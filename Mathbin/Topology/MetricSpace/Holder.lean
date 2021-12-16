@@ -43,6 +43,8 @@ variable [PseudoEmetricSpace X] [PseudoEmetricSpace Y] [PseudoEmetricSpace Z]
 def HolderWith (C r :  ℝ≥0 ) (f : X → Y) : Prop :=
   ∀ x y, edist (f x) (f y) ≤ C*edist x y^(r : ℝ)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- A function `f : X → Y` between two `pseudo_emeteric_space`s is Hölder continuous with constant
 `C : ℝ≥0` and exponent `r : ℝ≥0` on a set `s : set X`, if `edist (f x) (f y) ≤ C * edist x y ^ r`
 for all `x y ∈ s`. -/
@@ -112,18 +114,14 @@ theorem comp_holder_with {Cg rg :  ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : Hol
   {f : X → Y} (hf : HolderWith Cf rf f) (ht : ∀ x, f x ∈ t) : HolderWith (Cg*Cf^(rg : ℝ)) (rg*rf) (g ∘ f) :=
   holder_on_with_univ.mp$ hg.comp (hf.holder_on_with univ) fun x _ => ht x
 
--- error in Topology.MetricSpace.Holder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A Hölder continuous function is uniformly continuous -/
-protected
-theorem uniform_continuous_on (hf : holder_on_with C r f s) (h0 : «expr < »(0, r)) : uniform_continuous_on f s :=
-begin
-  refine [expr emetric.uniform_continuous_on_iff.2 (λ ε εpos, _)],
-  have [] [":", expr tendsto (λ
-    d : «exprℝ≥0∞»(), «expr * »((C : «exprℝ≥0∞»()), «expr ^ »(d, (r : exprℝ())))) (expr𝓝() 0) (expr𝓝() 0)] [],
-  from [expr ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos ennreal.coe_ne_top h0],
-  rcases [expr ennreal.nhds_zero_basis.mem_iff.1 (this (gt_mem_nhds εpos)), "with", "⟨", ident δ, ",", ident δ0, ",", ident H, "⟩"],
-  exact [expr ⟨δ, δ0, λ x y hx hy h, (hf.edist_le hx hy).trans_lt (H h)⟩]
-end
+protected theorem UniformContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) : UniformContinuousOn f s :=
+  by 
+    refine' Emetric.uniform_continuous_on_iff.2 fun ε εpos => _ 
+    have  : tendsto (fun d : ℝ≥0∞ => (C : ℝ≥0∞)*d^(r : ℝ)) (𝓝 0) (𝓝 0)
+    exact Ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos Ennreal.coe_ne_top h0 
+    rcases ennreal.nhds_zero_basis.mem_iff.1 (this (gt_mem_nhds εpos)) with ⟨δ, δ0, H⟩
+    exact ⟨δ, δ0, fun x y hx hy h => (hf.edist_le hx hy).trans_lt (H h)⟩
 
 protected theorem ContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) : ContinuousOn f s :=
   (hf.uniform_continuous_on h0).ContinuousOn

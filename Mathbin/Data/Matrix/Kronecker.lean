@@ -118,25 +118,25 @@ theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃
 
 theorem kronecker_map_reindex_left (f : α → β → γ) (el : l ≃ l') (em : m ≃ m') (M : Matrix l m α) (N : Matrix n n' β) :
   kronecker_map f (Matrix.reindex el em M) N =
-    reindex (el.prod_congr (Equiv.refl _)) (em.prod_congr (Equiv.refl _)) (kronecker_map f M N) :=
-  kronecker_map_reindex _ _ _ (Equiv.refl _) (Equiv.refl _) _ _
+    reindex (el.prod_congr (Equivₓ.refl _)) (em.prod_congr (Equivₓ.refl _)) (kronecker_map f M N) :=
+  kronecker_map_reindex _ _ _ (Equivₓ.refl _) (Equivₓ.refl _) _ _
 
 theorem kronecker_map_reindex_right (f : α → β → γ) (em : m ≃ m') (en : n ≃ n') (M : Matrix l l' α) (N : Matrix m n β) :
   kronecker_map f M (reindex em en N) =
-    reindex ((Equiv.refl _).prodCongr em) ((Equiv.refl _).prodCongr en) (kronecker_map f M N) :=
-  kronecker_map_reindex _ (Equiv.refl _) (Equiv.refl _) _ _ _ _
+    reindex ((Equivₓ.refl _).prodCongr em) ((Equivₓ.refl _).prodCongr en) (kronecker_map f M N) :=
+  kronecker_map_reindex _ (Equivₓ.refl _) (Equivₓ.refl _) _ _ _ _
 
 theorem kronecker_map_assoc {δ ξ ω ω' : Type _} (f : α → β → γ) (g : γ → δ → ω) (f' : α → ξ → ω') (g' : β → δ → ξ)
   (A : Matrix l m α) (B : Matrix n p β) (D : Matrix q r δ) (φ : ω ≃ ω')
   (hφ : ∀ a b d, φ (g (f a b) d) = f' a (g' b d)) :
-  (reindex (Equiv.prodAssoc l n q) (Equiv.prodAssoc m p r)).trans (Equiv.mapMatrix φ)
+  (reindex (Equivₓ.prodAssoc l n q) (Equivₓ.prodAssoc m p r)).trans (Equivₓ.mapMatrix φ)
       (kronecker_map g (kronecker_map f A B) D) =
     kronecker_map f' A (kronecker_map g' B D) :=
   ext$ fun i j => hφ _ _ _
 
 theorem kronecker_map_assoc₁ {δ ξ ω : Type _} (f : α → β → γ) (g : γ → δ → ω) (f' : α → ξ → ω) (g' : β → δ → ξ)
   (A : Matrix l m α) (B : Matrix n p β) (D : Matrix q r δ) (h : ∀ a b d, g (f a b) d = f' a (g' b d)) :
-  reindex (Equiv.prodAssoc l n q) (Equiv.prodAssoc m p r) (kronecker_map g (kronecker_map f A B) D) =
+  reindex (Equivₓ.prodAssoc l n q) (Equivₓ.prodAssoc m p r) (kronecker_map g (kronecker_map f A B) D) =
     kronecker_map f' A (kronecker_map g' B D) :=
   ext$ fun i j => h _ _ _
 
@@ -232,7 +232,7 @@ theorem mul_kronecker_mul [Fintype m] [Fintype m'] [CommSemiringₓ α] (A : Mat
 
 @[simp]
 theorem kronecker_assoc [Semigroupₓ α] (A : Matrix l m α) (B : Matrix n p α) (C : Matrix q r α) :
-  reindex (Equiv.prodAssoc l n q) (Equiv.prodAssoc m p r) (A ⊗ₖ B ⊗ₖ C) = A ⊗ₖ (B ⊗ₖ C) :=
+  reindex (Equivₓ.prodAssoc l n q) (Equivₓ.prodAssoc m p r) (A ⊗ₖ B ⊗ₖ C) = A ⊗ₖ (B ⊗ₖ C) :=
   kronecker_map_assoc₁ _ _ _ _ A B C mul_assocₓ
 
 end Kronecker
@@ -303,7 +303,8 @@ theorem diagonal_kronecker_tmul_diagonal [DecidableEq m] [DecidableEq n] (a : m 
 
 @[simp]
 theorem kronecker_tmul_assoc (A : Matrix l m α) (B : Matrix n p β) (C : Matrix q r γ) :
-  reindex (Equiv.prodAssoc l n q) (Equiv.prodAssoc m p r) (((A ⊗ₖₜ[R] B) ⊗ₖₜ[R] C).map (TensorProduct.assoc _ _ _ _)) =
+  reindex (Equivₓ.prodAssoc l n q) (Equivₓ.prodAssoc m p r)
+      (((A ⊗ₖₜ[R] B) ⊗ₖₜ[R] C).map (TensorProduct.assoc _ _ _ _)) =
     A ⊗ₖₜ[R] B ⊗ₖₜ[R] C :=
   ext$ fun i j => assoc_tmul _ _ _
 

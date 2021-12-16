@@ -21,7 +21,7 @@ namespace CategoryTheory.Limits
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 variable {J : Type v} [small_category J]
 

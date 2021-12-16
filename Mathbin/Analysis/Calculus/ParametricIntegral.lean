@@ -47,235 +47,221 @@ integral, derivative
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open TopologicalSpace MeasureTheory Filter Metric
 
 open_locale TopologicalSpace Filter
 
 variable {α : Type _} [MeasurableSpace α] {μ : Measureₓ α} {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E]
-  [NormedSpace ℝ E] [NormedSpace 𝕜 E] [IsScalarTower ℝ 𝕜 E] [CompleteSpace E] [second_countable_topology E]
-  [MeasurableSpace E] [BorelSpace E] {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H]
-  [second_countable_topology$ H →L[𝕜] E]
+  [NormedSpace ℝ E] [NormedSpace 𝕜 E] [CompleteSpace E] [second_countable_topology E] [MeasurableSpace E] [BorelSpace E]
+  {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] [second_countable_topology$ H →L[𝕜] E]
 
--- error in Analysis.Calculus.ParametricIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ ε)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ ε)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ ε)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ ε)
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming `F x₀` is
 integrable, `∥F x a - F x₀ a∥ ≤ bound a * ∥x - x₀∥` for `x` in a ball around `x₀` for ae `a` with
 integrable Lipschitz bound `bound` (with a ball radius independent of `a`), and `F x` is
 ae-measurable for `x` in the same ball. See `has_fderiv_at_integral_of_dominated_loc_of_lip` for a
 slightly less general but usually more useful version. -/
-theorem has_fderiv_at_integral_of_dominated_loc_of_lip'
-{F : H → α → E}
-{F' : α → «expr →L[ ] »(H, 𝕜, E)}
-{x₀ : H}
-{bound : α → exprℝ()}
-{ε : exprℝ()}
-(ε_pos : «expr < »(0, ε))
-(hF_meas : ∀ x «expr ∈ » ball x₀ ε, ae_measurable (F x) μ)
-(hF_int : integrable (F x₀) μ)
-(hF'_meas : ae_measurable F' μ)
-(h_lipsch : «expr∀ᵐ ∂ , »((a), μ, ∀
-  x «expr ∈ » ball x₀ ε, «expr ≤ »(«expr∥ ∥»(«expr - »(F x a, F x₀ a)), «expr * »(bound a, «expr∥ ∥»(«expr - »(x, x₀))))))
-(bound_integrable : integrable (bound : α → exprℝ()) μ)
-(h_diff : «expr∀ᵐ ∂ , »((a), μ, has_fderiv_at (λ
-   x, F x a) (F' a) x₀)) : «expr ∧ »(integrable F' μ, has_fderiv_at (λ
-  x, «expr∫ , ∂ »((a), F x a, μ)) «expr∫ , ∂ »((a), F' a, μ) x₀) :=
-begin
-  letI [] [":", expr measurable_space 𝕜] [":=", expr borel 𝕜],
-  haveI [] [":", expr opens_measurable_space 𝕜] [":=", expr ⟨le_rfl⟩],
-  have [ident x₀_in] [":", expr «expr ∈ »(x₀, ball x₀ ε)] [":=", expr mem_ball_self ε_pos],
-  have [ident nneg] [":", expr ∀
-   x, «expr ≤ »(0, «expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))))] [":=", expr λ x, inv_nonneg.mpr (norm_nonneg _)],
-  set [] [ident b] [":", expr α → exprℝ()] [":="] [expr λ a, «expr| |»(bound a)] [],
-  have [ident b_int] [":", expr integrable b μ] [":=", expr bound_integrable.norm],
-  have [ident b_nonneg] [":", expr ∀ a, «expr ≤ »(0, b a)] [":=", expr λ a, abs_nonneg _],
-  replace [ident h_lipsch] [":", expr «expr∀ᵐ ∂ , »((a), μ, ∀
-    x «expr ∈ » ball x₀ ε, «expr ≤ »(«expr∥ ∥»(«expr - »(F x a, F x₀ a)), «expr * »(b a, «expr∥ ∥»(«expr - »(x, x₀)))))] [],
-  from [expr h_lipsch.mono (λ
-    a ha x hx, «expr $ »((ha x hx).trans, mul_le_mul_of_nonneg_right (le_abs_self _) (norm_nonneg _)))],
-  have [ident hF_int'] [":", expr ∀ x «expr ∈ » ball x₀ ε, integrable (F x) μ] [],
-  { intros [ident x, ident x_in],
-    have [] [":", expr «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(«expr∥ ∥»(«expr - »(F x₀ a, F x a)), «expr * »(ε, b a)))] [],
-    { simp [] [] ["only"] ["[", expr norm_sub_rev (F x₀ _), "]"] [] [],
-      refine [expr h_lipsch.mono (λ a ha, (ha x x_in).trans _)],
-      rw [expr mul_comm ε] [],
-      rw ["[", expr mem_ball, ",", expr dist_eq_norm, "]"] ["at", ident x_in],
-      exact [expr mul_le_mul_of_nonneg_left x_in.le (b_nonneg _)] },
-    exact [expr integrable_of_norm_sub_le (hF_meas x x_in) hF_int (integrable.const_mul bound_integrable.norm ε) this] },
-  have [ident hF'_int] [":", expr integrable F' μ] [],
-  { have [] [":", expr «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(«expr∥ ∥»(F' a), b a))] [],
-    { apply [expr (h_diff.and h_lipsch).mono],
-      rintros [ident a, "⟨", ident ha_diff, ",", ident ha_lip, "⟩"],
-      refine [expr ha_diff.le_of_lip' (b_nonneg a) «expr $ »(mem_of_superset (ball_mem_nhds _ ε_pos), ha_lip)] },
-    exact [expr b_int.mono' hF'_meas this] },
-  refine [expr ⟨hF'_int, _⟩],
-  have [ident h_ball] [":", expr «expr ∈ »(ball x₀ ε, expr𝓝() x₀)] [":=", expr ball_mem_nhds x₀ ε_pos],
-  have [] [":", expr «expr∀ᶠ in , »((x), expr𝓝() x₀, «expr = »(«expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr∥ ∥»(«expr - »(«expr - »(«expr∫ , ∂ »((a), F x a, μ), «expr∫ , ∂ »((a), F x₀ a, μ)), «expr∫ , ∂ »((a), F' a, μ) «expr - »(x, x₀)))), «expr∥ ∥»(«expr∫ , ∂ »((a), «expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr - »(«expr - »(F x a, F x₀ a), F' a «expr - »(x, x₀))), μ))))] [],
-  { apply [expr mem_of_superset (ball_mem_nhds _ ε_pos)],
-    intros [ident x, ident x_in],
-    rw ["[", expr set.mem_set_of_eq, ",", "<-", expr norm_smul_of_nonneg (nneg _), ",", expr integral_smul, ",", expr integral_sub, ",", expr integral_sub, ",", "<-", expr continuous_linear_map.integral_apply hF'_int, "]"] [],
-    exacts ["[", expr hF_int' x x_in, ",", expr hF_int, ",", expr (hF_int' x x_in).sub hF_int, ",", expr hF'_int.apply_continuous_linear_map _, "]"] },
-  rw ["[", expr has_fderiv_at_iff_tendsto, ",", expr tendsto_congr' this, ",", "<-", expr tendsto_zero_iff_norm_tendsto_zero, ",", "<-", expr show «expr = »(«expr∫ , ∂ »((a : α), «expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x₀, x₀))), «expr - »(«expr - »(F x₀ a, F x₀ a), F' a «expr - »(x₀, x₀))), μ), 0), by simp [] [] [] [] [] [], "]"] [],
-  apply [expr tendsto_integral_filter_of_dominated_convergence],
-  { filter_upwards ["[", expr h_ball, "]"] [],
-    intros [ident x, ident x_in],
-    apply [expr ae_measurable.const_smul],
-    exact [expr ((hF_meas _ x_in).sub (hF_meas _ x₀_in)).sub (hF'_meas.apply_continuous_linear_map _)] },
-  { apply [expr mem_of_superset h_ball],
-    intros [ident x, ident hx],
-    apply [expr (h_diff.and h_lipsch).mono],
-    rintros [ident a, "⟨", ident ha_deriv, ",", ident ha_bound, "⟩"],
-    show [expr «expr ≤ »(«expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr - »(«expr - »(F x a, F x₀ a), F' a «expr - »(x, x₀)))), «expr + »(b a, «expr∥ ∥»(F' a)))],
-    replace [ident ha_bound] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(F x a, F x₀ a)), «expr * »(b a, «expr∥ ∥»(«expr - »(x, x₀))))] [":=", expr ha_bound x hx],
-    calc
-      «expr = »(«expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr - »(«expr - »(F x a, F x₀ a), F' a «expr - »(x, x₀)))), «expr∥ ∥»(«expr - »(«expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr - »(F x a, F x₀ a)), «expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), F' a «expr - »(x, x₀))))) : by rw [expr smul_sub] []
-      «expr ≤ »(..., «expr + »(«expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr - »(F x a, F x₀ a))), «expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), F' a «expr - »(x, x₀))))) : norm_sub_le _ _
-      «expr = »(..., «expr + »(«expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr∥ ∥»(«expr - »(F x a, F x₀ a))), «expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr∥ ∥»(F' a «expr - »(x, x₀))))) : by { rw ["[", expr norm_smul_of_nonneg, ",", expr norm_smul_of_nonneg, "]"] []; exact [expr nneg _] }
-      «expr ≤ »(..., «expr + »(«expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr * »(b a, «expr∥ ∥»(«expr - »(x, x₀)))), «expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr * »(«expr∥ ∥»(F' a), «expr∥ ∥»(«expr - »(x, x₀)))))) : add_le_add _ _
-      «expr ≤ »(..., «expr + »(b a, «expr∥ ∥»(F' a))) : _,
-    exact [expr mul_le_mul_of_nonneg_left ha_bound (nneg _)],
-    apply [expr mul_le_mul_of_nonneg_left ((F' a).le_op_norm _) (nneg _)],
-    by_cases [expr h, ":", expr «expr = »(«expr∥ ∥»(«expr - »(x, x₀)), 0)],
-    { simpa [] [] [] ["[", expr h, "]"] [] ["using", expr add_nonneg (b_nonneg a) (norm_nonneg (F' a))] },
-    { field_simp [] ["[", expr h, "]"] [] [] } },
-  { exact [expr b_int.add hF'_int.norm] },
-  { apply [expr h_diff.mono],
-    intros [ident a, ident ha],
-    suffices [] [":", expr tendsto (λ
-      x, «expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr - »(«expr - »(F x a, F x₀ a), F' a «expr - »(x, x₀)))) (expr𝓝() x₀) (expr𝓝() 0)],
-    by simpa [] [] [] [] [] [],
-    rw [expr tendsto_zero_iff_norm_tendsto_zero] [],
-    have [] [":", expr «expr = »(λ
-      x, «expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr∥ ∥»(«expr - »(«expr - »(F x a, F x₀ a), F' a «expr - »(x, x₀)))), λ
-      x, «expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x, x₀))), «expr - »(«expr - »(F x a, F x₀ a), F' a «expr - »(x, x₀)))))] [],
-    { ext [] [ident x] [],
-      rw [expr norm_smul_of_nonneg (nneg _)] [] },
-    rwa ["[", expr has_fderiv_at_iff_tendsto, ",", expr this, "]"] ["at", ident ha] }
-end
+theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H} {bound : α → ℝ}
+  {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ x _ : x ∈ ball x₀ ε, AeMeasurable (F x) μ) (hF_int : integrable (F x₀) μ)
+  (hF'_meas : AeMeasurable F' μ) (h_lipsch : ∀ᵐ a ∂μ, ∀ x _ : x ∈ ball x₀ ε, ∥F x a - F x₀ a∥ ≤ bound a*∥x - x₀∥)
+  (bound_integrable : integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (F' a) x₀) :
+  integrable F' μ ∧ HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ :=
+  by 
+    let this' : MeasurableSpace 𝕜 := borel 𝕜 
+    have  : OpensMeasurableSpace 𝕜 := ⟨le_rfl⟩
+    have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos 
+    have nneg : ∀ x, 0 ≤ ∥x - x₀∥⁻¹ := fun x => inv_nonneg.mpr (norm_nonneg _)
+    set b : α → ℝ := fun a => |bound a|
+    have b_int : integrable b μ := bound_integrable.norm 
+    have b_nonneg : ∀ a, 0 ≤ b a := fun a => abs_nonneg _ 
+    replace h_lipsch : ∀ᵐ a ∂μ, ∀ x _ : x ∈ ball x₀ ε, ∥F x a - F x₀ a∥ ≤ b a*∥x - x₀∥
+    exact h_lipsch.mono fun a ha x hx => (ha x hx).trans$ mul_le_mul_of_nonneg_right (le_abs_self _) (norm_nonneg _)
+    have hF_int' : ∀ x _ : x ∈ ball x₀ ε, integrable (F x) μ
+    ·
+      intro x x_in 
+      have  : ∀ᵐ a ∂μ, ∥F x₀ a - F x a∥ ≤ ε*b a
+      ·
+        simp only [norm_sub_rev (F x₀ _)]
+        refine' h_lipsch.mono fun a ha => (ha x x_in).trans _ 
+        rw [mul_commₓ ε]
+        rw [mem_ball, dist_eq_norm] at x_in 
+        exact mul_le_mul_of_nonneg_left x_in.le (b_nonneg _)
+      exact integrable_of_norm_sub_le (hF_meas x x_in) hF_int (integrable.const_mul bound_integrable.norm ε) this 
+    have hF'_int : integrable F' μ
+    ·
+      have  : ∀ᵐ a ∂μ, ∥F' a∥ ≤ b a
+      ·
+        apply (h_diff.and h_lipsch).mono 
+        rintro a ⟨ha_diff, ha_lip⟩
+        refine' ha_diff.le_of_lip' (b_nonneg a) (mem_of_superset (ball_mem_nhds _ ε_pos)$ ha_lip)
+      exact b_int.mono' hF'_meas this 
+    refine' ⟨hF'_int, _⟩
+    have h_ball : ball x₀ ε ∈ 𝓝 x₀ := ball_mem_nhds x₀ ε_pos 
+    have  :
+      ∀ᶠ x in 𝓝 x₀,
+        (∥x - x₀∥⁻¹*∥((∫ a, F x a ∂μ) - ∫ a, F x₀ a ∂μ) - (∫ a, F' a ∂μ) (x - x₀)∥) =
+          ∥∫ a, ∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀)) ∂μ∥
+    ·
+      apply mem_of_superset (ball_mem_nhds _ ε_pos)
+      intro x x_in 
+      rw [Set.mem_set_of_eq, ←norm_smul_of_nonneg (nneg _), integral_smul, integral_sub, integral_sub,
+        ←ContinuousLinearMap.integral_apply hF'_int]
+      exacts[hF_int' x x_in, hF_int, (hF_int' x x_in).sub hF_int, hF'_int.apply_continuous_linear_map _]
+    rw [has_fderiv_at_iff_tendsto, tendsto_congr' this, ←tendsto_zero_iff_norm_tendsto_zero,
+      ←show (∫ a : α, ∥x₀ - x₀∥⁻¹ • (F x₀ a - F x₀ a - (F' a) (x₀ - x₀)) ∂μ) = 0 by 
+        simp ]
+    apply tendsto_integral_filter_of_dominated_convergence
+    ·
+      filterUpwards [h_ball]
+      intro x x_in 
+      apply AeMeasurable.const_smul 
+      exact ((hF_meas _ x_in).sub (hF_meas _ x₀_in)).sub (hF'_meas.apply_continuous_linear_map _)
+    ·
+      apply mem_of_superset h_ball 
+      intro x hx 
+      apply (h_diff.and h_lipsch).mono 
+      rintro a ⟨ha_deriv, ha_bound⟩
+      show ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀))∥ ≤ b a+∥F' a∥
+      replace ha_bound : ∥F x a - F x₀ a∥ ≤ b a*∥x - x₀∥ := ha_bound x hx 
+      calc
+        ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀))∥ =
+          ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a) - ∥x - x₀∥⁻¹ • F' a (x - x₀)∥ :=
+        by 
+          rw [smul_sub]_ ≤ ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a)∥+∥∥x - x₀∥⁻¹ • F' a (x - x₀)∥ :=
+        norm_sub_le _ _ _ = (∥x - x₀∥⁻¹*∥F x a - F x₀ a∥)+∥x - x₀∥⁻¹*∥F' a (x - x₀)∥ :=
+        by 
+          rw [norm_smul_of_nonneg, norm_smul_of_nonneg] <;>
+            exact nneg _ _ ≤ (∥x - x₀∥⁻¹*b a*∥x - x₀∥)+∥x - x₀∥⁻¹*∥F' a∥*∥x - x₀∥ :=
+        add_le_add _ _ _ ≤ b a+∥F' a∥ := _ 
+      exact mul_le_mul_of_nonneg_left ha_bound (nneg _)
+      apply mul_le_mul_of_nonneg_left ((F' a).le_op_norm _) (nneg _)
+      byCases' h : ∥x - x₀∥ = 0
+      ·
+        simpa [h] using add_nonneg (b_nonneg a) (norm_nonneg (F' a))
+      ·
+        fieldSimp [h]
+    ·
+      exact b_int.add hF'_int.norm
+    ·
+      apply h_diff.mono 
+      intro a ha 
+      suffices  : tendsto (fun x => ∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀))) (𝓝 x₀) (𝓝 0)
+      ·
+        simpa 
+      rw [tendsto_zero_iff_norm_tendsto_zero]
+      have  :
+        (fun x => ∥x - x₀∥⁻¹*∥F x a - F x₀ a - F' a (x - x₀)∥) =
+          fun x => ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀))∥
+      ·
+        ext x 
+        rw [norm_smul_of_nonneg (nneg _)]
+      rwa [has_fderiv_at_iff_tendsto, this] at ha
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (δ «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ δ)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ δ)
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
 (with a ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is ae-measurable
 for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H} {bound : α → ℝ}
-  {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠx in 𝓝 x₀, AeMeasurable (F x) μ) (hF_int : integrable (F x₀) μ)
-  (hF'_meas : AeMeasurable F' μ) (h_lip : ∀ᵐa ∂μ, LipschitzOnWith (Real.nnabs$ bound a) (fun x => F x a) (ball x₀ ε))
-  (bound_integrable : integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐa ∂μ, HasFderivAt (fun x => F x a) (F' a) x₀) :
-  integrable F' μ ∧ HasFderivAt (fun x => ∫a, F x a ∂μ) (∫a, F' a ∂μ) x₀ :=
+  {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (F x) μ) (hF_int : integrable (F x₀) μ)
+  (hF'_meas : AeMeasurable F' μ) (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs$ bound a) (fun x => F x a) (ball x₀ ε))
+  (bound_integrable : integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (F' a) x₀) :
+  integrable F' μ ∧ HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ :=
   by 
     obtain ⟨δ, δ_pos, hδ⟩ : ∃ (δ : _)(_ : δ > 0), ∀ x _ : x ∈ ball x₀ δ, AeMeasurable (F x) μ ∧ x ∈ ball x₀ ε 
     exact eventually_nhds_iff_ball.mp (hF_meas.and (ball_mem_nhds x₀ ε_pos))
     choose hδ_meas hδε using hδ 
-    replace h_lip : ∀ᵐa : α ∂μ, ∀ x _ : x ∈ ball x₀ δ, ∥F x a - F x₀ a∥ ≤ |bound a|*∥x - x₀∥
+    replace h_lip : ∀ᵐ a : α ∂μ, ∀ x _ : x ∈ ball x₀ δ, ∥F x a - F x₀ a∥ ≤ |bound a|*∥x - x₀∥
     exact h_lip.mono fun a lip x hx => lip.norm_sub_le (hδε x hx) (mem_ball_self ε_pos)
     replace bound_integrable := bound_integrable.norm 
     apply has_fderiv_at_integral_of_dominated_loc_of_lip' δ_pos <;> assumption
 
--- error in Analysis.Calculus.ParametricIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ ε)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ ε)
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on a ball around `x₀` for ae `a` with
 derivative norm uniformly bounded by an integrable function (the ball radius is independent of `a`),
 and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem has_fderiv_at_integral_of_dominated_of_fderiv_le
-{F : H → α → E}
-{F' : H → α → «expr →L[ ] »(H, 𝕜, E)}
-{x₀ : H}
-{bound : α → exprℝ()}
-{ε : exprℝ()}
-(ε_pos : «expr < »(0, ε))
-(hF_meas : «expr∀ᶠ in , »((x), expr𝓝() x₀, ae_measurable (F x) μ))
-(hF_int : integrable (F x₀) μ)
-(hF'_meas : ae_measurable (F' x₀) μ)
-(h_bound : «expr∀ᵐ ∂ , »((a), μ, ∀ x «expr ∈ » ball x₀ ε, «expr ≤ »(«expr∥ ∥»(F' x a), bound a)))
-(bound_integrable : integrable (bound : α → exprℝ()) μ)
-(h_diff : «expr∀ᵐ ∂ , »((a), μ, ∀
-  x «expr ∈ » ball x₀ ε, has_fderiv_at (λ
-   x, F x a) (F' x a) x)) : has_fderiv_at (λ x, «expr∫ , ∂ »((a), F x a, μ)) «expr∫ , ∂ »((a), F' x₀ a, μ) x₀ :=
-begin
-  letI [] [":", expr normed_space exprℝ() H] [":=", expr normed_space.restrict_scalars exprℝ() 𝕜 H],
-  haveI [] [":", expr is_scalar_tower exprℝ() 𝕜 H] [":=", expr restrict_scalars.is_scalar_tower exprℝ() 𝕜 H],
-  have [ident x₀_in] [":", expr «expr ∈ »(x₀, ball x₀ ε)] [":=", expr mem_ball_self ε_pos],
-  have [ident diff_x₀] [":", expr «expr∀ᵐ ∂ , »((a), μ, has_fderiv_at (λ
-     x, F x a) (F' x₀ a) x₀)] [":=", expr h_diff.mono (λ a ha, ha x₀ x₀_in)],
-  have [] [":", expr «expr∀ᵐ ∂ , »((a), μ, lipschitz_on_with (real.nnabs (bound a)) (λ x, F x a) (ball x₀ ε))] [],
-  { apply [expr (h_diff.and h_bound).mono],
-    rintros [ident a, "⟨", ident ha_deriv, ",", ident ha_bound, "⟩"],
-    refine [expr (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_fderiv_within_le (λ
-      x x_in, (ha_deriv x x_in).has_fderiv_within_at) (λ x x_in, _)],
-    rw ["[", "<-", expr nnreal.coe_le_coe, ",", expr coe_nnnorm, ",", expr real.coe_nnabs, "]"] [],
-    exact [expr (ha_bound x x_in).trans (le_abs_self _)] },
-  exact [expr (has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable diff_x₀).2]
-end
+theorem has_fderiv_at_integral_of_dominated_of_fderiv_le {F : H → α → E} {F' : H → α → H →L[𝕜] E} {x₀ : H}
+  {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (F x) μ) (hF_int : integrable (F x₀) μ)
+  (hF'_meas : AeMeasurable (F' x₀) μ) (h_bound : ∀ᵐ a ∂μ, ∀ x _ : x ∈ ball x₀ ε, ∥F' x a∥ ≤ bound a)
+  (bound_integrable : integrable (bound : α → ℝ) μ)
+  (h_diff : ∀ᵐ a ∂μ, ∀ x _ : x ∈ ball x₀ ε, HasFderivAt (fun x => F x a) (F' x a) x) :
+  HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' x₀ a ∂μ) x₀ :=
+  by 
+    let this' : NormedSpace ℝ H := NormedSpace.restrictScalars ℝ 𝕜 H 
+    have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos 
+    have diff_x₀ : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (F' x₀ a) x₀ := h_diff.mono fun a ha => ha x₀ x₀_in 
+    have  : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs (bound a)) (fun x => F x a) (ball x₀ ε)
+    ·
+      apply (h_diff.and h_bound).mono 
+      rintro a ⟨ha_deriv, ha_bound⟩
+      refine'
+        (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_fderiv_within_le
+          (fun x x_in => (ha_deriv x x_in).HasFderivWithinAt) fun x x_in => _ 
+      rw [←Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
+      exact (ha_bound x x_in).trans (le_abs_self _)
+    exact (has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable diff_x₀).2
 
--- error in Analysis.Calculus.ParametricIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : 𝕜`, `𝕜 = ℝ` or `𝕜 = ℂ`,
 assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
 (with ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is
 ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem has_deriv_at_integral_of_dominated_loc_of_lip
-{F : 𝕜 → α → E}
-{F' : α → E}
-{x₀ : 𝕜}
-{ε : exprℝ()}
-(ε_pos : «expr < »(0, ε))
-(hF_meas : «expr∀ᶠ in , »((x), expr𝓝() x₀, ae_measurable (F x) μ))
-(hF_int : integrable (F x₀) μ)
-(hF'_meas : ae_measurable F' μ)
-{bound : α → exprℝ()}
-(h_lipsch : «expr∀ᵐ ∂ , »((a), μ, lipschitz_on_with «expr $ »(real.nnabs, bound a) (λ x, F x a) (ball x₀ ε)))
-(bound_integrable : integrable (bound : α → exprℝ()) μ)
-(h_diff : «expr∀ᵐ ∂ , »((a), μ, has_deriv_at (λ
-   x, F x a) (F' a) x₀)) : «expr ∧ »(integrable F' μ, has_deriv_at (λ
-  x, «expr∫ , ∂ »((a), F x a, μ)) «expr∫ , ∂ »((a), F' a, μ) x₀) :=
-begin
-  letI [] [":", expr measurable_space 𝕜] [":=", expr borel 𝕜],
-  haveI [] [":", expr opens_measurable_space 𝕜] [":=", expr ⟨le_rfl⟩],
-  set [] [ident L] [":", expr «expr →L[ ] »(E, 𝕜, «expr →L[ ] »(𝕜, 𝕜, E))] [":="] [expr continuous_linear_map.smul_rightL 𝕜 𝕜 E 1] [],
-  replace [ident h_diff] [":", expr «expr∀ᵐ ∂ , »((a), μ, has_fderiv_at (λ
-     x, F x a) (L (F' a)) x₀)] [":=", expr h_diff.mono (λ x hx, hx.has_fderiv_at)],
-  have [ident hm] [":", expr ae_measurable «expr ∘ »(L, F') μ] [":=", expr L.continuous.measurable.comp_ae_measurable hF'_meas],
-  cases [expr has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hm h_lipsch bound_integrable h_diff] ["with", ident hF'_int, ident key],
-  replace [ident hF'_int] [":", expr integrable F' μ] [],
-  { rw ["[", "<-", expr integrable_norm_iff hm, "]"] ["at", ident hF'_int],
-    simpa [] [] ["only"] ["[", expr L, ",", expr («expr ∘ »), ",", expr integrable_norm_iff, ",", expr hF'_meas, ",", expr one_mul, ",", expr norm_one, ",", expr continuous_linear_map.comp_apply, ",", expr continuous_linear_map.coe_restrict_scalarsL', ",", expr continuous_linear_map.norm_restrict_scalars, ",", expr continuous_linear_map.norm_smul_rightL_apply, "]"] [] ["using", expr hF'_int] },
-  refine [expr ⟨hF'_int, _⟩],
-  simp_rw [expr has_deriv_at_iff_has_fderiv_at] ["at", ident h_diff, "⊢"],
-  rwa [expr continuous_linear_map.integral_comp_comm _ hF'_int] ["at", ident key],
-  all_goals { apply_instance }
-end
+theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' : α → E} {x₀ : 𝕜} {ε : ℝ} (ε_pos : 0 < ε)
+  (hF_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (F x) μ) (hF_int : integrable (F x₀) μ) (hF'_meas : AeMeasurable F' μ)
+  {bound : α → ℝ} (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs$ bound a) (fun x => F x a) (ball x₀ ε))
+  (bound_integrable : integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasDerivAt (fun x => F x a) (F' a) x₀) :
+  integrable F' μ ∧ HasDerivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ :=
+  by 
+    let this' : MeasurableSpace 𝕜 := borel 𝕜 
+    have  : OpensMeasurableSpace 𝕜 := ⟨le_rfl⟩
+    set L : E →L[𝕜] 𝕜 →L[𝕜] E := ContinuousLinearMap.smulRightL 𝕜 𝕜 E 1
+    replace h_diff : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (L (F' a)) x₀ := h_diff.mono fun x hx => hx.has_fderiv_at 
+    have hm : AeMeasurable (L ∘ F') μ := L.continuous.measurable.comp_ae_measurable hF'_meas 
+    cases' has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hm h_lipsch bound_integrable h_diff with
+      hF'_int key 
+    replace hF'_int : integrable F' μ
+    ·
+      rw [←integrable_norm_iff hm] at hF'_int 
+      simpa only [L, · ∘ ·, integrable_norm_iff, hF'_meas, one_mulₓ, norm_one, ContinuousLinearMap.comp_apply,
+        ContinuousLinearMap.coe_restrict_scalarsL', ContinuousLinearMap.norm_restrict_scalars,
+        ContinuousLinearMap.norm_smul_rightL_apply] using hF'_int 
+    refine' ⟨hF'_int, _⟩
+    simpRw [has_deriv_at_iff_has_fderiv_at]  at h_diff⊢
+    rwa [ContinuousLinearMap.integral_comp_comm _ hF'_int] at key 
+    all_goals 
+      infer_instance
 
--- error in Analysis.Calculus.ParametricIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ ε)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ball x₀ ε)
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : ℝ`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on an interval around `x₀` for ae `a`
 (with interval radius independent of `a`) with derivative uniformly bounded by an integrable
 function, and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le
-{F : 𝕜 → α → E}
-{F' : 𝕜 → α → E}
-{x₀ : 𝕜}
-{ε : exprℝ()}
-(ε_pos : «expr < »(0, ε))
-(hF_meas : «expr∀ᶠ in , »((x), expr𝓝() x₀, ae_measurable (F x) μ))
-(hF_int : integrable (F x₀) μ)
-(hF'_meas : ae_measurable (F' x₀) μ)
-{bound : α → exprℝ()}
-(h_bound : «expr∀ᵐ ∂ , »((a), μ, ∀ x «expr ∈ » ball x₀ ε, «expr ≤ »(«expr∥ ∥»(F' x a), bound a)))
-(bound_integrable : integrable bound μ)
-(h_diff : «expr∀ᵐ ∂ , »((a), μ, ∀
-  x «expr ∈ » ball x₀ ε, has_deriv_at (λ
-   x, F x a) (F' x a) x)) : «expr ∧ »(integrable (F' x₀) μ, has_deriv_at (λ
-  n, «expr∫ , ∂ »((a), F n a, μ)) «expr∫ , ∂ »((a), F' x₀ a, μ) x₀) :=
-begin
-  have [ident x₀_in] [":", expr «expr ∈ »(x₀, ball x₀ ε)] [":=", expr mem_ball_self ε_pos],
-  have [ident diff_x₀] [":", expr «expr∀ᵐ ∂ , »((a), μ, has_deriv_at (λ
-     x, F x a) (F' x₀ a) x₀)] [":=", expr h_diff.mono (λ a ha, ha x₀ x₀_in)],
-  have [] [":", expr «expr∀ᵐ ∂ , »((a), μ, lipschitz_on_with (real.nnabs (bound a)) (λ x : 𝕜, F x a) (ball x₀ ε))] [],
-  { apply [expr (h_diff.and h_bound).mono],
-    rintros [ident a, "⟨", ident ha_deriv, ",", ident ha_bound, "⟩"],
-    refine [expr (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_deriv_within_le (λ
-      x x_in, (ha_deriv x x_in).has_deriv_within_at) (λ x x_in, _)],
-    rw ["[", "<-", expr nnreal.coe_le_coe, ",", expr coe_nnnorm, ",", expr real.coe_nnabs, "]"] [],
-    exact [expr (ha_bound x x_in).trans (le_abs_self _)] },
-  exact [expr has_deriv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable diff_x₀]
-end
+theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → E} {F' : 𝕜 → α → E} {x₀ : 𝕜} {ε : ℝ}
+  (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (F x) μ) (hF_int : integrable (F x₀) μ)
+  (hF'_meas : AeMeasurable (F' x₀) μ) {bound : α → ℝ} (h_bound : ∀ᵐ a ∂μ, ∀ x _ : x ∈ ball x₀ ε, ∥F' x a∥ ≤ bound a)
+  (bound_integrable : integrable bound μ)
+  (h_diff : ∀ᵐ a ∂μ, ∀ x _ : x ∈ ball x₀ ε, HasDerivAt (fun x => F x a) (F' x a) x) :
+  integrable (F' x₀) μ ∧ HasDerivAt (fun n => ∫ a, F n a ∂μ) (∫ a, F' x₀ a ∂μ) x₀ :=
+  by 
+    have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos 
+    have diff_x₀ : ∀ᵐ a ∂μ, HasDerivAt (fun x => F x a) (F' x₀ a) x₀ := h_diff.mono fun a ha => ha x₀ x₀_in 
+    have  : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs (bound a)) (fun x : 𝕜 => F x a) (ball x₀ ε)
+    ·
+      apply (h_diff.and h_bound).mono 
+      rintro a ⟨ha_deriv, ha_bound⟩
+      refine'
+        (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_deriv_within_le
+          (fun x x_in => (ha_deriv x x_in).HasDerivWithinAt) fun x x_in => _ 
+      rw [←Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
+      exact (ha_bound x x_in).trans (le_abs_self _)
+    exact has_deriv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable diff_x₀
 

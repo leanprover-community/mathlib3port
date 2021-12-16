@@ -41,7 +41,7 @@ isometrically and in a way compatible with `f n`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u v w
 
@@ -63,32 +63,29 @@ open _root_.sum(inl inr)
 def glue_dist (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : Sum X Y → Sum X Y → ℝ
 | inl x, inl y => dist x y
 | inr x, inr y => dist x y
-| inl x, inr y => (⨅p, dist x (Φ p)+dist y (Ψ p))+ε
-| inr x, inl y => (⨅p, dist y (Φ p)+dist x (Ψ p))+ε
+| inl x, inr y => (⨅ p, dist x (Φ p)+dist y (Ψ p))+ε
+| inr x, inl y => (⨅ p, dist y (Φ p)+dist x (Ψ p))+ε
 
 private theorem glue_dist_self (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x, glue_dist Φ Ψ ε x x = 0
 | inl x => dist_self _
 | inr x => dist_self _
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem glue_dist_glued_points
-[nonempty Z]
-(Φ : Z → X)
-(Ψ : Z → Y)
-(ε : exprℝ())
-(p : Z) : «expr = »(glue_dist Φ Ψ ε (inl (Φ p)) (inr (Ψ p)), ε) :=
-begin
-  have [] [":", expr «expr = »(«expr⨅ , »((q), «expr + »(dist (Φ p) (Φ q), dist (Ψ p) (Ψ q))), 0)] [],
-  { have [ident A] [":", expr ∀
-     q, «expr ≤ »(0, «expr + »(dist (Φ p) (Φ q), dist (Ψ p) (Ψ q)))] [":=", expr λ
-     q, by rw ["<-", expr add_zero (0 : exprℝ())] []; exact [expr add_le_add dist_nonneg dist_nonneg]],
-    refine [expr le_antisymm _ (le_cinfi A)],
-    have [] [":", expr «expr = »(0, «expr + »(dist (Φ p) (Φ p), dist (Ψ p) (Ψ p)))] [],
-    by simp [] [] [] [] [] [],
-    rw [expr this] [],
-    exact [expr cinfi_le ⟨0, forall_range_iff.2 A⟩ p] },
-  rw ["[", expr glue_dist, ",", expr this, ",", expr zero_add, "]"] []
-end
+theorem glue_dist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (p : Z) :
+  glue_dist Φ Ψ ε (inl (Φ p)) (inr (Ψ p)) = ε :=
+  by 
+    have  : (⨅ q, dist (Φ p) (Φ q)+dist (Ψ p) (Ψ q)) = 0
+    ·
+      have A : ∀ q, 0 ≤ dist (Φ p) (Φ q)+dist (Ψ p) (Ψ q) :=
+        fun q =>
+          by 
+            rw [←add_zeroₓ (0 : ℝ)] <;> exact add_le_add dist_nonneg dist_nonneg 
+      refine' le_antisymmₓ _ (le_cinfi A)
+      have  : 0 = dist (Φ p) (Φ p)+dist (Ψ p) (Ψ p)
+      ·
+        simp 
+      rw [this]
+      exact cinfi_le ⟨0, forall_range_iff.2 A⟩ p 
+    rw [glue_dist, this, zero_addₓ]
 
 private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x y, glue_dist Φ Ψ ε x y = glue_dist Φ Ψ ε y x
 | inl x, inl y => dist_comm _ _
@@ -98,150 +95,174 @@ private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x 
 
 variable [Nonempty Z]
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem glue_dist_triangle
-(Φ : Z → X)
-(Ψ : Z → Y)
-(ε : exprℝ())
-(H : ∀
- p
- q, «expr ≤ »(«expr| |»(«expr - »(dist (Φ p) (Φ q), dist (Ψ p) (Ψ q))), «expr * »(2, ε))) : ∀
-x y z, «expr ≤ »(glue_dist Φ Ψ ε x z, «expr + »(glue_dist Φ Ψ ε x y, glue_dist Φ Ψ ε y z))
-| inl x, inl y, inl z := dist_triangle _ _ _
-| inr x, inr y, inr z := dist_triangle _ _ _
-| inr x, inl y, inl z := begin
-  have [ident B] [":", expr ∀
-   a
-   b, bdd_below (range (λ
-     p : Z, «expr + »(dist a (Φ p), dist b (Ψ p))))] [":=", expr λ
-   a b, ⟨0, forall_range_iff.2 (λ p, add_nonneg dist_nonneg dist_nonneg)⟩],
-  unfold [ident glue_dist] [],
-  have [] [":", expr «expr ≤ »(«expr⨅ , »((p), «expr + »(dist z (Φ p), dist x (Ψ p))), «expr + »(«expr⨅ , »((p), «expr + »(dist y (Φ p), dist x (Ψ p))), dist y z))] [],
-  { have [] [":", expr «expr = »(«expr + »(«expr⨅ , »((p), «expr + »(dist y (Φ p), dist x (Ψ p))), dist y z), infi «expr ∘ »(λ
-       t, «expr + »(t, dist y z), λ p, «expr + »(dist y (Φ p), dist x (Ψ p))))] [],
-    { refine [expr map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ (B _ _)],
-      intros [ident x, ident y, ident hx],
-      simpa [] [] [] [] [] [] },
-    rw ["[", expr this, ",", expr comp, "]"] [],
-    refine [expr cinfi_le_cinfi (B _ _) (λ p, _)],
-    calc
-      «expr ≤ »(«expr + »(dist z (Φ p), dist x (Ψ p)), «expr + »(«expr + »(dist y z, dist y (Φ p)), dist x (Ψ p))) : add_le_add (dist_triangle_left _ _ _) (le_refl _)
-      «expr = »(..., «expr + »(«expr + »(dist y (Φ p), dist x (Ψ p)), dist y z)) : by ring [] },
-  linarith [] [] []
-end
-| inr x, inr y, inl z := begin
-  have [ident B] [":", expr ∀
-   a
-   b, bdd_below (range (λ
-     p : Z, «expr + »(dist a (Φ p), dist b (Ψ p))))] [":=", expr λ
-   a b, ⟨0, forall_range_iff.2 (λ p, add_nonneg dist_nonneg dist_nonneg)⟩],
-  unfold [ident glue_dist] [],
-  have [] [":", expr «expr ≤ »(«expr⨅ , »((p), «expr + »(dist z (Φ p), dist x (Ψ p))), «expr + »(dist x y, «expr⨅ , »((p), «expr + »(dist z (Φ p), dist y (Ψ p)))))] [],
-  { have [] [":", expr «expr = »(«expr + »(dist x y, «expr⨅ , »((p), «expr + »(dist z (Φ p), dist y (Ψ p)))), infi «expr ∘ »(λ
-       t, «expr + »(dist x y, t), λ p, «expr + »(dist z (Φ p), dist y (Ψ p))))] [],
-    { refine [expr map_cinfi_of_continuous_at_of_monotone (continuous_at_const.add continuous_at_id) _ (B _ _)],
-      intros [ident x, ident y, ident hx],
-      simpa [] [] [] [] [] [] },
-    rw ["[", expr this, ",", expr comp, "]"] [],
-    refine [expr cinfi_le_cinfi (B _ _) (λ p, _)],
-    calc
-      «expr ≤ »(«expr + »(dist z (Φ p), dist x (Ψ p)), «expr + »(dist z (Φ p), «expr + »(dist x y, dist y (Ψ p)))) : add_le_add (le_refl _) (dist_triangle _ _ _)
-      «expr = »(..., «expr + »(dist x y, «expr + »(dist z (Φ p), dist y (Ψ p)))) : by ring [] },
-  linarith [] [] []
-end
-| inl x, inl y, inr z := begin
-  have [ident B] [":", expr ∀
-   a
-   b, bdd_below (range (λ
-     p : Z, «expr + »(dist a (Φ p), dist b (Ψ p))))] [":=", expr λ
-   a b, ⟨0, forall_range_iff.2 (λ p, add_nonneg dist_nonneg dist_nonneg)⟩],
-  unfold [ident glue_dist] [],
-  have [] [":", expr «expr ≤ »(«expr⨅ , »((p), «expr + »(dist x (Φ p), dist z (Ψ p))), «expr + »(dist x y, «expr⨅ , »((p), «expr + »(dist y (Φ p), dist z (Ψ p)))))] [],
-  { have [] [":", expr «expr = »(«expr + »(dist x y, «expr⨅ , »((p), «expr + »(dist y (Φ p), dist z (Ψ p)))), infi «expr ∘ »(λ
-       t, «expr + »(dist x y, t), λ p, «expr + »(dist y (Φ p), dist z (Ψ p))))] [],
-    { refine [expr map_cinfi_of_continuous_at_of_monotone (continuous_at_const.add continuous_at_id) _ (B _ _)],
-      intros [ident x, ident y, ident hx],
-      simpa [] [] [] [] [] [] },
-    rw ["[", expr this, ",", expr comp, "]"] [],
-    refine [expr cinfi_le_cinfi (B _ _) (λ p, _)],
-    calc
-      «expr ≤ »(«expr + »(dist x (Φ p), dist z (Ψ p)), «expr + »(«expr + »(dist x y, dist y (Φ p)), dist z (Ψ p))) : add_le_add (dist_triangle _ _ _) (le_refl _)
-      «expr = »(..., «expr + »(dist x y, «expr + »(dist y (Φ p), dist z (Ψ p)))) : by ring [] },
-  linarith [] [] []
-end
-| inl x, inr y, inr z := begin
-  have [ident B] [":", expr ∀
-   a
-   b, bdd_below (range (λ
-     p : Z, «expr + »(dist a (Φ p), dist b (Ψ p))))] [":=", expr λ
-   a b, ⟨0, forall_range_iff.2 (λ p, add_nonneg dist_nonneg dist_nonneg)⟩],
-  unfold [ident glue_dist] [],
-  have [] [":", expr «expr ≤ »(«expr⨅ , »((p), «expr + »(dist x (Φ p), dist z (Ψ p))), «expr + »(«expr⨅ , »((p), «expr + »(dist x (Φ p), dist y (Ψ p))), dist y z))] [],
-  { have [] [":", expr «expr = »(«expr + »(«expr⨅ , »((p), «expr + »(dist x (Φ p), dist y (Ψ p))), dist y z), infi «expr ∘ »(λ
-       t, «expr + »(t, dist y z), λ p, «expr + »(dist x (Φ p), dist y (Ψ p))))] [],
-    { refine [expr map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ (B _ _)],
-      intros [ident x, ident y, ident hx],
-      simpa [] [] [] [] [] [] },
-    rw ["[", expr this, ",", expr comp, "]"] [],
-    refine [expr cinfi_le_cinfi (B _ _) (λ p, _)],
-    calc
-      «expr ≤ »(«expr + »(dist x (Φ p), dist z (Ψ p)), «expr + »(dist x (Φ p), «expr + »(dist y z, dist y (Ψ p)))) : add_le_add (le_refl _) (dist_triangle_left _ _ _)
-      «expr = »(..., «expr + »(«expr + »(dist x (Φ p), dist y (Ψ p)), dist y z)) : by ring [] },
-  linarith [] [] []
-end
-| inl x, inr y, inl z := «expr $ »(le_of_forall_pos_le_add, λ δ δpos, begin
-   obtain ["⟨", ident p, ",", ident hp, "⟩", ":", expr «expr∃ , »((p), «expr < »(«expr + »(dist x (Φ p), dist y (Ψ p)), «expr + »(«expr⨅ , »((p), «expr + »(dist x (Φ p), dist y (Ψ p))), «expr / »(δ, 2))))],
-   from [expr exists_lt_of_cinfi_lt (by linarith [] [] [])],
-   obtain ["⟨", ident q, ",", ident hq, "⟩", ":", expr «expr∃ , »((q), «expr < »(«expr + »(dist z (Φ q), dist y (Ψ q)), «expr + »(«expr⨅ , »((p), «expr + »(dist z (Φ p), dist y (Ψ p))), «expr / »(δ, 2))))],
-   from [expr exists_lt_of_cinfi_lt (by linarith [] [] [])],
-   have [] [":", expr «expr ≤ »(dist (Φ p) (Φ q), «expr + »(dist (Ψ p) (Ψ q), «expr * »(2, ε)))] [],
-   { have [] [] [":=", expr le_trans (le_abs_self _) (H p q)],
-     by linarith [] [] [] },
-   calc
-     «expr ≤ »(dist x z, «expr + »(«expr + »(dist x (Φ p), dist (Φ p) (Φ q)), dist (Φ q) z)) : dist_triangle4 _ _ _ _
-     «expr ≤ »(..., «expr + »(«expr + »(«expr + »(dist x (Φ p), dist (Ψ p) (Ψ q)), dist z (Φ q)), «expr * »(2, ε))) : by rw ["[", expr dist_comm z, "]"] []; linarith [] [] []
-     «expr ≤ »(..., «expr + »(«expr + »(«expr + »(dist x (Φ p), «expr + »(dist y (Ψ p), dist y (Ψ q))), dist z (Φ q)), «expr * »(2, ε))) : add_le_add (add_le_add (add_le_add (le_refl _) (dist_triangle_left _ _ _)) le_rfl) le_rfl
-     «expr ≤ »(..., «expr + »(«expr + »(«expr + »(«expr⨅ , »((p), «expr + »(dist x (Φ p), dist y (Ψ p))), ε), «expr + »(«expr⨅ , »((p), «expr + »(dist z (Φ p), dist y (Ψ p))), ε)), δ)) : by linarith [] [] []
- end)
-| inr x, inl y, inr z := «expr $ »(le_of_forall_pos_le_add, λ δ δpos, begin
-   obtain ["⟨", ident p, ",", ident hp, "⟩", ":", expr «expr∃ , »((p), «expr < »(«expr + »(dist y (Φ p), dist x (Ψ p)), «expr + »(«expr⨅ , »((p), «expr + »(dist y (Φ p), dist x (Ψ p))), «expr / »(δ, 2))))],
-   from [expr exists_lt_of_cinfi_lt (by linarith [] [] [])],
-   obtain ["⟨", ident q, ",", ident hq, "⟩", ":", expr «expr∃ , »((q), «expr < »(«expr + »(dist y (Φ q), dist z (Ψ q)), «expr + »(«expr⨅ , »((p), «expr + »(dist y (Φ p), dist z (Ψ p))), «expr / »(δ, 2))))],
-   from [expr exists_lt_of_cinfi_lt (by linarith [] [] [])],
-   have [] [":", expr «expr ≤ »(dist (Ψ p) (Ψ q), «expr + »(dist (Φ p) (Φ q), «expr * »(2, ε)))] [],
-   { have [] [] [":=", expr le_trans (neg_le_abs_self _) (H p q)],
-     by linarith [] [] [] },
-   calc
-     «expr ≤ »(dist x z, «expr + »(«expr + »(dist x (Ψ p), dist (Ψ p) (Ψ q)), dist (Ψ q) z)) : dist_triangle4 _ _ _ _
-     «expr ≤ »(..., «expr + »(«expr + »(«expr + »(dist x (Ψ p), dist (Φ p) (Φ q)), dist z (Ψ q)), «expr * »(2, ε))) : by rw ["[", expr dist_comm z, "]"] []; linarith [] [] []
-     «expr ≤ »(..., «expr + »(«expr + »(«expr + »(dist x (Ψ p), «expr + »(dist y (Φ p), dist y (Φ q))), dist z (Ψ q)), «expr * »(2, ε))) : add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl
-     «expr ≤ »(..., «expr + »(«expr + »(«expr + »(«expr⨅ , »((p), «expr + »(dist y (Φ p), dist x (Ψ p))), ε), «expr + »(«expr⨅ , »((p), «expr + »(dist y (Φ p), dist z (Ψ p))), ε)), δ)) : by linarith [] [] []
- end)
+private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
+  (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2*ε) :
+  ∀ x y z, glue_dist Φ Ψ ε x z ≤ glue_dist Φ Ψ ε x y+glue_dist Φ Ψ ε y z
+| inl x, inl y, inl z => dist_triangle _ _ _
+| inr x, inr y, inr z => dist_triangle _ _ _
+| inr x, inl y, inl z =>
+  by 
+    have B : ∀ a b, BddBelow (range fun p : Z => dist a (Φ p)+dist b (Ψ p)) :=
+      fun a b => ⟨0, forall_range_iff.2 fun p => add_nonneg dist_nonneg dist_nonneg⟩
+    unfold glue_dist 
+    have  : (⨅ p, dist z (Φ p)+dist x (Ψ p)) ≤ (⨅ p, dist y (Φ p)+dist x (Ψ p))+dist y z
+    ·
+      have  :
+        ((⨅ p, dist y (Φ p)+dist x (Ψ p))+dist y z) = infi ((fun t => t+dist y z) ∘ fun p => dist y (Φ p)+dist x (Ψ p))
+      ·
+        refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ (B _ _)
+        intro x y hx 
+        simpa 
+      rw [this, comp]
+      refine' cinfi_le_cinfi (B _ _) fun p => _ 
+      calc (dist z (Φ p)+dist x (Ψ p)) ≤ (dist y z+dist y (Φ p))+dist x (Ψ p) :=
+        add_le_add (dist_triangle_left _ _ _) (le_reflₓ _)_ = (dist y (Φ p)+dist x (Ψ p))+dist y z :=
+        by 
+          ring 
+    linarith
+| inr x, inr y, inl z =>
+  by 
+    have B : ∀ a b, BddBelow (range fun p : Z => dist a (Φ p)+dist b (Ψ p)) :=
+      fun a b => ⟨0, forall_range_iff.2 fun p => add_nonneg dist_nonneg dist_nonneg⟩
+    unfold glue_dist 
+    have  : (⨅ p, dist z (Φ p)+dist x (Ψ p)) ≤ dist x y+⨅ p, dist z (Φ p)+dist y (Ψ p)
+    ·
+      have  :
+        (dist x y+⨅ p, dist z (Φ p)+dist y (Ψ p)) = infi ((fun t => dist x y+t) ∘ fun p => dist z (Φ p)+dist y (Ψ p))
+      ·
+        refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_const.add continuous_at_id) _ (B _ _)
+        intro x y hx 
+        simpa 
+      rw [this, comp]
+      refine' cinfi_le_cinfi (B _ _) fun p => _ 
+      calc (dist z (Φ p)+dist x (Ψ p)) ≤ dist z (Φ p)+dist x y+dist y (Ψ p) :=
+        add_le_add (le_reflₓ _) (dist_triangle _ _ _)_ = dist x y+dist z (Φ p)+dist y (Ψ p) :=
+        by 
+          ring 
+    linarith
+| inl x, inl y, inr z =>
+  by 
+    have B : ∀ a b, BddBelow (range fun p : Z => dist a (Φ p)+dist b (Ψ p)) :=
+      fun a b => ⟨0, forall_range_iff.2 fun p => add_nonneg dist_nonneg dist_nonneg⟩
+    unfold glue_dist 
+    have  : (⨅ p, dist x (Φ p)+dist z (Ψ p)) ≤ dist x y+⨅ p, dist y (Φ p)+dist z (Ψ p)
+    ·
+      have  :
+        (dist x y+⨅ p, dist y (Φ p)+dist z (Ψ p)) = infi ((fun t => dist x y+t) ∘ fun p => dist y (Φ p)+dist z (Ψ p))
+      ·
+        refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_const.add continuous_at_id) _ (B _ _)
+        intro x y hx 
+        simpa 
+      rw [this, comp]
+      refine' cinfi_le_cinfi (B _ _) fun p => _ 
+      calc (dist x (Φ p)+dist z (Ψ p)) ≤ (dist x y+dist y (Φ p))+dist z (Ψ p) :=
+        add_le_add (dist_triangle _ _ _) (le_reflₓ _)_ = dist x y+dist y (Φ p)+dist z (Ψ p) :=
+        by 
+          ring 
+    linarith
+| inl x, inr y, inr z =>
+  by 
+    have B : ∀ a b, BddBelow (range fun p : Z => dist a (Φ p)+dist b (Ψ p)) :=
+      fun a b => ⟨0, forall_range_iff.2 fun p => add_nonneg dist_nonneg dist_nonneg⟩
+    unfold glue_dist 
+    have  : (⨅ p, dist x (Φ p)+dist z (Ψ p)) ≤ (⨅ p, dist x (Φ p)+dist y (Ψ p))+dist y z
+    ·
+      have  :
+        ((⨅ p, dist x (Φ p)+dist y (Ψ p))+dist y z) = infi ((fun t => t+dist y z) ∘ fun p => dist x (Φ p)+dist y (Ψ p))
+      ·
+        refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ (B _ _)
+        intro x y hx 
+        simpa 
+      rw [this, comp]
+      refine' cinfi_le_cinfi (B _ _) fun p => _ 
+      calc (dist x (Φ p)+dist z (Ψ p)) ≤ dist x (Φ p)+dist y z+dist y (Ψ p) :=
+        add_le_add (le_reflₓ _) (dist_triangle_left _ _ _)_ = (dist x (Φ p)+dist y (Ψ p))+dist y z :=
+        by 
+          ring 
+    linarith
+| inl x, inr y, inl z =>
+  le_of_forall_pos_le_add$
+    fun δ δpos =>
+      by 
+        obtain ⟨p, hp⟩ : ∃ p, (dist x (Φ p)+dist y (Ψ p)) < (⨅ p, dist x (Φ p)+dist y (Ψ p))+δ / 2 
+        exact
+          exists_lt_of_cinfi_lt
+            (by 
+              linarith)
+        obtain ⟨q, hq⟩ : ∃ q, (dist z (Φ q)+dist y (Ψ q)) < (⨅ p, dist z (Φ p)+dist y (Ψ p))+δ / 2 
+        exact
+          exists_lt_of_cinfi_lt
+            (by 
+              linarith)
+        have  : dist (Φ p) (Φ q) ≤ dist (Ψ p) (Ψ q)+2*ε
+        ·
+          have  := le_transₓ (le_abs_self _) (H p q)
+          ·
+            linarith 
+        calc dist x z ≤ (dist x (Φ p)+dist (Φ p) (Φ q))+dist (Φ q) z :=
+          dist_triangle4 _ _ _ _ _ ≤ ((dist x (Φ p)+dist (Ψ p) (Ψ q))+dist z (Φ q))+2*ε :=
+          by 
+            rw [dist_comm z] <;> linarith _ ≤ ((dist x (Φ p)+dist y (Ψ p)+dist y (Ψ q))+dist z (Φ q))+2*ε :=
+          add_le_add (add_le_add (add_le_add (le_reflₓ _) (dist_triangle_left _ _ _)) le_rfl)
+            le_rfl _ ≤ (((⨅ p, dist x (Φ p)+dist y (Ψ p))+ε)+(⨅ p, dist z (Φ p)+dist y (Ψ p))+ε)+δ :=
+          by 
+            linarith
+| inr x, inl y, inr z =>
+  le_of_forall_pos_le_add$
+    fun δ δpos =>
+      by 
+        obtain ⟨p, hp⟩ : ∃ p, (dist y (Φ p)+dist x (Ψ p)) < (⨅ p, dist y (Φ p)+dist x (Ψ p))+δ / 2 
+        exact
+          exists_lt_of_cinfi_lt
+            (by 
+              linarith)
+        obtain ⟨q, hq⟩ : ∃ q, (dist y (Φ q)+dist z (Ψ q)) < (⨅ p, dist y (Φ p)+dist z (Ψ p))+δ / 2 
+        exact
+          exists_lt_of_cinfi_lt
+            (by 
+              linarith)
+        have  : dist (Ψ p) (Ψ q) ≤ dist (Φ p) (Φ q)+2*ε
+        ·
+          have  := le_transₓ (neg_le_abs_self _) (H p q)
+          ·
+            linarith 
+        calc dist x z ≤ (dist x (Ψ p)+dist (Ψ p) (Ψ q))+dist (Ψ q) z :=
+          dist_triangle4 _ _ _ _ _ ≤ ((dist x (Ψ p)+dist (Φ p) (Φ q))+dist z (Ψ q))+2*ε :=
+          by 
+            rw [dist_comm z] <;> linarith _ ≤ ((dist x (Ψ p)+dist y (Φ p)+dist y (Φ q))+dist z (Ψ q))+2*ε :=
+          add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl)
+            le_rfl _ ≤ (((⨅ p, dist y (Φ p)+dist x (Ψ p))+ε)+(⨅ p, dist y (Φ p)+dist z (Ψ p))+ε)+δ :=
+          by 
+            linarith
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem glue_eq_of_dist_eq_zero
-(Φ : Z → X)
-(Ψ : Z → Y)
-(ε : exprℝ())
-(ε0 : «expr < »(0, ε)) : ∀ p q : «expr ⊕ »(X, Y), «expr = »(glue_dist Φ Ψ ε p q, 0) → «expr = »(p, q)
-| inl x, inl y, h := by rw [expr eq_of_dist_eq_zero h] []
-| inl x, inr y, h := begin
-  have [] [":", expr «expr ≤ »(0, «expr⨅ , »((p), «expr + »(dist x (Φ p), dist y (Ψ p))))] [":=", expr le_cinfi (λ
-    p, by simpa [] [] [] [] [] ["using", expr add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)])],
-  have [] [":", expr «expr ≤ »(«expr + »(0, ε), glue_dist Φ Ψ ε (inl x) (inr y))] [":=", expr add_le_add this (le_refl ε)],
-  exfalso,
-  linarith [] [] []
-end
-| inr x, inl y, h := begin
-  have [] [":", expr «expr ≤ »(0, «expr⨅ , »((p), «expr + »(dist y (Φ p), dist x (Ψ p))))] [":=", expr le_cinfi (λ
-    p, by simpa [] [] [] ["[", expr add_comm, "]"] [] ["using", expr add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)])],
-  have [] [":", expr «expr ≤ »(«expr + »(0, ε), glue_dist Φ Ψ ε (inr x) (inl y))] [":=", expr add_le_add this (le_refl ε)],
-  exfalso,
-  linarith [] [] []
-end
-| inr x, inr y, h := by rw [expr eq_of_dist_eq_zero h] []
+private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε) :
+  ∀ p q : Sum X Y, glue_dist Φ Ψ ε p q = 0 → p = q
+| inl x, inl y, h =>
+  by 
+    rw [eq_of_dist_eq_zero h]
+| inl x, inr y, h =>
+  by 
+    have  : 0 ≤ ⨅ p, dist x (Φ p)+dist y (Ψ p) :=
+      le_cinfi
+        fun p =>
+          by 
+            simpa using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
+    have  : (0+ε) ≤ glue_dist Φ Ψ ε (inl x) (inr y) := add_le_add this (le_reflₓ ε)
+    exfalso 
+    linarith
+| inr x, inl y, h =>
+  by 
+    have  : 0 ≤ ⨅ p, dist y (Φ p)+dist x (Ψ p) :=
+      le_cinfi
+        fun p =>
+          by 
+            simpa [add_commₓ] using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
+    have  : (0+ε) ≤ glue_dist Φ Ψ ε (inr x) (inl y) := add_le_add this (le_reflₓ ε)
+    exfalso 
+    linarith
+| inr x, inr y, h =>
+  by 
+    rw [eq_of_dist_eq_zero h]
 
 /-- Given two maps `Φ` and `Ψ` intro metric spaces `X` and `Y` such that the distances between
 `Φ p` and `Φ q`, and between `Ψ p` and `Ψ q`, coincide up to `2 ε` where `ε > 0`, one can almost
@@ -297,10 +318,11 @@ theorem sum.one_dist_le' {x : X} {y : Y} : 1 ≤ sum.dist (inr y) (inl x) :=
   by 
     rw [sum.dist_comm] <;> exact sum.one_dist_le
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » 0)
 private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
   s ∈ 𝓤 (Sum X Y) ↔ ∃ (ε : _)(_ : ε > 0), ∀ a b, sum.dist a b < ε → (a, b) ∈ s :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨hsX, hsY⟩
       rcases mem_uniformity_dist.1 hsX with ⟨εX, εX0, hX⟩
@@ -317,7 +339,7 @@ private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
         exact hY (lt_of_lt_of_leₓ h (le_transₓ (min_le_leftₓ _ _) (min_le_rightₓ _ _)))
     ·
       rintro ⟨ε, ε0, H⟩
-      split  <;>
+      constructor <;>
         rw [Filter.mem_sets, Filter.mem_map, mem_uniformity_dist] <;>
           exact
             ⟨ε, ε0,
@@ -394,15 +416,15 @@ def glue_space (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Type _ :=
 instance metric_space_glue_space (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : MetricSpace (glue_space hΦ hΨ) :=
   @metricSpaceQuot _ (glue_premetric hΦ hΨ)
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The canonical map from `X` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
-def to_glue_l (hΦ : isometry Φ) (hΨ : isometry Ψ) (x : X) : glue_space hΦ hΨ :=
-by letI [] [":", expr pseudo_metric_space «expr ⊕ »(X, Y)] [":=", expr glue_premetric hΦ hΨ]; exact [expr «expr⟦ ⟧»(inl x)]
+def to_glue_l (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (x : X) : glue_space hΦ hΨ :=
+  by 
+    let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inl x⟧
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The canonical map from `Y` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
-def to_glue_r (hΦ : isometry Φ) (hΨ : isometry Ψ) (y : Y) : glue_space hΦ hΨ :=
-by letI [] [":", expr pseudo_metric_space «expr ⊕ »(X, Y)] [":=", expr glue_premetric hΦ hΨ]; exact [expr «expr⟦ ⟧»(inr y)]
+def to_glue_r (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (y : Y) : glue_space hΦ hΨ :=
+  by 
+    let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inr y⟧
 
 instance inhabited_left (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] : Inhabited (glue_space hΦ hΨ) :=
   ⟨to_glue_l _ _ (default _)⟩
@@ -410,16 +432,12 @@ instance inhabited_left (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] : 
 instance inhabited_right (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] : Inhabited (glue_space hΦ hΨ) :=
   ⟨to_glue_r _ _ (default _)⟩
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_glue_commute
-(hΦ : isometry Φ)
-(hΨ : isometry Ψ) : «expr = »(«expr ∘ »(to_glue_l hΦ hΨ, Φ), «expr ∘ »(to_glue_r hΦ hΨ, Ψ)) :=
-begin
-  letI [] [":", expr pseudo_metric_space «expr ⊕ »(X, Y)] [":=", expr glue_premetric hΦ hΨ],
-  funext [],
-  simp [] [] ["only"] ["[", expr comp, ",", expr to_glue_l, ",", expr to_glue_r, ",", expr quotient.eq, "]"] [] [],
-  exact [expr glue_dist_glued_points Φ Ψ 0 x]
-end
+theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : (to_glue_l hΦ hΨ ∘ Φ) = (to_glue_r hΦ hΨ ∘ Ψ) :=
+  by 
+    let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ 
+    funext 
+    simp only [comp, to_glue_l, to_glue_r, Quotientₓ.eq]
+    exact glue_dist_glued_points Φ Ψ 0 x
 
 theorem to_glue_l_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (to_glue_l hΦ hΨ) :=
   isometry_emetric_iff_metric.2$ fun _ _ => rfl
@@ -436,61 +454,74 @@ open Nat
 variable {X : ℕ → Type u} [∀ n, MetricSpace (X n)] {f : ∀ n, X n → X (n+1)}
 
 /-- Predistance on the disjoint union `Σ n, X n`. -/
-def inductive_limit_dist (f : ∀ n, X n → X (n+1)) (x y : Σn, X n) : ℝ :=
+def inductive_limit_dist (f : ∀ n, X n → X (n+1)) (x y : Σ n, X n) : ℝ :=
   dist (le_rec_on (le_max_leftₓ x.1 y.1) f x.2 : X (max x.1 y.1))
     (le_rec_on (le_max_rightₓ x.1 y.1) f y.2 : X (max x.1 y.1))
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The predistance on the disjoint union `Σ n, X n` can be computed in any `X k` for large
 enough `k`. -/
-theorem inductive_limit_dist_eq_dist
-(I : ∀ n, isometry (f n))
-(x y : «exprΣ , »((n), X n))
-(m : exprℕ()) : ∀
-hx : «expr ≤ »(x.1, m), ∀
-hy : «expr ≤ »(y.1, m), «expr = »(inductive_limit_dist f x y, dist (le_rec_on hx f x.2 : X m) (le_rec_on hy f y.2 : X m)) :=
-begin
-  induction [expr m] [] ["with", ident m, ident hm] [],
-  { assume [binders (hx hy)],
-    have [ident A] [":", expr «expr = »(max x.1 y.1, 0)] [],
-    { rw ["[", expr nonpos_iff_eq_zero.1 hx, ",", expr nonpos_iff_eq_zero.1 hy, "]"] [],
-      simp [] [] [] [] [] [] },
-    unfold [ident inductive_limit_dist] [],
-    congr; simp [] [] ["only"] ["[", expr A, "]"] [] [] },
-  { assume [binders (hx hy)],
-    by_cases [expr h, ":", expr «expr = »(max x.1 y.1, m.succ)],
-    { unfold [ident inductive_limit_dist] [],
-      congr; simp [] [] ["only"] ["[", expr h, "]"] [] [] },
-    { have [] [":", expr «expr ≤ »(max x.1 y.1, succ m)] [":=", expr by simp [] [] [] ["[", expr hx, ",", expr hy, "]"] [] []],
-      have [] [":", expr «expr ≤ »(max x.1 y.1, m)] [":=", expr by simpa [] [] [] ["[", expr h, "]"] [] ["using", expr of_le_succ this]],
-      have [ident xm] [":", expr «expr ≤ »(x.1, m)] [":=", expr le_trans (le_max_left _ _) this],
-      have [ident ym] [":", expr «expr ≤ »(y.1, m)] [":=", expr le_trans (le_max_right _ _) this],
-      rw ["[", expr le_rec_on_succ xm, ",", expr le_rec_on_succ ym, ",", expr (I m).dist_eq, "]"] [],
-      exact [expr hm xm ym] } }
-end
+theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σ n, X n) (m : ℕ) :
+  ∀ hx : x.1 ≤ m,
+    ∀ hy : y.1 ≤ m, inductive_limit_dist f x y = dist (le_rec_on hx f x.2 : X m) (le_rec_on hy f y.2 : X m) :=
+  by 
+    induction' m with m hm
+    ·
+      intro hx hy 
+      have A : max x.1 y.1 = 0
+      ·
+        rw [nonpos_iff_eq_zero.1 hx, nonpos_iff_eq_zero.1 hy]
+        simp 
+      unfold inductive_limit_dist 
+      congr <;> simp only [A]
+    ·
+      intro hx hy 
+      byCases' h : max x.1 y.1 = m.succ
+      ·
+        unfold inductive_limit_dist 
+        congr <;> simp only [h]
+      ·
+        have  : max x.1 y.1 ≤ succ m :=
+          by 
+            simp [hx, hy]
+        have  : max x.1 y.1 ≤ m :=
+          by 
+            simpa [h] using of_le_succ this 
+        have xm : x.1 ≤ m := le_transₓ (le_max_leftₓ _ _) this 
+        have ym : y.1 ≤ m := le_transₓ (le_max_rightₓ _ _) this 
+        rw [le_rec_on_succ xm, le_rec_on_succ ym, (I m).dist_eq]
+        exact hm xm ym
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Premetric space structure on `Σ n, X n`.-/
-def inductive_premetric (I : ∀ n, isometry (f n)) : pseudo_metric_space «exprΣ , »((n), X n) :=
-{ dist := inductive_limit_dist f,
-  dist_self := λ x, by simp [] [] [] ["[", expr dist, ",", expr inductive_limit_dist, "]"] [] [],
-  dist_comm := λ x y, begin
-    let [ident m] [] [":=", expr max x.1 y.1],
-    have [ident hx] [":", expr «expr ≤ »(x.1, m)] [":=", expr le_max_left _ _],
-    have [ident hy] [":", expr «expr ≤ »(y.1, m)] [":=", expr le_max_right _ _],
-    unfold [ident dist] [],
-    rw ["[", expr inductive_limit_dist_eq_dist I x y m hx hy, ",", expr inductive_limit_dist_eq_dist I y x m hy hx, ",", expr dist_comm, "]"] []
-  end,
-  dist_triangle := λ x y z, begin
-    let [ident m] [] [":=", expr max (max x.1 y.1) z.1],
-    have [ident hx] [":", expr «expr ≤ »(x.1, m)] [":=", expr le_trans (le_max_left _ _) (le_max_left _ _)],
-    have [ident hy] [":", expr «expr ≤ »(y.1, m)] [":=", expr le_trans (le_max_right _ _) (le_max_left _ _)],
-    have [ident hz] [":", expr «expr ≤ »(z.1, m)] [":=", expr le_max_right _ _],
-    calc
-      «expr = »(inductive_limit_dist f x z, dist (le_rec_on hx f x.2 : X m) (le_rec_on hz f z.2 : X m)) : inductive_limit_dist_eq_dist I x z m hx hz
-      «expr ≤ »(..., «expr + »(dist (le_rec_on hx f x.2 : X m) (le_rec_on hy f y.2 : X m), dist (le_rec_on hy f y.2 : X m) (le_rec_on hz f z.2 : X m))) : dist_triangle _ _ _
-      «expr = »(..., «expr + »(inductive_limit_dist f x y, inductive_limit_dist f y z)) : by rw ["[", expr inductive_limit_dist_eq_dist I x y m hx hy, ",", expr inductive_limit_dist_eq_dist I y z m hy hz, "]"] []
-  end }
+def inductive_premetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σ n, X n) :=
+  { dist := inductive_limit_dist f,
+    dist_self :=
+      fun x =>
+        by 
+          simp [dist, inductive_limit_dist],
+    dist_comm :=
+      fun x y =>
+        by 
+          let m := max x.1 y.1
+          have hx : x.1 ≤ m := le_max_leftₓ _ _ 
+          have hy : y.1 ≤ m := le_max_rightₓ _ _ 
+          unfold dist 
+          rw [inductive_limit_dist_eq_dist I x y m hx hy, inductive_limit_dist_eq_dist I y x m hy hx, dist_comm],
+    dist_triangle :=
+      fun x y z =>
+        by 
+          let m := max (max x.1 y.1) z.1
+          have hx : x.1 ≤ m := le_transₓ (le_max_leftₓ _ _) (le_max_leftₓ _ _)
+          have hy : y.1 ≤ m := le_transₓ (le_max_rightₓ _ _) (le_max_leftₓ _ _)
+          have hz : z.1 ≤ m := le_max_rightₓ _ _ 
+          calc inductive_limit_dist f x z = dist (le_rec_on hx f x.2 : X m) (le_rec_on hz f z.2 : X m) :=
+            inductive_limit_dist_eq_dist I x z m hx
+              hz
+                _ ≤
+              dist (le_rec_on hx f x.2 : X m)
+                  (le_rec_on hy f y.2 : X m)+dist (le_rec_on hy f y.2 : X m) (le_rec_on hz f z.2 : X m) :=
+            dist_triangle _ _ _ _ = inductive_limit_dist f x y+inductive_limit_dist f y z :=
+            by 
+              rw [inductive_limit_dist_eq_dist I x y m hx hy, inductive_limit_dist_eq_dist I y z m hy hz] }
 
 attribute [local instance] inductive_premetric PseudoMetric.distSetoid
 
@@ -502,10 +533,10 @@ def inductive_limit (I : ∀ n, Isometry (f n)) : Type _ :=
 instance metric_space_inductive_limit (I : ∀ n, Isometry (f n)) : MetricSpace (inductive_limit I) :=
   @metricSpaceQuot _ (inductive_premetric I)
 
--- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Mapping each `X n` to the inductive limit. -/
-def to_inductive_limit (I : ∀ n, isometry (f n)) (n : exprℕ()) (x : X n) : metric.inductive_limit I :=
-by letI [] [":", expr pseudo_metric_space «exprΣ , »((n), X n)] [":=", expr inductive_premetric I]; exact [expr «expr⟦ ⟧»(sigma.mk n x)]
+def to_inductive_limit (I : ∀ n, Isometry (f n)) (n : ℕ) (x : X n) : Metric.InductiveLimit I :=
+  by 
+    let this' : PseudoMetricSpace (Σ n, X n) := inductive_premetric I <;> exact ⟦Sigma.mk n x⟧
 
 instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (inductive_limit I) :=
   ⟨to_inductive_limit _ 0 (default _)⟩

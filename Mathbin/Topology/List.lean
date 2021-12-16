@@ -16,40 +16,48 @@ variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 instance : TopologicalSpace (List α) :=
   TopologicalSpace.mkOfNhds (traverse nhds)
 
--- error in Topology.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nhds_list (as : list α) : «expr = »(expr𝓝() as, traverse expr𝓝() as) :=
-begin
-  refine [expr nhds_mk_of_nhds _ _ _ _],
-  { assume [binders (l)],
-    induction [expr l] [] [] [],
-    case [ident list.nil] { exact [expr le_refl _] },
-    case [ident list.cons, ":", ident a, ident l, ident ih] { suffices [] [":", expr «expr ≤ »(«expr <*> »(«expr <$> »(list.cons, pure a), pure l), «expr <*> »(«expr <$> »(list.cons, expr𝓝() a), traverse expr𝓝() l))],
-      { simpa [] [] ["only"] ["[", "]"] ["with", ident functor_norm] ["using", expr this] },
-      exact [expr filter.seq_mono «expr $ »(filter.map_mono, pure_le_nhds a) ih] } },
-  { assume [binders (l s hs)],
-    rcases [expr (mem_traverse_iff _ _).1 hs, "with", "⟨", ident u, ",", ident hu, ",", ident hus, "⟩"],
-    clear [ident as, ident hs],
-    have [] [":", expr «expr∃ , »((v : list (set α)), «expr ∧ »(l.forall₂ (λ
-        a s, «expr ∧ »(is_open s, «expr ∈ »(a, s))) v, «expr ⊆ »(sequence v, s)))] [],
-    { induction [expr hu] [] [] ["generalizing", ident s],
-      case [ident list.forall₂.nil, ":", ident hs, ident this] { existsi ["[", "]"],
-        simpa [] [] ["only"] ["[", expr list.forall₂_nil_left_iff, ",", expr exists_eq_left, "]"] [] [] },
-      case [ident list.forall₂.cons, ":", ident a, ident s, ident as, ident ss, ident ht, ident h, ident ih, ident t, ident hts] { rcases [expr mem_nhds_iff.1 ht, "with", "⟨", ident u, ",", ident hut, ",", ident hu, "⟩"],
-        rcases [expr ih (subset.refl _), "with", "⟨", ident v, ",", ident hv, ",", ident hvss, "⟩"],
-        exact [expr ⟨[«expr :: »/«expr :: »/«expr :: »](u, v), list.forall₂.cons hu hv, subset.trans (set.seq_mono (set.image_subset _ hut) hvss) hts⟩] } },
-    rcases [expr this, "with", "⟨", ident v, ",", ident hv, ",", ident hvs, "⟩"],
-    refine [expr ⟨sequence v, mem_traverse _ _ _, hvs, _⟩],
-    { exact [expr hv.imp (assume (a s) ⟨hs, ha⟩, is_open.mem_nhds hs ha)] },
-    { assume [binders (u hu)],
-      have [ident hu] [] [":=", expr (list.mem_traverse _ _).1 hu],
-      have [] [":", expr list.forall₂ (λ a s, «expr ∧ »(is_open s, «expr ∈ »(a, s))) u v] [],
-      { refine [expr list.forall₂.flip _],
-        replace [ident hv] [] [":=", expr hv.flip],
-        simp [] [] ["only"] ["[", expr list.forall₂_and_left, ",", expr flip, "]"] [] ["at", "⊢", ident hv],
-        exact [expr ⟨hv.1, hu.flip⟩] },
-      refine [expr mem_of_superset _ hvs],
-      exact [expr mem_traverse _ _ «expr $ »(this.imp, assume (a s) ⟨hs, ha⟩, is_open.mem_nhds hs ha)] } }
-end
+theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as :=
+  by 
+    refine' nhds_mk_of_nhds _ _ _ _
+    ·
+      intro l 
+      induction l 
+      case list.nil => 
+        exact le_reflₓ _ 
+      case list.cons a l ih => 
+        suffices  : ((List.cons <$> pure a)<*>pure l) ≤ (List.cons <$> 𝓝 a)<*>traverse 𝓝 l
+        ·
+          simpa only with functor_norm using this 
+        exact Filter.seq_mono (Filter.map_mono$ pure_le_nhds a) ih
+    ·
+      intro l s hs 
+      rcases(mem_traverse_iff _ _).1 hs with ⟨u, hu, hus⟩
+      clear as hs 
+      have  : ∃ v : List (Set α), l.forall₂ (fun a s => IsOpen s ∧ a ∈ s) v ∧ sequence v ⊆ s
+      ·
+        induction hu generalizing s 
+        case list.forall₂.nil hs this => 
+          exists 
+          simpa only [List.forall₂_nil_left_iff, exists_eq_left]
+        case list.forall₂.cons a s as ss ht h ih t hts => 
+          rcases mem_nhds_iff.1 ht with ⟨u, hut, hu⟩
+          rcases ih (subset.refl _) with ⟨v, hv, hvss⟩
+          exact ⟨u :: v, List.Forall₂.cons hu hv, subset.trans (Set.seq_mono (Set.image_subset _ hut) hvss) hts⟩
+      rcases this with ⟨v, hv, hvs⟩
+      refine' ⟨sequence v, mem_traverse _ _ _, hvs, _⟩
+      ·
+        exact hv.imp fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha
+      ·
+        intro u hu 
+        have hu := (List.mem_traverse _ _).1 hu 
+        have  : List.Forall₂ (fun a s => IsOpen s ∧ a ∈ s) u v
+        ·
+          refine' List.Forall₂.flip _ 
+          replace hv := hv.flip 
+          simp only [List.forall₂_and_left, flip] at hv⊢
+          exact ⟨hv.1, hu.flip⟩
+        refine' mem_of_superset _ hvs 
+        exact mem_traverse _ _ (this.imp$ fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha)
 
 @[simp]
 theorem nhds_nil : 𝓝 ([] : List α) = pure [] :=
@@ -149,17 +157,23 @@ theorem tendsto_remove_nth : ∀ {n : ℕ} {l : List α}, tendsto (fun l => remo
 theorem continuous_remove_nth {n : ℕ} : Continuous fun l : List α => remove_nth l n :=
   continuous_iff_continuous_at.mpr$ fun a => tendsto_remove_nth
 
--- error in Topology.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem tendsto_prod [monoid α] [has_continuous_mul α] {l : list α} : tendsto list.prod (expr𝓝() l) (expr𝓝() l.prod) :=
-begin
-  induction [expr l] [] ["with", ident x, ident l, ident ih] [],
-  { simp [] [] [] ["[", expr nhds_nil, ",", expr mem_of_mem_nhds, ",", expr tendsto_pure_left, "]"] [] [] { contextual := tt } },
-  simp_rw ["[", expr tendsto_cons_iff, ",", expr prod_cons, "]"] [],
-  have [] [] [":=", expr continuous_iff_continuous_at.mp continuous_mul (x, l.prod)],
-  rw ["[", expr continuous_at, ",", expr nhds_prod_eq, "]"] ["at", ident this],
-  exact [expr this.comp (tendsto_id.prod_map ih)]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ toAdditive ]
+  theorem
+    tendsto_prod
+    [ Monoidₓ α ] [ HasContinuousMul α ] { l : List α } : tendsto List.prod 𝓝 l 𝓝 l.prod
+    :=
+      by
+        induction' l with x l ih
+          ·
+            simp
+              ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+              [ nhds_nil , mem_of_mem_nhds , tendsto_pure_left ]
+          simpRw [ tendsto_cons_iff , prod_cons ]
+          have := continuous_iff_continuous_at.mp continuous_mul ( x , l.prod )
+          rw [ ContinuousAt , nhds_prod_eq ] at this
+          exact this.comp tendsto_id.prod_map ih
 
 @[toAdditive]
 theorem continuous_prod [Monoidₓ α] [HasContinuousMul α] : Continuous (Prod : List α → α) :=

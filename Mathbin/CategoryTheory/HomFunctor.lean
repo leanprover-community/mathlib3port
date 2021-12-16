@@ -18,15 +18,15 @@ variable (C : Type u) [category.{v} C]
 
 /-- `functor.hom` is the hom-pairing, sending `(X, Y)` to `X ⟶ Y`, contravariant in `X` and
 covariant in `Y`. -/
-def hom : «expr ᵒᵖ» C × C ⥤ Type v :=
+def hom : Cᵒᵖ × C ⥤ Type v :=
   { obj := fun p => unop p.1 ⟶ p.2, map := fun X Y f => fun h => f.1.unop ≫ h ≫ f.2 }
 
 @[simp]
-theorem hom_obj (X : «expr ᵒᵖ» C × C) : (hom C).obj X = (unop X.1 ⟶ X.2) :=
+theorem hom_obj (X : Cᵒᵖ × C) : (hom C).obj X = (unop X.1 ⟶ X.2) :=
   rfl
 
 @[simp]
-theorem hom_pairing_map {X Y : «expr ᵒᵖ» C × C} (f : X ⟶ Y) : (hom C).map f = fun h => f.1.unop ≫ h ≫ f.2 :=
+theorem hom_pairing_map {X Y : Cᵒᵖ × C} (f : X ⟶ Y) : (hom C).map f = fun h => f.1.unop ≫ h ≫ f.2 :=
   rfl
 
 end CategoryTheory.Functor

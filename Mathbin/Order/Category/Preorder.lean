@@ -1,6 +1,6 @@
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom 
 import Mathbin.Algebra.PunitInstances 
-import Mathbin.Order.PreorderHom
+import Mathbin.Order.Hom.Basic
 
 /-! # Category of preorders -/
 
@@ -13,11 +13,12 @@ def Preorderₓₓ :=
 
 namespace Preorderₓₓ
 
-instance : bundled_hom @PreorderHom :=
-  { toFun := @PreorderHom.toFun, id := @PreorderHom.id, comp := @PreorderHom.comp, hom_ext := @PreorderHom.ext }
+instance : bundled_hom @OrderHom :=
+  { toFun := @OrderHom.toFun, id := @OrderHom.id, comp := @OrderHom.comp, hom_ext := @OrderHom.ext }
 
--- error in Order.Category.Preorder: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Preorder
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for Preorderₓₓ
 
 instance : CoeSort Preorderₓₓ (Type _) :=
   bundled.has_coe_to_sort

@@ -41,13 +41,13 @@ noncomputable def equivShrink (α : Type v) [Small.{w} α] : α ≃ Shrink α :=
   Nonempty.some (Classical.some_spec (@Small.equiv_small α _))
 
 instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
-  Small.mk' (Equiv.refl _)
+  Small.mk' (Equivₓ.refl _)
 
 instance (priority := 100) small_max (α : Type v) : Small.{max w v} α :=
-  Small.mk' Equiv.ulift.{w}.symm
+  Small.mk' Equivₓ.ulift.{w}.symm
 
 instance small_ulift (α : Type v) : Small.{v} (Ulift.{w} α) :=
-  Small.mk' Equiv.ulift
+  Small.mk' Equivₓ.ulift
 
 theorem small_type : Small.{max (u + 1) v} (Type u) :=
   small_max.{max (u + 1) v} _
@@ -58,7 +58,7 @@ open_locale Classical
 
 theorem small_congr {α : Type _} {β : Type _} (e : α ≃ β) : Small.{w} α ↔ Small.{w} β :=
   by 
-    fsplit
+    fconstructor
     ·
       rintro ⟨S, ⟨f⟩⟩
       exact Small.mk' (e.symm.trans f)
@@ -74,17 +74,17 @@ instance small_subtype (α : Type v) [Small.{w} α] (P : α → Prop) : Small.{w
 theorem small_of_injective {α : Type _} {β : Type _} [Small.{w} β] (f : α → β) (hf : Function.Injective f) :
   Small.{w} α :=
   by 
-    rw [small_congr (Equiv.ofInjective f hf)]
+    rw [small_congr (Equivₓ.ofInjective f hf)]
     infer_instance
 
 instance (priority := 100) small_subsingleton (α : Type v) [Subsingleton α] : Small.{w} α :=
   by 
     rcases is_empty_or_nonempty α with ⟨⟩ <;> skip
     ·
-      rw [small_congr (Equiv.equivPempty α)]
+      rw [small_congr (Equivₓ.equivPempty α)]
       apply small_self
     ·
-      rw [small_congr Equiv.punitOfNonemptyOfSubsingleton]
+      rw [small_congr Equivₓ.punitOfNonemptyOfSubsingleton]
       apply small_self 
       assumption 
       assumption
@@ -97,30 +97,30 @@ to keep imports to `logic` to a minimum.
 
 instance small_Pi {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (∀ a, β a) :=
   ⟨⟨∀ a' : Shrink α, Shrink (β ((equivShrink α).symm a')),
-      ⟨Equiv.piCongr (equivShrink α)
+      ⟨Equivₓ.piCongr (equivShrink α)
           fun a =>
             by 
               simpa using equivShrink (β a)⟩⟩⟩
 
-instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (Σa, β a) :=
-  ⟨⟨Σa' : Shrink α, Shrink (β ((equivShrink α).symm a')),
-      ⟨Equiv.sigmaCongr (equivShrink α)
+instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (Σ a, β a) :=
+  ⟨⟨Σ a' : Shrink α, Shrink (β ((equivShrink α).symm a')),
+      ⟨Equivₓ.sigmaCongr (equivShrink α)
           fun a =>
             by 
               simpa using equivShrink (β a)⟩⟩⟩
 
 instance small_prod {α β} [Small.{w} α] [Small.{w} β] : Small.{w} (α × β) :=
-  ⟨⟨Shrink α × Shrink β, ⟨Equiv.prodCongr (equivShrink α) (equivShrink β)⟩⟩⟩
+  ⟨⟨Shrink α × Shrink β, ⟨Equivₓ.prodCongr (equivShrink α) (equivShrink β)⟩⟩⟩
 
 instance small_sum {α β} [Small.{w} α] [Small.{w} β] : Small.{w} (Sum α β) :=
-  ⟨⟨Sum (Shrink α) (Shrink β), ⟨Equiv.sumCongr (equivShrink α) (equivShrink β)⟩⟩⟩
+  ⟨⟨Sum (Shrink α) (Shrink β), ⟨Equivₓ.sumCongr (equivShrink α) (equivShrink β)⟩⟩⟩
 
 instance small_set {α} [Small.{w} α] : Small.{w} (Set α) :=
-  ⟨⟨Set (Shrink α), ⟨Equiv.Set.congr (equivShrink α)⟩⟩⟩
+  ⟨⟨Set (Shrink α), ⟨Equivₓ.Set.congr (equivShrink α)⟩⟩⟩
 
 theorem not_small_type : ¬Small.{u} (Type max u v)
 | ⟨⟨S, ⟨e⟩⟩⟩ =>
-  @Function.cantor_injective (Σα, e.symm α) (fun a => ⟨_, cast (e.3 _).symm a⟩)
+  @Function.cantor_injective (Σ α, e.symm α) (fun a => ⟨_, cast (e.3 _).symm a⟩)
     fun a b e => (cast_inj _).1$ eq_of_heq (Sigma.mk.inj e).2
 
 end 

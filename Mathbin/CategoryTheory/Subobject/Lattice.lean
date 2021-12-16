@@ -11,7 +11,7 @@ and the `semilattice_sup (subobject X)` instance when `[has_images C] [has_binar
 
 universe v₁ v₂ u₁ u₂
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
@@ -351,7 +351,7 @@ variable (C)
 
 /-- Sending `X : C` to `subobject X` is a contravariant functor `Cᵒᵖ ⥤ Type`. -/
 @[simps]
-def Functor [has_pullbacks C] : «expr ᵒᵖ» C ⥤ Type max u₁ v₁ :=
+def Functor [has_pullbacks C] : Cᵒᵖ ⥤ Type max u₁ v₁ :=
   { obj := fun X => subobject X.unop, map := fun X Y f => (pullback f.unop).obj, map_id' := fun X => funext pullback_id,
     map_comp' := fun X Y Z f g => funext (pullback_comp _ _) }
 
@@ -408,6 +408,7 @@ theorem inf_arrow_factors_right {B : C} (X Y : subobject B) : Y.factors (X⊓Y).
       by 
         simp ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[simp]
 theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → subobject B} (f : A ⟶ B) :
   (s.inf P).Factors f ↔ ∀ i _ : i ∈ s, (P i).Factors f :=
@@ -503,6 +504,7 @@ theorem sup_factors_of_factors_right {A B : C} {X Y : subobject B} {f : A ⟶ B}
 
 variable [has_initial C] [initial_mono_class C]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → subobject B} {f : A ⟶ B}
   (h : ∃ (i : _)(_ : i ∈ s), (P i).Factors f) : (s.sup P).Factors f :=
   by 
@@ -553,6 +555,7 @@ theorem wide_cospan_map_term {A : C} (s : Set (subobject A)) j :
   (wide_cospan s).map (wide_pullback_shape.hom.term j) = ((equivShrink (subobject A)).symm j).arrow :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » s)
 /-- Auxiliary construction of a cone for `le_Inf`. -/
 def le_Inf_cone {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : g ∈ s, f ≤ g) : cone (wide_cospan s) :=
   wide_pullback_shape.mk_cone f.arrow
@@ -566,6 +569,7 @@ def le_Inf_cone {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ :
     (by 
       tidy)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » s)
 @[simp]
 theorem le_Inf_cone_π_app_none {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : g ∈ s, f ≤ g) :
   (le_Inf_cone s f k).π.app none = f.arrow :=
@@ -605,6 +609,7 @@ When `[well_powered C]` and `[has_wide_pullbacks C]`, `subobject A` has arbitrar
 def Inf {A : C} (s : Set (subobject A)) : subobject A :=
   subobject.mk (wide_pullback_ι s)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem Inf_le {A : C} (s : Set (subobject A)) f (_ : f ∈ s) : Inf s ≤ f :=
   by 
     fapply le_of_comm
@@ -615,13 +620,14 @@ theorem Inf_le {A : C} (s : Set (subobject A)) f (_ : f ∈ s) : Inf s ≤ f :=
             _ 
       apply eq_to_hom 
       apply congr_argₓ fun X : subobject A => (X : C)
-      exact Equiv.symm_apply_apply _ _
+      exact Equivₓ.symm_apply_apply _ _
     ·
       dsimp [Inf]
       simp only [category.comp_id, category.assoc, ←underlying_iso_hom_comp_eq_mk, subobject.arrow_congr,
         congr_arg_mpr_hom_left, iso.cancel_iso_hom_left]
       convert limit.w (wide_cospan s) (wide_pullback_shape.hom.term _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » s)
 theorem le_Inf {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : g ∈ s, f ≤ g) : f ≤ Inf s :=
   by 
     fapply le_of_comm
@@ -654,6 +660,7 @@ variable [has_images C]
 def Sup {A : C} (s : Set (subobject A)) : subobject A :=
   subobject.mk (image.ι (small_coproduct_desc s))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem le_Sup {A : C} (s : Set (subobject A)) f (_ : f ∈ s) : f ≤ Sup s :=
   by 
     fapply le_of_comm
@@ -666,7 +673,7 @@ theorem le_Sup {A : C} (s : Set (subobject A)) f (_ : f ∈ s) : f ≤ Sup s :=
             ⟨equivShrink _ f,
               by 
                 simpa [Set.mem_image] using H⟩
-      exact eq_to_hom (congr_argₓ (fun X : subobject A => (X : C)) (Equiv.symm_apply_apply _ _).symm)
+      exact eq_to_hom (congr_argₓ (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
     ·
       dsimp [Sup, small_coproduct_desc]
       simp 
@@ -682,6 +689,7 @@ theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set �
       rintro ⟨a, m, rfl⟩
       simpa using m⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » s)
 theorem Sup_le {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : g ∈ s, g ≤ f) : Sup s ≤ f :=
   by 
     fapply le_of_comm

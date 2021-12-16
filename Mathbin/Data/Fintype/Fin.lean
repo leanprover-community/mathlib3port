@@ -21,7 +21,7 @@ theorem univ_filter_zero_lt {n : ℕ} :
   by 
     ext i 
     simp only [mem_filter, mem_map, mem_univ, true_andₓ, Function.Embedding.coe_fn_mk, exists_true_left]
-    split 
+    constructor
     ·
       refine' cases _ _ i
       ·
@@ -40,7 +40,7 @@ theorem univ_filter_succ_lt {n : ℕ} (j : Finₓ n) :
   by 
     ext i 
     simp only [mem_filter, mem_map, mem_univ, true_andₓ, Function.Embedding.coe_fn_mk, exists_true_left]
-    split 
+    constructor
     ·
       refine' cases _ _ i
       ·

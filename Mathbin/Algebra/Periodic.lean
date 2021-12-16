@@ -1,7 +1,8 @@
 import Mathbin.Algebra.Field.Opposite 
 import Mathbin.Algebra.Module.Basic 
 import Mathbin.Algebra.Order.Archimedean 
-import Mathbin.Data.Int.Parity
+import Mathbin.Data.Int.Parity 
+import Mathbin.GroupTheory.Subgroup.Basic
 
 /-!
 # Periodicity
@@ -200,6 +201,7 @@ theorem periodic.zsmul_eq [AddGroupₓ α] (h : periodic f c) (n : ℤ) : f (n �
 theorem periodic.int_mul_eq [Ringₓ α] (h : periodic f c) (n : ℤ) : f (n*c) = f 0 :=
   (h.int_mul n).Eq
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » set.Ico 0 c)
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ico 0 c` such that `f x = f y`. -/
 theorem periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean α] (h : periodic f c) (hc : 0 < c) x :
@@ -207,6 +209,7 @@ theorem periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean �
   let ⟨n, H, _⟩ := exists_unique_zsmul_near_of_pos' hc x
   ⟨x - n • c, H, (h.sub_zsmul_eq n).symm⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » set.Ico a «expr + »(a, c))
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ico a (a + c)` such that `f x = f y`. -/
 theorem periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] (h : periodic f c) (hc : 0 < c) x a :
@@ -214,6 +217,7 @@ theorem periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] 
   let ⟨n, H, _⟩ := exists_unique_add_zsmul_mem_Ico hc x a
   ⟨x+n • c, H, (h.zsmul n x).symm⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » set.Ioc a «expr + »(a, c))
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ioc a (a + c)` such that `f x = f y`. -/
 theorem periodic.exists_mem_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : periodic f c) (hc : 0 < c) x a :
@@ -225,6 +229,18 @@ theorem periodic_with_period_zero [AddZeroClass α] (f : α → β) : periodic f
   fun x =>
     by 
       rw [add_zeroₓ]
+
+theorem periodic.map_vadd_zmultiples [AddCommGroupₓ α] (hf : periodic f c) (a : AddSubgroup.zmultiples c) (x : α) :
+  f (a +ᵥ x) = f x :=
+  by 
+    rcases a with ⟨_, m, rfl⟩
+    simp [AddSubgroup.vadd_def, add_commₓ _ x, hf.zsmul m x]
+
+theorem periodic.map_vadd_multiples [AddCommMonoidₓ α] (hf : periodic f c) (a : AddSubmonoid.multiples c) (x : α) :
+  f (a +ᵥ x) = f x :=
+  by 
+    rcases a with ⟨_, m, rfl⟩
+    simp [AddSubmonoid.vadd_def, add_commₓ _ x, hf.nsmul m x]
 
 /-! ### Antiperiodicity -/
 
@@ -271,31 +287,29 @@ theorem antiperiodic.int_odd_mul_antiperiodic [Ringₓ α] [AddGroupₓ β] (h :
     by 
       rw [←add_assocₓ, h, h.periodic.int_mul]
 
--- error in Algebra.Periodic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem antiperiodic.nat_mul_eq_of_eq_zero
-[comm_semiring α]
-[add_group β]
-(h : antiperiodic f c)
-(hi : «expr = »(f 0, 0))
-(n : exprℕ()) : «expr = »(f «expr * »(n, c), 0) :=
-begin
-  rcases [expr nat.even_or_odd n, "with", "⟨", ident k, ",", ident rfl, "⟩", "|", "⟨", ident k, ",", ident rfl, "⟩"]; have [ident hk] [":", expr «expr = »(«expr * »((k : α), «expr * »(2, c)), «expr * »(«expr * »(2, k), c))] [":=", expr by rw ["[", expr mul_left_comm, ",", "<-", expr mul_assoc, "]"] []],
-  { simpa [] [] [] ["[", expr hk, ",", expr hi, "]"] [] ["using", expr (h.nat_even_mul_periodic k).eq] },
-  { simpa [] [] [] ["[", expr add_mul, ",", expr hk, ",", expr hi, "]"] [] ["using", expr (h.nat_odd_mul_antiperiodic k).eq] }
-end
+theorem antiperiodic.nat_mul_eq_of_eq_zero [CommSemiringₓ α] [AddGroupₓ β] (h : antiperiodic f c) (hi : f 0 = 0)
+  (n : ℕ) : f (n*c) = 0 :=
+  by 
+    rcases Nat.even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;>
+      have hk : ((k : α)*2*c) = (2*k)*c :=
+        by 
+          rw [mul_left_commₓ, ←mul_assocₓ]
+    ·
+      simpa [hk, hi] using (h.nat_even_mul_periodic k).Eq
+    ·
+      simpa [add_mulₓ, hk, hi] using (h.nat_odd_mul_antiperiodic k).Eq
 
--- error in Algebra.Periodic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem antiperiodic.int_mul_eq_of_eq_zero
-[comm_ring α]
-[add_group β]
-(h : antiperiodic f c)
-(hi : «expr = »(f 0, 0))
-(n : exprℤ()) : «expr = »(f «expr * »(n, c), 0) :=
-begin
-  rcases [expr int.even_or_odd n, "with", "⟨", ident k, ",", ident rfl, "⟩", "|", "⟨", ident k, ",", ident rfl, "⟩"]; have [ident hk] [":", expr «expr = »(«expr * »((k : α), «expr * »(2, c)), «expr * »(«expr * »(2, k), c))] [":=", expr by rw ["[", expr mul_left_comm, ",", "<-", expr mul_assoc, "]"] []],
-  { simpa [] [] [] ["[", expr hk, ",", expr hi, "]"] [] ["using", expr (h.int_even_mul_periodic k).eq] },
-  { simpa [] [] [] ["[", expr add_mul, ",", expr hk, ",", expr hi, "]"] [] ["using", expr (h.int_odd_mul_antiperiodic k).eq] }
-end
+theorem antiperiodic.int_mul_eq_of_eq_zero [CommRingₓ α] [AddGroupₓ β] (h : antiperiodic f c) (hi : f 0 = 0) (n : ℤ) :
+  f (n*c) = 0 :=
+  by 
+    rcases Int.even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;>
+      have hk : ((k : α)*2*c) = (2*k)*c :=
+        by 
+          rw [mul_left_commₓ, ←mul_assocₓ]
+    ·
+      simpa [hk, hi] using (h.int_even_mul_periodic k).Eq
+    ·
+      simpa [add_mulₓ, hk, hi] using (h.int_odd_mul_antiperiodic k).Eq
 
 theorem antiperiodic.sub_eq [AddGroupₓ α] [AddGroupₓ β] (h : antiperiodic f c) (x : α) : f (x - c) = -f x :=
   by 

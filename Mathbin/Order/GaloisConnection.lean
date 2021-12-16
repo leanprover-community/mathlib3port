@@ -119,11 +119,21 @@ theorem is_lub_l_image {s : Set α} {a : α} (h : IsLub s a) : IsLub (l '' s) (l
 theorem is_glb_u_image {s : Set β} {b : β} (h : IsGlb s b) : IsGlb (u '' s) (u b) :=
   gc.dual.is_lub_l_image h
 
-theorem is_glb_l {a : α} : IsGlb { b | a ≤ u b } (l a) :=
-  ⟨fun b => gc.l_le, fun b h => h$ gc.le_u_l _⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_least_l { a : α } : IsLeast { b | a ≤ u b } l a := ⟨ gc.le_u_l _ , fun b hb => gc.l_le hb ⟩
 
-theorem is_lub_u {b : β} : IsLub { a | l a ≤ b } (u b) :=
-  ⟨fun b => gc.le_u, fun b h => h$ gc.l_u_le _⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_greatest_u { b : β } : IsGreatest { a | l a ≤ b } u b := gc.dual.is_least_l
+
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_glb_l { a : α } : IsGlb { b | a ≤ u b } l a := gc.is_least_l.is_glb
+
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_lub_u { b : β } : IsLub { a | l a ≤ b } u b := gc.is_greatest_u.is_lub
 
 end 
 
@@ -221,23 +231,34 @@ variable [CompleteLattice α] [CompleteLattice β] {l : α → β} {u : β → �
 
 include gc
 
-theorem l_supr {f : ι → α} : l (supr f) = ⨆i, l (f i) :=
+theorem l_supr {f : ι → α} : l (supr f) = ⨆ i, l (f i) :=
   Eq.symm$
     IsLub.supr_eq$
       show IsLub (range (l ∘ f)) (l (supr f))by 
         rw [range_comp, ←Sup_range] <;> exact gc.is_lub_l_image (is_lub_Sup _)
 
-theorem u_infi {f : ι → β} : u (infi f) = ⨅i, u (f i) :=
+theorem u_infi {f : ι → β} : u (infi f) = ⨅ i, u (f i) :=
   gc.dual.l_supr
 
-theorem l_Sup {s : Set α} : l (Sup s) = ⨆(a : _)(_ : a ∈ s), l a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem l_Sup {s : Set α} : l (Sup s) = ⨆ (a : _)(_ : a ∈ s), l a :=
   by 
     simp only [Sup_eq_supr, gc.l_supr]
 
-theorem u_Inf {s : Set β} : u (Inf s) = ⨅(a : _)(_ : a ∈ s), u a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem u_Inf {s : Set β} : u (Inf s) = ⨅ (a : _)(_ : a ∈ s), u a :=
   gc.dual.l_Sup
 
 end CompleteLattice
+
+section LinearOrderₓ
+
+variable [LinearOrderₓ α] [LinearOrderₓ β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
+
+theorem lt_iff_lt {a : α} {b : β} : b < l a ↔ u b < a :=
+  lt_iff_lt_of_le_iff_le (gc a b)
+
+end LinearOrderₓ
 
 section Constructions
 
@@ -345,9 +366,9 @@ theorem l_sup_u [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisInsertion l 
     
 
 theorem l_supr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} (f : ι → β) :
-  l (⨆i, u (f i)) = ⨆i, f i :=
-  calc l (⨆i : ι, u (f i)) = ⨆i : ι, l (u (f i)) := gi.gc.l_supr 
-    _ = ⨆i : ι, f i := congr_argₓ _$ funext$ fun i => gi.l_u_eq (f i)
+  l (⨆ i, u (f i)) = ⨆ i, f i :=
+  calc l (⨆ i : ι, u (f i)) = ⨆ i : ι, l (u (f i)) := gi.gc.l_supr 
+    _ = ⨆ i : ι, f i := congr_argₓ _$ funext$ fun i => gi.l_u_eq (f i)
     
 
 theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l u) (a b : β) : l (u a⊓u b) = a⊓b :=
@@ -358,17 +379,17 @@ theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l 
     
 
 theorem l_infi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} (f : ι → β) :
-  l (⨅i, u (f i)) = ⨅i, f i :=
-  calc l (⨅i : ι, u (f i)) = l (u (⨅i : ι, f i)) := congr_argₓ l gi.gc.u_infi.symm 
-    _ = ⨅i : ι, f i := gi.l_u_eq _
+  l (⨅ i, u (f i)) = ⨅ i, f i :=
+  calc l (⨅ i : ι, u (f i)) = l (u (⨅ i : ι, f i)) := congr_argₓ l gi.gc.u_infi.symm 
+    _ = ⨅ i : ι, f i := gi.l_u_eq _
     
 
 theorem l_infi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} (f : ι → α)
-  (hf : ∀ i, u (l (f i)) = f i) : l (⨅i, f i) = ⨅i, l (f i) :=
-  calc l (⨅i, f i) = l (⨅i : ι, u (l (f i))) :=
+  (hf : ∀ i, u (l (f i)) = f i) : l (⨅ i, f i) = ⨅ i, l (f i) :=
+  calc l (⨅ i, f i) = l (⨅ i : ι, u (l (f i))) :=
     by 
       simp [hf]
-    _ = ⨅i, l (f i) := gi.l_infi_u _
+    _ = ⨅ i, l (f i) := gi.l_infi_u _
     
 
 theorem u_le_u_iff [Preorderₓ α] [Preorderₓ β] (gi : GaloisInsertion l u) {a b} : u a ≤ u b ↔ a ≤ b :=
@@ -527,18 +548,18 @@ theorem u_inf_l [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisCoinsertion 
   gi.dual.l_sup_u a b
 
 theorem u_infi_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x} (f : ι → α) :
-  u (⨅i, l (f i)) = ⨅i, f i :=
+  u (⨅ i, l (f i)) = ⨅ i, f i :=
   gi.dual.l_supr_u _
 
 theorem u_sup_l [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisCoinsertion l u) (a b : α) : u (l a⊔l b) = a⊔b :=
   gi.dual.l_inf_u _ _
 
 theorem u_supr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x} (f : ι → α) :
-  u (⨆i, l (f i)) = ⨆i, f i :=
+  u (⨆ i, l (f i)) = ⨆ i, f i :=
   gi.dual.l_infi_u _
 
 theorem u_supr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
-  (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆i, f i) = ⨆i, u (f i) :=
+  (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆ i, f i) = ⨆ i, u (f i) :=
   gi.dual.l_infi_of_ul_eq_self _ hf
 
 theorem l_le_l_iff [Preorderₓ α] [Preorderₓ β] (gi : GaloisCoinsertion l u) {a b} : l a ≤ l b ↔ a ≤ b :=

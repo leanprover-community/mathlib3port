@@ -16,24 +16,24 @@ namespace Plift
 variable {α : Sort u} {β : Sort v}
 
 instance [Subsingleton α] : Subsingleton (Plift α) :=
-  Equiv.plift.Subsingleton
+  Equivₓ.plift.Subsingleton
 
 instance [Unique α] : Unique (Plift α) :=
-  Equiv.plift.unique
+  Equivₓ.plift.unique
 
 instance [DecidableEq α] : DecidableEq (Plift α) :=
-  Equiv.plift.DecidableEq
+  Equivₓ.plift.DecidableEq
 
 instance [IsEmpty α] : IsEmpty (Plift α) :=
-  Equiv.plift.isEmpty
+  Equivₓ.plift.isEmpty
 
 @[simp]
 theorem forall {p : Plift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (Plift.up x) :=
-  Equiv.plift.forall_congr_left'
+  Equivₓ.plift.forall_congr_left'
 
 @[simp]
 theorem exists {p : Plift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (Plift.up x) :=
-  Equiv.plift.exists_congr_left
+  Equivₓ.plift.exists_congr_left
 
 end Plift
 
@@ -42,24 +42,24 @@ namespace Ulift
 variable {α : Type u} {β : Type v}
 
 instance [Subsingleton α] : Subsingleton (Ulift α) :=
-  Equiv.ulift.Subsingleton
+  Equivₓ.ulift.Subsingleton
 
 instance [Unique α] : Unique (Ulift α) :=
-  Equiv.ulift.unique
+  Equivₓ.ulift.unique
 
 instance [DecidableEq α] : DecidableEq (Ulift α) :=
-  Equiv.ulift.DecidableEq
+  Equivₓ.ulift.DecidableEq
 
 instance [IsEmpty α] : IsEmpty (Ulift α) :=
-  Equiv.ulift.isEmpty
+  Equivₓ.ulift.isEmpty
 
 @[simp]
 theorem forall {p : Ulift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (Ulift.up x) :=
-  Equiv.ulift.forall_congr_left'
+  Equivₓ.ulift.forall_congr_left'
 
 @[simp]
 theorem exists {p : Ulift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (Ulift.up x) :=
-  Equiv.ulift.exists_congr_left
+  Equivₓ.ulift.exists_congr_left
 
 end Ulift
 

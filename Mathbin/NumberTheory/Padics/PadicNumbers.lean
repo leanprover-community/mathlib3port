@@ -53,7 +53,7 @@ p-adic, p adic, padic, norm, valuation, cauchy, completion, p-adic completion
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -70,28 +70,28 @@ section
 
 variable {p : ℕ} [Fact p.prime]
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≥ » N1)
 /-- The p-adic norm of the entries of a nonzero Cauchy sequence of rationals is eventually
 constant. -/
-theorem stationary
-{f : cau_seq exprℚ() (padic_norm p)}
-(hf : «expr¬ »(«expr ≈ »(f, 0))) : «expr∃ , »((N), ∀
- m n, «expr ≤ »(N, m) → «expr ≤ »(N, n) → «expr = »(padic_norm p (f n), padic_norm p (f m))) :=
-have «expr∃ , »((ε «expr > » 0), «expr∃ , »((N1), ∀
-  j «expr ≥ » N1, «expr ≤ »(ε, padic_norm p (f j)))), from «expr $ »(cau_seq.abv_pos_of_not_lim_zero, not_lim_zero_of_not_congr_zero hf),
-let ⟨ε, hε, N1, hN1⟩ := this, ⟨N2, hN2⟩ := cau_seq.cauchy₂ f hε in
-⟨max N1 N2, λ
- n m hn hm, have «expr < »(padic_norm p «expr - »(f n, f m), ε), from hN2 _ _ (max_le_iff.1 hn).2 (max_le_iff.1 hm).2,
- have «expr < »(padic_norm p «expr - »(f n, f m), padic_norm p (f n)), from «expr $ »(lt_of_lt_of_le this, hN1 _ (max_le_iff.1 hn).1),
- have «expr < »(padic_norm p «expr - »(f n, f m), max (padic_norm p (f n)) (padic_norm p (f m))), from lt_max_iff.2 (or.inl this),
- begin
-   by_contradiction [ident hne],
-   rw ["<-", expr padic_norm.neg p (f m)] ["at", ident hne],
-   have [ident hnam] [] [":=", expr add_eq_max_of_ne p hne],
-   rw ["[", expr padic_norm.neg, ",", expr max_comm, "]"] ["at", ident hnam],
-   rw ["[", "<-", expr hnam, ",", expr sub_eq_add_neg, ",", expr add_comm, "]"] ["at", ident this],
-   apply [expr _root_.lt_irrefl _ this]
- end⟩
+theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
+  ∃ N, ∀ m n, N ≤ m → N ≤ n → padicNorm p (f n) = padicNorm p (f m) :=
+  have  : ∃ (ε : _)(_ : ε > 0), ∃ N1, ∀ j _ : j ≥ N1, ε ≤ padicNorm p (f j) :=
+    CauSeq.abv_pos_of_not_lim_zero$ not_lim_zero_of_not_congr_zero hf 
+  let ⟨ε, hε, N1, hN1⟩ := this 
+  let ⟨N2, hN2⟩ := CauSeq.cauchy₂ f hε
+  ⟨max N1 N2,
+    fun n m hn hm =>
+      have  : padicNorm p (f n - f m) < ε := hN2 _ _ (max_le_iff.1 hn).2 (max_le_iff.1 hm).2
+      have  : padicNorm p (f n - f m) < padicNorm p (f n) := lt_of_lt_of_leₓ this$ hN1 _ (max_le_iff.1 hn).1
+      have  : padicNorm p (f n - f m) < max (padicNorm p (f n)) (padicNorm p (f m)) := lt_max_iff.2 (Or.inl this)
+      by 
+        byContra hne 
+        rw [←padicNorm.neg p (f m)] at hne 
+        have hnam := add_eq_max_of_ne p hne 
+        rw [padicNorm.neg, max_commₓ] at hnam 
+        rw [←hnam, sub_eq_add_neg, add_commₓ] at this 
+        apply _root_.lt_irrefl _ this⟩
 
 /-- For all n ≥ stationary_point f hf, the p-adic norm of f n is the same. -/
 def stationary_point {f : PadicSeq p} (hf : ¬f ≈ 0) : ℕ :=
@@ -106,23 +106,23 @@ we can lift the norm to sequences. -/
 def norm (f : PadicSeq p) : ℚ :=
   if hf : f ≈ 0 then 0 else padicNorm p (f (stationary_point hf))
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_zero_iff (f : padic_seq p) : «expr ↔ »(«expr = »(f.norm, 0), «expr ≈ »(f, 0)) :=
-begin
-  constructor,
-  { intro [ident h],
-    by_contradiction [ident hf],
-    unfold [ident norm] ["at", ident h],
-    split_ifs ["at", ident h] [],
-    apply [expr hf],
-    intros [ident ε, ident hε],
-    existsi [expr stationary_point hf],
-    intros [ident j, ident hj],
-    have [ident heq] [] [":=", expr stationary_point_spec hf (le_refl _) hj],
-    simpa [] [] [] ["[", expr h, ",", expr heq, "]"] [] [] },
-  { intro [ident h],
-    simp [] [] [] ["[", expr norm, ",", expr h, "]"] [] [] }
-end
+theorem norm_zero_iff (f : PadicSeq p) : f.norm = 0 ↔ f ≈ 0 :=
+  by 
+    constructor
+    ·
+      intro h 
+      byContra hf 
+      unfold norm  at h 
+      splitIfs  at h 
+      apply hf 
+      intro ε hε 
+      exists stationary_point hf 
+      intro j hj 
+      have heq := stationary_point_spec hf (le_reflₓ _) hj 
+      simpa [h, HEq]
+    ·
+      intro h 
+      simp [norm, h]
 
 end 
 
@@ -327,7 +327,7 @@ theorem norm_const (q : ℚ) : norm (const (padicNorm p) q) = padicNorm p q :=
     by 
       simp [norm, this]
 
-theorem norm_values_discrete (a : PadicSeq p) (ha : ¬a ≈ 0) : ∃ z : ℤ, a.norm = («expr↑ » p^-z) :=
+theorem norm_values_discrete (a : PadicSeq p) (ha : ¬a ≈ 0) : ∃ z : ℤ, a.norm = (↑p^-z) :=
   let ⟨k, hk, hk'⟩ := norm_eq_norm_app_of_nonzero ha 
   by 
     simpa [hk] using padicNorm.values_discrete p hk'
@@ -337,36 +337,32 @@ theorem norm_one : norm (1 : PadicSeq p) = 1 :=
   by 
     simp [h1, norm, hp.1.one_lt]
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem norm_eq_of_equiv_aux
-{f g : padic_seq p}
-(hf : «expr¬ »(«expr ≈ »(f, 0)))
-(hg : «expr¬ »(«expr ≈ »(g, 0)))
-(hfg : «expr ≈ »(f, g))
-(h : «expr ≠ »(padic_norm p (f (stationary_point hf)), padic_norm p (g (stationary_point hg))))
-(hlt : «expr < »(padic_norm p (g (stationary_point hg)), padic_norm p (f (stationary_point hf)))) : false :=
-begin
-  have [ident hpn] [":", expr «expr < »(0, «expr - »(padic_norm p (f (stationary_point hf)), padic_norm p (g (stationary_point hg))))] [],
-  from [expr sub_pos_of_lt hlt],
-  cases [expr hfg _ hpn] ["with", ident N, ident hN],
-  let [ident i] [] [":=", expr max N (max (stationary_point hf) (stationary_point hg))],
-  have [ident hi] [":", expr «expr ≤ »(N, i)] [],
-  from [expr le_max_left _ _],
-  have [ident hN'] [] [":=", expr hN _ hi],
-  padic_index_simp ["[", expr N, ",", expr hf, ",", expr hg, "]"] ["at", ident hN', ident h, ident hlt],
-  have [ident hpne] [":", expr «expr ≠ »(padic_norm p (f i), padic_norm p «expr- »(g i))] [],
-  by rwa ["[", "<-", expr padic_norm.neg p (g i), "]"] ["at", ident h],
-  let [ident hpnem] [] [":=", expr add_eq_max_of_ne p hpne],
-  have [ident hpeq] [":", expr «expr = »(padic_norm p («expr - »(f, g) i), max (padic_norm p (f i)) (padic_norm p (g i)))] [],
-  { rwa [expr padic_norm.neg] ["at", ident hpnem] },
-  rw ["[", expr hpeq, ",", expr max_eq_left_of_lt hlt, "]"] ["at", ident hN'],
-  have [] [":", expr «expr < »(padic_norm p (f i), padic_norm p (f i))] [],
-  { apply [expr lt_of_lt_of_le hN'],
-    apply [expr sub_le_self],
-    apply [expr padic_norm.nonneg] },
-  exact [expr lt_irrefl _ this]
-end
+private theorem norm_eq_of_equiv_aux {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) (hfg : f ≈ g)
+  (h : padicNorm p (f (stationary_point hf)) ≠ padicNorm p (g (stationary_point hg)))
+  (hlt : padicNorm p (g (stationary_point hg)) < padicNorm p (f (stationary_point hf))) : False :=
+  by 
+    have hpn : 0 < padicNorm p (f (stationary_point hf)) - padicNorm p (g (stationary_point hg))
+    exact sub_pos_of_lt hlt 
+    cases' hfg _ hpn with N hN 
+    let i := max N (max (stationary_point hf) (stationary_point hg))
+    have hi : N ≤ i 
+    exact le_max_leftₓ _ _ 
+    have hN' := hN _ hi 
+    padicIndexSimp [N, hf, hg]  at hN' h hlt 
+    have hpne : padicNorm p (f i) ≠ padicNorm p (-g i)
+    ·
+      rwa [←padicNorm.neg p (g i)] at h 
+    let hpnem := add_eq_max_of_ne p hpne 
+    have hpeq : padicNorm p ((f - g) i) = max (padicNorm p (f i)) (padicNorm p (g i))
+    ·
+      rwa [padicNorm.neg] at hpnem 
+    rw [hpeq, max_eq_left_of_ltₓ hlt] at hN' 
+    have  : padicNorm p (f i) < padicNorm p (f i)
+    ·
+      apply lt_of_lt_of_leₓ hN' 
+      apply sub_le_self 
+      apply padicNorm.nonneg 
+    exact lt_irreflₓ _ this
 
 private theorem norm_eq_of_equiv {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) (hfg : f ≈ g) :
   padicNorm p (f (stationary_point hf)) = padicNorm p (g (stationary_point hg)) :=
@@ -436,26 +432,33 @@ theorem norm_nonarchimedean (f g : PadicSeq p) : (f+g).norm ≤ max f.norm g.nor
           rw [this, hcfg]
       else norm_nonarchimedean_aux hfg hf hg
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_eq
-{f g : padic_seq p}
-(h : ∀ k, «expr = »(padic_norm p (f k), padic_norm p (g k))) : «expr = »(f.norm, g.norm) :=
-if hf : «expr ≈ »(f, 0) then have hg : «expr ≈ »(g, 0), from equiv_zero_of_val_eq_of_equiv_zero h hf,
-by simp [] [] ["only"] ["[", expr hf, ",", expr hg, ",", expr norm, ",", expr dif_pos, "]"] [] [] else have hg : «expr¬ »(«expr ≈ »(g, 0)), from λ
-hg, «expr $ »(hf, equiv_zero_of_val_eq_of_equiv_zero (by simp [] [] ["only"] ["[", expr h, ",", expr forall_const, ",", expr eq_self_iff_true, "]"] [] []) hg),
-begin
-  simp [] [] ["only"] ["[", expr hg, ",", expr hf, ",", expr norm, ",", expr dif_neg, ",", expr not_false_iff, "]"] [] [],
-  let [ident i] [] [":=", expr max (stationary_point hf) (stationary_point hg)],
-  have [ident hpf] [":", expr «expr = »(padic_norm p (f (stationary_point hf)), padic_norm p (f i))] [],
-  { apply [expr stationary_point_spec],
-    apply [expr le_max_left],
-    apply [expr le_refl] },
-  have [ident hpg] [":", expr «expr = »(padic_norm p (g (stationary_point hg)), padic_norm p (g i))] [],
-  { apply [expr stationary_point_spec],
-    apply [expr le_max_right],
-    apply [expr le_refl] },
-  rw ["[", expr hpf, ",", expr hpg, ",", expr h, "]"] []
-end
+theorem norm_eq {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (g k)) : f.norm = g.norm :=
+  if hf : f ≈ 0 then
+    have hg : g ≈ 0 := equiv_zero_of_val_eq_of_equiv_zero h hf 
+    by 
+      simp only [hf, hg, norm, dif_pos]
+  else
+    have hg : ¬g ≈ 0 :=
+      fun hg =>
+        hf$
+          equiv_zero_of_val_eq_of_equiv_zero
+            (by 
+              simp only [h, forall_const, eq_self_iff_true])
+            hg 
+    by 
+      simp only [hg, hf, norm, dif_neg, not_false_iff]
+      let i := max (stationary_point hf) (stationary_point hg)
+      have hpf : padicNorm p (f (stationary_point hf)) = padicNorm p (f i)
+      ·
+        apply stationary_point_spec 
+        apply le_max_leftₓ 
+        apply le_reflₓ 
+      have hpg : padicNorm p (g (stationary_point hg)) = padicNorm p (g i)
+      ·
+        apply stationary_point_spec 
+        apply le_max_rightₓ 
+        apply le_reflₓ 
+      rw [hpf, hpg, h]
 
 theorem norm_neg (a : PadicSeq p) : (-a).norm = a.norm :=
   norm_eq$
@@ -603,7 +606,7 @@ theorem of_rat_one : of_rat p 1 = 1 :=
 theorem of_rat_zero : of_rat p 0 = 0 :=
   rfl
 
-theorem cast_eq_of_rat_of_nat (n : ℕ) : («expr↑ » n : ℚ_[p]) = of_rat p n :=
+theorem cast_eq_of_rat_of_nat (n : ℕ) : (↑n : ℚ_[p]) = of_rat p n :=
   by 
     induction' n with n ih
     ·
@@ -611,49 +614,49 @@ theorem cast_eq_of_rat_of_nat (n : ℕ) : («expr↑ » n : ℚ_[p]) = of_rat p 
     ·
       simpa using ih
 
-theorem cast_eq_of_rat_of_int (n : ℤ) : «expr↑ » n = of_rat p n :=
+theorem cast_eq_of_rat_of_int (n : ℤ) : ↑n = of_rat p n :=
   by 
     induction n <;> simp [cast_eq_of_rat_of_nat]
 
-theorem cast_eq_of_rat : ∀ q : ℚ, («expr↑ » q : ℚ_[p]) = of_rat p q
+theorem cast_eq_of_rat : ∀ q : ℚ, (↑q : ℚ_[p]) = of_rat p q
 | ⟨n, d, h1, h2⟩ =>
-  show «expr↑ » n / «expr↑ » d = _ from
+  show ↑n / ↑d = _ from
     have  : (⟨n, d, h1, h2⟩ : ℚ) = Rat.mk n d := Rat.num_denom' 
     by 
       simp [this, Rat.mk_eq_div, of_rat_div, cast_eq_of_rat_of_int, cast_eq_of_rat_of_nat]
 
 @[normCast]
-theorem coe_add : ∀ {x y : ℚ}, («expr↑ » (x+y) : ℚ_[p]) = «expr↑ » x+«expr↑ » y :=
+theorem coe_add : ∀ {x y : ℚ}, (↑x+y : ℚ_[p]) = (↑x)+↑y :=
   by 
     simp [cast_eq_of_rat]
 
 @[normCast]
-theorem coe_neg : ∀ {x : ℚ}, («expr↑ » (-x) : ℚ_[p]) = -«expr↑ » x :=
+theorem coe_neg : ∀ {x : ℚ}, (↑(-x) : ℚ_[p]) = -↑x :=
   by 
     simp [cast_eq_of_rat]
 
 @[normCast]
-theorem coe_mul : ∀ {x y : ℚ}, («expr↑ » (x*y) : ℚ_[p]) = «expr↑ » x*«expr↑ » y :=
+theorem coe_mul : ∀ {x y : ℚ}, (↑x*y : ℚ_[p]) = (↑x)*↑y :=
   by 
     simp [cast_eq_of_rat]
 
 @[normCast]
-theorem coe_sub : ∀ {x y : ℚ}, («expr↑ » (x - y) : ℚ_[p]) = «expr↑ » x - «expr↑ » y :=
+theorem coe_sub : ∀ {x y : ℚ}, (↑(x - y) : ℚ_[p]) = ↑x - ↑y :=
   by 
     simp [cast_eq_of_rat]
 
 @[normCast]
-theorem coe_div : ∀ {x y : ℚ}, («expr↑ » (x / y) : ℚ_[p]) = «expr↑ » x / «expr↑ » y :=
+theorem coe_div : ∀ {x y : ℚ}, (↑(x / y) : ℚ_[p]) = ↑x / ↑y :=
   by 
     simp [cast_eq_of_rat]
 
 @[normCast]
-theorem coe_one : («expr↑ » 1 : ℚ_[p]) = 1 :=
+theorem coe_one : (↑1 : ℚ_[p]) = 1 :=
   by 
     simp [cast_eq_of_rat]
 
 @[normCast]
-theorem coe_zero : («expr↑ » 0 : ℚ_[p]) = 0 :=
+theorem coe_zero : (↑0 : ℚ_[p]) = 0 :=
   rfl
 
 theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) r ↔ q = r :=
@@ -669,7 +672,7 @@ theorem of_rat_eq {q r : ℚ} : of_rat p q = of_rat p r ↔ q = r :=
         rw [h]⟩
 
 @[normCast]
-theorem coe_inj {q r : ℚ} : («expr↑ » q : ℚ_[p]) = «expr↑ » r ↔ q = r :=
+theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
   by 
     simp [cast_eq_of_rat, of_rat_eq]
 
@@ -697,38 +700,40 @@ open PadicSeq
 
 variable {p : ℕ} [Fact p.prime]
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem defn
-(f : padic_seq p)
-{ε : exprℚ()}
-(hε : «expr < »(0, ε)) : «expr∃ , »((N), ∀ i «expr ≥ » N, «expr < »(padic_norm_e «expr - »(«expr⟦ ⟧»(f), f i), ε)) :=
-begin
-  simp [] [] ["only"] ["[", expr padic.cast_eq_of_rat, "]"] [] [],
-  change [expr «expr∃ , »((N), ∀ i «expr ≥ » N, «expr < »(«expr - »(f, const _ (f i)).norm, ε))] [] [],
-  by_contradiction [ident h],
-  cases [expr cauchy₂ f hε] ["with", ident N, ident hN],
-  have [] [":", expr ∀ N, «expr∃ , »((i «expr ≥ » N), «expr ≤ »(ε, «expr - »(f, const _ (f i)).norm))] [],
-  by simpa [] [] ["only"] ["[", expr not_forall, ",", expr not_exists, ",", expr not_lt, "]"] [] ["using", expr h],
-  rcases [expr this N, "with", "⟨", ident i, ",", ident hi, ",", ident hge, "⟩"],
-  have [ident hne] [":", expr «expr¬ »(«expr ≈ »(«expr - »(f, const (padic_norm p) (f i)), 0))] [],
-  { intro [ident h],
-    unfold [ident padic_seq.norm] ["at", ident hge]; split_ifs ["at", ident hge] [],
-    exact [expr not_lt_of_ge hge hε] },
-  unfold [ident padic_seq.norm] ["at", ident hge]; split_ifs ["at", ident hge] [],
-  apply [expr not_le_of_gt _ hge],
-  cases [expr decidable.em «expr ≤ »(N, stationary_point hne)] ["with", ident hgen, ident hngen],
-  { apply [expr hN]; assumption },
-  { have [] [] [":=", expr stationary_point_spec hne (le_refl _) (le_of_not_le hngen)],
-    rw ["<-", expr this] [],
-    apply [expr hN],
-    apply [expr le_refl],
-    assumption }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≥ » N)
+theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀ i _ : i ≥ N, padicNormE (⟦f⟧ - f i) < ε :=
+  by 
+    simp only [Padic.cast_eq_of_rat]
+    change ∃ N, ∀ i _ : i ≥ N, (f - const _ (f i)).norm < ε 
+    byContra h 
+    cases' cauchy₂ f hε with N hN 
+    have  : ∀ N, ∃ (i : _)(_ : i ≥ N), ε ≤ (f - const _ (f i)).norm
+    ·
+      simpa only [not_forall, not_exists, not_ltₓ] using h 
+    rcases this N with ⟨i, hi, hge⟩
+    have hne : ¬f - const (padicNorm p) (f i) ≈ 0
+    ·
+      intro h 
+      unfold PadicSeq.norm  at hge <;> splitIfs  at hge 
+      exact not_lt_of_geₓ hge hε 
+    unfold PadicSeq.norm  at hge <;> splitIfs  at hge 
+    apply not_le_of_gtₓ _ hge 
+    cases' Decidable.em (N ≤ stationary_point hne) with hgen hngen
+    ·
+      apply hN <;> assumption
+    ·
+      have  := stationary_point_spec hne (le_reflₓ _) (le_of_not_leₓ hngen)
+      rw [←this]
+      apply hN 
+      apply le_reflₓ 
+      assumption
 
 protected theorem nonneg (q : ℚ_[p]) : 0 ≤ padicNormE q :=
   Quotientₓ.induction_on q$ norm_nonneg
 
-theorem zero_def : (0 : ℚ_[p]) = «expr⟦ ⟧» 0 :=
+theorem zero_def : (0 : ℚ_[p]) = ⟦0⟧ :=
   rfl
 
 theorem zero_iff (q : ℚ_[p]) : padicNormE q = 0 ↔ q = 0 :=
@@ -804,34 +809,34 @@ section Complete
 
 open PadicSeq Padic
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rat_dense'
-{p : exprℕ()}
-[fact p.prime]
-(q : «exprℚ_[ ]»(p))
-{ε : exprℚ()}
-(hε : «expr < »(0, ε)) : «expr∃ , »((r : exprℚ()), «expr < »(padic_norm_e «expr - »(q, r), ε)) :=
-«expr $ »(quotient.induction_on q, λ
- q', have «expr∃ , »((N), ∀ m n «expr ≥ » N, «expr < »(padic_norm p «expr - »(q' m, q' n), ε)), from cauchy₂ _ hε,
- let ⟨N, hN⟩ := this in
- ⟨q' N, begin
-    simp [] [] ["only"] ["[", expr padic.cast_eq_of_rat, "]"] [] [],
-    change [expr «expr < »(padic_seq.norm «expr - »(q', const _ (q' N)), ε)] [] [],
-    cases [expr decidable.em «expr ≈ »(«expr - »(q', const (padic_norm p) (q' N)), 0)] ["with", ident heq, ident hne'],
-    { simpa [] [] ["only"] ["[", expr heq, ",", expr padic_seq.norm, ",", expr dif_pos, "]"] [] [] },
-    { simp [] [] ["only"] ["[", expr padic_seq.norm, ",", expr dif_neg hne', "]"] [] [],
-      change [expr «expr < »(padic_norm p «expr - »(q' _, q' _), ε)] [] [],
-      have [] [] [":=", expr stationary_point_spec hne'],
-      cases [expr decidable.em «expr ≤ »(stationary_point hne', N)] ["with", ident hle, ident hle],
-      { have [] [] [":=", expr eq.symm (this (le_refl _) hle)],
-        simp [] [] ["only"] ["[", expr const_apply, ",", expr sub_apply, ",", expr padic_norm.zero, ",", expr sub_self, "]"] [] ["at", ident this],
-        simpa [] [] ["only"] ["[", expr this, "]"] [] [] },
-      { apply [expr hN],
-        apply [expr le_of_lt],
-        apply [expr lt_of_not_ge],
-        apply [expr hle],
-        apply [expr le_refl] } }
-  end⟩)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m n «expr ≥ » N)
+theorem rat_dense' {p : ℕ} [Fact p.prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
+  Quotientₓ.induction_on q$
+    fun q' =>
+      have  : ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε 
+      let ⟨N, hN⟩ := this
+      ⟨q' N,
+        by 
+          simp only [Padic.cast_eq_of_rat]
+          change PadicSeq.norm (q' - const _ (q' N)) < ε 
+          cases' Decidable.em (q' - const (padicNorm p) (q' N) ≈ 0) with heq hne'
+          ·
+            simpa only [HEq, PadicSeq.norm, dif_pos]
+          ·
+            simp only [PadicSeq.norm, dif_neg hne']
+            change padicNorm p (q' _ - q' _) < ε 
+            have  := stationary_point_spec hne' 
+            cases' Decidable.em (stationary_point hne' ≤ N) with hle hle
+            ·
+              have  := Eq.symm (this (le_reflₓ _) hle)
+              simp only [const_apply, sub_apply, padicNorm.zero, sub_self] at this 
+              simpa only [this]
+            ·
+              apply hN 
+              apply le_of_ltₓ 
+              apply lt_of_not_geₓ 
+              apply hle 
+              apply le_reflₓ⟩
 
 variable {p : ℕ} [Fact p.prime] (f : CauSeq _ (@padicNormE p _))
 
@@ -847,87 +852,126 @@ is a sequence of rationals with the same limit point as `f`. -/
 def lim_seq : ℕ → ℚ :=
   fun n => Classical.some (rat_dense' (f n) (div_nat_pos n))
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exi_rat_seq_conv
-{ε : exprℚ()}
-(hε : «expr < »(0, ε)) : «expr∃ , »((N), ∀
- i «expr ≥ » N, «expr < »(padic_norm_e «expr - »(f i, (lim_seq f i : «exprℚ_[ ]»(p))), ε)) :=
-begin
-  refine [expr (exists_nat_gt «expr / »(1, ε)).imp (λ N hN i hi, _)],
-  have [ident h] [] [":=", expr classical.some_spec (rat_dense' (f i) (div_nat_pos i))],
-  refine [expr lt_of_lt_of_le h («expr $ »(div_le_iff', by exact_mod_cast [expr succ_pos _]).mpr _)],
-  rw [expr right_distrib] [],
-  apply [expr le_add_of_le_of_nonneg],
-  { exact [expr (div_le_iff hε).mp (le_trans (le_of_lt hN) (by exact_mod_cast [expr hi]))] },
-  { apply [expr le_of_lt],
-    simpa [] [] [] [] [] [] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≥ » N)
+theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀ i _ : i ≥ N, padicNormE (f i - ((lim_seq f) i : ℚ_[p])) < ε :=
+  by 
+    refine' (exists_nat_gt (1 / ε)).imp fun N hN i hi => _ 
+    have h := Classical.some_spec (rat_dense' (f i) (div_nat_pos i))
+    refine'
+      lt_of_lt_of_leₓ h
+        ((div_le_iff'$
+              by 
+                exactModCast succ_pos _).mpr
+          _)
+    rw [right_distrib]
+    apply le_add_of_le_of_nonneg
+    ·
+      exact
+        (div_le_iff hε).mp
+          (le_transₓ (le_of_ltₓ hN)
+            (by 
+              exactModCast hi))
+    ·
+      apply le_of_ltₓ 
+      simpa
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exi_rat_seq_conv_cauchy : is_cau_seq (padic_norm p) (lim_seq f) :=
-assume ε hε, have hε3 : «expr < »(0, «expr / »(ε, 3)), from div_pos hε (by norm_num [] []),
-let ⟨N, hN⟩ := exi_rat_seq_conv f hε3, ⟨N2, hN2⟩ := f.cauchy₂ hε3 in
-begin
-  existsi [expr max N N2],
-  intros [ident j, ident hj],
-  suffices [] [":", expr «expr < »(padic_norm_e «expr + »(«expr - »(«expr↑ »(lim_seq f j), f (max N N2)), «expr - »(f (max N N2), lim_seq f (max N N2))), ε)],
-  { ring_nf [] [] ["at", ident this, "⊢"],
-    rw ["[", "<-", expr padic_norm_e.eq_padic_norm', ",", "<-", expr padic.cast_eq_of_rat, "]"] [],
-    exact_mod_cast [expr this] },
-  { apply [expr lt_of_le_of_lt],
-    { apply [expr padic_norm_e.add] },
-    { have [] [":", expr «expr ≠ »((3 : exprℚ()), 0)] [],
-      by norm_num [] [],
-      have [] [":", expr «expr = »(ε, «expr + »(«expr + »(«expr / »(ε, 3), «expr / »(ε, 3)), «expr / »(ε, 3)))] [],
-      { field_simp [] ["[", expr this, "]"] [] [],
-        simp [] [] ["only"] ["[", expr bit0, ",", expr bit1, ",", expr mul_add, ",", expr mul_one, "]"] [] [] },
-      rw [expr this] [],
-      apply [expr add_lt_add],
-      { suffices [] [":", expr «expr < »(padic_norm_e «expr + »(«expr - »(«expr↑ »(lim_seq f j), f j), «expr - »(f j, f (max N N2))), «expr + »(«expr / »(ε, 3), «expr / »(ε, 3)))],
-        by simpa [] [] ["only"] ["[", expr sub_add_sub_cancel, "]"] [] [],
-        apply [expr lt_of_le_of_lt],
-        { apply [expr padic_norm_e.add] },
-        { apply [expr add_lt_add],
-          { rw ["[", expr padic_norm_e.sub_rev, "]"] [],
-            apply_mod_cast [expr hN],
-            exact [expr le_of_max_le_left hj] },
-          { apply [expr hN2],
-            exact [expr le_of_max_le_right hj],
-            apply [expr le_max_right] } } },
-      { apply_mod_cast [expr hN],
-        apply [expr le_max_left] } } }
-end
+theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (lim_seq f) :=
+  fun ε hε =>
+    have hε3 : 0 < ε / 3 :=
+      div_pos hε
+        (by 
+          normNum)
+    let ⟨N, hN⟩ := exi_rat_seq_conv f hε3 
+    let ⟨N2, hN2⟩ := f.cauchy₂ hε3 
+    by 
+      exists max N N2 
+      intro j hj 
+      suffices  : padicNormE ((↑lim_seq f j - f (max N N2))+f (max N N2) - lim_seq f (max N N2)) < ε
+      ·
+        ringNF  at this⊢
+        rw [←padicNormE.eq_padic_norm', ←Padic.cast_eq_of_rat]
+        exactModCast this
+      ·
+        apply lt_of_le_of_ltₓ
+        ·
+          apply padicNormE.add
+        ·
+          have  : (3 : ℚ) ≠ 0
+          ·
+            normNum 
+          have  : ε = ((ε / 3)+ε / 3)+ε / 3
+          ·
+            fieldSimp [this]
+            simp only [bit0, bit1, mul_addₓ, mul_oneₓ]
+          rw [this]
+          apply add_lt_add
+          ·
+            suffices  : padicNormE ((↑lim_seq f j - f j)+f j - f (max N N2)) < (ε / 3)+ε / 3
+            ·
+              simpa only [sub_add_sub_cancel]
+            apply lt_of_le_of_ltₓ
+            ·
+              apply padicNormE.add
+            ·
+              apply add_lt_add
+              ·
+                rw [padicNormE.sub_rev]
+                applyModCast hN 
+                exact le_of_max_le_left hj
+              ·
+                apply hN2 
+                exact le_of_max_le_right hj 
+                apply le_max_rightₓ
+          ·
+            applyModCast hN 
+            apply le_max_leftₓ
 
 private def lim' : PadicSeq p :=
   ⟨_, exi_rat_seq_conv_cauchy f⟩
 
 private def limₓ : ℚ_[p] :=
-  «expr⟦ ⟧» (lim' f)
+  ⟦lim' f⟧
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem complete' : «expr∃ , »((q : «exprℚ_[ ]»(p)), ∀
- ε «expr > » 0, «expr∃ , »((N), ∀ i «expr ≥ » N, «expr < »(padic_norm_e «expr - »(q, f i), ε))) :=
-⟨lim f, λ
- ε
- hε, let ⟨N, hN⟩ := exi_rat_seq_conv f (show «expr < »(0, «expr / »(ε, 2)), from div_pos hε (by norm_num [] [])),
-     ⟨N2, hN2⟩ := padic_norm_e.defn (lim' f) (show «expr < »(0, «expr / »(ε, 2)), from div_pos hε (by norm_num [] [])) in
- begin
-   existsi [expr max N N2],
-   intros [ident i, ident hi],
-   suffices [] [":", expr «expr < »(padic_norm_e «expr + »(«expr - »(lim f, lim' f i), «expr - »(lim' f i, f i)), ε)],
-   { ring_nf [] [] ["at", ident this]; exact [expr this] },
-   { apply [expr lt_of_le_of_lt],
-     { apply [expr padic_norm_e.add] },
-     { have [] [":", expr «expr = »(ε, «expr + »(«expr / »(ε, 2), «expr / »(ε, 2)))] [],
-       by rw ["<-", expr add_self_div_two ε] []; simp [] [] [] [] [] [],
-       rw [expr this] [],
-       apply [expr add_lt_add],
-       { apply [expr hN2],
-         exact [expr le_of_max_le_right hi] },
-       { rw_mod_cast ["[", expr padic_norm_e.sub_rev, "]"] [],
-         apply [expr hN],
-         exact [expr le_of_max_le_left hi] } } }
- end⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≥ » N)
+theorem complete' : ∃ q : ℚ_[p], ∀ ε _ : ε > 0, ∃ N, ∀ i _ : i ≥ N, padicNormE (q - f i) < ε :=
+  ⟨limₓ f,
+    fun ε hε =>
+      let ⟨N, hN⟩ :=
+        exi_rat_seq_conv f
+          (show 0 < ε / 2 from
+            div_pos hε
+              (by 
+                normNum))
+      let ⟨N2, hN2⟩ :=
+        padicNormE.defn (lim' f)
+          (show 0 < ε / 2 from
+            div_pos hε
+              (by 
+                normNum))
+      by 
+        exists max N N2 
+        intro i hi 
+        suffices  : padicNormE ((limₓ f - lim' f i)+lim' f i - f i) < ε
+        ·
+          ringNF  at this <;> exact this
+        ·
+          apply lt_of_le_of_ltₓ
+          ·
+            apply padicNormE.add
+          ·
+            have  : ε = (ε / 2)+ε / 2
+            ·
+              rw [←add_self_div_two ε] <;> simp 
+            rw [this]
+            apply add_lt_add
+            ·
+              apply hN2 
+              exact le_of_max_le_right hi
+            ·
+              rwModCast [padicNormE.sub_rev]
+              apply hN 
+              exact le_of_max_le_left hi⟩
 
 end Complete
 
@@ -1003,7 +1047,7 @@ protected theorem mul (q r : ℚ_[p]) : ∥q*r∥ = ∥q∥*∥r∥ :=
   by 
     simp [HasNorm.norm, padicNormE.mul']
 
-protected theorem is_norm (q : ℚ_[p]) : «expr↑ » (padicNormE q) = ∥q∥ :=
+protected theorem is_norm (q : ℚ_[p]) : ↑padicNormE q = ∥q∥ :=
   rfl
 
 theorem nonarchimedean (q r : ℚ_[p]) : ∥q+r∥ ≤ max ∥q∥ ∥r∥ :=
@@ -1021,18 +1065,17 @@ theorem add_eq_max_of_ne {q r : ℚ_[p]} (h : ∥q∥ ≠ ∥r∥) : ∥q+r∥ =
     exactModCast h'
 
 @[simp]
-theorem eq_padic_norm (q : ℚ) : ∥(«expr↑ » q : ℚ_[p])∥ = padicNorm p q :=
+theorem eq_padic_norm (q : ℚ) : ∥(↑q : ℚ_[p])∥ = padicNorm p q :=
   by 
     unfold HasNorm.norm 
     rw [←padicNormE.eq_padic_norm', ←Padic.cast_eq_of_rat]
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem norm_p : «expr = »(«expr∥ ∥»((p : «exprℚ_[ ]»(p))), «expr ⁻¹»(p)) :=
-begin
-  have [ident p₀] [":", expr «expr ≠ »(p, 0)] [":=", expr hp.1.ne_zero],
-  have [ident p₁] [":", expr «expr ≠ »(p, 1)] [":=", expr hp.1.ne_one],
-  simp [] [] [] ["[", expr p₀, ",", expr p₁, ",", expr norm, ",", expr padic_norm, ",", expr padic_val_rat, ",", expr zpow_neg, ",", expr padic.cast_eq_of_rat_of_nat, "]"] [] []
-end
+@[simp]
+theorem norm_p : ∥(p : ℚ_[p])∥ = p⁻¹ :=
+  by 
+    have p₀ : p ≠ 0 := hp.1.ne_zero 
+    have p₁ : p ≠ 1 := hp.1.ne_one 
+    simp [p₀, p₁, norm, padicNorm, padicValRat, zpow_neg, Padic.cast_eq_of_rat_of_nat]
 
 theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 :=
   by 
@@ -1052,14 +1095,14 @@ instance : NondiscreteNormedField ℚ_[p] :=
           rw [NormedField.norm_inv, norm_p, inv_inv₀]
           exactModCast hp.1.one_lt⟩ }
 
-protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = «expr↑ » ((«expr↑ » p : ℚ)^-n) :=
+protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((↑p : ℚ)^-n) :=
   Quotientₓ.induction_on q$
     fun f hf =>
       have  : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf 
       let ⟨n, hn⟩ := PadicSeq.norm_values_discrete f this
       ⟨n, congr_argₓ coeₓ hn⟩
 
-protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = «expr↑ » q' :=
+protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = ↑q' :=
   if h : q = 0 then
     ⟨0,
       by 
@@ -1077,29 +1120,33 @@ def rat_norm (q : ℚ_[p]) : ℚ :=
 theorem eq_rat_norm (q : ℚ_[p]) : ∥q∥ = rat_norm q :=
   Classical.some_spec (padicNormE.is_rat q)
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_rat_le_one : ∀
-{q : exprℚ()}
-(hq : «expr¬ »(«expr ∣ »(p, q.denom))), «expr ≤ »(«expr∥ ∥»((q : «exprℚ_[ ]»(p))), 1)
-| ⟨n, d, hn, hd⟩ := λ
-hq : «expr¬ »(«expr ∣ »(p, d)), if hnz : «expr = »(n, 0) then have «expr = »((⟨n, d, hn, hd⟩ : exprℚ()), 0), from rat.zero_iff_num_zero.mpr hnz,
-by norm_num ["[", expr this, "]"] [] else begin
-  have [ident hnz'] [":", expr «expr ≠ »({ rat . num := n, denom := d, pos := hn, cop := hd }, 0)] [],
-  from [expr mt rat.zero_iff_num_zero.1 hnz],
-  rw ["[", expr padic_norm_e.eq_padic_norm, "]"] [],
-  norm_cast [],
-  rw ["[", expr padic_norm.eq_zpow_of_nonzero p hnz', ",", expr padic_val_rat_def p hnz', "]"] [],
-  have [ident h] [":", expr «expr = »((multiplicity p d).get _, 0)] [],
-  by simp [] [] [] ["[", expr multiplicity_eq_zero_of_not_dvd, ",", expr hq, "]"] [] [],
-  simp [] [] ["only"] [] [] [],
-  norm_cast [],
-  rw_mod_cast ["[", expr h, ",", expr sub_zero, "]"] [],
-  apply [expr zpow_le_one_of_nonpos],
-  { exact_mod_cast [expr le_of_lt hp.1.one_lt] },
-  { apply [expr neg_nonpos_of_nonneg],
-    norm_cast [],
-    simp [] [] [] [] [] [] }
-end
+theorem norm_rat_le_one : ∀ {q : ℚ} hq : ¬p ∣ q.denom, ∥(q : ℚ_[p])∥ ≤ 1
+| ⟨n, d, hn, hd⟩ =>
+  fun hq : ¬p ∣ d =>
+    if hnz : n = 0 then
+      have  : (⟨n, d, hn, hd⟩ : ℚ) = 0 := Rat.zero_iff_num_zero.mpr hnz 
+      by 
+        normNum [this]
+    else
+      by 
+        have hnz' : { num := n, denom := d, Pos := hn, cop := hd } ≠ 0 
+        exact mt Rat.zero_iff_num_zero.1 hnz 
+        rw [padicNormE.eq_padic_norm]
+        normCast 
+        rw [padicNorm.eq_zpow_of_nonzero p hnz', padic_val_rat_def p hnz']
+        have h : (multiplicity p d).get _ = 0
+        ·
+          simp [multiplicity_eq_zero_of_not_dvd, hq]
+        simp only 
+        normCast 
+        rwModCast [h, sub_zero]
+        apply zpow_le_one_of_nonpos
+        ·
+          exactModCast le_of_ltₓ hp.1.one_lt
+        ·
+          apply neg_nonpos_of_nonneg 
+          normCast 
+          simp 
 
 theorem norm_int_le_one (z : ℤ) : ∥(z : ℚ_[p])∥ ≤ 1 :=
   suffices ∥((z : ℚ) : ℚ_[p])∥ ≤ 1by 
@@ -1108,9 +1155,9 @@ theorem norm_int_le_one (z : ℤ) : ∥(z : ℚ_[p])∥ ≤ 1 :=
     by 
       simp [hp.1.ne_one]
 
-theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℚ_[p])∥ < 1 ↔ «expr↑ » p ∣ k :=
+theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℚ_[p])∥ < 1 ↔ ↑p ∣ k :=
   by 
-    split 
+    constructor
     ·
       intro h 
       contrapose! h 
@@ -1151,17 +1198,17 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℚ_[p])∥ < 1 ↔ «expr�
         apply inv_lt_one 
         exactModCast hp.1.one_lt
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_int_le_pow_iff_dvd
-(k : exprℤ())
-(n : exprℕ()) : «expr ↔ »(«expr ≤ »(«expr∥ ∥»((k : «exprℚ_[ ]»(p))), «expr ^ »(«expr↑ »(p), («expr- »(n) : exprℤ()))), «expr ∣ »(«expr↑ »(«expr ^ »(p, n)), k)) :=
-begin
-  have [] [":", expr «expr = »(«expr ^ »((p : exprℝ()), («expr- »(n) : exprℤ())), «expr↑ »((«expr ^ »(p, («expr- »(n) : exprℤ())) : exprℚ())))] [],
-  { simp [] [] [] [] [] [] },
-  rw ["[", expr show «expr = »((k : «exprℚ_[ ]»(p)), ((k : exprℚ()) : «exprℚ_[ ]»(p))), by norm_cast [], ",", expr eq_padic_norm, ",", expr this, "]"] [],
-  norm_cast [],
-  rw [expr padic_norm.dvd_iff_norm_le] []
-end
+theorem norm_int_le_pow_iff_dvd (k : ℤ) (n : ℕ) : ∥(k : ℚ_[p])∥ ≤ (↑p^(-n : ℤ)) ↔ ↑(p^n) ∣ k :=
+  by 
+    have  : ((p : ℝ)^(-n : ℤ)) = ↑(p^(-n : ℤ) : ℚ)
+    ·
+      simp 
+    rw
+      [show (k : ℚ_[p]) = ((k : ℚ) : ℚ_[p])by 
+        normCast,
+      eq_padic_norm, this]
+    normCast 
+    rw [padicNorm.dvd_iff_norm_le]
 
 theorem eq_of_norm_add_lt_right {p : ℕ} {hp : Fact p.prime} {z1 z2 : ℚ_[p]} (h : ∥z1+z2∥ < ∥z2∥) : ∥z1∥ = ∥z2∥ :=
   by_contradiction$
@@ -1189,32 +1236,35 @@ variable {p : ℕ} [hp_prime : Fact p.prime]
 
 include hp_prime
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance complete : cau_seq.is_complete «exprℚ_[ ]»(p) norm :=
-begin
-  split,
-  intro [ident f],
-  have [ident cau_seq_norm_e] [":", expr is_cau_seq padic_norm_e f] [],
-  { intros [ident ε, ident hε],
-    let [ident h] [] [":=", expr is_cau f ε (by exact_mod_cast [expr hε])],
-    unfold [ident norm] ["at", ident h],
-    apply_mod_cast [expr h] },
-  cases [expr padic.complete' ⟨f, cau_seq_norm_e⟩] ["with", ident q, ident hq],
-  existsi [expr q],
-  intros [ident ε, ident hε],
-  cases [expr exists_rat_btwn hε] ["with", ident ε', ident hε'],
-  norm_cast ["at", ident hε'],
-  cases [expr hq ε' hε'.1] ["with", ident N, ident hN],
-  existsi [expr N],
-  intros [ident i, ident hi],
-  let [ident h] [] [":=", expr hN i hi],
-  unfold [ident norm] [],
-  rw_mod_cast ["[", expr cau_seq.sub_apply, ",", expr padic_norm_e.sub_rev, "]"] [],
-  refine [expr lt_trans _ hε'.2],
-  exact_mod_cast [expr hN i hi]
-end
+instance complete : CauSeq.IsComplete ℚ_[p] norm :=
+  by 
+    constructor 
+    intro f 
+    have cau_seq_norm_e : IsCauSeq padicNormE f
+    ·
+      intro ε hε 
+      let h :=
+        is_cau f ε
+          (by 
+            exactModCast hε)
+      unfold norm  at h 
+      applyModCast h 
+    cases' Padic.complete' ⟨f, cau_seq_norm_e⟩ with q hq 
+    exists q 
+    intro ε hε 
+    cases' exists_rat_btwn hε with ε' hε' 
+    normCast  at hε' 
+    cases' hq ε' hε'.1 with N hN 
+    exists N 
+    intro i hi 
+    let h := hN i hi 
+    unfold norm 
+    rwModCast [CauSeq.sub_apply, padicNormE.sub_rev]
+    refine' lt_transₓ _ hε'.2 
+    exactModCast hN i hi
 
 theorem padic_norm_e_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf : ∀ i, ∥f i∥ ≤ a) : ∥f.lim∥ ≤ a :=
   let ⟨N, hN⟩ := Setoidₓ.symm (CauSeq.equiv_lim f) _ ha 
@@ -1230,36 +1280,39 @@ theorem padic_norm_e_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf
 -/
 
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 `padic.valuation` lifts the p-adic valuation on rationals to `ℚ_[p]`.
--/ def valuation : «exprℚ_[ ]»(p) → exprℤ() :=
-quotient.lift (@padic_seq.valuation p _) (λ f g h, begin
-   by_cases [expr hf, ":", expr «expr ≈ »(f, 0)],
-   { have [ident hg] [":", expr «expr ≈ »(g, 0)] [],
-     from [expr setoid.trans (setoid.symm h) hf],
-     simp [] [] [] ["[", expr hf, ",", expr hg, ",", expr padic_seq.valuation, "]"] [] [] },
-   { have [ident hg] [":", expr «expr¬ »(«expr ≈ »(g, 0))] [],
-     from [expr λ hg, hf (setoid.trans h hg)],
-     rw [expr padic_seq.val_eq_iff_norm_eq hf hg] [],
-     exact [expr padic_seq.norm_equiv h] }
- end)
+-/
+def Valuation : ℚ_[p] → ℤ :=
+  Quotientₓ.lift (@PadicSeq.valuation p _)
+    fun f g h =>
+      by 
+        byCases' hf : f ≈ 0
+        ·
+          have hg : g ≈ 0 
+          exact Setoidₓ.trans (Setoidₓ.symm h) hf 
+          simp [hf, hg, PadicSeq.valuation]
+        ·
+          have hg : ¬g ≈ 0 
+          exact fun hg => hf (Setoidₓ.trans h hg)
+          rw [PadicSeq.val_eq_iff_norm_eq hf hg]
+          exact PadicSeq.norm_equiv h
 
 @[simp]
 theorem valuation_zero : Valuation (0 : ℚ_[p]) = 0 :=
   dif_pos ((const_equiv p).2 rfl)
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem valuation_one : «expr = »(valuation (1 : «exprℚ_[ ]»(p)), 0) :=
-begin
-  change [expr «expr = »(dite «expr ≈ »(cau_seq.const (padic_norm p) 1, _) _ _, _)] [] [],
-  have [ident h] [":", expr «expr¬ »(«expr ≈ »(cau_seq.const (padic_norm p) 1, 0))] [],
-  { assume [binders (H)],
-    erw [expr const_equiv p] ["at", ident H],
-    exact [expr one_ne_zero H] },
-  rw [expr dif_neg h] [],
-  simp [] [] [] [] [] []
-end
+@[simp]
+theorem valuation_one : Valuation (1 : ℚ_[p]) = 0 :=
+  by 
+    change dite (CauSeq.const (padicNorm p) 1 ≈ _) _ _ = _ 
+    have h : ¬CauSeq.const (padicNorm p) 1 ≈ 0
+    ·
+      intro H 
+      erw [const_equiv p] at H 
+      exact one_ne_zero H 
+    rw [dif_neg h]
+    simp 
 
 theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ∥x∥ = (p^-x.valuation) :=
   by 
@@ -1268,7 +1321,7 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ∥x∥ = (p^-x.valuation) :
     intro f hf 
     change (PadicSeq.norm _ : ℝ) = ((p : ℝ)^-PadicSeq.valuation _)
     rw [PadicSeq.norm_eq_pow_val]
-    change «expr↑ » ((p : ℚ)^-PadicSeq.valuation f) = ((p : ℝ)^-PadicSeq.valuation f)
+    change ↑((p : ℚ)^-PadicSeq.valuation f) = ((p : ℝ)^-PadicSeq.valuation f)
     ·
       rw [Rat.cast_zpow]
       congr 1
@@ -1279,39 +1332,41 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ∥x∥ = (p^-x.valuation) :
       apply Quotientₓ.sound 
       simpa using hf
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem valuation_p : «expr = »(valuation (p : «exprℚ_[ ]»(p)), 1) :=
-begin
-  have [ident h] [":", expr «expr < »((1 : exprℝ()), p)] [":=", expr by exact_mod_cast [expr (fact.out p.prime).one_lt]],
-  rw ["<-", expr neg_inj] [],
-  apply [expr (zpow_strict_mono h).injective],
-  dsimp ["only"] [] [] [],
-  rw ["<-", expr norm_eq_pow_val] [],
-  { simp [] [] [] [] [] [] },
-  { exact_mod_cast [expr (fact.out p.prime).ne_zero] }
-end
+@[simp]
+theorem valuation_p : Valuation (p : ℚ_[p]) = 1 :=
+  by 
+    have h : (1 : ℝ) < p :=
+      by 
+        exactModCast (Fact.out p.prime).one_lt 
+    rw [←neg_inj]
+    apply (zpow_strict_mono h).Injective 
+    dsimp only 
+    rw [←norm_eq_pow_val]
+    ·
+      simp 
+    ·
+      exactModCast (Fact.out p.prime).ne_zero
 
 section NormLeIff
 
 /-! ### Various characterizations of open unit balls -/
 
 
--- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_le_pow_iff_norm_lt_pow_add_one
-(x : «exprℚ_[ ]»(p))
-(n : exprℤ()) : «expr ↔ »(«expr ≤ »(«expr∥ ∥»(x), «expr ^ »(p, n)), «expr < »(«expr∥ ∥»(x), «expr ^ »(p, «expr + »(n, 1)))) :=
-begin
-  have [ident aux] [":", expr ∀ n : exprℤ(), «expr < »(0, («expr ^ »(p, n) : exprℝ()))] [],
-  { apply [expr nat.zpow_pos_of_pos],
-    exact [expr hp_prime.1.pos] },
-  by_cases [expr hx0, ":", expr «expr = »(x, 0)],
-  { simp [] [] [] ["[", expr hx0, ",", expr norm_zero, ",", expr aux, ",", expr le_of_lt (aux _), "]"] [] [] },
-  rw [expr norm_eq_pow_val hx0] [],
-  have [ident h1p] [":", expr «expr < »(1, (p : exprℝ()))] [],
-  { exact_mod_cast [expr hp_prime.1.one_lt] },
-  have [ident H] [] [":=", expr zpow_strict_mono h1p],
-  rw ["[", expr H.le_iff_le, ",", expr H.lt_iff_lt, ",", expr int.lt_add_one_iff, "]"] []
-end
+theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ∥x∥ ≤ (p^n) ↔ ∥x∥ < (p^n+1) :=
+  by 
+    have aux : ∀ n : ℤ, 0 < (p^n : ℝ)
+    ·
+      apply Nat.zpow_pos_of_pos 
+      exact hp_prime.1.Pos 
+    byCases' hx0 : x = 0
+    ·
+      simp [hx0, norm_zero, aux, le_of_ltₓ (aux _)]
+    rw [norm_eq_pow_val hx0]
+    have h1p : 1 < (p : ℝ)
+    ·
+      exactModCast hp_prime.1.one_lt 
+    have H := zpow_strict_mono h1p 
+    rw [H.le_iff_le, H.lt_iff_lt, Int.lt_add_one_iff]
 
 theorem norm_lt_pow_iff_norm_le_pow_sub_one (x : ℚ_[p]) (n : ℤ) : ∥x∥ < (p^n) ↔ ∥x∥ ≤ (p^n - 1) :=
   by 

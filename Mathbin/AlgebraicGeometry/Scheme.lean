@@ -12,7 +12,7 @@ A morphism of schemes is just a morphism of the underlying locally ringed spaces
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open TopologicalSpace
 
@@ -24,7 +24,7 @@ open Opposite
 
 namespace AlgebraicGeometry
 
--- error in AlgebraicGeometry.Scheme: ././Mathport/Syntax/Translate/Basic.lean:1004:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1056:11: unsupported: advanced extends in structure
 /--
 We define `Scheme` as a `X : LocallyRingedSpace`,
 along with a proof that every point has an open neighbourhood `U`
@@ -32,10 +32,11 @@ so that that the restriction of `X` to `U` is isomorphic,
 as a locally ringed space, to `Spec.to_LocallyRingedSpace.obj (op R)`
 for some `R : CommRing`.
 -/
-structure Schemeextends X : LocallyRingedSpace :=
-  (local_affine : ∀
-   x : X, «expr∃ , »((U : open_nhds x)
-    (R : CommRing), nonempty «expr ≅ »(X.restrict U.open_embedding, Spec.to_LocallyRingedSpace.obj (op R))))
+structure Scheme extends
+  "././Mathport/Syntax/Translate/Basic.lean:1056:11: unsupported: advanced extends in structure" where 
+  local_affine :
+  ∀ x : X,
+    ∃ (U : open_nhds x)(R : CommRingₓₓ), Nonempty (X.restrict U.open_embedding ≅ Spec.to_LocallyRingedSpace.obj (op R))
 
 namespace Scheme
 
@@ -50,6 +51,10 @@ Schemes are a full subcategory of locally ringed spaces.
 -/
 instance : category Scheme :=
   induced_category.category Scheme.to_LocallyRingedSpace
+
+/-- The structure sheaf of a Scheme. -/
+protected abbrev sheaf (X : Scheme) :=
+  X.to_SheafedSpace.sheaf
 
 /--
 The spectrum of a commutative ring, as a scheme.
@@ -80,7 +85,7 @@ theorem Spec_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) : Spe
 The spectrum, as a contravariant functor from commutative rings to schemes.
 -/
 @[simps]
-def Spec : «expr ᵒᵖ» CommRingₓₓ ⥤ Scheme :=
+def Spec : CommRingₓₓᵒᵖ ⥤ Scheme :=
   { obj := fun R => Spec_obj (unop R), map := fun R S f => Spec_map f.unop,
     map_id' :=
       fun R =>
@@ -106,21 +111,21 @@ instance : Inhabited Scheme :=
 /--
 The global sections, notated Gamma.
 -/
-def Γ : «expr ᵒᵖ» Scheme ⥤ CommRingₓₓ :=
+def Γ : Schemeᵒᵖ ⥤ CommRingₓₓ :=
   (induced_functor Scheme.to_LocallyRingedSpace).op ⋙ LocallyRingedSpace.Γ
 
 theorem Γ_def : Γ = (induced_functor Scheme.to_LocallyRingedSpace).op ⋙ LocallyRingedSpace.Γ :=
   rfl
 
 @[simp]
-theorem Γ_obj (X : «expr ᵒᵖ» Scheme) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
+theorem Γ_obj (X : Schemeᵒᵖ) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
   rfl
 
 theorem Γ_obj_op (X : Scheme) : Γ.obj (op X) = X.presheaf.obj (op ⊤) :=
   rfl
 
 @[simp]
-theorem Γ_map {X Y : «expr ᵒᵖ» Scheme} (f : X ⟶ Y) : Γ.map f = f.unop.1.c.app (op ⊤) :=
+theorem Γ_map {X Y : Schemeᵒᵖ} (f : X ⟶ Y) : Γ.map f = f.unop.1.c.app (op ⊤) :=
   rfl
 
 theorem Γ_map_op {X Y : Scheme} (f : X ⟶ Y) : Γ.map f.op = f.1.c.app (op ⊤) :=

@@ -35,11 +35,11 @@ namespace Opens
 instance : Coe (opens α) (Set α) :=
   { coe := Subtype.val }
 
-theorem val_eq_coe (U : opens α) : U.1 = «expr↑ » U :=
+theorem val_eq_coe (U : opens α) : U.1 = ↑U :=
   rfl
 
 /-- the coercion `opens α → set α` applied to a pair is the same as taking the first component -/
-theorem coe_mk {α : Type _} [TopologicalSpace α] {U : Set α} {hU : IsOpen U} : «expr↑ » (⟨U, hU⟩ : opens α) = U :=
+theorem coe_mk {α : Type _} [TopologicalSpace α] {U : Set α} {hU : IsOpen U} : ↑(⟨U, hU⟩ : opens α) = U :=
   rfl
 
 instance : HasSubset (opens α) :=
@@ -88,8 +88,7 @@ theorem gi_choice_val {s : OrderDual (Set α)} {hs} : (gi.choice s hs).val = s :
 instance : CompleteLattice (opens α) :=
   CompleteLattice.copy (@OrderDual.completeLattice _ (GaloisInsertion.liftCompleteLattice (@gi α _))) (fun U V => U ⊆ V)
     rfl ⟨Set.Univ, is_open_univ⟩ (Subtype.ext_iff_val.mpr interior_univ.symm) ⟨∅, is_open_empty⟩ rfl
-    (fun U V => ⟨«expr↑ » U ∪ «expr↑ » V, IsOpen.union U.2 V.2⟩) rfl
-    (fun U V => ⟨«expr↑ » U ∩ «expr↑ » V, IsOpen.inter U.2 V.2⟩)
+    (fun U V => ⟨↑U ∪ ↑V, IsOpen.union U.2 V.2⟩) rfl (fun U V => ⟨↑U ∩ ↑V, IsOpen.inter U.2 V.2⟩)
     (by 
       funext 
       apply subtype.ext_iff_val.mpr 
@@ -134,25 +133,26 @@ theorem empty_eq : (∅ : opens α) = ⊥ :=
   rfl
 
 @[simp]
-theorem Sup_s {Us : Set (opens α)} : «expr↑ » (Sup Us) = ⋃₀((coeₓ : _ → Set α) '' Us) :=
+theorem Sup_s {Us : Set (opens α)} : ↑Sup Us = ⋃₀((coeₓ : _ → Set α) '' Us) :=
   by 
     rw [(@gc α _).l_Sup, Set.sUnion_image]
     rfl
 
-theorem supr_def {ι} (s : ι → opens α) : (⨆i, s i) = ⟨⋃i, s i, is_open_Union$ fun i => (s i).2⟩ :=
+theorem supr_def {ι} (s : ι → opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union$ fun i => (s i).2⟩ :=
   by 
     ext 
     simp only [supr, opens.Sup_s, sUnion_image, bUnion_range]
     rfl
 
 @[simp]
-theorem supr_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) : (⨆i, ⟨s i, h i⟩ : opens α) = ⟨⋃i, s i, is_open_Union h⟩ :=
+theorem supr_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) :
+  (⨆ i, ⟨s i, h i⟩ : opens α) = ⟨⋃ i, s i, is_open_Union h⟩ :=
   by 
     rw [supr_def]
     simp 
 
 @[simp]
-theorem supr_s {ι} (s : ι → opens α) : ((⨆i, s i : opens α) : Set α) = ⋃i, s i :=
+theorem supr_s {ι} (s : ι → opens α) : ((⨆ i, s i : opens α) : Set α) = ⋃ i, s i :=
   by 
     simp [supr_def]
 
@@ -162,6 +162,7 @@ theorem mem_supr {ι} {x : α} {s : ι → opens α} : x ∈ supr s ↔ ∃ i, x
     rw [←mem_coe]
     simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » Us)
 @[simp]
 theorem mem_Sup {Us : Set (opens α)} {x : α} : x ∈ Sup Us ↔ ∃ (u : _)(_ : u ∈ Us), x ∈ u :=
   by 
@@ -178,10 +179,11 @@ theorem open_embedding_of_le {U V : opens α} (i : U ≤ V) : OpenEmbedding (Set
 def is_basis (B : Set (opens α)) : Prop :=
   is_topological_basis ((coeₓ : _ → Set α) '' B)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U' «expr ∈ » B)
 theorem is_basis_iff_nbhd {B : Set (opens α)} :
   is_basis B ↔ ∀ {U : opens α} {x}, x ∈ U → ∃ (U' : _)(_ : U' ∈ B), x ∈ U' ∧ U' ⊆ U :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rintro ⟨sU, hU⟩ x hx 
       rcases h.mem_nhds_iff.mp (IsOpen.mem_nhds hU hx) with ⟨sV, ⟨⟨V, H₁, H₂⟩, hsV⟩⟩
@@ -201,12 +203,13 @@ theorem is_basis_iff_nbhd {B : Set (opens α)} :
         rcases@h (⟨sU, hsU⟩ : opens α) x hx with ⟨V, hV, H⟩
         exact ⟨V, ⟨V, hV, rfl⟩, H⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (Us «expr ⊆ » B)
 theorem is_basis_iff_cover {B : Set (opens α)} : is_basis B ↔ ∀ U : opens α, ∃ (Us : _)(_ : Us ⊆ B), U = Sup Us :=
   by 
-    split 
+    constructor
     ·
       intro hB U 
-      refine' ⟨{ V:opens α | V ∈ B ∧ V ⊆ U }, fun U hU => hU.left, _⟩
+      refine' ⟨{ V : opens α | V ∈ B ∧ V ⊆ U }, fun U hU => hU.left, _⟩
       apply ext 
       rw [Sup_s, hB.open_eq_sUnion' U.prop]
       simpRw [sUnion_image, sUnion_eq_bUnion, Union, supr_and, supr_image]
@@ -224,7 +227,7 @@ def comap (f : C(α, β)) : opens β →ₘ opens α :=
   { toFun := fun V => ⟨f ⁻¹' V, V.2.Preimage f.continuous⟩, monotone' := fun V₁ V₂ hle => monotone_preimage hle }
 
 @[simp]
-theorem comap_id : comap (ContinuousMap.id : C(α, α)) = PreorderHom.id :=
+theorem comap_id : comap (ContinuousMap.id : C(α, α)) = OrderHom.id :=
   by 
     ext 
     rfl
@@ -233,7 +236,7 @@ theorem comap_mono (f : C(α, β)) {V W : opens β} (hVW : V ⊆ W) : comap f V 
   (comap f).Monotone hVW
 
 @[simp]
-theorem coe_comap (f : C(α, β)) (U : opens β) : «expr↑ » (comap f U) = f ⁻¹' U :=
+theorem coe_comap (f : C(α, β)) (U : opens β) : ↑comap f U = f ⁻¹' U :=
   rfl
 
 @[simp]
@@ -248,7 +251,7 @@ protected theorem comap_comap (g : C(β, γ)) (f : C(α, β)) (U : opens γ) : c
 
 /-- A homeomorphism induces an equivalence on open sets, by taking comaps. -/
 @[simp]
-protected def Equiv (f : α ≃ₜ β) : opens α ≃ opens β :=
+protected def Equivₓ (f : α ≃ₜ β) : opens α ≃ opens β :=
   { toFun := opens.comap f.symm.to_continuous_map, invFun := opens.comap f.to_continuous_map,
     left_inv :=
       by 

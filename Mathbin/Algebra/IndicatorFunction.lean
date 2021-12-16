@@ -21,7 +21,7 @@ indicator, characteristic
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -98,7 +98,7 @@ theorem mul_indicator_eq_one' : mul_indicator s f = 1 ↔ Disjoint (mul_support 
 @[toAdditive]
 theorem mul_indicator_eq_one_iff (a : α) : s.mul_indicator f a ≠ 1 ↔ a ∈ s ∩ mul_support f :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       byContra hmem 
       simp only [Set.mem_inter_eq, not_and, not_not, Function.mem_mul_support] at hmem 
@@ -179,14 +179,22 @@ theorem mul_indicator_one' {s : Set α} : s.mul_indicator (1 : α → M) = 1 :=
 
 variable {M}
 
--- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem mul_indicator_mul_indicator
-(s t : set α)
-(f : α → M) : «expr = »(mul_indicator s (mul_indicator t f), mul_indicator «expr ∩ »(s, t) f) :=
-«expr $ »(funext, λ x, by { simp [] [] ["only"] ["[", expr mul_indicator, "]"] [] [],
-   split_ifs [] [],
-   repeat { simp [] [] [] ["*"] [] ["at", "*"] { contextual := tt } } })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ toAdditive ]
+  theorem
+    mul_indicator_mul_indicator
+    ( s t : Set α ) ( f : α → M ) : mul_indicator s mul_indicator t f = mul_indicator s ∩ t f
+    :=
+      funext
+        $
+        fun
+          x
+            =>
+            by
+              simp only [ mul_indicator ]
+                splitIfs
+                repeat' simp_all ( config := { contextual := Bool.true._@._internal._hyg.0 } )
 
 @[simp, toAdditive]
 theorem mul_indicator_inter_mul_support (s : Set α) (f : α → M) :
@@ -284,7 +292,7 @@ theorem mul_indicator_mul (s : Set α) (f g : α → M) :
 
 @[simp, toAdditive]
 theorem mul_indicator_compl_mul_self_apply (s : Set α) (f : α → M) (a : α) :
-  (mul_indicator («expr ᶜ» s) f a*mul_indicator s f a) = f a :=
+  (mul_indicator (sᶜ) f a*mul_indicator s f a) = f a :=
   Classical.by_cases
     (fun ha : a ∈ s =>
       by 
@@ -294,12 +302,12 @@ theorem mul_indicator_compl_mul_self_apply (s : Set α) (f : α → M) (a : α) 
         simp [ha]
 
 @[simp, toAdditive]
-theorem mul_indicator_compl_mul_self (s : Set α) (f : α → M) : (mul_indicator («expr ᶜ» s) f*mul_indicator s f) = f :=
+theorem mul_indicator_compl_mul_self (s : Set α) (f : α → M) : (mul_indicator (sᶜ) f*mul_indicator s f) = f :=
   funext$ mul_indicator_compl_mul_self_apply s f
 
 @[simp, toAdditive]
 theorem mul_indicator_self_mul_compl_apply (s : Set α) (f : α → M) (a : α) :
-  (mul_indicator s f a*mul_indicator («expr ᶜ» s) f a) = f a :=
+  (mul_indicator s f a*mul_indicator (sᶜ) f a) = f a :=
   Classical.by_cases
     (fun ha : a ∈ s =>
       by 
@@ -309,32 +317,26 @@ theorem mul_indicator_self_mul_compl_apply (s : Set α) (f : α → M) (a : α) 
         simp [ha]
 
 @[simp, toAdditive]
-theorem mul_indicator_self_mul_compl (s : Set α) (f : α → M) : (mul_indicator s f*mul_indicator («expr ᶜ» s) f) = f :=
+theorem mul_indicator_self_mul_compl (s : Set α) (f : α → M) : (mul_indicator s f*mul_indicator (sᶜ) f) = f :=
   funext$ mul_indicator_self_mul_compl_apply s f
 
--- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem mul_indicator_mul_eq_left
-{f g : α → M}
-(h : disjoint (mul_support f) (mul_support g)) : «expr = »((mul_support f).mul_indicator «expr * »(f, g), f) :=
-begin
-  refine [expr «expr $ »(mul_indicator_congr, λ x hx, _).trans mul_indicator_mul_support],
-  have [] [":", expr «expr = »(g x, 1)] [],
-  from [expr nmem_mul_support.1 (disjoint_left.1 h hx)],
-  rw ["[", expr pi.mul_apply, ",", expr this, ",", expr mul_one, "]"] []
-end
+@[toAdditive]
+theorem mul_indicator_mul_eq_left {f g : α → M} (h : Disjoint (mul_support f) (mul_support g)) :
+  (mul_support f).mulIndicator (f*g) = f :=
+  by 
+    refine' (mul_indicator_congr$ fun x hx => _).trans mul_indicator_mul_support 
+    have  : g x = 1 
+    exact nmem_mul_support.1 (disjoint_left.1 h hx)
+    rw [Pi.mul_apply, this, mul_oneₓ]
 
--- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem mul_indicator_mul_eq_right
-{f g : α → M}
-(h : disjoint (mul_support f) (mul_support g)) : «expr = »((mul_support g).mul_indicator «expr * »(f, g), g) :=
-begin
-  refine [expr «expr $ »(mul_indicator_congr, λ x hx, _).trans mul_indicator_mul_support],
-  have [] [":", expr «expr = »(f x, 1)] [],
-  from [expr nmem_mul_support.1 (disjoint_right.1 h hx)],
-  rw ["[", expr pi.mul_apply, ",", expr this, ",", expr one_mul, "]"] []
-end
+@[toAdditive]
+theorem mul_indicator_mul_eq_right {f g : α → M} (h : Disjoint (mul_support f) (mul_support g)) :
+  (mul_support g).mulIndicator (f*g) = g :=
+  by 
+    refine' (mul_indicator_congr$ fun x hx => _).trans mul_indicator_mul_support 
+    have  : f x = 1 
+    exact nmem_mul_support.1 (disjoint_right.1 h hx)
+    rw [Pi.mul_apply, this, one_mulₓ]
 
 /-- `set.mul_indicator` as a `monoid_hom`. -/
 @[toAdditive "`set.indicator` as an `add_monoid_hom`."]
@@ -377,10 +379,10 @@ theorem indicator_sub {G} [AddGroupₓ G] (s : Set α) (f g : α → G) :
   (indicator_hom G s).map_sub f g
 
 @[toAdditive indicator_compl']
-theorem mul_indicator_compl (s : Set α) (f : α → G) : mul_indicator («expr ᶜ» s) f = f*mul_indicator s f⁻¹ :=
+theorem mul_indicator_compl (s : Set α) (f : α → G) : mul_indicator (sᶜ) f = f*mul_indicator s f⁻¹ :=
   eq_mul_inv_of_mul_eq$ s.mul_indicator_compl_mul_self f
 
-theorem indicator_compl {G} [AddGroupₓ G] (s : Set α) (f : α → G) : indicator («expr ᶜ» s) f = f - indicator s f :=
+theorem indicator_compl {G} [AddGroupₓ G] (s : Set α) (f : α → G) : indicator (sᶜ) f = f - indicator s f :=
   by 
     rw [sub_eq_add_neg, indicator_compl']
 
@@ -409,7 +411,7 @@ function, the `finset` may be replaced by a possibly larger `finset`
 without changing the value of the sum. -/
 @[toAdditive]
 theorem prod_mul_indicator_subset_of_eq_one [HasOne N] (f : α → N) (g : α → N → M) {s t : Finset α} (h : s ⊆ t)
-  (hg : ∀ a, g a 1 = 1) : (∏i in s, g i (f i)) = ∏i in t, g i (mul_indicator («expr↑ » s) f i) :=
+  (hg : ∀ a, g a 1 = 1) : (∏ i in s, g i (f i)) = ∏ i in t, g i (mul_indicator (↑s) f i) :=
   by 
     rw [←Finset.prod_subset h _]
     ·
@@ -434,7 +436,7 @@ add_decl_doc Set.sum_indicator_subset_of_eq_zero
 
 @[toAdditive]
 theorem prod_mul_indicator_subset (f : α → M) {s t : Finset α} (h : s ⊆ t) :
-  (∏i in s, f i) = ∏i in t, mul_indicator («expr↑ » s) f i :=
+  (∏ i in s, f i) = ∏ i in t, mul_indicator (↑s) f i :=
   prod_mul_indicator_subset_of_eq_one _ (fun a b => b) h fun _ => rfl
 
 /-- Summing an indicator function over a possibly larger `finset` is
@@ -444,23 +446,26 @@ add_decl_doc sum_indicator_subset
 
 @[toAdditive]
 theorem _root_.finset.prod_mul_indicator_eq_prod_filter (s : Finset ι) (f : ι → α → M) (t : ι → Set α) (g : ι → α) :
-  (∏i in s, mul_indicator (t i) (f i) (g i)) = ∏i in s.filter fun i => g i ∈ t i, f i (g i) :=
+  (∏ i in s, mul_indicator (t i) (f i) (g i)) = ∏ i in s.filter fun i => g i ∈ t i, f i (g i) :=
   by 
     refine' (Finset.prod_filter_mul_prod_filter_not s (fun i => g i ∈ t i) _).symm.trans _ 
     refine' Eq.trans _ (mul_oneₓ _)
     exact
-      congr_arg2 (·*·) (Finset.prod_congr rfl$ fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
+      congr_arg2ₓ (·*·) (Finset.prod_congr rfl$ fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
         (Finset.prod_eq_one$ fun x hx => mul_indicator_of_not_mem (Finset.mem_filter.1 hx).2 _)
 
 @[toAdditive]
 theorem mul_indicator_finset_prod (I : Finset ι) (s : Set α) (f : ι → α → M) :
-  mul_indicator s (∏i in I, f i) = ∏i in I, mul_indicator s (f i) :=
+  mul_indicator s (∏ i in I, f i) = ∏ i in I, mul_indicator s (f i) :=
   (mul_indicator_hom M s).map_prod _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 @[toAdditive]
 theorem mul_indicator_finset_bUnion {ι} (I : Finset ι) (s : ι → Set α) {f : α → M} :
   (∀ i _ : i ∈ I j _ : j ∈ I, i ≠ j → Disjoint (s i) (s j)) →
-    mul_indicator (⋃(i : _)(_ : i ∈ I), s i) f = fun a => ∏i in I, mul_indicator (s i) f a :=
+    mul_indicator (⋃ (i : _)(_ : i ∈ I), s i) f = fun a => ∏ i in I, mul_indicator (s i) f a :=
   by 
     refine' Finset.induction_on I _ _
     ·
@@ -542,6 +547,8 @@ theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 
     by 
       simpa [ha] using hg ha
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∉ » s)
 @[toAdditive]
 theorem mul_indicator_le' (hfg : ∀ a _ : a ∈ s, f a ≤ g a) (hg : ∀ a _ : a ∉ s, 1 ≤ g a) : mul_indicator s f ≤ g :=
   fun a => mul_indicator_apply_le' (hfg _) (hg _)
@@ -550,6 +557,8 @@ theorem mul_indicator_le' (hfg : ∀ a _ : a ∈ s, f a ≤ g a) (hg : ∀ a _ :
 theorem le_mul_indicator_apply {y} (hfg : a ∈ s → y ≤ g a) (hf : a ∉ s → y ≤ 1) : y ≤ mul_indicator s g a :=
   @mul_indicator_apply_le' α (OrderDual M) ‹_› _ _ _ _ _ hfg hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∉ » s)
 @[toAdditive]
 theorem le_mul_indicator (hfg : ∀ a _ : a ∈ s, f a ≤ g a) (hf : ∀ a _ : a ∉ s, f a ≤ 1) : f ≤ mul_indicator s g :=
   fun a => le_mul_indicator_apply (hfg _) (hf _)
@@ -558,6 +567,7 @@ theorem le_mul_indicator (hfg : ∀ a _ : a ∈ s, f a ≤ g a) (hf : ∀ a _ : 
 theorem one_le_mul_indicator_apply (h : a ∈ s → 1 ≤ f a) : 1 ≤ mul_indicator s f a :=
   le_mul_indicator_apply h fun _ => le_rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[toAdditive indicator_nonneg]
 theorem one_le_mul_indicator (h : ∀ a _ : a ∈ s, 1 ≤ f a) (a : α) : 1 ≤ mul_indicator s f a :=
   one_le_mul_indicator_apply (h a)
@@ -566,6 +576,7 @@ theorem one_le_mul_indicator (h : ∀ a _ : a ∈ s, 1 ≤ f a) (a : α) : 1 ≤
 theorem mul_indicator_apply_le_one (h : a ∈ s → f a ≤ 1) : mul_indicator s f a ≤ 1 :=
   mul_indicator_apply_le' h fun _ => le_rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[toAdditive]
 theorem mul_indicator_le_one (h : ∀ a _ : a ∈ s, f a ≤ 1) (a : α) : mul_indicator s f a ≤ 1 :=
   mul_indicator_apply_le_one (h a)
@@ -582,15 +593,16 @@ theorem mul_indicator_le_mul_indicator_of_subset (h : s ⊆ t) (hf : ∀ a, 1 �
   mul_indicator_apply_le' (fun ha => le_mul_indicator_apply (fun _ => le_rfl) fun hat => (hat$ h ha).elim)
     fun ha => one_le_mul_indicator_apply fun _ => hf _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∉ » s)
 @[toAdditive]
 theorem mul_indicator_le_self' (hf : ∀ x _ : x ∉ s, 1 ≤ f x) : mul_indicator s f ≤ f :=
   mul_indicator_le' (fun _ _ => le_reflₓ _) hf
 
 @[toAdditive]
 theorem mul_indicator_Union_apply {ι M} [CompleteLattice M] [HasOne M] (h1 : (⊥ : M) = 1) (s : ι → Set α) (f : α → M)
-  (x : α) : mul_indicator (⋃i, s i) f x = ⨆i, mul_indicator (s i) f x :=
+  (x : α) : mul_indicator (⋃ i, s i) f x = ⨆ i, mul_indicator (s i) f x :=
   by 
-    byCases' hx : x ∈ ⋃i, s i
+    byCases' hx : x ∈ ⋃ i, s i
     ·
       rw [mul_indicator_of_mem hx]
       rw [mem_Union] at hx 
@@ -617,30 +629,26 @@ theorem mul_indicator_apply_le {a : α} {s : Set α} {f g : α → M} (hfg : a �
   mul_indicator s f a ≤ g a :=
   mul_indicator_apply_le' hfg$ fun _ => one_le _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[toAdditive]
 theorem mul_indicator_le {s : Set α} {f g : α → M} (hfg : ∀ a _ : a ∈ s, f a ≤ g a) : mul_indicator s f ≤ g :=
   mul_indicator_le' hfg$ fun _ _ => one_le _
 
 end CanonicallyOrderedMonoid
 
-theorem indicator_le_indicator_nonneg {β} [LinearOrderₓ β] [HasZero β] (s : Set α) (f : α → β) :
-  s.indicator f ≤ { x | 0 ≤ f x }.indicator f :=
-  by 
-    intro x 
-    simpRw [indicator_apply]
-    splitIfs
-    ·
-      exact le_rfl
-    ·
-      exact (not_le.mp h_1).le
-    ·
-      exact h_1
-    ·
-      exact le_rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  indicator_le_indicator_nonneg
+  { β } [ LinearOrderₓ β ] [ HasZero β ] ( s : Set α ) ( f : α → β ) : s.indicator f ≤ { x | 0 ≤ f x } . indicator f
+  := by intro x simpRw [ indicator_apply ] splitIfs · exact le_rfl · exact not_le.mp h_1 . le · exact h_1 · exact le_rfl
 
-theorem indicator_nonpos_le_indicator {β} [LinearOrderₓ β] [HasZero β] (s : Set α) (f : α → β) :
-  { x | f x ≤ 0 }.indicator f ≤ s.indicator f :=
-  @indicator_le_indicator_nonneg α (OrderDual β) _ _ s f
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  indicator_nonpos_le_indicator
+  { β } [ LinearOrderₓ β ] [ HasZero β ] ( s : Set α ) ( f : α → β ) : { x | f x ≤ 0 } . indicator f ≤ s.indicator f
+  := @ indicator_le_indicator_nonneg α OrderDual β _ _ s f
 
 end Set
 

@@ -39,7 +39,8 @@ See [avigad-carneiro-hudon2019] for more details.
 
 ## Reference
 
- * [Jeremy Avigad, Mario M. Carneiro and Simon Hudon, *Data Types as Quotients of Polynomial Functors*][avigad-carneiro-hudon2019]
+ * Jeremy Avigad, Mario M. Carneiro and Simon Hudon.
+   [*Data Types as Quotients of Polynomial Functors*][avigad-carneiro-hudon2019]
 -/
 
 
@@ -189,7 +190,7 @@ attribute [nolint has_inhabited_instance] fix
 
 /-- `fix F` is a functor -/
 def fix.map {α β : Typevec n} (g : α ⟹ β) : fix F α → fix F β :=
-  Quotientₓ.lift (fun x : q.P.W α => «expr⟦ ⟧» (q.P.W_map g x)) fun a b h => Quot.sound (Wequiv_map _ _ _ h)
+  Quotientₓ.lift (fun x : q.P.W α => ⟦q.P.W_map g x⟧) fun a b h => Quot.sound (Wequiv_map _ _ _ h)
 
 instance fix.mvfunctor : Mvfunctor (fix F) :=
   { map := @fix.map _ _ _ _ }
@@ -222,19 +223,19 @@ theorem fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 
       apply recF_eq_of_Wequiv 
       apply Wrepr_equiv 
   by 
-    conv  => toLHS rw [fix.rec, fix.mk]dsimp 
+    conv  => lhs rw [fix.rec, fix.mk]dsimp 
     cases' h : reprₓ x with a f 
     rw [Mvpfunctor.map_eq, recF_eq', ←Mvpfunctor.map_eq, Mvpfunctor.W_dest'_W_mk']
     rw [←Mvpfunctor.comp_map, abs_map, ←h, abs_repr, ←append_fun_comp, id_comp, this]
 
 theorem fix.ind_aux (a : q.P.A) (f' : q.P.drop.B a ⟹ α) (f : q.P.last.B a → q.P.W α) :
-  fix.mk (abs ⟨a, q.P.append_contents f' fun x => «expr⟦ ⟧» (f x)⟩) = «expr⟦ ⟧» (q.P.W_mk a f' f) :=
-  have  : fix.mk (abs ⟨a, q.P.append_contents f' fun x => «expr⟦ ⟧» (f x)⟩) = «expr⟦ ⟧» (Wrepr (q.P.W_mk a f' f)) :=
+  fix.mk (abs ⟨a, q.P.append_contents f' fun x => ⟦f x⟧⟩) = ⟦q.P.W_mk a f' f⟧ :=
+  have  : fix.mk (abs ⟨a, q.P.append_contents f' fun x => ⟦f x⟧⟩) = ⟦Wrepr (q.P.W_mk a f' f)⟧ :=
     by 
       apply Quot.sound 
       apply Wequiv.abs' 
       rw [Mvpfunctor.W_dest'_W_mk', abs_map, abs_repr, ←abs_map, Mvpfunctor.map_eq]
-      conv  => toRHS rw [Wrepr_W_mk, q.P.W_dest'_W_mk', abs_repr, Mvpfunctor.map_eq]
+      conv  => rhs rw [Wrepr_W_mk, q.P.W_dest'_W_mk', abs_repr, Mvpfunctor.map_eq]
       congr 2
       rw [Mvpfunctor.appendContents, Mvpfunctor.appendContents]
       rw [append_fun, append_fun, ←split_fun_comp, ←split_fun_comp]
@@ -244,29 +245,26 @@ theorem fix.ind_aux (a : q.P.A) (f' : q.P.drop.B a ⟹ α) (f : q.P.last.B a →
     apply Quot.sound 
     apply Wrepr_equiv
 
--- error in Data.Qpf.Multivariate.Constructions.Fix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fix.ind_rec
-{β : Type*}
-(g₁ g₂ : fix F α → β)
-(h : ∀
- x : F (append1 α (fix F α)), «expr = »(«expr <$$> »(append_fun id g₁, x), «expr <$$> »(append_fun id g₂, x)) → «expr = »(g₁ (fix.mk x), g₂ (fix.mk x))) : ∀
-x, «expr = »(g₁ x, g₂ x) :=
-begin
-  apply [expr quot.ind],
-  intro [ident x],
-  apply [expr q.P.W_ind _ x],
-  intros [ident a, ident f', ident f, ident ih],
-  show [expr «expr = »(g₁ «expr⟦ ⟧»(q.P.W_mk a f' f), g₂ «expr⟦ ⟧»(q.P.W_mk a f' f))],
-  rw ["[", "<-", expr fix.ind_aux a f' f, "]"] [],
-  apply [expr h],
-  rw ["[", "<-", expr abs_map, ",", "<-", expr abs_map, ",", expr mvpfunctor.map_eq, ",", expr mvpfunctor.map_eq, "]"] [],
-  congr' [2] [],
-  rw ["[", expr mvpfunctor.append_contents, ",", expr append_fun, ",", expr append_fun, ",", "<-", expr split_fun_comp, ",", "<-", expr split_fun_comp, "]"] [],
-  have [] [":", expr «expr = »(«expr ∘ »(g₁, λ x, «expr⟦ ⟧»(f x)), «expr ∘ »(g₂, λ x, «expr⟦ ⟧»(f x)))] [],
-  { ext [] [ident x] [],
-    exact [expr ih x] },
-  rw [expr this] []
-end
+theorem fix.ind_rec {β : Type _} (g₁ g₂ : fix F α → β)
+  (h :
+    ∀ x : F (append1 α (fix F α)), append_fun id g₁ <$$> x = append_fun id g₂ <$$> x → g₁ (fix.mk x) = g₂ (fix.mk x)) :
+  ∀ x, g₁ x = g₂ x :=
+  by 
+    apply Quot.ind 
+    intro x 
+    apply q.P.W_ind _ x 
+    intro a f' f ih 
+    show g₁ (⟦q.P.W_mk a f' f⟧) = g₂ (⟦q.P.W_mk a f' f⟧)
+    rw [←fix.ind_aux a f' f]
+    apply h 
+    rw [←abs_map, ←abs_map, Mvpfunctor.map_eq, Mvpfunctor.map_eq]
+    congr 2
+    rw [Mvpfunctor.appendContents, append_fun, append_fun, ←split_fun_comp, ←split_fun_comp]
+    have  : (g₁ ∘ fun x => ⟦f x⟧) = g₂ ∘ fun x => ⟦f x⟧
+    ·
+      ext x 
+      exact ih x 
+    rw [this]
 
 theorem fix.rec_unique {β : Type _} (g : F (append1 α β) → β) (h : fix F α → β)
   (hyp : ∀ x, h (fix.mk x) = g (append_fun id h <$$> x)) : fix.rec g = h :=
@@ -288,19 +286,17 @@ theorem fix.mk_dest (x : fix F α) : fix.mk (fix.dest x) = x :=
     show fix.mk (append_fun id id <$$> x) = fix.mk x 
     rw [append_fun_id_id, Mvfunctor.id_map]
 
--- error in Data.Qpf.Multivariate.Constructions.Fix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fix.dest_mk (x : F (append1 α (fix F α))) : «expr = »(fix.dest (fix.mk x), x) :=
-begin
-  unfold [ident fix.dest] [],
-  rw ["[", expr fix.rec_eq, ",", "<-", expr fix.dest, ",", "<-", expr comp_map, "]"] [],
-  conv [] [] { to_rhs,
-    rw ["<-", expr mvfunctor.id_map x] },
-  rw ["[", "<-", expr append_fun_comp, ",", expr id_comp, "]"] [],
-  have [] [":", expr «expr = »(«expr ∘ »(fix.mk, fix.dest), id)] [],
-  { ext [] [ident x] [],
-    apply [expr fix.mk_dest] },
-  rw ["[", expr this, ",", expr append_fun_id_id, "]"] []
-end
+theorem fix.dest_mk (x : F (append1 α (fix F α))) : fix.dest (fix.mk x) = x :=
+  by 
+    unfold fix.dest 
+    rw [fix.rec_eq, ←fix.dest, ←comp_map]
+    conv  => rhs rw [←Mvfunctor.id_map x]
+    rw [←append_fun_comp, id_comp]
+    have  : fix.mk ∘ fix.dest = id
+    ·
+      ext x 
+      apply fix.mk_dest 
+    rw [this, append_fun_id_id]
 
 theorem fix.ind {α : Typevec n} (p : fix F α → Prop)
   (h : ∀ x : F (α.append1 (fix F α)), liftp (pred_last α p) x → p (fix.mk x)) : ∀ x, p x :=
@@ -309,7 +305,7 @@ theorem fix.ind {α : Typevec n} (p : fix F α → Prop)
     intro x 
     apply q.P.W_ind _ x 
     intro a f' f ih 
-    change p («expr⟦ ⟧» (q.P.W_mk a f' f))
+    change p (⟦q.P.W_mk a f' f⟧)
     rw [←fix.ind_aux a f' f]
     apply h 
     rw [Mvqpf.liftp_iff]
@@ -333,7 +329,7 @@ instance mvqpf_fix : Mvqpf (fix F) :=
     abs_map :=
       by 
         intro α β g x 
-        conv  => toRHS dsimp [Mvfunctor.map]
+        conv  => rhs dsimp [Mvfunctor.map]
         rw [fix.map]
         apply Quot.sound 
         apply Wequiv.refl }
@@ -352,7 +348,7 @@ def fix.drec {β : fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fi
       dsimp 
       simp [append_fun_id_id] at ih 
       congr 
-      conv  => toRHS rw [←ih]
+      conv  => rhs rw [←ih]
       rw [Mvfunctor.map_map, ←append_fun_comp, id_comp]
   cast
     (by 

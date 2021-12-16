@@ -32,9 +32,9 @@ cardinal arithmetic (for infinite cardinals)
 -/
 
 
-noncomputable theory
+noncomputable section 
 
-open Function Cardinal Set Equiv
+open Function Cardinal Set Equivₓ
 
 open_locale Classical Cardinal
 
@@ -98,7 +98,6 @@ theorem aleph_idx_le {a b} : aleph_idx a ≤ aleph_idx b ↔ a ≤ b :=
 theorem aleph_idx.init {a b} : b < aleph_idx a → ∃ c, aleph_idx c = b :=
   aleph_idx.initial_seg.init _ _
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
   (The `aleph'` part is because unlike `aleph` this counts also the
   finite stages. So `aleph_idx n = n`, `aleph_idx ω = ω`,
@@ -106,18 +105,19 @@ theorem aleph_idx.init {a b} : b < aleph_idx a → ∃ c, aleph_idx c = b :=
   In this version, we register additionally that this function is an order isomorphism
   between cardinals and ordinals.
   For the basic function version, see `aleph_idx`. -/
-def aleph_idx.rel_iso : @rel_iso cardinal.{u} ordinal.{u} ((«expr < »)) ((«expr < »)) :=
-«expr $ »(@rel_iso.of_surjective cardinal.{u} ordinal.{u} ((«expr < »)) ((«expr < »)) aleph_idx.initial_seg.{u}, «expr $ »((initial_seg.eq_or_principal aleph_idx.initial_seg.{u}).resolve_right, λ
-  ⟨o, e⟩, begin
-    have [] [":", expr ∀ c, «expr < »(aleph_idx c, o)] [":=", expr λ c, (e _).2 ⟨_, rfl⟩],
-    refine [expr ordinal.induction_on o _ this],
-    introsI [ident α, ident r, "_", ident h],
-    let [ident s] [] [":=", expr sup.{u, u} (λ a : α, inv_fun aleph_idx (ordinal.typein r a))],
-    apply [expr not_le_of_gt (lt_succ_self s)],
-    have [ident I] [":", expr injective aleph_idx] [":=", expr aleph_idx.initial_seg.to_embedding.injective],
-    simpa [] [] ["only"] ["[", expr typein_enum, ",", expr left_inverse_inv_fun I (succ s), "]"] [] ["using", expr le_sup.{u, u} (λ
-      a, inv_fun aleph_idx (ordinal.typein r a)) (ordinal.enum r _ (h (succ s)))]
-  end))
+def aleph_idx.rel_iso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
+  @RelIso.ofSurjective Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) aleph_idx.initial_seg.{u}$
+    (InitialSeg.eq_or_principal aleph_idx.initial_seg.{u}).resolve_right$
+      fun ⟨o, e⟩ =>
+        by 
+          have  : ∀ c, aleph_idx c < o := fun c => (e _).2 ⟨_, rfl⟩
+          refine' Ordinal.induction_on o _ this 
+          intros α r _ h 
+          let s := sup.{u, u} fun a : α => inv_fun aleph_idx (Ordinal.typein r a)
+          apply not_le_of_gtₓ (lt_succ_self s)
+          have I : injective aleph_idx := aleph_idx.initial_seg.to_embedding.injective 
+          simpa only [typein_enum, left_inverse_inv_fun I (succ s)] using
+            le_sup.{u, u} (fun a => inv_fun aleph_idx (Ordinal.typein r a)) (Ordinal.enum r _ (h (succ s)))
 
 @[simp]
 theorem aleph_idx.rel_iso_coe : (aleph_idx.rel_iso : Cardinal → Ordinal) = aleph_idx :=
@@ -188,6 +188,7 @@ theorem aleph'_nat : ∀ n : ℕ, aleph' n = n
   show aleph' (Ordinal.succ n) = n.succ by 
     rw [aleph'_succ, aleph'_nat, nat_succ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (o' «expr < » o)
 theorem aleph'_le_of_limit {o : Ordinal.{u}} (l : o.is_limit) {c} : aleph' o ≤ c ↔ ∀ o' _ : o' < o, aleph' o' ≤ c :=
   ⟨fun h o' h' => le_transₓ (aleph'_le.2$ le_of_ltₓ h') h,
     fun h =>
@@ -277,44 +278,58 @@ theorem countable_iff_lt_aleph_one {α : Type _} (s : Set α) : countable s ↔ 
 /-! ### Properties of `mul` -/
 
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- If `α` is an infinite type, then `α × α` and `α` have the same cardinality. -/
-theorem mul_eq_self {c : cardinal} (h : «expr ≤ »(exprω(), c)) : «expr = »(«expr * »(c, c), c) :=
-begin
-  refine [expr le_antisymm _ (by simpa [] [] ["only"] ["[", expr mul_one, "]"] [] ["using", expr mul_le_mul_left' (one_lt_omega.le.trans h) c])],
-  refine [expr acc.rec_on (cardinal.wf.apply c) (λ c _, «expr $ »(quotient.induction_on c, λ α IH ol, _)) h],
-  rcases [expr ord_eq α, "with", "⟨", ident r, ",", ident wo, ",", ident e, "⟩"],
-  resetI,
-  letI [] [] [":=", expr linear_order_of_STO' r],
-  haveI [] [":", expr is_well_order α ((«expr < »))] [":=", expr wo],
-  let [ident g] [":", expr «expr × »(α, α) → α] [":=", expr λ p, max p.1 p.2],
-  let [ident f] [":", expr «expr ↪ »(«expr × »(α, α), «expr × »(ordinal, «expr × »(α, α)))] [":=", expr ⟨λ
-    p : «expr × »(α, α), (typein ((«expr < »)) (g p), p), λ p q, congr_arg prod.snd⟩],
-  let [ident s] [] [":=", expr «expr ⁻¹'o »(f, prod.lex ((«expr < »)) (prod.lex ((«expr < »)) ((«expr < »))))],
-  haveI [] [":", expr is_well_order _ s] [":=", expr (rel_embedding.preimage _ _).is_well_order],
-  suffices [] [":", expr «expr ≤ »(type s, type r)],
-  { exact [expr card_le_card this] },
-  refine [expr le_of_forall_lt (λ o h, _)],
-  rcases [expr typein_surj s h, "with", "⟨", ident p, ",", ident rfl, "⟩"],
-  rw ["[", "<-", expr e, ",", expr lt_ord, "]"] [],
-  refine [expr lt_of_le_of_lt (_ : «expr ≤ »(_, «expr * »(card (typein ((«expr < »)) (g p)).succ, card (typein ((«expr < »)) (g p)).succ))) _],
-  { have [] [":", expr «expr ⊆ »({q | s q p}, (insert (g p) {x | «expr < »(x, g p)}).prod (insert (g p) {x | «expr < »(x, g p)}))] [],
-    { intros [ident q, ident h],
-      simp [] [] ["only"] ["[", expr s, ",", expr embedding.coe_fn_mk, ",", expr order.preimage, ",", expr typein_lt_typein, ",", expr prod.lex_def, ",", expr typein_inj, "]"] [] ["at", ident h],
-      exact [expr max_le_iff.1 «expr $ »(le_iff_lt_or_eq.2, h.imp_right and.left)] },
-    suffices [ident H] [":", expr «expr ≃ »((insert (g p) {x | r x (g p)} : set α), «expr ⊕ »({x | r x (g p)}, punit))],
-    { exact [expr ⟨(set.embedding_of_subset _ _ this).trans ((equiv.set.prod _ _).trans (H.prod_congr H)).to_embedding⟩] },
-    refine [expr (equiv.set.insert _).trans ((equiv.refl _).sum_congr punit_equiv_punit)],
-    apply [expr @irrefl _ r] },
-  cases [expr lt_or_le (card (typein ((«expr < »)) (g p)).succ) exprω()] ["with", ident qo, ident qo],
-  { exact [expr lt_of_lt_of_le (mul_lt_omega qo qo) ol] },
-  { suffices [] [],
-    { exact [expr lt_of_le_of_lt (IH _ this qo) this] },
-    rw ["<-", expr lt_ord] [],
-    apply [expr (ord_is_limit ol).2],
-    rw ["[", expr mk_def, ",", expr e, "]"] [],
-    apply [expr typein_lt_type] }
-end
+  theorem
+    mul_eq_self
+    { c : Cardinal } ( h : ω ≤ c ) : c * c = c
+    :=
+      by
+        refine' le_antisymmₓ _ by simpa only [ mul_oneₓ ] using mul_le_mul_left' one_lt_omega.le.trans h c
+          refine' Acc.recOnₓ cardinal.wf.apply c fun c _ => Quotientₓ.induction_on c $ fun α IH ol => _ h
+          rcases ord_eq α with ⟨ r , wo , e ⟩
+          skip
+          let this' := linearOrderOfSTO' r
+          have : IsWellOrder α · < · := wo
+          let g : α × α → α := fun p => max p . 1 p . 2
+          let
+            f
+              : α × α ↪ Ordinal × α × α
+              :=
+              ⟨ fun p : α × α => ( typein · < · g p , p ) , fun p q => congr_argₓ Prod.snd ⟩
+          let s := f ⁻¹'o Prod.Lex · < · Prod.Lex · < · · < ·
+          have : IsWellOrder _ s := RelEmbedding.preimage _ _ . IsWellOrder
+          suffices : type s ≤ type r
+          · exact card_le_card this
+          refine' le_of_forall_lt fun o h => _
+          rcases typein_surj s h with ⟨ p , rfl ⟩
+          rw [ ← e , lt_ord ]
+          refine' lt_of_le_of_ltₓ ( _ : _ ≤ card typein · < · g p . succ * card typein · < · g p . succ ) _
+          ·
+            have : { q | s q p } ⊆ insert g p { x | x < g p } . Prod insert g p { x | x < g p }
+              ·
+                intro q h
+                  simp
+                    only
+                    [ s , embedding.coe_fn_mk , Order.Preimage , typein_lt_typein , Prod.lex_def , typein_inj ]
+                    at h
+                  exact max_le_iff . 1 le_iff_lt_or_eqₓ . 2 $ h.imp_right And.left
+              suffices H : ( insert g p { x | r x g p } : Set α ) ≃ Sum { x | r x g p } PUnit
+              ·
+                exact
+                  ⟨ Set.embeddingOfSubset _ _ this . trans Equivₓ.Set.prod _ _ . trans H.prod_congr H . toEmbedding ⟩
+              refine' Equivₓ.Set.insert _ . trans Equivₓ.refl _ . sumCongr punit_equiv_punit
+              apply @ irrefl _ r
+          cases' lt_or_leₓ card typein · < · g p . succ ω with qo qo
+          · exact lt_of_lt_of_leₓ mul_lt_omega qo qo ol
+          ·
+            suffices
+              · exact lt_of_le_of_ltₓ IH _ this qo this
+              rw [ ← lt_ord ]
+              apply ord_is_limit ol . 2
+              rw [ mk_def , e ]
+              apply typein_lt_type
 
 end UsingOrdinals
 
@@ -349,21 +364,17 @@ theorem mul_le_max_of_omega_le_left {a b : Cardinal} (h : ω ≤ a) : (a*b) ≤ 
     rw [mul_eq_self]
     refine' le_transₓ h (le_max_leftₓ a b)
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_eq_max_of_omega_le_left
-{a b : cardinal}
-(h : «expr ≤ »(exprω(), a))
-(h' : «expr ≠ »(b, 0)) : «expr = »(«expr * »(a, b), max a b) :=
-begin
-  cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { exact [expr mul_eq_max h hb] },
-  refine [expr (mul_le_max_of_omega_le_left h).antisymm _],
-  have [] [":", expr «expr ≤ »(b, a)] [],
-  from [expr hb.le.trans h],
-  rw ["[", expr max_eq_left this, "]"] [],
-  convert [] [expr mul_le_mul_left' (one_le_iff_ne_zero.mpr h') _] [],
-  rw ["[", expr mul_one, "]"] []
-end
+theorem mul_eq_max_of_omega_le_left {a b : Cardinal} (h : ω ≤ a) (h' : b ≠ 0) : (a*b) = max a b :=
+  by 
+    cases' le_or_ltₓ ω b with hb hb
+    ·
+      exact mul_eq_max h hb 
+    refine' (mul_le_max_of_omega_le_left h).antisymm _ 
+    have  : b ≤ a 
+    exact hb.le.trans h 
+    rw [max_eq_leftₓ this]
+    convert mul_le_mul_left' (one_le_iff_ne_zero.mpr h') _ 
+    rw [mul_oneₓ]
 
 theorem mul_le_max (a b : Cardinal) : (a*b) ≤ max (max a b) ω :=
   by 
@@ -403,56 +414,62 @@ theorem le_mul_right {a b : Cardinal} (h : b ≠ 0) : a ≤ a*b :=
     rw [mul_commₓ]
     exact le_mul_left h
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_eq_left_iff
-{a
- b : cardinal} : «expr ↔ »(«expr = »(«expr * »(a, b), a), «expr ∨ »(«expr ∧ »(«expr ≤ »(max exprω() b, a), «expr ≠ »(b, 0)), «expr ∨ »(«expr = »(b, 1), «expr = »(a, 0)))) :=
-begin
-  rw ["[", expr max_le_iff, "]"] [],
-  split,
-  { intro [ident h],
-    cases [expr le_or_lt exprω() a] ["with", ident ha, ident ha],
-    { have [] [":", expr «expr ≠ »(a, 0)] [],
-      { rintro [ident rfl],
-        exact [expr not_lt_of_le ha omega_pos] },
-      left,
-      use [expr ha],
-      { rw ["[", "<-", expr not_lt, "]"] [],
-        intro [ident hb],
-        apply [expr ne_of_gt _ h],
-        refine [expr lt_of_lt_of_le hb (le_mul_left this)] },
-      { rintro [ident rfl],
-        apply [expr this],
-        rw ["[", expr _root_.mul_zero, "]"] ["at", ident h],
-        subst [expr h] } },
-    right,
-    by_cases [expr h2a, ":", expr «expr = »(a, 0)],
-    { right,
-      exact [expr h2a] },
-    have [ident hb] [":", expr «expr ≠ »(b, 0)] [],
-    { rintro [ident rfl],
-      apply [expr h2a],
-      rw ["[", expr mul_zero, "]"] ["at", ident h],
-      subst [expr h] },
-    left,
-    rw ["[", "<-", expr h, ",", expr mul_lt_omega_iff, ",", expr lt_omega, ",", expr lt_omega, "]"] ["at", ident ha],
-    rcases [expr ha, "with", ident rfl, "|", ident rfl, "|", "⟨", "⟨", ident n, ",", ident rfl, "⟩", ",", "⟨", ident m, ",", ident rfl, "⟩", "⟩"],
-    contradiction,
-    contradiction,
-    rw ["[", "<-", expr ne, "]"] ["at", ident h2a],
-    rw ["[", "<-", expr one_le_iff_ne_zero, "]"] ["at", ident h2a, ident hb],
-    norm_cast ["at", ident h2a, ident hb, ident h, "⊢"],
-    apply [expr le_antisymm _ hb],
-    rw ["[", "<-", expr not_lt, "]"] [],
-    intro [ident h2b],
-    apply [expr ne_of_gt _ h],
-    conv_lhs [] [] { rw ["[", "<-", expr mul_one n, "]"] },
-    rwa ["[", expr mul_lt_mul_left, "]"] [],
-    apply [expr nat.lt_of_succ_le h2a] },
-  { rintro ["(", "⟨", "⟨", ident ha, ",", ident hab, "⟩", ",", ident hb, "⟩", "|", ident rfl, "|", ident rfl, ")"],
-    { rw ["[", expr mul_eq_max_of_omega_le_left ha hb, ",", expr max_eq_left hab, "]"] [] },
-    all_goals { simp [] [] [] [] [] [] } }
-end
+theorem mul_eq_left_iff {a b : Cardinal} : (a*b) = a ↔ max ω b ≤ a ∧ b ≠ 0 ∨ b = 1 ∨ a = 0 :=
+  by 
+    rw [max_le_iff]
+    constructor
+    ·
+      intro h 
+      cases' le_or_ltₓ ω a with ha ha
+      ·
+        have  : a ≠ 0
+        ·
+          rintro rfl 
+          exact not_lt_of_le ha omega_pos 
+        left 
+        use ha
+        ·
+          rw [←not_ltₓ]
+          intro hb 
+          apply ne_of_gtₓ _ h 
+          refine' lt_of_lt_of_leₓ hb (le_mul_left this)
+        ·
+          rintro rfl 
+          apply this 
+          rw [_root_.mul_zero] at h 
+          subst h 
+      right 
+      byCases' h2a : a = 0
+      ·
+        right 
+        exact h2a 
+      have hb : b ≠ 0
+      ·
+        rintro rfl 
+        apply h2a 
+        rw [mul_zero] at h 
+        subst h 
+      left 
+      rw [←h, mul_lt_omega_iff, lt_omega, lt_omega] at ha 
+      rcases ha with (rfl | rfl | ⟨⟨n, rfl⟩, ⟨m, rfl⟩⟩)
+      contradiction 
+      contradiction 
+      rw [←Ne] at h2a 
+      rw [←one_le_iff_ne_zero] at h2a hb 
+      normCast  at h2a hb h⊢
+      apply le_antisymmₓ _ hb 
+      rw [←not_ltₓ]
+      intro h2b 
+      apply ne_of_gtₓ _ h 
+      convLHS => rw [←mul_oneₓ n]
+      rwa [mul_lt_mul_left]
+      apply Nat.lt_of_succ_leₓ h2a
+    ·
+      rintro (⟨⟨ha, hab⟩, hb⟩ | rfl | rfl)
+      ·
+        rw [mul_eq_max_of_omega_le_left ha hb, max_eq_leftₓ hab]
+      all_goals 
+        simp 
 
 /-! ### Properties of `add` -/
 
@@ -492,21 +509,16 @@ theorem add_lt_of_lt {a b c : Cardinal} (hc : ω ≤ c) (h1 : a < c) (h2 : b < c
         by 
           rw [add_eq_self h] <;> exact max_ltₓ h1 h2
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_of_add_eq_of_omega_le
-{a b c : cardinal}
-(h : «expr = »(«expr + »(a, b), c))
-(ha : «expr < »(a, c))
-(hc : «expr ≤ »(exprω(), c)) : «expr = »(b, c) :=
-begin
-  apply [expr le_antisymm],
-  { rw ["[", "<-", expr h, "]"] [],
-    apply [expr self_le_add_left] },
-  rw ["[", "<-", expr not_lt, "]"] [],
-  intro [ident hb],
-  have [] [":", expr «expr < »(«expr + »(a, b), c)] [":=", expr add_lt_of_lt hc ha hb],
-  simpa [] [] [] ["[", expr h, ",", expr lt_irrefl, "]"] [] ["using", expr this]
-end
+theorem eq_of_add_eq_of_omega_le {a b c : Cardinal} (h : (a+b) = c) (ha : a < c) (hc : ω ≤ c) : b = c :=
+  by 
+    apply le_antisymmₓ
+    ·
+      rw [←h]
+      apply self_le_add_left 
+    rw [←not_ltₓ]
+    intro hb 
+    have  : (a+b) < c := add_lt_of_lt hc ha hb 
+    simpa [h, lt_irreflₓ] using this
 
 theorem add_eq_left {a b : Cardinal} (ha : ω ≤ a) (hb : b ≤ a) : (a+b) = a :=
   by 
@@ -519,7 +531,7 @@ theorem add_eq_right {a b : Cardinal} (hb : ω ≤ b) (ha : a ≤ b) : (a+b) = b
 theorem add_eq_left_iff {a b : Cardinal} : (a+b) = a ↔ max ω b ≤ a ∨ b = 0 :=
   by 
     rw [max_le_iff]
-    split 
+    constructor
     ·
       intro h 
       cases' le_or_ltₓ ω a with ha ha
@@ -548,31 +560,28 @@ theorem add_one_eq {a : Cardinal} (ha : ω ≤ a) : (a+1) = a :=
   have  : 1 ≤ a := le_transₓ (le_of_ltₓ one_lt_omega) ha 
   add_eq_left ha this
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem eq_of_add_eq_add_left
-{a b c : cardinal}
-(h : «expr = »(«expr + »(a, b), «expr + »(a, c)))
-(ha : «expr < »(a, exprω())) : «expr = »(b, c) :=
-begin
-  cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { have [] [":", expr «expr < »(a, b)] [":=", expr lt_of_lt_of_le ha hb],
-    rw ["[", expr add_eq_right hb (le_of_lt this), ",", expr eq_comm, "]"] ["at", ident h],
-    rw ["[", expr eq_of_add_eq_of_omega_le h this hb, "]"] [] },
-  { have [ident hc] [":", expr «expr < »(c, exprω())] [],
-    { rw ["[", "<-", expr not_le, "]"] [],
-      intro [ident hc],
-      apply [expr lt_irrefl exprω()],
-      apply [expr lt_of_le_of_lt (le_trans hc (self_le_add_left _ a))],
-      rw ["[", "<-", expr h, "]"] [],
-      apply [expr add_lt_omega ha hb] },
-    rw ["[", expr lt_omega, "]"] ["at", "*"],
-    rcases [expr ha, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    rcases [expr hb, "with", "⟨", ident m, ",", ident rfl, "⟩"],
-    rcases [expr hc, "with", "⟨", ident k, ",", ident rfl, "⟩"],
-    norm_cast ["at", ident h, "⊢"],
-    apply [expr add_left_cancel h] }
-end
+protected theorem eq_of_add_eq_add_left {a b c : Cardinal} (h : (a+b) = a+c) (ha : a < ω) : b = c :=
+  by 
+    cases' le_or_ltₓ ω b with hb hb
+    ·
+      have  : a < b := lt_of_lt_of_leₓ ha hb 
+      rw [add_eq_right hb (le_of_ltₓ this), eq_comm] at h 
+      rw [eq_of_add_eq_of_omega_le h this hb]
+    ·
+      have hc : c < ω
+      ·
+        rw [←not_leₓ]
+        intro hc 
+        apply lt_irreflₓ ω 
+        apply lt_of_le_of_ltₓ (le_transₓ hc (self_le_add_left _ a))
+        rw [←h]
+        apply add_lt_omega ha hb 
+      rw [lt_omega] at *
+      rcases ha with ⟨n, rfl⟩
+      rcases hb with ⟨m, rfl⟩
+      rcases hc with ⟨k, rfl⟩
+      normCast  at h⊢
+      apply add_left_cancelₓ h
 
 protected theorem eq_of_add_eq_add_right {a b c : Cardinal} (h : (a+b) = c+b) (hb : b < ω) : a = c :=
   by 
@@ -688,44 +697,48 @@ theorem mk_finset_eq_mk (α : Type u) [Infinite α] : # (Finset α) = # α :=
         _ = # α := mk_list_eq_mk α
         
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mk_bounded_set_le_of_infinite
-(α : Type u)
-[infinite α]
-(c : cardinal) : «expr ≤ »(«expr#»() {t : set α // «expr ≤ »(mk t, c)}, «expr ^ »(«expr#»() α, c)) :=
-begin
-  refine [expr le_trans _ (by rw ["[", "<-", expr add_one_eq (omega_le_mk α), "]"] [])],
-  induction [expr c] ["using", ident cardinal.induction_on] ["with", ident β] [],
-  fapply [expr mk_le_of_surjective],
-  { intro [ident f],
-    use [expr «expr ⁻¹' »(sum.inl, range f)],
-    refine [expr le_trans (mk_preimage_of_injective _ _ (λ x y, sum.inl.inj)) _],
-    apply [expr mk_range_le] },
-  rintro ["⟨", ident s, ",", "⟨", ident g, "⟩", "⟩"],
-  use [expr λ y, if h : «expr∃ , »((x : s), «expr = »(g x, y)) then sum.inl (classical.some h).val else sum.inr ⟨⟩],
-  apply [expr subtype.eq],
-  ext [] [] [],
-  split,
-  { rintro ["⟨", ident y, ",", ident h, "⟩"],
-    dsimp ["only"] [] [] ["at", ident h],
-    by_cases [expr h', ":", expr «expr∃ , »((z : s), «expr = »(g z, y))],
-    { rw ["[", expr dif_pos h', "]"] ["at", ident h],
-      cases [expr sum.inl.inj h] [],
-      exact [expr (classical.some h').2] },
-    { rw ["[", expr dif_neg h', "]"] ["at", ident h],
-      cases [expr h] [] } },
-  { intro [ident h],
-    have [] [":", expr «expr∃ , »((z : s), «expr = »(g z, g ⟨x, h⟩))] [],
-    exact [expr ⟨⟨x, h⟩, rfl⟩],
-    use [expr g ⟨x, h⟩],
-    dsimp ["only"] [] [] [],
-    rw ["[", expr dif_pos this, "]"] [],
-    congr' [] [],
-    suffices [] [":", expr «expr = »(classical.some this, ⟨x, h⟩)],
-    exact [expr congr_arg subtype.val this],
-    apply [expr g.2],
-    exact [expr classical.some_spec this] }
-end
+theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal) :
+  # { t : Set α // mk t ≤ c } ≤ (# α^c) :=
+  by 
+    refine'
+      le_transₓ _
+        (by 
+          rw [←add_one_eq (omega_le_mk α)])
+    induction' c using Cardinal.induction_on with β 
+    fapply mk_le_of_surjective
+    ·
+      intro f 
+      use Sum.inl ⁻¹' range f 
+      refine' le_transₓ (mk_preimage_of_injective _ _ fun x y => Sum.inl.injₓ) _ 
+      apply mk_range_le 
+    rintro ⟨s, ⟨g⟩⟩
+    use fun y => if h : ∃ x : s, g x = y then Sum.inl (Classical.some h).val else Sum.inr ⟨⟩
+    apply Subtype.eq 
+    ext 
+    constructor
+    ·
+      rintro ⟨y, h⟩
+      dsimp only  at h 
+      byCases' h' : ∃ z : s, g z = y
+      ·
+        rw [dif_pos h'] at h 
+        cases Sum.inl.injₓ h 
+        exact (Classical.some h').2
+      ·
+        rw [dif_neg h'] at h 
+        cases h
+    ·
+      intro h 
+      have  : ∃ z : s, g z = g ⟨x, h⟩
+      exact ⟨⟨x, h⟩, rfl⟩
+      use g ⟨x, h⟩
+      dsimp only 
+      rw [dif_pos this]
+      congr 
+      suffices  : Classical.some this = ⟨x, h⟩
+      exact congr_argₓ Subtype.val this 
+      apply g.2 
+      exact Classical.some_spec this
 
 theorem mk_bounded_set_le (α : Type u) (c : Cardinal) : # { t : Set α // # t ≤ c } ≤ (max (# α) ω^c) :=
   by 
@@ -757,71 +770,59 @@ theorem mk_bounded_subset_le {α : Type u} (s : Set α) (c : Cardinal.{u}) :
 /-! ### Properties of `compl` -/
 
 
-theorem mk_compl_of_infinite {α : Type _} [Infinite α] (s : Set α) (h2 : # s < # α) : # («expr ᶜ» s : Set α) = # α :=
+theorem mk_compl_of_infinite {α : Type _} [Infinite α] (s : Set α) (h2 : # s < # α) : # (sᶜ : Set α) = # α :=
   by 
     refine' eq_of_add_eq_of_omega_le _ h2 (omega_le_mk α)
     exact mk_sum_compl s
 
-theorem mk_compl_finset_of_infinite {α : Type _} [Infinite α] (s : Finset α) :
-  # («expr ᶜ» («expr↑ » s) : Set α) = # α :=
+theorem mk_compl_finset_of_infinite {α : Type _} [Infinite α] (s : Finset α) : # ((↑s)ᶜ : Set α) = # α :=
   by 
     apply mk_compl_of_infinite 
     exact (finset_card_lt_omega s).trans_le (omega_le_mk α)
 
 theorem mk_compl_eq_mk_compl_infinite {α : Type _} [Infinite α] {s t : Set α} (hs : # s < # α) (ht : # t < # α) :
-  # («expr ᶜ» s : Set α) = # («expr ᶜ» t : Set α) :=
+  # (sᶜ : Set α) = # (tᶜ : Set α) :=
   by 
     rw [mk_compl_of_infinite s hs, mk_compl_of_infinite t ht]
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mk_compl_eq_mk_compl_finite_lift
-{α : Type u}
-{β : Type v}
-[fintype α]
-{s : set α}
-{t : set β}
-(h1 : «expr = »(lift.{max v w} («expr#»() α), lift.{max u w} («expr#»() β)))
-(h2 : «expr = »(lift.{max v w} («expr#»() s), lift.{max u w} («expr#»() t))) : «expr = »(lift.{max v w} («expr#»() («expr ᶜ»(s) : set α)), lift.{max u w} («expr#»() («expr ᶜ»(t) : set β))) :=
-begin
-  rcases [expr lift_mk_eq.1 h1, "with", "⟨", ident e, "⟩"],
-  letI [] [":", expr fintype β] [":=", expr fintype.of_equiv α e],
-  replace [ident h1] [":", expr «expr = »(fintype.card α, fintype.card β)] [":=", expr (fintype.of_equiv_card _).symm],
-  classical,
-  lift [expr s] ["to", expr finset α] ["using", expr finite.of_fintype s] [],
-  lift [expr t] ["to", expr finset β] ["using", expr finite.of_fintype t] [],
-  simp [] [] ["only"] ["[", expr finset.coe_sort_coe, ",", expr mk_finset, ",", expr lift_nat_cast, ",", expr nat.cast_inj, "]"] [] ["at", ident h2],
-  simp [] [] ["only"] ["[", "<-", expr finset.coe_compl, ",", expr finset.coe_sort_coe, ",", expr mk_finset, ",", expr finset.card_compl, ",", expr lift_nat_cast, ",", expr nat.cast_inj, ",", expr h1, ",", expr h2, "]"] [] []
-end
+theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Fintype α] {s : Set α} {t : Set β}
+  (h1 : lift.{max v w} (# α) = lift.{max u w} (# β)) (h2 : lift.{max v w} (# s) = lift.{max u w} (# t)) :
+  lift.{max v w} (# (sᶜ : Set α)) = lift.{max u w} (# (tᶜ : Set β)) :=
+  by 
+    rcases lift_mk_eq.1 h1 with ⟨e⟩
+    let this' : Fintype β := Fintype.ofEquiv α e 
+    replace h1 : Fintype.card α = Fintype.card β := (Fintype.of_equiv_card _).symm 
+    classical 
+    lift s to Finset α using finite.of_fintype s 
+    lift t to Finset β using finite.of_fintype t 
+    simp only [Finset.coe_sort_coe, mk_finset, lift_nat_cast, Nat.cast_inj] at h2 
+    simp only [←Finset.coe_compl, Finset.coe_sort_coe, mk_finset, Finset.card_compl, lift_nat_cast, Nat.cast_inj, h1,
+      h2]
 
 theorem mk_compl_eq_mk_compl_finite {α β : Type u} [Fintype α] {s : Set α} {t : Set β} (h1 : # α = # β)
-  (h : # s = # t) : # («expr ᶜ» s : Set α) = # («expr ᶜ» t : Set β) :=
+  (h : # s = # t) : # (sᶜ : Set α) = # (tᶜ : Set β) :=
   by 
     rw [←lift_inj]
     apply mk_compl_eq_mk_compl_finite_lift <;> rwa [lift_inj]
 
 theorem mk_compl_eq_mk_compl_finite_same {α : Type _} [Fintype α] {s t : Set α} (h : # s = # t) :
-  # («expr ᶜ» s : Set α) = # («expr ᶜ» t : Set α) :=
+  # (sᶜ : Set α) = # (tᶜ : Set α) :=
   mk_compl_eq_mk_compl_finite rfl h
 
 /-! ### Extending an injection to an equiv -/
 
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem extend_function
-{α β : Type*}
-{s : set α}
-(f : «expr ↪ »(s, β))
-(h : nonempty «expr ≃ »((«expr ᶜ»(s) : set α), («expr ᶜ»(range f) : set β))) : «expr∃ , »((g : «expr ≃ »(α, β)), ∀
- x : s, «expr = »(g x, f x)) :=
-begin
-  intros [],
-  have [] [] [":=", expr h],
-  cases [expr this] ["with", ident g],
-  let [ident h] [":", expr «expr ≃ »(α, β)] [":=", expr (set.sum_compl (s : set α)).symm.trans ((sum_congr (equiv.of_injective f f.2) g).trans (set.sum_compl (range f)))],
-  refine [expr ⟨h, _⟩],
-  rintro ["⟨", ident x, ",", ident hx, "⟩"],
-  simp [] [] [] ["[", expr set.sum_compl_symm_apply_of_mem, ",", expr hx, "]"] [] []
-end
+theorem extend_function {α β : Type _} {s : Set α} (f : s ↪ β) (h : Nonempty ((sᶜ : Set α) ≃ (range fᶜ : Set β))) :
+  ∃ g : α ≃ β, ∀ x : s, g x = f x :=
+  by 
+    intros 
+    have  := h 
+    cases' this with g 
+    let h : α ≃ β :=
+      (set.sum_compl (s : Set α)).symm.trans ((sum_congr (Equivₓ.ofInjective f f.2) g).trans (set.sum_compl (range f)))
+    refine' ⟨h, _⟩
+    rintro ⟨x, hx⟩
+    simp [set.sum_compl_symm_apply_of_mem, hx]
 
 theorem extend_function_finite {α β : Type _} [Fintype α] {s : Set α} (f : s ↪ β) (h : Nonempty (α ≃ β)) :
   ∃ g : α ≃ β, ∀ x : s, g x = f x :=
@@ -833,23 +834,19 @@ theorem extend_function_finite {α β : Type _} [Fintype α] {s : Set α} (f : s
     rw [mk_range_eq_lift]
     exact f.2
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem extend_function_of_lt
-{α β : Type*}
-{s : set α}
-(f : «expr ↪ »(s, β))
-(hs : «expr < »(«expr#»() s, «expr#»() α))
-(h : nonempty «expr ≃ »(α, β)) : «expr∃ , »((g : «expr ≃ »(α, β)), ∀ x : s, «expr = »(g x, f x)) :=
-begin
-  casesI [expr fintype_or_infinite α] [],
-  { exact [expr extend_function_finite f h] },
-  { apply [expr extend_function f],
-    cases [expr id h] ["with", ident g],
-    haveI [] [] [":=", expr infinite.of_injective _ g.injective],
-    rw ["[", "<-", expr lift_mk_eq', "]"] ["at", ident h, "⊢"],
-    rwa ["[", expr mk_compl_of_infinite s hs, ",", expr mk_compl_of_infinite, "]"] [],
-    rwa ["[", "<-", expr lift_lt, ",", expr mk_range_eq_of_injective f.injective, ",", "<-", expr h, ",", expr lift_lt, "]"] [] }
-end
+theorem extend_function_of_lt {α β : Type _} {s : Set α} (f : s ↪ β) (hs : # s < # α) (h : Nonempty (α ≃ β)) :
+  ∃ g : α ≃ β, ∀ x : s, g x = f x :=
+  by 
+    cases' fintypeOrInfinite α
+    ·
+      exact extend_function_finite f h
+    ·
+      apply extend_function f 
+      cases' id h with g 
+      have  := Infinite.of_injective _ g.injective 
+      rw [←lift_mk_eq'] at h⊢
+      rwa [mk_compl_of_infinite s hs, mk_compl_of_infinite]
+      rwa [←lift_lt, mk_range_eq_of_injective f.injective, ←h, lift_lt]
 
 section Bit
 
@@ -935,46 +932,54 @@ theorem omega_le_bit1 {c : Cardinal} : ω ≤ bit1 c ↔ ω ≤ c :=
     rw [←not_iff_not]
     simp 
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem bit0_le_bit0 {a b : cardinal} : «expr ↔ »(«expr ≤ »(bit0 a, bit0 b), «expr ≤ »(a, b)) :=
-begin
-  cases [expr le_or_lt exprω() a] ["with", ident ha, ident ha]; cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { rw ["[", expr bit0_eq_self ha, ",", expr bit0_eq_self hb, "]"] [] },
-  { rw [expr bit0_eq_self ha] [],
-    refine [expr iff_of_false (λ h, _) (not_le_of_lt (hb.trans_le ha))],
-    have [ident A] [":", expr «expr < »(bit0 b, exprω())] [],
-    by simpa [] [] [] [] [] ["using", expr hb],
-    exact [expr lt_irrefl _ (lt_of_lt_of_le (lt_of_lt_of_le A ha) h)] },
-  { rw ["[", expr bit0_eq_self hb, "]"] [],
-    exact [expr iff_of_true ((bit0_lt_omega.2 ha).le.trans hb) (ha.le.trans hb)] },
-  { rcases [expr lt_omega.1 ha, "with", "⟨", ident m, ",", ident rfl, "⟩"],
-    rcases [expr lt_omega.1 hb, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    norm_cast [],
-    exact [expr bit0_le_bit0] }
-end
+@[simp]
+theorem bit0_le_bit0 {a b : Cardinal} : bit0 a ≤ bit0 b ↔ a ≤ b :=
+  by 
+    cases' le_or_ltₓ ω a with ha ha <;> cases' le_or_ltₓ ω b with hb hb
+    ·
+      rw [bit0_eq_self ha, bit0_eq_self hb]
+    ·
+      rw [bit0_eq_self ha]
+      refine' iff_of_false (fun h => _) (not_le_of_lt (hb.trans_le ha))
+      have A : bit0 b < ω
+      ·
+        simpa using hb 
+      exact lt_irreflₓ _ (lt_of_lt_of_leₓ (lt_of_lt_of_leₓ A ha) h)
+    ·
+      rw [bit0_eq_self hb]
+      exact iff_of_true ((bit0_lt_omega.2 ha).le.trans hb) (ha.le.trans hb)
+    ·
+      rcases lt_omega.1 ha with ⟨m, rfl⟩
+      rcases lt_omega.1 hb with ⟨n, rfl⟩
+      normCast 
+      exact bit0_le_bit0
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem bit0_le_bit1 {a b : cardinal} : «expr ↔ »(«expr ≤ »(bit0 a, bit1 b), «expr ≤ »(a, b)) :=
-begin
-  cases [expr le_or_lt exprω() a] ["with", ident ha, ident ha]; cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { rw ["[", expr bit0_eq_self ha, ",", expr bit1_eq_self_iff.2 hb, "]"] [] },
-  { rw [expr bit0_eq_self ha] [],
-    refine [expr iff_of_false (λ h, _) (not_le_of_lt (hb.trans_le ha))],
-    have [ident A] [":", expr «expr < »(bit1 b, exprω())] [],
-    by simpa [] [] [] [] [] ["using", expr hb],
-    exact [expr lt_irrefl _ (lt_of_lt_of_le (lt_of_lt_of_le A ha) h)] },
-  { rw ["[", expr bit1_eq_self_iff.2 hb, "]"] [],
-    exact [expr iff_of_true ((bit0_lt_omega.2 ha).le.trans hb) (ha.le.trans hb)] },
-  { rcases [expr lt_omega.1 ha, "with", "⟨", ident m, ",", ident rfl, "⟩"],
-    rcases [expr lt_omega.1 hb, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    norm_cast [],
-    exact [expr nat.bit0_le_bit1_iff] }
-end
+@[simp]
+theorem bit0_le_bit1 {a b : Cardinal} : bit0 a ≤ bit1 b ↔ a ≤ b :=
+  by 
+    cases' le_or_ltₓ ω a with ha ha <;> cases' le_or_ltₓ ω b with hb hb
+    ·
+      rw [bit0_eq_self ha, bit1_eq_self_iff.2 hb]
+    ·
+      rw [bit0_eq_self ha]
+      refine' iff_of_false (fun h => _) (not_le_of_lt (hb.trans_le ha))
+      have A : bit1 b < ω
+      ·
+        simpa using hb 
+      exact lt_irreflₓ _ (lt_of_lt_of_leₓ (lt_of_lt_of_leₓ A ha) h)
+    ·
+      rw [bit1_eq_self_iff.2 hb]
+      exact iff_of_true ((bit0_lt_omega.2 ha).le.trans hb) (ha.le.trans hb)
+    ·
+      rcases lt_omega.1 ha with ⟨m, rfl⟩
+      rcases lt_omega.1 hb with ⟨n, rfl⟩
+      normCast 
+      exact Nat.bit0_le_bit1_iff
 
 @[simp]
 theorem bit1_le_bit1 {a b : Cardinal} : bit1 a ≤ bit1 b ↔ a ≤ b :=
   by 
-    split 
+    constructor
     ·
       intro h 
       apply bit0_le_bit1.1 (le_transₓ (self_le_add_right (bit0 a) 1) h)
@@ -983,107 +988,127 @@ theorem bit1_le_bit1 {a b : Cardinal} : bit1 a ≤ bit1 b ↔ a ≤ b :=
       calc ((a+a)+1) ≤ (a+b)+1 := add_le_add_right (add_le_add_left h a) 1_ ≤ (b+b)+1 :=
         add_le_add_right (add_le_add_right h b) 1
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem bit1_le_bit0
-{a
- b : cardinal} : «expr ↔ »(«expr ≤ »(bit1 a, bit0 b), «expr ∨ »(«expr < »(a, b), «expr ∧ »(«expr ≤ »(a, b), «expr ≤ »(exprω(), a)))) :=
-begin
-  cases [expr le_or_lt exprω() a] ["with", ident ha, ident ha]; cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { simp [] [] ["only"] ["[", expr bit1_eq_self_iff.mpr ha, ",", expr bit0_eq_self hb, ",", expr ha, ",", expr and_true, "]"] [] [],
-    refine [expr ⟨λ h, or.inr h, λ h, _⟩],
-    cases [expr h] [],
-    { exact [expr le_of_lt h] },
-    { exact [expr h] } },
-  { rw [expr bit1_eq_self_iff.2 ha] [],
-    refine [expr iff_of_false (λ h, _) (λ h, _)],
-    { have [ident A] [":", expr «expr < »(bit0 b, exprω())] [],
-      by simpa [] [] [] [] [] ["using", expr hb],
-      exact [expr lt_irrefl _ (lt_of_lt_of_le (lt_of_lt_of_le A ha) h)] },
-    { exact [expr not_le_of_lt (hb.trans_le ha) (h.elim le_of_lt and.left)] } },
-  { rw ["[", expr bit0_eq_self hb, "]"] [],
-    exact [expr iff_of_true ((bit1_lt_omega.2 ha).le.trans hb) «expr $ »(or.inl, ha.trans_le hb)] },
-  { rcases [expr lt_omega.1 ha, "with", "⟨", ident m, ",", ident rfl, "⟩"],
-    rcases [expr lt_omega.1 hb, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    norm_cast [],
-    simp [] [] [] ["[", expr not_le.mpr ha, "]"] [] [] }
-end
+theorem bit1_le_bit0 {a b : Cardinal} : bit1 a ≤ bit0 b ↔ a < b ∨ a ≤ b ∧ ω ≤ a :=
+  by 
+    cases' le_or_ltₓ ω a with ha ha <;> cases' le_or_ltₓ ω b with hb hb
+    ·
+      simp only [bit1_eq_self_iff.mpr ha, bit0_eq_self hb, ha, and_trueₓ]
+      refine' ⟨fun h => Or.inr h, fun h => _⟩
+      cases h
+      ·
+        exact le_of_ltₓ h
+      ·
+        exact h
+    ·
+      rw [bit1_eq_self_iff.2 ha]
+      refine' iff_of_false (fun h => _) fun h => _
+      ·
+        have A : bit0 b < ω
+        ·
+          simpa using hb 
+        exact lt_irreflₓ _ (lt_of_lt_of_leₓ (lt_of_lt_of_leₓ A ha) h)
+      ·
+        exact not_le_of_lt (hb.trans_le ha) (h.elim le_of_ltₓ And.left)
+    ·
+      rw [bit0_eq_self hb]
+      exact iff_of_true ((bit1_lt_omega.2 ha).le.trans hb) (Or.inl$ ha.trans_le hb)
+    ·
+      rcases lt_omega.1 ha with ⟨m, rfl⟩
+      rcases lt_omega.1 hb with ⟨n, rfl⟩
+      normCast 
+      simp [not_le.mpr ha]
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem bit0_lt_bit0 {a b : cardinal} : «expr ↔ »(«expr < »(bit0 a, bit0 b), «expr < »(a, b)) :=
-begin
-  cases [expr le_or_lt exprω() a] ["with", ident ha, ident ha]; cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { rw ["[", expr bit0_eq_self ha, ",", expr bit0_eq_self hb, "]"] [] },
-  { rw [expr bit0_eq_self ha] [],
-    refine [expr iff_of_false (λ h, _) (not_lt_of_le (hb.le.trans ha))],
-    have [ident A] [":", expr «expr < »(bit0 b, exprω())] [],
-    by simpa [] [] [] [] [] ["using", expr hb],
-    exact [expr lt_irrefl _ (lt_trans (lt_of_lt_of_le A ha) h)] },
-  { rw ["[", expr bit0_eq_self hb, "]"] [],
-    exact [expr iff_of_true ((bit0_lt_omega.2 ha).trans_le hb) (ha.trans_le hb)] },
-  { rcases [expr lt_omega.1 ha, "with", "⟨", ident m, ",", ident rfl, "⟩"],
-    rcases [expr lt_omega.1 hb, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    norm_cast [],
-    exact [expr bit0_lt_bit0] }
-end
-
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem bit1_lt_bit0 {a b : cardinal} : «expr ↔ »(«expr < »(bit1 a, bit0 b), «expr < »(a, b)) :=
-begin
-  cases [expr le_or_lt exprω() a] ["with", ident ha, ident ha]; cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { rw ["[", expr bit1_eq_self_iff.2 ha, ",", expr bit0_eq_self hb, "]"] [] },
-  { rw [expr bit1_eq_self_iff.2 ha] [],
-    refine [expr iff_of_false (λ h, _) (not_lt_of_le (hb.le.trans ha))],
-    have [ident A] [":", expr «expr < »(bit0 b, exprω())] [],
-    by simpa [] [] [] [] [] ["using", expr hb],
-    exact [expr lt_irrefl _ (lt_trans (lt_of_lt_of_le A ha) h)] },
-  { rw ["[", expr bit0_eq_self hb, "]"] [],
-    exact [expr iff_of_true ((bit1_lt_omega.2 ha).trans_le hb) (ha.trans_le hb)] },
-  { rcases [expr lt_omega.1 ha, "with", "⟨", ident m, ",", ident rfl, "⟩"],
-    rcases [expr lt_omega.1 hb, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    norm_cast [],
-    exact [expr nat.bit1_lt_bit0_iff] }
-end
-
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem bit1_lt_bit1 {a b : cardinal} : «expr ↔ »(«expr < »(bit1 a, bit1 b), «expr < »(a, b)) :=
-begin
-  cases [expr le_or_lt exprω() a] ["with", ident ha, ident ha]; cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { rw ["[", expr bit1_eq_self_iff.2 ha, ",", expr bit1_eq_self_iff.2 hb, "]"] [] },
-  { rw [expr bit1_eq_self_iff.2 ha] [],
-    refine [expr iff_of_false (λ h, _) (not_lt_of_le (hb.le.trans ha))],
-    have [ident A] [":", expr «expr < »(bit1 b, exprω())] [],
-    by simpa [] [] [] [] [] ["using", expr hb],
-    exact [expr lt_irrefl _ (lt_trans (lt_of_lt_of_le A ha) h)] },
-  { rw ["[", expr bit1_eq_self_iff.2 hb, "]"] [],
-    exact [expr iff_of_true ((bit1_lt_omega.2 ha).trans_le hb) (ha.trans_le hb)] },
-  { rcases [expr lt_omega.1 ha, "with", "⟨", ident m, ",", ident rfl, "⟩"],
-    rcases [expr lt_omega.1 hb, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    norm_cast [],
-    exact [expr bit1_lt_bit1] }
-end
-
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem bit0_lt_bit1
-{a
- b : cardinal} : «expr ↔ »(«expr < »(bit0 a, bit1 b), «expr ∨ »(«expr < »(a, b), «expr ∧ »(«expr ≤ »(a, b), «expr < »(a, exprω())))) :=
-begin
-  cases [expr le_or_lt exprω() a] ["with", ident ha, ident ha]; cases [expr le_or_lt exprω() b] ["with", ident hb, ident hb],
-  { simp [] [] [] ["[", expr bit0_eq_self ha, ",", expr bit1_eq_self_iff.2 hb, ",", expr not_lt.mpr ha, "]"] [] [] },
-  { rw [expr bit0_eq_self ha] [],
-    refine [expr iff_of_false (λ h, _) (λ h, _)],
-    { have [ident A] [":", expr «expr < »(bit1 b, exprω())] [],
-      by simpa [] [] [] [] [] ["using", expr hb],
-      exact [expr lt_irrefl _ (lt_trans (lt_of_lt_of_le A ha) h)] },
-    { exact [expr not_le_of_lt (hb.trans_le ha) (h.elim le_of_lt and.left)] } },
-  { rw ["[", expr bit1_eq_self_iff.2 hb, "]"] [],
-    exact [expr iff_of_true ((bit0_lt_omega.2 ha).trans_le hb) «expr $ »(or.inl, ha.trans_le hb)] },
-  { rcases [expr lt_omega.1 ha, "with", "⟨", ident m, ",", ident rfl, "⟩"],
-    rcases [expr lt_omega.1 hb, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    norm_cast [],
-    simp [] [] ["only"] ["[", expr ha, ",", expr and_true, ",", expr nat.bit0_lt_bit1_iff, ",", expr or_iff_right_of_imp le_of_lt, "]"] [] [] }
-end
+theorem bit0_lt_bit0 {a b : Cardinal} : bit0 a < bit0 b ↔ a < b :=
+  by 
+    cases' le_or_ltₓ ω a with ha ha <;> cases' le_or_ltₓ ω b with hb hb
+    ·
+      rw [bit0_eq_self ha, bit0_eq_self hb]
+    ·
+      rw [bit0_eq_self ha]
+      refine' iff_of_false (fun h => _) (not_lt_of_le (hb.le.trans ha))
+      have A : bit0 b < ω
+      ·
+        simpa using hb 
+      exact lt_irreflₓ _ (lt_transₓ (lt_of_lt_of_leₓ A ha) h)
+    ·
+      rw [bit0_eq_self hb]
+      exact iff_of_true ((bit0_lt_omega.2 ha).trans_le hb) (ha.trans_le hb)
+    ·
+      rcases lt_omega.1 ha with ⟨m, rfl⟩
+      rcases lt_omega.1 hb with ⟨n, rfl⟩
+      normCast 
+      exact bit0_lt_bit0
+
+@[simp]
+theorem bit1_lt_bit0 {a b : Cardinal} : bit1 a < bit0 b ↔ a < b :=
+  by 
+    cases' le_or_ltₓ ω a with ha ha <;> cases' le_or_ltₓ ω b with hb hb
+    ·
+      rw [bit1_eq_self_iff.2 ha, bit0_eq_self hb]
+    ·
+      rw [bit1_eq_self_iff.2 ha]
+      refine' iff_of_false (fun h => _) (not_lt_of_le (hb.le.trans ha))
+      have A : bit0 b < ω
+      ·
+        simpa using hb 
+      exact lt_irreflₓ _ (lt_transₓ (lt_of_lt_of_leₓ A ha) h)
+    ·
+      rw [bit0_eq_self hb]
+      exact iff_of_true ((bit1_lt_omega.2 ha).trans_le hb) (ha.trans_le hb)
+    ·
+      rcases lt_omega.1 ha with ⟨m, rfl⟩
+      rcases lt_omega.1 hb with ⟨n, rfl⟩
+      normCast 
+      exact Nat.bit1_lt_bit0_iff
+
+@[simp]
+theorem bit1_lt_bit1 {a b : Cardinal} : bit1 a < bit1 b ↔ a < b :=
+  by 
+    cases' le_or_ltₓ ω a with ha ha <;> cases' le_or_ltₓ ω b with hb hb
+    ·
+      rw [bit1_eq_self_iff.2 ha, bit1_eq_self_iff.2 hb]
+    ·
+      rw [bit1_eq_self_iff.2 ha]
+      refine' iff_of_false (fun h => _) (not_lt_of_le (hb.le.trans ha))
+      have A : bit1 b < ω
+      ·
+        simpa using hb 
+      exact lt_irreflₓ _ (lt_transₓ (lt_of_lt_of_leₓ A ha) h)
+    ·
+      rw [bit1_eq_self_iff.2 hb]
+      exact iff_of_true ((bit1_lt_omega.2 ha).trans_le hb) (ha.trans_le hb)
+    ·
+      rcases lt_omega.1 ha with ⟨m, rfl⟩
+      rcases lt_omega.1 hb with ⟨n, rfl⟩
+      normCast 
+      exact bit1_lt_bit1
+
+@[simp]
+theorem bit0_lt_bit1 {a b : Cardinal} : bit0 a < bit1 b ↔ a < b ∨ a ≤ b ∧ a < ω :=
+  by 
+    cases' le_or_ltₓ ω a with ha ha <;> cases' le_or_ltₓ ω b with hb hb
+    ·
+      simp [bit0_eq_self ha, bit1_eq_self_iff.2 hb, not_lt.mpr ha]
+    ·
+      rw [bit0_eq_self ha]
+      refine' iff_of_false (fun h => _) fun h => _
+      ·
+        have A : bit1 b < ω
+        ·
+          simpa using hb 
+        exact lt_irreflₓ _ (lt_transₓ (lt_of_lt_of_leₓ A ha) h)
+      ·
+        exact not_le_of_lt (hb.trans_le ha) (h.elim le_of_ltₓ And.left)
+    ·
+      rw [bit1_eq_self_iff.2 hb]
+      exact iff_of_true ((bit0_lt_omega.2 ha).trans_le hb) (Or.inl$ ha.trans_le hb)
+    ·
+      rcases lt_omega.1 ha with ⟨m, rfl⟩
+      rcases lt_omega.1 hb with ⟨n, rfl⟩
+      normCast 
+      simp only [ha, and_trueₓ, Nat.bit0_lt_bit1_iff, or_iff_right_of_imp le_of_ltₓ]
 
 theorem one_lt_two : (1 : Cardinal) < 2 :=
   by 
@@ -1108,20 +1133,19 @@ end Bit
 
 end Cardinal
 
--- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem not_injective_of_ordinal {α : Type u} (f : ordinal.{u} → α) : «expr¬ »(function.injective f) :=
-begin
-  let [ident g] [":", expr ordinal.{u} → ulift.{u+1} α] [":=", expr λ o, ulift.up (f o)],
-  suffices [] [":", expr «expr¬ »(function.injective g)],
-  { intro [ident hf],
-    exact [expr this (equiv.ulift.symm.injective.comp hf)] },
-  intro [ident hg],
-  replace [ident hg] [] [":=", expr cardinal.mk_le_of_injective hg],
-  rw [expr cardinal.mk_ulift] ["at", ident hg],
-  have [] [] [":=", expr hg.trans_lt (cardinal.lift_lt_univ _)],
-  rw [expr cardinal.univ_id] ["at", ident this],
-  exact [expr lt_irrefl _ this]
-end
+theorem not_injective_of_ordinal {α : Type u} (f : Ordinal.{u} → α) : ¬Function.Injective f :=
+  by 
+    let g : Ordinal.{u} → Ulift.{u + 1} α := fun o => Ulift.up (f o)
+    suffices  : ¬Function.Injective g
+    ·
+      intro hf 
+      exact this (equiv.ulift.symm.injective.comp hf)
+    intro hg 
+    replace hg := Cardinal.mk_le_of_injective hg 
+    rw [Cardinal.mk_ulift] at hg 
+    have  := hg.trans_lt (Cardinal.lift_lt_univ _)
+    rw [Cardinal.univ_id] at this 
+    exact lt_irreflₓ _ this
 
 theorem not_injective_of_ordinal_of_small {α : Type v} [Small.{u} α] (f : Ordinal.{u} → α) : ¬Function.Injective f :=
   by 

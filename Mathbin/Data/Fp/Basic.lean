@@ -12,9 +12,9 @@ def Int.shift2 (a b : ℕ) : ℤ → ℕ × ℕ
 
 namespace Fp
 
--- error in Data.Fp.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-@[derive #[expr inhabited]] inductive rmode
-| NE
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+inductive rmode
+  | NE deriving [anonymous]
 
 class float_cfg where 
   (prec emax : ℕ)

@@ -43,7 +43,7 @@ Uniform limit, uniform convergence, tends uniformly to
  -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale TopologicalSpace Classical uniformity Filter
 
@@ -62,11 +62,13 @@ We define uniform convergence and locally uniform convergence, on a set or in th
 -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A sequence of functions `Fₙ` converges uniformly on a set `s` to a limiting function `f` with
 respect to the filter `p` if, for any entourage of the diagonal `u`, one has `p`-eventually
 `(f x, Fₙ x) ∈ u` for all `x ∈ s`. -/
 def TendstoUniformlyOn (F : ι → α → β) (f : α → β) (p : Filter ι) (s : Set α) :=
-  ∀ u _ : u ∈ 𝓤 β, ∀ᶠn in p, ∀ x _ : x ∈ s, (f x, F n x) ∈ u
+  ∀ u _ : u ∈ 𝓤 β, ∀ᶠ n in p, ∀ x _ : x ∈ s, (f x, F n x) ∈ u
 
 /--
 A sequence of functions `Fₙ` converges uniformly on a set `s` to a limiting function `f` w.r.t.
@@ -79,11 +81,12 @@ theorem tendsto_uniformly_on_iff_tendsto {F : ι → α → β} {f : α → β} 
     refine' forall_congrₓ fun u => forall_congrₓ$ fun u_in => _ 
     simp [mem_map, Filter.Eventually, mem_prod_principal]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
 /-- A sequence of functions `Fₙ` converges uniformly to a limiting function `f` with respect to a
 filter `p` if, for any entourage of the diagonal `u`, one has `p`-eventually
 `(f x, Fₙ x) ∈ u` for all `x`. -/
 def TendstoUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
-  ∀ u _ : u ∈ 𝓤 β, ∀ᶠn in p, ∀ x, (f x, F n x) ∈ u
+  ∀ u _ : u ∈ 𝓤 β, ∀ᶠ n in p, ∀ x, (f x, F n x) ∈ u
 
 /--
 A sequence of functions `Fₙ` converges uniformly to a limiting function `f` w.r.t.
@@ -123,29 +126,31 @@ theorem TendstoUniformly.comp (h : TendstoUniformly F f p) (g : γ → α) :
     apply (h u hu).mono fun n hn => _ 
     exact fun x => hn _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » expr𝓤() β)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Uniform convergence to a constant function is equivalent to convergence in `p ×ᶠ ⊤`. -/
-theorem tendsto_prod_top_iff {c : β} : tendsto («expr↿ » F) (p ×ᶠ ⊤) (𝓝 c) ↔ TendstoUniformly F (fun _ => c) p :=
-  let j : β → β × β := Prod.mk c 
-  calc tendsto («expr↿ » F) (p ×ᶠ ⊤) (𝓝 c) ↔ map («expr↿ » F) (p ×ᶠ ⊤) ≤ 𝓝 c := Iff.rfl 
-    _ ↔ map («expr↿ » F) (p ×ᶠ ⊤) ≤ comap j (𝓤 β) :=
-    by 
-      rw [nhds_eq_comap_uniformity]
-    _ ↔ map j (map («expr↿ » F) (p ×ᶠ ⊤)) ≤ 𝓤 β := map_le_iff_le_comap.symm 
-    _ ↔ map (j ∘ «expr↿ » F) (p ×ᶠ ⊤) ≤ 𝓤 β :=
-    by 
-      rw [map_map]
-    _ ↔ ∀ V _ : V ∈ 𝓤 β, { x | (c, («expr↿ » F) x) ∈ V } ∈ p ×ᶠ (⊤ : Filter α) := Iff.rfl 
-    _ ↔ ∀ V _ : V ∈ 𝓤 β, { i | ∀ a, (c, F i a) ∈ V } ∈ p :=
-    by 
-      simpa [mem_prod_top]
-    
+  theorem
+    tendsto_prod_top_iff
+    { c : β } : tendsto ↿ F p ×ᶠ ⊤ 𝓝 c ↔ TendstoUniformly F fun _ => c p
+    :=
+      let
+        j : β → β × β := Prod.mk c
+        calc
+          tendsto ↿ F p ×ᶠ ⊤ 𝓝 c ↔ map ↿ F p ×ᶠ ⊤ ≤ 𝓝 c := Iff.rfl
+            _ ↔ map ↿ F p ×ᶠ ⊤ ≤ comap j 𝓤 β := by rw [ nhds_eq_comap_uniformity ]
+            _ ↔ map j map ↿ F p ×ᶠ ⊤ ≤ 𝓤 β := map_le_iff_le_comap . symm
+            _ ↔ map j ∘ ↿ F p ×ᶠ ⊤ ≤ 𝓤 β := by rw [ map_map ]
+            _ ↔ ∀ V _ : V ∈ 𝓤 β , { x | ( c , ↿ F x ) ∈ V } ∈ p ×ᶠ ( ⊤ : Filter α ) := Iff.rfl
+            _ ↔ ∀ V _ : V ∈ 𝓤 β , { i | ∀ a , ( c , F i a ) ∈ V } ∈ p := by simpa [ mem_prod_top ]
 
 theorem UniformContinuousOn.tendsto_uniformly [UniformSpace α] [UniformSpace γ] {x : α} {U : Set α} (hU : U ∈ 𝓝 x)
-  {F : α → β → γ} (hF : UniformContinuousOn («expr↿ » F) (U.prod univ)) : TendstoUniformly F (F x) (𝓝 x) :=
+  {F : α → β → γ} (hF : UniformContinuousOn (↿F) (U.prod univ)) : TendstoUniformly F (F x) (𝓝 x) :=
   by 
     let φ := fun q : α × β => ((x, q.2), q)
     rw [tendsto_uniformly_iff_tendsto,
-      show (fun q : α × β => (F x q.2, F q.1 q.2)) = (Prod.map («expr↿ » F) («expr↿ » F) ∘ φ)by 
+      show (fun q : α × β => (F x q.2, F q.1 q.2)) = (Prod.map (↿F) (↿F) ∘ φ)by 
         ext <;> simpa]
     apply hF.comp (tendsto_inf.mpr ⟨_, _⟩)
     ·
@@ -170,17 +175,24 @@ theorem UniformContinuous₂.tendsto_uniformly [UniformSpace α] [UniformSpace �
 
 variable [TopologicalSpace α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- A sequence of functions `Fₙ` converges locally uniformly on a set `s` to a limiting function
 `f` with respect to a filter `p` if, for any entourage of the diagonal `u`, for any `x ∈ s`, one
 has `p`-eventually `(f x, Fₙ x) ∈ u` for all `y` in a neighborhood of `x` in `s`. -/
 def TendstoLocallyUniformlyOn (F : ι → α → β) (f : α → β) (p : Filter ι) (s : Set α) :=
-  ∀ u _ : u ∈ 𝓤 β, ∀ x _ : x ∈ s, ∃ (t : _)(_ : t ∈ 𝓝[s] x), ∀ᶠn in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u
+  ∀ u _ : u ∈ 𝓤 β, ∀ x _ : x ∈ s, ∃ (t : _)(_ : t ∈ 𝓝[s] x), ∀ᶠ n in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- A sequence of functions `Fₙ` converges locally uniformly to a limiting function `f` with respect
 to a filter `p` if, for any entourage of the diagonal `u`, for any `x`, one has `p`-eventually
 `(f x, Fₙ x) ∈ u` for all `y` in a neighborhood of `x`. -/
 def TendstoLocallyUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
-  ∀ u _ : u ∈ 𝓤 β, ∀ x : α, ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠn in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u
+  ∀ u _ : u ∈ 𝓤 β, ∀ x : α, ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠ n in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u
 
 protected theorem TendstoUniformlyOn.tendsto_locally_uniformly_on (h : TendstoUniformlyOn F f p s) :
   TendstoLocallyUniformlyOn F f p s :=
@@ -208,20 +220,13 @@ protected theorem TendstoLocallyUniformly.tendsto_locally_uniformly_on (h : Tend
   TendstoLocallyUniformlyOn F f p s :=
   (tendsto_locally_uniformly_on_univ.mpr h).mono (subset_univ _)
 
--- error in Topology.UniformSpace.UniformConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tendsto_locally_uniformly_on.comp
-[topological_space γ]
-{t : set γ}
-(h : tendsto_locally_uniformly_on F f p s)
-(g : γ → α)
-(hg : maps_to g t s)
-(cg : continuous_on g t) : tendsto_locally_uniformly_on (λ n, «expr ∘ »(F n, g)) «expr ∘ »(f, g) p t :=
-begin
-  assume [binders (u hu x hx)],
-  rcases [expr h u hu (g x) (hg hx), "with", "⟨", ident a, ",", ident ha, ",", ident H, "⟩"],
-  have [] [":", expr «expr ∈ »(«expr ⁻¹' »(g, a), «expr𝓝[ ] »(t, x))] [":=", expr (cg x hx).preimage_mem_nhds_within' (nhds_within_mono (g x) hg.image_subset ha)],
-  exact [expr ⟨«expr ⁻¹' »(g, a), this, H.mono (λ n hn y hy, hn _ hy)⟩]
-end
+theorem TendstoLocallyUniformlyOn.comp [TopologicalSpace γ] {t : Set γ} (h : TendstoLocallyUniformlyOn F f p s)
+  (g : γ → α) (hg : maps_to g t s) (cg : ContinuousOn g t) : TendstoLocallyUniformlyOn (fun n => F n ∘ g) (f ∘ g) p t :=
+  by 
+    intro u hu x hx 
+    rcases h u hu (g x) (hg hx) with ⟨a, ha, H⟩
+    have  : g ⁻¹' a ∈ 𝓝[t] x := (cg x hx).preimage_mem_nhds_within' (nhds_within_mono (g x) hg.image_subset ha)
+    exact ⟨g ⁻¹' a, this, H.mono fun n hn y hy => hn _ hy⟩
 
 theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUniformly F f p) (g : γ → α)
   (cg : Continuous g) : TendstoLocallyUniformly (fun n => F n ∘ g) (f ∘ g) p :=
@@ -240,32 +245,31 @@ the statements are derived from a statement about locally uniform approximation 
 a point, called `continuous_within_at_of_locally_uniform_approx_of_continuous_within_at`. -/
 
 
--- error in Topology.UniformSpace.UniformConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- A function which can be locally uniformly approximated by functions which are continuous
 within a set at a point is continuous within this set at this point. -/
-theorem continuous_within_at_of_locally_uniform_approx_of_continuous_within_at
-(hx : «expr ∈ »(x, s))
-(L : ∀
- u «expr ∈ » expr𝓤() β, «expr∃ , »((t «expr ∈ » «expr𝓝[ ] »(s, x))
-  (F : α → β), «expr ∧ »(continuous_within_at F s x, ∀
-   y «expr ∈ » t, «expr ∈ »((f y, F y), u)))) : continuous_within_at f s x :=
-begin
-  apply [expr uniform.continuous_within_at_iff'_left.2 (λ u₀ hu₀, _)],
-  obtain ["⟨", ident u₁, ",", ident h₁, ",", ident u₁₀, "⟩", ":", expr «expr∃ , »((u : set «expr × »(β, β))
-    (H : «expr ∈ »(u, expr𝓤() β)), «expr ⊆ »(comp_rel u u, u₀)), ":=", expr comp_mem_uniformity_sets hu₀],
-  obtain ["⟨", ident u₂, ",", ident h₂, ",", ident hsymm, ",", ident u₂₁, "⟩", ":", expr «expr∃ , »((u : set «expr × »(β, β))
-    (H : «expr ∈ »(u, expr𝓤() β)), «expr ∧ »(∀
-     {a
-      b}, «expr ∈ »((a, b), u) → «expr ∈ »((b, a), u), «expr ⊆ »(comp_rel u u, u₁))), ":=", expr comp_symm_of_uniformity h₁],
-  rcases [expr L u₂ h₂, "with", "⟨", ident t, ",", ident tx, ",", ident F, ",", ident hFc, ",", ident hF, "⟩"],
-  have [ident A] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((f y, F y), u₂))] [":=", expr eventually.mono tx hF],
-  have [ident B] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((F y, F x), u₂))] [":=", expr uniform.continuous_within_at_iff'_left.1 hFc h₂],
-  have [ident C] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((f y, F x), u₁))] [":=", expr (A.and B).mono (λ
-    y hy, u₂₁ (prod_mk_mem_comp_rel hy.1 hy.2))],
-  have [] [":", expr «expr ∈ »((F x, f x), u₁)] [":=", expr u₂₁ (prod_mk_mem_comp_rel (refl_mem_uniformity h₂) (hsymm (A.self_of_nhds_within hx)))],
-  exact [expr C.mono (λ y hy, u₁₀ (prod_mk_mem_comp_rel hy this))]
-end
+theorem continuous_within_at_of_locally_uniform_approx_of_continuous_within_at (hx : x ∈ s)
+  (L :
+    ∀ u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝[s] x)(F : α → β), ContinuousWithinAt F s x ∧ ∀ y _ : y ∈ t, (f y, F y) ∈ u) :
+  ContinuousWithinAt f s x :=
+  by 
+    apply Uniform.continuous_within_at_iff'_left.2 fun u₀ hu₀ => _ 
+    obtain ⟨u₁, h₁, u₁₀⟩ : ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), CompRel u u ⊆ u₀ := comp_mem_uniformity_sets hu₀ 
+    obtain ⟨u₂, h₂, hsymm, u₂₁⟩ :
+      ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), (∀ {a b}, (a, b) ∈ u → (b, a) ∈ u) ∧ CompRel u u ⊆ u₁ :=
+      comp_symm_of_uniformity h₁ 
+    rcases L u₂ h₂ with ⟨t, tx, F, hFc, hF⟩
+    have A : ∀ᶠ y in 𝓝[s] x, (f y, F y) ∈ u₂ := eventually.mono tx hF 
+    have B : ∀ᶠ y in 𝓝[s] x, (F y, F x) ∈ u₂ := Uniform.continuous_within_at_iff'_left.1 hFc h₂ 
+    have C : ∀ᶠ y in 𝓝[s] x, (f y, F x) ∈ u₁ := (A.and B).mono fun y hy => u₂₁ (prod_mk_mem_comp_rel hy.1 hy.2)
+    have  : (F x, f x) ∈ u₁ := u₂₁ (prod_mk_mem_comp_rel (refl_mem_uniformity h₂) (hsymm (A.self_of_nhds_within hx)))
+    exact C.mono fun y hy => u₁₀ (prod_mk_mem_comp_rel hy this)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- A function which can be locally uniformly approximated by functions which are continuous at
 a point is continuous at this point. -/
 theorem continuous_at_of_locally_uniform_approx_of_continuous_at
@@ -276,6 +280,10 @@ theorem continuous_at_of_locally_uniform_approx_of_continuous_at
     apply continuous_within_at_of_locally_uniform_approx_of_continuous_within_at (mem_univ _) _ 
     simpa only [exists_prop, nhds_within_univ, continuous_within_at_univ] using L
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- A function which can be locally uniformly approximated by functions which are continuous
 on a set is continuous on this set. -/
 theorem continuous_on_of_locally_uniform_approx_of_continuous_within_at
@@ -285,6 +293,8 @@ theorem continuous_on_of_locally_uniform_approx_of_continuous_within_at
   ContinuousOn f s :=
   fun x hx => continuous_within_at_of_locally_uniform_approx_of_continuous_within_at hx (L x hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- A function which can be uniformly approximated by functions which are continuous on a set
 is continuous on this set. -/
 theorem continuous_on_of_uniform_approx_of_continuous_on
@@ -292,12 +302,16 @@ theorem continuous_on_of_uniform_approx_of_continuous_on
   continuous_on_of_locally_uniform_approx_of_continuous_within_at$
     fun x hx u hu => ⟨s, self_mem_nhds_within, (L u hu).imp$ fun F hF => ⟨hF.1.ContinuousWithinAt hx, hF.2⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- A function which can be locally uniformly approximated by continuous functions is continuous. -/
 theorem continuous_of_locally_uniform_approx_of_continuous_at
   (L : ∀ x : α, ∀ u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝 x), ∃ F, ContinuousAt F x ∧ ∀ y _ : y ∈ t, (f y, F y) ∈ u) :
   Continuous f :=
   continuous_iff_continuous_at.2$ fun x => continuous_at_of_locally_uniform_approx_of_continuous_at (L x)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
 /-- A function which can be uniformly approximated by continuous functions is continuous. -/
 theorem continuous_of_uniform_approx_of_continuous (L : ∀ u _ : u ∈ 𝓤 β, ∃ F, Continuous F ∧ ∀ y, (f y, F y) ∈ u) :
   Continuous f :=
@@ -317,7 +331,7 @@ limits.
 /-- A locally uniform limit on a set of functions which are continuous on this set is itself
 continuous on this set. -/
 protected theorem TendstoLocallyUniformlyOn.continuous_on (h : TendstoLocallyUniformlyOn F f p s)
-  (hc : ∀ᶠn in p, ContinuousOn (F n) s) [ne_bot p] : ContinuousOn f s :=
+  (hc : ∀ᶠ n in p, ContinuousOn (F n) s) [ne_bot p] : ContinuousOn f s :=
   by 
     apply continuous_on_of_locally_uniform_approx_of_continuous_within_at fun x hx u hu => _ 
     rcases h u hu x hx with ⟨t, ht, H⟩
@@ -327,17 +341,17 @@ protected theorem TendstoLocallyUniformlyOn.continuous_on (h : TendstoLocallyUni
 /-- A uniform limit on a set of functions which are continuous on this set is itself continuous
 on this set. -/
 protected theorem TendstoUniformlyOn.continuous_on (h : TendstoUniformlyOn F f p s)
-  (hc : ∀ᶠn in p, ContinuousOn (F n) s) [ne_bot p] : ContinuousOn f s :=
+  (hc : ∀ᶠ n in p, ContinuousOn (F n) s) [ne_bot p] : ContinuousOn f s :=
   h.tendsto_locally_uniformly_on.continuous_on hc
 
 /-- A locally uniform limit of continuous functions is continuous. -/
 protected theorem TendstoLocallyUniformly.continuous (h : TendstoLocallyUniformly F f p)
-  (hc : ∀ᶠn in p, Continuous (F n)) [ne_bot p] : Continuous f :=
+  (hc : ∀ᶠ n in p, Continuous (F n)) [ne_bot p] : Continuous f :=
   continuous_iff_continuous_on_univ.mpr$
     h.tendsto_locally_uniformly_on.continuous_on$ hc.mono$ fun n hn => hn.continuous_on
 
 /-- A uniform limit of continuous functions is continuous. -/
-protected theorem TendstoUniformly.continuous (h : TendstoUniformly F f p) (hc : ∀ᶠn in p, Continuous (F n))
+protected theorem TendstoUniformly.continuous (h : TendstoUniformly F f p) (hc : ∀ᶠ n in p, Continuous (F n))
   [ne_bot p] : Continuous f :=
   h.tendsto_locally_uniformly.continuous hc
 
@@ -350,32 +364,32 @@ this paragraph, we prove variations around this statement.
 -/
 
 
--- error in Topology.UniformSpace.UniformConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- If `Fₙ` converges locally uniformly on a neighborhood of `x` within a set `s` to a function `f`
 which is continuous at `x` within `s `, and `gₙ` tends to `x` within `s`, then `Fₙ (gₙ)` tends
 to `f x`. -/
-theorem tendsto_comp_of_locally_uniform_limit_within
-(h : continuous_within_at f s x)
-(hg : tendsto g p «expr𝓝[ ] »(s, x))
-(hunif : ∀
- u «expr ∈ » expr𝓤() β, «expr∃ , »((t «expr ∈ » «expr𝓝[ ] »(s, x)), «expr∀ᶠ in , »((n), p, ∀
-   y «expr ∈ » t, «expr ∈ »((f y, F n y), u)))) : tendsto (λ n, F n (g n)) p (expr𝓝() (f x)) :=
-begin
-  apply [expr uniform.tendsto_nhds_right.2 (λ u₀ hu₀, _)],
-  obtain ["⟨", ident u₁, ",", ident h₁, ",", ident u₁₀, "⟩", ":", expr «expr∃ , »((u : set «expr × »(β, β))
-    (H : «expr ∈ »(u, expr𝓤() β)), «expr ⊆ »(comp_rel u u, u₀)), ":=", expr comp_mem_uniformity_sets hu₀],
-  rcases [expr hunif u₁ h₁, "with", "⟨", ident s, ",", ident sx, ",", ident hs, "⟩"],
-  have [ident A] [":", expr «expr∀ᶠ in , »((n), p, «expr ∈ »(g n, s))] [":=", expr hg sx],
-  have [ident B] [":", expr «expr∀ᶠ in , »((n), p, «expr ∈ »((f x, f (g n)), u₁))] [":=", expr hg (uniform.continuous_within_at_iff'_right.1 h h₁)],
-  refine [expr ((hs.and A).and B).mono (λ y hy, _)],
-  rcases [expr hy, "with", "⟨", "⟨", ident H1, ",", ident H2, "⟩", ",", ident H3, "⟩"],
-  exact [expr u₁₀ (prod_mk_mem_comp_rel H3 (H1 _ H2))]
-end
+theorem tendsto_comp_of_locally_uniform_limit_within (h : ContinuousWithinAt f s x) (hg : tendsto g p (𝓝[s] x))
+  (hunif : ∀ u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝[s] x), ∀ᶠ n in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u) :
+  tendsto (fun n => F n (g n)) p (𝓝 (f x)) :=
+  by 
+    apply Uniform.tendsto_nhds_right.2 fun u₀ hu₀ => _ 
+    obtain ⟨u₁, h₁, u₁₀⟩ : ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), CompRel u u ⊆ u₀ := comp_mem_uniformity_sets hu₀ 
+    rcases hunif u₁ h₁ with ⟨s, sx, hs⟩
+    have A : ∀ᶠ n in p, g n ∈ s := hg sx 
+    have B : ∀ᶠ n in p, (f x, f (g n)) ∈ u₁ := hg (Uniform.continuous_within_at_iff'_right.1 h h₁)
+    refine' ((hs.and A).And B).mono fun y hy => _ 
+    rcases hy with ⟨⟨H1, H2⟩, H3⟩
+    exact u₁₀ (prod_mk_mem_comp_rel H3 (H1 _ H2))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓤() β)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- If `Fₙ` converges locally uniformly on a neighborhood of `x` to a function `f` which is
 continuous at `x`, and `gₙ` tends to `x`, then `Fₙ (gₙ)` tends to `f x`. -/
 theorem tendsto_comp_of_locally_uniform_limit (h : ContinuousAt f x) (hg : tendsto g p (𝓝 x))
-  (hunif : ∀ u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠn in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u) :
+  (hunif : ∀ u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠ n in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u) :
   tendsto (fun n => F n (g n)) p (𝓝 (f x)) :=
   by 
     rw [←continuous_within_at_univ] at h 

@@ -13,7 +13,7 @@ We provide basic instances, as well as a custom tactic for discharging
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical TopologicalSpace Filter
 
@@ -33,12 +33,12 @@ namespace UnitInterval
 theorem mem_iff_one_sub_mem {t : ℝ} : t ∈ I ↔ 1 - t ∈ I :=
   by 
     rw [mem_Icc, mem_Icc]
-    split  <;> intro  <;> split  <;> linarith
+    constructor <;> intro  <;> constructor <;> linarith
 
 instance HasZero : HasZero I :=
   ⟨⟨0,
       by 
-        split  <;> normNum⟩⟩
+        constructor <;> normNum⟩⟩
 
 @[simp, normCast]
 theorem coe_zero : ((0 : I) : ℝ) = 0 :=
@@ -57,7 +57,7 @@ theorem coe_eq_zero {x : I} : (x : ℝ) = 0 ↔ x = 0 :=
 instance HasOne : HasOne I :=
   ⟨⟨1,
       by 
-        split  <;> normNum⟩⟩
+        constructor <;> normNum⟩⟩
 
 @[simp, normCast]
 theorem coe_one : ((1 : I) : ℝ) = 1 :=
@@ -163,7 +163,7 @@ theorem le_one' {t : I} : t ≤ 1 :=
 
 theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : (a*t) ∈ I ↔ t ∈ Set.Icc (0 : ℝ) (1 / a) :=
   by 
-    split  <;> rintro ⟨h₁, h₂⟩ <;> split 
+    constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor
     ·
       exact nonneg_of_mul_nonneg_left h₁ ha
     ·
@@ -175,7 +175,7 @@ theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : (a*t) ∈ I ↔ t ∈ Set.Icc
 
 theorem two_mul_sub_one_mem_iff {t : ℝ} : (2*t) - 1 ∈ I ↔ t ∈ Set.Icc (1 / 2 : ℝ) 1 :=
   by 
-    split  <;> rintro ⟨h₁, h₂⟩ <;> split  <;> linarith
+    constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
 
 end UnitInterval
 
@@ -189,6 +189,10 @@ theorem proj_Icc_eq_one {x : ℝ} : proj_Icc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1
 
 namespace Tactic.Interactive
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
 unsafe def UnitInterval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry

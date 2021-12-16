@@ -36,16 +36,17 @@ they are not shared with other components of `linarith`.
 -/
 
 
--- error in Tactic.Linarith.Elimination: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 `comp_source` tracks the source of a comparison.
 The atomic source of a comparison is an assumption, indexed by a natural number.
 Two comparisons can be added to produce a new comparison,
 and one comparison can be scaled by a natural number to produce a new comparison.
- -/ @[derive #[expr inhabited]] inductive comp_source : Type
-| assump : exprℕ() → comp_source
-| add : comp_source → comp_source → comp_source
-| scale : exprℕ() → comp_source → comp_source
+ -/
+inductive comp_source : Type
+  | assump : ℕ → comp_source
+  | add : comp_source → comp_source → comp_source
+  | scale : ℕ → comp_source → comp_source deriving [anonymous]
 
 /--
 Given a `comp_source` `cs`, `cs.flatten` maps an assumption index
@@ -233,12 +234,15 @@ unsafe structure linarith_structure : Type where
   max_var : ℕ 
   comps : rb_set pcomp
 
--- error in Tactic.Linarith.Elimination: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler monad_except pcomp
 /--
 The linarith monad extends an exceptional monad with a `linarith_structure` state.
 An exception produces a contradictory `pcomp`.
--/ @[reducible, derive #["[", expr monad, ",", expr monad_except pcomp, "]"]] meta def linarith_monad : Type → Type :=
-state_t linarith_structure (except_t pcomp id)
+-/
+@[reducible]
+unsafe def linarith_monad : Type → Type :=
+  StateTₓ linarith_structure (ExceptTₓ pcomp id)deriving [anonymous], [anonymous]
 
 /-- Returns the current max variable. -/
 unsafe def get_max_var : linarith_monad ℕ :=

@@ -7,7 +7,7 @@ import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Complex
 
@@ -20,8 +20,8 @@ open_locale Real TopologicalSpace
 is complex differentiable at all points but the negative real semi-axis. -/
 def exp_local_homeomorph : LocalHomeomorph ℂ ℂ :=
   LocalHomeomorph.ofContinuousOpen
-    { toFun := exp, invFun := log, Source := { z:ℂ | z.im ∈ Ioo (-π) π },
-      Target := { z:ℂ | 0 < z.re } ∪ { z:ℂ | z.im ≠ 0 },
+    { toFun := exp, invFun := log, Source := { z : ℂ | z.im ∈ Ioo (-π) π },
+      Target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 },
       map_source' :=
         by 
           rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
@@ -126,6 +126,7 @@ theorem DifferentiableWithinAt.clog {f : E → ℂ} {s : Set E} {x : E} (h₁ : 
   (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableWithinAt ℂ (fun t => log (f t)) s x :=
   (h₁.has_fderiv_within_at.clog h₂).DifferentiableWithinAt
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem DifferentiableOn.clog {f : E → ℂ} {s : Set E} (h₁ : DifferentiableOn ℂ f s)
   (h₂ : ∀ x _ : x ∈ s, 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableOn ℂ (fun t => log (f t)) s :=
   fun x hx => (h₁ x hx).clog (h₂ x hx)

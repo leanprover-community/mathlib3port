@@ -30,20 +30,23 @@ topological abelian group structure is compatible with its group structure. -/
 protected theorem UniformAddGroup : @UniformAddGroup G B.uniform_space _ :=
   @topological_add_group_is_uniform G _ B.topology B.is_topological_add_group
 
--- error in Topology.Algebra.UniformFilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cauchy_iff
-{F : filter G} : «expr ↔ »(@cauchy G B.uniform_space F, «expr ∧ »(F.ne_bot, ∀
-  U «expr ∈ » B, «expr∃ , »((M «expr ∈ » F), ∀ x y «expr ∈ » M, «expr ∈ »(«expr - »(y, x), U)))) :=
-begin
-  letI [] [] [":=", expr B.uniform_space],
-  haveI [] [] [":=", expr B.uniform_add_group],
-  suffices [] [":", expr «expr ↔ »(«expr ≤ »(«expr ×ᶠ »(F, F), expr𝓤() G), ∀
-    U «expr ∈ » B, «expr∃ , »((M «expr ∈ » F), ∀ x y «expr ∈ » M, «expr ∈ »(«expr - »(y, x), U)))],
-  by split; rintros ["⟨", ident h', ",", ident h, "⟩"]; refine [expr ⟨h', _⟩]; [rwa ["<-", expr this] [], rwa [expr this] []],
-  rw ["[", expr uniformity_eq_comap_nhds_zero G, ",", "<-", expr map_le_iff_le_comap, "]"] [],
-  change [expr «expr ↔ »(tendsto _ _ _, _)] [] [],
-  simp [] [] [] ["[", expr (basis_sets F).prod_self.tendsto_iff B.nhds_zero_has_basis, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (M «expr ∈ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » M)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (M «expr ∈ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » M)
+theorem cauchy_iff {F : Filter G} :
+  @Cauchy G B.uniform_space F ↔ F.ne_bot ∧ ∀ U _ : U ∈ B, ∃ (M : _)(_ : M ∈ F), ∀ x y _ : x ∈ M _ : y ∈ M, y - x ∈ U :=
+  by 
+    let this' := B.uniform_space 
+    have  := B.uniform_add_group 
+    suffices  : F ×ᶠ F ≤ 𝓤 G ↔ ∀ U _ : U ∈ B, ∃ (M : _)(_ : M ∈ F), ∀ x y _ : x ∈ M _ : y ∈ M, y - x ∈ U
+    ·
+      constructor <;> rintro ⟨h', h⟩ <;> refine' ⟨h', _⟩ <;> [rwa [←this], rwa [this]]
+    rw [uniformity_eq_comap_nhds_zero G, ←map_le_iff_le_comap]
+    change tendsto _ _ _ ↔ _ 
+    simp [(basis_sets F).prod_self.tendsto_iff B.nhds_zero_has_basis]
 
 end AddGroupFilterBasis
 

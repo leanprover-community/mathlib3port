@@ -23,6 +23,7 @@ def push_neg : preform → preform
 | ¬* p => p
 | p => ¬* p
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem push_neg_equiv : ∀ {p : preform}, preform.equiv (push_neg p) (¬* p) :=
   by 
     runTac 
@@ -50,6 +51,7 @@ def is_nnf : preform → Prop
 | p ∧* q => is_nnf p ∧ is_nnf q
 | _ => False
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_push_neg : ∀ p : preform, is_nnf p → is_nnf (push_neg p) :=
   by 
     runTac 
@@ -84,6 +86,7 @@ def neg_free : preform → Prop
 | p ∧* q => neg_free p ∧ neg_free q
 | _ => False
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_nnf : ∀ p : preform, is_nnf (nnf p) :=
   by 
     runTac 
@@ -95,6 +98,7 @@ theorem is_nnf_nnf : ∀ p : preform, is_nnf (nnf p) :=
     ·
       constructor <;> assumption
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem nnf_equiv : ∀ {p : preform}, preform.equiv (nnf p) p :=
   by 
     runTac 
@@ -117,6 +121,7 @@ def neg_elim : preform → preform
 | p ∧* q => neg_elim p ∧* neg_elim q
 | p => p
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem neg_free_neg_elim : ∀ p : preform, is_nnf p → neg_free (neg_elim p) :=
   by 
     runTac 
@@ -154,6 +159,7 @@ theorem le_and_le_iff_eq {α : Type} [PartialOrderₓ α] {a b : α} : a ≤ b �
     ·
       constructor <;> apply le_of_eqₓ <;> rw [h1]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem implies_neg_elim : ∀ {p : preform}, preform.implies p (neg_elim p) :=
   by 
     runTac 
@@ -195,6 +201,8 @@ def dnf_core : preform → List clause
 def dnf (p : preform) : List clause :=
   dnf_core$ neg_elim$ nnf p
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » dnf_core p)
 theorem exists_clause_holds {v : Nat → Int} :
   ∀ {p : preform}, neg_free p → p.holds v → ∃ (c : _)(_ : c ∈ dnf_core p), clause.holds v c :=
   by 
@@ -245,17 +253,15 @@ theorem clauses_sat_dnf_core {p : preform} : neg_free p → p.sat → clauses.sa
     rcases exists_clause_holds h1 h2 with ⟨c, h3, h4⟩
     refine' ⟨c, h3, v, h4⟩
 
--- error in Tactic.Omega.Int.Dnf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem unsat_of_clauses_unsat {p : preform} : clauses.unsat (dnf p) → p.unsat :=
-begin
-  intros [ident h1, ident h2],
-  apply [expr h1],
-  apply [expr clauses_sat_dnf_core],
-  apply [expr neg_free_neg_elim _ (is_nnf_nnf _)],
-  apply [expr preform.sat_of_implies_of_sat implies_neg_elim],
-  have [ident hrw] [] [":=", expr exists_congr (@nnf_equiv p)],
-  apply [expr hrw.elim_right h2]
-end
+  by 
+    intro h1 h2 
+    apply h1 
+    apply clauses_sat_dnf_core 
+    apply neg_free_neg_elim _ (is_nnf_nnf _)
+    apply preform.sat_of_implies_of_sat implies_neg_elim 
+    have hrw := exists_congr (@nnf_equiv p)
+    apply hrw.elim_right h2
 
 end Int
 

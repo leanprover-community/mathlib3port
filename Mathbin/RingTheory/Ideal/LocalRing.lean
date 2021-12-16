@@ -47,7 +47,7 @@ theorem nonunits_add {x y} (hx : x ∈ Nonunits R) (hy : y ∈ Nonunits R) : (x+
   by 
     rintro ⟨u, hu⟩
     apply hy 
-    suffices  : IsUnit ((«expr↑ » (u⁻¹) : R)*y)
+    suffices  : IsUnit ((↑u⁻¹ : R)*y)
     ·
       rcases this with ⟨s, hs⟩
       use u*s 
@@ -55,9 +55,9 @@ theorem nonunits_add {x y} (hx : x ∈ Nonunits R) (hy : y ∈ Nonunits R) : (x+
       rw [←mul_assocₓ]
       simp 
     rw
-      [show («expr↑ » (u⁻¹)*y) = 1 - «expr↑ » (u⁻¹)*x by 
+      [show ((↑u⁻¹)*y) = 1 - (↑u⁻¹)*x by 
         rw [eq_sub_iff_add_eq]
-        replace hu := congr_argₓ (fun z => («expr↑ » (u⁻¹) : R)*z) hu.symm 
+        replace hu := congr_argₓ (fun z => (↑u⁻¹ : R)*z) hu.symm 
         simpa [mul_addₓ, add_commₓ] using hu]
     apply is_unit_one_sub_self_of_mem_nonunits 
     exact mul_mem_nonunits_right hx
@@ -72,7 +72,7 @@ def maximal_ideal : Ideal R :=
 instance maximal_ideal.is_maximal : (maximal_ideal R).IsMaximal :=
   by 
     rw [Ideal.is_maximal_iff]
-    split 
+    constructor
     ·
       intro h 
       apply h 
@@ -81,9 +81,9 @@ instance maximal_ideal.is_maximal : (maximal_ideal R).IsMaximal :=
       intro I x hI hx H 
       erw [not_not] at hx 
       rcases hx with ⟨u, rfl⟩
-      simpa using I.mul_mem_left («expr↑ » (u⁻¹)) H
+      simpa using I.mul_mem_left (↑u⁻¹) H
 
-theorem maximal_ideal_unique : ∃!I : Ideal R, I.is_maximal :=
+theorem maximal_ideal_unique : ∃! I : Ideal R, I.is_maximal :=
   ⟨maximal_ideal R, maximal_ideal.is_maximal R,
     fun I hI => hI.eq_of_le (maximal_ideal.is_maximal R).1.1$ fun x hx => hI.1.1 ∘ I.eq_top_of_is_unit_mem hx⟩
 
@@ -105,6 +105,7 @@ end LocalRing
 
 variable {R : Type u} {S : Type v} {T : Type w}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » nonunits R)
 theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
   (h : ∀ x y _ : x ∈ Nonunits R _ : y ∈ Nonunits R, (x+y) ∈ Nonunits R) : LocalRing R :=
   { exists_pair_ne := ⟨0, 1, hnze⟩,
@@ -117,7 +118,7 @@ theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
               apply h _ _ hx H 
               simp [-sub_eq_add_neg, add_sub_cancel'_right] }
 
-theorem local_of_unique_max_ideal [CommRingₓ R] (h : ∃!I : Ideal R, I.is_maximal) : LocalRing R :=
+theorem local_of_unique_max_ideal [CommRingₓ R] (h : ∃! I : Ideal R, I.is_maximal) : LocalRing R :=
   local_of_nonunits_ideal
       (let ⟨I, Imax, _⟩ := h 
       fun H : 0 = 1 => Imax.1.1$ I.eq_top_iff_one.2$ H ▸ I.zero_mem)$
@@ -129,7 +130,7 @@ theorem local_of_unique_max_ideal [CommRingₓ R] (h : ∃!I : Ideal R, I.is_max
       have ymemI : y ∈ I := Iuniq Iy Iymax ▸ Hy 
       Imax.1.1$ I.eq_top_of_is_unit_mem (I.add_mem xmemI ymemI) H
 
-theorem local_of_unique_nonzero_prime (R : Type u) [CommRingₓ R] (h : ∃!P : Ideal R, P ≠ ⊥ ∧ Ideal.IsPrime P) :
+theorem local_of_unique_nonzero_prime (R : Type u) [CommRingₓ R] (h : ∃! P : Ideal R, P ≠ ⊥ ∧ Ideal.IsPrime P) :
   LocalRing R :=
   local_of_unique_max_ideal
     (by 
@@ -169,6 +170,10 @@ theorem is_unit_map_iff [Semiringₓ R] [Semiringₓ S] (f : R →+* S) [IsLocal
 instance is_local_ring_hom_comp [Semiringₓ R] [Semiringₓ S] [Semiringₓ T] (g : S →+* T) (f : R →+* S) [IsLocalRingHom g]
   [IsLocalRingHom f] : IsLocalRingHom (g.comp f) :=
   { map_nonunit := fun a => IsLocalRingHom.map_nonunit a ∘ IsLocalRingHom.map_nonunit (f a) }
+
+instance _root_.CommRing.is_local_ring_hom_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) [IsLocalRingHom g]
+  [IsLocalRingHom f] : IsLocalRingHom (f ≫ g) :=
+  is_local_ring_hom_comp _ _
 
 instance is_local_ring_hom_equiv [Semiringₓ R] [Semiringₓ S] (f : R ≃+* S) : IsLocalRingHom f.to_ring_hom :=
   { map_nonunit :=
@@ -241,7 +246,7 @@ theorem local_hom_tfae (f : R →+* S) :
     exact Ideal.map_le_iff_le_comap 
     tfaeHave 4 → 1
     intro h 
-    fsplit 
+    fconstructor 
     exact fun x => not_imp_not.1 (@h x)
     tfaeHave 1 → 5
     intro 
@@ -256,7 +261,7 @@ variable (R)
 
 /-- The residue field of a local ring is the quotient of the ring by its maximal ideal. -/
 def residue_field :=
-  (maximal_ideal R).Quotient
+  R ⧸ maximal_ideal R
 
 noncomputable instance residue_field.field : Field (residue_field R) :=
   Ideal.Quotient.field (maximal_ideal R)

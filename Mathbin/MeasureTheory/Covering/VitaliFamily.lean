@@ -47,6 +47,14 @@ open_locale Filter MeasureTheory TopologicalSpace
 
 variable {α : Type _} [MetricSpace α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : exprℝ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » sets_at x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : exprℝ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » f x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 /-- On a metric space `X` with a measure `μ`, consider for each `x : X` a family of measurable sets
 with nonempty interiors, called `sets_at x`. This family is a Vitali family if it satisfies the
 following property: consider a (possibly non-measurable) set `s`, and for any `x` in `s` a
@@ -68,7 +76,7 @@ structure VitaliFamily {m : MeasurableSpace α} (μ : Measureₓ α) where
     (∀ x _ : x ∈ s, f x ⊆ sets_at x) →
       (∀ x _ : x ∈ s ε _ : ε > (0 : ℝ), ∃ (a : _)(_ : a ∈ f x), a ⊆ closed_ball x ε) →
         ∃ (t : Set α)(u : α → Set α),
-          t ⊆ s ∧ t.pairwise_disjoint u ∧ (∀ x _ : x ∈ t, u x ∈ f x) ∧ μ (s \ ⋃(x : _)(_ : x ∈ t), u x) = 0
+          t ⊆ s ∧ t.pairwise_disjoint u ∧ (∀ x _ : x ∈ t, u x ∈ f x) ∧ μ (s \ ⋃ (x : _)(_ : x ∈ t), u x) = 0
 
 namespace VitaliFamily
 
@@ -87,6 +95,9 @@ def mono (v : VitaliFamily μ) (ν : Measureₓ α) (hν : ν ≪ μ) : VitaliFa
           rcases v.covering s f h h' with ⟨t, u, ts, u_disj, uf, μu⟩
           exact ⟨t, u, ts, u_disj, uf, hν μu⟩ }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » «expr ∩ »(v.sets_at x, f x))
 /-- Given a Vitali family `v` for a measure `μ`, a family `f` is a fine subfamily on a set `s` if
 every point `x` in `s` belongs to arbitrarily small sets in `v.sets_at x ∩ f x`. This is precisely
 the subfamilies for which the Vitali family definition ensures that one can extract a disjoint
@@ -100,9 +111,11 @@ variable {v : VitaliFamily μ} {f : α → Set (Set α)} {s : Set α} (h : v.fin
 
 include h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem exists_disjoint_covering_ae :
   ∃ (t : Set α)(u : α → Set α),
-    t ⊆ s ∧ t.pairwise_disjoint u ∧ (∀ x _ : x ∈ t, u x ∈ v.sets_at x ∩ f x) ∧ μ (s \ ⋃(x : _)(_ : x ∈ t), u x) = 0 :=
+    t ⊆ s ∧ t.pairwise_disjoint u ∧ (∀ x _ : x ∈ t, u x ∈ v.sets_at x ∩ f x) ∧ μ (s \ ⋃ (x : _)(_ : x ∈ t), u x) = 0 :=
   v.covering s (fun x => v.sets_at x ∩ f x) (fun x hx => inter_subset_left _ _) h
 
 /-- Given `h : v.fine_subfamily_on f s`, then `h.index` is a subset of `s` parametrizing a disjoint
@@ -130,7 +143,8 @@ theorem covering_mem {x : α} (hx : x ∈ h.index) : h.covering x ∈ f x :=
 theorem covering_mem_family {x : α} (hx : x ∈ h.index) : h.covering x ∈ v.sets_at x :=
   (h.exists_disjoint_covering_ae.some_spec.some_spec.2.2.1 x hx).1
 
-theorem measure_diff_bUnion : μ (s \ ⋃(x : _)(_ : x ∈ h.index), h.covering x) = 0 :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » h.index)
+theorem measure_diff_bUnion : μ (s \ ⋃ (x : _)(_ : x ∈ h.index), h.covering x) = 0 :=
   h.exists_disjoint_covering_ae.some_spec.some_spec.2.2.2
 
 theorem index_countable [second_countable_topology α] : countable h.index :=
@@ -139,21 +153,25 @@ theorem index_countable [second_countable_topology α] : countable h.index :=
 protected theorem measurable_set_u {x : α} (hx : x ∈ h.index) : MeasurableSet (h.covering x) :=
   v.measurable_set' x _ (h.covering_mem_family hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » h.index)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » h.index)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » h.index)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » h.index)
 theorem measure_le_tsum_of_absolutely_continuous [second_countable_topology α] {ρ : Measureₓ α} (hρ : ρ ≪ μ) :
-  ρ s ≤ ∑'x : h.index, ρ (h.covering x) :=
-  calc ρ s ≤ ρ ((s \ ⋃(x : _)(_ : x ∈ h.index), h.covering x) ∪ ⋃(x : _)(_ : x ∈ h.index), h.covering x) :=
+  ρ s ≤ ∑' x : h.index, ρ (h.covering x) :=
+  calc ρ s ≤ ρ ((s \ ⋃ (x : _)(_ : x ∈ h.index), h.covering x) ∪ ⋃ (x : _)(_ : x ∈ h.index), h.covering x) :=
     measure_mono
       (by 
         simp only [subset_union_left, diff_union_self])
-    _ ≤ ρ (s \ ⋃(x : _)(_ : x ∈ h.index), h.covering x)+ρ (⋃(x : _)(_ : x ∈ h.index), h.covering x) :=
+    _ ≤ ρ (s \ ⋃ (x : _)(_ : x ∈ h.index), h.covering x)+ρ (⋃ (x : _)(_ : x ∈ h.index), h.covering x) :=
     measure_union_le _ _ 
-    _ = ∑'x : h.index, ρ (h.covering x) :=
+    _ = ∑' x : h.index, ρ (h.covering x) :=
     by 
       rw [hρ h.measure_diff_bUnion,
         measure_bUnion h.index_countable h.covering_disjoint fun x hx => h.measurable_set_u hx, zero_addₓ]
     
 
-theorem measure_le_tsum [second_countable_topology α] : μ s ≤ ∑'x : h.index, μ (h.covering x) :=
+theorem measure_le_tsum [second_countable_topology α] : μ s ≤ ∑' x : h.index, μ (h.covering x) :=
   h.measure_le_tsum_of_absolutely_continuous measure.absolutely_continuous.rfl
 
 end FineSubfamilyOn
@@ -162,12 +180,20 @@ variable (v : VitaliFamily μ)
 
 include v
 
-/-- Given a vitali family `v`, then `v.filter_at x` is the filter on `set α` made of those families
-that contain all sets of `v.sets_at x` of a sufficiently small diameter. This filter makes it
-possible to express limiting behavior when sets in `v.sets_at x` shrink to `x`. -/
-def filter_at (x : α) : Filter (Set α) :=
-  ⨅(ε : _)(_ : ε ∈ Ioi (0 : ℝ)), 𝓟 { a∈v.sets_at x | a ⊆ closed_ball x ε }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr ∈ » Ioi (0 : exprℝ()))
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Given a vitali family `v`, then `v.filter_at x` is the filter on `set α` made of those families
+    that contain all sets of `v.sets_at x` of a sufficiently small diameter. This filter makes it
+    possible to express limiting behavior when sets in `v.sets_at x` shrink to `x`. -/
+  def
+    filter_at
+    ( x : α ) : Filter Set α
+    := ⨅ ( ε : _ ) ( _ : ε ∈ Ioi ( 0 : ℝ ) ) , 𝓟 { a ∈ v.sets_at x | a ⊆ closed_ball x ε }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : exprℝ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » v.sets_at x)
 theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
   s ∈ v.filter_at x ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a _ : a ∈ v.sets_at x, a ⊆ closed_ball x ε → a ∈ s :=
   by 
@@ -184,6 +210,7 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
     ·
       exact ⟨(1 : ℝ), mem_Ioi.2 zero_lt_one⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » v.sets_at x)
 instance filter_at_ne_bot (x : α) : (v.filter_at x).ne_bot :=
   by 
     simp only [ne_bot_iff, ←empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_prop, mem_empty_eq, and_trueₓ,
@@ -192,30 +219,41 @@ instance filter_at_ne_bot (x : α) : (v.filter_at x).ne_bot :=
     obtain ⟨w, w_sets, hw⟩ : ∃ (w : _)(_ : w ∈ v.sets_at x), w ⊆ closed_ball x ε := v.nontrivial x ε εpos 
     exact ⟨w, w_sets, hw⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : exprℝ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » v.sets_at x)
 theorem eventually_filter_at_iff {x : α} {P : Set α → Prop} :
-  (∀ᶠa in v.filter_at x, P a) ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a _ : a ∈ v.sets_at x, a ⊆ closed_ball x ε → P a :=
+  (∀ᶠ a in v.filter_at x, P a) ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a _ : a ∈ v.sets_at x, a ⊆ closed_ball x ε → P a :=
   v.mem_filter_at_iff
 
--- error in MeasureTheory.Covering.VitaliFamily: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eventually_filter_at_mem_sets (x : α) : «expr∀ᶠ in , »((a), v.filter_at x, «expr ∈ »(a, v.sets_at x)) :=
-begin
-  simp [] [] ["only"] ["[", expr eventually_filter_at_iff, ",", expr exists_prop, ",", expr and_true, ",", expr gt_iff_lt, ",", expr implies_true_iff, "]"] [] [] { contextual := tt },
-  exact [expr ⟨1, zero_lt_one⟩]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  eventually_filter_at_mem_sets
+  ( x : α ) : ∀ᶠ a in v.filter_at x , a ∈ v.sets_at x
+  :=
+    by
+      simp
+          ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+          only
+          [ eventually_filter_at_iff , exists_prop , and_trueₓ , gt_iff_lt , implies_true_iff ]
+        exact ⟨ 1 , zero_lt_one ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : exprℝ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » v.sets_at x)
 theorem frequently_filter_at_iff {x : α} {P : Set α → Prop} :
-  (∃ᶠa in v.filter_at x, P a) ↔ ∀ ε _ : ε > (0 : ℝ), ∃ (a : _)(_ : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ P a :=
+  (∃ᶠ a in v.filter_at x, P a) ↔ ∀ ε _ : ε > (0 : ℝ), ∃ (a : _)(_ : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ P a :=
   by 
     simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and, not_not, not_forall]
 
-theorem eventually_filter_at_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ 𝓝 x) : ∀ᶠa in v.filter_at x, a ⊆ o :=
+theorem eventually_filter_at_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ 𝓝 x) : ∀ᶠ a in v.filter_at x, a ⊆ o :=
   by 
     rw [eventually_filter_at_iff]
     rcases Metric.mem_nhds_iff.1 hx with ⟨ε, εpos, hε⟩
     exact ⟨ε / 2, half_pos εpos, fun a av ha => ha.trans ((closed_ball_subset_ball (half_lt_self εpos)).trans hε)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem fine_subfamily_on_of_frequently (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set α)
-  (h : ∀ x _ : x ∈ s, ∃ᶠa in v.filter_at x, a ∈ f x) : v.fine_subfamily_on f s :=
+  (h : ∀ x _ : x ∈ s, ∃ᶠ a in v.filter_at x, a ∈ f x) : v.fine_subfamily_on f s :=
   by 
     intro x hx ε εpos 
     obtain ⟨a, av, ha, af⟩ : ∃ (a : Set α)(H : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ a ∈ f x :=

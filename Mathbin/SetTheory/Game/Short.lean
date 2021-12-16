@@ -168,17 +168,20 @@ instance short_of_lists : ∀ L R : List Pgame [list_short L] [list_short R], sh
       intros 
       apply Pgame.listShortNthLe
 
--- error in SetTheory.Game.Short: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
-def short_of_relabelling : ∀ {x y : pgame.{u}} (R : relabelling x y) (S : short x), short y
-| x, y, ⟨L, R, rL, rR⟩, S := begin
-  resetI,
-  haveI [] [] [":=", expr fintype.of_equiv _ L],
-  haveI [] [] [":=", expr fintype.of_equiv _ R],
-  exact [expr short.mk' (λ i, by { rw ["<-", expr L.right_inv i] [],
-      apply [expr short_of_relabelling (rL (L.symm i)) infer_instance] }) (λ
-    j, short_of_relabelling (rR j) infer_instance)]
-end
+def short_of_relabelling : ∀ {x y : Pgame.{u}} R : relabelling x y S : short x, short y
+| x, y, ⟨L, R, rL, rR⟩, S =>
+  by 
+    skip 
+    have  := Fintype.ofEquiv _ L 
+    have  := Fintype.ofEquiv _ R 
+    exact
+      short.mk'
+        (fun i =>
+          by 
+            rw [←L.right_inv i]
+            apply short_of_relabelling (rL (L.symm i)) inferInstance)
+        fun j => short_of_relabelling (rR j) inferInstance
 
 /-- If `x` has no left move or right moves, it is (very!) short. -/
 def short_of_equiv_empty {x : Pgame.{u}} (el : x.left_moves ≃ Pempty) (er : x.right_moves ≃ Pempty) : short x :=
@@ -241,7 +244,7 @@ def le_lt_decidable : ∀ x y : Pgame.{u} [short x] [short y], Decidable (x ≤ 
 | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty =>
   by 
     skip 
-    split 
+    constructor
     ·
       refine' @decidableOfIff' _ _ mk_le_mk (id _)
       apply @And.decidable _ _ _ _

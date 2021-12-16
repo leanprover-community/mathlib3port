@@ -209,7 +209,7 @@ noncomputable instance creates_limits_of_shape [preserves_limits_of_shape J G] :
   {  }
 
 noncomputable instance creates_limits [preserves_limits G] : creates_limits (proj X G : _) :=
-  {  }
+  ⟨⟩
 
 end StructuredArrow
 
@@ -239,7 +239,7 @@ noncomputable instance creates_colimits_of_shape [preserves_colimits_of_shape J 
   {  }
 
 noncomputable instance creates_colimits [preserves_colimits G] : creates_colimits (proj G X : _) :=
-  {  }
+  ⟨⟩
 
 end CostructuredArrow
 

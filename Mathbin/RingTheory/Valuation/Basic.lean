@@ -47,7 +47,7 @@ on R / J = `ideal.quotient J` is `on_quot v h`.
 
 open_locale Classical BigOperators
 
-noncomputable theory
+noncomputable section 
 
 open Function Ideal
 
@@ -119,16 +119,18 @@ theorem map_add_le {x y g} (hx : v x ≤ g) (hy : v y ≤ g) : v (x+y) ≤ g :=
 theorem map_add_lt {x y g} (hx : v x < g) (hy : v y < g) : v (x+y) < g :=
   lt_of_le_of_ltₓ (v.map_add x y)$ max_ltₓ hx hy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem map_sum_le {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i _ : i ∈ s, v (f i) ≤ g) :
-  v (∑i in s, f i) ≤ g :=
+  v (∑ i in s, f i) ≤ g :=
   by 
     refine' Finset.induction_on s (fun _ => trans_rel_right (· ≤ ·) v.map_zero zero_le') (fun a s has ih hf => _) hf 
     rw [Finset.forall_mem_insert] at hf 
     rw [Finset.sum_insert has]
     exact v.map_add_le hf.1 (ih hf.2)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem map_sum_lt {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ 0) (hf : ∀ i _ : i ∈ s, v (f i) < g) :
-  v (∑i in s, f i) < g :=
+  v (∑ i in s, f i) < g :=
   by 
     refine'
       Finset.induction_on s (fun _ => trans_rel_right (· < ·) v.map_zero (zero_lt_iff.2 hg)) (fun a s has ih hf => _)
@@ -137,8 +139,9 @@ theorem map_sum_lt {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg 
     rw [Finset.sum_insert has]
     exact v.map_add_lt hf.1 (ih hf.2)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem map_sum_lt' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : 0 < g) (hf : ∀ i _ : i ∈ s, v (f i) < g) :
-  v (∑i in s, f i) < g :=
+  v (∑ i in s, f i) < g :=
   v.map_sum_lt (ne_of_gtₓ hg) hf
 
 @[simp]
@@ -260,23 +263,25 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x+y) = max (v x) (v y) :=
       apply this h.symm 
       rwa [add_commₓ, max_commₓ] at h'
 
--- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_eq_of_sub_lt (h : «expr < »(v «expr - »(y, x), v x)) : «expr = »(v y, v x) :=
-begin
-  have [] [] [":=", expr valuation.map_add_of_distinct_val v (ne_of_gt h).symm],
-  rw [expr max_eq_right (le_of_lt h)] ["at", ident this],
-  simpa [] [] [] [] [] ["using", expr this]
-end
+theorem map_eq_of_sub_lt (h : v (y - x) < v x) : v y = v x :=
+  by 
+    have  := Valuation.map_add_of_distinct_val v (ne_of_gtₓ h).symm 
+    rw [max_eq_rightₓ (le_of_ltₓ h)] at this 
+    simpa using this
 
--- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
-def lt_add_subgroup (v : valuation R Γ₀) (γ : units Γ₀) : add_subgroup R :=
-{ carrier := {x | «expr < »(v x, γ)},
-  zero_mem' := by { have [ident h] [] [":=", expr units.ne_zero γ],
-    contrapose ["!"] [ident h],
-    simpa [] [] [] [] [] ["using", expr h] },
-  add_mem' := λ x y x_in y_in, lt_of_le_of_lt (v.map_add x y) (max_lt x_in y_in),
-  neg_mem' := λ x x_in, by rwa ["[", expr set.mem_set_of_eq, ",", expr map_neg, "]"] [] }
+  def
+    lt_add_subgroup
+    ( v : Valuation R Γ₀ ) ( γ : Units Γ₀ ) : AddSubgroup R
+    :=
+      {
+        Carrier := { x | v x < γ } ,
+          zero_mem' := by have h := Units.ne_zero γ contrapose! h simpa using h ,
+          add_mem' := fun x y x_in y_in => lt_of_le_of_ltₓ v.map_add x y max_ltₓ x_in y_in ,
+          neg_mem' := fun x x_in => by rwa [ Set.mem_set_of_eq , map_neg ]
+        }
 
 end Groupₓ
 
@@ -329,12 +334,10 @@ theorem val_eq (h : v₁.is_equiv v₂) {r s : R} : v₁ r = v₁ s ↔ v₂ r =
   by 
     simpa only [le_antisymm_iffₓ] using and_congr (h r s) (h s r)
 
--- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ne_zero (h : v₁.is_equiv v₂) {r : R} : «expr ↔ »(«expr ≠ »(v₁ r, 0), «expr ≠ »(v₂ r, 0)) :=
-begin
-  have [] [":", expr «expr ↔ »(«expr ≠ »(v₁ r, v₁ 0), «expr ≠ »(v₂ r, v₂ 0))] [":=", expr not_iff_not_of_iff h.val_eq],
-  rwa ["[", expr v₁.map_zero, ",", expr v₂.map_zero, "]"] ["at", ident this]
-end
+theorem ne_zero (h : v₁.is_equiv v₂) {r : R} : v₁ r ≠ 0 ↔ v₂ r ≠ 0 :=
+  by 
+    have  : v₁ r ≠ v₁ 0 ↔ v₂ r ≠ v₂ 0 := not_iff_not_of_iff h.val_eq 
+    rwa [v₁.map_zero, v₂.map_zero] at this
 
 end IsEquiv
 
@@ -358,7 +361,7 @@ theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrd
     iterate 2 
       rw [v.map_mul _ y, v'.map_mul _ y]
     rw [v.map_one, v'.map_one]
-    split  <;> intro H
+    constructor <;> intro H
     ·
       apply mul_le_mul_right' 
       replace hy := v.ne_zero_iff.mpr hy 
@@ -380,21 +383,30 @@ variable [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZer
 
 variable (v : Valuation R Γ₀)
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The support of a valuation `v : R → Γ₀` is the ideal of `R` where `v` vanishes. -/
-def supp : Ideal R :=
-  { Carrier := { x | v x = 0 }, zero_mem' := map_zero v,
-    add_mem' :=
-      fun x y hx hy =>
-        le_zero_iff.mp$
-          calc v (x+y) ≤ max (v x) (v y) := v.map_add x y 
-            _ ≤ 0 := max_leₓ (le_zero_iff.mpr hx) (le_zero_iff.mpr hy)
+  def
+    supp
+    : Ideal R
+    :=
+      {
+        Carrier := { x | v x = 0 } ,
+          zero_mem' := map_zero v ,
+          add_mem'
+              :=
+              fun
+                x y hx hy
+                  =>
+                  le_zero_iff . mp
+                    $
+                    calc
+                      v x + y ≤ max v x v y := v.map_add x y _ ≤ 0 := max_leₓ le_zero_iff . mpr hx le_zero_iff . mpr hy
             ,
-    smul_mem' :=
-      fun c x hx =>
-        calc v (c*x) = v c*v x := map_mul v c x 
-          _ = v c*0 := congr_argₓ _ hx 
-          _ = 0 := mul_zero _
-           }
+          smul_mem'
+            :=
+            fun c x hx => calc v c * x = v c * v x := map_mul v c x _ = v c * 0 := congr_argₓ _ hx _ = 0 := mul_zero _
+        }
 
 @[simp]
 theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
@@ -418,22 +430,24 @@ instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
         rw [v.map_mul x y] at hxy 
         exact eq_zero_or_eq_zero_of_mul_eq_zero hxy⟩
 
--- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_add_supp (a : R) {s : R} (h : «expr ∈ »(s, supp v)) : «expr = »(v «expr + »(a, s), v a) :=
-begin
-  have [ident aux] [":", expr ∀ a s, «expr = »(v s, 0) → «expr ≤ »(v «expr + »(a, s), v a)] [],
-  { intros [ident a', ident s', ident h'],
-    refine [expr le_trans (v.map_add a' s') (max_le (le_refl _) _)],
-    simp [] [] [] ["[", expr h', "]"] [] [] },
-  apply [expr le_antisymm (aux a s h)],
-  calc
-    «expr = »(v a, v «expr + »(«expr + »(a, s), «expr- »(s))) : by simp [] [] [] [] [] []
-    «expr ≤ »(..., v «expr + »(a, s)) : aux «expr + »(a, s) «expr- »(s) (by rwa ["<-", expr ideal.neg_mem_iff] ["at", ident h])
-end
+theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a+s) = v a :=
+  by 
+    have aux : ∀ a s, v s = 0 → v (a+s) ≤ v a
+    ·
+      intro a' s' h' 
+      refine' le_transₓ (v.map_add a' s') (max_leₓ (le_reflₓ _) _)
+      simp [h']
+    apply le_antisymmₓ (aux a s h)
+    calc v a = v ((a+s)+-s) :=
+      by 
+        simp _ ≤ v (a+s) :=
+      aux (a+s) (-s)
+        (by 
+          rwa [←Ideal.neg_mem_iff] at h)
 
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/
-def on_quot_val {J : Ideal R} (hJ : J ≤ supp v) : J.quotient → Γ₀ :=
+def on_quot_val {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ :=
   fun q =>
     Quotientₓ.liftOn' q v$
       fun a b h =>
@@ -444,7 +458,7 @@ def on_quot_val {J : Ideal R} (hJ : J ≤ supp v) : J.quotient → Γ₀ :=
           
 
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
-def on_quot {J : Ideal R} (hJ : J ≤ supp v) : Valuation J.quotient Γ₀ :=
+def on_quot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀ :=
   { toFun := v.on_quot_val hJ, map_zero' := v.map_zero, map_one' := v.map_one,
     map_mul' := fun xbar ybar => Quotientₓ.ind₂' v.map_mul xbar ybar,
     map_add' := fun xbar ybar => Quotientₓ.ind₂' v.map_add xbar ybar }
@@ -467,13 +481,13 @@ theorem comap_supp {S : Type _} [CommRingₓ S] (f : S →+* R) : supp (v.comap 
         rw [mem_supp_iff, Ideal.mem_comap, mem_supp_iff]
         rfl
 
-theorem self_le_supp_comap (J : Ideal R) (v : Valuation (Quotientₓ J) Γ₀) : J ≤ (v.comap (Ideal.Quotient.mk J)).Supp :=
+theorem self_le_supp_comap (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) : J ≤ (v.comap (Ideal.Quotient.mk J)).Supp :=
   by 
     rw [comap_supp, ←Ideal.map_le_iff_le_comap]
     simp 
 
 @[simp]
-theorem comap_on_quot_eq (J : Ideal R) (v : Valuation J.quotient Γ₀) :
+theorem comap_on_quot_eq (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
   (v.comap (Ideal.Quotient.mk J)).onQuot (v.self_le_supp_comap J) = v :=
   ext$
     by 
@@ -572,16 +586,19 @@ theorem map_le_add {x y g} (hx : g ≤ v x) (hy : g ≤ v y) : g ≤ v (x+y) :=
 theorem map_lt_add {x y g} (hx : g < v x) (hy : g < v y) : g < v (x+y) :=
   v.map_add_lt hx hy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem map_le_sum {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i _ : i ∈ s, g ≤ v (f i)) :
-  g ≤ v (∑i in s, f i) :=
+  g ≤ v (∑ i in s, f i) :=
   v.map_sum_le hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem map_lt_sum {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ ⊤) (hf : ∀ i _ : i ∈ s, g < v (f i)) :
-  g < v (∑i in s, f i) :=
+  g < v (∑ i in s, f i) :=
   v.map_sum_lt hg hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem map_lt_sum' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g < ⊤) (hf : ∀ i _ : i ∈ s, g < v (f i)) :
-  g < v (∑i in s, f i) :=
+  g < v (∑ i in s, f i) :=
   v.map_sum_lt' hg hf
 
 @[simp]
@@ -730,11 +747,11 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a+s) = v a :=
 
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/
-def on_quot_val {J : Ideal R} (hJ : J ≤ supp v) : J.quotient → Γ₀ :=
+def on_quot_val {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ :=
   v.on_quot_val hJ
 
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
-def on_quot {J : Ideal R} (hJ : J ≤ supp v) : AddValuation J.quotient Γ₀ :=
+def on_quot {J : Ideal R} (hJ : J ≤ supp v) : AddValuation (R ⧸ J) Γ₀ :=
   v.on_quot hJ
 
 @[simp]
@@ -744,12 +761,11 @@ theorem on_quot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) : (v.on_quot hJ).coma
 theorem comap_supp {S : Type _} [CommRingₓ S] (f : S →+* R) : supp (v.comap f) = Ideal.comap f v.supp :=
   v.comap_supp f
 
-theorem self_le_supp_comap (J : Ideal R) (v : AddValuation (Quotientₓ J) Γ₀) :
-  J ≤ (v.comap (Ideal.Quotient.mk J)).Supp :=
+theorem self_le_supp_comap (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) : J ≤ (v.comap (Ideal.Quotient.mk J)).Supp :=
   v.self_le_supp_comap J
 
 @[simp]
-theorem comap_on_quot_eq (J : Ideal R) (v : AddValuation J.quotient Γ₀) :
+theorem comap_on_quot_eq (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) :
   (v.comap (Ideal.Quotient.mk J)).onQuot (v.self_le_supp_comap J) = v :=
   v.comap_on_quot_eq J
 
@@ -761,8 +777,6 @@ theorem supp_quot_supp : supp (v.on_quot (le_reflₓ _)) = 0 :=
   v.supp_quot_supp
 
 end Supp
-
-attribute [irreducible] AddValuation
 
 end AddValuation
 

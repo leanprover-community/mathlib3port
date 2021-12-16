@@ -10,9 +10,7 @@ and `monoid_algebra`.
 -/
 
 
-noncomputable theory
-
-open_locale Classical
+noncomputable section 
 
 open Finset
 
@@ -38,7 +36,7 @@ instance : Mul (α →₀ β) :=
 theorem mul_apply {g₁ g₂ : α →₀ β} {a : α} : (g₁*g₂) a = g₁ a*g₂ a :=
   rfl
 
-theorem support_mul {g₁ g₂ : α →₀ β} : (g₁*g₂).Support ⊆ g₁.support ∩ g₂.support :=
+theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} : (g₁*g₂).Support ⊆ g₁.support ∩ g₂.support :=
   by 
     intro a h 
     simp only [mul_apply, mem_support_iff] at h 
@@ -74,14 +72,37 @@ instance [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
           ext 
           simp only [mul_apply, mul_assocₓ] }
 
--- error in Data.Finsupp.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [non_unital_non_assoc_semiring β] : non_unital_non_assoc_semiring «expr →₀ »(α, β) :=
-{ left_distrib := λ f g h, by { ext [] [] [],
-    simp [] [] ["only"] ["[", expr mul_apply, ",", expr add_apply, ",", expr left_distrib, "]"] [] [] { proj := ff } },
-  right_distrib := λ f g h, by { ext [] [] [],
-    simp [] [] ["only"] ["[", expr mul_apply, ",", expr add_apply, ",", expr right_distrib, "]"] [] [] { proj := ff } },
-  ..(infer_instance : mul_zero_class «expr →₀ »(α, β)),
-  ..(infer_instance : add_comm_monoid «expr →₀ »(α, β)) }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ NonUnitalNonAssocSemiring β ] : NonUnitalNonAssocSemiring α →₀ β
+  :=
+    {
+      ( inferInstance : MulZeroClass α →₀ β ) , ( inferInstance : AddCommMonoidₓ α →₀ β ) with
+      left_distrib
+            :=
+            fun
+              f g h
+                =>
+                by
+                  ext
+                    simp
+                      ( config := { proj := Bool.false._@._internal._hyg.0 } )
+                      only
+                      [ mul_apply , add_apply , left_distrib ]
+          ,
+        right_distrib
+          :=
+          fun
+            f g h
+              =>
+              by
+                ext
+                  simp
+                    ( config := { proj := Bool.false._@._internal._hyg.0 } )
+                    only
+                    [ mul_apply , add_apply , right_distrib ]
+      }
 
 instance [NonUnitalSemiring β] : NonUnitalSemiring (α →₀ β) :=
   { (inferInstance : Semigroupₓ (α →₀ β)), (inferInstance : NonUnitalNonAssocSemiring (α →₀ β)) with  }

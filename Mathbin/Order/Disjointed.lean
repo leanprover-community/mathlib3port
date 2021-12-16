@@ -108,6 +108,7 @@ theorem partial_sups_disjointed (f : ℕ → α) : partialSups (disjointed f) = 
     ·
       rw [partial_sups_succ, partial_sups_succ, disjointed_succ, ih, sup_sdiff_self_right]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≤ » n)
 /-- `disjointed f` is the unique sequence that is pairwise disjoint and has the same partial sups
 as `f`. -/
 theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d)) (hsups : partialSups d = partialSups f) :
@@ -137,10 +138,11 @@ section CompleteBooleanAlgebra
 
 variable [CompleteBooleanAlgebra α]
 
-theorem supr_disjointed (f : ℕ → α) : (⨆n, disjointed f n) = ⨆n, f n :=
+theorem supr_disjointed (f : ℕ → α) : (⨆ n, disjointed f n) = ⨆ n, f n :=
   supr_eq_supr_of_partial_sups_eq_partial_sups (partial_sups_disjointed f)
 
-theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n⊓⨅(i : _)(_ : i < n), «expr ᶜ» (f i) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » n)
+theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n⊓⨅ (i : _)(_ : i < n), f iᶜ :=
   by 
     cases n
     ·
@@ -160,11 +162,11 @@ end CompleteBooleanAlgebra
 theorem disjointed_subset (f : ℕ → Set α) (n : ℕ) : disjointed f n ⊆ f n :=
   disjointed_le f n
 
-theorem Union_disjointed {f : ℕ → Set α} : (⋃n, disjointed f n) = ⋃n, f n :=
+theorem Union_disjointed {f : ℕ → Set α} : (⋃ n, disjointed f n) = ⋃ n, f n :=
   supr_disjointed f
 
-theorem disjointed_eq_inter_compl (f : ℕ → Set α) (n : ℕ) :
-  disjointed f n = f n ∩ ⋂(i : _)(_ : i < n), «expr ᶜ» (f i) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » n)
+theorem disjointed_eq_inter_compl (f : ℕ → Set α) (n : ℕ) : disjointed f n = f n ∩ ⋂ (i : _)(_ : i < n), f iᶜ :=
   disjointed_eq_inf_compl f n
 
 theorem preimage_find_eq_disjointed (s : ℕ → Set α) (H : ∀ x, ∃ n, x ∈ s n) [∀ x n, Decidable (x ∈ s n)] (n : ℕ) :

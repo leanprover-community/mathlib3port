@@ -293,7 +293,7 @@ def extract (a : α) (s : Alist β) : Option (β a) × Alist β :=
 @[simp]
 theorem extract_eq_lookup_erase (a : α) (s : Alist β) : extract a s = (lookup a s, erase a s) :=
   by 
-    simp [extract] <;> split  <;> rfl
+    simp [extract] <;> constructor <;> rfl
 
 /-! ### union -/
 
@@ -364,6 +364,7 @@ end
 /-! ### disjoint -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr ∈ » s₁.keys)
 /-- Two associative lists are disjoint if they have no common keys. -/
 def Disjoint (s₁ s₂ : Alist β) : Prop :=
   ∀ k _ : k ∈ s₁.keys, ¬k ∈ s₂.keys
@@ -375,7 +376,7 @@ theorem union_comm_of_disjoint {s₁ s₂ : Alist β} (h : Disjoint s₁ s₂) :
     (by 
       intros 
       simp 
-      split  <;> intro h' 
+      constructor <;> intro h' 
       cases h'
       ·
         right 

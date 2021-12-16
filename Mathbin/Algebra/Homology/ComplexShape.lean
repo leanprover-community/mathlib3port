@@ -38,7 +38,7 @@ so `d : X i ⟶ X j` is nonzero only when `i = j + 1`.
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
 /--
 A `c : complex_shape ι` describes the shape of a chain complex,
@@ -112,14 +112,14 @@ def trans (c₁ c₂ : ComplexShape ι) : ComplexShape ι :=
 
 instance subsingleton_next (c : ComplexShape ι) (i : ι) : Subsingleton { j // c.rel i j } :=
   by 
-    fsplit 
+    fconstructor 
     rintro ⟨j, rij⟩ ⟨k, rik⟩
     congr 
     exact c.next_eq rij rik
 
 instance subsingleton_prev (c : ComplexShape ι) (j : ι) : Subsingleton { i // c.rel i j } :=
   by 
-    fsplit 
+    fconstructor 
     rintro ⟨i, rik⟩ ⟨j, rjk⟩
     congr 
     exact c.prev_eq rik rjk

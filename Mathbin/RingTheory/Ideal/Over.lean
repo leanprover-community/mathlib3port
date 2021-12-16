@@ -121,32 +121,31 @@ R/p → S/P
 ```
 then `P` lies over `p`.
 -/
-theorem comap_eq_of_scalar_tower_quotient [Algebra R S] [Algebra p.quotient P.quotient]
-  [IsScalarTower R p.quotient P.quotient] (h : Function.Injective (algebraMap p.quotient P.quotient)) :
-  comap (algebraMap R S) P = p :=
+theorem comap_eq_of_scalar_tower_quotient [Algebra R S] [Algebra (R ⧸ p) (S ⧸ P)] [IsScalarTower R (R ⧸ p) (S ⧸ P)]
+  (h : Function.Injective (algebraMap (R ⧸ p) (S ⧸ P))) : comap (algebraMap R S) P = p :=
   by 
     ext x 
-    split  <;>
+    constructor <;>
       rw [mem_comap, ←quotient.eq_zero_iff_mem, ←quotient.eq_zero_iff_mem, quotient.mk_algebra_map,
-        IsScalarTower.algebra_map_apply _ p.quotient, quotient.algebra_map_eq]
+        IsScalarTower.algebra_map_apply _ (R ⧸ p), quotient.algebra_map_eq]
     ·
       intro hx 
-      exact (algebraMap p.quotient P.quotient).injective_iff.mp h _ hx
+      exact (algebraMap (R ⧸ p) (S ⧸ P)).injective_iff.mp h _ hx
     ·
       intro hx 
       rw [hx, RingHom.map_zero]
 
 /-- If `P` lies over `p`, then `R / p` has a canonical map to `S / P`. -/
-def quotient.algebra_quotient_of_le_comap (h : p ≤ comap f P) : Algebra p.quotient P.quotient :=
+def quotient.algebra_quotient_of_le_comap (h : p ≤ comap f P) : Algebra (R ⧸ p) (S ⧸ P) :=
   RingHom.toAlgebra$ quotient_map _ f h
 
 /-- `R / p` has a canonical map to `S / pS`. -/
-instance quotient.algebra_quotient_map_quotient : Algebra p.quotient (map f p).Quotient :=
+instance quotient.algebra_quotient_map_quotient : Algebra (R ⧸ p) (S ⧸ map f p) :=
   quotient.algebra_quotient_of_le_comap le_comap_map
 
 @[simp]
 theorem quotient.algebra_map_quotient_map_quotient (x : R) :
-  algebraMap p.quotient (map f p).Quotient (Quotientₓ.mk p x) = Quotientₓ.mk _ (f x) :=
+  algebraMap (R ⧸ p) (S ⧸ map f p) (Quotientₓ.mk p x) = Quotientₓ.mk _ (f x) :=
   rfl
 
 @[simp]
@@ -154,8 +153,7 @@ theorem quotient.mk_smul_mk_quotient_map_quotient (x : R) (y : S) :
   Quotientₓ.mk p x • Quotientₓ.mk (map f p) y = Quotientₓ.mk _ (f x*y) :=
   rfl
 
-instance quotient.tower_quotient_map_quotient [Algebra R S] :
-  IsScalarTower R p.quotient (map (algebraMap R S) p).Quotient :=
+instance quotient.tower_quotient_map_quotient [Algebra R S] : IsScalarTower R (R ⧸ p) (S ⧸ map (algebraMap R S) p) :=
   IsScalarTower.of_algebra_map_eq$
     fun x =>
       by 
@@ -172,30 +170,28 @@ theorem exists_coeff_ne_zero_mem_comap_of_root_mem [IsDomain S] {r : S} (r_ne_ze
   exists_coeff_ne_zero_mem_comap_of_non_zero_divisor_root_mem (fun _ h => Or.resolve_right (mul_eq_zero.mp h) r_ne_zero)
     hr
 
--- error in RingTheory.Ideal.Over: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_coeff_mem_comap_sdiff_comap_of_root_mem_sdiff
-[is_prime I]
-(hIJ : «expr ≤ »(I, J))
-{r : S}
-(hr : «expr ∈ »(r, «expr \ »((J : set S), I)))
-{p : polynomial R}
-(p_ne_zero : «expr ≠ »(p.map (quotient.mk (I.comap f)), 0))
-(hpI : «expr ∈ »(p.eval₂ f r, I)) : «expr∃ , »((i), «expr ∈ »(p.coeff i, «expr \ »((J.comap f : set R), I.comap f))) :=
-begin
-  obtain ["⟨", ident hrJ, ",", ident hrI, "⟩", ":=", expr hr],
-  have [ident rbar_ne_zero] [":", expr «expr ≠ »(quotient.mk I r, 0)] [":=", expr mt (quotient.mk_eq_zero I).mp hrI],
-  have [ident rbar_mem_J] [":", expr «expr ∈ »(quotient.mk I r, J.map (quotient.mk I))] [":=", expr mem_map_of_mem _ hrJ],
-  have [ident quotient_f] [":", expr ∀ x «expr ∈ » I.comap f, «expr = »((quotient.mk I).comp f x, 0)] [],
-  { simp [] [] [] ["[", expr quotient.eq_zero_iff_mem, "]"] [] [] },
-  have [ident rbar_root] [":", expr «expr = »((p.map (quotient.mk (I.comap f))).eval₂ (quotient.lift (I.comap f) _ quotient_f) (quotient.mk I r), 0)] [],
-  { convert [] [expr quotient.eq_zero_iff_mem.mpr hpI] [],
-    exact [expr trans (eval₂_map _ _ _) (hom_eval₂ p f (quotient.mk I) r).symm] },
-  obtain ["⟨", ident i, ",", ident ne_zero, ",", ident mem, "⟩", ":=", expr exists_coeff_ne_zero_mem_comap_of_root_mem rbar_ne_zero rbar_mem_J p_ne_zero rbar_root],
-  rw [expr coeff_map] ["at", ident ne_zero, ident mem],
-  refine [expr ⟨i, (mem_quotient_iff_mem hIJ).mp _, mt _ ne_zero⟩],
-  { simpa [] [] [] [] [] ["using", expr mem] },
-  simp [] [] [] ["[", expr quotient.eq_zero_iff_mem, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » I.comap f)
+theorem exists_coeff_mem_comap_sdiff_comap_of_root_mem_sdiff [is_prime I] (hIJ : I ≤ J) {r : S}
+  (hr : r ∈ (J : Set S) \ I) {p : Polynomial R} (p_ne_zero : p.map (Quotientₓ.mk (I.comap f)) ≠ 0)
+  (hpI : p.eval₂ f r ∈ I) : ∃ i, p.coeff i ∈ (J.comap f : Set R) \ I.comap f :=
+  by 
+    obtain ⟨hrJ, hrI⟩ := hr 
+    have rbar_ne_zero : Quotientₓ.mk I r ≠ 0 := mt (quotient.mk_eq_zero I).mp hrI 
+    have rbar_mem_J : Quotientₓ.mk I r ∈ J.map (Quotientₓ.mk I) := mem_map_of_mem _ hrJ 
+    have quotient_f : ∀ x _ : x ∈ I.comap f, (Quotientₓ.mk I).comp f x = 0
+    ·
+      simp [quotient.eq_zero_iff_mem]
+    have rbar_root :
+      (p.map (Quotientₓ.mk (I.comap f))).eval₂ (Quotientₓ.lift (I.comap f) _ quotient_f) (Quotientₓ.mk I r) = 0
+    ·
+      convert quotient.eq_zero_iff_mem.mpr hpI 
+      exact trans (eval₂_map _ _ _) (hom_eval₂ p f (Quotientₓ.mk I) r).symm 
+    obtain ⟨i, ne_zero, mem⟩ := exists_coeff_ne_zero_mem_comap_of_root_mem rbar_ne_zero rbar_mem_J p_ne_zero rbar_root 
+    rw [coeff_map] at ne_zero mem 
+    refine' ⟨i, (mem_quotient_iff_mem hIJ).mp _, mt _ ne_zero⟩
+    ·
+      simpa using mem 
+    simp [quotient.eq_zero_iff_mem]
 
 theorem comap_lt_comap_of_root_mem_sdiff [I.is_prime] (hIJ : I ≤ J) {r : S} (hr : r ∈ (J : Set S) \ I)
   {p : Polynomial R} (p_ne_zero : p.map (Quotientₓ.mk (I.comap f)) ≠ 0) (hp : p.eval₂ f r ∈ I) :
@@ -257,16 +253,15 @@ theorem eq_bot_of_comap_eq_bot [Nontrivial R] [IsDomain S] (hRS : Algebra.IsInte
     ·
       exact absurd hI (comap_ne_bot_of_integral_mem hx0 hx (hRS x))
 
--- error in RingTheory.Ideal.Over: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_maximal_comap_of_is_integral_of_is_maximal
-(hRS : algebra.is_integral R S)
-(I : ideal S)
-[hI : I.is_maximal] : is_maximal (I.comap (algebra_map R S)) :=
-begin
-  refine [expr quotient.maximal_of_is_field _ _],
-  haveI [] [":", expr is_prime (I.comap (algebra_map R S))] [":=", expr comap_is_prime _ _],
-  exact [expr is_field_of_is_integral_of_is_field (is_integral_quotient_of_is_integral hRS) algebra_map_quotient_injective (by rwa ["<-", expr quotient.maximal_ideal_iff_is_field_quotient] [])]
-end
+theorem is_maximal_comap_of_is_integral_of_is_maximal (hRS : Algebra.IsIntegral R S) (I : Ideal S) [hI : I.is_maximal] :
+  is_maximal (I.comap (algebraMap R S)) :=
+  by 
+    refine' quotient.maximal_of_is_field _ _ 
+    have  : is_prime (I.comap (algebraMap R S)) := comap_is_prime _ _ 
+    exact
+      is_field_of_is_integral_of_is_field (is_integral_quotient_of_is_integral hRS) algebra_map_quotient_injective
+        (by 
+          rwa [←quotient.maximal_ideal_iff_is_field_quotient])
 
 theorem is_maximal_comap_of_is_integral_of_is_maximal' {R S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S)
   (hf : f.is_integral) (I : Ideal S) (hI : I.is_maximal) : is_maximal (I.comap f) :=
@@ -320,67 +315,62 @@ theorem integral_closure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal (integ
   I.comap (algebraMap R (integralClosure R S)) = ⊥ → I = ⊥ :=
   is_integral_closure.eq_bot_of_comap_eq_bot S
 
--- error in RingTheory.Ideal.Over: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `comap (algebra_map R S)` is a surjection from the prime spec of `R` to prime spec of `S`.
 `hP : (algebra_map R S).ker ≤ P` is a slight generalization of the extension being injective -/
-theorem exists_ideal_over_prime_of_is_integral'
-(H : algebra.is_integral R S)
-(P : ideal R)
-[is_prime P]
-(hP : «expr ≤ »((algebra_map R S).ker, P)) : «expr∃ , »((Q : ideal S), «expr ∧ »(is_prime Q, «expr = »(Q.comap (algebra_map R S), P))) :=
-begin
-  have [ident hP0] [":", expr «expr ∉ »((0 : S), algebra.algebra_map_submonoid S P.prime_compl)] [],
-  { rintro ["⟨", ident x, ",", "⟨", ident hx, ",", ident x0, "⟩", "⟩"],
-    exact [expr absurd (hP x0) hx] },
-  let [ident Rₚ] [] [":=", expr localization P.prime_compl],
-  let [ident Sₚ] [] [":=", expr localization (algebra.algebra_map_submonoid S P.prime_compl)],
-  letI [] [":", expr is_domain (localization (algebra.algebra_map_submonoid S P.prime_compl))] [":=", expr is_localization.is_domain_localization (le_non_zero_divisors_of_no_zero_divisors hP0)],
-  obtain ["⟨", ident Qₚ, ":", expr ideal Sₚ, ",", ident Qₚ_maximal, "⟩", ":=", expr exists_maximal Sₚ],
-  haveI [ident Qₚ_max] [":", expr is_maximal (comap _ Qₚ)] [":=", expr @is_maximal_comap_of_is_integral_of_is_maximal Rₚ _ Sₚ _ (localization_algebra P.prime_compl S) (is_integral_localization H) _ Qₚ_maximal],
-  refine [expr ⟨comap (algebra_map S Sₚ) Qₚ, ⟨comap_is_prime _ Qₚ, _⟩⟩],
-  convert [] [expr localization.at_prime.comap_maximal_ideal] [],
-  rw ["[", expr comap_comap, ",", "<-", expr local_ring.eq_maximal_ideal Qₚ_max, ",", "<-", expr is_localization.map_comp _, "]"] [],
-  refl
-end
+theorem exists_ideal_over_prime_of_is_integral' (H : Algebra.IsIntegral R S) (P : Ideal R) [is_prime P]
+  (hP : (algebraMap R S).ker ≤ P) : ∃ Q : Ideal S, is_prime Q ∧ Q.comap (algebraMap R S) = P :=
+  by 
+    have hP0 : (0 : S) ∉ Algebra.algebraMapSubmonoid S P.prime_compl
+    ·
+      rintro ⟨x, ⟨hx, x0⟩⟩
+      exact absurd (hP x0) hx 
+    let Rₚ := Localization P.prime_compl 
+    let Sₚ := Localization (Algebra.algebraMapSubmonoid S P.prime_compl)
+    let this' : IsDomain (Localization (Algebra.algebraMapSubmonoid S P.prime_compl)) :=
+      IsLocalization.is_domain_localization (le_non_zero_divisors_of_no_zero_divisors hP0)
+    obtain ⟨Qₚ : Ideal Sₚ, Qₚ_maximal⟩ := exists_maximal Sₚ 
+    have Qₚ_max : is_maximal (comap _ Qₚ) :=
+      @is_maximal_comap_of_is_integral_of_is_maximal Rₚ _ Sₚ _ (localizationAlgebra P.prime_compl S)
+        (is_integral_localization H) _ Qₚ_maximal 
+    refine' ⟨comap (algebraMap S Sₚ) Qₚ, ⟨comap_is_prime _ Qₚ, _⟩⟩
+    convert Localization.AtPrime.comap_maximal_ideal 
+    rw [comap_comap, ←LocalRing.eq_maximal_ideal Qₚ_max, ←IsLocalization.map_comp _]
+    rfl
 
 end 
 
--- error in RingTheory.Ideal.Over: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (Q «expr ≥ » I)
 /-- More general going-up theorem than `exists_ideal_over_prime_of_is_integral'`.
 TODO: Version of going-up theorem with arbitrary length chains (by induction on this)?
   Not sure how best to write an ascending chain in Lean -/
-theorem exists_ideal_over_prime_of_is_integral
-(H : algebra.is_integral R S)
-(P : ideal R)
-[is_prime P]
-(I : ideal S)
-[is_prime I]
-(hIP : «expr ≤ »(I.comap (algebra_map R S), P)) : «expr∃ , »((Q «expr ≥ » I), «expr ∧ »(is_prime Q, «expr = »(Q.comap (algebra_map R S), P))) :=
-begin
-  obtain ["⟨", ident Q', ":", expr ideal I.quotient, ",", "⟨", ident Q'_prime, ",", ident hQ', "⟩", "⟩", ":=", expr @exists_ideal_over_prime_of_is_integral' (I.comap (algebra_map R S)).quotient _ I.quotient _ ideal.quotient_algebra _ (is_integral_quotient_of_is_integral H) (map (quotient.mk (I.comap (algebra_map R S))) P) (map_is_prime_of_surjective quotient.mk_surjective (by simp [] [] [] ["[", expr hIP, "]"] [] [])) (le_trans (le_of_eq ((ring_hom.injective_iff_ker_eq_bot _).1 algebra_map_quotient_injective)) bot_le)],
-  haveI [] [] [":=", expr Q'_prime],
-  refine [expr ⟨Q'.comap _, le_trans (le_of_eq mk_ker.symm) (ker_le_comap _), ⟨comap_is_prime _ Q', _⟩⟩],
-  rw [expr comap_comap] [],
-  refine [expr trans _ (trans (congr_arg (comap (quotient.mk (comap (algebra_map R S) I))) hQ') _)],
-  { simpa [] [] [] ["[", expr comap_comap, "]"] [] [] },
-  { refine [expr trans (comap_map_of_surjective _ quotient.mk_surjective _) (sup_eq_left.2 _)],
-    simpa [] [] [] ["[", "<-", expr ring_hom.ker_eq_comap_bot, "]"] [] ["using", expr hIP] }
-end
+theorem exists_ideal_over_prime_of_is_integral (H : Algebra.IsIntegral R S) (P : Ideal R) [is_prime P] (I : Ideal S)
+  [is_prime I] (hIP : I.comap (algebraMap R S) ≤ P) : ∃ (Q : _)(_ : Q ≥ I), is_prime Q ∧ Q.comap (algebraMap R S) = P :=
+  by 
+    obtain ⟨Q' : Ideal (S ⧸ I), ⟨Q'_prime, hQ'⟩⟩ :=
+      @exists_ideal_over_prime_of_is_integral' (R ⧸ I.comap (algebraMap R S)) _ (S ⧸ I) _ Ideal.quotientAlgebra _
+        (is_integral_quotient_of_is_integral H) (map (Quotientₓ.mk (I.comap (algebraMap R S))) P)
+        (map_is_prime_of_surjective quotient.mk_surjective
+          (by 
+            simp [hIP]))
+        (le_transₓ (le_of_eqₓ ((RingHom.injective_iff_ker_eq_bot _).1 algebra_map_quotient_injective)) bot_le)
+    have  := Q'_prime 
+    refine' ⟨Q'.comap _, le_transₓ (le_of_eqₓ mk_ker.symm) (ker_le_comap _), ⟨comap_is_prime _ Q', _⟩⟩
+    rw [comap_comap]
+    refine' trans _ (trans (congr_argₓ (comap (Quotientₓ.mk (comap (algebraMap R S) I))) hQ') _)
+    ·
+      simpa [comap_comap]
+    ·
+      refine' trans (comap_map_of_surjective _ quotient.mk_surjective _) (sup_eq_left.2 _)
+      simpa [←RingHom.ker_eq_comap_bot] using hIP
 
--- error in RingTheory.Ideal.Over: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `comap (algebra_map R S)` is a surjection from the max spec of `S` to max spec of `R`.
 `hP : (algebra_map R S).ker ≤ P` is a slight generalization of the extension being injective -/
-theorem exists_ideal_over_maximal_of_is_integral
-[is_domain S]
-(H : algebra.is_integral R S)
-(P : ideal R)
-[P_max : is_maximal P]
-(hP : «expr ≤ »((algebra_map R S).ker, P)) : «expr∃ , »((Q : ideal S), «expr ∧ »(is_maximal Q, «expr = »(Q.comap (algebra_map R S), P))) :=
-begin
-  obtain ["⟨", ident Q, ",", "⟨", ident Q_prime, ",", ident hQ, "⟩", "⟩", ":=", expr exists_ideal_over_prime_of_is_integral' H P hP],
-  haveI [] [":", expr Q.is_prime] [":=", expr Q_prime],
-  exact [expr ⟨Q, is_maximal_of_is_integral_of_is_maximal_comap H _ «expr ▸ »(hQ.symm, P_max), hQ⟩]
-end
+theorem exists_ideal_over_maximal_of_is_integral [IsDomain S] (H : Algebra.IsIntegral R S) (P : Ideal R)
+  [P_max : is_maximal P] (hP : (algebraMap R S).ker ≤ P) : ∃ Q : Ideal S, is_maximal Q ∧ Q.comap (algebraMap R S) = P :=
+  by 
+    obtain ⟨Q, ⟨Q_prime, hQ⟩⟩ := exists_ideal_over_prime_of_is_integral' H P hP 
+    have  : Q.is_prime := Q_prime 
+    exact ⟨Q, is_maximal_of_is_integral_of_is_maximal_comap H _ (hQ.symm ▸ P_max), hQ⟩
 
 end IsDomain
 

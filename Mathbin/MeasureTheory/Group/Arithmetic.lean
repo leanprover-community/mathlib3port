@@ -138,20 +138,17 @@ class HasMeasurablePow (β γ : Type _) [MeasurableSpace β] [MeasurableSpace γ
 
 export HasMeasurablePow(measurable_pow)
 
--- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance has_measurable_mul.has_measurable_pow
-(M : Type*)
-[monoid M]
-[measurable_space M]
-[has_measurable_mul₂ M] : has_measurable_pow M exprℕ() :=
-⟨begin
-   haveI [] [":", expr measurable_singleton_class exprℕ()] [":=", expr ⟨λ _, trivial⟩],
-   refine [expr measurable_from_prod_encodable (λ n, _)],
-   induction [expr n] [] ["with", ident n, ident ih] [],
-   { simp [] [] [] ["[", expr pow_zero, ",", expr measurable_one, "]"] [] [] },
-   { simp [] [] ["only"] ["[", expr pow_succ, "]"] [] [],
-     exact [expr measurable_id.mul ih] }
- end⟩
+instance HasMeasurableMul.hasMeasurablePow (M : Type _) [Monoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
+  HasMeasurablePow M ℕ :=
+  ⟨by 
+      have  : MeasurableSingletonClass ℕ := ⟨fun _ => trivialₓ⟩
+      refine' measurable_from_prod_encodable fun n => _ 
+      induction' n with n ih
+      ·
+        simp [pow_zeroₓ, measurable_one]
+      ·
+        simp only [pow_succₓ]
+        exact measurable_id.mul ih⟩
 
 section Pow
 
@@ -266,16 +263,26 @@ instance (priority := 100) HasMeasurableDiv₂.to_has_measurable_div [HasMeasura
 attribute [measurability] Measurable.sub Measurable.sub' AeMeasurable.sub AeMeasurable.sub' Measurable.const_sub
   AeMeasurable.const_sub Measurable.sub_const AeMeasurable.sub_const
 
-@[measurability]
-theorem measurable_set_eq_fun {E} [MeasurableSpace E] [AddGroupₓ E] [MeasurableSingletonClass E] [HasMeasurableSub₂ E]
-  {f g : α → E} (hf : Measurable f) (hg : Measurable g) : MeasurableSet { x | f x = g x } :=
-  by 
-    suffices h_set_eq : { x:α | f x = g x } = { x | (f - g) x = (0 : E) }
-    ·
-      rw [h_set_eq]
-      exact (hf.sub hg) measurable_set_eq 
-    ext 
-    simpRw [Set.mem_set_of_eq, Pi.sub_apply, sub_eq_zero]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ measurability ]
+  theorem
+    measurable_set_eq_fun
+    { E }
+        [ MeasurableSpace E ]
+        [ AddGroupₓ E ]
+        [ MeasurableSingletonClass E ]
+        [ HasMeasurableSub₂ E ]
+        { f g : α → E }
+        ( hf : Measurable f )
+        ( hg : Measurable g )
+      : MeasurableSet { x | f x = g x }
+    :=
+      by
+        suffices h_set_eq : { x : α | f x = g x } = { x | f - g x = ( 0 : E ) }
+          · rw [ h_set_eq ] exact hf.sub hg measurable_set_eq
+          ext
+          simpRw [ Set.mem_set_of_eq , Pi.sub_apply , sub_eq_zero ]
 
 theorem ae_eq_trim_of_measurable {α E} {m m0 : MeasurableSpace α} {μ : Measureₓ α} [MeasurableSpace E] [AddGroupₓ E]
   [MeasurableSingletonClass E] [HasMeasurableSub₂ E] (hm : m ≤ m0) {f g : α → E} (hf : @Measurable _ _ m _ f)
@@ -373,22 +380,18 @@ private theorem has_measurable_zpow_aux (G : Type u) [DivInvMonoidₓ G] [Measur
     simpRw [zpow_neg_succ_of_nat]
     exact (measurable_id.pow_const (k+1)).inv
 
--- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance has_measurable_zpow
-(G : Type u)
-[div_inv_monoid G]
-[measurable_space G]
-[has_measurable_mul₂ G]
-[has_measurable_inv G] : has_measurable_pow G exprℤ() :=
-begin
-  letI [] [":", expr measurable_singleton_class exprℤ()] [":=", expr ⟨λ _, trivial⟩],
-  constructor,
-  refine [expr measurable_from_prod_encodable (λ n, _)],
-  dsimp [] [] [] [],
-  apply [expr int.cases_on n],
-  { simpa [] [] [] [] [] ["using", expr measurable_id.pow_const] },
-  { exact [expr has_measurable_zpow_aux G] }
-end
+instance hasMeasurableZpow (G : Type u) [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul₂ G]
+  [HasMeasurableInv G] : HasMeasurablePow G ℤ :=
+  by 
+    let this' : MeasurableSingletonClass ℤ := ⟨fun _ => trivialₓ⟩
+    constructor 
+    refine' measurable_from_prod_encodable fun n => _ 
+    dsimp 
+    apply Int.casesOn n
+    ·
+      simpa using measurable_id.pow_const
+    ·
+      exact has_measurable_zpow_aux G
 
 @[toAdditive]
 instance (priority := 100) has_measurable_div₂_of_mul_inv (G : Type _) [MeasurableSpace G] [DivInvMonoidₓ G]
@@ -438,6 +441,19 @@ instance has_measurable_smul_of_mul (M : Type _) [Mul M] [MeasurableSpace M] [Ha
 instance has_measurable_smul₂_of_mul (M : Type _) [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
   HasMeasurableSmul₂ M M :=
   ⟨measurable_mul⟩
+
+@[toAdditive]
+instance Submonoid.has_measurable_smul {M α} [MeasurableSpace M] [MeasurableSpace α] [Monoidₓ M] [MulAction M α]
+  [HasMeasurableSmul M α] (s : Submonoid M) : HasMeasurableSmul s α :=
+  ⟨fun c =>
+      by 
+        simpa only using measurable_const_smul (c : M),
+    fun x => (measurable_smul_const x : Measurable fun c : M => c • x).comp measurable_subtype_coe⟩
+
+@[toAdditive]
+instance Subgroup.has_measurable_smul {G α} [MeasurableSpace G] [MeasurableSpace α] [Groupₓ G] [MulAction G α]
+  [HasMeasurableSmul G α] (s : Subgroup G) : HasMeasurableSmul s α :=
+  s.to_submonoid.has_measurable_smul
 
 section Smul
 
@@ -546,27 +562,27 @@ section Opposite
 
 open MulOpposite
 
-instance {α : Type _} [h : MeasurableSpace α] : MeasurableSpace («expr ᵐᵒᵖ» α) :=
+instance {α : Type _} [h : MeasurableSpace α] : MeasurableSpace (αᵐᵒᵖ) :=
   MeasurableSpace.map op h
 
-theorem measurable_op {α : Type _} [MeasurableSpace α] : Measurable (op : α → «expr ᵐᵒᵖ» α) :=
+theorem measurable_op {α : Type _} [MeasurableSpace α] : Measurable (op : α → αᵐᵒᵖ) :=
   fun s => id
 
-theorem measurable_unop {α : Type _} [MeasurableSpace α] : Measurable (unop : «expr ᵐᵒᵖ» α → α) :=
+theorem measurable_unop {α : Type _} [MeasurableSpace α] : Measurable (unop : αᵐᵒᵖ → α) :=
   fun s => id
 
-instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul («expr ᵐᵒᵖ» M) :=
+instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul (Mᵐᵒᵖ) :=
   ⟨fun c => measurable_op.comp (measurable_unop.mul_const _), fun c => measurable_op.comp (measurable_unop.const_mul _)⟩
 
-instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ («expr ᵐᵒᵖ» M) :=
+instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ (Mᵐᵒᵖ) :=
   ⟨measurable_op.comp ((measurable_unop.comp measurable_snd).mul (measurable_unop.comp measurable_fst))⟩
 
 instance has_measurable_smul_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] :
-  HasMeasurableSmul («expr ᵐᵒᵖ» M) M :=
+  HasMeasurableSmul (Mᵐᵒᵖ) M :=
   ⟨fun c => measurable_mul_const (unop c), fun x => measurable_unop.const_mul x⟩
 
 instance has_measurable_smul₂_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
-  HasMeasurableSmul₂ («expr ᵐᵒᵖ» M) M :=
+  HasMeasurableSmul₂ (Mᵐᵒᵖ) M :=
   ⟨measurable_snd.mul (measurable_unop.comp measurable_fst)⟩
 
 end Opposite
@@ -580,6 +596,7 @@ section Monoidₓ
 
 variable {M α : Type _} [Monoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] [MeasurableSpace α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » l)
 @[toAdditive, measurability]
 theorem List.measurable_prod' (l : List (α → M)) (hl : ∀ f _ : f ∈ l, Measurable f) : Measurable l.prod :=
   by 
@@ -590,6 +607,7 @@ theorem List.measurable_prod' (l : List (α → M)) (hl : ∀ f _ : f ∈ l, Mea
     rw [List.prod_cons]
     exact hl.1.mul (ihl hl.2)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » l)
 @[toAdditive, measurability]
 theorem List.ae_measurable_prod' {μ : Measureₓ α} (l : List (α → M)) (hl : ∀ f _ : f ∈ l, AeMeasurable f μ) :
   AeMeasurable l.prod μ :=
@@ -601,12 +619,14 @@ theorem List.ae_measurable_prod' {μ : Measureₓ α} (l : List (α → M)) (hl 
     rw [List.prod_cons]
     exact hl.1.mul (ihl hl.2)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » l)
 @[toAdditive, measurability]
 theorem List.measurable_prod (l : List (α → M)) (hl : ∀ f _ : f ∈ l, Measurable f) :
   Measurable fun x => (l.map fun f : α → M => f x).Prod :=
   by 
     simpa only [←Pi.list_prod_apply] using l.measurable_prod' hl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » l)
 @[toAdditive, measurability]
 theorem List.ae_measurable_prod {μ : Measureₓ α} (l : List (α → M)) (hl : ∀ f _ : f ∈ l, AeMeasurable f μ) :
   AeMeasurable (fun x => (l.map fun f : α → M => f x).Prod) μ :=
@@ -619,6 +639,7 @@ section CommMonoidₓ
 
 variable {M ι α : Type _} [CommMonoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] [MeasurableSpace α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » l)
 @[toAdditive, measurability]
 theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀ f _ : f ∈ l, Measurable f) : Measurable l.prod :=
   by 
@@ -628,6 +649,7 @@ theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀ f _ : f �
         (by 
           simpa using hl)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » l)
 @[toAdditive, measurability]
 theorem Multiset.ae_measurable_prod' {μ : Measureₓ α} (l : Multiset (α → M)) (hl : ∀ f _ : f ∈ l, AeMeasurable f μ) :
   AeMeasurable l.prod μ :=
@@ -638,40 +660,46 @@ theorem Multiset.ae_measurable_prod' {μ : Measureₓ α} (l : Multiset (α → 
         (by 
           simpa using hl)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » s)
 @[toAdditive, measurability]
 theorem Multiset.measurable_prod (s : Multiset (α → M)) (hs : ∀ f _ : f ∈ s, Measurable f) :
   Measurable fun x => (s.map fun f : α → M => f x).Prod :=
   by 
     simpa only [←Pi.multiset_prod_apply] using s.measurable_prod' hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » s)
 @[toAdditive, measurability]
 theorem Multiset.ae_measurable_prod {μ : Measureₓ α} (s : Multiset (α → M)) (hs : ∀ f _ : f ∈ s, AeMeasurable f μ) :
   AeMeasurable (fun x => (s.map fun f : α → M => f x).Prod) μ :=
   by 
     simpa only [←Pi.multiset_prod_apply] using s.ae_measurable_prod' hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[toAdditive, measurability]
 theorem Finset.measurable_prod' {f : ι → α → M} (s : Finset ι) (hf : ∀ i _ : i ∈ s, Measurable (f i)) :
-  Measurable (∏i in s, f i) :=
+  Measurable (∏ i in s, f i) :=
   Finset.prod_induction _ _ (fun _ _ => Measurable.mul) (@measurable_one M _ _ _ _) hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[toAdditive, measurability]
 theorem Finset.measurable_prod {f : ι → α → M} (s : Finset ι) (hf : ∀ i _ : i ∈ s, Measurable (f i)) :
-  Measurable fun a => ∏i in s, f i a :=
+  Measurable fun a => ∏ i in s, f i a :=
   by 
     simpa only [←Finset.prod_apply] using s.measurable_prod' hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[toAdditive, measurability]
 theorem Finset.ae_measurable_prod' {μ : Measureₓ α} {f : ι → α → M} (s : Finset ι)
-  (hf : ∀ i _ : i ∈ s, AeMeasurable (f i) μ) : AeMeasurable (∏i in s, f i) μ :=
+  (hf : ∀ i _ : i ∈ s, AeMeasurable (f i) μ) : AeMeasurable (∏ i in s, f i) μ :=
   Multiset.ae_measurable_prod' _$
     fun g hg =>
       let ⟨i, hi, hg⟩ := Multiset.mem_map.1 hg 
       hg ▸ hf _ hi
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[toAdditive, measurability]
 theorem Finset.ae_measurable_prod {f : ι → α → M} {μ : Measureₓ α} (s : Finset ι)
-  (hf : ∀ i _ : i ∈ s, AeMeasurable (f i) μ) : AeMeasurable (fun a => ∏i in s, f i a) μ :=
+  (hf : ∀ i _ : i ∈ s, AeMeasurable (f i) μ) : AeMeasurable (fun a => ∏ i in s, f i a) μ :=
   by 
     simpa only [←Finset.prod_apply] using s.ae_measurable_prod' hf
 

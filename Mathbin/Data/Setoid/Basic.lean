@@ -82,11 +82,12 @@ def ker (f : α → β) : Setoidₓ α :=
 theorem ker_mk_eq (r : Setoidₓ α) : ker (@Quotientₓ.mk _ r) = r :=
   ext'$ fun x y => Quotientₓ.eq
 
--- error in Data.Setoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ker_apply_mk_out
-{f : α → β}
-(a : α) : «expr = »(f (by haveI [] [] [":=", expr setoid.ker f]; exact [expr «expr⟦ ⟧»(a).out]), f a) :=
-@quotient.mk_out _ (setoid.ker f) a
+theorem ker_apply_mk_out {f : α → β} (a : α) :
+  f
+      (by 
+        have  := Setoidₓ.ker f <;> exact ⟦a⟧.out) =
+    f a :=
+  @Quotientₓ.mk_out _ (Setoidₓ.ker f) a
 
 theorem ker_apply_mk_out' {f : α → β} (a : α) : f (Quotientₓ.mk' a : Quotientₓ$ Setoidₓ.ker f).out' = f a :=
   @Quotientₓ.mk_out' _ (Setoidₓ.ker f) a
@@ -118,6 +119,7 @@ theorem inf_def {r s : Setoidₓ α} : (r⊓s).Rel = r.rel⊓s.rel :=
 theorem inf_iff_and {r s : Setoidₓ α} {x y} : (r⊓s).Rel x y ↔ r.rel x y ∧ s.rel x y :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (r «expr ∈ » S)
 /-- The infimum of a set of equivalence relations. -/
 instance : HasInfₓ (Setoidₓ α) :=
   ⟨fun S =>
@@ -163,7 +165,7 @@ theorem eq_top_iff {s : Setoidₓ α} : s = (⊤ : Setoidₓ α) ↔ ∀ x y : �
 
 /-- The inductively defined equivalence closure of a binary relation r is the infimum
     of the set of all equivalence relations containing r. -/
-theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = Inf { s:Setoidₓ α | ∀ ⦃x y⦄, r x y → s.rel x y } :=
+theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = Inf { s : Setoidₓ α | ∀ ⦃x y⦄, r x y → s.rel x y } :=
   le_antisymmₓ
     (fun _ _ H => EqvGen.ndrec (fun _ _ h _ hs => hs h) (refl' _) (fun _ _ _ => symm' _) (fun _ _ _ _ _ => trans' _) H)
     (Inf_le$ fun _ _ h => EqvGen.rel _ _ h)
@@ -271,16 +273,14 @@ theorem ker_lift_injective (f : α → β) : injective (@Quotientₓ.lift _ _ (k
     induced map from the quotient of α to β is injective. -/
 theorem ker_eq_lift_of_injective {r : Setoidₓ α} (f : α → β) (H : ∀ x y, r.rel x y → f x = f y)
   (h : injective (Quotientₓ.lift f H)) : ker f = r :=
-  le_antisymmₓ
-    (fun x y hk => Quotientₓ.exact$ h$ show Quotientₓ.lift f H («expr⟦ ⟧» x) = Quotientₓ.lift f H («expr⟦ ⟧» y) from hk)
-    H
+  le_antisymmₓ (fun x y hk => Quotientₓ.exact$ h$ show Quotientₓ.lift f H (⟦x⟧) = Quotientₓ.lift f H (⟦y⟧) from hk) H
 
 variable (r : Setoidₓ α) (f : α → β)
 
 /-- The first isomorphism theorem for sets: the quotient of α by the kernel of a function f
     bijects with f's image. -/
 noncomputable def quotient_ker_equiv_range : Quotientₓ (ker f) ≃ Set.Range f :=
-  Equiv.ofBijective
+  Equivₓ.ofBijective
     ((@Quotientₓ.lift _ (Set.Range f) (ker f) fun x => ⟨f x, Set.mem_range_self x⟩)$ fun _ _ h => Subtype.ext_val h)
     ⟨fun x y h =>
         ker_lift_injective f$
@@ -356,7 +356,7 @@ theorem comap_rel (f : α → β) (r : Setoidₓ β) (x y : α) : (comap f r).Re
 theorem comap_eq {f : α → β} {r : Setoidₓ β} : comap f r = ker (@Quotientₓ.mk _ r ∘ f) :=
   ext$
     fun x y =>
-      show _ ↔ «expr⟦ ⟧» _ = «expr⟦ ⟧» _ by 
+      show _ ↔ ⟦_⟧ = ⟦_⟧by 
         rw [Quotientₓ.eq] <;> rfl
 
 /-- The second isomorphism theorem for sets. -/
@@ -383,13 +383,13 @@ def quotient_quotient_equiv_quotient (s : Setoidₓ α) (h : r ≤ s) : Quotient
             Quotientₓ.induction_on' y$
               fun w =>
                 by 
-                  show «expr⟦ ⟧» _ = _ <;> rfl,
+                  show ⟦_⟧ = _ <;> rfl,
     right_inv :=
       fun x =>
         Quotientₓ.induction_on' x$
           fun y =>
             by 
-              show «expr⟦ ⟧» _ = _ <;> rfl }
+              show ⟦_⟧ = _ <;> rfl }
 
 variable {r f}
 

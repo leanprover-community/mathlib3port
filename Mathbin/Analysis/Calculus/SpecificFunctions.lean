@@ -36,7 +36,7 @@ function cannot have:
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical TopologicalSpace
 
@@ -57,7 +57,7 @@ derivatives for `x > 0`. The `n`-th derivative is of the form `P_aux n (x) exp(-
 where `P_aux n` is computed inductively. -/
 noncomputable def P_aux : ℕ → Polynomial ℝ
 | 0 => 1
-| n+1 => ((X^2)*(P_aux n).derivative)+(1 - C («expr↑ » (2*n))*X)*P_aux n
+| n+1 => ((X^2)*(P_aux n).derivative)+(1 - C (↑2*n)*X)*P_aux n
 
 /-- Formula for the `n`-th derivative of `exp_neg_inv_glue`, as an auxiliary function `f_aux`. -/
 def f_aux (n : ℕ) (x : ℝ) : ℝ :=
@@ -73,26 +73,26 @@ theorem f_aux_zero_eq : f_aux 0 = expNegInvGlue :=
     ·
       simp [h, expNegInvGlue, f_aux, ne_of_gtₓ (not_leₓ.1 h), P_aux]
 
--- error in Analysis.Calculus.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 (given in this statement in unfolded form) is the `n+1`-th auxiliary function, since
 the polynomial `P_aux (n+1)` was chosen precisely to ensure this. -/
-theorem f_aux_deriv
-(n : exprℕ())
-(x : exprℝ())
-(hx : «expr ≠ »(x, 0)) : has_deriv_at (λ
- x, «expr / »(«expr * »((P_aux n).eval x, exp «expr- »(«expr ⁻¹»(x))), «expr ^ »(x, «expr * »(2, n)))) «expr / »(«expr * »((P_aux «expr + »(n, 1)).eval x, exp «expr- »(«expr ⁻¹»(x))), «expr ^ »(x, «expr * »(2, «expr + »(n, 1)))) x :=
-begin
-  have [ident A] [":", expr ∀
-   k : exprℕ(), «expr = »(«expr - »(«expr * »(2, «expr + »(k, 1)), 1), «expr + »(«expr * »(2, k), 1))] [],
-  { assume [binders (k)],
-    rw [expr tsub_eq_iff_eq_add_of_le] [],
-    { ring [] },
-    { simpa [] [] [] ["[", expr mul_add, "]"] [] ["using", expr add_le_add (zero_le «expr * »(2, k)) one_le_two] } },
-  convert [] [expr (((P_aux n).has_deriv_at x).mul ((has_deriv_at_exp _).comp x (has_deriv_at_inv hx).neg)).div (has_deriv_at_pow «expr * »(2, n) x) (pow_ne_zero _ hx)] ["using", 1],
-  field_simp [] ["[", expr hx, ",", expr P_aux, "]"] [] [],
-  cases [expr n] []; simp [] [] [] ["[", expr nat.succ_eq_add_one, ",", expr A, ",", "-", ident mul_eq_mul_right_iff, "]"] [] []; ring_exp [] []
-end
+theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
+  HasDerivAt (fun x => ((P_aux n).eval x*exp (-x⁻¹)) / (x^2*n)) (((P_aux (n+1)).eval x*exp (-x⁻¹)) / (x^2*n+1)) x :=
+  by 
+    have A : ∀ k : ℕ, (2*k+1) - 1 = (2*k)+1
+    ·
+      intro k 
+      rw [tsub_eq_iff_eq_add_of_le]
+      ·
+        ring
+      ·
+        simpa [mul_addₓ] using add_le_add (zero_le (2*k)) one_le_two 
+    convert
+      (((P_aux n).HasDerivAt x).mul ((has_deriv_at_exp _).comp x (has_deriv_at_inv hx).neg)).div
+        (has_deriv_at_pow (2*n) x) (pow_ne_zero _ hx) using
+      1
+    fieldSimp [hx, P_aux]
+    cases n <;> simp [Nat.succ_eq_add_one, A, -mul_eq_mul_right_iff] <;> ringExp
 
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 is the `n+1`-th auxiliary function. -/
@@ -104,75 +104,81 @@ theorem f_aux_deriv_pos (n : ℕ) (x : ℝ) (hx : 0 < x) :
     intro y hy 
     simp [f_aux, hy.not_le]
 
--- error in Analysis.Calculus.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- To get differentiability at `0` of the auxiliary functions, we need to know that their limit
 is `0`, to be able to apply general differentiability extension theorems. This limit is checked in
 this lemma. -/
-theorem f_aux_limit
-(n : exprℕ()) : tendsto (λ
- x, «expr / »(«expr * »((P_aux n).eval x, exp «expr- »(«expr ⁻¹»(x))), «expr ^ »(x, «expr * »(2, n)))) «expr𝓝[ ] »(Ioi 0, 0) (expr𝓝() 0) :=
-begin
-  have [ident A] [":", expr tendsto (λ
-    x, (P_aux n).eval x) «expr𝓝[ ] »(Ioi 0, 0) (expr𝓝() ((P_aux n).eval 0))] [":=", expr (P_aux n).continuous_within_at],
-  have [ident B] [":", expr tendsto (λ
-    x, «expr / »(exp «expr- »(«expr ⁻¹»(x)), «expr ^ »(x, «expr * »(2, n)))) «expr𝓝[ ] »(Ioi 0, 0) (expr𝓝() 0)] [],
-  { convert [] [expr (tendsto_pow_mul_exp_neg_at_top_nhds_0 «expr * »(2, n)).comp tendsto_inv_zero_at_top] [],
-    ext [] [ident x] [],
-    field_simp [] [] [] [] },
-  convert [] [expr A.mul B] []; simp [] [] [] ["[", expr mul_div_assoc, "]"] [] []
-end
+theorem f_aux_limit (n : ℕ) : tendsto (fun x => ((P_aux n).eval x*exp (-x⁻¹)) / (x^2*n)) (𝓝[Ioi 0] 0) (𝓝 0) :=
+  by 
+    have A : tendsto (fun x => (P_aux n).eval x) (𝓝[Ioi 0] 0) (𝓝 ((P_aux n).eval 0)) := (P_aux n).ContinuousWithinAt 
+    have B : tendsto (fun x => exp (-x⁻¹) / (x^2*n)) (𝓝[Ioi 0] 0) (𝓝 0)
+    ·
+      convert (tendsto_pow_mul_exp_neg_at_top_nhds_0 (2*n)).comp tendsto_inv_zero_at_top 
+      ext x 
+      fieldSimp 
+    convert A.mul B <;> simp [mul_div_assoc]
 
--- error in Analysis.Calculus.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Deduce from the limiting behavior at `0` of its derivative and general differentiability
 extension theorems that the auxiliary function `f_aux n` is differentiable at `0`,
-with derivative `0`. -/ theorem f_aux_deriv_zero (n : exprℕ()) : has_deriv_at (f_aux n) 0 0 :=
-begin
-  have [ident A] [":", expr has_deriv_within_at (f_aux n) (0 : exprℝ()) (Iic 0) 0] [],
-  { apply [expr (has_deriv_at_const (0 : exprℝ()) (0 : exprℝ())).has_deriv_within_at.congr],
-    { assume [binders (y hy)],
-      simp [] [] [] [] [] ["at", ident hy],
-      simp [] [] [] ["[", expr f_aux, ",", expr hy, "]"] [] [] },
-    { simp [] [] [] ["[", expr f_aux, ",", expr le_refl, "]"] [] [] } },
-  have [ident B] [":", expr has_deriv_within_at (f_aux n) (0 : exprℝ()) (Ici 0) 0] [],
-  { have [ident diff] [":", expr differentiable_on exprℝ() (f_aux n) (Ioi 0)] [":=", expr λ
-     x hx, (f_aux_deriv_pos n x hx).differentiable_at.differentiable_within_at],
-    apply [expr has_deriv_at_interval_left_endpoint_of_tendsto_deriv diff _ self_mem_nhds_within],
-    { refine [expr (f_aux_limit «expr + »(n, 1)).congr' _],
-      apply [expr mem_of_superset self_mem_nhds_within (λ x hx, _)],
-      simp [] [] [] ["[", expr (f_aux_deriv_pos n x hx).deriv, "]"] [] [] },
-    { have [] [":", expr «expr = »(f_aux n 0, 0)] [],
-      by simp [] [] [] ["[", expr f_aux, ",", expr le_refl, "]"] [] [],
-      simp [] [] ["only"] ["[", expr continuous_within_at, ",", expr this, "]"] [] [],
-      refine [expr (f_aux_limit n).congr' _],
-      apply [expr mem_of_superset self_mem_nhds_within (λ x hx, _)],
-      have [] [":", expr «expr¬ »(«expr ≤ »(x, 0))] [],
-      by simpa [] [] [] [] [] ["using", expr hx],
-      simp [] [] [] ["[", expr f_aux, ",", expr this, "]"] [] [] } },
-  simpa [] [] [] [] [] ["using", expr A.union B]
-end
+with derivative `0`. -/
+theorem f_aux_deriv_zero (n : ℕ) : HasDerivAt (f_aux n) 0 0 :=
+  by 
+    have A : HasDerivWithinAt (f_aux n) (0 : ℝ) (Iic 0) 0
+    ·
+      apply (has_deriv_at_const (0 : ℝ) (0 : ℝ)).HasDerivWithinAt.congr
+      ·
+        intro y hy 
+        simp  at hy 
+        simp [f_aux, hy]
+      ·
+        simp [f_aux, le_reflₓ]
+    have B : HasDerivWithinAt (f_aux n) (0 : ℝ) (Ici 0) 0
+    ·
+      have diff : DifferentiableOn ℝ (f_aux n) (Ioi 0) :=
+        fun x hx => (f_aux_deriv_pos n x hx).DifferentiableAt.DifferentiableWithinAt 
+      apply has_deriv_at_interval_left_endpoint_of_tendsto_deriv diff _ self_mem_nhds_within
+      ·
+        refine' (f_aux_limit (n+1)).congr' _ 
+        apply mem_of_superset self_mem_nhds_within fun x hx => _ 
+        simp [(f_aux_deriv_pos n x hx).deriv]
+      ·
+        have  : f_aux n 0 = 0
+        ·
+          simp [f_aux, le_reflₓ]
+        simp only [ContinuousWithinAt, this]
+        refine' (f_aux_limit n).congr' _ 
+        apply mem_of_superset self_mem_nhds_within fun x hx => _ 
+        have  : ¬x ≤ 0
+        ·
+          simpa using hx 
+        simp [f_aux, this]
+    simpa using A.union B
 
--- error in Analysis.Calculus.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- At every point, the auxiliary function `f_aux n` has a derivative which is
 equal to `f_aux (n+1)`. -/
-theorem f_aux_has_deriv_at (n : exprℕ()) (x : exprℝ()) : has_deriv_at (f_aux n) (f_aux «expr + »(n, 1) x) x :=
-begin
-  rcases [expr lt_trichotomy x 0, "with", ident hx, "|", ident hx, "|", ident hx],
-  { have [] [":", expr «expr = »(f_aux «expr + »(n, 1) x, 0)] [],
-    by simp [] [] [] ["[", expr f_aux, ",", expr le_of_lt hx, "]"] [] [],
-    rw [expr this] [],
-    apply [expr (has_deriv_at_const x (0 : exprℝ())).congr_of_eventually_eq],
-    filter_upwards ["[", expr gt_mem_nhds hx, "]"] [],
-    assume [binders (y hy)],
-    simp [] [] [] ["[", expr f_aux, ",", expr hy.le, "]"] [] [] },
-  { have [] [":", expr «expr = »(f_aux «expr + »(n, 1) 0, 0)] [],
-    by simp [] [] [] ["[", expr f_aux, ",", expr le_refl, "]"] [] [],
-    rw ["[", expr hx, ",", expr this, "]"] [],
-    exact [expr f_aux_deriv_zero n] },
-  { have [] [":", expr «expr = »(f_aux «expr + »(n, 1) x, «expr / »(«expr * »((P_aux «expr + »(n, 1)).eval x, exp «expr- »(«expr ⁻¹»(x))), «expr ^ »(x, «expr * »(2, «expr + »(n, 1)))))] [],
-    by simp [] [] [] ["[", expr f_aux, ",", expr not_le_of_gt hx, "]"] [] [],
-    rw [expr this] [],
-    exact [expr f_aux_deriv_pos n x hx] }
-end
+theorem f_aux_has_deriv_at (n : ℕ) (x : ℝ) : HasDerivAt (f_aux n) (f_aux (n+1) x) x :=
+  by 
+    rcases lt_trichotomyₓ x 0 with (hx | hx | hx)
+    ·
+      have  : f_aux (n+1) x = 0
+      ·
+        simp [f_aux, le_of_ltₓ hx]
+      rw [this]
+      apply (has_deriv_at_const x (0 : ℝ)).congr_of_eventually_eq 
+      filterUpwards [gt_mem_nhds hx]
+      intro y hy 
+      simp [f_aux, hy.le]
+    ·
+      have  : f_aux (n+1) 0 = 0
+      ·
+        simp [f_aux, le_reflₓ]
+      rw [hx, this]
+      exact f_aux_deriv_zero n
+    ·
+      have  : f_aux (n+1) x = ((P_aux (n+1)).eval x*exp (-x⁻¹)) / (x^2*n+1)
+      ·
+        simp [f_aux, not_le_of_gtₓ hx]
+      rw [this]
+      exact f_aux_deriv_pos n x hx
 
 /-- The successive derivatives of the auxiliary function `f_aux 0` are the
 functions `f_aux n`, by induction. -/
@@ -393,7 +399,7 @@ instance (c : E) : Inhabited (TimesContDiffBump c) :=
 theorem R_pos : 0 < f.R :=
   f.to_times_cont_diff_bump_of_inner.R_pos
 
-theorem coe_eq_comp : «expr⇑ » f = (f.to_times_cont_diff_bump_of_inner ∘ toEuclidean) :=
+theorem coe_eq_comp : ⇑f = (f.to_times_cont_diff_bump_of_inner ∘ toEuclidean) :=
   rfl
 
 theorem one_of_mem_closed_ball (hx : x ∈ Euclidean.ClosedBall c f.r) : f x = 1 :=

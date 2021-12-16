@@ -120,15 +120,16 @@ instance : HasInf (ConvexCone 𝕜 E) :=
       ⟨S ∩ T, fun c hc x hx => ⟨S.smul_mem hc hx.1, T.smul_mem hc hx.2⟩,
         fun x hx y hy => ⟨S.add_mem hx.1 hy.1, T.add_mem hx.2 hy.2⟩⟩⟩
 
-theorem coe_inf : ((S⊓T : ConvexCone 𝕜 E) : Set E) = «expr↑ » S ∩ «expr↑ » T :=
+theorem coe_inf : ((S⊓T : ConvexCone 𝕜 E) : Set E) = ↑S ∩ ↑T :=
   rfl
 
 theorem mem_inf {x} : x ∈ S⊓T ↔ x ∈ S ∧ x ∈ T :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 instance : HasInfₓ (ConvexCone 𝕜 E) :=
   ⟨fun S =>
-      ⟨⋂(s : _)(_ : s ∈ S), «expr↑ » s,
+      ⟨⋂ (s : _)(_ : s ∈ S), ↑s,
         fun c hc x hx =>
           mem_bInter$
             fun s hs =>
@@ -144,6 +145,7 @@ instance : HasInfₓ (ConvexCone 𝕜 E) :=
                 (by 
                   apply mem_bInter_iff.1 hy s hs)⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 theorem mem_Inf {x : E} {S : Set (ConvexCone 𝕜 E)} : x ∈ Inf S ↔ ∀ s _ : s ∈ S, x ∈ s :=
   mem_bInter_iff
 
@@ -161,16 +163,35 @@ instance : HasTop (ConvexCone 𝕜 E) :=
 theorem mem_top (x : E) : x ∈ (⊤ : ConvexCone 𝕜 E) :=
   mem_univ x
 
-instance : CompleteLattice (ConvexCone 𝕜 E) :=
-  { PartialOrderₓ.lift (coeₓ : ConvexCone 𝕜 E → Set E) fun a b => ext' with le := · ≤ ·, lt := · < ·, bot := ⊥,
-    bot_le := fun S x => False.elim, top := ⊤, le_top := fun S x hx => mem_top 𝕜 x, inf := ·⊓·, inf := HasInfₓ.inf,
-    sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x }, sup := fun s => Inf { T | ∀ S _ : S ∈ s, S ≤ T },
-    le_sup_left := fun a b => fun x hx => mem_Inf.2$ fun s hs => hs.1 hx,
-    le_sup_right := fun a b => fun x hx => mem_Inf.2$ fun s hs => hs.2 hx,
-    sup_le := fun a b c ha hb x hx => mem_Inf.1 hx c ⟨ha, hb⟩, le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩,
-    inf_le_left := fun a b x => And.left, inf_le_right := fun a b x => And.right,
-    le_Sup := fun s p hs x hx => mem_Inf.2$ fun t ht => ht p hs hx, Sup_le := fun s p hs x hx => mem_Inf.1 hx p hs,
-    le_Inf := fun s a ha x hx => mem_Inf.2$ fun t ht => ha t ht hx, Inf_le := fun s a ha x hx => mem_Inf.1 hx _ ha }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  : CompleteLattice ConvexCone 𝕜 E
+  :=
+    {
+      PartialOrderₓ.lift ( coeₓ : ConvexCone 𝕜 E → Set E ) fun a b => ext' with
+      le := · ≤ · ,
+        lt := · < · ,
+        bot := ⊥ ,
+        bot_le := fun S x => False.elim ,
+        top := ⊤ ,
+        le_top := fun S x hx => mem_top 𝕜 x ,
+        inf := · ⊓ · ,
+        inf := HasInfₓ.inf ,
+        sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x } ,
+        sup := fun s => Inf { T | ∀ S _ : S ∈ s , S ≤ T } ,
+        le_sup_left := fun a b => fun x hx => mem_Inf . 2 $ fun s hs => hs . 1 hx ,
+        le_sup_right := fun a b => fun x hx => mem_Inf . 2 $ fun s hs => hs . 2 hx ,
+        sup_le := fun a b c ha hb x hx => mem_Inf . 1 hx c ⟨ ha , hb ⟩ ,
+        le_inf := fun a b c ha hb x hx => ⟨ ha hx , hb hx ⟩ ,
+        inf_le_left := fun a b x => And.left ,
+        inf_le_right := fun a b x => And.right ,
+        le_Sup := fun s p hs x hx => mem_Inf . 2 $ fun t ht => ht p hs hx ,
+        Sup_le := fun s p hs x hx => mem_Inf . 1 hx p hs ,
+        le_Inf := fun s a ha x hx => mem_Inf . 2 $ fun t ht => ha t ht hx ,
+        Inf_le := fun s a ha x hx => mem_Inf . 1 hx _ ha
+      }
 
 instance : Inhabited (ConvexCone 𝕜 E) :=
   ⟨⊥⟩
@@ -303,17 +324,19 @@ section AddCommGroupₓ
 
 variable [AddCommGroupₓ E] [HasScalar 𝕜 E] (S : ConvexCone 𝕜 E)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 /-- A convex cone is flat if it contains some nonzero vector `x` and its opposite `-x`. -/
 def flat : Prop :=
   ∃ (x : _)(_ : x ∈ S), x ≠ (0 : E) ∧ -x ∈ S
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 /-- A convex cone is salient if it doesn't include `x` and `-x` for any nonzero `x`. -/
 def salient : Prop :=
   ∀ x _ : x ∈ S, x ≠ (0 : E) → -x ∉ S
 
 theorem salient_iff_not_flat (S : ConvexCone 𝕜 E) : S.salient ↔ ¬S.flat :=
   by 
-    split 
+    constructor
     ·
       rintro h₁ ⟨x, xs, H₁, H₂⟩
       exact h₁ x xs H₁ H₂
@@ -348,18 +371,17 @@ def to_preorder (h₁ : S.pointed) : Preorderₓ E :=
         by 
           simpa using add_mem S zy xy }
 
--- error in Analysis.Convex.Cone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A pointed and salient cone defines a partial order. -/
-def to_partial_order (h₁ : S.pointed) (h₂ : S.salient) : partial_order E :=
-{ le_antisymm := begin
-    intros [ident a, ident b, ident ab, ident ba],
-    by_contradiction [ident h],
-    have [ident h'] [":", expr «expr ≠ »(«expr - »(b, a), 0)] [":=", expr λ h'', h (eq_of_sub_eq_zero h'').symm],
-    have [ident H] [] [":=", expr h₂ «expr - »(b, a) ab h'],
-    rw [expr neg_sub b a] ["at", ident H],
-    exact [expr H ba]
-  end,
-  ..to_preorder S h₁ }
+def to_partial_order (h₁ : S.pointed) (h₂ : S.salient) : PartialOrderₓ E :=
+  { to_preorder S h₁ with
+    le_antisymm :=
+      by 
+        intro a b ab ba 
+        byContra h 
+        have h' : b - a ≠ 0 := fun h'' => h (eq_of_sub_eq_zero h'').symm 
+        have H := h₂ (b - a) ab h' 
+        rw [neg_sub b a] at H 
+        exact H ba }
 
 /-- A pointed and salient cone defines an `ordered_add_comm_group`. -/
 def to_ordered_add_comm_group (h₁ : S.pointed) (h₂ : S.salient) : OrderedAddCommGroup E :=
@@ -384,18 +406,21 @@ section PositiveCone
 
 variable (𝕜 E) [OrderedSemiring 𝕜] [OrderedAddCommGroup E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-The positive cone is the convex cone formed by the set of nonnegative elements in an ordered
-module.
--/
-def positive_cone : ConvexCone 𝕜 E :=
-  { Carrier := { x | 0 ≤ x },
-    smul_mem' :=
-      by 
-        rintro c hc x (hx : _ ≤ _)
-        rw [←smul_zero c]
-        exact smul_le_smul_of_nonneg hx hc.le,
-    add_mem' := fun x hx : _ ≤ _ y hy : _ ≤ _ => add_nonneg hx hy }
+    The positive cone is the convex cone formed by the set of nonnegative elements in an ordered
+    module.
+    -/
+  def
+    positive_cone
+    : ConvexCone 𝕜 E
+    :=
+      {
+        Carrier := { x | 0 ≤ x } ,
+          smul_mem' := by rintro c hc x ( hx : _ ≤ _ ) rw [ ← smul_zero c ] exact smul_le_smul_of_nonneg hx hc.le ,
+          add_mem' := fun x hx : _ ≤ _ y hy : _ ≤ _ => add_nonneg hx hy
+        }
 
 /-- The positive cone of an ordered module is always salient. -/
 theorem salient_positive_cone : salient (positive_cone 𝕜 E) :=
@@ -423,23 +448,23 @@ variable [LinearOrderedField 𝕜] [OrderedAddCommGroup E] [Module 𝕜 E]
 
 namespace Convex
 
--- error in Analysis.Convex.Cone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The set of vectors proportional to those in a convex set forms a convex cone. -/
-def to_cone (s : set E) (hs : convex 𝕜 s) : convex_cone 𝕜 E :=
-begin
-  apply [expr convex_cone.mk «expr⋃ , »((c : 𝕜)
-    (H : «expr < »(0, c)), «expr • »(c, s))]; simp [] [] ["only"] ["[", expr mem_Union, ",", expr mem_smul_set, "]"] [] [],
-  { rintros [ident c, ident c_pos, "_", "⟨", ident c', ",", ident c'_pos, ",", ident x, ",", ident hx, ",", ident rfl, "⟩"],
-    exact [expr ⟨«expr * »(c, c'), mul_pos c_pos c'_pos, x, hx, (smul_smul _ _ _).symm⟩] },
-  { rintros ["_", "⟨", ident cx, ",", ident cx_pos, ",", ident x, ",", ident hx, ",", ident rfl, "⟩", "_", "⟨", ident cy, ",", ident cy_pos, ",", ident y, ",", ident hy, ",", ident rfl, "⟩"],
-    have [] [":", expr «expr < »(0, «expr + »(cx, cy))] [],
-    from [expr add_pos cx_pos cy_pos],
-    refine [expr ⟨_, this, _, convex_iff_div.1 hs hx hy cx_pos.le cy_pos.le this, _⟩],
-    simp [] [] ["only"] ["[", expr smul_add, ",", expr smul_smul, ",", expr mul_div_assoc', ",", expr mul_div_cancel_left _ this.ne', "]"] [] [] }
-end
+def to_cone (s : Set E) (hs : Convex 𝕜 s) : ConvexCone 𝕜 E :=
+  by 
+    apply ConvexCone.mk (⋃ (c : 𝕜)(H : 0 < c), c • s) <;> simp only [mem_Union, mem_smul_set]
+    ·
+      rintro c c_pos _ ⟨c', c'_pos, x, hx, rfl⟩
+      exact ⟨c*c', mul_pos c_pos c'_pos, x, hx, (smul_smul _ _ _).symm⟩
+    ·
+      rintro _ ⟨cx, cx_pos, x, hx, rfl⟩ _ ⟨cy, cy_pos, y, hy, rfl⟩
+      have  : 0 < cx+cy 
+      exact add_pos cx_pos cy_pos 
+      refine' ⟨_, this, _, convex_iff_div.1 hs hx hy cx_pos.le cy_pos.le this, _⟩
+      simp only [smul_add, smul_smul, mul_div_assoc', mul_div_cancel_left _ this.ne']
 
 variable {s : Set E} (hs : Convex 𝕜 s) {x : E}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem mem_to_cone : x ∈ hs.to_cone s ↔ ∃ c : 𝕜, 0 < c ∧ ∃ (y : _)(_ : y ∈ s), c • y = x :=
   by 
     simp only [to_cone, ConvexCone.mem_mk, mem_Union, mem_smul_set, eq_comm, exists_prop]
@@ -468,25 +493,26 @@ theorem subset_to_cone : s ⊆ hs.to_cone s :=
           rwa [one_smul]⟩
 
 /-- `hs.to_cone s` is the least cone that includes `s`. -/
-theorem to_cone_is_least : IsLeast { t:ConvexCone 𝕜 E | s ⊆ t } (hs.to_cone s) :=
+theorem to_cone_is_least : IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } (hs.to_cone s) :=
   by 
     refine' ⟨hs.subset_to_cone, fun t ht x hx => _⟩
     rcases hs.mem_to_cone.1 hx with ⟨c, hc, y, hy, rfl⟩
     exact t.smul_mem hc (ht hy)
 
-theorem to_cone_eq_Inf : hs.to_cone s = Inf { t:ConvexCone 𝕜 E | s ⊆ t } :=
+theorem to_cone_eq_Inf : hs.to_cone s = Inf { t : ConvexCone 𝕜 E | s ⊆ t } :=
   hs.to_cone_is_least.is_glb.Inf_eq.symm
 
 end Convex
 
 theorem convex_hull_to_cone_is_least (s : Set E) :
-  IsLeast { t:ConvexCone 𝕜 E | s ⊆ t } ((convex_convex_hull 𝕜 s).toCone _) :=
+  IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } ((convex_convex_hull 𝕜 s).toCone _) :=
   by 
     convert (convex_convex_hull 𝕜 s).to_cone_is_least 
     ext t 
     exact ⟨fun h => convex_hull_min h t.convex, (subset_convex_hull 𝕜 s).trans⟩
 
-theorem convex_hull_to_cone_eq_Inf (s : Set E) : (convex_convex_hull 𝕜 s).toCone _ = Inf { t:ConvexCone 𝕜 E | s ⊆ t } :=
+theorem convex_hull_to_cone_eq_Inf (s : Set E) :
+  (convex_convex_hull 𝕜 s).toCone _ = Inf { t : ConvexCone 𝕜 E | s ⊆ t } :=
   (convex_hull_to_cone_is_least s).IsGlb.Inf_eq.symm
 
 end ConeFromConvex
@@ -517,97 +543,107 @@ open Submodule
 
 variable (s : ConvexCone ℝ E) (f : LinearPmap ℝ E ℝ)
 
--- error in Analysis.Convex.Cone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Induction step in M. Riesz extension theorem. Given a convex cone `s` in a vector space `E`,
 a partially defined linear map `f : f.domain → ℝ`, assume that `f` is nonnegative on `f.domain ∩ p`
 and `p + s = E`. If `f` is not defined on the whole `E`, then we can extend it to a larger
 submodule without breaking the non-negativity condition. -/
-theorem step
-(nonneg : ∀ x : f.domain, «expr ∈ »((x : E), s) → «expr ≤ »(0, f x))
-(dense : ∀ y, «expr∃ , »((x : f.domain), «expr ∈ »(«expr + »((x : E), y), s)))
-(hdom : «expr ≠ »(f.domain, «expr⊤»())) : «expr∃ , »((g), «expr ∧ »(«expr < »(f, g), ∀
-  x : g.domain, «expr ∈ »((x : E), s) → «expr ≤ »(0, g x))) :=
-begin
-  obtain ["⟨", ident y, ",", "-", ",", ident hy, "⟩", ":", expr «expr∃ , »((y : E)
-    (h : «expr ∈ »(y, «expr⊤»())), «expr ∉ »(y, f.domain))],
-  { exact [expr @set_like.exists_of_lt (submodule exprℝ() E) _ _ _ _ (lt_top_iff_ne_top.2 hdom)] },
-  obtain ["⟨", ident c, ",", ident le_c, ",", ident c_le, "⟩", ":", expr «expr∃ , »((c), «expr ∧ »(∀
-     x : f.domain, «expr ∈ »(«expr - »(«expr- »((x : E)), y), s) → «expr ≤ »(f x, c), ∀
-     x : f.domain, «expr ∈ »(«expr + »((x : E), y), s) → «expr ≤ »(c, f x)))],
-  { set [] [ident Sp] [] [":="] [expr «expr '' »(f, {x : f.domain | «expr ∈ »(«expr + »((x : E), y), s)})] [],
-    set [] [ident Sn] [] [":="] [expr «expr '' »(f, {x : f.domain | «expr ∈ »(«expr - »(«expr- »((x : E)), y), s)})] [],
-    suffices [] [":", expr «expr ∩ »(upper_bounds Sn, lower_bounds Sp).nonempty],
-    by simpa [] [] ["only"] ["[", expr set.nonempty, ",", expr upper_bounds, ",", expr lower_bounds, ",", expr ball_image_iff, "]"] [] ["using", expr this],
-    refine [expr exists_between_of_forall_le (nonempty.image f _) (nonempty.image f (dense y)) _],
-    { rcases [expr dense «expr- »(y), "with", "⟨", ident x, ",", ident hx, "⟩"],
-      rw ["[", "<-", expr neg_neg x, ",", expr coe_neg, ",", "<-", expr sub_eq_add_neg, "]"] ["at", ident hx],
-      exact [expr ⟨_, hx⟩] },
-    rintros [ident a, "⟨", ident xn, ",", ident hxn, ",", ident rfl, "⟩", ident b, "⟨", ident xp, ",", ident hxp, ",", ident rfl, "⟩"],
-    have [] [] [":=", expr s.add_mem hxp hxn],
-    rw ["[", expr add_assoc, ",", expr add_sub_cancel'_right, ",", "<-", expr sub_eq_add_neg, ",", "<-", expr coe_sub, "]"] ["at", ident this],
-    replace [] [] [":=", expr nonneg _ this],
-    rwa ["[", expr f.map_sub, ",", expr sub_nonneg, "]"] ["at", ident this] },
-  have [ident hy'] [":", expr «expr ≠ »(y, 0)] [],
-  from [expr λ hy₀, hy «expr ▸ »(hy₀.symm, zero_mem _)],
-  refine [expr ⟨f.sup_span_singleton y «expr- »(c) hy, _, _⟩],
-  { refine [expr lt_iff_le_not_le.2 ⟨f.left_le_sup _ _, λ H, _⟩],
-    replace [ident H] [] [":=", expr linear_pmap.domain_mono.monotone H],
-    rw ["[", expr linear_pmap.domain_sup_span_singleton, ",", expr sup_le_iff, ",", expr span_le, ",", expr singleton_subset_iff, "]"] ["at", ident H],
-    exact [expr hy H.2] },
-  { rintros ["⟨", ident z, ",", ident hz, "⟩", ident hzs],
-    rcases [expr mem_sup.1 hz, "with", "⟨", ident x, ",", ident hx, ",", ident y', ",", ident hy', ",", ident rfl, "⟩"],
-    rcases [expr mem_span_singleton.1 hy', "with", "⟨", ident r, ",", ident rfl, "⟩"],
-    simp [] [] ["only"] ["[", expr subtype.coe_mk, "]"] [] ["at", ident hzs],
-    erw ["[", expr linear_pmap.sup_span_singleton_apply_mk _ _ _ _ _ hx, ",", expr smul_neg, ",", "<-", expr sub_eq_add_neg, ",", expr sub_nonneg, "]"] [],
-    rcases [expr lt_trichotomy r 0, "with", ident hr, "|", ident hr, "|", ident hr],
-    { have [] [":", expr «expr ∈ »(«expr - »(«expr- »(«expr • »(«expr ⁻¹»(r), x)), y), s)] [],
-      by rwa ["[", "<-", expr s.smul_mem_iff (neg_pos.2 hr), ",", expr smul_sub, ",", expr smul_neg, ",", expr neg_smul, ",", expr neg_neg, ",", expr smul_smul, ",", expr mul_inv_cancel hr.ne, ",", expr one_smul, ",", expr sub_eq_add_neg, ",", expr neg_smul, ",", expr neg_neg, "]"] [],
-      replace [] [] [":=", expr le_c «expr • »(«expr ⁻¹»(r), ⟨x, hx⟩) this],
-      rwa ["[", "<-", expr mul_le_mul_left (neg_pos.2 hr), ",", "<-", expr neg_mul_eq_neg_mul, ",", "<-", expr neg_mul_eq_neg_mul, ",", expr neg_le_neg_iff, ",", expr f.map_smul, ",", expr smul_eq_mul, ",", "<-", expr mul_assoc, ",", expr mul_inv_cancel hr.ne, ",", expr one_mul, "]"] ["at", ident this] },
-    { subst [expr r],
-      simp [] [] ["only"] ["[", expr zero_smul, ",", expr add_zero, "]"] [] ["at", ident hzs, "⊢"],
-      apply [expr nonneg],
-      exact [expr hzs] },
-    { have [] [":", expr «expr ∈ »(«expr + »(«expr • »(«expr ⁻¹»(r), x), y), s)] [],
-      by rwa ["[", "<-", expr s.smul_mem_iff hr, ",", expr smul_add, ",", expr smul_smul, ",", expr mul_inv_cancel hr.ne', ",", expr one_smul, "]"] [],
-      replace [] [] [":=", expr c_le «expr • »(«expr ⁻¹»(r), ⟨x, hx⟩) this],
-      rwa ["[", "<-", expr mul_le_mul_left hr, ",", expr f.map_smul, ",", expr smul_eq_mul, ",", "<-", expr mul_assoc, ",", expr mul_inv_cancel hr.ne', ",", expr one_mul, "]"] ["at", ident this] } }
-end
+theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x) (dense : ∀ y, ∃ x : f.domain, ((x : E)+y) ∈ s)
+  (hdom : f.domain ≠ ⊤) : ∃ g, f < g ∧ ∀ x : g.domain, (x : E) ∈ s → 0 ≤ g x :=
+  by 
+    obtain ⟨y, -, hy⟩ : ∃ (y : E)(h : y ∈ ⊤), y ∉ f.domain
+    ·
+      exact @SetLike.exists_of_lt (Submodule ℝ E) _ _ _ _ (lt_top_iff_ne_top.2 hdom)
+    obtain ⟨c, le_c, c_le⟩ :
+      ∃ c, (∀ x : f.domain, -(x : E) - y ∈ s → f x ≤ c) ∧ ∀ x : f.domain, ((x : E)+y) ∈ s → c ≤ f x
+    ·
+      set Sp := f '' { x : f.domain | ((x : E)+y) ∈ s }
+      set Sn := f '' { x : f.domain | -(x : E) - y ∈ s }
+      suffices  : (UpperBounds Sn ∩ LowerBounds Sp).Nonempty
+      ·
+        simpa only [Set.Nonempty, UpperBounds, LowerBounds, ball_image_iff] using this 
+      refine' exists_between_of_forall_le (nonempty.image f _) (nonempty.image f (Dense y)) _
+      ·
+        rcases Dense (-y) with ⟨x, hx⟩
+        rw [←neg_negₓ x, coe_neg, ←sub_eq_add_neg] at hx 
+        exact ⟨_, hx⟩
+      rintro a ⟨xn, hxn, rfl⟩ b ⟨xp, hxp, rfl⟩
+      have  := s.add_mem hxp hxn 
+      rw [add_assocₓ, add_sub_cancel'_right, ←sub_eq_add_neg, ←coe_sub] at this 
+      replace  := nonneg _ this 
+      rwa [f.map_sub, sub_nonneg] at this 
+    have hy' : y ≠ 0 
+    exact fun hy₀ => hy (hy₀.symm ▸ zero_mem _)
+    refine' ⟨f.sup_span_singleton y (-c) hy, _, _⟩
+    ·
+      refine' lt_iff_le_not_leₓ.2 ⟨f.left_le_sup _ _, fun H => _⟩
+      replace H := linear_pmap.domain_mono.monotone H 
+      rw [LinearPmap.domain_sup_span_singleton, sup_le_iff, span_le, singleton_subset_iff] at H 
+      exact hy H.2
+    ·
+      rintro ⟨z, hz⟩ hzs 
+      rcases mem_sup.1 hz with ⟨x, hx, y', hy', rfl⟩
+      rcases mem_span_singleton.1 hy' with ⟨r, rfl⟩
+      simp only [Subtype.coe_mk] at hzs 
+      erw [LinearPmap.sup_span_singleton_apply_mk _ _ _ _ _ hx, smul_neg, ←sub_eq_add_neg, sub_nonneg]
+      rcases lt_trichotomyₓ r 0 with (hr | hr | hr)
+      ·
+        have  : -(r⁻¹ • x) - y ∈ s
+        ·
+          rwa [←s.smul_mem_iff (neg_pos.2 hr), smul_sub, smul_neg, neg_smul, neg_negₓ, smul_smul, mul_inv_cancel hr.ne,
+            one_smul, sub_eq_add_neg, neg_smul, neg_negₓ]
+        replace  := le_c (r⁻¹ • ⟨x, hx⟩) this 
+        rwa [←mul_le_mul_left (neg_pos.2 hr), ←neg_mul_eq_neg_mul, ←neg_mul_eq_neg_mul, neg_le_neg_iff, f.map_smul,
+          smul_eq_mul, ←mul_assocₓ, mul_inv_cancel hr.ne, one_mulₓ] at this
+      ·
+        subst r 
+        simp only [zero_smul, add_zeroₓ] at hzs⊢
+        apply nonneg 
+        exact hzs
+      ·
+        have  : ((r⁻¹ • x)+y) ∈ s
+        ·
+          rwa [←s.smul_mem_iff hr, smul_add, smul_smul, mul_inv_cancel hr.ne', one_smul]
+        replace  := c_le (r⁻¹ • ⟨x, hx⟩) this 
+        rwa [←mul_le_mul_left hr, f.map_smul, smul_eq_mul, ←mul_assocₓ, mul_inv_cancel hr.ne', one_mulₓ] at this
 
--- error in Analysis.Convex.Cone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_top
-(p : linear_pmap exprℝ() E exprℝ())
-(hp_nonneg : ∀ x : p.domain, «expr ∈ »((x : E), s) → «expr ≤ »(0, p x))
-(hp_dense : ∀
- y, «expr∃ , »((x : p.domain), «expr ∈ »(«expr + »((x : E), y), s))) : «expr∃ , »((q «expr ≥ » p), «expr ∧ »(«expr = »(q.domain, «expr⊤»()), ∀
-  x : q.domain, «expr ∈ »((x : E), s) → «expr ≤ »(0, q x))) :=
-begin
-  replace [ident hp_nonneg] [":", expr «expr ∈ »(p, {p | _})] [],
-  by { rw [expr mem_set_of_eq] [],
-    exact [expr hp_nonneg] },
-  obtain ["⟨", ident q, ",", ident hqs, ",", ident hpq, ",", ident hq, "⟩", ":=", expr zorn.zorn_nonempty_partial_order₀ _ _ _ hp_nonneg],
-  { refine [expr ⟨q, hpq, _, hqs⟩],
-    contrapose ["!"] [ident hq],
-    rcases [expr step s q hqs _ hq, "with", "⟨", ident r, ",", ident hqr, ",", ident hr, "⟩"],
-    { exact [expr ⟨r, hr, hqr.le, hqr.ne'⟩] },
-    { exact [expr λ y, let ⟨x, hx⟩ := hp_dense y in ⟨of_le hpq.left x, hx⟩] } },
-  { intros [ident c, ident hcs, ident c_chain, ident y, ident hy],
-    clear [ident hp_nonneg, ident hp_dense, ident p],
-    have [ident cne] [":", expr c.nonempty] [":=", expr ⟨y, hy⟩],
-    refine [expr ⟨linear_pmap.Sup c c_chain.directed_on, _, λ _, linear_pmap.le_Sup c_chain.directed_on⟩],
-    rintros ["⟨", ident x, ",", ident hx, "⟩", ident hxs],
-    have [ident hdir] [":", expr directed_on ((«expr ≤ »)) «expr '' »(linear_pmap.domain, c)] [],
-    from [expr directed_on_image.2 (c_chain.directed_on.mono linear_pmap.domain_mono.monotone)],
-    rcases [expr (mem_Sup_of_directed (cne.image _) hdir).1 hx, "with", "⟨", "_", ",", "⟨", ident f, ",", ident hfc, ",", ident rfl, "⟩", ",", ident hfx, "⟩"],
-    have [] [":", expr «expr ≤ »(f, linear_pmap.Sup c c_chain.directed_on)] [],
-    from [expr linear_pmap.le_Sup _ hfc],
-    convert ["<-"] [expr hcs hfc ⟨x, hfx⟩ hxs] [],
-    apply [expr this.2],
-    refl }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ≥ » p)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  exists_top
+  ( p : LinearPmap ℝ E ℝ )
+      ( hp_nonneg : ∀ x : p.domain , ( x : E ) ∈ s → 0 ≤ p x )
+      ( hp_dense : ∀ y , ∃ x : p.domain , ( x : E ) + y ∈ s )
+    : ∃ ( q : _ ) ( _ : q ≥ p ) , q.domain = ⊤ ∧ ∀ x : q.domain , ( x : E ) ∈ s → 0 ≤ q x
+  :=
+    by
+      replace hp_nonneg : p ∈ { p | _ }
+        · · rw [ mem_set_of_eq ] exact hp_nonneg
+        obtain ⟨ q , hqs , hpq , hq ⟩ := Zorn.zorn_nonempty_partial_order₀ _ _ _ hp_nonneg
+        ·
+          refine' ⟨ q , hpq , _ , hqs ⟩
+            contrapose! hq
+            rcases step s q hqs _ hq with ⟨ r , hqr , hr ⟩
+            · exact ⟨ r , hr , hqr.le , hqr.ne' ⟩
+            · exact fun y => let ⟨ x , hx ⟩ := hp_dense y ⟨ of_le hpq.left x , hx ⟩
+        ·
+          intro c hcs c_chain y hy
+            clear hp_nonneg hp_dense p
+            have cne : c.nonempty := ⟨ y , hy ⟩
+            refine' ⟨ LinearPmap.supₓ c c_chain.directed_on , _ , fun _ => LinearPmap.le_Sup c_chain.directed_on ⟩
+            rintro ⟨ x , hx ⟩ hxs
+            have hdir : DirectedOn · ≤ · LinearPmap.domain '' c
+            exact directed_on_image . 2 c_chain.directed_on.mono linear_pmap.domain_mono.monotone
+            rcases mem_Sup_of_directed cne.image _ hdir . 1 hx with ⟨ _ , ⟨ f , hfc , rfl ⟩ , hfx ⟩
+            have : f ≤ LinearPmap.supₓ c c_chain.directed_on
+            exact LinearPmap.le_Sup _ hfc
+            convert ← hcs hfc ⟨ x , hfx ⟩ hxs
+            apply this . 2
+            rfl
 
 end riesz_extension
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- M. **Riesz extension theorem**: given a convex cone `s` in a vector space `E`, a submodule `p`,
 and a linear `f : p → ℝ`, assume that `f` is nonnegative on `p ∩ s` and `p + s = E`. Then
 there exists a globally defined linear function `g : E → ℝ` that agrees with `f` on `p`,
@@ -618,52 +654,59 @@ theorem riesz_extension (s : ConvexCone ℝ E) (f : LinearPmap ℝ E ℝ) (nonne
   by 
     rcases RieszExtension.exists_top s f nonneg Dense with ⟨⟨g_dom, g⟩, ⟨hpg, hfg⟩, htop, hgs⟩
     clear hpg 
-    refine' ⟨g ∘ₗ «expr↑ » (LinearEquiv.ofTop _ htop).symm, _, _⟩ <;>
+    refine' ⟨g ∘ₗ ↑(LinearEquiv.ofTop _ htop).symm, _, _⟩ <;>
       simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.of_top_symm_apply]
     ·
       exact fun x => (hfg (Submodule.coe_mk _ _).symm).symm
     ·
       exact fun x hx => hgs ⟨x, _⟩ hx
 
--- error in Analysis.Convex.Cone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Hahn-Banach theorem**: if `N : E → ℝ` is a sublinear map, `f` is a linear map
 defined on a subspace of `E`, and `f x ≤ N x` for all `x` in the domain of `f`,
 then `f` can be extended to the whole space to a linear map `g` such that `g x ≤ N x`
 for all `x`. -/
-theorem exists_extension_of_le_sublinear
-(f : linear_pmap exprℝ() E exprℝ())
-(N : E → exprℝ())
-(N_hom : ∀ c : exprℝ(), «expr < »(0, c) → ∀ x, «expr = »(N «expr • »(c, x), «expr * »(c, N x)))
-(N_add : ∀ x y, «expr ≤ »(N «expr + »(x, y), «expr + »(N x, N y)))
-(hf : ∀
- x : f.domain, «expr ≤ »(f x, N x)) : «expr∃ , »((g : «expr →ₗ[ ] »(E, exprℝ(), exprℝ())), «expr ∧ »(∀
-  x : f.domain, «expr = »(g x, f x), ∀ x, «expr ≤ »(g x, N x))) :=
-begin
-  let [ident s] [":", expr convex_cone exprℝ() «expr × »(E, exprℝ())] [":=", expr { carrier := {p : «expr × »(E, exprℝ()) | «expr ≤ »(N p.1, p.2)},
-     smul_mem' := λ c hc p hp, calc
-       «expr = »(N «expr • »(c, p.1), «expr * »(c, N p.1)) : N_hom c hc p.1
-       «expr ≤ »(..., «expr * »(c, p.2)) : mul_le_mul_of_nonneg_left hp hc.le,
-     add_mem' := λ x hx y hy, (N_add _ _).trans (add_le_add hx hy) }],
-  obtain ["⟨", ident g, ",", ident g_eq, ",", ident g_nonneg, "⟩", ":=", expr riesz_extension s («expr- »(f).coprod (linear_map.id.to_pmap «expr⊤»())) _ _]; try { simp [] [] ["only"] ["[", expr linear_pmap.coprod_apply, ",", expr to_pmap_apply, ",", expr id_apply, ",", expr linear_pmap.neg_apply, ",", "<-", expr sub_eq_neg_add, ",", expr sub_nonneg, ",", expr subtype.coe_mk, "]"] [] ["at", "*"] },
-  replace [ident g_eq] [":", expr ∀ (x : f.domain) (y : exprℝ()), «expr = »(g (x, y), «expr - »(y, f x))] [],
-  { intros [ident x, ident y],
-    simpa [] [] ["only"] ["[", expr subtype.coe_mk, ",", expr subtype.coe_eta, "]"] [] ["using", expr g_eq ⟨(x, y), ⟨x.2, trivial⟩⟩] },
-  { refine [expr ⟨«expr- »(g.comp (inl exprℝ() E exprℝ())), _, _⟩]; simp [] [] ["only"] ["[", expr neg_apply, ",", expr inl_apply, ",", expr comp_apply, "]"] [] [],
-    { intro [ident x],
-      simp [] [] [] ["[", expr g_eq x 0, "]"] [] [] },
-    { intro [ident x],
-      have [ident A] [":", expr «expr = »((x, N x), «expr + »((x, 0), (0, N x)))] [],
-      by simp [] [] [] [] [] [],
-      have [ident B] [] [":=", expr g_nonneg ⟨x, N x⟩ (le_refl (N x))],
-      rw ["[", expr A, ",", expr map_add, ",", "<-", expr neg_le_iff_add_nonneg', "]"] ["at", ident B],
-      have [ident C] [] [":=", expr g_eq 0 (N x)],
-      simp [] [] ["only"] ["[", expr submodule.coe_zero, ",", expr f.map_zero, ",", expr sub_zero, "]"] [] ["at", ident C],
-      rwa ["<-", expr C] [] } },
-  { exact [expr λ x hx, le_trans (hf _) hx] },
-  { rintros ["⟨", ident x, ",", ident y, "⟩"],
-    refine [expr ⟨⟨(0, «expr - »(N x, y)), ⟨f.domain.zero_mem, trivial⟩⟩, _⟩],
-    simp [] [] ["only"] ["[", expr convex_cone.mem_mk, ",", expr mem_set_of_eq, ",", expr subtype.coe_mk, ",", expr prod.fst_add, ",", expr prod.snd_add, ",", expr zero_add, ",", expr sub_add_cancel, "]"] [] [] }
-end
+theorem exists_extension_of_le_sublinear (f : LinearPmap ℝ E ℝ) (N : E → ℝ)
+  (N_hom : ∀ c : ℝ, 0 < c → ∀ x, N (c • x) = c*N x) (N_add : ∀ x y, N (x+y) ≤ N x+N y)
+  (hf : ∀ x : f.domain, f x ≤ N x) : ∃ g : E →ₗ[ℝ] ℝ, (∀ x : f.domain, g x = f x) ∧ ∀ x, g x ≤ N x :=
+  by 
+    let s : ConvexCone ℝ (E × ℝ) :=
+      { Carrier := { p : E × ℝ | N p.1 ≤ p.2 },
+        smul_mem' :=
+          fun c hc p hp =>
+            calc N (c • p.1) = c*N p.1 := N_hom c hc p.1
+              _ ≤ c*p.2 := mul_le_mul_of_nonneg_left hp hc.le
+              ,
+        add_mem' := fun x hx y hy => (N_add _ _).trans (add_le_add hx hy) }
+    obtain ⟨g, g_eq, g_nonneg⟩ := riesz_extension s ((-f).coprod (linear_map.id.to_pmap ⊤)) _ _ <;>
+      try 
+        simp only [LinearPmap.coprod_apply, to_pmap_apply, id_apply, LinearPmap.neg_apply, ←sub_eq_neg_add, sub_nonneg,
+          Subtype.coe_mk] at *
+    replace g_eq : ∀ x : f.domain y : ℝ, g (x, y) = y - f x
+    ·
+      intro x y 
+      simpa only [Subtype.coe_mk, Subtype.coe_eta] using g_eq ⟨(x, y), ⟨x.2, trivialₓ⟩⟩
+    ·
+      refine' ⟨-g.comp (inl ℝ E ℝ), _, _⟩ <;> simp only [neg_apply, inl_apply, comp_apply]
+      ·
+        intro x 
+        simp [g_eq x 0]
+      ·
+        intro x 
+        have A : (x, N x) = (x, 0)+(0, N x)
+        ·
+          simp 
+        have B := g_nonneg ⟨x, N x⟩ (le_reflₓ (N x))
+        rw [A, map_add, ←neg_le_iff_add_nonneg'] at B 
+        have C := g_eq 0 (N x)
+        simp only [Submodule.coe_zero, f.map_zero, sub_zero] at C 
+        rwa [←C]
+    ·
+      exact fun x hx => le_transₓ (hf _) hx
+    ·
+      rintro ⟨x, y⟩
+      refine' ⟨⟨(0, N x - y), ⟨f.domain.zero_mem, trivialₓ⟩⟩, _⟩
+      simp only [ConvexCone.mem_mk, mem_set_of_eq, Subtype.coe_mk, Prod.fst_add, Prod.snd_add, zero_addₓ,
+        sub_add_cancel]
 
 /-! ### The dual cone -/
 
@@ -674,21 +717,24 @@ variable {H : Type _} [InnerProductSpace ℝ H] (s t : Set H)
 
 open_locale RealInnerProductSpace
 
-/-- The dual cone is the cone consisting of all points `y` such that for
-all points `x` in a given set `0 ≤ ⟪ x, y ⟫`. -/
-noncomputable def Set.innerDualCone (s : Set H) : ConvexCone ℝ H :=
-  { Carrier := { y | ∀ x _ : x ∈ s, 0 ≤ ⟪x, y⟫ },
-    smul_mem' :=
-      fun c hc y hy x hx =>
-        by 
-          rw [real_inner_smul_right]
-          exact mul_nonneg hc.le (hy x hx),
-    add_mem' :=
-      fun u hu v hv x hx =>
-        by 
-          rw [inner_add_right]
-          exact add_nonneg (hu x hx) (hv x hx) }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      The dual cone is the cone consisting of all points `y` such that for
+      all points `x` in a given set `0 ≤ ⟪ x, y ⟫`. -/
+    noncomputable
+  def
+    Set.innerDualCone
+    ( s : Set H ) : ConvexCone ℝ H
+    :=
+      {
+        Carrier := { y | ∀ x _ : x ∈ s , 0 ≤ ⟪ x , y ⟫ } ,
+          smul_mem' := fun c hc y hy x hx => by rw [ real_inner_smul_right ] exact mul_nonneg hc.le hy x hx ,
+          add_mem' := fun u hu v hv x hx => by rw [ inner_add_right ] exact add_nonneg hu x hx hv x hx
+        }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem mem_inner_dual_cone (y : H) (s : Set H) : y ∈ s.inner_dual_cone ↔ ∀ x _ : x ∈ s, 0 ≤ ⟪x, y⟫ :=
   by 
     rfl

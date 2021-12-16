@@ -23,7 +23,7 @@ or equivalently whether we're looking at the first or second object in an equali
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -225,7 +225,7 @@ theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections (F : preshea
     fun ι =>
       forall_congrₓ
         fun U =>
-          Equiv.nonempty_congr$
+          Equivₓ.nonempty_congr$
             calc
               is_limit (F.map_cone (opens_le_cover_cocone U).op) ≃
                 is_limit ((F.map_cone (opens_le_cover_cocone U).op).whisker (pairwise_to_opens_le_cover U).op) :=

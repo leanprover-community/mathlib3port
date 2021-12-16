@@ -76,16 +76,7 @@ theorem map_add (n m k : ℕ) : (Ico n m).map ((·+·) k) = Ico (n+k) (m+k) :=
 
 theorem map_sub (n m k : ℕ) (h₁ : k ≤ n) : ((Ico n m).map fun x => x - k) = Ico (n - k) (m - k) :=
   by 
-    byCases' h₂ : n < m
-    ·
-      rw [Ico, Ico]
-      rw [tsub_tsub_tsub_cancel_right h₁]
-      rw [map_sub_range' _ _ _ h₁]
-    ·
-      simp  at h₂ 
-      rw [eq_nil_of_le h₂]
-      rw [eq_nil_of_le (tsub_le_tsub_right h₂ _)]
-      rfl
+    rw [Ico, Ico, tsub_tsub_tsub_cancel_right h₁, map_sub_range' _ _ _ h₁]
 
 @[simp]
 theorem self_empty {n : ℕ} : Ico n n = [] :=
@@ -209,14 +200,10 @@ theorem filter_le (n m l : ℕ) : ((Ico n m).filter fun x => l ≤ x) = Ico (max
     ·
       rw [max_eq_leftₓ hln, filter_le_of_le_bot hln]
 
--- error in Data.List.Intervals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem filter_lt_of_succ_bot
-{n m : exprℕ()}
-(hnm : «expr < »(n, m)) : «expr = »((Ico n m).filter (λ x, «expr < »(x, «expr + »(n, 1))), «expr[ , ]»([n])) :=
-begin
-  have [ident r] [":", expr «expr = »(min m «expr + »(n, 1), «expr + »(n, 1))] [":=", expr (@inf_eq_right _ _ m «expr + »(n, 1)).mpr hnm],
-  simp [] [] [] ["[", expr filter_lt n m «expr + »(n, 1), ",", expr r, "]"] [] []
-end
+theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filter fun x => x < n+1) = [n] :=
+  by 
+    have r : min m (n+1) = n+1 := (@inf_eq_right _ _ m (n+1)).mpr hnm 
+    simp [filter_lt n m (n+1), r]
 
 @[simp]
 theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filter fun x => x ≤ n) = [n] :=

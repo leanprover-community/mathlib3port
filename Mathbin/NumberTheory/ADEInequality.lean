@@ -146,73 +146,68 @@ theorem admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : admissible pqr → 1 <
       rw [←H, E', sum_inv_pqr]
       normNum
 
--- error in NumberTheory.ADEInequality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_three
-{p q r : «exprℕ+»()}
-(hpq : «expr ≤ »(p, q))
-(hqr : «expr ≤ »(q, r))
-(H : «expr < »(1, sum_inv {p, q, r})) : «expr < »(p, 3) :=
-begin
-  have [ident h3] [":", expr «expr < »((0 : exprℚ()), 3)] [],
-  by norm_num [] [],
-  contrapose ["!"] [ident H],
-  rw [expr sum_inv_pqr] [],
-  have [ident h3q] [] [":=", expr H.trans hpq],
-  have [ident h3r] [] [":=", expr h3q.trans hqr],
-  calc
-    «expr ≤ »((«expr + »(«expr + »(«expr ⁻¹»(p), «expr ⁻¹»(q)), «expr ⁻¹»(r)) : exprℚ()), «expr + »(«expr + »(«expr ⁻¹»(3), «expr ⁻¹»(3)), «expr ⁻¹»(3))) : add_le_add (add_le_add _ _) _
-    «expr = »(..., 1) : by norm_num [] [],
-  all_goals { rw [expr inv_le_inv _ h3] []; [assumption_mod_cast, norm_num [] []] }
-end
+theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sum_inv {p, q, r}) : p < 3 :=
+  by 
+    have h3 : (0 : ℚ) < 3
+    ·
+      normNum 
+    contrapose! H 
+    rw [sum_inv_pqr]
+    have h3q := H.trans hpq 
+    have h3r := h3q.trans hqr 
+    calc ((p⁻¹+q⁻¹)+r⁻¹ : ℚ) ≤ (3⁻¹+3⁻¹)+3⁻¹ := add_le_add (add_le_add _ _) _ _ = 1 :=
+      by 
+        normNum 
+    all_goals 
+      rw [inv_le_inv _ h3] <;> [assumptionModCast, normNum]
 
--- error in NumberTheory.ADEInequality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_four {q r : «exprℕ+»()} (hqr : «expr ≤ »(q, r)) (H : «expr < »(1, sum_inv {2, q, r})) : «expr < »(q, 4) :=
-begin
-  have [ident h4] [":", expr «expr < »((0 : exprℚ()), 4)] [],
-  by norm_num [] [],
-  contrapose ["!"] [ident H],
-  rw [expr sum_inv_pqr] [],
-  have [ident h4r] [] [":=", expr H.trans hqr],
-  simp [] [] ["only"] ["[", expr pnat.coe_bit0, ",", expr nat.cast_bit0, ",", expr pnat.one_coe, ",", expr nat.cast_one, ",", expr coe_coe, "]"] [] [],
-  calc
-    «expr ≤ »((«expr + »(«expr + »(«expr ⁻¹»(2), «expr ⁻¹»(q)), «expr ⁻¹»(r)) : exprℚ()), «expr + »(«expr + »(«expr ⁻¹»(2), «expr ⁻¹»(4)), «expr ⁻¹»(4))) : add_le_add (add_le_add le_rfl _) _
-    «expr = »(..., 1) : by norm_num [] [],
-  all_goals { rw [expr inv_le_inv _ h4] []; [assumption_mod_cast, norm_num [] []] }
-end
+theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sum_inv {2, q, r}) : q < 4 :=
+  by 
+    have h4 : (0 : ℚ) < 4
+    ·
+      normNum 
+    contrapose! H 
+    rw [sum_inv_pqr]
+    have h4r := H.trans hqr 
+    simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_one, coe_coe]
+    calc ((2⁻¹+q⁻¹)+r⁻¹ : ℚ) ≤ (2⁻¹+4⁻¹)+4⁻¹ := add_le_add (add_le_add le_rfl _) _ _ = 1 :=
+      by 
+        normNum 
+    all_goals 
+      rw [inv_le_inv _ h4] <;> [assumptionModCast, normNum]
 
--- error in NumberTheory.ADEInequality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_six {r : «exprℕ+»()} (H : «expr < »(1, sum_inv {2, 3, r})) : «expr < »(r, 6) :=
-begin
-  have [ident h6] [":", expr «expr < »((0 : exprℚ()), 6)] [],
-  by norm_num [] [],
-  contrapose ["!"] [ident H],
-  rw [expr sum_inv_pqr] [],
-  simp [] [] ["only"] ["[", expr pnat.coe_bit0, ",", expr nat.cast_bit0, ",", expr pnat.one_coe, ",", expr nat.cast_bit1, ",", expr nat.cast_one, ",", expr pnat.coe_bit1, ",", expr coe_coe, "]"] [] [],
-  calc
-    «expr ≤ »((«expr + »(«expr + »(«expr ⁻¹»(2), «expr ⁻¹»(3)), «expr ⁻¹»(r)) : exprℚ()), «expr + »(«expr + »(«expr ⁻¹»(2), «expr ⁻¹»(3)), «expr ⁻¹»(6))) : add_le_add (add_le_add le_rfl le_rfl) _
-    «expr = »(..., 1) : by norm_num [] [],
-  rw [expr inv_le_inv _ h6] []; [assumption_mod_cast, norm_num [] []]
-end
+theorem lt_six {r : ℕ+} (H : 1 < sum_inv {2, 3, r}) : r < 6 :=
+  by 
+    have h6 : (0 : ℚ) < 6
+    ·
+      normNum 
+    contrapose! H 
+    rw [sum_inv_pqr]
+    simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_bit1, Nat.cast_one, Pnat.coe_bit1, coe_coe]
+    calc ((2⁻¹+3⁻¹)+r⁻¹ : ℚ) ≤ (2⁻¹+3⁻¹)+6⁻¹ := add_le_add (add_le_add le_rfl le_rfl) _ _ = 1 :=
+      by 
+        normNum 
+    rw [inv_le_inv _ h6] <;> [assumptionModCast, normNum]
 
--- error in NumberTheory.ADEInequality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem admissible_of_one_lt_sum_inv_aux'
-{p q r : «exprℕ+»()}
-(hpq : «expr ≤ »(p, q))
-(hqr : «expr ≤ »(q, r))
-(H : «expr < »(1, sum_inv {p, q, r})) : admissible {p, q, r} :=
-begin
-  have [ident hp3] [":", expr «expr < »(p, 3)] [":=", expr lt_three hpq hqr H],
-  interval_cases [expr p] [] [],
-  { exact [expr admissible_A' q r] },
-  have [ident hq4] [":", expr «expr < »(q, 4)] [":=", expr lt_four hqr H],
-  interval_cases [expr q] [] [],
-  { exact [expr admissible_D' r] },
-  have [ident hr6] [":", expr «expr < »(r, 6)] [":=", expr lt_six H],
-  interval_cases [expr r] [] [],
-  { exact [expr admissible_E6] },
-  { exact [expr admissible_E7] },
-  { exact [expr admissible_E8] }
-end
+theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sum_inv {p, q, r}) :
+  admissible {p, q, r} :=
+  by 
+    have hp3 : p < 3 := lt_three hpq hqr H 
+    intervalCases p
+    ·
+      exact admissible_A' q r 
+    have hq4 : q < 4 := lt_four hqr H 
+    intervalCases q
+    ·
+      exact admissible_D' r 
+    have hr6 : r < 6 := lt_six H 
+    intervalCases r
+    ·
+      exact admissible_E6
+    ·
+      exact admissible_E7
+    ·
+      exact admissible_E8
 
 theorem admissible_of_one_lt_sum_inv_aux :
   ∀ {pqr : List ℕ+} hs : pqr.sorted (· ≤ ·) hl : pqr.length = 3 H : 1 < sum_inv pqr, admissible pqr
@@ -222,20 +217,16 @@ theorem admissible_of_one_lt_sum_inv_aux :
     simpa using hs 
     exact admissible_of_one_lt_sum_inv_aux' hpq hqr H
 
--- error in NumberTheory.ADEInequality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem admissible_of_one_lt_sum_inv
-{p q r : «exprℕ+»()}
-(H : «expr < »(1, sum_inv {p, q, r})) : admissible {p, q, r} :=
-begin
-  simp [] [] ["only"] ["[", expr admissible, "]"] [] [],
-  let [ident S] [] [":=", expr sort ((«expr ≤ ») : «exprℕ+»() → «exprℕ+»() → exprProp()) {p, q, r}],
-  have [ident hS] [":", expr S.sorted ((«expr ≤ »))] [":=", expr sort_sorted _ _],
-  have [ident hpqr] [":", expr «expr = »(({p, q, r} : multiset «exprℕ+»()), S)] [":=", expr (sort_eq has_le.le {p, q, r}).symm],
-  simp [] [] ["only"] ["[", expr hpqr, "]"] [] ["at", "*"],
-  apply [expr admissible_of_one_lt_sum_inv_aux hS _ H],
-  simp [] [] ["only"] ["[", expr S, ",", expr length_sort, "]"] [] [],
-  dec_trivial []
-end
+theorem admissible_of_one_lt_sum_inv {p q r : ℕ+} (H : 1 < sum_inv {p, q, r}) : admissible {p, q, r} :=
+  by 
+    simp only [admissible]
+    let S := sort (· ≤ · : ℕ+ → ℕ+ → Prop) {p, q, r}
+    have hS : S.sorted (· ≤ ·) := sort_sorted _ _ 
+    have hpqr : ({p, q, r} : Multiset ℕ+) = S := (sort_eq LE.le {p, q, r}).symm 
+    simp only [hpqr] at *
+    apply admissible_of_one_lt_sum_inv_aux hS _ H 
+    simp only [S, length_sort]
+    decide
 
 /-- A multiset `{p,q,r}` of positive natural numbers
 is a solution to `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1` if and only if

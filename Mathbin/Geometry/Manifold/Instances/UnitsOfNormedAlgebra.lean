@@ -39,7 +39,7 @@ None of this should be particularly difficult.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Manifold
 

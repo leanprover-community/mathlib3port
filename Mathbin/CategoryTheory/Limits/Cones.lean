@@ -35,7 +35,7 @@ natural transformations from the constant functor with value `X` to `F`.
 An object representing this functor is a limit of `F`.
 -/
 @[simps]
-def cones : «expr ᵒᵖ» C ⥤ Type max u₁ v₃ :=
+def cones : Cᵒᵖ ⥤ Type max u₁ v₃ :=
   (const J).op ⋙ yoneda.obj F
 
 /--
@@ -58,7 +58,7 @@ Functorially associated to each functor `J ⥤ C`, we have the `C`-presheaf cons
 cones with a given cone point.
 -/
 @[simps]
-def cones : (J ⥤ C) ⥤ «expr ᵒᵖ» C ⥤ Type max u₁ v₃ :=
+def cones : (J ⥤ C) ⥤ Cᵒᵖ ⥤ Type max u₁ v₃ :=
   { obj := functor.cones, map := fun F G f => whisker_left (const J).op (yoneda.map f) }
 
 /--
@@ -66,7 +66,7 @@ Contravariantly associated to each functor `J ⥤ C`, we have the `C`-copresheaf
 cocones with a given cocone point.
 -/
 @[simps]
-def cocones : «expr ᵒᵖ» (J ⥤ C) ⥤ C ⥤ Type max u₁ v₃ :=
+def cocones : (J ⥤ C)ᵒᵖ ⥤ C ⥤ Type max u₁ v₃ :=
   { obj := fun F => functor.cocones (unop F), map := fun F G f => whisker_left (const J) (coyoneda.map f) }
 
 end 
@@ -119,7 +119,7 @@ namespace Cone
 
 /-- The isomorphism between a cone on `F` and an element of the functor `F.cones`. -/
 @[simps]
-def Equiv (F : J ⥤ C) : cone F ≅ ΣX, F.cones.obj X :=
+def Equivₓ (F : J ⥤ C) : cone F ≅ Σ X, F.cones.obj X :=
   { Hom := fun c => ⟨op c.X, c.π⟩, inv := fun c => { x := c.1.unop, π := c.2 },
     hom_inv_id' :=
       by 
@@ -152,7 +152,7 @@ end Cone
 namespace Cocone
 
 /-- The isomorphism between a cocone on `F` and an element of the functor `F.cocones`. -/
-def Equiv (F : J ⥤ C) : cocone F ≅ ΣX, F.cocones.obj X :=
+def Equivₓ (F : J ⥤ C) : cocone F ≅ Σ X, F.cocones.obj X :=
   { Hom := fun c => ⟨c.X, c.ι⟩, inv := fun c => { x := c.1, ι := c.2 },
     hom_inv_id' :=
       by 
@@ -394,22 +394,18 @@ def functoriality_equivalence (e : C ≌ D) : cone F ≌ cone (F ⋙ e.functor) 
         (by 
           tidy) }
 
--- error in CategoryTheory.Limits.Cones: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `F` reflects isomorphisms, then `cones.functoriality F` reflects isomorphisms
 as well.
 -/
-instance reflects_cone_isomorphism
-(F : «expr ⥤ »(C, D))
-[reflects_isomorphisms F]
-(K : «expr ⥤ »(J, C)) : reflects_isomorphisms (cones.functoriality K F) :=
-begin
-  constructor,
-  introsI [],
-  haveI [] [":", expr is_iso (F.map f.hom)] [":=", expr (cones.forget «expr ⋙ »(K, F)).map_is_iso ((cones.functoriality K F).map f)],
-  haveI [] [] [":=", expr reflects_isomorphisms.reflects F f.hom],
-  apply [expr cone_iso_of_hom_iso]
-end
+instance reflects_cone_isomorphism (F : C ⥤ D) [reflects_isomorphisms F] (K : J ⥤ C) :
+  reflects_isomorphisms (cones.functoriality K F) :=
+  by 
+    constructor 
+    intros 
+    have  : is_iso (F.map f.hom) := (cones.forget (K ⋙ F)).map_is_iso ((cones.functoriality K F).map f)
+    have  := reflects_isomorphisms.reflects F f.hom 
+    apply cone_iso_of_hom_iso
 
 end 
 
@@ -632,22 +628,18 @@ def functoriality_equivalence (e : C ≌ D) : cocone F ≌ cocone (F ⋙ e.funct
             dsimp 
             simp  }
 
--- error in CategoryTheory.Limits.Cones: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `F` reflects isomorphisms, then `cocones.functoriality F` reflects isomorphisms
 as well.
 -/
-instance reflects_cocone_isomorphism
-(F : «expr ⥤ »(C, D))
-[reflects_isomorphisms F]
-(K : «expr ⥤ »(J, C)) : reflects_isomorphisms (cocones.functoriality K F) :=
-begin
-  constructor,
-  introsI [],
-  haveI [] [":", expr is_iso (F.map f.hom)] [":=", expr (cocones.forget «expr ⋙ »(K, F)).map_is_iso ((cocones.functoriality K F).map f)],
-  haveI [] [] [":=", expr reflects_isomorphisms.reflects F f.hom],
-  apply [expr cocone_iso_of_hom_iso]
-end
+instance reflects_cocone_isomorphism (F : C ⥤ D) [reflects_isomorphisms F] (K : J ⥤ C) :
+  reflects_isomorphisms (cocones.functoriality K F) :=
+  by 
+    constructor 
+    intros 
+    have  : is_iso (F.map f.hom) := (cocones.forget (K ⋙ F)).map_is_iso ((cocones.functoriality K F).map f)
+    have  := reflects_isomorphisms.reflects F f.hom 
+    apply cocone_iso_of_hom_iso
 
 end 
 
@@ -869,59 +861,82 @@ def cone.unop (c : cone F.op) : cocone F :=
 
 variable (F)
 
--- error in CategoryTheory.Limits.Cones: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The category of cocones on `F`
 is equivalent to the opposite category of
 the category of cones on the opposite of `F`.
--/ @[simps #[]] def cocone_equivalence_op_cone_op : «expr ≌ »(cocone F, «expr ᵒᵖ»(cone F.op)) :=
-{ functor := { obj := λ c, op (cocone.op c),
-    map := λ
-    X
-    Y
-    f, quiver.hom.op { hom := f.hom.op,
-      w' := λ j, by { apply [expr quiver.hom.unop_inj],
-        dsimp [] [] [] [],
-        simp [] [] [] [] [] [] } } },
-  inverse := { obj := λ c, cone.unop (unop c),
-    map := λ
-    X
-    Y
-    f, { hom := f.unop.hom.unop,
-      w' := λ j, by { apply [expr quiver.hom.op_inj],
-        dsimp [] [] [] [],
-        simp [] [] [] [] [] [] } } },
-  unit_iso := nat_iso.of_components (λ c, cocones.ext (iso.refl _) (by tidy [])) (by tidy []),
-  counit_iso := nat_iso.of_components (λ c, by { induction [expr c] ["using", ident opposite.rec] [] [],
-     dsimp [] [] [] [],
-     apply [expr iso.op],
-     exact [expr cones.ext (iso.refl _) (by tidy [])] }) (begin
-     intros [],
-     have [ident hX] [":", expr «expr = »(X, op (unop X))] [":=", expr rfl],
-     revert [ident hX],
-     generalize [] [":"] [expr «expr = »(unop X, X')],
-     rintro [ident rfl],
-     have [ident hY] [":", expr «expr = »(Y, op (unop Y))] [":=", expr rfl],
-     revert [ident hY],
-     generalize [] [":"] [expr «expr = »(unop Y, Y')],
-     rintro [ident rfl],
-     apply [expr quiver.hom.unop_inj],
-     apply [expr cone_morphism.ext],
-     dsimp [] [] [] [],
-     simp [] [] [] [] [] []
-   end),
-  functor_unit_iso_comp' := λ c, begin
-    apply [expr quiver.hom.unop_inj],
-    ext [] [] [],
-    dsimp [] [] [] [],
-    simp [] [] [] [] [] []
-  end }
+-/
+@[simps]
+def cocone_equivalence_op_cone_op : cocone F ≌ cone F.opᵒᵖ :=
+  { Functor :=
+      { obj := fun c => op (cocone.op c),
+        map :=
+          fun X Y f =>
+            Quiver.Hom.op
+              { Hom := f.hom.op,
+                w' :=
+                  fun j =>
+                    by 
+                      apply Quiver.Hom.unop_inj 
+                      dsimp 
+                      simp  } },
+    inverse :=
+      { obj := fun c => cone.unop (unop c),
+        map :=
+          fun X Y f =>
+            { Hom := f.unop.hom.unop,
+              w' :=
+                fun j =>
+                  by 
+                    apply Quiver.Hom.op_inj 
+                    dsimp 
+                    simp  } },
+    unitIso :=
+      nat_iso.of_components
+        (fun c =>
+          cocones.ext (iso.refl _)
+            (by 
+              tidy))
+        (by 
+          tidy),
+    counitIso :=
+      nat_iso.of_components
+        (fun c =>
+          by 
+            induction c using Opposite.rec 
+            dsimp 
+            apply iso.op 
+            exact
+              cones.ext (iso.refl _)
+                (by 
+                  tidy))
+        (by 
+          intros 
+          have hX : X = op (unop X) := rfl 
+          revert hX 
+          generalize unop X = X' 
+          rintro rfl 
+          have hY : Y = op (unop Y) := rfl 
+          revert hY 
+          generalize unop Y = Y' 
+          rintro rfl 
+          apply Quiver.Hom.unop_inj 
+          apply cone_morphism.ext 
+          dsimp 
+          simp ),
+    functor_unit_iso_comp' :=
+      fun c =>
+        by 
+          apply Quiver.Hom.unop_inj 
+          ext 
+          dsimp 
+          simp  }
 
 end 
 
 section 
 
-variable {F : J ⥤ «expr ᵒᵖ» C}
+variable {F : J ⥤ Cᵒᵖ}
 
 /-- Change a cocone on `F.left_op : Jᵒᵖ ⥤ C` to a cocone on `F : J ⥤ Cᵒᵖ`. -/
 @[simps (config := { rhsMd := semireducible, simpRhs := tt })]

@@ -141,15 +141,25 @@ theorem inter_mem_iff {s t} : s ∩ t ∈ f ↔ s ∈ f ∧ t ∈ f :=
 theorem univ_mem' (h : ∀ a, a ∈ s) : s ∈ f :=
   mem_of_superset univ_mem fun x _ => h x
 
-theorem mp_mem (hs : s ∈ f) (h : { x | x ∈ s → x ∈ t } ∈ f) : t ∈ f :=
-  mem_of_superset (inter_mem hs h)$ fun x ⟨h₁, h₂⟩ => h₂ h₁
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mp_mem
+  ( hs : s ∈ f ) ( h : { x | x ∈ s → x ∈ t } ∈ f ) : t ∈ f
+  := mem_of_superset inter_mem hs h $ fun x ⟨ h₁ , h₂ ⟩ => h₂ h₁
 
-theorem congr_sets (h : { x | x ∈ s ↔ x ∈ t } ∈ f) : s ∈ f ↔ t ∈ f :=
-  ⟨fun hs => mp_mem hs (mem_of_superset h fun x => Iff.mp), fun hs => mp_mem hs (mem_of_superset h fun x => Iff.mpr)⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  congr_sets
+  ( h : { x | x ∈ s ↔ x ∈ t } ∈ f ) : s ∈ f ↔ t ∈ f
+  := ⟨ fun hs => mp_mem hs mem_of_superset h fun x => Iff.mp , fun hs => mp_mem hs mem_of_superset h fun x => Iff.mpr ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » is)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » is)
 @[simp]
 theorem bInter_mem {β : Type v} {s : β → Set α} {is : Set β} (hf : finite is) :
-  (⋂(i : _)(_ : i ∈ is), s i) ∈ f ↔ ∀ i _ : i ∈ is, s i ∈ f :=
+  (⋂ (i : _)(_ : i ∈ is), s i) ∈ f ↔ ∀ i _ : i ∈ is, s i ∈ f :=
   finite.induction_on hf
     (by 
       simp )
@@ -157,25 +167,29 @@ theorem bInter_mem {β : Type v} {s : β → Set α} {is : Set β} (hf : finite 
       by 
         simp [hs]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » is)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » is)
 @[simp]
 theorem bInter_finset_mem {β : Type v} {s : β → Set α} (is : Finset β) :
-  (⋂(i : _)(_ : i ∈ is), s i) ∈ f ↔ ∀ i _ : i ∈ is, s i ∈ f :=
+  (⋂ (i : _)(_ : i ∈ is), s i) ∈ f ↔ ∀ i _ : i ∈ is, s i ∈ f :=
   bInter_mem is.finite_to_set
 
 alias bInter_finset_mem ← Finset.Inter_mem_sets
 
 attribute [protected] Finset.Inter_mem_sets
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » s)
 @[simp]
 theorem sInter_mem {s : Set (Set α)} (hfin : finite s) : ⋂₀s ∈ f ↔ ∀ U _ : U ∈ s, U ∈ f :=
   by 
     rw [sInter_eq_bInter, bInter_mem hfin]
 
 @[simp]
-theorem Inter_mem {β : Type v} {s : β → Set α} [Fintype β] : (⋂i, s i) ∈ f ↔ ∀ i, s i ∈ f :=
+theorem Inter_mem {β : Type v} {s : β → Set α} [Fintype β] : (⋂ i, s i) ∈ f ↔ ∀ i, s i ∈ f :=
   by 
     simpa using bInter_mem finite_univ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
 theorem exists_mem_subset_iff : (∃ (t : _)(_ : t ∈ f), t ⊆ s) ↔ s ∈ f :=
   ⟨fun ⟨t, ht, ts⟩ => mem_of_superset ht ts, fun hs => ⟨s, hs, subset.rfl⟩⟩
 
@@ -188,6 +202,7 @@ namespace Tactic.Interactive
 
 open Tactic Interactive
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- `filter_upwards [h1, ⋯, hn]` replaces a goal of the form `s ∈ f`
 and terms `h1 : t1 ∈ f, ⋯, hn : tn ∈ f` with `∀ x, x ∈ t1 → ⋯ → x ∈ tn → x ∈ s`.
 
@@ -214,10 +229,19 @@ variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x}
 
 section Principal
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The principal filter of `s` is the collection of all supersets of `s`. -/
-def principal (s : Set α) : Filter α :=
-  { Sets := { t | s ⊆ t }, univ_sets := subset_univ s, sets_of_superset := fun x y hx => subset.trans hx,
-    inter_sets := fun x y => subset_inter }
+  def
+    principal
+    ( s : Set α ) : Filter α
+    :=
+      {
+        Sets := { t | s ⊆ t } ,
+          univ_sets := subset_univ s ,
+          sets_of_superset := fun x y hx => subset.trans hx ,
+          inter_sets := fun x y => subset_inter
+        }
 
 localized [Filter] notation "𝓟" => Filter.principal
 
@@ -237,18 +261,23 @@ open_locale Filter
 
 section Join
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The join of a filter of filters is defined by the relation `s ∈ join f ↔ {t | s ∈ t} ∈ f`. -/
-def join (f : Filter (Filter α)) : Filter α :=
-  { Sets := { s | { t:Filter α | s ∈ t } ∈ f },
-    univ_sets :=
-      by 
-        simp only [mem_set_of_eq, univ_sets, ←Filter.mem_sets, set_of_true],
-    sets_of_superset := fun x y hx xy => mem_of_superset hx$ fun f h => mem_of_superset h xy,
-    inter_sets := fun x y hx hy => mem_of_superset (inter_mem hx hy)$ fun f ⟨h₁, h₂⟩ => inter_mem h₁ h₂ }
+  def
+    join
+    ( f : Filter Filter α ) : Filter α
+    :=
+      {
+        Sets := { s | { t : Filter α | s ∈ t } ∈ f } ,
+          univ_sets := by simp only [ mem_set_of_eq , univ_sets , ← Filter.mem_sets , set_of_true ] ,
+          sets_of_superset := fun x y hx xy => mem_of_superset hx $ fun f h => mem_of_superset h xy ,
+          inter_sets := fun x y hx hy => mem_of_superset inter_mem hx hy $ fun f ⟨ h₁ , h₂ ⟩ => inter_mem h₁ h₂
+        }
 
-@[simp]
-theorem mem_join {s : Set α} {f : Filter (Filter α)} : s ∈ join f ↔ { t | s ∈ t } ∈ f :=
-  Iff.rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ] theorem mem_join { s : Set α } { f : Filter Filter α } : s ∈ join f ↔ { t | s ∈ t } ∈ f := Iff.rfl
 
 end Join
 
@@ -258,6 +287,7 @@ instance : PartialOrderₓ (Filter α) :=
   { le := fun f g => ∀ ⦃U : Set α⦄, U ∈ g → U ∈ f, le_antisymm := fun a b h₁ h₂ => filter_eq$ subset.antisymm h₂ h₁,
     le_refl := fun a => subset.rfl, le_trans := fun a b c h₁ h₂ => subset.trans h₂ h₁ }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » g)
 theorem le_def {f g : Filter α} : f ≤ g ↔ ∀ x _ : x ∈ g, x ∈ f :=
   Iff.rfl
 
@@ -277,9 +307,10 @@ theorem sets_iff_generate {s : Set (Set α)} {f : Filter α} : f ≤ Filter.gene
   Iff.intro (fun h u hu => h$ generate_sets.basic$ hu)
     fun h u hu => hu.rec_on h univ_mem (fun x y _ hxy hx => mem_of_superset hx hxy) fun x y _ _ hx hy => inter_mem hx hy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem mem_generate_iff {s : Set$ Set α} {U : Set α} : U ∈ generate s ↔ ∃ (t : _)(_ : t ⊆ s), finite t ∧ ⋂₀t ⊆ U :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       induction' h with V V_in V W V_in hVW hV V W V_in W_in hV hW
       ·
@@ -330,27 +361,52 @@ def gi_generate (α : Type _) : @GaloisInsertion (Set (Set α)) (OrderDual (Filt
     choice := fun s hs => Filter.mkOfClosure s (le_antisymmₓ hs$ sets_iff_generate.1$ le_rfl),
     choice_eq := fun s hs => mk_of_closure_sets }
 
-/-- The infimum of filters is the filter generated by intersections
-  of elements of the two filters. -/
-instance : HasInf (Filter α) :=
-  ⟨fun f g : Filter α =>
-      { Sets := { s | ∃ (a : _)(_ : a ∈ f)(b : _)(_ : b ∈ g), s = a ∩ b },
-        univ_sets :=
-          ⟨_, univ_mem, _, univ_mem,
-            by 
-              simp ⟩,
-        sets_of_superset :=
-          by 
-            rintro x y ⟨a, ha, b, hb, rfl⟩ xy 
-            refine'
-              ⟨a ∪ y, mem_of_superset ha (subset_union_left a y), b ∪ y, mem_of_superset hb (subset_union_left b y), _⟩
-            rw [←inter_union_distrib_right, union_eq_self_of_subset_left xy],
-        inter_sets :=
-          by 
-            rintro x y ⟨a, ha, b, hb, rfl⟩ ⟨c, hc, d, hd, rfl⟩
-            refine' ⟨a ∩ c, inter_mem ha hc, b ∩ d, inter_mem hb hd, _⟩
-            acRfl }⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » g)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The infimum of filters is the filter generated by intersections
+      of elements of the two filters. -/
+  instance
+    : HasInf Filter α
+    :=
+      ⟨
+        fun
+          f g : Filter α
+            =>
+            {
+              Sets := { s | ∃ ( a : _ ) ( _ : a ∈ f ) ( b : _ ) ( _ : b ∈ g ) , s = a ∩ b } ,
+                univ_sets := ⟨ _ , univ_mem , _ , univ_mem , by simp ⟩ ,
+                sets_of_superset
+                    :=
+                    by
+                      rintro x y ⟨ a , ha , b , hb , rfl ⟩ xy
+                        refine'
+                          ⟨
+                            a ∪ y
+                              ,
+                              mem_of_superset ha subset_union_left a y
+                              ,
+                              b ∪ y
+                              ,
+                              mem_of_superset hb subset_union_left b y
+                              ,
+                              _
+                            ⟩
+                        rw [ ← inter_union_distrib_right , union_eq_self_of_subset_left xy ]
+                  ,
+                inter_sets
+                  :=
+                  by
+                    rintro x y ⟨ a , ha , b , hb , rfl ⟩ ⟨ c , hc , d , hd , rfl ⟩
+                      refine' ⟨ a ∩ c , inter_mem ha hc , b ∩ d , inter_mem hb hd , _ ⟩
+                      acRfl
+              }
+        ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₁ «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₂ «expr ∈ » g)
 theorem mem_inf_iff {f g : Filter α} {s : Set α} :
   s ∈ f⊓g ↔ ∃ (t₁ : _)(_ : t₁ ∈ f), ∃ (t₂ : _)(_ : t₂ ∈ g), s = t₁ ∩ t₂ :=
   Iff.rfl
@@ -367,14 +423,26 @@ theorem inter_mem_inf {α : Type u} {f g : Filter α} {s t : Set α} (hs : s ∈
 theorem mem_inf_of_inter {f g : Filter α} {s t u : Set α} (hs : s ∈ f) (ht : t ∈ g) (h : s ∩ t ⊆ u) : u ∈ f⊓g :=
   mem_of_superset (inter_mem_inf hs ht) h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₁ «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₂ «expr ∈ » g)
 theorem mem_inf_iff_superset {f g : Filter α} {s : Set α} :
   s ∈ f⊓g ↔ ∃ (t₁ : _)(_ : t₁ ∈ f), ∃ (t₂ : _)(_ : t₂ ∈ g), t₁ ∩ t₂ ⊆ s :=
   ⟨fun ⟨t₁, h₁, t₂, h₂, Eq⟩ => ⟨t₁, h₁, t₂, h₂, Eq ▸ subset.rfl⟩,
     fun ⟨t₁, h₁, t₂, h₂, sub⟩ => mem_inf_of_inter h₁ h₂ sub⟩
 
-instance : HasTop (Filter α) :=
-  ⟨{ Sets := { s | ∀ x, x ∈ s }, univ_sets := fun x => mem_univ x, sets_of_superset := fun x y hx hxy a => hxy (hx a),
-      inter_sets := fun x y hx hy a => mem_inter (hx _) (hy _) }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  : HasTop Filter α
+  :=
+    ⟨
+      {
+        Sets := { s | ∀ x , x ∈ s } ,
+          univ_sets := fun x => mem_univ x ,
+          sets_of_superset := fun x y hx hxy a => hxy hx a ,
+          inter_sets := fun x y hx hy a => mem_inter hx _ hy _
+        }
+      ⟩
 
 theorem mem_top_iff_forall {s : Set α} : s ∈ (⊤ : Filter α) ↔ ∀ x, x ∈ s :=
   Iff.rfl
@@ -447,10 +515,11 @@ theorem bot_sets_eq : (⊥ : Filter α).Sets = univ :=
 theorem sup_sets_eq {f g : Filter α} : (f⊔g).Sets = f.sets ∩ g.sets :=
   (gi_generate α).gc.u_inf
 
-theorem Sup_sets_eq {s : Set (Filter α)} : (Sup s).Sets = ⋂(f : _)(_ : f ∈ s), (f : Filter α).Sets :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » s)
+theorem Sup_sets_eq {s : Set (Filter α)} : (Sup s).Sets = ⋂ (f : _)(_ : f ∈ s), (f : Filter α).Sets :=
   (gi_generate α).gc.u_Inf
 
-theorem supr_sets_eq {f : ι → Filter α} : (supr f).Sets = ⋂i, (f i).Sets :=
+theorem supr_sets_eq {f : ι → Filter α} : (supr f).Sets = ⋂ i, (f i).Sets :=
   (gi_generate α).gc.u_infi
 
 theorem generate_empty : Filter.generate ∅ = (⊤ : Filter α) :=
@@ -462,7 +531,7 @@ theorem generate_univ : Filter.generate univ = (⊥ : Filter α) :=
 theorem generate_union {s t : Set (Set α)} : Filter.generate (s ∪ t) = Filter.generate s⊓Filter.generate t :=
   (gi_generate α).gc.l_sup
 
-theorem generate_Union {s : ι → Set (Set α)} : Filter.generate (⋃i, s i) = ⨅i, Filter.generate (s i) :=
+theorem generate_Union {s : ι → Set (Set α)} : Filter.generate (⋃ i, s i) = ⨅ i, Filter.generate (s i) :=
   (gi_generate α).gc.l_supr
 
 @[simp]
@@ -476,6 +545,7 @@ theorem mem_sup {f g : Filter α} {s : Set α} : s ∈ f⊔g ↔ s ∈ f ∧ s �
 theorem union_mem_sup {f g : Filter α} {s t : Set α} (hs : s ∈ f) (ht : t ∈ g) : s ∪ t ∈ f⊔g :=
   ⟨mem_of_superset hs (subset_union_left s t), mem_of_superset ht (subset_union_right s t)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » s)
 @[simp]
 theorem mem_Sup {x : Set α} {s : Set (Filter α)} : x ∈ Sup s ↔ ∀ f _ : f ∈ s, x ∈ (f : Filter α) :=
   Iff.rfl
@@ -486,63 +556,55 @@ theorem mem_supr {x : Set α} {f : ι → Filter α} : x ∈ supr f ↔ ∀ i, x
     simp only [←Filter.mem_sets, supr_sets_eq, iff_selfₓ, mem_Inter]
 
 @[simp]
-theorem supr_ne_bot {f : ι → Filter α} : (⨆i, f i).ne_bot ↔ ∃ i, (f i).ne_bot :=
+theorem supr_ne_bot {f : ι → Filter α} : (⨆ i, f i).ne_bot ↔ ∃ i, (f i).ne_bot :=
   by 
     simp [ne_bot_iff]
 
-theorem infi_eq_generate (s : ι → Filter α) : infi s = generate (⋃i, (s i).Sets) :=
+theorem infi_eq_generate (s : ι → Filter α) : infi s = generate (⋃ i, (s i).Sets) :=
   show generate _ = generate _ from congr_argₓ _$ congr_argₓ Sup$ (range_comp _ _).symm
 
-theorem mem_infi_of_mem {f : ι → Filter α} (i : ι) : ∀ {s}, s ∈ f i → s ∈ ⨅i, f i :=
-  show (⨅i, f i) ≤ f i from infi_le _ _
+theorem mem_infi_of_mem {f : ι → Filter α} (i : ι) : ∀ {s}, s ∈ f i → s ∈ ⨅ i, f i :=
+  show (⨅ i, f i) ≤ f i from infi_le _ _
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_infi_of_Inter
-{ι}
-{s : ι → filter α}
-{U : set α}
-{I : set ι}
-(I_fin : finite I)
-{V : I → set α}
-(hV : ∀ i, «expr ∈ »(V i, s i))
-(hU : «expr ⊆ »(«expr⋂ , »((i), V i), U)) : «expr ∈ »(U, «expr⨅ , »((i), s i)) :=
-begin
-  haveI [] [] [":=", expr I_fin.fintype],
-  refine [expr mem_of_superset «expr $ »(Inter_mem.2, λ i, _) hU],
-  exact [expr mem_infi_of_mem i (hV _)]
-end
+theorem mem_infi_of_Inter {ι} {s : ι → Filter α} {U : Set α} {I : Set ι} (I_fin : finite I) {V : I → Set α}
+  (hV : ∀ i, V i ∈ s i) (hU : (⋂ i, V i) ⊆ U) : U ∈ ⨅ i, s i :=
+  by 
+    have  := I_fin.fintype 
+    refine' mem_of_superset (Inter_mem.2$ fun i => _) hU 
+    exact mem_infi_of_mem i (hV _)
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_infi
-{ι}
-{s : ι → filter α}
-{U : set α} : «expr ↔ »(«expr ∈ »(U, «expr⨅ , »((i), s i)), «expr∃ , »((I : set ι), «expr ∧ »(finite I, «expr∃ , »((V : I → set α), «expr ∧ »(∀
-     i, «expr ∈ »(V i, s i), «expr = »(U, «expr⋂ , »((i), V i))))))) :=
-begin
-  split,
-  { rw ["[", expr infi_eq_generate, ",", expr mem_generate_iff, "]"] [],
-    rintro ["⟨", ident t, ",", ident tsub, ",", ident tfin, ",", ident tinter, "⟩"],
-    rcases [expr eq_finite_Union_of_finite_subset_Union tfin tsub, "with", "⟨", ident I, ",", ident Ifin, ",", ident σ, ",", ident σfin, ",", ident σsub, ",", ident rfl, "⟩"],
-    rw [expr sInter_Union] ["at", ident tinter],
-    set [] [ident V] [] [":="] [expr λ i, «expr ∪ »(U, «expr⋂₀ »(σ i))] ["with", ident hV],
-    have [ident V_in] [":", expr ∀ i, «expr ∈ »(V i, s i)] [],
-    { rintro [ident i],
-      have [] [":", expr «expr ∈ »(«expr⋂₀ »(σ i), s i)] [],
-      { rw [expr sInter_mem (σfin _)] [],
-        apply [expr σsub] },
-      exact [expr mem_of_superset this (subset_union_right _ _)] },
-    refine [expr ⟨I, Ifin, V, V_in, _⟩],
-    rwa ["[", expr hV, ",", "<-", expr union_Inter, ",", expr union_eq_self_of_subset_right, "]"] [] },
-  { rintro ["⟨", ident I, ",", ident Ifin, ",", ident V, ",", ident V_in, ",", ident rfl, "⟩"],
-    exact [expr mem_infi_of_Inter Ifin V_in subset.rfl] }
-end
+theorem mem_infi {ι} {s : ι → Filter α} {U : Set α} :
+  (U ∈ ⨅ i, s i) ↔ ∃ I : Set ι, finite I ∧ ∃ V : I → Set α, (∀ i, V i ∈ s i) ∧ U = ⋂ i, V i :=
+  by 
+    constructor
+    ·
+      rw [infi_eq_generate, mem_generate_iff]
+      rintro ⟨t, tsub, tfin, tinter⟩
+      rcases eq_finite_Union_of_finite_subset_Union tfin tsub with ⟨I, Ifin, σ, σfin, σsub, rfl⟩
+      rw [sInter_Union] at tinter 
+      set V := fun i => U ∪ ⋂₀σ i with hV 
+      have V_in : ∀ i, V i ∈ s i
+      ·
+        rintro i 
+        have  : ⋂₀σ i ∈ s i
+        ·
+          rw [sInter_mem (σfin _)]
+          apply σsub 
+        exact mem_of_superset this (subset_union_right _ _)
+      refine' ⟨I, Ifin, V, V_in, _⟩
+      rwa [hV, ←union_Inter, union_eq_self_of_subset_right]
+    ·
+      rintro ⟨I, Ifin, V, V_in, rfl⟩
+      exact mem_infi_of_Inter Ifin V_in subset.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 theorem mem_infi' {ι} {s : ι → Filter α} {U : Set α} :
-  (U ∈ ⨅i, s i) ↔
+  (U ∈ ⨅ i, s i) ↔
     ∃ I : Set ι,
       finite I ∧
         ∃ V : ι → Set α,
-          (∀ i, V i ∈ s i) ∧ (∀ i _ : i ∉ I, V i = univ) ∧ (U = ⋂(i : _)(_ : i ∈ I), V i) ∧ U = ⋂i, V i :=
+          (∀ i, V i ∈ s i) ∧ (∀ i _ : i ∉ I, V i = univ) ∧ (U = ⋂ (i : _)(_ : i ∈ I), V i) ∧ U = ⋂ i, V i :=
   by 
     simp only [mem_infi, SetCoe.forall', bInter_eq_Inter]
     refine' ⟨_, fun ⟨I, If, V, hVs, _, hVU, _⟩ => ⟨I, If, fun i => V i, fun i => hVs i, hVU⟩⟩
@@ -556,13 +618,13 @@ theorem mem_infi' {ι} {s : ι → Filter α} {U : Set α} :
     ·
       simp [Inter_dite, bInter_eq_Inter]
 
-theorem exists_Inter_of_mem_infi {ι : Type _} {α : Type _} {f : ι → Filter α} {s} (hs : s ∈ ⨅i, f i) :
-  ∃ t : ι → Set α, (∀ i, t i ∈ f i) ∧ s = ⋂i, t i :=
+theorem exists_Inter_of_mem_infi {ι : Type _} {α : Type _} {f : ι → Filter α} {s} (hs : s ∈ ⨅ i, f i) :
+  ∃ t : ι → Set α, (∀ i, t i ∈ f i) ∧ s = ⋂ i, t i :=
   let ⟨I, If, V, hVs, hV', hVU, hVU'⟩ := mem_infi'.1 hs
   ⟨V, hVs, hVU'⟩
 
 theorem mem_infi_of_fintype {ι : Type _} [Fintype ι] {α : Type _} {f : ι → Filter α} s :
-  (s ∈ ⨅i, f i) ↔ ∃ t : ι → Set α, (∀ i, t i ∈ f i) ∧ s = ⋂i, t i :=
+  (s ∈ ⨅ i, f i) ↔ ∃ t : ι → Set α, (∀ i, t i ∈ f i) ∧ s = ⋂ i, t i :=
   by 
     refine' ⟨exists_Inter_of_mem_infi, _⟩
     rintro ⟨t, ht, rfl⟩
@@ -599,7 +661,8 @@ theorem principal_univ : 𝓟 (univ : Set α) = ⊤ :=
 theorem principal_empty : 𝓟 (∅ : Set α) = ⊥ :=
   bot_unique$ fun s _ => empty_subset _
 
-theorem generate_eq_binfi (S : Set (Set α)) : generate S = ⨅(s : _)(_ : s ∈ S), 𝓟 s :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+theorem generate_eq_binfi (S : Set (Set α)) : generate S = ⨅ (s : _)(_ : s ∈ S), 𝓟 s :=
   eq_of_forall_le_iff$
     fun f =>
       by 
@@ -624,7 +687,7 @@ theorem empty_not_mem (f : Filter α) [ne_bot f] : ¬∅ ∈ f :=
 theorem nonempty_of_ne_bot (f : Filter α) [ne_bot f] : Nonempty α :=
   nonempty_of_exists$ nonempty_of_mem (univ_mem : univ ∈ f)
 
-theorem compl_not_mem {f : Filter α} {s : Set α} [ne_bot f] (h : s ∈ f) : «expr ᶜ» s ∉ f :=
+theorem compl_not_mem {f : Filter α} {s : Set α} [ne_bot f] (h : s ∈ f) : sᶜ ∉ f :=
   fun hsc => (nonempty_of_mem (inter_mem h hsc)).ne_empty$ inter_compl_self s
 
 theorem filter_eq_bot_of_is_empty [IsEmpty α] (f : Filter α) : f = ⊥ :=
@@ -645,14 +708,22 @@ protected def Unique [IsEmpty α] : Unique (Filter α) :=
 theorem forall_mem_nonempty_iff_ne_bot {f : Filter α} : (∀ s : Set α, s ∈ f → s.nonempty) ↔ ne_bot f :=
   ⟨fun h => ⟨fun hf => empty_not_nonempty (h ∅$ hf.symm ▸ mem_bot)⟩, @nonempty_of_mem _ _⟩
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nontrivial_iff_nonempty : «expr ↔ »(nontrivial (filter α), nonempty α) :=
-⟨λ
- ⟨⟨f, g, hfg⟩⟩, «expr $ »(by_contra, λ
-  h, «expr $ »(hfg, by haveI [] [":", expr is_empty α] [":=", expr not_nonempty_iff.1 h]; exact [expr subsingleton.elim _ _])), λ
- ⟨x⟩, ⟨⟨«expr⊤»(), «expr⊥»(), «expr $ »(ne_bot.ne, «expr $ »(forall_mem_nonempty_iff_ne_bot.1, λ
-     s hs, by rwa ["[", expr mem_top.1 hs, ",", "<-", expr nonempty_iff_univ_nonempty, "]"] []))⟩⟩⟩
+theorem nontrivial_iff_nonempty : Nontrivial (Filter α) ↔ Nonempty α :=
+  ⟨fun ⟨⟨f, g, hfg⟩⟩ =>
+      by_contra$
+        fun h =>
+          hfg$
+            by 
+              have  : IsEmpty α := not_nonempty_iff.1 h <;> exact Subsingleton.elimₓ _ _,
+    fun ⟨x⟩ =>
+      ⟨⟨⊤, ⊥,
+          ne_bot.ne$
+            forall_mem_nonempty_iff_ne_bot.1$
+              fun s hs =>
+                by 
+                  rwa [mem_top.1 hs, ←nonempty_iff_univ_nonempty]⟩⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » S)
 theorem eq_Inf_of_mem_iff_exists_mem {S : Set (Filter α)} {l : Filter α}
   (h : ∀ {s}, s ∈ l ↔ ∃ (f : _)(_ : f ∈ S), s ∈ f) : l = Inf S :=
   le_antisymmₓ (le_Inf$ fun f hf s hs => h.2 ⟨f, hf, hs⟩)
@@ -665,17 +736,17 @@ theorem eq_infi_of_mem_iff_exists_mem {f : ι → Filter α} {l : Filter α} (h 
   eq_Inf_of_mem_iff_exists_mem$ fun s => h.trans exists_range_iff.symm
 
 theorem eq_binfi_of_mem_iff_exists_mem {f : ι → Filter α} {p : ι → Prop} {l : Filter α}
-  (h : ∀ {s}, s ∈ l ↔ ∃ (i : _)(_ : p i), s ∈ f i) : l = ⨅(i : _)(_ : p i), f i :=
+  (h : ∀ {s}, s ∈ l ↔ ∃ (i : _)(_ : p i), s ∈ f i) : l = ⨅ (i : _)(_ : p i), f i :=
   by 
     rw [infi_subtype']
     apply eq_infi_of_mem_iff_exists_mem 
     intro s 
     exact h.trans ⟨fun ⟨i, pi, si⟩ => ⟨⟨i, pi⟩, si⟩, fun ⟨⟨i, pi⟩, si⟩ => ⟨i, pi, si⟩⟩
 
-theorem infi_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : Nonempty ι] : (infi f).Sets = ⋃i, (f i).Sets :=
+theorem infi_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : Nonempty ι] : (infi f).Sets = ⋃ i, (f i).Sets :=
   let ⟨i⟩ := Ne 
   let u :=
-    { Sets := ⋃i, (f i).Sets,
+    { Sets := ⋃ i, (f i).Sets,
       univ_sets :=
         by 
           simp only [mem_Union] <;> exact ⟨i, univ_mem⟩,
@@ -699,39 +770,45 @@ theorem mem_infi_of_directed {f : ι → Filter α} (h : Directed (· ≥ ·) f)
   by 
     simp only [←Filter.mem_sets, infi_sets_eq h, mem_Union]
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_binfi_of_directed
-{f : β → filter α}
-{s : set β}
-(h : directed_on «expr ⁻¹'o »(f, («expr ≥ »)) s)
-(ne : s.nonempty)
-{t : set α} : «expr ↔ »(«expr ∈ »(t, «expr⨅ , »((i «expr ∈ » s), f i)), «expr∃ , »((i «expr ∈ » s), «expr ∈ »(t, f i))) :=
-by haveI [] [":", expr nonempty {x // «expr ∈ »(x, s)}] [":=", expr ne.to_subtype]; erw ["[", expr infi_subtype', ",", expr mem_infi_of_directed h.directed_coe, ",", expr subtype.exists, "]"] []; refl
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem mem_binfi_of_directed {f : β → Filter α} {s : Set β} (h : DirectedOn (f ⁻¹'o (· ≥ ·)) s) (ne : s.nonempty)
+  {t : Set α} : (t ∈ ⨅ (i : _)(_ : i ∈ s), f i) ↔ ∃ (i : _)(_ : i ∈ s), t ∈ f i :=
+  by 
+    have  : Nonempty { x // x ∈ s } := ne.to_subtype <;>
+      erw [infi_subtype', mem_infi_of_directed h.directed_coe, Subtype.exists] <;> rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem binfi_sets_eq {f : β → Filter α} {s : Set β} (h : DirectedOn (f ⁻¹'o (· ≥ ·)) s) (ne : s.nonempty) :
-  (⨅(i : _)(_ : i ∈ s), f i).Sets = ⋃(i : _)(_ : i ∈ s), (f i).Sets :=
+  (⨅ (i : _)(_ : i ∈ s), f i).Sets = ⋃ (i : _)(_ : i ∈ s), (f i).Sets :=
   ext$
     fun t =>
       by 
         simp [mem_binfi_of_directed h Ne]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem infi_sets_eq_finite {ι : Type _} (f : ι → Filter α) :
-  (⨅i, f i).Sets = ⋃t : Finset ι, (⨅(i : _)(_ : i ∈ t), f i).Sets :=
+  (⨅ i, f i).Sets = ⋃ t : Finset ι, (⨅ (i : _)(_ : i ∈ t), f i).Sets :=
   by 
     rw [infi_eq_infi_finset, infi_sets_eq]
     exact directed_of_sup$ fun s₁ s₂ hs => infi_le_infi$ fun i => infi_le_infi_const$ fun h => hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem infi_sets_eq_finite' (f : ι → Filter α) :
-  (⨅i, f i).Sets = ⋃t : Finset (Plift ι), (⨅(i : _)(_ : i ∈ t), f (Plift.down i)).Sets :=
+  (⨅ i, f i).Sets = ⋃ t : Finset (Plift ι), (⨅ (i : _)(_ : i ∈ t), f (Plift.down i)).Sets :=
   by 
     rw [←infi_sets_eq_finite, ←equiv.plift.surjective.infi_comp]
     rfl
 
-theorem mem_infi_finite {ι : Type _} {f : ι → Filter α} s : s ∈ infi f ↔ ∃ t : Finset ι, s ∈ ⨅(i : _)(_ : i ∈ t), f i :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
+theorem mem_infi_finite {ι : Type _} {f : ι → Filter α} s :
+  s ∈ infi f ↔ ∃ t : Finset ι, s ∈ ⨅ (i : _)(_ : i ∈ t), f i :=
   (Set.ext_iff.1 (infi_sets_eq_finite f) s).trans mem_Union
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem mem_infi_finite' {f : ι → Filter α} s :
-  s ∈ infi f ↔ ∃ t : Finset (Plift ι), s ∈ ⨅(i : _)(_ : i ∈ t), f (Plift.down i) :=
+  s ∈ infi f ↔ ∃ t : Finset (Plift ι), s ∈ ⨅ (i : _)(_ : i ∈ t), f (Plift.down i) :=
   (Set.ext_iff.1 (infi_sets_eq_finite' f) s).trans mem_Union
 
 @[simp]
@@ -742,7 +819,7 @@ theorem sup_join {f₁ f₂ : Filter (Filter α)} : join f₁⊔join f₂ = join
         simp only [mem_sup, mem_join]
 
 @[simp]
-theorem supr_join {ι : Sort w} {f : ι → Filter (Filter α)} : (⨆x, join (f x)) = join (⨆x, f x) :=
+theorem supr_join {ι : Sort w} {f : ι → Filter (Filter α)} : (⨆ x, join (f x)) = join (⨆ x, f x) :=
   Filter.ext$
     fun x =>
       by 
@@ -759,14 +836,14 @@ instance : DistribLattice (Filter α) :=
           ⟨t₁, x.sets_of_superset hs (inter_subset_left t₁ t₂), ht₁, t₂,
             x.sets_of_superset hs (inter_subset_right t₁ t₂), ht₂, rfl⟩ }
 
-theorem infi_sup_left {f : Filter α} {g : ι → Filter α} : (⨅x, f⊔g x) = f⊔infi g :=
+theorem infi_sup_left {f : Filter α} {g : ι → Filter α} : (⨅ x, f⊔g x) = f⊔infi g :=
   by 
     refine' le_antisymmₓ _ (le_infi$ fun i => sup_le_sup_left (infi_le _ _) _)
     rintro t ⟨h₁, h₂⟩
     rw [infi_sets_eq_finite'] at h₂ 
     simp only [mem_Union, (Finset.inf_eq_infi _ _).symm] at h₂ 
     rcases h₂ with ⟨s, hs⟩
-    suffices  : (⨅i, f⊔g i) ≤ f⊔s.inf fun i => g i.down
+    suffices  : (⨅ i, f⊔g i) ≤ f⊔s.inf fun i => g i.down
     ·
       exact this ⟨h₁, hs⟩
     refine' Finset.induction_on s _ _
@@ -777,22 +854,25 @@ theorem infi_sup_left {f : Filter α} {g : ι → Filter α} : (⨅x, f⊔g x) =
       rw [Finset.inf_insert, sup_inf_left]
       exact le_inf (infi_le _ _) ih
 
-theorem infi_sup_right {f : Filter α} {g : ι → Filter α} : (⨅x, g x⊔f) = infi g⊔f :=
+theorem infi_sup_right {f : Filter α} {g : ι → Filter α} : (⨅ x, g x⊔f) = infi g⊔f :=
   by 
     simp [sup_comm, ←infi_sup_left]
 
 theorem binfi_sup_right (p : ι → Prop) (f : ι → Filter α) (g : Filter α) :
-  (⨅(i : _)(h : p i), f i⊔g) = (⨅(i : _)(h : p i), f i)⊔g :=
+  (⨅ (i : _)(h : p i), f i⊔g) = (⨅ (i : _)(h : p i), f i)⊔g :=
   by 
     rw [infi_subtype', infi_sup_right, infi_subtype']
 
 theorem binfi_sup_left (p : ι → Prop) (f : ι → Filter α) (g : Filter α) :
-  (⨅(i : _)(h : p i), g⊔f i) = g⊔⨅(i : _)(h : p i), f i :=
+  (⨅ (i : _)(h : p i), g⊔f i) = g⊔⨅ (i : _)(h : p i), f i :=
   by 
     rw [infi_subtype', infi_sup_left, infi_subtype']
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem mem_infi_finset {s : Finset α} {f : α → Filter β} {t : Set β} :
-  (t ∈ ⨅(a : _)(_ : a ∈ s), f a) ↔ ∃ p : α → Set β, (∀ a _ : a ∈ s, p a ∈ f a) ∧ t = ⋂(a : _)(_ : a ∈ s), p a :=
+  (t ∈ ⨅ (a : _)(_ : a ∈ s), f a) ↔ ∃ p : α → Set β, (∀ a _ : a ∈ s, p a ∈ f a) ∧ t = ⋂ (a : _)(_ : a ∈ s), p a :=
   by 
     simp only [←Finset.set_bInter_coe, bInter_eq_Inter, infi_subtype']
     refine' ⟨fun h => _, _⟩
@@ -811,22 +891,17 @@ theorem mem_infi_finset {s : Finset α} {f : α → Filter β} {t : Set β} :
       rintro ⟨p, hpf, rfl⟩
       exact Inter_mem.2 fun a => mem_infi_of_mem a (hpf a a.2)
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f : ι → filter α` is directed, `ι` is not empty, and `∀ i, f i ≠ ⊥`, then `infi f ≠ ⊥`.
 See also `infi_ne_bot_of_directed` for a version assuming `nonempty α` instead of `nonempty ι`. -/
-theorem infi_ne_bot_of_directed'
-{f : ι → filter α}
-[nonempty ι]
-(hd : directed ((«expr ≥ »)) f)
-(hb : ∀ i, ne_bot (f i)) : ne_bot (infi f) :=
-⟨begin
-   intro [ident h],
-   have [ident he] [":", expr «expr ∈ »(«expr∅»(), infi f)] [],
-   from [expr «expr ▸ »(h.symm, (mem_bot : «expr ∈ »(«expr∅»(), («expr⊥»() : filter α))))],
-   obtain ["⟨", ident i, ",", ident hi, "⟩", ":", expr «expr∃ , »((i), «expr ∈ »(«expr∅»(), f i))],
-   from [expr (mem_infi_of_directed hd «expr∅»()).1 he],
-   exact [expr (hb i).ne (empty_mem_iff_bot.1 hi)]
- end⟩
+theorem infi_ne_bot_of_directed' {f : ι → Filter α} [Nonempty ι] (hd : Directed (· ≥ ·) f) (hb : ∀ i, ne_bot (f i)) :
+  ne_bot (infi f) :=
+  ⟨by 
+      intro h 
+      have he : ∅ ∈ infi f 
+      exact h.symm ▸ (mem_bot : ∅ ∈ (⊥ : Filter α))
+      obtain ⟨i, hi⟩ : ∃ i, ∅ ∈ f i 
+      exact (mem_infi_of_directed hd ∅).1 he 
+      exact (hb i).Ne (empty_mem_iff_bot.1 hi)⟩
 
 /-- If `f : ι → filter α` is directed, `α` is not empty, and `∀ i, f i ≠ ⊥`, then `infi f ≠ ⊥`.
 See also `infi_ne_bot_of_directed'` for a version assuming `nonempty ι` instead of `nonempty α`. -/
@@ -886,7 +961,7 @@ theorem sup_principal {s t : Set α} : 𝓟 s⊔𝓟 t = 𝓟 (s ∪ t) :=
         simp only [union_subset_iff, mem_sup, mem_principal]
 
 @[simp]
-theorem supr_principal {ι : Sort w} {s : ι → Set α} : (⨆x, 𝓟 (s x)) = 𝓟 (⋃i, s i) :=
+theorem supr_principal {ι : Sort w} {s : ι → Set α} : (⨆ x, 𝓟 (s x)) = 𝓟 (⋃ i, s i) :=
   Filter.ext$
     fun x =>
       by 
@@ -900,48 +975,69 @@ theorem principal_eq_bot_iff {s : Set α} : 𝓟 s = ⊥ ↔ s = ∅ :=
 theorem principal_ne_bot_iff {s : Set α} : ne_bot (𝓟 s) ↔ s.nonempty :=
   ne_bot_iff.trans$ (not_congr principal_eq_bot_iff).trans ne_empty_iff_nonempty
 
-theorem is_compl_principal (s : Set α) : IsCompl (𝓟 s) (𝓟 («expr ᶜ» s)) :=
+theorem is_compl_principal (s : Set α) : IsCompl (𝓟 s) (𝓟 (sᶜ)) :=
   ⟨by 
       simp only [inf_principal, inter_compl_self, principal_empty, le_reflₓ],
     by 
       simp only [sup_principal, union_compl_self, principal_univ, le_reflₓ]⟩
 
-theorem mem_inf_principal {f : Filter α} {s t : Set α} : s ∈ f⊓𝓟 t ↔ { x | x ∈ t → x ∈ s } ∈ f :=
-  by 
-    simp only [←le_principal_iff, (is_compl_principal s).le_left_iff, Disjoint, inf_assoc, inf_principal,
-      imp_iff_not_or]
-    rw [←Disjoint, ←(is_compl_principal (t ∩ «expr ᶜ» s)).le_right_iff, compl_inter, compl_compl]
-    rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_inf_principal
+  { f : Filter α } { s t : Set α } : s ∈ f ⊓ 𝓟 t ↔ { x | x ∈ t → x ∈ s } ∈ f
+  :=
+    by
+      simp
+          only
+          [
+            ← le_principal_iff
+              ,
+              is_compl_principal s . le_left_iff
+              ,
+              Disjoint
+              ,
+              inf_assoc
+              ,
+              inf_principal
+              ,
+              imp_iff_not_or
+            ]
+        rw [ ← Disjoint , ← is_compl_principal t ∩ s ᶜ . le_right_iff , compl_inter , compl_compl ]
+        rfl
 
-theorem supr_inf_principal (f : ι → Filter α) (s : Set α) : (⨆i, f i⊓𝓟 s) = (⨆i, f i)⊓𝓟 s :=
+theorem supr_inf_principal (f : ι → Filter α) (s : Set α) : (⨆ i, f i⊓𝓟 s) = (⨆ i, f i)⊓𝓟 s :=
   by 
     ext 
     simp only [mem_supr, mem_inf_principal]
 
-theorem inf_principal_eq_bot {f : Filter α} {s : Set α} : f⊓𝓟 s = ⊥ ↔ «expr ᶜ» s ∈ f :=
+theorem inf_principal_eq_bot {f : Filter α} {s : Set α} : f⊓𝓟 s = ⊥ ↔ sᶜ ∈ f :=
   by 
     rw [←empty_mem_iff_bot, mem_inf_principal]
     rfl
 
-theorem mem_of_eq_bot {f : Filter α} {s : Set α} (h : f⊓𝓟 («expr ᶜ» s) = ⊥) : s ∈ f :=
+theorem mem_of_eq_bot {f : Filter α} {s : Set α} (h : f⊓𝓟 (sᶜ) = ⊥) : s ∈ f :=
   by 
     rwa [inf_principal_eq_bot, compl_compl] at h
 
-theorem diff_mem_inf_principal_compl {f : Filter α} {s : Set α} (hs : s ∈ f) (t : Set α) : s \ t ∈ f⊓𝓟 («expr ᶜ» t) :=
+theorem diff_mem_inf_principal_compl {f : Filter α} {s : Set α} (hs : s ∈ f) (t : Set α) : s \ t ∈ f⊓𝓟 (tᶜ) :=
   by 
     rw [mem_inf_principal]
     filterUpwards [hs]
     intro a has hat 
     exact ⟨has, hat⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » f)
 theorem principal_le_iff {s : Set α} {f : Filter α} : 𝓟 s ≤ f ↔ ∀ V _ : V ∈ f, s ⊆ V :=
   by 
     change (∀ V, V ∈ f → V ∈ _) ↔ _ 
     simpRw [mem_principal]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[simp]
 theorem infi_principal_finset {ι : Type w} (s : Finset ι) (f : ι → Set α) :
-  (⨅(i : _)(_ : i ∈ s), 𝓟 (f i)) = 𝓟 (⋂(i : _)(_ : i ∈ s), f i) :=
+  (⨅ (i : _)(_ : i ∈ s), 𝓟 (f i)) = 𝓟 (⋂ (i : _)(_ : i ∈ s), f i) :=
   by 
     induction' s using Finset.induction_on with i s hi hs
     ·
@@ -950,12 +1046,14 @@ theorem infi_principal_finset {ι : Type w} (s : Finset ι) (f : ι → Set α) 
       rw [Finset.infi_insert, Finset.set_bInter_insert, hs, inf_principal]
 
 @[simp]
-theorem infi_principal_fintype {ι : Type w} [Fintype ι] (f : ι → Set α) : (⨅i, 𝓟 (f i)) = 𝓟 (⋂i, f i) :=
+theorem infi_principal_fintype {ι : Type w} [Fintype ι] (f : ι → Set α) : (⨅ i, 𝓟 (f i)) = 𝓟 (⋂ i, f i) :=
   by 
     simpa using infi_principal_finset Finset.univ f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem infi_principal_finite {ι : Type w} {s : Set ι} (hs : finite s) (f : ι → Set α) :
-  (⨅(i : _)(_ : i ∈ s), 𝓟 (f i)) = 𝓟 (⋂(i : _)(_ : i ∈ s), f i) :=
+  (⨅ (i : _)(_ : i ∈ s), 𝓟 (f i)) = 𝓟 (⋂ (i : _)(_ : i ∈ s), f i) :=
   by 
     lift s to Finset ι using hs 
     exactModCast infi_principal_finset s f
@@ -969,47 +1067,53 @@ theorem join_mono {f₁ f₂ : Filter (Filter α)} (h : f₁ ≤ f₂) : join f�
 /-! ### Eventually -/
 
 
-/-- `f.eventually p` or `∀ᶠ x in f, p x` mean that `{x | p x} ∈ f`. E.g., `∀ᶠ x in at_top, p x`
-means that `p` holds true for sufficiently large `x`. -/
-protected def eventually (p : α → Prop) (f : Filter α) : Prop :=
-  { x | p x } ∈ f
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      `f.eventually p` or `∀ᶠ x in f, p x` mean that `{x | p x} ∈ f`. E.g., `∀ᶠ x in at_top, p x`
+      means that `p` holds true for sufficiently large `x`. -/
+    protected
+  def eventually ( p : α → Prop ) ( f : Filter α ) : Prop := { x | p x } ∈ f
 
-notation3  "∀ᶠ" (...) " in " f ", " r:(scoped p => Filter.Eventually p f) => r
+notation3 "∀ᶠ " (...) " in " f ", " r:(scoped p => Filter.Eventually p f) => r
 
-theorem eventually_iff {f : Filter α} {P : α → Prop} : (∀ᶠx in f, P x) ↔ { x | P x } ∈ f :=
-  Iff.rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem eventually_iff { f : Filter α } { P : α → Prop } : ∀ᶠ x in f , P x ↔ { x | P x } ∈ f := Iff.rfl
 
 @[simp]
-theorem eventually_mem_set {s : Set α} {l : Filter α} : (∀ᶠx in l, x ∈ s) ↔ s ∈ l :=
+theorem eventually_mem_set {s : Set α} {l : Filter α} : (∀ᶠ x in l, x ∈ s) ↔ s ∈ l :=
   Iff.rfl
 
-protected theorem ext' {f₁ f₂ : Filter α} (h : ∀ p : α → Prop, (∀ᶠx in f₁, p x) ↔ ∀ᶠx in f₂, p x) : f₁ = f₂ :=
+protected theorem ext' {f₁ f₂ : Filter α} (h : ∀ p : α → Prop, (∀ᶠ x in f₁, p x) ↔ ∀ᶠ x in f₂, p x) : f₁ = f₂ :=
   Filter.ext h
 
-theorem eventually.filter_mono {f₁ f₂ : Filter α} (h : f₁ ≤ f₂) {p : α → Prop} (hp : ∀ᶠx in f₂, p x) : ∀ᶠx in f₁, p x :=
+theorem eventually.filter_mono {f₁ f₂ : Filter α} (h : f₁ ≤ f₂) {p : α → Prop} (hp : ∀ᶠ x in f₂, p x) :
+  ∀ᶠ x in f₁, p x :=
   h hp
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » U)
 theorem eventually_of_mem {f : Filter α} {P : α → Prop} {U : Set α} (hU : U ∈ f) (h : ∀ x _ : x ∈ U, P x) :
-  ∀ᶠx in f, P x :=
+  ∀ᶠ x in f, P x :=
   mem_of_superset hU h
 
 protected theorem eventually.and {p q : α → Prop} {f : Filter α} :
-  f.eventually p → f.eventually q → ∀ᶠx in f, p x ∧ q x :=
+  f.eventually p → f.eventually q → ∀ᶠ x in f, p x ∧ q x :=
   inter_mem
 
 @[simp]
-theorem eventually_true (f : Filter α) : ∀ᶠx in f, True :=
+theorem eventually_true (f : Filter α) : ∀ᶠ x in f, True :=
   univ_mem
 
-theorem eventually_of_forall {p : α → Prop} {f : Filter α} (hp : ∀ x, p x) : ∀ᶠx in f, p x :=
+theorem eventually_of_forall {p : α → Prop} {f : Filter α} (hp : ∀ x, p x) : ∀ᶠ x in f, p x :=
   univ_mem' hp
 
 @[simp]
-theorem eventually_false_iff_eq_bot {f : Filter α} : (∀ᶠx in f, False) ↔ f = ⊥ :=
+theorem eventually_false_iff_eq_bot {f : Filter α} : (∀ᶠ x in f, False) ↔ f = ⊥ :=
   empty_mem_iff_bot
 
 @[simp]
-theorem eventually_const {f : Filter α} [t : ne_bot f] {p : Prop} : (∀ᶠx in f, p) ↔ p :=
+theorem eventually_const {f : Filter α} [t : ne_bot f] {p : Prop} : (∀ᶠ x in f, p) ↔ p :=
   Classical.by_cases
     (fun h : p =>
       by 
@@ -1018,29 +1122,35 @@ theorem eventually_const {f : Filter α} [t : ne_bot f] {p : Prop} : (∀ᶠx in
       by 
         simpa [h] using t.ne
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » v)
 theorem eventually_iff_exists_mem {p : α → Prop} {f : Filter α} :
-  (∀ᶠx in f, p x) ↔ ∃ (v : _)(_ : v ∈ f), ∀ y _ : y ∈ v, p y :=
+  (∀ᶠ x in f, p x) ↔ ∃ (v : _)(_ : v ∈ f), ∀ y _ : y ∈ v, p y :=
   exists_mem_subset_iff.symm
 
-theorem eventually.exists_mem {p : α → Prop} {f : Filter α} (hp : ∀ᶠx in f, p x) :
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » v)
+theorem eventually.exists_mem {p : α → Prop} {f : Filter α} (hp : ∀ᶠ x in f, p x) :
   ∃ (v : _)(_ : v ∈ f), ∀ y _ : y ∈ v, p y :=
   eventually_iff_exists_mem.1 hp
 
-theorem eventually.mp {p q : α → Prop} {f : Filter α} (hp : ∀ᶠx in f, p x) (hq : ∀ᶠx in f, p x → q x) : ∀ᶠx in f, q x :=
+theorem eventually.mp {p q : α → Prop} {f : Filter α} (hp : ∀ᶠ x in f, p x) (hq : ∀ᶠ x in f, p x → q x) :
+  ∀ᶠ x in f, q x :=
   mp_mem hp hq
 
-theorem eventually.mono {p q : α → Prop} {f : Filter α} (hp : ∀ᶠx in f, p x) (hq : ∀ x, p x → q x) : ∀ᶠx in f, q x :=
+theorem eventually.mono {p q : α → Prop} {f : Filter α} (hp : ∀ᶠ x in f, p x) (hq : ∀ x, p x → q x) : ∀ᶠ x in f, q x :=
   hp.mp (eventually_of_forall hq)
 
 @[simp]
-theorem eventually_and {p q : α → Prop} {f : Filter α} : (∀ᶠx in f, p x ∧ q x) ↔ (∀ᶠx in f, p x) ∧ ∀ᶠx in f, q x :=
+theorem eventually_and {p q : α → Prop} {f : Filter α} : (∀ᶠ x in f, p x ∧ q x) ↔ (∀ᶠ x in f, p x) ∧ ∀ᶠ x in f, q x :=
   inter_mem_iff
 
-theorem eventually.congr {f : Filter α} {p q : α → Prop} (h' : ∀ᶠx in f, p x) (h : ∀ᶠx in f, p x ↔ q x) :
-  ∀ᶠx in f, q x :=
+theorem eventually.congr {f : Filter α} {p q : α → Prop} (h' : ∀ᶠ x in f, p x) (h : ∀ᶠ x in f, p x ↔ q x) :
+  ∀ᶠ x in f, q x :=
   h'.mp (h.mono$ fun x hx => hx.mp)
 
-theorem eventually_congr {f : Filter α} {p q : α → Prop} (h : ∀ᶠx in f, p x ↔ q x) : (∀ᶠx in f, p x) ↔ ∀ᶠx in f, q x :=
+theorem eventually_congr {f : Filter α} {p q : α → Prop} (h : ∀ᶠ x in f, p x ↔ q x) :
+  (∀ᶠ x in f, p x) ↔ ∀ᶠ x in f, q x :=
   ⟨fun hp => hp.congr h,
     fun hq =>
       hq.congr$
@@ -1048,13 +1158,15 @@ theorem eventually_congr {f : Filter α} {p q : α → Prop} (h : ∀ᶠx in f, 
           simpa only [Iff.comm] using h⟩
 
 @[simp]
-theorem eventually_all {ι} [Fintype ι] {l} {p : ι → α → Prop} : (∀ᶠx in l, ∀ i, p i x) ↔ ∀ i, ∀ᶠx in l, p i x :=
+theorem eventually_all {ι} [Fintype ι] {l} {p : ι → α → Prop} : (∀ᶠ x in l, ∀ i, p i x) ↔ ∀ i, ∀ᶠ x in l, p i x :=
   by 
     simpa only [Filter.Eventually, set_of_forall] using Inter_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 @[simp]
 theorem eventually_all_finite {ι} {I : Set ι} (hI : I.finite) {l} {p : ι → α → Prop} :
-  (∀ᶠx in l, ∀ i _ : i ∈ I, p i x) ↔ ∀ i _ : i ∈ I, ∀ᶠx in l, p i x :=
+  (∀ᶠ x in l, ∀ i _ : i ∈ I, p i x) ↔ ∀ i _ : i ∈ I, ∀ᶠ x in l, p i x :=
   by 
     simpa only [Filter.Eventually, set_of_forall] using bInter_mem hI
 
@@ -1062,9 +1174,11 @@ alias eventually_all_finite ← Set.Finite.eventually_all
 
 attribute [protected] Set.Finite.eventually_all
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 @[simp]
 theorem eventually_all_finset {ι} (I : Finset ι) {l} {p : ι → α → Prop} :
-  (∀ᶠx in l, ∀ i _ : i ∈ I, p i x) ↔ ∀ i _ : i ∈ I, ∀ᶠx in l, p i x :=
+  (∀ᶠ x in l, ∀ i _ : i ∈ I, p i x) ↔ ∀ i _ : i ∈ I, ∀ᶠ x in l, p i x :=
   I.finite_to_set.eventually_all
 
 alias eventually_all_finset ← Finset.eventually_all
@@ -1072,7 +1186,8 @@ alias eventually_all_finset ← Finset.eventually_all
 attribute [protected] Finset.eventually_all
 
 @[simp]
-theorem eventually_or_distrib_left {f : Filter α} {p : Prop} {q : α → Prop} : (∀ᶠx in f, p ∨ q x) ↔ p ∨ ∀ᶠx in f, q x :=
+theorem eventually_or_distrib_left {f : Filter α} {p : Prop} {q : α → Prop} :
+  (∀ᶠ x in f, p ∨ q x) ↔ p ∨ ∀ᶠ x in f, q x :=
   Classical.by_cases
     (fun h : p =>
       by 
@@ -1083,46 +1198,51 @@ theorem eventually_or_distrib_left {f : Filter α} {p : Prop} {q : α → Prop} 
 
 @[simp]
 theorem eventually_or_distrib_right {f : Filter α} {p : α → Prop} {q : Prop} :
-  (∀ᶠx in f, p x ∨ q) ↔ (∀ᶠx in f, p x) ∨ q :=
+  (∀ᶠ x in f, p x ∨ q) ↔ (∀ᶠ x in f, p x) ∨ q :=
   by 
     simp only [or_comm _ q, eventually_or_distrib_left]
 
 @[simp]
 theorem eventually_imp_distrib_left {f : Filter α} {p : Prop} {q : α → Prop} :
-  (∀ᶠx in f, p → q x) ↔ p → ∀ᶠx in f, q x :=
+  (∀ᶠ x in f, p → q x) ↔ p → ∀ᶠ x in f, q x :=
   by 
     simp only [imp_iff_not_or, eventually_or_distrib_left]
 
 @[simp]
-theorem eventually_bot {p : α → Prop} : ∀ᶠx in ⊥, p x :=
+theorem eventually_bot {p : α → Prop} : ∀ᶠ x in ⊥, p x :=
   ⟨⟩
 
 @[simp]
-theorem eventually_top {p : α → Prop} : (∀ᶠx in ⊤, p x) ↔ ∀ x, p x :=
+theorem eventually_top {p : α → Prop} : (∀ᶠ x in ⊤, p x) ↔ ∀ x, p x :=
   Iff.rfl
 
 @[simp]
-theorem eventually_sup {p : α → Prop} {f g : Filter α} : (∀ᶠx in f⊔g, p x) ↔ (∀ᶠx in f, p x) ∧ ∀ᶠx in g, p x :=
+theorem eventually_sup {p : α → Prop} {f g : Filter α} : (∀ᶠ x in f⊔g, p x) ↔ (∀ᶠ x in f, p x) ∧ ∀ᶠ x in g, p x :=
+  Iff.rfl
+
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » fs)
+@[simp]
+theorem eventually_Sup {p : α → Prop} {fs : Set (Filter α)} : (∀ᶠ x in Sup fs, p x) ↔ ∀ f _ : f ∈ fs, ∀ᶠ x in f, p x :=
   Iff.rfl
 
 @[simp]
-theorem eventually_Sup {p : α → Prop} {fs : Set (Filter α)} : (∀ᶠx in Sup fs, p x) ↔ ∀ f _ : f ∈ fs, ∀ᶠx in f, p x :=
-  Iff.rfl
-
-@[simp]
-theorem eventually_supr {p : α → Prop} {fs : β → Filter α} : (∀ᶠx in ⨆b, fs b, p x) ↔ ∀ b, ∀ᶠx in fs b, p x :=
+theorem eventually_supr {p : α → Prop} {fs : β → Filter α} : (∀ᶠ x in ⨆ b, fs b, p x) ↔ ∀ b, ∀ᶠ x in fs b, p x :=
   mem_supr
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » a)
 @[simp]
-theorem eventually_principal {a : Set α} {p : α → Prop} : (∀ᶠx in 𝓟 a, p x) ↔ ∀ x _ : x ∈ a, p x :=
+theorem eventually_principal {a : Set α} {p : α → Prop} : (∀ᶠ x in 𝓟 a, p x) ↔ ∀ x _ : x ∈ a, p x :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » g)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(s, t))
 theorem eventually_inf {f g : Filter α} {p : α → Prop} :
-  (∀ᶠx in f⊓g, p x) ↔ ∃ (s : _)(_ : s ∈ f)(t : _)(_ : t ∈ g), ∀ x _ : x ∈ s ∩ t, p x :=
+  (∀ᶠ x in f⊓g, p x) ↔ ∃ (s : _)(_ : s ∈ f)(t : _)(_ : t ∈ g), ∀ x _ : x ∈ s ∩ t, p x :=
   mem_inf_iff_superset
 
 theorem eventually_inf_principal {f : Filter α} {p : α → Prop} {s : Set α} :
-  (∀ᶠx in f⊓𝓟 s, p x) ↔ ∀ᶠx in f, x ∈ s → p x :=
+  (∀ᶠ x in f⊓𝓟 s, p x) ↔ ∀ᶠ x in f, x ∈ s → p x :=
   mem_inf_principal
 
 /-! ### Frequently -/
@@ -1131,80 +1251,82 @@ theorem eventually_inf_principal {f : Filter α} {p : α → Prop} {s : Set α} 
 /-- `f.frequently p` or `∃ᶠ x in f, p x` mean that `{x | ¬p x} ∉ f`. E.g., `∃ᶠ x in at_top, p x`
 means that there exist arbitrarily large `x` for which `p` holds true. -/
 protected def frequently (p : α → Prop) (f : Filter α) : Prop :=
-  ¬∀ᶠx in f, ¬p x
+  ¬∀ᶠ x in f, ¬p x
 
-notation3  "∃ᶠ" (...) " in " f ", " r:(scoped p => Filter.Frequently p f) => r
+notation3 "∃ᶠ " (...) " in " f ", " r:(scoped p => Filter.Frequently p f) => r
 
-theorem eventually.frequently {f : Filter α} [ne_bot f] {p : α → Prop} (h : ∀ᶠx in f, p x) : ∃ᶠx in f, p x :=
+theorem eventually.frequently {f : Filter α} [ne_bot f] {p : α → Prop} (h : ∀ᶠ x in f, p x) : ∃ᶠ x in f, p x :=
   compl_not_mem h
 
-theorem frequently_of_forall {f : Filter α} [ne_bot f] {p : α → Prop} (h : ∀ x, p x) : ∃ᶠx in f, p x :=
+theorem frequently_of_forall {f : Filter α} [ne_bot f] {p : α → Prop} (h : ∀ x, p x) : ∃ᶠ x in f, p x :=
   eventually.frequently (eventually_of_forall h)
 
-theorem frequently.mp {p q : α → Prop} {f : Filter α} (h : ∃ᶠx in f, p x) (hpq : ∀ᶠx in f, p x → q x) : ∃ᶠx in f, q x :=
+theorem frequently.mp {p q : α → Prop} {f : Filter α} (h : ∃ᶠ x in f, p x) (hpq : ∀ᶠ x in f, p x → q x) :
+  ∃ᶠ x in f, q x :=
   mt (fun hq => hq.mp$ hpq.mono$ fun x => mt) h
 
-theorem frequently.filter_mono {p : α → Prop} {f g : Filter α} (h : ∃ᶠx in f, p x) (hle : f ≤ g) : ∃ᶠx in g, p x :=
+theorem frequently.filter_mono {p : α → Prop} {f g : Filter α} (h : ∃ᶠ x in f, p x) (hle : f ≤ g) : ∃ᶠ x in g, p x :=
   mt (fun h' => h'.filter_mono hle) h
 
-theorem frequently.mono {p q : α → Prop} {f : Filter α} (h : ∃ᶠx in f, p x) (hpq : ∀ x, p x → q x) : ∃ᶠx in f, q x :=
+theorem frequently.mono {p q : α → Prop} {f : Filter α} (h : ∃ᶠ x in f, p x) (hpq : ∀ x, p x → q x) : ∃ᶠ x in f, q x :=
   h.mp (eventually_of_forall hpq)
 
-theorem frequently.and_eventually {p q : α → Prop} {f : Filter α} (hp : ∃ᶠx in f, p x) (hq : ∀ᶠx in f, q x) :
-  ∃ᶠx in f, p x ∧ q x :=
+theorem frequently.and_eventually {p q : α → Prop} {f : Filter α} (hp : ∃ᶠ x in f, p x) (hq : ∀ᶠ x in f, q x) :
+  ∃ᶠ x in f, p x ∧ q x :=
   by 
     refine' mt (fun h => hq.mp$ h.mono _) hp 
     exact fun x hpq hq hp => hpq ⟨hp, hq⟩
 
-theorem eventually.and_frequently {p q : α → Prop} {f : Filter α} (hp : ∀ᶠx in f, p x) (hq : ∃ᶠx in f, q x) :
-  ∃ᶠx in f, p x ∧ q x :=
+theorem eventually.and_frequently {p q : α → Prop} {f : Filter α} (hp : ∀ᶠ x in f, p x) (hq : ∃ᶠ x in f, q x) :
+  ∃ᶠ x in f, p x ∧ q x :=
   by 
     simpa only [And.comm] using hq.and_eventually hp
 
-theorem frequently.exists {p : α → Prop} {f : Filter α} (hp : ∃ᶠx in f, p x) : ∃ x, p x :=
+theorem frequently.exists {p : α → Prop} {f : Filter α} (hp : ∃ᶠ x in f, p x) : ∃ x, p x :=
   by 
     byContra H 
-    replace H : ∀ᶠx in f, ¬p x 
+    replace H : ∀ᶠ x in f, ¬p x 
     exact eventually_of_forall (not_exists.1 H)
     exact hp H
 
-theorem eventually.exists {p : α → Prop} {f : Filter α} [ne_bot f] (hp : ∀ᶠx in f, p x) : ∃ x, p x :=
+theorem eventually.exists {p : α → Prop} {f : Filter α} [ne_bot f] (hp : ∀ᶠ x in f, p x) : ∃ x, p x :=
   hp.frequently.exists
 
 theorem frequently_iff_forall_eventually_exists_and {p : α → Prop} {f : Filter α} :
-  (∃ᶠx in f, p x) ↔ ∀ {q : α → Prop}, (∀ᶠx in f, q x) → ∃ x, p x ∧ q x :=
+  (∃ᶠ x in f, p x) ↔ ∀ {q : α → Prop}, (∀ᶠ x in f, q x) → ∃ x, p x ∧ q x :=
   ⟨fun hp q hq => (hp.and_eventually hq).exists,
     fun H hp =>
       by 
         simpa only [and_not_selfₓ, exists_false] using H hp⟩
 
-theorem frequently_iff {f : Filter α} {P : α → Prop} : (∃ᶠx in f, P x) ↔ ∀ {U}, U ∈ f → ∃ (x : _)(_ : x ∈ U), P x :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » U)
+theorem frequently_iff {f : Filter α} {P : α → Prop} : (∃ᶠ x in f, P x) ↔ ∀ {U}, U ∈ f → ∃ (x : _)(_ : x ∈ U), P x :=
   by 
     simp only [frequently_iff_forall_eventually_exists_and, exists_prop, and_comm (P _)]
     rfl
 
 @[simp]
-theorem not_eventually {p : α → Prop} {f : Filter α} : (¬∀ᶠx in f, p x) ↔ ∃ᶠx in f, ¬p x :=
+theorem not_eventually {p : α → Prop} {f : Filter α} : (¬∀ᶠ x in f, p x) ↔ ∃ᶠ x in f, ¬p x :=
   by 
     simp [Filter.Frequently]
 
 @[simp]
-theorem not_frequently {p : α → Prop} {f : Filter α} : (¬∃ᶠx in f, p x) ↔ ∀ᶠx in f, ¬p x :=
+theorem not_frequently {p : α → Prop} {f : Filter α} : (¬∃ᶠ x in f, p x) ↔ ∀ᶠ x in f, ¬p x :=
   by 
     simp only [Filter.Frequently, not_not]
 
 @[simp]
-theorem frequently_true_iff_ne_bot (f : Filter α) : (∃ᶠx in f, True) ↔ ne_bot f :=
+theorem frequently_true_iff_ne_bot (f : Filter α) : (∃ᶠ x in f, True) ↔ ne_bot f :=
   by 
     simp [Filter.Frequently, -not_eventually, eventually_false_iff_eq_bot, ne_bot_iff]
 
 @[simp]
-theorem frequently_false (f : Filter α) : ¬∃ᶠx in f, False :=
+theorem frequently_false (f : Filter α) : ¬∃ᶠ x in f, False :=
   by 
     simp 
 
 @[simp]
-theorem frequently_const {f : Filter α} [ne_bot f] {p : Prop} : (∃ᶠx in f, p) ↔ p :=
+theorem frequently_const {f : Filter α} [ne_bot f] {p : Prop} : (∃ᶠ x in f, p) ↔ p :=
   Classical.by_cases
     (fun h : p =>
       by 
@@ -1215,81 +1337,83 @@ theorem frequently_const {f : Filter α} [ne_bot f] {p : Prop} : (∃ᶠx in f, 
 
 @[simp]
 theorem frequently_or_distrib {f : Filter α} {p q : α → Prop} :
-  (∃ᶠx in f, p x ∨ q x) ↔ (∃ᶠx in f, p x) ∨ ∃ᶠx in f, q x :=
+  (∃ᶠ x in f, p x ∨ q x) ↔ (∃ᶠ x in f, p x) ∨ ∃ᶠ x in f, q x :=
   by 
     simp only [Filter.Frequently, ←not_and_distrib, not_or_distrib, eventually_and]
 
 theorem frequently_or_distrib_left {f : Filter α} [ne_bot f] {p : Prop} {q : α → Prop} :
-  (∃ᶠx in f, p ∨ q x) ↔ p ∨ ∃ᶠx in f, q x :=
+  (∃ᶠ x in f, p ∨ q x) ↔ p ∨ ∃ᶠ x in f, q x :=
   by 
     simp 
 
 theorem frequently_or_distrib_right {f : Filter α} [ne_bot f] {p : α → Prop} {q : Prop} :
-  (∃ᶠx in f, p x ∨ q) ↔ (∃ᶠx in f, p x) ∨ q :=
+  (∃ᶠ x in f, p x ∨ q) ↔ (∃ᶠ x in f, p x) ∨ q :=
   by 
     simp 
 
 @[simp]
 theorem frequently_imp_distrib {f : Filter α} {p q : α → Prop} :
-  (∃ᶠx in f, p x → q x) ↔ (∀ᶠx in f, p x) → ∃ᶠx in f, q x :=
+  (∃ᶠ x in f, p x → q x) ↔ (∀ᶠ x in f, p x) → ∃ᶠ x in f, q x :=
   by 
     simp [imp_iff_not_or, not_eventually, frequently_or_distrib]
 
 theorem frequently_imp_distrib_left {f : Filter α} [ne_bot f] {p : Prop} {q : α → Prop} :
-  (∃ᶠx in f, p → q x) ↔ p → ∃ᶠx in f, q x :=
+  (∃ᶠ x in f, p → q x) ↔ p → ∃ᶠ x in f, q x :=
   by 
     simp 
 
 theorem frequently_imp_distrib_right {f : Filter α} [ne_bot f] {p : α → Prop} {q : Prop} :
-  (∃ᶠx in f, p x → q) ↔ (∀ᶠx in f, p x) → q :=
+  (∃ᶠ x in f, p x → q) ↔ (∀ᶠ x in f, p x) → q :=
   by 
     simp 
 
 @[simp]
 theorem eventually_imp_distrib_right {f : Filter α} {p : α → Prop} {q : Prop} :
-  (∀ᶠx in f, p x → q) ↔ (∃ᶠx in f, p x) → q :=
+  (∀ᶠ x in f, p x → q) ↔ (∃ᶠ x in f, p x) → q :=
   by 
     simp only [imp_iff_not_or, eventually_or_distrib_right, not_frequently]
 
 @[simp]
 theorem frequently_and_distrib_left {f : Filter α} {p : Prop} {q : α → Prop} :
-  (∃ᶠx in f, p ∧ q x) ↔ p ∧ ∃ᶠx in f, q x :=
+  (∃ᶠ x in f, p ∧ q x) ↔ p ∧ ∃ᶠ x in f, q x :=
   by 
     simp only [Filter.Frequently, not_and, eventually_imp_distrib_left, not_imp]
 
 @[simp]
 theorem frequently_and_distrib_right {f : Filter α} {p : α → Prop} {q : Prop} :
-  (∃ᶠx in f, p x ∧ q) ↔ (∃ᶠx in f, p x) ∧ q :=
+  (∃ᶠ x in f, p x ∧ q) ↔ (∃ᶠ x in f, p x) ∧ q :=
   by 
     simp only [and_comm _ q, frequently_and_distrib_left]
 
 @[simp]
-theorem frequently_bot {p : α → Prop} : ¬∃ᶠx in ⊥, p x :=
+theorem frequently_bot {p : α → Prop} : ¬∃ᶠ x in ⊥, p x :=
   by 
     simp 
 
 @[simp]
-theorem frequently_top {p : α → Prop} : (∃ᶠx in ⊤, p x) ↔ ∃ x, p x :=
+theorem frequently_top {p : α → Prop} : (∃ᶠ x in ⊤, p x) ↔ ∃ x, p x :=
   by 
     simp [Filter.Frequently]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » a)
 @[simp]
-theorem frequently_principal {a : Set α} {p : α → Prop} : (∃ᶠx in 𝓟 a, p x) ↔ ∃ (x : _)(_ : x ∈ a), p x :=
+theorem frequently_principal {a : Set α} {p : α → Prop} : (∃ᶠ x in 𝓟 a, p x) ↔ ∃ (x : _)(_ : x ∈ a), p x :=
   by 
     simp [Filter.Frequently, not_forall]
 
-theorem frequently_sup {p : α → Prop} {f g : Filter α} : (∃ᶠx in f⊔g, p x) ↔ (∃ᶠx in f, p x) ∨ ∃ᶠx in g, p x :=
+theorem frequently_sup {p : α → Prop} {f g : Filter α} : (∃ᶠ x in f⊔g, p x) ↔ (∃ᶠ x in f, p x) ∨ ∃ᶠ x in g, p x :=
   by 
     simp only [Filter.Frequently, eventually_sup, not_and_distrib]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » fs)
 @[simp]
 theorem frequently_Sup {p : α → Prop} {fs : Set (Filter α)} :
-  (∃ᶠx in Sup fs, p x) ↔ ∃ (f : _)(_ : f ∈ fs), ∃ᶠx in f, p x :=
+  (∃ᶠ x in Sup fs, p x) ↔ ∃ (f : _)(_ : f ∈ fs), ∃ᶠ x in f, p x :=
   by 
     simp [Filter.Frequently, -not_eventually, not_forall]
 
 @[simp]
-theorem frequently_supr {p : α → Prop} {fs : β → Filter α} : (∃ᶠx in ⨆b, fs b, p x) ↔ ∃ b, ∃ᶠx in fs b, p x :=
+theorem frequently_supr {p : α → Prop} {fs : β → Filter α} : (∃ᶠ x in ⨆ b, fs b, p x) ↔ ∃ b, ∃ᶠ x in fs b, p x :=
   by 
     simp [Filter.Frequently, -not_eventually, not_forall]
 
@@ -1301,18 +1425,18 @@ theorem frequently_supr {p : α → Prop} {fs : β → Filter α} : (∃ᶠx in 
 /-- Two functions `f` and `g` are *eventually equal* along a filter `l` if the set of `x` such that
 `f x = g x` belongs to `l`. -/
 def eventually_eq (l : Filter α) (f g : α → β) : Prop :=
-  ∀ᶠx in l, f x = g x
+  ∀ᶠ x in l, f x = g x
 
 notation:50 f " =ᶠ[" l:50 "] " g:50 => eventually_eq l f g
 
-theorem eventually_eq.eventually {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) : ∀ᶠx in l, f x = g x :=
+theorem eventually_eq.eventually {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) : ∀ᶠ x in l, f x = g x :=
   h
 
-theorem eventually_eq.rw {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) (p : α → β → Prop) (hf : ∀ᶠx in l, p x (f x)) :
-  ∀ᶠx in l, p x (g x) :=
+theorem eventually_eq.rw {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) (p : α → β → Prop) (hf : ∀ᶠ x in l, p x (f x)) :
+  ∀ᶠ x in l, p x (g x) :=
   hf.congr$ h.mono$ fun x hx => hx ▸ Iff.rfl
 
-theorem eventually_eq_set {s t : Set α} {l : Filter α} : s =ᶠ[l] t ↔ ∀ᶠx in l, x ∈ s ↔ x ∈ t :=
+theorem eventually_eq_set {s t : Set α} {l : Filter α} : s =ᶠ[l] t ↔ ∀ᶠ x in l, x ∈ s ↔ x ∈ t :=
   eventually_congr$ eventually_of_forall$ fun x => ⟨Eq.to_iff, Iff.to_eq⟩
 
 alias eventually_eq_set ↔ Filter.EventuallyEq.mem_iff Filter.Eventually.set_eq
@@ -1322,12 +1446,14 @@ theorem eventually_eq_univ {s : Set α} {l : Filter α} : s =ᶠ[l] univ ↔ s �
   by 
     simp [eventually_eq_set]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l)
 theorem eventually_eq.exists_mem {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) : ∃ (s : _)(_ : s ∈ l), eq_on f g s :=
   h.exists_mem
 
 theorem eventually_eq_of_mem {l : Filter α} {f g : α → β} {s : Set α} (hs : s ∈ l) (h : eq_on f g s) : f =ᶠ[l] g :=
   eventually_of_mem hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l)
 theorem eventually_eq_iff_exists_mem {l : Filter α} {f g : α → β} : f =ᶠ[l] g ↔ ∃ (s : _)(_ : s ∈ l), eq_on f g s :=
   eventually_iff_exists_mem
 
@@ -1397,24 +1523,23 @@ theorem eventually_eq.union {s t s' t' : Set α} {l : Filter α} (h : s =ᶠ[l] 
   (s ∪ s' : Set α) =ᶠ[l] (t ∪ t' : Set α) :=
   h.comp₂ (· ∨ ·) h'
 
-theorem eventually_eq.compl {s t : Set α} {l : Filter α} (h : s =ᶠ[l] t) :
-  («expr ᶜ» s : Set α) =ᶠ[l] («expr ᶜ» t : Set α) :=
+theorem eventually_eq.compl {s t : Set α} {l : Filter α} (h : s =ᶠ[l] t) : (sᶜ : Set α) =ᶠ[l] (tᶜ : Set α) :=
   h.fun_comp Not
 
 theorem eventually_eq.diff {s t s' t' : Set α} {l : Filter α} (h : s =ᶠ[l] t) (h' : s' =ᶠ[l] t') :
   (s \ s' : Set α) =ᶠ[l] (t \ t' : Set α) :=
   h.inter h'.compl
 
-theorem eventually_eq_empty {s : Set α} {l : Filter α} : s =ᶠ[l] (∅ : Set α) ↔ ∀ᶠx in l, x ∉ s :=
+theorem eventually_eq_empty {s : Set α} {l : Filter α} : s =ᶠ[l] (∅ : Set α) ↔ ∀ᶠ x in l, x ∉ s :=
   eventually_eq_set.trans$
     by 
       simp 
 
-theorem inter_eventually_eq_left {s t : Set α} {l : Filter α} : (s ∩ t : Set α) =ᶠ[l] s ↔ ∀ᶠx in l, x ∈ s → x ∈ t :=
+theorem inter_eventually_eq_left {s t : Set α} {l : Filter α} : (s ∩ t : Set α) =ᶠ[l] s ↔ ∀ᶠ x in l, x ∈ s → x ∈ t :=
   by 
     simp only [eventually_eq_set, mem_inter_eq, and_iff_left_iff_imp]
 
-theorem inter_eventually_eq_right {s t : Set α} {l : Filter α} : (s ∩ t : Set α) =ᶠ[l] t ↔ ∀ᶠx in l, x ∈ t → x ∈ s :=
+theorem inter_eventually_eq_right {s t : Set α} {l : Filter α} : (s ∩ t : Set α) =ᶠ[l] t ↔ ∀ᶠ x in l, x ∈ t → x ∈ s :=
   by 
     rw [inter_comm, inter_eventually_eq_left]
 
@@ -1423,7 +1548,7 @@ theorem eventually_eq_principal {s : Set α} {f g : α → β} : f =ᶠ[𝓟 s] 
   Iff.rfl
 
 theorem eventually_eq_inf_principal_iff {F : Filter α} {s : Set α} {f g : α → β} :
-  f =ᶠ[F⊓𝓟 s] g ↔ ∀ᶠx in F, x ∈ s → f x = g x :=
+  f =ᶠ[F⊓𝓟 s] g ↔ ∀ᶠ x in F, x ∈ s → f x = g x :=
   eventually_inf_principal
 
 theorem eventually_eq.sub_eq [AddGroupₓ β] {f g : α → β} {l : Filter α} (h : f =ᶠ[l] g) : f - g =ᶠ[l] 0 :=
@@ -1442,7 +1567,7 @@ variable [LE β] {l : Filter α}
 
 /-- A function `f` is eventually less than or equal to a function `g` at a filter `l`. -/
 def eventually_le (l : Filter α) (f g : α → β) : Prop :=
-  ∀ᶠx in l, f x ≤ g x
+  ∀ᶠ x in l, f x ≤ g x
 
 notation:50 f " ≤ᶠ[" l:50 "] " g:50 => eventually_le l f g
 
@@ -1499,20 +1624,20 @@ theorem eventually_le.le_iff_eq [PartialOrderₓ β] {l : Filter α} {f g : α �
   g ≤ᶠ[l] f ↔ g =ᶠ[l] f :=
   ⟨fun h' => h'.antisymm h, eventually_eq.le⟩
 
-theorem eventually.ne_of_lt [Preorderₓ β] {l : Filter α} {f g : α → β} (h : ∀ᶠx in l, f x < g x) :
-  ∀ᶠx in l, f x ≠ g x :=
+theorem eventually.ne_of_lt [Preorderₓ β] {l : Filter α} {f g : α → β} (h : ∀ᶠ x in l, f x < g x) :
+  ∀ᶠ x in l, f x ≠ g x :=
   h.mono fun x hx => hx.ne
 
-theorem eventually.ne_top_of_lt [PartialOrderₓ β] [OrderTop β] {l : Filter α} {f g : α → β} (h : ∀ᶠx in l, f x < g x) :
-  ∀ᶠx in l, f x ≠ ⊤ :=
+theorem eventually.ne_top_of_lt [PartialOrderₓ β] [OrderTop β] {l : Filter α} {f g : α → β} (h : ∀ᶠ x in l, f x < g x) :
+  ∀ᶠ x in l, f x ≠ ⊤ :=
   h.mono fun x hx => hx.ne_top
 
-theorem eventually.lt_top_of_ne [PartialOrderₓ β] [OrderTop β] {l : Filter α} {f : α → β} (h : ∀ᶠx in l, f x ≠ ⊤) :
-  ∀ᶠx in l, f x < ⊤ :=
+theorem eventually.lt_top_of_ne [PartialOrderₓ β] [OrderTop β] {l : Filter α} {f : α → β} (h : ∀ᶠ x in l, f x ≠ ⊤) :
+  ∀ᶠ x in l, f x < ⊤ :=
   h.mono fun x hx => hx.lt_top
 
 theorem eventually.lt_top_iff_ne_top [PartialOrderₓ β] [OrderTop β] {l : Filter α} {f : α → β} :
-  (∀ᶠx in l, f x < ⊤) ↔ ∀ᶠx in l, f x ≠ ⊤ :=
+  (∀ᶠ x in l, f x < ⊤) ↔ ∀ᶠ x in l, f x ≠ ⊤ :=
   ⟨eventually.ne_of_lt, eventually.lt_top_of_ne⟩
 
 @[mono]
@@ -1526,8 +1651,7 @@ theorem eventually_le.union {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l
   h'.mp$ h.mono$ fun x => Or.imp
 
 @[mono]
-theorem eventually_le.compl {s t : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) :
-  («expr ᶜ» t : Set α) ≤ᶠ[l] («expr ᶜ» s : Set α) :=
+theorem eventually_le.compl {s t : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) : (tᶜ : Set α) ≤ᶠ[l] (sᶜ : Set α) :=
   h.mono$ fun x => mt
 
 @[mono]
@@ -1535,7 +1659,7 @@ theorem eventually_le.diff {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l]
   (s \ s' : Set α) ≤ᶠ[l] (t \ t' : Set α) :=
   h.inter h'.compl
 
-theorem join_le {f : Filter (Filter α)} {l : Filter α} (h : ∀ᶠm in f, m ≤ l) : join f ≤ l :=
+theorem join_le {f : Filter (Filter α)} {l : Filter α} (h : ∀ᶠ m in f, m ≤ l) : join f ≤ l :=
   fun s hs => h.mono$ fun m hm => hm hs
 
 /-! ### Push-forwards, pull-backs, and the monad structure -/
@@ -1556,19 +1680,20 @@ theorem map_principal {s : Set α} {f : α → β} : map f (𝓟 s) = 𝓟 (Set.
 variable {f : Filter α} {m : α → β} {m' : β → γ} {s : Set α} {t : Set β}
 
 @[simp]
-theorem eventually_map {P : β → Prop} : (∀ᶠb in map m f, P b) ↔ ∀ᶠa in f, P (m a) :=
+theorem eventually_map {P : β → Prop} : (∀ᶠ b in map m f, P b) ↔ ∀ᶠ a in f, P (m a) :=
   Iff.rfl
 
 @[simp]
-theorem frequently_map {P : β → Prop} : (∃ᶠb in map m f, P b) ↔ ∃ᶠa in f, P (m a) :=
+theorem frequently_map {P : β → Prop} : (∃ᶠ b in map m f, P b) ↔ ∃ᶠ a in f, P (m a) :=
   Iff.rfl
 
 @[simp]
 theorem mem_map : t ∈ map m f ↔ m ⁻¹' t ∈ f :=
   Iff.rfl
 
-theorem mem_map' : t ∈ map m f ↔ { x | m x ∈ t } ∈ f :=
-  Iff.rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem mem_map' : t ∈ map m f ↔ { x | m x ∈ t } ∈ f := Iff.rfl
 
 theorem image_mem_map (hs : s ∈ f) : m '' s ∈ map m f :=
   f.sets_of_superset hs$ subset_preimage_image m s
@@ -1584,6 +1709,7 @@ theorem range_mem_map : range m ∈ map m f :=
     rw [←image_univ]
     exact image_mem_map univ_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f)
 theorem mem_map_iff_exists_image : t ∈ map m f ↔ ∃ (s : _)(_ : s ∈ f), m '' s ⊆ t :=
   ⟨fun ht => ⟨m ⁻¹' t, ht, image_preimage_subset _ _⟩, fun ⟨s, hs, ht⟩ => mem_of_superset (image_mem_map hs) ht⟩
 
@@ -1616,24 +1742,33 @@ end Map
 
 section Comap
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The inverse map of a filter -/
-def comap (m : α → β) (f : Filter β) : Filter α :=
-  { Sets := { s | ∃ (t : _)(_ : t ∈ f), m ⁻¹' t ⊆ s },
-    univ_sets :=
-      ⟨univ, univ_mem,
-        by 
-          simp only [subset_univ, preimage_univ]⟩,
-    sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩,
-    inter_sets := fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ => ⟨a' ∩ b', inter_mem ha₁ hb₁, inter_subset_inter ha₂ hb₂⟩ }
+  def
+    comap
+    ( m : α → β ) ( f : Filter β ) : Filter α
+    :=
+      {
+        Sets := { s | ∃ ( t : _ ) ( _ : t ∈ f ) , m ⁻¹' t ⊆ s } ,
+          univ_sets := ⟨ univ , univ_mem , by simp only [ subset_univ , preimage_univ ] ⟩ ,
+          sets_of_superset := fun a b ⟨ a' , ha' , ma'a ⟩ ab => ⟨ a' , ha' , ma'a.trans ab ⟩ ,
+          inter_sets
+            :=
+            fun
+              a b ⟨ a' , ha₁ , ha₂ ⟩ ⟨ b' , hb₁ , hb₂ ⟩ => ⟨ a' ∩ b' , inter_mem ha₁ hb₁ , inter_subset_inter ha₂ hb₂ ⟩
+        }
 
-theorem eventually_comap' {f : Filter β} {φ : α → β} {p : β → Prop} (hf : ∀ᶠb in f, p b) : ∀ᶠa in comap φ f, p (φ a) :=
+theorem eventually_comap' {f : Filter β} {φ : α → β} {p : β → Prop} (hf : ∀ᶠ b in f, p b) :
+  ∀ᶠ a in comap φ f, p (φ a) :=
   ⟨_, hf, fun a h => h⟩
 
 @[simp]
 theorem eventually_comap {f : Filter β} {φ : α → β} {P : α → Prop} :
-  (∀ᶠa in comap φ f, P a) ↔ ∀ᶠb in f, ∀ a, φ a = b → P a :=
+  (∀ᶠ a in comap φ f, P a) ↔ ∀ᶠ b in f, ∀ a, φ a = b → P a :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rcases h with ⟨t, t_in, ht⟩
       apply mem_of_superset t_in 
@@ -1644,7 +1779,7 @@ theorem eventually_comap {f : Filter β} {φ : α → β} {P : α → Prop} :
 
 @[simp]
 theorem frequently_comap {f : Filter β} {φ : α → β} {P : α → Prop} :
-  (∃ᶠa in comap φ f, P a) ↔ ∃ᶠb in f, ∃ a, φ a = b ∧ P a :=
+  (∃ᶠ a in comap φ f, P a) ↔ ∃ᶠ b in f, ∃ a, φ a = b ∧ P a :=
   by 
     simp only [Filter.Frequently, eventually_comap, not_exists, not_and]
 
@@ -1657,23 +1792,63 @@ applicative instance. -/
 def bind (f : Filter α) (m : α → Filter β) : Filter β :=
   join (map m f)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » g)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » u)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The applicative sequentiation operation. This is not induced by the bind operation. -/
-def seq (f : Filter (α → β)) (g : Filter α) : Filter β :=
-  ⟨{ s | ∃ (u : _)(_ : u ∈ f), ∃ (t : _)(_ : t ∈ g), ∀ m _ : m ∈ u, ∀ x _ : x ∈ t, (m : α → β) x ∈ s },
-    ⟨univ, univ_mem, univ, univ_mem,
-      by 
-        simp only [forall_prop_of_true, mem_univ, forall_true_iff]⟩,
-    fun s₀ s₁ ⟨t₀, t₁, h₀, h₁, h⟩ hst => ⟨t₀, t₁, h₀, h₁, fun x hx y hy => hst$ h _ hx _ hy⟩,
-    fun s₀ s₁ ⟨t₀, ht₀, t₁, ht₁, ht⟩ ⟨u₀, hu₀, u₁, hu₁, hu⟩ =>
-      ⟨t₀ ∩ u₀, inter_mem ht₀ hu₀, t₁ ∩ u₁, inter_mem ht₁ hu₁,
-        fun x ⟨hx₀, hx₁⟩ x ⟨hy₀, hy₁⟩ => ⟨ht _ hx₀ _ hy₀, hu _ hx₁ _ hy₁⟩⟩⟩
+  def
+    seq
+    ( f : Filter α → β ) ( g : Filter α ) : Filter β
+    :=
+      ⟨
+        {
+            s
+            |
+            ∃ ( u : _ ) ( _ : u ∈ f ) , ∃ ( t : _ ) ( _ : t ∈ g ) , ∀ m _ : m ∈ u , ∀ x _ : x ∈ t , ( m : α → β ) x ∈ s
+            }
+          ,
+          ⟨ univ , univ_mem , univ , univ_mem , by simp only [ forall_prop_of_true , mem_univ , forall_true_iff ] ⟩
+          ,
+          fun s₀ s₁ ⟨ t₀ , t₁ , h₀ , h₁ , h ⟩ hst => ⟨ t₀ , t₁ , h₀ , h₁ , fun x hx y hy => hst $ h _ hx _ hy ⟩
+          ,
+          fun
+            s₀ s₁ ⟨ t₀ , ht₀ , t₁ , ht₁ , ht ⟩ ⟨ u₀ , hu₀ , u₁ , hu₁ , hu ⟩
+              =>
+              ⟨
+                t₀ ∩ u₀
+                  ,
+                  inter_mem ht₀ hu₀
+                  ,
+                  t₁ ∩ u₁
+                  ,
+                  inter_mem ht₁ hu₁
+                  ,
+                  fun x ⟨ hx₀ , hx₁ ⟩ x ⟨ hy₀ , hy₁ ⟩ => ⟨ ht _ hx₀ _ hy₀ , hu _ hx₁ _ hy₁ ⟩
+                ⟩
+        ⟩
 
-/-- `pure x` is the set of sets that contain `x`. It is equal to `𝓟 {x}` but
-with this definition we have `s ∈ pure a` defeq `a ∈ s`. -/
-instance : Pure Filter :=
-  ⟨fun α : Type u x =>
-      { Sets := { s | x ∈ s }, inter_sets := fun s t => And.intro, sets_of_superset := fun s t hs hst => hst hs,
-        univ_sets := trivialₓ }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    `pure x` is the set of sets that contain `x`. It is equal to `𝓟 {x}` but
+    with this definition we have `s ∈ pure a` defeq `a ∈ s`. -/
+  instance
+    : Pure Filter
+    :=
+      ⟨
+        fun
+          α : Type u x
+            =>
+            {
+              Sets := { s | x ∈ s } ,
+                inter_sets := fun s t => And.intro ,
+                sets_of_superset := fun s t hs hst => hst hs ,
+                univ_sets := trivialₓ
+              }
+        ⟩
 
 instance : Bind Filter :=
   ⟨@Filter.bind⟩
@@ -1684,15 +1859,16 @@ instance : Seqₓ Filter :=
 instance : Functor Filter :=
   { map := @Filter.map }
 
-theorem pure_sets (a : α) : (pure a : Filter α).Sets = { s | a ∈ s } :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem pure_sets ( a : α ) : ( pure a : Filter α ) . Sets = { s | a ∈ s } := rfl
 
 @[simp]
 theorem mem_pure {a : α} {s : Set α} : s ∈ (pure a : Filter α) ↔ a ∈ s :=
   Iff.rfl
 
 @[simp]
-theorem eventually_pure {a : α} {p : α → Prop} : (∀ᶠx in pure a, p x) ↔ p a :=
+theorem eventually_pure {a : α} {p : α → Prop} : (∀ᶠ x in pure a, p x) ↔ p a :=
   Iff.rfl
 
 @[simp]
@@ -1756,6 +1932,7 @@ section Map
 
 variable {f f₁ f₂ : Filter α} {g g₁ g₂ : Filter β} {m : α → β} {m' : β → γ} {s : Set α} {t : Set β}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » g)
 @[simp]
 theorem mem_comap : s ∈ comap m g ↔ ∃ (t : _)(_ : t ∈ g), m ⁻¹' t ⊆ s :=
   Iff.rfl
@@ -1766,6 +1943,7 @@ theorem preimage_mem_comap (ht : t ∈ g) : m ⁻¹' t ∈ comap m g :=
 theorem comap_id : comap id f = f :=
   le_antisymmₓ (fun s => preimage_mem_comap) fun s ⟨t, ht, hst⟩ => mem_of_superset ht hst
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
 theorem comap_const_of_not_mem {x : α} {f : Filter α} {V : Set α} (hV : V ∈ f) (hx : x ∉ V) :
   comap (fun y : α => x) f = ⊥ :=
   by 
@@ -1776,13 +1954,14 @@ theorem comap_const_of_not_mem {x : α} {f : Filter α} {V : Set α} (hV : V ∈
     use V, hV 
     simp [preimage_const_of_not_mem hx]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » f)
 theorem comap_const_of_mem {x : α} {f : Filter α} (h : ∀ V _ : V ∈ f, x ∈ V) : comap (fun y : α => x) f = ⊤ :=
   by 
     ext W 
     suffices  : (∃ t : Set α, t ∈ f ∧ (fun y : α => x) ⁻¹' t ⊆ W) ↔ W = univ
     ·
       simpa 
-    split 
+    constructor
     ·
       rintro ⟨V, V_in, hW⟩
       simpa [preimage_const_of_mem (h V V_in), univ_subset_iff] using hW
@@ -1860,7 +2039,7 @@ theorem map_sup : map m (f₁⊔f₂) = map m f₁⊔map m f₂ :=
   (gc_map_comap m).l_sup
 
 @[simp]
-theorem map_supr {f : ι → Filter α} : map m (⨆i, f i) = ⨆i, map m (f i) :=
+theorem map_supr {f : ι → Filter α} : map m (⨆ i, f i) = ⨆ i, map m (f i) :=
   (gc_map_comap m).l_supr
 
 @[simp]
@@ -1872,7 +2051,7 @@ theorem comap_inf : comap m (g₁⊓g₂) = comap m g₁⊓comap m g₂ :=
   (gc_map_comap m).u_inf
 
 @[simp]
-theorem comap_infi {f : ι → Filter β} : comap m (⨅i, f i) = ⨅i, comap m (f i) :=
+theorem comap_infi {f : ι → Filter β} : comap m (⨅ i, f i) = ⨅ i, comap m (f i) :=
   (gc_map_comap m).u_infi
 
 theorem le_comap_top (f : α → β) (l : Filter α) : l ≤ comap f ⊤ :=
@@ -1896,20 +2075,21 @@ theorem comap_bot : comap m ⊥ = ⊥ :=
         by 
           simp only [empty_subset, preimage_empty]⟩
 
-theorem comap_supr {ι} {f : ι → Filter β} {m : α → β} : comap m (supr f) = ⨆i, comap m (f i) :=
+theorem comap_supr {ι} {f : ι → Filter β} {m : α → β} : comap m (supr f) = ⨆ i, comap m (f i) :=
   le_antisymmₓ
     (fun s hs =>
       have  : ∀ i, ∃ t, t ∈ f i ∧ m ⁻¹' t ⊆ s :=
         by 
           simpa only [mem_comap, exists_prop, mem_supr] using mem_supr.1 hs 
       let ⟨t, ht⟩ := Classical.axiom_of_choice this
-      ⟨⋃i, t i, mem_supr.2$ fun i => (f i).sets_of_superset (ht i).1 (subset_Union _ _),
+      ⟨⋃ i, t i, mem_supr.2$ fun i => (f i).sets_of_superset (ht i).1 (subset_Union _ _),
         by 
           rw [preimage_Union, Union_subset_iff]
           exact fun i => (ht i).2⟩)
     (supr_le$ fun i => comap_mono$ le_supr _ _)
 
-theorem comap_Sup {s : Set (Filter β)} {m : α → β} : comap m (Sup s) = ⨆(f : _)(_ : f ∈ s), comap m f :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » s)
+theorem comap_Sup {s : Set (Filter β)} {m : α → β} : comap m (Sup s) = ⨆ (f : _)(_ : f ∈ s), comap m f :=
   by 
     simp only [Sup_eq_supr, comap_supr, eq_self_iff_true]
 
@@ -1978,16 +2158,22 @@ theorem mem_comap_iff {f : Filter β} {m : α → β} (inj : injective m) (large
   by 
     rw [←image_mem_map_iff inj, map_comap_of_mem large]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem le_of_map_le_map_inj' {f g : Filter α} {m : α → β} {s : Set α} (hsf : s ∈ f) (hsg : s ∈ g)
   (hm : ∀ x _ : x ∈ s, ∀ y _ : y ∈ s, m x = m y → x = y) (h : map m f ≤ map m g) : f ≤ g :=
   fun t ht =>
     by 
       filterUpwards [hsf, h$ image_mem_map (inter_mem hsg ht)] fun a has ⟨b, ⟨hbs, hb⟩, h⟩ => hm _ hbs _ has h ▸ hb
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem le_of_map_le_map_inj_iff {f g : Filter α} {m : α → β} {s : Set α} (hsf : s ∈ f) (hsg : s ∈ g)
   (hm : ∀ x _ : x ∈ s, ∀ y _ : y ∈ s, m x = m y → x = y) : map m f ≤ map m g ↔ f ≤ g :=
   Iff.intro (le_of_map_le_map_inj' hsf hsg hm) fun h => map_mono h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem eq_of_map_eq_map_inj' {f g : Filter α} {m : α → β} {s : Set α} (hsf : s ∈ f) (hsg : s ∈ g)
   (hm : ∀ x _ : x ∈ s, ∀ y _ : y ∈ s, m x = m y → x = y) (h : map m f = map m g) : f = g :=
   le_antisymmₓ (le_of_map_le_map_inj' hsf hsg hm$ le_of_eqₓ h) (le_of_map_le_map_inj' hsg hsf hm$ le_of_eqₓ h.symm)
@@ -1999,6 +2185,7 @@ theorem map_inj {f g : Filter α} {m : α → β} (hm : injective m) (h : map m 
   by 
     rwa [comap_map hm, comap_map hm] at this
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
 theorem comap_ne_bot_iff {f : Filter β} {m : α → β} : ne_bot (comap m f) ↔ ∀ t _ : t ∈ f, ∃ a, m a ∈ t :=
   by 
     rw [←forall_mem_nonempty_iff_ne_bot]
@@ -2008,14 +2195,15 @@ theorem comap_ne_bot_iff {f : Filter β} {m : α → β} : ne_bot (comap m f) �
           let ⟨x, hx⟩ := h u u_in
           ⟨x, hu hx⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
 theorem comap_ne_bot {f : Filter β} {m : α → β} (hm : ∀ t _ : t ∈ f, ∃ a, m a ∈ t) : ne_bot (comap m f) :=
   comap_ne_bot_iff.mpr hm
 
-theorem comap_ne_bot_iff_frequently {f : Filter β} {m : α → β} : ne_bot (comap m f) ↔ ∃ᶠy in f, y ∈ range m :=
+theorem comap_ne_bot_iff_frequently {f : Filter β} {m : α → β} : ne_bot (comap m f) ↔ ∃ᶠ y in f, y ∈ range m :=
   by 
     simp [comap_ne_bot_iff, frequently_iff, ←exists_and_distrib_left, And.comm]
 
-theorem comap_ne_bot_iff_compl_range {f : Filter β} {m : α → β} : ne_bot (comap m f) ↔ «expr ᶜ» (range m) ∉ f :=
+theorem comap_ne_bot_iff_compl_range {f : Filter β} {m : α → β} : ne_bot (comap m f) ↔ range mᶜ ∉ f :=
   comap_ne_bot_iff_frequently
 
 theorem ne_bot.comap_of_range_mem {f : Filter β} {m : α → β} (hf : ne_bot f) (hm : range m ∈ f) : ne_bot (comap m f) :=
@@ -2047,20 +2235,17 @@ theorem comap_snd_ne_bot_iff {f : Filter β} : (f.comap (Prod.snd : α × β →
 theorem comap_snd_ne_bot [Nonempty α] {f : Filter β} [ne_bot f] : (f.comap (Prod.snd : α × β → β)).ne_bot :=
   comap_snd_ne_bot_iff.2 ⟨‹_›, ‹_›⟩
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comap_eval_ne_bot_iff'
-{ι : Type*}
-{α : ι → Type*}
-{i : ι}
-{f : filter (α i)} : «expr ↔ »((comap (eval i) f).ne_bot, «expr ∧ »(∀ j, nonempty (α j), ne_bot f)) :=
-begin
-  casesI [expr is_empty_or_nonempty (∀ j, α j)] ["with", ident H, ident H],
-  { rw ["[", expr filter_eq_bot_of_is_empty (f.comap _), ",", "<-", expr not_iff_not, "]"] []; [skip, assumption],
-    simpa [] [] [] ["[", "<-", expr classical.nonempty_pi, "]"] [] ["using", expr H.elim] },
-  { haveI [] [":", expr ∀ j, nonempty (α j)] [],
-    from [expr classical.nonempty_pi.1 H],
-    simp [] [] [] ["[", expr comap_ne_bot_iff_frequently, ",", "*", "]"] [] [] }
-end
+theorem comap_eval_ne_bot_iff' {ι : Type _} {α : ι → Type _} {i : ι} {f : Filter (α i)} :
+  (comap (eval i) f).ne_bot ↔ (∀ j, Nonempty (α j)) ∧ ne_bot f :=
+  by 
+    cases' is_empty_or_nonempty (∀ j, α j) with H H
+    ·
+      rw [filter_eq_bot_of_is_empty (f.comap _), ←not_iff_not] <;> [skip, assumption]
+      simpa [←Classical.nonempty_pi] using H.elim
+    ·
+      have  : ∀ j, Nonempty (α j)
+      exact Classical.nonempty_pi.1 H 
+      simp [comap_ne_bot_iff_frequently]
 
 @[simp]
 theorem comap_eval_ne_bot_iff {ι : Type _} {α : ι → Type _} [∀ j, Nonempty (α j)] {i : ι} {f : Filter (α i)} :
@@ -2111,14 +2296,15 @@ theorem ne_bot.map (hf : ne_bot f) (m : α → β) : ne_bot (map m f) :=
 instance map_ne_bot [hf : ne_bot f] : ne_bot (f.map m) :=
   hf.map m
 
-theorem sInter_comap_sets (f : α → β) (F : Filter β) : ⋂₀(comap f F).Sets = ⋂(U : _)(_ : U ∈ F), f ⁻¹' U :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » F)
+theorem sInter_comap_sets (f : α → β) (F : Filter β) : ⋂₀(comap f F).Sets = ⋂ (U : _)(_ : U ∈ F), f ⁻¹' U :=
   by 
     ext x 
     suffices  : (∀ A : Set α B : Set β, B ∈ F → f ⁻¹' B ⊆ A → x ∈ A) ↔ ∀ B : Set β, B ∈ F → f x ∈ B
     ·
       simp only [mem_sInter, mem_Inter, Filter.mem_sets, mem_comap, this, and_imp, exists_prop, mem_preimage,
         exists_imp_distrib]
-    split 
+    constructor
     ·
       intro h U U_in 
       simpa only [subset.refl, forall_prop_of_true, mem_preimage] using h (f ⁻¹' U) U U_in
@@ -2128,62 +2314,58 @@ theorem sInter_comap_sets (f : α → β) (F : Filter β) : ⋂₀(comap f F).Se
 
 end Map
 
-theorem map_infi_le {f : ι → Filter α} {m : α → β} : map m (infi f) ≤ ⨅i, map m (f i) :=
+theorem map_infi_le {f : ι → Filter α} {m : α → β} : map m (infi f) ≤ ⨅ i, map m (f i) :=
   le_infi$ fun i => map_mono$ infi_le _ _
 
 theorem map_infi_eq {f : ι → Filter α} {m : α → β} (hf : Directed (· ≥ ·) f) [Nonempty ι] :
-  map m (infi f) = ⨅i, map m (f i) :=
+  map m (infi f) = ⨅ i, map m (f i) :=
   map_infi_le.antisymm
     fun s hs : preimage m s ∈ infi f =>
       let ⟨i, hi⟩ := (mem_infi_of_directed hf _).1 hs 
-      have  : (⨅i, map m (f i)) ≤ 𝓟 s :=
+      have  : (⨅ i, map m (f i)) ≤ 𝓟 s :=
         infi_le_of_le i$
           by 
             simp only [le_principal_iff, mem_map]
             assumption 
       Filter.le_principal_iff.1 this
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_binfi_eq
-{ι : Type w}
-{f : ι → filter α}
-{m : α → β}
-{p : ι → exprProp()}
-(h : directed_on «expr ⁻¹'o »(f, («expr ≥ »)) {x | p x})
-(ne : «expr∃ , »((i), p i)) : «expr = »(map m «expr⨅ , »((i) (h : p i), f i), «expr⨅ , »((i) (h : p i), map m (f i))) :=
-begin
-  haveI [] [] [":=", expr nonempty_subtype.2 ne],
-  simp [] [] ["only"] ["[", expr infi_subtype', "]"] [] [],
-  exact [expr map_infi_eq h.directed_coe]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  map_binfi_eq
+  { ι : Type w }
+      { f : ι → Filter α }
+      { m : α → β }
+      { p : ι → Prop }
+      ( h : DirectedOn f ⁻¹'o · ≥ · { x | p x } )
+      ( ne : ∃ i , p i )
+    : map m ⨅ ( i : _ ) ( h : p i ) , f i = ⨅ ( i : _ ) ( h : p i ) , map m f i
+  := by have := nonempty_subtype . 2 Ne simp only [ infi_subtype' ] exact map_infi_eq h.directed_coe
 
 theorem map_inf_le {f g : Filter α} {m : α → β} : map m (f⊓g) ≤ map m f⊓map m g :=
   (@map_mono _ _ m).map_inf_le f g
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_inf'
-{f g : filter α}
-{m : α → β}
-{t : set α}
-(htf : «expr ∈ »(t, f))
-(htg : «expr ∈ »(t, g))
-(h : ∀
- x «expr ∈ » t, ∀
- y «expr ∈ » t, «expr = »(m x, m y) → «expr = »(x, y)) : «expr = »(map m «expr ⊓ »(f, g), «expr ⊓ »(map m f, map m g)) :=
-begin
-  refine [expr le_antisymm map_inf_le (λ s hs, _)],
-  simp [] [] ["only"] ["[", expr mem_inf_iff, ",", expr exists_prop, ",", expr mem_map, ",", expr mem_preimage, ",", expr mem_inf_iff, "]"] [] ["at", ident hs],
-  rcases [expr hs, "with", "⟨", ident t₁, ",", ident h₁, ",", ident t₂, ",", ident h₂, ",", ident hs, ":", expr «expr = »(«expr ⁻¹' »(m, s), «expr ∩ »(t₁, t₂)), "⟩"],
-  have [] [":", expr «expr ∈ »(«expr ∩ »(«expr '' »(m, «expr ∩ »(t₁, t)), «expr '' »(m, «expr ∩ »(t₂, t))), «expr ⊓ »(map m f, map m g))] [],
-  { apply [expr inter_mem_inf]; apply [expr image_mem_map],
-    exacts ["[", expr inter_mem h₁ htf, ",", expr inter_mem h₂ htg, "]"] },
-  apply [expr mem_of_superset this],
-  { rw ["[", expr image_inter_on, "]"] [],
-    { refine [expr image_subset_iff.2 _],
-      rw [expr hs] [],
-      exact [expr λ (x) ⟨⟨h₁, _⟩, h₂, _⟩, ⟨h₁, h₂⟩] },
-    { exact [expr λ (x) ⟨_, hx⟩ (y) ⟨_, hy⟩, h x hx y hy] } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
+theorem map_inf' {f g : Filter α} {m : α → β} {t : Set α} (htf : t ∈ f) (htg : t ∈ g)
+  (h : ∀ x _ : x ∈ t, ∀ y _ : y ∈ t, m x = m y → x = y) : map m (f⊓g) = map m f⊓map m g :=
+  by 
+    refine' le_antisymmₓ map_inf_le fun s hs => _ 
+    simp only [mem_inf_iff, exists_prop, mem_map, mem_preimage, mem_inf_iff] at hs 
+    rcases hs with ⟨t₁, h₁, t₂, h₂, hs : m ⁻¹' s = t₁ ∩ t₂⟩
+    have  : m '' (t₁ ∩ t) ∩ m '' (t₂ ∩ t) ∈ map m f⊓map m g
+    ·
+      apply inter_mem_inf <;> apply image_mem_map 
+      exacts[inter_mem h₁ htf, inter_mem h₂ htg]
+    apply mem_of_superset this
+    ·
+      rw [image_inter_on]
+      ·
+        refine' image_subset_iff.2 _ 
+        rw [hs]
+        exact fun x ⟨⟨h₁, _⟩, h₂, _⟩ => ⟨h₁, h₂⟩
+      ·
+        exact fun x ⟨_, hx⟩ y ⟨_, hy⟩ => h x hx y hy
 
 theorem map_inf {f g : Filter α} {m : α → β} (h : injective m) : map m (f⊓g) = map m f⊓map m g :=
   map_inf' univ_mem univ_mem fun x _ y _ hxy => h hxy
@@ -2206,6 +2388,7 @@ theorem map_eq_comap_of_inverse {f : Filter α} {m : α → β} {n : β → α} 
 theorem map_swap_eq_comap_swap {f : Filter (α × β)} : Prod.swap <$> f = comap Prod.swap f :=
   map_eq_comap_of_inverse Prod.swap_swap_eqₓ Prod.swap_swap_eqₓ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f)
 theorem le_map {f : Filter α} {m : α → β} {g : Filter β} (h : ∀ s _ : s ∈ f, m '' s ∈ g) : g ≤ f.map m :=
   fun s hs => mem_of_superset (h _ hs)$ image_preimage_subset _ _
 
@@ -2235,8 +2418,12 @@ section Applicativeₓ
 theorem singleton_mem_pure {a : α} : {a} ∈ (pure a : Filter α) :=
   mem_singleton a
 
-theorem pure_injective : injective (pure : α → Filter α) :=
-  fun a b hab => (Filter.ext_iff.1 hab { x | a = x }).1 rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  pure_injective
+  : injective ( pure : α → Filter α )
+  := fun a b hab => Filter.ext_iff . 1 hab { x | a = x } . 1 rfl
 
 instance pure_ne_bot {α : Type u} {a : α} : ne_bot (pure a) :=
   ⟨mt empty_mem_iff_bot.2$ not_mem_empty a⟩
@@ -2245,15 +2432,23 @@ instance pure_ne_bot {α : Type u} {a : α} : ne_bot (pure a) :=
 theorem le_pure_iff {f : Filter α} {a : α} : f ≤ pure a ↔ {a} ∈ f :=
   ⟨fun h => h singleton_mem_pure, fun h s hs => mem_of_superset h$ singleton_subset_iff.2 hs⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » g)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » u)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 theorem mem_seq_def {f : Filter (α → β)} {g : Filter α} {s : Set β} :
   s ∈ f.seq g ↔ ∃ (u : _)(_ : u ∈ f), ∃ (t : _)(_ : t ∈ g), ∀ x _ : x ∈ u, ∀ y _ : y ∈ t, (x : α → β) y ∈ s :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » g)
 theorem mem_seq_iff {f : Filter (α → β)} {g : Filter α} {s : Set β} :
   s ∈ f.seq g ↔ ∃ (u : _)(_ : u ∈ f), ∃ (t : _)(_ : t ∈ g), Set.Seq u t ⊆ s :=
   by 
     simp only [mem_seq_def, seq_subset, exists_prop, iff_selfₓ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » u)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 theorem mem_map_seq_iff {f : Filter α} {g : Filter β} {m : α → β → γ} {s : Set γ} :
   s ∈ (f.map m).seq g ↔ ∃ t u, t ∈ g ∧ u ∈ f ∧ ∀ x _ : x ∈ u, ∀ y _ : y ∈ t, m x y ∈ s :=
   Iff.intro (fun ⟨t, ht, s, hs, hts⟩ => ⟨s, m ⁻¹' t, hs, ht, fun a => hts _⟩)
@@ -2263,6 +2458,8 @@ theorem seq_mem_seq {f : Filter (α → β)} {g : Filter α} {s : Set (α → β
   s.seq t ∈ f.seq g :=
   ⟨s, hs, t, ht, fun f hf a ha => ⟨f, hf, a, ha, rfl⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » g)
 theorem le_seq {f : Filter (α → β)} {g : Filter α} {h : Filter β} (hh : ∀ t _ : t ∈ f, ∀ u _ : u ∈ g, Set.Seq t u ∈ h) :
   h ≤ seq f g :=
   fun s ⟨t, ht, u, hu, hs⟩ => mem_of_superset (hh _ ht _ hu)$ fun b ⟨m, hm, a, ha, Eq⟩ => Eq ▸ hs _ hm _ ha
@@ -2349,31 +2546,42 @@ section Bind
 
 @[simp]
 theorem eventually_bind {f : Filter α} {m : α → Filter β} {p : β → Prop} :
-  (∀ᶠy in bind f m, p y) ↔ ∀ᶠx in f, ∀ᶠy in m x, p y :=
+  (∀ᶠ y in bind f m, p y) ↔ ∀ᶠ x in f, ∀ᶠ y in m x, p y :=
   Iff.rfl
 
 @[simp]
 theorem eventually_eq_bind {f : Filter α} {m : α → Filter β} {g₁ g₂ : β → γ} :
-  g₁ =ᶠ[bind f m] g₂ ↔ ∀ᶠx in f, g₁ =ᶠ[m x] g₂ :=
+  g₁ =ᶠ[bind f m] g₂ ↔ ∀ᶠ x in f, g₁ =ᶠ[m x] g₂ :=
   Iff.rfl
 
 @[simp]
 theorem eventually_le_bind [LE γ] {f : Filter α} {m : α → Filter β} {g₁ g₂ : β → γ} :
-  g₁ ≤ᶠ[bind f m] g₂ ↔ ∀ᶠx in f, g₁ ≤ᶠ[m x] g₂ :=
+  g₁ ≤ᶠ[bind f m] g₂ ↔ ∀ᶠ x in f, g₁ ≤ᶠ[m x] g₂ :=
   Iff.rfl
 
-theorem mem_bind' {s : Set β} {f : Filter α} {m : α → Filter β} : s ∈ bind f m ↔ { a | s ∈ m a } ∈ f :=
-  Iff.rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem mem_bind' { s : Set β } { f : Filter α } { m : α → Filter β } : s ∈ bind f m ↔ { a | s ∈ m a } ∈ f := Iff.rfl
 
-@[simp]
-theorem mem_bind {s : Set β} {f : Filter α} {m : α → Filter β} :
-  s ∈ bind f m ↔ ∃ (t : _)(_ : t ∈ f), ∀ x _ : x ∈ t, s ∈ m x :=
-  calc s ∈ bind f m ↔ { a | s ∈ m a } ∈ f := Iff.rfl 
-    _ ↔ ∃ (t : _)(_ : t ∈ f), t ⊆ { a | s ∈ m a } := exists_mem_subset_iff.symm 
-    _ ↔ ∃ (t : _)(_ : t ∈ f), ∀ x _ : x ∈ t, s ∈ m x := Iff.rfl
-    
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    mem_bind
+    { s : Set β } { f : Filter α } { m : α → Filter β }
+      : s ∈ bind f m ↔ ∃ ( t : _ ) ( _ : t ∈ f ) , ∀ x _ : x ∈ t , s ∈ m x
+    :=
+      calc
+        s ∈ bind f m ↔ { a | s ∈ m a } ∈ f := Iff.rfl
+          _ ↔ ∃ ( t : _ ) ( _ : t ∈ f ) , t ⊆ { a | s ∈ m a } := exists_mem_subset_iff . symm
+          _ ↔ ∃ ( t : _ ) ( _ : t ∈ f ) , ∀ x _ : x ∈ t , s ∈ m x := Iff.rfl
 
-theorem bind_le {f : Filter α} {g : α → Filter β} {l : Filter β} (h : ∀ᶠx in f, g x ≤ l) : f.bind g ≤ l :=
+theorem bind_le {f : Filter α} {g : α → Filter β} {l : Filter β} (h : ∀ᶠ x in f, g x ≤ l) : f.bind g ≤ l :=
   join_le$ eventually_map.2 h
 
 @[mono]
@@ -2395,8 +2603,10 @@ theorem sup_bind {f g : Filter α} {h : α → Filter β} : bind (f⊔g) h = bin
   by 
     simp only [bind, sup_join, map_sup, eq_self_iff_true]
 
-theorem principal_bind {s : Set α} {f : α → Filter β} : bind (𝓟 s) f = ⨆(x : _)(_ : x ∈ s), f x :=
-  show join (map f (𝓟 s)) = ⨆(x : _)(_ : x ∈ s), f x by 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+theorem principal_bind {s : Set α} {f : α → Filter β} : bind (𝓟 s) f = ⨆ (x : _)(_ : x ∈ s), f x :=
+  show join (map f (𝓟 s)) = ⨆ (x : _)(_ : x ∈ s), f x by 
     simp only [Sup_image, join_principal_eq_Sup, map_principal, eq_self_iff_true]
 
 end Bind
@@ -2418,7 +2628,7 @@ theorem mem_traverse : ∀ fs : List β' us : List γ', forall₂ (fun b c => s 
 theorem mem_traverse_iff (fs : List β') (t : Set (List α')) :
   t ∈ traverse f fs ↔ ∃ us : List (Set α'), forall₂ (fun b s : Set α' => s ∈ f b) fs us ∧ sequence us ⊆ t :=
   by 
-    split 
+    constructor
     ·
       induction fs generalizing t 
       case nil => 
@@ -2445,23 +2655,24 @@ end ListTraverse
 def tendsto (f : α → β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.map f ≤ l₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l₂)
 theorem tendsto_def {f : α → β} {l₁ : Filter α} {l₂ : Filter β} : tendsto f l₁ l₂ ↔ ∀ s _ : s ∈ l₂, f ⁻¹' s ∈ l₁ :=
   Iff.rfl
 
 theorem tendsto_iff_eventually {f : α → β} {l₁ : Filter α} {l₂ : Filter β} :
-  tendsto f l₁ l₂ ↔ ∀ ⦃p : β → Prop⦄, (∀ᶠy in l₂, p y) → ∀ᶠx in l₁, p (f x) :=
+  tendsto f l₁ l₂ ↔ ∀ ⦃p : β → Prop⦄, (∀ᶠ y in l₂, p y) → ∀ᶠ x in l₁, p (f x) :=
   Iff.rfl
 
 theorem tendsto.eventually {f : α → β} {l₁ : Filter α} {l₂ : Filter β} {p : β → Prop} (hf : tendsto f l₁ l₂)
-  (h : ∀ᶠy in l₂, p y) : ∀ᶠx in l₁, p (f x) :=
+  (h : ∀ᶠ y in l₂, p y) : ∀ᶠ x in l₁, p (f x) :=
   hf h
 
 theorem tendsto.frequently {f : α → β} {l₁ : Filter α} {l₂ : Filter β} {p : β → Prop} (hf : tendsto f l₁ l₂)
-  (h : ∃ᶠx in l₁, p (f x)) : ∃ᶠy in l₂, p y :=
+  (h : ∃ᶠ x in l₁, p (f x)) : ∃ᶠ y in l₂, p y :=
   mt hf.eventually h
 
 theorem tendsto.frequently_map {l₁ : Filter α} {l₂ : Filter β} {p : α → Prop} {q : β → Prop} (f : α → β)
-  (c : Filter.Tendsto f l₁ l₂) (w : ∀ x, p x → q (f x)) (h : ∃ᶠx in l₁, p x) : ∃ᶠy in l₂, q y :=
+  (c : Filter.Tendsto f l₁ l₂) (w : ∀ x, p x → q (f x)) (h : ∃ᶠ x in l₁, p x) : ∃ᶠ y in l₂, q y :=
   c.frequently (h.mono w)
 
 @[simp]
@@ -2484,7 +2695,7 @@ theorem tendsto_of_is_empty [IsEmpty α] {f : α → β} {la : Filter α} {lb : 
     simp only [filter_eq_bot_of_is_empty la, tendsto_bot]
 
 theorem eventually_eq_of_left_inv_of_right_inv {f : α → β} {g₁ g₂ : β → α} {fa : Filter α} {fb : Filter β}
-  (hleft : ∀ᶠx in fa, g₁ (f x) = x) (hright : ∀ᶠy in fb, f (g₂ y) = y) (htendsto : tendsto g₂ fb fa) : g₁ =ᶠ[fb] g₂ :=
+  (hleft : ∀ᶠ x in fa, g₁ (f x) = x) (hright : ∀ᶠ y in fb, f (g₂ y) = y) (htendsto : tendsto g₂ fb fa) : g₁ =ᶠ[fb] g₂ :=
   (htendsto.eventually hleft).mp$ hright.mono$ fun y hr hl => (congr_argₓ g₁ hr.symm).trans hl
 
 theorem tendsto_iff_comap {f : α → β} {l₁ : Filter α} {l₂ : Filter β} : tendsto f l₁ l₂ ↔ l₁ ≤ l₂.comap f :=
@@ -2509,9 +2720,12 @@ theorem tendsto.congr {f₁ f₂ : α → β} {l₁ : Filter α} {l₂ : Filter 
   tendsto f₁ l₁ l₂ → tendsto f₂ l₁ l₂ :=
   (tendsto_congr h).1
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tendsto_id' {x y : filter α} : «expr ≤ »(x, y) → tendsto id x y :=
-by simp [] [] ["only"] ["[", expr tendsto, ",", expr map_id, ",", expr forall_true_iff, "]"] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  tendsto_id'
+  { x y : Filter α } : x ≤ y → tendsto id x y
+  := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) only [ tendsto , map_id , forall_true_iff ]
 
 theorem tendsto_id {x : Filter α} : tendsto id x x :=
   tendsto_id'$ le_reflₓ x
@@ -2607,12 +2821,12 @@ theorem tendsto.inf {f : α → β} {x₁ x₂ : Filter α} {y₁ y₂ : Filter 
   tendsto_inf.2 ⟨tendsto_inf_left h₁, tendsto_inf_right h₂⟩
 
 @[simp]
-theorem tendsto_infi {f : α → β} {x : Filter α} {y : ι → Filter β} : tendsto f x (⨅i, y i) ↔ ∀ i, tendsto f x (y i) :=
+theorem tendsto_infi {f : α → β} {x : Filter α} {y : ι → Filter β} : tendsto f x (⨅ i, y i) ↔ ∀ i, tendsto f x (y i) :=
   by 
     simp only [tendsto, iff_selfₓ, le_infi_iff]
 
 theorem tendsto_infi' {f : α → β} {x : ι → Filter α} {y : Filter β} (i : ι) (hi : tendsto f (x i) y) :
-  tendsto f (⨅i, x i) y :=
+  tendsto f (⨅ i, x i) y :=
   hi.mono_left$ infi_le _ _
 
 @[simp]
@@ -2626,15 +2840,16 @@ theorem tendsto.sup {f : α → β} {x₁ x₂ : Filter α} {y : Filter β} :
   fun h₁ h₂ => tendsto_sup.mpr ⟨h₁, h₂⟩
 
 @[simp]
-theorem tendsto_supr {f : α → β} {x : ι → Filter α} {y : Filter β} : tendsto f (⨆i, x i) y ↔ ∀ i, tendsto f (x i) y :=
+theorem tendsto_supr {f : α → β} {x : ι → Filter α} {y : Filter β} : tendsto f (⨆ i, x i) y ↔ ∀ i, tendsto f (x i) y :=
   by 
     simp only [tendsto, map_supr, supr_le_iff]
 
 @[simp]
-theorem tendsto_principal {f : α → β} {l : Filter α} {s : Set β} : tendsto f l (𝓟 s) ↔ ∀ᶠa in l, f a ∈ s :=
+theorem tendsto_principal {f : α → β} {l : Filter α} {s : Set β} : tendsto f l (𝓟 s) ↔ ∀ᶠ a in l, f a ∈ s :=
   by 
     simp only [tendsto, le_principal_iff, mem_map', Filter.Eventually]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[simp]
 theorem tendsto_principal_principal {f : α → β} {s : Set α} {t : Set β} :
   tendsto f (𝓟 s) (𝓟 t) ↔ ∀ a _ : a ∈ s, f a ∈ t :=
@@ -2642,7 +2857,7 @@ theorem tendsto_principal_principal {f : α → β} {s : Set α} {t : Set β} :
     simp only [tendsto_principal, eventually_principal]
 
 @[simp]
-theorem tendsto_pure {f : α → β} {a : Filter α} {b : β} : tendsto f a (pure b) ↔ ∀ᶠx in a, f x = b :=
+theorem tendsto_pure {f : α → β} {a : Filter α} {b : β} : tendsto f a (pure b) ↔ ∀ᶠ x in a, f x = b :=
   by 
     simp only [tendsto, le_pure_iff, mem_map', mem_singleton_iff, Filter.Eventually]
 
@@ -2652,9 +2867,11 @@ theorem tendsto_pure_pure (f : α → β) (a : α) : tendsto f (pure a) (pure (f
 theorem tendsto_const_pure {a : Filter α} {b : β} : tendsto (fun x => b) a (pure b) :=
   tendsto_pure.2$ univ_mem'$ fun _ => rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l)
 theorem pure_le_iff {a : α} {l : Filter α} : pure a ≤ l ↔ ∀ s _ : s ∈ l, a ∈ s :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l)
 theorem tendsto_pure_left {f : α → β} {a : α} {l : Filter β} : tendsto f (pure a) l ↔ ∀ s _ : s ∈ l, f a ∈ s :=
   Iff.rfl
 
@@ -2671,20 +2888,30 @@ theorem tendsto.not_tendsto {f : α → β} {a : Filter α} {b₁ b₂ : Filter 
   (hb : Disjoint b₁ b₂) : ¬tendsto f a b₂ :=
   fun hf' => (tendsto_inf.2 ⟨hf, hf'⟩).ne_bot.Ne hb.eq_bot
 
-theorem tendsto.if {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : α → Prop} [∀ x, Decidable (p x)]
-  (h₀ : tendsto f (l₁⊓𝓟 { x | p x }) l₂) (h₁ : tendsto g (l₁⊓𝓟 { x | ¬p x }) l₂) :
-  tendsto (fun x => if p x then f x else g x) l₁ l₂ :=
-  by 
-    simp only [tendsto_def, mem_inf_principal] at *
-    intro s hs 
-    filterUpwards [h₀ s hs, h₁ s hs]
-    simp only [mem_preimage]
-    intro x hp₀ hp₁ 
-    splitIfs 
-    exacts[hp₀ h, hp₁ h]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  tendsto.if
+  { l₁ : Filter α }
+      { l₂ : Filter β }
+      { f g : α → β }
+      { p : α → Prop }
+      [ ∀ x , Decidable p x ]
+      ( h₀ : tendsto f l₁ ⊓ 𝓟 { x | p x } l₂ )
+      ( h₁ : tendsto g l₁ ⊓ 𝓟 { x | ¬ p x } l₂ )
+    : tendsto fun x => if p x then f x else g x l₁ l₂
+  :=
+    by
+      simp only [ tendsto_def , mem_inf_principal ] at *
+        intro s hs
+        filterUpwards [ h₀ s hs , h₁ s hs ]
+        simp only [ mem_preimage ]
+        intro x hp₀ hp₁
+        splitIfs
+        exacts [ hp₀ h , hp₁ h ]
 
 theorem tendsto.piecewise {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {s : Set α} [∀ x, Decidable (x ∈ s)]
-  (h₀ : tendsto f (l₁⊓𝓟 s) l₂) (h₁ : tendsto g (l₁⊓𝓟 («expr ᶜ» s)) l₂) : tendsto (piecewise s f g) l₁ l₂ :=
+  (h₀ : tendsto f (l₁⊓𝓟 s) l₂) (h₁ : tendsto g (l₁⊓𝓟 (sᶜ)) l₂) : tendsto (piecewise s f g) l₁ l₂ :=
   h₀.if h₁
 
 /-! ### Products of filters -/
@@ -2705,11 +2932,13 @@ theorem prod_mem_prod {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} 
   Set.Prod s t ∈ f ×ᶠ g :=
   inter_mem_inf (preimage_mem_comap hs) (preimage_mem_comap ht)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₁ «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₂ «expr ∈ » g)
 theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} :
   s ∈ f ×ᶠ g ↔ ∃ (t₁ : _)(_ : t₁ ∈ f), ∃ (t₂ : _)(_ : t₂ ∈ g), Set.Prod t₁ t₂ ⊆ s :=
   by 
     simp only [Filter.prod]
-    split 
+    constructor
     ·
       rintro ⟨t₁, ⟨s₁, hs₁, hts₁⟩, t₂, ⟨s₂, hs₂, hts₂⟩, rfl⟩
       exact ⟨s₁, hs₁, s₂, hs₂, fun p ⟨h, h'⟩ => ⟨hts₁ h, hts₂ h'⟩⟩
@@ -2728,28 +2957,29 @@ theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter 
             fun ht'e => absurd ht'e (nonempty_of_mem ht').ne_empty,
     fun h => prod_mem_prod h.1 h.2⟩
 
-theorem mem_prod_principal {f : Filter α} {s : Set (α × β)} {t : Set β} :
-  s ∈ f ×ᶠ 𝓟 t ↔ { a | ∀ b _ : b ∈ t, (a, b) ∈ s } ∈ f :=
-  by 
-    rw [←@exists_mem_subset_iff _ f, mem_prod_iff]
-    apply exists_congr 
-    intro u 
-    apply exists_congr 
-    intro u_in 
-    split 
-    ·
-      rintro ⟨v, v_in, hv⟩ a a_in b b_in 
-      exact hv (mk_mem_prod a_in$ v_in b_in)
-    ·
-      intro h 
-      refine' ⟨t, mem_principal_self t, _⟩
-      rintro ⟨x, y⟩ ⟨hx, hy⟩
-      exact h hx y hy
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_prod_principal
+  { f : Filter α } { s : Set α × β } { t : Set β } : s ∈ f ×ᶠ 𝓟 t ↔ { a | ∀ b _ : b ∈ t , ( a , b ) ∈ s } ∈ f
+  :=
+    by
+      rw [ ← @ exists_mem_subset_iff _ f , mem_prod_iff ]
+        apply exists_congr
+        intro u
+        apply exists_congr
+        intro u_in
+        constructor
+        · rintro ⟨ v , v_in , hv ⟩ a a_in b b_in exact hv mk_mem_prod a_in $ v_in b_in
+        · intro h refine' ⟨ t , mem_principal_self t , _ ⟩ rintro ⟨ x , y ⟩ ⟨ hx , hy ⟩ exact h hx y hy
 
-theorem mem_prod_top {f : Filter α} {s : Set (α × β)} : s ∈ f ×ᶠ (⊤ : Filter β) ↔ { a | ∀ b, (a, b) ∈ s } ∈ f :=
-  by 
-    rw [←principal_univ, mem_prod_principal]
-    simp only [mem_univ, forall_true_left]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_prod_top
+  { f : Filter α } { s : Set α × β } : s ∈ f ×ᶠ ( ⊤ : Filter β ) ↔ { a | ∀ b , ( a , b ) ∈ s } ∈ f
+  := by rw [ ← principal_univ , mem_prod_principal ] simp only [ mem_univ , forall_true_left ]
 
 theorem comap_prod (f : α → β × γ) (b : Filter β) (c : Filter γ) :
   comap f (b ×ᶠ c) = comap (Prod.fst ∘ f) b⊓comap (Prod.snd ∘ f) c :=
@@ -2769,8 +2999,9 @@ theorem prod_sup (f : Filter α) (g₁ g₂ : Filter β) : f ×ᶠ g₁⊔g₂ =
     rw [Filter.prod, comap_sup, inf_sup_left, ←Filter.prod, ←Filter.prod]
 
 theorem eventually_prod_iff {p : α × β → Prop} {f : Filter α} {g : Filter β} :
-  (∀ᶠx in f ×ᶠ g, p x) ↔
-    ∃ (pa : α → Prop)(ha : ∀ᶠx in f, pa x)(pb : β → Prop)(hb : ∀ᶠy in g, pb y), ∀ {x}, pa x → ∀ {y}, pb y → p (x, y) :=
+  (∀ᶠ x in f ×ᶠ g, p x) ↔
+    ∃ (pa : α → Prop)(ha : ∀ᶠ x in f, pa x)(pb : β → Prop)(hb : ∀ᶠ y in g, pb y),
+      ∀ {x}, pa x → ∀ {y}, pb y → p (x, y) :=
   by 
     simpa only [Set.prod_subset_iff] using @mem_prod_iff α β p f g
 
@@ -2784,30 +3015,30 @@ theorem tendsto.prod_mk {f : Filter α} {g : Filter β} {h : Filter γ} {m₁ : 
   (h₂ : tendsto m₂ f h) : tendsto (fun x => (m₁ x, m₂ x)) f (g ×ᶠ h) :=
   tendsto_inf.2 ⟨tendsto_comap_iff.2 h₁, tendsto_comap_iff.2 h₂⟩
 
-theorem eventually.prod_inl {la : Filter α} {p : α → Prop} (h : ∀ᶠx in la, p x) (lb : Filter β) :
-  ∀ᶠx in la ×ᶠ lb, p (x : α × β).1 :=
+theorem eventually.prod_inl {la : Filter α} {p : α → Prop} (h : ∀ᶠ x in la, p x) (lb : Filter β) :
+  ∀ᶠ x in la ×ᶠ lb, p (x : α × β).1 :=
   tendsto_fst.Eventually h
 
-theorem eventually.prod_inr {lb : Filter β} {p : β → Prop} (h : ∀ᶠx in lb, p x) (la : Filter α) :
-  ∀ᶠx in la ×ᶠ lb, p (x : α × β).2 :=
+theorem eventually.prod_inr {lb : Filter β} {p : β → Prop} (h : ∀ᶠ x in lb, p x) (la : Filter α) :
+  ∀ᶠ x in la ×ᶠ lb, p (x : α × β).2 :=
   tendsto_snd.Eventually h
 
-theorem eventually.prod_mk {la : Filter α} {pa : α → Prop} (ha : ∀ᶠx in la, pa x) {lb : Filter β} {pb : β → Prop}
-  (hb : ∀ᶠy in lb, pb y) : ∀ᶠp in la ×ᶠ lb, pa (p : α × β).1 ∧ pb p.2 :=
+theorem eventually.prod_mk {la : Filter α} {pa : α → Prop} (ha : ∀ᶠ x in la, pa x) {lb : Filter β} {pb : β → Prop}
+  (hb : ∀ᶠ y in lb, pb y) : ∀ᶠ p in la ×ᶠ lb, pa (p : α × β).1 ∧ pb p.2 :=
   (ha.prod_inl lb).And (hb.prod_inr la)
 
-theorem eventually.curry {la : Filter α} {lb : Filter β} {p : α × β → Prop} (h : ∀ᶠx in la ×ᶠ lb, p x) :
-  ∀ᶠx in la, ∀ᶠy in lb, p (x, y) :=
+theorem eventually.curry {la : Filter α} {lb : Filter β} {p : α × β → Prop} (h : ∀ᶠ x in la ×ᶠ lb, p x) :
+  ∀ᶠ x in la, ∀ᶠ y in lb, p (x, y) :=
   by 
     rcases eventually_prod_iff.1 h with ⟨pa, ha, pb, hb, h⟩
     exact ha.mono fun a ha => hb.mono$ fun b hb => h ha hb
 
-theorem prod_infi_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} : (⨅i, f i) ×ᶠ g = ⨅i, f i ×ᶠ g :=
+theorem prod_infi_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} : (⨅ i, f i) ×ᶠ g = ⨅ i, f i ×ᶠ g :=
   by 
     rw [Filter.prod, comap_infi, infi_inf]
     simp only [Filter.prod, eq_self_iff_true]
 
-theorem prod_infi_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} : (f ×ᶠ ⨅i, g i) = ⨅i, f ×ᶠ g i :=
+theorem prod_infi_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} : (f ×ᶠ ⨅ i, g i) = ⨅ i, f ×ᶠ g i :=
   by 
     rw [Filter.prod, comap_infi, inf_infi]
     simp only [Filter.prod, eq_self_iff_true]
@@ -2858,7 +3089,7 @@ theorem map_prod (m : α × β → γ) (f : Filter α) (g : Filter β) : map m (
   by 
     simp [Filter.ext_iff, mem_prod_iff, mem_map_seq_iff]
     intro s 
-    split 
+    constructor 
     exact fun ⟨t, ht, s, hs, h⟩ => ⟨s, hs, t, ht, fun x hx y hy => @h ⟨x, y⟩ ⟨hx, hy⟩⟩
     exact fun ⟨s, hs, t, ht, h⟩ => ⟨t, ht, s, hs, fun ⟨x, y⟩ ⟨hx, hy⟩ => h x hx y hy⟩
 
@@ -2902,7 +3133,7 @@ theorem prod_pure_pure {a : α} {b : β} : pure a ×ᶠ pure b = pure (a, b) :=
 
 theorem prod_eq_bot {f : Filter α} {g : Filter β} : f ×ᶠ g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   by 
-    split 
+    constructor
     ·
       intro h 
       rcases mem_prod_iff.1 (empty_mem_iff_bot.2 h) with ⟨s, hs, t, ht, hst⟩
@@ -2929,6 +3160,9 @@ theorem ne_bot.prod {f : Filter α} {g : Filter β} (hf : ne_bot f) (hg : ne_bot
 instance prod_ne_bot' {f : Filter α} {g : Filter β} [hf : ne_bot f] [hg : ne_bot g] : ne_bot (f ×ᶠ g) :=
   hf.prod hg
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (W «expr ∈ » z)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » y)
 theorem tendsto_prod_iff {f : α × β → γ} {x : Filter α} {y : Filter β} {z : Filter γ} :
   Filter.Tendsto f (x ×ᶠ y) z ↔
     ∀ W _ : W ∈ z, ∃ (U : _)(_ : U ∈ x), ∃ (V : _)(_ : V ∈ y), ∀ x y, x ∈ U → y ∈ V → f (x, y) ∈ W :=
@@ -2948,6 +3182,8 @@ variable {f : Filter α} {g : Filter β}
 protected def coprod (f : Filter α) (g : Filter β) : Filter (α × β) :=
   f.comap Prod.fst⊔g.comap Prod.snd
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₁ «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₂ «expr ∈ » g)
 theorem mem_coprod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} :
   s ∈ f.coprod g ↔ (∃ (t₁ : _)(_ : t₁ ∈ f), Prod.fst ⁻¹' t₁ ⊆ s) ∧ ∃ (t₂ : _)(_ : t₂ ∈ g), Prod.snd ⁻¹' t₂ ⊆ s :=
   by 
@@ -2969,8 +3205,7 @@ theorem coprod_ne_bot_left [ne_bot f] [Nonempty β] : (f.coprod g).ne_bot :=
 theorem coprod_ne_bot_right [ne_bot g] [Nonempty α] : (f.coprod g).ne_bot :=
   coprod_ne_bot_iff.2 (Or.inr ⟨‹_›, ‹_›⟩)
 
-theorem principal_coprod_principal (s : Set α) (t : Set β) :
-  (𝓟 s).coprod (𝓟 t) = 𝓟 («expr ᶜ» ((«expr ᶜ» s).Prod («expr ᶜ» t))) :=
+theorem principal_coprod_principal (s : Set α) (t : Set β) : (𝓟 s).coprod (𝓟 t) = 𝓟 (sᶜ.Prod (tᶜ)ᶜ) :=
   by 
     rw [Filter.coprod, comap_principal, comap_principal, sup_principal]
     congr 
@@ -3010,7 +3245,7 @@ theorem map_prod_map_const_id_principal_coprod_principal {α β ι : Type _} (a 
     rw [principal_coprod_principal, map_principal]
     congr 
     ext ⟨b', i'⟩
-    split 
+    constructor
     ·
       rintro ⟨⟨a'', i''⟩, h₁, h₂, h₃⟩
       simp 

@@ -62,16 +62,19 @@ unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : Stringₓ) (a :
 mk_simp_attribute push_cast :=
   "The `push_cast` simp attribute uses `norm_cast` lemmas\nto move casts toward the leaf nodes of the expression."
 
--- error in Tactic.NormCast: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 `label` is a type used to classify `norm_cast` lemmas.
 * elim lemma:   LHS has 0 head coes and ≥ 1 internal coe
 * move lemma:   LHS has 1 head coe and 0 internal coes,    RHS has 0 head coes and ≥ 1 internal coes
 * squash lemma: LHS has ≥ 1 head coes and 0 internal coes, RHS has fewer head coes
--/ @[derive #["[", expr decidable_eq, ",", expr has_reflect, ",", expr inhabited, "]"]] inductive label
-| elim : label
-| move : label
-| squash : label
+-/
+inductive label
+  | elim : label
+  | move : label
+  | squash : label deriving [anonymous], [anonymous], [anonymous]
 
 namespace Label
 
@@ -653,14 +656,13 @@ unsafe def norm_cast : conv Unit :=
 end Conv.Interactive
 
 @[normCast]
-theorem ite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a b : α} :
-  «expr↑ » (ite c a b) = ite c («expr↑ » a : β) («expr↑ » b : β) :=
+theorem ite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a b : α} : ↑ite c a b = ite c (↑a : β) (↑b : β) :=
   by 
     byCases' h : c <;> simp [h]
 
 @[normCast]
 theorem dite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a : c → α} {b : ¬c → α} :
-  «expr↑ » (dite c a b) = dite c (fun h => («expr↑ » (a h) : β)) fun h => («expr↑ » (b h) : β) :=
+  ↑dite c a b = dite c (fun h => (↑a h : β)) fun h => (↑b h : β) :=
   by 
     byCases' h : c <;> simp [h]
 

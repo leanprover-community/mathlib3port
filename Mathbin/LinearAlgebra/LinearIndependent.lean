@@ -66,7 +66,7 @@ linearly dependent, linear dependence, linearly independent, linear independence
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Function Set Submodule
 
@@ -100,33 +100,35 @@ theorem linear_independent_iff : LinearIndependent R v ↔ ∀ l, Finsupp.total 
   by 
     simp [LinearIndependent, LinearMap.ker_eq_bot']
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem linear_independent_iff' :
-  LinearIndependent R v ↔ ∀ s : Finset ι, ∀ g : ι → R, (∑i in s, g i • v i) = 0 → ∀ i _ : i ∈ s, g i = 0 :=
+  LinearIndependent R v ↔ ∀ s : Finset ι, ∀ g : ι → R, (∑ i in s, g i • v i) = 0 → ∀ i _ : i ∈ s, g i = 0 :=
   linear_independent_iff.trans
     ⟨fun hf s g hg i his =>
         have h :=
-          hf (∑i in s, Finsupp.single i (g i))$
+          hf (∑ i in s, Finsupp.single i (g i))$
             by 
               simpa only [LinearMap.map_sum, Finsupp.total_single] using hg 
         calc g i = (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R) (Finsupp.single i (g i)) :=
           by 
             rw [Finsupp.lapply_apply, Finsupp.single_eq_same]
-          _ = ∑j in s, (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R) (Finsupp.single j (g j)) :=
+          _ = ∑ j in s, (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R) (Finsupp.single j (g j)) :=
           Eq.symm$
             Finset.sum_eq_single i
               (fun j hjs hji =>
                 by 
                   rw [Finsupp.lapply_apply, Finsupp.single_eq_of_ne hji])
               fun hnis => hnis.elim his 
-          _ = (∑j in s, Finsupp.single j (g j)) i := (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R).map_sum.symm 
+          _ = (∑ j in s, Finsupp.single j (g j)) i := (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R).map_sum.symm 
           _ = 0 := Finsupp.ext_iff.1 h i
           ,
       fun hf l hl =>
         Finsupp.ext$ fun i => Classical.by_contradiction$ fun hni => hni$ hf _ _ hl _$ Finsupp.mem_support_iff.2 hni⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem linear_independent_iff'' :
   LinearIndependent R v ↔
-    ∀ s : Finset ι g : ι → R hg : ∀ i _ : i ∉ s, g i = 0, (∑i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
+    ∀ s : Finset ι g : ι → R hg : ∀ i _ : i ∉ s, g i = 0, (∑ i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
   linear_independent_iff'.trans
     ⟨fun H s g hg hv i => if his : i ∈ s then H s g hv i his else hg i his,
       fun H s g hg i hi =>
@@ -138,14 +140,15 @@ theorem linear_independent_iff'' :
               i 
           exact (if_pos hi).symm⟩
 
-theorem linear_dependent_iff :
-  ¬LinearIndependent R v ↔ ∃ s : Finset ι, ∃ g : ι → R, (∑i in s, g i • v i) = 0 ∧ ∃ (i : _)(_ : i ∈ s), g i ≠ 0 :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem not_linear_independent_iff :
+  ¬LinearIndependent R v ↔ ∃ s : Finset ι, ∃ g : ι → R, (∑ i in s, g i • v i) = 0 ∧ ∃ (i : _)(_ : i ∈ s), g i ≠ 0 :=
   by 
     rw [linear_independent_iff']
     simp only [exists_prop, not_forall]
 
 theorem Fintype.linear_independent_iff [Fintype ι] :
-  LinearIndependent R v ↔ ∀ g : ι → R, (∑i, g i • v i) = 0 → ∀ i, g i = 0 :=
+  LinearIndependent R v ↔ ∀ g : ι → R, (∑ i, g i • v i) = 0 → ∀ i, g i = 0 :=
   by 
     refine'
       ⟨fun H g =>
@@ -162,6 +165,11 @@ theorem Fintype.linear_independent_iff' [Fintype ι] :
   LinearIndependent R v ↔ (LinearMap.lsum R (fun i : ι => R) ℕ fun i => LinearMap.id.smulRight (v i)).ker = ⊥ :=
   by 
     simp [Fintype.linear_independent_iff, LinearMap.ker_eq_bot', funext_iff]
+
+theorem Fintype.not_linear_independent_iff [Fintype ι] :
+  ¬LinearIndependent R v ↔ ∃ g : ι → R, (∑ i, g i • v i) = 0 ∧ ∃ i, g i ≠ 0 :=
+  by 
+    simpa using not_iff_not.2 Fintype.linear_independent_iff
 
 theorem linear_independent_empty_type [IsEmpty ι] : LinearIndependent R v :=
   linear_independent_iff.mpr$ fun v hv => Subsingleton.elimₓ v 0
@@ -180,43 +188,37 @@ theorem LinearIndependent.ne_zero [Nontrivial R] (i : ι) (hv : LinearIndependen
           ·
             simp [h])
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subfamily of a linearly independent family (i.e., a composition with an injective map) is a
 linearly independent family. -/
-theorem linear_independent.comp
-(h : linear_independent R v)
-(f : ι' → ι)
-(hf : injective f) : linear_independent R «expr ∘ »(v, f) :=
-begin
-  rw ["[", expr linear_independent_iff, ",", expr finsupp.total_comp, "]"] [],
-  intros [ident l, ident hl],
-  have [ident h_map_domain] [":", expr ∀ x, «expr = »(finsupp.map_domain f l (f x), 0)] [],
-  by rw [expr linear_independent_iff.1 h (finsupp.map_domain f l) hl] []; simp [] [] [] [] [] [],
-  ext [] [ident x] [],
-  convert [] [expr h_map_domain x] [],
-  rw ["[", expr finsupp.map_domain_apply hf, "]"] []
-end
+theorem LinearIndependent.comp (h : LinearIndependent R v) (f : ι' → ι) (hf : injective f) :
+  LinearIndependent R (v ∘ f) :=
+  by 
+    rw [linear_independent_iff, Finsupp.total_comp]
+    intro l hl 
+    have h_map_domain : ∀ x, (Finsupp.mapDomain f l) (f x) = 0
+    ·
+      rw [linear_independent_iff.1 h (Finsupp.mapDomain f l) hl] <;> simp 
+    ext x 
+    convert h_map_domain x 
+    rw [Finsupp.map_domain_apply hf]
 
 theorem LinearIndependent.coe_range (i : LinearIndependent R v) : LinearIndependent R (coeₓ : range v → M) :=
   by 
     simpa using i.comp _ (range_splitting_injective v)
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `v` is a linearly independent family of vectors and the kernel of a linear map `f` is
 disjoint with the submodule spanned by the vectors of `v`, then `f ∘ v` is a linearly independent
 family of vectors. See also `linear_independent.map'` for a special case assuming `ker f = ⊥`. -/
-theorem linear_independent.map
-(hv : linear_independent R v)
-{f : «expr →ₗ[ ] »(M, R, M')}
-(hf_inj : disjoint (span R (range v)) f.ker) : linear_independent R «expr ∘ »(f, v) :=
-begin
-  rw ["[", expr disjoint, ",", "<-", expr set.image_univ, ",", expr finsupp.span_image_eq_map_total, ",", expr map_inf_eq_map_inf_comap, ",", expr map_le_iff_le_comap, ",", expr comap_bot, ",", expr finsupp.supported_univ, ",", expr top_inf_eq, "]"] ["at", ident hf_inj],
-  unfold [ident linear_independent] ["at", ident hv, "⊢"],
-  rw ["[", expr hv, ",", expr le_bot_iff, "]"] ["at", ident hf_inj],
-  haveI [] [":", expr inhabited M] [":=", expr ⟨0⟩],
-  rw ["[", expr finsupp.total_comp, ",", expr @finsupp.lmap_domain_total _ _ R _ _ _ _ _ _ _ _ _ _ f, ",", expr linear_map.ker_comp, ",", expr hf_inj, "]"] [],
-  exact [expr λ _, rfl]
-end
+theorem LinearIndependent.map (hv : LinearIndependent R v) {f : M →ₗ[R] M'}
+  (hf_inj : Disjoint (span R (range v)) f.ker) : LinearIndependent R (f ∘ v) :=
+  by 
+    rw [Disjoint, ←Set.image_univ, Finsupp.span_image_eq_map_total, map_inf_eq_map_inf_comap, map_le_iff_le_comap,
+      comap_bot, Finsupp.supported_univ, top_inf_eq] at hf_inj 
+    unfold LinearIndependent  at hv⊢
+    rw [hv, le_bot_iff] at hf_inj 
+    have  : Inhabited M := ⟨0⟩
+    rw [Finsupp.total_comp, @Finsupp.lmap_domain_total _ _ R _ _ _ _ _ _ _ _ _ _ f, LinearMap.ker_comp, hf_inj]
+    exact fun _ => rfl
 
 /-- An injective linear map sends linearly independent families of vectors to linearly independent
 families of vectors. See also `linear_independent.map` for a more general statement. -/
@@ -231,7 +233,7 @@ the original family. -/
 theorem LinearIndependent.of_comp (f : M →ₗ[R] M') (hfv : LinearIndependent R (f ∘ v)) : LinearIndependent R v :=
   linear_independent_iff'.2$
     fun s g hg i his =>
-      have  : (∑i : ι in s, g i • f (v i)) = 0 :=
+      have  : (∑ i : ι in s, g i • f (v i)) = 0 :=
         by 
           simpRw [←f.map_smul, ←f.map_sum, hg, f.map_zero]
       linear_independent_iff'.1 hfv s g this i his
@@ -259,43 +261,39 @@ theorem linear_independent_equiv' (e : ι ≃ ι') {f : ι' → M} {g : ι → M
 
 theorem linear_independent_subtype_range {ι} {f : ι → M} (hf : injective f) :
   LinearIndependent R (coeₓ : range f → M) ↔ LinearIndependent R f :=
-  Iff.symm$ linear_independent_equiv' (Equiv.ofInjective f hf) rfl
+  Iff.symm$ linear_independent_equiv' (Equivₓ.ofInjective f hf) rfl
 
 alias linear_independent_subtype_range ↔ LinearIndependent.of_subtype_range _
 
 theorem linear_independent_image {ι} {s : Set ι} {f : ι → M} (hf : Set.InjOn f s) :
   (LinearIndependent R fun x : s => f x) ↔ LinearIndependent R fun x : f '' s => (x : M) :=
-  linear_independent_equiv' (Equiv.Set.imageOfInjOn _ _ hf) rfl
+  linear_independent_equiv' (Equivₓ.Set.imageOfInjOn _ _ hf) rfl
 
 theorem linear_independent_span (hs : LinearIndependent R v) :
   @LinearIndependent ι R (span R (range v)) (fun i : ι => ⟨v i, subset_span (mem_range_self i)⟩) _ _ _ :=
   LinearIndependent.of_comp (span R (range v)).Subtype hs
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- See `linear_independent.fin_cons` for a family of elements in a vector space. -/
-theorem linear_independent.fin_cons'
-{m : exprℕ()}
-(x : M)
-(v : fin m → M)
-(hli : linear_independent R v)
-(x_ortho : ∀
- (c : R)
- (y : submodule.span R (set.range v)), «expr = »(«expr + »(«expr • »(c, x), y), (0 : M)) → «expr = »(c, 0)) : linear_independent R (fin.cons x v : fin m.succ → M) :=
-begin
-  rw [expr fintype.linear_independent_iff] ["at", ident hli, "⊢"],
-  rintros [ident g, ident total_eq, ident j],
-  have [ident zero_not_mem] [":", expr «expr ∉ »((0 : fin m.succ), finset.univ.image (fin.succ : fin m → fin m.succ))] [],
-  { rw [expr finset.mem_image] [],
-    rintro ["⟨", ident x, ",", ident hx, ",", ident succ_eq, "⟩"],
-    exact [expr fin.succ_ne_zero _ succ_eq] },
-  simp [] [] ["only"] ["[", expr submodule.coe_mk, ",", expr fin.univ_succ, ",", expr finset.sum_insert zero_not_mem, ",", expr fin.cons_zero, ",", expr fin.cons_succ, ",", expr forall_true_iff, ",", expr imp_self, ",", expr fin.succ_inj, ",", expr finset.sum_image, "]"] [] ["at", ident total_eq],
-  have [] [":", expr «expr = »(g 0, 0)] [],
-  { refine [expr x_ortho (g 0) ⟨«expr∑ , »((i : fin m), «expr • »(g i.succ, v i)), _⟩ total_eq],
-    exact [expr sum_mem _ (λ i _, smul_mem _ _ (subset_span ⟨i, rfl⟩))] },
-  refine [expr fin.cases this (λ j, _) j],
-  apply [expr hli (λ i, g i.succ)],
-  simpa [] [] ["only"] ["[", expr this, ",", expr zero_smul, ",", expr zero_add, "]"] [] ["using", expr total_eq]
-end
+theorem LinearIndependent.fin_cons' {m : ℕ} (x : M) (v : Finₓ m → M) (hli : LinearIndependent R v)
+  (x_ortho : ∀ c : R y : Submodule.span R (Set.Range v), ((c • x)+y) = (0 : M) → c = 0) :
+  LinearIndependent R (Finₓ.cons x v : Finₓ m.succ → M) :=
+  by 
+    rw [Fintype.linear_independent_iff] at hli⊢
+    rintro g total_eq j 
+    have zero_not_mem : (0 : Finₓ m.succ) ∉ finset.univ.image (Finₓ.succ : Finₓ m → Finₓ m.succ)
+    ·
+      rw [Finset.mem_image]
+      rintro ⟨x, hx, succ_eq⟩
+      exact Finₓ.succ_ne_zero _ succ_eq 
+    simp only [Submodule.coe_mk, Finₓ.univ_succ, Finset.sum_insert zero_not_mem, Finₓ.cons_zero, Finₓ.cons_succ,
+      forall_true_iff, imp_self, Finₓ.succ_inj, Finset.sum_image] at total_eq 
+    have  : g 0 = 0
+    ·
+      refine' x_ortho (g 0) ⟨∑ i : Finₓ m, g i.succ • v i, _⟩ total_eq 
+      exact sum_mem _ fun i _ => smul_mem _ _ (subset_span ⟨i, rfl⟩)
+    refine' Finₓ.cases this (fun j => _) j 
+    apply hli fun i => g i.succ 
+    simpa only [this, zero_smul, zero_addₓ] using total_eq
 
 /-- A set of linearly independent vectors in a module `M` over a semiring `K` is also linearly
 independent over a subring `R` of `K`.
@@ -349,25 +347,29 @@ section Subtype
 /-! The following lemmas use the subtype defined by a set in `M` as the index set `ι`. -/
 
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent_comp_subtype
-{s : set ι} : «expr ↔ »(linear_independent R («expr ∘ »(v, coe) : s → M), ∀
- l «expr ∈ » finsupp.supported R R s, «expr = »(finsupp.total ι M R v l, 0) → «expr = »(l, 0)) :=
-begin
-  simp [] [] ["only"] ["[", expr linear_independent_iff, ",", expr («expr ∘ »), ",", expr finsupp.mem_supported, ",", expr finsupp.total_apply, ",", expr set.subset_def, ",", expr finset.mem_coe, "]"] [] [],
-  split,
-  { intros [ident h, ident l, ident hl₁, ident hl₂],
-    have [] [] [":=", expr h (l.subtype_domain s) ((finsupp.sum_subtype_domain_index hl₁).trans hl₂)],
-    exact [expr (finsupp.subtype_domain_eq_zero_iff hl₁).1 this] },
-  { intros [ident h, ident l, ident hl],
-    refine [expr finsupp.emb_domain_eq_zero.1 (h «expr $ »(l.emb_domain, function.embedding.subtype s) _ _)],
-    { suffices [] [":", expr ∀ i hi, «expr¬ »(«expr = »(l ⟨i, hi⟩, 0)) → «expr ∈ »(i, s)],
-      by simpa [] [] [] [] [] [],
-      intros [],
-      assumption },
-    { rwa ["[", expr finsupp.emb_domain_eq_map_domain, ",", expr finsupp.sum_map_domain_index, "]"] [],
-      exacts ["[", expr λ _, zero_smul _ _, ",", expr λ _ _ _, add_smul _ _ _, "]"] } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » finsupp.supported R R s)
+theorem linear_independent_comp_subtype {s : Set ι} :
+  LinearIndependent R (v ∘ coeₓ : s → M) ↔ ∀ l _ : l ∈ Finsupp.supported R R s, (Finsupp.total ι M R v) l = 0 → l = 0 :=
+  by 
+    simp only [linear_independent_iff, · ∘ ·, Finsupp.mem_supported, Finsupp.total_apply, Set.subset_def,
+      Finset.mem_coe]
+    constructor
+    ·
+      intro h l hl₁ hl₂ 
+      have  := h (l.subtype_domain s) ((Finsupp.sum_subtype_domain_index hl₁).trans hl₂)
+      exact (Finsupp.subtype_domain_eq_zero_iff hl₁).1 this
+    ·
+      intro h l hl 
+      refine' Finsupp.emb_domain_eq_zero.1 (h (l.emb_domain$ Function.Embedding.subtype s) _ _)
+      ·
+        suffices  : ∀ i hi, ¬l ⟨i, hi⟩ = 0 → i ∈ s
+        ·
+          simpa 
+        intros 
+        assumption
+      ·
+        rwa [Finsupp.emb_domain_eq_map_domain, Finsupp.sum_map_domain_index]
+        exacts[fun _ => zero_smul _ _, fun _ _ _ => add_smul _ _ _]
 
 theorem linear_dependent_comp_subtype' {s : Set ι} :
   ¬LinearIndependent R (v ∘ coeₓ : s → M) ↔
@@ -378,9 +380,10 @@ theorem linear_dependent_comp_subtype' {s : Set ι} :
 /-- A version of `linear_dependent_comp_subtype'` with `finsupp.total` unfolded. -/
 theorem linear_dependent_comp_subtype {s : Set ι} :
   ¬LinearIndependent R (v ∘ coeₓ : s → M) ↔
-    ∃ f : ι →₀ R, f ∈ Finsupp.supported R R s ∧ (∑i in f.support, f i • v i) = 0 ∧ f ≠ 0 :=
+    ∃ f : ι →₀ R, f ∈ Finsupp.supported R R s ∧ (∑ i in f.support, f i • v i) = 0 ∧ f ≠ 0 :=
   linear_dependent_comp_subtype'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » finsupp.supported R R s)
 theorem linear_independent_subtype {s : Set M} :
   LinearIndependent R (fun x => x : s → M) ↔
     ∀ l _ : l ∈ Finsupp.supported R R s, (Finsupp.total M M R id) l = 0 → l = 0 :=
@@ -422,18 +425,19 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
     simp only [linear_independent_subtype_disjoint]
     exact Disjoint.mono_left (Finsupp.supported_mono h)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem linear_independent_of_finite (s : Set M)
   (H : ∀ t _ : t ⊆ s, finite t → LinearIndependent R (fun x => x : t → M)) : LinearIndependent R (fun x => x : s → M) :=
   linear_independent_subtype.2$
     fun l hl => linear_independent_subtype.1 (H _ hl (Finset.finite_to_set _)) l (subset.refl _)
 
 theorem linear_independent_Union_of_directed {η : Type _} {s : η → Set M} (hs : Directed (· ⊆ ·) s)
-  (h : ∀ i, LinearIndependent R (fun x => x : s i → M)) : LinearIndependent R (fun x => x : (⋃i, s i) → M) :=
+  (h : ∀ i, LinearIndependent R (fun x => x : s i → M)) : LinearIndependent R (fun x => x : (⋃ i, s i) → M) :=
   by 
     byCases' hη : Nonempty η
     ·
       skip 
-      refine' linear_independent_of_finite (⋃i, s i) fun t ht ft => _ 
+      refine' linear_independent_of_finite (⋃ i, s i) fun t ht ft => _ 
       rcases finite_subset_Union ft ht with ⟨I, fi, hI⟩
       rcases hs.finset_le fi.to_finset with ⟨i, hi⟩
       exact (h i).mono (subset.trans hI$ bUnion_subset$ fun j hj => hi j (fi.mem_to_finset.2 hj))
@@ -442,6 +446,7 @@ theorem linear_independent_Union_of_directed {η : Type _} {s : η → Set M} (h
       rintro _ ⟨_, ⟨i, _⟩, _⟩
       exact hη ⟨i⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem linear_independent_sUnion_of_directed {s : Set (Set M)} (hs : DirectedOn (· ⊆ ·) s)
   (h : ∀ a _ : a ∈ s, LinearIndependent R (fun x => x : (a : Set M) → M)) :
   LinearIndependent R (fun x => x : ⋃₀s → M) :=
@@ -452,9 +457,11 @@ theorem linear_independent_sUnion_of_directed {s : Set (Set M)} (hs : DirectedOn
           (by 
             simpa using h)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem linear_independent_bUnion_of_directed {η} {s : Set η} {t : η → Set M} (hs : DirectedOn (t ⁻¹'o (· ⊆ ·)) s)
   (h : ∀ a _ : a ∈ s, LinearIndependent R (fun x => x : t a → M)) :
-  LinearIndependent R (fun x => x : (⋃(a : _)(_ : a ∈ s), t a) → M) :=
+  LinearIndependent R (fun x => x : (⋃ (a : _)(_ : a ∈ s), t a) → M) :=
   by 
     rw [bUnion_eq_Union] <;>
       exact
@@ -484,19 +491,19 @@ theorem linear_independent_iff_injective_total : LinearIndependent R v ↔ Funct
 
 alias linear_independent_iff_injective_total ↔ LinearIndependent.injective_total _
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent.injective [nontrivial R] (hv : linear_independent R v) : injective v :=
-begin
-  intros [ident i, ident j, ident hij],
-  let [ident l] [":", expr «expr →₀ »(ι, R)] [":=", expr «expr - »(finsupp.single i (1 : R), finsupp.single j 1)],
-  have [ident h_total] [":", expr «expr = »(finsupp.total ι M R v l, 0)] [],
-  { simp_rw ["[", expr linear_map.map_sub, ",", expr finsupp.total_apply, "]"] [],
-    simp [] [] [] ["[", expr hij, "]"] [] [] },
-  have [ident h_single_eq] [":", expr «expr = »(finsupp.single i (1 : R), finsupp.single j 1)] [],
-  { rw [expr linear_independent_iff] ["at", ident hv],
-    simp [] [] [] ["[", expr eq_add_of_sub_eq' (hv l h_total), "]"] [] [] },
-  simpa [] [] [] ["[", expr finsupp.single_eq_single_iff, "]"] [] ["using", expr h_single_eq]
-end
+theorem LinearIndependent.injective [Nontrivial R] (hv : LinearIndependent R v) : injective v :=
+  by 
+    intro i j hij 
+    let l : ι →₀ R := Finsupp.single i (1 : R) - Finsupp.single j 1
+    have h_total : Finsupp.total ι M R v l = 0
+    ·
+      simpRw [LinearMap.map_sub, Finsupp.total_apply]
+      simp [hij]
+    have h_single_eq : Finsupp.single i (1 : R) = Finsupp.single j 1
+    ·
+      rw [linear_independent_iff] at hv 
+      simp [eq_add_of_sub_eq' (hv l h_total)]
+    simpa [Finsupp.single_eq_single_iff] using h_single_eq
 
 theorem LinearIndependent.to_subtype_range {ι} {f : ι → M} (hf : LinearIndependent R f) :
   LinearIndependent R (coeₓ : range f → M) :=
@@ -508,19 +515,13 @@ theorem LinearIndependent.to_subtype_range' {ι} {f : ι → M} (hf : LinearInde
   LinearIndependent R (coeₓ : t → M) :=
   ht ▸ hf.to_subtype_range
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent.image_of_comp
-{ι ι'}
-(s : set ι)
-(f : ι → ι')
-(g : ι' → M)
-(hs : linear_independent R (λ x : s, g (f x))) : linear_independent R (λ x : «expr '' »(f, s), g x) :=
-begin
-  nontriviality [expr R] [],
-  have [] [":", expr inj_on f s] [],
-  from [expr inj_on_iff_injective.2 hs.injective.of_comp],
-  exact [expr (linear_independent_equiv' (equiv.set.image_of_inj_on f s this) rfl).1 hs]
-end
+theorem LinearIndependent.image_of_comp {ι ι'} (s : Set ι) (f : ι → ι') (g : ι' → M)
+  (hs : LinearIndependent R fun x : s => g (f x)) : LinearIndependent R fun x : f '' s => g x :=
+  by 
+    nontriviality R 
+    have  : inj_on f s 
+    exact inj_on_iff_injective.2 hs.injective.of_comp 
+    exact (linear_independent_equiv' (Equivₓ.Set.imageOfInjOn f s this) rfl).1 hs
 
 theorem LinearIndependent.image {ι} {s : Set ι} {f : ι → M} (hs : LinearIndependent R fun x : s => f x) :
   LinearIndependent R fun x : f '' s => (x : M) :=
@@ -571,148 +572,132 @@ def LinearIndependent.Maximal {ι : Type w} {R : Type u} [Semiringₓ R] {M : Ty
   {v : ι → M} (i : LinearIndependent R v) : Prop :=
   ∀ s : Set M i' : LinearIndependent R (coeₓ : s → M) h : range v ≤ s, range v = s
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An alternative characterization of a maximal linearly independent family,
 quantifying over types (in the same universe as `M`) into which the indexing family injects.
 -/
-theorem linear_independent.maximal_iff
-{ι : Type w}
-{R : Type u}
-[ring R]
-[nontrivial R]
-{M : Type v}
-[add_comm_group M]
-[module R M]
-{v : ι → M}
-(i : linear_independent R v) : «expr ↔ »(i.maximal, ∀
- (κ : Type v)
- (w : κ → M)
- (i' : linear_independent R w)
- (j : ι → κ)
- (h : «expr = »(«expr ∘ »(w, j), v)), surjective j) :=
-begin
-  fsplit,
-  { rintros [ident p, ident κ, ident w, ident i', ident j, ident rfl],
-    specialize [expr p (range w) i'.coe_range (range_comp_subset_range _ _)],
-    rw ["[", expr range_comp, ",", "<-", expr @image_univ _ _ w, "]"] ["at", ident p],
-    exact [expr range_iff_surjective.mp (image_injective.mpr i'.injective p)] },
-  { intros [ident p, ident w, ident i', ident h],
-    specialize [expr p w (coe : w → M) i' (λ
-      i, ⟨v i, range_subset_iff.mp h i⟩) (by { ext [] [] [], simp [] [] [] [] [] [] })],
-    have [ident q] [] [":=", expr congr_arg (λ s, «expr '' »((coe : w → M), s)) p.range_eq],
-    dsimp [] [] [] ["at", ident q],
-    rw ["[", "<-", expr image_univ, ",", expr image_image, "]"] ["at", ident q],
-    simpa [] [] [] [] [] ["using", expr q] }
-end
+theorem LinearIndependent.maximal_iff {ι : Type w} {R : Type u} [Ringₓ R] [Nontrivial R] {M : Type v} [AddCommGroupₓ M]
+  [Module R M] {v : ι → M} (i : LinearIndependent R v) :
+  i.maximal ↔ ∀ κ : Type v w : κ → M i' : LinearIndependent R w j : ι → κ h : w ∘ j = v, surjective j :=
+  by 
+    fconstructor
+    ·
+      rintro p κ w i' j rfl 
+      specialize p (range w) i'.coe_range (range_comp_subset_range _ _)
+      rw [range_comp, ←@image_univ _ _ w] at p 
+      exact range_iff_surjective.mp (image_injective.mpr i'.injective p)
+    ·
+      intro p w i' h 
+      specialize
+        p w (coeₓ : w → M) i' (fun i => ⟨v i, range_subset_iff.mp h i⟩)
+          (by 
+            ext 
+            simp )
+      have q := congr_argₓ (fun s => (coeₓ : w → M) '' s) p.range_eq 
+      dsimp  at q 
+      rw [←image_univ, image_image] at q 
+      simpa using q
 
 end Maximal
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Linear independent families are injective, even if you multiply either side. -/
-theorem linear_independent.eq_of_smul_apply_eq_smul_apply
-{M : Type*}
-[add_comm_group M]
-[module R M]
-{v : ι → M}
-(li : linear_independent R v)
-(c d : R)
-(i j : ι)
-(hc : «expr ≠ »(c, 0))
-(h : «expr = »(«expr • »(c, v i), «expr • »(d, v j))) : «expr = »(i, j) :=
-begin
-  let [ident l] [":", expr «expr →₀ »(ι, R)] [":=", expr «expr - »(finsupp.single i c, finsupp.single j d)],
-  have [ident h_total] [":", expr «expr = »(finsupp.total ι M R v l, 0)] [],
-  { simp_rw ["[", expr linear_map.map_sub, ",", expr finsupp.total_apply, "]"] [],
-    simp [] [] [] ["[", expr h, "]"] [] [] },
-  have [ident h_single_eq] [":", expr «expr = »(finsupp.single i c, finsupp.single j d)] [],
-  { rw [expr linear_independent_iff] ["at", ident li],
-    simp [] [] [] ["[", expr eq_add_of_sub_eq' (li l h_total), "]"] [] [] },
-  rcases [expr (finsupp.single_eq_single_iff _ _ _ _).mp h_single_eq, "with", "⟨", ident this, ",", "_", "⟩", "|", "⟨", ident hc, ",", "_", "⟩"],
-  { exact [expr this] },
-  { contradiction }
-end
+theorem LinearIndependent.eq_of_smul_apply_eq_smul_apply {M : Type _} [AddCommGroupₓ M] [Module R M] {v : ι → M}
+  (li : LinearIndependent R v) (c d : R) (i j : ι) (hc : c ≠ 0) (h : c • v i = d • v j) : i = j :=
+  by 
+    let l : ι →₀ R := Finsupp.single i c - Finsupp.single j d 
+    have h_total : Finsupp.total ι M R v l = 0
+    ·
+      simpRw [LinearMap.map_sub, Finsupp.total_apply]
+      simp [h]
+    have h_single_eq : Finsupp.single i c = Finsupp.single j d
+    ·
+      rw [linear_independent_iff] at li 
+      simp [eq_add_of_sub_eq' (li l h_total)]
+    rcases(Finsupp.single_eq_single_iff _ _ _ _).mp h_single_eq with (⟨this, _⟩ | ⟨hc, _⟩)
+    ·
+      exact this
+    ·
+      contradiction
 
 section Subtype
 
 /-! The following lemmas use the subtype defined by a set in `M` as the index set `ι`. -/
 
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent.disjoint_span_image
-(hv : linear_independent R v)
-{s t : set ι}
-(hs : disjoint s t) : disjoint «expr $ »(submodule.span R, «expr '' »(v, s)) «expr $ »(submodule.span R, «expr '' »(v, t)) :=
-begin
-  simp [] [] ["only"] ["[", expr disjoint_def, ",", expr finsupp.mem_span_image_iff_total, "]"] [] [],
-  rintros ["_", "⟨", ident l₁, ",", ident hl₁, ",", ident rfl, "⟩", "⟨", ident l₂, ",", ident hl₂, ",", ident H, "⟩"],
-  rw ["[", expr hv.injective_total.eq_iff, "]"] ["at", ident H],
-  subst [expr l₂],
-  have [] [":", expr «expr = »(l₁, 0)] [":=", expr finsupp.disjoint_supported_supported hs (submodule.mem_inf.2 ⟨hl₁, hl₂⟩)],
-  simp [] [] [] ["[", expr this, "]"] [] []
-end
+theorem LinearIndependent.disjoint_span_image (hv : LinearIndependent R v) {s t : Set ι} (hs : Disjoint s t) :
+  Disjoint (Submodule.span R$ v '' s) (Submodule.span R$ v '' t) :=
+  by 
+    simp only [disjoint_def, Finsupp.mem_span_image_iff_total]
+    rintro _ ⟨l₁, hl₁, rfl⟩ ⟨l₂, hl₂, H⟩
+    rw [hv.injective_total.eq_iff] at H 
+    subst l₂ 
+    have  : l₁ = 0 := Finsupp.disjoint_supported_supported hs (Submodule.mem_inf.2 ⟨hl₁, hl₂⟩)
+    simp [this]
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent.not_mem_span_image
-[nontrivial R]
-(hv : linear_independent R v)
-{s : set ι}
-{x : ι}
-(h : «expr ∉ »(x, s)) : «expr ∉ »(v x, submodule.span R «expr '' »(v, s)) :=
-begin
-  have [ident h'] [":", expr «expr ∈ »(v x, submodule.span R «expr '' »(v, {x}))] [],
-  { rw [expr set.image_singleton] [],
-    exact [expr mem_span_singleton_self (v x)] },
-  intro [ident w],
-  apply [expr linear_independent.ne_zero x hv],
-  refine [expr disjoint_def.1 (hv.disjoint_span_image _) (v x) h' w],
-  simpa [] [] [] [] [] ["using", expr h]
-end
+theorem LinearIndependent.not_mem_span_image [Nontrivial R] (hv : LinearIndependent R v) {s : Set ι} {x : ι}
+  (h : x ∉ s) : v x ∉ Submodule.span R (v '' s) :=
+  by 
+    have h' : v x ∈ Submodule.span R (v '' {x})
+    ·
+      rw [Set.image_singleton]
+      exact mem_span_singleton_self (v x)
+    intro w 
+    apply LinearIndependent.ne_zero x hv 
+    refine' disjoint_def.1 (hv.disjoint_span_image _) (v x) h' w 
+    simpa using h
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent.total_ne_of_not_mem_support
-[nontrivial R]
-(hv : linear_independent R v)
-{x : ι}
-(f : «expr →₀ »(ι, R))
-(h : «expr ∉ »(x, f.support)) : «expr ≠ »(finsupp.total ι M R v f, v x) :=
-begin
-  replace [ident h] [":", expr «expr ∉ »(x, (f.support : set ι))] [":=", expr h],
-  have [ident p] [] [":=", expr hv.not_mem_span_image h],
-  intro [ident w],
-  rw ["<-", expr w] ["at", ident p],
-  rw [expr finsupp.span_image_eq_map_total] ["at", ident p],
-  simp [] [] ["only"] ["[", expr not_exists, ",", expr not_and, ",", expr mem_map, "]"] [] ["at", ident p],
-  exact [expr p f (f.mem_supported_support R) rfl]
-end
+theorem LinearIndependent.total_ne_of_not_mem_support [Nontrivial R] (hv : LinearIndependent R v) {x : ι} (f : ι →₀ R)
+  (h : x ∉ f.support) : Finsupp.total ι M R v f ≠ v x :=
+  by 
+    replace h : x ∉ (f.support : Set ι) := h 
+    have p := hv.not_mem_span_image h 
+    intro w 
+    rw [←w] at p 
+    rw [Finsupp.span_image_eq_map_total] at p 
+    simp only [not_exists, not_and, mem_map] at p 
+    exact p f (f.mem_supported_support R) rfl
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent_sum
-{v : «expr ⊕ »(ι, ι') → M} : «expr ↔ »(linear_independent R v, «expr ∧ »(linear_independent R «expr ∘ »(v, sum.inl), «expr ∧ »(linear_independent R «expr ∘ »(v, sum.inr), disjoint (submodule.span R (range «expr ∘ »(v, sum.inl))) (submodule.span R (range «expr ∘ »(v, sum.inr)))))) :=
-begin
-  rw ["[", expr range_comp v, ",", expr range_comp v, "]"] [],
-  refine [expr ⟨λ
-    h, ⟨h.comp _ sum.inl_injective, h.comp _ sum.inr_injective, h.disjoint_span_image is_compl_range_inl_range_inr.1⟩, _⟩],
-  rintro ["⟨", ident hl, ",", ident hr, ",", ident hlr, "⟩"],
-  rw ["[", expr linear_independent_iff', "]"] ["at", "*"],
-  intros [ident s, ident g, ident hg, ident i, ident hi],
-  have [] [":", expr «expr = »(«expr + »(«expr∑ in , »((i), s.preimage sum.inl (sum.inl_injective.inj_on _), λ
-      x, «expr • »(g x, v x) (sum.inl i)), «expr∑ in , »((i), s.preimage sum.inr (sum.inr_injective.inj_on _), λ
-      x, «expr • »(g x, v x) (sum.inr i))), 0)] [],
-  { rw ["[", expr finset.sum_preimage', ",", expr finset.sum_preimage', ",", "<-", expr finset.sum_union, ",", "<-", expr finset.filter_or, "]"] [],
-    { simpa [] [] ["only"] ["[", "<-", expr mem_union, ",", expr range_inl_union_range_inr, ",", expr mem_univ, ",", expr finset.filter_true, "]"] [] [] },
-    { exact [expr finset.disjoint_filter.2 (λ x hx, disjoint_left.1 is_compl_range_inl_range_inr.1)] } },
-  { rw ["<-", expr eq_neg_iff_add_eq_zero] ["at", ident this],
-    rw ["[", expr disjoint_def', "]"] ["at", ident hlr],
-    have [ident A] [] [":=", expr hlr _ «expr $ »(sum_mem _, λ
-      i hi, _) _ «expr $ »(neg_mem _, «expr $ »(sum_mem _, λ i hi, _)) this],
-    { cases [expr i] ["with", ident i, ident i],
-      { exact [expr hl _ _ A i (finset.mem_preimage.2 hi)] },
-      { rw ["[", expr this, ",", expr neg_eq_zero, "]"] ["at", ident A],
-        exact [expr hr _ _ A i (finset.mem_preimage.2 hi)] } },
-    { exact [expr smul_mem _ _ (subset_span ⟨sum.inl i, mem_range_self _, rfl⟩)] },
-    { exact [expr smul_mem _ _ (subset_span ⟨sum.inr i, mem_range_self _, rfl⟩)] } }
-end
+theorem linear_independent_sum {v : Sum ι ι' → M} :
+  LinearIndependent R v ↔
+    LinearIndependent R (v ∘ Sum.inl) ∧
+      LinearIndependent R (v ∘ Sum.inr) ∧
+        Disjoint (Submodule.span R (range (v ∘ Sum.inl))) (Submodule.span R (range (v ∘ Sum.inr))) :=
+  by 
+    rw [range_comp v, range_comp v]
+    refine'
+      ⟨fun h =>
+          ⟨h.comp _ Sum.inl_injective, h.comp _ Sum.inr_injective,
+            h.disjoint_span_image is_compl_range_inl_range_inr.1⟩,
+        _⟩
+    rintro ⟨hl, hr, hlr⟩
+    rw [linear_independent_iff'] at *
+    intro s g hg i hi 
+    have  :
+      ((∑ i in s.preimage Sum.inl (sum.inl_injective.inj_on _),
+            (fun x => g x • v x)
+              (Sum.inl i))+∑ i in s.preimage Sum.inr (sum.inr_injective.inj_on _), (fun x => g x • v x) (Sum.inr i)) =
+        0
+    ·
+      rw [Finset.sum_preimage', Finset.sum_preimage', ←Finset.sum_union, ←Finset.filter_or]
+      ·
+        simpa only [←mem_union, range_inl_union_range_inr, mem_univ, Finset.filter_true]
+      ·
+        exact Finset.disjoint_filter.2 fun x hx => disjoint_left.1 is_compl_range_inl_range_inr.1
+    ·
+      rw [←eq_neg_iff_add_eq_zero] at this 
+      rw [disjoint_def'] at hlr 
+      have A := hlr _ (sum_mem _$ fun i hi => _) _ (neg_mem _$ sum_mem _$ fun i hi => _) this
+      ·
+        cases' i with i i
+        ·
+          exact hl _ _ A i (Finset.mem_preimage.2 hi)
+        ·
+          rw [this, neg_eq_zero] at A 
+          exact hr _ _ A i (Finset.mem_preimage.2 hi)
+      ·
+        exact smul_mem _ _ (subset_span ⟨Sum.inl i, mem_range_self _, rfl⟩)
+      ·
+        exact smul_mem _ _ (subset_span ⟨Sum.inr i, mem_range_self _, rfl⟩)
 
 theorem LinearIndependent.sum_type {v' : ι' → M} (hv : LinearIndependent R v) (hv' : LinearIndependent R v')
   (h : Disjoint (Submodule.span R (range v)) (Submodule.span R (range v'))) : LinearIndependent R (Sum.elim v v') :=
@@ -727,10 +712,11 @@ theorem LinearIndependent.union {s t : Set M} (hs : LinearIndependent R (fun x =
     by 
       simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem linear_independent_Union_finite_subtype {ι : Type _} {f : ι → Set M}
   (hl : ∀ i, LinearIndependent R (fun x => x : f i → M))
-  (hd : ∀ i, ∀ t : Set ι, finite t → i ∉ t → Disjoint (span R (f i)) (⨆(i : _)(_ : i ∈ t), span R (f i))) :
-  LinearIndependent R (fun x => x : (⋃i, f i) → M) :=
+  (hd : ∀ i, ∀ t : Set ι, finite t → i ∉ t → Disjoint (span R (f i)) (⨆ (i : _)(_ : i ∈ t), span R (f i))) :
+  LinearIndependent R (fun x => x : (⋃ i, f i) → M) :=
   by 
     rw [Union_eq_Union_finset f]
     apply linear_independent_Union_of_directed
@@ -750,36 +736,36 @@ theorem linear_independent_Union_finite_subtype {ι : Type _} {f : ι → Set M}
       refine' span_mono (@supr_le_supr2 (Set M) _ _ _ _ _ _)
       exact fun i => ⟨i, le_rfl⟩
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent_Union_finite
-{η : Type*}
-{ιs : η → Type*}
-{f : ∀ j : η, ιs j → M}
-(hindep : ∀ j, linear_independent R (f j))
-(hd : ∀
- i, ∀
- t : set η, finite t → «expr ∉ »(i, t) → disjoint (span R (range (f i))) «expr⨆ , »((i «expr ∈ » t), span R (range (f i)))) : linear_independent R (λ
- ji : «exprΣ , »((j), ιs j), f ji.1 ji.2) :=
-begin
-  nontriviality [expr R] [],
-  apply [expr linear_independent.of_subtype_range],
-  { rintros ["⟨", ident x₁, ",", ident x₂, "⟩", "⟨", ident y₁, ",", ident y₂, "⟩", ident hxy],
-    by_cases [expr h_cases, ":", expr «expr = »(x₁, y₁)],
-    subst [expr h_cases],
-    { apply [expr sigma.eq],
-      rw [expr linear_independent.injective (hindep _) hxy] [],
-      refl },
-    { have [ident h0] [":", expr «expr = »(f x₁ x₂, 0)] [],
-      { apply [expr disjoint_def.1 (hd x₁ {y₁} (finite_singleton y₁) (λ
-           h, h_cases (eq_of_mem_singleton h))) (f x₁ x₂) (subset_span (mem_range_self _))],
-        rw [expr supr_singleton] [],
-        simp [] [] ["only"] [] [] ["at", ident hxy],
-        rw [expr hxy] [],
-        exact [expr subset_span (mem_range_self y₂)] },
-      exact [expr false.elim ((hindep x₁).ne_zero _ h0)] } },
-  rw [expr range_sigma_eq_Union_range] [],
-  apply [expr linear_independent_Union_finite_subtype (λ j, (hindep j).to_subtype_range) hd]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
+theorem linear_independent_Union_finite {η : Type _} {ιs : η → Type _} {f : ∀ j : η, ιs j → M}
+  (hindep : ∀ j, LinearIndependent R (f j))
+  (hd :
+    ∀ i, ∀ t : Set η, finite t → i ∉ t → Disjoint (span R (range (f i))) (⨆ (i : _)(_ : i ∈ t), span R (range (f i)))) :
+  LinearIndependent R fun ji : Σ j, ιs j => f ji.1 ji.2 :=
+  by 
+    nontriviality R 
+    apply LinearIndependent.of_subtype_range
+    ·
+      rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ hxy 
+      byCases' h_cases : x₁ = y₁ 
+      subst h_cases
+      ·
+        apply Sigma.eq 
+        rw [LinearIndependent.injective (hindep _) hxy]
+        rfl
+      ·
+        have h0 : f x₁ x₂ = 0
+        ·
+          apply
+            disjoint_def.1 (hd x₁ {y₁} (finite_singleton y₁) fun h => h_cases (eq_of_mem_singleton h)) (f x₁ x₂)
+              (subset_span (mem_range_self _))
+          rw [supr_singleton]
+          simp only  at hxy 
+          rw [hxy]
+          exact subset_span (mem_range_self y₂)
+        exact False.elim ((hindep x₁).ne_zero _ h0)
+    rw [range_sigma_eq_Union_range]
+    apply linear_independent_Union_finite_subtype (fun j => (hindep j).to_subtype_range) hd
 
 end Subtype
 
@@ -830,177 +816,185 @@ theorem LinearIndependent.repr_range : hv.repr.range = ⊤ :=
   by 
     rw [LinearIndependent.repr, LinearEquiv.range]
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent.repr_eq
-{l : «expr →₀ »(ι, R)}
-{x}
-(eq : «expr = »(finsupp.total ι M R v l, «expr↑ »(x))) : «expr = »(hv.repr x, l) :=
-begin
-  have [] [":", expr «expr = »(«expr↑ »((linear_independent.total_equiv hv : «expr →ₗ[ ] »(«expr →₀ »(ι, R), R, span R (range v))) l), finsupp.total ι M R v l)] [":=", expr rfl],
-  have [] [":", expr «expr = »((linear_independent.total_equiv hv : «expr →ₗ[ ] »(«expr →₀ »(ι, R), R, span R (range v))) l, x)] [],
-  { rw [expr eq] ["at", ident this],
-    exact [expr subtype.ext_iff.2 this] },
-  rw ["<-", expr linear_equiv.symm_apply_apply hv.total_equiv l] [],
-  rw ["<-", expr this] [],
-  refl
-end
+theorem LinearIndependent.repr_eq {l : ι →₀ R} {x} (eq : Finsupp.total ι M R v l = ↑x) : hv.repr x = l :=
+  by 
+    have  : ↑(LinearIndependent.totalEquiv hv : (ι →₀ R) →ₗ[R] span R (range v)) l = Finsupp.total ι M R v l := rfl 
+    have  : (LinearIndependent.totalEquiv hv : (ι →₀ R) →ₗ[R] span R (range v)) l = x
+    ·
+      rw [Eq] at this 
+      exact Subtype.ext_iff.2 this 
+    rw [←LinearEquiv.symm_apply_apply hv.total_equiv l]
+    rw [←this]
+    rfl
 
-theorem LinearIndependent.repr_eq_single i x (hx : «expr↑ » x = v i) : hv.repr x = Finsupp.single i 1 :=
+theorem LinearIndependent.repr_eq_single i x (hx : ↑x = v i) : hv.repr x = Finsupp.single i 1 :=
   by 
     apply hv.repr_eq 
     simp [Finsupp.total_single, hx]
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent.span_repr_eq
-[nontrivial R]
-(x) : «expr = »(span.repr R (set.range v) x, (hv.repr x).equiv_map_domain (equiv.of_injective _ hv.injective)) :=
-begin
-  have [ident p] [":", expr «expr = »((span.repr R (set.range v) x).equiv_map_domain (equiv.of_injective _ hv.injective).symm, hv.repr x)] [],
-  { apply [expr (linear_independent.total_equiv hv).injective],
-    ext [] [] [],
-    simp [] [] [] [] [] [] },
-  ext [] ["⟨", "_", ",", "⟨", ident i, ",", ident rfl, "⟩", "⟩"] [],
-  simp [] [] [] ["[", "<-", expr p, "]"] [] []
-end
+theorem LinearIndependent.span_repr_eq [Nontrivial R] x :
+  Span.repr R (Set.Range v) x = (hv.repr x).equivMapDomain (Equivₓ.ofInjective _ hv.injective) :=
+  by 
+    have p : (Span.repr R (Set.Range v) x).equivMapDomain (Equivₓ.ofInjective _ hv.injective).symm = hv.repr x
+    ·
+      apply (LinearIndependent.totalEquiv hv).Injective 
+      ext 
+      simp 
+    ext ⟨_, ⟨i, rfl⟩⟩
+    simp [←p]
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent_iff_not_smul_mem_span : «expr ↔ »(linear_independent R v, ∀
- (i : ι)
- (a : R), «expr ∈ »(«expr • »(a, v i), span R «expr '' »(v, «expr \ »(univ, {i}))) → «expr = »(a, 0)) :=
-⟨λ hv i a ha, begin
-   rw ["[", expr finsupp.span_image_eq_map_total, ",", expr mem_map, "]"] ["at", ident ha],
-   rcases [expr ha, "with", "⟨", ident l, ",", ident hl, ",", ident e, "⟩"],
-   rw [expr sub_eq_zero.1 (linear_independent_iff.1 hv «expr - »(l, finsupp.single i a) (by simp [] [] [] ["[", expr e, "]"] [] []))] ["at", ident hl],
-   by_contra [ident hn],
-   exact [expr not_mem_of_mem_diff «expr $ »(hl, by simp [] [] [] ["[", expr hn, "]"] [] []) (mem_singleton _)]
- end, λ
- H, «expr $ »(linear_independent_iff.2, λ l hl, begin
-    ext [] [ident i] [],
-    simp [] [] ["only"] ["[", expr finsupp.zero_apply, "]"] [] [],
-    by_contra [ident hn],
-    refine [expr hn (H i _ _)],
-    refine [expr (finsupp.mem_span_image_iff_total _).2 ⟨«expr - »(finsupp.single i (l i), l), _, _⟩],
-    { rw [expr finsupp.mem_supported'] [],
-      intros [ident j, ident hj],
-      have [ident hij] [":", expr «expr = »(j, i)] [":=", expr not_not.1 (λ
-        hij : «expr ≠ »(j, i), hj ((mem_diff _).2 ⟨mem_univ _, λ h, hij (eq_of_mem_singleton h)⟩))],
-      simp [] [] [] ["[", expr hij, "]"] [] [] },
-    { simp [] [] [] ["[", expr hl, "]"] [] [] }
-  end)⟩
+theorem linear_independent_iff_not_smul_mem_span :
+  LinearIndependent R v ↔ ∀ i : ι a : R, a • v i ∈ span R (v '' (univ \ {i})) → a = 0 :=
+  ⟨fun hv i a ha =>
+      by 
+        rw [Finsupp.span_image_eq_map_total, mem_map] at ha 
+        rcases ha with ⟨l, hl, e⟩
+        rw
+          [sub_eq_zero.1
+            (linear_independent_iff.1 hv (l - Finsupp.single i a)
+              (by 
+                simp [e]))] at
+          hl 
+        byContra hn 
+        exact
+          (not_mem_of_mem_diff
+              (hl$
+                by 
+                  simp [hn]))
+            (mem_singleton _),
+    fun H =>
+      linear_independent_iff.2$
+        fun l hl =>
+          by 
+            ext i 
+            simp only [Finsupp.zero_apply]
+            byContra hn 
+            refine' hn (H i _ _)
+            refine' (Finsupp.mem_span_image_iff_total _).2 ⟨Finsupp.single i (l i) - l, _, _⟩
+            ·
+              rw [Finsupp.mem_supported']
+              intro j hj 
+              have hij : j = i :=
+                not_not.1 fun hij : j ≠ i => hj ((mem_diff _).2 ⟨mem_univ _, fun h => hij (eq_of_mem_singleton h)⟩)
+              simp [hij]
+            ·
+              simp [hl]⟩
 
 variable (R)
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_maximal_independent'
-(s : ι → M) : «expr∃ , »((I : set ι), «expr ∧ »(linear_independent R (λ
-   x : I, s x), ∀ J : set ι, «expr ⊆ »(I, J) → linear_independent R (λ x : J, s x) → «expr = »(I, J))) :=
-begin
-  let [ident indep] [":", expr set ι → exprProp()] [":=", expr λ I, linear_independent R («expr ∘ »(s, coe) : I → M)],
-  let [ident X] [] [":=", expr {I : set ι // indep I}],
-  let [ident r] [":", expr X → X → exprProp()] [":=", expr λ I J, «expr ⊆ »(I.1, J.1)],
-  have [ident key] [":", expr ∀ c : set X, zorn.chain r c → indep «expr⋃ , »((I : X) (H : «expr ∈ »(I, c)), I)] [],
-  { intros [ident c, ident hc],
-    dsimp [] ["[", expr indep, "]"] [] [],
-    rw ["[", expr linear_independent_comp_subtype, "]"] [],
-    intros [ident f, ident hsupport, ident hsum],
-    rcases [expr eq_empty_or_nonempty c, "with", ident rfl, "|", "⟨", ident a, ",", ident hac, "⟩"],
-    { simpa [] [] [] [] [] ["using", expr hsupport] },
-    haveI [] [":", expr is_refl X r] [":=", expr ⟨λ _, set.subset.refl _⟩],
-    obtain ["⟨", ident I, ",", ident I_mem, ",", ident hI, "⟩", ":", expr «expr∃ , »((I «expr ∈ » c), «expr ⊆ »((f.support : set ι), I)), ":=", expr finset.exists_mem_subset_of_subset_bUnion_of_directed_on hac hc.directed_on hsupport],
-    exact [expr linear_independent_comp_subtype.mp I.2 f hI hsum] },
-  have [ident trans] [":", expr transitive r] [":=", expr λ I J K, set.subset.trans],
-  obtain ["⟨", "⟨", ident I, ",", ident hli, ":", expr indep I, "⟩", ",", ident hmax, ":", expr ∀
-   a, r ⟨I, hli⟩ a → r a ⟨I, hli⟩, "⟩", ":=", expr @zorn.exists_maximal_of_chains_bounded _ r (λ
-    c hc, ⟨⟨«expr⋃ , »((I «expr ∈ » c), (I : set ι)), key c hc⟩, λ I, set.subset_bUnion_of_mem⟩) trans],
-  exact [expr ⟨I, hli, λ J hsub hli, set.subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ∈ » c)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ∈ » c)
+theorem exists_maximal_independent' (s : ι → M) :
+  ∃ I : Set ι,
+    (LinearIndependent R fun x : I => s x) ∧ ∀ J : Set ι, I ⊆ J → (LinearIndependent R fun x : J => s x) → I = J :=
+  by 
+    let indep : Set ι → Prop := fun I => LinearIndependent R (s ∘ coeₓ : I → M)
+    let X := { I : Set ι // indep I }
+    let r : X → X → Prop := fun I J => I.1 ⊆ J.1
+    have key : ∀ c : Set X, Zorn.Chain r c → indep (⋃ (I : X)(H : I ∈ c), I)
+    ·
+      intro c hc 
+      dsimp [indep]
+      rw [linear_independent_comp_subtype]
+      intro f hsupport hsum 
+      rcases eq_empty_or_nonempty c with (rfl | ⟨a, hac⟩)
+      ·
+        simpa using hsupport 
+      have  : IsRefl X r := ⟨fun _ => Set.Subset.refl _⟩
+      obtain ⟨I, I_mem, hI⟩ : ∃ (I : _)(_ : I ∈ c), (f.support : Set ι) ⊆ I :=
+        Finset.exists_mem_subset_of_subset_bUnion_of_directed_on hac hc.directed_on hsupport 
+      exact linear_independent_comp_subtype.mp I.2 f hI hsum 
+    have trans : Transitive r := fun I J K => Set.Subset.trans 
+    obtain ⟨⟨I, hli : indep I⟩, hmax : ∀ a, r ⟨I, hli⟩ a → r a ⟨I, hli⟩⟩ :=
+      @Zorn.exists_maximal_of_chains_bounded _ r
+        (fun c hc => ⟨⟨⋃ (I : _)(_ : I ∈ c), (I : Set ι), key c hc⟩, fun I => Set.subset_bUnion_of_mem⟩) trans 
+    exact ⟨I, hli, fun J hsub hli => Set.Subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_maximal_independent
-(s : ι → M) : «expr∃ , »((I : set ι), «expr ∧ »(linear_independent R (λ
-   x : I, s x), ∀
-  i «expr ∉ » I, «expr∃ , »((a : R), «expr ∧ »(«expr ≠ »(a, 0), «expr ∈ »(«expr • »(a, s i), span R «expr '' »(s, I)))))) :=
-begin
-  classical,
-  rcases [expr exists_maximal_independent' R s, "with", "⟨", ident I, ",", ident hIlinind, ",", ident hImaximal, "⟩"],
-  use ["[", expr I, ",", expr hIlinind, "]"],
-  intros [ident i, ident hi],
-  specialize [expr hImaximal «expr ∪ »(I, {i}) (by simp [] [] [] [] [] [])],
-  set [] [ident J] [] [":="] [expr «expr ∪ »(I, {i})] ["with", ident hJ],
-  have [ident memJ] [":", expr ∀ {x}, «expr ↔ »(«expr ∈ »(x, J), «expr ∨ »(«expr = »(x, i), «expr ∈ »(x, I)))] [],
-  by simp [] [] [] ["[", expr hJ, "]"] [] [],
-  have [ident hiJ] [":", expr «expr ∈ »(i, J)] [":=", expr by simp [] [] [] [] [] []],
-  have [ident h] [] [":=", expr mt hImaximal _],
-  swap,
-  { intro [ident h2],
-    rw [expr h2] ["at", ident hi],
-    exact [expr absurd hiJ hi] },
-  obtain ["⟨", ident f, ",", ident supp_f, ",", ident sum_f, ",", ident f_ne, "⟩", ":=", expr linear_dependent_comp_subtype.mp h],
-  have [ident hfi] [":", expr «expr ≠ »(f i, 0)] [],
-  { contrapose [] [ident hIlinind],
-    refine [expr linear_dependent_comp_subtype.mpr ⟨f, _, sum_f, f_ne⟩],
-    simp [] [] ["only"] ["[", expr finsupp.mem_supported, ",", expr hJ, "]"] [] ["at", "⊢", ident supp_f],
-    rintro [ident x, ident hx],
-    refine [expr (memJ.mp (supp_f hx)).resolve_left _],
-    rintro [ident rfl],
-    exact [expr hIlinind (finsupp.mem_support_iff.mp hx)] },
-  use ["[", expr f i, ",", expr hfi, "]"],
-  have [ident hfi'] [":", expr «expr ∈ »(i, f.support)] [":=", expr finsupp.mem_support_iff.mpr hfi],
-  rw ["[", "<-", expr finset.insert_erase hfi', ",", expr finset.sum_insert (finset.not_mem_erase _ _), ",", expr add_eq_zero_iff_eq_neg, "]"] ["at", ident sum_f],
-  rw [expr sum_f] [],
-  refine [expr neg_mem _ (sum_mem _ (λ c hc, smul_mem _ _ (subset_span ⟨c, _, rfl⟩)))],
-  exact [expr (memJ.mp (supp_f (finset.erase_subset _ _ hc))).resolve_left (finset.ne_of_mem_erase hc)]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∉ » I)
+theorem exists_maximal_independent (s : ι → M) :
+  ∃ I : Set ι, (LinearIndependent R fun x : I => s x) ∧ ∀ i _ : i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) :=
+  by 
+    classical 
+    rcases exists_maximal_independent' R s with ⟨I, hIlinind, hImaximal⟩
+    use I, hIlinind 
+    intro i hi 
+    specialize
+      hImaximal (I ∪ {i})
+        (by 
+          simp )
+    set J := I ∪ {i} with hJ 
+    have memJ : ∀ {x}, x ∈ J ↔ x = i ∨ x ∈ I
+    ·
+      simp [hJ]
+    have hiJ : i ∈ J :=
+      by 
+        simp 
+    have h := mt hImaximal _ 
+    swap
+    ·
+      intro h2 
+      rw [h2] at hi 
+      exact absurd hiJ hi 
+    obtain ⟨f, supp_f, sum_f, f_ne⟩ := linear_dependent_comp_subtype.mp h 
+    have hfi : f i ≠ 0
+    ·
+      contrapose hIlinind 
+      refine' linear_dependent_comp_subtype.mpr ⟨f, _, sum_f, f_ne⟩
+      simp only [Finsupp.mem_supported, hJ] at supp_f⊢
+      rintro x hx 
+      refine' (memJ.mp (supp_f hx)).resolve_left _ 
+      rintro rfl 
+      exact hIlinind (finsupp.mem_support_iff.mp hx)
+    use f i, hfi 
+    have hfi' : i ∈ f.support := finsupp.mem_support_iff.mpr hfi 
+    rw [←Finset.insert_erase hfi', Finset.sum_insert (Finset.not_mem_erase _ _), add_eq_zero_iff_eq_neg] at sum_f 
+    rw [sum_f]
+    refine' neg_mem _ (sum_mem _ fun c hc => smul_mem _ _ (subset_span ⟨c, _, rfl⟩))
+    exact (memJ.mp (supp_f (Finset.erase_subset _ _ hc))).resolve_left (Finset.ne_of_mem_erase hc)
 
 end reprₓ
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem surjective_of_linear_independent_of_span
-[nontrivial R]
-(hv : linear_independent R v)
-(f : «expr ↪ »(ι', ι))
-(hss : «expr ⊆ »(range v, span R (range «expr ∘ »(v, f)))) : surjective f :=
-begin
-  intros [ident i],
-  let [ident repr] [":", expr (span R (range «expr ∘ »(v, f)) : Type*) → «expr →₀ »(ι', R)] [":=", expr (hv.comp f f.injective).repr],
-  let [ident l] [] [":=", expr (repr ⟨v i, hss (mem_range_self i)⟩).map_domain f],
-  have [ident h_total_l] [":", expr «expr = »(finsupp.total ι M R v l, v i)] [],
-  { dsimp ["only"] ["[", expr l, "]"] [] [],
-    rw [expr finsupp.total_map_domain] [],
-    rw [expr (hv.comp f f.injective).total_repr] [],
-    { refl },
-    { exact [expr f.injective] } },
-  have [ident h_total_eq] [":", expr «expr = »(finsupp.total ι M R v l, finsupp.total ι M R v (finsupp.single i 1))] [],
-  by rw ["[", expr h_total_l, ",", expr finsupp.total_single, ",", expr one_smul, "]"] [],
-  have [ident l_eq] [":", expr «expr = »(l, _)] [":=", expr linear_map.ker_eq_bot.1 hv h_total_eq],
-  dsimp ["only"] ["[", expr l, "]"] [] ["at", ident l_eq],
-  rw ["<-", expr finsupp.emb_domain_eq_map_domain] ["at", ident l_eq],
-  rcases [expr finsupp.single_of_emb_domain_single (repr ⟨v i, _⟩) f i (1 : R) zero_ne_one.symm l_eq, "with", "⟨", ident i', ",", ident hi', "⟩"],
-  use [expr i'],
-  exact [expr hi'.2]
-end
+theorem surjective_of_linear_independent_of_span [Nontrivial R] (hv : LinearIndependent R v) (f : ι' ↪ ι)
+  (hss : range v ⊆ span R (range (v ∘ f))) : surjective f :=
+  by 
+    intro i 
+    let repr : (span R (range (v ∘ f)) : Type _) → ι' →₀ R := (hv.comp f f.injective).repr 
+    let l := (reprₓ ⟨v i, hss (mem_range_self i)⟩).mapDomain f 
+    have h_total_l : Finsupp.total ι M R v l = v i
+    ·
+      dsimp only [l]
+      rw [Finsupp.total_map_domain]
+      rw [(hv.comp f f.injective).total_repr]
+      ·
+        rfl
+      ·
+        exact f.injective 
+    have h_total_eq : (Finsupp.total ι M R v) l = (Finsupp.total ι M R v) (Finsupp.single i 1)
+    ·
+      rw [h_total_l, Finsupp.total_single, one_smul]
+    have l_eq : l = _ := LinearMap.ker_eq_bot.1 hv h_total_eq 
+    dsimp only [l]  at l_eq 
+    rw [←Finsupp.emb_domain_eq_map_domain] at l_eq 
+    rcases Finsupp.single_of_emb_domain_single (reprₓ ⟨v i, _⟩) f i (1 : R) zero_ne_one.symm l_eq with ⟨i', hi'⟩
+    use i' 
+    exact hi'.2
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_of_linear_independent_of_span_subtype
-[nontrivial R]
-{s t : set M}
-(hs : linear_independent R (λ x, x : s → M))
-(h : «expr ⊆ »(t, s))
-(hst : «expr ⊆ »(s, span R t)) : «expr = »(s, t) :=
-begin
-  let [ident f] [":", expr «expr ↪ »(t, s)] [":=", expr ⟨λ
-    x, ⟨x.1, h x.2⟩, λ a b hab, subtype.coe_injective (subtype.mk.inj hab)⟩],
-  have [ident h_surj] [":", expr surjective f] [],
-  { apply [expr surjective_of_linear_independent_of_span hs f _],
-    convert [] [expr hst] []; simp [] [] [] ["[", expr f, ",", expr comp, "]"] [] [] },
-  show [expr «expr = »(s, t)],
-  { apply [expr subset.antisymm _ h],
-    intros [ident x, ident hx],
-    rcases [expr h_surj ⟨x, hx⟩, "with", "⟨", ident y, ",", ident hy, "⟩"],
-    convert [] [expr y.mem] [],
-    rw ["<-", expr subtype.mk.inj hy] [],
-    refl }
-end
+theorem eq_of_linear_independent_of_span_subtype [Nontrivial R] {s t : Set M}
+  (hs : LinearIndependent R (fun x => x : s → M)) (h : t ⊆ s) (hst : s ⊆ span R t) : s = t :=
+  by 
+    let f : t ↪ s := ⟨fun x => ⟨x.1, h x.2⟩, fun a b hab => Subtype.coe_injective (Subtype.mk.injₓ hab)⟩
+    have h_surj : surjective f
+    ·
+      apply surjective_of_linear_independent_of_span hs f _ 
+      convert hst <;> simp [f, comp]
+    show s = t
+    ·
+      apply subset.antisymm _ h 
+      intro x hx 
+      rcases h_surj ⟨x, hx⟩ with ⟨y, hy⟩
+      convert y.mem 
+      rw [←Subtype.mk.injₓ hy]
+      rfl
 
 open LinearMap
 
@@ -1025,82 +1019,112 @@ theorem linear_independent_inl_union_inr' {v : ι → M} {v' : ι' → M'} (hv :
     by 
       refine' is_compl_range_inl_inr.disjoint.mono _ _ <;> simp only [span_le, range_coe, range_comp_subset_range]
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- Dedekind's linear independence of characters -/
-theorem linear_independent_monoid_hom
-(G : Type*)
-[monoid G]
-(L : Type*)
-[comm_ring L]
-[no_zero_divisors L] : @linear_independent _ L (G → L) (λ f, f : «expr →* »(G, L) → G → L) _ _ _ :=
-by letI [] [] [":=", expr classical.dec_eq «expr →* »(G, L)]; letI [] [":", expr mul_action L L] [":=", expr distrib_mul_action.to_mul_action]; exact [expr linear_independent_iff'.2 (λ
-  s, «expr $ »(finset.induction_on s (λ
-    g
-    hg
-    i, false.elim), λ
-   a
-   s
-   has
-   ih
-   g
-   hg, have h1 : ∀
-   i «expr ∈ » s, «expr = »((«expr • »(g i, i) : G → L), «expr • »(g i, a)), from λ
-   i
-   his, «expr $ »(funext, λ
-    x : G, «expr $ »(eq_of_sub_eq_zero, ih (λ
-      j, «expr - »(«expr * »(g j, j x), «expr * »(g j, a x))) «expr $ »(funext, λ y : G, calc
-        «expr = »(«expr∑ in , »((i), s, («expr • »(«expr - »(«expr * »(g i, i x), «expr * »(g i, a x)), i) : G → L)) y, «expr∑ in , »((i), s, «expr * »(«expr - »(«expr * »(g i, i x), «expr * »(g i, a x)), i y))) : finset.sum_apply _ _ _
-        «expr = »(..., «expr∑ in , »((i), s, «expr - »(«expr * »(«expr * »(g i, i x), i y), «expr * »(«expr * »(g i, a x), i y)))) : finset.sum_congr rfl (λ
-         _ _, sub_mul _ _ _)
-        «expr = »(..., «expr - »(«expr∑ in , »((i), s, «expr * »(«expr * »(g i, i x), i y)), «expr∑ in , »((i), s, «expr * »(«expr * »(g i, a x), i y)))) : finset.sum_sub_distrib
-        «expr = »(..., «expr - »(«expr + »(«expr * »(«expr * »(g a, a x), a y), «expr∑ in , »((i), s, «expr * »(«expr * »(g i, i x), i y))), «expr + »(«expr * »(«expr * »(g a, a x), a y), «expr∑ in , »((i), s, «expr * »(«expr * »(g i, a x), i y))))) : by rw [expr add_sub_add_left_eq_sub] []
-        «expr = »(..., «expr - »(«expr∑ in , »((i), insert a s, «expr * »(«expr * »(g i, i x), i y)), «expr∑ in , »((i), insert a s, «expr * »(«expr * »(g i, a x), i y)))) : by rw ["[", expr finset.sum_insert has, ",", expr finset.sum_insert has, "]"] []
-        «expr = »(..., «expr - »(«expr∑ in , »((i), insert a s, «expr * »(g i, i «expr * »(x, y))), «expr∑ in , »((i), insert a s, «expr * »(a x, «expr * »(g i, i y))))) : congr (congr_arg has_sub.sub «expr $ »(finset.sum_congr rfl, λ
-          i
-          _, by rw ["[", expr i.map_mul, ",", expr mul_assoc, "]"] [])) «expr $ »(finset.sum_congr rfl, λ
-         _ _, by rw ["[", expr mul_assoc, ",", expr mul_left_comm, "]"] [])
-        «expr = »(..., «expr - »(«expr∑ in , »((i), insert a s, («expr • »(g i, i) : G → L)) «expr * »(x, y), «expr * »(a x, «expr∑ in , »((i), insert a s, («expr • »(g i, i) : G → L)) y))) : by rw ["[", expr finset.sum_apply, ",", expr finset.sum_apply, ",", expr finset.mul_sum, "]"] []; refl
-        «expr = »(..., «expr - »(0, «expr * »(a x, 0))) : by rw [expr hg] []; refl
-        «expr = »(..., 0) : by rw ["[", expr mul_zero, ",", expr sub_zero, "]"] []) i his)),
-   have h2 : ∀
-   i : «expr →* »(G, L), «expr ∈ »(i, s) → «expr∃ , »((y), «expr ≠ »(i y, a y)), from λ
-   i
-   his, «expr $ »(classical.by_contradiction, λ
-    h, have hia : «expr = »(i, a), from «expr $ »(monoid_hom.ext, λ
-     y, «expr $ »(classical.by_contradiction, λ hy, h ⟨y, hy⟩)),
-    «expr $ »(has, «expr ▸ »(hia, his))),
-   have h3 : ∀ i «expr ∈ » s, «expr = »(g i, 0), from λ i his, let ⟨y, hy⟩ := h2 i his in
-   have h : «expr = »(«expr • »(g i, i y), «expr • »(g i, a y)), from congr_fun (h1 i his) y,
-   or.resolve_right «expr $ »(mul_eq_zero.1, by rw ["[", expr mul_sub, ",", expr sub_eq_zero, "]"] []; exact [expr h]) (sub_ne_zero_of_ne hy),
-   have h4 : «expr = »(g a, 0), from calc
-     «expr = »(g a, «expr * »(g a, 1)) : (mul_one _).symm
-     «expr = »(..., («expr • »(g a, a) : G → L) 1) : by rw ["<-", expr a.map_one] []; refl
-     «expr = »(..., «expr∑ in , »((i), insert a s, («expr • »(g i, i) : G → L)) 1) : begin
-       rw [expr finset.sum_eq_single a] [],
-       { intros [ident i, ident his, ident hia],
-         rw [expr finset.mem_insert] ["at", ident his],
-         rw ["[", expr h3 i (his.resolve_left hia), ",", expr zero_smul, "]"] [] },
-       { intros [ident haas],
-         exfalso,
-         apply [expr haas],
-         exact [expr finset.mem_insert_self a s] }
-     end
-     «expr = »(..., 0) : by rw [expr hg] []; refl,
-   (finset.forall_mem_insert _ _ _).2 ⟨h4, h3⟩))]
+theorem linear_independent_monoid_hom (G : Type _) [Monoidₓ G] (L : Type _) [CommRingₓ L] [NoZeroDivisors L] :
+  @LinearIndependent _ L (G → L) (fun f => f : (G →* L) → G → L) _ _ _ :=
+  by 
+    let this' := Classical.decEq (G →* L) <;>
+      let this' : MulAction L L := DistribMulAction.toMulAction <;>
+        exact
+          linear_independent_iff'.2
+            fun s =>
+              (Finset.induction_on s fun g hg i => False.elim)$
+                fun a s has ih g hg =>
+                  have h1 : ∀ i _ : i ∈ s, (g i • i : G → L) = g i • a :=
+                    fun i his =>
+                      funext$
+                        fun x : G =>
+                          eq_of_sub_eq_zero$
+                            ih (fun j => (g j*j x) - g j*a x)
+                              (funext$
+                                fun y : G =>
+                                  calc
+                                    (∑ i in s, (((g i*i x) - g i*a x) • i : G → L)) y =
+                                      ∑ i in s, ((g i*i x) - g i*a x)*i y :=
+                                    Finset.sum_apply _ _ _ 
+                                    _ = ∑ i in s, ((g i*i x)*i y) - (g i*a x)*i y :=
+                                    Finset.sum_congr rfl fun _ _ => sub_mul _ _ _ 
+                                    _ = (∑ i in s, (g i*i x)*i y) - ∑ i in s, (g i*a x)*i y := Finset.sum_sub_distrib 
+                                    _ =
+                                      (((g a*a x)*a y)+∑ i in s, (g i*i x)*i y) -
+                                        ((g a*a x)*a y)+∑ i in s, (g i*a x)*i y :=
+                                    by 
+                                      rw [add_sub_add_left_eq_sub]
+                                    _ = (∑ i in insert a s, (g i*i x)*i y) - ∑ i in insert a s, (g i*a x)*i y :=
+                                    by 
+                                      rw [Finset.sum_insert has, Finset.sum_insert has]
+                                    _ = (∑ i in insert a s, g i*i (x*y)) - ∑ i in insert a s, a x*g i*i y :=
+                                    congr
+                                      (congr_argₓ Sub.sub
+                                        (Finset.sum_congr rfl$
+                                          fun i _ =>
+                                            by 
+                                              rw [i.map_mul, mul_assocₓ]))
+                                      (Finset.sum_congr rfl$
+                                        fun _ _ =>
+                                          by 
+                                            rw [mul_assocₓ, mul_left_commₓ])
+                                    _ =
+                                      (∑ i in insert a s, (g i • i : G → L)) (x*y) -
+                                        a x*(∑ i in insert a s, (g i • i : G → L)) y :=
+                                    by 
+                                      rw [Finset.sum_apply, Finset.sum_apply, Finset.mul_sum] <;> rfl 
+                                    _ = 0 - a x*0 :=
+                                    by 
+                                      rw [hg] <;> rfl 
+                                    _ = 0 :=
+                                    by 
+                                      rw [mul_zero, sub_zero]
+                                    )
+                              i his 
+                  have h2 : ∀ i : G →* L, i ∈ s → ∃ y, i y ≠ a y :=
+                    fun i his =>
+                      Classical.by_contradiction$
+                        fun h =>
+                          have hia : i = a := MonoidHom.ext$ fun y => Classical.by_contradiction$ fun hy => h ⟨y, hy⟩
+                          has$ hia ▸ his 
+                  have h3 : ∀ i _ : i ∈ s, g i = 0 :=
+                    fun i his =>
+                      let ⟨y, hy⟩ := h2 i his 
+                      have h : g i • i y = g i • a y := congr_funₓ (h1 i his) y 
+                      Or.resolve_right
+                        (mul_eq_zero.1$
+                          by 
+                            rw [mul_sub, sub_eq_zero] <;> exact h)
+                        (sub_ne_zero_of_ne hy)
+                  have h4 : g a = 0 :=
+                    calc g a = g a*1 := (mul_oneₓ _).symm 
+                      _ = (g a • a : G → L) 1 :=
+                      by 
+                        rw [←a.map_one] <;> rfl 
+                      _ = (∑ i in insert a s, (g i • i : G → L)) 1 :=
+                      by 
+                        rw [Finset.sum_eq_single a]
+                        ·
+                          intro i his hia 
+                          rw [Finset.mem_insert] at his 
+                          rw [h3 i (his.resolve_left hia), zero_smul]
+                        ·
+                          intro haas 
+                          exfalso 
+                          apply haas 
+                          exact Finset.mem_insert_self a s 
+                      _ = 0 :=
+                      by 
+                        rw [hg] <;> rfl
+                      
+                  (Finset.forall_mem_insert _ _ _).2 ⟨h4, h3⟩
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_of_span_le_span
-[nontrivial R]
-{s t u : set M}
-(hl : linear_independent R (coe : u → M))
-(hsu : «expr ⊆ »(s, u))
-(htu : «expr ⊆ »(t, u))
-(hst : «expr ≤ »(span R s, span R t)) : «expr ⊆ »(s, t) :=
-begin
-  have [] [] [":=", expr eq_of_linear_independent_of_span_subtype (hl.mono (set.union_subset hsu htu)) (set.subset_union_right _ _) (set.union_subset (set.subset.trans subset_span hst) subset_span)],
-  rw ["<-", expr this] [],
-  apply [expr set.subset_union_left]
-end
+theorem le_of_span_le_span [Nontrivial R] {s t u : Set M} (hl : LinearIndependent R (coeₓ : u → M)) (hsu : s ⊆ u)
+  (htu : t ⊆ u) (hst : span R s ≤ span R t) : s ⊆ t :=
+  by 
+    have  :=
+      eq_of_linear_independent_of_span_subtype (hl.mono (Set.union_subset hsu htu)) (Set.subset_union_right _ _)
+        (Set.union_subset (Set.Subset.trans subset_span hst) subset_span)
+    rw [←this]
+    apply Set.subset_union_left
 
 theorem span_le_span_iff [Nontrivial R] {s t u : Set M} (hl : LinearIndependent R (coeₓ : u → M)) (hsu : s ⊆ u)
   (htu : t ⊆ u) : span R s ≤ span R t ↔ s ⊆ t :=
@@ -1116,16 +1140,12 @@ variable [Module R M] [NoZeroSmulDivisors R M] [Module R M']
 
 variable {v : ι → M} {s t : Set M} {x y z : M}
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent_unique_iff
-(v : ι → M)
-[unique ι] : «expr ↔ »(linear_independent R v, «expr ≠ »(v (default ι), 0)) :=
-begin
-  simp [] [] ["only"] ["[", expr linear_independent_iff, ",", expr finsupp.total_unique, ",", expr smul_eq_zero, "]"] [] [],
-  refine [expr ⟨λ h hv, _, λ hv l hl, «expr $ »(finsupp.unique_ext, hl.resolve_right hv)⟩],
-  have [] [] [":=", expr h (finsupp.single (default ι) 1) (or.inr hv)],
-  exact [expr one_ne_zero (finsupp.single_eq_zero.1 this)]
-end
+theorem linear_independent_unique_iff (v : ι → M) [Unique ι] : LinearIndependent R v ↔ v (default ι) ≠ 0 :=
+  by 
+    simp only [linear_independent_iff, Finsupp.total_unique, smul_eq_zero]
+    refine' ⟨fun h hv => _, fun hv l hl => Finsupp.unique_ext$ hl.resolve_right hv⟩
+    have  := h (Finsupp.single (default ι) 1) (Or.inr hv)
+    exact one_ne_zero (Finsupp.single_eq_zero.1 this)
 
 alias linear_independent_unique_iff ↔ _ linear_independent_unique
 
@@ -1151,22 +1171,21 @@ variable {v : ι → V} {s t : Set V} {x y z : V}
 
 open Submodule
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_span_insert_exchange : «expr ∈ »(x, span K (insert y s)) → «expr ∉ »(x, span K s) → «expr ∈ »(y, span K (insert x s)) :=
-begin
-  simp [] [] [] ["[", expr mem_span_insert, "]"] [] [],
-  rintro [ident a, ident z, ident hz, ident rfl, ident h],
-  refine [expr ⟨«expr ⁻¹»(a), «expr • »(«expr- »(«expr ⁻¹»(a)), z), smul_mem _ _ hz, _⟩],
-  have [ident a0] [":", expr «expr ≠ »(a, 0)] [],
-  { rintro [ident rfl],
-    simp [] [] [] ["*"] [] ["at", "*"] },
-  simp [] [] [] ["[", expr a0, ",", expr smul_add, ",", expr smul_smul, "]"] [] []
-end
+theorem mem_span_insert_exchange : x ∈ span K (insert y s) → x ∉ span K s → y ∈ span K (insert x s) :=
+  by 
+    simp [mem_span_insert]
+    rintro a z hz rfl h 
+    refine' ⟨a⁻¹, -a⁻¹ • z, smul_mem _ _ hz, _⟩
+    have a0 : a ≠ 0
+    ·
+      rintro rfl 
+      simp_all 
+    simp [a0, smul_add, smul_smul]
 
 theorem linear_independent_iff_not_mem_span : LinearIndependent K v ↔ ∀ i, v i ∉ span K (v '' (univ \ {i})) :=
   by 
     apply linear_independent_iff_not_smul_mem_span.trans 
-    split 
+    constructor
     ·
       intro h i h_in_span 
       apply
@@ -1179,22 +1198,23 @@ theorem linear_independent_iff_not_mem_span : LinearIndependent K v ↔ ∀ i, v
       byContra ha' 
       exact False.elim (h _ ((smul_mem_iff _ ha').1 ha))
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent.insert
-(hs : linear_independent K (λ b, b : s → V))
-(hx : «expr ∉ »(x, span K s)) : linear_independent K (λ b, b : insert x s → V) :=
-begin
-  rw ["<-", expr union_singleton] [],
-  have [ident x0] [":", expr «expr ≠ »(x, 0)] [":=", expr mt (by rintro [ident rfl]; apply [expr zero_mem _]) hx],
-  apply [expr hs.union (linear_independent_singleton x0)],
-  rwa ["[", expr disjoint_span_singleton' x0, "]"] []
-end
+theorem LinearIndependent.insert (hs : LinearIndependent K (fun b => b : s → V)) (hx : x ∉ span K s) :
+  LinearIndependent K (fun b => b : insert x s → V) :=
+  by 
+    rw [←union_singleton]
+    have x0 : x ≠ 0 :=
+      mt
+        (by 
+          rintro rfl <;> apply zero_mem _)
+        hx 
+    apply hs.union (linear_independent_singleton x0)
+    rwa [disjoint_span_singleton' x0]
 
 theorem linear_independent_option' :
   LinearIndependent K (fun o => Option.casesOn' o x v : Option ι → V) ↔
     LinearIndependent K v ∧ x ∉ Submodule.span K (range v) :=
   by 
-    rw [←linear_independent_equiv (Equiv.optionEquivSumPunit ι).symm, linear_independent_sum, @range_unique _ PUnit,
+    rw [←linear_independent_equiv (Equivₓ.optionEquivSumPunit ι).symm, linear_independent_sum, @range_unique _ PUnit,
       @linear_independent_unique_iff PUnit, disjoint_span_singleton]
     dsimp [· ∘ ·]
     refine' ⟨fun h => ⟨h.1, fun hx => h.2.1$ h.2.2 hx⟩, fun h => ⟨h.1, _, fun hx => (h.2 hx).elim⟩⟩
@@ -1215,7 +1235,7 @@ theorem linear_independent_insert' {ι} {s : Set ι} {a : ι} {f : ι → V} (ha
   (LinearIndependent K fun x : insert a s => f x) ↔
     (LinearIndependent K fun x : s => f x) ∧ f a ∉ Submodule.span K (f '' s) :=
   by 
-    rw [←linear_independent_equiv ((Equiv.optionEquivSumPunit _).trans (Equiv.Set.insert has).symm),
+    rw [←linear_independent_equiv ((Equivₓ.optionEquivSumPunit _).trans (Equivₓ.Set.insert has).symm),
       linear_independent_option]
     simp [· ∘ ·, range_comp f]
 
@@ -1269,28 +1289,33 @@ theorem linear_independent_fin2 {f : Finₓ 2 → V} : LinearIndependent K f ↔
       show Finₓ.tail f (default (Finₓ 1)) = f 1by 
         rw [←Finₓ.succ_zero_eq_one] <;> rfl]
 
-theorem exists_linear_independent_extension (hs : LinearIndependent K (coeₓ : s → V)) (hst : s ⊆ t) :
-  ∃ (b : _)(_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coeₓ : b → V) :=
-  by 
-    rcases Zorn.zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K (coeₓ : b → V) } _ _ ⟨hst, hs⟩ with
-      ⟨b, ⟨bt, bi⟩, sb, h⟩
-    ·
-      refine' ⟨b, bt, sb, fun x xt => _, bi⟩
-      byContra hn 
-      apply hn 
-      rw [←h _ ⟨insert_subset.2 ⟨xt, bt⟩, bi.insert hn⟩ (subset_insert _ _)]
-      exact subset_span (mem_insert _ _)
-    ·
-      refine' fun c hc cc c0 => ⟨⋃₀c, ⟨_, _⟩, fun x => _⟩
-      ·
-        exact sUnion_subset fun x xc => (hc xc).1
-      ·
-        exact linear_independent_sUnion_of_directed cc.directed_on fun x xc => (hc xc).2
-      ·
-        exact subset_sUnion_of_mem
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ⊆ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  exists_linear_independent_extension
+  ( hs : LinearIndependent K ( coeₓ : s → V ) ) ( hst : s ⊆ t )
+    : ∃ ( b : _ ) ( _ : b ⊆ t ) , s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K ( coeₓ : b → V )
+  :=
+    by
+      rcases
+          Zorn.zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K ( coeₓ : b → V ) } _ _ ⟨ hst , hs ⟩
+          with ⟨ b , ⟨ bt , bi ⟩ , sb , h ⟩
+        ·
+          refine' ⟨ b , bt , sb , fun x xt => _ , bi ⟩
+            byContra hn
+            apply hn
+            rw [ ← h _ ⟨ insert_subset . 2 ⟨ xt , bt ⟩ , bi.insert hn ⟩ subset_insert _ _ ]
+            exact subset_span mem_insert _ _
+        ·
+          refine' fun c hc cc c0 => ⟨ ⋃₀ c , ⟨ _ , _ ⟩ , fun x => _ ⟩
+            · exact sUnion_subset fun x xc => hc xc . 1
+            · exact linear_independent_sUnion_of_directed cc.directed_on fun x xc => hc xc . 2
+            · exact subset_sUnion_of_mem
 
 variable (K t)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ⊆ » t)
 theorem exists_linear_independent : ∃ (b : _)(_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coeₓ : b → V) :=
   by 
     obtain ⟨b, hb₁, -, hb₂, hb₃⟩ :=
@@ -1326,61 +1351,173 @@ theorem LinearIndependent.linear_independent_extend (hs : LinearIndependent K (f
 
 variable {K V}
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_of_linear_independent_of_finite_span
-{t : finset V}
-(hs : linear_independent K (λ x, x : s → V))
-(hst : «expr ⊆ »(s, (span K «expr↑ »(t) : submodule K V))) : «expr∃ , »((t' : finset V), «expr ∧ »(«expr ⊆ »(«expr↑ »(t'), «expr ∪ »(s, «expr↑ »(t))), «expr ∧ »(«expr ⊆ »(s, «expr↑ »(t')), «expr = »(t'.card, t.card)))) :=
-have ∀
-t, ∀
-s' : finset V, «expr ⊆ »(«expr↑ »(s'), s) → «expr = »(«expr ∩ »(s, «expr↑ »(t)), «expr∅»()) → «expr ⊆ »(s, (span K «expr↑ »(«expr ∪ »(s', t)) : submodule K V)) → «expr∃ , »((t' : finset V), «expr ∧ »(«expr ⊆ »(«expr↑ »(t'), «expr ∪ »(s, «expr↑ »(t))), «expr ∧ »(«expr ⊆ »(s, «expr↑ »(t')), «expr = »(t'.card, «expr ∪ »(s', t).card)))) := assume
-t, finset.induction_on t (assume
- s'
- hs'
- _
- hss', have «expr = »(s, «expr↑ »(s')), from «expr $ »(eq_of_linear_independent_of_span_subtype hs hs', by simpa [] [] [] [] [] ["using", expr hss']),
- ⟨s', by simp [] [] [] ["[", expr this, "]"] [] []⟩) (assume
- b₁
- t
- hb₁t
- ih
- s'
- hs'
- hst
- hss', have hb₁s : «expr ∉ »(b₁, s), from assume
- h, have «expr ∈ »(b₁, «expr ∩ »(s, «expr↑ »(insert b₁ t))), from ⟨h, finset.mem_insert_self _ _⟩,
- by rwa ["[", expr hst, "]"] ["at", ident this],
- have hb₁s' : «expr ∉ »(b₁, s'), from assume h, «expr $ »(hb₁s, hs' h),
- have hst : «expr = »(«expr ∩ »(s, «expr↑ »(t)), «expr∅»()), from «expr $ »(eq_empty_of_subset_empty, subset.trans (by simp [] [] [] ["[", expr inter_subset_inter, ",", expr subset.refl, "]"] [] []) (le_of_eq hst)),
- classical.by_cases (assume: «expr ⊆ »(s, (span K «expr↑ »(«expr ∪ »(s', t)) : submodule K V)), let ⟨u, hust, hsu, eq⟩ := ih _ hs' hst this in
-  have hb₁u : «expr ∉ »(b₁, u), from assume h, (hust h).elim hb₁s hb₁t,
-  ⟨insert b₁ u, by simp [] [] [] ["[", expr insert_subset_insert hust, "]"] [] [], subset.trans hsu (by simp [] [] [] [] [] []), by simp [] [] [] ["[", expr eq, ",", expr hb₁t, ",", expr hb₁s', ",", expr hb₁u, "]"] [] []⟩) (assume: «expr¬ »(«expr ⊆ »(s, (span K «expr↑ »(«expr ∪ »(s', t)) : submodule K V))), let ⟨b₂, hb₂s, hb₂t⟩ := not_subset.mp this in
-  have hb₂t' : «expr ∉ »(b₂, «expr ∪ »(s', t)), from assume h, «expr $ »(hb₂t, subset_span h),
-  have «expr ⊆ »(s, (span K «expr↑ »(«expr ∪ »(insert b₂ s', t)) : submodule K V)), from assume
-  b₃
-  hb₃, have «expr ⊆ »(«expr↑ »(«expr ∪ »(s', insert b₁ t)), insert b₁ (insert b₂ «expr↑ »(«expr ∪ »(s', t)) : set V)), by simp [] [] [] ["[", expr insert_eq, ",", "-", ident singleton_union, ",", "-", ident union_singleton, ",", expr union_subset_union, ",", expr subset.refl, ",", expr subset_union_right, "]"] [] [],
-  have hb₃ : «expr ∈ »(b₃, span K (insert b₁ (insert b₂ «expr↑ »(«expr ∪ »(s', t)) : set V))), from span_mono this (hss' hb₃),
-  have «expr ⊆ »(s, (span K (insert b₁ «expr↑ »(«expr ∪ »(s', t))) : submodule K V)), by simpa [] [] [] ["[", expr insert_eq, ",", "-", ident singleton_union, ",", "-", ident union_singleton, "]"] [] ["using", expr hss'],
-  have hb₁ : «expr ∈ »(b₁, span K (insert b₂ «expr↑ »(«expr ∪ »(s', t)))), from mem_span_insert_exchange (this hb₂s) hb₂t,
-  by rw ["[", expr span_insert_eq_span hb₁, "]"] ["at", ident hb₃]; simpa [] [] [] [] [] ["using", expr hb₃],
-  let ⟨u, hust, hsu, eq⟩ := ih _ (by simp [] [] [] ["[", expr insert_subset, ",", expr hb₂s, ",", expr hs', "]"] [] []) hst this in
-  ⟨u, «expr $ »(subset.trans hust, union_subset_union (subset.refl _) (by simp [] [] [] ["[", expr subset_insert, "]"] [] [])), hsu, by simp [] [] [] ["[", expr eq, ",", expr hb₂t', ",", expr hb₁t, ",", expr hb₁s', "]"] [] []⟩)),
-begin
-  have [ident eq] [":", expr «expr = »(«expr ∪ »(t.filter (λ
-      x, «expr ∈ »(x, s)), t.filter (λ x, «expr ∉ »(x, s))), t)] [],
-  { ext1 [] [ident x],
-    by_cases [expr «expr ∈ »(x, s)]; simp [] [] [] ["*"] [] [] },
-  apply [expr exists.elim (this (t.filter (λ
-      x, «expr ∉ »(x, s))) (t.filter (λ
-      x, «expr ∈ »(x, s))) (by simp [] [] [] ["[", expr set.subset_def, "]"] [] []) (by simp [] [] [] ["[", expr set.ext_iff, "]"] [] [] { contextual := tt }) (by rwa ["[", expr eq, "]"] []))],
-  intros [ident u, ident h],
-  exact [expr ⟨u, subset.trans h.1 (by simp [] [] [] ["[", expr subset_def, ",", expr and_imp, ",", expr or_imp_distrib, "]"] [] [] { contextual := tt }), h.2.1, by simp [] [] ["only"] ["[", expr h.2.2, ",", expr eq, "]"] [] []⟩]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  exists_of_linear_independent_of_finite_span
+  { t : Finset V } ( hs : LinearIndependent K ( fun x => x : s → V ) ) ( hst : s ⊆ ( span K ↑ t : Submodule K V ) )
+    : ∃ t' : Finset V , ↑ t' ⊆ s ∪ ↑ t ∧ s ⊆ ↑ t' ∧ t'.card = t.card
+  :=
+    have
+      :
+          ∀
+            t
+            ,
+            ∀
+              s' : Finset V
+              ,
+              ↑ s' ⊆ s
+                →
+                s ∩ ↑ t = ∅
+                  →
+                  s ⊆ ( span K ↑ s' ∪ t : Submodule K V )
+                    →
+                    ∃ t' : Finset V , ↑ t' ⊆ s ∪ ↑ t ∧ s ⊆ ↑ t' ∧ t'.card = s' ∪ t . card
+        :=
+        fun
+          t
+            =>
+            Finset.induction_on
+              t
+                fun
+                  s' hs' _ hss'
+                    =>
+                    have
+                      : s = ↑ s' := eq_of_linear_independent_of_span_subtype hs hs' $ by simpa using hss'
+                      ⟨ s' , by simp [ this ] ⟩
+                fun
+                  b₁ t hb₁t ih s' hs' hst hss'
+                    =>
+                    have
+                      hb₁s
+                        : b₁ ∉ s
+                        :=
+                        fun
+                          h
+                            =>
+                            have : b₁ ∈ s ∩ ↑ insert b₁ t := ⟨ h , Finset.mem_insert_self _ _ ⟩ by rwa [ hst ] at this
+                      have
+                        hb₁s' : b₁ ∉ s' := fun h => hb₁s $ hs' h
+                        have
+                          hst
+                            : s ∩ ↑ t = ∅
+                            :=
+                            eq_empty_of_subset_empty
+                              $
+                              subset.trans by simp [ inter_subset_inter , subset.refl ] le_of_eqₓ hst
+                          Classical.by_cases
+                            fun
+                                this : s ⊆ ( span K ↑ s' ∪ t : Submodule K V )
+                                  =>
+                                  let
+                                    ⟨ u , hust , hsu , Eq ⟩ := ih _ hs' hst this
+                                    have
+                                      hb₁u : b₁ ∉ u := fun h => hust h . elim hb₁s hb₁t
+                                      ⟨
+                                        insert b₁ u
+                                          ,
+                                          by simp [ insert_subset_insert hust ]
+                                          ,
+                                          subset.trans hsu by simp
+                                          ,
+                                          by simp [ Eq , hb₁t , hb₁s' , hb₁u ]
+                                        ⟩
+                              fun
+                                this : ¬ s ⊆ ( span K ↑ s' ∪ t : Submodule K V )
+                                  =>
+                                  let
+                                    ⟨ b₂ , hb₂s , hb₂t ⟩ := not_subset . mp this
+                                    have
+                                      hb₂t' : b₂ ∉ s' ∪ t := fun h => hb₂t $ subset_span h
+                                      have
+                                        : s ⊆ ( span K ↑ insert b₂ s' ∪ t : Submodule K V )
+                                          :=
+                                          fun
+                                            b₃ hb₃
+                                              =>
+                                              have
+                                                : ↑ s' ∪ insert b₁ t ⊆ insert b₁ ( insert b₂ ↑ s' ∪ t : Set V )
+                                                  :=
+                                                  by
+                                                    simp
+                                                      [
+                                                        insert_eq
+                                                          ,
+                                                          - singleton_union
+                                                          ,
+                                                          - union_singleton
+                                                          ,
+                                                          union_subset_union
+                                                          ,
+                                                          subset.refl
+                                                          ,
+                                                          subset_union_right
+                                                        ]
+                                                have
+                                                  hb₃
+                                                    : b₃ ∈ span K insert b₁ ( insert b₂ ↑ s' ∪ t : Set V )
+                                                    :=
+                                                    span_mono this hss' hb₃
+                                                  have
+                                                    : s ⊆ ( span K insert b₁ ↑ s' ∪ t : Submodule K V )
+                                                      :=
+                                                      by
+                                                        simpa
+                                                          [ insert_eq , - singleton_union , - union_singleton ]
+                                                          using hss'
+                                                    have
+                                                      hb₁
+                                                        : b₁ ∈ span K insert b₂ ↑ s' ∪ t
+                                                        :=
+                                                        mem_span_insert_exchange this hb₂s hb₂t
+                                                      by rw [ span_insert_eq_span hb₁ ] at hb₃ <;> simpa using hb₃
+                                        let
+                                          ⟨ u , hust , hsu , Eq ⟩
+                                            :=
+                                            ih _ by simp [ insert_subset , hb₂s , hs' ] hst this
+                                          ⟨
+                                            u
+                                              ,
+                                              subset.trans hust
+                                                $
+                                                union_subset_union subset.refl _ by simp [ subset_insert ]
+                                              ,
+                                              hsu
+                                              ,
+                                              by simp [ Eq , hb₂t' , hb₁t , hb₁s' ]
+                                            ⟩
+      by
+        have eq : t.filter fun x => x ∈ s ∪ t.filter fun x => x ∉ s = t
+          · ext1 x byCases' x ∈ s <;> simp
+          apply
+            Exists.elim
+              this
+                t.filter fun x => x ∉ s
+                  t.filter fun x => x ∈ s
+                  by simp [ Set.subset_def ]
+                  by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ Set.ext_iff ]
+                  by rwa [ Eq ]
+          intro u h
+          exact
+            ⟨
+              u
+                ,
+                subset.trans
+                  h . 1
+                    by
+                      simp
+                        ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                        [ subset_def , and_imp , or_imp_distrib ]
+                ,
+                h . 2 . 1
+                ,
+                by simp only [ h . 2 . 2 , Eq ]
+              ⟩
 
 theorem exists_finite_card_le_of_finite_of_linear_independent_of_span (ht : finite t)
   (hs : LinearIndependent K (fun x => x : s → V)) (hst : s ⊆ span K t) :
   ∃ h : finite s, h.to_finset.card ≤ ht.to_finset.card :=
-  have  : s ⊆ (span K («expr↑ » ht.to_finset) : Submodule K V) :=
+  have  : s ⊆ (span K (↑ht.to_finset) : Submodule K V) :=
     by 
       simp  <;> assumption 
   let ⟨u, hust, hsu, Eq⟩ := exists_of_linear_independent_of_finite_span hs this 

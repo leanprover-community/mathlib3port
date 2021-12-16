@@ -9,15 +9,15 @@ collection of theorems is to show the equivalence of the different approaches.
 -/
 
 
--- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- The type of positive binary numbers.
 
      13 = 1101(base 2) = bit1 (bit0 (bit1 one)) -/
-@[derive #[expr has_reflect], derive #[expr decidable_eq]]
-inductive pos_num : Type
-| one : pos_num
-| bit1 : pos_num → pos_num
-| bit0 : pos_num → pos_num
+inductive PosNum : Type
+  | one : PosNum
+  | bit1 : PosNum → PosNum
+  | bit0 : PosNum → PosNum deriving [anonymous], [anonymous]
 
 instance : HasOne PosNum :=
   ⟨PosNum.one⟩
@@ -25,14 +25,14 @@ instance : HasOne PosNum :=
 instance : Inhabited PosNum :=
   ⟨1⟩
 
--- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- The type of nonnegative binary numbers, using `pos_num`.
 
      13 = 1101(base 2) = pos (bit1 (bit0 (bit1 one))) -/
-@[derive #[expr has_reflect], derive #[expr decidable_eq]]
-inductive num : Type
-| zero : num
-| pos : pos_num → num
+inductive Num : Type
+  | zero : Num
+  | Pos : PosNum → Num deriving [anonymous], [anonymous]
 
 instance : HasZero Num :=
   ⟨Num.zero⟩
@@ -43,16 +43,16 @@ instance : HasOne Num :=
 instance : Inhabited Num :=
   ⟨0⟩
 
--- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- Representation of integers using trichotomy around zero.
 
      13 = 1101(base 2) = pos (bit1 (bit0 (bit1 one)))
      -13 = -1101(base 2) = neg (bit1 (bit0 (bit1 one))) -/
-@[derive #[expr has_reflect], derive #[expr decidable_eq]]
-inductive znum : Type
-| zero : znum
-| pos : pos_num → znum
-| neg : pos_num → znum
+inductive Znum : Type
+  | zero : Znum
+  | Pos : PosNum → Znum
+  | neg : PosNum → Znum deriving [anonymous], [anonymous]
 
 instance : HasZero Znum :=
   ⟨Znum.zero⟩

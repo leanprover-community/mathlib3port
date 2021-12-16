@@ -27,7 +27,7 @@ p-adic, p adic, padic, p-adic integer
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical TopologicalSpace
 
@@ -166,11 +166,8 @@ private theorem ih_0 : ih 0 a :=
     by 
       simp [T_def, mul_div_cancel' _ (ne_of_gtₓ (deriv_sq_norm_pos hnorm))]⟩
 
-private theorem calc_norm_le_one {n : ℕ} {z : ℤ_[p]} (hz : ih n z) :
-  ∥(«expr↑ » (F.eval z) : ℚ_[p]) / «expr↑ » (F.derivative.eval z)∥ ≤ 1 :=
-  calc
-    ∥(«expr↑ » (F.eval z) : ℚ_[p]) / «expr↑ » (F.derivative.eval z)∥ =
-      ∥(«expr↑ » (F.eval z) : ℚ_[p])∥ / ∥(«expr↑ » (F.derivative.eval z) : ℚ_[p])∥ :=
+private theorem calc_norm_le_one {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ ≤ 1 :=
+  calc ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ = ∥(↑F.eval z : ℚ_[p])∥ / ∥(↑F.derivative.eval z : ℚ_[p])∥ :=
     NormedField.norm_div _ _ 
     _ = ∥F.eval z∥ / ∥F.derivative.eval a∥ :=
     by 
@@ -199,27 +196,26 @@ private theorem calc_deriv_dist {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) (hz1 : �
     
 
 private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n z)
-  (h1 : ∥(«expr↑ » (F.eval z) : ℚ_[p]) / «expr↑ » (F.derivative.eval z)∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
-  { q : ℤ_[p] // F.eval z' = q*z1^2 } :=
-  have hdzne' : («expr↑ » (F.derivative.eval z) : ℚ_[p]) ≠ 0 :=
+  (h1 : ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) : { q : ℤ_[p] // F.eval z' = q*z1^2 } :=
+  have hdzne' : (↑F.derivative.eval z : ℚ_[p]) ≠ 0 :=
     have hdzne : F.derivative.eval z ≠ 0 :=
       mt norm_eq_zero.2
         (by 
           rw [hz.1] <;> apply deriv_norm_ne_zero <;> assumption)
     fun h => hdzne$ Subtype.ext_iff_val.2 h 
   let ⟨q, hq⟩ := F.binom_expansion z (-z1)
-  have  : ∥(«expr↑ » (F.derivative.eval z)*«expr↑ » (F.eval z) / «expr↑ » (F.derivative.eval z) : ℚ_[p])∥ ≤ 1 :=
+  have  : ∥((↑F.derivative.eval z)*↑F.eval z / ↑F.derivative.eval z : ℚ_[p])∥ ≤ 1 :=
     by 
       rw [padicNormE.mul]
       exact mul_le_one (PadicInt.norm_le_one _) (norm_nonneg _) h1 
   have  : (F.derivative.eval z*-z1) = -F.eval z :=
-    calc (F.derivative.eval z*-z1) = F.derivative.eval z*-⟨«expr↑ » (F.eval z) / «expr↑ » (F.derivative.eval z), h1⟩ :=
+    calc (F.derivative.eval z*-z1) = F.derivative.eval z*-⟨↑F.eval z / ↑F.derivative.eval z, h1⟩ :=
       by 
         rw [hzeq]
-      _ = -F.derivative.eval z*⟨«expr↑ » (F.eval z) / «expr↑ » (F.derivative.eval z), h1⟩ :=
+      _ = -F.derivative.eval z*⟨↑F.eval z / ↑F.derivative.eval z, h1⟩ :=
       by 
         simp [Subtype.ext_iff_val]
-      _ = -⟨«expr↑ » (F.derivative.eval z)*«expr↑ » (F.eval z) / «expr↑ » (F.derivative.eval z), this⟩ :=
+      _ = -⟨(↑F.derivative.eval z)*↑F.eval z / ↑F.derivative.eval z, this⟩ :=
       Subtype.ext$
         by 
           simp 
@@ -233,7 +229,7 @@ private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n 
   ⟨q, HEq⟩
 
 private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F.eval z' = q*z1^2)
-  (h1 : ∥(«expr↑ » (F.eval z) : ℚ_[p]) / «expr↑ » (F.derivative.eval z)∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
+  (h1 : ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
   ∥F.eval z'∥ ≤ (∥F.derivative.eval a∥^2)*T^2^n+1 :=
   calc ∥F.eval z'∥ = ∥q∥*∥z1∥^2 :=
     by 
@@ -253,25 +249,31 @@ private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F
       rw [←pow_mulₓ, pow_succ'ₓ 2]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
--- error in NumberTheory.Padics.Hensel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given `z : ℤ_[p]` satisfying `ih n z`, construct `z' : ℤ_[p]` satisfying `ih (n+1) z'`. We need
 the hypothesis `ih n z`, since otherwise `z'` is not necessarily an integer. -/
-private
-def ih_n {n : exprℕ()} {z : «exprℤ_[ ]»(p)} (hz : ih n z) : {z' : «exprℤ_[ ]»(p) // ih «expr + »(n, 1) z'} :=
-have h1 : «expr ≤ »(«expr∥ ∥»(«expr / »((«expr↑ »(F.eval z) : «exprℚ_[ ]»(p)), «expr↑ »(F.derivative.eval z))), 1), from calc_norm_le_one hz,
-let z1 : «exprℤ_[ ]»(p) := ⟨_, h1⟩, z' : «exprℤ_[ ]»(p) := «expr - »(z, z1) in
-⟨z', have hdist : «expr < »(«expr∥ ∥»(«expr - »(F.derivative.eval z', F.derivative.eval z)), «expr∥ ∥»(F.derivative.eval a)), from calc_deriv_dist rfl (by simp [] [] [] ["[", expr z1, ",", expr hz.1, "]"] [] []) hz,
- have hfeq : «expr = »(«expr∥ ∥»(F.derivative.eval z'), «expr∥ ∥»(F.derivative.eval a)), begin
-   rw ["[", expr sub_eq_add_neg, ",", "<-", expr hz.1, ",", "<-", expr norm_neg (F.derivative.eval z), "]"] ["at", ident hdist],
-   have [] [] [":=", expr padic_int.norm_eq_of_norm_add_lt_right hdist],
-   rwa ["[", expr norm_neg, ",", expr hz.1, "]"] ["at", ident this]
- end,
- let ⟨q, heq⟩ := calc_eval_z' rfl hz h1 rfl in
- have hnle : «expr ≤ »(«expr∥ ∥»(F.eval z'), «expr * »(«expr ^ »(«expr∥ ∥»(F.derivative.eval a), 2), «expr ^ »(T, «expr ^ »(2, «expr + »(n, 1))))), from calc_eval_z'_norm hz heq h1 rfl,
- ⟨hfeq, hnle⟩⟩
+private def ih_n {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : { z' : ℤ_[p] // ih (n+1) z' } :=
+  have h1 : ∥(↑F.eval z : ℚ_[p]) / ↑F.derivative.eval z∥ ≤ 1 := calc_norm_le_one hz 
+  let z1 : ℤ_[p] := ⟨_, h1⟩
+  let z' : ℤ_[p] := z - z1
+  ⟨z',
+    have hdist : ∥F.derivative.eval z' - F.derivative.eval z∥ < ∥F.derivative.eval a∥ :=
+      calc_deriv_dist rfl
+        (by 
+          simp [z1, hz.1])
+        hz 
+    have hfeq : ∥F.derivative.eval z'∥ = ∥F.derivative.eval a∥ :=
+      by 
+        rw [sub_eq_add_neg, ←hz.1, ←norm_neg (F.derivative.eval z)] at hdist 
+        have  := PadicInt.norm_eq_of_norm_add_lt_right hdist 
+        rwa [norm_neg, hz.1] at this 
+    let ⟨q, HEq⟩ := calc_eval_z' rfl hz h1 rfl 
+    have hnle : ∥F.eval z'∥ ≤ (∥F.derivative.eval a∥^2)*T^2^n+1 := calc_eval_z'_norm hz HEq h1 rfl
+    ⟨hfeq, hnle⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta false
 
 private noncomputable def newton_seq_aux : ∀ n : ℕ, { z : ℤ_[p] // ih n z }
@@ -394,23 +396,17 @@ private theorem bound' : tendsto (fun n : ℕ => ∥F.derivative.eval a∥*T^2^n
             (by 
               normNum)))
 
--- error in NumberTheory.Padics.Hensel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem bound : ∀
-{ε}, «expr > »(ε, 0) → «expr∃ , »((N : exprℕ()), ∀
- {n}, «expr ≥ »(n, N) → «expr < »(«expr * »(«expr∥ ∥»(F.derivative.eval a), «expr ^ »(T, «expr ^ »(2, n))), ε)) :=
-have mtn : ∀
-n : exprℕ(), «expr ≥ »(«expr * »(«expr∥ ∥»(polynomial.eval a (polynomial.derivative F)), «expr ^ »(T, «expr ^ »(2, n))), 0), from λ
-n, mul_nonneg (norm_nonneg _) (T_pow_nonneg _),
-begin
-  have [] [] [":=", expr bound' hnorm hnsol],
-  simp [] [] [] ["[", expr tendsto, ",", expr nhds, "]"] [] ["at", ident this],
-  intros [ident ε, ident hε],
-  cases [expr this (ball 0 ε) (mem_ball_self hε) is_open_ball] ["with", ident N, ident hN],
-  existsi [expr N],
-  intros [ident n, ident hn],
-  simpa [] [] [] ["[", expr normed_field.norm_mul, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg (mtn n), "]"] [] ["using", expr hN _ hn]
-end
+private theorem bound : ∀ {ε}, ε > 0 → ∃ N : ℕ, ∀ {n}, n ≥ N → (∥F.derivative.eval a∥*T^2^n) < ε :=
+  have mtn : ∀ n : ℕ, (∥Polynomial.eval a (Polynomial.derivative F)∥*T^2^n) ≥ 0 :=
+    fun n => mul_nonneg (norm_nonneg _) (T_pow_nonneg _)
+  by 
+    have  := bound' hnorm hnsol 
+    simp [tendsto, nhds] at this 
+    intro ε hε 
+    cases' this (ball 0 ε) (mem_ball_self hε) is_open_ball with N hN 
+    exists N 
+    intro n hn 
+    simpa [NormedField.norm_mul, Real.norm_eq_abs, abs_of_nonneg (mtn n)] using hN _ hn
 
 private theorem bound'_sq : tendsto (fun n : ℕ => (∥F.derivative.eval a∥^2)*T^2^n) at_top (𝓝 0) :=
   by 

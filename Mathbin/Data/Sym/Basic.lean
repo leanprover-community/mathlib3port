@@ -57,7 +57,7 @@ This is the quotient map that takes a list of n elements as an n-tuple and produ
 symmetric power.
 -/
 def of_vector (x : Vector α n) : Sym α n :=
-  ⟨«expr↑ » x.val,
+  ⟨↑x.val,
     by 
       rw [Multiset.coe_card]
       exact x.2⟩
@@ -137,7 +137,7 @@ theorem mem_cons_of_mem {a b : α} {s : Sym α n} (h : a ∈ s) : a ∈ b :: s :
 theorem mem_cons_self (a : α) (s : Sym α n) : a ∈ a :: s :=
   mem_cons.2 (Or.inl rfl)
 
-theorem cons_of_coe_eq (a : α) (v : Vector α n) : a :: («expr↑ » v : Sym α n) = «expr↑ » (a::ᵥv) :=
+theorem cons_of_coe_eq (a : α) (v : Vector α n) : a :: (↑v : Sym α n) = ↑(a::ᵥv) :=
   by 
     unfoldCoes 
     delta' of_vector 
@@ -145,7 +145,7 @@ theorem cons_of_coe_eq (a : α) (v : Vector α n) : a :: («expr↑ » v : Sym �
     delta' Vector.cons 
     tidy
 
-theorem sound {a b : Vector α n} (h : a.val ~ b.val) : («expr↑ » a : Sym α n) = «expr↑ » b :=
+theorem sound {a b : Vector α n} (h : a.val ~ b.val) : (↑a : Sym α n) = ↑b :=
   by 
     cases a 
     cases b 
@@ -170,7 +170,7 @@ def cons' {α : Type u} {n : ℕ} : α → sym' α n → sym' α (Nat.succ n) :=
 Multisets of cardinality n are equivalent to length-n vectors up to permutations.
 -/
 def sym_equiv_sym' {α : Type u} {n : ℕ} : Sym α n ≃ sym' α n :=
-  Equiv.subtypeQuotientEquivQuotientSubtype _ _
+  Equivₓ.subtypeQuotientEquivQuotientSubtype _ _
     (fun _ =>
       by 
         rfl)

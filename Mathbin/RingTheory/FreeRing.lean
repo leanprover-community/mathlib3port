@@ -24,11 +24,11 @@ free ring
 
 universe u v
 
--- error in RingTheory.FreeRing: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The free ring over a type `α`. -/
-@[derive #["[", expr ring, ",", expr inhabited, "]"]]
-def free_ring (α : Type u) : Type u :=
-«expr $ »(free_abelian_group, free_monoid α)
+def FreeRing (α : Type u) : Type u :=
+  FreeAbelianGroup$ FreeMonoid α deriving [anonymous], [anonymous]
 
 namespace FreeRing
 

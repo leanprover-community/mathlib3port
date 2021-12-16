@@ -33,7 +33,7 @@ open TensorProduct
 
 open algebra.tensor_product(algHomOfLinearMapTensorProduct includeLeft)
 
-noncomputable theory
+noncomputable section 
 
 variable (R A : Type _)
 
@@ -176,7 +176,7 @@ theorem right_inv (x : Polynomial A) : (to_fun_alg_hom R A) (inv_fun R A x) = x 
 
 The equivalence, ignoring the algebra structure, `(A ⊗[R] polynomial R) ≃ polynomial A`.
 -/
-def Equiv : A ⊗[R] Polynomial R ≃ Polynomial A :=
+def Equivₓ : A ⊗[R] Polynomial R ≃ Polynomial A :=
   { toFun := to_fun_alg_hom R A, invFun := inv_fun R A, left_inv := left_inv R A, right_inv := right_inv R A }
 
 end polyEquivTensor
@@ -271,17 +271,15 @@ theorem mat_poly_equiv_coeff_apply (m : Matrix n n (Polynomial R)) (k : ℕ) (i 
       ·
         simp [std_basis_matrix, h]
 
--- error in RingTheory.PolynomialAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mat_poly_equiv_symm_apply_coeff
-(p : polynomial (matrix n n R))
-(i j : n)
-(k : exprℕ()) : «expr = »(coeff (mat_poly_equiv.symm p i j) k, coeff p k i j) :=
-begin
-  have [ident t] [":", expr «expr = »(p, mat_poly_equiv (mat_poly_equiv.symm p))] [":=", expr by simp [] [] [] [] [] []],
-  conv_rhs [] [] { rw [expr t] },
-  simp [] [] ["only"] ["[", expr mat_poly_equiv_coeff_apply, "]"] [] []
-end
+theorem mat_poly_equiv_symm_apply_coeff (p : Polynomial (Matrix n n R)) (i j : n) (k : ℕ) :
+  coeff (matPolyEquiv.symm p i j) k = coeff p k i j :=
+  by 
+    have t : p = matPolyEquiv (mat_poly_equiv.symm p) :=
+      by 
+        simp 
+    convRHS => rw [t]
+    simp only [mat_poly_equiv_coeff_apply]
 
 theorem mat_poly_equiv_smul_one (p : Polynomial R) : matPolyEquiv (p • 1) = p.map (algebraMap R (Matrix n n R)) :=
   by 

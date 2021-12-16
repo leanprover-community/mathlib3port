@@ -31,7 +31,7 @@ open Function Filter FiniteDimensional Set
 
 open_locale TopologicalSpace Manifold Classical Filter BigOperators
 
-noncomputable theory
+noncomputable section 
 
 namespace SmoothBumpCovering
 
@@ -53,41 +53,38 @@ def embedding_pi_tangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E ×
         fun i => ((f i).smooth_smul times_cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth }
 
 @[local simp]
-theorem embedding_pi_tangent_coe :
-  «expr⇑ » f.embedding_pi_tangent = fun x i => (f i x • extChartAt I (f.c i) x, f i x) :=
+theorem embedding_pi_tangent_coe : ⇑f.embedding_pi_tangent = fun x i => (f i x • extChartAt I (f.c i) x, f i x) :=
   rfl
 
--- error in Geometry.Manifold.WhitneyEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem embedding_pi_tangent_inj_on : inj_on f.embedding_pi_tangent s :=
-begin
-  intros [ident x, ident hx, ident y, ident hy, ident h],
-  simp [] [] ["only"] ["[", expr embedding_pi_tangent_coe, ",", expr funext_iff, "]"] [] ["at", ident h],
-  obtain ["⟨", ident h₁, ",", ident h₂, "⟩", ":=", expr prod.mk.inj_iff.1 (h (f.ind x hx))],
-  rw ["[", expr f.apply_ind x hx, "]"] ["at", ident h₂],
-  rw ["[", "<-", expr h₂, ",", expr f.apply_ind x hx, ",", expr one_smul, ",", expr one_smul, "]"] ["at", ident h₁],
-  have [] [] [":=", expr f.mem_ext_chart_at_source_of_eq_one h₂.symm],
-  exact [expr (ext_chart_at I (f.c _)).inj_on (f.mem_ext_chart_at_ind_source x hx) this h₁]
-end
+  by 
+    intro x hx y hy h 
+    simp only [embedding_pi_tangent_coe, funext_iff] at h 
+    obtain ⟨h₁, h₂⟩ := Prod.mk.inj_iffₓ.1 (h (f.ind x hx))
+    rw [f.apply_ind x hx] at h₂ 
+    rw [←h₂, f.apply_ind x hx, one_smul, one_smul] at h₁ 
+    have  := f.mem_ext_chart_at_source_of_eq_one h₂.symm 
+    exact (extChartAt I (f.c _)).InjOn (f.mem_ext_chart_at_ind_source x hx) this h₁
 
 theorem embedding_pi_tangent_injective (f : SmoothBumpCovering ι I M) : injective f.embedding_pi_tangent :=
   injective_iff_inj_on_univ.2 f.embedding_pi_tangent_inj_on
 
--- error in Geometry.Manifold.WhitneyEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comp_embedding_pi_tangent_mfderiv
-(x : M)
-(hx : «expr ∈ »(x, s)) : «expr = »(((continuous_linear_map.fst exprℝ() E exprℝ()).comp (@continuous_linear_map.proj exprℝ() _ ι (λ
-    _, «expr × »(E, exprℝ())) _ _ (λ
-    _, infer_instance) (f.ind x hx))).comp (mfderiv I «expr𝓘( , )»(exprℝ(), ι → «expr × »(E, exprℝ())) f.embedding_pi_tangent x), mfderiv I I (chart_at H (f.c (f.ind x hx))) x) :=
-begin
-  set [] [ident L] [] [":="] [expr (continuous_linear_map.fst exprℝ() E exprℝ()).comp (@continuous_linear_map.proj exprℝ() _ ι (λ
-     _, «expr × »(E, exprℝ())) _ _ (λ _, infer_instance) (f.ind x hx))] [],
-  have [] [] [":=", expr L.has_mfderiv_at.comp x f.embedding_pi_tangent.mdifferentiable_at.has_mfderiv_at],
-  convert [] [expr has_mfderiv_at_unique this _] [],
-  refine [expr (has_mfderiv_at_ext_chart_at I (f.mem_chart_at_ind_source x hx)).congr_of_eventually_eq _],
-  refine [expr (f.eventually_eq_one x hx).mono (λ y hy, _)],
-  simp [] [] ["only"] ["[", expr embedding_pi_tangent_coe, ",", expr continuous_linear_map.coe_comp', ",", expr («expr ∘ »), ",", expr continuous_linear_map.coe_fst', ",", expr continuous_linear_map.proj_apply, "]"] [] [],
-  rw ["[", expr hy, ",", expr pi.one_apply, ",", expr one_smul, "]"] []
-end
+theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
+  ((ContinuousLinearMap.fst ℝ E ℝ).comp
+          (@ContinuousLinearMap.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance) (f.ind x hx))).comp
+      (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embedding_pi_tangent x) =
+    mfderiv I I (chart_at H (f.c (f.ind x hx))) x :=
+  by 
+    set L :=
+      (ContinuousLinearMap.fst ℝ E ℝ).comp
+        (@ContinuousLinearMap.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance) (f.ind x hx))
+    have  := L.has_mfderiv_at.comp x f.embedding_pi_tangent.mdifferentiable_at.has_mfderiv_at 
+    convert has_mfderiv_at_unique this _ 
+    refine' (has_mfderiv_at_ext_chart_at I (f.mem_chart_at_ind_source x hx)).congr_of_eventually_eq _ 
+    refine' (f.eventually_eq_one x hx).mono fun y hy => _ 
+    simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', · ∘ ·, ContinuousLinearMap.coe_fst',
+      ContinuousLinearMap.proj_apply]
+    rw [hy, Pi.one_apply, one_smul]
 
 theorem embedding_pi_tangent_ker_mfderiv (x : M) (hx : x ∈ s) :
   (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embedding_pi_tangent x).ker = ⊥ :=
@@ -101,42 +98,35 @@ theorem embedding_pi_tangent_injective_mfderiv (x : M) (hx : x ∈ s) :
   injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embedding_pi_tangent x) :=
   LinearMap.ker_eq_bot.1 (f.embedding_pi_tangent_ker_mfderiv x hx)
 
--- error in Geometry.Manifold.WhitneyEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional
 Euclidean space. -/
-theorem exists_immersion_euclidean
-(f : smooth_bump_covering ι I M) : «expr∃ , »((n : exprℕ())
- (e : M → euclidean_space exprℝ() (fin n)), «expr ∧ »(smooth I «expr𝓡 »(n) e, «expr ∧ »(injective e, ∀
-   x : M, injective (mfderiv I «expr𝓡 »(n) e x)))) :=
-begin
-  set [] [ident F] [] [":="] [expr euclidean_space exprℝ() «expr $ »(fin, finrank exprℝ() (ι → «expr × »(E, exprℝ())))] [],
-  letI [] [":", expr is_noetherian exprℝ() «expr × »(E, exprℝ())] [":=", expr is_noetherian.iff_fg.2 infer_instance],
-  letI [] [":", expr finite_dimensional exprℝ() (ι → «expr × »(E, exprℝ()))] [":=", expr is_noetherian.iff_fg.1 infer_instance],
-  set [] [ident eEF] [":", expr «expr ≃L[ ] »(ι → «expr × »(E, exprℝ()), exprℝ(), F)] [":="] [expr continuous_linear_equiv.of_finrank_eq finrank_euclidean_space_fin.symm] [],
-  refine [expr ⟨_, «expr ∘ »(eEF, f.embedding_pi_tangent), eEF.to_diffeomorph.smooth.comp f.embedding_pi_tangent.smooth, eEF.injective.comp f.embedding_pi_tangent_injective, λ
-    x, _⟩],
-  rw ["[", expr mfderiv_comp _ eEF.differentiable_at.mdifferentiable_at f.embedding_pi_tangent.mdifferentiable_at, ",", expr eEF.mfderiv_eq, "]"] [],
-  exact [expr eEF.injective.comp (f.embedding_pi_tangent_injective_mfderiv _ trivial)]
-end
+theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
+  ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Finₓ n)),
+    Smooth I (𝓡 n) e ∧ injective e ∧ ∀ x : M, injective (mfderiv I (𝓡 n) e x) :=
+  by 
+    set F := EuclideanSpace ℝ (Finₓ$ finrank ℝ (ι → E × ℝ))
+    let this' : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance 
+    let this' : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance 
+    set eEF : (ι → E × ℝ) ≃L[ℝ] F := ContinuousLinearEquiv.ofFinrankEq finrank_euclidean_space_fin.symm 
+    refine'
+      ⟨_, eEF ∘ f.embedding_pi_tangent, eEF.to_diffeomorph.smooth.comp f.embedding_pi_tangent.smooth,
+        eEF.injective.comp f.embedding_pi_tangent_injective, fun x => _⟩
+    rw [mfderiv_comp _ eEF.differentiable_at.mdifferentiable_at f.embedding_pi_tangent.mdifferentiable_at,
+      eEF.mfderiv_eq]
+    exact eEF.injective.comp (f.embedding_pi_tangent_injective_mfderiv _ trivialₓ)
 
 end SmoothBumpCovering
 
--- error in Geometry.Manifold.WhitneyEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be embedded into the `n`-dimensional
 Euclidean space. -/
-theorem exists_embedding_euclidean_of_compact
-[t2_space M]
-[compact_space M] : «expr∃ , »((n : exprℕ())
- (e : M → euclidean_space exprℝ() (fin n)), «expr ∧ »(smooth I «expr𝓡 »(n) e, «expr ∧ »(closed_embedding e, ∀
-   x : M, injective (mfderiv I «expr𝓡 »(n) e x)))) :=
-begin
-  rcases [expr smooth_bump_covering.exists_is_subordinate I is_closed_univ (λ
-    (x : M)
-    (_), univ_mem), "with", "⟨", ident ι, ",", ident f, ",", "-", "⟩"],
-  haveI [] [] [":=", expr f.fintype],
-  rcases [expr f.exists_immersion_euclidean, "with", "⟨", ident n, ",", ident e, ",", ident hsmooth, ",", ident hinj, ",", ident hinj_mfderiv, "⟩"],
-  exact [expr ⟨n, e, hsmooth, hsmooth.continuous.closed_embedding hinj, hinj_mfderiv⟩]
-end
+theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
+  ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Finₓ n)),
+    Smooth I (𝓡 n) e ∧ ClosedEmbedding e ∧ ∀ x : M, injective (mfderiv I (𝓡 n) e x) :=
+  by 
+    rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun x : M _ => univ_mem with ⟨ι, f, -⟩
+    have  := f.fintype 
+    rcases f.exists_immersion_euclidean with ⟨n, e, hsmooth, hinj, hinj_mfderiv⟩
+    exact ⟨n, e, hsmooth, hsmooth.continuous.closed_embedding hinj, hinj_mfderiv⟩
 

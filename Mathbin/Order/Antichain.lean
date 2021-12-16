@@ -18,12 +18,12 @@ open Function Set
 
 variable {α β : Type _} {r r₁ r₂ : α → α → Prop} {r' : β → β → Prop} {s t : Set α} {a : α}
 
-protected theorem Symmetric.compl (h : Symmetric r) : Symmetric («expr ᶜ» r) :=
+protected theorem Symmetric.compl (h : Symmetric r) : Symmetric (rᶜ) :=
   fun x y hr hr' => hr$ h hr'
 
 /-- An antichain is a set such that no two distinct elements are related. -/
 def IsAntichain (r : α → α → Prop) (s : Set α) : Prop :=
-  s.pairwise («expr ᶜ» r)
+  s.pairwise (rᶜ)
 
 namespace IsAntichain
 
@@ -37,7 +37,7 @@ theorem mono_on (hs : IsAntichain r₁ s) (h : s.pairwise fun ⦃a b⦄ => r₂ 
   hs.imp_on$ h.imp$ fun a b h h₁ h₂ => h₁$ h h₂
 
 theorem eq_of_related (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r a b) : a = b :=
-  of_not_not$ fun hab => hs _ ha _ hb hab h
+  of_not_not$ fun hab => hs ha hb hab h
 
 protected theorem IsAntisymm (h : IsAntichain r univ) : IsAntisymm α r :=
   ⟨fun a b ha _ => h.eq_of_related trivialₓ trivialₓ ha⟩
@@ -54,7 +54,7 @@ protected theorem Subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.s
       exact (h.eq_of_related hb ha hab).symm
 
 protected theorem flip (hs : IsAntichain r s) : IsAntichain (flip r) s :=
-  fun a ha b hb h => hs _ hb _ ha h.symm
+  fun a ha b hb h => hs hb ha h.symm
 
 theorem swap (hs : IsAntichain r s) : IsAntichain (swap r) s :=
   hs.flip
@@ -62,11 +62,11 @@ theorem swap (hs : IsAntichain r s) : IsAntichain (swap r) s :=
 theorem image (hs : IsAntichain r s) (f : α → β) (h : ∀ ⦃a b⦄, r' (f a) (f b) → r a b) : IsAntichain r' (f '' s) :=
   by 
     rintro _ ⟨b, hb, rfl⟩ _ ⟨c, hc, rfl⟩ hbc hr 
-    exact hs _ hb _ hc (ne_of_apply_ne _ hbc) (h hr)
+    exact hs hb hc (ne_of_apply_ne _ hbc) (h hr)
 
 theorem preimage (hs : IsAntichain r s) {f : β → α} (hf : injective f) (h : ∀ ⦃a b⦄, r' a b → r (f a) (f b)) :
   IsAntichain r' (f ⁻¹' s) :=
-  fun b hb c hc hbc hr => hs _ hb _ hc (hf.ne hbc)$ h hr
+  fun b hb c hc hbc hr => hs hb hc (hf.ne hbc)$ h hr
 
 theorem _root_.is_antichain_insert :
   IsAntichain r (insert a s) ↔ IsAntichain r s ∧ ∀ ⦃b⦄, b ∈ s → a ≠ b → ¬r a b ∧ ¬r b a :=
@@ -84,9 +84,10 @@ theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r) (h : ∀ �
   IsAntichain r (insert a s) :=
   (is_antichain_insert_of_symmetric hr).2 ⟨hs, h⟩
 
-/-- Turns a set into an antichain by keeping only the "maximal" elements. -/
-protected def mk (r : α → α → Prop) (s : Set α) : Set α :=
-  { a∈s | ∀ ⦃b⦄, b ∈ s → r a b → a = b }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Turns a set into an antichain by keeping only the "maximal" elements. -/ protected
+  def mk ( r : α → α → Prop ) ( s : Set α ) : Set α := { a ∈ s | ∀ ⦃ b ⦄ , b ∈ s → r a b → a = b }
 
 theorem mk_is_antichain (r : α → α → Prop) (s : Set α) : IsAntichain r (IsAntichain.Mk r s) :=
   fun a ha b hb hab h => hab$ ha.2 hb.1 h
@@ -94,6 +95,7 @@ theorem mk_is_antichain (r : α → α → Prop) (s : Set α) : IsAntichain r (I
 theorem mk_subset : IsAntichain.Mk r s ⊆ s :=
   sep_subset _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » is_antichain.mk r s)
 /-- If `is_antichain.mk r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 theorem mk_max (ht : IsAntichain r t) (h : IsAntichain.Mk r s ⊆ t)
@@ -101,7 +103,7 @@ theorem mk_max (ht : IsAntichain r t) (h : IsAntichain.Mk r s ⊆ t)
   by 
     refine' subset.antisymm (fun a ha => _) h 
     obtain ⟨b, hb, hr⟩ := hs ha 
-    rwa [of_not_not fun hab => ht _ ha _ (h hb) hab hr]
+    rwa [of_not_not fun hab => ht ha (h hb) hab hr]
 
 end IsAntichain
 

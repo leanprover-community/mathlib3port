@@ -25,13 +25,11 @@ with shape `discrete J`, where we have `[decidable_eq J]` and `[fintype J]`.
 class has_finite_products : Prop where 
   out (J : Type v) [DecidableEq J] [Fintype J] : has_limits_of_shape (discrete J) C
 
--- error in CategoryTheory.Limits.Shapes.FiniteProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance has_limits_of_shape_discrete
-(J : Type v)
-[fintype J]
-[has_finite_products C] : has_limits_of_shape (discrete J) C :=
-by { haveI [] [] [":=", expr @has_finite_products.out C _ _ J (classical.dec_eq _)],
-  apply_instance }
+instance has_limits_of_shape_discrete (J : Type v) [Fintype J] [has_finite_products C] :
+  has_limits_of_shape (discrete J) C :=
+  by 
+    have  := @has_finite_products.out C _ _ J (Classical.decEq _)
+    infer_instance
 
 /-- If `C` has finite limits then it has finite products. -/
 instance (priority := 10) has_finite_products_of_has_finite_limits [has_finite_limits C] : has_finite_products C :=
@@ -67,13 +65,11 @@ class has_finite_coproducts : Prop where
 
 attribute [class] has_finite_coproducts
 
--- error in CategoryTheory.Limits.Shapes.FiniteProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance has_colimits_of_shape_discrete
-(J : Type v)
-[fintype J]
-[has_finite_coproducts C] : has_colimits_of_shape (discrete J) C :=
-by { haveI [] [] [":=", expr @has_finite_coproducts.out C _ _ J (classical.dec_eq _)],
-  apply_instance }
+instance has_colimits_of_shape_discrete (J : Type v) [Fintype J] [has_finite_coproducts C] :
+  has_colimits_of_shape (discrete J) C :=
+  by 
+    have  := @has_finite_coproducts.out C _ _ J (Classical.decEq _)
+    infer_instance
 
 /-- If `C` has finite colimits then it has finite coproducts. -/
 instance (priority := 10) has_finite_coproducts_of_has_finite_colimits [has_finite_colimits C] :

@@ -117,6 +117,12 @@ theorem tsub_le_iff_tsub_le : a - b ≤ c ↔ a - c ≤ b :=
 theorem tsub_tsub_le : b - (b - a) ≤ a :=
   tsub_le_iff_right.mpr le_add_tsub
 
+theorem tsub_nonpos : a - b ≤ 0 ↔ a ≤ b :=
+  by 
+    rw [tsub_le_iff_left, add_zeroₓ]
+
+alias tsub_nonpos ↔ _ tsub_nonpos_of_le
+
 theorem AddMonoidHom.le_map_tsub [Preorderₓ β] [AddCommMonoidₓ β] [Sub β] [HasOrderedSub β] (f : α →+ β)
   (hf : Monotone f) (a b : α) : f a - f b ≤ f (a - b) :=
   f.to_add_hom.le_map_tsub hf a b
@@ -459,7 +465,7 @@ namespace AddLeCancellable
 
 protected theorem eq_tsub_iff_add_eq_of_le (hc : AddLeCancellable c) (h : c ≤ b) : a = b - c ↔ (a+c) = b :=
   by 
-    split 
+    constructor
     ·
       rintro rfl 
       exact tsub_add_cancel_of_le h
@@ -723,21 +729,15 @@ protected theorem tsub_lt_tsub_iff_right (hc : AddLeCancellable c) (h : c ≤ a)
   by 
     rw [hc.lt_tsub_iff_left, add_tsub_cancel_of_le h]
 
--- error in Algebra.Order.Sub: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem tsub_lt_self
-(ha : add_le_cancellable a)
-(hb : add_le_cancellable b)
-(h₁ : «expr < »(0, a))
-(h₂ : «expr < »(0, b)) : «expr < »(«expr - »(a, b), a) :=
-begin
-  refine [expr tsub_le_self.lt_of_ne _],
-  intro [ident h],
-  rw ["[", "<-", expr h, ",", expr tsub_pos_iff_lt, "]"] ["at", ident h₁],
-  have [] [] [":=", expr h.ge],
-  rw ["[", expr hb.le_tsub_iff_left h₁.le, ",", expr ha.add_le_iff_nonpos_left, "]"] ["at", ident this],
-  exact [expr h₂.not_le this]
-end
+protected theorem tsub_lt_self (ha : AddLeCancellable a) (hb : AddLeCancellable b) (h₁ : 0 < a) (h₂ : 0 < b) :
+  a - b < a :=
+  by 
+    refine' tsub_le_self.lt_of_ne _ 
+    intro h 
+    rw [←h, tsub_pos_iff_lt] at h₁ 
+    have  := h.ge 
+    rw [hb.le_tsub_iff_left h₁.le, ha.add_le_iff_nonpos_left] at this 
+    exact h₂.not_le this
 
 protected theorem tsub_lt_self_iff (ha : AddLeCancellable a) (hb : AddLeCancellable b) : a - b < a ↔ 0 < a ∧ 0 < b :=
   by 
@@ -821,7 +821,7 @@ instance : Sub (WithTop α) :=
   ⟨WithTop.sub⟩
 
 @[simp, normCast]
-theorem coe_sub {a b : α} : («expr↑ » (a - b) : WithTop α) = «expr↑ » a - «expr↑ » b :=
+theorem coe_sub {a b : α} : (↑(a - b) : WithTop α) = ↑a - ↑b :=
   rfl
 
 @[simp]

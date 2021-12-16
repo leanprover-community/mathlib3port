@@ -83,14 +83,14 @@ instance [Preorderₓ α] : OrderTop (Iic a) :=
   { top := ⟨a, le_reflₓ a⟩, le_top := fun x => x.prop }
 
 @[simp]
-theorem coe_top [PartialOrderₓ α] {a : α} : «expr↑ » (⊤ : Iic a) = a :=
+theorem coe_top [PartialOrderₓ α] {a : α} : ↑(⊤ : Iic a) = a :=
   rfl
 
 instance [Preorderₓ α] [OrderBot α] : OrderBot (Iic a) :=
   { bot := ⟨⊥, bot_le⟩, bot_le := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 bot_le }
 
 @[simp]
-theorem coe_bot [Preorderₓ α] [OrderBot α] {a : α} : «expr↑ » (⊥ : Iic a) = (⊥ : α) :=
+theorem coe_bot [Preorderₓ α] [OrderBot α] {a : α} : ↑(⊥ : Iic a) = (⊥ : α) :=
   rfl
 
 instance [PartialOrderₓ α] [NoBotOrder α] {a : α} : NoBotOrder (Iic a) :=
@@ -120,14 +120,14 @@ instance [Preorderₓ α] : OrderBot (Ici a) :=
   { bot := ⟨a, le_reflₓ a⟩, bot_le := fun x => x.prop }
 
 @[simp]
-theorem coe_bot [PartialOrderₓ α] {a : α} : «expr↑ » (⊥ : Ici a) = a :=
+theorem coe_bot [PartialOrderₓ α] {a : α} : ↑(⊥ : Ici a) = a :=
   rfl
 
 instance [Preorderₓ α] [OrderTop α] : OrderTop (Ici a) :=
   { top := ⟨⊤, le_top⟩, le_top := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 le_top }
 
 @[simp]
-theorem coe_top [Preorderₓ α] [OrderTop α] {a : α} : «expr↑ » (⊤ : Ici a) = (⊤ : α) :=
+theorem coe_top [Preorderₓ α] [OrderTop α] {a : α} : ↑(⊤ : Ici a) = (⊤ : α) :=
   rfl
 
 instance [PartialOrderₓ α] [NoTopOrder α] {a : α} : NoTopOrder (Ici a) :=

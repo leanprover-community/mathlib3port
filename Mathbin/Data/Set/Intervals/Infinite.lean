@@ -16,6 +16,8 @@ section Bounded
 
 variable [DenselyOrdered α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » Ioo a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » Ioo a b)
 theorem Ioo.infinite {a b : α} (h : a < b) : Infinite (Ioo a b) :=
   by 
     rintro (f : finite (Ioo a b))
@@ -40,6 +42,8 @@ section UnboundedBelow
 
 variable [NoBotOrder α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr < » b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » b)
 theorem Iio.infinite {b : α} : Infinite (Iio b) :=
   by 
     rintro (f : finite (Iio b))

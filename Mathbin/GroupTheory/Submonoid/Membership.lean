@@ -38,7 +38,7 @@ section Assoc
 variable [Monoidₓ M] (S : Submonoid M)
 
 @[simp, normCast, toAdditive coe_nsmul]
-theorem coe_pow (x : S) (n : ℕ) : «expr↑ » (x ^ n) = (x ^ n : M) :=
+theorem coe_pow (x : S) (n : ℕ) : ↑(x ^ n) = (x ^ n : M) :=
   S.subtype.map_pow x n
 
 @[simp, normCast, toAdditive]
@@ -51,9 +51,10 @@ theorem coe_multiset_prod {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset 
 
 @[simp, normCast, toAdditive]
 theorem coe_finset_prod {ι M} [CommMonoidₓ M] (S : Submonoid M) (f : ι → S) (s : Finset ι) :
-  «expr↑ » (∏i in s, f i) = (∏i in s, f i : M) :=
+  (↑∏ i in s, f i) = (∏ i in s, f i : M) :=
   S.subtype.map_prod f s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- Product of a list of elements in a submonoid is in the submonoid. -/
 @[toAdditive "Sum of a list of elements in an `add_submonoid` is in the `add_submonoid`."]
 theorem list_prod_mem {l : List M} (hl : ∀ x _ : x ∈ l, x ∈ S) : l.prod ∈ S :=
@@ -62,6 +63,7 @@ theorem list_prod_mem {l : List M} (hl : ∀ x _ : x ∈ l, x ∈ S) : l.prod �
     rw [←coe_list_prod]
     exact l.prod.coe_prop
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » m)
 /-- Product of a multiset of elements in a submonoid of a `comm_monoid` is in the submonoid. -/
 @[toAdditive "Sum of a multiset of elements in an `add_submonoid` of an `add_comm_monoid` is\nin the `add_submonoid`."]
 theorem multiset_prod_mem {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset M) (hm : ∀ a _ : a ∈ m, a ∈ S) :
@@ -71,12 +73,13 @@ theorem multiset_prod_mem {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset 
     rw [←coe_multiset_prod]
     exact m.prod.coe_prop
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
 /-- Product of elements of a submonoid of a `comm_monoid` indexed by a `finset` is in the
     submonoid. -/
 @[toAdditive
       "Sum of elements in an `add_submonoid` of an `add_comm_monoid` indexed by a `finset`\nis in the `add_submonoid`."]
 theorem prod_mem {M : Type _} [CommMonoidₓ M] (S : Submonoid M) {ι : Type _} {t : Finset ι} {f : ι → M}
-  (h : ∀ c _ : c ∈ t, f c ∈ S) : (∏c in t, f c) ∈ S :=
+  (h : ∀ c _ : c ∈ t, f c ∈ S) : (∏ c in t, f c) ∈ S :=
   S.multiset_prod_mem (t.1.map f)$
     fun x hx =>
       let ⟨i, hi, hix⟩ := Multiset.mem_map.1 hx 
@@ -97,10 +100,10 @@ open Set
 
 @[toAdditive]
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S) {x : M} :
-  (x ∈ ⨆i, S i) ↔ ∃ i, x ∈ S i :=
+  (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i :=
   by 
     refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1$ le_supr S i) hi⟩
-    suffices  : x ∈ closure (⋃i, (S i : Set M)) → ∃ i, x ∈ S i
+    suffices  : x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i
     ·
       simpa only [closure_Union, closure_eq (S _)] using this 
     refine' fun hx => closure_induction hx (fun _ => mem_Union.1) _ _
@@ -113,27 +116,24 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (
 
 @[toAdditive]
 theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S) :
-  ((⨆i, S i : Submonoid M) : Set M) = ⋃i, «expr↑ » (S i) :=
+  ((⨆ i, S i : Submonoid M) : Set M) = ⋃ i, ↑S i :=
   Set.ext$
     fun x =>
       by 
         simp [mem_supr_of_directed hS]
 
--- error in GroupTheory.Submonoid.Membership: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem mem_Sup_of_directed_on
-{S : set (submonoid M)}
-(Sne : S.nonempty)
-(hS : directed_on ((«expr ≤ »)) S)
-{x : M} : «expr ↔ »(«expr ∈ »(x, Sup S), «expr∃ , »((s «expr ∈ » S), «expr ∈ »(x, s))) :=
-begin
-  haveI [] [":", expr nonempty S] [":=", expr Sne.to_subtype],
-  simp [] [] ["only"] ["[", expr Sup_eq_supr', ",", expr mem_supr_of_directed hS.directed_coe, ",", expr set_coe.exists, ",", expr subtype.coe_mk, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+@[toAdditive]
+theorem mem_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : M} :
+  x ∈ Sup S ↔ ∃ (s : _)(_ : s ∈ S), x ∈ s :=
+  by 
+    have  : Nonempty S := Sne.to_subtype 
+    simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 @[toAdditive]
 theorem coe_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
-  («expr↑ » (Sup S) : Set M) = ⋃(s : _)(_ : s ∈ S), «expr↑ » s :=
+  (↑Sup S : Set M) = ⋃ (s : _)(_ : s ∈ S), ↑s :=
   Set.ext$
     fun x =>
       by 
@@ -205,6 +205,7 @@ theorem closure_eq_mrange (s : Set M) : closure s = (FreeMonoid.lift (coeₓ : s
     rw [mrange_eq_map, ←FreeMonoid.closure_range_of, map_mclosure, ←Set.range_comp, FreeMonoid.lift_comp_of,
       Subtype.range_coe]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
 @[toAdditive]
 theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
   ∃ (l : List M)(hl : ∀ y _ : y ∈ l, y ∈ s), l.prod = x :=
@@ -218,6 +219,7 @@ theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
           hy ▸ z.2,
         hx⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
 @[toAdditive]
 theorem exists_multiset_of_mem_closure {M : Type _} [CommMonoidₓ M] {s : Set M} {x : M} (hx : x ∈ closure s) :
   ∃ (l : Multiset M)(hl : ∀ y _ : y ∈ l, y ∈ s), l.prod = x :=
@@ -275,6 +277,11 @@ theorem log_pow_eq_self [DecidableEq M] {n : M} (h : Function.Injective fun m : 
 theorem log_pow_int_eq_self {x : ℤ} (h : 1 < x.nat_abs) (m : ℕ) : log (pow x m) = m :=
   log_pow_eq_self (Int.pow_right_injective h) _
 
+@[simp]
+theorem map_powers {N : Type _} [Monoidₓ N] (f : M →* N) (m : M) : (powers m).map f = powers (f m) :=
+  by 
+    simp only [powers_eq_closure, f.map_mclosure, Set.image_singleton]
+
 end Submonoid
 
 namespace Submonoid
@@ -289,6 +296,8 @@ theorem sup_eq_range (s t : Submonoid N) : s⊔t = (s.subtype.coprod t.subtype).
     rw [mrange_eq_map, ←mrange_inl_sup_mrange_inr, map_sup, map_mrange, coprod_comp_inl, map_mrange, coprod_comp_inr,
       range_subtype, range_subtype]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » t)
 @[toAdditive]
 theorem mem_sup {s t : Submonoid N} {x : N} : x ∈ s⊔t ↔ ∃ (y : _)(_ : y ∈ s)(z : _)(_ : z ∈ t), (y*z) = x :=
   by 
@@ -412,7 +421,7 @@ theorem of_mul_image_powers_eq_multiples_of_mul [Monoidₓ M] {x : M} :
   Additive.ofMul '' (Submonoid.powers x : Set M) = AddSubmonoid.multiples (Additive.ofMul x) :=
   by 
     ext 
-    split 
+    constructor
     ·
       rintro ⟨y, ⟨n, hy1⟩, hy2⟩
       use n 
@@ -426,7 +435,7 @@ theorem of_add_image_multiples_eq_powers_of_add [AddMonoidₓ A] {x : A} :
   Multiplicative.ofAdd '' (AddSubmonoid.multiples x : Set A) = Submonoid.powers (Multiplicative.ofAdd x) :=
   by 
     symm 
-    rw [Equiv.eq_image_iff_symm_image_eq]
+    rw [Equivₓ.eq_image_iff_symm_image_eq]
     exact of_mul_image_powers_eq_multiples_of_mul
 
 end mul_addₓ

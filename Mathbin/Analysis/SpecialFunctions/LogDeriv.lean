@@ -48,7 +48,7 @@ theorem has_deriv_at_log (hx : x ≠ 0) : HasDerivAt log (x⁻¹) x :=
 theorem differentiable_at_log (hx : x ≠ 0) : DifferentiableAt ℝ log x :=
   (has_deriv_at_log hx).DifferentiableAt
 
-theorem differentiable_on_log : DifferentiableOn ℝ log («expr ᶜ» {0}) :=
+theorem differentiable_on_log : DifferentiableOn ℝ log ({0}ᶜ) :=
   fun x hx => (differentiable_at_log hx).DifferentiableWithinAt
 
 @[simp]
@@ -65,9 +65,9 @@ theorem deriv_log (x : ℝ) : deriv log x = x⁻¹ :=
 theorem deriv_log' : deriv log = HasInv.inv :=
   funext deriv_log
 
-theorem times_cont_diff_on_log {n : WithTop ℕ} : TimesContDiffOn ℝ n log («expr ᶜ» {0}) :=
+theorem times_cont_diff_on_log {n : WithTop ℕ} : TimesContDiffOn ℝ n log ({0}ᶜ) :=
   by 
-    suffices  : TimesContDiffOn ℝ ⊤ log («expr ᶜ» {0})
+    suffices  : TimesContDiffOn ℝ ⊤ log ({0}ᶜ)
     exact this.of_le le_top 
     refine' (times_cont_diff_on_top_iff_deriv_of_open is_open_compl_singleton).2 _ 
     simp [differentiable_on_log, times_cont_diff_on_inv]
@@ -144,6 +144,7 @@ theorem TimesContDiffWithinAt.log {n} (hf : TimesContDiffWithinAt ℝ n f s x) (
   TimesContDiffWithinAt ℝ n (fun x => log (f x)) s x :=
   (times_cont_diff_at_log.2 hx).comp_times_cont_diff_within_at x hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem TimesContDiffOn.log {n} (hf : TimesContDiffOn ℝ n f s) (hs : ∀ x _ : x ∈ s, f x ≠ 0) :
   TimesContDiffOn ℝ n (fun x => log (f x)) s :=
   fun x hx => (hf x hx).log (hs x hx)
@@ -151,6 +152,7 @@ theorem TimesContDiffOn.log {n} (hf : TimesContDiffOn ℝ n f s) (hs : ∀ x _ :
 theorem TimesContDiff.log {n} (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun x => log (f x) :=
   times_cont_diff_iff_times_cont_diff_at.2$ fun x => hf.times_cont_diff_at.log (h x)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem DifferentiableOn.log (hf : DifferentiableOn ℝ f s) (hx : ∀ x _ : x ∈ s, f x ≠ 0) :
   DifferentiableOn ℝ (fun x => log (f x)) s :=
   fun x h => (hf x h).log (hx x h)
@@ -174,102 +176,105 @@ end LogDifferentiable
 
 namespace Real
 
--- error in Analysis.SpecialFunctions.LogDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The function `x * log (1 + t / x)` tends to `t` at `+∞`. -/
-theorem tendsto_mul_log_one_plus_div_at_top
-(t : exprℝ()) : tendsto (λ x, «expr * »(x, log «expr + »(1, «expr / »(t, x)))) at_top (expr𝓝() t) :=
-begin
-  have [ident h₁] [":", expr tendsto (λ
-    h, «expr * »(«expr ⁻¹»(h), log «expr + »(1, «expr * »(t, h)))) «expr𝓝[ ] »(«expr ᶜ»({0}), 0) (expr𝓝() t)] [],
-  { simpa [] [] [] ["[", expr has_deriv_at_iff_tendsto_slope, "]"] [] ["using", expr ((has_deriv_at_const _ 1).add ((has_deriv_at_id (0 : exprℝ())).const_mul t)).log (by simp [] [] [] [] [] [])] },
-  have [ident h₂] [":", expr tendsto (λ
-    x : exprℝ(), «expr ⁻¹»(x)) at_top «expr𝓝[ ] »(«expr ᶜ»({0}), 0)] [":=", expr tendsto_inv_at_top_zero'.mono_right (nhds_within_mono _ (λ
-     x hx, (set.mem_Ioi.mp hx).ne'))],
-  convert [] [expr h₁.comp h₂] [],
-  ext [] [] [],
-  field_simp [] ["[", expr mul_comm, "]"] [] []
-end
+theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : tendsto (fun x => x*log (1+t / x)) at_top (𝓝 t) :=
+  by 
+    have h₁ : tendsto (fun h => h⁻¹*log (1+t*h)) (𝓝[{0}ᶜ] 0) (𝓝 t)
+    ·
+      simpa [has_deriv_at_iff_tendsto_slope] using
+        ((has_deriv_at_const _ 1).add ((has_deriv_at_id (0 : ℝ)).const_mul t)).log
+          (by 
+            simp )
+    have h₂ : tendsto (fun x : ℝ => x⁻¹) at_top (𝓝[{0}ᶜ] 0) :=
+      tendsto_inv_at_top_zero'.mono_right (nhds_within_mono _ fun x hx => (set.mem_Ioi.mp hx).ne')
+    convert h₁.comp h₂ 
+    ext 
+    fieldSimp [mul_commₓ]
 
 open_locale BigOperators
 
--- error in Analysis.SpecialFunctions.LogDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » Ioo («expr- »(1) : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » Icc «expr- »(«expr| |»(x)) «expr| |»(x))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » Icc «expr- »(«expr| |»(x)) «expr| |»(x))
 /-- A crude lemma estimating the difference between `log (1-x)` and its Taylor series at `0`,
 where the main point of the bound is that it tends to `0`. The goal is to deduce the series
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
 -/
-theorem abs_log_sub_add_sum_range_le
-{x : exprℝ()}
-(h : «expr < »(«expr| |»(x), 1))
-(n : exprℕ()) : «expr ≤ »(«expr| |»(«expr + »(«expr∑ in , »((i), range n, «expr / »(«expr ^ »(x, «expr + »(i, 1)), «expr + »(i, 1))), log «expr - »(1, x))), «expr / »(«expr ^ »(«expr| |»(x), «expr + »(n, 1)), «expr - »(1, «expr| |»(x)))) :=
-begin
-  let [ident F] [":", expr exprℝ() → exprℝ()] [":=", expr λ
-   x, «expr + »(«expr∑ in , »((i), range n, «expr / »(«expr ^ »(x, «expr + »(i, 1)), «expr + »(i, 1))), log «expr - »(1, x))],
-  have [ident A] [":", expr ∀
-   y «expr ∈ » Ioo («expr- »(1) : exprℝ()) 1, «expr = »(deriv F y, «expr / »(«expr- »(«expr ^ »(y, n)), «expr - »(1, y)))] [],
-  { assume [binders (y hy)],
-    have [] [":", expr «expr = »(«expr∑ in , »((i), range n, «expr / »(«expr * »(«expr + »(«expr↑ »(i), 1), «expr ^ »(y, i)), «expr + »(«expr↑ »(i), 1))), «expr∑ in , »((i), range n, «expr ^ »(y, i)))] [],
-    { congr' [] ["with", ident i],
-      have [] [":", expr «expr ≠ »(«expr + »((i : exprℝ()), 1), 0)] [":=", expr ne_of_gt (nat.cast_add_one_pos i)],
-      field_simp [] ["[", expr this, ",", expr mul_comm, "]"] [] [] },
-    field_simp [] ["[", expr F, ",", expr this, ",", "<-", expr geom_sum_def, ",", expr geom_sum_eq (ne_of_lt hy.2), ",", expr sub_ne_zero_of_ne (ne_of_gt hy.2), ",", expr sub_ne_zero_of_ne (ne_of_lt hy.2), "]"] [] [],
-    ring [] },
-  have [ident B] [":", expr ∀
-   y «expr ∈ » Icc «expr- »(«expr| |»(x)) «expr| |»(x), «expr ≤ »(«expr| |»(deriv F y), «expr / »(«expr ^ »(«expr| |»(x), n), «expr - »(1, «expr| |»(x))))] [],
-  { assume [binders (y hy)],
-    have [] [":", expr «expr ∈ »(y, Ioo «expr- »((1 : exprℝ())) 1)] [":=", expr ⟨lt_of_lt_of_le (neg_lt_neg h) hy.1, lt_of_le_of_lt hy.2 h⟩],
-    calc
-      «expr = »(«expr| |»(deriv F y), «expr| |»(«expr / »(«expr- »(«expr ^ »(y, n)), «expr - »(1, y)))) : by rw ["[", expr A y this, "]"] []
-      «expr ≤ »(..., «expr / »(«expr ^ »(«expr| |»(x), n), «expr - »(1, «expr| |»(x)))) : begin
-        have [] [":", expr «expr ≤ »(«expr| |»(y), «expr| |»(x))] [":=", expr abs_le.2 hy],
-        have [] [":", expr «expr < »(0, «expr - »(1, «expr| |»(x)))] [],
-        by linarith [] [] [],
-        have [] [":", expr «expr ≤ »(«expr - »(1, «expr| |»(x)), «expr| |»(«expr - »(1, y)))] [":=", expr le_trans (by linarith [] [] ["[", expr hy.2, "]"]) (le_abs_self _)],
-        simp [] [] ["only"] ["[", "<-", expr pow_abs, ",", expr abs_div, ",", expr abs_neg, "]"] [] [],
-        apply_rules ["[", expr div_le_div, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr pow_le_pow_of_le_left, "]"]
-      end },
-  have [ident C] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(F x, F 0)), «expr * »(«expr / »(«expr ^ »(«expr| |»(x), n), «expr - »(1, «expr| |»(x))), «expr∥ ∥»(«expr - »(x, 0))))] [],
-  { have [] [":", expr ∀ y «expr ∈ » Icc «expr- »(«expr| |»(x)) «expr| |»(x), differentiable_at exprℝ() F y] [],
-    { assume [binders (y hy)],
-      have [] [":", expr «expr ≠ »(«expr - »(1, y), 0)] [":=", expr sub_ne_zero_of_ne (ne_of_gt (lt_of_le_of_lt hy.2 h))],
-      simp [] [] [] ["[", expr F, ",", expr this, "]"] [] [] },
-    apply [expr convex.norm_image_sub_le_of_norm_deriv_le this B (convex_Icc _ _) _ _],
-    { simpa [] [] [] [] [] ["using", expr abs_nonneg x] },
-    { simp [] [] [] ["[", expr le_abs_self x, ",", expr neg_le.mp (neg_le_abs_self x), "]"] [] [] } },
-  simpa [] [] [] ["[", expr F, ",", expr norm_eq_abs, ",", expr div_mul_eq_mul_div, ",", expr pow_succ', "]"] [] ["using", expr C]
-end
+theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
+  |(∑ i in range n, (x^i+1) / i+1)+log (1 - x)| ≤ (|x|^n+1) / (1 - |x|) :=
+  by 
+    let F : ℝ → ℝ := fun x => (∑ i in range n, (x^i+1) / i+1)+log (1 - x)
+    have A : ∀ y _ : y ∈ Ioo (-1 : ℝ) 1, deriv F y = -(y^n) / (1 - y)
+    ·
+      intro y hy 
+      have  : (∑ i in range n, (((↑i)+1)*y^i) / (↑i)+1) = ∑ i in range n, y^i
+      ·
+        congr with i 
+        have  : ((i : ℝ)+1) ≠ 0 := ne_of_gtₓ (Nat.cast_add_one_pos i)
+        fieldSimp [this, mul_commₓ]
+      fieldSimp [F, this, ←geom_sum_def, geom_sum_eq (ne_of_ltₓ hy.2), sub_ne_zero_of_ne (ne_of_gtₓ hy.2),
+        sub_ne_zero_of_ne (ne_of_ltₓ hy.2)]
+      ring 
+    have B : ∀ y _ : y ∈ Icc (-|x|) |x|, |deriv F y| ≤ (|x|^n) / (1 - |x|)
+    ·
+      intro y hy 
+      have  : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_leₓ (neg_lt_neg h) hy.1, lt_of_le_of_ltₓ hy.2 h⟩
+      calc |deriv F y| = |-(y^n) / (1 - y)| :=
+        by 
+          rw [A y this]_ ≤ (|x|^n) / (1 - |x|) :=
+        by 
+          have  : |y| ≤ |x| := abs_le.2 hy 
+          have  : 0 < 1 - |x|
+          ·
+            linarith 
+          have  : 1 - |x| ≤ |1 - y| :=
+            le_transₓ
+              (by 
+                linarith [hy.2])
+              (le_abs_self _)
+          simp only [←pow_abs, abs_div, abs_neg]
+          applyRules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_of_le_left]
+    have C : ∥F x - F 0∥ ≤ ((|x|^n) / (1 - |x|))*∥x - 0∥
+    ·
+      have  : ∀ y _ : y ∈ Icc (-|x|) |x|, DifferentiableAt ℝ F y
+      ·
+        intro y hy 
+        have  : 1 - y ≠ 0 := sub_ne_zero_of_ne (ne_of_gtₓ (lt_of_le_of_ltₓ hy.2 h))
+        simp [F, this]
+      apply Convex.norm_image_sub_le_of_norm_deriv_le this B (convex_Icc _ _) _ _
+      ·
+        simpa using abs_nonneg x
+      ·
+        simp [le_abs_self x, neg_le.mp (neg_le_abs_self x)]
+    simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'ₓ] using C
 
--- error in Analysis.SpecialFunctions.LogDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Power series expansion of the logarithm around `1`. -/
-theorem has_sum_pow_div_log_of_abs_lt_1
-{x : exprℝ()}
-(h : «expr < »(«expr| |»(x), 1)) : has_sum (λ
- n : exprℕ(), «expr / »(«expr ^ »(x, «expr + »(n, 1)), «expr + »(n, 1))) «expr- »(log «expr - »(1, x)) :=
-begin
-  rw [expr summable.has_sum_iff_tendsto_nat] [],
-  show [expr tendsto (λ
-    n : exprℕ(), «expr∑ in , »((i : exprℕ()), range n, «expr / »(«expr ^ »(x, «expr + »(i, 1)), «expr + »(i, 1)))) at_top (expr𝓝() «expr- »(log «expr - »(1, x)))],
-  { rw ["[", expr tendsto_iff_norm_tendsto_zero, "]"] [],
-    simp [] [] ["only"] ["[", expr norm_eq_abs, ",", expr sub_neg_eq_add, "]"] [] [],
-    refine [expr squeeze_zero (λ n, abs_nonneg _) (abs_log_sub_add_sum_range_le h) _],
-    suffices [] [":", expr tendsto (λ
-      t : exprℕ(), «expr / »(«expr ^ »(«expr| |»(x), «expr + »(t, 1)), «expr - »(1, «expr| |»(x)))) at_top (expr𝓝() «expr / »(«expr * »(«expr| |»(x), 0), «expr - »(1, «expr| |»(x))))],
-    by simpa [] [] [] [] [] [],
-    simp [] [] ["only"] ["[", expr pow_succ, "]"] [] [],
-    refine [expr (tendsto_const_nhds.mul _).div_const],
-    exact [expr tendsto_pow_at_top_nhds_0_of_lt_1 (abs_nonneg _) h] },
-  show [expr summable (λ n : exprℕ(), «expr / »(«expr ^ »(x, «expr + »(n, 1)), «expr + »(n, 1)))],
-  { refine [expr summable_of_norm_bounded _ (summable_geometric_of_lt_1 (abs_nonneg _) h) (λ i, _)],
-    calc
-      «expr = »(«expr∥ ∥»(«expr / »(«expr ^ »(x, «expr + »(i, 1)), «expr + »(i, 1))), «expr / »(«expr ^ »(«expr| |»(x), «expr + »(i, 1)), «expr + »(i, 1))) : begin
-        have [] [":", expr «expr ≤ »((0 : exprℝ()), «expr + »(i, 1))] [":=", expr le_of_lt (nat.cast_add_one_pos i)],
-        rw ["[", expr norm_eq_abs, ",", expr abs_div, ",", "<-", expr pow_abs, ",", expr abs_of_nonneg this, "]"] []
-      end
-      «expr ≤ »(..., «expr / »(«expr ^ »(«expr| |»(x), «expr + »(i, 1)), «expr + »(0, 1))) : begin
-        apply_rules ["[", expr div_le_div_of_le_left, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr add_le_add_right, ",", expr i.cast_nonneg, "]"],
-        norm_num [] []
-      end
-      «expr ≤ »(..., «expr ^ »(«expr| |»(x), i)) : by simpa [] [] [] ["[", expr pow_succ', "]"] [] ["using", expr mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_lt h)] }
-end
+theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) : HasSum (fun n : ℕ => (x^n+1) / n+1) (-log (1 - x)) :=
+  by 
+    rw [Summable.has_sum_iff_tendsto_nat]
+    show tendsto (fun n : ℕ => ∑ i : ℕ in range n, (x^i+1) / i+1) at_top (𝓝 (-log (1 - x)))
+    ·
+      rw [tendsto_iff_norm_tendsto_zero]
+      simp only [norm_eq_abs, sub_neg_eq_add]
+      refine' squeeze_zero (fun n => abs_nonneg _) (abs_log_sub_add_sum_range_le h) _ 
+      suffices  : tendsto (fun t : ℕ => (|x|^t+1) / (1 - |x|)) at_top (𝓝 ((|x|*0) / (1 - |x|)))
+      ·
+        simpa 
+      simp only [pow_succₓ]
+      refine' (tendsto_const_nhds.mul _).div_const 
+      exact tendsto_pow_at_top_nhds_0_of_lt_1 (abs_nonneg _) h 
+    show Summable fun n : ℕ => (x^n+1) / n+1
+    ·
+      refine' summable_of_norm_bounded _ (summable_geometric_of_lt_1 (abs_nonneg _) h) fun i => _ 
+      calc ∥(x^i+1) / i+1∥ = (|x|^i+1) / i+1 :=
+        by 
+          have  : (0 : ℝ) ≤ i+1 := le_of_ltₓ (Nat.cast_add_one_pos i)
+          rw [norm_eq_abs, abs_div, ←pow_abs, abs_of_nonneg this]_ ≤ (|x|^i+1) / 0+1 :=
+        by 
+          applyRules [div_le_div_of_le_left, pow_nonneg, abs_nonneg, add_le_add_right, i.cast_nonneg]
+          normNum _ ≤ (|x|^i) :=
+        by 
+          simpa [pow_succ'ₓ] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_ltₓ h)
 
 end Real
 

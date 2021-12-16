@@ -49,6 +49,7 @@ open MeasurableSpace Set
 
 open_locale Classical
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s t «expr ∈ » C)
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/
@@ -57,7 +58,7 @@ def IsPiSystem {α} (C : Set (Set α)) : Prop :=
 
 namespace MeasurableSpace
 
-theorem is_pi_system_measurable_set {α : Type _} [MeasurableSpace α] : IsPiSystem { s:Set α | MeasurableSet s } :=
+theorem is_pi_system_measurable_set {α : Type _} [MeasurableSpace α] : IsPiSystem { s : Set α | MeasurableSet s } :=
   fun s t hs ht _ => hs.inter ht
 
 end MeasurableSpace
@@ -85,51 +86,100 @@ theorem is_pi_system_image_Ioi (s : Set α) : IsPiSystem (Ioi '' s) :=
 theorem is_pi_system_Ioi : IsPiSystem (range Ioi : Set (Set α)) :=
   @image_univ α _ Ioi ▸ is_pi_system_image_Ioi univ
 
-theorem is_pi_system_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Prop} (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
-  (Hi : ∀ {a₁ b₁ a₂ b₂}, Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx (max a₁ a₂) (min b₁ b₂)) (s t : Set α) :
-  IsPiSystem { S | ∃ (l : _)(_ : l ∈ s)(u : _)(_ : u ∈ t)(hlu : p l u), Ixx l u = S } :=
-  by 
-    rintro _ _ ⟨l₁, hls₁, u₁, hut₁, hlu₁, rfl⟩ ⟨l₂, hls₂, u₂, hut₂, hlu₂, rfl⟩
-    simp only [Hi, ←sup_eq_max, ←inf_eq_min]
-    exact fun H => ⟨l₁⊔l₂, sup_ind l₁ l₂ hls₁ hls₂, u₁⊓u₂, inf_ind u₁ u₂ hut₁ hut₂, Hne H, rfl⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Ixx_mem
+  { Ixx : α → α → Set α }
+      { p : α → α → Prop }
+      ( Hne : ∀ { a b } , Ixx a b . Nonempty → p a b )
+      ( Hi : ∀ { a₁ b₁ a₂ b₂ } , Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx max a₁ a₂ min b₁ b₂ )
+      ( s t : Set α )
+    : IsPiSystem { S | ∃ ( l : _ ) ( _ : l ∈ s ) ( u : _ ) ( _ : u ∈ t ) ( hlu : p l u ) , Ixx l u = S }
+  :=
+    by
+      rintro _ _ ⟨ l₁ , hls₁ , u₁ , hut₁ , hlu₁ , rfl ⟩ ⟨ l₂ , hls₂ , u₂ , hut₂ , hlu₂ , rfl ⟩
+        simp only [ Hi , ← sup_eq_max , ← inf_eq_min ]
+        exact fun H => ⟨ l₁ ⊔ l₂ , sup_ind l₁ l₂ hls₁ hls₂ , u₁ ⊓ u₂ , inf_ind u₁ u₂ hut₁ hut₂ , Hne H , rfl ⟩
 
-theorem is_pi_system_Ixx {Ixx : α → α → Set α} {p : α → α → Prop} (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
-  (Hi : ∀ {a₁ b₁ a₂ b₂}, Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx (max a₁ a₂) (min b₁ b₂)) (f : ι → α) (g : ι' → α) :
-  @IsPiSystem α { S | ∃ (i j : _)(h : p (f i) (g j)), Ixx (f i) (g j) = S } :=
-  by 
-    simpa only [exists_range_iff] using is_pi_system_Ixx_mem (@Hne) (@Hi) (range f) (range g)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Ixx
+  { Ixx : α → α → Set α }
+      { p : α → α → Prop }
+      ( Hne : ∀ { a b } , Ixx a b . Nonempty → p a b )
+      ( Hi : ∀ { a₁ b₁ a₂ b₂ } , Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx max a₁ a₂ min b₁ b₂ )
+      ( f : ι → α )
+      ( g : ι' → α )
+    : @ IsPiSystem α { S | ∃ ( i j : _ ) ( h : p f i g j ) , Ixx f i g j = S }
+  := by simpa only [ exists_range_iff ] using is_pi_system_Ixx_mem @ Hne @ Hi range f range g
 
-theorem is_pi_system_Ioo_mem (s t : Set α) :
-  IsPiSystem { S | ∃ (l : _)(_ : l ∈ s)(u : _)(_ : u ∈ t)(h : l < u), Ioo l u = S } :=
-  is_pi_system_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) s t
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Ioo_mem
+  ( s t : Set α ) : IsPiSystem { S | ∃ ( l : _ ) ( _ : l ∈ s ) ( u : _ ) ( _ : u ∈ t ) ( h : l < u ) , Ioo l u = S }
+  := is_pi_system_Ixx_mem fun a b ⟨ x , hax , hxb ⟩ => hax.trans hxb fun _ _ _ _ => Ioo_inter_Ioo s t
 
-theorem is_pi_system_Ioo (f : ι → α) (g : ι' → α) :
-  @IsPiSystem α { S | ∃ (l u : _)(h : f l < g u), Ioo (f l) (g u) = S } :=
-  is_pi_system_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) f g
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Ioo
+  ( f : ι → α ) ( g : ι' → α ) : @ IsPiSystem α { S | ∃ ( l u : _ ) ( h : f l < g u ) , Ioo f l g u = S }
+  := is_pi_system_Ixx fun a b ⟨ x , hax , hxb ⟩ => hax.trans hxb fun _ _ _ _ => Ioo_inter_Ioo f g
 
-theorem is_pi_system_Ioc_mem (s t : Set α) :
-  IsPiSystem { S | ∃ (l : _)(_ : l ∈ s)(u : _)(_ : u ∈ t)(h : l < u), Ioc l u = S } :=
-  is_pi_system_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) s t
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Ioc_mem
+  ( s t : Set α ) : IsPiSystem { S | ∃ ( l : _ ) ( _ : l ∈ s ) ( u : _ ) ( _ : u ∈ t ) ( h : l < u ) , Ioc l u = S }
+  := is_pi_system_Ixx_mem fun a b ⟨ x , hax , hxb ⟩ => hax.trans_le hxb fun _ _ _ _ => Ioc_inter_Ioc s t
 
-theorem is_pi_system_Ioc (f : ι → α) (g : ι' → α) :
-  @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), Ioc (f i) (g j) = S } :=
-  is_pi_system_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) f g
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Ioc
+  ( f : ι → α ) ( g : ι' → α ) : @ IsPiSystem α { S | ∃ ( i j : _ ) ( h : f i < g j ) , Ioc f i g j = S }
+  := is_pi_system_Ixx fun a b ⟨ x , hax , hxb ⟩ => hax.trans_le hxb fun _ _ _ _ => Ioc_inter_Ioc f g
 
-theorem is_pi_system_Ico_mem (s t : Set α) :
-  IsPiSystem { S | ∃ (l : _)(_ : l ∈ s)(u : _)(_ : u ∈ t)(h : l < u), Ico l u = S } :=
-  is_pi_system_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) s t
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Ico_mem
+  ( s t : Set α ) : IsPiSystem { S | ∃ ( l : _ ) ( _ : l ∈ s ) ( u : _ ) ( _ : u ∈ t ) ( h : l < u ) , Ico l u = S }
+  := is_pi_system_Ixx_mem fun a b ⟨ x , hax , hxb ⟩ => hax.trans_lt hxb fun _ _ _ _ => Ico_inter_Ico s t
 
-theorem is_pi_system_Ico (f : ι → α) (g : ι' → α) :
-  @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), Ico (f i) (g j) = S } :=
-  is_pi_system_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) f g
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Ico
+  ( f : ι → α ) ( g : ι' → α ) : @ IsPiSystem α { S | ∃ ( i j : _ ) ( h : f i < g j ) , Ico f i g j = S }
+  := is_pi_system_Ixx fun a b ⟨ x , hax , hxb ⟩ => hax.trans_lt hxb fun _ _ _ _ => Ico_inter_Ico f g
 
-theorem is_pi_system_Icc_mem (s t : Set α) :
-  IsPiSystem { S | ∃ (l : _)(_ : l ∈ s)(u : _)(_ : u ∈ t)(h : l ≤ u), Icc l u = S } :=
-  is_pi_system_Ixx_mem (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) s t
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Icc_mem
+  ( s t : Set α ) : IsPiSystem { S | ∃ ( l : _ ) ( _ : l ∈ s ) ( u : _ ) ( _ : u ∈ t ) ( h : l ≤ u ) , Icc l u = S }
+  := is_pi_system_Ixx_mem fun a b => nonempty_Icc . 1 fun _ _ _ _ => Icc_inter_Icc s t
 
-theorem is_pi_system_Icc (f : ι → α) (g : ι' → α) :
-  @IsPiSystem α { S | ∃ (i j : _)(h : f i ≤ g j), Icc (f i) (g j) = S } :=
-  is_pi_system_Ixx (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) f g
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_pi_system_Icc
+  ( f : ι → α ) ( g : ι' → α ) : @ IsPiSystem α { S | ∃ ( i j : _ ) ( h : f i ≤ g j ) , Icc f i g j = S }
+  := is_pi_system_Ixx fun a b => nonempty_Icc . 1 fun _ _ _ _ => Icc_inter_Icc f g
 
 end Order
 
@@ -167,6 +217,7 @@ theorem generate_pi_system_mono {α} {S T : Set (Set α)} (hST : S ⊆ T) : Gene
     ·
       exact is_pi_system_generate_pi_system T _ _ h_s h_u h_nonempty
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 theorem generate_pi_system_measurable_set {α} [M : MeasurableSpace α] {S : Set (Set α)}
   (h_meas_S : ∀ s _ : s ∈ S, MeasurableSet s) (t : Set α) (h_in_pi : t ∈ GeneratePiSystem S) : MeasurableSet t :=
   by 
@@ -190,9 +241,11 @@ theorem generate_from_generate_pi_system_eq {α} {g : Set (Set α)} :
     ·
       exact fun t h_t => measurable_set_generate_from (GeneratePiSystem.base h_t)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » T)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » T)
 theorem mem_generate_pi_system_Union_elim {α β} {g : β → Set (Set α)} (h_pi : ∀ b, IsPiSystem (g b)) (t : Set α)
-  (h_t : t ∈ GeneratePiSystem (⋃b, g b)) :
-  ∃ (T : Finset β)(f : β → Set α), (t = ⋂(b : _)(_ : b ∈ T), f b) ∧ ∀ b _ : b ∈ T, f b ∈ g b :=
+  (h_t : t ∈ GeneratePiSystem (⋃ b, g b)) :
+  ∃ (T : Finset β)(f : β → Set α), (t = ⋂ (b : _)(_ : b ∈ T), f b) ∧ ∀ b _ : b ∈ T, f b ∈ g b :=
   by 
     induction' h_t with s h_s s t' h_gen_s h_gen_t' h_nonempty h_s h_t'
     ·
@@ -205,12 +258,12 @@ theorem mem_generate_pi_system_Union_elim {α β} {g : β → Set (Set α)} (h_p
       use T_s ∪ T_t',
         fun b : β =>
           if b ∈ T_s then if b ∈ T_t' then f_s b ∩ f_t' b else f_s b else if b ∈ T_t' then f_t' b else (∅ : Set α)
-      split 
+      constructor
       ·
         ext a 
         simpRw [Set.mem_inter_iff, Set.mem_Inter, Finset.mem_union, or_imp_distrib]
         rw [←forall_and_distrib]
-        split  <;>
+        constructor <;>
           intro h1 b <;>
             byCases' hbs : b ∈ T_s <;>
               byCases' hbt : b ∈ T_t' <;>
@@ -232,43 +285,48 @@ theorem mem_generate_pi_system_Union_elim {α β} {g : β → Set (Set α)} (h_p
         rw [Finset.mem_union] at h_b 
         apply False.elim (h_b.elim hbs hbt)
 
--- error in MeasureTheory.PiSystem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_generate_pi_system_Union_elim'
-{α β}
-{g : β → set (set α)}
-{s : set β}
-(h_pi : ∀ b «expr ∈ » s, is_pi_system (g b))
-(t : set α)
-(h_t : «expr ∈ »(t, generate_pi_system «expr⋃ , »((b «expr ∈ » s), g b))) : «expr∃ , »((T : finset β)
- (f : β → set α), «expr ∧ »(«expr ⊆ »(«expr↑ »(T), s), «expr ∧ »(«expr = »(t, «expr⋂ , »((b «expr ∈ » T), f b)), ∀
-   b «expr ∈ » T, «expr ∈ »(f b, g b)))) :=
-begin
-  have [] [":", expr «expr ∈ »(t, generate_pi_system «expr⋃ , »((b : subtype s), «expr ∘ »(g, subtype.val) b))] [],
-  { suffices [ident h1] [":", expr «expr = »(«expr⋃ , »((b : subtype s), «expr ∘ »(g, subtype.val) b), «expr⋃ , »((b)
-       (H : «expr ∈ »(b, s)), g b))],
-    by rwa [expr h1] [],
-    ext [] [ident x] [],
-    simp [] [] ["only"] ["[", expr exists_prop, ",", expr set.mem_Union, ",", expr function.comp_app, ",", expr subtype.exists, ",", expr subtype.coe_mk, "]"] [] [],
-    refl },
-  rcases [expr @mem_generate_pi_system_Union_elim α (subtype s) «expr ∘ »(g, subtype.val) (λ
-    b, h_pi b.val b.property) t this, "with", "⟨", ident T, ",", "⟨", ident f, ",", "⟨", ident rfl, ",", ident h_t', "⟩", "⟩", "⟩"],
-  refine [expr ⟨T.image subtype.val, function.extend subtype.val f (λ
-     b : β, («expr∅»() : set α)), by simp [] [] [] [] [] [], _, _⟩],
-  { ext [] [ident a] [],
-    split; { simp [] [] ["only"] ["[", expr set.mem_Inter, ",", expr subtype.forall, ",", expr finset.set_bInter_finset_image, "]"] [] [],
-      intros [ident h1, ident b, ident h_b, ident h_b_in_T],
-      have [ident h2] [] [":=", expr h1 b h_b h_b_in_T],
-      revert [ident h2],
-      rw [expr function.extend_apply subtype.val_injective] [],
-      apply [expr id] } },
-  { intros [ident b, ident h_b],
-    simp_rw ["[", expr finset.mem_image, ",", expr exists_prop, ",", expr subtype.exists, ",", expr exists_and_distrib_right, ",", expr exists_eq_right, "]"] ["at", ident h_b],
-    cases [expr h_b] [],
-    have [ident h_b_alt] [":", expr «expr = »(b, (subtype.mk b h_b_w).val)] [":=", expr rfl],
-    rw ["[", expr h_b_alt, ",", expr function.extend_apply subtype.val_injective, "]"] [],
-    apply [expr h_t'],
-    apply [expr h_b_h] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » T)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » T)
+theorem mem_generate_pi_system_Union_elim' {α β} {g : β → Set (Set α)} {s : Set β}
+  (h_pi : ∀ b _ : b ∈ s, IsPiSystem (g b)) (t : Set α) (h_t : t ∈ GeneratePiSystem (⋃ (b : _)(_ : b ∈ s), g b)) :
+  ∃ (T : Finset β)(f : β → Set α), ↑T ⊆ s ∧ (t = ⋂ (b : _)(_ : b ∈ T), f b) ∧ ∀ b _ : b ∈ T, f b ∈ g b :=
+  by 
+    have  : t ∈ GeneratePiSystem (⋃ b : Subtype s, (g ∘ Subtype.val) b)
+    ·
+      suffices h1 : (⋃ b : Subtype s, (g ∘ Subtype.val) b) = ⋃ (b : _)(H : b ∈ s), g b
+      ·
+        rwa [h1]
+      ext x 
+      simp only [exists_prop, Set.mem_Union, Function.comp_app, Subtype.exists, Subtype.coe_mk]
+      rfl 
+    rcases@mem_generate_pi_system_Union_elim α (Subtype s) (g ∘ Subtype.val) (fun b => h_pi b.val b.property) t
+        this with
+      ⟨T, ⟨f, ⟨rfl, h_t'⟩⟩⟩
+    refine'
+      ⟨T.image Subtype.val, Function.extendₓ Subtype.val f fun b : β => (∅ : Set α),
+        by 
+          simp ,
+        _, _⟩
+    ·
+      ext a 
+      constructor <;>
+        ·
+          simp only [Set.mem_Inter, Subtype.forall, Finset.set_bInter_finset_image]
+          intro h1 b h_b h_b_in_T 
+          have h2 := h1 b h_b h_b_in_T 
+          revert h2 
+          rw [Function.extend_applyₓ Subtype.val_injective]
+          apply id
+    ·
+      intro b h_b 
+      simpRw [Finset.mem_image, exists_prop, Subtype.exists, exists_and_distrib_right, exists_eq_right]  at h_b 
+      cases h_b 
+      have h_b_alt : b = (Subtype.mk b h_b_w).val := rfl 
+      rw [h_b_alt, Function.extend_applyₓ Subtype.val_injective]
+      apply h_t' 
+      apply h_b_h
 
 namespace MeasurableSpace
 
@@ -286,8 +344,8 @@ variable {α : Type _}
 structure dynkin_system (α : Type _) where 
   Has : Set α → Prop 
   has_empty : has ∅
-  HasCompl : ∀ {a}, has a → has («expr ᶜ» a)
-  has_Union_nat : ∀ {f : ℕ → Set α}, Pairwise (Disjoint on f) → (∀ i, has (f i)) → has (⋃i, f i)
+  HasCompl : ∀ {a}, has a → has (aᶜ)
+  has_Union_nat : ∀ {f : ℕ → Set α}, Pairwise (Disjoint on f) → (∀ i, has (f i)) → has (⋃ i, f i)
 
 namespace DynkinSystem
 
@@ -300,7 +358,7 @@ theorem ext : ∀ {d₁ d₂ : dynkin_system α}, (∀ s : Set α, d₁.has s �
 
 variable (d : dynkin_system α)
 
-theorem has_compl_iff {a} : d.has («expr ᶜ» a) ↔ d.has a :=
+theorem has_compl_iff {a} : d.has (aᶜ) ↔ d.has a :=
   ⟨fun h =>
       by 
         simpa using d.has_compl h,
@@ -311,7 +369,7 @@ theorem has_univ : d.has univ :=
     simpa using d.has_compl d.has_empty
 
 theorem has_Union {β} [Encodable β] {f : β → Set α} (hd : Pairwise (Disjoint on f)) (h : ∀ i, d.has (f i)) :
-  d.has (⋃i, f i) :=
+  d.has (⋃ i, f i) :=
   by 
     rw [←Encodable.Union_decode₂]
     exact d.has_Union_nat (Encodable.Union_decode₂_disjoint_on hd) fun n => Encodable.Union_decode₂_cases d.has_empty h
@@ -347,15 +405,16 @@ theorem of_measurable_space_le_of_measurable_space_iff {m₁ m₂ : MeasurableSp
   of_measurable_space m₁ ≤ of_measurable_space m₂ ↔ m₁ ≤ m₂ :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 /-- The least Dynkin system containing a collection of basic sets.
   This inductive type gives the underlying collection of sets. -/
 inductive generate_has (s : Set (Set α)) : Set α → Prop
   | basic : ∀ t _ : t ∈ s, generate_has t
   | Empty : generate_has ∅
-  | compl : ∀ {a}, generate_has a → generate_has («expr ᶜ» a)
-  | Union : ∀ {f : ℕ → Set α}, Pairwise (Disjoint on f) → (∀ i, generate_has (f i)) → generate_has (⋃i, f i)
+  | compl : ∀ {a}, generate_has a → generate_has (aᶜ)
+  | Union : ∀ {f : ℕ → Set α}, Pairwise (Disjoint on f) → (∀ i, generate_has (f i)) → generate_has (⋃ i, f i)
 
-theorem generate_has_compl {C : Set (Set α)} {s : Set α} : generate_has C («expr ᶜ» s) ↔ generate_has C s :=
+theorem generate_has_compl {C : Set (Set α)} {s : Set α} : generate_has C (sᶜ) ↔ generate_has C s :=
   by 
     refine' ⟨_, generate_has.compl⟩
     intro h 
@@ -396,7 +455,7 @@ def restrict_on {s : Set α} (h : d.has s) : dynkin_system α :=
         simp [d.has_empty],
     HasCompl :=
       fun t hts =>
-        have  : «expr ᶜ» t ∩ s = «expr ᶜ» (t ∩ s) \ «expr ᶜ» s :=
+        have  : tᶜ ∩ s = (t ∩ s)ᶜ \ sᶜ :=
           Set.ext$
             fun x =>
               by 
@@ -414,6 +473,7 @@ def restrict_on {s : Set α} (h : d.has s) : dynkin_system α :=
           ·
             simpa [inter_comm] using hf }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem generate_le {s : Set (Set α)} (h : ∀ t _ : t ∈ s, d.has t) : generate s ≤ d :=
   fun t ht => ht.rec_on h d.has_empty (fun a _ h => d.has_compl h) fun f hd _ hf => d.has_Union hd hf
 
@@ -456,10 +516,11 @@ theorem generate_from_eq {s : Set (Set α)} (hs : IsPiSystem s) :
 
 end DynkinSystem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem induction_on_inter {C : Set α → Prop} {s : Set (Set α)} [m : MeasurableSpace α] (h_eq : m = generate_from s)
   (h_inter : IsPiSystem s) (h_empty : C ∅) (h_basic : ∀ t _ : t ∈ s, C t)
-  (h_compl : ∀ t, MeasurableSet t → C t → C («expr ᶜ» t))
-  (h_union : ∀ f : ℕ → Set α, Pairwise (Disjoint on f) → (∀ i, MeasurableSet (f i)) → (∀ i, C (f i)) → C (⋃i, f i)) :
+  (h_compl : ∀ t, MeasurableSet t → C t → C (tᶜ))
+  (h_union : ∀ f : ℕ → Set α, Pairwise (Disjoint on f) → (∀ i, MeasurableSet (f i)) → (∀ i, C (f i)) → C (⋃ i, f i)) :
   ∀ ⦃t⦄, MeasurableSet t → C t :=
   have eq : MeasurableSet = dynkin_system.generate_has s :=
     by 

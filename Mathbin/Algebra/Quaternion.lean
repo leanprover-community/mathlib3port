@@ -1,6 +1,6 @@
 import Mathbin.Tactic.RingExp 
 import Mathbin.Algebra.Algebra.Basic 
-import Mathbin.Algebra.Opposites 
+import Mathbin.Algebra.Ring.Opposite 
 import Mathbin.Data.Equiv.Ring
 
 /-!
@@ -251,13 +251,13 @@ theorem coe_neg : ((-x : R) : ℍ[R,c₁,c₂]) = -x :=
 theorem coe_mul : ((x*y : R) : ℍ[R,c₁,c₂]) = x*y :=
   (algebraMap R ℍ[R,c₁,c₂]).map_mul x y
 
-theorem coe_commutes : («expr↑ » r*a) = a*r :=
+theorem coe_commutes : ((↑r)*a) = a*r :=
   Algebra.commutes r a
 
-theorem coe_commute : Commute («expr↑ » r) a :=
+theorem coe_commute : Commute (↑r) a :=
   coe_commutes r a
 
-theorem coe_mul_eq_smul : («expr↑ » r*a) = r • a :=
+theorem coe_mul_eq_smul : ((↑r)*a) = r • a :=
   (Algebra.smul_def r a).symm
 
 theorem mul_coe_eq_smul : (a*r) = r • a :=
@@ -265,10 +265,10 @@ theorem mul_coe_eq_smul : (a*r) = r • a :=
     rw [←coe_commutes, coe_mul_eq_smul]
 
 @[normCast, simp]
-theorem coe_algebra_map : «expr⇑ » (algebraMap R ℍ[R,c₁,c₂]) = coeₓ :=
+theorem coe_algebra_map : ⇑algebraMap R ℍ[R,c₁,c₂] = coeₓ :=
   rfl
 
-theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = «expr↑ » (x*y) :=
+theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = ↑x*y :=
   by 
     rw [coe_mul, coe_mul_eq_smul]
 
@@ -328,7 +328,7 @@ theorem conj_mul_conj : (a*b.conj).conj = b*a.conj :=
   by 
     rw [conj_mul, conj_conj]
 
-theorem self_add_conj' : (a+a.conj) = «expr↑ » (2*a.re) :=
+theorem self_add_conj' : (a+a.conj) = ↑2*a.re :=
   by 
     ext <;> simp [two_mul]
 
@@ -336,7 +336,7 @@ theorem self_add_conj : (a+a.conj) = 2*a.re :=
   by 
     simp only [self_add_conj', two_mul, coe_add]
 
-theorem conj_add_self' : (a.conj+a) = «expr↑ » (2*a.re) :=
+theorem conj_add_self' : (a.conj+a) = ↑2*a.re :=
   by 
     rw [add_commₓ, self_add_conj']
 
@@ -344,7 +344,7 @@ theorem conj_add_self : (a.conj+a) = 2*a.re :=
   by 
     rw [add_commₓ, self_add_conj]
 
-theorem conj_eq_two_re_sub : a.conj = «expr↑ » (2*a.re) - a :=
+theorem conj_eq_two_re_sub : a.conj = (↑2*a.re) - a :=
   eq_sub_iff_add_eq.2 a.conj_add_self'
 
 theorem commute_conj_self : Commute a.conj a :=
@@ -416,7 +416,7 @@ theorem star_def (a : ℍ[R,c₁,c₂]) : star a = conj a :=
 open MulOpposite
 
 /-- Quaternion conjugate as an `alg_equiv` to the opposite ring. -/
-def conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] «expr ᵐᵒᵖ» ℍ[R,c₁,c₂] :=
+def conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] ℍ[R,c₁,c₂]ᵐᵒᵖ :=
   { conj.toAddEquiv.trans op_add_equiv with toFun := op ∘ conj, invFun := conj ∘ unop,
     map_mul' :=
       fun x y =>
@@ -428,7 +428,7 @@ def conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] «expr ᵐᵒᵖ» ℍ[R,c₁,c₂] :=
           simp  }
 
 @[simp]
-theorem coe_conj_ae : «expr⇑ » (conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] _) = op ∘ conj :=
+theorem coe_conj_ae : ⇑(conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] _) = op ∘ conj :=
   rfl
 
 end QuaternionAlgebra
@@ -635,23 +635,23 @@ theorem smul_im_j : (r • a).imJ = r • a.im_j :=
 theorem smul_im_k : (r • a).imK = r • a.im_k :=
   rfl
 
-theorem coe_commutes : («expr↑ » r*a) = a*r :=
+theorem coe_commutes : ((↑r)*a) = a*r :=
   QuaternionAlgebra.coe_commutes r a
 
-theorem coe_commute : Commute («expr↑ » r) a :=
+theorem coe_commute : Commute (↑r) a :=
   QuaternionAlgebra.coe_commute r a
 
-theorem coe_mul_eq_smul : («expr↑ » r*a) = r • a :=
+theorem coe_mul_eq_smul : ((↑r)*a) = r • a :=
   QuaternionAlgebra.coe_mul_eq_smul r a
 
 theorem mul_coe_eq_smul : (a*r) = r • a :=
   QuaternionAlgebra.mul_coe_eq_smul r a
 
 @[simp]
-theorem algebra_map_def : «expr⇑ » (algebraMap R ℍ[R]) = coeₓ :=
+theorem algebra_map_def : ⇑algebraMap R ℍ[R] = coeₓ :=
   rfl
 
-theorem smul_coe : x • (y : ℍ[R]) = «expr↑ » (x*y) :=
+theorem smul_coe : x • (y : ℍ[R]) = ↑x*y :=
   QuaternionAlgebra.smul_coe x y
 
 /-- Quaternion conjugate. -/
@@ -692,19 +692,19 @@ theorem conj_conj_mul : (a.conj*b).conj = b.conj*a :=
 theorem conj_mul_conj : (a*b.conj).conj = b*a.conj :=
   a.conj_mul_conj b
 
-theorem self_add_conj' : (a+a.conj) = «expr↑ » (2*a.re) :=
+theorem self_add_conj' : (a+a.conj) = ↑2*a.re :=
   a.self_add_conj'
 
 theorem self_add_conj : (a+a.conj) = 2*a.re :=
   a.self_add_conj
 
-theorem conj_add_self' : (a.conj+a) = «expr↑ » (2*a.re) :=
+theorem conj_add_self' : (a.conj+a) = ↑2*a.re :=
   a.conj_add_self'
 
 theorem conj_add_self : (a.conj+a) = 2*a.re :=
   a.conj_add_self
 
-theorem conj_eq_two_re_sub : a.conj = «expr↑ » (2*a.re) - a :=
+theorem conj_eq_two_re_sub : a.conj = (↑2*a.re) - a :=
   a.conj_eq_two_re_sub
 
 theorem commute_conj_self : Commute a.conj a :=
@@ -761,11 +761,11 @@ theorem conj_sub : (a - b).conj = a.conj - b.conj :=
 open MulOpposite
 
 /-- Quaternion conjugate as an `alg_equiv` to the opposite ring. -/
-def conj_ae : ℍ[R] ≃ₐ[R] «expr ᵐᵒᵖ» ℍ[R] :=
+def conj_ae : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ :=
   QuaternionAlgebra.conjAe
 
 @[simp]
-theorem coe_conj_ae : «expr⇑ » (conj_ae : ℍ[R] ≃ₐ[R] «expr ᵐᵒᵖ» ℍ[R]) = op ∘ conj :=
+theorem coe_conj_ae : ⇑(conj_ae : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ) = op ∘ conj :=
   rfl
 
 /-- Square of the norm. -/

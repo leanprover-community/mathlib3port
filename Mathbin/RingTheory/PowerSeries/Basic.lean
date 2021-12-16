@@ -60,7 +60,7 @@ Occasionally this leads to proofs that are uglier than expected.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -168,9 +168,9 @@ theorem monomial_zero_one : monomial R (0 : σ →₀ ℕ) 1 = 1 :=
   rfl
 
 instance : Mul (MvPowerSeries σ R) :=
-  ⟨fun φ ψ n => ∑p in Finsupp.antidiagonal n, coeff R p.1 φ*coeff R p.2 ψ⟩
+  ⟨fun φ ψ n => ∑ p in Finsupp.antidiagonal n, coeff R p.1 φ*coeff R p.2 ψ⟩
 
-theorem coeff_mul : coeff R n (φ*ψ) = ∑p in Finsupp.antidiagonal n, coeff R p.1 φ*coeff R p.2 ψ :=
+theorem coeff_mul : coeff R n (φ*ψ) = ∑ p in Finsupp.antidiagonal n, coeff R p.1 φ*coeff R p.2 ψ :=
   rfl
 
 protected theorem zero_mul : ((0 : MvPowerSeries σ R)*φ) = 0 :=
@@ -185,27 +185,23 @@ protected theorem mul_zero : (φ*0) = 0 :=
       by 
         simp [coeff_mul]
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coeff_monomial_mul
-(a : R) : «expr = »(coeff R m «expr * »(monomial R n a, φ), if «expr ≤ »(n, m) then «expr * »(a, coeff R «expr - »(m, n) φ) else 0) :=
-begin
-  have [] [":", expr ∀
-   p «expr ∈ » antidiagonal m, «expr ≠ »(«expr * »(coeff R (p : «expr × »(«expr →₀ »(σ, exprℕ()), «expr →₀ »(σ, exprℕ()))).1 (monomial R n a), coeff R p.2 φ), 0) → «expr = »(p.1, n)] [":=", expr λ
-   p _ hp, eq_of_coeff_monomial_ne_zero (left_ne_zero_of_mul hp)],
-  rw ["[", expr coeff_mul, ",", "<-", expr finset.sum_filter_of_ne this, ",", expr antidiagonal_filter_fst_eq, ",", expr finset.sum_ite_index, "]"] [],
-  simp [] [] ["only"] ["[", expr finset.sum_singleton, ",", expr coeff_monomial_same, ",", expr finset.sum_empty, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » antidiagonal m)
+theorem coeff_monomial_mul (a : R) : coeff R m (monomial R n a*φ) = if n ≤ m then a*coeff R (m - n) φ else 0 :=
+  by 
+    have  :
+      ∀ p _ : p ∈ antidiagonal m, (coeff R (p : (σ →₀ ℕ) × (σ →₀ ℕ)).1 (monomial R n a)*coeff R p.2 φ) ≠ 0 → p.1 = n :=
+      fun p _ hp => eq_of_coeff_monomial_ne_zero (left_ne_zero_of_mul hp)
+    rw [coeff_mul, ←Finset.sum_filter_of_ne this, antidiagonal_filter_fst_eq, Finset.sum_ite_index]
+    simp only [Finset.sum_singleton, coeff_monomial_same, Finset.sum_empty]
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coeff_mul_monomial
-(a : R) : «expr = »(coeff R m «expr * »(φ, monomial R n a), if «expr ≤ »(n, m) then «expr * »(coeff R «expr - »(m, n) φ, a) else 0) :=
-begin
-  have [] [":", expr ∀
-   p «expr ∈ » antidiagonal m, «expr ≠ »(«expr * »(coeff R (p : «expr × »(«expr →₀ »(σ, exprℕ()), «expr →₀ »(σ, exprℕ()))).1 φ, coeff R p.2 (monomial R n a)), 0) → «expr = »(p.2, n)] [":=", expr λ
-   p _ hp, eq_of_coeff_monomial_ne_zero (right_ne_zero_of_mul hp)],
-  rw ["[", expr coeff_mul, ",", "<-", expr finset.sum_filter_of_ne this, ",", expr antidiagonal_filter_snd_eq, ",", expr finset.sum_ite_index, "]"] [],
-  simp [] [] ["only"] ["[", expr finset.sum_singleton, ",", expr coeff_monomial_same, ",", expr finset.sum_empty, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » antidiagonal m)
+theorem coeff_mul_monomial (a : R) : coeff R m (φ*monomial R n a) = if n ≤ m then coeff R (m - n) φ*a else 0 :=
+  by 
+    have  :
+      ∀ p _ : p ∈ antidiagonal m, (coeff R (p : (σ →₀ ℕ) × (σ →₀ ℕ)).1 φ*coeff R p.2 (monomial R n a)) ≠ 0 → p.2 = n :=
+      fun p _ hp => eq_of_coeff_monomial_ne_zero (right_ne_zero_of_mul hp)
+    rw [coeff_mul, ←Finset.sum_filter_of_ne this, antidiagonal_filter_snd_eq, Finset.sum_ite_index]
+    simp only [Finset.sum_singleton, coeff_monomial_same, Finset.sum_empty]
 
 theorem coeff_add_monomial_mul (a : R) : coeff R (m+n) (monomial R m a*φ) = a*coeff R n φ :=
   by 
@@ -323,7 +319,7 @@ def C : R →+* MvPowerSeries σ R :=
 variable {σ} {R}
 
 @[simp]
-theorem monomial_zero_eq_C : «expr⇑ » (monomial R (0 : σ →₀ ℕ)) = C σ R :=
+theorem monomial_zero_eq_C : ⇑monomial R (0 : σ →₀ ℕ) = C σ R :=
   rfl
 
 theorem monomial_zero_eq_C_apply (a : R) : monomial R (0 : σ →₀ ℕ) a = C σ R a :=
@@ -385,25 +381,23 @@ theorem coeff_C_mul (n : σ →₀ ℕ) (φ : MvPowerSeries σ R) (a : R) : coef
   by 
     simpa using coeff_add_monomial_mul 0 n φ a
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coeff_zero_mul_X
-(φ : mv_power_series σ R)
-(s : σ) : «expr = »(coeff R (0 : «expr →₀ »(σ, exprℕ())) «expr * »(φ, X s), 0) :=
-begin
-  have [] [":", expr «expr¬ »(«expr ≤ »(single s 1, 0))] [],
-  from [expr λ h, by simpa [] [] [] [] [] ["using", expr h s]],
-  simp [] [] ["only"] ["[", expr X, ",", expr coeff_mul_monomial, ",", expr if_neg this, "]"] [] []
-end
+theorem coeff_zero_mul_X (φ : MvPowerSeries σ R) (s : σ) : coeff R (0 : σ →₀ ℕ) (φ*X s) = 0 :=
+  by 
+    have  : ¬single s 1 ≤ 0 
+    exact
+      fun h =>
+        by 
+          simpa using h s 
+    simp only [X, coeff_mul_monomial, if_neg this]
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coeff_zero_X_mul
-(φ : mv_power_series σ R)
-(s : σ) : «expr = »(coeff R (0 : «expr →₀ »(σ, exprℕ())) «expr * »(X s, φ), 0) :=
-begin
-  have [] [":", expr «expr¬ »(«expr ≤ »(single s 1, 0))] [],
-  from [expr λ h, by simpa [] [] [] [] [] ["using", expr h s]],
-  simp [] [] ["only"] ["[", expr X, ",", expr coeff_monomial_mul, ",", expr if_neg this, "]"] [] []
-end
+theorem coeff_zero_X_mul (φ : MvPowerSeries σ R) (s : σ) : coeff R (0 : σ →₀ ℕ) (X s*φ) = 0 :=
+  by 
+    have  : ¬single s 1 ≤ 0 
+    exact
+      fun h =>
+        by 
+          simpa using h s 
+    simp only [X, coeff_monomial_mul, if_neg this]
 
 variable (σ) (R)
 
@@ -419,7 +413,7 @@ def constant_coeff : MvPowerSeries σ R →+* R :=
 variable {σ} {R}
 
 @[simp]
-theorem coeff_zero_eq_constant_coeff : «expr⇑ » (coeff R (0 : σ →₀ ℕ)) = constant_coeff σ R :=
+theorem coeff_zero_eq_constant_coeff : ⇑coeff R (0 : σ →₀ ℕ) = constant_coeff σ R :=
   rfl
 
 theorem coeff_zero_eq_constant_coeff_apply (φ : MvPowerSeries σ R) : coeff R (0 : σ →₀ ℕ) φ = constant_coeff σ R φ :=
@@ -588,7 +582,7 @@ variable [CommSemiringₓ R] (n : σ →₀ ℕ)
 
 /-- Auxiliary definition for the truncation function. -/
 def trunc_fun (φ : MvPowerSeries σ R) : MvPolynomial σ R :=
-  ∑m in Iic_finset n, MvPolynomial.monomial m (coeff R m φ)
+  ∑ m in Iic_finset n, MvPolynomial.monomial m (coeff R m φ)
 
 theorem coeff_trunc_fun (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) :
   (trunc_fun n φ).coeff m = if m ≤ n then coeff R m φ else 0 :=
@@ -667,7 +661,7 @@ variable [CommSemiringₓ R]
 theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
   ((X s : MvPowerSeries σ R)^n) ∣ φ ↔ ∀ m : σ →₀ ℕ, m s < n → coeff R m φ = 0 :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨φ, rfl⟩ m h 
       rw [coeff_mul, Finset.sum_eq_zero]
@@ -737,7 +731,7 @@ theorem X_dvd_iff {s : σ} {φ : MvPowerSeries σ R} :
   (X s : MvPowerSeries σ R) ∣ φ ↔ ∀ m : σ →₀ ℕ, m s = 0 → coeff R m φ = 0 :=
   by 
     rw [←pow_oneₓ (X s : MvPowerSeries σ R), X_pow_dvd_iff]
-    split  <;> intro h m hm
+    constructor <;> intro h m hm
     ·
       exact h m (hm.symm ▸ zero_lt_one)
     ·
@@ -754,59 +748,70 @@ variable [Ringₓ R]
  the inverse formal power series that depends on
  an inverse of the constant coefficient `inv_of_unit`.-/
 protected noncomputable def inv.aux (a : R) (φ : MvPowerSeries σ R) : MvPowerSeries σ R
-| n => if n = 0 then a else (-a)*∑x in n.antidiagonal, if h : x.2 < n then coeff R x.1 φ*inv.aux x.2 else 0
+| n => if n = 0 then a else (-a)*∑ x in n.antidiagonal, if h : x.2 < n then coeff R x.1 φ*inv.aux x.2 else 0
 
 theorem coeff_inv_aux [DecidableEq σ] (n : σ →₀ ℕ) (a : R) (φ : MvPowerSeries σ R) :
   coeff R n (inv.aux a φ) =
-    if n = 0 then a else (-a)*∑x in n.antidiagonal, if x.2 < n then coeff R x.1 φ*coeff R x.2 (inv.aux a φ) else 0 :=
+    if n = 0 then a else (-a)*∑ x in n.antidiagonal, if x.2 < n then coeff R x.1 φ*coeff R x.2 (inv.aux a φ) else 0 :=
   show inv.aux a φ n = _ by 
     rw [inv.aux]
     convert rfl
 
 /-- A multivariate formal power series is invertible if the constant coefficient is invertible.-/
 def inv_of_unit (φ : MvPowerSeries σ R) (u : Units R) : MvPowerSeries σ R :=
-  inv.aux («expr↑ » (u⁻¹)) φ
+  inv.aux (↑u⁻¹) φ
 
 theorem coeff_inv_of_unit [DecidableEq σ] (n : σ →₀ ℕ) (φ : MvPowerSeries σ R) (u : Units R) :
   coeff R n (inv_of_unit φ u) =
-    if n = 0 then «expr↑ » (u⁻¹) else
-      (-«expr↑ » (u⁻¹))*∑x in n.antidiagonal, if x.2 < n then coeff R x.1 φ*coeff R x.2 (inv_of_unit φ u) else 0 :=
-  coeff_inv_aux n («expr↑ » (u⁻¹)) φ
+    if n = 0 then ↑u⁻¹ else
+      (-↑u⁻¹)*∑ x in n.antidiagonal, if x.2 < n then coeff R x.1 φ*coeff R x.2 (inv_of_unit φ u) else 0 :=
+  coeff_inv_aux n (↑u⁻¹) φ
 
 @[simp]
 theorem constant_coeff_inv_of_unit (φ : MvPowerSeries σ R) (u : Units R) :
-  constant_coeff σ R (inv_of_unit φ u) = «expr↑ » (u⁻¹) :=
+  constant_coeff σ R (inv_of_unit φ u) = ↑u⁻¹ :=
   by 
     rw [←coeff_zero_eq_constant_coeff_apply, coeff_inv_of_unit, if_pos rfl]
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_inv_of_unit
-(φ : mv_power_series σ R)
-(u : units R)
-(h : «expr = »(constant_coeff σ R φ, u)) : «expr = »(«expr * »(φ, inv_of_unit φ u), 1) :=
-«expr $ »(ext, λ n, if H : «expr = »(n, 0) then by { rw [expr H] [],
-   simp [] [] [] ["[", expr coeff_mul, ",", expr support_single_ne_zero, ",", expr h, "]"] [] [] } else begin
-   have [] [":", expr «expr ∈ »(((0 : «expr →₀ »(σ, exprℕ())), n), n.antidiagonal)] [],
-   { rw ["[", expr finsupp.mem_antidiagonal, ",", expr zero_add, "]"] [] },
-   rw ["[", expr coeff_one, ",", expr if_neg H, ",", expr coeff_mul, ",", "<-", expr finset.insert_erase this, ",", expr finset.sum_insert (finset.not_mem_erase _ _), ",", expr coeff_zero_eq_constant_coeff_apply, ",", expr h, ",", expr coeff_inv_of_unit, ",", expr if_neg H, ",", expr neg_mul_eq_neg_mul_symm, ",", expr mul_neg_eq_neg_mul_symm, ",", expr units.mul_inv_cancel_left, ",", "<-", expr finset.insert_erase this, ",", expr finset.sum_insert (finset.not_mem_erase _ _), ",", expr finset.insert_erase this, ",", expr if_neg «expr $ »(not_lt_of_ge, le_refl _), ",", expr zero_add, ",", expr add_comm, ",", "<-", expr sub_eq_add_neg, ",", expr sub_eq_zero, ",", expr finset.sum_congr rfl, "]"] [],
-   rintros ["⟨", ident i, ",", ident j, "⟩", ident hij],
-   rw ["[", expr finset.mem_erase, ",", expr finsupp.mem_antidiagonal, "]"] ["at", ident hij],
-   cases [expr hij] ["with", ident h₁, ident h₂],
-   subst [expr n],
-   rw [expr if_pos] [],
-   suffices [] [":", expr «expr < »(«expr + »((0 : _), j), «expr + »(i, j))],
-   { simpa [] [] [] [] [] [] },
-   apply [expr add_lt_add_right],
-   split,
-   { intro [ident s],
-     exact [expr nat.zero_le _] },
-   { intro [ident H],
-     apply [expr h₁],
-     suffices [] [":", expr «expr = »(i, 0)],
-     { simp [] [] [] ["[", expr this, "]"] [] [] },
-     ext1 [] [ident s],
-     exact [expr nat.eq_zero_of_le_zero (H s)] }
- end)
+theorem mul_inv_of_unit (φ : MvPowerSeries σ R) (u : Units R) (h : constant_coeff σ R φ = u) :
+  (φ*inv_of_unit φ u) = 1 :=
+  ext$
+    fun n =>
+      if H : n = 0 then
+        by 
+          rw [H]
+          simp [coeff_mul, support_single_ne_zero, h]
+      else
+        by 
+          have  : ((0 : σ →₀ ℕ), n) ∈ n.antidiagonal
+          ·
+            rw [Finsupp.mem_antidiagonal, zero_addₓ]
+          rw [coeff_one, if_neg H, coeff_mul, ←Finset.insert_erase this, Finset.sum_insert (Finset.not_mem_erase _ _),
+            coeff_zero_eq_constant_coeff_apply, h, coeff_inv_of_unit, if_neg H, neg_mul_eq_neg_mul_symm,
+            mul_neg_eq_neg_mul_symm, Units.mul_inv_cancel_left, ←Finset.insert_erase this,
+            Finset.sum_insert (Finset.not_mem_erase _ _), Finset.insert_erase this, if_neg (not_lt_of_geₓ$ le_reflₓ _),
+            zero_addₓ, add_commₓ, ←sub_eq_add_neg, sub_eq_zero, Finset.sum_congr rfl]
+          rintro ⟨i, j⟩ hij 
+          rw [Finset.mem_erase, Finsupp.mem_antidiagonal] at hij 
+          cases' hij with h₁ h₂ 
+          subst n 
+          rw [if_pos]
+          suffices  : ((0 : _)+j) < i+j
+          ·
+            simpa 
+          apply add_lt_add_right 
+          constructor
+          ·
+            intro s 
+            exact Nat.zero_leₓ _
+          ·
+            intro H 
+            apply h₁ 
+            suffices  : i = 0
+            ·
+              simp [this]
+            ext1 s 
+            exact Nat.eq_zero_of_le_zeroₓ (H s)
 
 end Ringₓ
 
@@ -830,18 +835,16 @@ section LocalRing
 
 variable {S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) [IsLocalRingHom f]
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The map `A[[X]] → B[[X]]` induced by a local ring hom `A → B` is local -/
-instance map.is_local_ring_hom : is_local_ring_hom (map σ f) :=
-⟨begin
-   rintros [ident φ, "⟨", ident ψ, ",", ident h, "⟩"],
-   replace [ident h] [] [":=", expr congr_arg (constant_coeff σ S) h],
-   rw [expr constant_coeff_map] ["at", ident h],
-   have [] [":", expr is_unit (constant_coeff σ S «expr↑ »(ψ))] [":=", expr @is_unit_constant_coeff σ S _ «expr↑ »(ψ) ψ.is_unit],
-   rw [expr h] ["at", ident this],
-   rcases [expr is_unit_of_map_unit f _ this, "with", "⟨", ident c, ",", ident hc, "⟩"],
-   exact [expr is_unit_of_mul_eq_one φ (inv_of_unit φ c) (mul_inv_of_unit φ c hc.symm)]
- end⟩
+instance map.is_local_ring_hom : IsLocalRingHom (map σ f) :=
+  ⟨by 
+      rintro φ ⟨ψ, h⟩
+      replace h := congr_argₓ (constant_coeff σ S) h 
+      rw [constant_coeff_map] at h 
+      have  : IsUnit (constant_coeff σ S (↑ψ)) := @is_unit_constant_coeff σ S _ (↑ψ) ψ.is_unit 
+      rw [h] at this 
+      rcases is_unit_of_map_unit f _ this with ⟨c, hc⟩
+      exact is_unit_of_mul_eq_one φ (inv_of_unit φ c) (mul_inv_of_unit φ c hc.symm)⟩
 
 variable [LocalRing R] [LocalRing S]
 
@@ -864,7 +867,7 @@ instance : HasInv (MvPowerSeries σ k) :=
 theorem coeff_inv [DecidableEq σ] (n : σ →₀ ℕ) (φ : MvPowerSeries σ k) :
   coeff k n (φ⁻¹) =
     if n = 0 then constant_coeff σ k φ⁻¹ else
-      (-constant_coeff σ k φ⁻¹)*∑x in n.antidiagonal, if x.2 < n then coeff k x.1 φ*coeff k x.2 (φ⁻¹) else 0 :=
+      (-constant_coeff σ k φ⁻¹)*∑ x in n.antidiagonal, if x.2 < n then coeff k x.1 φ*coeff k x.2 (φ⁻¹) else 0 :=
   coeff_inv_aux n _ φ
 
 @[simp]
@@ -939,7 +942,7 @@ instance coe_to_mv_power_series : Coe (MvPolynomial σ R) (MvPowerSeries σ R) :
   ⟨fun φ n => coeff n φ⟩
 
 @[simp, normCast]
-theorem coeff_coe (φ : MvPolynomial σ R) (n : σ →₀ ℕ) : MvPowerSeries.coeff R n («expr↑ » φ) = coeff n φ :=
+theorem coeff_coe (φ : MvPolynomial σ R) (n : σ →₀ ℕ) : MvPowerSeries.coeff R n (↑φ) = coeff n φ :=
   rfl
 
 @[simp, normCast]
@@ -1139,7 +1142,7 @@ def X : PowerSeries R :=
   MvPowerSeries.x ()
 
 @[simp]
-theorem coeff_zero_eq_constant_coeff : «expr⇑ » (coeff R 0) = constant_coeff R :=
+theorem coeff_zero_eq_constant_coeff : ⇑coeff R 0 = constant_coeff R :=
   by 
     rw [coeff, Finsupp.single_zero]
     rfl
@@ -1149,7 +1152,7 @@ theorem coeff_zero_eq_constant_coeff_apply (φ : PowerSeries R) : coeff R 0 φ =
     rw [coeff_zero_eq_constant_coeff] <;> rfl
 
 @[simp]
-theorem monomial_zero_eq_C : «expr⇑ » (monomial R 0) = C R :=
+theorem monomial_zero_eq_C : ⇑monomial R 0 = C R :=
   by 
     rw [monomial, Finsupp.single_zero, MvPowerSeries.monomial_zero_eq_C, C]
 
@@ -1203,7 +1206,7 @@ theorem coeff_zero_one : coeff R 0 (1 : PowerSeries R) = 1 :=
   coeff_zero_C 1
 
 theorem coeff_mul (n : ℕ) (φ ψ : PowerSeries R) :
-  coeff R n (φ*ψ) = ∑p in Finset.Nat.antidiagonal n, coeff R p.1 φ*coeff R p.2 ψ :=
+  coeff R n (φ*ψ) = ∑ p in Finset.Nat.antidiagonal n, coeff R p.1 φ*coeff R p.2 ψ :=
   by 
     symm 
     apply Finset.sum_bij fun p : ℕ × ℕ h => (single () p.1, single () p.2)
@@ -1340,7 +1343,7 @@ theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} : ((X : PowerSeries R)^n) �
     convert @MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ 
     apply propext 
     classical 
-    split  <;> intro h m hm
+    constructor <;> intro h m hm
     ·
       rw [Finsupp.unique_single m]
       convert h _ hm
@@ -1351,7 +1354,7 @@ theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} : ((X : PowerSeries R)^n) �
 theorem X_dvd_iff {φ : PowerSeries R} : (X : PowerSeries R) ∣ φ ↔ constant_coeff R φ = 0 :=
   by 
     rw [←pow_oneₓ (X : PowerSeries R), X_pow_dvd_iff, ←coeff_zero_eq_constant_coeff_apply]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       exact h 0 zero_lt_one
     ·
@@ -1419,7 +1422,7 @@ section Trunc
 
 /-- The `n`th truncation of a formal power series to a polynomial -/
 def Trunc (n : ℕ) (φ : PowerSeries R) : Polynomial R :=
-  ∑m in Ico 0 (n+1), Polynomial.monomial m (coeff R m φ)
+  ∑ m in Ico 0 (n+1), Polynomial.monomial m (coeff R m φ)
 
 theorem coeff_trunc m n (φ : PowerSeries R) : (Trunc n φ).coeff m = if m ≤ n then coeff R m φ else 0 :=
   by 
@@ -1493,7 +1496,7 @@ protected def inv.aux : R → PowerSeries R → PowerSeries R :=
 theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
   coeff R n (inv.aux a φ) =
     if n = 0 then a else
-      (-a)*∑x in Finset.Nat.antidiagonal n, if x.2 < n then coeff R x.1 φ*coeff R x.2 (inv.aux a φ) else 0 :=
+      (-a)*∑ x in Finset.Nat.antidiagonal n, if x.2 < n then coeff R x.1 φ*coeff R x.2 (inv.aux a φ) else 0 :=
   by 
     rw [coeff, inv.aux, MvPowerSeries.coeff_inv_aux]
     simp only [Finsupp.single_eq_zero]
@@ -1514,7 +1517,7 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
         rw [if_pos H, if_pos]
         ·
           rfl 
-        split 
+        constructor
         ·
           rintro ⟨⟩
           simpa [Finsupp.single_eq_same] using le_of_ltₓ H
@@ -1549,15 +1552,12 @@ def inv_of_unit (φ : PowerSeries R) (u : Units R) : PowerSeries R :=
 
 theorem coeff_inv_of_unit (n : ℕ) (φ : PowerSeries R) (u : Units R) :
   coeff R n (inv_of_unit φ u) =
-    if n = 0 then «expr↑ » (u⁻¹) else
-      (-«expr↑ »
-            (u⁻¹))*∑x in Finset.Nat.antidiagonal n,
-          if x.2 < n then coeff R x.1 φ*coeff R x.2 (inv_of_unit φ u) else 0 :=
-  coeff_inv_aux n («expr↑ » (u⁻¹)) φ
+    if n = 0 then ↑u⁻¹ else
+      (-↑u⁻¹)*∑ x in Finset.Nat.antidiagonal n, if x.2 < n then coeff R x.1 φ*coeff R x.2 (inv_of_unit φ u) else 0 :=
+  coeff_inv_aux n (↑u⁻¹) φ
 
 @[simp]
-theorem constant_coeff_inv_of_unit (φ : PowerSeries R) (u : Units R) :
-  constant_coeff R (inv_of_unit φ u) = «expr↑ » (u⁻¹) :=
+theorem constant_coeff_inv_of_unit (φ : PowerSeries R) (u : Units R) : constant_coeff R (inv_of_unit φ u) = ↑u⁻¹ :=
   by 
     rw [←coeff_zero_eq_constant_coeff_apply, coeff_inv_of_unit, if_pos rfl]
 
@@ -1600,51 +1600,55 @@ section Domain
 
 variable [Ringₓ R] [IsDomain R]
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_zero_or_eq_zero_of_mul_eq_zero
-(φ ψ : power_series R)
-(h : «expr = »(«expr * »(φ, ψ), 0)) : «expr ∨ »(«expr = »(φ, 0), «expr = »(ψ, 0)) :=
-begin
-  rw [expr or_iff_not_imp_left] [],
-  intro [ident H],
-  have [ident ex] [":", expr «expr∃ , »((m), «expr ≠ »(coeff R m φ, 0))] [],
-  { contrapose ["!"] [ident H],
-    exact [expr ext H] },
-  let [ident m] [] [":=", expr nat.find ex],
-  have [ident hm₁] [":", expr «expr ≠ »(coeff R m φ, 0)] [":=", expr nat.find_spec ex],
-  have [ident hm₂] [":", expr ∀ k «expr < » m, «expr¬ »(«expr ≠ »(coeff R k φ, 0))] [":=", expr λ k, nat.find_min ex],
-  ext [] [ident n] [],
-  rw [expr (coeff R n).map_zero] [],
-  apply [expr nat.strong_induction_on n],
-  clear [ident n],
-  intros [ident n, ident ih],
-  replace [ident h] [] [":=", expr congr_arg (coeff R «expr + »(m, n)) h],
-  rw ["[", expr linear_map.map_zero, ",", expr coeff_mul, ",", expr finset.sum_eq_single (m, n), "]"] ["at", ident h],
-  { replace [ident h] [] [":=", expr eq_zero_or_eq_zero_of_mul_eq_zero h],
-    rw [expr or_iff_not_imp_left] ["at", ident h],
-    exact [expr h hm₁] },
-  { rintro ["⟨", ident i, ",", ident j, "⟩", ident hij, ident hne],
-    by_cases [expr hj, ":", expr «expr < »(j, n)],
-    { rw ["[", expr ih j hj, ",", expr mul_zero, "]"] [] },
-    by_cases [expr hi, ":", expr «expr < »(i, m)],
-    { specialize [expr hm₂ _ hi],
-      push_neg ["at", ident hm₂],
-      rw ["[", expr hm₂, ",", expr zero_mul, "]"] [] },
-    rw [expr finset.nat.mem_antidiagonal] ["at", ident hij],
-    push_neg ["at", ident hi, ident hj],
-    suffices [] [":", expr «expr < »(m, i)],
-    { have [] [":", expr «expr < »(«expr + »(m, n), «expr + »(i, j))] [":=", expr add_lt_add_of_lt_of_le this hj],
-      exfalso,
-      exact [expr ne_of_lt this hij.symm] },
-    contrapose ["!"] [ident hne],
-    have [] [":", expr «expr = »(i, m)] [":=", expr le_antisymm hne hi],
-    subst [expr i],
-    clear [ident hi, ident hne],
-    simpa [] [] [] ["[", expr ne.def, ",", expr prod.mk.inj_iff, "]"] [] ["using", expr (add_right_inj m).mp hij] },
-  { contrapose ["!"] [],
-    intro [ident h],
-    rw [expr finset.nat.mem_antidiagonal] [] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » m)
+theorem eq_zero_or_eq_zero_of_mul_eq_zero (φ ψ : PowerSeries R) (h : (φ*ψ) = 0) : φ = 0 ∨ ψ = 0 :=
+  by 
+    rw [or_iff_not_imp_left]
+    intro H 
+    have ex : ∃ m, coeff R m φ ≠ 0
+    ·
+      contrapose! H 
+      exact ext H 
+    let m := Nat.findₓ ex 
+    have hm₁ : coeff R m φ ≠ 0 := Nat.find_specₓ ex 
+    have hm₂ : ∀ k _ : k < m, ¬coeff R k φ ≠ 0 := fun k => Nat.find_minₓ ex 
+    ext n 
+    rw [(coeff R n).map_zero]
+    apply Nat.strong_induction_onₓ n 
+    clear n 
+    intro n ih 
+    replace h := congr_argₓ (coeff R (m+n)) h 
+    rw [LinearMap.map_zero, coeff_mul, Finset.sum_eq_single (m, n)] at h
+    ·
+      replace h := eq_zero_or_eq_zero_of_mul_eq_zero h 
+      rw [or_iff_not_imp_left] at h 
+      exact h hm₁
+    ·
+      rintro ⟨i, j⟩ hij hne 
+      byCases' hj : j < n
+      ·
+        rw [ih j hj, mul_zero]
+      byCases' hi : i < m
+      ·
+        specialize hm₂ _ hi 
+        pushNeg  at hm₂ 
+        rw [hm₂, zero_mul]
+      rw [Finset.Nat.mem_antidiagonal] at hij 
+      pushNeg  at hi hj 
+      suffices  : m < i
+      ·
+        have  : (m+n) < i+j := add_lt_add_of_lt_of_le this hj 
+        exfalso 
+        exact ne_of_ltₓ this hij.symm 
+      contrapose! hne 
+      have  : i = m := le_antisymmₓ hne hi 
+      subst i 
+      clear hi hne 
+      simpa [Ne.def, Prod.mk.inj_iffₓ] using (add_right_injₓ m).mp hij
+    ·
+      contrapose! 
+      intro h 
+      rw [Finset.Nat.mem_antidiagonal]
 
 instance : IsDomain (PowerSeries R) :=
   { PowerSeries.nontrivial with eq_zero_or_eq_zero_of_mul_eq_zero := eq_zero_or_eq_zero_of_mul_eq_zero }
@@ -1736,7 +1740,8 @@ theorem inv_eq_inv_aux (φ : PowerSeries k) : φ⁻¹ = inv.aux (constant_coeff 
 theorem coeff_inv n (φ : PowerSeries k) :
   coeff k n (φ⁻¹) =
     if n = 0 then constant_coeff k φ⁻¹ else
-      (-constant_coeff k φ⁻¹)*∑x in Finset.Nat.antidiagonal n, if x.2 < n then coeff k x.1 φ*coeff k x.2 (φ⁻¹) else 0 :=
+      (-constant_coeff k
+              φ⁻¹)*∑ x in Finset.Nat.antidiagonal n, if x.2 < n then coeff k x.1 φ*coeff k x.2 (φ⁻¹) else 0 :=
   by 
     rw [inv_eq_inv_aux, coeff_inv_aux n (constant_coeff k φ⁻¹) φ]
 
@@ -1783,7 +1788,7 @@ variable {R : Type _}
 
 attribute [local instance] Classical.propDecidable
 
-noncomputable theory
+noncomputable section 
 
 section OrderBasic
 
@@ -1806,42 +1811,42 @@ theorem order_finite_of_coeff_ne_zero (φ : PowerSeries R) (h : ∃ n, coeff R n
     pushNeg 
     exact ⟨n, lt_add_one n, h⟩
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the order of a formal power series is finite,
 then the coefficient indexed by the order is nonzero.-/
-theorem coeff_order (φ : power_series R) (h : (order φ).dom) : «expr ≠ »(coeff R (φ.order.get h) φ, 0) :=
-begin
-  have [ident H] [] [":=", expr nat.find_spec h],
-  contrapose ["!"] [ident H],
-  rw [expr X_pow_dvd_iff] [],
-  intros [ident m, ident hm],
-  by_cases [expr Hm, ":", expr «expr < »(m, nat.find h)],
-  { have [] [] [":=", expr nat.find_min h Hm],
-    push_neg ["at", ident this],
-    rw [expr X_pow_dvd_iff] ["at", ident this],
-    exact [expr this m (lt_add_one m)] },
-  have [] [":", expr «expr = »(m, nat.find h)] [],
-  { linarith [] [] [] },
-  { rwa [expr this] [] }
-end
+theorem coeff_order (φ : PowerSeries R) (h : (order φ).Dom) : coeff R (φ.order.get h) φ ≠ 0 :=
+  by 
+    have H := Nat.find_specₓ h 
+    contrapose! H 
+    rw [X_pow_dvd_iff]
+    intro m hm 
+    byCases' Hm : m < Nat.findₓ h
+    ·
+      have  := Nat.find_minₓ h Hm 
+      pushNeg  at this 
+      rw [X_pow_dvd_iff] at this 
+      exact this m (lt_add_one m)
+    have  : m = Nat.findₓ h
+    ·
+      linarith
+    ·
+      rwa [this]
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the `n`th coefficient of a formal power series is nonzero,
 then the order of the power series is less than or equal to `n`.-/
-theorem order_le (φ : power_series R) (n : exprℕ()) (h : «expr ≠ »(coeff R n φ, 0)) : «expr ≤ »(order φ, n) :=
-begin
-  have [ident h] [":", expr «expr¬ »(«expr ∣ »(«expr ^ »(X, «expr + »(n, 1)), φ))] [],
-  { rw [expr X_pow_dvd_iff] [],
-    push_neg [],
-    exact [expr ⟨n, lt_add_one n, h⟩] },
-  have [] [":", expr (order φ).dom] [":=", expr ⟨n, h⟩],
-  rw ["[", "<-", expr enat.coe_get this, ",", expr enat.coe_le_coe, "]"] [],
-  refine [expr nat.find_min' this h]
-end
+theorem order_le (φ : PowerSeries R) (n : ℕ) (h : coeff R n φ ≠ 0) : order φ ≤ n :=
+  by 
+    have h : ¬(X^n+1) ∣ φ
+    ·
+      rw [X_pow_dvd_iff]
+      pushNeg 
+      exact ⟨n, lt_add_one n, h⟩
+    have  : (order φ).Dom := ⟨n, h⟩
+    rw [←Enat.coe_get this, Enat.coe_le_coe]
+    refine' Nat.find_min'ₓ this h
 
 /-- The `n`th coefficient of a formal power series is `0` if `n` is strictly
 smaller than the order of the power series.-/
-theorem coeff_of_lt_order (φ : PowerSeries R) (n : ℕ) (h : «expr↑ » n < order φ) : coeff R n φ = 0 :=
+theorem coeff_of_lt_order (φ : PowerSeries R) (n : ℕ) (h : ↑n < order φ) : coeff R n φ = 0 :=
   by 
     contrapose! h 
     exact order_le _ _ h
@@ -1855,7 +1860,7 @@ theorem order_zero : order (0 : PowerSeries R) = ⊤ :=
 @[simp]
 theorem order_eq_top {φ : PowerSeries R} : φ.order = ⊤ ↔ φ = 0 :=
   by 
-    split 
+    constructor
     ·
       intro h 
       ext n 
@@ -1865,24 +1870,20 @@ theorem order_eq_top {φ : PowerSeries R} : φ.order = ⊤ ↔ φ = 0 :=
       rintro rfl 
       exact order_zero
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » n)
 /-- The order of a formal power series is at least `n` if
 the `i`th coefficient is `0` for all `i < n`.-/
-theorem nat_le_order
-(φ : power_series R)
-(n : exprℕ())
-(h : ∀ i «expr < » n, «expr = »(coeff R i φ, 0)) : «expr ≤ »(«expr↑ »(n), order φ) :=
-begin
-  by_contra [ident H],
-  rw [expr not_le] ["at", ident H],
-  have [] [":", expr (order φ).dom] [":=", expr enat.dom_of_le_coe H.le],
-  rw ["[", "<-", expr enat.coe_get this, ",", expr enat.coe_lt_coe, "]"] ["at", ident H],
-  exact [expr coeff_order _ this (h _ H)]
-end
+theorem nat_le_order (φ : PowerSeries R) (n : ℕ) (h : ∀ i _ : i < n, coeff R i φ = 0) : ↑n ≤ order φ :=
+  by 
+    byContra H 
+    rw [not_leₓ] at H 
+    have  : (order φ).Dom := Enat.dom_of_le_coe H.le 
+    rw [←Enat.coe_get this, Enat.coe_lt_coe] at H 
+    exact coeff_order _ this (h _ H)
 
 /-- The order of a formal power series is at least `n` if
 the `i`th coefficient is `0` for all `i < n`.-/
-theorem le_order (φ : PowerSeries R) (n : Enat) (h : ∀ i : ℕ, «expr↑ » i < n → coeff R i φ = 0) : n ≤ order φ :=
+theorem le_order (φ : PowerSeries R) (n : Enat) (h : ∀ i : ℕ, ↑i < n → coeff R i φ = 0) : n ≤ order φ :=
   by 
     induction n using Enat.cases_on
     ·
@@ -1900,7 +1901,7 @@ theorem order_eq_nat {φ : PowerSeries R} {n : ℕ} : order φ = n ↔ coeff R n
   by 
     simp only [eq_coe_iff, X_pow_dvd_iff]
     pushNeg 
-    split 
+    constructor
     ·
       rintro ⟨h₁, m, hm₁, hm₂⟩
       refine' ⟨_, h₁⟩
@@ -1919,15 +1920,15 @@ theorem order_eq_nat {φ : PowerSeries R} {n : ℕ} : order φ = n ↔ coeff R n
 /-- The order of a formal power series is exactly `n` if the `n`th coefficient is nonzero,
 and the `i`th coefficient is `0` for all `i < n`.-/
 theorem order_eq {φ : PowerSeries R} {n : Enat} :
-  order φ = n ↔ (∀ i : ℕ, «expr↑ » i = n → coeff R i φ ≠ 0) ∧ ∀ i : ℕ, «expr↑ » i < n → coeff R i φ = 0 :=
+  order φ = n ↔ (∀ i : ℕ, ↑i = n → coeff R i φ ≠ 0) ∧ ∀ i : ℕ, ↑i < n → coeff R i φ = 0 :=
   by 
     induction n using Enat.cases_on
     ·
       rw [order_eq_top]
-      split 
+      constructor
       ·
         rintro rfl 
-        split  <;> intros 
+        constructor <;> intros 
         ·
           exfalso 
           exact Enat.coe_ne_top ‹_› ‹_›
@@ -1954,7 +1955,7 @@ private theorem order_add_of_order_eq.aux (φ ψ : PowerSeries R) (h : order φ 
       exact ⟨le_reflₓ _, le_of_ltₓ H⟩
     ·
       rw [order_eq]
-      split 
+      constructor
       ·
         intro i hi 
         rw [(coeff _ _).map_add, coeff_of_lt_order ψ i (hi.symm ▸ H), add_zeroₓ]
@@ -1985,10 +1986,10 @@ theorem order_mul_ge (φ ψ : PowerSeries R) : (order φ+order ψ) ≤ order (φ
     intro n hn 
     rw [coeff_mul, Finset.sum_eq_zero]
     rintro ⟨i, j⟩ hij 
-    byCases' hi : «expr↑ » i < order φ
+    byCases' hi : ↑i < order φ
     ·
       rw [coeff_of_lt_order φ i hi, zero_mul]
-    byCases' hj : «expr↑ » j < order ψ
+    byCases' hj : ↑j < order ψ
     ·
       rw [coeff_of_lt_order ψ j hj, mul_zero]
     rw [not_ltₓ] at hi hj 
@@ -2005,7 +2006,7 @@ theorem order_monomial (n : ℕ) (a : R) [Decidable (a = 0)] : order (monomial R
       rw [h, order_eq_top, LinearMap.map_zero]
     ·
       rw [order_eq]
-      split  <;> intro i hi
+      constructor <;> intro i hi
       ·
         rw [Enat.coe_inj] at hi 
         rwa [hi, coeff_monomial_same]
@@ -2021,9 +2022,9 @@ theorem order_monomial_of_ne_zero (n : ℕ) (a : R) (h : a ≠ 0) : order (monom
 
 /-- If `n` is strictly smaller than the order of `ψ`, then the `n`th coefficient of its product
 with any other power series is `0`. -/
-theorem coeff_mul_of_lt_order {φ ψ : PowerSeries R} {n : ℕ} (h : «expr↑ » n < ψ.order) : coeff R n (φ*ψ) = 0 :=
+theorem coeff_mul_of_lt_order {φ ψ : PowerSeries R} {n : ℕ} (h : ↑n < ψ.order) : coeff R n (φ*ψ) = 0 :=
   by 
-    suffices  : coeff R n (φ*ψ) = ∑p in Finset.Nat.antidiagonal n, 0
+    suffices  : coeff R n (φ*ψ) = ∑ p in Finset.Nat.antidiagonal n, 0
     rw [this, Finset.sum_const_zero]
     rw [coeff_mul]
     apply Finset.sum_congr rfl fun x hx => _ 
@@ -2032,13 +2033,14 @@ theorem coeff_mul_of_lt_order {φ ψ : PowerSeries R} {n : ℕ} (h : «expr↑ �
     normCast 
     linarith
 
-theorem coeff_mul_one_sub_of_lt_order {R : Type _} [CommRingₓ R] {φ ψ : PowerSeries R} (n : ℕ)
-  (h : «expr↑ » n < ψ.order) : coeff R n (φ*1 - ψ) = coeff R n φ :=
+theorem coeff_mul_one_sub_of_lt_order {R : Type _} [CommRingₓ R] {φ ψ : PowerSeries R} (n : ℕ) (h : ↑n < ψ.order) :
+  coeff R n (φ*1 - ψ) = coeff R n φ :=
   by 
     simp [coeff_mul_of_lt_order h, mul_sub]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem coeff_mul_prod_one_sub_of_lt_order {R ι : Type _} [CommRingₓ R] (k : ℕ) (s : Finset ι) (φ : PowerSeries R)
-  (f : ι → PowerSeries R) : (∀ i _ : i ∈ s, «expr↑ » k < (f i).order) → coeff R k (φ*∏i in s, 1 - f i) = coeff R k φ :=
+  (f : ι → PowerSeries R) : (∀ i _ : i ∈ s, ↑k < (f i).order) → coeff R k (φ*∏ i in s, 1 - f i) = coeff R k φ :=
   by 
     apply Finset.induction_on s
     ·
@@ -2113,12 +2115,11 @@ theorem coe_monomial (n : ℕ) (a : R) : (monomial n a : PowerSeries R) = PowerS
 theorem coe_zero : ((0 : Polynomial R) : PowerSeries R) = 0 :=
   rfl
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, norm_cast #[]] theorem coe_one : «expr = »(((1 : polynomial R) : power_series R), 1) :=
-begin
-  have [] [] [":=", expr coe_monomial 0 (1 : R)],
-  rwa [expr power_series.monomial_zero_eq_C_apply] ["at", ident this]
-end
+@[simp, normCast]
+theorem coe_one : ((1 : Polynomial R) : PowerSeries R) = 1 :=
+  by 
+    have  := coe_monomial 0 (1 : R)
+    rwa [PowerSeries.monomial_zero_eq_C_apply] at this
 
 @[simp, normCast]
 theorem coe_add (φ ψ : Polynomial R) : ((φ+ψ : Polynomial R) : PowerSeries R) = φ+ψ :=
@@ -2133,12 +2134,11 @@ theorem coe_mul (φ ψ : Polynomial R) : ((φ*ψ : Polynomial R) : PowerSeries R
       by 
         simp only [coeff_coe, PowerSeries.coeff_mul, coeff_mul]
 
--- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, norm_cast #[]] theorem coe_C (a : R) : «expr = »(((C a : polynomial R) : power_series R), power_series.C R a) :=
-begin
-  have [] [] [":=", expr coe_monomial 0 a],
-  rwa [expr power_series.monomial_zero_eq_C_apply] ["at", ident this]
-end
+@[simp, normCast]
+theorem coe_C (a : R) : ((C a : Polynomial R) : PowerSeries R) = PowerSeries.c R a :=
+  by 
+    have  := coe_monomial 0 a 
+    rwa [PowerSeries.monomial_zero_eq_C_apply] at this
 
 @[simp, normCast]
 theorem coe_X : ((X : Polynomial R) : PowerSeries R) = PowerSeries.x :=

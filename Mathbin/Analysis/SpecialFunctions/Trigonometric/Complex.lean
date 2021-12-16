@@ -10,7 +10,7 @@ Basic facts and derivatives for the complex trigonometric functions.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Complex
 
@@ -18,20 +18,19 @@ open Set Filter
 
 open_locale Real
 
--- error in Analysis.SpecialFunctions.Trigonometric.Complex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cos_eq_zero_iff
-{θ : exprℂ()} : «expr ↔ »(«expr = »(cos θ, 0), «expr∃ , »((k : exprℤ()), «expr = »(θ, «expr / »(«expr * »(«expr + »(«expr * »(2, k), 1), exprπ()), 2)))) :=
-begin
-  have [ident h] [":", expr «expr ↔ »(«expr = »(«expr / »(«expr + »(exp «expr * »(θ, I), exp «expr * »(«expr- »(θ), I)), 2), 0), «expr = »(exp «expr * »(«expr * »(2, θ), I), «expr- »(1)))] [],
-  { rw ["[", expr @div_eq_iff _ _ «expr + »(exp «expr * »(θ, I), exp «expr * »(«expr- »(θ), I)) 2 0 two_ne_zero', ",", expr zero_mul, ",", expr add_eq_zero_iff_eq_neg, ",", expr neg_eq_neg_one_mul, ",", "<-", expr div_eq_iff (exp_ne_zero _), ",", "<-", expr exp_sub, "]"] [],
-    field_simp ["only"] [] [] [],
-    congr' [3] [],
-    ring [] },
-  rw ["[", expr cos, ",", expr h, ",", "<-", expr exp_pi_mul_I, ",", expr exp_eq_exp_iff_exists_int, ",", expr mul_right_comm, "]"] [],
-  refine [expr exists_congr (λ x, _)],
-  refine [expr «expr $ »(iff_of_eq, congr_arg _ _).trans «expr $ »(mul_right_inj', mul_ne_zero two_ne_zero' I_ne_zero)],
-  ring []
-end
+theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (((2*k)+1)*π) / 2 :=
+  by 
+    have h : (exp (θ*I)+exp ((-θ)*I)) / 2 = 0 ↔ exp ((2*θ)*I) = -1
+    ·
+      rw [@div_eq_iff _ _ (exp (θ*I)+exp ((-θ)*I)) 2 0 two_ne_zero', zero_mul, add_eq_zero_iff_eq_neg,
+        neg_eq_neg_one_mul, ←div_eq_iff (exp_ne_zero _), ←exp_sub]
+      fieldSimp only 
+      congr 3
+      ring 
+    rw [cos, h, ←exp_pi_mul_I, exp_eq_exp_iff_exists_int, mul_right_commₓ]
+    refine' exists_congr fun x => _ 
+    refine' (iff_of_eq$ congr_argₓ _ _).trans (mul_right_inj'$ mul_ne_zero two_ne_zero' I_ne_zero)
+    ring
 
 theorem cos_ne_zero_iff {θ : ℂ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (((2*k)+1)*π) / 2 :=
   by 
@@ -40,7 +39,7 @@ theorem cos_ne_zero_iff {θ : ℂ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (((2*k
 theorem sin_eq_zero_iff {θ : ℂ} : sin θ = 0 ↔ ∃ k : ℤ, θ = k*π :=
   by 
     rw [←Complex.cos_sub_pi_div_two, cos_eq_zero_iff]
-    split 
+    constructor
     ·
       rintro ⟨k, hk⟩
       use k+1
@@ -56,15 +55,13 @@ theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k*π :
   by 
     rw [←not_exists, not_iff_not, sin_eq_zero_iff]
 
--- error in Analysis.SpecialFunctions.Trigonometric.Complex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tan_eq_zero_iff
-{θ : exprℂ()} : «expr ↔ »(«expr = »(tan θ, 0), «expr∃ , »((k : exprℤ()), «expr = »(θ, «expr / »(«expr * »(k, exprπ()), 2)))) :=
-begin
-  have [ident h] [] [":=", expr (sin_two_mul θ).symm],
-  rw [expr mul_assoc] ["at", ident h],
-  rw ["[", expr tan, ",", expr div_eq_zero_iff, ",", "<-", expr mul_eq_zero, ",", "<-", expr zero_mul («expr / »(1, 2) : exprℂ()), ",", expr mul_one_div, ",", expr cancel_factors.cancel_factors_eq_div h two_ne_zero', ",", expr mul_comm, "]"] [],
-  simpa [] [] ["only"] ["[", expr zero_div, ",", expr zero_mul, ",", expr ne.def, ",", expr not_false_iff, "]"] ["with", ident field_simps] ["using", expr sin_eq_zero_iff]
-end
+theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = (k*π) / 2 :=
+  by 
+    have h := (sin_two_mul θ).symm 
+    rw [mul_assocₓ] at h 
+    rw [tan, div_eq_zero_iff, ←mul_eq_zero, ←zero_mul (1 / 2 : ℂ), mul_one_div,
+      CancelFactors.cancel_factors_eq_div h two_ne_zero', mul_commₓ]
+    simpa only [zero_div, zero_mul, Ne.def, not_false_iff] with field_simps using sin_eq_zero_iff
 
 theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (k*π) / 2 :=
   by 
@@ -95,7 +92,7 @@ theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, (y = ((2*k)*
             normNum :
           -(2 : ℂ) ≠ 0),
           eq_sub_iff_add_eq', sub_eq_iff_eq_add, mul_commₓ (2 : ℂ), mul_right_commₓ _ (2 : ℂ)]
-      split  <;>
+      constructor <;>
         ·
           rintro ⟨k, rfl⟩
           use -k 
@@ -159,11 +156,15 @@ theorem tan_eq {z : ℂ}
 
 open_locale TopologicalSpace
 
-theorem continuous_on_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
-  continuous_on_sin.div continuous_on_cos$ fun x => id
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  continuous_on_tan
+  : ContinuousOn tan { x | cos x ≠ 0 }
+  := continuous_on_sin . div continuous_on_cos $ fun x => id
 
 @[continuity]
-theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
+theorem continuous_tan : Continuous fun x => tan x :=
   continuous_on_iff_continuous_restrict.1 continuous_on_tan
 
 theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ (((exp (z*I)^2) - (2*w)*exp (z*I))+1) = 0 :=
@@ -173,6 +174,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ (((exp (z*I)^2) - (2*w)
     refine' Eq.congr _ rfl 
     ring
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ≠ » 0)
 theorem cos_surjective : Function.Surjective cos :=
   by 
     intro x 

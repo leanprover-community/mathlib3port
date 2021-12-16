@@ -43,15 +43,21 @@ theorem bit_eq_zero {n : ℕ} {b : Bool} : n.bit b = 0 ↔ n = 0 ∧ b = ff :=
   by 
     cases b <;> normNum [bit0_eq_zero, Nat.bit1_ne_zero]
 
--- error in Data.Nat.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zero_of_test_bit_eq_ff {n : exprℕ()} (h : ∀ i, «expr = »(test_bit n i, ff)) : «expr = »(n, 0) :=
-begin
-  induction [expr n] ["using", ident nat.binary_rec] ["with", ident b, ident n, ident hn] [],
-  { refl },
-  { have [] [":", expr «expr = »(b, ff)] [":=", expr by simpa [] [] [] [] [] ["using", expr h 0]],
-    rw ["[", expr this, ",", expr bit_ff, ",", expr bit0_val, ",", expr hn (λ
-      i, by rw ["[", "<-", expr h «expr + »(i, 1), ",", expr test_bit_succ, "]"] []), ",", expr mul_zero, "]"] [] }
-end
+theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, test_bit n i = ff) : n = 0 :=
+  by 
+    induction' n using Nat.binaryRec with b n hn
+    ·
+      rfl
+    ·
+      have  : b = ff :=
+        by 
+          simpa using h 0
+      rw [this, bit_ff, bit0_val,
+        hn
+          fun i =>
+            by 
+              rw [←h (i+1), test_bit_succ],
+        mul_zero]
 
 @[simp]
 theorem zero_test_bit (i : ℕ) : test_bit 0 i = ff :=
@@ -112,34 +118,44 @@ theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, test_bit n 
             linarith)
       exact (test_bit_succ _ _ _).trans (hk' _ (lt_of_succ_lt_succ hj))
 
--- error in Data.Nat.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_of_test_bit
-{n m : exprℕ()}
-(i : exprℕ())
-(hn : «expr = »(test_bit n i, ff))
-(hm : «expr = »(test_bit m i, tt))
-(hnm : ∀ j, «expr < »(i, j) → «expr = »(test_bit n j, test_bit m j)) : «expr < »(n, m) :=
-begin
-  induction [expr n] ["using", ident nat.binary_rec] ["with", ident b, ident n, ident hn'] ["generalizing", ident i, ident m],
-  { contrapose ["!"] [ident hm],
-    rw [expr le_zero_iff] ["at", ident hm],
-    simp [] [] [] ["[", expr hm, "]"] [] [] },
-  induction [expr m] ["using", ident nat.binary_rec] ["with", ident b', ident m, ident hm'] ["generalizing", ident i],
-  { exact [expr false.elim (bool.ff_ne_tt ((zero_test_bit i).symm.trans hm))] },
-  by_cases [expr hi, ":", expr «expr = »(i, 0)],
-  { subst [expr hi],
-    simp [] [] ["only"] ["[", expr test_bit_zero, "]"] [] ["at", ident hn, ident hm],
-    have [] [":", expr «expr = »(n, m)] [],
-    { exact [expr eq_of_test_bit_eq (λ
-        i, by convert [] [expr hnm «expr + »(i, 1) exprdec_trivial()] ["using", 1]; rw [expr test_bit_succ] [])] },
-    rw ["[", expr hn, ",", expr hm, ",", expr this, ",", expr bit_ff, ",", expr bit_tt, ",", expr bit0_val, ",", expr bit1_val, "]"] [],
-    exact [expr lt_add_one _] },
-  { obtain ["⟨", ident i', ",", ident rfl, "⟩", ":=", expr exists_eq_succ_of_ne_zero hi],
-    simp [] [] ["only"] ["[", expr test_bit_succ, "]"] [] ["at", ident hn, ident hm],
-    have [] [] [":=", expr hn' _ hn hm (λ
-      j hj, by convert [] [expr hnm j.succ (succ_lt_succ hj)] ["using", 1]; rw [expr test_bit_succ] [])],
-    cases [expr b] []; cases [expr b'] []; simp [] [] ["only"] ["[", expr bit_ff, ",", expr bit_tt, ",", expr bit0_val n, ",", expr bit1_val n, ",", expr bit0_val m, ",", expr bit1_val m, "]"] [] []; linarith [] [] [] }
-end
+theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : test_bit n i = ff) (hm : test_bit m i = tt)
+  (hnm : ∀ j, i < j → test_bit n j = test_bit m j) : n < m :=
+  by 
+    induction' n using Nat.binaryRec with b n hn' generalizing i m
+    ·
+      contrapose! hm 
+      rw [le_zero_iff] at hm 
+      simp [hm]
+    induction' m using Nat.binaryRec with b' m hm' generalizing i
+    ·
+      exact False.elim (Bool.ff_ne_tt ((zero_test_bit i).symm.trans hm))
+    byCases' hi : i = 0
+    ·
+      subst hi 
+      simp only [test_bit_zero] at hn hm 
+      have  : n = m
+      ·
+        exact
+          eq_of_test_bit_eq
+            fun i =>
+              by 
+                convert
+                    hnm (i+1)
+                      (by 
+                        decide) using
+                    1 <;>
+                  rw [test_bit_succ]
+      rw [hn, hm, this, bit_ff, bit_tt, bit0_val, bit1_val]
+      exact lt_add_one _
+    ·
+      obtain ⟨i', rfl⟩ := exists_eq_succ_of_ne_zero hi 
+      simp only [test_bit_succ] at hn hm 
+      have  :=
+        hn' _ hn hm
+          fun j hj =>
+            by 
+              convert hnm j.succ (succ_lt_succ hj) using 1 <;> rw [test_bit_succ]
+      cases b <;> cases b' <;> simp only [bit_ff, bit_tt, bit0_val n, bit1_val n, bit0_val m, bit1_val m] <;> linarith
 
 @[simp]
 theorem test_bit_two_pow_self (n : ℕ) : test_bit (2 ^ n) n = tt :=
@@ -216,6 +232,7 @@ theorem lor_zero (n : ℕ) : lor n 0 = n :=
   by 
     simp [lor]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
@@ -265,37 +282,31 @@ theorem lxor_eq_zero {n m : ℕ} : lxor n m = 0 ↔ n = m :=
       rintro rfl 
       exact lxor_self _⟩
 
--- error in Data.Nat.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lxor_trichotomy
-{a b c : exprℕ()}
-(h : «expr ≠ »(lxor a (lxor b c), 0)) : «expr ∨ »(«expr < »(lxor b c, a), «expr ∨ »(«expr < »(lxor a c, b), «expr < »(lxor a b, c))) :=
-begin
-  set [] [ident v] [] [":="] [expr lxor a (lxor b c)] ["with", ident hv],
-  have [ident hab] [":", expr «expr = »(lxor a b, lxor c v)] [],
-  { rw [expr hv] [],
-    conv_rhs [] [] { rw [expr lxor_comm],
-      simp [] ["[", expr lxor_assoc, "]"] [] } },
-  have [ident hac] [":", expr «expr = »(lxor a c, lxor b v)] [],
-  { rw [expr hv] [],
-    conv_rhs [] [] { congr,
-      skip,
-      rw [expr lxor_comm] },
-    rw ["[", "<-", expr lxor_assoc, ",", "<-", expr lxor_assoc, ",", expr lxor_self, ",", expr zero_lxor, ",", expr lxor_comm, "]"] [] },
-  have [ident hbc] [":", expr «expr = »(lxor b c, lxor a v)] [],
-  { simp [] [] [] ["[", expr hv, ",", "<-", expr lxor_assoc, "]"] [] [] },
-  obtain ["⟨", ident i, ",", "⟨", ident hi, ",", ident hi', "⟩", "⟩", ":=", expr exists_most_significant_bit h],
-  have [] [":", expr «expr ∨ »(«expr = »(test_bit a i, tt), «expr ∨ »(«expr = »(test_bit b i, tt), «expr = »(test_bit c i, tt)))] [],
-  { contrapose ["!"] [ident hi],
-    simp [] [] ["only"] ["[", expr eq_ff_eq_not_eq_tt, ",", expr ne, ",", expr test_bit_lxor, "]"] [] ["at", "⊢", ident hi],
-    rw ["[", expr hi.1, ",", expr hi.2.1, ",", expr hi.2.2, ",", expr bxor_ff, ",", expr bxor_ff, "]"] [] },
-  rcases [expr this, "with", ident h, "|", ident h, "|", ident h]; [{ left,
-     rw [expr hbc] [] }, { right,
-     left,
-     rw [expr hac] [] }, { right,
-     right,
-     rw [expr hab] [] }]; exact [expr lt_of_test_bit i (by simp [] [] [] ["[", expr h, ",", expr hi, "]"] [] []) h (λ
-    j hj, by simp [] [] [] ["[", expr hi' _ hj, "]"] [] [])]
-end
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lxor_trichotomy
+  { a b c : ℕ } ( h : lxor a ( lxor b c ) ≠ 0 ) : lxor b c < a ∨ lxor a c < b ∨ lxor a b < c
+  :=
+    by
+      set v := lxor a ( lxor b c ) with hv
+        have hab : lxor a b = lxor c v
+        · rw [ hv ] convRHS => rw [ lxor_comm ] simp [ lxor_assoc ]
+        have hac : lxor a c = lxor b v
+        ·
+          rw [ hv ]
+            convRHS => congr skip rw [ lxor_comm ]
+            rw [ ← lxor_assoc , ← lxor_assoc , lxor_self , zero_lxor , lxor_comm ]
+        have hbc : lxor b c = lxor a v
+        · simp [ hv , ← lxor_assoc ]
+        obtain ⟨ i , ⟨ hi , hi' ⟩ ⟩ := exists_most_significant_bit h
+        have : test_bit a i = tt ∨ test_bit b i = tt ∨ test_bit c i = tt
+        ·
+          contrapose! hi
+            simp only [ eq_ff_eq_not_eq_tt , Ne , test_bit_lxor ] at hi ⊢
+            rw [ hi . 1 , hi . 2 . 1 , hi . 2 . 2 , bxor_ff , bxor_ff ]
+        rcases this with ( h | h | h ) <;> [ · left rw [ hbc ] , · right left rw [ hac ] , · right right rw [ hab ] ]
+          <;>
+          exact lt_of_test_bit i ( by simp [ h , hi ] ) h fun j hj => by simp [ hi' _ hj ]
 
 end Nat
 

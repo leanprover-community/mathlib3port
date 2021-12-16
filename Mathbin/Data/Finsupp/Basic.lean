@@ -67,7 +67,7 @@ This file defines `α →₀ β` as notation for `finsupp α β`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -97,14 +97,14 @@ instance : CoeFun (α →₀ M) fun _ => α → M :=
   ⟨to_fun⟩
 
 @[simp]
-theorem coe_mk (f : α → M) (s : Finset α) (h : ∀ a, a ∈ s ↔ f a ≠ 0) : «expr⇑ » (⟨s, f, h⟩ : α →₀ M) = f :=
+theorem coe_mk (f : α → M) (s : Finset α) (h : ∀ a, a ∈ s ↔ f a ≠ 0) : ⇑(⟨s, f, h⟩ : α →₀ M) = f :=
   rfl
 
 instance : HasZero (α →₀ M) :=
   ⟨⟨∅, 0, fun _ => ⟨False.elim, fun H => H rfl⟩⟩⟩
 
 @[simp]
-theorem coe_zero : «expr⇑ » (0 : α →₀ M) = 0 :=
+theorem coe_zero : ⇑(0 : α →₀ M) = 0 :=
   rfl
 
 theorem zero_apply {a : α} : (0 : α →₀ M) a = 0 :=
@@ -128,16 +128,16 @@ theorem fun_support_eq (f : α →₀ M) : Function.Support f = f.support :=
 theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.support ↔ f a = 0 :=
   not_iff_comm.1 mem_support_iff.symm
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coe_fn_injective : @function.injective «expr →₀ »(α, M) (α → M) coe_fn
-| ⟨s, f, hf⟩, ⟨t, g, hg⟩, h := begin
-  change [expr «expr = »(f, g)] [] ["at", ident h],
-  subst [expr h],
-  have [] [":", expr «expr = »(s, t)] [],
-  { ext [] [ident a] [],
-    exact [expr (hf a).trans (hg a).symm] },
-  subst [expr this]
-end
+theorem coe_fn_injective : @Function.Injective (α →₀ M) (α → M) coeFn
+| ⟨s, f, hf⟩, ⟨t, g, hg⟩, h =>
+  by 
+    change f = g at h 
+    subst h 
+    have  : s = t
+    ·
+      ext a 
+      exact (hf a).trans (hg a).symm 
+    subst this
 
 @[simp, normCast]
 theorem coe_fn_inj {f g : α →₀ M} : (f : α → M) = g ↔ f = g :=
@@ -157,6 +157,7 @@ theorem ext_iff {f g : α →₀ M} : f = g ↔ ∀ a : α, f a = g a :=
       rintro rfl a <;> rfl,
     ext⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » f.support)
 theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.support = g.support ∧ ∀ x _ : x ∈ f.support, f x = g x :=
   ⟨fun h => h ▸ ⟨rfl, fun _ _ => rfl⟩,
     fun ⟨h₁, h₂⟩ =>
@@ -190,13 +191,15 @@ theorem card_support_eq_zero {f : α →₀ M} : card f.support = 0 ↔ f = 0 :=
   by 
     simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » f.support)
 instance [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) :=
   fun f g => decidableOfIff (f.support = g.support ∧ ∀ a _ : a ∈ f.support, f a = g a) ext_iff'.symm
 
 theorem finite_support (f : α →₀ M) : Set.Finite (Function.Support f) :=
   f.fun_support_eq.symm ▸ f.support.finite_to_set
 
-theorem support_subset_iff {s : Set α} {f : α →₀ M} : «expr↑ » f.support ⊆ s ↔ ∀ a _ : a ∉ s, f a = 0 :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∉ » s)
+theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.support ⊆ s ↔ ∀ a _ : a ∉ s, f a = 0 :=
   by 
     simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congrₓ fun a => not_imp_comm
 
@@ -254,7 +257,7 @@ theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b els
   by 
     convert rfl
 
-theorem single_eq_indicator : «expr⇑ » (single a b) = Set.indicator {a} fun _ => b :=
+theorem single_eq_indicator : ⇑single a b = Set.indicator {a} fun _ => b :=
   by 
     ext 
     simp [single_apply, Set.indicator, @eq_comm _ a]
@@ -267,11 +270,11 @@ theorem single_eq_same : (single a b : α →₀ M) a = b :=
 theorem single_eq_of_ne (h : a ≠ a') : (single a b : α →₀ M) a' = 0 :=
   if_neg h
 
-theorem single_eq_update : «expr⇑ » (single a b) = Function.update 0 a b :=
+theorem single_eq_update [DecidableEq α] : ⇑single a b = Function.update 0 a b :=
   by 
     rw [single_eq_indicator, ←Set.piecewise_eq_indicator, Set.piecewise_singleton]
 
-theorem single_eq_pi_single : «expr⇑ » (single a b) = Pi.single a b :=
+theorem single_eq_pi_single [DecidableEq α] : ⇑single a b = Pi.single a b :=
   single_eq_update
 
 @[simp]
@@ -330,26 +333,28 @@ theorem eq_single_iff {f : α →₀ M} {a b} : f = single a b ↔ f.support ⊆
     byCases' hx : a = x <;> simp only [hx, single_eq_same, single_eq_of_ne, Ne.def, not_false_iff]
     exact not_mem_support_iff.1 (mt (fun hx => (mem_singleton.1 (h hx)).symm) hx)
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem single_eq_single_iff
-(a₁ a₂ : α)
-(b₁
- b₂ : M) : «expr ↔ »(«expr = »(single a₁ b₁, single a₂ b₂), «expr ∨ »(«expr ∧ »(«expr = »(a₁, a₂), «expr = »(b₁, b₂)), «expr ∧ »(«expr = »(b₁, 0), «expr = »(b₂, 0)))) :=
-begin
-  split,
-  { assume [binders (eq)],
-    by_cases [expr «expr = »(a₁, a₂)],
-    { refine [expr or.inl ⟨h, _⟩],
-      rwa ["[", expr h, ",", expr (single_injective a₂).eq_iff, "]"] ["at", ident eq] },
-    { rw ["[", expr ext_iff, "]"] ["at", ident eq],
-      have [ident h₁] [] [":=", expr eq a₁],
-      have [ident h₂] [] [":=", expr eq a₂],
-      simp [] [] ["only"] ["[", expr single_eq_same, ",", expr single_eq_of_ne h, ",", expr single_eq_of_ne (ne.symm h), "]"] [] ["at", ident h₁, ident h₂],
-      exact [expr or.inr ⟨h₁, h₂.symm⟩] } },
-  { rintros ["(", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩", ")"],
-    { refl },
-    { rw ["[", expr single_zero, ",", expr single_zero, "]"] [] } }
-end
+theorem single_eq_single_iff (a₁ a₂ : α) (b₁ b₂ : M) :
+  single a₁ b₁ = single a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ ∨ b₁ = 0 ∧ b₂ = 0 :=
+  by 
+    constructor
+    ·
+      intro eq 
+      byCases' a₁ = a₂
+      ·
+        refine' Or.inl ⟨h, _⟩
+        rwa [h, (single_injective a₂).eq_iff] at eq
+      ·
+        rw [ext_iff] at eq 
+        have h₁ := Eq a₁ 
+        have h₂ := Eq a₂ 
+        simp only [single_eq_same, single_eq_of_ne h, single_eq_of_ne (Ne.symm h)] at h₁ h₂ 
+        exact Or.inr ⟨h₁, h₂.symm⟩
+    ·
+      rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
+      ·
+        rfl
+      ·
+        rw [single_zero, single_zero]
 
 /-- `finsupp.single a b` is injective in `a`. For the statement that it is injective in `b`, see
 `finsupp.single_injective` -/
@@ -359,15 +364,15 @@ theorem single_left_injective (h : b ≠ 0) : Function.Injective fun a : α => s
 theorem single_left_inj (h : b ≠ 0) : single a b = single a' b ↔ a = a' :=
   (single_left_injective h).eq_iff
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem support_single_ne_bot (i : α) (h : «expr ≠ »(b, 0)) : «expr ≠ »((single i b).support, «expr⊥»()) :=
-begin
-  have [] [":", expr «expr ∈ »(i, (single i b).support)] [":=", expr by simpa [] [] [] [] [] ["using", expr h]],
-  intro [ident H],
-  simpa [] [] [] ["[", expr H, "]"] [] []
-end
+theorem support_single_ne_bot (i : α) (h : b ≠ 0) : (single i b).Support ≠ ⊥ :=
+  by 
+    have  : i ∈ (single i b).Support :=
+      by 
+        simpa using h 
+    intro H 
+    simpa [H]
 
-theorem support_single_disjoint {b' : M} (hb : b ≠ 0) (hb' : b' ≠ 0) {i j : α} :
+theorem support_single_disjoint [DecidableEq α] {b' : M} (hb : b ≠ 0) (hb' : b' ≠ 0) {i j : α} :
   Disjoint (single i b).Support (single j b').Support ↔ i ≠ j :=
   by 
     rw [support_single_ne_zero hb, support_single_ne_zero hb', disjoint_singleton]
@@ -408,6 +413,7 @@ theorem support_eq_singleton {f : α →₀ M} {a : α} : f.support = {a} ↔ f 
   ⟨fun h => ⟨mem_support_iff.1$ h.symm ▸ Finset.mem_singleton_self a, eq_single_iff.2 ⟨subset_of_eq h, rfl⟩⟩,
     fun h => h.2.symm ▸ support_single_ne_zero h.1⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ≠ » 0)
 theorem support_eq_singleton' {f : α →₀ M} {a : α} : f.support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
       let h := support_eq_singleton.1 h
@@ -418,6 +424,7 @@ theorem card_support_eq_one {f : α →₀ M} : card f.support = 1 ↔ ∃ a, f 
   by 
     simp only [card_eq_one, support_eq_singleton]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ≠ » 0)
 theorem card_support_eq_one' {f : α →₀ M} : card f.support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b :=
   by 
     simp only [card_eq_one, support_eq_singleton']
@@ -440,14 +447,14 @@ theorem card_support_le_one' [Nonempty α] {f : α →₀ M} : card f.support �
     simp only [card_le_one_iff_subset_singleton, support_subset_singleton']
 
 @[simp]
-theorem equiv_fun_on_fintype_single [Fintype α] (x : α) (m : M) :
+theorem equiv_fun_on_fintype_single [DecidableEq α] [Fintype α] (x : α) (m : M) :
   (@Finsupp.equivFunOnFintype α M _ _) (Finsupp.single x m) = Pi.single x m :=
   by 
     ext 
     simp [Finsupp.single_eq_pi_single, Finsupp.equivFunOnFintype]
 
 @[simp]
-theorem equiv_fun_on_fintype_symm_single [Fintype α] (x : α) (m : M) :
+theorem equiv_fun_on_fintype_symm_single [DecidableEq α] [Fintype α] (x : α) (m : M) :
   (@Finsupp.equivFunOnFintype α M _ _).symm (Pi.single x m) = Finsupp.single x m :=
   by 
     ext 
@@ -475,8 +482,9 @@ def update : α →₀ M :=
         splitIfs with hb ha ha hb <;> simp [ha, hb]⟩
 
 @[simp]
-theorem coe_update : (f.update a b : α → M) = Function.update f a b :=
-  rfl
+theorem coe_update [DecidableEq α] : (f.update a b : α → M) = Function.update f a b :=
+  by 
+    convert rfl
 
 @[simp]
 theorem update_self : f.update a (f a) = f :=
@@ -484,17 +492,21 @@ theorem update_self : f.update a (f a) = f :=
     ext 
     simp 
 
-theorem support_update : support (f.update a b) = if b = 0 then f.support.erase a else insert a f.support :=
-  rfl
+theorem support_update [DecidableEq α] :
+  support (f.update a b) = if b = 0 then f.support.erase a else insert a f.support :=
+  by 
+    convert rfl
 
 @[simp]
-theorem support_update_zero : support (f.update a 0) = f.support.erase a :=
-  if_pos rfl
+theorem support_update_zero [DecidableEq α] : support (f.update a 0) = f.support.erase a :=
+  by 
+    convert if_pos rfl
 
 variable {b}
 
-theorem support_update_ne_zero (h : b ≠ 0) : support (f.update a b) = insert a f.support :=
-  if_neg h
+theorem support_update_ne_zero [DecidableEq α] (h : b ≠ 0) : support (f.update a b) = insert a f.support :=
+  by 
+    convert if_neg h
 
 end Update
 
@@ -685,31 +697,30 @@ theorem emb_domain_map_range (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg
     ·
       rw [map_range_apply, emb_domain_notin_range, emb_domain_notin_range, ←hg] <;> assumption
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem single_of_emb_domain_single
-(l : «expr →₀ »(α, M))
-(f : «expr ↪ »(α, β))
-(a : β)
-(b : M)
-(hb : «expr ≠ »(b, 0))
-(h : «expr = »(l.emb_domain f, single a b)) : «expr∃ , »((x), «expr ∧ »(«expr = »(l, single x b), «expr = »(f x, a))) :=
-begin
-  have [ident h_map_support] [":", expr «expr = »(finset.map f l.support, {a})] [],
-  by rw ["[", "<-", expr support_emb_domain, ",", expr h, ",", expr support_single_ne_zero hb, "]"] []; refl,
-  have [ident ha] [":", expr «expr ∈ »(a, finset.map f l.support)] [],
-  by simp [] [] ["only"] ["[", expr h_map_support, ",", expr finset.mem_singleton, "]"] [] [],
-  rcases [expr finset.mem_map.1 ha, "with", "⟨", ident c, ",", ident hc₁, ",", ident hc₂, "⟩"],
-  use [expr c],
-  split,
-  { ext [] [ident d] [],
-    rw ["[", "<-", expr emb_domain_apply f l, ",", expr h, "]"] [],
-    by_cases [expr h_cases, ":", expr «expr = »(c, d)],
-    { simp [] [] ["only"] ["[", expr eq.symm h_cases, ",", expr hc₂, ",", expr single_eq_same, "]"] [] [] },
-    { rw ["[", expr single_apply, ",", expr single_apply, ",", expr if_neg, ",", expr if_neg h_cases, "]"] [],
-      by_contra [ident hfd],
-      exact [expr h_cases (f.injective (hc₂.trans hfd))] } },
-  { exact [expr hc₂] }
-end
+theorem single_of_emb_domain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b : M) (hb : b ≠ 0)
+  (h : l.emb_domain f = single a b) : ∃ x, l = single x b ∧ f x = a :=
+  by 
+    have h_map_support : Finset.map f l.support = {a}
+    ·
+      rw [←support_emb_domain, h, support_single_ne_zero hb] <;> rfl 
+    have ha : a ∈ Finset.map f l.support
+    ·
+      simp only [h_map_support, Finset.mem_singleton]
+    rcases Finset.mem_map.1 ha with ⟨c, hc₁, hc₂⟩
+    use c 
+    constructor
+    ·
+      ext d 
+      rw [←emb_domain_apply f l, h]
+      byCases' h_cases : c = d
+      ·
+        simp only [Eq.symm h_cases, hc₂, single_eq_same]
+      ·
+        rw [single_apply, single_apply, if_neg, if_neg h_cases]
+        byContra hfd 
+        exact h_cases (f.injective (hc₂.trans hfd))
+    ·
+      exact hc₂
 
 @[simp]
 theorem emb_domain_single (f : α ↪ β) (a : α) (m : M) : emb_domain f (single a m) = single (f a) m :=
@@ -775,8 +786,9 @@ def erase (a : α) (f : α →₀ M) : α →₀ M :=
           splitIfs <;> [exact ⟨fun H _ => H.1 h, fun H => (H rfl).elim⟩, exact and_iff_right h]⟩
 
 @[simp]
-theorem support_erase {a : α} {f : α →₀ M} : (f.erase a).Support = f.support.erase a :=
-  rfl
+theorem support_erase [DecidableEq α] {a : α} {f : α →₀ M} : (f.erase a).Support = f.support.erase a :=
+  by 
+    convert rfl
 
 @[simp]
 theorem erase_same {a : α} {f : α →₀ M} : (f.erase a) a = 0 :=
@@ -826,22 +838,23 @@ section SumProd
 /-- `prod f g` is the product of `g a (f a)` over the support of `f`. -/
 @[toAdditive "`sum f g` is the sum of `g a (f a)` over the support of `f`. "]
 def Prod [HasZero M] [CommMonoidₓ N] (f : α →₀ M) (g : α → M → N) : N :=
-  ∏a in f.support, g a (f a)
+  ∏ a in f.support, g a (f a)
 
 variable [HasZero M] [HasZero M'] [CommMonoidₓ N]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[toAdditive]
 theorem prod_of_support_subset (f : α →₀ M) {s : Finset α} (hs : f.support ⊆ s) (g : α → M → N)
-  (h : ∀ i _ : i ∈ s, g i 0 = 1) : f.prod g = ∏x in s, g x (f x) :=
+  (h : ∀ i _ : i ∈ s, g i 0 = 1) : f.prod g = ∏ x in s, g x (f x) :=
   Finset.prod_subset hs$ fun x hxs hx => h x hxs ▸ congr_argₓ (g x)$ not_mem_support_iff.1 hx
 
 @[toAdditive]
-theorem prod_fintype [Fintype α] (f : α →₀ M) (g : α → M → N) (h : ∀ i, g i 0 = 1) : f.prod g = ∏i, g i (f i) :=
+theorem prod_fintype [Fintype α] (f : α →₀ M) (g : α → M → N) (h : ∀ i, g i 0 = 1) : f.prod g = ∏ i, g i (f i) :=
   f.prod_of_support_subset (subset_univ _) g fun x _ => h x
 
 @[simp, toAdditive]
 theorem prod_single_index {a : α} {b : M} {h : α → M → N} (h_zero : h a 0 = 1) : (single a b).Prod h = h a b :=
-  calc (single a b).Prod h = ∏x in {a}, h x (single a b x) :=
+  calc (single a b).Prod h = ∏ x in {a}, h x (single a b x) :=
     prod_of_support_subset _ support_single_subset h$ fun x hx => (mem_singleton.1 hx).symm ▸ h_zero 
     _ = h a b :=
     by 
@@ -895,26 +908,38 @@ theorem sum_ite_self_eq' [DecidableEq α] {N : Type _} [AddCommMonoidₓ N] (f :
     simp [ite_eq_right_iff.2 Eq.symm]
 
 @[simp]
-theorem prod_pow [Fintype α] (f : α →₀ ℕ) (g : α → N) : (f.prod fun a b => g a ^ b) = ∏a, g a ^ f a :=
+theorem prod_pow [Fintype α] (f : α →₀ ℕ) (g : α → N) : (f.prod fun a b => g a ^ b) = ∏ a, g a ^ f a :=
   f.prod_fintype _$ fun a => pow_zeroₓ _
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- If `g` maps a second argument of 0 to 1, then multiplying it over the
-result of `on_finset` is the same as multiplying it over the original
-`finset`. -/
-@[to_additive #[expr "If `g` maps a second argument of 0 to 0, summing it over the\nresult of `on_finset` is the same as summing it over the original\n`finset`."]]
-theorem on_finset_prod
-{s : finset α}
-{f : α → M}
-{g : α → M → N}
-(hf : ∀ a, «expr ≠ »(f a, 0) → «expr ∈ »(a, s))
-(hg : ∀ a, «expr = »(g a 0, 1)) : «expr = »((on_finset s f hf).prod g, «expr∏ in , »((a), s, g a (f a))) :=
-«expr $ »(finset.prod_subset support_on_finset_subset, by simp [] [] [] ["[", "*", "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      If `g` maps a second argument of 0 to 1, then multiplying it over the
+      result of `on_finset` is the same as multiplying it over the original
+      `finset`. -/
+    @[
+      toAdditive
+        "If `g` maps a second argument of 0 to 0, summing it over the\nresult of `on_finset` is the same as summing it over the original\n`finset`."
+      ]
+  theorem
+    on_finset_prod
+    { s : Finset α } { f : α → M } { g : α → M → N } ( hf : ∀ a , f a ≠ 0 → a ∈ s ) ( hg : ∀ a , g a 0 = 1 )
+      : on_finset s f hf . Prod g = ∏ a in s , g a f a
+    :=
+      Finset.prod_subset support_on_finset_subset
+        $
+        by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
 
 @[toAdditive]
 theorem _root_.submonoid.finsupp_prod_mem (S : Submonoid N) (f : α →₀ M) (g : α → M → N)
   (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.prod g ∈ S :=
   S.prod_mem$ fun i hi => h _ (Finsupp.mem_support_iff.mp hi)
+
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » f.support)
+@[toAdditive]
+theorem prod_congr {f : α →₀ M} {g1 g2 : α → M → N} (h : ∀ x _ : x ∈ f.support, g1 x (f x) = g2 x (f x)) :
+  f.prod g1 = f.prod g2 :=
+  Finset.prod_congr rfl h
 
 end SumProd
 
@@ -931,7 +956,7 @@ instance : Add (α →₀ M) :=
   ⟨zip_with (·+·) (add_zeroₓ 0)⟩
 
 @[simp]
-theorem coe_add (f g : α →₀ M) : «expr⇑ » (f+g) = f+g :=
+theorem coe_add (f g : α →₀ M) : (⇑f+g) = f+g :=
   rfl
 
 theorem add_apply (g₁ g₂ : α →₀ M) (a : α) : (g₁+g₂) a = g₁ a+g₂ a :=
@@ -1076,20 +1101,18 @@ theorem induction_linear {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 
   induction₂ f h0 fun a b f _ _ w => hadd _ _ w (hsingle _ _)
 
 @[simp]
-theorem add_closure_Union_range_single : AddSubmonoid.closure (⋃a : α, Set.Range (single a : M → α →₀ M)) = ⊤ :=
+theorem add_closure_set_of_eq_single : AddSubmonoid.closure { f : α →₀ M | ∃ a b, f = single a b } = ⊤ :=
   top_unique$
     fun x hx =>
       Finsupp.induction x (AddSubmonoid.zero_mem _)$
-        fun a b f ha hb hf =>
-          AddSubmonoid.add_mem _ (AddSubmonoid.subset_closure$ Set.mem_Union.2 ⟨a, Set.mem_range_self _⟩) hf
+        fun a b f ha hb hf => AddSubmonoid.add_mem _ (AddSubmonoid.subset_closure$ ⟨a, b, rfl⟩) hf
 
 /-- If two additive homomorphisms from `α →₀ M` are equal on each `single a b`, then
 they are equal. -/
 theorem add_hom_ext [AddZeroClass N] ⦃f g : (α →₀ M) →+ N⦄ (H : ∀ x y, f (single x y) = g (single x y)) : f = g :=
   by 
-    refine' AddMonoidHom.eq_of_eq_on_mdense add_closure_Union_range_single fun f hf => _ 
-    simp only [Set.mem_Union, Set.mem_range] at hf 
-    rcases hf with ⟨x, y, rfl⟩
+    refine' AddMonoidHom.eq_of_eq_on_mdense add_closure_set_of_eq_single _ 
+    rintro _ ⟨x, y, rfl⟩
     apply H
 
 /-- If two additive homomorphisms from `α →₀ M` are equal on each `single a b`, then
@@ -1186,7 +1209,7 @@ theorem RingHom.map_finsupp_prod [HasZero M] [CommSemiringₓ R] [CommSemiring�
 
 @[toAdditive]
 theorem MonoidHom.coe_finsupp_prod [HasZero β] [Monoidₓ N] [CommMonoidₓ P] (f : α →₀ β) (g : α → β → N →* P) :
-  «expr⇑ » (f.prod g) = f.prod fun i fi => g i fi :=
+  ⇑f.prod g = f.prod fun i fi => g i fi :=
   MonoidHom.coe_prod _ _
 
 @[simp, toAdditive]
@@ -1234,7 +1257,7 @@ theorem single_multiset_sum [AddCommMonoidₓ M] (s : Multiset M) (a : α) : sin
         rw [Multiset.sum_cons, single_add, ih, Multiset.map_cons, Multiset.sum_cons]
 
 theorem single_finset_sum [AddCommMonoidₓ M] (s : Finset ι) (f : ι → M) (a : α) :
-  single a (∑b in s, f b) = ∑b in s, single a (f b) :=
+  single a (∑ b in s, f b) = ∑ b in s, single a (f b) :=
   by 
     trans 
     apply single_multiset_sum 
@@ -1251,25 +1274,30 @@ theorem prod_neg_index [AddGroupₓ G] [CommMonoidₓ M] {g : α →₀ G} {h : 
   prod_map_range_index h0
 
 @[simp]
-theorem coe_neg [AddGroupₓ G] (g : α →₀ G) : «expr⇑ » (-g) = -g :=
+theorem coe_neg [AddGroupₓ G] (g : α →₀ G) : ⇑(-g) = -g :=
   rfl
 
 theorem neg_apply [AddGroupₓ G] (g : α →₀ G) (a : α) : (-g) a = -g a :=
   rfl
 
 @[simp]
-theorem coe_sub [AddGroupₓ G] (g₁ g₂ : α →₀ G) : «expr⇑ » (g₁ - g₂) = g₁ - g₂ :=
+theorem coe_sub [AddGroupₓ G] (g₁ g₂ : α →₀ G) : ⇑(g₁ - g₂) = g₁ - g₂ :=
   rfl
 
 theorem sub_apply [AddGroupₓ G] (g₁ g₂ : α →₀ G) (a : α) : (g₁ - g₂) a = g₁ a - g₂ a :=
   rfl
 
 @[simp]
-theorem support_neg [AddGroupₓ G] {f : α →₀ G} : support (-f) = support f :=
+theorem support_neg [AddGroupₓ G] (f : α →₀ G) : support (-f) = support f :=
   Finset.Subset.antisymm support_map_range
     (calc support f = support (- -f) := congr_argₓ support (neg_negₓ _).symm 
       _ ⊆ support (-f) := support_map_range
       )
+
+theorem support_sub [DecidableEq α] [AddGroupₓ G] {f g : α →₀ G} : support (f - g) ⊆ support f ∪ support g :=
+  by 
+    rw [sub_eq_add_neg, ←support_neg g]
+    exact support_add
 
 theorem erase_eq_sub_single [AddGroupₓ G] (f : α →₀ G) (a : α) : f.erase a = f - single a (f a) :=
   by 
@@ -1299,6 +1327,17 @@ theorem support_sum [DecidableEq β] [HasZero M] [AddCommMonoidₓ N] {f : α �
   by 
     simpa only [Finset.subset_iff, mem_support_iff, Finset.mem_bUnion, sum_apply, exists_prop]
 
+theorem support_finset_sum [DecidableEq β] [AddCommMonoidₓ M] {s : Finset α} {f : α → β →₀ M} :
+  (Finset.sum s f).Support ⊆ s.bUnion fun x => (f x).Support :=
+  by 
+    rw [←Finset.sup_eq_bUnion]
+    induction' s using Finset.cons_induction_on with a s ha ih
+    ·
+      rfl
+    ·
+      rw [Finset.sum_cons, Finset.sup_cons]
+      exact support_add.trans (Finset.union_subset_union (Finset.Subset.refl _) ih)
+
 @[simp]
 theorem sum_zero [HasZero M] [AddCommMonoidₓ N] {f : α →₀ M} : (f.sum fun a b => (0 : N)) = 0 :=
   Finset.sum_const_zero
@@ -1320,11 +1359,11 @@ theorem sum_sub [HasZero M] [AddCommGroupₓ G] {f : α →₀ M} {h₁ h₂ : �
 @[toAdditive]
 theorem prod_add_index [AddCommMonoidₓ M] [CommMonoidₓ N] {f g : α →₀ M} {h : α → M → N} (h_zero : ∀ a, h a 0 = 1)
   (h_add : ∀ a b₁ b₂, h a (b₁+b₂) = h a b₁*h a b₂) : (f+g).Prod h = f.prod h*g.prod h :=
-  have hf : f.prod h = ∏a in f.support ∪ g.support, h a (f a) :=
+  have hf : f.prod h = ∏ a in f.support ∪ g.support, h a (f a) :=
     f.prod_of_support_subset (subset_union_left _ _) _$ fun a ha => h_zero a 
-  have hg : g.prod h = ∏a in f.support ∪ g.support, h a (g a) :=
+  have hg : g.prod h = ∏ a in f.support ∪ g.support, h a (g a) :=
     g.prod_of_support_subset (subset_union_right _ _) _$ fun a ha => h_zero a 
-  have hfg : (f+g).Prod h = ∏a in f.support ∪ g.support, h a ((f+g) a) :=
+  have hfg : (f+g).Prod h = ∏ a in f.support ∪ g.support, h a ((f+g) a) :=
     (f+g).prod_of_support_subset support_add _$ fun a ha => h_zero a 
   by 
     simp only [add_apply, prod_mul_distrib]
@@ -1419,7 +1458,7 @@ theorem prod_emb_domain [HasZero M] [CommMonoidₓ N] {v : α →₀ M} {f : α 
 @[toAdditive]
 theorem prod_finset_sum_index [AddCommMonoidₓ M] [CommMonoidₓ N] {s : Finset ι} {g : ι → α →₀ M} {h : α → M → N}
   (h_zero : ∀ a, h a 0 = 1) (h_add : ∀ a b₁ b₂, h a (b₁+b₂) = h a b₁*h a b₂) :
-  (∏i in s, (g i).Prod h) = (∑i in s, g i).Prod h :=
+  (∏ i in s, (g i).Prod h) = (∑ i in s, g i).Prod h :=
   Finset.induction_on s rfl$
     fun a s has ih =>
       by 
@@ -1439,33 +1478,25 @@ theorem multiset_sum_sum_index [AddCommMonoidₓ M] [AddCommMonoidₓ N] (f : Mu
       by 
         rw [Multiset.sum_cons, Multiset.map_cons, Multiset.sum_cons, sum_add_index h₀ h₁, ih]
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem support_sum_eq_bUnion
-{α : Type*}
-{ι : Type*}
-{M : Type*}
-[add_comm_monoid M]
-{g : ι → «expr →₀ »(α, M)}
-(s : finset ι)
-(h : ∀
- i₁
- i₂, «expr ≠ »(i₁, i₂) → disjoint (g i₁).support (g i₂).support) : «expr = »(«expr∑ in , »((i), s, g i).support, s.bUnion (λ
-  i, (g i).support)) :=
-begin
-  apply [expr finset.induction_on s],
-  { simp [] [] [] [] [] [] },
-  { intros [ident i, ident s, ident hi],
-    simp [] [] ["only"] ["[", expr hi, ",", expr sum_insert, ",", expr not_false_iff, ",", expr bUnion_insert, "]"] [] [],
-    intro [ident hs],
-    rw ["[", expr finsupp.support_add_eq, ",", expr hs, "]"] [],
-    rw ["[", expr hs, "]"] [],
-    intros [ident x, ident hx],
-    simp [] [] ["only"] ["[", expr mem_bUnion, ",", expr exists_prop, ",", expr inf_eq_inter, ",", expr ne.def, ",", expr mem_inter, "]"] [] ["at", ident hx],
-    obtain ["⟨", ident hxi, ",", ident j, ",", ident hj, ",", ident hxj, "⟩", ":=", expr hx],
-    have [ident hn] [":", expr «expr ≠ »(i, j)] [":=", expr λ H, hi «expr ▸ »(H.symm, hj)],
-    apply [expr h _ _ hn],
-    simp [] [] [] ["[", expr hxi, ",", expr hxj, "]"] [] [] }
-end
+theorem support_sum_eq_bUnion {α : Type _} {ι : Type _} {M : Type _} [AddCommMonoidₓ M] {g : ι → α →₀ M} (s : Finset ι)
+  (h : ∀ i₁ i₂, i₁ ≠ i₂ → Disjoint (g i₁).Support (g i₂).Support) :
+  (∑ i in s, g i).Support = s.bUnion fun i => (g i).Support :=
+  by 
+    apply Finset.induction_on s
+    ·
+      simp 
+    ·
+      intro i s hi 
+      simp only [hi, sum_insert, not_false_iff, bUnion_insert]
+      intro hs 
+      rw [Finsupp.support_add_eq, hs]
+      rw [hs]
+      intro x hx 
+      simp only [mem_bUnion, exists_prop, inf_eq_inter, Ne.def, mem_inter] at hx 
+      obtain ⟨hxi, j, hj, hxj⟩ := hx 
+      have hn : i ≠ j := fun H => hi (H.symm ▸ hj)
+      apply h _ _ hn 
+      simp [hxi, hxj]
 
 theorem multiset_map_sum [HasZero M] {f : α →₀ M} {m : β → γ} {h : α → M → Multiset β} :
   Multiset.map m (f.sum h) = f.sum fun a b => (h a b).map m :=
@@ -1477,7 +1508,7 @@ theorem multiset_sum_sum [HasZero M] [AddCommMonoidₓ N] {f : α →₀ M} {h :
 
 section MapRange
 
-section Equiv
+section Equivₓ
 
 variable [HasZero M] [HasZero N] [HasZero P]
 
@@ -1488,7 +1519,7 @@ def map_range.equiv (f : M ≃ N) (hf : f 0 = 0) (hf' : f.symm 0 = 0) : (α →�
     left_inv :=
       fun x =>
         by 
-          rw [←map_range_comp _ _ _ _] <;> simpRw [Equiv.symm_comp_self]
+          rw [←map_range_comp _ _ _ _] <;> simpRw [Equivₓ.symm_comp_self]
           ·
             exact map_range_id _
           ·
@@ -1496,32 +1527,32 @@ def map_range.equiv (f : M ≃ N) (hf : f 0 = 0) (hf' : f.symm 0 = 0) : (α →�
     right_inv :=
       fun x =>
         by 
-          rw [←map_range_comp _ _ _ _] <;> simpRw [Equiv.self_comp_symm]
+          rw [←map_range_comp _ _ _ _] <;> simpRw [Equivₓ.self_comp_symm]
           ·
             exact map_range_id _
           ·
             rfl }
 
 @[simp]
-theorem map_range.equiv_refl : map_range.equiv (Equiv.refl M) rfl rfl = Equiv.refl (α →₀ M) :=
-  Equiv.ext map_range_id
+theorem map_range.equiv_refl : map_range.equiv (Equivₓ.refl M) rfl rfl = Equivₓ.refl (α →₀ M) :=
+  Equivₓ.ext map_range_id
 
 theorem map_range.equiv_trans (f : M ≃ N) (hf : f 0 = 0) hf' (f₂ : N ≃ P) (hf₂ : f₂ 0 = 0) hf₂' :
   (map_range.equiv (f.trans f₂)
       (by 
-        rw [Equiv.trans_apply, hf, hf₂])
+        rw [Equivₓ.trans_apply, hf, hf₂])
       (by 
-        rw [Equiv.symm_trans_apply, hf₂', hf']) :
+        rw [Equivₓ.symm_trans_apply, hf₂', hf']) :
     (α →₀ _) ≃ _) =
     (map_range.equiv f hf hf').trans (map_range.equiv f₂ hf₂ hf₂') :=
-  Equiv.ext$ map_range_comp _ _ _ _ _
+  Equivₓ.ext$ map_range_comp _ _ _ _ _
 
 @[simp]
 theorem map_range.equiv_symm (f : M ≃ N) hf hf' :
   ((map_range.equiv f hf hf').symm : (α →₀ _) ≃ _) = map_range.equiv f.symm hf' hf :=
-  Equiv.ext$ fun x => rfl
+  Equivₓ.ext$ fun x => rfl
 
-end Equiv
+end Equivₓ
 
 section ZeroHom
 
@@ -1574,7 +1605,7 @@ theorem map_range_multiset_sum (f : M →+ N) (m : Multiset (α →₀ M)) :
   (map_range.add_monoid_hom f : (α →₀ _) →+ _).map_multiset_sum _
 
 theorem map_range_finset_sum (f : M →+ N) (s : Finset ι) (g : ι → α →₀ M) :
-  map_range f f.map_zero (∑x in s, g x) = ∑x in s, map_range f f.map_zero (g x) :=
+  map_range f f.map_zero (∑ x in s, g x) = ∑ x in s, map_range f f.map_zero (g x) :=
   (map_range.add_monoid_hom f : (α →₀ _) →+ _).map_sum _ _
 
 /-- `finsupp.map_range.add_monoid_hom` as an equiv. -/
@@ -1621,7 +1652,7 @@ theorem map_range.add_equiv_to_add_monoid_hom (f : M ≃+ N) :
 @[simp]
 theorem map_range.add_equiv_to_equiv (f : M ≃+ N) :
   (map_range.add_equiv f).toEquiv = (map_range.equiv f.to_equiv f.map_zero f.symm.map_zero : (α →₀ _) ≃ _) :=
-  Equiv.ext$ fun _ => rfl
+  Equivₓ.ext$ fun _ => rfl
 
 end AddMonoidHom
 
@@ -1668,7 +1699,7 @@ theorem map_domain_comp {f : α → β} {g : β → γ} : map_domain (g ∘ f) v
     ·
       intros 
       exact single_add 
-    refine' sum_congr rfl fun _ _ => sum_single_index _
+    refine' sum_congr fun _ _ => sum_single_index _
     ·
       exact single_zero
 
@@ -1680,6 +1711,7 @@ theorem map_domain_single {f : α → β} {a : α} {b : M} : map_domain f (singl
 theorem map_domain_zero {f : α → β} : map_domain f (0 : α →₀ M) = (0 : β →₀ M) :=
   sum_zero_index
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » v.support)
 theorem map_domain_congr {f g : α → β} (h : ∀ x _ : x ∈ v.support, f x = g x) : v.map_domain f = v.map_domain g :=
   Finset.sum_congr rfl$
     fun _ H =>
@@ -1710,7 +1742,7 @@ theorem map_domain.add_monoid_hom_comp (f : β → γ) (g : α → β) :
   AddMonoidHom.ext$ fun _ => map_domain_comp
 
 theorem map_domain_finset_sum {f : α → β} {s : Finset ι} {v : ι → α →₀ M} :
-  map_domain f (∑i in s, v i) = ∑i in s, map_domain f (v i) :=
+  map_domain f (∑ i in s, v i) = ∑ i in s, map_domain f (v i) :=
   (map_domain.add_monoid_hom f : (α →₀ M) →+ β →₀ M).map_sum _ _
 
 theorem map_domain_sum [HasZero N] {f : α → β} {s : α →₀ N} {v : α → N → α →₀ M} :
@@ -1726,7 +1758,7 @@ theorem map_domain_support [DecidableEq β] {f : α → β} {s : α →₀ M} : 
 @[toAdditive]
 theorem prod_map_domain_index [CommMonoidₓ N] {f : α → β} {s : α →₀ M} {h : β → M → N} (h_zero : ∀ b, h b 0 = 1)
   (h_add : ∀ b m₁ m₂, h b (m₁+m₂) = h b m₁*h b m₂) : (map_domain f s).Prod h = s.prod fun a m => h (f a) m :=
-  (prod_sum_index h_zero h_add).trans$ prod_congr rfl$ fun _ _ => prod_single_index (h_zero _)
+  (prod_sum_index h_zero h_add).trans$ prod_congr$ fun _ _ => prod_single_index (h_zero _)
 
 /--
 A version of `sum_map_domain_index` that takes a bundled `add_monoid_hom`,
@@ -1753,17 +1785,15 @@ theorem prod_map_domain_index_inj [CommMonoidₓ N] {f : α → β} {s : α →�
   by 
     rw [←Function.Embedding.coe_fn_mk f hf, ←emb_domain_eq_map_domain, prod_emb_domain]
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_domain_injective
-{f : α → β}
-(hf : function.injective f) : function.injective (map_domain f : «expr →₀ »(α, M) → «expr →₀ »(β, M)) :=
-begin
-  assume [binders (v₁ v₂ eq)],
-  ext [] [ident a] [],
-  have [] [":", expr «expr = »(map_domain f v₁ (f a), map_domain f v₂ (f a))] [],
-  { rw [expr eq] [] },
-  rwa ["[", expr map_domain_apply hf, ",", expr map_domain_apply hf, "]"] ["at", ident this]
-end
+theorem map_domain_injective {f : α → β} (hf : Function.Injective f) :
+  Function.Injective (map_domain f : (α →₀ M) → β →₀ M) :=
+  by 
+    intro v₁ v₂ eq 
+    ext a 
+    have  : map_domain f v₁ (f a) = map_domain f v₂ (f a)
+    ·
+      rw [Eq]
+    rwa [map_domain_apply hf, map_domain_apply hf] at this
 
 theorem map_domain.add_monoid_hom_comp_map_range [AddCommMonoidₓ N] (f : α → β) (g : M →+ N) :
   (map_domain.add_monoid_hom f).comp (map_range.add_monoid_hom g) =
@@ -1788,7 +1818,7 @@ section ComapDomain
 /-- Given `f : α → β`, `l : β →₀ M` and a proof `hf` that `f` is injective on
 the preimage of `l.support`, `comap_domain f l hf` is the finitely supported function
 from `α` to `M` given by composing `l` with `f`. -/
-def comap_domain [HasZero M] (f : α → β) (l : β →₀ M) (hf : Set.InjOn f (f ⁻¹' «expr↑ » l.support)) : α →₀ M :=
+def comap_domain [HasZero M] (f : α → β) (l : β →₀ M) (hf : Set.InjOn f (f ⁻¹' ↑l.support)) : α →₀ M :=
   { Support := l.support.preimage f hf, toFun := fun a => l (f a),
     mem_support_to_fun :=
       by 
@@ -1797,19 +1827,18 @@ def comap_domain [HasZero M] (f : α → β) (l : β →₀ M) (hf : Set.InjOn f
         exact l.mem_support_to_fun (f a) }
 
 @[simp]
-theorem comap_domain_apply [HasZero M] (f : α → β) (l : β →₀ M) (hf : Set.InjOn f (f ⁻¹' «expr↑ » l.support)) (a : α) :
+theorem comap_domain_apply [HasZero M] (f : α → β) (l : β →₀ M) (hf : Set.InjOn f (f ⁻¹' ↑l.support)) (a : α) :
   comap_domain f l hf a = l (f a) :=
   rfl
 
 theorem sum_comap_domain [HasZero M] [AddCommMonoidₓ N] (f : α → β) (l : β →₀ M) (g : β → M → N)
-  (hf : Set.BijOn f (f ⁻¹' «expr↑ » l.support) («expr↑ » l.support)) :
-  (comap_domain f l hf.inj_on).Sum (g ∘ f) = l.sum g :=
+  (hf : Set.BijOn f (f ⁻¹' ↑l.support) (↑l.support)) : (comap_domain f l hf.inj_on).Sum (g ∘ f) = l.sum g :=
   by 
     simp only [Sum, comap_domain_apply, · ∘ ·]
     simp [comap_domain, Finset.sum_preimage_of_bij f _ _ fun x => g x (l x)]
 
 theorem eq_zero_of_comap_domain_eq_zero [AddCommMonoidₓ M] (f : α → β) (l : β →₀ M)
-  (hf : Set.BijOn f (f ⁻¹' «expr↑ » l.support) («expr↑ » l.support)) : comap_domain f l hf.inj_on = 0 → l = 0 :=
+  (hf : Set.BijOn f (f ⁻¹' ↑l.support) (↑l.support)) : comap_domain f l hf.inj_on = 0 → l = 0 :=
   by 
     rw [←support_eq_empty, ←support_eq_empty, comap_domain]
     simp only [Finset.ext_iff, Finset.not_mem_empty, iff_falseₓ, mem_preimage]
@@ -1818,7 +1847,7 @@ theorem eq_zero_of_comap_domain_eq_zero [AddCommMonoidₓ M] (f : α → β) (l 
     exact h b (hb.2.symm ▸ ha)
 
 theorem map_domain_comap_domain [AddCommMonoidₓ M] (f : α → β) (l : β →₀ M) (hf : Function.Injective f)
-  (hl : «expr↑ » l.support ⊆ Set.Range f) : map_domain f (comap_domain f l (hf.inj_on _)) = l :=
+  (hl : ↑l.support ⊆ Set.Range f) : map_domain f (comap_domain f l (hf.inj_on _)) = l :=
   by 
     ext a 
     byCases' h_cases : a ∈ Set.Range f
@@ -1917,11 +1946,11 @@ theorem equiv_map_domain_symm_apply (f : α ≃ β) (l : β →₀ M) (a : α) :
   rfl
 
 @[simp]
-theorem equiv_map_domain_refl (l : α →₀ M) : equiv_map_domain (Equiv.refl _) l = l :=
+theorem equiv_map_domain_refl (l : α →₀ M) : equiv_map_domain (Equivₓ.refl _) l = l :=
   by 
     ext x <;> rfl
 
-theorem equiv_map_domain_refl' : equiv_map_domain (Equiv.refl _) = @id (α →₀ M) :=
+theorem equiv_map_domain_refl' : equiv_map_domain (Equivₓ.refl _) = @id (α →₀ M) :=
   by 
     ext x <;> rfl
 
@@ -1938,7 +1967,7 @@ theorem equiv_map_domain_trans' (f : α ≃ β) (g : β ≃ γ) :
 @[simp]
 theorem equiv_map_domain_single (f : α ≃ β) (a : α) (b : M) : equiv_map_domain f (single a b) = single (f a) b :=
   by 
-    ext x <;> simp only [single_apply, Equiv.apply_eq_iff_eq_symm_apply, equiv_map_domain_apply] <;> congr
+    ext x <;> simp only [single_apply, Equivₓ.apply_eq_iff_eq_symm_apply, equiv_map_domain_apply] <;> congr
 
 @[simp]
 theorem equiv_map_domain_zero {f : α ≃ β} : equiv_map_domain f (0 : α →₀ M) = (0 : β →₀ M) :=
@@ -1957,7 +1986,7 @@ This is the finitely-supported version of `equiv.Pi_congr_left`. -/
 def equiv_congr_left (f : α ≃ β) : (α →₀ M) ≃ (β →₀ M) :=
   by 
     refine' ⟨equiv_map_domain f, equiv_map_domain f.symm, fun f => _, fun f => _⟩ <;>
-      ext x <;> simp only [equiv_map_domain_apply, Equiv.symm_symm, Equiv.symm_apply_apply, Equiv.apply_symm_apply]
+      ext x <;> simp only [equiv_map_domain_apply, Equivₓ.symm_symm, Equivₓ.symm_apply_apply, Equivₓ.apply_symm_apply]
 
 @[simp]
 theorem equiv_congr_left_apply (f : α ≃ β) (l : α →₀ M) : equiv_congr_left f l = equiv_map_domain f l :=
@@ -1993,8 +2022,9 @@ theorem filter_apply (a : α) [D : Decidable (p a)] : f.filter p a = if p a then
   by 
     rw [Subsingleton.elimₓ D] <;> rfl
 
-theorem filter_eq_indicator : «expr⇑ » (f.filter p) = Set.indicator { x | p x } f :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem filter_eq_indicator : ⇑ f.filter p = Set.indicator { x | p x } f := rfl
 
 @[simp]
 theorem filter_apply_pos {a : α} (h : p a) : f.filter p a = f a :=
@@ -2027,9 +2057,12 @@ theorem filter_single_of_neg {a : α} {b : M} (h : ¬p a) : (single a b).filter 
 
 end HasZero
 
-theorem filter_pos_add_filter_neg [AddZeroClass M] (f : α →₀ M) (p : α → Prop) :
-  (f.filter p+f.filter fun a => ¬p a) = f :=
-  coe_fn_injective$ Set.indicator_self_add_compl { x | p x } f
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  filter_pos_add_filter_neg
+  [ AddZeroClass M ] ( f : α →₀ M ) ( p : α → Prop ) : f.filter p + f.filter fun a => ¬ p a = f
+  := coe_fn_injective $ Set.indicator_self_add_compl { x | p x } f
 
 end Filter
 
@@ -2096,6 +2129,7 @@ theorem subtype_domain_eq_zero_iff' {f : α →₀ M} : f.subtype_domain p = 0 �
   by 
     simpRw [←support_eq_empty, support_subtype_domain, subtype_eq_empty, not_mem_support_iff]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » f.support)
 theorem subtype_domain_eq_zero_iff {f : α →₀ M} (hf : ∀ x _ : x ∈ f.support, p x) : f.subtype_domain p = 0 ↔ f = 0 :=
   subtype_domain_eq_zero_iff'.trans
     ⟨fun H => ext$ fun x => if hx : p x then H x hx else not_mem_support_iff.1$ mt (hf x) hx,
@@ -2103,6 +2137,7 @@ theorem subtype_domain_eq_zero_iff {f : α →₀ M} (hf : ∀ x _ : x ∈ f.sup
         by 
           simp [H]⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » v.support)
 @[toAdditive]
 theorem prod_subtype_domain_index [CommMonoidₓ N] {v : α →₀ M} {h : α → M → N} (hp : ∀ x _ : x ∈ v.support, p x) :
   ((v.subtype_domain p).Prod fun a b => h a b) = v.prod h :=
@@ -2123,10 +2158,18 @@ theorem subtype_domain_add {v v' : α →₀ M} : (v+v').subtypeDomain p = v.sub
 def subtype_domain_add_monoid_hom : (α →₀ M) →+ Subtype p →₀ M :=
   { toFun := subtype_domain p, map_zero' := subtype_domain_zero, map_add' := fun _ _ => subtype_domain_add }
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- `finsupp.filter` as an `add_monoid_hom`. -/
-def filter_add_hom (p : α → Prop) : (α →₀ M) →+ α →₀ M :=
-  { toFun := filter p, map_zero' := filter_zero p,
-    map_add' := fun f g => coe_fn_injective$ Set.indicator_add { x | p x } f g }
+  def
+    filter_add_hom
+    ( p : α → Prop ) : α →₀ M →+ α →₀ M
+    :=
+      {
+        toFun := filter p ,
+          map_zero' := filter_zero p ,
+          map_add' := fun f g => coe_fn_injective $ Set.indicator_add { x | p x } f g
+        }
 
 @[simp]
 theorem filter_add {v v' : α →₀ M} : (v+v').filter p = v.filter p+v'.filter p :=
@@ -2139,18 +2182,18 @@ section CommMonoidₓ
 variable [AddCommMonoidₓ M] {p : α → Prop}
 
 theorem subtype_domain_sum {s : Finset ι} {h : ι → α →₀ M} :
-  (∑c in s, h c).subtypeDomain p = ∑c in s, (h c).subtypeDomain p :=
+  (∑ c in s, h c).subtypeDomain p = ∑ c in s, (h c).subtypeDomain p :=
   (subtype_domain_add_monoid_hom : _ →+ Subtype p →₀ M).map_sum _ s
 
 theorem subtype_domain_finsupp_sum [HasZero N] {s : β →₀ N} {h : β → N → α →₀ M} :
   (s.sum h).subtypeDomain p = s.sum fun c d => (h c d).subtypeDomain p :=
   subtype_domain_sum
 
-theorem filter_sum (s : Finset ι) (f : ι → α →₀ M) : (∑a in s, f a).filter p = ∑a in s, filter p (f a) :=
+theorem filter_sum (s : Finset ι) (f : ι → α →₀ M) : (∑ a in s, f a).filter p = ∑ a in s, filter p (f a) :=
   (filter_add_hom p : (α →₀ M) →+ _).map_sum f s
 
 theorem filter_eq_sum (p : α → Prop) [D : DecidablePred p] (f : α →₀ M) :
-  f.filter p = ∑i in f.support.filter p, single i (f i) :=
+  f.filter p = ∑ i in f.support.filter p, single i (f i) :=
   (f.filter p).sum_single.symm.trans$
     Finset.sum_congr
         (by 
@@ -2241,8 +2284,9 @@ theorem to_multiset_apply (f : α →₀ ℕ) : f.to_multiset = f.sum fun a n =>
   rfl
 
 @[simp]
-theorem to_multiset_symm_apply (s : Multiset α) (x : α) : Finsupp.toMultiset.symm s x = s.count x :=
-  rfl
+theorem to_multiset_symm_apply [DecidableEq α] (s : Multiset α) (x : α) : Finsupp.toMultiset.symm s x = s.count x :=
+  by 
+    convert rfl
 
 @[simp]
 theorem to_multiset_single (a : α) (n : ℕ) : to_multiset (single a n) = n • {a} :=
@@ -2250,11 +2294,11 @@ theorem to_multiset_single (a : α) (n : ℕ) : to_multiset (single a n) = n •
     rw [to_multiset_apply, sum_single_index] <;> apply zero_nsmul
 
 theorem to_multiset_sum {ι : Type _} {f : ι → α →₀ ℕ} (s : Finset ι) :
-  Finsupp.toMultiset (∑i in s, f i) = ∑i in s, Finsupp.toMultiset (f i) :=
+  Finsupp.toMultiset (∑ i in s, f i) = ∑ i in s, Finsupp.toMultiset (f i) :=
   AddEquiv.map_sum _ _ _
 
 theorem to_multiset_sum_single {ι : Type _} (s : Finset ι) (n : ℕ) :
-  Finsupp.toMultiset (∑i in s, single i n) = n • s.val :=
+  Finsupp.toMultiset (∑ i in s, single i n) = n • s.val :=
   by 
     simpRw [to_multiset_sum, Finsupp.to_multiset_single, sum_nsmul, sum_multiset_singleton]
 
@@ -2323,6 +2367,7 @@ theorem count_to_multiset [DecidableEq α] (f : α →₀ ℕ) (a : α) : f.to_m
       rw [Multiset.count_singleton_self, mul_oneₓ]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem mem_support_multiset_sum [AddCommMonoidₓ M] {s : Multiset (α →₀ M)} (a : α) :
   a ∈ s.sum.support → ∃ (f : _)(_ : f ∈ s), a ∈ (f : α →₀ M).Support :=
   Multiset.induction_on s False.elim
@@ -2336,8 +2381,9 @@ theorem mem_support_multiset_sum [AddCommMonoidₓ M] {s : Multiset (α →₀ M
         rcases ih (mem_support_iff.2 ha) with ⟨f', h₀, h₁⟩
         exact ⟨f', Multiset.mem_cons_of_mem h₀, h₁⟩)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 theorem mem_support_finset_sum [AddCommMonoidₓ M] {s : Finset ι} {h : ι → α →₀ M} (a : α)
-  (ha : a ∈ (∑c in s, h c).Support) : ∃ (c : _)(_ : c ∈ s), a ∈ (h c).Support :=
+  (ha : a ∈ (∑ c in s, h c).Support) : ∃ (c : _)(_ : c ∈ s), a ∈ (h c).Support :=
   let ⟨f, hf, hfa⟩ := mem_support_multiset_sum a ha 
   let ⟨c, hc, Eq⟩ := Multiset.mem_map.1 hf
   ⟨c, hc, Eq.symm ▸ hfa⟩
@@ -2362,20 +2408,21 @@ finitely supported functions from `β` to `γ`. -/
 protected def curry (f : α × β →₀ M) : α →₀ β →₀ M :=
   f.sum$ fun p c => single p.1 (single p.2 c)
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem curry_apply (f : «expr →₀ »(«expr × »(α, β), M)) (x : α) (y : β) : «expr = »(f.curry x y, f (x, y)) :=
-begin
-  have [] [":", expr ∀
-   b : «expr × »(α, β), «expr = »(single b.fst (single b.snd (f b)) x y, if «expr = »(b, (x, y)) then f b else 0)] [],
-  { rintros ["⟨", ident b₁, ",", ident b₂, "⟩"],
-    simp [] [] [] ["[", expr single_apply, ",", expr ite_apply, ",", expr prod.ext_iff, ",", expr ite_and, "]"] [] [],
-    split_ifs [] []; simp [] [] [] ["[", expr single_apply, ",", "*", "]"] [] [] },
-  rw ["[", expr finsupp.curry, ",", expr sum_apply, ",", expr sum_apply, ",", expr finsupp.sum, ",", expr finset.sum_eq_single, ",", expr this, ",", expr if_pos rfl, "]"] [],
-  { intros [ident b, ident hb, ident b_ne],
-    rw ["[", expr this b, ",", expr if_neg b_ne, "]"] [] },
-  { intros [ident hxy],
-    rw ["[", expr this (x, y), ",", expr if_pos rfl, ",", expr not_mem_support_iff.mp hxy, "]"] [] }
-end
+@[simp]
+theorem curry_apply (f : α × β →₀ M) (x : α) (y : β) : f.curry x y = f (x, y) :=
+  by 
+    have  : ∀ b : α × β, single b.fst (single b.snd (f b)) x y = if b = (x, y) then f b else 0
+    ·
+      rintro ⟨b₁, b₂⟩
+      simp [single_apply, ite_apply, Prod.ext_iff, ite_and]
+      splitIfs <;> simp [single_apply]
+    rw [Finsupp.curry, sum_apply, sum_apply, Finsupp.sum, Finset.sum_eq_single, this, if_pos rfl]
+    ·
+      intro b hb b_ne 
+      rw [this b, if_neg b_ne]
+    ·
+      intro hxy 
+      rw [this (x, y), if_pos rfl, not_mem_support_iff.mp hxy]
 
 theorem sum_curry_index (f : α × β →₀ M) (g : α → β → M → N) (hg₀ : ∀ a b, g a b 0 = 0)
   (hg₁ : ∀ a b c₀ c₁, g a b (c₀+c₁) = g a b c₀+g a b c₁) :
@@ -2439,7 +2486,7 @@ def sum_elim {α β γ : Type _} [HasZero γ] (f : α →₀ γ) (g : β →₀ 
         cases' ab with a b <;> simp only [Sum.elim_inl, Sum.elim_inr] at h <;> simpa
 
 @[simp]
-theorem coe_sum_elim {α β γ : Type _} [HasZero γ] (f : α →₀ γ) (g : β →₀ γ) : «expr⇑ » (sum_elim f g) = Sum.elim f g :=
+theorem coe_sum_elim {α β γ : Type _} [HasZero γ] (f : α →₀ γ) (g : β →₀ γ) : ⇑sum_elim f g = Sum.elim f g :=
   rfl
 
 theorem sum_elim_apply {α β γ : Type _} [HasZero γ] (f : α →₀ γ) (g : β →₀ γ) (x : Sum α β) :
@@ -2498,7 +2545,7 @@ def sum_finsupp_add_equiv_prod_finsupp {α β : Type _} : (Sum α β →₀ M) �
       by 
         intros 
         ext <;>
-          simp only [Equiv.to_fun_as_coe, Prod.fst_add, Prod.snd_add, add_apply, snd_sum_finsupp_equiv_prod_finsupp,
+          simp only [Equivₓ.to_fun_as_coe, Prod.fst_add, Prod.snd_add, add_apply, snd_sum_finsupp_equiv_prod_finsupp,
             fst_sum_finsupp_equiv_prod_finsupp] }
 
 theorem fst_sum_finsupp_add_equiv_prod_finsupp {α β : Type _} (f : Sum α β →₀ M) (x : α) :
@@ -2616,8 +2663,7 @@ Throughout this section, some `monoid` and `semiring` arguments are specified wi
 
 
 @[simp]
-theorem coe_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] (b : R) (v : α →₀ M) :
-  «expr⇑ » (b • v) = b • v :=
+theorem coe_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] (b : R) (v : α →₀ M) : ⇑(b • v) = b • v :=
   rfl
 
 theorem smul_apply {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] (b : R) (v : α →₀ M) (a : α) :
@@ -2653,6 +2699,10 @@ instance [Monoidₓ R] [Monoidₓ S] [AddMonoidₓ M] [DistribMulAction R M] [Di
   SmulCommClass R S (α →₀ M) :=
   { smul_comm := fun r s a => ext$ fun _ => smul_comm _ _ _ }
 
+instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] [DistribMulAction (Rᵐᵒᵖ) M] [IsCentralScalar R M] :
+  IsCentralScalar R (α →₀ M) :=
+  { op_smul_eq_smul := fun r a => ext$ fun _ => op_smul_eq_smul _ _ }
+
 instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (α →₀ M) :=
   { Finsupp.distribMulAction α M with smul := · • ·, zero_smul := fun x => ext$ fun _ => zero_smul _ _,
     add_smul := fun a x y => ext$ fun _ => add_smul _ _ _ }
@@ -2670,10 +2720,14 @@ section
 
 variable {p : α → Prop}
 
-@[simp]
-theorem filter_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] {b : R} {v : α →₀ M} :
-  (b • v).filter p = b • v.filter p :=
-  coe_fn_injective$ Set.indicator_smul { x | p x } b v
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    filter_smul
+    { _ : Monoidₓ R } [ AddMonoidₓ M ] [ DistribMulAction R M ] { b : R } { v : α →₀ M }
+      : b • v . filter p = b • v.filter p
+    := coe_fn_injective $ Set.indicator_smul { x | p x } b v
 
 end 
 
@@ -2698,26 +2752,15 @@ theorem smul_single {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] (c
 theorem smul_single' {_ : Semiringₓ R} (c : R) (a : α) (b : R) : c • Finsupp.single a b = Finsupp.single a (c*b) :=
   smul_single _ _ _
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_range_smul
-{_ : monoid R}
-[add_monoid M]
-[distrib_mul_action R M]
-[add_monoid N]
-[distrib_mul_action R N]
-{f : M → N}
-{hf : «expr = »(f 0, 0)}
-(c : R)
-(v : «expr →₀ »(α, M))
-(hsmul : ∀
- x, «expr = »(f «expr • »(c, x), «expr • »(c, f x))) : «expr = »(map_range f hf «expr • »(c, v), «expr • »(c, map_range f hf v)) :=
-begin
-  erw ["<-", expr map_range_comp] [],
-  have [] [":", expr «expr = »(«expr ∘ »(f, ((«expr • »)) c), «expr ∘ »(((«expr • »)) c, f))] [":=", expr funext hsmul],
-  simp_rw [expr this] [],
-  apply [expr map_range_comp],
-  rw ["[", expr function.comp_apply, ",", expr smul_zero, ",", expr hf, "]"] []
-end
+theorem map_range_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] [AddMonoidₓ N] [DistribMulAction R N]
+  {f : M → N} {hf : f 0 = 0} (c : R) (v : α →₀ M) (hsmul : ∀ x, f (c • x) = c • f x) :
+  map_range f hf (c • v) = c • map_range f hf v :=
+  by 
+    erw [←map_range_comp]
+    have  : f ∘ (· • ·) c = (· • ·) c ∘ f := funext hsmul 
+    simpRw [this]
+    apply map_range_comp 
+    rw [Function.comp_applyₓ, smul_zero, hf]
 
 theorem smul_single_one [Semiringₓ R] (a : α) (b : R) : b • single a 1 = single a b :=
   by 
@@ -2788,8 +2831,7 @@ end
 /-- Given an `add_comm_monoid M` and `s : set α`, `restrict_support_equiv s M` is the `equiv`
 between the subtype of finitely supported functions with support contained in `s` and
 the type of finitely supported functions from `s`. -/
-def restrict_support_equiv (s : Set α) (M : Type _) [AddCommMonoidₓ M] :
-  { f : α →₀ M // «expr↑ » f.support ⊆ s } ≃ (s →₀ M) :=
+def restrict_support_equiv (s : Set α) (M : Type _) [AddCommMonoidₓ M] : { f : α →₀ M // ↑f.support ⊆ s } ≃ (s →₀ M) :=
   by 
     refine' ⟨fun f => subtype_domain (fun x => x ∈ s) f.1, fun f => ⟨f.map_domain Subtype.val, _⟩, _, _⟩
     ·
@@ -2826,12 +2868,12 @@ protected def dom_congr [AddCommMonoidₓ M] (e : α ≃ β) : (α →₀ M) ≃
     left_inv :=
       fun v =>
         by 
-          simp only [←equiv_map_domain_trans, Equiv.self_trans_symm]
+          simp only [←equiv_map_domain_trans, Equivₓ.self_trans_symm]
           exact equiv_map_domain_refl _,
     right_inv :=
       by 
         intro v 
-        simp only [←equiv_map_domain_trans, Equiv.symm_trans_self]
+        simp only [←equiv_map_domain_trans, Equivₓ.symm_trans_self]
         exact equiv_map_domain_refl _,
     map_add' :=
       fun a b =>
@@ -2839,7 +2881,7 @@ protected def dom_congr [AddCommMonoidₓ M] (e : α ≃ β) : (α →₀ M) ≃
           simp only [equiv_map_domain_eq_map_domain] <;> exact map_domain_add }
 
 @[simp]
-theorem dom_congr_refl [AddCommMonoidₓ M] : Finsupp.domCongr (Equiv.refl α) = AddEquiv.refl (α →₀ M) :=
+theorem dom_congr_refl [AddCommMonoidₓ M] : Finsupp.domCongr (Equivₓ.refl α) = AddEquiv.refl (α →₀ M) :=
   AddEquiv.ext$ fun _ => equiv_map_domain_refl _
 
 @[simp]
@@ -2861,7 +2903,7 @@ namespace Finsupp
 
 section Sigma
 
-variable {αs : ι → Type _} [HasZero M] (l : (Σi, αs i) →₀ M)
+variable {αs : ι → Type _} [HasZero M] (l : (Σ i, αs i) →₀ M)
 
 /-- Given `l`, a finitely supported function from the sigma type `Σ (i : ι), αs i` to `M` and
 an index element `i : ι`, `split l i` is the `i`th component of `l`,
@@ -2905,8 +2947,8 @@ theorem sigma_support : l.support = l.split_support.sigma fun i => (l.split i).S
     simp only [Finset.ext_iff, split_support, split, comap_domain, mem_image, mem_preimage, Sigma.forall, mem_sigma] <;>
       tauto
 
-theorem sigma_sum [AddCommMonoidₓ N] (f : (Σi : ι, αs i) → M → N) :
-  l.sum f = ∑i in split_support l, (split l i).Sum fun a : αs i b => f ⟨i, a⟩ b :=
+theorem sigma_sum [AddCommMonoidₓ N] (f : (Σ i : ι, αs i) → M → N) :
+  l.sum f = ∑ i in split_support l, (split l i).Sum fun a : αs i b => f ⟨i, a⟩ b :=
   by 
     simp only [Sum, sigma_support, sum_sigma, split_apply]
 
@@ -2916,7 +2958,7 @@ variable {η : Type _} [Fintype η] {ιs : η → Type _} [HasZero α]
 and `Π j, (ιs j →₀ α)`.
 
 This is the `finsupp` version of `equiv.Pi_curry`. -/
-noncomputable def sigma_finsupp_equiv_pi_finsupp : ((Σj, ιs j) →₀ α) ≃ ∀ j, ιs j →₀ α :=
+noncomputable def sigma_finsupp_equiv_pi_finsupp : ((Σ j, ιs j) →₀ α) ≃ ∀ j, ιs j →₀ α :=
   { toFun := split,
     invFun :=
       fun f =>
@@ -2934,7 +2976,7 @@ noncomputable def sigma_finsupp_equiv_pi_finsupp : ((Σj, ιs j) →₀ α) ≃ 
           simp [split] }
 
 @[simp]
-theorem sigma_finsupp_equiv_pi_finsupp_apply (f : (Σj, ιs j) →₀ α) j i :
+theorem sigma_finsupp_equiv_pi_finsupp_apply (f : (Σ j, ιs j) →₀ α) j i :
   sigma_finsupp_equiv_pi_finsupp f j i = f ⟨j, i⟩ :=
   rfl
 
@@ -2944,7 +2986,7 @@ theorem sigma_finsupp_equiv_pi_finsupp_apply (f : (Σj, ιs j) →₀ α) j i :
 This is the `add_equiv` version of `finsupp.sigma_finsupp_equiv_pi_finsupp`.
 -/
 noncomputable def sigma_finsupp_add_equiv_pi_finsupp {α : Type _} {ιs : η → Type _} [AddMonoidₓ α] :
-  ((Σj, ιs j) →₀ α) ≃+ ∀ j, ιs j →₀ α :=
+  ((Σ j, ιs j) →₀ α) ≃+ ∀ j, ιs j →₀ α :=
   { sigma_finsupp_equiv_pi_finsupp with
     map_add' :=
       fun f g =>
@@ -2953,7 +2995,7 @@ noncomputable def sigma_finsupp_add_equiv_pi_finsupp {α : Type _} {ιs : η →
           simp  }
 
 @[simp]
-theorem sigma_finsupp_add_equiv_pi_finsupp_apply {α : Type _} {ιs : η → Type _} [AddMonoidₓ α] (f : (Σj, ιs j) →₀ α) j
+theorem sigma_finsupp_add_equiv_pi_finsupp_apply {α : Type _} {ιs : η → Type _} [AddMonoidₓ α] (f : (Σ j, ιs j) →₀ α) j
   i : sigma_finsupp_add_equiv_pi_finsupp f j i = f ⟨j, i⟩ :=
   rfl
 
@@ -3033,11 +3075,13 @@ instance [OrderedAddCommMonoid M] [ContravariantClass M M (·+·) (· ≤ ·)] :
 theorem le_def [Preorderₓ M] [HasZero M] {f g : α →₀ M} : f ≤ g ↔ ∀ x, f x ≤ g x :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » t)
 theorem le_iff' [CanonicallyOrderedAddMonoid M] (f g : α →₀ M) {t : Finset α} (hf : f.support ⊆ t) :
   f ≤ g ↔ ∀ s _ : s ∈ t, f s ≤ g s :=
   ⟨fun h s hs => h s,
     fun h s => if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f.support)
 theorem le_iff [CanonicallyOrderedAddMonoid M] (f g : α →₀ M) : f ≤ g ↔ ∀ s _ : s ∈ f.support, f s ≤ g s :=
   le_iff' f g (subset.refl _)
 
@@ -3064,11 +3108,11 @@ def order_iso_multiset : (α →₀ ℕ) ≃o Multiset α :=
           simp [Multiset.le_iff_count, le_def] }
 
 @[simp]
-theorem coe_order_iso_multiset : «expr⇑ » (@order_iso_multiset α) = to_multiset :=
+theorem coe_order_iso_multiset : ⇑@order_iso_multiset α = to_multiset :=
   rfl
 
 @[simp]
-theorem coe_order_iso_multiset_symm : «expr⇑ » (@order_iso_multiset α).symm = Multiset.toFinsupp :=
+theorem coe_order_iso_multiset_symm : ⇑(@order_iso_multiset α).symm = Multiset.toFinsupp :=
   rfl
 
 theorem to_multiset_strict_mono : StrictMono (@to_multiset α) :=
@@ -3111,7 +3155,7 @@ instance tsub : Sub (α →₀ M) :=
   ⟨zip_with (fun m n => m - n) (tsub_self 0)⟩
 
 @[simp]
-theorem coe_tsub (g₁ g₂ : α →₀ M) : «expr⇑ » (g₁ - g₂) = g₁ - g₂ :=
+theorem coe_tsub (g₁ g₂ : α →₀ M) : ⇑(g₁ - g₂) = g₁ - g₂ :=
   rfl
 
 theorem tsub_apply (g₁ g₂ : α →₀ M) (a : α) : (g₁ - g₂) a = g₁ a - g₂ a :=
@@ -3125,7 +3169,7 @@ instance : CanonicallyOrderedAddMonoid (α →₀ M) :=
     le_iff_exists_add :=
       by 
         intro f g 
-        split 
+        constructor
         ·
           intro H 
           use g - f 
@@ -3148,6 +3192,43 @@ theorem single_tsub {a : α} {n₁ n₂ : M} : single a (n₁ - n₂) = single a
       rw [h, tsub_apply, single_eq_same, single_eq_same, single_eq_same]
     rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  support_tsub
+  { f1 f2 : α →₀ M } : f1 - f2 . Support ⊆ f1.support
+  :=
+    by
+      simp
+        ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+        only
+        [
+          subset_iff
+            ,
+            tsub_eq_zero_iff_le
+            ,
+            mem_support_iff
+            ,
+            Ne.def
+            ,
+            coe_tsub
+            ,
+            Pi.sub_apply
+            ,
+            not_imp_not
+            ,
+            zero_le
+            ,
+            implies_true_iff
+          ]
+
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  subset_support_tsub
+  { f1 f2 : α →₀ M } : f1.support \ f2.support ⊆ f1 - f2 . Support
+  := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ subset_iff ]
+
 end CanonicallyOrderedMonoid
 
 /-! Some lemmas specifically about `ℕ`. -/
@@ -3169,4 +3250,34 @@ theorem to_finsuppstrict_mono : StrictMono (@to_finsupp α) :=
   Finsupp.orderIsoMultiset.symm.StrictMono
 
 end Multiset
+
+section CastFinsupp
+
+variable [HasZero M] (f : α →₀ M)
+
+namespace Nat
+
+@[simp, normCast]
+theorem cast_finsupp_prod [CommSemiringₓ R] (g : α → M → ℕ) : (↑f.prod g : R) = f.prod fun a b => ↑g a b :=
+  Nat.cast_prod _ _
+
+@[simp, normCast]
+theorem cast_finsupp_sum [CommSemiringₓ R] (g : α → M → ℕ) : (↑f.sum g : R) = f.sum fun a b => ↑g a b :=
+  Nat.cast_sum _ _
+
+end Nat
+
+namespace Int
+
+@[simp, normCast]
+theorem cast_finsupp_prod [CommRingₓ R] (g : α → M → ℤ) : (↑f.prod g : R) = f.prod fun a b => ↑g a b :=
+  Int.cast_prod _ _
+
+@[simp, normCast]
+theorem cast_finsupp_sum [CommRingₓ R] (g : α → M → ℤ) : (↑f.sum g : R) = f.sum fun a b => ↑g a b :=
+  Int.cast_sum _ _
+
+end Int
+
+end CastFinsupp
 

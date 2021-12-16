@@ -47,7 +47,7 @@ Those depending on analysis or topology are defined elsewhere; see
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale BigOperators Classical Affine
 
@@ -91,17 +91,24 @@ theorem vector_span_singleton (p : P) : vectorSpan k ({p} : Set P) = ⊥ :=
     simp [vector_span_def]
 
 /-- The `s -ᵥ s` lies within the `vector_span k s`. -/
-theorem vsub_set_subset_vector_span (s : Set P) : s -ᵥ s ⊆ «expr↑ » (vectorSpan k s) :=
+theorem vsub_set_subset_vector_span (s : Set P) : s -ᵥ s ⊆ ↑vectorSpan k s :=
   Submodule.subset_span
 
 /-- Each pairwise difference is in the `vector_span`. -/
 theorem vsub_mem_vector_span {s : Set P} {p1 p2 : P} (hp1 : p1 ∈ s) (hp2 : p2 ∈ s) : p1 -ᵥ p2 ∈ vectorSpan k s :=
   vsub_set_subset_vector_span k s (vsub_mem_vsub hp1 hp2)
 
-/-- The points in the affine span of a (possibly empty) set of
-points. Use `affine_span` instead to get an `affine_subspace k P`. -/
-def SpanPoints (s : Set P) : Set P :=
-  { p | ∃ (p1 : _)(_ : p1 ∈ s), ∃ (v : _)(_ : v ∈ vectorSpan k s), p = v +ᵥ p1 }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p1 «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » vector_span k s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The points in the affine span of a (possibly empty) set of
+    points. Use `affine_span` instead to get an `affine_subspace k P`. -/
+  def
+    SpanPoints
+    ( s : Set P ) : Set P
+    := { p | ∃ ( p1 : _ ) ( _ : p1 ∈ s ) , ∃ ( v : _ ) ( _ : v ∈ vectorSpan k s ) , p = v +ᵥ p1 }
 
 /-- A point in a set is in its affine span. -/
 theorem mem_span_points (p : P) (s : Set P) : p ∈ s → p ∈ SpanPoints k s
@@ -116,7 +123,7 @@ is. -/
 @[simp]
 theorem span_points_nonempty (s : Set P) : (SpanPoints k s).Nonempty ↔ s.nonempty :=
   by 
-    split 
+    constructor
     ·
       contrapose 
       rw [Set.not_nonempty_iff_eq_empty, Set.not_nonempty_iff_eq_empty]
@@ -134,26 +141,22 @@ theorem vadd_mem_span_points_of_mem_span_points_of_mem_vector_span {s : Set P} {
     rw [hv2p, vadd_vadd]
     use p2, hp2, v+v2, (vectorSpan k s).add_mem hv hv2, rfl
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Subtracting two points in the affine span produces a vector in the
 spanning submodule. -/
-theorem vsub_mem_vector_span_of_mem_span_points_of_mem_span_points
-{s : set P}
-{p1 p2 : P}
-(hp1 : «expr ∈ »(p1, span_points k s))
-(hp2 : «expr ∈ »(p2, span_points k s)) : «expr ∈ »(«expr -ᵥ »(p1, p2), vector_span k s) :=
-begin
-  rcases [expr hp1, "with", "⟨", ident p1a, ",", "⟨", ident hp1a, ",", "⟨", ident v1, ",", "⟨", ident hv1, ",", ident hv1p, "⟩", "⟩", "⟩", "⟩"],
-  rcases [expr hp2, "with", "⟨", ident p2a, ",", "⟨", ident hp2a, ",", "⟨", ident v2, ",", "⟨", ident hv2, ",", ident hv2p, "⟩", "⟩", "⟩", "⟩"],
-  rw ["[", expr hv1p, ",", expr hv2p, ",", expr vsub_vadd_eq_vsub_sub «expr +ᵥ »(v1, p1a), ",", expr vadd_vsub_assoc, ",", expr add_comm, ",", expr add_sub_assoc, "]"] [],
-  have [ident hv1v2] [":", expr «expr ∈ »(«expr - »(v1, v2), vector_span k s)] [],
-  { rw [expr sub_eq_add_neg] [],
-    apply [expr (vector_span k s).add_mem hv1],
-    rw ["<-", expr neg_one_smul k v2] [],
-    exact [expr (vector_span k s).smul_mem («expr- »(1) : k) hv2] },
-  refine [expr (vector_span k s).add_mem _ hv1v2],
-  exact [expr vsub_mem_vector_span k hp1a hp2a]
-end
+theorem vsub_mem_vector_span_of_mem_span_points_of_mem_span_points {s : Set P} {p1 p2 : P} (hp1 : p1 ∈ SpanPoints k s)
+  (hp2 : p2 ∈ SpanPoints k s) : p1 -ᵥ p2 ∈ vectorSpan k s :=
+  by 
+    rcases hp1 with ⟨p1a, ⟨hp1a, ⟨v1, ⟨hv1, hv1p⟩⟩⟩⟩
+    rcases hp2 with ⟨p2a, ⟨hp2a, ⟨v2, ⟨hv2, hv2p⟩⟩⟩⟩
+    rw [hv1p, hv2p, vsub_vadd_eq_vsub_sub (v1 +ᵥ p1a), vadd_vsub_assoc, add_commₓ, add_sub_assoc]
+    have hv1v2 : v1 - v2 ∈ vectorSpan k s
+    ·
+      rw [sub_eq_add_neg]
+      apply (vectorSpan k s).add_mem hv1 
+      rw [←neg_one_smul k v2]
+      exact (vectorSpan k s).smul_mem (-1 : k) hv2 
+    refine' (vectorSpan k s).add_mem _ hv1v2 
+    exact vsub_mem_vector_span k hp1a hp2a
 
 end 
 
@@ -248,6 +251,8 @@ theorem coe_direction_eq_vsub_set {s : AffineSubspace k P} (h : (s : Set P).None
   (s.direction : Set V) = (s : Set P) -ᵥ s :=
   direction_of_nonempty_eq_direction h ▸ rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p1 «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p2 «expr ∈ » s)
 /-- A vector is in the direction of a nonempty affine subspace if and
 only if it is the subtraction of two vectors in the subspace. -/
 theorem mem_direction_iff_eq_vsub {s : AffineSubspace k P} (h : (s : Set P).Nonempty) (v : V) :
@@ -310,6 +315,7 @@ theorem coe_direction_eq_vsub_set_left {s : AffineSubspace k P} {p : P} (hp : p 
       Set.mem_image_iff_bex, Set.mem_image_iff_bex]
     convLHS => congr ext rw [←neg_vsub_eq_vsub_rev, neg_inj]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p2 «expr ∈ » s)
 /-- Given a point in an affine subspace, a vector is in its direction
 if and only if it results from subtracting that point on the right. -/
 theorem mem_direction_iff_eq_vsub_right {s : AffineSubspace k P} {p : P} (hp : p ∈ s) (v : V) :
@@ -318,6 +324,7 @@ theorem mem_direction_iff_eq_vsub_right {s : AffineSubspace k P} {p : P} (hp : p
     rw [←SetLike.mem_coe, coe_direction_eq_vsub_set_right hp]
     exact ⟨fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩, fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p2 «expr ∈ » s)
 /-- Given a point in an affine subspace, a vector is in its direction
 if and only if it results from subtracting that point on the left. -/
 theorem mem_direction_iff_eq_vsub_left {s : AffineSubspace k P} {p : P} (hp : p ∈ s) (v : V) :
@@ -359,29 +366,27 @@ theorem ext_iff (s₁ s₂ : AffineSubspace k P) : (s₁ : Set P) = s₂ ↔ s�
     by 
       tidy⟩
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two affine subspaces with the same direction and nonempty
 intersection are equal. -/
-theorem ext_of_direction_eq
-{s1 s2 : affine_subspace k P}
-(hd : «expr = »(s1.direction, s2.direction))
-(hn : «expr ∩ »((s1 : set P), s2).nonempty) : «expr = »(s1, s2) :=
-begin
-  ext [] [ident p] [],
-  have [ident hq1] [] [":=", expr set.mem_of_mem_inter_left hn.some_mem],
-  have [ident hq2] [] [":=", expr set.mem_of_mem_inter_right hn.some_mem],
-  split,
-  { intro [ident hp],
-    rw ["<-", expr vsub_vadd p hn.some] [],
-    refine [expr vadd_mem_of_mem_direction _ hq2],
-    rw ["<-", expr hd] [],
-    exact [expr vsub_mem_direction hp hq1] },
-  { intro [ident hp],
-    rw ["<-", expr vsub_vadd p hn.some] [],
-    refine [expr vadd_mem_of_mem_direction _ hq1],
-    rw [expr hd] [],
-    exact [expr vsub_mem_direction hp hq2] }
-end
+theorem ext_of_direction_eq {s1 s2 : AffineSubspace k P} (hd : s1.direction = s2.direction)
+  (hn : ((s1 : Set P) ∩ s2).Nonempty) : s1 = s2 :=
+  by 
+    ext p 
+    have hq1 := Set.mem_of_mem_inter_left hn.some_mem 
+    have hq2 := Set.mem_of_mem_inter_right hn.some_mem 
+    constructor
+    ·
+      intro hp 
+      rw [←vsub_vadd p hn.some]
+      refine' vadd_mem_of_mem_direction _ hq2 
+      rw [←hd]
+      exact vsub_mem_direction hp hq1
+    ·
+      intro hp 
+      rw [←vsub_vadd p hn.some]
+      refine' vadd_mem_of_mem_direction _ hq1 
+      rw [hd]
+      exact vsub_mem_direction hp hq2
 
 instance to_add_torsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.direction s :=
   { vadd := fun a b => ⟨(a : V) +ᵥ (b : P), vadd_mem_of_mem_direction a.2 b.2⟩,
@@ -409,12 +414,11 @@ instance to_add_torsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.direc
           apply AddTorsor.vadd_vsub' }
 
 @[simp, normCast]
-theorem coe_vsub (s : AffineSubspace k P) [Nonempty s] (a b : s) : «expr↑ » (a -ᵥ b) = (a : P) -ᵥ (b : P) :=
+theorem coe_vsub (s : AffineSubspace k P) [Nonempty s] (a b : s) : ↑(a -ᵥ b) = (a : P) -ᵥ (b : P) :=
   rfl
 
 @[simp, normCast]
-theorem coe_vadd (s : AffineSubspace k P) [Nonempty s] (a : s.direction) (b : s) :
-  «expr↑ » (a +ᵥ b) = (a : V) +ᵥ (b : P) :=
+theorem coe_vadd (s : AffineSubspace k P) [Nonempty s] (a : s.direction) (b : s) : ↑(a +ᵥ b) = (a : V) +ᵥ (b : P) :=
   rfl
 
 /-- Two affine subspaces with nonempty intersection are equal if and
@@ -423,17 +427,28 @@ theorem eq_iff_direction_eq_of_mem {s₁ s₂ : AffineSubspace k P} {p : P} (h�
   s₁ = s₂ ↔ s₁.direction = s₂.direction :=
   ⟨fun h => h ▸ rfl, fun h => ext_of_direction_eq h ⟨p, h₁, h₂⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » direction)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Construct an affine subspace from a point and a direction. -/
-def mk' (p : P) (direction : Submodule k V) : AffineSubspace k P :=
-  { Carrier := { q | ∃ (v : _)(_ : v ∈ direction), q = v +ᵥ p },
-    smul_vsub_vadd_mem :=
-      fun c p1 p2 p3 hp1 hp2 hp3 =>
-        by 
-          rcases hp1 with ⟨v1, hv1, hp1⟩
-          rcases hp2 with ⟨v2, hv2, hp2⟩
-          rcases hp3 with ⟨v3, hv3, hp3⟩
-          use (c • (v1 - v2))+v3, direction.add_mem (direction.smul_mem c (direction.sub_mem hv1 hv2)) hv3 
-          simp [hp1, hp2, hp3, vadd_vadd] }
+  def
+    mk'
+    ( p : P ) ( direction : Submodule k V ) : AffineSubspace k P
+    :=
+      {
+        Carrier := { q | ∃ ( v : _ ) ( _ : v ∈ direction ) , q = v +ᵥ p } ,
+          smul_vsub_vadd_mem
+            :=
+            fun
+              c p1 p2 p3 hp1 hp2 hp3
+                =>
+                by
+                  rcases hp1 with ⟨ v1 , hv1 , hp1 ⟩
+                    rcases hp2 with ⟨ v2 , hv2 , hp2 ⟩
+                    rcases hp3 with ⟨ v3 , hv3 , hp3 ⟩
+                    use c • v1 - v2 + v3 , direction.add_mem direction.smul_mem c direction.sub_mem hv1 hv2 hv3
+                    simp [ hp1 , hp2 , hp3 , vadd_vadd ]
+        }
 
 /-- An affine subspace constructed from a point and a direction contains
 that point. -/
@@ -457,7 +472,7 @@ theorem direction_mk' (p : P) (direction : Submodule k V) : (mk' p direction).di
   by 
     ext v 
     rw [mem_direction_iff_eq_vsub (mk'_nonempty _ _)]
-    split 
+    constructor
     ·
       rintro ⟨p1, ⟨v1, hv1, hp1⟩, p2, ⟨v2, hv2, hp2⟩, hv⟩
       rw [hv, hp1, hp2, vadd_vsub_vadd_cancel_right]
@@ -471,23 +486,18 @@ that subspace's direction yields the original subspace. -/
 theorem mk'_eq {s : AffineSubspace k P} {p : P} (hp : p ∈ s) : mk' p s.direction = s :=
   ext_of_direction_eq (direction_mk' p s.direction) ⟨p, Set.mem_inter (self_mem_mk' _ _) hp⟩
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If an affine subspace contains a set of points, it contains the
 `span_points` of that set. -/
-theorem span_points_subset_coe_of_subset_coe
-{s : set P}
-{s1 : affine_subspace k P}
-(h : «expr ⊆ »(s, s1)) : «expr ⊆ »(span_points k s, s1) :=
-begin
-  rintros [ident p, "⟨", ident p1, ",", ident hp1, ",", ident v, ",", ident hv, ",", ident hp, "⟩"],
-  rw [expr hp] [],
-  have [ident hp1s1] [":", expr «expr ∈ »(p1, (s1 : set P))] [":=", expr set.mem_of_mem_of_subset hp1 h],
-  refine [expr vadd_mem_of_mem_direction _ hp1s1],
-  have [ident hs] [":", expr «expr ≤ »(vector_span k s, s1.direction)] [":=", expr vector_span_mono k h],
-  rw [expr set_like.le_def] ["at", ident hs],
-  rw ["<-", expr set_like.mem_coe] [],
-  exact [expr set.mem_of_mem_of_subset hv hs]
-end
+theorem span_points_subset_coe_of_subset_coe {s : Set P} {s1 : AffineSubspace k P} (h : s ⊆ s1) : SpanPoints k s ⊆ s1 :=
+  by 
+    rintro p ⟨p1, hp1, v, hv, hp⟩
+    rw [hp]
+    have hp1s1 : p1 ∈ (s1 : Set P) := Set.mem_of_mem_of_subset hp1 h 
+    refine' vadd_mem_of_mem_direction _ hp1s1 
+    have hs : vectorSpan k s ≤ s1.direction := vector_span_mono k h 
+    rw [SetLike.le_def] at hs 
+    rw [←SetLike.mem_coe]
+    exact Set.mem_of_mem_of_subset hv hs
 
 end AffineSubspace
 
@@ -546,6 +556,8 @@ variable {k : Type _} {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] 
 
 include S
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s' «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s' «expr ∈ » s)
 instance : CompleteLattice (AffineSubspace k P) :=
   { PartialOrderₓ.lift (coeₓ : AffineSubspace k P → Set P) fun _ _ => ext with
     sup := fun s1 s2 => affineSpan k (s1 ∪ s2),
@@ -561,10 +573,10 @@ instance : CompleteLattice (AffineSubspace k P) :=
     le_inf := fun _ _ _ => Set.subset_inter,
     top := { Carrier := Set.Univ, smul_vsub_vadd_mem := fun _ _ _ _ _ _ _ => Set.mem_univ _ },
     le_top := fun _ _ _ => Set.mem_univ _, bot := { Carrier := ∅, smul_vsub_vadd_mem := fun _ _ _ _ => False.elim },
-    bot_le := fun _ _ => False.elim, sup := fun s => affineSpan k (⋃(s' : _)(_ : s' ∈ s), (s' : Set P)),
+    bot_le := fun _ _ => False.elim, sup := fun s => affineSpan k (⋃ (s' : _)(_ : s' ∈ s), (s' : Set P)),
     inf :=
       fun s =>
-        mk (⋂(s' : _)(_ : s' ∈ s), (s' : Set P))
+        mk (⋂ (s' : _)(_ : s' ∈ s), (s' : Set P))
           fun c p1 p2 p3 hp1 hp2 hp3 =>
             Set.mem_bInter_iff.2$
               fun s2 hs2 =>
@@ -582,6 +594,7 @@ sets. -/
 theorem le_def (s1 s2 : AffineSubspace k P) : s1 ≤ s2 ↔ (s1 : Set P) ⊆ s2 :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s1)
 /-- One subspace is less than or equal to another if and only if all
 its points are in the second subspace. -/
 theorem le_def' (s1 s2 : AffineSubspace k P) : s1 ≤ s2 ↔ ∀ p _ : p ∈ s1, p ∈ s2 :=
@@ -592,16 +605,19 @@ sets. -/
 theorem lt_def (s1 s2 : AffineSubspace k P) : s1 < s2 ↔ (s1 : Set P) ⊂ s2 :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s1)
 /-- One subspace is not less than or equal to another if and only if
 it has a point not in the second subspace. -/
 theorem not_le_iff_exists (s1 s2 : AffineSubspace k P) : ¬s1 ≤ s2 ↔ ∃ (p : _)(_ : p ∈ s1), p ∉ s2 :=
   Set.not_subset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s2)
 /-- If a subspace is less than another, there is a point only in the
 second. -/
 theorem exists_of_lt {s1 s2 : AffineSubspace k P} (h : s1 < s2) : ∃ (p : _)(_ : p ∈ s2), p ∉ s1 :=
   Set.exists_of_ssubset h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s2)
 /-- A subspace is less than another if and only if it is less than or
 equal to the second subspace and there is a point only in the
 second. -/
@@ -618,10 +634,15 @@ theorem eq_of_direction_eq_of_nonempty_of_le {s₁ s₂ : AffineSubspace k P} (h
 
 variable (k V)
 
-/-- The affine span is the `Inf` of subspaces containing the given
-points. -/
-theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = Inf { s' | s ⊆ s' } :=
-  le_antisymmₓ (span_points_subset_coe_of_subset_coe (Set.subset_bInter fun _ h => h)) (Inf_le (subset_span_points k _))
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The affine span is the `Inf` of subspaces containing the given
+    points. -/
+  theorem
+    affine_span_eq_Inf
+    ( s : Set P ) : affineSpan k s = Inf { s' | s ⊆ s' }
+    := le_antisymmₓ span_points_subset_coe_of_subset_coe Set.subset_bInter fun _ h => h Inf_le subset_span_points k _
 
 variable (P)
 
@@ -671,7 +692,7 @@ theorem span_union (s t : Set P) : affineSpan k (s ∪ t) = affineSpan k s⊔aff
 
 /-- The span of a union of an indexed family of sets is the sup of
 their spans. -/
-theorem span_Union {ι : Type _} (s : ι → Set P) : affineSpan k (⋃i, s i) = ⨆i, affineSpan k (s i) :=
+theorem span_Union {ι : Type _} (s : ι → Set P) : affineSpan k (⋃ i, s i) = ⨆ i, affineSpan k (s i) :=
   (AffineSubspace.gi k V P).gc.l_supr
 
 variable (P)
@@ -689,17 +710,16 @@ theorem mem_top (p : P) : p ∈ (⊤ : AffineSubspace k P) :=
 
 variable (P)
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The direction of `⊤` is the whole module as a submodule. -/
 @[simp]
-theorem direction_top : «expr = »((«expr⊤»() : affine_subspace k P).direction, «expr⊤»()) :=
-begin
-  cases [expr S.nonempty] ["with", ident p],
-  ext [] [ident v] [],
-  refine [expr ⟨imp_intro submodule.mem_top, λ hv, _⟩],
-  have [ident hpv] [":", expr «expr ∈ »((«expr -ᵥ »(«expr +ᵥ »(v, p), p) : V), («expr⊤»() : affine_subspace k P).direction)] [":=", expr vsub_mem_direction (mem_top k V _) (mem_top k V _)],
-  rwa [expr vadd_vsub] ["at", ident hpv]
-end
+theorem direction_top : (⊤ : AffineSubspace k P).direction = ⊤ :=
+  by 
+    cases' S.nonempty with p 
+    ext v 
+    refine' ⟨imp_intro Submodule.mem_top, fun hv => _⟩
+    have hpv : (v +ᵥ p -ᵥ p : V) ∈ (⊤ : AffineSubspace k P).direction :=
+      vsub_mem_direction (mem_top k V _) (mem_top k V _)
+    rwa [vadd_vsub] at hpv
 
 /-- `⊥`, coerced to a set, is the empty set. -/
 @[simp]
@@ -772,31 +792,32 @@ theorem direction_bot : (⊥ : AffineSubspace k P).direction = ⊥ :=
 
 variable {k V P}
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem subsingleton_of_subsingleton_span_eq_top
-{s : set P}
-(h₁ : s.subsingleton)
-(h₂ : «expr = »(affine_span k s, «expr⊤»())) : subsingleton P :=
-begin
-  obtain ["⟨", ident p, ",", ident hp, "⟩", ":=", expr affine_subspace.nonempty_of_affine_span_eq_top k V P h₂],
-  have [] [":", expr «expr = »(s, {p})] [],
-  { exact [expr subset.antisymm (λ q hq, h₁ hq hp) (by simp [] [] [] ["[", expr hp, "]"] [] [])] },
-  rw ["[", expr this, ",", "<-", expr affine_subspace.ext_iff, ",", expr affine_subspace.coe_affine_span_singleton, ",", expr affine_subspace.top_coe, ",", expr eq_comm, ",", "<-", expr subsingleton_iff_singleton (mem_univ _), "]"] ["at", ident h₂],
-  exact [expr subsingleton_of_univ_subsingleton h₂]
-end
+theorem subsingleton_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.subsingleton) (h₂ : affineSpan k s = ⊤) :
+  Subsingleton P :=
+  by 
+    obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affine_span_eq_top k V P h₂ 
+    have  : s = {p}
+    ·
+      exact
+        subset.antisymm (fun q hq => h₁ hq hp)
+          (by 
+            simp [hp])
+    rw [this, ←AffineSubspace.ext_iff, AffineSubspace.coe_affine_span_singleton, AffineSubspace.top_coe, eq_comm,
+      ←subsingleton_iff_singleton (mem_univ _)] at h₂ 
+    exact subsingleton_of_univ_subsingleton h₂
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_univ_of_subsingleton_span_eq_top
-{s : set P}
-(h₁ : s.subsingleton)
-(h₂ : «expr = »(affine_span k s, «expr⊤»())) : «expr = »(s, (univ : set P)) :=
-begin
-  obtain ["⟨", ident p, ",", ident hp, "⟩", ":=", expr affine_subspace.nonempty_of_affine_span_eq_top k V P h₂],
-  have [] [":", expr «expr = »(s, {p})] [],
-  { exact [expr subset.antisymm (λ q hq, h₁ hq hp) (by simp [] [] [] ["[", expr hp, "]"] [] [])] },
-  rw ["[", expr this, ",", expr eq_comm, ",", "<-", expr subsingleton_iff_singleton (mem_univ p), ",", expr subsingleton_univ_iff, "]"] [],
-  exact [expr subsingleton_of_subsingleton_span_eq_top h₁ h₂]
-end
+theorem eq_univ_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.subsingleton) (h₂ : affineSpan k s = ⊤) :
+  s = (univ : Set P) :=
+  by 
+    obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affine_span_eq_top k V P h₂ 
+    have  : s = {p}
+    ·
+      exact
+        subset.antisymm (fun q hq => h₁ hq hp)
+          (by 
+            simp [hp])
+    rw [this, eq_comm, ←subsingleton_iff_singleton (mem_univ p), subsingleton_univ_iff]
+    exact subsingleton_of_subsingleton_span_eq_top h₁ h₂
 
 /-- A nonempty affine subspace is `⊤` if and only if its direction is
 `⊤`. -/
@@ -804,7 +825,7 @@ end
 theorem direction_eq_top_iff_of_nonempty {s : AffineSubspace k P} (h : (s : Set P).Nonempty) :
   s.direction = ⊤ ↔ s = ⊤ :=
   by 
-    split 
+    constructor
     ·
       intro hd 
       rw [←direction_top k V P] at hd 
@@ -902,41 +923,33 @@ theorem sup_direction_lt_of_nonempty_of_inter_empty {s1 s2 : AffineSubspace k P}
     rw [hv1v2]
     exact vadd_mem_of_mem_direction (Submodule.neg_mem _ hv2) hp2
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the directions of two nonempty affine subspaces span the whole
 module, they have nonempty intersection. -/
-theorem inter_nonempty_of_nonempty_of_sup_direction_eq_top
-{s1 s2 : affine_subspace k P}
-(h1 : (s1 : set P).nonempty)
-(h2 : (s2 : set P).nonempty)
-(hd : «expr = »(«expr ⊔ »(s1.direction, s2.direction), «expr⊤»())) : «expr ∩ »((s1 : set P), s2).nonempty :=
-begin
-  by_contradiction [ident h],
-  rw [expr set.not_nonempty_iff_eq_empty] ["at", ident h],
-  have [ident hlt] [] [":=", expr sup_direction_lt_of_nonempty_of_inter_empty h1 h2 h],
-  rw [expr hd] ["at", ident hlt],
-  exact [expr not_top_lt hlt]
-end
+theorem inter_nonempty_of_nonempty_of_sup_direction_eq_top {s1 s2 : AffineSubspace k P} (h1 : (s1 : Set P).Nonempty)
+  (h2 : (s2 : Set P).Nonempty) (hd : s1.direction⊔s2.direction = ⊤) : ((s1 : Set P) ∩ s2).Nonempty :=
+  by 
+    byContra h 
+    rw [Set.not_nonempty_iff_eq_empty] at h 
+    have hlt := sup_direction_lt_of_nonempty_of_inter_empty h1 h2 h 
+    rw [hd] at hlt 
+    exact not_top_lt hlt
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the directions of two nonempty affine subspaces are complements
 of each other, they intersect in exactly one point. -/
-theorem inter_eq_singleton_of_nonempty_of_is_compl
-{s1 s2 : affine_subspace k P}
-(h1 : (s1 : set P).nonempty)
-(h2 : (s2 : set P).nonempty)
-(hd : is_compl s1.direction s2.direction) : «expr∃ , »((p), «expr = »(«expr ∩ »((s1 : set P), s2), {p})) :=
-begin
-  cases [expr inter_nonempty_of_nonempty_of_sup_direction_eq_top h1 h2 hd.sup_eq_top] ["with", ident p, ident hp],
-  use [expr p],
-  ext [] [ident q] [],
-  rw [expr set.mem_singleton_iff] [],
-  split,
-  { rintros ["⟨", ident hq1, ",", ident hq2, "⟩"],
-    have [ident hqp] [":", expr «expr ∈ »(«expr -ᵥ »(q, p), «expr ⊓ »(s1.direction, s2.direction))] [":=", expr ⟨vsub_mem_direction hq1 hp.1, vsub_mem_direction hq2 hp.2⟩],
-    rwa ["[", expr hd.inf_eq_bot, ",", expr submodule.mem_bot, ",", expr vsub_eq_zero_iff_eq, "]"] ["at", ident hqp] },
-  { exact [expr λ h, «expr ▸ »(h.symm, hp)] }
-end
+theorem inter_eq_singleton_of_nonempty_of_is_compl {s1 s2 : AffineSubspace k P} (h1 : (s1 : Set P).Nonempty)
+  (h2 : (s2 : Set P).Nonempty) (hd : IsCompl s1.direction s2.direction) : ∃ p, (s1 : Set P) ∩ s2 = {p} :=
+  by 
+    cases' inter_nonempty_of_nonempty_of_sup_direction_eq_top h1 h2 hd.sup_eq_top with p hp 
+    use p 
+    ext q 
+    rw [Set.mem_singleton_iff]
+    constructor
+    ·
+      rintro ⟨hq1, hq2⟩
+      have hqp : q -ᵥ p ∈ s1.direction⊓s2.direction := ⟨vsub_mem_direction hq1 hp.1, vsub_mem_direction hq2 hp.2⟩
+      rwa [hd.inf_eq_bot, Submodule.mem_bot, vsub_eq_zero_iff_eq] at hqp
+    ·
+      exact fun h => h.symm ▸ hp
 
 /-- Coercing a subspace to a set then taking the affine span produces
 the original subspace. -/
@@ -1068,7 +1081,7 @@ theorem vector_span_range_eq_span_range_vsub_left_ne (p : ι → P) (i₀ : ι) 
     rw [←Set.image_univ, vector_span_image_eq_span_vsub_set_left_ne k _ (Set.mem_univ i₀)]
     congr with v 
     simp only [Set.mem_range, Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Subtype.exists, Subtype.coe_mk]
-    split 
+    constructor
     ·
       rintro ⟨x, ⟨i₁, ⟨⟨hi₁u, hi₁⟩, rfl⟩⟩, hv⟩
       exact ⟨i₁, hi₁, hv⟩
@@ -1084,7 +1097,7 @@ theorem vector_span_range_eq_span_range_vsub_right_ne (p : ι → P) (i₀ : ι)
     rw [←Set.image_univ, vector_span_image_eq_span_vsub_set_right_ne k _ (Set.mem_univ i₀)]
     congr with v 
     simp only [Set.mem_range, Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Subtype.exists, Subtype.coe_mk]
-    split 
+    constructor
     ·
       rintro ⟨x, ⟨i₁, ⟨⟨hi₁u, hi₁⟩, rfl⟩⟩, hv⟩
       exact ⟨i₁, hi₁, hv⟩
@@ -1203,7 +1216,7 @@ theorem mem_affine_span_insert_iff {s : AffineSubspace k P} {p1 : P} (hp1 : p1 �
     rw [←mem_coe] at hp1 
     rw [←vsub_right_mem_direction_iff_mem (mem_affine_span k (Set.mem_insert_of_mem _ hp1)),
       direction_affine_span_insert hp1, Submodule.mem_sup]
-    split 
+    constructor
     ·
       rintro ⟨v1, hv1, v2, hv2, hp⟩
       rw [Submodule.mem_span_singleton] at hv1 
@@ -1295,18 +1308,15 @@ theorem span_eq_top_of_surjective {s : Set P₁} (hf : Function.Surjective f) (h
 
 end AffineMap
 
--- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem affine_equiv.span_eq_top_iff
-{s : set P₁}
-(e : «expr ≃ᵃ[ ] »(P₁, k, P₂)) : «expr ↔ »(«expr = »(affine_span k s, «expr⊤»()), «expr = »(affine_span k «expr '' »(e, s), «expr⊤»())) :=
-begin
-  refine [expr ⟨(e : «expr →ᵃ[ ] »(P₁, k, P₂)).span_eq_top_of_surjective e.surjective, _⟩],
-  intros [ident h],
-  have [] [":", expr «expr = »(s, «expr '' »(e.symm, «expr '' »(e, s)))] [],
-  { simp [] [] [] ["[", "<-", expr image_comp, "]"] [] [] },
-  rw [expr this] [],
-  exact [expr (e.symm : «expr →ᵃ[ ] »(P₂, k, P₁)).span_eq_top_of_surjective e.symm.surjective h]
-end
+theorem AffineEquiv.span_eq_top_iff {s : Set P₁} (e : P₁ ≃ᵃ[k] P₂) : affineSpan k s = ⊤ ↔ affineSpan k (e '' s) = ⊤ :=
+  by 
+    refine' ⟨(e : P₁ →ᵃ[k] P₂).span_eq_top_of_surjective e.surjective, _⟩
+    intro h 
+    have  : s = e.symm '' (e '' s)
+    ·
+      simp [←image_comp]
+    rw [this]
+    exact (e.symm : P₂ →ᵃ[k] P₁).span_eq_top_of_surjective e.symm.surjective h
 
 end Maps
 

@@ -134,7 +134,7 @@ theorem Nat.eq_of_mul_eq_mul_rightₓ {n m k : ℕ} (Hm : 0 < m) (H : (n*m) = k*
   by 
     rw [mul_commₓ n m, mul_commₓ k m] at H <;> exact Nat.eq_of_mul_eq_mul_leftₓ Hm H
 
-instance Nat.commCancelMonoidWithZero : CommCancelMonoidWithZero ℕ :=
+instance Nat.cancelCommMonoidWithZero : CancelCommMonoidWithZero ℕ :=
   { (inferInstance : CommMonoidWithZero ℕ) with
     mul_left_cancel_of_ne_zero := fun _ _ _ h1 h2 => Nat.eq_of_mul_eq_mul_leftₓ (Nat.pos_of_ne_zeroₓ h1) h2,
     mul_right_cancel_of_ne_zero := fun _ _ _ h1 h2 => Nat.eq_of_mul_eq_mul_rightₓ (Nat.pos_of_ne_zeroₓ h1) h2 }
@@ -243,12 +243,15 @@ theorem one_lt_iff_ne_zero_and_ne_one : ∀ {n : ℕ}, 1 < n ↔ n ≠ 0 ∧ n �
 protected theorem mul_ne_zero {n m : ℕ} (n0 : n ≠ 0) (m0 : m ≠ 0) : (n*m) ≠ 0
 | nm => (eq_zero_of_mul_eq_zero nm).elim n0 m0
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp]
-protected
-theorem mul_eq_zero
-{a b : exprℕ()} : «expr ↔ »(«expr = »(«expr * »(a, b), 0), «expr ∨ »(«expr = »(a, 0), «expr = »(b, 0))) :=
-iff.intro eq_zero_of_mul_eq_zero (by simp [] [] [] ["[", expr or_imp_distrib, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ] protected
+  theorem
+    mul_eq_zero
+    { a b : ℕ } : a * b = 0 ↔ a = 0 ∨ b = 0
+    :=
+      Iff.intro
+        eq_zero_of_mul_eq_zero by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ or_imp_distrib ]
 
 @[simp]
 protected theorem zero_eq_mul {a b : ℕ} : (0 = a*b) ↔ a = 0 ∨ b = 0 :=
@@ -270,7 +273,7 @@ theorem zero_max {m : ℕ} : max 0 m = m :=
 @[simp]
 theorem min_eq_zero_iff {m n : ℕ} : min m n = 0 ↔ m = 0 ∨ n = 0 :=
   by 
-    split 
+    constructor
     ·
       intro h 
       cases' le_totalₓ n m with H H
@@ -284,7 +287,7 @@ theorem min_eq_zero_iff {m n : ℕ} : min m n = 0 ↔ m = 0 ∨ n = 0 :=
 @[simp]
 theorem max_eq_zero_iff {m n : ℕ} : max m n = 0 ↔ m = 0 ∧ n = 0 :=
   by 
-    split 
+    constructor
     ·
       intro h 
       cases' le_totalₓ n m with H H
@@ -364,15 +367,14 @@ theorem one_lt_succ_succ (n : ℕ) : 1 < n.succ.succ :=
 theorem succ_le_succ_iff {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
   ⟨le_of_succ_le_succ, succ_le_succ⟩
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem max_succ_succ {m n : exprℕ()} : «expr = »(max (succ m) (succ n), succ (max m n)) :=
-begin
-  by_cases [expr h1, ":", expr «expr ≤ »(m, n)],
-  rw ["[", expr max_eq_right h1, ",", expr max_eq_right (succ_le_succ h1), "]"] [],
-  { rw [expr not_le] ["at", ident h1],
-    have [ident h2] [] [":=", expr le_of_lt h1],
-    rw ["[", expr max_eq_left h2, ",", expr max_eq_left (succ_le_succ h2), "]"] [] }
-end
+theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
+  by 
+    byCases' h1 : m ≤ n 
+    rw [max_eq_rightₓ h1, max_eq_rightₓ (succ_le_succ h1)]
+    ·
+      rw [not_leₓ] at h1 
+      have h2 := le_of_ltₓ h1 
+      rw [max_eq_leftₓ h2, max_eq_leftₓ (succ_le_succ h2)]
 
 theorem not_succ_lt_self {n : ℕ} : ¬succ n < n :=
   not_lt_of_geₓ (Nat.le_succₓ _)
@@ -418,6 +420,14 @@ theorem div_le_iff_le_mul_add_pred {m n k : ℕ} (n0 : 0 < n) : m / n ≤ k ↔ 
     ·
       cases n0 
     exact lt_succ_iff
+
+theorem two_lt_of_ne : ∀ {n}, n ≠ 0 → n ≠ 1 → n ≠ 2 → 2 < n
+| 0, h, _, _ => (h rfl).elim
+| 1, _, h, _ => (h rfl).elim
+| 2, _, _, h => (h rfl).elim
+| n+3, _, _, _ =>
+  by 
+    decide
 
 /-! ### `add` -/
 
@@ -558,7 +568,7 @@ theorem pred_eq_of_eq_succ {m n : ℕ} (H : m = n.succ) : m.pred = n :=
 @[simp]
 theorem pred_eq_succ_iff {n m : ℕ} : pred n = succ m ↔ n = m+2 :=
   by 
-    cases n <;> split  <;> rintro ⟨⟩ <;> rfl
+    cases n <;> constructor <;> rintro ⟨⟩ <;> rfl
 
 theorem pred_sub (n m : ℕ) : pred n - m = pred (n - m) :=
   by 
@@ -654,7 +664,7 @@ theorem le_mul_self : ∀ n : ℕ, n ≤ n*n
 
 theorem le_mul_of_pos_left {m n : ℕ} (h : 0 < n) : m ≤ n*m :=
   by 
-    conv  => toLHS rw [←one_mulₓ m]
+    conv  => lhs rw [←one_mulₓ m]
     exact
       Decidable.mul_le_mul_of_nonneg_right h.nat_succ_le
         (by 
@@ -662,7 +672,7 @@ theorem le_mul_of_pos_left {m n : ℕ} (h : 0 < n) : m ≤ n*m :=
 
 theorem le_mul_of_pos_right {m n : ℕ} (h : 0 < n) : m ≤ m*n :=
   by 
-    conv  => toLHS rw [←mul_oneₓ m]
+    conv  => lhs rw [←mul_oneₓ m]
     exact
       Decidable.mul_le_mul_of_nonneg_left h.nat_succ_le
         (by 
@@ -765,7 +775,7 @@ theorem le_rec_on_self {C : ℕ → Sort u} {n} {h : n ≤ n} {next} (x : C n) :
 theorem le_rec_on_succ {C : ℕ → Sort u} {n m} (h1 : n ≤ m) {h2 : n ≤ m+1} {next} (x : C n) :
   (le_rec_on h2 (@next) x : C (m+1)) = next (le_rec_on h1 (@next) x : C m) :=
   by 
-    conv  => toLHS rw [le_rec_on, Or.byCases, dif_pos h1]
+    conv  => lhs rw [le_rec_on, Or.byCases, dif_pos h1]
 
 theorem le_rec_on_succ' {C : ℕ → Sort u} {n} {h : n ≤ n+1} {next} (x : C n) : (le_rec_on h next x : C (n+1)) = next x :=
   by 
@@ -879,6 +889,7 @@ def le_rec_on' {C : ℕ → Sort _} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ 
 | m+1, H, next, x =>
   Or.byCases (of_le_succ H) (fun h : n ≤ m => next h$ le_rec_on' h next x) fun h : n = m+1 => Eq.recOnₓ h x
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
 /-- Decreasing induction: if `P (k+1)` implies `P k` for all `m ≤ k < n`, then `P n` implies `P m`.
 Also works for functions to `Sort*`. Weakens the assumptions of `decreasing_induction`. -/
 @[elab_as_eliminator]
@@ -1088,7 +1099,7 @@ protected theorem div_mod_unique {n k m d : ℕ} (h : 0 < k) : n / k = d ∧ n %
 
 theorem two_mul_odd_div_two {n : ℕ} (hn : n % 2 = 1) : (2*n / 2) = n - 1 :=
   by 
-    conv  => toRHS rw [←Nat.mod_add_divₓ n 2, hn, add_tsub_cancel_left]
+    conv  => rhs rw [←Nat.mod_add_divₓ n 2, hn, add_tsub_cancel_left]
 
 theorem div_dvd_of_dvd {a b : ℕ} (h : b ∣ a) : a / b ∣ a :=
   ⟨b, (Nat.div_mul_cancelₓ h).symm⟩
@@ -1178,39 +1189,53 @@ protected theorem mul_dvd_mul_iff_right {a b c : ℕ} (hc : 0 < c) : ((a*c) ∣ 
       by 
         rw [mul_right_commₓ, Nat.mul_left_inj hc]
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem succ_div : ∀
-a
-b : exprℕ(), «expr = »(«expr / »(«expr + »(a, 1), b), «expr + »(«expr / »(a, b), if «expr ∣ »(b, «expr + »(a, 1)) then 1 else 0))
-| a, 0 := by simp [] [] [] [] [] []
-| 0, 1 := by simp [] [] [] [] [] []
-| 0, «expr + »(b, 2) := have hb2 : «expr > »(«expr + »(b, 2), 1), from exprdec_trivial(),
-by simp [] [] [] ["[", expr ne_of_gt hb2, ",", expr div_eq_of_lt hb2, "]"] [] []
-| «expr + »(a, 1), «expr + »(b, 1) := begin
-  rw ["[", expr nat.div_def, "]"] [],
-  conv_rhs [] [] { rw [expr nat.div_def] },
-  by_cases [expr hb_eq_a, ":", expr «expr = »(b, «expr + »(a, 1))],
-  { simp [] [] [] ["[", expr hb_eq_a, ",", expr le_refl, "]"] [] [] },
-  by_cases [expr hb_le_a1, ":", expr «expr ≤ »(b, «expr + »(a, 1))],
-  { have [ident hb_le_a] [":", expr «expr ≤ »(b, a)] [],
-    from [expr le_of_lt_succ (lt_of_le_of_ne hb_le_a1 hb_eq_a)],
-    have [ident h₁] [":", expr «expr ∧ »(«expr < »(0, «expr + »(b, 1)), «expr ≤ »(«expr + »(b, 1), «expr + »(«expr + »(a, 1), 1)))] [],
-    from [expr ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a1⟩],
-    have [ident h₂] [":", expr «expr ∧ »(«expr < »(0, «expr + »(b, 1)), «expr ≤ »(«expr + »(b, 1), «expr + »(a, 1)))] [],
-    from [expr ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a⟩],
-    have [ident dvd_iff] [":", expr «expr ↔ »(«expr ∣ »(«expr + »(b, 1), «expr + »(«expr - »(a, b), 1)), «expr ∣ »(«expr + »(b, 1), «expr + »(«expr + »(a, 1), 1)))] [],
-    { rw ["[", expr nat.dvd_add_iff_left (dvd_refl «expr + »(b, 1)), ",", "<-", expr add_tsub_add_eq_tsub_right a 1 b, ",", expr add_comm «expr - »(_, _), ",", expr add_assoc, ",", expr tsub_add_cancel_of_le (succ_le_succ hb_le_a), ",", expr add_comm 1, "]"] [] },
-    have [ident wf] [":", expr «expr < »(«expr - »(a, b), «expr + »(a, 1))] [],
-    from [expr lt_succ_of_le tsub_le_self],
-    rw ["[", expr if_pos h₁, ",", expr if_pos h₂, ",", expr add_tsub_add_eq_tsub_right, ",", "<-", expr tsub_add_eq_add_tsub hb_le_a, ",", expr by exact [expr have _ := wf,
-      succ_div «expr - »(a, b)], ",", expr add_tsub_add_eq_tsub_right, "]"] [],
-    simp [] [] [] ["[", expr dvd_iff, ",", expr succ_eq_add_one, ",", expr add_comm 1, ",", expr add_assoc, "]"] [] [] },
-  { have [ident hba] [":", expr «expr¬ »(«expr ≤ »(b, a))] [],
-    from [expr not_le_of_gt (lt_trans (lt_succ_self a) (lt_of_not_ge hb_le_a1))],
-    have [ident hb_dvd_a] [":", expr «expr¬ »(«expr ∣ »(«expr + »(b, 1), «expr + »(a, 2)))] [],
-    from [expr λ h, hb_le_a1 (le_of_succ_le_succ (le_of_dvd (succ_pos _) h))],
-    simp [] [] [] ["[", expr hba, ",", expr hb_le_a1, ",", expr hb_dvd_a, "]"] [] [] }
-end
+theorem succ_div : ∀ a b : ℕ, (a+1) / b = (a / b)+if b ∣ a+1 then 1 else 0
+| a, 0 =>
+  by 
+    simp 
+| 0, 1 =>
+  by 
+    simp 
+| 0, b+2 =>
+  have hb2 : (b+2) > 1 :=
+    by 
+      decide 
+  by 
+    simp [ne_of_gtₓ hb2, div_eq_of_lt hb2]
+| a+1, b+1 =>
+  by 
+    rw [Nat.div_def]
+    convRHS => rw [Nat.div_def]
+    byCases' hb_eq_a : b = a+1
+    ·
+      simp [hb_eq_a, le_reflₓ]
+    byCases' hb_le_a1 : b ≤ a+1
+    ·
+      have hb_le_a : b ≤ a 
+      exact le_of_lt_succ (lt_of_le_of_neₓ hb_le_a1 hb_eq_a)
+      have h₁ : (0 < b+1) ∧ (b+1) ≤ (a+1)+1 
+      exact ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a1⟩
+      have h₂ : (0 < b+1) ∧ (b+1) ≤ a+1 
+      exact ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a⟩
+      have dvd_iff : ((b+1) ∣ (a - b)+1) ↔ (b+1) ∣ (a+1)+1
+      ·
+        rw [Nat.dvd_add_iff_left (dvd_refl (b+1)), ←add_tsub_add_eq_tsub_right a 1 b, add_commₓ (_ - _), add_assocₓ,
+          tsub_add_cancel_of_le (succ_le_succ hb_le_a), add_commₓ 1]
+      have wf : a - b < a+1 
+      exact lt_succ_of_le tsub_le_self 
+      rw [if_pos h₁, if_pos h₂, add_tsub_add_eq_tsub_right, ←tsub_add_eq_add_tsub hb_le_a,
+        by 
+          exact
+            have  := wf 
+            succ_div (a - b),
+        add_tsub_add_eq_tsub_right]
+      simp [dvd_iff, succ_eq_add_one, add_commₓ 1, add_assocₓ]
+    ·
+      have hba : ¬b ≤ a 
+      exact not_le_of_gtₓ (lt_transₓ (lt_succ_self a) (lt_of_not_geₓ hb_le_a1))
+      have hb_dvd_a : ¬(b+1) ∣ a+2 
+      exact fun h => hb_le_a1 (le_of_succ_le_succ (le_of_dvd (succ_pos _) h))
+      simp [hba, hb_le_a1, hb_dvd_a]
 
 theorem succ_div_of_dvd {a b : ℕ} (hba : b ∣ a+1) : (a+1) / b = (a / b)+1 :=
   by 
@@ -1223,7 +1248,7 @@ theorem succ_div_of_not_dvd {a b : ℕ} (hba : ¬b ∣ a+1) : (a+1) / b = a / b 
 @[simp]
 theorem mod_mod_of_dvd (n : Nat) {m k : Nat} (h : m ∣ k) : n % k % m = n % m :=
   by 
-    conv  => toRHS rw [←mod_add_div n k]
+    conv  => rhs rw [←mod_add_div n k]
     rcases h with ⟨t, rfl⟩
     rw [mul_assocₓ, add_mul_mod_self_left]
 
@@ -1248,11 +1273,10 @@ theorem one_mod (n : ℕ) : (1 % n+2) = 1 :=
 theorem dvd_sub_mod (k : ℕ) : n ∣ k - k % n :=
   ⟨k / n, tsub_eq_of_eq_add_rev (Nat.mod_add_divₓ k n).symm⟩
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mod_add_mod
-(m n k : exprℕ()) : «expr = »(«expr % »(«expr + »(«expr % »(m, n), k), n), «expr % »(«expr + »(m, k), n)) :=
-by have [] [] [":=", expr (add_mul_mod_self_left «expr + »(«expr % »(m, n), k) n «expr / »(m, n)).symm]; rwa ["[", expr add_right_comm, ",", expr mod_add_div, "]"] ["at", ident this]
+theorem mod_add_mod (m n k : ℕ) : ((m % n)+k) % n = (m+k) % n :=
+  by 
+    have  := (add_mul_mod_self_left ((m % n)+k) n (m / n)).symm <;> rwa [add_right_commₓ, mod_add_div] at this
 
 @[simp]
 theorem add_mod_mod (m n k : ℕ) : (m+n % k) % k = (m+n) % k :=
@@ -1343,23 +1367,29 @@ theorem div_mul_div {a b c d : ℕ} (hab : b ∣ a) (hcd : d ∣ c) : ((a / b)*c
           assumption 
         cc
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem div_div_div_eq_div : ∀
-{a b c : exprℕ()}
-(dvd : «expr ∣ »(b, a))
-(dvd2 : «expr ∣ »(a, c)), «expr = »(«expr / »(«expr / »(c, «expr / »(a, b)), b), «expr / »(c, a))
-| 0, _ := by simp [] [] [] [] [] []
-| «expr + »(a, 1), 0 := λ _ dvd _, by simpa [] [] [] [] [] ["using", expr dvd]
-| «expr + »(a, 1), «expr + »(c, 1) := have a_split : «expr ≠ »(«expr + »(a, 1), 0) := succ_ne_zero a,
-have c_split : «expr ≠ »(«expr + »(c, 1), 0) := succ_ne_zero c,
-λ b dvd dvd2, begin
-  rcases [expr dvd2, "with", "⟨", ident k, ",", ident rfl, "⟩"],
-  rcases [expr dvd, "with", "⟨", ident k2, ",", ident pr, "⟩"],
-  have [ident k2_nonzero] [":", expr «expr ≠ »(k2, 0)] [":=", expr λ
-   k2_zero, by simpa [] [] [] ["[", expr k2_zero, "]"] [] ["using", expr pr]],
-  rw ["[", expr nat.mul_div_cancel_left k (nat.pos_of_ne_zero a_split), ",", expr pr, ",", expr nat.mul_div_cancel_left k2 (nat.pos_of_ne_zero c_split), ",", expr nat.mul_comm «expr * »(«expr + »(c, 1), k2) k, ",", "<-", expr nat.mul_assoc k «expr + »(c, 1) k2, ",", expr nat.mul_div_cancel _ (nat.pos_of_ne_zero k2_nonzero), ",", expr nat.mul_div_cancel _ (nat.pos_of_ne_zero c_split), "]"] []
-end
+theorem div_div_div_eq_div : ∀ {a b c : ℕ} dvd : b ∣ a dvd2 : a ∣ c, c / (a / b) / b = c / a
+| 0, _ =>
+  by 
+    simp 
+| a+1, 0 =>
+  fun _ dvd _ =>
+    by 
+      simpa using dvd
+| a+1, c+1 =>
+  have a_split : (a+1) ≠ 0 := succ_ne_zero a 
+  have c_split : (c+1) ≠ 0 := succ_ne_zero c 
+  fun b dvd dvd2 =>
+    by 
+      rcases dvd2 with ⟨k, rfl⟩
+      rcases dvd with ⟨k2, pr⟩
+      have k2_nonzero : k2 ≠ 0 :=
+        fun k2_zero =>
+          by 
+            simpa [k2_zero] using pr 
+      rw [Nat.mul_div_cancel_leftₓ k (Nat.pos_of_ne_zeroₓ a_split), pr,
+        Nat.mul_div_cancel_leftₓ k2 (Nat.pos_of_ne_zeroₓ c_split), Nat.mul_comm ((c+1)*k2) k, ←Nat.mul_assoc k (c+1) k2,
+        Nat.mul_div_cancelₓ _ (Nat.pos_of_ne_zeroₓ k2_nonzero), Nat.mul_div_cancelₓ _ (Nat.pos_of_ne_zeroₓ c_split)]
 
 theorem eq_of_dvd_of_div_eq_one {a b : ℕ} (w : a ∣ b) (h : b / a = 1) : a = b :=
   by 
@@ -1377,27 +1407,36 @@ theorem eq_zero_of_dvd_of_lt {a b : ℕ} (w : a ∣ b) (h : b < a) : b = 0 :=
 theorem div_le_div_left {a b c : ℕ} (h₁ : c ≤ b) (h₂ : 0 < c) : a / b ≤ a / c :=
   (Nat.le_div_iff_mul_leₓ _ _ h₂).2$ le_transₓ (Nat.mul_le_mul_leftₓ _ h₁) (div_mul_le_self _ _)
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem div_eq_self
-{a b : exprℕ()} : «expr ↔ »(«expr = »(«expr / »(a, b), a), «expr ∨ »(«expr = »(a, 0), «expr = »(b, 1))) :=
-begin
-  split,
-  { intro [],
-    cases [expr b] [],
-    { simp [] [] [] ["*"] [] ["at", "*"] },
-    { cases [expr b] [],
-      { right,
-        refl },
-      { left,
-        have [] [":", expr «expr ≤ »(«expr / »(a, «expr + »(b, 2)), «expr / »(a, 2))] [":=", expr div_le_div_left (by simp [] [] [] [] [] []) exprdec_trivial()],
-        refine [expr eq_zero_of_le_half _],
-        simp [] [] [] ["*"] [] ["at", "*"] } } },
-  { rintros ["(", ident rfl, "|", ident rfl, ")"]; simp [] [] [] [] [] [] }
-end
+theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 :=
+  by 
+    constructor
+    ·
+      intro 
+      cases b
+      ·
+        simp_all 
+      ·
+        cases b
+        ·
+          right 
+          rfl
+        ·
+          left 
+          have  : (a / b+2) ≤ a / 2 :=
+            div_le_div_left
+              (by 
+                simp )
+              (by 
+                decide)
+          refine' eq_zero_of_le_half _ 
+          simp_all 
+    ·
+      rintro (rfl | rfl) <;> simp 
 
 theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
 | m, n+1, _ => lt_succ_iff
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2]) }
 theorem div_eq_sub_mod_div {m n : ℕ} : m / n = (m - m % n) / n :=
   by 
     byCases' n0 : n = 0
@@ -1430,25 +1469,27 @@ theorem mod_div_self (m n : ℕ) : m % n / n = 0 :=
     ·
       exact Nat.div_eq_zero (m.mod_lt n.succ_pos)
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- `m` is not divisible by `n` iff it is between `n * k` and `n * (k + 1)` for some `k`. -/
-theorem exists_lt_and_lt_iff_not_dvd
-(m : exprℕ())
-{n : exprℕ()}
-(hn : «expr < »(0, n)) : «expr ↔ »(«expr∃ , »((k), «expr ∧ »(«expr < »(«expr * »(n, k), m), «expr < »(m, «expr * »(n, «expr + »(k, 1))))), «expr¬ »(«expr ∣ »(n, m))) :=
-begin
-  split,
-  { rintro ["⟨", ident k, ",", ident h1k, ",", ident h2k, "⟩", "⟨", ident l, ",", ident rfl, "⟩"],
-    rw ["[", expr mul_lt_mul_left hn, "]"] ["at", ident h1k, ident h2k],
-    rw ["[", expr lt_succ_iff, ",", "<-", expr not_lt, "]"] ["at", ident h2k],
-    exact [expr h2k h1k] },
-  { intro [ident h],
-    rw ["[", expr dvd_iff_mod_eq_zero, ",", "<-", expr ne.def, ",", "<-", expr pos_iff_ne_zero, "]"] ["at", ident h],
-    simp [] [] ["only"] ["[", "<-", expr mod_add_div m n, "]"] [] [] { single_pass := tt },
-    refine [expr ⟨«expr / »(m, n), lt_add_of_pos_left _ h, _⟩],
-    rw ["[", expr add_comm _ 1, ",", expr left_distrib, ",", expr mul_one, "]"] [],
-    exact [expr add_lt_add_right (mod_lt _ hn) _] }
-end
+  theorem
+    exists_lt_and_lt_iff_not_dvd
+    ( m : ℕ ) { n : ℕ } ( hn : 0 < n ) : ∃ k , n * k < m ∧ m < n * k + 1 ↔ ¬ n ∣ m
+    :=
+      by
+        constructor
+          ·
+            rintro ⟨ k , h1k , h2k ⟩ ⟨ l , rfl ⟩
+              rw [ mul_lt_mul_left hn ] at h1k h2k
+              rw [ lt_succ_iff , ← not_ltₓ ] at h2k
+              exact h2k h1k
+          ·
+            intro h
+              rw [ dvd_iff_mod_eq_zero , ← Ne.def , ← pos_iff_ne_zero ] at h
+              simp ( config := { singlePass := Bool.true._@._internal._hyg.0 } ) only [ ← mod_add_div m n ]
+              refine' ⟨ m / n , lt_add_of_pos_left _ h , _ ⟩
+              rw [ add_commₓ _ 1 , left_distrib , mul_oneₓ ]
+              exact add_lt_add_right mod_lt _ hn _
 
 /-- Two natural numbers are equal if and only if the have the same multiples. -/
 theorem dvd_right_iff_eq {m n : ℕ} : (∀ a : ℕ, m ∣ a ↔ n ∣ a) ↔ m = n :=
@@ -1475,9 +1516,10 @@ section Find
 
 variable {p q : ℕ → Prop} [DecidablePred p] [DecidablePred q]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr < » m)
 theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.findₓ h = m ↔ p m ∧ ∀ n _ : n < m, ¬p n :=
   by 
-    split 
+    constructor
     ·
       rintro rfl 
       exact ⟨Nat.find_specₓ h, fun _ => Nat.find_minₓ h⟩
@@ -1485,20 +1527,24 @@ theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.findₓ h = m ↔ p m ∧ ∀ n
       rintro ⟨hm, hlt⟩
       exact le_antisymmₓ (Nat.find_min'ₓ h hm) (not_ltₓ.1$ imp_not_comm.1 (hlt _)$ Nat.find_specₓ h)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr < » n)
 @[simp]
 theorem find_lt_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.findₓ h < n ↔ ∃ (m : _)(_ : m < n), p m :=
   ⟨fun h2 => ⟨Nat.findₓ h, h2, Nat.find_specₓ h⟩, fun ⟨m, hmn, hm⟩ => (Nat.find_min'ₓ h hm).trans_lt hmn⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≤ » n)
 @[simp]
 theorem find_le_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.findₓ h ≤ n ↔ ∃ (m : _)(_ : m ≤ n), p m :=
   by 
     simp only [exists_prop, ←lt_succ_iff, find_lt_iff]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr < » n)
 @[simp]
 theorem le_find_iff (h : ∃ n : ℕ, p n) (n : ℕ) : n ≤ Nat.findₓ h ↔ ∀ m _ : m < n, ¬p m :=
   by 
     simpRw [←not_ltₓ, find_lt_iff, not_exists]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≤ » n)
 @[simp]
 theorem lt_find_iff (h : ∃ n : ℕ, p n) (n : ℕ) : n < Nat.findₓ h ↔ ∀ m _ : m ≤ n, ¬p m :=
   by 
@@ -1520,21 +1566,18 @@ theorem find_mono (h : ∀ n, q n → p n) {hp : ∃ n, p n} {hq : ∃ n, q n} :
 theorem find_le {h : ∃ n, p n} (hn : p n) : Nat.findₓ h ≤ n :=
   (Nat.find_le_iff _ _).2 ⟨n, le_rfl, hn⟩
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem find_add
-{hₘ : «expr∃ , »((m), p «expr + »(m, n))}
-{hₙ : «expr∃ , »((n), p n)}
-(hn : «expr ≤ »(n, nat.find hₙ)) : «expr = »(«expr + »(nat.find hₘ, n), nat.find hₙ) :=
-begin
-  refine [expr ((le_find_iff _ _).2 (λ m hm hpm, hm.not_le _)).antisymm _],
-  { have [ident hnm] [":", expr «expr ≤ »(n, m)] [":=", expr hn.trans (find_le hpm)],
-    refine [expr add_le_of_le_tsub_right_of_le hnm (find_le _)],
-    rwa [expr tsub_add_cancel_of_le hnm] [] },
-  { rw ["<-", expr tsub_le_iff_right] [],
-    refine [expr (le_find_iff _ _).2 (λ m hm hpm, hm.not_le _)],
-    rw [expr tsub_le_iff_right] [],
-    exact [expr find_le hpm] }
-end
+theorem find_add {hₘ : ∃ m, p (m+n)} {hₙ : ∃ n, p n} (hn : n ≤ Nat.findₓ hₙ) : (Nat.findₓ hₘ+n) = Nat.findₓ hₙ :=
+  by 
+    refine' ((le_find_iff _ _).2 fun m hm hpm => hm.not_le _).antisymm _
+    ·
+      have hnm : n ≤ m := hn.trans (find_le hpm)
+      refine' add_le_of_le_tsub_right_of_le hnm (find_le _)
+      rwa [tsub_add_cancel_of_le hnm]
+    ·
+      rw [←tsub_le_iff_right]
+      refine' (le_find_iff _ _).2 fun m hm hpm => hm.not_le _ 
+      rw [tsub_le_iff_right]
+      exact find_le hpm
 
 theorem find_comp_succ (h₁ : ∃ n, p n) (h₂ : ∃ n, p (n+1)) (h0 : ¬p 0) : Nat.findₓ h₁ = Nat.findₓ h₂+1 :=
   by 
@@ -1555,10 +1598,13 @@ protected def find_greatest (P : ℕ → Prop) [DecidablePred P] : ℕ → ℕ
 | 0 => 0
 | n+1 => if P (n+1) then n+1 else find_greatest n
 
-variable {P : ℕ → Prop} [DecidablePred P]
+variable {P Q : ℕ → Prop} [DecidablePred P] {b : ℕ}
 
 @[simp]
 theorem find_greatest_zero : Nat.findGreatest P 0 = 0 :=
+  rfl
+
+theorem find_greatest_succ (n : ℕ) : Nat.findGreatest P (n+1) = if P (n+1) then n+1 else Nat.findGreatest P n :=
   rfl
 
 @[simp]
@@ -1569,11 +1615,11 @@ theorem find_greatest_eq : ∀ {b}, P b → Nat.findGreatest P b = b
     simp [Nat.findGreatest, h]
 
 @[simp]
-theorem find_greatest_of_not {b} (h : ¬P (b+1)) : Nat.findGreatest P (b+1) = Nat.findGreatest P b :=
+theorem find_greatest_of_not (h : ¬P (b+1)) : Nat.findGreatest P (b+1) = Nat.findGreatest P b :=
   by 
     simp [Nat.findGreatest, h]
 
-theorem find_greatest_eq_iff {b m} : Nat.findGreatest P b = m ↔ m ≤ b ∧ (m ≠ 0 → P m) ∧ ∀ ⦃n⦄, m < n → n ≤ b → ¬P n :=
+theorem find_greatest_eq_iff : Nat.findGreatest P b = m ↔ m ≤ b ∧ (m ≠ 0 → P m) ∧ ∀ ⦃n⦄, m < n → n ≤ b → ¬P n :=
   by 
     induction' b with b ihb generalizing m
     ·
@@ -1585,17 +1631,17 @@ theorem find_greatest_eq_iff {b m} : Nat.findGreatest P b = m ↔ m ≤ b ∧ (m
       byCases' hb : P (b+1)
       ·
         rw [find_greatest_eq hb]
-        split 
+        constructor
         ·
           rintro rfl 
-          exact ⟨le_reflₓ _, fun _ => hb, fun n hlt hle => (hlt.not_le hle).elim⟩
+          exact ⟨le_rfl, fun _ => hb, fun n hlt hle => (hlt.not_le hle).elim⟩
         ·
           rintro ⟨hle, h0, hm⟩
           rcases Decidable.eq_or_lt_of_leₓ hle with (rfl | hlt)
-          exacts[rfl, (hm hlt (le_reflₓ _) hb).elim]
+          exacts[rfl, (hm hlt le_rfl hb).elim]
       ·
         rw [find_greatest_of_not hb, ihb]
-        split 
+        constructor
         ·
           rintro ⟨hle, hP, hm⟩
           refine' ⟨hle.trans b.le_succ, hP, fun n hlt hle => _⟩
@@ -1607,13 +1653,12 @@ theorem find_greatest_eq_iff {b m} : Nat.findGreatest P b = m ↔ m ≤ b ∧ (m
           rintro rfl 
           exact hb (hP b.succ_ne_zero)
 
-theorem find_greatest_eq_zero_iff {b} : Nat.findGreatest P b = 0 ↔ ∀ ⦃n⦄, 0 < n → n ≤ b → ¬P n :=
+theorem find_greatest_eq_zero_iff : Nat.findGreatest P b = 0 ↔ ∀ ⦃n⦄, 0 < n → n ≤ b → ¬P n :=
   by 
     simp [find_greatest_eq_iff]
 
-theorem find_greatest_spec {b} (h : ∃ m, m ≤ b ∧ P m) : P (Nat.findGreatest P b) :=
+theorem find_greatest_spec (hmb : m ≤ b) (hm : P m) : P (Nat.findGreatest P b) :=
   by 
-    rcases h with ⟨m, hmb, hm⟩
     byCases' h : Nat.findGreatest P b = 0
     ·
       cases m
@@ -1623,16 +1668,43 @@ theorem find_greatest_spec {b} (h : ∃ m, m ≤ b ∧ P m) : P (Nat.findGreates
     ·
       exact (find_greatest_eq_iff.1 rfl).2.1 h
 
-theorem find_greatest_le {b} : Nat.findGreatest P b ≤ b :=
+theorem find_greatest_le (n : ℕ) : Nat.findGreatest P n ≤ n :=
   (find_greatest_eq_iff.1 rfl).1
 
-theorem le_find_greatest {b m} (hmb : m ≤ b) (hm : P m) : m ≤ Nat.findGreatest P b :=
+theorem le_find_greatest (hmb : m ≤ b) (hm : P m) : m ≤ Nat.findGreatest P b :=
   le_of_not_ltₓ$ fun hlt => (find_greatest_eq_iff.1 rfl).2.2 hlt hmb hm
 
-theorem find_greatest_is_greatest {b k} (hk : Nat.findGreatest P b < k) (hkb : k ≤ b) : ¬P k :=
+theorem find_greatest_mono_right (P : ℕ → Prop) [DecidablePred P] : Monotone (Nat.findGreatest P) :=
+  by 
+    refine' monotone_nat_of_le_succ fun n => _ 
+    rw [find_greatest_succ]
+    splitIfs
+    ·
+      exact (find_greatest_le n).trans (le_succ _)
+    ·
+      rfl
+
+theorem find_greatest_mono_left [DecidablePred Q] (hPQ : P ≤ Q) : Nat.findGreatest P ≤ Nat.findGreatest Q :=
+  by 
+    intro n 
+    induction' n with n hn
+    ·
+      rfl 
+    byCases' P (n+1)
+    ·
+      rw [find_greatest_eq h, find_greatest_eq (hPQ _ h)]
+    ·
+      rw [find_greatest_of_not h]
+      exact hn.trans (Nat.find_greatest_mono_right _$ le_succ _)
+
+theorem find_greatest_mono {a b : ℕ} [DecidablePred Q] (hPQ : P ≤ Q) (hab : a ≤ b) :
+  Nat.findGreatest P a ≤ Nat.findGreatest Q b :=
+  (Nat.find_greatest_mono_right _ hab).trans$ find_greatest_mono_left hPQ _
+
+theorem find_greatest_is_greatest (hk : Nat.findGreatest P b < k) (hkb : k ≤ b) : ¬P k :=
   (find_greatest_eq_iff.1 rfl).2.2 hk hkb
 
-theorem find_greatest_of_ne_zero {b m} (h : Nat.findGreatest P b = m) (h0 : m ≠ 0) : P m :=
+theorem find_greatest_of_ne_zero (h : Nat.findGreatest P b = m) (h0 : m ≠ 0) : P m :=
   (find_greatest_eq_iff.1 h).2.1 h0
 
 end FindGreatest
@@ -1796,6 +1868,7 @@ def bit_cases {C : ℕ → Sort u} (H : ∀ b n, C (bit b n)) (n : ℕ) : C n :=
 /-! ### decidability of predicates -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
 instance decidable_ball_lt (n : Nat) (P : ∀ k _ : k < n, Prop) :
   ∀ [H : ∀ n h, Decidable (P n h)], Decidable (∀ n h, P n h) :=
   by 
@@ -1826,20 +1899,19 @@ instance decidable_ball_lt (n : Nat) (P : ∀ k _ : k < n, Prop) :
 instance decidable_forall_fin {n : ℕ} (P : Finₓ n → Prop) [H : DecidablePred P] : Decidable (∀ i, P i) :=
   decidableOfIff (∀ k h, P ⟨k, h⟩) ⟨fun a ⟨k, h⟩ => a k h, fun a k h => a ⟨k, h⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr ≤ » n)
 instance decidable_ball_le (n : ℕ) (P : ∀ k _ : k ≤ n, Prop) [H : ∀ n h, Decidable (P n h)] :
   Decidable (∀ n h, P n h) :=
   decidableOfIff (∀ k h : k < succ n, P k (le_of_lt_succ h)) ⟨fun a k h => a k (lt_succ_of_le h), fun a k h => a k _⟩
 
--- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance decidable_lo_hi
-(lo hi : exprℕ())
-(P : exprℕ() → exprProp())
-[H : decidable_pred P] : decidable (∀ x, «expr ≤ »(lo, x) → «expr < »(x, hi) → P x) :=
-decidable_of_iff (∀
- x «expr < » «expr - »(hi, lo), P «expr + »(lo, x)) ⟨λ
- al x hl hh, by { have [] [] [":=", expr al «expr - »(x, lo) ((tsub_lt_tsub_iff_right hl).mpr hh)],
-   rwa ["[", expr add_tsub_cancel_of_le hl, "]"] ["at", ident this] }, λ
- al x h, al _ (nat.le_add_right _ _) (lt_tsub_iff_left.mp h)⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » «expr - »(hi, lo))
+instance decidable_lo_hi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : Decidable (∀ x, lo ≤ x → x < hi → P x) :=
+  decidableOfIff (∀ x _ : x < hi - lo, P (lo+x))
+    ⟨fun al x hl hh =>
+        by 
+          have  := al (x - lo) ((tsub_lt_tsub_iff_right hl).mpr hh)
+          rwa [add_tsub_cancel_of_le hl] at this,
+      fun al x h => al _ (Nat.le_add_rightₓ _ _) (lt_tsub_iff_left.mp h)⟩
 
 instance decidable_lo_hi_le (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : Decidable (∀ x, lo ≤ x → x ≤ hi → P x) :=
   decidableOfIff (∀ x, lo ≤ x → (x < hi+1) → P x)$ ball_congr$ fun x hl => imp_congr lt_succ_iff Iff.rfl

@@ -46,7 +46,7 @@ adjoint functor
 
 universe u v w
 
-noncomputable theory
+noncomputable section 
 
 variable (R : Type u) (X : Type v) [CommRingₓ R]
 
@@ -84,11 +84,10 @@ theorem rel.neg (a b : lib R X) (h : rel R X a b) : rel R X (-a) (-b) :=
 
 end FreeLieAlgebra
 
--- error in Algebra.Lie.Free: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The free Lie algebra on the type `X` with coefficients in the commutative ring `R`. -/
-@[derive #[expr inhabited]]
-def free_lie_algebra :=
-quot (free_lie_algebra.rel R X)
+def FreeLieAlgebra :=
+  Quot (FreeLieAlgebra.Rel R X)deriving [anonymous]
 
 namespace FreeLieAlgebra
 
@@ -277,8 +276,6 @@ theorem of_comp_lift (f : X → L) : lift R f ∘ of R = f :=
 @[simp]
 theorem lift_unique (f : X → L) (g : FreeLieAlgebra R X →ₗ⁅R⁆ L) : g ∘ of R = f ↔ g = lift R f :=
   (lift R).symm_apply_eq
-
-attribute [irreducible] of lift
 
 @[simp]
 theorem lift_of_apply (f : X → L) x : lift R f (of R x) = f x :=

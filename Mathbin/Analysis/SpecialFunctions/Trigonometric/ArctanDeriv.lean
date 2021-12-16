@@ -9,7 +9,7 @@ and `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the who
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Real
 
@@ -31,21 +31,18 @@ theorem has_deriv_at_tan {x : ℝ} (h : cos x ≠ 0) : HasDerivAt tan (1 / (cos 
           (by 
             exactModCast h)).real_of_complex
 
--- error in Analysis.SpecialFunctions.Trigonometric.ArctanDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tendsto_abs_tan_of_cos_eq_zero
-{x : exprℝ()}
-(hx : «expr = »(cos x, 0)) : tendsto (λ x, abs (tan x)) «expr𝓝[ ] »(«expr ᶜ»({x}), x) at_top :=
-begin
-  have [ident hx] [":", expr «expr = »(complex.cos x, 0)] [],
-  by exact_mod_cast [expr hx],
-  simp [] [] ["only"] ["[", "<-", expr complex.abs_of_real, ",", expr complex.of_real_tan, "]"] [] [],
-  refine [expr (complex.tendsto_abs_tan_of_cos_eq_zero hx).comp _],
-  refine [expr tendsto.inf complex.continuous_of_real.continuous_at _],
-  exact [expr tendsto_principal_principal.2 (λ y, mt complex.of_real_inj.1)]
-end
+theorem tendsto_abs_tan_of_cos_eq_zero {x : ℝ} (hx : cos x = 0) : tendsto (fun x => abs (tan x)) (𝓝[{x}ᶜ] x) at_top :=
+  by 
+    have hx : Complex.cos x = 0
+    ·
+      exactModCast hx 
+    simp only [←Complex.abs_of_real, Complex.of_real_tan]
+    refine' (Complex.tendsto_abs_tan_of_cos_eq_zero hx).comp _ 
+    refine' tendsto.inf complex.continuous_of_real.continuous_at _ 
+    exact tendsto_principal_principal.2 fun y => mt Complex.of_real_inj.1
 
 theorem tendsto_abs_tan_at_top (k : ℤ) :
-  tendsto (fun x => abs (tan x)) (𝓝[«expr ᶜ» {(((2*k)+1)*π) / 2}] ((((2*k)+1)*π) / 2)) at_top :=
+  tendsto (fun x => abs (tan x)) (𝓝[{(((2*k)+1)*π) / 2}ᶜ] ((((2*k)+1)*π) / 2)) at_top :=
   tendsto_abs_tan_of_cos_eq_zero$ cos_eq_zero_iff.2 ⟨k, rfl⟩
 
 theorem continuous_at_tan {x : ℝ} : ContinuousAt tan x ↔ cos x ≠ 0 :=

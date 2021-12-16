@@ -59,6 +59,7 @@ universe u v w
 
 variable {K : Type u} {L : Type v} {M : Type w} [Field K] [Field L] [Field M]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » carrier)
 /-- `subfield R` is the type of subfields of `R`. A subfield of `R` is a subset `s` that is a
   multiplicative submonoid and an additive subgroup. Note in particular that it shares the
   same 0 and 1 as R. -/
@@ -108,14 +109,14 @@ theorem ext {S T : Subfield K} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 
 /-- Copy of a subfield with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (S : Subfield K) (s : Set K) (hs : s = «expr↑ » S) : Subfield K :=
+protected def copy (S : Subfield K) (s : Set K) (hs : s = ↑S) : Subfield K :=
   { S.to_subring.copy s hs with Carrier := s, inv_mem' := hs.symm ▸ S.inv_mem' }
 
 @[simp]
-theorem coe_copy (S : Subfield K) (s : Set K) (hs : s = «expr↑ » S) : (S.copy s hs : Set K) = s :=
+theorem coe_copy (S : Subfield K) (s : Set K) (hs : s = ↑S) : (S.copy s hs : Set K) = s :=
   rfl
 
-theorem copy_eq (S : Subfield K) (s : Set K) (hs : s = «expr↑ » S) : S.copy s hs = S :=
+theorem copy_eq (S : Subfield K) (s : Set K) (hs : s = ↑S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 
 @[simp]
@@ -128,6 +129,7 @@ theorem mem_to_subring (s : Subfield K) (x : K) : x ∈ s.to_subring ↔ x ∈ s
 
 end Subfield
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A `subring` containing inverses is a `subfield`. -/
 def Subring.toSubfield (s : Subring K) (hinv : ∀ x _ : x ∈ s, x⁻¹ ∈ s) : Subfield K :=
   { s with inv_mem' := hinv }
@@ -170,28 +172,34 @@ theorem div_mem {x y : K} (hx : x ∈ s) (hy : y ∈ s) : x / y ∈ s :=
     rw [div_eq_mul_inv]
     exact s.mul_mem hx (s.inv_mem hy)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- Product of a list of elements in a subfield is in the subfield. -/
 theorem list_prod_mem {l : List K} : (∀ x _ : x ∈ l, x ∈ s) → l.prod ∈ s :=
   s.to_submonoid.list_prod_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- Sum of a list of elements in a subfield is in the subfield. -/
 theorem list_sum_mem {l : List K} : (∀ x _ : x ∈ l, x ∈ s) → l.sum ∈ s :=
   s.to_add_subgroup.list_sum_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » m)
 /-- Product of a multiset of elements in a subfield is in the subfield. -/
 theorem multiset_prod_mem (m : Multiset K) : (∀ a _ : a ∈ m, a ∈ s) → m.prod ∈ s :=
   s.to_submonoid.multiset_prod_mem m
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » m)
 /-- Sum of a multiset of elements in a `subfield` is in the `subfield`. -/
 theorem multiset_sum_mem (m : Multiset K) : (∀ a _ : a ∈ m, a ∈ s) → m.sum ∈ s :=
   s.to_add_subgroup.multiset_sum_mem m
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
 /-- Product of elements of a subfield indexed by a `finset` is in the subfield. -/
-theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c _ : c ∈ t, f c ∈ s) : (∏i in t, f i) ∈ s :=
+theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c _ : c ∈ t, f c ∈ s) : (∏ i in t, f i) ∈ s :=
   s.to_submonoid.prod_mem h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
 /-- Sum of elements in a `subfield` indexed by a `finset` is in the `subfield`. -/
-theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c _ : c ∈ t, f c ∈ s) : (∑i in t, f i) ∈ s :=
+theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c _ : c ∈ t, f c ∈ s) : (∑ i in t, f i) ∈ s :=
   s.to_add_subgroup.sum_mem h
 
 theorem pow_mem {x : K} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
@@ -224,27 +232,27 @@ instance to_linear_ordered_field {K} [LinearOrderedField K] (s : Subfield K) : L
     (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 
 @[simp, normCast]
-theorem coe_add (x y : s) : («expr↑ » (x+y) : K) = «expr↑ » x+«expr↑ » y :=
+theorem coe_add (x y : s) : (↑x+y : K) = (↑x)+↑y :=
   rfl
 
 @[simp, normCast]
-theorem coe_sub (x y : s) : («expr↑ » (x - y) : K) = «expr↑ » x - «expr↑ » y :=
+theorem coe_sub (x y : s) : (↑(x - y) : K) = ↑x - ↑y :=
   rfl
 
 @[simp, normCast]
-theorem coe_neg (x : s) : («expr↑ » (-x) : K) = -«expr↑ » x :=
+theorem coe_neg (x : s) : (↑(-x) : K) = -↑x :=
   rfl
 
 @[simp, normCast]
-theorem coe_mul (x y : s) : («expr↑ » (x*y) : K) = «expr↑ » x*«expr↑ » y :=
+theorem coe_mul (x y : s) : (↑x*y : K) = (↑x)*↑y :=
   rfl
 
 @[simp, normCast]
-theorem coe_div (x y : s) : («expr↑ » (x / y) : K) = «expr↑ » x / «expr↑ » y :=
+theorem coe_div (x y : s) : (↑(x / y) : K) = ↑x / ↑y :=
   rfl
 
 @[simp, normCast]
-theorem coe_inv (x : s) : («expr↑ » (x⁻¹) : K) = «expr↑ » x⁻¹ :=
+theorem coe_inv (x : s) : (↑x⁻¹ : K) = (↑x)⁻¹ :=
   rfl
 
 @[simp, normCast]
@@ -263,7 +271,7 @@ instance to_algebra : Algebra s K :=
   RingHom.toAlgebra s.subtype
 
 @[simp]
-theorem coeSubtype : «expr⇑ » s.subtype = coeₓ :=
+theorem coeSubtype : ⇑s.subtype = coeₓ :=
   rfl
 
 theorem to_subring.subtype_eq_subtype (F : Type _) [Field F] (S : Subfield F) : S.to_subring.subtype = S.subtype :=
@@ -348,6 +356,7 @@ def map (s : Subfield K) : Subfield L :=
 theorem coe_map : (s.map f : Set L) = f '' s :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[simp]
 theorem mem_map {f : K →+* L} {s : Subfield K} {y : L} : y ∈ s.map f ↔ ∃ (x : _)(_ : x ∈ s), f x = y :=
   Set.mem_image_iff_bex
@@ -429,24 +438,28 @@ instance : HasInfₓ (Subfield K) :=
             rintro _ ⟨p, p_mem, rfl⟩
             exact p.inv_mem (subring.mem_Inf.mp hx p.to_subring ⟨p, p_mem, rfl⟩) }⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 @[simp, normCast]
-theorem coe_Inf (S : Set (Subfield K)) : ((Inf S : Subfield K) : Set K) = ⋂(s : _)(_ : s ∈ S), «expr↑ » s :=
-  show ((Inf (Subfield.toSubring '' S) : Subring K) : Set K) = ⋂(s : _)(_ : s ∈ S), «expr↑ » s by 
+theorem coe_Inf (S : Set (Subfield K)) : ((Inf S : Subfield K) : Set K) = ⋂ (s : _)(_ : s ∈ S), ↑s :=
+  show ((Inf (Subfield.toSubring '' S) : Subring K) : Set K) = ⋂ (s : _)(_ : s ∈ S), ↑s by 
     ext x 
     rw [Subring.coe_Inf, Set.mem_Inter, Set.mem_Inter]
     exact
       ⟨fun h s s' ⟨s_mem, s'_eq⟩ => h s.to_subring _ ⟨⟨s, s_mem, rfl⟩, s'_eq⟩,
-        fun h s s' ⟨⟨s'', s''_mem, s_eq⟩, (s'_eq : «expr↑ » s = s')⟩ =>
+        fun h s s' ⟨⟨s'', s''_mem, s_eq⟩, (s'_eq : ↑s = s')⟩ =>
           h s'' _
             ⟨s''_mem,
               by 
                 simp [←s_eq, ←s'_eq]⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » S)
 theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ Inf S ↔ ∀ p _ : p ∈ S, x ∈ p :=
   Subring.mem_Inf.trans ⟨fun h p hp => h p.to_subring ⟨p, hp, rfl⟩, fun h p ⟨p', hp', p_eq⟩ => p_eq ▸ h p' hp'⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 @[simp]
-theorem Inf_to_subring (s : Set (Subfield K)) : (Inf s).toSubring = ⨅(t : _)(_ : t ∈ s), Subfield.toSubring t :=
+theorem Inf_to_subring (s : Set (Subfield K)) : (Inf s).toSubring = ⨅ (t : _)(_ : t ∈ s), Subfield.toSubring t :=
   by 
     ext x 
     rw [mem_to_subring, mem_Inf]
@@ -476,9 +489,11 @@ instance : CompleteLattice (Subfield K) :=
 /-! # subfield closure of a subset -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:717:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}
 /-- The `subfield` generated by a set. -/
 def closure (s : Set K) : Subfield K :=
-  { Carrier := {x / y | (x)(_ : x ∈ Subring.closure s)(y)(_ : y ∈ Subring.closure s) },
+  { Carrier :=
+      "././Mathport/Syntax/Translate/Basic.lean:717:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}",
     zero_mem' := ⟨0, Subring.zero_mem _, 1, Subring.one_mem _, div_one _⟩,
     one_mem' := ⟨1, Subring.one_mem _, 1, Subring.one_mem _, div_one _⟩,
     neg_mem' := fun x ⟨y, hy, z, hz, x_eq⟩ => ⟨-y, Subring.neg_mem _ hy, z, hz, x_eq ▸ neg_div _ _⟩,
@@ -504,6 +519,8 @@ def closure (s : Set K) : Subfield K :=
           obtain ⟨ny, hny, dy, hdy, rfl⟩ := id y_mem 
           exact ⟨nx*ny, Subring.mul_mem _ hnx hny, dx*dy, Subring.mul_mem _ hdx hdy, (div_mul_div _ _ _ _).symm⟩ }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » subring.closure s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » subring.closure s)
 theorem mem_closure_iff {s : Set K} {x} :
   x ∈ closure s ↔ ∃ (y : _)(_ : y ∈ Subring.closure s)(z : _)(_ : z ∈ Subring.closure s), y / z = x :=
   Iff.rfl
@@ -537,6 +554,7 @@ theorem closure_mono ⦃s t : Set K⦄ (h : s ⊆ t) : closure s ≤ closure t :
 theorem closure_eq_of_le {s : Set K} {t : Subfield K} (h₁ : s ⊆ t) (h₂ : t ≤ closure s) : closure s = t :=
   le_antisymmₓ (closure_le.2 h₁) h₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- An induction principle for closure membership. If `p` holds for `1`, and all elements
 of `s`, and is preserved under addition, negation, and multiplication, then `p` holds for all
 elements of the closure of `s`. -/
@@ -570,22 +588,23 @@ theorem closure_univ : closure (Set.Univ : Set K) = ⊤ :=
 theorem closure_union (s t : Set K) : closure (s ∪ t) = closure s⊔closure t :=
   (Subfield.gi K).gc.l_sup
 
-theorem closure_Union {ι} (s : ι → Set K) : closure (⋃i, s i) = ⨆i, closure (s i) :=
+theorem closure_Union {ι} (s : ι → Set K) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
   (Subfield.gi K).gc.l_supr
 
-theorem closure_sUnion (s : Set (Set K)) : closure (⋃₀s) = ⨆(t : _)(_ : t ∈ s), closure t :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
+theorem closure_sUnion (s : Set (Set K)) : closure (⋃₀s) = ⨆ (t : _)(_ : t ∈ s), closure t :=
   (Subfield.gi K).gc.l_Sup
 
 theorem map_sup (s t : Subfield K) (f : K →+* L) : (s⊔t).map f = s.map f⊔t.map f :=
   (gc_map_comap f).l_sup
 
-theorem map_supr {ι : Sort _} (f : K →+* L) (s : ι → Subfield K) : (supr s).map f = ⨆i, (s i).map f :=
+theorem map_supr {ι : Sort _} (f : K →+* L) (s : ι → Subfield K) : (supr s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 
 theorem comap_inf (s t : Subfield L) (f : K →+* L) : (s⊓t).comap f = s.comap f⊓t.comap f :=
   (gc_map_comap f).u_inf
 
-theorem comap_infi {ι : Sort _} (f : K →+* L) (s : ι → Subfield L) : (infi s).comap f = ⨅i, (s i).comap f :=
+theorem comap_infi {ι : Sort _} (f : K →+* L) (s : ι → Subfield L) : (infi s).comap f = ⨅ i, (s i).comap f :=
   (gc_map_comap f).u_infi
 
 @[simp]
@@ -600,10 +619,10 @@ theorem comap_top (f : K →+* L) : (⊤ : Subfield L).comap f = ⊤ :=
   Note that this fails without the directedness assumption (the union of two subfields is
   typically not a subfield) -/
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S) {x : K} :
-  (x ∈ ⨆i, S i) ↔ ∃ i, x ∈ S i :=
+  (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i :=
   by 
     refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1$ le_supr S i) hi⟩
-    suffices  : x ∈ closure (⋃i, (S i : Set K)) → ∃ i, x ∈ S i
+    suffices  : x ∈ closure (⋃ i, (S i : Set K)) → ∃ i, x ∈ S i
     ·
       simpa only [closure_Union, closure_eq]
     refine' fun hx => closure_induction hx (fun x => set.mem_Union.mp) _ _ _ _ _
@@ -625,25 +644,22 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
       exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
 
 theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S) :
-  ((⨆i, S i : Subfield K) : Set K) = ⋃i, «expr↑ » (S i) :=
+  ((⨆ i, S i : Subfield K) : Set K) = ⋃ i, ↑S i :=
   Set.ext$
     fun x =>
       by 
         simp [mem_supr_of_directed hS]
 
--- error in FieldTheory.Subfield: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_Sup_of_directed_on
-{S : set (subfield K)}
-(Sne : S.nonempty)
-(hS : directed_on ((«expr ≤ »)) S)
-{x : K} : «expr ↔ »(«expr ∈ »(x, Sup S), «expr∃ , »((s «expr ∈ » S), «expr ∈ »(x, s))) :=
-begin
-  haveI [] [":", expr nonempty S] [":=", expr Sne.to_subtype],
-  simp [] [] ["only"] ["[", expr Sup_eq_supr', ",", expr mem_supr_of_directed hS.directed_coe, ",", expr set_coe.exists, ",", expr subtype.coe_mk, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : K} :
+  x ∈ Sup S ↔ ∃ (s : _)(_ : s ∈ S), x ∈ s :=
+  by 
+    have  : Nonempty S := Sne.to_subtype 
+    simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 theorem coe_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
-  («expr↑ » (Sup S) : Set K) = ⋃(s : _)(_ : s ∈ S), «expr↑ » s :=
+  (↑Sup S : Set K) = ⋃ (s : _)(_ : s ∈ S), ↑s :=
   Set.ext$
     fun x =>
       by 
@@ -678,15 +694,20 @@ def range_restrict_field (f : K →+* L) : K →+* f.field_range :=
 theorem coe_range_restrict_field (f : K →+* L) (x : K) : (f.range_restrict_field x : L) = f x :=
   rfl
 
-/-- The subfield of elements `x : R` such that `f x = g x`, i.e.,
-the equalizer of f and g as a subfield of R -/
-def eq_locus_field (f g : K →+* L) : Subfield K :=
-  { (f : K →+* L).eqLocus g with
-    inv_mem' :=
-      fun x hx : f x = g x =>
-        show f (x⁻¹) = g (x⁻¹)by 
-          rw [f.map_inv, g.map_inv, hx],
-    Carrier := { x | f x = g x } }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The subfield of elements `x : R` such that `f x = g x`, i.e.,
+    the equalizer of f and g as a subfield of R -/
+  def
+    eq_locus_field
+    ( f g : K →+* L ) : Subfield K
+    :=
+      {
+        ( f : K →+* L ) . eqLocus g with
+        inv_mem' := fun x hx : f x = g x => show f x ⁻¹ = g x ⁻¹ by rw [ f.map_inv , g.map_inv , hx ] ,
+          Carrier := { x | f x = g x }
+        }
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subfield closure. -/
 theorem eq_on_field_closure {f g : K →+* L} {s : Set K} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
@@ -732,7 +753,7 @@ variable {s t : Subfield K}
 /-- Makes the identity isomorphism from a proof two subfields of a multiplicative
     monoid are equal. -/
 def subfield_congr (h : s = t) : s ≃+* t :=
-  { Equiv.setCongr$ SetLike.ext'_iff.1 h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr$ SetLike.ext'_iff.1 h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 end RingEquiv
 

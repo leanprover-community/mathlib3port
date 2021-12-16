@@ -37,7 +37,7 @@ although we defer an abstract statement of this until later.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -81,57 +81,60 @@ We now give a slight reformulation of `bernstein_polynomial.variance`.
 
 namespace bernstein
 
--- error in Analysis.SpecialFunctions.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Send `k : fin (n+1)` to the equally spaced points `k/n` in the unit interval.
--/ def z {n : exprℕ()} (k : fin «expr + »(n, 1)) : exprI() :=
-⟨«expr / »((k : exprℝ()), n), begin
-   cases [expr n] [],
-   { norm_num [] [] },
-   { have [ident h₁] [":", expr «expr < »(0, (n.succ : exprℝ()))] [":=", expr by exact_mod_cast [expr nat.succ_pos _]],
-     have [ident h₂] [":", expr «expr ≤ »(«expr↑ »(k), n.succ)] [":=", expr by exact_mod_cast [expr fin.le_last k]],
-     rw ["[", expr set.mem_Icc, ",", expr le_div_iff h₁, ",", expr div_le_iff h₁, "]"] [],
-     norm_cast [],
-     simp [] [] [] ["[", expr h₂, "]"] [] [] }
- end⟩
+-/
+def z {n : ℕ} (k : Finₓ (n+1)) : I :=
+  ⟨(k : ℝ) / n,
+    by 
+      cases n
+      ·
+        normNum
+      ·
+        have h₁ : 0 < (n.succ : ℝ) :=
+          by 
+            exactModCast Nat.succ_posₓ _ 
+        have h₂ : ↑k ≤ n.succ :=
+          by 
+            exactModCast Finₓ.le_last k 
+        rw [Set.mem_Icc, le_div_iff h₁, div_le_iff h₁]
+        normCast 
+        simp [h₂]⟩
 
 local postfix:90 "/ₙ" => z
 
--- error in Analysis.SpecialFunctions.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem probability
-(n : exprℕ())
-(x : exprI()) : «expr = »(«expr∑ , »((k : fin «expr + »(n, 1)), bernstein n k x), 1) :=
-begin
-  have [] [] [":=", expr bernstein_polynomial.sum exprℝ() n],
-  apply_fun [expr λ p, polynomial.aeval (x : exprℝ()) p] ["at", ident this] [],
-  simp [] [] [] ["[", expr alg_hom.map_sum, ",", expr finset.sum_range, "]"] [] ["at", ident this],
-  exact [expr this]
-end
+theorem probability (n : ℕ) (x : I) : (∑ k : Finₓ (n+1), bernstein n k x) = 1 :=
+  by 
+    have  := bernsteinPolynomial.sum ℝ n 
+    applyFun fun p => Polynomial.aeval (x : ℝ) p  at this 
+    simp [AlgHom.map_sum, Finset.sum_range] at this 
+    exact this
 
--- error in Analysis.SpecialFunctions.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem variance
-{n : exprℕ()}
-(h : «expr < »(0, (n : exprℝ())))
-(x : exprI()) : «expr = »(«expr∑ , »((k : fin «expr + »(n, 1)), «expr * »(«expr ^ »((«expr - »(x, «expr /ₙ»(k)) : exprℝ()), 2), bernstein n k x)), «expr / »(«expr * »(x, «expr - »(1, x)), n)) :=
-begin
-  have [ident h'] [":", expr «expr ≠ »((n : exprℝ()), 0)] [":=", expr ne_of_gt h],
-  apply_fun [expr λ x : exprℝ(), «expr * »(x, n)] [] ["using", expr group_with_zero.mul_right_injective h'],
-  apply_fun [expr λ x : exprℝ(), «expr * »(x, n)] [] ["using", expr group_with_zero.mul_right_injective h'],
-  dsimp [] [] [] [],
-  conv_lhs [] [] { simp ["only"] ["[", expr finset.sum_mul, ",", expr z, "]"] [] },
-  conv_rhs [] [] { rw [expr div_mul_cancel _ h'] },
-  have [] [] [":=", expr bernstein_polynomial.variance exprℝ() n],
-  apply_fun [expr λ p, polynomial.aeval (x : exprℝ()) p] ["at", ident this] [],
-  simp [] [] [] ["[", expr alg_hom.map_sum, ",", expr finset.sum_range, ",", "<-", expr polynomial.nat_cast_mul, "]"] [] ["at", ident this],
-  convert [] [expr this] ["using", 1],
-  { congr' [1] [],
-    funext [ident k],
-    rw ["[", expr mul_comm _ (n : exprℝ()), ",", expr mul_comm _ (n : exprℝ()), ",", "<-", expr mul_assoc, ",", "<-", expr mul_assoc, "]"] [],
-    congr' [1] [],
-    field_simp [] ["[", expr h, "]"] [] [],
-    ring [] },
-  { ring [] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  variance
+  { n : ℕ } ( h : 0 < ( n : ℝ ) ) ( x : I ) : ∑ k : Finₓ n + 1 , ( x - k /ₙ : ℝ ) ^ 2 * bernstein n k x = x * 1 - x / n
+  :=
+    by
+      have h' : ( n : ℝ ) ≠ 0 := ne_of_gtₓ h
+        applyFun fun x : ℝ => x * n using GroupWithZeroₓ.mul_right_injective h'
+        applyFun fun x : ℝ => x * n using GroupWithZeroₓ.mul_right_injective h'
+        dsimp
+        convLHS => simp only [ Finset.sum_mul , z ]
+        convRHS => rw [ div_mul_cancel _ h' ]
+        have := bernsteinPolynomial.variance ℝ n
+        applyFun fun p => Polynomial.aeval ( x : ℝ ) p at this
+        simp [ AlgHom.map_sum , Finset.sum_range , ← Polynomial.nat_cast_mul ] at this
+        convert this using 1
+        ·
+          congr 1
+            funext k
+            rw [ mul_commₓ _ ( n : ℝ ) , mul_commₓ _ ( n : ℝ ) , ← mul_assocₓ , ← mul_assocₓ ]
+            congr 1
+            fieldSimp [ h ]
+            ring
+        · ring
 
 end bernstein
 
@@ -144,7 +147,7 @@ The `n`-th approximation of a continuous function on `[0,1]` by Bernstein polyno
 given by `∑ k, f (k/n) * bernstein n k x`.
 -/
 def bernsteinApproximation (n : ℕ) (f : C(I, ℝ)) : C(I, ℝ) :=
-  ∑k : Finₓ (n+1), f (k)/ₙ • bernstein n k
+  ∑ k : Finₓ (n+1), f (k)/ₙ • bernstein n k
 
 /-!
 We now set up some of the basic machinery of the proof that the Bernstein approximations
@@ -164,7 +167,8 @@ We show that if `k ∉ S`, then `1 ≤ δ^-2 * (x - k/n)^2`.
 namespace bernsteinApproximation
 
 @[simp]
-theorem apply (n : ℕ) (f : C(I, ℝ)) (x : I) : bernsteinApproximation n f x = ∑k : Finₓ (n+1), f (k)/ₙ*bernstein n k x :=
+theorem apply (n : ℕ) (f : C(I, ℝ)) (x : I) :
+  bernsteinApproximation n f x = ∑ k : Finₓ (n+1), f (k)/ₙ*bernstein n k x :=
   by 
     simp [bernsteinApproximation]
 
@@ -178,7 +182,7 @@ def δ (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) : ℝ :=
 The set of points `k` so `k/n` is within `δ` of `x`.
 -/
 def S (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Finₓ (n+1)) :=
-  { k:Finₓ (n+1) | dist (k)/ₙ x < δ f ε h }.toFinset
+  { k : Finₓ (n+1) | dist (k)/ₙ x < δ f ε h }.toFinset
 
 /--
 If `k ∈ S`, then `f(k/n)` is close to `f x`.
@@ -193,8 +197,8 @@ theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k
 If `k ∉ S`, then as `δ ≤ |x - k/n|`, we have the inequality `1 ≤ δ^-2 * (x - k/n)^2`.
 This particular formulation will be helpful later.
 -/
-theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n+1)}
-  (m : k ∈ «expr ᶜ» (S f ε h n x)) : (1 : ℝ) ≤ (δ f ε h^(-2 : ℤ))*x - (k)/ₙ^2 :=
+theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n+1)} (m : k ∈ S f ε h n xᶜ) :
+  (1 : ℝ) ≤ (δ f ε h^(-2 : ℤ))*x - (k)/ₙ^2 :=
   by 
     simp only [Finset.mem_compl, not_ltₓ, Set.mem_to_finset, Set.mem_set_of_eq, S] at m 
     fieldSimp 
@@ -214,69 +218,94 @@ open Filter
 
 open_locale TopologicalSpace
 
--- error in Analysis.SpecialFunctions.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-The Bernstein approximations
-```
-∑ k : fin (n+1), f (k/n : ℝ) * n.choose k * x^k * (1-x)^(n-k)
-```
-for a continuous function `f : C([0,1], ℝ)` converge uniformly to `f` as `n` tends to infinity.
-
-This is the proof given in [Richard Beals' *Analysis, an introduction*][beals-analysis], §7D,
-and reproduced on wikipedia.
--/
-theorem bernstein_approximation_uniform
-(f : «exprC( , )»(exprI(), exprℝ())) : tendsto (λ n : exprℕ(), bernstein_approximation n f) at_top (expr𝓝() f) :=
-begin
-  simp [] [] ["only"] ["[", expr metric.nhds_basis_ball.tendsto_right_iff, ",", expr metric.mem_ball, ",", expr dist_eq_norm, "]"] [] [],
-  intros [ident ε, ident h],
-  let [ident δ] [] [":=", expr δ f ε h],
-  have [ident nhds_zero] [] [":=", expr tendsto_const_div_at_top_nhds_0_nat «expr * »(«expr * »(2, «expr∥ ∥»(f)), «expr ^ »(δ, («expr- »(2) : exprℤ())))],
-  filter_upwards ["[", expr nhds_zero.eventually (gt_mem_nhds (half_pos h)), ",", expr eventually_gt_at_top 0, "]"] [],
-  intros [ident n, ident nh, ident npos'],
-  have [ident npos] [":", expr «expr < »(0, (n : exprℝ()))] [":=", expr by exact_mod_cast [expr npos']],
-  have [ident w₁] [":", expr «expr ≤ »(0, «expr * »(2, «expr∥ ∥»(f)))] [":=", expr mul_nonneg (by norm_num [] []) (norm_nonneg f)],
-  have [ident w₂] [":", expr «expr ≤ »(0, «expr * »(«expr * »(2, «expr∥ ∥»(f)), «expr ^ »(δ, («expr- »(2) : exprℤ()))))] [":=", expr mul_nonneg w₁ pow_minus_two_nonneg],
-  rw [expr continuous_map.norm_lt_iff _ h] [],
-  intro [ident x],
-  let [ident S] [] [":=", expr S f ε h n x],
-  calc
-    «expr = »(«expr| |»(«expr - »(bernstein_approximation n f, f) x), «expr| |»(«expr - »(bernstein_approximation n f x, f x))) : rfl
-    «expr = »(..., «expr| |»(«expr - »(bernstein_approximation n f x, «expr * »(f x, 1)))) : by rw [expr mul_one] []
-    «expr = »(..., «expr| |»(«expr - »(bernstein_approximation n f x, «expr * »(f x, «expr∑ , »((k : fin «expr + »(n, 1)), bernstein n k x))))) : by rw [expr bernstein.probability] []
-    «expr = »(..., «expr| |»(«expr∑ , »((k : fin «expr + »(n, 1)), «expr * »(«expr - »(f «expr /ₙ»(k), f x), bernstein n k x)))) : by simp [] [] [] ["[", expr bernstein_approximation, ",", expr finset.mul_sum, ",", expr sub_mul, "]"] [] []
-    «expr ≤ »(..., «expr∑ , »((k : fin «expr + »(n, 1)), «expr| |»(«expr * »(«expr - »(f «expr /ₙ»(k), f x), bernstein n k x)))) : finset.abs_sum_le_sum_abs _ _
-    «expr = »(..., «expr∑ , »((k : fin «expr + »(n, 1)), «expr * »(«expr| |»(«expr - »(f «expr /ₙ»(k), f x)), bernstein n k x))) : by simp_rw ["[", expr abs_mul, ",", expr abs_eq_self.mpr bernstein_nonneg, "]"] []
-    «expr = »(..., «expr + »(«expr∑ in , »((k), S, «expr * »(«expr| |»(«expr - »(f «expr /ₙ»(k), f x)), bernstein n k x)), «expr∑ in , »((k), «expr ᶜ»(S), «expr * »(«expr| |»(«expr - »(f «expr /ₙ»(k), f x)), bernstein n k x)))) : (S.sum_add_sum_compl _).symm
-    «expr < »(..., «expr + »(«expr / »(ε, 2), «expr / »(ε, 2))) : add_lt_add_of_le_of_lt _ _
-    «expr = »(..., ε) : add_halves ε,
-  { calc
-      «expr ≤ »(«expr∑ in , »((k), S, «expr * »(«expr| |»(«expr - »(f «expr /ₙ»(k), f x)), bernstein n k x)), «expr∑ in , »((k), S, «expr * »(«expr / »(ε, 2), bernstein n k x))) : finset.sum_le_sum (λ
-       k m, mul_le_mul_of_nonneg_right (le_of_lt (lt_of_mem_S m)) bernstein_nonneg)
-      «expr = »(..., «expr * »(«expr / »(ε, 2), «expr∑ in , »((k), S, bernstein n k x))) : by rw [expr finset.mul_sum] []
-      «expr ≤ »(..., «expr * »(«expr / »(ε, 2), «expr∑ , »((k : fin «expr + »(n, 1)), bernstein n k x))) : mul_le_mul_of_nonneg_left (finset.sum_le_univ_sum_of_nonneg (λ
-        k, bernstein_nonneg)) (le_of_lt (half_pos h))
-      «expr = »(..., «expr / »(ε, 2)) : by rw ["[", expr bernstein.probability, ",", expr mul_one, "]"] [] },
-  { calc
-      «expr ≤ »(«expr∑ in , »((k), «expr ᶜ»(S), «expr * »(«expr| |»(«expr - »(f «expr /ₙ»(k), f x)), bernstein n k x)), «expr∑ in , »((k), «expr ᶜ»(S), «expr * »(«expr * »(2, «expr∥ ∥»(f)), bernstein n k x))) : finset.sum_le_sum (λ
-       k m, mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _) bernstein_nonneg)
-      «expr = »(..., «expr * »(«expr * »(2, «expr∥ ∥»(f)), «expr∑ in , »((k), «expr ᶜ»(S), bernstein n k x))) : by rw [expr finset.mul_sum] []
-      «expr ≤ »(..., «expr * »(«expr * »(2, «expr∥ ∥»(f)), «expr∑ in , »((k), «expr ᶜ»(S), «expr * »(«expr * »(«expr ^ »(δ, («expr- »(2) : exprℤ())), «expr ^ »(«expr - »(x, «expr /ₙ»(k)), 2)), bernstein n k x)))) : mul_le_mul_of_nonneg_left (finset.sum_le_sum (λ
-        k m, begin
-          conv_lhs [] [] { rw ["<-", expr one_mul (bernstein _ _ _)] },
-          exact [expr mul_le_mul_of_nonneg_right (le_of_mem_S_compl m) bernstein_nonneg]
-        end)) w₁
-      «expr ≤ »(..., «expr * »(«expr * »(2, «expr∥ ∥»(f)), «expr∑ , »((k : fin «expr + »(n, 1)), «expr * »(«expr * »(«expr ^ »(δ, («expr- »(2) : exprℤ())), «expr ^ »(«expr - »(x, «expr /ₙ»(k)), 2)), bernstein n k x)))) : mul_le_mul_of_nonneg_left (finset.sum_le_univ_sum_of_nonneg (λ
-        k, mul_nonneg (mul_nonneg pow_minus_two_nonneg (sq_nonneg _)) bernstein_nonneg)) w₁
-      «expr = »(..., «expr * »(«expr * »(«expr * »(2, «expr∥ ∥»(f)), «expr ^ »(δ, («expr- »(2) : exprℤ()))), «expr∑ , »((k : fin «expr + »(n, 1)), «expr * »(«expr ^ »(«expr - »(x, «expr /ₙ»(k)), 2), bernstein n k x)))) : by conv_rhs [] [] { rw ["[", expr mul_assoc, ",", expr finset.mul_sum, "]"],
-        simp ["only"] ["[", "<-", expr mul_assoc, "]"] [] }
-      «expr = »(..., «expr / »(«expr * »(«expr * »(«expr * »(«expr * »(2, «expr∥ ∥»(f)), «expr ^ »(δ, («expr- »(2) : exprℤ()))), x), «expr - »(1, x)), n)) : by { rw [expr variance npos] [],
-        ring [] }
-      «expr ≤ »(..., «expr / »(«expr * »(«expr * »(2, «expr∥ ∥»(f)), «expr ^ »(δ, («expr- »(2) : exprℤ()))), n)) : (div_le_div_right npos).mpr (begin
-         apply [expr mul_nonneg_le_one_le w₂],
-         apply [expr mul_nonneg_le_one_le w₂ (le_refl _)],
-         all_goals { unit_interval }
-       end)
-      «expr < »(..., «expr / »(ε, 2)) : nh }
-end
+    The Bernstein approximations
+    ```
+    ∑ k : fin (n+1), f (k/n : ℝ) * n.choose k * x^k * (1-x)^(n-k)
+    ```
+    for a continuous function `f : C([0,1], ℝ)` converge uniformly to `f` as `n` tends to infinity.
+    
+    This is the proof given in [Richard Beals' *Analysis, an introduction*][beals-analysis], §7D,
+    and reproduced on wikipedia.
+    -/
+  theorem
+    bernstein_approximation_uniform
+    ( f : C( I , ℝ ) ) : tendsto fun n : ℕ => bernsteinApproximation n f at_top 𝓝 f
+    :=
+      by
+        simp only [ metric.nhds_basis_ball.tendsto_right_iff , Metric.mem_ball , dist_eq_norm ]
+          intro ε h
+          let δ := δ f ε h
+          have nhds_zero := tendsto_const_div_at_top_nhds_0_nat 2 * ∥ f ∥ * δ ^ ( - 2 : ℤ )
+          filterUpwards [ nhds_zero.eventually gt_mem_nhds half_pos h , eventually_gt_at_top 0 ]
+          intro n nh npos'
+          have npos : 0 < ( n : ℝ ) := by exactModCast npos'
+          have w₁ : 0 ≤ 2 * ∥ f ∥ := mul_nonneg by normNum norm_nonneg f
+          have w₂ : 0 ≤ 2 * ∥ f ∥ * δ ^ ( - 2 : ℤ ) := mul_nonneg w₁ pow_minus_two_nonneg
+          rw [ ContinuousMap.norm_lt_iff _ h ]
+          intro x
+          let S := S f ε h n x
+          calc
+            | bernsteinApproximation n f - f x | = | bernsteinApproximation n f x - f x | := rfl
+              _ = | bernsteinApproximation n f x - f x * 1 | := by rw [ mul_oneₓ ]
+              _ = | bernsteinApproximation n f x - f x * ∑ k : Finₓ n + 1 , bernstein n k x |
+                :=
+                by rw [ bernstein.probability ]
+              _ = | ∑ k : Finₓ n + 1 , f k /ₙ - f x * bernstein n k x |
+                :=
+                by simp [ bernsteinApproximation , Finset.mul_sum , sub_mul ]
+              _ ≤ ∑ k : Finₓ n + 1 , | f k /ₙ - f x * bernstein n k x | := Finset.abs_sum_le_sum_abs _ _
+              _ = ∑ k : Finₓ n + 1 , | f k /ₙ - f x | * bernstein n k x
+                :=
+                by simpRw [ abs_mul , abs_eq_self.mpr bernstein_nonneg ]
+              _ = ∑ k in S , | f k /ₙ - f x | * bernstein n k x + ∑ k in S ᶜ , | f k /ₙ - f x | * bernstein n k x
+                :=
+                S.sum_add_sum_compl _ . symm
+              _ < ε / 2 + ε / 2 := add_lt_add_of_le_of_lt _ _
+              _ = ε := add_halves ε
+          ·
+            calc
+              ∑ k in S , | f k /ₙ - f x | * bernstein n k x ≤ ∑ k in S , ε / 2 * bernstein n k x
+                  :=
+                  Finset.sum_le_sum fun k m => mul_le_mul_of_nonneg_right le_of_ltₓ lt_of_mem_S m bernstein_nonneg
+                _ = ε / 2 * ∑ k in S , bernstein n k x := by rw [ Finset.mul_sum ]
+                _ ≤ ε / 2 * ∑ k : Finₓ n + 1 , bernstein n k x
+                  :=
+                  mul_le_mul_of_nonneg_left
+                    Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg le_of_ltₓ half_pos h
+                _ = ε / 2 := by rw [ bernstein.probability , mul_oneₓ ]
+          ·
+            calc
+              ∑ k in S ᶜ , | f k /ₙ - f x | * bernstein n k x ≤ ∑ k in S ᶜ , 2 * ∥ f ∥ * bernstein n k x
+                  :=
+                  Finset.sum_le_sum fun k m => mul_le_mul_of_nonneg_right f.dist_le_two_norm _ _ bernstein_nonneg
+                _ = 2 * ∥ f ∥ * ∑ k in S ᶜ , bernstein n k x := by rw [ Finset.mul_sum ]
+                _ ≤ 2 * ∥ f ∥ * ∑ k in S ᶜ , δ ^ ( - 2 : ℤ ) * x - k /ₙ ^ 2 * bernstein n k x
+                  :=
+                  mul_le_mul_of_nonneg_left
+                    Finset.sum_le_sum
+                        fun
+                          k m
+                            =>
+                            by
+                              convLHS => rw [ ← one_mulₓ bernstein _ _ _ ]
+                                exact mul_le_mul_of_nonneg_right le_of_mem_S_compl m bernstein_nonneg
+                      w₁
+                _ ≤ 2 * ∥ f ∥ * ∑ k : Finₓ n + 1 , δ ^ ( - 2 : ℤ ) * x - k /ₙ ^ 2 * bernstein n k x
+                  :=
+                  mul_le_mul_of_nonneg_left
+                    Finset.sum_le_univ_sum_of_nonneg
+                        fun k => mul_nonneg mul_nonneg pow_minus_two_nonneg sq_nonneg _ bernstein_nonneg
+                      w₁
+                _ = 2 * ∥ f ∥ * δ ^ ( - 2 : ℤ ) * ∑ k : Finₓ n + 1 , x - k /ₙ ^ 2 * bernstein n k x
+                  :=
+                  by convRHS => rw [ mul_assocₓ , Finset.mul_sum ] simp only [ ← mul_assocₓ ]
+                _ = 2 * ∥ f ∥ * δ ^ ( - 2 : ℤ ) * x * 1 - x / n := by rw [ variance npos ] ring
+                _ ≤ 2 * ∥ f ∥ * δ ^ ( - 2 : ℤ ) / n
+                  :=
+                  div_le_div_right npos . mpr
+                    by apply mul_nonneg_le_one_le w₂ apply mul_nonneg_le_one_le w₂ le_reflₓ _ all_goals unitInterval
+                _ < ε / 2 := nh
 

@@ -98,7 +98,7 @@ theorem Inducing.continuous_at_iff' {f : α → β} {g : β → γ} (hf : Induci
   by 
     simpRw [ContinuousAt, Filter.Tendsto, ←hf.map_nhds_of_mem _ h, Filter.map_map]
 
-theorem Inducing.continuous {f : α → β} (hf : Inducing f) : Continuous f :=
+protected theorem Inducing.continuous {f : α → β} (hf : Inducing f) : Continuous f :=
   hf.continuous_iff.mp continuous_id
 
 theorem Inducing.closure_eq_preimage_closure_image {f : α → β} (hf : Inducing f) (s : Set α) :
@@ -182,39 +182,42 @@ theorem quotient_map_iff {α β : Type _} [TopologicalSpace α] [TopologicalSpac
 
 namespace QuotientMap
 
-variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ] {g : β → γ} {f : α → β}
 
 protected theorem id : QuotientMap (@id α) :=
   ⟨fun a => ⟨a, rfl⟩, coinduced_id.symm⟩
 
-protected theorem comp {g : β → γ} {f : α → β} (hg : QuotientMap g) (hf : QuotientMap f) : QuotientMap (g ∘ f) :=
+protected theorem comp (hg : QuotientMap g) (hf : QuotientMap f) : QuotientMap (g ∘ f) :=
   ⟨hg.left.comp hf.left,
     by 
       rw [hg.right, hf.right, coinduced_compose]⟩
 
-protected theorem of_quotient_map_compose {f : α → β} {g : β → γ} (hf : Continuous f) (hg : Continuous g)
-  (hgf : QuotientMap (g ∘ f)) : QuotientMap g :=
-  ⟨fun b =>
-      let ⟨a, h⟩ := hgf.left b
-      ⟨f a, h⟩,
+protected theorem of_quotient_map_compose (hf : Continuous f) (hg : Continuous g) (hgf : QuotientMap (g ∘ f)) :
+  QuotientMap g :=
+  ⟨hgf.1.of_comp,
     le_antisymmₓ
       (by 
-        rw [hgf.right, ←continuous_iff_coinduced_le] <;> apply continuous_coinduced_rng.comp hf)
+        rw [hgf.right, ←continuous_iff_coinduced_le]
+        apply continuous_coinduced_rng.comp hf)
       (by 
         rwa [←continuous_iff_coinduced_le])⟩
 
-protected theorem continuous_iff {f : α → β} {g : β → γ} (hf : QuotientMap f) : Continuous g ↔ Continuous (g ∘ f) :=
+protected theorem continuous_iff (hf : QuotientMap f) : Continuous g ↔ Continuous (g ∘ f) :=
   by 
     rw [continuous_iff_coinduced_le, continuous_iff_coinduced_le, hf.right, coinduced_compose]
 
-protected theorem Continuous {f : α → β} (hf : QuotientMap f) : Continuous f :=
+protected theorem Continuous (hf : QuotientMap f) : Continuous f :=
   hf.continuous_iff.mp continuous_id
 
-protected theorem surjective {f : α → β} (hf : QuotientMap f) : Function.Surjective f :=
+protected theorem surjective (hf : QuotientMap f) : Function.Surjective f :=
   hf.1
 
-protected theorem is_open_preimage {f : α → β} (hf : QuotientMap f) {s : Set β} : IsOpen (f ⁻¹' s) ↔ IsOpen s :=
+protected theorem is_open_preimage (hf : QuotientMap f) {s : Set β} : IsOpen (f ⁻¹' s) ↔ IsOpen s :=
   ((quotient_map_iff.1 hf).2 s).symm
+
+protected theorem is_closed_preimage (hf : QuotientMap f) {s : Set β} : IsClosed (f ⁻¹' s) ↔ IsClosed s :=
+  by 
+    simp only [←is_open_compl_iff, ←preimage_compl, hf.is_open_preimage]
 
 end QuotientMap
 
@@ -263,19 +266,10 @@ theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv :
     rw [image_eq_preimage_of_inverse r_inv l_inv]
     exact hs.preimage h
 
-theorem to_quotient_map {f : α → β} (open_map : IsOpenMap f) (cont : Continuous f) (surj : Function.Surjective f) :
+/-- A continuous surjective open map is a quotient map. -/
+theorem to_quotient_map {f : α → β} (open_map : IsOpenMap f) (cont : Continuous f) (surj : surjective f) :
   QuotientMap f :=
-  ⟨surj,
-    by 
-      ext s 
-      show IsOpen s ↔ IsOpen (f ⁻¹' s)
-      split 
-      ·
-        exact continuous_def.1 cont s
-      ·
-        intro h 
-        rw [←surj.image_preimage s]
-        exact open_map _ h⟩
+  quotient_map_iff.2 ⟨surj, fun s => ⟨fun h => h.preimage cont, fun h => surj.image_preimage s ▸ open_map _ h⟩⟩
 
 theorem interior_preimage_subset_preimage_interior {s : Set β} (hf : IsOpenMap f) :
   Interior (f ⁻¹' s) ⊆ f ⁻¹' Interior s :=
@@ -306,7 +300,8 @@ theorem is_open_map_iff_interior [TopologicalSpace α] [TopologicalSpace β] {f 
           _ ⊆ Interior (f '' u) := hs u
           ⟩
 
-theorem Inducing.is_open_map [TopologicalSpace α] [TopologicalSpace β] {f : α → β} (hi : Inducing f)
+/-- An inducing map with an open range is an open map. -/
+protected theorem Inducing.is_open_map [TopologicalSpace α] [TopologicalSpace β] {f : α → β} (hi : Inducing f)
   (ho : IsOpen (range f)) : IsOpenMap f :=
   IsOpenMap.of_nhds_le$ fun x => (hi.map_nhds_of_mem _$ IsOpen.mem_nhds ho$ mem_range_self _).Ge
 
@@ -369,7 +364,7 @@ theorem Inducing.is_closed_map [TopologicalSpace α] [TopologicalSpace β] {f : 
     intro s hs 
     rcases hf.is_closed_iff.1 hs with ⟨t, ht, rfl⟩
     rw [image_preimage_eq_inter_range]
-    exact IsClosed.inter ht h
+    exact ht.inter h
 
 theorem is_closed_map_iff_closure_image [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
   IsClosedMap f ↔ ∀ s, Closure (f '' s) ⊆ f '' Closure s :=
@@ -431,15 +426,26 @@ theorem open_embedding_of_continuous_injective_open {f : α → β} (h₁ : Cont
     rw [preimage_image_eq _ h₂]
 
 theorem open_embedding_id : OpenEmbedding (@id α) :=
-  ⟨embedding_id,
-    by 
-      convert is_open_univ <;> apply range_id⟩
+  ⟨embedding_id, IsOpenMap.id.is_open_range⟩
 
 theorem OpenEmbedding.comp {g : β → γ} {f : α → β} (hg : OpenEmbedding g) (hf : OpenEmbedding f) :
   OpenEmbedding (g ∘ f) :=
-  ⟨hg.1.comp hf.1,
-    show IsOpen (range (g ∘ f))by 
-      rw [range_comp, ←hg.open_iff_image_open] <;> exact hf.2⟩
+  ⟨hg.1.comp hf.1, (hg.is_open_map.comp hf.is_open_map).is_open_range⟩
+
+theorem open_embedding_of_open_embedding_compose {α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β]
+  [TopologicalSpace γ] (f : α → β) {g : β → γ} (hg : OpenEmbedding g) (h : OpenEmbedding (g ∘ f)) : OpenEmbedding f :=
+  by 
+    have hf := hg.to_embedding.continuous_iff.mpr h.continuous 
+    constructor
+    ·
+      exact embedding_of_embedding_compose hf hg.continuous h.to_embedding
+    ·
+      rw [hg.open_iff_image_open, ←Set.image_univ, ←Set.image_comp, ←h.open_iff_image_open]
+      exact is_open_univ
+
+theorem open_embedding_iff_open_embedding_compose {α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β]
+  [TopologicalSpace γ] (f : α → β) {g : β → γ} (hg : OpenEmbedding g) : OpenEmbedding (g ∘ f) ↔ OpenEmbedding f :=
+  ⟨open_embedding_of_open_embedding_compose f hg, hg.comp⟩
 
 end OpenEmbedding
 
@@ -489,7 +495,7 @@ theorem closed_embedding_of_continuous_injective_closed (h₁ : Continuous f) (h
     intro s' 
     change IsOpen _ ≤ IsOpen _ 
     rw [←is_closed_compl_iff, ←is_closed_compl_iff]
-    generalize «expr ᶜ» s' = s 
+    generalize s'ᶜ = s 
     rw [is_closed_induced_iff]
     refine' fun hs => ⟨f '' s, h₃ s hs, _⟩
     rw [preimage_image_eq _ h₂]

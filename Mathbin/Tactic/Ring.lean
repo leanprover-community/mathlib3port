@@ -30,11 +30,13 @@ unsafe structure cache where
   nc : ref instance_cache 
   atoms : ref (Buffer expr)
 
--- error in Tactic.Ring: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler alternative
 /-- The monad that `ring` works in. This is a reader monad containing a mutable cache (using `ref`
 for mutability), as well as the list of atoms-up-to-defeq encountered thus far, used for atom
-sorting. -/ @[derive #["[", expr monad, ",", expr alternative, "]"]] meta def ring_m (α : Type) : Type :=
-reader_t cache tactic α
+sorting. -/
+unsafe def ring_m (α : Type) : Type :=
+  ReaderTₓ cache tactic α deriving [anonymous], [anonymous]
 
 /-- Get the `ring` data from the monad. -/
 unsafe def get_cache : ring_m cache :=
@@ -149,7 +151,7 @@ unsafe instance : Coe horner_expr expr :=
   ⟨horner_expr.e⟩
 
 unsafe instance : CoeFun horner_expr fun _ => expr → expr :=
-  ⟨fun e => «expr⇑ » (e : expr)⟩
+  ⟨fun e => ⇑(e : expr)⟩
 
 /-- Construct a `xadd` node, generating the cached expr using the input cache. -/
 unsafe def horner_expr.xadd' (c : cache) (a : horner_expr) (x : expr × ℕ) (n : expr × ℕ) (b : horner_expr) :
@@ -594,7 +596,8 @@ theorem pow_add_rev_right {α} [Monoidₓ α] (a b : α) (m n : ℕ) : ((b*a ^ m
 theorem add_neg_eq_sub {α} [AddGroupₓ α] (a b : α) : (a+-b) = a - b :=
   (sub_eq_add_neg a b).symm
 
--- error in Tactic.Ring: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- If `ring` fails to close the goal, it falls back on normalizing the expression to a "pretty"
 form so that you can see why it failed. This setting adjusts the resulting form:
 
@@ -605,13 +608,70 @@ form so that you can see why it failed. This setting adjusts the resulting form:
     and tries to otherwise minimize parentheses.
     This results in terms like `(3 * x ^ 2 * y + 1) * x + y`.
   * `SOP` means sum of products form, expanding everything to monomials.
-    This results in terms like `3 * x ^ 3 * y + x + y`. -/ @[derive #[expr has_reflect]] inductive normalize_mode
-| raw
-| SOP
-| horner
+    This results in terms like `3 * x ^ 3 * y + x + y`. -/
+inductive normalize_mode
+  | raw
+  | SOP
+  | horner deriving [anonymous], [anonymous]
 
 instance : Inhabited normalize_mode :=
   ⟨normalize_mode.horner⟩
+
+/-- A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.
+  See `normalize`. This version takes a list of atoms to persist across multiple calls. -/
+unsafe def normalize' (atoms : ref (Buffer expr)) (red : transparency) (mode := normalize_mode.horner) (e : expr) :
+  tactic (expr × expr) :=
+  do 
+    let pow_lemma ← simp_lemmas.mk.add_simp `` pow_oneₓ 
+    let lemmas :=
+      match mode with 
+      | normalize_mode.SOP =>
+        [`` horner_def', `` add_zeroₓ, `` mul_oneₓ, `` mul_addₓ, `` mul_sub, `` mul_assoc_rev, `` pow_add_rev,
+          `` pow_add_rev_right, `` mul_neg_eq_neg_mul_symm, `` add_neg_eq_sub]
+      | normalize_mode.horner =>
+        [`` horner.equations._eqn_1, `` add_zeroₓ, `` one_mulₓ, `` pow_oneₓ, `` neg_mul_eq_neg_mul_symm,
+          `` add_neg_eq_sub]
+      | _ => []
+    let lemmas ← lemmas.mfoldl simp_lemmas.add_simp simp_lemmas.mk 
+    trans_conv
+        (fun e =>
+          do 
+            guardₓ (mode ≠ normalize_mode.raw)
+            let (e', pr, _) ← simplify simp_lemmas.mk [] e 
+            pure (e', pr))
+        (fun e =>
+          do 
+            let a ← read_ref atoms 
+            let (a, e', pr) ←
+              ext_simplify_core a {  } simp_lemmas.mk (fun _ => failed)
+                  (fun a _ _ _ e =>
+                    do 
+                      write_ref atoms a 
+                      let (new_e, pr) ←
+                        (match mode with 
+                            | normalize_mode.raw => eval' red atoms
+                            | normalize_mode.horner =>
+                              trans_conv (eval' red atoms)
+                                fun e =>
+                                  do 
+                                    let (e', prf, _) ← simplify lemmas [] e 
+                                    pure (e', prf)
+                            | normalize_mode.SOP =>
+                              trans_conv (eval' red atoms)$
+                                (trans_conv
+                                    fun e =>
+                                      do 
+                                        let (e', prf, _) ← simplify lemmas [] e 
+                                        pure (e', prf))$
+                                  simp_bottom_up' fun e => norm_num.derive e <|> pow_lemma.rewrite e)
+                            e 
+                      guardₓ ¬new_e =ₐ e 
+                      let a ← read_ref atoms 
+                      pure (a, new_e, some pr, ff))
+                  (fun _ _ _ _ _ => failed) `eq e 
+            write_ref atoms a 
+            pure (e', pr))
+        e
 
 /-- A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.
 
@@ -624,46 +684,7 @@ instance : Inhabited normalize_mode :=
   * `SOP` means sum of products form, expanding everything to monomials.
     This results in terms like `3 * x ^ 3 * y + x + y`. -/
 unsafe def normalize (red : transparency) (mode := normalize_mode.horner) (e : expr) : tactic (expr × expr) :=
-  using_new_ref mkBuffer$
-    fun atoms =>
-      do 
-        let pow_lemma ← simp_lemmas.mk.add_simp `` pow_oneₓ 
-        let lemmas :=
-          match mode with 
-          | normalize_mode.SOP =>
-            [`` horner_def', `` add_zeroₓ, `` mul_oneₓ, `` mul_addₓ, `` mul_sub, `` mul_assoc_rev, `` pow_add_rev,
-              `` pow_add_rev_right, `` mul_neg_eq_neg_mul_symm, `` add_neg_eq_sub]
-          | normalize_mode.horner =>
-            [`` horner.equations._eqn_1, `` add_zeroₓ, `` one_mulₓ, `` pow_oneₓ, `` neg_mul_eq_neg_mul_symm,
-              `` add_neg_eq_sub]
-          | _ => []
-        let lemmas ← lemmas.mfoldl simp_lemmas.add_simp simp_lemmas.mk 
-        let (_, e', pr) ←
-          ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed)
-              (fun _ _ _ _ e =>
-                do 
-                  let (new_e, pr) ←
-                    (match mode with 
-                        | normalize_mode.raw => eval' red atoms
-                        | normalize_mode.horner =>
-                          trans_conv (eval' red atoms)
-                            fun e =>
-                              do 
-                                let (e', prf, _) ← simplify lemmas [] e 
-                                return (e', prf)
-                        | normalize_mode.SOP =>
-                          trans_conv (eval' red atoms)$
-                            (trans_conv
-                                fun e =>
-                                  do 
-                                    let (e', prf, _) ← simplify lemmas [] e 
-                                    return (e', prf))$
-                              simp_bottom_up' fun e => norm_num.derive e <|> pow_lemma.rewrite e)
-                        e 
-                  guardₓ ¬new_e =ₐ e 
-                  return ((), new_e, some pr, ff))
-              (fun _ _ _ _ _ => failed) `eq e 
-        return (e', pr)
+  using_new_ref mkBuffer$ fun atoms => normalize' atoms red mode e
 
 end Ringₓ
 
@@ -679,7 +700,7 @@ setup_tactic_parser
 unsafe def ring1 (red : parse (tk "!")?) : tactic Unit :=
   let transp := if red.is_some then semireducible else reducible 
   do 
-    let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target 
+    let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target >>= instantiate_mvars 
     let ((e₁', p₁), (e₂', p₂)) ← ring_m.run transp e₁$ (Prod.mk <$> eval e₁)<*>eval e₂ 
     is_def_eq e₁' e₂' 
     let p ← mk_eq_symm p₂ >>= mk_eq_trans p₁ 
@@ -693,10 +714,10 @@ unsafe def ring.mode : lean.parser ring.normalize_mode :=
     do 
       let mode ← (ident)?
       match mode with 
-        | none => return ring.normalize_mode.horner
-        | some `horner => return ring.normalize_mode.horner
-        | some `SOP => return ring.normalize_mode.SOP
-        | some `raw => return ring.normalize_mode.raw
+        | none => pure ring.normalize_mode.horner
+        | some `horner => pure ring.normalize_mode.horner
+        | some `SOP => pure ring.normalize_mode.SOP
+        | some `raw => pure ring.normalize_mode.raw
         | _ => failed
 
 /-- Simplification tactic for expressions in the language of commutative (semi)rings,
@@ -708,7 +729,8 @@ unsafe def ring_nf (red : parse (tk "!")?) (SOP : parse ring.mode) (loc : parse 
   do 
     let ns ← loc.get_locals 
     let transp := if red.is_some then semireducible else reducible 
-    let tt ← tactic.replace_at (normalize transp SOP) ns loc.include_goal | fail "ring_nf failed to simplify"
+    let tt ← using_new_ref mkBuffer$ fun atoms => tactic.replace_at (normalize' atoms transp SOP) ns loc.include_goal |
+      fail "ring_nf failed to simplify"
     when loc.include_goal$ try tactic.reflexivity
 
 /-- Tactic for solving equations in the language of *commutative* (semi)rings.

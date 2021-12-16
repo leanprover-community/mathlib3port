@@ -16,7 +16,7 @@ Thus it is useful for induction or minimal-degree arguments.
 
 namespace Polynomial
 
-noncomputable theory
+noncomputable section 
 
 variable {R : Type _}
 
@@ -40,36 +40,39 @@ theorem dvd_cancel_leads_of_dvd_of_dvd {r : Polynomial R} (pq : p ∣ q) (pr : p
 
 end CommRingₓ
 
--- error in Data.Polynomial.CancelLeads: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree
-[comm_ring R]
-[is_domain R]
-{p q : polynomial R}
-(h : «expr ≤ »(p.nat_degree, q.nat_degree))
-(hq : «expr < »(0, q.nat_degree)) : «expr < »((p.cancel_leads q).nat_degree, q.nat_degree) :=
-begin
-  by_cases [expr hp, ":", expr «expr = »(p, 0)],
-  { convert [] [expr hq] [],
-    simp [] [] [] ["[", expr hp, ",", expr cancel_leads, "]"] [] [] },
-  rw ["[", expr cancel_leads, ",", expr sub_eq_add_neg, ",", expr tsub_eq_zero_iff_le.mpr h, ",", expr pow_zero, ",", expr mul_one, "]"] [],
-  by_cases [expr h0, ":", expr «expr = »(«expr + »(«expr * »(C p.leading_coeff, q), «expr- »(«expr * »(«expr * »(C q.leading_coeff, «expr ^ »(X, «expr - »(q.nat_degree, p.nat_degree))), p))), 0)],
-  { convert [] [expr hq] [],
-    simp [] [] ["only"] ["[", expr h0, ",", expr nat_degree_zero, "]"] [] [] },
-  have [ident hq0] [":", expr «expr¬ »(«expr = »(q, 0))] [],
-  { contrapose ["!"] [ident hq],
-    simp [] [] [] ["[", expr hq, "]"] [] [] },
-  apply [expr lt_of_le_of_ne],
-  { rw ["[", "<-", expr with_bot.coe_le_coe, ",", "<-", expr degree_eq_nat_degree h0, ",", "<-", expr degree_eq_nat_degree hq0, "]"] [],
-    apply [expr le_trans (degree_add_le _ _)],
-    rw ["<-", expr leading_coeff_eq_zero] ["at", ident hp, ident hq0],
-    simp [] [] ["only"] ["[", expr max_le_iff, ",", expr degree_C hp, ",", expr degree_C hq0, ",", expr le_refl q.degree, ",", expr true_and, ",", expr nat.cast_with_bot, ",", expr nsmul_one, ",", expr degree_neg, ",", expr degree_mul, ",", expr zero_add, ",", expr degree_X, ",", expr degree_pow, "]"] [] [],
-    rw [expr leading_coeff_eq_zero] ["at", ident hp, ident hq0],
-    rw ["[", expr degree_eq_nat_degree hp, ",", expr degree_eq_nat_degree hq0, ",", "<-", expr with_bot.coe_add, ",", expr with_bot.coe_le_coe, ",", expr tsub_add_cancel_of_le h, "]"] [] },
-  { contrapose ["!"] [ident h0],
-    rw ["[", "<-", expr leading_coeff_eq_zero, ",", expr leading_coeff, ",", expr h0, ",", expr mul_assoc, ",", expr mul_comm _ p, ",", "<-", expr tsub_add_cancel_of_le h, ",", expr add_comm _ p.nat_degree, "]"] [],
-    simp [] [] ["only"] ["[", expr coeff_mul_X_pow, ",", expr coeff_neg, ",", expr coeff_C_mul, ",", expr add_tsub_cancel_left, ",", expr coeff_add, "]"] [] [],
-    rw ["[", expr add_comm p.nat_degree, ",", expr tsub_add_cancel_of_le h, ",", "<-", expr leading_coeff, ",", "<-", expr leading_coeff, ",", expr mul_comm _ q.leading_coeff, ",", "<-", expr sub_eq_add_neg, ",", "<-", expr mul_sub, ",", expr sub_self, ",", expr mul_zero, "]"] [] }
-end
+theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree [CommRingₓ R] [IsDomain R] {p q : Polynomial R}
+  (h : p.nat_degree ≤ q.nat_degree) (hq : 0 < q.nat_degree) : (p.cancel_leads q).natDegree < q.nat_degree :=
+  by 
+    byCases' hp : p = 0
+    ·
+      convert hq 
+      simp [hp, cancel_leads]
+    rw [cancel_leads, sub_eq_add_neg, tsub_eq_zero_iff_le.mpr h, pow_zeroₓ, mul_oneₓ]
+    byCases' h0 : ((C p.leading_coeff*q)+-(C q.leading_coeff*X ^ (q.nat_degree - p.nat_degree))*p) = 0
+    ·
+      convert hq 
+      simp only [h0, nat_degree_zero]
+    have hq0 : ¬q = 0
+    ·
+      contrapose! hq 
+      simp [hq]
+    apply lt_of_le_of_neₓ
+    ·
+      rw [←WithBot.coe_le_coe, ←degree_eq_nat_degree h0, ←degree_eq_nat_degree hq0]
+      apply le_transₓ (degree_add_le _ _)
+      rw [←leading_coeff_eq_zero] at hp hq0 
+      simp only [max_le_iff, degree_C hp, degree_C hq0, le_reflₓ q.degree, true_andₓ, Nat.cast_with_bot, nsmul_one,
+        degree_neg, degree_mul, zero_addₓ, degree_X, degree_pow]
+      rw [leading_coeff_eq_zero] at hp hq0 
+      rw [degree_eq_nat_degree hp, degree_eq_nat_degree hq0, ←WithBot.coe_add, WithBot.coe_le_coe,
+        tsub_add_cancel_of_le h]
+    ·
+      contrapose! h0 
+      rw [←leading_coeff_eq_zero, leading_coeff, h0, mul_assocₓ, mul_commₓ _ p, ←tsub_add_cancel_of_le h,
+        add_commₓ _ p.nat_degree]
+      simp only [coeff_mul_X_pow, coeff_neg, coeff_C_mul, add_tsub_cancel_left, coeff_add]
+      rw [add_commₓ p.nat_degree, tsub_add_cancel_of_le h, ←leading_coeff, ←leading_coeff, mul_commₓ _ q.leading_coeff,
+        ←sub_eq_add_neg, ←mul_sub, sub_self, mul_zero]
 
 end Polynomial
 

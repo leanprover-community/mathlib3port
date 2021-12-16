@@ -17,19 +17,18 @@ to access this notation in your own code.
 
 section nonZeroDivisors
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The submonoid of non-zero-divisors of a `monoid_with_zero` `R`. -/
-def nonZeroDivisors (R : Type _) [MonoidWithZeroₓ R] : Submonoid R :=
-  { Carrier := { x | ∀ z, (z*x) = 0 → z = 0 },
-    one_mem' :=
-      fun z hz =>
-        by 
-          rwa [mul_oneₓ] at hz,
-    mul_mem' :=
-      fun x₁ x₂ hx₁ hx₂ z hz =>
-        have  : ((z*x₁)*x₂) = 0 :=
-          by 
-            rwa [mul_assocₓ]
-        hx₁ z$ hx₂ (z*x₁) this }
+  def
+    nonZeroDivisors
+    ( R : Type _ ) [ MonoidWithZeroₓ R ] : Submonoid R
+    :=
+      {
+        Carrier := { x | ∀ z , z * x = 0 → z = 0 } ,
+          one_mem' := fun z hz => by rwa [ mul_oneₓ ] at hz ,
+          mul_mem' := fun x₁ x₂ hx₁ hx₂ z hz => have : z * x₁ * x₂ = 0 := by rwa [ mul_assocₓ ] hx₁ z $ hx₂ z * x₁ this
+        }
 
 localized [nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
 
@@ -43,10 +42,10 @@ theorem nonZeroDivisors.coe_ne_zero [Nontrivial M] (x : M⁰) : (x : M) ≠ 0 :=
 
 theorem mul_mem_non_zero_divisors {a b : M₁} : (a*b) ∈ M₁⁰ ↔ a ∈ M₁⁰ ∧ b ∈ M₁⁰ :=
   by 
-    split 
+    constructor
     ·
       intro h 
-      split  <;> intro x h' <;> apply h
+      constructor <;> intro x h' <;> apply h
       ·
         rw [←mul_assocₓ, h', zero_mul]
       ·
@@ -91,21 +90,20 @@ theorem powers_le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {a : 
   le_non_zero_divisors_of_no_zero_divisors fun h => absurd (h.rec_on fun _ hn => pow_eq_zero hn) ha
 
 theorem MonoidWithZeroHom.map_le_non_zero_divisors_of_injective [Nontrivial M] [NoZeroDivisors M']
-  (f : MonoidWithZeroHom M M') (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map («expr↑ » f) ≤ M'⁰ :=
+  (f : MonoidWithZeroHom M M') (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map (↑f) ≤ M'⁰ :=
   le_non_zero_divisors_of_no_zero_divisors
     fun h =>
       let ⟨x, hx, hx0⟩ := h 
       zero_ne_one (hS (hf (trans hx0 f.map_zero.symm) ▸ hx : 0 ∈ S) 1 (mul_zero 1)).symm
 
 theorem RingHom.map_le_non_zero_divisors_of_injective {R R' : Type _} [Semiringₓ R] [Semiringₓ R'] [Nontrivial R]
-  [NoZeroDivisors R'] (f : R →+* R') (hf : Function.Injective f) {S : Submonoid R} (hS : S ≤ R⁰) :
-  S.map («expr↑ » f) ≤ R'⁰ :=
+  [NoZeroDivisors R'] (f : R →+* R') (hf : Function.Injective f) {S : Submonoid R} (hS : S ≤ R⁰) : S.map (↑f) ≤ R'⁰ :=
   f.to_monoid_with_zero_hom.map_le_non_zero_divisors_of_injective hf hS
 
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
   s.prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 :=
   by 
-    split 
+    constructor 
     swap
     ·
       rintro ⟨r, hrs, rfl⟩

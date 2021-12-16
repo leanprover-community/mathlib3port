@@ -108,11 +108,11 @@ theorem lift_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) : lift R L M 
 Note that maps `f` of type `M →ₗ⁅R,L⁆ N →ₗ[R] P` are exactly those `R`-bilinear maps satisfying
 `⁅x, f m n⁆ = f ⁅x, m⁆ n + f m ⁅x, n⁆` for all `x, m, n` (see e.g, `lie_module_hom.map_lie₂`). -/
 def lift_lie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,L⁆ P :=
-  max_triv_linear_map_equiv_lie_module_hom.symm ≪≫ₗ «expr↑ » (max_triv_equiv (lift R L M N P)) ≪≫ₗ
+  max_triv_linear_map_equiv_lie_module_hom.symm ≪≫ₗ ↑max_triv_equiv (lift R L M N P) ≪≫ₗ
     max_triv_linear_map_equiv_lie_module_hom
 
 @[simp]
-theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : «expr⇑ » (lift_lie R L M N P f) = lift R L M N P f :=
+theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : ⇑lift_lie R L M N P f = lift R L M N P f :=
   by 
     suffices  : (lift_lie R L M N P f : M ⊗[R] N →ₗ[R] P) = lift R L M N P f
     ·
@@ -219,18 +219,18 @@ applying the action of `L` on `M`, we obtain morphism of Lie modules `f : I ⊗ 
 
 This lemma states that `⁅I, N⁆ = range f`. -/
 theorem lie_ideal_oper_eq_tensor_map_range :
-  ⁅I,N⁆ = ((to_module_hom R L M).comp (map_incl I N : «expr↥ » I ⊗ «expr↥ » N →ₗ⁅R,L⁆ L ⊗ M)).range :=
+  ⁅I,N⁆ = ((to_module_hom R L M).comp (map_incl I N : ↥I ⊗ ↥N →ₗ⁅R,L⁆ L ⊗ M)).range :=
   by 
     rw [←coe_to_submodule_eq_iff, lie_ideal_oper_eq_linear_span, LieModuleHom.coe_submodule_range,
       LieModuleHom.coe_linear_map_comp, LinearMap.range_comp, map_incl_def, coe_linear_map_map,
       TensorProduct.map_range_eq_span_tmul, Submodule.map_span]
     congr 
     ext m 
-    split 
+    constructor
     ·
       rintro ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩
       use x ⊗ₜ n 
-      split 
+      constructor
       ·
         use ⟨x, hx⟩, ⟨n, hn⟩
         simp 

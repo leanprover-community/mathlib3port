@@ -42,7 +42,7 @@ The vertical maps in the above diagrams are also normed group homs constructed i
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Set NormedGroupHom UniformSpace
 
@@ -68,7 +68,7 @@ def NormedGroupHom.completion (f : NormedGroupHom G H) : NormedGroupHom (complet
               (continuous_const.mul continuous_norm)
         ·
           intro x 
-          change ∥f.to_add_monoid_hom.completion _ («expr↑ » x)∥ ≤ ∥f∥*∥«expr↑ » x∥
+          change ∥f.to_add_monoid_hom.completion _ (↑x)∥ ≤ ∥f∥*∥↑x∥
           rw [f.to_add_monoid_hom.completion_coe f.continuous]
           simp only [completion.norm_coe]
           exact f.le_op_norm x }
@@ -185,56 +185,66 @@ theorem NormedGroupHom.ker_le_ker_completion (f : NormedGroupHom G H) :
     change f.completion (g : completion G) = 0
     simp [NormedGroupHom.mem_ker, f.completion_coe g, g_in, completion.coe_zero]
 
--- error in Analysis.Normed.Group.HomCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem normed_group_hom.ker_completion
-{f : normed_group_hom G H}
-{C : exprℝ()}
-(h : f.surjective_on_with f.range C) : «expr = »((f.completion.ker : «expr $ »(set, completion G)), closure «expr $ »(to_compl.comp, incl f.ker).range) :=
-begin
-  rcases [expr h.exists_pos, "with", "⟨", ident C', ",", ident C'_pos, ",", ident hC', "⟩"],
-  apply [expr le_antisymm],
-  { intros [ident hatg, ident hatg_in],
-    rw [expr semi_normed_group.mem_closure_iff] [],
-    intros [ident ε, ident ε_pos],
-    have [ident hCf] [":", expr «expr ≤ »(0, «expr * »(C', «expr∥ ∥»(f)))] [":=", expr (zero_le_mul_left C'_pos).mpr (norm_nonneg f)],
-    have [ident ineq] [":", expr «expr < »(0, «expr + »(1, «expr * »(C', «expr∥ ∥»(f))))] [],
-    by linarith [] [] [],
-    set [] [ident δ] [] [":="] [expr «expr / »(ε, «expr + »(1, «expr * »(C', «expr∥ ∥»(f))))] [],
-    have [ident δ_pos] [":", expr «expr > »(δ, 0)] [],
-    from [expr div_pos ε_pos ineq],
-    obtain ["⟨", "_", ",", "⟨", ident g, ":", expr G, ",", ident rfl, "⟩", ",", ident hg, ":", expr «expr < »(«expr∥ ∥»(«expr - »(hatg, g)), δ), "⟩", ":=", expr semi_normed_group.mem_closure_iff.mp (completion.dense_inducing_coe.dense hatg) δ δ_pos],
-    obtain ["⟨", ident g', ":", expr G, ",", ident hgg', ":", expr «expr = »(f g', f g), ",", ident hfg, ":", expr «expr ≤ »(«expr∥ ∥»(g'), «expr * »(C', «expr∥ ∥»(f g))), "⟩", ":=", expr hC' (f g) (mem_range_self g)],
-    have [ident mem_ker] [":", expr «expr ∈ »(«expr - »(g, g'), f.ker)] [],
-    by rw ["[", expr f.mem_ker, ",", expr f.map_sub, ",", expr sub_eq_zero.mpr hgg'.symm, "]"] [],
-    have [] [":", expr «expr ≤ »(«expr∥ ∥»(f g), «expr * »(«expr∥ ∥»(f), «expr∥ ∥»(«expr - »(hatg, g))))] [],
-    calc
-      «expr = »(«expr∥ ∥»(f g), «expr∥ ∥»(f.completion g)) : by rw ["[", expr f.completion_coe, ",", expr completion.norm_coe, "]"] []
-      «expr = »(..., «expr∥ ∥»(«expr - »(f.completion g, 0))) : by rw ["[", expr sub_zero _, "]"] []
-      «expr = »(..., «expr∥ ∥»(«expr - »(f.completion g, f.completion hatg))) : by rw ["[", expr (f.completion.mem_ker _).mp hatg_in, "]"] []
-      «expr = »(..., «expr∥ ∥»(f.completion «expr - »(g, hatg))) : by rw ["[", expr f.completion.map_sub, "]"] []
-      «expr ≤ »(..., «expr * »(«expr∥ ∥»(f.completion), «expr∥ ∥»(«expr - »((g : completion G), hatg)))) : f.completion.le_op_norm _
-      «expr = »(..., «expr * »(«expr∥ ∥»(f), «expr∥ ∥»(«expr - »(hatg, g)))) : by rw ["[", expr norm_sub_rev, ",", expr f.norm_completion, "]"] [],
-    have [] [":", expr «expr ≤ »(«expr∥ ∥»((g' : completion G)), «expr * »(«expr * »(C', «expr∥ ∥»(f)), «expr∥ ∥»(«expr - »(hatg, g))))] [],
-    calc
-      «expr = »(«expr∥ ∥»((g' : completion G)), «expr∥ ∥»(g')) : completion.norm_coe _
-      «expr ≤ »(..., «expr * »(C', «expr∥ ∥»(f g))) : hfg
-      «expr ≤ »(..., «expr * »(«expr * »(C', «expr∥ ∥»(f)), «expr∥ ∥»(«expr - »(hatg, g)))) : by { rw [expr mul_assoc] [],
-        exact [expr (mul_le_mul_left C'_pos).mpr this] },
-    refine [expr ⟨«expr - »(g, g'), _, _⟩],
-    { norm_cast [],
-      rw [expr normed_group_hom.comp_range] [],
-      apply [expr add_subgroup.mem_map_of_mem],
-      simp [] [] ["only"] ["[", expr incl_range, ",", expr mem_ker, "]"] [] [] },
-    { calc
-        «expr = »(«expr∥ ∥»(«expr - »(hatg, «expr - »(g, g'))), «expr∥ ∥»(«expr + »(«expr - »(hatg, g), g'))) : by abel [] [] []
-        «expr ≤ »(..., «expr + »(«expr∥ ∥»(«expr - »(hatg, g)), «expr∥ ∥»((g' : completion G)))) : norm_add_le _ _
-        «expr < »(..., «expr + »(δ, «expr * »(«expr * »(C', «expr∥ ∥»(f)), «expr∥ ∥»(«expr - »(hatg, g))))) : by linarith [] [] []
-        «expr ≤ »(..., «expr + »(δ, «expr * »(«expr * »(C', «expr∥ ∥»(f)), δ))) : add_le_add_left (mul_le_mul_of_nonneg_left hg.le hCf) δ
-        «expr = »(..., «expr * »(«expr + »(1, «expr * »(C', «expr∥ ∥»(f))), δ)) : by ring []
-        «expr = »(..., ε) : mul_div_cancel' _ ineq.ne.symm } },
-  { rw ["<-", expr f.completion.is_closed_ker.closure_eq] [],
-    exact [expr closure_mono f.ker_le_ker_completion] }
-end
+theorem NormedGroupHom.ker_completion {f : NormedGroupHom G H} {C : ℝ} (h : f.surjective_on_with f.range C) :
+  (f.completion.ker : Set$ completion G) = Closure (to_compl.comp$ incl f.ker).range :=
+  by 
+    rcases h.exists_pos with ⟨C', C'_pos, hC'⟩
+    apply le_antisymmₓ
+    ·
+      intro hatg hatg_in 
+      rw [SemiNormedGroup.mem_closure_iff]
+      intro ε ε_pos 
+      have hCf : 0 ≤ C'*∥f∥ := (zero_le_mul_left C'_pos).mpr (norm_nonneg f)
+      have ineq : 0 < 1+C'*∥f∥
+      ·
+        linarith 
+      set δ := ε / 1+C'*∥f∥
+      have δ_pos : δ > 0 
+      exact div_pos ε_pos ineq 
+      obtain ⟨_, ⟨g : G, rfl⟩, hg : ∥hatg - g∥ < δ⟩ :=
+        semi_normed_group.mem_closure_iff.mp (completion.dense_inducing_coe.dense hatg) δ δ_pos 
+      obtain ⟨g' : G, hgg' : f g' = f g, hfg : ∥g'∥ ≤ C'*∥f g∥⟩ := hC' (f g) (mem_range_self g)
+      have mem_ker : g - g' ∈ f.ker
+      ·
+        rw [f.mem_ker, f.map_sub, sub_eq_zero.mpr hgg'.symm]
+      have  : ∥f g∥ ≤ ∥f∥*∥hatg - g∥
+      calc ∥f g∥ = ∥f.completion g∥ :=
+        by 
+          rw [f.completion_coe, completion.norm_coe]_ = ∥f.completion g - 0∥ :=
+        by 
+          rw [sub_zero _]_ = ∥f.completion g - f.completion hatg∥ :=
+        by 
+          rw [(f.completion.mem_ker _).mp hatg_in]_ = ∥f.completion (g - hatg)∥ :=
+        by 
+          rw [f.completion.map_sub]_ ≤ ∥f.completion∥*∥(g : completion G) - hatg∥ :=
+        f.completion.le_op_norm _ _ = ∥f∥*∥hatg - g∥ :=
+        by 
+          rw [norm_sub_rev, f.norm_completion]
+      have  : ∥(g' : completion G)∥ ≤ (C'*∥f∥)*∥hatg - g∥
+      calc ∥(g' : completion G)∥ = ∥g'∥ := completion.norm_coe _ _ ≤ C'*∥f g∥ := hfg _ ≤ (C'*∥f∥)*∥hatg - g∥ :=
+        by 
+          rw [mul_assocₓ]
+          exact (mul_le_mul_left C'_pos).mpr this 
+      refine' ⟨g - g', _, _⟩
+      ·
+        normCast 
+        rw [NormedGroupHom.comp_range]
+        apply AddSubgroup.mem_map_of_mem 
+        simp only [incl_range, mem_ker]
+      ·
+        calc ∥hatg - (g - g')∥ = ∥(hatg - g)+g'∥ :=
+          by 
+            abel _ ≤ ∥hatg - g∥+∥(g' : completion G)∥ :=
+          norm_add_le _ _ _ < δ+(C'*∥f∥)*∥hatg - g∥ :=
+          by 
+            linarith _ ≤ δ+(C'*∥f∥)*δ :=
+          add_le_add_left (mul_le_mul_of_nonneg_left hg.le hCf) δ _ = (1+C'*∥f∥)*δ :=
+          by 
+            ring _ = ε :=
+          mul_div_cancel' _ ineq.ne.symm
+    ·
+      rw [←f.completion.is_closed_ker.closure_eq]
+      exact closure_mono f.ker_le_ker_completion
 
 end Completion
 

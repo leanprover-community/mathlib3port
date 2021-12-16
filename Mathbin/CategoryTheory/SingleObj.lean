@@ -78,7 +78,7 @@ protected def star : single_obj α :=
 /-- The endomorphisms monoid of the only object in `single_obj α` is equivalent to the original
      monoid α. -/
 def to_End [Monoidₓ α] : α ≃* End (single_obj.star α) :=
-  { Equiv.refl α with map_mul' := fun x y => rfl }
+  { Equivₓ.refl α with map_mul' := fun x y => rfl }
 
 theorem to_End_def [Monoidₓ α] (x : α) : to_End α x = x :=
   rfl
@@ -93,8 +93,7 @@ although we do not characterize when the functor is full or faithful.
 def map_hom (α : Type u) (β : Type v) [Monoidₓ α] [Monoidₓ β] : (α →* β) ≃ single_obj α ⥤ single_obj β :=
   { toFun :=
       fun f =>
-        { obj := id, map := fun _ _ => «expr⇑ » f, map_id' := fun _ => f.map_one,
-          map_comp' := fun _ _ _ x y => f.map_mul y x },
+        { obj := id, map := fun _ _ => ⇑f, map_id' := fun _ => f.map_one, map_comp' := fun _ _ _ x y => f.map_mul y x },
     invFun :=
       fun f =>
         { toFun := @Functor.map _ _ _ _ f (single_obj.star α) (single_obj.star α), map_one' := f.map_id _,
@@ -186,13 +185,13 @@ instance to_Cat_full : full to_Cat :=
     witness' :=
       fun x y =>
         by 
-          apply Equiv.right_inv }
+          apply Equivₓ.right_inv }
 
 instance to_Cat_faithful : faithful to_Cat :=
   { map_injective' :=
       fun x y =>
         by 
-          apply Equiv.injective }
+          apply Equivₓ.injective }
 
 end Mon
 

@@ -32,7 +32,7 @@ https://math.fontein.de/2009/08/12/the-hasse-derivative/
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Polynomial
 
@@ -49,7 +49,7 @@ It satisfies `k! * (hasse_deriv k f) = derivative^[k] f`. -/
 def hasse_deriv (k : ℕ) : Polynomial R →ₗ[R] Polynomial R :=
   lsum fun i => monomial (i - k) ∘ₗ DistribMulAction.toLinearMap R R (i.choose k)
 
-theorem hasse_deriv_apply : hasse_deriv k f = f.sum fun i r => monomial (i - k) («expr↑ » (i.choose k)*r) :=
+theorem hasse_deriv_apply : hasse_deriv k f = f.sum fun i r => monomial (i - k) ((↑i.choose k)*r) :=
   by 
     simpa only [←nsmul_eq_mul]
 
@@ -91,8 +91,7 @@ theorem hasse_deriv_one : @hasse_deriv R _ 1 = derivative :=
   LinearMap.ext$ hasse_deriv_one'
 
 @[simp]
-theorem hasse_deriv_monomial (n : ℕ) (r : R) :
-  hasse_deriv k (monomial n r) = monomial (n - k) («expr↑ » (n.choose k)*r) :=
+theorem hasse_deriv_monomial (n : ℕ) (r : R) : hasse_deriv k (monomial n r) = monomial (n - k) ((↑n.choose k)*r) :=
   by 
     ext i 
     simp only [hasse_deriv_coeff, coeff_monomial]
@@ -125,93 +124,106 @@ theorem hasse_deriv_X (hk : 1 < k) : hasse_deriv k (X : Polynomial R) = 0 :=
     rw [←monomial_one_one_eq_X, hasse_deriv_monomial, Nat.choose_eq_zero_of_lt hk, Nat.cast_zero, zero_mul,
       monomial_zero_right]
 
--- error in Data.Polynomial.HasseDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem factorial_smul_hasse_deriv : «expr = »(«expr⇑ »(«expr • »(«expr !»(k), @hasse_deriv R _ k)), «expr ^[ ]»(@derivative R _, k)) :=
-begin
-  induction [expr k] [] ["with", ident k, ident ih] [],
-  { rw ["[", expr hasse_deriv_zero, ",", expr factorial_zero, ",", expr iterate_zero, ",", expr one_smul, ",", expr linear_map.id_coe, "]"] [] },
-  ext [] [ident f, ident n] [":", 2],
-  rw ["[", expr iterate_succ_apply', ",", "<-", expr ih, "]"] [],
-  simp [] [] ["only"] ["[", expr linear_map.smul_apply, ",", expr coeff_smul, ",", expr linear_map.map_smul_of_tower, ",", expr coeff_derivative, ",", expr hasse_deriv_coeff, ",", "<-", expr @choose_symm_add _ k, "]"] [] [],
-  simp [] [] ["only"] ["[", expr nsmul_eq_mul, ",", expr factorial_succ, ",", expr mul_assoc, ",", expr succ_eq_add_one, ",", "<-", expr add_assoc, ",", expr add_right_comm n 1 k, ",", "<-", expr cast_succ, "]"] [] [],
-  rw ["<-", expr (cast_commute «expr + »(n, 1) (f.coeff «expr + »(«expr + »(n, k), 1))).eq] [],
-  simp [] [] ["only"] ["[", "<-", expr mul_assoc, "]"] [] [],
-  norm_cast [],
-  congr' [2] [],
-  apply [expr @cast_injective exprℚ()],
-  have [ident h1] [":", expr «expr ≤ »(«expr + »(n, 1), «expr + »(«expr + »(n, k), 1))] [":=", expr succ_le_succ le_self_add],
-  have [ident h2] [":", expr «expr ≤ »(«expr + »(k, 1), «expr + »(«expr + »(n, k), 1))] [":=", expr succ_le_succ le_add_self],
-  have [ident H] [":", expr ∀ n : exprℕ(), «expr ≠ »((«expr !»(n) : exprℚ()), 0)] [],
-  { exact_mod_cast [expr factorial_ne_zero] },
-  simp [] [] ["only"] ["[", expr cast_mul, ",", expr cast_choose exprℚ(), ",", expr h1, ",", expr h2, ",", "-", ident one_div, ",", "-", ident mul_eq_zero, ",", expr succ_sub_succ_eq_sub, ",", expr add_tsub_cancel_right, ",", expr add_tsub_cancel_left, "]"] ["with", ident field_simps] [],
-  rw ["[", expr eq_div_iff_mul_eq (mul_ne_zero (H _) (H _)), ",", expr eq_comm, ",", expr div_mul_eq_mul_div, ",", expr eq_div_iff_mul_eq (mul_ne_zero (H _) (H _)), "]"] [],
-  norm_cast [],
-  simp [] [] ["only"] ["[", expr factorial_succ, ",", expr succ_eq_add_one, "]"] [] [],
-  ring []
-end
+theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasse_deriv R _ k) = @derivative R _^[k] :=
+  by 
+    induction' k with k ih
+    ·
+      rw [hasse_deriv_zero, factorial_zero, iterate_zero, one_smul, LinearMap.id_coe]
+    ext f n : 2
+    rw [iterate_succ_apply', ←ih]
+    simp only [LinearMap.smul_apply, coeff_smul, LinearMap.map_smul_of_tower, coeff_derivative, hasse_deriv_coeff,
+      ←@choose_symm_add _ k]
+    simp only [nsmul_eq_mul, factorial_succ, mul_assocₓ, succ_eq_add_one, ←add_assocₓ, add_right_commₓ n 1 k,
+      ←cast_succ]
+    rw [←(cast_commute (n+1) (f.coeff ((n+k)+1))).Eq]
+    simp only [←mul_assocₓ]
+    normCast 
+    congr 2
+    apply @cast_injective ℚ 
+    have h1 : (n+1) ≤ (n+k)+1 := succ_le_succ le_self_add 
+    have h2 : (k+1) ≤ (n+k)+1 := succ_le_succ le_add_self 
+    have H : ∀ n : ℕ, (n ! : ℚ) ≠ 0
+    ·
+      exactModCast factorial_ne_zero 
+    simp' only [cast_mul, cast_choose ℚ, h1, h2, -one_div, -mul_eq_zero, succ_sub_succ_eq_sub, add_tsub_cancel_right,
+      add_tsub_cancel_left] with field_simps 
+    rw [eq_div_iff_mul_eq (mul_ne_zero (H _) (H _)), eq_comm, div_mul_eq_mul_div,
+      eq_div_iff_mul_eq (mul_ne_zero (H _) (H _))]
+    normCast 
+    simp only [factorial_succ, succ_eq_add_one]
+    ring
 
--- error in Data.Polynomial.HasseDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem hasse_deriv_comp
-(k
- l : exprℕ()) : «expr = »((@hasse_deriv R _ k).comp (hasse_deriv l), «expr • »(«expr + »(k, l).choose k, hasse_deriv «expr + »(k, l))) :=
-begin
-  ext [] [ident i] [":", 2],
-  simp [] [] ["only"] ["[", expr linear_map.smul_apply, ",", expr comp_app, ",", expr linear_map.coe_comp, ",", expr smul_monomial, ",", expr hasse_deriv_apply, ",", expr mul_one, ",", expr monomial_eq_zero_iff, ",", expr sum_monomial_index, ",", expr mul_zero, ",", "<-", expr tsub_add_eq_tsub_tsub, ",", expr add_comm l k, "]"] [] [],
-  rw_mod_cast [expr nsmul_eq_mul] [],
-  congr' [2] [],
-  by_cases [expr hikl, ":", expr «expr < »(i, «expr + »(k, l))],
-  { rw ["[", expr choose_eq_zero_of_lt hikl, ",", expr mul_zero, "]"] [],
-    by_cases [expr hil, ":", expr «expr < »(i, l)],
-    { rw ["[", expr choose_eq_zero_of_lt hil, ",", expr mul_zero, "]"] [] },
-    { push_neg ["at", ident hil],
-      rw ["[", "<-", expr tsub_lt_iff_right hil, "]"] ["at", ident hikl],
-      rw ["[", expr choose_eq_zero_of_lt hikl, ",", expr zero_mul, "]"] [] } },
-  push_neg ["at", ident hikl],
-  apply [expr @cast_injective exprℚ()],
-  have [ident h1] [":", expr «expr ≤ »(l, i)] [":=", expr nat.le_of_add_le_right hikl],
-  have [ident h2] [":", expr «expr ≤ »(k, «expr - »(i, l))] [":=", expr le_tsub_of_add_le_right hikl],
-  have [ident h3] [":", expr «expr ≤ »(k, «expr + »(k, l))] [":=", expr le_self_add],
-  have [ident H] [":", expr ∀ n : exprℕ(), «expr ≠ »((«expr !»(n) : exprℚ()), 0)] [],
-  { exact_mod_cast [expr factorial_ne_zero] },
-  simp [] [] ["only"] ["[", expr cast_mul, ",", expr cast_choose exprℚ(), ",", expr h1, ",", expr h2, ",", expr h3, ",", expr hikl, ",", "-", ident one_div, ",", "-", ident mul_eq_zero, ",", expr succ_sub_succ_eq_sub, ",", expr add_tsub_cancel_right, ",", expr add_tsub_cancel_left, "]"] ["with", ident field_simps] [],
-  rw ["[", expr eq_div_iff_mul_eq, ",", expr eq_comm, ",", expr div_mul_eq_mul_div, ",", expr eq_div_iff_mul_eq, ",", "<-", expr tsub_add_eq_tsub_tsub, ",", expr add_comm l k, "]"] [],
-  { ring [] },
-  all_goals { apply_rules ["[", expr mul_ne_zero, ",", expr H, "]"] }
-end
+theorem hasse_deriv_comp (k l : ℕ) : (@hasse_deriv R _ k).comp (hasse_deriv l) = (k+l).choose k • hasse_deriv (k+l) :=
+  by 
+    ext i : 2
+    simp only [LinearMap.smul_apply, comp_app, LinearMap.coe_comp, smul_monomial, hasse_deriv_apply, mul_oneₓ,
+      monomial_eq_zero_iff, sum_monomial_index, mul_zero, ←tsub_add_eq_tsub_tsub, add_commₓ l k]
+    rwModCast [nsmul_eq_mul]
+    congr 2
+    byCases' hikl : i < k+l
+    ·
+      rw [choose_eq_zero_of_lt hikl, mul_zero]
+      byCases' hil : i < l
+      ·
+        rw [choose_eq_zero_of_lt hil, mul_zero]
+      ·
+        pushNeg  at hil 
+        rw [←tsub_lt_iff_right hil] at hikl 
+        rw [choose_eq_zero_of_lt hikl, zero_mul]
+    pushNeg  at hikl 
+    apply @cast_injective ℚ 
+    have h1 : l ≤ i := Nat.le_of_add_le_right hikl 
+    have h2 : k ≤ i - l := le_tsub_of_add_le_right hikl 
+    have h3 : k ≤ k+l := le_self_add 
+    have H : ∀ n : ℕ, (n ! : ℚ) ≠ 0
+    ·
+      exactModCast factorial_ne_zero 
+    simp' only [cast_mul, cast_choose ℚ, h1, h2, h3, hikl, -one_div, -mul_eq_zero, succ_sub_succ_eq_sub,
+      add_tsub_cancel_right, add_tsub_cancel_left] with field_simps 
+    rw [eq_div_iff_mul_eq, eq_comm, div_mul_eq_mul_div, eq_div_iff_mul_eq, ←tsub_add_eq_tsub_tsub, add_commₓ l k]
+    ·
+      ring 
+    all_goals 
+      applyRules [mul_ne_zero, H]
 
 section 
 
 open AddMonoidHom Finset.Nat
 
--- error in Data.Polynomial.HasseDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem hasse_deriv_mul
-(f
- g : polynomial R) : «expr = »(hasse_deriv k «expr * »(f, g), «expr∑ in , »((ij), antidiagonal k, «expr * »(hasse_deriv ij.1 f, hasse_deriv ij.2 g))) :=
-begin
-  let [ident D] [] [":=", expr λ k, (@hasse_deriv R _ k).to_add_monoid_hom],
-  let [ident Φ] [] [":=", expr @add_monoid_hom.mul (polynomial R) _],
-  show [expr «expr = »((comp_hom (D k)).comp Φ f g, «expr∑ in , »((ij : «expr × »(exprℕ(), exprℕ())), antidiagonal k, (comp_hom.comp (comp_hom Φ (D ij.1))).flip (D ij.2) f g))],
-  simp [] [] ["only"] ["[", "<-", expr finset_sum_apply, "]"] [] [],
-  congr' [2] [],
-  clear [ident f, ident g],
-  ext [] [ident m, ident r, ident n, ident s] [":", 4],
-  simp [] [] ["only"] ["[", expr finset_sum_apply, ",", expr coe_mul_left, ",", expr coe_comp, ",", expr flip_apply, ",", expr comp_app, ",", expr hasse_deriv_monomial, ",", expr linear_map.to_add_monoid_hom_coe, ",", expr comp_hom_apply_apply, ",", expr coe_mul, ",", expr monomial_mul_monomial, "]"] [] [],
-  have [ident aux] [":", expr ∀
-   x : «expr × »(exprℕ(), exprℕ()), «expr ∈ »(x, antidiagonal k) → «expr = »(monomial «expr + »(«expr - »(m, x.1), «expr - »(n, x.2)) «expr * »(«expr * »(«expr↑ »(m.choose x.1), r), «expr * »(«expr↑ »(n.choose x.2), s)), monomial «expr - »(«expr + »(m, n), k) «expr * »(«expr * »(«expr↑ »(m.choose x.1), «expr↑ »(n.choose x.2)), «expr * »(r, s)))] [],
-  { intros [ident x, ident hx],
-    rw ["[", expr finset.nat.mem_antidiagonal, "]"] ["at", ident hx],
-    subst [expr hx],
-    by_cases [expr hm, ":", expr «expr < »(m, x.1)],
-    { simp [] [] ["only"] ["[", expr nat.choose_eq_zero_of_lt hm, ",", expr nat.cast_zero, ",", expr zero_mul, ",", expr monomial_zero_right, "]"] [] [] },
-    by_cases [expr hn, ":", expr «expr < »(n, x.2)],
-    { simp [] [] ["only"] ["[", expr nat.choose_eq_zero_of_lt hn, ",", expr nat.cast_zero, ",", expr zero_mul, ",", expr mul_zero, ",", expr monomial_zero_right, "]"] [] [] },
-    push_neg ["at", ident hm, ident hn],
-    rw ["[", expr tsub_add_eq_add_tsub hm, ",", "<-", expr add_tsub_assoc_of_le hn, ",", "<-", expr tsub_add_eq_tsub_tsub, ",", expr add_comm x.2 x.1, ",", expr mul_assoc, ",", "<-", expr mul_assoc r, ",", "<-", expr (nat.cast_commute _ r).eq, ",", expr mul_assoc, ",", expr mul_assoc, "]"] [] },
-  conv_rhs [] [] { apply_congr [],
-    skip,
-    rw [expr aux _ H] },
-  rw_mod_cast ["[", "<-", expr linear_map.map_sum, ",", "<-", expr finset.sum_mul, ",", "<-", expr nat.add_choose_eq, "]"] []
-end
+theorem hasse_deriv_mul (f g : Polynomial R) :
+  hasse_deriv k (f*g) = ∑ ij in antidiagonal k, hasse_deriv ij.1 f*hasse_deriv ij.2 g :=
+  by 
+    let D := fun k => (@hasse_deriv R _ k).toAddMonoidHom 
+    let Φ := @AddMonoidHom.mul (Polynomial R) _ 
+    show
+      (comp_hom (D k)).comp Φ f g =
+        ∑ ij : ℕ × ℕ in antidiagonal k, ((comp_hom.comp ((comp_hom Φ) (D ij.1))).flip (D ij.2) f) g 
+    simp only [←finset_sum_apply]
+    congr 2
+    clear f g 
+    ext m r n s : 4
+    simp only [finset_sum_apply, coe_mul_left, coe_comp, flip_apply, comp_app, hasse_deriv_monomial,
+      LinearMap.to_add_monoid_hom_coe, comp_hom_apply_apply, coe_mul, monomial_mul_monomial]
+    have aux :
+      ∀ x : ℕ × ℕ,
+        x ∈ antidiagonal k →
+          monomial ((m - x.1)+n - x.2) (((↑m.choose x.1)*r)*(↑n.choose x.2)*s) =
+            monomial ((m+n) - k) (((↑m.choose x.1)*↑n.choose x.2)*r*s)
+    ·
+      intro x hx 
+      rw [Finset.Nat.mem_antidiagonal] at hx 
+      subst hx 
+      byCases' hm : m < x.1
+      ·
+        simp only [Nat.choose_eq_zero_of_lt hm, Nat.cast_zero, zero_mul, monomial_zero_right]
+      byCases' hn : n < x.2
+      ·
+        simp only [Nat.choose_eq_zero_of_lt hn, Nat.cast_zero, zero_mul, mul_zero, monomial_zero_right]
+      pushNeg  at hm hn 
+      rw [tsub_add_eq_add_tsub hm, ←add_tsub_assoc_of_le hn, ←tsub_add_eq_tsub_tsub, add_commₓ x.2 x.1, mul_assocₓ,
+        ←mul_assocₓ r, ←(Nat.cast_commute _ r).Eq, mul_assocₓ, mul_assocₓ]
+    convRHS => applyCongr skip rw [aux _ H]
+    rwModCast [←LinearMap.map_sum, ←Finset.sum_mul, ←Nat.add_choose_eq]
 
 end 
 

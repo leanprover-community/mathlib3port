@@ -56,7 +56,7 @@ noncomputable def equiv_small_model (C : Type u) [category.{v} C] [essentially_s
 theorem essentially_small_congr {C : Type u} [category.{v} C] {D : Type u'} [category.{v'} D] (e : C ≌ D) :
   essentially_small.{w} C ↔ essentially_small.{w} D :=
   by 
-    fsplit
+    fconstructor
     ·
       rintro ⟨S, 𝒮, ⟨f⟩⟩
       skip 
@@ -82,17 +82,17 @@ instance (C : Type u) [category.{v} C] [locally_small.{w} C] (X Y : C) : Small (
 theorem locally_small_congr {C : Type u} [category.{v} C] {D : Type u'} [category.{v'} D] (e : C ≌ D) :
   locally_small.{w} C ↔ locally_small.{w} D :=
   by 
-    fsplit
+    fconstructor
     ·
       rintro ⟨L⟩
-      fsplit 
+      fconstructor 
       intro X Y 
       specialize L (e.inverse.obj X) (e.inverse.obj Y)
       refine' (small_congr _).mpr L 
       exact equiv_of_fully_faithful e.inverse
     ·
       rintro ⟨L⟩
-      fsplit 
+      fconstructor 
       intro X Y 
       specialize L (e.functor.obj X) (e.functor.obj Y)
       refine' (small_congr _).mpr L 
@@ -179,10 +179,10 @@ and it is locally small.
 theorem essentially_small_iff (C : Type u) [category.{v} C] :
   essentially_small.{w} C ↔ Small.{w} (skeleton C) ∧ locally_small.{w} C :=
   by 
-    fsplit
+    fconstructor
     ·
       intro h 
-      fsplit
+      fconstructor
       ·
         rcases h with ⟨S, 𝒮, ⟨e⟩⟩
         skip 

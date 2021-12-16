@@ -18,13 +18,13 @@ of those in `data/equiv/basic` and other files in `group_theory/perm/*`.
 
 universe u v
 
-open Equiv Function Fintype Finset
+open Equivₓ Function Fintype Finset
 
 open_locale BigOperators
 
 variable {α : Type u} {β : Type v}
 
-namespace Equiv.Perm
+namespace Equivₓ.Perm
 
 /--
 `mod_swap i j` contains permutations up to swapping `i` and `j`.
@@ -51,25 +51,18 @@ def mod_swap [DecidableEq α] (i j : α) : Setoidₓ (perm α) :=
 instance {α : Type _} [Fintype α] [DecidableEq α] (i j : α) : DecidableRel (mod_swap i j).R :=
   fun σ τ => Or.decidable
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem perm_inv_on_of_perm_on_finset
-{s : finset α}
-{f : perm α}
-(h : ∀ x «expr ∈ » s, «expr ∈ »(f x, s))
-{y : α}
-(hy : «expr ∈ »(y, s)) : «expr ∈ »(«expr ⁻¹»(f) y, s) :=
-begin
-  have [ident h0] [":", expr ∀
-   y «expr ∈ » s, «expr∃ , »((x)
-    (hx : «expr ∈ »(x, s)), «expr = »(y, λ
-     (i)
-     (hi : «expr ∈ »(i, s)), f i x hx))] [":=", expr finset.surj_on_of_inj_on_of_card_le (λ
-    x hx, λ i hi, f i x hx) (λ a ha, h a ha) (λ a₁ a₂ ha₁ ha₂ heq, (equiv.apply_eq_iff_eq f).mp heq) rfl.ge],
-  obtain ["⟨", ident y2, ",", ident hy2, ",", ident heq, "⟩", ":=", expr h0 y hy],
-  convert [] [expr hy2] [],
-  rw [expr heq] [],
-  simp [] [] ["only"] ["[", expr inv_apply_self, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+theorem perm_inv_on_of_perm_on_finset {s : Finset α} {f : perm α} (h : ∀ x _ : x ∈ s, f x ∈ s) {y : α} (hy : y ∈ s) :
+  (f⁻¹) y ∈ s :=
+  by 
+    have h0 : ∀ y _ : y ∈ s, ∃ (x : _)(hx : x ∈ s), y = (fun i hi : i ∈ s => f i) x hx :=
+      Finset.surj_on_of_inj_on_of_card_le (fun x hx => (fun i hi => f i) x hx) (fun a ha => h a ha)
+        (fun a₁ a₂ ha₁ ha₂ heq => (Equivₓ.apply_eq_iff_eq f).mp HEq) rfl.ge 
+    obtain ⟨y2, hy2, heq⟩ := h0 y hy 
+    convert hy2 
+    rw [HEq]
+    simp only [inv_apply_self]
 
 theorem perm_inv_maps_to_of_maps_to (f : perm α) {s : Set α} [Fintype s] (h : Set.MapsTo f s s) :
   Set.MapsTo (f⁻¹ : _) s s :=
@@ -83,18 +76,11 @@ theorem perm_inv_maps_to_iff_maps_to {f : perm α} {s : Set α} [Fintype s] :
   Set.MapsTo (f⁻¹ : _) s s ↔ Set.MapsTo f s s :=
   ⟨perm_inv_maps_to_of_maps_to (f⁻¹), perm_inv_maps_to_of_maps_to f⟩
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem perm_inv_on_of_perm_on_fintype
-{f : perm α}
-{p : α → exprProp()}
-[fintype {x // p x}]
-(h : ∀ x, p x → p (f x))
-{x : α}
-(hx : p x) : p («expr ⁻¹»(f) x) :=
-begin
-  letI [] [":", expr fintype «expr↥ »(show set α, from p)] [":=", expr «expr‹ ›»(fintype {x // p x})],
-  exact [expr perm_inv_maps_to_of_maps_to f h hx]
-end
+theorem perm_inv_on_of_perm_on_fintype {f : perm α} {p : α → Prop} [Fintype { x // p x }] (h : ∀ x, p x → p (f x))
+  {x : α} (hx : p x) : p ((f⁻¹) x) :=
+  by 
+    let this' : Fintype (↥show Set α from p) := ‹Fintype { x // p x }›
+    exact perm_inv_maps_to_of_maps_to f h hx
 
 /-- If the permutation `f` maps `{x // p x}` into itself, then this returns the permutation
   on `{x // p x}` induced by `f`. Note that the `h` hypothesis is weaker than for
@@ -111,12 +97,12 @@ theorem subtype_perm_of_fintype_apply (f : perm α) {p : α → Prop} [Fintype {
 @[simp]
 theorem subtype_perm_of_fintype_one (p : α → Prop) [Fintype { x // p x }] (h : ∀ x, p x → p ((1 : perm α) x)) :
   @subtype_perm_of_fintype α 1 p _ h = 1 :=
-  Equiv.ext$ fun ⟨_, _⟩ => rfl
+  Equivₓ.ext$ fun ⟨_, _⟩ => rfl
 
-theorem perm_maps_to_inl_iff_maps_to_inr {m n : Type _} [Fintype m] [Fintype n] (σ : Equiv.Perm (Sum m n)) :
+theorem perm_maps_to_inl_iff_maps_to_inr {m n : Type _} [Fintype m] [Fintype n] (σ : Equivₓ.Perm (Sum m n)) :
   Set.MapsTo σ (Set.Range Sum.inl) (Set.Range Sum.inl) ↔ Set.MapsTo σ (Set.Range Sum.inr) (Set.Range Sum.inr) :=
   by 
-    split  <;>
+    constructor <;>
       (
         intro h 
         classical 
@@ -140,54 +126,52 @@ theorem perm_maps_to_inl_iff_maps_to_inr {m n : Type _} [Fintype m] [Fintype n] 
       rw [←hx, σ.inv_apply_self] at hy 
       exact absurd hy Sum.inr_ne_inl
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_sum_congr_hom_range_of_perm_maps_to_inl
-{m n : Type*}
-[fintype m]
-[fintype n]
-{σ : perm «expr ⊕ »(m, n)}
-(h : set.maps_to σ (set.range sum.inl) (set.range sum.inl)) : «expr ∈ »(σ, (sum_congr_hom m n).range) :=
-begin
-  classical,
-  have [ident h1] [":", expr ∀
-   x : «expr ⊕ »(m, n), «expr∃ , »((a : m), «expr = »(sum.inl a, x)) → «expr∃ , »((a : m), «expr = »(sum.inl a, σ x))] [],
-  { rintros [ident x, "⟨", ident a, ",", ident ha, "⟩"],
-    apply [expr h],
-    rw ["<-", expr ha] [],
-    exact [expr ⟨a, rfl⟩] },
-  have [ident h3] [":", expr ∀
-   x : «expr ⊕ »(m, n), «expr∃ , »((b : n), «expr = »(sum.inr b, x)) → «expr∃ , »((b : n), «expr = »(sum.inr b, σ x))] [],
-  { rintros [ident x, "⟨", ident b, ",", ident hb, "⟩"],
-    apply [expr (perm_maps_to_inl_iff_maps_to_inr σ).mp h],
-    rw ["<-", expr hb] [],
-    exact [expr ⟨b, rfl⟩] },
-  let [ident σ₁'] [] [":=", expr subtype_perm_of_fintype σ h1],
-  let [ident σ₂'] [] [":=", expr subtype_perm_of_fintype σ h3],
-  let [ident σ₁] [] [":=", expr perm_congr (equiv.of_injective (@sum.inl m n) sum.inl_injective).symm σ₁'],
-  let [ident σ₂] [] [":=", expr perm_congr (equiv.of_injective (@sum.inr m n) sum.inr_injective).symm σ₂'],
-  rw ["[", expr monoid_hom.mem_range, ",", expr prod.exists, "]"] [],
-  use ["[", expr σ₁, ",", expr σ₂, "]"],
-  rw ["[", expr perm.sum_congr_hom_apply, "]"] [],
-  ext [] [] [],
-  cases [expr x] ["with", ident a, ident b],
-  { rw ["[", expr equiv.sum_congr_apply, ",", expr sum.map_inl, ",", expr perm_congr_apply, ",", expr equiv.symm_symm, ",", expr apply_of_injective_symm (@sum.inl m n), "]"] [],
-    erw [expr subtype_perm_apply] [],
-    rw ["[", expr of_injective_apply, ",", expr subtype.coe_mk, ",", expr subtype.coe_mk, "]"] [] },
-  { rw ["[", expr equiv.sum_congr_apply, ",", expr sum.map_inr, ",", expr perm_congr_apply, ",", expr equiv.symm_symm, ",", expr apply_of_injective_symm (@sum.inr m n), "]"] [],
-    erw [expr subtype_perm_apply] [],
-    rw ["[", expr of_injective_apply, ",", expr subtype.coe_mk, ",", expr subtype.coe_mk, "]"] [] }
-end
+theorem mem_sum_congr_hom_range_of_perm_maps_to_inl {m n : Type _} [Fintype m] [Fintype n] {σ : perm (Sum m n)}
+  (h : Set.MapsTo σ (Set.Range Sum.inl) (Set.Range Sum.inl)) : σ ∈ (sum_congr_hom m n).range :=
+  by 
+    classical 
+    have h1 : ∀ x : Sum m n, (∃ a : m, Sum.inl a = x) → ∃ a : m, Sum.inl a = σ x
+    ·
+      rintro x ⟨a, ha⟩
+      apply h 
+      rw [←ha]
+      exact ⟨a, rfl⟩
+    have h3 : ∀ x : Sum m n, (∃ b : n, Sum.inr b = x) → ∃ b : n, Sum.inr b = σ x
+    ·
+      rintro x ⟨b, hb⟩
+      apply (perm_maps_to_inl_iff_maps_to_inr σ).mp h 
+      rw [←hb]
+      exact ⟨b, rfl⟩
+    let σ₁' := subtype_perm_of_fintype σ h1 
+    let σ₂' := subtype_perm_of_fintype σ h3 
+    let σ₁ := perm_congr (Equivₓ.ofInjective (@Sum.inl m n) Sum.inl_injective).symm σ₁' 
+    let σ₂ := perm_congr (Equivₓ.ofInjective (@Sum.inr m n) Sum.inr_injective).symm σ₂' 
+    rw [MonoidHom.mem_range, Prod.exists]
+    use σ₁, σ₂ 
+    rw [perm.sum_congr_hom_apply]
+    ext 
+    cases' x with a b
+    ·
+      rw [Equivₓ.sum_congr_apply, Sum.map_inl, perm_congr_apply, Equivₓ.symm_symm,
+        apply_of_injective_symm (@Sum.inl m n)]
+      erw [subtype_perm_apply]
+      rw [of_injective_apply, Subtype.coe_mk, Subtype.coe_mk]
+    ·
+      rw [Equivₓ.sum_congr_apply, Sum.map_inr, perm_congr_apply, Equivₓ.symm_symm,
+        apply_of_injective_symm (@Sum.inr m n)]
+      erw [subtype_perm_apply]
+      rw [of_injective_apply, Subtype.coe_mk, Subtype.coe_mk]
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem disjoint.order_of
-{σ τ : perm α}
-(hστ : disjoint σ τ) : «expr = »(order_of «expr * »(σ, τ), nat.lcm (order_of σ) (order_of τ)) :=
-begin
-  have [ident h] [":", expr ∀
-   n : exprℕ(), «expr ↔ »(«expr = »(«expr ^ »(«expr * »(σ, τ), n), 1), «expr ∧ »(«expr = »(«expr ^ »(σ, n), 1), «expr = »(«expr ^ »(τ, n), 1)))] [":=", expr λ
-   n, by rw ["[", expr hστ.commute.mul_pow, ",", expr disjoint.mul_eq_one_iff (hστ.pow_disjoint_pow n n), "]"] []],
-  exact [expr nat.dvd_antisymm hστ.commute.order_of_mul_dvd_lcm (nat.lcm_dvd (order_of_dvd_of_pow_eq_one ((h (order_of «expr * »(σ, τ))).mp (pow_order_of_eq_one «expr * »(σ, τ))).1) (order_of_dvd_of_pow_eq_one ((h (order_of «expr * »(σ, τ))).mp (pow_order_of_eq_one «expr * »(σ, τ))).2))]
-end
+theorem disjoint.order_of {σ τ : perm α} (hστ : Disjoint σ τ) : orderOf (σ*τ) = Nat.lcmₓ (orderOf σ) (orderOf τ) :=
+  by 
+    have h : ∀ n : ℕ, (σ*τ) ^ n = 1 ↔ σ ^ n = 1 ∧ τ ^ n = 1 :=
+      fun n =>
+        by 
+          rw [hστ.commute.mul_pow, disjoint.mul_eq_one_iff (hστ.pow_disjoint_pow n n)]
+    exact
+      Nat.dvd_antisymm hστ.commute.order_of_mul_dvd_lcm
+        (Nat.lcm_dvdₓ (order_of_dvd_of_pow_eq_one ((h (orderOf (σ*τ))).mp (pow_order_of_eq_one (σ*τ))).1)
+          (order_of_dvd_of_pow_eq_one ((h (orderOf (σ*τ))).mp (pow_order_of_eq_one (σ*τ))).2))
 
 theorem disjoint.extend_domain {α : Type _} {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p) {σ τ : perm α}
   (h : Disjoint σ τ) : Disjoint (σ.extend_domain f) (τ.extend_domain f) :=
@@ -216,6 +200,7 @@ theorem support_pow_coprime {σ : perm α} {n : ℕ} (h : Nat.Coprime n (orderOf
 
 end Fintype
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » l)
 /-- Given a list `l : list α` and a permutation `f : perm α` such that the nonfixed points of `f`
   are in `l`, recursively factors `f` as a product of transpositions. -/
 def swap_factors_aux :
@@ -223,7 +208,7 @@ def swap_factors_aux :
 | [] =>
   fun f h =>
     ⟨[],
-      Equiv.ext$
+      Equivₓ.ext$
         fun x =>
           by 
             rw [List.prod_nil]
@@ -251,6 +236,7 @@ def swap_factors_aux :
           rw [List.prod_cons, m.2.1, ←mul_assocₓ, mul_def (swap x (f x)), swap_swap, ←one_def, one_mulₓ],
         fun g hg => ((List.mem_cons_iffₓ _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » l)
 /-- `swap_factors` represents a permutation as a product of a list of transpositions.
 The representation is non unique and depends on the linear order structure.
 For types without linear order `trunc_swap_factors` can be used. -/
@@ -258,6 +244,7 @@ def swap_factors [Fintype α] [LinearOrderₓ α] (f : perm α) :
   { l : List (perm α) // l.prod = f ∧ ∀ g _ : g ∈ l, is_swap g } :=
   swap_factors_aux ((@univ α _).sort (· ≤ ·)) f fun _ _ => (mem_sort _).2 (mem_univ _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » l)
 /-- This computably represents the fact that any permutation can be represented as the product of
   a list of transpositions. -/
 def trunc_swap_factors [Fintype α] (f : perm α) :
@@ -265,25 +252,31 @@ def trunc_swap_factors [Fintype α] (f : perm α) :
   Quotientₓ.recOnSubsingleton (@univ α _).1 (fun l h => Trunc.mk (swap_factors_aux l f h))
     (show ∀ x, f x ≠ x → x ∈ (@univ α _).1 from fun _ _ => mem_univ _)
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- An induction principle for permutations. If `P` holds for the identity permutation, and
-is preserved under composition with a non-trivial swap, then `P` holds for all permutations. -/
-@[elab_as_eliminator]
-theorem swap_induction_on
-[fintype α]
-{P : perm α → exprProp()}
-(f : perm α) : P 1 → ∀ f x y, «expr ≠ »(x, y) → P f → P «expr * »(swap x y, f) → P f :=
-begin
-  cases [expr (trunc_swap_factors f).out] ["with", ident l, ident hl],
-  induction [expr l] [] ["with", ident g, ident l, ident ih] ["generalizing", ident f],
-  { simp [] [] ["only"] ["[", expr hl.left.symm, ",", expr list.prod_nil, ",", expr forall_true_iff, "]"] [] [] { contextual := tt } },
-  { assume [binders (h1 hmul_swap)],
-    rcases [expr hl.2 g (by simp [] [] [] [] [] []), "with", "⟨", ident x, ",", ident y, ",", ident hxy, "⟩"],
-    rw ["[", "<-", expr hl.1, ",", expr list.prod_cons, ",", expr hxy.2, "]"] [],
-    exact [expr hmul_swap _ _ _ hxy.1 (ih _ ⟨rfl, λ v hv, hl.2 _ (list.mem_cons_of_mem _ hv)⟩ h1 hmul_swap)] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      An induction principle for permutations. If `P` holds for the identity permutation, and
+      is preserved under composition with a non-trivial swap, then `P` holds for all permutations. -/
+    @[ elab_as_eliminator ]
+  theorem
+    swap_induction_on
+    [ Fintype α ] { P : perm α → Prop } ( f : perm α ) : P 1 → ∀ f x y , x ≠ y → P f → P swap x y * f → P f
+    :=
+      by
+        cases' trunc_swap_factors f . out with l hl
+          induction' l with g l ih generalizing f
+          ·
+            simp
+              ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+              only
+              [ hl.left.symm , List.prod_nil , forall_true_iff ]
+          ·
+            intro h1 hmul_swap
+              rcases hl . 2 g by simp with ⟨ x , y , hxy ⟩
+              rw [ ← hl . 1 , List.prod_cons , hxy . 2 ]
+              exact hmul_swap _ _ _ hxy . 1 ih _ ⟨ rfl , fun v hv => hl . 2 _ List.mem_cons_of_memₓ _ hv ⟩ h1 hmul_swap
 
-theorem closure_is_swap [Fintype α] : Subgroup.closure { σ:perm α | is_swap σ } = ⊤ :=
+theorem closure_is_swap [Fintype α] : Subgroup.closure { σ : perm α | is_swap σ } = ⊤ :=
   by 
     refine' eq_top_iff.mpr fun x hx => _ 
     obtain ⟨h1, h2⟩ := Subtype.mem (trunc_swap_factors x).out 
@@ -316,42 +309,40 @@ theorem is_conj_swap {w x y z : α} (hwx : w ≠ x) (hyz : y ≠ z) : IsConj (sw
     else ⟨swap w y*swap x z, h hyz hwz⟩)
 
 /-- set of all pairs (⟨a, b⟩ : Σ a : fin n, fin n) such that b < a -/
-def fin_pairs_lt (n : ℕ) : Finset (Σa : Finₓ n, Finₓ n) :=
+def fin_pairs_lt (n : ℕ) : Finset (Σ a : Finₓ n, Finₓ n) :=
   (univ : Finset (Finₓ n)).Sigma fun a => (range a).attachFin fun m hm => (mem_range.1 hm).trans a.2
 
-theorem mem_fin_pairs_lt {n : ℕ} {a : Σa : Finₓ n, Finₓ n} : a ∈ fin_pairs_lt n ↔ a.2 < a.1 :=
+theorem mem_fin_pairs_lt {n : ℕ} {a : Σ a : Finₓ n, Finₓ n} : a ∈ fin_pairs_lt n ↔ a.2 < a.1 :=
   by 
     simp only [fin_pairs_lt, Finₓ.lt_iff_coe_lt_coe, true_andₓ, mem_attach_fin, mem_range, mem_univ, mem_sigma]
 
 /-- `sign_aux σ` is the sign of a permutation on `fin n`, defined as the parity of the number of
   pairs `(x₁, x₂)` such that `x₂ < x₁` but `σ x₁ ≤ σ x₂` -/
 def sign_aux {n : ℕ} (a : perm (Finₓ n)) : Units ℤ :=
-  ∏x in fin_pairs_lt n, if a x.1 ≤ a x.2 then -1 else 1
+  ∏ x in fin_pairs_lt n, if a x.1 ≤ a x.2 then -1 else 1
 
 @[simp]
 theorem sign_aux_one (n : ℕ) : sign_aux (1 : perm (Finₓ n)) = 1 :=
   by 
     unfold sign_aux 
-    conv  => toRHS rw [←@Finset.prod_const_one (Units ℤ) _ (fin_pairs_lt n)]
+    conv  => rhs rw [←@Finset.prod_const_one (Units ℤ) _ (fin_pairs_lt n)]
     exact Finset.prod_congr rfl fun a ha => if_neg (mem_fin_pairs_lt.1 ha).not_le
 
 /-- `sign_bij_aux f ⟨a, b⟩` returns the pair consisting of `f a` and `f b` in decreasing order. -/
-def sign_bij_aux {n : ℕ} (f : perm (Finₓ n)) (a : Σa : Finₓ n, Finₓ n) : Σa : Finₓ n, Finₓ n :=
+def sign_bij_aux {n : ℕ} (f : perm (Finₓ n)) (a : Σ a : Finₓ n, Finₓ n) : Σ a : Finₓ n, Finₓ n :=
   if hxa : f a.2 < f a.1 then ⟨f a.1, f a.2⟩ else ⟨f a.2, f a.1⟩
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sign_bij_aux_inj
-{n : exprℕ()}
-{f : perm (fin n)} : ∀
-a
-b : «exprΣ , »((a : fin n), fin n), «expr ∈ »(a, fin_pairs_lt n) → «expr ∈ »(b, fin_pairs_lt n) → «expr = »(sign_bij_aux f a, sign_bij_aux f b) → «expr = »(a, b) :=
-λ ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ (ha hb h), begin
-  unfold [ident sign_bij_aux] ["at", ident h],
-  rw [expr mem_fin_pairs_lt] ["at", "*"],
-  have [] [":", expr «expr¬ »(«expr < »(b₁, b₂))] [":=", expr hb.le.not_lt],
-  split_ifs ["at", ident h] []; simp [] [] ["only"] ["[", "*", ",", expr (equiv.injective f).eq_iff, ",", expr eq_self_iff_true, ",", expr and_self, ",", expr heq_iff_eq, "]"] [] ["at", "*"]
-end
+theorem sign_bij_aux_inj {n : ℕ} {f : perm (Finₓ n)} :
+  ∀ a b : Σ a : Finₓ n, Finₓ n, a ∈ fin_pairs_lt n → b ∈ fin_pairs_lt n → sign_bij_aux f a = sign_bij_aux f b → a = b :=
+  fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ha hb h =>
+    by 
+      unfold sign_bij_aux  at h 
+      rw [mem_fin_pairs_lt] at *
+      have  : ¬b₁ < b₂ := hb.le.not_lt 
+      splitIfs  at h <;> simp_all only [(Equivₓ.injective f).eq_iff, eq_self_iff_true, and_selfₓ, heq_iff_eq]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » fin_pairs_lt n)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » fin_pairs_lt n)
 theorem sign_bij_aux_surj {n : ℕ} {f : perm (Finₓ n)} :
   ∀ a _ : a ∈ fin_pairs_lt n, ∃ (b : _)(_ : b ∈ fin_pairs_lt n), a = sign_bij_aux f b :=
   fun ⟨a₁, a₂⟩ ha =>
@@ -372,7 +363,7 @@ theorem sign_bij_aux_surj {n : ℕ} {f : perm (Finₓ n)} :
           rw [apply_inv_self, apply_inv_self, if_neg (mem_fin_pairs_lt.1 ha).le.not_lt]⟩
 
 theorem sign_bij_aux_mem {n : ℕ} {f : perm (Finₓ n)} :
-  ∀ a : Σa : Finₓ n, Finₓ n, a ∈ fin_pairs_lt n → sign_bij_aux f a ∈ fin_pairs_lt n :=
+  ∀ a : Σ a : Finₓ n, Finₓ n, a ∈ fin_pairs_lt n → sign_bij_aux f a ∈ fin_pairs_lt n :=
   fun ⟨a₁, a₂⟩ ha =>
     by 
       unfold sign_bij_aux 
@@ -396,58 +387,89 @@ theorem sign_aux_inv {n : ℕ} (f : perm (Finₓ n)) : sign_aux (f⁻¹) = sign_
             if_pos (mem_fin_pairs_lt.1 hab).le])
     sign_bij_aux_inj sign_bij_aux_surj
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sign_aux_mul
-{n : exprℕ()}
-(f g : perm (fin n)) : «expr = »(sign_aux «expr * »(f, g), «expr * »(sign_aux f, sign_aux g)) :=
-begin
-  rw ["<-", expr sign_aux_inv g] [],
-  unfold [ident sign_aux] [],
-  rw ["<-", expr prod_mul_distrib] [],
-  refine [expr prod_bij (λ a ha, sign_bij_aux g a) sign_bij_aux_mem _ sign_bij_aux_inj sign_bij_aux_surj],
-  rintros ["⟨", ident a, ",", ident b, "⟩", ident hab],
-  rw ["[", expr sign_bij_aux, ",", expr mul_apply, ",", expr mul_apply, "]"] [],
-  rw [expr mem_fin_pairs_lt] ["at", ident hab],
-  by_cases [expr h, ":", expr «expr < »(g b, g a)],
-  { rw [expr dif_pos h] [],
-    simp [] [] ["only"] ["[", expr not_le_of_gt hab, ",", expr mul_one, ",", expr perm.inv_apply_self, ",", expr if_false, "]"] [] [] },
-  { rw ["[", expr dif_neg h, ",", expr inv_apply_self, ",", expr inv_apply_self, ",", expr if_pos hab.le, "]"] [],
-    by_cases [expr h₁, ":", expr «expr ≤ »(f (g b), f (g a))],
-    { have [] [":", expr «expr ≠ »(f (g b), f (g a))] [],
-      { rw ["[", expr ne.def, ",", expr f.injective.eq_iff, ",", expr g.injective.eq_iff, "]"] [],
-        exact [expr ne_of_lt hab] },
-      rw ["[", expr if_pos h₁, ",", expr if_neg (h₁.lt_of_ne this).not_le, "]"] [],
-      refl },
-    { rw ["[", expr if_neg h₁, ",", expr if_pos (lt_of_not_ge h₁).le, "]"] [],
-      refl } }
-end
+theorem sign_aux_mul {n : ℕ} (f g : perm (Finₓ n)) : sign_aux (f*g) = sign_aux f*sign_aux g :=
+  by 
+    rw [←sign_aux_inv g]
+    unfold sign_aux 
+    rw [←prod_mul_distrib]
+    refine' prod_bij (fun a ha => sign_bij_aux g a) sign_bij_aux_mem _ sign_bij_aux_inj sign_bij_aux_surj 
+    rintro ⟨a, b⟩ hab 
+    rw [sign_bij_aux, mul_apply, mul_apply]
+    rw [mem_fin_pairs_lt] at hab 
+    byCases' h : g b < g a
+    ·
+      rw [dif_pos h]
+      simp only [not_le_of_gtₓ hab, mul_oneₓ, perm.inv_apply_self, if_false]
+    ·
+      rw [dif_neg h, inv_apply_self, inv_apply_self, if_pos hab.le]
+      byCases' h₁ : f (g b) ≤ f (g a)
+      ·
+        have  : f (g b) ≠ f (g a)
+        ·
+          rw [Ne.def, f.injective.eq_iff, g.injective.eq_iff]
+          exact ne_of_ltₓ hab 
+        rw [if_pos h₁, if_neg (h₁.lt_of_ne this).not_le]
+        rfl
+      ·
+        rw [if_neg h₁, if_pos (lt_of_not_geₓ h₁).le]
+        rfl
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 private
-theorem sign_aux_swap_zero_one' (n : exprℕ()) : «expr = »(sign_aux (swap (0 : fin «expr + »(n, 2)) 1), «expr- »(1)) :=
-show «expr = »(_, «expr∏ in , »((x : «exprΣ , »((a : fin «expr + »(n, 2)), fin «expr + »(n, 2))), {(⟨1, 0⟩ : «exprΣ , »((a : fin «expr + »(n, 2)), fin «expr + »(n, 2)))}, if «expr ≤ »(equiv.swap 0 1 x.1, swap 0 1 x.2) then («expr- »(1) : units exprℤ()) else 1)), begin
-  refine [expr eq.symm (prod_subset (λ
-     ⟨x₁, x₂⟩, by simp [] [] [] ["[", expr mem_fin_pairs_lt, ",", expr fin.one_pos, "]"] [] [] { contextual := tt }) (λ
-     a ha₁ ha₂, _))],
-  rcases [expr a, "with", "⟨", ident a₁, ",", ident a₂, "⟩"],
-  replace [ident ha₁] [":", expr «expr < »(a₂, a₁)] [":=", expr mem_fin_pairs_lt.1 ha₁],
-  dsimp ["only"] [] [] [],
-  rcases [expr a₁.zero_le.eq_or_lt, "with", ident rfl, "|", ident H],
-  { exact [expr absurd a₂.zero_le ha₁.not_le] },
-  rcases [expr a₂.zero_le.eq_or_lt, "with", ident rfl, "|", ident H'],
-  { simp [] [] ["only"] ["[", expr and_true, ",", expr eq_self_iff_true, ",", expr heq_iff_eq, ",", expr mem_singleton, "]"] [] ["at", ident ha₂],
-    have [] [":", expr «expr < »(1, a₁)] [":=", expr lt_of_le_of_ne (nat.succ_le_of_lt ha₁) (ne.symm ha₂)],
-    have [ident h01] [":", expr «expr = »(equiv.swap (0 : fin «expr + »(n, 2)) 1 0, 1)] [],
-    by simp [] [] [] [] [] [],
-    norm_num ["[", expr swap_apply_of_ne_of_ne (ne_of_gt H) ha₂, ",", expr this.not_le, ",", expr h01, "]"] [] },
-  { have [ident le] [":", expr «expr ≤ »(1, a₂)] [":=", expr nat.succ_le_of_lt H'],
-    have [ident lt] [":", expr «expr < »(1, a₁)] [":=", expr le.trans_lt ha₁],
-    have [ident h01] [":", expr «expr = »(equiv.swap (0 : fin «expr + »(n, 2)) 1 1, 0)] [],
-    by simp [] [] [] [] [] [],
-    rcases [expr le.eq_or_lt, "with", ident rfl, "|", ident lt'],
-    { norm_num ["[", expr swap_apply_of_ne_of_ne H.ne' lt.ne', ",", expr H.not_le, ",", expr h01, "]"] [] },
-    { norm_num ["[", expr swap_apply_of_ne_of_ne (ne_of_gt H) (ne_of_gt lt), ",", expr swap_apply_of_ne_of_ne (ne_of_gt H') (ne_of_gt lt'), ",", expr ha₁.not_le, "]"] [] } }
-end
+  theorem
+    sign_aux_swap_zero_one'
+    ( n : ℕ ) : sign_aux swap ( 0 : Finₓ n + 2 ) 1 = - 1
+    :=
+      show
+        _
+          =
+          ∏
+            x : Σ a : Finₓ n + 2 , Finₓ n + 2
+            in
+            { ( ⟨ 1 , 0 ⟩ : Σ a : Finₓ n + 2 , Finₓ n + 2 ) }
+            ,
+            if Equivₓ.swap 0 1 x . 1 ≤ swap 0 1 x . 2 then ( - 1 : Units ℤ ) else 1
+        by
+          refine'
+              Eq.symm
+                prod_subset
+                  fun
+                      ⟨ x₁ , x₂ ⟩
+                        =>
+                        by
+                          simp
+                            ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                            [ mem_fin_pairs_lt , Finₓ.one_pos ]
+                    fun a ha₁ ha₂ => _
+            rcases a with ⟨ a₁ , a₂ ⟩
+            replace ha₁ : a₂ < a₁ := mem_fin_pairs_lt . 1 ha₁
+            dsimp only
+            rcases a₁.zero_le.eq_or_lt with ( rfl | H )
+            · exact absurd a₂.zero_le ha₁.not_le
+            rcases a₂.zero_le.eq_or_lt with ( rfl | H' )
+            ·
+              simp only [ and_trueₓ , eq_self_iff_true , heq_iff_eq , mem_singleton ] at ha₂
+                have : 1 < a₁ := lt_of_le_of_neₓ Nat.succ_le_of_ltₓ ha₁ Ne.symm ha₂
+                have h01 : Equivₓ.swap ( 0 : Finₓ n + 2 ) 1 0 = 1
+                · simp
+                normNum [ swap_apply_of_ne_of_ne ne_of_gtₓ H ha₂ , this.not_le , h01 ]
+            ·
+              have le : 1 ≤ a₂ := Nat.succ_le_of_ltₓ H'
+                have lt : 1 < a₁ := le.trans_lt ha₁
+                have h01 : Equivₓ.swap ( 0 : Finₓ n + 2 ) 1 1 = 0
+                · simp
+                rcases le.eq_or_lt with ( rfl | lt' )
+                · normNum [ swap_apply_of_ne_of_ne H.ne' lt.ne' , H.not_le , h01 ]
+                ·
+                  normNum
+                    [
+                      swap_apply_of_ne_of_ne ne_of_gtₓ H ne_of_gtₓ lt
+                        ,
+                        swap_apply_of_ne_of_ne ne_of_gtₓ H' ne_of_gtₓ lt'
+                        ,
+                        ha₁.not_le
+                      ]
 
 private theorem sign_aux_swap_zero_one {n : ℕ} (hn : 2 ≤ n) :
   sign_aux
@@ -499,34 +521,39 @@ def sign_aux2 : List α → perm α → Units ℤ
 | [], f => 1
 | x :: l, f => if x = f x then sign_aux2 l f else -sign_aux2 l (swap x (f x)*f)
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sign_aux_eq_sign_aux2
-{n : exprℕ()} : ∀
-(l : list α)
-(f : perm α)
-(e : «expr ≃ »(α, fin n))
-(h : ∀ x, «expr ≠ »(f x, x) → «expr ∈ »(x, l)), «expr = »(sign_aux ((e.symm.trans f).trans e), sign_aux2 l f)
-| «expr[ , ]»([]), f, e, h := have «expr = »(f, 1), from «expr $ »(equiv.ext, λ
- y, not_not.1 (mt (h y) (list.not_mem_nil _))),
-by rw ["[", expr this, ",", expr one_def, ",", expr equiv.trans_refl, ",", expr equiv.symm_trans_self, ",", "<-", expr one_def, ",", expr sign_aux_one, ",", expr sign_aux2, "]"] []
-| [«expr :: »/«expr :: »/«expr :: »](x, l), f, e, h := begin
-  rw [expr sign_aux2] [],
-  by_cases [expr hfx, ":", expr «expr = »(x, f x)],
-  { rw [expr if_pos hfx] [],
-    exact [expr sign_aux_eq_sign_aux2 l f _ (λ
-      (y)
-      (hy : «expr ≠ »(f y, y)), list.mem_of_ne_of_mem (λ
-       h : «expr = »(y, x), by simpa [] [] [] ["[", expr h, ",", expr hfx.symm, "]"] [] ["using", expr hy]) (h y hy))] },
-  { have [ident hy] [":", expr ∀ y : α, «expr ≠ »(«expr * »(swap x (f x), f) y, y) → «expr ∈ »(y, l)] [],
-    from [expr λ y hy, have «expr ∧ »(«expr ≠ »(f y, y), «expr ≠ »(y, x)), from ne_and_ne_of_swap_mul_apply_ne_self hy,
-     list.mem_of_ne_of_mem this.2 (h _ this.1)],
-    have [] [":", expr «expr = »((e.symm.trans «expr * »(swap x (f x), f)).trans e, «expr * »(swap (e x) (e (f x)), (e.symm.trans f).trans e))] [],
-    by ext [] [] []; simp [] [] [] ["[", "<-", expr equiv.symm_trans_swap_trans, ",", expr mul_def, "]"] [] [],
-    have [ident hefx] [":", expr «expr ≠ »(e x, e (f x))] [],
-    from [expr mt e.injective.eq_iff.1 hfx],
-    rw ["[", expr if_neg hfx, ",", "<-", expr sign_aux_eq_sign_aux2 _ _ e hy, ",", expr this, ",", expr sign_aux_mul, ",", expr sign_aux_swap hefx, "]"] [],
-    simp [] [] ["only"] ["[", expr units.neg_neg, ",", expr one_mul, ",", expr units.neg_mul, "]"] [] [] }
-end
+theorem sign_aux_eq_sign_aux2 {n : ℕ} :
+  ∀ l : List α f : perm α e : α ≃ Finₓ n h : ∀ x, f x ≠ x → x ∈ l, sign_aux ((e.symm.trans f).trans e) = sign_aux2 l f
+| [], f, e, h =>
+  have  : f = 1 := Equivₓ.ext$ fun y => not_not.1 (mt (h y) (List.not_mem_nil _))
+  by 
+    rw [this, one_def, Equivₓ.trans_refl, Equivₓ.symm_trans_self, ←one_def, sign_aux_one, sign_aux2]
+| x :: l, f, e, h =>
+  by 
+    rw [sign_aux2]
+    byCases' hfx : x = f x
+    ·
+      rw [if_pos hfx]
+      exact
+        sign_aux_eq_sign_aux2 l f _
+          fun y hy : f y ≠ y =>
+            List.mem_of_ne_of_memₓ
+              (fun h : y = x =>
+                by 
+                  simpa [h, hfx.symm] using hy)
+              (h y hy)
+    ·
+      have hy : ∀ y : α, (swap x (f x)*f) y ≠ y → y ∈ l 
+      exact
+        fun y hy =>
+          have  : f y ≠ y ∧ y ≠ x := ne_and_ne_of_swap_mul_apply_ne_self hy 
+          List.mem_of_ne_of_memₓ this.2 (h _ this.1)
+      have  : (e.symm.trans (swap x (f x)*f)).trans e = swap (e x) (e (f x))*(e.symm.trans f).trans e
+      ·
+        ext <;> simp [←Equivₓ.symm_trans_swap_trans, mul_def]
+      have hefx : e x ≠ e (f x)
+      exact mt e.injective.eq_iff.1 hfx 
+      rw [if_neg hfx, ←sign_aux_eq_sign_aux2 _ _ e hy, this, sign_aux_mul, sign_aux_swap hefx]
+      simp only [Units.neg_neg, one_mulₓ, Units.neg_mul]
 
 /-- When the multiset `s : multiset α` contains all nonfixed points of the permutation `f : perm α`,
   `sign_aux2 f _` recursively calculates the sign of `f`. -/
@@ -541,36 +568,29 @@ def sign_aux3 [Fintype α] (f : perm α) {s : Multiset α} : (∀ x, x ∈ s) �
             by 
               rw [←sign_aux_eq_sign_aux2 _ _ e fun _ _ => h₁ _, ←sign_aux_eq_sign_aux2 _ _ e fun _ _ => h₂ _])
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sign_aux3_mul_and_swap
-[fintype α]
-(f g : perm α)
-(s : multiset α)
-(hs : ∀
- x, «expr ∈ »(x, s)) : «expr ∧ »(«expr = »(sign_aux3 «expr * »(f, g) hs, «expr * »(sign_aux3 f hs, sign_aux3 g hs)), ∀
- x y, «expr ≠ »(x, y) → «expr = »(sign_aux3 (swap x y) hs, «expr- »(1))) :=
-let ⟨l, hl⟩ := quotient.exists_rep s in
-let e := equiv_fin α in
-begin
-  clear [ident _let_match],
-  subst [expr hl],
-  show [expr «expr ∧ »(«expr = »(sign_aux2 l «expr * »(f, g), «expr * »(sign_aux2 l f, sign_aux2 l g)), ∀
-    x y, «expr ≠ »(x, y) → «expr = »(sign_aux2 l (swap x y), «expr- »(1)))],
-  have [ident hfg] [":", expr «expr = »((e.symm.trans «expr * »(f, g)).trans e, «expr * »((e.symm.trans f).trans e, (e.symm.trans g).trans e))] [],
-  from [expr equiv.ext (λ h, by simp [] [] [] ["[", expr mul_apply, "]"] [] [])],
-  split,
-  { rw ["[", "<-", expr sign_aux_eq_sign_aux2 _ _ e (λ
-      _
-      _, hs _), ",", "<-", expr sign_aux_eq_sign_aux2 _ _ e (λ
-      _
-      _, hs _), ",", "<-", expr sign_aux_eq_sign_aux2 _ _ e (λ
-      _ _, hs _), ",", expr hfg, ",", expr sign_aux_mul, "]"] [] },
-  { assume [binders (x y hxy)],
-    have [ident hexy] [":", expr «expr ≠ »(e x, e y)] [],
-    from [expr mt e.injective.eq_iff.1 hxy],
-    rw ["[", "<-", expr sign_aux_eq_sign_aux2 _ _ e (λ
-      _ _, hs _), ",", expr symm_trans_swap_trans, ",", expr sign_aux_swap hexy, "]"] [] }
-end
+theorem sign_aux3_mul_and_swap [Fintype α] (f g : perm α) (s : Multiset α) (hs : ∀ x, x ∈ s) :
+  (sign_aux3 (f*g) hs = sign_aux3 f hs*sign_aux3 g hs) ∧ ∀ x y, x ≠ y → sign_aux3 (swap x y) hs = -1 :=
+  let ⟨l, hl⟩ := Quotientₓ.exists_rep s 
+  let e := equiv_fin α 
+  by 
+    clear _let_match 
+    subst hl 
+    show (sign_aux2 l (f*g) = sign_aux2 l f*sign_aux2 l g) ∧ ∀ x y, x ≠ y → sign_aux2 l (swap x y) = -1
+    have hfg : (e.symm.trans (f*g)).trans e = (e.symm.trans f).trans e*(e.symm.trans g).trans e 
+    exact
+      Equivₓ.ext
+        fun h =>
+          by 
+            simp [mul_apply]
+    constructor
+    ·
+      rw [←sign_aux_eq_sign_aux2 _ _ e fun _ _ => hs _, ←sign_aux_eq_sign_aux2 _ _ e fun _ _ => hs _,
+        ←sign_aux_eq_sign_aux2 _ _ e fun _ _ => hs _, hfg, sign_aux_mul]
+    ·
+      intro x y hxy 
+      have hexy : e x ≠ e y 
+      exact mt e.injective.eq_iff.1 hxy 
+      rw [←sign_aux_eq_sign_aux2 _ _ e fun _ _ => hs _, symm_trans_swap_trans, sign_aux_swap hexy]
 
 /-- `sign` of a permutation returns the signature or parity of a permutation, `1` for even
 permutations, `-1` for odd permutations. It is the unique surjective group homomorphism from
@@ -596,7 +616,7 @@ theorem sign_one : sign (1 : perm α) = 1 :=
   MonoidHom.map_one sign
 
 @[simp]
-theorem sign_refl : sign (Equiv.refl α) = 1 :=
+theorem sign_refl : sign (Equivₓ.refl α) = 1 :=
   MonoidHom.map_one sign
 
 @[simp]
@@ -634,10 +654,10 @@ theorem sign_aux3_symm_trans_trans [DecidableEq β] [Fintype β] (f : perm α) (
           rw [←sign_aux_eq_sign_aux2 _ _ n fun _ _ => h₁ _, ←sign_aux_eq_sign_aux2 _ _ (e.trans n) fun _ _ => h₂ _]
           exact
             congr_argₓ sign_aux
-              (Equiv.ext
+              (Equivₓ.ext
                 fun x =>
                   by 
-                    simp only [Equiv.coe_trans, apply_eq_iff_eq, symm_trans_apply]))
+                    simp only [Equivₓ.coe_trans, apply_eq_iff_eq, symm_trans_apply]))
     ht hs
 
 @[simp]
@@ -650,6 +670,7 @@ theorem sign_trans_trans_symm [DecidableEq β] [Fintype β] (f : perm β) (e : �
   sign ((e.trans f).trans e.symm) = sign f :=
   sign_symm_trans_trans f e.symm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » l)
 theorem sign_prod_list_swap {l : List (perm α)} (hl : ∀ g _ : g ∈ l, is_swap g) : sign l.prod = -1 ^ l.length :=
   have h₁ : l.map sign = List.repeat (-1) l.length :=
     List.eq_repeat.2
@@ -678,6 +699,8 @@ theorem sign_surjective [Nontrivial α] : Function.Surjective (sign : perm α �
 
 variable {α}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l.map s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l.map s)
 theorem eq_sign_of_surjective_hom {s : perm α →* Units ℤ} (hs : surjective s) : s = sign :=
   have  : ∀ {f}, is_swap f → s f = -1 :=
     fun f ⟨x, y, hxy, hxy'⟩ =>
@@ -714,6 +737,7 @@ theorem eq_sign_of_surjective_hom {s : perm α →* Units ℤ} (hs : surjective 
       by 
         rw [←hl₁, ←l.prod_hom s, List.eq_repeat'.2 hsl, List.length_map, List.prod_repeat, sign_prod_list_swap hl₂]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g' «expr ∈ » l.1.map of_subtype)
 theorem sign_subtype_perm (f : perm α) {p : α → Prop} [DecidablePred p] (h₁ : ∀ x, p x ↔ p (f x))
   (h₂ : ∀ x, f x ≠ x → p x) : sign (subtype_perm f h₁) = sign f :=
   let l := (trunc_swap_factors (subtype_perm f h₁)).out 
@@ -732,12 +756,12 @@ theorem sign_subtype_perm (f : perm α) {p : α → Prop} [DecidablePred p] (h�
 theorem sign_of_subtype {p : α → Prop} [DecidablePred p] (f : perm (Subtype p)) : sign (of_subtype f) = sign f :=
   have  : ∀ x, of_subtype f x ≠ x → p x := fun x => not_imp_comm.1 (of_subtype_apply_of_not_mem f)
   by 
-    conv  => toRHS rw [←subtype_perm_of_subtype f, sign_subtype_perm _ _ this]
+    conv  => rhs rw [←subtype_perm_of_subtype f, sign_subtype_perm _ _ this]
 
 theorem sign_eq_sign_of_equiv [DecidableEq β] [Fintype β] (f : perm α) (g : perm β) (e : α ≃ β)
   (h : ∀ x, e (f x) = g (e x)) : sign f = sign g :=
   have hg : g = (e.symm.trans f).trans e :=
-    Equiv.ext$
+    Equivₓ.ext$
       by 
         simp [h]
   by 
@@ -759,7 +783,7 @@ theorem sign_bij [DecidableEq β] [Fintype β] {f : perm α} {g : perm β} (i : 
           (by 
             simp )) :=
     sign_eq_sign_of_equiv _ _
-      (Equiv.ofBijective
+      (Equivₓ.ofBijective
         (fun x : { x // f x ≠ x } =>
           (⟨i x.1 x.2,
             have  : f (f x) ≠ f x := mt (fun h => f.injective h) x.2
@@ -826,19 +850,18 @@ theorem sign_prod_extend_right (a : α) (σ : perm β) : (prod_extend_right a σ
         by 
           simp ⟩
 
--- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sign_prod_congr_right (σ : α → perm β) : «expr = »(sign (prod_congr_right σ), «expr∏ , »((k), (σ k).sign)) :=
-begin
-  obtain ["⟨", ident l, ",", ident hl, ",", ident mem_l, "⟩", ":=", expr fintype.exists_univ_list α],
-  have [ident l_to_finset] [":", expr «expr = »(l.to_finset, finset.univ)] [],
-  { apply [expr eq_top_iff.mpr],
-    intros [ident b, "_"],
-    exact [expr list.mem_to_finset.mpr (mem_l b)] },
-  rw ["[", "<-", expr prod_prod_extend_right σ hl mem_l, ",", expr sign.map_list_prod, ",", expr list.map_map, ",", "<-", expr l_to_finset, ",", expr list.prod_to_finset _ hl, "]"] [],
-  simp_rw ["<-", expr λ a, sign_prod_extend_right a (σ a)] []
-end
+theorem sign_prod_congr_right (σ : α → perm β) : sign (prod_congr_right σ) = ∏ k, (σ k).sign :=
+  by 
+    obtain ⟨l, hl, mem_l⟩ := Fintype.exists_univ_list α 
+    have l_to_finset : l.to_finset = Finset.univ
+    ·
+      apply eq_top_iff.mpr 
+      intro b _ 
+      exact list.mem_to_finset.mpr (mem_l b)
+    rw [←prod_prod_extend_right σ hl mem_l, sign.map_list_prod, List.map_mapₓ, ←l_to_finset, List.prod_to_finset _ hl]
+    simpRw [←fun a => sign_prod_extend_right a (σ a)]
 
-theorem sign_prod_congr_left (σ : α → perm β) : sign (prod_congr_left σ) = ∏k, (σ k).sign :=
+theorem sign_prod_congr_left (σ : α → perm β) : sign (prod_congr_left σ) = ∏ k, (σ k).sign :=
   by 
     refine' (sign_eq_sign_of_equiv _ _ (prod_comm β α) _).trans (sign_prod_congr_right σ)
     rintro ⟨b, α⟩
@@ -856,7 +879,7 @@ theorem sign_sum_congr (σa : perm α) (σb : perm β) : (sum_congr σa σb).sig
     suffices  : (sum_congr σa (1 : perm β)).sign = σa.sign ∧ (sum_congr (1 : perm α) σb).sign = σb.sign
     ·
       rw [←this.1, ←this.2, ←sign_mul, sum_congr_mul, one_mulₓ, mul_oneₓ]
-    split 
+    constructor
     ·
       apply σa.swap_induction_on _ fun σa' a₁ a₂ ha ih => _
       ·
@@ -880,13 +903,13 @@ theorem sign_subtype_congr {p : α → Prop} [DecidablePred p] (ep : perm { a //
 
 @[simp]
 theorem sign_extend_domain (e : perm α) {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p) :
-  Equiv.Perm.sign (e.extend_domain f) = Equiv.Perm.sign e :=
+  Equivₓ.Perm.sign (e.extend_domain f) = Equivₓ.Perm.sign e :=
   by 
-    simp [Equiv.Perm.extendDomain]
+    simp [Equivₓ.Perm.extendDomain]
 
 end congr
 
 end Sign
 
-end Equiv.Perm
+end Equivₓ.Perm
 

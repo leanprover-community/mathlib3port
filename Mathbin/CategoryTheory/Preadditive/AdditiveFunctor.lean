@@ -49,7 +49,7 @@ theorem map_add {X Y : C} {f g : X ⟶ Y} : F.map (f+g) = F.map f+F.map g :=
 def map_add_hom {X Y : C} : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y) :=
   AddMonoidHom.mk' (fun f => F.map f) fun f g => F.map_add
 
-theorem coe_map_add_hom {X Y : C} : «expr⇑ » (F.map_add_hom : (X ⟶ Y) →+ _) = @map C _ D _ F X Y :=
+theorem coe_map_add_hom {X Y : C} : ⇑(F.map_add_hom : (X ⟶ Y) →+ _) = @map C _ D _ F X Y :=
   rfl
 
 @[simp]
@@ -76,7 +76,8 @@ theorem map_zsmul {X Y : C} {f : X ⟶ Y} {r : ℤ} : F.map (r • f) = r • F.
 open_locale BigOperators
 
 @[simp]
-theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finset α) : F.map (∑a in s, f a) = ∑a in s, F.map (f a) :=
+theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finset α) :
+  F.map (∑ a in s, f a) = ∑ a in s, F.map (f a) :=
   (F.map_add_hom : (X ⟶ Y) →+ _).map_sum f s
 
 open CategoryTheory.Limits
@@ -105,7 +106,7 @@ end InducedCategory
 
 section 
 
-noncomputable theory
+noncomputable section 
 
 universe v u₁ u₂
 

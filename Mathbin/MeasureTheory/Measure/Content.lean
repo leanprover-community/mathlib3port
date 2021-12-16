@@ -46,7 +46,7 @@ We prove that, on a locally compact space, the measure `μ.measure` is regular.
 
 universe u v w
 
-noncomputable theory
+noncomputable section 
 
 open Set TopologicalSpace
 
@@ -106,18 +106,16 @@ theorem sup_le (K₁ K₂ : compacts G) : μ (K₁⊔K₂) ≤ μ K₁+μ K₂ :
 theorem lt_top (K : compacts G) : μ K < ∞ :=
   Ennreal.coe_lt_top
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem empty : «expr = »(μ «expr⊥»(), 0) :=
-begin
-  have [] [] [":=", expr μ.sup_disjoint' «expr⊥»() «expr⊥»()],
-  simpa [] [] [] ["[", expr apply_eq_coe_to_fun, "]"] [] ["using", expr this]
-end
+theorem Empty : μ ⊥ = 0 :=
+  by 
+    have  := μ.sup_disjoint' ⊥ ⊥
+    simpa [apply_eq_coe_to_fun] using this
 
 /-- Constructing the inner content of a content. From a content defined on the compact sets, we
   obtain a function defined on all open sets, by taking the supremum of the content of all compact
   subsets. -/
 def inner_content (U : opens G) : ℝ≥0∞ :=
-  ⨆(K : compacts G)(h : K.1 ⊆ U), μ K
+  ⨆ (K : compacts G)(h : K.1 ⊆ U), μ K
 
 theorem le_inner_content (K : compacts G) (U : opens G) (h2 : K.1 ⊆ U) : μ K ≤ μ.inner_content U :=
   le_supr_of_le K$ le_supr _ h2
@@ -129,90 +127,83 @@ theorem inner_content_of_is_compact {K : Set G} (h1K : IsCompact K) (h2K : IsOpe
   μ.inner_content ⟨K, h2K⟩ = μ ⟨K, h1K⟩ :=
   le_antisymmₓ (bsupr_le$ fun K' hK' => μ.mono _ ⟨K, h1K⟩ hK') (μ.le_inner_content _ _ subset.rfl)
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inner_content_empty : «expr = »(μ.inner_content «expr∅»(), 0) :=
-begin
-  refine [expr le_antisymm _ (zero_le _)],
-  rw ["<-", expr μ.empty] [],
-  refine [expr bsupr_le (λ K hK, _)],
-  have [] [":", expr «expr = »(K, «expr⊥»())] [],
-  { ext1 [] [],
-    rw ["[", expr subset_empty_iff.mp hK, ",", expr compacts.bot_val, "]"] [] },
-  rw [expr this] [],
-  refl'
-end
+theorem inner_content_empty : μ.inner_content ∅ = 0 :=
+  by 
+    refine' le_antisymmₓ _ (zero_le _)
+    rw [←μ.empty]
+    refine' bsupr_le fun K hK => _ 
+    have  : K = ⊥
+    ·
+      ext1 
+      rw [subset_empty_iff.mp hK, compacts.bot_val]
+    rw [this]
+    rfl'
 
 /-- This is "unbundled", because that it required for the API of `induced_outer_measure`. -/
 theorem inner_content_mono ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
   μ.inner_content ⟨U, hU⟩ ≤ μ.inner_content ⟨V, hV⟩ :=
   supr_le_supr$ fun K => supr_le_supr_const$ fun hK => subset.trans hK h2
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inner_content_exists_compact
-{U : opens G}
-(hU : «expr ≠ »(μ.inner_content U, «expr∞»()))
-{ε : «exprℝ≥0»()}
-(hε : «expr ≠ »(ε, 0)) : «expr∃ , »((K : compacts G), «expr ∧ »(«expr ⊆ »(K.1, U), «expr ≤ »(μ.inner_content U, «expr + »(μ K, ε)))) :=
-begin
-  have [ident h'ε] [] [":=", expr ennreal.coe_ne_zero.2 hε],
-  cases [expr le_or_lt (μ.inner_content U) ε] [],
-  { exact [expr ⟨«expr⊥»(), empty_subset _, le_add_left h⟩] },
-  have [] [] [":=", expr ennreal.sub_lt_self hU h.ne_bot h'ε],
-  conv ["at", ident this] [] { to_rhs,
-    rw [expr inner_content] },
-  simp [] [] ["only"] ["[", expr lt_supr_iff, "]"] [] ["at", ident this],
-  rcases [expr this, "with", "⟨", ident U, ",", ident h1U, ",", ident h2U, "⟩"],
-  refine [expr ⟨U, h1U, _⟩],
-  rw ["[", "<-", expr tsub_le_iff_right, "]"] [],
-  exact [expr le_of_lt h2U]
-end
+theorem inner_content_exists_compact {U : opens G} (hU : μ.inner_content U ≠ ∞) {ε :  ℝ≥0 } (hε : ε ≠ 0) :
+  ∃ K : compacts G, K.1 ⊆ U ∧ μ.inner_content U ≤ μ K+ε :=
+  by 
+    have h'ε := Ennreal.coe_ne_zero.2 hε 
+    cases le_or_ltₓ (μ.inner_content U) ε
+    ·
+      exact ⟨⊥, empty_subset _, le_add_left h⟩
+    have  := Ennreal.sub_lt_self hU h.ne_bot h'ε 
+    conv  at this => rhs rw [inner_content]
+    simp only [lt_supr_iff] at this 
+    rcases this with ⟨U, h1U, h2U⟩
+    refine' ⟨U, h1U, _⟩
+    rw [←tsub_le_iff_right]
+    exact le_of_ltₓ h2U
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner content of a supremum of opens is at most the sum of the individual inner
 contents. -/
-theorem inner_content_Sup_nat
-[t2_space G]
-(U : exprℕ() → opens G) : «expr ≤ »(μ.inner_content «expr⨆ , »((i : exprℕ()), U i), «expr∑' , »((i : exprℕ()), μ.inner_content (U i))) :=
-begin
-  have [ident h3] [":", expr ∀
-   (t : finset exprℕ())
-   (K : exprℕ() → compacts G), «expr ≤ »(μ (t.sup K), t.sum (λ i, μ (K i)))] [],
-  { intros [ident t, ident K],
-    refine [expr finset.induction_on t _ _],
-    { simp [] [] ["only"] ["[", expr μ.empty, ",", expr nonpos_iff_eq_zero, ",", expr finset.sum_empty, ",", expr finset.sup_empty, "]"] [] [] },
-    { intros [ident n, ident s, ident hn, ident ih],
-      rw ["[", expr finset.sup_insert, ",", expr finset.sum_insert hn, "]"] [],
-      exact [expr le_trans (μ.sup_le _ _) (add_le_add_left ih _)] } },
-  refine [expr bsupr_le (λ K hK, _)],
-  rcases [expr is_compact.elim_finite_subcover K.2 _ (λ i, (U i).prop) _, "with", "⟨", ident t, ",", ident ht, "⟩"],
-  swap,
-  { convert [] [expr hK] [],
-    rw ["[", expr opens.supr_def, ",", expr subtype.coe_mk, "]"] [] },
-  rcases [expr K.2.finite_compact_cover t «expr ∘ »(coe, U) (λ
-    i
-    _, (U _).prop) (by simp [] [] ["only"] ["[", expr ht, "]"] [] []), "with", "⟨", ident K', ",", ident h1K', ",", ident h2K', ",", ident h3K', "⟩"],
-  let [ident L] [":", expr exprℕ() → compacts G] [":=", expr λ n, ⟨K' n, h1K' n⟩],
-  convert [] [expr le_trans (h3 t L) _] [],
-  { ext1 [] [],
-    simp [] [] ["only"] ["[", expr h3K', ",", expr compacts.finset_sup_val, ",", expr finset.sup_eq_supr, ",", expr set.supr_eq_Union, "]"] [] [] },
-  refine [expr le_trans (finset.sum_le_sum _) (ennreal.sum_le_tsum t)],
-  intros [ident i, ident hi],
-  refine [expr le_trans _ (le_supr _ (L i))],
-  refine [expr le_trans _ (le_supr _ (h2K' i))],
-  refl'
-end
+theorem inner_content_Sup_nat [T2Space G] (U : ℕ → opens G) :
+  μ.inner_content (⨆ i : ℕ, U i) ≤ ∑' i : ℕ, μ.inner_content (U i) :=
+  by 
+    have h3 : ∀ t : Finset ℕ K : ℕ → compacts G, μ (t.sup K) ≤ t.sum fun i => μ (K i)
+    ·
+      intro t K 
+      refine' Finset.induction_on t _ _
+      ·
+        simp only [μ.empty, nonpos_iff_eq_zero, Finset.sum_empty, Finset.sup_empty]
+      ·
+        intro n s hn ih 
+        rw [Finset.sup_insert, Finset.sum_insert hn]
+        exact le_transₓ (μ.sup_le _ _) (add_le_add_left ih _)
+    refine' bsupr_le fun K hK => _ 
+    rcases IsCompact.elim_finite_subcover K.2 _ (fun i => (U i).Prop) _ with ⟨t, ht⟩
+    swap
+    ·
+      convert hK 
+      rw [opens.supr_def, Subtype.coe_mk]
+    rcases
+      K.2.finite_compact_cover t (coeₓ ∘ U) (fun i _ => (U _).Prop)
+        (by 
+          simp only [ht]) with
+      ⟨K', h1K', h2K', h3K'⟩
+    let L : ℕ → compacts G := fun n => ⟨K' n, h1K' n⟩
+    convert le_transₓ (h3 t L) _
+    ·
+      ext1 
+      simp only [h3K', compacts.finset_sup_val, Finset.sup_eq_supr, Set.supr_eq_Union]
+    refine' le_transₓ (Finset.sum_le_sum _) (Ennreal.sum_le_tsum t)
+    intro i hi 
+    refine' le_transₓ _ (le_supr _ (L i))
+    refine' le_transₓ _ (le_supr _ (h2K' i))
+    rfl'
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner content of a union of sets is at most the sum of the individual inner contents.
   This is the "unbundled" version of `inner_content_Sup_nat`.
   It required for the API of `induced_outer_measure`. -/
-theorem inner_content_Union_nat
-[t2_space G]
-{{U : exprℕ() → set G}}
-(hU : ∀
- i : exprℕ(), is_open (U i)) : «expr ≤ »(μ.inner_content ⟨«expr⋃ , »((i : exprℕ()), U i), is_open_Union hU⟩, «expr∑' , »((i : exprℕ()), μ.inner_content ⟨U i, hU i⟩)) :=
-by { have [] [] [":=", expr μ.inner_content_Sup_nat (λ i, ⟨U i, hU i⟩)],
-  rwa ["[", expr opens.supr_def, "]"] ["at", ident this] }
+theorem inner_content_Union_nat [T2Space G] ⦃U : ℕ → Set G⦄ (hU : ∀ i : ℕ, IsOpen (U i)) :
+  μ.inner_content ⟨⋃ i : ℕ, U i, is_open_Union hU⟩ ≤ ∑' i : ℕ, μ.inner_content ⟨U i, hU i⟩ :=
+  by 
+    have  := μ.inner_content_Sup_nat fun i => ⟨U i, hU i⟩
+    rwa [opens.supr_def] at this
 
 theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : compacts G⦄, μ (K.map f f.continuous) = μ K) (U : opens G) :
   μ.inner_content (opens.comap f.to_continuous_map U) = μ.inner_content U :=
@@ -221,7 +212,7 @@ theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : compacts G⦄, μ (
     intro K 
     refine' supr_congr_Prop image_subset_iff _ 
     intro hK 
-    simp only [Equiv.coe_fn_mk, Subtype.mk_eq_mk, Ennreal.coe_eq_coe, compacts.equiv]
+    simp only [Equivₓ.coe_fn_mk, Subtype.mk_eq_mk, Ennreal.coe_eq_coe, compacts.equiv]
     apply h
 
 @[toAdditive]
@@ -231,29 +222,24 @@ theorem is_mul_left_invariant_inner_content [Groupₓ G] [TopologicalGroup G]
   by 
     convert μ.inner_content_comap (Homeomorph.mulLeft g) (fun K => h g) U
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem inner_content_pos_of_is_mul_left_invariant
-[t2_space G]
-[group G]
-[topological_group G]
-(h3 : ∀ (g : G) {K : compacts G}, «expr = »(μ «expr $ »(K.map _, continuous_mul_left g), μ K))
-(K : compacts G)
-(hK : «expr ≠ »(μ K, 0))
-(U : opens G)
-(hU : (U : set G).nonempty) : «expr < »(0, μ.inner_content U) :=
-begin
-  have [] [":", expr (interior (U : set G)).nonempty] [],
-  rwa ["[", expr U.prop.interior_eq, "]"] [],
-  rcases [expr compact_covered_by_mul_left_translates K.2 this, "with", "⟨", ident s, ",", ident hs, "⟩"],
-  suffices [] [":", expr «expr ≤ »(μ K, «expr * »(s.card, μ.inner_content U))],
-  { exact [expr «expr $ »(ennreal.mul_pos_iff.mp, hK.bot_lt.trans_le this).2] },
-  have [] [":", expr «expr ⊆ »(K.1, «expr↑ »(«expr⨆ , »((g «expr ∈ » s), opens.comap (homeomorph.mul_left g).to_continuous_map U)))] [],
-  { simpa [] [] ["only"] ["[", expr opens.supr_def, ",", expr opens.coe_comap, ",", expr subtype.coe_mk, "]"] [] [] },
-  refine [expr (μ.le_inner_content _ _ this).trans _],
-  refine [expr (rel_supr_sum μ.inner_content μ.inner_content_empty ((«expr ≤ »)) μ.inner_content_Sup_nat _ _).trans _],
-  simp [] [] ["only"] ["[", expr μ.is_mul_left_invariant_inner_content h3, ",", expr finset.sum_const, ",", expr nsmul_eq_mul, ",", expr le_refl, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » s)
+@[toAdditive]
+theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Groupₓ G] [TopologicalGroup G]
+  (h3 : ∀ g : G {K : compacts G}, μ (K.map _$ continuous_mul_left g) = μ K) (K : compacts G) (hK : μ K ≠ 0)
+  (U : opens G) (hU : (U : Set G).Nonempty) : 0 < μ.inner_content U :=
+  by 
+    have  : (Interior (U : Set G)).Nonempty 
+    rwa [U.prop.interior_eq]
+    rcases compact_covered_by_mul_left_translates K.2 this with ⟨s, hs⟩
+    suffices  : μ K ≤ s.card*μ.inner_content U
+    ·
+      exact (ennreal.mul_pos_iff.mp$ hK.bot_lt.trans_le this).2
+    have  : K.1 ⊆ ↑⨆ (g : _)(_ : g ∈ s), opens.comap (Homeomorph.mulLeft g).toContinuousMap U
+    ·
+      simpa only [opens.supr_def, opens.coe_comap, Subtype.coe_mk]
+    refine' (μ.le_inner_content _ _ this).trans _ 
+    refine' (rel_supr_sum μ.inner_content μ.inner_content_empty (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _ 
+    simp only [μ.is_mul_left_invariant_inner_content h3, Finset.sum_const, nsmul_eq_mul, le_reflₓ]
 
 theorem inner_content_mono' ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
   μ.inner_content ⟨U, hU⟩ ≤ μ.inner_content ⟨V, hV⟩ :=
@@ -285,7 +271,7 @@ theorem le_outer_measure_compacts (K : compacts G) : μ K ≤ μ.outer_measure K
       exact μ.inner_content_mono
 
 theorem outer_measure_eq_infi (A : Set G) :
-  μ.outer_measure A = ⨅(U : Set G)(hU : IsOpen U)(h : A ⊆ U), μ.inner_content ⟨U, hU⟩ :=
+  μ.outer_measure A = ⨅ (U : Set G)(hU : IsOpen U)(h : A ⊆ U), μ.inner_content ⟨U, hU⟩ :=
   induced_outer_measure_eq_infi _ μ.inner_content_Union_nat μ.inner_content_mono A
 
 theorem outer_measure_interior_compacts (K : compacts G) : μ.outer_measure (Interior K.1) ≤ μ K :=
@@ -353,39 +339,38 @@ variable [S : MeasurableSpace G] [BorelSpace G]
 
 include S
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For the outer measure coming from a content, all Borel sets are measurable. -/
-theorem borel_le_caratheodory : «expr ≤ »(S, μ.outer_measure.caratheodory) :=
-begin
-  rw ["[", expr @borel_space.measurable_eq G _ _, "]"] [],
-  refine [expr measurable_space.generate_from_le _],
-  intros [ident U, ident hU],
-  rw [expr μ.outer_measure_caratheodory] [],
-  intro [ident U'],
-  rw [expr μ.outer_measure_of_is_open «expr ∩ »((U' : set G), U) (is_open.inter U'.prop hU)] [],
-  simp [] [] ["only"] ["[", expr inner_content, ",", expr supr_subtype', "]"] [] [],
-  rw ["[", expr opens.coe_mk, "]"] [],
-  haveI [] [":", expr nonempty {L : compacts G // «expr ⊆ »(L.1, «expr ∩ »(U', U))}] [":=", expr ⟨⟨«expr⊥»(), empty_subset _⟩⟩],
-  rw ["[", expr ennreal.supr_add, "]"] [],
-  refine [expr supr_le _],
-  rintro ["⟨", ident L, ",", ident hL, "⟩"],
-  simp [] [] ["only"] ["[", expr subset_inter_iff, "]"] [] ["at", ident hL],
-  have [] [":", expr «expr ⊆ »(«expr \ »(«expr↑ »(U'), U), «expr \ »(U', L.1))] [":=", expr diff_subset_diff_right hL.2],
-  refine [expr le_trans (add_le_add_left (μ.outer_measure.mono' this) _) _],
-  rw [expr μ.outer_measure_of_is_open «expr \ »(«expr↑ »(U'), L.1) (is_open.sdiff U'.2 L.2.is_closed)] [],
-  simp [] [] ["only"] ["[", expr inner_content, ",", expr supr_subtype', "]"] [] [],
-  rw ["[", expr opens.coe_mk, "]"] [],
-  haveI [] [":", expr nonempty {M : compacts G // «expr ⊆ »(M.1, «expr \ »(«expr↑ »(U'), L.1))}] [":=", expr ⟨⟨«expr⊥»(), empty_subset _⟩⟩],
-  rw ["[", expr ennreal.add_supr, "]"] [],
-  refine [expr supr_le _],
-  rintro ["⟨", ident M, ",", ident hM, "⟩"],
-  simp [] [] ["only"] ["[", expr subset_diff, "]"] [] ["at", ident hM],
-  have [] [":", expr «expr ⊆ »(«expr ⊔ »(L, M).1, U')] [],
-  { simp [] [] ["only"] ["[", expr union_subset_iff, ",", expr compacts.sup_val, ",", expr hM, ",", expr hL, ",", expr and_self, "]"] [] [] },
-  rw [expr μ.outer_measure_of_is_open «expr↑ »(U') U'.2] [],
-  refine [expr le_trans (ge_of_eq _) (μ.le_inner_content _ _ this)],
-  exact [expr μ.sup_disjoint _ _ hM.2.symm]
-end
+theorem borel_le_caratheodory : S ≤ μ.outer_measure.caratheodory :=
+  by 
+    rw [@BorelSpace.measurable_eq G _ _]
+    refine' MeasurableSpace.generate_from_le _ 
+    intro U hU 
+    rw [μ.outer_measure_caratheodory]
+    intro U' 
+    rw [μ.outer_measure_of_is_open ((U' : Set G) ∩ U) (IsOpen.inter U'.prop hU)]
+    simp only [inner_content, supr_subtype']
+    rw [opens.coe_mk]
+    have  : Nonempty { L : compacts G // L.1 ⊆ U' ∩ U } := ⟨⟨⊥, empty_subset _⟩⟩
+    rw [Ennreal.supr_add]
+    refine' supr_le _ 
+    rintro ⟨L, hL⟩
+    simp only [subset_inter_iff] at hL 
+    have  : ↑U' \ U ⊆ U' \ L.1 := diff_subset_diff_right hL.2
+    refine' le_transₓ (add_le_add_left (μ.outer_measure.mono' this) _) _ 
+    rw [μ.outer_measure_of_is_open (↑U' \ L.1) (IsOpen.sdiff U'.2 L.2.IsClosed)]
+    simp only [inner_content, supr_subtype']
+    rw [opens.coe_mk]
+    have  : Nonempty { M : compacts G // M.1 ⊆ ↑U' \ L.1 } := ⟨⟨⊥, empty_subset _⟩⟩
+    rw [Ennreal.add_supr]
+    refine' supr_le _ 
+    rintro ⟨M, hM⟩
+    simp only [subset_diff] at hM 
+    have  : (L⊔M).1 ⊆ U'
+    ·
+      simp only [union_subset_iff, compacts.sup_val, hM, hL, and_selfₓ]
+    rw [μ.outer_measure_of_is_open (↑U') U'.2]
+    refine' le_transₓ (ge_of_eq _) (μ.le_inner_content _ _ this)
+    exact μ.sup_disjoint _ _ hM.2.symm
 
 /-- The measure induced by the outer measure coming from a content, on the Borel sigma-algebra. -/
 protected def Measureₓ : Measureₓ G :=
@@ -394,28 +379,29 @@ protected def Measureₓ : Measureₓ G :=
 theorem measure_apply {s : Set G} (hs : MeasurableSet s) : μ.measure s = μ.outer_measure s :=
   to_measure_apply _ _ hs
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a locally compact space, any measure constructed from a content is regular. -/
-instance regular [locally_compact_space G] : μ.measure.regular :=
-begin
-  haveI [] [":", expr μ.measure.outer_regular] [],
-  { refine [expr ⟨λ (A hA r) (hr : «expr < »(_, _)), _⟩],
-    rw ["[", expr μ.measure_apply hA, ",", expr outer_measure_eq_infi, "]"] ["at", ident hr],
-    simp [] [] ["only"] ["[", expr infi_lt_iff, "]"] [] ["at", ident hr],
-    rcases [expr hr, "with", "⟨", ident U, ",", ident hUo, ",", ident hAU, ",", ident hr, "⟩"],
-    rw ["[", "<-", expr μ.outer_measure_of_is_open U hUo, ",", "<-", expr μ.measure_apply hUo.measurable_set, "]"] ["at", ident hr],
-    exact [expr ⟨U, hAU, hUo, hr⟩] },
-  split,
-  { intros [ident K, ident hK],
-    rw ["[", expr measure_apply _ hK.measurable_set, "]"] [],
-    exact [expr μ.outer_measure_lt_top_of_is_compact hK] },
-  { intros [ident U, ident hU, ident r, ident hr],
-    rw ["[", expr measure_apply _ hU.measurable_set, ",", expr μ.outer_measure_of_is_open U hU, "]"] ["at", ident hr],
-    simp [] [] ["only"] ["[", expr inner_content, ",", expr lt_supr_iff, "]"] [] ["at", ident hr],
-    rcases [expr hr, "with", "⟨", ident K, ",", ident hKU, ",", ident hr, "⟩"],
-    refine [expr ⟨K.1, hKU, K.2, hr.trans_le _⟩],
-    exact [expr (μ.le_outer_measure_compacts K).trans (le_to_measure_apply _ _ _)] }
-end
+instance regular [LocallyCompactSpace G] : μ.measure.regular :=
+  by 
+    have  : μ.measure.outer_regular
+    ·
+      refine' ⟨fun A hA r hr : _ < _ => _⟩
+      rw [μ.measure_apply hA, outer_measure_eq_infi] at hr 
+      simp only [infi_lt_iff] at hr 
+      rcases hr with ⟨U, hUo, hAU, hr⟩
+      rw [←μ.outer_measure_of_is_open U hUo, ←μ.measure_apply hUo.measurable_set] at hr 
+      exact ⟨U, hAU, hUo, hr⟩
+    constructor
+    ·
+      intro K hK 
+      rw [measure_apply _ hK.measurable_set]
+      exact μ.outer_measure_lt_top_of_is_compact hK
+    ·
+      intro U hU r hr 
+      rw [measure_apply _ hU.measurable_set, μ.outer_measure_of_is_open U hU] at hr 
+      simp only [inner_content, lt_supr_iff] at hr 
+      rcases hr with ⟨K, hKU, hr⟩
+      refine' ⟨K.1, hKU, K.2, hr.trans_le _⟩
+      exact (μ.le_outer_measure_compacts K).trans (le_to_measure_apply _ _ _)
 
 end Content
 

@@ -28,7 +28,7 @@ naturality lemmas relating the two fork diagrams to each other.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u v w
 
@@ -46,11 +46,11 @@ variable {X : Top.{v}} (F : presheaf C X)
 Given a presieve `R` on `U`, we obtain a covering family of open sets in `X`, by taking as index
 type the type of dependent pairs `(V, f)`, where `f : V ⟶ U` is in `R`.
 -/
-def covering_of_presieve (U : opens X) (R : presieve U) : (ΣV, { f : V ⟶ U // R f }) → opens X :=
+def covering_of_presieve (U : opens X) (R : presieve U) : (Σ V, { f : V ⟶ U // R f }) → opens X :=
   fun f => f.1
 
 @[simp]
-theorem covering_of_presieve_apply (U : opens X) (R : presieve U) (f : ΣV, { f : V ⟶ U // R f }) :
+theorem covering_of_presieve_apply (U : opens X) (R : presieve U) (f : Σ V, { f : V ⟶ U // R f }) :
   covering_of_presieve U R f = f.1 :=
   rfl
 
@@ -102,7 +102,7 @@ def first_obj_iso_pi_opens : presheaf.first_obj R F ≅ pi_opens F (covering_of_
 The isomorphism `first_obj_iso_pi_opens` is compatible with canonical projections out of the
 product.
 -/
-theorem first_obj_iso_pi_opens_π (f : ΣV, { f : V ⟶ U // R f }) :
+theorem first_obj_iso_pi_opens_π (f : Σ V, { f : V ⟶ U // R f }) :
   (first_obj_iso_pi_opens F U R).hom ≫ pi.π _ f = pi.π _ f :=
   category.id_comp _
 
@@ -118,7 +118,7 @@ The isomorphism `second_obj_iso_pi_inters` is compatible with canonical projecti
 product. Here, we have to insert an `eq_to_hom` arrow to pass from
 `F.obj (op (pullback f.2.1 g.2.1))` to `F.obj (op (f.1 ⊓ g.1))`.
 -/
-theorem second_obj_iso_pi_inters_π (f g : ΣV, { f : V ⟶ U // R f }) :
+theorem second_obj_iso_pi_inters_π (f g : Σ V, { f : V ⟶ U // R f }) :
   (second_obj_iso_pi_inters F U R).hom ≫ pi.π _ (f, g) =
     pi.π _ (f, g) ≫ F.map (eq_to_hom (complete_lattice.pullback_eq_inf f.2.1 g.2.1).symm).op :=
   by 
@@ -279,17 +279,17 @@ theorem mem_grothendieck_topology : sieve.generate (presieve_of_covering U) ∈ 
 An index `i : ι` can be turned into a dependent pair `(V, f)`, where `V` is an open set and
 `f : V ⟶ supr U` is a member of `presieve_of_covering U f`.
 -/
-def hom_of_index (i : ι) : ΣV, { f : V ⟶ supr U // presieve_of_covering U f } :=
+def hom_of_index (i : ι) : Σ V, { f : V ⟶ supr U // presieve_of_covering U f } :=
   ⟨U i, opens.le_supr U i, i, rfl⟩
 
 /--
 By using the axiom of choice, a dependent pair `(V, f)` where `f : V ⟶ supr U` is a member of
 `presieve_of_covering U f` can be turned into an index `i : ι`, such that `V = U i`.
 -/
-def index_of_hom (f : ΣV, { f : V ⟶ supr U // presieve_of_covering U f }) : ι :=
+def index_of_hom (f : Σ V, { f : V ⟶ supr U // presieve_of_covering U f }) : ι :=
   f.2.2.some
 
-theorem index_of_hom_spec (f : ΣV, { f : V ⟶ supr U // presieve_of_covering U f }) : f.1 = U (index_of_hom U f) :=
+theorem index_of_hom_spec (f : Σ V, { f : V ⟶ supr U // presieve_of_covering U f }) : f.1 = U (index_of_hom U f) :=
   f.2.2.some_spec
 
 /--
@@ -308,39 +308,42 @@ duplicate factors, i.e. `U : ι → opens X` may not be injective.
 def pi_opens_to_first_obj : pi_opens F U ⟶ presheaf.first_obj.{v, v, u} (presieve_of_covering U) F :=
   pi.lift fun f => pi.π _ (index_of_hom U f) ≫ F.map (eq_to_hom (index_of_hom_spec U f)).op
 
--- error in Topology.Sheaves.SheafCondition.Sites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Even though `first_obj_to_pi_opens` and `pi_opens_to_first_obj` are not inverse to each other,
 applying them both after a fork map `s.ι` does nothing. The intuition here is that a compatible
 family `s : Π i : ι, F.obj (op (U i))` does not care about duplicate open sets:
-If `U i = U j` the the compatible family coincides on the intersection `U i ⊓ U j = U i = U j`,
+If `U i = U j` the compatible family coincides on the intersection `U i ⊓ U j = U i = U j`,
 hence `s i = s j` (module an `eq_to_hom` arrow).
 -/
-theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq
-(s : limits.fork (left_res F U) (right_res F U)) : «expr = »(«expr ≫ »(s.ι, «expr ≫ »(pi_opens_to_first_obj F U, first_obj_to_pi_opens F U)), s.ι) :=
-begin
-  ext [] [ident j] [],
-  dunfold [ident first_obj_to_pi_opens, ident pi_opens_to_first_obj] [],
-  rw ["[", expr category.assoc, ",", expr category.assoc, ",", expr limit.lift_π, ",", expr fan.mk_π_app, ",", expr limit.lift_π, ",", expr fan.mk_π_app, "]"] [],
-  have [ident i_eq] [":", expr «expr ⟶ »(U j, «expr ⊓ »(U j, U (index_of_hom U (hom_of_index U j))))] [],
-  { apply [expr eq_to_hom],
-    rw ["<-", expr index_of_hom_spec U] [],
-    exact [expr inf_idem.symm] },
-  have [] [] [":=", expr congr_arg (λ
-    f, «expr ≫ »(f, «expr ≫ »(pi.π (λ
-       p : «expr × »(ι, ι), F.obj (op «expr ⊓ »(U p.1, U p.2))) (j, index_of_hom U (hom_of_index U j)), F.map i_eq.op))) s.condition],
-  dsimp [] [] [] ["at", ident this],
-  rw ["[", expr category.assoc, ",", expr category.assoc, "]"] ["at", ident this],
-  symmetry,
-  convert [] [expr this] ["using", 2],
-  { dunfold [ident left_res] [],
-    rw ["[", expr limit.lift_π_assoc, ",", expr fan.mk_π_app, ",", expr category.assoc, ",", "<-", expr F.map_comp, "]"] [],
-    erw [expr F.map_id] [],
-    rw [expr category.comp_id] [] },
-  { dunfold [ident right_res] [],
-    rw ["[", expr limit.lift_π_assoc, ",", expr fan.mk_π_app, ",", expr category.assoc, ",", "<-", expr F.map_comp, "]"] [],
-    congr }
-end
+theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : limits.fork (left_res F U) (right_res F U)) :
+  s.ι ≫ pi_opens_to_first_obj F U ≫ first_obj_to_pi_opens F U = s.ι :=
+  by 
+    ext j 
+    dunfold first_obj_to_pi_opens pi_opens_to_first_obj 
+    rw [category.assoc, category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
+    have i_eq : U j ⟶ U j⊓U (index_of_hom U (hom_of_index U j))
+    ·
+      apply eq_to_hom 
+      rw [←index_of_hom_spec U]
+      exact inf_idem.symm 
+    have  :=
+      congr_argₓ
+        (fun f =>
+          f ≫ pi.π (fun p : ι × ι => F.obj (op (U p.1⊓U p.2))) (j, index_of_hom U (hom_of_index U j)) ≫ F.map i_eq.op)
+        s.condition 
+    dsimp  at this 
+    rw [category.assoc, category.assoc] at this 
+    symm 
+    convert this using 2
+    ·
+      dunfold left_res 
+      rw [limit.lift_π_assoc, fan.mk_π_app, category.assoc, ←F.map_comp]
+      erw [F.map_id]
+      rw [category.comp_id]
+    ·
+      dunfold right_res 
+      rw [limit.lift_π_assoc, fan.mk_π_app, category.assoc, ←F.map_comp]
+      congr
 
 /--
 The canonical morphism from the second object of the spaces diagram to the second object of the
@@ -446,10 +449,9 @@ def Sheaf_spaces_equiv_sheaf_sites : Sheaf (Opens.grothendieckTopology X) C ≌ 
     refine' equivalence.mk (Sheaf_sites_to_sheaf_spaces C X) (Sheaf_spaces_to_sheaf_sites C X) _ _ 
     all_goals 
       refine' nat_iso.of_components (fun F => eq_to_iso (Subtype.ext rfl)) fun F G f => _ 
-      ext U 
-      dsimp 
-      erw [nat_trans.comp_app, nat_trans.comp_app, eq_to_hom_refl G.1 rfl, eq_to_hom_refl F.1 rfl, nat_trans.id_app G.1,
-        category.comp_id, nat_trans.id_app F.1, category.id_comp]
+      ext 
+      dsimp [eq_to_hom]
+      simp 
 
 /-- The two forgetful functors are isomorphic via `Sheaf_spaces_equiv_sheaf_sites`. -/
 def Sheaf_spaces_equiv_sheaf_sites_functor_forget :
@@ -481,12 +483,12 @@ theorem cover_dense_iff_is_basis [category ι] (B : ι ⥤ opens X) :
   cover_dense (Opens.grothendieckTopology X) B ↔ opens.is_basis (Set.Range B.obj) :=
   by 
     rw [opens.is_basis_iff_nbhd]
-    split 
+    constructor 
     intro hd U x hx 
     rcases hd.1 U x hx with ⟨V, f, ⟨i, f₁, f₂, hc⟩, hV⟩
     exact ⟨B.obj i, ⟨i, rfl⟩, f₁.le hV, f₂.le⟩
     intro hb 
-    split 
+    constructor 
     intro U x hx 
     rcases hb hx with ⟨_, ⟨i, rfl⟩, hx, hi⟩
     exact ⟨B.obj i, ⟨⟨hi⟩⟩, ⟨⟨i, 𝟙 _, ⟨⟨hi⟩⟩, rfl⟩⟩, hx⟩
@@ -506,6 +508,17 @@ variable {C : Type u} [category.{v} C] [limits.has_products C]
 variable {X : Top.{v}} {ι : Type _} {B : ι → opens X}
 
 variable (F : presheaf C X) (F' : sheaf C X) (h : opens.is_basis (Set.Range B))
+
+/-- The empty component of a sheaf is terminal -/
+def is_terminal_of_empty (F : sheaf C X) : limits.is_terminal (F.val.obj (op ∅)) :=
+  ((presheaf.Sheaf_spaces_to_sheaf_sites C X).obj F).isTerminalOfBotCover ∅
+    (by 
+      tidy)
+
+/-- A variant of `is_terminal_of_empty` that is easier to `apply`. -/
+def is_terminal_of_eq_empty (F : X.sheaf C) {U : opens X} (h : U = ∅) : limits.is_terminal (F.val.obj (op U)) :=
+  by 
+    convert F.is_terminal_of_empty
 
 /-- If a family `B` of open sets forms a basis of the topology on `X`, and if `F'`
     is a sheaf on `X`, then a homomorphism between a presheaf `F` on `X` and `F'`

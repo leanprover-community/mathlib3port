@@ -69,7 +69,7 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
     let a_vars ← return$ Prod.fst <$> args 
     let p ← head_beta (app_of_list f a_vars)
     let p_data ← return$ mark_occurences (app R p) params 
-    let p_vars ← return$ List.map Prod.fst (p_data.filter fun x => «expr↑ » x.2)
+    let p_vars ← return$ List.map Prod.fst (p_data.filter fun x => ↑x.2)
     let u ← return$ collect_univ_params (app R p) ∩ u' 
     let pat ← mk_pattern (level.param <$> u) (p_vars ++ a_vars) (app R p) (level.param <$> u) (p_vars ++ a_vars)
     return$ rule_data.mk pr (u'.remove_all u) p_data u args pat g

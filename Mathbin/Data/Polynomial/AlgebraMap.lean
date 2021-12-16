@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Algebra.Tower 
+import Mathbin.RingTheory.Adjoin.Basic 
 import Mathbin.Data.Polynomial.Eval
 
 /-!
@@ -9,7 +9,7 @@ We promote `eval₂` to an algebra hom in `aeval`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Finset
 
@@ -149,12 +149,18 @@ def aeval : Polynomial R →ₐ[R] A :=
 
 variable {R A}
 
+@[simp]
+theorem adjoin_X : Algebra.adjoin R ({X} : Set (Polynomial R)) = ⊤ :=
+  by 
+    refine' top_unique fun p hp => _ 
+    set S := Algebra.adjoin R ({X} : Set (Polynomial R))
+    rw [←sum_monomial_eq p]
+    simp only [monomial_eq_smul_X, Sum]
+    exact S.sum_mem fun n hn => S.smul_mem (S.pow_mem (Algebra.subset_adjoin rfl) _) _
+
 @[ext]
 theorem alg_hom_ext {f g : Polynomial R →ₐ[R] A} (h : f X = g X) : f = g :=
-  by 
-    ext p 
-    rw [←sum_monomial_eq p]
-    simp [Sum, f.map_sum, g.map_sum, monomial_eq_smul_X, h]
+  AlgHom.ext_of_adjoin_eq_top adjoin_X$ fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
 
 theorem aeval_def (p : Polynomial R) : aeval x p = eval₂ (algebraMap R A) x p :=
   rfl
@@ -211,26 +217,18 @@ theorem aeval_map {A : Type _} [CommSemiringₓ A] [Algebra R A] [Algebra A B] [
   by 
     rw [aeval_def, eval₂_map, ←IsScalarTower.algebra_map_eq, ←aeval_def]
 
+theorem aeval_alg_hom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x) :=
+  alg_hom_ext$
+    by 
+      simp only [aeval_X, AlgHom.comp_apply]
+
+@[simp]
+theorem aeval_X_left : aeval (X : Polynomial R) = AlgHom.id R (Polynomial R) :=
+  alg_hom_ext$ aeval_X X
+
 theorem eval_unique (φ : Polynomial R →ₐ[R] A) p : φ p = eval₂ (algebraMap R A) (φ X) p :=
   by 
-    apply Polynomial.induction_on p
-    ·
-      intro r 
-      rw [eval₂_C]
-      exact φ.commutes r
-    ·
-      intro f g ih1 ih2 
-      rw [φ.map_add, ih1, ih2, eval₂_add]
-    ·
-      intro n r ih 
-      rw [pow_succ'ₓ, ←mul_assocₓ, φ.map_mul, eval₂_mul_noncomm (algebraMap R A) _ fun k => Algebra.commutes _ _,
-        eval₂_X, ih]
-
-theorem aeval_alg_hom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x) :=
-  AlgHom.ext$
-    fun p =>
-      by 
-        rw [eval_unique (f.comp (aeval x)), AlgHom.comp_apply, aeval_X, aeval_def]
+    rw [←aeval_def, aeval_alg_hom, aeval_X_left, AlgHom.comp_id]
 
 theorem aeval_alg_hom_apply (f : A →ₐ[R] B) (x : A) (p : Polynomial R) : aeval (f x) p = f (aeval x p) :=
   AlgHom.ext_iff.1 (aeval_alg_hom f x) p
@@ -265,21 +263,38 @@ theorem coeff_zero_eq_aeval_zero' (p : Polynomial R) : algebraMap R A (p.coeff 0
   by 
     simp [aeval_def]
 
+variable (R)
+
+theorem _root_.algebra.adjoin_singleton_eq_range_aeval (x : A) : Algebra.adjoin R {x} = (Polynomial.aeval x).range :=
+  by 
+    rw [←Algebra.map_top, ←adjoin_X, AlgHom.map_adjoin, Set.image_singleton, aeval_X]
+
+variable {R}
+
 section CommSemiringₓ
 
 variable [CommSemiringₓ S] {f : R →+* S}
 
 theorem aeval_eq_sum_range [Algebra R S] {p : Polynomial R} (x : S) :
-  aeval x p = ∑i in Finset.range (p.nat_degree+1), p.coeff i • x ^ i :=
+  aeval x p = ∑ i in Finset.range (p.nat_degree+1), p.coeff i • x ^ i :=
   by 
     simpRw [Algebra.smul_def]
     exact eval₂_eq_sum_range (algebraMap R S) x
 
 theorem aeval_eq_sum_range' [Algebra R S] {p : Polynomial R} {n : ℕ} (hn : p.nat_degree < n) (x : S) :
-  aeval x p = ∑i in Finset.range n, p.coeff i • x ^ i :=
+  aeval x p = ∑ i in Finset.range n, p.coeff i • x ^ i :=
   by 
     simpRw [Algebra.smul_def]
     exact eval₂_eq_sum_range' (algebraMap R S) hn x
+
+theorem aeval_sum {ι : Type _} [Algebra R S] (s : Finset ι) (f : ι → Polynomial R) (g : S) :
+  aeval g (∑ i in s, f i) = ∑ i in s, aeval g (f i) :=
+  (Polynomial.aeval g : Polynomial R →ₐ[_] _).map_sum f s
+
+@[toAdditive]
+theorem aeval_prod {ι : Type _} [Algebra R S] (s : Finset ι) (f : ι → Polynomial R) (g : S) :
+  aeval g (∏ i in s, f i) = ∏ i in s, aeval g (f i) :=
+  (Polynomial.aeval g : Polynomial R →ₐ[_] _).map_prod f s
 
 theorem is_root_of_eval₂_map_eq_zero (hf : Function.Injective f) {r : R} : eval₂ f (f r) p = 0 → p.is_root r :=
   by 
@@ -298,7 +313,7 @@ variable [Algebra S R] [Algebra S A'] [Algebra S B']
 /-- Version of `aeval` for defining algebra homs out of `polynomial R` over a smaller base ring
   than `R`. -/
 def aeval_tower (f : R →ₐ[S] A') (x : A') : Polynomial R →ₐ[S] A' :=
-  { eval₂_ring_hom («expr↑ » f) x with
+  { eval₂_ring_hom (↑f) x with
     commutes' :=
       fun r =>
         by 
@@ -353,12 +368,10 @@ section CommRingₓ
 
 variable [CommRingₓ S] {f : R →+* S}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : Polynomial S} (i : ℕ) (dvd_eval : p ∣ f.eval z)
   (dvd_terms : ∀ j _ : j ≠ i, p ∣ f.coeff j*z ^ j) : p ∣ f.coeff i*z ^ i :=
   by 
-    byCases' hf : f = 0
-    ·
-      simp [hf]
     byCases' hi : i ∈ f.support
     ·
       rw [eval, eval₂, Sum] at dvd_eval 
@@ -372,6 +385,7 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : Polynomial S} (i : ℕ)
       rw [not_mem_support_iff] at hi 
       simp [hi]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : Polynomial S} (i : ℕ) (hr : f.is_root r)
   (h : ∀ j _ : j ≠ i, p ∣ f.coeff j*r ^ j) : p ∣ f.coeff i*r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h
@@ -384,30 +398,28 @@ section Ringₓ
 
 variable [Ringₓ R]
 
--- error in Data.Polynomial.AlgebraMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The evaluation map is not generally multiplicative when the coefficient ring is noncommutative,
 but nevertheless any polynomial of the form `p * (X - monomial 0 r)` is sent to zero
 when evaluated at `r`.
 
 This is the key step in our proof of the Cayley-Hamilton theorem.
--/ theorem eval_mul_X_sub_C {p : polynomial R} (r : R) : «expr = »(«expr * »(p, «expr - »(X, C r)).eval r, 0) :=
-begin
-  simp [] [] ["only"] ["[", expr eval, ",", expr eval₂, ",", expr ring_hom.id_apply, "]"] [] [],
-  have [ident bound] [] [":=", expr calc
-     «expr ≤ »(«expr * »(p, «expr - »(X, C r)).nat_degree, «expr + »(p.nat_degree, «expr - »(X, C r).nat_degree)) : nat_degree_mul_le
-     «expr ≤ »(..., «expr + »(p.nat_degree, 1)) : add_le_add_left nat_degree_X_sub_C_le _
-     «expr < »(..., «expr + »(p.nat_degree, 2)) : lt_add_one _],
-  rw [expr sum_over_range' _ _ «expr + »(p.nat_degree, 2) bound] [],
-  swap,
-  { simp [] [] [] [] [] [] },
-  rw [expr sum_range_succ'] [],
-  conv_lhs [] [] { congr,
-    apply_congr [],
-    skip,
-    rw ["[", expr coeff_mul_X_sub_C, ",", expr sub_mul, ",", expr mul_assoc, ",", "<-", expr pow_succ, "]"] },
-  simp [] [] [] ["[", expr sum_range_sub', ",", expr coeff_monomial, "]"] [] []
-end
+-/
+theorem eval_mul_X_sub_C {p : Polynomial R} (r : R) : (p*X - C r).eval r = 0 :=
+  by 
+    simp only [eval, eval₂, RingHom.id_apply]
+    have bound :=
+      calc (p*X - C r).natDegree ≤ p.nat_degree+(X - C r).natDegree := nat_degree_mul_le 
+        _ ≤ p.nat_degree+1 := add_le_add_left nat_degree_X_sub_C_le _ 
+        _ < p.nat_degree+2 := lt_add_one _ 
+        
+    rw [sum_over_range' _ _ (p.nat_degree+2) bound]
+    swap
+    ·
+      simp 
+    rw [sum_range_succ']
+    convLHS => congr applyCongr skip rw [coeff_mul_X_sub_C, sub_mul, mul_assocₓ, ←pow_succₓ]
+    simp [sum_range_sub', coeff_monomial]
 
 theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - C r) :=
   fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>

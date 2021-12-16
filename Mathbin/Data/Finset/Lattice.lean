@@ -1,7 +1,7 @@
 import Mathbin.Data.Finset.Fold 
 import Mathbin.Data.Finset.Option 
+import Mathbin.Data.Finset.Prod 
 import Mathbin.Data.Multiset.Lattice 
-import Mathbin.Order.OrderDual 
 import Mathbin.Order.CompleteLattice
 
 /-!
@@ -71,10 +71,12 @@ theorem sup_sup : s.sup (f⊔g) = s.sup f⊔s.sup g :=
       rw [sup_cons, sup_cons, sup_cons, h]
       exact sup_sup_sup_comm _ _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s₂)
 theorem sup_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a _ : a ∈ s₂, f a = g a) : s₁.sup f = s₂.sup g :=
   by 
     subst hs <;> exact Finset.fold_congr hfg
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀ b _ : b ∈ s, f b ≤ a :=
   by 
@@ -93,18 +95,21 @@ theorem sup_bUnion [DecidableEq β] (s : Finset γ) (t : γ → Finset β) :
 theorem sup_const {s : Finset β} (h : s.nonempty) (c : α) : (s.sup fun _ => c) = c :=
   eq_of_forall_ge_iff$ fun b => sup_le_iff.trans h.forall_const
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem sup_le {a : α} : (∀ b _ : b ∈ s, f b ≤ a) → s.sup f ≤ a :=
   sup_le_iff.2
 
 theorem le_sup {b : β} (hb : b ∈ s) : f b ≤ s.sup f :=
-  sup_le_iff.1 (le_reflₓ _) _ hb
+  sup_le_iff.1 le_rfl _ hb
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem sup_mono_fun {g : β → α} (h : ∀ b _ : b ∈ s, f b ≤ g b) : s.sup f ≤ s.sup g :=
   sup_le fun b hb => le_transₓ (h b hb) (le_sup hb)
 
 theorem sup_mono (h : s₁ ⊆ s₂) : s₁.sup f ≤ s₂.sup f :=
   sup_le$ fun b hb => le_sup (h hb)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem sup_lt_iff [IsTotal α (· ≤ ·)] {a : α} (ha : ⊥ < a) : s.sup f < a ↔ ∀ b _ : b ∈ s, f b < a :=
   ⟨fun hs b hb => lt_of_le_of_ltₓ (le_sup hb) hs,
@@ -113,6 +118,7 @@ theorem sup_lt_iff [IsTotal α (· ≤ ·)] {a : α} (ha : ⊥ < a) : s.sup f < 
         by 
           simpa only [sup_cons, sup_lt_iff, mem_cons, forall_eq_or_imp] using And.imp_right⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem le_sup_iff [IsTotal α (· ≤ ·)] {a : α} (ha : ⊥ < a) : a ≤ s.sup f ↔ ∃ (b : _)(_ : b ∈ s), a ≤ f b :=
   ⟨Finset.cons_induction_on s (fun h => absurd h (not_le_of_lt ha))
@@ -125,6 +131,7 @@ theorem le_sup_iff [IsTotal α (· ≤ ·)] {a : α} (ha : ⊥ < a) : a ≤ s.su
                 ⟨b, Or.inr hb, hle⟩,
     fun ⟨b, hb, hle⟩ => trans hle (le_sup hb)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem lt_sup_iff [IsTotal α (· ≤ ·)] {a : α} : a < s.sup f ↔ ∃ (b : _)(_ : b ∈ s), a < f b :=
   ⟨Finset.cons_induction_on s (fun h => absurd h not_lt_bot)
@@ -137,9 +144,42 @@ theorem lt_sup_iff [IsTotal α (· ≤ ·)] {a : α} : a < s.sup f ↔ ∃ (b : 
                 ⟨b, Or.inr hb, hlt⟩,
     fun ⟨b, hb, hlt⟩ => lt_of_lt_of_leₓ hlt (le_sup hb)⟩
 
+theorem sup_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
+  (s.sup fun b => t.sup (f b)) = t.sup fun c => s.sup fun b => f b c :=
+  by 
+    refine' eq_of_forall_ge_iff fun a => _ 
+    simpRw [sup_le_iff]
+    exact ⟨fun h c hc b hb => h b hb c hc, fun h b hb c hc => h c hc b hb⟩
+
 @[simp]
 theorem sup_attach (s : Finset β) (f : β → α) : (s.attach.sup fun x => f x) = s.sup f :=
   (s.attach.sup_map (Function.Embedding.subtype _) f).symm.trans$ congr_argₓ _ attach_map_val
+
+theorem sup_sigma {γ : β → Type _} (s : Finset β) (t : ∀ i, Finset (γ i)) (f : Sigma γ → α) :
+  (s.sigma t).sup f = s.sup fun i => (t i).sup$ fun b => f ⟨i, b⟩ :=
+  by 
+    refine' le_antisymmₓ _ (sup_le fun i hi => sup_le$ fun b hb => le_sup$ mem_sigma.2 ⟨hi, hb⟩)
+    refine' sup_le _ 
+    rintro ⟨i, b⟩ hb 
+    rw [mem_sigma] at hb 
+    refine' le_transₓ _ (le_sup hb.1)
+    convert le_sup hb.2
+
+/-- See also `finset.product_bUnion`. -/
+theorem sup_product_left (s : Finset β) (t : Finset γ) (f : β × γ → α) :
+  (s.product t).sup f = s.sup fun i => t.sup$ fun i' => f ⟨i, i'⟩ :=
+  by 
+    refine' le_antisymmₓ _ (sup_le fun i hi => sup_le$ fun i' hi' => le_sup$ mem_product.2 ⟨hi, hi'⟩)
+    refine' sup_le _ 
+    rintro ⟨i, i'⟩ hi 
+    rw [mem_product] at hi 
+    refine' le_transₓ _ (le_sup hi.1)
+    convert le_sup hi.2
+
+theorem sup_product_right (s : Finset β) (t : Finset γ) (f : β × γ → α) :
+  (s.product t).sup f = t.sup fun i' => s.sup$ fun i => f ⟨i, i'⟩ :=
+  by 
+    rw [sup_product_left, sup_comm]
 
 @[simp]
 theorem sup_erase_bot [DecidableEq α] (s : Finset α) : (s.erase ⊥).sup id = s.sup id :=
@@ -189,6 +229,7 @@ theorem subset_range_sup_succ (s : Finset ℕ) : s ⊆ range (s.sup id).succ :=
 theorem exists_nat_subset_range (s : Finset ℕ) : ∃ n : ℕ, s ⊆ range n :=
   ⟨_, s.subset_range_sup_succ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁ a₂ : α, p a₁ → p a₂ → p (a₁⊔a₂))
   (hs : ∀ b _ : b ∈ s, p (f b)) : p (s.sup f) :=
   by 
@@ -203,50 +244,60 @@ theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁ a₂ : α, p
       ·
         exact ih fun b h => hs b (mem_cons.2 (Or.inr h))
 
--- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sup_le_of_le_directed
-{α : Type*}
-[semilattice_sup α]
-[order_bot α]
-(s : set α)
-(hs : s.nonempty)
-(hdir : directed_on ((«expr ≤ »)) s)
-(t : finset α) : ∀
-x «expr ∈ » t, «expr∃ , »((y «expr ∈ » s), «expr ≤ »(x, y)) → «expr∃ , »((x), «expr ∧ »(«expr ∈ »(x, s), «expr ≤ »(t.sup id, x))) :=
-begin
-  classical,
-  apply [expr finset.induction_on t],
-  { simpa [] [] ["only"] ["[", expr forall_prop_of_true, ",", expr and_true, ",", expr forall_prop_of_false, ",", expr bot_le, ",", expr not_false_iff, ",", expr sup_empty, ",", expr forall_true_iff, ",", expr not_mem_empty, "]"] [] [] },
-  { intros [ident a, ident r, ident har, ident ih, ident h],
-    have [ident incs] [":", expr «expr ⊆ »(«expr↑ »(r), «expr↑ »(insert a r))] [],
-    by { rw [expr finset.coe_subset] [],
-      apply [expr finset.subset_insert] },
-    obtain ["⟨", ident x, ",", "⟨", ident hxs, ",", ident hsx_sup, "⟩", "⟩", ":=", expr ih (λ
-      x hx, «expr $ »(h x, incs hx))],
-    obtain ["⟨", ident y, ",", ident hys, ",", ident hay, "⟩", ":=", expr h a (finset.mem_insert_self a r)],
-    obtain ["⟨", ident z, ",", ident hzs, ",", "⟨", ident hxz, ",", ident hyz, "⟩", "⟩", ":=", expr hdir x hxs y hys],
-    use ["[", expr z, ",", expr hzs, "]"],
-    rw ["[", expr sup_insert, ",", expr id.def, ",", expr _root_.sup_le_iff, "]"] [],
-    exact [expr ⟨le_trans hay hyz, le_trans hsx_sup hxz⟩] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s : Set α) (hs : s.nonempty)
+  (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) :
+  (∀ x _ : x ∈ t, ∃ (y : _)(_ : y ∈ s), x ≤ y) → ∃ x, x ∈ s ∧ t.sup id ≤ x :=
+  by 
+    classical 
+    apply Finset.induction_on t
+    ·
+      simpa only [forall_prop_of_true, and_trueₓ, forall_prop_of_false, bot_le, not_false_iff, sup_empty,
+        forall_true_iff, not_mem_empty]
+    ·
+      intro a r har ih h 
+      have incs : ↑r ⊆ ↑insert a r
+      ·
+        ·
+          rw [Finset.coe_subset]
+          apply Finset.subset_insert 
+      obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x$ incs hx 
+      obtain ⟨y, hys, hay⟩ := h a (Finset.mem_insert_self a r)
+      obtain ⟨z, hzs, ⟨hxz, hyz⟩⟩ := hdir x hxs y hys 
+      use z, hzs 
+      rw [sup_insert, id.def, _root_.sup_le_iff]
+      exact ⟨le_transₓ hay hyz, le_transₓ hsx_sup hxz⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι)
   (p : ι → α) (h : ∀ i _ : i ∈ t, p i ∈ s) : t.sup p ∈ s :=
   @sup_induction _ _ _ _ _ _ (· ∈ s) w₁ w₂ h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+@[simp]
+theorem sup_eq_bot_iff (f : β → α) (S : Finset β) : S.sup f = ⊥ ↔ ∀ s _ : s ∈ S, f s = ⊥ :=
+  by 
+    classical 
+    induction' S using Finset.induction with a S haS hi <;> simp 
+
 end Sup
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem disjoint_sup_right [DistribLattice α] [OrderBot α] {a : α} {s : Finset β} {f : β → α} :
   Disjoint a (s.sup f) ↔ ∀ i _ : i ∈ s, Disjoint a (f i) :=
   ⟨fun h i hi => h.mono_right (le_sup hi), sup_induction disjoint_bot_right fun b c => Disjoint.sup_right⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem disjoint_sup_left [DistribLattice α] [OrderBot α] {a : α} {s : Finset β} {f : β → α} :
   Disjoint (s.sup f) a ↔ ∀ i _ : i ∈ s, Disjoint (f i) a :=
   by 
     simpRw [@Disjoint.comm _ _ _ _ a]
     exact disjoint_sup_right
 
-theorem sup_eq_supr [CompleteLattice β] (s : Finset α) (f : α → β) : s.sup f = ⨆(a : _)(_ : a ∈ s), f a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem sup_eq_supr [CompleteLattice β] (s : Finset α) (f : α → β) : s.sup f = ⨆ (a : _)(_ : a ∈ s), f a :=
   le_antisymmₓ (Finset.sup_le$ fun a ha => le_supr_of_le a$ le_supr _ ha)
     (supr_le$ fun a => supr_le$ fun ha => le_sup ha)
 
@@ -304,6 +355,7 @@ theorem inf_union [DecidableEq β] : (s₁ ∪ s₂).inf f = s₁.inf f⊓s₂.i
 theorem inf_inf : s.inf (f⊓g) = s.inf f⊓s.inf g :=
   @sup_sup (OrderDual α) _ _ _ _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s₂)
 theorem inf_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a _ : a ∈ s₂, f a = g a) : s₁.inf f = s₂.inf g :=
   by 
     subst hs <;> exact Finset.fold_congr hfg
@@ -316,35 +368,57 @@ theorem inf_bUnion [DecidableEq β] (s : Finset γ) (t : γ → Finset β) :
 theorem inf_const {s : Finset β} (h : s.nonempty) (c : α) : (s.inf fun _ => c) = c :=
   @sup_const (OrderDual α) _ _ _ _ h _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem le_inf_iff {a : α} : a ≤ s.inf f ↔ ∀ b _ : b ∈ s, a ≤ f b :=
   @sup_le_iff (OrderDual α) _ _ _ _ _ _
 
 theorem inf_le {b : β} (hb : b ∈ s) : s.inf f ≤ f b :=
-  le_inf_iff.1 (le_reflₓ _) _ hb
+  le_inf_iff.1 le_rfl _ hb
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem le_inf {a : α} : (∀ b _ : b ∈ s, a ≤ f b) → a ≤ s.inf f :=
   le_inf_iff.2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem inf_mono_fun {g : β → α} (h : ∀ b _ : b ∈ s, f b ≤ g b) : s.inf f ≤ s.inf g :=
   le_inf fun b hb => le_transₓ (inf_le hb) (h b hb)
 
 theorem inf_mono (h : s₁ ⊆ s₂) : s₂.inf f ≤ s₁.inf f :=
   le_inf$ fun b hb => inf_le (h hb)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem lt_inf_iff [IsTotal α (· ≤ ·)] {a : α} (ha : a < ⊤) : a < s.inf f ↔ ∀ b _ : b ∈ s, a < f b :=
   @sup_lt_iff (OrderDual α) _ _ _ _ _ _ _ ha
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem inf_le_iff [IsTotal α (· ≤ ·)] {a : α} (ha : a < ⊤) : s.inf f ≤ a ↔ ∃ (b : _)(_ : b ∈ s), f b ≤ a :=
   @le_sup_iff (OrderDual α) _ _ _ _ _ _ _ ha
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem inf_lt_iff [IsTotal α (· ≤ ·)] {a : α} : s.inf f < a ↔ ∃ (b : _)(_ : b ∈ s), f b < a :=
   @lt_sup_iff (OrderDual α) _ _ _ _ _ _ _
 
 theorem inf_attach (s : Finset β) (f : β → α) : (s.attach.inf fun x => f x) = s.inf f :=
   @sup_attach (OrderDual α) _ _ _ _ _
+
+theorem inf_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
+  (s.inf fun b => t.inf (f b)) = t.inf fun c => s.inf fun b => f b c :=
+  @sup_comm (OrderDual α) _ _ _ _ _ _ _
+
+theorem inf_sigma {γ : β → Type _} (s : Finset β) (t : ∀ i, Finset (γ i)) (f : Sigma γ → α) :
+  (s.sigma t).inf f = s.inf fun i => (t i).inf$ fun b => f ⟨i, b⟩ :=
+  @sup_sigma (OrderDual α) _ _ _ _ _ _ _
+
+theorem inf_product_left (s : Finset β) (t : Finset γ) (f : β × γ → α) :
+  (s.product t).inf f = s.inf fun i => t.inf$ fun i' => f ⟨i, i'⟩ :=
+  @sup_product_left (OrderDual α) _ _ _ _ _ _ _
+
+theorem inf_product_right (s : Finset β) (t : Finset γ) (f : β × γ → α) :
+  (s.product t).inf f = t.inf fun i' => s.inf$ fun i => f ⟨i, i'⟩ :=
+  @sup_product_right (OrderDual α) _ _ _ _ _ _ _
 
 @[simp]
 theorem inf_erase_top [DecidableEq α] (s : Finset α) : (s.erase ⊤).inf id = s.inf id :=
@@ -391,17 +465,26 @@ theorem inf_coe {P : α → Prop} {Ptop : P ⊤} {Pinf : ∀ ⦃x y⦄, P x → 
   (@inf _ _ (Subtype.semilatticeInf Pinf) (Subtype.orderTop Ptop) t f : α) = t.inf fun x => f x :=
   @sup_coe (OrderDual α) _ _ _ _ Ptop Pinf t f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem inf_induction {p : α → Prop} (ht : p ⊤) (hp : ∀ a₁ a₂ : α, p a₁ → p a₂ → p (a₁⊓a₂))
   (hs : ∀ b _ : b ∈ s, p (f b)) : p (s.inf f) :=
   @sup_induction (OrderDual α) _ _ _ _ _ _ ht hp hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem inf_mem (s : Set α) (w₁ : ⊤ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι)
   (p : ι → α) (h : ∀ i _ : i ∈ t, p i ∈ s) : t.inf p ∈ s :=
   @inf_induction _ _ _ _ _ _ (· ∈ s) w₁ w₂ h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+@[simp]
+theorem inf_eq_top_iff (f : β → α) (S : Finset β) : S.inf f = ⊤ ↔ ∀ s _ : s ∈ S, f s = ⊤ :=
+  @Finset.sup_eq_bot_iff (OrderDual α) _ _ _ _ _
+
 end Inf
 
-theorem inf_eq_infi [CompleteLattice β] (s : Finset α) (f : α → β) : s.inf f = ⨅(a : _)(_ : a ∈ s), f a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem inf_eq_infi [CompleteLattice β] (s : Finset α) (f : α → β) : s.inf f = ⨅ (a : _)(_ : a ∈ s), f a :=
   @sup_eq_supr _ (OrderDual β) _ _ _
 
 theorem inf_id_eq_Inf [CompleteLattice α] (s : Finset α) : s.inf id = Inf s :=
@@ -414,8 +497,7 @@ section Sup'
 
 variable [SemilatticeSup α]
 
-theorem sup_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) :
-  ∃ a : α, s.sup (coeₓ ∘ f : β → WithBot α) = «expr↑ » a :=
+theorem sup_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) : ∃ a : α, s.sup (coeₓ ∘ f : β → WithBot α) = ↑a :=
   Exists.impₓ (fun a => Exists.fst) (@le_sup (WithBot α) _ _ _ _ _ _ h (f b) rfl)
 
 /-- Given nonempty finset `s` then `s.sup' H f` is the supremum of its image under `f` in (possibly
@@ -449,6 +531,7 @@ theorem sup'_insert [DecidableEq β] {b : β} {h : (insert b s).Nonempty} : (ins
 theorem sup'_singleton {b : β} {h : ({b} : Finset β).Nonempty} : ({b} : Finset β).sup' h f = f b :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem sup'_le {a : α} (hs : ∀ b _ : b ∈ s, f b ≤ a) : s.sup' H f ≤ a :=
   by 
     rw [←WithBot.coe_le_coe, coe_sup']
@@ -470,22 +553,26 @@ theorem sup'_const (a : α) : (s.sup' H fun b => a) = a :=
     ·
       apply le_sup' (fun b => a) H.some_spec
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem sup'_le_iff {a : α} : s.sup' H f ≤ a ↔ ∀ b _ : b ∈ s, f b ≤ a :=
   Iff.intro (fun h b hb => trans (le_sup' f hb) h) (sup'_le H f)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem sup'_lt_iff [IsTotal α (· ≤ ·)] {a : α} : s.sup' H f < a ↔ ∀ b _ : b ∈ s, f b < a :=
   by 
     rw [←WithBot.coe_lt_coe, coe_sup', sup_lt_iff (WithBot.bot_lt_coe a)]
     exact ball_congr fun b hb => WithBot.coe_lt_coe
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem le_sup'_iff [IsTotal α (· ≤ ·)] {a : α} : a ≤ s.sup' H f ↔ ∃ (b : _)(_ : b ∈ s), a ≤ f b :=
   by 
     rw [←WithBot.coe_le_coe, coe_sup', le_sup_iff (WithBot.bot_lt_coe a)]
     exact bex_congr fun b hb => WithBot.coe_le_coe
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem lt_sup'_iff [IsTotal α (· ≤ ·)] {a : α} : a < s.sup' H f ↔ ∃ (b : _)(_ : b ∈ s), a < f b :=
   by 
@@ -503,8 +590,8 @@ theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.nonemp
   (g_sup : ∀ x y, g (x⊔y) = g x⊔g y) : g (s.sup' H f) = s.sup' H (g ∘ f) :=
   by 
     rw [←WithBot.coe_eq_coe, coe_sup']
-    let g' : WithBot α → WithBot γ := WithBot.recBotCoe ⊥ fun x => «expr↑ » (g x)
-    show g' («expr↑ » (s.sup' H f)) = s.sup fun a => g' («expr↑ » (f a))
+    let g' : WithBot α → WithBot γ := WithBot.recBotCoe ⊥ fun x => ↑g x 
+    show g' (↑s.sup' H f) = s.sup fun a => g' (↑f a)
     rw [coe_sup']
     refine' comp_sup_eq_sup_comp g' _ rfl 
     intro f₁ f₂ 
@@ -517,10 +604,11 @@ theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.nonemp
       rfl 
       exact congr_argₓ coeₓ (g_sup f₁ f₂)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem sup'_induction {p : α → Prop} (hp : ∀ a₁ a₂ : α, p a₁ → p a₂ → p (a₁⊔a₂)) (hs : ∀ b _ : b ∈ s, p (f b)) :
   p (s.sup' H f) :=
   by 
-    show @WithBot.recBotCoe α (fun _ => Prop) True p («expr↑ » (s.sup' H f))
+    show @WithBot.recBotCoe α (fun _ => Prop) True p (↑s.sup' H f)
     rw [coe_sup']
     refine' sup_induction trivialₓ _ hs 
     intro a₁ a₂ h₁ h₂ 
@@ -551,22 +639,24 @@ theorem exists_mem_eq_sup' [IsTotal α (· ≤ ·)] : ∃ b, b ∈ s ∧ s.sup' 
         ·
           exact ⟨b, mem_cons.2 (Or.inr hb), sup_eq_right.2 h⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem sup'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι) (H : t.nonempty)
   (p : ι → α) (h : ∀ i _ : i ∈ t, p i ∈ s) : t.sup' H p ∈ s :=
   sup'_induction H p w h
 
--- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[congr]
-theorem sup'_congr
-{t : finset β}
-{f g : β → α}
-(h₁ : «expr = »(s, t))
-(h₂ : ∀ x «expr ∈ » s, «expr = »(f x, g x)) : «expr = »(s.sup' H f, t.sup' «expr ▸ »(h₁, H) g) :=
-begin
-  subst [expr s],
-  refine [expr eq_of_forall_ge_iff (λ c, _)],
-  simp [] [] ["only"] ["[", expr sup'_le_iff, ",", expr h₂, "]"] [] [] { contextual := tt }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ congr ]
+  theorem
+    sup'_congr
+    { t : Finset β } { f g : β → α } ( h₁ : s = t ) ( h₂ : ∀ x _ : x ∈ s , f x = g x ) : s.sup' H f = t.sup' h₁ ▸ H g
+    :=
+      by
+        subst s
+          refine' eq_of_forall_ge_iff fun c => _
+          simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) only [ sup'_le_iff , h₂ ]
 
 end Sup'
 
@@ -574,8 +664,7 @@ section Inf'
 
 variable [SemilatticeInf α]
 
-theorem inf_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) :
-  ∃ a : α, s.inf (coeₓ ∘ f : β → WithTop α) = «expr↑ » a :=
+theorem inf_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) : ∃ a : α, s.inf (coeₓ ∘ f : β → WithTop α) = ↑a :=
   @sup_of_mem (OrderDual α) _ _ _ f _ h
 
 /-- Given nonempty finset `s` then `s.inf' H f` is the infimum of its image under `f` in (possibly
@@ -602,6 +691,7 @@ theorem inf'_insert [DecidableEq β] {b : β} {h : (insert b s).Nonempty} : (ins
 theorem inf'_singleton {b : β} {h : ({b} : Finset β).Nonempty} : ({b} : Finset β).inf' h f = f b :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem le_inf' {a : α} (hs : ∀ b _ : b ∈ s, a ≤ f b) : a ≤ s.inf' H f :=
   @sup'_le (OrderDual α) _ _ _ H f _ hs
 
@@ -612,18 +702,22 @@ theorem inf'_le {b : β} (h : b ∈ s) : s.inf' ⟨b, h⟩ f ≤ f b :=
 theorem inf'_const (a : α) : (s.inf' H fun b => a) = a :=
   @sup'_const (OrderDual α) _ _ _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem le_inf'_iff {a : α} : a ≤ s.inf' H f ↔ ∀ b _ : b ∈ s, a ≤ f b :=
   @sup'_le_iff (OrderDual α) _ _ _ H f _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem lt_inf'_iff [IsTotal α (· ≤ ·)] {a : α} : a < s.inf' H f ↔ ∀ b _ : b ∈ s, a < f b :=
   @sup'_lt_iff (OrderDual α) _ _ _ H f _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem inf'_le_iff [IsTotal α (· ≤ ·)] {a : α} : s.inf' H f ≤ a ↔ ∃ (b : _)(_ : b ∈ s), f b ≤ a :=
   @le_sup'_iff (OrderDual α) _ _ _ H f _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem inf'_lt_iff [IsTotal α (· ≤ ·)] {a : α} : s.inf' H f < a ↔ ∃ (b : _)(_ : b ∈ s), f b < a :=
   @lt_sup'_iff (OrderDual α) _ _ _ H f _ _
@@ -636,6 +730,7 @@ theorem comp_inf'_eq_inf'_comp [SemilatticeInf γ] {s : Finset β} (H : s.nonemp
   (g_inf : ∀ x y, g (x⊓y) = g x⊓g y) : g (s.inf' H f) = s.inf' H (g ∘ f) :=
   @comp_sup'_eq_sup'_comp (OrderDual α) _ (OrderDual γ) _ _ _ H f g g_inf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem inf'_induction {p : α → Prop} (hp : ∀ a₁ a₂ : α, p a₁ → p a₂ → p (a₁⊓a₂)) (hs : ∀ b _ : b ∈ s, p (f b)) :
   p (s.inf' H f) :=
   @sup'_induction (OrderDual α) _ _ _ H f _ hp hs
@@ -643,10 +738,13 @@ theorem inf'_induction {p : α → Prop} (hp : ∀ a₁ a₂ : α, p a₁ → p 
 theorem exists_mem_eq_inf' [IsTotal α (· ≤ ·)] : ∃ b, b ∈ s ∧ s.inf' H f = f b :=
   @exists_mem_eq_sup' (OrderDual α) _ _ _ H f _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem inf'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι) (H : t.nonempty)
   (p : ι → α) (h : ∀ i _ : i ∈ t, p i ∈ s) : t.inf' H p ∈ s :=
   inf'_induction H p w h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[congr]
 theorem inf'_congr {t : Finset β} {f g : β → α} (h₁ : s = t) (h₂ : ∀ x _ : x ∈ s, f x = g x) :
   s.inf' H f = t.inf' (h₁ ▸ H) g :=
@@ -661,7 +759,7 @@ variable [SemilatticeSup α] [OrderBot α]
 theorem sup'_eq_sup {s : Finset β} (H : s.nonempty) (f : β → α) : s.sup' H f = s.sup f :=
   le_antisymmₓ (sup'_le H f fun b => le_sup) (sup_le fun b => le_sup' f)
 
-theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.nonempty) (h_subset : «expr↑ » t ⊆ s)
+theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.nonempty) (h_subset : ↑t ⊆ s)
   (h : ∀ ⦃a b⦄, a ∈ s → b ∈ s → a⊔b ∈ s) : t.sup id ∈ s :=
   sup'_eq_sup htne id ▸ sup'_induction _ _ h h_subset
 
@@ -678,7 +776,7 @@ variable [SemilatticeInf α] [OrderTop α]
 theorem inf'_eq_inf {s : Finset β} (H : s.nonempty) (f : β → α) : s.inf' H f = s.inf f :=
   @sup'_eq_sup (OrderDual α) _ _ _ _ H f
 
-theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.nonempty) (h_subset : «expr↑ » t ⊆ s)
+theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.nonempty) (h_subset : ↑t ⊆ s)
   (h : ∀ ⦃a b⦄, a ∈ s → b ∈ s → a⊓b ∈ s) : t.inf id ∈ s :=
   @sup_closed_of_sup_closed (OrderDual α) _ _ _ t htne h_subset h
 
@@ -875,12 +973,14 @@ theorem min'_mem : s.min' H ∈ s :=
 theorem min'_le x (H2 : x ∈ s) : s.min' ⟨x, H2⟩ ≤ x :=
   min_le_of_mem H2$ Option.get_mem _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem le_min' x (H2 : ∀ y _ : y ∈ s, x ≤ y) : x ≤ s.min' H :=
   H2 _$ min'_mem _ _
 
-theorem is_least_min' : IsLeast («expr↑ » s) (s.min' H) :=
+theorem is_least_min' : IsLeast (↑s) (s.min' H) :=
   ⟨min'_mem _ _, min'_le _⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 @[simp]
 theorem le_min'_iff {x} : x ≤ s.min' H ↔ ∀ y _ : y ∈ s, x ≤ y :=
   le_is_glb_iff (is_least_min' s H).IsGlb
@@ -899,20 +999,24 @@ theorem max'_mem : s.max' H ∈ s :=
 theorem le_max' x (H2 : x ∈ s) : x ≤ s.max' ⟨x, H2⟩ :=
   le_max_of_mem H2$ Option.get_mem _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem max'_le x (H2 : ∀ y _ : y ∈ s, y ≤ x) : s.max' H ≤ x :=
   H2 _$ max'_mem _ _
 
-theorem is_greatest_max' : IsGreatest («expr↑ » s) (s.max' H) :=
+theorem is_greatest_max' : IsGreatest (↑s) (s.max' H) :=
   ⟨max'_mem _ _, le_max' _⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 @[simp]
 theorem max'_le_iff {x} : s.max' H ≤ x ↔ ∀ y _ : y ∈ s, y ≤ x :=
   is_lub_le_iff (is_greatest_max' s H).IsLub
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 @[simp]
 theorem max'_lt_iff {x} : s.max' H < x ↔ ∀ y _ : y ∈ s, y < x :=
   ⟨fun Hlt y hy => (s.le_max' y hy).trans_lt Hlt, fun H => H _$ s.max'_mem _⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 @[simp]
 theorem lt_min'_iff {x} : x < s.min' H ↔ ∀ y _ : y ∈ s, x < y :=
   @max'_lt_iff (OrderDual α) _ _ H _
@@ -945,14 +1049,14 @@ theorem min'_lt_max'_of_card (h₂ : 1 < card s) :
 theorem max'_eq_of_dual_min' {s : Finset α} (hs : s.nonempty) :
   max' s hs = of_dual (min' (image to_dual s) (nonempty.image hs to_dual)) :=
   by 
-    rw [of_dual, to_dual, Equiv.coe_fn_mk, Equiv.coe_fn_symm_mk, id.def]
+    rw [of_dual, to_dual, Equivₓ.coe_fn_mk, Equivₓ.coe_fn_symm_mk, id.def]
     simpRw [@image_id (OrderDual α) (s : Finset (OrderDual α))]
     rfl
 
 theorem min'_eq_of_dual_max' {s : Finset α} (hs : s.nonempty) :
   min' s hs = of_dual (max' (image to_dual s) (nonempty.image hs to_dual)) :=
   by 
-    rw [of_dual, to_dual, Equiv.coe_fn_mk, Equiv.coe_fn_symm_mk, id.def]
+    rw [of_dual, to_dual, Equivₓ.coe_fn_mk, Equivₓ.coe_fn_symm_mk, id.def]
     simpRw [@image_id (OrderDual α) (s : Finset (OrderDual α))]
     rfl
 
@@ -1006,7 +1110,7 @@ theorem min'_image [LinearOrderₓ β] {f : α → β} (hf : Monotone f) (s : Fi
     obtain ⟨x, hx, rfl⟩ := mem_image.mp hy 
     exact hf (min'_le _ _ hx)
 
--- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- Induction principle for `finset`s in a linearly ordered type: a predicate is true on all
 `s : finset α` provided that:
 
@@ -1014,22 +1118,20 @@ theorem min'_image [LinearOrderₓ β] {f : α → β} (hf : Monotone f) (s : Fi
 * for every `s : finset α` and an element `a` strictly greater than all elements of `s`, `p s`
   implies `p (insert a s)`. -/
 @[elab_as_eliminator]
-theorem induction_on_max
-[decidable_eq α]
-{p : finset α → exprProp()}
-(s : finset α)
-(h0 : p «expr∅»())
-(step : ∀ a s, ∀ x «expr ∈ » s, «expr < »(x, a) → p s → p (insert a s)) : p s :=
-begin
-  induction [expr s] ["using", ident finset.strong_induction_on] ["with", ident s, ident ihs] [],
-  rcases [expr s.eq_empty_or_nonempty, "with", ident rfl, "|", ident hne],
-  { exact [expr h0] },
-  { have [ident H] [":", expr «expr ∈ »(s.max' hne, s)] [],
-    from [expr max'_mem s hne],
-    rw ["<-", expr insert_erase H] [],
-    exact [expr step _ _ (λ x, s.lt_max'_of_mem_erase_max' hne) «expr $ »(ihs _, erase_ssubset H)] }
-end
+theorem induction_on_max [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h0 : p ∅)
+  (step : ∀ a s, (∀ x _ : x ∈ s, x < a) → p s → p (insert a s)) : p s :=
+  by 
+    induction' s using Finset.strongInductionOn with s ihs 
+    rcases s.eq_empty_or_nonempty with (rfl | hne)
+    ·
+      exact h0
+    ·
+      have H : s.max' hne ∈ s 
+      exact max'_mem s hne 
+      rw [←insert_erase H]
+      exact step _ _ (fun x => s.lt_max'_of_mem_erase_max' hne) (ihs _$ erase_ssubset H)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- Induction principle for `finset`s in a linearly ordered type: a predicate is true on all
 `s : finset α` provided that:
 
@@ -1047,6 +1149,8 @@ section ExistsMaxMin
 
 variable [LinearOrderₓ α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x' «expr ∈ » s)
 theorem exists_max_image (s : Finset β) (f : β → α) (h : s.nonempty) :
   ∃ (x : _)(_ : x ∈ s), ∀ x' _ : x' ∈ s, f x' ≤ f x :=
   by 
@@ -1054,6 +1158,8 @@ theorem exists_max_image (s : Finset β) (f : β → α) (h : s.nonempty) :
     rcases mem_image.mp (mem_of_max hy) with ⟨x, hx, rfl⟩
     exact ⟨x, hx, fun x' hx' => le_max_of_mem (mem_image_of_mem f hx') hy⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x' «expr ∈ » s)
 theorem exists_min_image (s : Finset β) (f : β → α) (h : s.nonempty) :
   ∃ (x : _)(_ : x ∈ s), ∀ x' _ : x' ∈ s, f x ≤ f x' :=
   @exists_max_image (OrderDual α) β _ s f h
@@ -1064,21 +1170,19 @@ end Finset
 
 namespace Multiset
 
--- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem count_sup
-[decidable_eq β]
-(s : finset α)
-(f : α → multiset β)
-(b : β) : «expr = »(count b (s.sup f), s.sup (λ a, count b (f a))) :=
-begin
-  letI [] [] [":=", expr classical.dec_eq α],
-  refine [expr s.induction _ _],
-  { exact [expr count_zero _] },
-  { assume [binders (i s his ih)],
-    rw ["[", expr finset.sup_insert, ",", expr sup_eq_union, ",", expr count_union, ",", expr finset.sup_insert, ",", expr ih, "]"] [],
-    refl }
-end
+theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset β) (b : β) :
+  count b (s.sup f) = s.sup fun a => count b (f a) :=
+  by 
+    let this' := Classical.decEq α 
+    refine' s.induction _ _
+    ·
+      exact count_zero _
+    ·
+      intro i s his ih 
+      rw [Finset.sup_insert, sup_eq_union, count_union, Finset.sup_insert, ih]
+      rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » s)
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β} {x : β} :
   x ∈ s.sup f ↔ ∃ (v : _)(_ : v ∈ s), x ∈ f v :=
   by 
@@ -1089,7 +1193,7 @@ theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β
     ·
       intro a s has hxs 
       rw [Finset.sup_insert, Multiset.sup_eq_union, Multiset.mem_union]
-      split 
+      constructor
       ·
         intro hxi 
         cases' hxi with hf hf
@@ -1113,6 +1217,8 @@ end Multiset
 
 namespace Finset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » s)
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Finset β} {x : β} :
   x ∈ s.sup f ↔ ∃ (v : _)(_ : v ∈ s), x ∈ f v :=
   by 
@@ -1137,10 +1243,11 @@ section Lattice
 
 variable {ι : Type _} {ι' : Sort _} [CompleteLattice α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- Supremum of `s i`, `i : ι`, is equal to the supremum over `t : finset ι` of suprema
 `⨆ i ∈ t, s i`. This version assumes `ι` is a `Type*`. See `supr_eq_supr_finset'` for a version
 that works for `ι : Sort*`. -/
-theorem supr_eq_supr_finset (s : ι → α) : (⨆i, s i) = ⨆t : Finset ι, ⨆(i : _)(_ : i ∈ t), s i :=
+theorem supr_eq_supr_finset (s : ι → α) : (⨆ i, s i) = ⨆ t : Finset ι, ⨆ (i : _)(_ : i ∈ t), s i :=
   by 
     classical 
     exact
@@ -1155,23 +1262,28 @@ theorem supr_eq_supr_finset (s : ι → α) : (⨆i, s i) = ⨆t : Finset ι, �
                   le_reflₓ _)
         (supr_le$ fun t => supr_le$ fun b => supr_le$ fun hb => le_supr _ _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- Supremum of `s i`, `i : ι`, is equal to the supremum over `t : finset ι` of suprema
 `⨆ i ∈ t, s i`. This version works for `ι : Sort*`. See `supr_eq_supr_finset` for a version
 that assumes `ι : Type*` but has no `plift`s. -/
-theorem supr_eq_supr_finset' (s : ι' → α) : (⨆i, s i) = ⨆t : Finset (Plift ι'), ⨆(i : _)(_ : i ∈ t), s (Plift.down i) :=
+theorem supr_eq_supr_finset' (s : ι' → α) :
+  (⨆ i, s i) = ⨆ t : Finset (Plift ι'), ⨆ (i : _)(_ : i ∈ t), s (Plift.down i) :=
   by 
     rw [←supr_eq_supr_finset, ←equiv.plift.surjective.supr_comp] <;> rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- Infimum of `s i`, `i : ι`, is equal to the infimum over `t : finset ι` of infima
 `⨅ i ∈ t, s i`. This version assumes `ι` is a `Type*`. See `infi_eq_infi_finset'` for a version
 that works for `ι : Sort*`. -/
-theorem infi_eq_infi_finset (s : ι → α) : (⨅i, s i) = ⨅t : Finset ι, ⨅(i : _)(_ : i ∈ t), s i :=
+theorem infi_eq_infi_finset (s : ι → α) : (⨅ i, s i) = ⨅ t : Finset ι, ⨅ (i : _)(_ : i ∈ t), s i :=
   @supr_eq_supr_finset (OrderDual α) _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- Infimum of `s i`, `i : ι`, is equal to the infimum over `t : finset ι` of infima
 `⨅ i ∈ t, s i`. This version works for `ι : Sort*`. See `infi_eq_infi_finset` for a version
 that assumes `ι : Type*` but has no `plift`s. -/
-theorem infi_eq_infi_finset' (s : ι' → α) : (⨅i, s i) = ⨅t : Finset (Plift ι'), ⨅(i : _)(_ : i ∈ t), s (Plift.down i) :=
+theorem infi_eq_infi_finset' (s : ι' → α) :
+  (⨅ i, s i) = ⨅ t : Finset (Plift ι'), ⨅ (i : _)(_ : i ∈ t), s (Plift.down i) :=
   @supr_eq_supr_finset' (OrderDual α) _ _ _
 
 end Lattice
@@ -1180,31 +1292,35 @@ namespace Set
 
 variable {ι : Type _} {ι' : Sort _}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- Union of an indexed family of sets `s : ι → set α` is equal to the union of the unions
 of finite subfamilies. This version assumes `ι : Type*`. See also `Union_eq_Union_finset'` for
 a version that works for `ι : Sort*`. -/
-theorem Union_eq_Union_finset (s : ι → Set α) : (⋃i, s i) = ⋃t : Finset ι, ⋃(i : _)(_ : i ∈ t), s i :=
+theorem Union_eq_Union_finset (s : ι → Set α) : (⋃ i, s i) = ⋃ t : Finset ι, ⋃ (i : _)(_ : i ∈ t), s i :=
   supr_eq_supr_finset s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- Union of an indexed family of sets `s : ι → set α` is equal to the union of the unions
 of finite subfamilies. This version works for `ι : Sort*`. See also `Union_eq_Union_finset` for
 a version that assumes `ι : Type*` but avoids `plift`s in the right hand side. -/
 theorem Union_eq_Union_finset' (s : ι' → Set α) :
-  (⋃i, s i) = ⋃t : Finset (Plift ι'), ⋃(i : _)(_ : i ∈ t), s (Plift.down i) :=
+  (⋃ i, s i) = ⋃ t : Finset (Plift ι'), ⋃ (i : _)(_ : i ∈ t), s (Plift.down i) :=
   supr_eq_supr_finset' s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- Intersection of an indexed family of sets `s : ι → set α` is equal to the intersection of the
 intersections of finite subfamilies. This version assumes `ι : Type*`. See also
 `Inter_eq_Inter_finset'` for a version that works for `ι : Sort*`. -/
-theorem Inter_eq_Inter_finset (s : ι → Set α) : (⋂i, s i) = ⋂t : Finset ι, ⋂(i : _)(_ : i ∈ t), s i :=
+theorem Inter_eq_Inter_finset (s : ι → Set α) : (⋂ i, s i) = ⋂ t : Finset ι, ⋂ (i : _)(_ : i ∈ t), s i :=
   infi_eq_infi_finset s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- Intersection of an indexed family of sets `s : ι → set α` is equal to the intersection of the
 intersections of finite subfamilies. This version works for `ι : Sort*`. See also
 `Inter_eq_Inter_finset` for a version that assumes `ι : Type*` but avoids `plift`s in the right
 hand side. -/
 theorem Inter_eq_Inter_finset' (s : ι' → Set α) :
-  (⋂i, s i) = ⋂t : Finset (Plift ι'), ⋂(i : _)(_ : i ∈ t), s (Plift.down i) :=
+  (⋂ i, s i) = ⋂ t : Finset (Plift ι'), ⋂ (i : _)(_ : i ∈ t), s (Plift.down i) :=
   infi_eq_infi_finset' s
 
 end Set
@@ -1218,56 +1334,78 @@ open Function
 
 section Lattice
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » («expr↑ »(s) : set α))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem supr_coe [HasSupₓ β] (f : α → β) (s : Finset α) :
-  (⨆(x : _)(_ : x ∈ («expr↑ » s : Set α)), f x) = ⨆(x : _)(_ : x ∈ s), f x :=
+  (⨆ (x : _)(_ : x ∈ (↑s : Set α)), f x) = ⨆ (x : _)(_ : x ∈ s), f x :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » («expr↑ »(s) : set α))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem infi_coe [HasInfₓ β] (f : α → β) (s : Finset α) :
-  (⨅(x : _)(_ : x ∈ («expr↑ » s : Set α)), f x) = ⨅(x : _)(_ : x ∈ s), f x :=
+  (⨅ (x : _)(_ : x ∈ (↑s : Set α)), f x) = ⨅ (x : _)(_ : x ∈ s), f x :=
   rfl
 
 variable [CompleteLattice β]
 
-theorem supr_singleton (a : α) (s : α → β) : (⨆(x : _)(_ : x ∈ ({a} : Finset α)), s x) = s a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ({a} : finset α))
+theorem supr_singleton (a : α) (s : α → β) : (⨆ (x : _)(_ : x ∈ ({a} : Finset α)), s x) = s a :=
   by 
     simp 
 
-theorem infi_singleton (a : α) (s : α → β) : (⨅(x : _)(_ : x ∈ ({a} : Finset α)), s x) = s a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ({a} : finset α))
+theorem infi_singleton (a : α) (s : α → β) : (⨅ (x : _)(_ : x ∈ ({a} : Finset α)), s x) = s a :=
   by 
     simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » o.to_finset)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » o)
 theorem supr_option_to_finset (o : Option α) (f : α → β) :
-  (⨆(x : _)(_ : x ∈ o.to_finset), f x) = ⨆(x : _)(_ : x ∈ o), f x :=
+  (⨆ (x : _)(_ : x ∈ o.to_finset), f x) = ⨆ (x : _)(_ : x ∈ o), f x :=
   by 
     simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » o.to_finset)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » o)
 theorem infi_option_to_finset (o : Option α) (f : α → β) :
-  (⨅(x : _)(_ : x ∈ o.to_finset), f x) = ⨅(x : _)(_ : x ∈ o), f x :=
+  (⨅ (x : _)(_ : x ∈ o.to_finset), f x) = ⨅ (x : _)(_ : x ∈ o), f x :=
   @supr_option_to_finset _ (OrderDual β) _ _ _
 
 variable [DecidableEq α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∪ »(s, t))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem supr_union {f : α → β} {s t : Finset α} :
-  (⨆(x : _)(_ : x ∈ s ∪ t), f x) = (⨆(x : _)(_ : x ∈ s), f x)⊔⨆(x : _)(_ : x ∈ t), f x :=
+  (⨆ (x : _)(_ : x ∈ s ∪ t), f x) = (⨆ (x : _)(_ : x ∈ s), f x)⊔⨆ (x : _)(_ : x ∈ t), f x :=
   by 
     simp [supr_or, supr_sup_eq]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∪ »(s, t))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem infi_union {f : α → β} {s t : Finset α} :
-  (⨅(x : _)(_ : x ∈ s ∪ t), f x) = (⨅(x : _)(_ : x ∈ s), f x)⊓⨅(x : _)(_ : x ∈ t), f x :=
+  (⨅ (x : _)(_ : x ∈ s ∪ t), f x) = (⨅ (x : _)(_ : x ∈ s), f x)⊓⨅ (x : _)(_ : x ∈ t), f x :=
   @supr_union α (OrderDual β) _ _ _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » insert a s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem supr_insert (a : α) (s : Finset α) (t : α → β) :
-  (⨆(x : _)(_ : x ∈ insert a s), t x) = t a⊔⨆(x : _)(_ : x ∈ s), t x :=
+  (⨆ (x : _)(_ : x ∈ insert a s), t x) = t a⊔⨆ (x : _)(_ : x ∈ s), t x :=
   by 
     rw [insert_eq]
     simp only [supr_union, Finset.supr_singleton]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » insert a s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem infi_insert (a : α) (s : Finset α) (t : α → β) :
-  (⨅(x : _)(_ : x ∈ insert a s), t x) = t a⊓⨅(x : _)(_ : x ∈ s), t x :=
+  (⨅ (x : _)(_ : x ∈ insert a s), t x) = t a⊓⨅ (x : _)(_ : x ∈ s), t x :=
   @supr_insert α (OrderDual β) _ _ _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s.image f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem supr_finset_image {f : γ → α} {g : α → β} {s : Finset γ} :
-  (⨆(x : _)(_ : x ∈ s.image f), g x) = ⨆(y : _)(_ : y ∈ s), g (f y) :=
+  (⨆ (x : _)(_ : x ∈ s.image f), g x) = ⨆ (y : _)(_ : y ∈ s), g (f y) :=
   by 
     rw [←supr_coe, coe_image, supr_image, supr_coe]
 
@@ -1277,13 +1415,17 @@ theorem sup_finset_image {β γ : Type _} [SemilatticeSup β] [OrderBot β] (f :
     classical 
     induction' s using Finset.induction_on with a s' ha ih <;> simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s.image f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem infi_finset_image {f : γ → α} {g : α → β} {s : Finset γ} :
-  (⨅(x : _)(_ : x ∈ s.image f), g x) = ⨅(y : _)(_ : y ∈ s), g (f y) :=
+  (⨅ (x : _)(_ : x ∈ s.image f), g x) = ⨅ (y : _)(_ : y ∈ s), g (f y) :=
   by 
     rw [←infi_coe, coe_image, infi_image, infi_coe]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » insert x t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem supr_insert_update {x : α} {t : Finset α} (f : α → β) {s : β} (hx : x ∉ t) :
-  (⨆(i : _)(_ : i ∈ insert x t), Function.update f x s i) = s⊔⨆(i : _)(_ : i ∈ t), f i :=
+  (⨆ (i : _)(_ : i ∈ insert x t), Function.update f x s i) = s⊔⨆ (i : _)(_ : i ∈ t), f i :=
   by 
     simp only [Finset.supr_insert, update_same]
     rcongr i hi 
@@ -1291,90 +1433,135 @@ theorem supr_insert_update {x : α} {t : Finset α} (f : α → β) {s : β} (hx
     rintro rfl 
     exact hx hi
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » insert x t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem infi_insert_update {x : α} {t : Finset α} (f : α → β) {s : β} (hx : x ∉ t) :
-  (⨅(i : _)(_ : i ∈ insert x t), update f x s i) = s⊓⨅(i : _)(_ : i ∈ t), f i :=
+  (⨅ (i : _)(_ : i ∈ insert x t), update f x s i) = s⊓⨅ (i : _)(_ : i ∈ t), f i :=
   @supr_insert_update α (OrderDual β) _ _ _ _ f _ hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s.bUnion t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t x)
 theorem supr_bUnion (s : Finset γ) (t : γ → Finset α) (f : α → β) :
-  (⨆(y : _)(_ : y ∈ s.bUnion t), f y) = ⨆(x : _)(_ : x ∈ s)(y : _)(_ : y ∈ t x), f y :=
+  (⨆ (y : _)(_ : y ∈ s.bUnion t), f y) = ⨆ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ t x), f y :=
   by 
     simp [@supr_comm _ α, supr_and]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s.bUnion t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t x)
 theorem infi_bUnion (s : Finset γ) (t : γ → Finset α) (f : α → β) :
-  (⨅(y : _)(_ : y ∈ s.bUnion t), f y) = ⨅(x : _)(_ : x ∈ s)(y : _)(_ : y ∈ t x), f y :=
+  (⨅ (y : _)(_ : y ∈ s.bUnion t), f y) = ⨅ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ t x), f y :=
   @supr_bUnion _ (OrderDual β) _ _ _ _ _ _
 
 end Lattice
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » («expr↑ »(s) : set α))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem set_bUnion_coe (s : Finset α) (t : α → Set β) :
-  (⋃(x : _)(_ : x ∈ («expr↑ » s : Set α)), t x) = ⋃(x : _)(_ : x ∈ s), t x :=
+  (⋃ (x : _)(_ : x ∈ (↑s : Set α)), t x) = ⋃ (x : _)(_ : x ∈ s), t x :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » («expr↑ »(s) : set α))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem set_bInter_coe (s : Finset α) (t : α → Set β) :
-  (⋂(x : _)(_ : x ∈ («expr↑ » s : Set α)), t x) = ⋂(x : _)(_ : x ∈ s), t x :=
+  (⋂ (x : _)(_ : x ∈ (↑s : Set α)), t x) = ⋂ (x : _)(_ : x ∈ s), t x :=
   rfl
 
-theorem set_bUnion_singleton (a : α) (s : α → Set β) : (⋃(x : _)(_ : x ∈ ({a} : Finset α)), s x) = s a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ({a} : finset α))
+theorem set_bUnion_singleton (a : α) (s : α → Set β) : (⋃ (x : _)(_ : x ∈ ({a} : Finset α)), s x) = s a :=
   supr_singleton a s
 
-theorem set_bInter_singleton (a : α) (s : α → Set β) : (⋂(x : _)(_ : x ∈ ({a} : Finset α)), s x) = s a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » ({a} : finset α))
+theorem set_bInter_singleton (a : α) (s : α → Set β) : (⋂ (x : _)(_ : x ∈ ({a} : Finset α)), s x) = s a :=
   infi_singleton a s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 @[simp]
-theorem set_bUnion_preimage_singleton (f : α → β) (s : Finset β) : (⋃(y : _)(_ : y ∈ s), f ⁻¹' {y}) = f ⁻¹' s :=
+theorem set_bUnion_preimage_singleton (f : α → β) (s : Finset β) : (⋃ (y : _)(_ : y ∈ s), f ⁻¹' {y}) = f ⁻¹' s :=
   Set.bUnion_preimage_singleton f s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » o.to_finset)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » o)
 theorem set_bUnion_option_to_finset (o : Option α) (f : α → Set β) :
-  (⋃(x : _)(_ : x ∈ o.to_finset), f x) = ⋃(x : _)(_ : x ∈ o), f x :=
+  (⋃ (x : _)(_ : x ∈ o.to_finset), f x) = ⋃ (x : _)(_ : x ∈ o), f x :=
   supr_option_to_finset o f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » o.to_finset)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » o)
 theorem set_bInter_option_to_finset (o : Option α) (f : α → Set β) :
-  (⋂(x : _)(_ : x ∈ o.to_finset), f x) = ⋂(x : _)(_ : x ∈ o), f x :=
+  (⋂ (x : _)(_ : x ∈ o.to_finset), f x) = ⋂ (x : _)(_ : x ∈ o), f x :=
   infi_option_to_finset o f
 
-theorem subset_set_bUnion_of_mem {s : Finset α} {f : α → Set β} {x : α} (h : x ∈ s) : f x ⊆ ⋃(y : _)(_ : y ∈ s), f y :=
-  show f x ≤ ⨆(y : _)(_ : y ∈ s), f y from le_supr_of_le x$ le_supr _ h
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+theorem subset_set_bUnion_of_mem {s : Finset α} {f : α → Set β} {x : α} (h : x ∈ s) : f x ⊆ ⋃ (y : _)(_ : y ∈ s), f y :=
+  show f x ≤ ⨆ (y : _)(_ : y ∈ s), f y from le_supr_of_le x$ le_supr _ h
 
 variable [DecidableEq α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∪ »(s, t))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem set_bUnion_union (s t : Finset α) (u : α → Set β) :
-  (⋃(x : _)(_ : x ∈ s ∪ t), u x) = (⋃(x : _)(_ : x ∈ s), u x) ∪ ⋃(x : _)(_ : x ∈ t), u x :=
+  (⋃ (x : _)(_ : x ∈ s ∪ t), u x) = (⋃ (x : _)(_ : x ∈ s), u x) ∪ ⋃ (x : _)(_ : x ∈ t), u x :=
   supr_union
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∪ »(s, t))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem set_bInter_inter (s t : Finset α) (u : α → Set β) :
-  (⋂(x : _)(_ : x ∈ s ∪ t), u x) = (⋂(x : _)(_ : x ∈ s), u x) ∩ ⋂(x : _)(_ : x ∈ t), u x :=
+  (⋂ (x : _)(_ : x ∈ s ∪ t), u x) = (⋂ (x : _)(_ : x ∈ s), u x) ∩ ⋂ (x : _)(_ : x ∈ t), u x :=
   infi_union
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » insert a s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem set_bUnion_insert (a : α) (s : Finset α) (t : α → Set β) :
-  (⋃(x : _)(_ : x ∈ insert a s), t x) = t a ∪ ⋃(x : _)(_ : x ∈ s), t x :=
+  (⋃ (x : _)(_ : x ∈ insert a s), t x) = t a ∪ ⋃ (x : _)(_ : x ∈ s), t x :=
   supr_insert a s t
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » insert a s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem set_bInter_insert (a : α) (s : Finset α) (t : α → Set β) :
-  (⋂(x : _)(_ : x ∈ insert a s), t x) = t a ∩ ⋂(x : _)(_ : x ∈ s), t x :=
+  (⋂ (x : _)(_ : x ∈ insert a s), t x) = t a ∩ ⋂ (x : _)(_ : x ∈ s), t x :=
   infi_insert a s t
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s.image f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem set_bUnion_finset_image {f : γ → α} {g : α → Set β} {s : Finset γ} :
-  (⋃(x : _)(_ : x ∈ s.image f), g x) = ⋃(y : _)(_ : y ∈ s), g (f y) :=
+  (⋃ (x : _)(_ : x ∈ s.image f), g x) = ⋃ (y : _)(_ : y ∈ s), g (f y) :=
   supr_finset_image
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s.image f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem set_bInter_finset_image {f : γ → α} {g : α → Set β} {s : Finset γ} :
-  (⋂(x : _)(_ : x ∈ s.image f), g x) = ⋂(y : _)(_ : y ∈ s), g (f y) :=
+  (⋂ (x : _)(_ : x ∈ s.image f), g x) = ⋂ (y : _)(_ : y ∈ s), g (f y) :=
   infi_finset_image
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » insert x t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem set_bUnion_insert_update {x : α} {t : Finset α} (f : α → Set β) {s : Set β} (hx : x ∉ t) :
-  (⋃(i : _)(_ : i ∈ insert x t), @update _ _ _ f x s i) = s ∪ ⋃(i : _)(_ : i ∈ t), f i :=
+  (⋃ (i : _)(_ : i ∈ insert x t), @update _ _ _ f x s i) = s ∪ ⋃ (i : _)(_ : i ∈ t), f i :=
   supr_insert_update f hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » insert x t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem set_bInter_insert_update {x : α} {t : Finset α} (f : α → Set β) {s : Set β} (hx : x ∉ t) :
-  (⋂(i : _)(_ : i ∈ insert x t), @update _ _ _ f x s i) = s ∩ ⋂(i : _)(_ : i ∈ t), f i :=
+  (⋂ (i : _)(_ : i ∈ insert x t), @update _ _ _ f x s i) = s ∩ ⋂ (i : _)(_ : i ∈ t), f i :=
   infi_insert_update f hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s.bUnion t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t x)
 theorem set_bUnion_bUnion (s : Finset γ) (t : γ → Finset α) (f : α → Set β) :
-  (⋃(y : _)(_ : y ∈ s.bUnion t), f y) = ⋃(x : _)(_ : x ∈ s)(y : _)(_ : y ∈ t x), f y :=
+  (⋃ (y : _)(_ : y ∈ s.bUnion t), f y) = ⋃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ t x), f y :=
   supr_bUnion s t f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s.bUnion t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t x)
 theorem set_bInter_bUnion (s : Finset γ) (t : γ → Finset α) (f : α → Set β) :
-  (⋂(y : _)(_ : y ∈ s.bUnion t), f y) = ⋂(x : _)(_ : x ∈ s)(y : _)(_ : y ∈ t x), f y :=
+  (⋂ (y : _)(_ : y ∈ s.bUnion t), f y) = ⋂ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ t x), f y :=
   infi_bUnion s t f
 
 end Finset

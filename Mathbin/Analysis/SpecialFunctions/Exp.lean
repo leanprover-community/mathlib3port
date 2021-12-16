@@ -13,7 +13,7 @@ exp
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Finset Filter Metric Asymptotics Set Function
 
@@ -33,32 +33,30 @@ theorem exp_bound_sq (x z : ℂ) (hz : ∥z∥ ≤ 1) : ∥exp (x+z) - exp x - z
     _ ≤ ∥exp x∥*∥z∥^2 := mul_le_mul_of_nonneg_left (abs_exp_sub_one_sub_id_le hz) (norm_nonneg _)
     
 
--- error in Analysis.SpecialFunctions.Exp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem locally_lipschitz_exp
-{r : exprℝ()}
-(hr_nonneg : «expr ≤ »(0, r))
-(hr_le : «expr ≤ »(r, 1))
-(x y : exprℂ())
-(hyx : «expr < »(«expr∥ ∥»(«expr - »(y, x)), r)) : «expr ≤ »(«expr∥ ∥»(«expr - »(exp y, exp x)), «expr * »(«expr * »(«expr + »(1, r), «expr∥ ∥»(exp x)), «expr∥ ∥»(«expr - »(y, x)))) :=
-begin
-  have [ident hy_eq] [":", expr «expr = »(y, «expr + »(x, «expr - »(y, x)))] [],
-  by abel [] [] [],
-  have [ident hyx_sq_le] [":", expr «expr ≤ »(«expr ^ »(«expr∥ ∥»(«expr - »(y, x)), 2), «expr * »(r, «expr∥ ∥»(«expr - »(y, x))))] [],
-  { rw [expr pow_two] [],
-    exact [expr mul_le_mul hyx.le le_rfl (norm_nonneg _) hr_nonneg] },
-  have [ident h_sq] [":", expr ∀
-   z, «expr ≤ »(«expr∥ ∥»(z), 1) → «expr ≤ »(«expr∥ ∥»(«expr - »(exp «expr + »(x, z), exp x)), «expr + »(«expr * »(«expr∥ ∥»(z), «expr∥ ∥»(exp x)), «expr * »(«expr∥ ∥»(exp x), «expr ^ »(«expr∥ ∥»(z), 2))))] [],
-  { intros [ident z, ident hz],
-    have [] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(«expr - »(exp «expr + »(x, z), exp x), «expr • »(z, exp x))), «expr * »(«expr∥ ∥»(exp x), «expr ^ »(«expr∥ ∥»(z), 2)))] [],
-    from [expr exp_bound_sq x z hz],
-    rw ["[", "<-", expr sub_le_iff_le_add', ",", "<-", expr norm_smul z, "]"] [],
-    exact [expr (norm_sub_norm_le _ _).trans this] },
-  calc
-    «expr = »(«expr∥ ∥»(«expr - »(exp y, exp x)), «expr∥ ∥»(«expr - »(exp «expr + »(x, «expr - »(y, x)), exp x))) : by nth_rewrite [0] [expr hy_eq] []
-    «expr ≤ »(..., «expr + »(«expr * »(«expr∥ ∥»(«expr - »(y, x)), «expr∥ ∥»(exp x)), «expr * »(«expr∥ ∥»(exp x), «expr ^ »(«expr∥ ∥»(«expr - »(y, x)), 2)))) : h_sq «expr - »(y, x) (hyx.le.trans hr_le)
-    «expr ≤ »(..., «expr + »(«expr * »(«expr∥ ∥»(«expr - »(y, x)), «expr∥ ∥»(exp x)), «expr * »(«expr∥ ∥»(exp x), «expr * »(r, «expr∥ ∥»(«expr - »(y, x)))))) : add_le_add_left (mul_le_mul le_rfl hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _
-    «expr = »(..., «expr * »(«expr * »(«expr + »(1, r), «expr∥ ∥»(exp x)), «expr∥ ∥»(«expr - »(y, x)))) : by ring []
-end
+theorem locally_lipschitz_exp {r : ℝ} (hr_nonneg : 0 ≤ r) (hr_le : r ≤ 1) (x y : ℂ) (hyx : ∥y - x∥ < r) :
+  ∥exp y - exp x∥ ≤ ((1+r)*∥exp x∥)*∥y - x∥ :=
+  by 
+    have hy_eq : y = x+y - x
+    ·
+      abel 
+    have hyx_sq_le : (∥y - x∥^2) ≤ r*∥y - x∥
+    ·
+      rw [pow_two]
+      exact mul_le_mul hyx.le le_rfl (norm_nonneg _) hr_nonneg 
+    have h_sq : ∀ z, ∥z∥ ≤ 1 → ∥exp (x+z) - exp x∥ ≤ (∥z∥*∥exp x∥)+∥exp x∥*∥z∥^2
+    ·
+      intro z hz 
+      have  : ∥exp (x+z) - exp x - z • exp x∥ ≤ ∥exp x∥*∥z∥^2 
+      exact exp_bound_sq x z hz 
+      rw [←sub_le_iff_le_add', ←norm_smul z]
+      exact (norm_sub_norm_le _ _).trans this 
+    calc ∥exp y - exp x∥ = ∥exp (x+y - x) - exp x∥ :=
+      by 
+        nthRw 0[hy_eq]_ ≤ (∥y - x∥*∥exp x∥)+∥exp x∥*∥y - x∥^2 :=
+      h_sq (y - x) (hyx.le.trans hr_le)_ ≤ (∥y - x∥*∥exp x∥)+∥exp x∥*r*∥y - x∥ :=
+      add_le_add_left (mul_le_mul le_rfl hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _ _ = ((1+r)*∥exp x∥)*∥y - x∥ :=
+      by 
+        ring
 
 @[continuity]
 theorem continuous_exp : Continuous exp :=
@@ -137,15 +135,12 @@ namespace Real
 
 variable {x y z : ℝ}
 
--- error in Analysis.SpecialFunctions.Exp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The real exponential function tends to `+∞` at `+∞`. -/ theorem tendsto_exp_at_top : tendsto exp at_top at_top :=
-begin
-  have [ident A] [":", expr tendsto (λ
-    x : exprℝ(), «expr + »(x, 1)) at_top at_top] [":=", expr tendsto_at_top_add_const_right at_top 1 tendsto_id],
-  have [ident B] [":", expr «expr∀ᶠ in , »((x), at_top, «expr ≤ »(«expr + »(x, 1), exp x))] [":=", expr eventually_at_top.2 ⟨0, λ
-    x hx, add_one_le_exp x⟩],
-  exact [expr tendsto_at_top_mono' at_top B A]
-end
+/-- The real exponential function tends to `+∞` at `+∞`. -/
+theorem tendsto_exp_at_top : tendsto exp at_top at_top :=
+  by 
+    have A : tendsto (fun x : ℝ => x+1) at_top at_top := tendsto_at_top_add_const_right at_top 1 tendsto_id 
+    have B : ∀ᶠ x in at_top, (x+1) ≤ exp x := eventually_at_top.2 ⟨0, fun x hx => add_one_le_exp x⟩
+    exact tendsto_at_top_mono' at_top B A
 
 /-- The real exponential function tends to `0` at `-∞` or, equivalently, `exp(-x)` tends to `0`
 at `+∞` -/
@@ -164,28 +159,28 @@ theorem tendsto_exp_at_bot : tendsto exp at_bot (𝓝 0) :=
 theorem tendsto_exp_at_bot_nhds_within : tendsto exp at_bot (𝓝[Ioi 0] 0) :=
   tendsto_inf.2 ⟨tendsto_exp_at_bot, tendsto_principal.2$ eventually_of_forall exp_pos⟩
 
--- error in Analysis.SpecialFunctions.Exp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr ≥ » N)
 /-- The function `exp(x)/x^n` tends to `+∞` at `+∞`, for any natural number `n` -/
-theorem tendsto_exp_div_pow_at_top (n : exprℕ()) : tendsto (λ x, «expr / »(exp x, «expr ^ »(x, n))) at_top at_top :=
-begin
-  refine [expr (at_top_basis_Ioi.tendsto_iff (at_top_basis' 1)).2 (λ C hC₁, _)],
-  have [ident hC₀] [":", expr «expr < »(0, C)] [],
-  from [expr zero_lt_one.trans_le hC₁],
-  have [] [":", expr «expr < »(0, «expr ⁻¹»(«expr * »(exp 1, C)))] [":=", expr inv_pos.2 (mul_pos (exp_pos _) hC₀)],
-  obtain ["⟨", ident N, ",", ident hN, "⟩", ":", expr «expr∃ , »((N), ∀
-    k «expr ≥ » N, «expr < »(«expr / »((«expr ^ »(«expr↑ »(k), n) : exprℝ()), «expr ^ »(exp 1, k)), «expr ⁻¹»(«expr * »(exp 1, C)))), ":=", expr eventually_at_top.1 ((tendsto_pow_const_div_const_pow_of_one_lt n (one_lt_exp_iff.2 zero_lt_one)).eventually (gt_mem_nhds this))],
-  simp [] [] ["only"] ["[", "<-", expr exp_nat_mul, ",", expr mul_one, ",", expr div_lt_iff, ",", expr exp_pos, ",", "<-", expr div_eq_inv_mul, "]"] [] ["at", ident hN],
-  refine [expr ⟨N, trivial, λ x hx, _⟩],
-  rw [expr set.mem_Ioi] ["at", ident hx],
-  have [ident hx₀] [":", expr «expr < »(0, x)] [],
-  from [expr N.cast_nonneg.trans_lt hx],
-  rw ["[", expr set.mem_Ici, ",", expr le_div_iff (pow_pos hx₀ _), ",", "<-", expr le_div_iff' hC₀, "]"] [],
-  calc
-    «expr ≤ »(«expr ^ »(x, n), «expr ^ »(«expr⌈ ⌉₊»(x), n)) : pow_le_pow_of_le_left hx₀.le (nat.le_ceil _) _
-    «expr ≤ »(..., «expr / »(exp «expr⌈ ⌉₊»(x), «expr * »(exp 1, C))) : (hN _ (nat.lt_ceil.2 hx).le).le
-    «expr ≤ »(..., «expr / »(exp «expr + »(x, 1), «expr * »(exp 1, C))) : div_le_div_of_le (mul_pos (exp_pos _) hC₀).le «expr $ »(exp_le_exp.2, (nat.ceil_lt_add_one hx₀.le).le)
-    «expr = »(..., «expr / »(exp x, C)) : by rw ["[", expr add_comm, ",", expr exp_add, ",", expr mul_div_mul_left _ _ (exp_pos _).ne', "]"] []
-end
+theorem tendsto_exp_div_pow_at_top (n : ℕ) : tendsto (fun x => exp x / (x^n)) at_top at_top :=
+  by 
+    refine' (at_top_basis_Ioi.tendsto_iff (at_top_basis' 1)).2 fun C hC₁ => _ 
+    have hC₀ : 0 < C 
+    exact zero_lt_one.trans_le hC₁ 
+    have  : 0 < (exp 1*C)⁻¹ := inv_pos.2 (mul_pos (exp_pos _) hC₀)
+    obtain ⟨N, hN⟩ : ∃ N, ∀ k _ : k ≥ N, (↑k^n : ℝ) / (exp 1^k) < (exp 1*C)⁻¹ :=
+      eventually_at_top.1
+        ((tendsto_pow_const_div_const_pow_of_one_lt n (one_lt_exp_iff.2 zero_lt_one)).Eventually (gt_mem_nhds this))
+    simp only [←exp_nat_mul, mul_oneₓ, div_lt_iff, exp_pos, ←div_eq_inv_mul] at hN 
+    refine' ⟨N, trivialₓ, fun x hx => _⟩
+    rw [Set.mem_Ioi] at hx 
+    have hx₀ : 0 < x 
+    exact N.cast_nonneg.trans_lt hx 
+    rw [Set.mem_Ici, le_div_iff (pow_pos hx₀ _), ←le_div_iff' hC₀]
+    calc (x^n) ≤ (⌈x⌉₊^n) := pow_le_pow_of_le_left hx₀.le (Nat.le_ceil _) _ _ ≤ exp ⌈x⌉₊ / exp 1*C :=
+      (hN _ (Nat.lt_ceil.2 hx).le).le _ ≤ exp (x+1) / exp 1*C :=
+      div_le_div_of_le (mul_pos (exp_pos _) hC₀).le (exp_le_exp.2$ (Nat.ceil_lt_add_one hx₀.le).le)_ = exp x / C :=
+      by 
+        rw [add_commₓ, exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
 
 /-- The function `x^n * exp(-x)` tends to `0` at `+∞`, for any natural number `n`. -/
 theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : tendsto (fun x => (x^n)*exp (-x)) at_top (𝓝 0) :=
@@ -207,32 +202,28 @@ theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) (h
     simp only [zpow_neg₀ x n]
     ring
 
--- error in Analysis.SpecialFunctions.Exp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The function `(x ^ n) / (b * exp x + c)` tends to `0` at `+∞`, for any positive natural number
 `n` and any real numbers `b` and `c` such that `b` is nonzero. -/
-theorem tendsto_div_pow_mul_exp_add_at_top
-(b c : exprℝ())
-(n : exprℕ())
-(hb : «expr ≠ »(0, b))
-(hn : «expr ≤ »(1, n)) : tendsto (λ
- x, «expr / »(«expr ^ »(x, n), «expr + »(«expr * »(b, exp x), c))) at_top (expr𝓝() 0) :=
-begin
-  have [ident H] [":", expr ∀
-   d
-   e, «expr < »(0, d) → tendsto (λ
-    x : exprℝ(), «expr / »(«expr ^ »(x, n), «expr + »(«expr * »(d, exp x), e))) at_top (expr𝓝() 0)] [],
-  { intros [ident b', ident c', ident h],
-    convert [] [expr (tendsto_mul_exp_add_div_pow_at_top b' c' n h hn).inv_tendsto_at_top] [],
-    ext [] [ident x] [],
-    simpa [] [] ["only"] ["[", expr pi.inv_apply, "]"] [] ["using", expr inv_div.symm] },
-  cases [expr lt_or_gt_of_ne hb] [],
-  { exact [expr H b c h] },
-  { convert [] [expr (H «expr- »(b) «expr- »(c) (neg_pos.mpr h)).neg] [],
-    { ext [] [ident x] [],
-      field_simp [] [] [] [],
-      rw ["[", "<-", expr neg_add «expr * »(b, exp x) c, ",", expr neg_div_neg_eq, "]"] [] },
-    { exact [expr neg_zero.symm] } }
-end
+theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) (hn : 1 ≤ n) :
+  tendsto (fun x => (x^n) / (b*exp x)+c) at_top (𝓝 0) :=
+  by 
+    have H : ∀ d e, 0 < d → tendsto (fun x : ℝ => (x^n) / (d*exp x)+e) at_top (𝓝 0)
+    ·
+      intro b' c' h 
+      convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h hn).inv_tendsto_at_top 
+      ext x 
+      simpa only [Pi.inv_apply] using inv_div.symm 
+    cases lt_or_gt_of_neₓ hb
+    ·
+      exact H b c h
+    ·
+      convert (H (-b) (-c) (neg_pos.mpr h)).neg
+      ·
+        ext x 
+        fieldSimp 
+        rw [←neg_add (b*exp x) c, neg_div_neg_eq]
+      ·
+        exact neg_zero.symm
 
 /-- `real.exp` as an order isomorphism between `ℝ` and `(0, +∞)`. -/
 def exp_order_iso : ℝ ≃o Ioi (0 : ℝ) :=

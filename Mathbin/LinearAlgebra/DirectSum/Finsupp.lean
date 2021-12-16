@@ -12,7 +12,7 @@ The tensor product of ι →₀ M and κ →₀ N is linearly equivalent to (ι 
 
 universe u v w
 
-noncomputable theory
+noncomputable section 
 
 open_locale DirectSum
 
@@ -76,7 +76,7 @@ variable (S : Type _) [CommRingₓ S] (α β : Type _)
 A variant of `finsupp_tensor_finsupp` where both modules are the ground ring.
 -/
 def finsuppTensorFinsupp' : (α →₀ S) ⊗[S] (β →₀ S) ≃ₗ[S] α × β →₀ S :=
-  (finsuppTensorFinsupp S S S α β).trans (Finsupp.lcongr (Equiv.refl _) (TensorProduct.lid S S))
+  (finsuppTensorFinsupp S S S α β).trans (Finsupp.lcongr (Equivₓ.refl _) (TensorProduct.lid S S))
 
 @[simp]
 theorem finsupp_tensor_finsupp'_apply_apply (f : α →₀ S) (g : β →₀ S) (a : α) (b : β) :

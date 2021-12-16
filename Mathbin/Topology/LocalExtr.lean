@@ -133,7 +133,7 @@ theorem IsExtrOn.is_local_extr (hf : IsExtrOn f s a) (hs : s ∈ 𝓝 a) : IsLoc
 theorem IsLocalMinOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMinOn f s a) [ne_bot (𝓝[Iio (f a)] f a)] :
   ¬𝓝 (f a) ≤ map f (𝓝[s] a) :=
   fun hle =>
-    have  : ∀ᶠy in 𝓝[Iio (f a)] f a, f a ≤ y := (eventually_map.2 hf).filter_mono (inf_le_left.trans hle)
+    have  : ∀ᶠ y in 𝓝[Iio (f a)] f a, f a ≤ y := (eventually_map.2 hf).filter_mono (inf_le_left.trans hle)
     let ⟨y, hy⟩ := (this.and self_mem_nhds_within).exists 
     hy.1.not_lt hy.2
 

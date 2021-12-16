@@ -63,7 +63,7 @@ theorem iterate_map_pow (f : M →* M) a (n m : ℕ) : (f^[n]) (a ^ m) = (f^[n])
 theorem iterate_map_zpow (f : G →* G) a (n : ℕ) (m : ℤ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
   commute.iterate_left (fun x => f.map_zpow x m) n a
 
-theorem coe_pow {M} [CommMonoidₓ M] (f : Monoidₓ.End M) (n : ℕ) : «expr⇑ » (f ^ n) = f^[n] :=
+theorem coe_pow {M} [CommMonoidₓ M] (f : Monoidₓ.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
 
 end MonoidHom
@@ -90,7 +90,7 @@ section Semiringₓ
 
 variable {R : Type _} [Semiringₓ R] (f : R →+* R) (n : ℕ) (x y : R)
 
-theorem coe_pow (n : ℕ) : «expr⇑ » (f ^ n) = f^[n] :=
+theorem coe_pow (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) f n
 
 theorem iterate_map_one : (f^[n]) 1 = 1 :=
@@ -126,7 +126,7 @@ theorem iterate_map_zsmul (n : ℕ) (m : ℤ) (x : R) : (f^[n]) (m • x) = m �
 
 end RingHom
 
-theorem Equiv.Perm.coe_pow {α : Type _} (f : Equiv.Perm α) (n : ℕ) : «expr⇑ » (f ^ n) = f^[n] :=
+theorem Equivₓ.Perm.coe_pow {α : Type _} (f : Equivₓ.Perm α) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun _ _ => rfl) _ _
 
 section Monoidₓ

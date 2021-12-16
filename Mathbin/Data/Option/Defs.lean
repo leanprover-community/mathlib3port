@@ -27,6 +27,9 @@ instance HasMem : HasMem α (Option α) :=
 theorem mem_def {a : α} {b : Option α} : a ∈ b ↔ b = some a :=
   Iff.rfl
 
+theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
+  Iff.rfl
+
 theorem is_none_iff_eq_none {o : Option α} : o.is_none = tt ↔ o = none :=
   ⟨Option.eq_none_of_is_none, fun e => e.symm ▸ rfl⟩
 
@@ -44,6 +47,7 @@ Try to use `o.is_none` or `o.is_some` instead.
 def decidable_eq_none {o : Option α} : Decidable (o = none) :=
   decidableOfDecidableOfIff (Bool.decidableEq _ _) is_none_iff_eq_none
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » o)
 instance decidable_forall_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀ a _ : a ∈ o, p a)
 | none =>
   is_true
@@ -51,6 +55,7 @@ instance decidable_forall_mem {p : α → Prop} [DecidablePred p] : ∀ o : Opti
       simp [false_implies_iff])
 | some a => if h : p a then is_true$ fun o e => some_inj.1 e ▸ h else is_false$ mt (fun H => H _ rfl) h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » o)
 instance decidable_exists_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ (a : _)(_ : a ∈ o), p a)
 | none =>
   is_false
@@ -138,6 +143,7 @@ def pbind : ∀ x : Option α, (∀ a : α, a ∈ x → Option β) → Option β
 | none, _ => none
 | some a, f => f a rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » x)
 /-- Partial map. If `f : Π a, p a → β` is a partial function defined on `a : α` satisfying `p`,
 then `pmap f x h` is essentially the same as `map f x` but is defined only when all members of `x`
 satisfy `p`, using the proof to apply `f`. -/

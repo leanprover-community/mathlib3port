@@ -36,13 +36,13 @@ variable [Preorderₓ α] [Preorderₓ β] {s t : Set α} {a b : α}
 -/
 
 
-/-- The set of upper bounds of a set. -/
-def UpperBounds (s : Set α) : Set α :=
-  { x | ∀ ⦃a⦄, a ∈ s → a ≤ x }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The set of upper bounds of a set. -/ def UpperBounds ( s : Set α ) : Set α := { x | ∀ ⦃ a ⦄ , a ∈ s → a ≤ x }
 
-/-- The set of lower bounds of a set. -/
-def LowerBounds (s : Set α) : Set α :=
-  { x | ∀ ⦃a⦄, a ∈ s → x ≤ a }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The set of lower bounds of a set. -/ def LowerBounds ( s : Set α ) : Set α := { x | ∀ ⦃ a ⦄ , a ∈ s → x ≤ a }
 
 /-- A set is bounded above if there exists an upper bound. -/
 def BddAbove (s : Set α) :=
@@ -68,12 +68,15 @@ def IsLub (s : Set α) : α → Prop :=
 def IsGlb (s : Set α) : α → Prop :=
   IsGreatest (LowerBounds s)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem mem_upper_bounds : a ∈ UpperBounds s ↔ ∀ x _ : x ∈ s, x ≤ a :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem mem_lower_bounds : a ∈ LowerBounds s ↔ ∀ x _ : x ∈ s, a ≤ x :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`
 is not greater than or equal to `y`. This version only assumes `preorder` structure and uses
 `¬(y ≤ x)`. A version for linear orders is called `not_bdd_above_iff`. -/
@@ -81,18 +84,21 @@ theorem not_bdd_above_iff' : ¬BddAbove s ↔ ∀ x, ∃ (y : _)(_ : y ∈ s), �
   by 
     simp [BddAbove, UpperBounds, Set.Nonempty]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` such that `x`
 is not less than or equal to `y`. This version only assumes `preorder` structure and uses
 `¬(x ≤ y)`. A version for linear orders is called `not_bdd_below_iff`. -/
 theorem not_bdd_below_iff' : ¬BddBelow s ↔ ∀ x, ∃ (y : _)(_ : y ∈ s), ¬x ≤ y :=
   @not_bdd_above_iff' (OrderDual α) _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` that is greater
 than `x`. A version for preorders is called `not_bdd_above_iff'`. -/
 theorem not_bdd_above_iff {α : Type _} [LinearOrderₓ α] {s : Set α} : ¬BddAbove s ↔ ∀ x, ∃ (y : _)(_ : y ∈ s), x < y :=
   by 
     simp only [not_bdd_above_iff', not_leₓ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` that is less
 than `x`. A version for preorders is called `not_bdd_below_iff'`. -/
 theorem not_bdd_below_iff {α : Type _} [LinearOrderₓ α] {s : Set α} : ¬BddBelow s ↔ ∀ x, ∃ (y : _)(_ : y ∈ s), y < x :=
@@ -764,9 +770,11 @@ theorem lower_bounds_le_upper_bounds (ha : a ∈ LowerBounds s) (hb : b ∈ Uppe
 theorem is_glb_le_is_lub (ha : IsGlb s a) (hb : IsLub s b) (hs : s.nonempty) : a ≤ b :=
   lower_bounds_le_upper_bounds ha.1 hb.1 hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » upper_bounds s)
 theorem is_lub_lt_iff (ha : IsLub s a) : a < b ↔ ∃ (c : _)(_ : c ∈ UpperBounds s), c < b :=
   ⟨fun hb => ⟨a, ha.1, hb⟩, fun ⟨c, hcs, hcb⟩ => lt_of_le_of_ltₓ (ha.2 hcs) hcb⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » lower_bounds s)
 theorem lt_is_glb_iff (ha : IsGlb s a) : b < a ↔ ∃ (c : _)(_ : c ∈ LowerBounds s), b < c :=
   is_lub_lt_iff ha.dual
 
@@ -816,25 +824,31 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α] {s : Set α} {a b : α}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 theorem lt_is_lub_iff (h : IsLub s a) : b < a ↔ ∃ (c : _)(_ : c ∈ s), b < c :=
   by 
     simp only [←not_leₓ, is_lub_le_iff h, mem_upper_bounds, not_forall]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 theorem is_glb_lt_iff (h : IsGlb s a) : a < b ↔ ∃ (c : _)(_ : c ∈ s), c < b :=
   lt_is_lub_iff h.dual
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 theorem IsLub.exists_between (h : IsLub s a) (hb : b < a) : ∃ (c : _)(_ : c ∈ s), b < c ∧ c ≤ a :=
   let ⟨c, hcs, hbc⟩ := (lt_is_lub_iff h).1 hb
   ⟨c, hcs, hbc, h.1 hcs⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 theorem IsLub.exists_between' (h : IsLub s a) (h' : a ∉ s) (hb : b < a) : ∃ (c : _)(_ : c ∈ s), b < c ∧ c < a :=
   let ⟨c, hcs, hbc, hca⟩ := h.exists_between hb
   ⟨c, hcs, hbc, hca.lt_of_ne$ fun hac => h'$ hac ▸ hcs⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 theorem IsGlb.exists_between (h : IsGlb s a) (hb : a < b) : ∃ (c : _)(_ : c ∈ s), a ≤ c ∧ c < b :=
   let ⟨c, hcs, hbc⟩ := (is_glb_lt_iff h).1 hb
   ⟨c, hcs, h.1 hcs, hbc⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 theorem IsGlb.exists_between' (h : IsGlb s a) (h' : a ∉ s) (hb : a < b) : ∃ (c : _)(_ : c ∈ s), a < c ∧ c < b :=
   let ⟨c, hcs, hac, hcb⟩ := h.exists_between hb
   ⟨c, hcs, hac.lt_of_ne$ fun hac => h'$ hac.symm ▸ hcs, hcb⟩
@@ -850,16 +864,20 @@ section LinearOrderedAddCommGroup
 
 variable [LinearOrderedAddCommGroup α] {s : Set α} {a ε : α}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem IsGlb.exists_between_self_add (h : IsGlb s a) (hε : 0 < ε) : ∃ (b : _)(_ : b ∈ s), a ≤ b ∧ b < a+ε :=
   h.exists_between$ lt_add_of_pos_right _ hε
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem IsGlb.exists_between_self_add' (h : IsGlb s a) (h₂ : a ∉ s) (hε : 0 < ε) :
   ∃ (b : _)(_ : b ∈ s), a < b ∧ b < a+ε :=
   h.exists_between' h₂$ lt_add_of_pos_right _ hε
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem IsLub.exists_between_sub_self (h : IsLub s a) (hε : 0 < ε) : ∃ (b : _)(_ : b ∈ s), a - ε < b ∧ b ≤ a :=
   h.exists_between$ sub_lt_self _ hε
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem IsLub.exists_between_sub_self' (h : IsLub s a) (h₂ : a ∉ s) (hε : 0 < ε) :
   ∃ (b : _)(_ : b ∈ s), a - ε < b ∧ b < a :=
   h.exists_between' h₂$ sub_lt_self _ hε

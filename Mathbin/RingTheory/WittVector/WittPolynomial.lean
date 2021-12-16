@@ -71,10 +71,10 @@ It is defined as:
 
 `∑_{i ≤ n} p^i X_i^{p^{n-i}} ∈ R[X_0, X_1, X_2, …]`. -/
 noncomputable def wittPolynomial (n : ℕ) : MvPolynomial ℕ R :=
-  ∑i in range (n+1), monomial (single i (p ^ (n - i))) (p ^ i : R)
+  ∑ i in range (n+1), monomial (single i (p ^ (n - i))) (p ^ i : R)
 
 theorem witt_polynomial_eq_sum_C_mul_X_pow (n : ℕ) :
-  wittPolynomial p R n = ∑i in range (n+1), C (p ^ i : R)*X i ^ p ^ (n - i) :=
+  wittPolynomial p R n = ∑ i in range (n+1), C (p ^ i : R)*X i ^ p ^ (n - i) :=
   by 
     apply sum_congr rfl 
     rintro i -
@@ -122,13 +122,13 @@ theorem witt_polynomial_zero : wittPolynomial p R 0 = X 0 :=
     simp only [wittPolynomial, X, sum_singleton, range_one, pow_zeroₓ]
 
 @[simp]
-theorem witt_polynomial_one : wittPolynomial p R 1 = (C («expr↑ » p)*X 1)+X 0 ^ p :=
+theorem witt_polynomial_one : wittPolynomial p R 1 = (C (↑p)*X 1)+X 0 ^ p :=
   by 
     simp only [witt_polynomial_eq_sum_C_mul_X_pow, sum_range_succ_comm, range_one, sum_singleton, one_mulₓ, pow_oneₓ,
       C_1, pow_zeroₓ]
 
 theorem aeval_witt_polynomial {A : Type _} [CommRingₓ A] [Algebra R A] (f : ℕ → A) (n : ℕ) :
-  aeval f (W_ R n) = ∑i in range (n+1), (p ^ i)*f i ^ p ^ (n - i) :=
+  aeval f (W_ R n) = ∑ i in range (n+1), (p ^ i)*f i ^ p ^ (n - i) :=
   by 
     simp [wittPolynomial, AlgHom.map_sum, aeval_monomial, Finsupp.prod_single_index]
 
@@ -154,24 +154,22 @@ variable [hp : Fact p.prime]
 
 include hp
 
--- error in RingTheory.WittVector.WittPolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem witt_polynomial_vars
-[char_zero R]
-(n : exprℕ()) : «expr = »((witt_polynomial p R n).vars, range «expr + »(n, 1)) :=
-begin
-  have [] [":", expr ∀
-   i, «expr = »((monomial (finsupp.single i «expr ^ »(p, «expr - »(n, i))) («expr ^ »(p, i) : R)).vars, {i})] [],
-  { intro [ident i],
-    refine [expr vars_monomial_single i (pow_ne_zero _ hp.1.ne_zero) _],
-    rw ["[", "<-", expr nat.cast_pow, ",", expr nat.cast_ne_zero, "]"] [],
-    exact [expr pow_ne_zero i hp.1.ne_zero] },
-  rw ["[", expr witt_polynomial, ",", expr vars_sum_of_disjoint, "]"] [],
-  { simp [] [] ["only"] ["[", expr this, ",", expr int.nat_cast_eq_coe_nat, ",", expr bUnion_singleton_eq_self, "]"] [] [] },
-  { simp [] [] ["only"] ["[", expr this, ",", expr int.nat_cast_eq_coe_nat, "]"] [] [],
-    intros [ident a, ident b, ident h],
-    apply [expr disjoint_singleton_left.mpr],
-    rwa [expr mem_singleton] [] }
-end
+theorem witt_polynomial_vars [CharZero R] (n : ℕ) : (wittPolynomial p R n).vars = range (n+1) :=
+  by 
+    have  : ∀ i, (monomial (Finsupp.single i (p ^ (n - i))) (p ^ i : R)).vars = {i}
+    ·
+      intro i 
+      refine' vars_monomial_single i (pow_ne_zero _ hp.1.ne_zero) _ 
+      rw [←Nat.cast_pow, Nat.cast_ne_zero]
+      exact pow_ne_zero i hp.1.ne_zero 
+    rw [wittPolynomial, vars_sum_of_disjoint]
+    ·
+      simp only [this, Int.nat_cast_eq_coe_nat, bUnion_singleton_eq_self]
+    ·
+      simp only [this, Int.nat_cast_eq_coe_nat]
+      intro a b h 
+      apply disjoint_singleton_left.mpr 
+      rwa [mem_singleton]
 
 theorem witt_polynomial_vars_subset (n : ℕ) : (wittPolynomial p R n).vars ⊆ range (n+1) :=
   by 
@@ -197,12 +195,12 @@ that corresponds to the ordinary `X n`. -/
 noncomputable def xInTermsOfW [Invertible (p : R)] : ℕ → MvPolynomial ℕ R
 | n =>
   (X n -
-      ∑i : Finₓ n,
+      ∑ i : Finₓ n,
         have  := i.2
         C (p ^ (i : ℕ) : R)*xInTermsOfW i ^ p ^ (n - i))*C (⅟ p ^ n : R)
 
 theorem X_in_terms_of_W_eq [Invertible (p : R)] {n : ℕ} :
-  xInTermsOfW p R n = (X n - ∑i in range n, C (p ^ i : R)*xInTermsOfW p R i ^ p ^ (n - i))*C (⅟ p ^ n : R) :=
+  xInTermsOfW p R n = (X n - ∑ i in range n, C (p ^ i : R)*xInTermsOfW p R i ^ p ^ (n - i))*C (⅟ p ^ n : R) :=
   by 
     rw [xInTermsOfW, ←Finₓ.sum_univ_eq_sum_range]
 
@@ -274,7 +272,7 @@ theorem X_in_terms_of_W_vars_subset (n : ℕ) : (xInTermsOfW p ℚ n).vars ⊆ r
 end PPrime
 
 theorem X_in_terms_of_W_aux [Invertible (p : R)] (n : ℕ) :
-  (xInTermsOfW p R n*C (p ^ n : R)) = X n - ∑i in range n, C (p ^ i : R)*xInTermsOfW p R i ^ p ^ (n - i) :=
+  (xInTermsOfW p R n*C (p ^ n : R)) = X n - ∑ i in range n, C (p ^ i : R)*xInTermsOfW p R i ^ p ^ (n - i) :=
   by 
     rw [X_in_terms_of_W_eq, mul_assocₓ, ←C_mul, ←mul_powₓ, inv_of_mul_self, one_pow, C_1, mul_oneₓ]
 
@@ -286,22 +284,22 @@ theorem bind₁_X_in_terms_of_W_witt_polynomial [Invertible (p : R)] (k : ℕ) :
     rw [sum_range_succ_comm, tsub_self, pow_zeroₓ, pow_oneₓ, bind₁_X_right, mul_commₓ, ←C_pow, X_in_terms_of_W_aux]
     simp only [C_pow, bind₁_X_right, sub_add_cancel]
 
--- error in RingTheory.WittVector.WittPolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem bind₁_witt_polynomial_X_in_terms_of_W
-[invertible (p : R)]
-(n : exprℕ()) : «expr = »(bind₁ (exprW_() R) (X_in_terms_of_W p R n), X n) :=
-begin
-  apply [expr nat.strong_induction_on n],
-  clear [ident n],
-  intros [ident n, ident H],
-  rw ["[", expr X_in_terms_of_W_eq, ",", expr alg_hom.map_mul, ",", expr alg_hom.map_sub, ",", expr bind₁_X_right, ",", expr alg_hom_C, ",", expr alg_hom.map_sum, "]"] [],
-  have [] [":", expr «expr = »(«expr - »(exprW_() R n, «expr∑ in , »((i), range n, «expr * »(C («expr ^ »(p, i) : R), «expr ^ »(X i, «expr ^ »(p, «expr - »(n, i)))))), «expr * »(C («expr ^ »(p, n) : R), X n))] [],
-  by simp [] [] ["only"] ["[", expr witt_polynomial_eq_sum_C_mul_X_pow, ",", expr tsub_self, ",", expr sum_range_succ_comm, ",", expr pow_one, ",", expr add_sub_cancel, ",", expr pow_zero, "]"] [] [],
-  rw ["[", expr sum_congr rfl, ",", expr this, "]"] [],
-  { rw ["[", expr mul_right_comm, ",", "<-", expr C_mul, ",", "<-", expr mul_pow, ",", expr mul_inv_of_self, ",", expr one_pow, ",", expr C_1, ",", expr one_mul, "]"] [] },
-  { intros [ident i, ident h],
-    rw [expr mem_range] ["at", ident h],
-    simp [] [] ["only"] ["[", expr alg_hom.map_mul, ",", expr alg_hom.map_pow, ",", expr alg_hom_C, ",", expr H i h, "]"] [] [] }
-end
+theorem bind₁_witt_polynomial_X_in_terms_of_W [Invertible (p : R)] (n : ℕ) : bind₁ (W_ R) (xInTermsOfW p R n) = X n :=
+  by 
+    apply Nat.strong_induction_onₓ n 
+    clear n 
+    intro n H 
+    rw [X_in_terms_of_W_eq, AlgHom.map_mul, AlgHom.map_sub, bind₁_X_right, alg_hom_C, AlgHom.map_sum]
+    have  : (W_ R n - ∑ i in range n, C (p ^ i : R)*X i ^ p ^ (n - i)) = C (p ^ n : R)*X n
+    ·
+      simp only [witt_polynomial_eq_sum_C_mul_X_pow, tsub_self, sum_range_succ_comm, pow_oneₓ, add_sub_cancel,
+        pow_zeroₓ]
+    rw [sum_congr rfl, this]
+    ·
+      rw [mul_right_commₓ, ←C_mul, ←mul_powₓ, mul_inv_of_self, one_pow, C_1, one_mulₓ]
+    ·
+      intro i h 
+      rw [mem_range] at h 
+      simp only [AlgHom.map_mul, AlgHom.map_pow, alg_hom_C, H i h]
 

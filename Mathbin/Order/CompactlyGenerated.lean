@@ -56,88 +56,97 @@ def is_sup_closed_compact : Prop :=
 /-- A compactness property for a complete lattice is that any subset has a finite subset with the
 same `Sup`. -/
 def is_Sup_finite_compact : Prop :=
-  ∀ s : Set α, ∃ t : Finset α, «expr↑ » t ⊆ s ∧ Sup s = t.sup id
+  ∀ s : Set α, ∃ t : Finset α, ↑t ⊆ s ∧ Sup s = t.sup id
 
 /-- An element `k` of a complete lattice is said to be compact if any set with `Sup`
 above `k` has a finite subset with `Sup` above `k`.  Such an element is also called
 "finite" or "S-compact". -/
 def is_compact_element {α : Type _} [CompleteLattice α] (k : α) :=
-  ∀ s : Set α, k ≤ Sup s → ∃ t : Finset α, «expr↑ » t ⊆ s ∧ k ≤ t.sup id
+  ∀ s : Set α, k ≤ Sup s → ∃ t : Finset α, ↑t ⊆ s ∧ k ≤ t.sup id
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- An element `k` is compact if and only if any directed set with `Sup` above
-`k` already got above `k` at some point in the set. -/
-theorem is_compact_element_iff_le_of_directed_Sup_le
-(k : α) : «expr ↔ »(is_compact_element k, ∀
- s : set α, s.nonempty → directed_on ((«expr ≤ »)) s → «expr ≤ »(k, Sup s) → «expr∃ , »((x : α), «expr ∧ »(«expr ∈ »(x, s), «expr ≤ »(k, x)))) :=
-begin
-  classical,
-  split,
-  { by_cases [expr hbot, ":", expr «expr = »(k, «expr⊥»())],
-    { rintros ["_", "_", "⟨", ident x, ",", ident hx, "⟩", "_", "_"],
-      use [expr x],
-      by simp [] [] ["only"] ["[", expr hx, ",", expr hbot, ",", expr bot_le, ",", expr and_self, "]"] [] [] },
-    { intros [ident hk, ident s, ident hne, ident hdir, ident hsup],
-      obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr hk s hsup],
-      have [ident tne] [":", expr t.nonempty] [],
-      { by_contradiction [ident n],
-        rw ["[", expr finset.nonempty_iff_ne_empty, ",", expr not_not, "]"] ["at", ident n],
-        simp [] [] ["only"] ["[", expr n, ",", expr true_and, ",", expr set.empty_subset, ",", expr finset.coe_empty, ",", expr finset.sup_empty, ",", expr le_bot_iff, "]"] [] ["at", ident ht],
-        exact [expr absurd ht hbot] },
-      have [ident t_below_s] [":", expr ∀ x «expr ∈ » t, «expr∃ , »((y «expr ∈ » s), «expr ≤ »(x, y))] [],
-      from [expr λ x hxt, ⟨x, ht.left hxt, by refl⟩],
-      obtain ["⟨", ident x, ",", "⟨", ident hxs, ",", ident hsupx, "⟩", "⟩", ":=", expr finset.sup_le_of_le_directed s hne hdir t t_below_s],
-      exact [expr ⟨x, ⟨hxs, le_trans ht.right hsupx⟩⟩] } },
-  { intros [ident hk, ident s, ident hsup],
-    let [ident S] [":", expr set α] [":=", expr {x | «expr∃ , »((t : finset α), «expr ∧ »(«expr ⊆ »(«expr↑ »(t), s), «expr = »(x, t.sup id)))}],
-    have [ident dir_US] [":", expr directed_on ((«expr ≤ »)) S] [],
-    { rintros [ident x, "⟨", ident c, ",", ident hc, "⟩", ident y, "⟨", ident d, ",", ident hd, "⟩"],
-      use [expr «expr ⊔ »(x, y)],
-      split,
-      { use [expr «expr ∪ »(c, d)],
-        split,
-        { simp [] [] ["only"] ["[", expr hc.left, ",", expr hd.left, ",", expr set.union_subset_iff, ",", expr finset.coe_union, ",", expr and_self, "]"] [] [] },
-        { simp [] [] ["only"] ["[", expr hc.right, ",", expr hd.right, ",", expr finset.sup_union, "]"] [] [] } },
-      simp [] [] ["only"] ["[", expr and_self, ",", expr le_sup_left, ",", expr le_sup_right, "]"] [] [] },
-    have [ident sup_S] [":", expr «expr ≤ »(Sup s, Sup S)] [],
-    { apply [expr Sup_le_Sup],
-      intros [ident x, ident hx],
-      use [expr {x}],
-      simpa [] [] ["only"] ["[", expr and_true, ",", expr id.def, ",", expr finset.coe_singleton, ",", expr eq_self_iff_true, ",", expr finset.sup_singleton, ",", expr set.singleton_subset_iff, "]"] [] [] },
-    have [ident Sne] [":", expr S.nonempty] [],
-    { suffices [] [":", expr «expr ∈ »(«expr⊥»(), S)],
-      from [expr set.nonempty_of_mem this],
-      use [expr «expr∅»()],
-      simp [] [] ["only"] ["[", expr set.empty_subset, ",", expr finset.coe_empty, ",", expr finset.sup_empty, ",", expr eq_self_iff_true, ",", expr and_self, "]"] [] [] },
-    obtain ["⟨", ident j, ",", "⟨", ident hjS, ",", ident hjk, "⟩", "⟩", ":=", expr hk S Sne dir_US (le_trans hsup sup_S)],
-    obtain ["⟨", ident t, ",", "⟨", ident htS, ",", ident htsup, "⟩", "⟩", ":=", expr hjS],
-    use [expr t],
-    exact [expr ⟨htS, by rwa ["<-", expr htsup] []⟩] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    An element `k` is compact if and only if any directed set with `Sup` above
+    `k` already got above `k` at some point in the set. -/
+  theorem
+    is_compact_element_iff_le_of_directed_Sup_le
+    ( k : α )
+      : is_compact_element k ↔ ∀ s : Set α , s.nonempty → DirectedOn · ≤ · s → k ≤ Sup s → ∃ x : α , x ∈ s ∧ k ≤ x
+    :=
+      by
+        classical
+          constructor
+          ·
+            intro hk s hne hdir hsup
+              obtain ⟨ t , ht ⟩ := hk s hsup
+              have t_below_s : ∀ x _ : x ∈ t , ∃ ( y : _ ) ( _ : y ∈ s ) , x ≤ y
+              exact fun x hxt => ⟨ x , ht.left hxt , le_rfl ⟩
+              obtain ⟨ x , ⟨ hxs , hsupx ⟩ ⟩ := Finset.sup_le_of_le_directed s hne hdir t t_below_s
+              exact ⟨ x , ⟨ hxs , le_transₓ ht.right hsupx ⟩ ⟩
+          ·
+            intro hk s hsup
+              let S : Set α := { x | ∃ t : Finset α , ↑ t ⊆ s ∧ x = t.sup id }
+              have dir_US : DirectedOn · ≤ · S
+              ·
+                rintro x ⟨ c , hc ⟩ y ⟨ d , hd ⟩
+                  use x ⊔ y
+                  constructor
+                  ·
+                    use c ∪ d
+                      constructor
+                      · simp only [ hc.left , hd.left , Set.union_subset_iff , Finset.coe_union , and_selfₓ ]
+                      · simp only [ hc.right , hd.right , Finset.sup_union ]
+                  simp only [ and_selfₓ , le_sup_left , le_sup_right ]
+              have sup_S : Sup s ≤ Sup S
+              ·
+                apply Sup_le_Sup
+                  intro x hx
+                  use { x }
+                  simpa
+                    only
+                    [
+                      and_trueₓ
+                        ,
+                        id.def
+                        ,
+                        Finset.coe_singleton
+                        ,
+                        eq_self_iff_true
+                        ,
+                        Finset.sup_singleton
+                        ,
+                        Set.singleton_subset_iff
+                      ]
+              have Sne : S.nonempty
+              ·
+                suffices : ⊥ ∈ S
+                  exact Set.nonempty_of_mem this
+                  use ∅
+                  simp only [ Set.empty_subset , Finset.coe_empty , Finset.sup_empty , eq_self_iff_true , and_selfₓ ]
+              obtain ⟨ j , ⟨ hjS , hjk ⟩ ⟩ := hk S Sne dir_US le_transₓ hsup sup_S
+              obtain ⟨ t , ⟨ htS , htsup ⟩ ⟩ := hjS
+              use t
+              exact ⟨ htS , by rwa [ ← htsup ] ⟩
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A compact element `k` has the property that any directed set lying strictly below `k` has
 its Sup strictly below `k`. -/
-theorem is_compact_element.directed_Sup_lt_of_lt
-{α : Type*}
-[complete_lattice α]
-{k : α}
-(hk : is_compact_element k)
-{s : set α}
-(hemp : s.nonempty)
-(hdir : directed_on ((«expr ≤ »)) s)
-(hbelow : ∀ x «expr ∈ » s, «expr < »(x, k)) : «expr < »(Sup s, k) :=
-begin
-  rw [expr is_compact_element_iff_le_of_directed_Sup_le] ["at", ident hk],
-  by_contradiction [],
-  have [ident sSup] [":", expr «expr ≤ »(Sup s, k)] [],
-  from [expr Sup_le (λ s hs, (hbelow s hs).le)],
-  replace [ident sSup] [":", expr «expr = »(Sup s, k)] [":=", expr eq_iff_le_not_lt.mpr ⟨sSup, h⟩],
-  obtain ["⟨", ident x, ",", ident hxs, ",", ident hkx, "⟩", ":=", expr hk s hemp hdir sSup.symm.le],
-  obtain [ident hxk, ":=", expr hbelow x hxs],
-  exact [expr hxk.ne (hxk.le.antisymm hkx)]
-end
+theorem is_compact_element.directed_Sup_lt_of_lt {α : Type _} [CompleteLattice α] {k : α} (hk : is_compact_element k)
+  {s : Set α} (hemp : s.nonempty) (hdir : DirectedOn (· ≤ ·) s) (hbelow : ∀ x _ : x ∈ s, x < k) : Sup s < k :=
+  by 
+    rw [is_compact_element_iff_le_of_directed_Sup_le] at hk 
+    byContra 
+    have sSup : Sup s ≤ k 
+    exact Sup_le fun s hs => (hbelow s hs).le 
+    replace sSup : Sup s = k := eq_iff_le_not_lt.mpr ⟨sSup, h⟩
+    obtain ⟨x, hxs, hkx⟩ := hk s hemp hdir sSup.symm.le 
+    obtain hxk := hbelow x hxs 
+    exact hxk.ne (hxk.le.antisymm hkx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f : β → α} (s : Finset β)
   (h : ∀ x _ : x ∈ s, is_compact_element (f x)) : is_compact_element (s.sup f) :=
   by 
@@ -154,35 +163,32 @@ theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f :
     specialize h d hemp hdir (le_transₓ (Finset.le_sup hps) hsup)
     simpa only [exists_prop]
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem well_founded.is_Sup_finite_compact
-(h : well_founded ((«expr > ») : α → α → exprProp())) : is_Sup_finite_compact α :=
-begin
-  intros [ident s],
-  let [ident p] [":", expr set α] [":=", expr {x | «expr∃ , »((t : finset α), «expr ∧ »(«expr ⊆ »(«expr↑ »(t), s), «expr = »(t.sup id, x)))}],
-  have [ident hp] [":", expr p.nonempty] [],
-  { use ["[", expr «expr⊥»(), ",", expr «expr∅»(), "]"],
-    simp [] [] [] [] [] [] },
-  obtain ["⟨", ident m, ",", "⟨", ident t, ",", "⟨", ident ht₁, ",", ident ht₂, "⟩", "⟩", ",", ident hm, "⟩", ":=", expr well_founded.well_founded_iff_has_max'.mp h p hp],
-  use [expr t],
-  simp [] [] ["only"] ["[", expr ht₁, ",", expr ht₂, ",", expr true_and, "]"] [] [],
-  apply [expr le_antisymm],
-  { apply [expr Sup_le],
-    intros [ident y, ident hy],
-    classical,
-    have [ident hy'] [":", expr «expr ∈ »((insert y t).sup id, p)] [],
-    { use [expr insert y t],
-      simp [] [] [] [] [] [],
-      rw [expr set.insert_subset] [],
-      exact [expr ⟨hy, ht₁⟩] },
-    have [ident hm'] [":", expr «expr ≤ »(m, (insert y t).sup id)] [],
-    { rw ["<-", expr ht₂] [],
-      exact [expr finset.sup_mono (t.subset_insert y)] },
-    rw ["<-", expr hm _ hy' hm'] [],
-    simp [] [] [] [] [] [] },
-  { rw ["[", "<-", expr ht₂, ",", expr finset.sup_id_eq_Sup, "]"] [],
-    exact [expr Sup_le_Sup ht₁] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  well_founded.is_Sup_finite_compact
+  ( h : WellFounded ( · > · : α → α → Prop ) ) : is_Sup_finite_compact α
+  :=
+    by
+      intro s
+        let p : Set α := { x | ∃ t : Finset α , ↑ t ⊆ s ∧ t.sup id = x }
+        have hp : p.nonempty
+        · use ⊥ , ∅ simp
+        obtain ⟨ m , ⟨ t , ⟨ ht₁ , ht₂ ⟩ ⟩ , hm ⟩ := well_founded.well_founded_iff_has_max'.mp h p hp
+        use t
+        simp only [ ht₁ , ht₂ , true_andₓ ]
+        apply le_antisymmₓ
+        ·
+          apply Sup_le
+            intro y hy
+            classical
+            have hy' : insert y t . sup id ∈ p
+            · use insert y t simp rw [ Set.insert_subset ] exact ⟨ hy , ht₁ ⟩
+            have hm' : m ≤ insert y t . sup id
+            · rw [ ← ht₂ ] exact Finset.sup_mono t.subset_insert y
+            rw [ ← hm _ hy' hm' ]
+            simp
+        · rw [ ← ht₂ , Finset.sup_id_eq_Sup ] exact Sup_le_Sup ht₁
 
 theorem is_Sup_finite_compact.is_sup_closed_compact (h : is_Sup_finite_compact α) : is_sup_closed_compact α :=
   by 
@@ -199,50 +205,56 @@ theorem is_Sup_finite_compact.is_sup_closed_compact (h : is_Sup_finite_compact �
       rw [ht₂]
       exact t.sup_closed_of_sup_closed h ht₁ hsc
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_sup_closed_compact.well_founded
-(h : is_sup_closed_compact α) : well_founded ((«expr > ») : α → α → exprProp()) :=
-begin
-  refine [expr rel_embedding.well_founded_iff_no_descending_seq.mpr ⟨λ a, _⟩],
-  suffices [] [":", expr «expr ∈ »(Sup (set.range a), set.range a)],
-  { obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr set.mem_range.mp this],
-    have [ident h'] [":", expr «expr < »(Sup (set.range a), a «expr + »(n, 1))] [],
-    { change [expr «expr > »(_, _)] [] [],
-      simp [] [] [] ["[", "<-", expr hn, ",", expr a.map_rel_iff, "]"] [] [] },
-    apply [expr lt_irrefl (a «expr + »(n, 1))],
-    apply [expr lt_of_le_of_lt _ h'],
-    apply [expr le_Sup],
-    apply [expr set.mem_range_self] },
-  apply [expr h (set.range a)],
-  { use [expr a 37],
-    apply [expr set.mem_range_self] },
-  { rintros [ident x, ident y, "⟨", ident m, ",", ident hm, "⟩", "⟨", ident n, ",", ident hn, "⟩"],
-    use [expr «expr ⊔ »(m, n)],
-    rw ["[", "<-", expr hm, ",", "<-", expr hn, "]"] [],
-    apply [expr a.to_rel_hom.map_sup] }
-end
+theorem is_sup_closed_compact.well_founded (h : is_sup_closed_compact α) : WellFounded (· > · : α → α → Prop) :=
+  by 
+    refine' rel_embedding.well_founded_iff_no_descending_seq.mpr ⟨fun a => _⟩
+    suffices  : Sup (Set.Range a) ∈ Set.Range a
+    ·
+      obtain ⟨n, hn⟩ := set.mem_range.mp this 
+      have h' : Sup (Set.Range a) < a (n+1)
+      ·
+        change _ > _ 
+        simp [←hn, a.map_rel_iff]
+      apply lt_irreflₓ (a (n+1))
+      apply lt_of_le_of_ltₓ _ h' 
+      apply le_Sup 
+      apply Set.mem_range_self 
+    apply h (Set.Range a)
+    ·
+      use a 37
+      apply Set.mem_range_self
+    ·
+      rintro x y ⟨m, hm⟩ ⟨n, hn⟩
+      use m⊔n 
+      rw [←hm, ←hn]
+      apply a.to_rel_hom.map_sup
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_Sup_finite_compact_iff_all_elements_compact : «expr ↔ »(is_Sup_finite_compact α, ∀
- k : α, is_compact_element k) :=
-begin
-  split,
-  { intros [ident h, ident k, ident s, ident hs],
-    obtain ["⟨", ident t, ",", "⟨", ident hts, ",", ident htsup, "⟩", "⟩", ":=", expr h s],
-    use ["[", expr t, ",", expr hts, "]"],
-    rwa ["<-", expr htsup] [] },
-  { intros [ident h, ident s],
-    obtain ["⟨", ident t, ",", "⟨", ident hts, ",", ident htsup, "⟩", "⟩", ":=", expr h (Sup s) s (by refl)],
-    have [] [":", expr «expr = »(Sup s, t.sup id)] [],
-    { suffices [] [":", expr «expr ≤ »(t.sup id, Sup s)],
-      by { apply [expr le_antisymm]; assumption },
-      simp [] [] ["only"] ["[", expr id.def, ",", expr finset.sup_le_iff, "]"] [] [],
-      intros [ident x, ident hx],
-      apply [expr le_Sup],
-      exact [expr hts hx] },
-    use ["[", expr t, ",", expr hts, "]"],
-    assumption }
-end
+theorem is_Sup_finite_compact_iff_all_elements_compact : is_Sup_finite_compact α ↔ ∀ k : α, is_compact_element k :=
+  by 
+    constructor
+    ·
+      intro h k s hs 
+      obtain ⟨t, ⟨hts, htsup⟩⟩ := h s 
+      use t, hts 
+      rwa [←htsup]
+    ·
+      intro h s 
+      obtain ⟨t, ⟨hts, htsup⟩⟩ :=
+        h (Sup s) s
+          (by 
+            rfl)
+      have  : Sup s = t.sup id
+      ·
+        suffices  : t.sup id ≤ Sup s
+        ·
+          ·
+            apply le_antisymmₓ <;> assumption 
+        simp only [id.def, Finset.sup_le_iff]
+        intro x hx 
+        apply le_Sup 
+        exact hts hx 
+      use t, hts 
+      assumption
 
 theorem well_founded_characterisations :
   tfae
@@ -284,6 +296,7 @@ alias is_sup_closed_compact_iff_well_founded ↔ _ WellFounded.is_sup_closed_com
 
 end CompleteLattice
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A complete lattice is said to be compactly generated if any
 element is the `Sup` of compact elements. -/
 class IsCompactlyGenerated (α : Type _) [CompleteLattice α] : Prop where 
@@ -294,13 +307,13 @@ section
 variable {α} [IsCompactlyGenerated α] {a b : α} {s : Set α}
 
 @[simp]
-theorem Sup_compact_le_eq b : Sup { c:α | CompleteLattice.IsCompactElement c ∧ c ≤ b } = b :=
+theorem Sup_compact_le_eq b : Sup { c : α | CompleteLattice.IsCompactElement c ∧ c ≤ b } = b :=
   by 
     rcases IsCompactlyGenerated.exists_Sup_eq b with ⟨s, hs, rfl⟩
     exact le_antisymmₓ (Sup_le fun c hc => hc.2) (Sup_le_Sup fun c cs => ⟨hs c cs, le_Sup cs⟩)
 
 @[simp]
-theorem Sup_compact_eq_top : Sup { a:α | CompleteLattice.IsCompactElement a } = ⊤ :=
+theorem Sup_compact_eq_top : Sup { a : α | CompleteLattice.IsCompactElement a } = ⊤ :=
   by 
     refine' Eq.trans (congr rfl (Set.ext fun x => _)) (Sup_compact_le_eq ⊤)
     exact (and_iff_left le_top).symm
@@ -312,8 +325,9 @@ theorem le_iff_compact_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, CompleteLatti
         rw [←Sup_compact_le_eq a, ←Sup_compact_le_eq b]
         exact Sup_le_Sup fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 /-- This property is sometimes referred to as `α` being upper continuous. -/
-theorem inf_Sup_eq_of_directed_on (h : DirectedOn (· ≤ ·) s) : a⊓Sup s = ⨆(b : _)(_ : b ∈ s), a⊓b :=
+theorem inf_Sup_eq_of_directed_on (h : DirectedOn (· ≤ ·) s) : a⊓Sup s = ⨆ (b : _)(_ : b ∈ s), a⊓b :=
   le_antisymmₓ
     (by 
       rw [le_iff_compact_le_imp]
@@ -330,7 +344,7 @@ theorem inf_Sup_eq_of_directed_on (h : DirectedOn (· ≤ ·) s) : a⊓Sup s = �
     supr_inf_le_inf_Sup
 
 /-- This property is equivalent to `α` being upper continuous. -/
-theorem inf_Sup_eq_supr_inf_sup_finset : a⊓Sup s = ⨆(t : Finset α)(H : «expr↑ » t ⊆ s), a⊓t.sup id :=
+theorem inf_Sup_eq_supr_inf_sup_finset : a⊓Sup s = ⨆ (t : Finset α)(H : ↑t ⊆ s), a⊓t.sup id :=
   le_antisymmₓ
     (by 
       rw [le_iff_compact_le_imp]
@@ -340,25 +354,26 @@ theorem inf_Sup_eq_supr_inf_sup_finset : a⊓Sup s = ⨆(t : Finset α)(H : «ex
       exact (le_inf hcinf.1 ht2).trans (le_bsupr t ht1))
     (supr_le$ fun t => supr_le$ fun h => inf_le_inf_left _ ((Finset.sup_id_eq_Sup t).symm ▸ Sup_le_Sup h))
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem complete_lattice.set_independent_iff_finite
-{s : set α} : «expr ↔ »(complete_lattice.set_independent s, ∀
- t : finset α, «expr ⊆ »(«expr↑ »(t), s) → complete_lattice.set_independent («expr↑ »(t) : set α)) :=
-⟨λ hs t ht, hs.mono ht, λ h a ha, begin
-   rw ["[", expr disjoint_iff, ",", expr inf_Sup_eq_supr_inf_sup_finset, ",", expr supr_eq_bot, "]"] [],
-   intro [ident t],
-   rw ["[", expr supr_eq_bot, ",", expr finset.sup_id_eq_Sup, "]"] [],
-   intro [ident ht],
-   classical,
-   have [ident h'] [] [":=", expr (h (insert a t) _ (t.mem_insert_self a)).eq_bot],
-   { rwa ["[", expr finset.coe_insert, ",", expr set.insert_diff_self_of_not_mem, "]"] ["at", ident h'],
-     exact [expr λ con, ((set.mem_diff a).1 (ht con)).2 (set.mem_singleton a)] },
-   { rw ["[", expr finset.coe_insert, ",", expr set.insert_subset, "]"] [],
-     exact [expr ⟨ha, set.subset.trans ht (set.diff_subset _ _)⟩] }
- end⟩
+theorem CompleteLattice.set_independent_iff_finite {s : Set α} :
+  CompleteLattice.SetIndependent s ↔ ∀ t : Finset α, ↑t ⊆ s → CompleteLattice.SetIndependent (↑t : Set α) :=
+  ⟨fun hs t ht => hs.mono ht,
+    fun h a ha =>
+      by 
+        rw [disjoint_iff, inf_Sup_eq_supr_inf_sup_finset, supr_eq_bot]
+        intro t 
+        rw [supr_eq_bot, Finset.sup_id_eq_Sup]
+        intro ht 
+        classical 
+        have h' := (h (insert a t) _ (t.mem_insert_self a)).eq_bot
+        ·
+          rwa [Finset.coe_insert, Set.insert_diff_self_of_not_mem] at h' 
+          exact fun con => ((Set.mem_diff a).1 (ht con)).2 (Set.mem_singleton a)
+        ·
+          rw [Finset.coe_insert, Set.insert_subset]
+          exact ⟨ha, Set.Subset.trans ht (Set.diff_subset _ _)⟩⟩
 
 theorem CompleteLattice.set_independent_Union_of_directed {η : Type _} {s : η → Set α} (hs : Directed (· ⊆ ·) s)
-  (h : ∀ i, CompleteLattice.SetIndependent (s i)) : CompleteLattice.SetIndependent (⋃i, s i) :=
+  (h : ∀ i, CompleteLattice.SetIndependent (s i)) : CompleteLattice.SetIndependent (⋃ i, s i) :=
   by 
     byCases' hη : Nonempty η
     ·
@@ -373,6 +388,7 @@ theorem CompleteLattice.set_independent_Union_of_directed {η : Type _} {s : η 
       exfalso 
       exact hη ⟨i⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem CompleteLattice.independent_sUnion_of_directed {s : Set (Set α)} (hs : DirectedOn (· ⊆ ·) s)
   (h : ∀ a _ : a ∈ s, CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀s) :=
   by 
@@ -427,97 +443,130 @@ section
 
 variable [IsModularLattice α] [IsCompactlyGenerated α]
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[priority 100] instance is_atomic_of_is_complemented [is_complemented α] : is_atomic α :=
-⟨λ b, begin
-   by_cases [expr h, ":", expr «expr ⊆ »({c : α | «expr ∧ »(complete_lattice.is_compact_element c, «expr ≤ »(c, b))}, {«expr⊥»()})],
-   { left,
-     rw ["[", "<-", expr Sup_compact_le_eq b, ",", expr Sup_eq_bot, "]"] [],
-     exact [expr h] },
-   { rcases [expr set.not_subset.1 h, "with", "⟨", ident c, ",", "⟨", ident hc, ",", ident hcb, "⟩", ",", ident hcbot, "⟩"],
-     right,
-     have [ident hc'] [] [":=", expr complete_lattice.Iic_coatomic_of_compact_element hc],
-     rw ["<-", expr is_atomic_iff_is_coatomic] ["at", ident hc'],
-     haveI [] [] [":=", expr hc'],
-     obtain [ident con, "|", "⟨", ident a, ",", ident ha, ",", ident hac, "⟩", ":=", expr eq_bot_or_exists_atom_le (⟨c, le_refl c⟩ : set.Iic c)],
-     { exfalso,
-       apply [expr hcbot],
-       simp [] [] ["only"] ["[", expr subtype.ext_iff, ",", expr set.Iic.coe_bot, ",", expr subtype.coe_mk, "]"] [] ["at", ident con],
-       exact [expr con] },
-     rw ["[", "<-", expr subtype.coe_le_coe, ",", expr subtype.coe_mk, "]"] ["at", ident hac],
-     exact [expr ⟨a, ha.of_is_atom_coe_Iic, hac.trans hcb⟩] }
- end⟩
+instance (priority := 100) is_atomic_of_is_complemented [IsComplemented α] : IsAtomic α :=
+  ⟨fun b =>
+      by 
+        byCases' h : { c : α | CompleteLattice.IsCompactElement c ∧ c ≤ b } ⊆ {⊥}
+        ·
+          left 
+          rw [←Sup_compact_le_eq b, Sup_eq_bot]
+          exact h
+        ·
+          rcases Set.not_subset.1 h with ⟨c, ⟨hc, hcb⟩, hcbot⟩
+          right 
+          have hc' := CompleteLattice.Iic_coatomic_of_compact_element hc 
+          rw [←is_atomic_iff_is_coatomic] at hc' 
+          have  := hc' 
+          obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_reflₓ c⟩ : Set.Iic c)
+          ·
+            exfalso 
+            apply hcbot 
+            simp only [Subtype.ext_iff, Set.Iic.coe_bot, Subtype.coe_mk] at con 
+            exact con 
+          rw [←Subtype.coe_le_coe, Subtype.coe_mk] at hac 
+          exact ⟨a, ha.of_is_atom_coe_Iic, hac.trans hcb⟩⟩
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- See Lemma 5.1, Călugăreanu -/
-@[priority 100]
-instance is_atomistic_of_is_complemented [is_complemented α] : is_atomistic α :=
-⟨λ
- b, ⟨{a | «expr ∧ »(is_atom a, «expr ≤ »(a, b))}, begin
-    symmetry,
-    have [ident hle] [":", expr «expr ≤ »(Sup {a : α | «expr ∧ »(is_atom a, «expr ≤ »(a, b))}, b)] [":=", expr «expr $ »(Sup_le, λ
-      _, and.right)],
-    apply [expr (lt_or_eq_of_le hle).resolve_left (λ con, _)],
-    obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr exists_is_compl (⟨Sup {a : α | «expr ∧ »(is_atom a, «expr ≤ »(a, b))}, hle⟩ : set.Iic b)],
-    obtain [ident rfl, "|", "⟨", ident a, ",", ident ha, ",", ident hac, "⟩", ":=", expr eq_bot_or_exists_atom_le c],
-    { exact [expr ne_of_lt con (subtype.ext_iff.1 (eq_top_of_is_compl_bot hc))] },
-    { apply [expr ha.1],
-      rw [expr eq_bot_iff] [],
-      apply [expr le_trans (le_inf _ hac) hc.1],
-      rw ["[", "<-", expr subtype.coe_le_coe, ",", expr subtype.coe_mk, "]"] [],
-      exact [expr le_Sup ⟨ha.of_is_atom_coe_Iic, a.2⟩] }
-  end, λ _, and.left⟩⟩
+  instance
+    ( priority := 100 )
+    is_atomistic_of_is_complemented
+    [ IsComplemented α ] : IsAtomistic α
+    :=
+      ⟨
+        fun
+          b
+            =>
+            ⟨
+              { a | IsAtom a ∧ a ≤ b }
+                ,
+                by
+                  symm
+                    have hle : Sup { a : α | IsAtom a ∧ a ≤ b } ≤ b := Sup_le $ fun _ => And.right
+                    apply lt_or_eq_of_leₓ hle . resolve_left fun con => _
+                    obtain ⟨ c , hc ⟩ := exists_is_compl ( ⟨ Sup { a : α | IsAtom a ∧ a ≤ b } , hle ⟩ : Set.Iic b )
+                    obtain rfl | ⟨ a , ha , hac ⟩ := eq_bot_or_exists_atom_le c
+                    · exact ne_of_ltₓ con Subtype.ext_iff . 1 eq_top_of_is_compl_bot hc
+                    ·
+                      apply ha . 1
+                        rw [ eq_bot_iff ]
+                        apply le_transₓ le_inf _ hac hc . 1
+                        rw [ ← Subtype.coe_le_coe , Subtype.coe_mk ]
+                        exact le_Sup ⟨ ha.of_is_atom_coe_Iic , a . 2 ⟩
+                ,
+                fun _ => And.left
+              ⟩
+        ⟩
 
--- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- See Theorem 6.6, Călugăreanu -/
-theorem is_complemented_of_Sup_atoms_eq_top (h : «expr = »(Sup {a : α | is_atom a}, «expr⊤»())) : is_complemented α :=
-⟨λ b, begin
-   obtain ["⟨", ident s, ",", "⟨", ident s_ind, ",", ident b_inf_Sup_s, ",", ident s_atoms, "⟩", ",", ident s_max, "⟩", ":=", expr zorn.zorn_subset {s : set α | «expr ∧ »(complete_lattice.set_independent s, «expr ∧ »(«expr = »(«expr ⊓ »(b, Sup s), «expr⊥»()), ∀
-      a «expr ∈ » s, is_atom a))} _],
-   { refine [expr ⟨Sup s, le_of_eq b_inf_Sup_s, _⟩],
-     rw ["[", "<-", expr h, ",", expr Sup_le_iff, "]"] [],
-     intros [ident a, ident ha],
-     rw ["<-", expr inf_eq_left] [],
-     refine [expr (eq_bot_or_eq_of_le_atom ha inf_le_left).resolve_left (λ con, ha.1 _)],
-     rw ["[", expr eq_bot_iff, ",", "<-", expr con, "]"] [],
-     refine [expr le_inf (le_refl a) ((le_Sup _).trans le_sup_right)],
-     rw ["<-", expr disjoint_iff] ["at", "*"],
-     have [ident a_dis_Sup_s] [":", expr disjoint a (Sup s)] [":=", expr con.mono_right le_sup_right],
-     rw ["<-", expr s_max «expr ∪ »(s, {a}) ⟨λ x hx, _, ⟨_, λ x hx, _⟩⟩ (set.subset_union_left _ _)] [],
-     { exact [expr set.mem_union_right _ (set.mem_singleton _)] },
-     { rw ["[", expr set.mem_union, ",", expr set.mem_singleton_iff, "]"] ["at", ident hx],
-       by_cases [expr xa, ":", expr «expr = »(x, a)],
-       { simp [] [] ["only"] ["[", expr xa, ",", expr set.mem_singleton, ",", expr set.insert_diff_of_mem, ",", expr set.union_singleton, "]"] [] [],
-         exact [expr con.mono_right (le_trans (Sup_le_Sup (set.diff_subset s {a})) le_sup_right)] },
-       { have [ident h] [":", expr «expr = »(«expr \ »(«expr ∪ »(s, {a}), {x}), «expr ∪ »(«expr \ »(s, {x}), {a}))] [],
-         { simp [] [] ["only"] ["[", expr set.union_singleton, "]"] [] [],
-           rw [expr set.insert_diff_of_not_mem] [],
-           rw [expr set.mem_singleton_iff] [],
-           exact [expr ne.symm xa] },
-         rw ["[", expr h, ",", expr Sup_union, ",", expr Sup_singleton, "]"] [],
-         apply [expr (s_ind (hx.resolve_right xa)).disjoint_sup_right_of_disjoint_sup_left (a_dis_Sup_s.mono_right _).symm],
-         rw ["[", "<-", expr Sup_insert, ",", expr set.insert_diff_singleton, ",", expr set.insert_eq_of_mem (hx.resolve_right xa), "]"] [] } },
-     { rw ["[", expr Sup_union, ",", expr Sup_singleton, ",", "<-", expr disjoint_iff, "]"] [],
-       exact [expr b_inf_Sup_s.disjoint_sup_right_of_disjoint_sup_left con.symm] },
-     { rw ["[", expr set.mem_union, ",", expr set.mem_singleton_iff, "]"] ["at", ident hx],
-       cases [expr hx] [],
-       { exact [expr s_atoms x hx] },
-       { rw [expr hx] [],
-         exact [expr ha] } } },
-   { intros [ident c, ident hc1, ident hc2],
-     refine [expr ⟨«expr⋃₀ »(c), ⟨complete_lattice.independent_sUnion_of_directed hc2.directed_on (λ
-         s hs, (hc1 hs).1), _, λ a ha, _⟩, λ _, set.subset_sUnion_of_mem⟩],
-     { rw ["[", expr Sup_sUnion, ",", "<-", expr Sup_image, ",", expr inf_Sup_eq_of_directed_on, ",", expr supr_eq_bot, "]"] [],
-       { intro [ident i],
-         rw [expr supr_eq_bot] [],
-         intro [ident hi],
-         obtain ["⟨", ident x, ",", ident xc, ",", ident rfl, "⟩", ":=", expr (set.mem_image _ _ _).1 hi],
-         exact [expr (hc1 xc).2.1] },
-       { rw [expr directed_on_image] [],
-         refine [expr hc2.directed_on.mono (λ s t, Sup_le_Sup)] } },
-     { rcases [expr set.mem_sUnion.1 ha, "with", "⟨", ident s, ",", ident sc, ",", ident as, "⟩"],
-       exact [expr (hc1 sc).2.2 a as] } }
- end⟩
+theorem is_complemented_of_Sup_atoms_eq_top (h : Sup { a : α | IsAtom a } = ⊤) : IsComplemented α :=
+  ⟨fun b =>
+      by 
+        obtain ⟨s, ⟨s_ind, b_inf_Sup_s, s_atoms⟩, s_max⟩ :=
+          Zorn.zorn_subset { s : Set α | CompleteLattice.SetIndependent s ∧ b⊓Sup s = ⊥ ∧ ∀ a _ : a ∈ s, IsAtom a } _
+        ·
+          refine' ⟨Sup s, le_of_eqₓ b_inf_Sup_s, _⟩
+          rw [←h, Sup_le_iff]
+          intro a ha 
+          rw [←inf_eq_left]
+          refine' (eq_bot_or_eq_of_le_atom ha inf_le_left).resolve_left fun con => ha.1 _ 
+          rw [eq_bot_iff, ←con]
+          refine' le_inf (le_reflₓ a) ((le_Sup _).trans le_sup_right)
+          rw [←disjoint_iff] at *
+          have a_dis_Sup_s : Disjoint a (Sup s) := con.mono_right le_sup_right 
+          rw [←s_max (s ∪ {a}) ⟨fun x hx => _, ⟨_, fun x hx => _⟩⟩ (Set.subset_union_left _ _)]
+          ·
+            exact Set.mem_union_right _ (Set.mem_singleton _)
+          ·
+            rw [Set.mem_union, Set.mem_singleton_iff] at hx 
+            byCases' xa : x = a
+            ·
+              simp only [xa, Set.mem_singleton, Set.insert_diff_of_mem, Set.union_singleton]
+              exact con.mono_right (le_transₓ (Sup_le_Sup (Set.diff_subset s {a})) le_sup_right)
+            ·
+              have h : (s ∪ {a}) \ {x} = s \ {x} ∪ {a}
+              ·
+                simp only [Set.union_singleton]
+                rw [Set.insert_diff_of_not_mem]
+                rw [Set.mem_singleton_iff]
+                exact Ne.symm xa 
+              rw [h, Sup_union, Sup_singleton]
+              apply
+                (s_ind (hx.resolve_right xa)).disjoint_sup_right_of_disjoint_sup_left (a_dis_Sup_s.mono_right _).symm 
+              rw [←Sup_insert, Set.insert_diff_singleton, Set.insert_eq_of_mem (hx.resolve_right xa)]
+          ·
+            rw [Sup_union, Sup_singleton, ←disjoint_iff]
+            exact b_inf_Sup_s.disjoint_sup_right_of_disjoint_sup_left con.symm
+          ·
+            rw [Set.mem_union, Set.mem_singleton_iff] at hx 
+            cases hx
+            ·
+              exact s_atoms x hx
+            ·
+              rw [hx]
+              exact ha
+        ·
+          intro c hc1 hc2 
+          refine'
+            ⟨⋃₀c,
+              ⟨CompleteLattice.independent_sUnion_of_directed hc2.directed_on fun s hs => (hc1 hs).1, _, fun a ha => _⟩,
+              fun _ => Set.subset_sUnion_of_mem⟩
+          ·
+            rw [Sup_sUnion, ←Sup_image, inf_Sup_eq_of_directed_on, supr_eq_bot]
+            ·
+              intro i 
+              rw [supr_eq_bot]
+              intro hi 
+              obtain ⟨x, xc, rfl⟩ := (Set.mem_image _ _ _).1 hi 
+              exact (hc1 xc).2.1
+            ·
+              rw [directed_on_image]
+              refine' hc2.directed_on.mono fun s t => Sup_le_Sup
+          ·
+            rcases Set.mem_sUnion.1 ha with ⟨s, sc, as⟩
+            exact (hc1 sc).2.2 a as⟩
 
 /-- See Theorem 6.6, Călugăreanu -/
 theorem is_complemented_of_is_atomistic [IsAtomistic α] : IsComplemented α :=
@@ -525,7 +574,7 @@ theorem is_complemented_of_is_atomistic [IsAtomistic α] : IsComplemented α :=
 
 theorem is_complemented_iff_is_atomistic : IsComplemented α ↔ IsAtomistic α :=
   by 
-    split  <;> intros 
+    constructor <;> intros 
     ·
       exact is_atomistic_of_is_complemented
     ·

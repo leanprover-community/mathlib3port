@@ -43,7 +43,7 @@ def std_basis : ∀ i : ι, φ i →ₗ[R] ∀ i, φ i :=
 theorem std_basis_apply (i : ι) (b : φ i) : std_basis R φ i b = update 0 i b :=
   rfl
 
-theorem coe_std_basis (i : ι) : «expr⇑ » (std_basis R φ i) = Pi.single i :=
+theorem coe_std_basis (i : ι) : ⇑std_basis R φ i = Pi.single i :=
   funext$ std_basis_apply R φ i
 
 @[simp]
@@ -80,26 +80,27 @@ theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (std_basis R 
   by 
     ext b <;> simp [std_basis_ne R φ _ _ h]
 
--- error in LinearAlgebra.StdBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem supr_range_std_basis_le_infi_ker_proj
-(I J : set ι)
-(h : disjoint I J) : «expr ≤ »(«expr⨆ , »((i «expr ∈ » I), range (std_basis R φ i)), «expr⨅ , »((i «expr ∈ » J), ker (proj i))) :=
-begin
-  refine [expr «expr $ »(supr_le, assume i, «expr $ »(supr_le, assume hi, range_le_iff_comap.2 _))],
-  simp [] [] ["only"] ["[", expr (ker_comp _ _).symm, ",", expr eq_top_iff, ",", expr set_like.le_def, ",", expr mem_ker, ",", expr comap_infi, ",", expr mem_infi, "]"] [] [],
-  assume [binders (b hb j hj)],
-  have [] [":", expr «expr ≠ »(i, j)] [":=", expr assume eq, h ⟨hi, «expr ▸ »(eq.symm, hj)⟩],
-  rw ["[", expr mem_comap, ",", expr mem_ker, ",", "<-", expr comp_apply, ",", expr proj_std_basis_ne R φ j i this.symm, ",", expr zero_apply, "]"] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » J)
+theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) :
+  (⨆ (i : _)(_ : i ∈ I), range (std_basis R φ i)) ≤ ⨅ (i : _)(_ : i ∈ J), ker (proj i) :=
+  by 
+    refine' supr_le$ fun i => supr_le$ fun hi => range_le_iff_comap.2 _ 
+    simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
+    intro b hb j hj 
+    have  : i ≠ j := fun eq => h ⟨hi, Eq.symm ▸ hj⟩
+    rw [mem_comap, mem_ker, ←comp_apply, proj_std_basis_ne R φ j i this.symm, zero_apply]
 
-theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.Univ ⊆ «expr↑ » I ∪ J) :
-  (⨅(i : _)(_ : i ∈ J), ker (proj i)) ≤ ⨆(i : _)(_ : i ∈ I), range (std_basis R φ i) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » J)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.Univ ⊆ ↑I ∪ J) :
+  (⨅ (i : _)(_ : i ∈ J), ker (proj i)) ≤ ⨆ (i : _)(_ : i ∈ I), range (std_basis R φ i) :=
   SetLike.le_def.2
     (by 
       intro b hb 
       simp only [mem_infi, mem_ker, proj_apply] at hb 
       rw
-        [←show (∑i in I, std_basis R φ i (b i)) = b by 
+        [←show (∑ i in I, std_basis R φ i (b i)) = b by 
           ext i 
           rw [Finset.sum_apply, ←std_basis_same R φ i (b i)]
           refine' Finset.sum_eq_single i (fun j hjI ne => std_basis_ne _ _ _ _ Ne.symm _) _ 
@@ -108,23 +109,21 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
           exact hb _ ((hu trivialₓ).resolve_left hiI)]
       exact sum_mem _ fun i hiI => mem_supr_of_mem i$ mem_supr_of_mem hiI$ (std_basis R φ i).mem_range_self (b i))
 
--- error in LinearAlgebra.StdBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem supr_range_std_basis_eq_infi_ker_proj
-{I J : set ι}
-(hd : disjoint I J)
-(hu : «expr ⊆ »(set.univ, «expr ∪ »(I, J)))
-(hI : set.finite I) : «expr = »(«expr⨆ , »((i «expr ∈ » I), range (std_basis R φ i)), «expr⨅ , »((i «expr ∈ » J), ker (proj i))) :=
-begin
-  refine [expr le_antisymm (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _],
-  have [] [":", expr «expr ⊆ »(set.univ, «expr ∪ »(«expr↑ »(hI.to_finset), J))] [],
-  { rwa ["[", expr hI.coe_to_finset, "]"] [] },
-  refine [expr le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) «expr $ »(supr_le_supr, assume i, _)],
-  rw ["[", expr set.finite.mem_to_finset, "]"] [],
-  exact [expr le_refl _]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » J)
+theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J)
+  (hI : Set.Finite I) : (⨆ (i : _)(_ : i ∈ I), range (std_basis R φ i)) = ⨅ (i : _)(_ : i ∈ J), ker (proj i) :=
+  by 
+    refine' le_antisymmₓ (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _ 
+    have  : Set.Univ ⊆ ↑hI.to_finset ∪ J
+    ·
+      rwa [hI.coe_to_finset]
+    refine' le_transₓ (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_le_supr$ fun i => _)
+    rw [Set.Finite.mem_to_finset]
+    exact le_reflₓ _
 
-theorem supr_range_std_basis [Fintype ι] : (⨆i : ι, range (std_basis R φ i)) = ⊤ :=
-  have  : (Set.Univ : Set ι) ⊆ «expr↑ » (Finset.univ : Finset ι) ∪ ∅ :=
+theorem supr_range_std_basis [Fintype ι] : (⨆ i : ι, range (std_basis R φ i)) = ⊤ :=
+  have  : (Set.Univ : Set ι) ⊆ ↑(Finset.univ : Finset ι) ∪ ∅ :=
     by 
       rw [Finset.coe_univ, Set.union_empty]
   by 
@@ -133,8 +132,10 @@ theorem supr_range_std_basis [Fintype ι] : (⨆i : ι, range (std_basis R φ i)
     exact infi_emptyset.symm 
     exact funext$ fun i => ((@supr_pos _ _ _ fun h => range (std_basis R φ i))$ Finset.mem_univ i).symm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » J)
 theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
-  Disjoint (⨆(i : _)(_ : i ∈ I), range (std_basis R φ i)) (⨆(i : _)(_ : i ∈ J), range (std_basis R φ i)) :=
+  Disjoint (⨆ (i : _)(_ : i ∈ I), range (std_basis R φ i)) (⨆ (i : _)(_ : i ∈ J), range (std_basis R φ i)) :=
   by 
     refine'
       Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _$ disjoint_compl_right)
@@ -178,39 +179,39 @@ section Module
 
 variable {η : Type _} {ιs : η → Type _} {Ms : η → Type _}
 
--- error in LinearAlgebra.StdBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent_std_basis
-[ring R]
-[∀ i, add_comm_group (Ms i)]
-[∀ i, module R (Ms i)]
-[decidable_eq η]
-(v : ∀ j, ιs j → Ms j)
-(hs : ∀
- i, linear_independent R (v i)) : linear_independent R (λ
- ji : «exprΣ , »((j), ιs j), std_basis R Ms ji.1 (v ji.1 ji.2)) :=
-begin
-  have [ident hs'] [":", expr ∀ j : η, linear_independent R (λ i : ιs j, std_basis R Ms j (v j i))] [],
-  { intro [ident j],
-    exact [expr (hs j).map' _ (ker_std_basis _ _ _)] },
-  apply [expr linear_independent_Union_finite hs'],
-  { assume [binders (j J _ hiJ)],
-    simp [] [] [] ["[", expr (set.Union.equations._eqn_1 _).symm, ",", expr submodule.span_image, ",", expr submodule.span_Union, "]"] [] [],
-    have [ident h₀] [":", expr ∀
-     j, «expr ≤ »(span R (range (λ i : ιs j, std_basis R Ms j (v j i))), range (std_basis R Ms j))] [],
-    { intro [ident j],
-      rw ["[", expr span_le, ",", expr linear_map.range_coe, "]"] [],
-      apply [expr range_comp_subset_range] },
-    have [ident h₁] [":", expr «expr ≤ »(span R (range (λ
-        i : ιs j, std_basis R Ms j (v j i))), «expr⨆ , »((i «expr ∈ » {j}), range (std_basis R Ms i)))] [],
-    { rw [expr @supr_singleton _ _ _ (λ i, linear_map.range (std_basis R (λ j : η, Ms j) i))] [],
-      apply [expr h₀] },
-    have [ident h₂] [":", expr «expr ≤ »(«expr⨆ , »((j «expr ∈ » J), span R (range (λ
-         i : ιs j, std_basis R Ms j (v j i)))), «expr⨆ , »((j «expr ∈ » J), range (std_basis R (λ
-         j : η, Ms j) j)))] [":=", expr supr_le_supr (λ i, supr_le_supr (λ H, h₀ i))],
-    have [ident h₃] [":", expr disjoint (λ i : η, «expr ∈ »(i, {j})) J] [],
-    { convert [] [expr set.disjoint_singleton_left.2 hiJ] ["using", 0] },
-    exact [expr (disjoint_std_basis_std_basis _ _ _ _ h₃).mono h₁ h₂] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » {j})
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » J)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » J)
+theorem linear_independent_std_basis [Ringₓ R] [∀ i, AddCommGroupₓ (Ms i)] [∀ i, Module R (Ms i)] [DecidableEq η]
+  (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent R (v i)) :
+  LinearIndependent R fun ji : Σ j, ιs j => std_basis R Ms ji.1 (v ji.1 ji.2) :=
+  by 
+    have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => std_basis R Ms j (v j i)
+    ·
+      intro j 
+      exact (hs j).map' _ (ker_std_basis _ _ _)
+    apply linear_independent_Union_finite hs'
+    ·
+      intro j J _ hiJ 
+      simp [(Set.Unionₓ.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_Union]
+      have h₀ : ∀ j, span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤ range (std_basis R Ms j)
+      ·
+        intro j 
+        rw [span_le, LinearMap.range_coe]
+        apply range_comp_subset_range 
+      have h₁ :
+        span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤ ⨆ (i : _)(_ : i ∈ {j}), range (std_basis R Ms i)
+      ·
+        rw [@supr_singleton _ _ _ fun i => LinearMap.range (std_basis R (fun j : η => Ms j) i)]
+        apply h₀ 
+      have h₂ :
+        (⨆ (j : _)(_ : j ∈ J), span R (range fun i : ιs j => std_basis R Ms j (v j i))) ≤
+          ⨆ (j : _)(_ : j ∈ J), range (std_basis R (fun j : η => Ms j) j) :=
+        supr_le_supr fun i => supr_le_supr fun H => h₀ i 
+      have h₃ : Disjoint (fun i : η => i ∈ {j}) J
+      ·
+        convert Set.disjoint_singleton_left.2 hiJ using 0 
+      exact (disjoint_std_basis_std_basis _ _ _ _ h₃).mono h₁ h₂
 
 variable [Semiringₓ R] [∀ i, AddCommMonoidₓ (Ms i)] [∀ i, Module R (Ms i)]
 
@@ -222,7 +223,7 @@ open LinearEquiv
 
 /-- `pi.basis (s : ∀ j, basis (ιs j) R (Ms j))` is the `Σ j, ιs j`-indexed basis on `Π j, Ms j`
 given by `s j` on each component. -/
-protected noncomputable def Basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σj, ιs j) R (∀ j, Ms j) :=
+protected noncomputable def Basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σ j, ιs j) R (∀ j, Ms j) :=
   by 
     refine' Basis.of_repr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm)
     exact LinearEquiv.piCongrRight fun j => (s j).repr
@@ -239,8 +240,8 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
         Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
       symm 
       exact
-        Basis.Finsupp.single_apply_left (fun i i' h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _
-          _ 
+        Basis.Finsupp.single_apply_left (fun i i' h : (⟨j, i⟩ : Σ j, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _
+          _ _ 
     simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply,
       LinearEquiv.Pi_congr_right_apply]
     dsimp 
@@ -292,7 +293,7 @@ variable (R : Type _) (n : Type _) (m : Type _) [Fintype m] [Fintype n] [Semirin
 
 /-- The standard basis of `matrix n m R`. -/
 noncomputable def std_basis : Basis (n × m) R (Matrix n m R) :=
-  Basis.reindex (Pi.basis fun i : n => Pi.basisFun R m) (Equiv.sigmaEquivProd _ _)
+  Basis.reindex (Pi.basis fun i : n => Pi.basisFun R m) (Equivₓ.sigmaEquivProd _ _)
 
 variable {n m}
 

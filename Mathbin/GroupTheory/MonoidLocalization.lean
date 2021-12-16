@@ -102,15 +102,19 @@ namespace Localization
 run_cmd 
   to_additive.map_namespace `localization `add_localization
 
-/-- The congruence relation on `M × S`, `M` a `comm_monoid` and `S` a submonoid of `M`, whose
-quotient is the localization of `M` at `S`, defined as the unique congruence relation on
-`M × S` such that for any other congruence relation `s` on `M × S` where for all `y ∈ S`,
-`(1, 1) ∼ (y, y)` under `s`, we have that `(x₁, y₁) ∼ (x₂, y₂)` by `r` implies
-`(x₁, y₁) ∼ (x₂, y₂)` by `s`. -/
-@[toAdditive
-      "The congruence relation on `M × S`, `M` an `add_comm_monoid` and `S`\nan `add_submonoid` of `M`, whose quotient is the localization of `M` at `S`, defined as the unique\ncongruence relation on `M × S` such that for any other congruence relation `s` on `M × S` where\nfor all `y ∈ S`, `(0, 0) ∼ (y, y)` under `s`, we have that `(x₁, y₁) ∼ (x₂, y₂)` by `r` implies\n`(x₁, y₁) ∼ (x₂, y₂)` by `s`."]
-def r (S : Submonoid M) : Con (M × S) :=
-  Inf { c | ∀ y : S, c 1 (y, y) }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      The congruence relation on `M × S`, `M` a `comm_monoid` and `S` a submonoid of `M`, whose
+      quotient is the localization of `M` at `S`, defined as the unique congruence relation on
+      `M × S` such that for any other congruence relation `s` on `M × S` where for all `y ∈ S`,
+      `(1, 1) ∼ (y, y)` under `s`, we have that `(x₁, y₁) ∼ (x₂, y₂)` by `r` implies
+      `(x₁, y₁) ∼ (x₂, y₂)` by `s`. -/
+    @[
+      toAdditive
+        "The congruence relation on `M × S`, `M` an `add_comm_monoid` and `S`\nan `add_submonoid` of `M`, whose quotient is the localization of `M` at `S`, defined as the unique\ncongruence relation on `M × S` such that for any other congruence relation `s` on `M × S` where\nfor all `y ∈ S`, `(0, 0) ∼ (y, y)` under `s`, we have that `(x₁, y₁) ∼ (x₂, y₂)` by `r` implies\n`(x₁, y₁) ∼ (x₂, y₂)` by `s`."
+      ]
+  def r ( S : Submonoid M ) : Con M × S := Inf { c | ∀ y : S , c 1 ( y , y ) }
 
 /-- An alternate form of the congruence relation on `M × S`, `M` a `comm_monoid` and `S` a
 submonoid of `M`, whose quotient is the localization of `M` at `S`. -/
@@ -187,9 +191,8 @@ instance Inhabited : Inhabited (Localization S) :=
 
 /-- Multiplication in a localization is defined as `⟨a, b⟩ * ⟨c, d⟩ = ⟨a * c, b * d⟩`. -/
 @[toAdditive
-      "Addition in an `add_localization` is defined as `⟨a, b⟩ + ⟨c, d⟩ = ⟨a + c, b + d⟩`.\n\nShould not be confused with the ring localization counterpart `localization.add`, which maps\n`⟨a, b⟩ + ⟨c, d⟩` to `⟨d * a + b * c, b * d⟩`.",
-  irreducible]
-protected def mul : Localization S → Localization S → Localization S :=
+      "Addition in an `add_localization` is defined as `⟨a, b⟩ + ⟨c, d⟩ = ⟨a + c, b + d⟩`.\n\nShould not be confused with the ring localization counterpart `localization.add`, which maps\n`⟨a, b⟩ + ⟨c, d⟩` to `⟨d * a + b * c, b * d⟩`."]
+protected irreducible_def mul : Localization S → Localization S → Localization S :=
   (r S).CommMonoid.mul
 
 @[toAdditive]
@@ -198,9 +201,8 @@ instance : Mul (Localization S) :=
 
 /-- The identity element of a localization is defined as `⟨1, 1⟩`. -/
 @[toAdditive
-      "The identity element of an `add_localization` is defined as `⟨0, 0⟩`.\n\nShould not be confused with the ring localization counterpart `localization.zero`,\nwhich is defined as `⟨0, 1⟩`.",
-  irreducible]
-protected def one : Localization S :=
+      "The identity element of an `add_localization` is defined as `⟨0, 0⟩`.\n\nShould not be confused with the ring localization counterpart `localization.zero`,\nwhich is defined as `⟨0, 1⟩`."]
+protected irreducible_def one : Localization S :=
   (r S).CommMonoid.one
 
 @[toAdditive]
@@ -213,9 +215,8 @@ This is a separate `irreducible` def to ensure the elaborator doesn't waste its 
 trying to unify some huge recursive definition with itself, but unfolded one step less.
 -/
 @[toAdditive
-      "Multiplication with a natural in an `add_localization` is defined as `n • ⟨a, b⟩ = ⟨n • a, n • b⟩`.\n\nThis is a separate `irreducible` def to ensure the elaborator doesn't waste its time\ntrying to unify some huge recursive definition with itself, but unfolded one step less.",
-  irreducible]
-protected def npow : ℕ → Localization S → Localization S :=
+      "Multiplication with a natural in an `add_localization` is defined as `n • ⟨a, b⟩ = ⟨n • a, n • b⟩`.\n\nThis is a separate `irreducible` def to ensure the elaborator doesn't waste its time\ntrying to unify some huge recursive definition with itself, but unfolded one step less."]
+protected irreducible_def npow : ℕ → Localization S → Localization S :=
   (r S).CommMonoid.npow
 
 attribute [local semireducible] Localization.mul Localization.one Localization.npow
@@ -262,8 +263,6 @@ def rec {p : Localization S → Sort u} (f : ∀ a : M b : S, p (mk a b))
         cases z 
         exact H h)
     x
-
-attribute [irreducible] Localization
 
 @[toAdditive]
 theorem mk_mul (a c : M) (b d : S) : (mk a b*mk c d) = mk (a*c) (b*d) :=
@@ -420,7 +419,7 @@ theorem sec_spec' {f : localization_map S N} (z : N) : f.to_map (f.sec z).1 = f.
 @[toAdditive
       "Given an add_monoid hom `f : M →+ N` and submonoid `S ⊆ M` such that\n`f(S) ⊆ add_units N`, for all `w : M, z : N` and `y ∈ S`, we have `w - f y = z ↔ w = f y + z`."]
 theorem mul_inv_left {f : M →* N} (h : ∀ y : S, IsUnit (f y)) (y : S) w z :
-  (w*«expr↑ » (IsUnit.liftRight (f.mrestrict S) h y⁻¹)) = z ↔ w = f y*z :=
+  (w*↑IsUnit.liftRight (f.mrestrict S) h y⁻¹) = z ↔ w = f y*z :=
   by 
     rw [mul_commₓ] <;> convert Units.inv_mul_eq_iff_eq_mul _ <;> exact (IsUnit.coe_lift_right (f.mrestrict S) h _).symm
 
@@ -429,7 +428,7 @@ theorem mul_inv_left {f : M →* N} (h : ∀ y : S, IsUnit (f y)) (y : S) w z :
 @[toAdditive
       "Given an add_monoid hom `f : M →+ N` and submonoid `S ⊆ M` such that\n`f(S) ⊆ add_units N`, for all `w : M, z : N` and `y ∈ S`, we have `z = w - f y ↔ z + f y = w`."]
 theorem mul_inv_right {f : M →* N} (h : ∀ y : S, IsUnit (f y)) (y : S) w z :
-  (z = w*«expr↑ » (IsUnit.liftRight (f.mrestrict S) h y⁻¹)) ↔ (z*f y) = w :=
+  (z = w*↑IsUnit.liftRight (f.mrestrict S) h y⁻¹) ↔ (z*f y) = w :=
   by 
     rw [eq_comm, mul_inv_left h, mul_commₓ, eq_comm]
 
@@ -440,8 +439,7 @@ theorem mul_inv_right {f : M →* N} (h : ∀ y : S, IsUnit (f y)) (y : S) w z :
   toAdditive
       "Given an add_monoid hom `f : M →+ N` and submonoid `S ⊆ M` such that\n`f(S) ⊆ add_units N`, for all `x₁ x₂ : M` and `y₁, y₂ ∈ S`, we have\n`f x₁ - f y₁ = f x₂ - f y₂ ↔ f (x₁ + y₂) = f (x₂ + y₁)`."]
 theorem mul_inv {f : M →* N} (h : ∀ y : S, IsUnit (f y)) {x₁ x₂} {y₁ y₂ : S} :
-  ((f x₁*«expr↑ » (IsUnit.liftRight (f.mrestrict S) h y₁⁻¹)) =
-      f x₂*«expr↑ » (IsUnit.liftRight (f.mrestrict S) h y₂⁻¹)) ↔
+  ((f x₁*↑IsUnit.liftRight (f.mrestrict S) h y₁⁻¹) = f x₂*↑IsUnit.liftRight (f.mrestrict S) h y₂⁻¹) ↔
     f (x₁*y₂) = f (x₂*y₁) :=
   by 
     rw [mul_inv_right h, mul_assocₓ, mul_commₓ _ (f y₂), ←mul_assocₓ, mul_inv_left h, mul_commₓ x₂, f.map_mul,
@@ -462,9 +460,9 @@ theorem inv_inj {f : M →* N} (hf : ∀ y : S, IsUnit (f y)) {y z}
 @[toAdditive
       "Given an add_monoid hom `f : M →+ N` and submonoid `S ⊆ M` such that\n`f(S) ⊆ add_units N`, for all `y ∈ S`, `- (f y)` is unique."]
 theorem inv_unique {f : M →* N} (h : ∀ y : S, IsUnit (f y)) {y : S} {z} (H : (f y*z) = 1) :
-  «expr↑ » (IsUnit.liftRight (f.mrestrict S) h y⁻¹) = z :=
+  ↑IsUnit.liftRight (f.mrestrict S) h y⁻¹ = z :=
   by 
-    rw [←one_mulₓ («expr↑ » (_⁻¹)), mul_inv_left, ←H]
+    rw [←one_mulₓ (↑_⁻¹), mul_inv_left, ←H]
 
 variable (f : localization_map S N)
 
@@ -486,7 +484,7 @@ theorem map_left_cancel {x y} {c : S} (h : f.to_map (x*c) = f.to_map (y*c)) : f.
 `f x * (f y)⁻¹`. -/
 @[toAdditive "Given a localization map `f : M →+ N`, the surjection sending `(x, y) : M × S`\nto `f x - f y`."]
 noncomputable def mk' (f : localization_map S N) (x : M) (y : S) : N :=
-  f.to_map x*«expr↑ » (IsUnit.liftRight (f.to_map.mrestrict S) f.map_units y⁻¹)
+  f.to_map x*↑IsUnit.liftRight (f.to_map.mrestrict S) f.map_units y⁻¹
 
 @[toAdditive]
 theorem mk'_mul (x₁ x₂ : M) (y₁ y₂ : S) : f.mk' (x₁*x₂) (y₁*y₂) = f.mk' x₁ y₁*f.mk' x₂ y₂ :=
@@ -651,7 +649,7 @@ variable (hg : ∀ y : S, IsUnit (g y))
 @[toAdditive
       "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M` and a map\nof `add_comm_monoid`s `g : M →+ P` such that `g y` is invertible for all `y : S`, the homomorphism\ninduced from `N` to `P` sending `z : N` to `g x - g y`, where `(x, y) : M × S` are such that\n`z = f x - f y`."]
 noncomputable def lift : N →* P :=
-  { toFun := fun z => g (f.sec z).1*«expr↑ » (IsUnit.liftRight (g.mrestrict S) hg (f.sec z).2⁻¹),
+  { toFun := fun z => g (f.sec z).1*↑IsUnit.liftRight (g.mrestrict S) hg (f.sec z).2⁻¹,
     map_one' :=
       by 
         rw [mul_inv_left, mul_oneₓ] <;>
@@ -682,7 +680,7 @@ variable {S g}
 `N` to `P` maps `f x * (f y)⁻¹` to `g x * (g y)⁻¹` for all `x : M, y ∈ S`. -/
 @[toAdditive
       "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M` and a map\nof `add_comm_monoid`s `g : M →+ P` such that `g y` is invertible for all `y : S`, the homomorphism\ninduced from `N` to `P` maps `f x - f y` to `g x - g y` for all `x : M, y ∈ S`."]
-theorem lift_mk' x y : f.lift hg (f.mk' x y) = g x*«expr↑ » (IsUnit.liftRight (g.mrestrict S) hg y⁻¹) :=
+theorem lift_mk' x y : f.lift hg (f.mk' x y) = g x*↑IsUnit.liftRight (g.mrestrict S) hg y⁻¹ :=
   (mul_inv hg).2$
     f.eq_of_eq hg$
       by 
@@ -800,13 +798,13 @@ theorem lift_left_inverse {k : localization_map S P} (z : N) : k.lift f.map_unit
 @[toAdditive]
 theorem lift_surjective_iff : Function.Surjective (f.lift hg) ↔ ∀ v : P, ∃ x : M × S, (v*g x.2) = g x.1 :=
   by 
-    split 
+    constructor
     ·
       intro H v 
       obtain ⟨z, hz⟩ := H v 
       obtain ⟨x, hx⟩ := f.surj z 
       use x 
-      rw [←hz, f.eq_mk'_iff_mul_eq.2 hx, lift_mk', mul_assocₓ, mul_commₓ _ (g («expr↑ » x.2))]
+      rw [←hz, f.eq_mk'_iff_mul_eq.2 hx, lift_mk', mul_assocₓ, mul_commₓ _ (g (↑x.2))]
       erw [IsUnit.mul_lift_right_inv (g.mrestrict S) hg, mul_oneₓ]
     ·
       intro H v 
@@ -817,10 +815,10 @@ theorem lift_surjective_iff : Function.Surjective (f.lift hg) ↔ ∀ v : P, ∃
 @[toAdditive]
 theorem lift_injective_iff : Function.Injective (f.lift hg) ↔ ∀ x y, f.to_map x = f.to_map y ↔ g x = g y :=
   by 
-    split 
+    constructor
     ·
       intro H x y 
-      split 
+      constructor
       ·
         exact f.eq_of_eq hg
       ·

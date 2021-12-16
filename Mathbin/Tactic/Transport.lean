@@ -19,9 +19,11 @@ open Tactic.Interactive
 mk_simp_attribute transport_simps :=
   "The simpset `transport_simps` is used by the tactic `transport`\nto simplify certain expressions involving application of equivalences,\nand trivial `eq.rec` or `ep.mpr` conversions.\nIt's probably best not to adjust it without understanding the algorithm used by `transport`."
 
-attribute [transport_simps] eq_rec_constant eq_mp_eq_cast cast_eq Equiv.to_fun_as_coe Equiv.arrow_congr'_apply
-  Equiv.symm_apply_apply Equiv.apply_eq_iff_eq_symm_apply
+attribute [transport_simps] eq_rec_constant eq_mp_eq_cast cast_eq Equivₓ.to_fun_as_coe Equivₓ.arrow_congr'_apply
+  Equivₓ.symm_apply_apply Equivₓ.apply_eq_iff_eq_symm_apply
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Given `s : S α` for some structure `S` depending on a type `α`,
 and an equivalence `e : α ≃ β`,

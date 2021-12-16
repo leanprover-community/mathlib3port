@@ -21,19 +21,19 @@ theorem dvd_choose_add {p a b : ℕ} (hap : a < p) (hbp : b < p) (h : p ≤ a+b)
         add_tsub_cancel_left a b] at h₁ <;>
       exact h₁.resolve_right (not_or_distrib.2 ⟨h₂, h₃⟩)
 
--- error in Data.Nat.Choose.Dvd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dvd_choose_self
-{p k : exprℕ()}
-(hk : «expr < »(0, k))
-(hkp : «expr < »(k, p))
-(hp : prime p) : «expr ∣ »(p, choose p k) :=
-begin
-  have [ident r] [":", expr «expr = »(«expr + »(k, «expr - »(p, k)), p)] [],
-  by rw ["[", "<-", expr add_tsub_assoc_of_le (nat.le_of_lt hkp) k, ",", expr add_tsub_cancel_left, "]"] [],
-  have [ident e] [":", expr «expr ∣ »(p, choose «expr + »(k, «expr - »(p, k)) k)] [],
-  by exact [expr dvd_choose_add hkp (nat.sub_lt (hk.trans hkp) hk) (by rw [expr r] []) hp],
-  rwa [expr r] ["at", ident e]
-end
+theorem dvd_choose_self {p k : ℕ} (hk : 0 < k) (hkp : k < p) (hp : prime p) : p ∣ choose p k :=
+  by 
+    have r : (k+p - k) = p
+    ·
+      rw [←add_tsub_assoc_of_le (Nat.le_of_ltₓ hkp) k, add_tsub_cancel_left]
+    have e : p ∣ choose (k+p - k) k
+    ·
+      exact
+        dvd_choose_add hkp (Nat.sub_ltₓ (hk.trans hkp) hk)
+          (by 
+            rw [r])
+          hp 
+    rwa [r] at e
 
 end Prime
 

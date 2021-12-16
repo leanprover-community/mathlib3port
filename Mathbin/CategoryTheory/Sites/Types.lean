@@ -70,13 +70,13 @@ open Opposite
 
 /-- Given a presheaf `P` on the category of types, construct
 a map `P(α) → (α → P(*))` for all type `α`. -/
-def eval (P : «expr ᵒᵖ» (Type u) ⥤ Type u) (α : Type u) (s : P.obj (op α)) (x : α) : P.obj (op PUnit) :=
+def eval (P : Type uᵒᵖ ⥤ Type u) (α : Type u) (s : P.obj (op α)) (x : α) : P.obj (op PUnit) :=
   P.map (↾fun _ => x).op s
 
 /-- Given a sheaf `S` on the category of types, construct a map
 `(α → S(*)) → S(α)` that is inverse to `eval`. -/
-noncomputable def types_glue (S : «expr ᵒᵖ» (Type u) ⥤ Type u) (hs : is_sheaf types_grothendieck_topology S)
-  (α : Type u) (f : α → S.obj (op PUnit)) : S.obj (op α) :=
+noncomputable def types_glue (S : Type uᵒᵖ ⥤ Type u) (hs : is_sheaf types_grothendieck_topology S) (α : Type u)
+  (f : α → S.obj (op PUnit)) : S.obj (op α) :=
   (hs.is_sheaf_for _ _ (generate_discrete_presieve_mem α)).amalgamate
     (fun β g hg => S.map (↾fun x => PUnit.unit).op$ f$ g$ Classical.some hg)
     fun β γ δ g₁ g₂ f₁ f₂ hf₁ hf₂ h =>
@@ -111,20 +111,20 @@ theorem types_glue_eval {S hs α} s : types_glue.{u} S hs α (eval S α s) = s :
 
 /-- Given a sheaf `S`, construct an equivalence `S(α) ≃ (α → S(*))`. -/
 @[simps]
-noncomputable def eval_equiv (S : «expr ᵒᵖ» (Type u) ⥤ Type u) (hs : is_sheaf types_grothendieck_topology S)
-  (α : Type u) : S.obj (op α) ≃ (α → S.obj (op PUnit)) :=
+noncomputable def eval_equiv (S : Type uᵒᵖ ⥤ Type u) (hs : is_sheaf types_grothendieck_topology S) (α : Type u) :
+  S.obj (op α) ≃ (α → S.obj (op PUnit)) :=
   { toFun := eval S α, invFun := types_glue S hs α, left_inv := types_glue_eval, right_inv := eval_types_glue }
 
-theorem eval_map (S : «expr ᵒᵖ» (Type u) ⥤ Type u) α β (f : β ⟶ α) s x : eval S β (S.map f.op s) x = eval S α s (f x) :=
+theorem eval_map (S : Type uᵒᵖ ⥤ Type u) α β (f : β ⟶ α) s x : eval S β (S.map f.op s) x = eval S α s (f x) :=
   by 
     simpRw [eval, ←functor_to_types.map_comp_apply, ←op_comp]
     rfl
 
 /-- Given a sheaf `S`, construct an isomorphism `S ≅ [-, S(*)]`. -/
 @[simps]
-noncomputable def equiv_yoneda (S : «expr ᵒᵖ» (Type u) ⥤ Type u) (hs : is_sheaf types_grothendieck_topology S) :
+noncomputable def equiv_yoneda (S : Type uᵒᵖ ⥤ Type u) (hs : is_sheaf types_grothendieck_topology S) :
   S ≅ yoneda.obj (S.obj (op PUnit)) :=
-  (nat_iso.of_components fun α => Equiv.toIso$ eval_equiv S hs$ unop α)$
+  (nat_iso.of_components fun α => Equivₓ.toIso$ eval_equiv S hs$ unop α)$
     fun α β f => funext$ fun s => funext$ fun x => eval_map S (unop α) (unop β) f.unop _ _
 
 /-- Given a sheaf `S`, construct an isomorphism `S ≅ [-, S(*)]`. -/

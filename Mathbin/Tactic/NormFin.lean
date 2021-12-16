@@ -38,7 +38,7 @@ the input is strictly less than `n`.
 def normalize_fin_lt (n : ℕ) (a : Finₓ n) (b : ℕ) :=
   a.1 = b
 
-theorem normalize_fin_lt.coe {n} {a : Finₓ n} {b : ℕ} (h : normalize_fin_lt n a b) : «expr↑ » a = b :=
+theorem normalize_fin_lt.coe {n} {a : Finₓ n} {b : ℕ} (h : normalize_fin_lt n a b) : ↑a = b :=
   h
 
 theorem normalize_fin_iff {n} [Fact (0 < n)] {a b} : normalize_fin n a b ↔ a = Finₓ.ofNat' b :=
@@ -141,36 +141,25 @@ theorem normalize_fin_lt.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n 
 theorem normalize_fin.eq {n} {a b : Finₓ n} {c : ℕ} (ha : normalize_fin n a c) (hb : normalize_fin n b c) : a = b :=
   Finₓ.eq_of_veq$ ha.trans hb.symm
 
--- error in Tactic.NormFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem normalize_fin.lt
-{n}
-{a b : fin n}
-{a' b' : exprℕ()}
-(ha : normalize_fin n a a')
-(hb : normalize_fin_lt n b b')
-(h : «expr < »(a', b')) : «expr < »(a, b) :=
-by have [ident ha'] [] [":=", expr normalize_fin_lt.mk rfl ha (h.trans hb.lt)]; rwa ["[", "<-", expr hb.coe, ",", "<-", expr ha'.coe, "]"] ["at", ident h]
+theorem normalize_fin.lt {n} {a b : Finₓ n} {a' b' : ℕ} (ha : normalize_fin n a a') (hb : normalize_fin_lt n b b')
+  (h : a' < b') : a < b :=
+  by 
+    have ha' := normalize_fin_lt.mk rfl ha (h.trans hb.lt) <;> rwa [←hb.coe, ←ha'.coe] at h
 
--- error in Tactic.NormFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem normalize_fin.le
-{n}
-{a b : fin n}
-{a' b' : exprℕ()}
-(ha : normalize_fin n a a')
-(hb : normalize_fin_lt n b b')
-(h : «expr ≤ »(a', b')) : «expr ≤ »(a, b) :=
-by have [ident ha'] [] [":=", expr normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt)]; rwa ["[", "<-", expr hb.coe, ",", "<-", expr ha'.coe, "]"] ["at", ident h]
+theorem normalize_fin.le {n} {a b : Finₓ n} {a' b' : ℕ} (ha : normalize_fin n a a') (hb : normalize_fin_lt n b b')
+  (h : a' ≤ b') : a ≤ b :=
+  by 
+    have ha' := normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [←hb.coe, ←ha'.coe] at h
 
--- error in Tactic.NormFin: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler alternative
 /-- The monad for the `norm_fin` internal tactics. The state consists of an instance cache for `ℕ`,
 and a tuple `(nn, n', p)` where `p` is a proof of `n = n'` and `nn` is `n` evaluated to a natural
 number. (`n` itself is implicit.)  It is in an `option` because it is lazily initialized - for many
 `n` we will never need this information, and indeed eagerly computing it would make some reductions
 fail spuriously if `n` is not a numeral. -/
-@[derive #["[", expr monad, ",", expr alternative, "]"]]
-meta
-def eval_fin_m (α : Type) : Type :=
-state_t «expr × »(instance_cache, option «expr × »(exprℕ(), «expr × »(expr, expr))) tactic α
+unsafe def eval_fin_m (α : Type) : Type :=
+  StateTₓ (instance_cache × Option (ℕ × expr × expr)) tactic α deriving [anonymous], [anonymous]
 
 /-- Lifts a tactic into the `eval_fin_m` monad. -/
 @[inline]

@@ -70,29 +70,26 @@ section AnyFieldCommAlgebra
 
 variable {𝕂 𝔸 : Type _} [NondiscreteNormedField 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
--- error in Analysis.SpecialFunctions.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The exponential map in a commutative Banach-algebra `𝔸` over a normed field `𝕂` of
 characteristic zero has Fréchet-derivative `exp 𝕂 𝔸 x • 1 : 𝔸 →L[𝕂] 𝔸` at any point `x` in the
 disk of convergence. -/
-theorem has_fderiv_at_exp_of_mem_ball
-[char_zero 𝕂]
-{x : 𝔸}
-(hx : «expr ∈ »(x, emetric.ball (0 : 𝔸) (exp_series 𝕂 𝔸).radius)) : has_fderiv_at (exp 𝕂 𝔸) («expr • »(exp 𝕂 𝔸 x, 1) : «expr →L[ ] »(𝔸, 𝕂, 𝔸)) x :=
-begin
-  have [ident hpos] [":", expr «expr < »(0, (exp_series 𝕂 𝔸).radius)] [":=", expr (zero_le _).trans_lt hx],
-  rw [expr has_fderiv_at_iff_is_o_nhds_zero] [],
-  suffices [] [":", expr «expr =ᶠ[ ] »(λ
-    h, «expr * »(exp 𝕂 𝔸 x, «expr - »(«expr - »(exp 𝕂 𝔸 «expr + »(0, h), exp 𝕂 𝔸 0), continuous_linear_map.id 𝕂 𝔸 h)), expr𝓝() 0, λ
-    h, «expr - »(«expr - »(exp 𝕂 𝔸 «expr + »(x, h), exp 𝕂 𝔸 x), «expr • »(exp 𝕂 𝔸 x, continuous_linear_map.id 𝕂 𝔸 h)))],
-  { refine [expr (is_o.const_mul_left _ _).congr' this (eventually_eq.refl _ _)],
-    rw ["<-", expr has_fderiv_at_iff_is_o_nhds_zero] [],
-    exact [expr has_fderiv_at_exp_zero_of_radius_pos hpos] },
-  have [] [":", expr «expr∀ᶠ in , »((h), expr𝓝() (0 : 𝔸), «expr ∈ »(h, emetric.ball (0 : 𝔸) (exp_series 𝕂 𝔸).radius))] [":=", expr emetric.ball_mem_nhds _ hpos],
-  filter_upwards ["[", expr this, "]"] [],
-  intros [ident h, ident hh],
-  rw ["[", expr exp_add_of_mem_ball hx hh, ",", expr exp_zero, ",", expr zero_add, ",", expr continuous_linear_map.id_apply, ",", expr smul_eq_mul, "]"] [],
-  ring []
-end
+theorem has_fderiv_at_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸} (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
+  HasFderivAt (exp 𝕂 𝔸) (exp 𝕂 𝔸 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
+  by 
+    have hpos : 0 < (expSeries 𝕂 𝔸).radius := (zero_le _).trans_lt hx 
+    rw [has_fderiv_at_iff_is_o_nhds_zero]
+    suffices  :
+      (fun h => exp 𝕂 𝔸 x*exp 𝕂 𝔸 (0+h) - exp 𝕂 𝔸 0 - ContinuousLinearMap.id 𝕂 𝔸 h) =ᶠ[𝓝 0]
+        fun h => exp 𝕂 𝔸 (x+h) - exp 𝕂 𝔸 x - exp 𝕂 𝔸 x • ContinuousLinearMap.id 𝕂 𝔸 h
+    ·
+      refine' (is_o.const_mul_left _ _).congr' this (eventually_eq.refl _ _)
+      rw [←has_fderiv_at_iff_is_o_nhds_zero]
+      exact has_fderiv_at_exp_zero_of_radius_pos hpos 
+    have  : ∀ᶠ h in 𝓝 (0 : 𝔸), h ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius := Emetric.ball_mem_nhds _ hpos 
+    filterUpwards [this]
+    intro h hh 
+    rw [exp_add_of_mem_ball hx hh, exp_zero, zero_addₓ, ContinuousLinearMap.id_apply, smul_eq_mul]
+    ring
 
 /-- The exponential map in a commutative Banach-algebra `𝔸` over a normed field `𝕂` of
 characteristic zero has strict Fréchet-derivative `exp 𝕂 𝔸 x • 1 : 𝔸 →L[𝕂] 𝔸` at any point `x` in

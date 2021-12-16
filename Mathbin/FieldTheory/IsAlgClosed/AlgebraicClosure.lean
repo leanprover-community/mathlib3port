@@ -22,7 +22,7 @@ algebraic closure, algebraically closed
 
 universe u v w
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -52,7 +52,7 @@ def span_eval : Ideal (MvPolynomial (monic_irreducible k) k) :=
 splitting field of the product of the polynomials sending each indeterminate `x_f` represented by
 the polynomial `f` in the finset to a root of `f`. -/
 def to_splitting_field (s : Finset (monic_irreducible k)) :
-  MvPolynomial (monic_irreducible k) k →ₐ[k] splitting_field (∏x in s, x : Polynomial k) :=
+  MvPolynomial (monic_irreducible k) k →ₐ[k] splitting_field (∏ x in s, x : Polynomial k) :=
   MvPolynomial.aeval$
     fun f =>
       if hf : f ∈ s then
@@ -91,7 +91,7 @@ theorem le_max_ideal : span_eval k ≤ max_ideal k :=
 
 /-- The first step of constructing `algebraic_closure`: adjoin a root of all monic polynomials -/
 def adjoin_monic : Type u :=
-  (max_ideal k).Quotient
+  MvPolynomial (monic_irreducible k) k ⧸ max_ideal k
 
 instance adjoin_monic.field : Field (adjoin_monic k) :=
   Ideal.Quotient.field _
@@ -128,7 +128,7 @@ theorem adjoin_monic.exists_root {f : Polynomial k} (hfm : f.monic) (hfi : Irred
       exact le_max_ideal k (Ideal.subset_span$ ⟨_, rfl⟩)⟩
 
 /-- The `n`th step of constructing `algebraic_closure`, together with its `field` instance. -/
-def step_aux (n : ℕ) : Σα : Type u, Field α :=
+def step_aux (n : ℕ) : Σ α : Type u, Field α :=
   Nat.recOn n ⟨k, inferInstance⟩$ fun n ih => ⟨@adjoin_monic ih.1 ih.2, @adjoin_monic.field ih.1 ih.2⟩
 
 /-- The `n`th step of constructing `algebraic_closure`. -/
@@ -238,21 +238,19 @@ theorem of_step_succ (n : ℕ) : (of_step k (n+1)).comp (to_step_succ k n) = of_
 theorem exists_of_step (z : AlgebraicClosure k) : ∃ n x, of_step k n x = z :=
   Ringₓ.DirectLimit.exists_of z
 
--- error in FieldTheory.IsAlgClosed.AlgebraicClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_root
-{f : polynomial (algebraic_closure k)}
-(hfm : f.monic)
-(hfi : irreducible f) : «expr∃ , »((x : algebraic_closure k), «expr = »(f.eval x, 0)) :=
-begin
-  have [] [":", expr «expr∃ , »((n p), «expr = »(polynomial.map (of_step k n) p, f))] [],
-  { convert [] [expr ring.direct_limit.polynomial.exists_of f] [] },
-  unfreezingI { obtain ["⟨", ident n, ",", ident p, ",", ident rfl, "⟩", ":=", expr this] },
-  rw [expr monic_map_iff] ["at", ident hfm],
-  have [] [] [":=", expr hfm.irreducible_of_irreducible_map (of_step k n) p hfi],
-  obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr to_step_succ.exists_root k hfm this],
-  refine [expr ⟨of_step k «expr + »(n, 1) x, _⟩],
-  rw ["[", "<-", expr of_step_succ k n, ",", expr eval_map, ",", "<-", expr hom_eval₂, ",", expr hx, ",", expr ring_hom.map_zero, "]"] []
-end
+theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.monic) (hfi : Irreducible f) :
+  ∃ x : AlgebraicClosure k, f.eval x = 0 :=
+  by 
+    have  : ∃ n p, Polynomial.map (of_step k n) p = f
+    ·
+      convert Ringₓ.DirectLimit.Polynomial.exists_of f
+    (
+      obtain ⟨n, p, rfl⟩ := this)
+    rw [monic_map_iff] at hfm 
+    have  := hfm.irreducible_of_irreducible_map (of_step k n) p hfi 
+    obtain ⟨x, hx⟩ := to_step_succ.exists_root k hfm this 
+    refine' ⟨of_step k (n+1) x, _⟩
+    rw [←of_step_succ k n, eval_map, ←hom_eval₂, hx, RingHom.map_zero]
 
 instance : IsAlgClosed (AlgebraicClosure k) :=
   IsAlgClosed.of_exists_root _$ fun f => exists_root k

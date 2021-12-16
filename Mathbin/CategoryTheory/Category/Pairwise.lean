@@ -17,7 +17,7 @@ and show that `supr U` provides a colimit cocone over this functor.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 

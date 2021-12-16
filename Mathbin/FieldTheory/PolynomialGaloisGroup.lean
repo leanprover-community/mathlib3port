@@ -34,7 +34,7 @@ equals the number of real roots plus the number of roots not fixed by complex co
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -44,15 +44,18 @@ namespace Polynomial
 
 variable {F : Type _} [Field F] (p q : Polynomial F) (E : Type _) [Field E] [Algebra F E]
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler group
-/-- The Galois group of a polynomial. -/ @[derive #["[", expr group, ",", expr fintype, "]"]] def gal :=
-«expr ≃ₐ[ ] »(p.splitting_field, F, p.splitting_field)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler group
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler fintype
+/-- The Galois group of a polynomial. -/
+def gal :=
+  p.splitting_field ≃ₐ[F] p.splitting_field deriving [anonymous], [anonymous]
 
 namespace Gal
 
 instance : CoeFun p.gal fun _ => p.splitting_field → p.splitting_field :=
   AlgEquiv.hasCoeToFun
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p.root_set p.splitting_field)
 @[ext]
 theorem ext {σ τ : p.gal} (h : ∀ x _ : x ∈ p.root_set p.splitting_field, σ x = τ x) : σ = τ :=
   by 
@@ -101,8 +104,6 @@ instance [h : Fact (p.splits (algebraMap F E))] : Algebra p.splitting_field E :=
 instance [h : Fact (p.splits (algebraMap F E))] : IsScalarTower F p.splitting_field E :=
   IsScalarTower.of_algebra_map_eq fun x => ((is_splitting_field.lift p.splitting_field p h.1).commutes x).symm
 
-attribute [irreducible] gal.algebra
-
 /-- Restrict from a superfield automorphism into a member of `gal p`. -/
 def restrict [Fact (p.splits (algebraMap F E))] : (E ≃ₐ[F] E) →* p.gal :=
   AlgEquiv.restrictNormalHom p.splitting_field
@@ -112,54 +113,64 @@ theorem restrict_surjective [Fact (p.splits (algebraMap F E))] [Normal F E] : Fu
 
 section RootsAction
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The function taking `roots p p.splitting_field` to `roots p E`. This is actually a bijection,
 see `polynomial.gal.map_roots_bijective`. -/
-def map_roots [fact (p.splits (algebra_map F E))] : root_set p p.splitting_field → root_set p E :=
-λ
-x, ⟨is_scalar_tower.to_alg_hom F p.splitting_field E x, begin
-   have [ident key] [] [":=", expr subtype.mem x],
-   by_cases [expr «expr = »(p, 0)],
-   { simp [] [] ["only"] ["[", expr h, ",", expr root_set_zero, "]"] [] ["at", ident key],
-     exact [expr false.rec _ key] },
-   { rw ["[", expr mem_root_set h, ",", expr aeval_alg_hom_apply, ",", expr (mem_root_set h).mp key, ",", expr alg_hom.map_zero, "]"] [] }
- end⟩
+def map_roots [Fact (p.splits (algebraMap F E))] : root_set p p.splitting_field → root_set p E :=
+  fun x =>
+    ⟨IsScalarTower.toAlgHom F p.splitting_field E x,
+      by 
+        have key := Subtype.mem x 
+        byCases' p = 0
+        ·
+          simp only [h, root_set_zero] at key 
+          exact False.ndrec _ key
+        ·
+          rw [mem_root_set h, aeval_alg_hom_apply, (mem_root_set h).mp key, AlgHom.map_zero]⟩
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_roots_bijective [h : fact (p.splits (algebra_map F E))] : function.bijective (map_roots p E) :=
-begin
-  split,
-  { exact [expr λ _ _ h, subtype.ext (ring_hom.injective _ (subtype.ext_iff.mp h))] },
-  { intro [ident y],
-    have [ident key] [] [":=", expr roots_map (is_scalar_tower.to_alg_hom F p.splitting_field E : «expr →+* »(p.splitting_field, E)) ((splits_id_iff_splits _).mpr (is_splitting_field.splits p.splitting_field p))],
-    rw ["[", expr map_map, ",", expr alg_hom.comp_algebra_map, "]"] ["at", ident key],
-    have [ident hy] [] [":=", expr subtype.mem y],
-    simp [] [] ["only"] ["[", expr root_set, ",", expr finset.mem_coe, ",", expr multiset.mem_to_finset, ",", expr key, ",", expr multiset.mem_map, "]"] [] ["at", ident hy],
-    rcases [expr hy, "with", "⟨", ident x, ",", ident hx1, ",", ident hx2, "⟩"],
-    exact [expr ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, subtype.ext hx2⟩] }
-end
+theorem map_roots_bijective [h : Fact (p.splits (algebraMap F E))] : Function.Bijective (map_roots p E) :=
+  by 
+    constructor
+    ·
+      exact fun _ _ h => Subtype.ext (RingHom.injective _ (subtype.ext_iff.mp h))
+    ·
+      intro y 
+      have key :=
+        roots_map (IsScalarTower.toAlgHom F p.splitting_field E : p.splitting_field →+* E)
+          ((splits_id_iff_splits _).mpr (is_splitting_field.splits p.splitting_field p))
+      rw [map_map, AlgHom.comp_algebra_map] at key 
+      have hy := Subtype.mem y 
+      simp only [root_set, Finset.mem_coe, Multiset.mem_to_finset, key, Multiset.mem_map] at hy 
+      rcases hy with ⟨x, hx1, hx2⟩
+      exact ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, Subtype.ext hx2⟩
 
 /-- The bijection between `root_set p p.splitting_field` and `root_set p E`. -/
 def roots_equiv_roots [Fact (p.splits (algebraMap F E))] : root_set p p.splitting_field ≃ root_set p E :=
-  Equiv.ofBijective (map_roots p E) (map_roots_bijective p E)
+  Equivₓ.ofBijective (map_roots p E) (map_roots_bijective p E)
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance gal_action_aux : mul_action p.gal (root_set p p.splitting_field) :=
-{ smul := λ
-  ϕ
-  x, ⟨ϕ x, begin
-     have [ident key] [] [":=", expr subtype.mem x],
-     by_cases [expr «expr = »(p, 0)],
-     { simp [] [] ["only"] ["[", expr h, ",", expr root_set_zero, "]"] [] ["at", ident key],
-       exact [expr false.rec _ key] },
-     { rw [expr mem_root_set h] [],
-       change [expr «expr = »(aeval (ϕ.to_alg_hom x) p, 0)] [] [],
-       rw ["[", expr aeval_alg_hom_apply, ",", expr (mem_root_set h).mp key, ",", expr alg_hom.map_zero, "]"] [] }
-   end⟩,
-  one_smul := λ _, by { ext [] [] [],
-    refl },
-  mul_smul := λ _ _ _, by { ext [] [] [],
-    refl } }
+instance gal_action_aux : MulAction p.gal (root_set p p.splitting_field) :=
+  { smul :=
+      fun ϕ x =>
+        ⟨ϕ x,
+          by 
+            have key := Subtype.mem x 
+            byCases' p = 0
+            ·
+              simp only [h, root_set_zero] at key 
+              exact False.ndrec _ key
+            ·
+              rw [mem_root_set h]
+              change aeval (ϕ.to_alg_hom x) p = 0
+              rw [aeval_alg_hom_apply, (mem_root_set h).mp key, AlgHom.map_zero]⟩,
+    one_smul :=
+      fun _ =>
+        by 
+          ext 
+          rfl,
+    mul_smul :=
+      fun _ _ _ =>
+        by 
+          ext 
+          rfl }
 
 /-- The action of `gal p` on the roots of `p` in `E`. -/
 instance gal_action [Fact (p.splits (algebraMap F E))] : MulAction p.gal (root_set p E) :=
@@ -167,31 +178,31 @@ instance gal_action [Fact (p.splits (algebraMap F E))] : MulAction p.gal (root_s
     one_smul :=
       fun _ =>
         by 
-          simp only [Equiv.apply_symm_apply, one_smul],
+          simp only [Equivₓ.apply_symm_apply, one_smul],
     mul_smul :=
       fun _ _ _ =>
         by 
-          simp only [Equiv.apply_symm_apply, Equiv.symm_apply_apply, mul_smul] }
+          simp only [Equivₓ.apply_symm_apply, Equivₓ.symm_apply_apply, mul_smul] }
 
 variable {p E}
 
 /-- `polynomial.gal.restrict p E` is compatible with `polynomial.gal.gal_action p E`. -/
 @[simp]
 theorem restrict_smul [Fact (p.splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : root_set p E) :
-  «expr↑ » (restrict p E ϕ • x) = ϕ x :=
+  ↑(restrict p E ϕ • x) = ϕ x :=
   by 
     let ψ := AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F p.splitting_field E)
-    change «expr↑ » (ψ (ψ.symm _)) = ϕ x 
+    change ↑ψ (ψ.symm _) = ϕ x 
     rw [AlgEquiv.apply_symm_apply ψ]
     change ϕ (roots_equiv_roots p E ((roots_equiv_roots p E).symm x)) = ϕ x 
-    rw [Equiv.apply_symm_apply (roots_equiv_roots p E)]
+    rw [Equivₓ.apply_symm_apply (roots_equiv_roots p E)]
 
 variable (p E)
 
 /-- `polynomial.gal.gal_action` as a permutation representation -/
-def gal_action_hom [Fact (p.splits (algebraMap F E))] : p.gal →* Equiv.Perm (root_set p E) :=
+def gal_action_hom [Fact (p.splits (algebraMap F E))] : p.gal →* Equivₓ.Perm (root_set p E) :=
   { toFun :=
-      fun ϕ => Equiv.mk (fun x => ϕ • x) (fun x => ϕ⁻¹ • x) (fun x => inv_smul_smul ϕ x) fun x => smul_inv_smul ϕ x,
+      fun ϕ => Equivₓ.mk (fun x => ϕ • x) (fun x => ϕ⁻¹ • x) (fun x => inv_smul_smul ϕ x) fun x => smul_inv_smul ϕ x,
     map_one' :=
       by 
         ext1 x 
@@ -203,21 +214,22 @@ def gal_action_hom [Fact (p.splits (algebraMap F E))] : p.gal →* Equiv.Perm (r
           exact MulAction.mul_smul x y z }
 
 theorem gal_action_hom_restrict [Fact (p.splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : root_set p E) :
-  «expr↑ » (gal_action_hom p E (restrict p E ϕ) x) = ϕ x :=
+  ↑gal_action_hom p E (restrict p E ϕ) x = ϕ x :=
   restrict_smul ϕ x
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `gal p` embeds as a subgroup of permutations of the roots of `p` in `E`. -/
-theorem gal_action_hom_injective [fact (p.splits (algebra_map F E))] : function.injective (gal_action_hom p E) :=
-begin
-  rw [expr monoid_hom.injective_iff] [],
-  intros [ident ϕ, ident hϕ],
-  ext [] [ident x, ident hx] [],
-  have [ident key] [] [":=", expr equiv.perm.ext_iff.mp hϕ (roots_equiv_roots p E ⟨x, hx⟩)],
-  change [expr «expr = »(roots_equiv_roots p E «expr • »(ϕ, (roots_equiv_roots p E).symm (roots_equiv_roots p E ⟨x, hx⟩)), roots_equiv_roots p E ⟨x, hx⟩)] [] ["at", ident key],
-  rw [expr equiv.symm_apply_apply] ["at", ident key],
-  exact [expr subtype.ext_iff.mp (equiv.injective (roots_equiv_roots p E) key)]
-end
+theorem gal_action_hom_injective [Fact (p.splits (algebraMap F E))] : Function.Injective (gal_action_hom p E) :=
+  by 
+    rw [MonoidHom.injective_iff]
+    intro ϕ hϕ 
+    ext x hx 
+    have key := equiv.perm.ext_iff.mp hϕ (roots_equiv_roots p E ⟨x, hx⟩)
+    change
+      roots_equiv_roots p E (ϕ • (roots_equiv_roots p E).symm (roots_equiv_roots p E ⟨x, hx⟩)) =
+        roots_equiv_roots p E ⟨x, hx⟩ at
+      key 
+    rw [Equivₓ.symm_apply_apply] at key 
+    exact subtype.ext_iff.mp (Equivₓ.injective (roots_equiv_roots p E) key)
 
 end RootsAction
 
@@ -238,31 +250,44 @@ variable (p q)
 def restrict_prod : (p*q).Gal →* p.gal × q.gal :=
   MonoidHom.prod (restrict_dvd (dvd_mul_right p q)) (restrict_dvd (dvd_mul_left q p))
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `polynomial.gal.restrict_prod` is actually a subgroup embedding. -/
-theorem restrict_prod_injective : function.injective (restrict_prod p q) :=
-begin
-  by_cases [expr hpq, ":", expr «expr = »(«expr * »(p, q), 0)],
-  { haveI [] [":", expr unique «expr * »(p, q).gal] [],
-    { rw [expr hpq] [],
-      apply_instance },
-    exact [expr λ f g h, eq.trans (unique.eq_default f) (unique.eq_default g).symm] },
-  intros [ident f, ident g, ident hfg],
-  dsimp ["only"] ["[", expr restrict_prod, ",", expr restrict_dvd, "]"] [] ["at", ident hfg],
-  simp [] [] ["only"] ["[", expr dif_neg hpq, ",", expr monoid_hom.prod_apply, ",", expr prod.mk.inj_iff, "]"] [] ["at", ident hfg],
-  ext [] [ident x, ident hx] [],
-  rw ["[", expr root_set, ",", expr map_mul, ",", expr polynomial.roots_mul, "]"] ["at", ident hx],
-  cases [expr multiset.mem_add.mp (multiset.mem_to_finset.mp hx)] ["with", ident h, ident h],
-  { haveI [] [":", expr fact (p.splits (algebra_map F «expr * »(p, q).splitting_field))] [":=", expr ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits «expr * »(p, q)) (dvd_mul_right p q)⟩],
-    have [ident key] [":", expr «expr = »(x, algebra_map p.splitting_field «expr * »(p, q).splitting_field ((roots_equiv_roots p _).inv_fun ⟨x, multiset.mem_to_finset.mpr h⟩))] [":=", expr subtype.ext_iff.mp (equiv.apply_symm_apply (roots_equiv_roots p _) ⟨x, _⟩).symm],
-    rw ["[", expr key, ",", "<-", expr alg_equiv.restrict_normal_commutes, ",", "<-", expr alg_equiv.restrict_normal_commutes, "]"] [],
-    exact [expr congr_arg _ (alg_equiv.ext_iff.mp hfg.1 _)] },
-  { haveI [] [":", expr fact (q.splits (algebra_map F «expr * »(p, q).splitting_field))] [":=", expr ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits «expr * »(p, q)) (dvd_mul_left q p)⟩],
-    have [ident key] [":", expr «expr = »(x, algebra_map q.splitting_field «expr * »(p, q).splitting_field ((roots_equiv_roots q _).inv_fun ⟨x, multiset.mem_to_finset.mpr h⟩))] [":=", expr subtype.ext_iff.mp (equiv.apply_symm_apply (roots_equiv_roots q _) ⟨x, _⟩).symm],
-    rw ["[", expr key, ",", "<-", expr alg_equiv.restrict_normal_commutes, ",", "<-", expr alg_equiv.restrict_normal_commutes, "]"] [],
-    exact [expr congr_arg _ (alg_equiv.ext_iff.mp hfg.2 _)] },
-  { rwa ["[", expr ne.def, ",", expr mul_eq_zero, ",", expr map_eq_zero, ",", expr map_eq_zero, ",", "<-", expr mul_eq_zero, "]"] [] }
-end
+theorem restrict_prod_injective : Function.Injective (restrict_prod p q) :=
+  by 
+    byCases' hpq : (p*q) = 0
+    ·
+      have  : Unique (p*q).Gal
+      ·
+        rw [hpq]
+        infer_instance 
+      exact fun f g h => Eq.trans (Unique.eq_default f) (Unique.eq_default g).symm 
+    intro f g hfg 
+    dsimp only [restrict_prod, restrict_dvd]  at hfg 
+    simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iffₓ] at hfg 
+    ext x hx 
+    rw [root_set, map_mul, Polynomial.roots_mul] at hx 
+    cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
+    ·
+      have  : Fact (p.splits (algebraMap F (p*q).SplittingField)) :=
+        ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p*q)) (dvd_mul_right p q)⟩
+      have key :
+        x =
+          algebraMap p.splitting_field (p*q).SplittingField
+            ((roots_equiv_roots p _).invFun ⟨x, multiset.mem_to_finset.mpr h⟩) :=
+        subtype.ext_iff.mp (Equivₓ.apply_symm_apply (roots_equiv_roots p _) ⟨x, _⟩).symm 
+      rw [key, ←AlgEquiv.restrict_normal_commutes, ←AlgEquiv.restrict_normal_commutes]
+      exact congr_argₓ _ (alg_equiv.ext_iff.mp hfg.1 _)
+    ·
+      have  : Fact (q.splits (algebraMap F (p*q).SplittingField)) :=
+        ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p*q)) (dvd_mul_left q p)⟩
+      have key :
+        x =
+          algebraMap q.splitting_field (p*q).SplittingField
+            ((roots_equiv_roots q _).invFun ⟨x, multiset.mem_to_finset.mpr h⟩) :=
+        subtype.ext_iff.mp (Equivₓ.apply_symm_apply (roots_equiv_roots q _) ⟨x, _⟩).symm 
+      rw [key, ←AlgEquiv.restrict_normal_commutes, ←AlgEquiv.restrict_normal_commutes]
+      exact congr_argₓ _ (alg_equiv.ext_iff.mp hfg.2 _)
+    ·
+      rwa [Ne.def, mul_eq_zero, map_eq_zero, map_eq_zero, ←mul_eq_zero]
 
 theorem mul_splits_in_splitting_field_of_mul {p₁ q₁ p₂ q₂ : Polynomial F} (hq₁ : q₁ ≠ 0) (hq₂ : q₂ ≠ 0)
   (h₁ : p₁.splits (algebraMap F q₁.splitting_field)) (h₂ : p₂.splits (algebraMap F q₂.splitting_field)) :
@@ -282,40 +307,57 @@ theorem mul_splits_in_splitting_field_of_mul {p₁ q₁ p₂ q₂ : Polynomial F
               (dvd_mul_left q₂ q₁))).comp_algebra_map]
       exact splits_comp_of_splits _ _ h₂
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `p` splits in the splitting field of `p ∘ q`, for `q` non-constant. -/
-theorem splits_in_splitting_field_of_comp
-(hq : «expr ≠ »(q.nat_degree, 0)) : p.splits (algebra_map F (p.comp q).splitting_field) :=
-begin
-  let [ident P] [":", expr polynomial F → exprProp()] [":=", expr λ
-   r, r.splits (algebra_map F (r.comp q).splitting_field)],
-  have [ident key1] [":", expr ∀ {r : polynomial F}, irreducible r → P r] [],
-  { intros [ident r, ident hr],
-    by_cases [expr hr', ":", expr «expr = »(nat_degree r, 0)],
-    { exact [expr splits_of_nat_degree_le_one _ (le_trans (le_of_eq hr') zero_le_one)] },
-    obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr exists_root_of_splits _ (splitting_field.splits (r.comp q)) (λ
-      h, hr' ((mul_eq_zero.mp (nat_degree_comp.symm.trans (nat_degree_eq_of_degree_eq_some h))).resolve_right hq))],
-    rw ["[", "<-", expr aeval_def, ",", expr aeval_comp, "]"] ["at", ident hx],
-    have [ident h_normal] [":", expr normal F (r.comp q).splitting_field] [":=", expr splitting_field.normal (r.comp q)],
-    have [ident qx_int] [] [":=", expr normal.is_integral h_normal (aeval x q)],
-    exact [expr splits_of_splits_of_dvd _ (minpoly.ne_zero qx_int) (normal.splits h_normal _) ((minpoly.irreducible qx_int).dvd_symm hr (minpoly.dvd F _ hx))] },
-  have [ident key2] [":", expr ∀ {p₁ p₂ : polynomial F}, P p₁ → P p₂ → P «expr * »(p₁, p₂)] [],
-  { intros [ident p₁, ident p₂, ident hp₁, ident hp₂],
-    by_cases [expr h₁, ":", expr «expr = »(p₁.comp q, 0)],
-    { cases [expr comp_eq_zero_iff.mp h₁] ["with", ident h, ident h],
-      { rw ["[", expr h, ",", expr zero_mul, "]"] [],
-        exact [expr splits_zero _] },
-      { exact [expr false.rec _ (hq (by rw ["[", expr h.2, ",", expr nat_degree_C, "]"] []))] } },
-    by_cases [expr h₂, ":", expr «expr = »(p₂.comp q, 0)],
-    { cases [expr comp_eq_zero_iff.mp h₂] ["with", ident h, ident h],
-      { rw ["[", expr h, ",", expr mul_zero, "]"] [],
-        exact [expr splits_zero _] },
-      { exact [expr false.rec _ (hq (by rw ["[", expr h.2, ",", expr nat_degree_C, "]"] []))] } },
-    have [ident key] [] [":=", expr mul_splits_in_splitting_field_of_mul h₁ h₂ hp₁ hp₂],
-    rwa ["<-", expr mul_comp] ["at", ident key] },
-  exact [expr wf_dvd_monoid.induction_on_irreducible p (splits_zero _) (λ
-    _, splits_of_is_unit _) (λ _ _ _ h, key2 (key1 h))]
-end
+theorem splits_in_splitting_field_of_comp (hq : q.nat_degree ≠ 0) : p.splits (algebraMap F (p.comp q).SplittingField) :=
+  by 
+    let P : Polynomial F → Prop := fun r => r.splits (algebraMap F (r.comp q).SplittingField)
+    have key1 : ∀ {r : Polynomial F}, Irreducible r → P r
+    ·
+      intro r hr 
+      byCases' hr' : nat_degree r = 0
+      ·
+        exact splits_of_nat_degree_le_one _ (le_transₓ (le_of_eqₓ hr') zero_le_one)
+      obtain ⟨x, hx⟩ :=
+        exists_root_of_splits _ (splitting_field.splits (r.comp q))
+          fun h =>
+            hr' ((mul_eq_zero.mp (nat_degree_comp.symm.trans (nat_degree_eq_of_degree_eq_some h))).resolve_right hq)
+      rw [←aeval_def, aeval_comp] at hx 
+      have h_normal : Normal F (r.comp q).SplittingField := splitting_field.normal (r.comp q)
+      have qx_int := Normal.is_integral h_normal (aeval x q)
+      exact
+        splits_of_splits_of_dvd _ (minpoly.ne_zero qx_int) (Normal.splits h_normal _)
+          ((minpoly.irreducible qx_int).dvd_symm hr (minpoly.dvd F _ hx))
+    have key2 : ∀ {p₁ p₂ : Polynomial F}, P p₁ → P p₂ → P (p₁*p₂)
+    ·
+      intro p₁ p₂ hp₁ hp₂ 
+      byCases' h₁ : p₁.comp q = 0
+      ·
+        cases' comp_eq_zero_iff.mp h₁ with h h
+        ·
+          rw [h, zero_mul]
+          exact splits_zero _
+        ·
+          exact
+            False.ndrec _
+              (hq
+                (by 
+                  rw [h.2, nat_degree_C]))
+      byCases' h₂ : p₂.comp q = 0
+      ·
+        cases' comp_eq_zero_iff.mp h₂ with h h
+        ·
+          rw [h, mul_zero]
+          exact splits_zero _
+        ·
+          exact
+            False.ndrec _
+              (hq
+                (by 
+                  rw [h.2, nat_degree_C]))
+      have key := mul_splits_in_splitting_field_of_mul h₁ h₂ hp₁ hp₂ 
+      rwa [←mul_comp] at key 
+    exact
+      WfDvdMonoid.induction_on_irreducible p (splits_zero _) (fun _ => splits_of_is_unit _) fun _ _ _ h => key2 (key1 h)
 
 /-- `polynomial.gal.restrict` for the composition of polynomials. -/
 def restrict_comp (hq : q.nat_degree ≠ 0) : (p.comp q).Gal →* p.gal :=
@@ -327,37 +369,45 @@ theorem restrict_comp_surjective (hq : q.nat_degree ≠ 0) : Function.Surjective
 
 variable {p q}
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For a separable polynomial, its Galois group has cardinality
 equal to the dimension of its splitting field over `F`. -/
-theorem card_of_separable (hp : p.separable) : «expr = »(fintype.card p.gal, finrank F p.splitting_field) :=
-begin
-  haveI [] [":", expr is_galois F p.splitting_field] [":=", expr is_galois.of_separable_splitting_field hp],
-  exact [expr is_galois.card_aut_eq_finrank F p.splitting_field]
-end
+theorem card_of_separable (hp : p.separable) : Fintype.card p.gal = finrank F p.splitting_field :=
+  by 
+    have  : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp 
+    exact IsGalois.card_aut_eq_finrank F p.splitting_field
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:341:40: in use: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem prime_degree_dvd_card
-[char_zero F]
-(p_irr : irreducible p)
-(p_deg : p.nat_degree.prime) : «expr ∣ »(p.nat_degree, fintype.card p.gal) :=
-begin
-  rw [expr gal.card_of_separable p_irr.separable] [],
-  have [ident hp] [":", expr «expr ≠ »(p.degree, 0)] [":=", expr λ
-   h, nat.prime.ne_zero p_deg (nat_degree_eq_zero_iff_degree_le_zero.mpr (le_of_eq h))],
-  let [ident α] [":", expr p.splitting_field] [":=", expr root_of_splits (algebra_map F p.splitting_field) (splitting_field.splits p) hp],
-  have [ident hα] [":", expr is_integral F α] [":=", expr (is_algebraic_iff_is_integral F).mp (algebra.is_algebraic_of_finite α)],
-  use [expr finite_dimensional.finrank «expr ⟮ , ⟯»(F, [α]) p.splitting_field],
-  suffices [] [":", expr «expr = »((minpoly F α).nat_degree, p.nat_degree)],
-  { rw ["[", "<-", expr finite_dimensional.finrank_mul_finrank F «expr ⟮ , ⟯»(F, [α]) p.splitting_field, ",", expr intermediate_field.adjoin.finrank hα, ",", expr this, "]"] [] },
-  suffices [] [":", expr «expr ∣ »(minpoly F α, p)],
-  { have [ident key] [] [":=", expr (minpoly.irreducible hα).dvd_symm p_irr this],
-    apply [expr le_antisymm],
-    { exact [expr nat_degree_le_of_dvd this p_irr.ne_zero] },
-    { exact [expr nat_degree_le_of_dvd key (minpoly.ne_zero hα)] } },
-  apply [expr minpoly.dvd F α],
-  rw ["[", expr aeval_def, ",", expr map_root_of_splits _ (splitting_field.splits p) hp, "]"] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.nat_degree.prime) :
+  p.nat_degree ∣ Fintype.card p.gal :=
+  by 
+    rw [gal.card_of_separable p_irr.separable]
+    have hp : p.degree ≠ 0 := fun h => Nat.Prime.ne_zero p_deg (nat_degree_eq_zero_iff_degree_le_zero.mpr (le_of_eqₓ h))
+    let α : p.splitting_field := root_of_splits (algebraMap F p.splitting_field) (splitting_field.splits p) hp 
+    have hα : IsIntegral F α := (is_algebraic_iff_is_integral F).mp (Algebra.is_algebraic_of_finite α)
+    use
+      FiniteDimensional.finrank
+        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+        p.splitting_field 
+    suffices  : (minpoly F α).natDegree = p.nat_degree
+    ·
+      rw
+        [←FiniteDimensional.finrank_mul_finrank F
+          («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+          p.splitting_field,
+        IntermediateField.adjoin.finrank hα, this]
+    suffices  : minpoly F α ∣ p
+    ·
+      have key := (minpoly.irreducible hα).dvd_symm p_irr this 
+      apply le_antisymmₓ
+      ·
+        exact nat_degree_le_of_dvd this p_irr.ne_zero
+      ·
+        exact nat_degree_le_of_dvd key (minpoly.ne_zero hα)
+    apply minpoly.dvd F α 
+    rw [aeval_def, map_root_of_splits _ (splitting_field.splits p) hp]
 
 section Rationals
 
@@ -366,113 +416,139 @@ theorem splits_ℚ_ℂ {p : Polynomial ℚ} : Fact (p.splits (algebraMap ℚ ℂ
 
 attribute [local instance] splits_ℚ_ℂ
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The number of complex roots equals the number of real roots plus
     the number of roots not fixed by complex conjugation (i.e. with some imaginary component). -/
-theorem card_complex_roots_eq_card_real_add_card_not_gal_inv
-(p : polynomial exprℚ()) : «expr = »((p.root_set exprℂ()).to_finset.card, «expr + »((p.root_set exprℝ()).to_finset.card, (gal_action_hom p exprℂ() (restrict p exprℂ() (complex.conj_ae.restrict_scalars exprℚ()))).support.card)) :=
-begin
-  by_cases [expr hp, ":", expr «expr = »(p, 0)],
-  { simp_rw ["[", expr hp, ",", expr root_set_zero, ",", expr set.to_finset_eq_empty_iff.mpr rfl, ",", expr finset.card_empty, ",", expr zero_add, "]"] [],
-    refine [expr eq.symm (nat.le_zero_iff.mp ((finset.card_le_univ _).trans (le_of_eq _)))],
-    simp_rw ["[", expr hp, ",", expr root_set_zero, ",", expr fintype.card_eq_zero_iff, "]"] [],
-    apply_instance },
-  have [ident inj] [":", expr function.injective (is_scalar_tower.to_alg_hom exprℚ() exprℝ() exprℂ())] [":=", expr (algebra_map exprℝ() exprℂ()).injective],
-  rw ["[", "<-", expr finset.card_image_of_injective _ subtype.coe_injective, ",", "<-", expr finset.card_image_of_injective _ inj, "]"] [],
-  let [ident a] [":", expr finset exprℂ()] [":=", expr _],
-  let [ident b] [":", expr finset exprℂ()] [":=", expr _],
-  let [ident c] [":", expr finset exprℂ()] [":=", expr _],
-  change [expr «expr = »(a.card, «expr + »(b.card, c.card))] [] [],
-  have [ident ha] [":", expr ∀
-   z : exprℂ(), «expr ↔ »(«expr ∈ »(z, a), «expr = »(aeval z p, 0))] [":=", expr λ
-   z, by rw ["[", expr set.mem_to_finset, ",", expr mem_root_set hp, "]"] []],
-  have [ident hb] [":", expr ∀
-   z : exprℂ(), «expr ↔ »(«expr ∈ »(z, b), «expr ∧ »(«expr = »(aeval z p, 0), «expr = »(z.im, 0)))] [],
-  { intro [ident z],
-    simp_rw ["[", expr finset.mem_image, ",", expr exists_prop, ",", expr set.mem_to_finset, ",", expr mem_root_set hp, "]"] [],
-    split,
-    { rintros ["⟨", ident w, ",", ident hw, ",", ident rfl, "⟩"],
-      exact [expr ⟨by rw ["[", expr aeval_alg_hom_apply, ",", expr hw, ",", expr alg_hom.map_zero, "]"] [], rfl⟩] },
-    { rintros ["⟨", ident hz1, ",", ident hz2, "⟩"],
-      have [ident key] [":", expr «expr = »(is_scalar_tower.to_alg_hom exprℚ() exprℝ() exprℂ() z.re, z)] [":=", expr by { ext [] [] [],
-         refl,
-         rw [expr hz2] [],
-         refl }],
-      exact [expr ⟨z.re, inj (by rwa ["[", "<-", expr aeval_alg_hom_apply, ",", expr key, ",", expr alg_hom.map_zero, "]"] []), key⟩] } },
-  have [ident hc0] [":", expr ∀
-   w : p.root_set exprℂ(), «expr ↔ »(«expr = »(gal_action_hom p exprℂ() (restrict p exprℂ() (complex.conj_ae.restrict_scalars exprℚ())) w, w), «expr = »(w.val.im, 0))] [],
-  { intro [ident w],
-    rw ["[", expr subtype.ext_iff, ",", expr gal_action_hom_restrict, "]"] [],
-    exact [expr complex.eq_conj_iff_im] },
-  have [ident hc] [":", expr ∀
-   z : exprℂ(), «expr ↔ »(«expr ∈ »(z, c), «expr ∧ »(«expr = »(aeval z p, 0), «expr ≠ »(z.im, 0)))] [],
-  { intro [ident z],
-    simp_rw ["[", expr finset.mem_image, ",", expr exists_prop, "]"] [],
-    split,
-    { rintros ["⟨", ident w, ",", ident hw, ",", ident rfl, "⟩"],
-      exact [expr ⟨(mem_root_set hp).mp w.2, mt (hc0 w).mpr (equiv.perm.mem_support.mp hw)⟩] },
-    { rintros ["⟨", ident hz1, ",", ident hz2, "⟩"],
-      exact [expr ⟨⟨z, (mem_root_set hp).mpr hz1⟩, equiv.perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩] } },
-  rw ["<-", expr finset.card_disjoint_union] [],
-  { apply [expr congr_arg finset.card],
-    simp_rw ["[", expr finset.ext_iff, ",", expr finset.mem_union, ",", expr ha, ",", expr hb, ",", expr hc, "]"] [],
-    tauto [] },
-  { intro [ident z],
-    rw ["[", expr finset.inf_eq_inter, ",", expr finset.mem_inter, ",", expr hb, ",", expr hc, "]"] [],
-    tauto [] },
-  { apply_instance }
-end
+theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : Polynomial ℚ) :
+  (p.root_set ℂ).toFinset.card =
+    (p.root_set ℝ).toFinset.card+(gal_action_hom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
+  by 
+    byCases' hp : p = 0
+    ·
+      simpRw [hp, root_set_zero, set.to_finset_eq_empty_iff.mpr rfl, Finset.card_empty, zero_addₓ]
+      refine' Eq.symm (nat.le_zero_iff.mp ((Finset.card_le_univ _).trans (le_of_eqₓ _)))
+      simpRw [hp, root_set_zero, Fintype.card_eq_zero_iff]
+      infer_instance 
+    have inj : Function.Injective (IsScalarTower.toAlgHom ℚ ℝ ℂ) := (algebraMap ℝ ℂ).Injective 
+    rw [←Finset.card_image_of_injective _ Subtype.coe_injective, ←Finset.card_image_of_injective _ inj]
+    let a : Finset ℂ := _ 
+    let b : Finset ℂ := _ 
+    let c : Finset ℂ := _ 
+    change a.card = b.card+c.card 
+    have ha : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0 :=
+      fun z =>
+        by 
+          rw [Set.mem_to_finset, mem_root_set hp]
+    have hb : ∀ z : ℂ, z ∈ b ↔ aeval z p = 0 ∧ z.im = 0
+    ·
+      intro z 
+      simpRw [Finset.mem_image, exists_prop, Set.mem_to_finset, mem_root_set hp]
+      constructor
+      ·
+        rintro ⟨w, hw, rfl⟩
+        exact
+          ⟨by 
+              rw [aeval_alg_hom_apply, hw, AlgHom.map_zero],
+            rfl⟩
+      ·
+        rintro ⟨hz1, hz2⟩
+        have key : IsScalarTower.toAlgHom ℚ ℝ ℂ z.re = z :=
+          by 
+            ext 
+            rfl 
+            rw [hz2]
+            rfl 
+        exact
+          ⟨z.re,
+            inj
+              (by 
+                rwa [←aeval_alg_hom_apply, key, AlgHom.map_zero]),
+            key⟩
+    have hc0 :
+      ∀ w : p.root_set ℂ, gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)) w = w ↔ w.val.im = 0
+    ·
+      intro w 
+      rw [Subtype.ext_iff, gal_action_hom_restrict]
+      exact Complex.eq_conj_iff_im 
+    have hc : ∀ z : ℂ, z ∈ c ↔ aeval z p = 0 ∧ z.im ≠ 0
+    ·
+      intro z 
+      simpRw [Finset.mem_image, exists_prop]
+      constructor
+      ·
+        rintro ⟨w, hw, rfl⟩
+        exact ⟨(mem_root_set hp).mp w.2, mt (hc0 w).mpr (equiv.perm.mem_support.mp hw)⟩
+      ·
+        rintro ⟨hz1, hz2⟩
+        exact ⟨⟨z, (mem_root_set hp).mpr hz1⟩, equiv.perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩
+    rw [←Finset.card_disjoint_union]
+    ·
+      apply congr_argₓ Finset.card 
+      simpRw [Finset.ext_iff, Finset.mem_union, ha, hb, hc]
+      tauto
+    ·
+      intro z 
+      rw [Finset.inf_eq_inter, Finset.mem_inter, hb, hc]
+      tauto
+    ·
+      infer_instance
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An irreducible polynomial of prime degree with two non-real roots has full Galois group. -/
-theorem gal_action_hom_bijective_of_prime_degree
-{p : polynomial exprℚ()}
-(p_irr : irreducible p)
-(p_deg : p.nat_degree.prime)
-(p_roots : «expr = »(fintype.card (p.root_set exprℂ()), «expr + »(fintype.card (p.root_set exprℝ()), 2))) : function.bijective (gal_action_hom p exprℂ()) :=
-begin
-  have [ident h1] [":", expr «expr = »(fintype.card (p.root_set exprℂ()), p.nat_degree)] [],
-  { simp_rw ["[", expr root_set_def, ",", expr finset.coe_sort_coe, ",", expr fintype.card_coe, "]"] [],
-    rw ["[", expr multiset.to_finset_card_of_nodup, ",", "<-", expr nat_degree_eq_card_roots, "]"] [],
-    { exact [expr is_alg_closed.splits_codomain p] },
-    { exact [expr nodup_roots ((separable_map (algebra_map exprℚ() exprℂ())).mpr p_irr.separable)] } },
-  have [ident h2] [":", expr «expr = »(fintype.card p.gal, fintype.card (gal_action_hom p exprℂ()).range)] [":=", expr fintype.card_congr (monoid_hom.of_injective (gal_action_hom_injective p exprℂ())).to_equiv],
-  let [ident conj] [] [":=", expr restrict p exprℂ() (complex.conj_ae.restrict_scalars exprℚ())],
-  refine [expr ⟨gal_action_hom_injective p exprℂ(), λ
-    x, (congr_arg (has_mem.mem x) (show «expr = »((gal_action_hom p exprℂ()).range, «expr⊤»()), from _)).mpr (subgroup.mem_top x)⟩],
-  apply [expr equiv.perm.subgroup_eq_top_of_swap_mem],
-  { rwa [expr h1] [] },
-  { rw [expr h1] [],
-    convert [] [expr prime_degree_dvd_card p_irr p_deg] ["using", 1],
-    convert [] [expr h2.symm] [] },
-  { exact [expr ⟨conj, rfl⟩] },
-  { rw ["<-", expr equiv.perm.card_support_eq_two] [],
-    apply [expr nat.add_left_cancel],
-    rw ["[", "<-", expr p_roots, ",", "<-", expr set.to_finset_card (root_set p exprℝ()), ",", "<-", expr set.to_finset_card (root_set p exprℂ()), "]"] [],
-    exact [expr (card_complex_roots_eq_card_real_add_card_not_gal_inv p).symm] }
-end
+theorem gal_action_hom_bijective_of_prime_degree {p : Polynomial ℚ} (p_irr : Irreducible p) (p_deg : p.nat_degree.prime)
+  (p_roots : Fintype.card (p.root_set ℂ) = Fintype.card (p.root_set ℝ)+2) : Function.Bijective (gal_action_hom p ℂ) :=
+  by 
+    have h1 : Fintype.card (p.root_set ℂ) = p.nat_degree
+    ·
+      simpRw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
+      rw [Multiset.to_finset_card_of_nodup, ←nat_degree_eq_card_roots]
+      ·
+        exact IsAlgClosed.splits_codomain p
+      ·
+        exact nodup_roots ((separable_map (algebraMap ℚ ℂ)).mpr p_irr.separable)
+    have h2 : Fintype.card p.gal = Fintype.card (gal_action_hom p ℂ).range :=
+      Fintype.card_congr (MonoidHom.ofInjective (gal_action_hom_injective p ℂ)).toEquiv 
+    let conj := restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)
+    refine'
+      ⟨gal_action_hom_injective p ℂ,
+        fun x => (congr_argₓ (HasMem.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr (Subgroup.mem_top x)⟩
+    apply Equivₓ.Perm.subgroup_eq_top_of_swap_mem
+    ·
+      rwa [h1]
+    ·
+      rw [h1]
+      convert prime_degree_dvd_card p_irr p_deg using 1
+      convert h2.symm
+    ·
+      exact ⟨conj, rfl⟩
+    ·
+      rw [←Equivₓ.Perm.card_support_eq_two]
+      apply Nat.add_left_cancel 
+      rw [←p_roots, ←Set.to_finset_card (root_set p ℝ), ←Set.to_finset_card (root_set p ℂ)]
+      exact (card_complex_roots_eq_card_real_add_card_not_gal_inv p).symm
 
--- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An irreducible polynomial of prime degree with 1-3 non-real roots has full Galois group. -/
-theorem gal_action_hom_bijective_of_prime_degree'
-{p : polynomial exprℚ()}
-(p_irr : irreducible p)
-(p_deg : p.nat_degree.prime)
-(p_roots1 : «expr ≤ »(«expr + »(fintype.card (p.root_set exprℝ()), 1), fintype.card (p.root_set exprℂ())))
-(p_roots2 : «expr ≤ »(fintype.card (p.root_set exprℂ()), «expr + »(fintype.card (p.root_set exprℝ()), 3))) : function.bijective (gal_action_hom p exprℂ()) :=
-begin
-  apply [expr gal_action_hom_bijective_of_prime_degree p_irr p_deg],
-  let [ident n] [] [":=", expr (gal_action_hom p exprℂ() (restrict p exprℂ() (complex.conj_ae.restrict_scalars exprℚ()))).support.card],
-  have [ident hn] [":", expr «expr ∣ »(2, n)] [":=", expr equiv.perm.two_dvd_card_support (by rw ["[", "<-", expr monoid_hom.map_pow, ",", "<-", expr monoid_hom.map_pow, ",", expr show «expr = »(«expr ^ »(alg_equiv.restrict_scalars exprℚ() complex.conj_ae, 2), 1), from alg_equiv.ext complex.conj_conj, ",", expr monoid_hom.map_one, ",", expr monoid_hom.map_one, "]"] [])],
-  have [ident key] [] [":=", expr card_complex_roots_eq_card_real_add_card_not_gal_inv p],
-  simp_rw ["[", expr set.to_finset_card, "]"] ["at", ident key],
-  rw ["[", expr key, ",", expr add_le_add_iff_left, "]"] ["at", ident p_roots1, ident p_roots2],
-  rw ["[", expr key, ",", expr add_right_inj, "]"] [],
-  suffices [] [":", expr ∀ m : exprℕ(), «expr ∣ »(2, m) → «expr ≤ »(1, m) → «expr ≤ »(m, 3) → «expr = »(m, 2)],
-  { exact [expr this n hn p_roots1 p_roots2] },
-  rintros [ident m, "⟨", ident k, ",", ident rfl, "⟩", ident h2, ident h3],
-  exact [expr le_antisymm (nat.lt_succ_iff.mp (lt_of_le_of_ne h3 (show «expr ≠ »(«expr * »(2, k), «expr + »(«expr * »(2, 1), 1)), from nat.two_mul_ne_two_mul_add_one))) (nat.succ_le_iff.mpr (lt_of_le_of_ne h2 (show «expr ≠ »(«expr + »(«expr * »(2, 0), 1), «expr * »(2, k)), from nat.two_mul_ne_two_mul_add_one.symm)))]
-end
+theorem gal_action_hom_bijective_of_prime_degree' {p : Polynomial ℚ} (p_irr : Irreducible p)
+  (p_deg : p.nat_degree.prime) (p_roots1 : (Fintype.card (p.root_set ℝ)+1) ≤ Fintype.card (p.root_set ℂ))
+  (p_roots2 : Fintype.card (p.root_set ℂ) ≤ Fintype.card (p.root_set ℝ)+3) : Function.Bijective (gal_action_hom p ℂ) :=
+  by 
+    apply gal_action_hom_bijective_of_prime_degree p_irr p_deg 
+    let n := (gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ))).support.card 
+    have hn : 2 ∣ n :=
+      Equivₓ.Perm.two_dvd_card_support
+        (by 
+          rw [←MonoidHom.map_pow, ←MonoidHom.map_pow,
+            show (AlgEquiv.restrictScalars ℚ Complex.conjAe^2) = 1 from AlgEquiv.ext Complex.conj_conj,
+            MonoidHom.map_one, MonoidHom.map_one])
+    have key := card_complex_roots_eq_card_real_add_card_not_gal_inv p 
+    simpRw [Set.to_finset_card]  at key 
+    rw [key, add_le_add_iff_left] at p_roots1 p_roots2 
+    rw [key, add_right_injₓ]
+    suffices  : ∀ m : ℕ, 2 ∣ m → 1 ≤ m → m ≤ 3 → m = 2
+    ·
+      exact this n hn p_roots1 p_roots2 
+    rintro m ⟨k, rfl⟩ h2 h3 
+    exact
+      le_antisymmₓ (nat.lt_succ_iff.mp (lt_of_le_of_neₓ h3 (show (2*k) ≠ (2*1)+1 from Nat.two_mul_ne_two_mul_add_one)))
+        (nat.succ_le_iff.mpr (lt_of_le_of_neₓ h2 (show ((2*0)+1) ≠ 2*k from nat.two_mul_ne_two_mul_add_one.symm)))
 
 end Rationals
 

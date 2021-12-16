@@ -12,7 +12,7 @@ Based on equality of these `nat`s, equality proofs are generated using either
 -/
 
 
-open Equiv Tactic Expr
+open Equivₓ Tactic Expr
 
 open NormNum
 
@@ -31,7 +31,7 @@ unsafe def eval : expr → tactic (expr × expr) :=
   fun e =>
     do 
       let (swapt, fun_ty, coe_fn_inst, fexpr, c) ← e.match_app_coe_fn <|> fail "did not get an app coe_fn expr"
-      guardₓ (fexpr.get_app_fn.const_name = `` Equiv.swap) <|> fail "coe_fn not of equiv.swap"
+      guardₓ (fexpr.get_app_fn.const_name = `` Equivₓ.swap) <|> fail "coe_fn not of equiv.swap"
       let [α, deceq_inst, a, b] ← pure fexpr.get_app_args <|> fail "swap did not have exactly two args applied"
       let na ←
         a.to_rat <|>

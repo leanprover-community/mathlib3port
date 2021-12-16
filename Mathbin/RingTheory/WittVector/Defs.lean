@@ -31,7 +31,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
@@ -142,26 +142,48 @@ def eval {k : ℕ} (φ : ℕ → MvPolynomial (Finₓ k × ℕ) ℤ) (x : Finₓ
 
 variable (R) [Fact p.prime]
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-instance : has_zero (expr𝕎() R) := ⟨eval (witt_zero p) «expr![ , ]»([])⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+instance : HasZero (𝕎 R) :=
+  ⟨eval (witt_zero p)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")⟩
 
 instance : Inhabited (𝕎 R) :=
   ⟨0⟩
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-instance : has_one (expr𝕎() R) := ⟨eval (witt_one p) «expr![ , ]»([])⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+instance : HasOne (𝕎 R) :=
+  ⟨eval (witt_one p)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")⟩
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-instance : has_add (expr𝕎() R) := ⟨λ x y, eval (witt_add p) «expr![ , ]»([x, y])⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+instance : Add (𝕎 R) :=
+  ⟨fun x y =>
+      eval (witt_add p)
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")⟩
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-instance : has_sub (expr𝕎() R) := ⟨λ x y, eval (witt_sub p) «expr![ , ]»([x, y])⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+instance : Sub (𝕎 R) :=
+  ⟨fun x y =>
+      eval (witt_sub p)
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")⟩
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-instance : has_mul (expr𝕎() R) := ⟨λ x y, eval (witt_mul p) «expr![ , ]»([x, y])⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+instance : Mul (𝕎 R) :=
+  ⟨fun x y =>
+      eval (witt_mul p)
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")⟩
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-instance : has_neg (expr𝕎() R) := ⟨λ x, eval (witt_neg p) «expr![ , ]»([x])⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+instance : Neg (𝕎 R) :=
+  ⟨fun x =>
+      eval (witt_neg p)
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")⟩
 
 end RingOperations
 
@@ -283,39 +305,54 @@ variable {p R}
 
 omit hp
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem v2_coeff
-{p' R'}
-(x y : witt_vector p' R')
-(i : fin 2) : «expr = »((«expr![ , ]»([x, y]) i).coeff, «expr![ , ]»([x.coeff, y.coeff]) i) :=
-by fin_cases [ident i] []; simp [] [] [] [] [] []
+theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Finₓ 2) :
+  ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") i).coeff =
+    («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") i :=
+  by 
+    finCases i <;> simp 
 
 include hp
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-theorem add_coeff
-(x y : expr𝕎() R)
-(n : exprℕ()) : «expr = »(«expr + »(x, y).coeff n, peval (witt_add p n) «expr![ , ]»([x.coeff, y.coeff])) :=
-by simp [] [] [] ["[", expr («expr + »), ",", expr eval, "]"] [] []
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+theorem add_coeff (x y : 𝕎 R) (n : ℕ) :
+  (x+y).coeff n =
+    peval (witt_add p n)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") :=
+  by 
+    simp [·+·, eval]
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-theorem sub_coeff
-(x y : expr𝕎() R)
-(n : exprℕ()) : «expr = »(«expr - »(x, y).coeff n, peval (witt_sub p n) «expr![ , ]»([x.coeff, y.coeff])) :=
-by simp [] [] [] ["[", expr has_sub.sub, ",", expr eval, "]"] [] []
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+theorem sub_coeff (x y : 𝕎 R) (n : ℕ) :
+  (x - y).coeff n =
+    peval (witt_sub p n)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") :=
+  by 
+    simp [Sub.sub, eval]
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-theorem mul_coeff
-(x y : expr𝕎() R)
-(n : exprℕ()) : «expr = »(«expr * »(x, y).coeff n, peval (witt_mul p n) «expr![ , ]»([x.coeff, y.coeff])) :=
-by simp [] [] [] ["[", expr («expr * »), ",", expr eval, "]"] [] []
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+theorem mul_coeff (x y : 𝕎 R) (n : ℕ) :
+  (x*y).coeff n =
+    peval (witt_mul p n)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") :=
+  by 
+    simp [·*·, eval]
 
--- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-theorem neg_coeff
-(x : expr𝕎() R)
-(n : exprℕ()) : «expr = »(«expr- »(x).coeff n, peval (witt_neg p n) «expr![ , ]»([x.coeff])) :=
-by simp [] [] [] ["[", expr has_neg.neg, ",", expr eval, ",", expr matrix.cons_fin_one, "]"] [] []
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+theorem neg_coeff (x : 𝕎 R) (n : ℕ) :
+  (-x).coeff n =
+    peval (witt_neg p n)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") :=
+  by 
+    simp [Neg.neg, eval, Matrix.cons_fin_one]
 
 end Coeff
 

@@ -47,11 +47,14 @@ inductive rel : FreeAlgebra R M → FreeAlgebra R M → Prop
 
 end TensorAlgebra
 
--- error in LinearAlgebra.TensorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler algebra R
 /--
 The tensor algebra of the module `M` over the commutative semiring `R`.
--/ @[derive #["[", expr inhabited, ",", expr semiring, ",", expr algebra R, "]"]] def tensor_algebra :=
-ring_quot (tensor_algebra.rel R M)
+-/
+def TensorAlgebra :=
+  RingQuot (TensorAlgebra.Rel R M)deriving [anonymous], [anonymous], [anonymous]
 
 namespace TensorAlgebra
 
@@ -88,7 +91,7 @@ def lift {A : Type _} [Semiringₓ A] [Algebra R A] : (M →ₗ[R] A) ≃ (Tenso
   { toFun :=
       RingQuot.liftAlgHom R ∘
         fun f =>
-          ⟨FreeAlgebra.lift R («expr⇑ » f),
+          ⟨FreeAlgebra.lift R (⇑f),
             fun x y h : rel R M x y =>
               by 
                 induction h <;> simp [Algebra.smul_def]⟩,
@@ -121,8 +124,6 @@ theorem lift_unique {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R] 
   g.to_linear_map.comp (ι R) = f ↔ g = lift R f :=
   (lift R).symm_apply_eq
 
-attribute [irreducible] ι lift
-
 @[simp]
 theorem lift_comp_ι {A : Type _} [Semiringₓ A] [Algebra R A] (g : TensorAlgebra R M →ₐ[R] A) :
   lift R (g.to_linear_map.comp (ι R)) = g :=
@@ -138,30 +139,23 @@ theorem hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : TensorAlgebra 
     rw [←lift_symm_apply, ←lift_symm_apply] at w 
     exact (lift R).symm.Injective w
 
--- error in LinearAlgebra.TensorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `C` holds for the `algebra_map` of `r : R` into `tensor_algebra R M`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `tensor_algebra R M`.
 -/
 @[elab_as_eliminator]
-theorem induction
-{C : tensor_algebra R M → exprProp()}
-(h_grade0 : ∀ r, C (algebra_map R (tensor_algebra R M) r))
-(h_grade1 : ∀ x, C (ι R x))
-(h_mul : ∀ a b, C a → C b → C «expr * »(a, b))
-(h_add : ∀ a b, C a → C b → C «expr + »(a, b))
-(a : tensor_algebra R M) : C a :=
-begin
-  let [ident s] [":", expr subalgebra R (tensor_algebra R M)] [":=", expr { carrier := C,
-     mul_mem' := h_mul,
-     add_mem' := h_add,
-     algebra_map_mem' := h_grade0 }],
-  let [ident of] [":", expr «expr →ₗ[ ] »(M, R, s)] [":=", expr (ι R).cod_restrict s.to_submodule h_grade1],
-  have [ident of_id] [":", expr «expr = »(alg_hom.id R (tensor_algebra R M), s.val.comp (lift R of))] [],
-  { ext [] [] [],
-    simp [] [] [] ["[", expr of, "]"] [] [] },
-  convert [] [expr subtype.prop (lift R of a)] [],
-  exact [expr alg_hom.congr_fun of_id a]
-end
+theorem induction {C : TensorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebraMap R (TensorAlgebra R M) r))
+  (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a*b)) (h_add : ∀ a b, C a → C b → C (a+b))
+  (a : TensorAlgebra R M) : C a :=
+  by 
+    let s : Subalgebra R (TensorAlgebra R M) :=
+      { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
+    let of : M →ₗ[R] s := (ι R).codRestrict s.to_submodule h_grade1 
+    have of_id : AlgHom.id R (TensorAlgebra R M) = s.val.comp (lift R of)
+    ·
+      ext 
+      simp [of]
+    convert Subtype.prop (lift R of a)
+    exact AlgHom.congr_fun of_id a
 
 /-- The left-inverse of `algebra_map`. -/
 def algebra_map_inv : TensorAlgebra R M →ₐ[R] R :=
@@ -224,21 +218,19 @@ theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 :=
 
 variable {R}
 
--- error in LinearAlgebra.TensorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem ι_eq_algebra_map_iff
-(x : M)
-(r : R) : «expr ↔ »(«expr = »(ι R x, algebra_map R _ r), «expr ∧ »(«expr = »(x, 0), «expr = »(r, 0))) :=
-begin
-  refine [expr ⟨λ h, _, _⟩],
-  { have [ident hf0] [":", expr «expr = »(to_triv_sq_zero_ext (ι R x), (0, x))] [],
-    from [expr lift_ι_apply _ _],
-    rw ["[", expr h, ",", expr alg_hom.commutes, "]"] ["at", ident hf0],
-    have [] [":", expr «expr ∧ »(«expr = »(r, 0), «expr = »(0, x))] [":=", expr prod.ext_iff.1 hf0],
-    exact [expr this.symm.imp_left eq.symm] },
-  { rintro ["⟨", ident rfl, ",", ident rfl, "⟩"],
-    rw ["[", expr linear_map.map_zero, ",", expr ring_hom.map_zero, "]"] [] }
-end
+theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 :=
+  by 
+    refine' ⟨fun h => _, _⟩
+    ·
+      have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x)
+      exact lift_ι_apply _ _ 
+      rw [h, AlgHom.commutes] at hf0 
+      have  : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0 
+      exact this.symm.imp_left Eq.symm
+    ·
+      rintro ⟨rfl, rfl⟩
+      rw [LinearMap.map_zero, RingHom.map_zero]
 
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 :=

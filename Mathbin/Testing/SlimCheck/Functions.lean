@@ -58,7 +58,7 @@ We use `Σ` to encode mappings instead of `×` because we
 rely on the association list API defined in `data.list.sigma`.
  -/
 inductive total_function (α : Type u) (β : Type v) : Type max u v
-  | with_default : List (Σ_ : α, β) → β → total_function
+  | with_default : List (Σ _ : α, β) → β → total_function
 
 instance total_function.inhabited [Inhabited β] : Inhabited (total_function α β) :=
   ⟨total_function.with_default ∅ (default _)⟩
@@ -75,7 +75,7 @@ Implementation of `has_repr (total_function α β)`.
 Creates a string for a given `finmap` and output, `x₀ ↦ y₀, .. xₙ ↦ yₙ`
 for each of the entries. The brackets are provided by the calling function.
 -/
-def repr_aux [HasRepr α] [HasRepr β] (m : List (Σ_ : α, β)) : Stringₓ :=
+def repr_aux [HasRepr α] [HasRepr β] (m : List (Σ _ : α, β)) : Stringₓ :=
   Stringₓ.join$ List.qsort (fun x y => x < y) (m.map$ fun x => s!"{(reprₓ$ Sigma.fst x)} ↦ {reprₓ$ Sigma.snd x}, ")
 
 /--
@@ -89,7 +89,7 @@ instance (α : Type u) (β : Type v) [HasRepr α] [HasRepr β] : HasRepr (total_
   ⟨total_function.repr⟩
 
 /-- Create a `finmap` from a list of pairs. -/
-def list.to_finmap' (xs : List (α × β)) : List (Σ_ : α, β) :=
+def list.to_finmap' (xs : List (α × β)) : List (Σ _ : α, β) :=
   xs.map Prod.toSigma
 
 section 
@@ -158,7 +158,7 @@ We use `Σ` to encode mappings instead of `×` because we
 rely on the association list API defined in `data.list.sigma`.
 -/
 inductive injective_function (α : Type u) : Type u
-  | map_to_self (xs : List (Σ_ : α, α)) :
+  | map_to_self (xs : List (Σ _ : α, α)) :
   xs.map Sigma.fst ~ xs.map Sigma.snd → List.Nodup (xs.map Sigma.snd) → injective_function
 
 instance : Inhabited (injective_function α) :=
@@ -199,74 +199,102 @@ open _root_.prod(toSigma)
 
 open _Root_.Nat
 
--- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem list.apply_id_zip_eq
-[decidable_eq α]
-{xs ys : list α}
-(h₀ : list.nodup xs)
-(h₁ : «expr = »(xs.length, ys.length))
-(x y : α)
-(i : exprℕ())
-(h₂ : «expr = »(xs.nth i, some x)) : «expr ↔ »(«expr = »(list.apply_id.{u} (xs.zip ys) x, y), «expr = »(ys.nth i, some y)) :=
-begin
-  induction [expr xs] [] [] ["generalizing", ident ys, ident i],
-  case [ident list.nil, ":", ident ys, ident i, ident h₁, ident h₂] { cases [expr h₂] [] },
-  case [ident list.cons, ":", ident x', ident xs, ident xs_ih, ident ys, ident i, ident h₁, ident h₂] { cases [expr i] [],
-    { injection [expr h₂] ["with", ident h₀, ident h₁],
-      subst [expr h₀],
-      cases [expr ys] [],
-      { cases [expr h₁] [] },
-      { simp [] [] ["only"] ["[", expr list.apply_id, ",", expr to_sigma, ",", expr option.get_or_else_some, ",", expr nth, ",", expr lookup_cons_eq, ",", expr zip_cons_cons, ",", expr list.map, "]"] [] [] } },
-    { cases [expr ys] [],
-      { cases [expr h₁] [] },
-      { cases [expr h₀] ["with", "_", "_", ident h₀, ident h₁],
-        simp [] [] ["only"] ["[", expr nth, ",", expr zip_cons_cons, ",", expr list.apply_id_cons, "]"] [] ["at", ident h₂, "⊢"],
-        rw [expr if_neg] [],
-        { apply [expr xs_ih]; solve_by_elim [] [] ["[", expr succ.inj, "]"] [] },
-        { apply [expr h₀],
-          apply [expr nth_mem h₂] } } } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  list.apply_id_zip_eq
+  [ DecidableEq α ]
+      { xs ys : List α }
+      ( h₀ : List.Nodup xs )
+      ( h₁ : xs.length = ys.length )
+      ( x y : α )
+      ( i : ℕ )
+      ( h₂ : xs.nth i = some x )
+    : list.apply_id .{ u } xs.zip ys x = y ↔ ys.nth i = some y
+  :=
+    by
+      induction xs generalizing ys i
+        case list.nil ys i h₁ h₂ => cases h₂
+        case
+          list.cons
+          x' xs xs_ih ys i h₁ h₂
+          =>
+          cases i
+            ·
+              injection h₂ with h₀ h₁
+                subst h₀
+                cases ys
+                · cases h₁
+                ·
+                  simp
+                    only
+                    [
+                      list.apply_id
+                        ,
+                        to_sigma
+                        ,
+                        Option.get_or_else_some
+                        ,
+                        nth
+                        ,
+                        lookup_cons_eq
+                        ,
+                        zip_cons_cons
+                        ,
+                        List.map
+                      ]
+            ·
+              cases ys
+                · cases h₁
+                ·
+                  cases' h₀ with _ _ h₀ h₁
+                    simp only [ nth , zip_cons_cons , list.apply_id_cons ] at h₂ ⊢
+                    rw [ if_neg ]
+                    · apply xs_ih <;> solveByElim [ succ.inj ]
+                    · apply h₀ apply nth_mem h₂
 
--- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem apply_id_mem_iff
-[decidable_eq α]
-{xs ys : list α}
-(h₀ : list.nodup xs)
-(h₁ : «expr ~ »(xs, ys))
-(x : α) : «expr ↔ »(«expr ∈ »(list.apply_id.{u} (xs.zip ys) x, ys), «expr ∈ »(x, xs)) :=
-begin
-  simp [] [] ["only"] ["[", expr list.apply_id, "]"] [] [],
-  cases [expr h₃, ":", expr lookup x (map prod.to_sigma (xs.zip ys))] [],
-  { dsimp [] ["[", expr option.get_or_else, "]"] [] [],
-    rw [expr h₁.mem_iff] [] },
-  { have [ident h₂] [":", expr ys.nodup] [":=", expr h₁.nodup_iff.1 h₀],
-    replace [ident h₁] [":", expr «expr = »(xs.length, ys.length)] [":=", expr h₁.length_eq],
-    dsimp [] [] [] [],
-    induction [expr xs] [] [] ["generalizing", ident ys],
-    case [ident list.nil, ":", ident ys, ident h₃, ident h₂, ident h₁] { contradiction },
-    case [ident list.cons, ":", ident x', ident xs, ident xs_ih, ident ys, ident h₃, ident h₂, ident h₁] { cases [expr ys] ["with", ident y, ident ys],
-      { cases [expr h₃] [] },
-      dsimp [] ["[", expr lookup, "]"] [] ["at", ident h₃],
-      split_ifs ["at", ident h₃] [],
-      { subst [expr x'],
-        subst [expr val],
-        simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr true_or, ",", expr eq_self_iff_true, "]"] [] [] },
-      { cases [expr h₀] ["with", "_", "_", ident h₀, ident h₅],
-        cases [expr h₂] ["with", "_", "_", ident h₂, ident h₄],
-        have [ident h₆] [] [":=", expr nat.succ.inj h₁],
-        specialize [expr @xs_ih h₅ ys h₃ h₄ h₆],
-        simp [] [] ["only"] ["[", expr ne.symm h, ",", expr xs_ih, ",", expr mem_cons_iff, ",", expr false_or, "]"] [] [],
-        suffices [] [":", expr «expr ∈ »(val, ys)],
-        tauto ["!"],
-        erw ["[", "<-", expr option.mem_def, ",", expr mem_lookup_iff, "]"] ["at", ident h₃],
-        simp [] [] ["only"] ["[", expr to_sigma, ",", expr mem_map, ",", expr heq_iff_eq, ",", expr prod.exists, "]"] [] ["at", ident h₃],
-        rcases [expr h₃, "with", "⟨", ident a, ",", ident b, ",", ident h₃, ",", ident h₄, ",", ident h₅, "⟩"],
-        subst [expr a],
-        subst [expr b],
-        apply [expr (mem_zip h₃).2],
-        simp [] [] ["only"] ["[", expr nodupkeys, ",", expr keys, ",", expr comp, ",", expr prod.fst_to_sigma, ",", expr map_map, "]"] [] [],
-        rwa [expr map_fst_zip _ _ (le_of_eq h₆)] [] } } }
-end
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:514:6: unsupported: specialize @hyp
+theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) (x : α) :
+  list.apply_id.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs :=
+  by 
+    simp only [list.apply_id]
+    cases h₃ : lookup x (map Prod.toSigma (xs.zip ys))
+    ·
+      dsimp [Option.getOrElse]
+      rw [h₁.mem_iff]
+    ·
+      have h₂ : ys.nodup := h₁.nodup_iff.1 h₀ 
+      replace h₁ : xs.length = ys.length := h₁.length_eq 
+      dsimp 
+      induction xs generalizing ys 
+      case list.nil ys h₃ h₂ h₁ => 
+        contradiction 
+      case list.cons x' xs xs_ih ys h₃ h₂ h₁ => 
+        cases' ys with y ys
+        ·
+          cases h₃ 
+        dsimp [lookup]  at h₃ 
+        splitIfs  at h₃
+        ·
+          subst x' 
+          subst val 
+          simp only [mem_cons_iff, true_orₓ, eq_self_iff_true]
+        ·
+          cases' h₀ with _ _ h₀ h₅ 
+          cases' h₂ with _ _ h₂ h₄ 
+          have h₆ := Nat.succ.injₓ h₁ 
+          specialize xs_ih h₅ ys h₃ h₄ h₆ 
+          simp only [Ne.symm h, xs_ih, mem_cons_iff, false_orₓ]
+          suffices  : val ∈ ys 
+          tauto! 
+          erw [←Option.mem_def, mem_lookup_iff] at h₃ 
+          simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃ 
+          rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
+          subst a 
+          subst b 
+          apply (mem_zip h₃).2
+          simp only [nodupkeys, keys, comp, Prod.fst_to_sigma, map_map]
+          rwa [map_fst_zip _ _ (le_of_eqₓ h₆)]
 
 theorem list.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x ∉ xs → list.apply_id.{u} (xs.zip ys) x = x :=
   by 
@@ -279,40 +307,42 @@ theorem list.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x �
     intro y hy 
     exact h (mem_zip hy).1
 
--- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem apply_id_injective
-[decidable_eq α]
-{xs ys : list α}
-(h₀ : list.nodup xs)
-(h₁ : «expr ~ »(xs, ys)) : injective.{u+1, u+1} (list.apply_id (xs.zip ys)) :=
-begin
-  intros [ident x, ident y, ident h],
-  by_cases [expr hx, ":", expr «expr ∈ »(x, xs)]; by_cases [expr hy, ":", expr «expr ∈ »(y, xs)],
-  { rw [expr mem_iff_nth] ["at", ident hx, ident hy],
-    cases [expr hx] ["with", ident i, ident hx],
-    cases [expr hy] ["with", ident j, ident hy],
-    suffices [] [":", expr «expr = »(some x, some y)],
-    { injection [expr this] [] },
-    have [ident h₂] [] [":=", expr h₁.length_eq],
-    rw ["[", expr list.apply_id_zip_eq h₀ h₂ _ _ _ hx, "]"] ["at", ident h],
-    rw ["[", "<-", expr hx, ",", "<-", expr hy, "]"] [],
-    congr,
-    apply [expr nth_injective _ (h₁.nodup_iff.1 h₀)],
-    { symmetry,
-      rw [expr h] [],
-      rw ["<-", expr list.apply_id_zip_eq] []; assumption },
-    { rw ["<-", expr h₁.length_eq] [],
-      rw [expr nth_eq_some] ["at", ident hx],
-      cases [expr hx] ["with", ident hx, ident hx'],
-      exact [expr hx] } },
-  { rw ["<-", expr apply_id_mem_iff h₀ h₁] ["at", ident hx, ident hy],
-    rw [expr h] ["at", ident hx],
-    contradiction },
-  { rw ["<-", expr apply_id_mem_iff h₀ h₁] ["at", ident hx, ident hy],
-    rw [expr h] ["at", ident hx],
-    contradiction },
-  { rwa ["[", expr list.apply_id_eq_self, ",", expr list.apply_id_eq_self, "]"] ["at", ident h]; assumption }
-end
+theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) :
+  injective.{u + 1, u + 1} (list.apply_id (xs.zip ys)) :=
+  by 
+    intro x y h 
+    byCases' hx : x ∈ xs <;> byCases' hy : y ∈ xs
+    ·
+      rw [mem_iff_nth] at hx hy 
+      cases' hx with i hx 
+      cases' hy with j hy 
+      suffices  : some x = some y
+      ·
+        injection this 
+      have h₂ := h₁.length_eq 
+      rw [list.apply_id_zip_eq h₀ h₂ _ _ _ hx] at h 
+      rw [←hx, ←hy]
+      congr 
+      apply nth_injective _ (h₁.nodup_iff.1 h₀)
+      ·
+        symm 
+        rw [h]
+        rw [←list.apply_id_zip_eq] <;> assumption
+      ·
+        rw [←h₁.length_eq]
+        rw [nth_eq_some] at hx 
+        cases' hx with hx hx' 
+        exact hx
+    ·
+      rw [←apply_id_mem_iff h₀ h₁] at hx hy 
+      rw [h] at hx 
+      contradiction
+    ·
+      rw [←apply_id_mem_iff h₀ h₁] at hx hy 
+      rw [h] at hx 
+      contradiction
+    ·
+      rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h <;> assumption
 
 open total_function(list.to_finmap')
 
@@ -322,7 +352,8 @@ open Sampleable
 Remove a slice of length `m` at index `n` in a list and a permutation, maintaining the property
 that it is a permutation.
 -/
-def perm.slice [DecidableEq α] (n m : ℕ) : (Σ'xs ys : List α, xs ~ ys ∧ ys.nodup) → Σ'xs ys : List α, xs ~ ys ∧ ys.nodup
+def perm.slice [DecidableEq α] (n m : ℕ) :
+  (Σ' xs ys : List α, xs ~ ys ∧ ys.nodup) → Σ' xs ys : List α, xs ~ ys ∧ ys.nodup
 | ⟨xs, ys, h, h'⟩ =>
   let xs' := List.slice n m xs 
   have h₀ : xs' ~ ys.inter xs' := perm.slice_inter _ _ h h'
@@ -349,13 +380,13 @@ The sizes of the slice being removed start at `n` (with `n` the length
 of the list) and then `n / 2`, then `n / 4`, etc down to 1. The slices
 will be taken at index `0`, `n / k`, `2n / k`, `3n / k`, etc.
 -/
-protected def shrink_perm {α : Type} [DecidableEq α] [SizeOf α] : shrink_fn (Σ'xs ys : List α, xs ~ ys ∧ ys.nodup)
+protected def shrink_perm {α : Type} [DecidableEq α] [SizeOf α] : shrink_fn (Σ' xs ys : List α, xs ~ ys ∧ ys.nodup)
 | xs =>
   do 
     let k := xs.1.length 
     let n ← slice_sizes k 
     let i ← LazyList.ofList$ List.finRange$ k / n 
-    have  : («expr↑ » i*«expr↑ » n) < xs.1.length :=
+    have  : ((↑i)*↑n) < xs.1.length :=
         Nat.lt_of_div_lt_div
           (lt_of_le_of_ltₓ
             (by 
@@ -405,28 +436,30 @@ protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.nodup) : injective_fun
     (by 
       simp only [list.to_finmap', comp, map_snd_zip, Prod.snd_to_sigma, map_map])
 
--- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected theorem injective [decidable_eq α] (f : injective_function α) : injective (apply f) :=
-begin
-  cases [expr f] ["with", ident xs, ident hperm, ident hnodup],
-  generalize [ident h₀] [":"] [expr «expr = »(map sigma.fst xs, xs₀)],
-  generalize [ident h₁] [":"] [expr «expr = »(xs.map «expr $ »(@id («exprΣ , »((_ : α), α) → α), @sigma.snd α (λ
-      _ : α, α)), xs₁)],
-  dsimp [] ["[", expr id, "]"] [] ["at", ident h₁],
-  have [ident hxs] [":", expr «expr = »(xs, total_function.list.to_finmap' (xs₀.zip xs₁))] [],
-  { rw ["[", "<-", expr h₀, ",", "<-", expr h₁, ",", expr list.to_finmap', "]"] [],
-    clear [ident h₀, ident h₁, ident xs₀, ident xs₁, ident hperm, ident hnodup],
-    induction [expr xs] [] [] [],
-    case [ident list.nil] { simp [] [] ["only"] ["[", expr zip_nil_right, ",", expr map_nil, "]"] [] [] },
-    case [ident list.cons, ":", ident xs_hd, ident xs_tl, ident xs_ih] { simp [] [] ["only"] ["[", expr true_and, ",", expr to_sigma, ",", expr eq_self_iff_true, ",", expr sigma.eta, ",", expr zip_cons_cons, ",", expr list.map, "]"] [] [],
-      exact [expr xs_ih] } },
-  revert [ident hperm, ident hnodup],
-  rw [expr hxs] [],
-  intros [],
-  apply [expr apply_id_injective],
-  { rwa ["[", "<-", expr h₀, ",", expr hxs, ",", expr hperm.nodup_iff, "]"] [] },
-  { rwa ["[", "<-", expr hxs, ",", expr h₀, ",", expr h₁, "]"] ["at", ident hperm] }
-end
+protected theorem injective [DecidableEq α] (f : injective_function α) : injective (apply f) :=
+  by 
+    cases' f with xs hperm hnodup 
+    generalize h₀ : map Sigma.fst xs = xs₀ 
+    generalize h₁ : xs.map (@id ((Σ _ : α, α) → α)$ @Sigma.snd α fun _ : α => α) = xs₁ 
+    dsimp [id]  at h₁ 
+    have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁)
+    ·
+      rw [←h₀, ←h₁, list.to_finmap']
+      clear h₀ h₁ xs₀ xs₁ hperm hnodup 
+      induction xs 
+      case list.nil => 
+        simp only [zip_nil_right, map_nil]
+      case list.cons xs_hd xs_tl xs_ih => 
+        simp only [true_andₓ, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
+        exact xs_ih 
+    revert hperm hnodup 
+    rw [hxs]
+    intros 
+    apply apply_id_injective
+    ·
+      rwa [←h₀, hxs, hperm.nodup_iff]
+    ·
+      rwa [←hxs, h₀, h₁] at hperm
 
 instance pi_injective.sampleable_ext : sampleable_ext { f : ℤ → ℤ // Function.Injective f } :=
   { ProxyRepr := injective_function ℤ, interp := fun f => ⟨apply f, f.injective⟩,
@@ -436,7 +469,7 @@ instance pi_injective.sampleable_ext : sampleable_ext { f : ℤ → ℤ // Funct
           do 
             let xs' := Int.range (-(2*sz)+2) ((2*sz)+2)
             let ys ← gen.permutation_of xs' 
-            have Hinj : injective fun r : ℕ => (-((2*sz)+2 : ℤ))+«expr↑ » r :=
+            have Hinj : injective fun r : ℕ => (-((2*sz)+2 : ℤ))+↑r :=
                 fun x y h => Int.coe_nat_inj (add_right_injective _ h)
               let r : injective_function ℤ :=
                 injective_function.mk.{0} xs' ys.1 ys.2 (ys.2.nodup_iff.1$ nodup_map Hinj (nodup_range _))

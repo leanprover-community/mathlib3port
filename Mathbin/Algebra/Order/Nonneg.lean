@@ -125,7 +125,7 @@ def coe_add_monoid_hom [OrderedAddCommMonoid α] : { x : α // 0 ≤ x } →+ α
   ⟨coeₓ, Nonneg.coe_zero, Nonneg.coe_add⟩
 
 @[normCast]
-theorem nsmul_coe [OrderedAddCommMonoid α] (n : ℕ) (r : { x : α // 0 ≤ x }) : «expr↑ » (n • r) = n • (r : α) :=
+theorem nsmul_coe [OrderedAddCommMonoid α] (n : ℕ) (r : { x : α // 0 ≤ x }) : ↑(n • r) = n • (r : α) :=
   Nonneg.coeAddMonoidHom.map_nsmul _ _
 
 instance Archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { x : α // 0 ≤ x } :=
@@ -275,7 +275,7 @@ theorem to_nonneg_le {a : α} {b : { x : α // 0 ≤ x }} : to_nonneg a ≤ b �
     simp [to_nonneg, hb]
 
 @[simp]
-theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < to_nonneg b ↔ «expr↑ » a < b :=
+theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < to_nonneg b ↔ ↑a < b :=
   by 
     cases' a with a ha 
     simp [to_nonneg, ha.not_lt]

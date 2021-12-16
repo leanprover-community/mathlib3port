@@ -72,19 +72,19 @@ open_locale Classical TopologicalSpace
 
 local notation "β" => of_type_monad Ultrafilter
 
--- error in Topology.Category.Compactum: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The type `Compactum` of Compacta, defined as algebras for the ultrafilter monad. -/
-@[derive #["[", expr category, ",", expr inhabited, "]"]]
 def Compactum :=
-monad.algebra exprβ()
+  monad.algebra β deriving [anonymous], [anonymous]
 
 namespace Compactum
 
--- error in Topology.Category.Compactum: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler creates_limits
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler creates_limits
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- The forgetful functor to Type* -/
-@[derive #["[", expr creates_limits, ",", expr faithful, "]"]]
-def forget : «expr ⥤ »(Compactum, Type*) :=
-monad.forget _
+def forget : Compactum ⥤ Type _ :=
+  monad.forget _ deriving [anonymous], [anonymous]
 
 /-- The "free" Compactum functor. -/
 def free : Type _ ⥤ Compactum :=
@@ -147,7 +147,7 @@ instance {X : Compactum} : TopologicalSpace X :=
 theorem is_closed_iff {X : Compactum} (S : Set X) : IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S :=
   by 
     rw [←is_open_compl_iff]
-    split 
+    constructor
     ·
       intro cond F h 
       byContra c 
@@ -173,9 +173,10 @@ instance {X : Compactum} : CompactSpace X :=
     intro S h1 h2 
     exact h2 F h1
 
-/-- A local definition used only in the proofs. -/
-private def basic {X : Compactum} (A : Set X) : Set (Ultrafilter X) :=
-  { F | A ∈ F }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- A local definition used only in the proofs. -/ private
+  def basic { X : Compactum } ( A : Set X ) : Set Ultrafilter X := { F | A ∈ F }
 
 /-- A local definition used only in the proofs. -/
 private def cl {X : Compactum} (A : Set X) : Set X :=
@@ -184,10 +185,10 @@ private def cl {X : Compactum} (A : Set X) : Set X :=
 private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B :=
   by 
     ext G 
-    split 
+    constructor
     ·
       intro hG 
-      split  <;> filterUpwards [hG] <;> intro x 
+      constructor <;> filterUpwards [hG] <;> intro x 
       exacts[And.left, And.right]
     ·
       rintro ⟨h1, h2⟩
@@ -199,60 +200,66 @@ private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ cl A :=
       by 
         simp ⟩
 
--- error in Topology.Category.Compactum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private theorem cl_cl {X : Compactum} (A : set X) : «expr ⊆ »(cl (cl A), cl A) :=
-begin
-  rintros ["_", "⟨", ident F, ",", ident hF, ",", ident rfl, "⟩"],
-  let [ident fsu] [] [":=", expr finset (set (ultrafilter X))],
-  let [ident ssu] [] [":=", expr set (set (ultrafilter X))],
-  let [ident ι] [":", expr fsu → ssu] [":=", expr coe],
-  let [ident C0] [":", expr ssu] [":=", expr {Z | «expr∃ , »((B «expr ∈ » F), «expr = »(«expr ⁻¹' »(X.str, B), Z))}],
-  let [ident AA] [] [":=", expr {G : ultrafilter X | «expr ∈ »(A, G)}],
-  let [ident C1] [] [":=", expr insert AA C0],
-  let [ident C2] [] [":=", expr finite_inter_closure C1],
-  have [ident claim1] [":", expr ∀ B C «expr ∈ » C0, «expr ∈ »(«expr ∩ »(B, C), C0)] [],
-  { rintros [ident B, ident C, "⟨", ident Q, ",", ident hQ, ",", ident rfl, "⟩", "⟨", ident R, ",", ident hR, ",", ident rfl, "⟩"],
-    use [expr «expr ∩ »(Q, R)],
-    simp [] [] ["only"] ["[", expr and_true, ",", expr eq_self_iff_true, ",", expr set.preimage_inter, ",", expr subtype.val_eq_coe, "]"] [] [],
-    exact [expr inter_sets _ hQ hR] },
-  have [ident claim2] [":", expr ∀ B «expr ∈ » C0, set.nonempty B] [],
-  { rintros [ident B, "⟨", ident Q, ",", ident hQ, ",", ident rfl, "⟩"],
-    obtain ["⟨", ident q, "⟩", ":=", expr filter.nonempty_of_mem hQ],
-    use [expr X.incl q],
-    simpa [] [] [] [] [] [] },
-  have [ident claim3] [":", expr ∀ B «expr ∈ » C0, «expr ∩ »(AA, B).nonempty] [],
-  { rintros [ident B, "⟨", ident Q, ",", ident hQ, ",", ident rfl, "⟩"],
-    have [] [":", expr «expr ∩ »(Q, cl A).nonempty] [":=", expr filter.nonempty_of_mem (inter_mem hQ hF)],
-    rcases [expr this, "with", "⟨", ident q, ",", ident hq1, ",", ident P, ",", ident hq2, ",", ident hq3, "⟩"],
-    refine [expr ⟨P, hq2, _⟩],
-    rw ["<-", expr hq3] ["at", ident hq1],
-    simpa [] [] [] [] [] [] },
-  suffices [] [":", expr ∀ T : fsu, «expr ⊆ »(ι T, C1) → «expr⋂₀ »(ι T).nonempty],
-  { obtain ["⟨", ident G, ",", ident h1, "⟩", ":=", expr exists_ultrafilter_of_finite_inter_nonempty _ this],
-    use [expr X.join G],
-    have [] [":", expr «expr = »(G.map X.str, F)] [":=", expr ultrafilter.coe_le_coe.1 (λ
-      S hS, h1 (or.inr ⟨S, hS, rfl⟩))],
-    rw ["[", expr join_distrib, ",", expr this, "]"] [],
-    exact [expr ⟨h1 (or.inl rfl), rfl⟩] },
-  have [ident claim4] [] [":=", expr finite_inter_closure_has_finite_inter C1],
-  have [ident claim5] [":", expr has_finite_inter C0] [":=", expr ⟨⟨_, univ_mem, set.preimage_univ⟩, claim1⟩],
-  have [ident claim6] [":", expr ∀ P «expr ∈ » C2, (P : set (ultrafilter X)).nonempty] [],
-  { suffices [] [":", expr ∀
-     P «expr ∈ » C2, «expr ∨ »(«expr ∈ »(P, C0), «expr∃ , »((Q «expr ∈ » C0), «expr = »(P, «expr ∩ »(AA, Q))))],
-    { intros [ident P, ident hP],
-      cases [expr this P hP] [],
-      { exact [expr claim2 _ h] },
-      { rcases [expr h, "with", "⟨", ident Q, ",", ident hQ, ",", ident rfl, "⟩"],
-        exact [expr claim3 _ hQ] } },
-    intros [ident P, ident hP],
-    exact [expr claim5.finite_inter_closure_insert _ hP] },
-  intros [ident T, ident hT],
-  suffices [] [":", expr «expr ∈ »(«expr⋂₀ »(ι T), C2)],
-  by exact [expr claim6 _ this],
-  apply [expr claim4.finite_inter_mem],
-  intros [ident t, ident ht],
-  exact [expr finite_inter_closure.basic (@hT t ht)]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (B «expr ∈ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (B C «expr ∈ » C0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (B «expr ∈ » C0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (B «expr ∈ » C0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (P «expr ∈ » C2)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (P «expr ∈ » C2)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (Q «expr ∈ » C0)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+private
+  theorem
+    cl_cl
+    { X : Compactum } ( A : Set X ) : cl cl A ⊆ cl A
+    :=
+      by
+        rintro _ ⟨ F , hF , rfl ⟩
+          let fsu := Finset Set Ultrafilter X
+          let ssu := Set Set Ultrafilter X
+          let ι : fsu → ssu := coeₓ
+          let C0 : ssu := { Z | ∃ ( B : _ ) ( _ : B ∈ F ) , X.str ⁻¹' B = Z }
+          let AA := { G : Ultrafilter X | A ∈ G }
+          let C1 := insert AA C0
+          let C2 := finite_inter_closure C1
+          have claim1 : ∀ B C _ : B ∈ C0 _ : C ∈ C0 , B ∩ C ∈ C0
+          ·
+            rintro B C ⟨ Q , hQ , rfl ⟩ ⟨ R , hR , rfl ⟩
+              use Q ∩ R
+              simp only [ and_trueₓ , eq_self_iff_true , Set.preimage_inter , Subtype.val_eq_coe ]
+              exact inter_sets _ hQ hR
+          have claim2 : ∀ B _ : B ∈ C0 , Set.Nonempty B
+          · rintro B ⟨ Q , hQ , rfl ⟩ obtain ⟨ q ⟩ := Filter.nonempty_of_mem hQ use X.incl q simpa
+          have claim3 : ∀ B _ : B ∈ C0 , AA ∩ B . Nonempty
+          ·
+            rintro B ⟨ Q , hQ , rfl ⟩
+              have : Q ∩ cl A . Nonempty := Filter.nonempty_of_mem inter_mem hQ hF
+              rcases this with ⟨ q , hq1 , P , hq2 , hq3 ⟩
+              refine' ⟨ P , hq2 , _ ⟩
+              rw [ ← hq3 ] at hq1
+              simpa
+          suffices : ∀ T : fsu , ι T ⊆ C1 → ⋂₀ ι T . Nonempty
+          ·
+            obtain ⟨ G , h1 ⟩ := exists_ultrafilter_of_finite_inter_nonempty _ this
+              use X.join G
+              have : G.map X.str = F := Ultrafilter.coe_le_coe . 1 fun S hS => h1 Or.inr ⟨ S , hS , rfl ⟩
+              rw [ join_distrib , this ]
+              exact ⟨ h1 Or.inl rfl , rfl ⟩
+          have claim4 := finite_inter_closure_has_finite_inter C1
+          have claim5 : HasFiniteInter C0 := ⟨ ⟨ _ , univ_mem , Set.preimage_univ ⟩ , claim1 ⟩
+          have claim6 : ∀ P _ : P ∈ C2 , ( P : Set Ultrafilter X ) . Nonempty
+          ·
+            suffices : ∀ P _ : P ∈ C2 , P ∈ C0 ∨ ∃ ( Q : _ ) ( _ : Q ∈ C0 ) , P = AA ∩ Q
+              · intro P hP cases this P hP · exact claim2 _ h · rcases h with ⟨ Q , hQ , rfl ⟩ exact claim3 _ hQ
+              intro P hP
+              exact claim5.finite_inter_closure_insert _ hP
+          intro T hT
+          suffices : ⋂₀ ι T ∈ C2
+          · exact claim6 _ this
+          apply claim4.finite_inter_mem
+          intro t ht
+          exact finite_inter_closure.basic @ hT t ht
 
 theorem is_closed_cl {X : Compactum} (A : Set X) : IsClosed (cl A) :=
   by 
@@ -260,76 +267,79 @@ theorem is_closed_cl {X : Compactum} (A : Set X) : IsClosed (cl A) :=
     intro F hF 
     exact cl_cl _ ⟨F, hF, rfl⟩
 
--- error in Topology.Category.Compactum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem str_eq_of_le_nhds
-{X : Compactum}
-(F : ultrafilter X)
-(x : X) : «expr ≤ »(«expr↑ »(F), expr𝓝() x) → «expr = »(X.str F, x) :=
-begin
-  let [ident fsu] [] [":=", expr finset (set (ultrafilter X))],
-  let [ident ssu] [] [":=", expr set (set (ultrafilter X))],
-  let [ident ι] [":", expr fsu → ssu] [":=", expr coe],
-  let [ident T0] [":", expr ssu] [":=", expr {S | «expr∃ , »((A «expr ∈ » F), «expr = »(S, basic A))}],
-  let [ident AA] [] [":=", expr «expr ⁻¹' »(X.str, {x})],
-  let [ident T1] [] [":=", expr insert AA T0],
-  let [ident T2] [] [":=", expr finite_inter_closure T1],
-  intro [ident cond],
-  have [ident claim1] [":", expr ∀ A : set X, is_closed A → «expr ∈ »(A, F) → «expr ∈ »(x, A)] [],
-  { intros [ident A, ident hA, ident h],
-    by_contradiction [ident H],
-    rw [expr le_nhds_iff] ["at", ident cond],
-    specialize [expr cond «expr ᶜ»(A) H hA.is_open_compl],
-    rw ["[", expr ultrafilter.mem_coe, ",", expr ultrafilter.compl_mem_iff_not_mem, "]"] ["at", ident cond],
-    contradiction },
-  have [ident claim2] [":", expr ∀ A : set X, «expr ∈ »(A, F) → «expr ∈ »(x, cl A)] [],
-  { intros [ident A, ident hA],
-    exact [expr claim1 (cl A) (is_closed_cl A) (mem_of_superset hA (subset_cl A))] },
-  have [ident claim3] [":", expr ∀ S1 S2 «expr ∈ » T0, «expr ∈ »(«expr ∩ »(S1, S2), T0)] [],
-  { rintros [ident S1, ident S2, "⟨", ident S1, ",", ident hS1, ",", ident rfl, "⟩", "⟨", ident S2, ",", ident hS2, ",", ident rfl, "⟩"],
-    exact [expr ⟨«expr ∩ »(S1, S2), inter_mem hS1 hS2, by simp [] [] [] ["[", expr basic_inter, "]"] [] []⟩] },
-  have [ident claim4] [":", expr ∀ S «expr ∈ » T0, «expr ∩ »(AA, S).nonempty] [],
-  { rintros [ident S, "⟨", ident S, ",", ident hS, ",", ident rfl, "⟩"],
-    rcases [expr claim2 _ hS, "with", "⟨", ident G, ",", ident hG, ",", ident hG2, "⟩"],
-    exact [expr ⟨G, hG2, hG⟩] },
-  have [ident claim5] [":", expr ∀ S «expr ∈ » T0, set.nonempty S] [],
-  { rintros [ident S, "⟨", ident S, ",", ident hS, ",", ident rfl, "⟩"],
-    exact [expr ⟨F, hS⟩] },
-  have [ident claim6] [":", expr ∀ S «expr ∈ » T2, set.nonempty S] [],
-  { suffices [] [":", expr ∀
-     S «expr ∈ » T2, «expr ∨ »(«expr ∈ »(S, T0), «expr∃ , »((Q «expr ∈ » T0), «expr = »(S, «expr ∩ »(AA, Q))))],
-    { intros [ident S, ident hS],
-      cases [expr this _ hS] ["with", ident h, ident h],
-      { exact [expr claim5 S h] },
-      { rcases [expr h, "with", "⟨", ident Q, ",", ident hQ, ",", ident rfl, "⟩"],
-        exact [expr claim4 Q hQ] } },
-    intros [ident S, ident hS],
-    apply [expr finite_inter_closure_insert],
-    { split,
-      { use [expr set.univ],
-        refine [expr ⟨filter.univ_sets _, _⟩],
-        ext [] [] [],
-        refine [expr ⟨_, by tauto []⟩],
-        { intro [],
-          apply [expr filter.univ_sets] } },
-      { exact [expr claim3] } },
-    { exact [expr hS] } },
-  suffices [] [":", expr ∀ F : fsu, «expr ⊆ »(«expr↑ »(F), T1) → «expr⋂₀ »(ι F).nonempty],
-  { obtain ["⟨", ident G, ",", ident h1, "⟩", ":=", expr ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ this],
-    have [ident c1] [":", expr «expr = »(X.join G, F)] [":=", expr ultrafilter.coe_le_coe.1 (λ
-      P hP, h1 (or.inr ⟨P, hP, rfl⟩))],
-    have [ident c2] [":", expr «expr = »(G.map X.str, X.incl x)] [],
-    { refine [expr ultrafilter.coe_le_coe.1 (λ P hP, _)],
-      apply [expr mem_of_superset (h1 (or.inl rfl))],
-      rintros [ident x, "⟨", ident rfl, "⟩"],
-      exact [expr hP] },
-    simp [] [] [] ["[", "<-", expr c1, ",", expr c2, "]"] [] [] },
-  intros [ident T, ident hT],
-  refine [expr claim6 _ (finite_inter_mem (finite_inter_closure_has_finite_inter _) _ _)],
-  intros [ident t, ident ht],
-  exact [expr finite_inter_closure.basic (@hT t ht)]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (A «expr ∈ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » T0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » T0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » T2)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » T2)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (Q «expr ∈ » T0)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  str_eq_of_le_nhds
+  { X : Compactum } ( F : Ultrafilter X ) ( x : X ) : ↑ F ≤ 𝓝 x → X.str F = x
+  :=
+    by
+      let fsu := Finset Set Ultrafilter X
+        let ssu := Set Set Ultrafilter X
+        let ι : fsu → ssu := coeₓ
+        let T0 : ssu := { S | ∃ ( A : _ ) ( _ : A ∈ F ) , S = basic A }
+        let AA := X.str ⁻¹' { x }
+        let T1 := insert AA T0
+        let T2 := finite_inter_closure T1
+        intro cond
+        have claim1 : ∀ A : Set X , IsClosed A → A ∈ F → x ∈ A
+        ·
+          intro A hA h
+            byContra H
+            rw [ le_nhds_iff ] at cond
+            specialize cond A ᶜ H hA.is_open_compl
+            rw [ Ultrafilter.mem_coe , Ultrafilter.compl_mem_iff_not_mem ] at cond
+            contradiction
+        have claim2 : ∀ A : Set X , A ∈ F → x ∈ cl A
+        · intro A hA exact claim1 cl A is_closed_cl A mem_of_superset hA subset_cl A
+        have claim3 : ∀ S1 S2 _ : S1 ∈ T0 _ : S2 ∈ T0 , S1 ∩ S2 ∈ T0
+        ·
+          rintro S1 S2 ⟨ S1 , hS1 , rfl ⟩ ⟨ S2 , hS2 , rfl ⟩
+            exact ⟨ S1 ∩ S2 , inter_mem hS1 hS2 , by simp [ basic_inter ] ⟩
+        have claim4 : ∀ S _ : S ∈ T0 , AA ∩ S . Nonempty
+        · rintro S ⟨ S , hS , rfl ⟩ rcases claim2 _ hS with ⟨ G , hG , hG2 ⟩ exact ⟨ G , hG2 , hG ⟩
+        have claim5 : ∀ S _ : S ∈ T0 , Set.Nonempty S
+        · rintro S ⟨ S , hS , rfl ⟩ exact ⟨ F , hS ⟩
+        have claim6 : ∀ S _ : S ∈ T2 , Set.Nonempty S
+        ·
+          suffices : ∀ S _ : S ∈ T2 , S ∈ T0 ∨ ∃ ( Q : _ ) ( _ : Q ∈ T0 ) , S = AA ∩ Q
+            · intro S hS cases' this _ hS with h h · exact claim5 S h · rcases h with ⟨ Q , hQ , rfl ⟩ exact claim4 Q hQ
+            intro S hS
+            apply finite_inter_closure_insert
+            ·
+              constructor
+                ·
+                  use Set.Univ
+                    refine' ⟨ Filter.univ_sets _ , _ ⟩
+                    ext
+                    refine' ⟨ _ , by tauto ⟩
+                    · intro apply Filter.univ_sets
+                · exact claim3
+            · exact hS
+        suffices : ∀ F : fsu , ↑ F ⊆ T1 → ⋂₀ ι F . Nonempty
+        ·
+          obtain ⟨ G , h1 ⟩ := Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ this
+            have c1 : X.join G = F := Ultrafilter.coe_le_coe . 1 fun P hP => h1 Or.inr ⟨ P , hP , rfl ⟩
+            have c2 : G.map X.str = X.incl x
+            ·
+              refine' Ultrafilter.coe_le_coe . 1 fun P hP => _
+                apply mem_of_superset h1 Or.inl rfl
+                rintro x ⟨ rfl ⟩
+                exact hP
+            simp [ ← c1 , c2 ]
+        intro T hT
+        refine' claim6 _ finite_inter_mem finite_inter_closure_has_finite_inter _ _ _
+        intro t ht
+        exact finite_inter_closure.basic @ hT t ht
 
-theorem le_nhds_of_str_eq {X : Compactum} (F : Ultrafilter X) (x : X) : X.str F = x → «expr↑ » F ≤ 𝓝 x :=
+theorem le_nhds_of_str_eq {X : Compactum} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x :=
   fun h =>
     le_nhds_iff.mpr
       fun s hx hs =>
@@ -353,7 +363,7 @@ theorem cl_eq_closure {X : Compactum} (A : Set X) : cl A = Closure A :=
   by 
     ext 
     rw [mem_closure_iff_ultrafilter]
-    split 
+    constructor
     ·
       rintro ⟨F, h1, h2⟩
       exact ⟨F, h1, le_nhds_of_str_eq _ _ h2⟩
@@ -370,49 +380,58 @@ theorem continuous_of_hom {X Y : Compactum} (f : X ⟶ Y) : Continuous f :=
     apply le_nhds_of_str_eq 
     rw [←str_hom_commute, str_eq_of_le_nhds _ x h]
 
--- error in Topology.Category.Compactum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
-noncomputable
-def of_topological_space (X : Type*) [topological_space X] [compact_space X] [t2_space X] : Compactum :=
-{ A := X,
-  a := ultrafilter.Lim,
-  unit' := by { ext [] [ident x] [],
-    exact [expr Lim_eq (by finish ["[", expr le_nhds_iff, "]"] [])] },
-  assoc' := begin
-    ext [] [ident FF] [],
-    change [expr ultrafilter (ultrafilter X)] [] ["at", ident FF],
-    set [] [ident x] [] [":="] [expr (ultrafilter.map ultrafilter.Lim FF).Lim] ["with", ident c1],
-    have [ident c2] [":", expr ∀ (U : set X) (F : ultrafilter X), «expr ∈ »(F.Lim, U) → is_open U → «expr ∈ »(U, F)] [],
-    { intros [ident U, ident F, ident h1, ident hU],
-      exact [expr «expr ▸ »(c1, is_open_iff_ultrafilter.mp hU _ h1 _ (ultrafilter.le_nhds_Lim _))] },
-    have [ident c3] [":", expr «expr ≤ »(«expr↑ »(ultrafilter.map ultrafilter.Lim FF), expr𝓝() x)] [],
-    { rw [expr le_nhds_iff] [],
-      intros [ident U, ident hx, ident hU],
-      exact [expr mem_coe.2 (c2 _ _ (by rwa ["<-", expr c1] []) hU)] },
-    have [ident c4] [":", expr ∀
-     U : set X, «expr ∈ »(x, U) → is_open U → «expr ∈ »({G : ultrafilter X | «expr ∈ »(U, G)}, FF)] [],
-    { intros [ident U, ident hx, ident hU],
-      suffices [] [":", expr «expr ∈ »(«expr ⁻¹' »(ultrafilter.Lim, U), FF)],
-      { apply [expr mem_of_superset this],
-        intros [ident P, ident hP],
-        exact [expr c2 U P hP hU] },
-      exact [expr @c3 U (is_open.mem_nhds hU hx)] },
-    apply [expr Lim_eq],
-    rw [expr le_nhds_iff] [],
-    exact [expr c4]
-  end }
+noncomputable def of_topological_space (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] : Compactum :=
+  { a := X, a := Ultrafilter.lim,
+    unit' :=
+      by 
+        ext x 
+        exact
+          Lim_eq
+            (by 
+              finish [le_nhds_iff]),
+    assoc' :=
+      by 
+        ext FF 
+        change Ultrafilter (Ultrafilter X) at FF 
+        set x := (Ultrafilter.map Ultrafilter.lim FF).lim with c1 
+        have c2 : ∀ U : Set X F : Ultrafilter X, F.Lim ∈ U → IsOpen U → U ∈ F
+        ·
+          intro U F h1 hU 
+          exact c1 ▸ is_open_iff_ultrafilter.mp hU _ h1 _ (Ultrafilter.le_nhds_Lim _)
+        have c3 : ↑Ultrafilter.map Ultrafilter.lim FF ≤ 𝓝 x
+        ·
+          rw [le_nhds_iff]
+          intro U hx hU 
+          exact
+            mem_coe.2
+              (c2 _ _
+                (by 
+                  rwa [←c1])
+                hU)
+        have c4 : ∀ U : Set X, x ∈ U → IsOpen U → { G : Ultrafilter X | U ∈ G } ∈ FF
+        ·
+          intro U hx hU 
+          suffices  : Ultrafilter.lim ⁻¹' U ∈ FF
+          ·
+            apply mem_of_superset this 
+            intro P hP 
+            exact c2 U P hP hU 
+          exact @c3 U (IsOpen.mem_nhds hU hx)
+        apply Lim_eq 
+        rw [le_nhds_iff]
+        exact c4 }
 
--- error in Topology.Category.Compactum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any continuous map between Compacta is a morphism of compacta. -/
-def hom_of_continuous {X Y : Compactum} (f : X → Y) (cont : continuous f) : «expr ⟶ »(X, Y) :=
-{ f := f,
-  h' := begin
-    rw [expr continuous_iff_ultrafilter] ["at", ident cont],
-    ext [] ["(", ident F, ":", expr ultrafilter X, ")"] [],
-    specialize [expr cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)],
-    have [] [] [":=", expr str_eq_of_le_nhds (ultrafilter.map f F) _ cont],
-    simpa [] [] ["only"] ["[", "<-", expr this, ",", expr types_comp_apply, ",", expr of_type_functor_map, "]"] [] []
-  end }
+def hom_of_continuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
+  { f,
+    h' :=
+      by 
+        rw [continuous_iff_ultrafilter] at cont 
+        ext (F : Ultrafilter X)
+        specialize cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)
+        have  := str_eq_of_le_nhds (Ultrafilter.map f F) _ cont 
+        simpa only [←this, types_comp_apply, of_type_functor_map] }
 
 end Compactum
 

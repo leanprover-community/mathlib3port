@@ -127,7 +127,7 @@ def apply_add_hom (m : ∀ i, M₁ i) : ContinuousMultilinearMap R M₁ M₂ →
 
 @[simp]
 theorem sum_apply {α : Type _} (f : α → ContinuousMultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) {s : Finset α} :
-  (∑a in s, f a) m = ∑a in s, f a m :=
+  (∑ a in s, f a) m = ∑ a in s, f a m :=
   (apply_add_hom m).map_sum f s
 
 end HasContinuousAdd
@@ -157,7 +157,7 @@ def pi {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i)] [�
 
 @[simp]
 theorem coe_pi {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i)] [∀ i, TopologicalSpace (M' i)]
-  [∀ i, Module R (M' i)] (f : ∀ i, ContinuousMultilinearMap R M₁ (M' i)) : «expr⇑ » (pi f) = fun m j => f j m :=
+  [∀ i, Module R (M' i)] (f : ∀ i, ContinuousMultilinearMap R M₁ (M' i)) : ⇑pi f = fun m j => f j m :=
   rfl
 
 theorem pi_apply {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i)] [∀ i, TopologicalSpace (M' i)]
@@ -223,12 +223,12 @@ theorem cons_smul (f : ContinuousMultilinearMap R M M₂) (m : ∀ i : Finₓ n,
   f.to_multilinear_map.cons_smul m c x
 
 theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finset ι) :
-  f (t.piecewise (m+m') m') = ∑s in t.powerset, f (s.piecewise m m') :=
+  f (t.piecewise (m+m') m') = ∑ s in t.powerset, f (s.piecewise m m') :=
   f.to_multilinear_map.map_piecewise_add _ _ _
 
 /-- Additivity of a continuous multilinear map along all coordinates at the same time,
 writing `f (m + m')` as the sum  of `f (s.piecewise m m')` over all sets `s`. -/
-theorem map_add_univ [Fintype ι] (m m' : ∀ i, M₁ i) : f (m+m') = ∑s : Finset ι, f (s.piecewise m m') :=
+theorem map_add_univ [Fintype ι] (m m' : ∀ i, M₁ i) : f (m+m') = ∑ s : Finset ι, f (s.piecewise m m') :=
   f.to_multilinear_map.map_add_univ _ _
 
 section ApplySum
@@ -241,13 +241,13 @@ variable {α : ι → Type _} [Fintype ι] (g : ∀ i, α i → M₁ i) (A : ∀
 sum of `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions with `r 1 ∈ A₁`, ...,
 `r n ∈ Aₙ`. This follows from multilinearity by expanding successively with respect to each
 coordinate. -/
-theorem map_sum_finset : (f fun i => ∑j in A i, g i j) = ∑r in pi_finset A, f fun i => g i (r i) :=
+theorem map_sum_finset : (f fun i => ∑ j in A i, g i j) = ∑ r in pi_finset A, f fun i => g i (r i) :=
   f.to_multilinear_map.map_sum_finset _ _
 
 /-- If `f` is continuous multilinear, then `f (Σ_{j₁} g₁ j₁, ..., Σ_{jₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions `r`. This follows from
 multilinearity by expanding successively with respect to each coordinate. -/
-theorem map_sum [∀ i, Fintype (α i)] : (f fun i => ∑j, g i j) = ∑r : ∀ i, α i, f fun i => g i (r i) :=
+theorem map_sum [∀ i, Fintype (α i)] : (f fun i => ∑ j, g i j) = ∑ r : ∀ i, α i, f fun i => g i (r i) :=
   f.to_multilinear_map.map_sum _
 
 end ApplySum
@@ -263,7 +263,7 @@ def restrict_scalars (f : ContinuousMultilinearMap A M₁ M₂) : ContinuousMult
   { toMultilinearMap := f.to_multilinear_map.restrict_scalars R, cont := f.cont }
 
 @[simp]
-theorem coe_restrict_scalars (f : ContinuousMultilinearMap A M₁ M₂) : «expr⇑ » (f.restrict_scalars R) = f :=
+theorem coe_restrict_scalars (f : ContinuousMultilinearMap A M₁ M₂) : ⇑f.restrict_scalars R = f :=
   rfl
 
 end RestrictScalar
@@ -310,12 +310,12 @@ variable [CommSemiringₓ R] [∀ i, AddCommMonoidₓ (M₁ i)] [AddCommMonoid�
   [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] (f : ContinuousMultilinearMap R M₁ M₂)
 
 theorem map_piecewise_smul (c : ι → R) (m : ∀ i, M₁ i) (s : Finset ι) :
-  f (s.piecewise (fun i => c i • m i) m) = (∏i in s, c i) • f m :=
+  f (s.piecewise (fun i => c i • m i) m) = (∏ i in s, c i) • f m :=
   f.to_multilinear_map.map_piecewise_smul _ _ _
 
 /-- Multiplicativity of a continuous multilinear map along all coordinates at the same time,
 writing `f (λ i, c i • m i)` as `(∏ i, c i) • f m`. -/
-theorem map_smul_univ [Fintype ι] (c : ι → R) (m : ∀ i, M₁ i) : (f fun i => c i • m i) = (∏i, c i) • f m :=
+theorem map_smul_univ [Fintype ι] (c : ι → R) (m : ∀ i, M₁ i) : (f fun i => c i • m i) = (∏ i, c i) • f m :=
   f.to_multilinear_map.map_smul_univ _ _
 
 variable {R' A : Type _} [CommSemiringₓ R'] [Semiringₓ A] [Algebra R' A] [∀ i, Module A (M₁ i)] [Module R' M₂]

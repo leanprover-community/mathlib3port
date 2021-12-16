@@ -30,28 +30,26 @@ variable (R : Type _) [CommRingₓ R] [Nontrivial R]
 
 open Polynomial Function Finₓ LinearMap
 
--- error in LinearAlgebra.FreeModule.StrongRankCondition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any commutative ring satisfies the `strong_rank_condition`. -/
-@[priority 100]
-instance comm_ring_strong_rank_condition : strong_rank_condition R :=
-begin
-  suffices [] [":", expr ∀ n, ∀ f : «expr →ₗ[ ] »(fin «expr + »(n, 1) → R, R, fin n → R), «expr¬ »(injective f)],
-  { rwa [expr strong_rank_condition_iff_succ R] [] },
-  intros [ident n, ident f],
-  by_contradiction [ident hf],
-  letI [] [] [":=", expr module.finite.of_basis (pi.basis_fun R (fin «expr + »(n, 1)))],
-  let [ident g] [":", expr «expr →ₗ[ ] »(fin «expr + »(n, 1) → R, R, fin «expr + »(n, 1) → R)] [":=", expr (extend_by_zero.linear_map R cast_succ).comp f],
-  have [ident hg] [":", expr injective g] [":=", expr (extend_injective (rel_embedding.injective cast_succ) 0).comp hf],
-  have [ident hnex] [":", expr «expr¬ »(«expr∃ , »((i : fin n), «expr = »(cast_succ i, last n)))] [":=", expr λ
-   ⟨i, hi⟩, ne_of_lt (cast_succ_lt_last i) hi],
-  let [ident a₀] [] [":=", expr (minpoly R g).coeff 0],
-  have [] [":", expr «expr ≠ »(a₀, 0)] [":=", expr minpoly_coeff_zero_of_injective hg],
-  have [] [":", expr «expr = »(a₀, 0)] [],
-  { have [ident heval] [] [":=", expr linear_map.congr_fun (minpoly.aeval R g) (pi.single (fin.last n) 1)],
-    obtain ["⟨", ident P, ",", ident hP, "⟩", ":=", expr X_dvd_iff.2 (erase_same (minpoly R g) 0)],
-    rw ["[", "<-", expr monomial_add_erase (minpoly R g) 0, ",", expr hP, "]"] ["at", ident heval],
-    replace [ident heval] [] [":=", expr congr_fun heval (fin.last n)],
-    simpa [] [] [] ["[", expr hnex, "]"] [] ["using", expr heval] },
-  contradiction
-end
+instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition R :=
+  by 
+    suffices  : ∀ n, ∀ f : (Finₓ (n+1) → R) →ₗ[R] Finₓ n → R, ¬injective f
+    ·
+      rwa [strong_rank_condition_iff_succ R]
+    intro n f 
+    byContra hf 
+    let this' := Module.Finite.of_basis (Pi.basisFun R (Finₓ (n+1)))
+    let g : (Finₓ (n+1) → R) →ₗ[R] Finₓ (n+1) → R := (extend_by_zero.linear_map R cast_succ).comp f 
+    have hg : injective g := (extend_injective (RelEmbedding.injective cast_succ) 0).comp hf 
+    have hnex : ¬∃ i : Finₓ n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_ltₓ (cast_succ_lt_last i) hi 
+    let a₀ := (minpoly R g).coeff 0
+    have  : a₀ ≠ 0 := minpoly_coeff_zero_of_injective hg 
+    have  : a₀ = 0
+    ·
+      have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Finₓ.last n) 1)
+      obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
+      rw [←monomial_add_erase (minpoly R g) 0, hP] at heval 
+      replace heval := congr_funₓ heval (Finₓ.last n)
+      simpa [hnex] using heval 
+    contradiction
 

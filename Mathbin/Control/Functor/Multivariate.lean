@@ -45,8 +45,9 @@ def liftr {α : Typevec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : 
 /-- given `x : F α` and a projection `i` of type vector `α`, `supp x i` is the set
 of `α.i` contained in `x` -/
 def supp {α : Typevec n} (x : F α) (i : Fin2 n) : Set (α i) :=
-  { y:α i | ∀ ⦃p⦄, liftp p x → p i y }
+  { y : α i | ∀ ⦃p⦄, liftp p x → p i y }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » supp x i)
 theorem of_mem_supp {α : Typevec n} {x : F α} {p : ∀ ⦃i⦄, α i → Prop} (h : liftp p x) (i : Fin2 n) :
   ∀ y _ : y ∈ supp x i, p y :=
   fun y hy => hy h
@@ -100,7 +101,7 @@ variable (F)
 theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : α ⟹ β) (g : β ⟹ α) (h₀ : f ⊚ g = id)
   (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u :=
   by 
-    split  <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u, use g <$$> u]
+    constructor <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u, use g <$$> u]
     ·
       apply (h₁ u).mp h₂
     ·

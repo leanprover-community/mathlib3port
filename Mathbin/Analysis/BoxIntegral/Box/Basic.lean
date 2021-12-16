@@ -45,7 +45,7 @@ rectangular box
 
 open Set Function Metric
 
-noncomputable theory
+noncomputable section 
 
 open_locale Nnreal Classical
 
@@ -79,8 +79,9 @@ theorem lower_le_upper : I.lower ≤ I.upper :=
 instance : HasMem (ι → ℝ) (box ι) :=
   ⟨fun x I => ∀ i, x i ∈ Ioc (I.lower i) (I.upper i)⟩
 
-instance : CoeTₓ (box ι) (Set$ ι → ℝ) :=
-  ⟨fun I => { x | x ∈ I }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance : CoeTₓ box ι Set $ ι → ℝ := ⟨ fun I => { x | x ∈ I } ⟩
 
 @[simp]
 theorem mem_mk {l u x : ι → ℝ} {H} : x ∈ mk l u H ↔ ∀ i, x i ∈ Ioc (l i) (u i) :=
@@ -120,6 +121,7 @@ theorem empty_ne_coe : ∅ ≠ (I : Set (ι → ℝ)) :=
 instance : LE (box ι) :=
   ⟨fun I J => ∀ ⦃x⦄, x ∈ I → x ∈ J⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » I)
 theorem le_def : I ≤ J ↔ ∀ x _ : x ∈ I, x ∈ J :=
   Iff.rfl
 
@@ -200,7 +202,7 @@ theorem antitone_lower : Antitone fun I : box ι => I.lower :=
 theorem monotone_upper : Monotone fun I : box ι => I.upper :=
   fun I J H => (le_iff_bounds.1 H).2
 
-theorem coe_subset_Icc : «expr↑ » I ⊆ I.Icc :=
+theorem coe_subset_Icc : ↑I ⊆ I.Icc :=
   fun x hx => ⟨fun i => (hx i).1.le, fun i => (hx i).2⟩
 
 /-!
@@ -251,7 +253,7 @@ theorem is_some_iff : ∀ {I : WithBot (box ι)}, I.is_some ↔ (I : Set (ι →
     erw [Option.isSome]
     simp [I.nonempty_coe]
 
-theorem bUnion_coe_eq_coe (I : WithBot (box ι)) : (⋃(J : box ι)(hJ : «expr↑ » J = I), (J : Set (ι → ℝ))) = I :=
+theorem bUnion_coe_eq_coe (I : WithBot (box ι)) : (⋃ (J : box ι)(hJ : ↑J = I), (J : Set (ι → ℝ))) = I :=
   by 
     induction I using WithBot.recBotCoe <;> simp [WithBot.coe_eq_coe]
 
@@ -275,7 +277,7 @@ theorem with_bot_coe_inj {I J : WithBot (box ι)} : (I : Set (ι → ℝ)) = J �
 then the result is `⟨l, u, _⟩ : box ι`, otherwise it is `⊥`. In any case, the result interpreted
 as a set in `ι → ℝ` is the set `{x : ι → ℝ | ∀ i, x i ∈ Ioc (l i) (u i)}`.  -/
 def mk' (l u : ι → ℝ) : WithBot (box ι) :=
-  if h : ∀ i, l i < u i then «expr↑ » (⟨l, u, h⟩ : box ι) else ⊥
+  if h : ∀ i, l i < u i then ↑(⟨l, u, h⟩ : box ι) else ⊥
 
 @[simp]
 theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i :=
@@ -316,7 +318,7 @@ instance : HasInf (WithBot (box ι)) :=
         (fun I J => WithBot.recBotCoe ⊥ (fun J => mk' (I.lower⊔J.lower) (I.upper⊓J.upper)) J) I⟩
 
 @[simp]
-theorem coe_inf (I J : WithBot (box ι)) : («expr↑ » (I⊓J) : Set (ι → ℝ)) = I ∩ J :=
+theorem coe_inf (I J : WithBot (box ι)) : (↑(I⊓J) : Set (ι → ℝ)) = I ∩ J :=
   by 
     induction I using WithBot.recBotCoe
     ·
@@ -326,7 +328,7 @@ theorem coe_inf (I J : WithBot (box ι)) : («expr↑ » (I⊓J) : Set (ι → �
     ·
       change ∅ = _ 
       simp 
-    change «expr↑ » (mk' _ _) = _ 
+    change ↑mk' _ _ = _ 
     simp only [coe_eq_pi, ←pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk', coe_coe]
 
 instance : Lattice (WithBot (box ι)) :=
@@ -406,22 +408,18 @@ It is defined as the maximum of the ratios
 def distortion (I : box ι) :  ℝ≥0  :=
   Finset.univ.sup$ fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
 
--- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem distortion_eq_of_sub_eq_div
-{I J : box ι}
-{r : exprℝ()}
-(h : ∀
- i, «expr = »(«expr - »(I.upper i, I.lower i), «expr / »(«expr - »(J.upper i, J.lower i), r))) : «expr = »(distortion I, distortion J) :=
-begin
-  simp [] [] ["only"] ["[", expr distortion, ",", expr nndist_pi_def, ",", expr real.nndist_eq', ",", expr h, ",", expr real.nnabs.map_div, "]"] [] [],
-  congr' [1] ["with", ident i],
-  have [] [":", expr «expr < »(0, r)] [],
-  { by_contra [ident hr],
-    have [] [] [":=", expr div_nonpos_of_nonneg_of_nonpos «expr $ »(sub_nonneg.2, J.lower_le_upper i) (not_lt.1 hr)],
-    rw ["<-", expr h] ["at", ident this],
-    exact [expr this.not_lt «expr $ »(sub_pos.2, I.lower_lt_upper i)] },
-  simp [] [] ["only"] ["[", expr nnreal.finset_sup_div, ",", expr div_div_div_cancel_right _ (real.nnabs.map_ne_zero.2 this.ne'), "]"] [] []
-end
+theorem distortion_eq_of_sub_eq_div {I J : box ι} {r : ℝ}
+  (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J :=
+  by 
+    simp only [distortion, nndist_pi_def, Real.nndist_eq', h, real.nnabs.map_div]
+    congr 1 with i 
+    have  : 0 < r
+    ·
+      byContra hr 
+      have  := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2$ J.lower_le_upper i) (not_ltₓ.1 hr)
+      rw [←h] at this 
+      exact this.not_lt (sub_pos.2$ I.lower_lt_upper i)
+    simp only [Nnreal.finset_sup_div, div_div_div_cancel_right _ (real.nnabs.map_ne_zero.2 this.ne')]
 
 theorem nndist_le_distortion_mul (I : box ι) (i : ι) :
   nndist I.lower I.upper ≤ I.distortion*nndist (I.lower i) (I.upper i) :=

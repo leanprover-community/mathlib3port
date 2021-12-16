@@ -15,7 +15,7 @@ where `J` is a connected category is preserved by the functor `(X × -)`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v₁ v₂ u₁ u₂
 
@@ -25,38 +25,26 @@ namespace CategoryTheory
 
 section Examples
 
--- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
-instance wide_pullback_shape_connected (J : Type v₁) : is_connected (wide_pullback_shape J) :=
-begin
-  apply [expr is_connected.of_induct],
-  introv [ident hp, ident t],
-  cases [expr j] [],
-  { exact [expr hp] },
-  { rwa [expr t (wide_pullback_shape.hom.term j)] [] }
-end
+-- failed to format: format: uncaught backtrack exception
+instance
+  wide_pullback_shape_connected
+  ( J : Type v₁ ) : is_connected ( wide_pullback_shape J )
+  := by apply is_connected.of_induct introv hp t cases j · exact hp · rwa [ t ( wide_pullback_shape.hom.term j ) ]
 
--- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
-instance wide_pushout_shape_connected (J : Type v₁) : is_connected (wide_pushout_shape J) :=
-begin
-  apply [expr is_connected.of_induct],
-  introv [ident hp, ident t],
-  cases [expr j] [],
-  { exact [expr hp] },
-  { rwa ["<-", expr t (wide_pushout_shape.hom.init j)] [] }
-end
+-- failed to format: format: uncaught backtrack exception
+instance
+  wide_pushout_shape_connected
+  ( J : Type v₁ ) : is_connected ( wide_pushout_shape J )
+  := by apply is_connected.of_induct introv hp t cases j · exact hp · rwa [ ← t ( wide_pushout_shape.hom.init j ) ]
 
 instance parallel_pair_inhabited : Inhabited walking_parallel_pair :=
   ⟨walking_parallel_pair.one⟩
 
--- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
-instance parallel_pair_connected : is_connected walking_parallel_pair :=
-begin
-  apply [expr is_connected.of_induct],
-  introv ["_", ident t],
-  cases [expr j] [],
-  { rwa [expr t walking_parallel_pair_hom.left] [] },
-  { assumption }
-end
+-- failed to format: format: uncaught backtrack exception
+instance
+  parallel_pair_connected
+  : is_connected walking_parallel_pair
+  := by apply is_connected.of_induct introv _ t cases j · rwa [ t walking_parallel_pair_hom.left ] · assumption
 
 end Examples
 

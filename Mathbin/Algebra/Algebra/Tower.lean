@@ -105,29 +105,18 @@ theorem algebra_map_apply (x : R) : algebraMap R A x = algebraMap S A (algebraMa
 instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
   @IsScalarTower.of_algebra_map_eq R S₀ A _ _ _ _ _ _$ fun _ => (IsScalarTower.algebra_map_apply R S A _ : _)
 
--- error in Algebra.Algebra.Tower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[ext #[]]
-theorem algebra.ext
-{S : Type u}
-{A : Type v}
-[comm_semiring S]
-[semiring A]
-(h1 h2 : algebra S A)
-(h : ∀
- {r : S}
- {x : A}, «expr = »(by haveI [] [] [":=", expr h1]; exact [expr «expr • »(r, x)], «expr • »(r, x))) : «expr = »(h1, h2) :=
-begin
-  unfreezingI { cases [expr h1] ["with", ident f1, ident g1, ident h11, ident h12],
-    cases [expr h2] ["with", ident f2, ident g2, ident h21, ident h22],
-    cases [expr f1] [],
-    cases [expr f2] [] },
-  congr' [] [],
-  { ext [] [ident r, ident x] [],
-    exact [expr h] },
-  { ext [] [ident r] [],
-    erw ["[", "<-", expr mul_one (g1 r), ",", "<-", expr h12, ",", "<-", expr mul_one (g2 r), ",", "<-", expr h22, ",", expr h, "]"] [],
-    refl }
-end
+@[ext]
+theorem algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A] (h1 h2 : Algebra S A)
+  (h :
+    ∀ r : S x : A,
+      by 
+          have  := h1 <;> exact r • x =
+        r • x) :
+  h1 = h2 :=
+  Algebra.algebra_ext _ _$
+    fun r =>
+      by 
+        simpa only [@Algebra.smul_def _ _ _ _ h1, @Algebra.smul_def _ _ _ _ h2, mul_oneₓ] using h r 1
 
 /-- In a tower, the canonical map from the middle element to the top element is an
 algebra homomorphism over the bottom element. -/
@@ -138,7 +127,7 @@ theorem to_alg_hom_apply (y : S) : to_alg_hom R S A y = algebraMap S A y :=
   rfl
 
 @[simp]
-theorem coe_to_alg_hom : «expr↑ » (to_alg_hom R S A) = algebraMap S A :=
+theorem coe_to_alg_hom : ↑to_alg_hom R S A = algebraMap S A :=
   RingHom.ext$ fun _ => rfl
 
 @[simp]
@@ -164,18 +153,12 @@ variable (R) {S A B}
 instance (priority := 999) Subsemiring (U : Subsemiring S) : IsScalarTower U S A :=
   of_algebra_map_eq$ fun x => rfl
 
--- error in Algebra.Algebra.Tower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[nolint #[ident instance_priority]]
-instance of_ring_hom
-{R A B : Type*}
-[comm_semiring R]
-[comm_semiring A]
-[comm_semiring B]
-[algebra R A]
-[algebra R B]
-(f : «expr →ₐ[ ] »(A, R, B)) : @is_scalar_tower R A B _ f.to_ring_hom.to_algebra.to_has_scalar _ :=
-by { letI [] [] [":=", expr (f : «expr →+* »(A, B)).to_algebra],
-  exact [expr of_algebra_map_eq (λ x, (f.commutes x).symm)] }
+@[nolint instance_priority]
+instance of_ring_hom {R A B : Type _} [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B] [Algebra R A] [Algebra R B]
+  (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.to_ring_hom.to_algebra.to_has_scalar _ :=
+  by 
+    let this' := (f : A →+* B).toAlgebra 
+    exact of_algebra_map_eq fun x => (f.commutes x).symm
 
 end Semiringₓ
 

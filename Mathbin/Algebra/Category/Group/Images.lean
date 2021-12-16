@@ -48,30 +48,28 @@ attribute [local simp] image.fac
 
 variable {f}
 
--- error in Algebra.Category.Group.Images: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- the universal property for the image factorisation -/
-noncomputable
-def image.lift (F' : mono_factorisation f) : «expr ⟶ »(image f, F'.I) :=
-{ to_fun := (λ x, F'.e (classical.indefinite_description _ x.2).1 : image f → F'.I),
-  map_zero' := begin
-    haveI [] [] [":=", expr F'.m_mono],
-    apply [expr injective_of_mono F'.m],
-    change [expr «expr = »(«expr ≫ »(F'.e, F'.m) _, _)] [] [],
-    rw ["[", expr F'.fac, ",", expr add_monoid_hom.map_zero, "]"] [],
-    exact [expr (classical.indefinite_description (λ y, «expr = »(f y, 0)) _).2]
-  end,
-  map_add' := begin
-    intros [ident x, ident y],
-    haveI [] [] [":=", expr F'.m_mono],
-    apply [expr injective_of_mono F'.m],
-    rw ["[", expr add_monoid_hom.map_add, "]"] [],
-    change [expr «expr = »(«expr ≫ »(F'.e, F'.m) _, «expr + »(«expr ≫ »(F'.e, F'.m) _, «expr ≫ »(F'.e, F'.m) _))] [] [],
-    rw ["[", expr F'.fac, "]"] [],
-    rw [expr (classical.indefinite_description (λ z, «expr = »(f z, _)) _).2] [],
-    rw [expr (classical.indefinite_description (λ z, «expr = »(f z, _)) _).2] [],
-    rw [expr (classical.indefinite_description (λ z, «expr = »(f z, _)) _).2] [],
-    refl
-  end }
+noncomputable def image.lift (F' : mono_factorisation f) : image f ⟶ F'.I :=
+  { toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.I),
+    map_zero' :=
+      by 
+        have  := F'.m_mono 
+        apply injective_of_mono F'.m 
+        change (F'.e ≫ F'.m) _ = _ 
+        rw [F'.fac, AddMonoidHom.map_zero]
+        exact (Classical.indefiniteDescription (fun y => f y = 0) _).2,
+    map_add' :=
+      by 
+        intro x y 
+        have  := F'.m_mono 
+        apply injective_of_mono F'.m 
+        rw [AddMonoidHom.map_add]
+        change (F'.e ≫ F'.m) _ = (F'.e ≫ F'.m) _+(F'.e ≫ F'.m) _ 
+        rw [F'.fac]
+        rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
+        rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
+        rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
+        rfl }
 
 theorem image.lift_fac (F' : mono_factorisation f) : image.lift F' ≫ F'.m = image.ι f :=
   by 

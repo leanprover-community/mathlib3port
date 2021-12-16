@@ -18,7 +18,7 @@ rectangular box, box partition
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical Ennreal Nnreal
 
@@ -54,7 +54,8 @@ theorem mem_mk (π : prepartition I) f h : J ∈ mk π f h ↔ J ∈ π :=
 def Union : Set (ι → ℝ) :=
   π.to_prepartition.Union
 
-theorem Union_def : π.Union = ⋃(J : _)(_ : J ∈ π), «expr↑ » J :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
+theorem Union_def : π.Union = ⋃ (J : _)(_ : J ∈ π), ↑J :=
   rfl
 
 @[simp]
@@ -65,11 +66,12 @@ theorem Union_mk (π : prepartition I) f h : (mk π f h).Union = π.Union :=
 theorem Union_to_prepartition : π.to_prepartition.Union = π.Union :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 @[simp]
 theorem mem_Union : x ∈ π.Union ↔ ∃ (J : _)(_ : J ∈ π), x ∈ J :=
   Set.mem_bUnion_iff
 
-theorem subset_Union (h : J ∈ π) : «expr↑ » J ⊆ π.Union :=
+theorem subset_Union (h : J ∈ π) : ↑J ⊆ π.Union :=
   subset_bUnion_of_mem h
 
 theorem Union_subset : π.Union ⊆ I :=
@@ -110,30 +112,29 @@ def bUnion_tagged (π : prepartition I) (πi : ∀ J, tagged_prepartition J) : t
     Tag := fun J => (πi (π.bUnion_index (fun J => (πi J).toPrepartition) J)).Tag J,
     tag_mem_Icc := fun J => box.le_iff_Icc.1 (π.bUnion_index_le _ _) ((πi _).tag_mem_Icc _) }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π)
 @[simp]
 theorem mem_bUnion_tagged (π : prepartition I) {πi : ∀ J, tagged_prepartition J} :
   J ∈ π.bUnion_tagged πi ↔ ∃ (J' : _)(_ : J' ∈ π), J ∈ πi J' :=
   π.mem_bUnion
 
--- error in Analysis.BoxIntegral.Partition.Tagged: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tag_bUnion_tagged
-(π : prepartition I)
-{πi : ∀ J, tagged_prepartition J}
-(hJ : «expr ∈ »(J, π))
-{J'}
-(hJ' : «expr ∈ »(J', πi J)) : «expr = »((π.bUnion_tagged πi).tag J', (πi J).tag J') :=
-begin
-  have [] [":", expr «expr ∈ »(J', π.bUnion_tagged πi)] [],
-  from [expr π.mem_bUnion.2 ⟨J, hJ, hJ'⟩],
-  obtain [ident rfl, ":=", expr π.bUnion_index_of_mem hJ hJ'],
-  refl
-end
+theorem tag_bUnion_tagged (π : prepartition I) {πi : ∀ J, tagged_prepartition J} (hJ : J ∈ π) {J'} (hJ' : J' ∈ πi J) :
+  (π.bUnion_tagged πi).Tag J' = (πi J).Tag J' :=
+  by 
+    have  : J' ∈ π.bUnion_tagged πi 
+    exact π.mem_bUnion.2 ⟨J, hJ, hJ'⟩
+    obtain rfl := π.bUnion_index_of_mem hJ hJ' 
+    rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 @[simp]
 theorem Union_bUnion_tagged (π : prepartition I) (πi : ∀ J, tagged_prepartition J) :
-  (π.bUnion_tagged πi).Union = ⋃(J : _)(_ : J ∈ π), (πi J).Union :=
+  (π.bUnion_tagged πi).Union = ⋃ (J : _)(_ : J ∈ π), (πi J).Union :=
   Union_bUnion _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π.bUnion_tagged πi)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » πi J)
 theorem forall_bUnion_tagged (p : (ι → ℝ) → box ι → Prop) (π : prepartition I) (πi : ∀ J, tagged_prepartition J) :
   (∀ J _ : J ∈ π.bUnion_tagged πi, p ((π.bUnion_tagged πi).Tag J) J) ↔
     ∀ J _ : J ∈ π J' _ : J' ∈ πi J, p ((πi J).Tag J') J' :=
@@ -147,6 +148,7 @@ theorem forall_bUnion_tagged (p : (ι → ℝ) → box ι → Prop) (π : prepar
       rw [π.tag_bUnion_tagged hJ hJ']
       exact H J hJ J' hJ'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem is_partition.bUnion_tagged {π : prepartition I} (h : is_partition π) {πi : ∀ J, tagged_prepartition J}
   (hi : ∀ J _ : J ∈ π, (πi J).IsPartition) : (π.bUnion_tagged πi).IsPartition :=
   h.bUnion hi
@@ -167,6 +169,7 @@ def bUnion_prepartition (π : tagged_prepartition I) (πi : ∀ J, prepartition 
   { toPrepartition := π.to_prepartition.bUnion πi, Tag := fun J => π.tag (π.to_prepartition.bUnion_index πi J),
     tag_mem_Icc := fun J => π.tag_mem_Icc _ }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem is_partition.bUnion_prepartition {π : tagged_prepartition I} (h : is_partition π) {πi : ∀ J, prepartition J}
   (hi : ∀ J _ : J ∈ π, (πi J).IsPartition) : (π.bUnion_prepartition πi).IsPartition :=
   h.bUnion hi
@@ -194,11 +197,13 @@ theorem is_partition.inf_prepartition (h₁ : π₁.is_partition) {π₂ : prepa
 
 open Metric
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 /-- A tagged partition is said to be a Henstock partition if for each `J ∈ π`, the tag of `J`
 belongs to `J.Icc`. -/
 def is_Henstock (π : tagged_prepartition I) : Prop :=
   ∀ J _ : J ∈ π, π.tag J ∈ J.Icc
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 @[simp]
 theorem is_Henstock_bUnion_tagged {π : prepartition I} {πi : ∀ J, tagged_prepartition J} :
   is_Henstock (π.bUnion_tagged πi) ↔ ∀ J _ : J ∈ π, (πi J).IsHenstock :=
@@ -216,6 +221,7 @@ theorem is_Henstock.card_filter_tag_eq_le [Fintype ι] (h : π.is_Henstock) (x :
     _ ≤ 2 ^ Fintype.card ι := π.to_prepartition.card_filter_mem_Icc_le x
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 /-- A tagged partition `π` is subordinate to `r : (ι → ℝ) → ℝ` if each box `J ∈ π` is included in
 the closed ball with center `π.tag J` and radius `r (π.tag J)`. -/
 def is_subordinate [Fintype ι] (π : tagged_prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
@@ -223,6 +229,7 @@ def is_subordinate [Fintype ι] (π : tagged_prepartition I) (r : (ι → ℝ) �
 
 variable {r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 @[simp]
 theorem is_subordinate_bUnion_tagged [Fintype ι] {π : prepartition I} {πi : ∀ J, tagged_prepartition J} :
   is_subordinate (π.bUnion_tagged πi) r ↔ ∀ J _ : J ∈ π, (πi J).IsSubordinate r :=
@@ -237,10 +244,12 @@ theorem is_subordinate.inf_prepartition [Fintype ι] (h : is_subordinate π r) (
   is_subordinate (π.inf_prepartition π') r :=
   h.bUnion_prepartition _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem is_subordinate.mono' [Fintype ι] {π : tagged_prepartition I} (hr₁ : π.is_subordinate r₁)
   (h : ∀ J _ : J ∈ π, r₁ (π.tag J) ≤ r₂ (π.tag J)) : π.is_subordinate r₂ :=
   fun J hJ x hx => closed_ball_subset_closed_ball (h _ hJ) (hr₁ _ hJ hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » I.Icc)
 theorem is_subordinate.mono [Fintype ι] {π : tagged_prepartition I} (hr₁ : π.is_subordinate r₁)
   (h : ∀ x _ : x ∈ I.Icc, r₁ x ≤ r₂ x) : π.is_subordinate r₂ :=
   hr₁.mono'$ fun J _ => h _$ π.tag_mem_Icc J
@@ -269,6 +278,7 @@ theorem is_partition_single_iff (hJ : J ≤ I) (h : x ∈ I.Icc) : (single I J h
 theorem is_partition_single (h : x ∈ I.Icc) : (single I I le_rfl x h).IsPartition :=
   prepartition.is_partition_top I
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » single I J hJ x h)
 theorem forall_mem_single (p : (ι → ℝ) → box ι → Prop) (hJ : J ≤ I) (h : x ∈ I.Icc) :
   (∀ J' _ : J' ∈ single I J hJ x h, p ((single I J hJ x h).Tag J') J') ↔ p x J :=
   by 
@@ -367,6 +377,7 @@ def distortion :  ℝ≥0  :=
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem distortion_le_iff {c :  ℝ≥0 } : π.distortion ≤ c ↔ ∀ J _ : J ∈ π, box.distortion J ≤ c :=
   sup_le_iff
 
@@ -385,6 +396,7 @@ theorem distortion_disj_union (h : Disjoint π₁.Union π₂.Union) :
   (π₁.disj_union π₂ h).distortion = max π₁.distortion π₂.distortion :=
   sup_union
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem distortion_of_const {c} (h₁ : π.boxes.nonempty) (h₂ : ∀ J _ : J ∈ π, box.distortion J = c) : π.distortion = c :=
   (sup_congr rfl h₂).trans (sup_const h₁ _)
 

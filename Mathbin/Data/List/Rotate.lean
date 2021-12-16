@@ -276,63 +276,64 @@ theorem zip_with_rotate_one {β : Type _} (f : α → α → β) (x y : α) (l :
   by 
     simp 
 
--- error in Data.List.Rotate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nth_le_rotate_one
-(l : list α)
-(k : exprℕ())
-(hk : «expr < »(k, (l.rotate 1).length)) : «expr = »((l.rotate 1).nth_le k hk, l.nth_le «expr % »(«expr + »(k, 1), l.length) (mod_lt _ «expr ▸ »(length_rotate l 1, k.zero_le.trans_lt hk))) :=
-begin
-  cases [expr l] ["with", ident hd, ident tl],
-  { simp [] [] [] [] [] [] },
-  { have [] [":", expr «expr ≤ »(k, tl.length)] [],
-    { refine [expr nat.le_of_lt_succ _],
-      simpa [] [] [] [] [] ["using", expr hk] },
-    rcases [expr this.eq_or_lt, "with", ident rfl, "|", ident hk'],
-    { simp [] [] [] ["[", expr nth_le_append_right (le_refl _), "]"] [] [] },
-    { simpa [] [] [] ["[", expr nth_le_append _ hk', ",", expr length_cons, ",", expr nat.mod_eq_of_lt (nat.succ_lt_succ hk'), "]"] [] [] } }
-end
+theorem nth_le_rotate_one (l : List α) (k : ℕ) (hk : k < (l.rotate 1).length) :
+  (l.rotate 1).nthLe k hk = l.nth_le ((k+1) % l.length) (mod_lt _ (length_rotate l 1 ▸ k.zero_le.trans_lt hk)) :=
+  by 
+    cases' l with hd tl
+    ·
+      simp 
+    ·
+      have  : k ≤ tl.length
+      ·
+        refine' Nat.le_of_lt_succₓ _ 
+        simpa using hk 
+      rcases this.eq_or_lt with (rfl | hk')
+      ·
+        simp [nth_le_append_right (le_reflₓ _)]
+      ·
+        simpa [nth_le_append _ hk', length_cons, Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ hk')]
 
--- error in Data.List.Rotate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nth_le_rotate
-(l : list α)
-(n k : exprℕ())
-(hk : «expr < »(k, (l.rotate n).length)) : «expr = »((l.rotate n).nth_le k hk, l.nth_le «expr % »(«expr + »(k, n), l.length) (mod_lt _ «expr ▸ »(length_rotate l n, k.zero_le.trans_lt hk))) :=
-begin
-  induction [expr n] [] ["with", ident n, ident hn] ["generalizing", ident l, ident k],
-  { have [ident hk'] [":", expr «expr < »(k, l.length)] [":=", expr by simpa [] [] [] [] [] ["using", expr hk]],
-    simp [] [] [] ["[", expr nat.mod_eq_of_lt hk', "]"] [] [] },
-  { simp [] [] [] ["[", expr nat.succ_eq_add_one, ",", "<-", expr rotate_rotate, ",", expr nth_le_rotate_one, ",", expr hn l, ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] }
-end
+theorem nth_le_rotate (l : List α) (n k : ℕ) (hk : k < (l.rotate n).length) :
+  (l.rotate n).nthLe k hk = l.nth_le ((k+n) % l.length) (mod_lt _ (length_rotate l n ▸ k.zero_le.trans_lt hk)) :=
+  by 
+    induction' n with n hn generalizing l k
+    ·
+      have hk' : k < l.length :=
+        by 
+          simpa using hk 
+      simp [Nat.mod_eq_of_ltₓ hk']
+    ·
+      simp [Nat.succ_eq_add_one, ←rotate_rotate, nth_le_rotate_one, hn l, add_commₓ, add_left_commₓ]
 
--- error in Data.List.Rotate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A variant of `nth_le_rotate` useful for rewrites. -/
-theorem nth_le_rotate'
-(l : list α)
-(n k : exprℕ())
-(hk : «expr < »(k, l.length)) : «expr = »((l.rotate n).nth_le «expr % »(«expr + »(«expr - »(l.length, «expr % »(n, l.length)), k), l.length) ((nat.mod_lt _ (k.zero_le.trans_lt hk)).trans_le (length_rotate _ _).ge), l.nth_le k hk) :=
-begin
-  rw [expr nth_le_rotate] [],
-  congr,
-  set [] [ident m] [] [":="] [expr l.length] [],
-  rw ["[", expr mod_add_mod, ",", expr add_assoc, ",", expr add_left_comm, ",", expr add_comm, ",", expr add_mod, ",", expr add_mod _ n, "]"] [],
-  cases [expr «expr % »(n, m).zero_le.eq_or_lt] ["with", ident hn, ident hn],
-  { simpa [] [] [] ["[", "<-", expr hn, "]"] [] ["using", expr nat.mod_eq_of_lt hk] },
-  { have [ident mpos] [":", expr «expr < »(0, m)] [":=", expr k.zero_le.trans_lt hk],
-    have [ident hm] [":", expr «expr < »(«expr - »(m, «expr % »(n, m)), m)] [":=", expr tsub_lt_self mpos hn],
-    have [ident hn'] [":", expr «expr < »(«expr % »(n, m), m)] [":=", expr nat.mod_lt _ mpos],
-    simpa [] [] [] ["[", expr mod_eq_of_lt hm, ",", expr tsub_add_cancel_of_le hn'.le, "]"] [] ["using", expr nat.mod_eq_of_lt hk] }
-end
+theorem nth_le_rotate' (l : List α) (n k : ℕ) (hk : k < l.length) :
+  (l.rotate n).nthLe (((l.length - n % l.length)+k) % l.length)
+      ((Nat.mod_ltₓ _ (k.zero_le.trans_lt hk)).trans_le (length_rotate _ _).Ge) =
+    l.nth_le k hk :=
+  by 
+    rw [nth_le_rotate]
+    congr 
+    set m := l.length 
+    rw [mod_add_mod, add_assocₓ, add_left_commₓ, add_commₓ, add_mod, add_mod _ n]
+    cases' (n % m).zero_le.eq_or_lt with hn hn
+    ·
+      simpa [←hn] using Nat.mod_eq_of_ltₓ hk
+    ·
+      have mpos : 0 < m := k.zero_le.trans_lt hk 
+      have hm : m - n % m < m := tsub_lt_self mpos hn 
+      have hn' : n % m < m := Nat.mod_ltₓ _ mpos 
+      simpa [mod_eq_of_lt hm, tsub_add_cancel_of_le hn'.le] using Nat.mod_eq_of_ltₓ hk
 
--- error in Data.List.Rotate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rotate_injective (n : exprℕ()) : function.injective (λ l : list α, l.rotate n) :=
-begin
-  rintros [ident l, ident l', "(", ident h, ":", expr «expr = »(l.rotate n, l'.rotate n), ")"],
-  have [ident hle] [":", expr «expr = »(l.length, l'.length)] [":=", expr (l.length_rotate n).symm.trans «expr ▸ »(h.symm, l'.length_rotate n)],
-  rw ["[", expr rotate_eq_drop_append_take_mod, ",", expr rotate_eq_drop_append_take_mod, "]"] ["at", ident h],
-  obtain ["⟨", ident hd, ",", ident ht, "⟩", ":=", expr append_inj h _],
-  { rw ["[", "<-", expr take_append_drop _ l, ",", expr ht, ",", expr hd, ",", expr take_append_drop, "]"] [] },
-  { rw ["[", expr length_drop, ",", expr length_drop, ",", expr hle, "]"] [] }
-end
+theorem rotate_injective (n : ℕ) : Function.Injective fun l : List α => l.rotate n :=
+  by 
+    rintro l l' (h : l.rotate n = l'.rotate n)
+    have hle : l.length = l'.length := (l.length_rotate n).symm.trans (h.symm ▸ l'.length_rotate n)
+    rw [rotate_eq_drop_append_take_mod, rotate_eq_drop_append_take_mod] at h 
+    obtain ⟨hd, ht⟩ := append_inj h _
+    ·
+      rw [←take_append_drop _ l, ht, hd, take_append_drop]
+    ·
+      rw [length_drop, length_drop, hle]
 
 theorem rotate_eq_rotate {l l' : List α} {n : ℕ} : l.rotate n = l'.rotate n ↔ l = l' :=
   (rotate_injective n).eq_iff
@@ -365,25 +366,32 @@ theorem reverse_rotate (l : List α) (n : ℕ) : (l.rotate n).reverse = l.revers
         rw [rotate_cons_succ, Nat.succ_eq_add_one, ←rotate_rotate, hn]
         simp 
 
--- error in Data.List.Rotate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rotate_reverse
-(l : list α)
-(n : exprℕ()) : «expr = »(l.reverse.rotate n, (l.rotate «expr - »(l.length, «expr % »(n, l.length))).reverse) :=
-begin
-  rw ["[", "<-", expr reverse_reverse l, "]"] [],
-  simp_rw ["[", expr reverse_rotate, ",", expr reverse_reverse, ",", expr rotate_eq_iff, ",", expr rotate_rotate, ",", expr length_rotate, ",", expr length_reverse, "]"] [],
-  rw ["[", "<-", expr length_reverse l, "]"] [],
-  set [] [ident k] [] [":="] [expr «expr % »(n, l.reverse.length)] ["with", ident hk],
-  cases [expr hk', ":", expr k] ["with", ident k'],
-  { simp [] [] [] ["[", "-", ident length_reverse, ",", "<-", expr rotate_rotate, "]"] [] [] },
-  { cases [expr l] ["with", ident x, ident l],
-    { simp [] [] [] [] [] [] },
-    { have [] [":", expr «expr < »(k'.succ, «expr :: »(x, l).length)] [],
-      { simp [] [] [] ["[", "<-", expr hk', ",", expr hk, ",", expr nat.mod_lt, "]"] [] [] },
-      rw ["[", expr nat.mod_eq_of_lt, ",", expr tsub_add_cancel_of_le, ",", expr rotate_length, "]"] [],
-      { exact [expr tsub_le_self] },
-      { exact [expr tsub_lt_self (by simp [] [] [] [] [] []) nat.succ_pos'] } } }
-end
+theorem rotate_reverse (l : List α) (n : ℕ) : l.reverse.rotate n = (l.rotate (l.length - n % l.length)).reverse :=
+  by 
+    rw [←reverse_reverse l]
+    simpRw [reverse_rotate, reverse_reverse, rotate_eq_iff, rotate_rotate, length_rotate, length_reverse]
+    rw [←length_reverse l]
+    set k := n % l.reverse.length with hk 
+    cases' hk' : k with k'
+    ·
+      simp [-length_reverse, ←rotate_rotate]
+    ·
+      cases' l with x l
+      ·
+        simp 
+      ·
+        have  : k'.succ < (x :: l).length
+        ·
+          simp [←hk', hk, Nat.mod_ltₓ]
+        rw [Nat.mod_eq_of_ltₓ, tsub_add_cancel_of_le, rotate_length]
+        ·
+          exact tsub_le_self
+        ·
+          exact
+            tsub_lt_self
+              (by 
+                simp )
+              Nat.succ_pos'
 
 theorem map_rotate {β : Type _} (f : α → β) (l : List α) (n : ℕ) : map f (l.rotate n) = (map f l).rotate n :=
   by 
@@ -399,7 +407,7 @@ theorem map_rotate {β : Type _} (f : α → β) (l : List α) (n : ℕ) : map f
 
 theorem nodup.rotate_eq_self_iff {l : List α} (hl : l.nodup) {n : ℕ} : l.rotate n = l ↔ n % l.length = 0 ∨ l = [] :=
   by 
-    split 
+    constructor
     ·
       intro h 
       cases' l.length.zero_le.eq_or_lt with hl' hl'
@@ -418,20 +426,14 @@ theorem nodup.rotate_eq_self_iff {l : List α} (hl : l.nodup) {n : ℕ} : l.rota
       ·
         simp [h]
 
--- error in Data.List.Rotate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nodup.rotate_congr
-{l : list α}
-(hl : l.nodup)
-(hn : «expr ≠ »(l, «expr[ , ]»([])))
-(i j : exprℕ())
-(h : «expr = »(l.rotate i, l.rotate j)) : «expr = »(«expr % »(i, l.length), «expr % »(j, l.length)) :=
-begin
-  have [ident hi] [":", expr «expr < »(«expr % »(i, l.length), l.length)] [":=", expr mod_lt _ (length_pos_of_ne_nil hn)],
-  have [ident hj] [":", expr «expr < »(«expr % »(j, l.length), l.length)] [":=", expr mod_lt _ (length_pos_of_ne_nil hn)],
-  refine [expr nodup_iff_nth_le_inj.mp hl _ _ hi hj _],
-  rw ["[", "<-", expr nth_le_rotate' l i, ",", "<-", expr nth_le_rotate' l j, "]"] [],
-  simp [] [] [] ["[", expr tsub_add_cancel_of_le, ",", expr hi.le, ",", expr hj.le, ",", expr h, "]"] [] []
-end
+theorem nodup.rotate_congr {l : List α} (hl : l.nodup) (hn : l ≠ []) (i j : ℕ) (h : l.rotate i = l.rotate j) :
+  i % l.length = j % l.length :=
+  by 
+    have hi : i % l.length < l.length := mod_lt _ (length_pos_of_ne_nil hn)
+    have hj : j % l.length < l.length := mod_lt _ (length_pos_of_ne_nil hn)
+    refine' (nodup_iff_nth_le_inj.mp hl) _ _ hi hj _ 
+    rw [←nth_le_rotate' l i, ←nth_le_rotate' l j]
+    simp [tsub_add_cancel_of_le, hi.le, hj.le, h]
 
 section IsRotated
 
@@ -546,7 +548,7 @@ theorem is_rotated.reverse (h : l ~r l') : l.reverse ~r l'.reverse :=
 
 theorem is_rotated_reverse_comm_iff : l.reverse ~r l' ↔ l ~r l'.reverse :=
   by 
-    split  <;>
+    constructor <;>
       ·
         intro h 
         simpa using h.reverse
@@ -556,6 +558,7 @@ theorem is_rotated_reverse_iff : l.reverse ~r l'.reverse ↔ l ~r l' :=
   by 
     simp [is_rotated_reverse_comm_iff]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ≤ » l.length)
 theorem is_rotated_iff_mod : l ~r l' ↔ ∃ (n : _)(_ : n ≤ l.length), l.rotate n = l' :=
   by 
     refine' ⟨fun h => _, fun ⟨n, _, h⟩ => ⟨n, h⟩⟩
@@ -649,7 +652,7 @@ theorem length_mem_cyclic_permutations (l : List α) (h : l' ∈ cyclic_permutat
 @[simp]
 theorem mem_cyclic_permutations_iff {l l' : List α} : l ∈ cyclic_permutations l' ↔ l ~r l' :=
   by 
-    split 
+    constructor
     ·
       intro h 
       obtain ⟨k, hk, rfl⟩ := nth_le_of_mem h 
@@ -702,20 +705,20 @@ theorem nodup.cyclic_permutations {l : List α} (hn : nodup l) : nodup (cyclic_p
     ·
       simpa using h
 
--- error in Data.List.Rotate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem cyclic_permutations_rotate
-(l : list α)
-(k : exprℕ()) : «expr = »((l.rotate k).cyclic_permutations, l.cyclic_permutations.rotate k) :=
-begin
-  have [] [":", expr «expr = »((l.rotate k).cyclic_permutations.length, length (l.cyclic_permutations.rotate k))] [],
-  { cases [expr l] [],
-    { simp [] [] [] [] [] [] },
-    { rw [expr length_cyclic_permutations_of_ne_nil] []; simp [] [] [] [] [] [] } },
-  refine [expr ext_le this (λ n hn hn', _)],
-  rw ["[", expr nth_le_cyclic_permutations, ",", expr nth_le_rotate, ",", expr nth_le_cyclic_permutations, ",", expr rotate_rotate, ",", "<-", expr rotate_mod, ",", expr add_comm, "]"] [],
-  cases [expr l] []; simp [] [] [] [] [] []
-end
+theorem cyclic_permutations_rotate (l : List α) (k : ℕ) :
+  (l.rotate k).cyclicPermutations = l.cyclic_permutations.rotate k :=
+  by 
+    have  : (l.rotate k).cyclicPermutations.length = length (l.cyclic_permutations.rotate k)
+    ·
+      cases l
+      ·
+        simp 
+      ·
+        rw [length_cyclic_permutations_of_ne_nil] <;> simp 
+    refine' ext_le this fun n hn hn' => _ 
+    rw [nth_le_cyclic_permutations, nth_le_rotate, nth_le_cyclic_permutations, rotate_rotate, ←rotate_mod, add_commₓ]
+    cases l <;> simp 
 
 theorem is_rotated.cyclic_permutations {l l' : List α} (h : l ~r l') :
   l.cyclic_permutations ~r l'.cyclic_permutations :=
@@ -726,21 +729,20 @@ theorem is_rotated.cyclic_permutations {l l' : List α} (h : l ~r l') :
         by 
           simp ⟩
 
--- error in Data.List.Rotate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem is_rotated_cyclic_permutations_iff
-{l l' : list α} : «expr ↔ »(«expr ~r »(l.cyclic_permutations, l'.cyclic_permutations), «expr ~r »(l, l')) :=
-begin
-  by_cases [expr hl, ":", expr «expr = »(l, «expr[ , ]»([]))],
-  { simp [] [] [] ["[", expr hl, ",", expr eq_comm, "]"] [] [] },
-  have [ident hl'] [":", expr «expr = »(l.cyclic_permutations.length, l.length)] [":=", expr length_cyclic_permutations_of_ne_nil _ hl],
-  refine [expr ⟨λ h, _, is_rotated.cyclic_permutations⟩],
-  obtain ["⟨", ident k, ",", ident hk, "⟩", ":=", expr h],
-  refine [expr ⟨«expr % »(k, l.length), _⟩],
-  have [ident hk'] [":", expr «expr < »(«expr % »(k, l.length), l.length)] [":=", expr mod_lt _ (length_pos_of_ne_nil hl)],
-  rw ["[", "<-", expr nth_le_cyclic_permutations _ _ (hk'.trans_le hl'.ge), ",", "<-", expr nth_le_rotate' _ k, "]"] [],
-  simp [] [] [] ["[", expr hk, ",", expr hl', ",", expr tsub_add_cancel_of_le hk'.le, "]"] [] []
-end
+theorem is_rotated_cyclic_permutations_iff {l l' : List α} :
+  l.cyclic_permutations ~r l'.cyclic_permutations ↔ l ~r l' :=
+  by 
+    byCases' hl : l = []
+    ·
+      simp [hl, eq_comm]
+    have hl' : l.cyclic_permutations.length = l.length := length_cyclic_permutations_of_ne_nil _ hl 
+    refine' ⟨fun h => _, is_rotated.cyclic_permutations⟩
+    obtain ⟨k, hk⟩ := h 
+    refine' ⟨k % l.length, _⟩
+    have hk' : k % l.length < l.length := mod_lt _ (length_pos_of_ne_nil hl)
+    rw [←nth_le_cyclic_permutations _ _ (hk'.trans_le hl'.ge), ←nth_le_rotate' _ k]
+    simp [hk, hl', tsub_add_cancel_of_le hk'.le]
 
 section Decidable
 

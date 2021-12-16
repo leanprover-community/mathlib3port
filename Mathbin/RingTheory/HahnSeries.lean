@@ -46,7 +46,7 @@ open Finset
 
 open_locale BigOperators Classical Pointwise
 
-noncomputable theory
+noncomputable section 
 
 /-- If `Γ` is linearly ordered and `R` has zero, then `hahn_series Γ R` consists of
   formal series over `Γ` with coefficients in `R`, whose supports are well-founded. -/
@@ -103,20 +103,21 @@ theorem ne_zero_of_coeff_ne_zero {x : HahnSeries Γ R} {g : Γ} (h : x.coeff g �
 theorem support_zero : support (0 : HahnSeries Γ R) = ∅ :=
   Function.support_zero
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem support_nonempty_iff {x : hahn_series Γ R} : «expr ↔ »(x.support.nonempty, «expr ≠ »(x, 0)) :=
-begin
-  split,
-  { rintro ["⟨", ident a, ",", ident ha, "⟩", ident rfl],
-    apply [expr ha zero_coeff] },
-  { contrapose ["!"] [],
-    rw [expr set.not_nonempty_iff_eq_empty] [],
-    intro [ident h],
-    ext [] [ident a] [],
-    have [ident ha] [] [":=", expr set.not_mem_empty a],
-    rw ["[", "<-", expr h, ",", expr mem_support, ",", expr not_not, "]"] ["at", ident ha],
-    rw ["[", expr ha, ",", expr zero_coeff, "]"] [] }
-end
+@[simp]
+theorem support_nonempty_iff {x : HahnSeries Γ R} : x.support.nonempty ↔ x ≠ 0 :=
+  by 
+    constructor
+    ·
+      rintro ⟨a, ha⟩ rfl 
+      apply ha zero_coeff
+    ·
+      contrapose! 
+      rw [Set.not_nonempty_iff_eq_empty]
+      intro h 
+      ext a 
+      have ha := Set.not_mem_empty a 
+      rw [←h, mem_support, not_not] at ha 
+      rw [ha, zero_coeff]
 
 /-- `single a r` is the Hahn series which has coefficient `r` at `a` and zero otherwise. -/
 def single (a : Γ) : ZeroHom R (HahnSeries Γ R) :=
@@ -267,15 +268,13 @@ theorem emb_domain_single {f : Γ ↪o Γ'} {g : Γ} {r : R} : emb_domain f (sin
       simp [hr]
     rwa [support_single_of_ne hr, Set.image_singleton, Set.mem_singleton_iff]
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem emb_domain_injective
-{f : «expr ↪o »(Γ, Γ')} : function.injective (emb_domain f : hahn_series Γ R → hahn_series Γ' R) :=
-λ x y xy, begin
-  ext [] [ident g] [],
-  rw ["[", expr ext_iff, ",", expr function.funext_iff, "]"] ["at", ident xy],
-  have [ident xyg] [] [":=", expr xy (f g)],
-  rwa ["[", expr emb_domain_coeff, ",", expr emb_domain_coeff, "]"] ["at", ident xyg]
-end
+theorem emb_domain_injective {f : Γ ↪o Γ'} : Function.Injective (emb_domain f : HahnSeries Γ R → HahnSeries Γ' R) :=
+  fun x y xy =>
+    by 
+      ext g 
+      rw [ext_iff, Function.funext_iffₓ] at xy 
+      have xyg := xy (f g)
+      rwa [emb_domain_coeff, emb_domain_coeff] at xyg
 
 end Domain
 
@@ -554,36 +553,41 @@ theorem single_zero_one [HasZero R] [HasOne R] : single 0 (1 : R) = 1 :=
 theorem support_one [MulZeroOneClass R] [Nontrivial R] : support (1 : HahnSeries Γ R) = {0} :=
   support_single_of_ne one_ne_zero
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem order_one [mul_zero_one_class R] : «expr = »(order (1 : hahn_series Γ R), 0) :=
-begin
-  cases [expr subsingleton_or_nontrivial R] ["with", ident h, ident h]; haveI [] [] [":=", expr h],
-  { rw ["[", expr subsingleton.elim (1 : hahn_series Γ R) 0, ",", expr order_zero, "]"] [] },
-  { exact [expr order_single one_ne_zero] }
-end
+@[simp]
+theorem order_one [MulZeroOneClass R] : order (1 : HahnSeries Γ R) = 0 :=
+  by 
+    cases' subsingleton_or_nontrivial R with h h <;> have  := h
+    ·
+      rw [Subsingleton.elimₓ (1 : HahnSeries Γ R) 0, order_zero]
+    ·
+      exact order_single one_ne_zero
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [non_unital_non_assoc_semiring R] : has_mul (hahn_series Γ R) :=
-{ mul := λ
-  x
-  y, { coeff := λ
-    a, «expr∑ in , »((ij), add_antidiagonal x.is_pwo_support y.is_pwo_support a, «expr * »(x.coeff ij.fst, y.coeff ij.snd)),
-    is_pwo_support' := begin
-      have [ident h] [":", expr «expr ⊆ »({a : Γ | «expr ≠ »(«expr∑ in , »((ij : «expr × »(Γ, Γ)), add_antidiagonal x.is_pwo_support y.is_pwo_support a, «expr * »(x.coeff ij.fst, y.coeff ij.snd)), 0)}, {a : Γ | (add_antidiagonal x.is_pwo_support y.is_pwo_support a).nonempty})] [],
-      { intros [ident a, ident ha],
-        contrapose ["!"] [ident ha],
-        simp [] [] [] ["[", expr not_nonempty_iff_eq_empty.1 ha, "]"] [] [] },
-      exact [expr is_pwo_support_add_antidiagonal.mono h]
-    end } }
+instance [NonUnitalNonAssocSemiring R] : Mul (HahnSeries Γ R) :=
+  { mul :=
+      fun x y =>
+        { coeff := fun a => ∑ ij in add_antidiagonal x.is_pwo_support y.is_pwo_support a, x.coeff ij.fst*y.coeff ij.snd,
+          is_pwo_support' :=
+            by 
+              have h :
+                { a : Γ |
+                    (∑ ij : Γ × Γ in add_antidiagonal x.is_pwo_support y.is_pwo_support a,
+                        x.coeff ij.fst*y.coeff ij.snd) ≠
+                      0 } ⊆
+                  { a : Γ | (add_antidiagonal x.is_pwo_support y.is_pwo_support a).Nonempty }
+              ·
+                intro a ha 
+                contrapose! ha 
+                simp [not_nonempty_iff_eq_empty.1 ha]
+              exact is_pwo_support_add_antidiagonal.mono h } }
 
 @[simp]
 theorem mul_coeff [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ} :
-  (x*y).coeff a = ∑ij in add_antidiagonal x.is_pwo_support y.is_pwo_support a, x.coeff ij.fst*y.coeff ij.snd :=
+  (x*y).coeff a = ∑ ij in add_antidiagonal x.is_pwo_support y.is_pwo_support a, x.coeff ij.fst*y.coeff ij.snd :=
   rfl
 
 theorem mul_coeff_right' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ} {s : Set Γ} (hs : s.is_pwo)
   (hys : y.support ⊆ s) :
-  (x*y).coeff a = ∑ij in add_antidiagonal x.is_pwo_support hs a, x.coeff ij.fst*y.coeff ij.snd :=
+  (x*y).coeff a = ∑ ij in add_antidiagonal x.is_pwo_support hs a, x.coeff ij.fst*y.coeff ij.snd :=
   by 
     rw [mul_coeff]
     apply sum_subset_zero_on_sdiff (add_antidiagonal_mono_right hys) _ fun _ _ => rfl 
@@ -593,7 +597,7 @@ theorem mul_coeff_right' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {
 
 theorem mul_coeff_left' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ} {s : Set Γ} (hs : s.is_pwo)
   (hxs : x.support ⊆ s) :
-  (x*y).coeff a = ∑ij in add_antidiagonal hs y.is_pwo_support a, x.coeff ij.fst*y.coeff ij.snd :=
+  (x*y).coeff a = ∑ ij in add_antidiagonal hs y.is_pwo_support a, x.coeff ij.fst*y.coeff ij.snd :=
   by 
     rw [mul_coeff]
     apply sum_subset_zero_on_sdiff (add_antidiagonal_mono_left hxs) _ fun _ _ => rfl 
@@ -601,32 +605,38 @@ theorem mul_coeff_left' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a
     simp only [not_and, not_not, mem_sdiff, mem_add_antidiagonal, Ne.def, Set.mem_set_of_eq, mem_support] at hb 
     rw [not_not.1 fun con => hb.1.2.2 (hb.2 hb.1.1 Con), zero_mul]
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [non_unital_non_assoc_semiring R] : distrib (hahn_series Γ R) :=
-{ left_distrib := λ x y z, begin
-    ext [] [ident a] [],
-    have [ident hwf] [] [":=", expr y.is_pwo_support.union z.is_pwo_support],
-    rw ["[", expr mul_coeff_right' hwf, ",", expr add_coeff, ",", expr mul_coeff_right' hwf (set.subset_union_right _ _), ",", expr mul_coeff_right' hwf (set.subset_union_left _ _), "]"] [],
-    { simp [] [] ["only"] ["[", expr add_coeff, ",", expr mul_add, ",", expr sum_add_distrib, "]"] [] [] },
-    { intro [ident b],
-      simp [] [] ["only"] ["[", expr add_coeff, ",", expr ne.def, ",", expr set.mem_union_eq, ",", expr set.mem_set_of_eq, ",", expr mem_support, "]"] [] [],
-      contrapose ["!"] [],
-      intro [ident h],
-      rw ["[", expr h.1, ",", expr h.2, ",", expr add_zero, "]"] [] }
-  end,
-  right_distrib := λ x y z, begin
-    ext [] [ident a] [],
-    have [ident hwf] [] [":=", expr x.is_pwo_support.union y.is_pwo_support],
-    rw ["[", expr mul_coeff_left' hwf, ",", expr add_coeff, ",", expr mul_coeff_left' hwf (set.subset_union_right _ _), ",", expr mul_coeff_left' hwf (set.subset_union_left _ _), "]"] [],
-    { simp [] [] ["only"] ["[", expr add_coeff, ",", expr add_mul, ",", expr sum_add_distrib, "]"] [] [] },
-    { intro [ident b],
-      simp [] [] ["only"] ["[", expr add_coeff, ",", expr ne.def, ",", expr set.mem_union_eq, ",", expr set.mem_set_of_eq, ",", expr mem_support, "]"] [] [],
-      contrapose ["!"] [],
-      intro [ident h],
-      rw ["[", expr h.1, ",", expr h.2, ",", expr add_zero, "]"] [] }
-  end,
-  ..hahn_series.has_mul,
-  ..hahn_series.has_add }
+instance [NonUnitalNonAssocSemiring R] : Distrib (HahnSeries Γ R) :=
+  { HahnSeries.hasMul, HahnSeries.hasAdd with
+    left_distrib :=
+      fun x y z =>
+        by 
+          ext a 
+          have hwf := y.is_pwo_support.union z.is_pwo_support 
+          rw [mul_coeff_right' hwf, add_coeff, mul_coeff_right' hwf (Set.subset_union_right _ _),
+            mul_coeff_right' hwf (Set.subset_union_left _ _)]
+          ·
+            simp only [add_coeff, mul_addₓ, sum_add_distrib]
+          ·
+            intro b 
+            simp only [add_coeff, Ne.def, Set.mem_union_eq, Set.mem_set_of_eq, mem_support]
+            contrapose! 
+            intro h 
+            rw [h.1, h.2, add_zeroₓ],
+    right_distrib :=
+      fun x y z =>
+        by 
+          ext a 
+          have hwf := x.is_pwo_support.union y.is_pwo_support 
+          rw [mul_coeff_left' hwf, add_coeff, mul_coeff_left' hwf (Set.subset_union_right _ _),
+            mul_coeff_left' hwf (Set.subset_union_left _ _)]
+          ·
+            simp only [add_coeff, add_mulₓ, sum_add_distrib]
+          ·
+            intro b 
+            simp only [add_coeff, Ne.def, Set.mem_union_eq, Set.mem_set_of_eq, mem_support]
+            contrapose! 
+            intro h 
+            rw [h.1, h.2, add_zeroₓ] }
 
 theorem single_mul_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeries Γ R} {a : Γ} {b : Γ} :
   (single b r*x).coeff (a+b) = r*x.coeff a :=
@@ -646,12 +656,12 @@ theorem single_mul_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeri
       rw [add_commₓ] at h1 
       rw [←add_right_cancelₓ h1] at hx 
       exact h2 hx 
-    trans ∑ij : Γ × Γ in {(b, a)}, (single b r).coeff ij.fst*x.coeff ij.snd
+    trans ∑ ij : Γ × Γ in {(b, a)}, (single b r).coeff ij.fst*x.coeff ij.snd
     ·
       apply sum_congr _ fun _ _ => rfl 
       ext ⟨a1, a2⟩
       simp only [Set.mem_singleton_iff, Prod.mk.inj_iffₓ, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
-      split 
+      constructor
       ·
         rintro ⟨h1, rfl, h2⟩
         rw [add_commₓ] at h1 
@@ -680,12 +690,12 @@ theorem mul_single_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeri
       rintro h1 h2 rfl 
       rw [←add_right_cancelₓ h1] at hx 
       exact h2 hx 
-    trans ∑ij : Γ × Γ in {(a, b)}, x.coeff ij.fst*(single b r).coeff ij.snd
+    trans ∑ ij : Γ × Γ in {(a, b)}, x.coeff ij.fst*(single b r).coeff ij.snd
     ·
       apply sum_congr _ fun _ _ => rfl 
       ext ⟨a1, a2⟩
       simp only [Set.mem_singleton_iff, Prod.mk.inj_iffₓ, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
-      split 
+      constructor
       ·
         rintro ⟨h1, h2, rfl⟩
         refine' ⟨add_right_cancelₓ h1, rfl⟩
@@ -907,14 +917,12 @@ theorem C_zero : C (0 : R) = (0 : HahnSeries Γ R) :=
 theorem C_one : C (1 : R) = (1 : HahnSeries Γ R) :=
   C.map_one
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem C_injective : function.injective (C : R → hahn_series Γ R) :=
-begin
-  intros [ident r, ident s, ident rs],
-  rw ["[", expr ext_iff, ",", expr function.funext_iff, "]"] ["at", ident rs],
-  have [ident h] [] [":=", expr rs 0],
-  rwa ["[", expr C_apply, ",", expr single_coeff_same, ",", expr C_apply, ",", expr single_coeff_same, "]"] ["at", ident h]
-end
+theorem C_injective : Function.Injective (C : R → HahnSeries Γ R) :=
+  by 
+    intro r s rs 
+    rw [ext_iff, Function.funext_iffₓ] at rs 
+    have h := rs 0
+    rwa [C_apply, single_coeff_same, C_apply, single_coeff_same] at h
 
 theorem C_ne_zero {r : R} (h : r ≠ 0) : (C r : HahnSeries Γ R) ≠ 0 :=
   by 
@@ -954,7 +962,7 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiring R] (f : Γ ↪o Γ') (hf : ∀
       obtain ⟨g, rfl⟩ := hg 
       simp only [mul_coeff, emb_domain_coeff]
       trans
-        ∑ij in
+        ∑ ij in
           (add_antidiagonal x.is_pwo_support y.is_pwo_support g).map
             (Function.Embedding.prodMap f.to_embedding f.to_embedding),
           (emb_domain f x).coeff ij.1*(emb_domain f y).coeff ij.2
@@ -1233,7 +1241,7 @@ theorem add_val_le_of_coeff_ne_zero {x : HahnSeries Γ R} {g : Γ} (h : x.coeff 
 end Valuation
 
 theorem is_pwo_Union_support_powers [LinearOrderedAddCommGroup Γ] [Ringₓ R] [IsDomain R] {x : HahnSeries Γ R}
-  (hx : 0 < add_val Γ R x) : (⋃n : ℕ, (x^n).Support).IsPwo :=
+  (hx : 0 < add_val Γ R x) : (⋃ n : ℕ, (x^n).Support).IsPwo :=
   by 
     apply (x.is_wf_support.is_pwo.add_submonoid_closure fun g hg => _).mono _
     ·
@@ -1253,13 +1261,19 @@ section
 
 variable (Γ) (R) [PartialOrderₓ Γ] [AddCommMonoidₓ R]
 
-/-- An infinite family of Hahn series which has a formal coefficient-wise sum.
-  The requirements for this are that the union of the supports of the series is well-founded,
-  and that only finitely many series are nonzero at any given coefficient. -/
-structure summable_family (α : Type _) where 
-  toFun : α → HahnSeries Γ R 
-  is_pwo_Union_support' : Set.IsPwo (⋃a : α, (to_fun a).Support)
-  finite_co_support' : ∀ g : Γ, { a | (to_fun a).coeff g ≠ 0 }.Finite
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    An infinite family of Hahn series which has a formal coefficient-wise sum.
+      The requirements for this are that the union of the supports of the series is well-founded,
+      and that only finitely many series are nonzero at any given coefficient. -/
+  structure
+    summable_family
+    ( α : Type _ )
+    where
+      toFun : α → HahnSeries Γ R
+        is_pwo_Union_support' : Set.IsPwo ⋃ a : α , to_fun a . Support
+        finite_co_support' : ∀ g : Γ , { a | to_fun a . coeff g ≠ 0 } . Finite
 
 end 
 
@@ -1272,7 +1286,7 @@ variable [PartialOrderₓ Γ] [AddCommMonoidₓ R] {α : Type _}
 instance : CoeFun (summable_family Γ R α) fun _ => α → HahnSeries Γ R :=
   ⟨to_fun⟩
 
-theorem is_pwo_Union_support (s : summable_family Γ R α) : Set.IsPwo (⋃a : α, (s a).Support) :=
+theorem is_pwo_Union_support (s : summable_family Γ R α) : Set.IsPwo (⋃ a : α, (s a).Support) :=
   s.is_pwo_Union_support'
 
 theorem finite_co_support (s : summable_family Γ R α) (g : Γ) : (Function.Support fun a => (s a).coeff g).Finite :=
@@ -1317,7 +1331,7 @@ instance : Inhabited (summable_family Γ R α) :=
   ⟨0⟩
 
 @[simp]
-theorem coe_add {s t : summable_family Γ R α} : «expr⇑ » (s+t) = s+t :=
+theorem coe_add {s t : summable_family Γ R α} : (⇑s+t) = s+t :=
   rfl
 
 theorem add_apply {s t : summable_family Γ R α} {a : α} : (s+t) a = s a+t a :=
@@ -1355,7 +1369,7 @@ instance : AddCommMonoidₓ (summable_family Γ R α) :=
 
 /-- The infinite sum of a `summable_family` of Hahn series. -/
 def hsum (s : summable_family Γ R α) : HahnSeries Γ R :=
-  { coeff := fun g => ∑ᶠi, (s i).coeff g,
+  { coeff := fun g => ∑ᶠ i, (s i).coeff g,
     is_pwo_support' :=
       s.is_pwo_Union_support.mono
         fun g =>
@@ -1367,10 +1381,10 @@ def hsum (s : summable_family Γ R α) : HahnSeries Γ R :=
             rw [finsum_congr h, finsum_zero] }
 
 @[simp]
-theorem hsum_coeff {s : summable_family Γ R α} {g : Γ} : s.hsum.coeff g = ∑ᶠi, (s i).coeff g :=
+theorem hsum_coeff {s : summable_family Γ R α} {g : Γ} : s.hsum.coeff g = ∑ᶠ i, (s i).coeff g :=
   rfl
 
-theorem support_hsum_subset {s : summable_family Γ R α} : s.hsum.support ⊆ ⋃a : α, (s a).Support :=
+theorem support_hsum_subset {s : summable_family Γ R α} : s.hsum.support ⊆ ⋃ a : α, (s a).Support :=
   fun g hg =>
     by 
       rw [mem_support, hsum_coeff, finsum_eq_sum _ (s.finite_co_support _)] at hg 
@@ -1412,14 +1426,14 @@ instance : AddCommGroupₓ (summable_family Γ R α) :=
           apply add_left_negₓ }
 
 @[simp]
-theorem coe_neg : «expr⇑ » (-s) = -s :=
+theorem coe_neg : ⇑(-s) = -s :=
   rfl
 
 theorem neg_apply : (-s) a = -s a :=
   rfl
 
 @[simp]
-theorem coe_sub : «expr⇑ » (s - t) = s - t :=
+theorem coe_sub : ⇑(s - t) = s - t :=
   rfl
 
 theorem sub_apply : (s - t) a = s a - t a :=
@@ -1468,41 +1482,43 @@ instance : Module (HahnSeries Γ R) (summable_family Γ R α) :=
     one_smul := fun x => ext fun a => one_mulₓ _, add_smul := fun x y s => ext fun a => add_mulₓ _ _ _,
     smul_add := fun x s t => ext fun a => mul_addₓ _ _ _, mul_smul := fun x y s => ext fun a => mul_assocₓ _ _ _ }
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem hsum_smul
-{x : hahn_series Γ R}
-{s : summable_family Γ R α} : «expr = »(«expr • »(x, s).hsum, «expr * »(x, s.hsum)) :=
-begin
-  ext [] [ident g] [],
-  simp [] [] ["only"] ["[", expr mul_coeff, ",", expr hsum_coeff, ",", expr smul_apply, "]"] [] [],
-  have [ident h] [":", expr ∀
-   i, «expr ⊆ »((s i).support, «expr⋃ , »((j), (s j).support))] [":=", expr set.subset_Union _],
-  refine [expr (eq.trans (finsum_congr (λ
-      a, _)) (finsum_sum_comm (add_antidiagonal x.is_pwo_support s.is_pwo_Union_support g) (λ
-      i ij, «expr * »(x.coeff (prod.fst ij), (s i).coeff ij.snd)) _)).trans _],
-  { refine [expr sum_subset (add_antidiagonal_mono_right (set.subset_Union _ a)) _],
-    rintro ["⟨", ident i, ",", ident j, "⟩", ident hU, ident ha],
-    rw [expr mem_add_antidiagonal] ["at", "*"],
-    rw ["[", expr not_not.1 (λ con, ha ⟨hU.1, hU.2.1, con⟩), ",", expr mul_zero, "]"] [] },
-  { rintro ["⟨", ident i, ",", ident j, "⟩", ident hij],
-    refine [expr (s.finite_co_support j).subset _],
-    simp_rw ["[", expr function.support_subset_iff', ",", expr function.mem_support, ",", expr not_not, "]"] [],
-    intros [ident a, ident ha],
-    rw ["[", expr ha, ",", expr mul_zero, "]"] [] },
-  { refine [expr (sum_congr rfl _).trans (sum_subset (add_antidiagonal_mono_right _) _).symm],
-    { rintro ["⟨", ident i, ",", ident j, "⟩", ident hij],
-      rw [expr mul_finsum] [],
-      apply [expr s.finite_co_support] },
-    { intros [ident x, ident hx],
-      simp [] [] ["only"] ["[", expr set.mem_Union, ",", expr ne.def, ",", expr mem_support, "]"] [] [],
-      contrapose ["!"] [ident hx],
-      simp [] [] [] ["[", expr hx, "]"] [] [] },
-    { rintro ["⟨", ident i, ",", ident j, "⟩", ident hU, ident ha],
-      rw [expr mem_add_antidiagonal] ["at", "*"],
-      rw ["[", "<-", expr hsum_coeff, ",", expr not_not.1 (λ
-        con, ha ⟨hU.1, hU.2.1, con⟩), ",", expr mul_zero, "]"] [] } }
-end
+theorem hsum_smul {x : HahnSeries Γ R} {s : summable_family Γ R α} : (x • s).hsum = x*s.hsum :=
+  by 
+    ext g 
+    simp only [mul_coeff, hsum_coeff, smul_apply]
+    have h : ∀ i, (s i).Support ⊆ ⋃ j, (s j).Support := Set.subset_Union _ 
+    refine'
+      (Eq.trans (finsum_congr fun a => _)
+            (finsum_sum_comm (add_antidiagonal x.is_pwo_support s.is_pwo_Union_support g)
+              (fun i ij => x.coeff (Prod.fst ij)*(s i).coeff ij.snd) _)).trans
+        _
+    ·
+      refine' sum_subset (add_antidiagonal_mono_right (Set.subset_Union _ a)) _ 
+      rintro ⟨i, j⟩ hU ha 
+      rw [mem_add_antidiagonal] at *
+      rw [not_not.1 fun con => ha ⟨hU.1, hU.2.1, Con⟩, mul_zero]
+    ·
+      rintro ⟨i, j⟩ hij 
+      refine' (s.finite_co_support j).Subset _ 
+      simpRw [Function.support_subset_iff', Function.mem_support, not_not]
+      intro a ha 
+      rw [ha, mul_zero]
+    ·
+      refine' (sum_congr rfl _).trans (sum_subset (add_antidiagonal_mono_right _) _).symm
+      ·
+        rintro ⟨i, j⟩ hij 
+        rw [mul_finsum]
+        apply s.finite_co_support
+      ·
+        intro x hx 
+        simp only [Set.mem_Union, Ne.def, mem_support]
+        contrapose! hx 
+        simp [hx]
+      ·
+        rintro ⟨i, j⟩ hU ha 
+        rw [mem_add_antidiagonal] at *
+        rw [←hsum_coeff, not_not.1 fun con => ha ⟨hU.1, hU.2.1, Con⟩, mul_zero]
 
 /-- The summation of a `summable_family` as a `linear_map`. -/
 @[simps]
@@ -1520,31 +1536,32 @@ section OfFinsupp
 
 variable [PartialOrderₓ Γ] [AddCommMonoidₓ R] {α : Type _}
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family with only finitely many nonzero elements is summable. -/
-def of_finsupp (f : «expr →₀ »(α, hahn_series Γ R)) : summable_family Γ R α :=
-{ to_fun := f,
-  is_pwo_Union_support' := begin
-    apply [expr (f.support.is_pwo_sup (λ a, (f a).support) (λ a ha, (f a).is_pwo_support)).mono],
-    intros [ident g, ident hg],
-    obtain ["⟨", ident a, ",", ident ha, "⟩", ":=", expr set.mem_Union.1 hg],
-    have [ident haf] [":", expr «expr ∈ »(a, f.support)] [],
-    { rw [expr finsupp.mem_support_iff] [],
-      contrapose ["!"] [ident ha],
-      rw ["[", expr ha, ",", expr support_zero, "]"] [],
-      exact [expr set.not_mem_empty _] },
-    have [ident h] [":", expr «expr ≤ »(λ i, (f i).support a, _)] [":=", expr le_sup haf],
-    exact [expr h ha]
-  end,
-  finite_co_support' := λ g, begin
-    refine [expr f.support.finite_to_set.subset (λ a ha, _)],
-    simp [] [] ["only"] ["[", expr coeff.add_monoid_hom_apply, ",", expr mem_coe, ",", expr finsupp.mem_support_iff, ",", expr ne.def, ",", expr function.mem_support, "]"] [] [],
-    contrapose ["!"] [ident ha],
-    simp [] [] [] ["[", expr ha, "]"] [] []
-  end }
+def of_finsupp (f : α →₀ HahnSeries Γ R) : summable_family Γ R α :=
+  { toFun := f,
+    is_pwo_Union_support' :=
+      by 
+        apply (f.support.is_pwo_sup (fun a => (f a).Support) fun a ha => (f a).is_pwo_support).mono 
+        intro g hg 
+        obtain ⟨a, ha⟩ := Set.mem_Union.1 hg 
+        have haf : a ∈ f.support
+        ·
+          rw [Finsupp.mem_support_iff]
+          contrapose! ha 
+          rw [ha, support_zero]
+          exact Set.not_mem_empty _ 
+        have h : (fun i => (f i).Support) a ≤ _ := le_sup haf 
+        exact h ha,
+    finite_co_support' :=
+      fun g =>
+        by 
+          refine' f.support.finite_to_set.subset fun a ha => _ 
+          simp only [coeff.add_monoid_hom_apply, mem_coe, Finsupp.mem_support_iff, Ne.def, Function.mem_support]
+          contrapose! ha 
+          simp [ha] }
 
 @[simp]
-theorem coe_of_finsupp {f : α →₀ HahnSeries Γ R} : «expr⇑ » (summable_family.of_finsupp f) = f :=
+theorem coe_of_finsupp {f : α →₀ HahnSeries Γ R} : ⇑summable_family.of_finsupp f = f :=
   rfl
 
 @[simp]
@@ -1620,37 +1637,80 @@ section Powers
 
 variable [LinearOrderedAddCommGroup Γ] [CommRingₓ R] [IsDomain R]
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The powers of an element of positive valuation form a summable family. -/
-def powers (x : hahn_series Γ R) (hx : «expr < »(0, add_val Γ R x)) : summable_family Γ R exprℕ() :=
-{ to_fun := λ n, «expr ^ »(x, n),
-  is_pwo_Union_support' := is_pwo_Union_support_powers hx,
-  finite_co_support' := λ g, begin
-    have [ident hpwo] [] [":=", expr is_pwo_Union_support_powers hx],
-    by_cases [expr hg, ":", expr «expr ∈ »(g, «expr⋃ , »((n : exprℕ()), {g | «expr ≠ »(«expr ^ »(x, n).coeff g, 0)}))],
-    swap,
-    { exact [expr set.finite_empty.subset (λ n hn, hg (set.mem_Union.2 ⟨n, hn⟩))] },
-    apply [expr hpwo.is_wf.induction hg],
-    intros [ident y, ident ys, ident hy],
-    refine [expr ((((add_antidiagonal x.is_pwo_support hpwo y).finite_to_set.bUnion (λ
-         ij hij, hy ij.snd _ _)).image nat.succ).union (set.finite_singleton 0)).subset _],
-    { exact [expr (mem_add_antidiagonal.1 (mem_coe.1 hij)).2.2] },
-    { obtain ["⟨", ident rfl, ",", ident hi, ",", ident hj, "⟩", ":=", expr mem_add_antidiagonal.1 (mem_coe.1 hij)],
-      rw ["[", "<-", expr zero_add ij.snd, ",", "<-", expr add_assoc, ",", expr add_zero, "]"] [],
-      exact [expr add_lt_add_right (with_top.coe_lt_coe.1 (lt_of_lt_of_le hx (add_val_le_of_coeff_ne_zero hi))) _] },
-    { intros [ident n, ident hn],
-      cases [expr n] [],
-      { exact [expr set.mem_union_right _ (set.mem_singleton 0)] },
-      { obtain ["⟨", ident i, ",", ident j, ",", ident hi, ",", ident hj, ",", ident rfl, "⟩", ":=", expr support_mul_subset_add_support hn],
-        refine [expr set.mem_union_left _ ⟨n, set.mem_Union.2 ⟨⟨i, j⟩, set.mem_Union.2 ⟨_, hj⟩⟩, rfl⟩],
-        simp [] [] ["only"] ["[", expr true_and, ",", expr set.mem_Union, ",", expr mem_add_antidiagonal, ",", expr mem_coe, ",", expr eq_self_iff_true, ",", expr ne.def, ",", expr mem_support, ",", expr set.mem_set_of_eq, "]"] [] [],
-        exact [expr ⟨hi, ⟨n, hj⟩⟩] } }
-  end }
+  def
+    powers
+    ( x : HahnSeries Γ R ) ( hx : 0 < add_val Γ R x ) : summable_family Γ R ℕ
+    :=
+      {
+        toFun := fun n => x ^ n ,
+          is_pwo_Union_support' := is_pwo_Union_support_powers hx ,
+          finite_co_support'
+            :=
+            fun
+              g
+                =>
+                by
+                  have hpwo := is_pwo_Union_support_powers hx
+                    byCases' hg : g ∈ ⋃ n : ℕ , { g | x ^ n . coeff g ≠ 0 }
+                    swap
+                    · exact set.finite_empty.subset fun n hn => hg Set.mem_Union . 2 ⟨ n , hn ⟩
+                    apply hpwo.is_wf.induction hg
+                    intro y ys hy
+                    refine'
+                      add_antidiagonal x.is_pwo_support hpwo y . finite_to_set . bUnion fun ij hij => hy ij.snd _ _
+                                  .
+                                  Image
+                                Nat.succ
+                              .
+                              union
+                            Set.finite_singleton 0
+                          .
+                          Subset
+                        _
+                    · exact mem_add_antidiagonal . 1 mem_coe . 1 hij . 2 . 2
+                    ·
+                      obtain ⟨ rfl , hi , hj ⟩ := mem_add_antidiagonal . 1 mem_coe . 1 hij
+                        rw [ ← zero_addₓ ij.snd , ← add_assocₓ , add_zeroₓ ]
+                        exact
+                          add_lt_add_right WithTop.coe_lt_coe . 1 lt_of_lt_of_leₓ hx add_val_le_of_coeff_ne_zero hi _
+                    ·
+                      intro n hn
+                        cases n
+                        · exact Set.mem_union_right _ Set.mem_singleton 0
+                        ·
+                          obtain ⟨ i , j , hi , hj , rfl ⟩ := support_mul_subset_add_support hn
+                            refine'
+                              Set.mem_union_left
+                                _ ⟨ n , Set.mem_Union . 2 ⟨ ⟨ i , j ⟩ , Set.mem_Union . 2 ⟨ _ , hj ⟩ ⟩ , rfl ⟩
+                            simp
+                              only
+                              [
+                                true_andₓ
+                                  ,
+                                  Set.mem_Union
+                                  ,
+                                  mem_add_antidiagonal
+                                  ,
+                                  mem_coe
+                                  ,
+                                  eq_self_iff_true
+                                  ,
+                                  Ne.def
+                                  ,
+                                  mem_support
+                                  ,
+                                  Set.mem_set_of_eq
+                                ]
+                            exact ⟨ hi , ⟨ n , hj ⟩ ⟩
+        }
 
 variable {x : HahnSeries Γ R} (hx : 0 < add_val Γ R x)
 
 @[simp]
-theorem coe_powers : «expr⇑ » (powers x hx) = pow x :=
+theorem coe_powers : ⇑powers x hx = pow x :=
   rfl
 
 theorem emb_domain_succ_smul_powers :
@@ -1685,59 +1745,68 @@ section IsDomain
 
 variable [CommRingₓ R] [IsDomain R]
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem unit_aux
-(x : hahn_series Γ R)
-{r : R}
-(hr : «expr = »(«expr * »(r, x.coeff x.order), 1)) : «expr < »(0, add_val Γ R «expr - »(1, «expr * »(«expr * »(C r, single «expr- »(x.order) 1), x))) :=
-begin
-  have [ident h10] [":", expr «expr ≠ »((1 : R), 0)] [":=", expr one_ne_zero],
-  have [ident x0] [":", expr «expr ≠ »(x, 0)] [":=", expr ne_zero_of_coeff_ne_zero (right_ne_zero_of_mul_eq_one hr)],
-  refine [expr lt_of_le_of_ne ((add_val Γ R).map_le_sub (ge_of_eq (add_val Γ R).map_one) _) _],
-  { simp [] [] ["only"] ["[", expr add_valuation.map_mul, "]"] [] [],
-    rw ["[", expr add_val_apply_of_ne x0, ",", expr add_val_apply_of_ne (single_ne_zero h10), ",", expr add_val_apply_of_ne _, ",", expr order_C, ",", expr order_single h10, ",", expr with_top.coe_zero, ",", expr zero_add, ",", "<-", expr with_top.coe_add, ",", expr neg_add_self, ",", expr with_top.coe_zero, "]"] [],
-    { exact [expr le_refl 0] },
-    { exact [expr C_ne_zero (left_ne_zero_of_mul_eq_one hr)] } },
-  { rw ["[", expr add_val_apply, ",", "<-", expr with_top.coe_zero, "]"] [],
-    split_ifs [] [],
-    { apply [expr with_top.coe_ne_top] },
-    rw ["[", expr ne.def, ",", expr with_top.coe_eq_coe, "]"] [],
-    intro [ident con],
-    apply [expr coeff_order_ne_zero h],
-    rw ["[", "<-", expr con, ",", expr mul_assoc, ",", expr sub_coeff, ",", expr one_coeff, ",", expr if_pos rfl, ",", expr C_mul_eq_smul, ",", expr smul_coeff, ",", expr smul_eq_mul, ",", "<-", expr add_neg_self x.order, ",", expr single_mul_coeff_add, ",", expr one_mul, ",", expr hr, ",", expr sub_self, "]"] [] }
-end
+theorem unit_aux (x : HahnSeries Γ R) {r : R} (hr : (r*x.coeff x.order) = 1) :
+  0 < add_val Γ R (1 - (C r*single (-x.order) 1)*x) :=
+  by 
+    have h10 : (1 : R) ≠ 0 := one_ne_zero 
+    have x0 : x ≠ 0 := ne_zero_of_coeff_ne_zero (right_ne_zero_of_mul_eq_one hr)
+    refine' lt_of_le_of_neₓ ((add_val Γ R).map_le_sub (ge_of_eq (add_val Γ R).map_one) _) _
+    ·
+      simp only [AddValuation.map_mul]
+      rw [add_val_apply_of_ne x0, add_val_apply_of_ne (single_ne_zero h10), add_val_apply_of_ne _, order_C,
+        order_single h10, WithTop.coe_zero, zero_addₓ, ←WithTop.coe_add, neg_add_selfₓ, WithTop.coe_zero]
+      ·
+        exact le_reflₓ 0
+      ·
+        exact C_ne_zero (left_ne_zero_of_mul_eq_one hr)
+    ·
+      rw [add_val_apply, ←WithTop.coe_zero]
+      splitIfs
+      ·
+        apply WithTop.coe_ne_top 
+      rw [Ne.def, WithTop.coe_eq_coe]
+      intro con 
+      apply coeff_order_ne_zero h 
+      rw [←Con, mul_assocₓ, sub_coeff, one_coeff, if_pos rfl, C_mul_eq_smul, smul_coeff, smul_eq_mul,
+        ←add_neg_selfₓ x.order, single_mul_coeff_add, one_mulₓ, hr, sub_self]
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_unit_iff {x : hahn_series Γ R} : «expr ↔ »(is_unit x, is_unit (x.coeff x.order)) :=
-begin
-  split,
-  { rintro ["⟨", "⟨", ident u, ",", ident i, ",", ident ui, ",", ident iu, "⟩", ",", ident rfl, "⟩"],
-    refine [expr is_unit_of_mul_eq_one (u.coeff u.order) (i.coeff i.order) ((mul_coeff_order_add_order (left_ne_zero_of_mul_eq_one ui) (right_ne_zero_of_mul_eq_one ui)).symm.trans _)],
-    rw ["[", expr ui, ",", expr one_coeff, ",", expr if_pos, "]"] [],
-    rw ["[", "<-", expr order_mul (left_ne_zero_of_mul_eq_one ui) (right_ne_zero_of_mul_eq_one ui), ",", expr ui, ",", expr order_one, "]"] [] },
-  { rintro ["⟨", "⟨", ident u, ",", ident i, ",", ident ui, ",", ident iu, "⟩", ",", ident h, "⟩"],
-    rw ["[", expr units.coe_mk, "]"] ["at", ident h],
-    rw [expr h] ["at", ident iu],
-    have [ident h] [] [":=", expr summable_family.one_sub_self_mul_hsum_powers (unit_aux x iu)],
-    rw ["[", expr sub_sub_cancel, "]"] ["at", ident h],
-    exact [expr is_unit_of_mul_is_unit_right (is_unit_of_mul_eq_one _ _ h)] }
-end
+theorem is_unit_iff {x : HahnSeries Γ R} : IsUnit x ↔ IsUnit (x.coeff x.order) :=
+  by 
+    constructor
+    ·
+      rintro ⟨⟨u, i, ui, iu⟩, rfl⟩
+      refine'
+        is_unit_of_mul_eq_one (u.coeff u.order) (i.coeff i.order)
+          ((mul_coeff_order_add_order (left_ne_zero_of_mul_eq_one ui) (right_ne_zero_of_mul_eq_one ui)).symm.trans _)
+      rw [ui, one_coeff, if_pos]
+      rw [←order_mul (left_ne_zero_of_mul_eq_one ui) (right_ne_zero_of_mul_eq_one ui), ui, order_one]
+    ·
+      rintro ⟨⟨u, i, ui, iu⟩, h⟩
+      rw [Units.coe_mk] at h 
+      rw [h] at iu 
+      have h := summable_family.one_sub_self_mul_hsum_powers (unit_aux x iu)
+      rw [sub_sub_cancel] at h 
+      exact is_unit_of_mul_is_unit_right (is_unit_of_mul_eq_one _ _ h)
 
 end IsDomain
 
--- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [field R] : field (hahn_series Γ R) :=
-{ inv := λ
-  x, if x0 : «expr = »(x, 0) then 0 else «expr * »(«expr * »(C «expr ⁻¹»(x.coeff x.order), single «expr- »(x.order) 1), (summable_family.powers _ (unit_aux x (inv_mul_cancel (coeff_order_ne_zero x0)))).hsum),
-  inv_zero := dif_pos rfl,
-  mul_inv_cancel := λ x x0, begin
-    refine [expr (congr rfl (dif_neg x0)).trans _],
-    have [ident h] [] [":=", expr summable_family.one_sub_self_mul_hsum_powers (unit_aux x (inv_mul_cancel (coeff_order_ne_zero x0)))],
-    rw ["[", expr sub_sub_cancel, "]"] ["at", ident h],
-    rw ["[", "<-", expr mul_assoc, ",", expr mul_comm x, ",", expr h, "]"] []
-  end,
-  ..hahn_series.is_domain,
-  ..hahn_series.comm_ring }
+instance [Field R] : Field (HahnSeries Γ R) :=
+  { HahnSeries.is_domain, HahnSeries.commRing with
+    inv :=
+      fun x =>
+        if x0 : x = 0 then 0 else
+          (C
+                (x.coeff
+                    x.order⁻¹)*(single (-x.order))
+                1)*(summable_family.powers _ (unit_aux x (inv_mul_cancel (coeff_order_ne_zero x0)))).hsum,
+    inv_zero := dif_pos rfl,
+    mul_inv_cancel :=
+      fun x x0 =>
+        by 
+          refine' (congr rfl (dif_neg x0)).trans _ 
+          have h := summable_family.one_sub_self_mul_hsum_powers (unit_aux x (inv_mul_cancel (coeff_order_ne_zero x0)))
+          rw [sub_sub_cancel] at h 
+          rw [←mul_assocₓ, mul_commₓ x, h] }
 
 end Inversion
 

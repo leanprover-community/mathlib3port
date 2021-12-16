@@ -61,23 +61,25 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Ringₓ A.X :=
           rw [←TensorProduct.add_tmul]
           rfl }
 
--- error in CategoryTheory.Monoidal.Internal.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance (A : Mon_ (Module.{u} R)) : algebra R A.X :=
-{ map_zero' := A.one.map_zero,
-  map_one' := rfl,
-  map_mul' := λ x y, begin
-    have [ident h] [] [":=", expr linear_map.congr_fun A.one_mul.symm «expr ⊗ₜ »(x, A.one y)],
-    rwa ["[", expr monoidal_category.left_unitor_hom_apply, ",", "<-", expr A.one.map_smul, "]"] ["at", ident h]
-  end,
-  commutes' := λ r a, begin
-    dsimp [] [] [] [],
-    have [ident h₁] [] [":=", expr linear_map.congr_fun A.one_mul «expr ⊗ₜ »(r, a)],
-    have [ident h₂] [] [":=", expr linear_map.congr_fun A.mul_one «expr ⊗ₜ »(a, r)],
-    exact [expr h₁.trans h₂.symm]
-  end,
-  smul_def' := λ r a, by { convert [] [expr (linear_map.congr_fun A.one_mul «expr ⊗ₜ »(r, a)).symm] [],
-    simp [] [] [] [] [] [] },
-  ..A.one }
+instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.X :=
+  { A.one with map_zero' := A.one.map_zero, map_one' := rfl,
+    map_mul' :=
+      fun x y =>
+        by 
+          have h := LinearMap.congr_fun A.one_mul.symm (x ⊗ₜ A.one y)
+          rwa [monoidal_category.left_unitor_hom_apply, ←A.one.map_smul] at h,
+    commutes' :=
+      fun r a =>
+        by 
+          dsimp 
+          have h₁ := LinearMap.congr_fun A.one_mul (r ⊗ₜ a)
+          have h₂ := LinearMap.congr_fun A.mul_one (a ⊗ₜ r)
+          exact h₁.trans h₂.symm,
+    smul_def' :=
+      fun r a =>
+        by 
+          convert (LinearMap.congr_fun A.one_mul (r ⊗ₜ a)).symm 
+          simp  }
 
 @[simp]
 theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.X r = A.one r :=

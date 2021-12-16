@@ -33,7 +33,7 @@ linear_map, matrix, linear_equiv, diagonal, det, trace
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open LinearMap Matrix Set Submodule
 
@@ -64,18 +64,19 @@ theorem Matrix.mul_vec_lin_apply [Fintype n] (M : Matrix m n R) (v : n → R) : 
 
 variable [Fintype n] [DecidableEq n]
 
--- error in LinearAlgebra.Matrix.ToLin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem matrix.mul_vec_std_basis (M : matrix m n R) (i j) : «expr = »(M.mul_vec (std_basis R (λ _, R) j 1) i, M i j) :=
-begin
-  have [] [":", expr «expr = »(«expr∑ , »((j'), «expr * »(M i j', if «expr = »(j, j') then 1 else 0)), M i j)] [],
-  { simp_rw ["[", expr mul_boole, ",", expr finset.sum_ite_eq, ",", expr finset.mem_univ, ",", expr if_true, "]"] [] },
-  convert [] [expr this] [],
-  ext [] [] [],
-  split_ifs [] ["with", ident h]; simp [] [] ["only"] ["[", expr std_basis_apply, "]"] [] [],
-  { rw ["[", expr h, ",", expr function.update_same, "]"] [] },
-  { rw ["[", expr function.update_noteq (ne.symm h), ",", expr pi.zero_apply, "]"] [] }
-end
+theorem Matrix.mul_vec_std_basis (M : Matrix m n R) i j : M.mul_vec (std_basis R (fun _ => R) j 1) i = M i j :=
+  by 
+    have  : (∑ j', M i j'*if j = j' then 1 else 0) = M i j
+    ·
+      simpRw [mul_boole, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    convert this 
+    ext 
+    splitIfs with h <;> simp only [std_basis_apply]
+    ·
+      rw [h, Function.update_same]
+    ·
+      rw [Function.update_noteq (Ne.symm h), Pi.zero_apply]
 
 /-- Linear maps `(n → R) →ₗ[R] (m → R)` are linearly equivalent to `matrix m n R`. -/
 def LinearMap.toMatrix' : ((n → R) →ₗ[R] m → R) ≃ₗ[R] Matrix m n R :=
@@ -328,19 +329,18 @@ theorem LinearMap.to_matrix_to_lin (M : Matrix m n R) : LinearMap.toMatrix v₁ 
   by 
     rw [←Matrix.to_lin_symm, LinearEquiv.symm_apply_apply]
 
--- error in LinearAlgebra.Matrix.ToLin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_map.to_matrix_apply
-(f : «expr →ₗ[ ] »(M₁, R, M₂))
-(i : m)
-(j : n) : «expr = »(linear_map.to_matrix v₁ v₂ f i j, v₂.repr (f (v₁ j)) i) :=
-begin
-  rw ["[", expr linear_map.to_matrix, ",", expr linear_equiv.trans_apply, ",", expr linear_map.to_matrix'_apply, ",", expr linear_equiv.arrow_congr_apply, ",", expr basis.equiv_fun_symm_apply, ",", expr finset.sum_eq_single j, ",", expr if_pos rfl, ",", expr one_smul, ",", expr basis.equiv_fun_apply, "]"] [],
-  { intros [ident j', "_", ident hj'],
-    rw ["[", expr if_neg hj', ",", expr zero_smul, "]"] [] },
-  { intro [ident hj],
-    have [] [] [":=", expr finset.mem_univ j],
-    contradiction }
-end
+theorem LinearMap.to_matrix_apply (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
+  LinearMap.toMatrix v₁ v₂ f i j = v₂.repr (f (v₁ j)) i :=
+  by 
+    rw [LinearMap.toMatrix, LinearEquiv.trans_apply, LinearMap.to_matrix'_apply, LinearEquiv.arrow_congr_apply,
+      Basis.equiv_fun_symm_apply, Finset.sum_eq_single j, if_pos rfl, one_smul, Basis.equiv_fun_apply]
+    ·
+      intro j' _ hj' 
+      rw [if_neg hj', zero_smul]
+    ·
+      intro hj 
+      have  := Finset.mem_univ j 
+      contradiction
 
 theorem LinearMap.to_matrix_transpose_apply (f : M₁ →ₗ[R] M₂) (j : n) :
   (LinearMap.toMatrix v₁ v₂ f)ᵀ j = v₂.repr (f (v₁ j)) :=
@@ -354,24 +354,23 @@ theorem LinearMap.to_matrix_transpose_apply' (f : M₁ →ₗ[R] M₂) (j : n) :
   (LinearMap.toMatrix v₁ v₂ f)ᵀ j = v₂.repr (f (v₁ j)) :=
   LinearMap.to_matrix_transpose_apply v₁ v₂ f j
 
-theorem Matrix.to_lin_apply (M : Matrix m n R) (v : M₁) : Matrix.toLin v₁ v₂ M v = ∑j, M.mul_vec (v₁.repr v) j • v₂ j :=
+theorem Matrix.to_lin_apply (M : Matrix m n R) (v : M₁) :
+  Matrix.toLin v₁ v₂ M v = ∑ j, M.mul_vec (v₁.repr v) j • v₂ j :=
   show v₂.equiv_fun.symm (Matrix.toLin' M (v₁.repr v)) = _ by 
     rw [Matrix.to_lin'_apply, v₂.equiv_fun_symm_apply]
 
--- error in LinearAlgebra.Matrix.ToLin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem matrix.to_lin_self
-(M : matrix m n R)
-(i : n) : «expr = »(matrix.to_lin v₁ v₂ M (v₁ i), «expr∑ , »((j), «expr • »(M j i, v₂ j))) :=
-begin
-  rw ["[", expr matrix.to_lin_apply, ",", expr finset.sum_congr rfl (λ j hj, _), "]"] [],
-  rw ["[", expr basis.repr_self, ",", expr matrix.mul_vec, ",", expr dot_product, ",", expr finset.sum_eq_single i, ",", expr finsupp.single_eq_same, ",", expr mul_one, "]"] [],
-  { intros [ident i', "_", ident i'_ne],
-    rw ["[", expr finsupp.single_eq_of_ne i'_ne.symm, ",", expr mul_zero, "]"] [] },
-  { intros [],
-    have [] [] [":=", expr finset.mem_univ i],
-    contradiction }
-end
+theorem Matrix.to_lin_self (M : Matrix m n R) (i : n) : Matrix.toLin v₁ v₂ M (v₁ i) = ∑ j, M j i • v₂ j :=
+  by 
+    rw [Matrix.to_lin_apply, Finset.sum_congr rfl fun j hj => _]
+    rw [Basis.repr_self, Matrix.mulVecₓ, dot_product, Finset.sum_eq_single i, Finsupp.single_eq_same, mul_oneₓ]
+    ·
+      intro i' _ i'_ne 
+      rw [Finsupp.single_eq_of_ne i'_ne.symm, mul_zero]
+    ·
+      intros 
+      have  := Finset.mem_univ i 
+      contradiction
 
 /-- This will be a special case of `linear_map.to_matrix_id_eq_basis_to_matrix`. -/
 theorem LinearMap.to_matrix_id : LinearMap.toMatrix v₁ v₁ id = 1 :=
@@ -421,18 +420,14 @@ theorem LinearMap.to_matrix_mul_vec_repr (f : M₁ →ₗ[R] M₂) (x : M₁) :
     congr 
     exact v₁.equiv_fun.symm_apply_apply x
 
--- error in LinearAlgebra.Matrix.ToLin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem matrix.to_lin_mul
-[fintype l]
-[decidable_eq m]
-(A : matrix l m R)
-(B : matrix m n R) : «expr = »(matrix.to_lin v₁ v₃ «expr ⬝ »(A, B), (matrix.to_lin v₂ v₃ A).comp (matrix.to_lin v₁ v₂ B)) :=
-begin
-  apply [expr (linear_map.to_matrix v₁ v₃).injective],
-  haveI [] [":", expr decidable_eq l] [":=", expr λ _ _, classical.prop_decidable _],
-  rw [expr linear_map.to_matrix_comp v₁ v₂ v₃] [],
-  repeat { rw [expr linear_map.to_matrix_to_lin] [] }
-end
+theorem Matrix.to_lin_mul [Fintype l] [DecidableEq m] (A : Matrix l m R) (B : Matrix m n R) :
+  Matrix.toLin v₁ v₃ (A ⬝ B) = (Matrix.toLin v₂ v₃ A).comp (Matrix.toLin v₁ v₂ B) :=
+  by 
+    apply (LinearMap.toMatrix v₁ v₃).Injective 
+    have  : DecidableEq l := fun _ _ => Classical.propDecidable _ 
+    rw [LinearMap.to_matrix_comp v₁ v₂ v₃]
+    repeat' 
+      rw [LinearMap.to_matrix_to_lin]
 
 /-- Shortcut lemma for `matrix.to_lin_mul` and `linear_map.comp_apply`. -/
 theorem Matrix.to_lin_mul_apply [Fintype l] [DecidableEq m] (A : Matrix l m R) (B : Matrix m n R) x :
@@ -503,12 +498,13 @@ theorem LinearMap.to_matrix_alg_equiv_transpose_apply' (f : M₁ →ₗ[R] M₁)
   LinearMap.to_matrix_alg_equiv_transpose_apply v₁ f j
 
 theorem Matrix.to_lin_alg_equiv_apply (M : Matrix n n R) (v : M₁) :
-  Matrix.toLinAlgEquiv v₁ M v = ∑j, M.mul_vec (v₁.repr v) j • v₁ j :=
+  Matrix.toLinAlgEquiv v₁ M v = ∑ j, M.mul_vec (v₁.repr v) j • v₁ j :=
   show v₁.equiv_fun.symm (Matrix.toLinAlgEquiv' M (v₁.repr v)) = _ by 
     rw [Matrix.to_lin_alg_equiv'_apply, v₁.equiv_fun_symm_apply]
 
 @[simp]
-theorem Matrix.to_lin_alg_equiv_self (M : Matrix n n R) (i : n) : Matrix.toLinAlgEquiv v₁ M (v₁ i) = ∑j, M j i • v₁ j :=
+theorem Matrix.to_lin_alg_equiv_self (M : Matrix n n R) (i : n) :
+  Matrix.toLinAlgEquiv v₁ M (v₁ i) = ∑ j, M j i • v₁ j :=
   Matrix.to_lin_self _ _ _ _
 
 theorem LinearMap.to_matrix_alg_equiv_id : LinearMap.toMatrixAlgEquiv v₁ id = 1 :=

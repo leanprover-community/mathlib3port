@@ -7,7 +7,7 @@ In this file, we define instances of algebraic structures over smooth functions.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Manifold
 
@@ -25,7 +25,7 @@ instance Mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasS
 
 @[simp, toAdditive]
 theorem coe_mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G]
-  (f g : C^∞⟮I, N; I', G⟯) : «expr⇑ » (f*g) = f*g :=
+  (f g : C^∞⟮I, N; I', G⟯) : (⇑f*g) = f*g :=
   rfl
 
 @[simp, toAdditive]
@@ -39,8 +39,7 @@ instance HasOne {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H'
   ⟨TimesContMdiffMap.const (1 : G)⟩
 
 @[simp, toAdditive]
-theorem coe_one {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] :
-  «expr⇑ » (1 : C^∞⟮I, N; I', G⟯) = 1 :=
+theorem coe_one {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] : ⇑(1 : C^∞⟮I, N; I', G⟯) = 1 :=
   rfl
 
 section GroupStructure
@@ -106,12 +105,12 @@ instance Groupₓ {G : Type _} [Groupₓ G] [TopologicalSpace G] [ChartedSpace H
 
 @[simp, toAdditive]
 theorem coe_inv {G : Type _} [Groupₓ G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G]
-  (f : C^∞⟮I, N; I', G⟯) : «expr⇑ » (f⁻¹) = f⁻¹ :=
+  (f : C^∞⟮I, N; I', G⟯) : ⇑f⁻¹ = f⁻¹ :=
   rfl
 
 @[simp, toAdditive]
 theorem coe_div {G : Type _} [Groupₓ G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G]
-  (f g : C^∞⟮I, N; I', G⟯) : «expr⇑ » (f / g) = f / g :=
+  (f g : C^∞⟮I, N; I', G⟯) : ⇑(f / g) = f / g :=
   rfl
 
 @[toAdditive]
@@ -187,7 +186,7 @@ instance HasScalar {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : HasScalar
 
 @[simp]
 theorem coe_smul {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] (r : 𝕜) (f : C^∞⟮I, N; 𝓘(𝕜, V), V⟯) :
-  «expr⇑ » (r • f) = r • f :=
+  ⇑(r • f) = r • f :=
   rfl
 
 @[simp]

@@ -53,7 +53,7 @@ noncomputable def Types.monoOverEquivalenceSet (α : Type u) : mono_over α ≌ 
     unitIso :=
       nat_iso.of_components
         (fun f =>
-          mono_over.iso_mk (Equiv.ofInjective f.1.Hom ((mono_iff_injective _).mp f.2)).toIso
+          mono_over.iso_mk (Equivₓ.ofInjective f.1.Hom ((mono_iff_injective _).mp f.2)).toIso
             (by 
               tidy))
         (by 

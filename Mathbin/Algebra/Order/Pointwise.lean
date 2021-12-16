@@ -23,10 +23,10 @@ theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) :=
   by 
     ext x 
     simp only [mem_smul_set, Algebra.id.smul_eq_mul, mem_Ioo]
-    split 
+    constructor
     ·
       rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
-      split 
+      constructor 
       exact (mul_lt_mul_left hr).mpr a_h_left_left 
       exact (mul_lt_mul_left hr).mpr a_h_left_right
     ·
@@ -39,10 +39,10 @@ theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) :=
   by 
     ext x 
     simp only [mem_smul_set, Algebra.id.smul_eq_mul, mem_Icc]
-    split 
+    constructor
     ·
       rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
-      split 
+      constructor 
       exact (mul_le_mul_left hr).mpr a_h_left_left 
       exact (mul_le_mul_left hr).mpr a_h_left_right
     ·
@@ -55,10 +55,10 @@ theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) :=
   by 
     ext x 
     simp only [mem_smul_set, Algebra.id.smul_eq_mul, mem_Ico]
-    split 
+    constructor
     ·
       rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
-      split 
+      constructor 
       exact (mul_le_mul_left hr).mpr a_h_left_left 
       exact (mul_lt_mul_left hr).mpr a_h_left_right
     ·
@@ -71,10 +71,10 @@ theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) :=
   by 
     ext x 
     simp only [mem_smul_set, Algebra.id.smul_eq_mul, mem_Ioc]
-    split 
+    constructor
     ·
       rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
-      split 
+      constructor 
       exact (mul_lt_mul_left hr).mpr a_h_left_left 
       exact (mul_le_mul_left hr).mpr a_h_left_right
     ·
@@ -87,14 +87,14 @@ theorem smul_Ioi : r • Ioi a = Ioi (r • a) :=
   by 
     ext x 
     simp only [mem_smul_set, Algebra.id.smul_eq_mul, mem_Ioi]
-    split 
+    constructor
     ·
       rintro ⟨a_w, a_h_left, rfl⟩
       exact (mul_lt_mul_left hr).mpr a_h_left
     ·
       rintro h 
       use x / r 
-      split 
+      constructor 
       exact (lt_div_iff' hr).mpr h 
       exact mul_div_cancel' _ (ne_of_gtₓ hr)
 
@@ -102,14 +102,14 @@ theorem smul_Iio : r • Iio a = Iio (r • a) :=
   by 
     ext x 
     simp only [mem_smul_set, Algebra.id.smul_eq_mul, mem_Iio]
-    split 
+    constructor
     ·
       rintro ⟨a_w, a_h_left, rfl⟩
       exact (mul_lt_mul_left hr).mpr a_h_left
     ·
       rintro h 
       use x / r 
-      split 
+      constructor 
       exact (div_lt_iff' hr).mpr h 
       exact mul_div_cancel' _ (ne_of_gtₓ hr)
 
@@ -117,14 +117,14 @@ theorem smul_Ici : r • Ici a = Ici (r • a) :=
   by 
     ext x 
     simp only [mem_smul_set, Algebra.id.smul_eq_mul, mem_Ioi]
-    split 
+    constructor
     ·
       rintro ⟨a_w, a_h_left, rfl⟩
       exact (mul_le_mul_left hr).mpr a_h_left
     ·
       rintro h 
       use x / r 
-      split 
+      constructor 
       exact (le_div_iff' hr).mpr h 
       exact mul_div_cancel' _ (ne_of_gtₓ hr)
 
@@ -132,14 +132,14 @@ theorem smul_Iic : r • Iic a = Iic (r • a) :=
   by 
     ext x 
     simp only [mem_smul_set, Algebra.id.smul_eq_mul, mem_Iio]
-    split 
+    constructor
     ·
       rintro ⟨a_w, a_h_left, rfl⟩
       exact (mul_le_mul_left hr).mpr a_h_left
     ·
       rintro h 
       use x / r 
-      split 
+      constructor 
       exact (div_le_iff' hr).mpr h 
       exact mul_div_cancel' _ (ne_of_gtₓ hr)
 

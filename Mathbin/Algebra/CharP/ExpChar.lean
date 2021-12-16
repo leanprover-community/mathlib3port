@@ -49,7 +49,7 @@ theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p
   by 
     cases' hq with q hq_one hq_prime
     ·
-      split 
+      constructor
       ·
         (
           rintro rfl)
@@ -59,7 +59,7 @@ theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p
         rw [(CharP.eq R hp inferInstance : p = 0)] at pprime 
         exact False.elim (Nat.not_prime_zero pprime)
     ·
-      split 
+      constructor
       ·
         intro hpq 
         rw [hpq]
@@ -93,7 +93,7 @@ instance (priority := 100) char_zero_of_exp_char_one' [hq : ExpChar R 1] : CharZ
 /-- The exponential characteristic is one iff the characteristic is zero. -/
 theorem exp_char_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1 ↔ p = 0 :=
   by 
-    split 
+    constructor
     ·
       (
         rintro rfl)
@@ -116,22 +116,26 @@ theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) :
     ·
       contradiction
 
--- error in Algebra.CharP.ExpChar: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The exponential characteristic is a prime number or one. -/
-theorem exp_char_is_prime_or_one (q : exprℕ()) [hq : exp_char R q] : «expr ∨ »(nat.prime q, «expr = »(q, 1)) :=
-«expr $ »(or_iff_not_imp_right.mpr, λ h, begin
-   casesI [expr char_p.exists R] ["with", ident p, ident hp],
-   have [ident p_ne_zero] [":", expr «expr ≠ »(p, 0)] [],
-   { intro [ident p_zero],
-     haveI [] [":", expr char_p R 0] [],
-     { rwa ["<-", expr p_zero] [] },
-     have [] [":", expr «expr = »(q, 1)] [":=", expr exp_char_one_of_char_zero R q],
-     contradiction },
-   have [ident p_eq_q] [":", expr «expr = »(p, q)] [":=", expr (char_eq_exp_char_iff R p q).mpr (char_prime_of_ne_zero R p_ne_zero)],
-   cases [expr char_p.char_is_prime_or_zero R p] ["with", ident pprime],
-   { rwa [expr p_eq_q] ["at", ident pprime] },
-   { contradiction }
- end)
+theorem exp_char_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
+  or_iff_not_imp_right.mpr$
+    fun h =>
+      by 
+        cases' CharP.exists R with p hp 
+        have p_ne_zero : p ≠ 0
+        ·
+          intro p_zero 
+          have  : CharP R 0
+          ·
+            rwa [←p_zero]
+          have  : q = 1 := exp_char_one_of_char_zero R q 
+          contradiction 
+        have p_eq_q : p = q := (char_eq_exp_char_iff R p q).mpr (char_prime_of_ne_zero R p_ne_zero)
+        cases' CharP.char_is_prime_or_zero R p with pprime
+        ·
+          rwa [p_eq_q] at pprime
+        ·
+          contradiction
 
 end NoZeroDivisors
 

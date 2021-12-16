@@ -137,7 +137,7 @@ def cast_add_hom (α : Type _) [AddGroupₓ α] [HasOne α] : ℤ →+ α :=
   ⟨coeₓ, cast_zero, cast_add⟩
 
 @[simp]
-theorem coe_cast_add_hom [AddGroupₓ α] [HasOne α] : «expr⇑ » (cast_add_hom α) = coeₓ :=
+theorem coe_cast_add_hom [AddGroupₓ α] [HasOne α] : ⇑cast_add_hom α = coeₓ :=
   rfl
 
 /-- `coe : ℤ → α` as a `ring_hom`. -/
@@ -145,10 +145,10 @@ def cast_ring_hom (α : Type _) [Ringₓ α] : ℤ →+* α :=
   ⟨coeₓ, cast_one, cast_mul, cast_zero, cast_add⟩
 
 @[simp]
-theorem coe_cast_ring_hom [Ringₓ α] : «expr⇑ » (cast_ring_hom α) = coeₓ :=
+theorem coe_cast_ring_hom [Ringₓ α] : ⇑cast_ring_hom α = coeₓ :=
   rfl
 
-theorem cast_commute [Ringₓ α] (m : ℤ) (x : α) : Commute («expr↑ » m) x :=
+theorem cast_commute [Ringₓ α] (m : ℤ) (x : α) : Commute (↑m) x :=
   Int.casesOn m (fun n => n.cast_commute x) fun n => ((n+1).cast_commute x).neg_left
 
 theorem cast_comm [Ringₓ α] (m : ℤ) (x : α) : ((m : α)*x) = x*m :=
@@ -158,13 +158,13 @@ theorem commute_cast [Ringₓ α] (x : α) (m : ℤ) : Commute x m :=
   (m.cast_commute x).symm
 
 @[simp, normCast]
-theorem coe_nat_bit0 (n : ℕ) : («expr↑ » (bit0 n) : ℤ) = bit0 («expr↑ » n) :=
+theorem coe_nat_bit0 (n : ℕ) : (↑bit0 n : ℤ) = bit0 (↑n) :=
   by 
     unfold bit0 
     simp 
 
 @[simp, normCast]
-theorem coe_nat_bit1 (n : ℕ) : («expr↑ » (bit1 n) : ℤ) = bit1 («expr↑ » n) :=
+theorem coe_nat_bit1 (n : ℕ) : (↑bit1 n : ℤ) = bit1 (↑n) :=
   by 
     unfold bit1 
     unfold bit0 
@@ -233,11 +233,11 @@ theorem cast_lt_zero [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) < 0 �
     rw [←cast_zero, cast_lt]
 
 @[simp, normCast]
-theorem cast_min [LinearOrderedRing α] {a b : ℤ} : («expr↑ » (min a b) : α) = min a b :=
+theorem cast_min [LinearOrderedRing α] {a b : ℤ} : (↑min a b : α) = min a b :=
   Monotone.map_min cast_mono
 
 @[simp, normCast]
-theorem cast_max [LinearOrderedRing α] {a b : ℤ} : («expr↑ » (max a b) : α) = max a b :=
+theorem cast_max [LinearOrderedRing α] {a b : ℤ} : (↑max a b : α) = max a b :=
   Monotone.map_max cast_mono
 
 @[simp, normCast]
@@ -368,7 +368,7 @@ instance int.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (
 end RingHom
 
 @[simp, normCast]
-theorem Int.cast_id (n : ℤ) : «expr↑ » n = n :=
+theorem Int.cast_id (n : ℤ) : ↑n = n :=
   ((RingHom.id ℤ).eq_int_cast n).symm
 
 namespace Pi

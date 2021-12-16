@@ -16,29 +16,26 @@ open_locale BigOperators
 
 open_locale TopologicalSpace
 
--- error in Combinatorics.Derangements.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem num_derangements_tendsto_inv_e : tendsto (λ
- n, «expr / »((num_derangements n : exprℝ()), n.factorial)) at_top (expr𝓝() (real.exp «expr- »(1))) :=
-begin
-  let [ident s] [":", expr exprℕ() → exprℝ()] [":=", expr λ
-   n, «expr∑ in , »((k), finset.range n, «expr / »(«expr ^ »((«expr- »(1) : exprℝ()), k), k.factorial))],
-  suffices [] [":", expr ∀
-   n : exprℕ(), «expr = »(«expr / »((num_derangements n : exprℝ()), n.factorial), s «expr + »(n, 1))],
-  { simp_rw [expr this] [],
-    rw [expr tendsto_add_at_top_iff_nat 1] [],
-    apply [expr has_sum.tendsto_sum_nat],
-    rw [expr real.exp_eq_exp_ℝ_ℝ] [],
-    exact [expr exp_series_field_has_sum_exp («expr- »(1) : exprℝ())] },
-  intro [ident n],
-  rw ["[", "<-", expr int.cast_coe_nat, ",", expr num_derangements_sum, "]"] [],
-  push_cast [] [],
-  rw [expr finset.sum_div] [],
-  refine [expr finset.sum_congr (refl _) _],
-  intros [ident k, ident hk],
-  have [ident h_le] [":", expr «expr ≤ »(k, n)] [":=", expr finset.mem_range_succ_iff.mp hk],
-  rw ["[", expr nat.asc_factorial_eq_div, ",", expr add_tsub_cancel_of_le h_le, "]"] [],
-  push_cast ["[", expr nat.factorial_dvd_factorial h_le, "]"] [],
-  field_simp [] ["[", expr nat.factorial_ne_zero, "]"] [] [],
-  ring []
-end
+theorem num_derangements_tendsto_inv_e :
+  tendsto (fun n => (numDerangements n : ℝ) / n.factorial) at_top (𝓝 (Real.exp (-1))) :=
+  by 
+    let s : ℕ → ℝ := fun n => ∑ k in Finset.range n, ((-1 : ℝ)^k) / k.factorial 
+    suffices  : ∀ n : ℕ, (numDerangements n : ℝ) / n.factorial = s (n+1)
+    ·
+      simpRw [this]
+      rw [tendsto_add_at_top_iff_nat 1]
+      apply HasSum.tendsto_sum_nat 
+      rw [Real.exp_eq_exp_ℝ_ℝ]
+      exact exp_series_field_has_sum_exp (-1 : ℝ)
+    intro n 
+    rw [←Int.cast_coe_nat, num_derangements_sum]
+    pushCast 
+    rw [Finset.sum_div]
+    refine' Finset.sum_congr (refl _) _ 
+    intro k hk 
+    have h_le : k ≤ n := finset.mem_range_succ_iff.mp hk 
+    rw [Nat.asc_factorial_eq_div, add_tsub_cancel_of_le h_le]
+    pushCast [Nat.factorial_dvd_factorial h_le]
+    fieldSimp [Nat.factorial_ne_zero]
+    ring
 

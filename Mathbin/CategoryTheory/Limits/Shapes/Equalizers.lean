@@ -39,9 +39,9 @@ general limits can be used.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
-open CategoryTheory
+open CategoryTheory Opposite
 
 namespace CategoryTheory.Limits
 
@@ -49,22 +49,21 @@ attribute [local tidy] tactic.case_bash
 
 universe v u u₂
 
--- error in CategoryTheory.Limits.Shapes.Equalizers: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The type of objects for the diagram indexing a (co)equalizer. -/
-@[derive #[expr decidable_eq], derive #[expr inhabited]]
 inductive walking_parallel_pair : Type v
-| zero
-| one
+  | zero
+  | one deriving [anonymous], [anonymous]
 
 open WalkingParallelPair
 
--- error in CategoryTheory.Limits.Shapes.Equalizers: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- The type family of morphisms for the diagram indexing a (co)equalizer. -/
-@[derive #[expr decidable_eq]]
 inductive walking_parallel_pair_hom : walking_parallel_pair → walking_parallel_pair → Type v
-| left : walking_parallel_pair_hom zero one
-| right : walking_parallel_pair_hom zero one
-| id : ∀ X : walking_parallel_pair.{v}, walking_parallel_pair_hom X X
+  | left : walking_parallel_pair_hom zero one
+  | right : walking_parallel_pair_hom zero one
+  | id : ∀ X : walking_parallel_pair.{v}, walking_parallel_pair_hom X X deriving [anonymous]
 
 /-- Satisfying the inhabited linter -/
 instance : Inhabited (walking_parallel_pair_hom zero one) :=
@@ -85,6 +84,94 @@ instance walking_parallel_pair_hom_category : small_category walking_parallel_pa
 
 @[simp]
 theorem walking_parallel_pair_hom_id (X : walking_parallel_pair) : walking_parallel_pair_hom.id X = 𝟙 X :=
+  rfl
+
+/--
+The functor `walking_parallel_pair ⥤ walking_parallel_pairᵒᵖ` sending left to left and right to
+right.
+-/
+def walking_parallel_pair_op : walking_parallel_pair.{u} ⥤ walking_parallel_pair.{u₂}ᵒᵖ :=
+  { obj :=
+      fun x =>
+        op$
+          by 
+            cases x 
+            exacts[one, zero],
+    map :=
+      fun i j f =>
+        by 
+          cases f <;> apply Quiver.Hom.op 
+          exacts[left, right, walking_parallel_pair_hom.id _],
+    map_comp' :=
+      by 
+        rintro (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _) <;> rfl }
+
+@[simp]
+theorem walking_parallel_pair_op_zero : walking_parallel_pair_op.obj zero = op one :=
+  rfl
+
+@[simp]
+theorem walking_parallel_pair_op_one : walking_parallel_pair_op.obj one = op zero :=
+  rfl
+
+@[simp]
+theorem walking_parallel_pair_op_left : walking_parallel_pair_op.map left = @Quiver.Hom.op _ _ zero one left :=
+  rfl
+
+@[simp]
+theorem walking_parallel_pair_op_right : walking_parallel_pair_op.map right = @Quiver.Hom.op _ _ zero one right :=
+  rfl
+
+/--
+The equivalence `walking_parallel_pair ⥤ walking_parallel_pairᵒᵖ` sending left to left and right to
+right.
+-/
+@[simps Functor inverse]
+def walking_parallel_pair_op_equiv : walking_parallel_pair.{u} ≌ walking_parallel_pair.{u₂}ᵒᵖ :=
+  { Functor := walking_parallel_pair_op, inverse := walking_parallel_pair_op.leftOp,
+    unitIso :=
+      nat_iso.of_components
+        (fun j =>
+          eq_to_iso
+            (by 
+              cases j <;> rfl))
+        (by 
+          rintro (_ | _) (_ | _) (_ | _ | _) <;> rfl),
+    counitIso :=
+      nat_iso.of_components
+        (fun j =>
+          eq_to_iso
+            (by 
+              induction j using Opposite.rec 
+              cases j <;> rfl))
+        fun i j f =>
+          by 
+            induction i using Opposite.rec 
+            induction j using Opposite.rec 
+            let g := f.unop 
+            have  : f = g.op := rfl 
+            clearValue g 
+            subst this 
+            rcases i with (_ | _) <;> rcases j with (_ | _) <;> rcases g with (_ | _ | _) <;> rfl }
+
+@[simp]
+theorem walking_parallel_pair_op_equiv_unit_iso_zero :
+  walking_parallel_pair_op_equiv.{u, u₂}.unitIso.app zero = iso.refl zero :=
+  rfl
+
+@[simp]
+theorem walking_parallel_pair_op_equiv_unit_iso_one :
+  walking_parallel_pair_op_equiv.{u, u₂}.unitIso.app one = iso.refl one :=
+  rfl
+
+@[simp]
+theorem walking_parallel_pair_op_equiv_counit_iso_zero :
+  walking_parallel_pair_op_equiv.{u, u₂}.counitIso.app (op zero) = iso.refl (op zero) :=
+  rfl
+
+@[simp]
+theorem walking_parallel_pair_op_equiv_counit_iso_one :
+  walking_parallel_pair_op_equiv.{u, u₂}.counitIso.app (op one) = iso.refl (op one) :=
   rfl
 
 variable {C : Type u} [category.{v} C]

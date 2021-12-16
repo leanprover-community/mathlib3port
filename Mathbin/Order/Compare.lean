@@ -204,7 +204,7 @@ variable {x y} {β : Type _} [LinearOrderₓ β] {x' y' : β}
 
 theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' :=
   by 
-    split 
+    constructor 
     rw [←cmp_swap _ y, ←cmp_swap _ y']
     cc 
     rw [←cmp_swap _ x, ←cmp_swap _ x']

@@ -24,14 +24,14 @@ section Semiringₓ
 
 variable [NonUnitalNonAssocSemiring β]
 
-theorem sum_mul : ((∑x in s, f x)*b) = ∑x in s, f x*b :=
+theorem sum_mul : ((∑ x in s, f x)*b) = ∑ x in s, f x*b :=
   AddMonoidHom.map_sum (AddMonoidHom.mulRight b) _ s
 
-theorem mul_sum : (b*∑x in s, f x) = ∑x in s, b*f x :=
+theorem mul_sum : (b*∑ x in s, f x) = ∑ x in s, b*f x :=
   AddMonoidHom.map_sum (AddMonoidHom.mulLeft b) _ s
 
 theorem sum_mul_sum {ι₁ : Type _} {ι₂ : Type _} (s₁ : Finset ι₁) (s₂ : Finset ι₂) (f₁ : ι₁ → β) (f₂ : ι₂ → β) :
-  ((∑x₁ in s₁, f₁ x₁)*∑x₂ in s₂, f₂ x₂) = ∑p in s₁.product s₂, f₁ p.1*f₂ p.2 :=
+  ((∑ x₁ in s₁, f₁ x₁)*∑ x₂ in s₂, f₂ x₂) = ∑ p in s₁.product s₂, f₁ p.1*f₂ p.2 :=
   by 
     rw [sum_product, sum_mul, sum_congr rfl]
     intros 
@@ -44,18 +44,18 @@ section Semiringₓ
 variable [NonAssocSemiring β]
 
 theorem sum_mul_boole [DecidableEq α] (s : Finset α) (f : α → β) (a : α) :
-  (∑x in s, f x*ite (a = x) 1 0) = ite (a ∈ s) (f a) 0 :=
+  (∑ x in s, f x*ite (a = x) 1 0) = ite (a ∈ s) (f a) 0 :=
   by 
     simp 
 
 theorem sum_boole_mul [DecidableEq α] (s : Finset α) (f : α → β) (a : α) :
-  (∑x in s, ite (a = x) 1 0*f x) = ite (a ∈ s) (f a) 0 :=
+  (∑ x in s, ite (a = x) 1 0*f x) = ite (a ∈ s) (f a) 0 :=
   by 
     simp 
 
 end Semiringₓ
 
-theorem sum_div [DivisionRing β] {s : Finset α} {f : α → β} {b : β} : (∑x in s, f x) / b = ∑x in s, f x / b :=
+theorem sum_div [DivisionRing β] {s : Finset α} {f : α → β} {b : β} : (∑ x in s, f x) / b = ∑ x in s, f x / b :=
   by 
     simp only [div_eq_mul_inv, sum_mul]
 
@@ -63,65 +63,70 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ β]
 
--- error in Algebra.BigOperators.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p₁ «expr ∈ » pi s t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p₂ «expr ∈ » pi s t)
 /-- The product over a sum can be written as a sum over the product of sets, `finset.pi`.
   `finset.prod_univ_sum` is an alternative statement when the product is over `univ`. -/
-theorem prod_sum
-{δ : α → Type*}
-[decidable_eq α]
-[∀ a, decidable_eq (δ a)]
-{s : finset α}
-{t : ∀ a, finset (δ a)}
-{f : ∀
- a, δ a → β} : «expr = »(«expr∏ in , »((a), s, «expr∑ in , »((b), t a, f a b)), «expr∑ in , »((p), s.pi t, «expr∏ in , »((x), s.attach, f x.1 (p x.1 x.2)))) :=
-begin
-  induction [expr s] ["using", ident finset.induction] ["with", ident a, ident s, ident ha, ident ih] [],
-  { rw ["[", expr pi_empty, ",", expr sum_singleton, "]"] [],
-    refl },
-  { have [ident h₁] [":", expr ∀
-     x «expr ∈ » t a, ∀
-     y «expr ∈ » t a, ∀
-     h : «expr ≠ »(x, y), disjoint (image (pi.cons s a x) (pi s t)) (image (pi.cons s a y) (pi s t))] [],
-    { assume [binders (x hx y hy h)],
-      simp [] [] ["only"] ["[", expr disjoint_iff_ne, ",", expr mem_image, "]"] [] [],
-      rintros ["_", "⟨", ident p₂, ",", ident hp, ",", ident eq₂, "⟩", "_", "⟨", ident p₃, ",", ident hp₃, ",", ident eq₃, "⟩", ident eq],
-      have [] [":", expr «expr = »(pi.cons s a x p₂ a (mem_insert_self _ _), pi.cons s a y p₃ a (mem_insert_self _ _))] [],
-      { rw ["[", expr eq₂, ",", expr eq₃, ",", expr eq, "]"] [] },
-      rw ["[", expr pi.cons_same, ",", expr pi.cons_same, "]"] ["at", ident this],
-      exact [expr h this] },
-    rw ["[", expr prod_insert ha, ",", expr pi_insert ha, ",", expr ih, ",", expr sum_mul, ",", expr sum_bUnion h₁, "]"] [],
-    refine [expr sum_congr rfl (λ b _, _)],
-    have [ident h₂] [":", expr ∀
-     p₁ «expr ∈ » pi s t, ∀ p₂ «expr ∈ » pi s t, «expr = »(pi.cons s a b p₁, pi.cons s a b p₂) → «expr = »(p₁, p₂)] [],
-    from [expr assume p₁ h₁ p₂ h₂ eq, pi_cons_injective ha eq],
-    rw ["[", expr sum_image h₂, ",", expr mul_sum, "]"] [],
-    refine [expr sum_congr rfl (λ g _, _)],
-    rw ["[", expr attach_insert, ",", expr prod_insert, ",", expr prod_image, "]"] [],
-    { simp [] [] ["only"] ["[", expr pi.cons_same, "]"] [] [],
-      congr' [] ["with", "⟨", ident v, ",", ident hv, "⟩"],
-      congr' [] [],
-      exact [expr (pi.cons_ne (by rintro [ident rfl]; exact [expr ha hv])).symm] },
-    { exact [expr λ _ _ _ _, «expr ∘ »(subtype.eq, subtype.mk.inj)] },
-    { simp [] [] ["only"] ["[", expr mem_image, "]"] [] [],
-      rintro ["⟨", "⟨", "_", ",", ident hm, "⟩", ",", "_", ",", ident rfl, "⟩"],
-      exact [expr ha hm] } }
-end
+theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a, Finset (δ a)}
+  {f : ∀ a, δ a → β} : (∏ a in s, ∑ b in t a, f a b) = ∑ p in s.pi t, ∏ x in s.attach, f x.1 (p x.1 x.2) :=
+  by 
+    induction' s using Finset.induction with a s ha ih
+    ·
+      rw [pi_empty, sum_singleton]
+      rfl
+    ·
+      have h₁ :
+        ∀ x _ : x ∈ t a,
+          ∀ y _ : y ∈ t a, ∀ h : x ≠ y, Disjoint (image (pi.cons s a x) (pi s t)) (image (pi.cons s a y) (pi s t))
+      ·
+        intro x hx y hy h 
+        simp only [disjoint_iff_ne, mem_image]
+        rintro _ ⟨p₂, hp, eq₂⟩ _ ⟨p₃, hp₃, eq₃⟩ eq 
+        have  : pi.cons s a x p₂ a (mem_insert_self _ _) = pi.cons s a y p₃ a (mem_insert_self _ _)
+        ·
+          rw [eq₂, eq₃, Eq]
+        rw [pi.cons_same, pi.cons_same] at this 
+        exact h this 
+      rw [prod_insert ha, pi_insert ha, ih, sum_mul, sum_bUnion h₁]
+      refine' sum_congr rfl fun b _ => _ 
+      have h₂ : ∀ p₁ _ : p₁ ∈ pi s t, ∀ p₂ _ : p₂ ∈ pi s t, pi.cons s a b p₁ = pi.cons s a b p₂ → p₁ = p₂ 
+      exact fun p₁ h₁ p₂ h₂ eq => pi_cons_injective ha Eq 
+      rw [sum_image h₂, mul_sum]
+      refine' sum_congr rfl fun g _ => _ 
+      rw [attach_insert, prod_insert, prod_image]
+      ·
+        simp only [pi.cons_same]
+        congr with ⟨v, hv⟩
+        congr 
+        exact
+          (pi.cons_ne
+              (by 
+                rintro rfl <;> exact ha hv)).symm
+      ·
+        exact fun _ _ _ _ => Subtype.eq ∘ Subtype.mk.injₓ
+      ·
+        simp only [mem_image]
+        rintro ⟨⟨_, hm⟩, _, rfl⟩
+        exact ha hm
 
 open_locale Classical
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- The product of `f a + g a` over all of `s` is the sum
   over the powerset of `s` of the product of `f` over a subset `t` times
   the product of `g` over the complement of `t`  -/
 theorem prod_add (f g : α → β) (s : Finset α) :
-  (∏a in s, f a+g a) = ∑t in s.powerset, (∏a in t, f a)*∏a in s \ t, g a :=
-  calc (∏a in s, f a+g a) = ∏a in s, ∑p in ({True, False} : Finset Prop), if p then f a else g a :=
+  (∏ a in s, f a+g a) = ∑ t in s.powerset, (∏ a in t, f a)*∏ a in s \ t, g a :=
+  calc (∏ a in s, f a+g a) = ∏ a in s, ∑ p in ({True, False} : Finset Prop), if p then f a else g a :=
     by 
       simp 
     _ =
-      ∑p in (s.pi fun _ => {True, False} : Finset (∀ a _ : a ∈ s, Prop)),
-        ∏a in s.attach, if p a.1 a.2 then f a.1 else g a.1 :=
+      ∑ p in (s.pi fun _ => {True, False} : Finset (∀ a _ : a ∈ s, Prop)),
+        ∏ a in s.attach, if p a.1 a.2 then f a.1 else g a.1 :=
     prod_sum 
-    _ = ∑t in s.powerset, (∏a in t, f a)*∏a in s \ t, g a :=
+    _ = ∑ t in s.powerset, (∏ a in t, f a)*∏ a in s \ t, g a :=
     by 
       refine' Eq.symm (sum_bij (fun t _ a _ => a ∈ t) _ _ _ _)
       ·
@@ -130,7 +135,7 @@ theorem prod_add (f g : α → β) (s : Finset α) :
         intro t ht 
         erw [prod_ite (fun a : { a // a ∈ s } => f a.1) fun a : { a // a ∈ s } => g a.1]
         refine'
-            congr_arg2 _
+            congr_arg2ₓ _
               (prod_bij (fun a : α ha : a ∈ t => ⟨a, mem_powerset.1 ht ha⟩) _ _ _
                 fun b hb =>
                   ⟨b,
@@ -159,38 +164,38 @@ theorem prod_add (f g : α → β) (s : Finset α) :
               funext  <;> intros  <;> simp ⟩
     
 
--- error in Algebra.BigOperators.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `∏ i, (f i + g i) = (∏ i, f i) + ∑ i, g i * (∏ j < i, f j + g j) * (∏ j > i, f j)`. -/
-theorem prod_add_ordered
-{ι R : Type*}
-[comm_semiring R]
-[linear_order ι]
-(s : finset ι)
-(f
- g : ι → R) : «expr = »(«expr∏ in , »((i), s, «expr + »(f i, g i)), «expr + »(«expr∏ in , »((i), s, f i), «expr∑ in , »((i), s, «expr * »(«expr * »(g i, «expr∏ in , »((j), s.filter ((«expr < » i)), «expr + »(f j, g j))), «expr∏ in , »((j), s.filter (λ
-      j, «expr < »(i, j)), f j))))) :=
-begin
-  refine [expr finset.induction_on_max s (by simp [] [] [] [] [] []) _],
-  clear [ident s],
-  intros [ident a, ident s, ident ha, ident ihs],
-  have [ident ha'] [":", expr «expr ∉ »(a, s)] [],
-  from [expr λ ha', (ha a ha').false],
-  rw ["[", expr prod_insert ha', ",", expr prod_insert ha', ",", expr sum_insert ha', ",", expr filter_insert, ",", expr if_neg (lt_irrefl a), ",", expr filter_true_of_mem ha, ",", expr ihs, ",", expr add_mul, ",", expr mul_add, ",", expr mul_add, ",", expr add_assoc, "]"] [],
-  congr' [1] [],
-  rw [expr add_comm] [],
-  congr' [1] [],
-  { rw ["[", expr filter_false_of_mem, ",", expr prod_empty, ",", expr mul_one, "]"] [],
-    exact [expr (forall_mem_insert _ _ _).2 ⟨lt_irrefl a, λ i hi, (ha i hi).not_lt⟩] },
-  { rw [expr mul_sum] [],
-    refine [expr sum_congr rfl (λ i hi, _)],
-    rw ["[", expr filter_insert, ",", expr if_neg (ha i hi).not_lt, ",", expr filter_insert, ",", expr if_pos (ha i hi), ",", expr prod_insert, ",", expr mul_left_comm, "]"] [],
-    exact [expr mt (λ ha, (mem_filter.1 ha).1) ha'] }
-end
+theorem prod_add_ordered {ι R : Type _} [CommSemiringₓ R] [LinearOrderₓ ι] (s : Finset ι) (f g : ι → R) :
+  (∏ i in s, f i+g i) =
+    (∏ i in s, f i)+∑ i in s, (g i*∏ j in s.filter (· < i), f j+g j)*∏ j in s.filter fun j => i < j, f j :=
+  by 
+    refine'
+      Finset.induction_on_max s
+        (by 
+          simp )
+        _ 
+    clear s 
+    intro a s ha ihs 
+    have ha' : a ∉ s 
+    exact fun ha' => (ha a ha').False 
+    rw [prod_insert ha', prod_insert ha', sum_insert ha', filter_insert, if_neg (lt_irreflₓ a), filter_true_of_mem ha,
+      ihs, add_mulₓ, mul_addₓ, mul_addₓ, add_assocₓ]
+    congr 1
+    rw [add_commₓ]
+    congr 1
+    ·
+      rw [filter_false_of_mem, prod_empty, mul_oneₓ]
+      exact (forall_mem_insert _ _ _).2 ⟨lt_irreflₓ a, fun i hi => (ha i hi).not_lt⟩
+    ·
+      rw [mul_sum]
+      refine' sum_congr rfl fun i hi => _ 
+      rw [filter_insert, if_neg (ha i hi).not_lt, filter_insert, if_pos (ha i hi), prod_insert, mul_left_commₓ]
+      exact mt (fun ha => (mem_filter.1 ha).1) ha'
 
 /-- `∏ i, (f i - g i) = (∏ i, f i) - ∑ i, g i * (∏ j < i, f j - g j) * (∏ j > i, f j)`. -/
 theorem prod_sub_ordered {ι R : Type _} [CommRingₓ R] [LinearOrderₓ ι] (s : Finset ι) (f g : ι → R) :
-  (∏i in s, f i - g i) =
-    (∏i in s, f i) - ∑i in s, (g i*∏j in s.filter (· < i), f j - g j)*∏j in s.filter fun j => i < j, f j :=
+  (∏ i in s, f i - g i) =
+    (∏ i in s, f i) - ∑ i in s, (g i*∏ j in s.filter (· < i), f j - g j)*∏ j in s.filter fun j => i < j, f j :=
   by 
     simp only [sub_eq_add_neg]
     convert prod_add_ordered s f fun i => -g i 
@@ -199,7 +204,7 @@ theorem prod_sub_ordered {ι R : Type _} [CommRingₓ R] [LinearOrderₓ ι] (s 
 /-- `∏ i, (1 - f i) = 1 - ∑ i, f i * (∏ j < i, 1 - f j)`. This formula is useful in construction of
 a partition of unity from a collection of “bump” functions.  -/
 theorem prod_one_sub_ordered {ι R : Type _} [CommRingₓ R] [LinearOrderₓ ι] (s : Finset ι) (f : ι → R) :
-  (∏i in s, 1 - f i) = 1 - ∑i in s, f i*∏j in s.filter (· < i), 1 - f j :=
+  (∏ i in s, 1 - f i) = 1 - ∑ i in s, f i*∏ j in s.filter (· < i), 1 - f j :=
   by 
     rw [prod_sub_ordered]
     simp 
@@ -207,13 +212,13 @@ theorem prod_one_sub_ordered {ι R : Type _} [CommRingₓ R] [LinearOrderₓ ι]
 /--  Summing `a^s.card * b^(n-s.card)` over all finite subsets `s` of a `finset`
 gives `(a + b)^s.card`.-/
 theorem sum_pow_mul_eq_add_pow {α R : Type _} [CommSemiringₓ R] (a b : R) (s : Finset α) :
-  (∑t in s.powerset, (a ^ t.card)*b ^ (s.card - t.card)) = (a+b) ^ s.card :=
+  (∑ t in s.powerset, (a ^ t.card)*b ^ (s.card - t.card)) = (a+b) ^ s.card :=
   by 
     rw [←prod_const, prod_add]
     refine' Finset.sum_congr rfl fun t ht => _ 
     rw [prod_const, prod_const, ←card_sdiff (mem_powerset.1 ht)]
 
-theorem prod_pow_eq_pow_sum {x : β} {f : α → ℕ} : ∀ {s : Finset α}, (∏i in s, x ^ f i) = x ^ ∑x in s, f x :=
+theorem prod_pow_eq_pow_sum {x : β} {f : α → ℕ} : ∀ {s : Finset α}, (∏ i in s, x ^ f i) = x ^ ∑ x in s, f x :=
   by 
     apply Finset.induction
     ·
@@ -222,14 +227,15 @@ theorem prod_pow_eq_pow_sum {x : β} {f : α → ℕ} : ∀ {s : Finset α}, (�
       intro a s has H 
       rw [Finset.prod_insert has, Finset.sum_insert has, pow_addₓ, H]
 
-theorem dvd_sum {b : β} {s : Finset α} {f : α → β} (h : ∀ x _ : x ∈ s, b ∣ f x) : b ∣ ∑x in s, f x :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+theorem dvd_sum {b : β} {s : Finset α} {f : α → β} (h : ∀ x _ : x ∈ s, b ∣ f x) : b ∣ ∑ x in s, f x :=
   Multiset.dvd_sum
     fun y hy =>
       by 
         rcases Multiset.mem_map.1 hy with ⟨x, hx, rfl⟩ <;> exact h x hx
 
 @[normCast]
-theorem prod_nat_cast (s : Finset α) (f : α → ℕ) : «expr↑ » (∏x in s, f x : ℕ) = ∏x in s, (f x : β) :=
+theorem prod_nat_cast (s : Finset α) (f : α → ℕ) : ↑(∏ x in s, f x : ℕ) = ∏ x in s, (f x : β) :=
   (Nat.castRingHom β).map_prod f s
 
 end CommSemiringₓ
@@ -238,7 +244,7 @@ section CommRingₓ
 
 variable {R : Type _} [CommRingₓ R]
 
-theorem prod_range_cast_nat_sub (n k : ℕ) : (∏i in range k, (n - i : R)) = (∏i in range k, n - i : ℕ) :=
+theorem prod_range_cast_nat_sub (n k : ℕ) : (∏ i in range k, (n - i : R)) = (∏ i in range k, n - i : ℕ) :=
   by 
     rw [prod_nat_cast]
     cases' le_or_ltₓ k n with hkn hnk
@@ -254,7 +260,7 @@ end CommRingₓ
 of `s`, and over all subsets of `s` to which one adds `x`. -/
 @[toAdditive]
 theorem prod_powerset_insert [DecidableEq α] [CommMonoidₓ β] {s : Finset α} {x : α} (h : x ∉ s) (f : Finset α → β) :
-  (∏a in (insert x s).Powerset, f a) = (∏a in s.powerset, f a)*∏t in s.powerset, f (insert x t) :=
+  (∏ a in (insert x s).Powerset, f a) = (∏ a in s.powerset, f a)*∏ t in s.powerset, f (insert x t) :=
   by 
     rw [powerset_insert, Finset.prod_union, Finset.prod_image]
     ·
@@ -272,7 +278,7 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoidₓ β] {s : Finset α}
 sets of subsets of `s` with `card s = k`, for `k = 1, ... , card s`. -/
 @[toAdditive]
 theorem prod_powerset [CommMonoidₓ β] (s : Finset α) (f : Finset α → β) :
-  (∏t in powerset s, f t) = ∏j in range (card s+1), ∏t in powerset_len j s, f t :=
+  (∏ t in powerset s, f t) = ∏ j in range (card s+1), ∏ t in powerset_len j s, f t :=
   by 
     classical 
     rw [powerset_card_bUnion, prod_bUnion]

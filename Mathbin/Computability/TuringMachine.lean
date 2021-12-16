@@ -289,13 +289,13 @@ theorem list_blank.nth_mk {Γ} [Inhabited Γ] (l : List Γ) (n : ℕ) : (list_bl
 @[simp]
 theorem list_blank.nth_zero {Γ} [Inhabited Γ] (l : list_blank Γ) : l.nth 0 = l.head :=
   by 
-    conv  => toLHS rw [←list_blank.cons_head_tail l]
+    conv  => lhs rw [←list_blank.cons_head_tail l]
     exact Quotientₓ.induction_on' l.tail fun l => rfl
 
 @[simp]
 theorem list_blank.nth_succ {Γ} [Inhabited Γ] (l : list_blank Γ) (n : ℕ) : l.nth (n+1) = l.tail.nth n :=
   by 
-    conv  => toLHS rw [←list_blank.cons_head_tail l]
+    conv  => lhs rw [←list_blank.cons_head_tail l]
     exact Quotientₓ.induction_on' l.tail fun l => rfl
 
 @[ext]
@@ -387,14 +387,14 @@ theorem list_blank.map_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_m
 theorem list_blank.head_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_map Γ Γ') (l : list_blank Γ) :
   (l.map f).head = f l.head :=
   by 
-    conv  => toLHS rw [←list_blank.cons_head_tail l]
+    conv  => lhs rw [←list_blank.cons_head_tail l]
     exact Quotientₓ.induction_on' l fun a => rfl
 
 @[simp]
 theorem list_blank.tail_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_map Γ Γ') (l : list_blank Γ) :
   (l.map f).tail = l.tail.map f :=
   by 
-    conv  => toLHS rw [←list_blank.cons_head_tail l]
+    conv  => lhs rw [←list_blank.cons_head_tail l]
     exact Quotientₓ.induction_on' l fun a => rfl
 
 @[simp]
@@ -490,11 +490,13 @@ instance tape.inhabited {Γ} [Inhabited Γ] : Inhabited (tape Γ) :=
   ⟨by 
       constructor <;> apply default⟩
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- A direction for the turing machine `move` command, either
-  left or right. -/ @[derive #[expr decidable_eq], derive #[expr inhabited]] inductive dir
-| left
-| right
+  left or right. -/
+inductive dir
+  | left
+  | right deriving [anonymous], [anonymous]
 
 /-- The "inclusive" left side of the tape, including both `left` and `head`. -/
 def tape.left₀ {Γ} [Inhabited Γ] (T : tape Γ) : list_blank Γ :=
@@ -608,7 +610,7 @@ theorem tape.move_left_nth {Γ} [Inhabited Γ] : ∀ T : tape Γ i : ℤ, (T.mov
 @[simp]
 theorem tape.move_right_nth {Γ} [Inhabited Γ] (T : tape Γ) (i : ℤ) : (T.move dir.right).nth i = T.nth (i+1) :=
   by 
-    conv  => toRHS rw [←T.move_right_left] <;> rw [tape.move_left_nth, add_sub_cancel]
+    conv  => rhs rw [←T.move_right_left] <;> rw [tape.move_left_nth, add_sub_cancel]
 
 @[simp]
 theorem tape.move_right_n_head {Γ} [Inhabited Γ] (T : tape Γ) (i : ℕ) : ((tape.move dir.right^[i]) T).head = T.nth i :=
@@ -846,25 +848,19 @@ def respects {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ → Opt
       | none => f₂ a₂ = none :
       Prop)
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_reaches₁
-{σ₁ σ₂ f₁ f₂}
-{tr : σ₁ → σ₂ → exprProp()}
-(H : respects f₁ f₂ tr)
-{a₁ a₂}
-(aa : tr a₁ a₂)
-{b₁}
-(ab : reaches₁ f₁ a₁ b₁) : «expr∃ , »((b₂), «expr ∧ »(tr b₁ b₂, reaches₁ f₂ a₂ b₂)) :=
-begin
-  induction [expr ab] [] ["with", ident c₁, ident ac, ident c₁, ident d₁, ident ac, ident cd, ident IH] [],
-  { have [] [] [":=", expr H aa],
-    rwa [expr show «expr = »(f₁ a₁, _), from ac] ["at", ident this] },
-  { rcases [expr IH, "with", "⟨", ident c₂, ",", ident cc, ",", ident ac₂, "⟩"],
-    have [] [] [":=", expr H cc],
-    rw [expr show «expr = »(f₁ c₁, _), from cd] ["at", ident this],
-    rcases [expr this, "with", "⟨", ident d₂, ",", ident dd, ",", ident cd₂, "⟩"],
-    exact [expr ⟨_, dd, ac₂.trans cd₂⟩] }
-end
+theorem tr_reaches₁ {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : respects f₁ f₂ tr) {a₁ a₂} (aa : tr a₁ a₂) {b₁}
+  (ab : reaches₁ f₁ a₁ b₁) : ∃ b₂, tr b₁ b₂ ∧ reaches₁ f₂ a₂ b₂ :=
+  by 
+    induction' ab with c₁ ac c₁ d₁ ac cd IH
+    ·
+      have  := H aa 
+      rwa [show f₁ a₁ = _ from ac] at this
+    ·
+      rcases IH with ⟨c₂, cc, ac₂⟩
+      have  := H cc 
+      rw [show f₁ c₁ = _ from cd] at this 
+      rcases this with ⟨d₂, dd, cd₂⟩
+      exact ⟨_, dd, ac₂.trans cd₂⟩
 
 theorem tr_reaches {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : respects f₁ f₂ tr) {a₁ a₂} (aa : tr a₁ a₂) {b₁}
   (ab : reaches f₁ a₁ b₁) : ∃ b₂, tr b₁ b₂ ∧ reaches f₂ a₂ b₂ :=
@@ -877,69 +873,58 @@ theorem tr_reaches {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : 
         let ⟨b₂, bb, h⟩ := tr_reaches₁ H aa ab
         ⟨b₂, bb, h.to_refl⟩
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_reaches_rev
-{σ₁ σ₂ f₁ f₂}
-{tr : σ₁ → σ₂ → exprProp()}
-(H : respects f₁ f₂ tr)
-{a₁ a₂}
-(aa : tr a₁ a₂)
-{b₂}
-(ab : reaches f₂ a₂ b₂) : «expr∃ , »((c₁ c₂), «expr ∧ »(reaches f₂ b₂ c₂, «expr ∧ »(tr c₁ c₂, reaches f₁ a₁ c₁))) :=
-begin
-  induction [expr ab] [] ["with", ident c₂, ident d₂, ident ac, ident cd, ident IH] [],
-  { exact [expr ⟨_, _, refl_trans_gen.refl, aa, refl_trans_gen.refl⟩] },
-  { rcases [expr IH, "with", "⟨", ident e₁, ",", ident e₂, ",", ident ce, ",", ident ee, ",", ident ae, "⟩"],
-    rcases [expr refl_trans_gen.cases_head ce, "with", ident rfl, "|", "⟨", ident d', ",", ident cd', ",", ident de, "⟩"],
-    { have [] [] [":=", expr H ee],
-      revert [ident this],
-      cases [expr eg, ":", expr f₁ e₁] ["with", ident g₁]; simp [] [] ["only"] ["[", expr respects, ",", expr and_imp, ",", expr exists_imp_distrib, "]"] [] [],
-      { intro [ident c0],
-        cases [expr cd.symm.trans c0] [] },
-      { intros [ident g₂, ident gg, ident cg],
-        rcases [expr trans_gen.head'_iff.1 cg, "with", "⟨", ident d', ",", ident cd', ",", ident dg, "⟩"],
-        cases [expr option.mem_unique cd cd'] [],
-        exact [expr ⟨_, _, dg, gg, ae.tail eg⟩] } },
-    { cases [expr option.mem_unique cd cd'] [],
-      exact [expr ⟨_, _, de, ee, ae⟩] } }
-end
+theorem tr_reaches_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : respects f₁ f₂ tr) {a₁ a₂} (aa : tr a₁ a₂) {b₂}
+  (ab : reaches f₂ a₂ b₂) : ∃ c₁ c₂, reaches f₂ b₂ c₂ ∧ tr c₁ c₂ ∧ reaches f₁ a₁ c₁ :=
+  by 
+    induction' ab with c₂ d₂ ac cd IH
+    ·
+      exact ⟨_, _, refl_trans_gen.refl, aa, refl_trans_gen.refl⟩
+    ·
+      rcases IH with ⟨e₁, e₂, ce, ee, ae⟩
+      rcases refl_trans_gen.cases_head ce with (rfl | ⟨d', cd', de⟩)
+      ·
+        have  := H ee 
+        revert this 
+        cases' eg : f₁ e₁ with g₁ <;> simp only [respects, and_imp, exists_imp_distrib]
+        ·
+          intro c0 
+          cases cd.symm.trans c0
+        ·
+          intro g₂ gg cg 
+          rcases trans_gen.head'_iff.1 cg with ⟨d', cd', dg⟩
+          cases Option.mem_unique cd cd' 
+          exact ⟨_, _, dg, gg, ae.tail eg⟩
+      ·
+        cases Option.mem_unique cd cd' 
+        exact ⟨_, _, de, ee, ae⟩
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_eval
-{σ₁ σ₂ f₁ f₂}
-{tr : σ₁ → σ₂ → exprProp()}
-(H : respects f₁ f₂ tr)
-{a₁ b₁ a₂}
-(aa : tr a₁ a₂)
-(ab : «expr ∈ »(b₁, eval f₁ a₁)) : «expr∃ , »((b₂), «expr ∧ »(tr b₁ b₂, «expr ∈ »(b₂, eval f₂ a₂))) :=
-begin
-  cases [expr mem_eval.1 ab] ["with", ident ab, ident b0],
-  rcases [expr tr_reaches H aa ab, "with", "⟨", ident b₂, ",", ident bb, ",", ident ab, "⟩"],
-  refine [expr ⟨_, bb, mem_eval.2 ⟨ab, _⟩⟩],
-  have [] [] [":=", expr H bb],
-  rwa [expr b0] ["at", ident this]
-end
+theorem tr_eval {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : respects f₁ f₂ tr) {a₁ b₁ a₂} (aa : tr a₁ a₂)
+  (ab : b₁ ∈ eval f₁ a₁) : ∃ b₂, tr b₁ b₂ ∧ b₂ ∈ eval f₂ a₂ :=
+  by 
+    cases' mem_eval.1 ab with ab b0 
+    rcases tr_reaches H aa ab with ⟨b₂, bb, ab⟩
+    refine' ⟨_, bb, mem_eval.2 ⟨ab, _⟩⟩
+    have  := H bb 
+    rwa [b0] at this
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_eval_rev
-{σ₁ σ₂ f₁ f₂}
-{tr : σ₁ → σ₂ → exprProp()}
-(H : respects f₁ f₂ tr)
-{a₁ b₂ a₂}
-(aa : tr a₁ a₂)
-(ab : «expr ∈ »(b₂, eval f₂ a₂)) : «expr∃ , »((b₁), «expr ∧ »(tr b₁ b₂, «expr ∈ »(b₁, eval f₁ a₁))) :=
-begin
-  cases [expr mem_eval.1 ab] ["with", ident ab, ident b0],
-  rcases [expr tr_reaches_rev H aa ab, "with", "⟨", ident c₁, ",", ident c₂, ",", ident bc, ",", ident cc, ",", ident ac, "⟩"],
-  cases [expr (refl_trans_gen_iff_eq (by exact [expr option.eq_none_iff_forall_not_mem.1 b0])).1 bc] [],
-  refine [expr ⟨_, cc, mem_eval.2 ⟨ac, _⟩⟩],
-  have [] [] [":=", expr H cc],
-  cases [expr f₁ c₁] ["with", ident d₁],
-  { refl },
-  rcases [expr this, "with", "⟨", ident d₂, ",", ident dd, ",", ident bd, "⟩"],
-  rcases [expr trans_gen.head'_iff.1 bd, "with", "⟨", ident e, ",", ident h, ",", "_", "⟩"],
-  cases [expr b0.symm.trans h] []
-end
+theorem tr_eval_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : respects f₁ f₂ tr) {a₁ b₂ a₂} (aa : tr a₁ a₂)
+  (ab : b₂ ∈ eval f₂ a₂) : ∃ b₁, tr b₁ b₂ ∧ b₁ ∈ eval f₁ a₁ :=
+  by 
+    cases' mem_eval.1 ab with ab b0 
+    rcases tr_reaches_rev H aa ab with ⟨c₁, c₂, bc, cc, ac⟩
+    cases
+      (refl_trans_gen_iff_eq
+            (by 
+              exact Option.eq_none_iff_forall_not_mem.1 b0)).1
+        bc 
+    refine' ⟨_, cc, mem_eval.2 ⟨ac, _⟩⟩
+    have  := H cc 
+    cases' f₁ c₁ with d₁
+    ·
+      rfl 
+    rcases this with ⟨d₂, dd, bd⟩
+    rcases trans_gen.head'_iff.1 bd with ⟨e, h, _⟩
+    cases b0.symm.trans h
 
 theorem tr_eval_dom {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : respects f₁ f₂ tr) {a₁ a₂} (aa : tr a₁ a₂) :
   (eval f₂ a₂).Dom ↔ (eval f₁ a₁).Dom :=
@@ -1129,6 +1114,7 @@ in both directions, essentially an `equiv` without the laws. -/
 def machine.map : machine Γ' Λ'
 | q, l => (M (g₂ q) (f₂ l)).map (Prod.map g₁ (stmt.map f₁))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » S)
 theorem machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q _ : q ∈ S, g₂ (g₁ q) = q) :
   ∀ c : cfg Γ Λ, c.q ∈ S → (step M c).map (cfg.map f₁ g₁) = step (M.map f₁ f₂ g₁ g₂) (cfg.map f₁ g₁ c)
 | ⟨q, T⟩, h =>
@@ -1148,6 +1134,7 @@ theorem machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂
 theorem map_init (g₁ : pointed_map Λ Λ') (l : List Γ) : (init l).map f₁ g₁ = init (l.map f₁) :=
   congr (congr_argₓ cfg.mk g₁.map_pt) (tape.map_mk₁ _ _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » S)
 theorem machine.map_respects (g₁ : pointed_map Λ Λ') (g₂ : Λ' → Λ) {S} (ss : supports M S)
   (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q _ : q ∈ S, g₂ (g₁ q) = q) :
   respects (step M) (step (M.map f₁ f₂ g₁ g₂)) fun a b => a.q ∈ S ∧ cfg.map f₁ g₁ a = b
@@ -1337,6 +1324,7 @@ theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q�
 
 variable [Inhabited Λ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » S)
 /-- A set `S` of labels supports machine `M` if all the `goto`
   statements in the functions in `S` refer only to other functions
   in `S`. -/
@@ -1518,43 +1506,53 @@ open_locale Classical
 
 attribute [local simp] TM1.stmts₁_self
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_supports {S : finset Λ} (ss : TM1.supports M S) : TM0.supports tr «expr↑ »(tr_stmts S) :=
-⟨finset.mem_product.2 ⟨finset.some_mem_insert_none.2 (finset.mem_bUnion.2 ⟨_, ss.1, TM1.stmts₁_self⟩), finset.mem_univ _⟩, λ
- q a q' s h₁ h₂, begin
-   rcases [expr q, "with", "⟨", "_", "|", ident q, ",", ident v, "⟩"],
-   { cases [expr h₁] [] },
-   cases [expr q'] ["with", ident q', ident v'],
-   simp [] [] ["only"] ["[", expr tr_stmts, ",", expr finset.mem_coe, ",", expr finset.mem_product, ",", expr finset.mem_univ, ",", expr and_true, "]"] [] ["at", ident h₂, "⊢"],
-   cases [expr q'] [],
-   { exact [expr multiset.mem_cons_self _ _] },
-   simp [] [] ["only"] ["[", expr tr, ",", expr option.mem_def, "]"] [] ["at", ident h₁],
-   have [] [] [":=", expr TM1.stmts_supports_stmt ss h₂],
-   revert [ident this],
-   induction [expr q] [] [] ["generalizing", ident v]; intro [ident hs],
-   case [ident TM1.stmt.move, ":", ident d, ident q] { cases [expr h₁] [],
-     refine [expr TM1.stmts_trans _ h₂],
-     unfold [ident TM1.stmts₁] [],
-     exact [expr finset.mem_insert_of_mem TM1.stmts₁_self] },
-   case [ident TM1.stmt.write, ":", ident b, ident q] { cases [expr h₁] [],
-     refine [expr TM1.stmts_trans _ h₂],
-     unfold [ident TM1.stmts₁] [],
-     exact [expr finset.mem_insert_of_mem TM1.stmts₁_self] },
-   case [ident TM1.stmt.load, ":", ident b, ident q, ident IH] { refine [expr IH (TM1.stmts_trans _ h₂) _ h₁ hs],
-     unfold [ident TM1.stmts₁] [],
-     exact [expr finset.mem_insert_of_mem TM1.stmts₁_self] },
-   case [ident TM1.stmt.branch, ":", ident p, ident q₁, ident q₂, ident IH₁, ident IH₂] { change [expr «expr = »(cond (p a v) _ _, ((some q', v'), s))] [] ["at", ident h₁],
-     cases [expr p a v] [],
-     { refine [expr IH₂ (TM1.stmts_trans _ h₂) _ h₁ hs.2],
-       unfold [ident TM1.stmts₁] [],
-       exact [expr finset.mem_insert_of_mem (finset.mem_union_right _ TM1.stmts₁_self)] },
-     { refine [expr IH₁ (TM1.stmts_trans _ h₂) _ h₁ hs.1],
-       unfold [ident TM1.stmts₁] [],
-       exact [expr finset.mem_insert_of_mem (finset.mem_union_left _ TM1.stmts₁_self)] } },
-   case [ident TM1.stmt.goto, ":", ident l] { cases [expr h₁] [],
-     exact [expr finset.some_mem_insert_none.2 (finset.mem_bUnion.2 ⟨_, hs _ _, TM1.stmts₁_self⟩)] },
-   case [ident TM1.stmt.halt] { cases [expr h₁] [] }
- end⟩
+theorem tr_supports {S : Finset Λ} (ss : TM1.supports M S) : TM0.supports tr (↑tr_stmts S) :=
+  ⟨Finset.mem_product.2
+      ⟨Finset.some_mem_insert_none.2 (Finset.mem_bUnion.2 ⟨_, ss.1, TM1.stmts₁_self⟩), Finset.mem_univ _⟩,
+    fun q a q' s h₁ h₂ =>
+      by 
+        rcases q with ⟨_ | q, v⟩
+        ·
+          cases h₁ 
+        cases' q' with q' v' 
+        simp only [tr_stmts, Finset.mem_coe, Finset.mem_product, Finset.mem_univ, and_trueₓ] at h₂⊢
+        cases q'
+        ·
+          exact Multiset.mem_cons_self _ _ 
+        simp only [tr, Option.mem_def] at h₁ 
+        have  := TM1.stmts_supports_stmt ss h₂ 
+        revert this 
+        induction q generalizing v <;> intro hs 
+        case TM1.stmt.move d q => 
+          cases h₁ 
+          refine' TM1.stmts_trans _ h₂ 
+          unfold TM1.stmts₁ 
+          exact Finset.mem_insert_of_mem TM1.stmts₁_self 
+        case TM1.stmt.write b q => 
+          cases h₁ 
+          refine' TM1.stmts_trans _ h₂ 
+          unfold TM1.stmts₁ 
+          exact Finset.mem_insert_of_mem TM1.stmts₁_self 
+        case TM1.stmt.load b q IH => 
+          refine' IH (TM1.stmts_trans _ h₂) _ h₁ hs 
+          unfold TM1.stmts₁ 
+          exact Finset.mem_insert_of_mem TM1.stmts₁_self 
+        case TM1.stmt.branch p q₁ q₂ IH₁ IH₂ => 
+          change cond (p a v) _ _ = ((some q', v'), s) at h₁ 
+          cases p a v
+          ·
+            refine' IH₂ (TM1.stmts_trans _ h₂) _ h₁ hs.2
+            unfold TM1.stmts₁ 
+            exact Finset.mem_insert_of_mem (Finset.mem_union_right _ TM1.stmts₁_self)
+          ·
+            refine' IH₁ (TM1.stmts_trans _ h₂) _ h₁ hs.1
+            unfold TM1.stmts₁ 
+            exact Finset.mem_insert_of_mem (Finset.mem_union_left _ TM1.stmts₁_self)
+        case TM1.stmt.goto l => 
+          cases h₁ 
+          exact Finset.some_mem_insert_none.2 (Finset.mem_bUnion.2 ⟨_, hs _ _, TM1.stmts₁_self⟩)
+        case TM1.stmt.halt => 
+          cases h₁⟩
 
 end 
 
@@ -1592,23 +1590,19 @@ section
 
 parameter {Γ : Type _}[Inhabited Γ]
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_enc_dec
-[fintype Γ] : «expr∃ , »((n)
- (enc : Γ → vector bool n)
- (dec : vector bool n → Γ), «expr ∧ »(«expr = »(enc (default _), vector.repeat ff n), ∀
-  a, «expr = »(dec (enc a), a))) :=
-begin
-  letI [] [] [":=", expr classical.dec_eq Γ],
-  let [ident n] [] [":=", expr fintype.card Γ],
-  obtain ["⟨", ident F, "⟩", ":=", expr fintype.trunc_equiv_fin Γ],
-  let [ident G] [":", expr «expr ↪ »(fin n, fin n → bool)] [":=", expr ⟨λ
-    a b, «expr = »(a, b), λ a b h, «expr $ »(of_to_bool_true, «expr $ »((congr_fun h b).trans, to_bool_tt rfl))⟩],
-  let [ident H] [] [":=", expr (F.to_embedding.trans G).trans (equiv.vector_equiv_fin _ _).symm.to_embedding],
-  classical,
-  let [ident enc] [] [":=", expr H.set_value (default _) (vector.repeat ff n)],
-  exact [expr ⟨_, enc, function.inv_fun enc, H.set_value_eq _ _, function.left_inverse_inv_fun enc.2⟩]
-end
+theorem exists_enc_dec [Fintype Γ] :
+  ∃ (n : _)(enc : Γ → Vector Bool n)(dec : Vector Bool n → Γ),
+    enc (default _) = Vector.repeat ff n ∧ ∀ a, dec (enc a) = a :=
+  by 
+    let this' := Classical.decEq Γ 
+    let n := Fintype.card Γ 
+    obtain ⟨F⟩ := Fintype.truncEquivFin Γ 
+    let G : Finₓ n ↪ Finₓ n → Bool :=
+      ⟨fun a b => a = b, fun a b h => of_to_bool_true$ (congr_funₓ h b).trans$ to_bool_tt rfl⟩
+    let H := (F.to_embedding.trans G).trans (Equivₓ.vectorEquivFin _ _).symm.toEmbedding 
+    classical 
+    let enc := H.set_value (default _) (Vector.repeat ff n)
+    exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.left_inverse_inv_funₓ enc.2⟩
 
 parameter {Λ : Type _}[Inhabited Λ]
 
@@ -1693,7 +1687,7 @@ theorem supports_stmt_read {S} : ∀ {f : Γ → stmt'}, (∀ a, supports_stmt S
       induction' i with i IH
       ·
         exact hf _ 
-      split  <;> apply IH <;> intro  <;> apply hf
+      constructor <;> apply IH <;> intro  <;> apply hf
 
 parameter (enc0 : enc (default _) = Vector.repeat ff n)
 
@@ -1888,44 +1882,57 @@ are the normal states embedded from `S`, plus all write states accessible from t
 noncomputable def tr_supp (S : Finset Λ) : Finset Λ' :=
   S.bUnion fun l => insert (Λ'.normal l) (writes (M l))
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q' «expr ∈ » writes q)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q' «expr ∈ » writes q)
 theorem tr_supports {S} (ss : supports M S) : supports tr (tr_supp S) :=
-⟨finset.mem_bUnion.2 ⟨_, ss.1, finset.mem_insert_self _ _⟩, λ q h, begin
-   suffices [] [":", expr ∀
-    q, supports_stmt S q → ∀
-    q' «expr ∈ » writes q, «expr ∈ »(q', tr_supp M S) → «expr ∧ »(supports_stmt (tr_supp M S) (tr_normal dec q), ∀
-     q' «expr ∈ » writes q, supports_stmt (tr_supp M S) (tr enc dec M q'))],
-   { rcases [expr finset.mem_bUnion.1 h, "with", "⟨", ident l, ",", ident hl, ",", ident h, "⟩"],
-     have [] [] [":=", expr this _ (ss.2 _ hl) (λ q' hq, finset.mem_bUnion.2 ⟨_, hl, finset.mem_insert_of_mem hq⟩)],
-     rcases [expr finset.mem_insert.1 h, "with", ident rfl, "|", ident h],
-     exacts ["[", expr this.1, ",", expr this.2 _ h, "]"] },
-   intros [ident q, ident hs, ident hw],
-   induction [expr q] [] [] [],
-   case [ident TM1.stmt.move, ":", ident d, ident q, ident IH] { unfold [ident writes] ["at", ident hw, "⊢"],
-     replace [ident IH] [] [":=", expr IH hs hw],
-     refine [expr ⟨_, IH.2⟩],
-     cases [expr d] []; simp [] [] ["only"] ["[", expr tr_normal, ",", expr iterate, ",", expr supports_stmt_move, ",", expr IH, "]"] [] [] },
-   case [ident TM1.stmt.write, ":", ident f, ident q, ident IH] { unfold [ident writes] ["at", ident hw, "⊢"],
-     simp [] [] ["only"] ["[", expr finset.mem_image, ",", expr finset.mem_union, ",", expr finset.mem_univ, ",", expr exists_prop, ",", expr true_and, "]"] [] ["at", ident hw, "⊢"],
-     replace [ident IH] [] [":=", expr IH hs (λ q hq, hw q (or.inr hq))],
-     refine [expr ⟨«expr $ »(supports_stmt_read _, λ a _ s, hw _ (or.inl ⟨_, rfl⟩)), λ q' hq, _⟩],
-     rcases [expr hq, "with", "⟨", ident a, ",", ident q₂, ",", ident rfl, "⟩", "|", ident hq],
-     { simp [] [] ["only"] ["[", expr tr, ",", expr supports_stmt_write, ",", expr supports_stmt_move, ",", expr IH.1, "]"] [] [] },
-     { exact [expr IH.2 _ hq] } },
-   case [ident TM1.stmt.load, ":", ident a, ident q, ident IH] { unfold [ident writes] ["at", ident hw, "⊢"],
-     replace [ident IH] [] [":=", expr IH hs hw],
-     refine [expr ⟨supports_stmt_read _ (λ a, IH.1), IH.2⟩] },
-   case [ident TM1.stmt.branch, ":", ident p, ident q₁, ident q₂, ident IH₁, ident IH₂] { unfold [ident writes] ["at", ident hw, "⊢"],
-     simp [] [] ["only"] ["[", expr finset.mem_union, "]"] [] ["at", ident hw, "⊢"],
-     replace [ident IH₁] [] [":=", expr IH₁ hs.1 (λ q hq, hw q (or.inl hq))],
-     replace [ident IH₂] [] [":=", expr IH₂ hs.2 (λ q hq, hw q (or.inr hq))],
-     exact [expr ⟨supports_stmt_read _ (λ a, ⟨IH₁.1, IH₂.1⟩), λ q, or.rec (IH₁.2 _) (IH₂.2 _)⟩] },
-   case [ident TM1.stmt.goto, ":", ident l] { refine [expr ⟨_, λ _, false.elim⟩],
-     refine [expr supports_stmt_read _ (λ a _ s, _)],
-     exact [expr finset.mem_bUnion.2 ⟨_, hs _ _, finset.mem_insert_self _ _⟩] },
-   case [ident TM1.stmt.halt] { refine [expr ⟨_, λ _, false.elim⟩],
-     simp [] [] ["only"] ["[", expr supports_stmt, ",", expr supports_stmt_move, ",", expr tr_normal, "]"] [] [] }
- end⟩
+  ⟨Finset.mem_bUnion.2 ⟨_, ss.1, Finset.mem_insert_self _ _⟩,
+    fun q h =>
+      by 
+        suffices  :
+          ∀ q,
+            supports_stmt S q →
+              (∀ q' _ : q' ∈ writes q, q' ∈ tr_supp M S) →
+                supports_stmt (tr_supp M S) (tr_normal dec q) ∧
+                  ∀ q' _ : q' ∈ writes q, supports_stmt (tr_supp M S) (tr enc dec M q')
+        ·
+          rcases Finset.mem_bUnion.1 h with ⟨l, hl, h⟩
+          have  := this _ (ss.2 _ hl) fun q' hq => Finset.mem_bUnion.2 ⟨_, hl, Finset.mem_insert_of_mem hq⟩
+          rcases Finset.mem_insert.1 h with (rfl | h)
+          exacts[this.1, this.2 _ h]
+        intro q hs hw 
+        induction q 
+        case TM1.stmt.move d q IH => 
+          unfold writes  at hw⊢
+          replace IH := IH hs hw 
+          refine' ⟨_, IH.2⟩
+          cases d <;> simp only [tr_normal, iterate, supports_stmt_move, IH]
+        case TM1.stmt.write f q IH => 
+          unfold writes  at hw⊢
+          simp only [Finset.mem_image, Finset.mem_union, Finset.mem_univ, exists_prop, true_andₓ] at hw⊢
+          replace IH := IH hs fun q hq => hw q (Or.inr hq)
+          refine' ⟨supports_stmt_read _$ fun a _ s => hw _ (Or.inl ⟨_, rfl⟩), fun q' hq => _⟩
+          rcases hq with (⟨a, q₂, rfl⟩ | hq)
+          ·
+            simp only [tr, supports_stmt_write, supports_stmt_move, IH.1]
+          ·
+            exact IH.2 _ hq 
+        case TM1.stmt.load a q IH => 
+          unfold writes  at hw⊢
+          replace IH := IH hs hw 
+          refine' ⟨supports_stmt_read _ fun a => IH.1, IH.2⟩
+        case TM1.stmt.branch p q₁ q₂ IH₁ IH₂ => 
+          unfold writes  at hw⊢
+          simp only [Finset.mem_union] at hw⊢
+          replace IH₁ := IH₁ hs.1 fun q hq => hw q (Or.inl hq)
+          replace IH₂ := IH₂ hs.2 fun q hq => hw q (Or.inr hq)
+          exact ⟨supports_stmt_read _ fun a => ⟨IH₁.1, IH₂.1⟩, fun q => Or.ndrec (IH₁.2 _) (IH₂.2 _)⟩
+        case TM1.stmt.goto l => 
+          refine' ⟨_, fun _ => False.elim⟩
+          refine' supports_stmt_read _ fun a _ s => _ 
+          exact Finset.mem_bUnion.2 ⟨_, hs _ _, Finset.mem_insert_self _ _⟩
+        case TM1.stmt.halt => 
+          refine' ⟨_, fun _ => False.elim⟩
+          simp only [supports_stmt, supports_stmt_move, tr_normal]⟩
 
 end 
 
@@ -1990,26 +1997,31 @@ def tr : Λ' → stmt₁
 def tr_cfg : cfg₀ → cfg₁
 | ⟨q, T⟩ => ⟨cond (M q T.1).isSome (some (Λ'.normal q)) none, (), T⟩
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_respects : respects (TM0.step M) (TM1.step tr) (λ a b, «expr = »(tr_cfg a, b)) :=
-«expr $ »(fun_respects.2, λ ⟨q, T⟩, begin
-   cases [expr e, ":", expr M q T.1] [],
-   { simp [] [] ["only"] ["[", expr TM0.step, ",", expr tr_cfg, ",", expr e, "]"] [] []; exact [expr eq.refl none] },
-   cases [expr val] ["with", ident q', ident s],
-   simp [] [] ["only"] ["[", expr frespects, ",", expr TM0.step, ",", expr tr_cfg, ",", expr e, ",", expr option.is_some, ",", expr cond, ",", expr option.map_some', "]"] [] [],
-   have [] [":", expr «expr = »(TM1.step (tr M) ⟨some (Λ'.act s q'), (), T⟩, some ⟨some (Λ'.normal q'), (), TM0.step._match_1 T s⟩)] [],
-   { cases [expr s] ["with", ident d, ident a]; refl },
-   refine [expr trans_gen.head _ (trans_gen.head' this _)],
-   { unfold [ident TM1.step, ident TM1.step_aux, ident tr, ident has_mem.mem] [],
-     rw [expr e] [],
-     refl },
-   cases [expr e', ":", expr M q' _] [],
-   { apply [expr refl_trans_gen.single],
-     unfold [ident TM1.step, ident TM1.step_aux, ident tr, ident has_mem.mem] [],
-     rw [expr e'] [],
-     refl },
-   { refl }
- end)
+theorem tr_respects : respects (TM0.step M) (TM1.step tr) fun a b => tr_cfg a = b :=
+  fun_respects.2$
+    fun ⟨q, T⟩ =>
+      by 
+        cases e : M q T.1
+        ·
+          simp only [TM0.step, tr_cfg, e] <;> exact Eq.refl none 
+        cases' val with q' s 
+        simp only [frespects, TM0.step, tr_cfg, e, Option.isSome, cond, Option.map_some']
+        have  : TM1.step (tr M) ⟨some (Λ'.act s q'), (), T⟩ = some ⟨some (Λ'.normal q'), (), TM0.step._match_1 T s⟩
+        ·
+          cases' s with d a <;> rfl 
+        refine' trans_gen.head _ (trans_gen.head' this _)
+        ·
+          unfold TM1.step TM1.step_aux tr HasMem.Mem 
+          rw [e]
+          rfl 
+        cases e' : M q' _
+        ·
+          apply refl_trans_gen.single 
+          unfold TM1.step TM1.step_aux tr HasMem.Mem 
+          rw [e']
+          rfl
+        ·
+          rfl
 
 end 
 
@@ -2190,6 +2202,7 @@ theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q�
 
 variable [Inhabited Λ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » S)
 /-- Given a TM2 machine `M` and a set `S` of states, `supports M S` means that all states in
 `S` jump only to other states in `S`. -/
 def supports (M : Λ → stmt) (S : Finset Λ) :=
@@ -2334,7 +2347,7 @@ theorem add_bottom_modify_nth (f : (∀ k, Option (Γ k)) → ∀ k, Option (Γ 
 
 theorem add_bottom_nth_snd L n : ((add_bottom L).nth n).2 = L.nth n :=
   by 
-    conv  => toRHS rw [←add_bottom_map L, list_blank.nth_map] <;> rfl
+    conv  => rhs rw [←add_bottom_map L, list_blank.nth_map] <;> rfl
 
 theorem add_bottom_nth_succ_fst L n : ((add_bottom L).nth (n+1)).1 = ff :=
   by 
@@ -2472,73 +2485,106 @@ theorem tr_stmts₁_run {k s q} : tr_stmts₁ (st_run s q) = {go k s q, ret q} �
   by 
     rcases s with (_ | _ | _) <;> unfold tr_stmts₁ st_run
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_respects_aux₂
-{k q v}
-{S : ∀ k, list (Γ k)}
-{L : list_blank (∀ k, option (Γ k))}
-(hL : ∀ k, «expr = »(L.map (proj k), list_blank.mk ((S k).map some).reverse))
-(o) : let v' := st_var v (S k) o, Sk' := st_write v (S k) o, S' := update S k Sk' in
-«expr∃ , »((L' : list_blank (∀
-   k, option (Γ k))), «expr ∧ »(∀
-  k, «expr = »(L'.map (proj k), list_blank.mk ((S' k).map some).reverse), «expr = »(TM1.step_aux (tr_st_act q o) v («expr ^[ ]»(tape.move dir.right, (S k).length) (tape.mk' «expr∅»() (add_bottom L))), TM1.step_aux q v' («expr ^[ ]»(tape.move dir.right, (S' k).length) (tape.mk' «expr∅»() (add_bottom L')))))) :=
-begin
-  dsimp ["only"] [] [] [],
-  simp [] [] [] [] [] [],
-  cases [expr o] []; simp [] [] ["only"] ["[", expr st_write, ",", expr st_var, ",", expr tr_st_act, ",", expr TM1.step_aux, "]"] [] [],
-  case [ident TM2to1.st_act.push, ":", ident f] { have [] [] [":=", expr tape.write_move_right_n (λ
-      a : Γ', (a.1, update a.2 k (some (f v))))],
-    dsimp ["only"] [] [] ["at", ident this],
-    refine [expr ⟨_, λ
-      k', _, by rw ["[", expr tape.move_right_n_head, ",", expr list.length, ",", expr tape.mk'_nth_nat, ",", expr this, ",", expr add_bottom_modify_nth (λ
-        a, update a k (some (f v))), ",", expr nat.add_one, ",", expr iterate_succ', "]"] []⟩],
-    refine [expr list_blank.ext (λ i, _)],
-    rw ["[", expr list_blank.nth_map, ",", expr list_blank.nth_modify_nth, ",", expr proj, ",", expr pointed_map.mk_val, "]"] [],
-    by_cases [expr h', ":", expr «expr = »(k', k)],
-    { subst [expr k'],
-      split_ifs [] []; simp [] [] ["only"] ["[", expr list.reverse_cons, ",", expr function.update_same, ",", expr list_blank.nth_mk, ",", expr list.inth, ",", expr list.map, "]"] [] [],
-      { rw ["[", expr list.nth_le_nth, ",", expr list.nth_le_append_right, "]"] []; simp [] [] ["only"] ["[", expr h, ",", expr list.nth_le_singleton, ",", expr list.length_map, ",", expr list.length_reverse, ",", expr nat.succ_pos', ",", expr list.length_append, ",", expr lt_add_iff_pos_right, ",", expr list.length, "]"] [] [] },
-      rw ["[", "<-", expr proj_map_nth, ",", expr hL, ",", expr list_blank.nth_mk, ",", expr list.inth, "]"] [],
-      cases [expr lt_or_gt_of_ne h] ["with", ident h, ident h],
-      { rw [expr list.nth_append] [],
-        simpa [] [] ["only"] ["[", expr list.length_map, ",", expr list.length_reverse, "]"] [] ["using", expr h] },
-      { rw [expr gt_iff_lt] ["at", ident h],
-        rw ["[", expr list.nth_len_le, ",", expr list.nth_len_le, "]"] []; simp [] [] ["only"] ["[", expr nat.add_one_le_iff, ",", expr h, ",", expr list.length, ",", expr le_of_lt, ",", expr list.length_reverse, ",", expr list.length_append, ",", expr list.length_map, "]"] [] [] } },
-    { split_ifs [] []; rw ["[", expr function.update_noteq h', ",", "<-", expr proj_map_nth, ",", expr hL, "]"] [],
-      rw [expr function.update_noteq h'] [] } },
-  case [ident TM2to1.st_act.peek, ":", ident f] { rw [expr function.update_eq_self] [],
-    use ["[", expr L, ",", expr hL, "]"],
-    rw ["[", expr tape.move_left_right, "]"] [],
-    congr,
-    cases [expr e, ":", expr S k] [],
-    { refl },
-    rw ["[", expr list.length_cons, ",", expr iterate_succ', ",", expr tape.move_right_left, ",", expr tape.move_right_n_head, ",", expr tape.mk'_nth_nat, ",", expr add_bottom_nth_snd, ",", expr stk_nth_val _ (hL k), ",", expr e, ",", expr list.reverse_cons, ",", "<-", expr list.length_reverse, ",", expr list.nth_concat_length, "]"] [],
-    refl },
-  case [ident TM2to1.st_act.pop, ":", ident f] { cases [expr e, ":", expr S k] [],
-    { simp [] [] ["only"] ["[", expr tape.mk'_head, ",", expr list_blank.head_cons, ",", expr tape.move_left_mk', ",", expr list.length, ",", expr tape.write_mk', ",", expr list.head', ",", expr iterate_zero_apply, ",", expr list.tail_nil, "]"] [] [],
-      rw ["[", "<-", expr e, ",", expr function.update_eq_self, "]"] [],
-      exact [expr ⟨L, hL, by rw ["[", expr add_bottom_head_fst, ",", expr cond, "]"] []⟩] },
-    { refine [expr ⟨_, λ
-        k', _, by rw ["[", expr list.length_cons, ",", expr tape.move_right_n_head, ",", expr tape.mk'_nth_nat, ",", expr add_bottom_nth_succ_fst, ",", expr cond, ",", expr iterate_succ', ",", expr tape.move_right_left, ",", expr tape.move_right_n_head, ",", expr tape.mk'_nth_nat, ",", expr tape.write_move_right_n (λ
-          a : Γ', (a.1, update a.2 k none)), ",", expr add_bottom_modify_nth (λ
-          a, update a k none), ",", expr add_bottom_nth_snd, ",", expr stk_nth_val _ (hL k), ",", expr e, ",", expr show «expr = »((list.cons hd tl).reverse.nth tl.length, some hd), by rw ["[", expr list.reverse_cons, ",", "<-", expr list.length_reverse, ",", expr list.nth_concat_length, "]"] []; refl, ",", expr list.head', ",", expr list.tail, "]"] []⟩],
-      refine [expr list_blank.ext (λ i, _)],
-      rw ["[", expr list_blank.nth_map, ",", expr list_blank.nth_modify_nth, ",", expr proj, ",", expr pointed_map.mk_val, "]"] [],
-      by_cases [expr h', ":", expr «expr = »(k', k)],
-      { subst [expr k'],
-        split_ifs [] []; simp [] [] ["only"] ["[", expr function.update_same, ",", expr list_blank.nth_mk, ",", expr list.tail, ",", expr list.inth, "]"] [] [],
-        { rw ["[", expr list.nth_len_le, "]"] [],
-          { refl },
-          rw ["[", expr h, ",", expr list.length_reverse, ",", expr list.length_map, "]"] [] },
-        rw ["[", "<-", expr proj_map_nth, ",", expr hL, ",", expr list_blank.nth_mk, ",", expr list.inth, ",", expr e, ",", expr list.map, ",", expr list.reverse_cons, "]"] [],
-        cases [expr lt_or_gt_of_ne h] ["with", ident h, ident h],
-        { rw [expr list.nth_append] [],
-          simpa [] [] ["only"] ["[", expr list.length_map, ",", expr list.length_reverse, "]"] [] ["using", expr h] },
-        { rw [expr gt_iff_lt] ["at", ident h],
-          rw ["[", expr list.nth_len_le, ",", expr list.nth_len_le, "]"] []; simp [] [] ["only"] ["[", expr nat.add_one_le_iff, ",", expr h, ",", expr list.length, ",", expr le_of_lt, ",", expr list.length_reverse, ",", expr list.length_append, ",", expr list.length_map, "]"] [] [] } },
-      { split_ifs [] []; rw ["[", expr function.update_noteq h', ",", "<-", expr proj_map_nth, ",", expr hL, "]"] [],
-        rw [expr function.update_noteq h'] [] } } }
-end
+theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : list_blank (∀ k, Option (Γ k))}
+  (hL : ∀ k, L.map (proj k) = list_blank.mk ((S k).map some).reverse) o :
+  let v' := st_var v (S k) o 
+  let Sk' := st_write v (S k) o 
+  let S' := update S k Sk'
+  ∃ L' : list_blank (∀ k, Option (Γ k)),
+    (∀ k, L'.map (proj k) = list_blank.mk ((S' k).map some).reverse) ∧
+      TM1.step_aux (tr_st_act q o) v ((tape.move dir.right^[(S k).length]) (tape.mk' ∅ (add_bottom L))) =
+        TM1.step_aux q v' ((tape.move dir.right^[(S' k).length]) (tape.mk' ∅ (add_bottom L'))) :=
+  by 
+    dsimp only 
+    simp 
+    cases o <;> simp only [st_write, st_var, tr_st_act, TM1.step_aux]
+    case TM2to1.st_act.push f => 
+      have  := tape.write_move_right_n fun a : Γ' => (a.1, update a.2 k (some (f v)))
+      dsimp only  at this 
+      refine'
+        ⟨_, fun k' => _,
+          by 
+            rw [tape.move_right_n_head, List.length, tape.mk'_nth_nat, this,
+              add_bottom_modify_nth fun a => update a k (some (f v)), Nat.add_one, iterate_succ']⟩
+      refine' list_blank.ext fun i => _ 
+      rw [list_blank.nth_map, list_blank.nth_modify_nth, proj, pointed_map.mk_val]
+      byCases' h' : k' = k
+      ·
+        subst k' 
+        splitIfs <;> simp only [List.reverse_cons, Function.update_same, list_blank.nth_mk, List.inth, List.map]
+        ·
+          rw [List.nth_le_nth, List.nth_le_append_right] <;>
+            simp only [h, List.nth_le_singleton, List.length_map, List.length_reverse, Nat.succ_pos',
+              List.length_append, lt_add_iff_pos_right, List.length]
+        rw [←proj_map_nth, hL, list_blank.nth_mk, List.inth]
+        cases' lt_or_gt_of_neₓ h with h h
+        ·
+          rw [List.nth_append]
+          simpa only [List.length_map, List.length_reverse] using h
+        ·
+          rw [gt_iff_lt] at h 
+          rw [List.nth_len_le, List.nth_len_le] <;>
+            simp only [Nat.add_one_le_iff, h, List.length, le_of_ltₓ, List.length_reverse, List.length_append,
+              List.length_map]
+      ·
+        splitIfs <;> rw [Function.update_noteq h', ←proj_map_nth, hL]
+        rw [Function.update_noteq h']
+    case TM2to1.st_act.peek f => 
+      rw [Function.update_eq_self]
+      use L, hL 
+      rw [tape.move_left_right]
+      congr 
+      cases e : S k
+      ·
+        rfl 
+      rw [List.length_cons, iterate_succ', tape.move_right_left, tape.move_right_n_head, tape.mk'_nth_nat,
+        add_bottom_nth_snd, stk_nth_val _ (hL k), e, List.reverse_cons, ←List.length_reverse, List.nth_concat_length]
+      rfl 
+    case TM2to1.st_act.pop f => 
+      cases e : S k
+      ·
+        simp only [tape.mk'_head, list_blank.head_cons, tape.move_left_mk', List.length, tape.write_mk', List.head',
+          iterate_zero_apply, List.tail_nil]
+        rw [←e, Function.update_eq_self]
+        exact
+          ⟨L, hL,
+            by 
+              rw [add_bottom_head_fst, cond]⟩
+      ·
+        refine'
+          ⟨_, fun k' => _,
+            by 
+              rw [List.length_cons, tape.move_right_n_head, tape.mk'_nth_nat, add_bottom_nth_succ_fst, cond,
+                iterate_succ', tape.move_right_left, tape.move_right_n_head, tape.mk'_nth_nat,
+                tape.write_move_right_n fun a : Γ' => (a.1, update a.2 k none),
+                add_bottom_modify_nth fun a => update a k none, add_bottom_nth_snd, stk_nth_val _ (hL k), e,
+                show (List.cons hd tl).reverse.nth tl.length = some hd by 
+                  rw [List.reverse_cons, ←List.length_reverse, List.nth_concat_length] <;> rfl,
+                List.head', List.tail]⟩
+        refine' list_blank.ext fun i => _ 
+        rw [list_blank.nth_map, list_blank.nth_modify_nth, proj, pointed_map.mk_val]
+        byCases' h' : k' = k
+        ·
+          subst k' 
+          splitIfs <;> simp only [Function.update_same, list_blank.nth_mk, List.tail, List.inth]
+          ·
+            rw [List.nth_len_le]
+            ·
+              rfl 
+            rw [h, List.length_reverse, List.length_map]
+          rw [←proj_map_nth, hL, list_blank.nth_mk, List.inth, e, List.map, List.reverse_cons]
+          cases' lt_or_gt_of_neₓ h with h h
+          ·
+            rw [List.nth_append]
+            simpa only [List.length_map, List.length_reverse] using h
+          ·
+            rw [gt_iff_lt] at h 
+            rw [List.nth_len_le, List.nth_len_le] <;>
+              simp only [Nat.add_one_le_iff, h, List.length, le_of_ltₓ, List.length_reverse, List.length_append,
+                List.length_map]
+        ·
+          splitIfs <;> rw [Function.update_noteq h', ←proj_map_nth, hL]
+          rw [Function.update_noteq h']
 
 parameter (M : Λ → stmt₂)
 
@@ -2560,6 +2606,7 @@ inductive tr_cfg : cfg₂ → cfg₁ → Prop
   (∀ k, L.map (proj k) = list_blank.mk ((S k).map some).reverse) →
     tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, tape.mk' ∅ (add_bottom L)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ≤ » S.length)
 theorem tr_respects_aux₁ {k} o q v {S : List (Γ k)} {L : list_blank (∀ k, Option (Γ k))}
   (hL : L.map (proj k) = list_blank.mk (S.map some).reverse) n (_ : n ≤ S.length) :
   reaches₀ (TM1.step tr) ⟨some (go k o q), v, tape.mk' ∅ (add_bottom L)⟩
@@ -2587,30 +2634,29 @@ theorem tr_respects_aux₃ {q v} {L : list_blank (∀ k, Option (Γ k))} n :
       TM1.step_aux, iterate_succ', tape.move_right_left]
     rfl
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_respects_aux
-{q v T k}
-{S : ∀ k, list (Γ k)}
-(hT : ∀ k, «expr = »(list_blank.map (proj k) T, list_blank.mk ((S k).map some).reverse))
-(o : st_act k)
-(IH : ∀
- {v : σ}
- {S : ∀ k : K, list (Γ k)}
- {T : list_blank (∀
-   k, option (Γ k))}, ∀
- k, «expr = »(list_blank.map (proj k) T, list_blank.mk ((S k).map some).reverse) → «expr∃ , »((b), «expr ∧ »(tr_cfg (TM2.step_aux q v S) b, reaches (TM1.step tr) (TM1.step_aux (tr_normal q) v (tape.mk' «expr∅»() (add_bottom T))) b))) : «expr∃ , »((b), «expr ∧ »(tr_cfg (TM2.step_aux (st_run o q) v S) b, reaches (TM1.step tr) (TM1.step_aux (tr_normal (st_run o q)) v (tape.mk' «expr∅»() (add_bottom T))) b)) :=
-begin
-  simp [] [] ["only"] ["[", expr tr_normal_run, ",", expr step_run, "]"] [] [],
-  have [ident hgo] [] [":=", expr tr_respects_aux₁ M o q v (hT k) _ (le_refl _)],
-  obtain ["⟨", ident T', ",", ident hT', ",", ident hrun, "⟩", ":=", expr tr_respects_aux₂ hT o],
-  have [ident hret] [] [":=", expr tr_respects_aux₃ M _],
-  have [] [] [":=", expr hgo.tail' rfl],
-  rw ["[", expr tr, ",", expr TM1.step_aux, ",", expr tape.move_right_n_head, ",", expr tape.mk'_nth_nat, ",", expr add_bottom_nth_snd, ",", expr stk_nth_val _ (hT k), ",", expr list.nth_len_le (le_of_eq (list.length_reverse _)), ",", expr option.is_none, ",", expr cond, ",", expr hrun, ",", expr TM1.step_aux, "]"] ["at", ident this],
-  obtain ["⟨", ident c, ",", ident gc, ",", ident rc, "⟩", ":=", expr IH hT'],
-  refine [expr ⟨c, gc, (this.to₀.trans hret c (trans_gen.head' rfl _)).to_refl⟩],
-  rw ["[", expr tr, ",", expr TM1.step_aux, ",", expr tape.mk'_head, ",", expr add_bottom_head_fst, "]"] [],
-  exact [expr rc]
-end
+theorem tr_respects_aux {q v T k} {S : ∀ k, List (Γ k)}
+  (hT : ∀ k, list_blank.map (proj k) T = list_blank.mk ((S k).map some).reverse) (o : st_act k)
+  (IH :
+    ∀ {v : σ} {S : ∀ k : K, List (Γ k)} {T : list_blank (∀ k, Option (Γ k))},
+      (∀ k, list_blank.map (proj k) T = list_blank.mk ((S k).map some).reverse) →
+        ∃ b,
+          tr_cfg (TM2.step_aux q v S) b ∧
+            reaches (TM1.step tr) (TM1.step_aux (tr_normal q) v (tape.mk' ∅ (add_bottom T))) b) :
+  ∃ b,
+    tr_cfg (TM2.step_aux (st_run o q) v S) b ∧
+      reaches (TM1.step tr) (TM1.step_aux (tr_normal (st_run o q)) v (tape.mk' ∅ (add_bottom T))) b :=
+  by 
+    simp only [tr_normal_run, step_run]
+    have hgo := tr_respects_aux₁ M o q v (hT k) _ (le_reflₓ _)
+    obtain ⟨T', hT', hrun⟩ := tr_respects_aux₂ hT o 
+    have hret := tr_respects_aux₃ M _ 
+    have  := hgo.tail' rfl 
+    rw [tr, TM1.step_aux, tape.move_right_n_head, tape.mk'_nth_nat, add_bottom_nth_snd, stk_nth_val _ (hT k),
+      List.nth_len_le (le_of_eqₓ (List.length_reverse _)), Option.isNone, cond, hrun, TM1.step_aux] at this 
+    obtain ⟨c, gc, rc⟩ := IH hT' 
+    refine' ⟨c, gc, (this.to₀.trans hret c (trans_gen.head' rfl _)).to_refl⟩
+    rw [tr, TM1.step_aux, tape.mk'_head, add_bottom_head_fst]
+    exact rc
 
 attribute [local simp] respects TM2.step TM2.step_aux tr_normal
 
@@ -2689,52 +2735,66 @@ theorem tr_eval k (L : List (Γ k)) {L₁ L₂} (H₁ : L₁ ∈ TM1.eval tr (tr
 noncomputable def tr_supp (S : Finset Λ) : Finset Λ' :=
   S.bUnion fun l => insert (normal l) (tr_stmts₁ (M l))
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » tr_stmts₁ q)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l' «expr ∈ » tr_stmts₁ q)
 theorem tr_supports {S} (ss : TM2.supports M S) : TM1.supports tr (tr_supp S) :=
-⟨finset.mem_bUnion.2 ⟨_, ss.1, «expr $ »(finset.mem_insert.2, or.inl rfl)⟩, λ l' h, begin
-   suffices [] [":", expr ∀
-    (q)
-    (ss' : TM2.supports_stmt S q)
-    (sub : ∀
-     x «expr ∈ » tr_stmts₁ q, «expr ∈ »(x, tr_supp M S)), «expr ∧ »(TM1.supports_stmt (tr_supp M S) (tr_normal q), ∀
-     l' «expr ∈ » tr_stmts₁ q, TM1.supports_stmt (tr_supp M S) (tr M l'))],
-   { rcases [expr finset.mem_bUnion.1 h, "with", "⟨", ident l, ",", ident lS, ",", ident h, "⟩"],
-     have [] [] [":=", expr this _ (ss.2 l lS) (λ x hx, finset.mem_bUnion.2 ⟨_, lS, finset.mem_insert_of_mem hx⟩)],
-     rcases [expr finset.mem_insert.1 h, "with", ident rfl, "|", ident h]; [exact [expr this.1], exact [expr this.2 _ h]] },
-   clear [ident h, ident l'],
-   refine [expr stmt_st_rec _ _ _ _ _]; intros [],
-   { rw [expr TM2to1.supports_run] ["at", ident ss'],
-     simp [] [] ["only"] ["[", expr TM2to1.tr_stmts₁_run, ",", expr finset.mem_union, ",", expr finset.mem_insert, ",", expr finset.mem_singleton, "]"] [] ["at", ident sub],
-     have [ident hgo] [] [":=", expr sub _ «expr $ »(or.inl, or.inl rfl)],
-     have [ident hret] [] [":=", expr sub _ «expr $ »(or.inl, or.inr rfl)],
-     cases [expr IH ss' (λ x hx, «expr $ »(sub x, or.inr hx))] ["with", ident IH₁, ident IH₂],
-     refine [expr ⟨by simp [] [] ["only"] ["[", expr tr_normal_run, ",", expr TM1.supports_stmt, "]"] [] []; intros []; exact [expr hgo], λ
-       l h, _⟩],
-     rw ["[", expr tr_stmts₁_run, "]"] ["at", ident h],
-     simp [] [] ["only"] ["[", expr TM2to1.tr_stmts₁_run, ",", expr finset.mem_union, ",", expr finset.mem_insert, ",", expr finset.mem_singleton, "]"] [] ["at", ident h],
-     rcases [expr h, "with", "⟨", ident rfl, "|", ident rfl, "⟩", "|", ident h],
-     { unfold [ident TM1.supports_stmt, ident TM2to1.tr] [],
-       rcases [expr s, "with", "_", "|", "_", "|", "_"],
-       { exact [expr ⟨λ _ _, hret, λ _ _, hgo⟩] },
-       { exact [expr ⟨λ _ _, hret, λ _ _, hgo⟩] },
-       { exact [expr ⟨⟨λ _ _, hret, λ _ _, hret⟩, λ _ _, hgo⟩] } },
-     { unfold [ident TM1.supports_stmt, ident TM2to1.tr] [],
-       exact [expr ⟨IH₁, λ _ _, hret⟩] },
-     { exact [expr IH₂ _ h] } },
-   { unfold [ident TM2to1.tr_stmts₁] ["at", ident ss', ident sub, "⊢"],
-     exact [expr IH ss' sub] },
-   { unfold [ident TM2to1.tr_stmts₁] ["at", ident sub],
-     cases [expr IH₁ ss'.1 (λ x hx, «expr $ »(sub x, finset.mem_union_left _ hx))] ["with", ident IH₁₁, ident IH₁₂],
-     cases [expr IH₂ ss'.2 (λ x hx, «expr $ »(sub x, finset.mem_union_right _ hx))] ["with", ident IH₂₁, ident IH₂₂],
-     refine [expr ⟨⟨IH₁₁, IH₂₁⟩, λ l h, _⟩],
-     rw ["[", expr tr_stmts₁, "]"] ["at", ident h],
-     rcases [expr finset.mem_union.1 h, "with", ident h, "|", ident h]; [exact [expr IH₁₂ _ h], exact [expr IH₂₂ _ h]] },
-   { rw [expr tr_stmts₁] [],
-     unfold [ident TM2to1.tr_normal, ident TM1.supports_stmt] [],
-     unfold [ident TM2.supports_stmt] ["at", ident ss'],
-     exact [expr ⟨λ _ v, finset.mem_bUnion.2 ⟨_, ss' v, finset.mem_insert_self _ _⟩, λ _, false.elim⟩] },
-   { exact [expr ⟨trivial, λ _, false.elim⟩] }
- end⟩
+  ⟨Finset.mem_bUnion.2 ⟨_, ss.1, Finset.mem_insert.2$ Or.inl rfl⟩,
+    fun l' h =>
+      by 
+        suffices  :
+          ∀ q ss' : TM2.supports_stmt S q sub : ∀ x _ : x ∈ tr_stmts₁ q, x ∈ tr_supp M S,
+            TM1.supports_stmt (tr_supp M S) (tr_normal q) ∧
+              ∀ l' _ : l' ∈ tr_stmts₁ q, TM1.supports_stmt (tr_supp M S) (tr M l')
+        ·
+          rcases Finset.mem_bUnion.1 h with ⟨l, lS, h⟩
+          have  := this _ (ss.2 l lS) fun x hx => Finset.mem_bUnion.2 ⟨_, lS, Finset.mem_insert_of_mem hx⟩
+          rcases Finset.mem_insert.1 h with (rfl | h) <;> [exact this.1, exact this.2 _ h]
+        clear h l' 
+        refine' stmt_st_rec _ _ _ _ _ <;> intros 
+        ·
+          rw [TM2to1.supports_run] at ss' 
+          simp only [TM2to1.tr_stmts₁_run, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton] at sub 
+          have hgo := sub _ (Or.inl$ Or.inl rfl)
+          have hret := sub _ (Or.inl$ Or.inr rfl)
+          cases' IH ss' fun x hx => sub x$ Or.inr hx with IH₁ IH₂ 
+          refine'
+            ⟨by 
+                simp only [tr_normal_run, TM1.supports_stmt] <;> intros  <;> exact hgo,
+              fun l h => _⟩
+          rw [tr_stmts₁_run] at h 
+          simp only [TM2to1.tr_stmts₁_run, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton] at h 
+          rcases h with (⟨rfl | rfl⟩ | h)
+          ·
+            unfold TM1.supports_stmt TM2to1.tr 
+            rcases s with (_ | _ | _)
+            ·
+              exact ⟨fun _ _ => hret, fun _ _ => hgo⟩
+            ·
+              exact ⟨fun _ _ => hret, fun _ _ => hgo⟩
+            ·
+              exact ⟨⟨fun _ _ => hret, fun _ _ => hret⟩, fun _ _ => hgo⟩
+          ·
+            unfold TM1.supports_stmt TM2to1.tr 
+            exact ⟨IH₁, fun _ _ => hret⟩
+          ·
+            exact IH₂ _ h
+        ·
+          unfold TM2to1.tr_stmts₁  at ss' sub⊢
+          exact IH ss' sub
+        ·
+          unfold TM2to1.tr_stmts₁  at sub 
+          cases' IH₁ ss'.1 fun x hx => sub x$ Finset.mem_union_left _ hx with IH₁₁ IH₁₂ 
+          cases' IH₂ ss'.2 fun x hx => sub x$ Finset.mem_union_right _ hx with IH₂₁ IH₂₂ 
+          refine' ⟨⟨IH₁₁, IH₂₁⟩, fun l h => _⟩
+          rw [tr_stmts₁] at h 
+          rcases Finset.mem_union.1 h with (h | h) <;> [exact IH₁₂ _ h, exact IH₂₂ _ h]
+        ·
+          rw [tr_stmts₁]
+          unfold TM2to1.tr_normal TM1.supports_stmt 
+          unfold TM2.supports_stmt  at ss' 
+          exact ⟨fun _ v => Finset.mem_bUnion.2 ⟨_, ss' v, Finset.mem_insert_self _ _⟩, fun _ => False.elim⟩
+        ·
+          exact ⟨trivialₓ, fun _ => False.elim⟩⟩
 
 end 
 

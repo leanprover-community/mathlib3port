@@ -19,13 +19,15 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {ι : Sort w}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 /-- A complete distributive lattice is a bit stronger than the name might
   suggest; perhaps completely distributive lattice is more descriptive,
   as this class includes a requirement that the lattice join
   distribute over *arbitrary* infima, and similarly for the dual. -/
 class CompleteDistribLattice (α) extends CompleteLattice α where 
-  infi_sup_le_sup_Inf : ∀ a s, (⨅(b : _)(_ : b ∈ s), a⊔b) ≤ a⊔Inf s 
-  inf_Sup_le_supr_inf : ∀ a s, a⊓Sup s ≤ ⨆(b : _)(_ : b ∈ s), a⊓b
+  infi_sup_le_sup_Inf : ∀ a s, (⨅ (b : _)(_ : b ∈ s), a⊔b) ≤ a⊔Inf s 
+  inf_Sup_le_supr_inf : ∀ a s, a⊓Sup s ≤ ⨆ (b : _)(_ : b ∈ s), a⊓b
 
 section CompleteDistribLattice
 
@@ -35,32 +37,36 @@ instance : CompleteDistribLattice (OrderDual α) :=
   { OrderDual.completeLattice α with infi_sup_le_sup_Inf := CompleteDistribLattice.inf_Sup_le_supr_inf,
     inf_Sup_le_supr_inf := CompleteDistribLattice.infi_sup_le_sup_Inf }
 
-theorem sup_Inf_eq : a⊔Inf s = ⨅(b : _)(_ : b ∈ s), a⊔b :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+theorem sup_Inf_eq : a⊔Inf s = ⨅ (b : _)(_ : b ∈ s), a⊔b :=
   sup_Inf_le_infi_sup.antisymm (CompleteDistribLattice.infi_sup_le_sup_Inf _ _)
 
-theorem Inf_sup_eq : Inf s⊔b = ⨅(a : _)(_ : a ∈ s), a⊔b :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem Inf_sup_eq : Inf s⊔b = ⨅ (a : _)(_ : a ∈ s), a⊔b :=
   by 
     simpa only [sup_comm] using @sup_Inf_eq α _ b s
 
-theorem inf_Sup_eq : a⊓Sup s = ⨆(b : _)(_ : b ∈ s), a⊓b :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+theorem inf_Sup_eq : a⊓Sup s = ⨆ (b : _)(_ : b ∈ s), a⊓b :=
   (CompleteDistribLattice.inf_Sup_le_supr_inf _ _).antisymm supr_inf_le_inf_Sup
 
-theorem Sup_inf_eq : Sup s⊓b = ⨆(a : _)(_ : a ∈ s), a⊓b :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem Sup_inf_eq : Sup s⊓b = ⨆ (a : _)(_ : a ∈ s), a⊓b :=
   by 
     simpa only [inf_comm] using @inf_Sup_eq α _ b s
 
-theorem supr_inf_eq (f : ι → α) (a : α) : (⨆i, f i)⊓a = ⨆i, f i⊓a :=
+theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i)⊓a = ⨆ i, f i⊓a :=
   by 
     rw [supr, Sup_inf_eq, supr_range]
 
-theorem inf_supr_eq (a : α) (f : ι → α) : (a⊓⨆i, f i) = ⨆i, a⊓f i :=
+theorem inf_supr_eq (a : α) (f : ι → α) : (a⊓⨆ i, f i) = ⨆ i, a⊓f i :=
   by 
     simpa only [inf_comm] using supr_inf_eq f a
 
-theorem infi_sup_eq (f : ι → α) (a : α) : (⨅i, f i)⊔a = ⨅i, f i⊔a :=
+theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i)⊔a = ⨅ i, f i⊔a :=
   @supr_inf_eq (OrderDual α) _ _ _ _
 
-theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅i, f i) = ⨅i, a⊔f i :=
+theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅ i, f i) = ⨅ i, a⊔f i :=
   @inf_supr_eq (OrderDual α) _ _ _ _
 
 instance Pi.completeDistribLattice {ι : Type _} {π : ι → Type _} [∀ i, CompleteDistribLattice (π i)] :
@@ -75,39 +81,51 @@ instance Pi.completeDistribLattice {ι : Type _} {π : ι → Type _} [∀ i, Co
         by 
           simp only [CompleteLattice.supₓ, Sup_apply, supr_apply, Pi.inf_apply, inf_supr_eq, ←supr_subtype''] }
 
--- error in Order.CompleteBooleanAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Inf_sup_Inf : «expr = »(«expr ⊔ »(Inf s, Inf t), «expr⨅ , »((p «expr ∈ » set.prod s t), «expr ⊔ »((p : «expr × »(α, α)).1, p.2))) :=
-begin
-  apply [expr le_antisymm],
-  { simp [] [] ["only"] ["[", expr and_imp, ",", expr prod.forall, ",", expr le_infi_iff, ",", expr set.mem_prod, "]"] [] [],
-    intros [ident a, ident b, ident ha, ident hb],
-    exact [expr sup_le_sup (Inf_le ha) (Inf_le hb)] },
-  { have [] [":", expr ∀
-     a «expr ∈ » s, «expr ≤ »(«expr⨅ , »((p «expr ∈ » set.prod s t), «expr ⊔ »((p : «expr × »(α, α)).1, p.2)), «expr ⊔ »(a, Inf t))] [],
-    { rintro [ident a, ident ha],
-      have [] [":", expr «expr ≤ »(«expr⨅ , »((p «expr ∈ » set.prod s t), «expr ⊔ »(((p : «expr × »(α, α)).1 : α), p.2)), «expr⨅ , »((p «expr ∈ » «expr '' »(prod.mk a, t)), «expr ⊔ »((p : «expr × »(α, α)).1, p.2)))] [],
-      { apply [expr infi_le_infi_of_subset],
-        rintro ["⟨", ident x, ",", ident y, "⟩"],
-        simp [] [] ["only"] ["[", expr and_imp, ",", expr set.mem_image, ",", expr prod.mk.inj_iff, ",", expr set.prod_mk_mem_set_prod_eq, ",", expr exists_imp_distrib, "]"] [] [],
-        rintro [ident x', ident x't, ident ax, ident x'y],
-        rw ["[", "<-", expr x'y, ",", "<-", expr ax, "]"] [],
-        simp [] [] [] ["[", expr ha, ",", expr x't, "]"] [] [] },
-      rw ["[", expr infi_image, "]"] ["at", ident this],
-      simp [] [] ["only"] [] [] ["at", ident this],
-      rwa ["<-", expr sup_Inf_eq] ["at", ident this] },
-    calc
-      «expr ≤ »(«expr⨅ , »((p «expr ∈ » set.prod s t), «expr ⊔ »((p : «expr × »(α, α)).1, p.2)), «expr⨅ , »((a «expr ∈ » s), «expr ⊔ »(a, Inf t))) : by simp [] [] [] [] [] []; exact [expr this]
-      «expr = »(..., «expr ⊔ »(Inf s, Inf t)) : Inf_sup_eq.symm }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » set.prod s t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » set.prod s t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » «expr '' »(prod.mk a, t))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » set.prod s t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » set.prod s t)
+theorem Inf_sup_Inf : Inf s⊔Inf t = ⨅ (p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊔p.2 :=
+  by 
+    apply le_antisymmₓ
+    ·
+      simp only [and_imp, Prod.forall, le_infi_iff, Set.mem_prod]
+      intro a b ha hb 
+      exact sup_le_sup (Inf_le ha) (Inf_le hb)
+    ·
+      have  : ∀ a _ : a ∈ s, (⨅ (p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊔p.2) ≤ a⊔Inf t
+      ·
+        rintro a ha 
+        have  :
+          (⨅ (p : _)(_ : p ∈ Set.Prod s t), ((p : α × α).1 : α)⊔p.2) ≤
+            ⨅ (p : _)(_ : p ∈ Prod.mk a '' t), (p : α × α).1⊔p.2
+        ·
+          apply infi_le_infi_of_subset 
+          rintro ⟨x, y⟩
+          simp only [and_imp, Set.mem_image, Prod.mk.inj_iffₓ, Set.prod_mk_mem_set_prod_eq, exists_imp_distrib]
+          rintro x' x't ax x'y 
+          rw [←x'y, ←ax]
+          simp [ha, x't]
+        rw [infi_image] at this 
+        simp only  at this 
+        rwa [←sup_Inf_eq] at this 
+      calc (⨅ (p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊔p.2) ≤ ⨅ (a : _)(_ : a ∈ s), a⊔Inf t :=
+        by 
+          simp  <;> exact this _ = Inf s⊔Inf t :=
+        Inf_sup_eq.symm
 
-theorem Sup_inf_Sup : Sup s⊓Sup t = ⨆(p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊓p.2 :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » set.prod s t)
+theorem Sup_inf_Sup : Sup s⊓Sup t = ⨆ (p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊓p.2 :=
   @Inf_sup_Inf (OrderDual α) _ _ _
 
-theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆i, f i) a ↔ ∀ i, Disjoint (f i) a :=
+theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆ i, f i) a ↔ ∀ i, Disjoint (f i) a :=
   by 
     simp only [disjoint_iff, supr_inf_eq, supr_eq_bot]
 
-theorem disjoint_supr_iff {f : ι → α} : Disjoint a (⨆i, f i) ↔ ∀ i, Disjoint a (f i) :=
+theorem disjoint_supr_iff {f : ι → α} : Disjoint a (⨆ i, f i) ↔ ∀ i, Disjoint a (f i) :=
   by 
     simpa only [Disjoint.comm] using @supr_disjoint_iff _ _ _ a f
 
@@ -144,20 +162,22 @@ section CompleteBooleanAlgebra
 
 variable [CompleteBooleanAlgebra α] {a b : α} {s : Set α} {f : ι → α}
 
-theorem compl_infi : «expr ᶜ» (infi f) = ⨆i, «expr ᶜ» (f i) :=
+theorem compl_infi : infi fᶜ = ⨆ i, f iᶜ :=
   le_antisymmₓ (compl_le_of_compl_le$ le_infi$ fun i => compl_le_of_compl_le$ le_supr (compl ∘ f) i)
     (supr_le$ fun i => compl_le_compl$ infi_le _ _)
 
-theorem compl_supr : «expr ᶜ» (supr f) = ⨅i, «expr ᶜ» (f i) :=
+theorem compl_supr : supr fᶜ = ⨅ i, f iᶜ :=
   compl_injective
     (by 
       simp [compl_infi])
 
-theorem compl_Inf : «expr ᶜ» (Inf s) = ⨆(i : _)(_ : i ∈ s), «expr ᶜ» i :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem compl_Inf : Inf sᶜ = ⨆ (i : _)(_ : i ∈ s), iᶜ :=
   by 
     simp only [Inf_eq_infi, compl_infi]
 
-theorem compl_Sup : «expr ᶜ» (Sup s) = ⨅(i : _)(_ : i ∈ s), «expr ᶜ» i :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem compl_Sup : Sup sᶜ = ⨅ (i : _)(_ : i ∈ s), iᶜ :=
   by 
     simp only [Sup_eq_supr, compl_supr]
 

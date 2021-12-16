@@ -40,11 +40,11 @@ variable (α : Type _)
 /-!### Definitions-/
 
 
--- error in Algebra.ContinuedFractions.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- We collect a partial numerator `aᵢ` and partial denominator `bᵢ` in a pair `⟨aᵢ,bᵢ⟩`. -/
-@[derive #[expr inhabited]]
-protected
-structure generalized_continued_fraction.pair := (a : α) (b : α)
+protected structure GeneralizedContinuedFraction.Pair where 
+  a : α 
+  b : α deriving [anonymous]
 
 open GeneralizedContinuedFraction
 
@@ -72,8 +72,7 @@ instance has_coe_to_generalized_continued_fraction_pair : Coe (pair α) (pair β
   ⟨map coeₓ⟩
 
 @[simp, normCast]
-theorem coe_to_generalized_continued_fraction_pair {a b : α} :
-  («expr↑ » (pair.mk a b) : pair β) = pair.mk (a : β) (b : β) :=
+theorem coe_to_generalized_continued_fraction_pair {a b : α} : (↑pair.mk a b : pair β) = pair.mk (a : β) (b : β) :=
   rfl
 
 end coeₓ
@@ -152,7 +151,7 @@ instance has_coe_to_generalized_continued_fraction :
 
 @[simp, normCast]
 theorem coe_to_generalized_continued_fraction {g : GeneralizedContinuedFraction α} :
-  («expr↑ » (g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
+  (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
     ⟨(g.h : β), (g.s.map coeₓ : Seqₓₓ$ pair β)⟩ :=
   rfl
 
@@ -224,7 +223,7 @@ instance has_coe_to_generalized_continued_fraction : Coe (SimpleContinuedFractio
     infer_instance
 
 theorem coe_to_generalized_continued_fraction {s : SimpleContinuedFraction α} :
-  («expr↑ » s : GeneralizedContinuedFraction α) = s.val :=
+  (↑s : GeneralizedContinuedFraction α) = s.val :=
   rfl
 
 end SimpleContinuedFraction
@@ -234,7 +233,7 @@ A simple continued fraction is a *(regular) continued fraction* ((r)cf) if all p
 `bᵢ` are positive, i.e. `0 < bᵢ`.
 -/
 def SimpleContinuedFraction.IsContinuedFraction [HasOne α] [HasZero α] [LT α] (s : SimpleContinuedFraction α) : Prop :=
-  ∀ n : ℕ bₙ : α, («expr↑ » s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
+  ∀ n : ℕ bₙ : α, (↑s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
 
 variable (α)
 
@@ -271,15 +270,15 @@ instance has_coe_to_simple_continued_fraction : Coe (ContinuedFraction α) (Simp
     unfold ContinuedFraction 
     infer_instance
 
-theorem coe_to_simple_continued_fraction {c : ContinuedFraction α} : («expr↑ » c : SimpleContinuedFraction α) = c.val :=
+theorem coe_to_simple_continued_fraction {c : ContinuedFraction α} : (↑c : SimpleContinuedFraction α) = c.val :=
   rfl
 
 /-- Lift a cf to a scf using the inclusion map. -/
 instance has_coe_to_generalized_continued_fraction : Coe (ContinuedFraction α) (GeneralizedContinuedFraction α) :=
-  ⟨fun c => «expr↑ » («expr↑ » c : SimpleContinuedFraction α)⟩
+  ⟨fun c => ↑(↑c : SimpleContinuedFraction α)⟩
 
 theorem coe_to_generalized_continued_fraction {c : ContinuedFraction α} :
-  («expr↑ » c : GeneralizedContinuedFraction α) = c.val :=
+  (↑c : GeneralizedContinuedFraction α) = c.val :=
   rfl
 
 end ContinuedFraction

@@ -33,7 +33,7 @@ Bernoulli polynomials are defined using `bernoulli`, the Bernoulli numbers.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale BigOperators
 
@@ -43,10 +43,10 @@ open Nat Finset
 
 /-- The Bernoulli polynomials are defined in terms of the negative Bernoulli numbers. -/
 def bernoulliPoly (n : ℕ) : Polynomial ℚ :=
-  ∑i in range (n+1), Polynomial.monomial (n - i) (bernoulli i*choose n i)
+  ∑ i in range (n+1), Polynomial.monomial (n - i) (bernoulli i*choose n i)
 
 theorem bernoulli_poly_def (n : ℕ) :
-  bernoulliPoly n = ∑i in range (n+1), Polynomial.monomial i (bernoulli (n - i)*choose n i) :=
+  bernoulliPoly n = ∑ i in range (n+1), Polynomial.monomial i (bernoulli (n - i)*choose n i) :=
   by 
     rw [←sum_range_reflect, add_succ_sub_one, add_zeroₓ, bernoulliPoly]
     apply sum_congr rfl 
@@ -63,16 +63,16 @@ theorem bernoulli_poly_zero : bernoulliPoly 0 = 1 :=
   by 
     simp [bernoulliPoly]
 
--- error in NumberTheory.BernoulliPolynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem bernoulli_poly_eval_zero (n : exprℕ()) : «expr = »((bernoulli_poly n).eval 0, bernoulli n) :=
-begin
-  rw ["[", expr bernoulli_poly, ",", expr polynomial.eval_finset_sum, ",", expr sum_range_succ, "]"] [],
-  have [] [":", expr «expr = »(«expr∑ in , »((x : exprℕ()), range n, «expr * »(«expr * »(bernoulli x, n.choose x), «expr ^ »(0, «expr - »(n, x)))), 0)] [],
-  { apply [expr sum_eq_zero (λ x hx, _)],
-    have [ident h] [":", expr «expr < »(0, «expr - »(n, x))] [":=", expr tsub_pos_of_lt (mem_range.1 hx)],
-    simp [] [] [] ["[", expr h, "]"] [] [] },
-  simp [] [] [] ["[", expr this, "]"] [] []
-end
+@[simp]
+theorem bernoulli_poly_eval_zero (n : ℕ) : (bernoulliPoly n).eval 0 = bernoulli n :=
+  by 
+    rw [bernoulliPoly, Polynomial.eval_finset_sum, sum_range_succ]
+    have  : (∑ x : ℕ in range n, (bernoulli x*n.choose x)*0^n - x) = 0
+    ·
+      apply sum_eq_zero fun x hx => _ 
+      have h : 0 < n - x := tsub_pos_of_lt (mem_range.1 hx)
+      simp [h]
+    simp [this]
 
 @[simp]
 theorem bernoulli_poly_eval_one (n : ℕ) : (bernoulliPoly n).eval 1 = bernoulli' n :=
@@ -89,35 +89,41 @@ theorem bernoulli_poly_eval_one (n : ℕ) : (bernoulliPoly n).eval 1 = bernoulli
 
 end Examples
 
--- error in NumberTheory.BernoulliPolynomials: ././Mathport/Syntax/Translate/Basic.lean:341:40: in conv_lhs: ././Mathport/Syntax/Translate/Basic.lean:385:40: in conv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » range n)
 @[simp]
-theorem sum_bernoulli_poly
-(n : exprℕ()) : «expr = »(«expr∑ in , »((k), range «expr + »(n, 1), «expr • »((«expr + »(n, 1).choose k : exprℚ()), bernoulli_poly k)), polynomial.monomial n («expr + »(n, 1) : exprℚ())) :=
-begin
-  simp_rw ["[", expr bernoulli_poly_def, ",", expr finset.smul_sum, ",", expr finset.range_eq_Ico, ",", "<-", expr finset.sum_Ico_Ico_comm, ",", expr finset.sum_Ico_eq_sum_range, "]"] [],
-  simp [] [] ["only"] ["[", expr cast_succ, ",", expr add_tsub_cancel_left, ",", expr tsub_zero, ",", expr zero_add, ",", expr linear_map.map_add, "]"] [] [],
-  simp_rw ["[", expr polynomial.smul_monomial, ",", expr mul_comm (bernoulli _) _, ",", expr smul_eq_mul, ",", "<-", expr mul_assoc, "]"] [],
-  conv_lhs [] [] { apply_congr [],
-    skip,
-    conv { apply_congr [],
-      skip,
-      rw ["[", "<-", expr nat.cast_mul, ",", expr choose_mul «expr $ »(«expr $ »(le_tsub_iff_left, mem_range_le H).1, mem_range_le H_1) (le.intro rfl), ",", expr nat.cast_mul, ",", expr add_comm x x_1, ",", expr add_tsub_cancel_right, ",", expr mul_assoc, ",", expr mul_comm, ",", "<-", expr smul_eq_mul, ",", "<-", expr polynomial.smul_monomial, "]"] },
-    rw ["[", "<-", expr sum_smul, "]"] },
-  rw ["[", expr sum_range_succ_comm, "]"] [],
-  simp [] [] ["only"] ["[", expr add_right_eq_self, ",", expr cast_succ, ",", expr mul_one, ",", expr cast_one, ",", expr cast_add, ",", expr add_tsub_cancel_left, ",", expr choose_succ_self_right, ",", expr one_smul, ",", expr bernoulli_zero, ",", expr sum_singleton, ",", expr zero_add, ",", expr linear_map.map_add, ",", expr range_one, "]"] [] [],
-  apply [expr sum_eq_zero (λ x hx, _)],
-  have [ident f] [":", expr ∀ x «expr ∈ » range n, «expr¬ »(«expr = »(«expr - »(«expr + »(n, 1), x), 1))] [],
-  { rintros [ident x, ident H],
-    rw ["[", expr mem_range, "]"] ["at", ident H],
-    rw ["[", expr eq_comm, "]"] [],
-    exact [expr ne_of_lt (nat.lt_of_lt_of_le one_lt_two (le_tsub_of_add_le_left (succ_le_succ H)))] },
-  rw ["[", expr sum_bernoulli, "]"] [],
-  have [ident g] [":", expr «expr = »(ite «expr = »(«expr - »(«expr + »(n, 1), x), 1) (1 : exprℚ()) 0, 0)] [],
-  { simp [] [] ["only"] ["[", expr ite_eq_right_iff, ",", expr one_ne_zero, "]"] [] [],
-    intro [ident h₁],
-    exact [expr f x hx h₁] },
-  rw ["[", expr g, ",", expr zero_smul, "]"] []
-end
+theorem sum_bernoulli_poly (n : ℕ) :
+  (∑ k in range (n+1), ((n+1).choose k : ℚ) • bernoulliPoly k) = Polynomial.monomial n (n+1 : ℚ) :=
+  by 
+    simpRw [bernoulli_poly_def, Finset.smul_sum, Finset.range_eq_Ico, ←Finset.sum_Ico_Ico_comm,
+      Finset.sum_Ico_eq_sum_range]
+    simp only [cast_succ, add_tsub_cancel_left, tsub_zero, zero_addₓ, LinearMap.map_add]
+    simpRw [Polynomial.smul_monomial, mul_commₓ (bernoulli _) _, smul_eq_mul, ←mul_assocₓ]
+    convLHS =>
+      applyCongr
+        skip
+        conv  =>
+        applyCongr
+          skip
+          rw [←Nat.cast_mul, choose_mul ((le_tsub_iff_left$ mem_range_le H).1$ mem_range_le H_1) (le.intro rfl),
+          Nat.cast_mul, add_commₓ x x_1, add_tsub_cancel_right, mul_assocₓ, mul_commₓ, ←smul_eq_mul,
+          ←Polynomial.smul_monomial]rw [←sum_smul]
+    rw [sum_range_succ_comm]
+    simp only [add_right_eq_selfₓ, cast_succ, mul_oneₓ, cast_one, cast_add, add_tsub_cancel_left,
+      choose_succ_self_right, one_smul, bernoulli_zero, sum_singleton, zero_addₓ, LinearMap.map_add, range_one]
+    apply sum_eq_zero fun x hx => _ 
+    have f : ∀ x _ : x ∈ range n, ¬(n+1) - x = 1
+    ·
+      rintro x H 
+      rw [mem_range] at H 
+      rw [eq_comm]
+      exact ne_of_ltₓ (Nat.lt_of_lt_of_leₓ one_lt_two (le_tsub_of_add_le_left (succ_le_succ H)))
+    rw [sum_bernoulli]
+    have g : ite ((n+1) - x = 1) (1 : ℚ) 0 = 0
+    ·
+      simp only [ite_eq_right_iff, one_ne_zero]
+      intro h₁ 
+      exact (f x hx) h₁ 
+    rw [g, zero_smul]
 
 open PowerSeries
 

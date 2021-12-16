@@ -27,7 +27,7 @@ theorem iff_dim_lt_omega : IsNoetherian K V ↔ Module.rank K V < ω :=
   by 
     let b := Basis.ofVectorSpace K V 
     rw [←b.mk_eq_dim'', lt_omega_iff_finite]
-    split 
+    constructor
     ·
       intro 
       exact finite_of_linear_independent (Basis.OfVectorSpaceIndex.linear_independent K V)
@@ -68,8 +68,7 @@ noncomputable def finset_basis_index [IsNoetherian K V] : Finset V :=
   (finite_basis_index (Basis.ofVectorSpace K V)).toFinset
 
 @[simp]
-theorem coe_finset_basis_index [IsNoetherian K V] :
-  («expr↑ » (finset_basis_index K V) : Set V) = Basis.OfVectorSpaceIndex K V :=
+theorem coe_finset_basis_index [IsNoetherian K V] : (↑finset_basis_index K V : Set V) = Basis.OfVectorSpaceIndex K V :=
   Set.Finite.coe_to_finset _
 
 @[simp]
@@ -98,7 +97,7 @@ variable {K V}
 /-- A module over a division ring is noetherian if and only if it is finitely generated. -/
 theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V :=
   by 
-    split 
+    constructor
     ·
       intro h 
       exact

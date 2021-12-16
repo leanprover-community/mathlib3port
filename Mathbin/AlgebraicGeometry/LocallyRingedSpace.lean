@@ -86,6 +86,9 @@ noncomputable def stalk_map {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) : Y
 instance {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) : IsLocalRingHom (stalk_map f x) :=
   f.2 x
 
+instance {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) : IsLocalRingHom (PresheafedSpace.stalk_map f.1 x) :=
+  f.2 x
+
 /-- The identity morphism on a locally ringed space. -/
 @[simps]
 def id (X : LocallyRingedSpace) : hom X X :=
@@ -190,25 +193,46 @@ def restrict_top_iso (X : LocallyRingedSpace) : X.restrict (opens.open_embedding
 /--
 The global sections, notated Gamma.
 -/
-def Γ : «expr ᵒᵖ» LocallyRingedSpace ⥤ CommRingₓₓ :=
+def Γ : LocallyRingedSpaceᵒᵖ ⥤ CommRingₓₓ :=
   forget_to_SheafedSpace.op ⋙ SheafedSpace.Γ
 
 theorem Γ_def : Γ = forget_to_SheafedSpace.op ⋙ SheafedSpace.Γ :=
   rfl
 
 @[simp]
-theorem Γ_obj (X : «expr ᵒᵖ» LocallyRingedSpace) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
+theorem Γ_obj (X : LocallyRingedSpaceᵒᵖ) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
   rfl
 
 theorem Γ_obj_op (X : LocallyRingedSpace) : Γ.obj (op X) = X.presheaf.obj (op ⊤) :=
   rfl
 
 @[simp]
-theorem Γ_map {X Y : «expr ᵒᵖ» LocallyRingedSpace} (f : X ⟶ Y) : Γ.map f = f.unop.1.c.app (op ⊤) :=
+theorem Γ_map {X Y : LocallyRingedSpaceᵒᵖ} (f : X ⟶ Y) : Γ.map f = f.unop.1.c.app (op ⊤) :=
   rfl
 
 theorem Γ_map_op {X Y : LocallyRingedSpace} (f : X ⟶ Y) : Γ.map f.op = f.1.c.app (op ⊤) :=
   rfl
+
+theorem preimage_basic_open {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : opens Y} (s : Y.presheaf.obj (op U)) :
+  (opens.map f.1.base).obj (Y.to_RingedSpace.basic_open s) =
+    @RingedSpace.basic_open X.to_RingedSpace ((opens.map f.1.base).obj U) (f.1.c.app _ s) :=
+  by 
+    ext 
+    constructor
+    ·
+      rintro ⟨⟨y, hyU⟩, hy : IsUnit _, rfl : y = _⟩
+      erw [RingedSpace.mem_basic_open _ _ ⟨x, show x ∈ (opens.map f.1.base).obj U from hyU⟩]
+      rw [←PresheafedSpace.stalk_map_germ_apply]
+      exact (PresheafedSpace.stalk_map f.1 _).is_unit_map hy
+    ·
+      rintro ⟨y, hy : IsUnit _, rfl⟩
+      erw [RingedSpace.mem_basic_open _ _ ⟨f.1.base y.1, y.2⟩]
+      rw [←PresheafedSpace.stalk_map_germ_apply] at hy 
+      exact (is_unit_map_iff (PresheafedSpace.stalk_map f.1 _) _).mp hy
+
+instance component_nontrivial (X : LocallyRingedSpace) (U : opens X.carrier) [hU : Nonempty U] :
+  Nontrivial (X.presheaf.obj$ op U) :=
+  (X.presheaf.germ hU.some).domain_nontrivial
 
 end LocallyRingedSpace
 

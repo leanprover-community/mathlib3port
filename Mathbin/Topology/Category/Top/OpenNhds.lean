@@ -113,12 +113,12 @@ theorem map_id_obj' (x : X) U p q : (map (𝟙 X) x).obj ⟨⟨U, p⟩, q⟩ = �
   rfl
 
 @[simp]
-theorem map_id_obj_unop (x : X) (U : «expr ᵒᵖ» (open_nhds x)) : (map (𝟙 X) x).obj (unop U) = unop U :=
+theorem map_id_obj_unop (x : X) (U : open_nhds xᵒᵖ) : (map (𝟙 X) x).obj (unop U) = unop U :=
   by 
     simp 
 
 @[simp]
-theorem op_map_id_obj (x : X) (U : «expr ᵒᵖ» (open_nhds x)) : (map (𝟙 X) x).op.obj U = U :=
+theorem op_map_id_obj (x : X) (U : open_nhds xᵒᵖ) : (map (𝟙 X) x).op.obj U = U :=
   by 
     simp 
 
@@ -128,7 +128,7 @@ def inclusion_map_iso (x : X) : inclusion (f x) ⋙ opens.map f ≅ map f x ⋙ 
   nat_iso.of_components
     (fun U =>
       by 
-        split 
+        constructor 
         exact 𝟙 _ 
         exact 𝟙 _)
     (by 

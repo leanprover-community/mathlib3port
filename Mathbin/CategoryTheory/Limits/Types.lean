@@ -122,7 +122,7 @@ theorem limit.map_π_apply {F G : J ⥤ Type u} (α : F ⟶ G) (j : J) x :
 The relation defining the quotient type which implements the colimit of a functor `F : J ⥤ Type u`.
 See `category_theory.limits.types.quot`.
 -/
-def quot.rel (F : J ⥤ Type u) : (Σj, F.obj j) → (Σj, F.obj j) → Prop :=
+def quot.rel (F : J ⥤ Type u) : (Σ j, F.obj j) → (Σ j, F.obj j) → Prop :=
   fun p p' => ∃ f : p.1 ⟶ p'.1, p'.2 = F.map f p.2
 
 /--
@@ -132,7 +132,7 @@ as pairs `⟨j, x⟩` where `x : F.obj j`, modulo the equivalence relation gener
 -/
 @[nolint has_inhabited_instance]
 def Quot (F : J ⥤ Type u) : Type u :=
-  @Quot (Σj, F.obj j) (quot.rel F)
+  @Quot (Σ j, F.obj j) (quot.rel F)
 
 /--
 (internal implementation) the colimit cocone of a functor,
@@ -150,7 +150,7 @@ attribute [local elab_with_expected_type] Quot.lift
 def colimit_cocone_is_colimit (F : J ⥤ Type u) : is_colimit (colimit_cocone F) :=
   { desc :=
       fun s =>
-        Quot.lift (fun p : Σj, F.obj j => s.ι.app p.1 p.2)
+        Quot.lift (fun p : Σ j, F.obj j => s.ι.app p.1 p.2)
           fun ⟨j, x⟩ ⟨j', x'⟩ ⟨f, hf⟩ =>
             by 
               rw [hf] <;> exact (congr_funₓ (cocone.w s f) x).symm }
@@ -220,25 +220,19 @@ theorem colimit_eq {F : J ⥤ Type u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (
     apply Quot.eq.1
     simpa using congr_argₓ (colimit_equiv_quot F) w
 
--- error in CategoryTheory.Limits.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem jointly_surjective
-(F : «expr ⥤ »(J, Type u))
-{t : cocone F}
-(h : is_colimit t)
-(x : t.X) : «expr∃ , »((j y), «expr = »(t.ι.app j y, x)) :=
-begin
-  suffices [] [":", expr «expr = »(λ
-    x : t.X, ulift.up «expr∃ , »((j y), «expr = »(t.ι.app j y, x)), λ _, ulift.up true)],
-  { have [] [] [":=", expr congr_fun this x],
-    have [ident H] [] [":=", expr congr_arg ulift.down this],
-    dsimp [] [] [] ["at", ident H],
-    rwa [expr eq_true] ["at", ident H] },
-  refine [expr h.hom_ext _],
-  intro [ident j],
-  ext [] [ident y] [],
-  erw [expr iff_true] [],
-  exact [expr ⟨j, y, rfl⟩]
-end
+theorem jointly_surjective (F : J ⥤ Type u) {t : cocone F} (h : is_colimit t) (x : t.X) : ∃ j y, t.ι.app j y = x :=
+  by 
+    suffices  : (fun x : t.X => Ulift.up (∃ j y, t.ι.app j y = x)) = fun _ => Ulift.up True
+    ·
+      have  := congr_funₓ this x 
+      have H := congr_argₓ Ulift.down this 
+      dsimp  at H 
+      rwa [eq_trueₓ] at H 
+    refine' h.hom_ext _ 
+    intro j 
+    ext y 
+    erw [iff_trueₓ]
+    exact ⟨j, y, rfl⟩
 
 /-- A variant of `jointly_surjective` for `x : colimit F`. -/
 theorem jointly_surjective' {F : J ⥤ Type u} (x : colimit F) : ∃ j y, colimit.ι F j y = x :=
@@ -256,16 +250,16 @@ but that is more convenient when working with filtered colimits.
 Elements in `F.obj j` and `F.obj j'` are equivalent if there is some `k : J` to the right
 where their images are equal.
 -/
-protected def rel (x y : Σj, F.obj j) : Prop :=
+protected def rel (x y : Σ j, F.obj j) : Prop :=
   ∃ (k : _)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2
 
-theorem rel_of_quot_rel (x y : Σj, F.obj j) : quot.rel F x y → filtered_colimit.rel F x y :=
+theorem rel_of_quot_rel (x y : Σ j, F.obj j) : quot.rel F x y → filtered_colimit.rel F x y :=
   fun ⟨f, h⟩ =>
     ⟨y.1, f, 𝟙 y.1,
       by 
         rw [←h, functor_to_types.map_id_apply]⟩
 
-theorem eqv_gen_quot_rel_of_rel (x y : Σj, F.obj j) : filtered_colimit.rel F x y → EqvGen (quot.rel F) x y :=
+theorem eqv_gen_quot_rel_of_rel (x y : Σ j, F.obj j) : filtered_colimit.rel F x y → EqvGen (quot.rel F) x y :=
   fun ⟨k, f, g, h⟩ =>
     EqvGen.trans _ ⟨k, F.map f x.2⟩ _ (EqvGen.rel _ _ ⟨f, rfl⟩) (EqvGen.symm _ _ (EqvGen.rel _ _ ⟨g, h⟩))
 
@@ -277,11 +271,11 @@ noncomputable def is_colimit_of (t : cocone F) (hsurj : ∀ x : t.X, ∃ i xi, x
   is_colimit t :=
   by 
     apply is_colimit.of_iso_colimit (colimit.is_colimit F)
-    refine' cocones.ext (Equiv.toIso (Equiv.ofBijective _ _)) _
+    refine' cocones.ext (Equivₓ.toIso (Equivₓ.ofBijective _ _)) _
     ·
       exact colimit.desc F t
     ·
-      split 
+      constructor
       ·
         show Function.Injective _ 
         intro a b h 
@@ -338,7 +332,7 @@ protected theorem rel_equiv : Equivalenceₓ (filtered_colimit.rel F) :=
 protected theorem rel_eq_eqv_gen_quot_rel : filtered_colimit.rel F = EqvGen (quot.rel F) :=
   by 
     ext ⟨j, x⟩ ⟨j', y⟩
-    split 
+    constructor
     ·
       apply eqv_gen_quot_rel_of_rel
     ·
@@ -415,18 +409,19 @@ instance : has_images (Type u) :=
       by 
         infer_instance }
 
--- error in CategoryTheory.Limits.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : has_image_maps (Type u) :=
-{ has_image_map := λ
-  f
-  g
-  st, has_image_map.transport st (mono_factorisation f.hom) (is_image g.hom) (λ
-   x, ⟨st.right x.1, ⟨st.left (classical.some x.2), begin
-       have [ident p] [] [":=", expr st.w],
-       replace [ident p] [] [":=", expr congr_fun p (classical.some x.2)],
-       simp [] [] ["only"] ["[", expr functor.id_map, ",", expr types_comp_apply, ",", expr subtype.val_eq_coe, "]"] [] ["at", ident p],
-       erw ["[", expr p, ",", expr classical.some_spec x.2, "]"] []
-     end⟩⟩) rfl }
+  { HasImageMap :=
+      fun f g st =>
+        has_image_map.transport st (mono_factorisation f.hom) (is_image g.hom)
+          (fun x =>
+            ⟨st.right x.1,
+              ⟨st.left (Classical.some x.2),
+                by 
+                  have p := st.w 
+                  replace p := congr_funₓ p (Classical.some x.2)
+                  simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p 
+                  erw [p, Classical.some_spec x.2]⟩⟩)
+          rfl }
 
 end CategoryTheory.Limits.Types
 

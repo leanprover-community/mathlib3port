@@ -21,17 +21,20 @@ namespace Encodable
 
 variable {α : Type _} {β : Type _} [Encodable β]
 
-theorem supr_decode₂ [CompleteLattice α] (f : β → α) : (⨆(i : ℕ)(b : _)(_ : b ∈ decode₂ β i), f b) = ⨆b, f b :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » decode₂ β i)
+theorem supr_decode₂ [CompleteLattice α] (f : β → α) : (⨆ (i : ℕ)(b : _)(_ : b ∈ decode₂ β i), f b) = ⨆ b, f b :=
   by 
     rw [supr_comm]
     simp [mem_decode₂]
 
-theorem Union_decode₂ (f : β → Set α) : (⋃(i : ℕ)(b : _)(_ : b ∈ decode₂ β i), f b) = ⋃b, f b :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » decode₂ β i)
+theorem Union_decode₂ (f : β → Set α) : (⋃ (i : ℕ)(b : _)(_ : b ∈ decode₂ β i), f b) = ⋃ b, f b :=
   supr_decode₂ f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » decode₂ β n)
 @[elab_as_eliminator]
 theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C ∅) (H1 : ∀ b, C (f b)) {n} :
-  C (⋃(b : _)(_ : b ∈ decode₂ β n), f b) :=
+  C (⋃ (b : _)(_ : b ∈ decode₂ β n), f b) :=
   match decode₂ β n with 
   | none =>
     by 
@@ -42,8 +45,9 @@ theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C 
       convert H1 b 
       simp [ext_iff]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » decode₂ β i)
 theorem Union_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint on f)) :
-  Pairwise (Disjoint on fun i => ⋃(b : _)(_ : b ∈ decode₂ β i), f b) :=
+  Pairwise (Disjoint on fun i => ⋃ (b : _)(_ : b ∈ decode₂ β i), f b) :=
   by 
     rintro i j ij x ⟨h₁, h₂⟩
     revert h₁ h₂ 

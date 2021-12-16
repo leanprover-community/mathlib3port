@@ -12,7 +12,7 @@ spaces.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Nnreal TopologicalSpace
 
@@ -313,8 +313,7 @@ it sends midpoints to midpoints. -/
 def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = midpoint ℝ (f x) (f y)) (hfc : Continuous f) :
   P →ᵃ[ℝ] Q :=
   AffineMap.mk' f
-    («expr↑ »
-      ((AddMonoidHom.ofMapMidpoint ℝ ℝ
+    (↑((AddMonoidHom.ofMapMidpoint ℝ ℝ
             ((AffineEquiv.vaddConst ℝ (f$ Classical.arbitrary P)).symm ∘
               f ∘ AffineEquiv.vaddConst ℝ (Classical.arbitrary P))
             (by 

@@ -1,5 +1,4 @@
-import Mathbin.Data.Finset.Lattice 
-import Mathbin.Data.Set.Pairwise
+import Mathbin.Data.Finset.Lattice
 
 /-!
 # Finite supremum independence
@@ -45,6 +44,7 @@ theorem sup_indep.attach (hs : s.sup_indep f) : s.attach.sup_indep (f ∘ Subtyp
       rw [←Finset.sup_image, image_erase Subtype.val_injective, attach_image_val]
       exact hs i.2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i' «expr ∈ » s)
 /-- Bind operation for `sup_indep`. -/
 theorem sup_indep.sup {α} [DistribLattice α] [OrderBot α] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
   (hs : s.sup_indep fun i => (g i).sup f) (hg : ∀ i' _ : i' ∈ s, (g i').SupIndep f) : (s.sup g).SupIndep f :=
@@ -62,6 +62,7 @@ theorem sup_indep.sup {α} [DistribLattice α] [OrderBot α] {s : Finset ι'} {g
     ·
       exact (hs hi').mono (le_sup hi) ((le_sup hj).trans$ le_sup$ mem_erase.2 ⟨hij', hj'⟩)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i' «expr ∈ » s)
 /-- Bind operation for `sup_indep`. -/
 theorem sup_indep.bUnion {α} [DistribLattice α] [OrderBot α] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
   (hs : s.sup_indep fun i => (g i).sup f) (hg : ∀ i' _ : i' ∈ s, (g i').SupIndep f) : (s.bUnion g).SupIndep f :=
@@ -77,7 +78,7 @@ theorem sup_indep_iff_pairwise_disjoint {α} [DistribLattice α] [OrderBot α] {
   by 
     refine' ⟨fun hs a ha b hb hab => (hs ha).mono_right$ le_sup$ mem_erase.2 ⟨hab.symm, hb⟩, fun hs a ha => _⟩
     rw [disjoint_sup_right]
-    exact fun b hb => hs a ha b (mem_of_mem_erase hb) (ne_of_mem_erase hb).symm
+    exact fun b hb => hs ha (mem_of_mem_erase hb) (ne_of_mem_erase hb).symm
 
 alias sup_indep_iff_pairwise_disjoint ↔ Finset.SupIndep.pairwise_disjoint Set.PairwiseDisjoint.sup_indep
 

@@ -15,6 +15,13 @@ It is constructed as a quotient of the free module (for the module case) or quot
 the free commutative ring (for the ring case) instead of a quotient of the disjoint union
 so as to make the operations (addition etc.) "computable".
 
+## Main definitions
+
+* `directed_system f`
+* `module.direct_limit G f`
+* `add_comm_group.direct_limit G f`
+* `ring.direct_limit G f`
+
 -/
 
 
@@ -30,31 +37,44 @@ variable [dec_ι : DecidableEq ι] [DirectedOrder ι]
 
 variable (G : ι → Type w)
 
-/-- A directed system is a functor from the category (directed poset) to another category.
-This is used for abelian groups and rings and fields because their maps are not bundled.
-See module.directed_system -/
+/-- A directed system is a functor from a category (directed poset) to another category. -/
 class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where 
   map_self{} : ∀ i x h, f i i h x = x 
-  map_map{} : ∀ i j k hij hjk x, f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x
+  map_map{} : ∀ {i j k} hij hjk x, f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x
 
 namespace Module
 
 variable [∀ i, AddCommGroupₓ (G i)] [∀ i, Module R (G i)]
 
-/-- A directed system is a functor from the category (directed poset) to the category of
-`R`-modules. -/
-class DirectedSystem (f : ∀ i j, i ≤ j → G i →ₗ[R] G j) : Prop where 
-  map_self{} : ∀ i x h, f i i h x = x 
-  map_map{} : ∀ i j k hij hjk x, f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x
+variable {G} (f : ∀ i j, i ≤ j → G i →ₗ[R] G j)
 
-variable (f : ∀ i j, i ≤ j → G i →ₗ[R] G j)
+/-- A copy of `directed_system.map_self` specialized to linear maps, as otherwise the
+`λ i j h, f i j h` can confuse the simplifier. -/
+theorem DirectedSystem.map_self [DirectedSystem G fun i j h => f i j h] i x h : f i i h x = x :=
+  DirectedSystem.map_self (fun i j h => f i j h) i x h
+
+/-- A copy of `directed_system.map_map` specialized to linear maps, as otherwise the
+`λ i j h, f i j h` can confuse the simplifier. -/
+theorem DirectedSystem.map_map [DirectedSystem G fun i j h => f i j h] {i j k} hij hjk x :
+  f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x :=
+  DirectedSystem.map_map (fun i j h => f i j h) hij hjk x
+
+variable (G)
 
 include dec_ι
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The direct limit of a directed system is the modules glued together along the maps. -/
-def direct_limit : Type max v w :=
-  (span R$
-      { a | ∃ (i j : _)(H : i ≤ j)(x : _), DirectSum.lof R ι G i x - DirectSum.lof R ι G j (f i j H x) = a }).Quotient
+  def
+    direct_limit
+    : Type max v w
+    :=
+      DirectSum ι G
+        ⧸
+        span R
+          $
+          { a | ∃ ( i j : _ ) ( H : i ≤ j ) ( x : _ ) , DirectSum.lof R ι G i x - DirectSum.lof R ι G j f i j H x = a }
 
 namespace DirectLimit
 
@@ -149,25 +169,24 @@ omit dec_ι
 /-- `totalize G f i j` is a linear map from `G i` to `G j`, for *every* `i` and `j`.
 If `i ≤ j`, then it is the map `f i j` that comes with the directed system `G`,
 and otherwise it is the zero map. -/
-noncomputable def totalize : ∀ i j, G i →ₗ[R] G j :=
-  fun i j => if h : i ≤ j then f i j h else 0
+noncomputable def totalize i j : G i →ₗ[R] G j :=
+  if h : i ≤ j then f i j h else 0
 
 variable {G f}
 
-theorem totalize_apply i j x : totalize G f i j x = if h : i ≤ j then f i j h x else 0 :=
-  if h : i ≤ j then
-    by 
-      dsimp only [totalize] <;> rw [dif_pos h, dif_pos h]
-  else
-    by 
-      dsimp only [totalize] <;> rw [dif_neg h, dif_neg h, LinearMap.zero_apply]
+theorem totalize_of_le {i j} (h : i ≤ j) : totalize G f i j = f i j h :=
+  dif_pos h
+
+theorem totalize_of_not_le {i j} (h : ¬i ≤ j) : totalize G f i j = 0 :=
+  dif_neg h
 
 end Totalize
 
-variable [DirectedSystem G f]
+variable [DirectedSystem G fun i j h => f i j h]
 
 open_locale Classical
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr ∈ » x.support)
 theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j) (hx : ∀ k _ : k ∈ x.support, k ≤ i) :
   DirectSum.toModule R ι (G j) (fun k => totalize G f k j) x =
     f i j hij (DirectSum.toModule R ι (G i) (fun k => totalize G f k i) x) :=
@@ -176,9 +195,10 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     unfold Dfinsupp.sum 
     simp only [LinearMap.map_sum]
     refine' Finset.sum_congr rfl fun k hk => _ 
-    rw [DirectSum.single_eq_lof R k (x k)]
-    simp [totalize_apply, hx k hk, le_transₓ (hx k hk) hij, DirectedSystem.map_map f]
+    rw [DirectSum.single_eq_lof R k (x k), DirectSum.to_module_lof, DirectSum.to_module_lof, totalize_of_le (hx k hk),
+      totalize_of_le (le_transₓ (hx k hk) hij), DirectedSystem.map_map]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr ∈ » x.support)
 theorem of.zero_exact_aux [Nonempty ι] {x : DirectSum ι G} (H : Submodule.Quotient.mk x = (0 : direct_limit G f)) :
   ∃ j, (∀ k _ : k ∈ x.support, k ≤ j) ∧ DirectSum.toModule R ι (G j) (fun i => totalize G f i j) x = (0 : G j) :=
   Nonempty.elimₓ
@@ -192,7 +212,7 @@ theorem of.zero_exact_aux [Nonempty ι] {x : DirectSum ι G} (H : Submodule.Quot
             by 
               clear_ 
               subst hxy 
-              split 
+              constructor
               ·
                 intro i0 hi0 
                 rw [Dfinsupp.mem_support_iff, DirectSum.sub_apply, ←DirectSum.single_eq_lof, ←DirectSum.single_eq_lof,
@@ -207,7 +227,7 @@ theorem of.zero_exact_aux [Nonempty ι] {x : DirectSum ι G} (H : Submodule.Quot
                 exfalso 
                 apply hi0 
                 rw [sub_zero]
-              simp [LinearMap.map_sub, totalize_apply, hik, hjk, DirectedSystem.map_map f, DirectSum.apply_eq_component,
+              simp [LinearMap.map_sub, totalize_of_le, hik, hjk, DirectedSystem.map_map, DirectSum.apply_eq_component,
                 DirectSum.component.of]⟩)
         ⟨ind, fun _ h => (Finset.not_mem_empty _ h).elim, LinearMap.map_zero _⟩
         (fun x y ⟨i, hi, hxi⟩ ⟨j, hj, hyj⟩ =>
@@ -223,15 +243,25 @@ theorem of.zero_exact_aux [Nonempty ι] {x : DirectSum ι G} (H : Submodule.Quot
             by 
               simp [LinearMap.map_smul, hxi]⟩
 
--- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
-theorem of.zero_exact
-{i x}
-(H : «expr = »(of R ι G f i x, 0)) : «expr∃ , »((j hij), «expr = »(f i j hij x, (0 : G j))) :=
-by haveI [] [":", expr nonempty ι] [":=", expr ⟨i⟩]; exact [expr let ⟨j, hj, hxj⟩ := of.zero_exact_aux H in
- if hx0 : «expr = »(x, 0) then ⟨i, le_refl _, by simp [] [] [] ["[", expr hx0, "]"] [] []⟩ else have hij : «expr ≤ »(i, j), from «expr $ »(hj _, by simp [] [] [] ["[", expr direct_sum.apply_eq_component, ",", expr hx0, "]"] [] []),
- ⟨j, hij, by simpa [] [] [] ["[", expr totalize_apply, ",", expr hij, "]"] [] ["using", expr hxj]⟩]
+theorem of.zero_exact {i x} (H : of R ι G f i x = 0) : ∃ j hij, f i j hij x = (0 : G j) :=
+  by 
+    have  : Nonempty ι := ⟨i⟩ <;>
+      exact
+        let ⟨j, hj, hxj⟩ := of.zero_exact_aux H 
+        if hx0 : x = 0 then
+          ⟨i, le_reflₓ _,
+            by 
+              simp [hx0]⟩
+        else
+          have hij : i ≤ j :=
+            hj _$
+              by 
+                simp [DirectSum.apply_eq_component, hx0]
+          ⟨j, hij,
+            by 
+              simpa [totalize_of_le hij] using hxj⟩
 
 end DirectLimit
 
@@ -253,9 +283,9 @@ variable (f : ∀ i j, i ≤ j → G i →+ G j)
 
 omit dec_ι
 
-protected theorem DirectedSystem [DirectedSystem G fun i j h => f i j h] :
-  Module.DirectedSystem G fun i j hij => (f i j hij).toIntLinearMap :=
-  ⟨DirectedSystem.map_self fun i j h => f i j h, DirectedSystem.map_map fun i j h => f i j h⟩
+protected theorem DirectedSystem [h : DirectedSystem G fun i j h => f i j h] :
+  DirectedSystem G fun i j hij => (f i j hij).toIntLinearMap :=
+  h
 
 include dec_ι
 
@@ -333,14 +363,27 @@ variable (f : ∀ i j, i ≤ j → G i → G j)
 
 open FreeCommRing
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The direct limit of a directed system is the rings glued together along the maps. -/
-def direct_limit : Type max v w :=
-  (Ideal.span
-      { a |
-        (∃ i j H x, of (⟨j, f i j H x⟩ : Σi, G i) - of ⟨i, x⟩ = a) ∨
-          (∃ i, of (⟨i, 1⟩ : Σi, G i) - 1 = a) ∨
-            (∃ i x y, (of (⟨i, x+y⟩ : Σi, G i) - of ⟨i, x⟩+of ⟨i, y⟩) = a) ∨
-              ∃ i x y, (of (⟨i, x*y⟩ : Σi, G i) - of ⟨i, x⟩*of ⟨i, y⟩) = a }).Quotient
+  def
+    direct_limit
+    : Type max v w
+    :=
+      FreeCommRing Σ i , G i
+        ⧸
+        Ideal.span
+          {
+            a
+            |
+            ∃ i j H x , of ( ⟨ j , f i j H x ⟩ : Σ i , G i ) - of ⟨ i , x ⟩ = a
+              ∨
+              ∃ i , of ( ⟨ i , 1 ⟩ : Σ i , G i ) - 1 = a
+                ∨
+                ∃ i x y , of ( ⟨ i , x + y ⟩ : Σ i , G i ) - of ⟨ i , x ⟩ + of ⟨ i , y ⟩ = a
+                  ∨
+                  ∃ i x y , of ( ⟨ i , x * y ⟩ : Σ i , G i ) - of ⟨ i , x ⟩ * of ⟨ i , y ⟩ = a
+            }
 
 namespace DirectLimit
 
@@ -356,7 +399,7 @@ instance : Inhabited (direct_limit G f) :=
 /-- The canonical map from a component to the direct limit. -/
 def of i : G i →+* direct_limit G f :=
   RingHom.mk'
-    { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σi, G i)),
+    { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σ i, G i)),
       map_one' := Ideal.Quotient.eq.2$ subset_span$ Or.inr$ Or.inl ⟨i, rfl⟩,
       map_mul' := fun x y => Ideal.Quotient.eq.2$ subset_span$ Or.inr$ Or.inr$ Or.inr ⟨i, x, y, rfl⟩ }
     fun x y => Ideal.Quotient.eq.2$ subset_span$ Or.inr$ Or.inr$ Or.inl ⟨i, x, y, rfl⟩
@@ -442,113 +485,157 @@ variable [DirectedSystem G fun i j h => f' i j h]
 
 variable (G f)
 
--- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of.zero_exact_aux2
-{x : free_comm_ring «exprΣ , »((i), G i)}
-{s t}
-(hxs : is_supported x s)
-{j k}
-(hj : ∀ z : «exprΣ , »((i), G i), «expr ∈ »(z, s) → «expr ≤ »(z.1, j))
-(hk : ∀ z : «exprΣ , »((i), G i), «expr ∈ »(z, t) → «expr ≤ »(z.1, k))
-(hjk : «expr ≤ »(j, k))
-(hst : «expr ⊆ »(s, t)) : «expr = »(f' j k hjk (lift (λ
-   ix : s, f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)), lift (λ
-  ix : t, f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x)) :=
-begin
-  refine [expr subring.in_closure.rec_on hxs _ _ _ _],
-  { rw ["[", expr (restriction _).map_one, ",", expr (free_comm_ring.lift _).map_one, ",", expr (f' j k hjk).map_one, ",", expr (restriction _).map_one, ",", expr (free_comm_ring.lift _).map_one, "]"] [] },
-  { rw ["[", expr (restriction _).map_neg, ",", expr (restriction _).map_one, ",", expr (free_comm_ring.lift _).map_neg, ",", expr (free_comm_ring.lift _).map_one, ",", expr (f' j k hjk).map_neg, ",", expr (f' j k hjk).map_one, ",", expr (restriction _).map_neg, ",", expr (restriction _).map_one, ",", expr (free_comm_ring.lift _).map_neg, ",", expr (free_comm_ring.lift _).map_one, "]"] [] },
-  { rintros ["_", "⟨", ident p, ",", ident hps, ",", ident rfl, "⟩", ident n, ident ih],
-    rw ["[", expr (restriction _).map_mul, ",", expr (free_comm_ring.lift _).map_mul, ",", expr (f' j k hjk).map_mul, ",", expr ih, ",", expr (restriction _).map_mul, ",", expr (free_comm_ring.lift _).map_mul, ",", expr restriction_of, ",", expr dif_pos hps, ",", expr lift_of, ",", expr restriction_of, ",", expr dif_pos (hst hps), ",", expr lift_of, "]"] [],
-    dsimp ["only"] [] [] [],
-    have [] [] [":=", expr directed_system.map_map (λ i j h, f' i j h)],
-    dsimp ["only"] [] [] ["at", ident this],
-    rw [expr this] [],
-    refl },
-  { rintros [ident x, ident y, ident ihx, ident ihy],
-    rw ["[", expr (restriction _).map_add, ",", expr (free_comm_ring.lift _).map_add, ",", expr (f' j k hjk).map_add, ",", expr ihx, ",", expr ihy, ",", expr (restriction _).map_add, ",", expr (free_comm_ring.lift _).map_add, "]"] [] }
-end
+theorem of.zero_exact_aux2 {x : FreeCommRing (Σ i, G i)} {s t} (hxs : is_supported x s) {j k}
+  (hj : ∀ z : Σ i, G i, z ∈ s → z.1 ≤ j) (hk : ∀ z : Σ i, G i, z ∈ t → z.1 ≤ k) (hjk : j ≤ k) (hst : s ⊆ t) :
+  f' j k hjk (lift (fun ix : s => f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)) =
+    lift (fun ix : t => f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x) :=
+  by 
+    refine' Subring.InClosure.rec_on hxs _ _ _ _
+    ·
+      rw [(restriction _).map_one, (FreeCommRing.lift _).map_one, (f' j k hjk).map_one, (restriction _).map_one,
+        (FreeCommRing.lift _).map_one]
+    ·
+      rw [(restriction _).map_neg, (restriction _).map_one, (FreeCommRing.lift _).map_neg,
+        (FreeCommRing.lift _).map_one, (f' j k hjk).map_neg, (f' j k hjk).map_one, (restriction _).map_neg,
+        (restriction _).map_one, (FreeCommRing.lift _).map_neg, (FreeCommRing.lift _).map_one]
+    ·
+      rintro _ ⟨p, hps, rfl⟩ n ih 
+      rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, (f' j k hjk).map_mul, ih, (restriction _).map_mul,
+        (FreeCommRing.lift _).map_mul, restriction_of, dif_pos hps, lift_of, restriction_of, dif_pos (hst hps), lift_of]
+      dsimp only 
+      have  := DirectedSystem.map_map fun i j h => f' i j h 
+      dsimp only  at this 
+      rw [this]
+      rfl
+    ·
+      rintro x y ihx ihy 
+      rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, (f' j k hjk).map_add, ihx, ihy,
+        (restriction _).map_add, (FreeCommRing.lift _).map_add]
 
 variable {G f f'}
 
--- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of.zero_exact_aux
-[nonempty ι]
-{x : free_comm_ring «exprΣ , »((i), G i)}
-(H : «expr = »(ideal.quotient.mk _ x, (0 : direct_limit G (λ
-   i
-   j
-   h, f' i j h)))) : «expr∃ , »((j
-  s), «expr∃ , »((H : ∀
-   k : «exprΣ , »((i), G i), «expr ∈ »(k, s) → «expr ≤ »(k.1, j)), «expr ∧ »(is_supported x s, «expr = »(lift (λ
-     ix : s, f' ix.1.1 j (H ix ix.2) ix.1.2) (restriction s x), (0 : G j))))) :=
-begin
-  refine [expr span_induction (ideal.quotient.eq_zero_iff_mem.1 H) _ _ _ _],
-  { rintros [ident x, "(", "⟨", ident i, ",", ident j, ",", ident hij, ",", ident x, ",", ident rfl, "⟩", "|", "⟨", ident i, ",", ident rfl, "⟩", "|", "⟨", ident i, ",", ident x, ",", ident y, ",", ident rfl, "⟩", "|", "⟨", ident i, ",", ident x, ",", ident y, ",", ident rfl, "⟩", ")"],
-    { refine [expr ⟨j, {⟨i, x⟩, ⟨j, f' i j hij x⟩}, _, is_supported_sub «expr $ »(is_supported_of.2, or.inr rfl) «expr $ »(is_supported_of.2, or.inl rfl), _⟩],
-      { rintros [ident k, "(", ident rfl, "|", "⟨", ident rfl, "|", "_", "⟩", ")"],
-        exact [expr hij],
-        refl },
-      { rw ["[", expr (restriction _).map_sub, ",", expr (free_comm_ring.lift _).map_sub, ",", expr restriction_of, ",", expr dif_pos, ",", expr restriction_of, ",", expr dif_pos, ",", expr lift_of, ",", expr lift_of, "]"] [],
-        dsimp ["only"] [] [] [],
-        have [] [] [":=", expr directed_system.map_map (λ i j h, f' i j h)],
-        dsimp ["only"] [] [] ["at", ident this],
-        rw [expr this] [],
-        exact [expr sub_self _],
-        exacts ["[", expr or.inr rfl, ",", expr or.inl rfl, "]"] } },
-    { refine [expr ⟨i, {⟨i, 1⟩}, _, is_supported_sub (is_supported_of.2 rfl) is_supported_one, _⟩],
-      { rintros [ident k, "(", ident rfl, "|", ident h, ")"],
-        refl },
-      { rw ["[", expr (restriction _).map_sub, ",", expr (free_comm_ring.lift _).map_sub, ",", expr restriction_of, ",", expr dif_pos, ",", expr (restriction _).map_one, ",", expr lift_of, ",", expr (free_comm_ring.lift _).map_one, "]"] [],
-        dsimp ["only"] [] [] [],
-        rw ["[", expr (f' i i _).map_one, ",", expr sub_self, "]"] [],
-        { exact [expr set.mem_singleton _] } } },
-    { refine [expr ⟨i, {⟨i, «expr + »(x, y)⟩, ⟨i, x⟩, ⟨i, y⟩}, _, is_supported_sub «expr $ »(is_supported_of.2, or.inl rfl) (is_supported_add «expr $ »(is_supported_of.2, «expr $ »(or.inr, or.inl rfl)) «expr $ »(is_supported_of.2, «expr $ »(or.inr, or.inr rfl))), _⟩],
-      { rintros [ident k, "(", ident rfl, "|", "⟨", ident rfl, "|", "⟨", ident rfl, "|", ident hk, "⟩", "⟩", ")"]; refl },
-      { rw ["[", expr (restriction _).map_sub, ",", expr (restriction _).map_add, ",", expr restriction_of, ",", expr restriction_of, ",", expr restriction_of, ",", expr dif_pos, ",", expr dif_pos, ",", expr dif_pos, ",", expr (free_comm_ring.lift _).map_sub, ",", expr (free_comm_ring.lift _).map_add, ",", expr lift_of, ",", expr lift_of, ",", expr lift_of, "]"] [],
-        dsimp ["only"] [] [] [],
-        rw [expr (f' i i _).map_add] [],
-        exact [expr sub_self _],
-        exacts ["[", expr or.inl rfl, ",", expr or.inr (or.inr rfl), ",", expr or.inr (or.inl rfl), "]"] } },
-    { refine [expr ⟨i, {⟨i, «expr * »(x, y)⟩, ⟨i, x⟩, ⟨i, y⟩}, _, is_supported_sub «expr $ »(is_supported_of.2, or.inl rfl) (is_supported_mul «expr $ »(is_supported_of.2, «expr $ »(or.inr, or.inl rfl)) «expr $ »(is_supported_of.2, «expr $ »(or.inr, or.inr rfl))), _⟩],
-      { rintros [ident k, "(", ident rfl, "|", "⟨", ident rfl, "|", "⟨", ident rfl, "|", ident hk, "⟩", "⟩", ")"]; refl },
-      { rw ["[", expr (restriction _).map_sub, ",", expr (restriction _).map_mul, ",", expr restriction_of, ",", expr restriction_of, ",", expr restriction_of, ",", expr dif_pos, ",", expr dif_pos, ",", expr dif_pos, ",", expr (free_comm_ring.lift _).map_sub, ",", expr (free_comm_ring.lift _).map_mul, ",", expr lift_of, ",", expr lift_of, ",", expr lift_of, "]"] [],
-        dsimp ["only"] [] [] [],
-        rw [expr (f' i i _).map_mul] [],
-        exacts ["[", expr sub_self _, ",", expr or.inl rfl, ",", expr or.inr (or.inr rfl), ",", expr or.inr (or.inl rfl), "]"] } } },
-  { refine [expr nonempty.elim (by apply_instance) (assume ind : ι, _)],
-    refine [expr ⟨ind, «expr∅»(), λ _, false.elim, is_supported_zero, _⟩],
-    rw ["[", expr (restriction _).map_zero, ",", expr (free_comm_ring.lift _).map_zero, "]"] [] },
-  { rintros [ident x, ident y, "⟨", ident i, ",", ident s, ",", ident hi, ",", ident hxs, ",", ident ihs, "⟩", "⟨", ident j, ",", ident t, ",", ident hj, ",", ident hyt, ",", ident iht, "⟩"],
-    rcases [expr directed_order.directed i j, "with", "⟨", ident k, ",", ident hik, ",", ident hjk, "⟩"],
-    have [] [":", expr ∀ z : «exprΣ , »((i), G i), «expr ∈ »(z, «expr ∪ »(s, t)) → «expr ≤ »(z.1, k)] [],
-    { rintros [ident z, "(", ident hz, "|", ident hz, ")"],
-      exact [expr le_trans (hi z hz) hik],
-      exact [expr le_trans (hj z hz) hjk] },
-    refine [expr ⟨k, «expr ∪ »(s, t), this, is_supported_add «expr $ »(is_supported_upwards hxs, set.subset_union_left s t) «expr $ »(is_supported_upwards hyt, set.subset_union_right s t), _⟩],
-    { rw ["[", expr (restriction _).map_add, ",", expr (free_comm_ring.lift _).map_add, ",", "<-", expr of.zero_exact_aux2 G f' hxs hi this hik (set.subset_union_left s t), ",", "<-", expr of.zero_exact_aux2 G f' hyt hj this hjk (set.subset_union_right s t), ",", expr ihs, ",", expr (f' i k hik).map_zero, ",", expr iht, ",", expr (f' j k hjk).map_zero, ",", expr zero_add, "]"] [] } },
-  { rintros [ident x, ident y, "⟨", ident j, ",", ident t, ",", ident hj, ",", ident hyt, ",", ident iht, "⟩"],
-    rw [expr smul_eq_mul] [],
-    rcases [expr exists_finset_support x, "with", "⟨", ident s, ",", ident hxs, "⟩"],
-    rcases [expr (s.image sigma.fst).exists_le, "with", "⟨", ident i, ",", ident hi, "⟩"],
-    rcases [expr directed_order.directed i j, "with", "⟨", ident k, ",", ident hik, ",", ident hjk, "⟩"],
-    have [] [":", expr ∀ z : «exprΣ , »((i), G i), «expr ∈ »(z, «expr ∪ »(«expr↑ »(s), t)) → «expr ≤ »(z.1, k)] [],
-    { rintros [ident z, "(", ident hz, "|", ident hz, ")"],
-      exacts ["[", expr «expr $ »(hi z.1, finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, ",", expr (hj z hz).trans hjk, "]"] },
-    refine [expr ⟨k, «expr ∪ »(«expr↑ »(s), t), this, is_supported_mul «expr $ »(is_supported_upwards hxs, set.subset_union_left «expr↑ »(s) t) «expr $ »(is_supported_upwards hyt, set.subset_union_right «expr↑ »(s) t), _⟩],
-    rw ["[", expr (restriction _).map_mul, ",", expr (free_comm_ring.lift _).map_mul, ",", "<-", expr of.zero_exact_aux2 G f' hyt hj this hjk (set.subset_union_right «expr↑ »(s) t), ",", expr iht, ",", expr (f' j k hjk).map_zero, ",", expr mul_zero, "]"] [] }
-end
+theorem of.zero_exact_aux [Nonempty ι] {x : FreeCommRing (Σ i, G i)}
+  (H : Ideal.Quotient.mk _ x = (0 : direct_limit G fun i j h => f' i j h)) :
+  ∃ j s,
+    ∃ H : ∀ k : Σ i, G i, k ∈ s → k.1 ≤ j,
+      is_supported x s ∧ lift (fun ix : s => f' ix.1.1 j (H ix ix.2) ix.1.2) (restriction s x) = (0 : G j) :=
+  by 
+    refine' span_induction (Ideal.Quotient.eq_zero_iff_mem.1 H) _ _ _ _
+    ·
+      rintro x (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩)
+      ·
+        refine'
+          ⟨j, {⟨i, x⟩, ⟨j, f' i j hij x⟩}, _,
+            is_supported_sub (is_supported_of.2$ Or.inr rfl) (is_supported_of.2$ Or.inl rfl), _⟩
+        ·
+          rintro k (rfl | ⟨rfl | _⟩)
+          exact hij 
+          rfl
+        ·
+          rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos, restriction_of, dif_pos,
+            lift_of, lift_of]
+          dsimp only 
+          have  := DirectedSystem.map_map fun i j h => f' i j h 
+          dsimp only  at this 
+          rw [this]
+          exact sub_self _ 
+          exacts[Or.inr rfl, Or.inl rfl]
+      ·
+        refine' ⟨i, {⟨i, 1⟩}, _, is_supported_sub (is_supported_of.2 rfl) is_supported_one, _⟩
+        ·
+          rintro k (rfl | h)
+          rfl
+        ·
+          rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos, (restriction _).map_one,
+            lift_of, (FreeCommRing.lift _).map_one]
+          dsimp only 
+          rw [(f' i i _).map_one, sub_self]
+          ·
+            exact Set.mem_singleton _
+      ·
+        refine'
+          ⟨i, {⟨i, x+y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
+            is_supported_sub (is_supported_of.2$ Or.inl rfl)
+              (is_supported_add (is_supported_of.2$ Or.inr$ Or.inl rfl) (is_supported_of.2$ Or.inr$ Or.inr rfl)),
+            _⟩
+        ·
+          rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
+        ·
+          rw [(restriction _).map_sub, (restriction _).map_add, restriction_of, restriction_of, restriction_of, dif_pos,
+            dif_pos, dif_pos, (FreeCommRing.lift _).map_sub, (FreeCommRing.lift _).map_add, lift_of, lift_of, lift_of]
+          dsimp only 
+          rw [(f' i i _).map_add]
+          exact sub_self _ 
+          exacts[Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
+      ·
+        refine'
+          ⟨i, {⟨i, x*y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
+            is_supported_sub (is_supported_of.2$ Or.inl rfl)
+              (is_supported_mul (is_supported_of.2$ Or.inr$ Or.inl rfl) (is_supported_of.2$ Or.inr$ Or.inr rfl)),
+            _⟩
+        ·
+          rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
+        ·
+          rw [(restriction _).map_sub, (restriction _).map_mul, restriction_of, restriction_of, restriction_of, dif_pos,
+            dif_pos, dif_pos, (FreeCommRing.lift _).map_sub, (FreeCommRing.lift _).map_mul, lift_of, lift_of, lift_of]
+          dsimp only 
+          rw [(f' i i _).map_mul]
+          exacts[sub_self _, Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
+    ·
+      refine'
+        Nonempty.elimₓ
+          (by 
+            infer_instance)
+          fun ind : ι => _ 
+      refine' ⟨ind, ∅, fun _ => False.elim, is_supported_zero, _⟩
+      rw [(restriction _).map_zero, (FreeCommRing.lift _).map_zero]
+    ·
+      rintro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
+      rcases DirectedOrder.directed i j with ⟨k, hik, hjk⟩
+      have  : ∀ z : Σ i, G i, z ∈ s ∪ t → z.1 ≤ k
+      ·
+        rintro z (hz | hz)
+        exact le_transₓ (hi z hz) hik 
+        exact le_transₓ (hj z hz) hjk 
+      refine'
+        ⟨k, s ∪ t, this,
+          is_supported_add (is_supported_upwards hxs$ Set.subset_union_left s t)
+            (is_supported_upwards hyt$ Set.subset_union_right s t),
+          _⟩
+      ·
+        rw [(restriction _).map_add, (FreeCommRing.lift _).map_add,
+          ←of.zero_exact_aux2 G f' hxs hi this hik (Set.subset_union_left s t),
+          ←of.zero_exact_aux2 G f' hyt hj this hjk (Set.subset_union_right s t), ihs, (f' i k hik).map_zero, iht,
+          (f' j k hjk).map_zero, zero_addₓ]
+    ·
+      rintro x y ⟨j, t, hj, hyt, iht⟩
+      rw [smul_eq_mul]
+      rcases exists_finset_support x with ⟨s, hxs⟩
+      rcases(s.image Sigma.fst).exists_le with ⟨i, hi⟩
+      rcases DirectedOrder.directed i j with ⟨k, hik, hjk⟩
+      have  : ∀ z : Σ i, G i, z ∈ ↑s ∪ t → z.1 ≤ k
+      ·
+        rintro z (hz | hz)
+        exacts[(hi z.1$ Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
+      refine'
+        ⟨k, ↑s ∪ t, this,
+          is_supported_mul (is_supported_upwards hxs$ Set.subset_union_left (↑s) t)
+            (is_supported_upwards hyt$ Set.subset_union_right (↑s) t),
+          _⟩
+      rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul,
+        ←of.zero_exact_aux2 G f' hyt hj this hjk (Set.subset_union_right (↑s) t), iht, (f' j k hjk).map_zero, mul_zero]
 
--- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
-theorem of.zero_exact
-{i x}
-(hix : «expr = »(of G (λ
-   i j h, f' i j h) i x, 0)) : «expr∃ , »((j) (hij : «expr ≤ »(i, j)), «expr = »(f' i j hij x, 0)) :=
-by haveI [] [":", expr nonempty ι] [":=", expr ⟨i⟩]; exact [expr let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix in
- have hixs : «expr ∈ »((⟨i, x⟩ : «exprΣ , »((i), G i)), s), from is_supported_of.1 hxs,
- ⟨j, H ⟨i, x⟩ hixs, by rw ["[", expr restriction_of, ",", expr dif_pos hixs, ",", expr lift_of, "]"] ["at", ident hx]; exact [expr hx]⟩]
+theorem of.zero_exact {i x} (hix : of G (fun i j h => f' i j h) i x = 0) : ∃ (j : _)(hij : i ≤ j), f' i j hij x = 0 :=
+  by 
+    have  : Nonempty ι := ⟨i⟩ <;>
+      exact
+        let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix 
+        have hixs : (⟨i, x⟩ : Σ i, G i) ∈ s := is_supported_of.1 hxs
+        ⟨j, H ⟨i, x⟩ hixs,
+          by 
+            rw [restriction_of, dif_pos hixs, lift_of] at hx <;> exact hx⟩
 
 end OfZeroExact
 
@@ -587,9 +674,9 @@ that respect the directed system structure (i.e. make some diagram commute) give
 to a unique map out of the direct limit.
 -/
 def lift : direct_limit G f →+* P :=
-  Ideal.Quotient.lift _ (FreeCommRing.lift$ fun x : Σi, G i => g x.1 x.2)
+  Ideal.Quotient.lift _ (FreeCommRing.lift$ fun x : Σ i, G i => g x.1 x.2)
     (by 
-      suffices  : Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σi : ι, G i => g x.fst x.snd) ⊥
+      suffices  : Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σ i : ι, G i => g x.fst x.snd) ⊥
       ·
         intro x hx 
         exact (mem_bot P).1 (this hx)

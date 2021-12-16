@@ -60,13 +60,12 @@ section Defs
 a type `α` and `l` is a filter on `α`, means that eventually for `l`, `∥f∥` is bounded by `C * ∥g∥`.
 In other words, `∥f∥ / ∥g∥` is eventually bounded by `C`, modulo division by zero issues that are
 avoided by this definition. Probably you want to use `is_O` instead of this relation. -/
-@[irreducible]
-def is_O_with (c : ℝ) (f : α → E) (g : α → F) (l : Filter α) : Prop :=
-  ∀ᶠx in l, ∥f x∥ ≤ c*∥g x∥
+irreducible_def is_O_with (c : ℝ) (f : α → E) (g : α → F) (l : Filter α) : Prop :=
+  ∀ᶠ x in l, ∥f x∥ ≤ c*∥g x∥
 
 /-- Definition of `is_O_with`. We record it in a lemma as we will set `is_O_with` to be irreducible
 at the end of this file. -/
-theorem is_O_with_iff {c : ℝ} {f : α → E} {g : α → F} {l : Filter α} : is_O_with c f g l ↔ ∀ᶠx in l, ∥f x∥ ≤ c*∥g x∥ :=
+theorem is_O_with_iff {c : ℝ} {f : α → E} {g : α → F} {l : Filter α} : is_O_with c f g l ↔ ∀ᶠ x in l, ∥f x∥ ≤ c*∥g x∥ :=
   by 
     rw [is_O_with]
 
@@ -76,8 +75,7 @@ alias is_O_with_iff ↔ Asymptotics.IsOWith.bound Asymptotics.IsOWith.of_bound
 a filter on `α`, means that eventually for `l`, `∥f∥` is bounded by a constant multiple of `∥g∥`.
 In other words, `∥f∥ / ∥g∥` is eventually bounded, modulo division by zero issues that are avoided
 by this definition. -/
-@[irreducible]
-def is_O (f : α → E) (g : α → F) (l : Filter α) : Prop :=
+irreducible_def is_O (f : α → E) (g : α → F) (l : Filter α) : Prop :=
   ∃ c : ℝ, is_O_with c f g l
 
 /-- Definition of `is_O` in terms of `is_O_with`. We record it in a lemma as we will set
@@ -88,22 +86,21 @@ theorem is_O_iff_is_O_with {f : α → E} {g : α → F} {l : Filter α} : is_O 
 
 /-- Definition of `is_O` in terms of filters. We record it in a lemma as we will set
 `is_O` to be irreducible at the end of this file. -/
-theorem is_O_iff {f : α → E} {g : α → F} {l : Filter α} : is_O f g l ↔ ∃ c : ℝ, ∀ᶠx in l, ∥f x∥ ≤ c*∥g x∥ :=
+theorem is_O_iff {f : α → E} {g : α → F} {l : Filter α} : is_O f g l ↔ ∃ c : ℝ, ∀ᶠ x in l, ∥f x∥ ≤ c*∥g x∥ :=
   by 
     simp [is_O, is_O_with]
 
-theorem is_O.of_bound (c : ℝ) {f : α → E} {g : α → F} {l : Filter α} (h : ∀ᶠx in l, ∥f x∥ ≤ c*∥g x∥) : is_O f g l :=
+theorem is_O.of_bound (c : ℝ) {f : α → E} {g : α → F} {l : Filter α} (h : ∀ᶠ x in l, ∥f x∥ ≤ c*∥g x∥) : is_O f g l :=
   is_O_iff.2 ⟨c, h⟩
 
-theorem is_O.bound {f : α → E} {g : α → F} {l : Filter α} : is_O f g l → ∃ c : ℝ, ∀ᶠx in l, ∥f x∥ ≤ c*∥g x∥ :=
+theorem is_O.bound {f : α → E} {g : α → F} {l : Filter α} : is_O f g l → ∃ c : ℝ, ∀ᶠ x in l, ∥f x∥ ≤ c*∥g x∥ :=
   is_O_iff.1
 
 /-- The Landau notation `is_o f g l` where `f` and `g` are two functions on a type `α` and `l` is
 a filter on `α`, means that eventually for `l`, `∥f∥` is bounded by an arbitrarily small constant
 multiple of `∥g∥`. In other words, `∥f∥ / ∥g∥` tends to `0` along `l`, modulo division by zero
 issues that are avoided by this definition. -/
-@[irreducible]
-def is_o (f : α → E) (g : α → F) (l : Filter α) : Prop :=
+irreducible_def is_o (f : α → E) (g : α → F) (l : Filter α) : Prop :=
   ∀ ⦃c : ℝ⦄, 0 < c → is_O_with c f g l
 
 /-- Definition of `is_o` in terms of `is_O_with`. We record it in a lemma as we will set
@@ -117,14 +114,14 @@ alias is_o_iff_forall_is_O_with ↔ Asymptotics.IsOₓ.forall_is_O_with Asymptot
 
 /-- Definition of `is_o` in terms of filters. We record it in a lemma as we will set
 `is_o` to be irreducible at the end of this file. -/
-theorem is_o_iff {f : α → E} {g : α → F} {l : Filter α} : is_o f g l ↔ ∀ ⦃c : ℝ⦄, 0 < c → ∀ᶠx in l, ∥f x∥ ≤ c*∥g x∥ :=
+theorem is_o_iff {f : α → E} {g : α → F} {l : Filter α} : is_o f g l ↔ ∀ ⦃c : ℝ⦄, 0 < c → ∀ᶠ x in l, ∥f x∥ ≤ c*∥g x∥ :=
   by 
     simp only [is_o, is_O_with]
 
 alias is_o_iff ↔ Asymptotics.IsOₓ.bound Asymptotics.IsOₓ.of_bound
 
 theorem is_o.def {f : α → E} {g : α → F} {l : Filter α} (h : is_o f g l) {c : ℝ} (hc : 0 < c) :
-  ∀ᶠx in l, ∥f x∥ ≤ c*∥g x∥ :=
+  ∀ᶠ x in l, ∥f x∥ ≤ c*∥g x∥ :=
   is_o_iff.1 h hc
 
 theorem is_o.def' {f : α → E} {g : α → F} {l : Filter α} (h : is_o f g l) {c : ℝ} (hc : 0 < c) : is_O_with c f g l :=
@@ -172,11 +169,11 @@ theorem is_O.exists_nonneg (h : is_O f g' l) : ∃ (c : _)(H : 0 ≤ c), is_O_wi
   hc.exists_nonneg
 
 /-- `f = O(g)` if and only if `is_O_with c f g` for all sufficiently large `c`. -/
-theorem is_O_iff_eventually_is_O_with : is_O f g' l ↔ ∀ᶠc in at_top, is_O_with c f g' l :=
+theorem is_O_iff_eventually_is_O_with : is_O f g' l ↔ ∀ᶠ c in at_top, is_O_with c f g' l :=
   is_O_iff_is_O_with.trans ⟨fun ⟨c, hc⟩ => mem_at_top_sets.2 ⟨c, fun c' hc' => hc.weaken hc'⟩, fun h => h.exists⟩
 
 /-- `f = O(g)` if and only if `∀ᶠ x in l, ∥f x∥ ≤ c * ∥g x∥` for all sufficiently large `c`. -/
-theorem is_O_iff_eventually : is_O f g' l ↔ ∀ᶠc in at_top, ∀ᶠx in l, ∥f x∥ ≤ c*∥g' x∥ :=
+theorem is_O_iff_eventually : is_O f g' l ↔ ∀ᶠ c in at_top, ∀ᶠ x in l, ∥f x∥ ≤ c*∥g' x∥ :=
   is_O_iff_eventually_is_O_with.trans$
     by 
       simp only [is_O_with]
@@ -320,29 +317,25 @@ theorem is_O.trans (hfg : is_O f g' l) (hgk : is_O g' k l) : is_O f k l :=
   let ⟨c', hc'⟩ := hgk.is_O_with
   (hc.trans hc' cnonneg).IsO
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_o.trans_is_O_with (hfg : is_o f g l) (hgk : is_O_with c g k l) (hc : «expr < »(0, c)) : is_o f k l :=
-begin
-  unfold [ident is_o] ["at", "*"],
-  intros [ident c', ident c'pos],
-  have [] [":", expr «expr < »(0, «expr / »(c', c))] [],
-  from [expr div_pos c'pos hc],
-  exact [expr ((hfg this).trans hgk (le_of_lt this)).congr_const (div_mul_cancel _ (ne_of_gt hc))]
-end
+theorem is_o.trans_is_O_with (hfg : is_o f g l) (hgk : is_O_with c g k l) (hc : 0 < c) : is_o f k l :=
+  by 
+    unfold is_o  at *
+    intro c' c'pos 
+    have  : 0 < c' / c 
+    exact div_pos c'pos hc 
+    exact ((hfg this).trans hgk (le_of_ltₓ this)).congr_const (div_mul_cancel _ (ne_of_gtₓ hc))
 
 theorem is_o.trans_is_O (hfg : is_o f g l) (hgk : is_O g k' l) : is_o f k' l :=
   let ⟨c, cpos, hc⟩ := hgk.exists_pos 
   hfg.trans_is_O_with hc cpos
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_O_with.trans_is_o (hfg : is_O_with c f g l) (hgk : is_o g k l) (hc : «expr < »(0, c)) : is_o f k l :=
-begin
-  unfold [ident is_o] ["at", "*"],
-  intros [ident c', ident c'pos],
-  have [] [":", expr «expr < »(0, «expr / »(c', c))] [],
-  from [expr div_pos c'pos hc],
-  exact [expr (hfg.trans (hgk this) (le_of_lt hc)).congr_const (mul_div_cancel' _ (ne_of_gt hc))]
-end
+theorem is_O_with.trans_is_o (hfg : is_O_with c f g l) (hgk : is_o g k l) (hc : 0 < c) : is_o f k l :=
+  by 
+    unfold is_o  at *
+    intro c' c'pos 
+    have  : 0 < c' / c 
+    exact div_pos c'pos hc 
+    exact (hfg.trans (hgk this) (le_of_ltₓ hc)).congr_const (mul_div_cancel' _ (ne_of_gtₓ hc))
 
 theorem is_O.trans_is_o (hfg : is_O f g' l) (hgk : is_o g' k l) : is_o f k l :=
   let ⟨c, cpos, hc⟩ := hfg.exists_pos 
@@ -631,14 +624,14 @@ theorem is_o.prod_left_snd (h : is_o (fun x => (f' x, g' x)) k' l) : is_o g' k' 
 theorem is_o_prod_left : is_o (fun x => (f' x, g' x)) k' l ↔ is_o f' k' l ∧ is_o g' k' l :=
   ⟨fun h => ⟨h.prod_left_fst, h.prod_left_snd⟩, fun h => h.1.prodLeft h.2⟩
 
-theorem is_O_with.eq_zero_imp (h : is_O_with c f' g' l) : ∀ᶠx in l, g' x = 0 → f' x = 0 :=
+theorem is_O_with.eq_zero_imp (h : is_O_with c f' g' l) : ∀ᶠ x in l, g' x = 0 → f' x = 0 :=
   eventually.mono h.bound$
     fun x hx hg =>
       norm_le_zero_iff.1$
         by 
           simpa [hg] using hx
 
-theorem is_O.eq_zero_imp (h : is_O f' g' l) : ∀ᶠx in l, g' x = 0 → f' x = 0 :=
+theorem is_O.eq_zero_imp (h : is_O f' g' l) : ∀ᶠ x in l, g' x = 0 → f' x = 0 :=
   let ⟨C, hC⟩ := h.is_O_with 
   hC.eq_zero_imp
 
@@ -797,19 +790,19 @@ theorem is_o_refl_left : is_o (fun x => f' x - f' x) g' l :=
 variable {g g' l}
 
 @[simp]
-theorem is_O_with_zero_right_iff : is_O_with c f' (fun x => (0 : F')) l ↔ ∀ᶠx in l, f' x = 0 :=
+theorem is_O_with_zero_right_iff : is_O_with c f' (fun x => (0 : F')) l ↔ ∀ᶠ x in l, f' x = 0 :=
   by 
     simp only [is_O_with, exists_prop, true_andₓ, norm_zero, mul_zero, norm_le_zero_iff]
 
 @[simp]
-theorem is_O_zero_right_iff : is_O f' (fun x => (0 : F')) l ↔ ∀ᶠx in l, f' x = 0 :=
+theorem is_O_zero_right_iff : is_O f' (fun x => (0 : F')) l ↔ ∀ᶠ x in l, f' x = 0 :=
   ⟨fun h =>
       let ⟨c, hc⟩ := h.is_O_with 
       is_O_with_zero_right_iff.1 hc,
     fun h => (is_O_with_zero_right_iff.2 h : is_O_with 1 _ _ _).IsO⟩
 
 @[simp]
-theorem is_o_zero_right_iff : is_o f' (fun x => (0 : F')) l ↔ ∀ᶠx in l, f' x = 0 :=
+theorem is_o_zero_right_iff : is_o f' (fun x => (0 : F')) l ↔ ∀ᶠ x in l, f' x = 0 :=
   ⟨fun h => is_O_zero_right_iff.1 h.is_O, fun h => is_o.of_is_O_with$ fun c hc => is_O_with_zero_right_iff.2 h⟩
 
 theorem is_O_with_const_const (c : E) {c' : F'} (hc' : c' ≠ 0) (l : Filter α) :
@@ -836,23 +829,25 @@ theorem is_O_top : is_O f g ⊤ ↔ ∃ C, ∀ x, ∥f x∥ ≤ C*∥g x∥ :=
   by 
     rw [is_O_iff] <;> rfl
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem is_o_top : «expr ↔ »(is_o f' g' «expr⊤»(), ∀ x, «expr = »(f' x, 0)) :=
-begin
-  refine [expr ⟨_, λ h, (is_o_zero g' «expr⊤»()).congr (λ x, (h x).symm) (λ x, rfl)⟩],
-  simp [] [] ["only"] ["[", expr is_o_iff, ",", expr eventually_top, "]"] [] [],
-  refine [expr λ h x, norm_le_zero_iff.1 _],
-  have [] [":", expr tendsto (λ
-    c : exprℝ(), «expr * »(c, «expr∥ ∥»(g' x))) «expr𝓝[ ] »(Ioi 0, 0) (expr𝓝() 0)] [":=", expr ((continuous_id.mul continuous_const).tendsto' _ _ (zero_mul _)).mono_left inf_le_left],
-  exact [expr le_of_tendsto_of_tendsto tendsto_const_nhds this «expr $ »(eventually_nhds_within_iff.2, «expr $ »(eventually_of_forall, λ
-     c hc, h hc x))]
-end
+@[simp]
+theorem is_o_top : is_o f' g' ⊤ ↔ ∀ x, f' x = 0 :=
+  by 
+    refine' ⟨_, fun h => (is_o_zero g' ⊤).congr (fun x => (h x).symm) fun x => rfl⟩
+    simp only [is_o_iff, eventually_top]
+    refine' fun h x => norm_le_zero_iff.1 _ 
+    have  : tendsto (fun c : ℝ => c*∥g' x∥) (𝓝[Ioi 0] 0) (𝓝 0) :=
+      ((continuous_id.mul continuous_const).tendsto' _ _ (zero_mul _)).mono_left inf_le_left 
+    exact
+      le_of_tendsto_of_tendsto tendsto_const_nhds this
+        (eventually_nhds_within_iff.2$ eventually_of_forall$ fun c hc => h hc x)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[simp]
 theorem is_O_with_principal {s : Set α} : is_O_with c f g (𝓟 s) ↔ ∀ x _ : x ∈ s, ∥f x∥ ≤ c*∥g x∥ :=
   by 
     rw [is_O_with] <;> rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem is_O_principal {s : Set α} : is_O f g (𝓟 s) ↔ ∃ c, ∀ x _ : x ∈ s, ∥f x∥ ≤ c*∥g x∥ :=
   by 
     rw [is_O_iff] <;> rfl
@@ -894,22 +889,16 @@ theorem is_o_const_const_iff [ne_bot l] {d : E'} {c : F'} (hc : c ≠ 0) : is_o 
 theorem is_o_id_const {c : F'} (hc : c ≠ 0) : is_o (fun x : E' => x) (fun x => c) (𝓝 0) :=
   (is_o_const_iff hc).mpr (continuous_id.Tendsto 0)
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_O_const_of_tendsto
-{y : E'}
-(h : tendsto f' l (expr𝓝() y))
-{c : F'}
-(hc : «expr ≠ »(c, 0)) : is_O f' (λ x, c) l :=
-begin
-  refine [expr is_O.trans _ (is_O_const_const «expr + »(«expr∥ ∥»(y), 1) hc l)],
-  refine [expr is_O.of_bound 1 _],
-  simp [] [] ["only"] ["[", expr is_O_with, ",", expr one_mul, "]"] [] [],
-  have [] [":", expr tendsto (λ x, «expr∥ ∥»(f' x)) l (expr𝓝() «expr∥ ∥»(y))] [],
-  from [expr (continuous_norm.tendsto _).comp h],
-  have [ident Iy] [":", expr «expr < »(«expr∥ ∥»(y), «expr∥ ∥»(«expr + »(«expr∥ ∥»(y), 1)))] [],
-  from [expr lt_of_lt_of_le (lt_add_one _) (le_abs_self _)],
-  exact [expr this (ge_mem_nhds Iy)]
-end
+theorem is_O_const_of_tendsto {y : E'} (h : tendsto f' l (𝓝 y)) {c : F'} (hc : c ≠ 0) : is_O f' (fun x => c) l :=
+  by 
+    refine' is_O.trans _ (is_O_const_const (∥y∥+1) hc l)
+    refine' is_O.of_bound 1 _ 
+    simp only [is_O_with, one_mulₓ]
+    have  : tendsto (fun x => ∥f' x∥) l (𝓝 ∥y∥)
+    exact (continuous_norm.tendsto _).comp h 
+    have Iy : ∥y∥ < ∥∥y∥+1∥
+    exact lt_of_lt_of_leₓ (lt_add_one _) (le_abs_self _)
+    exact this (ge_mem_nhds Iy)
 
 section 
 
@@ -950,8 +939,8 @@ theorem is_O.const_mul_left {f : α → R} (h : is_O f g l) (c' : R) : is_O (fun
   (hc.const_mul_left c').IsO
 
 theorem is_O_with_self_const_mul' (u : Units R) (f : α → R) (l : Filter α) :
-  is_O_with ∥(«expr↑ » (u⁻¹) : R)∥ f (fun x => «expr↑ » u*f x) l :=
-  (is_O_with_const_mul_self («expr↑ » (u⁻¹)) _ l).congr_left$ fun x => u.inv_mul_cancel_left (f x)
+  is_O_with ∥(↑u⁻¹ : R)∥ f (fun x => (↑u)*f x) l :=
+  (is_O_with_const_mul_self (↑u⁻¹) _ l).congr_left$ fun x => u.inv_mul_cancel_left (f x)
 
 theorem is_O_with_self_const_mul (c : 𝕜) (hc : c ≠ 0) (f : α → 𝕜) (l : Filter α) :
   is_O_with (∥c∥⁻¹) f (fun x => c*f x) l :=
@@ -988,7 +977,7 @@ theorem is_O.of_const_mul_right {g : α → R} {c : R} (h : is_O f (fun x => c*g
   (hc.of_const_mul_right cnonneg).IsO
 
 theorem is_O_with.const_mul_right' {g : α → R} {u : Units R} {c' : ℝ} (hc' : 0 ≤ c') (h : is_O_with c' f g l) :
-  is_O_with (c'*∥(«expr↑ » (u⁻¹) : R)∥) f (fun x => «expr↑ » u*g x) l :=
+  is_O_with (c'*∥(↑u⁻¹ : R)∥) f (fun x => (↑u)*g x) l :=
   h.trans (is_O_with_self_const_mul' _ _ _) hc'
 
 theorem is_O_with.const_mul_right {g : α → 𝕜} {c : 𝕜} (hc : c ≠ 0) {c' : ℝ} (hc' : 0 ≤ c') (h : is_O_with c' f g l) :
@@ -1108,58 +1097,42 @@ theorem is_O_with.const_smul_left (h : is_O_with c f' g l) (c' : 𝕜) : is_O_wi
     refine' ((h.norm_left.const_mul_left ∥c'∥).congr _ _ fun _ => rfl).of_norm_left <;>
       intros  <;> simp only [norm_norm, norm_smul]
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_O_const_smul_left_iff
-{c : 𝕜}
-(hc : «expr ≠ »(c, 0)) : «expr ↔ »(is_O (λ x, «expr • »(c, f' x)) g l, is_O f' g l) :=
-begin
-  have [ident cne0] [":", expr «expr ≠ »(«expr∥ ∥»(c), 0)] [],
-  from [expr mt norm_eq_zero.mp hc],
-  rw ["[", "<-", expr is_O_norm_left, "]"] [],
-  simp [] [] ["only"] ["[", expr norm_smul, "]"] [] [],
-  rw ["[", expr is_O_const_mul_left_iff cne0, ",", expr is_O_norm_left, "]"] []
-end
+theorem is_O_const_smul_left_iff {c : 𝕜} (hc : c ≠ 0) : is_O (fun x => c • f' x) g l ↔ is_O f' g l :=
+  by 
+    have cne0 : ∥c∥ ≠ 0 
+    exact mt norm_eq_zero.mp hc 
+    rw [←is_O_norm_left]
+    simp only [norm_smul]
+    rw [is_O_const_mul_left_iff cne0, is_O_norm_left]
 
 theorem is_o_const_smul_left (h : is_o f' g l) (c : 𝕜) : is_o (fun x => c • f' x) g l :=
   by 
     refine' ((h.norm_left.const_mul_left ∥c∥).congr_left _).of_norm_left 
     exact fun x => (norm_smul _ _).symm
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_o_const_smul_left_iff
-{c : 𝕜}
-(hc : «expr ≠ »(c, 0)) : «expr ↔ »(is_o (λ x, «expr • »(c, f' x)) g l, is_o f' g l) :=
-begin
-  have [ident cne0] [":", expr «expr ≠ »(«expr∥ ∥»(c), 0)] [],
-  from [expr mt norm_eq_zero.mp hc],
-  rw ["[", "<-", expr is_o_norm_left, "]"] [],
-  simp [] [] ["only"] ["[", expr norm_smul, "]"] [] [],
-  rw ["[", expr is_o_const_mul_left_iff cne0, ",", expr is_o_norm_left, "]"] []
-end
+theorem is_o_const_smul_left_iff {c : 𝕜} (hc : c ≠ 0) : is_o (fun x => c • f' x) g l ↔ is_o f' g l :=
+  by 
+    have cne0 : ∥c∥ ≠ 0 
+    exact mt norm_eq_zero.mp hc 
+    rw [←is_o_norm_left]
+    simp only [norm_smul]
+    rw [is_o_const_mul_left_iff cne0, is_o_norm_left]
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_O_const_smul_right
-{c : 𝕜}
-(hc : «expr ≠ »(c, 0)) : «expr ↔ »(is_O f (λ x, «expr • »(c, f' x)) l, is_O f f' l) :=
-begin
-  have [ident cne0] [":", expr «expr ≠ »(«expr∥ ∥»(c), 0)] [],
-  from [expr mt norm_eq_zero.mp hc],
-  rw ["[", "<-", expr is_O_norm_right, "]"] [],
-  simp [] [] ["only"] ["[", expr norm_smul, "]"] [] [],
-  rw ["[", expr is_O_const_mul_right_iff cne0, ",", expr is_O_norm_right, "]"] []
-end
+theorem is_O_const_smul_right {c : 𝕜} (hc : c ≠ 0) : is_O f (fun x => c • f' x) l ↔ is_O f f' l :=
+  by 
+    have cne0 : ∥c∥ ≠ 0 
+    exact mt norm_eq_zero.mp hc 
+    rw [←is_O_norm_right]
+    simp only [norm_smul]
+    rw [is_O_const_mul_right_iff cne0, is_O_norm_right]
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_o_const_smul_right
-{c : 𝕜}
-(hc : «expr ≠ »(c, 0)) : «expr ↔ »(is_o f (λ x, «expr • »(c, f' x)) l, is_o f f' l) :=
-begin
-  have [ident cne0] [":", expr «expr ≠ »(«expr∥ ∥»(c), 0)] [],
-  from [expr mt norm_eq_zero.mp hc],
-  rw ["[", "<-", expr is_o_norm_right, "]"] [],
-  simp [] [] ["only"] ["[", expr norm_smul, "]"] [] [],
-  rw ["[", expr is_o_const_mul_right_iff cne0, ",", expr is_o_norm_right, "]"] []
-end
+theorem is_o_const_smul_right {c : 𝕜} (hc : c ≠ 0) : is_o f (fun x => c • f' x) l ↔ is_o f f' l :=
+  by 
+    have cne0 : ∥c∥ ≠ 0 
+    exact mt norm_eq_zero.mp hc 
+    rw [←is_o_norm_right]
+    simp only [norm_smul]
+    rw [is_o_const_mul_right_iff cne0, is_o_norm_right]
 
 end SmulConst
 
@@ -1211,8 +1184,9 @@ section Sum
 
 variable {ι : Type _} {A : ι → α → E'} {C : ι → ℝ} {s : Finset ι}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem is_O_with.sum (h : ∀ i _ : i ∈ s, is_O_with (C i) (A i) g l) :
-  is_O_with (∑i in s, C i) (fun x => ∑i in s, A i x) g l :=
+  is_O_with (∑ i in s, C i) (fun x => ∑ i in s, A i x) g l :=
   by 
     induction' s using Finset.induction_on with i s is IH
     ·
@@ -1221,7 +1195,8 @@ theorem is_O_with.sum (h : ∀ i _ : i ∈ s, is_O_with (C i) (A i) g l) :
       simp only [is, Finset.sum_insert, not_false_iff]
       exact (h _ (Finset.mem_insert_self i s)).add (IH fun j hj => h _ (Finset.mem_insert_of_mem hj))
 
-theorem is_O.sum (h : ∀ i _ : i ∈ s, is_O (A i) g l) : is_O (fun x => ∑i in s, A i x) g l :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem is_O.sum (h : ∀ i _ : i ∈ s, is_O (A i) g l) : is_O (fun x => ∑ i in s, A i x) g l :=
   by 
     induction' s using Finset.induction_on with i s is IH
     ·
@@ -1230,7 +1205,8 @@ theorem is_O.sum (h : ∀ i _ : i ∈ s, is_O (A i) g l) : is_O (fun x => ∑i i
       simp only [is, Finset.sum_insert, not_false_iff]
       exact (h _ (Finset.mem_insert_self i s)).add (IH fun j hj => h _ (Finset.mem_insert_of_mem hj))
 
-theorem is_o.sum (h : ∀ i _ : i ∈ s, is_o (A i) g' l) : is_o (fun x => ∑i in s, A i x) g' l :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem is_o.sum (h : ∀ i _ : i ∈ s, is_o (A i) g' l) : is_o (fun x => ∑ i in s, A i x) g' l :=
   by 
     induction' s using Finset.induction_on with i s is IH
     ·
@@ -1255,7 +1231,7 @@ theorem is_o.tendsto_0 {f g : α → 𝕜} {l : Filter α} (h : is_o f g l) : te
           byCases' h : ∥g x∥ = 0 <;> simp [h, zero_le_one]
   (is_o_one_iff 𝕜).mp (eq₁.trans_is_O eq₂)
 
-theorem is_o_iff_tendsto' {f g : α → 𝕜} {l : Filter α} (hgf : ∀ᶠx in l, g x = 0 → f x = 0) :
+theorem is_o_iff_tendsto' {f g : α → 𝕜} {l : Filter α} (hgf : ∀ᶠ x in l, g x = 0 → f x = 0) :
   is_o f g l ↔ tendsto (fun x => f x / g x) l (𝓝 0) :=
   Iff.intro is_o.tendsto_0$
     fun h =>
@@ -1311,7 +1287,7 @@ variable {u v : α → 𝕜}
 /-- If `∥φ∥` is eventually bounded by `c`, and `u =ᶠ[l] φ * v`, then we have `is_O_with c u v l`.
     This does not require any assumptions on `c`, which is why we keep this version along with
     `is_O_with_iff_exists_eq_mul`. -/
-theorem is_O_with_of_eq_mul (φ : α → 𝕜) (hφ : ∀ᶠx in l, ∥φ x∥ ≤ c) (h : u =ᶠ[l] φ*v) : is_O_with c u v l :=
+theorem is_O_with_of_eq_mul (φ : α → 𝕜) (hφ : ∀ᶠ x in l, ∥φ x∥ ≤ c) (h : u =ᶠ[l] φ*v) : is_O_with c u v l :=
   by 
     unfold is_O_with 
     refine' h.symm.rw (fun x a => ∥a∥ ≤ c*∥v x∥) (hφ.mono$ fun x hx => _)
@@ -1319,9 +1295,9 @@ theorem is_O_with_of_eq_mul (φ : α → 𝕜) (hφ : ∀ᶠx in l, ∥φ x∥ �
     exact mul_le_mul_of_nonneg_right hx (norm_nonneg _)
 
 theorem is_O_with_iff_exists_eq_mul (hc : 0 ≤ c) :
-  is_O_with c u v l ↔ ∃ (φ : α → 𝕜)(hφ : ∀ᶠx in l, ∥φ x∥ ≤ c), u =ᶠ[l] φ*v :=
+  is_O_with c u v l ↔ ∃ (φ : α → 𝕜)(hφ : ∀ᶠ x in l, ∥φ x∥ ≤ c), u =ᶠ[l] φ*v :=
   by 
-    split 
+    constructor
     ·
       intro h 
       use fun x => u x / v x 
@@ -1332,12 +1308,12 @@ theorem is_O_with_iff_exists_eq_mul (hc : 0 ≤ c) :
       exact is_O_with_of_eq_mul φ hφ h
 
 theorem is_O_with.exists_eq_mul (h : is_O_with c u v l) (hc : 0 ≤ c) :
-  ∃ (φ : α → 𝕜)(hφ : ∀ᶠx in l, ∥φ x∥ ≤ c), u =ᶠ[l] φ*v :=
+  ∃ (φ : α → 𝕜)(hφ : ∀ᶠ x in l, ∥φ x∥ ≤ c), u =ᶠ[l] φ*v :=
   (is_O_with_iff_exists_eq_mul hc).mp h
 
 theorem is_O_iff_exists_eq_mul : is_O u v l ↔ ∃ (φ : α → 𝕜)(hφ : l.is_bounded_under (· ≤ ·) (norm ∘ φ)), u =ᶠ[l] φ*v :=
   by 
-    split 
+    constructor
     ·
       rintro h 
       rcases h.exists_nonneg with ⟨c, hnnc, hc⟩
@@ -1351,7 +1327,7 @@ alias is_O_iff_exists_eq_mul ↔ Asymptotics.IsO.exists_eq_mul _
 
 theorem is_o_iff_exists_eq_mul : is_o u v l ↔ ∃ (φ : α → 𝕜)(hφ : tendsto φ l (𝓝 0)), u =ᶠ[l] φ*v :=
   by 
-    split 
+    constructor
     ·
       exact fun h => ⟨fun x => u x / v x, h.tendsto_0, h.eventually_mul_div_cancel.symm⟩
     ·
@@ -1380,7 +1356,7 @@ theorem div_is_bounded_under_of_is_O {α : Type _} {l : Filter α} {f g : α →
     ·
       exact le_max_iff.2 (Or.inl ((div_le_iff (norm_pos_iff.2 hgx)).2 hx))
 
-theorem is_O_iff_div_is_bounded_under {α : Type _} {l : Filter α} {f g : α → 𝕜} (hgf : ∀ᶠx in l, g x = 0 → f x = 0) :
+theorem is_O_iff_div_is_bounded_under {α : Type _} {l : Filter α} {f g : α → 𝕜} (hgf : ∀ᶠ x in l, g x = 0 → f x = 0) :
   is_O f g l ↔ is_bounded_under (· ≤ ·) l fun x => ∥f x / g x∥ :=
   by 
     refine' ⟨div_is_bounded_under_of_is_O, fun h => _⟩
@@ -1394,7 +1370,7 @@ theorem is_O_iff_div_is_bounded_under {α : Type _} {l : Filter α} {f g : α �
     ·
       refine' (div_le_iff (norm_pos_iff.2 hgx)).mp hx.2
 
-theorem is_O_of_div_tendsto_nhds {α : Type _} {l : Filter α} {f g : α → 𝕜} (hgf : ∀ᶠx in l, g x = 0 → f x = 0) (c : 𝕜)
+theorem is_O_of_div_tendsto_nhds {α : Type _} {l : Filter α} {f g : α → 𝕜} (hgf : ∀ᶠ x in l, g x = 0 → f x = 0) (c : 𝕜)
   (H : Filter.Tendsto (f / g) l (𝓝 c)) : is_O f g l :=
   (is_O_iff_div_is_bounded_under hgf).2$ is_bounded_under_of_tendsto H
 
@@ -1406,20 +1382,17 @@ theorem is_o.tendsto_zero_of_tendsto {α E 𝕜 : Type _} [NormedGroup E] [Norme
       rwa [is_o_one_iff] at h 
     exact huv.trans_is_O (is_O_one_of_tendsto 𝕜 hv)
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_o_pow_pow
-{m n : exprℕ()}
-(h : «expr < »(m, n)) : is_o (λ x : 𝕜, «expr ^ »(x, n)) (λ x, «expr ^ »(x, m)) (expr𝓝() 0) :=
-begin
-  let [ident p] [] [":=", expr «expr - »(n, m)],
-  have [ident nmp] [":", expr «expr = »(n, «expr + »(m, p))] [":=", expr (add_tsub_cancel_of_le (le_of_lt h)).symm],
-  have [] [":", expr «expr = »(λ x : 𝕜, «expr ^ »(x, m), λ x, «expr * »(«expr ^ »(x, m), 1))] [],
-  by simp [] [] ["only"] ["[", expr mul_one, "]"] [] [],
-  simp [] [] ["only"] ["[", expr this, ",", expr pow_add, ",", expr nmp, "]"] [] [],
-  refine [expr is_O.mul_is_o (is_O_refl _ _) ((is_o_one_iff _).2 _)],
-  convert [] [expr (continuous_pow p).tendsto (0 : 𝕜)] [],
-  exact [expr (zero_pow (tsub_pos_of_lt h)).symm]
-end
+theorem is_o_pow_pow {m n : ℕ} (h : m < n) : is_o (fun x : 𝕜 => x ^ n) (fun x => x ^ m) (𝓝 0) :=
+  by 
+    let p := n - m 
+    have nmp : n = m+p := (add_tsub_cancel_of_le (le_of_ltₓ h)).symm 
+    have  : (fun x : 𝕜 => x ^ m) = fun x => (x ^ m)*1
+    ·
+      simp only [mul_oneₓ]
+    simp only [this, pow_addₓ, nmp]
+    refine' is_O.mul_is_o (is_O_refl _ _) ((is_o_one_iff _).2 _)
+    convert (continuous_pow p).Tendsto (0 : 𝕜)
+    exact (zero_pow (tsub_pos_of_lt h)).symm
 
 theorem is_o_norm_pow_norm_pow {m n : ℕ} (h : m < n) : is_o (fun x : E' => ∥x∥ ^ n) (fun x => ∥x∥ ^ m) (𝓝 (0 : E')) :=
   (is_o_pow_pow h).comp_tendsto tendsto_norm_zero
@@ -1459,24 +1432,20 @@ theorem is_o.right_is_O_sub {f₁ f₂ : α → E'} (h : is_o f₁ f₂ l) : is_
 theorem is_o.right_is_O_add {f₁ f₂ : α → E'} (h : is_o f₁ f₂ l) : is_O f₂ (fun x => f₁ x+f₂ x) l :=
   ((h.def' one_half_pos).right_le_add_of_lt_1 one_half_lt_one).IsO
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
 /-- If `f x = O(g x)` along `cofinite`, then there exists a positive constant `C` such that
 `∥f x∥ ≤ C * ∥g x∥` whenever `g x ≠ 0`. -/
-theorem bound_of_is_O_cofinite
-(h : is_O f g' cofinite) : «expr∃ , »((C «expr > » 0), ∀
- {{x}}, «expr ≠ »(g' x, 0) → «expr ≤ »(«expr∥ ∥»(f x), «expr * »(C, «expr∥ ∥»(g' x)))) :=
-begin
-  rcases [expr h.exists_pos, "with", "⟨", ident C, ",", ident C₀, ",", ident hC, "⟩"],
-  rw ["[", expr is_O_with, ",", expr eventually_cofinite, "]"] ["at", ident hC],
-  rcases [expr (hC.to_finset.image (λ
-     x, «expr / »(«expr∥ ∥»(f x), «expr∥ ∥»(g' x)))).exists_le, "with", "⟨", ident C', ",", ident hC', "⟩"],
-  have [] [":", expr ∀
-   x, «expr < »(«expr * »(C, «expr∥ ∥»(g' x)), «expr∥ ∥»(f x)) → «expr ≤ »(«expr / »(«expr∥ ∥»(f x), «expr∥ ∥»(g' x)), C')] [],
-  by simpa [] [] [] [] [] ["using", expr hC'],
-  refine [expr ⟨max C C', lt_max_iff.2 (or.inl C₀), λ x h₀, _⟩],
-  rw ["[", expr max_mul_of_nonneg _ _ (norm_nonneg _), ",", expr le_max_iff, ",", expr or_iff_not_imp_left, ",", expr not_le, "]"] [],
-  exact [expr λ hx, (div_le_iff (norm_pos_iff.2 h₀)).1 (this _ hx)]
-end
+theorem bound_of_is_O_cofinite (h : is_O f g' cofinite) : ∃ (C : _)(_ : C > 0), ∀ ⦃x⦄, g' x ≠ 0 → ∥f x∥ ≤ C*∥g' x∥ :=
+  by 
+    rcases h.exists_pos with ⟨C, C₀, hC⟩
+    rw [is_O_with, eventually_cofinite] at hC 
+    rcases(hC.to_finset.image fun x => ∥f x∥ / ∥g' x∥).exists_le with ⟨C', hC'⟩
+    have  : ∀ x, (C*∥g' x∥) < ∥f x∥ → ∥f x∥ / ∥g' x∥ ≤ C'
+    ·
+      simpa using hC' 
+    refine' ⟨max C C', lt_max_iff.2 (Or.inl C₀), fun x h₀ => _⟩
+    rw [max_mul_of_nonneg _ _ (norm_nonneg _), le_max_iff, or_iff_not_imp_left, not_leₓ]
+    exact fun hx => (div_le_iff (norm_pos_iff.2 h₀)).1 (this _ hx)
 
 theorem is_O_cofinite_iff (h : ∀ x, g' x = 0 → f' x = 0) : is_O f' g' cofinite ↔ ∃ C, ∀ x, ∥f' x∥ ≤ C*∥g' x∥ :=
   ⟨fun h' =>
@@ -1489,6 +1458,7 @@ theorem is_O_cofinite_iff (h : ∀ x, g' x = 0 → f' x = 0) : is_O f' g' cofini
           else hC hx⟩,
     fun h => (is_O_top.2 h).mono le_top⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
 theorem bound_of_is_O_nat_at_top {f : ℕ → E} {g' : ℕ → E'} (h : is_O f g' at_top) :
   ∃ (C : _)(_ : C > 0), ∀ ⦃x⦄, g' x ≠ 0 → ∥f x∥ ≤ C*∥g' x∥ :=
   bound_of_is_O_cofinite$
@@ -1518,18 +1488,17 @@ theorem is_O_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedGr
     simp only [is_O_iff_eventually_is_O_with, ←eventually_all]
     exact eventually_congr (eventually_at_top.2 ⟨0, fun c => is_O_with_pi⟩)
 
--- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp]
-theorem is_o_pi
-{ι : Type*}
-[fintype ι]
-{E' : ι → Type*}
-[∀ i, normed_group (E' i)]
-{f : α → ∀ i, E' i} : «expr ↔ »(is_o f g' l, ∀ i, is_o (λ x, f x i) g' l) :=
-begin
-  simp [] [] ["only"] ["[", expr is_o, ",", expr is_O_with_pi, ",", expr le_of_lt, "]"] [] [] { contextual := tt },
-  exact [expr ⟨λ h i c hc, h hc i, λ h c hc i, h i hc⟩]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    is_o_pi
+    { ι : Type _ } [ Fintype ι ] { E' : ι → Type _ } [ ∀ i , NormedGroup E' i ] { f : α → ∀ i , E' i }
+      : is_o f g' l ↔ ∀ i , is_o fun x => f x i g' l
+    :=
+      by
+        simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) only [ is_o , is_O_with_pi , le_of_ltₓ ]
+          exact ⟨ fun h i c hc => h hc i , fun h c hc i => h i hc ⟩
 
 end Asymptotics
 

@@ -151,7 +151,7 @@ def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h�
 variable {G} (H)
 
 /-- The canonical map to the left cosets. -/
-def to_quotient : G →[G] QuotientGroup.Quotient H :=
+def to_quotient : G →[G] G ⧸ H :=
   ⟨coeₓ, fun g x => rfl⟩
 
 @[simp]
@@ -185,7 +185,7 @@ instance : CoeFun (A →+[M] B) fun _ => A → B :=
 variable {M A B}
 
 @[simp]
-theorem to_fun_eq_coe (f : A →+[M] B) : f.to_fun = «expr⇑ » f :=
+theorem to_fun_eq_coe (f : A →+[M] B) : f.to_fun = ⇑f :=
   rfl
 
 @[normCast]

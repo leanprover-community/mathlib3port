@@ -72,15 +72,19 @@ theorem one_le : (1 : Submodule R A) ≤ P ↔ (1 : A) ∈ P :=
 /-- Multiplication of sub-R-modules of an R-algebra A. The submodule `M * N` is the
 smallest R-submodule of `A` containing the elements `m * n` for `m ∈ M` and `n ∈ N`. -/
 instance : Mul (Submodule R A) :=
-  ⟨fun M N => ⨆s : M, N.map$ Algebra.lmul R A s.1⟩
+  ⟨fun M N => ⨆ s : M, N.map$ Algebra.lmul R A s.1⟩
 
 theorem mul_mem_mul (hm : m ∈ M) (hn : n ∈ N) : (m*n) ∈ M*N :=
   (le_supr _ ⟨m, hm⟩ : _ ≤ M*N) ⟨n, hn, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » M)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ∈ » N)
 theorem mul_le : (M*N) ≤ P ↔ ∀ m _ : m ∈ M n _ : n ∈ N, (m*n) ∈ P :=
   ⟨fun H m hm n hn => H$ mul_mem_mul hm hn,
     fun H => supr_le$ fun ⟨m, hm⟩ => map_le_iff_le_comap.2$ fun n hn => H m hm n hn⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » M)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ∈ » N)
 @[elab_as_eliminator]
 protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M*N) (hm : ∀ m _ : m ∈ M n _ : n ∈ N, C (m*n))
   (h0 : C 0) (ha : ∀ x y, C x → C y → C (x+y)) (hs : ∀ r : R x, C x → C (r • x)) : C r :=
@@ -188,19 +192,19 @@ theorem sup_mul : ((M⊔N)*P) = (M*P)⊔N*P :=
         mem_sup.2 ⟨_, mul_mem_mul hm hp, _, mul_mem_mul hn hp, hmn ▸ (add_mulₓ m n p).symm⟩)
     (sup_le (mul_le_mul_left le_sup_left) (mul_le_mul_left le_sup_right))
 
-theorem mul_subset_mul : ((«expr↑ » M : Set A)*(«expr↑ » N : Set A)) ⊆ («expr↑ » (M*N) : Set A) :=
+theorem mul_subset_mul : ((↑M : Set A)*(↑N : Set A)) ⊆ (↑M*N : Set A) :=
   by 
     rintro _ ⟨i, j, hi, hj, rfl⟩
     exact mul_mem_mul hi hj
 
 theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
   map f.to_linear_map (M*N) = map f.to_linear_map M*map f.to_linear_map N :=
-  calc map f.to_linear_map (M*N) = ⨆i : M, (N.map (lmul R A i)).map f.to_linear_map := map_supr _ _ 
+  calc map f.to_linear_map (M*N) = ⨆ i : M, (N.map (lmul R A i)).map f.to_linear_map := map_supr _ _ 
     _ = map f.to_linear_map M*map f.to_linear_map N :=
     by 
       apply congr_argₓ Sup 
       ext S 
-      split  <;> rintro ⟨y, hy⟩
+      constructor <;> rintro ⟨y, hy⟩
       ·
         use f y, mem_map.mpr ⟨y.1, y.2, rfl⟩
         refine' trans _ hy 
@@ -219,22 +223,17 @@ section DecidableEq
 
 open_locale Classical
 
--- error in Algebra.Algebra.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_span_mul_finite_of_mem_span_mul
-{S : set A}
-{S' : set A}
-{x : A}
-(hx : «expr ∈ »(x, span R «expr * »(S, S'))) : «expr∃ , »((T
-  T' : finset A), «expr ∧ »(«expr ⊆ »(«expr↑ »(T), S), «expr ∧ »(«expr ⊆ »(«expr↑ »(T'), S'), «expr ∈ »(x, span R («expr * »(T, T') : set A))))) :=
-begin
-  obtain ["⟨", ident U, ",", ident h, ",", ident hU, "⟩", ":=", expr mem_span_finite_of_mem_span hx],
-  obtain ["⟨", ident T, ",", ident T', ",", ident hS, ",", ident hS', ",", ident h, "⟩", ":=", expr finset.subset_mul h],
-  use ["[", expr T, ",", expr T', ",", expr hS, ",", expr hS', "]"],
-  have [ident h'] [":", expr «expr ⊆ »((U : set A), «expr * »(T, T'))] [],
-  { assumption_mod_cast },
-  have [ident h''] [] [":=", expr span_mono h' hU],
-  assumption
-end
+theorem mem_span_mul_finite_of_mem_span_mul {S : Set A} {S' : Set A} {x : A} (hx : x ∈ span R (S*S')) :
+  ∃ T T' : Finset A, ↑T ⊆ S ∧ ↑T' ⊆ S' ∧ x ∈ span R (T*T' : Set A) :=
+  by 
+    obtain ⟨U, h, hU⟩ := mem_span_finite_of_mem_span hx 
+    obtain ⟨T, T', hS, hS', h⟩ := Finset.subset_mul h 
+    use T, T', hS, hS' 
+    have h' : (U : Set A) ⊆ T*T'
+    ·
+      assumptionModCast 
+    have h'' := span_mono h' hU 
+    assumption
 
 end DecidableEq
 
@@ -242,16 +241,16 @@ theorem mul_eq_span_mul_set (s t : Submodule R A) : (s*t) = span R ((s : Set A)*
   by 
     rw [←span_mul_span, span_eq, span_eq]
 
-theorem supr_mul (s : ι → Submodule R A) (t : Submodule R A) : ((⨆i, s i)*t) = ⨆i, s i*t :=
+theorem supr_mul (s : ι → Submodule R A) (t : Submodule R A) : ((⨆ i, s i)*t) = ⨆ i, s i*t :=
   by 
-    suffices  : ((⨆i, span R (s i : Set A))*span R t) = ⨆i, span R (s i)*span R t
+    suffices  : ((⨆ i, span R (s i : Set A))*span R t) = ⨆ i, span R (s i)*span R t
     ·
       simpa only [span_eq] using this 
     simpRw [span_mul_span, ←span_Union, span_mul_span, Set.Union_mul]
 
-theorem mul_supr (t : Submodule R A) (s : ι → Submodule R A) : (t*⨆i, s i) = ⨆i, t*s i :=
+theorem mul_supr (t : Submodule R A) (s : ι → Submodule R A) : (t*⨆ i, s i) = ⨆ i, t*s i :=
   by 
-    suffices  : (span R (t : Set A)*⨆i, span R (s i)) = ⨆i, span R t*span R (s i)
+    suffices  : (span R (t : Set A)*⨆ i, span R (s i)) = ⨆ i, span R t*span R (s i)
     ·
       simpa only [span_eq] using this 
     simpRw [span_mul_span, ←span_Union, span_mul_span, Set.mul_Union]
@@ -272,7 +271,7 @@ instance : Semiringₓ (Submodule R A) :=
 
 variable (M)
 
-theorem pow_subset_pow {n : ℕ} : («expr↑ » M : Set A) ^ n ⊆ «expr↑ » (M ^ n : Submodule R A) :=
+theorem pow_subset_pow {n : ℕ} : (↑M : Set A) ^ n ⊆ ↑(M ^ n : Submodule R A) :=
   by 
     induction' n with n ih
     ·
@@ -314,21 +313,19 @@ protected theorem mul_commₓ : (M*N) = N*M :=
 instance : CommSemiringₓ (Submodule R A) :=
   { Submodule.semiring with mul_comm := Submodule.mul_comm }
 
--- error in Algebra.Algebra.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prod_span
-{ι : Type*}
-(s : finset ι)
-(M : ι → set A) : «expr = »(«expr∏ in , »((i), s, submodule.span R (M i)), submodule.span R «expr∏ in , »((i), s, M i)) :=
-begin
-  letI [] [] [":=", expr classical.dec_eq ι],
-  refine [expr finset.induction_on s _ _],
-  { simp [] [] [] ["[", expr one_eq_span, ",", expr set.singleton_one, "]"] [] [] },
-  { intros ["_", "_", ident H, ident ih],
-    rw ["[", expr finset.prod_insert H, ",", expr finset.prod_insert H, ",", expr ih, ",", expr span_mul_span, "]"] [] }
-end
+theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
+  (∏ i in s, Submodule.span R (M i)) = Submodule.span R (∏ i in s, M i) :=
+  by 
+    let this' := Classical.decEq ι 
+    refine' Finset.induction_on s _ _
+    ·
+      simp [one_eq_span, Set.singleton_one]
+    ·
+      intro _ _ H ih 
+      rw [Finset.prod_insert H, Finset.prod_insert H, ih, span_mul_span]
 
 theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
-  (∏i in s, span R ({x i} : Set A)) = span R {∏i in s, x i} :=
+  (∏ i in s, span R ({x i} : Set A)) = span R {∏ i in s, x i} :=
   by 
     rw [prod_span, Set.finset_prod_singleton]
 
@@ -381,32 +378,33 @@ theorem smul_singleton (a : A) (M : Submodule R A) : ({a} : Set A).up • M = M.
 
 section Quotientₓ
 
-/-- The elements of `I / J` are the `x` such that `x • J ⊆ I`.
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » J)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The elements of `I / J` are the `x` such that `x • J ⊆ I`.
+    
+    In fact, we define `x ∈ I / J` to be `∀ y ∈ J, x * y ∈ I` (see `mem_div_iff_forall_mul_mem`),
+    which is equivalent to `x • J ⊆ I` (see `mem_div_iff_smul_subset`), but nicer to use in proofs.
+    
+    This is the general form of the ideal quotient, traditionally written $I : J$.
+    -/
+  instance
+    : Div Submodule R A
+    :=
+      ⟨
+        fun
+          I J
+            =>
+            {
+              Carrier := { x | ∀ y _ : y ∈ J , x * y ∈ I } ,
+                zero_mem' := fun y hy => by rw [ zero_mul ] apply Submodule.zero_mem ,
+                add_mem' := fun a b ha hb y hy => by rw [ add_mulₓ ] exact Submodule.add_mem _ ha _ hy hb _ hy ,
+                smul_mem' := fun r x hx y hy => by rw [ Algebra.smul_mul_assoc ] exact Submodule.smul_mem _ _ hx _ hy
+              }
+        ⟩
 
-In fact, we define `x ∈ I / J` to be `∀ y ∈ J, x * y ∈ I` (see `mem_div_iff_forall_mul_mem`),
-which is equivalent to `x • J ⊆ I` (see `mem_div_iff_smul_subset`), but nicer to use in proofs.
-
-This is the general form of the ideal quotient, traditionally written $I : J$.
--/
-instance : Div (Submodule R A) :=
-  ⟨fun I J =>
-      { Carrier := { x | ∀ y _ : y ∈ J, (x*y) ∈ I },
-        zero_mem' :=
-          fun y hy =>
-            by 
-              rw [zero_mul]
-              apply Submodule.zero_mem,
-        add_mem' :=
-          fun a b ha hb y hy =>
-            by 
-              rw [add_mulₓ]
-              exact Submodule.add_mem _ (ha _ hy) (hb _ hy),
-        smul_mem' :=
-          fun r x hx y hy =>
-            by 
-              rw [Algebra.smul_mul_assoc]
-              exact Submodule.smul_mem _ _ (hx _ hy) }⟩
-
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » J)
 theorem mem_div_iff_forall_mul_mem {x : A} {I J : Submodule R A} : x ∈ I / J ↔ ∀ y _ : y ∈ J, (x*y) ∈ I :=
   Iff.refl _
 
@@ -418,6 +416,8 @@ theorem mem_div_iff_smul_subset {x : A} {I J : Submodule R A} : x ∈ I / J ↔ 
         assumption,
     fun h y hy => h (Set.smul_mem_smul_set hy)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » K)
 theorem le_div_iff {I J K : Submodule R A} : I ≤ J / K ↔ ∀ x _ : x ∈ I z _ : z ∈ K, (x*z) ∈ J :=
   Iff.refl _
 
@@ -428,7 +428,7 @@ theorem le_div_iff_mul_le {I J K : Submodule R A} : I ≤ J / K ↔ (I*K) ≤ J 
 @[simp]
 theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 :=
   by 
-    split 
+    constructor 
     all_goals 
       intro hI
     ·
@@ -436,6 +436,7 @@ theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 :=
     ·
       rwa [le_div_iff_mul_le, one_mulₓ]
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
 theorem le_self_mul_one_div {I : Submodule R A} (hI : I ≤ 1) : I ≤ I*1 / I :=
   by 
     rw [←mul_oneₓ I]
@@ -455,7 +456,7 @@ theorem map_div {B : Type _} [CommRingₓ B] [Algebra R B] (I J : Submodule R A)
   by 
     ext x 
     simp only [mem_map, mem_div_iff_forall_mul_mem]
-    split 
+    constructor
     ·
       rintro ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
       exact ⟨x*y, hx _ hy, h.map_mul x y⟩

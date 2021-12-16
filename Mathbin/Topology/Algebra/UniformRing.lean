@@ -27,7 +27,9 @@ open Classical Set Filter TopologicalSpace AddCommGroupₓ
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
+
+universe u
 
 namespace UniformSpace.Completion
 
@@ -54,18 +56,16 @@ theorem coe_mul (a b : α) : ((a*b : α) : completion α) = a*b :=
 
 variable [UniformAddGroup α]
 
--- error in Topology.Algebra.UniformRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_mul : continuous (λ p : «expr × »(completion α, completion α), «expr * »(p.1, p.2)) :=
-begin
-  let [ident m] [] [":=", expr (add_monoid_hom.mul : «expr →+ »(α, «expr →+ »(α, α))).compr₂ to_compl],
-  have [] [":", expr continuous (λ p : «expr × »(α, α), m p.1 p.2)] [],
-  from [expr (continuous_coe α).comp continuous_mul],
-  have [ident di] [":", expr dense_inducing (to_compl : α → completion α)] [],
-  from [expr dense_inducing_coe],
-  convert [] [expr di.extend_Z_bilin di this] [],
-  ext [] ["⟨", ident x, ",", ident y, "⟩"] [],
-  refl
-end
+theorem continuous_mul : Continuous fun p : completion α × completion α => p.1*p.2 :=
+  by 
+    let m := (AddMonoidHom.mul : α →+ α →+ α).compr₂ to_compl 
+    have  : Continuous fun p : α × α => m p.1 p.2 
+    exact (continuous_coe α).comp continuous_mul 
+    have di : DenseInducing (to_compl : α → completion α)
+    exact dense_inducing_coe 
+    convert di.extend_Z_bilin di this 
+    ext ⟨x, y⟩
+    rfl
 
 theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → completion α} (hf : Continuous f)
   (hg : Continuous g) : Continuous fun b => f b*g b :=
@@ -125,8 +125,6 @@ def coe_ring_hom : α →+* completion α :=
 
 theorem continuous_coe_ring_hom : Continuous (coe_ring_hom : α → completion α) :=
   continuous_coe α
-
-universe u
 
 variable {β : Type u} [UniformSpace β] [Ringₓ β] [UniformAddGroup β] [TopologicalRing β] (f : α →+* β)
   (hf : Continuous f)
@@ -188,8 +186,8 @@ theorem ring_sep_rel α [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] 
   separation_setoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
   Setoidₓ.ext$ fun x y => group_separation_rel x y
 
-theorem ring_sep_quot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
-  Quotientₓ (separation_setoid α) = (⊥ : Ideal α).closure.Quotient :=
+theorem ring_sep_quot (α : Type u) [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
+  Quotientₓ (separation_setoid α) = (α ⧸ (⊥ : Ideal α).closure) :=
   by 
     rw [@ring_sep_rel α r] <;> rfl
 
@@ -197,7 +195,7 @@ theorem ring_sep_quot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup
 continuous, get an equivalence between the separated quotient of `α` and the quotient ring
 corresponding to the closure of zero. -/
 def sep_quot_equiv_ring_quot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
-  Quotientₓ (separation_setoid α) ≃ (⊥ : Ideal α).closure.Quotient :=
+  Quotientₓ (separation_setoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
   Quotientₓ.congrRight$ fun x y => group_separation_rel x y
 
 instance CommRingₓ [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :

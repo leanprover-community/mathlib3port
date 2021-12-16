@@ -178,6 +178,10 @@ variable (f)
 theorem single_injective (i : I) : Function.Injective (single i : f i → ∀ i, f i) :=
   Function.update_injective _ i
 
+@[simp]
+theorem single_inj (i : I) {x y : f i} : Pi.single i x = Pi.single i y ↔ x = y :=
+  (Pi.single_injective _ _).eq_iff
+
 end 
 
 end Pi

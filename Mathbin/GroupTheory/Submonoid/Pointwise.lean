@@ -3,14 +3,19 @@ import Mathbin.Algebra.Pointwise
 
 /-! # Pointwise instances on `submonoid`s and `add_submonoid`s
 
-This file provides the actions
+This file provides:
+
+* `submonoid.has_inv`
+* `add_submonoid.has_neg`
+
+and the actions
 
 * `submonoid.pointwise_mul_action`
 * `add_submonoid.pointwise_mul_action`
 
 which matches the action of `mul_action_set`.
 
-These actions are available in the `pointwise` locale.
+These are all available in the `pointwise` locale.
 
 ## Implementation notes
 
@@ -22,7 +27,96 @@ on `set`s.
 -/
 
 
-variable {α : Type _} {M : Type _} {A : Type _} [Monoidₓ M] [AddMonoidₓ A]
+variable {α : Type _} {M : Type _} {G : Type _} {A : Type _} [Monoidₓ M] [AddMonoidₓ A]
+
+namespace Submonoid
+
+variable [Groupₓ G]
+
+open_locale Pointwise
+
+/-- The submonoid with every element inverted. -/
+@[toAdditive " The additive submonoid with every element negated. "]
+protected def HasInv : HasInv (Submonoid G) :=
+  { inv :=
+      fun S =>
+        { Carrier := (S : Set G)⁻¹,
+          one_mem' :=
+            show (1 : G)⁻¹ ∈ S by 
+              rw [one_inv]
+              exact S.one_mem,
+          mul_mem' :=
+            fun a b ha : a⁻¹ ∈ S hb : b⁻¹ ∈ S =>
+              show (a*b)⁻¹ ∈ S by 
+                rw [mul_inv_rev]
+                exact S.mul_mem hb ha } }
+
+localized [Pointwise] attribute [instance] Submonoid.hasInv
+
+open_locale Pointwise
+
+@[simp, toAdditive]
+theorem coe_inv (S : Submonoid G) : ↑S⁻¹ = (S : Set G)⁻¹ :=
+  rfl
+
+@[simp, toAdditive]
+theorem mem_inv {g : G} {S : Submonoid G} : g ∈ S⁻¹ ↔ g⁻¹ ∈ S :=
+  Iff.rfl
+
+@[simp, toAdditive]
+protected theorem inv_invₓ (S : Submonoid G) : S⁻¹⁻¹ = S :=
+  SetLike.coe_injective Set.inv_inv
+
+@[simp, toAdditive]
+theorem inv_le_inv (S T : Submonoid G) : S⁻¹ ≤ T⁻¹ ↔ S ≤ T :=
+  SetLike.coe_subset_coe.symm.trans Set.inv_subset_inv
+
+@[toAdditive]
+theorem inv_le (S T : Submonoid G) : S⁻¹ ≤ T ↔ S ≤ T⁻¹ :=
+  SetLike.coe_subset_coe.symm.trans Set.inv_subset
+
+/-- `submonoid.has_inv` as an order isomorphism. -/
+@[toAdditive " `add_submonoid.has_neg` as an order isomorphism ", simps]
+def inv_order_iso : Submonoid G ≃o Submonoid G :=
+  { toFun := HasInv.inv, invFun := HasInv.inv, left_inv := Submonoid.inv_inv, right_inv := Submonoid.inv_inv,
+    map_rel_iff' := inv_le_inv }
+
+@[toAdditive]
+theorem closure_inv (s : Set G) : closure (s⁻¹) = closure s⁻¹ :=
+  by 
+    apply le_antisymmₓ
+    ·
+      rw [closure_le, coe_inv, ←Set.inv_subset, Set.inv_inv]
+      exact subset_closure
+    ·
+      rw [inv_le, closure_le, coe_inv, ←Set.inv_subset]
+      exact subset_closure
+
+@[simp, toAdditive]
+theorem inv_inf (S T : Submonoid G) : (S⊓T)⁻¹ = S⁻¹⊓T⁻¹ :=
+  SetLike.coe_injective Set.inter_inv
+
+@[simp, toAdditive]
+theorem inv_sup (S T : Submonoid G) : (S⊔T)⁻¹ = S⁻¹⊔T⁻¹ :=
+  (inv_order_iso : Submonoid G ≃o Submonoid G).map_sup S T
+
+@[simp, toAdditive]
+theorem inv_bot : (⊥ : Submonoid G)⁻¹ = ⊥ :=
+  SetLike.coe_injective$ (Set.inv_singleton 1).trans$ congr_argₓ _ one_inv
+
+@[simp, toAdditive]
+theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=
+  SetLike.coe_injective$ Set.inv_univ
+
+@[simp, toAdditive]
+theorem inv_infi {ι : Sort _} (S : ι → Submonoid G) : (⨅ i, S i)⁻¹ = ⨅ i, S i⁻¹ :=
+  (inv_order_iso : Submonoid G ≃o Submonoid G).map_infi _
+
+@[simp, toAdditive]
+theorem inv_supr {ι : Sort _} (S : ι → Submonoid G) : (⨆ i, S i)⁻¹ = ⨆ i, S i⁻¹ :=
+  (inv_order_iso : Submonoid G ≃o Submonoid G).map_supr _
+
+end Submonoid
 
 namespace Submonoid
 
@@ -43,11 +137,19 @@ localized [Pointwise] attribute [instance] Submonoid.pointwiseMulAction
 open_locale Pointwise
 
 @[simp]
-theorem coe_pointwise_smul (a : α) (S : Submonoid M) : «expr↑ » (a • S) = a • (S : Set M) :=
+theorem coe_pointwise_smul (a : α) (S : Submonoid M) : ↑(a • S) = a • (S : Set M) :=
   rfl
 
 theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submonoid M) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set M))
+
+instance pointwise_central_scalar [MulDistribMulAction (αᵐᵒᵖ) M] [IsCentralScalar α M] :
+  IsCentralScalar α (Submonoid M) :=
+  ⟨fun a S =>
+      (congr_argₓ fun f => S.map f)$
+        MonoidHom.ext$
+          by 
+            exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -109,28 +211,11 @@ end GroupWithZeroₓ
 
 open_locale Pointwise
 
--- error in GroupTheory.Submonoid.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem mem_closure_inv
-{G : Type*}
-[group G]
-(S : set G)
-(x : G) : «expr ↔ »(«expr ∈ »(x, submonoid.closure «expr ⁻¹»(S)), «expr ∈ »(«expr ⁻¹»(x), submonoid.closure S)) :=
-begin
-  suffices [] [":", expr ∀
-   (S : set G)
-   (x : G), «expr ∈ »(x, submonoid.closure «expr ⁻¹»(S)) → «expr ∈ »(«expr ⁻¹»(x), submonoid.closure S)],
-  { refine [expr ⟨this S x, _⟩],
-    have [] [] [":=", expr this «expr ⁻¹»(S) «expr ⁻¹»(x)],
-    rwa ["[", expr inv_inv, ",", expr set.inv_inv, "]"] ["at", ident this] },
-  intros [ident S, ident x, ident hx],
-  refine [expr submonoid.closure_induction hx (λ x hx, _) _ (λ x y hx hy, _)],
-  { exact [expr submonoid.subset_closure (set.mem_inv.mp hx)] },
-  { rw [expr one_inv] [],
-    exact [expr submonoid.one_mem _] },
-  { rw [expr mul_inv_rev x y] [],
-    exact [expr submonoid.mul_mem _ hy hx] }
-end
+@[toAdditive]
+theorem mem_closure_inv {G : Type _} [Groupₓ G] (S : Set G) (x : G) :
+  x ∈ Submonoid.closure (S⁻¹) ↔ x⁻¹ ∈ Submonoid.closure S :=
+  by 
+    rw [closure_inv, mem_inv]
 
 end Submonoid
 
@@ -153,11 +238,19 @@ localized [Pointwise] attribute [instance] AddSubmonoid.pointwiseMulAction
 open_locale Pointwise
 
 @[simp]
-theorem coe_pointwise_smul (a : α) (S : AddSubmonoid A) : «expr↑ » (a • S) = a • (S : Set A) :=
+theorem coe_pointwise_smul (a : α) (S : AddSubmonoid A) : ↑(a • S) = a • (S : Set A) :=
   rfl
 
 theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubmonoid A) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set A))
+
+instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) A] [IsCentralScalar α A] :
+  IsCentralScalar α (AddSubmonoid A) :=
+  ⟨fun a S =>
+      (congr_argₓ fun f => S.map f)$
+        AddMonoidHom.ext$
+          by 
+            exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 

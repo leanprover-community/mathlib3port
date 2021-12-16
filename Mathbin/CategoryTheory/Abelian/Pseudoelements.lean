@@ -155,7 +155,7 @@ def over_to_sort {P : C} : Coe (over P) (pseudoelement P) :=
 
 attribute [local instance] over_to_sort
 
-theorem over_coe_def {P Q : C} (a : Q ⟶ P) : (a : pseudoelement P) = «expr⟦ ⟧» a :=
+theorem over_coe_def {P Q : C} (a : Q ⟶ P) : (a : pseudoelement P) = ⟦a⟧ :=
   rfl
 
 /-- If two elements are pseudo-equal, then their composition with a morphism is, too. -/
@@ -175,7 +175,7 @@ def hom_to_fun {P Q : C} : CoeFun (P ⟶ Q) fun _ => P → Q :=
 
 attribute [local instance] hom_to_fun
 
-theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : over P) : f («expr⟦ ⟧» a) = «expr⟦ ⟧» (a.hom ≫ f) :=
+theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : over P) : f (⟦a⟧) = ⟦a.hom ≫ f⟧ :=
   rfl
 
 /-- Applying a pseudoelement to a composition of morphisms is the same as composing
@@ -225,12 +225,12 @@ theorem pseudo_zero_aux {P : C} (Q : C) (f : over P) : f ≈ (0 : Q ⟶ P) ↔ f
 
 end 
 
-theorem zero_eq_zero' {P Q R : C} : «expr⟦ ⟧» ((0 : Q ⟶ P) : over P) = «expr⟦ ⟧» ((0 : R ⟶ P) : over P) :=
+theorem zero_eq_zero' {P Q R : C} : ⟦((0 : Q ⟶ P) : over P)⟧ = ⟦((0 : R ⟶ P) : over P)⟧ :=
   Quotientₓ.sound$ (pseudo_zero_aux R _).2 rfl
 
 /-- The zero pseudoelement is the class of a zero morphism -/
 def pseudo_zero {P : C} : P :=
-  «expr⟦ ⟧» (0 : P ⟶ P)
+  ⟦(0 : P ⟶ P)⟧
 
 /--
 We can not use `pseudo_zero` as a global `has_zero` instance,
@@ -245,11 +245,11 @@ localized [Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelem
 instance {P : C} : Inhabited (pseudoelement P) :=
   ⟨0⟩
 
-theorem pseudo_zero_def {P : C} : (0 : pseudoelement P) = «expr⟦ ⟧» (0 : P ⟶ P) :=
+theorem pseudo_zero_def {P : C} : (0 : pseudoelement P) = ⟦(0 : P ⟶ P)⟧ :=
   rfl
 
 @[simp]
-theorem zero_eq_zero {P Q : C} : «expr⟦ ⟧» ((0 : Q ⟶ P) : over P) = (0 : pseudoelement P) :=
+theorem zero_eq_zero {P Q : C} : ⟦((0 : Q ⟶ P) : over P)⟧ = (0 : pseudoelement P) :=
   zero_eq_zero'
 
 /-- The pseudoelement induced by an arrow is zero precisely when that arrow is zero -/
@@ -302,7 +302,7 @@ theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [mono f] : Function.Inj
     Quotientₓ.induction_on₂ abar abar'$
       fun a a' ha =>
         Quotientₓ.sound$
-          have  : «expr⟦ ⟧» (a.hom ≫ f : over Q) = «expr⟦ ⟧» (a'.hom ≫ f) :=
+          have  : ⟦(a.hom ≫ f : over Q)⟧ = ⟦a'.hom ≫ f⟧ :=
             by 
               convert ha 
           match Quotientₓ.exact this with 
@@ -352,7 +352,7 @@ theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f
     | ⟨pbar, hpbar⟩ =>
       match Quotientₓ.exists_rep pbar with 
       | ⟨p, hp⟩ =>
-        have  : «expr⟦ ⟧» (p.hom ≫ f : over Q) = «expr⟦ ⟧» (𝟙 Q) :=
+        have  : ⟦(p.hom ≫ f : over Q)⟧ = ⟦𝟙 Q⟧ :=
           by 
             rw [←hp] at hpbar 
             exact hpbar 
@@ -407,56 +407,67 @@ theorem apply_eq_zero_of_comp_eq_zero {P Q R : C} (f : Q ⟶ R) (a : P ⟶ Q) : 
 
 section 
 
--- error in CategoryTheory.Abelian.Pseudoelements: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If two morphisms are exact on pseudoelements, they are exact. -/
-theorem exact_of_pseudo_exact
-{P Q R : C}
-(f : «expr ⟶ »(P, Q))
-(g : «expr ⟶ »(Q, R)) : «expr ∧ »(∀
- a, «expr = »(g (f a), 0), ∀ b, «expr = »(g b, 0) → «expr∃ , »((a), «expr = »(f a, b))) → exact f g :=
-λ
-⟨h₁, h₂⟩, (abelian.exact_iff _ _).2 ⟨«expr $ »(zero_morphism_ext _, λ
-  a, by rw ["[", expr comp_apply, ",", expr h₁ a, "]"] []), begin
-   have [] [":", expr «expr = »(g (kernel.ι g), 0)] [":=", expr apply_eq_zero_of_comp_eq_zero _ _ (kernel.condition _)],
-   obtain ["⟨", ident a', ",", ident ha, "⟩", ":=", expr h₂ _ this],
-   obtain ["⟨", ident a, ",", ident ha', "⟩", ":=", expr quotient.exists_rep a'],
-   rw ["<-", expr ha'] ["at", ident ha],
-   obtain ["⟨", ident Z, ",", ident r, ",", ident q, ",", ident er, ",", ident eq, ",", ident comm, "⟩", ":=", expr quotient.exact ha],
-   obtain ["⟨", ident z, ",", ident hz₁, ",", ident hz₂, "⟩", ":=", expr @pullback.lift' _ _ _ _ _ _ (kernel.ι (cokernel.π f)) (kernel.ι g) _ «expr ≫ »(r, «expr ≫ »(a.hom, images.factor_thru_image f)) q (by { simp [] [] ["only"] ["[", expr category.assoc, ",", expr images.image.fac, "]"] [] [],
-       exact [expr comm] })],
-   let [ident j] [":", expr «expr ⟶ »(pullback (kernel.ι (cokernel.π f)) (kernel.ι g), kernel g)] [":=", expr pullback.snd],
-   haveI [ident pe] [":", expr epi j] [":=", expr by exactI [expr epi_of_epi_fac hz₂]],
-   haveI [] [":", expr is_iso j] [":=", expr is_iso_of_mono_of_epi _],
-   rw [expr (iso.eq_inv_comp (as_iso j)).2 pullback.condition.symm] [],
-   simp [] [] ["only"] ["[", expr category.assoc, ",", expr kernel.condition, ",", expr has_zero_morphisms.comp_zero, "]"] [] []
- end⟩
+theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
+  ((∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b) → exact f g :=
+  fun ⟨h₁, h₂⟩ =>
+    (abelian.exact_iff _ _).2
+      ⟨zero_morphism_ext _$
+          fun a =>
+            by 
+              rw [comp_apply, h₁ a],
+        by 
+          have  : g (kernel.ι g) = 0 := apply_eq_zero_of_comp_eq_zero _ _ (kernel.condition _)
+          obtain ⟨a', ha⟩ := h₂ _ this 
+          obtain ⟨a, ha'⟩ := Quotientₓ.exists_rep a' 
+          rw [←ha'] at ha 
+          obtain ⟨Z, r, q, er, eq, comm⟩ := Quotientₓ.exact ha 
+          obtain ⟨z, hz₁, hz₂⟩ :=
+            @pullback.lift' _ _ _ _ _ _ (kernel.ι (cokernel.π f)) (kernel.ι g) _
+              (r ≫ a.hom ≫ images.factor_thru_image f) q
+              (by 
+                simp only [category.assoc, images.image.fac]
+                exact comm)
+          let j : pullback (kernel.ι (cokernel.π f)) (kernel.ι g) ⟶ kernel g := pullback.snd 
+          have pe : epi j :=
+            by 
+              exact epi_of_epi_fac hz₂ 
+          have  : is_iso j := is_iso_of_mono_of_epi _ 
+          rw [(iso.eq_inv_comp (as_iso j)).2 pullback.condition.symm]
+          simp only [category.assoc, kernel.condition, has_zero_morphisms.comp_zero]⟩
 
 end 
 
--- error in CategoryTheory.Abelian.Pseudoelements: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If two pseudoelements `x` and `y` have the same image under some morphism `f`, then we can form
     their "difference" `z`. This pseudoelement has the properties that `f z = 0` and for all
     morphisms `g`, if `g y = 0` then `g z = g x`. -/
-theorem sub_of_eq_image
-{P Q : C}
-(f : «expr ⟶ »(P, Q))
-(x
- y : P) : «expr = »(f x, f y) → «expr∃ , »((z), «expr ∧ »(«expr = »(f z, 0), ∀
-  (R : C)
-  (g : «expr ⟶ »(P, R)), «expr = »((g : «expr ⟶ »(P, R)) y, 0) → «expr = »(g z, g x))) :=
-«expr $ »(quotient.induction_on₂ x y, λ a a' h, match quotient.exact h with
- | ⟨R, p, q, ep, eq, comm⟩ := let a'' : «expr ⟶ »(R, P) := «expr - »(«expr ≫ »(p, a.hom), «expr ≫ »(q, a'.hom)) in
- ⟨a'', ⟨show «expr = »(«expr⟦ ⟧»((«expr ≫ »(«expr - »(«expr ≫ »(p, a.hom), «expr ≫ »(q, a'.hom)), f) : over Q)), «expr⟦ ⟧»((0 : «expr ⟶ »(Q, Q)))), by { dsimp [] [] [] ["at", ident comm],
-     simp [] [] [] ["[", expr sub_eq_zero.2 comm, "]"] [] [] }, λ Z g hh, begin
-     obtain ["⟨", ident X, ",", ident p', ",", ident q', ",", ident ep', ",", ident eq', ",", ident comm', "⟩", ":=", expr quotient.exact hh],
-     have [] [":", expr «expr = »(«expr ≫ »(a'.hom, g), 0)] [],
-     { apply [expr (epi_iff_cancel_zero _).1 ep' _ «expr ≫ »(a'.hom, g)],
-       simpa [] [] [] [] [] ["using", expr comm'] },
-     apply [expr quotient.sound],
-     change [expr «expr ≈ »(app g (a'' : over P), app g a)] [] [],
-     exact [expr ⟨R, «expr𝟙»() R, p, by apply_instance, ep, by simp [] [] [] ["[", expr sub_eq_add_neg, ",", expr this, "]"] [] []⟩]
-   end⟩⟩
- end)
+theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
+  f x = f y → ∃ z, f z = 0 ∧ ∀ R : C g : P ⟶ R, (g : P ⟶ R) y = 0 → g z = g x :=
+  Quotientₓ.induction_on₂ x y$
+    fun a a' h =>
+      match Quotientₓ.exact h with 
+      | ⟨R, p, q, ep, Eq, comm⟩ =>
+        let a'' : R ⟶ P := p ≫ a.hom - q ≫ a'.hom
+        ⟨a'',
+          ⟨show ⟦((p ≫ a.hom - q ≫ a'.hom) ≫ f : over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧by 
+              dsimp  at comm 
+              simp [sub_eq_zero.2 comm],
+            fun Z g hh =>
+              by 
+                obtain ⟨X, p', q', ep', eq', comm'⟩ := Quotientₓ.exact hh 
+                have  : a'.hom ≫ g = 0
+                ·
+                  apply (epi_iff_cancel_zero _).1 ep' _ (a'.hom ≫ g)
+                  simpa using comm' 
+                apply Quotientₓ.sound 
+                change app g (a'' : over P) ≈ app g a 
+                exact
+                  ⟨R, 𝟙 R, p,
+                    by 
+                      infer_instance,
+                    ep,
+                    by 
+                      simp [sub_eq_add_neg, this]⟩⟩⟩
 
 variable [limits.has_pullbacks C]
 

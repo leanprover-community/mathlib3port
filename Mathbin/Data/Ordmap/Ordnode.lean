@@ -104,8 +104,8 @@ def ratio :=
 protected def singleton (a : α) : Ordnode α :=
   node 1 nil a nil
 
--- error in Data.Ordmap.Ordnode: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
-local prefix `ι`:max := ordnode.singleton
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+local prefix:999 "ι" => Ordnode.singleton
 
 instance : HasSingleton α (Ordnode α) :=
   ⟨Ordnode.singleton⟩
@@ -166,7 +166,7 @@ def balance_l (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
         ·
           cases' id l with ls ll lx lr
           ·
-            exact «exprι » x
+            exact ι x
           ·
             cases' id ll with lls
             ·
@@ -174,11 +174,11 @@ def balance_l (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
               ·
                 exact node 2 l x nil
               ·
-                exact node 3 («exprι » lx) lrx («exprι » x)
+                exact node 3 (ι lx) lrx (ι x)
             ·
               cases' id lr with lrs lrl lrx lrr
               ·
-                exact node 3 ll lx («exprι » x)
+                exact node 3 ll lx (ι x)
               ·
                 exact
                   if lrs < ratio*lls then node (ls+1) ll lx (node (lrs+1) lr x nil) else
@@ -211,7 +211,7 @@ def balance_r (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
         ·
           cases' id r with rs rl rx rr
           ·
-            exact «exprι » x
+            exact ι x
           ·
             cases' id rr with rrs
             ·
@@ -219,11 +219,11 @@ def balance_r (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
               ·
                 exact node 2 nil x r
               ·
-                exact node 3 («exprι » x) rlx («exprι » rx)
+                exact node 3 (ι x) rlx (ι rx)
             ·
               cases' id rl with rls rll rlx rlr
               ·
-                exact node 3 («exprι » x) rx rr
+                exact node 3 (ι x) rx rr
               ·
                 exact
                   if rls < ratio*rrs then node (rs+1) (node (rls+1) nil x rl) rx rr else
@@ -256,7 +256,7 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
         ·
           cases' id r with rs rl rx rr
           ·
-            exact «exprι » x
+            exact ι x
           ·
             cases' id rl with rls rll rlx rlr
             ·
@@ -264,11 +264,11 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
               ·
                 exact node 2 nil x r
               ·
-                exact node 3 («exprι » x) rx rr
+                exact node 3 (ι x) rx rr
             ·
               cases' id rr with rrs
               ·
-                exact node 3 («exprι » x) rlx («exprι » rx)
+                exact node 3 (ι x) rlx (ι rx)
               ·
                 exact
                   if rls < ratio*rrs then node (rs+1) (node (rls+1) nil x rl) rx rr else
@@ -282,11 +282,11 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
               ·
                 exact node 2 l x nil
               ·
-                exact node 3 («exprι » lx) lrx («exprι » x)
+                exact node 3 (ι lx) lrx (ι x)
             ·
               cases' id lr with lrs lrl lrx lrr
               ·
-                exact node 3 ll lx («exprι » x)
+                exact node 3 ll lx (ι x)
               ·
                 exact
                   if lrs < ratio*lls then node (ls+1) ll lx (node (lrs+1) lr x nil) else
@@ -490,7 +490,7 @@ def merge (l : Ordnode α) : Ordnode α → Ordnode α :=
     insert_max {1, 2} 4 = {1, 2, 4}
     insert_max {1, 2} 0 = precondition violation -/
 def insert_max : Ordnode α → α → Ordnode α
-| nil, x => «exprι » x
+| nil, x => ι x
 | node _ l y r, x => balance_r l y (insert_max r x)
 
 /-- O(log n). Insert an element below all the others, without any comparisons.
@@ -499,7 +499,7 @@ def insert_max : Ordnode α → α → Ordnode α
     insert_min {1, 2} 0 = {0, 1, 2}
     insert_min {1, 2} 4 = precondition violation -/
 def insert_min (x : α) : Ordnode α → Ordnode α
-| nil => «exprι » x
+| nil => ι x
 | node _ l y r => balance_r (insert_min l) y r
 
 /-- O(log(m+n)). Build a tree from an element between two trees, without any
@@ -590,17 +590,17 @@ unsafe instance [has_to_format α] : has_to_format (Ordnode α) :=
 
      equiv {1, 2, 4} {2, 1, 1, 4} = true
      equiv {1, 2, 4} {1, 2, 3} = false -/
-def Equiv (t₁ t₂ : Ordnode α) : Prop :=
+def Equivₓ (t₁ t₂ : Ordnode α) : Prop :=
   t₁.size = t₂.size ∧ t₁.to_list = t₂.to_list
 
-instance [DecidableEq α] : DecidableRel (@Equiv α) :=
+instance [DecidableEq α] : DecidableRel (@Equivₓ α) :=
   fun t₁ t₂ => And.decidable
 
 /-- O(2^n). Constructs the powerset of a given set, that is, the set of all subsets.
 
      powerset {1, 2, 3} = {∅, {1}, {2}, {3}, {1,2}, {1,3}, {2,3}, {1,2,3}} -/
 def powerset (t : Ordnode α) : Ordnode (Ordnode α) :=
-  insert_min nil$ foldr (fun x ts => glue (insert_min («exprι » x) (map (insert_min x) ts)) ts) t nil
+  insert_min nil$ foldr (fun x ts => glue (insert_min (ι x) (map (insert_min x) ts)) ts) t nil
 
 /-- O(m*n). The cartesian product of two sets: `(a, b) ∈ s.prod t` iff `a ∈ s` and `b ∈ t`.
 
@@ -764,7 +764,7 @@ def of_asc_list_aux₁ : ∀ l : List α, ℕ → Ordnode α × { l' : List α /
 | [] => fun s => (nil, ⟨[], le_reflₓ _⟩)
 | x :: xs =>
   fun s =>
-    if s = 1 then («exprι » x, ⟨xs, Nat.le_succₓ _⟩) else
+    if s = 1 then (ι x, ⟨xs, Nat.le_succₓ _⟩) else
       have  := Nat.lt_succ_selfₓ xs.length 
       match of_asc_list_aux₁ xs (s.shiftl 1) with 
       | (t, ⟨[], h⟩) => (t, ⟨[], Nat.zero_leₓ _⟩)
@@ -790,7 +790,7 @@ def of_asc_list_aux₂ : List α → Ordnode α → ℕ → Ordnode α
      of_asc_list [3, 2, 1] = precondition violation -/
 def of_asc_list : List α → Ordnode α
 | [] => nil
-| x :: xs => of_asc_list_aux₂ xs («exprι » x) 1
+| x :: xs => of_asc_list_aux₂ xs (ι x) 1
 
 section 
 
@@ -850,7 +850,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
     insert_with f (1, 1) {(0, 1), (1, 2)} = {(0, 1), f (1, 2)}
     insert_with f (3, 1) {(0, 1), (1, 2)} = {(0, 1), (1, 2), (3, 1)} -/
 def insert_with (f : α → α) (x : α) : Ordnode α → Ordnode α
-| nil => «exprι » x
+| nil => ι x
 | t@(node sz l y r) =>
   match cmpLe x y with 
   | Ordering.lt => balance_l (insert_with l) y r
@@ -924,7 +924,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
     insert (1, 1) {(0, 1), (1, 2)} = {(0, 1), (1, 1)}
     insert (3, 1) {(0, 1), (1, 2)} = {(0, 1), (1, 2), (3, 1)} -/
 protected def insert (x : α) : Ordnode α → Ordnode α
-| nil => «exprι » x
+| nil => ι x
 | node sz l y r =>
   match cmpLe x y with 
   | Ordering.lt => balance_l (insert l) y r
@@ -945,7 +945,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
     insert' (1, 1) {(0, 1), (1, 2)} = {(0, 1), (1, 2)}
     insert' (3, 1) {(0, 1), (1, 2)} = {(0, 1), (1, 2), (3, 1)} -/
 def insert' (x : α) : Ordnode α → Ordnode α
-| nil => «exprι » x
+| nil => ι x
 | t@(node sz l y r) =>
   match cmpLe x y with 
   | Ordering.lt => balance_l (insert' l) y r

@@ -57,19 +57,19 @@ namespace Set
 
 /-- The relation `r` holds pairwise on the set `s` if `r x y` for all *distinct* `x y ∈ s`. -/
 protected def Pairwise (s : Set α) (r : α → α → Prop) :=
-  ∀ x _ : x ∈ s, ∀ y _ : y ∈ s, x ≠ y → r x y
+  ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → x ≠ y → r x y
 
 theorem pairwise_of_forall (s : Set α) (r : α → α → Prop) (h : ∀ a b, r a b) : s.pairwise r :=
   fun a _ b _ _ => h a b
 
 theorem pairwise.imp_on (h : s.pairwise r) (hrp : s.pairwise fun ⦃a b : α⦄ => r a b → p a b) : s.pairwise p :=
-  fun a ha b hb hab => hrp a ha b hb hab (h a ha b hb hab)
+  fun a ha b hb hab => hrp ha hb hab$ h ha hb hab
 
 theorem pairwise.imp (h : s.pairwise r) (hpq : ∀ ⦃a b : α⦄, r a b → p a b) : s.pairwise p :=
   h.imp_on$ pairwise_of_forall s _ hpq
 
 theorem Pairwise.mono (h : t ⊆ s) (hs : s.pairwise r) : t.pairwise r :=
-  fun x xt y yt => hs x (h xt) y (h yt)
+  fun x xt y yt => hs (h xt) (h yt)
 
 theorem pairwise.mono' (H : r ≤ p) (hr : s.pairwise r) : s.pairwise p :=
   hr.imp H
@@ -88,10 +88,11 @@ theorem pairwise_empty (r : α → α → Prop) : (∅ : Set α).Pairwise r :=
 theorem pairwise_singleton (a : α) (r : α → α → Prop) : Set.Pairwise {a} r :=
   subsingleton_singleton.Pairwise r
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.nonempty) :
   s.pairwise (r on f) ↔ ∃ z, ∀ x _ : x ∈ s, r (f x) z :=
   by 
-    fsplit
+    fconstructor
     ·
       rcases hs with ⟨y, hy⟩
       refine' fun H => ⟨f y, fun x hx => _⟩
@@ -99,11 +100,12 @@ theorem nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.
       ·
         apply IsRefl.refl
       ·
-        exact H _ hx _ hy hne
+        exact H hx hy hne
     ·
       rintro ⟨z, hz⟩ x hx y hy hne 
       exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _$ hz _ hy)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- For a nonempty set `s`, a function `f` takes pairwise equal values on `s` if and only if
 for some `z` in the codomain, `f` takes value `z` on all `x ∈ s`. See also
 `set.pairwise_eq_iff_exists_eq` for a version that assumes `[nonempty ι]` instead of
@@ -112,6 +114,7 @@ theorem nonempty.pairwise_eq_iff_exists_eq {s : Set α} (hs : s.nonempty) {f : �
   (s.pairwise fun x y => f x = f y) ↔ ∃ z, ∀ x _ : x ∈ s, f x = z :=
   hs.pairwise_iff_exists_forall
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem pairwise_iff_exists_forall [Nonempty ι] (s : Set α) (f : α → ι) {r : ι → ι → Prop} [IsEquiv ι r] :
   s.pairwise (r on f) ↔ ∃ z, ∀ x _ : x ∈ s, r (f x) z :=
   by 
@@ -121,6 +124,7 @@ theorem pairwise_iff_exists_forall [Nonempty ι] (s : Set α) (f : α → ι) {r
     ·
       exact hne.pairwise_iff_exists_forall
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A function `f : α → ι` with nonempty codomain takes pairwise equal values on a set `s` if and
 only if for some `z` in the codomain, `f` takes value `z` on all `x ∈ s`. See also
 `set.nonempty.pairwise_eq_iff_exists_eq` for a version that assumes `set.nonempty s` instead of
@@ -129,6 +133,8 @@ theorem pairwise_eq_iff_exists_eq [Nonempty ι] (s : Set α) (f : α → ι) :
   (s.pairwise fun x y => f x = f y) ↔ ∃ z, ∀ x _ : x ∈ s, f x = z :=
   pairwise_iff_exists_forall s f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
 theorem pairwise_union :
   (s ∪ t).Pairwise r ↔ s.pairwise r ∧ t.pairwise r ∧ ∀ a _ : a ∈ s b _ : b ∈ t, a ≠ b → r a b ∧ r b a :=
   by 
@@ -137,16 +143,20 @@ theorem pairwise_union :
       ⟨fun H => ⟨H.1.1, H.2.2, H.2.1, fun x hx y hy hne => H.1.2 y hy x hx hne.symm⟩,
         fun H => ⟨⟨H.1, fun x hx y hy hne => H.2.2.2 y hy x hx hne.symm⟩, H.2.2.1, H.2.1⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
 theorem pairwise_union_of_symmetric (hr : Symmetric r) :
   (s ∪ t).Pairwise r ↔ s.pairwise r ∧ t.pairwise r ∧ ∀ a _ : a ∈ s b _ : b ∈ t, a ≠ b → r a b :=
   pairwise_union.trans$
     by 
       simp only [hr.iff, and_selfₓ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem pairwise_insert : (insert a s).Pairwise r ↔ s.pairwise r ∧ ∀ b _ : b ∈ s, a ≠ b → r a b ∧ r b a :=
   by 
     simp only [insert_eq, pairwise_union, pairwise_singleton, true_andₓ, mem_singleton_iff, forall_eq]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem pairwise_insert_of_symmetric (hr : Symmetric r) :
   (insert a s).Pairwise r ↔ s.pairwise r ∧ ∀ b _ : b ∈ s, a ≠ b → r a b :=
   by 
@@ -166,17 +176,18 @@ theorem pairwise_univ : (univ : Set α).Pairwise r ↔ Pairwise r :=
 
 theorem pairwise.on_injective (hs : s.pairwise r) (hf : Function.Injective f) (hfs : ∀ x, f x ∈ s) :
   Pairwise (r on f) :=
-  fun i j hij => hs _ (hfs i) _ (hfs j) (hf.ne hij)
+  fun i j hij => hs (hfs i) (hfs j) (hf.ne hij)
 
--- error in Data.Set.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inj_on.pairwise_image
-{s : set ι}
-(h : s.inj_on f) : «expr ↔ »(«expr '' »(f, s).pairwise r, s.pairwise «expr on »(r, f)) :=
-by simp [] [] [] ["[", expr h.eq_iff, ",", expr set.pairwise, "]"] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  inj_on.pairwise_image
+  { s : Set ι } ( h : s.inj_on f ) : f '' s . Pairwise r ↔ s.pairwise r on f
+  := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ h.eq_iff , Set.Pairwise ]
 
-theorem pairwise_Union {f : ι → Set α} (h : Directed (· ⊆ ·) f) : (⋃n, f n).Pairwise r ↔ ∀ n, (f n).Pairwise r :=
+theorem pairwise_Union {f : ι → Set α} (h : Directed (· ⊆ ·) f) : (⋃ n, f n).Pairwise r ↔ ∀ n, (f n).Pairwise r :=
   by 
-    split 
+    constructor
     ·
       intro H n 
       exact Pairwise.mono (subset_Union _ _) H
@@ -185,8 +196,9 @@ theorem pairwise_Union {f : ι → Set α} (h : Directed (· ⊆ ·) f) : (⋃n,
       rcases mem_Union.1 hi with ⟨m, hm⟩
       rcases mem_Union.1 hj with ⟨n, hn⟩
       rcases h m n with ⟨p, mp, np⟩
-      exact H p i (mp hm) j (np hn) hij
+      exact H p (mp hm) (np hn) hij
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem pairwise_sUnion {r : α → α → Prop} {s : Set (Set α)} (h : DirectedOn (· ⊆ ·) s) :
   (⋃₀s).Pairwise r ↔ ∀ a _ : a ∈ s, Set.Pairwise a r :=
   by 
@@ -203,7 +215,7 @@ end Pairwise
 theorem pairwise_subtype_iff_pairwise_set {α : Type _} (s : Set α) (r : α → α → Prop) :
   (Pairwise fun x : s y : s => r x y) ↔ s.pairwise r :=
   by 
-    split 
+    constructor
     ·
       intro h x hx y hy hxy 
       exact
@@ -213,7 +225,7 @@ theorem pairwise_subtype_iff_pairwise_set {α : Type _} (s : Set α) (r : α →
     ·
       rintro h ⟨x, hx⟩ ⟨y, hy⟩ hxy 
       simp only [Subtype.mk_eq_mk, Ne.def] at hxy 
-      exact h x hx y hy hxy
+      exact h hx hy hxy
 
 alias pairwise_subtype_iff_pairwise_set ↔ Pairwise.set_of_subtype Set.Pairwise.subtype
 
@@ -232,7 +244,7 @@ theorem pairwise_disjoint.subset (ht : t.pairwise_disjoint f) (h : s ⊆ t) : s.
   Pairwise.mono h ht
 
 theorem pairwise_disjoint.mono_on (hs : s.pairwise_disjoint f) (h : ∀ ⦃i⦄, i ∈ s → g i ≤ f i) : s.pairwise_disjoint g :=
-  fun a ha b hb hab => (hs a ha b hb hab).mono (h ha) (h hb)
+  fun a ha b hb hab => (hs ha hb hab).mono (h ha) (h hb)
 
 theorem pairwise_disjoint.mono (hs : s.pairwise_disjoint f) (h : g ≤ f) : s.pairwise_disjoint g :=
   hs.mono_on fun i _ => h i
@@ -245,10 +257,12 @@ theorem pairwise_disjoint_empty : (∅ : Set ι).PairwiseDisjoint f :=
 theorem pairwise_disjoint_singleton (i : ι) (f : ι → α) : pairwise_disjoint {i} f :=
   pairwise_singleton i _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » s)
 theorem pairwise_disjoint_insert {i : ι} :
   (insert i s).PairwiseDisjoint f ↔ s.pairwise_disjoint f ∧ ∀ j _ : j ∈ s, i ≠ j → Disjoint (f i) (f j) :=
   Set.pairwise_insert_of_symmetric$ symmetric_disjoint.comap f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » s)
 theorem pairwise_disjoint.insert (hs : s.pairwise_disjoint f) {i : ι}
   (h : ∀ j _ : j ∈ s, i ≠ j → Disjoint (f i) (f j)) : (insert i s).PairwiseDisjoint f :=
   Set.pairwise_disjoint_insert.2 ⟨hs, h⟩
@@ -257,7 +271,7 @@ theorem pairwise_disjoint.image_of_le (hs : s.pairwise_disjoint f) {g : ι → �
   (g '' s).PairwiseDisjoint f :=
   by 
     rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ h 
-    exact (hs a ha b hb$ ne_of_apply_ne _ h).mono (hg a) (hg b)
+    exact (hs ha hb$ ne_of_apply_ne _ h).mono (hg a) (hg b)
 
 theorem inj_on.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.inj_on g) :
   (g '' s).PairwiseDisjoint f ↔ s.pairwise_disjoint (f ∘ g) :=
@@ -267,7 +281,7 @@ theorem pairwise_disjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i)
   (range g).PairwiseDisjoint f :=
   by 
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy 
-    exact (ht _ x.2 _ y.2$ fun h => hxy$ congr_argₓ g$ Subtype.ext h).mono (hg x) (hg y)
+    exact (ht x.2 y.2$ fun h => hxy$ congr_argₓ g$ Subtype.ext h).mono (hg x) (hg y)
 
 theorem pairwise_disjoint_union :
   (s ∪ t).PairwiseDisjoint f ↔
@@ -279,7 +293,7 @@ theorem pairwise_disjoint.union (hs : s.pairwise_disjoint f) (ht : t.pairwise_di
   pairwise_disjoint_union.2 ⟨hs, ht, h⟩
 
 theorem pairwise_disjoint_Union {g : ι' → Set ι} (h : Directed (· ⊆ ·) g) :
-  (⋃n, g n).PairwiseDisjoint f ↔ ∀ ⦃n⦄, (g n).PairwiseDisjoint f :=
+  (⋃ n, g n).PairwiseDisjoint f ↔ ∀ ⦃n⦄, (g n).PairwiseDisjoint f :=
   pairwise_Union h
 
 theorem pairwise_disjoint_sUnion {s : Set (Set ι)} (h : DirectedOn (· ⊆ ·) s) :
@@ -288,7 +302,7 @@ theorem pairwise_disjoint_sUnion {s : Set (Set ι)} (h : DirectedOn (· ⊆ ·) 
 
 theorem pairwise_disjoint.elim (hs : s.pairwise_disjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s)
   (h : ¬Disjoint (f i) (f j)) : i = j :=
-  of_not_not$ fun hij => h$ hs _ hi _ hj hij
+  of_not_not$ fun hij => h$ hs hi hj hij
 
 theorem pairwise_disjoint.elim' (hs : s.pairwise_disjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (h : f i⊓f j ≠ ⊥) :
   i = j :=
@@ -300,11 +314,14 @@ section CompleteLattice
 
 variable [CompleteLattice α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » g i')
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- Bind operation for `set.pairwise_disjoint`. If you want to only consider finsets of indices, you
 can use `set.pairwise_disjoint.bUnion_finset`. -/
 theorem pairwise_disjoint.bUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → α}
-  (hs : s.pairwise_disjoint fun i' : ι' => ⨆(i : _)(_ : i ∈ g i'), f i) (hg : ∀ i _ : i ∈ s, (g i).PairwiseDisjoint f) :
-  (⋃(i : _)(_ : i ∈ s), g i).PairwiseDisjoint f :=
+  (hs : s.pairwise_disjoint fun i' : ι' => ⨆ (i : _)(_ : i ∈ g i'), f i)
+  (hg : ∀ i _ : i ∈ s, (g i).PairwiseDisjoint f) : (⋃ (i : _)(_ : i ∈ s), g i).PairwiseDisjoint f :=
   by 
     rintro a ha b hb hab 
     simpRw [Set.mem_Union]  at ha hb 
@@ -312,9 +329,9 @@ theorem pairwise_disjoint.bUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → 
     obtain ⟨d, hd, hb⟩ := hb 
     obtain hcd | hcd := eq_or_ne (g c) (g d)
     ·
-      exact hg d hd a (hcd ▸ ha) b hb hab
+      exact hg d hd (hcd.subst ha) hb hab
     ·
-      exact (hs _ hc _ hd (ne_of_apply_ne _ hcd)).mono (le_bsupr a ha) (le_bsupr b hb)
+      exact (hs hc hd (ne_of_apply_ne _ hcd)).mono (le_bsupr a ha) (le_bsupr b hb)
 
 end CompleteLattice
 
@@ -333,21 +350,25 @@ theorem pairwise_disjoint.elim_set {s : Set ι} {f : ι → Set α} (hs : s.pair
   (hj : j ∈ s) (a : α) (hai : a ∈ f i) (haj : a ∈ f j) : i = j :=
   hs.elim hi hj$ not_disjoint_iff.2 ⟨a, hai, haj⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » «expr \ »(s, t))
 theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).PairwiseDisjoint f) :
-  ((⋃(i : _)(_ : i ∈ s), f i) \ ⋃(i : _)(_ : i ∈ t), f i) = ⋃(i : _)(_ : i ∈ s \ t), f i :=
+  ((⋃ (i : _)(_ : i ∈ s), f i) \ ⋃ (i : _)(_ : i ∈ t), f i) = ⋃ (i : _)(_ : i ∈ s \ t), f i :=
   by 
     refine'
       (bUnion_diff_bUnion_subset f s t).antisymm
         (bUnion_subset$ fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
     rw [mem_bUnion_iff]
     rintro ⟨j, hj, haj⟩
-    exact h i (Or.inl hi.1) j (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm ⟨ha, haj⟩
+    exact h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm ⟨ha, haj⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- Equivalence between a disjoint bounded union and a dependent sum. -/
 noncomputable def bUnion_eq_sigma_of_disjoint {s : Set ι} {f : ι → Set α} (h : s.pairwise (Disjoint on f)) :
-  (⋃(i : _)(_ : i ∈ s), f i) ≃ Σi : s, f i :=
-  (Equiv.setCongr (bUnion_eq_Union _ _)).trans$
-    Union_eq_sigma_of_disjoint$ fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h _ hi _ hj$ fun eq => Ne$ Subtype.eq Eq
+  (⋃ (i : _)(_ : i ∈ s), f i) ≃ Σ i : s, f i :=
+  (Equivₓ.setCongr (bUnion_eq_Union _ _)).trans$
+    Union_eq_sigma_of_disjoint$ fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj$ fun eq => Ne$ Subtype.eq Eq
 
 end Set
 

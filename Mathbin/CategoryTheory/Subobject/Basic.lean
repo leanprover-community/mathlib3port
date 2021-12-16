@@ -62,7 +62,7 @@ In fact, in an abelian category (I'm not sure in what generality beyond that),
 
 universe v₁ v₂ u₁ u₂
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -83,11 +83,13 @@ with morphisms becoming inequalities, and isomorphisms becoming equations.
 -/
 
 
--- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler partial_order
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler partial_order
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /--
 The category of subobjects of `X : C`, defined as isomorphism classes of monomorphisms into `X`.
--/ @[derive #["[", expr partial_order, ",", expr category, "]"]] def subobject (X : C) :=
-thin_skeleton (mono_over X)
+-/
+def subobject (X : C) :=
+  thin_skeleton (mono_over X)deriving [anonymous], [anonymous]
 
 namespace Subobject
 
@@ -252,7 +254,7 @@ theorem of_le_arrow {B : C} {X Y : subobject B} (h : X ≤ Y) : of_le X Y h ≫ 
 
 instance {B : C} (X Y : subobject B) (h : X ≤ Y) : mono (of_le X Y h) :=
   by 
-    fsplit 
+    fconstructor 
     intro Z f g w 
     replace w := w =≫ Y.arrow 
     ext 
@@ -264,49 +266,30 @@ theorem of_le_mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A�
     ext 
     simp [w]
 
--- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler mono
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
-@[derive #[expr mono]]
-def of_le_mk
-{B A : C}
-(X : subobject B)
-(f : «expr ⟶ »(A, B))
-[mono f]
-(h : «expr ≤ »(X, mk f)) : «expr ⟶ »((X : C), A) :=
-«expr ≫ »(of_le X (mk f) h, (underlying_iso f).hom)
+def of_le_mk {B A : C} (X : subobject B) (f : A ⟶ B) [mono f] (h : X ≤ mk f) : (X : C) ⟶ A :=
+  of_le X (mk f) h ≫ (underlying_iso f).Hom deriving [anonymous]
 
 @[simp]
 theorem of_le_mk_comp {B A : C} {X : subobject B} {f : A ⟶ B} [mono f] (h : X ≤ mk f) : of_le_mk X f h ≫ f = X.arrow :=
   by 
     simp [of_le_mk]
 
--- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler mono
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
-@[derive #[expr mono]]
-def of_mk_le
-{B A : C}
-(f : «expr ⟶ »(A, B))
-[mono f]
-(X : subobject B)
-(h : «expr ≤ »(mk f, X)) : «expr ⟶ »(A, (X : C)) :=
-«expr ≫ »((underlying_iso f).inv, of_le (mk f) X h)
+def of_mk_le {B A : C} (f : A ⟶ B) [mono f] (X : subobject B) (h : mk f ≤ X) : A ⟶ (X : C) :=
+  (underlying_iso f).inv ≫ of_le (mk f) X h deriving [anonymous]
 
 @[simp]
 theorem of_mk_le_arrow {B A : C} {f : A ⟶ B} [mono f] {X : subobject B} (h : mk f ≤ X) : of_mk_le f X h ≫ X.arrow = f :=
   by 
     simp [of_mk_le]
 
--- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler mono
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
-@[derive #[expr mono]]
-def of_mk_le_mk
-{B A₁ A₂ : C}
-(f : «expr ⟶ »(A₁, B))
-(g : «expr ⟶ »(A₂, B))
-[mono f]
-[mono g]
-(h : «expr ≤ »(mk f, mk g)) : «expr ⟶ »(A₁, A₂) :=
-«expr ≫ »((underlying_iso f).inv, «expr ≫ »(of_le (mk f) (mk g) h, (underlying_iso g).hom))
+def of_mk_le_mk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [mono f] [mono g] (h : mk f ≤ mk g) : A₁ ⟶ A₂ :=
+  (underlying_iso f).inv ≫ of_le (mk f) (mk g) h ≫ (underlying_iso g).Hom deriving [anonymous]
 
 @[simp]
 theorem of_mk_le_mk_comp {B A₁ A₂ : C} {f : A₁ ⟶ B} {g : A₂ ⟶ B} [mono f] [mono g] (h : mk f ≤ mk g) :
@@ -521,7 +504,7 @@ def map_iso_to_order_iso (e : X ≅ Y) : subobject X ≃o subobject Y :=
       fun A B =>
         by 
           dsimp 
-          fsplit
+          fconstructor
           ·
             intro h 
             applyFun (map e.inv).obj  at h 

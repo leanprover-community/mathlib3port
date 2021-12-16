@@ -51,16 +51,35 @@ section
 
 variable {X : Type u} {α : Type v} [TopologicalSpace X] [LinearOrderₓ α] [TopologicalSpace α] [OrderClosedTopology α]
 
-/-- Intermediate value theorem for two functions: if `f` and `g` are two continuous functions
-on a preconnected space and `f a ≤ g a` and `g b ≤ f b`, then for some `x` we have `f x = g x`. -/
-theorem intermediate_value_univ₂ [PreconnectedSpace X] {a b : X} {f g : X → α} (hf : Continuous f) (hg : Continuous g)
-  (ha : f a ≤ g a) (hb : g b ≤ f b) : ∃ x, f x = g x :=
-  by 
-    obtain ⟨x, h, hfg, hgf⟩ : (univ ∩ { x | f x ≤ g x ∧ g x ≤ f x }).Nonempty 
-    exact
-      is_preconnected_closed_iff.1 PreconnectedSpace.is_preconnected_univ _ _ (is_closed_le hf hg) (is_closed_le hg hf)
-        (fun x hx => le_totalₓ _ _) ⟨a, trivialₓ, ha⟩ ⟨b, trivialₓ, hb⟩
-    exact ⟨x, le_antisymmₓ hfg hgf⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Intermediate value theorem for two functions: if `f` and `g` are two continuous functions
+    on a preconnected space and `f a ≤ g a` and `g b ≤ f b`, then for some `x` we have `f x = g x`. -/
+  theorem
+    intermediate_value_univ₂
+    [ PreconnectedSpace X ]
+        { a b : X }
+        { f g : X → α }
+        ( hf : Continuous f )
+        ( hg : Continuous g )
+        ( ha : f a ≤ g a )
+        ( hb : g b ≤ f b )
+      : ∃ x , f x = g x
+    :=
+      by
+        obtain ⟨ x , h , hfg , hgf ⟩ : univ ∩ { x | f x ≤ g x ∧ g x ≤ f x } . Nonempty
+          exact
+            is_preconnected_closed_iff . 1
+              PreconnectedSpace.is_preconnected_univ
+                _
+                _
+                is_closed_le hf hg
+                is_closed_le hg hf
+                fun x hx => le_totalₓ _ _
+                ⟨ a , trivialₓ , ha ⟩
+                ⟨ b , trivialₓ , hb ⟩
+          exact ⟨ x , le_antisymmₓ hfg hgf ⟩
 
 theorem intermediate_value_univ₂_eventually₁ [PreconnectedSpace X] {a : X} {l : Filter X} [ne_bot l] {f g : X → α}
   (hf : Continuous f) (hg : Continuous g) (ha : f a ≤ g a) (he : g ≤ᶠ[l] f) : ∃ x, f x = g x :=
@@ -73,6 +92,7 @@ theorem intermediate_value_univ₂_eventually₂ [PreconnectedSpace X] {l₁ l�
   let ⟨c₂, hc₂⟩ := he₂.frequently.exists 
   intermediate_value_univ₂ hf hg hc₁ hc₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- Intermediate value theorem for two functions: if `f` and `g` are two functions continuous
 on a preconnected set `s` and for some `a b ∈ s` we have `f a ≤ g a` and `g b ≤ f b`,
 then for some `x ∈ s` we have `f x = g x`. -/
@@ -84,6 +104,7 @@ theorem IsPreconnected.intermediate_value₂ {s : Set X} (hs : IsPreconnected s)
       (continuous_on_iff_continuous_restrict.1 hf) (continuous_on_iff_continuous_restrict.1 hg) ha' hb'
   ⟨x, x.2, hx⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem IsPreconnected.intermediate_value₂_eventually₁ {s : Set X} (hs : IsPreconnected s) {a : X} {l : Filter X}
   (ha : a ∈ s) [ne_bot l] (hl : l ≤ 𝓟 s) {f g : X → α} (hf : ContinuousOn f s) (hg : ContinuousOn g s) (ha' : f a ≤ g a)
   (he : g ≤ᶠ[l] f) : ∃ (x : _)(_ : x ∈ s), f x = g x :=
@@ -94,6 +115,7 @@ theorem IsPreconnected.intermediate_value₂_eventually₁ {s : Set X} (hs : IsP
         (comap_coe_ne_bot_of_le_principal hl) _ _ hf hg ha' (eventually_comap' he)
     exact ⟨b, b.prop, h⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem IsPreconnected.intermediate_value₂_eventually₂ {s : Set X} (hs : IsPreconnected s) {l₁ l₂ : Filter X}
   [ne_bot l₁] [ne_bot l₂] (hl₁ : l₁ ≤ 𝓟 s) (hl₂ : l₂ ≤ 𝓟 s) {f g : X → α} (hf : ContinuousOn f s)
   (hg : ContinuousOn g s) (he₁ : f ≤ᶠ[l₁] g) (he₂ : g ≤ᶠ[l₂] f) : ∃ (x : _)(_ : x ∈ s), f x = g x :=
@@ -208,6 +230,8 @@ theorem IsPreconnected.ord_connected {s : Set α} (h : IsPreconnected s) : ord_c
 theorem IsConnected.Icc_subset {s : Set α} (hs : IsConnected s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : Icc a b ⊆ s :=
   hs.2.Icc_subset ha hb
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » s)
 /-- If preconnected set in a linear order space is unbounded below and above, then it is the whole
 space. -/
 theorem IsPreconnected.eq_univ_of_unbounded {s : Set α} (hs : IsPreconnected s) (hb : ¬BddBelow s) (ha : ¬BddAbove s) :
@@ -237,62 +261,73 @@ theorem eq_Icc_cInf_cSup_of_connected_bdd_closed {s : Set α} (hc : IsConnected 
   subset.antisymm (subset_Icc_cInf_cSup hb ha)$
     hc.Icc_subset (hcl.cInf_mem hc.nonempty hb) (hcl.cSup_mem hc.nonempty ha)
 
--- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_preconnected.Ioi_cInf_subset
-{s : set α}
-(hs : is_preconnected s)
-(hb : bdd_below s)
-(ha : «expr¬ »(bdd_above s)) : «expr ⊆ »(Ioi (Inf s), s) :=
-begin
-  have [ident sne] [":", expr s.nonempty] [":=", expr @nonempty_of_not_bdd_above α _ s ⟨Inf «expr∅»()⟩ ha],
-  intros [ident x, ident hx],
-  obtain ["⟨", ident y, ",", ident ys, ",", ident hy, "⟩", ":", expr «expr∃ , »((y «expr ∈ » s), «expr < »(y, x)), ":=", expr (is_glb_lt_iff (is_glb_cInf sne hb)).1 hx],
-  obtain ["⟨", ident z, ",", ident zs, ",", ident hz, "⟩", ":", expr «expr∃ , »((z «expr ∈ » s), «expr < »(x, z)), ":=", expr not_bdd_above_iff.1 ha x],
-  exact [expr hs.Icc_subset ys zs ⟨le_of_lt hy, le_of_lt hz⟩]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » s)
+theorem IsPreconnected.Ioi_cInf_subset {s : Set α} (hs : IsPreconnected s) (hb : BddBelow s) (ha : ¬BddAbove s) :
+  Ioi (Inf s) ⊆ s :=
+  by 
+    have sne : s.nonempty := @nonempty_of_not_bdd_above α _ s ⟨Inf ∅⟩ ha 
+    intro x hx 
+    obtain ⟨y, ys, hy⟩ : ∃ (y : _)(_ : y ∈ s), y < x := (is_glb_lt_iff (is_glb_cInf sne hb)).1 hx 
+    obtain ⟨z, zs, hz⟩ : ∃ (z : _)(_ : z ∈ s), x < z := not_bdd_above_iff.1 ha x 
+    exact hs.Icc_subset ys zs ⟨le_of_ltₓ hy, le_of_ltₓ hz⟩
 
 theorem IsPreconnected.Iio_cSup_subset {s : Set α} (hs : IsPreconnected s) (hb : ¬BddBelow s) (ha : BddAbove s) :
   Iio (Sup s) ⊆ s :=
   @IsPreconnected.Ioi_cInf_subset (OrderDual α) _ _ _ s hs ha hb
 
--- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A preconnected set in a conditionally complete linear order is either one of the intervals
 `[Inf s, Sup s]`, `[Inf s, Sup s)`, `(Inf s, Sup s]`, `(Inf s, Sup s)`, `[Inf s, +∞)`,
 `(Inf s, +∞)`, `(-∞, Sup s]`, `(-∞, Sup s)`, `(-∞, +∞)`, or `∅`. The converse statement requires
 `α` to be densely ordererd. -/
-theorem is_preconnected.mem_intervals
-{s : set α}
-(hs : is_preconnected s) : «expr ∈ »(s, ({Icc (Inf s) (Sup s), Ico (Inf s) (Sup s), Ioc (Inf s) (Sup s), Ioo (Inf s) (Sup s), Ici (Inf s), Ioi (Inf s), Iic (Sup s), Iio (Sup s), univ, «expr∅»()} : set (set α))) :=
-begin
-  rcases [expr s.eq_empty_or_nonempty, "with", ident rfl, "|", ident hne],
-  { apply_rules ["[", expr or.inr, ",", expr mem_singleton, "]"] },
-  have [ident hs'] [":", expr is_connected s] [":=", expr ⟨hne, hs⟩],
-  by_cases [expr hb, ":", expr bdd_below s]; by_cases [expr ha, ":", expr bdd_above s],
-  { rcases [expr mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset (hs'.Ioo_cInf_cSup_subset hb ha) (subset_Icc_cInf_cSup hb ha), "with", ident hs, "|", ident hs, "|", ident hs, "|", ident hs],
-    { exact [expr or.inl hs] },
-    { exact [expr «expr $ »(or.inr, or.inl hs)] },
-    { exact [expr «expr $ »(or.inr, «expr $ »(or.inr, or.inl hs))] },
-    { exact [expr «expr $ »(or.inr, «expr $ »(or.inr, «expr $ »(or.inr, or.inl hs)))] } },
-  { refine [expr «expr $ »(or.inr, «expr $ »(or.inr, «expr $ »(or.inr, or.inr _)))],
-    cases [expr mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_cInf_subset hb ha) (λ
-      x hx, cInf_le hb hx)] ["with", ident hs, ident hs],
-    { exact [expr or.inl hs] },
-    { exact [expr or.inr (or.inl hs)] } },
-  { iterate [6] { apply [expr or.inr] },
-    cases [expr mem_Iic_Iio_of_subset_of_subset (hs.Iio_cSup_subset hb ha) (λ
-      x hx, le_cSup ha hx)] ["with", ident hs, ident hs],
-    { exact [expr or.inl hs] },
-    { exact [expr or.inr (or.inl hs)] } },
-  { iterate [8] { apply [expr or.inr] },
-    exact [expr or.inl (hs.eq_univ_of_unbounded hb ha)] }
-end
+theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
+  s ∈
+    ({Icc (Inf s) (Sup s), Ico (Inf s) (Sup s), Ioc (Inf s) (Sup s), Ioo (Inf s) (Sup s), Ici (Inf s), Ioi (Inf s),
+      Iic (Sup s), Iio (Sup s), univ, ∅} :
+    Set (Set α)) :=
+  by 
+    rcases s.eq_empty_or_nonempty with (rfl | hne)
+    ·
+      applyRules [Or.inr, mem_singleton]
+    have hs' : IsConnected s := ⟨hne, hs⟩
+    byCases' hb : BddBelow s <;> byCases' ha : BddAbove s
+    ·
+      rcases mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset (hs'.Ioo_cInf_cSup_subset hb ha) (subset_Icc_cInf_cSup hb ha) with
+        (hs | hs | hs | hs)
+      ·
+        exact Or.inl hs
+      ·
+        exact Or.inr$ Or.inl hs
+      ·
+        exact Or.inr$ Or.inr$ Or.inl hs
+      ·
+        exact Or.inr$ Or.inr$ Or.inr$ Or.inl hs
+    ·
+      refine' Or.inr$ Or.inr$ Or.inr$ Or.inr _ 
+      cases' mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_cInf_subset hb ha) fun x hx => cInf_le hb hx with hs hs
+      ·
+        exact Or.inl hs
+      ·
+        exact Or.inr (Or.inl hs)
+    ·
+      iterate 6 
+        apply Or.inr 
+      cases' mem_Iic_Iio_of_subset_of_subset (hs.Iio_cSup_subset hb ha) fun x hx => le_cSup ha hx with hs hs
+      ·
+        exact Or.inl hs
+      ·
+        exact Or.inr (Or.inl hs)
+    ·
+      iterate 8 
+        apply Or.inr 
+      exact Or.inl (hs.eq_univ_of_unbounded hb ha)
 
 /-- A preconnected set is either one of the intervals `Icc`, `Ico`, `Ioc`, `Ioo`, `Ici`, `Ioi`,
 `Iic`, `Iio`, or `univ`, or `∅`. The converse statement requires `α` to be densely ordered. Though
 one can represent `∅` as `(Inf s, Inf s)`, we include it into the list of possible cases to improve
 readability. -/
 theorem set_of_is_preconnected_subset_of_ordered :
-  { s:Set α | IsPreconnected s } ⊆
+  { s : Set α | IsPreconnected s } ⊆
     range (uncurry Icc) ∪ range (uncurry Ico) ∪ range (uncurry Ioc) ∪ range (uncurry Ioo) ∪
       (range Ici ∪ range Ioi ∪ range Iic ∪ range Iio ∪ {univ, ∅}) :=
   by 
@@ -327,100 +362,87 @@ conditionally complete linear order is preconnected.
 -/
 
 
--- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(s, Ico a b))
 /-- A "continuous induction principle" for a closed interval: if a set `s` meets `[a, b]`
 on a closed subset, contains `a`, and the set `s ∩ [a, b)` has no maximal point, then `b ∈ s`. -/
-theorem is_closed.mem_of_ge_of_forall_exists_gt
-{a b : α}
-{s : set α}
-(hs : is_closed «expr ∩ »(s, Icc a b))
-(ha : «expr ∈ »(a, s))
-(hab : «expr ≤ »(a, b))
-(hgt : ∀ x «expr ∈ » «expr ∩ »(s, Ico a b), «expr ∩ »(s, Ioc x b).nonempty) : «expr ∈ »(b, s) :=
-begin
-  let [ident S] [] [":=", expr «expr ∩ »(s, Icc a b)],
-  replace [ident ha] [":", expr «expr ∈ »(a, S)] [],
-  from [expr ⟨ha, left_mem_Icc.2 hab⟩],
-  have [ident Sbd] [":", expr bdd_above S] [],
-  from [expr ⟨b, λ z hz, hz.2.2⟩],
-  let [ident c] [] [":=", expr Sup «expr ∩ »(s, Icc a b)],
-  have [ident c_mem] [":", expr «expr ∈ »(c, S)] [],
-  from [expr hs.cSup_mem ⟨_, ha⟩ Sbd],
-  have [ident c_le] [":", expr «expr ≤ »(c, b)] [],
-  from [expr cSup_le ⟨_, ha⟩ (λ x hx, hx.2.2)],
-  cases [expr eq_or_lt_of_le c_le] ["with", ident hc, ident hc],
-  from [expr «expr ▸ »(hc, c_mem.1)],
-  exfalso,
-  rcases [expr hgt c ⟨c_mem.1, c_mem.2.1, hc⟩, "with", "⟨", ident x, ",", ident xs, ",", ident cx, ",", ident xb, "⟩"],
-  exact [expr not_lt_of_le (le_cSup Sbd ⟨xs, le_trans (le_cSup Sbd ha) (le_of_lt cx), xb⟩) cx]
-end
+theorem IsClosed.mem_of_ge_of_forall_exists_gt {a b : α} {s : Set α} (hs : IsClosed (s ∩ Icc a b)) (ha : a ∈ s)
+  (hab : a ≤ b) (hgt : ∀ x _ : x ∈ s ∩ Ico a b, (s ∩ Ioc x b).Nonempty) : b ∈ s :=
+  by 
+    let S := s ∩ Icc a b 
+    replace ha : a ∈ S 
+    exact ⟨ha, left_mem_Icc.2 hab⟩
+    have Sbd : BddAbove S 
+    exact ⟨b, fun z hz => hz.2.2⟩
+    let c := Sup (s ∩ Icc a b)
+    have c_mem : c ∈ S 
+    exact hs.cSup_mem ⟨_, ha⟩ Sbd 
+    have c_le : c ≤ b 
+    exact cSup_le ⟨_, ha⟩ fun x hx => hx.2.2
+    cases' eq_or_lt_of_le c_le with hc hc 
+    exact hc ▸ c_mem.1 
+    exfalso 
+    rcases hgt c ⟨c_mem.1, c_mem.2.1, hc⟩ with ⟨x, xs, cx, xb⟩
+    exact not_lt_of_le (le_cSup Sbd ⟨xs, le_transₓ (le_cSup Sbd ha) (le_of_ltₓ cx), xb⟩) cx
 
--- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(s, Ico a b))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » Ioi x)
 /-- A "continuous induction principle" for a closed interval: if a set `s` meets `[a, b]`
 on a closed subset, contains `a`, and for any `a ≤ x < y ≤ b`, `x ∈ s`, the set `s ∩ (x, y]`
 is not empty, then `[a, b] ⊆ s`. -/
-theorem is_closed.Icc_subset_of_forall_exists_gt
-{a b : α}
-{s : set α}
-(hs : is_closed «expr ∩ »(s, Icc a b))
-(ha : «expr ∈ »(a, s))
-(hgt : ∀
- x «expr ∈ » «expr ∩ »(s, Ico a b), ∀ y «expr ∈ » Ioi x, «expr ∩ »(s, Ioc x y).nonempty) : «expr ⊆ »(Icc a b, s) :=
-begin
-  assume [binders (y hy)],
-  have [] [":", expr is_closed «expr ∩ »(s, Icc a y)] [],
-  { suffices [] [":", expr «expr = »(«expr ∩ »(s, Icc a y), «expr ∩ »(«expr ∩ »(s, Icc a b), Icc a y))],
-    { rw [expr this] [],
-      exact [expr is_closed.inter hs is_closed_Icc] },
-    rw ["[", expr inter_assoc, "]"] [],
-    congr,
-    exact [expr «expr $ »(inter_eq_self_of_subset_right, Icc_subset_Icc_right hy.2).symm] },
-  exact [expr is_closed.mem_of_ge_of_forall_exists_gt this ha hy.1 (λ
-    x hx, hgt x ⟨hx.1, Ico_subset_Ico_right hy.2 hx.2⟩ y hx.2.2)]
-end
+theorem IsClosed.Icc_subset_of_forall_exists_gt {a b : α} {s : Set α} (hs : IsClosed (s ∩ Icc a b)) (ha : a ∈ s)
+  (hgt : ∀ x _ : x ∈ s ∩ Ico a b, ∀ y _ : y ∈ Ioi x, (s ∩ Ioc x y).Nonempty) : Icc a b ⊆ s :=
+  by 
+    intro y hy 
+    have  : IsClosed (s ∩ Icc a y)
+    ·
+      suffices  : s ∩ Icc a y = s ∩ Icc a b ∩ Icc a y
+      ·
+        rw [this]
+        exact IsClosed.inter hs is_closed_Icc 
+      rw [inter_assoc]
+      congr 
+      exact (inter_eq_self_of_subset_right$ Icc_subset_Icc_right hy.2).symm 
+    exact
+      IsClosed.mem_of_ge_of_forall_exists_gt this ha hy.1
+        fun x hx => hgt x ⟨hx.1, Ico_subset_Ico_right hy.2 hx.2⟩ y hx.2.2
 
 variable [DenselyOrdered α] {a b : α}
 
--- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(s, Ico a b))
 /-- A "continuous induction principle" for a closed interval: if a set `s` meets `[a, b]`
 on a closed subset, contains `a`, and for any `x ∈ s ∩ [a, b)` the set `s` includes some open
 neighborhood of `x` within `(x, +∞)`, then `[a, b] ⊆ s`. -/
-theorem is_closed.Icc_subset_of_forall_mem_nhds_within
-{a b : α}
-{s : set α}
-(hs : is_closed «expr ∩ »(s, Icc a b))
-(ha : «expr ∈ »(a, s))
-(hgt : ∀ x «expr ∈ » «expr ∩ »(s, Ico a b), «expr ∈ »(s, «expr𝓝[ ] »(Ioi x, x))) : «expr ⊆ »(Icc a b, s) :=
-begin
-  apply [expr hs.Icc_subset_of_forall_exists_gt ha],
-  rintros [ident x, "⟨", ident hxs, ",", ident hxab, "⟩", ident y, ident hyxb],
-  have [] [":", expr «expr ∈ »(«expr ∩ »(s, Ioc x y), «expr𝓝[ ] »(Ioi x, x))] [],
-  from [expr inter_mem (hgt x ⟨hxs, hxab⟩) (Ioc_mem_nhds_within_Ioi ⟨le_refl _, hyxb⟩)],
-  exact [expr (nhds_within_Ioi_self_ne_bot' hxab.2).nonempty_of_mem this]
-end
+theorem IsClosed.Icc_subset_of_forall_mem_nhds_within {a b : α} {s : Set α} (hs : IsClosed (s ∩ Icc a b)) (ha : a ∈ s)
+  (hgt : ∀ x _ : x ∈ s ∩ Ico a b, s ∈ 𝓝[Ioi x] x) : Icc a b ⊆ s :=
+  by 
+    apply hs.Icc_subset_of_forall_exists_gt ha 
+    rintro x ⟨hxs, hxab⟩ y hyxb 
+    have  : s ∩ Ioc x y ∈ 𝓝[Ioi x] x 
+    exact inter_mem (hgt x ⟨hxs, hxab⟩) (Ioc_mem_nhds_within_Ioi ⟨le_reflₓ _, hyxb⟩)
+    exact (nhds_within_Ioi_self_ne_bot' ⟨b, hxab.2⟩).nonempty_of_mem this
 
--- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A closed interval in a densely ordered conditionally complete linear order is preconnected. -/
-theorem is_preconnected_Icc : is_preconnected (Icc a b) :=
-is_preconnected_closed_iff.2 (begin
-   rintros [ident s, ident t, ident hs, ident ht, ident hab, "⟨", ident x, ",", ident hx, "⟩", "⟨", ident y, ",", ident hy, "⟩"],
-   wlog [ident hxy] [":", expr «expr ≤ »(x, y)] [":=", expr le_total x y] ["using", "[", ident x, ident y, ident s, ident t, ",", ident y, ident x, ident t, ident s, "]"],
-   have [ident xyab] [":", expr «expr ⊆ »(Icc x y, Icc a b)] [":=", expr Icc_subset_Icc hx.1.1 hy.1.2],
-   by_contradiction [ident hst],
-   suffices [] [":", expr «expr ⊆ »(Icc x y, s)],
-   from [expr hst ⟨y, «expr $ »(xyab, right_mem_Icc.2 hxy), «expr $ »(this, right_mem_Icc.2 hxy), hy.2⟩],
-   apply [expr (is_closed.inter hs is_closed_Icc).Icc_subset_of_forall_mem_nhds_within hx.2],
-   rintros [ident z, "⟨", ident zs, ",", ident hz, "⟩"],
-   have [ident zt] [":", expr «expr ∈ »(z, «expr ᶜ»(t))] [],
-   from [expr λ zt, hst ⟨z, «expr $ »(xyab, Ico_subset_Icc_self hz), zs, zt⟩],
-   have [] [":", expr «expr ∈ »(«expr ∩ »(«expr ᶜ»(t), Ioc z y), «expr𝓝[ ] »(Ioi z, z))] [],
-   { rw ["[", "<-", expr nhds_within_Ioc_eq_nhds_within_Ioi hz.2, "]"] [],
-     exact [expr mem_nhds_within.2 ⟨«expr ᶜ»(t), ht.is_open_compl, zt, subset.refl _⟩] },
-   apply [expr mem_of_superset this],
-   have [] [":", expr «expr ⊆ »(Ioc z y, «expr ∪ »(s, t))] [],
-   from [expr λ w hw, hab (xyab ⟨le_trans hz.1 (le_of_lt hw.1), hw.2⟩)],
-   exact [expr λ (w) ⟨wt, wzy⟩, (this wzy).elim id (λ h, (wt h).elim)]
- end)
+theorem is_preconnected_Icc : IsPreconnected (Icc a b) :=
+  is_preconnected_closed_iff.2
+    (by 
+      rintro s t hs ht hab ⟨x, hx⟩ ⟨y, hy⟩
+      wlog hxy : x ≤ y := le_totalₓ x y using x y s t, y x t s 
+      have xyab : Icc x y ⊆ Icc a b := Icc_subset_Icc hx.1.1 hy.1.2
+      byContra hst 
+      suffices  : Icc x y ⊆ s 
+      exact hst ⟨y, xyab$ right_mem_Icc.2 hxy, this$ right_mem_Icc.2 hxy, hy.2⟩
+      apply (IsClosed.inter hs is_closed_Icc).Icc_subset_of_forall_mem_nhds_within hx.2
+      rintro z ⟨zs, hz⟩
+      have zt : z ∈ tᶜ
+      exact fun zt => hst ⟨z, xyab$ Ico_subset_Icc_self hz, zs, zt⟩
+      have  : tᶜ ∩ Ioc z y ∈ 𝓝[Ioi z] z
+      ·
+        rw [←nhds_within_Ioc_eq_nhds_within_Ioi hz.2]
+        exact mem_nhds_within.2 ⟨tᶜ, ht.is_open_compl, zt, subset.refl _⟩
+      apply mem_of_superset this 
+      have  : Ioc z y ⊆ s ∪ t 
+      exact fun w hw => hab (xyab ⟨le_transₓ hz.1 (le_of_ltₓ hw.1), hw.2⟩)
+      exact fun w ⟨wt, wzy⟩ => (this wzy).elim id fun h => (wt h).elim)
 
 theorem is_preconnected_interval : IsPreconnected (interval a b) :=
   is_preconnected_Icc
@@ -462,7 +484,7 @@ the set of the intervals `Icc`, `Ico`, `Ioc`, `Ioo`, `Ici`, `Ioi`, `Iic`, `Iio`,
 or `∅`. Though one can represent `∅` as `(Inf s, Inf s)`, we include it into the list of
 possible cases to improve readability. -/
 theorem set_of_is_preconnected_eq_of_ordered :
-  { s:Set α | IsPreconnected s } =
+  { s : Set α | IsPreconnected s } =
     range (uncurry Icc) ∪ range (uncurry Ico) ∪ range (uncurry Ioc) ∪ range (uncurry Ioo) ∪
       (range Ici ∪ range Ioi ∪ range Iic ∪ range Iio ∪ {univ, ∅}) :=
   by 
@@ -575,20 +597,16 @@ theorem Continuous.surjective' {f : α → δ} (hf : Continuous f) (h_top : tend
   (h_bot : tendsto f at_top at_bot) : Function.Surjective f :=
   @Continuous.surjective (OrderDual α) _ _ _ _ _ _ _ _ _ hf h_top h_bot
 
--- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function `f : α → β` is continuous on a nonempty interval `s`, its restriction to `s`
 tends to `at_bot : filter β` along `at_bot : filter ↥s` and tends to `at_top : filter β` along
 `at_top : filter ↥s`, then the restriction of `f` to `s` is surjective. We formulate the
 conclusion as `surj_on f s univ`. -/
-theorem continuous_on.surj_on_of_tendsto
-{f : α → δ}
-{s : set α}
-[ord_connected s]
-(hs : s.nonempty)
-(hf : continuous_on f s)
-(hbot : tendsto (λ x : s, f x) at_bot at_bot)
-(htop : tendsto (λ x : s, f x) at_top at_top) : surj_on f s univ :=
-by haveI [] [] [":=", expr classical.inhabited_of_nonempty hs.to_subtype]; exact [expr «expr $ »(surj_on_iff_surjective.2, (continuous_on_iff_continuous_restrict.1 hf).surjective htop hbot)]
+theorem ContinuousOn.surj_on_of_tendsto {f : α → δ} {s : Set α} [ord_connected s] (hs : s.nonempty)
+  (hf : ContinuousOn f s) (hbot : tendsto (fun x : s => f x) at_bot at_bot)
+  (htop : tendsto (fun x : s => f x) at_top at_top) : surj_on f s univ :=
+  by 
+    have  := Classical.inhabitedOfNonempty hs.to_subtype <;>
+      exact surj_on_iff_surjective.2$ (continuous_on_iff_continuous_restrict.1 hf).Surjective htop hbot
 
 /-- If a function `f : α → β` is continuous on a nonempty interval `s`, its restriction to `s`
 tends to `at_top : filter β` along `at_bot : filter ↥s` and tends to `at_bot : filter β` along

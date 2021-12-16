@@ -19,7 +19,7 @@ predicate `S`) but are not completely determined.
   of nondeterministic functions. -/
 structure Semiquot.{u} (α : Type _) where mk' :: 
   S : Set α 
-  val : Trunc («expr↥ » s)
+  val : Trunc (↥s)
 
 namespace Semiquot
 
@@ -83,11 +83,13 @@ def of_trunc (q : Trunc α) : Semiquot α :=
 def to_trunc (q : Semiquot α) : Trunc α :=
   q.2.map Subtype.val
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a b «expr ∈ » q)
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
 def lift_on (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) : β :=
   Trunc.liftOn q.2 (fun x => f x.1) fun x y => h _ _ x.2 y.2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a b «expr ∈ » q)
 theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) (a : α) (aq : a ∈ q) :
   lift_on q f h = f a :=
   by 
@@ -101,10 +103,12 @@ def map (f : α → β) (q : Semiquot α) : Semiquot β :=
 theorem mem_map (f : α → β) (q : Semiquot α) (b : β) : b ∈ map f q ↔ ∃ a, a ∈ q ∧ f a = b :=
   Set.mem_image _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » q.1)
 /-- Apply a function returning a `semiquot` to a `semiquot`. -/
 def bind (q : Semiquot α) (f : α → Semiquot β) : Semiquot β :=
-  ⟨⋃(a : _)(_ : a ∈ q.1), (f a).1, q.2.bind fun a => (f a.1).2.map fun b => ⟨b.1, Set.mem_bUnion a.2 b.2⟩⟩
+  ⟨⋃ (a : _)(_ : a ∈ q.1), (f a).1, q.2.bind fun a => (f a.1).2.map fun b => ⟨b.1, Set.mem_bUnion a.2 b.2⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » q)
 @[simp]
 theorem mem_bind (q : Semiquot α) (f : α → Semiquot β) (b : β) : b ∈ bind q f ↔ ∃ (a : _)(_ : a ∈ q), b ∈ f a :=
   Set.mem_bUnion_iff
@@ -171,6 +175,7 @@ instance : SemilatticeSup (Semiquot α) :=
 theorem pure_le {a : α} {s : Semiquot α} : pure a ≤ s ↔ a ∈ s :=
   Set.singleton_subset_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a b «expr ∈ » q)
 /-- Assert that a `semiquot` contains only one possible value. -/
 def is_pure (q : Semiquot α) : Prop :=
   ∀ a b _ : a ∈ q _ : b ∈ q, a = b

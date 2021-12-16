@@ -25,7 +25,7 @@ variable (R : Type _) [Ringₓ R] (C : Type _) [category C] [preadditive C] [lin
 sending an object `X : C` to the `Module R`-valued presheaf on `C`,
 with value on `Y : Cᵒᵖ` given by `Module.of R (unop Y ⟶ X)`. -/
 @[simps]
-def linear_yoneda : C ⥤ «expr ᵒᵖ» C ⥤ ModuleCat R :=
+def linear_yoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R :=
   { obj :=
       fun X =>
         { obj := fun Y => ModuleCat.of R (unop Y ⟶ X), map := fun Y Y' f => linear.left_comp R _ f.unop,

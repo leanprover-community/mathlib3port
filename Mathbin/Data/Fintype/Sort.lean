@@ -26,20 +26,19 @@ variable {α : Type _} [DecidableEq α] [Fintype α] [LinearOrderₓ α] {m n : 
 cardinality `n`, then `fin m ⊕ fin n ≃ α`. The equivalence sends elements of `fin m` to
 elements of `s` and elements of `fin n` to elements of `sᶜ` while preserving order on each
 "half" of `fin m ⊕ fin n` (using `set.order_iso_of_fin`). -/
-def finSumEquivOfFinset (hm : s.card = m) (hn : («expr ᶜ» s).card = n) : Sum (Finₓ m) (Finₓ n) ≃ α :=
-  calc Sum (Finₓ m) (Finₓ n) ≃ Sum (s : Set α) («expr ᶜ» s : Set α) :=
-    Equiv.sumCongr (s.order_iso_of_fin hm).toEquiv$
-      ((«expr ᶜ» s).orderIsoOfFin hn).toEquiv.trans$ Equiv.Set.ofEq s.coe_compl 
-    _ ≃ α := Equiv.Set.sumCompl _
+def finSumEquivOfFinset (hm : s.card = m) (hn : sᶜ.card = n) : Sum (Finₓ m) (Finₓ n) ≃ α :=
+  calc Sum (Finₓ m) (Finₓ n) ≃ Sum (s : Set α) (sᶜ : Set α) :=
+    Equivₓ.sumCongr (s.order_iso_of_fin hm).toEquiv$ (sᶜ.orderIsoOfFin hn).toEquiv.trans$ Equivₓ.Set.ofEq s.coe_compl 
+    _ ≃ α := Equivₓ.Set.sumCompl _
     
 
 @[simp]
-theorem fin_sum_equiv_of_finset_inl (hm : s.card = m) (hn : («expr ᶜ» s).card = n) (i : Finₓ m) :
+theorem fin_sum_equiv_of_finset_inl (hm : s.card = m) (hn : sᶜ.card = n) (i : Finₓ m) :
   finSumEquivOfFinset hm hn (Sum.inl i) = s.order_emb_of_fin hm i :=
   rfl
 
 @[simp]
-theorem fin_sum_equiv_of_finset_inr (hm : s.card = m) (hn : («expr ᶜ» s).card = n) (i : Finₓ n) :
-  finSumEquivOfFinset hm hn (Sum.inr i) = («expr ᶜ» s).orderEmbOfFin hn i :=
+theorem fin_sum_equiv_of_finset_inr (hm : s.card = m) (hn : sᶜ.card = n) (i : Finₓ n) :
+  finSumEquivOfFinset hm hn (Sum.inr i) = sᶜ.orderEmbOfFin hn i :=
   rfl
 

@@ -14,7 +14,7 @@ normal monomorphism is normal (`category_theory.normal_of_is_pullback_snd_of_nor
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -80,36 +80,29 @@ def normal_mono.lift' {W : C} (f : X ⟶ Y) [normal_mono f] (k : W ⟶ Y) (h : k
   { l : W ⟶ X // l ≫ f = k } :=
   kernel_fork.is_limit.lift' normal_mono.is_limit _ h
 
--- error in CategoryTheory.Limits.Shapes.NormalMono: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The second leg of a pullback cone is a normal monomorphism if the right component is too.
 
 See also `pullback.snd_of_mono` for the basic monomorphism version, and
 `normal_of_is_pullback_fst_of_normal` for the flipped version.
 -/
-def normal_of_is_pullback_snd_of_normal
-{P Q R S : C}
-{f : «expr ⟶ »(P, Q)}
-{g : «expr ⟶ »(P, R)}
-{h : «expr ⟶ »(Q, S)}
-{k : «expr ⟶ »(R, S)}
-[hn : normal_mono h]
-(comm : «expr = »(«expr ≫ »(f, h), «expr ≫ »(g, k)))
-(t : is_limit (pullback_cone.mk _ _ comm)) : normal_mono g :=
-{ Z := hn.Z,
-  g := «expr ≫ »(k, hn.g),
-  w := by rw ["[", "<-", expr reassoc_of comm, ",", expr hn.w, ",", expr has_zero_morphisms.comp_zero, "]"] [],
-  is_limit := begin
-    letI [ident gr] [] [":=", expr regular_of_is_pullback_snd_of_regular comm t],
-    have [ident q] [] [":=", expr (has_zero_morphisms.comp_zero k hn.Z).symm],
-    convert [] [expr gr.is_limit] [],
-    dunfold [ident kernel_fork.of_ι, ident fork.of_ι] [],
-    congr,
-    exact [expr q],
-    exact [expr q],
-    exact [expr q],
-    apply [expr proof_irrel_heq]
-  end }
+def normal_of_is_pullback_snd_of_normal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+  [hn : normal_mono h] (comm : f ≫ h = g ≫ k) (t : is_limit (pullback_cone.mk _ _ comm)) : normal_mono g :=
+  { z := hn.Z, g := k ≫ hn.g,
+    w :=
+      by 
+        rw [←reassoc_of comm, hn.w, has_zero_morphisms.comp_zero],
+    IsLimit :=
+      by 
+        let gr := regular_of_is_pullback_snd_of_regular comm t 
+        have q := (has_zero_morphisms.comp_zero k hn.Z).symm 
+        convert gr.is_limit 
+        dunfold kernel_fork.of_ι fork.of_ι 
+        congr 
+        exact q 
+        exact q 
+        exact q 
+        apply proof_irrel_heq }
 
 /--
 The first leg of a pullback cone is a normal monomorphism if the left component is too.
@@ -177,36 +170,29 @@ def normal_epi.desc' {W : C} (f : X ⟶ Y) [normal_epi f] (k : X ⟶ W) (h : nor
   { l : Y ⟶ W // f ≫ l = k } :=
   cokernel_cofork.is_colimit.desc' normal_epi.is_colimit _ h
 
--- error in CategoryTheory.Limits.Shapes.NormalMono: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The second leg of a pushout cocone is a normal epimorphism if the right component is too.
 
 See also `pushout.snd_of_epi` for the basic epimorphism version, and
 `normal_of_is_pushout_fst_of_normal` for the flipped version.
 -/
-def normal_of_is_pushout_snd_of_normal
-{P Q R S : C}
-{f : «expr ⟶ »(P, Q)}
-{g : «expr ⟶ »(P, R)}
-{h : «expr ⟶ »(Q, S)}
-{k : «expr ⟶ »(R, S)}
-[gn : normal_epi g]
-(comm : «expr = »(«expr ≫ »(f, h), «expr ≫ »(g, k)))
-(t : is_colimit (pushout_cocone.mk _ _ comm)) : normal_epi h :=
-{ W := gn.W,
-  g := «expr ≫ »(gn.g, f),
-  w := by rw ["[", expr category.assoc, ",", expr comm, ",", expr reassoc_of gn.w, ",", expr zero_comp, "]"] [],
-  is_colimit := begin
-    letI [ident hn] [] [":=", expr regular_of_is_pushout_snd_of_regular comm t],
-    have [ident q] [] [":=", expr (@zero_comp _ _ _ gn.W _ _ f).symm],
-    convert [] [expr hn.is_colimit] [],
-    dunfold [ident cokernel_cofork.of_π, ident cofork.of_π] [],
-    congr,
-    exact [expr q],
-    exact [expr q],
-    exact [expr q],
-    apply [expr proof_irrel_heq]
-  end }
+def normal_of_is_pushout_snd_of_normal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [gn : normal_epi g]
+  (comm : f ≫ h = g ≫ k) (t : is_colimit (pushout_cocone.mk _ _ comm)) : normal_epi h :=
+  { w := gn.W, g := gn.g ≫ f,
+    w :=
+      by 
+        rw [category.assoc, comm, reassoc_of gn.w, zero_comp],
+    IsColimit :=
+      by 
+        let hn := regular_of_is_pushout_snd_of_regular comm t 
+        have q := (@zero_comp _ _ _ gn.W _ _ f).symm 
+        convert hn.is_colimit 
+        dunfold cokernel_cofork.of_π cofork.of_π 
+        congr 
+        exact q 
+        exact q 
+        exact q 
+        apply proof_irrel_heq }
 
 /--
 The first leg of a pushout cocone is a normal epimorphism if the left component is too.
@@ -225,7 +211,7 @@ open Opposite
 variable [has_zero_morphisms C]
 
 /-- A normal mono becomes a normal epi in the opposite category. -/
-def normal_epi_of_normal_mono_unop {X Y : «expr ᵒᵖ» C} (f : X ⟶ Y) (m : normal_mono f.unop) : normal_epi f :=
+def normal_epi_of_normal_mono_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : normal_mono f.unop) : normal_epi f :=
   { w := op m.Z, g := m.g.op, w := congr_argₓ Quiver.Hom.op m.w,
     IsColimit :=
       is_colimit.of_π _ _
@@ -239,7 +225,7 @@ def normal_epi_of_normal_mono_unop {X Y : «expr ᵒᵖ» C} (f : X ⟶ Y) (m : 
           rintro (⟨⟩ | ⟨⟩) <;> simp ) }
 
 /-- A normal epi becomes a normal mono in the opposite category. -/
-def normal_mono_of_normal_epi_unop {X Y : «expr ᵒᵖ» C} (f : X ⟶ Y) (m : normal_epi f.unop) : normal_mono f :=
+def normal_mono_of_normal_epi_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : normal_epi f.unop) : normal_mono f :=
   { z := op m.W, g := m.g.op, w := congr_argₓ Quiver.Hom.op m.w,
     IsLimit :=
       is_limit.of_ι _ _

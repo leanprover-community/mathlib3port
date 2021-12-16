@@ -45,8 +45,7 @@ def finite_inter_closure_has_finite_inter : HasFiniteInter (finite_inter_closure
 
 variable {S}
 
-theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) :
-  «expr↑ » F ⊆ S → ⋂₀(«expr↑ » F : Set (Set α)) ∈ S :=
+theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F ⊆ S → ⋂₀(↑F : Set (Set α)) ∈ S :=
   by 
     classical 
     refine' Finset.induction_on F (fun _ => _) _
@@ -54,11 +53,13 @@ theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) :
       simp [cond.univ_mem]
     ·
       intro a s h1 h2 h3 
-      suffices  : a ∩ ⋂₀«expr↑ » s ∈ S
+      suffices  : a ∩ ⋂₀↑s ∈ S
       ·
         simpa 
       exact cond.inter_mem (h3 (Finset.mem_insert_self a s)) (h2$ fun x hx => h3$ Finset.mem_insert_of_mem hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure (insert A S))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (Q «expr ∈ » S)
 theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) P
   (_ : P ∈ finite_inter_closure (insert A S)) : P ∈ S ∨ ∃ (Q : _)(_ : Q ∈ S), P = A ∩ Q :=
   by 

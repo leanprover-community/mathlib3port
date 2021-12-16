@@ -31,7 +31,7 @@ This will give rise to a monomial in `mv_polynomial σ R` which mathematicians m
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -124,7 +124,7 @@ def rename_equiv (f : σ ≃ τ) : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R
           rw [rename_rename, f.self_comp_symm, rename_id] }
 
 @[simp]
-theorem rename_equiv_refl : rename_equiv R (Equiv.refl σ) = AlgEquiv.refl :=
+theorem rename_equiv_refl : rename_equiv R (Equivₓ.refl σ) = AlgEquiv.refl :=
   AlgEquiv.ext rename_id
 
 @[simp]
@@ -184,27 +184,37 @@ theorem eval_rename_prodmk (g : σ × τ → R) (i : σ) (p : MvPolynomial τ R)
 
 end 
 
--- error in Data.MvPolynomial.Rename: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Every polynomial is a polynomial in finitely many variables. -/
-theorem exists_finset_rename
-(p : mv_polynomial σ R) : «expr∃ , »((s : finset σ)
- (q : mv_polynomial {x // «expr ∈ »(x, s)} R), «expr = »(p, rename coe q)) :=
-begin
-  apply [expr induction_on p],
-  { intro [ident r],
-    exact [expr ⟨«expr∅»(), C r, by rw [expr rename_C] []⟩] },
-  { rintro [ident p, ident q, "⟨", ident s, ",", ident p, ",", ident rfl, "⟩", "⟨", ident t, ",", ident q, ",", ident rfl, "⟩"],
-    refine [expr ⟨«expr ∪ »(s, t), ⟨_, _⟩⟩],
-    { refine [expr «expr + »(rename (subtype.map id _) p, rename (subtype.map id _) q)]; simp [] [] ["only"] ["[", expr id.def, ",", expr true_or, ",", expr or_true, ",", expr finset.mem_union, ",", expr forall_true_iff, "]"] [] [] { contextual := tt } },
-    { simp [] [] ["only"] ["[", expr rename_rename, ",", expr alg_hom.map_add, "]"] [] [],
-      refl } },
-  { rintro [ident p, ident n, "⟨", ident s, ",", ident p, ",", ident rfl, "⟩"],
-    refine [expr ⟨insert n s, ⟨_, _⟩⟩],
-    { refine [expr «expr * »(rename (subtype.map id _) p, X ⟨n, s.mem_insert_self n⟩)],
-      simp [] [] ["only"] ["[", expr id.def, ",", expr or_true, ",", expr finset.mem_insert, ",", expr forall_true_iff, "]"] [] [] { contextual := tt } },
-    { simp [] [] ["only"] ["[", expr rename_rename, ",", expr rename_X, ",", expr subtype.coe_mk, ",", expr alg_hom.map_mul, "]"] [] [],
-      refl } }
-end
+  theorem
+    exists_finset_rename
+    ( p : MvPolynomial σ R ) : ∃ ( s : Finset σ ) ( q : MvPolynomial { x // x ∈ s } R ) , p = rename coeₓ q
+    :=
+      by
+        apply induction_on p
+          · intro r exact ⟨ ∅ , C r , by rw [ rename_C ] ⟩
+          ·
+            rintro p q ⟨ s , p , rfl ⟩ ⟨ t , q , rfl ⟩
+              refine' ⟨ s ∪ t , ⟨ _ , _ ⟩ ⟩
+              ·
+                refine' rename Subtype.map id _ p + rename Subtype.map id _ q
+                  <;>
+                  simp
+                    ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                    only
+                    [ id.def , true_orₓ , or_trueₓ , Finset.mem_union , forall_true_iff ]
+              · simp only [ rename_rename , AlgHom.map_add ] rfl
+          ·
+            rintro p n ⟨ s , p , rfl ⟩
+              refine' ⟨ insert n s , ⟨ _ , _ ⟩ ⟩
+              ·
+                refine' rename Subtype.map id _ p * X ⟨ n , s.mem_insert_self n ⟩
+                  simp
+                    ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                    only
+                    [ id.def , or_trueₓ , Finset.mem_insert , forall_true_iff ]
+              · simp only [ rename_rename , rename_X , Subtype.coe_mk , AlgHom.map_mul ] rfl
 
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_fin_rename (p : MvPolynomial σ R) :
@@ -215,7 +225,7 @@ theorem exists_fin_rename (p : MvPolynomial σ R) :
     let e := Fintype.equivFin { x // x ∈ s }
     refine' ⟨n, coeₓ ∘ e.symm, subtype.val_injective.comp e.symm.injective, rename e q, _⟩
     rw [←rename_rename, rename_rename e]
-    simp only [Function.comp, Equiv.symm_apply_apply, rename_rename]
+    simp only [Function.comp, Equivₓ.symm_apply_apply, rename_rename]
 
 end Rename
 

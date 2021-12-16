@@ -77,12 +77,12 @@ instance [h : Subsingleton α] : Subsingleton (null_measurable_space α μ) :=
 instance : MeasurableSpace (null_measurable_space α μ) :=
   { MeasurableSet' := fun s => ∃ t, MeasurableSet t ∧ s =ᵐ[μ] t,
     measurable_set_empty := ⟨∅, MeasurableSet.empty, ae_eq_refl _⟩,
-    measurable_set_compl := fun s ⟨t, htm, hts⟩ => ⟨«expr ᶜ» t, htm.compl, hts.compl⟩,
+    measurable_set_compl := fun s ⟨t, htm, hts⟩ => ⟨tᶜ, htm.compl, hts.compl⟩,
     measurable_set_Union :=
       fun s hs =>
         by 
           choose t htm hts using hs 
-          exact ⟨⋃i, t i, MeasurableSet.Union htm, EventuallyEq.countable_Union hts⟩ }
+          exact ⟨⋃ i, t i, MeasurableSet.Union htm, EventuallyEq.countable_Union hts⟩ }
 
 /-- A set is called `null_measurable_set` if it can be approximated by a measurable set up to
 a set of null measure. -/
@@ -110,14 +110,14 @@ namespace NullMeasurableSet
 theorem of_null (h : μ s = 0) : null_measurable_set s μ :=
   ⟨∅, MeasurableSet.empty, ae_eq_empty.2 h⟩
 
-theorem compl (h : null_measurable_set s μ) : null_measurable_set («expr ᶜ» s) μ :=
+theorem compl (h : null_measurable_set s μ) : null_measurable_set (sᶜ) μ :=
   h.compl
 
-theorem of_compl (h : null_measurable_set («expr ᶜ» s) μ) : null_measurable_set s μ :=
+theorem of_compl (h : null_measurable_set (sᶜ) μ) : null_measurable_set s μ :=
   h.of_compl
 
 @[simp]
-theorem compl_iff : null_measurable_set («expr ᶜ» s) μ ↔ null_measurable_set s μ :=
+theorem compl_iff : null_measurable_set (sᶜ) μ ↔ null_measurable_set s μ :=
   MeasurableSet.compl_iff
 
 @[nontriviality]
@@ -129,17 +129,21 @@ protected theorem congr (hs : null_measurable_set s μ) (h : s =ᵐ[μ] t) : nul
   ⟨s', hm, h.symm.trans hs'⟩
 
 protected theorem Union [Encodable ι] {s : ι → Set α} (h : ∀ i, null_measurable_set (s i) μ) :
-  null_measurable_set (⋃i, s i) μ :=
+  null_measurable_set (⋃ i, s i) μ :=
   MeasurableSet.Union h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » encodable.decode₂ ι n)
 protected theorem bUnion_decode₂ [Encodable ι] ⦃f : ι → Set α⦄ (h : ∀ i, null_measurable_set (f i) μ) (n : ℕ) :
-  null_measurable_set (⋃(b : _)(_ : b ∈ Encodable.decode₂ ι n), f b) μ :=
+  null_measurable_set (⋃ (b : _)(_ : b ∈ Encodable.decode₂ ι n), f b) μ :=
   MeasurableSet.bUnion_decode₂ h n
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : countable s)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃ (b : _)(_ : b ∈ s), f b) μ :=
   MeasurableSet.bUnion hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 protected theorem sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t ∈ s, null_measurable_set t μ) :
   null_measurable_set (⋃₀s) μ :=
   by 
@@ -147,31 +151,34 @@ protected theorem sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t 
     exact MeasurableSet.bUnion hs h
 
 theorem Union_Prop {p : Prop} {f : p → Set α} (hf : ∀ i, null_measurable_set (f i) μ) :
-  null_measurable_set (⋃i, f i) μ :=
+  null_measurable_set (⋃ i, f i) μ :=
   MeasurableSet.Union_Prop hf
 
 theorem Union_fintype [Fintype ι] {f : ι → Set α} (h : ∀ b, null_measurable_set (f b) μ) :
-  null_measurable_set (⋃b, f b) μ :=
+  null_measurable_set (⋃ b, f b) μ :=
   MeasurableSet.Union_fintype h
 
 protected theorem Inter [Encodable ι] {f : ι → Set α} (h : ∀ i, null_measurable_set (f i) μ) :
-  null_measurable_set (⋂i, f i) μ :=
+  null_measurable_set (⋂ i, f i) μ :=
   MeasurableSet.Inter h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 protected theorem bInter {f : β → Set α} {s : Set β} (hs : countable s)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂ (b : _)(_ : b ∈ s), f b) μ :=
   MeasurableSet.bInter hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 protected theorem sInter {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t ∈ s, null_measurable_set t μ) :
   null_measurable_set (⋂₀s) μ :=
   MeasurableSet.sInter hs h
 
 theorem Inter_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, null_measurable_set (f b) μ) :
-  null_measurable_set (⋂b, f b) μ :=
+  null_measurable_set (⋂ b, f b) μ :=
   MeasurableSet.Inter_Prop hf
 
 theorem Inter_fintype [Fintype ι] {f : ι → Set α} (h : ∀ b, null_measurable_set (f b) μ) :
-  null_measurable_set (⋂b, f b) μ :=
+  null_measurable_set (⋂ b, f b) μ :=
   MeasurableSet.Inter_fintype h
 
 @[simp]
@@ -195,7 +202,7 @@ protected theorem disjointed {f : ℕ → Set α} (h : ∀ i, null_measurable_se
   MeasurableSet.disjointed h n
 
 @[simp]
-protected theorem const (p : Prop) : null_measurable_set { a:α | p } μ :=
+protected theorem const (p : Prop) : null_measurable_set { a : α | p } μ :=
   MeasurableSet.const p
 
 instance [MeasurableSingletonClass α] : MeasurableSingletonClass (null_measurable_space α μ) :=
@@ -205,37 +212,39 @@ protected theorem insert [MeasurableSingletonClass (null_measurable_space α μ)
   null_measurable_set (insert a s) μ :=
   hs.insert a
 
--- error in MeasureTheory.Measure.NullMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_measurable_superset_ae_eq
-(h : null_measurable_set s μ) : «expr∃ , »((t «expr ⊇ » s), «expr ∧ »(measurable_set t, «expr =ᵐ[ ] »(t, μ, s))) :=
-begin
-  rcases [expr h, "with", "⟨", ident t, ",", ident htm, ",", ident hst, "⟩"],
-  refine [expr ⟨«expr ∪ »(t, to_measurable μ «expr \ »(s, t)), _, htm.union (measurable_set_to_measurable _ _), _⟩],
-  { exact [expr diff_subset_iff.1 (subset_to_measurable _ _)] },
-  { have [] [":", expr «expr =ᵐ[ ] »(to_measurable μ «expr \ »(s, t), μ, («expr∅»() : set α))] [],
-    by simp [] [] [] ["[", expr ae_le_set.1 hst.le, "]"] [] [],
-    simpa [] [] ["only"] ["[", expr union_empty, "]"] [] ["using", expr hst.symm.union this] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊇ » s)
+theorem exists_measurable_superset_ae_eq (h : null_measurable_set s μ) :
+  ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
+  by 
+    rcases h with ⟨t, htm, hst⟩
+    refine' ⟨t ∪ to_measurable μ (s \ t), _, htm.union (measurable_set_to_measurable _ _), _⟩
+    ·
+      exact diff_subset_iff.1 (subset_to_measurable _ _)
+    ·
+      have  : to_measurable μ (s \ t) =ᵐ[μ] (∅ : Set α)
+      ·
+        simp [ae_le_set.1 hst.le]
+      simpa only [union_empty] using hst.symm.union this
 
 theorem to_measurable_ae_eq (h : null_measurable_set s μ) : to_measurable μ s =ᵐ[μ] s :=
   by 
     rw [to_measurable, dif_pos]
     exact h.exists_measurable_superset_ae_eq.some_spec.snd.2
 
-theorem compl_to_measurable_compl_ae_eq (h : null_measurable_set s μ) :
-  «expr ᶜ» (to_measurable μ («expr ᶜ» s)) =ᵐ[μ] s :=
+theorem compl_to_measurable_compl_ae_eq (h : null_measurable_set s μ) : to_measurable μ (sᶜ)ᶜ =ᵐ[μ] s :=
   by 
     simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_measurable_subset_ae_eq (h : null_measurable_set s μ) :
   ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
-  ⟨«expr ᶜ» (to_measurable μ («expr ᶜ» s)), compl_subset_comm.2$ subset_to_measurable _ _,
-    (measurable_set_to_measurable _ _).Compl, h.compl_to_measurable_compl_ae_eq⟩
+  ⟨to_measurable μ (sᶜ)ᶜ, compl_subset_comm.2$ subset_to_measurable _ _, (measurable_set_to_measurable _ _).Compl,
+    h.compl_to_measurable_compl_ae_eq⟩
 
 end NullMeasurableSet
 
 theorem measure_Union {m0 : MeasurableSpace α} {μ : Measureₓ α} [Encodable ι] {f : ι → Set α}
-  (hn : Pairwise (Disjoint on f)) (h : ∀ i, MeasurableSet (f i)) : μ (⋃i, f i) = ∑'i, μ (f i) :=
+  (hn : Pairwise (Disjoint on f)) (h : ∀ i, MeasurableSet (f i)) : μ (⋃ i, f i) = ∑' i, μ (f i) :=
   by 
     rw [measure_eq_extend (MeasurableSet.Union h), extend_Union MeasurableSet.empty _ MeasurableSet.Union _ hn h]
     ·
@@ -245,20 +254,15 @@ theorem measure_Union {m0 : MeasurableSpace α} {μ : Measureₓ α} [Encodable 
     ·
       exact μ.m_Union
 
--- error in MeasureTheory.Measure.NullMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem measure_Union₀
-[encodable ι]
-{f : ι → set α}
-(hn : pairwise «expr on »(disjoint, f))
-(h : ∀ i, null_measurable_set (f i) μ) : «expr = »(μ «expr⋃ , »((i), f i), «expr∑' , »((i), μ (f i))) :=
-begin
-  refine [expr (measure_Union_le _).antisymm _],
-  choose [] [ident s] [ident hsf, ident hsm, ident hs_eq] ["using", expr λ i, (h i).exists_measurable_subset_ae_eq],
-  have [ident hsd] [":", expr pairwise «expr on »(disjoint, s)] [],
-  from [expr hn.mono (λ i j h, h.mono (hsf i) (hsf j))],
-  simp [] [] ["only"] ["[", "<-", expr measure_congr (hs_eq _), ",", "<-", expr measure_Union hsd hsm, "]"] [] [],
-  exact [expr measure_mono (Union_subset_Union hsf)]
-end
+theorem measure_Union₀ [Encodable ι] {f : ι → Set α} (hn : Pairwise (Disjoint on f))
+  (h : ∀ i, null_measurable_set (f i) μ) : μ (⋃ i, f i) = ∑' i, μ (f i) :=
+  by 
+    refine' (measure_Union_le _).antisymm _ 
+    choose s hsf hsm hs_eq using fun i => (h i).exists_measurable_subset_ae_eq 
+    have hsd : Pairwise (Disjoint on s)
+    exact hn.mono fun i j h => h.mono (hsf i) (hsf j)
+    simp only [←measure_congr (hs_eq _), ←measure_Union hsd hsm]
+    exact measure_mono (Union_subset_Union hsf)
 
 theorem measure_union₀ (hs : null_measurable_set s μ) (ht : null_measurable_set t μ) (hd : Disjoint s t) :
   μ (s ∪ t) = μ s+μ t :=
@@ -277,37 +281,48 @@ theorem null_measurable_set_singleton (x : α) : null_measurable_set {x} μ :=
 theorem null_measurable_set_insert {a : α} {s : Set α} : null_measurable_set (insert a s) μ ↔ null_measurable_set s μ :=
   measurable_set_insert
 
-theorem null_measurable_set_eq {a : α} : null_measurable_set { x | x = a } μ :=
-  null_measurable_set_singleton a
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem null_measurable_set_eq { a : α } : null_measurable_set { x | x = a } μ := null_measurable_set_singleton a
 
 protected theorem _root_.set.finite.null_measurable_set (hs : finite s) : null_measurable_set s μ :=
   finite.measurable_set hs
 
-protected theorem _root_.finset.null_measurable_set (s : Finset α) : null_measurable_set («expr↑ » s) μ :=
+protected theorem _root_.finset.null_measurable_set (s : Finset α) : null_measurable_set (↑s) μ :=
   Finset.measurable_set s
 
 end MeasurableSingletonClass
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem _root_.set.finite.null_measurable_set_bUnion {f : ι → Set α} {s : Set ι} (hs : finite s)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃ (b : _)(_ : b ∈ s), f b) μ :=
   finite.measurable_set_bUnion hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem _root_.finset.null_measurable_set_bUnion {f : ι → Set α} (s : Finset ι)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃ (b : _)(_ : b ∈ s), f b) μ :=
   Finset.measurable_set_bUnion s h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem _root_.set.finite.null_measurable_set_sUnion {s : Set (Set α)} (hs : finite s)
   (h : ∀ t _ : t ∈ s, null_measurable_set t μ) : null_measurable_set (⋃₀s) μ :=
   finite.measurable_set_sUnion hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem _root_.set.finite.null_measurable_set_bInter {f : ι → Set α} {s : Set ι} (hs : finite s)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂ (b : _)(_ : b ∈ s), f b) μ :=
   finite.measurable_set_bInter hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem _root_.finset.null_measurable_set_bInter {f : ι → Set α} (s : Finset ι)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂ (b : _)(_ : b ∈ s), f b) μ :=
   s.finite_to_set.null_measurable_set_bInter h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem _root_.set.finite.null_measurable_set_sInter {s : Set (Set α)} (hs : finite s)
   (h : ∀ t _ : t ∈ s, null_measurable_set t μ) : null_measurable_set (⋂₀s) μ :=
   null_measurable_set.sInter hs.countable h
@@ -401,7 +416,7 @@ instance completion.is_complete {m : MeasurableSpace α} (μ : Measureₓ α) : 
   ⟨fun z hz => null_measurable_set.of_null hz⟩
 
 @[simp]
-theorem coe_completion {_ : MeasurableSpace α} (μ : Measureₓ α) : «expr⇑ » μ.completion = μ :=
+theorem coe_completion {_ : MeasurableSpace α} (μ : Measureₓ α) : ⇑μ.completion = μ :=
   rfl
 
 theorem completion_apply {_ : MeasurableSpace α} (μ : Measureₓ α) (s : Set α) : μ.completion s = μ s :=

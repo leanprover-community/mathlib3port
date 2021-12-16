@@ -15,58 +15,67 @@ open Set Classical
 
 open_locale Classical
 
--- error in Order.Extension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » c)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ub «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » c)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-Any partial order can be extended to a linear order.
--/
-theorem extend_partial_order
-{α : Type u}
-(r : α → α → exprProp())
-[is_partial_order α r] : «expr∃ , »((s : α → α → exprProp()) (_ : is_linear_order α s), «expr ≤ »(r, s)) :=
-begin
-  let [ident S] [] [":=", expr {s | is_partial_order α s}],
-  have [ident hS] [":", expr ∀
-   c, «expr ⊆ »(c, S) → zorn.chain ((«expr ≤ »)) c → ∀
-   y «expr ∈ » c, «expr∃ , »((ub «expr ∈ » S), ∀ z «expr ∈ » c, «expr ≤ »(z, ub))] [],
-  { rintro [ident c, ident hc₁, ident hc₂, ident s, ident hs],
-    haveI [] [] [":=", expr (hc₁ hs).1],
-    refine [expr ⟨Sup c, _, λ z hz, le_Sup hz⟩],
-    refine [expr { refl := _, trans := _, antisymm := _ }]; simp_rw [expr binary_relation_Sup_iff] [],
-    { intro [ident x],
-      exact [expr ⟨s, hs, refl x⟩] },
-    { rintro [ident x, ident y, ident z, "⟨", ident s₁, ",", ident h₁s₁, ",", ident h₂s₁, "⟩", "⟨", ident s₂, ",", ident h₁s₂, ",", ident h₂s₂, "⟩"],
-      haveI [] [":", expr is_partial_order _ _] [":=", expr hc₁ h₁s₁],
-      haveI [] [":", expr is_partial_order _ _] [":=", expr hc₁ h₁s₂],
-      cases [expr hc₂.total_of_refl h₁s₁ h₁s₂] [],
-      { exact [expr ⟨s₂, h₁s₂, trans (h _ _ h₂s₁) h₂s₂⟩] },
-      { exact [expr ⟨s₁, h₁s₁, trans h₂s₁ (h _ _ h₂s₂)⟩] } },
-    { rintro [ident x, ident y, "⟨", ident s₁, ",", ident h₁s₁, ",", ident h₂s₁, "⟩", "⟨", ident s₂, ",", ident h₁s₂, ",", ident h₂s₂, "⟩"],
-      haveI [] [":", expr is_partial_order _ _] [":=", expr hc₁ h₁s₁],
-      haveI [] [":", expr is_partial_order _ _] [":=", expr hc₁ h₁s₂],
-      cases [expr hc₂.total_of_refl h₁s₁ h₁s₂] [],
-      { exact [expr antisymm (h _ _ h₂s₁) h₂s₂] },
-      { apply [expr antisymm h₂s₁ (h _ _ h₂s₂)] } } },
-  obtain ["⟨", ident s, ",", ident hs₁, ":", expr is_partial_order _ _, ",", ident rs, ",", ident hs₂, "⟩", ":=", expr zorn.zorn_nonempty_partial_order₀ S hS r «expr‹ ›»(_)],
-  resetI,
-  refine [expr ⟨s, { total := _ }, rs⟩],
-  intros [ident x, ident y],
-  by_contra [ident h],
-  push_neg ["at", ident h],
-  let [ident s'] [] [":=", expr λ x' y', «expr ∨ »(s x' y', «expr ∧ »(s x' x, s y y'))],
-  rw ["<-", expr hs₂ s' _ (λ _ _, or.inl)] ["at", ident h],
-  { apply [expr h.1 (or.inr ⟨refl _, refl _⟩)] },
-  { refine [expr { refl := λ x, or.inl (refl _), trans := _, antisymm := _ }],
-    { rintro [ident a, ident b, ident c, "(", ident ab, "|", "⟨", ident ax, ":", expr s a x, ",", ident yb, ":", expr s y b, "⟩", ")", "(", ident bc, "|", "⟨", ident bx, ":", expr s b x, ",", ident yc, ":", expr s y c, "⟩", ")"],
-      { exact [expr or.inl (trans ab bc)] },
-      { exact [expr or.inr ⟨trans ab bx, yc⟩] },
-      { exact [expr or.inr ⟨ax, trans yb bc⟩] },
-      { exact [expr or.inr ⟨ax, yc⟩] } },
-    { rintro [ident a, ident b, "(", ident ab, "|", "⟨", ident ax, ":", expr s a x, ",", ident yb, ":", expr s y b, "⟩", ")", "(", ident ba, "|", "⟨", ident bx, ":", expr s b x, ",", ident ya, ":", expr s y a, "⟩", ")"],
-      { exact [expr antisymm ab ba] },
-      { exact [expr (h.2 (trans ya (trans ab bx))).elim] },
-      { exact [expr (h.2 (trans yb (trans ba ax))).elim] },
-      { exact [expr (h.2 (trans yb bx)).elim] } } }
-end
+    Any partial order can be extended to a linear order.
+    -/
+  theorem
+    extend_partial_order
+    { α : Type u } ( r : α → α → Prop ) [ IsPartialOrder α r ]
+      : ∃ ( s : α → α → Prop ) ( _ : IsLinearOrder α s ) , r ≤ s
+    :=
+      by
+        let S := { s | IsPartialOrder α s }
+          have
+            hS
+            : ∀ c , c ⊆ S → Zorn.Chain · ≤ · c → ∀ y _ : y ∈ c , ∃ ( ub : _ ) ( _ : ub ∈ S ) , ∀ z _ : z ∈ c , z ≤ ub
+          ·
+            rintro c hc₁ hc₂ s hs
+              have := hc₁ hs . 1
+              refine' ⟨ Sup c , _ , fun z hz => le_Sup hz ⟩
+              refine' { refl := _ , trans := _ , antisymm := _ } <;> simpRw [ binary_relation_Sup_iff ]
+              · intro x exact ⟨ s , hs , refl x ⟩
+              ·
+                rintro x y z ⟨ s₁ , h₁s₁ , h₂s₁ ⟩ ⟨ s₂ , h₁s₂ , h₂s₂ ⟩
+                  have : IsPartialOrder _ _ := hc₁ h₁s₁
+                  have : IsPartialOrder _ _ := hc₁ h₁s₂
+                  cases hc₂.total_of_refl h₁s₁ h₁s₂
+                  · exact ⟨ s₂ , h₁s₂ , trans h _ _ h₂s₁ h₂s₂ ⟩
+                  · exact ⟨ s₁ , h₁s₁ , trans h₂s₁ h _ _ h₂s₂ ⟩
+              ·
+                rintro x y ⟨ s₁ , h₁s₁ , h₂s₁ ⟩ ⟨ s₂ , h₁s₂ , h₂s₂ ⟩
+                  have : IsPartialOrder _ _ := hc₁ h₁s₁
+                  have : IsPartialOrder _ _ := hc₁ h₁s₂
+                  cases hc₂.total_of_refl h₁s₁ h₁s₂
+                  · exact antisymm h _ _ h₂s₁ h₂s₂
+                  · apply antisymm h₂s₁ h _ _ h₂s₂
+          obtain ⟨ s , hs₁ : IsPartialOrder _ _ , rs , hs₂ ⟩ := Zorn.zorn_nonempty_partial_order₀ S hS r ‹ _ ›
+          skip
+          refine' ⟨ s , { Total := _ } , rs ⟩
+          intro x y
+          byContra h
+          pushNeg at h
+          let s' := fun x' y' => s x' y' ∨ s x' x ∧ s y y'
+          rw [ ← hs₂ s' _ fun _ _ => Or.inl ] at h
+          · apply h . 1 Or.inr ⟨ refl _ , refl _ ⟩
+          ·
+            refine' { refl := fun x => Or.inl refl _ , trans := _ , antisymm := _ }
+              ·
+                rintro a b c ( ab | ⟨ ax : s a x , yb : s y b ⟩ ) ( bc | ⟨ bx : s b x , yc : s y c ⟩ )
+                  · exact Or.inl trans ab bc
+                  · exact Or.inr ⟨ trans ab bx , yc ⟩
+                  · exact Or.inr ⟨ ax , trans yb bc ⟩
+                  · exact Or.inr ⟨ ax , yc ⟩
+              ·
+                rintro a b ( ab | ⟨ ax : s a x , yb : s y b ⟩ ) ( ba | ⟨ bx : s b x , ya : s y a ⟩ )
+                  · exact antisymm ab ba
+                  · exact h . 2 trans ya trans ab bx . elim
+                  · exact h . 2 trans yb trans ba ax . elim
+                  · exact h . 2 trans yb bx . elim
 
 /-- A type alias for `α`, intended to extend a partial order on `α` to a linear order. -/
 def LinearExtension (α : Type u) : Type u :=

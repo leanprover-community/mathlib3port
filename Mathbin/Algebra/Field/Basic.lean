@@ -293,7 +293,7 @@ noncomputable def IsField.toField (R : Type u) [Ringₓ R] (h : IsField R) : Fie
 Since `is_field` doesn't remember the data of an `inv` function and as such,
 a lemma that there is a unique inverse could be useful.
 -/
-theorem uniq_inv_of_is_field (R : Type u) [Ringₓ R] (hf : IsField R) : ∀ x : R, x ≠ 0 → ∃!y : R, (x*y) = 1 :=
+theorem uniq_inv_of_is_field (R : Type u) [Ringₓ R] (hf : IsField R) : ∀ x : R, x ≠ 0 → ∃! y : R, (x*y) = 1 :=
   by 
     intro x hx 
     apply exists_unique_of_exists_of_unique
@@ -318,7 +318,7 @@ section
 variable {R : Type _} [Semiringₓ R] [DivisionRing K] (f : R →+* K)
 
 @[simp]
-theorem map_units_inv (u : Units R) : f («expr↑ » (u⁻¹)) = f («expr↑ » u)⁻¹ :=
+theorem map_units_inv (u : Units R) : f (↑u⁻¹) = f (↑u)⁻¹ :=
   (f : R →* K).map_units_inv u
 
 end 

@@ -46,18 +46,17 @@ include V W
 instance : CoeFun (P →A[R] Q) fun _ => P → Q :=
   ⟨fun f => f.to_affine_map.to_fun⟩
 
-theorem to_fun_eq_coe (f : P →A[R] Q) : f.to_fun = «expr⇑ » f :=
+theorem to_fun_eq_coe (f : P →A[R] Q) : f.to_fun = ⇑f :=
   rfl
 
--- error in Topology.Algebra.ContinuousAffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coe_injective : @function.injective «expr →A[ ] »(P, R, Q) (P → Q) coe_fn :=
-begin
-  rintros ["⟨", "⟨", ident f, ",", "⟨", ident f', ",", ident hf₁, ",", ident hf₂, "⟩", ",", ident hf₀, "⟩", ",", ident hf₁, "⟩", "⟨", "⟨", ident g, ",", "⟨", ident g', ",", ident hg₁, ",", ident hg₂, "⟩", ",", ident hg₀, "⟩", ",", ident hg₁, "⟩", ident h],
-  have [] [":", expr «expr ∧ »(«expr = »(f, g), «expr = »(f', g'))] [],
-  { simpa [] [] ["only"] [] [] ["using", expr affine_map.coe_fn_injective h] },
-  congr,
-  exacts ["[", expr this.1, ",", expr this.2, "]"]
-end
+theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn :=
+  by 
+    rintro ⟨⟨f, ⟨f', hf₁, hf₂⟩, hf₀⟩, hf₁⟩ ⟨⟨g, ⟨g', hg₁, hg₂⟩, hg₀⟩, hg₁⟩ h 
+    have  : f = g ∧ f' = g'
+    ·
+      simpa only using AffineMap.coe_fn_injective h 
+    congr 
+    exacts[this.1, this.2]
 
 @[ext]
 theorem ext {f g : P →A[R] Q} (h : ∀ x, f x = g x) : f = g :=
@@ -83,11 +82,11 @@ instance : Coe (P →A[R] Q) C(P, Q) :=
   ⟨to_continuous_map⟩
 
 @[simp]
-theorem to_affine_map_eq_coe (f : P →A[R] Q) : f.to_affine_map = «expr↑ » f :=
+theorem to_affine_map_eq_coe (f : P →A[R] Q) : f.to_affine_map = ↑f :=
   rfl
 
 @[simp]
-theorem to_continuous_map_coe (f : P →A[R] Q) : f.to_continuous_map = «expr↑ » f :=
+theorem to_continuous_map_coe (f : P →A[R] Q) : f.to_continuous_map = ↑f :=
   rfl
 
 @[simp, normCast]
@@ -186,7 +185,7 @@ instance : HasScalar S (P →A[S] W) :=
   { smul := fun t f => { t • (f : P →ᵃ[S] W) with cont := f.continuous.const_smul t } }
 
 @[normCast, simp]
-theorem coe_smul (t : S) (f : P →A[S] W) : «expr⇑ » (t • f) = t • f :=
+theorem coe_smul (t : S) (f : P →A[S] W) : ⇑(t • f) = t • f :=
   rfl
 
 theorem smul_apply (t : S) (f : P →A[S] W) (x : P) : (t • f) x = t • f x :=
@@ -198,7 +197,7 @@ instance : Add (P →A[R] W) :=
   { add := fun f g => { (f : P →ᵃ[R] W)+(g : P →ᵃ[R] W) with cont := f.continuous.add g.continuous } }
 
 @[normCast, simp]
-theorem coe_add (f g : P →A[R] W) : «expr⇑ » (f+g) = f+g :=
+theorem coe_add (f g : P →A[R] W) : (⇑f+g) = f+g :=
   rfl
 
 theorem add_apply (f g : P →A[R] W) (x : P) : (f+g) x = f x+g x :=
@@ -208,7 +207,7 @@ instance : Sub (P →A[R] W) :=
   { sub := fun f g => { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.continuous.sub g.continuous } }
 
 @[normCast, simp]
-theorem coe_sub (f g : P →A[R] W) : «expr⇑ » (f - g) = f - g :=
+theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
   rfl
 
 theorem sub_apply (f g : P →A[R] W) (x : P) : (f - g) x = f x - g x :=
@@ -218,7 +217,7 @@ instance : Neg (P →A[R] W) :=
   { neg := fun f => { -(f : P →ᵃ[R] W) with cont := f.continuous.neg } }
 
 @[normCast, simp]
-theorem coe_neg (f : P →A[R] W) : «expr⇑ » (-f) = -f :=
+theorem coe_neg (f : P →A[R] W) : ⇑(-f) = -f :=
   rfl
 
 theorem neg_apply (f : P →A[R] W) (x : P) : (-f) x = -f x :=
@@ -252,7 +251,7 @@ def to_continuous_affine_map (f : V →L[R] W) : V →A[R] W :=
     cont := f.cont }
 
 @[simp]
-theorem coe_to_continuous_affine_map (f : V →L[R] W) : «expr⇑ » f.to_continuous_affine_map = f :=
+theorem coe_to_continuous_affine_map (f : V →L[R] W) : ⇑f.to_continuous_affine_map = f :=
   rfl
 
 @[simp]

@@ -16,10 +16,10 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [category.{v₁} C]
 
-instance unop_mono_of_epi {A B : «expr ᵒᵖ» C} (f : A ⟶ B) [epi f] : mono f.unop :=
+instance unop_mono_of_epi {A B : Cᵒᵖ} (f : A ⟶ B) [epi f] : mono f.unop :=
   ⟨fun Z g h eq => Quiver.Hom.op_inj ((cancel_epi f).1 (Quiver.Hom.unop_inj Eq))⟩
 
-instance unop_epi_of_mono {A B : «expr ᵒᵖ» C} (f : A ⟶ B) [mono f] : epi f.unop :=
+instance unop_epi_of_mono {A B : Cᵒᵖ} (f : A ⟶ B) [mono f] : epi f.unop :=
   ⟨fun Z g h eq => Quiver.Hom.op_inj ((cancel_mono f).1 (Quiver.Hom.unop_inj Eq))⟩
 
 instance op_mono_of_epi {A B : C} (f : A ⟶ B) [epi f] : mono f.op :=
@@ -38,7 +38,7 @@ theorem left_adjoint_preserves_epi {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {
     constructor 
     intro Z g h H 
     replace H := congr_argₓ (adj.hom_equiv X Z) H 
-    rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi, Equiv.apply_eq_iff_eq] at H
+    rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi, Equivₓ.apply_eq_iff_eq] at H
 
 theorem right_adjoint_preserves_mono {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {X Y : D} {f : X ⟶ Y} (hf : mono f) :
   mono (G.map f) :=
@@ -47,7 +47,7 @@ theorem right_adjoint_preserves_mono {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
     intro Z g h H 
     replace H := congr_argₓ (adj.hom_equiv Z Y).symm H 
     rwa [adj.hom_equiv_naturality_right_symm, adj.hom_equiv_naturality_right_symm, cancel_mono,
-      Equiv.apply_eq_iff_eq] at H
+      Equivₓ.apply_eq_iff_eq] at H
 
 instance is_equivalence.epi_map {F : C ⥤ D} [is_left_adjoint F] {X Y : C} {f : X ⟶ Y} [h : epi f] : epi (F.map f) :=
   left_adjoint_preserves_epi (adjunction.of_left_adjoint F) h

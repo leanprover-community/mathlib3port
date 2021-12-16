@@ -43,11 +43,12 @@ instance {X : Fintypeₓ} : Fintype X :=
 instance : category Fintypeₓ :=
   induced_category.category bundled.α
 
--- error in CategoryTheory.Fintype: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- The fully faithful embedding of `Fintype` into the category of types. -/
-@[derive #["[", expr full, ",", expr faithful, "]"], simps #[]]
-def incl : «expr ⥤ »(Fintype, Type*) :=
-induced_functor _
+@[simps]
+def incl : Fintypeₓ ⥤ Type _ :=
+  induced_functor _ deriving [anonymous], [anonymous]
 
 instance : concrete_category Fintypeₓ :=
   ⟨incl⟩

@@ -136,24 +136,20 @@ theorem mul_le_iff_le_one_left' [CovariantClass α α (swap (·*·)) (· ≤ ·)
 
 end LE
 
--- error in Algebra.Order.MonoidLemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_square_le
-{α : Type*}
-[mul_one_class α]
-[linear_order α]
-[covariant_class α α ((«expr * »)) ((«expr < »))]
-(a : α) : «expr∃ , »((b : α), «expr ≤ »(«expr * »(b, b), a)) :=
-begin
-  by_cases [expr h, ":", expr «expr < »(a, 1)],
-  { use [expr a],
-    have [] [":", expr «expr < »(«expr * »(a, a), «expr * »(a, 1))] [],
-    exact [expr mul_lt_mul_left' h a],
-    rw [expr mul_one] ["at", ident this],
-    exact [expr le_of_lt this] },
-  { use [expr 1],
-    push_neg ["at", ident h],
-    rwa [expr mul_one] [] }
-end
+theorem exists_square_le {α : Type _} [MulOneClass α] [LinearOrderₓ α] [CovariantClass α α (·*·) (· < ·)] (a : α) :
+  ∃ b : α, (b*b) ≤ a :=
+  by 
+    byCases' h : a < 1
+    ·
+      use a 
+      have  : (a*a) < a*1 
+      exact mul_lt_mul_left' h a 
+      rw [mul_oneₓ] at this 
+      exact le_of_ltₓ this
+    ·
+      use 1
+      pushNeg  at h 
+      rwa [mul_oneₓ]
 
 section LT
 

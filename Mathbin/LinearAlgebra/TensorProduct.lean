@@ -399,7 +399,7 @@ section
 
 open_locale BigOperators
 
-theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑a in s, m a) ⊗ₜ[R] n = ∑a in s, m a ⊗ₜ[R] n :=
+theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n :=
   by 
     classical 
     induction' s using Finset.induction with a s has ih h
@@ -408,7 +408,7 @@ theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑a in
     ·
       simp [Finset.sum_insert has, add_tmul, ih]
 
-theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) : (m ⊗ₜ[R] ∑a in s, n a) = ∑a in s, m ⊗ₜ[R] n a :=
+theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) : (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a :=
   by 
     classical 
     induction' s using Finset.induction with a s has ih h
@@ -422,7 +422,7 @@ end
 variable (R M N)
 
 /-- The simple (aka pure) elements span the tensor product. -/
-theorem span_tmul_eq_top : Submodule.span R { t:M ⊗[R] N | ∃ m n, m ⊗ₜ n = t } = ⊤ :=
+theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ n = t } = ⊤ :=
   by 
     ext t 
     simp only [Submodule.mem_top, iff_trueₓ]
@@ -744,21 +744,19 @@ def map (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : M ⊗ N →ₗ[R] P ⊗ Q :=
 theorem map_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) (m : M) (n : N) : map f g (m ⊗ₜ n) = f m ⊗ₜ g n :=
   rfl
 
-theorem map_range_eq_span_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
-  (map f g).range = Submodule.span R { t | ∃ m n, f m ⊗ₜ g n = t } :=
-  by 
-    simp only [←Submodule.map_top, ←span_tmul_eq_top, Submodule.map_span, Set.mem_image, Set.mem_set_of_eq]
-    congr 
-    ext t 
-    split 
-    ·
-      rintro ⟨_, ⟨⟨m, n, rfl⟩, rfl⟩⟩
-      use m, n 
-      simp only [map_tmul]
-    ·
-      rintro ⟨m, n, rfl⟩
-      use m ⊗ₜ n, m, n 
-      simp only [map_tmul]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  map_range_eq_span_tmul
+  ( f : M →ₗ[ R ] P ) ( g : N →ₗ[ R ] Q ) : map f g . range = Submodule.span R { t | ∃ m n , f m ⊗ₜ g n = t }
+  :=
+    by
+      simp only [ ← Submodule.map_top , ← span_tmul_eq_top , Submodule.map_span , Set.mem_image , Set.mem_set_of_eq ]
+        congr
+        ext t
+        constructor
+        · rintro ⟨ _ , ⟨ ⟨ m , n , rfl ⟩ , rfl ⟩ ⟩ use m , n simp only [ map_tmul ]
+        · rintro ⟨ m , n , rfl ⟩ use m ⊗ₜ n , m , n simp only [ map_tmul ]
 
 /-- Given submodules `p ⊆ P` and `q ⊆ Q`, this is the natural map: `p ⊗ q → P ⊗ Q`. -/
 @[simp]
@@ -803,7 +801,7 @@ theorem map_mul (f₁ f₂ : M →ₗ[R] M) (g₁ g₂ : N →ₗ[R] N) : map (f
   map_comp f₁ f₂ g₁ g₂
 
 @[simp]
-theorem map_pow (f : M →ₗ[R] M) (g : N →ₗ[R] N) (n : ℕ) : map f g ^ n = map (f ^ n) (g ^ n) :=
+protected theorem map_pow (f : M →ₗ[R] M) (g : N →ₗ[R] N) (n : ℕ) : map f g ^ n = map (f ^ n) (g ^ n) :=
   by 
     induction' n with n ih
     ·
@@ -1038,21 +1036,17 @@ theorem ltensor_comp_map (g' : Q →ₗ[R] S) (f : M →ₗ[R] P) (g : N →ₗ[
 
 variable {M}
 
--- error in LinearAlgebra.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem rtensor_pow
-(f : «expr →ₗ[ ] »(M, R, M))
-(n : exprℕ()) : «expr = »(«expr ^ »(f.rtensor N, n), «expr ^ »(f, n).rtensor N) :=
-by { have [ident h] [] [":=", expr map_pow f (id : «expr →ₗ[ ] »(N, R, N)) n],
-  rwa [expr id_pow] ["at", ident h] }
+theorem rtensor_pow (f : M →ₗ[R] M) (n : ℕ) : f.rtensor N ^ n = (f ^ n).rtensor N :=
+  by 
+    have h := TensorProduct.map_pow f (id : N →ₗ[R] N) n 
+    rwa [id_pow] at h
 
--- error in LinearAlgebra.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem ltensor_pow
-(f : «expr →ₗ[ ] »(N, R, N))
-(n : exprℕ()) : «expr = »(«expr ^ »(f.ltensor M, n), «expr ^ »(f, n).ltensor M) :=
-by { have [ident h] [] [":=", expr map_pow (id : «expr →ₗ[ ] »(M, R, M)) f n],
-  rwa [expr id_pow] ["at", ident h] }
+theorem ltensor_pow (f : N →ₗ[R] N) (n : ℕ) : f.ltensor M ^ n = (f ^ n).ltensor M :=
+  by 
+    have h := TensorProduct.map_pow (id : M →ₗ[R] M) f n 
+    rwa [id_pow] at h
 
 end LinearMap
 
@@ -1149,8 +1143,8 @@ instance : AddCommGroupₓ (M ⊗[R] N) :=
       fun n x =>
         by 
           change (-n.succ : ℤ) • x = -(((n : ℤ)+1) • x)
-          rw [←zero_addₓ (-«expr↑ » n.succ • x), ←TensorProduct.add_left_neg («expr↑ » n.succ • x), add_assocₓ,
-            ←add_smul, ←sub_eq_add_neg, sub_self, zero_smul, add_zeroₓ]
+          rw [←zero_addₓ (-↑n.succ • x), ←TensorProduct.add_left_neg (↑n.succ • x), add_assocₓ, ←add_smul,
+            ←sub_eq_add_neg, sub_self, zero_smul, add_zeroₓ]
           rfl }
 
 theorem neg_tmul (m : M) (n : N) : (-m) ⊗ₜ n = -m ⊗ₜ[R] n :=

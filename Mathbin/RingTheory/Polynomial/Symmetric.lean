@@ -40,7 +40,7 @@ open equiv(Perm)
 
 open_locale BigOperators
 
-noncomputable theory
+noncomputable section 
 
 namespace MvPolynomial
 
@@ -131,10 +131,10 @@ variable (σ R) [CommSemiringₓ R] [CommSemiringₓ S] [Fintype σ] [Fintype τ
 
 /-- The `n`th elementary symmetric `mv_polynomial σ R`. -/
 def esymm (n : ℕ) : MvPolynomial σ R :=
-  ∑t in powerset_len n univ, ∏i in t, X i
+  ∑ t in powerset_len n univ, ∏ i in t, X i
 
 /-- We can define `esymm σ R n` by summing over a subtype instead of over `powerset_len`. -/
-theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑t : { s : Finset σ // s.card = n }, ∏i in (t : Finset σ), X i :=
+theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), X i :=
   by 
     rw [esymm]
     let i : ∀ a : Finset σ, a ∈ powerset_len n univ → { s : Finset σ // s.card = n } :=
@@ -152,7 +152,7 @@ theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑t : { s : Finset σ /
 
 /-- We can define `esymm σ R n` as a sum over explicit monomials -/
 theorem esymm_eq_sum_monomial (n : ℕ) :
-  esymm σ R n = ∑t in powerset_len n univ, monomial (∑i in t, Finsupp.single i 1) 1 :=
+  esymm σ R n = ∑ t in powerset_len n univ, monomial (∑ i in t, Finsupp.single i 1) 1 :=
   by 
     refine' sum_congr rfl fun x hx => _ 
     rw [monic_monomial_eq]
@@ -186,16 +186,16 @@ theorem map_esymm (n : ℕ) (f : R →+* S) : map f (esymm σ R n) = esymm σ S 
 
 theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm τ R n :=
   by 
-    rw [esymm_eq_sum_subtype, esymm_eq_sum_subtype, (rename («expr⇑ » e)).map_sum]
+    rw [esymm_eq_sum_subtype, esymm_eq_sum_subtype, (rename (⇑e)).map_sum]
     let e' : { s : Finset σ // s.card = n } ≃ { s : Finset τ // s.card = n } :=
-      Equiv.subtypeEquiv (Equiv.finsetCongr e)
+      Equivₓ.subtypeEquiv (Equivₓ.finsetCongr e)
         (by 
           simp )
-    rw [←Equiv.sum_comp e'.symm]
+    rw [←Equivₓ.sum_comp e'.symm]
     apply Fintype.sum_congr 
     intro 
-    calc _ = ∏i in (e'.symm a : Finset σ), (rename e) (X i) :=
-      (rename e).map_prod _ _ _ = ∏i in (a : Finset τ), (rename e) (X (e.symm i)) :=
+    calc _ = ∏ i in (e'.symm a : Finset σ), (rename e) (X i) :=
+      (rename e).map_prod _ _ _ = ∏ i in (a : Finset τ), (rename e) (X (e.symm i)) :=
       prod_mapₓ (a : Finset τ) _ _ _ = _ := _ 
     apply Finset.prod_congr rfl 
     intros 
@@ -206,29 +206,28 @@ theorem esymm_is_symmetric (n : ℕ) : is_symmetric (esymm σ R n) :=
     intro 
     rw [rename_esymm]
 
--- error in RingTheory.Polynomial.Symmetric: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem support_esymm''
-(n : exprℕ())
-[decidable_eq σ]
-[nontrivial R] : «expr = »((esymm σ R n).support, (powerset_len n (univ : finset σ)).bUnion (λ
-  t, (finsupp.single «expr∑ in , »((i : σ), t, finsupp.single i 1) (1 : R)).support)) :=
-begin
-  rw [expr esymm_eq_sum_monomial] [],
-  simp [] [] ["only"] ["[", "<-", expr single_eq_monomial, "]"] [] [],
-  convert [] [expr finsupp.support_sum_eq_bUnion (powerset_len n (univ : finset σ)) _] [],
-  intros [ident s, ident t, ident hst, ident d],
-  simp [] [] ["only"] ["[", expr finsupp.support_single_ne_zero one_ne_zero, ",", expr and_imp, ",", expr inf_eq_inter, ",", expr mem_inter, ",", expr mem_singleton, "]"] [] [],
-  rintro [ident h, ident rfl],
-  have [] [] [":=", expr congr_arg finsupp.support h],
-  rw ["[", expr finsupp.support_sum_eq_bUnion, ",", expr finsupp.support_sum_eq_bUnion, "]"] ["at", ident this],
-  { simp [] [] ["only"] ["[", expr finsupp.support_single_ne_zero one_ne_zero, ",", expr bUnion_singleton_eq_self, "]"] [] ["at", ident this],
-    exact [expr absurd this hst.symm] },
-  all_goals { intros [ident x, ident y],
-    simp [] [] [] ["[", expr finsupp.support_single_disjoint, "]"] [] [] }
-end
+theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
+  (esymm σ R n).support =
+    (powerset_len n (univ : Finset σ)).bUnion
+      fun t => (Finsupp.single (∑ i : σ in t, Finsupp.single i 1) (1 : R)).support :=
+  by 
+    rw [esymm_eq_sum_monomial]
+    simp only [←single_eq_monomial]
+    convert Finsupp.support_sum_eq_bUnion (powerset_len n (univ : Finset σ)) _ 
+    intro s t hst d 
+    simp only [Finsupp.support_single_ne_zero one_ne_zero, and_imp, inf_eq_inter, mem_inter, mem_singleton]
+    rintro h rfl 
+    have  := congr_argₓ Finsupp.support h 
+    rw [Finsupp.support_sum_eq_bUnion, Finsupp.support_sum_eq_bUnion] at this
+    ·
+      simp only [Finsupp.support_single_ne_zero one_ne_zero, bUnion_singleton_eq_self] at this 
+      exact absurd this hst.symm 
+    all_goals 
+      intro x y 
+      simp [Finsupp.support_single_disjoint]
 
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-  (esymm σ R n).support = (powerset_len n (univ : Finset σ)).bUnion fun t => {∑i : σ in t, Finsupp.single i 1} :=
+  (esymm σ R n).support = (powerset_len n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} :=
   by 
     rw [support_esymm'']
     congr 
@@ -236,31 +235,29 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     exact Finsupp.support_single_ne_zero one_ne_zero
 
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-  (esymm σ R n).support = (powerset_len n (univ : Finset σ)).Image fun t => ∑i : σ in t, Finsupp.single i 1 :=
+  (esymm σ R n).support = (powerset_len n (univ : Finset σ)).Image fun t => ∑ i : σ in t, Finsupp.single i 1 :=
   by 
     rw [support_esymm']
     exact bUnion_singleton
 
--- error in RingTheory.Polynomial.Symmetric: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem degrees_esymm
-[nontrivial R]
-(n : exprℕ())
-(hpos : «expr < »(0, n))
-(hn : «expr ≤ »(n, fintype.card σ)) : «expr = »((esymm σ R n).degrees, (univ : finset σ).val) :=
-begin
-  classical,
-  have [] [":", expr «expr = »(«expr ∘ »(finsupp.to_multiset, λ
-     t : finset σ, «expr∑ in , »((i : σ), t, finsupp.single i 1)), finset.val)] [],
-  { funext [],
-    simp [] [] [] ["[", expr finsupp.to_multiset_sum_single, "]"] [] [] },
-  rw ["[", expr degrees, ",", expr support_esymm, ",", expr sup_finset_image, ",", expr this, ",", "<-", expr comp_sup_eq_sup_comp, "]"] [],
-  { obtain ["⟨", ident k, ",", ident rfl, "⟩", ":=", expr nat.exists_eq_succ_of_ne_zero hpos.ne'],
-    simpa [] [] [] [] [] ["using", expr powerset_len_sup _ _ (nat.lt_of_succ_le hn)] },
-  { intros [],
-    simp [] [] ["only"] ["[", expr union_val, ",", expr sup_eq_union, "]"] [] [],
-    congr },
-  { refl }
-end
+theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
+  (esymm σ R n).degrees = (univ : Finset σ).val :=
+  by 
+    classical 
+    have  : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val
+    ·
+      funext 
+      simp [Finsupp.to_multiset_sum_single]
+    rw [degrees, support_esymm, sup_finset_image, this, ←comp_sup_eq_sup_comp]
+    ·
+      obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne' 
+      simpa using powerset_len_sup _ _ (Nat.lt_of_succ_leₓ hn)
+    ·
+      intros 
+      simp only [union_val, sup_eq_union]
+      congr
+    ·
+      rfl
 
 end ElementarySymmetric
 

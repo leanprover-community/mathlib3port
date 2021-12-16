@@ -13,7 +13,7 @@ universe v u
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory CategoryTheory.Limits HomologicalComplex
 
@@ -36,10 +36,11 @@ instance homotopy_congruence : congruence (Homotopic V c) :=
           trans := fun f g h ⟨w₁⟩ ⟨w₂⟩ => ⟨w₁.trans w₂⟩ },
     compLeft := fun E F G m₁ m₂ g ⟨i⟩ => ⟨i.comp_left _⟩, compRight := fun E F G f m₁ m₂ ⟨i⟩ => ⟨i.comp_right _⟩ }
 
--- error in Algebra.Homology.HomotopyCategory: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- `homotopy_category V c` is the category of chain complexes of shape `c` in `V`,
-with chain maps identified when they are homotopic. -/ @[derive #[expr category]] def homotopy_category :=
-category_theory.quotient (homotopic V c)
+with chain maps identified when they are homotopic. -/
+def HomotopyCategory :=
+  CategoryTheory.Quotient (Homotopic V c)deriving [anonymous]
 
 namespace HomotopyCategory
 

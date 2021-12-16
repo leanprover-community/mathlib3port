@@ -9,7 +9,7 @@ as well as `SemiNormedGroup₁`, the subcategory of norm non-increasing morphism
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u
 
@@ -24,8 +24,9 @@ namespace SemiNormedGroupₓ
 instance bundled_hom : bundled_hom @NormedGroupHom :=
   ⟨@NormedGroupHom.toFun, @NormedGroupHom.id, @NormedGroupHom.comp, @NormedGroupHom.coe_inj⟩
 
--- error in Analysis.Normed.Group.SemiNormedGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] SemiNormedGroup
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for SemiNormedGroupₓ
 
 instance : CoeSort SemiNormedGroupₓ (Type u) :=
   bundled.has_coe_to_sort
@@ -42,7 +43,7 @@ theorem coe_of (V : Type u) [SemiNormedGroup V] : (SemiNormedGroupₓ.of V : Typ
   rfl
 
 @[simp]
-theorem coe_id (V : SemiNormedGroupₓ) : «expr⇑ » (𝟙 V) = id :=
+theorem coe_id (V : SemiNormedGroupₓ) : ⇑𝟙 V = id :=
   rfl
 
 @[simp]
@@ -154,7 +155,7 @@ theorem coe_of (V : Type u) [SemiNormedGroup V] : (SemiNormedGroup₁.of V : Typ
   rfl
 
 @[simp]
-theorem coe_id (V : SemiNormedGroup₁) : «expr⇑ » (𝟙 V) = id :=
+theorem coe_id (V : SemiNormedGroup₁) : ⇑𝟙 V = id :=
   rfl
 
 @[simp]
@@ -163,7 +164,7 @@ theorem coe_comp {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) : (f �
 
 @[simp]
 theorem coe_comp' {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) :
-  (f ≫ g : NormedGroupHom M K) = («expr↑ » g : NormedGroupHom N K).comp («expr↑ » f) :=
+  (f ≫ g : NormedGroupHom M K) = (↑g : NormedGroupHom N K).comp (↑f) :=
   rfl
 
 instance : HasZero SemiNormedGroup₁ :=

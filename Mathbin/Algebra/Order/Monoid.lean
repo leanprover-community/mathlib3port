@@ -4,7 +4,7 @@ import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Order.MonoidLemmas 
 import Mathbin.Order.BoundedOrder 
 import Mathbin.Order.MinMax 
-import Mathbin.Order.RelIso
+import Mathbin.Order.Hom.Basic
 
 /-!
 # Ordered monoids
@@ -108,14 +108,6 @@ theorem top_add (a : α) : (⊤+a) = ⊤ :=
 theorem add_top (a : α) : (a+⊤) = ⊤ :=
   trans (add_commₓ _ _) (top_add _)
 
-@[simp]
-theorem min_top_left (a : α) : min (⊤ : α) a = a :=
-  min_eq_rightₓ le_top
-
-@[simp]
-theorem min_top_right (a : α) : min a ⊤ = a :=
-  min_eq_leftₓ le_top
-
 end LinearOrderedAddCommMonoidWithTop
 
 /-- Pullback an `ordered_comm_monoid` under an injective map.
@@ -167,12 +159,12 @@ instance [Monoidₓ α] [LinearOrderₓ α] : LinearOrderₓ (Units α) :=
   LinearOrderₓ.lift coeₓ Units.ext
 
 @[simp, normCast, toAdditive]
-theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : Units α} : («expr↑ » (max a b) : α) = max a b :=
+theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : Units α} : (↑max a b : α) = max a b :=
   by 
     byCases' b ≤ a <;> simp [max_def, h]
 
 @[simp, normCast, toAdditive]
-theorem min_coe [Monoidₓ α] [LinearOrderₓ α] {a b : Units α} : («expr↑ » (min a b) : α) = min a b :=
+theorem min_coe [Monoidₓ α] [LinearOrderₓ α] {a b : Units α} : (↑min a b : α) = min a b :=
   by 
     byCases' a ≤ b <;> simp [min_def, h]
 
@@ -338,8 +330,7 @@ theorem add_lt_top [Add α] [PartialOrderₓ α] {a b : WithTop α} : (a+b) < �
   by 
     simp [lt_top_iff_ne_top, add_eq_top, not_or_distrib]
 
-theorem add_eq_coe [Add α] :
-  ∀ {a b : WithTop α} {c : α}, (a+b) = c ↔ ∃ a' b' : α, «expr↑ » a' = a ∧ «expr↑ » b' = b ∧ (a'+b') = c
+theorem add_eq_coe [Add α] : ∀ {a b : WithTop α} {c : α}, (a+b) = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ (a'+b') = c
 | none, b, c =>
   by 
     simp [none_eq_top]
@@ -356,7 +347,7 @@ theorem add_coe_eq_top_iff [Add α] {x : WithTop α} {y : α} : (x+y) = ⊤ ↔ 
     induction x using WithTop.recTopCoe <;> simp [←coe_add, -WithZero.coe_add]
 
 @[simp]
-theorem coe_add_eq_top_iff [Add α] {x : α} {y : WithTop α} : («expr↑ » x+y) = ⊤ ↔ y = ⊤ :=
+theorem coe_add_eq_top_iff [Add α] {x : α} {y : WithTop α} : ((↑x)+y) = ⊤ ↔ y = ⊤ :=
   by 
     induction y using WithTop.recTopCoe <;> simp [←coe_add, -WithZero.coe_add]
 
@@ -425,7 +416,7 @@ def coe_add_hom [AddMonoidₓ α] : α →+ WithTop α :=
   ⟨coeₓ, rfl, fun _ _ => rfl⟩
 
 @[simp]
-theorem coe_coe_add_hom [AddMonoidₓ α] : «expr⇑ » (coe_add_hom : α →+ WithTop α) = coeₓ :=
+theorem coe_coe_add_hom [AddMonoidₓ α] : ⇑(coe_add_hom : α →+ WithTop α) = coeₓ :=
   rfl
 
 @[simp]
@@ -585,6 +576,7 @@ theorem le_one_iff_eq_one : a ≤ 1 ↔ a = 1 :=
 theorem one_lt_iff_ne_one : 1 < a ↔ a ≠ 1 :=
   Iff.intro ne_of_gtₓ$ fun hne => lt_of_le_of_neₓ (one_le _) hne.symm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr > » 1)
 @[toAdditive]
 theorem exists_pos_mul_of_lt (h : a < b) : ∃ (c : _)(_ : c > 1), (a*c) = b :=
   by 
@@ -617,6 +609,7 @@ theorem le_mul_right (h : a ≤ b) : a ≤ b*c :=
 theorem le_self_mul : a ≤ a*c :=
   le_mul_right (le_reflₓ a)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr > » 1)
 @[toAdditive]
 theorem lt_iff_exists_mul [CovariantClass α α (·*·) (· < ·)] : a < b ↔ ∃ (c : _)(_ : c > 1), b = a*c :=
   by 
@@ -625,7 +618,7 @@ theorem lt_iff_exists_mul [CovariantClass α α (·*·) (· < ·)] : a < b ↔ �
     intro c 
     rw [And.congr_left_iff, gt_iff_lt]
     rintro rfl 
-    split 
+    constructor
     ·
       rw [one_lt_iff_ne_one]
       apply mt 
@@ -658,7 +651,7 @@ instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedA
           ·
             simp only [le_iff_exists_add, WithZero.coe_le_coe]
             intros 
-            split  <;> rintro ⟨c, h⟩
+            constructor <;> rintro ⟨c, h⟩
             ·
               exact ⟨c, congr_argₓ coeₓ h⟩
             ·
@@ -680,9 +673,9 @@ instance WithTop.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAd
           show a ≤ ⊤ ↔ ∃ c, ⊤ = a+c by 
             simp  <;> refine' ⟨⊤, _⟩ <;> cases a <;> rfl
         | some a, some b =>
-          show (a : WithTop α) ≤ «expr↑ » b ↔ ∃ c : WithTop α, «expr↑ » b = «expr↑ » a+c by 
+          show (a : WithTop α) ≤ ↑b ↔ ∃ c : WithTop α, ↑b = (↑a)+c by 
             simp [CanonicallyOrderedAddMonoid.le_iff_exists_add, -add_commₓ]
-            split 
+            constructor
             ·
               rintro ⟨c, rfl⟩
               refine' ⟨c, _⟩
@@ -693,7 +686,7 @@ instance WithTop.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAd
                   match b, h with 
                   | _, ⟨some c, rfl⟩ => ⟨_, rfl⟩
         | none, some b =>
-          show (⊤ : WithTop α) ≤ b ↔ ∃ c : WithTop α, «expr↑ » b = ⊤+c by 
+          show (⊤ : WithTop α) ≤ b ↔ ∃ c : WithTop α, ↑b = ⊤+c by 
             simp  }
 
 @[toAdditive]

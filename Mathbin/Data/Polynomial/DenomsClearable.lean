@@ -32,8 +32,9 @@ def DenomsClearable (a b : R) (N : ℕ) (f : Polynomial R) (i : R →+* K) : Pro
 theorem denoms_clearable_zero (N : ℕ) (a : R) (bu : (bi*i b) = 1) : DenomsClearable a b N 0 i :=
   ⟨0, bi, bu,
     by 
-      simp only [eval_zero, RingHom.map_zero, mul_zero, map_zero]⟩
+      simp only [eval_zero, RingHom.map_zero, mul_zero, Polynomial.map_zero]⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2]) }
 theorem denoms_clearable_C_mul_X_pow {N : ℕ} (a : R) (bu : (bi*i b) = 1) {n : ℕ} (r : R) (nN : n ≤ N) :
   DenomsClearable a b N (C r*X ^ n) i :=
   by 

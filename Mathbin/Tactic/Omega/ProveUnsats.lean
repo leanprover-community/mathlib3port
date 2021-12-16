@@ -11,6 +11,7 @@ unsafe def prove_neg : Int → tactic expr
 | Int.ofNat _ => failed
 | -[1+ m] => return (quote.1 (Int.neg_succ_lt_zero (%%ₓquote.1 m)))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » list.repeat (0 : int) m)
 theorem forall_mem_repeat_zero_eq_zero (m : Nat) : ∀ x _ : x ∈ List.repeat (0 : Int) m, x = (0 : Int) :=
   fun x => List.eq_of_mem_repeat
 

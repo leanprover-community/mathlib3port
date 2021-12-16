@@ -40,7 +40,7 @@ a few of which rely on the fact that subtraction is continuous.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Set TopologicalSpace Metric Filter
 
@@ -104,7 +104,8 @@ theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {x : ℝ} (h : tendsto 
   tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_of_real.Tendsto _).comp h
 
-theorem nhds_zero : 𝓝 (0 :  ℝ≥0 ) = ⨅(a : _)(_ : a ≠ 0), 𝓟 (Iio a) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ≠ » 0)
+theorem nhds_zero : 𝓝 (0 :  ℝ≥0 ) = ⨅ (a : _)(_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans$
     by 
       simp [bot_lt_iff_ne_bot]
@@ -129,23 +130,18 @@ theorem has_sum_coe {f : α →  ℝ≥0 } {r :  ℝ≥0 } : HasSum (fun a => (f
   by 
     simp only [HasSum, coe_sum.symm, tendsto_coe]
 
--- error in Topology.Instances.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_sum_of_real_of_nonneg
-{f : α → exprℝ()}
-(hf_nonneg : ∀ n, «expr ≤ »(0, f n))
-(hf : summable f) : has_sum (λ n, real.to_nnreal (f n)) (real.to_nnreal «expr∑' , »((n), f n)) :=
-begin
-  have [ident h_sum] [":", expr «expr = »(λ
-    s, «expr∑ in , »((b), s, real.to_nnreal (f b)), λ s, real.to_nnreal «expr∑ in , »((b), s, f b))] [],
-  from [expr funext (λ _, (real.to_nnreal_sum_of_nonneg (λ n _, hf_nonneg n)).symm)],
-  simp_rw ["[", expr has_sum, ",", expr h_sum, "]"] [],
-  exact [expr tendsto_of_real hf.has_sum]
-end
+theorem has_sum_of_real_of_nonneg {f : α → ℝ} (hf_nonneg : ∀ n, 0 ≤ f n) (hf : Summable f) :
+  HasSum (fun n => Real.toNnreal (f n)) (Real.toNnreal (∑' n, f n)) :=
+  by 
+    have h_sum : (fun s => ∑ b in s, Real.toNnreal (f b)) = fun s => Real.toNnreal (∑ b in s, f b)
+    exact funext fun _ => (Real.to_nnreal_sum_of_nonneg fun n _ => hf_nonneg n).symm 
+    simpRw [HasSum, h_sum]
+    exact tendsto_of_real hf.has_sum
 
 @[normCast]
 theorem summable_coe {f : α →  ℝ≥0 } : (Summable fun a => (f a : ℝ)) ↔ Summable f :=
   by 
-    split 
+    constructor 
     exact fun ⟨a, ha⟩ => ⟨⟨a, has_sum_le (fun a => (f a).2) has_sum_zero ha⟩, has_sum_coe.1 ha⟩
     exact fun ⟨a, ha⟩ => ⟨a.1, has_sum_coe.2 ha⟩
 
@@ -158,23 +154,23 @@ theorem summable_coe_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
 open_locale Classical
 
 @[normCast]
-theorem coe_tsum {f : α →  ℝ≥0 } : «expr↑ » (∑'a, f a) = ∑'a, (f a : ℝ) :=
+theorem coe_tsum {f : α →  ℝ≥0 } : (↑∑' a, f a) = ∑' a, (f a : ℝ) :=
   if hf : Summable f then Eq.symm$ (has_sum_coe.2$ hf.has_sum).tsum_eq else
     by 
       simp [tsum, hf, mt summable_coe.1 hf]
 
 theorem coe_tsum_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
-  (⟨∑'n, f n, tsum_nonneg hf₁⟩ :  ℝ≥0 ) = (∑'n, ⟨f n, hf₁ n⟩ :  ℝ≥0 ) :=
+  (⟨∑' n, f n, tsum_nonneg hf₁⟩ :  ℝ≥0 ) = (∑' n, ⟨f n, hf₁ n⟩ :  ℝ≥0 ) :=
   by 
     lift f to α →  ℝ≥0  using hf₁ with f rfl hf₁ 
     simpRw [←Nnreal.coe_tsum, Subtype.coe_eta]
 
-theorem tsum_mul_left (a :  ℝ≥0 ) (f : α →  ℝ≥0 ) : (∑'x, a*f x) = a*∑'x, f x :=
+theorem tsum_mul_left (a :  ℝ≥0 ) (f : α →  ℝ≥0 ) : (∑' x, a*f x) = a*∑' x, f x :=
   Nnreal.eq$
     by 
       simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_left]
 
-theorem tsum_mul_right (f : α →  ℝ≥0 ) (a :  ℝ≥0 ) : (∑'x, f x*a) = (∑'x, f x)*a :=
+theorem tsum_mul_right (f : α →  ℝ≥0 ) (a :  ℝ≥0 ) : (∑' x, f x*a) = (∑' x, f x)*a :=
   Nnreal.eq$
     by 
       simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_right]
@@ -192,33 +188,28 @@ theorem summable_nat_add_iff {f : ℕ →  ℝ≥0 } (k : ℕ) : (Summable fun i
     exact @summable_nat_add_iff ℝ _ _ _ (fun i => (f i : ℝ)) k
 
 theorem has_sum_nat_add_iff {f : ℕ →  ℝ≥0 } (k : ℕ) {a :  ℝ≥0 } :
-  HasSum (fun n => f (n+k)) a ↔ HasSum f (a+∑i in range k, f i) :=
+  HasSum (fun n => f (n+k)) a ↔ HasSum f (a+∑ i in range k, f i) :=
   by 
     simp [←has_sum_coe, coe_sum, Nnreal.coe_add, ←has_sum_nat_add_iff k]
 
 theorem sum_add_tsum_nat_add {f : ℕ →  ℝ≥0 } (k : ℕ) (hf : Summable f) :
-  (∑'i, f i) = (∑i in range k, f i)+∑'i, f (i+k) :=
+  (∑' i, f i) = (∑ i in range k, f i)+∑' i, f (i+k) :=
   by 
     rw [←Nnreal.coe_eq, coe_tsum, Nnreal.coe_add, coe_sum, coe_tsum, sum_add_tsum_nat_add k (Nnreal.summable_coe.2 hf)]
 
 theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
-  (⨅(n : ℝ)(h : 0 < n), f n) = ⨅(n :  ℝ≥0 )(h : 0 < n), f n :=
+  (⨅ (n : ℝ)(h : 0 < n), f n) = ⨅ (n :  ℝ≥0 )(h : 0 < n), f n :=
   le_antisymmₓ (infi_le_infi2$ fun r => ⟨r, infi_le_infi$ fun hr => le_rfl⟩)
     (le_infi$ fun r => le_infi$ fun hr => infi_le_of_le ⟨r, hr.le⟩$ infi_le _ hr)
 
 end coeₓ
 
--- error in Topology.Instances.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tendsto_cofinite_zero_of_summable
-{α}
-{f : α → «exprℝ≥0»()}
-(hf : summable f) : tendsto f cofinite (expr𝓝() 0) :=
-begin
-  have [ident h_f_coe] [":", expr «expr = »(f, λ n, real.to_nnreal (f n : exprℝ()))] [],
-  from [expr funext (λ n, real.to_nnreal_coe.symm)],
-  rw ["[", expr h_f_coe, ",", "<-", expr @real.to_nnreal_coe 0, "]"] [],
-  exact [expr tendsto_of_real (summable_coe.mpr hf).tendsto_cofinite_zero]
-end
+theorem tendsto_cofinite_zero_of_summable {α} {f : α →  ℝ≥0 } (hf : Summable f) : tendsto f cofinite (𝓝 0) :=
+  by 
+    have h_f_coe : f = fun n => Real.toNnreal (f n : ℝ)
+    exact funext fun n => real.to_nnreal_coe.symm 
+    rw [h_f_coe, ←@Real.to_nnreal_coe 0]
+    exact tendsto_of_real (summable_coe.mpr hf).tendsto_cofinite_zero
 
 theorem tendsto_at_top_zero_of_summable {f : ℕ →  ℝ≥0 } (hf : Summable f) : tendsto f at_top (𝓝 0) :=
   by 
@@ -228,7 +219,7 @@ theorem tendsto_at_top_zero_of_summable {f : ℕ →  ℝ≥0 } (hf : Summable f
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/
 theorem tendsto_tsum_compl_at_top_zero {α : Type _} (f : α →  ℝ≥0 ) :
-  tendsto (fun s : Finset α => ∑'b : { x // x ∉ s }, f b) at_top (𝓝 0) :=
+  tendsto (fun s : Finset α => ∑' b : { x // x ∉ s }, f b) at_top (𝓝 0) :=
   by 
     simpRw [←tendsto_coe, coe_tsum, Nnreal.coe_zero]
     exact tendsto_tsum_compl_at_top_zero fun a : α => (f a : ℝ)

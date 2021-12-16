@@ -73,10 +73,14 @@ theorem nodup_iff_pairwise {α} {s : Multiset α} : nodup s ↔ Pairwise (· ≠
           (by 
             exact fun a b => Ne.symm)).symm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem pairwise_of_nodup {r : α → α → Prop} {s : Multiset α} :
   (∀ a _ : a ∈ s, ∀ b _ : b ∈ s, a ≠ b → r a b) → nodup s → Pairwise r s :=
   Quotientₓ.induction_on s$ fun l h hl => ⟨l, rfl, hl.imp_of_mem$ fun a b ha hb => h a ha b hb⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem forall_of_pairwise {r : α → α → Prop} (H : Symmetric r) {s : Multiset α} (hs : Pairwise r s) :
   ∀ a _ : a ∈ s, ∀ b _ : b ∈ s, a ≠ b → r a b :=
   let ⟨l, hl₁, hl₂⟩ := hs 
@@ -95,6 +99,8 @@ theorem nodup_add_of_nodup {s t : Multiset α} (d₁ : nodup s) (d₂ : nodup t)
 theorem nodup_of_nodup_map (f : α → β) {s : Multiset α} : nodup (map f s) → nodup s :=
   Quot.induction_on s$ fun l => nodup_of_nodup_map f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem nodup_map_on {f : α → β} {s : Multiset α} :
   (∀ x _ : x ∈ s, ∀ y _ : y ∈ s, f x = f y → x = y) → nodup s → nodup (map f s) :=
   Quot.induction_on s$ fun l => nodup_map_on
@@ -102,10 +108,14 @@ theorem nodup_map_on {f : α → β} {s : Multiset α} :
 theorem nodup_map {f : α → β} {s : Multiset α} (hf : Function.Injective f) : nodup s → nodup (map f s) :=
   nodup_map_on fun x _ y _ h => hf h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem inj_on_of_nodup_map {f : α → β} {s : Multiset α} :
   nodup (map f s) → ∀ x _ : x ∈ s y _ : y ∈ s, f x = f y → x = y :=
   Quot.induction_on s$ fun l => inj_on_of_nodup_map
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem nodup_map_iff_inj_on {f : α → β} {s : Multiset α} (d : nodup s) :
   nodup (map f s) ↔ ∀ x _ : x ∈ s y _ : y ∈ s, f x = f y → x = y :=
   ⟨inj_on_of_nodup_map, fun h => nodup_map_on h d⟩
@@ -188,6 +198,7 @@ theorem nodup_powerset {s : Multiset α} : nodup (powerset s) ↔ nodup s :=
 theorem nodup_powerset_len {n : ℕ} {s : Multiset α} (h : nodup s) : nodup (powerset_len n s) :=
   nodup_of_le (powerset_len_le_powerset _ _) (nodup_powerset.2 h)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[simp]
 theorem nodup_bind {s : Multiset α} {t : α → Multiset β} :
   nodup (bind s t) ↔ (∀ a _ : a ∈ s, nodup (t a)) ∧ s.pairwise fun a b => Disjoint (t a) (t b) :=
@@ -218,6 +229,8 @@ theorem mem_sub_of_nodup [DecidableEq α] {a : α} {s t : Multiset α} (d : nodu
                 exact le_transₓ (nodup_iff_count_le_one.1 d _) (count_pos.2 h')⟩,
     fun ⟨h₁, h₂⟩ => Or.resolve_right (mem_add.1$ mem_of_le le_tsub_add h₁) h₂⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
 theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset α} {t : Multiset β} (hs : s.nodup)
   (ht : t.nodup) (i : ∀ a _ : a ∈ s, β) (hi : ∀ a ha, i a ha ∈ t) (h : ∀ a ha, f a = g (i a ha))
   (i_inj : ∀ a₁ a₂ ha₁ ha₂, i a₁ ha₁ = i a₂ ha₂ → a₁ = a₂) (i_surj : ∀ b _ : b ∈ t, ∃ a ha, b = i a ha) :

@@ -46,7 +46,7 @@ the set of elements of `l`. -/
 @[simps]
 def nth_le_equiv (l : List α) (H : nodup l) : Finₓ (length l) ≃ { x // x ∈ l } :=
   { toFun := fun i => ⟨nth_le l i i.2, nth_le_mem l i i.2⟩,
-    invFun := fun x => ⟨index_of («expr↑ » x) l, index_of_lt_length.2 x.2⟩,
+    invFun := fun x => ⟨index_of (↑x) l, index_of_lt_length.2 x.2⟩,
     left_inv :=
       fun i =>
         by 
@@ -99,41 +99,40 @@ theorem coe_nth_le_iso_apply : (H.nth_le_iso l i : α) = nth_le l i i.2 :=
   rfl
 
 @[simp]
-theorem coe_nth_le_iso_symm_apply : ((H.nth_le_iso l).symm x : ℕ) = index_of («expr↑ » x) l :=
+theorem coe_nth_le_iso_symm_apply : ((H.nth_le_iso l).symm x : ℕ) = index_of (↑x) l :=
   rfl
 
 end Sorted
 
 section Sublist
 
--- error in Data.List.NodupEquivFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`,
 then `sublist l l'`.
 -/
-theorem sublist_of_order_embedding_nth_eq
-{l l' : list α}
-(f : «expr ↪o »(exprℕ(), exprℕ()))
-(hf : ∀ ix : exprℕ(), «expr = »(l.nth ix, l'.nth (f ix))) : «expr <+ »(l, l') :=
-begin
-  induction [expr l] [] ["with", ident hd, ident tl, ident IH] ["generalizing", ident l', ident f],
-  { simp [] [] [] [] [] [] },
-  have [] [":", expr «expr = »(some hd, _)] [":=", expr hf 0],
-  rw ["[", expr eq_comm, ",", expr list.nth_eq_some, "]"] ["at", ident this],
-  obtain ["⟨", ident w, ",", ident h, "⟩", ":=", expr this],
-  let [ident f'] [":", expr «expr ↪o »(exprℕ(), exprℕ())] [":=", expr order_embedding.of_map_le_iff (λ
-    i, «expr - »(f «expr + »(i, 1), «expr + »(f 0, 1))) (λ
-    a
-    b, by simp [] [] [] ["[", expr tsub_le_tsub_iff_right, ",", expr nat.succ_le_iff, ",", expr nat.lt_succ_iff, "]"] [] [])],
-  have [] [":", expr ∀ ix, «expr = »(tl.nth ix, (l'.drop «expr + »(f 0, 1)).nth (f' ix))] [],
-  { intro [ident ix],
-    simp [] [] [] ["[", expr list.nth_drop, ",", expr add_tsub_cancel_of_le, ",", expr nat.succ_le_iff, ",", "<-", expr hf, "]"] [] [] },
-  rw ["[", "<-", expr list.take_append_drop «expr + »(f 0, 1) l', ",", "<-", expr list.singleton_append, "]"] [],
-  apply [expr list.sublist.append _ (IH _ this)],
-  rw ["[", expr list.singleton_sublist, ",", "<-", expr h, ",", expr l'.nth_le_take _ (nat.lt_succ_self _), "]"] [],
-  apply [expr list.nth_le_mem]
-end
+theorem sublist_of_order_embedding_nth_eq {l l' : List α} (f : ℕ ↪o ℕ) (hf : ∀ ix : ℕ, l.nth ix = l'.nth (f ix)) :
+  l <+ l' :=
+  by 
+    induction' l with hd tl IH generalizing l' f
+    ·
+      simp 
+    have  : some hd = _ := hf 0
+    rw [eq_comm, List.nth_eq_some] at this 
+    obtain ⟨w, h⟩ := this 
+    let f' : ℕ ↪o ℕ :=
+      OrderEmbedding.ofMapLeIff (fun i => f (i+1) - f 0+1)
+        fun a b =>
+          by 
+            simp [tsub_le_tsub_iff_right, Nat.succ_le_iff, Nat.lt_succ_iff]
+    have  : ∀ ix, tl.nth ix = (l'.drop (f 0+1)).nth (f' ix)
+    ·
+      intro ix 
+      simp [List.nth_drop, add_tsub_cancel_of_le, Nat.succ_le_iff, ←hf]
+    rw [←List.take_append_drop (f 0+1) l', ←List.singleton_append]
+    apply List.Sublist.append _ (IH _ this)
+    rw [List.singleton_sublist, ←h, l'.nth_le_take _ (Nat.lt_succ_selfₓ _)]
+    apply List.nth_le_mem
 
 /--
 A `l : list α` is `sublist l l'` for `l' : list α` iff
@@ -143,7 +142,7 @@ any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
 theorem sublist_iff_exists_order_embedding_nth_eq {l l' : List α} :
   l <+ l' ↔ ∃ f : ℕ ↪o ℕ, ∀ ix : ℕ, l.nth ix = l'.nth (f ix) :=
   by 
-    split 
+    constructor
     ·
       intro H 
       induction' H with xs ys y H IH xs ys x H IH
@@ -174,51 +173,62 @@ theorem sublist_iff_exists_order_embedding_nth_eq {l l' : List α} :
       rintro ⟨f, hf⟩
       exact sublist_of_order_embedding_nth_eq f hf
 
--- error in Data.List.NodupEquivFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A `l : list α` is `sublist l l'` for `l' : list α` iff
 there is `f`, an order-preserving embedding of `fin l.length` into `fin l'.length` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
 -/
-theorem sublist_iff_exists_fin_order_embedding_nth_le_eq
-{l
- l' : list α} : «expr ↔ »(«expr <+ »(l, l'), «expr∃ , »((f : «expr ↪o »(fin l.length, fin l'.length)), ∀
-  ix : fin l.length, «expr = »(l.nth_le ix ix.is_lt, l'.nth_le (f ix) (f ix).is_lt))) :=
-begin
-  rw [expr sublist_iff_exists_order_embedding_nth_eq] [],
-  split,
-  { rintro ["⟨", ident f, ",", ident hf, "⟩"],
-    have [ident h] [":", expr ∀ {i : exprℕ()} (h : «expr < »(i, l.length)), «expr < »(f i, l'.length)] [],
-    { intros [ident i, ident hi],
-      specialize [expr hf i],
-      rw ["[", expr nth_le_nth hi, ",", expr eq_comm, ",", expr nth_eq_some, "]"] ["at", ident hf],
-      obtain ["⟨", ident h, ",", "-", "⟩", ":=", expr hf],
-      exact [expr h] },
-    refine [expr ⟨order_embedding.of_map_le_iff (λ ix, ⟨f ix, h ix.is_lt⟩) _, _⟩],
-    { simp [] [] [] [] [] [] },
-    { intro [ident i],
-      apply [expr option.some_injective],
-      simpa [] [] [] ["[", "<-", expr nth_le_nth, "]"] [] ["using", expr hf _] } },
-  { rintro ["⟨", ident f, ",", ident hf, "⟩"],
-    refine [expr ⟨order_embedding.of_strict_mono (λ
-       i, if hi : «expr < »(i, l.length) then f ⟨i, hi⟩ else «expr + »(i, l'.length)) _, _⟩],
-    { intros [ident i, ident j, ident h],
-      dsimp ["only"] [] [] [],
-      split_ifs [] ["with", ident hi, ident hj, ident hj, ident hi],
-      { simpa [] [] [] [] [] ["using", expr h] },
-      { rw [expr add_comm] [],
-        exact [expr lt_add_of_lt_of_pos (fin.is_lt _) (i.zero_le.trans_lt h)] },
-      { exact [expr absurd (h.trans hj) hi] },
-      { simpa [] [] [] [] [] ["using", expr h] } },
-    { intro [ident i],
-      simp [] [] ["only"] ["[", expr order_embedding.coe_of_strict_mono, "]"] [] [],
-      split_ifs [] ["with", ident hi],
-      { rw ["[", expr nth_le_nth hi, ",", expr nth_le_nth, ",", "<-", expr hf, "]"] [],
-        simp [] [] [] [] [] [] },
-      { rw ["[", expr nth_len_le, ",", expr nth_len_le, "]"] [],
-        { simp [] [] [] [] [] [] },
-        { simpa [] [] [] [] [] ["using", expr hi] } } } }
-end
+theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
+  l <+ l' ↔
+    ∃ f : Finₓ l.length ↪o Finₓ l'.length, ∀ ix : Finₓ l.length, l.nth_le ix ix.is_lt = l'.nth_le (f ix) (f ix).is_lt :=
+  by 
+    rw [sublist_iff_exists_order_embedding_nth_eq]
+    constructor
+    ·
+      rintro ⟨f, hf⟩
+      have h : ∀ {i : ℕ} h : i < l.length, f i < l'.length
+      ·
+        intro i hi 
+        specialize hf i 
+        rw [nth_le_nth hi, eq_comm, nth_eq_some] at hf 
+        obtain ⟨h, -⟩ := hf 
+        exact h 
+      refine' ⟨OrderEmbedding.ofMapLeIff (fun ix => ⟨f ix, h ix.is_lt⟩) _, _⟩
+      ·
+        simp 
+      ·
+        intro i 
+        apply Option.some_injective 
+        simpa [←nth_le_nth] using hf _
+    ·
+      rintro ⟨f, hf⟩
+      refine' ⟨OrderEmbedding.ofStrictMono (fun i => if hi : i < l.length then f ⟨i, hi⟩ else i+l'.length) _, _⟩
+      ·
+        intro i j h 
+        dsimp only 
+        splitIfs with hi hj hj hi
+        ·
+          simpa using h
+        ·
+          rw [add_commₓ]
+          exact lt_add_of_lt_of_pos (Finₓ.is_lt _) (i.zero_le.trans_lt h)
+        ·
+          exact absurd (h.trans hj) hi
+        ·
+          simpa using h
+      ·
+        intro i 
+        simp only [OrderEmbedding.coe_of_strict_mono]
+        splitIfs with hi
+        ·
+          rw [nth_le_nth hi, nth_le_nth, ←hf]
+          simp 
+        ·
+          rw [nth_len_le, nth_len_le]
+          ·
+            simp 
+          ·
+            simpa using hi
 
 /--
 An element `x : α` of `l : list α` is a duplicate iff it can be found
@@ -230,7 +240,7 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
   by 
     classical 
     rw [duplicate_iff_two_le_count, le_count_iff_repeat_sublist, sublist_iff_exists_fin_order_embedding_nth_le_eq]
-    split 
+    constructor
     ·
       rintro ⟨f, hf⟩
       refine'

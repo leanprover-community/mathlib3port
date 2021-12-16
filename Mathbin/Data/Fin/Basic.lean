@@ -290,7 +290,10 @@ theorem le_last (i : Finₓ (n+1)) : i ≤ last n :=
   le_of_lt_succ i.is_lt
 
 instance : BoundedOrder (Finₓ (n+1)) :=
-  { Finₓ.linearOrder, latticeOfLinearOrder with top := last n, le_top := le_last, bot := 0, bot_le := zero_le }
+  { top := last n, le_top := le_last, bot := 0, bot_le := zero_le }
+
+instance : Lattice (Finₓ (n+1)) :=
+  latticeOfLinearOrder
 
 theorem last_pos : (0 : Finₓ (n+2)) < last (n+1) :=
   by 
@@ -305,22 +308,22 @@ variable {α : Type _} [Preorderₓ α]
 
 open Set
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `e` is an `order_iso` between `fin n` and `fin m`, then `n = m` and `e` is the identity
 map. In this lemma we state that for each `i : fin n` we have `(e i : ℕ) = (i : ℕ)`. -/
 @[simp]
-theorem coe_order_iso_apply (e : «expr ≃o »(fin n, fin m)) (i : fin n) : «expr = »((e i : exprℕ()), i) :=
-begin
-  rcases [expr i, "with", "⟨", ident i, ",", ident hi, "⟩"],
-  rw ["[", expr subtype.coe_mk, "]"] [],
-  induction [expr i] ["using", ident nat.strong_induction_on] ["with", ident i, ident h] [],
-  refine [expr le_antisymm «expr $ »(forall_lt_iff_le.1, λ j hj, _) «expr $ »(forall_lt_iff_le.1, λ j hj, _)],
-  { have [] [] [":=", expr e.symm.lt_iff_lt.2 (mk_lt_of_lt_coe hj)],
-    rw [expr e.symm_apply_apply] ["at", ident this],
-    convert [] [expr this] [],
-    simpa [] [] [] [] [] ["using", expr h _ this (e.symm _).is_lt] },
-  { rwa ["[", "<-", expr h j hj (hj.trans hi), ",", "<-", expr lt_iff_coe_lt_coe, ",", expr e.lt_iff_lt, "]"] [] }
-end
+theorem coe_order_iso_apply (e : Finₓ n ≃o Finₓ m) (i : Finₓ n) : (e i : ℕ) = i :=
+  by 
+    rcases i with ⟨i, hi⟩
+    rw [Subtype.coe_mk]
+    induction' i using Nat.strong_induction_onₓ with i h 
+    refine' le_antisymmₓ (forall_lt_iff_le.1$ fun j hj => _) (forall_lt_iff_le.1$ fun j hj => _)
+    ·
+      have  := e.symm.lt_iff_lt.2 (mk_lt_of_lt_coe hj)
+      rw [e.symm_apply_apply] at this 
+      convert this 
+      simpa using h _ this (e.symm _).is_lt
+    ·
+      rwa [←h j hj (hj.trans hi), ←lt_iff_coe_lt_coe, e.lt_iff_lt]
 
 instance order_iso_subsingleton : Subsingleton (Finₓ n ≃o α) :=
   ⟨fun e e' =>
@@ -346,31 +349,27 @@ theorem order_embedding_eq {f g : Finₓ n ↪o α} (h : range f = range g) : f 
 
 end 
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function `f` on `fin n` is strictly monotone if and only if `f i < f (i+1)` for all `i`. -/
-theorem strict_mono_iff_lt_succ
-{α : Type*}
-[preorder α]
-{f : fin n → α} : «expr ↔ »(strict_mono f, ∀
- (i)
- (h : «expr < »(«expr + »(i, 1), n)), «expr < »(f ⟨i, lt_of_le_of_lt (nat.le_succ i) h⟩, f ⟨«expr + »(i, 1), h⟩)) :=
-begin
-  split,
-  { assume [binders (H i hi)],
-    apply [expr H],
-    exact [expr nat.lt_succ_self _] },
-  { assume [binders (H)],
-    have [ident A] [":", expr ∀
-     (i j)
-     (h : «expr < »(i, j))
-     (h' : «expr < »(j, n)), «expr < »(f ⟨i, lt_trans h h'⟩, f ⟨j, h'⟩)] [],
-    { assume [binders (i j h h')],
-      induction [expr h] [] ["with", ident k, ident h, ident IH] [],
-      { exact [expr H _ _] },
-      { exact [expr lt_trans (IH (nat.lt_of_succ_lt h')) (H _ _)] } },
-    assume [binders (i j hij)],
-    convert [] [expr A (i : exprℕ()) (j : exprℕ()) hij j.2] []; ext [] [] []; simp [] [] ["only"] ["[", expr subtype.coe_eta, "]"] [] [] }
-end
+theorem strict_mono_iff_lt_succ {α : Type _} [Preorderₓ α] {f : Finₓ n → α} :
+  StrictMono f ↔ ∀ i h : (i+1) < n, f ⟨i, lt_of_le_of_ltₓ (Nat.le_succₓ i) h⟩ < f ⟨i+1, h⟩ :=
+  by 
+    constructor
+    ·
+      intro H i hi 
+      apply H 
+      exact Nat.lt_succ_selfₓ _
+    ·
+      intro H 
+      have A : ∀ i j h : i < j h' : j < n, f ⟨i, lt_transₓ h h'⟩ < f ⟨j, h'⟩
+      ·
+        intro i j h h' 
+        induction' h with k h IH
+        ·
+          exact H _ _
+        ·
+          exact lt_transₓ (IH (Nat.lt_of_succ_ltₓ h')) (H _ _)
+      intro i j hij 
+      convert A (i : ℕ) (j : ℕ) hij j.2 <;> ext <;> simp only [Subtype.coe_eta]
 
 end Order
 
@@ -438,10 +437,10 @@ theorem val_add {n : ℕ} : ∀ a b : Finₓ n, (a+b).val = (a.val+b.val) % n
 theorem coe_add {n : ℕ} : ∀ a b : Finₓ n, ((a+b : Finₓ n) : ℕ) = (a+b) % n
 | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
-theorem coe_add_eq_ite {n : ℕ} (a b : Finₓ n) : («expr↑ » (a+b) : ℕ) = if n ≤ a+b then (a+b) - n else a+b :=
+theorem coe_add_eq_ite {n : ℕ} (a b : Finₓ n) : (↑a+b : ℕ) = if n ≤ a+b then (a+b) - n else a+b :=
   by 
-    rw [Finₓ.coe_add, Nat.add_mod_eq_ite, Nat.mod_eq_of_ltₓ (show «expr↑ » a < n from a.2),
-      Nat.mod_eq_of_ltₓ (show «expr↑ » b < n from b.2)]
+    rw [Finₓ.coe_add, Nat.add_mod_eq_ite, Nat.mod_eq_of_ltₓ (show ↑a < n from a.2),
+      Nat.mod_eq_of_ltₓ (show ↑b < n from b.2)]
 
 theorem coe_bit0 {n : ℕ} (k : Finₓ n) : ((bit0 k : Finₓ n) : ℕ) = bit0 (k : ℕ) % n :=
   by 
@@ -461,7 +460,7 @@ theorem coe_bit1 {n : ℕ} (k : Finₓ (n+1)) : ((bit1 k : Finₓ (n+1)) : ℕ) 
       cases h 
     simp [bit1, Finₓ.coe_bit0, Finₓ.coe_add, Finₓ.coe_one]
 
-theorem coe_add_one_of_lt {n : ℕ} {i : Finₓ n.succ} (h : i < last _) : («expr↑ » (i+1) : ℕ) = i+1 :=
+theorem coe_add_one_of_lt {n : ℕ} {i : Finₓ n.succ} (h : i < last _) : (↑i+1 : ℕ) = i+1 :=
   by 
     cases n
     ·
@@ -577,17 +576,20 @@ theorem one_pos : (0 : Finₓ (n+2)) < 1 :=
 theorem zero_ne_one : (0 : Finₓ (n+2)) ≠ 1 :=
   ne_of_ltₓ one_pos
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem zero_eq_one_iff : «expr ↔ »(«expr = »((0 : fin «expr + »(n, 1)), 1), «expr = »(n, 0)) :=
-begin
-  split,
-  { cases [expr n] []; intro [ident h],
-    { refl },
-    { have [] [] [":=", expr zero_ne_one],
-      contradiction } },
-  { rintro [ident rfl],
-    refl }
-end
+@[simp]
+theorem zero_eq_one_iff : (0 : Finₓ (n+1)) = 1 ↔ n = 0 :=
+  by 
+    constructor
+    ·
+      cases n <;> intro h
+      ·
+        rfl
+      ·
+        have  := zero_ne_one 
+        contradiction
+    ·
+      rintro rfl 
+      rfl
 
 @[simp]
 theorem one_eq_zero_iff : (1 : Finₓ (n+1)) = 0 ↔ n = 0 :=
@@ -617,7 +619,7 @@ def succ_embedding (n : ℕ) : Finₓ n ↪o Finₓ (n+1) :=
   OrderEmbedding.ofStrictMono Finₓ.succ$ fun ⟨i, hi⟩ ⟨j, hj⟩ h => succ_lt_succ h
 
 @[simp]
-theorem coe_succ_embedding : «expr⇑ » (succ_embedding n) = Finₓ.succ :=
+theorem coe_succ_embedding : ⇑succ_embedding n = Finₓ.succ :=
   rfl
 
 @[simp]
@@ -696,16 +698,20 @@ theorem cast_le_zero {n m : ℕ} (h : n.succ ≤ m.succ) : cast_le h 0 = 0 :=
   by 
     simp [eq_iff_veq]
 
-@[simp]
-theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (cast_le h) = { i | (i : ℕ) < n } :=
-  Set.ext fun x => ⟨fun ⟨y, hy⟩ => hy ▸ y.2, fun hx => ⟨⟨x, hx⟩, Finₓ.ext rfl⟩⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    range_cast_le
+    { n k : ℕ } ( h : n ≤ k ) : Set.Range cast_le h = { i | ( i : ℕ ) < n }
+    := Set.ext fun x => ⟨ fun ⟨ y , hy ⟩ => hy ▸ y . 2 , fun hx => ⟨ ⟨ x , hx ⟩ , Finₓ.ext rfl ⟩ ⟩
 
 @[simp]
 theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) hi :
-  ((Equiv.ofInjective _ (cast_le h).Injective).symm ⟨i, hi⟩ : ℕ) = i :=
+  ((Equivₓ.ofInjective _ (cast_le h).Injective).symm ⟨i, hi⟩ : ℕ) = i :=
   by 
     rw [←coe_cast_le]
-    exact congr_argₓ coeₓ (Equiv.apply_of_injective_symm _ _ _)
+    exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _ _)
 
 @[simp]
 theorem cast_le_succ {m n : ℕ} (h : (m+1) ≤ n+1) (i : Finₓ m) :
@@ -744,7 +750,7 @@ theorem cast_refl (h : n = n := rfl) : cast h = OrderIso.refl (Finₓ n) :=
 
 /-- While in many cases `fin.cast` is better than `equiv.cast`/`cast`, sometimes we want to apply
 a generic theorem about `cast`. -/
-theorem cast_to_equiv (h : n = m) : (cast h).toEquiv = Equiv.cast (h ▸ rfl) :=
+theorem cast_to_equiv (h : n = m) : (cast h).toEquiv = Equivₓ.cast (h ▸ rfl) :=
   by 
     subst h 
     simp 
@@ -910,16 +916,20 @@ theorem lt_succ : a.cast_succ < a.succ :=
     rw [cast_succ, lt_iff_coe_lt_coe, coe_cast_add, coe_succ]
     exact lt_add_one a.val
 
-@[simp]
-theorem range_cast_succ {n : ℕ} : Set.Range (cast_succ : Finₓ n → Finₓ n.succ) = { i | (i : ℕ) < n } :=
-  range_cast_le _
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    range_cast_succ
+    { n : ℕ } : Set.Range ( cast_succ : Finₓ n → Finₓ n.succ ) = { i | ( i : ℕ ) < n }
+    := range_cast_le _
 
 @[simp]
 theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) hi :
-  ((Equiv.ofInjective cast_succ (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i :=
+  ((Equivₓ.ofInjective cast_succ (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i :=
   by 
     rw [←coe_cast_succ]
-    exact congr_argₓ coeₓ (Equiv.apply_of_injective_symm _ _ _)
+    exact congr_argₓ coeₓ (Equivₓ.apply_of_injective_symm _ _ _)
 
 theorem succ_cast_succ {n : ℕ} (i : Finₓ n) : i.cast_succ.succ = i.succ.cast_succ :=
   Finₓ.ext
@@ -1320,22 +1330,16 @@ theorem add_cases_left {m n : ℕ} {C : Finₓ (m+n) → Sort _} (hleft : ∀ i,
     rw [add_cases, dif_pos (cast_add_lt _ _)]
     rfl
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem add_cases_right
-{m n : exprℕ()}
-{C : fin «expr + »(m, n) → Sort*}
-(hleft : ∀ i, C (cast_add n i))
-(hright : ∀ i, C (nat_add m i))
-(i : fin n) : «expr = »(add_cases hleft hright (nat_add m i), hright i) :=
-begin
-  have [] [":", expr «expr¬ »(«expr < »((nat_add m i : exprℕ()), m))] [],
-  from [expr (le_coe_nat_add _ _).not_lt],
-  rw ["[", expr add_cases, ",", expr dif_neg this, "]"] [],
-  refine [expr eq_of_heq ((eq_rec_heq _ _).trans _)],
-  congr' [1] [],
-  simp [] [] [] [] [] []
-end
+theorem add_cases_right {m n : ℕ} {C : Finₓ (m+n) → Sort _} (hleft : ∀ i, C (cast_add n i))
+  (hright : ∀ i, C (nat_add m i)) (i : Finₓ n) : add_cases hleft hright (nat_add m i) = hright i :=
+  by 
+    have  : ¬(nat_add m i : ℕ) < m 
+    exact (le_coe_nat_add _ _).not_lt 
+    rw [add_cases, dif_neg this]
+    refine' eq_of_heq ((eq_rec_heqₓ _ _).trans _)
+    congr 1
+    simp 
 
 end Rec
 
@@ -1409,7 +1413,7 @@ theorem succ_above_ne_zero {a : Finₓ (n+2)} {b : Finₓ (n+1)} (ha : a ≠ 0) 
 
 /-- Embedding `fin n` into `fin (n + 1)` with a hole around zero embeds by `succ`. -/
 @[simp]
-theorem succ_above_zero : «expr⇑ » (succ_above (0 : Finₓ (n+1))) = Finₓ.succ :=
+theorem succ_above_zero : ⇑succ_above (0 : Finₓ (n+1)) = Finₓ.succ :=
   rfl
 
 /-- Embedding `fin n` into `fin (n + 1)` with a hole around `last n` embeds by `cast_succ`. -/
@@ -1533,7 +1537,7 @@ theorem exists_succ_above_eq_iff {x y : Finₓ (n+1)} : (∃ z, x.succ_above z =
 
 /-- The range of `p.succ_above` is everything except `p`. -/
 @[simp]
-theorem range_succ_above (p : Finₓ (n+1)) : Set.Range p.succ_above = «expr ᶜ» {p} :=
+theorem range_succ_above (p : Finₓ (n+1)) : Set.Range p.succ_above = {p}ᶜ :=
   Set.ext$ fun _ => exists_succ_above_eq_iff
 
 /-- Given a fixed pivot `x : fin (n + 1)`, `x.succ_above` is injective -/
@@ -1548,7 +1552,7 @@ theorem succ_above_right_inj {x : Finₓ (n+1)} : x.succ_above a = x.succ_above 
 theorem succ_above_left_injective : injective (@succ_above n) :=
   fun _ _ h =>
     by 
-      simpa [range_succ_above] using congr_argₓ (fun f : Finₓ n ↪o Finₓ (n+1) => «expr ᶜ» (Set.Range f)) h
+      simpa [range_succ_above] using congr_argₓ (fun f : Finₓ n ↪o Finₓ (n+1) => Set.Range fᶜ) h
 
 /-- `succ_above` is injective at the pivot -/
 @[simp]
@@ -1625,16 +1629,18 @@ theorem pred_above_right_monotone (p : Finₓ n) : Monotone p.pred_above :=
       ·
         exact H
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pred_above_left_monotone (i : fin «expr + »(n, 1)) : monotone (λ p, pred_above p i) :=
-λ a b H, begin
-  dsimp [] ["[", expr pred_above, "]"] [] [],
-  split_ifs [] ["with", ident ha, ident hb, ident hb],
-  all_goals { simp [] [] ["only"] ["[", expr le_iff_coe_le_coe, ",", expr coe_pred, "]"] [] [] },
-  { exact [expr pred_le _] },
-  { have [] [":", expr «expr < »(b, a)] [":=", expr cast_succ_lt_cast_succ_iff.mpr (hb.trans_le (le_of_not_gt ha))],
-    exact [expr absurd H this.not_le] }
-end
+theorem pred_above_left_monotone (i : Finₓ (n+1)) : Monotone fun p => pred_above p i :=
+  fun a b H =>
+    by 
+      dsimp [pred_above]
+      splitIfs with ha hb hb 
+      all_goals 
+        simp only [le_iff_coe_le_coe, coe_pred]
+      ·
+        exact pred_le _
+      ·
+        have  : b < a := cast_succ_lt_cast_succ_iff.mpr (hb.trans_le (le_of_not_gtₓ ha))
+        exact absurd H this.not_le
 
 /-- `cast_pred` embeds `i : fin (n + 2)` into `fin (n + 1)`
 by lowering just `last (n + 1)` to `last n`. -/
@@ -1664,26 +1670,18 @@ theorem cast_pred_last : cast_pred (last (n+1)) = last n :=
   by 
     simp [eq_iff_veq, cast_pred, pred_above, cast_succ_lt_last]
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem cast_pred_mk
-(n i : exprℕ())
-(h : «expr < »(i, «expr + »(n, 1))) : «expr = »(cast_pred ⟨i, lt_succ_of_lt h⟩, ⟨i, h⟩) :=
-begin
-  have [] [":", expr «expr¬ »(«expr < »(cast_succ (last n), ⟨i, lt_succ_of_lt h⟩))] [],
-  { simpa [] [] [] ["[", expr lt_iff_coe_lt_coe, "]"] [] ["using", expr le_of_lt_succ h] },
-  simp [] [] [] ["[", expr cast_pred, ",", expr pred_above, ",", expr this, "]"] [] []
-end
+theorem cast_pred_mk (n i : ℕ) (h : i < n+1) : cast_pred ⟨i, lt_succ_of_lt h⟩ = ⟨i, h⟩ :=
+  by 
+    have  : ¬cast_succ (last n) < ⟨i, lt_succ_of_lt h⟩
+    ·
+      simpa [lt_iff_coe_lt_coe] using le_of_lt_succ h 
+    simp [cast_pred, pred_above, this]
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pred_above_below
-(p : fin «expr + »(n, 1))
-(i : fin «expr + »(n, 2))
-(h : «expr ≤ »(i, p.cast_succ)) : «expr = »(p.pred_above i, i.cast_pred) :=
-begin
-  have [] [":", expr «expr ≤ »(i, (last n).cast_succ)] [":=", expr h.trans p.le_last],
-  simp [] [] [] ["[", expr pred_above, ",", expr cast_pred, ",", expr h.not_lt, ",", expr this.not_lt, "]"] [] []
-end
+theorem pred_above_below (p : Finₓ (n+1)) (i : Finₓ (n+2)) (h : i ≤ p.cast_succ) : p.pred_above i = i.cast_pred :=
+  by 
+    have  : i ≤ (last n).cast_succ := h.trans p.le_last 
+    simp [pred_above, cast_pred, h.not_lt, this.not_lt]
 
 @[simp]
 theorem pred_above_last : pred_above (Finₓ.last n) = cast_pred :=
@@ -1762,25 +1760,26 @@ theorem cast_succ_pred_eq_pred_cast_succ {a : Finₓ (n+1)} (ha : a ≠ 0) (ha' 
     cases a 
     rfl
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `pred` commutes with `succ_above`. -/
-theorem pred_succ_above_pred
-{a : fin «expr + »(n, 2)}
-{b : fin «expr + »(n, 1)}
-(ha : «expr ≠ »(a, 0))
-(hb : «expr ≠ »(b, 0))
-(hk := succ_above_ne_zero ha hb) : «expr = »((a.pred ha).succ_above (b.pred hb), (a.succ_above b).pred hk) :=
-begin
-  obtain [ident hbelow, "|", ident habove, ":=", expr lt_or_le b.cast_succ a],
-  { rw [expr fin.succ_above_below] [],
-    { rwa ["[", expr cast_succ_pred_eq_pred_cast_succ, ",", expr fin.pred_inj, ",", expr fin.succ_above_below, "]"] [] },
-    { rwa ["[", expr cast_succ_pred_eq_pred_cast_succ, ",", expr pred_lt_pred_iff, "]"] [] } },
-  { rw [expr fin.succ_above_above] [],
-    have [] [":", expr «expr = »((b.pred hb).succ, b.succ.pred (fin.succ_ne_zero _))] [],
-    by rw ["[", expr succ_pred, ",", expr pred_succ, "]"] [],
-    { rwa ["[", expr this, ",", expr fin.pred_inj, ",", expr fin.succ_above_above, "]"] [] },
-    { rwa ["[", expr cast_succ_pred_eq_pred_cast_succ, ",", expr fin.pred_le_pred_iff, "]"] [] } }
-end
+theorem pred_succ_above_pred {a : Finₓ (n+2)} {b : Finₓ (n+1)} (ha : a ≠ 0) (hb : b ≠ 0)
+  (hk := succ_above_ne_zero ha hb) : (a.pred ha).succAbove (b.pred hb) = (a.succ_above b).pred hk :=
+  by 
+    obtain hbelow | habove := lt_or_leₓ b.cast_succ a
+    ·
+      rw [Finₓ.succ_above_below]
+      ·
+        rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_inj, Finₓ.succ_above_below]
+      ·
+        rwa [cast_succ_pred_eq_pred_cast_succ, pred_lt_pred_iff]
+    ·
+      rw [Finₓ.succ_above_above]
+      have  : (b.pred hb).succ = b.succ.pred (Finₓ.succ_ne_zero _)
+      ·
+        rw [succ_pred, pred_succ]
+      ·
+        rwa [this, Finₓ.pred_inj, Finₓ.succ_above_above]
+      ·
+        rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_le_pred_iff]
 
 @[simp]
 theorem cast_pred_cast_succ (i : Finₓ (n+1)) : cast_pred i.cast_succ = i :=

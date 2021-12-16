@@ -73,24 +73,24 @@ theorem not_leₓ : ∀ {x y : Game}, ¬x ≤ y ↔ lt y x :=
     exact not_leₓ
 
 instance : HasZero Game :=
-  ⟨«expr⟦ ⟧» 0⟩
+  ⟨⟦0⟧⟩
 
 instance : Inhabited Game :=
   ⟨0⟩
 
 instance : HasOne Game :=
-  ⟨«expr⟦ ⟧» 1⟩
+  ⟨⟦1⟧⟩
 
 /-- The negation of `{L | R}` is `{-R | -L}`. -/
 def neg : Game → Game :=
-  Quot.lift (fun x => «expr⟦ ⟧» (-x)) fun x y h => Quot.sound (@neg_congr x y h)
+  Quot.lift (fun x => ⟦-x⟧) fun x y h => Quot.sound (@neg_congr x y h)
 
 instance : Neg Game :=
   { neg := neg }
 
 /-- The sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
 def add : Game → Game → Game :=
-  Quotientₓ.lift₂ (fun x y : Pgame => «expr⟦ ⟧» (x+y)) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
+  Quotientₓ.lift₂ (fun x y : Pgame => ⟦x+y⟧) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
 
 instance : Add Game :=
   ⟨add⟩
@@ -158,21 +158,20 @@ end Game
 namespace Pgame
 
 @[simp]
-theorem quot_neg (a : Pgame) : «expr⟦ ⟧» (-a) = -«expr⟦ ⟧» a :=
+theorem quot_neg (a : Pgame) : ⟦-a⟧ = -⟦a⟧ :=
   rfl
 
 @[simp]
-theorem quot_add (a b : Pgame) : «expr⟦ ⟧» (a+b) = «expr⟦ ⟧» a+«expr⟦ ⟧» b :=
+theorem quot_add (a b : Pgame) : ⟦a+b⟧ = ⟦a⟧+⟦b⟧ :=
   rfl
 
 @[simp]
-theorem quot_sub (a b : Pgame) : «expr⟦ ⟧» (a - b) = «expr⟦ ⟧» a - «expr⟦ ⟧» b :=
+theorem quot_sub (a b : Pgame) : ⟦a - b⟧ = ⟦a⟧ - ⟦b⟧ :=
   rfl
 
 theorem quot_eq_of_mk_quot_eq {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R : x.right_moves ≃ y.right_moves)
-  (hl : ∀ i : x.left_moves, «expr⟦ ⟧» (x.move_left i) = «expr⟦ ⟧» (y.move_left (L i)))
-  (hr : ∀ j : y.right_moves, «expr⟦ ⟧» (x.move_right (R.symm j)) = «expr⟦ ⟧» (y.move_right j)) :
-  «expr⟦ ⟧» x = «expr⟦ ⟧» y :=
+  (hl : ∀ i : x.left_moves, ⟦x.move_left i⟧ = ⟦y.move_left (L i)⟧)
+  (hr : ∀ j : y.right_moves, ⟦x.move_right (R.symm j)⟧ = ⟦y.move_right j⟧) : ⟦x⟧ = ⟦y⟧ :=
   by 
     simp only [Quotientₓ.eq] at hl hr 
     apply Quotientₓ.sound 
@@ -183,20 +182,22 @@ but to prove their properties we need to use the abelian group structure of game
 Hence we define them here. -/
 
 
--- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of `x = {xL | xR}` and `y = {yL | yR}` is
 `{xL*y + x*yL - xL*yL, xR*y + x*yR - xR*yR | xL*y + x*yR - xL*yR, x*yL + xR*y - xR*yL }`. -/
-def mul (x y : pgame) : pgame :=
-begin
-  induction [expr x] [] ["with", ident xl, ident xr, ident xL, ident xR, ident IHxl, ident IHxr] ["generalizing", ident y],
-  induction [expr y] [] ["with", ident yl, ident yr, ident yL, ident yR, ident IHyl, ident IHyr] [],
-  have [ident y] [] [":=", expr mk yl yr yL yR],
-  refine [expr ⟨«expr ⊕ »(«expr × »(xl, yl), «expr × »(xr, yr)), «expr ⊕ »(«expr × »(xl, yr), «expr × »(xr, yl)), _, _⟩]; rintro ["(", "⟨", ident i, ",", ident j, "⟩", "|", "⟨", ident i, ",", ident j, "⟩", ")"],
-  { exact [expr «expr - »(«expr + »(IHxl i y, IHyl j), IHxl i (yL j))] },
-  { exact [expr «expr - »(«expr + »(IHxr i y, IHyr j), IHxr i (yR j))] },
-  { exact [expr «expr - »(«expr + »(IHxl i y, IHyr j), IHxl i (yR j))] },
-  { exact [expr «expr - »(«expr + »(IHxr i y, IHyl j), IHxr i (yL j))] }
-end
+def mul (x y : Pgame) : Pgame :=
+  by 
+    induction' x with xl xr xL xR IHxl IHxr generalizing y 
+    induction' y with yl yr yL yR IHyl IHyr 
+    have y := mk yl yr yL yR 
+    refine' ⟨Sum (xl × yl) (xr × yr), Sum (xl × yr) (xr × yl), _, _⟩ <;> rintro (⟨i, j⟩ | ⟨i, j⟩)
+    ·
+      exact (IHxl i y+IHyl j) - IHxl i (yL j)
+    ·
+      exact (IHxr i y+IHyr j) - IHxr i (yR j)
+    ·
+      exact (IHxl i y+IHyr j) - IHxl i (yR j)
+    ·
+      exact (IHxr i y+IHyl j) - IHxr i (yL j)
 
 instance : Mul Pgame :=
   ⟨mul⟩
@@ -275,41 +276,33 @@ theorem mul_move_right_inr {x y : Pgame} {i j} :
     cases y 
     rfl
 
-theorem quot_mul_comm : ∀ x y : Pgame.{u}, «expr⟦ ⟧» (x*y) = «expr⟦ ⟧» (y*x)
+theorem quot_mul_comm : ∀ x y : Pgame.{u}, ⟦x*y⟧ = ⟦y*x⟧
 | mk xl xr xL xR, mk yl yr yL yR =>
   by 
     let x := mk xl xr xL xR 
     let y := mk yl yr yL yR 
     refine' quot_eq_of_mk_quot_eq _ _ _ _ 
-    apply Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _)
-    calc Sum (xl × yr) (xr × yl) ≃ Sum (xr × yl) (xl × yr) := Equiv.sumComm _ _ _ ≃ Sum (yl × xr) (yr × xl) :=
-      Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _)
+    apply Equivₓ.sumCongr (Equivₓ.prodComm _ _) (Equivₓ.prodComm _ _)
+    calc Sum (xl × yr) (xr × yl) ≃ Sum (xr × yl) (xl × yr) := Equivₓ.sumComm _ _ _ ≃ Sum (yl × xr) (yr × xl) :=
+      Equivₓ.sumCongr (Equivₓ.prodComm _ _) (Equivₓ.prodComm _ _)
     ·
       rintro (⟨i, j⟩ | ⟨i, j⟩)
       ·
-        change
-          («expr⟦ ⟧» (xL i*y)+«expr⟦ ⟧» (x*yL j)) - «expr⟦ ⟧» (xL i*yL j) =
-            («expr⟦ ⟧» (yL j*x)+«expr⟦ ⟧» (y*xL i)) - «expr⟦ ⟧» (yL j*xL i)
+        change (⟦xL i*y⟧+⟦x*yL j⟧) - ⟦xL i*yL j⟧ = (⟦yL j*x⟧+⟦y*xL i⟧) - ⟦yL j*xL i⟧
         rw [quot_mul_comm (xL i) y, quot_mul_comm x (yL j), quot_mul_comm (xL i) (yL j)]
         abel
       ·
-        change
-          («expr⟦ ⟧» (xR i*y)+«expr⟦ ⟧» (x*yR j)) - «expr⟦ ⟧» (xR i*yR j) =
-            («expr⟦ ⟧» (yR j*x)+«expr⟦ ⟧» (y*xR i)) - «expr⟦ ⟧» (yR j*xR i)
+        change (⟦xR i*y⟧+⟦x*yR j⟧) - ⟦xR i*yR j⟧ = (⟦yR j*x⟧+⟦y*xR i⟧) - ⟦yR j*xR i⟧
         rw [quot_mul_comm (xR i) y, quot_mul_comm x (yR j), quot_mul_comm (xR i) (yR j)]
         abel
     ·
       rintro (⟨j, i⟩ | ⟨j, i⟩)
       ·
-        change
-          («expr⟦ ⟧» (xR i*y)+«expr⟦ ⟧» (x*yL j)) - «expr⟦ ⟧» (xR i*yL j) =
-            («expr⟦ ⟧» (yL j*x)+«expr⟦ ⟧» (y*xR i)) - «expr⟦ ⟧» (yL j*xR i)
+        change (⟦xR i*y⟧+⟦x*yL j⟧) - ⟦xR i*yL j⟧ = (⟦yL j*x⟧+⟦y*xR i⟧) - ⟦yL j*xR i⟧
         rw [quot_mul_comm (xR i) y, quot_mul_comm x (yL j), quot_mul_comm (xR i) (yL j)]
         abel
       ·
-        change
-          («expr⟦ ⟧» (xL i*y)+«expr⟦ ⟧» (x*yR j)) - «expr⟦ ⟧» (xL i*yR j) =
-            («expr⟦ ⟧» (yR j*x)+«expr⟦ ⟧» (y*xL i)) - «expr⟦ ⟧» (yR j*xL i)
+        change (⟦xL i*y⟧+⟦x*yR j⟧) - ⟦xL i*yR j⟧ = (⟦yR j*x⟧+⟦y*xL i⟧) - ⟦yR j*xL i⟧
         rw [quot_mul_comm (xL i) y, quot_mul_comm x (yR j), quot_mul_comm (xL i) (yR j)]
         abel
 
@@ -321,9 +314,9 @@ theorem mul_comm_equiv (x y : Pgame) : (x*y) ≈ y*x :=
 def mul_zero_relabelling : ∀ x : Pgame, relabelling (x*0) 0
 | mk xl xr xL xR =>
   ⟨by 
-      fsplit <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩),
+      fconstructor <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩),
     by 
-      fsplit <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩),
+      fconstructor <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩),
     by 
       rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩),
     by 
@@ -334,16 +327,16 @@ theorem mul_zero_equiv (x : Pgame) : (x*0) ≈ 0 :=
   (mul_zero_relabelling x).Equiv
 
 @[simp]
-theorem quot_mul_zero (x : Pgame) : «expr⟦ ⟧» (x*0) = «expr⟦ ⟧» 0 :=
+theorem quot_mul_zero (x : Pgame) : ⟦x*0⟧ = ⟦0⟧ :=
   @Quotientₓ.sound _ _ (x*0) _ x.mul_zero_equiv
 
 /-- `0 * x` has exactly the same moves as `0`. -/
 def zero_mul_relabelling : ∀ x : Pgame, relabelling (0*x) 0
 | mk xl xr xL xR =>
   ⟨by 
-      fsplit <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩),
+      fconstructor <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩),
     by 
-      fsplit <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩),
+      fconstructor <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩),
     by 
       rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩),
     by 
@@ -354,105 +347,151 @@ theorem zero_mul_equiv (x : Pgame) : (0*x) ≈ 0 :=
   (zero_mul_relabelling x).Equiv
 
 @[simp]
-theorem quot_zero_mul (x : Pgame) : «expr⟦ ⟧» (0*x) = «expr⟦ ⟧» 0 :=
+theorem quot_zero_mul (x : Pgame) : ⟦0*x⟧ = ⟦0⟧ :=
   @Quotientₓ.sound _ _ (0*x) _ x.zero_mul_equiv
 
--- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-@[simp]
-theorem quot_neg_mul : ∀
-x y : pgame, «expr = »(«expr⟦ ⟧»(«expr * »(«expr- »(x), y)), «expr- »(«expr⟦ ⟧»(«expr * »(x, y))))
-| mk xl xr xL xR, mk yl yr yL yR := begin
-  let [ident x] [] [":=", expr mk xl xr xL xR],
-  let [ident y] [] [":=", expr mk yl yr yL yR],
-  refine [expr quot_eq_of_mk_quot_eq _ _ _ _],
-  { fsplit; rintro ["(", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 4 } },
-  { fsplit; rintro ["(", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 4 } },
-  { rintro ["(", "⟨", ident i, ",", ident j, "⟩", "|", "⟨", ident i, ",", ident j, "⟩", ")"],
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr- »(xR i), y), «expr * »(«expr- »(x), yL j)), «expr * »(«expr- »(xR i), yL j))), «expr⟦ ⟧»(«expr- »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yL j)), «expr * »(xR i, yL j)))))] [] [],
-      simp [] [] ["only"] ["[", expr quot_add, ",", expr quot_sub, ",", expr quot_neg_mul, "]"] [] [],
-      simp [] [] [] [] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr- »(xL i), y), «expr * »(«expr- »(x), yR j)), «expr * »(«expr- »(xL i), yR j))), «expr⟦ ⟧»(«expr- »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yR j)), «expr * »(xL i, yR j)))))] [] [],
-      simp [] [] ["only"] ["[", expr quot_add, ",", expr quot_sub, ",", expr quot_neg_mul, "]"] [] [],
-      simp [] [] [] [] [] [],
-      abel [] [] [] } },
-  { rintro ["(", "⟨", ident i, ",", ident j, "⟩", "|", "⟨", ident i, ",", ident j, "⟩", ")"],
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr- »(xL i), y), «expr * »(«expr- »(x), yL j)), «expr * »(«expr- »(xL i), yL j))), «expr⟦ ⟧»(«expr- »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yL j)), «expr * »(xL i, yL j)))))] [] [],
-      simp [] [] ["only"] ["[", expr quot_add, ",", expr quot_sub, ",", expr quot_neg_mul, "]"] [] [],
-      simp [] [] [] [] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr- »(xR i), y), «expr * »(«expr- »(x), yR j)), «expr * »(«expr- »(xR i), yR j))), «expr⟦ ⟧»(«expr- »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yR j)), «expr * »(xR i, yR j)))))] [] [],
-      simp [] [] ["only"] ["[", expr quot_add, ",", expr quot_sub, ",", expr quot_neg_mul, "]"] [] [],
-      simp [] [] [] [] [] [],
-      abel [] [] [] } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+@[ simp ]
+  theorem
+    quot_neg_mul
+    : ∀ x y : Pgame , ⟦ - x * y ⟧ = - ⟦ x * y ⟧
+    |
+      mk xl xr xL xR , mk yl yr yL yR
+      =>
+      by
+        let x := mk xl xr xL xR
+          let y := mk yl yr yL yR
+          refine' quot_eq_of_mk_quot_eq _ _ _ _
+          ·
+            fconstructor
+              <;>
+              rintro ( ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ )
+                <;>
+                solveByElim ( config := { max_depth := 4 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+          ·
+            fconstructor
+              <;>
+              rintro ( ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ )
+                <;>
+                solveByElim ( config := { max_depth := 4 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+          ·
+            rintro ( ⟨ i , j ⟩ | ⟨ i , j ⟩ )
+              ·
+                change ⟦ - xR i * y + - x * yL j - - xR i * yL j ⟧ = ⟦ - xR i * y + x * yL j - xR i * yL j ⟧
+                  simp only [ quot_add , quot_sub , quot_neg_mul ]
+                  simp
+                  abel
+              ·
+                change ⟦ - xL i * y + - x * yR j - - xL i * yR j ⟧ = ⟦ - xL i * y + x * yR j - xL i * yR j ⟧
+                  simp only [ quot_add , quot_sub , quot_neg_mul ]
+                  simp
+                  abel
+          ·
+            rintro ( ⟨ i , j ⟩ | ⟨ i , j ⟩ )
+              ·
+                change ⟦ - xL i * y + - x * yL j - - xL i * yL j ⟧ = ⟦ - xL i * y + x * yL j - xL i * yL j ⟧
+                  simp only [ quot_add , quot_sub , quot_neg_mul ]
+                  simp
+                  abel
+              ·
+                change ⟦ - xR i * y + - x * yR j - - xR i * yR j ⟧ = ⟦ - xR i * y + x * yR j - xR i * yR j ⟧
+                  simp only [ quot_add , quot_sub , quot_neg_mul ]
+                  simp
+                  abel
 
 @[simp]
-theorem quot_mul_neg (x y : Pgame) : «expr⟦ ⟧» (x*-y) = -«expr⟦ ⟧» (x*y) :=
+theorem quot_mul_neg (x y : Pgame) : ⟦x*-y⟧ = -⟦x*y⟧ :=
   by 
     rw [quot_mul_comm, quot_neg_mul, quot_mul_comm]
 
--- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-@[simp]
-theorem quot_left_distrib : ∀
-x
-y
-z : pgame, «expr = »(«expr⟦ ⟧»(«expr * »(x, «expr + »(y, z))), «expr + »(«expr⟦ ⟧»(«expr * »(x, y)), «expr⟦ ⟧»(«expr * »(x, z))))
-| mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR := begin
-  let [ident x] [] [":=", expr mk xl xr xL xR],
-  let [ident y] [] [":=", expr mk yl yr yL yR],
-  let [ident z] [] [":=", expr mk zl zr zL zR],
-  refine [expr quot_eq_of_mk_quot_eq _ _ _ _],
-  { fsplit,
-    { rintro ["(", "⟨", "_", ",", "_", "|", "_", "⟩", "|", "⟨", "_", ",", "_", "|", "_", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 5 } },
-    { rintro ["(", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", "|", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 5 } },
-    { rintro ["(", "⟨", "_", ",", "_", "|", "_", "⟩", "|", "⟨", "_", ",", "_", "|", "_", "⟩", ")"]; refl },
-    { rintro ["(", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", "|", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ")"]; refl } },
-  { fsplit,
-    { rintro ["(", "⟨", "_", ",", "_", "|", "_", "⟩", "|", "⟨", "_", ",", "_", "|", "_", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 5 } },
-    { rintro ["(", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", "|", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 5 } },
-    { rintro ["(", "⟨", "_", ",", "_", "|", "_", "⟩", "|", "⟨", "_", ",", "_", "|", "_", "⟩", ")"]; refl },
-    { rintro ["(", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", "|", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ")"]; refl } },
-  { rintro ["(", "⟨", ident i, ",", ident j, "|", ident k, "⟩", "|", "⟨", ident i, ",", ident j, "|", ident k, "⟩", ")"],
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xL i, «expr + »(y, z)), «expr * »(x, «expr + »(yL j, z))), «expr * »(xL i, «expr + »(yL j, z)))), «expr⟦ ⟧»(«expr + »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yL j)), «expr * »(xL i, yL j)), «expr * »(x, z))))] [] [],
-      simp [] [] [] ["[", expr quot_left_distrib, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xL i, «expr + »(y, z)), «expr * »(x, «expr + »(y, zL k))), «expr * »(xL i, «expr + »(y, zL k)))), «expr⟦ ⟧»(«expr + »(«expr * »(x, y), «expr - »(«expr + »(«expr * »(xL i, z), «expr * »(x, zL k)), «expr * »(xL i, zL k)))))] [] [],
-      simp [] [] [] ["[", expr quot_left_distrib, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xR i, «expr + »(y, z)), «expr * »(x, «expr + »(yR j, z))), «expr * »(xR i, «expr + »(yR j, z)))), «expr⟦ ⟧»(«expr + »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yR j)), «expr * »(xR i, yR j)), «expr * »(x, z))))] [] [],
-      simp [] [] [] ["[", expr quot_left_distrib, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xR i, «expr + »(y, z)), «expr * »(x, «expr + »(y, zR k))), «expr * »(xR i, «expr + »(y, zR k)))), «expr⟦ ⟧»(«expr + »(«expr * »(x, y), «expr - »(«expr + »(«expr * »(xR i, z), «expr * »(x, zR k)), «expr * »(xR i, zR k)))))] [] [],
-      simp [] [] [] ["[", expr quot_left_distrib, "]"] [] [],
-      abel [] [] [] } },
-  { rintro ["(", "⟨", "⟨", ident i, ",", ident j, "⟩", "|", "⟨", ident i, ",", ident j, "⟩", "⟩", "|", "⟨", ident i, ",", ident k, "⟩", "|", "⟨", ident i, ",", ident k, "⟩", ")"],
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xL i, «expr + »(y, z)), «expr * »(x, «expr + »(yR j, z))), «expr * »(xL i, «expr + »(yR j, z)))), «expr⟦ ⟧»(«expr + »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yR j)), «expr * »(xL i, yR j)), «expr * »(x, z))))] [] [],
-      simp [] [] [] ["[", expr quot_left_distrib, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xR i, «expr + »(y, z)), «expr * »(x, «expr + »(yL j, z))), «expr * »(xR i, «expr + »(yL j, z)))), «expr⟦ ⟧»(«expr + »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yL j)), «expr * »(xR i, yL j)), «expr * »(x, z))))] [] [],
-      simp [] [] [] ["[", expr quot_left_distrib, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xL i, «expr + »(y, z)), «expr * »(x, «expr + »(y, zR k))), «expr * »(xL i, «expr + »(y, zR k)))), «expr⟦ ⟧»(«expr + »(«expr * »(x, y), «expr - »(«expr + »(«expr * »(xL i, z), «expr * »(x, zR k)), «expr * »(xL i, zR k)))))] [] [],
-      simp [] [] [] ["[", expr quot_left_distrib, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xR i, «expr + »(y, z)), «expr * »(x, «expr + »(y, zL k))), «expr * »(xR i, «expr + »(y, zL k)))), «expr⟦ ⟧»(«expr + »(«expr * »(x, y), «expr - »(«expr + »(«expr * »(xR i, z), «expr * »(x, zL k)), «expr * »(xR i, zL k)))))] [] [],
-      simp [] [] [] ["[", expr quot_left_distrib, "]"] [] [],
-      abel [] [] [] } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+@[ simp ]
+  theorem
+    quot_left_distrib
+    : ∀ x y z : Pgame , ⟦ x * y + z ⟧ = ⟦ x * y ⟧ + ⟦ x * z ⟧
+    |
+      mk xl xr xL xR , mk yl yr yL yR , mk zl zr zL zR
+      =>
+      by
+        let x := mk xl xr xL xR
+          let y := mk yl yr yL yR
+          let z := mk zl zr zL zR
+          refine' quot_eq_of_mk_quot_eq _ _ _ _
+          ·
+            fconstructor
+              ·
+                rintro ( ⟨ _ , _ | _ ⟩ | ⟨ _ , _ | _ ⟩ )
+                  <;>
+                  solveByElim ( config := { max_depth := 5 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+              ·
+                rintro ( ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ | ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ )
+                  <;>
+                  solveByElim ( config := { max_depth := 5 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+              · rintro ( ⟨ _ , _ | _ ⟩ | ⟨ _ , _ | _ ⟩ ) <;> rfl
+              · rintro ( ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ | ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ) <;> rfl
+          ·
+            fconstructor
+              ·
+                rintro ( ⟨ _ , _ | _ ⟩ | ⟨ _ , _ | _ ⟩ )
+                  <;>
+                  solveByElim ( config := { max_depth := 5 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+              ·
+                rintro ( ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ | ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ )
+                  <;>
+                  solveByElim ( config := { max_depth := 5 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+              · rintro ( ⟨ _ , _ | _ ⟩ | ⟨ _ , _ | _ ⟩ ) <;> rfl
+              · rintro ( ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ | ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ) <;> rfl
+          ·
+            rintro ( ⟨ i , j | k ⟩ | ⟨ i , j | k ⟩ )
+              ·
+                change ⟦ xL i * y + z + x * yL j + z - xL i * yL j + z ⟧ = ⟦ xL i * y + x * yL j - xL i * yL j + x * z ⟧
+                  simp [ quot_left_distrib ]
+                  abel
+              ·
+                change ⟦ xL i * y + z + x * y + zL k - xL i * y + zL k ⟧ = ⟦ x * y + xL i * z + x * zL k - xL i * zL k ⟧
+                  simp [ quot_left_distrib ]
+                  abel
+              ·
+                change ⟦ xR i * y + z + x * yR j + z - xR i * yR j + z ⟧ = ⟦ xR i * y + x * yR j - xR i * yR j + x * z ⟧
+                  simp [ quot_left_distrib ]
+                  abel
+              ·
+                change ⟦ xR i * y + z + x * y + zR k - xR i * y + zR k ⟧ = ⟦ x * y + xR i * z + x * zR k - xR i * zR k ⟧
+                  simp [ quot_left_distrib ]
+                  abel
+          ·
+            rintro ( ⟨ ⟨ i , j ⟩ | ⟨ i , j ⟩ ⟩ | ⟨ i , k ⟩ | ⟨ i , k ⟩ )
+              ·
+                change ⟦ xL i * y + z + x * yR j + z - xL i * yR j + z ⟧ = ⟦ xL i * y + x * yR j - xL i * yR j + x * z ⟧
+                  simp [ quot_left_distrib ]
+                  abel
+              ·
+                change ⟦ xR i * y + z + x * yL j + z - xR i * yL j + z ⟧ = ⟦ xR i * y + x * yL j - xR i * yL j + x * z ⟧
+                  simp [ quot_left_distrib ]
+                  abel
+              ·
+                change ⟦ xL i * y + z + x * y + zR k - xL i * y + zR k ⟧ = ⟦ x * y + xL i * z + x * zR k - xL i * zR k ⟧
+                  simp [ quot_left_distrib ]
+                  abel
+              ·
+                change ⟦ xR i * y + z + x * y + zL k - xR i * y + zL k ⟧ = ⟦ x * y + xR i * z + x * zL k - xR i * zL k ⟧
+                  simp [ quot_left_distrib ]
+                  abel
 
 /-- `x * (y + z)` is equivalent to `x * y + x * z.`-/
 theorem left_distrib_equiv (x y z : Pgame) : (x*y+z) ≈ (x*y)+x*z :=
   Quotientₓ.exact$ quot_left_distrib _ _ _
 
 @[simp]
-theorem quot_left_distrib_sub (x y z : Pgame) : «expr⟦ ⟧» (x*y - z) = «expr⟦ ⟧» (x*y) - «expr⟦ ⟧» (x*z) :=
+theorem quot_left_distrib_sub (x y z : Pgame) : ⟦x*y - z⟧ = ⟦x*y⟧ - ⟦x*z⟧ :=
   by 
-    change «expr⟦ ⟧» (x*y+-z) = «expr⟦ ⟧» (x*y)+-«expr⟦ ⟧» (x*z)
+    change ⟦x*y+-z⟧ = ⟦x*y⟧+-⟦x*z⟧
     rw [quot_left_distrib, quot_mul_neg]
 
 @[simp]
-theorem quot_right_distrib (x y z : Pgame) : «expr⟦ ⟧» ((x+y)*z) = «expr⟦ ⟧» (x*z)+«expr⟦ ⟧» (y*z) :=
+theorem quot_right_distrib (x y z : Pgame) : ⟦(x+y)*z⟧ = ⟦x*z⟧+⟦y*z⟧ :=
   by 
     simp only [quot_mul_comm, quot_left_distrib]
 
@@ -461,19 +500,19 @@ theorem right_distrib_equiv (x y z : Pgame) : ((x+y)*z) ≈ (x*z)+y*z :=
   Quotientₓ.exact$ quot_right_distrib _ _ _
 
 @[simp]
-theorem quot_right_distrib_sub (x y z : Pgame) : «expr⟦ ⟧» ((y - z)*x) = «expr⟦ ⟧» (y*x) - «expr⟦ ⟧» (z*x) :=
+theorem quot_right_distrib_sub (x y z : Pgame) : ⟦(y - z)*x⟧ = ⟦y*x⟧ - ⟦z*x⟧ :=
   by 
-    change «expr⟦ ⟧» ((y+-z)*x) = «expr⟦ ⟧» (y*x)+-«expr⟦ ⟧» (z*x)
+    change ⟦(y+-z)*x⟧ = ⟦y*x⟧+-⟦z*x⟧
     rw [quot_right_distrib, quot_neg_mul]
 
 @[simp]
-theorem quot_mul_one : ∀ x : Pgame, «expr⟦ ⟧» (x*1) = «expr⟦ ⟧» x
+theorem quot_mul_one : ∀ x : Pgame, ⟦x*1⟧ = ⟦x⟧
 | mk xl xr xL xR =>
   by 
     let x := mk xl xr xL xR 
     refine' quot_eq_of_mk_quot_eq _ _ _ _
     ·
-      fsplit
+      fconstructor
       ·
         rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩)
         assumption
@@ -487,7 +526,7 @@ theorem quot_mul_one : ∀ x : Pgame, «expr⟦ ⟧» (x*1) = «expr⟦ ⟧» x
         rintro i 
         rfl
     ·
-      fsplit
+      fconstructor
       ·
         rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩)
         assumption
@@ -502,11 +541,11 @@ theorem quot_mul_one : ∀ x : Pgame, «expr⟦ ⟧» (x*1) = «expr⟦ ⟧» x
         rfl
     ·
       rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩)
-      change «expr⟦ ⟧» (((xL i*1)+x*0) - xL i*0) = «expr⟦ ⟧» (xL i)
+      change ⟦((xL i*1)+x*0) - xL i*0⟧ = ⟦xL i⟧
       simp [quot_mul_one]
     ·
       rintro i 
-      change «expr⟦ ⟧» (((xR i*1)+x*0) - xR i*0) = «expr⟦ ⟧» (xR i)
+      change ⟦((xR i*1)+x*0) - xR i*0⟧ = ⟦xR i⟧
       simp [quot_mul_one]
 
 /-- `x * 1` is equivalent to `x`. -/
@@ -514,7 +553,7 @@ theorem mul_one_equiv (x : Pgame) : (x*1) ≈ x :=
   Quotientₓ.exact$ quot_mul_one _
 
 @[simp]
-theorem quot_one_mul (x : Pgame) : «expr⟦ ⟧» (1*x) = «expr⟦ ⟧» x :=
+theorem quot_one_mul (x : Pgame) : ⟦1*x⟧ = ⟦x⟧ :=
   by 
     rw [quot_mul_comm, quot_mul_one x]
 
@@ -522,51 +561,103 @@ theorem quot_one_mul (x : Pgame) : «expr⟦ ⟧» (1*x) = «expr⟦ ⟧» x :=
 theorem one_mul_equiv (x : Pgame) : (1*x) ≈ x :=
   Quotientₓ.exact$ quot_one_mul _
 
--- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem quot_mul_assoc : ∀
-x y z : pgame, «expr = »(«expr⟦ ⟧»(«expr * »(«expr * »(x, y), z)), «expr⟦ ⟧»(«expr * »(x, «expr * »(y, z))))
-| mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR := begin
-  let [ident x] [] [":=", expr mk xl xr xL xR],
-  let [ident y] [] [":=", expr mk yl yr yL yR],
-  let [ident z] [] [":=", expr mk zl zr zL zR],
-  refine [expr quot_eq_of_mk_quot_eq _ _ _ _],
-  { fsplit,
-    { rintro ["(", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ",", "_", "⟩", "|", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ",", "_", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 7 } },
-    { rintro ["(", "⟨", "_", ",", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", "|", "⟨", "_", ",", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 7 } },
-    { rintro ["(", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ",", "_", "⟩", "|", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ",", "_", "⟩", ")"]; refl },
-    { rintro ["(", "⟨", "_", ",", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", "|", "⟨", "_", ",", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", ")"]; refl } },
-  { fsplit,
-    { rintro ["(", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ",", "_", "⟩", "|", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ",", "_", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 7 } },
-    { rintro ["(", "⟨", "_", ",", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", "|", "⟨", "_", ",", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", ")"]; solve_by_elim [] [] ["[", expr sum.inl, ",", expr sum.inr, ",", expr prod.mk, "]"] [] { max_depth := 7 } },
-    { rintro ["(", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ",", "_", "⟩", "|", "⟨", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", ",", "_", "⟩", ")"]; refl },
-    { rintro ["(", "⟨", "_", ",", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", "|", "⟨", "_", ",", "⟨", "_", ",", "_", "⟩", "|", "⟨", "_", ",", "_", "⟩", "⟩", ")"]; refl } },
-  { rintro ["(", "⟨", "⟨", ident i, ",", ident j, "⟩", "|", "⟨", ident i, ",", ident j, "⟩", ",", ident k, "⟩", "|", "⟨", "⟨", ident i, ",", ident j, "⟩", "|", "⟨", ident i, ",", ident j, "⟩", ",", ident k, "⟩", ")"],
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yL j)), «expr * »(xL i, yL j)), z), «expr * »(«expr * »(x, y), zL k)), «expr * »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yL j)), «expr * »(xL i, yL j)), zL k))), «expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xL i, «expr * »(y, z)), «expr * »(x, «expr - »(«expr + »(«expr * »(yL j, z), «expr * »(y, zL k)), «expr * »(yL j, zL k)))), «expr * »(xL i, «expr - »(«expr + »(«expr * »(yL j, z), «expr * »(y, zL k)), «expr * »(yL j, zL k))))))] [] [],
-      simp [] [] [] ["[", expr quot_mul_assoc, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yR j)), «expr * »(xR i, yR j)), z), «expr * »(«expr * »(x, y), zL k)), «expr * »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yR j)), «expr * »(xR i, yR j)), zL k))), «expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xR i, «expr * »(y, z)), «expr * »(x, «expr - »(«expr + »(«expr * »(yR j, z), «expr * »(y, zL k)), «expr * »(yR j, zL k)))), «expr * »(xR i, «expr - »(«expr + »(«expr * »(yR j, z), «expr * »(y, zL k)), «expr * »(yR j, zL k))))))] [] [],
-      simp [] [] [] ["[", expr quot_mul_assoc, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yR j)), «expr * »(xL i, yR j)), z), «expr * »(«expr * »(x, y), zR k)), «expr * »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yR j)), «expr * »(xL i, yR j)), zR k))), «expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xL i, «expr * »(y, z)), «expr * »(x, «expr - »(«expr + »(«expr * »(yR j, z), «expr * »(y, zR k)), «expr * »(yR j, zR k)))), «expr * »(xL i, «expr - »(«expr + »(«expr * »(yR j, z), «expr * »(y, zR k)), «expr * »(yR j, zR k))))))] [] [],
-      simp [] [] [] ["[", expr quot_mul_assoc, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yL j)), «expr * »(xR i, yL j)), z), «expr * »(«expr * »(x, y), zR k)), «expr * »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yL j)), «expr * »(xR i, yL j)), zR k))), «expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xR i, «expr * »(y, z)), «expr * »(x, «expr - »(«expr + »(«expr * »(yL j, z), «expr * »(y, zR k)), «expr * »(yL j, zR k)))), «expr * »(xR i, «expr - »(«expr + »(«expr * »(yL j, z), «expr * »(y, zR k)), «expr * »(yL j, zR k))))))] [] [],
-      simp [] [] [] ["[", expr quot_mul_assoc, "]"] [] [],
-      abel [] [] [] } },
-  { rintro ["(", "⟨", ident i, ",", "⟨", ident j, ",", ident k, "⟩", "|", "⟨", ident j, ",", ident k, "⟩", "⟩", "|", "⟨", ident i, ",", "⟨", ident j, ",", ident k, "⟩", "|", "⟨", ident j, ",", ident k, "⟩", "⟩", ")"],
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yL j)), «expr * »(xL i, yL j)), z), «expr * »(«expr * »(x, y), zR k)), «expr * »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yL j)), «expr * »(xL i, yL j)), zR k))), «expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xL i, «expr * »(y, z)), «expr * »(x, «expr - »(«expr + »(«expr * »(yL j, z), «expr * »(y, zR k)), «expr * »(yL j, zR k)))), «expr * »(xL i, «expr - »(«expr + »(«expr * »(yL j, z), «expr * »(y, zR k)), «expr * »(yL j, zR k))))))] [] [],
-      simp [] [] [] ["[", expr quot_mul_assoc, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yR j)), «expr * »(xL i, yR j)), z), «expr * »(«expr * »(x, y), zL k)), «expr * »(«expr - »(«expr + »(«expr * »(xL i, y), «expr * »(x, yR j)), «expr * »(xL i, yR j)), zL k))), «expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xL i, «expr * »(y, z)), «expr * »(x, «expr - »(«expr + »(«expr * »(yR j, z), «expr * »(y, zL k)), «expr * »(yR j, zL k)))), «expr * »(xL i, «expr - »(«expr + »(«expr * »(yR j, z), «expr * »(y, zL k)), «expr * »(yR j, zL k))))))] [] [],
-      simp [] [] [] ["[", expr quot_mul_assoc, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yL j)), «expr * »(xR i, yL j)), z), «expr * »(«expr * »(x, y), zL k)), «expr * »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yL j)), «expr * »(xR i, yL j)), zL k))), «expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xR i, «expr * »(y, z)), «expr * »(x, «expr - »(«expr + »(«expr * »(yL j, z), «expr * »(y, zL k)), «expr * »(yL j, zL k)))), «expr * »(xR i, «expr - »(«expr + »(«expr * »(yL j, z), «expr * »(y, zL k)), «expr * »(yL j, zL k))))))] [] [],
-      simp [] [] [] ["[", expr quot_mul_assoc, "]"] [] [],
-      abel [] [] [] },
-    { change [expr «expr = »(«expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yR j)), «expr * »(xR i, yR j)), z), «expr * »(«expr * »(x, y), zR k)), «expr * »(«expr - »(«expr + »(«expr * »(xR i, y), «expr * »(x, yR j)), «expr * »(xR i, yR j)), zR k))), «expr⟦ ⟧»(«expr - »(«expr + »(«expr * »(xR i, «expr * »(y, z)), «expr * »(x, «expr - »(«expr + »(«expr * »(yR j, z), «expr * »(y, zR k)), «expr * »(yR j, zR k)))), «expr * »(xR i, «expr - »(«expr + »(«expr * »(yR j, z), «expr * »(y, zR k)), «expr * »(yR j, zR k))))))] [] [],
-      simp [] [] [] ["[", expr quot_mul_assoc, "]"] [] [],
-      abel [] [] [] } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  quot_mul_assoc
+  : ∀ x y z : Pgame , ⟦ x * y * z ⟧ = ⟦ x * y * z ⟧
+  |
+    mk xl xr xL xR , mk yl yr yL yR , mk zl zr zL zR
+    =>
+    by
+      let x := mk xl xr xL xR
+        let y := mk yl yr yL yR
+        let z := mk zl zr zL zR
+        refine' quot_eq_of_mk_quot_eq _ _ _ _
+        ·
+          fconstructor
+            ·
+              rintro ( ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ , _ ⟩ | ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ , _ ⟩ )
+                <;>
+                solveByElim ( config := { max_depth := 7 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+            ·
+              rintro ( ⟨ _ , ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ | ⟨ _ , ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ )
+                <;>
+                solveByElim ( config := { max_depth := 7 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+            · rintro ( ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ , _ ⟩ | ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ , _ ⟩ ) <;> rfl
+            · rintro ( ⟨ _ , ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ | ⟨ _ , ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ ) <;> rfl
+        ·
+          fconstructor
+            ·
+              rintro ( ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ , _ ⟩ | ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ , _ ⟩ )
+                <;>
+                solveByElim ( config := { max_depth := 7 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+            ·
+              rintro ( ⟨ _ , ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ | ⟨ _ , ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ )
+                <;>
+                solveByElim ( config := { max_depth := 7 } ) [ Sum.inl , Sum.inr , Prod.mk ]
+            · rintro ( ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ , _ ⟩ | ⟨ ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ , _ ⟩ ) <;> rfl
+            · rintro ( ⟨ _ , ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ | ⟨ _ , ⟨ _ , _ ⟩ | ⟨ _ , _ ⟩ ⟩ ) <;> rfl
+        ·
+          rintro ( ⟨ ⟨ i , j ⟩ | ⟨ i , j ⟩ , k ⟩ | ⟨ ⟨ i , j ⟩ | ⟨ i , j ⟩ , k ⟩ )
+            ·
+              change
+                  ⟦ xL i * y + x * yL j - xL i * yL j * z + x * y * zL k - xL i * y + x * yL j - xL i * yL j * zL k ⟧
+                    =
+                    ⟦ xL i * y * z + x * yL j * z + y * zL k - yL j * zL k - xL i * yL j * z + y * zL k - yL j * zL k ⟧
+                simp [ quot_mul_assoc ]
+                abel
+            ·
+              change
+                  ⟦ xR i * y + x * yR j - xR i * yR j * z + x * y * zL k - xR i * y + x * yR j - xR i * yR j * zL k ⟧
+                    =
+                    ⟦ xR i * y * z + x * yR j * z + y * zL k - yR j * zL k - xR i * yR j * z + y * zL k - yR j * zL k ⟧
+                simp [ quot_mul_assoc ]
+                abel
+            ·
+              change
+                  ⟦ xL i * y + x * yR j - xL i * yR j * z + x * y * zR k - xL i * y + x * yR j - xL i * yR j * zR k ⟧
+                    =
+                    ⟦ xL i * y * z + x * yR j * z + y * zR k - yR j * zR k - xL i * yR j * z + y * zR k - yR j * zR k ⟧
+                simp [ quot_mul_assoc ]
+                abel
+            ·
+              change
+                  ⟦ xR i * y + x * yL j - xR i * yL j * z + x * y * zR k - xR i * y + x * yL j - xR i * yL j * zR k ⟧
+                    =
+                    ⟦ xR i * y * z + x * yL j * z + y * zR k - yL j * zR k - xR i * yL j * z + y * zR k - yL j * zR k ⟧
+                simp [ quot_mul_assoc ]
+                abel
+        ·
+          rintro ( ⟨ i , ⟨ j , k ⟩ | ⟨ j , k ⟩ ⟩ | ⟨ i , ⟨ j , k ⟩ | ⟨ j , k ⟩ ⟩ )
+            ·
+              change
+                  ⟦ xL i * y + x * yL j - xL i * yL j * z + x * y * zR k - xL i * y + x * yL j - xL i * yL j * zR k ⟧
+                    =
+                    ⟦ xL i * y * z + x * yL j * z + y * zR k - yL j * zR k - xL i * yL j * z + y * zR k - yL j * zR k ⟧
+                simp [ quot_mul_assoc ]
+                abel
+            ·
+              change
+                  ⟦ xL i * y + x * yR j - xL i * yR j * z + x * y * zL k - xL i * y + x * yR j - xL i * yR j * zL k ⟧
+                    =
+                    ⟦ xL i * y * z + x * yR j * z + y * zL k - yR j * zL k - xL i * yR j * z + y * zL k - yR j * zL k ⟧
+                simp [ quot_mul_assoc ]
+                abel
+            ·
+              change
+                  ⟦ xR i * y + x * yL j - xR i * yL j * z + x * y * zL k - xR i * y + x * yL j - xR i * yL j * zL k ⟧
+                    =
+                    ⟦ xR i * y * z + x * yL j * z + y * zL k - yL j * zL k - xR i * yL j * z + y * zL k - yL j * zL k ⟧
+                simp [ quot_mul_assoc ]
+                abel
+            ·
+              change
+                  ⟦ xR i * y + x * yR j - xR i * yR j * z + x * y * zR k - xR i * y + x * yR j - xR i * yR j * zR k ⟧
+                    =
+                    ⟦ xR i * y * z + x * yR j * z + y * zR k - yR j * zR k - xR i * yR j * z + y * zR k - yR j * zR k ⟧
+                simp [ quot_mul_assoc ]
+                abel
 
 /-- `x * y * z` is equivalent to `x * (y * z).`-/
 theorem mul_assoc_equiv (x y z : Pgame) : ((x*y)*z) ≈ x*y*z :=

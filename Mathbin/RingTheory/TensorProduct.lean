@@ -188,13 +188,16 @@ def assoc : (M ⊗[A] P) ⊗[R] N ≃ₗ[A] M ⊗[A] P ⊗[R] N :=
     (TensorProduct.uncurry A _ _ _$
       comp (uncurry R A _ _ _)$
         by 
-          apply TensorProduct.curry <;> exact mk R A _ _)
+          apply TensorProduct.curry 
+          exact mk R A _ _)
     (by 
       ext 
       rfl)
     (by 
       ext 
-      rfl)
+      simp only [curry_apply, TensorProduct.curry_apply, mk_apply, TensorProduct.mk_apply, uncurry_apply,
+        TensorProduct.uncurry_apply, id_apply, lift_tmul, compr₂_apply, restrict_scalars_apply, Function.comp_app,
+        to_fun_eq_coe, lcurry_apply, LinearMap.comp_apply])
 
 end CommSemiringₓ
 
@@ -393,17 +396,19 @@ theorem mul_assocₓ (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
       simp only [mul_apply, mul_assocₓ])
     x y z
 
--- error in RingTheory.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem one_mul (x : «expr ⊗[ ] »(A, R, B)) : «expr = »(mul «expr ⊗ₜ »(1, 1) x, x) :=
-begin
-  apply [expr tensor_product.induction_on x]; simp [] [] [] [] [] [] { contextual := tt }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  one_mulₓ
+  ( x : A ⊗[ R ] B ) : mul 1 ⊗ₜ 1 x = x
+  := by apply TensorProduct.induction_on x <;> simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
 
--- error in RingTheory.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_one (x : «expr ⊗[ ] »(A, R, B)) : «expr = »(mul x «expr ⊗ₜ »(1, 1), x) :=
-begin
-  apply [expr tensor_product.induction_on x]; simp [] [] [] [] [] [] { contextual := tt }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mul_oneₓ
+  ( x : A ⊗[ R ] B ) : mul x 1 ⊗ₜ 1 = x
+  := by apply TensorProduct.induction_on x <;> simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
 
 instance : Semiringₓ (A ⊗[R] B) :=
   { (by 
@@ -720,38 +725,39 @@ def alg_equiv_of_linear_equiv_triple_tensor_product (f : (A ⊗[R] B) ⊗[R] C �
         by 
           apply TensorProduct.induction_on x
           ·
-            simp 
+            simp only [map_zero, zero_mul]
           ·
             intro ab₁ c₁ 
             apply TensorProduct.induction_on y
             ·
-              simp 
+              simp only [map_zero, mul_zero]
             ·
               intro ab₂ c₂ 
               apply TensorProduct.induction_on ab₁
               ·
-                simp 
+                simp only [zero_tmul, map_zero, zero_mul]
               ·
                 intro a₁ b₁ 
                 apply TensorProduct.induction_on ab₂
                 ·
-                  simp 
+                  simp only [zero_tmul, map_zero, mul_zero]
                 ·
-                  simp [w₁]
+                  intros 
+                  simp only [tmul_mul_tmul, w₁]
                 ·
                   intro x₁ x₂ h₁ h₂ 
-                  simp  at h₁ h₂ 
-                  simp [mul_addₓ, add_tmul, h₁, h₂]
+                  simp only [tmul_mul_tmul] at h₁ h₂ 
+                  simp only [tmul_mul_tmul, mul_addₓ, add_tmul, map_add, h₁, h₂]
               ·
                 intro x₁ x₂ h₁ h₂ 
-                simp  at h₁ h₂ 
-                simp [add_mulₓ, add_tmul, h₁, h₂]
+                simp only [tmul_mul_tmul] at h₁ h₂ 
+                simp only [tmul_mul_tmul, add_mulₓ, add_tmul, map_add, h₁, h₂]
             ·
               intro x₁ x₂ h₁ h₂ 
-              simp [mul_addₓ, add_mulₓ, h₁, h₂]
+              simp only [tmul_mul_tmul, map_add, mul_addₓ, add_mulₓ, h₁, h₂]
           ·
             intro x₁ x₂ h₁ h₂ 
-            simp [mul_addₓ, add_mulₓ, h₁, h₂],
+            simp only [tmul_mul_tmul, map_add, mul_addₓ, add_mulₓ, h₁, h₂],
     commutes' :=
       fun r =>
         by 

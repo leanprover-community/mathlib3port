@@ -29,19 +29,32 @@ variable {α β γ : Type _}
 
 open Set
 
-/-- We say that `g : β → α` is an order right adjoint function for `f : α → β` if it sends each `y`
-to a least upper bound for `{x | f x ≤ y}`. If `α` is a partial order, and `f : α → β` has
-a right adjoint, then this right adjoint is unique. -/
-def IsOrderRightAdjoint [Preorderₓ α] [Preorderₓ β] (f : α → β) (g : β → α) :=
-  ∀ y, IsLub { x | f x ≤ y } (g y)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    We say that `g : β → α` is an order right adjoint function for `f : α → β` if it sends each `y`
+    to a least upper bound for `{x | f x ≤ y}`. If `α` is a partial order, and `f : α → β` has
+    a right adjoint, then this right adjoint is unique. -/
+  def IsOrderRightAdjoint [ Preorderₓ α ] [ Preorderₓ β ] ( f : α → β ) ( g : β → α ) := ∀ y , IsLub { x | f x ≤ y } g y
 
-theorem is_order_right_adjoint_Sup [CompleteLattice α] [Preorderₓ β] (f : α → β) :
-  IsOrderRightAdjoint f fun y => Sup { x | f x ≤ y } :=
-  fun y => is_lub_Sup _
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_order_right_adjoint_Sup
+  [ CompleteLattice α ] [ Preorderₓ β ] ( f : α → β ) : IsOrderRightAdjoint f fun y => Sup { x | f x ≤ y }
+  := fun y => is_lub_Sup _
 
-theorem is_order_right_adjoint_cSup [ConditionallyCompleteLattice α] [Preorderₓ β] (f : α → β) (hne : ∀ y, ∃ x, f x ≤ y)
-  (hbdd : ∀ y, BddAbove { x | f x ≤ y }) : IsOrderRightAdjoint f fun y => Sup { x | f x ≤ y } :=
-  fun y => is_lub_cSup (hne y) (hbdd y)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_order_right_adjoint_cSup
+  [ ConditionallyCompleteLattice α ]
+      [ Preorderₓ β ]
+      ( f : α → β )
+      ( hne : ∀ y , ∃ x , f x ≤ y )
+      ( hbdd : ∀ y , BddAbove { x | f x ≤ y } )
+    : IsOrderRightAdjoint f fun y => Sup { x | f x ≤ y }
+  := fun y => is_lub_cSup hne y hbdd y
 
 namespace IsOrderRightAdjoint
 
@@ -58,47 +71,59 @@ theorem order_iso_comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {f : �
     by 
       simpa [e.le_symm_apply] using h (e.symm y)
 
-theorem comp_order_iso [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
-  (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) :=
-  by 
-    intro y 
-    change IsLub (e ⁻¹' { x | f x ≤ y }) (e.symm (g y))
-    rw [e.is_lub_preimage, e.apply_symm_apply]
-    exact h y
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  comp_order_iso
+  [ Preorderₓ α ]
+      [ Preorderₓ β ]
+      [ Preorderₓ γ ]
+      { f : α → β }
+      { g : β → α }
+      ( h : IsOrderRightAdjoint f g )
+      ( e : γ ≃o α )
+    : IsOrderRightAdjoint f ∘ e e.symm ∘ g
+  := by intro y change IsLub e ⁻¹' { x | f x ≤ y } e.symm g y rw [ e.is_lub_preimage , e.apply_symm_apply ] exact h y
 
 end IsOrderRightAdjoint
 
 namespace Function
 
-/-- If an order automorphism `fa` is semiconjugate to an order embedding `fb` by a function `g`
-and `g'` is an order right adjoint of `g` (i.e. `g' y = Sup {x | f x ≤ y}`), then `fb` is
-semiconjugate to `fa` by `g'`.
-
-This is a version of Proposition 2.1 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
-cohomologie bornee][ghys87:groupes]. -/
-theorem semiconj.symm_adjoint [PartialOrderₓ α] [Preorderₓ β] {fa : α ≃o α} {fb : β ↪o β} {g : α → β}
-  (h : Function.Semiconj g fa fb) {g' : β → α} (hg' : IsOrderRightAdjoint g g') : Function.Semiconj g' fb fa :=
-  by 
-    refine' fun y => (hg' _).unique _ 
-    rw [←fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
-    simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    If an order automorphism `fa` is semiconjugate to an order embedding `fb` by a function `g`
+    and `g'` is an order right adjoint of `g` (i.e. `g' y = Sup {x | f x ≤ y}`), then `fb` is
+    semiconjugate to `fa` by `g'`.
+    
+    This is a version of Proposition 2.1 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
+    cohomologie bornee][ghys87:groupes]. -/
+  theorem
+    semiconj.symm_adjoint
+    [ PartialOrderₓ α ]
+        [ Preorderₓ β ]
+        { fa : α ≃o α }
+        { fb : β ↪o β }
+        { g : α → β }
+        ( h : Function.Semiconj g fa fb )
+        { g' : β → α }
+        ( hg' : IsOrderRightAdjoint g g' )
+      : Function.Semiconj g' fb fa
+    :=
+      by
+        refine' fun y => hg' _ . unique _
+          rw [ ← fa.surjective.image_preimage { x | g x ≤ fb y } , preimage_set_of_eq ]
+          simp only [ h.eq , fb.le_iff_le , fa.left_ord_continuous hg' _ ]
 
 variable {G : Type _}
 
--- error in Order.SemiconjSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem semiconj_of_is_lub
-[partial_order α]
-[group G]
-(f₁ f₂ : «expr →* »(G, «expr ≃o »(α, α)))
-{h : α → α}
-(H : ∀ x, is_lub (range (λ g', «expr ⁻¹»(f₁ g') (f₂ g' x))) (h x))
-(g : G) : function.semiconj h (f₂ g) (f₁ g) :=
-begin
-  refine [expr λ y, (H _).unique _],
-  have [] [] [":=", expr (f₁ g).left_ord_continuous (H y)],
-  rw ["[", "<-", expr range_comp, ",", "<-", expr (equiv.mul_right g).surjective.range_comp _, "]"] ["at", ident this],
-  simpa [] [] [] ["[", expr («expr ∘ »), "]"] [] ["using", expr this]
-end
+theorem semiconj_of_is_lub [PartialOrderₓ α] [Groupₓ G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
+  (H : ∀ x, IsLub (range fun g' => (f₁ g'⁻¹) (f₂ g' x)) (h x)) (g : G) : Function.Semiconj h (f₂ g) (f₁ g) :=
+  by 
+    refine' fun y => (H _).unique _ 
+    have  := (f₁ g).LeftOrdContinuous (H y)
+    rw [←range_comp, ←(Equivₓ.mulRight g).Surjective.range_comp _] at this 
+    simpa [· ∘ ·] using this
 
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a complete lattice by order
 isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconjugates each `f₁ g'` to `f₂ g'`.
@@ -106,7 +131,7 @@ isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconju
 This is a version of Proposition 5.4 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
 cohomologie bornee][ghys87:groupes]. -/
 theorem Sup_div_semiconj [CompleteLattice α] [Groupₓ G] (f₁ f₂ : G →* α ≃o α) (g : G) :
-  Function.Semiconj (fun x => ⨆g' : G, (f₁ g'⁻¹) (f₂ g' x)) (f₂ g) (f₁ g) :=
+  Function.Semiconj (fun x => ⨆ g' : G, (f₁ g'⁻¹) (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_is_lub f₁ f₂ (fun x => is_lub_supr) _
 
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a conditionally complete lattice by order
@@ -117,7 +142,7 @@ This is a version of Proposition 5.4 from [Étienne Ghys, Groupes d'homeomorphis
 cohomologie bornee][ghys87:groupes]. -/
 theorem cSup_div_semiconj [ConditionallyCompleteLattice α] [Groupₓ G] (f₁ f₂ : G →* α ≃o α)
   (hbdd : ∀ x, BddAbove (range$ fun g => (f₁ g⁻¹) (f₂ g x))) (g : G) :
-  Function.Semiconj (fun x => ⨆g' : G, (f₁ g'⁻¹) (f₂ g' x)) (f₂ g) (f₁ g) :=
+  Function.Semiconj (fun x => ⨆ g' : G, (f₁ g'⁻¹) (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_is_lub f₁ f₂ (fun x => is_lub_cSup (range_nonempty _) (hbdd x)) _
 
 end Function

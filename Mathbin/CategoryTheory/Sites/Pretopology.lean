@@ -26,7 +26,7 @@ coverage, pretopology, site
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -91,6 +91,7 @@ instance : OrderTop (pretopology C) :=
 instance : Inhabited (pretopology C) :=
   ⟨⊤⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (R «expr ∈ » K X)
 /--
 A pretopology `K` can be completed to a Grothendieck topology `J` by declaring a sieve to be
 `J`-covering if it contains a family in `K`.
@@ -116,6 +117,7 @@ def to_grothendieck (K : pretopology C) : grothendieck_topology C :=
         rintro Y _ ⟨Z, g, f, hg, hf, rfl⟩
         apply t₃ (RS _ hg) _ hf }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (R «expr ∈ » K X)
 theorem mem_to_grothendieck (K : pretopology C) X S :
   S ∈ to_grothendieck C K X ↔ ∃ (R : _)(_ : R ∈ K X), R ≤ (S : presieve X) :=
   Iff.rfl
@@ -159,7 +161,7 @@ def gi : GaloisInsertion (to_grothendieck C) (of_grothendieck C) :=
   { gc :=
       fun K J =>
         by 
-          split 
+          constructor
           ·
             intro h X R hR 
             exact h _ ⟨_, hR, sieve.le_generate R⟩
@@ -210,7 +212,7 @@ def trivialₓ : pretopology C :=
           skip 
           infer_instance 
         ext W k 
-        split 
+        constructor
         ·
           rintro ⟨V, h, k, ⟨_⟩, hh, rfl⟩
           rw [hTi] at hh 

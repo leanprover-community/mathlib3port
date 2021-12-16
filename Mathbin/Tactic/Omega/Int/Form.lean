@@ -12,15 +12,15 @@ unsafe inductive exprform
   | Or : exprform → exprform → exprform
   | And : exprform → exprform → exprform
 
--- error in Tactic.Omega.Int.Form: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Intermediate shadow syntax for LIA formulas that includes non-canonical terms -/
-@[derive #[expr has_reflect], derive #[expr inhabited]]
 inductive preform
-| eq : preterm → preterm → preform
-| le : preterm → preterm → preform
-| not : preform → preform
-| or : preform → preform → preform
-| and : preform → preform → preform
+  | Eq : preterm → preterm → preform
+  | le : preterm → preterm → preform
+  | Not : preform → preform
+  | Or : preform → preform → preform
+  | And : preform → preform → preform deriving [anonymous], [anonymous]
 
 localized [Omega.Int] notation x " =* " y => Omega.Int.Preform.eq x y
 
@@ -74,7 +74,7 @@ def Implies (p q : preform) : Prop :=
   ∀ v, holds v p → holds v q
 
 /-- equiv p q := under any valuation, p holds iff q holds -/
-def Equiv (p q : preform) : Prop :=
+def Equivₓ (p q : preform) : Prop :=
   ∀ v, holds v p ↔ holds v q
 
 theorem sat_of_implies_of_sat {p q : preform} : Implies p q → sat p → sat q :=
@@ -121,6 +121,7 @@ theorem valid_of_unsat_not {p : preform} : (¬* p).Unsat → p.valid :=
     intro h 
     assumption
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

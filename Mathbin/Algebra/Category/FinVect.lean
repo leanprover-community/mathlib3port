@@ -18,7 +18,7 @@ category.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory ModuleCat.monoidalCategory
 
@@ -28,11 +28,11 @@ universe u
 
 variable (K : Type u) [Field K]
 
--- error in Algebra.Category.FinVect: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)
 /-- Define `FinVect` as the subtype of `Module.{u} K` of finite dimensional vector spaces. -/
-@[derive #["[", expr category, ",", expr λ α, has_coe_to_sort α (Sort*), "]"]]
 def FinVect :=
-{V : Module.{u} K // finite_dimensional K V}
+  { V : ModuleCat.{u} K // FiniteDimensional K V }deriving [anonymous], [anonymous]
 
 namespace FinVect
 
@@ -77,7 +77,7 @@ def FinVect_coevaluation : 𝟙_ (FinVect K) ⟶ V ⊗ FinVect_dual K V :=
 
 theorem FinVect_coevaluation_apply_one :
   FinVect_coevaluation K V (1 : K) =
-    ∑i : Basis.OfVectorSpaceIndex K V, (Basis.ofVectorSpace K V) i ⊗ₜ[K] (Basis.ofVectorSpace K V).Coord i :=
+    ∑ i : Basis.OfVectorSpaceIndex K V, (Basis.ofVectorSpace K V) i ⊗ₜ[K] (Basis.ofVectorSpace K V).Coord i :=
   by 
     apply coevaluation_apply_one K V
 

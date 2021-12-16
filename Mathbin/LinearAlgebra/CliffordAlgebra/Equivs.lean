@@ -99,7 +99,7 @@ theorem involute_eq_id : (involute : CliffordAlgebra (0 : QuadraticForm R Unit) 
     simp 
 
 /-- The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
-protected def Equiv : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
+protected def Equivₓ : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
   AlgEquiv.ofAlgHom
     (CliffordAlgebra.lift (0 : QuadraticForm R Unit)$
       ⟨0, fun m : Unit => (zero_mul (0 : R)).trans (algebraMap R _).map_zero.symm⟩)
@@ -143,18 +143,18 @@ def to_complex : CliffordAlgebra Q →ₐ[ℝ] ℂ :=
 theorem to_complex_ι (r : ℝ) : to_complex (ι Q r) = r • Complex.i :=
   CliffordAlgebra.lift_ι_apply _ _ r
 
--- error in LinearAlgebra.CliffordAlgebra.Equivs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `clifford_algebra.involute` is analogous to `complex.conj`. -/
 @[simp]
-theorem to_complex_involute (c : clifford_algebra Q) : «expr = »(to_complex c.involute, exprconj() (to_complex c)) :=
-begin
-  have [] [":", expr «expr = »(to_complex (involute (ι Q 1)), exprconj() (to_complex (ι Q 1)))] [],
-  { simp [] [] ["only"] ["[", expr involute_ι, ",", expr to_complex_ι, ",", expr alg_hom.map_neg, ",", expr one_smul, ",", expr complex.conj_I, "]"] [] [] },
-  suffices [] [":", expr «expr = »(to_complex.comp involute, complex.conj_ae.to_alg_hom.comp to_complex)],
-  { exact [expr alg_hom.congr_fun this c] },
-  ext [] [] [":", 2],
-  exact [expr this]
-end
+theorem to_complex_involute (c : CliffordAlgebra Q) : to_complex c.involute = conj (to_complex c) :=
+  by 
+    have  : to_complex (involute (ι Q 1)) = conj (to_complex (ι Q 1))
+    ·
+      simp only [involute_ι, to_complex_ι, AlgHom.map_neg, one_smul, Complex.conj_I]
+    suffices  : to_complex.comp involute = complex.conj_ae.to_alg_hom.comp to_complex
+    ·
+      exact AlgHom.congr_fun this c 
+    ext : 2 
+    exact this
 
 /-- Intermediate result for `clifford_algebra_complex.equiv`: `ℂ` can be converted to
 `clifford_algebra_complex.Q` above can be converted to. -/
@@ -193,7 +193,7 @@ theorem of_complex_to_complex (c : CliffordAlgebra Q) : of_complex (to_complex c
 /-- The clifford algebras over `clifford_algebra_complex.Q` is isomorphic as an `ℝ`-algebra to
 `ℂ`. -/
 @[simps]
-protected def Equiv : CliffordAlgebra Q ≃ₐ[ℝ] ℂ :=
+protected def Equivₓ : CliffordAlgebra Q ≃ₐ[ℝ] ℂ :=
   AlgEquiv.ofAlgHom to_complex of_complex to_complex_comp_of_complex of_complex_comp_to_complex
 
 /-- The clifford algebra is commutative since it is isomorphic to the complex numbers.
@@ -357,7 +357,7 @@ theorem to_quaternion_of_quaternion (q : ℍ[R,c₁,c₂]) : to_quaternion (of_q
 /-- The clifford algebra over `clifford_algebra_quaternion.Q c₁ c₂` is isomorphic as an `R`-algebra
 to `ℍ[R,c₁,c₂]`. -/
 @[simps]
-protected def Equiv : CliffordAlgebra (Q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :=
+protected def Equivₓ : CliffordAlgebra (Q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :=
   AlgEquiv.ofAlgHom to_quaternion of_quaternion to_quaternion_comp_of_quaternion of_quaternion_comp_to_quaternion
 
 /-- The quaternion conjugate maps to the "clifford conjugate" (aka

@@ -157,6 +157,7 @@ section TopologicalFiberBundle
 
 variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z → B}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » source)
 /-- This structure contains the information left for a local trivialization (which is implemented
 below as `trivialization F proj`) if the total space has not been given a topology, but we
 have a topology on both the fiber and the base space. Through the construction
@@ -181,7 +182,7 @@ instance : CoeFun (pretrivialization F proj) fun _ => Z → B × F :=
 variable {F} (e : pretrivialization F proj) {x : Z}
 
 @[simp, mfld_simps]
-theorem coe_coe : «expr⇑ » e.to_local_equiv = e :=
+theorem coe_coe : ⇑e.to_local_equiv = e :=
   rfl
 
 @[simp, mfld_simps]
@@ -212,14 +213,10 @@ theorem mem_target {x : B × F} : x ∈ e.target ↔ x.1 ∈ e.base_set :=
   by 
     rw [e.target_eq, prod_univ, mem_preimage]
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem proj_symm_apply
-{x : «expr × »(B, F)}
-(hx : «expr ∈ »(x, e.target)) : «expr = »(proj (e.to_local_equiv.symm x), x.1) :=
-begin
-  have [] [] [":=", expr (e.coe_fst (e.to_local_equiv.map_target hx)).symm],
-  rwa ["[", "<-", expr e.coe_coe, ",", expr e.to_local_equiv.right_inv hx, "]"] ["at", ident this]
-end
+theorem proj_symm_apply {x : B × F} (hx : x ∈ e.target) : proj (e.to_local_equiv.symm x) = x.1 :=
+  by 
+    have  := (e.coe_fst (e.to_local_equiv.map_target hx)).symm 
+    rwa [←e.coe_coe, e.to_local_equiv.right_inv hx] at this
 
 theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.base_set) : proj (e.to_local_equiv.symm (b, x)) = b :=
   e.proj_symm_apply (e.mem_target.2 hx)
@@ -264,6 +261,7 @@ end TopologicalFiberBundle.Pretrivialization
 
 variable [TopologicalSpace Z]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » source)
 /--
 A structure extending local homeomorphisms, defining a local trivialization of a projection
 `proj : Z → B` with fiber `F`, as a local homeomorphism between `Z` and `B × F` defined between two
@@ -294,7 +292,7 @@ instance : Coe (trivialization F proj) (pretrivialization F proj) :=
   ⟨to_pretrivialization⟩
 
 @[simp, mfld_simps]
-theorem coe_coe : «expr⇑ » e.to_local_homeomorph = e :=
+theorem coe_coe : ⇑e.to_local_homeomorph = e :=
   rfl
 
 @[simp, mfld_simps]
@@ -538,7 +536,7 @@ def coord_change_homeomorph (e₁ e₂ : trivialization F proj) {b : B} (h₁ : 
 
 @[simp]
 theorem coord_change_homeomorph_coe (e₁ e₂ : trivialization F proj) {b : B} (h₁ : b ∈ e₁.base_set)
-  (h₂ : b ∈ e₂.base_set) : «expr⇑ » (e₁.coord_change_homeomorph e₂ h₁ h₂) = e₁.coord_change e₂ b :=
+  (h₂ : b ∈ e₂.base_set) : ⇑e₁.coord_change_homeomorph e₂ h₁ h₂ = e₁.coord_change e₂ b :=
   rfl
 
 end TopologicalFiberBundle.Trivialization
@@ -549,62 +547,90 @@ open_locale Classical
 
 variable {B' : Type _} [TopologicalSpace B']
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Given a bundle trivialization of `proj : Z → B` and a continuous map `f : B' → B`,
-construct a bundle trivialization of `φ : {p : B' × Z | f p.1 = proj p.2} → B'`
-given by `φ x = (x : B' × Z).1`. -/
-noncomputable
-def topological_fiber_bundle.trivialization.comap
-(e : trivialization F proj)
-(f : B' → B)
-(hf : continuous f)
-(b' : B')
-(hb' : «expr ∈ »(f b', e.base_set)) : trivialization F (λ
- x : {p : «expr × »(B', Z) | «expr = »(f p.1, proj p.2)}, (x : «expr × »(B', Z)).1) :=
-{ to_fun := λ p, ((p : «expr × »(B', Z)).1, (e (p : «expr × »(B', Z)).2).2),
-  inv_fun := λ
-  p, if h : «expr ∈ »(f p.1, e.base_set) then ⟨⟨p.1, e.to_local_homeomorph.symm (f p.1, p.2)⟩, by simp [] [] [] ["[", expr e.proj_symm_apply' h, "]"] [] []⟩ else ⟨⟨b', e.to_local_homeomorph.symm (f b', p.2)⟩, by simp [] [] [] ["[", expr e.proj_symm_apply' hb', "]"] [] []⟩,
-  source := {p | «expr ∈ »(f (p : «expr × »(B', Z)).1, e.base_set)},
-  target := {p | «expr ∈ »(f p.1, e.base_set)},
-  map_source' := λ p hp, hp,
-  map_target' := λ (p) (hp : «expr ∈ »(f p.1, e.base_set)), by simp [] [] [] ["[", expr hp, "]"] [] [],
-  left_inv' := begin
-    rintro ["⟨", "⟨", ident b, ",", ident x, "⟩", ",", ident hbx, "⟩", ident hb],
-    dsimp [] [] [] ["at", "*"],
-    have [ident hx] [":", expr «expr ∈ »(x, e.source)] [],
-    from [expr e.mem_source.2 «expr ▸ »(hbx, hb)],
-    ext [] [] []; simp [] [] [] ["*"] [] []
-  end,
-  right_inv' := λ
-  (p)
-  (hp : «expr ∈ »(f p.1, e.base_set)), by simp [] [] [] ["[", "*", ",", expr e.apply_symm_apply', "]"] [] [],
-  open_source := e.open_base_set.preimage «expr $ »(hf.comp, continuous_fst.comp continuous_subtype_coe),
-  open_target := e.open_base_set.preimage (hf.comp continuous_fst),
-  continuous_to_fun := «expr $ »((continuous_fst.comp continuous_subtype_coe).continuous_on.prod, «expr $ »(continuous_snd.comp_continuous_on, «expr $ »(e.continuous_to_fun.comp (continuous_snd.comp continuous_subtype_coe).continuous_on, by { rintro ["⟨", "⟨", ident b, ",", ident x, "⟩", ",", "(", ident hbx, ":", expr «expr = »(f b, proj x), ")", "⟩", "(", ident hb, ":", expr «expr ∈ »(f b, e.base_set), ")"],
-       rw [expr hbx] ["at", ident hb],
-       exact [expr e.mem_source.2 hb] }))),
-  continuous_inv_fun := begin
-    rw ["[", expr embedding_subtype_coe.continuous_on_iff, "]"] [],
-    suffices [] [":", expr continuous_on (λ
-      p : «expr × »(B', F), (p.1, e.to_local_homeomorph.symm (f p.1, p.2))) {p : «expr × »(B', F) | «expr ∈ »(f p.1, e.base_set)}],
-    { refine [expr this.congr (λ (p) (hp : «expr ∈ »(f p.1, e.base_set)), _)],
-      simp [] [] [] ["[", expr hp, "]"] [] [] },
-    { refine [expr continuous_on_fst.prod (e.to_local_homeomorph.symm.continuous_on.comp _ _)],
-      { exact [expr ((hf.comp continuous_fst).prod_mk continuous_snd).continuous_on] },
-      { exact [expr λ p hp, e.mem_target.2 hp] } }
-  end,
-  base_set := «expr ⁻¹' »(f, e.base_set),
-  source_eq := rfl,
-  target_eq := by { ext [] [] [],
-    simp [] [] [] [] [] [] },
-  open_base_set := e.open_base_set.preimage hf,
-  proj_to_fun := λ _ _, rfl }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      Given a bundle trivialization of `proj : Z → B` and a continuous map `f : B' → B`,
+      construct a bundle trivialization of `φ : {p : B' × Z | f p.1 = proj p.2} → B'`
+      given by `φ x = (x : B' × Z).1`. -/
+    noncomputable
+  def
+    TopologicalFiberBundle.Trivialization.comap
+    ( e : trivialization F proj ) ( f : B' → B ) ( hf : Continuous f ) ( b' : B' ) ( hb' : f b' ∈ e.base_set )
+      : trivialization F fun x : { p : B' × Z | f p . 1 = proj p . 2 } => ( x : B' × Z ) . 1
+    :=
+      {
+        toFun := fun p => ( ( p : B' × Z ) . 1 , e ( p : B' × Z ) . 2 . 2 ) ,
+          invFun
+              :=
+              fun
+                p
+                  =>
+                  if
+                    h
+                    :
+                    f p . 1 ∈ e.base_set
+                    then
+                    ⟨ ⟨ p . 1 , e.to_local_homeomorph.symm ( f p . 1 , p . 2 ) ⟩ , by simp [ e.proj_symm_apply' h ] ⟩
+                    else
+                    ⟨ ⟨ b' , e.to_local_homeomorph.symm ( f b' , p . 2 ) ⟩ , by simp [ e.proj_symm_apply' hb' ] ⟩
+            ,
+          Source := { p | f ( p : B' × Z ) . 1 ∈ e.base_set } ,
+          Target := { p | f p . 1 ∈ e.base_set } ,
+          map_source' := fun p hp => hp ,
+          map_target' := fun p hp : f p . 1 ∈ e.base_set => by simp [ hp ] ,
+          left_inv'
+              :=
+              by
+                rintro ⟨ ⟨ b , x ⟩ , hbx ⟩ hb
+                  dsimp at *
+                  have hx : x ∈ e.source
+                  exact e.mem_source . 2 hbx ▸ hb
+                  ext <;> simp
+            ,
+          right_inv' := fun p hp : f p . 1 ∈ e.base_set => by simp [ e.apply_symm_apply' ] ,
+          open_source := e.open_base_set.preimage hf.comp $ continuous_fst . comp continuous_subtype_coe ,
+          open_target := e.open_base_set.preimage hf.comp continuous_fst ,
+          continuous_to_fun
+              :=
+              continuous_fst . comp continuous_subtype_coe . ContinuousOn . Prod
+                $
+                continuous_snd . comp_continuous_on
+                  $
+                  e.continuous_to_fun.comp continuous_snd . comp continuous_subtype_coe . ContinuousOn
+                    $
+                    by
+                      rintro ⟨ ⟨ b , x ⟩ , hbx : f b = proj x ⟩ ( hb : f b ∈ e.base_set )
+                        rw [ hbx ] at hb
+                        exact e.mem_source . 2 hb
+            ,
+          continuous_inv_fun
+              :=
+              by
+                rw [ embedding_subtype_coe.continuous_on_iff ]
+                  suffices
+                    :
+                      ContinuousOn
+                        fun p : B' × F => ( p . 1 , e.to_local_homeomorph.symm ( f p . 1 , p . 2 ) )
+                          { p : B' × F | f p . 1 ∈ e.base_set }
+                  · refine' this.congr fun p hp : f p . 1 ∈ e.base_set => _ simp [ hp ]
+                  ·
+                    refine' continuous_on_fst.prod e.to_local_homeomorph.symm.continuous_on.comp _ _
+                      · exact hf.comp continuous_fst . prod_mk continuous_snd . ContinuousOn
+                      · exact fun p hp => e.mem_target . 2 hp
+            ,
+          BaseSet := f ⁻¹' e.base_set ,
+          source_eq := rfl ,
+          target_eq := by ext simp ,
+          open_base_set := e.open_base_set.preimage hf ,
+          proj_to_fun := fun _ _ => rfl
+        }
 
 /-- If `proj : Z → B` is a topological fiber bundle with fiber `F` and `f : B' → B` is a continuous
 map, then the pullback bundle (a.k.a. induced bundle) is the topological bundle with the total space
 `{(x, y) : B' × Z | f x = proj y}` given by `λ ⟨(x, y), h⟩, x`. -/
 theorem IsTopologicalFiberBundle.comap (h : IsTopologicalFiberBundle F proj) {f : B' → B} (hf : Continuous f) :
-  IsTopologicalFiberBundle F fun x : { p:B' × Z | f p.1 = proj p.2 } => (x : B' × Z).1 :=
+  IsTopologicalFiberBundle F fun x : { p : B' × Z | f p.1 = proj p.2 } => (x : B' × Z).1 :=
   fun x =>
     let ⟨e, he⟩ := h (f x)
     ⟨e.comap f hf x he, he⟩
@@ -716,8 +742,8 @@ noncomputable def disjoint_union (e e' : trivialization F proj) (H : Disjoint e.
             rw [e.target_eq, e'.target_eq] at hx 
             exact H ⟨hx.1.1, hx.2.1⟩,
     BaseSet := e.base_set ∪ e'.base_set, open_base_set := IsOpen.union e.open_base_set e'.open_base_set,
-    source_eq := congr_arg2 (· ∪ ·) e.source_eq e'.source_eq,
-    target_eq := (congr_arg2 (· ∪ ·) e.target_eq e'.target_eq).trans union_prod.symm,
+    source_eq := congr_arg2ₓ (· ∪ ·) e.source_eq e'.source_eq,
+    target_eq := (congr_arg2ₓ (· ∪ ·) e.target_eq e'.target_eq).trans union_prod.symm,
     proj_to_fun :=
       by 
         rintro p (hp | hp')
@@ -730,58 +756,94 @@ noncomputable def disjoint_union (e e' : trivialization F proj) (H : Disjoint e.
           simp only [e.source_eq, e'.source_eq] at hp'⊢
           exact fun h => H ⟨h, hp'⟩ }
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- If `h` is a topological fiber bundle over a conditionally complete linear order,
-then it is trivial over any closed interval. -/
-theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset
-[conditionally_complete_linear_order B]
-[order_topology B]
-(h : is_topological_fiber_bundle F proj)
-(a b : B) : «expr∃ , »((e : trivialization F proj), «expr ⊆ »(Icc a b, e.base_set)) :=
-begin
-  classical,
-  obtain ["⟨", ident ea, ",", ident hea, "⟩", ":", expr «expr∃ , »((ea : trivialization F proj), «expr ∈ »(a, ea.base_set)), ":=", expr h a],
-  cases [expr le_or_lt a b] ["with", ident hab, ident hab]; [skip, exact [expr ⟨ea, by simp [] [] [] ["*"] [] []⟩]],
-  set [] [ident s] [":", expr set B] [":="] [expr {x ∈ Icc a b | «expr∃ , »((e : trivialization F proj), «expr ⊆ »(Icc a x, e.base_set))}] [],
-  have [ident ha] [":", expr «expr ∈ »(a, s)] [],
-  from [expr ⟨left_mem_Icc.2 hab, ea, by simp [] [] [] ["[", expr hea, "]"] [] []⟩],
-  have [ident sne] [":", expr s.nonempty] [":=", expr ⟨a, ha⟩],
-  have [ident hsb] [":", expr «expr ∈ »(b, upper_bounds s)] [],
-  from [expr λ x hx, hx.1.2],
-  have [ident sbd] [":", expr bdd_above s] [":=", expr ⟨b, hsb⟩],
-  set [] [ident c] [] [":="] [expr Sup s] [],
-  have [ident hsc] [":", expr is_lub s c] [],
-  from [expr is_lub_cSup sne sbd],
-  have [ident hc] [":", expr «expr ∈ »(c, Icc a b)] [],
-  from [expr ⟨hsc.1 ha, hsc.2 hsb⟩],
-  obtain ["⟨", "-", ",", ident ec, ":", expr trivialization F proj, ",", ident hec, ":", expr «expr ⊆ »(Icc a c, ec.base_set), "⟩", ":", expr «expr ∈ »(c, s)],
-  { cases [expr hc.1.eq_or_lt] ["with", ident heq, ident hlt],
-    { rwa ["<-", expr heq] [] },
-    refine [expr ⟨hc, _⟩],
-    rcases [expr h c, "with", "⟨", ident ec, ",", ident hc, "⟩"],
-    obtain ["⟨", ident c', ",", ident hc', ",", ident hc'e, "⟩", ":", expr «expr∃ , »((c' «expr ∈ » Ico a c), «expr ⊆ »(Ioc c' c, ec.base_set)), ":=", expr (mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset hlt).1 «expr $ »(mem_nhds_within_of_mem_nhds, is_open.mem_nhds ec.open_base_set hc)],
-    obtain ["⟨", ident d, ",", "⟨", ident hdab, ",", ident ead, ",", ident had, "⟩", ",", ident hd, "⟩", ":", expr «expr∃ , »((d «expr ∈ » s), «expr ∈ »(d, Ioc c' c)), ":=", expr hsc.exists_between hc'.2],
-    refine [expr ⟨ead.piecewise_le ec d (had ⟨hdab.1, le_rfl⟩) (hc'e hd), subset_ite.2 _⟩],
-    refine [expr ⟨λ x hx, had ⟨hx.1.1, hx.2⟩, λ x hx, hc'e ⟨hd.1.trans (not_le.1 hx.2), hx.1.2⟩⟩] },
-  cases [expr hc.2.eq_or_lt] ["with", ident heq, ident hlt],
-  { exact [expr ⟨ec, «expr ▸ »(heq, hec)⟩] },
-  suffices [] [":", expr «expr∃ , »((d «expr ∈ » Ioc c b) (e : trivialization F proj), «expr ⊆ »(Icc a d, e.base_set))],
-  { rcases [expr this, "with", "⟨", ident d, ",", ident hdcb, ",", ident hd, "⟩"],
-    exact [expr ((hsc.1 ⟨⟨hc.1.trans hdcb.1.le, hdcb.2⟩, hd⟩).not_lt hdcb.1).elim] },
-  obtain ["⟨", ident d, ",", ident hdcb, ",", ident hd, "⟩", ":", expr «expr∃ , »((d «expr ∈ » Ioc c b), «expr ⊆ »(Ico c d, ec.base_set)), ":=", expr (mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1 «expr $ »(mem_nhds_within_of_mem_nhds, is_open.mem_nhds ec.open_base_set (hec ⟨hc.1, le_rfl⟩))],
-  have [ident had] [":", expr «expr ⊆ »(Ico a d, ec.base_set)] [],
-  from [expr subset.trans Ico_subset_Icc_union_Ico (union_subset hec hd)],
-  by_cases [expr he, ":", expr disjoint (Iio d) (Ioi c)],
-  { rcases [expr h d, "with", "⟨", ident ed, ",", ident hed, "⟩"],
-    refine [expr ⟨d, hdcb, (ec.restr_open (Iio d) is_open_Iio).disjoint_union (ed.restr_open (Ioi c) is_open_Ioi) (he.mono (inter_subset_right _ _) (inter_subset_right _ _)), λ
-      x hx, _⟩],
-    rcases [expr hx.2.eq_or_lt, "with", ident rfl, "|", ident hxd],
-    exacts ["[", expr or.inr ⟨hed, hdcb.1⟩, ",", expr or.inl ⟨had ⟨hx.1, hxd⟩, hxd⟩, "]"] },
-  { rw ["[", expr disjoint_left, "]"] ["at", ident he],
-    push_neg ["at", ident he],
-    rcases [expr he, "with", "⟨", ident d', ",", ident hdd', ":", expr «expr < »(d', d), ",", ident hd'c, "⟩"],
-    exact [expr ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, subset.trans (Icc_subset_Ico_right hdd') had⟩] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c' «expr ∈ » Ico a c)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (d «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (d «expr ∈ » Ioc c b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (d «expr ∈ » Ioc c b)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    If `h` is a topological fiber bundle over a conditionally complete linear order,
+    then it is trivial over any closed interval. -/
+  theorem
+    _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset
+    [ ConditionallyCompleteLinearOrder B ] [ OrderTopology B ] ( h : IsTopologicalFiberBundle F proj ) ( a b : B )
+      : ∃ e : trivialization F proj , Icc a b ⊆ e.base_set
+    :=
+      by
+        classical
+          obtain ⟨ ea , hea ⟩ : ∃ ea : trivialization F proj , a ∈ ea.base_set := h a
+          cases' le_or_ltₓ a b with hab hab <;> [ skip , exact ⟨ ea , by simp ⟩ ]
+          set s : Set B := { x ∈ Icc a b | ∃ e : trivialization F proj , Icc a x ⊆ e.base_set }
+          have ha : a ∈ s
+          exact ⟨ left_mem_Icc . 2 hab , ea , by simp [ hea ] ⟩
+          have sne : s.nonempty := ⟨ a , ha ⟩
+          have hsb : b ∈ UpperBounds s
+          exact fun x hx => hx . 1 . 2
+          have sbd : BddAbove s := ⟨ b , hsb ⟩
+          set c := Sup s
+          have hsc : IsLub s c
+          exact is_lub_cSup sne sbd
+          have hc : c ∈ Icc a b
+          exact ⟨ hsc . 1 ha , hsc . 2 hsb ⟩
+          obtain ⟨ - , ec : trivialization F proj , hec : Icc a c ⊆ ec.base_set ⟩ : c ∈ s
+          ·
+            cases' hc . 1 . eq_or_lt with heq hlt
+              · rwa [ ← HEq ]
+              refine' ⟨ hc , _ ⟩
+              rcases h c with ⟨ ec , hc ⟩
+              obtain
+                ⟨ c' , hc' , hc'e ⟩
+                : ∃ ( c' : _ ) ( _ : c' ∈ Ico a c ) , Ioc c' c ⊆ ec.base_set
+                :=
+                  mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset hlt . 1
+                    mem_nhds_within_of_mem_nhds $ IsOpen.mem_nhds ec.open_base_set hc
+              obtain
+                ⟨ d , ⟨ hdab , ead , had ⟩ , hd ⟩
+                : ∃ ( d : _ ) ( _ : d ∈ s ) , d ∈ Ioc c' c
+                := hsc.exists_between hc' . 2
+              refine' ⟨ ead.piecewise_le ec d had ⟨ hdab . 1 , le_rfl ⟩ hc'e hd , subset_ite . 2 _ ⟩
+              refine'
+                ⟨
+                  fun x hx => had ⟨ hx . 1 . 1 , hx . 2 ⟩
+                    ,
+                    fun x hx => hc'e ⟨ hd . 1 . trans not_leₓ . 1 hx . 2 , hx . 1 . 2 ⟩
+                  ⟩
+          cases' hc . 2 . eq_or_lt with heq hlt
+          · exact ⟨ ec , HEq ▸ hec ⟩
+          suffices : ∃ ( d : _ ) ( _ : d ∈ Ioc c b ) ( e : trivialization F proj ) , Icc a d ⊆ e.base_set
+          ·
+            rcases this with ⟨ d , hdcb , hd ⟩
+              exact hsc . 1 ⟨ ⟨ hc . 1 . trans hdcb . 1 . le , hdcb . 2 ⟩ , hd ⟩ . not_lt hdcb . 1 . elim
+          obtain
+            ⟨ d , hdcb , hd ⟩
+            : ∃ ( d : _ ) ( _ : d ∈ Ioc c b ) , Ico c d ⊆ ec.base_set
+            :=
+              mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset hlt . 1
+                mem_nhds_within_of_mem_nhds $ IsOpen.mem_nhds ec.open_base_set hec ⟨ hc . 1 , le_rfl ⟩
+          have had : Ico a d ⊆ ec.base_set
+          exact subset.trans Ico_subset_Icc_union_Ico union_subset hec hd
+          byCases' he : Disjoint Iio d Ioi c
+          ·
+            rcases h d with ⟨ ed , hed ⟩
+              refine'
+                ⟨
+                  d
+                    ,
+                    hdcb
+                    ,
+                    ec.restr_open Iio d is_open_Iio . disjointUnion
+                      ed.restr_open Ioi c is_open_Ioi he.mono inter_subset_right _ _ inter_subset_right _ _
+                    ,
+                    fun x hx => _
+                  ⟩
+              rcases hx . 2 . eq_or_lt with ( rfl | hxd )
+              exacts [ Or.inr ⟨ hed , hdcb . 1 ⟩ , Or.inl ⟨ had ⟨ hx . 1 , hxd ⟩ , hxd ⟩ ]
+          ·
+            rw [ disjoint_left ] at he
+              pushNeg at he
+              rcases he with ⟨ d' , hdd' : d' < d , hd'c ⟩
+              exact ⟨ d' , ⟨ hd'c , hdd'.le.trans hdcb . 2 ⟩ , ec , subset.trans Icc_subset_Ico_right hdd' had ⟩
 
 end Piecewise
 
@@ -806,6 +868,8 @@ instance [t₁ : TopologicalSpace B] [t₂ : TopologicalSpace F] : TopologicalSp
 
 end Bundle
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » base_set i)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(«expr ∩ »(base_set i, base_set j), base_set k))
 /-- Core data defining a locally trivial topological bundle with fiber `F` over a topological
 space `B`. Note that "bundle" is used in its mathematical sense. This is the (computer science)
 bundled version, i.e., all the relevant data is contained in the following structure. A family of
@@ -978,7 +1042,7 @@ theorem local_triv_as_local_equiv_apply (p : Z.total_space) :
 theorem local_triv_as_local_equiv_trans (i j : ι) :
   (Z.local_triv_as_local_equiv i).symm.trans (Z.local_triv_as_local_equiv j) ≈ (Z.triv_change i j).toLocalEquiv :=
   by 
-    split 
+    constructor
     ·
       ext x 
       simp' only [mem_local_triv_as_local_equiv_target] with mfld_simps 
@@ -996,7 +1060,7 @@ variable (ι)
 that all the local trivialization are continuous. -/
 instance to_topological_space : TopologicalSpace (Bundle.TotalSpace Z.fiber) :=
   TopologicalSpace.generateFrom$
-    ⋃(i : ι)(s : Set (B × F))(s_open : IsOpen s),
+    ⋃ (i : ι)(s : Set (B × F))(s_open : IsOpen s),
       {(Z.local_triv_as_local_equiv i).Source ∩ Z.local_triv_as_local_equiv i ⁻¹' s}
 
 variable {ι}
@@ -1012,45 +1076,44 @@ theorem open_source' (i : ι) : IsOpen (Z.local_triv_as_local_equiv i).Source :=
 
 open TopologicalFiberBundle
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Extended version of the local trivialization of a fiber bundle constructed from core,
 registering additionally in its type that it is a local bundle trivialization. -/
 def local_triv (i : ι) : trivialization F Z.proj :=
-{ base_set := Z.base_set i,
-  open_base_set := Z.is_open_base_set i,
-  source_eq := rfl,
-  target_eq := rfl,
-  proj_to_fun := λ p hp, by { simp [] [] ["only"] [] ["with", ident mfld_simps] [],
-    refl },
-  open_source := Z.open_source' i,
-  open_target := (Z.is_open_base_set i).prod is_open_univ,
-  continuous_to_fun := begin
-    rw [expr continuous_on_open_iff (Z.open_source' i)] [],
-    assume [binders (s s_open)],
-    apply [expr topological_space.generate_open.basic],
-    simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_Union, ",", expr mem_singleton_iff, "]"] [] [],
-    exact [expr ⟨i, s, s_open, rfl⟩]
-  end,
-  continuous_inv_fun := begin
-    apply [expr continuous_on_open_of_generate_from ((Z.is_open_base_set i).prod is_open_univ)],
-    assume [binders (t ht)],
-    simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_Union, ",", expr mem_singleton_iff, "]"] [] ["at", ident ht],
-    obtain ["⟨", ident j, ",", ident s, ",", ident s_open, ",", ident ts, "⟩", ":", expr «expr∃ , »((j
-       s), «expr ∧ »(is_open s, «expr = »(t, «expr ∩ »((local_triv_as_local_equiv Z j).source, «expr ⁻¹' »(local_triv_as_local_equiv Z j, s))))), ":=", expr ht],
-    rw [expr ts] [],
-    simp [] [] ["only"] ["[", expr local_equiv.right_inv, ",", expr preimage_inter, ",", expr local_equiv.left_inv, "]"] [] [],
-    let [ident e] [] [":=", expr Z.local_triv_as_local_equiv i],
-    let [ident e'] [] [":=", expr Z.local_triv_as_local_equiv j],
-    let [ident f] [] [":=", expr e.symm.trans e'],
-    have [] [":", expr is_open «expr ∩ »(f.source, «expr ⁻¹' »(f, s))] [],
-    { rw ["[", expr (Z.local_triv_as_local_equiv_trans i j).source_inter_preimage_eq, "]"] [],
-      exact [expr (continuous_on_open_iff (Z.triv_change i j).open_source).1 (Z.triv_change i j).continuous_on _ s_open] },
-    convert [] [expr this] ["using", 1],
-    dsimp [] ["[", expr local_equiv.trans_source, "]"] [] [],
-    rw ["[", "<-", expr preimage_comp, ",", expr inter_assoc, "]"] [],
-    refl
-  end,
-  to_local_equiv := Z.local_triv_as_local_equiv i }
+  { BaseSet := Z.base_set i, open_base_set := Z.is_open_base_set i, source_eq := rfl, target_eq := rfl,
+    proj_to_fun :=
+      fun p hp =>
+        by 
+          simp' only with mfld_simps 
+          rfl,
+    open_source := Z.open_source' i, open_target := (Z.is_open_base_set i).Prod is_open_univ,
+    continuous_to_fun :=
+      by 
+        rw [continuous_on_open_iff (Z.open_source' i)]
+        intro s s_open 
+        apply TopologicalSpace.GenerateOpen.basic 
+        simp only [exists_prop, mem_Union, mem_singleton_iff]
+        exact ⟨i, s, s_open, rfl⟩,
+    continuous_inv_fun :=
+      by 
+        apply continuous_on_open_of_generate_from ((Z.is_open_base_set i).Prod is_open_univ)
+        intro t ht 
+        simp only [exists_prop, mem_Union, mem_singleton_iff] at ht 
+        obtain ⟨j, s, s_open, ts⟩ :
+          ∃ j s, IsOpen s ∧ t = (local_triv_as_local_equiv Z j).Source ∩ local_triv_as_local_equiv Z j ⁻¹' s := ht 
+        rw [ts]
+        simp only [LocalEquiv.right_inv, preimage_inter, LocalEquiv.left_inv]
+        let e := Z.local_triv_as_local_equiv i 
+        let e' := Z.local_triv_as_local_equiv j 
+        let f := e.symm.trans e' 
+        have  : IsOpen (f.source ∩ f ⁻¹' s)
+        ·
+          rw [(Z.local_triv_as_local_equiv_trans i j).source_inter_preimage_eq]
+          exact (continuous_on_open_iff (Z.triv_change i j).open_source).1 (Z.triv_change i j).ContinuousOn _ s_open 
+        convert this using 1
+        dsimp [LocalEquiv.trans_source]
+        rw [←preimage_comp, inter_assoc]
+        rfl,
+    toLocalEquiv := Z.local_triv_as_local_equiv i }
 
 /-- A topological fiber bundle constructed from core is indeed a topological fiber bundle. -/
 protected theorem IsTopologicalFiberBundle : IsTopologicalFiberBundle F Z.proj :=
@@ -1073,33 +1136,31 @@ def local_triv_at (b : B) : trivialization F Z.proj :=
 theorem local_triv_at_def (b : B) : Z.local_triv (Z.index_at b) = Z.local_triv_at b :=
   rfl
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(Z.base_set i, Z.base_set j))
 /-- If an element of `F` is invariant under all coordinate changes, then one can define a
 corresponding section of the fiber bundle, which is continuous. This applies in particular to the
 zero section of a vector bundle. Another example (not yet defined) would be the identity
 section of the endomorphism bundle of a vector bundle. -/
-theorem continuous_const_section
-(v : F)
-(h : ∀
- i
- j, ∀
- x «expr ∈ » «expr ∩ »(Z.base_set i, Z.base_set j), «expr = »(Z.coord_change i j x v, v)) : continuous (show B → Z.total_space, from λ
- x, ⟨x, v⟩) :=
-begin
-  apply [expr continuous_iff_continuous_at.2 (λ x, _)],
-  have [ident A] [":", expr «expr ∈ »(Z.base_set (Z.index_at x), expr𝓝() x)] [":=", expr is_open.mem_nhds (Z.is_open_base_set (Z.index_at x)) (Z.mem_base_set_at x)],
-  apply [expr ((Z.local_triv_at x).to_local_homeomorph.continuous_at_iff_continuous_at_comp_left _).2],
-  { simp [] [] ["only"] ["[", expr («expr ∘ »), "]"] ["with", ident mfld_simps] [],
-    apply [expr continuous_at_id.prod],
-    have [] [":", expr continuous_on (λ y : B, v) (Z.base_set (Z.index_at x))] [":=", expr continuous_on_const],
-    apply [expr (this.congr _).continuous_at A],
-    assume [binders (y hy)],
-    simp [] [] ["only"] ["[", expr h, ",", expr hy, ",", expr mem_base_set_at, "]"] ["with", ident mfld_simps] [] },
-  { exact [expr A] }
-end
+theorem continuous_const_section (v : F)
+  (h : ∀ i j, ∀ x _ : x ∈ Z.base_set i ∩ Z.base_set j, Z.coord_change i j x v = v) :
+  Continuous (show B → Z.total_space from fun x => ⟨x, v⟩) :=
+  by 
+    apply continuous_iff_continuous_at.2 fun x => _ 
+    have A : Z.base_set (Z.index_at x) ∈ 𝓝 x :=
+      IsOpen.mem_nhds (Z.is_open_base_set (Z.index_at x)) (Z.mem_base_set_at x)
+    apply ((Z.local_triv_at x).toLocalHomeomorph.continuous_at_iff_continuous_at_comp_left _).2
+    ·
+      simp' only [· ∘ ·] with mfld_simps 
+      apply continuous_at_id.prod 
+      have  : ContinuousOn (fun y : B => v) (Z.base_set (Z.index_at x)) := continuous_on_const 
+      apply (this.congr _).ContinuousAt A 
+      intro y hy 
+      simp' only [h, hy, mem_base_set_at] with mfld_simps
+    ·
+      exact A
 
 @[simp, mfld_simps]
-theorem local_triv_as_local_equiv_coe : «expr⇑ » (Z.local_triv_as_local_equiv i) = Z.local_triv i :=
+theorem local_triv_as_local_equiv_coe : ⇑Z.local_triv_as_local_equiv i = Z.local_triv i :=
   rfl
 
 @[simp, mfld_simps]
@@ -1149,35 +1210,43 @@ theorem mem_local_triv_at_base_set (b : B) : b ∈ (Z.local_triv_at b).BaseSet :
 
 open Bundle
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inclusion of a fiber into the total space is a continuous map. -/
-theorem continuous_total_space_mk (b : B) : continuous (λ a, total_space_mk Z.fiber b a) :=
-begin
-  rw ["[", expr continuous_iff_le_induced, ",", expr topological_fiber_bundle_core.to_topological_space, "]"] [],
-  apply [expr le_induced_generate_from],
-  simp [] [] ["only"] ["[", expr total_space_mk, ",", expr mem_Union, ",", expr mem_singleton_iff, ",", expr local_triv_as_local_equiv_source, ",", expr local_triv_as_local_equiv_coe, "]"] [] [],
-  rintros [ident s, "⟨", ident i, ",", ident t, ",", ident ht, ",", ident rfl, "⟩"],
-  rw ["[", "<-", expr (Z.local_triv i).source_inter_preimage_target_inter t, ",", expr preimage_inter, ",", "<-", expr preimage_comp, ",", expr trivialization.source_eq, "]"] [],
-  apply [expr is_open.inter],
-  { simp [] [] ["only"] ["[", expr bundle.proj, ",", expr proj, ",", "<-", expr preimage_comp, "]"] [] [],
-    by_cases [expr «expr ∈ »(b, (Z.local_triv i).base_set)],
-    { rw [expr preimage_const_of_mem h] [],
-      exact [expr is_open_univ] },
-    { rw [expr preimage_const_of_not_mem h] [],
-      exact [expr is_open_empty] } },
-  { simp [] [] ["only"] ["[", expr function.comp, ",", expr local_triv_apply, "]"] [] [],
-    rw ["[", expr preimage_inter, ",", expr preimage_comp, "]"] [],
-    by_cases [expr «expr ∈ »(b, Z.base_set i)],
-    { have [ident hc] [":", expr continuous (λ
-        x : Z.fiber b, Z.coord_change (Z.index_at b) i b x)] [":=", expr begin
-         rw [expr continuous_iff_continuous_on_univ] [],
-         refine [expr (Z.coord_change_continuous (Z.index_at b) i).comp (continuous_const.prod_mk continuous_id).continuous_on (by { convert [] [expr subset_univ univ] [],
-             exact [expr mk_preimage_prod_right (mem_inter (Z.mem_base_set_at b) h)] })]
-       end],
-      exact [expr hc.is_open_preimage _ ((continuous.prod.mk b).is_open_preimage _ ((Z.local_triv i).open_target.inter ht))] },
-    { rw ["[", expr (Z.local_triv i).target_eq, ",", "<-", expr base_set_at, ",", expr mk_preimage_prod_right_eq_empty h, ",", expr preimage_empty, ",", expr empty_inter, "]"] [],
-      exact [expr is_open_empty] } }
-end
+theorem continuous_total_space_mk (b : B) : Continuous fun a => total_space_mk Z.fiber b a :=
+  by 
+    rw [continuous_iff_le_induced, TopologicalFiberBundleCore.toTopologicalSpace]
+    apply le_induced_generate_from 
+    simp only [total_space_mk, mem_Union, mem_singleton_iff, local_triv_as_local_equiv_source,
+      local_triv_as_local_equiv_coe]
+    rintro s ⟨i, t, ht, rfl⟩
+    rw [←(Z.local_triv i).source_inter_preimage_target_inter t, preimage_inter, ←preimage_comp,
+      trivialization.source_eq]
+    apply IsOpen.inter
+    ·
+      simp only [Bundle.proj, proj, ←preimage_comp]
+      byCases' b ∈ (Z.local_triv i).BaseSet
+      ·
+        rw [preimage_const_of_mem h]
+        exact is_open_univ
+      ·
+        rw [preimage_const_of_not_mem h]
+        exact is_open_empty
+    ·
+      simp only [Function.comp, local_triv_apply]
+      rw [preimage_inter, preimage_comp]
+      byCases' b ∈ Z.base_set i
+      ·
+        have hc : Continuous fun x : Z.fiber b => (Z.coord_change (Z.index_at b) i b) x :=
+          by 
+            rw [continuous_iff_continuous_on_univ]
+            refine'
+              ((Z.coord_change_continuous (Z.index_at b) i).comp (continuous_const.prod_mk continuous_id).ContinuousOn)
+                (by 
+                  convert subset_univ univ 
+                  exact mk_preimage_prod_right (mem_inter (Z.mem_base_set_at b) h))
+        exact hc.is_open_preimage _ ((Continuous.Prod.mk b).is_open_preimage _ ((Z.local_triv i).open_target.inter ht))
+      ·
+        rw [(Z.local_triv i).target_eq, ←base_set_at, mk_preimage_prod_right_eq_empty h, preimage_empty, empty_inter]
+        exact is_open_empty
 
 end TopologicalFiberBundleCore
 
@@ -1204,7 +1273,7 @@ variable {F} (a : TopologicalFiberPrebundle F proj) (x : B)
 
 /-- Topology on the total space that will make the prebundle into a bundle. -/
 def total_space_topology (a : TopologicalFiberPrebundle F proj) : TopologicalSpace Z :=
-  ⨆x : B, coinduced (a.pretrivialization_at x).setSymm Subtype.topologicalSpace
+  ⨆ x : B, coinduced (a.pretrivialization_at x).setSymm Subtype.topologicalSpace
 
 theorem continuous_symm_pretrivialization_at :
   @ContinuousOn _ _ _ a.total_space_topology (a.pretrivialization_at x).toLocalEquiv.symm
@@ -1218,59 +1287,66 @@ theorem continuous_symm_pretrivialization_at :
               preimage_nhds_within_coinduced' H (a.pretrivialization_at x).open_target (le_def.1 (nhds_mono _) U h)
     exact le_supr _ x
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_open_source_pretrivialization_at : @is_open _ a.total_space_topology (a.pretrivialization_at x).source :=
-begin
-  letI [] [] [":=", expr a.total_space_topology],
-  refine [expr is_open_supr_iff.mpr (λ
-    y, is_open_coinduced.mpr (is_open_induced_iff.mpr ⟨(a.pretrivialization_at x).target, (a.pretrivialization_at x).open_target, _⟩))],
-  rw ["[", expr pretrivialization.set_symm, ",", expr restrict, ",", expr (a.pretrivialization_at x).target_eq, ",", expr (a.pretrivialization_at x).source_eq, ",", expr preimage_comp, ",", expr subtype.preimage_coe_eq_preimage_coe_iff, ",", expr (a.pretrivialization_at y).target_eq, ",", expr prod_inter_prod, ",", expr inter_univ, ",", expr pretrivialization.preimage_symm_proj_inter, "]"] []
-end
+theorem is_open_source_pretrivialization_at : @IsOpen _ a.total_space_topology (a.pretrivialization_at x).Source :=
+  by 
+    let this' := a.total_space_topology 
+    refine'
+      is_open_supr_iff.mpr
+        fun y =>
+          is_open_coinduced.mpr
+            (is_open_induced_iff.mpr ⟨(a.pretrivialization_at x).Target, (a.pretrivialization_at x).open_target, _⟩)
+    rw [pretrivialization.set_symm, restrict, (a.pretrivialization_at x).target_eq,
+      (a.pretrivialization_at x).source_eq, preimage_comp, Subtype.preimage_coe_eq_preimage_coe_iff,
+      (a.pretrivialization_at y).target_eq, prod_inter_prod, inter_univ, pretrivialization.preimage_symm_proj_inter]
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_open_target_pretrivialization_at_inter
-(x
- y : B) : is_open «expr ∩ »((a.pretrivialization_at y).to_local_equiv.target, «expr ⁻¹' »((a.pretrivialization_at y).to_local_equiv.symm, (a.pretrivialization_at x).source)) :=
-begin
-  letI [] [] [":=", expr a.total_space_topology],
-  obtain ["⟨", ident u, ",", ident hu1, ",", ident hu2, "⟩", ":=", expr continuous_on_iff'.mp (a.continuous_symm_pretrivialization_at y) (a.pretrivialization_at x).source (a.is_open_source_pretrivialization_at x)],
-  rw ["[", expr inter_comm, ",", expr hu2, "]"] [],
-  exact [expr hu1.inter (a.pretrivialization_at y).open_target]
-end
+theorem is_open_target_pretrivialization_at_inter (x y : B) :
+  IsOpen
+    ((a.pretrivialization_at y).toLocalEquiv.Target ∩
+      (a.pretrivialization_at y).toLocalEquiv.symm ⁻¹' (a.pretrivialization_at x).Source) :=
+  by 
+    let this' := a.total_space_topology 
+    obtain ⟨u, hu1, hu2⟩ :=
+      continuous_on_iff'.mp (a.continuous_symm_pretrivialization_at y) (a.pretrivialization_at x).Source
+        (a.is_open_source_pretrivialization_at x)
+    rw [inter_comm, hu2]
+    exact hu1.inter (a.pretrivialization_at y).open_target
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Promotion from a `pretrivialization` to a `trivialization`. -/
-def trivialization_at
-(a : topological_fiber_prebundle F proj)
-(x : B) : @trivialization B F Z _ _ a.total_space_topology proj :=
-{ open_source := a.is_open_source_pretrivialization_at x,
-  continuous_to_fun := begin
-    letI [] [] [":=", expr a.total_space_topology],
-    refine [expr continuous_on_iff'.mpr (λ
-      s
-      hs, ⟨«expr ∩ »(«expr ⁻¹' »(a.pretrivialization_at x, s), (a.pretrivialization_at x).source), is_open_supr_iff.mpr (λ
-        y, _), by { rw ["[", expr inter_assoc, ",", expr inter_self, "]"] [],
-         refl }⟩)],
-    rw ["[", expr is_open_coinduced, ",", expr is_open_induced_iff, "]"] [],
-    obtain ["⟨", ident u, ",", ident hu1, ",", ident hu2, "⟩", ":=", expr continuous_on_iff'.mp (a.continuous_triv_change x y) s hs],
-    have [ident hu3] [] [":=", expr congr_arg (λ
-      s, «expr ⁻¹' »(λ x : (a.pretrivialization_at y).target, (x : «expr × »(B, F)), s)) hu2],
-    simp [] [] ["only"] ["[", expr subtype.coe_preimage_self, ",", expr preimage_inter, ",", expr univ_inter, "]"] [] ["at", ident hu3],
-    refine [expr ⟨«expr ∩ »(«expr ∩ »(u, (a.pretrivialization_at y).to_local_equiv.target), «expr ⁻¹' »((a.pretrivialization_at y).to_local_equiv.symm, (a.pretrivialization_at x).source)), _, by { simp [] [] ["only"] ["[", expr preimage_inter, ",", expr inter_univ, ",", expr subtype.coe_preimage_self, ",", expr hu3.symm, "]"] [] [],
-        refl }⟩],
-    rw [expr inter_assoc] [],
-    exact [expr hu1.inter (a.is_open_target_pretrivialization_at_inter x y)]
-  end,
-  continuous_inv_fun := a.continuous_symm_pretrivialization_at x,
-  ..a.pretrivialization_at x }
+def trivialization_at (a : TopologicalFiberPrebundle F proj) (x : B) :
+  @trivialization B F Z _ _ a.total_space_topology proj :=
+  { a.pretrivialization_at x with open_source := a.is_open_source_pretrivialization_at x,
+    continuous_to_fun :=
+      by 
+        let this' := a.total_space_topology 
+        refine'
+          continuous_on_iff'.mpr
+            fun s hs =>
+              ⟨a.pretrivialization_at x ⁻¹' s ∩ (a.pretrivialization_at x).Source, is_open_supr_iff.mpr fun y => _,
+                by 
+                  rw [inter_assoc, inter_self]
+                  rfl⟩
+        rw [is_open_coinduced, is_open_induced_iff]
+        obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change x y) s hs 
+        have hu3 := congr_argₓ (fun s => (fun x : (a.pretrivialization_at y).Target => (x : B × F)) ⁻¹' s) hu2 
+        simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3 
+        refine'
+          ⟨u ∩ (a.pretrivialization_at y).toLocalEquiv.Target ∩
+              (a.pretrivialization_at y).toLocalEquiv.symm ⁻¹' (a.pretrivialization_at x).Source,
+            _,
+            by 
+              simp only [preimage_inter, inter_univ, Subtype.coe_preimage_self, hu3.symm]
+              rfl⟩
+        rw [inter_assoc]
+        exact hu1.inter (a.is_open_target_pretrivialization_at_inter x y),
+    continuous_inv_fun := a.continuous_symm_pretrivialization_at x }
 
 theorem IsTopologicalFiberBundle : @IsTopologicalFiberBundle B F Z _ _ a.total_space_topology proj :=
   fun x => ⟨a.trivialization_at x, a.mem_base_pretrivialization_at x⟩
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_proj : @continuous _ _ a.total_space_topology _ proj :=
-by { letI [] [] [":=", expr a.total_space_topology],
-  exact [expr a.is_topological_fiber_bundle.continuous_proj] }
+theorem continuous_proj : @Continuous _ _ a.total_space_topology _ proj :=
+  by 
+    let this' := a.total_space_topology 
+    exact a.is_topological_fiber_bundle.continuous_proj
 
 end TopologicalFiberPrebundle
 

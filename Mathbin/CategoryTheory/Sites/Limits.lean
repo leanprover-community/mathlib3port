@@ -22,9 +22,9 @@ This allows us to show that `Sheaf J D` has colimits (of a certain shape) as soo
 -/
 
 
-namespace CategoryTheory.Sheaf
+namespace CategoryTheory
 
-open CategoryTheory
+namespace Sheaf
 
 open CategoryTheory.Limits
 
@@ -40,7 +40,7 @@ variable {D : Type w} [category.{max v u} D]
 
 variable {K : Type max v u} [small_category K]
 
-noncomputable theory
+noncomputable section 
 
 section 
 
@@ -53,7 +53,7 @@ shape `K` of objects in `D`, with cone point `S.X`.
 See `is_limit_multifork_of_is_limit` for more on how this definition is used.
 -/
 def multifork_evaluation_cone (F : K ⥤ Sheaf J D) (E : cone (F ⋙ Sheaf_to_presheaf J D)) (X : C) (W : J.cover X)
-  (S : multifork (W.index E.X)) : cone (F ⋙ Sheaf_to_presheaf J D ⋙ (evaluation («expr ᵒᵖ» C) D).obj (op X)) :=
+  (S : multifork (W.index E.X)) : cone (F ⋙ Sheaf_to_presheaf J D ⋙ (evaluation (Cᵒᵖ) D).obj (op X)) :=
   { x := S.X,
     π :=
       { app :=
@@ -93,27 +93,25 @@ This is used below in `is_sheaf_of_is_limit` to show that the limit presheaf is 
 def is_limit_multifork_of_is_limit (F : K ⥤ Sheaf J D) (E : cone (F ⋙ Sheaf_to_presheaf J D)) (hE : is_limit E) (X : C)
   (W : J.cover X) : is_limit (W.multifork E.X) :=
   multifork.is_limit.mk _
-    (fun S =>
-      (is_limit_of_preserves ((evaluation («expr ᵒᵖ» C) D).obj (op X)) hE).lift$ multifork_evaluation_cone F E X W S)
+    (fun S => (is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).lift$ multifork_evaluation_cone F E X W S)
     (by 
       intro S i 
-      apply (is_limit_of_preserves ((evaluation («expr ᵒᵖ» C) D).obj (op i.Y)) hE).hom_ext 
+      apply (is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op i.Y)) hE).hom_ext 
       intro k 
       dsimp [multifork.of_ι]
       erw [category.assoc, (E.π.app k).naturality]
       dsimp 
       rw [←category.assoc]
-      erw
-        [(is_limit_of_preserves ((evaluation («expr ᵒᵖ» C) D).obj (op X)) hE).fac (multifork_evaluation_cone F E X W S)]
+      erw [(is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).fac (multifork_evaluation_cone F E X W S)]
       dsimp [multifork_evaluation_cone, presheaf.is_limit_of_is_sheaf]
       erw [presheaf.is_sheaf.amalgamate_map]
       rfl)
     (by 
       intro S m hm 
-      apply (is_limit_of_preserves ((evaluation («expr ᵒᵖ» C) D).obj (op X)) hE).hom_ext 
+      apply (is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).hom_ext 
       intro k 
       dsimp 
-      erw [(is_limit_of_preserves ((evaluation («expr ᵒᵖ» C) D).obj (op X)) hE).fac]
+      erw [(is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).fac]
       apply presheaf.is_sheaf.hom_ext (F.obj k).2 W 
       intro i 
       erw [presheaf.is_sheaf.amalgamate_map]
@@ -158,7 +156,7 @@ instance : has_limits_of_shape K (Sheaf J D) :=
 end 
 
 instance [has_limits D] : creates_limits (Sheaf_to_presheaf J D) :=
-  {  }
+  ⟨⟩
 
 instance [has_limits D] : has_limits (Sheaf J D) :=
   has_limits_of_has_limits_creates_limits (Sheaf_to_presheaf J D)
@@ -177,13 +175,13 @@ variable {K : Type max v u} [small_category K]
 
 variable [concrete_category.{max v u} D]
 
-variable [∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
 
 variable [preserves_limits (forget D)]
 
-variable [∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable [∀ X : C, has_colimits_of_shape (J.cover Xᵒᵖ) D]
 
-variable [∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
+variable [∀ X : C, preserves_colimits_of_shape (J.cover Xᵒᵖ) (forget D)]
 
 variable [reflects_isomorphisms (forget D)]
 
@@ -232,5 +230,7 @@ instance [has_colimits D] : has_colimits (Sheaf J D) :=
 
 end Colimits
 
-end CategoryTheory.Sheaf
+end Sheaf
+
+end CategoryTheory
 

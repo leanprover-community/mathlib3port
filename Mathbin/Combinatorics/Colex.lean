@@ -45,12 +45,13 @@ open Finset
 
 open_locale BigOperators
 
--- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 We define this type synonym to refer to the colexicographic ordering on finsets
 rather than the natural subset ordering.
--/ @[derive #[expr inhabited]] def finset.colex (α) :=
-finset α
+-/
+def Finset.Colex α :=
+  Finset α deriving [anonymous]
 
 /--
 A convenience constructor to turn a `finset α` into a `finset.colex α`, useful in order to
@@ -81,19 +82,14 @@ theorem Colex.lt_def [LT α] (A B : Finset α) :
 theorem Colex.le_def [LT α] (A B : Finset α) : A.to_colex ≤ B.to_colex ↔ A.to_colex < B.to_colex ∨ A = B :=
   Iff.rfl
 
--- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If everything in `A` is less than `k`, we can bound the sum of powers. -/
-theorem nat.sum_two_pow_lt
-{k : exprℕ()}
-{A : finset exprℕ()}
-(h₁ : ∀ {x}, «expr ∈ »(x, A) → «expr < »(x, k)) : «expr < »(A.sum (pow 2), «expr ^ »(2, k)) :=
-begin
-  apply [expr lt_of_le_of_lt (sum_le_sum_of_subset (λ t, «expr ∘ »(mem_range.2, h₁)))],
-  have [ident z] [] [":=", expr geom_sum_mul_add 1 k],
-  rw ["[", expr geom_sum, ",", expr mul_one, ",", expr one_add_one_eq_two, "]"] ["at", ident z],
-  rw ["<-", expr z] [],
-  apply [expr nat.lt_succ_self]
-end
+theorem Nat.sum_two_pow_lt {k : ℕ} {A : Finset ℕ} (h₁ : ∀ {x}, x ∈ A → x < k) : A.sum (pow 2) < 2 ^ k :=
+  by 
+    apply lt_of_le_of_ltₓ (sum_le_sum_of_subset fun t => mem_range.2 ∘ h₁)
+    have z := geom_sum_mul_add 1 k 
+    rw [geomSum, mul_oneₓ, one_add_one_eq_two] at z 
+    rw [←z]
+    apply Nat.lt_succ_selfₓ
 
 namespace Colex
 
@@ -102,7 +98,7 @@ theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorder�
   (A B : Finset α) : (A.image f).toColex < (B.image f).toColex ↔ A.to_colex < B.to_colex :=
   by 
     simp only [Colex.lt_def, not_exists, mem_image, exists_prop, not_and]
-    split 
+    constructor
     ·
       rintro ⟨k, z, q, k', _, rfl⟩
       exact
@@ -114,7 +110,7 @@ theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorder�
     rintro ⟨k, z, ka, _⟩
     refine' ⟨f k, fun x hx => _, _, k, ‹k ∈ B›, rfl⟩
     ·
-      split 
+      constructor 
       any_goals 
         rintro ⟨x', hx', rfl⟩
         refine' ⟨x', _, rfl⟩
@@ -199,6 +195,8 @@ theorem lt_trichotomyₓ [LinearOrderₓ α] (A B : Finset.Colex α) : A < B ∨
 instance [LinearOrderₓ α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
   ⟨lt_trichotomyₓ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr ∈ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∪ »(A, B))
 instance decidable_lt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidable (A < B) :=
   show ∀ A B : Finset α, Decidable (A.to_colex < B.to_colex) from
     fun A B =>
@@ -230,7 +228,7 @@ instance [LinearOrderₓ α] : LinearOrderₓ (Finset.Colex α) :=
     lt_iff_le_not_le :=
       fun A B =>
         by 
-          split 
+          constructor
           ·
             intro t 
             refine' ⟨Or.inl t, _⟩
@@ -260,6 +258,8 @@ theorem hom_fin_le_iff {n : ℕ} (A B : Finset (Finₓ n)) :
   (A.image fun i : Finₓ n => (i : ℕ)).toColex ≤ (B.image fun i : Finₓ n => (i : ℕ)).toColex ↔ A.to_colex ≤ B.to_colex :=
   Colex.hom_le_iff (fun x y k => k) _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » A)
 /--
 If `A` is before `B` in colex, and everything in `B` is small, then everything in `A` is small.
 -/
@@ -275,12 +275,13 @@ theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrderₓ α] {A B : Finset α}
     rwa [←z]
     apply lt_of_lt_of_leₓ (h₂ k ‹_›) a
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- `s.to_colex < {r}.to_colex` iff all elements of `s` are less than `r`. -/
 theorem lt_singleton_iff_mem_lt [LinearOrderₓ α] {r : α} {s : Finset α} :
   s.to_colex < ({r} : Finset α).toColex ↔ ∀ x _ : x ∈ s, x < r :=
   by 
     simp only [lt_def, mem_singleton, ←and_assoc, exists_eq_right]
-    split 
+    constructor
     ·
       intro t x hx 
       rw [←not_leₓ]
@@ -297,6 +298,7 @@ theorem lt_singleton_iff_mem_lt [LinearOrderₓ α] {r : α} {s : Finset α} :
             by 
               simpa using h r⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- If {r} is less than or equal to s in the colexicographical sense,
   then s contains an element greater than or equal to r. -/
 theorem mem_le_of_singleton_le [LinearOrderₓ α] {r : α} {s : Finset α} :
@@ -324,7 +326,7 @@ theorem sdiff_lt_sdiff_iff_lt [LT α] [DecidableEq α] (A B : Finset α) :
     apply exists_congr 
     intro k 
     simp only [mem_sdiff, not_and, not_not]
-    split 
+    constructor
     ·
       rintro ⟨z, kAB, kB, kA⟩
       refine' ⟨_, kA, kB⟩
@@ -413,36 +415,33 @@ instance [LinearOrderₓ α] [Fintype α] : BoundedOrder (Finset.Colex α) :=
     OrderBot (Finset.Colex α)) with
      }
 
--- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For subsets of ℕ, we can show that colex is equivalent to binary. -/
-theorem sum_two_pow_lt_iff_lt
-(A
- B : finset exprℕ()) : «expr ↔ »(«expr < »(«expr∑ in , »((i), A, «expr ^ »(2, i)), «expr∑ in , »((i), B, «expr ^ »(2, i))), «expr < »(A.to_colex, B.to_colex)) :=
-begin
-  have [ident z] [":", expr ∀
-   A
-   B : finset exprℕ(), «expr < »(A.to_colex, B.to_colex) → «expr < »(«expr∑ in , »((i), A, «expr ^ »(2, i)), «expr∑ in , »((i), B, «expr ^ »(2, i)))] [],
-  { intros [ident A, ident B],
-    rw ["[", "<-", expr sdiff_lt_sdiff_iff_lt, ",", expr colex.lt_def, "]"] [],
-    rintro ["⟨", ident k, ",", ident z, ",", ident kA, ",", ident kB, "⟩"],
-    rw ["<-", expr sdiff_union_inter A B] [],
-    conv_rhs [] [] { rw ["<-", expr sdiff_union_inter B A] },
-    rw ["[", expr sum_union (disjoint_sdiff_inter _ _), ",", expr sum_union (disjoint_sdiff_inter _ _), ",", expr inter_comm, ",", expr add_lt_add_iff_right, "]"] [],
-    apply [expr lt_of_lt_of_le (@nat.sum_two_pow_lt k «expr \ »(A, B) _)],
-    { apply [expr single_le_sum (λ _ _, nat.zero_le _) kB] },
-    intros [ident x, ident hx],
-    apply [expr lt_of_le_of_ne (le_of_not_lt (λ kx, _))],
-    { apply [expr ne_of_mem_of_not_mem hx kA] },
-    have [] [] [":=", expr (z kx).1 hx],
-    rw [expr mem_sdiff] ["at", ident this, ident hx],
-    exact [expr hx.2 this.1] },
-  refine [expr ⟨λ h, (lt_trichotomy A B).resolve_right (λ h₁, h₁.elim _ «expr ∘ »(not_lt_of_gt h, z _ _)), z A B⟩],
-  rintro [ident rfl],
-  apply [expr irrefl _ h]
-end
+theorem sum_two_pow_lt_iff_lt (A B : Finset ℕ) : ((∑ i in A, 2 ^ i) < ∑ i in B, 2 ^ i) ↔ A.to_colex < B.to_colex :=
+  by 
+    have z : ∀ A B : Finset ℕ, A.to_colex < B.to_colex → (∑ i in A, 2 ^ i) < ∑ i in B, 2 ^ i
+    ·
+      intro A B 
+      rw [←sdiff_lt_sdiff_iff_lt, Colex.lt_def]
+      rintro ⟨k, z, kA, kB⟩
+      rw [←sdiff_union_inter A B]
+      convRHS => rw [←sdiff_union_inter B A]
+      rw [sum_union (disjoint_sdiff_inter _ _), sum_union (disjoint_sdiff_inter _ _), inter_comm, add_lt_add_iff_right]
+      apply lt_of_lt_of_leₓ (@Nat.sum_two_pow_lt k (A \ B) _)
+      ·
+        apply single_le_sum (fun _ _ => Nat.zero_leₓ _) kB 
+      intro x hx 
+      apply lt_of_le_of_neₓ (le_of_not_ltₓ fun kx => _)
+      ·
+        apply ne_of_mem_of_not_mem hx kA 
+      have  := (z kx).1 hx 
+      rw [mem_sdiff] at this hx 
+      exact hx.2 this.1
+    refine' ⟨fun h => (lt_trichotomyₓ A B).resolve_right fun h₁ => h₁.elim _ (not_lt_of_gtₓ h ∘ z _ _), z A B⟩
+    rintro rfl 
+    apply irrefl _ h
 
 /-- For subsets of ℕ, we can show that colex is equivalent to binary. -/
-theorem sum_two_pow_le_iff_lt (A B : Finset ℕ) : ((∑i in A, 2 ^ i) ≤ ∑i in B, 2 ^ i) ↔ A.to_colex ≤ B.to_colex :=
+theorem sum_two_pow_le_iff_lt (A B : Finset ℕ) : ((∑ i in A, 2 ^ i) ≤ ∑ i in B, 2 ^ i) ↔ A.to_colex ≤ B.to_colex :=
   by 
     rw [le_iff_le_iff_lt_iff_lt, sum_two_pow_lt_iff_lt]
 

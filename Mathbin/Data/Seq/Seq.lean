@@ -212,31 +212,30 @@ def cases_on {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 :
       rw [destruct_eq_cons H]
       apply h2
 
--- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_rec_on
-{C : seq α → exprProp()}
-{a s}
-(M : «expr ∈ »(a, s))
-(h1 : ∀ b s', «expr ∨ »(«expr = »(a, b), C s') → C (cons b s')) : C s :=
-begin
-  cases [expr M] ["with", ident k, ident e],
-  unfold [ident stream.nth] ["at", ident e],
-  induction [expr k] [] ["with", ident k, ident IH] ["generalizing", ident s],
-  { have [ident TH] [":", expr «expr = »(s, cons a (tail s))] [],
-    { apply [expr destruct_eq_cons],
-      unfold [ident destruct, ident nth, ident functor.map] [],
-      rw ["<-", expr e] [],
-      refl },
-    rw [expr TH] [],
-    apply [expr h1 _ _ (or.inl rfl)] },
-  revert [ident e],
-  apply [expr s.cases_on _ (λ b s', _)]; intro [ident e],
-  { injection [expr e] [] },
-  { have [ident h_eq] [":", expr «expr = »((cons b s').val (nat.succ k), s'.val k)] [],
-    { cases [expr s'] []; refl },
-    rw ["[", expr h_eq, "]"] ["at", ident e],
-    apply [expr h1 _ _ (or.inr (IH e))] }
-end
+theorem mem_rec_on {C : Seqₓₓ α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s', a = b ∨ C s' → C (cons b s')) : C s :=
+  by 
+    cases' M with k e 
+    unfold Streamₓ.nth  at e 
+    induction' k with k IH generalizing s
+    ·
+      have TH : s = cons a (tail s)
+      ·
+        apply destruct_eq_cons 
+        unfold destruct nth Functor.map 
+        rw [←e]
+        rfl 
+      rw [TH]
+      apply h1 _ _ (Or.inl rfl)
+    revert e 
+    apply s.cases_on _ fun b s' => _ <;> intro e
+    ·
+      injection e
+    ·
+      have h_eq : (cons b s').val (Nat.succ k) = s'.val k
+      ·
+        cases s' <;> rfl 
+      rw [h_eq] at e 
+      apply h1 _ _ (Or.inr (IH e))
 
 def corec.F (f : β → Option (α × β)) : Option β → Option α × Option β
 | none => (none, none)
@@ -325,38 +324,47 @@ attribute [simp] bisim_o
 def is_bisimulation :=
   ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → bisim_o R (destruct s₁) (destruct s₂)
 
--- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_of_bisim (bisim : is_bisimulation R) {s₁ s₂} (r : «expr ~ »(s₁, s₂)) : «expr = »(s₁, s₂) :=
-begin
-  apply [expr subtype.eq],
-  apply [expr stream.eq_of_bisim (λ
-    x y, «expr∃ , »((s s' : seq α), «expr ∧ »(«expr = »(s.1, x), «expr ∧ »(«expr = »(s'.1, y), R s s'))))],
-  dsimp [] ["[", expr stream.is_bisimulation, "]"] [] [],
-  intros [ident t₁, ident t₂, ident e],
-  exact [expr match t₁, t₂, e with
-   | ._, ._, ⟨s, s', rfl, rfl, r⟩ := suffices «expr ∧ »(«expr = »(head s, head s'), R (tail s) (tail s')), from and.imp id (λ
-    r, ⟨tail s, tail s', by cases [expr s] []; refl, by cases [expr s'] []; refl, r⟩) this,
-   begin
-     have [] [] [":=", expr bisim r],
-     revert [ident r, ident this],
-     apply [expr cases_on s _ _]; intros []; apply [expr cases_on s' _ _]; intros []; intros [ident r, ident this],
-     { constructor,
-       refl,
-       assumption },
-     { rw ["[", expr destruct_nil, ",", expr destruct_cons, "]"] ["at", ident this],
-       exact [expr false.elim this] },
-     { rw ["[", expr destruct_nil, ",", expr destruct_cons, "]"] ["at", ident this],
-       exact [expr false.elim this] },
-     { rw ["[", expr destruct_cons, ",", expr destruct_cons, "]"] ["at", ident this],
-       rw ["[", expr head_cons, ",", expr head_cons, ",", expr tail_cons, ",", expr tail_cons, "]"] [],
-       cases [expr this] ["with", ident h1, ident h2],
-       constructor,
-       rw [expr h1] [],
-       exact [expr h2] }
-   end
-   end],
-  exact [expr ⟨s₁, s₂, rfl, rfl, r⟩]
-end
+theorem eq_of_bisim (bisim : is_bisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ :=
+  by 
+    apply Subtype.eq 
+    apply Streamₓ.eq_of_bisim fun x y => ∃ s s' : Seqₓₓ α, s.1 = x ∧ s'.1 = y ∧ R s s' 
+    dsimp [Streamₓ.IsBisimulation]
+    intro t₁ t₂ e 
+    exact
+      match t₁, t₂, e with 
+      | _, _, ⟨s, s', rfl, rfl, r⟩ =>
+        suffices head s = head s' ∧ R (tail s) (tail s') from
+          And.imp id
+            (fun r =>
+              ⟨tail s, tail s',
+                by 
+                  cases s <;> rfl,
+                by 
+                  cases s' <;> rfl,
+                r⟩)
+            this 
+        by 
+          have  := bisim r 
+          revert r this 
+          apply cases_on s _ _ <;> intros  <;> apply cases_on s' _ _ <;> intros  <;> intro r this
+          ·
+            constructor 
+            rfl 
+            assumption
+          ·
+            rw [destruct_nil, destruct_cons] at this 
+            exact False.elim this
+          ·
+            rw [destruct_nil, destruct_cons] at this 
+            exact False.elim this
+          ·
+            rw [destruct_cons, destruct_cons] at this 
+            rw [head_cons, head_cons, tail_cons, tail_cons]
+            cases' this with h1 h2 
+            constructor 
+            rw [h1]
+            exact h2 
+    exact ⟨s₁, s₂, rfl, rfl, r⟩
 
 end Bisim
 
@@ -511,46 +519,32 @@ def zip_with (f : α → β → γ) : Seqₓₓ α → Seqₓₓ β → Seqₓ�
 
 variable {s : Seqₓₓ α} {s' : Seqₓₓ β} {n : ℕ}
 
--- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zip_with_nth_some
-{a : α}
-{b : β}
-(s_nth_eq_some : «expr = »(s.nth n, some a))
-(s_nth_eq_some' : «expr = »(s'.nth n, some b))
-(f : α → β → γ) : «expr = »((zip_with f s s').nth n, some (f a b)) :=
-begin
-  cases [expr s] ["with", ident st],
-  have [] [":", expr «expr = »(st n, some a)] [],
-  from [expr s_nth_eq_some],
-  cases [expr s'] ["with", ident st'],
-  have [] [":", expr «expr = »(st' n, some b)] [],
-  from [expr s_nth_eq_some'],
-  simp [] [] ["only"] ["[", expr zip_with, ",", expr seq.nth, ",", "*", "]"] [] []
-end
+theorem zip_with_nth_some {a : α} {b : β} (s_nth_eq_some : s.nth n = some a) (s_nth_eq_some' : s'.nth n = some b)
+  (f : α → β → γ) : (zip_with f s s').nth n = some (f a b) :=
+  by 
+    cases' s with st 
+    have  : st n = some a 
+    exact s_nth_eq_some 
+    cases' s' with st' 
+    have  : st' n = some b 
+    exact s_nth_eq_some' 
+    simp only [zip_with, Seqₓₓ.nth]
 
--- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zip_with_nth_none
-(s_nth_eq_none : «expr = »(s.nth n, none))
-(f : α → β → γ) : «expr = »((zip_with f s s').nth n, none) :=
-begin
-  cases [expr s] ["with", ident st],
-  have [] [":", expr «expr = »(st n, none)] [],
-  from [expr s_nth_eq_none],
-  cases [expr s'] ["with", ident st'],
-  cases [expr st'_nth_eq, ":", expr st' n] []; simp [] [] ["only"] ["[", expr zip_with, ",", expr seq.nth, ",", "*", "]"] [] []
-end
+theorem zip_with_nth_none (s_nth_eq_none : s.nth n = none) (f : α → β → γ) : (zip_with f s s').nth n = none :=
+  by 
+    cases' s with st 
+    have  : st n = none 
+    exact s_nth_eq_none 
+    cases' s' with st' 
+    cases st'_nth_eq : st' n <;> simp only [zip_with, Seqₓₓ.nth]
 
--- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zip_with_nth_none'
-(s'_nth_eq_none : «expr = »(s'.nth n, none))
-(f : α → β → γ) : «expr = »((zip_with f s s').nth n, none) :=
-begin
-  cases [expr s'] ["with", ident st'],
-  have [] [":", expr «expr = »(st' n, none)] [],
-  from [expr s'_nth_eq_none],
-  cases [expr s] ["with", ident st],
-  cases [expr st_nth_eq, ":", expr st n] []; simp [] [] ["only"] ["[", expr zip_with, ",", expr seq.nth, ",", "*", "]"] [] []
-end
+theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β → γ) : (zip_with f s s').nth n = none :=
+  by 
+    cases' s' with st' 
+    have  : st' n = none 
+    exact s'_nth_eq_none 
+    cases' s with st 
+    cases st_nth_eq : st n <;> simp only [zip_with, Seqₓₓ.nth]
 
 end ZipWith
 
@@ -788,9 +782,7 @@ theorem of_list_nil : of_list [] = (nil : Seqₓₓ α) :=
 @[simp]
 theorem of_list_cons (a : α) l : of_list (a :: l) = cons a (of_list l) :=
   by 
-    apply Subtype.eq 
-    simp [of_list, cons]
-    ext ⟨⟩ <;> simp [List.nth, Streamₓ.cons]
+    ext (_ | n) : 2 <;> simp [of_list, cons, Streamₓ.nth, Streamₓ.cons]
 
 @[simp]
 theorem of_stream_cons (a : α) s : of_stream (a :: s) = cons a (of_stream s) :=
@@ -866,30 +858,37 @@ theorem exists_of_mem_map {f} {b : β} : ∀ {s : Seqₓₓ α}, b ∈ map f s �
   by 
     cases' o with a <;> injection oe with h' <;> exact ⟨a, om, h'⟩
 
--- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_mem_append
-{s₁ s₂ : seq α}
-{a : α}
-(h : «expr ∈ »(a, append s₁ s₂)) : «expr ∨ »(«expr ∈ »(a, s₁), «expr ∈ »(a, s₂)) :=
-begin
-  have [] [] [":=", expr h],
-  revert [ident this],
-  generalize [ident e] [":"] [expr «expr = »(append s₁ s₂, ss)],
-  intro [ident h],
-  revert [ident s₁],
-  apply [expr mem_rec_on h _],
-  intros [ident b, ident s', ident o, ident s₁],
-  apply [expr s₁.cases_on _ (λ c t₁, _)]; intros [ident m, ident e]; have [] [] [":=", expr congr_arg destruct e],
-  { apply [expr or.inr],
-    simpa [] [] [] [] [] ["using", expr m] },
-  { cases [expr show «expr ∨ »(«expr = »(a, c), «expr ∈ »(a, append t₁ s₂)), by simpa [] [] [] [] [] ["using", expr m]] ["with", ident e', ident m],
-    { rw [expr e'] [],
-      exact [expr or.inl (mem_cons _ _)] },
-    { cases [expr show «expr ∧ »(«expr = »(c, b), «expr = »(append t₁ s₂, s')), by simpa [] [] [] [] [] []] ["with", ident i1, ident i2],
-      cases [expr o] ["with", ident e', ident IH],
-      { simp [] [] [] ["[", expr i1, ",", expr e', "]"] [] [] },
-      { exact [expr or.imp_left (mem_cons_of_mem _) (IH m i2)] } } }
-end
+theorem of_mem_append {s₁ s₂ : Seqₓₓ α} {a : α} (h : a ∈ append s₁ s₂) : a ∈ s₁ ∨ a ∈ s₂ :=
+  by 
+    have  := h 
+    revert this 
+    generalize e : append s₁ s₂ = ss 
+    intro h 
+    revert s₁ 
+    apply mem_rec_on h _ 
+    intro b s' o s₁ 
+    apply s₁.cases_on _ fun c t₁ => _ <;> intro m e <;> have  := congr_argₓ destruct e
+    ·
+      apply Or.inr 
+      simpa using m
+    ·
+      cases'
+        show a = c ∨ a ∈ append t₁ s₂ by 
+          simpa using m with
+        e' m
+      ·
+        rw [e']
+        exact Or.inl (mem_cons _ _)
+      ·
+        cases'
+          show c = b ∧ append t₁ s₂ = s' by 
+            simpa with
+          i1 i2 
+        cases' o with e' IH
+        ·
+          simp [i1, e']
+        ·
+          exact Or.imp_left (mem_cons_of_mem _) (IH m i2)
 
 theorem mem_append_left {s₁ s₂ : Seqₓₓ α} {a : α} (h : a ∈ s₁) : a ∈ append s₁ s₂ :=
   by 

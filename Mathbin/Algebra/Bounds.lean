@@ -100,11 +100,11 @@ variable {ι G : Type _} [Groupₓ G] [ConditionallyCompleteLattice G] [Covarian
   [Nonempty ι] {f : ι → G}
 
 @[toAdditive]
-theorem csupr_mul (hf : BddAbove (Set.Range f)) (a : G) : ((⨆i, f i)*a) = ⨆i, f i*a :=
+theorem csupr_mul (hf : BddAbove (Set.Range f)) (a : G) : ((⨆ i, f i)*a) = ⨆ i, f i*a :=
   (OrderIso.mulRight a).map_csupr hf
 
 @[toAdditive]
-theorem csupr_div (hf : BddAbove (Set.Range f)) (a : G) : (⨆i, f i) / a = ⨆i, f i / a :=
+theorem csupr_div (hf : BddAbove (Set.Range f)) (a : G) : (⨆ i, f i) / a = ⨆ i, f i / a :=
   by 
     simp only [div_eq_mul_inv, csupr_mul hf]
 
@@ -116,7 +116,7 @@ variable {ι G : Type _} [Groupₓ G] [ConditionallyCompleteLattice G] [Covarian
   {f : ι → G}
 
 @[toAdditive]
-theorem mul_csupr (hf : BddAbove (Set.Range f)) (a : G) : (a*⨆i, f i) = ⨆i, a*f i :=
+theorem mul_csupr (hf : BddAbove (Set.Range f)) (a : G) : (a*⨆ i, f i) = ⨆ i, a*f i :=
   (OrderIso.mulLeft a).map_csupr hf
 
 end Left

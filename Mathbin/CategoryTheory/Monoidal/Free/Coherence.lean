@@ -234,19 +234,19 @@ def normalize_iso : tensor_func C ≅ normalize' C :=
         simp only [category.comp_id]
       ·
         dsimp  at *
-        rw [id_tensor_comp, category.assoc, f_ih_g («expr⟦ ⟧» f_g), ←category.assoc, f_ih_f («expr⟦ ⟧» f_f),
-          category.assoc, ←functor.map_comp]
+        rw [id_tensor_comp, category.assoc, f_ih_g (⟦f_g⟧), ←category.assoc, f_ih_f (⟦f_f⟧), category.assoc,
+          ←functor.map_comp]
         congr 2
       ·
         dsimp  at *
         rw [associator_inv_naturality_assoc]
-        sliceLHS 2 3 => rw [←tensor_comp, f_ih_f («expr⟦ ⟧» f_f)]
-        convLHS => rw [←@category.id_comp (F C) _ _ _ («expr⟦ ⟧» f_g)]
+        sliceLHS 2 3 => rw [←tensor_comp, f_ih_f (⟦f_f⟧)]
+        convLHS => rw [←@category.id_comp (F C) _ _ _ (⟦f_g⟧)]
         simp only [category.comp_id, tensor_comp, category.assoc]
         congr 2
         rw [←mk_tensor, Quotientₓ.lift_mk]
         dsimp 
-        rw [functor.map_comp, ←category.assoc, ←f_ih_g («expr⟦ ⟧» f_g), ←@category.comp_id (F C) _ _ _ («expr⟦ ⟧» f_g),
+        rw [functor.map_comp, ←category.assoc, ←f_ih_g (⟦f_g⟧), ←@category.comp_id (F C) _ _ _ (⟦f_g⟧),
           ←category.id_comp ((discrete.functor inclusion_obj).map _), tensor_comp]
         dsimp 
         simp only [category.assoc, category.comp_id]
@@ -298,7 +298,7 @@ instance : groupoid.{u} (F C) :=
   { (inferInstance : category (F C)) with
     inv :=
       fun X Y =>
-        Quotientₓ.lift (fun f => «expr⟦ ⟧» (inverse_aux f))
+        Quotientₓ.lift (fun f => ⟦inverse_aux f⟧)
           (by 
             tidy) }
 

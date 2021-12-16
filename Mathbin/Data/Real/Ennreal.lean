@@ -70,14 +70,20 @@ open_locale Classical BigOperators Nnreal
 
 variable {α : Type _} {β : Type _}
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_zero
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_zero
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler add_comm_monoid
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler canonically_ordered_comm_semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler complete_linear_order
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler densely_ordered
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler nontrivial
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler canonically_linear_ordered_add_monoid
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_sub
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_ordered_sub
 /-- The extended nonnegative real numbers. This is usually denoted [0, ∞],
   and is relevant as the codomain of a measure. -/
-@[derive #["[", expr has_zero, ",", expr add_comm_monoid, ",", expr canonically_ordered_comm_semiring, ",",
-   expr complete_linear_order, ",", expr densely_ordered, ",", expr nontrivial, ",",
-   expr canonically_linear_ordered_add_monoid, ",", expr has_sub, ",", expr has_ordered_sub, "]"]]
-def ennreal :=
-with_top «exprℝ≥0»()
+def Ennreal :=
+  WithTop ℝ≥0 deriving [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous],
+  [anonymous], [anonymous]
 
 localized [Ennreal] notation "ℝ≥0∞" => Ennreal
 
@@ -111,7 +117,7 @@ theorem none_eq_top : (none : ℝ≥0∞) = ∞ :=
   rfl
 
 @[simp]
-theorem some_eq_coe (a :  ℝ≥0 ) : (some a : ℝ≥0∞) = («expr↑ » a : ℝ≥0∞) :=
+theorem some_eq_coe (a :  ℝ≥0 ) : (some a : ℝ≥0∞) = (↑a : ℝ≥0∞) :=
   rfl
 
 /-- `to_nnreal x` returns `x` if it is real, otherwise 0. -/
@@ -132,7 +138,7 @@ theorem to_nnreal_coe : (r : ℝ≥0∞).toNnreal = r :=
   rfl
 
 @[simp]
-theorem coe_to_nnreal : ∀ {a : ℝ≥0∞}, a ≠ ∞ → «expr↑ » a.to_nnreal = a
+theorem coe_to_nnreal : ∀ {a : ℝ≥0∞}, a ≠ ∞ → ↑a.to_nnreal = a
 | some r, h => rfl
 | none, h => (h rfl).elim
 
@@ -149,7 +155,7 @@ theorem to_real_of_real {r : ℝ} (h : 0 ≤ r) : Ennreal.toReal (Ennreal.ofReal
 theorem to_real_of_real' {r : ℝ} : Ennreal.toReal (Ennreal.ofReal r) = max r 0 :=
   rfl
 
-theorem coe_to_nnreal_le_self : ∀ {a : ℝ≥0∞}, «expr↑ » a.to_nnreal ≤ a
+theorem coe_to_nnreal_le_self : ∀ {a : ℝ≥0∞}, ↑a.to_nnreal ≤ a
 | some r =>
   by 
     rw [some_eq_coe, to_nnreal_coe] <;> exact le_reflₓ _
@@ -173,11 +179,11 @@ theorem of_real_coe_nnreal : Ennreal.ofReal p = p :=
   (coe_nnreal_eq p).symm
 
 @[simp, normCast]
-theorem coe_zero : «expr↑ » (0 :  ℝ≥0 ) = (0 : ℝ≥0∞) :=
+theorem coe_zero : ↑(0 :  ℝ≥0 ) = (0 : ℝ≥0∞) :=
   rfl
 
 @[simp, normCast]
-theorem coe_one : «expr↑ » (1 :  ℝ≥0 ) = (1 : ℝ≥0∞) :=
+theorem coe_one : ↑(1 :  ℝ≥0 ) = (1 : ℝ≥0∞) :=
   rfl
 
 @[simp]
@@ -233,21 +239,30 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r :  �
       | some r => h₁ _
       | none => h₂⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ a _ : a ≠ ∞, p a) ↔ ∀ r :  ℝ≥0 , p r :=
   Option.ball_ne_none
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r :  ℝ≥0 , p r :=
   Option.bex_ne_none
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_nnreal_eq_zero_iff
-(x : «exprℝ≥0∞»()) : «expr ↔ »(«expr = »(x.to_nnreal, 0), «expr ∨ »(«expr = »(x, 0), «expr = »(x, «expr∞»()))) :=
-⟨begin
-   cases [expr x] [],
-   { simp [] [] [] ["[", expr none_eq_top, "]"] [] [] },
-   { have [ident A] [":", expr «expr = »(some (0 : «exprℝ≥0»()), (0 : «exprℝ≥0∞»()))] [":=", expr rfl],
-     simp [] [] [] ["[", expr ennreal.to_nnreal, ",", expr A, "]"] [] [] { contextual := tt } }
- end, by intro [ident h]; cases [expr h] []; simp [] [] [] ["[", expr h, "]"] [] []⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  to_nnreal_eq_zero_iff
+  ( x : ℝ≥0∞ ) : x.to_nnreal = 0 ↔ x = 0 ∨ x = ∞
+  :=
+    ⟨
+      by
+          cases x
+            · simp [ none_eq_top ]
+            ·
+              have A : some ( 0 : ℝ≥0 ) = ( 0 : ℝ≥0∞ ) := rfl
+                simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ Ennreal.toNnreal , A ]
+        ,
+        by intro h <;> cases h <;> simp [ h ]
+      ⟩
 
 theorem to_real_eq_zero_iff (x : ℝ≥0∞) : x.to_real = 0 ↔ x = 0 ∨ x = ∞ :=
   by 
@@ -292,61 +307,61 @@ theorem top_ne_one : ∞ ≠ 1 :=
   top_ne_coe
 
 @[simp, normCast]
-theorem coe_eq_coe : («expr↑ » r : ℝ≥0∞) = «expr↑ » q ↔ r = q :=
+theorem coe_eq_coe : (↑r : ℝ≥0∞) = ↑q ↔ r = q :=
   WithTop.coe_eq_coe
 
 @[simp, normCast]
-theorem coe_le_coe : («expr↑ » r : ℝ≥0∞) ≤ «expr↑ » q ↔ r ≤ q :=
+theorem coe_le_coe : (↑r : ℝ≥0∞) ≤ ↑q ↔ r ≤ q :=
   WithTop.coe_le_coe
 
 @[simp, normCast]
-theorem coe_lt_coe : («expr↑ » r : ℝ≥0∞) < «expr↑ » q ↔ r < q :=
+theorem coe_lt_coe : (↑r : ℝ≥0∞) < ↑q ↔ r < q :=
   WithTop.coe_lt_coe
 
 theorem coe_mono : Monotone (coeₓ :  ℝ≥0  → ℝ≥0∞) :=
   fun _ _ => coe_le_coe.2
 
 @[simp, normCast]
-theorem coe_eq_zero : («expr↑ » r : ℝ≥0∞) = 0 ↔ r = 0 :=
+theorem coe_eq_zero : (↑r : ℝ≥0∞) = 0 ↔ r = 0 :=
   coe_eq_coe
 
 @[simp, normCast]
-theorem zero_eq_coe : 0 = («expr↑ » r : ℝ≥0∞) ↔ 0 = r :=
+theorem zero_eq_coe : 0 = (↑r : ℝ≥0∞) ↔ 0 = r :=
   coe_eq_coe
 
 @[simp, normCast]
-theorem coe_eq_one : («expr↑ » r : ℝ≥0∞) = 1 ↔ r = 1 :=
+theorem coe_eq_one : (↑r : ℝ≥0∞) = 1 ↔ r = 1 :=
   coe_eq_coe
 
 @[simp, normCast]
-theorem one_eq_coe : 1 = («expr↑ » r : ℝ≥0∞) ↔ 1 = r :=
+theorem one_eq_coe : 1 = (↑r : ℝ≥0∞) ↔ 1 = r :=
   coe_eq_coe
 
 @[simp, normCast]
-theorem coe_nonneg : 0 ≤ («expr↑ » r : ℝ≥0∞) ↔ 0 ≤ r :=
+theorem coe_nonneg : 0 ≤ (↑r : ℝ≥0∞) ↔ 0 ≤ r :=
   coe_le_coe
 
 @[simp, normCast]
-theorem coe_pos : 0 < («expr↑ » r : ℝ≥0∞) ↔ 0 < r :=
+theorem coe_pos : 0 < (↑r : ℝ≥0∞) ↔ 0 < r :=
   coe_lt_coe
 
 theorem coe_ne_zero : (r : ℝ≥0∞) ≠ 0 ↔ r ≠ 0 :=
   not_congr coe_eq_coe
 
 @[simp, normCast]
-theorem coe_add : «expr↑ » (r+p) = (r+p : ℝ≥0∞) :=
+theorem coe_add : (↑r+p) = (r+p : ℝ≥0∞) :=
   WithTop.coe_add
 
 @[simp, normCast]
-theorem coe_mul : «expr↑ » (r*p) = (r*p : ℝ≥0∞) :=
+theorem coe_mul : (↑r*p) = (r*p : ℝ≥0∞) :=
   WithTop.coe_mul
 
 @[simp, normCast]
-theorem coe_bit0 : («expr↑ » (bit0 r) : ℝ≥0∞) = bit0 r :=
+theorem coe_bit0 : (↑bit0 r : ℝ≥0∞) = bit0 r :=
   coe_add
 
 @[simp, normCast]
-theorem coe_bit1 : («expr↑ » (bit1 r) : ℝ≥0∞) = bit1 r :=
+theorem coe_bit1 : (↑bit1 r : ℝ≥0∞) = bit1 r :=
   by 
     simp [bit1]
 
@@ -374,29 +389,40 @@ theorem two_ne_zero : (2 : ℝ≥0∞) ≠ 0 :=
 theorem two_ne_top : (2 : ℝ≥0∞) ≠ ∞ :=
   coe_two ▸ coe_ne_top
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The set of numbers in `ℝ≥0∞` that are not equal to `∞` is equivalent to `ℝ≥0`. -/
-def ne_top_equiv_nnreal : { a | a ≠ ∞ } ≃  ℝ≥0  :=
-  { toFun := fun x => Ennreal.toNnreal x, invFun := fun x => ⟨x, coe_ne_top⟩,
-    left_inv := fun ⟨x, hx⟩ => Subtype.eq$ coe_to_nnreal hx, right_inv := fun x => to_nnreal_coe }
+  def
+    ne_top_equiv_nnreal
+    : { a | a ≠ ∞ } ≃ ℝ≥0
+    :=
+      {
+        toFun := fun x => Ennreal.toNnreal x ,
+          invFun := fun x => ⟨ x , coe_ne_top ⟩ ,
+          left_inv := fun ⟨ x , hx ⟩ => Subtype.eq $ coe_to_nnreal hx ,
+          right_inv := fun x => to_nnreal_coe
+        }
 
-theorem cinfi_ne_top [HasInfₓ α] (f : ℝ≥0∞ → α) : (⨅x : { x // x ≠ ∞ }, f x) = ⨅x :  ℝ≥0 , f x :=
+theorem cinfi_ne_top [HasInfₓ α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x :  ℝ≥0 , f x :=
   Eq.symm$ infi_congr _ ne_top_equiv_nnreal.symm.Surjective$ fun x => rfl
 
-theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨅(x : _)(_ : x ≠ ∞), f x) = ⨅x :  ℝ≥0 , f x :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨅ (x : _)(_ : x ≠ ∞), f x) = ⨅ x :  ℝ≥0 , f x :=
   by 
     rw [infi_subtype', cinfi_ne_top]
 
-theorem csupr_ne_top [HasSupₓ α] (f : ℝ≥0∞ → α) : (⨆x : { x // x ≠ ∞ }, f x) = ⨆x :  ℝ≥0 , f x :=
+theorem csupr_ne_top [HasSupₓ α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠ ∞ }, f x) = ⨆ x :  ℝ≥0 , f x :=
   @cinfi_ne_top (OrderDual α) _ _
 
-theorem supr_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨆(x : _)(_ : x ≠ ∞), f x) = ⨆x :  ℝ≥0 , f x :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+theorem supr_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨆ (x : _)(_ : x ≠ ∞), f x) = ⨆ x :  ℝ≥0 , f x :=
   @infi_ne_top (OrderDual α) _ _
 
-theorem infi_ennreal {α : Type _} [CompleteLattice α] {f : ℝ≥0∞ → α} : (⨅n, f n) = (⨅n :  ℝ≥0 , f n)⊓f ∞ :=
+theorem infi_ennreal {α : Type _} [CompleteLattice α] {f : ℝ≥0∞ → α} : (⨅ n, f n) = (⨅ n :  ℝ≥0 , f n)⊓f ∞ :=
   le_antisymmₓ (le_inf (le_infi$ fun i => infi_le _ _) (infi_le _ _))
     (le_infi$ forall_ennreal.2 ⟨fun r => inf_le_of_left_le$ infi_le _ _, inf_le_right⟩)
 
-theorem supr_ennreal {α : Type _} [CompleteLattice α] {f : ℝ≥0∞ → α} : (⨆n, f n) = (⨆n :  ℝ≥0 , f n)⊔f ∞ :=
+theorem supr_ennreal {α : Type _} [CompleteLattice α] {f : ℝ≥0∞ → α} : (⨆ n, f n) = (⨆ n :  ℝ≥0 , f n)⊔f ∞ :=
   @infi_ennreal (OrderDual α) _ _
 
 @[simp]
@@ -412,7 +438,7 @@ noncomputable def of_nnreal_hom :  ℝ≥0  →+* ℝ≥0∞ :=
   ⟨coeₓ, coe_one, fun _ _ => coe_mul, coe_zero, fun _ _ => coe_add⟩
 
 @[simp]
-theorem coe_of_nnreal_hom : «expr⇑ » of_nnreal_hom = coeₓ :=
+theorem coe_of_nnreal_hom : ⇑of_nnreal_hom = coeₓ :=
   rfl
 
 section Actions
@@ -466,7 +492,7 @@ noncomputable example : DistribMulAction (Units ℝ≥0 ) ℝ≥0∞ :=
     infer_instance
 
 theorem coe_smul {R} (r : R) (s :  ℝ≥0 ) [HasScalar R ℝ≥0 ] [HasScalar R ℝ≥0∞] [IsScalarTower R ℝ≥0  ℝ≥0 ]
-  [IsScalarTower R ℝ≥0  ℝ≥0∞] : («expr↑ » (r • s) : ℝ≥0∞) = r • «expr↑ » s :=
+  [IsScalarTower R ℝ≥0  ℝ≥0∞] : (↑(r • s) : ℝ≥0∞) = r • ↑s :=
   by 
     rw [←smul_one_smul ℝ≥0  r (s : ℝ≥0∞), smul_def, smul_eq_mul, ←Ennreal.coe_mul, smul_mul_assoc, one_mulₓ]
 
@@ -478,7 +504,7 @@ theorem coe_indicator {α} (s : Set α) (f : α →  ℝ≥0 ) (a : α) :
   (of_nnreal_hom :  ℝ≥0  →+ ℝ≥0∞).map_indicator _ _ _
 
 @[simp, normCast]
-theorem coe_pow (n : ℕ) : («expr↑ » (r ^ n) : ℝ≥0∞) = r ^ n :=
+theorem coe_pow (n : ℕ) : (↑(r ^ n) : ℝ≥0∞) = r ^ n :=
   of_nnreal_hom.map_pow r n
 
 @[simp]
@@ -551,7 +577,7 @@ theorem lt_top_of_mul_ne_top_right (h : (a*b) ≠ ∞) (ha : a ≠ 0) : b < ∞ 
 
 theorem mul_lt_top_iff {a b : ℝ≥0∞} : (a*b) < ∞ ↔ a < ∞ ∧ b < ∞ ∨ a = 0 ∨ b = 0 :=
   by 
-    split 
+    constructor
     ·
       intro h 
       rw [←or_assoc, or_iff_not_imp_right, or_iff_not_imp_right]
@@ -579,7 +605,7 @@ theorem pow_eq_top_iff {n : ℕ} : a ^ n = ∞ ↔ a = ∞ ∧ n ≠ 0 :=
     ·
       simp 
     rw [pow_succₓ, mul_eq_top, ihn]
-    fsplit
+    fconstructor
     ·
       rintro (⟨-, rfl, h0⟩ | ⟨rfl, h0⟩) <;> exact ⟨rfl, n.succ_ne_zero⟩
     ·
@@ -597,11 +623,11 @@ theorem pow_lt_top : a < ∞ → ∀ n : ℕ, a ^ n < ∞ :=
     simpa only [lt_top_iff_ne_top] using pow_ne_top
 
 @[simp, normCast]
-theorem coe_finset_sum {s : Finset α} {f : α →  ℝ≥0 } : «expr↑ » (∑a in s, f a) = (∑a in s, f a : ℝ≥0∞) :=
+theorem coe_finset_sum {s : Finset α} {f : α →  ℝ≥0 } : (↑∑ a in s, f a) = (∑ a in s, f a : ℝ≥0∞) :=
   of_nnreal_hom.map_sum f s
 
 @[simp, normCast]
-theorem coe_finset_prod {s : Finset α} {f : α →  ℝ≥0 } : «expr↑ » (∏a in s, f a) = (∏a in s, f a : ℝ≥0∞) :=
+theorem coe_finset_prod {s : Finset α} {f : α →  ℝ≥0 } : (↑∏ a in s, f a) = (∏ a in s, f a : ℝ≥0∞) :=
   of_nnreal_hom.map_prod f s
 
 section Order
@@ -615,23 +641,23 @@ theorem coe_lt_top : coeₓ r < ∞ :=
   WithTop.coe_lt_top r
 
 @[simp]
-theorem not_top_le_coe : ¬∞ ≤ «expr↑ » r :=
+theorem not_top_le_coe : ¬∞ ≤ ↑r :=
   WithTop.not_top_le_coe r
 
 @[simp, normCast]
-theorem one_le_coe_iff : (1 : ℝ≥0∞) ≤ «expr↑ » r ↔ 1 ≤ r :=
+theorem one_le_coe_iff : (1 : ℝ≥0∞) ≤ ↑r ↔ 1 ≤ r :=
   coe_le_coe
 
 @[simp, normCast]
-theorem coe_le_one_iff : «expr↑ » r ≤ (1 : ℝ≥0∞) ↔ r ≤ 1 :=
+theorem coe_le_one_iff : ↑r ≤ (1 : ℝ≥0∞) ↔ r ≤ 1 :=
   coe_le_coe
 
 @[simp, normCast]
-theorem coe_lt_one_iff : («expr↑ » p : ℝ≥0∞) < 1 ↔ p < 1 :=
+theorem coe_lt_one_iff : (↑p : ℝ≥0∞) < 1 ↔ p < 1 :=
   coe_lt_coe
 
 @[simp, normCast]
-theorem one_lt_coe_iff : 1 < («expr↑ » p : ℝ≥0∞) ↔ 1 < p :=
+theorem one_lt_coe_iff : 1 < (↑p : ℝ≥0∞) ↔ 1 < p :=
   coe_lt_coe
 
 @[simp, normCast]
@@ -665,25 +691,23 @@ theorem to_real_nat (n : ℕ) : (n : ℝ≥0∞).toReal = n :=
   by 
     convLHS => rw [←Ennreal.of_real_coe_nat n, Ennreal.to_real_of_real (Nat.cast_nonneg _)]
 
-theorem le_coe_iff : a ≤ «expr↑ » r ↔ ∃ p :  ℝ≥0 , a = p ∧ p ≤ r :=
+theorem le_coe_iff : a ≤ ↑r ↔ ∃ p :  ℝ≥0 , a = p ∧ p ≤ r :=
   WithTop.le_coe_iff
 
-theorem coe_le_iff : «expr↑ » r ≤ a ↔ ∀ p :  ℝ≥0 , a = p → r ≤ p :=
+theorem coe_le_iff : ↑r ≤ a ↔ ∀ p :  ℝ≥0 , a = p → r ≤ p :=
   WithTop.coe_le_iff
 
-theorem lt_iff_exists_coe : a < b ↔ ∃ p :  ℝ≥0 , a = p ∧ «expr↑ » p < b :=
+theorem lt_iff_exists_coe : a < b ↔ ∃ p :  ℝ≥0 , a = p ∧ ↑p < b :=
   WithTop.lt_iff_exists_coe
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_real_le_coe_of_le_coe {a : «exprℝ≥0∞»()} {b : «exprℝ≥0»()} (h : «expr ≤ »(a, b)) : «expr ≤ »(a.to_real, b) :=
-show «expr ≤ »(«expr↑ »(a.to_nnreal), «expr↑ »(b)), begin
-  have [] [":", expr «expr = »(«expr↑ »(a.to_nnreal), a)] [":=", expr ennreal.coe_to_nnreal (lt_of_le_of_lt h coe_lt_top).ne],
-  rw ["<-", expr this] ["at", ident h],
-  exact_mod_cast [expr h]
-end
+theorem to_real_le_coe_of_le_coe {a : ℝ≥0∞} {b :  ℝ≥0 } (h : a ≤ b) : a.to_real ≤ b :=
+  show ↑a.to_nnreal ≤ ↑b by 
+    have  : ↑a.to_nnreal = a := Ennreal.coe_to_nnreal (lt_of_le_of_ltₓ h coe_lt_top).Ne 
+    rw [←this] at h 
+    exactModCast h
 
 @[simp, normCast]
-theorem coe_finset_sup {s : Finset α} {f : α →  ℝ≥0 } : «expr↑ » (s.sup f) = s.sup fun x => (f x : ℝ≥0∞) :=
+theorem coe_finset_sup {s : Finset α} {f : α →  ℝ≥0 } : ↑s.sup f = s.sup fun x => (f x : ℝ≥0∞) :=
   Finset.comp_sup_eq_sup_comp_of_is_total _ coe_mono rfl
 
 theorem pow_le_pow {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
@@ -760,7 +784,7 @@ theorem lt_add_right (ha : a ≠ ∞) (hb : b ≠ 0) : a < a+b :=
 theorem le_of_forall_pos_le_add : ∀ {a b : ℝ≥0∞}, (∀ ε :  ℝ≥0 , 0 < ε → b < ∞ → a ≤ b+ε) → a ≤ b
 | a, none, h => le_top
 | none, some a, h =>
-  have  : ∞ ≤ «expr↑ » a+«expr↑ » (1 :  ℝ≥0 ) := h 1 zero_lt_one coe_lt_top 
+  have  : ∞ ≤ (↑a)+↑(1 :  ℝ≥0 ) := h 1 zero_lt_one coe_lt_top 
   by 
     rw [←coe_add] at this <;> exact (not_top_le_coe this).elim
 | some a, some b, h =>
@@ -787,28 +811,30 @@ theorem lt_iff_exists_real_btwn : a < b ↔ ∃ r : ℝ, 0 ≤ r ∧ a < Ennreal
 theorem lt_iff_exists_nnreal_btwn : a < b ↔ ∃ r :  ℝ≥0 , a < r ∧ (r : ℝ≥0∞) < b :=
   WithTop.lt_iff_exists_coe_btwn
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_iff_exists_add_pos_lt : «expr ↔ »(«expr < »(a, b), «expr∃ , »((r : «exprℝ≥0»()), «expr ∧ »(«expr < »(0, r), «expr < »(«expr + »(a, r), b)))) :=
-begin
-  refine [expr ⟨λ hab, _, λ ⟨r, rpos, hr⟩, lt_of_le_of_lt le_self_add hr⟩],
-  cases [expr a] [],
-  { simpa [] [] [] [] [] ["using", expr hab] },
-  rcases [expr lt_iff_exists_real_btwn.1 hab, "with", "⟨", ident c, ",", ident c_nonneg, ",", ident ac, ",", ident cb, "⟩"],
-  let [ident d] [":", expr «exprℝ≥0»()] [":=", expr ⟨c, c_nonneg⟩],
-  have [ident ad] [":", expr «expr < »(a, d)] [],
-  { rw [expr of_real_eq_coe_nnreal c_nonneg] ["at", ident ac],
-    exact [expr coe_lt_coe.1 ac] },
-  refine [expr ⟨«expr - »(d, a), tsub_pos_iff_lt.2 ad, _⟩],
-  rw ["[", expr some_eq_coe, ",", "<-", expr coe_add, "]"] [],
-  convert [] [expr cb] [],
-  have [] [":", expr «expr = »(real.to_nnreal c, d)] [],
-  by { rw ["[", "<-", expr nnreal.coe_eq, ",", expr real.coe_to_nnreal _ c_nonneg, "]"] [],
-    refl },
-  rw ["[", expr add_comm, ",", expr this, "]"] [],
-  exact [expr tsub_add_cancel_of_le ad.le]
-end
+theorem lt_iff_exists_add_pos_lt : a < b ↔ ∃ r :  ℝ≥0 , 0 < r ∧ (a+r) < b :=
+  by 
+    refine' ⟨fun hab => _, fun ⟨r, rpos, hr⟩ => lt_of_le_of_ltₓ le_self_add hr⟩
+    cases a
+    ·
+      simpa using hab 
+    rcases lt_iff_exists_real_btwn.1 hab with ⟨c, c_nonneg, ac, cb⟩
+    let d :  ℝ≥0  := ⟨c, c_nonneg⟩
+    have ad : a < d
+    ·
+      rw [of_real_eq_coe_nnreal c_nonneg] at ac 
+      exact coe_lt_coe.1 ac 
+    refine' ⟨d - a, tsub_pos_iff_lt.2 ad, _⟩
+    rw [some_eq_coe, ←coe_add]
+    convert cb 
+    have  : Real.toNnreal c = d
+    ·
+      ·
+        rw [←Nnreal.coe_eq, Real.coe_to_nnreal _ c_nonneg]
+        rfl 
+    rw [add_commₓ, this]
+    exact tsub_add_cancel_of_le ad.le
 
-theorem coe_nat_lt_coe {n : ℕ} : (n : ℝ≥0∞) < r ↔ «expr↑ » n < r :=
+theorem coe_nat_lt_coe {n : ℕ} : (n : ℝ≥0∞) < r ↔ ↑n < r :=
   Ennreal.coe_nat n ▸ coe_lt_coe
 
 theorem coe_lt_coe_nat {n : ℕ} : (r : ℝ≥0∞) < n ↔ r < n :=
@@ -876,20 +902,25 @@ end Order
 
 section CompleteLattice
 
-theorem coe_Sup {s : Set ℝ≥0 } : BddAbove s → («expr↑ » (Sup s) : ℝ≥0∞) = ⨆(a : _)(_ : a ∈ s), «expr↑ » a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem coe_Sup {s : Set ℝ≥0 } : BddAbove s → (↑Sup s : ℝ≥0∞) = ⨆ (a : _)(_ : a ∈ s), ↑a :=
   WithTop.coe_Sup
 
-theorem coe_Inf {s : Set ℝ≥0 } : s.nonempty → («expr↑ » (Inf s) : ℝ≥0∞) = ⨅(a : _)(_ : a ∈ s), «expr↑ » a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem coe_Inf {s : Set ℝ≥0 } : s.nonempty → (↑Inf s : ℝ≥0∞) = ⨅ (a : _)(_ : a ∈ s), ↑a :=
   WithTop.coe_Inf
 
 @[simp]
 theorem top_mem_upper_bounds {s : Set ℝ≥0∞} : ∞ ∈ UpperBounds s :=
   fun x hx => le_top
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coe_mem_upper_bounds
-{s : set «exprℝ≥0»()} : «expr ↔ »(«expr ∈ »(«expr↑ »(r), upper_bounds «expr '' »((coe : «exprℝ≥0»() → «exprℝ≥0∞»()), s)), «expr ∈ »(r, upper_bounds s)) :=
-by simp [] [] [] ["[", expr upper_bounds, ",", expr ball_image_iff, ",", "-", ident mem_image, ",", "*", "]"] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  coe_mem_upper_bounds
+  { s : Set ℝ≥0 } : ↑ r ∈ UpperBounds ( coeₓ : ℝ≥0 → ℝ≥0∞ ) '' s ↔ r ∈ UpperBounds s
+  :=
+    by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ UpperBounds , ball_image_iff , - mem_image ]
 
 end CompleteLattice
 
@@ -920,8 +951,7 @@ theorem mul_lt_mul (ac : a < c) (bd : b < d) : (a*b) < c*d :=
     rcases lt_iff_exists_nnreal_btwn.1 bd with ⟨b', bb', b'd⟩
     lift b to  ℝ≥0  using ne_top_of_lt bb' 
     normCast  at *
-    calc «expr↑ » (a*b) < «expr↑ » (a'*b') :=
-      coe_lt_coe.2 (mul_lt_mul' aa'.le bb' (zero_le _) ((zero_le a).trans_lt aa'))_ = «expr↑ » a'*«expr↑ » b' :=
+    calc (↑a*b) < ↑a'*b' := coe_lt_coe.2 (mul_lt_mul' aa'.le bb' (zero_le _) ((zero_le a).trans_lt aa'))_ = (↑a')*↑b' :=
       coe_mul _ ≤ c*d := mul_le_mul a'c.le b'd.le
 
 theorem mul_left_mono : Monotone ((·*·) a) :=
@@ -946,22 +976,44 @@ theorem max_mul : (max a b*c) = max (a*c) (b*c) :=
 theorem mul_max : (a*max b c) = max (a*b) (a*c) :=
   mul_left_mono.map_max
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_eq_mul_left : «expr ≠ »(a, 0) → «expr ≠ »(a, «expr∞»()) → «expr ↔ »(«expr = »(«expr * »(a, b), «expr * »(a, c)), «expr = »(b, c)) :=
-begin
-  cases [expr a] []; cases [expr b] []; cases [expr c] []; simp [] [] [] ["[", expr none_eq_top, ",", expr some_eq_coe, ",", expr mul_top, ",", expr top_mul, ",", "-", ident coe_mul, ",", expr coe_mul.symm, ",", expr nnreal.mul_eq_mul_left, "]"] [] [] { contextual := tt }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mul_eq_mul_left
+  : a ≠ 0 → a ≠ ∞ → a * b = a * c ↔ b = c
+  :=
+    by
+      cases a
+        <;>
+        cases b
+          <;>
+          cases c
+            <;>
+            simp
+              ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+              [ none_eq_top , some_eq_coe , mul_top , top_mul , - coe_mul , coe_mul.symm , Nnreal.mul_eq_mul_left ]
 
 theorem mul_eq_mul_right : c ≠ 0 → c ≠ ∞ → (((a*c) = b*c) ↔ a = b) :=
   mul_commₓ c a ▸ mul_commₓ c b ▸ mul_eq_mul_left
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_le_mul_left : «expr ≠ »(a, 0) → «expr ≠ »(a, «expr∞»()) → «expr ↔ »(«expr ≤ »(«expr * »(a, b), «expr * »(a, c)), «expr ≤ »(b, c)) :=
-begin
-  cases [expr a] []; cases [expr b] []; cases [expr c] []; simp [] [] [] ["[", expr none_eq_top, ",", expr some_eq_coe, ",", expr mul_top, ",", expr top_mul, ",", "-", ident coe_mul, ",", expr coe_mul.symm, "]"] [] [] { contextual := tt },
-  assume [binders (h)],
-  exact [expr mul_le_mul_left (pos_iff_ne_zero.2 h)]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mul_le_mul_left
+  : a ≠ 0 → a ≠ ∞ → a * b ≤ a * c ↔ b ≤ c
+  :=
+    by
+      cases a
+          <;>
+          cases b
+            <;>
+            cases c
+              <;>
+              simp
+                ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                [ none_eq_top , some_eq_coe , mul_top , top_mul , - coe_mul , coe_mul.symm ]
+        intro h
+        exact mul_le_mul_left pos_iff_ne_zero . 2 h
 
 theorem mul_le_mul_right : c ≠ 0 → c ≠ ∞ → (((a*c) ≤ b*c) ↔ a ≤ b) :=
   mul_commₓ c a ▸ mul_commₓ c b ▸ mul_le_mul_left
@@ -982,7 +1034,7 @@ section Cancel
   This is true in `ℝ≥0∞` for all elements except `∞`. -/
 theorem add_le_cancellable_iff_ne {a : ℝ≥0∞} : AddLeCancellable a ↔ a ≠ ∞ :=
   by 
-    split 
+    constructor
     ·
       rintro h rfl 
       refine' ennreal.zero_lt_one.not_le (h _)
@@ -1017,16 +1069,20 @@ end Cancel
 
 section Sub
 
-theorem sub_eq_Inf {a b : ℝ≥0∞} : a - b = Inf { d | a ≤ d+b } :=
-  le_antisymmₓ (le_Inf$ fun c => tsub_le_iff_right.mpr)$ Inf_le le_tsub_add
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  sub_eq_Inf
+  { a b : ℝ≥0∞ } : a - b = Inf { d | a ≤ d + b }
+  := le_antisymmₓ le_Inf $ fun c => tsub_le_iff_right . mpr $ Inf_le le_tsub_add
 
 /-- This is a special case of `with_top.coe_sub` in the `ennreal` namespace -/
-theorem coe_sub : («expr↑ » (r - p) : ℝ≥0∞) = «expr↑ » r - «expr↑ » p :=
+theorem coe_sub : (↑(r - p) : ℝ≥0∞) = ↑r - ↑p :=
   by 
     simp 
 
 /-- This is a special case of `with_top.top_sub_coe` in the `ennreal` namespace -/
-theorem top_sub_coe : ∞ - «expr↑ » r = ∞ :=
+theorem top_sub_coe : ∞ - ↑r = ∞ :=
   by 
     simp 
 
@@ -1106,29 +1162,34 @@ section Sum
 
 open Finset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- A product of finite numbers is still finite -/
-theorem prod_lt_top {s : Finset α} {f : α → ℝ≥0∞} (h : ∀ a _ : a ∈ s, f a ≠ ∞) : (∏a in s, f a) < ∞ :=
+theorem prod_lt_top {s : Finset α} {f : α → ℝ≥0∞} (h : ∀ a _ : a ∈ s, f a ≠ ∞) : (∏ a in s, f a) < ∞ :=
   WithTop.prod_lt_top h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- A sum of finite numbers is still finite -/
-theorem sum_lt_top {s : Finset α} {f : α → ℝ≥0∞} (h : ∀ a _ : a ∈ s, f a ≠ ∞) : (∑a in s, f a) < ∞ :=
+theorem sum_lt_top {s : Finset α} {f : α → ℝ≥0∞} (h : ∀ a _ : a ∈ s, f a ≠ ∞) : (∑ a in s, f a) < ∞ :=
   WithTop.sum_lt_top h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- A sum of finite numbers is still finite -/
-theorem sum_lt_top_iff {s : Finset α} {f : α → ℝ≥0∞} : (∑a in s, f a) < ∞ ↔ ∀ a _ : a ∈ s, f a < ∞ :=
+theorem sum_lt_top_iff {s : Finset α} {f : α → ℝ≥0∞} : (∑ a in s, f a) < ∞ ↔ ∀ a _ : a ∈ s, f a < ∞ :=
   WithTop.sum_lt_top_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- A sum of numbers is infinite iff one of them is infinite -/
-theorem sum_eq_top_iff {s : Finset α} {f : α → ℝ≥0∞} : (∑x in s, f x) = ∞ ↔ ∃ (a : _)(_ : a ∈ s), f a = ∞ :=
+theorem sum_eq_top_iff {s : Finset α} {f : α → ℝ≥0∞} : (∑ x in s, f x) = ∞ ↔ ∃ (a : _)(_ : a ∈ s), f a = ∞ :=
   WithTop.sum_eq_top_iff
 
-theorem lt_top_of_sum_ne_top {s : Finset α} {f : α → ℝ≥0∞} (h : (∑x in s, f x) ≠ ∞) {a : α} (ha : a ∈ s) : f a < ∞ :=
+theorem lt_top_of_sum_ne_top {s : Finset α} {f : α → ℝ≥0∞} (h : (∑ x in s, f x) ≠ ∞) {a : α} (ha : a ∈ s) : f a < ∞ :=
   sum_lt_top_iff.1 h.lt_top a ha
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- seeing `ℝ≥0∞` as `ℝ≥0` does not change their sum, unless one of the `ℝ≥0∞` is
 infinity -/
 theorem to_nnreal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a _ : a ∈ s, f a ≠ ∞) :
-  Ennreal.toNnreal (∑a in s, f a) = ∑a in s, Ennreal.toNnreal (f a) :=
+  Ennreal.toNnreal (∑ a in s, f a) = ∑ a in s, Ennreal.toNnreal (f a) :=
   by 
     rw [←coe_eq_coe, coe_to_nnreal, coe_finset_sum, sum_congr rfl]
     ·
@@ -1137,21 +1198,23 @@ theorem to_nnreal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a _ : a 
     ·
       exact (sum_lt_top hf).Ne
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- seeing `ℝ≥0∞` as `real` does not change their sum, unless one of the `ℝ≥0∞` is infinity -/
 theorem to_real_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a _ : a ∈ s, f a ≠ ∞) :
-  Ennreal.toReal (∑a in s, f a) = ∑a in s, Ennreal.toReal (f a) :=
+  Ennreal.toReal (∑ a in s, f a) = ∑ a in s, Ennreal.toReal (f a) :=
   by 
     rw [Ennreal.toReal, to_nnreal_sum hf, Nnreal.coe_sum]
     rfl
 
 theorem of_real_sum_of_nonneg {s : Finset α} {f : α → ℝ} (hf : ∀ i, i ∈ s → 0 ≤ f i) :
-  Ennreal.ofReal (∑i in s, f i) = ∑i in s, Ennreal.ofReal (f i) :=
+  Ennreal.ofReal (∑ i in s, f i) = ∑ i in s, Ennreal.ofReal (f i) :=
   by 
     simpRw [Ennreal.ofReal, ←coe_finset_sum, coe_eq_coe]
     exact Real.to_nnreal_sum_of_nonneg hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem sum_lt_sum_of_nonempty {s : Finset α} (hs : s.nonempty) {f g : α → ℝ≥0∞} (Hlt : ∀ i _ : i ∈ s, f i < g i) :
-  (∑i in s, f i) < ∑i in s, g i :=
+  (∑ i in s, f i) < ∑ i in s, g i :=
   by 
     classical 
     induction' s using Finset.induction_on with a s as IH
@@ -1167,7 +1230,8 @@ theorem sum_lt_sum_of_nonempty {s : Finset α} (hs : s.nonempty) {f g : α → �
           Ennreal.add_lt_add (Hlt _ (Finset.mem_insert_self _ _))
             (IH h's fun i hi => Hlt _ (Finset.mem_insert_of_mem hi))
 
-theorem exists_le_of_sum_le {s : Finset α} (hs : s.nonempty) {f g : α → ℝ≥0∞} (Hle : (∑i in s, f i) ≤ ∑i in s, g i) :
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem exists_le_of_sum_le {s : Finset α} (hs : s.nonempty) {f g : α → ℝ≥0∞} (Hle : (∑ i in s, f i) ≤ ∑ i in s, g i) :
   ∃ (i : _)(_ : i ∈ s), f i ≤ g i :=
   by 
     contrapose! Hle 
@@ -1243,17 +1307,18 @@ end Bit
 
 section Inv
 
-noncomputable theory
+noncomputable section 
 
-instance : HasInv ℝ≥0∞ :=
-  ⟨fun a => Inf { b | 1 ≤ a*b }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance : HasInv ℝ≥0∞ := ⟨ fun a => Inf { b | 1 ≤ a * b } ⟩
 
 instance : DivInvMonoidₓ ℝ≥0∞ :=
   { (inferInstance : Monoidₓ ℝ≥0∞) with inv := HasInv.inv }
 
 @[simp]
 theorem inv_zero : (0 : ℝ≥0∞)⁻¹ = ∞ :=
-  show Inf { b:ℝ≥0∞ | 1 ≤ 0*b } = ∞by 
+  show Inf { b : ℝ≥0∞ | 1 ≤ 0*b } = ∞by 
     simp  <;> rfl
 
 @[simp]
@@ -1266,10 +1331,10 @@ theorem inv_top : ∞⁻¹ = 0 :=
             simp [ne_of_gtₓ h, top_mul]
 
 @[simp, normCast]
-theorem coe_inv (hr : r ≠ 0) : («expr↑ » (r⁻¹) : ℝ≥0∞) = «expr↑ » r⁻¹ :=
+theorem coe_inv (hr : r ≠ 0) : (↑r⁻¹ : ℝ≥0∞) = (↑r)⁻¹ :=
   le_antisymmₓ
     (le_Inf$
-      fun b hb : 1 ≤ «expr↑ » r*b =>
+      fun b hb : 1 ≤ (↑r)*b =>
         coe_le_iff.2$
           by 
             rintro b rfl <;> rwa [←coe_mul, ←coe_one, coe_le_coe, ←Nnreal.inv_le hr] at hb)
@@ -1277,7 +1342,7 @@ theorem coe_inv (hr : r ≠ 0) : («expr↑ » (r⁻¹) : ℝ≥0∞) = «expr�
       by 
         simp  <;> rw [←coe_mul, mul_inv_cancel hr] <;> exact le_reflₓ 1)
 
-theorem coe_inv_le : («expr↑ » (r⁻¹) : ℝ≥0∞) ≤ «expr↑ » r⁻¹ :=
+theorem coe_inv_le : (↑r⁻¹ : ℝ≥0∞) ≤ (↑r)⁻¹ :=
   if hr : r = 0 then
     by 
       simp only [hr, inv_zero, coe_zero, le_top]
@@ -1291,7 +1356,7 @@ theorem coe_inv_two : ((2⁻¹ :  ℝ≥0 ) : ℝ≥0∞) = 2⁻¹ :=
     rw [coe_inv (ne_of_gtₓ _root_.zero_lt_two), coe_two]
 
 @[simp, normCast]
-theorem coe_div (hr : r ≠ 0) : («expr↑ » (p / r) : ℝ≥0∞) = p / r :=
+theorem coe_div (hr : r ≠ 0) : (↑(p / r) : ℝ≥0∞) = p / r :=
   by 
     rw [div_eq_mul_inv, div_eq_mul_inv, coe_mul, coe_inv hr]
 
@@ -1368,14 +1433,11 @@ theorem inv_lt_inv : a⁻¹ < b⁻¹ ↔ b < a :=
     ·
       simp only [not_lt_zero, not_top_lt]
     ·
-      cases' eq_or_lt_of_le (zero_le a) with ha ha <;> cases' eq_or_lt_of_le (zero_le b) with hb hb
-      ·
-        subst a 
-        subst b 
-        simp 
+      cases' eq_or_lt_of_le (zero_le a) with ha ha
       ·
         subst a 
         simp 
+      cases' eq_or_lt_of_le (zero_le b) with hb hb
       ·
         subst b 
         simp [pos_iff_ne_zero, lt_top_iff_ne_top, inv_ne_top]
@@ -1457,36 +1519,41 @@ theorem div_eq_top : a / b = ∞ ↔ a ≠ 0 ∧ b = 0 ∨ a = ∞ ∧ b ≠ ∞
   by 
     simp [div_eq_mul_inv, Ennreal.mul_eq_top]
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_div_iff_mul_le
-(h0 : «expr ∨ »(«expr ≠ »(b, 0), «expr ≠ »(c, 0)))
-(ht : «expr ∨ »(«expr ≠ »(b, «expr∞»()), «expr ≠ »(c, «expr∞»()))) : «expr ↔ »(«expr ≤ »(a, «expr / »(c, b)), «expr ≤ »(«expr * »(a, b), c)) :=
-begin
-  cases [expr b] [],
-  { simp [] [] [] [] [] ["at", ident ht],
-    split,
-    { assume [binders (ha)],
-      simp [] [] [] [] [] ["at", ident ha],
-      simp [] [] [] ["[", expr ha, "]"] [] [] },
-    { contrapose [] [],
-      assume [binders (ha)],
-      simp [] [] [] [] [] ["at", ident ha],
-      have [] [":", expr «expr = »(«expr * »(a, «expr∞»()), «expr∞»())] [],
-      by simp [] [] [] ["[", expr ennreal.mul_eq_top, ",", expr ha, "]"] [] [],
-      simp [] [] [] ["[", expr this, ",", expr ht, "]"] [] [] } },
-  by_cases [expr hb, ":", expr «expr ≠ »(b, 0)],
-  { have [] [":", expr «expr ≠ »((b : «exprℝ≥0∞»()), 0)] [],
-    by simp [] [] [] ["[", expr hb, "]"] [] [],
-    rw ["[", "<-", expr ennreal.mul_le_mul_left this coe_ne_top, "]"] [],
-    suffices [] [":", expr «expr ↔ »(«expr ≤ »(«expr * »(«expr↑ »(b), a), «expr * »(«expr * »(«expr↑ »(b), «expr↑ »(«expr ⁻¹»(b))), c)), «expr ≤ »(«expr * »(a, «expr↑ »(b)), c))],
-    { simpa [] [] [] ["[", expr some_eq_coe, ",", expr div_eq_mul_inv, ",", expr hb, ",", expr mul_left_comm, ",", expr mul_comm, ",", expr mul_assoc, "]"] [] [] },
-    rw ["[", "<-", expr coe_mul, ",", expr mul_inv_cancel hb, ",", expr coe_one, ",", expr one_mul, ",", expr mul_comm, "]"] [] },
-  { simp [] [] [] [] [] ["at", ident hb],
-    simp [] [] [] ["[", expr hb, "]"] [] ["at", ident h0],
-    have [] [":", expr «expr = »(«expr / »(c, 0), «expr∞»())] [],
-    by simp [] [] [] ["[", expr div_eq_top, ",", expr h0, "]"] [] [],
-    simp [] [] [] ["[", expr hb, ",", expr this, "]"] [] [] }
-end
+theorem le_div_iff_mul_le (h0 : b ≠ 0 ∨ c ≠ 0) (ht : b ≠ ∞ ∨ c ≠ ∞) : a ≤ c / b ↔ (a*b) ≤ c :=
+  by 
+    cases b
+    ·
+      simp  at ht 
+      constructor
+      ·
+        intro ha 
+        simp  at ha 
+        simp [ha]
+      ·
+        contrapose 
+        intro ha 
+        simp  at ha 
+        have  : (a*∞) = ∞
+        ·
+          simp [Ennreal.mul_eq_top, ha]
+        simp [this, ht]
+    byCases' hb : b ≠ 0
+    ·
+      have  : (b : ℝ≥0∞) ≠ 0
+      ·
+        simp [hb]
+      rw [←Ennreal.mul_le_mul_left this coe_ne_top]
+      suffices  : (((↑b)*a) ≤ ((↑b)*↑b⁻¹)*c) ↔ (a*↑b) ≤ c
+      ·
+        simpa [some_eq_coe, div_eq_mul_inv, hb, mul_left_commₓ, mul_commₓ, mul_assocₓ]
+      rw [←coe_mul, mul_inv_cancel hb, coe_one, one_mulₓ, mul_commₓ]
+    ·
+      simp  at hb 
+      simp [hb] at h0 
+      have  : c / 0 = ∞
+      ·
+        simp [div_eq_top, h0]
+      simp [hb, this]
 
 theorem div_le_iff_le_mul (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c ≠ 0) : a / b ≤ c ↔ a ≤ c*b :=
   by 
@@ -1498,17 +1565,18 @@ theorem div_le_iff_le_mul (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c �
 theorem lt_div_iff_mul_lt (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c ≠ 0) : c < a / b ↔ (c*b) < a :=
   lt_iff_lt_of_le_iff_le (div_le_iff_le_mul hb0 hbt)
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem div_le_of_le_mul (h : «expr ≤ »(a, «expr * »(b, c))) : «expr ≤ »(«expr / »(a, c), b) :=
-begin
-  by_cases [expr h0, ":", expr «expr = »(c, 0)],
-  { have [] [":", expr «expr = »(a, 0)] [],
-    by simpa [] [] [] ["[", expr h0, "]"] [] ["using", expr h],
-    simp [] [] [] ["[", "*", "]"] [] [] },
-  by_cases [expr hinf, ":", expr «expr = »(c, «expr∞»())],
-  by simp [] [] [] ["[", expr hinf, "]"] [] [],
-  exact [expr (div_le_iff_le_mul (or.inl h0) (or.inl hinf)).2 h]
-end
+theorem div_le_of_le_mul (h : a ≤ b*c) : a / c ≤ b :=
+  by 
+    byCases' h0 : c = 0
+    ·
+      have  : a = 0
+      ·
+        simpa [h0] using h 
+      simp 
+    byCases' hinf : c = ∞
+    ·
+      simp [hinf]
+    exact (div_le_iff_le_mul (Or.inl h0) (Or.inl hinf)).2 h
 
 theorem div_le_of_le_mul' (h : a ≤ b*c) : a / b ≤ c :=
   div_le_of_le_mul$ mul_commₓ b c ▸ h
@@ -1539,12 +1607,21 @@ theorem mul_lt_of_lt_div (h : a < b / c) : (a*c) < b :=
 theorem mul_lt_of_lt_div' (h : a < b / c) : (c*a) < b :=
   mul_commₓ a c ▸ mul_lt_of_lt_div h
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inv_le_iff_le_mul : («expr = »(b, «expr∞»()) → «expr ≠ »(a, 0)) → («expr = »(a, «expr∞»()) → «expr ≠ »(b, 0)) → «expr ↔ »(«expr ≤ »(«expr ⁻¹»(a), b), «expr ≤ »(1, «expr * »(a, b))) :=
-begin
-  cases [expr a] []; cases [expr b] []; simp [] [] [] ["[", expr none_eq_top, ",", expr some_eq_coe, ",", expr mul_top, ",", expr top_mul, "]"] [] [] { contextual := tt },
-  by_cases [expr «expr = »(a, 0)]; simp [] [] [] ["[", "*", ",", "-", ident coe_mul, ",", expr coe_mul.symm, ",", "-", ident coe_inv, ",", expr (coe_inv _).symm, ",", expr nnreal.inv_le, "]"] [] []
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  inv_le_iff_le_mul
+  : b = ∞ → a ≠ 0 → a = ∞ → b ≠ 0 → a ⁻¹ ≤ b ↔ 1 ≤ a * b
+  :=
+    by
+      cases a
+          <;>
+          cases b
+            <;>
+            simp
+              ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+              [ none_eq_top , some_eq_coe , mul_top , top_mul ]
+        byCases' a = 0 <;> simp [ - coe_mul , coe_mul.symm , - coe_inv , coe_inv _ . symm , Nnreal.inv_le ]
 
 @[simp]
 theorem le_inv_iff_mul_le : a ≤ b⁻¹ ↔ (a*b) ≤ 1 :=
@@ -1567,30 +1644,31 @@ theorem mul_inv_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : (a*a⁻¹) = 1 :=
 theorem inv_mul_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : (a⁻¹*a) = 1 :=
   mul_commₓ a (a⁻¹) ▸ mul_inv_cancel h0 ht
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_inv_of_mul_eq_one (h : «expr = »(«expr * »(a, b), 1)) : «expr = »(a, «expr ⁻¹»(b)) :=
-begin
-  rcases [expr eq_or_ne b «expr∞»(), "with", ident rfl, "|", ident hb],
-  { have [] [":", expr false] [],
-    by simpa [] [] [] ["[", expr left_ne_zero_of_mul_eq_one h, "]"] [] ["using", expr h],
-    exact [expr this.elim] },
-  { rw ["[", "<-", expr mul_one a, ",", "<-", expr mul_inv_cancel (right_ne_zero_of_mul_eq_one h) hb, ",", "<-", expr mul_assoc, ",", expr h, ",", expr one_mul, "]"] [] }
-end
+theorem eq_inv_of_mul_eq_one (h : (a*b) = 1) : a = b⁻¹ :=
+  by 
+    rcases eq_or_ne b ∞ with (rfl | hb)
+    ·
+      have  : False
+      ·
+        simpa [left_ne_zero_of_mul_eq_one h] using h 
+      exact this.elim
+    ·
+      rw [←mul_oneₓ a, ←mul_inv_cancel (right_ne_zero_of_mul_eq_one h) hb, ←mul_assocₓ, h, one_mulₓ]
 
 theorem mul_le_iff_le_inv {a b r : ℝ≥0∞} (hr₀ : r ≠ 0) (hr₁ : r ≠ ∞) : (r*a) ≤ b ↔ a ≤ r⁻¹*b :=
   by 
     rw [←@Ennreal.mul_le_mul_left _ a _ hr₀ hr₁, ←mul_assocₓ, mul_inv_cancel hr₀ hr₁, one_mulₓ]
 
-theorem le_of_forall_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , «expr↑ » r < x → «expr↑ » r ≤ y) : x ≤ y :=
+theorem le_of_forall_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , ↑r < x → ↑r ≤ y) : x ≤ y :=
   by 
     refine' le_of_forall_ge_of_dense fun r hr => _ 
     lift r to  ℝ≥0  using ne_top_of_lt hr 
     exact h r hr
 
-theorem le_of_forall_pos_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , 0 < r → «expr↑ » r < x → «expr↑ » r ≤ y) : x ≤ y :=
+theorem le_of_forall_pos_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , 0 < r → ↑r < x → ↑r ≤ y) : x ≤ y :=
   le_of_forall_nnreal_lt$ fun r hr => (zero_le r).eq_or_lt.elim (fun h => h ▸ zero_le _) fun h0 => h r h0 hr
 
-theorem eq_top_of_forall_nnreal_le {x : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , «expr↑ » r ≤ x) : x = ∞ :=
+theorem eq_top_of_forall_nnreal_le {x : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , ↑r ≤ x) : x = ∞ :=
   top_unique$ le_of_forall_nnreal_lt$ fun r hr => h r
 
 theorem add_div {a b c : ℝ≥0∞} : (a+b) / c = (a / c)+b / c :=
@@ -1646,21 +1724,16 @@ theorem half_pos {a : ℝ≥0∞} (h : a ≠ 0) : 0 < a / 2 :=
 theorem one_half_lt_one : (2⁻¹ : ℝ≥0∞) < 1 :=
   inv_lt_one.2$ one_lt_two
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem half_lt_self
-{a : «exprℝ≥0∞»()}
-(hz : «expr ≠ »(a, 0))
-(ht : «expr ≠ »(a, «expr∞»())) : «expr < »(«expr / »(a, 2), a) :=
-begin
-  lift [expr a] ["to", expr «exprℝ≥0»()] ["using", expr ht] [],
-  have [ident h] [":", expr «expr = »((2 : «exprℝ≥0∞»()), ((2 : «exprℝ≥0»()) : «exprℝ≥0∞»()))] [],
-  from [expr rfl],
-  have [ident h'] [":", expr «expr ≠ »((2 : «exprℝ≥0»()), 0)] [],
-  from [expr _root_.two_ne_zero'],
-  rw ["[", expr h, ",", "<-", expr coe_div h', ",", expr coe_lt_coe, "]"] [],
-  norm_cast ["at", ident hz],
-  exact [expr nnreal.half_lt_self hz]
-end
+theorem half_lt_self {a : ℝ≥0∞} (hz : a ≠ 0) (ht : a ≠ ∞) : a / 2 < a :=
+  by 
+    lift a to  ℝ≥0  using ht 
+    have h : (2 : ℝ≥0∞) = ((2 :  ℝ≥0 ) : ℝ≥0∞)
+    exact rfl 
+    have h' : (2 :  ℝ≥0 ) ≠ 0 
+    exact _root_.two_ne_zero' 
+    rw [h, ←coe_div h', coe_lt_coe]
+    normCast  at hz 
+    exact Nnreal.half_lt_self hz
 
 theorem half_le_self : a / 2 ≤ a :=
   le_add_self.trans_eq (add_halves _)
@@ -1685,35 +1758,31 @@ theorem exists_inv_nat_lt {a : ℝ≥0∞} (h : a ≠ 0) : ∃ n : ℕ, (n : ℝ
     by 
       simp only [inv_lt_inv, Ennreal.exists_nat_gt (inv_ne_top.2 h)]
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_nat_pos_mul_gt
-(ha : «expr ≠ »(a, 0))
-(hb : «expr ≠ »(b, «expr∞»())) : «expr∃ , »((n «expr > » 0), «expr < »(b, «expr * »((n : exprℕ()), a))) :=
-begin
-  have [] [":", expr «expr ≠ »(«expr / »(b, a), «expr∞»())] [],
-  from [expr mul_ne_top hb (inv_ne_top.2 ha)],
-  refine [expr (ennreal.exists_nat_gt this).imp (λ n hn, _)],
-  have [] [":", expr «expr < »(0, (n : «exprℝ≥0∞»()))] [],
-  from [expr (zero_le _).trans_lt hn],
-  refine [expr ⟨coe_nat_lt_coe_nat.1 this, _⟩],
-  rwa ["[", "<-", expr ennreal.div_lt_iff (or.inl ha) (or.inr hb), "]"] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr > » 0)
+theorem exists_nat_pos_mul_gt (ha : a ≠ 0) (hb : b ≠ ∞) : ∃ (n : _)(_ : n > 0), b < (n : ℕ)*a :=
+  by 
+    have  : b / a ≠ ∞
+    exact mul_ne_top hb (inv_ne_top.2 ha)
+    refine' (Ennreal.exists_nat_gt this).imp fun n hn => _ 
+    have  : 0 < (n : ℝ≥0∞)
+    exact (zero_le _).trans_lt hn 
+    refine' ⟨coe_nat_lt_coe_nat.1 this, _⟩
+    rwa [←Ennreal.div_lt_iff (Or.inl ha) (Or.inr hb)]
 
 theorem exists_nat_mul_gt (ha : a ≠ 0) (hb : b ≠ ∞) : ∃ n : ℕ, b < n*a :=
   (exists_nat_pos_mul_gt ha hb).imp$ fun n => Exists.snd
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_nat_pos_inv_mul_lt
-(ha : «expr ≠ »(a, «expr∞»()))
-(hb : «expr ≠ »(b, 0)) : «expr∃ , »((n «expr > » 0), «expr < »(«expr * »(«expr ⁻¹»(((n : exprℕ()) : «exprℝ≥0∞»())), a), b)) :=
-begin
-  rcases [expr exists_nat_pos_mul_gt hb ha, "with", "⟨", ident n, ",", ident npos, ",", ident hn, "⟩"],
-  have [] [":", expr «expr ≠ »((n : «exprℝ≥0∞»()), 0)] [":=", expr nat.cast_ne_zero.2 npos.lt.ne'],
-  use ["[", expr n, ",", expr npos, "]"],
-  rwa ["[", "<-", expr one_mul b, ",", "<-", expr inv_mul_cancel this coe_nat_ne_top, ",", expr mul_assoc, ",", expr mul_lt_mul_left (inv_ne_zero.2 coe_nat_ne_top) (inv_ne_top.2 this), "]"] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr > » 0)
+theorem exists_nat_pos_inv_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ (n : _)(_ : n > 0), (((n : ℕ) : ℝ≥0∞)⁻¹*a) < b :=
+  by 
+    rcases exists_nat_pos_mul_gt hb ha with ⟨n, npos, hn⟩
+    have  : (n : ℝ≥0∞) ≠ 0 := Nat.cast_ne_zero.2 npos.lt.ne' 
+    use n, npos 
+    rwa [←one_mulₓ b, ←inv_mul_cancel this coe_nat_ne_top, mul_assocₓ,
+      mul_lt_mul_left (inv_ne_zero.2 coe_nat_ne_top) (inv_ne_top.2 this)]
 
-theorem exists_nnreal_pos_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ (n : _)(_ : n > 0), («expr↑ » (n :  ℝ≥0 )*a) < b :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr > » 0)
+theorem exists_nnreal_pos_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ (n : _)(_ : n > 0), ((↑(n :  ℝ≥0 ))*a) < b :=
   by 
     rcases exists_nat_pos_inv_mul_lt ha hb with ⟨n, npos : 0 < n, hn⟩
     use (n :  ℝ≥0 )⁻¹
@@ -1727,17 +1796,15 @@ theorem exists_inv_two_pow_lt (ha : a ≠ 0) : ∃ n : ℕ, 2⁻¹ ^ n < a :=
     normCast 
     exact n.lt_two_pow
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, norm_cast #[]]
-theorem coe_zpow
-(hr : «expr ≠ »(r, 0))
-(n : exprℤ()) : «expr = »((«expr↑ »(«expr ^ »(r, n)) : «exprℝ≥0∞»()), «expr ^ »(r, n)) :=
-begin
-  cases [expr n] [],
-  { simp [] [] ["only"] ["[", expr int.of_nat_eq_coe, ",", expr coe_pow, ",", expr zpow_coe_nat, "]"] [] [] },
-  { have [] [":", expr «expr ≠ »(«expr ^ »(r, n.succ), 0)] [":=", expr pow_ne_zero «expr + »(n, 1) hr],
-    simp [] [] ["only"] ["[", expr zpow_neg_succ_of_nat, ",", expr coe_inv this, ",", expr coe_pow, "]"] [] [] }
-end
+@[simp, normCast]
+theorem coe_zpow (hr : r ≠ 0) (n : ℤ) : (↑(r ^ n) : ℝ≥0∞) = r ^ n :=
+  by 
+    cases n
+    ·
+      simp only [Int.of_nat_eq_coe, coe_pow, zpow_coe_nat]
+    ·
+      have  : r ^ n.succ ≠ 0 := pow_ne_zero (n+1) hr 
+      simp only [zpow_neg_succ_of_nat, coe_inv this, coe_pow]
 
 theorem zpow_pos (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : 0 < a ^ n :=
   by 
@@ -1755,58 +1822,54 @@ theorem zpow_lt_top (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : a ^ n < ∞ :=
     ·
       simp only [Ennreal.pow_pos ha.bot_lt (n+1), zpow_neg_succ_of_nat, inv_lt_top]
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_mem_Ico_zpow
-{x y : «exprℝ≥0∞»()}
-(hx : «expr ≠ »(x, 0))
-(h'x : «expr ≠ »(x, «expr∞»()))
-(hy : «expr < »(1, y))
-(h'y : «expr ≠ »(y, «expr⊤»())) : «expr∃ , »((n : exprℤ()), «expr ∈ »(x, Ico «expr ^ »(y, n) «expr ^ »(y, «expr + »(n, 1)))) :=
-begin
-  lift [expr x] ["to", expr «exprℝ≥0»()] ["using", expr h'x] [],
-  lift [expr y] ["to", expr «exprℝ≥0»()] ["using", expr h'y] [],
-  have [ident A] [":", expr «expr ≠ »(y, 0)] [],
-  by simpa [] [] ["only"] ["[", expr ne.def, ",", expr coe_eq_zero, "]"] [] ["using", expr (ennreal.zero_lt_one.trans hy).ne'],
-  obtain ["⟨", ident n, ",", ident hn, ",", ident h'n, "⟩", ":", expr «expr∃ , »((n : exprℤ()), «expr ∧ »(«expr ≤ »(«expr ^ »(y, n), x), «expr < »(x, «expr ^ »(y, «expr + »(n, 1)))))],
-  { refine [expr nnreal.exists_mem_Ico_zpow _ (one_lt_coe_iff.1 hy)],
-    simpa [] [] ["only"] ["[", expr ne.def, ",", expr coe_eq_zero, "]"] [] ["using", expr hx] },
-  refine [expr ⟨n, _, _⟩],
-  { rwa ["[", "<-", expr ennreal.coe_zpow A, ",", expr ennreal.coe_le_coe, "]"] [] },
-  { rwa ["[", "<-", expr ennreal.coe_zpow A, ",", expr ennreal.coe_lt_coe, "]"] [] }
-end
+theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
+  ∃ n : ℤ, x ∈ Ico (y ^ n) (y ^ n+1) :=
+  by 
+    lift x to  ℝ≥0  using h'x 
+    lift y to  ℝ≥0  using h'y 
+    have A : y ≠ 0
+    ·
+      simpa only [Ne.def, coe_eq_zero] using (ennreal.zero_lt_one.trans hy).ne' 
+    obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n ≤ x ∧ x < y ^ n+1
+    ·
+      refine' Nnreal.exists_mem_Ico_zpow _ (one_lt_coe_iff.1 hy)
+      simpa only [Ne.def, coe_eq_zero] using hx 
+    refine' ⟨n, _, _⟩
+    ·
+      rwa [←Ennreal.coe_zpow A, Ennreal.coe_le_coe]
+    ·
+      rwa [←Ennreal.coe_zpow A, Ennreal.coe_lt_coe]
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_mem_Ioc_zpow
-{x y : «exprℝ≥0∞»()}
-(hx : «expr ≠ »(x, 0))
-(h'x : «expr ≠ »(x, «expr∞»()))
-(hy : «expr < »(1, y))
-(h'y : «expr ≠ »(y, «expr⊤»())) : «expr∃ , »((n : exprℤ()), «expr ∈ »(x, Ioc «expr ^ »(y, n) «expr ^ »(y, «expr + »(n, 1)))) :=
-begin
-  lift [expr x] ["to", expr «exprℝ≥0»()] ["using", expr h'x] [],
-  lift [expr y] ["to", expr «exprℝ≥0»()] ["using", expr h'y] [],
-  have [ident A] [":", expr «expr ≠ »(y, 0)] [],
-  by simpa [] [] ["only"] ["[", expr ne.def, ",", expr coe_eq_zero, "]"] [] ["using", expr (ennreal.zero_lt_one.trans hy).ne'],
-  obtain ["⟨", ident n, ",", ident hn, ",", ident h'n, "⟩", ":", expr «expr∃ , »((n : exprℤ()), «expr ∧ »(«expr < »(«expr ^ »(y, n), x), «expr ≤ »(x, «expr ^ »(y, «expr + »(n, 1)))))],
-  { refine [expr nnreal.exists_mem_Ioc_zpow _ (one_lt_coe_iff.1 hy)],
-    simpa [] [] ["only"] ["[", expr ne.def, ",", expr coe_eq_zero, "]"] [] ["using", expr hx] },
-  refine [expr ⟨n, _, _⟩],
-  { rwa ["[", "<-", expr ennreal.coe_zpow A, ",", expr ennreal.coe_lt_coe, "]"] [] },
-  { rwa ["[", "<-", expr ennreal.coe_zpow A, ",", expr ennreal.coe_le_coe, "]"] [] }
-end
+theorem exists_mem_Ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
+  ∃ n : ℤ, x ∈ Ioc (y ^ n) (y ^ n+1) :=
+  by 
+    lift x to  ℝ≥0  using h'x 
+    lift y to  ℝ≥0  using h'y 
+    have A : y ≠ 0
+    ·
+      simpa only [Ne.def, coe_eq_zero] using (ennreal.zero_lt_one.trans hy).ne' 
+    obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n < x ∧ x ≤ y ^ n+1
+    ·
+      refine' Nnreal.exists_mem_Ioc_zpow _ (one_lt_coe_iff.1 hy)
+      simpa only [Ne.def, coe_eq_zero] using hx 
+    refine' ⟨n, _, _⟩
+    ·
+      rwa [←Ennreal.coe_zpow A, Ennreal.coe_lt_coe]
+    ·
+      rwa [←Ennreal.coe_zpow A, Ennreal.coe_le_coe]
 
 theorem Ioo_zero_top_eq_Union_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y ≠ ⊤) :
-  Ioo (0 : ℝ≥0∞) (∞ : ℝ≥0∞) = ⋃n : ℤ, Ico (y ^ n) (y ^ n+1) :=
+  Ioo (0 : ℝ≥0∞) (∞ : ℝ≥0∞) = ⋃ n : ℤ, Ico (y ^ n) (y ^ n+1) :=
   by 
     ext x 
     simp only [mem_Union, mem_Ioo, mem_Ico]
-    split 
+    constructor
     ·
       rintro ⟨hx, h'x⟩
       exact exists_mem_Ico_zpow hx.ne' h'x.ne hy h'y
     ·
       rintro ⟨n, hn, h'n⟩
-      split 
+      constructor
       ·
         apply lt_of_lt_of_leₓ _ hn 
         exact Ennreal.zpow_pos (ennreal.zero_lt_one.trans hy).ne' h'y _
@@ -1814,31 +1877,31 @@ theorem Ioo_zero_top_eq_Union_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y �
         apply lt_transₓ h'n _ 
         exact Ennreal.zpow_lt_top (ennreal.zero_lt_one.trans hy).ne' h'y _
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zpow_le_of_le
-{x : «exprℝ≥0∞»()}
-(hx : «expr ≤ »(1, x))
-{a b : exprℤ()}
-(h : «expr ≤ »(a, b)) : «expr ≤ »(«expr ^ »(x, a), «expr ^ »(x, b)) :=
-begin
-  induction [expr a] [] ["with", ident a, ident a] []; induction [expr b] [] ["with", ident b, ident b] [],
-  { simp [] [] [] [] [] [],
-    apply [expr pow_le_pow hx],
-    apply [expr int.le_of_coe_nat_le_coe_nat h] },
-  { apply [expr absurd h],
-    apply [expr not_le_of_gt],
-    exact [expr lt_of_lt_of_le (int.neg_succ_lt_zero _) (int.of_nat_nonneg _)] },
-  { simp [] [] ["only"] ["[", expr zpow_neg_succ_of_nat, ",", expr int.of_nat_eq_coe, ",", expr zpow_coe_nat, "]"] [] [],
-    refine [expr le_trans (inv_le_one.2 _) _]; apply [expr ennreal.one_le_pow_of_one_le hx] },
-  { simp [] [] ["only"] ["[", expr zpow_neg_succ_of_nat, "]"] [] [],
-    apply [expr inv_le_inv.2],
-    { apply [expr pow_le_pow hx],
-      have [] [":", expr «expr ≤ »(«expr- »((«expr↑ »(«expr + »(a, 1)) : exprℤ())), «expr- »((«expr↑ »(«expr + »(b, 1)) : exprℤ())))] [],
-      from [expr h],
-      have [ident h'] [] [":=", expr le_of_neg_le_neg this],
-      apply [expr int.le_of_coe_nat_le_coe_nat h'] },
-    repeat { apply [expr pow_pos (lt_of_lt_of_le zero_lt_one hx)] } }
-end
+theorem zpow_le_of_le {x : ℝ≥0∞} (hx : 1 ≤ x) {a b : ℤ} (h : a ≤ b) : x ^ a ≤ x ^ b :=
+  by 
+    induction' a with a a <;> induction' b with b b
+    ·
+      simp 
+      apply pow_le_pow hx 
+      apply Int.le_of_coe_nat_le_coe_nat h
+    ·
+      apply absurd h 
+      apply not_le_of_gtₓ 
+      exact lt_of_lt_of_leₓ (Int.neg_succ_lt_zero _) (Int.of_nat_nonneg _)
+    ·
+      simp only [zpow_neg_succ_of_nat, Int.of_nat_eq_coe, zpow_coe_nat]
+      refine' le_transₓ (inv_le_one.2 _) _ <;> apply Ennreal.one_le_pow_of_one_le hx
+    ·
+      simp only [zpow_neg_succ_of_nat]
+      apply inv_le_inv.2
+      ·
+        apply pow_le_pow hx 
+        have  : -(↑a+1 : ℤ) ≤ -(↑b+1 : ℤ)
+        exact h 
+        have h' := le_of_neg_le_neg this 
+        apply Int.le_of_coe_nat_le_coe_nat h' 
+      repeat' 
+        apply pow_pos (lt_of_lt_of_leₓ zero_lt_one hx)
 
 theorem monotone_zpow {x : ℝ≥0∞} (hx : 1 ≤ x) : Monotone ((· ^ ·) x : ℤ → ℝ≥0∞) :=
   fun a b h => zpow_le_of_le hx h
@@ -2099,7 +2162,8 @@ theorem to_nnreal_mul {a b : ℝ≥0∞} : (a*b).toNnreal = a.to_nnreal*b.to_nnr
 theorem to_nnreal_pow (a : ℝ≥0∞) (n : ℕ) : (a ^ n).toNnreal = a.to_nnreal ^ n :=
   to_nnreal_hom.map_pow a n
 
-theorem to_nnreal_prod {ι : Type _} {s : Finset ι} {f : ι → ℝ≥0∞} : (∏i in s, f i).toNnreal = ∏i in s, (f i).toNnreal :=
+theorem to_nnreal_prod {ι : Type _} {s : Finset ι} {f : ι → ℝ≥0∞} :
+  (∏ i in s, f i).toNnreal = ∏ i in s, (f i).toNnreal :=
   to_nnreal_hom.map_prod _ _
 
 theorem to_nnreal_inv (a : ℝ≥0∞) : a⁻¹.toNnreal = a.to_nnreal⁻¹ :=
@@ -2127,7 +2191,7 @@ theorem to_real_mul : (a*b).toReal = a.to_real*b.to_real :=
 theorem to_real_pow (a : ℝ≥0∞) (n : ℕ) : (a ^ n).toReal = a.to_real ^ n :=
   to_real_hom.map_pow a n
 
-theorem to_real_prod {ι : Type _} {s : Finset ι} {f : ι → ℝ≥0∞} : (∏i in s, f i).toReal = ∏i in s, (f i).toReal :=
+theorem to_real_prod {ι : Type _} {s : Finset ι} {f : ι → ℝ≥0∞} : (∏ i in s, f i).toReal = ∏ i in s, (f i).toReal :=
   to_real_hom.map_prod _ _
 
 theorem to_real_inv (a : ℝ≥0∞) : a⁻¹.toReal = a.to_real⁻¹ :=
@@ -2141,7 +2205,7 @@ theorem to_real_div (a b : ℝ≥0∞) : (a / b).toReal = a.to_real / b.to_real 
     rw [div_eq_mul_inv, to_real_mul, to_real_inv, div_eq_mul_inv]
 
 theorem of_real_prod_of_nonneg {s : Finset α} {f : α → ℝ} (hf : ∀ i, i ∈ s → 0 ≤ f i) :
-  Ennreal.ofReal (∏i in s, f i) = ∏i in s, Ennreal.ofReal (f i) :=
+  Ennreal.ofReal (∏ i in s, f i) = ∏ i in s, Ennreal.ofReal (f i) :=
   by 
     simpRw [Ennreal.ofReal, ←coe_finset_prod, coe_eq_coe]
     exact Real.to_nnreal_prod_of_nonneg hf
@@ -2192,32 +2256,33 @@ section infi
 
 variable {ι : Sort _} {f g : ι → ℝ≥0∞}
 
-theorem infi_add : (infi f+a) = ⨅i, f i+a :=
+theorem infi_add : (infi f+a) = ⨅ i, f i+a :=
   le_antisymmₓ (le_infi$ fun i => add_le_add (infi_le _ _)$ le_reflₓ _)
     (tsub_le_iff_right.1$ le_infi$ fun i => tsub_le_iff_right.2$ infi_le _ _)
 
-theorem supr_sub : (⨆i, f i) - a = ⨆i, f i - a :=
+theorem supr_sub : (⨆ i, f i) - a = ⨆ i, f i - a :=
   le_antisymmₓ (tsub_le_iff_right.2$ supr_le$ fun i => tsub_le_iff_right.1$ le_supr _ i)
     (supr_le$ fun i => tsub_le_tsub (le_supr _ _) (le_reflₓ a))
 
-theorem sub_infi : (a - ⨅i, f i) = ⨆i, a - f i :=
+theorem sub_infi : (a - ⨅ i, f i) = ⨆ i, a - f i :=
   by 
     refine' eq_of_forall_ge_iff$ fun c => _ 
     rw [tsub_le_iff_right, add_commₓ, infi_add]
     simp [tsub_le_iff_right, sub_eq_add_neg, add_commₓ]
 
-theorem Inf_add {s : Set ℝ≥0∞} : (Inf s+a) = ⨅(b : _)(_ : b ∈ s), b+a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+theorem Inf_add {s : Set ℝ≥0∞} : (Inf s+a) = ⨅ (b : _)(_ : b ∈ s), b+a :=
   by 
     simp [Inf_eq_infi, infi_add]
 
-theorem add_infi {a : ℝ≥0∞} : (a+infi f) = ⨅b, a+f b :=
+theorem add_infi {a : ℝ≥0∞} : (a+infi f) = ⨅ b, a+f b :=
   by 
     rw [add_commₓ, infi_add] <;> simp [add_commₓ]
 
-theorem infi_add_infi (h : ∀ i j, ∃ k, (f k+g k) ≤ f i+g j) : (infi f+infi g) = ⨅a, f a+g a :=
-  suffices (⨅a, f a+g a) ≤ infi f+infi g from
+theorem infi_add_infi (h : ∀ i j, ∃ k, (f k+g k) ≤ f i+g j) : (infi f+infi g) = ⨅ a, f a+g a :=
+  suffices (⨅ a, f a+g a) ≤ infi f+infi g from
     le_antisymmₓ (le_infi$ fun a => add_le_add (infi_le _ _) (infi_le _ _)) this 
-  calc (⨅a, f a+g a) ≤ ⨅a a', f a+g a' :=
+  calc (⨅ a, f a+g a) ≤ ⨅ a a', f a+g a' :=
     le_infi$
       fun a =>
         le_infi$
@@ -2229,14 +2294,15 @@ theorem infi_add_infi (h : ∀ i j, ∃ k, (f k+g k) ≤ f i+g j) : (infi f+infi
       simp [add_infi, infi_add]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » t)
 theorem infi_sum {f : ι → α → ℝ≥0∞} {s : Finset α} [Nonempty ι]
   (h : ∀ t : Finset α i j : ι, ∃ k, ∀ a _ : a ∈ t, f k a ≤ f i a ∧ f k a ≤ f j a) :
-  (⨅i, ∑a in s, f i a) = ∑a in s, ⨅i, f i a :=
+  (⨅ i, ∑ a in s, f i a) = ∑ a in s, ⨅ i, f i a :=
   Finset.induction_on s
       (by 
         simp )$
     fun a s ha ih =>
-      have  : ∀ i j : ι, ∃ k : ι, (f k a+∑b in s, f k b) ≤ f i a+∑b in s, f j b :=
+      have  : ∀ i j : ι, ∃ k : ι, (f k a+∑ b in s, f k b) ≤ f i a+∑ b in s, f j b :=
         fun i j =>
           let ⟨k, hk⟩ := h (insert a s) i j
           ⟨k,
@@ -2247,14 +2313,14 @@ theorem infi_sum {f : ι → α → ℝ≥0∞} {s : Finset α} [Nonempty ι]
 
 /-- If `x ≠ 0` and `x ≠ ∞`, then right multiplication by `x` maps infimum to infimum.
 See also `ennreal.infi_mul` that assumes `[nonempty ι]` but does not require `x ≠ 0`. -/
-theorem infi_mul_of_ne {ι} {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h0 : x ≠ 0) (h : x ≠ ∞) : (infi f*x) = ⨅i, f i*x :=
+theorem infi_mul_of_ne {ι} {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h0 : x ≠ 0) (h : x ≠ ∞) : (infi f*x) = ⨅ i, f i*x :=
   le_antisymmₓ mul_right_mono.map_infi_le
     ((div_le_iff_le_mul (Or.inl h0)$ Or.inl h).mp$
       le_infi$ fun i => (div_le_iff_le_mul (Or.inl h0)$ Or.inl h).mpr$ infi_le _ _)
 
 /-- If `x ≠ ∞`, then right multiplication by `x` maps infimum over a nonempty type to infimum. See
 also `ennreal.infi_mul_of_ne` that assumes `x ≠ 0` but does not require `[nonempty ι]`. -/
-theorem infi_mul {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h : x ≠ ∞) : (infi f*x) = ⨅i, f i*x :=
+theorem infi_mul {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h : x ≠ ∞) : (infi f*x) = ⨅ i, f i*x :=
   by 
     byCases' h0 : x = 0
     ·
@@ -2264,13 +2330,13 @@ theorem infi_mul {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h 
 
 /-- If `x ≠ ∞`, then left multiplication by `x` maps infimum over a nonempty type to infimum. See
 also `ennreal.mul_infi_of_ne` that assumes `x ≠ 0` but does not require `[nonempty ι]`. -/
-theorem mul_infi {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h : x ≠ ∞) : (x*infi f) = ⨅i, x*f i :=
+theorem mul_infi {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h : x ≠ ∞) : (x*infi f) = ⨅ i, x*f i :=
   by 
     simpa only [mul_commₓ] using infi_mul h
 
 /-- If `x ≠ 0` and `x ≠ ∞`, then left multiplication by `x` maps infimum to infimum.
 See also `ennreal.mul_infi` that assumes `[nonempty ι]` but does not require `x ≠ 0`. -/
-theorem mul_infi_of_ne {ι} {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h0 : x ≠ 0) (h : x ≠ ∞) : (x*infi f) = ⨅i, x*f i :=
+theorem mul_infi_of_ne {ι} {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h0 : x ≠ 0) (h : x ≠ ∞) : (x*infi f) = ⨅ i, x*f i :=
   by 
     simpa only [mul_commₓ] using infi_mul_of_ne h0 h
 
@@ -2282,18 +2348,18 @@ end infi
 section supr
 
 @[simp]
-theorem supr_eq_zero {ι : Sort _} {f : ι → ℝ≥0∞} : (⨆i, f i) = 0 ↔ ∀ i, f i = 0 :=
+theorem supr_eq_zero {ι : Sort _} {f : ι → ℝ≥0∞} : (⨆ i, f i) = 0 ↔ ∀ i, f i = 0 :=
   supr_eq_bot
 
 @[simp]
-theorem supr_zero_eq_zero {ι : Sort _} : (⨆i : ι, (0 : ℝ≥0∞)) = 0 :=
+theorem supr_zero_eq_zero {ι : Sort _} : (⨆ i : ι, (0 : ℝ≥0∞)) = 0 :=
   by 
     simp 
 
 theorem sup_eq_zero {a b : ℝ≥0∞} : a⊔b = 0 ↔ a = 0 ∧ b = 0 :=
   sup_eq_bot_iff
 
-theorem supr_coe_nat : (⨆n : ℕ, (n : ℝ≥0∞)) = ∞ :=
+theorem supr_coe_nat : (⨆ n : ℕ, (n : ℝ≥0∞)) = ∞ :=
   (supr_eq_top _).2$ fun b hb => Ennreal.exists_nat_gt (lt_top_iff_ne_top.1 hb)
 
 end supr

@@ -1,7 +1,6 @@
-import Mathbin.Topology.Algebra.Ring 
+import Mathbin.GroupTheory.Subgroup.Basic 
 import Mathbin.Topology.Algebra.OpenSubgroup 
-import Mathbin.Data.Set.Basic 
-import Mathbin.GroupTheory.Subgroup.Basic
+import Mathbin.Topology.Algebra.Ring
 
 /-!
 # Nonarchimedean Topology
@@ -24,16 +23,19 @@ group is nonarchimedean.
 
 open_locale Pointwise
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » nhds (0 : G))
 /-- An topological additive group is nonarchimedean if every neighborhood of 0
   contains an open subgroup. -/
 class NonarchimedeanAddGroup (G : Type _) [AddGroupₓ G] [TopologicalSpace G] extends TopologicalAddGroup G : Prop where 
   is_nonarchimedean : ∀ U _ : U ∈ nhds (0 : G), ∃ V : OpenAddSubgroup G, (V : Set G) ⊆ U
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » nhds (1 : G))
 /-- A topological group is nonarchimedean if every neighborhood of 1 contains an open subgroup. -/
 @[toAdditive]
 class NonarchimedeanGroup (G : Type _) [Groupₓ G] [TopologicalSpace G] extends TopologicalGroup G : Prop where 
   is_nonarchimedean : ∀ U _ : U ∈ nhds (1 : G), ∃ V : OpenSubgroup G, (V : Set G) ⊆ U
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » nhds (0 : R))
 /-- An topological ring is nonarchimedean if its underlying topological additive
   group is nonarchimedean. -/
 class NonarchimedeanRing (R : Type _) [Ringₓ R] [TopologicalSpace R] extends TopologicalRing R : Prop where 
@@ -121,20 +123,19 @@ instance : NonarchimedeanRing (R × S) :=
 theorem left_mul_subset (U : OpenAddSubgroup R) (r : R) : ∃ V : OpenAddSubgroup R, r • (V : Set R) ⊆ U :=
   ⟨U.comap (AddMonoidHom.mulLeft r) (continuous_mul_left r), (U : Set R).image_preimage_subset _⟩
 
--- error in Topology.Algebra.Nonarchimedean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An open subgroup of a nonarchimedean ring contains the square of another one. -/
-theorem mul_subset
-(U : open_add_subgroup R) : «expr∃ , »((V : open_add_subgroup R), «expr ⊆ »(«expr * »((V : set R), V), U)) :=
-let ⟨V, H⟩ := prod_self_subset (is_open.mem_nhds (is_open.preimage continuous_mul U.is_open) (begin
-        simpa [] [] ["only"] ["[", expr set.mem_preimage, ",", expr open_add_subgroup.mem_coe, ",", expr prod.snd_zero, ",", expr mul_zero, "]"] [] ["using", expr U.zero_mem]
-      end)) in
-begin
-  use [expr V],
-  rintros [ident v, "⟨", ident a, ",", ident b, ",", ident ha, ",", ident hb, ",", ident hv, "⟩"],
-  have [ident hy] [] [":=", expr H (set.mk_mem_prod ha hb)],
-  simp [] [] ["only"] ["[", expr set.mem_preimage, ",", expr open_add_subgroup.mem_coe, "]"] [] ["at", ident hy],
-  rwa [expr hv] ["at", ident hy]
-end
+theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, ((V : Set R)*V) ⊆ U :=
+  let ⟨V, H⟩ :=
+    prod_self_subset
+      (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.is_open)
+        (by 
+          simpa only [Set.mem_preimage, OpenAddSubgroup.mem_coe, Prod.snd_zero, mul_zero] using U.zero_mem))
+  by 
+    use V 
+    rintro v ⟨a, b, ha, hb, hv⟩
+    have hy := H (Set.mk_mem_prod ha hb)
+    simp only [Set.mem_preimage, OpenAddSubgroup.mem_coe] at hy 
+    rwa [hv] at hy
 
 end NonarchimedeanRing
 

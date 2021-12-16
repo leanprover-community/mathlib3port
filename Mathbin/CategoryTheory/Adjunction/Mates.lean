@@ -150,31 +150,25 @@ def transfer_nat_trans_self : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
     _ ≃ (R₁ ⟶ R₂) := R₁.right_unitor.hom_congr R₂.left_unitor
     
 
--- error in CategoryTheory.Adjunction.Mates: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem transfer_nat_trans_self_counit
-(f : «expr ⟶ »(L₂, L₁))
-(X) : «expr = »(«expr ≫ »(L₂.map ((transfer_nat_trans_self adj₁ adj₂ f).app _), adj₂.counit.app X), «expr ≫ »(f.app _, adj₁.counit.app X)) :=
-begin
-  dsimp [] ["[", expr transfer_nat_trans_self, "]"] [] [],
-  rw ["[", expr id_comp, ",", expr comp_id, "]"] [],
-  have [] [] [":=", expr transfer_nat_trans_counit adj₁ adj₂ «expr ≫ »(L₂.left_unitor.hom, «expr ≫ »(f, L₁.right_unitor.inv)) X],
-  dsimp [] [] [] ["at", ident this],
-  rw [expr this] [],
-  simp [] [] [] [] [] []
-end
+theorem transfer_nat_trans_self_counit (f : L₂ ⟶ L₁) X :
+  L₂.map ((transfer_nat_trans_self adj₁ adj₂ f).app _) ≫ adj₂.counit.app X = f.app _ ≫ adj₁.counit.app X :=
+  by 
+    dsimp [transfer_nat_trans_self]
+    rw [id_comp, comp_id]
+    have  := transfer_nat_trans_counit adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X 
+    dsimp  at this 
+    rw [this]
+    simp 
 
--- error in CategoryTheory.Adjunction.Mates: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem unit_transfer_nat_trans_self
-(f : «expr ⟶ »(L₂, L₁))
-(X) : «expr = »(«expr ≫ »(adj₁.unit.app _, (transfer_nat_trans_self adj₁ adj₂ f).app _), «expr ≫ »(adj₂.unit.app X, functor.map _ (f.app _))) :=
-begin
-  dsimp [] ["[", expr transfer_nat_trans_self, "]"] [] [],
-  rw ["[", expr id_comp, ",", expr comp_id, "]"] [],
-  have [] [] [":=", expr unit_transfer_nat_trans adj₁ adj₂ «expr ≫ »(L₂.left_unitor.hom, «expr ≫ »(f, L₁.right_unitor.inv)) X],
-  dsimp [] [] [] ["at", ident this],
-  rw [expr this] [],
-  simp [] [] [] [] [] []
-end
+theorem unit_transfer_nat_trans_self (f : L₂ ⟶ L₁) X :
+  adj₁.unit.app _ ≫ (transfer_nat_trans_self adj₁ adj₂ f).app _ = adj₂.unit.app X ≫ Functor.map _ (f.app _) :=
+  by 
+    dsimp [transfer_nat_trans_self]
+    rw [id_comp, comp_id]
+    have  := unit_transfer_nat_trans adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X 
+    dsimp  at this 
+    rw [this]
+    simp 
 
 @[simp]
 theorem transfer_nat_trans_self_id : transfer_nat_trans_self adj₁ adj₁ (𝟙 _) = 𝟙 _ :=
@@ -186,7 +180,7 @@ theorem transfer_nat_trans_self_id : transfer_nat_trans_self adj₁ adj₁ (𝟙
 @[simp]
 theorem transfer_nat_trans_self_symm_id : (transfer_nat_trans_self adj₁ adj₁).symm (𝟙 _) = 𝟙 _ :=
   by 
-    rw [Equiv.symm_apply_eq]
+    rw [Equivₓ.symm_apply_eq]
     simp 
 
 theorem transfer_nat_trans_self_comp f g :
@@ -203,7 +197,7 @@ theorem transfer_nat_trans_self_symm_comp f g :
   (transfer_nat_trans_self adj₂ adj₁).symm f ≫ (transfer_nat_trans_self adj₃ adj₂).symm g =
     (transfer_nat_trans_self adj₃ adj₁).symm (g ≫ f) :=
   by 
-    rw [Equiv.eq_symm_apply, ←transfer_nat_trans_self_comp _ adj₂]
+    rw [Equivₓ.eq_symm_apply, ←transfer_nat_trans_self_comp _ adj₂]
     simp 
 
 theorem transfer_nat_trans_self_comm {f g} (gf : g ≫ f = 𝟙 _) :

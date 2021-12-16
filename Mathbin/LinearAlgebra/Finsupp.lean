@@ -46,7 +46,7 @@ function with finite support, module, linear algebra
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Set LinearMap Submodule
 
@@ -110,31 +110,32 @@ theorem lapply_apply (a : α) (f : α →₀ M) : (lapply a : (α →₀ M) →�
 theorem ker_lsingle (a : α) : (lsingle a : M →ₗ[R] α →₀ M).ker = ⊥ :=
   ker_eq_bot_of_injective (single_injective a)
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lsingle_range_le_ker_lapply
-(s t : set α)
-(h : disjoint s t) : «expr ≤ »(«expr⨆ , »((a «expr ∈ » s), (lsingle a : «expr →ₗ[ ] »(M, R, «expr →₀ »(α, M))).range), «expr⨅ , »((a «expr ∈ » t), ker (lapply a))) :=
-begin
-  refine [expr supr_le (assume a₁, «expr $ »(supr_le, assume h₁, range_le_iff_comap.2 _))],
-  simp [] [] ["only"] ["[", expr (ker_comp _ _).symm, ",", expr eq_top_iff, ",", expr set_like.le_def, ",", expr mem_ker, ",", expr comap_infi, ",", expr mem_infi, "]"] [] [],
-  assume [binders (b hb a₂ h₂)],
-  have [] [":", expr «expr ≠ »(a₁, a₂)] [":=", expr assume eq, h ⟨h₁, «expr ▸ »(eq.symm, h₂)⟩],
-  exact [expr single_eq_of_ne this]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » t)
+theorem lsingle_range_le_ker_lapply (s t : Set α) (h : Disjoint s t) :
+  (⨆ (a : _)(_ : a ∈ s), (lsingle a : M →ₗ[R] α →₀ M).range) ≤ ⨅ (a : _)(_ : a ∈ t), ker (lapply a) :=
+  by 
+    refine' supr_le fun a₁ => supr_le$ fun h₁ => range_le_iff_comap.2 _ 
+    simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
+    intro b hb a₂ h₂ 
+    have  : a₁ ≠ a₂ := fun eq => h ⟨h₁, Eq.symm ▸ h₂⟩
+    exact single_eq_of_ne this
 
-theorem infi_ker_lapply_le_bot : (⨅a, ker (lapply a : (α →₀ M) →ₗ[R] M)) ≤ ⊥ :=
+theorem infi_ker_lapply_le_bot : (⨅ a, ker (lapply a : (α →₀ M) →ₗ[R] M)) ≤ ⊥ :=
   by 
     simp only [SetLike.le_def, mem_infi, mem_ker, mem_bot, lapply_apply]
     exact fun a h => Finsupp.ext h
 
-theorem supr_lsingle_range : (⨆a, (lsingle a : M →ₗ[R] α →₀ M).range) = ⊤ :=
+theorem supr_lsingle_range : (⨆ a, (lsingle a : M →ₗ[R] α →₀ M).range) = ⊤ :=
   by 
     refine' eq_top_iff.2$ SetLike.le_def.2$ fun f _ => _ 
     rw [←sum_single f]
     exact sum_mem _ fun a ha => Submodule.mem_supr_of_mem a ⟨_, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » t)
 theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
-  Disjoint (⨆(a : _)(_ : a ∈ s), (lsingle a : M →ₗ[R] α →₀ M).range) (⨆(a : _)(_ : a ∈ t), (lsingle a).range) :=
+  Disjoint (⨆ (a : _)(_ : a ∈ s), (lsingle a : M →ₗ[R] α →₀ M).range) (⨆ (a : _)(_ : a ∈ t), (lsingle a).range) :=
   by 
     refine'
       Disjoint.mono (lsingle_range_le_ker_lapply _ _$ disjoint_compl_right)
@@ -155,33 +156,34 @@ theorem span_single_image (s : Set M) (a : α) :
 
 variable (M R)
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- `finsupp.supported M R s` is the `R`-submodule of all `p : α →₀ M` such that `p.support ⊆ s`. -/
-def supported (s : Set α) : Submodule R (α →₀ M) :=
-  by 
-    refine' ⟨{ p | «expr↑ » p.support ⊆ s }, _, _, _⟩
-    ·
-      simp only [subset_def, Finset.mem_coe, Set.mem_set_of_eq, mem_support_iff, zero_apply]
-      intro h ha 
-      exact (ha rfl).elim
-    ·
-      intro p q hp hq 
-      refine' subset.trans (subset.trans (Finset.coe_subset.2 support_add) _) (union_subset hp hq)
-      rw [Finset.coe_union]
-    ·
-      intro a p hp 
-      refine' subset.trans (Finset.coe_subset.2 support_smul) hp
+  def
+    supported
+    ( s : Set α ) : Submodule R α →₀ M
+    :=
+      by
+        refine' ⟨ { p | ↑ p.support ⊆ s } , _ , _ , _ ⟩
+          ·
+            simp only [ subset_def , Finset.mem_coe , Set.mem_set_of_eq , mem_support_iff , zero_apply ]
+              intro h ha
+              exact ha rfl . elim
+          ·
+            intro p q hp hq
+              refine' subset.trans subset.trans Finset.coe_subset . 2 support_add _ union_subset hp hq
+              rw [ Finset.coe_union ]
+          · intro a p hp refine' subset.trans Finset.coe_subset . 2 support_smul hp
 
 variable {M}
 
-theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ «expr↑ » p.support ⊆ s :=
+theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ↑p.support ⊆ s :=
   Iff.rfl
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_supported'
-{s : set α}
-(p : «expr →₀ »(α, M)) : «expr ↔ »(«expr ∈ »(p, supported M R s), ∀ x «expr ∉ » s, «expr = »(p x, 0)) :=
-by haveI [] [] [":=", expr classical.dec_pred (λ
-  x : α, «expr ∈ »(x, s))]; simp [] [] [] ["[", expr mem_supported, ",", expr set.subset_def, ",", expr not_imp_comm, "]"] [] []
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∉ » s)
+theorem mem_supported' {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ∀ x _ : x ∉ s, p x = 0 :=
+  by 
+    have  := Classical.decPred fun x : α => x ∈ s <;> simp [mem_supported, Set.subset_def, not_imp_comm]
 
 theorem mem_supported_support (p : α →₀ M) : p ∈ Finsupp.supported M R (p.support : Set α) :=
   by 
@@ -248,30 +250,29 @@ theorem supported_empty : supported M R (∅ : Set α) = ⊥ :=
 theorem supported_univ : supported M R (Set.Univ : Set α) = ⊤ :=
   eq_top_iff.2$ fun l _ => Set.subset_univ _
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem supported_Union
-{δ : Type*}
-(s : δ → set α) : «expr = »(supported M R «expr⋃ , »((i), s i), «expr⨆ , »((i), supported M R (s i))) :=
-begin
-  refine [expr le_antisymm _ «expr $ »(supr_le, λ i, «expr $ »(supported_mono, set.subset_Union _ _))],
-  haveI [] [] [":=", expr classical.dec_pred (λ x, «expr ∈ »(x, «expr⋃ , »((i), s i)))],
-  suffices [] [":", expr «expr ≤ »(((submodule.subtype _).comp (restrict_dom M R «expr⋃ , »((i), s i))).range, «expr⨆ , »((i), supported M R (s i)))],
-  { rwa ["[", expr linear_map.range_comp, ",", expr range_restrict_dom, ",", expr map_top, ",", expr range_subtype, "]"] ["at", ident this] },
-  rw ["[", expr range_le_iff_comap, ",", expr eq_top_iff, "]"] [],
-  rintro [ident l, "⟨", "⟩"],
-  apply [expr finsupp.induction l],
-  { exact [expr zero_mem _] },
-  refine [expr λ x a l hl a0, add_mem _ _],
-  by_cases [expr «expr∃ , »((i), «expr ∈ »(x, s i))]; simp [] [] [] ["[", expr h, "]"] [] [],
-  { cases [expr h] ["with", ident i, ident hi],
-    exact [expr le_supr (λ i, supported M R (s i)) i (single_mem_supported R _ hi)] }
-end
+theorem supported_Union {δ : Type _} (s : δ → Set α) : supported M R (⋃ i, s i) = ⨆ i, supported M R (s i) :=
+  by 
+    refine' le_antisymmₓ _ (supr_le$ fun i => supported_mono$ Set.subset_Union _ _)
+    have  := Classical.decPred fun x => x ∈ ⋃ i, s i 
+    suffices  : ((Submodule.subtype _).comp (restrict_dom M R (⋃ i, s i))).range ≤ ⨆ i, supported M R (s i)
+    ·
+      rwa [LinearMap.range_comp, range_restrict_dom, map_top, range_subtype] at this 
+    rw [range_le_iff_comap, eq_top_iff]
+    rintro l ⟨⟩
+    apply Finsupp.induction l
+    ·
+      exact zero_mem _ 
+    refine' fun x a l hl a0 => add_mem _ _ 
+    byCases' ∃ i, x ∈ s i <;> simp [h]
+    ·
+      cases' h with i hi 
+      exact le_supr (fun i => supported M R (s i)) i (single_mem_supported R _ hi)
 
 theorem supported_union (s t : Set α) : supported M R (s ∪ t) = supported M R s⊔supported M R t :=
   by 
     erw [Set.union_eq_Union, supported_Union, supr_bool_eq] <;> rfl
 
-theorem supported_Inter {ι : Type _} (s : ι → Set α) : supported M R (⋂i, s i) = ⨅i, supported M R (s i) :=
+theorem supported_Inter {ι : Type _} (s : ι → Set α) : supported M R (⋂ i, s i) = ⨅ i, supported M R (s i) :=
   Submodule.ext$
     fun x =>
       by 
@@ -286,29 +287,27 @@ theorem disjoint_supported_supported {s t : Set α} (h : Disjoint s t) : Disjoin
     by 
       rw [←supported_inter, disjoint_iff_inter_eq_empty.1 h, supported_empty]
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem disjoint_supported_supported_iff
-[nontrivial M]
-{s t : set α} : «expr ↔ »(disjoint (supported M R s) (supported M R t), disjoint s t) :=
-begin
-  refine [expr ⟨λ h x hx, _, disjoint_supported_supported⟩],
-  rcases [expr exists_ne (0 : M), "with", "⟨", ident y, ",", ident hy, "⟩"],
-  have [] [] [":=", expr h ⟨single_mem_supported R y hx.1, single_mem_supported R y hx.2⟩],
-  rw ["[", expr mem_bot, ",", expr single_eq_zero, "]"] ["at", ident this],
-  exact [expr hy this]
-end
+theorem disjoint_supported_supported_iff [Nontrivial M] {s t : Set α} :
+  Disjoint (supported M R s) (supported M R t) ↔ Disjoint s t :=
+  by 
+    refine' ⟨fun h x hx => _, disjoint_supported_supported⟩
+    rcases exists_ne (0 : M) with ⟨y, hy⟩
+    have  := h ⟨single_mem_supported R y hx.1, single_mem_supported R y hx.2⟩
+    rw [mem_bot, single_eq_zero] at this 
+    exact hy this
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Interpret `finsupp.restrict_support_equiv` as a linear equivalence between
 `supported M R s` and `s →₀ M`. -/
-def supported_equiv_finsupp (s : set α) : «expr ≃ₗ[ ] »(supported M R s, R, «expr →₀ »(s, M)) :=
-begin
-  let [ident F] [":", expr «expr ≃ »(supported M R s, «expr →₀ »(s, M))] [":=", expr restrict_support_equiv s M],
-  refine [expr F.to_linear_equiv _],
-  have [] [":", expr «expr = »((F : supported M R s → «expr →₀ »(«expr↥ »(s), M)), (lsubtype_domain s : «expr →ₗ[ ] »(«expr →₀ »(α, M), R, «expr →₀ »(s, M))).comp (submodule.subtype (supported M R s)))] [":=", expr rfl],
-  rw [expr this] [],
-  exact [expr linear_map.is_linear _]
-end
+def supported_equiv_finsupp (s : Set α) : supported M R s ≃ₗ[R] s →₀ M :=
+  by 
+    let F : supported M R s ≃ (s →₀ M) := restrict_support_equiv s M 
+    refine' F.to_linear_equiv _ 
+    have  :
+      (F : supported M R s → ↥s →₀ M) =
+        (lsubtype_domain s : (α →₀ M) →ₗ[R] s →₀ M).comp (Submodule.subtype (supported M R s)) :=
+      rfl 
+    rw [this]
+    exact LinearMap.is_linear _
 
 section Lsum
 
@@ -373,7 +372,7 @@ A slight rearrangement from `lsum` gives us
 the bijection underlying the free-forgetful adjunction for R-modules.
 -/
 noncomputable def lift : (X → M) ≃+ ((X →₀ R) →ₗ[R] M) :=
-  (AddEquiv.arrowCongr (Equiv.refl X) (ring_lmap_equiv_self R ℕ M).toAddEquiv.symm).trans
+  (AddEquiv.arrowCongr (Equivₓ.refl X) (ring_lmap_equiv_self R ℕ M).toAddEquiv.symm).trans
     (lsum _ : _ ≃ₗ[ℕ] _).toAddEquiv
 
 @[simp]
@@ -408,8 +407,8 @@ theorem lmap_domain_comp (f : α → α') (g : α' → α'') :
 
 theorem supported_comap_lmap_domain (f : α → α') (s : Set α') :
   supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmap_domain M R f) :=
-  fun l hl : «expr↑ » l.support ⊆ f ⁻¹' s =>
-    show «expr↑ » (map_domain f l).Support ⊆ s by 
+  fun l hl : ↑l.support ⊆ f ⁻¹' s =>
+    show ↑(map_domain f l).Support ⊆ s by 
       rw [←Set.image_subset_iff, ←Finset.coe_image] at hl 
       exact Set.Subset.trans map_domain_support hl
 
@@ -438,29 +437,29 @@ theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
           (by 
             simpa using hl hc)
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lmap_domain_disjoint_ker
-(f : α → α')
-{s : set α}
-(H : ∀ a b «expr ∈ » s, «expr = »(f a, f b) → «expr = »(a, b)) : disjoint (supported M R s) (lmap_domain M R f).ker :=
-begin
-  rintro [ident l, "⟨", ident h₁, ",", ident h₂, "⟩"],
-  rw ["[", expr set_like.mem_coe, ",", expr mem_ker, ",", expr lmap_domain_apply, ",", expr map_domain, "]"] ["at", ident h₂],
-  simp [] [] [] [] [] [],
-  ext [] [ident x] [],
-  haveI [] [] [":=", expr classical.dec_pred (λ x, «expr ∈ »(x, s))],
-  by_cases [expr xs, ":", expr «expr ∈ »(x, s)],
-  { have [] [":", expr «expr = »(finsupp.sum l (λ a, finsupp.single (f a)) (f x), 0)] [],
-    { rw [expr h₂] [],
-      refl },
-    rw ["[", expr finsupp.sum_apply, ",", expr finsupp.sum, ",", expr finset.sum_eq_single x, "]"] ["at", ident this],
-    { simpa [] [] [] ["[", expr finsupp.single_apply, "]"] [] [] },
-    { intros [ident y, ident hy, ident xy],
-      simp [] [] [] ["[", expr mt (H _ _ (h₁ hy) xs) xy, "]"] [] [] },
-    { simp [] [] [] [] [] [] { contextual := tt } } },
-  { by_contra [ident h],
-    exact [expr xs «expr $ »(h₁, finsupp.mem_support_iff.2 h)] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lmap_domain_disjoint_ker
+  ( f : α → α' ) { s : Set α } ( H : ∀ a b _ : a ∈ s _ : b ∈ s , f a = f b → a = b )
+    : Disjoint supported M R s lmap_domain M R f . ker
+  :=
+    by
+      rintro l ⟨ h₁ , h₂ ⟩
+        rw [ SetLike.mem_coe , mem_ker , lmap_domain_apply , map_domain ] at h₂
+        simp
+        ext x
+        have := Classical.decPred fun x => x ∈ s
+        byCases' xs : x ∈ s
+        ·
+          have : Finsupp.sum l fun a => Finsupp.single f a f x = 0
+            · rw [ h₂ ] rfl
+            rw [ Finsupp.sum_apply , Finsupp.sum , Finset.sum_eq_single x ] at this
+            · simpa [ Finsupp.single_apply ]
+            · intro y hy xy simp [ mt H _ _ h₁ hy xs xy ]
+            · simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+        · byContra h exact xs h₁ $ Finsupp.mem_support_iff . 2 h
 
 end LmapDomain
 
@@ -478,7 +477,7 @@ variable {α M v}
 theorem total_apply (l : α →₀ R) : Finsupp.total α M R v l = l.sum fun i a => a • v i :=
   rfl
 
-theorem total_apply_of_mem_supported {l : α →₀ R} {s : Finset α} (hs : l ∈ supported R R («expr↑ » s : Set α)) :
+theorem total_apply_of_mem_supported {l : α →₀ R} {s : Finset α} (hs : l ∈ supported R R (↑s : Set α)) :
   Finsupp.total α M R v l = s.sum fun i => l i • v i :=
   Finset.sum_subset hs$
     fun x _ hxg =>
@@ -490,12 +489,12 @@ theorem total_single (c : R) (a : α) : Finsupp.total α M R v (single a c) = c 
   by 
     simp [total_apply, sum_single_index]
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem apply_total
-(f : «expr →ₗ[ ] »(M, R, M'))
-(v)
-(l : «expr →₀ »(α, R)) : «expr = »(f (finsupp.total α M R v l), finsupp.total α M' R «expr ∘ »(f, v) l) :=
-by apply [expr finsupp.induction_linear l]; simp [] [] [] [] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  apply_total
+  ( f : M →ₗ[ R ] M' ) v ( l : α →₀ R ) : f Finsupp.total α M R v l = Finsupp.total α M' R f ∘ v l
+  := by apply Finsupp.induction_linear l <;> simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
 
 theorem total_unique [Unique α] (l : α →₀ R) v : Finsupp.total α M R v l = l (default α) • v (default α) :=
   by 
@@ -521,7 +520,7 @@ theorem total_id_surjective M [AddCommMonoidₓ M] [Module R M] : Function.Surje
 theorem range_total : (Finsupp.total α M R v).range = span R (range v) :=
   by 
     ext x 
-    split 
+    constructor
     ·
       intro hx 
       rw [LinearMap.mem_range] at hx 
@@ -550,18 +549,15 @@ theorem total_emb_domain (f : α ↪ α') (l : α →₀ R) :
   by 
     simp [total_apply, Finsupp.sum, support_emb_domain, emb_domain_apply]
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem total_map_domain
-(f : α → α')
-(hf : function.injective f)
-(l : «expr →₀ »(α, R)) : «expr = »(finsupp.total α' M' R v' (map_domain f l), finsupp.total α M' R «expr ∘ »(v', f) l) :=
-begin
-  have [] [":", expr «expr = »(map_domain f l, emb_domain ⟨f, hf⟩ l)] [],
-  { rw [expr emb_domain_eq_map_domain ⟨f, hf⟩] [],
-    refl },
-  rw [expr this] [],
-  apply [expr total_emb_domain R ⟨f, hf⟩ l]
-end
+theorem total_map_domain (f : α → α') (hf : Function.Injective f) (l : α →₀ R) :
+  (Finsupp.total α' M' R v') (map_domain f l) = (Finsupp.total α M' R (v' ∘ f)) l :=
+  by 
+    have  : map_domain f l = emb_domain ⟨f, hf⟩ l
+    ·
+      rw [emb_domain_eq_map_domain ⟨f, hf⟩]
+      rfl 
+    rw [this]
+    apply total_emb_domain R ⟨f, hf⟩ l
 
 @[simp]
 theorem total_equiv_map_domain (f : α ≃ α') (l : α →₀ R) :
@@ -577,27 +573,34 @@ theorem span_eq_range_total (s : Set M) : span R s = (Finsupp.total s M R coeₓ
 theorem mem_span_iff_total (s : Set M) (x : M) : x ∈ span R s ↔ ∃ l : s →₀ R, Finsupp.total s M R coeₓ l = x :=
   (SetLike.ext_iff.1$ span_eq_range_total _ _) x
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem span_image_eq_map_total
-(s : set α) : «expr = »(span R «expr '' »(v, s), submodule.map (finsupp.total α M R v) (supported R R s)) :=
-begin
-  apply [expr span_eq_of_le],
-  { intros [ident x, ident hx],
-    rw [expr set.mem_image] ["at", ident hx],
-    apply [expr exists.elim hx],
-    intros [ident i, ident hi],
-    exact [expr ⟨_, finsupp.single_mem_supported R 1 hi.1, by simp [] [] [] ["[", expr hi.2, "]"] [] []⟩] },
-  { refine [expr map_le_iff_le_comap.2 (λ z hz, _)],
-    have [] [":", expr ∀ i, «expr ∈ »(«expr • »(z i, v i), span R «expr '' »(v, s))] [],
-    { intro [ident c],
-      haveI [] [] [":=", expr classical.dec_pred (λ x, «expr ∈ »(x, s))],
-      by_cases [expr «expr ∈ »(c, s)],
-      { exact [expr smul_mem _ _ (subset_span (set.mem_image_of_mem _ h))] },
-      { simp [] [] [] ["[", expr (finsupp.mem_supported' R _).1 hz _ h, "]"] [] [] } },
-    refine [expr sum_mem _ _],
-    simp [] [] [] ["[", expr this, "]"] [] [] }
-end
+theorem span_image_eq_map_total (s : Set α) :
+  span R (v '' s) = Submodule.map (Finsupp.total α M R v) (supported R R s) :=
+  by 
+    apply span_eq_of_le
+    ·
+      intro x hx 
+      rw [Set.mem_image] at hx 
+      apply Exists.elim hx 
+      intro i hi 
+      exact
+        ⟨_, Finsupp.single_mem_supported R 1 hi.1,
+          by 
+            simp [hi.2]⟩
+    ·
+      refine' map_le_iff_le_comap.2 fun z hz => _ 
+      have  : ∀ i, z i • v i ∈ span R (v '' s)
+      ·
+        intro c 
+        have  := Classical.decPred fun x => x ∈ s 
+        byCases' c ∈ s
+        ·
+          exact smul_mem _ _ (subset_span (Set.mem_image_of_mem _ h))
+        ·
+          simp [(Finsupp.mem_supported' R _).1 hz _ h]
+      refine' sum_mem _ _ 
+      simp [this]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » supported R R s)
 theorem mem_span_image_iff_total {s : Set α} {x : M} :
   x ∈ span R (v '' s) ↔ ∃ (l : _)(_ : l ∈ supported R R s), Finsupp.total α M R v l = x :=
   by 
@@ -653,7 +656,7 @@ theorem total_comp (f : α' → α) : Finsupp.total α' M R (v ∘ f) = (Finsupp
     ext 
     simp [total_apply]
 
-theorem total_comap_domain (f : α → α') (l : α' →₀ R) (hf : Set.InjOn f (f ⁻¹' «expr↑ » l.support)) :
+theorem total_comap_domain (f : α → α') (l : α' →₀ R) (hf : Set.InjOn f (f ⁻¹' ↑l.support)) :
   Finsupp.total α M R v (Finsupp.comapDomain f l hf) = (l.support.preimage f hf).Sum fun i => l (f i) • v i :=
   by 
     rw [Finsupp.total_apply] <;> rfl
@@ -684,7 +687,7 @@ theorem dom_lcongr_apply {α₁ : Type _} {α₂ : Type _} (e : α₁ ≃ α₂)
   rfl
 
 @[simp]
-theorem dom_lcongr_refl : Finsupp.domLcongr (Equiv.refl α) = LinearEquiv.refl R (α →₀ M) :=
+theorem dom_lcongr_refl : Finsupp.domLcongr (Equivₓ.refl α) = LinearEquiv.refl R (α →₀ M) :=
   LinearEquiv.ext$ fun _ => equiv_map_domain_refl _
 
 theorem dom_lcongr_trans {α₁ α₂ α₃ : Type _} (f : α₁ ≃ α₂) (f₂ : α₂ ≃ α₃) :
@@ -702,20 +705,13 @@ theorem dom_lcongr_single {α₁ : Type _} {α₂ : Type _} (e : α₁ ≃ α₂
   by 
     simp [Finsupp.domLcongr, Finsupp.domCongr, equiv_map_domain_single]
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An equivalence of sets induces a linear equivalence of `finsupp`s supported on those sets. -/
-noncomputable
-def congr
-{α' : Type*}
-(s : set α)
-(t : set α')
-(e : «expr ≃ »(s, t)) : «expr ≃ₗ[ ] »(supported M R s, R, supported M R t) :=
-begin
-  haveI [] [] [":=", expr classical.dec_pred (λ x, «expr ∈ »(x, s))],
-  haveI [] [] [":=", expr classical.dec_pred (λ x, «expr ∈ »(x, t))],
-  refine [expr «expr ≪≫ₗ »(finsupp.supported_equiv_finsupp s, «expr ≪≫ₗ »(_, (finsupp.supported_equiv_finsupp t).symm))],
-  exact [expr finsupp.dom_lcongr e]
-end
+noncomputable def congr {α' : Type _} (s : Set α) (t : Set α') (e : s ≃ t) : supported M R s ≃ₗ[R] supported M R t :=
+  by 
+    have  := Classical.decPred fun x => x ∈ s 
+    have  := Classical.decPred fun x => x ∈ t 
+    refine' Finsupp.supportedEquivFinsupp s ≪≫ₗ (_ ≪≫ₗ (Finsupp.supportedEquivFinsupp t).symm)
+    exact Finsupp.domLcongr e
 
 /-- `finsupp.map_range` as a `linear_map`. -/
 @[simps]
@@ -792,7 +788,7 @@ theorem lcongr_symm_single {ι κ : Sort _} (e₁ : ι ≃ κ) (e₂ : M ≃ₗ[
 theorem lcongr_symm {ι κ : Sort _} (e₁ : ι ≃ κ) (e₂ : M ≃ₗ[R] N) : (lcongr e₁ e₂).symm = lcongr e₁.symm e₂.symm :=
   by 
     ext f i 
-    simp only [Equiv.symm_symm, Finsupp.lcongr_apply_apply]
+    simp only [Equivₓ.symm_symm, Finsupp.lcongr_apply_apply]
     apply Finsupp.induction_linear f
     ·
       simp 
@@ -802,7 +798,7 @@ theorem lcongr_symm {ι κ : Sort _} (e₁ : ι ≃ κ) (e₂ : M ≃ₗ[R] N) :
     ·
       intro k m 
       simp only [Finsupp.lcongr_symm_single]
-      simp only [Finsupp.single, Equiv.symm_apply_eq, Finsupp.coe_mk]
+      simp only [Finsupp.single, Equivₓ.symm_apply_eq, Finsupp.coe_mk]
       splitIfs <;> simp 
 
 section Sum
@@ -851,7 +847,7 @@ variable (R)
 
 This is the `linear_equiv` version of `finsupp.sigma_finsupp_add_equiv_pi_finsupp`. -/
 noncomputable def sigma_finsupp_lequiv_pi_finsupp {M : Type _} {ιs : η → Type _} [AddCommMonoidₓ M] [Module R M] :
-  ((Σj, ιs j) →₀ M) ≃ₗ[R] ∀ j, ιs j →₀ M :=
+  ((Σ j, ιs j) →₀ M) ≃ₗ[R] ∀ j, ιs j →₀ M :=
   { sigma_finsupp_add_equiv_pi_finsupp with
     map_smul' :=
       fun c f =>
@@ -861,7 +857,7 @@ noncomputable def sigma_finsupp_lequiv_pi_finsupp {M : Type _} {ιs : η → Typ
 
 @[simp]
 theorem sigma_finsupp_lequiv_pi_finsupp_apply {M : Type _} {ιs : η → Type _} [AddCommMonoidₓ M] [Module R M]
-  (f : (Σj, ιs j) →₀ M) j i : sigma_finsupp_lequiv_pi_finsupp R f j i = f ⟨j, i⟩ :=
+  (f : (Σ j, ιs j) →₀ M) j i : sigma_finsupp_lequiv_pi_finsupp R f j i = f ⟨j, i⟩ :=
   rfl
 
 @[simp]
@@ -925,8 +921,6 @@ def Span.repr (w : Set M) (x : span R w) : w →₀ R :=
 theorem Span.finsupp_total_repr {w : Set M} (x : span R w) : Finsupp.total w M R coeₓ (Span.repr R w x) = x :=
   ((Finsupp.mem_span_iff_total _ _ _).mp x.2).some_spec
 
-attribute [irreducible] Span.repr
-
 end 
 
 theorem Submodule.finsupp_sum_mem {ι β : Type _} [HasZero β] (S : Submodule R M) (f : ι →₀ β) (g : ι → β → M)
@@ -938,49 +932,49 @@ theorem LinearMap.map_finsupp_total (f : M →ₗ[R] N) {ι : Type _} {g : ι �
   by 
     simp only [Finsupp.total_apply, Finsupp.total_apply, Finsupp.sum, f.map_sum, f.map_smul]
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem submodule.exists_finset_of_mem_supr
-{ι : Sort*}
-(p : ι → submodule R M)
-{m : M}
-(hm : «expr ∈ »(m, «expr⨆ , »((i), p i))) : «expr∃ , »((s : finset ι), «expr ∈ »(m, «expr⨆ , »((i «expr ∈ » s), p i))) :=
-begin
-  obtain ["⟨", ident f, ",", ident hf, ",", ident rfl, "⟩", ":", expr «expr∃ , »((f «expr ∈ » finsupp.supported R R «expr⋃ , »((i), «expr↑ »(p i))), «expr = »(finsupp.total M M R id f, m))],
-  { have [ident aux] [":", expr «expr = »(«expr '' »((id : M → M), «expr⋃ , »((i : ι), «expr↑ »(p i))), «expr⋃ , »((i : ι), «expr↑ »(p i)))] [":=", expr set.image_id _],
-    rwa ["[", expr supr_eq_span, ",", "<-", expr aux, ",", expr finsupp.mem_span_image_iff_total R, "]"] ["at", ident hm] },
-  let [ident t] [":", expr finset M] [":=", expr f.support],
-  have [ident ht] [":", expr ∀ x : {x // «expr ∈ »(x, t)}, «expr∃ , »((i), «expr ∈ »(«expr↑ »(x), p i))] [],
-  { intros [ident x],
-    rw [expr finsupp.mem_supported] ["at", ident hf],
-    specialize [expr hf x.2],
-    rwa [expr set.mem_Union] ["at", ident hf] },
-  choose [] [ident g] [ident hg] ["using", expr ht],
-  let [ident s] [":", expr finset ι] [":=", expr finset.univ.image g],
-  use [expr s],
-  simp [] [] ["only"] ["[", expr mem_supr, ",", expr supr_le_iff, "]"] [] [],
-  assume [binders (N hN)],
-  rw ["[", expr finsupp.total_apply, ",", expr finsupp.sum, ",", "<-", expr set_like.mem_coe, "]"] [],
-  apply [expr N.sum_mem],
-  assume [binders (x hx)],
-  apply [expr submodule.smul_mem],
-  let [ident i] [":", expr ι] [":=", expr g ⟨x, hx⟩],
-  have [ident hi] [":", expr «expr ∈ »(i, s)] [],
-  { rw [expr finset.mem_image] [],
-    exact [expr ⟨⟨x, hx⟩, finset.mem_univ _, rfl⟩] },
-  exact [expr hN i hi (hg _)]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » finsupp.supported R R «expr⋃ , »((i), «expr↑ »(p i)))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem Submodule.exists_finset_of_mem_supr {ι : Sort _} (p : ι → Submodule R M) {m : M} (hm : m ∈ ⨆ i, p i) :
+  ∃ s : Finset ι, m ∈ ⨆ (i : _)(_ : i ∈ s), p i :=
+  by 
+    obtain ⟨f, hf, rfl⟩ : ∃ (f : _)(_ : f ∈ Finsupp.supported R R (⋃ i, ↑p i)), Finsupp.total M M R id f = m
+    ·
+      have aux : ((id : M → M) '' ⋃ i : ι, ↑p i) = ⋃ i : ι, ↑p i := Set.image_id _ 
+      rwa [supr_eq_span, ←aux, Finsupp.mem_span_image_iff_total R] at hm 
+    let t : Finset M := f.support 
+    have ht : ∀ x : { x // x ∈ t }, ∃ i, ↑x ∈ p i
+    ·
+      intro x 
+      rw [Finsupp.mem_supported] at hf 
+      specialize hf x.2
+      rwa [Set.mem_Union] at hf 
+    choose g hg using ht 
+    let s : Finset ι := finset.univ.image g 
+    use s 
+    simp only [mem_supr, supr_le_iff]
+    intro N hN 
+    rw [Finsupp.total_apply, Finsupp.sum, ←SetLike.mem_coe]
+    apply N.sum_mem 
+    intro x hx 
+    apply Submodule.smul_mem 
+    let i : ι := g ⟨x, hx⟩
+    have hi : i ∈ s
+    ·
+      rw [Finset.mem_image]
+      exact ⟨⟨x, hx⟩, Finset.mem_univ _, rfl⟩
+    exact hN i hi (hg _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- `submodule.exists_finset_of_mem_supr` as an `iff` -/
 theorem Submodule.mem_supr_iff_exists_finset {ι : Sort _} {p : ι → Submodule R M} {m : M} :
-  (m ∈ ⨆i, p i) ↔ ∃ s : Finset ι, m ∈ ⨆(i : _)(_ : i ∈ s), p i :=
+  (m ∈ ⨆ i, p i) ↔ ∃ s : Finset ι, m ∈ ⨆ (i : _)(_ : i ∈ s), p i :=
   ⟨Submodule.exists_finset_of_mem_supr p, fun ⟨_, hs⟩ => supr_le_supr (fun i => (supr_const_le : _ ≤ p i)) hs⟩
 
-theorem mem_span_finset {s : Finset M} {x : M} :
-  x ∈ span R («expr↑ » s : Set M) ↔ ∃ f : M → R, (∑i in s, f i • i) = x :=
+theorem mem_span_finset {s : Finset M} {x : M} : x ∈ span R (↑s : Set M) ↔ ∃ f : M → R, (∑ i in s, f i • i) = x :=
   ⟨fun hx =>
       let ⟨v, hvs, hvx⟩ :=
         (Finsupp.mem_span_image_iff_total _).1
-          (show x ∈ span R (id '' («expr↑ » s : Set M))by 
+          (show x ∈ span R (id '' (↑s : Set M))by 
             rwa [Set.image_id])
       ⟨v, hvx ▸ (Finsupp.total_apply_of_mem_supported _ hvs).symm⟩,
     fun ⟨f, hf⟩ => hf ▸ sum_mem _ fun i hi => smul_mem _ _$ subset_span hi⟩
@@ -995,22 +989,21 @@ theorem mem_span_set {m : M} {s : Set M} :
     simpRw [←exists_prop]
     exact Finsupp.mem_span_image_iff_total R
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `subsingleton R`, then `M ≃ₗ[R] ι →₀ R` for any type `ι`. -/
-@[simps #[]]
-def module.subsingleton_equiv
-(R M ι : Type*)
-[semiring R]
-[subsingleton R]
-[add_comm_monoid M]
-[module R M] : «expr ≃ₗ[ ] »(M, R, «expr →₀ »(ι, R)) :=
-{ to_fun := λ m, 0,
-  inv_fun := λ f, 0,
-  left_inv := λ m, by { letI [] [] [":=", expr module.subsingleton R M],
-    simp [] [] ["only"] ["[", expr eq_iff_true_of_subsingleton, "]"] [] [] },
-  right_inv := λ f, by simp [] [] ["only"] ["[", expr eq_iff_true_of_subsingleton, "]"] [] [],
-  map_add' := λ m n, (add_zero 0).symm,
-  map_smul' := λ r m, (smul_zero r).symm }
+@[simps]
+def Module.subsingletonEquiv (R M ι : Type _) [Semiringₓ R] [Subsingleton R] [AddCommMonoidₓ M] [Module R M] :
+  M ≃ₗ[R] ι →₀ R :=
+  { toFun := fun m => 0, invFun := fun f => 0,
+    left_inv :=
+      fun m =>
+        by 
+          let this' := Module.subsingleton R M 
+          simp only [eq_iff_true_of_subsingleton],
+    right_inv :=
+      fun f =>
+        by 
+          simp only [eq_iff_true_of_subsingleton],
+    map_add' := fun m n => (add_zeroₓ 0).symm, map_smul' := fun r m => (smul_zero r).symm }
 
 namespace LinearMap
 

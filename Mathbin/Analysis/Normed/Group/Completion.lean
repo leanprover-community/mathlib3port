@@ -13,7 +13,7 @@ normed group, completion
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace UniformSpace
 

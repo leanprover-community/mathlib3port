@@ -62,7 +62,7 @@ localized [Pointwise] attribute [instance] Submodule.pointwiseDistribMulAction
 open_locale Pointwise
 
 @[simp]
-theorem coe_pointwise_smul (a : α) (S : Submodule R M) : «expr↑ » (a • S) = a • (S : Set M) :=
+theorem coe_pointwise_smul (a : α) (S : Submodule R M) : ↑(a • S) = a • (S : Set M) :=
   rfl
 
 @[simp]
@@ -76,6 +76,14 @@ theorem pointwise_smul_to_add_subgroup {R M : Type _} [Ringₓ R] [AddCommGroup�
 
 theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set M))
+
+instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) M] [SmulCommClass (αᵐᵒᵖ) R M] [IsCentralScalar α M] :
+  IsCentralScalar α (Submodule R M) :=
+  ⟨fun a S =>
+      (congr_argₓ fun f => S.map f)$
+        LinearMap.ext$
+          by 
+            exact op_smul_eq_smul _⟩
 
 @[simp]
 theorem smul_le_self_of_tower {α : Type _} [Semiringₓ α] [Module α R] [Module α M] [SmulCommClass α R M]

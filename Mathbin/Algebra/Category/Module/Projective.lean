@@ -18,24 +18,20 @@ open LinearMap
 
 open_locale ModuleCat
 
--- error in Algebra.Category.Module.Projective: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The categorical notion of projective object agrees with the explicit module-theoretic notion. -/
-theorem is_projective.iff_projective
-{R : Type u}
-[ring R]
-{P : Type max u v}
-[add_comm_group P]
-[module R P] : «expr ↔ »(module.projective R P, projective (Module.of R P)) :=
-begin
-  refine [expr ⟨λ h, _, λ h, _⟩],
-  { letI [] [":", expr module.projective R «expr↥ »(Module.of R P)] [":=", expr h],
-    exact [expr ⟨λ E X f e epi, module.projective_lifting_property _ _ ((Module.epi_iff_surjective _).mp epi)⟩] },
-  { refine [expr module.projective_of_lifting_property _],
-    introsI [ident E, ident X, ident mE, ident mX, ident sE, ident sX, ident f, ident g, ident s],
-    haveI [] [":", expr epi «expr↟ »(f)] [":=", expr (Module.epi_iff_surjective «expr↟ »(f)).mpr s],
-    letI [] [":", expr projective (Module.of R P)] [":=", expr h],
-    exact [expr ⟨projective.factor_thru «expr↟ »(g) «expr↟ »(f), projective.factor_thru_comp «expr↟ »(g) «expr↟ »(f)⟩] }
-end
+theorem IsProjective.iff_projective {R : Type u} [Ringₓ R] {P : Type max u v} [AddCommGroupₓ P] [Module R P] :
+  Module.Projective R P ↔ projective (ModuleCat.of R P) :=
+  by 
+    refine' ⟨fun h => _, fun h => _⟩
+    ·
+      let this' : Module.Projective R (↥ModuleCat.of R P) := h 
+      exact ⟨fun E X f e epi => Module.projective_lifting_property _ _ ((ModuleCat.epi_iff_surjective _).mp epi)⟩
+    ·
+      refine' Module.projective_of_lifting_property _ 
+      intros E X mE mX sE sX f g s 
+      have  : epi (↟f) := (ModuleCat.epi_iff_surjective (↟f)).mpr s 
+      let this' : projective (ModuleCat.of R P) := h 
+      exact ⟨projective.factor_thru (↟g) (↟f), projective.factor_thru_comp (↟g) (↟f)⟩
 
 namespace ModuleCat
 

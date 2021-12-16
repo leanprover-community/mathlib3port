@@ -110,7 +110,7 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
         by 
           intros 
           ext 
-          simp only [free_map, Equiv.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_app,
+          simp only [free_map, Equivₓ.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_app,
             types_comp_apply],
       hom_equiv_naturality_right' :=
         by 

@@ -18,9 +18,10 @@ modeq, congruence, mod, MOD, modulo, integers
 
 namespace Int
 
--- error in Data.Int.Modeq: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable
-/-- `a ≡ b [ZMOD n]` when `a % n = b % n`. -/ @[derive #[expr decidable]] def modeq (n a b : exprℤ()) :=
-«expr = »(«expr % »(a, n), «expr % »(b, n))
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable
+/-- `a ≡ b [ZMOD n]` when `a % n = b % n`. -/
+def modeq (n a b : ℤ) :=
+  a % n = b % n deriving [anonymous]
 
 notation:50 a " ≡ " b " [ZMOD " n "]" => modeq n a b
 
@@ -201,9 +202,9 @@ theorem modeq_add_fac {a b n : ℤ} (c : ℤ) (ha : a ≡ b [ZMOD n]) : (a+n*c) 
 theorem mod_coprime {a b : ℕ} (hab : Nat.Coprime a b) : ∃ y : ℤ, (a*y) ≡ 1 [ZMOD b] :=
   ⟨Nat.gcdA a b,
     have hgcd : Nat.gcdₓ a b = 1 := Nat.Coprime.gcd_eq_one hab 
-    calc («expr↑ » a*Nat.gcdA a b) ≡ («expr↑ » a*Nat.gcdA a b)+«expr↑ » b*Nat.gcdB a b [ZMOD «expr↑ » b] :=
+    calc ((↑a)*Nat.gcdA a b) ≡ ((↑a)*Nat.gcdA a b)+(↑b)*Nat.gcdB a b [ZMOD ↑b] :=
       modeq.symm$ modeq_add_fac _$ modeq.refl _ 
-      _ ≡ 1 [ZMOD «expr↑ » b] :=
+      _ ≡ 1 [ZMOD ↑b] :=
       by 
         rw [←Nat.gcd_eq_gcd_ab, hgcd] <;> rfl
       ⟩
@@ -216,11 +217,11 @@ theorem exists_unique_equiv (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℤ, 0 �
     by 
       simp [modeq]⟩
 
-theorem exists_unique_equiv_nat (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℕ, «expr↑ » z < b ∧ «expr↑ » z ≡ a [ZMOD b] :=
+theorem exists_unique_equiv_nat (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℕ, ↑z < b ∧ ↑z ≡ a [ZMOD b] :=
   let ⟨z, hz1, hz2, hz3⟩ := exists_unique_equiv a hb
   ⟨z.nat_abs,
     by 
-      split  <;> rw [←of_nat_eq_coe, of_nat_nat_abs_eq_of_nonneg hz1] <;> assumption⟩
+      constructor <;> rw [←of_nat_eq_coe, of_nat_nat_abs_eq_of_nonneg hz1] <;> assumption⟩
 
 @[simp]
 theorem mod_mul_right_mod (a b c : ℤ) : (a % b*c) % b = a % b :=

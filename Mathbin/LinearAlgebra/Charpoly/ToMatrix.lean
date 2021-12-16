@@ -21,7 +21,7 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M] 
 
 open_locale Classical Matrix
 
-noncomputable theory
+noncomputable section 
 
 open Module.Free Polynomial Matrix
 
@@ -29,41 +29,61 @@ namespace LinearMap
 
 section Basic
 
--- error in LinearAlgebra.Charpoly.ToMatrix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `charpoly f` is the characteristic polynomial of the matrix of `f` in any basis. -/
 @[simp]
-theorem charpoly_to_matrix
-{ι : Type w}
-[fintype ι]
-(b : basis ι R M) : «expr = »((to_matrix b b f).charpoly, f.charpoly) :=
-begin
-  set [] [ident A] [] [":="] [expr to_matrix b b f] [],
-  set [] [ident b'] [] [":="] [expr choose_basis R M] [],
-  set [] [ident ι'] [] [":="] [expr choose_basis_index R M] [],
-  set [] [ident A'] [] [":="] [expr to_matrix b' b' f] [],
-  set [] [ident e] [] [":="] [expr basis.index_equiv b b'] [],
-  set [] [ident φ] [] [":="] [expr reindex_linear_equiv R R e e] [],
-  set [] [ident φ₁] [] [":="] [expr reindex_linear_equiv R R e (equiv.refl ι')] [],
-  set [] [ident φ₂] [] [":="] [expr reindex_linear_equiv R R (equiv.refl ι') (equiv.refl ι')] [],
-  set [] [ident φ₃] [] [":="] [expr reindex_linear_equiv R R (equiv.refl ι') e] [],
-  set [] [ident P] [] [":="] [expr b.to_matrix b'] [],
-  set [] [ident Q] [] [":="] [expr b'.to_matrix b] [],
-  have [ident hPQ] [":", expr «expr = »(«expr ⬝ »(C.map_matrix (φ₁ P), C.map_matrix (φ₃ Q)), 1)] [],
-  { rw ["[", expr ring_hom.map_matrix_apply, ",", expr ring_hom.map_matrix_apply, ",", "<-", expr matrix.map_mul, ",", "<-", expr @reindex_linear_equiv_mul _ ι' _ _ _ _ R R, ",", expr basis.to_matrix_mul_to_matrix_flip, ",", expr reindex_linear_equiv_one, ",", "<-", expr ring_hom.map_matrix_apply, ",", expr ring_hom.map_one, "]"] [] },
-  calc
-    «expr = »(A.charpoly, (reindex e e A).charpoly) : (charpoly_reindex _ _).symm
-    «expr = »(..., «expr - »(scalar ι' X, C.map_matrix (φ A)).det) : rfl
-    «expr = »(..., «expr - »(scalar ι' X, C.map_matrix (φ «expr ⬝ »(«expr ⬝ »(P, A'), Q))).det) : by rw ["[", expr basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix, "]"] []
-    «expr = »(..., «expr - »(scalar ι' X, C.map_matrix «expr ⬝ »(«expr ⬝ »(φ₁ P, φ₂ A'), φ₃ Q)).det) : by rw ["[", expr reindex_linear_equiv_mul R R _ _ e, ",", expr reindex_linear_equiv_mul R R e _ _, "]"] []
-    «expr = »(..., «expr - »(scalar ι' X, «expr ⬝ »(«expr ⬝ »(C.map_matrix (φ₁ P), C.map_matrix A'), C.map_matrix (φ₃ Q))).det) : by simp [] [] [] [] [] []
-    «expr = »(..., «expr - »(«expr ⬝ »(«expr ⬝ »(scalar ι' X, C.map_matrix (φ₁ P)), C.map_matrix (φ₃ Q)), «expr ⬝ »(«expr ⬝ »(C.map_matrix (φ₁ P), C.map_matrix A'), C.map_matrix (φ₃ Q))).det) : by { rw ["[", expr matrix.mul_assoc (scalar ι' X), ",", expr hPQ, ",", expr matrix.mul_one, "]"] [] }
-    «expr = »(..., «expr - »(«expr ⬝ »(«expr ⬝ »(C.map_matrix (φ₁ P), scalar ι' X), C.map_matrix (φ₃ Q)), «expr ⬝ »(«expr ⬝ »(C.map_matrix (φ₁ P), C.map_matrix A'), C.map_matrix (φ₃ Q))).det) : by simp [] [] [] [] [] []
-    «expr = »(..., «expr ⬝ »(«expr ⬝ »(C.map_matrix (φ₁ P), «expr - »(scalar ι' X, C.map_matrix A')), C.map_matrix (φ₃ Q)).det) : by rw ["[", "<-", expr matrix.sub_mul, ",", "<-", expr matrix.mul_sub, "]"] []
-    «expr = »(..., «expr * »(«expr * »((C.map_matrix (φ₁ P)).det, «expr - »(scalar ι' X, C.map_matrix A').det), (C.map_matrix (φ₃ Q)).det)) : by rw ["[", expr det_mul, ",", expr det_mul, "]"] []
-    «expr = »(..., «expr * »(«expr * »((C.map_matrix (φ₁ P)).det, (C.map_matrix (φ₃ Q)).det), «expr - »(scalar ι' X, C.map_matrix A').det)) : by ring []
-    «expr = »(..., «expr - »(scalar ι' X, C.map_matrix A').det) : by rw ["[", "<-", expr det_mul, ",", expr hPQ, ",", expr det_one, ",", expr one_mul, "]"] []
-    «expr = »(..., f.charpoly) : rfl
-end
+theorem charpoly_to_matrix {ι : Type w} [Fintype ι] (b : Basis ι R M) : (to_matrix b b f).charpoly = f.charpoly :=
+  by 
+    set A := to_matrix b b f 
+    set b' := choose_basis R M 
+    set ι' := choose_basis_index R M 
+    set A' := to_matrix b' b' f 
+    set e := Basis.indexEquiv b b' 
+    set φ := reindex_linear_equiv R R e e 
+    set φ₁ := reindex_linear_equiv R R e (Equivₓ.refl ι')
+    set φ₂ := reindex_linear_equiv R R (Equivₓ.refl ι') (Equivₓ.refl ι')
+    set φ₃ := reindex_linear_equiv R R (Equivₓ.refl ι') e 
+    set P := b.to_matrix b' 
+    set Q := b'.to_matrix b 
+    have hPQ : C.map_matrix (φ₁ P) ⬝ C.map_matrix (φ₃ Q) = 1
+    ·
+      rw [RingHom.map_matrix_apply, RingHom.map_matrix_apply, ←Matrix.map_mul,
+        @reindex_linear_equiv_mul _ ι' _ _ _ _ R R, Basis.to_matrix_mul_to_matrix_flip, reindex_linear_equiv_one,
+        ←RingHom.map_matrix_apply, RingHom.map_one]
+    calc A.charpoly = (reindex e e A).charpoly :=
+      (charpoly_reindex _ _).symm _ = (scalar ι' X - C.map_matrix (φ A)).det :=
+      rfl _ = (scalar ι' X - C.map_matrix (φ (P ⬝ A' ⬝ Q))).det :=
+      by 
+        rw
+          [basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix]_ =
+        (scalar ι' X - C.map_matrix (φ₁ P ⬝ φ₂ A' ⬝ φ₃ Q)).det :=
+      by 
+        rw [reindex_linear_equiv_mul,
+          reindex_linear_equiv_mul]_ =
+        (scalar ι' X - C.map_matrix (φ₁ P) ⬝ C.map_matrix A' ⬝ C.map_matrix (φ₃ Q)).det :=
+      by 
+        simp
+          _ =
+        (scalar ι' X ⬝ C.map_matrix (φ₁ P) ⬝ C.map_matrix (φ₃ Q) -
+            C.map_matrix (φ₁ P) ⬝ C.map_matrix A' ⬝ C.map_matrix (φ₃ Q)).det :=
+      by 
+        rw [Matrix.mul_assoc ((scalar ι') X), hPQ,
+          Matrix.mul_one]_ =
+        (C.map_matrix (φ₁ P) ⬝ scalar ι' X ⬝ C.map_matrix (φ₃ Q) -
+            C.map_matrix (φ₁ P) ⬝ C.map_matrix A' ⬝ C.map_matrix (φ₃ Q)).det :=
+      by 
+        simp _ = (C.map_matrix (φ₁ P) ⬝ (scalar ι' X - C.map_matrix A') ⬝ C.map_matrix (φ₃ Q)).det :=
+      by 
+        rw [←Matrix.sub_mul,
+          ←Matrix.mul_sub]_ =
+        ((C.map_matrix (φ₁ P)).det*(scalar ι' X - C.map_matrix A').det)*(C.map_matrix (φ₃ Q)).det :=
+      by 
+        rw [det_mul,
+          det_mul]_ = ((C.map_matrix (φ₁ P)).det*(C.map_matrix (φ₃ Q)).det)*(scalar ι' X - C.map_matrix A').det :=
+      by 
+        ring _ = (scalar ι' X - C.map_matrix A').det :=
+      by 
+        rw [←det_mul, hPQ, det_one, one_mulₓ]_ = f.charpoly :=
+      rfl
 
 end Basic
 

@@ -131,17 +131,13 @@ theorem image_to_kernel_is_iso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g :
     simp only [subobject.of_le_comp_of_le, subobject.of_le_refl]
     simp 
 
--- error in Algebra.Homology.Exact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exact_of_image_eq_kernel
-{A B C : V}
-(f : «expr ⟶ »(A, B))
-(g : «expr ⟶ »(B, C))
-(p : «expr = »(image_subobject f, kernel_subobject g)) : exact f g :=
-{ w := comp_eq_zero_of_image_eq_kernel f g p,
-  epi := begin
-    haveI [] [] [":=", expr image_to_kernel_is_iso_of_image_eq_kernel f g p],
-    apply_instance
-  end }
+theorem exact_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C) (p : image_subobject f = kernel_subobject g) :
+  exact f g :=
+  { w := comp_eq_zero_of_image_eq_kernel f g p,
+    Epi :=
+      by 
+        have  := image_to_kernel_is_iso_of_image_eq_kernel f g p 
+        infer_instance }
 
 end 
 
@@ -165,15 +161,16 @@ instance exact_comp_hom_inv_comp [exact f g] (i : B ≅ D) : exact (f ≫ i.hom)
 instance exact_comp_inv_hom_comp [exact f g] (i : D ≅ B) : exact (f ≫ i.inv) (i.hom ≫ g) :=
   CategoryTheory.exact_comp_hom_inv_comp i.symm
 
--- error in Algebra.Homology.Exact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exact_comp_hom_inv_comp_iff
-(i : «expr ≅ »(B, D)) : «expr ↔ »(exact «expr ≫ »(f, i.hom) «expr ≫ »(i.inv, g), exact f g) :=
-begin
-  refine [expr ⟨_, by { introI [], apply_instance }⟩],
-  introI [],
-  have [] [":", expr exact «expr ≫ »(«expr ≫ »(f, i.hom), i.inv) «expr ≫ »(i.hom, «expr ≫ »(i.inv, g))] [":=", expr infer_instance],
-  simpa [] [] [] [] [] ["using", expr this]
-end
+theorem exact_comp_hom_inv_comp_iff (i : B ≅ D) : exact (f ≫ i.hom) (i.inv ≫ g) ↔ exact f g :=
+  by 
+    refine'
+      ⟨_,
+        by 
+          intro 
+          infer_instance⟩
+    intro 
+    have  : exact ((f ≫ i.hom) ≫ i.inv) (i.hom ≫ i.inv ≫ g) := inferInstance 
+    simpa using this
 
 theorem exact_epi_comp [exact g h] [epi f] : exact (f ≫ g) h :=
   by 
@@ -315,7 +312,7 @@ instance exact_of_zero {A C : V} (f : A ⟶ 0) (g : 0 ⟶ C) : exact f g :=
     obtain rfl : g = 0 :=
       by 
         ext 
-    fsplit
+    fconstructor
     ·
       simp 
     ·
@@ -349,22 +346,22 @@ theorem mono_iff_exact_zero_left [has_kernels V] {B C : V} (f : B ⟶ C) : mono 
             (by 
               simpa using h.epi))⟩
 
--- error in Algebra.Homology.Exact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem epi_iff_exact_zero_right
-[has_equalizers V]
-{A B : V}
-(f : «expr ⟶ »(A, B)) : «expr ↔ »(epi f, exact f (0 : «expr ⟶ »(B, 0))) :=
-⟨λ h, by { resetI,
-   apply_instance }, λ h, begin
-   have [ident e₁] [] [":=", expr h.epi],
-   rw [expr image_to_kernel_zero_right] ["at", ident e₁],
-   have [ident e₂] [":", expr epi «expr ≫ »(«expr ≫ »((image_subobject f).arrow, inv (kernel_subobject 0).arrow), (kernel_subobject 0).arrow)] [":=", expr @epi_comp _ _ _ _ _ _ e₁ _ _],
-   rw ["[", expr category.assoc, ",", expr is_iso.inv_hom_id, ",", expr category.comp_id, "]"] ["at", ident e₂],
-   rw ["[", "<-", expr image_subobject_arrow, "]"] ["at", ident e₂],
-   resetI,
-   haveI [] [":", expr epi (image.ι f)] [":=", expr epi_of_epi (image_subobject_iso f).hom (image.ι f)],
-   apply [expr epi_of_epi_image]
- end⟩
+theorem epi_iff_exact_zero_right [has_equalizers V] {A B : V} (f : A ⟶ B) : epi f ↔ exact f (0 : B ⟶ 0) :=
+  ⟨fun h =>
+      by 
+        skip 
+        infer_instance,
+    fun h =>
+      by 
+        have e₁ := h.epi 
+        rw [image_to_kernel_zero_right] at e₁ 
+        have e₂ : epi (((image_subobject f).arrow ≫ inv (kernel_subobject 0).arrow) ≫ (kernel_subobject 0).arrow) :=
+          @epi_comp _ _ _ _ _ _ e₁ _ _ 
+        rw [category.assoc, is_iso.inv_hom_id, category.comp_id] at e₂ 
+        rw [←image_subobject_arrow] at e₂ 
+        skip 
+        have  : epi (image.ι f) := epi_of_epi (image_subobject_iso f).Hom (image.ι f)
+        apply epi_of_epi_image⟩
 
 end 
 

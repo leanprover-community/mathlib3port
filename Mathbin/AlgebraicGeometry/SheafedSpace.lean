@@ -69,11 +69,11 @@ instance : category (SheafedSpace C) :=
   show category (induced_category (PresheafedSpace C) SheafedSpace.to_PresheafedSpace)by 
     infer_instance
 
--- error in AlgebraicGeometry.SheafedSpace: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- Forgetting the sheaf condition is a functor from `SheafedSpace C` to `PresheafedSpace C`. -/
-@[derive #["[", expr full, ",", expr faithful, "]"]]
-def forget_to_PresheafedSpace : «expr ⥤ »(SheafedSpace C, PresheafedSpace C) :=
-induced_functor _
+def forget_to_PresheafedSpace : SheafedSpace C ⥤ PresheafedSpace C :=
+  induced_functor _ deriving [anonymous], [anonymous]
 
 variable {C}
 
@@ -142,21 +142,21 @@ def restrict_top_iso (X : SheafedSpace C) : X.restrict (opens.open_embedding ⊤
 /--
 The global sections, notated Gamma.
 -/
-def Γ : «expr ᵒᵖ» (SheafedSpace C) ⥤ C :=
+def Γ : SheafedSpace Cᵒᵖ ⥤ C :=
   forget_to_PresheafedSpace.op ⋙ PresheafedSpace.Γ
 
 theorem Γ_def : (Γ : _ ⥤ C) = forget_to_PresheafedSpace.op ⋙ PresheafedSpace.Γ :=
   rfl
 
 @[simp]
-theorem Γ_obj (X : «expr ᵒᵖ» (SheafedSpace C)) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
+theorem Γ_obj (X : SheafedSpace Cᵒᵖ) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
   rfl
 
 theorem Γ_obj_op (X : SheafedSpace C) : Γ.obj (op X) = X.presheaf.obj (op ⊤) :=
   rfl
 
 @[simp]
-theorem Γ_map {X Y : «expr ᵒᵖ» (SheafedSpace C)} (f : X ⟶ Y) : Γ.map f = f.unop.c.app (op ⊤) :=
+theorem Γ_map {X Y : SheafedSpace Cᵒᵖ} (f : X ⟶ Y) : Γ.map f = f.unop.c.app (op ⊤) :=
   rfl
 
 theorem Γ_map_op {X Y : SheafedSpace C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=
@@ -174,6 +174,9 @@ noncomputable instance [has_limits C] : creates_colimits (forget_to_PresheafedSp
 
 instance [has_limits C] : has_colimits (SheafedSpace C) :=
   has_colimits_of_has_colimits_creates_colimits forget_to_PresheafedSpace
+
+noncomputable instance [has_limits C] : preserves_colimits (forget C) :=
+  limits.comp_preserves_colimits forget_to_PresheafedSpace (PresheafedSpace.forget C)
 
 end SheafedSpace
 

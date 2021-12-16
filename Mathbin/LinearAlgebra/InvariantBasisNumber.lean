@@ -57,7 +57,7 @@ free module, rank, invariant basis number, IBN
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -79,19 +79,20 @@ theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Finₓ n �
   injective f → n ≤ m :=
   StrongRankCondition.le_of_fin_injective f
 
--- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A ring satisfies the strong rank condition if and only if, for all `n : ℕ`, any linear map
 `(fin (n + 1) → R) →ₗ[R] (fin n → R)` is not injective. -/
-theorem strong_rank_condition_iff_succ : «expr ↔ »(strong_rank_condition R, ∀
- (n : exprℕ())
- (f : «expr →ₗ[ ] »(fin «expr + »(n, 1) → R, R, fin n → R)), «expr¬ »(function.injective f)) :=
-begin
-  refine [expr ⟨λ h n, λ f hf, _, λ h, ⟨λ n m f hf, _⟩⟩],
-  { letI [] [":", expr strong_rank_condition R] [":=", expr h],
-    exact [expr nat.not_succ_le_self n (le_of_fin_injective R f hf)] },
-  { by_contra [ident H],
-    exact [expr h m (f.comp (function.extend_by_zero.linear_map R (fin.cast_le (not_le.1 H)))) (hf.comp (function.extend_injective (rel_embedding.injective _) 0))] }
-end
+theorem strong_rank_condition_iff_succ :
+  StrongRankCondition R ↔ ∀ n : ℕ f : (Finₓ (n+1) → R) →ₗ[R] Finₓ n → R, ¬Function.Injective f :=
+  by 
+    refine' ⟨fun h n => fun f hf => _, fun h => ⟨fun n m f hf => _⟩⟩
+    ·
+      let this' : StrongRankCondition R := h 
+      exact Nat.not_succ_le_selfₓ n (le_of_fin_injective R f hf)
+    ·
+      byContra H 
+      exact
+        h m (f.comp (Function.ExtendByZero.linearMap R (Finₓ.castLe (not_leₓ.1 H))))
+          (hf.comp (Function.extend_injective (RelEmbedding.injective _) 0))
 
 theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α → R) →ₗ[R] β → R)
   (i : injective f) : Fintype.card α ≤ Fintype.card β :=
@@ -170,16 +171,17 @@ theorem card_eq_of_lequiv {α β : Type _} [Fintype α] [Fintype β] (f : (α �
     ((LinearEquiv.funCongrLeft R R (Fintype.equivFin α)).trans f ≪≫ₗ
       (LinearEquiv.funCongrLeft R R (Fintype.equivFin β)).symm)
 
--- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nontrivial_of_invariant_basis_number : nontrivial R :=
-begin
-  by_contra [ident h],
-  refine [expr zero_ne_one (eq_of_fin_equiv R _)],
-  haveI [] [] [":=", expr not_nontrivial_iff_subsingleton.1 h],
-  haveI [] [":", expr subsingleton (fin 1 → R)] [":=", expr ⟨λ a b, «expr $ »(funext, λ x, subsingleton.elim _ _)⟩],
-  refine [expr { .. }]; { intros [],
-    exact [expr 0] } <|> tidy []
-end
+theorem nontrivial_of_invariant_basis_number : Nontrivial R :=
+  by 
+    byContra h 
+    refine' zero_ne_one (eq_of_fin_equiv R _)
+    have  := not_nontrivial_iff_subsingleton.1 h 
+    have  : Subsingleton (Finₓ 1 → R) := ⟨fun a b => funext$ fun x => Subsingleton.elimₓ _ _⟩
+    refine' { .. } <;>
+      first |
+        intros 
+        exact 0|
+        tidy
 
 end 
 
@@ -187,27 +189,27 @@ section
 
 variable (R : Type u) [Ringₓ R] [Nontrivial R] [IsNoetherianRing R]
 
--- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Any nontrivial noetherian ring satisfies the strong rank condition.
 
 An injective map `((fin n ⊕ fin (1 + m)) → R) →ₗ[R] (fin n → R)` for some left-noetherian `R`
 would force `fin (1 + m) → R ≃ₗ punit` (via `is_noetherian.equiv_punit_of_prod_injective`),
 which is not the case!
--/ @[priority 100] instance noetherian_ring_strong_rank_condition : strong_rank_condition R :=
-begin
-  fsplit,
-  intros [ident m, ident n, ident f, ident i],
-  by_contradiction [ident h],
-  rw ["[", expr not_le, ",", "<-", expr nat.add_one_le_iff, ",", expr le_iff_exists_add, "]"] ["at", ident h],
-  obtain ["⟨", ident m, ",", ident rfl, "⟩", ":=", expr h],
-  let [ident e] [":", expr «expr ≃ »(fin «expr + »(«expr + »(n, 1), m), «expr ⊕ »(fin n, fin «expr + »(1, m)))] [":=", expr (fin_congr (add_assoc _ _ _)).trans fin_sum_fin_equiv.symm],
-  let [ident f'] [] [":=", expr f.comp ((linear_equiv.sum_arrow_lequiv_prod_arrow _ _ R R).symm.trans (linear_equiv.fun_congr_left R R e)).to_linear_map],
-  have [ident i'] [":", expr injective f'] [":=", expr i.comp (linear_equiv.injective _)],
-  apply [expr @zero_ne_one (fin «expr + »(1, m) → R) _ _],
-  apply [expr (is_noetherian.equiv_punit_of_prod_injective f' i').injective],
-  ext [] [] []
-end
+-/
+instance (priority := 100) noetherian_ring_strong_rank_condition : StrongRankCondition R :=
+  by 
+    fconstructor 
+    intro m n f i 
+    byContra h 
+    rw [not_leₓ, ←Nat.add_one_le_iff, le_iff_exists_add] at h 
+    obtain ⟨m, rfl⟩ := h 
+    let e : Finₓ ((n+1)+m) ≃ Sum (Finₓ n) (Finₓ (1+m)) := (finCongr (add_assocₓ _ _ _)).trans fin_sum_fin_equiv.symm 
+    let f' :=
+      f.comp ((LinearEquiv.sumArrowLequivProdArrow _ _ R R).symm.trans (LinearEquiv.funCongrLeft R R e)).toLinearMap 
+    have i' : injective f' := i.comp (LinearEquiv.injective _)
+    apply @zero_ne_one (Finₓ (1+m) → R) _ _ 
+    apply (IsNoetherian.equivPunitOfProdInjective f' i').Injective 
+    ext
 
 end 
 
@@ -231,7 +233,7 @@ section
 variable {R : Type u} [CommRingₓ R] (I : Ideal R) {ι : Type v} [Fintype ι] {ι' : Type w}
 
 /-- An `R`-linear map `R^n → R^m` induces a function `R^n/I^n → R^m/I^m`. -/
-private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) : (I.pi ι).Quotient → (I.pi ι').Quotient :=
+private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) : (ι → R) ⧸ I.pi ι → (ι' → R) ⧸ I.pi ι' :=
   fun x =>
     Quotientₓ.liftOn' x (fun y => Ideal.Quotient.mk _ (e y))
       (by 
@@ -242,7 +244,7 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) : (I.
 /-- An isomorphism of `R`-modules `R^n ≃ R^m` induces an isomorphism of `R/I`-modules
     `R^n/I^n ≃ R^m/I^m`. -/
 private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] ι' → R) :
-  (I.pi ι).Quotient ≃ₗ[I.quotient] (I.pi ι').Quotient :=
+  ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] (ι' → R) ⧸ I.pi ι' :=
   by 
     refine' { toFun := induced_map I e, invFun := induced_map I e.symm, .. }
     all_goals 
@@ -265,8 +267,7 @@ instance (priority := 100) invariant_basis_number_of_nontrivial_of_comm_ring {R 
   ⟨fun n m e =>
       let ⟨I, hI⟩ := Ideal.exists_maximal R 
       by 
-        exact
-          eq_of_fin_equiv I.quotient ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ (induced_equiv _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
+        exact eq_of_fin_equiv (R ⧸ I) ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ (induced_equiv _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
 
 end 
 

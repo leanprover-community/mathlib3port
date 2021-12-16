@@ -48,16 +48,18 @@ open Tactic Expr Native
 
 setup_tactic_parser
 
--- error in Tactic.Lint.Frontend: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 Verbosity for the linter output.
 * `low`: only print failing checks, print nothing on success.
 * `medium`: only print failing checks, print confirmation on success.
 * `high`: print output of every check.
--/ @[derive #["[", expr decidable_eq, ",", expr inhabited, "]"]] inductive lint_verbosity
-| low
-| medium
-| high
+-/
+inductive LintVerbosity
+  | low
+  | medium
+  | high deriving [anonymous], [anonymous]
 
 /-- `get_checks slow extra use_only` produces a list of linters.
 `extras` is a list of names that should resolve to declarations with type `linter`.

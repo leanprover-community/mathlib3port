@@ -27,19 +27,24 @@ local notation "𝕎" => WittVector p
 
 open MvPolynomial
 
-noncomputable theory
+noncomputable section 
 
 include hp
 
 variable (p)
 
--- error in RingTheory.WittVector.MulP: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 /-- `witt_mul_n p n` is the family of polynomials that computes
 the coefficients of `x * n` in terms of the coefficients of the Witt vector `x`. -/
-noncomputable
-def witt_mul_n : exprℕ() → exprℕ() → mv_polynomial exprℕ() exprℤ()
-| 0 := 0
-| «expr + »(n, 1) := λ k, bind₁ «expr $ »(function.uncurry, «expr![ , ]»([witt_mul_n n, X])) (witt_add p k)
+noncomputable def witt_mul_n : ℕ → ℕ → MvPolynomial ℕ ℤ
+| 0 => 0
+| n+1 =>
+  fun k =>
+    bind₁
+      (Function.uncurry$
+        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
+      (witt_add p k)
 
 variable {p}
 

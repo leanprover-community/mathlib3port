@@ -93,7 +93,7 @@ as `Icc (-1) 1` is infinite.
 -/
 
 
-open Finset
+open Finset Function
 
 /-- A locally finite order is an order where bounded intervals are finite. When you don't care too
 much about definitional equality, you can use `locally_finite_order.of_Icc` or
@@ -548,25 +548,29 @@ noncomputable def Fintype.toLocallyFiniteOrder [Fintype α] : LocallyFiniteOrder
         by 
           rw [Set.Finite.mem_to_finset, Set.mem_Ioo] }
 
--- error in Order.LocallyFinite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : subsingleton (locally_finite_order α) :=
-subsingleton.intro (λ h₀ h₁, begin
-   cases [expr h₀] [],
-   cases [expr h₁] [],
-   have [ident hIcc] [":", expr «expr = »(h₀_finset_Icc, h₁_finset_Icc)] [],
-   { ext [] [ident a, ident b, ident x] [],
-     rw ["[", expr h₀_finset_mem_Icc, ",", expr h₁_finset_mem_Icc, "]"] [] },
-   have [ident hIco] [":", expr «expr = »(h₀_finset_Ico, h₁_finset_Ico)] [],
-   { ext [] [ident a, ident b, ident x] [],
-     rw ["[", expr h₀_finset_mem_Ico, ",", expr h₁_finset_mem_Ico, "]"] [] },
-   have [ident hIoc] [":", expr «expr = »(h₀_finset_Ioc, h₁_finset_Ioc)] [],
-   { ext [] [ident a, ident b, ident x] [],
-     rw ["[", expr h₀_finset_mem_Ioc, ",", expr h₁_finset_mem_Ioc, "]"] [] },
-   have [ident hIoo] [":", expr «expr = »(h₀_finset_Ioo, h₁_finset_Ioo)] [],
-   { ext [] [ident a, ident b, ident x] [],
-     rw ["[", expr h₀_finset_mem_Ioo, ",", expr h₁_finset_mem_Ioo, "]"] [] },
-   simp_rw ["[", expr hIcc, ",", expr hIco, ",", expr hIoc, ",", expr hIoo, "]"] []
- end)
+instance : Subsingleton (LocallyFiniteOrder α) :=
+  Subsingleton.intro
+    fun h₀ h₁ =>
+      by 
+        cases h₀ 
+        cases h₁ 
+        have hIcc : h₀_finset_Icc = h₁_finset_Icc
+        ·
+          ext a b x 
+          rw [h₀_finset_mem_Icc, h₁_finset_mem_Icc]
+        have hIco : h₀_finset_Ico = h₁_finset_Ico
+        ·
+          ext a b x 
+          rw [h₀_finset_mem_Ico, h₁_finset_mem_Ico]
+        have hIoc : h₀_finset_Ioc = h₁_finset_Ioc
+        ·
+          ext a b x 
+          rw [h₀_finset_mem_Ioc, h₁_finset_mem_Ioc]
+        have hIoo : h₀_finset_Ioo = h₁_finset_Ioo
+        ·
+          ext a b x 
+          rw [h₀_finset_mem_Ioo, h₁_finset_mem_Ioo]
+        simpRw [hIcc, hIco, hIoc, hIoo]
 
 variable [Preorderₓ β] [LocallyFiniteOrder β]
 
@@ -650,6 +654,177 @@ instance [DecidableRel (· ≤ · : α × β → α × β → Prop)] : LocallyFi
         rfl
 
 end Preorderₓ
+
+/-!
+#### `with_top`, `with_bot`
+
+Adding a `⊤` to a locally finite `order_top` keeps it locally finite.
+Adding a `⊥` to a locally finite `order_bot` keeps it locally finite.
+-/
+
+
+namespace WithTop
+
+variable (α) [PartialOrderₓ α] [OrderTop α] [LocallyFiniteOrder α]
+
+attribute [local matchPattern] coeₓ
+
+attribute [local simp] Option.mem_iff
+
+instance : LocallyFiniteOrder (WithTop α) :=
+  { finsetIcc :=
+      fun a b =>
+        match a, b with 
+        | ⊤, ⊤ => {⊤}
+        | ⊤, (b : α) => ∅
+        | (a : α), ⊤ => insert_none (Ici a)
+        | (a : α), (b : α) => (Icc a b).map embedding.coe_option,
+    finsetIco :=
+      fun a b =>
+        match a, b with 
+        | ⊤, _ => ∅
+        | (a : α), ⊤ => (Ici a).map embedding.coe_option
+        | (a : α), (b : α) => (Ico a b).map embedding.coe_option,
+    finsetIoc :=
+      fun a b =>
+        match a, b with 
+        | ⊤, _ => ∅
+        | (a : α), ⊤ => insert_none (Ioi a)
+        | (a : α), (b : α) => (Ioc a b).map embedding.coe_option,
+    finsetIoo :=
+      fun a b =>
+        match a, b with 
+        | ⊤, _ => ∅
+        | (a : α), ⊤ => (Ioi a).map embedding.coe_option
+        | (a : α), (b : α) => (Ioo a b).map embedding.coe_option,
+    finset_mem_Icc :=
+      fun a b x =>
+        match a, b, x with 
+        | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iffₓ.trans$ and_comm _ _)
+        | ⊤, (b : α), x => iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt$ coe_lt_top _
+        | (a : α), ⊤, ⊤ =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match1]
+        | (a : α), ⊤, (x : α) =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match1, coe_eq_coe]
+        | (a : α), (b : α), ⊤ =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match1]
+        | (a : α), (b : α), (x : α) =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match1, coe_eq_coe],
+    finset_mem_Ico :=
+      fun a b x =>
+        match a, b, x with 
+        | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt$ h.1.trans_lt h.2
+        | (a : α), ⊤, ⊤ =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match2]
+        | (a : α), ⊤, (x : α) =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_top]
+        | (a : α), (b : α), ⊤ =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match2]
+        | (a : α), (b : α), (x : α) =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_coe],
+    finset_mem_Ioc :=
+      fun a b x =>
+        match a, b, x with 
+        | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt$ h.1.trans_le h.2
+        | (a : α), ⊤, ⊤ =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match3, coe_lt_top]
+        | (a : α), ⊤, (x : α) =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
+        | (a : α), (b : α), ⊤ =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match3]
+        | (a : α), (b : α), (x : α) =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe],
+    finset_mem_Ioo :=
+      fun a b x =>
+        match a, b, x with 
+        | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt$ h.1.trans h.2
+        | (a : α), ⊤, ⊤ =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match4, coe_lt_top]
+        | (a : α), ⊤, (x : α) =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe, coe_lt_top]
+        | (a : α), (b : α), ⊤ =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match4]
+        | (a : α), (b : α), (x : α) =>
+          by 
+            simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe] }
+
+variable (a b : α)
+
+theorem Icc_coe_top : Icc (a : WithTop α) ⊤ = insert_none (Ici a) :=
+  rfl
+
+theorem Icc_coe_coe : Icc (a : WithTop α) b = (Icc a b).map embedding.coe_option :=
+  rfl
+
+theorem Ico_coe_top : Ico (a : WithTop α) ⊤ = (Ici a).map embedding.coe_option :=
+  rfl
+
+theorem Ico_coe_coe : Ico (a : WithTop α) b = (Ico a b).map embedding.coe_option :=
+  rfl
+
+theorem Ioc_coe_top : Ioc (a : WithTop α) ⊤ = insert_none (Ioi a) :=
+  rfl
+
+theorem Ioc_coe_coe : Ioc (a : WithTop α) b = (Ioc a b).map embedding.coe_option :=
+  rfl
+
+theorem Ioo_coe_top : Ioo (a : WithTop α) ⊤ = (Ioi a).map embedding.coe_option :=
+  rfl
+
+theorem Ioo_coe_coe : Ioo (a : WithTop α) b = (Ioo a b).map embedding.coe_option :=
+  rfl
+
+end WithTop
+
+namespace WithBot
+
+variable (α) [PartialOrderₓ α] [OrderBot α] [LocallyFiniteOrder α]
+
+instance : LocallyFiniteOrder (WithBot α) :=
+  @OrderDual.locallyFiniteOrder (WithTop (OrderDual α)) _ _
+
+variable (a b : α)
+
+theorem Icc_bot_coe : Icc (⊥ : WithBot α) b = insert_none (Iic b) :=
+  rfl
+
+theorem Icc_coe_coe : Icc (a : WithBot α) b = (Icc a b).map embedding.coe_option :=
+  rfl
+
+theorem Ico_bot_coe : Ico (⊥ : WithBot α) b = insert_none (Iio b) :=
+  rfl
+
+theorem Ico_coe_coe : Ico (a : WithBot α) b = (Ico a b).map embedding.coe_option :=
+  rfl
+
+theorem Ioc_bot_coe : Ioc (⊥ : WithBot α) b = (Iic b).map embedding.coe_option :=
+  rfl
+
+theorem Ioc_coe_coe : Ioc (a : WithBot α) b = (Ioc a b).map embedding.coe_option :=
+  rfl
+
+theorem Ioo_bot_coe : Ioo (⊥ : WithBot α) b = (Iio b).map embedding.coe_option :=
+  rfl
+
+theorem Ioo_coe_coe : Ioo (a : WithBot α) b = (Ioo a b).map embedding.coe_option :=
+  rfl
+
+end WithBot
 
 /-! #### Subtype of a locally finite order -/
 

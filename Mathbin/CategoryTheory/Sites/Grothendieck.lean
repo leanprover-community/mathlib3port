@@ -385,10 +385,11 @@ def atomic (hro : right_ore_condition C) : grothendieck_topology C :=
         rcases h hf with ⟨Z, g, hg⟩
         exact ⟨_, _, hg⟩ }
 
--- error in CategoryTheory.Sites.Grothendieck: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler preorder
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler preorder
 /-- `J.cover X` denotes the poset of covers of `X` with respect to the
-Grothendieck topology `J`. -/ @[derive #[expr preorder]] def cover (X : C) :=
-{S : sieve X // «expr ∈ »(S, J X)}
+Grothendieck topology `J`. -/
+def cover (X : C) :=
+  { S : sieve X // S ∈ J X }deriving [anonymous]
 
 namespace Cover
 
@@ -575,7 +576,7 @@ theorem arrow.middle_spec {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover 
   I.hf.some_spec.some_spec.some_spec.some_spec.2
 
 /-- To every `S : J.cover X` and presheaf `P`, associate a `multicospan_index`. -/
-def index {D : Type w} [category.{max v u} D] (S : J.cover X) (P : «expr ᵒᵖ» C ⥤ D) : limits.multicospan_index D :=
+def index {D : Type w} [category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D) : limits.multicospan_index D :=
   { L := S.arrow, R := S.relation, fstTo := fun I => I.fst, sndTo := fun I => I.snd,
     left := fun I => P.obj (Opposite.op I.Y), right := fun I => P.obj (Opposite.op I.Z), fst := fun I => P.map I.g₁.op,
     snd := fun I => P.map I.g₂.op }
@@ -585,8 +586,7 @@ Saying that this multifork is a limit is essentially equivalent to the sheaf con
 given object for the given covering sieve. See `sheaf.lean` for an equivalent sheaf condition
 using this.
 -/
-abbrev multifork {D : Type w} [category.{max v u} D] (S : J.cover X) (P : «expr ᵒᵖ» C ⥤ D) :
-  limits.multifork (S.index P) :=
+abbrev multifork {D : Type w} [category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D) : limits.multifork (S.index P) :=
   limits.multifork.of_ι _ (P.obj (Opposite.op X)) (fun I => P.map I.f.op)
     (by 
       intro I 
@@ -596,7 +596,7 @@ abbrev multifork {D : Type w} [category.{max v u} D] (S : J.cover X) (P : «expr
 /-- The canonical map from `P.obj (op X)` to the multiequalizer associated to a covering sieve,
 assuming such a multiequalizer exists. This will be used in `sheaf.lean` to provide an equivalent
 sheaf condition in terms of multiequalizers. -/
-noncomputable abbrev to_multiequalizer {D : Type w} [category.{max v u} D] (S : J.cover X) (P : «expr ᵒᵖ» C ⥤ D)
+noncomputable abbrev to_multiequalizer {D : Type w} [category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D)
   [limits.has_multiequalizer (S.index P)] : P.obj (Opposite.op X) ⟶ limits.multiequalizer (S.index P) :=
   limits.multiequalizer.lift _ _ (fun I => P.map I.f.op)
     (by 

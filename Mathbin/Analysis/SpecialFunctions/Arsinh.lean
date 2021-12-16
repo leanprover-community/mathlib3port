@@ -20,7 +20,7 @@ arsinh, arcsinh, argsinh, asinh, sinh injective, sinh bijective, sinh surjective
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Real
 
@@ -33,15 +33,11 @@ def arsinh (x : ℝ) :=
 theorem sinh_injective : Function.Injective sinh :=
   sinh_strict_mono.Injective
 
--- error in Analysis.SpecialFunctions.Arsinh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem aux_lemma
-(x : exprℝ()) : «expr = »(«expr / »(1, «expr + »(x, sqrt «expr + »(1, «expr ^ »(x, 2)))), «expr + »(«expr- »(x), sqrt «expr + »(1, «expr ^ »(x, 2)))) :=
-begin
-  refine [expr (eq_one_div_of_mul_eq_one _).symm],
-  have [] [":", expr «expr ≤ »(0, «expr + »(1, «expr ^ »(x, 2)))] [":=", expr add_nonneg zero_le_one (sq_nonneg x)],
-  rw ["[", expr add_comm, ",", "<-", expr sub_eq_neg_add, ",", "<-", expr mul_self_sub_mul_self, ",", expr mul_self_sqrt this, ",", expr sq, ",", expr add_sub_cancel, "]"] []
-end
+private theorem aux_lemma (x : ℝ) : (1 / x+sqrt (1+x^2)) = (-x)+sqrt (1+x^2) :=
+  by 
+    refine' (eq_one_div_of_mul_eq_one _).symm 
+    have  : 0 ≤ 1+x^2 := add_nonneg zero_le_one (sq_nonneg x)
+    rw [add_commₓ, ←sub_eq_neg_add, ←mul_self_sub_mul_self, mul_self_sqrt this, sq, add_sub_cancel]
 
 private theorem b_lt_sqrt_b_one_add_sq (b : ℝ) : b < sqrt (1+b^2) :=
   calc b ≤ sqrt (b^2) := le_sqrt_of_sq_le le_rfl 
@@ -68,16 +64,16 @@ theorem sinh_surjective : Function.Surjective sinh :=
 theorem sinh_bijective : Function.Bijective sinh :=
   ⟨sinh_injective, sinh_surjective⟩
 
--- error in Analysis.SpecialFunctions.Arsinh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A rearrangement and `sqrt` of `real.cosh_sq_sub_sinh_sq`. -/
-theorem sqrt_one_add_sinh_sq (x : exprℝ()) : «expr = »(sqrt «expr + »(1, «expr ^ »(sinh x, 2)), cosh x) :=
-begin
-  have [ident H] [] [":=", expr real.cosh_sq_sub_sinh_sq x],
-  have [ident G] [":", expr «expr = »(«expr + »(«expr - »(«expr ^ »(cosh x, 2), «expr ^ »(sinh x, 2)), «expr ^ »(sinh x, 2)), «expr + »(1, «expr ^ »(sinh x, 2)))] [":=", expr by rw [expr H] []],
-  rw [expr sub_add_cancel] ["at", ident G],
-  rw ["[", "<-", expr G, ",", expr sqrt_sq, "]"] [],
-  exact [expr le_of_lt (cosh_pos x)]
-end
+theorem sqrt_one_add_sinh_sq (x : ℝ) : sqrt (1+sinh x^2) = cosh x :=
+  by 
+    have H := Real.cosh_sq_sub_sinh_sq x 
+    have G : (((cosh x^2) - (sinh x^2))+sinh x^2) = 1+sinh x^2 :=
+      by 
+        rw [H]
+    rw [sub_add_cancel] at G 
+    rw [←G, sqrt_sq]
+    exact le_of_ltₓ (cosh_pos x)
 
 /-- `arsinh` is the left inverse of `sinh`. -/
 theorem arsinh_sinh (x : ℝ) : arsinh (sinh x) = x :=

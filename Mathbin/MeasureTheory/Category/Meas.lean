@@ -22,7 +22,7 @@ measurable space, giry monad, borel
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory MeasureTheory
 
@@ -53,8 +53,9 @@ theorem coe_of (X : Type u) [MeasurableSpace X] : (of X : Type u) = X :=
 instance unbundled_hom : unbundled_hom @Measurable :=
   ⟨@measurable_id, @Measurable.comp⟩
 
--- error in MeasureTheory.Category.Meas: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Meas
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for Meas
 
 instance : Inhabited Meas :=
   ⟨Meas.of Empty⟩
@@ -90,13 +91,13 @@ def Giry : CategoryTheory.Monad Meas :=
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
 def Integral : Giry.Algebra :=
-  { A := Meas.of ℝ≥0∞, a := ⟨fun m : Measureₓ ℝ≥0∞ => ∫⁻x, x ∂m, measure.measurable_lintegral measurable_id⟩,
+  { A := Meas.of ℝ≥0∞, a := ⟨fun m : Measureₓ ℝ≥0∞ => ∫⁻ x, x ∂m, measure.measurable_lintegral measurable_id⟩,
     unit' := Subtype.eq$ funext$ fun r : ℝ≥0∞ => lintegral_dirac' _ measurable_id,
     assoc' :=
       Subtype.eq$
         funext$
           fun μ : Measureₓ (Measureₓ ℝ≥0∞) =>
-            show (∫⁻x, x ∂μ.join) = ∫⁻x, x ∂measure.map (fun m : Measureₓ ℝ≥0∞ => ∫⁻x, x ∂m) μ by 
+            show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂measure.map (fun m : Measureₓ ℝ≥0∞ => ∫⁻ x, x ∂m) μ by 
               rw [measure.lintegral_join, lintegral_map] <;> applyRules [measurable_id, measure.measurable_lintegral] }
 
 end Meas

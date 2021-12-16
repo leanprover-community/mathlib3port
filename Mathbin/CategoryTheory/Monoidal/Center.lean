@@ -30,7 +30,7 @@ open CategoryTheory.MonoidalCategory
 
 universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -73,7 +73,7 @@ and `b` is a half-braiding on `X`.
 -/
 @[nolint has_inhabited_instance]
 def center :=
-  ΣX : C, half_braiding X
+  Σ X : C, half_braiding X
 
 namespace Center
 

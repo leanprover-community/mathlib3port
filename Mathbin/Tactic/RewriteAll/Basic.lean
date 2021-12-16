@@ -2,10 +2,11 @@ import Mathbin.Tactic.Core
 
 open Tactic
 
--- error in Tactic.RewriteAll.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
-@[derive #[expr decidable_eq], derive #[expr inhabited]] inductive side
-| L
-| R
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+inductive Side
+  | L
+  | R deriving [anonymous], [anonymous]
 
 def Side.other : Side → Side
 | Side.L => Side.R

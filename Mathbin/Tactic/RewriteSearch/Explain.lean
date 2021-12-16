@@ -12,11 +12,13 @@ namespace Tactic.RewriteSearch
 
 universe u
 
--- error in Tactic.RewriteSearch.Explain: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 A `dir_pair` is a pair of items designed to be accessed according to
 `dir`, a "direction" defined in the `expr_lens` library.
--/ @[derive #[expr inhabited]] structure dir_pair (α : Type u) := (l r : α)
+-/
+structure dir_pair (α : Type u) where 
+  (l R : α)deriving [anonymous]
 
 namespace DirPair
 
@@ -87,16 +89,17 @@ private unsafe def app_addr.to_string : app_addr → Stringₓ
 | node c => "(node " ++ ((c.to_list.filter_map id).map app_addr.to_string).toString ++ ")"
 | rw rws => "(rw " ++ rws.to_string ++ ")"
 
--- error in Tactic.RewriteSearch.Explain: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 A data structure for the result of a splice operation.
 obstructed:  There was more of the addr to be added left, but we hit a rw
 contained:   The added addr was already contained, and did not terminate at an existing rw
 new:         The added addr terminated at an existing rw or we could create a new one for it
--/ @[derive #[expr inhabited]] inductive splice_result
-| obstructed
-| contained
-| new (addr : app_addr)
+-/
+inductive splice_result
+  | obstructed
+  | contained
+  | new (addr : app_addr)deriving [anonymous]
 
 open SpliceResult
 

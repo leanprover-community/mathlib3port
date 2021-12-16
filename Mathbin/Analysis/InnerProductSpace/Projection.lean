@@ -1,5 +1,6 @@
+import Mathbin.Analysis.Convex.Basic 
 import Mathbin.Analysis.InnerProductSpace.Basic 
-import Mathbin.Analysis.Convex.Basic
+import Mathbin.Analysis.NormedSpace.IsROrC
 
 /-!
 # The orthogonal projection
@@ -38,7 +39,7 @@ The Coq code is available at the following address: <http://www.lri.fr/~sboldo/e
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open IsROrC Real Filter
 
@@ -55,256 +56,314 @@ local notation "absR" => HasAbs.abs
 /-! ### Orthogonal projection in inner product spaces -/
 
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » K)
 /--
 Existence of minimizers
 Let `u` be a point in a real inner product space, and let `K` be a nonempty complete convex subset.
 Then there exists a (unique) `v` in `K` that minimizes the distance `∥u - v∥` to `u`.
  -/
-theorem exists_norm_eq_infi_of_complete_convex
-{K : set F}
-(ne : K.nonempty)
-(h₁ : is_complete K)
-(h₂ : convex exprℝ() K) : ∀
-u : F, «expr∃ , »((v «expr ∈ » K), «expr = »(«expr∥ ∥»(«expr - »(u, v)), «expr⨅ , »((w : K), «expr∥ ∥»(«expr - »(u, w))))) :=
-assume u, begin
-  let [ident δ] [] [":=", expr «expr⨅ , »((w : K), «expr∥ ∥»(«expr - »(u, w)))],
-  letI [] [":", expr nonempty K] [":=", expr ne.to_subtype],
-  have [ident zero_le_δ] [":", expr «expr ≤ »(0, δ)] [":=", expr le_cinfi (λ _, norm_nonneg _)],
-  have [ident δ_le] [":", expr ∀ w : K, «expr ≤ »(δ, «expr∥ ∥»(«expr - »(u, w)))] [],
-  from [expr cinfi_le ⟨0, «expr $ »(set.forall_range_iff.2, λ _, norm_nonneg _)⟩],
-  have [ident δ_le'] [":", expr ∀
-   w «expr ∈ » K, «expr ≤ »(δ, «expr∥ ∥»(«expr - »(u, w)))] [":=", expr assume w hw, δ_le ⟨w, hw⟩],
-  have [ident exists_seq] [":", expr «expr∃ , »((w : exprℕ() → K), ∀
-    n, «expr < »(«expr∥ ∥»(«expr - »(u, w n)), «expr + »(δ, «expr / »(1, «expr + »(n, 1)))))] [],
-  { have [ident hδ] [":", expr ∀ n : exprℕ(), «expr < »(δ, «expr + »(δ, «expr / »(1, «expr + »(n, 1))))] [],
-    from [expr λ n, lt_add_of_le_of_pos (le_refl _) nat.one_div_pos_of_nat],
-    have [ident h] [] [":=", expr λ n, exists_lt_of_cinfi_lt (hδ n)],
-    let [ident w] [":", expr exprℕ() → K] [":=", expr λ n, classical.some (h n)],
-    exact [expr ⟨w, λ n, classical.some_spec (h n)⟩] },
-  rcases [expr exists_seq, "with", "⟨", ident w, ",", ident hw, "⟩"],
-  have [ident norm_tendsto] [":", expr tendsto (λ n, «expr∥ ∥»(«expr - »(u, w n))) at_top (nhds δ)] [],
-  { have [ident h] [":", expr tendsto (λ n : exprℕ(), δ) at_top (nhds δ)] [":=", expr tendsto_const_nhds],
-    have [ident h'] [":", expr tendsto (λ n : exprℕ(), «expr + »(δ, «expr / »(1, «expr + »(n, 1)))) at_top (nhds δ)] [],
-    { convert [] [expr h.add tendsto_one_div_add_at_top_nhds_0_nat] [],
-      simp [] [] ["only"] ["[", expr add_zero, "]"] [] [] },
-    exact [expr tendsto_of_tendsto_of_tendsto_of_le_of_le h h' (λ x, δ_le _) (λ x, le_of_lt (hw _))] },
-  have [ident seq_is_cauchy] [":", expr cauchy_seq (λ n, (w n : F))] [],
-  { rw [expr cauchy_seq_iff_le_tendsto_0] [],
-    let [ident b] [] [":=", expr λ
-     n : exprℕ(), «expr + »(«expr * »(«expr * »(8, δ), «expr / »(1, «expr + »(n, 1))), «expr * »(«expr * »(4, «expr / »(1, «expr + »(n, 1))), «expr / »(1, «expr + »(n, 1))))],
-    use [expr λ n, sqrt (b n)],
-    split,
-    assume [binders (n)],
-    exact [expr sqrt_nonneg _],
-    split,
-    assume [binders (p q N hp hq)],
-    let [ident wp] [] [":=", expr (w p : F)],
-    let [ident wq] [] [":=", expr (w q : F)],
-    let [ident a] [] [":=", expr «expr - »(u, wq)],
-    let [ident b] [] [":=", expr «expr - »(u, wp)],
-    let [ident half] [] [":=", expr «expr / »(1, (2 : exprℝ()))],
-    let [ident div] [] [":=", expr «expr / »(1, «expr + »((N : exprℝ()), 1))],
-    have [] [":", expr «expr = »(«expr + »(«expr * »(«expr * »(4, «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr * »(«expr∥ ∥»(«expr - »(wp, wq)), «expr∥ ∥»(«expr - »(wp, wq)))), «expr * »(2, «expr + »(«expr * »(«expr∥ ∥»(a), «expr∥ ∥»(a)), «expr * »(«expr∥ ∥»(b), «expr∥ ∥»(b)))))] [":=", expr calc
-       «expr = »(«expr + »(«expr * »(«expr * »(4, «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr * »(«expr∥ ∥»(«expr - »(wp, wq)), «expr∥ ∥»(«expr - »(wp, wq)))), «expr + »(«expr * »(«expr * »(2, «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr * »(2, «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp)))))), «expr * »(«expr∥ ∥»(«expr - »(wp, wq)), «expr∥ ∥»(«expr - »(wp, wq))))) : by ring []
-       «expr = »(..., «expr + »(«expr * »(«expr * »(exprabsR() (2 : exprℝ()), «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr * »(exprabsR() (2 : exprℝ()), «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp)))))), «expr * »(«expr∥ ∥»(«expr - »(wp, wq)), «expr∥ ∥»(«expr - »(wp, wq))))) : by { rw [expr _root_.abs_of_nonneg] [],
-         exact [expr zero_le_two] }
-       «expr = »(..., «expr + »(«expr * »(«expr∥ ∥»(«expr • »((2 : exprℝ()), «expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr∥ ∥»(«expr • »((2 : exprℝ()), «expr - »(u, «expr • »(half, «expr + »(wq, wp)))))), «expr * »(«expr∥ ∥»(«expr - »(wp, wq)), «expr∥ ∥»(«expr - »(wp, wq))))) : by simp [] [] [] ["[", expr norm_smul, "]"] [] []
-       «expr = »(..., «expr + »(«expr * »(«expr∥ ∥»(«expr + »(a, b)), «expr∥ ∥»(«expr + »(a, b))), «expr * »(«expr∥ ∥»(«expr - »(a, b)), «expr∥ ∥»(«expr - »(a, b))))) : begin
-         rw ["[", expr smul_sub, ",", expr smul_smul, ",", expr mul_one_div_cancel (_root_.two_ne_zero : «expr ≠ »((2 : exprℝ()), 0)), ",", "<-", expr one_add_one_eq_two, ",", expr add_smul, "]"] [],
-         simp [] [] ["only"] ["[", expr one_smul, "]"] [] [],
-         have [ident eq₁] [":", expr «expr = »(«expr - »(wp, wq), «expr - »(a, b))] [],
-         from [expr (sub_sub_sub_cancel_left _ _ _).symm],
-         have [ident eq₂] [":", expr «expr = »(«expr - »(«expr + »(u, u), «expr + »(wq, wp)), «expr + »(a, b))] [],
-         show [expr «expr = »(«expr - »(«expr + »(u, u), «expr + »(wq, wp)), «expr + »(«expr - »(u, wq), «expr - »(u, wp)))],
-         abel [] [] [],
-         rw ["[", expr eq₁, ",", expr eq₂, "]"] []
-       end
-       «expr = »(..., «expr * »(2, «expr + »(«expr * »(«expr∥ ∥»(a), «expr∥ ∥»(a)), «expr * »(«expr∥ ∥»(b), «expr∥ ∥»(b))))) : parallelogram_law_with_norm],
-    have [ident eq] [":", expr «expr ≤ »(δ, «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp)))))] [],
-    { rw [expr smul_add] [],
-      apply [expr δ_le'],
-      apply [expr h₂],
-      repeat { exact [expr subtype.mem _] },
-      repeat { exact [expr le_of_lt one_half_pos] },
-      exact [expr add_halves 1] },
-    have [ident eq₁] [":", expr «expr ≤ »(«expr * »(«expr * »(4, δ), δ), «expr * »(«expr * »(4, «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))))] [],
-    { mono [] [] [] [],
-      mono [] [] [] [],
-      norm_num [] [],
-      apply [expr mul_nonneg],
-      norm_num [] [],
-      exact [expr norm_nonneg _] },
-    have [ident eq₂] [":", expr «expr ≤ »(«expr * »(«expr∥ ∥»(a), «expr∥ ∥»(a)), «expr * »(«expr + »(δ, div), «expr + »(δ, div)))] [":=", expr mul_self_le_mul_self (norm_nonneg _) (le_trans «expr $ »(le_of_lt, hw q) (add_le_add_left (nat.one_div_le_one_div hq) _))],
-    have [ident eq₂'] [":", expr «expr ≤ »(«expr * »(«expr∥ ∥»(b), «expr∥ ∥»(b)), «expr * »(«expr + »(δ, div), «expr + »(δ, div)))] [":=", expr mul_self_le_mul_self (norm_nonneg _) (le_trans «expr $ »(le_of_lt, hw p) (add_le_add_left (nat.one_div_le_one_div hp) _))],
-    rw [expr dist_eq_norm] [],
-    apply [expr nonneg_le_nonneg_of_sq_le_sq],
-    { exact [expr sqrt_nonneg _] },
-    rw [expr mul_self_sqrt] [],
-    calc
-      «expr = »(«expr * »(«expr∥ ∥»(«expr - »(wp, wq)), «expr∥ ∥»(«expr - »(wp, wq))), «expr - »(«expr * »(2, «expr + »(«expr * »(«expr∥ ∥»(a), «expr∥ ∥»(a)), «expr * »(«expr∥ ∥»(b), «expr∥ ∥»(b)))), «expr * »(«expr * »(4, «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))), «expr∥ ∥»(«expr - »(u, «expr • »(half, «expr + »(wq, wp))))))) : by { rw ["<-", expr this] [],
-        simp [] [] [] [] [] [] }
-      «expr ≤ »(..., «expr - »(«expr * »(2, «expr + »(«expr * »(«expr∥ ∥»(a), «expr∥ ∥»(a)), «expr * »(«expr∥ ∥»(b), «expr∥ ∥»(b)))), «expr * »(«expr * »(4, δ), δ))) : sub_le_sub_left eq₁ _
-      «expr ≤ »(..., «expr - »(«expr * »(2, «expr + »(«expr * »(«expr + »(δ, div), «expr + »(δ, div)), «expr * »(«expr + »(δ, div), «expr + »(δ, div)))), «expr * »(«expr * »(4, δ), δ))) : sub_le_sub_right (mul_le_mul_of_nonneg_left (add_le_add eq₂ eq₂') (by norm_num [] [])) _
-      «expr = »(..., «expr + »(«expr * »(«expr * »(8, δ), div), «expr * »(«expr * »(4, div), div))) : by ring [],
-    exact [expr add_nonneg (mul_nonneg (mul_nonneg (by norm_num [] []) zero_le_δ) (le_of_lt nat.one_div_pos_of_nat)) (mul_nonneg (mul_nonneg (by norm_num [] []) nat.one_div_pos_of_nat.le) nat.one_div_pos_of_nat.le)],
-    apply [expr tendsto.comp],
-    { convert [] [expr continuous_sqrt.continuous_at] [],
-      exact [expr sqrt_zero.symm] },
-    have [ident eq₁] [":", expr tendsto (λ
-      n : exprℕ(), «expr * »(«expr * »(8, δ), «expr / »(1, «expr + »(n, 1)))) at_top (nhds (0 : exprℝ()))] [],
-    { convert [] [expr (@tendsto_const_nhds _ _ _ «expr * »(8, δ) _).mul tendsto_one_div_add_at_top_nhds_0_nat] [],
-      simp [] [] ["only"] ["[", expr mul_zero, "]"] [] [] },
-    have [] [":", expr tendsto (λ
-      n : exprℕ(), «expr * »((4 : exprℝ()), «expr / »(1, «expr + »(n, 1)))) at_top (nhds (0 : exprℝ()))] [],
-    { convert [] [expr (@tendsto_const_nhds _ _ _ (4 : exprℝ()) _).mul tendsto_one_div_add_at_top_nhds_0_nat] [],
-      simp [] [] ["only"] ["[", expr mul_zero, "]"] [] [] },
-    have [ident eq₂] [":", expr tendsto (λ
-      n : exprℕ(), «expr * »(«expr * »((4 : exprℝ()), «expr / »(1, «expr + »(n, 1))), «expr / »(1, «expr + »(n, 1)))) at_top (nhds (0 : exprℝ()))] [],
-    { convert [] [expr this.mul tendsto_one_div_add_at_top_nhds_0_nat] [],
-      simp [] [] ["only"] ["[", expr mul_zero, "]"] [] [] },
-    convert [] [expr eq₁.add eq₂] [],
-    simp [] [] ["only"] ["[", expr add_zero, "]"] [] [] },
-  rcases [expr cauchy_seq_tendsto_of_is_complete h₁ (λ
-    n, _) seq_is_cauchy, "with", "⟨", ident v, ",", ident hv, ",", ident w_tendsto, "⟩"],
-  use [expr v],
-  use [expr hv],
-  have [ident h_cont] [":", expr continuous (λ
-    v, «expr∥ ∥»(«expr - »(u, v)))] [":=", expr continuous.comp continuous_norm (continuous.sub continuous_const continuous_id)],
-  have [] [":", expr tendsto (λ n, «expr∥ ∥»(«expr - »(u, w n))) at_top (nhds «expr∥ ∥»(«expr - »(u, v)))] [],
-  convert [] [expr tendsto.comp h_cont.continuous_at w_tendsto] [],
-  exact [expr tendsto_nhds_unique this norm_tendsto],
-  exact [expr subtype.mem _]
-end
+theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.nonempty) (h₁ : IsComplete K) (h₂ : Convex ℝ K) :
+  ∀ u : F, ∃ (v : _)(_ : v ∈ K), ∥u - v∥ = ⨅ w : K, ∥u - w∥ :=
+  fun u =>
+    by 
+      let δ := ⨅ w : K, ∥u - w∥
+      let this' : Nonempty K := ne.to_subtype 
+      have zero_le_δ : 0 ≤ δ := le_cinfi fun _ => norm_nonneg _ 
+      have δ_le : ∀ w : K, δ ≤ ∥u - w∥
+      exact cinfi_le ⟨0, Set.forall_range_iff.2$ fun _ => norm_nonneg _⟩
+      have δ_le' : ∀ w _ : w ∈ K, δ ≤ ∥u - w∥ := fun w hw => δ_le ⟨w, hw⟩
+      have exists_seq : ∃ w : ℕ → K, ∀ n, ∥u - w n∥ < δ+1 / n+1
+      ·
+        have hδ : ∀ n : ℕ, δ < δ+1 / n+1 
+        exact fun n => lt_add_of_le_of_pos (le_reflₓ _) Nat.one_div_pos_of_nat 
+        have h := fun n => exists_lt_of_cinfi_lt (hδ n)
+        let w : ℕ → K := fun n => Classical.some (h n)
+        exact ⟨w, fun n => Classical.some_spec (h n)⟩
+      rcases exists_seq with ⟨w, hw⟩
+      have norm_tendsto : tendsto (fun n => ∥u - w n∥) at_top (nhds δ)
+      ·
+        have h : tendsto (fun n : ℕ => δ) at_top (nhds δ) := tendsto_const_nhds 
+        have h' : tendsto (fun n : ℕ => δ+1 / n+1) at_top (nhds δ)
+        ·
+          convert h.add tendsto_one_div_add_at_top_nhds_0_nat 
+          simp only [add_zeroₓ]
+        exact tendsto_of_tendsto_of_tendsto_of_le_of_le h h' (fun x => δ_le _) fun x => le_of_ltₓ (hw _)
+      have seq_is_cauchy : CauchySeq fun n => (w n : F)
+      ·
+        rw [cauchy_seq_iff_le_tendsto_0]
+        let b := fun n : ℕ => ((8*δ)*1 / n+1)+(4*1 / n+1)*1 / n+1
+        use fun n => sqrt (b n)
+        constructor 
+        intro n 
+        exact sqrt_nonneg _ 
+        constructor 
+        intro p q N hp hq 
+        let wp := (w p : F)
+        let wq := (w q : F)
+        let a := u - wq 
+        let b := u - wp 
+        let half := 1 / (2 : ℝ)
+        let div := 1 / (N : ℝ)+1
+        have  : (((4*∥u - half • wq+wp∥)*∥u - half • wq+wp∥)+∥wp - wq∥*∥wp - wq∥) = 2*(∥a∥*∥a∥)+∥b∥*∥b∥ :=
+          calc
+            (((4*∥u - half • wq+wp∥)*∥u - half • wq+wp∥)+∥wp - wq∥*∥wp - wq∥) =
+              ((2*∥u - half • wq+wp∥)*2*∥u - half • wq+wp∥)+∥wp - wq∥*∥wp - wq∥ :=
+            by 
+              ring 
+            _ = ((absR (2 : ℝ)*∥u - half • wq+wp∥)*absR (2 : ℝ)*∥u - half • wq+wp∥)+∥wp - wq∥*∥wp - wq∥ :=
+            by 
+              rw [_root_.abs_of_nonneg]
+              exact zero_le_two 
+            _ = (∥(2 : ℝ) • (u - half • wq+wp)∥*∥(2 : ℝ) • (u - half • wq+wp)∥)+∥wp - wq∥*∥wp - wq∥ :=
+            by 
+              simp [norm_smul]
+            _ = (∥a+b∥*∥a+b∥)+∥a - b∥*∥a - b∥ :=
+            by 
+              rw [smul_sub, smul_smul, mul_one_div_cancel (_root_.two_ne_zero : (2 : ℝ) ≠ 0), ←one_add_one_eq_two,
+                add_smul]
+              simp only [one_smul]
+              have eq₁ : wp - wq = a - b 
+              exact (sub_sub_sub_cancel_left _ _ _).symm 
+              have eq₂ : ((u+u) - wq+wp) = a+b 
+              show ((u+u) - wq+wp) = (u - wq)+u - wp 
+              abel 
+              rw [eq₁, eq₂]
+            _ = 2*(∥a∥*∥a∥)+∥b∥*∥b∥ := parallelogram_law_with_norm 
+            
+        have eq : δ ≤ ∥u - half • wq+wp∥
+        ·
+          rw [smul_add]
+          apply δ_le' 
+          apply h₂ 
+          repeat' 
+            exact Subtype.mem _ 
+          repeat' 
+            exact le_of_ltₓ one_half_pos 
+          exact add_halves 1
+        have eq₁ : ((4*δ)*δ) ≤ (4*∥u - half • wq+wp∥)*∥u - half • wq+wp∥
+        ·
+          mono 
+          mono 
+          normNum 
+          apply mul_nonneg 
+          normNum 
+          exact norm_nonneg _ 
+        have eq₂ : (∥a∥*∥a∥) ≤ (δ+div)*δ+div :=
+          mul_self_le_mul_self (norm_nonneg _)
+            (le_transₓ (le_of_ltₓ$ hw q) (add_le_add_left (Nat.one_div_le_one_div hq) _))
+        have eq₂' : (∥b∥*∥b∥) ≤ (δ+div)*δ+div :=
+          mul_self_le_mul_self (norm_nonneg _)
+            (le_transₓ (le_of_ltₓ$ hw p) (add_le_add_left (Nat.one_div_le_one_div hp) _))
+        rw [dist_eq_norm]
+        apply nonneg_le_nonneg_of_sq_le_sq
+        ·
+          exact sqrt_nonneg _ 
+        rw [mul_self_sqrt]
+        calc (∥wp - wq∥*∥wp - wq∥) = (2*(∥a∥*∥a∥)+∥b∥*∥b∥) - (4*∥u - half • wq+wp∥)*∥u - half • wq+wp∥ :=
+          by 
+            rw [←this]
+            simp _ ≤ (2*(∥a∥*∥a∥)+∥b∥*∥b∥) - (4*δ)*δ :=
+          sub_le_sub_left eq₁ _ _ ≤ (2*((δ+div)*δ+div)+(δ+div)*δ+div) - (4*δ)*δ :=
+          sub_le_sub_right
+            (mul_le_mul_of_nonneg_left (add_le_add eq₂ eq₂')
+              (by 
+                normNum))
+            _ _ = ((8*δ)*div)+(4*div)*div :=
+          by 
+            ring 
+        exact
+          add_nonneg
+            (mul_nonneg
+              (mul_nonneg
+                (by 
+                  normNum)
+                zero_le_δ)
+              (le_of_ltₓ Nat.one_div_pos_of_nat))
+            (mul_nonneg
+              (mul_nonneg
+                (by 
+                  normNum)
+                nat.one_div_pos_of_nat.le)
+              nat.one_div_pos_of_nat.le)
+        apply tendsto.comp
+        ·
+          convert continuous_sqrt.continuous_at 
+          exact sqrt_zero.symm 
+        have eq₁ : tendsto (fun n : ℕ => (8*δ)*1 / n+1) at_top (nhds (0 : ℝ))
+        ·
+          convert (@tendsto_const_nhds _ _ _ (8*δ) _).mul tendsto_one_div_add_at_top_nhds_0_nat 
+          simp only [mul_zero]
+        have  : tendsto (fun n : ℕ => (4 : ℝ)*1 / n+1) at_top (nhds (0 : ℝ))
+        ·
+          convert (@tendsto_const_nhds _ _ _ (4 : ℝ) _).mul tendsto_one_div_add_at_top_nhds_0_nat 
+          simp only [mul_zero]
+        have eq₂ : tendsto (fun n : ℕ => ((4 : ℝ)*1 / n+1)*1 / n+1) at_top (nhds (0 : ℝ))
+        ·
+          convert this.mul tendsto_one_div_add_at_top_nhds_0_nat 
+          simp only [mul_zero]
+        convert eq₁.add eq₂ 
+        simp only [add_zeroₓ]
+      rcases cauchy_seq_tendsto_of_is_complete h₁ (fun n => _) seq_is_cauchy with ⟨v, hv, w_tendsto⟩
+      use v 
+      use hv 
+      have h_cont : Continuous fun v => ∥u - v∥ :=
+        Continuous.comp continuous_norm (Continuous.sub continuous_const continuous_id)
+      have  : tendsto (fun n => ∥u - w n∥) at_top (nhds ∥u - v∥)
+      convert tendsto.comp h_cont.continuous_at w_tendsto 
+      exact tendsto_nhds_unique this norm_tendsto 
+      exact Subtype.mem _
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
 /-- Characterization of minimizers for the projection on a convex set in a real inner product
 space. -/
-theorem norm_eq_infi_iff_real_inner_le_zero
-{K : set F}
-(h : convex exprℝ() K)
-{u : F}
-{v : F}
-(hv : «expr ∈ »(v, K)) : «expr ↔ »(«expr = »(«expr∥ ∥»(«expr - »(u, v)), «expr⨅ , »((w : K), «expr∥ ∥»(«expr - »(u, w)))), ∀
- w «expr ∈ » K, «expr ≤ »(«expr⟪ , ⟫_ℝ»(«expr - »(u, v), «expr - »(w, v)), 0)) :=
-iff.intro (begin
-   assume [binders (eq w hw)],
-   let [ident δ] [] [":=", expr «expr⨅ , »((w : K), «expr∥ ∥»(«expr - »(u, w)))],
-   let [ident p] [] [":=", expr «expr⟪ , ⟫_ℝ»(«expr - »(u, v), «expr - »(w, v))],
-   let [ident q] [] [":=", expr «expr ^ »(«expr∥ ∥»(«expr - »(w, v)), 2)],
-   letI [] [":", expr nonempty K] [":=", expr ⟨⟨v, hv⟩⟩],
-   have [ident zero_le_δ] [":", expr «expr ≤ »(0, δ)] [],
-   apply [expr le_cinfi],
-   intro [],
-   exact [expr norm_nonneg _],
-   have [ident δ_le] [":", expr ∀ w : K, «expr ≤ »(δ, «expr∥ ∥»(«expr - »(u, w)))] [],
-   assume [binders (w)],
-   apply [expr cinfi_le],
-   use [expr (0 : exprℝ())],
-   rintros ["_", "⟨", "_", ",", ident rfl, "⟩"],
-   exact [expr norm_nonneg _],
-   have [ident δ_le'] [":", expr ∀
-    w «expr ∈ » K, «expr ≤ »(δ, «expr∥ ∥»(«expr - »(u, w)))] [":=", expr assume w hw, δ_le ⟨w, hw⟩],
-   have [] [":", expr ∀
-    θ : exprℝ(), «expr < »(0, θ) → «expr ≤ »(θ, 1) → «expr ≤ »(«expr * »(2, p), «expr * »(θ, q))] [],
-   assume [binders (θ hθ₁ hθ₂)],
-   have [] [":", expr «expr ≤ »(«expr ^ »(«expr∥ ∥»(«expr - »(u, v)), 2), «expr + »(«expr - »(«expr ^ »(«expr∥ ∥»(«expr - »(u, v)), 2), «expr * »(«expr * »(2, θ), «expr⟪ , ⟫_ℝ»(«expr - »(u, v), «expr - »(w, v)))), «expr * »(«expr * »(θ, θ), «expr ^ »(«expr∥ ∥»(«expr - »(w, v)), 2))))] [":=", expr calc
-      «expr ≤ »(«expr ^ »(«expr∥ ∥»(«expr - »(u, v)), 2), «expr ^ »(«expr∥ ∥»(«expr - »(u, «expr + »(«expr • »(θ, w), «expr • »(«expr - »(1, θ), v)))), 2)) : begin
-        simp [] [] ["only"] ["[", expr sq, "]"] [] [],
-        apply [expr mul_self_le_mul_self (norm_nonneg _)],
-        rw ["[", expr eq, "]"] [],
-        apply [expr δ_le'],
-        apply [expr h hw hv],
-        exacts ["[", expr le_of_lt hθ₁, ",", expr sub_nonneg.2 hθ₂, ",", expr add_sub_cancel'_right _ _, "]"]
-      end
-      «expr = »(..., «expr ^ »(«expr∥ ∥»(«expr - »(«expr - »(u, v), «expr • »(θ, «expr - »(w, v)))), 2)) : begin
-        have [] [":", expr «expr = »(«expr - »(u, «expr + »(«expr • »(θ, w), «expr • »(«expr - »(1, θ), v))), «expr - »(«expr - »(u, v), «expr • »(θ, «expr - »(w, v))))] [],
-        { rw ["[", expr smul_sub, ",", expr sub_smul, ",", expr one_smul, "]"] [],
-          simp [] [] ["only"] ["[", expr sub_eq_add_neg, ",", expr add_comm, ",", expr add_left_comm, ",", expr add_assoc, ",", expr neg_add_rev, "]"] [] [] },
-        rw [expr this] []
-      end
-      «expr = »(..., «expr + »(«expr - »(«expr ^ »(«expr∥ ∥»(«expr - »(u, v)), 2), «expr * »(«expr * »(2, θ), inner «expr - »(u, v) «expr - »(w, v))), «expr * »(«expr * »(θ, θ), «expr ^ »(«expr∥ ∥»(«expr - »(w, v)), 2)))) : begin
-        rw ["[", expr norm_sub_sq, ",", expr inner_smul_right, ",", expr norm_smul, "]"] [],
-        simp [] [] ["only"] ["[", expr sq, "]"] [] [],
-        show [expr «expr = »(«expr + »(«expr - »(«expr * »(«expr∥ ∥»(«expr - »(u, v)), «expr∥ ∥»(«expr - »(u, v))), «expr * »(2, «expr * »(θ, inner «expr - »(u, v) «expr - »(w, v)))), «expr * »(«expr * »(exprabsR() θ, «expr∥ ∥»(«expr - »(w, v))), «expr * »(exprabsR() θ, «expr∥ ∥»(«expr - »(w, v))))), «expr + »(«expr - »(«expr * »(«expr∥ ∥»(«expr - »(u, v)), «expr∥ ∥»(«expr - »(u, v))), «expr * »(«expr * »(2, θ), inner «expr - »(u, v) «expr - »(w, v))), «expr * »(«expr * »(θ, θ), «expr * »(«expr∥ ∥»(«expr - »(w, v)), «expr∥ ∥»(«expr - »(w, v))))))],
-        rw [expr abs_of_pos hθ₁] [],
-        ring []
-      end],
-   have [ident eq₁] [":", expr «expr = »(«expr + »(«expr - »(«expr ^ »(«expr∥ ∥»(«expr - »(u, v)), 2), «expr * »(«expr * »(2, θ), inner «expr - »(u, v) «expr - »(w, v))), «expr * »(«expr * »(θ, θ), «expr ^ »(«expr∥ ∥»(«expr - »(w, v)), 2))), «expr + »(«expr ^ »(«expr∥ ∥»(«expr - »(u, v)), 2), «expr - »(«expr * »(«expr * »(θ, θ), «expr ^ »(«expr∥ ∥»(«expr - »(w, v)), 2)), «expr * »(«expr * »(2, θ), inner «expr - »(u, v) «expr - »(w, v)))))] [],
-   by abel [] [] [],
-   rw ["[", expr eq₁, ",", expr le_add_iff_nonneg_right, "]"] ["at", ident this],
-   have [ident eq₂] [":", expr «expr = »(«expr - »(«expr * »(«expr * »(θ, θ), «expr ^ »(«expr∥ ∥»(«expr - »(w, v)), 2)), «expr * »(«expr * »(2, θ), inner «expr - »(u, v) «expr - »(w, v))), «expr * »(θ, «expr - »(«expr * »(θ, «expr ^ »(«expr∥ ∥»(«expr - »(w, v)), 2)), «expr * »(2, inner «expr - »(u, v) «expr - »(w, v)))))] [],
-   ring [],
-   rw [expr eq₂] ["at", ident this],
-   have [] [] [":=", expr le_of_sub_nonneg (nonneg_of_mul_nonneg_left this hθ₁)],
-   exact [expr this],
-   by_cases [expr hq, ":", expr «expr = »(q, 0)],
-   { rw [expr hq] ["at", ident this],
-     have [] [":", expr «expr ≤ »(p, 0)] [],
-     have [] [] [":=", expr this (1 : exprℝ()) (by norm_num [] []) (by norm_num [] [])],
-     linarith [] [] [],
-     exact [expr this] },
-   { have [ident q_pos] [":", expr «expr < »(0, q)] [],
-     apply [expr lt_of_le_of_ne],
-     exact [expr sq_nonneg _],
-     intro [ident h],
-     exact [expr hq h.symm],
-     by_contradiction [ident hp],
-     rw [expr not_le] ["at", ident hp],
-     let [ident θ] [] [":=", expr min (1 : exprℝ()) «expr / »(p, q)],
-     have [ident eq₁] [":", expr «expr ≤ »(«expr * »(θ, q), p)] [":=", expr calc
-        «expr ≤ »(«expr * »(θ, q), «expr * »(«expr / »(p, q), q)) : mul_le_mul_of_nonneg_right (min_le_right _ _) (sq_nonneg _)
-        «expr = »(..., p) : div_mul_cancel _ hq],
-     have [] [":", expr «expr ≤ »(«expr * »(2, p), p)] [":=", expr calc
-        «expr ≤ »(«expr * »(2, p), «expr * »(θ, q)) : by { refine [expr this θ (lt_min (by norm_num [] []) (div_pos hp q_pos)) (by norm_num [] [])] }
-        «expr ≤ »(..., p) : eq₁],
-     linarith [] [] [] }
- end) (begin
-   assume [binders (h)],
-   letI [] [":", expr nonempty K] [":=", expr ⟨⟨v, hv⟩⟩],
-   apply [expr le_antisymm],
-   { apply [expr le_cinfi],
-     assume [binders (w)],
-     apply [expr nonneg_le_nonneg_of_sq_le_sq (norm_nonneg _)],
-     have [] [] [":=", expr h w w.2],
-     calc
-       «expr ≤ »(«expr * »(«expr∥ ∥»(«expr - »(u, v)), «expr∥ ∥»(«expr - »(u, v))), «expr - »(«expr * »(«expr∥ ∥»(«expr - »(u, v)), «expr∥ ∥»(«expr - »(u, v))), «expr * »(2, inner «expr - »(u, v) «expr - »((w : F), v)))) : by linarith [] [] []
-       «expr ≤ »(..., «expr + »(«expr - »(«expr ^ »(«expr∥ ∥»(«expr - »(u, v)), 2), «expr * »(2, inner «expr - »(u, v) «expr - »((w : F), v))), «expr ^ »(«expr∥ ∥»(«expr - »((w : F), v)), 2))) : by { rw [expr sq] [],
-         refine [expr le_add_of_nonneg_right _],
-         exact [expr sq_nonneg _] }
-       «expr = »(..., «expr ^ »(«expr∥ ∥»(«expr - »(«expr - »(u, v), «expr - »(w, v))), 2)) : norm_sub_sq.symm
-       «expr = »(..., «expr * »(«expr∥ ∥»(«expr - »(u, w)), «expr∥ ∥»(«expr - »(u, w)))) : by { have [] [":", expr «expr = »(«expr - »(«expr - »(u, v), «expr - »(w, v)), «expr - »(u, w))] [],
-         abel [] [] [],
-         rw ["[", expr this, ",", expr sq, "]"] [] } },
-   { show [expr «expr ≤ »(«expr⨅ , »((w : K), «expr∥ ∥»(«expr - »(u, w))), λ
-       w : K, «expr∥ ∥»(«expr - »(u, w)) ⟨v, hv⟩)],
-     apply [expr cinfi_le],
-     use [expr 0],
-     rintros [ident y, "⟨", ident z, ",", ident rfl, "⟩"],
-     exact [expr norm_nonneg _] }
- end)
+theorem norm_eq_infi_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : F} {v : F} (hv : v ∈ K) :
+  (∥u - v∥ = ⨅ w : K, ∥u - w∥) ↔ ∀ w _ : w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0 :=
+  Iff.intro
+    (by 
+      intro eq w hw 
+      let δ := ⨅ w : K, ∥u - w∥
+      let p := ⟪u - v, w - v⟫_ℝ
+      let q := ∥w - v∥^2
+      let this' : Nonempty K := ⟨⟨v, hv⟩⟩
+      have zero_le_δ : 0 ≤ δ 
+      apply le_cinfi 
+      intro 
+      exact norm_nonneg _ 
+      have δ_le : ∀ w : K, δ ≤ ∥u - w∥
+      intro w 
+      apply cinfi_le 
+      use (0 : ℝ)
+      rintro _ ⟨_, rfl⟩
+      exact norm_nonneg _ 
+      have δ_le' : ∀ w _ : w ∈ K, δ ≤ ∥u - w∥ := fun w hw => δ_le ⟨w, hw⟩
+      have  : ∀ θ : ℝ, 0 < θ → θ ≤ 1 → (2*p) ≤ θ*q 
+      intro θ hθ₁ hθ₂ 
+      have  : (∥u - v∥^2) ≤ ((∥u - v∥^2) - (2*θ)*⟪u - v, w - v⟫_ℝ)+(θ*θ)*∥w - v∥^2 :=
+        calc (∥u - v∥^2) ≤ (∥u - (θ • w)+(1 - θ) • v∥^2) :=
+          by 
+            simp only [sq]
+            apply mul_self_le_mul_self (norm_nonneg _)
+            rw [Eq]
+            apply δ_le' 
+            apply h hw hv 
+            exacts[le_of_ltₓ hθ₁, sub_nonneg.2 hθ₂, add_sub_cancel'_right _ _]
+          _ = (∥u - v - θ • (w - v)∥^2) :=
+          by 
+            have  : (u - (θ • w)+(1 - θ) • v) = u - v - θ • (w - v)
+            ·
+              rw [smul_sub, sub_smul, one_smul]
+              simp only [sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ, neg_add_rev]
+            rw [this]
+          _ = ((∥u - v∥^2) - (2*θ)*inner (u - v) (w - v))+(θ*θ)*∥w - v∥^2 :=
+          by 
+            rw [norm_sub_sq, inner_smul_right, norm_smul]
+            simp only [sq]
+            show
+              (((∥u - v∥*∥u - v∥) - 2*θ*inner (u - v) (w - v))+(absR θ*∥w - v∥)*absR θ*∥w - v∥) =
+                ((∥u - v∥*∥u - v∥) - (2*θ)*inner (u - v) (w - v))+(θ*θ)*∥w - v∥*∥w - v∥
+            rw [abs_of_pos hθ₁]
+            ring 
+          
+      have eq₁ :
+        (((∥u - v∥^2) - (2*θ)*inner (u - v) (w - v))+(θ*θ)*∥w - v∥^2) =
+          (∥u - v∥^2)+((θ*θ)*∥w - v∥^2) - (2*θ)*inner (u - v) (w - v)
+      ·
+        abel 
+      rw [eq₁, le_add_iff_nonneg_right] at this 
+      have eq₂ : (((θ*θ)*∥w - v∥^2) - (2*θ)*inner (u - v) (w - v)) = θ*(θ*∥w - v∥^2) - 2*inner (u - v) (w - v)
+      ring 
+      rw [eq₂] at this 
+      have  := le_of_sub_nonneg (nonneg_of_mul_nonneg_left this hθ₁)
+      exact this 
+      byCases' hq : q = 0
+      ·
+        rw [hq] at this 
+        have  : p ≤ 0
+        have  :=
+          this (1 : ℝ)
+            (by 
+              normNum)
+            (by 
+              normNum)
+        linarith 
+        exact this
+      ·
+        have q_pos : 0 < q 
+        apply lt_of_le_of_neₓ 
+        exact sq_nonneg _ 
+        intro h 
+        exact hq h.symm 
+        byContra hp 
+        rw [not_leₓ] at hp 
+        let θ := min (1 : ℝ) (p / q)
+        have eq₁ : (θ*q) ≤ p :=
+          calc (θ*q) ≤ (p / q)*q := mul_le_mul_of_nonneg_right (min_le_rightₓ _ _) (sq_nonneg _)
+            _ = p := div_mul_cancel _ hq 
+            
+        have  : (2*p) ≤ p :=
+          calc (2*p) ≤ θ*q :=
+            by 
+              refine'
+                this θ
+                  (lt_minₓ
+                    (by 
+                      normNum)
+                    (div_pos hp q_pos))
+                  (by 
+                    normNum)
+            _ ≤ p := eq₁ 
+            
+        linarith)
+    (by 
+      intro h 
+      let this' : Nonempty K := ⟨⟨v, hv⟩⟩
+      apply le_antisymmₓ
+      ·
+        apply le_cinfi 
+        intro w 
+        apply nonneg_le_nonneg_of_sq_le_sq (norm_nonneg _)
+        have  := h w w.2
+        calc (∥u - v∥*∥u - v∥) ≤ (∥u - v∥*∥u - v∥) - 2*inner (u - v) ((w : F) - v) :=
+          by 
+            linarith _ ≤ ((∥u - v∥^2) - 2*inner (u - v) ((w : F) - v))+∥(w : F) - v∥^2 :=
+          by 
+            rw [sq]
+            refine' le_add_of_nonneg_right _ 
+            exact sq_nonneg _ _ = (∥u - v - (w - v)∥^2) :=
+          norm_sub_sq.symm _ = ∥u - w∥*∥u - w∥ :=
+          by 
+            have  : u - v - (w - v) = u - w 
+            abel 
+            rw [this, sq]
+      ·
+        show (⨅ w : K, ∥u - w∥) ≤ (fun w : K => ∥u - w∥) ⟨v, hv⟩
+        apply cinfi_le 
+        use 0
+        rintro y ⟨z, rfl⟩
+        exact norm_nonneg _)
 
 variable (K : Submodule 𝕜 E)
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » K)
 /--
 Existence of projections on complete subspaces.
 Let `u` be a point in an inner product space, and let `K` be a nonempty complete subspace.
 Then there exists a (unique) `v` in `K` that minimizes the distance `∥u - v∥` to `u`.
 This point `v` is usually called the orthogonal projection of `u` onto `K`.
 -/
-theorem exists_norm_eq_infi_of_complete_subspace
-(h : is_complete («expr↑ »(K) : set E)) : ∀
-u : E, «expr∃ , »((v «expr ∈ » K), «expr = »(«expr∥ ∥»(«expr - »(u, v)), «expr⨅ , »((w : (K : set E)), «expr∥ ∥»(«expr - »(u, w))))) :=
-begin
-  letI [] [":", expr inner_product_space exprℝ() E] [":=", expr inner_product_space.is_R_or_C_to_real 𝕜 E],
-  letI [] [":", expr module exprℝ() E] [":=", expr restrict_scalars.module exprℝ() 𝕜 E],
-  letI [] [":", expr is_scalar_tower exprℝ() 𝕜 E] [":=", expr restrict_scalars.is_scalar_tower _ _ _],
-  let [ident K'] [":", expr submodule exprℝ() E] [":=", expr submodule.restrict_scalars exprℝ() K],
-  exact [expr exists_norm_eq_infi_of_complete_convex ⟨0, K'.zero_mem⟩ h K'.convex]
-end
+theorem exists_norm_eq_infi_of_complete_subspace (h : IsComplete (↑K : Set E)) :
+  ∀ u : E, ∃ (v : _)(_ : v ∈ K), ∥u - v∥ = ⨅ w : (K : Set E), ∥u - w∥ :=
+  by 
+    let this' : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E 
+    let this' : Module ℝ E := RestrictScalars.module ℝ 𝕜 E 
+    let K' : Submodule ℝ E := Submodule.restrictScalars ℝ K 
+    exact exists_norm_eq_infi_of_complete_convex ⟨0, K'.zero_mem⟩ h K'.convex
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
 /--
 Characterization of minimizers in the projection on a subspace, in the real case.
 Let `u` be a point in a real inner product space, and let `K` be a nonempty subspace.
@@ -313,84 +372,83 @@ for all `w ∈ K`, `⟪u - v, w⟫ = 0` (i.e., `u - v` is orthogonal to the subs
 This is superceded by `norm_eq_infi_iff_inner_eq_zero` that gives the same conclusion over
 any `is_R_or_C` field.
 -/
-theorem norm_eq_infi_iff_real_inner_eq_zero
-(K : submodule exprℝ() F)
-{u : F}
-{v : F}
-(hv : «expr ∈ »(v, K)) : «expr ↔ »(«expr = »(«expr∥ ∥»(«expr - »(u, v)), «expr⨅ , »((w : («expr↑ »(K) : set F)), «expr∥ ∥»(«expr - »(u, w)))), ∀
- w «expr ∈ » K, «expr = »(«expr⟪ , ⟫_ℝ»(«expr - »(u, v), w), 0)) :=
-iff.intro (begin
-   assume [binders (h)],
-   have [ident h] [":", expr ∀ w «expr ∈ » K, «expr ≤ »(«expr⟪ , ⟫_ℝ»(«expr - »(u, v), «expr - »(w, v)), 0)] [],
-   { rwa ["[", expr norm_eq_infi_iff_real_inner_le_zero, "]"] ["at", ident h],
-     exacts ["[", expr K.convex, ",", expr hv, "]"] },
-   assume [binders (w hw)],
-   have [ident le] [":", expr «expr ≤ »(«expr⟪ , ⟫_ℝ»(«expr - »(u, v), w), 0)] [],
-   let [ident w'] [] [":=", expr «expr + »(w, v)],
-   have [] [":", expr «expr ∈ »(w', K)] [":=", expr submodule.add_mem _ hw hv],
-   have [ident h₁] [] [":=", expr h w' this],
-   have [ident h₂] [":", expr «expr = »(«expr - »(w', v), w)] [],
-   simp [] [] ["only"] ["[", expr add_neg_cancel_right, ",", expr sub_eq_add_neg, "]"] [] [],
-   rw [expr h₂] ["at", ident h₁],
-   exact [expr h₁],
-   have [ident ge] [":", expr «expr ≥ »(«expr⟪ , ⟫_ℝ»(«expr - »(u, v), w), 0)] [],
-   let [ident w''] [] [":=", expr «expr + »(«expr- »(w), v)],
-   have [] [":", expr «expr ∈ »(w'', K)] [":=", expr submodule.add_mem _ (submodule.neg_mem _ hw) hv],
-   have [ident h₁] [] [":=", expr h w'' this],
-   have [ident h₂] [":", expr «expr = »(«expr - »(w'', v), «expr- »(w))] [],
-   simp [] [] ["only"] ["[", expr neg_inj, ",", expr add_neg_cancel_right, ",", expr sub_eq_add_neg, "]"] [] [],
-   rw ["[", expr h₂, ",", expr inner_neg_right, "]"] ["at", ident h₁],
-   linarith [] [] [],
-   exact [expr le_antisymm le ge]
- end) (begin
-   assume [binders (h)],
-   have [] [":", expr ∀ w «expr ∈ » K, «expr ≤ »(«expr⟪ , ⟫_ℝ»(«expr - »(u, v), «expr - »(w, v)), 0)] [],
-   assume [binders (w hw)],
-   let [ident w'] [] [":=", expr «expr - »(w, v)],
-   have [] [":", expr «expr ∈ »(w', K)] [":=", expr submodule.sub_mem _ hw hv],
-   have [ident h₁] [] [":=", expr h w' this],
-   exact [expr le_of_eq h₁],
-   rwa [expr norm_eq_infi_iff_real_inner_le_zero] [],
-   exacts ["[", expr submodule.convex _, ",", expr hv, "]"]
- end)
+theorem norm_eq_infi_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v : F} (hv : v ∈ K) :
+  (∥u - v∥ = ⨅ w : (↑K : Set F), ∥u - w∥) ↔ ∀ w _ : w ∈ K, ⟪u - v, w⟫_ℝ = 0 :=
+  Iff.intro
+    (by 
+      intro h 
+      have h : ∀ w _ : w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0
+      ·
+        rwa [norm_eq_infi_iff_real_inner_le_zero] at h 
+        exacts[K.convex, hv]
+      intro w hw 
+      have le : ⟪u - v, w⟫_ℝ ≤ 0
+      let w' := w+v 
+      have  : w' ∈ K := Submodule.add_mem _ hw hv 
+      have h₁ := h w' this 
+      have h₂ : w' - v = w 
+      simp only [add_neg_cancel_rightₓ, sub_eq_add_neg]
+      rw [h₂] at h₁ 
+      exact h₁ 
+      have ge : ⟪u - v, w⟫_ℝ ≥ 0
+      let w'' := (-w)+v 
+      have  : w'' ∈ K := Submodule.add_mem _ (Submodule.neg_mem _ hw) hv 
+      have h₁ := h w'' this 
+      have h₂ : w'' - v = -w 
+      simp only [neg_inj, add_neg_cancel_rightₓ, sub_eq_add_neg]
+      rw [h₂, inner_neg_right] at h₁ 
+      linarith 
+      exact le_antisymmₓ le Ge)
+    (by 
+      intro h 
+      have  : ∀ w _ : w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0
+      intro w hw 
+      let w' := w - v 
+      have  : w' ∈ K := Submodule.sub_mem _ hw hv 
+      have h₁ := h w' this 
+      exact le_of_eqₓ h₁ 
+      rwa [norm_eq_infi_iff_real_inner_le_zero]
+      exacts[Submodule.convex _, hv])
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K')
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
 /--
 Characterization of minimizers in the projection on a subspace.
 Let `u` be a point in an inner product space, and let `K` be a nonempty subspace.
 Then point `v` minimizes the distance `∥u - v∥` over points in `K` if and only if
 for all `w ∈ K`, `⟪u - v, w⟫ = 0` (i.e., `u - v` is orthogonal to the subspace `K`)
 -/
-theorem norm_eq_infi_iff_inner_eq_zero
-{u : E}
-{v : E}
-(hv : «expr ∈ »(v, K)) : «expr ↔ »(«expr = »(«expr∥ ∥»(«expr - »(u, v)), «expr⨅ , »((w : («expr↑ »(K) : set E)), «expr∥ ∥»(«expr - »(u, w)))), ∀
- w «expr ∈ » K, «expr = »(«expr⟪ , ⟫»(«expr - »(u, v), w), 0)) :=
-begin
-  letI [] [":", expr inner_product_space exprℝ() E] [":=", expr inner_product_space.is_R_or_C_to_real 𝕜 E],
-  letI [] [":", expr module exprℝ() E] [":=", expr restrict_scalars.module exprℝ() 𝕜 E],
-  letI [] [":", expr is_scalar_tower exprℝ() 𝕜 E] [":=", expr restrict_scalars.is_scalar_tower _ _ _],
-  let [ident K'] [":", expr submodule exprℝ() E] [":=", expr K.restrict_scalars exprℝ()],
-  split,
-  { assume [binders (H)],
-    have [ident A] [":", expr ∀
-     w «expr ∈ » K, «expr = »(re «expr⟪ , ⟫»(«expr - »(u, v), w), 0)] [":=", expr (norm_eq_infi_iff_real_inner_eq_zero K' hv).1 H],
-    assume [binders (w hw)],
-    apply [expr ext],
-    { simp [] [] [] ["[", expr A w hw, "]"] [] [] },
-    { symmetry,
-      calc
-        «expr = »(im (0 : 𝕜), 0) : im.map_zero
-        «expr = »(..., re «expr⟪ , ⟫»(«expr - »(u, v), «expr • »(«expr- »(I), w))) : (A _ (K.smul_mem «expr- »(I) hw)).symm
-        «expr = »(..., re «expr * »(«expr- »(I), «expr⟪ , ⟫»(«expr - »(u, v), w))) : by rw [expr inner_smul_right] []
-        «expr = »(..., im «expr⟪ , ⟫»(«expr - »(u, v), w)) : by simp [] [] [] [] [] [] } },
-  { assume [binders (H)],
-    have [] [":", expr ∀ w «expr ∈ » K', «expr = »(«expr⟪ , ⟫_ℝ»(«expr - »(u, v), w), 0)] [],
-    { assume [binders (w hw)],
-      rw ["[", expr real_inner_eq_re_inner, ",", expr H w hw, "]"] [],
-      exact [expr zero_re'] },
-    exact [expr (norm_eq_infi_iff_real_inner_eq_zero K' hv).2 this] }
-end
+theorem norm_eq_infi_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
+  (∥u - v∥ = ⨅ w : (↑K : Set E), ∥u - w∥) ↔ ∀ w _ : w ∈ K, ⟪u - v, w⟫ = 0 :=
+  by 
+    let this' : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E 
+    let this' : Module ℝ E := RestrictScalars.module ℝ 𝕜 E 
+    let K' : Submodule ℝ E := K.restrict_scalars ℝ 
+    constructor
+    ·
+      intro H 
+      have A : ∀ w _ : w ∈ K, re ⟪u - v, w⟫ = 0 := (norm_eq_infi_iff_real_inner_eq_zero K' hv).1 H 
+      intro w hw 
+      apply ext
+      ·
+        simp [A w hw]
+      ·
+        symm 
+        calc im (0 : 𝕜) = 0 := im.map_zero _ = re ⟪u - v, -I • w⟫ :=
+          (A _ (K.smul_mem (-I) hw)).symm _ = re ((-I)*⟪u - v, w⟫) :=
+          by 
+            rw [inner_smul_right]_ = im ⟪u - v, w⟫ :=
+          by 
+            simp 
+    ·
+      intro H 
+      have  : ∀ w _ : w ∈ K', ⟪u - v, w⟫_ℝ = 0
+      ·
+        intro w hw 
+        rw [real_inner_eq_re_inner, H w hw]
+        exact zero_re' 
+      exact (norm_eq_infi_iff_real_inner_eq_zero K' hv).2 this
 
 section orthogonalProjection
 
@@ -411,6 +469,7 @@ and should not be used once that is defined. -/
 theorem orthogonal_projection_fn_mem (v : E) : orthogonalProjectionFn K v ∈ K :=
   (exists_norm_eq_infi_of_complete_subspace K (complete_space_coe_iff_is_complete.mp ‹_›) v).some_spec.some
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
 /-- The characterization of the unbundled orthogonal projection.  This
 lemma is only intended for use in setting up the bundled version
 and should not be used once that is defined. -/
@@ -419,63 +478,77 @@ theorem orthogonal_projection_fn_inner_eq_zero (v : E) : ∀ w _ : w ∈ K, ⟪v
     rw [←norm_eq_infi_iff_inner_eq_zero K (orthogonal_projection_fn_mem v)]
     exact (exists_norm_eq_infi_of_complete_subspace K (complete_space_coe_iff_is_complete.mp ‹_›) v).some_spec.some_spec
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
 /-- The unbundled orthogonal projection is the unique point in `K`
 with the orthogonality property.  This lemma is only intended for use
 in setting up the bundled version and should not be used once that is
 defined. -/
-theorem eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero
-{u v : E}
-(hvm : «expr ∈ »(v, K))
-(hvo : ∀ w «expr ∈ » K, «expr = »(«expr⟪ , ⟫»(«expr - »(u, v), w), 0)) : «expr = »(orthogonal_projection_fn K u, v) :=
-begin
-  rw ["[", "<-", expr sub_eq_zero, ",", "<-", expr inner_self_eq_zero, "]"] [],
-  have [ident hvs] [":", expr «expr ∈ »(«expr - »(orthogonal_projection_fn K u, v), K)] [":=", expr submodule.sub_mem K (orthogonal_projection_fn_mem u) hvm],
-  have [ident huo] [":", expr «expr = »(«expr⟪ , ⟫»(«expr - »(u, orthogonal_projection_fn K u), «expr - »(orthogonal_projection_fn K u, v)), 0)] [":=", expr orthogonal_projection_fn_inner_eq_zero u _ hvs],
-  have [ident huv] [":", expr «expr = »(«expr⟪ , ⟫»(«expr - »(u, v), «expr - »(orthogonal_projection_fn K u, v)), 0)] [":=", expr hvo _ hvs],
-  have [ident houv] [":", expr «expr = »(«expr⟪ , ⟫»(«expr - »(«expr - »(u, v), «expr - »(u, orthogonal_projection_fn K u)), «expr - »(orthogonal_projection_fn K u, v)), 0)] [],
-  { rw ["[", expr inner_sub_left, ",", expr huo, ",", expr huv, ",", expr sub_zero, "]"] [] },
-  rwa [expr sub_sub_sub_cancel_left] ["at", ident houv]
-end
+theorem eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero {u v : E} (hvm : v ∈ K)
+  (hvo : ∀ w _ : w ∈ K, ⟪u - v, w⟫ = 0) : orthogonalProjectionFn K u = v :=
+  by 
+    rw [←sub_eq_zero, ←inner_self_eq_zero]
+    have hvs : orthogonalProjectionFn K u - v ∈ K := Submodule.sub_mem K (orthogonal_projection_fn_mem u) hvm 
+    have huo : ⟪u - orthogonalProjectionFn K u, orthogonalProjectionFn K u - v⟫ = 0 :=
+      orthogonal_projection_fn_inner_eq_zero u _ hvs 
+    have huv : ⟪u - v, orthogonalProjectionFn K u - v⟫ = 0 := hvo _ hvs 
+    have houv : ⟪u - v - (u - orthogonalProjectionFn K u), orthogonalProjectionFn K u - v⟫ = 0
+    ·
+      rw [inner_sub_left, huo, huv, sub_zero]
+    rwa [sub_sub_sub_cancel_left] at houv
 
 variable (K)
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem orthogonal_projection_fn_norm_sq
-(v : E) : «expr = »(«expr * »(«expr∥ ∥»(v), «expr∥ ∥»(v)), «expr + »(«expr * »(«expr∥ ∥»(«expr - »(v, orthogonal_projection_fn K v)), «expr∥ ∥»(«expr - »(v, orthogonal_projection_fn K v))), «expr * »(«expr∥ ∥»(orthogonal_projection_fn K v), «expr∥ ∥»(orthogonal_projection_fn K v)))) :=
-begin
-  set [] [ident p] [] [":="] [expr orthogonal_projection_fn K v] [],
-  have [ident h'] [":", expr «expr = »(«expr⟪ , ⟫»(«expr - »(v, p), p), 0)] [],
-  { exact [expr orthogonal_projection_fn_inner_eq_zero _ _ (orthogonal_projection_fn_mem v)] },
-  convert [] [expr norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero «expr - »(v, p) p h'] ["using", 2]; simp [] [] [] [] [] []
-end
+theorem orthogonal_projection_fn_norm_sq (v : E) :
+  (∥v∥*∥v∥) =
+    (∥v -
+            orthogonalProjectionFn K
+              v∥*∥v - orthogonalProjectionFn K v∥)+∥orthogonalProjectionFn K v∥*∥orthogonalProjectionFn K v∥ :=
+  by 
+    set p := orthogonalProjectionFn K v 
+    have h' : ⟪v - p, p⟫ = 0
+    ·
+      exact orthogonal_projection_fn_inner_eq_zero _ _ (orthogonal_projection_fn_mem v)
+    convert norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (v - p) p h' using 2 <;> simp 
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The orthogonal projection onto a complete subspace. -/ def orthogonal_projection : «expr →L[ ] »(E, 𝕜, K) :=
-linear_map.mk_continuous { to_fun := λ v, ⟨orthogonal_projection_fn K v, orthogonal_projection_fn_mem v⟩,
-  map_add' := λ x y, begin
-    have [ident hm] [":", expr «expr ∈ »(«expr + »(orthogonal_projection_fn K x, orthogonal_projection_fn K y), K)] [":=", expr submodule.add_mem K (orthogonal_projection_fn_mem x) (orthogonal_projection_fn_mem y)],
-    have [ident ho] [":", expr ∀
-     w «expr ∈ » K, «expr = »(«expr⟪ , ⟫»(«expr - »(«expr + »(x, y), «expr + »(orthogonal_projection_fn K x, orthogonal_projection_fn K y)), w), 0)] [],
-    { intros [ident w, ident hw],
-      rw ["[", expr add_sub_comm, ",", expr inner_add_left, ",", expr orthogonal_projection_fn_inner_eq_zero _ w hw, ",", expr orthogonal_projection_fn_inner_eq_zero _ w hw, ",", expr add_zero, "]"] [] },
-    ext [] [] [],
-    simp [] [] [] ["[", expr eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero hm ho, "]"] [] []
-  end,
-  map_smul' := λ c x, begin
-    have [ident hm] [":", expr «expr ∈ »(«expr • »(c, orthogonal_projection_fn K x), K)] [":=", expr submodule.smul_mem K _ (orthogonal_projection_fn_mem x)],
-    have [ident ho] [":", expr ∀
-     w «expr ∈ » K, «expr = »(«expr⟪ , ⟫»(«expr - »(«expr • »(c, x), «expr • »(c, orthogonal_projection_fn K x)), w), 0)] [],
-    { intros [ident w, ident hw],
-      rw ["[", "<-", expr smul_sub, ",", expr inner_smul_left, ",", expr orthogonal_projection_fn_inner_eq_zero _ w hw, ",", expr mul_zero, "]"] [] },
-    ext [] [] [],
-    simp [] [] [] ["[", expr eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero hm ho, "]"] [] []
-  end } 1 (λ x, begin
-   simp [] [] ["only"] ["[", expr one_mul, ",", expr linear_map.coe_mk, "]"] [] [],
-   refine [expr le_of_pow_le_pow 2 (norm_nonneg _) (by norm_num [] []) _],
-   change [expr «expr ≤ »(«expr ^ »(«expr∥ ∥»(orthogonal_projection_fn K x), 2), «expr ^ »(«expr∥ ∥»(x), 2))] [] [],
-   nlinarith [] [] ["[", expr orthogonal_projection_fn_norm_sq K x, "]"]
- end)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
+/-- The orthogonal projection onto a complete subspace. -/
+def orthogonalProjection : E →L[𝕜] K :=
+  LinearMap.mkContinuous
+    { toFun := fun v => ⟨orthogonalProjectionFn K v, orthogonal_projection_fn_mem v⟩,
+      map_add' :=
+        fun x y =>
+          by 
+            have hm : (orthogonalProjectionFn K x+orthogonalProjectionFn K y) ∈ K :=
+              Submodule.add_mem K (orthogonal_projection_fn_mem x) (orthogonal_projection_fn_mem y)
+            have ho : ∀ w _ : w ∈ K, ⟪(x+y) - orthogonalProjectionFn K x+orthogonalProjectionFn K y, w⟫ = 0
+            ·
+              intro w hw 
+              rw [add_sub_comm, inner_add_left, orthogonal_projection_fn_inner_eq_zero _ w hw,
+                orthogonal_projection_fn_inner_eq_zero _ w hw, add_zeroₓ]
+            ext 
+            simp [eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero hm ho],
+      map_smul' :=
+        fun c x =>
+          by 
+            have hm : c • orthogonalProjectionFn K x ∈ K := Submodule.smul_mem K _ (orthogonal_projection_fn_mem x)
+            have ho : ∀ w _ : w ∈ K, ⟪c • x - c • orthogonalProjectionFn K x, w⟫ = 0
+            ·
+              intro w hw 
+              rw [←smul_sub, inner_smul_left, orthogonal_projection_fn_inner_eq_zero _ w hw, mul_zero]
+            ext 
+            simp [eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero hm ho] }
+    1
+    fun x =>
+      by 
+        simp only [one_mulₓ, LinearMap.coe_mk]
+        refine'
+          le_of_pow_le_pow 2 (norm_nonneg _)
+            (by 
+              normNum)
+            _ 
+        change (∥orthogonalProjectionFn K x∥^2) ≤ (∥x∥^2)
+        nlinarith [orthogonal_projection_fn_norm_sq K x]
 
 variable {K}
 
@@ -483,6 +556,7 @@ variable {K}
 theorem orthogonal_projection_fn_eq (v : E) : orthogonalProjectionFn K v = (orthogonalProjection K v : E) :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
 /-- The characterization of the orthogonal projection.  -/
 @[simp]
 theorem orthogonal_projection_inner_eq_zero (v : E) : ∀ w _ : w ∈ K, ⟪v - orthogonalProjection K v, w⟫ = 0 :=
@@ -496,6 +570,7 @@ theorem sub_orthogonal_projection_mem_orthogonal (v : E) : v - orthogonalProject
     rw [inner_eq_zero_sym]
     exact orthogonal_projection_inner_eq_zero _ _ hw
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » K)
 /-- The orthogonal projection is the unique point in `K` with the
 orthogonality property. -/
 theorem eq_orthogonal_projection_of_mem_of_inner_eq_zero {u v : E} (hvm : v ∈ K) (hvo : ∀ w _ : w ∈ K, ⟪u - v, w⟫ = 0) :
@@ -527,23 +602,21 @@ theorem orthogonal_projection_eq_self_iff {v : E} : (orthogonalProjection K v : 
     ·
       simp 
 
+theorem LinearIsometry.map_orthogonal_projection {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E']
+  (f : E →ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
+  f (orthogonalProjection p x) = orthogonalProjection (p.map f.to_linear_map) (f x) :=
+  by 
+    refine' (eq_orthogonal_projection_of_mem_of_inner_eq_zero (Submodule.apply_coe_mem_map _ _)$ fun y hy => _).symm 
+    rcases hy with ⟨x', hx', rfl : f x' = y⟩
+    rw [f.coe_to_linear_map, ←f.map_sub, f.inner_map_map, orthogonal_projection_inner_eq_zero x x' hx']
+
 /-- Orthogonal projection onto the `submodule.map` of a subspace. -/
 theorem orthogonal_projection_map_apply {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E']
-  (f : E ≃ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [FiniteDimensional 𝕜 p] (x : E') :
+  (f : E ≃ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E') :
   (orthogonalProjection (p.map (f.to_linear_equiv : E →ₗ[𝕜] E')) x : E') = f (orthogonalProjection p (f.symm x)) :=
   by 
-    apply eq_orthogonal_projection_of_mem_of_inner_eq_zero
-    ·
-      exact
-        ⟨orthogonalProjection p (f.symm x), Submodule.coe_mem _,
-          by 
-            simp ⟩
-    rintro w ⟨a, ha, rfl⟩
-    suffices  : inner (f (f.symm x - orthogonalProjection p (f.symm x))) (f a) = (0 : 𝕜)
-    ·
-      simpa using this 
-    rw [f.inner_map_map]
-    exact orthogonal_projection_inner_eq_zero _ _ ha
+    simpa only [f.coe_to_linear_isometry, f.apply_symm_apply] using
+      (f.to_linear_isometry.map_orthogonal_projection p (f.symm x)).symm
 
 /-- The orthogonal projection onto the trivial submodule is the zero map. -/
 @[simp]
@@ -562,38 +635,41 @@ theorem orthogonal_projection_norm_le : ∥orthogonalProjection K∥ ≤ 1 :=
 
 variable (𝕜)
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem smul_orthogonal_projection_singleton
-{v : E}
-(w : E) : «expr = »(«expr • »((«expr ^ »(«expr∥ ∥»(v), 2) : 𝕜), (orthogonal_projection «expr ∙ »(𝕜, v) w : E)), «expr • »(«expr⟪ , ⟫»(v, w), v)) :=
-begin
-  suffices [] [":", expr «expr = »(«expr↑ »(orthogonal_projection «expr ∙ »(𝕜, v) «expr • »((«expr ^ »(«expr∥ ∥»(v), 2) : 𝕜), w)), «expr • »(«expr⟪ , ⟫»(v, w), v))],
-  { simpa [] [] [] [] [] ["using", expr this] },
-  apply [expr eq_orthogonal_projection_of_mem_of_inner_eq_zero],
-  { rw [expr submodule.mem_span_singleton] [],
-    use [expr «expr⟪ , ⟫»(v, w)] },
-  { intros [ident x, ident hx],
-    obtain ["⟨", ident c, ",", ident rfl, "⟩", ":=", expr submodule.mem_span_singleton.mp hx],
-    have [ident hv] [":", expr «expr = »(«expr ^ »(«expr↑ »(«expr∥ ∥»(v)), 2), «expr⟪ , ⟫»(v, v))] [":=", expr by { norm_cast [],
-       simp [] [] [] ["[", expr norm_sq_eq_inner, "]"] [] [] }],
-    simp [] [] [] ["[", expr inner_sub_left, ",", expr inner_smul_left, ",", expr inner_smul_right, ",", expr ring_equiv.map_div, ",", expr mul_comm, ",", expr hv, ",", expr inner_product_space.conj_sym, ",", expr hv, "]"] [] [] }
-end
+theorem smul_orthogonal_projection_singleton {v : E} (w : E) :
+  (∥v∥^2 : 𝕜) • (orthogonalProjection (𝕜∙v) w : E) = ⟪v, w⟫ • v :=
+  by 
+    suffices  : ↑orthogonalProjection (𝕜∙v) ((∥v∥^2 : 𝕜) • w) = ⟪v, w⟫ • v
+    ·
+      simpa using this 
+    apply eq_orthogonal_projection_of_mem_of_inner_eq_zero
+    ·
+      rw [Submodule.mem_span_singleton]
+      use ⟪v, w⟫
+    ·
+      intro x hx 
+      obtain ⟨c, rfl⟩ := submodule.mem_span_singleton.mp hx 
+      have hv : (↑∥v∥^2) = ⟪v, v⟫ :=
+        by 
+          normCast 
+          simp [norm_sq_eq_inner]
+      simp [inner_sub_left, inner_smul_left, inner_smul_right, RingEquiv.map_div, mul_commₓ, hv,
+        InnerProductSpace.conj_sym, hv]
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Formula for orthogonal projection onto a single vector. -/
-theorem orthogonal_projection_singleton
-{v : E}
-(w : E) : «expr = »((orthogonal_projection «expr ∙ »(𝕜, v) w : E), «expr • »(«expr / »(«expr⟪ , ⟫»(v, w), «expr ^ »(«expr∥ ∥»(v), 2)), v)) :=
-begin
-  by_cases [expr hv, ":", expr «expr = »(v, 0)],
-  { rw ["[", expr hv, ",", expr eq_orthogonal_projection_of_eq_submodule submodule.span_zero_singleton, "]"] [],
-    { simp [] [] [] [] [] [] },
-    { apply_instance } },
-  have [ident hv'] [":", expr «expr ≠ »(«expr∥ ∥»(v), 0)] [":=", expr ne_of_gt (norm_pos_iff.mpr hv)],
-  have [ident key] [":", expr «expr = »(«expr • »(«expr * »(«expr ⁻¹»((«expr ^ »(«expr∥ ∥»(v), 2) : 𝕜)), «expr ^ »(«expr∥ ∥»(v), 2)), «expr↑ »(orthogonal_projection «expr ∙ »(𝕜, v) w)), «expr • »(«expr * »(«expr ⁻¹»((«expr ^ »(«expr∥ ∥»(v), 2) : 𝕜)), «expr⟪ , ⟫»(v, w)), v))] [],
-  { simp [] [] [] ["[", expr mul_smul, ",", expr smul_orthogonal_projection_singleton 𝕜 w, "]"] [] [] },
-  convert [] [expr key] []; field_simp [] ["[", expr hv', "]"] [] []
-end
+theorem orthogonal_projection_singleton {v : E} (w : E) : (orthogonalProjection (𝕜∙v) w : E) = (⟪v, w⟫ / (∥v∥^2)) • v :=
+  by 
+    byCases' hv : v = 0
+    ·
+      rw [hv, eq_orthogonal_projection_of_eq_submodule Submodule.span_zero_singleton]
+      ·
+        simp 
+      ·
+        infer_instance 
+    have hv' : ∥v∥ ≠ 0 := ne_of_gtₓ (norm_pos_iff.mpr hv)
+    have key : ((∥v∥^2 : 𝕜)⁻¹*∥v∥^2) • ↑orthogonalProjection (𝕜∙v) w = ((∥v∥^2 : 𝕜)⁻¹*⟪v, w⟫) • v
+    ·
+      simp [mul_smul, smul_orthogonal_projection_singleton 𝕜 w]
+    convert key <;> fieldSimp [hv']
 
 /-- Formula for orthogonal projection onto a single unit vector. -/
 theorem orthogonal_projection_unit_singleton {v : E} (hv : ∥v∥ = 1) (w : E) :
@@ -615,29 +691,33 @@ def reflectionLinearEquiv : E ≃ₗ[𝕜] E :=
       by 
         simp [bit0]
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Reflection in a complete subspace of an inner product space.  The word "reflection" is
 sometimes understood to mean specifically reflection in a codimension-one subspace, and sometimes
 more generally to cover operations such as reflection in a point.  The definition here, of
 reflection in a subspace, is a more general sense of the word that includes both those common
-cases. -/ def reflection : «expr ≃ₗᵢ[ ] »(E, 𝕜, E) :=
-{ norm_map' := begin
-    intros [ident x],
-    let [ident w] [":", expr K] [":=", expr orthogonal_projection K x],
-    let [ident v] [] [":=", expr «expr - »(x, w)],
-    have [] [":", expr «expr = »(«expr⟪ , ⟫»(v, w), 0)] [":=", expr orthogonal_projection_inner_eq_zero x w w.2],
-    convert [] [expr norm_sub_eq_norm_add this] ["using", 2],
-    { rw ["[", expr linear_equiv.coe_mk, ",", expr reflection_linear_equiv, ",", expr linear_equiv.to_fun_eq_coe, ",", expr linear_equiv.coe_of_involutive, ",", expr linear_map.sub_apply, ",", expr linear_map.id_apply, ",", expr bit0, ",", expr linear_map.add_apply, ",", expr linear_map.comp_apply, ",", expr submodule.subtype_apply, ",", expr continuous_linear_map.to_linear_map_eq_coe, ",", expr continuous_linear_map.coe_coe, "]"] [],
-      dsimp [] ["[", expr w, ",", expr v, "]"] [] [],
-      abel [] [] [] },
-    { simp [] [] ["only"] ["[", expr add_sub_cancel'_right, ",", expr eq_self_iff_true, "]"] [] [] }
-  end,
-  ..reflection_linear_equiv K }
+cases. -/
+def reflection : E ≃ₗᵢ[𝕜] E :=
+  { reflectionLinearEquiv K with
+    norm_map' :=
+      by 
+        intro x 
+        let w : K := orthogonalProjection K x 
+        let v := x - w 
+        have  : ⟪v, w⟫ = 0 := orthogonal_projection_inner_eq_zero x w w.2
+        convert norm_sub_eq_norm_add this using 2
+        ·
+          rw [LinearEquiv.coe_mk, reflectionLinearEquiv, LinearEquiv.to_fun_eq_coe, LinearEquiv.coe_of_involutive,
+            LinearMap.sub_apply, LinearMap.id_apply, bit0, LinearMap.add_apply, LinearMap.comp_apply,
+            Submodule.subtype_apply, ContinuousLinearMap.to_linear_map_eq_coe, ContinuousLinearMap.coe_coe]
+          dsimp [w, v]
+          abel
+        ·
+          simp only [add_sub_cancel'_right, eq_self_iff_true] }
 
 variable {K}
 
 /-- The result of reflecting. -/
-theorem reflection_apply (p : E) : reflection K p = bit0 («expr↑ » (orthogonalProjection K p)) - p :=
+theorem reflection_apply (p : E) : reflection K p = bit0 (↑orthogonalProjection K p) - p :=
   rfl
 
 /-- Reflection is its own inverse. -/
@@ -675,14 +755,14 @@ theorem reflection_mem_subspace_eq_self {x : E} (hx : x ∈ K) : reflection K x 
 
 /-- Reflection in the `submodule.map` of a subspace. -/
 theorem reflection_map_apply {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E')
-  (K : Submodule 𝕜 E) [FiniteDimensional 𝕜 K] (x : E') :
+  (K : Submodule 𝕜 E) [CompleteSpace K] (x : E') :
   reflection (K.map (f.to_linear_equiv : E →ₗ[𝕜] E')) x = f (reflection K (f.symm x)) :=
   by 
     simp [bit0, reflection_apply, orthogonal_projection_map_apply f K x]
 
 /-- Reflection in the `submodule.map` of a subspace. -/
 theorem reflection_map {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E')
-  (K : Submodule 𝕜 E) [FiniteDimensional 𝕜 K] :
+  (K : Submodule 𝕜 E) [CompleteSpace K] :
   reflection (K.map (f.to_linear_equiv : E →ₗ[𝕜] E')) = f.symm.trans ((reflection K).trans f) :=
   LinearIsometryEquiv.ext$ reflection_map_apply f K
 
@@ -696,22 +776,20 @@ end reflection
 
 section Orthogonal
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `K₁` is complete and contained in `K₂`, `K₁` and `K₁ᗮ ⊓ K₂` span `K₂`. -/
-theorem submodule.sup_orthogonal_inf_of_complete_space
-{K₁ K₂ : submodule 𝕜 E}
-(h : «expr ≤ »(K₁, K₂))
-[complete_space K₁] : «expr = »(«expr ⊔ »(K₁, «expr ⊓ »(«expr ᗮ»(K₁), K₂)), K₂) :=
-begin
-  ext [] [ident x] [],
-  rw [expr submodule.mem_sup] [],
-  let [ident v] [":", expr K₁] [":=", expr orthogonal_projection K₁ x],
-  have [ident hvm] [":", expr «expr ∈ »(«expr - »(x, v), «expr ᗮ»(K₁))] [":=", expr sub_orthogonal_projection_mem_orthogonal x],
-  split,
-  { rintro ["⟨", ident y, ",", ident hy, ",", ident z, ",", ident hz, ",", ident rfl, "⟩"],
-    exact [expr K₂.add_mem (h hy) hz.2] },
-  { exact [expr λ hx, ⟨v, v.prop, «expr - »(x, v), ⟨hvm, K₂.sub_mem hx (h v.prop)⟩, add_sub_cancel'_right _ _⟩] }
-end
+theorem Submodule.sup_orthogonal_inf_of_complete_space {K₁ K₂ : Submodule 𝕜 E} (h : K₁ ≤ K₂) [CompleteSpace K₁] :
+  K₁⊔K₁ᗮ⊓K₂ = K₂ :=
+  by 
+    ext x 
+    rw [Submodule.mem_sup]
+    let v : K₁ := orthogonalProjection K₁ x 
+    have hvm : x - v ∈ K₁ᗮ := sub_orthogonal_projection_mem_orthogonal x 
+    constructor
+    ·
+      rintro ⟨y, hy, z, hz, rfl⟩
+      exact K₂.add_mem (h hy) hz.2
+    ·
+      exact fun hx => ⟨v, v.prop, x - v, ⟨hvm, K₂.sub_mem hx (h v.prop)⟩, add_sub_cancel'_right _ _⟩
 
 variable {K}
 
@@ -723,45 +801,48 @@ theorem Submodule.sup_orthogonal_of_complete_space [CompleteSpace K] : K⊔Kᗮ 
 
 variable (K)
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » K)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » «expr ᗮ»(K))
 /-- If `K` is complete, any `v` in `E` can be expressed as a sum of elements of `K` and `Kᗮ`. -/
-theorem submodule.exists_sum_mem_mem_orthogonal
-[complete_space K]
-(v : E) : «expr∃ , »((y «expr ∈ » K) (z «expr ∈ » «expr ᗮ»(K)), «expr = »(v, «expr + »(y, z))) :=
-begin
-  have [ident h_mem] [":", expr «expr ∈ »(v, «expr ⊔ »(K, «expr ᗮ»(K)))] [":=", expr by simp [] [] [] ["[", expr submodule.sup_orthogonal_of_complete_space, "]"] [] []],
-  obtain ["⟨", ident y, ",", ident hy, ",", ident z, ",", ident hz, ",", ident hyz, "⟩", ":=", expr submodule.mem_sup.mp h_mem],
-  exact [expr ⟨y, hy, z, hz, hyz.symm⟩]
-end
+theorem Submodule.exists_sum_mem_mem_orthogonal [CompleteSpace K] (v : E) :
+  ∃ (y : _)(_ : y ∈ K)(z : _)(_ : z ∈ Kᗮ), v = y+z :=
+  by 
+    have h_mem : v ∈ K⊔Kᗮ :=
+      by 
+        simp [Submodule.sup_orthogonal_of_complete_space]
+    obtain ⟨y, hy, z, hz, hyz⟩ := submodule.mem_sup.mp h_mem 
+    exact ⟨y, hy, z, hz, hyz.symm⟩
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `K` is complete, then the orthogonal complement of its orthogonal complement is itself. -/
 @[simp]
-theorem submodule.orthogonal_orthogonal [complete_space K] : «expr = »(«expr ᗮ»(«expr ᗮ»(K)), K) :=
-begin
-  ext [] [ident v] [],
-  split,
-  { obtain ["⟨", ident y, ",", ident hy, ",", ident z, ",", ident hz, ",", ident rfl, "⟩", ":=", expr K.exists_sum_mem_mem_orthogonal v],
-    intros [ident hv],
-    have [ident hz'] [":", expr «expr = »(z, 0)] [],
-    { have [ident hyz] [":", expr «expr = »(«expr⟪ , ⟫»(z, y), 0)] [":=", expr by simp [] [] [] ["[", expr hz y hy, ",", expr inner_eq_zero_sym, "]"] [] []],
-      simpa [] [] [] ["[", expr inner_add_right, ",", expr hyz, "]"] [] ["using", expr hv z hz] },
-    simp [] [] [] ["[", expr hy, ",", expr hz', "]"] [] [] },
-  { intros [ident hv, ident w, ident hw],
-    rw [expr inner_eq_zero_sym] [],
-    exact [expr hw v hv] }
-end
+theorem Submodule.orthogonal_orthogonal [CompleteSpace K] : Kᗮᗮ = K :=
+  by 
+    ext v 
+    constructor
+    ·
+      obtain ⟨y, hy, z, hz, rfl⟩ := K.exists_sum_mem_mem_orthogonal v 
+      intro hv 
+      have hz' : z = 0
+      ·
+        have hyz : ⟪z, y⟫ = 0 :=
+          by 
+            simp [hz y hy, inner_eq_zero_sym]
+        simpa [inner_add_right, hyz] using hv z hz 
+      simp [hy, hz']
+    ·
+      intro hv w hw 
+      rw [inner_eq_zero_sym]
+      exact hw v hv
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem submodule.orthogonal_orthogonal_eq_closure
-[complete_space E] : «expr = »(«expr ᗮ»(«expr ᗮ»(K)), K.topological_closure) :=
-begin
-  refine [expr le_antisymm _ _],
-  { convert [] [expr submodule.orthogonal_orthogonal_monotone K.submodule_topological_closure] [],
-    haveI [] [":", expr complete_space K.topological_closure] [":=", expr K.is_closed_topological_closure.complete_space_coe],
-    rw [expr K.topological_closure.orthogonal_orthogonal] [] },
-  { exact [expr K.topological_closure_minimal K.le_orthogonal_orthogonal «expr ᗮ»(K).is_closed_orthogonal] }
-end
+theorem Submodule.orthogonal_orthogonal_eq_closure [CompleteSpace E] : Kᗮᗮ = K.topological_closure :=
+  by 
+    refine' le_antisymmₓ _ _
+    ·
+      convert Submodule.orthogonal_orthogonal_monotone K.submodule_topological_closure 
+      have  : CompleteSpace K.topological_closure := K.is_closed_topological_closure.complete_space_coe 
+      rw [K.topological_closure.orthogonal_orthogonal]
+    ·
+      exact K.topological_closure_minimal K.le_orthogonal_orthogonal Kᗮ.is_closed_orthogonal
 
 variable {K}
 
@@ -769,16 +850,17 @@ variable {K}
 theorem Submodule.is_compl_orthogonal_of_complete_space [CompleteSpace K] : IsCompl K Kᗮ :=
   ⟨K.orthogonal_disjoint, le_of_eqₓ Submodule.sup_orthogonal_of_complete_space.symm⟩
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem submodule.orthogonal_eq_bot_iff
-[complete_space (K : set E)] : «expr ↔ »(«expr = »(«expr ᗮ»(K), «expr⊥»()), «expr = »(K, «expr⊤»())) :=
-begin
-  refine [expr ⟨_, λ h, by rw ["[", expr h, ",", expr submodule.top_orthogonal_eq_bot, "]"] []⟩],
-  intro [ident h],
-  have [] [":", expr «expr = »(«expr ⊔ »(K, «expr ᗮ»(K)), «expr⊤»())] [":=", expr submodule.sup_orthogonal_of_complete_space],
-  rwa ["[", expr h, ",", expr sup_comm, ",", expr bot_sup_eq, "]"] ["at", ident this]
-end
+theorem Submodule.orthogonal_eq_bot_iff [CompleteSpace (K : Set E)] : Kᗮ = ⊥ ↔ K = ⊤ :=
+  by 
+    refine'
+      ⟨_,
+        fun h =>
+          by 
+            rw [h, Submodule.top_orthogonal_eq_bot]⟩
+    intro h 
+    have  : K⊔Kᗮ = ⊤ := Submodule.sup_orthogonal_of_complete_space 
+    rwa [h, sup_comm, bot_sup_eq] at this
 
 /-- A point in `K` with the orthogonality property (here characterized in terms of `Kᗮ`) must be the
 orthogonal projection. -/
@@ -826,26 +908,29 @@ theorem orthogonal_projection_orthogonal_complement_singleton_eq_zero [CompleteS
 theorem reflection_orthogonal_complement_singleton_eq_neg [CompleteSpace E] (v : E) : reflection (𝕜∙v)ᗮ v = -v :=
   reflection_mem_subspace_orthogonal_precomplement_eq_neg (Submodule.mem_span_singleton_self v)
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem reflection_sub
-[complete_space F]
-{v w : F}
-(h : «expr = »(«expr∥ ∥»(v), «expr∥ ∥»(w))) : «expr = »(reflection «expr ᗮ»(«expr ∙ »(exprℝ(), «expr - »(v, w))) v, w) :=
-begin
-  set [] [ident R] [":", expr «expr ≃ₗᵢ[ ] »(F, exprℝ(), F)] [":="] [expr reflection «expr ᗮ»(«expr ∙ »(exprℝ(), «expr - »(v, w)))] [],
-  suffices [] [":", expr «expr = »(«expr + »(R v, R v), «expr + »(w, w))],
-  { apply [expr smul_right_injective F (by norm_num [] [] : «expr ≠ »((2 : exprℝ()), 0))],
-    simpa [] [] [] ["[", expr two_smul, "]"] [] ["using", expr this] },
-  have [ident h₁] [":", expr «expr = »(R «expr - »(v, w), «expr- »(«expr - »(v, w)))] [":=", expr reflection_orthogonal_complement_singleton_eq_neg «expr - »(v, w)],
-  have [ident h₂] [":", expr «expr = »(R «expr + »(v, w), «expr + »(v, w))] [],
-  { apply [expr reflection_mem_subspace_eq_self],
-    apply [expr mem_orthogonal_singleton_of_inner_left],
-    rw [expr real_inner_add_sub_eq_zero_iff] [],
-    exact [expr h] },
-  convert [] [expr congr_arg2 ((«expr + »)) h₂ h₁] ["using", 1],
-  { simp [] [] [] [] [] [] },
-  { abel [] [] [] }
-end
+theorem reflection_sub [CompleteSpace F] {v w : F} (h : ∥v∥ = ∥w∥) : reflection (ℝ∙v - w)ᗮ v = w :=
+  by 
+    set R : F ≃ₗᵢ[ℝ] F := reflection (ℝ∙v - w)ᗮ
+    suffices  : (R v+R v) = w+w
+    ·
+      apply
+        smul_right_injective F
+          (by 
+            normNum :
+          (2 : ℝ) ≠ 0)
+      simpa [two_smul] using this 
+    have h₁ : R (v - w) = -(v - w) := reflection_orthogonal_complement_singleton_eq_neg (v - w)
+    have h₂ : R (v+w) = v+w
+    ·
+      apply reflection_mem_subspace_eq_self 
+      apply mem_orthogonal_singleton_of_inner_left 
+      rw [real_inner_add_sub_eq_zero_iff]
+      exact h 
+    convert congr_arg2ₓ (·+·) h₂ h₁ using 1
+    ·
+      simp 
+    ·
+      abel
 
 variable (K)
 
@@ -873,7 +958,7 @@ theorem id_eq_sum_orthogonal_projection_self_orthogonal_complement [CompleteSpac
 
 /-- The orthogonal projection is self-adjoint. -/
 theorem inner_orthogonal_projection_left_eq_right [CompleteSpace E] [CompleteSpace K] (u v : E) :
-  ⟪«expr↑ » (orthogonalProjection K u), v⟫ = ⟪u, orthogonalProjection K v⟫ :=
+  ⟪↑orthogonalProjection K u, v⟫ = ⟪u, orthogonalProjection K v⟫ :=
   by 
     nthRw 0[eq_sum_orthogonal_projection_self_orthogonal_complement K v]
     nthRw 1[eq_sum_orthogonal_projection_self_orthogonal_complement K u]
@@ -885,21 +970,19 @@ theorem inner_orthogonal_projection_left_eq_right [CompleteSpace E] [CompleteSpa
 
 open FiniteDimensional
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a finite-dimensional subspace `K₂`, and a subspace `K₁`
 containined in it, the dimensions of `K₁` and the intersection of its
 orthogonal subspace with `K₂` add to that of `K₂`. -/
-theorem submodule.finrank_add_inf_finrank_orthogonal
-{K₁ K₂ : submodule 𝕜 E}
-[finite_dimensional 𝕜 K₂]
-(h : «expr ≤ »(K₁, K₂)) : «expr = »(«expr + »(finrank 𝕜 K₁, finrank 𝕜 («expr ⊓ »(«expr ᗮ»(K₁), K₂) : submodule 𝕜 E)), finrank 𝕜 K₂) :=
-begin
-  haveI [] [] [":=", expr submodule.finite_dimensional_of_le h],
-  have [ident hd] [] [":=", expr submodule.dim_sup_add_dim_inf_eq K₁ «expr ⊓ »(«expr ᗮ»(K₁), K₂)],
-  rw ["[", "<-", expr inf_assoc, ",", expr (submodule.orthogonal_disjoint K₁).eq_bot, ",", expr bot_inf_eq, ",", expr finrank_bot, ",", expr submodule.sup_orthogonal_inf_of_complete_space h, "]"] ["at", ident hd],
-  rw [expr add_zero] ["at", ident hd],
-  exact [expr hd.symm]
-end
+theorem Submodule.finrank_add_inf_finrank_orthogonal {K₁ K₂ : Submodule 𝕜 E} [FiniteDimensional 𝕜 K₂] (h : K₁ ≤ K₂) :
+  (finrank 𝕜 K₁+finrank 𝕜 (K₁ᗮ⊓K₂ : Submodule 𝕜 E)) = finrank 𝕜 K₂ :=
+  by 
+    have  := Submodule.finite_dimensional_of_le h 
+    have  := proper_is_R_or_C 𝕜 K₁ 
+    have hd := Submodule.dim_sup_add_dim_inf_eq K₁ (K₁ᗮ⊓K₂)
+    rw [←inf_assoc, (Submodule.orthogonal_disjoint K₁).eq_bot, bot_inf_eq, finrank_bot,
+      Submodule.sup_orthogonal_inf_of_complete_space h] at hd 
+    rw [add_zeroₓ] at hd 
+    exact hd.symm
 
 /-- Given a finite-dimensional subspace `K₂`, and a subspace `K₁`
 containined in it, the dimensions of `K₁` and the intersection of its
@@ -939,72 +1022,88 @@ theorem finrank_orthogonal_span_singleton {n : ℕ} [_i : Fact (finrank 𝕜 E =
     by 
       simp [finrank_span_singleton hv, _i.elim, add_commₓ]
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » W)
 /-- An element `φ` of the orthogonal group of `F` can be factored as a product of reflections, and
 specifically at most as many reflections as the dimension of the complement of the fixed subspace
 of `φ`. -/
-theorem linear_isometry_equiv.reflections_generate_dim_aux
-[finite_dimensional exprℝ() F]
-{n : exprℕ()}
-(φ : «expr ≃ₗᵢ[ ] »(F, exprℝ(), F))
-(hn : «expr ≤ »(finrank exprℝ() «expr ᗮ»(«expr - »(continuous_linear_map.id exprℝ() F, φ.to_continuous_linear_equiv).ker), n)) : «expr∃ , »((l : list F), «expr ∧ »(«expr ≤ »(l.length, n), «expr = »(φ, (l.map (λ
-     v, reflection «expr ᗮ»(«expr ∙ »(exprℝ(), v)))).prod))) :=
-begin
-  induction [expr n] [] ["with", ident n, ident IH] ["generalizing", ident φ],
-  { refine [expr ⟨«expr[ , ]»([]), rfl.le, _⟩],
-    have [] [":", expr «expr = »(«expr - »(continuous_linear_map.id exprℝ() F, φ.to_continuous_linear_equiv).ker, «expr⊤»())] [],
-    { rwa ["[", expr nat.le_zero_iff, ",", expr finrank_eq_zero, ",", expr submodule.orthogonal_eq_bot_iff, "]"] ["at", ident hn] },
-    symmetry,
-    ext [] [ident x] [],
-    simpa [] [] [] ["[", expr sub_eq_zero, "]"] [] ["using", expr congr_arg (λ
-      f : «expr →ₗ[ ] »(F, exprℝ(), F), f x) (linear_map.ker_eq_top.mp this)] },
-  { let [ident W] [] [":=", expr «expr - »(continuous_linear_map.id exprℝ() F, φ.to_continuous_linear_equiv).ker],
-    have [ident hW] [":", expr ∀ w «expr ∈ » W, «expr = »(φ w, w)] [":=", expr λ w hw, (sub_eq_zero.mp hw).symm],
-    by_cases [expr hn', ":", expr «expr ≤ »(finrank exprℝ() «expr ᗮ»(W), n)],
-    { obtain ["⟨", ident V, ",", ident hV₁, ",", ident hV₂, "⟩", ":=", expr IH φ hn'],
-      exact [expr ⟨V, hV₁.trans n.le_succ, hV₂⟩] },
-    haveI [] [":", expr nontrivial «expr ᗮ»(W)] [":=", expr nontrivial_of_finrank_pos (by linarith [] [] ["[", expr zero_le n, "]"] : «expr < »(0, finrank exprℝ() «expr ᗮ»(W)))],
-    obtain ["⟨", ident v, ",", ident hv, "⟩", ":=", expr exists_ne (0 : «expr ᗮ»(W))],
-    have [ident hφv] [":", expr «expr ∈ »(φ v, «expr ᗮ»(W))] [],
-    { intros [ident w, ident hw],
-      rw ["[", "<-", expr hW w hw, ",", expr linear_isometry_equiv.inner_map_map, "]"] [],
-      exact [expr v.prop w hw] },
-    have [ident hv'] [":", expr «expr ∉ »((v : F), W)] [],
-    { intros [ident h],
-      exact [expr hv ((submodule.mem_left_iff_eq_zero_of_disjoint W.orthogonal_disjoint).mp h)] },
-    let [ident x] [":", expr F] [":=", expr «expr - »(v, φ v)],
-    let [ident ρ] [] [":=", expr reflection «expr ᗮ»(«expr ∙ »(exprℝ(), x))],
-    let [ident V] [] [":=", expr «expr - »(continuous_linear_map.id exprℝ() F, (φ.trans ρ).to_continuous_linear_equiv).ker],
-    have [ident hV] [":", expr ∀ w, «expr = »(ρ (φ w), w) → «expr ∈ »(w, V)] [],
-    { intros [ident w, ident hw],
-      change [expr «expr = »(«expr - »(w, ρ (φ w)), 0)] [] [],
-      rw ["[", expr sub_eq_zero, ",", expr hw, "]"] [] },
-    have [ident H₂V] [":", expr «expr ≤ »(W, V)] [],
-    { intros [ident w, ident hw],
-      apply [expr hV],
-      rw [expr hW w hw] [],
-      refine [expr reflection_mem_subspace_eq_self _],
-      apply [expr mem_orthogonal_singleton_of_inner_left],
-      exact [expr submodule.sub_mem _ v.prop hφv _ hw] },
-    have [ident H₁V] [":", expr «expr ∈ »((v : F), V)] [],
-    { apply [expr hV],
-      have [] [":", expr «expr = »(ρ v, φ v)] [":=", expr reflection_sub (by simp [] [] [] [] [] [])],
-      simp [] [] [] ["[", "<-", expr this, ",", expr ρ, "]"] [] [] },
-    have [] [":", expr «expr ≤ »(finrank exprℝ() «expr ᗮ»(V), n)] [],
-    { change [expr «expr ≤ »(finrank exprℝ() «expr ᗮ»(W), «expr + »(n, 1))] [] ["at", ident hn],
-      have [] [":", expr «expr ≤ »(«expr + »(finrank exprℝ() W, 1), finrank exprℝ() V)] [":=", expr submodule.finrank_lt_finrank_of_lt (set_like.lt_iff_le_and_exists.2 ⟨H₂V, v, H₁V, hv'⟩)],
-      have [] [":", expr «expr = »(«expr + »(finrank exprℝ() V, finrank exprℝ() «expr ᗮ»(V)), finrank exprℝ() F)] [":=", expr V.finrank_add_finrank_orthogonal],
-      have [] [":", expr «expr = »(«expr + »(finrank exprℝ() W, finrank exprℝ() «expr ᗮ»(W)), finrank exprℝ() F)] [":=", expr W.finrank_add_finrank_orthogonal],
-      linarith [] [] [] },
-    obtain ["⟨", ident l, ",", ident hl, ",", ident hφl, "⟩", ":=", expr IH (φ.trans ρ) this],
-    refine [expr ⟨[«expr :: »/«expr :: »/«expr :: »](x, l), _, _⟩],
-    { simp [] [] [] ["[", expr hl, ",", expr nat.succ_le_succ, "]"] [] [] },
-    have [] [] [":=", expr congr_arg (λ ψ, linear_isometry_equiv.trans ψ ρ) hφl],
-    convert [] [expr this] ["using", 1],
-    { simp [] [] [] ["[", "<-", expr linear_isometry_equiv.trans_assoc φ ρ ρ, "]"] [] [] },
-    { change [expr «expr = »(_, «expr * »(_, _))] [] [],
-      simp [] [] [] [] [] [] } }
-end
+theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ F] {n : ℕ} (φ : F ≃ₗᵢ[ℝ] F)
+  (hn : finrank ℝ (ContinuousLinearMap.id ℝ F - φ.to_continuous_linear_equiv).kerᗮ ≤ n) :
+  ∃ l : List F, l.length ≤ n ∧ φ = (l.map fun v => reflection (ℝ∙v)ᗮ).Prod :=
+  by 
+    induction' n with n IH generalizing φ
+    ·
+      refine' ⟨[], rfl.le, _⟩
+      have  : (ContinuousLinearMap.id ℝ F - φ.to_continuous_linear_equiv).ker = ⊤
+      ·
+        rwa [Nat.le_zero_iff, finrank_eq_zero, Submodule.orthogonal_eq_bot_iff] at hn 
+      symm 
+      ext x 
+      simpa [sub_eq_zero] using congr_argₓ (fun f : F →ₗ[ℝ] F => f x) (linear_map.ker_eq_top.mp this)
+    ·
+      let W := (ContinuousLinearMap.id ℝ F - φ.to_continuous_linear_equiv).ker 
+      have hW : ∀ w _ : w ∈ W, φ w = w := fun w hw => (sub_eq_zero.mp hw).symm 
+      byCases' hn' : finrank ℝ Wᗮ ≤ n
+      ·
+        obtain ⟨V, hV₁, hV₂⟩ := IH φ hn' 
+        exact ⟨V, hV₁.trans n.le_succ, hV₂⟩
+      have  : Nontrivial Wᗮ :=
+        nontrivial_of_finrank_pos
+          (by 
+            linarith [zero_le n] :
+          0 < finrank ℝ Wᗮ)
+      obtain ⟨v, hv⟩ := exists_ne (0 : Wᗮ)
+      have hφv : φ v ∈ Wᗮ
+      ·
+        intro w hw 
+        rw [←hW w hw, LinearIsometryEquiv.inner_map_map]
+        exact v.prop w hw 
+      have hv' : (v : F) ∉ W
+      ·
+        intro h 
+        exact hv ((Submodule.mem_left_iff_eq_zero_of_disjoint W.orthogonal_disjoint).mp h)
+      let x : F := v - φ v 
+      let ρ := reflection (ℝ∙x)ᗮ
+      let V := (ContinuousLinearMap.id ℝ F - (φ.trans ρ).toContinuousLinearEquiv).ker 
+      have hV : ∀ w, ρ (φ w) = w → w ∈ V
+      ·
+        intro w hw 
+        change w - ρ (φ w) = 0
+        rw [sub_eq_zero, hw]
+      have H₂V : W ≤ V
+      ·
+        intro w hw 
+        apply hV 
+        rw [hW w hw]
+        refine' reflection_mem_subspace_eq_self _ 
+        apply mem_orthogonal_singleton_of_inner_left 
+        exact Submodule.sub_mem _ v.prop hφv _ hw 
+      have H₁V : (v : F) ∈ V
+      ·
+        apply hV 
+        have  : ρ v = φ v :=
+          reflection_sub
+            (by 
+              simp )
+        simp [←this, ρ]
+      have  : finrank ℝ Vᗮ ≤ n
+      ·
+        change finrank ℝ Wᗮ ≤ n+1 at hn 
+        have  : (finrank ℝ W+1) ≤ finrank ℝ V :=
+          Submodule.finrank_lt_finrank_of_lt (SetLike.lt_iff_le_and_exists.2 ⟨H₂V, v, H₁V, hv'⟩)
+        have  : (finrank ℝ V+finrank ℝ Vᗮ) = finrank ℝ F := V.finrank_add_finrank_orthogonal 
+        have  : (finrank ℝ W+finrank ℝ Wᗮ) = finrank ℝ F := W.finrank_add_finrank_orthogonal 
+        linarith 
+      obtain ⟨l, hl, hφl⟩ := IH (φ.trans ρ) this 
+      refine' ⟨x :: l, _, _⟩
+      ·
+        simp [hl, Nat.succ_le_succₓ]
+      have  := congr_argₓ (fun ψ => LinearIsometryEquiv.trans ψ ρ) hφl 
+      convert this using 1
+      ·
+        simp [←LinearIsometryEquiv.trans_assoc φ ρ ρ]
+      ·
+        change _ = _*_ 
+        simp 
 
 /-- The orthogonal group of `F` is generated by reflections; specifically each element `φ` of the
 orthogonal group is a product of at most as many reflections as the dimension of `F`.
@@ -1036,11 +1135,21 @@ variable {ι : Type _}
 /-- An orthogonal family of subspaces of `E` satisfies `direct_sum.submodule_is_internal` (that is,
 they provide an internal direct sum decomposition of `E`) if and only if their span has trivial
 orthogonal complement. -/
+theorem OrthogonalFamily.submodule_is_internal_iff_of_is_complete [DecidableEq ι] {V : ι → Submodule 𝕜 E}
+  (hV : OrthogonalFamily 𝕜 V) (hc : IsComplete (↑supr V : Set E)) : DirectSum.SubmoduleIsInternal V ↔ (supr V)ᗮ = ⊥ :=
+  by 
+    have  : CompleteSpace (↥supr V) := hc.complete_space_coe 
+    simp only [DirectSum.submodule_is_internal_iff_independent_and_supr_eq_top, hV.independent, true_andₓ,
+      Submodule.orthogonal_eq_bot_iff]
+
+/-- An orthogonal family of subspaces of `E` satisfies `direct_sum.submodule_is_internal` (that is,
+they provide an internal direct sum decomposition of `E`) if and only if their span has trivial
+orthogonal complement. -/
 theorem OrthogonalFamily.submodule_is_internal_iff [DecidableEq ι] [FiniteDimensional 𝕜 E] {V : ι → Submodule 𝕜 E}
   (hV : OrthogonalFamily 𝕜 V) : DirectSum.SubmoduleIsInternal V ↔ (supr V)ᗮ = ⊥ :=
   by 
-    simp only [DirectSum.submodule_is_internal_iff_independent_and_supr_eq_top, hV.independent, true_andₓ,
-      Submodule.orthogonal_eq_bot_iff]
+    have h := FiniteDimensional.proper_is_R_or_C 𝕜 (↥supr V)
+    exact hV.submodule_is_internal_iff_of_is_complete (complete_space_coe_iff_is_complete.mp inferInstance)
 
 end OrthogonalFamily
 
@@ -1053,66 +1162,86 @@ variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » v)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » finsupp.supported 𝕜 𝕜 («expr ⁻¹' »(coe, v) : set u))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the orthogonal
 complement of its span is empty. -/
-theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot
-(hv : orthonormal 𝕜 (coe : v → E)) : «expr ↔ »(∀
- u «expr ⊇ » v, orthonormal 𝕜 (coe : u → E) → «expr = »(u, v), «expr = »(«expr ᗮ»(span 𝕜 v), «expr⊥»())) :=
-begin
-  rw [expr submodule.eq_bot_iff] [],
-  split,
-  { contrapose ["!"] [],
-    rintros ["⟨", ident x, ",", ident hx', ",", ident hx, "⟩"],
-    let [ident e] [] [":=", expr «expr • »((«expr ⁻¹»(«expr∥ ∥»(x)) : 𝕜), x)],
-    have [ident he] [":", expr «expr = »(«expr∥ ∥»(e), 1)] [":=", expr by simp [] [] [] ["[", expr e, ",", expr norm_smul_inv_norm hx, "]"] [] []],
-    have [ident he'] [":", expr «expr ∈ »(e, «expr ᗮ»(span 𝕜 v))] [":=", expr smul_mem' _ _ hx'],
-    have [ident he''] [":", expr «expr ∉ »(e, v)] [],
-    { intros [ident hev],
-      have [] [":", expr «expr = »(e, 0)] [],
-      { have [] [":", expr «expr ∈ »(e, «expr ⊓ »(span 𝕜 v, «expr ᗮ»(span 𝕜 v)))] [":=", expr ⟨subset_span hev, he'⟩],
-        simpa [] [] [] ["[", expr (span 𝕜 v).inf_orthogonal_eq_bot, "]"] [] ["using", expr this] },
-      have [] [":", expr «expr ≠ »(e, 0)] [":=", expr hv.ne_zero ⟨e, hev⟩],
-      contradiction },
-    refine [expr ⟨v.insert e, v.subset_insert e, ⟨_, _⟩, (v.ne_insert_of_not_mem he'').symm⟩],
-    { rintros ["⟨", ident a, ",", ident ha', "⟩"],
-      cases [expr eq_or_mem_of_mem_insert ha'] ["with", ident ha, ident ha],
-      { simp [] [] [] ["[", expr ha, ",", expr he, "]"] [] [] },
-      { exact [expr hv.1 ⟨a, ha⟩] } },
-    { have [ident h_end] [":", expr ∀ a «expr ∈ » v, «expr = »(«expr⟪ , ⟫»(a, e), 0)] [],
-      { intros [ident a, ident ha],
-        exact [expr he' a (submodule.subset_span ha)] },
-      rintros ["⟨", ident a, ",", ident ha', "⟩"],
-      cases [expr eq_or_mem_of_mem_insert ha'] ["with", ident ha, ident ha],
-      { rintros ["⟨", ident b, ",", ident hb', "⟩", ident hab'],
-        have [ident hb] [":", expr «expr ∈ »(b, v)] [],
-        { refine [expr mem_of_mem_insert_of_ne hb' _],
-          intros [ident hbe'],
-          apply [expr hab'],
-          simp [] [] [] ["[", expr ha, ",", expr hbe', "]"] [] [] },
-        rw [expr inner_eq_zero_sym] [],
-        simpa [] [] [] ["[", expr ha, "]"] [] ["using", expr h_end b hb] },
-      rintros ["⟨", ident b, ",", ident hb', "⟩", ident hab'],
-      cases [expr eq_or_mem_of_mem_insert hb'] ["with", ident hb, ident hb],
-      { simpa [] [] [] ["[", expr hb, "]"] [] ["using", expr h_end a ha] },
-      have [] [":", expr «expr ≠ »((⟨a, ha⟩ : v), ⟨b, hb⟩)] [],
-      { intros [ident hab''],
-        apply [expr hab'],
-        simpa [] [] [] [] [] ["using", expr hab''] },
-      exact [expr hv.2 this] } },
-  { simp [] [] ["only"] ["[", expr subset.antisymm_iff, "]"] [] [],
-    rintros [ident h, ident u, "(", ident huv, ":", expr «expr ⊆ »(v, u), ")", ident hu],
-    refine [expr ⟨_, huv⟩],
-    intros [ident x, ident hxu],
-    refine [expr (mt (h x) (hu.ne_zero ⟨x, hxu⟩)).imp_symm _],
-    intros [ident hxv, ident y, ident hy],
-    have [ident hxv'] [":", expr «expr ∉ »((⟨x, hxu⟩ : u), («expr ⁻¹' »(coe, v) : set u))] [":=", expr by simp [] [] [] ["[", expr huv, ",", expr hxv, "]"] [] []],
-    obtain ["⟨", ident l, ",", ident hl, ",", ident rfl, "⟩", ":", expr «expr∃ , »((l «expr ∈ » finsupp.supported 𝕜 𝕜 («expr ⁻¹' »(coe, v) : set u)), «expr = »(finsupp.total «expr↥ »(u) E 𝕜 coe l, y))],
-    { rw ["<-", expr finsupp.mem_span_image_iff_total] [],
-      simp [] [] [] ["[", expr huv, ",", expr inter_eq_self_of_subset_left, ",", expr hy, "]"] [] [] },
-    exact [expr hu.inner_finsupp_eq_zero hxv' hl] }
-end
+theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal 𝕜 (coeₓ : v → E)) :
+  (∀ u _ : u ⊇ v, Orthonormal 𝕜 (coeₓ : u → E) → u = v) ↔ (span 𝕜 v)ᗮ = ⊥ :=
+  by 
+    rw [Submodule.eq_bot_iff]
+    constructor
+    ·
+      contrapose! 
+      rintro ⟨x, hx', hx⟩
+      let e := (∥x∥⁻¹ : 𝕜) • x 
+      have he : ∥e∥ = 1 :=
+        by 
+          simp [e, norm_smul_inv_norm hx]
+      have he' : e ∈ (span 𝕜 v)ᗮ := smul_mem' _ _ hx' 
+      have he'' : e ∉ v
+      ·
+        intro hev 
+        have  : e = 0
+        ·
+          have  : e ∈ span 𝕜 v⊓(span 𝕜 v)ᗮ := ⟨subset_span hev, he'⟩
+          simpa [(span 𝕜 v).inf_orthogonal_eq_bot] using this 
+        have  : e ≠ 0 := hv.ne_zero ⟨e, hev⟩
+        contradiction 
+      refine' ⟨v.insert e, v.subset_insert e, ⟨_, _⟩, (v.ne_insert_of_not_mem he'').symm⟩
+      ·
+        rintro ⟨a, ha'⟩
+        cases' eq_or_mem_of_mem_insert ha' with ha ha
+        ·
+          simp [ha, he]
+        ·
+          exact hv.1 ⟨a, ha⟩
+      ·
+        have h_end : ∀ a _ : a ∈ v, ⟪a, e⟫ = 0
+        ·
+          intro a ha 
+          exact he' a (Submodule.subset_span ha)
+        rintro ⟨a, ha'⟩
+        cases' eq_or_mem_of_mem_insert ha' with ha ha
+        ·
+          rintro ⟨b, hb'⟩ hab' 
+          have hb : b ∈ v
+          ·
+            refine' mem_of_mem_insert_of_ne hb' _ 
+            intro hbe' 
+            apply hab' 
+            simp [ha, hbe']
+          rw [inner_eq_zero_sym]
+          simpa [ha] using h_end b hb 
+        rintro ⟨b, hb'⟩ hab' 
+        cases' eq_or_mem_of_mem_insert hb' with hb hb
+        ·
+          simpa [hb] using h_end a ha 
+        have  : (⟨a, ha⟩ : v) ≠ ⟨b, hb⟩
+        ·
+          intro hab'' 
+          apply hab' 
+          simpa using hab'' 
+        exact hv.2 this
+    ·
+      simp only [subset.antisymm_iff]
+      rintro h u (huv : v ⊆ u) hu 
+      refine' ⟨_, huv⟩
+      intro x hxu 
+      refine' ((mt (h x)) (hu.ne_zero ⟨x, hxu⟩)).imp_symm _ 
+      intro hxv y hy 
+      have hxv' : (⟨x, hxu⟩ : u) ∉ (coeₓ ⁻¹' v : Set u) :=
+        by 
+          simp [huv, hxv]
+      obtain ⟨l, hl, rfl⟩ :
+        ∃ (l : _)(_ : l ∈ Finsupp.supported 𝕜 𝕜 (coeₓ ⁻¹' v : Set u)), (Finsupp.total (↥u) E 𝕜 coeₓ) l = y
+      ·
+        rw [←Finsupp.mem_span_image_iff_total]
+        simp [huv, inter_eq_self_of_subset_left, hy]
+      exact hu.inner_finsupp_eq_zero hxv' hl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the closure of its
 span is the whole space. -/
 theorem maximal_orthonormal_iff_dense_span [CompleteSpace E] (hv : Orthonormal 𝕜 (coeₓ : v → E)) :
@@ -1121,6 +1250,7 @@ theorem maximal_orthonormal_iff_dense_span [CompleteSpace E] (hv : Orthonormal �
     rw [maximal_orthonormal_iff_orthogonal_complement_eq_bot hv, ←Submodule.orthogonal_eq_top_iff,
       (span 𝕜 v).orthogonal_orthogonal_eq_closure]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- Any orthonormal subset can be extended to an orthonormal set whose span is dense. -/
 theorem exists_subset_is_orthonormal_dense_span [CompleteSpace E] (hv : Orthonormal 𝕜 (coeₓ : v → E)) :
   ∃ (u : _)(_ : u ⊇ v), Orthonormal 𝕜 (coeₓ : u → E) ∧ (span 𝕜 u).topologicalClosure = ⊤ :=
@@ -1143,28 +1273,32 @@ section FiniteDimensional
 
 variable [FiniteDimensional 𝕜 E]
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
 is a basis. -/
-theorem maximal_orthonormal_iff_basis_of_finite_dimensional
-(hv : orthonormal 𝕜 (coe : v → E)) : «expr ↔ »(∀
- u «expr ⊇ » v, orthonormal 𝕜 (coe : u → E) → «expr = »(u, v), «expr∃ , »((b : basis v 𝕜 E), «expr = »(«expr⇑ »(b), coe))) :=
-begin
-  rw [expr maximal_orthonormal_iff_orthogonal_complement_eq_bot hv] [],
-  have [ident hv_compl] [":", expr is_complete (span 𝕜 v : set E)] [":=", expr (span 𝕜 v).complete_of_finite_dimensional],
-  rw [expr submodule.orthogonal_eq_bot_iff] [],
-  have [ident hv_coe] [":", expr «expr = »(range (coe : v → E), v)] [":=", expr by simp [] [] [] [] [] []],
-  split,
-  { refine [expr λ h, ⟨basis.mk hv.linear_independent _, basis.coe_mk _ _⟩],
-    convert [] [expr h] [] },
-  { rintros ["⟨", ident h, ",", ident coe_h, "⟩"],
-    rw ["[", "<-", expr h.span_eq, ",", expr coe_h, ",", expr hv_coe, "]"] [] }
-end
+theorem maximal_orthonormal_iff_basis_of_finite_dimensional (hv : Orthonormal 𝕜 (coeₓ : v → E)) :
+  (∀ u _ : u ⊇ v, Orthonormal 𝕜 (coeₓ : u → E) → u = v) ↔ ∃ b : Basis v 𝕜 E, ⇑b = coeₓ :=
+  by 
+    have  := proper_is_R_or_C 𝕜 (span 𝕜 v)
+    rw [maximal_orthonormal_iff_orthogonal_complement_eq_bot hv]
+    have hv_compl : IsComplete (span 𝕜 v : Set E) := (span 𝕜 v).complete_of_finite_dimensional 
+    rw [Submodule.orthogonal_eq_bot_iff]
+    have hv_coe : range (coeₓ : v → E) = v :=
+      by 
+        simp 
+    constructor
+    ·
+      refine' fun h => ⟨Basis.mk hv.linear_independent _, Basis.coe_mk _ _⟩
+      convert h
+    ·
+      rintro ⟨h, coe_h⟩
+      rw [←h.span_eq, coe_h, hv_coe]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- In a finite-dimensional `inner_product_space`, any orthonormal subset can be extended to an
 orthonormal basis. -/
 theorem exists_subset_is_orthonormal_basis (hv : Orthonormal 𝕜 (coeₓ : v → E)) :
-  ∃ (u : _)(_ : u ⊇ v)(b : Basis u 𝕜 E), Orthonormal 𝕜 b ∧ «expr⇑ » b = coeₓ :=
+  ∃ (u : _)(_ : u ⊇ v)(b : Basis u 𝕜 E), Orthonormal 𝕜 b ∧ ⇑b = coeₓ :=
   by 
     obtain ⟨u, hus, hu, hu_max⟩ := exists_maximal_orthonormal hv 
     obtain ⟨b, hb⟩ := (maximal_orthonormal_iff_basis_of_finite_dimensional hu).mp hu_max 
@@ -1188,7 +1322,7 @@ theorem orthonormal_basis_orthonormal : Orthonormal 𝕜 (orthonormalBasis 𝕜 
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some_spec.1
 
 @[simp]
-theorem coe_orthonormal_basis : «expr⇑ » (orthonormalBasis 𝕜 E) = coeₓ :=
+theorem coe_orthonormal_basis : ⇑orthonormalBasis 𝕜 E = coeₓ :=
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some_spec.2
 
 instance : Fintype (OrthonormalBasisIndex 𝕜 E) :=
@@ -1204,10 +1338,10 @@ def finOrthonormalBasis {n : ℕ} (hn : finrank 𝕜 E = n) : Basis (Finₓ n) �
   (orthonormalBasis 𝕜 E).reindex (Fintype.equivFinOfCardEq h)
 
 theorem fin_orthonormal_basis_orthonormal {n : ℕ} (hn : finrank 𝕜 E = n) : Orthonormal 𝕜 (finOrthonormalBasis hn) :=
-  suffices Orthonormal 𝕜 (orthonormalBasis _ _ ∘ Equiv.symm _)by 
+  suffices Orthonormal 𝕜 (orthonormalBasis _ _ ∘ Equivₓ.symm _)by 
     simp only [finOrthonormalBasis, Basis.coe_reindex]
     assumption
-  (orthonormal_basis_orthonormal 𝕜 E).comp _ (Equiv.injective _)
+  (orthonormal_basis_orthonormal 𝕜 E).comp _ (Equivₓ.injective _)
 
 section SubordinateOrthonormalBasis
 
@@ -1218,15 +1352,14 @@ variable {n : ℕ} (hn : finrank 𝕜 E = n) {ι : Type _} [Fintype ι] [Decidab
 
 /-- Exhibit a bijection between `fin n` and the index set of a certain basis of an `n`-dimensional
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
-@[irreducible]
-def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv : (Σi, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
+irreducible_def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv :
+  (Σ i, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
   let b := hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq$ (FiniteDimensional.finrank_eq_card_basis b).symm.trans hn
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. -/
-@[irreducible]
-def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis : Basis (Finₓ n) 𝕜 E :=
+irreducible_def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis : Basis (Finₓ n) 𝕜 E :=
   (hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)).reindex (hV.sigma_orthonormal_basis_index_equiv hn)
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
@@ -1235,17 +1368,14 @@ provides the mapping by which it is subordinate. -/
 def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasisIndex (a : Finₓ n) : ι :=
   ((hV.sigma_orthonormal_basis_index_equiv hn).symm a).1
 
--- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The basis constructed in `orthogonal_family.subordinate_orthonormal_basis` is orthonormal. -/
-theorem direct_sum.submodule_is_internal.subordinate_orthonormal_basis_orthonormal
-(hV' : orthogonal_family 𝕜 V) : orthonormal 𝕜 (hV.subordinate_orthonormal_basis hn) :=
-begin
-  simp [] [] ["only"] ["[", expr direct_sum.submodule_is_internal.subordinate_orthonormal_basis, ",", expr basis.coe_reindex, "]"] [] [],
-  have [] [":", expr orthonormal 𝕜 (hV.collected_basis (λ
-     i, orthonormal_basis 𝕜 (V i)))] [":=", expr hV.collected_basis_orthonormal hV' (λ
-    i, orthonormal_basis_orthonormal 𝕜 (V i))],
-  exact [expr this.comp _ (equiv.injective _)]
-end
+theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_orthonormal (hV' : OrthogonalFamily 𝕜 V) :
+  Orthonormal 𝕜 (hV.subordinate_orthonormal_basis hn) :=
+  by 
+    simp only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex]
+    have  : Orthonormal 𝕜 (hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)) :=
+      hV.collected_basis_orthonormal hV' fun i => orthonormal_basis_orthonormal 𝕜 (V i)
+    exact this.comp _ (Equivₓ.injective _)
 
 /-- The basis constructed in `orthogonal_family.subordinate_orthonormal_basis` is subordinate to
 the `orthogonal_family` in question. -/
@@ -1254,8 +1384,6 @@ theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_subordinate 
   by 
     simpa only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex] using
       hV.collected_basis_mem (fun i => orthonormalBasis 𝕜 (V i)) ((hV.sigma_orthonormal_basis_index_equiv hn).symm a)
-
-attribute [irreducible] DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasisIndex
 
 end SubordinateOrthonormalBasis
 

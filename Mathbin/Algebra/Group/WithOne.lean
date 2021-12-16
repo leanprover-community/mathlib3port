@@ -54,7 +54,7 @@ instance : CoeTₓ α (WithOne α) :=
   ⟨some⟩
 
 @[toAdditive]
-theorem some_eq_coe {a : α} : (some a : WithOne α) = «expr↑ » a :=
+theorem some_eq_coe {a : α} : (some a : WithOne α) = ↑a :=
   rfl
 
 @[simp, toAdditive]
@@ -66,7 +66,7 @@ theorem one_ne_coe {a : α} : (1 : WithOne α) ≠ a :=
   coe_ne_one.symm
 
 @[toAdditive]
-theorem ne_one_iff_exists {x : WithOne α} : x ≠ 1 ↔ ∃ a : α, «expr↑ » a = x :=
+theorem ne_one_iff_exists {x : WithOne α} : x ≠ 1 ↔ ∃ a : α, ↑a = x :=
   Option.ne_none_iff_exists
 
 @[toAdditive]
@@ -98,8 +98,6 @@ instance [CommSemigroupₓ α] : CommMonoidₓ (WithOne α) :=
   { WithOne.monoid with mul_comm := (Option.lift_or_get_comm _).1 }
 
 section 
-
-attribute [local irreducible] WithOne WithZero
 
 /-- `coe` as a bundled morphism -/
 @[toAdditive "`coe` as a bundled morphism", simps apply]
@@ -173,8 +171,6 @@ theorem map_comp {γ : Type w} [Mul γ] (f : MulHom α β) (g : MulHom β γ) : 
     cases x <;> rfl
 
 end Map
-
-attribute [irreducible] WithOne
 
 @[simp, normCast, toAdditive]
 theorem coe_mul [Mul α] (a b : α) : ((a*b : α) : WithOne α) = a*b :=
@@ -252,10 +248,10 @@ instance [HasOne α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
       match x, n with 
       | none, 0 => 1
       | none, n+1 => 0
-      | some x, n => «expr↑ » (x ^ n)⟩
+      | some x, n => ↑(x ^ n)⟩
 
 @[simp, normCast]
-theorem coe_pow [HasOne α] [Pow α ℕ] {a : α} (n : ℕ) : «expr↑ » (a ^ n : α) = («expr↑ » a ^ n : WithZero α) :=
+theorem coe_pow [HasOne α] [Pow α ℕ] {a : α} (n : ℕ) : ↑(a ^ n : α) = (↑a ^ n : WithZero α) :=
   rfl
 
 instance [Monoidₓ α] : MonoidWithZeroₓ (WithZero α) :=
@@ -291,7 +287,7 @@ instance [Div α] : Div (WithZero α) :=
   ⟨fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a / b) o₂⟩
 
 @[normCast]
-theorem coe_div [Div α] (a b : α) : «expr↑ » (a / b : α) = (a / b : WithZero α) :=
+theorem coe_div [Div α] (a b : α) : ↑(a / b : α) = (a / b : WithZero α) :=
   rfl
 
 instance [HasOne α] [Pow α ℤ] : Pow (WithZero α) ℤ :=
@@ -300,10 +296,10 @@ instance [HasOne α] [Pow α ℤ] : Pow (WithZero α) ℤ :=
       | none, Int.ofNat 0 => 1
       | none, Int.ofNat (Nat.succ n) => 0
       | none, Int.negSucc n => 0
-      | some x, n => «expr↑ » (x ^ n)⟩
+      | some x, n => ↑(x ^ n)⟩
 
 @[simp, normCast]
-theorem coe_zpow [DivInvMonoidₓ α] {a : α} (n : ℤ) : «expr↑ » (a ^ n : α) = («expr↑ » a ^ n : WithZero α) :=
+theorem coe_zpow [DivInvMonoidₓ α] {a : α} (n : ℤ) : ↑(a ^ n : α) = (↑a ^ n : WithZero α) :=
   rfl
 
 instance [DivInvMonoidₓ α] : DivInvMonoidₓ (WithZero α) :=
@@ -380,8 +376,6 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
               try 
                 rfl 
           exact congr_argₓ some (right_distrib _ _ _) }
-
-attribute [irreducible] WithZero
 
 end WithZero
 

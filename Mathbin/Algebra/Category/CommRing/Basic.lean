@@ -43,8 +43,9 @@ instance bundled_hom : bundled_hom assoc_ring_hom :=
       by 
         exact @RingHom.coe_inj M N _ _⟩
 
--- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] SemiRing
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for SemiRing
 
 instance : CoeSort SemiRing (Type _) :=
   bundled.has_coe_to_sort
@@ -85,9 +86,10 @@ namespace Ringₓₓ
 instance : bundled_hom.parent_projection @Ringₓ.toSemiring :=
   ⟨⟩
 
--- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
-attribute [derive #["[", expr λ Ring, has_coe_to_sort Ring (Type*), ",", expr large_category, ",",
-   expr concrete_category, "]"]] Ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous], [anonymous] for Ringₓₓ
 
 /-- Construct a bundled Ring from the underlying type and typeclass. -/
 def of (R : Type u) [Ringₓ R] : Ringₓₓ :=
@@ -124,8 +126,9 @@ namespace CommSemiRing
 instance : bundled_hom.parent_projection @CommSemiringₓ.toSemiring :=
   ⟨⟩
 
--- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommSemiRing
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for CommSemiRing
 
 instance : CoeSort CommSemiRing (Type _) :=
   bundled.has_coe_to_sort
@@ -168,8 +171,9 @@ namespace CommRingₓₓ
 instance : bundled_hom.parent_projection @CommRingₓ.toRing :=
   ⟨⟩
 
--- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommRing
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for CommRingₓₓ
 
 instance : CoeSort CommRingₓₓ (Type _) :=
   bundled.has_coe_to_sort

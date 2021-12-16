@@ -20,7 +20,7 @@ Most proofs are adapted from the corresponding proofs on `ℝ≥0∞`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Classical Set Filter Metric TopologicalSpace
 
@@ -40,22 +40,64 @@ instance : T2Space Ereal :=
   by 
     infer_instance
 
--- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : second_countable_topology ereal :=
-⟨begin
-   refine [expr ⟨«expr⋃ , »((q : exprℚ()), {{a : ereal | «expr < »(a, (q : exprℝ()))}, {a : ereal | «expr < »(((q : exprℝ()) : ereal), a)}}), countable_Union (λ
-      a, (countable_singleton _).insert _), _⟩],
-   refine [expr le_antisymm «expr $ »(le_generate_from, by simp [] [] [] ["[", expr or_imp_distrib, ",", expr is_open_lt', ",", expr is_open_gt', "]"] [] [] { contextual := tt }) _],
-   apply [expr le_generate_from (λ s h, _)],
-   rcases [expr h, "with", "⟨", ident a, ",", ident hs, "|", ident hs, "⟩"]; [rw [expr show «expr = »(s, «expr⋃ , »((q «expr ∈ » {q : exprℚ() | «expr < »(a, (q : exprℝ()))}), {b | «expr < »(((q : exprℝ()) : ereal), b)})), by { ext [] [ident x] [],
-       simpa [] [] ["only"] ["[", expr hs, ",", expr exists_prop, ",", expr mem_Union, "]"] [] ["using", expr lt_iff_exists_rat_btwn] }] [], rw [expr show «expr = »(s, «expr⋃ , »((q «expr ∈ » {q : exprℚ() | «expr < »(((q : exprℝ()) : ereal), a)}), {b | «expr < »(b, ((q : exprℝ()) : ereal))})), by { ext [] [ident x] [],
-       simpa [] [] ["only"] ["[", expr hs, ",", expr and_comm, ",", expr exists_prop, ",", expr mem_Union, "]"] [] ["using", expr lt_iff_exists_rat_btwn] }] []]; { apply [expr is_open_Union],
-     intro [ident q],
-     apply [expr is_open_Union],
-     intro [ident hq],
-     apply [expr generate_open.basic],
-     exact [expr mem_Union.2 ⟨q, by simp [] [] [] [] [] []⟩] }
- end⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » {q : exprℚ() | «expr < »(a, (q : exprℝ()))})
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » {q : exprℚ() | «expr < »(((q : exprℝ()) : ereal), a)})
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  : second_countable_topology Ereal
+  :=
+    ⟨
+      by
+        refine'
+            ⟨
+              ⋃ q : ℚ , { { a : Ereal | a < ( q : ℝ ) } , { a : Ereal | ( ( q : ℝ ) : Ereal ) < a } }
+                ,
+                countable_Union fun a => countable_singleton _ . insert _
+                ,
+                _
+              ⟩
+          refine'
+            le_antisymmₓ
+              le_generate_from
+                  $
+                  by
+                    simp
+                      ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                      [ or_imp_distrib , is_open_lt' , is_open_gt' ]
+                _
+          apply le_generate_from fun s h => _
+          rcases h with ⟨ a , hs | hs ⟩
+              <;>
+              [
+              rw
+                  [
+                    show
+                      s = ⋃ ( q : _ ) ( _ : q ∈ { q : ℚ | a < ( q : ℝ ) } ) , { b | ( ( q : ℝ ) : Ereal ) < b }
+                      by ext x simpa only [ hs , exists_prop , mem_Union ] using lt_iff_exists_rat_btwn
+                    ]
+                ,
+                rw
+                  [
+                    show
+                      s
+                        =
+                        ⋃
+                          ( q : _ ) ( _ : q ∈ { q : ℚ | ( ( q : ℝ ) : Ereal ) < a } )
+                          ,
+                          { b | b < ( ( q : ℝ ) : Ereal ) }
+                      by ext x simpa only [ hs , and_comm , exists_prop , mem_Union ] using lt_iff_exists_rat_btwn
+                    ]
+              ]
+            <;>
+            ·
+              apply is_open_Union
+                intro q
+                apply is_open_Union
+                intro hq
+                apply generate_open.basic
+                exact mem_Union . 2 ⟨ q , by simp ⟩
+      ⟩
 
 /-! ### Real coercion -/
 
@@ -67,7 +109,7 @@ theorem embedding_coe : Embedding (coeₓ : ℝ → Ereal) :=
           rw [@OrderTopology.topology_eq_generate_intervals Ereal _, ←coinduced_le_iff_le_induced]
           refine' le_generate_from fun s ha => _ 
           rcases ha with ⟨a, rfl | rfl⟩
-          show IsOpen { b:ℝ | a < «expr↑ » b }
+          show IsOpen { b : ℝ | a < ↑b }
           ·
             induction a using Ereal.rec
             ·
@@ -77,7 +119,7 @@ theorem embedding_coe : Embedding (coeₓ : ℝ → Ereal) :=
               exact is_open_Ioi
             ·
               simp only [set_of_false, is_open_empty, not_top_lt]
-          show IsOpen { b:ℝ | «expr↑ » b < a }
+          show IsOpen { b : ℝ | ↑b < a }
           ·
             induction a using Ereal.rec
             ·
@@ -118,7 +160,7 @@ theorem open_embedding_coe : OpenEmbedding (coeₓ : ℝ → Ereal) :=
 
 @[normCast]
 theorem tendsto_coe {α : Type _} {f : Filter α} {m : α → ℝ} {a : ℝ} :
-  tendsto (fun a => (m a : Ereal)) f (𝓝 («expr↑ » a)) ↔ tendsto m f (𝓝 a) :=
+  tendsto (fun a => (m a : Ereal)) f (𝓝 (↑a)) ↔ tendsto m f (𝓝 a) :=
   embedding_coe.tendsto_nhds_iff.symm
 
 theorem _root_.continuous_coe_real_ereal : Continuous (coeₓ : ℝ → Ereal) :=
@@ -158,49 +200,69 @@ def ne_bot_top_homeomorph_real : ({⊥, ⊤} : Set Ereal).Compl ≃ₜ ℝ :=
 /-! ### ennreal coercion -/
 
 
--- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem embedding_coe_ennreal : embedding (coe : «exprℝ≥0∞»() → ereal) :=
-⟨⟨begin
-    refine [expr le_antisymm _ _],
-    { rw ["[", expr @order_topology.topology_eq_generate_intervals ereal _, ",", "<-", expr coinduced_le_iff_le_induced, "]"] [],
-      refine [expr le_generate_from (assume s ha, _)],
-      rcases [expr ha, "with", "⟨", ident a, ",", ident rfl, "|", ident rfl, "⟩"],
-      show [expr is_open {b : «exprℝ≥0∞»() | «expr < »(a, «expr↑ »(b))}],
-      { induction [expr a] ["using", ident ereal.rec] ["with", ident x] [],
-        { simp [] [] ["only"] ["[", expr is_open_univ, ",", expr bot_lt_coe_ennreal, ",", expr set_of_true, "]"] [] [] },
-        { rcases [expr le_or_lt 0 x, "with", ident h, "|", ident h],
-          { have [] [":", expr «expr = »((x : ereal), ((id ⟨x, h⟩ : «exprℝ≥0»()) : «exprℝ≥0∞»()))] [":=", expr rfl],
-            rw [expr this] [],
-            simp [] [] ["only"] ["[", expr id.def, ",", expr coe_ennreal_lt_coe_ennreal_iff, "]"] [] [],
-            exact [expr is_open_Ioi] },
-          { have [] [":", expr ∀
-             y : «exprℝ≥0∞»(), «expr < »((x : ereal), y)] [":=", expr λ
-             y, (ereal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg _)],
-            simp [] [] ["only"] ["[", expr this, ",", expr is_open_univ, ",", expr set_of_true, "]"] [] [] } },
-        { simp [] [] ["only"] ["[", expr set_of_false, ",", expr is_open_empty, ",", expr not_top_lt, "]"] [] [] } },
-      show [expr is_open {b : «exprℝ≥0∞»() | «expr < »(«expr↑ »(b), a)}],
-      { induction [expr a] ["using", ident ereal.rec] ["with", ident x] [],
-        { simp [] [] ["only"] ["[", expr not_lt_bot, ",", expr set_of_false, ",", expr is_open_empty, "]"] [] [] },
-        { rcases [expr le_or_lt 0 x, "with", ident h, "|", ident h],
-          { have [] [":", expr «expr = »((x : ereal), ((id ⟨x, h⟩ : «exprℝ≥0»()) : «exprℝ≥0∞»()))] [":=", expr rfl],
-            rw [expr this] [],
-            simp [] [] ["only"] ["[", expr id.def, ",", expr coe_ennreal_lt_coe_ennreal_iff, "]"] [] [],
-            exact [expr is_open_Iio] },
-          { convert [] [expr is_open_empty] [],
-            apply [expr eq_empty_iff_forall_not_mem.2 (λ y hy, lt_irrefl (x : ereal) _)],
-            exact [expr ((ereal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg y)).trans hy] } },
-        { simp [] [] ["only"] ["[", "<-", expr coe_ennreal_top, ",", expr coe_ennreal_lt_coe_ennreal_iff, "]"] [] [],
-          exact [expr is_open_Iio] } } },
-    { rw ["[", expr @order_topology.topology_eq_generate_intervals «exprℝ≥0∞»() _, "]"] [],
-      refine [expr le_generate_from (assume s ha, _)],
-      rcases [expr ha, "with", "⟨", ident a, ",", ident rfl, "|", ident rfl, "⟩"],
-      exact [expr ⟨Ioi a, is_open_Ioi, by simp [] [] [] ["[", expr Ioi, "]"] [] []⟩],
-      exact [expr ⟨Iio a, is_open_Iio, by simp [] [] [] ["[", expr Iio, "]"] [] []⟩] }
-  end⟩, assume a b, by simp [] [] ["only"] ["[", expr imp_self, ",", expr coe_ennreal_eq_coe_ennreal_iff, "]"] [] []⟩
+theorem embedding_coe_ennreal : Embedding (coeₓ : ℝ≥0∞ → Ereal) :=
+  ⟨⟨by 
+        refine' le_antisymmₓ _ _
+        ·
+          rw [@OrderTopology.topology_eq_generate_intervals Ereal _, ←coinduced_le_iff_le_induced]
+          refine' le_generate_from fun s ha => _ 
+          rcases ha with ⟨a, rfl | rfl⟩
+          show IsOpen { b : ℝ≥0∞ | a < ↑b }
+          ·
+            induction' a using Ereal.rec with x
+            ·
+              simp only [is_open_univ, bot_lt_coe_ennreal, set_of_true]
+            ·
+              rcases le_or_ltₓ 0 x with (h | h)
+              ·
+                have  : (x : Ereal) = ((id ⟨x, h⟩ :  ℝ≥0 ) : ℝ≥0∞) := rfl 
+                rw [this]
+                simp only [id.def, coe_ennreal_lt_coe_ennreal_iff]
+                exact is_open_Ioi
+              ·
+                have  : ∀ y : ℝ≥0∞, (x : Ereal) < y :=
+                  fun y => (Ereal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg _)
+                simp only [this, is_open_univ, set_of_true]
+            ·
+              simp only [set_of_false, is_open_empty, not_top_lt]
+          show IsOpen { b : ℝ≥0∞ | ↑b < a }
+          ·
+            induction' a using Ereal.rec with x
+            ·
+              simp only [not_lt_bot, set_of_false, is_open_empty]
+            ·
+              rcases le_or_ltₓ 0 x with (h | h)
+              ·
+                have  : (x : Ereal) = ((id ⟨x, h⟩ :  ℝ≥0 ) : ℝ≥0∞) := rfl 
+                rw [this]
+                simp only [id.def, coe_ennreal_lt_coe_ennreal_iff]
+                exact is_open_Iio
+              ·
+                convert is_open_empty 
+                apply eq_empty_iff_forall_not_mem.2 fun y hy => lt_irreflₓ (x : Ereal) _ 
+                exact ((Ereal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg y)).trans hy
+            ·
+              simp only [←coe_ennreal_top, coe_ennreal_lt_coe_ennreal_iff]
+              exact is_open_Iio
+        ·
+          rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0∞ _]
+          refine' le_generate_from fun s ha => _ 
+          rcases ha with ⟨a, rfl | rfl⟩
+          exact
+            ⟨Ioi a, is_open_Ioi,
+              by 
+                simp [Ioi]⟩
+          exact
+            ⟨Iio a, is_open_Iio,
+              by 
+                simp [Iio]⟩⟩,
+    fun a b =>
+      by 
+        simp only [imp_self, coe_ennreal_eq_coe_ennreal_iff]⟩
 
 @[normCast]
 theorem tendsto_coe_ennreal {α : Type _} {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} :
-  tendsto (fun a => (m a : Ereal)) f (𝓝 («expr↑ » a)) ↔ tendsto m f (𝓝 a) :=
+  tendsto (fun a => (m a : Ereal)) f (𝓝 (↑a)) ↔ tendsto m f (𝓝 a) :=
   embedding_coe_ennreal.tendsto_nhds_iff.symm
 
 theorem _root_.continuous_coe_ennreal_ereal : Continuous (coeₓ : ℝ≥0∞ → Ereal) :=
@@ -212,12 +274,13 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} : (Continuous fun a =
 /-! ### Neighborhoods of infinity -/
 
 
-theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅(a : _)(_ : a ≠ ⊤), 𝓟 (Ioi a) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»())
+theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅ (a : _)(_ : a ≠ ⊤), 𝓟 (Ioi a) :=
   nhds_top_order.trans$
     by 
       simp [lt_top_iff_ne_top, Ioi]
 
-theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅a : ℝ, 𝓟 (Ioi a) :=
+theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (Ioi a) :=
   by 
     rw [nhds_top]
     apply le_antisymmₓ
@@ -255,16 +318,17 @@ theorem mem_nhds_top_iff {s : Set Ereal} : s ∈ 𝓝 (⊤ : Ereal) ↔ ∃ y : 
             simp [le_reflₓ]⟩
 
 theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → Ereal} {f : Filter α} :
-  tendsto m f (𝓝 ⊤) ↔ ∀ x : ℝ, ∀ᶠa in f, «expr↑ » x < m a :=
+  tendsto m f (𝓝 ⊤) ↔ ∀ x : ℝ, ∀ᶠ a in f, ↑x < m a :=
   by 
     simp only [nhds_top', mem_Ioi, tendsto_infi, tendsto_principal]
 
-theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅(a : _)(_ : a ≠ ⊥), 𝓟 (Iio a) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»())
+theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅ (a : _)(_ : a ≠ ⊥), 𝓟 (Iio a) :=
   nhds_bot_order.trans$
     by 
       simp [bot_lt_iff_ne_bot]
 
-theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅a : ℝ, 𝓟 (Iio a) :=
+theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (Iio a) :=
   by 
     rw [nhds_bot]
     apply le_antisymmₓ
@@ -302,7 +366,7 @@ theorem mem_nhds_bot_iff {s : Set Ereal} : s ∈ 𝓝 (⊥ : Ereal) ↔ ∃ y : 
             simp [le_reflₓ]⟩
 
 theorem tendsto_nhds_bot_iff_real {α : Type _} {m : α → Ereal} {f : Filter α} :
-  tendsto m f (𝓝 ⊥) ↔ ∀ x : ℝ, ∀ᶠa in f, m a < x :=
+  tendsto m f (𝓝 ⊥) ↔ ∀ x : ℝ, ∀ᶠ a in f, m a < x :=
   by 
     simp only [nhds_bot', mem_Iio, tendsto_infi, tendsto_principal]
 

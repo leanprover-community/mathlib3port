@@ -74,7 +74,7 @@ variable (n) (R) (M)
 The trace of a square matrix.
 -/
 def trace [Fintype n] : Matrix n n M →ₗ[R] M :=
-  { toFun := fun A => ∑i, diag n R M A i,
+  { toFun := fun A => ∑ i, diag n R M A i,
     map_add' :=
       by 
         intros 
@@ -87,15 +87,15 @@ def trace [Fintype n] : Matrix n n M →ₗ[R] M :=
 variable {n} {R} {M} [Fintype n] [Fintype m] [Fintype p]
 
 @[simp]
-theorem trace_diag (A : Matrix n n M) : trace n R M A = ∑i, diag n R M A i :=
+theorem trace_diag (A : Matrix n n M) : trace n R M A = ∑ i, diag n R M A i :=
   rfl
 
-theorem trace_apply (A : Matrix n n M) : trace n R M A = ∑i, A i i :=
+theorem trace_apply (A : Matrix n n M) : trace n R M A = ∑ i, A i i :=
   rfl
 
 @[simp]
 theorem trace_one [DecidableEq n] : trace n R R 1 = Fintype.card n :=
-  have h : trace n R R 1 = ∑i, diag n R R 1 i := rfl 
+  have h : trace n R R 1 = ∑ i, diag n R R 1 i := rfl 
   by 
     simpRw [h, diag_one, Finset.sum_const, nsmul_one] <;> rfl
 

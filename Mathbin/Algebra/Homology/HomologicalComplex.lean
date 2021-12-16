@@ -254,43 +254,35 @@ end
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
--- error in Algebra.Homology.HomologicalComplex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `C.d i j` and `C.d i j'` are both allowed, then we must have `j = j'`,
 and so the differentials only differ by an `eq_to_hom`.
 -/
 @[simp]
-theorem d_comp_eq_to_hom
-{i j j' : ι}
-(rij : c.rel i j)
-(rij' : c.rel i j') : «expr = »(«expr ≫ »(C.d i j', eq_to_hom (congr_arg C.X (c.next_eq rij' rij))), C.d i j) :=
-begin
-  have [ident P] [":", expr ∀
-   h : «expr = »(j', j), «expr = »(«expr ≫ »(C.d i j', eq_to_hom (congr_arg C.X h)), C.d i j)] [],
-  { rintro [ident rfl],
-    simp [] [] [] [] [] [] },
-  apply [expr P]
-end
+theorem d_comp_eq_to_hom {i j j' : ι} (rij : c.rel i j) (rij' : c.rel i j') :
+  C.d i j' ≫ eq_to_hom (congr_argₓ C.X (c.next_eq rij' rij)) = C.d i j :=
+  by 
+    have P : ∀ h : j' = j, C.d i j' ≫ eq_to_hom (congr_argₓ C.X h) = C.d i j
+    ·
+      rintro rfl 
+      simp 
+    apply P
 
--- error in Algebra.Homology.HomologicalComplex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `C.d i j` and `C.d i' j` are both allowed, then we must have `i = i'`,
 and so the differentials only differ by an `eq_to_hom`.
 -/
 @[simp]
-theorem eq_to_hom_comp_d
-{i i' j : ι}
-(rij : c.rel i j)
-(rij' : c.rel i' j) : «expr = »(«expr ≫ »(eq_to_hom (congr_arg C.X (c.prev_eq rij rij')), C.d i' j), C.d i j) :=
-begin
-  have [ident P] [":", expr ∀
-   h : «expr = »(i, i'), «expr = »(«expr ≫ »(eq_to_hom (congr_arg C.X h), C.d i' j), C.d i j)] [],
-  { rintro [ident rfl],
-    simp [] [] [] [] [] [] },
-  apply [expr P]
-end
+theorem eq_to_hom_comp_d {i i' j : ι} (rij : c.rel i j) (rij' : c.rel i' j) :
+  eq_to_hom (congr_argₓ C.X (c.prev_eq rij rij')) ≫ C.d i' j = C.d i j :=
+  by 
+    have P : ∀ h : i = i', eq_to_hom (congr_argₓ C.X h) ≫ C.d i' j = C.d i j
+    ·
+      rintro rfl 
+      simp 
+    apply P
 
 theorem kernel_eq_kernel [has_kernels V] {i j j' : ι} (r : c.rel i j) (r' : c.rel i j') :
   kernel_subobject (C.d i j) = kernel_subobject (C.d i j') :=
@@ -712,13 +704,13 @@ structure mk_struct where
 variable {V}
 
 /-- Flatten to a tuple. -/
-def mk_struct.flat (t : mk_struct V) : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
+def mk_struct.flat (t : mk_struct V) : Σ' (X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
   ⟨t.X₀, t.X₁, t.X₂, t.d₀, t.d₁, t.s⟩
 
 variable (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁) (s : d₁ ≫ d₀ = 0)
   (succ :
-    ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
-      Σ'(X₃ : V)(d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
+    ∀ t : Σ' (X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
+      Σ' (X₃ : V)(d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
 
 /-- Auxiliary definition for `mk`. -/
 def mk_aux : ∀ n : ℕ, mk_struct V
@@ -771,12 +763,12 @@ You provide explicitly the first differential,
 then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
-def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀) (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) :
+def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀) (succ' : ∀ t : Σ X₀ X₁ : V, X₁ ⟶ X₀, Σ' (X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) :
   ChainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2
     fun t => succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
-variable (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
+variable (succ' : ∀ t : Σ X₀ X₁ : V, X₁ ⟶ X₀, Σ' (X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
 
 @[simp]
 theorem mk'_X_0 : (mk' X₀ X₁ d₀ succ').x 0 = X₀ :=
@@ -799,8 +791,8 @@ section MkHom
 variable {V} (P Q : ChainComplex V ℕ) (zero : P.X 0 ⟶ Q.X 0) (one : P.X 1 ⟶ Q.X 1)
   (one_zero_comm : one ≫ Q.d 1 0 = P.d 1 0 ≫ zero)
   (succ :
-    ∀ n : ℕ p : Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f' ≫ Q.d (n+1) n = P.d (n+1) n ≫ f,
-      Σ'f'' : P.X (n+2) ⟶ Q.X (n+2), f'' ≫ Q.d (n+2) (n+1) = P.d (n+2) (n+1) ≫ p.2.1)
+    ∀ n : ℕ p : Σ' (f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f' ≫ Q.d (n+1) n = P.d (n+1) n ≫ f,
+      Σ' f'' : P.X (n+2) ⟶ Q.X (n+2), f'' ≫ Q.d (n+2) (n+1) = P.d (n+2) (n+1) ≫ p.2.1)
 
 /--
 An auxiliary construction for `mk_hom`.
@@ -810,7 +802,7 @@ but don't require at the type level that these successive commutative squares ac
 They do in fact agree, and we then capture that at the type level (i.e. by constructing a chain map)
 in `mk_hom`.
 -/
-def mk_hom_aux : ∀ n, Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f' ≫ Q.d (n+1) n = P.d (n+1) n ≫ f
+def mk_hom_aux : ∀ n, Σ' (f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f' ≫ Q.d (n+1) n = P.d (n+1) n ≫ f
 | 0 => ⟨zero, one, one_zero_comm⟩
 | n+1 => ⟨(mk_hom_aux n).2.1, (succ n (mk_hom_aux n)).1, (succ n (mk_hom_aux n)).2⟩
 
@@ -951,13 +943,13 @@ structure mk_struct where
 variable {V}
 
 /-- Flatten to a tuple. -/
-def mk_struct.flat (t : mk_struct V) : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
+def mk_struct.flat (t : mk_struct V) : Σ' (X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
   ⟨t.X₀, t.X₁, t.X₂, t.d₀, t.d₁, t.s⟩
 
 variable (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂) (s : d₀ ≫ d₁ = 0)
   (succ :
-    ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
-      Σ'(X₃ : V)(d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
+    ∀ t : Σ' (X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
+      Σ' (X₃ : V)(d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
 
 /-- Auxiliary definition for `mk`. -/
 def mk_aux : ∀ n : ℕ, mk_struct V
@@ -1010,12 +1002,12 @@ You provide explicitly the first differential,
 then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
-def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁) (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) :
+def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁) (succ' : ∀ t : Σ X₀ X₁ : V, X₀ ⟶ X₁, Σ' (X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) :
   CochainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2
     fun t => succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
-variable (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
+variable (succ' : ∀ t : Σ X₀ X₁ : V, X₀ ⟶ X₁, Σ' (X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
 
 @[simp]
 theorem mk'_X_0 : (mk' X₀ X₁ d₀ succ').x 0 = X₀ :=
@@ -1038,8 +1030,8 @@ section MkHom
 variable {V} (P Q : CochainComplex V ℕ) (zero : P.X 0 ⟶ Q.X 0) (one : P.X 1 ⟶ Q.X 1)
   (one_zero_comm : zero ≫ Q.d 0 1 = P.d 0 1 ≫ one)
   (succ :
-    ∀ n : ℕ p : Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f ≫ Q.d n (n+1) = P.d n (n+1) ≫ f',
-      Σ'f'' : P.X (n+2) ⟶ Q.X (n+2), p.2.1 ≫ Q.d (n+1) (n+2) = P.d (n+1) (n+2) ≫ f'')
+    ∀ n : ℕ p : Σ' (f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f ≫ Q.d n (n+1) = P.d n (n+1) ≫ f',
+      Σ' f'' : P.X (n+2) ⟶ Q.X (n+2), p.2.1 ≫ Q.d (n+1) (n+2) = P.d (n+1) (n+2) ≫ f'')
 
 /--
 An auxiliary construction for `mk_hom`.
@@ -1049,7 +1041,7 @@ but don't require at the type level that these successive commutative squares ac
 They do in fact agree, and we then capture that at the type level (i.e. by constructing a chain map)
 in `mk_hom`.
 -/
-def mk_hom_aux : ∀ n, Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f ≫ Q.d n (n+1) = P.d n (n+1) ≫ f'
+def mk_hom_aux : ∀ n, Σ' (f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f ≫ Q.d n (n+1) = P.d n (n+1) ≫ f'
 | 0 => ⟨zero, one, one_zero_comm⟩
 | n+1 => ⟨(mk_hom_aux n).2.1, (succ n (mk_hom_aux n)).1, (succ n (mk_hom_aux n)).2⟩
 

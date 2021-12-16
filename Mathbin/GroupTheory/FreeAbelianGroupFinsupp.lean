@@ -16,7 +16,7 @@ We use this to transport the notion of `support` from `finsupp` to `free_abelian
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale BigOperators
 

@@ -34,7 +34,7 @@ variable [∀ i₁, Module R (M₁ i₁)] [∀ i₂, Module R (M₂ i₂)]
 
 /-- The linear equivalence `(⨁ i₁, M₁ i₁) ⊗ (⨁ i₂, M₂ i₂) ≃ (⨁ i₁, ⨁ i₂, M₁ i₁ ⊗ M₂ i₂)`, i.e.
 "tensor product distributes over direct sum". -/
-def DirectSum : ((⨁i₁, M₁ i₁) ⊗[R] ⨁i₂, M₂ i₂) ≃ₗ[R] ⨁i : ι₁ × ι₂, M₁ i.1 ⊗[R] M₂ i.2 :=
+def DirectSum : ((⨁ i₁, M₁ i₁) ⊗[R] ⨁ i₂, M₂ i₂) ≃ₗ[R] ⨁ i : ι₁ × ι₂, M₁ i.1 ⊗[R] M₂ i.2 :=
   by 
     refine'
         LinearEquiv.ofLinear

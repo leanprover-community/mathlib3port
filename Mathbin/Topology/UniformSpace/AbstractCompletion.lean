@@ -38,7 +38,7 @@ uniform spaces, completion, universal property
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 attribute [local instance] Classical.propDecidable
 
@@ -79,9 +79,13 @@ theorem uniform_continuous_coe : UniformContinuous ι :=
 theorem continuous_coe : Continuous ι :=
   pkg.uniform_continuous_coe.continuous
 
-@[elab_as_eliminator]
-theorem induction_on {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) : p a :=
-  is_closed_property pkg.dense hp ih a
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ elab_as_eliminator ]
+  theorem
+    induction_on
+    { p : hatα → Prop } ( a : hatα ) ( hp : IsClosed { a | p a } ) ( ih : ∀ a , p ι a ) : p a
+    := is_closed_property pkg.dense hp ih a
 
 variable {β : Type _} [UniformSpace β]
 
@@ -105,7 +109,7 @@ theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.exten
     rw [pkg.extend_def hf]
     exact pkg.dense_inducing.extend_eq hf.continuous a
 
-variable [CompleteSpace β] [SeparatedSpace β]
+variable [CompleteSpace β]
 
 theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) :=
   by 
@@ -124,6 +128,8 @@ theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) :=
 
 theorem continuous_extend : Continuous (pkg.extend f) :=
   pkg.uniform_continuous_extend.continuous
+
+variable [SeparatedSpace β]
 
 theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : UniformContinuous g)
   (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g :=
@@ -211,16 +217,14 @@ theorem uniform_continuous_compare : UniformContinuous (pkg.compare pkg') :=
 theorem compare_coe (a : α) : pkg.compare pkg' (pkg.coe a) = pkg'.coe a :=
   pkg.extend_coe pkg'.uniform_continuous_coe a
 
--- error in Topology.UniformSpace.AbstractCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inverse_compare : «expr = »(«expr ∘ »(pkg.compare pkg', pkg'.compare pkg), id) :=
-begin
-  have [ident uc] [] [":=", expr pkg.uniform_continuous_compare pkg'],
-  have [ident uc'] [] [":=", expr pkg'.uniform_continuous_compare pkg],
-  apply [expr pkg'.funext (uc.comp uc').continuous continuous_id],
-  intro [ident a],
-  rw ["[", expr comp_app, ",", expr pkg'.compare_coe pkg, ",", expr pkg.compare_coe pkg', "]"] [],
-  refl
-end
+theorem inverse_compare : (pkg.compare pkg' ∘ pkg'.compare pkg) = id :=
+  by 
+    have uc := pkg.uniform_continuous_compare pkg' 
+    have uc' := pkg'.uniform_continuous_compare pkg 
+    apply pkg'.funext (uc.comp uc').Continuous continuous_id 
+    intro a 
+    rw [comp_app, pkg'.compare_coe pkg, pkg.compare_coe pkg']
+    rfl
 
 /-- The bijection between two completions of the same uniform space. -/
 def compare_equiv : pkg.space ≃ pkg'.space :=
@@ -273,12 +277,18 @@ open Function
 protected def extend₂ (f : α → β → γ) : hatα → hatβ → γ :=
   curry$ (pkg.prod pkg').extend (uncurry f)
 
+section SeparatedSpace
+
 variable [SeparatedSpace γ] {f : α → β → γ}
 
 theorem extension₂_coe_coe (hf : UniformContinuous$ uncurry f) (a : α) (b : β) :
   pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
   show (pkg.prod pkg').extend (uncurry f) ((pkg.prod pkg').coe (a, b)) = uncurry f (a, b) from
     (pkg.prod pkg').extend_coe hf _
+
+end SeparatedSpace
+
+variable {f : α → β → γ}
 
 variable [CompleteSpace γ] (f)
 

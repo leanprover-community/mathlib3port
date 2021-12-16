@@ -49,10 +49,12 @@ theorem countp_append l₁ l₂ : countp p (l₁ ++ l₂) = countp p l₁+countp
   by 
     simp only [countp_eq_length_filter, filter_append, length_append]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem countp_pos {l} : 0 < countp p l ↔ ∃ (a : _)(_ : a ∈ l), p a :=
   by 
     simp only [countp_eq_length_filter, length_pos_iff_exists_mem, mem_filter, exists_prop]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem length_filter_lt_length_iff_exists l : length (filter p l) < length l ↔ ∃ (x : _)(_ : x ∈ l), ¬p x :=
   by 
     rw [length_eq_countp_add_countp p l, ←countp_pos, countp_eq_length_filter, lt_add_iff_pos_right]

@@ -28,6 +28,14 @@ unsafe def ext1_wrapper : tactic Stringₓ :=
     let ng' ← num_goals 
     return$ if ng' > ng then "tactic.ext1 [] {new_goals := tactic.new_goals.all}" else "ext1"
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 unsafe def default_tactics : List (tactic Stringₓ) :=
   [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial", propositional_goal >> assumption >> pure "assumption",
     intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate$ ns.map$ fun e => e.to_string)), auto_cases,

@@ -114,6 +114,26 @@ def completeGraph (V : Type u) : SimpleGraph V :=
 def emptyGraph (V : Type u) : SimpleGraph V :=
   { Adj := fun i j => False }
 
+/--
+Two vertices are adjacent in the complete bipartite graph on two vertex types
+if and only if they are not from the same side.
+Bipartite graphs in general may be regarded as being subgraphs of one of these.
+
+TODO also introduce complete multi-partite graphs, where the vertex type is a sigma type of an
+indexed family of vertex types
+-/
+@[simps]
+def completeBipartiteGraph (V W : Type _) : SimpleGraph (Sum V W) :=
+  { Adj := fun v w => v.is_left ∧ w.is_right ∨ v.is_right ∧ w.is_left,
+    symm :=
+      by 
+        intro v w 
+        cases v <;> cases w <;> simp ,
+    loopless :=
+      by 
+        intro v 
+        cases v <;> simp  }
+
 namespace SimpleGraph
 
 variable {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V) (G' : SimpleGraph W)
@@ -190,7 +210,7 @@ instance : HasCompl (SimpleGraph V) :=
         loopless := fun v ⟨hne, _⟩ => (hne rfl).elim }⟩
 
 @[simp]
-theorem compl_adj (G : SimpleGraph V) (v w : V) : («expr ᶜ» G).Adj v w ↔ v ≠ w ∧ ¬G.adj v w :=
+theorem compl_adj (G : SimpleGraph V) (v w : V) : Gᶜ.Adj v w ↔ v ≠ w ∧ ¬G.adj v w :=
   Iff.rfl
 
 /-- The difference of two graphs `x / y` has the edges of `x` with the edges of `y` removed. -/
@@ -285,7 +305,7 @@ variable [DecidableEq V]
 instance top.adj_decidable : DecidableRel (⊤ : SimpleGraph V).Adj :=
   fun v w => Not.decidable
 
-instance compl.adj_decidable : DecidableRel («expr ᶜ» G).Adj :=
+instance compl.adj_decidable : DecidableRel Gᶜ.Adj :=
   fun v w => And.decidable
 
 end Decidable
@@ -321,19 +341,21 @@ The way `edge_set` is defined is such that `mem_edge_set` is proved by `refl`.
 def edge_set : Set (Sym2 V) :=
   Sym2.FromRel G.symm
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-The `incidence_set` is the set of edges incident to a given vertex.
--/
-def incidence_set (v : V) : Set (Sym2 V) :=
-  { e∈G.edge_set | v ∈ e }
+    The `incidence_set` is the set of edges incident to a given vertex.
+    -/
+  def incidence_set ( v : V ) : Set Sym2 V := { e ∈ G.edge_set | v ∈ e }
 
 theorem incidence_set_subset (v : V) : G.incidence_set v ⊆ G.edge_set :=
   fun _ h => h.1
 
 @[simp]
-theorem mem_edge_set {v w : V} : «expr⟦ ⟧» (v, w) ∈ G.edge_set ↔ G.adj v w :=
+theorem mem_edge_set {v w : V} : ⟦(v, w)⟧ ∈ G.edge_set ↔ G.adj v w :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (e «expr ∈ » G.edge_set)
 /--
 Two vertices are adjacent iff there is an edge between them.  The
 condition `v ≠ w` ensures they are different endpoints of the edge,
@@ -343,7 +365,7 @@ incident to `v`.
 -/
 theorem adj_iff_exists_edge {v w : V} : G.adj v w ↔ v ≠ w ∧ ∃ (e : _)(_ : e ∈ G.edge_set), v ∈ e ∧ w ∈ e :=
   by 
-    refine' ⟨fun _ => ⟨G.ne_of_adj ‹_›, «expr⟦ ⟧» (v, w), _⟩, _⟩
+    refine' ⟨fun _ => ⟨G.ne_of_adj ‹_›, ⟦(v, w)⟧, _⟩, _⟩
     ·
       simpa
     ·
@@ -388,11 +410,11 @@ theorem mem_neighbor_set (v w : V) : w ∈ G.neighbor_set v ↔ G.adj v w :=
   Iff.rfl
 
 @[simp]
-theorem mem_incidence_set (v w : V) : «expr⟦ ⟧» (v, w) ∈ G.incidence_set v ↔ G.adj v w :=
+theorem mem_incidence_set (v w : V) : ⟦(v, w)⟧ ∈ G.incidence_set v ↔ G.adj v w :=
   by 
     simp [incidence_set]
 
-theorem mem_incidence_iff_neighbor {v w : V} : «expr⟦ ⟧» (v, w) ∈ G.incidence_set v ↔ w ∈ G.neighbor_set v :=
+theorem mem_incidence_iff_neighbor {v w : V} : ⟦(v, w)⟧ ∈ G.incidence_set v ↔ w ∈ G.neighbor_set v :=
   by 
     simp only [mem_incidence_set, mem_neighbor_set]
 
@@ -401,7 +423,7 @@ theorem adj_incidence_set_inter {v : V} {e : Sym2 V} (he : e ∈ G.edge_set) (h 
   by 
     ext e' 
     simp only [incidence_set, Set.mem_sep_eq, Set.mem_inter_eq, Set.mem_singleton_iff]
-    split 
+    constructor
     ·
       intro h' 
       rw [←Sym2.mem_other_spec h]
@@ -411,24 +433,20 @@ theorem adj_incidence_set_inter {v : V} {e : Sym2 V} (he : e ∈ G.edge_set) (h 
       use he, h, he 
       apply Sym2.mem_other_mem
 
-theorem compl_neighbor_set_disjoint (G : SimpleGraph V) (v : V) :
-  Disjoint (G.neighbor_set v) ((«expr ᶜ» G).NeighborSet v) :=
+theorem compl_neighbor_set_disjoint (G : SimpleGraph V) (v : V) : Disjoint (G.neighbor_set v) (Gᶜ.NeighborSet v) :=
   by 
     rw [Set.disjoint_iff]
     rintro w ⟨h, h'⟩
     rw [mem_neighbor_set, compl_adj] at h' 
     exact h'.2 h
 
--- error in Combinatorics.SimpleGraph.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem neighbor_set_union_compl_neighbor_set_eq
-(G : simple_graph V)
-(v : V) : «expr = »(«expr ∪ »(G.neighbor_set v, «expr ᶜ»(G).neighbor_set v), «expr ᶜ»({v})) :=
-begin
-  ext [] [ident w] [],
-  have [ident h] [] [":=", expr @ne_of_adj _ G],
-  simp_rw ["[", expr set.mem_union, ",", expr mem_neighbor_set, ",", expr compl_adj, ",", expr set.mem_compl_eq, ",", expr set.mem_singleton_iff, "]"] [],
-  tauto []
-end
+theorem neighbor_set_union_compl_neighbor_set_eq (G : SimpleGraph V) (v : V) :
+  G.neighbor_set v ∪ Gᶜ.NeighborSet v = {v}ᶜ :=
+  by 
+    ext w 
+    have h := @ne_of_adj _ G 
+    simpRw [Set.mem_union, mem_neighbor_set, compl_adj, Set.mem_compl_eq, Set.mem_singleton_iff]
+    tauto
 
 /--
 The set of common neighbors between two vertices `v` and `w` in a graph `G` is the
@@ -496,7 +514,7 @@ vertex and the set of vertices adjacent to the vertex.
 @[simps]
 def incidence_set_equiv_neighbor_set (v : V) : G.incidence_set v ≃ G.neighbor_set v :=
   { toFun := fun e => ⟨G.other_vertex_of_incident e.2, G.incidence_other_prop e.2⟩,
-    invFun := fun w => ⟨«expr⟦ ⟧» (v, w.1), G.mem_incidence_iff_neighbor.mpr w.2⟩,
+    invFun := fun w => ⟨⟦(v, w.1)⟧, G.mem_incidence_iff_neighbor.mpr w.2⟩,
     left_inv :=
       fun x =>
         by 
@@ -640,16 +658,13 @@ theorem exists_minimal_degree_vertex [DecidableRel G.adj] [Nonempty V] : ∃ v, 
         by 
           simp [min_degree, ht]⟩
 
--- error in Combinatorics.SimpleGraph.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The minimum degree in the graph is at most the degree of any particular vertex. -/
-theorem min_degree_le_degree [decidable_rel G.adj] (v : V) : «expr ≤ »(G.min_degree, G.degree v) :=
-begin
-  obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr finset.min_of_mem (mem_image_of_mem (λ
-     v, G.degree v) (mem_univ v))],
-  have [] [] [":=", expr finset.min_le_of_mem (mem_image_of_mem _ (mem_univ v)) ht],
-  rw [expr option.mem_def] ["at", ident ht],
-  rwa ["[", expr min_degree, ",", expr ht, ",", expr option.get_or_else_some, "]"] []
-end
+theorem min_degree_le_degree [DecidableRel G.adj] (v : V) : G.min_degree ≤ G.degree v :=
+  by 
+    obtain ⟨t, ht⟩ := Finset.min_of_mem (mem_image_of_mem (fun v => G.degree v) (mem_univ v))
+    have  := Finset.min_le_of_mem (mem_image_of_mem _ (mem_univ v)) ht 
+    rw [Option.mem_def] at ht 
+    rwa [min_degree, ht, Option.get_or_else_some]
 
 /--
 In a nonempty graph, if `k` is at most the degree of every vertex, it is at most the minimum
@@ -671,54 +686,44 @@ and `max_degree_le_of_forall_degree_le`.
 def max_degree [DecidableRel G.adj] : ℕ :=
   Option.getOrElse (univ.Image fun v => G.degree v).max 0
 
--- error in Combinatorics.SimpleGraph.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 There exists a vertex of maximal degree. Note the assumption of being nonempty is necessary, as
 the lemma implies there exists a vertex.
 -/
-theorem exists_maximal_degree_vertex
-[decidable_rel G.adj]
-[nonempty V] : «expr∃ , »((v), «expr = »(G.max_degree, G.degree v)) :=
-begin
-  obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr max_of_nonempty (univ_nonempty.image (λ v, G.degree v))],
-  have [ident ht₂] [] [":=", expr mem_of_max ht],
-  simp [] [] ["only"] ["[", expr mem_image, ",", expr mem_univ, ",", expr exists_prop_of_true, "]"] [] ["at", ident ht₂],
-  rcases [expr ht₂, "with", "⟨", ident v, ",", ident rfl, "⟩"],
-  rw [expr option.mem_def] ["at", ident ht],
-  refine [expr ⟨v, _⟩],
-  rw ["[", expr max_degree, ",", expr ht, "]"] [],
-  refl
-end
+theorem exists_maximal_degree_vertex [DecidableRel G.adj] [Nonempty V] : ∃ v, G.max_degree = G.degree v :=
+  by 
+    obtain ⟨t, ht⟩ := max_of_nonempty (univ_nonempty.image fun v => G.degree v)
+    have ht₂ := mem_of_max ht 
+    simp only [mem_image, mem_univ, exists_prop_of_true] at ht₂ 
+    rcases ht₂ with ⟨v, rfl⟩
+    rw [Option.mem_def] at ht 
+    refine' ⟨v, _⟩
+    rw [max_degree, ht]
+    rfl
 
--- error in Combinatorics.SimpleGraph.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The maximum degree in the graph is at least the degree of any particular vertex. -/
-theorem degree_le_max_degree [decidable_rel G.adj] (v : V) : «expr ≤ »(G.degree v, G.max_degree) :=
-begin
-  obtain ["⟨", ident t, ",", ident ht, ":", expr «expr = »(_, _), "⟩", ":=", expr finset.max_of_mem (mem_image_of_mem (λ
-     v, G.degree v) (mem_univ v))],
-  have [] [] [":=", expr finset.le_max_of_mem (mem_image_of_mem _ (mem_univ v)) ht],
-  rwa ["[", expr max_degree, ",", expr ht, ",", expr option.get_or_else_some, "]"] []
-end
+theorem degree_le_max_degree [DecidableRel G.adj] (v : V) : G.degree v ≤ G.max_degree :=
+  by 
+    obtain ⟨t, ht : _ = _⟩ := Finset.max_of_mem (mem_image_of_mem (fun v => G.degree v) (mem_univ v))
+    have  := Finset.le_max_of_mem (mem_image_of_mem _ (mem_univ v)) ht 
+    rwa [max_degree, ht, Option.get_or_else_some]
 
--- error in Combinatorics.SimpleGraph.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 In a graph, if `k` is at least the degree of every vertex, then it is at least the maximum
 degree.
 -/
-theorem max_degree_le_of_forall_degree_le
-[decidable_rel G.adj]
-(k : exprℕ())
-(h : ∀ v, «expr ≤ »(G.degree v, k)) : «expr ≤ »(G.max_degree, k) :=
-begin
-  by_cases [expr hV, ":", expr (univ : finset V).nonempty],
-  { haveI [] [":", expr nonempty V] [":=", expr univ_nonempty_iff.mp hV],
-    obtain ["⟨", ident v, ",", ident hv, "⟩", ":=", expr G.exists_maximal_degree_vertex],
-    rw [expr hv] [],
-    apply [expr h] },
-  { rw [expr not_nonempty_iff_eq_empty] ["at", ident hV],
-    rw ["[", expr max_degree, ",", expr hV, ",", expr image_empty, "]"] [],
-    exact [expr zero_le k] }
-end
+theorem max_degree_le_of_forall_degree_le [DecidableRel G.adj] (k : ℕ) (h : ∀ v, G.degree v ≤ k) : G.max_degree ≤ k :=
+  by 
+    byCases' hV : (univ : Finset V).Nonempty
+    ·
+      have  : Nonempty V := univ_nonempty_iff.mp hV 
+      obtain ⟨v, hv⟩ := G.exists_maximal_degree_vertex 
+      rw [hv]
+      apply h
+    ·
+      rw [not_nonempty_iff_eq_empty] at hV 
+      rw [max_degree, hV, image_empty]
+      exact zero_le k
 
 theorem degree_lt_card_verts [DecidableRel G.adj] (v : V) : G.degree v < Fintype.card V :=
   by 
@@ -770,13 +775,13 @@ theorem adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
     apply Finset.card_lt_card 
     rw [Finset.ssubset_iff]
     use w 
-    split 
+    constructor
     ·
       rw [Set.mem_to_finset]
       apply not_mem_common_neighbors_right
     ·
       rw [Finset.insert_subset]
-      split 
+      constructor
       ·
         simpa
       ·
@@ -846,6 +851,10 @@ def map_edge_set (e : G.edge_set) : G'.edge_set :=
 def map_neighbor_set (v : V) (w : G.neighbor_set v) : G'.neighbor_set (f v) :=
   ⟨f w, f.apply_mem_neighbor_set w.property⟩
 
+/-- The induced map for spanning subgraphs, which is the identity on vertices. -/
+def map_spanning_subgraphs {G G' : SimpleGraph V} (h : G ≤ G') : G →g G' :=
+  { toFun := fun x => x, map_rel' := h }
+
 theorem map_edge_set.injective (hinj : Function.Injective f) : Function.Injective f.map_edge_set :=
   by 
     rintro ⟨e₁, h₁⟩ ⟨e₂, h₂⟩
@@ -861,7 +870,7 @@ abbrev comp (f' : G' →g G'') (f : G →g G') : G →g G'' :=
   f'.comp f
 
 @[simp]
-theorem coe_comp (f' : G' →g G'') (f : G →g G') : «expr⇑ » (f'.comp f) = (f' ∘ f) :=
+theorem coe_comp (f' : G' →g G'') (f : G →g G') : ⇑f'.comp f = (f' ∘ f) :=
   rfl
 
 end Hom
@@ -902,6 +911,13 @@ def map_neighbor_set (v : V) : G.neighbor_set v ↪ G'.neighbor_set (f v) :=
         rw [Subtype.mk_eq_mk] at h⊢
         exact f.inj' h }
 
+/-- Embeddings of types induce embeddings of complete graphs on those types. -/
+def complete_graph.of_embedding {α β : Type _} (f : α ↪ β) : completeGraph α ↪g completeGraph β :=
+  { toFun := f, inj' := f.inj',
+    map_rel_iff' :=
+      by 
+        simp  }
+
 variable {G'' : SimpleGraph X}
 
 /-- Composition of graph embeddings. -/
@@ -909,7 +925,7 @@ abbrev comp (f' : G' ↪g G'') (f : G ↪g G') : G ↪g G'' :=
   f.trans f'
 
 @[simp]
-theorem coe_comp (f' : G' ↪g G'') (f : G ↪g G') : «expr⇑ » (f'.comp f) = (f' ∘ f) :=
+theorem coe_comp (f' : G' ↪g G'') (f : G ↪g G') : ⇑f'.comp f = (f' ∘ f) :=
   rfl
 
 end Embedding
@@ -994,7 +1010,7 @@ abbrev comp (f' : G' ≃g G'') (f : G ≃g G') : G ≃g G'' :=
   f.trans f'
 
 @[simp]
-theorem coe_comp (f' : G' ≃g G'') (f : G ≃g G') : «expr⇑ » (f'.comp f) = (f' ∘ f) :=
+theorem coe_comp (f' : G' ≃g G'') (f : G ≃g G') : ⇑f'.comp f = (f' ∘ f) :=
   rfl
 
 end Iso

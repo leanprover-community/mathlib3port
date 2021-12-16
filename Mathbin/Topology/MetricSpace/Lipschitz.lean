@@ -68,6 +68,8 @@ theorem LipschitzOnWith.mono [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K 
   (hf : LipschitzOnWith K f t) (h : s ⊆ t) : LipschitzOnWith K f s :=
   fun x x_in y y_in => hf (h x_in) (h y_in)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem lipschitz_on_with_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpace β] {K :  ℝ≥0 } {s : Set α}
   {f : α → β} : LipschitzOnWith K f s ↔ ∀ x _ : x ∈ s y _ : y ∈ s, dist (f x) (f y) ≤ K*dist x y :=
   by 
@@ -121,7 +123,7 @@ theorem ediam_image_le (hf : LipschitzWith K f) (s : Set α) : Emetric.diam (f '
   by 
     apply Emetric.diam_le 
     rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
-    calc edist (f x) (f y) ≤ «expr↑ » K*edist x y := hf.edist_le_mul x y _ ≤ «expr↑ » K*Emetric.diam s :=
+    calc edist (f x) (f y) ≤ (↑K)*edist x y := hf.edist_le_mul x y _ ≤ (↑K)*Emetric.diam s :=
       Ennreal.mul_left_mono (Emetric.edist_le_diam_of_mem hx hy)
 
 theorem edist_lt_of_edist_lt_div (hf : LipschitzWith K f) {x y : α} {d : ℝ≥0∞} (h : edist x y < d / K) :
@@ -286,7 +288,7 @@ theorem diam_image_le {f : α → β} (hf : LipschitzWith K f) (s : Set α) (hs 
   by 
     apply Metric.diam_le_of_forall_dist_le (mul_nonneg K.coe_nonneg Metric.diam_nonneg)
     rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
-    calc dist (f x) (f y) ≤ «expr↑ » K*dist x y := hf.dist_le_mul x y _ ≤ «expr↑ » K*Metric.diam s :=
+    calc dist (f x) (f y) ≤ (↑K)*dist x y := hf.dist_le_mul x y _ ≤ (↑K)*Metric.diam s :=
       mul_le_mul_of_nonneg_left (Metric.dist_le_diam_of_mem hs hx hy) K.2
 
 protected theorem dist_left (y : α) : LipschitzWith 1 fun x => dist x y :=
@@ -371,37 +373,31 @@ theorem edist_lt_of_edist_lt_div (hf : LipschitzOnWith K f s) {x y : α} (hx : x
 
 end LipschitzOnWith
 
--- error in Topology.MetricSpace.Lipschitz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical fiber”
 `{a} × t`, `a ∈ s`, and is Lipschitz continuous on each “horizontal fiber” `s × {b}`, `b ∈ t`
 with the same Lipschitz constant `K`. Then it is continuous on `s × t`.
 
 The actual statement uses (Lipschitz) continuity of `λ y, f (a, y)` and `λ x, f (x, b)` instead
 of continuity of `f` on subsets of the product space. -/
-theorem continuous_on_prod_of_continuous_on_lipschitz_on
-[pseudo_emetric_space α]
-[topological_space β]
-[pseudo_emetric_space γ]
-(f : «expr × »(α, β) → γ)
-{s : set α}
-{t : set β}
-(K : «exprℝ≥0»())
-(ha : ∀ a «expr ∈ » s, continuous_on (λ y, f (a, y)) t)
-(hb : ∀ b «expr ∈ » t, lipschitz_on_with K (λ x, f (x, b)) s) : continuous_on f (s.prod t) :=
-begin
-  rintro ["⟨", ident x, ",", ident y, "⟩", "⟨", ident hx, ":", expr «expr ∈ »(x, s), ",", ident hy, ":", expr «expr ∈ »(y, t), "⟩"],
-  refine [expr emetric.tendsto_nhds.2 (λ (ε) (ε0 : «expr < »(0, ε)), _)],
-  replace [ident ε0] [":", expr «expr < »(0, «expr / »(ε, 2))] [":=", expr ennreal.half_pos (ne_of_gt ε0)],
-  have [ident εK] [":", expr «expr < »(0, «expr / »(«expr / »(ε, 2), K))] [":=", expr ennreal.div_pos_iff.2 ⟨ε0.ne', ennreal.coe_ne_top⟩],
-  have [ident A] [":", expr «expr ∈ »(«expr ∩ »(s, emetric.ball x «expr / »(«expr / »(ε, 2), K)), «expr𝓝[ ] »(s, x))] [":=", expr inter_mem_nhds_within _ (emetric.ball_mem_nhds _ εK)],
-  have [ident B] [":", expr «expr ∈ »({b : β | «expr ∧ »(«expr ∈ »(b, t), «expr < »(edist (f (x, b)) (f (x, y)), «expr / »(ε, 2)))}, «expr𝓝[ ] »(t, y))] [":=", expr inter_mem self_mem_nhds_within (ha x hx y hy (emetric.ball_mem_nhds _ ε0))],
-  filter_upwards ["[", expr nhds_within_prod A B, "]"] [],
-  rintro ["⟨", ident a, ",", ident b, "⟩", "⟨", "⟨", ident has, ":", expr «expr ∈ »(a, s), ",", ident hax, ":", expr «expr < »(edist a x, «expr / »(«expr / »(ε, 2), K)), "⟩", ",", ident hbt, ":", expr «expr ∈ »(b, t), ",", ident hby, ":", expr «expr < »(edist (f (x, b)) (f (x, y)), «expr / »(ε, 2)), "⟩"],
-  calc
-    «expr ≤ »(edist (f (a, b)) (f (x, y)), «expr + »(edist (f (a, b)) (f (x, b)), edist (f (x, b)) (f (x, y)))) : edist_triangle _ _ _
-    «expr < »(..., «expr + »(«expr / »(ε, 2), «expr / »(ε, 2))) : ennreal.add_lt_add ((hb _ hbt).edist_lt_of_edist_lt_div has hx hax) hby
-    «expr = »(..., ε) : ennreal.add_halves ε
-end
+theorem continuous_on_prod_of_continuous_on_lipschitz_on [PseudoEmetricSpace α] [TopologicalSpace β]
+  [PseudoEmetricSpace γ] (f : α × β → γ) {s : Set α} {t : Set β} (K :  ℝ≥0 )
+  (ha : ∀ a _ : a ∈ s, ContinuousOn (fun y => f (a, y)) t)
+  (hb : ∀ b _ : b ∈ t, LipschitzOnWith K (fun x => f (x, b)) s) : ContinuousOn f (s.prod t) :=
+  by 
+    rintro ⟨x, y⟩ ⟨hx : x ∈ s, hy : y ∈ t⟩
+    refine' Emetric.tendsto_nhds.2 fun ε ε0 : 0 < ε => _ 
+    replace ε0 : 0 < ε / 2 := Ennreal.half_pos (ne_of_gtₓ ε0)
+    have εK : 0 < ε / 2 / K := Ennreal.div_pos_iff.2 ⟨ε0.ne', Ennreal.coe_ne_top⟩
+    have A : s ∩ Emetric.Ball x (ε / 2 / K) ∈ 𝓝[s] x := inter_mem_nhds_within _ (Emetric.ball_mem_nhds _ εK)
+    have B : { b : β | b ∈ t ∧ edist (f (x, b)) (f (x, y)) < ε / 2 } ∈ 𝓝[t] y :=
+      inter_mem self_mem_nhds_within (ha x hx y hy (Emetric.ball_mem_nhds _ ε0))
+    filterUpwards [nhds_within_prod A B]
+    rintro ⟨a, b⟩ ⟨⟨has : a ∈ s, hax : edist a x < ε / 2 / K⟩, hbt : b ∈ t, hby : edist (f (x, b)) (f (x, y)) < ε / 2⟩
+    calc edist (f (a, b)) (f (x, y)) ≤ edist (f (a, b)) (f (x, b))+edist (f (x, b)) (f (x, y)) :=
+      edist_triangle _ _ _ _ < (ε / 2)+ε / 2 :=
+      Ennreal.add_lt_add ((hb _ hbt).edist_lt_of_edist_lt_div has hx hax) hby _ = ε := Ennreal.add_halves ε
 
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical section”
 `{a} × univ`, `a : α`, and is Lipschitz continuous on each “horizontal section”

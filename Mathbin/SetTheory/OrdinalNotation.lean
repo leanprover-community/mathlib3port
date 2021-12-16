@@ -20,14 +20,15 @@ open Ordinal
 
 open_locale Ordinal
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- Recursive definition of an ordinal notation. `zero` denotes the
   ordinal 0, and `oadd e n a` is intended to refer to `ω^e * n + a`.
   For this to be valid Cantor normal form, we must have the exponents
   decrease to the right, but we can't state this condition until we've
-  defined `repr`, so it is a separate definition `NF`. -/ @[derive #[expr decidable_eq]] inductive onote : Type
-| zero : onote
-| oadd : onote → «exprℕ+»() → onote → onote
+  defined `repr`, so it is a separate definition `NF`. -/
+inductive Onote : Type
+  | zero : Onote
+  | oadd : Onote → ℕ+ → Onote → Onote deriving [anonymous]
 
 namespace Onote
 
@@ -125,26 +126,35 @@ def cmp : Onote → Onote → Ordering
 | 0, _ => Ordering.lt
 | o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂) => (cmp e₁ e₂).orElse$ (_root_.cmp (n₁ : ℕ) n₂).orElse (cmp a₁ a₂)
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_of_cmp_eq : ∀ {o₁ o₂}, «expr = »(cmp o₁ o₂, ordering.eq) → «expr = »(o₁, o₂)
-| 0, 0, h := rfl
-| oadd e n a, 0, h := by injection [expr h] []
-| 0, oadd e n a, h := by injection [expr h] []
-| o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂), h := begin
-  revert [ident h],
-  simp [] [] [] ["[", expr cmp, "]"] [] [],
-  cases [expr h₁, ":", expr cmp e₁ e₂] []; intro [ident h]; try { cases [expr h] [] },
-  have [] [] [":=", expr eq_of_cmp_eq h₁],
-  subst [expr e₂],
-  revert [ident h],
-  cases [expr h₂, ":", expr _root_.cmp (n₁ : exprℕ()) n₂] []; intro [ident h]; try { cases [expr h] [] },
-  have [] [] [":=", expr eq_of_cmp_eq h],
-  subst [expr a₂],
-  rw ["[", expr _root_.cmp, ",", expr cmp_using_eq_eq, "]"] ["at", ident h₂],
-  have [] [] [":=", expr subtype.eq (eq_of_incomp h₂)],
-  subst [expr n₂],
-  simp [] [] [] [] [] []
-end
+theorem eq_of_cmp_eq : ∀ {o₁ o₂}, cmp o₁ o₂ = Ordering.eq → o₁ = o₂
+| 0, 0, h => rfl
+| oadd e n a, 0, h =>
+  by 
+    injection h
+| 0, oadd e n a, h =>
+  by 
+    injection h
+| o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂), h =>
+  by 
+    revert h 
+    simp [cmp]
+    cases h₁ : cmp e₁ e₂ <;>
+      intro h <;>
+        try 
+          cases h 
+    have  := eq_of_cmp_eq h₁ 
+    subst e₂ 
+    revert h 
+    cases h₂ : _root_.cmp (n₁ : ℕ) n₂ <;>
+      intro h <;>
+        try 
+          cases h 
+    have  := eq_of_cmp_eq h 
+    subst a₂ 
+    rw [_root_.cmp, cmp_using_eq_eq] at h₂ 
+    have  := Subtype.eq (eq_of_incomp h₂)
+    subst n₂ 
+    simp 
 
 theorem zero_lt_one : (0 : Onote) < 1 :=
   by 
@@ -267,36 +277,41 @@ theorem oadd_lt_oadd_3 {e n a₁ a₂} (h : a₁ < a₂) : oadd e n a₁ < oadd 
     unfold reprₓ 
     exact (Ordinal.add_lt_add_iff_left _).2 h
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cmp_compares : ∀ (a b : onote) [NF a] [NF b], (cmp a b).compares a b
-| 0, 0, h₁, h₂ := rfl
-| oadd e n a, 0, h₁, h₂ := oadd_pos _ _ _
-| 0, oadd e n a, h₁, h₂ := oadd_pos _ _ _
-| o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂), h₁, h₂ := begin
-  rw [expr cmp] [],
-  have [ident IHe] [] [":=", expr @cmp_compares _ _ h₁.fst h₂.fst],
-  cases [expr cmp e₁ e₂] [],
-  case [ident ordering.lt] { exact [expr oadd_lt_oadd_1 h₁ IHe] },
-  case [ident ordering.gt] { exact [expr oadd_lt_oadd_1 h₂ IHe] },
-  change [expr «expr = »(e₁, e₂)] [] ["at", ident IHe],
-  subst [expr IHe],
-  unfold [ident _root_.cmp] [],
-  cases [expr nh, ":", expr cmp_using ((«expr < »)) (n₁ : exprℕ()) n₂] [],
-  case [ident ordering.lt] { rw [expr cmp_using_eq_lt] ["at", ident nh],
-    exact [expr oadd_lt_oadd_2 h₁ nh] },
-  case [ident ordering.gt] { rw [expr cmp_using_eq_gt] ["at", ident nh],
-    exact [expr oadd_lt_oadd_2 h₂ nh] },
-  rw [expr cmp_using_eq_eq] ["at", ident nh],
-  have [] [] [":=", expr subtype.eq (eq_of_incomp nh)],
-  subst [expr n₂],
-  have [ident IHa] [] [":=", expr @cmp_compares _ _ h₁.snd h₂.snd],
-  cases [expr cmp a₁ a₂] [],
-  case [ident ordering.lt] { exact [expr oadd_lt_oadd_3 IHa] },
-  case [ident ordering.gt] { exact [expr oadd_lt_oadd_3 IHa] },
-  change [expr «expr = »(a₁, a₂)] [] ["at", ident IHa],
-  subst [expr IHa],
-  exact [expr rfl]
-end
+theorem cmp_compares : ∀ a b : Onote [NF a] [NF b], (cmp a b).Compares a b
+| 0, 0, h₁, h₂ => rfl
+| oadd e n a, 0, h₁, h₂ => oadd_pos _ _ _
+| 0, oadd e n a, h₁, h₂ => oadd_pos _ _ _
+| o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂), h₁, h₂ =>
+  by 
+    rw [cmp]
+    have IHe := @cmp_compares _ _ h₁.fst h₂.fst 
+    cases cmp e₁ e₂ 
+    case ordering.lt => 
+      exact oadd_lt_oadd_1 h₁ IHe 
+    case ordering.gt => 
+      exact oadd_lt_oadd_1 h₂ IHe 
+    change e₁ = e₂ at IHe 
+    subst IHe 
+    unfold _root_.cmp 
+    cases nh : cmpUsing (· < ·) (n₁ : ℕ) n₂ 
+    case ordering.lt => 
+      rw [cmp_using_eq_lt] at nh 
+      exact oadd_lt_oadd_2 h₁ nh 
+    case ordering.gt => 
+      rw [cmp_using_eq_gt] at nh 
+      exact oadd_lt_oadd_2 h₂ nh 
+    rw [cmp_using_eq_eq] at nh 
+    have  := Subtype.eq (eq_of_incomp nh)
+    subst n₂ 
+    have IHa := @cmp_compares _ _ h₁.snd h₂.snd 
+    cases cmp a₁ a₂ 
+    case ordering.lt => 
+      exact oadd_lt_oadd_3 IHa 
+    case ordering.gt => 
+      exact oadd_lt_oadd_3 IHa 
+    change a₁ = a₂ at IHa 
+    subst IHa 
+    exact rfl
 
 theorem repr_inj {a b} [NF a] [NF b] : reprₓ a = reprₓ b ↔ a = b :=
   ⟨match cmp a b, cmp_compares a b with 
@@ -305,17 +320,18 @@ theorem repr_inj {a b} [NF a] [NF b] : reprₓ a = reprₓ b ↔ a = b :=
     | Ordering.eq, h, e => h,
     congr_argₓ _⟩
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem NF.of_dvd_omega_power
-{b e n a}
-(h : NF (oadd e n a))
-(d : «expr ∣ »(«expr ^ »(exprω(), b), repr (oadd e n a))) : «expr ∧ »(«expr ≤ »(b, repr e), «expr ∣ »(«expr ^ »(exprω(), b), repr a)) :=
-begin
-  have [] [] [":=", expr mt repr_inj.1 (λ h, by injection [expr h] [] : «expr ≠ »(oadd e n a, 0))],
-  have [ident L] [] [":=", expr le_of_not_lt (λ l, not_le_of_lt (h.below_of_lt l).repr_lt (le_of_dvd this d))],
-  simp [] [] [] [] [] ["at", ident d],
-  exact [expr ⟨L, «expr $ »(dvd_add_iff, (power_dvd_power _ L).mul_right _).1 d⟩]
-end
+theorem NF.of_dvd_omega_power {b e n a} (h : NF (oadd e n a)) (d : (ω^b) ∣ reprₓ (oadd e n a)) :
+  b ≤ reprₓ e ∧ (ω^b) ∣ reprₓ a :=
+  by 
+    have  :=
+      mt repr_inj.1
+        (fun h =>
+          by 
+            injection h :
+        oadd e n a ≠ 0)
+    have L := le_of_not_ltₓ fun l => not_le_of_lt (h.below_of_lt l).repr_lt (le_of_dvd this d)
+    simp  at d 
+    exact ⟨L, (dvd_add_iff$ (power_dvd_power _ L).mul_right _).1 d⟩
 
 theorem NF.of_dvd_omega {e n a} (h : NF (oadd e n a)) : ω ∣ reprₓ (oadd e n a) → reprₓ e ≠ 0 ∧ ω ∣ reprₓ a :=
   by 
@@ -338,17 +354,17 @@ theorem NF_below_iff_top_below {b} [NF b] : ∀ {o}, NF_below o (reprₓ b) ↔ 
   ⟨fun h => ⟨⟨⟨_, h⟩⟩, (@cmp_compares _ b h.fst _).eq_lt.2 h.lt⟩,
     fun ⟨h₁, h₂⟩ => h₁.below_of_lt$ (@cmp_compares _ b h₁.fst _).eq_lt.1 h₂⟩
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance decidable_NF : decidable_pred NF
-| 0 := is_true NF.zero
-| oadd e n a := begin
-  have [] [] [":=", expr decidable_NF e],
-  have [] [] [":=", expr decidable_NF a],
-  resetI,
-  apply [expr decidable_of_iff «expr ∧ »(NF e, «expr ∧ »(NF a, top_below e a))],
-  abstract [] { rw ["<-", expr and_congr_right (λ h, @NF_below_iff_top_below _ h _)] [],
-    exact [expr ⟨λ ⟨h₁, h₂⟩, NF.oadd h₁ n h₂, λ h, ⟨h.fst, h.snd'⟩⟩] }
-end
+instance decidable_NF : DecidablePred NF
+| 0 => is_true NF.zero
+| oadd e n a =>
+  by 
+    have  := decidable_NF e 
+    have  := decidable_NF a 
+    skip 
+    apply decidableOfIff (NF e ∧ NF a ∧ top_below e a)
+    abstract 
+      rw [←and_congr_right fun h => @NF_below_iff_top_below _ h _]
+      exact ⟨fun ⟨h₁, h₂⟩ => NF.oadd h₁ n h₂, fun h => ⟨h.fst, h.snd'⟩⟩
 
 /-- Addition of ordinal notations (correct only for normal input) -/
 def add : Onote → Onote → Onote
@@ -388,108 +404,157 @@ def sub : Onote → Onote → Onote
 instance : Sub Onote :=
   ⟨sub⟩
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_NF_below {b} : ∀ {o₁ o₂}, NF_below o₁ b → NF_below o₂ b → NF_below «expr + »(o₁, o₂) b
-| 0, o, h₁, h₂ := h₂
-| oadd e n a, o, h₁, h₂ := begin
-  have [ident h'] [] [":=", expr add_NF_below «expr $ »(h₁.snd.mono, le_of_lt h₁.lt) h₂],
-  simp [] [] [] ["[", expr oadd_add, "]"] [] [],
-  cases [expr «expr + »(a, o)] ["with", ident e', ident n', ident a'],
-  { exact [expr NF_below.oadd h₁.fst NF_below.zero h₁.lt] },
-  simp [] [] [] ["[", expr add, "]"] [] [],
-  have [] [] [":=", expr @cmp_compares _ _ h₁.fst h'.fst],
-  cases [expr cmp e e'] []; simp [] [] [] ["[", expr add, "]"] [] [],
-  { exact [expr h'] },
-  { simp [] [] [] [] [] ["at", ident this],
-    subst [expr e'],
-    exact [expr NF_below.oadd h'.fst h'.snd h'.lt] },
-  { exact [expr NF_below.oadd h₁.fst (NF.below_of_lt this ⟨⟨_, h'⟩⟩) h₁.lt] }
-end
+theorem add_NF_below {b} : ∀ {o₁ o₂}, NF_below o₁ b → NF_below o₂ b → NF_below (o₁+o₂) b
+| 0, o, h₁, h₂ => h₂
+| oadd e n a, o, h₁, h₂ =>
+  by 
+    have h' := add_NF_below (h₁.snd.mono$ le_of_ltₓ h₁.lt) h₂ 
+    simp [oadd_add]
+    cases' a+o with e' n' a'
+    ·
+      exact NF_below.oadd h₁.fst NF_below.zero h₁.lt 
+    simp [add]
+    have  := @cmp_compares _ _ h₁.fst h'.fst 
+    cases cmp e e' <;> simp [add]
+    ·
+      exact h'
+    ·
+      simp  at this 
+      subst e' 
+      exact NF_below.oadd h'.fst h'.snd h'.lt
+    ·
+      exact NF_below.oadd h₁.fst (NF.below_of_lt this ⟨⟨_, h'⟩⟩) h₁.lt
 
 instance add_NF o₁ o₂ : ∀ [NF o₁] [NF o₂], NF (o₁+o₂)
 | ⟨⟨b₁, h₁⟩⟩, ⟨⟨b₂, h₂⟩⟩ =>
   ⟨(b₁.le_total b₂).elim (fun h => ⟨b₂, add_NF_below (h₁.mono h) h₂⟩) fun h => ⟨b₁, add_NF_below h₁ (h₂.mono h)⟩⟩
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem repr_add : ∀ (o₁ o₂) [NF o₁] [NF o₂], «expr = »(repr «expr + »(o₁, o₂), «expr + »(repr o₁, repr o₂))
-| 0, o, h₁, h₂ := by simp [] [] [] [] [] []
-| oadd e n a, o, h₁, h₂ := begin
-  haveI [] [] [":=", expr h₁.snd],
-  have [ident h'] [] [":=", expr repr_add a o],
-  conv ["at", ident h'] ["in", expr «expr + »(_, o)] { simp [] ["[", expr («expr + »), "]"] [] },
-  have [ident nf] [] [":=", expr onote.add_NF a o],
-  conv ["at", ident nf] ["in", expr «expr + »(_, o)] { simp [] ["[", expr («expr + »), "]"] [] },
-  conv [] ["in", expr «expr + »(_, o)] { simp [] ["[", expr («expr + »), ",", expr add, "]"] [] },
-  cases [expr add a o] ["with", ident e', ident n', ident a']; simp [] [] [] ["[", expr add, ",", expr h'.symm, ",", expr add_assoc, "]"] [] [],
-  have [] [] [":=", expr h₁.fst],
-  haveI [] [] [":=", expr nf.fst],
-  have [ident ee] [] [":=", expr cmp_compares e e'],
-  cases [expr cmp e e'] []; simp [] [] [] ["[", expr add, "]"] [] [],
-  { rw ["[", "<-", expr add_assoc, ",", expr @add_absorp _ (repr e') «expr * »(«expr ^ »(exprω(), repr e'), (n' : exprℕ())), "]"] [],
-    { have [] [] [":=", expr (h₁.below_of_lt ee).repr_lt],
-      unfold [ident repr] ["at", ident this],
-      exact [expr lt_of_le_of_lt (le_add_right _ _) this] },
-    { simpa [] [] [] [] [] ["using", expr «expr $ »(mul_le_mul_iff_left, power_pos (repr e') omega_pos).2 (nat_cast_le.2 n'.pos)] } },
-  { change [expr «expr = »(e, e')] [] ["at", ident ee],
-    substI [expr e'],
-    rw ["[", "<-", expr add_assoc, ",", "<-", expr ordinal.mul_add, ",", "<-", expr nat.cast_add, "]"] [] }
-end
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    repr_add
+    : ∀ o₁ o₂ [ NF o₁ ] [ NF o₂ ] , reprₓ ( o₁ + o₂ ) = reprₓ o₁ + reprₓ o₂
+    | 0 , o , h₁ , h₂ => by simp
+      |
+        oadd e n a , o , h₁ , h₂
+        =>
+        by
+          have := h₁.snd
+            have h' := repr_add a o
+            conv at h' in _ + o => simp [ · + · ]
+            have nf := Onote.add_NF a o
+            conv at nf in _ + o => simp [ · + · ]
+            conv in _ + o => simp [ · + · , add ]
+            cases' add a o with e' n' a' <;> simp [ add , h'.symm , add_assocₓ ]
+            have := h₁.fst
+            have := nf.fst
+            have ee := cmp_compares e e'
+            cases cmp e e' <;> simp [ add ]
+            ·
+              rw [ ← add_assocₓ , @ add_absorp _ ( reprₓ e' ) ( ( ω ^ reprₓ e' ) * ( n' : ℕ ) ) ]
+                ·
+                  have := ( h₁.below_of_lt ee ) . repr_lt
+                    unfold reprₓ at this
+                    exact lt_of_le_of_ltₓ ( le_add_right _ _ ) this
+                · simpa using ( mul_le_mul_iff_left $ power_pos ( reprₓ e' ) omega_pos ) . 2 ( nat_cast_le . 2 n'.pos )
+            · change e = e' at ee subst e' rw [ ← add_assocₓ , ← Ordinal.mul_add , ← Nat.cast_add ]
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sub_NF_below : ∀ {o₁ o₂ b}, NF_below o₁ b → NF o₂ → NF_below «expr - »(o₁, o₂) b
-| 0, o, b, h₁, h₂ := by cases [expr o] []; exact [expr NF_below.zero]
-| oadd e n a, 0, b, h₁, h₂ := h₁
-| oadd e₁ n₁ a₁, oadd e₂ n₂ a₂, b, h₁, h₂ := begin
-  have [ident h'] [] [":=", expr sub_NF_below h₁.snd h₂.snd],
-  simp [] [] [] ["[", expr has_sub.sub, ",", expr sub, "]"] [] ["at", ident h', "⊢"],
-  have [] [] [":=", expr @cmp_compares _ _ h₁.fst h₂.fst],
-  cases [expr cmp e₁ e₂] []; simp [] [] [] ["[", expr sub, "]"] [] [],
-  { apply [expr NF_below.zero] },
-  { simp [] [] [] [] [] ["at", ident this],
-    subst [expr e₂],
-    cases [expr mn, ":", expr «expr - »((n₁ : exprℕ()), n₂)] []; simp [] [] [] ["[", expr sub, "]"] [] [],
-    { by_cases [expr en, ":", expr «expr = »(n₁, n₂)]; simp [] [] [] ["[", expr en, "]"] [] [],
-      { exact [expr h'.mono (le_of_lt h₁.lt)] },
-      { exact [expr NF_below.zero] } },
-    { exact [expr NF_below.oadd h₁.fst h₁.snd h₁.lt] } },
-  { exact [expr h₁] }
-end
+theorem sub_NF_below : ∀ {o₁ o₂ b}, NF_below o₁ b → NF o₂ → NF_below (o₁ - o₂) b
+| 0, o, b, h₁, h₂ =>
+  by 
+    cases o <;> exact NF_below.zero
+| oadd e n a, 0, b, h₁, h₂ => h₁
+| oadd e₁ n₁ a₁, oadd e₂ n₂ a₂, b, h₁, h₂ =>
+  by 
+    have h' := sub_NF_below h₁.snd h₂.snd 
+    simp [Sub.sub, sub] at h'⊢
+    have  := @cmp_compares _ _ h₁.fst h₂.fst 
+    cases cmp e₁ e₂ <;> simp [sub]
+    ·
+      apply NF_below.zero
+    ·
+      simp  at this 
+      subst e₂ 
+      cases mn : (n₁ : ℕ) - n₂ <;> simp [sub]
+      ·
+        byCases' en : n₁ = n₂ <;> simp [en]
+        ·
+          exact h'.mono (le_of_ltₓ h₁.lt)
+        ·
+          exact NF_below.zero
+      ·
+        exact NF_below.oadd h₁.fst h₁.snd h₁.lt
+    ·
+      exact h₁
 
 instance sub_NF o₁ o₂ : ∀ [NF o₁] [NF o₂], NF (o₁ - o₂)
 | ⟨⟨b₁, h₁⟩⟩, h₂ => ⟨⟨b₁, sub_NF_below h₁ h₂⟩⟩
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem repr_sub : ∀ (o₁ o₂) [NF o₁] [NF o₂], «expr = »(repr «expr - »(o₁, o₂), «expr - »(repr o₁, repr o₂))
-| 0, o, h₁, h₂ := by cases [expr o] []; exact [expr (ordinal.zero_sub _).symm]
-| oadd e n a, 0, h₁, h₂ := (ordinal.sub_zero _).symm
-| oadd e₁ n₁ a₁, oadd e₂ n₂ a₂, h₁, h₂ := begin
-  haveI [] [] [":=", expr h₁.snd],
-  haveI [] [] [":=", expr h₂.snd],
-  have [ident h'] [] [":=", expr repr_sub a₁ a₂],
-  conv ["at", ident h'] ["in", expr «expr - »(a₁, a₂)] { simp [] ["[", expr has_sub.sub, "]"] [] },
-  have [ident nf] [] [":=", expr onote.sub_NF a₁ a₂],
-  conv ["at", ident nf] ["in", expr «expr - »(a₁, a₂)] { simp [] ["[", expr has_sub.sub, "]"] [] },
-  conv [] ["in", expr «expr - »(_, oadd _ _ _)] { simp [] ["[", expr has_sub.sub, ",", expr sub, "]"] [] },
-  have [ident ee] [] [":=", expr @cmp_compares _ _ h₁.fst h₂.fst],
-  cases [expr cmp e₁ e₂] [],
-  { rw ["[", expr ordinal.sub_eq_zero_iff_le.2, "]"] [],
-    { refl },
-    exact [expr le_of_lt (oadd_lt_oadd_1 h₁ ee)] },
-  { change [expr «expr = »(e₁, e₂)] [] ["at", ident ee],
-    substI [expr e₂],
-    unfold [ident sub._match_1] [],
-    cases [expr mn, ":", expr «expr - »((n₁ : exprℕ()), n₂)] []; dsimp ["only"] ["[", expr sub._match_2, "]"] [] [],
-    { by_cases [expr en, ":", expr «expr = »(n₁, n₂)],
-      { simp [] [] [] ["[", expr en, "]"] [] [],
-        rwa ["[", expr add_sub_add_cancel, "]"] [] },
-      { simp [] [] [] ["[", expr en, ",", "-", ident repr, "]"] [] [],
-        exact [expr «expr $ »(ordinal.sub_eq_zero_iff_le.2, «expr $ »(le_of_lt, «expr $ »(oadd_lt_oadd_2 h₁, lt_of_le_of_ne (tsub_eq_zero_iff_le.1 mn) (mt pnat.eq en)))).symm] } },
-    { simp [] [] [] ["[", expr nat.succ_pnat, ",", "-", ident nat.cast_succ, "]"] [] [],
-      rw ["[", expr «expr $ »(tsub_eq_iff_eq_add_of_le, «expr $ »(le_of_lt, nat.lt_of_sub_eq_succ mn)).1 mn, ",", expr add_comm, ",", expr nat.cast_add, ",", expr ordinal.mul_add, ",", expr add_assoc, ",", expr add_sub_add_cancel, "]"] [],
-      refine [expr «expr $ »(ordinal.sub_eq_of_add_eq, «expr $ »(add_absorp h₂.snd'.repr_lt, le_trans _ (le_add_right _ _))).symm],
-      simpa [] [] [] [] [] ["using", expr mul_le_mul_left _ «expr $ »(nat_cast_le.2, nat.succ_pos _)] } },
-  { exact [expr «expr $ »(ordinal.sub_eq_of_add_eq, «expr $ »(add_absorp (h₂.below_of_lt ee).repr_lt, omega_le_oadd _ _ _)).symm] }
-end
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    repr_sub
+    : ∀ o₁ o₂ [ NF o₁ ] [ NF o₂ ] , reprₓ ( o₁ - o₂ ) = reprₓ o₁ - reprₓ o₂
+    | 0 , o , h₁ , h₂ => by cases o <;> exact ( Ordinal.zero_sub _ ) . symm
+      | oadd e n a , 0 , h₁ , h₂ => ( Ordinal.sub_zero _ ) . symm
+      |
+        oadd e₁ n₁ a₁ , oadd e₂ n₂ a₂ , h₁ , h₂
+        =>
+        by
+          have := h₁.snd
+            have := h₂.snd
+            have h' := repr_sub a₁ a₂
+            conv at h' in a₁ - a₂ => simp [ Sub.sub ]
+            have nf := Onote.sub_NF a₁ a₂
+            conv at nf in a₁ - a₂ => simp [ Sub.sub ]
+            conv in _ - oadd _ _ _ => simp [ Sub.sub , sub ]
+            have ee := @ cmp_compares _ _ h₁.fst h₂.fst
+            cases cmp e₁ e₂
+            · rw [ Ordinal.sub_eq_zero_iff_le . 2 ] · rfl exact le_of_ltₓ ( oadd_lt_oadd_1 h₁ ee )
+            ·
+              change e₁ = e₂ at ee
+                subst e₂
+                unfold sub._match_1
+                cases mn : ( n₁ : ℕ ) - n₂ <;> dsimp only [ sub._match_2 ]
+                ·
+                  byCases' en : n₁ = n₂
+                    · simp [ en ] rwa [ add_sub_add_cancel ]
+                    ·
+                      simp [ en , - reprₓ ]
+                        exact
+                          (
+                              Ordinal.sub_eq_zero_iff_le . 2
+                                $
+                                le_of_ltₓ
+                                  $
+                                  oadd_lt_oadd_2 h₁ $ lt_of_le_of_neₓ ( tsub_eq_zero_iff_le . 1 mn ) ( mt Pnat.eq en )
+                              )
+                            .
+                            symm
+                ·
+                  simp [ Nat.succPnat , - Nat.cast_succ ]
+                    rw
+                      [
+                        ( tsub_eq_iff_eq_add_of_le $ le_of_ltₓ $ Nat.lt_of_sub_eq_succₓ mn ) . 1 mn
+                          ,
+                          add_commₓ
+                          ,
+                          Nat.cast_add
+                          ,
+                          Ordinal.mul_add
+                          ,
+                          add_assocₓ
+                          ,
+                          add_sub_add_cancel
+                        ]
+                    refine'
+                      ( Ordinal.sub_eq_of_add_eq $ add_absorp h₂.snd'.repr_lt $ le_transₓ _ ( le_add_right _ _ ) )
+                        .
+                        symm
+                    simpa using mul_le_mul_left _ ( nat_cast_le . 2 $ Nat.succ_posₓ _ )
+            ·
+              exact
+                ( Ordinal.sub_eq_of_add_eq $ add_absorp ( h₂.below_of_lt ee ) . repr_lt $ omega_le_oadd _ _ _ ) . symm
 
 /-- Multiplication of ordinal notations (correct only for normal input) -/
 def mul : Onote → Onote → Onote
@@ -514,25 +579,26 @@ theorem oadd_mul e₁ n₁ a₁ e₂ n₂ a₂ :
   (oadd e₁ n₁ a₁*oadd e₂ n₂ a₂) = if e₂ = 0 then oadd e₁ (n₁*n₂) a₁ else oadd (e₁+e₂) n₂ (oadd e₁ n₁ a₁*a₂) :=
   rfl
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem oadd_mul_NF_below
-{e₁ n₁ a₁ b₁}
-(h₁ : NF_below (oadd e₁ n₁ a₁) b₁) : ∀
-{o₂ b₂}, NF_below o₂ b₂ → NF_below «expr * »(oadd e₁ n₁ a₁, o₂) «expr + »(repr e₁, b₂)
-| 0, b₂, h₂ := NF_below.zero
-| oadd e₂ n₂ a₂, b₂, h₂ := begin
-  have [ident IH] [] [":=", expr oadd_mul_NF_below h₂.snd],
-  by_cases [expr e0, ":", expr «expr = »(e₂, 0)]; simp [] [] [] ["[", expr e0, ",", expr oadd_mul, "]"] [] [],
-  { apply [expr NF_below.oadd h₁.fst h₁.snd],
-    simpa [] [] [] [] [] ["using", expr (add_lt_add_iff_left (repr e₁)).2 (lt_of_le_of_lt (ordinal.zero_le _) h₂.lt)] },
-  { haveI [] [] [":=", expr h₁.fst],
-    haveI [] [] [":=", expr h₂.fst],
-    apply [expr NF_below.oadd],
-    apply_instance,
-    { rwa [expr repr_add] [] },
-    { rw ["[", expr repr_add, ",", expr ordinal.add_lt_add_iff_left, "]"] [],
-      exact [expr h₂.lt] } }
-end
+theorem oadd_mul_NF_below {e₁ n₁ a₁ b₁} (h₁ : NF_below (oadd e₁ n₁ a₁) b₁) :
+  ∀ {o₂ b₂}, NF_below o₂ b₂ → NF_below (oadd e₁ n₁ a₁*o₂) (reprₓ e₁+b₂)
+| 0, b₂, h₂ => NF_below.zero
+| oadd e₂ n₂ a₂, b₂, h₂ =>
+  by 
+    have IH := oadd_mul_NF_below h₂.snd 
+    byCases' e0 : e₂ = 0 <;> simp [e0, oadd_mul]
+    ·
+      apply NF_below.oadd h₁.fst h₁.snd 
+      simpa using (add_lt_add_iff_left (reprₓ e₁)).2 (lt_of_le_of_ltₓ (Ordinal.zero_le _) h₂.lt)
+    ·
+      have  := h₁.fst 
+      have  := h₂.fst 
+      apply NF_below.oadd 
+      infer_instance
+      ·
+        rwa [repr_add]
+      ·
+        rw [repr_add, Ordinal.add_lt_add_iff_left]
+        exact h₂.lt
 
 instance mul_NF : ∀ o₁ o₂ [NF o₁] [NF o₂], NF (o₁*o₂)
 | 0, o, h₁, h₂ =>
@@ -540,30 +606,44 @@ instance mul_NF : ∀ o₁ o₂ [NF o₁] [NF o₂], NF (o₁*o₂)
     cases o <;> exact NF.zero
 | oadd e n a, o, ⟨⟨b₁, hb₁⟩⟩, ⟨⟨b₂, hb₂⟩⟩ => ⟨⟨_, oadd_mul_NF_below hb₁ hb₂⟩⟩
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem repr_mul : ∀ (o₁ o₂) [NF o₁] [NF o₂], «expr = »(repr «expr * »(o₁, o₂), «expr * »(repr o₁, repr o₂))
-| 0, o, h₁, h₂ := by cases [expr o] []; exact [expr (ordinal.zero_mul _).symm]
-| oadd e₁ n₁ a₁, 0, h₁, h₂ := (ordinal.mul_zero _).symm
-| oadd e₁ n₁ a₁, oadd e₂ n₂ a₂, h₁, h₂ := begin
-  have [ident IH] [":", expr «expr = »(repr (mul _ _), _)] [":=", expr @repr_mul _ _ h₁ h₂.snd],
-  conv [] [] { to_lhs,
-    simp [] ["[", expr («expr * »), "]"] [] },
-  have [ident ao] [":", expr «expr = »(«expr + »(repr a₁, «expr * »(«expr ^ »(exprω(), repr e₁), (n₁ : exprℕ()))), «expr * »(«expr ^ »(exprω(), repr e₁), (n₁ : exprℕ())))] [],
-  { apply [expr add_absorp h₁.snd'.repr_lt],
-    simpa [] [] [] [] [] ["using", expr «expr $ »(mul_le_mul_iff_left, power_pos _ omega_pos).2 (nat_cast_le.2 n₁.2)] },
-  by_cases [expr e0, ":", expr «expr = »(e₂, 0)]; simp [] [] [] ["[", expr e0, ",", expr mul, "]"] [] [],
-  { cases [expr nat.exists_eq_succ_of_ne_zero n₂.ne_zero] ["with", ident x, ident xe],
-    simp [] [] [] ["[", expr h₂.zero_of_zero e0, ",", expr xe, ",", "-", ident nat.cast_succ, "]"] [] [],
-    rw ["[", "<-", expr nat_cast_succ x, ",", expr add_mul_succ _ ao, ",", expr mul_assoc, "]"] [] },
-  { haveI [] [] [":=", expr h₁.fst],
-    haveI [] [] [":=", expr h₂.fst],
-    simp [] [] [] ["[", expr IH, ",", expr repr_add, ",", expr power_add, ",", expr ordinal.mul_add, "]"] [] [],
-    rw ["<-", expr mul_assoc] [],
-    congr' [2] [],
-    have [] [] [":=", expr mt repr_inj.1 e0],
-    rw ["[", expr add_mul_limit ao (power_is_limit_left omega_is_limit this), ",", expr mul_assoc, ",", expr mul_omega_dvd (nat_cast_pos.2 n₁.pos) (nat_lt_omega _), "]"] [],
-    simpa [] [] [] [] [] ["using", expr power_dvd_power exprω() (one_le_iff_ne_zero.2 this)] }
-end
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    repr_mul
+    : ∀ o₁ o₂ [ NF o₁ ] [ NF o₂ ] , reprₓ ( o₁ * o₂ ) = reprₓ o₁ * reprₓ o₂
+    | 0 , o , h₁ , h₂ => by cases o <;> exact ( Ordinal.zero_mul _ ) . symm
+      | oadd e₁ n₁ a₁ , 0 , h₁ , h₂ => ( Ordinal.mul_zero _ ) . symm
+      |
+        oadd e₁ n₁ a₁ , oadd e₂ n₂ a₂ , h₁ , h₂
+        =>
+        by
+          have IH : reprₓ ( mul _ _ ) = _ := @ repr_mul _ _ h₁ h₂.snd
+            conv => lhs simp [ · * · ]
+            have ao : ( reprₓ a₁ + ( ω ^ reprₓ e₁ ) * ( n₁ : ℕ ) ) = ( ω ^ reprₓ e₁ ) * ( n₁ : ℕ )
+            ·
+              apply add_absorp h₁.snd'.repr_lt
+                simpa using ( mul_le_mul_iff_left $ power_pos _ omega_pos ) . 2 ( nat_cast_le . 2 n₁ . 2 )
+            byCases' e0 : e₂ = 0 <;> simp [ e0 , mul ]
+            ·
+              cases' Nat.exists_eq_succ_of_ne_zero n₂.ne_zero with x xe
+                simp [ h₂.zero_of_zero e0 , xe , - Nat.cast_succ ]
+                rw [ ← nat_cast_succ x , add_mul_succ _ ao , mul_assocₓ ]
+            ·
+              have := h₁.fst
+                have := h₂.fst
+                simp [ IH , repr_add , power_add , Ordinal.mul_add ]
+                rw [ ← mul_assocₓ ]
+                congr 2
+                have := mt repr_inj . 1 e0
+                rw
+                  [
+                    add_mul_limit ao ( power_is_limit_left omega_is_limit this )
+                      ,
+                      mul_assocₓ
+                      ,
+                      mul_omega_dvd ( nat_cast_pos . 2 n₁.pos ) ( nat_lt_omega _ )
+                    ]
+                simpa using power_dvd_power ω ( one_le_iff_ne_zero . 2 this )
 
 /-- Calculate division and remainder of `o` mod ω.
   `split' o = (a, n)` means `o = ω * a + n`. -/
@@ -623,69 +703,87 @@ instance : Pow Onote Onote :=
 theorem power_def (o₁ o₂ : Onote) : (o₁^o₂) = power._match_1 o₂ (split o₁) :=
   rfl
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem split_eq_scale_split' : ∀ {o o' m} [NF o], «expr = »(split' o, (o', m)) → «expr = »(split o, (scale 1 o', m))
-| 0, o', m, h, p := by injection [expr p] []; substs [ident o', ident m]; refl
-| oadd e n a, o', m, h, p := begin
-  by_cases [expr e0, ":", expr «expr = »(e, 0)]; simp [] [] [] ["[", expr e0, ",", expr split, ",", expr split', "]"] [] ["at", ident p, "⊢"],
-  { rcases [expr p, "with", "⟨", ident rfl, ",", ident rfl, "⟩"],
-    exact [expr ⟨rfl, rfl⟩] },
-  { revert [ident p],
-    cases [expr h', ":", expr split' a] ["with", ident a', ident m'],
-    haveI [] [] [":=", expr h.fst],
-    haveI [] [] [":=", expr h.snd],
-    simp [] [] [] ["[", expr split_eq_scale_split' h', ",", expr split, ",", expr split', "]"] [] [],
-    have [] [":", expr «expr = »(«expr + »(1, «expr - »(e, 1)), e)] [],
-    { refine [expr repr_inj.1 _],
-      simp [] [] [] [] [] [],
-      have [] [] [":=", expr mt repr_inj.1 e0],
-      exact [expr ordinal.add_sub_cancel_of_le (one_le_iff_ne_zero.2 this)] },
-    intros [],
-    substs [ident o', ident m],
-    simp [] [] [] ["[", expr scale, ",", expr this, "]"] [] [] }
-end
+theorem split_eq_scale_split' : ∀ {o o' m} [NF o], split' o = (o', m) → split o = (scale 1 o', m)
+| 0, o', m, h, p =>
+  by 
+    injection p <;> substs o' m <;> rfl
+| oadd e n a, o', m, h, p =>
+  by 
+    byCases' e0 : e = 0 <;> simp [e0, split, split'] at p⊢
+    ·
+      rcases p with ⟨rfl, rfl⟩
+      exact ⟨rfl, rfl⟩
+    ·
+      revert p 
+      cases' h' : split' a with a' m' 
+      have  := h.fst 
+      have  := h.snd 
+      simp [split_eq_scale_split' h', split, split']
+      have  : (1+e - 1) = e
+      ·
+        refine' repr_inj.1 _ 
+        simp 
+        have  := mt repr_inj.1 e0 
+        exact Ordinal.add_sub_cancel_of_le (one_le_iff_ne_zero.2 this)
+      intros 
+      substs o' m 
+      simp [scale, this]
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem NF_repr_split' : ∀
-{o o' m}
-[NF o], «expr = »(split' o, (o', m)) → «expr ∧ »(NF o', «expr = »(repr o, «expr + »(«expr * »(exprω(), repr o'), m)))
-| 0, o', m, h, p := by injection [expr p] []; substs [ident o', ident m]; simp [] [] [] ["[", expr NF.zero, "]"] [] []
-| oadd e n a, o', m, h, p := begin
-  by_cases [expr e0, ":", expr «expr = »(e, 0)]; simp [] [] [] ["[", expr e0, ",", expr split, ",", expr split', "]"] [] ["at", ident p, "⊢"],
-  { rcases [expr p, "with", "⟨", ident rfl, ",", ident rfl, "⟩"],
-    simp [] [] [] ["[", expr h.zero_of_zero e0, ",", expr NF.zero, "]"] [] [] },
-  { revert [ident p],
-    cases [expr h', ":", expr split' a] ["with", ident a', ident m'],
-    haveI [] [] [":=", expr h.fst],
-    haveI [] [] [":=", expr h.snd],
-    cases [expr NF_repr_split' h'] ["with", ident IH₁, ident IH₂],
-    simp [] [] [] ["[", expr IH₂, ",", expr split', "]"] [] [],
-    intros [],
-    substs [ident o', ident m],
-    have [] [":", expr «expr = »(«expr ^ »(exprω(), repr e), «expr * »(«expr ^ »(exprω(), (1 : ordinal.{0})), «expr ^ »(exprω(), «expr - »(repr e, 1))))] [],
-    { have [] [] [":=", expr mt repr_inj.1 e0],
-      rw ["[", "<-", expr power_add, ",", expr ordinal.add_sub_cancel_of_le (one_le_iff_ne_zero.2 this), "]"] [] },
-    refine [expr ⟨NF.oadd (by apply_instance) _ _, _⟩],
-    { simp [] [] [] [] [] ["at", ident this, "⊢"],
-      refine [expr IH₁.below_of_lt' «expr $ »((mul_lt_mul_iff_left omega_pos).1, lt_of_le_of_lt (le_add_right _ m') _)],
-      rw ["[", "<-", expr this, ",", "<-", expr IH₂, "]"] [],
-      exact [expr h.snd'.repr_lt] },
-    { rw [expr this] [],
-      simp [] [] [] ["[", expr ordinal.mul_add, ",", expr mul_assoc, ",", expr add_assoc, "]"] [] [] } }
-end
+theorem NF_repr_split' : ∀ {o o' m} [NF o], split' o = (o', m) → NF o' ∧ reprₓ o = (ω*reprₓ o')+m
+| 0, o', m, h, p =>
+  by 
+    injection p <;> substs o' m <;> simp [NF.zero]
+| oadd e n a, o', m, h, p =>
+  by 
+    byCases' e0 : e = 0 <;> simp [e0, split, split'] at p⊢
+    ·
+      rcases p with ⟨rfl, rfl⟩
+      simp [h.zero_of_zero e0, NF.zero]
+    ·
+      revert p 
+      cases' h' : split' a with a' m' 
+      have  := h.fst 
+      have  := h.snd 
+      cases' NF_repr_split' h' with IH₁ IH₂ 
+      simp [IH₂, split']
+      intros 
+      substs o' m 
+      have  : (ω^reprₓ e) = (ω^(1 : Ordinal.{0}))*ω^reprₓ e - 1
+      ·
+        have  := mt repr_inj.1 e0 
+        rw [←power_add, Ordinal.add_sub_cancel_of_le (one_le_iff_ne_zero.2 this)]
+      refine'
+        ⟨NF.oadd
+            (by 
+              infer_instance)
+            _ _,
+          _⟩
+      ·
+        simp  at this⊢
+        refine' IH₁.below_of_lt' ((mul_lt_mul_iff_left omega_pos).1$ lt_of_le_of_ltₓ (le_add_right _ m') _)
+        rw [←this, ←IH₂]
+        exact h.snd'.repr_lt
+      ·
+        rw [this]
+        simp [Ordinal.mul_add, mul_assocₓ, add_assocₓ]
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem scale_eq_mul (x) [NF x] : ∀ (o) [NF o], «expr = »(scale x o, «expr * »(oadd x 1 0, o))
-| 0, h := rfl
-| oadd e n a, h := begin
-  simp [] [] [] ["[", expr («expr * »), "]"] [] [],
-  simp [] [] [] ["[", expr mul, ",", expr scale, "]"] [] [],
-  haveI [] [] [":=", expr h.snd],
-  by_cases [expr e0, ":", expr «expr = »(e, 0)],
-  { rw [expr scale_eq_mul] [],
-    simp [] [] [] ["[", expr e0, ",", expr h.zero_of_zero, ",", expr show «expr = »(«expr + »(x, 0), x), from repr_inj.1 (by simp [] [] [] [] [] []), "]"] [] [] },
-  { simp [] [] [] ["[", expr e0, ",", expr scale_eq_mul, ",", expr («expr * »), "]"] [] [] }
-end
+theorem scale_eq_mul x [NF x] : ∀ o [NF o], scale x o = oadd x 1 0*o
+| 0, h => rfl
+| oadd e n a, h =>
+  by 
+    simp [·*·]
+    simp [mul, scale]
+    have  := h.snd 
+    byCases' e0 : e = 0
+    ·
+      rw [scale_eq_mul]
+      simp [e0, h.zero_of_zero,
+        show (x+0) = x from
+          repr_inj.1
+            (by 
+              simp )]
+    ·
+      simp [e0, scale_eq_mul, ·*·]
 
 instance NF_scale x [NF x] o [NF o] : NF (scale x o) :=
   by 
@@ -717,19 +815,14 @@ theorem split_dvd {o o' m} [NF o] (h : split o = (o', m)) : ω ∣ reprₓ o' :=
     skip 
     simp 
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem split_add_lt
-{o e n a m}
-[NF o]
-(h : «expr = »(split o, (oadd e n a, m))) : «expr < »(«expr + »(repr a, m), «expr ^ »(exprω(), repr e)) :=
-begin
-  cases [expr NF_repr_split h] ["with", ident h₁, ident h₂],
-  cases [expr h₁.of_dvd_omega (split_dvd h)] ["with", ident e0, ident d],
-  have [] [] [":=", expr h₁.fst],
-  have [] [] [":=", expr h₁.snd],
-  refine [expr add_lt_omega_power h₁.snd'.repr_lt (lt_of_lt_of_le (nat_lt_omega _) _)],
-  simpa [] [] [] [] [] ["using", expr power_le_power_right omega_pos (one_le_iff_ne_zero.2 e0)]
-end
+theorem split_add_lt {o e n a m} [NF o] (h : split o = (oadd e n a, m)) : (reprₓ a+m) < (ω^reprₓ e) :=
+  by 
+    cases' NF_repr_split h with h₁ h₂ 
+    cases' h₁.of_dvd_omega (split_dvd h) with e0 d 
+    have  := h₁.fst 
+    have  := h₁.snd 
+    refine' add_lt_omega_power h₁.snd'.repr_lt (lt_of_lt_of_leₓ (nat_lt_omega _) _)
+    simpa using power_le_power_right omega_pos (one_le_iff_ne_zero.2 e0)
 
 @[simp]
 theorem mul_nat_eq_mul n o : mul_nat o n = o*of_nat n :=
@@ -740,31 +833,38 @@ instance NF_mul_nat o [NF o] n : NF (mul_nat o n) :=
   by 
     simp  <;> infer_instance
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance NF_power_aux (e a0 a) [NF e] [NF a0] [NF a] : ∀ k m, NF (power_aux e a0 a k m)
-| k, 0 := by cases [expr k] []; exact [expr NF.zero]
-| 0, «expr + »(m, 1) := NF.oadd_zero _ _
-| «expr + »(k, 1), «expr + »(m, 1) := by haveI [] [] [":=", expr NF_power_aux k]; simp [] [] [] ["[", expr power_aux, ",", expr nat.succ_ne_zero, "]"] [] []; apply_instance
+instance NF_power_aux e a0 a [NF e] [NF a0] [NF a] : ∀ k m, NF (power_aux e a0 a k m)
+| k, 0 =>
+  by 
+    cases k <;> exact NF.zero
+| 0, m+1 => NF.oadd_zero _ _
+| k+1, m+1 =>
+  by 
+    have  := NF_power_aux k <;> simp [power_aux, Nat.succ_ne_zero] <;> infer_instance
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance NF_power (o₁ o₂) [NF o₁] [NF o₂] : NF «expr ^ »(o₁, o₂) :=
-begin
-  cases [expr e₁, ":", expr split o₁] ["with", ident a, ident m],
-  have [ident na] [] [":=", expr (NF_repr_split e₁).1],
-  cases [expr e₂, ":", expr split' o₂] ["with", ident b', ident k],
-  haveI [] [] [":=", expr (NF_repr_split' e₂).1],
-  casesI [expr a] ["with", ident a0, ident n, ident a'],
-  { cases [expr m] ["with", ident m],
-    { by_cases [expr «expr = »(o₂, 0)]; simp [] [] [] ["[", expr pow, ",", expr power, ",", "*", "]"] [] []; apply_instance },
-    { by_cases [expr «expr = »(m, 0)],
-      { simp [] [] ["only"] ["[", expr pow, ",", expr power, ",", "*", ",", expr zero_def, "]"] [] [],
-        apply_instance },
-      { simp [] [] [] ["[", expr pow, ",", expr power, ",", "*", ",", "-", ident npow_eq_pow, "]"] [] [],
-        apply_instance } } },
-  { simp [] [] [] ["[", expr pow, ",", expr power, ",", expr e₁, ",", expr e₂, ",", expr split_eq_scale_split' e₂, "]"] [] [],
-    have [] [] [":=", expr na.fst],
-    cases [expr k] ["with", ident k]; simp [] [] [] ["[", expr succ_eq_add_one, ",", expr power, "]"] [] []; resetI; apply_instance }
-end
+instance NF_power o₁ o₂ [NF o₁] [NF o₂] : NF (o₁^o₂) :=
+  by 
+    cases' e₁ : split o₁ with a m 
+    have na := (NF_repr_split e₁).1
+    cases' e₂ : split' o₂ with b' k 
+    have  := (NF_repr_split' e₂).1
+    cases' a with a0 n a'
+    ·
+      cases' m with m
+      ·
+        byCases' o₂ = 0 <;> simp [pow, power] <;> infer_instance
+      ·
+        byCases' m = 0
+        ·
+          simp only [pow, power, zero_def]
+          infer_instance
+        ·
+          simp [pow, power, -npow_eq_powₓ]
+          infer_instance
+    ·
+      simp [pow, power, e₁, e₂, split_eq_scale_split' e₂]
+      have  := na.fst 
+      cases' k with k <;> simp [succ_eq_add_one, power] <;> skip <;> infer_instance
 
 theorem scale_power_aux (e a0 a : Onote) [NF e] [NF a0] [NF a] :
   ∀ k m, reprₓ (power_aux e a0 a k m) = (ω^reprₓ e)*reprₓ (power_aux 0 a0 a k m)
@@ -775,152 +875,192 @@ theorem scale_power_aux (e a0 a : Onote) [NF e] [NF a0] [NF a] :
   by 
     byCases' m = 0 <;> simp [h, power_aux, Ordinal.mul_add, power_add, mul_assocₓ, scale_power_aux]
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem repr_power_aux₁
-{e a}
-[Ne : NF e]
-[Na : NF a]
-{a' : ordinal}
-(e0 : «expr ≠ »(repr e, 0))
-(h : «expr < »(a', «expr ^ »(exprω(), repr e)))
-(aa : «expr = »(repr a, a'))
-(n : «exprℕ+»()) : «expr = »(«expr ^ »(«expr + »(«expr * »(«expr ^ »(exprω(), repr e), (n : exprℕ())), a'), exprω()), «expr ^ »(«expr ^ »(exprω(), repr e), exprω())) :=
-begin
-  subst [expr aa],
-  have [ident No] [] [":=", expr Ne.oadd n (Na.below_of_lt' h)],
-  have [] [] [":=", expr omega_le_oadd e n a],
-  unfold [ident repr] ["at", ident this],
-  refine [expr le_antisymm _ (power_le_power_left _ this)],
-  apply [expr (power_le_of_limit «expr $ »(ne_of_gt, lt_of_lt_of_le (power_pos _ omega_pos) this) omega_is_limit).2],
-  intros [ident b, ident l],
-  have [] [] [":=", expr (No.below_of_lt (lt_succ_self _)).repr_lt],
-  unfold [ident repr] ["at", ident this],
-  apply [expr le_trans «expr $ »(power_le_power_left b, le_of_lt this)],
-  rw ["[", "<-", expr power_mul, ",", "<-", expr power_mul, "]"] [],
-  apply [expr power_le_power_right omega_pos],
-  cases [expr le_or_lt exprω() (repr e)] ["with", ident h, ident h],
-  { apply [expr le_trans «expr $ »(mul_le_mul_left _, «expr $ »(le_of_lt, lt_succ_self _))],
-    rw ["[", expr succ, ",", expr add_mul_succ _ (one_add_of_omega_le h), ",", "<-", expr succ, ",", expr succ_le, ",", expr mul_lt_mul_iff_left (ordinal.pos_iff_ne_zero.2 e0), "]"] [],
-    exact [expr omega_is_limit.2 _ l] },
-  { refine [expr le_trans «expr $ »(le_of_lt, mul_lt_omega (omega_is_limit.2 _ h) l) _],
-    simpa [] [] [] [] [] ["using", expr mul_le_mul_right exprω() (one_le_iff_ne_zero.2 e0)] }
-end
+theorem repr_power_aux₁ {e a} [Ne : NF e] [Na : NF a] {a' : Ordinal} (e0 : reprₓ e ≠ 0) (h : a' < (ω^reprₓ e))
+  (aa : reprₓ a = a') (n : ℕ+) : ((((ω^reprₓ e)*(n : ℕ))+a')^ω) = ((ω^reprₓ e)^ω) :=
+  by 
+    subst aa 
+    have No := Ne.oadd n (Na.below_of_lt' h)
+    have  := omega_le_oadd e n a 
+    unfold reprₓ  at this 
+    refine' le_antisymmₓ _ (power_le_power_left _ this)
+    apply (power_le_of_limit (ne_of_gtₓ$ lt_of_lt_of_leₓ (power_pos _ omega_pos) this) omega_is_limit).2
+    intro b l 
+    have  := (No.below_of_lt (lt_succ_self _)).repr_lt 
+    unfold reprₓ  at this 
+    apply le_transₓ (power_le_power_left b$ le_of_ltₓ this)
+    rw [←power_mul, ←power_mul]
+    apply power_le_power_right omega_pos 
+    cases' le_or_ltₓ ω (reprₓ e) with h h
+    ·
+      apply le_transₓ (mul_le_mul_left _$ le_of_ltₓ$ lt_succ_self _)
+      rw [succ, add_mul_succ _ (one_add_of_omega_le h), ←succ, succ_le,
+        mul_lt_mul_iff_left (Ordinal.pos_iff_ne_zero.2 e0)]
+      exact omega_is_limit.2 _ l
+    ·
+      refine' le_transₓ (le_of_ltₓ$ mul_lt_omega (omega_is_limit.2 _ h) l) _ 
+      simpa using mul_le_mul_right ω (one_le_iff_ne_zero.2 e0)
 
 section 
 
 local infixr:0 "^" => @pow Ordinal.{0} Ordinal Ordinal.hasPow
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem repr_power_aux₂
-{a0 a'}
-[N0 : NF a0]
-[Na' : NF a']
-(m : exprℕ())
-(d : «expr ∣ »(exprω(), repr a'))
-(e0 : «expr ≠ »(repr a0, 0))
-(h : «expr < »(«expr + »(repr a', m), «expr ^ »(exprω(), repr a0)))
-(n : «exprℕ+»())
-(k : exprℕ()) : let R := repr (power_aux 0 a0 «expr * »(oadd a0 n a', of_nat m) k m) in
-«expr ∧ »(«expr ≠ »(k, 0) → «expr < »(R, «expr ^ »(«expr ^ »(exprω(), repr a0), succ k)), «expr = »(«expr + »(«expr * »(«expr ^ »(«expr ^ »(exprω(), repr a0), k), «expr + »(«expr * »(«expr ^ »(exprω(), repr a0), (n : exprℕ())), repr a')), R), «expr ^ »(«expr + »(«expr + »(«expr * »(«expr ^ »(exprω(), repr a0), (n : exprℕ())), repr a'), m), succ k))) :=
-begin
-  intro [],
-  haveI [ident No] [":", expr NF (oadd a0 n a')] [":=", expr N0.oadd n «expr $ »(Na'.below_of_lt', lt_of_le_of_lt (le_add_right _ _) h)],
-  induction [expr k] [] ["with", ident k, ident IH] [],
-  { cases [expr m] []; simp [] [] [] ["[", expr power_aux, ",", expr R, "]"] [] [] },
-  rename [ident R, ident R'],
-  let [ident R] [] [":=", expr repr (power_aux 0 a0 «expr * »(oadd a0 n a', of_nat m) k m)],
-  let [ident ω0] [] [":=", expr «expr ^ »(exprω(), repr a0)],
-  let [ident α'] [] [":=", expr «expr + »(«expr * »(ω0, n), repr a')],
-  change [expr «expr ∧ »(«expr ≠ »(k, 0) → «expr < »(R, «expr ^ »(ω0, succ k)), «expr = »(«expr + »(«expr * »(«expr ^ »(ω0, k), α'), R), «expr ^ »(«expr + »(α', m), succ k)))] [] ["at", ident IH],
-  have [ident RR] [":", expr «expr = »(R', «expr + »(«expr * »(«expr ^ »(ω0, k), «expr * »(α', m)), R))] [],
-  { by_cases [expr «expr = »(m, 0)]; simp [] [] [] ["[", expr h, ",", expr R', ",", expr power_aux, ",", expr R, ",", expr power_mul, "]"] [] [],
-    { cases [expr k] []; simp [] [] [] ["[", expr power_aux, "]"] [] [] },
-    { refl } },
-  have [ident α0] [":", expr «expr < »(0, α')] [],
-  { simpa [] [] [] ["[", expr α', ",", expr lt_def, ",", expr repr, "]"] [] ["using", expr oadd_pos a0 n a'] },
-  have [ident ω00] [":", expr «expr < »(0, «expr ^ »(ω0, k))] [":=", expr power_pos _ (power_pos _ omega_pos)],
-  have [ident Rl] [":", expr «expr < »(R, «expr ^ »(exprω(), «expr * »(repr a0, succ «expr↑ »(k))))] [],
-  { by_cases [expr k0, ":", expr «expr = »(k, 0)],
-    { simp [] [] [] ["[", expr k0, "]"] [] [],
-      refine [expr lt_of_lt_of_le _ (power_le_power_right omega_pos (one_le_iff_ne_zero.2 e0))],
-      cases [expr m] ["with", ident m]; simp [] [] [] ["[", expr k0, ",", expr R, ",", expr power_aux, ",", expr omega_pos, "]"] [] [],
-      rw ["[", "<-", expr nat.cast_succ, "]"] [],
-      apply [expr nat_lt_omega] },
-    { rw [expr power_mul] [],
-      exact [expr IH.1 k0] } },
-  refine [expr ⟨λ _, _, _⟩],
-  { rw ["[", expr RR, ",", "<-", expr power_mul _ _ (succ k.succ), "]"] [],
-    have [ident e0] [] [":=", expr ordinal.pos_iff_ne_zero.2 e0],
-    have [ident rr0] [] [":=", expr lt_of_lt_of_le e0 (le_add_left _ _)],
-    apply [expr add_lt_omega_power],
-    { simp [] [] [] ["[", expr power_mul, ",", expr ω0, ",", expr power_add, ",", expr mul_assoc, "]"] [] [],
-      rw ["[", expr mul_lt_mul_iff_left ω00, ",", "<-", expr ordinal.power_add, "]"] [],
-      have [] [] [":=", expr (No.below_of_lt _).repr_lt],
-      unfold [ident repr] ["at", ident this],
-      refine [expr mul_lt_omega_power rr0 this (nat_lt_omega _)],
-      simpa [] [] [] [] [] ["using", expr (add_lt_add_iff_left (repr a0)).2 e0] },
-    { refine [expr lt_of_lt_of_le Rl «expr $ »(power_le_power_right omega_pos, «expr $ »(mul_le_mul_left _, «expr $ »(succ_le_succ.2, «expr $ »(nat_cast_le.2, le_of_lt k.lt_succ_self))))] } },
-  calc
-    «expr = »(«expr + »(«expr * »(«expr ^ »(ω0, k.succ), α'), R'), «expr + »(«expr * »(«expr ^ »(ω0, succ k), α'), «expr + »(«expr * »(«expr * »(«expr ^ »(ω0, k), α'), m), R))) : by rw ["[", expr nat_cast_succ, ",", expr RR, ",", "<-", expr mul_assoc, "]"] []
-    «expr = »(..., «expr + »(«expr * »(«expr + »(«expr * »(«expr ^ »(ω0, k), α'), R), α'), «expr * »(«expr + »(«expr * »(«expr ^ »(ω0, k), α'), R), m))) : _
-    «expr = »(..., «expr ^ »(«expr + »(α', m), succ k.succ)) : by rw ["[", "<-", expr ordinal.mul_add, ",", "<-", expr nat_cast_succ, ",", expr power_succ, ",", expr IH.2, "]"] [],
-  congr' [1] [],
-  { have [ident αd] [":", expr «expr ∣ »(exprω(), α')] [":=", expr dvd_add (dvd_mul_of_dvd_left (by simpa [] [] [] [] [] ["using", expr power_dvd_power exprω() (one_le_iff_ne_zero.2 e0)]) _) d],
-    rw ["[", expr ordinal.mul_add «expr ^ »(ω0, k), ",", expr add_assoc, ",", "<-", expr mul_assoc, ",", "<-", expr power_succ, ",", expr add_mul_limit _ (is_limit_iff_omega_dvd.2 ⟨ne_of_gt α0, αd⟩), ",", expr mul_assoc, ",", expr @mul_omega_dvd n (nat_cast_pos.2 n.pos) (nat_lt_omega _) _ αd, "]"] [],
-    apply [expr @add_absorp _ «expr * »(repr a0, succ k)],
-    { refine [expr add_lt_omega_power _ Rl],
-      rw ["[", expr power_mul, ",", expr power_succ, ",", expr mul_lt_mul_iff_left ω00, "]"] [],
-      exact [expr No.snd'.repr_lt] },
-    { have [] [] [":=", expr mul_le_mul_left «expr ^ »(ω0, succ k) «expr $ »(one_le_iff_pos.2, nat_cast_pos.2 n.pos)],
-      rw [expr power_mul] [],
-      simpa [] [] [] ["[", "-", ident power_succ, "]"] [] [] } },
-  { cases [expr m] [],
-    { have [] [":", expr «expr = »(R, 0)] [],
-      { cases [expr k] []; simp [] [] [] ["[", expr R, ",", expr power_aux, "]"] [] [] },
-      simp [] [] [] ["[", expr this, "]"] [] [] },
-    { rw ["[", "<-", expr nat_cast_succ, ",", expr add_mul_succ, "]"] [],
-      apply [expr add_absorp Rl],
-      rw ["[", expr power_mul, ",", expr power_succ, "]"] [],
-      apply [expr ordinal.mul_le_mul_left],
-      simpa [] [] [] ["[", expr α', ",", expr repr, "]"] [] ["using", expr omega_le_oadd a0 n a'] } }
-end
+-- failed to format: format: uncaught backtrack exception
+theorem
+  repr_power_aux₂
+  { a0 a' }
+      [ N0 : NF a0 ]
+      [ Na' : NF a' ]
+      ( m : ℕ )
+      ( d : ω ∣ reprₓ a' )
+      ( e0 : reprₓ a0 ≠ 0 )
+      ( h : ( reprₓ a' + m ) < ( ω ^ reprₓ a0 ) )
+      ( n : ℕ+ )
+      ( k : ℕ )
+    :
+      let
+        R := reprₓ ( power_aux 0 a0 ( oadd a0 n a' * of_nat m ) k m )
+        ( k ≠ 0 → R < ( ( ω ^ reprₓ a0 ) ^ succ k ) )
+          ∧
+          ( ( ( ( ω ^ reprₓ a0 ) ^ k ) * ( ( ω ^ reprₓ a0 ) * ( n : ℕ ) ) + reprₓ a' ) + R )
+            =
+            ( ( ( ( ( ω ^ reprₓ a0 ) * ( n : ℕ ) ) + reprₓ a' ) + m ) ^ succ k )
+  :=
+    by
+      intro
+        have No : NF ( oadd a0 n a' ) := N0.oadd n ( Na'.below_of_lt' $ lt_of_le_of_ltₓ ( le_add_right _ _ ) h )
+        induction' k with k IH
+        · cases m <;> simp [ power_aux , R ]
+        rename' R
+        let R := reprₓ ( power_aux 0 a0 ( oadd a0 n a' * of_nat m ) k m )
+        let ω0 := ω ^ reprₓ a0
+        let α' := ( ω0 * n ) + reprₓ a'
+        change ( k ≠ 0 → R < ( ω0 ^ succ k ) ) ∧ ( ( ( ω0 ^ k ) * α' ) + R ) = ( ( α' + m ) ^ succ k ) at IH
+        have RR : R' = ( ( ω0 ^ k ) * α' * m ) + R
+        · byCases' m = 0 <;> simp [ h , R' , power_aux , R , power_mul ] · cases k <;> simp [ power_aux ] · rfl
+        have α0 : 0 < α'
+        · simpa [ α' , lt_def , reprₓ ] using oadd_pos a0 n a'
+        have ω00 : 0 < ( ω0 ^ k ) := power_pos _ ( power_pos _ omega_pos )
+        have Rl : R < ( ω ^ reprₓ a0 * succ ( ↑ k ) )
+        ·
+          byCases' k0 : k = 0
+            ·
+              simp [ k0 ]
+                refine' lt_of_lt_of_leₓ _ ( power_le_power_right omega_pos ( one_le_iff_ne_zero . 2 e0 ) )
+                cases' m with m <;> simp [ k0 , R , power_aux , omega_pos ]
+                rw [ ← Nat.cast_succ ]
+                apply nat_lt_omega
+            · rw [ power_mul ] exact IH . 1 k0
+        refine' ⟨ fun _ => _ , _ ⟩
+        ·
+          rw [ RR , ← power_mul _ _ ( succ k.succ ) ]
+            have e0 := Ordinal.pos_iff_ne_zero . 2 e0
+            have rr0 := lt_of_lt_of_leₓ e0 ( le_add_left _ _ )
+            apply add_lt_omega_power
+            ·
+              simp [ power_mul , ω0 , power_add , mul_assocₓ ]
+                rw [ mul_lt_mul_iff_left ω00 , ← Ordinal.power_add ]
+                have := ( No.below_of_lt _ ) . repr_lt
+                unfold reprₓ at this
+                refine' mul_lt_omega_power rr0 this ( nat_lt_omega _ )
+                simpa using ( add_lt_add_iff_left ( reprₓ a0 ) ) . 2 e0
+            ·
+              refine'
+                lt_of_lt_of_leₓ
+                  Rl
+                    (
+                      power_le_power_right omega_pos
+                        $
+                        mul_le_mul_left _ $ succ_le_succ . 2 $ nat_cast_le . 2 $ le_of_ltₓ k.lt_succ_self
+                      )
+        calc
+          ( ( ( ω0 ^ k.succ ) * α' ) + R' ) = ( ( ω0 ^ succ k ) * α' ) + ( ( ( ω0 ^ k ) * α' ) * m ) + R
+              :=
+              by rw [ nat_cast_succ , RR , ← mul_assocₓ ]
+            _ = ( ( ( ( ω0 ^ k ) * α' ) + R ) * α' ) + ( ( ( ω0 ^ k ) * α' ) + R ) * m := _
+            _ = ( ( α' + m ) ^ succ k.succ ) := by rw [ ← Ordinal.mul_add , ← nat_cast_succ , power_succ , IH . 2 ]
+        congr 1
+        ·
+          have
+              αd
+                : ω ∣ α'
+                :=
+                dvd_add ( dvd_mul_of_dvd_left ( by simpa using power_dvd_power ω ( one_le_iff_ne_zero . 2 e0 ) ) _ ) d
+            rw
+              [
+                Ordinal.mul_add ( ω0 ^ k )
+                  ,
+                  add_assocₓ
+                  ,
+                  ← mul_assocₓ
+                  ,
+                  ← power_succ
+                  ,
+                  add_mul_limit _ ( is_limit_iff_omega_dvd . 2 ⟨ ne_of_gtₓ α0 , αd ⟩ )
+                  ,
+                  mul_assocₓ
+                  ,
+                  @ mul_omega_dvd n ( nat_cast_pos . 2 n.pos ) ( nat_lt_omega _ ) _ αd
+                ]
+            apply @ add_absorp _ ( reprₓ a0 * succ k )
+            ·
+              refine' add_lt_omega_power _ Rl
+                rw [ power_mul , power_succ , mul_lt_mul_iff_left ω00 ]
+                exact No.snd'.repr_lt
+            ·
+              have := mul_le_mul_left ( ω0 ^ succ k ) ( one_le_iff_pos . 2 $ nat_cast_pos . 2 n.pos )
+                rw [ power_mul ]
+                simpa [ - power_succ ]
+        ·
+          cases m
+            · have : R = 0 · cases k <;> simp [ R , power_aux ] simp [ this ]
+            ·
+              rw [ ← nat_cast_succ , add_mul_succ ]
+                apply add_absorp Rl
+                rw [ power_mul , power_succ ]
+                apply Ordinal.mul_le_mul_left
+                simpa [ α' , reprₓ ] using omega_le_oadd a0 n a'
 
 end 
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem repr_power (o₁ o₂) [NF o₁] [NF o₂] : «expr = »(repr «expr ^ »(o₁, o₂), «expr ^ »(repr o₁, repr o₂)) :=
-begin
-  cases [expr e₁, ":", expr split o₁] ["with", ident a, ident m],
-  cases [expr NF_repr_split e₁] ["with", ident N₁, ident r₁],
-  cases [expr a] ["with", ident a0, ident n, ident a'],
-  { cases [expr m] ["with", ident m],
-    { by_cases [expr «expr = »(o₂, 0)]; simp [] [] [] ["[", expr power_def, ",", expr power, ",", expr e₁, ",", expr h, ",", expr r₁, "]"] [] [],
-      have [] [] [":=", expr mt repr_inj.1 h],
-      rw [expr zero_power this] [] },
-    { cases [expr e₂, ":", expr split' o₂] ["with", ident b', ident k],
-      cases [expr NF_repr_split' e₂] ["with", "_", ident r₂],
-      by_cases [expr «expr = »(m, 0)]; simp [] [] [] ["[", expr power_def, ",", expr power, ",", expr e₁, ",", expr h, ",", expr r₁, ",", expr e₂, ",", expr r₂, ",", "-", ident nat.cast_succ, "]"] [] [],
-      rw ["[", expr power_add, ",", expr power_mul, ",", expr power_omega _ (nat_lt_omega _), "]"] [],
-      simpa [] [] [] [] [] ["using", expr nat_cast_lt.2 «expr $ »(nat.succ_lt_succ, pos_iff_ne_zero.2 h)] } },
-  { haveI [] [] [":=", expr N₁.fst],
-    haveI [] [] [":=", expr N₁.snd],
-    cases [expr N₁.of_dvd_omega (split_dvd e₁)] ["with", ident a00, ident ad],
-    have [ident al] [] [":=", expr split_add_lt e₁],
-    have [ident aa] [":", expr «expr = »(repr «expr + »(a', of_nat m), «expr + »(repr a', m))] [],
-    { simp [] [] [] [] [] [] },
-    cases [expr e₂, ":", expr split' o₂] ["with", ident b', ident k],
-    cases [expr NF_repr_split' e₂] ["with", "_", ident r₂],
-    simp [] [] [] ["[", expr power_def, ",", expr power, ",", expr e₁, ",", expr r₁, ",", expr split_eq_scale_split' e₂, "]"] [] [],
-    cases [expr k] ["with", ident k]; resetI,
-    { simp [] [] [] ["[", expr power, ",", expr r₂, ",", expr power_mul, ",", expr repr_power_aux₁ a00 al aa, ",", expr add_assoc, "]"] [] [] },
-    { simp [] [] [] ["[", expr succ_eq_add_one, ",", expr power, ",", expr r₂, ",", expr power_add, ",", expr power_mul, ",", expr mul_assoc, ",", expr add_assoc, "]"] [] [],
-      rw ["[", expr repr_power_aux₁ a00 al aa, ",", expr scale_power_aux, "]"] [],
-      simp [] [] [] ["[", expr power_mul, "]"] [] [],
-      rw ["[", "<-", expr ordinal.mul_add, ",", "<-", expr add_assoc «expr * »(«expr ^ »(exprω(), repr a0), (n : exprℕ())), "]"] [],
-      congr' [1] [],
-      rw ["[", "<-", expr power_succ, "]"] [],
-      exact [expr (repr_power_aux₂ _ ad a00 al _ _).2] } }
-end
+theorem repr_power o₁ o₂ [NF o₁] [NF o₂] : reprₓ (o₁^o₂) = (reprₓ o₁^reprₓ o₂) :=
+  by 
+    cases' e₁ : split o₁ with a m 
+    cases' NF_repr_split e₁ with N₁ r₁ 
+    cases' a with a0 n a'
+    ·
+      cases' m with m
+      ·
+        byCases' o₂ = 0 <;> simp [power_def, power, e₁, h, r₁]
+        have  := mt repr_inj.1 h 
+        rw [zero_power this]
+      ·
+        cases' e₂ : split' o₂ with b' k 
+        cases' NF_repr_split' e₂ with _ r₂ 
+        byCases' m = 0 <;> simp [power_def, power, e₁, h, r₁, e₂, r₂, -Nat.cast_succ]
+        rw [power_add, power_mul, power_omega _ (nat_lt_omega _)]
+        simpa using nat_cast_lt.2 (Nat.succ_lt_succₓ$ pos_iff_ne_zero.2 h)
+    ·
+      have  := N₁.fst 
+      have  := N₁.snd 
+      cases' N₁.of_dvd_omega (split_dvd e₁) with a00 ad 
+      have al := split_add_lt e₁ 
+      have aa : reprₓ (a'+of_nat m) = reprₓ a'+m
+      ·
+        simp 
+      cases' e₂ : split' o₂ with b' k 
+      cases' NF_repr_split' e₂ with _ r₂ 
+      simp [power_def, power, e₁, r₁, split_eq_scale_split' e₂]
+      cases' k with k <;> skip
+      ·
+        simp [power, r₂, power_mul, repr_power_aux₁ a00 al aa, add_assocₓ]
+      ·
+        simp [succ_eq_add_one, power, r₂, power_add, power_mul, mul_assocₓ, add_assocₓ]
+        rw [repr_power_aux₁ a00 al aa, scale_power_aux]
+        simp [power_mul]
+        rw [←Ordinal.mul_add, ←add_assocₓ ((ω^reprₓ a0)*(n : ℕ))]
+        congr 1
+        rw [←power_succ]
+        exact (repr_power_aux₂ _ ad a00 al _ _).2
 
 end Onote
 
@@ -988,15 +1128,16 @@ def of_nat (n : ℕ) : Nonote :=
 def cmp (a b : Nonote) : Ordering :=
   cmp a.1 b.1
 
--- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cmp_compares : ∀ a b : nonote, (cmp a b).compares a b
-| ⟨a, ha⟩, ⟨b, hb⟩ := begin
-  resetI,
-  dsimp [] ["[", expr cmp, "]"] [] [],
-  have [] [] [":=", expr onote.cmp_compares a b],
-  cases [expr onote.cmp a b] []; try { exact [expr this] },
-  exact [expr subtype.mk_eq_mk.2 this]
-end
+theorem cmp_compares : ∀ a b : Nonote, (cmp a b).Compares a b
+| ⟨a, ha⟩, ⟨b, hb⟩ =>
+  by 
+    skip 
+    dsimp [cmp]
+    have  := Onote.cmp_compares a b 
+    cases Onote.cmp a b <;>
+      try 
+        exact this 
+    exact Subtype.mk_eq_mk.2 this
 
 instance : LinearOrderₓ Nonote :=
   linearOrderOfCompares cmp cmp_compares

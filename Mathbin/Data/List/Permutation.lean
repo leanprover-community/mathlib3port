@@ -121,43 +121,51 @@ theorem map_map_permutations'_aux (f : α → β) (t : α) (ts : List α) :
         simp [←ih]
         rfl]
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem permutations'_aux_eq_permutations_aux2
-(t : α)
-(ts : list α) : «expr = »(permutations'_aux t ts, (permutations_aux2 t «expr[ , ]»([]) «expr[ , ]»([«expr ++ »(ts, «expr[ , ]»([t]))]) ts id).2) :=
-begin
-  induction [expr ts] [] ["with", ident a, ident ts, ident ih] [],
-  { refl },
-  simp [] [] [] ["[", expr permutations'_aux, ",", expr permutations_aux2_snd_cons, ",", expr ih, "]"] [] [],
-  simp [] [] ["only"] ["[", "<-", expr permutations_aux2_append, "]"] [] [] { single_pass := tt },
-  simp [] [] [] ["[", expr map_permutations_aux2, "]"] [] []
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  permutations'_aux_eq_permutations_aux2
+  ( t : α ) ( ts : List α ) : permutations'_aux t ts = permutations_aux2 t [ ] [ ts ++ [ t ] ] ts id . 2
+  :=
+    by
+      induction' ts with a ts ih
+        · rfl
+        simp [ permutations'_aux , permutations_aux2_snd_cons , ih ]
+        simp ( config := { singlePass := Bool.true._@._internal._hyg.0 } ) only [ ← permutations_aux2_append ]
+        simp [ map_permutations_aux2 ]
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_permutations_aux2
-{t : α}
-{ts : list α}
-{ys : list α}
-{l
- l' : list α} : «expr ↔ »(«expr ∈ »(l', (permutations_aux2 t ts «expr[ , ]»([]) ys (append l)).2), «expr∃ , »((l₁
-   l₂), «expr ∧ »(«expr ≠ »(l₂, «expr[ , ]»([])), «expr ∧ »(«expr = »(ys, «expr ++ »(l₁, l₂)), «expr = »(l', «expr ++ »(«expr ++ »(«expr ++ »(l, l₁), «expr :: »(t, l₂)), ts)))))) :=
-begin
-  induction [expr ys] [] ["with", ident y, ident ys, ident ih] ["generalizing", ident l],
-  { simp [] [] [] [] [] [] { contextual := tt } },
-  rw ["[", expr permutations_aux2_snd_cons, ",", expr show «expr = »(λ
-    x : list α, «expr ++ »(l, «expr :: »(y, x)), append «expr ++ »(l, «expr[ , ]»([y]))), by funext []; simp [] [] [] [] [] [], ",", expr mem_cons_iff, ",", expr ih, "]"] [],
-  split,
-  { rintro ["(", ident e, "|", "⟨", ident l₁, ",", ident l₂, ",", ident l0, ",", ident ye, ",", "_", "⟩", ")"],
-    { subst [expr l'],
-      exact [expr ⟨«expr[ , ]»([]), «expr :: »(y, ys), by simp [] [] [] [] [] []⟩] },
-    { substs [ident l', ident ys],
-      exact [expr ⟨«expr :: »(y, l₁), l₂, l0, by simp [] [] [] [] [] []⟩] } },
-  { rintro ["⟨", "_", "|", "⟨", ident y', ",", ident l₁, "⟩", ",", ident l₂, ",", ident l0, ",", ident ye, ",", ident rfl, "⟩"],
-    { simp [] [] [] ["[", expr ye, "]"] [] [] },
-    { simp [] [] ["only"] ["[", expr cons_append, "]"] [] ["at", ident ye],
-      rcases [expr ye, "with", "⟨", ident rfl, ",", ident rfl, "⟩"],
-      exact [expr or.inr ⟨l₁, l₂, l0, by simp [] [] [] [] [] []⟩] } }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_permutations_aux2
+  { t : α } { ts : List α } { ys : List α } { l l' : List α }
+    :
+      l' ∈ permutations_aux2 t ts [ ] ys append l . 2
+        ↔
+        ∃ l₁ l₂ , l₂ ≠ [ ] ∧ ys = l₁ ++ l₂ ∧ l' = l ++ l₁ ++ t :: l₂ ++ ts
+  :=
+    by
+      induction' ys with y ys ih generalizing l
+        · simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+        rw
+          [
+            permutations_aux2_snd_cons
+              ,
+              show fun x : List α => l ++ y :: x = append l ++ [ y ] by funext <;> simp
+              ,
+              mem_cons_iff
+              ,
+              ih
+            ]
+        constructor
+        ·
+          rintro ( e | ⟨ l₁ , l₂ , l0 , ye , _ ⟩ )
+            · subst l' exact ⟨ [ ] , y :: ys , by simp ⟩
+            · substs l' ys exact ⟨ y :: l₁ , l₂ , l0 , by simp ⟩
+        ·
+          rintro ⟨ _ | ⟨ y' , l₁ ⟩ , l₂ , l0 , ye , rfl ⟩
+            · simp [ ye ]
+            · simp only [ cons_append ] at ye rcases ye with ⟨ rfl , rfl ⟩ exact Or.inr ⟨ l₁ , l₂ , l0 , by simp ⟩
 
 theorem mem_permutations_aux2' {t : α} {ts : List α} {ys : List α} {l : List α} :
   l ∈ (permutations_aux2 t ts [] ys id).2 ↔ ∃ l₁ l₂, l₂ ≠ [] ∧ ys = l₁ ++ l₂ ∧ l = l₁ ++ t :: l₂ ++ ts :=
@@ -197,24 +205,18 @@ theorem length_foldr_permutations_aux2 (t : α) (ts : List α) (r L : List (List
   by 
     simp [foldr_permutations_aux2, · ∘ ·, length_permutations_aux2]
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem length_foldr_permutations_aux2'
-(t : α)
-(ts : list α)
-(r L : list (list α))
-(n)
-(H : ∀
- l «expr ∈ » L, «expr = »(length l, n)) : «expr = »(length (foldr (λ
-   y r, (permutations_aux2 t ts r y id).2) r L), «expr + »(«expr * »(n, length L), length r)) :=
-begin
-  rw ["[", expr length_foldr_permutations_aux2, ",", expr (_ : «expr = »(sum (map length L), «expr * »(n, length L))), "]"] [],
-  induction [expr L] [] ["with", ident l, ident L, ident ih] [],
-  { simp [] [] [] [] [] [] },
-  have [ident sum_map] [":", expr «expr = »(sum (map length L), «expr * »(n, length L))] [":=", expr ih (λ
-    l m, H l (mem_cons_of_mem _ m))],
-  have [ident length_l] [":", expr «expr = »(length l, n)] [":=", expr H _ (mem_cons_self _ _)],
-  simp [] [] [] ["[", expr sum_map, ",", expr length_l, ",", expr mul_add, ",", expr add_comm, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » L)
+theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (List α)) n
+  (H : ∀ l _ : l ∈ L, length l = n) :
+  length (foldr (fun y r => (permutations_aux2 t ts r y id).2) r L) = (n*length L)+length r :=
+  by 
+    rw [length_foldr_permutations_aux2, (_ : Sum (map length L) = n*length L)]
+    induction' L with l L ih
+    ·
+      simp 
+    have sum_map : Sum (map length L) = n*length L := ih fun l m => H l (mem_cons_of_mem _ m)
+    have length_l : length l = n := H _ (mem_cons_self _ _)
+    simp [sum_map, length_l, mul_addₓ, add_commₓ]
 
 @[simp]
 theorem permutations_aux_nil (is : List α) : permutations_aux [] is = [] :=
@@ -233,16 +235,43 @@ theorem permutations_nil : permutations ([] : List α) = [[]] :=
   by 
     rw [permutations, permutations_aux_nil]
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
-theorem map_permutations_aux
-(f : α → β) : ∀
-ts is : list α, «expr = »(map (map f) (permutations_aux ts is), permutations_aux (map f ts) (map f is)) :=
-begin
-  refine [expr permutations_aux.rec (by simp [] [] [] [] [] []) _],
-  introv [ident IH1, ident IH2],
-  rw [expr map] ["at", ident IH2],
-  simp [] [] ["only"] ["[", expr foldr_permutations_aux2, ",", expr map_append, ",", expr map, ",", expr map_map_permutations_aux2, ",", expr permutations, ",", expr bind_map, ",", expr IH1, ",", expr append_assoc, ",", expr permutations_aux_cons, ",", expr cons_bind, ",", "<-", expr IH2, ",", expr map_bind, "]"] [] []
-end
+-- failed to format: format: uncaught backtrack exception
+theorem
+  map_permutations_aux
+  ( f : α → β )
+    : ∀ ts is : List α , map ( map f ) ( permutations_aux ts is ) = permutations_aux ( map f ts ) ( map f is )
+  :=
+    by
+      refine' permutations_aux.rec ( by simp ) _
+        introv IH1 IH2
+        rw [ map ] at IH2
+        simp
+          only
+          [
+            foldr_permutations_aux2
+              ,
+              map_append
+              ,
+              map
+              ,
+              map_map_permutations_aux2
+              ,
+              permutations
+              ,
+              bind_map
+              ,
+              IH1
+              ,
+              append_assoc
+              ,
+              permutations_aux_cons
+              ,
+              cons_bind
+              ,
+              ← IH2
+              ,
+              map_bind
+            ]
 
 theorem map_permutations (f : α → β) (ts : List α) : map (map f) (permutations ts) = permutations (map f ts) :=
   by 
@@ -252,21 +281,22 @@ theorem map_permutations' (f : α → β) (ts : List α) : map (map f) (permutat
   by 
     induction' ts with t ts ih <;> [rfl, simp [←ih, map_bind, ←map_map_permutations'_aux, bind_map]]
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem permutations_aux_append
-(is
- is'
- ts : list α) : «expr = »(permutations_aux «expr ++ »(is, ts) is', «expr ++ »((permutations_aux is is').map ((«expr ++ » ts)), permutations_aux ts «expr ++ »(is.reverse, is'))) :=
-begin
-  induction [expr is] [] ["with", ident t, ident is, ident ih] ["generalizing", ident is'],
-  { simp [] [] [] [] [] [] },
-  simp [] [] [] ["[", expr foldr_permutations_aux2, ",", expr ih, ",", expr bind_map, "]"] [] [],
-  congr' [2] [],
-  funext [ident ys],
-  rw ["[", expr map_permutations_aux2, "]"] [],
-  simp [] [] ["only"] ["[", "<-", expr permutations_aux2_comp_append, "]"] [] [] { single_pass := tt },
-  simp [] [] ["only"] ["[", expr id, ",", expr append_assoc, "]"] [] []
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  permutations_aux_append
+  ( is is' ts : List α )
+    : permutations_aux is ++ ts is' = permutations_aux is is' . map · ++ ts ++ permutations_aux ts is.reverse ++ is'
+  :=
+    by
+      induction' is with t is ih generalizing is'
+        · simp
+        simp [ foldr_permutations_aux2 , ih , bind_map ]
+        congr 2
+        funext ys
+        rw [ map_permutations_aux2 ]
+        simp ( config := { singlePass := Bool.true._@._internal._hyg.0 } ) only [ ← permutations_aux2_comp_append ]
+        simp only [ id , append_assoc ]
 
 theorem permutations_append (is ts : List α) :
   permutations (is ++ ts) = (permutations is).map (· ++ ts) ++ permutations_aux ts is.reverse :=

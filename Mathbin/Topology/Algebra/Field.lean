@@ -44,18 +44,16 @@ theorem induced_units.continuous_coe [induced_units R] : Continuous (coeₓ : Un
 theorem units_embedding [induced_units R] : Embedding (coeₓ : Units R → R) :=
   { induced := units_topology_eq R, inj := fun x y h => Units.ext h }
 
--- error in Topology.Algebra.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance top_monoid_units [topological_ring R] [induced_units R] : has_continuous_mul (units R) :=
-⟨begin
-   let [ident mulR] [] [":=", expr λ p : «expr × »(R, R), «expr * »(p.1, p.2)],
-   let [ident mulRx] [] [":=", expr λ p : «expr × »(units R, units R), «expr * »(p.1, p.2)],
-   have [ident key] [":", expr «expr = »(«expr ∘ »(coe, mulRx), «expr ∘ »(mulR, λ p, (p.1.val, p.2.val)))] [],
-   from [expr rfl],
-   rw ["[", expr continuous_iff_le_induced, ",", expr units_topology_eq R, ",", expr prod_induced_induced, ",", expr induced_compose, ",", expr key, ",", "<-", expr induced_compose, "]"] [],
-   apply [expr induced_mono],
-   rw ["<-", expr continuous_iff_le_induced] [],
-   exact [expr continuous_mul]
- end⟩
+instance top_monoid_units [TopologicalRing R] [induced_units R] : HasContinuousMul (Units R) :=
+  ⟨by 
+      let mulR := fun p : R × R => p.1*p.2
+      let mulRx := fun p : Units R × Units R => p.1*p.2
+      have key : (coeₓ ∘ mulRx) = (mulR ∘ fun p => (p.1.val, p.2.val))
+      exact rfl 
+      rw [continuous_iff_le_induced, units_topology_eq R, prod_induced_induced, induced_compose, key, ←induced_compose]
+      apply induced_mono 
+      rw [←continuous_iff_le_induced]
+      exact continuous_mul⟩
 
 end TopologicalRing
 
@@ -89,24 +87,23 @@ instance (priority := 100) induced_units : TopologicalRing.InducedUnits K :=
 
 variable [TopologicalDivisionRing K]
 
--- error in Topology.Algebra.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem units_top_group : topological_group (units K) :=
-{ continuous_inv := begin
-    have [] [":", expr «expr = »(«expr ∘ »((coe : units K → K), (λ
-       x, «expr ⁻¹»(x) : units K → units K)), «expr ∘ »((λ x, «expr ⁻¹»(x) : K → K), (coe : units K → K)))] [],
-    from [expr funext units.coe_inv'],
-    rw [expr continuous_iff_continuous_at] [],
-    intros [ident x],
-    rw ["[", expr continuous_at, ",", expr nhds_induced, ",", expr nhds_induced, ",", expr tendsto_iff_comap, ",", expr comap_comm this, "]"] [],
-    apply [expr comap_mono],
-    rw ["[", "<-", expr tendsto_iff_comap, ",", expr units.coe_inv', "]"] [],
-    exact [expr topological_division_ring.continuous_inv (x : K) x.ne_zero]
-  end,
-  ..topological_ring.top_monoid_units K }
+theorem units_top_group : TopologicalGroup (Units K) :=
+  { TopologicalRing.top_monoid_units K with
+    continuous_inv :=
+      by 
+        have  :
+          ((coeₓ : Units K → K) ∘ (fun x => x⁻¹ : Units K → Units K)) = ((fun x => x⁻¹ : K → K) ∘ (coeₓ : Units K → K))
+        exact funext Units.coe_inv' 
+        rw [continuous_iff_continuous_at]
+        intro x 
+        rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, comap_comm this]
+        apply comap_mono 
+        rw [←tendsto_iff_comap, Units.coe_inv']
+        exact TopologicalDivisionRing.continuous_inv (x : K) x.ne_zero }
 
 attribute [local instance] units_top_group
 
-theorem continuous_units_inv : Continuous fun x : Units K => («expr↑ » (x⁻¹) : K) :=
+theorem continuous_units_inv : Continuous fun x : Units K => (↑x⁻¹ : K) :=
   (TopologicalRing.InducedUnits.continuous_coe K).comp TopologicalGroup.continuous_inv
 
 end TopologicalDivisionRing

@@ -210,7 +210,7 @@ def coe_hom : ℕ →+ Enat :=
   ⟨coeₓ, Nat.cast_zero, Nat.cast_add⟩
 
 @[simp]
-theorem coe_coe_hom : «expr⇑ » coe_hom = coeₓ :=
+theorem coe_coe_hom : ⇑coe_hom = coeₓ :=
   rfl
 
 instance : PartialOrderₓ Enat :=
@@ -222,7 +222,7 @@ instance : PartialOrderₓ Enat :=
 theorem lt_def (x y : Enat) : x < y ↔ ∃ hx : x.dom, ∀ hy : y.dom, x.get hx < y.get hy :=
   by 
     rw [lt_iff_le_not_leₓ, le_def, le_def, not_exists]
-    split 
+    constructor
     ·
       rintro ⟨⟨hyx, H⟩, h⟩
       byCases' hx : x.dom
@@ -258,14 +258,14 @@ theorem coe_lt_coe {x y : ℕ} : (x : Enat) < y ↔ x < y :=
 @[simp]
 theorem get_le_get {x y : Enat} {hx : x.dom} {hy : y.dom} : x.get hx ≤ y.get hy ↔ x ≤ y :=
   by 
-    conv  => toLHS rw [←coe_le_coe, coe_get, coe_get]
+    conv  => lhs rw [←coe_le_coe, coe_get, coe_get]
 
 theorem le_coe_iff (x : Enat) (n : ℕ) : x ≤ n ↔ ∃ h : x.dom, x.get h ≤ n :=
   by 
     rw [←some_eq_coe]
     show (∃ h : True → x.dom, _) ↔ ∃ h : x.dom, x.get h ≤ n 
     simp only [forall_prop_of_true, some_eq_coe, dom_coe, get_coe']
-    split  <;>
+    constructor <;>
       rintro ⟨_, _⟩ <;>
         refine' ⟨_, _⟩ <;>
           intros  <;>
@@ -335,7 +335,7 @@ theorem ne_top_of_lt {x y : Enat} (h : x < y) : x ≠ ⊤ :=
 
 theorem eq_top_iff_forall_lt (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) < x :=
   by 
-    split 
+    constructor
     ·
       rintro rfl n 
       exact coe_lt_top _
@@ -470,7 +470,7 @@ theorem add_one_le_of_lt {x y : Enat} (h : x < y) : (x+1) ≤ y :=
 
 theorem add_one_le_iff_lt {x y : Enat} (hx : x ≠ ⊤) : (x+1) ≤ y ↔ x < y :=
   by 
-    split 
+    constructor 
     swap 
     exact add_one_le_of_lt 
     intro h 
@@ -482,7 +482,7 @@ theorem add_one_le_iff_lt {x y : Enat} (hx : x ≠ ⊤) : (x+1) ≤ y ↔ x < y 
 
 theorem lt_add_one_iff_lt {x y : Enat} (hx : x ≠ ⊤) : (x < y+1) ↔ x ≤ y :=
   by 
-    split 
+    constructor 
     exact le_of_lt_add_one 
     intro h 
     rcases ne_top_iff.mp hx with ⟨m, rfl⟩
@@ -659,11 +659,20 @@ noncomputable def with_top_add_equiv : Enat ≃+ WithTop ℕ :=
 
 end WithTopEquiv
 
--- error in Data.Nat.Enat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_wf : well_founded ((«expr < ») : enat → enat → exprProp()) :=
-show well_founded (λ
- a
- b : enat, «expr < »(a, b)), by haveI [] [] [":=", expr classical.dec]; simp [] [] ["only"] ["[", expr to_with_top_lt.symm, "]"] [] [] { eta := ff }; exact [expr inv_image.wf _ (with_top.well_founded_lt nat.lt_wf)]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lt_wf
+  : WellFounded ( · < · : Enat → Enat → Prop )
+  :=
+    show
+      WellFounded fun a b : Enat => a < b
+      by
+        have := Classical.dec
+          <;>
+          simp ( config := { eta := Bool.false._@._internal._hyg.0 } ) only [ to_with_top_lt.symm ]
+            <;>
+            exact InvImage.wfₓ _ WithTop.well_founded_lt Nat.lt_wf
 
 instance : HasWellFounded Enat :=
   ⟨· < ·, lt_wf⟩
@@ -683,17 +692,17 @@ theorem find_get (h : (find P).Dom) : (find P).get h = Nat.findₓ h :=
 theorem find_dom (h : ∃ n, P n) : (find P).Dom :=
   h
 
--- error in Data.Nat.Enat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_find (n : exprℕ()) (h : ∀ m «expr ≤ » n, «expr¬ »(P m)) : «expr < »((n : enat), find P) :=
-begin
-  rw [expr coe_lt_iff] [],
-  intro [ident h'],
-  rw [expr find_get] [],
-  have [] [] [":=", expr @nat.find_spec P _ h'],
-  contrapose ["!"] [ident this],
-  exact [expr h _ this]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≤ » n)
+theorem lt_find (n : ℕ) (h : ∀ m _ : m ≤ n, ¬P m) : (n : Enat) < find P :=
+  by 
+    rw [coe_lt_iff]
+    intro h' 
+    rw [find_get]
+    have  := @Nat.find_specₓ P _ h' 
+    contrapose! this 
+    exact h _ this
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≤ » n)
 theorem lt_find_iff (n : ℕ) : (n : Enat) < find P ↔ ∀ m _ : m ≤ n, ¬P m :=
   by 
     refine' ⟨_, lt_find P n⟩

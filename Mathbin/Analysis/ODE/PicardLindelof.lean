@@ -29,10 +29,14 @@ open measure_theory.measure_space(volume)
 
 open_locale Filter TopologicalSpace Nnreal Ennreal Nat Interval
 
-noncomputable theory
+noncomputable section 
 
 variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » Icc t_min t_max)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » closed_ball x₀ R)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » Icc t_min t_max)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » closed_ball x₀ R)
 /-- This structure holds arguments of the Picard-Lipschitz (Cauchy-Lipschitz) theorem. Unless you
 want to use one of the auxiliary lemmas, use
 `exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous` instead of using this structure. -/
@@ -105,7 +109,7 @@ def proj : ℝ → Icc v.t_min v.t_max :=
 theorem proj_coe (t : Icc v.t_min v.t_max) : v.proj t = t :=
   proj_Icc_coe _ _
 
-theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.t_min v.t_max) : «expr↑ » (v.proj t) = t :=
+theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.t_min v.t_max) : ↑v.proj t = t :=
   by 
     simp only [proj, proj_Icc_of_mem _ ht, Subtype.coe_mk]
 
@@ -154,10 +158,10 @@ theorem uniform_inducing_to_continuous_map : UniformInducing (@to_continuous_map
   ⟨rfl⟩
 
 theorem range_to_continuous_map :
-  range to_continuous_map = { f:C(Icc v.t_min v.t_max, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.C f } :=
+  range to_continuous_map = { f : C(Icc v.t_min v.t_max, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.C f } :=
   by 
     ext f 
-    split 
+    constructor
     ·
       rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
       exact ⟨hf₀, hf_lip⟩
@@ -188,13 +192,11 @@ theorem v_comp_apply_coe (t : Icc v.t_min v.t_max) : f.v_comp t = v t (f t) :=
   by 
     simp only [v_comp, proj_coe]
 
--- error in Analysis.ODE.PicardLindelof: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_v_comp : continuous f.v_comp :=
-begin
-  have [] [] [":=", expr (continuous_subtype_coe.prod_mk f.continuous).comp v.continuous_proj],
-  refine [expr continuous_on.comp_continuous v.continuous_on this (λ x, _)],
-  exact [expr ⟨(v.proj x).2, f.mem_closed_ball _⟩]
-end
+theorem continuous_v_comp : Continuous f.v_comp :=
+  by 
+    have  := (continuous_subtype_coe.prod_mk f.continuous).comp v.continuous_proj 
+    refine' ContinuousOn.comp_continuous v.continuous_on this fun x => _ 
+    exact ⟨(v.proj x).2, f.mem_closed_ball _⟩
 
 theorem norm_v_comp_le (t : ℝ) : ∥f.v_comp t∥ ≤ v.C :=
   v.norm_le (v.proj t).2$ f.mem_closed_ball _
@@ -207,15 +209,13 @@ theorem dist_le_of_forall {f₁ f₂ : fun_space v} {d : ℝ} (h : ∀ t, dist (
         v.nonempty_Icc.to_subtype).2
     h
 
--- error in Analysis.ODE.PicardLindelof: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [complete_space E] : complete_space v.fun_space :=
-begin
-  refine [expr (complete_space_iff_is_complete_range uniform_inducing_to_continuous_map).2 (is_closed.is_complete _)],
-  rw ["[", expr range_to_continuous_map, ",", expr set_of_and, "]"] [],
-  refine [expr (is_closed_eq (continuous_map.continuous_evalx _) continuous_const).inter _],
-  have [] [":", expr is_closed {f : Icc v.t_min v.t_max → E | lipschitz_with v.C f}] [":=", expr is_closed_set_of_lipschitz_with v.C],
-  exact [expr this.preimage continuous_map.continuous_coe]
-end
+instance [CompleteSpace E] : CompleteSpace v.fun_space :=
+  by 
+    refine' (complete_space_iff_is_complete_range uniform_inducing_to_continuous_map).2 (IsClosed.is_complete _)
+    rw [range_to_continuous_map, set_of_and]
+    refine' (is_closed_eq (ContinuousMap.continuous_evalx _) continuous_const).inter _ 
+    have  : IsClosed { f : Icc v.t_min v.t_max → E | LipschitzWith v.C f } := is_closed_set_of_lipschitz_with v.C 
+    exact this.preimage ContinuousMap.continuous_coe
 
 variable [MeasurableSpace E] [BorelSpace E]
 
@@ -229,7 +229,7 @@ that the fixed point of this map is the solution of the corresponding ODE.
 
 More precisely, some iteration of this map is a contracting map. -/
 def next (f : fun_space v) : fun_space v :=
-  { toFun := fun t => v.x₀+∫τ : ℝ in v.t₀..t, f.v_comp τ,
+  { toFun := fun t => v.x₀+∫ τ : ℝ in v.t₀..t, f.v_comp τ,
     map_t₀' :=
       by 
         rw [integral_same, add_zeroₓ],
@@ -241,25 +241,24 @@ def next (f : fun_space v) : fun_space v :=
               integral_interval_sub_left (f.interval_integrable_v_comp _ _) (f.interval_integrable_v_comp _ _)]
             exact norm_integral_le_of_norm_le_const fun t ht => f.norm_v_comp_le _ }
 
-theorem next_apply (t : Icc v.t_min v.t_max) : f.next t = v.x₀+∫τ : ℝ in v.t₀..t, f.v_comp τ :=
+theorem next_apply (t : Icc v.t_min v.t_max) : f.next t = v.x₀+∫ τ : ℝ in v.t₀..t, f.v_comp τ :=
   rfl
 
--- error in Analysis.ODE.PicardLindelof: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_deriv_within_at_next
-(t : Icc v.t_min v.t_max) : has_deriv_within_at «expr ∘ »(f.next, v.proj) (v t (f t)) (Icc v.t_min v.t_max) t :=
-begin
-  haveI [] [":", expr fact «expr ∈ »((t : exprℝ()), Icc v.t_min v.t_max)] [":=", expr ⟨t.2⟩],
-  simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr next_apply, "]"] [] [],
-  refine [expr has_deriv_within_at.const_add _ _],
-  have [] [":", expr has_deriv_within_at (λ
-    t : exprℝ(), «expr∫ in .. , »((τ), v.t₀, t, f.v_comp τ)) (f.v_comp t) (Icc v.t_min v.t_max) t] [],
-  from [expr integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _) (f.continuous_v_comp.measurable_at_filter _ _) f.continuous_v_comp.continuous_within_at],
-  rw [expr v_comp_apply_coe] ["at", ident this],
-  refine [expr this.congr_of_eventually_eq_of_mem _ t.coe_prop],
-  filter_upwards ["[", expr self_mem_nhds_within, "]"] [],
-  intros [ident t', ident ht'],
-  rw [expr v.proj_of_mem ht'] []
-end
+theorem has_deriv_within_at_next (t : Icc v.t_min v.t_max) :
+  HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.t_min v.t_max) t :=
+  by 
+    have  : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
+    simp only [· ∘ ·, next_apply]
+    refine' HasDerivWithinAt.const_add _ _ 
+    have  : HasDerivWithinAt (fun t : ℝ => ∫ τ in v.t₀..t, f.v_comp τ) (f.v_comp t) (Icc v.t_min v.t_max) t 
+    exact
+      integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _)
+        (f.continuous_v_comp.measurable_at_filter _ _) f.continuous_v_comp.continuous_within_at 
+    rw [v_comp_apply_coe] at this 
+    refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop 
+    filterUpwards [self_mem_nhds_within]
+    intro t' ht' 
+    rw [v.proj_of_mem ht']
 
 theorem dist_next_apply_le_of_le {f₁ f₂ : fun_space v} {n : ℕ} {d : ℝ}
   (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (((v.L*|t - v.t₀|)^n) / n !)*d) (t : Icc v.t_min v.t_max) :
@@ -268,7 +267,8 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : fun_space v} {n : ℕ} {d : ℝ}
     simp only [dist_eq_norm, next_apply, add_sub_add_left_eq_sub,
       ←intervalIntegral.integral_sub (interval_integrable_v_comp _ _ _) (interval_integrable_v_comp _ _ _),
       norm_integral_eq_norm_integral_Ioc] at *
-    calc ∥∫τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ∥ ≤ ∫τ in Ι (v.t₀ : ℝ) t, v.L*(((v.L*|τ - v.t₀|)^n) / n !)*d :=
+    calc
+      ∥∫ τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ∥ ≤ ∫ τ in Ι (v.t₀ : ℝ) t, v.L*(((v.L*|τ - v.t₀|)^n) / n !)*d :=
       by 
         refine' norm_integral_le_of_norm_le (Continuous.integrable_on_interval_oc _) _
         ·
@@ -296,16 +296,13 @@ theorem dist_iterate_next_apply_le (f₁ f₂ : fun_space v) (n : ℕ) (t : Icc 
       rw [iterate_succ_apply', iterate_succ_apply']
       exact dist_next_apply_le_of_le ihn _
 
--- error in Analysis.ODE.PicardLindelof: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dist_iterate_next_le
-(f₁ f₂ : fun_space v)
-(n : exprℕ()) : «expr ≤ »(dist («expr ^[ ]»(next, n) f₁) («expr ^[ ]»(next, n) f₂), «expr * »(«expr / »(«expr ^ »(«expr * »(v.L, v.t_dist), n), «expr !»(n)), dist f₁ f₂)) :=
-begin
-  refine [expr dist_le_of_forall (λ t, (dist_iterate_next_apply_le _ _ _ _).trans _)],
-  have [] [":", expr «expr ≤ »(0, dist f₁ f₂)] [":=", expr dist_nonneg],
-  have [] [":", expr «expr ≤ »(«expr| |»((«expr - »(t, v.t₀) : exprℝ())), v.t_dist)] [":=", expr v.dist_t₀_le t],
-  mono ["*"] [] [] []; simp [] [] ["only"] ["[", expr nat.cast_nonneg, ",", expr mul_nonneg, ",", expr nnreal.coe_nonneg, ",", expr abs_nonneg, ",", "*", "]"] [] []
-end
+theorem dist_iterate_next_le (f₁ f₂ : fun_space v) (n : ℕ) :
+  dist ((next^[n]) f₁) ((next^[n]) f₂) ≤ (((v.L*v.t_dist)^n) / n !)*dist f₁ f₂ :=
+  by 
+    refine' dist_le_of_forall fun t => (dist_iterate_next_apply_le _ _ _ _).trans _ 
+    have  : 0 ≤ dist f₁ f₂ := dist_nonneg 
+    have  : |(t - v.t₀ : ℝ)| ≤ v.t_dist := v.dist_t₀_le t 
+    mono* <;> simp only [Nat.cast_nonneg, mul_nonneg, Nnreal.coe_nonneg, abs_nonneg]
 
 end FunSpace
 
@@ -315,15 +312,14 @@ section
 
 variable [MeasurableSpace E] [BorelSpace E]
 
--- error in Analysis.ODE.PicardLindelof: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_contracting_iterate : «expr∃ , »((N : exprℕ())
- (K), contracting_with K «expr ^[ ]»((fun_space.next : v.fun_space → v.fun_space), N)) :=
-begin
-  rcases [expr ((real.tendsto_pow_div_factorial_at_top «expr * »(v.L, v.t_dist)).eventually (gt_mem_nhds zero_lt_one)).exists, "with", "⟨", ident N, ",", ident hN, "⟩"],
-  have [] [":", expr «expr ≤ »((0 : exprℝ()), «expr / »(«expr ^ »(«expr * »(v.L, v.t_dist), N), «expr !»(N)))] [],
-  from [expr div_nonneg (pow_nonneg (mul_nonneg v.L.2 v.t_dist_nonneg) _) (nat.cast_nonneg _)],
-  exact [expr ⟨N, ⟨_, this⟩, hN, lipschitz_with.of_dist_le_mul (λ f g, fun_space.dist_iterate_next_le f g N)⟩]
-end
+theorem exists_contracting_iterate :
+  ∃ (N : ℕ)(K : _), ContractingWith K ((fun_space.next : v.fun_space → v.fun_space)^[N]) :=
+  by 
+    rcases((Real.tendsto_pow_div_factorial_at_top (v.L*v.t_dist)).Eventually (gt_mem_nhds zero_lt_one)).exists with
+      ⟨N, hN⟩
+    have  : (0 : ℝ) ≤ ((v.L*v.t_dist)^N) / N !
+    exact div_nonneg (pow_nonneg (mul_nonneg v.L.2 v.t_dist_nonneg) _) (Nat.cast_nonneg _)
+    exact ⟨N, ⟨_, this⟩, hN, LipschitzWith.of_dist_le_mul fun f g => fun_space.dist_iterate_next_le f g N⟩
 
 theorem exists_fixed : ∃ f : v.fun_space, f.next = f :=
   let ⟨N, K, hK⟩ := exists_contracting_iterate v
@@ -331,23 +327,30 @@ theorem exists_fixed : ∃ f : v.fun_space, f.next = f :=
 
 end 
 
--- error in Analysis.ODE.PicardLindelof: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » Icc v.t_min v.t_max)
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
-theorem exists_solution : «expr∃ , »((f : exprℝ() → E), «expr ∧ »(«expr = »(f v.t₀, v.x₀), ∀
-  t «expr ∈ » Icc v.t_min v.t_max, has_deriv_within_at f (v t (f t)) (Icc v.t_min v.t_max) t)) :=
-begin
-  letI [] [":", expr measurable_space E] [":=", expr borel E],
-  haveI [] [":", expr borel_space E] [":=", expr ⟨rfl⟩],
-  rcases [expr v.exists_fixed, "with", "⟨", ident f, ",", ident hf, "⟩"],
-  refine [expr ⟨«expr ∘ »(f, v.proj), _, λ t ht, _⟩],
-  { simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr proj_coe, ",", expr f.map_t₀, "]"] [] [] },
-  { simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr v.proj_of_mem ht, "]"] [] [],
-    lift [expr t] ["to", expr Icc v.t_min v.t_max] ["using", expr ht] [],
-    simpa [] [] ["only"] ["[", expr hf, ",", expr v.proj_coe, "]"] [] ["using", expr f.has_deriv_within_at_next t] }
-end
+theorem exists_solution :
+  ∃ f : ℝ → E,
+    f v.t₀ = v.x₀ ∧ ∀ t _ : t ∈ Icc v.t_min v.t_max, HasDerivWithinAt f (v t (f t)) (Icc v.t_min v.t_max) t :=
+  by 
+    let this' : MeasurableSpace E := borel E 
+    have  : BorelSpace E := ⟨rfl⟩
+    rcases v.exists_fixed with ⟨f, hf⟩
+    refine' ⟨f ∘ v.proj, _, fun t ht => _⟩
+    ·
+      simp only [· ∘ ·, proj_coe, f.map_t₀]
+    ·
+      simp only [· ∘ ·, v.proj_of_mem ht]
+      lift t to Icc v.t_min v.t_max using ht 
+      simpa only [hf, v.proj_coe] using f.has_deriv_within_at_next t
 
 end PicardLindelof
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » Icc t_min t_max)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » closed_ball x₀ R)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » Icc t_min t_max)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » closed_ball x₀ R)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » Icc t_min t_max)
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
 theorem exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous [CompleteSpace E] [second_countable_topology E]
   {v : ℝ → E → E} {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ Icc t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L :  ℝ≥0 }

@@ -30,6 +30,8 @@ def equitable_on [LE β] [Add β] [HasOne β] (s : Set α) (f : α → β) : Pro
 theorem equitable_on_empty [LE β] [Add β] [HasOne β] (f : α → β) : equitable_on ∅ f :=
   fun a _ ha => (Set.not_mem_empty _ ha).elim
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
   s.equitable_on f ↔ ∃ b, ∀ a _ : a ∈ s, b ≤ f a ∧ f a ≤ b+1 :=
   by 
@@ -52,6 +54,7 @@ theorem equitable_on_iff_exists_image_subset_Icc {s : Set α} {f : α → ℕ} :
   by 
     simpa only [image_subset_iff] using equitable_on_iff_exists_le_le_add_one
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem equitable_on_iff_exists_eq_eq_add_one {s : Set α} {f : α → ℕ} :
   s.equitable_on f ↔ ∃ b, ∀ a _ : a ∈ s, f a = b ∨ f a = b+1 :=
   by 
@@ -78,8 +81,10 @@ open Set
 
 namespace Finset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem equitable_on_iff_le_le_add_one {s : Finset α} {f : α → ℕ} :
-  equitable_on (s : Set α) f ↔ ∀ a _ : a ∈ s, (∑i in s, f i) / s.card ≤ f a ∧ f a ≤ ((∑i in s, f i) / s.card)+1 :=
+  equitable_on (s : Set α) f ↔ ∀ a _ : a ∈ s, (∑ i in s, f i) / s.card ≤ f a ∧ f a ≤ ((∑ i in s, f i) / s.card)+1 :=
   by 
     rw [Set.equitable_on_iff_exists_le_le_add_one]
     refine' ⟨_, fun h => ⟨_, h⟩⟩
@@ -91,7 +96,7 @@ theorem equitable_on_iff_le_le_add_one {s : Finset α} {f : α → ℕ} :
       exact ⟨le_rfl, Nat.le_succₓ _⟩
     pushNeg  at h 
     obtain ⟨x, hx₁, hx₂⟩ := h 
-    suffices h : b = (∑i in s, f i) / s.card
+    suffices h : b = (∑ i in s, f i) / s.card
     ·
       simpRw [←h]
       apply hb 
@@ -106,8 +111,9 @@ theorem equitable_on_iff_le_le_add_one {s : Finset α} {f : α → ℕ} :
     rw [mul_commₓ, sum_const_nat]
     exact fun _ _ => rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem equitable_on_iff {s : Finset α} {f : α → ℕ} :
-  equitable_on (s : Set α) f ↔ ∀ a _ : a ∈ s, f a = (∑i in s, f i) / s.card ∨ f a = ((∑i in s, f i) / s.card)+1 :=
+  equitable_on (s : Set α) f ↔ ∀ a _ : a ∈ s, f a = (∑ i in s, f i) / s.card ∨ f a = ((∑ i in s, f i) / s.card)+1 :=
   by 
     simpRw [equitable_on_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
 

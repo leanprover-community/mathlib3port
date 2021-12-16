@@ -12,7 +12,7 @@ the product of `X` and `Y`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u₁ u₂
 

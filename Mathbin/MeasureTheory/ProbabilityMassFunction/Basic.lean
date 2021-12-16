@@ -22,7 +22,7 @@ probability mass function, discrete probability measure
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
@@ -49,7 +49,7 @@ theorem summable_coe (p : Pmf α) : Summable p :=
   p.has_sum_coe_one.Summable
 
 @[simp]
-theorem tsum_coe (p : Pmf α) : (∑'a, p a) = 1 :=
+theorem tsum_coe (p : Pmf α) : (∑' a, p a) = 1 :=
   p.has_sum_coe_one.tsum_eq
 
 /-- The support of a `pmf` is the set where it is nonzero. -/
@@ -78,11 +78,20 @@ section Pure
 def pure (a : α) : Pmf α :=
   ⟨fun a' => if a' = a then 1 else 0, has_sum_ite_eq _ _⟩
 
+variable (a a' : α)
+
 @[simp]
-theorem pure_apply (a a' : α) : pure a a' = if a' = a then 1 else 0 :=
+theorem pure_apply : pure a a' = if a' = a then 1 else 0 :=
   rfl
 
-theorem mem_support_pure_iff (a a' : α) : a' ∈ (pure a).Support ↔ a' = a :=
+@[simp]
+theorem support_pure : (pure a).Support = {a} :=
+  Set.ext
+    fun a' =>
+      by 
+        simp [mem_support_iff]
+
+theorem mem_support_pure_iff : a' ∈ (pure a).Support ↔ a' = a :=
   by 
     simp 
 
@@ -103,18 +112,34 @@ protected theorem bind.summable (p : Pmf α) (f : α → Pmf β) (b : β) : Summ
 
 /-- The monadic bind operation for `pmf`. -/
 def bind (p : Pmf α) (f : α → Pmf β) : Pmf β :=
-  ⟨fun b => ∑'a, p a*f a b,
+  ⟨fun b => ∑' a, p a*f a b,
     by 
       apply Ennreal.has_sum_coe.1
       simp only [Ennreal.coe_tsum (bind.summable p f _)]
       rw [ennreal.summable.has_sum_iff, Ennreal.tsum_comm]
       simp [Ennreal.tsum_mul_left, (Ennreal.coe_tsum (f _).summable_coe).symm, (Ennreal.coe_tsum p.summable_coe).symm]⟩
 
+variable (p : Pmf α) (f : α → Pmf β)
+
 @[simp]
-theorem bind_apply (p : Pmf α) (f : α → Pmf β) (b : β) : p.bind f b = ∑'a, p a*f a b :=
+theorem bind_apply (b : β) : p.bind f b = ∑' a, p a*f a b :=
   rfl
 
-theorem coe_bind_apply (p : Pmf α) (f : α → Pmf β) (b : β) : (p.bind f b : ℝ≥0∞) = ∑'a, p a*f a b :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » p.support)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    support_bind
+    : p.bind f . Support = { b | ∃ ( a : _ ) ( _ : a ∈ p.support ) , b ∈ f a . Support }
+    := Set.ext fun b => by simp [ mem_support_iff , tsum_eq_zero_iff bind.summable p f b , not_or_distrib ]
+
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » p.support)
+theorem mem_support_bind_iff (b : β) : b ∈ (p.bind f).Support ↔ ∃ (a : _)(_ : a ∈ p.support), b ∈ (f a).Support :=
+  by 
+    simp 
+
+theorem coe_bind_apply (p : Pmf α) (f : α → Pmf β) (b : β) : (p.bind f b : ℝ≥0∞) = ∑' a, p a*f a b :=
   Eq.trans (Ennreal.coe_tsum$ bind.summable p f b)$
     by 
       simp 
@@ -173,16 +198,16 @@ def to_outer_measure (p : Pmf α) : outer_measure α :=
   outer_measure.sum fun x : α => p x • dirac x
 
 theorem to_outer_measure_apply (p : Pmf α) (s : Set α) :
-  p.to_outer_measure s = ∑'x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
+  p.to_outer_measure s = ∑' x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
   tsum_congr fun x => smul_dirac_apply (p x) x s
 
-theorem to_outer_measure_apply' (p : Pmf α) (s : Set α) : p.to_outer_measure s = «expr↑ » (∑'x : α, s.indicator p x) :=
+theorem to_outer_measure_apply' (p : Pmf α) (s : Set α) : p.to_outer_measure s = ↑∑' x : α, s.indicator p x :=
   by 
     simp only [Ennreal.coe_tsum (Nnreal.indicator_summable (summable_coe p) s), Ennreal.coe_indicator,
       to_outer_measure_apply]
 
 @[simp]
-theorem to_outer_measure_apply_finset (p : Pmf α) (s : Finset α) : p.to_outer_measure s = ∑x in s, (p x : ℝ≥0∞) :=
+theorem to_outer_measure_apply_finset (p : Pmf α) (s : Finset α) : p.to_outer_measure s = ∑ x in s, (p x : ℝ≥0∞) :=
   by 
     refine' (to_outer_measure_apply p s).trans ((@tsum_eq_sum _ _ _ _ _ _ s _).trans _)
     ·
@@ -192,7 +217,7 @@ theorem to_outer_measure_apply_finset (p : Pmf α) (s : Finset α) : p.to_outer_
 
 @[simp]
 theorem to_outer_measure_apply_fintype [Fintype α] (p : Pmf α) (s : Set α) :
-  p.to_outer_measure s = ∑x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
+  p.to_outer_measure s = ∑ x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
   (p.to_outer_measure_apply s).trans (tsum_eq_sum fun x h => absurd (Finset.mem_univ x) h)
 
 theorem to_outer_measure_apply_eq_zero_iff (p : Pmf α) (s : Set α) : p.to_outer_measure s = 0 ↔ Disjoint p.support s :=
@@ -228,25 +253,24 @@ theorem to_outer_measure_apply_le_to_measure_apply (p : Pmf α) (s : Set α) : p
   le_to_measure_apply p.to_outer_measure _ s
 
 theorem to_measure_apply (p : Pmf α) (s : Set α) (hs : MeasurableSet s) :
-  p.to_measure s = ∑'x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
+  p.to_measure s = ∑' x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs).trans (p.to_outer_measure_apply s)
 
-theorem to_measure_apply' (p : Pmf α) (s : Set α) (hs : MeasurableSet s) :
-  p.to_measure s = «expr↑ » (∑'x, s.indicator p x) :=
+theorem to_measure_apply' (p : Pmf α) (s : Set α) (hs : MeasurableSet s) : p.to_measure s = ↑∑' x, s.indicator p x :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs).trans (p.to_outer_measure_apply' s)
 
 @[simp]
 theorem to_measure_apply_finset [MeasurableSingletonClass α] (p : Pmf α) (s : Finset α) :
-  p.to_measure s = ∑x in s, (p x : ℝ≥0∞) :=
+  p.to_measure s = ∑ x in s, (p x : ℝ≥0∞) :=
   (p.to_measure_apply_eq_to_outer_measure_apply s s.measurable_set).trans (p.to_outer_measure_apply_finset s)
 
 theorem to_measure_apply_of_finite [MeasurableSingletonClass α] (p : Pmf α) (s : Set α) (hs : s.finite) :
-  p.to_measure s = ∑'x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
+  p.to_measure s = ∑' x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs.measurable_set).trans (p.to_outer_measure_apply s)
 
 @[simp]
 theorem to_measure_apply_fintype [MeasurableSingletonClass α] [Fintype α] (p : Pmf α) (s : Set α) :
-  p.to_measure s = ∑x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
+  p.to_measure s = ∑ x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
   (p.to_measure_apply_eq_to_outer_measure_apply s (Set.Finite.of_fintype s).MeasurableSet).trans
     (p.to_outer_measure_apply_fintype s)
 

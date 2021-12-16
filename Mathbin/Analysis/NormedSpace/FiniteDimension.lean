@@ -38,7 +38,7 @@ then the identities from `E` to `E'` and from `E'`to `E` are continuous thanks t
 
 universe u v w x
 
-noncomputable theory
+noncomputable section 
 
 open Set FiniteDimensional TopologicalSpace Filter Asymptotics
 
@@ -101,51 +101,31 @@ theorem to_affine_isometry_equiv_apply [Inhabited P₁] (li : P₁ →ᵃⁱ[�
 
 end AffineIsometry
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A linear map on `ι → 𝕜` (where `ι` is a fintype) is continuous -/
-theorem linear_map.continuous_on_pi
-{ι : Type w}
-[fintype ι]
-{𝕜 : Type u}
-[normed_field 𝕜]
-{E : Type v}
-[add_comm_group E]
-[module 𝕜 E]
-[topological_space E]
-[topological_add_group E]
-[has_continuous_smul 𝕜 E]
-(f : «expr →ₗ[ ] »(ι → 𝕜, 𝕜, E)) : continuous f :=
-begin
-  have [] [":", expr «expr = »((f : (ι → 𝕜) → E), λ
-    x, «expr∑ , »((i : ι), «expr • »(x i, f (λ j, if «expr = »(i, j) then 1 else 0))))] [],
-  by { ext [] [ident x] [],
-    exact [expr f.pi_apply_eq_sum_univ x] },
-  rw [expr this] [],
-  refine [expr continuous_finset_sum _ (λ i hi, _)],
-  exact [expr (continuous_apply i).smul continuous_const]
-end
+theorem LinearMap.continuous_on_pi {ι : Type w} [Fintype ι] {𝕜 : Type u} [NormedField 𝕜] {E : Type v} [AddCommGroupₓ E]
+  [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousSmul 𝕜 E] (f : (ι → 𝕜) →ₗ[𝕜] E) :
+  Continuous f :=
+  by 
+    have  : (f : (ι → 𝕜) → E) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0
+    ·
+      ·
+        ext x 
+        exact f.pi_apply_eq_sum_univ x 
+    rw [this]
+    refine' continuous_finset_sum _ fun i hi => _ 
+    exact (continuous_apply i).smul continuous_const
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The space of continuous linear maps between finite-dimensional spaces is finite-dimensional. -/
-instance
-{𝕜 E F : Type*}
-[field 𝕜]
-[topological_space 𝕜]
-[topological_space E]
-[add_comm_group E]
-[module 𝕜 E]
-[finite_dimensional 𝕜 E]
-[topological_space F]
-[add_comm_group F]
-[module 𝕜 F]
-[topological_add_group F]
-[has_continuous_smul 𝕜 F]
-[finite_dimensional 𝕜 F] : finite_dimensional 𝕜 «expr →L[ ] »(E, 𝕜, F) :=
-begin
-  haveI [] [":", expr is_noetherian 𝕜 «expr →ₗ[ ] »(E, 𝕜, F)] [":=", expr is_noetherian.iff_fg.mpr (by apply_instance)],
-  let [ident I] [":", expr «expr →ₗ[ ] »(«expr →L[ ] »(E, 𝕜, F), 𝕜, «expr →ₗ[ ] »(E, 𝕜, F))] [":=", expr continuous_linear_map.coe_lm 𝕜],
-  exact [expr module.finite.of_injective I continuous_linear_map.coe_injective]
-end
+instance {𝕜 E F : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E]
+  [FiniteDimensional 𝕜 E] [TopologicalSpace F] [AddCommGroupₓ F] [Module 𝕜 F] [TopologicalAddGroup F]
+  [HasContinuousSmul 𝕜 F] [FiniteDimensional 𝕜 F] : FiniteDimensional 𝕜 (E →L[𝕜] F) :=
+  by 
+    have  : IsNoetherian 𝕜 (E →ₗ[𝕜] F) :=
+      is_noetherian.iff_fg.mpr
+        (by 
+          infer_instance)
+    let I : (E →L[𝕜] F) →ₗ[𝕜] E →ₗ[𝕜] F := ContinuousLinearMap.coeLm 𝕜 
+    exact Module.Finite.of_injective I ContinuousLinearMap.coe_injective
 
 section CompleteField
 
@@ -153,92 +133,111 @@ variable {𝕜 : Type u} [NondiscreteNormedField 𝕜] {E : Type v} [NormedGroup
   [NormedGroup F] [NormedSpace 𝕜 F] {F' : Type x} [AddCommGroupₓ F'] [Module 𝕜 F'] [TopologicalSpace F']
   [TopologicalAddGroup F'] [HasContinuousSmul 𝕜 F'] [CompleteSpace 𝕜]
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In finite dimension over a complete field, the canonical identification (in terms of a basis)
 with `𝕜^n` together with its sup norm is continuous. This is the nontrivial part in the fact that
 all norms are equivalent in finite dimension.
 
 This statement is superceded by the fact that every linear map on a finite-dimensional space is
 continuous, in `linear_map.continuous_of_finite_dimensional`. -/
-theorem continuous_equiv_fun_basis {ι : Type v} [fintype ι] (ξ : basis ι 𝕜 E) : continuous ξ.equiv_fun :=
-begin
-  unfreezingI { induction [expr hn, ":", expr fintype.card ι] [] ["with", ident n, ident IH] ["generalizing", ident ι, ident E] },
-  { apply [expr linear_map.continuous_of_bound _ 0 (λ x, _)],
-    have [] [":", expr «expr = »(ξ.equiv_fun x, 0)] [],
-    by { ext [] [ident i] [],
-      exact [expr (fintype.card_eq_zero_iff.1 hn).elim i] },
-    change [expr «expr ≤ »(«expr∥ ∥»(ξ.equiv_fun x), «expr * »(0, «expr∥ ∥»(x)))] [] [],
-    rw [expr this] [],
-    simp [] [] [] ["[", expr norm_nonneg, "]"] [] [] },
-  { haveI [] [":", expr finite_dimensional 𝕜 E] [":=", expr of_fintype_basis ξ],
-    have [ident H₁] [":", expr ∀ s : submodule 𝕜 E, «expr = »(finrank 𝕜 s, n) → is_closed (s : set E)] [],
-    { assume [binders (s s_dim)],
-      let [ident b] [] [":=", expr basis.of_vector_space 𝕜 s],
-      have [ident U] [":", expr uniform_embedding b.equiv_fun.symm.to_equiv] [],
-      { have [] [":", expr «expr = »(fintype.card (basis.of_vector_space_index 𝕜 s), n)] [],
-        by { rw ["<-", expr s_dim] [],
-          exact [expr (finrank_eq_card_basis b).symm] },
-        have [] [":", expr continuous b.equiv_fun] [":=", expr IH b this],
-        exact [expr b.equiv_fun.symm.uniform_embedding (linear_map.continuous_on_pi _) this] },
-      have [] [":", expr is_complete (s : set E)] [],
-      from [expr complete_space_coe_iff_is_complete.1 ((complete_space_congr U).1 (by apply_instance))],
-      exact [expr this.is_closed] },
-    have [ident H₂] [":", expr ∀ f : «expr →ₗ[ ] »(E, 𝕜, 𝕜), continuous f] [],
-    { assume [binders (f)],
-      have [] [":", expr «expr ∨ »(«expr = »(finrank 𝕜 f.ker, n), «expr = »(finrank 𝕜 f.ker, n.succ))] [],
-      { have [ident Z] [] [":=", expr f.finrank_range_add_finrank_ker],
-        rw ["[", expr finrank_eq_card_basis ξ, ",", expr hn, "]"] ["at", ident Z],
-        by_cases [expr H, ":", expr «expr = »(finrank 𝕜 f.range, 0)],
-        { right,
-          rw [expr H] ["at", ident Z],
-          simpa [] [] [] [] [] ["using", expr Z] },
-        { left,
-          have [] [":", expr «expr = »(finrank 𝕜 f.range, 1)] [],
-          { refine [expr le_antisymm _ (zero_lt_iff.mpr H)],
-            simpa [] [] [] ["[", expr finrank_self, "]"] [] ["using", expr f.range.finrank_le] },
-          rw ["[", expr this, ",", expr add_comm, ",", expr nat.add_one, "]"] ["at", ident Z],
-          exact [expr nat.succ.inj Z] } },
-      have [] [":", expr is_closed (f.ker : set E)] [],
-      { cases [expr this] [],
-        { exact [expr H₁ _ this] },
-        { have [] [":", expr «expr = »(f.ker, «expr⊤»())] [],
-          by { apply [expr eq_top_of_finrank_eq],
-            rw ["[", expr finrank_eq_card_basis ξ, ",", expr hn, ",", expr this, "]"] [] },
-          simp [] [] [] ["[", expr this, "]"] [] [] } },
-      exact [expr linear_map.continuous_iff_is_closed_ker.2 this] },
-    have [] [":", expr ∀
-     i : ι, «expr∃ , »((C), «expr ∧ »(«expr ≤ »(0, C), ∀
-       x : E, «expr ≤ »(«expr∥ ∥»(ξ.equiv_fun x i), «expr * »(C, «expr∥ ∥»(x)))))] [],
-    { assume [binders (i)],
-      let [ident f] [":", expr «expr →ₗ[ ] »(E, 𝕜, 𝕜)] [":=", expr «expr ∘ₗ »(linear_map.proj i, «expr↑ »(ξ.equiv_fun))],
-      let [ident f'] [":", expr «expr →L[ ] »(E, 𝕜, 𝕜)] [":=", expr { cont := H₂ f, ..f }],
-      exact [expr ⟨«expr∥ ∥»(f'), norm_nonneg _, λ x, continuous_linear_map.le_op_norm f' x⟩] },
-    choose [] [ident C0] [ident hC0] ["using", expr this],
-    let [ident C] [] [":=", expr «expr∑ , »((i), C0 i)],
-    have [ident C_nonneg] [":", expr «expr ≤ »(0, C)] [":=", expr finset.sum_nonneg (λ i hi, (hC0 i).1)],
-    have [ident C0_le] [":", expr ∀
-     i, «expr ≤ »(C0 i, C)] [":=", expr λ i, finset.single_le_sum (λ j hj, (hC0 j).1) (finset.mem_univ _)],
-    apply [expr linear_map.continuous_of_bound _ C (λ x, _)],
-    rw [expr pi_semi_norm_le_iff] [],
-    { exact [expr λ i, le_trans ((hC0 i).2 x) (mul_le_mul_of_nonneg_right (C0_le i) (norm_nonneg _))] },
-    { exact [expr mul_nonneg C_nonneg (norm_nonneg _)] } }
-end
+theorem continuous_equiv_fun_basis {ι : Type v} [Fintype ι] (ξ : Basis ι 𝕜 E) : Continuous ξ.equiv_fun :=
+  by 
+    (
+      induction' hn : Fintype.card ι with n IH generalizing ι E)
+    ·
+      apply ξ.equiv_fun.to_linear_map.continuous_of_bound 0 fun x => _ 
+      have  : ξ.equiv_fun x = 0
+      ·
+        ·
+          ext i 
+          exact (Fintype.card_eq_zero_iff.1 hn).elim i 
+      change ∥ξ.equiv_fun x∥ ≤ 0*∥x∥
+      rw [this]
+      simp [norm_nonneg]
+    ·
+      have  : FiniteDimensional 𝕜 E := of_fintype_basis ξ 
+      have H₁ : ∀ s : Submodule 𝕜 E, finrank 𝕜 s = n → IsClosed (s : Set E)
+      ·
+        intro s s_dim 
+        let b := Basis.ofVectorSpace 𝕜 s 
+        have U : UniformEmbedding b.equiv_fun.symm.to_equiv
+        ·
+          have  : Fintype.card (Basis.OfVectorSpaceIndex 𝕜 s) = n
+          ·
+            ·
+              rw [←s_dim]
+              exact (finrank_eq_card_basis b).symm 
+          have  : Continuous b.equiv_fun := IH b this 
+          exact b.equiv_fun.symm.uniform_embedding b.equiv_fun.symm.to_linear_map.continuous_on_pi this 
+        have  : IsComplete (s : Set E)
+        exact
+          complete_space_coe_iff_is_complete.1
+            ((complete_space_congr U).1
+              (by 
+                infer_instance))
+        exact this.is_closed 
+      have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f
+      ·
+        intro f 
+        have  : finrank 𝕜 f.ker = n ∨ finrank 𝕜 f.ker = n.succ
+        ·
+          have Z := f.finrank_range_add_finrank_ker 
+          rw [finrank_eq_card_basis ξ, hn] at Z 
+          byCases' H : finrank 𝕜 f.range = 0
+          ·
+            right 
+            rw [H] at Z 
+            simpa using Z
+          ·
+            left 
+            have  : finrank 𝕜 f.range = 1
+            ·
+              refine' le_antisymmₓ _ (zero_lt_iff.mpr H)
+              simpa [finrank_self] using f.range.finrank_le 
+            rw [this, add_commₓ, Nat.add_one] at Z 
+            exact Nat.succ.injₓ Z 
+        have  : IsClosed (f.ker : Set E)
+        ·
+          cases this
+          ·
+            exact H₁ _ this
+          ·
+            have  : f.ker = ⊤
+            ·
+              ·
+                apply eq_top_of_finrank_eq 
+                rw [finrank_eq_card_basis ξ, hn, this]
+            simp [this]
+        exact LinearMap.continuous_iff_is_closed_ker.2 this 
+      have  : ∀ i : ι, ∃ C, 0 ≤ C ∧ ∀ x : E, ∥ξ.equiv_fun x i∥ ≤ C*∥x∥
+      ·
+        intro i 
+        let f : E →ₗ[𝕜] 𝕜 := LinearMap.proj i ∘ₗ ↑ξ.equiv_fun 
+        let f' : E →L[𝕜] 𝕜 := { f with cont := H₂ f }
+        exact ⟨∥f'∥, norm_nonneg _, fun x => ContinuousLinearMap.le_op_norm f' x⟩
+      choose C0 hC0 using this 
+      let C := ∑ i, C0 i 
+      have C_nonneg : 0 ≤ C := Finset.sum_nonneg fun i hi => (hC0 i).1
+      have C0_le : ∀ i, C0 i ≤ C := fun i => Finset.single_le_sum (fun j hj => (hC0 j).1) (Finset.mem_univ _)
+      apply ξ.equiv_fun.to_linear_map.continuous_of_bound C fun x => _ 
+      rw [pi_semi_norm_le_iff]
+      ·
+        exact fun i => le_transₓ ((hC0 i).2 x) (mul_le_mul_of_nonneg_right (C0_le i) (norm_nonneg _))
+      ·
+        exact mul_nonneg C_nonneg (norm_nonneg _)
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any linear map on a finite dimensional space over a complete field is continuous. -/
-theorem linear_map.continuous_of_finite_dimensional
-[finite_dimensional 𝕜 E]
-(f : «expr →ₗ[ ] »(E, 𝕜, F')) : continuous f :=
-begin
-  let [ident b] [] [":=", expr basis.of_vector_space 𝕜 E],
-  have [ident A] [":", expr continuous b.equiv_fun] [":=", expr continuous_equiv_fun_basis b],
-  have [ident B] [":", expr continuous (f.comp (b.equiv_fun.symm : «expr →ₗ[ ] »(basis.of_vector_space_index 𝕜 E → 𝕜, 𝕜, E)))] [":=", expr linear_map.continuous_on_pi _],
-  have [] [":", expr continuous «expr ∘ »(f.comp (b.equiv_fun.symm : «expr →ₗ[ ] »(basis.of_vector_space_index 𝕜 E → 𝕜, 𝕜, E)), b.equiv_fun)] [":=", expr B.comp A],
-  convert [] [expr this] [],
-  ext [] [ident x] [],
-  dsimp [] [] [] [],
-  rw ["[", expr basis.equiv_fun_symm_apply, ",", expr basis.sum_repr, "]"] []
-end
+theorem LinearMap.continuous_of_finite_dimensional [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F') : Continuous f :=
+  by 
+    let b := Basis.ofVectorSpace 𝕜 E 
+    have A : Continuous b.equiv_fun := continuous_equiv_fun_basis b 
+    have B : Continuous (f.comp (b.equiv_fun.symm : (Basis.OfVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E)) :=
+      LinearMap.continuous_on_pi _ 
+    have  : Continuous (f.comp (b.equiv_fun.symm : (Basis.OfVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E) ∘ b.equiv_fun) :=
+      B.comp A 
+    convert this 
+    ext x 
+    dsimp 
+    rw [Basis.equiv_fun_symm_apply, Basis.sum_repr]
 
 theorem AffineMap.continuous_of_finite_dimensional {PE PF : Type _} [MetricSpace PE] [NormedAddTorsor E PE]
   [MetricSpace PF] [NormedAddTorsor F PF] [FiniteDimensional 𝕜 E] (f : PE →ᵃ[𝕜] PF) : Continuous f :=
@@ -254,7 +253,7 @@ def to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' 
     map_smul' := fun c f => rfl, left_inv := fun f => rfl, right_inv := fun f => ContinuousLinearMap.coe_injective rfl }
 
 @[simp]
-theorem coe_to_continuous_linear_map' (f : E →ₗ[𝕜] F') : «expr⇑ » f.to_continuous_linear_map = f :=
+theorem coe_to_continuous_linear_map' (f : E →ₗ[𝕜] F') : ⇑f.to_continuous_linear_map = f :=
   rfl
 
 @[simp]
@@ -262,25 +261,21 @@ theorem coe_to_continuous_linear_map (f : E →ₗ[𝕜] F') : (f.to_continuous_
   rfl
 
 @[simp]
-theorem coe_to_continuous_linear_map_symm :
-  «expr⇑ » (to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coeₓ :=
+theorem coe_to_continuous_linear_map_symm : ⇑(to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coeₓ :=
   rfl
 
 end LinearMap
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The continuous linear equivalence induced by a linear equivalence on a finite dimensional
 space. -/
-def linear_equiv.to_continuous_linear_equiv
-[finite_dimensional 𝕜 E]
-(e : «expr ≃ₗ[ ] »(E, 𝕜, F)) : «expr ≃L[ ] »(E, 𝕜, F) :=
-{ continuous_to_fun := e.to_linear_map.continuous_of_finite_dimensional,
-  continuous_inv_fun := begin
-    haveI [] [":", expr finite_dimensional 𝕜 F] [":=", expr e.finite_dimensional],
-    exact [expr e.symm.to_linear_map.continuous_of_finite_dimensional]
-  end,
-  ..e }
+def LinearEquiv.toContinuousLinearEquiv [FiniteDimensional 𝕜 E] (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
+  { e with continuous_to_fun := e.to_linear_map.continuous_of_finite_dimensional,
+    continuous_inv_fun :=
+      by 
+        have  : FiniteDimensional 𝕜 F := e.finite_dimensional 
+        exact e.symm.to_linear_map.continuous_of_finite_dimensional }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (K «expr > » 0)
 theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F) (hf : f.ker = ⊥) :
   ∃ (K : _)(_ : K > 0), AntilipschitzWith K f :=
   by 
@@ -292,47 +287,40 @@ theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E �
       let e : E ≃L[𝕜] f.range := (LinearEquiv.ofInjective f hf).toContinuousLinearEquiv 
       exact ⟨_, e.nnnorm_symm_pos, e.antilipschitz⟩
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem linear_independent.eventually
-{ι}
-[fintype ι]
-{f : ι → E}
-(hf : linear_independent 𝕜 f) : «expr∀ᶠ in , »((g), expr𝓝() f, linear_independent 𝕜 g) :=
-begin
-  simp [] [] ["only"] ["[", expr fintype.linear_independent_iff', "]"] [] ["at", ident hf, "⊢"],
-  rcases [expr linear_map.exists_antilipschitz_with _ hf, "with", "⟨", ident K, ",", ident K0, ",", ident hK, "⟩"],
-  have [] [":", expr tendsto (λ
-    g : ι → E, «expr∑ , »((i), «expr∥ ∥»(«expr - »(g i, f i)))) (expr𝓝() f) «expr $ »(expr𝓝(), «expr∑ , »((i), «expr∥ ∥»(«expr - »(f i, f i))))] [],
-  from [expr tendsto_finset_sum _ (λ
-    i hi, «expr $ »(tendsto.norm, ((continuous_apply i).tendsto _).sub tendsto_const_nhds))],
-  simp [] [] ["only"] ["[", expr sub_self, ",", expr norm_zero, ",", expr finset.sum_const_zero, "]"] [] ["at", ident this],
-  refine [expr (this.eventually «expr $ »(gt_mem_nhds, inv_pos.2 K0)).mono (λ g hg, _)],
-  replace [ident hg] [":", expr «expr < »(«expr∑ , »((i), nnnorm «expr - »(g i, f i)), «expr ⁻¹»(K))] [],
-  by { rw ["<-", expr nnreal.coe_lt_coe] [],
-    push_cast [] [],
-    exact [expr hg] },
-  rw [expr linear_map.ker_eq_bot] [],
-  refine [expr (hK.add_sub_lipschitz_with «expr $ »(lipschitz_with.of_dist_le_mul, λ v u, _) hg).injective],
-  simp [] [] ["only"] ["[", expr dist_eq_norm, ",", expr linear_map.lsum_apply, ",", expr pi.sub_apply, ",", expr linear_map.sum_apply, ",", expr linear_map.comp_apply, ",", expr linear_map.proj_apply, ",", expr linear_map.smul_right_apply, ",", expr linear_map.id_apply, ",", "<-", expr finset.sum_sub_distrib, ",", "<-", expr smul_sub, ",", "<-", expr sub_smul, ",", expr nnreal.coe_sum, ",", expr coe_nnnorm, ",", expr finset.sum_mul, "]"] [] [],
-  refine [expr norm_sum_le_of_le _ (λ i _, _)],
-  rw ["[", expr norm_smul, ",", expr mul_comm, "]"] [],
-  exact [expr mul_le_mul_of_nonneg_left (norm_le_pi_norm «expr - »(v, u) i) (norm_nonneg _)]
-end
+protected theorem LinearIndependent.eventually {ι} [Fintype ι] {f : ι → E} (hf : LinearIndependent 𝕜 f) :
+  ∀ᶠ g in 𝓝 f, LinearIndependent 𝕜 g :=
+  by 
+    simp only [Fintype.linear_independent_iff'] at hf⊢
+    rcases LinearMap.exists_antilipschitz_with _ hf with ⟨K, K0, hK⟩
+    have  : tendsto (fun g : ι → E => ∑ i, ∥g i - f i∥) (𝓝 f) (𝓝$ ∑ i, ∥f i - f i∥)
+    exact tendsto_finset_sum _ fun i hi => tendsto.norm$ ((continuous_apply i).Tendsto _).sub tendsto_const_nhds 
+    simp only [sub_self, norm_zero, Finset.sum_const_zero] at this 
+    refine' (this.eventually (gt_mem_nhds$ inv_pos.2 K0)).mono fun g hg => _ 
+    replace hg : (∑ i, nnnorm (g i - f i)) < K⁻¹
+    ·
+      ·
+        rw [←Nnreal.coe_lt_coe]
+        pushCast 
+        exact hg 
+    rw [LinearMap.ker_eq_bot]
+    refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul$ fun v u => _) hg).Injective 
+    simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply, LinearMap.comp_apply,
+      LinearMap.proj_apply, LinearMap.smul_right_apply, LinearMap.id_apply, ←Finset.sum_sub_distrib, ←smul_sub,
+      ←sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
+    refine' norm_sum_le_of_le _ fun i _ => _ 
+    rw [norm_smul, mul_commₓ]
+    exact mul_le_mul_of_nonneg_left (norm_le_pi_norm (v - u) i) (norm_nonneg _)
 
-theorem is_open_set_of_linear_independent {ι : Type _} [Fintype ι] : IsOpen { f:ι → E | LinearIndependent 𝕜 f } :=
+theorem is_open_set_of_linear_independent {ι : Type _} [Fintype ι] : IsOpen { f : ι → E | LinearIndependent 𝕜 f } :=
   is_open_iff_mem_nhds.2$ fun f => LinearIndependent.eventually
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_open_set_of_nat_le_rank
-(n : exprℕ()) : is_open {f : «expr →L[ ] »(E, 𝕜, F) | «expr ≤ »(«expr↑ »(n), rank (f : «expr →ₗ[ ] »(E, 𝕜, F)))} :=
-begin
-  simp [] [] ["only"] ["[", expr le_rank_iff_exists_linear_independent_finset, ",", expr set_of_exists, ",", "<-", expr exists_prop, "]"] [] [],
-  refine [expr is_open_bUnion (λ t ht, _)],
-  have [] [":", expr continuous (λ f : «expr →L[ ] »(E, 𝕜, F), λ x : (t : set E), f x)] [],
-  from [expr continuous_pi (λ x, (continuous_linear_map.apply 𝕜 F (x : E)).continuous)],
-  exact [expr is_open_set_of_linear_independent.preimage this]
-end
+theorem is_open_set_of_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } :=
+  by 
+    simp only [le_rank_iff_exists_linear_independent_finset, set_of_exists, ←exists_prop]
+    refine' is_open_bUnion fun t ht => _ 
+    have  : Continuous fun f : E →L[𝕜] F => fun x : (t : Set E) => f x 
+    exact continuous_pi fun x => (ContinuousLinearMap.apply 𝕜 F (x : E)).Continuous 
+    exact is_open_set_of_linear_independent.preimage this
 
 /-- Two finite-dimensional normed spaces are continuously linearly equivalent if they have the same
 (finite) dimension. -/
@@ -354,44 +342,45 @@ def ContinuousLinearEquiv.ofFinrankEq [FiniteDimensional 𝕜 E] [FiniteDimensio
 
 variable {ι : Type _} [Fintype ι]
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a continuous linear map given the value at a finite basis. -/
-def basis.constrL (v : basis ι 𝕜 E) (f : ι → F) : «expr →L[ ] »(E, 𝕜, F) :=
-by haveI [] [":", expr finite_dimensional 𝕜 E] [":=", expr finite_dimensional.of_fintype_basis v]; exact [expr (v.constr 𝕜 f).to_continuous_linear_map]
+def Basis.constrL (v : Basis ι 𝕜 E) (f : ι → F) : E →L[𝕜] F :=
+  by 
+    have  : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis v <;> exact (v.constr 𝕜 f).toContinuousLinearMap
 
 @[simp, normCast]
 theorem Basis.coe_constrL (v : Basis ι 𝕜 E) (f : ι → F) : (v.constrL f : E →ₗ[𝕜] F) = v.constr 𝕜 f :=
   rfl
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The continuous linear equivalence between a vector space over `𝕜` with a finite basis and
-functions from its basis indexing type to `𝕜`. -/ def basis.equiv_funL (v : basis ι 𝕜 E) : «expr ≃L[ ] »(E, 𝕜, ι → 𝕜) :=
-{ continuous_to_fun := begin
-    haveI [] [":", expr finite_dimensional 𝕜 E] [":=", expr finite_dimensional.of_fintype_basis v],
-    apply [expr linear_map.continuous_of_finite_dimensional]
-  end,
-  continuous_inv_fun := begin
-    change [expr continuous v.equiv_fun.symm.to_fun] [] [],
-    apply [expr linear_map.continuous_of_finite_dimensional]
-  end,
-  ..v.equiv_fun }
+functions from its basis indexing type to `𝕜`. -/
+def Basis.equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
+  { v.equiv_fun with
+    continuous_to_fun :=
+      by 
+        have  : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis v 
+        exact v.equiv_fun.to_linear_map.continuous_of_finite_dimensional,
+    continuous_inv_fun :=
+      by 
+        change Continuous v.equiv_fun.symm.to_fun 
+        exact v.equiv_fun.symm.to_linear_map.continuous_of_finite_dimensional }
 
 @[simp]
-theorem Basis.constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) : (v.constrL f) e = ∑i, v.equiv_fun e i • f i :=
+theorem Basis.constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) : (v.constrL f) e = ∑ i, v.equiv_fun e i • f i :=
   v.constr_apply_fintype 𝕜 _ _
 
 @[simp]
 theorem Basis.constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.constrL f) (v i) = f i :=
   v.constr_basis 𝕜 _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » (0 : exprℝ()))
 theorem Basis.sup_norm_le_norm (v : Basis ι 𝕜 E) :
-  ∃ (C : _)(_ : C > (0 : ℝ)), ∀ e : E, (∑i, ∥v.equiv_fun e i∥) ≤ C*∥e∥ :=
+  ∃ (C : _)(_ : C > (0 : ℝ)), ∀ e : E, (∑ i, ∥v.equiv_fun e i∥) ≤ C*∥e∥ :=
   by 
     set φ := v.equiv_funL.to_continuous_linear_map 
     set C := ∥φ∥*Fintype.card ι 
     use max C 1, lt_of_lt_of_leₓ zero_lt_one (le_max_rightₓ C 1)
     intro e 
-    calc (∑i, ∥φ e i∥) ≤ ∑i : ι, ∥φ e∥ :=
+    calc (∑ i, ∥φ e i∥) ≤ ∑ i : ι, ∥φ e∥ :=
       by 
         apply Finset.sum_le_sum 
         exact fun i hi => norm_le_pi_norm (φ e) i _ = ∥φ e∥*Fintype.card ι :=
@@ -402,88 +391,94 @@ theorem Basis.sup_norm_le_norm (v : Basis ι 𝕜 E) :
         ring _ ≤ max C 1*∥e∥ :=
       mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (norm_nonneg _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » (0 : exprℝ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » (0 : exprℝ()))
 theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) :
   ∃ (C : _)(_ : C > (0 : ℝ)), ∀ {u : E →L[𝕜] F} {M : ℝ}, 0 ≤ M → (∀ i, ∥u (v i)∥ ≤ M) → ∥u∥ ≤ C*M :=
   by 
-    obtain ⟨C, C_pos, hC⟩ : ∃ (C : _)(_ : C > (0 : ℝ)), ∀ e : E, (∑i, ∥v.equiv_fun e i∥) ≤ C*∥e∥
+    obtain ⟨C, C_pos, hC⟩ : ∃ (C : _)(_ : C > (0 : ℝ)), ∀ e : E, (∑ i, ∥v.equiv_fun e i∥) ≤ C*∥e∥
     exact v.sup_norm_le_norm 
     use C, C_pos 
     intro u M hM hu 
     apply u.op_norm_le_bound (mul_nonneg (le_of_ltₓ C_pos) hM)
     intro e 
-    calc ∥u e∥ = ∥u (∑i, v.equiv_fun e i • v i)∥ :=
+    calc ∥u e∥ = ∥u (∑ i, v.equiv_fun e i • v i)∥ :=
       by 
-        rw [v.sum_equiv_fun]_ = ∥∑i, v.equiv_fun e i • (u$ v i)∥ :=
+        rw [v.sum_equiv_fun]_ = ∥∑ i, v.equiv_fun e i • (u$ v i)∥ :=
       by 
-        simp [u.map_sum, LinearMap.map_smul]_ ≤ ∑i, ∥v.equiv_fun e i • (u$ v i)∥ :=
-      norm_sum_le _ _ _ = ∑i, ∥v.equiv_fun e i∥*∥u (v i)∥ :=
+        simp [u.map_sum, LinearMap.map_smul]_ ≤ ∑ i, ∥v.equiv_fun e i • (u$ v i)∥ :=
+      norm_sum_le _ _ _ = ∑ i, ∥v.equiv_fun e i∥*∥u (v i)∥ :=
       by 
-        simp only [norm_smul]_ ≤ ∑i, ∥v.equiv_fun e i∥*M :=
-      Finset.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hu i) (norm_nonneg _)_ = (∑i, ∥v.equiv_fun e i∥)*M :=
+        simp only [norm_smul]_ ≤ ∑ i, ∥v.equiv_fun e i∥*M :=
+      Finset.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hu i) (norm_nonneg _)_ = (∑ i, ∥v.equiv_fun e i∥)*M :=
       finset.sum_mul.symm _ ≤ (C*∥e∥)*M := mul_le_mul_of_nonneg_right (hC e) hM _ = (C*M)*∥e∥ :=
       by 
         ring
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [finite_dimensional 𝕜 E] [second_countable_topology F] : second_countable_topology «expr →L[ ] »(E, 𝕜, F) :=
-begin
-  set [] [ident d] [] [":="] [expr finite_dimensional.finrank 𝕜 E] [],
-  suffices [] [":", expr ∀
-   ε «expr > » (0 : exprℝ()), «expr∃ , »((n : «expr →L[ ] »(E, 𝕜, F) → fin d → exprℕ()), ∀
-    f g : «expr →L[ ] »(E, 𝕜, F), «expr = »(n f, n g) → «expr ≤ »(dist f g, ε))],
-  from [expr metric.second_countable_of_countable_discretization (λ
-    ε ε_pos, ⟨fin d → exprℕ(), by apply_instance, this ε ε_pos⟩)],
-  intros [ident ε, ident ε_pos],
-  obtain ["⟨", ident u, ":", expr exprℕ() → F, ",", ident hu, ":", expr dense_range u, "⟩", ":=", expr exists_dense_seq F],
-  let [ident v] [] [":=", expr finite_dimensional.fin_basis 𝕜 E],
-  obtain ["⟨", ident C, ":", expr exprℝ(), ",", ident C_pos, ":", expr «expr < »(0, C), ",", ident hC, ":", expr ∀
-   {φ : «expr →L[ ] »(E, 𝕜, F)}
-   {M : exprℝ()}, «expr ≤ »(0, M) → ∀
-   i, «expr ≤ »(«expr∥ ∥»(φ (v i)), M) → «expr ≤ »(«expr∥ ∥»(φ), «expr * »(C, M)), "⟩", ":=", expr v.op_norm_le],
-  have [ident h_2C] [":", expr «expr < »(0, «expr * »(2, C))] [":=", expr mul_pos zero_lt_two C_pos],
-  have [ident hε2C] [":", expr «expr < »(0, «expr / »(ε, «expr * »(2, C)))] [":=", expr div_pos ε_pos h_2C],
-  have [] [":", expr ∀
-   φ : «expr →L[ ] »(E, 𝕜, F), «expr∃ , »((n : fin d → exprℕ()), «expr ≤ »(«expr∥ ∥»(«expr - »(φ, «expr $ »(v.constrL, «expr ∘ »(u, n)))), «expr / »(ε, 2)))] [],
-  { intros [ident φ],
-    have [] [":", expr ∀
-     i, «expr∃ , »((n), «expr ≤ »(«expr∥ ∥»(«expr - »(φ (v i), u n)), «expr / »(ε, «expr * »(2, C))))] [],
-    { simp [] [] ["only"] ["[", expr norm_sub_rev, "]"] [] [],
-      intro [ident i],
-      have [] [":", expr «expr ∈ »(φ (v i), closure (range u))] [":=", expr hu _],
-      obtain ["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n), «expr < »(«expr∥ ∥»(«expr - »(u n, φ (v i))), «expr / »(ε, «expr * »(2, C))))],
-      { rw [expr mem_closure_iff_nhds_basis metric.nhds_basis_ball] ["at", ident this],
-        specialize [expr this «expr / »(ε, «expr * »(2, C)) hε2C],
-        simpa [] [] [] ["[", expr dist_eq_norm, "]"] [] [] },
-      exact [expr ⟨n, le_of_lt hn⟩] },
-    choose [] [ident n] [ident hn] ["using", expr this],
-    use [expr n],
-    replace [ident hn] [":", expr ∀
-     i : fin d, «expr ≤ »(«expr∥ ∥»(«expr - »(φ, «expr $ »(v.constrL, «expr ∘ »(u, n))) (v i)), «expr / »(ε, «expr * »(2, C)))] [],
-    by simp [] [] [] ["[", expr hn, "]"] [] [],
-    have [] [":", expr «expr = »(«expr * »(C, «expr / »(ε, «expr * »(2, C))), «expr / »(ε, 2))] [],
-    { rw ["[", expr eq_div_iff (two_ne_zero : «expr ≠ »((2 : exprℝ()), 0)), ",", expr mul_comm, ",", "<-", expr mul_assoc, ",", expr mul_div_cancel' _ (ne_of_gt h_2C), "]"] [] },
-    specialize [expr hC (le_of_lt hε2C) hn],
-    rwa [expr this] ["at", ident hC] },
-  choose [] [ident n] [ident hn] ["using", expr this],
-  set [] [ident Φ] [] [":="] [expr λ φ : «expr →L[ ] »(E, 𝕜, F), «expr $ »(v.constrL, «expr ∘ »(u, n φ))] [],
-  change [expr ∀ z, «expr ≤ »(dist z (Φ z), «expr / »(ε, 2))] [] ["at", ident hn],
-  use [expr n],
-  intros [ident x, ident y, ident hxy],
-  calc
-    «expr ≤ »(dist x y, «expr + »(dist x (Φ x), dist (Φ x) y)) : dist_triangle _ _ _
-    «expr = »(..., «expr + »(dist x (Φ x), dist y (Φ y))) : by simp [] [] [] ["[", expr Φ, ",", expr hxy, ",", expr dist_comm, "]"] [] []
-    «expr ≤ »(..., ε) : by linarith [] [] ["[", expr hn x, ",", expr hn y, "]"]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : exprℝ()))
+instance [FiniteDimensional 𝕜 E] [second_countable_topology F] : second_countable_topology (E →L[𝕜] F) :=
+  by 
+    set d := FiniteDimensional.finrank 𝕜 E 
+    suffices  : ∀ ε _ : ε > (0 : ℝ), ∃ n : (E →L[𝕜] F) → Finₓ d → ℕ, ∀ f g : E →L[𝕜] F, n f = n g → dist f g ≤ ε 
+    exact
+      Metric.second_countable_of_countable_discretization
+        fun ε ε_pos =>
+          ⟨Finₓ d → ℕ,
+            by 
+              infer_instance,
+            this ε ε_pos⟩
+    intro ε ε_pos 
+    obtain ⟨u : ℕ → F, hu : DenseRange u⟩ := exists_dense_seq F 
+    let v := FiniteDimensional.finBasis 𝕜 E 
+    obtain ⟨C : ℝ, C_pos : 0 < C, hC : ∀ {φ : E →L[𝕜] F} {M : ℝ}, 0 ≤ M → (∀ i, ∥φ (v i)∥ ≤ M) → ∥φ∥ ≤ C*M⟩ :=
+      v.op_norm_le 
+    have h_2C : 0 < 2*C := mul_pos zero_lt_two C_pos 
+    have hε2C : 0 < ε / 2*C := div_pos ε_pos h_2C 
+    have  : ∀ φ : E →L[𝕜] F, ∃ n : Finₓ d → ℕ, ∥φ - (v.constrL$ (u ∘ n))∥ ≤ ε / 2
+    ·
+      intro φ 
+      have  : ∀ i, ∃ n, ∥φ (v i) - u n∥ ≤ ε / 2*C
+      ·
+        simp only [norm_sub_rev]
+        intro i 
+        have  : φ (v i) ∈ Closure (range u) := hu _ 
+        obtain ⟨n, hn⟩ : ∃ n, ∥u n - φ (v i)∥ < ε / 2*C
+        ·
+          rw [mem_closure_iff_nhds_basis Metric.nhds_basis_ball] at this 
+          specialize this (ε / 2*C) hε2C 
+          simpa [dist_eq_norm]
+        exact ⟨n, le_of_ltₓ hn⟩
+      choose n hn using this 
+      use n 
+      replace hn : ∀ i : Finₓ d, ∥(φ - (v.constrL$ (u ∘ n))) (v i)∥ ≤ ε / 2*C
+      ·
+        simp [hn]
+      have  : (C*ε / 2*C) = ε / 2
+      ·
+        rw [eq_div_iff (two_ne_zero : (2 : ℝ) ≠ 0), mul_commₓ, ←mul_assocₓ, mul_div_cancel' _ (ne_of_gtₓ h_2C)]
+      specialize hC (le_of_ltₓ hε2C) hn 
+      rwa [this] at hC 
+    choose n hn using this 
+    set Φ := fun φ : E →L[𝕜] F => v.constrL$ (u ∘ n φ)
+    change ∀ z, dist z (Φ z) ≤ ε / 2 at hn 
+    use n 
+    intro x y hxy 
+    calc dist x y ≤ dist x (Φ x)+dist (Φ x) y := dist_triangle _ _ _ _ = dist x (Φ x)+dist y (Φ y) :=
+      by 
+        simp [Φ, hxy, dist_comm]_ ≤ ε :=
+      by 
+        linarith [hn x, hn y]
 
 variable (𝕜 E)
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem finite_dimensional.complete [finite_dimensional 𝕜 E] : complete_space E :=
-begin
-  set [] [ident e] [] [":="] [expr continuous_linear_equiv.of_finrank_eq (@finrank_fin_fun 𝕜 _ (finrank 𝕜 E)).symm] [],
-  have [] [":", expr uniform_embedding e.to_linear_equiv.to_equiv.symm] [":=", expr e.symm.uniform_embedding],
-  exact [expr (complete_space_congr this).1 (by apply_instance)]
-end
+theorem FiniteDimensional.complete [FiniteDimensional 𝕜 E] : CompleteSpace E :=
+  by 
+    set e := ContinuousLinearEquiv.ofFinrankEq (@finrank_fin_fun 𝕜 _ (finrank 𝕜 E)).symm 
+    have  : UniformEmbedding e.to_linear_equiv.to_equiv.symm := e.symm.uniform_embedding 
+    exact
+      (complete_space_congr this).1
+        (by 
+          infer_instance)
 
 variable {𝕜 E}
 
@@ -497,130 +492,107 @@ theorem Submodule.closed_of_finite_dimensional (s : Submodule 𝕜 E) [FiniteDim
 
 section Riesz
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- In an infinite dimensional space, given a finite number of points, one may find a point
 with norm at most `R` which is at distance at least `1` of all these points. -/
-theorem exists_norm_le_le_norm_sub_of_finset
-{c : 𝕜}
-(hc : «expr < »(1, «expr∥ ∥»(c)))
-{R : exprℝ()}
-(hR : «expr < »(«expr∥ ∥»(c), R))
-(h : «expr¬ »(finite_dimensional 𝕜 E))
-(s : finset E) : «expr∃ , »((x : E), «expr ∧ »(«expr ≤ »(«expr∥ ∥»(x), R), ∀
-  y «expr ∈ » s, «expr ≤ »(1, «expr∥ ∥»(«expr - »(y, x))))) :=
-begin
-  let [ident F] [] [":=", expr submodule.span 𝕜 (s : set E)],
-  haveI [] [":", expr finite_dimensional 𝕜 F] [":=", expr module.finite_def.2 ((submodule.fg_top _).2 (submodule.fg_def.2 ⟨s, finset.finite_to_set _, rfl⟩))],
-  have [ident Fclosed] [":", expr is_closed (F : set E)] [":=", expr submodule.closed_of_finite_dimensional _],
-  have [] [":", expr «expr∃ , »((x), «expr ∉ »(x, F))] [],
-  { contrapose ["!"] [ident h],
-    have [] [":", expr «expr = »((«expr⊤»() : submodule 𝕜 E), F)] [],
-    by { ext [] [ident x] [],
-      simp [] [] [] ["[", expr h, "]"] [] [] },
-    have [] [":", expr finite_dimensional 𝕜 («expr⊤»() : submodule 𝕜 E)] [],
-    by rwa [expr this] [],
-    refine [expr module.finite_def.2 ((submodule.fg_top _).1 (module.finite_def.1 this))] },
-  obtain ["⟨", ident x, ",", ident xR, ",", ident hx, "⟩", ":", expr «expr∃ , »((x : E), «expr ∧ »(«expr ≤ »(«expr∥ ∥»(x), R), ∀
-     y : E, «expr ∈ »(y, F) → «expr ≤ »(1, «expr∥ ∥»(«expr - »(x, y))))), ":=", expr riesz_lemma_of_norm_lt hc hR Fclosed this],
-  have [ident hx'] [":", expr ∀ y : E, «expr ∈ »(y, F) → «expr ≤ »(1, «expr∥ ∥»(«expr - »(y, x)))] [],
-  { assume [binders (y hy)],
-    rw ["<-", expr norm_neg] [],
-    simpa [] [] [] [] [] ["using", expr hx y hy] },
-  exact [expr ⟨x, xR, λ y hy, hx' _ (submodule.subset_span hy)⟩]
-end
+theorem exists_norm_le_le_norm_sub_of_finset {c : 𝕜} (hc : 1 < ∥c∥) {R : ℝ} (hR : ∥c∥ < R) (h : ¬FiniteDimensional 𝕜 E)
+  (s : Finset E) : ∃ x : E, ∥x∥ ≤ R ∧ ∀ y _ : y ∈ s, 1 ≤ ∥y - x∥ :=
+  by 
+    let F := Submodule.span 𝕜 (s : Set E)
+    have  : FiniteDimensional 𝕜 F :=
+      Module.finite_def.2 ((Submodule.fg_top _).2 (Submodule.fg_def.2 ⟨s, Finset.finite_to_set _, rfl⟩))
+    have Fclosed : IsClosed (F : Set E) := Submodule.closed_of_finite_dimensional _ 
+    have  : ∃ x, x ∉ F
+    ·
+      contrapose! h 
+      have  : (⊤ : Submodule 𝕜 E) = F
+      ·
+        ·
+          ext x 
+          simp [h]
+      have  : FiniteDimensional 𝕜 (⊤ : Submodule 𝕜 E)
+      ·
+        rwa [this]
+      refine' Module.finite_def.2 ((Submodule.fg_top _).1 (Module.finite_def.1 this))
+    obtain ⟨x, xR, hx⟩ : ∃ x : E, ∥x∥ ≤ R ∧ ∀ y : E, y ∈ F → 1 ≤ ∥x - y∥ := riesz_lemma_of_norm_lt hc hR Fclosed this 
+    have hx' : ∀ y : E, y ∈ F → 1 ≤ ∥y - x∥
+    ·
+      intro y hy 
+      rw [←norm_neg]
+      simpa using hx y hy 
+    exact ⟨x, xR, fun y hy => hx' _ (Submodule.subset_span hy)⟩
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In an infinite-dimensional normed space, there exists a sequence of points which are all
 bounded by `R` and at distance at least `1`. For a version not assuming `c` and `R`, see
 `exists_seq_norm_le_one_le_norm_sub`. -/
-theorem exists_seq_norm_le_one_le_norm_sub'
-{c : 𝕜}
-(hc : «expr < »(1, «expr∥ ∥»(c)))
-{R : exprℝ()}
-(hR : «expr < »(«expr∥ ∥»(c), R))
-(h : «expr¬ »(finite_dimensional 𝕜 E)) : «expr∃ , »((f : exprℕ() → E), «expr ∧ »(∀
-  n, «expr ≤ »(«expr∥ ∥»(f n), R), ∀ m n, «expr ≠ »(m, n) → «expr ≤ »(1, «expr∥ ∥»(«expr - »(f m, f n))))) :=
-begin
-  haveI [] [":", expr is_symm E (λ x y : E, «expr ≤ »(1, «expr∥ ∥»(«expr - »(x, y))))] [],
-  { constructor,
-    assume [binders (x y hxy)],
-    rw ["<-", expr norm_neg] [],
-    simpa [] [] [] [] [] [] },
-  apply [expr exists_seq_of_forall_finset_exists' (λ
-    x : E, «expr ≤ »(«expr∥ ∥»(x), R)) (λ (x : E) (y : E), «expr ≤ »(1, «expr∥ ∥»(«expr - »(x, y))))],
-  assume [binders (s hs)],
-  exact [expr exists_norm_le_le_norm_sub_of_finset hc hR h s]
-end
+theorem exists_seq_norm_le_one_le_norm_sub' {c : 𝕜} (hc : 1 < ∥c∥) {R : ℝ} (hR : ∥c∥ < R) (h : ¬FiniteDimensional 𝕜 E) :
+  ∃ f : ℕ → E, (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ :=
+  by 
+    have  : IsSymm E fun x y : E => 1 ≤ ∥x - y∥
+    ·
+      constructor 
+      intro x y hxy 
+      rw [←norm_neg]
+      simpa 
+    apply exists_seq_of_forall_finset_exists' (fun x : E => ∥x∥ ≤ R) fun x : E y : E => 1 ≤ ∥x - y∥
+    intro s hs 
+    exact exists_norm_le_le_norm_sub_of_finset hc hR h s
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_seq_norm_le_one_le_norm_sub
-(h : «expr¬ »(finite_dimensional 𝕜 E)) : «expr∃ , »((R : exprℝ())
- (f : exprℕ() → E), «expr ∧ »(«expr < »(1, R), «expr ∧ »(∀
-   n, «expr ≤ »(«expr∥ ∥»(f n), R), ∀ m n, «expr ≠ »(m, n) → «expr ≤ »(1, «expr∥ ∥»(«expr - »(f m, f n)))))) :=
-begin
-  obtain ["⟨", ident c, ",", ident hc, "⟩", ":", expr «expr∃ , »((c : 𝕜), «expr < »(1, «expr∥ ∥»(c))), ":=", expr normed_field.exists_one_lt_norm 𝕜],
-  have [ident A] [":", expr «expr < »(«expr∥ ∥»(c), «expr + »(«expr∥ ∥»(c), 1))] [],
-  by linarith [] [] [],
-  rcases [expr exists_seq_norm_le_one_le_norm_sub' hc A h, "with", "⟨", ident f, ",", ident hf, "⟩"],
-  exact [expr ⟨«expr + »(«expr∥ ∥»(c), 1), f, hc.trans A, hf.1, hf.2⟩]
-end
+theorem exists_seq_norm_le_one_le_norm_sub (h : ¬FiniteDimensional 𝕜 E) :
+  ∃ (R : ℝ)(f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ :=
+  by 
+    obtain ⟨c, hc⟩ : ∃ c : 𝕜, 1 < ∥c∥ := NormedField.exists_one_lt_norm 𝕜 
+    have A : ∥c∥ < ∥c∥+1
+    ·
+      linarith 
+    rcases exists_seq_norm_le_one_le_norm_sub' hc A h with ⟨f, hf⟩
+    exact ⟨∥c∥+1, f, hc.trans A, hf.1, hf.2⟩
 
 variable (𝕜)
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Riesz's theorem: if the unit ball is compact in a vector space, then the space is
 finite-dimensional. -/
-theorem finite_dimensional_of_is_compact_closed_ball
-{r : exprℝ()}
-(rpos : «expr < »(0, r))
-(h : is_compact (metric.closed_ball (0 : E) r)) : finite_dimensional 𝕜 E :=
-begin
-  by_contra [ident hfin],
-  obtain ["⟨", ident R, ",", ident f, ",", ident Rgt, ",", ident fle, ",", ident lef, "⟩", ":", expr «expr∃ , »((R : exprℝ())
-    (f : exprℕ() → E), «expr ∧ »(«expr < »(1, R), «expr ∧ »(∀
-      n, «expr ≤ »(«expr∥ ∥»(f n), R), ∀
-      m
-      n, «expr ≠ »(m, n) → «expr ≤ »(1, «expr∥ ∥»(«expr - »(f m, f n)))))), ":=", expr exists_seq_norm_le_one_le_norm_sub hfin],
-  have [ident rRpos] [":", expr «expr < »(0, «expr / »(r, R))] [":=", expr div_pos rpos (zero_lt_one.trans Rgt)],
-  obtain ["⟨", ident c, ",", ident hc, "⟩", ":", expr «expr∃ , »((c : 𝕜), «expr ∧ »(«expr < »(0, «expr∥ ∥»(c)), «expr < »(«expr∥ ∥»(c), «expr / »(r, R)))), ":=", expr normed_field.exists_norm_lt _ rRpos],
-  let [ident g] [] [":=", expr λ n : exprℕ(), «expr • »(c, f n)],
-  have [ident A] [":", expr ∀ n, «expr ∈ »(g n, metric.closed_ball (0 : E) r)] [],
-  { assume [binders (n)],
-    simp [] [] ["only"] ["[", expr norm_smul, ",", expr dist_zero_right, ",", expr metric.mem_closed_ball, "]"] [] [],
-    calc
-      «expr ≤ »(«expr * »(«expr∥ ∥»(c), «expr∥ ∥»(f n)), «expr * »(«expr / »(r, R), R)) : mul_le_mul hc.2.le (fle n) (norm_nonneg _) rRpos.le
-      «expr = »(..., r) : by field_simp [] ["[", expr (zero_lt_one.trans Rgt).ne', "]"] [] [] },
-  obtain ["⟨", ident x, ",", ident hx, ",", ident φ, ",", ident φmono, ",", ident φlim, "⟩", ":", expr «expr∃ , »((x : E)
-    (H : «expr ∈ »(x, metric.closed_ball (0 : E) r))
-    (φ : exprℕ() → exprℕ()), «expr ∧ »(strict_mono φ, tendsto «expr ∘ »(g, φ) at_top (expr𝓝() x))), ":=", expr h.tendsto_subseq A],
-  have [ident B] [":", expr cauchy_seq «expr ∘ »(g, φ)] [":=", expr φlim.cauchy_seq],
-  obtain ["⟨", ident N, ",", ident hN, "⟩", ":", expr «expr∃ , »((N : exprℕ()), ∀
-    n : exprℕ(), «expr ≤ »(N, n) → «expr < »(dist («expr ∘ »(g, φ) n) («expr ∘ »(g, φ) N), «expr∥ ∥»(c))), ":=", expr metric.cauchy_seq_iff'.1 B «expr∥ ∥»(c) hc.1],
-  apply [expr lt_irrefl «expr∥ ∥»(c)],
-  calc
-    «expr ≤ »(«expr∥ ∥»(c), dist (g (φ «expr + »(N, 1))) (g (φ N))) : begin
-      conv_lhs [] [] { rw ["[", "<-", expr mul_one «expr∥ ∥»(c), "]"] },
-      simp [] [] ["only"] ["[", expr g, ",", expr dist_eq_norm, ",", "<-", expr smul_sub, ",", expr norm_smul, ",", "-", ident mul_one, "]"] [] [],
-      apply [expr mul_le_mul_of_nonneg_left (lef _ _ (ne_of_gt _)) (norm_nonneg _)],
-      exact [expr φmono (nat.lt_succ_self N)]
-    end
-    «expr < »(..., «expr∥ ∥»(c)) : hN «expr + »(N, 1) (nat.le_succ N)
-end
+theorem finite_dimensional_of_is_compact_closed_ball {r : ℝ} (rpos : 0 < r)
+  (h : IsCompact (Metric.ClosedBall (0 : E) r)) : FiniteDimensional 𝕜 E :=
+  by 
+    byContra hfin 
+    obtain ⟨R, f, Rgt, fle, lef⟩ : ∃ (R : ℝ)(f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ :=
+      exists_seq_norm_le_one_le_norm_sub hfin 
+    have rRpos : 0 < r / R := div_pos rpos (zero_lt_one.trans Rgt)
+    obtain ⟨c, hc⟩ : ∃ c : 𝕜, 0 < ∥c∥ ∧ ∥c∥ < r / R := NormedField.exists_norm_lt _ rRpos 
+    let g := fun n : ℕ => c • f n 
+    have A : ∀ n, g n ∈ Metric.ClosedBall (0 : E) r
+    ·
+      intro n 
+      simp only [norm_smul, dist_zero_right, Metric.mem_closed_ball]
+      calc (∥c∥*∥f n∥) ≤ (r / R)*R := mul_le_mul hc.2.le (fle n) (norm_nonneg _) rRpos.le _ = r :=
+        by 
+          fieldSimp [(zero_lt_one.trans Rgt).ne']
+    obtain ⟨x, hx, φ, φmono, φlim⟩ :
+      ∃ (x : E)(H : x ∈ Metric.ClosedBall (0 : E) r)(φ : ℕ → ℕ), StrictMono φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
+      h.tendsto_subseq A 
+    have B : CauchySeq (g ∘ φ) := φlim.cauchy_seq 
+    obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ n : ℕ, N ≤ n → dist ((g ∘ φ) n) ((g ∘ φ) N) < ∥c∥ := Metric.cauchy_seq_iff'.1 B ∥c∥ hc.1
+    apply lt_irreflₓ ∥c∥
+    calc ∥c∥ ≤ dist (g (φ (N+1))) (g (φ N)) :=
+      by 
+        convLHS => rw [←mul_oneₓ ∥c∥]
+        simp only [g, dist_eq_norm, ←smul_sub, norm_smul, -mul_oneₓ]
+        apply mul_le_mul_of_nonneg_left (lef _ _ (ne_of_gtₓ _)) (norm_nonneg _)
+        exact φmono (Nat.lt_succ_selfₓ N)_ < ∥c∥ :=
+      hN (N+1) (Nat.le_succₓ N)
 
 end Riesz
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An injective linear map with finite-dimensional domain is a closed embedding. -/
-theorem linear_equiv.closed_embedding_of_injective
-{f : «expr →ₗ[ ] »(E, 𝕜, F)}
-(hf : «expr = »(f.ker, «expr⊥»()))
-[finite_dimensional 𝕜 E] : closed_embedding «expr⇑ »(f) :=
-let g := linear_equiv.of_injective f (linear_map.ker_eq_bot.mp hf) in
-{ closed_range := begin
-    haveI [] [] [":=", expr f.finite_dimensional_range],
-    simpa [] [] [] ["[", expr f.range_coe, "]"] [] ["using", expr f.range.closed_of_finite_dimensional]
-  end,
-  ..embedding_subtype_coe.comp g.to_continuous_linear_equiv.to_homeomorph.embedding }
+theorem LinearEquiv.closed_embedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥) [FiniteDimensional 𝕜 E] :
+  ClosedEmbedding (⇑f) :=
+  let g := LinearEquiv.ofInjective f (LinearMap.ker_eq_bot.mp hf)
+  { embedding_subtype_coe.comp g.to_continuous_linear_equiv.to_homeomorph.embedding with
+    closed_range :=
+      by 
+        have  := f.finite_dimensional_range 
+        simpa [f.range_coe] using f.range.closed_of_finite_dimensional }
 
 theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensional 𝕜 F] (f : E →L[𝕜] F)
   (hf : f.range = ⊤) : ∃ g : F →L[𝕜] E, f.comp g = ContinuousLinearMap.id 𝕜 F :=
@@ -662,34 +634,32 @@ instance FiniteDimensional.proper_real (E : Type u) [NormedGroup E] [NormedSpace
 
 attribute [instance] FiniteDimensional.proper_real
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a finite dimensional vector space over `ℝ`, the series `∑ x, ∥f x∥` is unconditionally
 summable if and only if the series `∑ x, f x` is unconditionally summable. One implication holds in
 any complete normed space, while the other holds only in finite dimensional spaces. -/
-theorem summable_norm_iff
-{α E : Type*}
-[normed_group E]
-[normed_space exprℝ() E]
-[finite_dimensional exprℝ() E]
-{f : α → E} : «expr ↔ »(summable (λ x, «expr∥ ∥»(f x)), summable f) :=
-begin
-  refine [expr ⟨summable_of_summable_norm, λ hf, _⟩],
-  suffices [] [":", expr ∀ {N : exprℕ()} {g : α → fin N → exprℝ()}, summable g → summable (λ x, «expr∥ ∥»(g x))],
-  { obtain [ident v, ":=", expr fin_basis exprℝ() E],
-    set [] [ident e] [] [":="] [expr v.equiv_funL] [],
-    have [] [":", expr summable (λ x, «expr∥ ∥»(e (f x)))] [":=", expr this (e.summable.2 hf)],
-    refine [expr summable_of_norm_bounded _ (this.mul_left «expr↑ »(nnnorm (e.symm : «expr →L[ ] »(fin (finrank exprℝ() E) → exprℝ(), exprℝ(), E)))) (λ
-      i, _)],
-    simpa [] [] [] [] [] ["using", expr (e.symm : «expr →L[ ] »(fin (finrank exprℝ() E) → exprℝ(), exprℝ(), E)).le_op_norm «expr $ »(e, f i)] },
-  unfreezingI { clear_dependent [ident E] },
-  intros [ident N, ident g, ident hg],
-  have [] [":", expr ∀ i, summable (λ x, «expr∥ ∥»(g x i))] [":=", expr λ i, (pi.summable.1 hg i).abs],
-  refine [expr summable_of_norm_bounded _ (summable_sum (λ (i) (hi : «expr ∈ »(i, finset.univ)), this i)) (λ x, _)],
-  rw ["[", expr norm_norm, ",", expr pi_norm_le_iff, "]"] [],
-  { refine [expr λ i, finset.single_le_sum (λ i hi, _) (finset.mem_univ i)],
-    exact [expr norm_nonneg (g x i)] },
-  { exact [expr finset.sum_nonneg (λ _ _, norm_nonneg _)] }
-end
+theorem summable_norm_iff {α E : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {f : α → E} :
+  (Summable fun x => ∥f x∥) ↔ Summable f :=
+  by 
+    refine' ⟨summable_of_summable_norm, fun hf => _⟩
+    suffices  : ∀ {N : ℕ} {g : α → Finₓ N → ℝ}, Summable g → Summable fun x => ∥g x∥
+    ·
+      obtain v := fin_basis ℝ E 
+      set e := v.equiv_funL 
+      have  : Summable fun x => ∥e (f x)∥ := this (e.summable.2 hf)
+      refine'
+        summable_of_norm_bounded _ (this.mul_left (↑nnnorm (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E))) fun i => _ 
+      simpa using (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e$ f i)
+    (
+      clear! E)
+    intro N g hg 
+    have  : ∀ i, Summable fun x => ∥g x i∥ := fun i => (Pi.summable.1 hg i).abs 
+    refine' summable_of_norm_bounded _ (summable_sum fun i hi : i ∈ Finset.univ => this i) fun x => _ 
+    rw [norm_norm, pi_norm_le_iff]
+    ·
+      refine' fun i => Finset.single_le_sum (fun i hi => _) (Finset.mem_univ i)
+      exact norm_nonneg (g x i)
+    ·
+      exact Finset.sum_nonneg fun _ _ => norm_nonneg _
 
 theorem summable_of_is_O' {ι E F : Type _} [NormedGroup E] [CompleteSpace E] [NormedGroup F] [NormedSpace ℝ F]
   [FiniteDimensional ℝ F] {f : ι → E} {g : ι → F} (hg : Summable g) (h : is_O f g cofinite) : Summable f :=

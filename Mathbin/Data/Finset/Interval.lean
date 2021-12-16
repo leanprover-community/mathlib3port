@@ -68,7 +68,7 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : Icc s t = (t \ s).Powerset.Image (
   by 
     ext u 
     simpRw [mem_Icc, mem_image, exists_prop, mem_powerset]
-    split 
+    constructor
     ·
       rintro ⟨hs, ht⟩
       exact ⟨u \ s, sdiff_le_sdiff_right ht, sup_sdiff_cancel_right hs⟩
@@ -80,7 +80,7 @@ theorem Ico_eq_image_ssubsets (h : s ⊆ t) : Ico s t = (t \ s).ssubsets.Image (
   by 
     ext u 
     simpRw [mem_Ico, mem_image, exists_prop, mem_ssubsets]
-    split 
+    constructor
     ·
       rintro ⟨hs, ht⟩
       exact ⟨u \ s, sdiff_lt_sdiff_right ht hs, sup_sdiff_cancel_right hs⟩

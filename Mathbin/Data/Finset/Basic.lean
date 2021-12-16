@@ -173,20 +173,20 @@ instance decidable_mem [h : DecidableEq α] (a : α) (s : Finset α) : Decidable
 /-! ### set coercion -/
 
 
-/-- Convert a finset to a set in the natural way. -/
-instance : CoeTₓ (Finset α) (Set α) :=
-  ⟨fun s => { x | x ∈ s }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Convert a finset to a set in the natural way. -/ instance : CoeTₓ Finset α Set α := ⟨ fun s => { x | x ∈ s } ⟩
 
 @[simp, normCast]
 theorem mem_coe {a : α} {s : Finset α} : a ∈ (s : Set α) ↔ a ∈ s :=
   Iff.rfl
 
-@[simp]
-theorem set_of_mem {α} {s : Finset α} : { a | a ∈ s } = s :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ] theorem set_of_mem { α } { s : Finset α } : { a | a ∈ s } = s := rfl
 
 @[simp]
-theorem coe_mem {s : Finset α} (x : (s : Set α)) : «expr↑ » x ∈ s :=
+theorem coe_mem {s : Finset α} (x : (s : Set α)) : ↑x ∈ s :=
   x.2
 
 @[simp]
@@ -286,12 +286,13 @@ def coe_emb : Finset α ↪o Set α :=
   ⟨⟨coeₓ, coe_injective⟩, fun s t => coe_subset⟩
 
 @[simp]
-theorem coe_coe_emb : «expr⇑ » (coe_emb : Finset α ↪o Set α) = coeₓ :=
+theorem coe_coe_emb : ⇑(coe_emb : Finset α ↪o Set α) = coeₓ :=
   rfl
 
 theorem subset.antisymm_iff {s₁ s₂ : Finset α} : s₁ = s₂ ↔ s₁ ⊆ s₂ ∧ s₂ ⊆ s₁ :=
   le_antisymm_iffₓ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem not_subset (s t : Finset α) : ¬s ⊆ t ↔ ∃ (x : _)(_ : x ∈ s), ¬x ∈ t :=
   by 
     simp only [←Finset.coe_subset, Set.not_subset, exists_prop, Finset.mem_coe]
@@ -322,6 +323,7 @@ theorem val_lt_iff {s₁ s₂ : Finset α} : s₁.1 < s₂.1 ↔ s₁ ⊂ s₂ :
 theorem ssubset_iff_subset_ne {s t : Finset α} : s ⊂ t ↔ s ⊆ t ∧ s ≠ t :=
   @lt_iff_le_and_ne _ _ s t
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s₂)
 theorem ssubset_iff_of_subset {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁ ⊂ s₂ ↔ ∃ (x : _)(_ : x ∈ s₂), x ∉ s₁ :=
   Set.ssubset_iff_of_subset h
 
@@ -331,6 +333,7 @@ theorem ssubset_of_ssubset_of_subset {s₁ s₂ s₃ : Finset α} (hs₁s₂ : s
 theorem ssubset_of_subset_of_ssubset {s₁ s₂ s₃ : Finset α} (hs₁s₂ : s₁ ⊆ s₂) (hs₂s₃ : s₂ ⊂ s₃) : s₁ ⊂ s₃ :=
   Set.ssubset_of_subset_of_ssubset hs₁s₂ hs₂s₃
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s₂)
 theorem exists_of_ssubset {s₁ s₂ : Finset α} (h : s₁ ⊂ s₂) : ∃ (x : _)(_ : x ∈ s₂), x ∉ s₁ :=
   Set.exists_of_ssubset h
 
@@ -348,7 +351,7 @@ theorem coe_nonempty {s : Finset α} : (s : Set α).Nonempty ↔ s.nonempty :=
   Iff.rfl
 
 @[simp]
-theorem nonempty_coe_sort (s : Finset α) : Nonempty («expr↥ » s) ↔ s.nonempty :=
+theorem nonempty_coe_sort (s : Finset α) : Nonempty (↥s) ↔ s.nonempty :=
   nonempty_subtype
 
 alias coe_nonempty ↔ _ Finset.Nonempty.to_set
@@ -359,6 +362,7 @@ theorem nonempty.bex {s : Finset α} (h : s.nonempty) : ∃ x : α, x ∈ s :=
 theorem nonempty.mono {s t : Finset α} (hst : s ⊆ t) (hs : s.nonempty) : t.nonempty :=
   Set.Nonempty.mono hst hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem nonempty.forall_const {s : Finset α} (h : s.nonempty) {p : Prop} : (∀ x _ : x ∈ s, p) ↔ p :=
   let ⟨x, hx⟩ := h
   ⟨fun h => h x hx, fun h x hx => h⟩
@@ -504,18 +508,20 @@ theorem coe_eq_singleton {α : Type _} {s : Finset α} {a : α} : (s : Set α) =
   by 
     rw [←Finset.coe_singleton, Finset.coe_inj]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem eq_singleton_iff_unique_mem {s : Finset α} {a : α} : s = {a} ↔ a ∈ s ∧ ∀ x _ : x ∈ s, x = a :=
   by 
-    split  <;> intro t 
+    constructor <;> intro t 
     rw [t]
     refine' ⟨Finset.mem_singleton_self _, fun _ => Finset.mem_singleton.1⟩
     ext 
     rw [Finset.mem_singleton]
     refine' ⟨t.right _, fun r => r.symm ▸ t.left⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem eq_singleton_iff_nonempty_unique_mem {s : Finset α} {a : α} : s = {a} ↔ s.nonempty ∧ ∀ x _ : x ∈ s, x = a :=
   by 
-    split 
+    constructor
     ·
       intro h 
       subst h 
@@ -527,11 +533,11 @@ theorem eq_singleton_iff_nonempty_unique_mem {s : Finset α} {a : α} : s = {a} 
       rw [←h_uniq hne.some hne.some_spec]
       apply hne.some_spec
 
-theorem singleton_iff_unique_mem (s : Finset α) : (∃ a, s = {a}) ↔ ∃!a, a ∈ s :=
+theorem singleton_iff_unique_mem (s : Finset α) : (∃ a, s = {a}) ↔ ∃! a, a ∈ s :=
   by 
     simp only [eq_singleton_iff_unique_mem, ExistsUnique]
 
-theorem singleton_subset_set_iff {s : Set α} {a : α} : «expr↑ » ({a} : Finset α) ⊆ s ↔ a ∈ s :=
+theorem singleton_subset_set_iff {s : Set α} {a : α} : ↑({a} : Finset α) ⊆ s ↔ a ∈ s :=
   by 
     rw [coe_singleton, Set.singleton_subset_iff]
 
@@ -542,7 +548,7 @@ theorem singleton_subset_iff {s : Finset α} {a : α} : {a} ⊆ s ↔ a ∈ s :=
 @[simp]
 theorem subset_singleton_iff {s : Finset α} {a : α} : s ⊆ {a} ↔ s = ∅ ∨ s = {a} :=
   by 
-    split 
+    constructor
     ·
       intro hs 
       apply Or.imp_rightₓ _ s.eq_empty_or_nonempty 
@@ -577,6 +583,10 @@ theorem mem_cons {a s h b} : b ∈ @cons α a s h ↔ b = a ∨ b ∈ s :=
     rcases s with ⟨⟨s⟩⟩ <;> apply List.mem_cons_iffₓ
 
 @[simp]
+theorem mem_cons_self (a : α) (s : Finset α) {h} : a ∈ cons a s h :=
+  mem_cons.2$ Or.inl rfl
+
+@[simp]
 theorem cons_val {a : α} {s : Finset α} (h : a ∉ s) : (cons a s h).1 = a ::ₘ s.1 :=
   rfl
 
@@ -590,7 +600,7 @@ theorem nonempty_cons {a : α} {s : Finset α} (h : a ∉ s) : (cons a s h).None
   ⟨a, mem_cons.2 (Or.inl rfl)⟩
 
 @[simp]
-theorem nonempty_mk_coe : ∀ {l : List α} {hl}, (⟨«expr↑ » l, hl⟩ : Finset α).Nonempty ↔ l ≠ []
+theorem nonempty_mk_coe : ∀ {l : List α} {hl}, (⟨↑l, hl⟩ : Finset α).Nonempty ↔ l ≠ []
 | [], hl =>
   by 
     simp 
@@ -612,6 +622,7 @@ theorem cons_subset_cons {a s hs t ht} : @cons α a s hs ⊆ cons a t ht ↔ s �
 /-! ### disjoint union -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- `disj_union s t h` is the set such that `a ∈ disj_union s t h` iff `a ∈ s` or `a ∈ t`.
 It is the same as `s ∪ t`, but it does not require decidable equality on the type. The hypothesis
 ensures that the sets are disjoint. -/
@@ -670,7 +681,7 @@ theorem cons_eq_insert {α} [DecidableEq α] a s h : @cons α a s h = insert a s
         simp 
 
 @[simp, normCast]
-theorem coe_insert (a : α) (s : Finset α) : «expr↑ » (insert a s) = (insert a s : Set α) :=
+theorem coe_insert (a : α) (s : Finset α) : ↑insert a s = (insert a s : Set α) :=
   Set.ext$
     fun x =>
       by 
@@ -748,6 +759,7 @@ theorem subset_insert (a : α) (s : Finset α) : s ⊆ insert a s :=
 theorem insert_subset_insert (a : α) {s t : Finset α} (h : s ⊆ t) : insert a s ⊆ insert a t :=
   insert_subset.2 ⟨mem_insert_self _ _, subset.trans h (subset_insert _ _)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem ssubset_iff {s t : Finset α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t :=
   by 
     exactModCast @Set.ssubset_iff_insert α s t
@@ -826,28 +838,25 @@ theorem nonempty.cons_induction {α : Type _} {s : Finset α} (hs : s.nonempty) 
     ·
       exact h₁ t ha (h ht)
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Inserting an element to a finite set is equivalent to the option type. -/
-def subtype_insert_equiv_option
-{t : finset α}
-{x : α}
-(h : «expr ∉ »(x, t)) : «expr ≃ »({i // «expr ∈ »(i, insert x t)}, option {i // «expr ∈ »(i, t)}) :=
-begin
-  refine [expr { to_fun := λ
-     y, if h : «expr = »(«expr↑ »(y), x) then none else some ⟨y, (mem_insert.mp y.2).resolve_left h⟩,
-     inv_fun := λ y, «expr $ »(y.elim ⟨x, mem_insert_self _ _⟩, λ z, ⟨z, mem_insert_of_mem z.2⟩),
-     .. }],
-  { intro [ident y],
-    by_cases [expr h, ":", expr «expr = »(«expr↑ »(y), x)],
-    simp [] [] ["only"] ["[", expr subtype.ext_iff, ",", expr h, ",", expr option.elim, ",", expr dif_pos, ",", expr subtype.coe_mk, "]"] [] [],
-    simp [] [] ["only"] ["[", expr h, ",", expr option.elim, ",", expr dif_neg, ",", expr not_false_iff, ",", expr subtype.coe_eta, ",", expr subtype.coe_mk, "]"] [] [] },
-  { rintro ["(", "_", "|", ident y, ")"],
-    simp [] [] ["only"] ["[", expr option.elim, ",", expr dif_pos, ",", expr subtype.coe_mk, "]"] [] [],
-    have [] [":", expr «expr ≠ »(«expr↑ »(y), x)] [],
-    { rintro ["⟨", "⟩"],
-      exact [expr h y.2] },
-    simp [] [] ["only"] ["[", expr this, ",", expr option.elim, ",", expr subtype.eta, ",", expr dif_neg, ",", expr not_false_iff, ",", expr subtype.coe_eta, ",", expr subtype.coe_mk, "]"] [] [] }
-end
+def subtype_insert_equiv_option {t : Finset α} {x : α} (h : x ∉ t) : { i // i ∈ insert x t } ≃ Option { i // i ∈ t } :=
+  by 
+    refine'
+      { toFun := fun y => if h : ↑y = x then none else some ⟨y, (mem_insert.mp y.2).resolve_left h⟩,
+        invFun := fun y => y.elim ⟨x, mem_insert_self _ _⟩$ fun z => ⟨z, mem_insert_of_mem z.2⟩, .. }
+    ·
+      intro y 
+      byCases' h : ↑y = x 
+      simp only [Subtype.ext_iff, h, Option.elim, dif_pos, Subtype.coe_mk]
+      simp only [h, Option.elim, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
+    ·
+      rintro (_ | y)
+      simp only [Option.elim, dif_pos, Subtype.coe_mk]
+      have  : ↑y ≠ x
+      ·
+        rintro ⟨⟩
+        exact h y.2
+      simp only [this, Option.elim, Subtype.eta, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
 
 /-! ### union -/
 
@@ -880,6 +889,9 @@ theorem mem_union_left {a : α} {s₁ : Finset α} (s₂ : Finset α) (h : a ∈
 theorem mem_union_right {a : α} {s₂ : Finset α} (s₁ : Finset α) (h : a ∈ s₂) : a ∈ s₁ ∪ s₂ :=
   mem_union.2$ Or.inr h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ab «expr ∈ » «expr ∪ »(s₁, s₂))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s₂)
 theorem forall_mem_union {s₁ s₂ : Finset α} {p : α → Prop} :
   (∀ ab _ : ab ∈ s₁ ∪ s₂, p ab) ↔ (∀ a _ : a ∈ s₁, p a) ∧ ∀ b _ : b ∈ s₂, p b :=
   ⟨fun h => ⟨fun a => h a ∘ mem_union_left _, fun b => h b ∘ mem_union_right _⟩,
@@ -890,7 +902,7 @@ theorem not_mem_union {a : α} {s₁ s₂ : Finset α} : a ∉ s₁ ∪ s₂ ↔
     rw [mem_union, not_or_distrib]
 
 @[simp, normCast]
-theorem coe_union (s₁ s₂ : Finset α) : «expr↑ » (s₁ ∪ s₂) = (s₁ ∪ s₂ : Set α) :=
+theorem coe_union (s₁ s₂ : Finset α) : ↑(s₁ ∪ s₂) = (s₁ ∪ s₂ : Set α) :=
   Set.ext$ fun x => mem_union
 
 theorem union_subset {s₁ s₂ s₃ : Finset α} (h₁ : s₁ ⊆ s₃) (h₂ : s₂ ⊆ s₃) : s₁ ∪ s₂ ⊆ s₃ :=
@@ -980,16 +992,17 @@ theorem insert_union_distrib (a : α) (s t : Finset α) : insert a (s ∪ t) = i
   by 
     simp only [insert_union, union_insert, insert_idem]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem union_eq_left_iff_subset {s t : finset α} : «expr ↔ »(«expr = »(«expr ∪ »(s, t), s), «expr ⊆ »(t, s)) :=
-begin
-  split,
-  { assume [binders (h)],
-    have [] [":", expr «expr ⊆ »(t, «expr ∪ »(s, t))] [":=", expr subset_union_right _ _],
-    rwa [expr h] ["at", ident this] },
-  { assume [binders (h)],
-    exact [expr subset.antisymm (union_subset (subset.refl _) h) (subset_union_left _ _)] }
-end
+@[simp]
+theorem union_eq_left_iff_subset {s t : Finset α} : s ∪ t = s ↔ t ⊆ s :=
+  by 
+    constructor
+    ·
+      intro h 
+      have  : t ⊆ s ∪ t := subset_union_right _ _ 
+      rwa [h] at this
+    ·
+      intro h 
+      exact subset.antisymm (union_subset (subset.refl _) h) (subset_union_left _ _)
 
 @[simp]
 theorem left_eq_union_iff_subset {s t : Finset α} : s = s ∪ t ↔ t ⊆ s :=
@@ -1024,9 +1037,12 @@ theorem induction_on_union (P : Finset α → Finset α → Prop) (symm : ∀ {a
     rw [Finset.insert_eq]
     exact union_of singletons (symm hi)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » c)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » c)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » c)
 theorem exists_mem_subset_of_subset_bUnion_of_directed_on {α ι : Type _} {f : ι → Set α} {c : Set ι} {a : ι}
   (hac : a ∈ c) (hc : DirectedOn (fun i j => f i ⊆ f j) c) {s : Finset α}
-  (hs : (s : Set α) ⊆ ⋃(i : _)(_ : i ∈ c), f i) : ∃ (i : _)(_ : i ∈ c), (s : Set α) ⊆ f i :=
+  (hs : (s : Set α) ⊆ ⋃ (i : _)(_ : i ∈ c), f i) : ∃ (i : _)(_ : i ∈ c), (s : Set α) ⊆ f i :=
   by 
     classical 
     revert hs 
@@ -1079,12 +1095,19 @@ theorem inter_subset_left (s₁ s₂ : Finset α) : s₁ ∩ s₂ ⊆ s₁ :=
 theorem inter_subset_right (s₁ s₂ : Finset α) : s₁ ∩ s₂ ⊆ s₂ :=
   fun a => mem_of_mem_inter_right
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem subset_inter {s₁ s₂ s₃ : finset α} : «expr ⊆ »(s₁, s₂) → «expr ⊆ »(s₁, s₃) → «expr ⊆ »(s₁, «expr ∩ »(s₂, s₃)) :=
-by simp [] [] ["only"] ["[", expr subset_iff, ",", expr mem_inter, "]"] [] [] { contextual := tt }; intros []; split; trivial
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  subset_inter
+  { s₁ s₂ s₃ : Finset α } : s₁ ⊆ s₂ → s₁ ⊆ s₃ → s₁ ⊆ s₂ ∩ s₃
+  :=
+    by
+      simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) only [ subset_iff , mem_inter ]
+        <;>
+        intros <;> constructor <;> trivial
 
 @[simp, normCast]
-theorem coe_inter (s₁ s₂ : Finset α) : «expr↑ » (s₁ ∩ s₂) = (s₁ ∩ s₂ : Set α) :=
+theorem coe_inter (s₁ s₂ : Finset α) : ↑(s₁ ∩ s₂) = (s₁ ∩ s₂ : Set α) :=
   Set.ext$ fun _ => mem_inter
 
 @[simp]
@@ -1227,13 +1250,28 @@ instance {α : Type u} : OrderBot (Finset α) :=
 theorem bot_eq_empty {α : Type u} : (⊥ : Finset α) = ∅ :=
   rfl
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : distrib_lattice (finset α) :=
-{ le_sup_inf := assume
-  a
-  b
-  c, show «expr ⊆ »(«expr ∩ »(«expr ∪ »(a, b), «expr ∪ »(a, c)), «expr ∪ »(a, «expr ∩ »(b, c))), by simp [] [] ["only"] ["[", expr subset_iff, ",", expr mem_inter, ",", expr mem_union, ",", expr and_imp, ",", expr or_imp_distrib, "]"] [] [] { contextual := tt }; simp [] [] ["only"] ["[", expr true_or, ",", expr imp_true_iff, ",", expr true_and, ",", expr or_true, "]"] [] [],
-  ..finset.lattice }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  : DistribLattice Finset α
+  :=
+    {
+      Finset.lattice with
+      le_sup_inf
+        :=
+        fun
+          a b c
+            =>
+            show
+              a ∪ b ∩ a ∪ c ⊆ a ∪ b ∩ c
+              by
+                simp
+                    ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                    only
+                    [ subset_iff , mem_inter , mem_union , and_imp , or_imp_distrib ]
+                  <;>
+                  simp only [ true_orₓ , imp_true_iff , true_andₓ , or_trueₓ ]
+      }
 
 @[simp]
 theorem union_left_idem (s t : Finset α) : s ∪ (s ∪ t) = s ∪ t :=
@@ -1346,8 +1384,12 @@ theorem erase_subset_erase (a : α) {s t : Finset α} (h : s ⊆ t) : erase s a 
 theorem erase_subset (a : α) (s : Finset α) : erase s a ⊆ s :=
   erase_subset _ _
 
+theorem subset_erase {a : α} {s t : Finset α} : s ⊆ t.erase a ↔ s ⊆ t ∧ a ∉ s :=
+  ⟨fun h => ⟨h.trans (erase_subset _ _), fun ha => not_mem_erase _ _ (h ha)⟩,
+    fun h b hb => mem_erase.2 ⟨ne_of_mem_of_not_mem hb h.2, h.1 hb⟩⟩
+
 @[simp, normCast]
-theorem coe_erase (a : α) (s : Finset α) : «expr↑ » (erase s a) = (s \ {a} : Set α) :=
+theorem coe_erase (a : α) (s : Finset α) : ↑erase s a = (s \ {a} : Set α) :=
   Set.ext$
     fun _ =>
       mem_erase.trans$
@@ -1471,7 +1513,7 @@ theorem sdiff_subset_sdiff {s₁ s₂ t₁ t₂ : Finset α} (h₁ : t₁ ⊆ t�
   sdiff_le_sdiff ‹t₁ ≤ t₂› ‹s₂ ≤ s₁›
 
 @[simp, normCast]
-theorem coe_sdiff (s₁ s₂ : Finset α) : «expr↑ » (s₁ \ s₂) = (s₁ \ s₂ : Set α) :=
+theorem coe_sdiff (s₁ s₂ : Finset α) : ↑(s₁ \ s₂) = (s₁ \ s₂ : Set α) :=
   Set.ext$ fun _ => mem_sdiff
 
 @[simp]
@@ -1547,6 +1589,11 @@ theorem sdiff_singleton_eq_erase (a : α) (s : Finset α) : s \ singleton a = er
 theorem sdiff_singleton_not_mem_eq_self (s : Finset α) {a : α} (ha : a ∉ s) : s \ {a} = s :=
   by 
     simp only [sdiff_singleton_eq_erase, ha, erase_eq_of_not_mem, not_false_iff]
+
+theorem sdiff_erase {A : Finset α} {x : α} (hx : x ∈ A) : A \ A.erase x = {x} :=
+  by 
+    rw [←sdiff_singleton_eq_erase, sdiff_sdiff_right_self]
+    exact inf_eq_right.2 (singleton_subset_iff.2 hx)
 
 theorem sdiff_sdiff_self_left (s t : Finset α) : s \ (s \ t) = s ∩ t :=
   sdiff_sdiff_right_self
@@ -1638,6 +1685,8 @@ theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g 
   by 
     simp [piecewise, hi]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀ i _ : i ∈ s, f i = f' i) (hg : ∀ i _ : i ∉ s, g i = g' i) :
   s.piecewise f g = s.piecewise f' g' :=
   funext$ fun i => if_ctx_congr Iff.rfl (hf i) (hg i)
@@ -1664,7 +1713,7 @@ theorem piecewise_mem_set_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set 
   by 
     classical 
     rw [←piecewise_coe]
-    exact Set.piecewise_mem_pi («expr↑ » s) hf hg
+    exact Set.piecewise_mem_pi (↑s) hf hg
 
 theorem piecewise_singleton [DecidableEq α] (i : α) : piecewise {i} f g = update g i (f i) :=
   by 
@@ -1718,6 +1767,8 @@ theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)
   h ≤ s.piecewise f g :=
   fun x => piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∉ » s)
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {f g f' g' : ∀ i, δ i}
   (Hf : ∀ x _ : x ∈ s, f x ≤ f' x) (Hg : ∀ x _ : x ∉ s, g x ≤ g' x) : s.piecewise f g ≤ s.piecewise f' g' :=
   fun x =>
@@ -1746,14 +1797,17 @@ section DecidablePiExists
 
 variable {s : Finset α}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 instance decidable_dforall_finset {p : ∀ a _ : a ∈ s, Prop} [hp : ∀ a h : a ∈ s, Decidable (p a h)] :
   Decidable (∀ a h : a ∈ s, p a h) :=
   Multiset.decidableDforallMultiset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- decidable equality for functions whose domain is bounded by finsets -/
 instance decidable_eq_pi_finset {β : α → Type _} [h : ∀ a, DecidableEq (β a)] : DecidableEq (∀ a _ : a ∈ s, β a) :=
   Multiset.decidableEqPiMultiset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 instance decidable_dexists_finset {p : ∀ a _ : a ∈ s, Prop} [hp : ∀ a h : a ∈ s, Decidable (p a h)] :
   Decidable (∃ (a : _)(h : a ∈ s), p a h) :=
   Multiset.decidableDexistsMultiset
@@ -1785,6 +1839,7 @@ variable {p}
 theorem mem_filter {s : Finset α} {a : α} : a ∈ s.filter p ↔ a ∈ s ∧ p a :=
   mem_filter
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem filter_ssubset {s : Finset α} : s.filter p ⊂ s ↔ ∃ (x : _)(_ : x ∈ s), ¬p x :=
   ⟨fun h =>
       let ⟨x, hs, hp⟩ := Set.exists_of_ssubset h
@@ -1812,17 +1867,20 @@ theorem filter_false {h} (s : Finset α) : @filter α (fun a => False) h s = ∅
 
 variable {p q}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- If all elements of a `finset` satisfy the predicate `p`, `s.filter p` is `s`. -/
 @[simp]
 theorem filter_true_of_mem {s : Finset α} (h : ∀ x _ : x ∈ s, p x) : s.filter p = s :=
   ext$ fun x => ⟨fun h => (mem_filter.1 h).1, fun hx => mem_filter.2 ⟨hx, h x hx⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- If all elements of a `finset` fail to satisfy the predicate `p`, `s.filter p` is `∅`. -/
 theorem filter_false_of_mem {s : Finset α} (h : ∀ x _ : x ∈ s, ¬p x) : s.filter p = ∅ :=
   eq_empty_of_forall_not_mem
     (by 
       simpa)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem filter_congr {s : Finset α} (H : ∀ x _ : x ∈ s, p x ↔ q x) : filter p s = filter q s :=
   eq_of_veq$ filter_congr H
 
@@ -1841,9 +1899,10 @@ theorem monotone_filter_right (s : Finset α) ⦃p q : α → Prop⦄ [Decidable
   s.filter p ≤ s.filter q :=
   Multiset.subset_of_le (Multiset.monotone_filter_right s.val h)
 
-@[simp, normCast]
-theorem coe_filter (s : Finset α) : «expr↑ » (s.filter p) = ({ x∈«expr↑ » s | p x } : Set α) :=
-  Set.ext$ fun _ => mem_filter
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp , normCast ]
+  theorem coe_filter ( s : Finset α ) : ↑ s.filter p = ( { x ∈ ↑ s | p x } : Set α ) := Set.ext $ fun _ => mem_filter
 
 theorem filter_singleton (a : α) : filter p (singleton a) = if p a then singleton a else ∅ :=
   by 
@@ -1922,7 +1981,7 @@ theorem sdiff_eq_filter (s₁ s₂ : Finset α) : s₁ \ s₂ = filter (· ∉ s
 theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ s₂ ⊆ ∅ :=
   by 
     simp [subset.antisymm_iff]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       trans' s₁ \ s₂ ∩ s₂ 
       mono 
@@ -1946,8 +2005,8 @@ theorem filter_inter_filter_neg_eq [DecidablePred fun a => ¬p a] (s : Finset α
   by 
     simp only [filter_not, inter_sdiff_self]
 
-theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : «expr↑ » s ⊆ t₁ ∪ t₂) :
-  ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ «expr↑ » s₁ ⊆ t₁ ∧ «expr↑ » s₂ ⊆ t₂ \ t₁ :=
+theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t₁ ∪ t₂) :
+  ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ :=
   by 
     classical 
     refine' ⟨s.filter (· ∈ t₁), s.filter (· ∉ t₁), _, _, _⟩
@@ -1984,9 +2043,9 @@ open_locale Classical
 noncomputable instance {α : Type _} : HasSep α (Finset α) :=
   ⟨fun p x => x.filter p⟩
 
-@[simp]
-theorem sep_def {α : Type _} (s : Finset α) (p : α → Prop) : { x∈s | p x } = s.filter p :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ] theorem sep_def { α : Type _ } ( s : Finset α ) ( p : α → Prop ) : { x ∈ s | p x } = s.filter p := rfl
 
 end Classical
 
@@ -2238,6 +2297,9 @@ theorem val_to_finset [DecidableEq α] (s : Finset α) : s.val.to_finset = s :=
     ext 
     rw [Multiset.mem_to_finset, ←mem_def]
 
+theorem val_le_iff_val_subset {a : Finset α} {b : Multiset α} : a.val ≤ b ↔ a.val ⊆ b :=
+  Multiset.le_iff_subset a.nodup
+
 end Finset
 
 namespace List
@@ -2269,7 +2331,7 @@ theorem to_finset_cons {a : α} {l : List α} : to_finset (a :: l) = insert a (t
     by 
       byCases' h : a ∈ l <;> simp [Finset.insert_val', Multiset.erase_dup_cons, h]
 
-theorem to_finset_surj_on : Set.SurjOn to_finset { l:List α | l.nodup } Set.Univ :=
+theorem to_finset_surj_on : Set.SurjOn to_finset { l : List α | l.nodup } Set.Univ :=
   by 
     rintro s -
     cases' s with t hl 
@@ -2351,6 +2413,7 @@ theorem map_empty (f : α ↪ β) : (∅ : Finset α).map f = ∅ :=
 
 variable {f : α ↪ β} {s : Finset α}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[simp]
 theorem mem_map {b : β} : b ∈ s.map f ↔ ∃ (a : _)(_ : a ∈ s), f a = b :=
   mem_map.trans$
@@ -2384,8 +2447,8 @@ theorem coe_map (f : α ↪ β) (s : Finset α) : (s.map f : Set β) = f '' s :=
   Set.ext$ fun x => mem_map.trans Set.mem_image_iff_bex.symm
 
 theorem coe_map_subset_range (f : α ↪ β) (s : Finset α) : (s.map f : Set β) ⊆ Set.Range f :=
-  calc «expr↑ » (s.map f) = f '' s := coe_map f s 
-    _ ⊆ Set.Range f := Set.image_subset_range f («expr↑ » s)
+  calc ↑s.map f = f '' s := coe_map f s 
+    _ ⊆ Set.Range f := Set.image_subset_range f (↑s)
     
 
 theorem map_to_finset [DecidableEq α] [DecidableEq β] {s : Multiset α} : s.to_finset.map f = (s.map f).toFinset :=
@@ -2402,7 +2465,7 @@ theorem map_refl : s.map (embedding.refl _) = s :=
         simpa only [mem_map, exists_prop] using exists_eq_right
 
 @[simp]
-theorem map_cast_heq {α β} (h : α = β) (s : Finset α) : HEq (s.map (Equiv.cast h).toEmbedding) s :=
+theorem map_cast_heq {α β} (h : α = β) (s : Finset α) : HEq (s.map (Equivₓ.cast h).toEmbedding) s :=
   by 
     subst h 
     simp 
@@ -2499,6 +2562,7 @@ theorem image_empty (f : α → β) : (∅ : Finset α).Image f = ∅ :=
 
 variable {f : α → β} {s : Finset α}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[simp]
 theorem mem_image {b : β} : b ∈ s.image f ↔ ∃ (a : _)(_ : a ∈ s), f a = b :=
   by 
@@ -2507,6 +2571,7 @@ theorem mem_image {b : β} : b ∈ s.image f ↔ ∃ (a : _)(_ : a ∈ s), f a =
 theorem mem_image_of_mem (f : α → β) {a} {s : Finset α} (h : a ∈ s) : f a ∈ s.image f :=
   mem_image.2 ⟨_, h, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 instance [CanLift β α] : CanLift (Finset β) (Finset α) :=
   { cond := fun s => ∀ x _ : x ∈ s, CanLift.Cond α x, coe := image CanLift.coe,
     prf :=
@@ -2523,6 +2588,7 @@ theorem _root_.function.injective.mem_finset_image {f : α → β} (hf : Functio
     obtain ⟨y, hy, heq⟩ := mem_image.1 h 
     exact hf HEq ▸ hy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem filter_mem_image_eq_image (f : α → β) (s : Finset α) (t : Finset β) (h : ∀ x _ : x ∈ s, f x ∈ t) :
   (t.filter fun y => y ∈ s.image f) = s.image f :=
   by 
@@ -2538,7 +2604,7 @@ theorem fiber_nonempty_iff_mem_image (f : α → β) (s : Finset α) (y : β) :
     simp [Finset.Nonempty]
 
 @[simp, normCast]
-theorem coe_image {f : α → β} : «expr↑ » (s.image f) = f '' «expr↑ » s :=
+theorem coe_image {f : α → β} : ↑s.image f = f '' ↑s :=
   Set.ext$ fun _ => mem_image.trans Set.mem_image_iff_bex.symm
 
 theorem nonempty.image (h : s.nonempty) (f : α → β) : (s.image f).Nonempty :=
@@ -2581,8 +2647,9 @@ theorem image_subset_image {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁.im
   by 
     simp only [subset_def, image_val, subset_erase_dup', erase_dup_subset', Multiset.map_subset_map h]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem image_subset_iff {s : Finset α} {t : Finset β} {f : α → β} : s.image f ⊆ t ↔ ∀ x _ : x ∈ s, f x ∈ t :=
-  calc s.image f ⊆ t ↔ f '' «expr↑ » s ⊆ «expr↑ » t :=
+  calc s.image f ⊆ t ↔ f '' ↑s ⊆ ↑t :=
     by 
       normCast 
     _ ↔ _ := Set.image_subset_iff
@@ -2591,9 +2658,9 @@ theorem image_subset_iff {s : Finset α} {t : Finset β} {f : α → β} : s.ima
 theorem image_mono (f : α → β) : Monotone (Finset.image f) :=
   fun _ _ => image_subset_image
 
-theorem coe_image_subset_range : «expr↑ » (s.image f) ⊆ Set.Range f :=
-  calc «expr↑ » (s.image f) = f '' «expr↑ » s := coe_image 
-    _ ⊆ Set.Range f := Set.image_subset_range f («expr↑ » s)
+theorem coe_image_subset_range : ↑s.image f ⊆ Set.Range f :=
+  calc ↑s.image f = f '' ↑s := coe_image 
+    _ ⊆ Set.Range f := Set.image_subset_range f (↑s)
     
 
 theorem image_filter {p : β → Prop} [DecidablePred p] : (s.image f).filter p = (s.filter (p ∘ f)).Image f :=
@@ -2642,7 +2709,7 @@ theorem image_erase [DecidableEq α] {f : α → β} (hf : injective f) (s : Fin
   by 
     ext b 
     simp only [mem_image, exists_prop, mem_erase]
-    split 
+    constructor
     ·
       rintro ⟨a', ⟨haa', ha'⟩, rfl⟩
       exact ⟨hf.ne haa', a', ha', rfl⟩
@@ -2657,7 +2724,7 @@ theorem image_eq_empty : s.image f = ∅ ↔ s = ∅ :=
 theorem mem_range_iff_mem_finset_range_of_mod_eq' [DecidableEq α] {f : ℕ → α} {a : α} {n : ℕ} (hn : 0 < n)
   (h : ∀ i, f (i % n) = f i) : a ∈ Set.Range f ↔ a ∈ (Finset.range n).Image fun i => f i :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨i, hi⟩
       simp only [mem_image, exists_prop, mem_range]
@@ -2670,12 +2737,12 @@ theorem mem_range_iff_mem_finset_range_of_mod_eq' [DecidableEq α] {f : ℕ → 
 
 theorem mem_range_iff_mem_finset_range_of_mod_eq [DecidableEq α] {f : ℤ → α} {a : α} {n : ℕ} (hn : 0 < n)
   (h : ∀ i, f (i % n) = f i) : a ∈ Set.Range f ↔ a ∈ (Finset.range n).Image fun i => f i :=
-  suffices (∃ i, f (i % n) = a) ↔ ∃ i, i < n ∧ f («expr↑ » i) = a by 
+  suffices (∃ i, f (i % n) = a) ↔ ∃ i, i < n ∧ f (↑i) = a by 
     simpa [h]
   have hn' : 0 < (n : ℤ) := Int.coe_nat_lt.mpr hn 
   Iff.intro
     (fun ⟨i, hi⟩ =>
-      have  : 0 ≤ i % «expr↑ » n := Int.mod_nonneg _ (ne_of_gtₓ hn')
+      have  : 0 ≤ i % ↑n := Int.mod_nonneg _ (ne_of_gtₓ hn')
       ⟨Int.toNat (i % n),
         by 
           rw [←Int.coe_nat_lt, Int.to_nat_of_nonneg this] <;> exact ⟨Int.mod_lt_of_pos i hn', hi⟩⟩)
@@ -2683,6 +2750,11 @@ theorem mem_range_iff_mem_finset_range_of_mod_eq [DecidableEq α] {f : ℤ → �
       ⟨i,
         by 
           rw [Int.mod_eq_of_lt (Int.coe_zero_le _) (Int.coe_nat_lt_coe_nat_of_lt hi), ha]⟩
+
+theorem range_add (a b : ℕ) : range (a+b) = range a ∪ (range b).map (addLeftEmbedding a) :=
+  by 
+    rw [←val_inj, union_val]
+    exact Multiset.range_add_eq_union a b
 
 @[simp]
 theorem attach_image_val [DecidableEq α] {s : Finset α} : s.attach.image Subtype.val = s :=
@@ -2757,6 +2829,7 @@ theorem subtype_map (p : α → Prop) [DecidablePred p] : (s.subtype p).map (emb
     ext x 
     simp [and_comm _ (_ = _), @And.left_comm _ (_ = _), and_comm (p x) (x ∈ s)]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- If all elements of a `finset` satisfy the predicate `p`,
 `s.subtype p` converts back to `s` with `embedding.subtype`. -/
 theorem subtype_map_of_mem {p : α → Prop} [DecidablePred p] (h : ∀ x _ : x ∈ s, p x) :
@@ -2783,31 +2856,36 @@ theorem not_mem_map_subtype_of_not_property {p : α → Prop} (s : Finset { x //
 /-- If a `finset` of a subtype is converted to the main type with
 `embedding.subtype`, the result is a subset of the set giving the
 subtype. -/
-theorem map_subtype_subset {t : Set α} (s : Finset t) : «expr↑ » (s.map (embedding.subtype _)) ⊆ t :=
+theorem map_subtype_subset {t : Set α} (s : Finset t) : ↑s.map (embedding.subtype _) ⊆ t :=
   by 
     intro a ha 
     rw [mem_coe] at ha 
     convert property_of_mem_map_subtype s ha
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem subset_image_iff
-{f : α → β}
-{s : finset β}
-{t : set α} : «expr ↔ »(«expr ⊆ »(«expr↑ »(s), «expr '' »(f, t)), «expr∃ , »((s' : finset α), «expr ∧ »(«expr ⊆ »(«expr↑ »(s'), t), «expr = »(s'.image f, s)))) :=
-begin
-  split,
-  swap,
-  { rintro ["⟨", ident s, ",", ident hs, ",", ident rfl, "⟩"],
-    rw ["[", expr coe_image, "]"] [],
-    exact [expr set.image_subset f hs] },
-  intro [ident h],
-  letI [] [":", expr can_lift β t] [":=", expr ⟨«expr ∘ »(f, coe), λ
-    y, «expr ∈ »(y, «expr '' »(f, t)), λ (y) ⟨x, hxt, hy⟩, ⟨⟨x, hxt⟩, hy⟩⟩],
-  lift [expr s] ["to", expr finset t] ["using", expr h] [],
-  refine [expr ⟨s.map (embedding.subtype _), map_subtype_subset _, _⟩],
-  ext [] [ident y] [],
-  simp [] [] [] [] [] []
-end
+theorem subset_image_iff {f : α → β} {s : Finset β} {t : Set α} :
+  ↑s ⊆ f '' t ↔ ∃ s' : Finset α, ↑s' ⊆ t ∧ s'.image f = s :=
+  by 
+    constructor 
+    swap
+    ·
+      rintro ⟨s, hs, rfl⟩
+      rw [coe_image]
+      exact Set.image_subset f hs 
+    intro h 
+    let this' : CanLift β t := ⟨f ∘ coeₓ, fun y => y ∈ f '' t, fun y ⟨x, hxt, hy⟩ => ⟨⟨x, hxt⟩, hy⟩⟩
+    lift s to Finset t using h 
+    refine' ⟨s.map (embedding.subtype _), map_subtype_subset _, _⟩
+    ext y 
+    simp 
+
+theorem range_sdiff_zero {n : ℕ} : range (n+1) \ {0} = (range n).Image Nat.succ :=
+  by 
+    induction' n with k hk
+    ·
+      simp 
+    nthRw 1[range_succ]
+    rw [range_succ, image_insert, ←hk, insert_sdiff_of_not_mem]
+    simp 
 
 end Image
 
@@ -2858,6 +2936,8 @@ theorem card_eq_one {s : Finset α} : s.card = 1 ↔ ∃ a, s = {a} :=
   by 
     cases s <;> simp only [Multiset.card_eq_one, Finset.card, ←val_inj, singleton_val]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem card_le_one {s : Finset α} : s.card ≤ 1 ↔ ∀ a _ : a ∈ s b _ : b ∈ s, a = b :=
   by 
     rcases s.eq_empty_or_nonempty with (rfl | ⟨x, hx⟩)
@@ -2877,7 +2957,7 @@ theorem card_le_one_iff {s : Finset α} : s.card ≤ 1 ↔ ∀ {a b}, a ∈ s �
 
 theorem card_le_one_iff_subset_singleton [Nonempty α] {s : Finset α} : s.card ≤ 1 ↔ ∃ x : α, s ⊆ {x} :=
   by 
-    split 
+    constructor
     ·
       intro H 
       byCases' h : ∃ x, x ∈ s
@@ -2898,6 +2978,8 @@ theorem card_le_one_iff_subset_singleton [Nonempty α] {s : Finset α} : s.card 
 theorem card_le_one_of_subsingleton [Subsingleton α] (s : Finset α) : s.card ≤ 1 :=
   Finset.card_le_one_iff.2$ fun _ _ _ _ => Subsingleton.elimₓ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem one_lt_card {s : Finset α} : 1 < s.card ↔ ∃ (a : _)(_ : a ∈ s)(b : _)(_ : b ∈ s), a ≠ b :=
   by 
     rw [←not_iff_not]
@@ -3006,7 +3088,7 @@ theorem List.card_to_finset [DecidableEq α] (l : List α) : Finset.card l.to_fi
   rfl
 
 theorem List.to_finset_card_le [DecidableEq α] (l : List α) : l.to_finset.card ≤ l.length :=
-  Multiset.to_finset_card_le («expr⟦ ⟧» l)
+  Multiset.to_finset_card_le (⟦l⟧)
 
 namespace Finset
 
@@ -3021,22 +3103,19 @@ theorem card_image_of_inj_on [DecidableEq β] {f : α → β} {s : Finset α} (H
   by 
     simp only [card, image_val_of_inj_on H, card_map]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inj_on_of_card_image_eq
-[decidable_eq β]
-{f : α → β}
-{s : finset α}
-(H : «expr = »(card (image f s), card s)) : set.inj_on f s :=
-begin
-  change [expr «expr = »((s.1.map f).erase_dup.card, s.1.card)] [] ["at", ident H],
-  have [] [":", expr «expr = »((s.1.map f).erase_dup, s.1.map f)] [],
-  { apply [expr multiset.eq_of_le_of_card_le],
-    { apply [expr multiset.erase_dup_le] },
-    rw [expr H] [],
-    simp [] [] ["only"] ["[", expr multiset.card_map, "]"] [] [] },
-  rw [expr multiset.erase_dup_eq_self] ["at", ident this],
-  apply [expr inj_on_of_nodup_map this]
-end
+theorem inj_on_of_card_image_eq [DecidableEq β] {f : α → β} {s : Finset α} (H : card (image f s) = card s) :
+  Set.InjOn f s :=
+  by 
+    change (s.1.map f).eraseDup.card = s.1.card at H 
+    have  : (s.1.map f).eraseDup = s.1.map f
+    ·
+      apply Multiset.eq_of_le_of_card_le
+      ·
+        apply Multiset.erase_dup_le 
+      rw [H]
+      simp only [Multiset.card_map]
+    rw [Multiset.erase_dup_eq_self] at this 
+    apply inj_on_of_nodup_map this
 
 theorem card_image_eq_iff_inj_on [DecidableEq β] {f : α → β} {s : Finset α} :
   (s.image f).card = s.card ↔ Set.InjOn f s :=
@@ -3060,37 +3139,28 @@ theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) : (s.su
   by 
     simp [Finset.subtype]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_eq_of_bijective
-{s : finset α}
-{n : exprℕ()}
-(f : ∀ i, «expr < »(i, n) → α)
-(hf : ∀ a «expr ∈ » s, «expr∃ , »((i), «expr∃ , »((h : «expr < »(i, n)), «expr = »(f i h, a))))
-(hf' : ∀ (i) (h : «expr < »(i, n)), «expr ∈ »(f i h, s))
-(f_inj : ∀
- (i j)
- (hi : «expr < »(i, n))
- (hj : «expr < »(j, n)), «expr = »(f i hi, f j hj) → «expr = »(i, j)) : «expr = »(card s, n) :=
-begin
-  classical,
-  have [] [":", expr ∀
-   a : α, «expr ↔ »(«expr ∈ »(a, s), «expr∃ , »((i)
-     (hi : «expr ∈ »(i, range n)), «expr = »(f i (mem_range.1 hi), a)))] [],
-  from [expr assume
-   a, ⟨assume ha, let ⟨i, hi, eq⟩ := hf a ha in
-    ⟨i, mem_range.2 hi, eq⟩, assume ⟨i, hi, eq⟩, «expr ▸ »(eq, hf' i (mem_range.1 hi))⟩],
-  have [] [":", expr «expr = »(s, «expr $ »((range n).attach.image, λ i, f i.1 (mem_range.1 i.2)))] [],
-  by simpa [] [] ["only"] ["[", expr ext_iff, ",", expr mem_image, ",", expr exists_prop, ",", expr subtype.exists, ",", expr mem_attach, ",", expr true_and, "]"] [] [],
-  calc
-    «expr = »(card s, card «expr $ »((range n).attach.image, λ
-      i, f i.1 (mem_range.1 i.2))) : by rw ["[", expr this, "]"] []
-    «expr = »(..., card (range n).attach) : «expr $ »(card_image_of_injective _, assume
-     ⟨i, hi⟩
-     ⟨j, hj⟩
-     (eq), «expr $ »(subtype.eq, f_inj i j (mem_range.1 hi) (mem_range.1 hj) eq))
-    «expr = »(..., card (range n)) : card_attach
-    «expr = »(..., n) : card_range n
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+theorem card_eq_of_bijective {s : Finset α} {n : ℕ} (f : ∀ i, i < n → α)
+  (hf : ∀ a _ : a ∈ s, ∃ i, ∃ h : i < n, f i h = a) (hf' : ∀ i h : i < n, f i h ∈ s)
+  (f_inj : ∀ i j hi : i < n hj : j < n, f i hi = f j hj → i = j) : card s = n :=
+  by 
+    classical 
+    have  : ∀ a : α, a ∈ s ↔ ∃ (i : _)(hi : i ∈ range n), f i (mem_range.1 hi) = a 
+    exact
+      fun a =>
+        ⟨fun ha =>
+            let ⟨i, hi, Eq⟩ := hf a ha
+            ⟨i, mem_range.2 hi, Eq⟩,
+          fun ⟨i, hi, Eq⟩ => Eq ▸ hf' i (mem_range.1 hi)⟩
+    have  : s = ((range n).attach.Image$ fun i => f i.1 (mem_range.1 i.2))
+    ·
+      simpa only [ext_iff, mem_image, exists_prop, Subtype.exists, mem_attach, true_andₓ]
+    calc card s = card ((range n).attach.Image$ fun i => f i.1 (mem_range.1 i.2)) :=
+      by 
+        rw [this]_ = card (range n).attach :=
+      card_image_of_injective _$
+        fun ⟨i, hi⟩ ⟨j, hj⟩ eq => Subtype.eq$ f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq _ = card (range n) :=
+      card_attach _ = n := card_range n
 
 theorem card_eq_succ [DecidableEq α] {s : Finset α} {n : ℕ} :
   (s.card = n+1) ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ card t = n :=
@@ -3105,7 +3175,7 @@ theorem card_eq_succ [DecidableEq α] {s : Finset α} {n : ℕ} :
 
 theorem card_eq_two [DecidableEq α] {s : Finset α} : s.card = 2 ↔ ∃ x y, x ≠ y ∧ s = {x, y} :=
   by 
-    split 
+    constructor
     ·
       rw [card_eq_succ]
       simpRw [card_eq_one]
@@ -3117,7 +3187,7 @@ theorem card_eq_two [DecidableEq α] {s : Finset α} : s.card = 2 ↔ ∃ x y, x
 
 theorem card_eq_three [DecidableEq α] {s : Finset α} : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x ≠ z ∧ y ≠ z ∧ s = {x, y, z} :=
   by 
-    split 
+    constructor
     ·
       rw [card_eq_succ]
       simpRw [card_eq_two]
@@ -3143,6 +3213,9 @@ theorem filter_card_eq {s : Finset α} {p : α → Prop} [DecidablePred p] (h : 
 theorem card_lt_card {s t : Finset α} (h : s ⊂ t) : s.card < t.card :=
   card_lt_of_lt (val_lt_iff.2 h)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a₁ «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a₂ «expr ∈ » s)
 theorem card_le_card_of_inj_on {s : Finset α} {t : Finset β} (f : α → β) (hf : ∀ a _ : a ∈ s, f a ∈ t)
   (f_inj : ∀ a₁ _ : a₁ ∈ s, ∀ a₂ _ : a₂ ∈ s, f a₁ = f a₂ → a₁ = a₂) : card s ≤ card t :=
   by 
@@ -3152,6 +3225,9 @@ theorem card_le_card_of_inj_on {s : Finset α} {t : Finset β} (f : α → β) (
         rw [card_image_of_inj_on f_inj]_ ≤ card t :=
       card_le_of_subset$ image_subset_iff.2 hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /--
 If there are more pigeons than pigeonholes, then there are two pigeons
 in the same pigeonhole.
@@ -3167,6 +3243,9 @@ theorem exists_ne_map_eq_of_card_lt_of_maps_to {s : Finset α} {t : Finset β} (
     contrapose 
     exact hz x hx y hy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » n)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » n)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr < » n)
 theorem le_card_of_inj_on_range {n} {s : Finset α} (f : ℕ → α) (hf : ∀ i _ : i < n, f i ∈ s)
   (f_inj : ∀ i _ : i < n j _ : j < n, f i = f j → i = j) : n ≤ card s :=
   calc n = card (range n) := (card_range n).symm 
@@ -3178,6 +3257,7 @@ theorem le_card_of_inj_on_range {n} {s : Finset α} (f : ℕ → α) (hf : ∀ i
         simpa only [mem_range])
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
 define an object on `s`. Then one can inductively define an object on all finsets, starting from
 the empty set and iterating. This can be used either to define data, or to prove properties. -/
@@ -3188,22 +3268,26 @@ def strong_induction {p : Finset α → Sort _} (H : ∀ s, (∀ t _ : t ⊂ s, 
       have  : card t < card s := card_lt_card h 
       strong_induction t
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) (s : Finset α) :
   strong_induction H s = H s fun t h => strong_induction H t :=
   by 
     rw [strong_induction]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
 @[elab_as_eliminator]
 def strong_induction_on {p : Finset α → Sort _} : ∀ s : Finset α, (∀ s, (∀ t _ : t ⊂ s, p t) → p s) → p s :=
   fun s H => strong_induction H s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) :
   s.strong_induction_on H = H s fun t h => t.strong_induction_on H :=
   by 
     dunfold strong_induction_on 
     rw [strong_induction]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊆ » s)
 @[elab_as_eliminator]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
   (h₁ : ∀ a s, a ∉ s → (∀ t _ : t ⊆ s, p t) → p (insert a s)) : p s :=
@@ -3243,23 +3327,30 @@ theorem strong_downward_induction_on_eq {p : Finset α → Sort _} (s : Finset �
     dunfold strong_downward_induction_on 
     rw [strong_downward_induction]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_congr
-{s : finset α}
-{t : finset β}
-(f : ∀ a «expr ∈ » s, β)
-(h₁ : ∀ a ha, «expr ∈ »(f a ha, t))
-(h₂ : ∀ a b ha hb, «expr = »(f a ha, f b hb) → «expr = »(a, b))
-(h₃ : ∀ b «expr ∈ » t, «expr∃ , »((a ha), «expr = »(f a ha, b))) : «expr = »(s.card, t.card) :=
-by haveI [] [] [":=", expr classical.prop_decidable]; exact [expr calc
-   «expr = »(s.card, s.attach.card) : card_attach.symm
-   «expr = »(..., (s.attach.image (λ
-      a : {a // «expr ∈ »(a, s)}, f a.1 a.2)).card) : eq.symm (card_image_of_injective _ (λ
-     a b h, subtype.eq (h₂ _ _ _ _ h)))
-   «expr = »(..., t.card) : congr_arg card «expr $ »(finset.ext, λ
-    b, ⟨λ h, let ⟨a, ha₁, ha₂⟩ := mem_image.1 h in
-     «expr ▸ »(ha₂, h₁ _ _), λ h, let ⟨a, ha₁, ha₂⟩ := h₃ b h in
-     mem_image.2 ⟨⟨a, ha₁⟩, by simp [] [] [] ["[", expr ha₂, "]"] [] []⟩⟩)]
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
+theorem card_congr {s : Finset α} {t : Finset β} (f : ∀ a _ : a ∈ s, β) (h₁ : ∀ a ha, f a ha ∈ t)
+  (h₂ : ∀ a b ha hb, f a ha = f b hb → a = b) (h₃ : ∀ b _ : b ∈ t, ∃ a ha, f a ha = b) : s.card = t.card :=
+  by 
+    have  := Classical.propDecidable <;>
+      exact
+        calc s.card = s.attach.card := card_attach.symm 
+          _ = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card :=
+          Eq.symm (card_image_of_injective _ fun a b h => Subtype.eq (h₂ _ _ _ _ h))
+          _ = t.card :=
+          congr_argₓ card
+            (Finset.ext$
+              fun b =>
+                ⟨fun h =>
+                    let ⟨a, ha₁, ha₂⟩ := mem_image.1 h 
+                    ha₂ ▸ h₁ _ _,
+                  fun h =>
+                    let ⟨a, ha₁, ha₂⟩ := h₃ b h 
+                    mem_image.2
+                      ⟨⟨a, ha₁⟩,
+                        by 
+                          simp [ha₂]⟩⟩)
+          
 
 theorem card_union_add_card_inter [DecidableEq α] (s t : Finset α) : ((s ∪ t).card+(s ∩ t).card) = s.card+t.card :=
   Finset.induction_on t
@@ -3279,60 +3370,57 @@ theorem card_union_eq [DecidableEq α] {s t : Finset α} (h : Disjoint s t) : (s
     rw [card_eq_zero]
     rwa [disjoint_iff] at h
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem surj_on_of_inj_on_of_card_le
-{s : finset α}
-{t : finset β}
-(f : ∀ a «expr ∈ » s, β)
-(hf : ∀ a ha, «expr ∈ »(f a ha, t))
-(hinj : ∀ a₁ a₂ ha₁ ha₂, «expr = »(f a₁ ha₁, f a₂ ha₂) → «expr = »(a₁, a₂))
-(hst : «expr ≤ »(card t, card s)) : ∀ b «expr ∈ » t, «expr∃ , »((a ha), «expr = »(b, f a ha)) :=
-by haveI [] [] [":=", expr classical.dec_eq β]; exact [expr λ
- b
- hb, have h : «expr = »(card (image (λ
-    a : {a // «expr ∈ »(a, s)}, f a a.prop) (attach s)), card s), from «expr ▸ »(@card_attach _ s, card_image_of_injective _ (λ
-   ⟨a₁, ha₁⟩
-   ⟨a₂, ha₂⟩
-   (h), «expr $ »(subtype.eq, hinj _ _ _ _ h))),
- have h₁ : «expr = »(image (λ
-   a : {a // «expr ∈ »(a, s)}, f a a.prop) s.attach, t) := eq_of_subset_of_card_le (λ
-  b h, let ⟨a, ha₁, ha₂⟩ := mem_image.1 h in
-  «expr ▸ »(ha₂, hf _ _)) (by simp [] [] [] ["[", expr hst, ",", expr h, "]"] [] []),
- begin
-   rw ["<-", expr h₁] ["at", ident hb],
-   rcases [expr mem_image.1 hb, "with", "⟨", ident a, ",", ident ha₁, ",", ident ha₂, "⟩"],
-   exact [expr ⟨a, a.2, ha₂.symm⟩]
- end]
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
+theorem surj_on_of_inj_on_of_card_le {s : Finset α} {t : Finset β} (f : ∀ a _ : a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
+  (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : card t ≤ card s) : ∀ b _ : b ∈ t, ∃ a ha, b = f a ha :=
+  by 
+    have  := Classical.decEq β <;>
+      exact
+        fun b hb =>
+          have h : card (image (fun a : { a // a ∈ s } => f a a.prop) (attach s)) = card s :=
+            @card_attach _ s ▸ card_image_of_injective _ fun ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ h => Subtype.eq$ hinj _ _ _ _ h 
+          have h₁ : image (fun a : { a // a ∈ s } => f a a.prop) s.attach = t :=
+            eq_of_subset_of_card_le
+              (fun b h =>
+                let ⟨a, ha₁, ha₂⟩ := mem_image.1 h 
+                ha₂ ▸ hf _ _)
+              (by 
+                simp [hst, h])
+          by 
+            rw [←h₁] at hb 
+            rcases mem_image.1 hb with ⟨a, ha₁, ha₂⟩
+            exact ⟨a, a.2, ha₂.symm⟩
 
 open Function
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inj_on_of_surj_on_of_card_le
-{s : finset α}
-{t : finset β}
-(f : ∀ a «expr ∈ » s, β)
-(hf : ∀ a ha, «expr ∈ »(f a ha, t))
-(hsurj : ∀ b «expr ∈ » t, «expr∃ , »((a ha), «expr = »(b, f a ha)))
-(hst : «expr ≤ »(card s, card t))
-{{a₁ a₂}}
-(ha₁ : «expr ∈ »(a₁, s))
-(ha₂ : «expr ∈ »(a₂, s))
-(ha₁a₂ : «expr = »(f a₁ ha₁, f a₂ ha₂)) : «expr = »(a₁, a₂) :=
-by haveI [] [":", expr inhabited {x // «expr ∈ »(x, s)}] [":=", expr ⟨⟨a₁, ha₁⟩⟩]; exact [expr let f' : {x // «expr ∈ »(x, s)} → {x // «expr ∈ »(x, t)} := λ
-     x, ⟨f x.1 x.2, hf x.1 x.2⟩ in
- let g : {x // «expr ∈ »(x, t)} → {x // «expr ∈ »(x, s)} := @surj_inv _ _ f' (λ x, let ⟨y, hy₁, hy₂⟩ := hsurj x.1 x.2 in
-      ⟨⟨y, hy₁⟩, subtype.eq hy₂.symm⟩) in
- have hg : injective g, from injective_surj_inv _,
- have hsg : surjective g, from λ
- x, let ⟨y, hy⟩ := surj_on_of_inj_on_of_card_le (λ
-      (x : {x // «expr ∈ »(x, t)})
-      (hx : «expr ∈ »(x, t.attach)), g x) (λ
-      x
-      _, show «expr ∈ »(g x, s.attach), from mem_attach _ _) (λ
-      x y _ _ hxy, hg hxy) (by simpa [] [] [] [] [] []) x (mem_attach _ _) in
- ⟨y, hy.snd.symm⟩,
- have hif : injective f', from (left_inverse_of_surjective_of_right_inverse hsg (right_inverse_surj_inv _)).injective,
- subtype.ext_iff_val.1 (@hif ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ (subtype.eq ha₁a₂))]
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
+theorem inj_on_of_surj_on_of_card_le {s : Finset α} {t : Finset β} (f : ∀ a _ : a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
+  (hsurj : ∀ b _ : b ∈ t, ∃ a ha, b = f a ha) (hst : card s ≤ card t) ⦃a₁ a₂⦄ (ha₁ : a₁ ∈ s) (ha₂ : a₂ ∈ s)
+  (ha₁a₂ : f a₁ ha₁ = f a₂ ha₂) : a₁ = a₂ :=
+  by 
+    have  : Inhabited { x // x ∈ s } := ⟨⟨a₁, ha₁⟩⟩ <;>
+      exact
+        let f' : { x // x ∈ s } → { x // x ∈ t } := fun x => ⟨f x.1 x.2, hf x.1 x.2⟩
+        let g : { x // x ∈ t } → { x // x ∈ s } :=
+          @surj_inv _ _ f'
+            fun x =>
+              let ⟨y, hy₁, hy₂⟩ := hsurj x.1 x.2
+              ⟨⟨y, hy₁⟩, Subtype.eq hy₂.symm⟩
+        have hg : injective g := injective_surj_inv _ 
+        have hsg : surjective g :=
+          fun x =>
+            let ⟨y, hy⟩ :=
+              surj_on_of_inj_on_of_card_le (fun x : { x // x ∈ t } hx : x ∈ t.attach => g x)
+                (fun x _ => show g x ∈ s.attach from mem_attach _ _) (fun x y _ _ hxy => hg hxy)
+                (by 
+                  simpa)
+                x (mem_attach _ _)
+            ⟨y, hy.snd.symm⟩
+        have hif : injective f' :=
+          (left_inverse_of_surjective_of_right_inverse hsg (right_inverse_surj_inv _)).Injective 
+        Subtype.ext_iff_val.1 (@hif ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ (Subtype.eq ha₁a₂))
 
 end Card
 
@@ -3408,6 +3496,7 @@ theorem bUnion_val (s : Finset α) (t : α → Finset β) : (s.bUnion t).1 = (s.
 theorem bUnion_empty : Finset.bUnion ∅ t = ∅ :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[simp]
 theorem mem_bUnion {b : β} : b ∈ s.bUnion t ↔ ∃ (a : _)(_ : a ∈ s), b ∈ t a :=
   by 
@@ -3421,14 +3510,16 @@ theorem bUnion_insert [DecidableEq α] {a : α} : (insert a s).bUnion t = t a �
         simp only [mem_bUnion, exists_prop, mem_union, mem_insert, or_and_distrib_right, exists_or_distrib,
           exists_eq_left]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem bUnion_congr
-{s₁ s₂ : finset α}
-{t₁ t₂ : α → finset β}
-(hs : «expr = »(s₁, s₂))
-(ht : ∀ a «expr ∈ » s₁, «expr = »(t₁ a, t₂ a)) : «expr = »(s₁.bUnion t₁, s₂.bUnion t₂) :=
-«expr $ »(ext, λ x, by simp [] [] [] ["[", expr hs, ",", expr ht, "]"] [] [] { contextual := tt })
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s₁)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  bUnion_congr
+  { s₁ s₂ : Finset α } { t₁ t₂ : α → Finset β } ( hs : s₁ = s₂ ) ( ht : ∀ a _ : a ∈ s₁ , t₁ a = t₂ a )
+    : s₁.bUnion t₁ = s₂.bUnion t₂
+  := ext $ fun x => by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ hs , ht ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem bUnion_subset {s' : Finset β} : s.bUnion t ⊆ s' ↔ ∀ x _ : x ∈ s, t x ⊆ s' :=
   by 
     simp only [subset_iff, mem_bUnion] <;> exact ⟨fun H a ha b hb => H ⟨a, ha, hb⟩, fun H b ⟨a, ha, hb⟩ => H a ha hb⟩
@@ -3449,23 +3540,25 @@ theorem inter_bUnion (t : Finset β) (s : Finset α) (f : α → Finset β) : t 
   by 
     rw [inter_comm, bUnion_inter] <;> simp [inter_comm]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem image_bUnion
-[decidable_eq γ]
-{f : α → β}
-{s : finset α}
-{t : β → finset γ} : «expr = »((s.image f).bUnion t, s.bUnion (λ a, t (f a))) :=
-by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr finset.induction_on s rfl (λ
-  a s has ih, by simp [] [] ["only"] ["[", expr image_insert, ",", expr bUnion_insert, ",", expr ih, "]"] [] [])]
+theorem image_bUnion [DecidableEq γ] {f : α → β} {s : Finset α} {t : β → Finset γ} :
+  (s.image f).bUnion t = s.bUnion fun a => t (f a) :=
+  by 
+    have  := Classical.decEq α <;>
+      exact
+        Finset.induction_on s rfl
+          fun a s has ih =>
+            by 
+              simp only [image_insert, bUnion_insert, ih]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem bUnion_image
-[decidable_eq γ]
-{s : finset α}
-{t : α → finset β}
-{f : β → γ} : «expr = »((s.bUnion t).image f, s.bUnion (λ a, (t a).image f)) :=
-by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr finset.induction_on s rfl (λ
-  a s has ih, by simp [] [] ["only"] ["[", expr bUnion_insert, ",", expr image_union, ",", expr ih, "]"] [] [])]
+theorem bUnion_image [DecidableEq γ] {s : Finset α} {t : α → Finset β} {f : β → γ} :
+  (s.bUnion t).Image f = s.bUnion fun a => (t a).Image f :=
+  by 
+    have  := Classical.decEq α <;>
+      exact
+        Finset.induction_on s rfl
+          fun a s has ih =>
+            by 
+              simp only [bUnion_insert, image_union, ih]
 
 theorem bUnion_bUnion [DecidableEq γ] (s : Finset α) (f : α → Finset β) (g : β → Finset γ) :
   (s.bUnion f).bUnion g = s.bUnion fun a => (f a).bUnion g :=
@@ -3482,6 +3575,7 @@ theorem bind_to_finset [DecidableEq α] (s : Multiset α) (t : α → Multiset �
       by 
         simp only [Multiset.mem_to_finset, mem_bUnion, Multiset.mem_bind, exists_prop]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem bUnion_mono {t₁ t₂ : α → Finset β} (h : ∀ a _ : a ∈ s, t₁ a ⊆ t₂ a) : s.bUnion t₁ ⊆ s.bUnion t₂ :=
   have  : ∀ b a, a ∈ s → b ∈ t₁ a → ∃ a : α, a ∈ s ∧ b ∈ t₂ a :=
     fun b a ha hb => ⟨a, ha, Finset.mem_of_subset (h a ha) hb⟩
@@ -3500,6 +3594,7 @@ theorem subset_bUnion_of_mem {s : Finset α} (u : α → Finset β) {x : α} (xs
     apply subset.trans _ (bUnion_subset_bUnion_of_subset_left u (singleton_subset_iff.2 xs))
     exact subset_of_eq singleton_bUnion.symm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[simp]
 theorem bUnion_subset_iff_forall_subset {α β : Type _} [DecidableEq β] {s : Finset α} {t : Finset β}
   {f : α → Finset β} : s.bUnion f ⊆ t ↔ ∀ x _ : x ∈ s, f x ⊆ t :=
@@ -3520,6 +3615,20 @@ theorem bUnion_singleton_eq_self [DecidableEq α] : s.bUnion (singleton : α →
     rw [bUnion_singleton]
     exact image_id
 
+theorem filter_bUnion (s : Finset α) (f : α → Finset β) (p : β → Prop) [DecidablePred p] :
+  (s.bUnion f).filter p = s.bUnion fun a => (f a).filter p :=
+  by 
+    ext b 
+    simp only [mem_bUnion, exists_prop, mem_filter]
+    constructor
+    ·
+      rintro ⟨⟨a, ha, hba⟩, hb⟩
+      exact ⟨a, ha, hba, hb⟩
+    ·
+      rintro ⟨a, ha, hba, hb⟩
+      exact ⟨⟨a, ha, hba⟩, hb⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem bUnion_filter_eq_of_maps_to [DecidableEq α] {s : Finset α} {t : Finset β} {f : α → β}
   (h : ∀ x _ : x ∈ s, f x ∈ t) : (t.bUnion fun a => s.filter$ fun c => f c = a) = s :=
   ext$
@@ -3537,11 +3646,13 @@ theorem erase_bUnion (f : α → Finset β) (s : Finset α) (b : β) :
     ext 
     simp only [Finset.mem_bUnion, iff_selfₓ, exists_and_distrib_left, Finset.mem_erase]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[simp]
 theorem bUnion_nonempty : (s.bUnion t).Nonempty ↔ ∃ (x : _)(_ : x ∈ s), (t x).Nonempty :=
   by 
     simp [Finset.Nonempty, ←exists_and_distrib_left, @exists_swap α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem nonempty.bUnion (hs : s.nonempty) (ht : ∀ x _ : x ∈ s, (t x).Nonempty) : (s.bUnion t).Nonempty :=
   bUnion_nonempty.2$ hs.imp$ fun x hx => ⟨hx, ht x hx⟩
 
@@ -3555,18 +3666,20 @@ section Sigma
 variable {σ : α → Type _} {s : Finset α} {t : ∀ a, Finset (σ a)}
 
 /-- `sigma s t` is the set of dependent pairs `⟨a, b⟩` such that `a ∈ s` and `b ∈ t a`. -/
-protected def Sigma (s : Finset α) (t : ∀ a, Finset (σ a)) : Finset (Σa, σ a) :=
+protected def Sigma (s : Finset α) (t : ∀ a, Finset (σ a)) : Finset (Σ a, σ a) :=
   ⟨_, nodup_sigma s.2 fun a => (t a).2⟩
 
 @[simp]
 theorem mem_sigma {p : Sigma σ} : p ∈ s.sigma t ↔ p.1 ∈ s ∧ p.2 ∈ t p.1 :=
   mem_sigma
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[simp]
 theorem sigma_nonempty : (s.sigma t).Nonempty ↔ ∃ (x : _)(_ : x ∈ s), (t x).Nonempty :=
   by 
     simp [Finset.Nonempty]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[simp]
 theorem sigma_eq_empty : s.sigma t = ∅ ↔ ∀ x _ : x ∈ s, t x = ∅ :=
   by 
@@ -3579,7 +3692,7 @@ theorem sigma_mono {s₁ s₂ : Finset α} {t₁ t₂ : ∀ a, Finset (σ a)} (H
     let ⟨H3, H4⟩ := mem_sigma.1 H 
     mem_sigma.2 ⟨H1 H3, H2 x H4⟩
 
-theorem sigma_eq_bUnion [DecidableEq (Σa, σ a)] (s : Finset α) (t : ∀ a, Finset (σ a)) :
+theorem sigma_eq_bUnion [DecidableEq (Σ a, σ a)] (s : Finset α) (t : ∀ a, Finset (σ a)) :
   s.sigma t = s.bUnion fun a => (t a).map$ embedding.sigma_mk a :=
   by 
     ext ⟨x, y⟩
@@ -3614,6 +3727,8 @@ theorem disjoint_right {s t : Finset α} : Disjoint s t ↔ ∀ {a}, a ∈ t →
   by 
     rw [Disjoint.comm, disjoint_left]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
 theorem disjoint_iff_ne {s t : Finset α} : Disjoint s t ↔ ∀ a _ : a ∈ s, ∀ b _ : b ∈ t, a ≠ b :=
   by 
     simp only [disjoint_left, imp_not_comm, forall_eq']
@@ -3694,6 +3809,7 @@ theorem sdiff_eq_self_of_disjoint {s t : Finset α} (h : Disjoint s t) : s \ t =
 theorem disjoint_self_iff_empty (s : Finset α) : Disjoint s s ↔ s = ∅ :=
   disjoint_self
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem disjoint_bUnion_left {ι : Type _} (s : Finset ι) (f : ι → Finset α) (t : Finset α) :
   Disjoint (s.bUnion f) t ↔ ∀ i _ : i ∈ s, Disjoint (f i) t :=
   by 
@@ -3705,6 +3821,7 @@ theorem disjoint_bUnion_left {ι : Type _} (s : Finset ι) (f : ι → Finset α
       intro i s his ih 
       simp only [disjoint_union_left, bUnion_insert, his, forall_mem_insert, ih]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 theorem disjoint_bUnion_right {ι : Type _} (s : Finset α) (t : Finset ι) (f : ι → Finset α) :
   Disjoint s (t.bUnion f) ↔ ∀ i _ : i ∈ t, Disjoint s (f i) :=
   by 
@@ -3725,20 +3842,21 @@ theorem card_sdiff_add_card {s t : Finset α} : ((s \ t).card+t.card) = (s ∪ t
   by 
     rw [←card_disjoint_union sdiff_disjoint, sdiff_union_self_eq_union]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem disjoint_filter
-{s : finset α}
-{p q : α → exprProp()}
-[decidable_pred p]
-[decidable_pred q] : «expr ↔ »(disjoint (s.filter p) (s.filter q), ∀ x «expr ∈ » s, p x → «expr¬ »(q x)) :=
-by split; simp [] [] [] ["[", expr disjoint_left, "]"] [] [] { contextual := tt }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  disjoint_filter
+  { s : Finset α } { p q : α → Prop } [ DecidablePred p ] [ DecidablePred q ]
+    : Disjoint s.filter p s.filter q ↔ ∀ x _ : x ∈ s , p x → ¬ q x
+  := by constructor <;> simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ disjoint_left ]
 
 theorem disjoint_filter_filter {s t : Finset α} {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
   Disjoint s t → Disjoint (s.filter p) (t.filter q) :=
   Disjoint.mono (filter_subset _ _) (filter_subset _ _)
 
 theorem disjoint_iff_disjoint_coe {α : Type _} {a b : Finset α} [DecidableEq α] :
-  Disjoint a b ↔ Disjoint («expr↑ » a : Set α) («expr↑ » b : Set α) :=
+  Disjoint a b ↔ Disjoint (↑a : Set α) (↑b : Set α) :=
   by 
     rw [Finset.disjoint_left, Set.disjoint_left]
     rfl
@@ -3751,37 +3869,38 @@ theorem filter_card_add_filter_neg_card_eq_card {α : Type _} {s : Finset α} (p
 
 end Disjoint
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a set A and a set B inside it, we can shrink A to any appropriate size, and keep B
 inside it.
 -/
-theorem exists_intermediate_set
-{A B : finset α}
-(i : exprℕ())
-(h₁ : «expr ≤ »(«expr + »(i, card B), card A))
-(h₂ : «expr ⊆ »(B, A)) : «expr∃ , »((C : finset α), «expr ∧ »(«expr ⊆ »(B, C), «expr ∧ »(«expr ⊆ »(C, A), «expr = »(card C, «expr + »(i, card B))))) :=
-begin
-  classical,
-  rcases [expr nat.le.dest h₁, "with", "⟨", ident k, ",", "_", "⟩"],
-  clear [ident h₁],
-  induction [expr k] [] ["with", ident k, ident ih] ["generalizing", ident A],
-  { exact [expr ⟨A, h₂, subset.refl _, h.symm⟩] },
-  { have [] [":", expr «expr \ »(A, B).nonempty] [],
-    { rw ["[", "<-", expr card_pos, ",", expr card_sdiff h₂, ",", "<-", expr h, ",", expr nat.add_right_comm, ",", expr add_tsub_cancel_right, ",", expr nat.add_succ, "]"] [],
-      apply [expr nat.succ_pos] },
-    rcases [expr this, "with", "⟨", ident a, ",", ident ha, "⟩"],
-    have [ident z] [":", expr «expr = »(«expr + »(«expr + »(i, card B), k), card (erase A a))] [],
-    { rw ["[", expr card_erase_of_mem, ",", "<-", expr h, ",", expr nat.add_succ, ",", expr nat.pred_succ, "]"] [],
-      rw [expr mem_sdiff] ["at", ident ha],
-      exact [expr ha.1] },
-    rcases [expr ih _ z, "with", "⟨", ident B', ",", ident hB', ",", ident B'subA', ",", ident cards, "⟩"],
-    { exact [expr ⟨B', hB', trans B'subA' (erase_subset _ _), cards⟩] },
-    { rintros [ident t, ident th],
-      apply [expr mem_erase_of_ne_of_mem _ (h₂ th)],
-      rintro [ident rfl],
-      exact [expr not_mem_sdiff_of_mem_right th ha] } }
-end
+theorem exists_intermediate_set {A B : Finset α} (i : ℕ) (h₁ : (i+card B) ≤ card A) (h₂ : B ⊆ A) :
+  ∃ C : Finset α, B ⊆ C ∧ C ⊆ A ∧ card C = i+card B :=
+  by 
+    classical 
+    rcases Nat.Le.dest h₁ with ⟨k, _⟩
+    clear h₁ 
+    induction' k with k ih generalizing A
+    ·
+      exact ⟨A, h₂, subset.refl _, h.symm⟩
+    ·
+      have  : (A \ B).Nonempty
+      ·
+        rw [←card_pos, card_sdiff h₂, ←h, Nat.add_right_comm, add_tsub_cancel_right, Nat.add_succ]
+        apply Nat.succ_posₓ 
+      rcases this with ⟨a, ha⟩
+      have z : ((i+card B)+k) = card (erase A a)
+      ·
+        rw [card_erase_of_mem, ←h, Nat.add_succ, Nat.pred_succ]
+        rw [mem_sdiff] at ha 
+        exact ha.1
+      rcases ih _ z with ⟨B', hB', B'subA', cards⟩
+      ·
+        exact ⟨B', hB', trans B'subA' (erase_subset _ _), cards⟩
+      ·
+        rintro t th 
+        apply mem_erase_of_ne_of_mem _ (h₂ th)
+        rintro rfl 
+        exact not_mem_sdiff_of_mem_right th ha
 
 /-- We can shrink A to any smaller size. -/
 theorem exists_smaller_set (A : Finset α) (i : ℕ) (h₁ : i ≤ card A) : ∃ B : Finset α, B ⊆ A ∧ card B = i :=
@@ -3792,21 +3911,19 @@ theorem exists_smaller_set (A : Finset α) (i : ℕ) (h₁ : i ≤ card A) : ∃
       (empty_subset A)
   ⟨B, x₁, x₂⟩
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_subset_or_subset_of_two_mul_lt_card
-[decidable_eq α]
-{X Y : finset α}
-{n : exprℕ()}
-(hXY : «expr < »(«expr * »(2, n), «expr ∪ »(X, Y).card)) : «expr∃ , »((C : finset α), «expr ∧ »(«expr < »(n, C.card), «expr ∨ »(«expr ⊆ »(C, X), «expr ⊆ »(C, Y)))) :=
-begin
-  have [ident h₁] [":", expr «expr = »(«expr ∩ »(X, «expr \ »(Y, X)).card, 0)] [":=", expr finset.card_eq_zero.mpr (finset.inter_sdiff_self X Y)],
-  have [ident h₂] [":", expr «expr = »(«expr ∪ »(X, Y).card, «expr + »(X.card, «expr \ »(Y, X).card))] [],
-  { rw ["[", "<-", expr card_union_add_card_inter X «expr \ »(Y, X), ",", expr finset.union_sdiff_self_eq_union, ",", expr h₁, ",", expr add_zero, "]"] [] },
-  rw ["[", expr h₂, ",", expr two_mul, "]"] ["at", ident hXY],
-  rcases [expr lt_or_lt_of_add_lt_add hXY, "with", ident h, "|", ident h],
-  { exact [expr ⟨X, h, or.inl (finset.subset.refl X)⟩] },
-  { exact [expr ⟨«expr \ »(Y, X), h, or.inr (finset.sdiff_subset Y X)⟩] }
-end
+theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finset α} {n : ℕ}
+  (hXY : (2*n) < (X ∪ Y).card) : ∃ C : Finset α, n < C.card ∧ (C ⊆ X ∨ C ⊆ Y) :=
+  by 
+    have h₁ : (X ∩ (Y \ X)).card = 0 := finset.card_eq_zero.mpr (Finset.inter_sdiff_self X Y)
+    have h₂ : (X ∪ Y).card = X.card+(Y \ X).card
+    ·
+      rw [←card_union_add_card_inter X (Y \ X), Finset.union_sdiff_self_eq_union, h₁, add_zeroₓ]
+    rw [h₂, two_mul] at hXY 
+    rcases lt_or_lt_of_add_lt_add hXY with (h | h)
+    ·
+      exact ⟨X, h, Or.inl (Finset.Subset.refl X)⟩
+    ·
+      exact ⟨Y \ X, h, Or.inr (Finset.sdiff_subset Y X)⟩
 
 /-- `finset.fin_range k` is the finset `{0, 1, ..., k-1}`, as a `finset (fin k)`. -/
 def fin_range (k : ℕ) : Finset (Finₓ k) :=
@@ -3825,11 +3942,13 @@ theorem mem_fin_range {k : ℕ} (m : Finₓ k) : m ∈ fin_range k :=
 theorem coe_fin_range (k : ℕ) : (fin_range k : Set (Finₓ k)) = Set.Univ :=
   Set.eq_univ_of_forall mem_fin_range
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » s)
 /-- Given a finset `s` of `ℕ` contained in `{0,..., n-1}`, the corresponding finset in `fin n`
 is `s.attach_fin h` where `h` is a proof that all elements of `s` are less than `n`. -/
 def attach_fin (s : Finset ℕ) {n : ℕ} (h : ∀ m _ : m ∈ s, m < n) : Finset (Finₓ n) :=
   ⟨s.1.pmap (fun a ha => ⟨a, ha⟩) h, Multiset.nodup_pmap (fun _ _ _ _ => Finₓ.veq_of_eq) s.2⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » s)
 @[simp]
 theorem mem_attach_fin {n : ℕ} {s : Finset ℕ} (h : ∀ m _ : m ∈ s, m < n) {a : Finₓ n} :
   a ∈ s.attach_fin h ↔ (a : ℕ) ∈ s :=
@@ -3838,6 +3957,7 @@ theorem mem_attach_fin {n : ℕ} {s : Finset ℕ} (h : ∀ m _ : m ∈ s, m < n)
       hb₂ ▸ hb₁,
     fun h => Multiset.mem_pmap.2 ⟨a, h, Finₓ.eta _ _⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » s)
 @[simp]
 theorem card_attach_fin {n : ℕ} (s : Finset ℕ) (h : ∀ m _ : m ∈ s, m < n) : (s.attach_fin h).card = s.card :=
   Multiset.card_pmap _ _ _
@@ -3851,21 +3971,21 @@ variable (p : α → Prop) [DecidablePred p] (l : Finset α)
 
 /-- Given a finset `l` and a predicate `p`, associate to a proof that there is a unique element of
 `l` satisfying `p` this unique element, as an element of the corresponding subtype. -/
-def choose_x (hp : ∃!a, a ∈ l ∧ p a) : { a // a ∈ l ∧ p a } :=
+def choose_x (hp : ∃! a, a ∈ l ∧ p a) : { a // a ∈ l ∧ p a } :=
   Multiset.chooseX p l.val hp
 
 /-- Given a finset `l` and a predicate `p`, associate to a proof that there is a unique element of
 `l` satisfying `p` this unique element, as an element of the ambient type. -/
-def choose (hp : ∃!a, a ∈ l ∧ p a) : α :=
+def choose (hp : ∃! a, a ∈ l ∧ p a) : α :=
   choose_x p l hp
 
-theorem choose_spec (hp : ∃!a, a ∈ l ∧ p a) : choose p l hp ∈ l ∧ p (choose p l hp) :=
+theorem choose_spec (hp : ∃! a, a ∈ l ∧ p a) : choose p l hp ∈ l ∧ p (choose p l hp) :=
   (choose_x p l hp).property
 
-theorem choose_mem (hp : ∃!a, a ∈ l ∧ p a) : choose p l hp ∈ l :=
+theorem choose_mem (hp : ∃! a, a ∈ l ∧ p a) : choose p l hp ∈ l :=
   (choose_spec _ _ _).1
 
-theorem choose_property (hp : ∃!a, a ∈ l ∧ p a) : p (choose p l hp) :=
+theorem choose_property (hp : ∃! a, a ∈ l ∧ p a) : p (choose p l hp) :=
   (choose_spec _ _ _).2
 
 end Choose
@@ -3876,7 +3996,7 @@ theorem lt_wf {α} : WellFounded (@LT.lt (Finset α) _) :=
 
 end Finset
 
-namespace Equiv
+namespace Equivₓ
 
 /-- Given an equivalence `α` to `β`, produce an equivalence between `finset α` and `finset β`. -/
 protected def finset_congr (e : α ≃ β) : Finset α ≃ Finset β :=
@@ -3895,7 +4015,7 @@ theorem finset_congr_apply (e : α ≃ β) (s : Finset α) : e.finset_congr s = 
   rfl
 
 @[simp]
-theorem finset_congr_refl : (Equiv.refl α).finsetCongr = Equiv.refl _ :=
+theorem finset_congr_refl : (Equivₓ.refl α).finsetCongr = Equivₓ.refl _ :=
   by 
     ext 
     simp 
@@ -3908,9 +4028,9 @@ theorem finset_congr_symm (e : α ≃ β) : e.finset_congr.symm = e.symm.finset_
 theorem finset_congr_trans (e : α ≃ β) (e' : β ≃ γ) : e.finset_congr.trans e'.finset_congr = (e.trans e').finsetCongr :=
   by 
     ext 
-    simp [-Finset.mem_map, -Equiv.trans_to_embedding]
+    simp [-Finset.mem_map, -Equivₓ.trans_to_embedding]
 
-end Equiv
+end Equivₓ
 
 namespace Multiset
 
@@ -3922,7 +4042,7 @@ theorem to_finset_card_of_nodup {l : Multiset α} (h : l.nodup) : l.to_finset.ca
 theorem disjoint_to_finset {m1 m2 : Multiset α} : _root_.disjoint m1.to_finset m2.to_finset ↔ m1.disjoint m2 :=
   by 
     rw [Finset.disjoint_iff_ne]
-    split 
+    constructor
     ·
       intro h 
       intro a ha1 ha2 

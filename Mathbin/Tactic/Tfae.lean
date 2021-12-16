@@ -15,11 +15,12 @@ export List(Tfae)
 
 namespace Tfae
 
--- error in Tactic.Tfae: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
-@[derive #[expr has_reflect], derive #[expr inhabited]] inductive arrow : Type
-| right : arrow
-| left_right : arrow
-| left : arrow
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+inductive arrow : Type
+  | right : arrow
+  | left_right : arrow
+  | left : arrow deriving [anonymous], [anonymous]
 
 unsafe def mk_implication : ∀ re : arrow e₁ e₂ : expr, pexpr
 | arrow.right, e₁, e₂ => pquote.1 ((%%ₓe₁) → %%ₓe₂)

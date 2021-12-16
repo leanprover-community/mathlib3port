@@ -66,7 +66,7 @@ with eigenvalues `χ x`.
 
 See also `lie_module.weight_space`. -/
 def pre_weight_space (χ : L → R) : Submodule R M :=
-  ⨅x : L, (to_endomorphism R L M x).maximalGeneralizedEigenspace (χ x)
+  ⨅ x : L, (to_endomorphism R L M x).maximalGeneralizedEigenspace (χ x)
 
 theorem mem_pre_weight_space (χ : L → R) (m : M) :
   m ∈ pre_weight_space M χ ↔ ∀ x, ∃ k : ℕ, (to_endomorphism R L M x - χ x • 1^k) m = 0 :=
@@ -75,75 +75,78 @@ theorem mem_pre_weight_space (χ : L → R) (m : M) :
 
 variable (L)
 
--- error in Algebra.Lie.Weights: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
-protected
-theorem weight_vector_multiplication
-(M₁ : Type w₁)
-(M₂ : Type w₂)
-(M₃ : Type w₃)
-[add_comm_group M₁]
-[module R M₁]
-[lie_ring_module L M₁]
-[lie_module R L M₁]
-[add_comm_group M₂]
-[module R M₂]
-[lie_ring_module L M₂]
-[lie_module R L M₂]
-[add_comm_group M₃]
-[module R M₃]
-[lie_ring_module L M₃]
-[lie_module R L M₃]
-(g : «expr →ₗ⁅ , ⁆ »(«expr ⊗[ ] »(M₁, R, M₂), R, L, M₃))
-(χ₁
- χ₂ : L → R) : «expr ≤ »(((g : «expr →ₗ[ ] »(«expr ⊗[ ] »(M₁, R, M₂), R, M₃)).comp (map_incl (pre_weight_space M₁ χ₁) (pre_weight_space M₂ χ₂))).range, pre_weight_space M₃ «expr + »(χ₁, χ₂)) :=
-begin
-  intros [ident m₃],
-  simp [] [] ["only"] ["[", expr lie_module_hom.coe_to_linear_map, ",", expr pi.add_apply, ",", expr function.comp_app, ",", expr mem_pre_weight_space, ",", expr linear_map.coe_comp, ",", expr tensor_product.map_incl, ",", expr exists_imp_distrib, ",", expr linear_map.mem_range, "]"] [] [],
-  rintros [ident t, ident rfl, ident x],
-  let [ident F] [":", expr module.End R M₃] [":=", expr «expr - »(to_endomorphism R L M₃ x, «expr • »(«expr + »(χ₁ x, χ₂ x), 1))],
-  change [expr «expr∃ , »((k), «expr = »(«expr ^ »(F, k) (g _), 0))] [] [],
-  apply [expr t.induction_on],
-  { use [expr 0],
-    simp [] [] ["only"] ["[", expr linear_map.map_zero, ",", expr lie_module_hom.map_zero, "]"] [] [] },
-  swap,
-  { rintros [ident t₁, ident t₂, "⟨", ident k₁, ",", ident hk₁, "⟩", "⟨", ident k₂, ",", ident hk₂, "⟩"],
-    use [expr max k₁ k₂],
-    simp [] [] ["only"] ["[", expr lie_module_hom.map_add, ",", expr linear_map.map_add, ",", expr linear_map.pow_map_zero_of_le (le_max_left k₁ k₂) hk₁, ",", expr linear_map.pow_map_zero_of_le (le_max_right k₁ k₂) hk₂, ",", expr add_zero, "]"] [] [] },
-  rintros ["⟨", ident m₁, ",", ident hm₁, "⟩", "⟨", ident m₂, ",", ident hm₂, "⟩"],
-  change [expr «expr∃ , »((k), «expr = »(«expr ^ »(F, k) ((g : «expr →ₗ[ ] »(«expr ⊗[ ] »(M₁, R, M₂), R, M₃)) «expr ⊗ₜ »(m₁, m₂)), 0))] [] [],
-  let [ident f₁] [":", expr module.End R «expr ⊗[ ] »(M₁, R, M₂)] [":=", expr «expr - »(to_endomorphism R L M₁ x, «expr • »(χ₁ x, 1)).rtensor M₂],
-  let [ident f₂] [":", expr module.End R «expr ⊗[ ] »(M₁, R, M₂)] [":=", expr «expr - »(to_endomorphism R L M₂ x, «expr • »(χ₂ x, 1)).ltensor M₁],
-  have [ident h_comm_square] [":", expr «expr = »(«expr ∘ₗ »(F, «expr↑ »(g)), (g : «expr →ₗ[ ] »(«expr ⊗[ ] »(M₁, R, M₂), R, M₃)).comp «expr + »(f₁, f₂))] [],
-  { ext [] [ident m₁, ident m₂] [],
-    simp [] [] ["only"] ["[", "<-", expr g.map_lie x «expr ⊗ₜ »(m₁, m₂), ",", expr add_smul, ",", expr sub_tmul, ",", expr tmul_sub, ",", expr smul_tmul, ",", expr lie_tmul_right, ",", expr tmul_smul, ",", expr to_endomorphism_apply_apply, ",", expr lie_module_hom.map_smul, ",", expr linear_map.one_apply, ",", expr lie_module_hom.coe_to_linear_map, ",", expr linear_map.smul_apply, ",", expr function.comp_app, ",", expr linear_map.coe_comp, ",", expr linear_map.rtensor_tmul, ",", expr lie_module_hom.map_add, ",", expr linear_map.add_apply, ",", expr lie_module_hom.map_sub, ",", expr linear_map.sub_apply, ",", expr linear_map.ltensor_tmul, ",", expr algebra_tensor_module.curry_apply, ",", expr curry_apply, ",", expr linear_map.to_fun_eq_coe, ",", expr linear_map.coe_restrict_scalars_eq_coe, "]"] [] [],
-    abel [] [] [] },
-  suffices [] [":", expr «expr∃ , »((k), «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))],
-  { obtain ["⟨", ident k, ",", ident hk, "⟩", ":=", expr this],
-    use [expr k],
-    rw ["[", "<-", expr linear_map.comp_apply, ",", expr linear_map.commute_pow_left_of_commute h_comm_square, ",", expr linear_map.comp_apply, ",", expr hk, ",", expr linear_map.map_zero, "]"] [] },
-  simp [] [] ["only"] ["[", expr mem_pre_weight_space, "]"] [] ["at", ident hm₁, ident hm₂],
-  obtain ["⟨", ident k₁, ",", ident hk₁, "⟩", ":=", expr hm₁ x],
-  obtain ["⟨", ident k₂, ",", ident hk₂, "⟩", ":=", expr hm₂ x],
-  have [ident hf₁] [":", expr «expr = »(«expr ^ »(f₁, k₁) «expr ⊗ₜ »(m₁, m₂), 0)] [],
-  { simp [] [] ["only"] ["[", expr hk₁, ",", expr zero_tmul, ",", expr linear_map.rtensor_tmul, ",", expr linear_map.rtensor_pow, "]"] [] [] },
-  have [ident hf₂] [":", expr «expr = »(«expr ^ »(f₂, k₂) «expr ⊗ₜ »(m₁, m₂), 0)] [],
-  { simp [] [] ["only"] ["[", expr hk₂, ",", expr tmul_zero, ",", expr linear_map.ltensor_tmul, ",", expr linear_map.ltensor_pow, "]"] [] [] },
-  use [expr «expr - »(«expr + »(k₁, k₂), 1)],
-  have [ident hf_comm] [":", expr commute f₁ f₂] [],
-  { ext [] [ident m₁, ident m₂] [],
-    simp [] [] ["only"] ["[", expr linear_map.mul_apply, ",", expr linear_map.rtensor_tmul, ",", expr linear_map.ltensor_tmul, ",", expr algebra_tensor_module.curry_apply, ",", expr linear_map.to_fun_eq_coe, ",", expr linear_map.ltensor_tmul, ",", expr curry_apply, ",", expr linear_map.coe_restrict_scalars_eq_coe, "]"] [] [] },
-  rw [expr hf_comm.add_pow'] [],
-  simp [] [] ["only"] ["[", expr tensor_product.map_incl, ",", expr submodule.subtype_apply, ",", expr finset.sum_apply, ",", expr submodule.coe_mk, ",", expr linear_map.coe_fn_sum, ",", expr tensor_product.map_tmul, ",", expr linear_map.smul_apply, "]"] [] [],
-  apply [expr finset.sum_eq_zero],
-  rintros ["⟨", ident i, ",", ident j, "⟩", ident hij],
-  suffices [] [":", expr «expr = »(«expr * »(«expr ^ »(f₁, i), «expr ^ »(f₂, j)) «expr ⊗ₜ »(m₁, m₂), 0)],
-  { rw [expr this] [],
-    apply [expr smul_zero] },
-  cases [expr nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij)] ["with", ident hi, ident hj],
-  { rw ["[", expr (hf_comm.pow_pow i j).eq, ",", expr linear_map.mul_apply, ",", expr linear_map.pow_map_zero_of_le hi hf₁, ",", expr linear_map.map_zero, "]"] [] },
-  { rw ["[", expr linear_map.mul_apply, ",", expr linear_map.pow_map_zero_of_le hj hf₂, ",", expr linear_map.map_zero, "]"] [] }
-end
+protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w₂) (M₃ : Type w₃) [AddCommGroupₓ M₁]
+  [Module R M₁] [LieRingModule L M₁] [LieModule R L M₁] [AddCommGroupₓ M₂] [Module R M₂] [LieRingModule L M₂]
+  [LieModule R L M₂] [AddCommGroupₓ M₃] [Module R M₃] [LieRingModule L M₃] [LieModule R L M₃]
+  (g : M₁ ⊗[R] M₂ →ₗ⁅R,L⁆ M₃) (χ₁ χ₂ : L → R) :
+  ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (map_incl (pre_weight_space M₁ χ₁) (pre_weight_space M₂ χ₂))).range ≤
+    pre_weight_space M₃ (χ₁+χ₂) :=
+  by 
+    intro m₃ 
+    simp only [LieModuleHom.coe_to_linear_map, Pi.add_apply, Function.comp_app, mem_pre_weight_space,
+      LinearMap.coe_comp, TensorProduct.mapIncl, exists_imp_distrib, LinearMap.mem_range]
+    rintro t rfl x 
+    let F : Module.End R M₃ := to_endomorphism R L M₃ x - (χ₁ x+χ₂ x) • 1
+    change ∃ k, (F^k) (g _) = 0
+    apply t.induction_on
+    ·
+      use 0
+      simp only [LinearMap.map_zero, LieModuleHom.map_zero]
+    swap
+    ·
+      rintro t₁ t₂ ⟨k₁, hk₁⟩ ⟨k₂, hk₂⟩
+      use max k₁ k₂ 
+      simp only [LieModuleHom.map_add, LinearMap.map_add, LinearMap.pow_map_zero_of_le (le_max_leftₓ k₁ k₂) hk₁,
+        LinearMap.pow_map_zero_of_le (le_max_rightₓ k₁ k₂) hk₂, add_zeroₓ]
+    rintro ⟨m₁, hm₁⟩ ⟨m₂, hm₂⟩
+    change ∃ k, (F^k) ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃) (m₁ ⊗ₜ m₂)) = 0
+    let f₁ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₁ x - χ₁ x • 1).rtensor M₂ 
+    let f₂ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₂ x - χ₂ x • 1).ltensor M₁ 
+    have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁+f₂)
+    ·
+      ext m₁ m₂ 
+      simp only [←g.map_lie x (m₁ ⊗ₜ m₂), add_smul, sub_tmul, tmul_sub, smul_tmul, lie_tmul_right, tmul_smul,
+        to_endomorphism_apply_apply, LieModuleHom.map_smul, LinearMap.one_apply, LieModuleHom.coe_to_linear_map,
+        LinearMap.smul_apply, Function.comp_app, LinearMap.coe_comp, LinearMap.rtensor_tmul, LieModuleHom.map_add,
+        LinearMap.add_apply, LieModuleHom.map_sub, LinearMap.sub_apply, LinearMap.ltensor_tmul,
+        algebra_tensor_module.curry_apply, curry_apply, LinearMap.to_fun_eq_coe, LinearMap.coe_restrict_scalars_eq_coe]
+      abel 
+    suffices  : ∃ k, ((f₁+f₂)^k) (m₁ ⊗ₜ m₂) = 0
+    ·
+      obtain ⟨k, hk⟩ := this 
+      use k 
+      rw [←LinearMap.comp_apply, LinearMap.commute_pow_left_of_commute h_comm_square, LinearMap.comp_apply, hk,
+        LinearMap.map_zero]
+    simp only [mem_pre_weight_space] at hm₁ hm₂ 
+    obtain ⟨k₁, hk₁⟩ := hm₁ x 
+    obtain ⟨k₂, hk₂⟩ := hm₂ x 
+    have hf₁ : (f₁^k₁) (m₁ ⊗ₜ m₂) = 0
+    ·
+      simp only [hk₁, zero_tmul, LinearMap.rtensor_tmul, LinearMap.rtensor_pow]
+    have hf₂ : (f₂^k₂) (m₁ ⊗ₜ m₂) = 0
+    ·
+      simp only [hk₂, tmul_zero, LinearMap.ltensor_tmul, LinearMap.ltensor_pow]
+    use (k₁+k₂) - 1
+    have hf_comm : Commute f₁ f₂
+    ·
+      ext m₁ m₂ 
+      simp only [LinearMap.mul_apply, LinearMap.rtensor_tmul, LinearMap.ltensor_tmul, algebra_tensor_module.curry_apply,
+        LinearMap.to_fun_eq_coe, LinearMap.ltensor_tmul, curry_apply, LinearMap.coe_restrict_scalars_eq_coe]
+    rw [hf_comm.add_pow']
+    simp only [TensorProduct.mapIncl, Submodule.subtype_apply, Finset.sum_apply, Submodule.coe_mk, LinearMap.coe_fn_sum,
+      TensorProduct.map_tmul, LinearMap.smul_apply]
+    apply Finset.sum_eq_zero 
+    rintro ⟨i, j⟩ hij 
+    suffices  : ((f₁^i)*f₂^j) (m₁ ⊗ₜ m₂) = 0
+    ·
+      rw [this]
+      apply smul_zero 
+    cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
+    ·
+      rw [(hf_comm.pow_pow i j).Eq, LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hi hf₁, LinearMap.map_zero]
+    ·
+      rw [LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hj hf₂, LinearMap.map_zero]
 
 variable {L M}
 
@@ -190,7 +193,7 @@ theorem coe_weight_space_of_top [LieAlgebra.IsNilpotent R L] (χ : L → R) :
     ext m 
     simp only [weight_space, LieSubmodule.coe_to_submodule_mk, LieSubalgebra.coe_bracket_of_module, Function.comp_app,
       mem_pre_weight_space]
-    split  <;> intro h x
+    constructor <;> intro h x
     ·
       obtain ⟨k, hk⟩ := h ⟨x, Set.mem_univ x⟩
       use k 
@@ -200,18 +203,17 @@ theorem coe_weight_space_of_top [LieAlgebra.IsNilpotent R L] (χ : L → R) :
       use k 
       exact hk
 
--- error in Algebra.Lie.Weights: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem zero_weight_space_eq_top_of_nilpotent
-[lie_algebra.is_nilpotent R L]
-[is_nilpotent R L M] : «expr = »(weight_space M (0 : («expr⊤»() : lie_subalgebra R L) → R), «expr⊤»()) :=
-begin
-  have [ident h₀] [":", expr «expr = »(«expr ∘ »((0 : L → R), («expr⊤»() : lie_subalgebra R L).incl), 0)] [],
-  { ext [] [] [],
-    refl },
-  rw ["[", "<-", expr lie_submodule.coe_to_submodule_eq_iff, ",", expr lie_submodule.top_coe_submodule, ",", "<-", expr h₀, ",", expr coe_weight_space_of_top, ",", "<-", expr infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L M, "]"] [],
-  refl
-end
+theorem zero_weight_space_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
+  weight_space M (0 : (⊤ : LieSubalgebra R L) → R) = ⊤ :=
+  by 
+    have h₀ : (0 : L → R) ∘ (⊤ : LieSubalgebra R L).incl = 0
+    ·
+      ext 
+      rfl 
+    rw [←LieSubmodule.coe_to_submodule_eq_iff, LieSubmodule.top_coe_submodule, ←h₀, coe_weight_space_of_top,
+      ←infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L M]
+    rfl
 
 /-- Given a Lie module `M` of a Lie algebra `L`, a weight of `M` with respect to a nilpotent
 subalgebra `H ⊆ L` is a Lie character whose corresponding weight space is non-empty. -/
@@ -250,25 +252,27 @@ regarded as a module of `H` via the adjoint action. -/
 abbrev is_root :=
   is_weight H L
 
--- error in Algebra.Lie.Weights: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem root_space_comap_eq_weight_space (χ : H → R) : «expr = »((root_space H χ).comap H.incl', weight_space H χ) :=
-begin
-  ext [] [ident x] [],
-  let [ident f] [":", expr H → module.End R L] [":=", expr λ y, «expr - »(to_endomorphism R H L y, «expr • »(χ y, 1))],
-  let [ident g] [":", expr H → module.End R H] [":=", expr λ y, «expr - »(to_endomorphism R H H y, «expr • »(χ y, 1))],
-  suffices [] [":", expr «expr ↔ »(∀
-    y : H, «expr∃ , »((k : exprℕ()), «expr = »(«expr ^ »(f y, k).comp (H.incl : «expr →ₗ[ ] »(H, R, L)) x, 0)), ∀
-    y : H, «expr∃ , »((k : exprℕ()), «expr = »((H.incl : «expr →ₗ[ ] »(H, R, L)).comp «expr ^ »(g y, k) x, 0)))],
-  { simp [] [] ["only"] ["[", expr lie_hom.coe_to_linear_map, ",", expr lie_subalgebra.coe_incl, ",", expr function.comp_app, ",", expr linear_map.coe_comp, ",", expr submodule.coe_eq_zero, "]"] [] ["at", ident this],
-    simp [] [] ["only"] ["[", expr mem_weight_space, ",", expr mem_pre_weight_space, ",", expr lie_subalgebra.coe_incl', ",", expr lie_submodule.mem_comap, ",", expr this, "]"] [] [] },
-  have [ident hfg] [":", expr ∀
-   y : H, «expr = »((f y).comp (H.incl : «expr →ₗ[ ] »(H, R, L)), (H.incl : «expr →ₗ[ ] »(H, R, L)).comp (g y))] [],
-  { rintros ["⟨", ident y, ",", ident hy, "⟩"],
-    ext [] ["⟨", ident z, ",", ident hz, "⟩"] [],
-    simp [] [] ["only"] ["[", expr submodule.coe_sub, ",", expr to_endomorphism_apply_apply, ",", expr lie_hom.coe_to_linear_map, ",", expr linear_map.one_apply, ",", expr lie_subalgebra.coe_incl, ",", expr lie_subalgebra.coe_bracket_of_module, ",", expr lie_subalgebra.coe_bracket, ",", expr linear_map.smul_apply, ",", expr function.comp_app, ",", expr submodule.coe_smul_of_tower, ",", expr linear_map.coe_comp, ",", expr linear_map.sub_apply, "]"] [] [] },
-  simp_rw ["[", expr linear_map.commute_pow_left_of_commute (hfg _), "]"] []
-end
+theorem root_space_comap_eq_weight_space (χ : H → R) : (root_space H χ).comap H.incl' = weight_space H χ :=
+  by 
+    ext x 
+    let f : H → Module.End R L := fun y => to_endomorphism R H L y - χ y • 1
+    let g : H → Module.End R H := fun y => to_endomorphism R H H y - χ y • 1
+    suffices  :
+      (∀ y : H, ∃ k : ℕ, (f y^k).comp (H.incl : H →ₗ[R] L) x = 0) ↔
+        ∀ y : H, ∃ k : ℕ, (H.incl : H →ₗ[R] L).comp (g y^k) x = 0
+    ·
+      simp only [LieHom.coe_to_linear_map, LieSubalgebra.coe_incl, Function.comp_app, LinearMap.coe_comp,
+        Submodule.coe_eq_zero] at this 
+      simp only [mem_weight_space, mem_pre_weight_space, LieSubalgebra.coe_incl', LieSubmodule.mem_comap, this]
+    have hfg : ∀ y : H, (f y).comp (H.incl : H →ₗ[R] L) = (H.incl : H →ₗ[R] L).comp (g y)
+    ·
+      rintro ⟨y, hy⟩
+      ext ⟨z, hz⟩
+      simp only [Submodule.coe_sub, to_endomorphism_apply_apply, LieHom.coe_to_linear_map, LinearMap.one_apply,
+        LieSubalgebra.coe_incl, LieSubalgebra.coe_bracket_of_module, LieSubalgebra.coe_bracket, LinearMap.smul_apply,
+        Function.comp_app, Submodule.coe_smul_of_tower, LinearMap.coe_comp, LinearMap.sub_apply]
+    simpRw [LinearMap.commute_pow_left_of_commute (hfg _)]
 
 variable {H M}
 
@@ -377,27 +381,29 @@ theorem mem_zero_root_subalgebra (x : L) :
     simp only [zero_root_subalgebra, mem_weight_space, mem_pre_weight_space, Pi.zero_apply, sub_zero, SetLike.mem_coe,
       zero_smul, LieSubmodule.mem_coe_submodule, Submodule.mem_carrier, LieSubalgebra.mem_mk_iff]
 
--- error in Algebra.Lie.Weights: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_lie_submodule_le_root_space_zero : «expr ≤ »(H.to_lie_submodule, root_space H 0) :=
-begin
-  intros [ident x, ident hx],
-  simp [] [] ["only"] ["[", expr lie_subalgebra.mem_to_lie_submodule, "]"] [] ["at", ident hx],
-  simp [] [] ["only"] ["[", expr mem_weight_space, ",", expr mem_pre_weight_space, ",", expr pi.zero_apply, ",", expr sub_zero, ",", expr zero_smul, "]"] [] [],
-  intros [ident y],
-  unfreezingI { obtain ["⟨", ident k, ",", ident hk, "⟩", ":=", expr (infer_instance : is_nilpotent R H)] },
-  use [expr k],
-  let [ident f] [":", expr module.End R H] [":=", expr to_endomorphism R H H y],
-  let [ident g] [":", expr module.End R L] [":=", expr to_endomorphism R H L y],
-  have [ident hfg] [":", expr «expr = »(g.comp (H : submodule R L).subtype, (H : submodule R L).subtype.comp f)] [],
-  { ext [] [ident z] [],
-    simp [] [] ["only"] ["[", expr to_endomorphism_apply_apply, ",", expr submodule.subtype_apply, ",", expr lie_subalgebra.coe_bracket_of_module, ",", expr lie_subalgebra.coe_bracket, ",", expr function.comp_app, ",", expr linear_map.coe_comp, "]"] [] [] },
-  change [expr «expr = »(«expr ^ »(g, k).comp (H : submodule R L).subtype ⟨x, hx⟩, 0)] [] [],
-  rw [expr linear_map.commute_pow_left_of_commute hfg k] [],
-  have [ident h] [] [":=", expr iterate_to_endomorphism_mem_lower_central_series R H H y ⟨x, hx⟩ k],
-  rw ["[", expr hk, ",", expr lie_submodule.mem_bot, "]"] ["at", ident h],
-  simp [] [] ["only"] ["[", expr submodule.subtype_apply, ",", expr function.comp_app, ",", expr linear_map.pow_apply, ",", expr linear_map.coe_comp, ",", expr submodule.coe_eq_zero, "]"] [] [],
-  exact [expr h]
-end
+theorem to_lie_submodule_le_root_space_zero : H.to_lie_submodule ≤ root_space H 0 :=
+  by 
+    intro x hx 
+    simp only [LieSubalgebra.mem_to_lie_submodule] at hx 
+    simp only [mem_weight_space, mem_pre_weight_space, Pi.zero_apply, sub_zero, zero_smul]
+    intro y
+    (
+      obtain ⟨k, hk⟩ := (inferInstance : IsNilpotent R H))
+    use k 
+    let f : Module.End R H := to_endomorphism R H H y 
+    let g : Module.End R L := to_endomorphism R H L y 
+    have hfg : g.comp (H : Submodule R L).Subtype = (H : Submodule R L).Subtype.comp f
+    ·
+      ext z 
+      simp only [to_endomorphism_apply_apply, Submodule.subtype_apply, LieSubalgebra.coe_bracket_of_module,
+        LieSubalgebra.coe_bracket, Function.comp_app, LinearMap.coe_comp]
+    change (g^k).comp (H : Submodule R L).Subtype ⟨x, hx⟩ = 0
+    rw [LinearMap.commute_pow_left_of_commute hfg k]
+    have h := iterate_to_endomorphism_mem_lower_central_series R H H y ⟨x, hx⟩ k 
+    rw [hk, LieSubmodule.mem_bot] at h 
+    simp only [Submodule.subtype_apply, Function.comp_app, LinearMap.pow_apply, LinearMap.coe_comp,
+      Submodule.coe_eq_zero]
+    exact h
 
 theorem le_zero_root_subalgebra : H ≤ zero_root_subalgebra R L H :=
   by 
@@ -441,19 +447,22 @@ open LieAlgebra
 
 variable {R L H}
 
--- error in Algebra.Lie.Weights: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A priori, weight spaces are Lie submodules over the Lie subalgebra `H` used to define them.
 However they are naturally Lie submodules over the (in general larger) Lie subalgebra
 `zero_root_subalgebra R L H`. Even though it is often the case that
 `zero_root_subalgebra R L H = H`, it is likely to be useful to have the flexibility not to have
 to invoke this equality (as well as to work more generally). -/
-def weight_space' (χ : H → R) : lie_submodule R (zero_root_subalgebra R L H) M :=
-{ lie_mem := λ x m hm, by { have [ident hx] [":", expr «expr ∈ »((x : L), root_space H 0)] [],
-    { rw ["[", "<-", expr lie_submodule.mem_coe_submodule, ",", "<-", expr coe_zero_root_subalgebra, "]"] [],
-      exact [expr x.property] },
-    rw ["<-", expr zero_add χ] [],
-    exact [expr lie_mem_weight_space_of_mem_weight_space hx hm] },
-  ..(weight_space M χ : submodule R M) }
+def weight_space' (χ : H → R) : LieSubmodule R (zero_root_subalgebra R L H) M :=
+  { (weight_space M χ : Submodule R M) with
+    lie_mem :=
+      fun x m hm =>
+        by 
+          have hx : (x : L) ∈ root_space H 0
+          ·
+            rw [←LieSubmodule.mem_coe_submodule, ←coe_zero_root_subalgebra]
+            exact x.property 
+          rw [←zero_addₓ χ]
+          exact lie_mem_weight_space_of_mem_weight_space hx hm }
 
 @[simp]
 theorem coe_weight_space' (χ : H → R) : (weight_space' M χ : Submodule R M) = weight_space M χ :=

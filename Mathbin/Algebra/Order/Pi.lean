@@ -34,10 +34,10 @@ instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i
     le_iff_exists_mul :=
       fun f g =>
         by 
-          fsplit
+          fconstructor
           ·
             intro w 
-            fsplit
+            fconstructor
             ·
               exact fun i => (le_iff_exists_mul.mp (w i)).some
             ·

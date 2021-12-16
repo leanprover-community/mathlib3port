@@ -10,7 +10,7 @@ for `dlist`.
 -/
 
 
-open Function Equiv
+open Function Equivₓ
 
 namespace Dlist
 
@@ -24,10 +24,10 @@ def list_equiv_dlist : List α ≃ Dlist α :=
       simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
 
 instance : Traversable Dlist :=
-  Equiv.traversable list_equiv_dlist
+  Equivₓ.traversable list_equiv_dlist
 
 instance : IsLawfulTraversable Dlist :=
-  Equiv.isLawfulTraversable list_equiv_dlist
+  Equivₓ.isLawfulTraversable list_equiv_dlist
 
 instance {α} : Inhabited (Dlist α) :=
   ⟨Dlist.empty⟩

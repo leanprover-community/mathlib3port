@@ -24,14 +24,15 @@ universe v₁ v₂ u₁ u₂
 
 variable {T : Type u₁} [category.{v₁} T]
 
--- error in CategoryTheory.Over: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /--
 The over category has as objects arrows in `T` with codomain `X` and as morphisms commutative
 triangles.
 
 See https://stacks.math.columbia.edu/tag/001G.
--/ @[derive #[expr category]] def over (X : T) :=
-costructured_arrow («expr𝟭»() T) X
+-/
+def over (X : T) :=
+  costructured_arrow (𝟭 T) X deriving [anonymous]
 
 instance over.inhabited [Inhabited T] : Inhabited (over (default T)) :=
   { default := { left := default T, Hom := 𝟙 _ } }
@@ -58,9 +59,10 @@ theorem id_left (U : over X) : comma_morphism.left (𝟙 U) = 𝟙 U.left :=
 theorem comp_left (a b c : over X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).left = f.left ≫ g.left :=
   rfl
 
--- error in CategoryTheory.Over: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, reassoc #[]] theorem w {A B : over X} (f : «expr ⟶ »(A, B)) : «expr = »(«expr ≫ »(f.left, B.hom), A.hom) :=
-by have [] [] [":=", expr f.w]; tidy []
+@[simp, reassoc]
+theorem w {A B : over X} (f : A ⟶ B) : f.left ≫ B.hom = A.hom :=
+  by 
+    have  := f.w <;> tidy
 
 /-- To give an object in the over category, it suffices to give a morphism with codomain `X`. -/
 @[simps]
@@ -301,10 +303,11 @@ end
 
 end Over
 
--- error in CategoryTheory.Over: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- The under category has as objects arrows with domain `X` and as morphisms commutative
-    triangles. -/ @[derive #[expr category]] def under (X : T) :=
-structured_arrow X («expr𝟭»() T)
+    triangles. -/
+def under (X : T) :=
+  structured_arrow X (𝟭 T)deriving [anonymous]
 
 instance under.inhabited [Inhabited T] : Inhabited (under (default T)) :=
   { default := { right := default T, Hom := 𝟙 _ } }
@@ -331,9 +334,10 @@ theorem id_right (U : under X) : comma_morphism.right (𝟙 U) = 𝟙 U.right :=
 theorem comp_right (a b c : under X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).right = f.right ≫ g.right :=
   rfl
 
--- error in CategoryTheory.Over: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, reassoc #[]] theorem w {A B : under X} (f : «expr ⟶ »(A, B)) : «expr = »(«expr ≫ »(A.hom, f.right), B.hom) :=
-by have [] [] [":=", expr f.w]; tidy []
+@[simp, reassoc]
+theorem w {A B : under X} (f : A ⟶ B) : A.hom ≫ f.right = B.hom :=
+  by 
+    have  := f.w <;> tidy
 
 /-- To give an object in the under category, it suffices to give an arrow with domain `X`. -/
 @[simps]

@@ -11,7 +11,7 @@ The theorems include formulas for computing coefficients, such as
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Finsupp Finset AddMonoidAlgebra
 
@@ -77,7 +77,7 @@ theorem lcoeff_apply (n : ℕ) (f : Polynomial R) : lcoeff R n f = coeff f n :=
 
 @[simp]
 theorem finset_sum_coeff {ι : Type _} (s : Finset ι) (f : ι → Polynomial R) (n : ℕ) :
-  coeff (∑b in s, f b) n = ∑b in s, coeff (f b) n :=
+  coeff (∑ b in s, f b) n = ∑ b in s, coeff (f b) n :=
   (lcoeff R n).map_sum
 
 theorem coeff_sum [Semiringₓ S] (n : ℕ) (f : ℕ → R → Polynomial S) :
@@ -89,7 +89,7 @@ theorem coeff_sum [Semiringₓ S] (n : ℕ) (f : ℕ → R → Polynomial S) :
 /-- Decomposes the coefficient of the product `p * q` as a sum
 over `nat.antidiagonal`. A version which sums over `range (n + 1)` can be obtained
 by using `finset.nat.sum_antidiagonal_eq_sum_range_succ`. -/
-theorem coeff_mul (p q : Polynomial R) (n : ℕ) : coeff (p*q) n = ∑x in nat.antidiagonal n, coeff p x.1*coeff q x.2 :=
+theorem coeff_mul (p q : Polynomial R) (n : ℕ) : coeff (p*q) n = ∑ x in nat.antidiagonal n, coeff p x.1*coeff q x.2 :=
   by 
     rcases p with ⟨⟩
     rcases q with ⟨⟩
@@ -190,23 +190,28 @@ theorem support_C_mul_X_pow' {c : R} {n : ℕ} : (C c*X ^ n).Support ⊆ singlet
     rw [C_mul_X_pow_eq_monomial]
     exact support_monomial' n c
 
--- error in Data.Polynomial.Coeff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coeff_X_add_one_pow
-(R : Type*)
-[semiring R]
-(n k : exprℕ()) : «expr = »(«expr ^ »(«expr + »(X, 1), n).coeff k, (n.choose k : R)) :=
-begin
-  rw ["[", expr (commute_X (1 : polynomial R)).add_pow, ",", "<-", expr lcoeff_apply, ",", expr linear_map.map_sum, "]"] [],
-  simp [] [] ["only"] ["[", expr one_pow, ",", expr mul_one, ",", expr lcoeff_apply, ",", "<-", expr C_eq_nat_cast, ",", expr coeff_mul_C, ",", expr nat.cast_id, "]"] [] [],
-  rw ["[", expr finset.sum_eq_single k, ",", expr coeff_X_pow_self, ",", expr one_mul, "]"] [],
-  { intros ["_", "_"],
-    simp [] [] ["only"] ["[", expr coeff_X_pow, ",", expr boole_mul, ",", expr ite_eq_right_iff, ",", expr ne.def, "]"] [] [] { contextual := tt },
-    rintro [ident h, ident rfl],
-    contradiction },
-  { simp [] [] ["only"] ["[", expr coeff_X_pow_self, ",", expr one_mul, ",", expr not_lt, ",", expr finset.mem_range, "]"] [] [],
-    intro [ident h],
-    rw ["[", expr nat.choose_eq_zero_of_lt h, ",", expr nat.cast_zero, "]"] [] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  coeff_X_add_one_pow
+  ( R : Type _ ) [ Semiringₓ R ] ( n k : ℕ ) : X + 1 ^ n . coeff k = ( n.choose k : R )
+  :=
+    by
+      rw [ commute_X ( 1 : Polynomial R ) . add_pow , ← lcoeff_apply , LinearMap.map_sum ]
+        simp only [ one_pow , mul_oneₓ , lcoeff_apply , ← C_eq_nat_cast , coeff_mul_C , Nat.cast_id ]
+        rw [ Finset.sum_eq_single k , coeff_X_pow_self , one_mulₓ ]
+        ·
+          intro _ _
+            simp
+              ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+              only
+              [ coeff_X_pow , boole_mul , ite_eq_right_iff , Ne.def ]
+            rintro h rfl
+            contradiction
+        ·
+          simp only [ coeff_X_pow_self , one_mulₓ , not_ltₓ , Finset.mem_range ]
+            intro h
+            rw [ Nat.choose_eq_zero_of_lt h , Nat.cast_zero ]
 
 theorem coeff_one_add_X_pow (R : Type _) [Semiringₓ R] (n k : ℕ) : ((1+X) ^ n).coeff k = (n.choose k : R) :=
   by 
@@ -214,7 +219,7 @@ theorem coeff_one_add_X_pow (R : Type _) [Semiringₓ R] (n k : ℕ) : ((1+X) ^ 
 
 theorem C_dvd_iff_dvd_coeff (r : R) (φ : Polynomial R) : C r ∣ φ ↔ ∀ i, r ∣ φ.coeff i :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨φ, rfl⟩ c 
       rw [coeff_C_mul]
@@ -224,7 +229,7 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : Polynomial R) : C r ∣ φ ↔ ∀ i, 
       choose c hc using h 
       classical 
       let c' : ℕ → R := fun i => if i ∈ φ.support then c i else 0
-      let ψ : Polynomial R := ∑i in φ.support, monomial i (c' i)
+      let ψ : Polynomial R := ∑ i in φ.support, monomial i (c' i)
       use ψ 
       ext i 
       simp only [ψ, c', coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff, Finset.sum_ite_eq']
@@ -268,10 +273,9 @@ theorem nat_cast_coeff_zero {n : ℕ} {R : Type _} [Semiringₓ R] : (n : Polyno
       simp [ih]
 
 @[simp, normCast]
-theorem nat_cast_inj {m n : ℕ} {R : Type _} [Semiringₓ R] [CharZero R] :
-  («expr↑ » m : Polynomial R) = «expr↑ » n ↔ m = n :=
+theorem nat_cast_inj {m n : ℕ} {R : Type _} [Semiringₓ R] [CharZero R] : (↑m : Polynomial R) = ↑n ↔ m = n :=
   by 
-    fsplit
+    fconstructor
     ·
       intro h 
       applyFun fun p => p.coeff 0  at h 
@@ -286,9 +290,9 @@ theorem int_cast_coeff_zero {i : ℤ} {R : Type _} [Ringₓ R] : (i : Polynomial
     cases i <;> simp 
 
 @[simp, normCast]
-theorem int_cast_inj {m n : ℤ} {R : Type _} [Ringₓ R] [CharZero R] : («expr↑ » m : Polynomial R) = «expr↑ » n ↔ m = n :=
+theorem int_cast_inj {m n : ℤ} {R : Type _} [Ringₓ R] [CharZero R] : (↑m : Polynomial R) = ↑n ↔ m = n :=
   by 
-    fsplit
+    fconstructor
     ·
       intro h 
       applyFun fun p => p.coeff 0  at h 

@@ -38,8 +38,8 @@ variable (α : Sort u)
 def Opposite : Sort u :=
   α
 
--- error in Data.Opposite: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
-notation α `ᵒᵖ`:std.prec.max_plus := opposite α
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+notation:999 α "ᵒᵖ" => Opposite α
 
 namespace Opposite
 
@@ -47,18 +47,18 @@ variable {α}
 
 /-- The canonical map `α → αᵒᵖ`. -/
 @[pp_nodot]
-def op : α → «expr ᵒᵖ» α :=
+def op : α → αᵒᵖ :=
   id
 
 /-- The canonical map `αᵒᵖ → α`. -/
 @[pp_nodot]
-def unop : «expr ᵒᵖ» α → α :=
+def unop : αᵒᵖ → α :=
   id
 
-theorem op_injective : Function.Injective (op : α → «expr ᵒᵖ» α) :=
+theorem op_injective : Function.Injective (op : α → αᵒᵖ) :=
   fun _ _ => id
 
-theorem unop_injective : Function.Injective (unop : «expr ᵒᵖ» α → α) :=
+theorem unop_injective : Function.Injective (unop : αᵒᵖ → α) :=
   fun _ _ => id
 
 @[simp]
@@ -66,29 +66,27 @@ theorem op_inj_iff (x y : α) : op x = op y ↔ x = y :=
   Iff.rfl
 
 @[simp]
-theorem unop_inj_iff (x y : «expr ᵒᵖ» α) : unop x = unop y ↔ x = y :=
+theorem unop_inj_iff (x y : αᵒᵖ) : unop x = unop y ↔ x = y :=
   Iff.rfl
 
 @[simp]
-theorem op_unop (x : «expr ᵒᵖ» α) : op (unop x) = x :=
+theorem op_unop (x : αᵒᵖ) : op (unop x) = x :=
   rfl
 
 @[simp]
 theorem unop_op (x : α) : unop (op x) = x :=
   rfl
 
-attribute [irreducible] Opposite
-
 /-- The type-level equivalence between a type and its opposite. -/
-def equiv_to_opposite : α ≃ «expr ᵒᵖ» α :=
+def equiv_to_opposite : α ≃ αᵒᵖ :=
   { toFun := op, invFun := unop, left_inv := unop_op, right_inv := op_unop }
 
 @[simp]
-theorem equiv_to_opposite_coe : (equiv_to_opposite : α → «expr ᵒᵖ» α) = op :=
+theorem equiv_to_opposite_coe : (equiv_to_opposite : α → αᵒᵖ) = op :=
   rfl
 
 @[simp]
-theorem equiv_to_opposite_symm_coe : (equiv_to_opposite.symm : «expr ᵒᵖ» α → α) = unop :=
+theorem equiv_to_opposite_symm_coe : (equiv_to_opposite.symm : αᵒᵖ → α) = unop :=
   rfl
 
 theorem op_eq_iff_eq_unop {x : α} {y} : op x = y ↔ x = unop y :=
@@ -97,12 +95,12 @@ theorem op_eq_iff_eq_unop {x : α} {y} : op x = y ↔ x = unop y :=
 theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
   equiv_to_opposite.symm.apply_eq_iff_eq_symm_apply
 
-instance [Inhabited α] : Inhabited («expr ᵒᵖ» α) :=
+instance [Inhabited α] : Inhabited (αᵒᵖ) :=
   ⟨op (default _)⟩
 
 /-- A recursor for `opposite`. Use as `induction x using opposite.rec`. -/
 @[simp]
-protected def rec {F : ∀ X : «expr ᵒᵖ» α, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X :=
+protected def rec {F : ∀ X : αᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X :=
   fun X => h (unop X)
 
 end Opposite

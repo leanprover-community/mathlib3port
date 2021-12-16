@@ -3,6 +3,7 @@ import Mathbin.Topology.Sheaves.Presheaf
 import Mathbin.Topology.Sheaves.SheafCondition.UniqueGluing 
 import Mathbin.CategoryTheory.Limits.Types 
 import Mathbin.CategoryTheory.Limits.Preserves.Filtered 
+import Mathbin.CategoryTheory.Limits.Final 
 import Mathbin.Tactic.Elementwise
 
 /-!
@@ -41,7 +42,7 @@ https://stacks.math.columbia.edu/tag/007L
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u v' u'
 
@@ -165,6 +166,38 @@ theorem comp (ℱ : X.presheaf C) (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
     erw [CategoryTheory.Functor.map_id, category.id_comp, category.id_comp, category.id_comp, colimit.ι_pre,
       colimit.ι_pre]
     rfl
+
+theorem stalk_pushforward_iso_of_open_embedding {f : X ⟶ Y} (hf : OpenEmbedding f) (F : X.presheaf C) (x : X) :
+  is_iso (F.stalk_pushforward _ f x) :=
+  by 
+    have  := functor.initial_of_adjunction (hf.is_open_map.adjunction_nhds x)
+    convert
+      is_iso.of_iso
+        ((functor.final.colimit_iso (hf.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ f _* F) :
+            _).symm ≪≫
+          colim.map_iso _)
+    swap
+    ·
+      fapply nat_iso.of_components
+      ·
+        intro U 
+        refine' F.map_iso (eq_to_iso _)
+        dsimp only [functor.op]
+        exact congr_argₓ op (Subtype.eq$ Set.preimage_image_eq (unop U).1.1 hf.inj)
+      ·
+        intro U V i 
+        erw [←F.map_comp, ←F.map_comp]
+        congr
+    ·
+      ext U 
+      rw [←iso.comp_inv_eq]
+      erw [colimit.ι_map_assoc]
+      rw [colimit.ι_pre, category.assoc]
+      erw [colimit.ι_map_assoc, colimit.ι_pre, ←F.map_comp_assoc]
+      apply colimit.w ((open_nhds.inclusion (f x)).op ⋙ f _* F) _ 
+      dsimp only [functor.op]
+      refine' ((hom_of_le _).op : op (unop U) ⟶ _)
+      exact Set.image_preimage_subset _ _
 
 end StalkPushforward
 
@@ -329,56 +362,58 @@ theorem app_injective_iff_stalk_functor_map_injective {F : sheaf C X} {G : presh
   ⟨fun h U => app_injective_of_stalk_functor_map_injective f U fun x => h x.1,
     stalk_functor_map_injective_of_app_injective f⟩
 
--- error in Topology.Sheaves.Stalks: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For surjectivity, we are given an arbitrary section `t` and need to find a preimage for it.
 We claim that it suffices to find preimages *locally*. That is, for each `x : U` we construct
 a neighborhood `V ≤ U` and a section `s : F.obj (op V))` such that `f.app (op V) s` and `t`
 agree on `V`. -/
-theorem app_surjective_of_injective_of_locally_surjective
-{F G : sheaf C X}
-(f : «expr ⟶ »(F, G))
-(U : opens X)
-(hinj : ∀ x : U, function.injective ((stalk_functor C x.1).map f))
-(hsurj : ∀
- (t)
- (x : U), «expr∃ , »((V : opens X)
-  (m : «expr ∈ »(x.1, V))
-  (iVU : «expr ⟶ »(V, U))
-  (s : F.1.obj (op V)), «expr = »(f.app (op V) s, G.1.map iVU.op t))) : function.surjective (f.app (op U)) :=
-begin
-  intro [ident t],
-  choose [] [ident V] [ident mV, ident iVU, ident sf, ident heq] ["using", expr hsurj t],
-  have [ident V_cover] [":", expr «expr ≤ »(U, supr V)] [],
-  { intros [ident x, ident hxU],
-    rw ["[", expr opens.mem_coe, ",", expr opens.mem_supr, "]"] [],
-    exact [expr ⟨⟨x, hxU⟩, mV ⟨x, hxU⟩⟩] },
-  obtain ["⟨", ident s, ",", ident s_spec, ",", "-", "⟩", ":=", expr F.exists_unique_gluing' V U iVU V_cover sf _],
-  { use [expr s],
-    apply [expr G.eq_of_locally_eq' V U iVU V_cover],
-    intro [ident x],
-    rw ["[", "<-", expr comp_apply, ",", "<-", expr f.naturality, ",", expr comp_apply, ",", expr s_spec, ",", expr heq, "]"] [] },
-  { intros [ident x, ident y],
-    apply [expr section_ext],
-    intro [ident z],
-    apply [expr hinj ⟨z, (iVU x).le ((inf_le_left : «expr ≤ »(«expr ⊓ »(V x, V y), V x)) z.2)⟩],
-    dsimp ["only"] [] [] [],
-    erw ["[", expr stalk_functor_map_germ_apply, ",", expr stalk_functor_map_germ_apply, "]"] [],
-    simp_rw ["[", "<-", expr comp_apply, ",", expr f.naturality, ",", expr comp_apply, ",", expr heq, ",", "<-", expr comp_apply, ",", "<-", expr G.1.map_comp, "]"] [],
-    refl }
-end
-
-theorem app_surjective_of_stalk_functor_map_bijective {F G : sheaf C X} (f : F ⟶ G) (U : opens X)
-  (h : ∀ x : U, Function.Bijective ((stalk_functor C x.val).map f)) : Function.Surjective (f.app (op U)) :=
+theorem app_surjective_of_injective_of_locally_surjective {F G : sheaf C X} (f : F ⟶ G) (U : opens X)
+  (hinj : ∀ x : U, Function.Injective ((stalk_functor C x.1).map f))
+  (hsurj :
+    ∀ t x : U, ∃ (V : opens X)(m : x.1 ∈ V)(iVU : V ⟶ U)(s : F.1.obj (op V)), f.app (op V) s = G.1.map iVU.op t) :
+  Function.Surjective (f.app (op U)) :=
   by 
-    refine' app_surjective_of_injective_of_locally_surjective f U (fun x => (h x).1) fun t x => _ 
-    obtain ⟨s₀, hs₀⟩ := (h x).2 (G.1.germ x t)
-    obtain ⟨V₁, hxV₁, s₁, hs₁⟩ := F.1.germ_exist x.1 s₀ 
-    subst hs₁ 
-    rename' hs₀ => hs₁ 
-    erw [stalk_functor_map_germ_apply V₁ ⟨x.1, hxV₁⟩ f s₁] at hs₁ 
-    obtain ⟨V₂, hxV₂, iV₂V₁, iV₂U, heq⟩ := G.1.germ_eq x.1 hxV₁ x.2 _ _ hs₁ 
-    use V₂, hxV₂, iV₂U, F.1.map iV₂V₁.op s₁ 
-    rw [←comp_apply, f.naturality, comp_apply, HEq]
+    intro t 
+    choose V mV iVU sf heq using hsurj t 
+    have V_cover : U ≤ supr V
+    ·
+      intro x hxU 
+      rw [opens.mem_coe, opens.mem_supr]
+      exact ⟨⟨x, hxU⟩, mV ⟨x, hxU⟩⟩
+    obtain ⟨s, s_spec, -⟩ := F.exists_unique_gluing' V U iVU V_cover sf _
+    ·
+      use s 
+      apply G.eq_of_locally_eq' V U iVU V_cover 
+      intro x 
+      rw [←comp_apply, ←f.naturality, comp_apply, s_spec, HEq]
+    ·
+      intro x y 
+      apply section_ext 
+      intro z 
+      apply hinj ⟨z, (iVU x).le ((inf_le_left : V x⊓V y ≤ V x) z.2)⟩
+      dsimp only 
+      erw [stalk_functor_map_germ_apply, stalk_functor_map_germ_apply]
+      simpRw [←comp_apply, f.naturality, comp_apply, HEq, ←comp_apply, ←G.1.map_comp]
+      rfl
+
+-- failed to format: format: uncaught backtrack exception
+theorem
+  app_surjective_of_stalk_functor_map_bijective
+  { F G : sheaf C X }
+      ( f : F ⟶ G )
+      ( U : opens X )
+      ( h : ∀ x : U , Function.Bijective ( ( stalk_functor C x.val ) . map f ) )
+    : Function.Surjective ( f.app ( op U ) )
+  :=
+    by
+      refine' app_surjective_of_injective_of_locally_surjective f U ( fun x => ( h x ) . 1 ) fun t x => _
+        obtain ⟨ s₀ , hs₀ ⟩ := ( h x ) . 2 ( G . 1 . germ x t )
+        obtain ⟨ V₁ , hxV₁ , s₁ , hs₁ ⟩ := F . 1 . germ_exist x . 1 s₀
+        subst hs₁
+        rename' hs₀
+        erw [ stalk_functor_map_germ_apply V₁ ⟨ x . 1 , hxV₁ ⟩ f s₁ ] at hs₁
+        obtain ⟨ V₂ , hxV₂ , iV₂V₁ , iV₂U , heq ⟩ := G . 1 . germ_eq x . 1 hxV₁ x . 2 _ _ hs₁
+        use V₂ , hxV₂ , iV₂U , F . 1 . map iV₂V₁.op s₁
+        rw [ ← comp_apply , f.naturality , comp_apply , HEq ]
 
 theorem app_bijective_of_stalk_functor_map_bijective {F G : sheaf C X} (f : F ⟶ G) (U : opens X)
   (h : ∀ x : U, Function.Bijective ((stalk_functor C x.val).map f)) : Function.Bijective (f.app (op U)) :=
@@ -408,7 +443,7 @@ theorem is_iso_of_stalk_functor_map_iso {F G : sheaf C X} (f : F ⟶ G) [∀ x :
     suffices  : is_iso ((sheaf.forget C X).map f)
     ·
       exact is_iso_of_fully_faithful (sheaf.forget C X) f 
-    suffices  : ∀ U : «expr ᵒᵖ» (opens X), is_iso (f.app U)
+    suffices  : ∀ U : opens Xᵒᵖ, is_iso (f.app U)
     ·
       exact @nat_iso.is_iso_of_is_iso_app _ _ _ _ F.1 G.1 f this 
     intro U 
@@ -423,7 +458,7 @@ isomorphism if and only if all of its stalk maps are isomorphisms.
 theorem is_iso_iff_stalk_functor_map_iso {F G : sheaf C X} (f : F ⟶ G) :
   is_iso f ↔ ∀ x : X, is_iso ((stalk_functor C x).map f) :=
   by 
-    split 
+    constructor
     ·
       intro h x 
       skip 

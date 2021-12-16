@@ -24,7 +24,7 @@ the main constructions deal with continuous group morphisms.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u v
 
@@ -142,7 +142,7 @@ instance {α : Type u} [UniformSpace α] [AddCommGroupₓ α] [UniformAddGroup �
           (is_closed_eq (continuous_map₂ continuous_fst continuous_snd) (continuous_map₂ continuous_snd continuous_fst))
           fun x y =>
             by 
-              change («expr↑ » x+«expr↑ » y) = «expr↑ » y+«expr↑ » x 
+              change ((↑x)+↑y) = (↑y)+↑x 
               rw [←coe_add, ←coe_add, add_commₓ] }
 
 end UniformAddGroup
@@ -204,23 +204,18 @@ theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_co
       intro a 
       simp [(0 : α →+ β).completion_coe continuous_const, coe_zero]
 
--- error in Topology.Algebra.GroupCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_monoid_hom.completion_add
-{γ : Type*}
-[add_comm_group γ]
-[uniform_space γ]
-[uniform_add_group γ]
-(f g : «expr →+ »(α, γ))
-(hf : continuous f)
-(hg : continuous g) : «expr = »(«expr + »(f, g).completion (hf.add hg), «expr + »(f.completion hf, g.completion hg)) :=
-begin
-  have [ident hfg] [] [":=", expr hf.add hg],
-  ext [] [ident x] [],
-  apply [expr completion.induction_on x],
-  { exact [expr is_closed_eq («expr + »(f, g).continuous_completion hfg) ((f.continuous_completion hf).add (g.continuous_completion hg))] },
-  { intro [ident a],
-    simp [] [] [] ["[", expr «expr + »(f, g).completion_coe hfg, ",", expr coe_add, ",", expr f.completion_coe hf, ",", expr g.completion_coe hg, "]"] [] [] }
-end
+theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroupₓ γ] [UniformSpace γ] [UniformAddGroup γ] (f g : α →+ γ)
+  (hf : Continuous f) (hg : Continuous g) : (f+g).Completion (hf.add hg) = f.completion hf+g.completion hg :=
+  by 
+    have hfg := hf.add hg 
+    ext x 
+    apply completion.induction_on x
+    ·
+      exact
+        is_closed_eq ((f+g).continuous_completion hfg) ((f.continuous_completion hf).add (g.continuous_completion hg))
+    ·
+      intro a 
+      simp [(f+g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]
 
 end AddMonoidHom
 

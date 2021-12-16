@@ -56,18 +56,18 @@ theorem factorial_pos : ∀ n, 0 < n !
 theorem factorial_ne_zero (n : ℕ) : n ! ≠ 0 :=
   ne_of_gtₓ (factorial_pos _)
 
--- error in Data.Nat.Factorial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem factorial_dvd_factorial {m n} (h : «expr ≤ »(m, n)) : «expr ∣ »(«expr !»(m), «expr !»(n)) :=
-begin
-  induction [expr n] [] ["with", ident n, ident IH] []; simp [] [] [] [] [] [],
-  { have [] [] [":=", expr nat.eq_zero_of_le_zero h],
-    subst [expr m],
-    simp [] [] [] [] [] [] },
-  obtain [ident he, "|", ident hl, ":=", expr h.eq_or_lt],
-  { subst [expr m],
-    simp [] [] [] [] [] [] },
-  exact [expr (IH (le_of_lt_succ hl)).mul_left _]
-end
+theorem factorial_dvd_factorial {m n} (h : m ≤ n) : m ! ∣ n ! :=
+  by 
+    induction' n with n IH <;> simp 
+    ·
+      have  := Nat.eq_zero_of_le_zeroₓ h 
+      subst m 
+      simp 
+    obtain he | hl := h.eq_or_lt
+    ·
+      subst m 
+      simp 
+    exact (IH (le_of_lt_succ hl)).mul_left _
 
 theorem dvd_factorial : ∀ {m n}, 0 < m → m ≤ n → m ∣ n !
 | succ m, n, _, h => dvd_of_mul_right_dvd (factorial_dvd_factorial h)
@@ -90,22 +90,23 @@ theorem factorial_mul_pow_le_factorial : ∀ {m n : ℕ}, (m !*m.succ ^ n) ≤ (
 theorem monotone_factorial : Monotone factorial :=
   fun n m => factorial_le
 
--- error in Data.Nat.Factorial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem factorial_lt (hn : «expr < »(0, n)) : «expr ↔ »(«expr < »(«expr !»(n), «expr !»(m)), «expr < »(n, m)) :=
-begin
-  split; intro [ident h],
-  { rw ["[", "<-", expr not_le, "]"] [],
-    intro [ident hmn],
-    apply [expr not_le_of_lt h (factorial_le hmn)] },
-  have [] [":", expr ∀ n, «expr < »(0, n) → «expr < »(«expr !»(n), «expr !»(n.succ))] [],
-  { intros [ident k, ident hk],
-    rw ["[", expr factorial_succ, ",", expr succ_mul, ",", expr lt_add_iff_pos_left, "]"] [],
-    apply [expr mul_pos hk (factorial_pos k)] },
-  induction [expr h] [] ["with", ident k, ident hnk] ["generalizing", ident hn],
-  { exact [expr this _ hn] },
-  refine [expr lt_trans (h_ih hn) (this _ _)],
-  exact [expr lt_trans hn (lt_of_succ_le hnk)]
-end
+theorem factorial_lt (hn : 0 < n) : n ! < m ! ↔ n < m :=
+  by 
+    constructor <;> intro h
+    ·
+      rw [←not_leₓ]
+      intro hmn 
+      apply not_le_of_lt h (factorial_le hmn)
+    have  : ∀ n, 0 < n → n ! < n.succ !
+    ·
+      intro k hk 
+      rw [factorial_succ, succ_mul, lt_add_iff_pos_left]
+      apply mul_pos hk (factorial_pos k)
+    induction' h with k hnk generalizing hn
+    ·
+      exact this _ hn 
+    refine' lt_transₓ (h_ih hn) (this _ _)
+    exact lt_transₓ hn (lt_of_succ_le hnk)
 
 theorem one_lt_factorial : 1 < n ! ↔ 1 < n :=
   by 
@@ -115,7 +116,7 @@ theorem one_lt_factorial : 1 < n ! ↔ 1 < n :=
 
 theorem factorial_eq_one : n ! = 1 ↔ n ≤ 1 :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rw [←not_ltₓ, ←one_lt_factorial, h]
       apply lt_irreflₓ 
@@ -126,7 +127,7 @@ theorem factorial_eq_one : n ! = 1 ↔ n ≤ 1 :=
 
 theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       obtain hnm | hnm | hnm := lt_trichotomyₓ n m
       ·
@@ -155,17 +156,18 @@ theorem lt_factorial_self {n : ℕ} (hi : 3 ≤ n) : n < n ! :=
       lt_mul_of_one_lt_right (pred n).succ_pos
         ((one_lt_two.trans_le (le_pred_of_lt (succ_le_iff.mp hi))).trans_le (self_le_factorial _))
 
--- error in Data.Nat.Factorial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_factorial_succ_lt_factorial_add_succ
-{i : exprℕ()}
-(n : exprℕ())
-(hi : «expr ≤ »(2, i)) : «expr < »(«expr + »(i, «expr !»(«expr + »(n, 1))), «expr !»(«expr + »(«expr + »(i, n), 1))) :=
-begin
-  rw ["[", expr factorial_succ «expr + »(i, _), ",", expr add_mul, ",", expr one_mul, "]"] [],
-  have [] [":", expr «expr ≤ »(i, «expr + »(i, n))] [":=", expr le.intro rfl],
-  exact [expr add_lt_add_of_lt_of_le (this.trans_lt ((lt_mul_iff_one_lt_right (zero_lt_two.trans_le (hi.trans this))).mpr (lt_iff_le_and_ne.mpr ⟨«expr + »(i, n).factorial_pos, λ
-       g, nat.not_succ_le_self 1 ((hi.trans this).trans (factorial_eq_one.mp g.symm))⟩))) (factorial_le ((le_of_eq (add_comm n 1)).trans ((add_le_add_iff_right n).mpr (one_le_two.trans hi))))]
-end
+theorem add_factorial_succ_lt_factorial_add_succ {i : ℕ} (n : ℕ) (hi : 2 ≤ i) : (i+(n+1)!) < ((i+n)+1)! :=
+  by 
+    rw [factorial_succ (i+_), add_mulₓ, one_mulₓ]
+    have  : i ≤ i+n := le.intro rfl 
+    exact
+      add_lt_add_of_lt_of_le
+        (this.trans_lt
+          ((lt_mul_iff_one_lt_right (zero_lt_two.trans_le (hi.trans this))).mpr
+            (lt_iff_le_and_ne.mpr
+              ⟨(i+n).factorial_pos,
+                fun g => Nat.not_succ_le_selfₓ 1 ((hi.trans this).trans (factorial_eq_one.mp g.symm))⟩)))
+        (factorial_le ((le_of_eqₓ (add_commₓ n 1)).trans ((add_le_add_iff_right n).mpr (one_le_two.trans hi))))
 
 theorem add_factorial_lt_factorial_add {i n : ℕ} (hi : 2 ≤ i) (hn : 1 ≤ n) : (i+n !) < (i+n)! :=
   by 

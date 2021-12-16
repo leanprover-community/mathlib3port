@@ -77,7 +77,7 @@ instance forget_to_CommRing_topological_space (R : TopCommRing) :
 
 /-- The forgetful functor to Top. -/
 instance has_forget_to_Top : has_forget₂ TopCommRing Top :=
-  has_forget₂.mk' (fun R => Top.of R) (fun x => rfl) (fun R S f => ⟨«expr⇑ » f.1, f.2⟩) fun R S f => HEq.rfl
+  has_forget₂.mk' (fun R => Top.of R) (fun x => rfl) (fun R S f => ⟨⇑f.1, f.2⟩) fun R S f => HEq.rfl
 
 instance forget_to_Top_comm_ring (R : TopCommRing) : CommRingₓ ((forget₂ TopCommRing Top).obj R) :=
   R.is_comm_ring

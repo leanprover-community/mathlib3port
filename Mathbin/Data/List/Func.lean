@@ -64,7 +64,7 @@ def get : ℕ → List α → α
 Pointwise equality of lists. If lists are different lengths, compare with the default
 element.
 -/
-def Equiv (as1 as2 : List α) : Prop :=
+def Equivₓ (as1 as2 : List α) : Prop :=
   ∀ m : Nat, get m as1 = get m as2
 
 /-- Pointwise operations on lists. If lists are different lengths, use the default element. -/
@@ -165,42 +165,43 @@ theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default 
     apply Or.inr (mem_get_of_ne_zero _)
     apply h1
 
--- error in Data.List.Func: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem get_set_eq_of_ne
-{a : α} : ∀
-{as : list α}
-(k : exprℕ())
-(m : exprℕ()), «expr ≠ »(m, k) → «expr = »(get m «expr { ↦ }»(as, k, a), get m as)
-| as, 0, m, h1 := by { cases [expr m] [],
-  contradiction,
-  cases [expr as] []; simp [] [] ["only"] ["[", expr set, ",", expr get, ",", expr get_nil, "]"] [] [] }
-| as, «expr + »(k, 1), m, h1 := begin
-  cases [expr as] []; cases [expr m] [],
-  simp [] [] ["only"] ["[", expr set, ",", expr get, "]"] [] [],
-  { have [ident h3] [":", expr «expr = »(get m «expr { ↦ }»(nil, k, a), default α)] [],
-    { rw ["[", expr get_set_eq_of_ne k m, ",", expr get_nil, "]"] [],
-      intro [ident hc],
-      apply [expr h1],
-      simp [] [] [] ["[", expr hc, "]"] [] [] },
-    apply [expr h3] },
-  simp [] [] ["only"] ["[", expr set, ",", expr get, "]"] [] [],
-  { apply [expr get_set_eq_of_ne k m],
-    intro [ident hc],
-    apply [expr h1],
-    simp [] [] [] ["[", expr hc, "]"] [] [] }
-end
+theorem get_set_eq_of_ne {a : α} : ∀ {as : List α} k : ℕ m : ℕ, m ≠ k → get m (as {k ↦ a}) = get m as
+| as, 0, m, h1 =>
+  by 
+    cases m 
+    contradiction 
+    cases as <;> simp only [Set, get, get_nil]
+| as, k+1, m, h1 =>
+  by 
+    cases as <;> cases m 
+    simp only [Set, get]
+    ·
+      have h3 : get m (nil {k ↦ a}) = default α
+      ·
+        rw [get_set_eq_of_ne k m, get_nil]
+        intro hc 
+        apply h1 
+        simp [hc]
+      apply h3 
+    simp only [Set, get]
+    ·
+      apply get_set_eq_of_ne k m 
+      intro hc 
+      apply h1 
+      simp [hc]
 
--- error in Data.List.Func: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem get_map
-{f : α → β} : ∀ {n : exprℕ()} {as : list α}, «expr < »(n, as.length) → «expr = »(get n (as.map f), f (get n as))
-| _, «expr[ , ]»([]), h := by cases [expr h] []
-| 0, «expr :: »(a, as), h := rfl
-| «expr + »(n, 1), «expr :: »(a, as), h1 := begin
-  have [ident h2] [":", expr «expr < »(n, length as)] [],
-  { rw ["[", "<-", expr nat.succ_le_iff, ",", "<-", expr nat.lt_succ_iff, "]"] [],
-    apply [expr h1] },
-  apply [expr get_map h2]
-end
+theorem get_map {f : α → β} : ∀ {n : ℕ} {as : List α}, n < as.length → get n (as.map f) = f (get n as)
+| _, [], h =>
+  by 
+    cases h
+| 0, a :: as, h => rfl
+| n+1, a :: as, h1 =>
+  by 
+    have h2 : n < length as
+    ·
+      rw [←Nat.succ_le_iff, ←Nat.lt_succ_iff]
+      apply h1 
+    apply get_map h2
 
 theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f (default α) = default β → get n (as.map f) = f (get n as) :=
   by 
@@ -214,6 +215,7 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f (default α) = def
       rw [length_map]
       apply h2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » as)
 theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
   p (default α) → (∀ x _ : x ∈ as, p x) → ∀ n, p (get n as) :=
   by 
@@ -226,35 +228,40 @@ theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
       rw [get_eq_default_of_le _ h3]
       apply h1
 
-theorem equiv_refl : Equiv as as :=
+theorem equiv_refl : Equivₓ as as :=
   fun k => rfl
 
-theorem equiv_symm : Equiv as1 as2 → Equiv as2 as1 :=
+theorem equiv_symm : Equivₓ as1 as2 → Equivₓ as2 as1 :=
   fun h1 k => (h1 k).symm
 
-theorem equiv_trans : Equiv as1 as2 → Equiv as2 as3 → Equiv as1 as3 :=
+theorem equiv_trans : Equivₓ as1 as2 → Equivₓ as2 as3 → Equivₓ as1 as3 :=
   fun h1 h2 k => Eq.trans (h1 k) (h2 k)
 
-theorem equiv_of_eq : as1 = as2 → Equiv as1 as2 :=
+theorem equiv_of_eq : as1 = as2 → Equivₓ as1 as2 :=
   by 
     intro h1 
     rw [h1]
     apply equiv_refl
 
--- error in Data.List.Func: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_of_equiv : ∀ {as1 as2 : list α}, «expr = »(as1.length, as2.length) → equiv as1 as2 → «expr = »(as1, as2)
-| «expr[ , ]»([]), «expr[ , ]»([]), h1, h2 := rfl
-| «expr :: »(_, _), «expr[ , ]»([]), h1, h2 := by cases [expr h1] []
-| «expr[ , ]»([]), «expr :: »(_, _), h1, h2 := by cases [expr h1] []
-| «expr :: »(a1, as1), «expr :: »(a2, as2), h1, h2 := begin
-  congr,
-  { apply [expr h2 0] },
-  have [ident h3] [":", expr «expr = »(as1.length, as2.length)] [],
-  { simpa [] [] [] ["[", expr add_left_inj, ",", expr add_comm, ",", expr length, "]"] [] ["using", expr h1] },
-  apply [expr eq_of_equiv h3],
-  intro [ident m],
-  apply [expr h2 «expr + »(m, 1)]
-end
+theorem eq_of_equiv : ∀ {as1 as2 : List α}, as1.length = as2.length → Equivₓ as1 as2 → as1 = as2
+| [], [], h1, h2 => rfl
+| _ :: _, [], h1, h2 =>
+  by 
+    cases h1
+| [], _ :: _, h1, h2 =>
+  by 
+    cases h1
+| a1 :: as1, a2 :: as2, h1, h2 =>
+  by 
+    congr
+    ·
+      apply h2 0
+    have h3 : as1.length = as2.length
+    ·
+      simpa [add_left_injₓ, add_commₓ, length] using h1 
+    apply eq_of_equiv h3 
+    intro m 
+    apply h2 (m+1)
 
 end Func
 
@@ -286,23 +293,32 @@ theorem pointwise_nil {f : α → β → γ} : ∀ as : List α, pointwise f as 
   by 
     simp only [pointwise_nil as, pointwise, eq_self_iff_true, and_selfₓ, List.map]
 
--- error in Data.List.Func: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem get_pointwise
-[inhabited γ]
-{f : α → β → γ}
-(h1 : «expr = »(f (default α) (default β), default γ)) : ∀
-(k : nat)
-(as : list α)
-(bs : list β), «expr = »(get k (pointwise f as bs), f (get k as) (get k bs))
-| k, «expr[ , ]»([]), «expr[ , ]»([]) := by simp [] [] ["only"] ["[", expr h1, ",", expr get_nil, ",", expr pointwise, ",", expr get, "]"] [] []
-| 0, «expr[ , ]»([]), «expr :: »(b, bs) := by simp [] [] ["only"] ["[", expr get_pointwise, ",", expr get_nil, ",", expr pointwise, ",", expr get, ",", expr nat.nat_zero_eq_zero, ",", expr map, "]"] [] []
-| «expr + »(k, 1), «expr[ , ]»([]), «expr :: »(b, bs) := by { have [] [":", expr «expr = »(get k (map «expr $ »(f, default α) bs), f (default α) (get k bs))] [],
-  { simpa [] [] [] ["[", expr nil_pointwise, ",", expr get_nil, "]"] [] ["using", expr get_pointwise k «expr[ , ]»([]) bs] },
-  simpa [] [] [] ["[", expr get, ",", expr get_nil, ",", expr pointwise, ",", expr map, "]"] [] [] }
-| 0, «expr :: »(a, as), «expr[ , ]»([]) := by simp [] [] ["only"] ["[", expr get_pointwise, ",", expr get_nil, ",", expr pointwise, ",", expr get, ",", expr nat.nat_zero_eq_zero, ",", expr map, "]"] [] []
-| «expr + »(k, 1), «expr :: »(a, as), «expr[ , ]»([]) := by simpa [] [] [] ["[", expr get, ",", expr get_nil, ",", expr pointwise, ",", expr map, ",", expr pointwise_nil, ",", expr get_nil, "]"] [] ["using", expr get_pointwise k as «expr[ , ]»([])]
-| 0, «expr :: »(a, as), «expr :: »(b, bs) := by simp [] [] ["only"] ["[", expr pointwise, ",", expr get, "]"] [] []
-| «expr + »(k, 1), «expr :: »(a, as), «expr :: »(b, bs) := by simp [] [] ["only"] ["[", expr pointwise, ",", expr get, ",", expr get_pointwise k, "]"] [] []
+theorem get_pointwise [Inhabited γ] {f : α → β → γ} (h1 : f (default α) (default β) = default γ) :
+  ∀ k : Nat as : List α bs : List β, get k (pointwise f as bs) = f (get k as) (get k bs)
+| k, [], [] =>
+  by 
+    simp only [h1, get_nil, pointwise, get]
+| 0, [], b :: bs =>
+  by 
+    simp only [get_pointwise, get_nil, pointwise, get, Nat.nat_zero_eq_zero, map]
+| k+1, [], b :: bs =>
+  by 
+    have  : get k (map (f$ default α) bs) = f (default α) (get k bs)
+    ·
+      simpa [nil_pointwise, get_nil] using get_pointwise k [] bs 
+    simpa [get, get_nil, pointwise, map]
+| 0, a :: as, [] =>
+  by 
+    simp only [get_pointwise, get_nil, pointwise, get, Nat.nat_zero_eq_zero, map]
+| k+1, a :: as, [] =>
+  by 
+    simpa [get, get_nil, pointwise, map, pointwise_nil, get_nil] using get_pointwise k as []
+| 0, a :: as, b :: bs =>
+  by 
+    simp only [pointwise, get]
+| k+1, a :: as, b :: bs =>
+  by 
+    simp only [pointwise, get, get_pointwise k]
 
 theorem length_pointwise {f : α → β → γ} :
   ∀ {as : List α} {bs : List β}, (pointwise f as bs).length = max as.length bs.length
@@ -332,27 +348,25 @@ theorem get_add {α : Type u} [AddMonoidₓ α] {k : ℕ} {xs ys : List α} :
 theorem length_add {α : Type u} [HasZero α] [Add α] {xs ys : List α} : (add xs ys).length = max xs.length ys.length :=
   @length_pointwise α α α ⟨0⟩ ⟨0⟩ _ _ _
 
--- error in Data.List.Func: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem nil_add {α : Type u} [add_monoid α] (as : list α) : «expr = »(add «expr[ , ]»([]) as, as) :=
-begin
-  rw ["[", expr add, ",", expr @nil_pointwise α α α ⟨0⟩ ⟨0⟩, "]"] [],
-  apply [expr eq.trans _ (map_id as)],
-  congr' [] ["with", ident x],
-  have [] [":", expr «expr = »(@default α ⟨0⟩, 0)] [":=", expr rfl],
-  rw ["[", expr this, ",", expr zero_add, "]"] [],
-  refl
-end
+@[simp]
+theorem nil_add {α : Type u} [AddMonoidₓ α] (as : List α) : add [] as = as :=
+  by 
+    rw [add, @nil_pointwise α α α ⟨0⟩ ⟨0⟩]
+    apply Eq.trans _ (map_id as)
+    congr with x 
+    have  : @default α ⟨0⟩ = 0 := rfl 
+    rw [this, zero_addₓ]
+    rfl
 
--- error in Data.List.Func: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem add_nil {α : Type u} [add_monoid α] (as : list α) : «expr = »(add as «expr[ , ]»([]), as) :=
-begin
-  rw ["[", expr add, ",", expr @pointwise_nil α α α ⟨0⟩ ⟨0⟩, "]"] [],
-  apply [expr eq.trans _ (map_id as)],
-  congr' [] ["with", ident x],
-  have [] [":", expr «expr = »(@default α ⟨0⟩, 0)] [":=", expr rfl],
-  rw ["[", expr this, ",", expr add_zero, "]"] [],
-  refl
-end
+@[simp]
+theorem add_nil {α : Type u} [AddMonoidₓ α] (as : List α) : add as [] = as :=
+  by 
+    rw [add, @pointwise_nil α α α ⟨0⟩ ⟨0⟩]
+    apply Eq.trans _ (map_id as)
+    congr with x 
+    have  : @default α ⟨0⟩ = 0 := rfl 
+    rw [this, add_zeroₓ]
+    rfl
 
 theorem map_add_map {α : Type u} [AddMonoidₓ α] (f g : α → α) {as : List α} :
   add (as.map f) (as.map g) = as.map fun x => f x+g x :=
@@ -387,25 +401,23 @@ theorem get_sub {α : Type u} [AddGroupₓ α] {k : ℕ} {xs ys : List α} :
 theorem length_sub [HasZero α] [Sub α] {xs ys : List α} : (sub xs ys).length = max xs.length ys.length :=
   @length_pointwise α α α ⟨0⟩ ⟨0⟩ _ _ _
 
--- error in Data.List.Func: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem nil_sub {α : Type} [add_group α] (as : list α) : «expr = »(sub «expr[ , ]»([]) as, neg as) :=
-begin
-  rw ["[", expr sub, ",", expr nil_pointwise, "]"] [],
-  congr' [] ["with", ident x],
-  have [] [":", expr «expr = »(@default α ⟨0⟩, 0)] [":=", expr rfl],
-  rw ["[", expr this, ",", expr zero_sub, "]"] []
-end
+@[simp]
+theorem nil_sub {α : Type} [AddGroupₓ α] (as : List α) : sub [] as = neg as :=
+  by 
+    rw [sub, nil_pointwise]
+    congr with x 
+    have  : @default α ⟨0⟩ = 0 := rfl 
+    rw [this, zero_sub]
 
--- error in Data.List.Func: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem sub_nil {α : Type} [add_group α] (as : list α) : «expr = »(sub as «expr[ , ]»([]), as) :=
-begin
-  rw ["[", expr sub, ",", expr pointwise_nil, "]"] [],
-  apply [expr eq.trans _ (map_id as)],
-  congr' [] ["with", ident x],
-  have [] [":", expr «expr = »(@default α ⟨0⟩, 0)] [":=", expr rfl],
-  rw ["[", expr this, ",", expr sub_zero, "]"] [],
-  refl
-end
+@[simp]
+theorem sub_nil {α : Type} [AddGroupₓ α] (as : List α) : sub as [] = as :=
+  by 
+    rw [sub, pointwise_nil]
+    apply Eq.trans _ (map_id as)
+    congr with x 
+    have  : @default α ⟨0⟩ = 0 := rfl 
+    rw [this, sub_zero]
+    rfl
 
 end Func
 

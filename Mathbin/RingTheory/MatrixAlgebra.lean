@@ -120,7 +120,7 @@ The bare function `matrix n n A → A ⊗[R] matrix n n R`.
 (We don't need to show that it's an algebra map, thankfully --- just that it's an inverse.)
 -/
 def inv_fun (M : Matrix n n A) : A ⊗[R] Matrix n n R :=
-  ∑p : n × n, M p.1 p.2 ⊗ₜ std_basis_matrix p.1 p.2 1
+  ∑ p : n × n, M p.1 p.2 ⊗ₜ std_basis_matrix p.1 p.2 1
 
 @[simp]
 theorem inv_fun_zero : inv_fun R A n 0 = 0 :=
@@ -149,8 +149,8 @@ theorem inv_fun_algebra_map (M : Matrix n n R) : (inv_fun R A n fun i j => algeb
 
 theorem right_inv (M : Matrix n n A) : (to_fun_alg_hom R A n) (inv_fun R A n M) = M :=
   by 
-    simp only [inv_fun, AlgHom.map_sum, std_basis_matrix, apply_ite («expr⇑ » (algebraMap R A)), mul_boole,
-      to_fun_alg_hom_apply, RingHom.map_zero, RingHom.map_one]
+    simp only [inv_fun, AlgHom.map_sum, std_basis_matrix, apply_ite (⇑algebraMap R A), mul_boole, to_fun_alg_hom_apply,
+      RingHom.map_zero, RingHom.map_one]
     convert Finset.sum_product 
     apply matrix_eq_sum_std_basis
 
@@ -171,7 +171,7 @@ theorem left_inv (M : A ⊗[R] Matrix n n R) : inv_fun R A n (to_fun_alg_hom R A
 
 The equivalence, ignoring the algebra structure, `(A ⊗[R] matrix n n R) ≃ matrix n n A`.
 -/
-def Equiv : A ⊗[R] Matrix n n R ≃ Matrix n n A :=
+def Equivₓ : A ⊗[R] Matrix n n R ≃ Matrix n n A :=
   { toFun := to_fun_alg_hom R A n, invFun := inv_fun R A n, left_inv := left_inv R A n, right_inv := right_inv R A n }
 
 end matrixEquivTensor
@@ -188,19 +188,17 @@ open matrixEquivTensor
 
 @[simp]
 theorem matrix_equiv_tensor_apply (M : Matrix n n A) :
-  matrixEquivTensor R A n M = ∑p : n × n, M p.1 p.2 ⊗ₜ std_basis_matrix p.1 p.2 1 :=
+  matrixEquivTensor R A n M = ∑ p : n × n, M p.1 p.2 ⊗ₜ std_basis_matrix p.1 p.2 1 :=
   rfl
 
--- error in RingTheory.MatrixAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem matrix_equiv_tensor_apply_std_basis
-(i j : n)
-(x : A) : «expr = »(matrix_equiv_tensor R A n (std_basis_matrix i j x), «expr ⊗ₜ »(x, std_basis_matrix i j 1)) :=
-begin
-  have [ident t] [":", expr ∀
-   p : «expr × »(n, n), «expr ↔ »(«expr ∧ »(«expr = »(i, p.1), «expr = »(j, p.2)), «expr = »(p, (i, j)))] [":=", expr by tidy []],
-  simp [] [] [] ["[", expr ite_tmul, ",", expr t, ",", expr std_basis_matrix, "]"] [] []
-end
+theorem matrix_equiv_tensor_apply_std_basis (i j : n) (x : A) :
+  matrixEquivTensor R A n (std_basis_matrix i j x) = x ⊗ₜ std_basis_matrix i j 1 :=
+  by 
+    have t : ∀ p : n × n, i = p.1 ∧ j = p.2 ↔ p = (i, j) :=
+      by 
+        tidy 
+    simp [ite_tmul, t, std_basis_matrix]
 
 @[simp]
 theorem matrix_equiv_tensor_apply_symm (a : A) (M : Matrix n n R) :

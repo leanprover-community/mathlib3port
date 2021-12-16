@@ -39,7 +39,7 @@ implicit function, inverse function
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale TopologicalSpace
 
@@ -138,7 +138,7 @@ def implicit_function : F → G → E :=
   Function.curry$ φ.to_local_homeomorph.symm
 
 @[simp]
-theorem to_local_homeomorph_coe : «expr⇑ » φ.to_local_homeomorph = φ.prod_fun :=
+theorem to_local_homeomorph_coe : ⇑φ.to_local_homeomorph = φ.prod_fun :=
   rfl
 
 theorem to_local_homeomorph_apply (x : E) : φ.to_local_homeomorph x = (φ.left_fun x, φ.right_fun x) :=
@@ -150,36 +150,34 @@ theorem pt_mem_to_local_homeomorph_source : φ.pt ∈ φ.to_local_homeomorph.sou
 theorem map_pt_mem_to_local_homeomorph_target : (φ.left_fun φ.pt, φ.right_fun φ.pt) ∈ φ.to_local_homeomorph.target :=
   φ.to_local_homeomorph.map_source$ φ.pt_mem_to_local_homeomorph_source
 
-theorem prod_map_implicit_function : ∀ᶠp : F × G in 𝓝 (φ.prod_fun φ.pt), φ.prod_fun (φ.implicit_function p.1 p.2) = p :=
+theorem prod_map_implicit_function :
+  ∀ᶠ p : F × G in 𝓝 (φ.prod_fun φ.pt), φ.prod_fun (φ.implicit_function p.1 p.2) = p :=
   φ.has_strict_fderiv_at.eventually_right_inverse.mono$ fun ⟨z, y⟩ h => h
 
 theorem left_map_implicit_function :
-  ∀ᶠp : F × G in 𝓝 (φ.prod_fun φ.pt), φ.left_fun (φ.implicit_function p.1 p.2) = p.1 :=
+  ∀ᶠ p : F × G in 𝓝 (φ.prod_fun φ.pt), φ.left_fun (φ.implicit_function p.1 p.2) = p.1 :=
   φ.prod_map_implicit_function.mono$ fun z => congr_argₓ Prod.fst
 
 theorem right_map_implicit_function :
-  ∀ᶠp : F × G in 𝓝 (φ.prod_fun φ.pt), φ.right_fun (φ.implicit_function p.1 p.2) = p.2 :=
+  ∀ᶠ p : F × G in 𝓝 (φ.prod_fun φ.pt), φ.right_fun (φ.implicit_function p.1 p.2) = p.2 :=
   φ.prod_map_implicit_function.mono$ fun z => congr_argₓ Prod.snd
 
-theorem implicit_function_apply_image : ∀ᶠx in 𝓝 φ.pt, φ.implicit_function (φ.left_fun x) (φ.right_fun x) = x :=
+theorem implicit_function_apply_image : ∀ᶠ x in 𝓝 φ.pt, φ.implicit_function (φ.left_fun x) (φ.right_fun x) = x :=
   φ.has_strict_fderiv_at.eventually_left_inverse
 
 theorem map_nhds_eq : map φ.left_fun (𝓝 φ.pt) = 𝓝 (φ.left_fun φ.pt) :=
   show map (Prod.fst ∘ φ.prod_fun) (𝓝 φ.pt) = 𝓝 (φ.prod_fun φ.pt).1by 
     rw [←map_map, φ.has_strict_fderiv_at.map_nhds_eq_of_equiv, map_fst_nhds]
 
--- error in Analysis.Calculus.Implicit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem implicit_function_has_strict_fderiv_at
-(g'inv : «expr →L[ ] »(G, 𝕜, E))
-(hg'inv : «expr = »(φ.right_deriv.comp g'inv, continuous_linear_map.id 𝕜 G))
-(hg'invf : «expr = »(φ.left_deriv.comp g'inv, 0)) : has_strict_fderiv_at (φ.implicit_function (φ.left_fun φ.pt)) g'inv (φ.right_fun φ.pt) :=
-begin
-  have [] [] [":=", expr φ.has_strict_fderiv_at.to_local_inverse],
-  simp [] [] ["only"] ["[", expr prod_fun, "]"] [] ["at", ident this],
-  convert [] [expr this.comp (φ.right_fun φ.pt) ((has_strict_fderiv_at_const _ _).prod (has_strict_fderiv_at_id _))] [],
-  simp [] [] ["only"] ["[", expr continuous_linear_map.ext_iff, ",", expr continuous_linear_map.coe_comp', ",", expr function.comp_app, "]"] [] ["at", ident hg'inv, ident hg'invf, "⊢"],
-  simp [] [] [] ["[", expr continuous_linear_equiv.eq_symm_apply, ",", "*", "]"] [] []
-end
+theorem implicit_function_has_strict_fderiv_at (g'inv : G →L[𝕜] E)
+  (hg'inv : φ.right_deriv.comp g'inv = ContinuousLinearMap.id 𝕜 G) (hg'invf : φ.left_deriv.comp g'inv = 0) :
+  HasStrictFderivAt (φ.implicit_function (φ.left_fun φ.pt)) g'inv (φ.right_fun φ.pt) :=
+  by 
+    have  := φ.has_strict_fderiv_at.to_local_inverse 
+    simp only [prod_fun] at this 
+    convert this.comp (φ.right_fun φ.pt) ((has_strict_fderiv_at_const _ _).Prod (has_strict_fderiv_at_id _))
+    simp only [ContinuousLinearMap.ext_iff, ContinuousLinearMap.coe_comp', Function.comp_app] at hg'inv hg'invf⊢
+    simp [ContinuousLinearEquiv.eq_symm_apply]
 
 end ImplicitFunctionData
 
@@ -272,7 +270,7 @@ theorem mem_implicit_to_local_homeomorph_of_complemented_target (hf : HasStrictF
 /-- `implicit_function_of_complemented` sends `(z, y)` to a point in `f ⁻¹' z`. -/
 theorem map_implicit_function_of_complemented_eq (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
   (hker : f'.ker.closed_complemented) :
-  ∀ᶠp : F × f'.ker in 𝓝 (f a, 0), f (hf.implicit_function_of_complemented f f' hf' hker p.1 p.2) = p.1 :=
+  ∀ᶠ p : F × f'.ker in 𝓝 (f a, 0), f (hf.implicit_function_of_complemented f f' hf' hker p.1 p.2) = p.1 :=
   ((hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).eventually_right_inverse$
         hf.mem_implicit_to_local_homeomorph_of_complemented_target hf' hker).mono$
     fun ⟨z, y⟩ h => congr_argₓ Prod.fst h
@@ -281,7 +279,7 @@ theorem map_implicit_function_of_complemented_eq (hf : HasStrictFderivAt f f' a)
 of some point. -/
 theorem eq_implicit_function_of_complemented (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
   (hker : f'.ker.closed_complemented) :
-  ∀ᶠx in 𝓝 a,
+  ∀ᶠ x in 𝓝 a,
     hf.implicit_function_of_complemented f f' hf' hker (f x)
         (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker x).snd =
       x :=
@@ -332,13 +330,14 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [CompleteSpace 𝕜] {E :
   [CompleteSpace E] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [FiniteDimensional 𝕜 F] (f : E → F) (f' : E →L[𝕜] F)
   {a : E}
 
--- error in Analysis.Calculus.Implicit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a map `f : E → F` to a finite dimensional space with a surjective derivative `f'`,
 returns a local homeomorphism between `E` and `F × ker f'`. -/
-def implicit_to_local_homeomorph
-(hf : has_strict_fderiv_at f f' a)
-(hf' : «expr = »(f'.range, «expr⊤»())) : local_homeomorph E «expr × »(F, f'.ker) :=
-by haveI [] [] [":=", expr finite_dimensional.complete 𝕜 F]; exact [expr hf.implicit_to_local_homeomorph_of_complemented f f' hf' f'.ker_closed_complemented_of_finite_dimensional_range]
+def implicit_to_local_homeomorph (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) :
+  LocalHomeomorph E (F × f'.ker) :=
+  by 
+    have  := FiniteDimensional.complete 𝕜 F <;>
+      exact
+        hf.implicit_to_local_homeomorph_of_complemented f f' hf' f'.ker_closed_complemented_of_finite_dimensional_range
 
 /-- Implicit function `g` defined by `f (g z y) = z`. -/
 def implicit_function (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) : F → f'.ker → E :=
@@ -385,7 +384,7 @@ alias tendsto_implicit_function ← Filter.Tendsto.implicit_function
 
 /-- `implicit_function` sends `(z, y)` to a point in `f ⁻¹' z`. -/
 theorem map_implicit_function_eq (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) :
-  ∀ᶠp : F × f'.ker in 𝓝 (f a, 0), f (hf.implicit_function f f' hf' p.1 p.2) = p.1 :=
+  ∀ᶠ p : F × f'.ker in 𝓝 (f a, 0), f (hf.implicit_function f f' hf' p.1 p.2) = p.1 :=
   by 
     apply map_implicit_function_of_complemented_eq
 
@@ -398,7 +397,7 @@ theorem implicit_function_apply_image (hf : HasStrictFderivAt f f' a) (hf' : f'.
 /-- Any point in some neighborhood of `a` can be represented as `implicit_function`
 of some point. -/
 theorem eq_implicit_function (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) :
-  ∀ᶠx in 𝓝 a, hf.implicit_function f f' hf' (f x) (hf.implicit_to_local_homeomorph f f' hf' x).snd = x :=
+  ∀ᶠ x in 𝓝 a, hf.implicit_function f f' hf' (f x) (hf.implicit_to_local_homeomorph f f' hf' x).snd = x :=
   by 
     apply eq_implicit_function_of_complemented
 

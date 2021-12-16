@@ -180,17 +180,12 @@ theorem inv_lt_inv₀ (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ < b⁻¹ ↔ b < a 
 theorem inv_le_inv₀ (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ ≤ b⁻¹ ↔ b ≤ a :=
   show Units.mk0 a ha⁻¹ ≤ Units.mk0 b hb⁻¹ ↔ Units.mk0 b hb ≤ Units.mk0 a ha from inv_le_inv_iff
 
--- error in Algebra.Order.WithZero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_of_mul_lt_mul_of_le₀
-(h : «expr < »(«expr * »(a, b), «expr * »(c, d)))
-(hc : «expr < »(0, c))
-(hh : «expr ≤ »(c, a)) : «expr < »(b, d) :=
-begin
-  have [ident ha] [":", expr «expr ≠ »(a, 0)] [":=", expr ne_of_gt (lt_of_lt_of_le hc hh)],
-  simp_rw ["<-", expr inv_le_inv₀ ha (ne_of_gt hc)] ["at", ident hh],
-  have [] [] [":=", expr mul_lt_mul_of_lt_of_le₀ hh (inv_ne_zero (ne_of_gt hc)) h],
-  simpa [] [] [] ["[", expr inv_mul_cancel_left₀ ha, ",", expr inv_mul_cancel_left₀ (ne_of_gt hc), "]"] [] ["using", expr this]
-end
+theorem lt_of_mul_lt_mul_of_le₀ (h : (a*b) < c*d) (hc : 0 < c) (hh : c ≤ a) : b < d :=
+  by 
+    have ha : a ≠ 0 := ne_of_gtₓ (lt_of_lt_of_leₓ hc hh)
+    simpRw [←inv_le_inv₀ ha (ne_of_gtₓ hc)]  at hh 
+    have  := mul_lt_mul_of_lt_of_le₀ hh (inv_ne_zero (ne_of_gtₓ hc)) h 
+    simpa [inv_mul_cancel_left₀ ha, inv_mul_cancel_left₀ (ne_of_gtₓ hc)] using this
 
 theorem mul_le_mul_right₀ (hc : c ≠ 0) : ((a*c) ≤ b*c) ↔ a ≤ b :=
   ⟨le_of_le_mul_right hc, fun hab => mul_le_mul_right' hab _⟩

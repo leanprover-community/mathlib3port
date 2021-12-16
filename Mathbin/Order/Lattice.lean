@@ -72,9 +72,9 @@ class HasSup (α : Type u) where
 class HasInf (α : Type u) where 
   inf : α → α → α
 
-infixl:65 "⊔" => HasSup.sup
+infixl:68 "⊔" => HasSup.sup
 
-infixl:70 "⊓" => HasInf.inf
+infixl:69 "⊓" => HasInf.inf
 
 /-!
 ### Join-semilattices
@@ -299,28 +299,34 @@ theorem Monotone.forall_le_of_antitone {β : Type _} [Preorderₓ β] {f g : α 
     _ ≤ g n := hg le_sup_right
     
 
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem semilattice_sup.ext_sup
-{α}
-{A B : semilattice_sup α}
-(H : ∀ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y)))
-(x y : α) : «expr = »(by haveI [] [] [":=", expr A]; exact [expr «expr ⊔ »(x, y)], «expr ⊔ »(x, y)) :=
-«expr $ »(eq_of_forall_ge_iff, λ
- c, by simp [] [] ["only"] ["[", expr sup_le_iff, "]"] [] []; rw ["[", "<-", expr H, ",", expr @sup_le_iff α A, ",", expr H, ",", expr H, "]"] [])
+theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
+  (H :
+    ∀ x y : α,
+      by 
+          have  := A <;> exact x ≤ y ↔
+        x ≤ y)
+  (x y : α) :
+  by 
+      have  := A <;> exact x⊔y =
+    x⊔y :=
+  eq_of_forall_ge_iff$
+    fun c =>
+      by 
+        simp only [sup_le_iff] <;> rw [←H, @sup_le_iff α A, H, H]
 
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem semilattice_sup.ext
-{α}
-{A B : semilattice_sup α}
-(H : ∀
- x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
-begin
-  have [] [] [":=", expr partial_order.ext H],
-  have [ident ss] [] [":=", expr funext (λ x, «expr $ »(funext, semilattice_sup.ext_sup H x))],
-  casesI [expr A] [],
-  casesI [expr B] [],
-  injection [expr this] []; congr' [] []
-end
+theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
+  (H :
+    ∀ x y : α,
+      by 
+          have  := A <;> exact x ≤ y ↔
+        x ≤ y) :
+  A = B :=
+  by 
+    have  := PartialOrderₓ.ext H 
+    have ss := funext fun x => funext$ SemilatticeSup.ext_sup H x 
+    cases' A 
+    cases' B 
+    injection this <;> congr
 
 theorem exists_lt_of_sup (α : Type _) [SemilatticeSup α] [Nontrivial α] : ∃ a b : α, a < b :=
   by 
@@ -482,28 +488,34 @@ theorem inf_inf_inf_comm (a b c d : α) : a⊓b⊓(c⊓d) = a⊓c⊓(b⊓d) :=
 theorem forall_le_or_exists_lt_inf (a : α) : (∀ b, a ≤ b) ∨ ∃ b, b < a :=
   @forall_le_or_exists_lt_sup (OrderDual α) _ a
 
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem semilattice_inf.ext_inf
-{α}
-{A B : semilattice_inf α}
-(H : ∀ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y)))
-(x y : α) : «expr = »(by haveI [] [] [":=", expr A]; exact [expr «expr ⊓ »(x, y)], «expr ⊓ »(x, y)) :=
-«expr $ »(eq_of_forall_le_iff, λ
- c, by simp [] [] ["only"] ["[", expr le_inf_iff, "]"] [] []; rw ["[", "<-", expr H, ",", expr @le_inf_iff α A, ",", expr H, ",", expr H, "]"] [])
+theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
+  (H :
+    ∀ x y : α,
+      by 
+          have  := A <;> exact x ≤ y ↔
+        x ≤ y)
+  (x y : α) :
+  by 
+      have  := A <;> exact x⊓y =
+    x⊓y :=
+  eq_of_forall_le_iff$
+    fun c =>
+      by 
+        simp only [le_inf_iff] <;> rw [←H, @le_inf_iff α A, H, H]
 
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem semilattice_inf.ext
-{α}
-{A B : semilattice_inf α}
-(H : ∀
- x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
-begin
-  have [] [] [":=", expr partial_order.ext H],
-  have [ident ss] [] [":=", expr funext (λ x, «expr $ »(funext, semilattice_inf.ext_inf H x))],
-  casesI [expr A] [],
-  casesI [expr B] [],
-  injection [expr this] []; congr' [] []
-end
+theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
+  (H :
+    ∀ x y : α,
+      by 
+          have  := A <;> exact x ≤ y ↔
+        x ≤ y) :
+  A = B :=
+  by 
+    have  := PartialOrderₓ.ext H 
+    have ss := funext fun x => funext$ SemilatticeInf.ext_inf H x 
+    cases' A 
+    cases' B 
+    injection this <;> congr
 
 theorem SemilatticeInf.dual_dual (α : Type _) [H : SemilatticeInf α] : OrderDual.semilatticeInf (OrderDual α) = H :=
   SemilatticeInf.ext$ fun _ _ => Iff.rfl
@@ -514,24 +526,18 @@ theorem exists_lt_of_inf (α : Type _) [SemilatticeInf α] [Nontrivial α] : ∃
 
 end SemilatticeInf
 
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A type with a commutative, associative and idempotent binary `inf` operation has the structure of a
 meet-semilattice.
 
 The partial order is defined so that `a ≤ b` unfolds to `b ⊓ a = a`; cf. `inf_eq_right`.
 -/
-def semilattice_inf.mk'
-{α : Type*}
-[has_inf α]
-(inf_comm : ∀ a b : α, «expr = »(«expr ⊓ »(a, b), «expr ⊓ »(b, a)))
-(inf_assoc : ∀ a b c : α, «expr = »(«expr ⊓ »(«expr ⊓ »(a, b), c), «expr ⊓ »(a, «expr ⊓ »(b, c))))
-(inf_idem : ∀ a : α, «expr = »(«expr ⊓ »(a, a), a)) : semilattice_inf α :=
-begin
-  haveI [] [":", expr semilattice_sup (order_dual α)] [":=", expr semilattice_sup.mk' inf_comm inf_assoc inf_idem],
-  haveI [ident i] [] [":=", expr order_dual.semilattice_inf (order_dual α)],
-  exact [expr i]
-end
+def SemilatticeInf.mk' {α : Type _} [HasInf α] (inf_comm : ∀ a b : α, a⊓b = b⊓a)
+  (inf_assoc : ∀ a b c : α, a⊓b⊓c = a⊓(b⊓c)) (inf_idem : ∀ a : α, a⊓a = a) : SemilatticeInf α :=
+  by 
+    have  : SemilatticeSup (OrderDual α) := SemilatticeSup.mk' inf_comm inf_assoc inf_idem 
+    have i := OrderDual.semilatticeInf (OrderDual α)
+    exact i
 
 /-!
 ### Lattices
@@ -624,7 +630,7 @@ theorem inf_le_sup : a⊓b ≤ a⊔b :=
 @[simp]
 theorem inf_lt_sup : a⊓b < a⊔b ↔ a ≠ b :=
   by 
-    split 
+    constructor
     ·
       rintro H rfl 
       simpa using H
@@ -656,19 +662,19 @@ theorem sup_eq_iff_inf_eq : a⊔b = b ↔ a⊓b = a :=
   by 
     rw [sup_eq_right, ←inf_eq_left]
 
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lattice.ext
-{α}
-{A B : lattice α}
-(H : ∀
- x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
-begin
-  have [ident SS] [":", expr «expr = »(@lattice.to_semilattice_sup α A, @lattice.to_semilattice_sup α B)] [":=", expr semilattice_sup.ext H],
-  have [ident II] [] [":=", expr semilattice_inf.ext H],
-  casesI [expr A] [],
-  casesI [expr B] [],
-  injection [expr SS] []; injection [expr II] []; congr' [] []
-end
+theorem Lattice.ext {α} {A B : Lattice α}
+  (H :
+    ∀ x y : α,
+      by 
+          have  := A <;> exact x ≤ y ↔
+        x ≤ y) :
+  A = B :=
+  by 
+    have SS : @Lattice.toSemilatticeSup α A = @Lattice.toSemilatticeSup α B := SemilatticeSup.ext H 
+    have II := SemilatticeInf.ext H 
+    cases' A 
+    cases' B 
+    injection SS <;> injection II <;> congr
 
 end Lattice
 
@@ -957,4 +963,83 @@ protected def Lattice [Lattice α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x 
   { Subtype.semilatticeInf Pinf, Subtype.semilatticeSup Psup with  }
 
 end Subtype
+
+section lift
+
+/-- A type endowed with `⊔` is a `semilattice_sup`, if it admits an injective map that
+preserves `⊔` to a `semilattice_sup`.
+See note [reducible non-instances]. -/
+@[reducible]
+protected def Function.Injective.semilatticeSup [HasSup α] [SemilatticeSup β] (f : α → β)
+  (hf_inj : Function.Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) : SemilatticeSup α :=
+  { PartialOrderₓ.lift f hf_inj with sup := HasSup.sup,
+    le_sup_left :=
+      fun a b =>
+        by 
+          change f a ≤ f (a⊔b)
+          rw [map_sup]
+          exact le_sup_left,
+    le_sup_right :=
+      fun a b =>
+        by 
+          change f b ≤ f (a⊔b)
+          rw [map_sup]
+          exact le_sup_right,
+    sup_le :=
+      fun a b c ha hb =>
+        by 
+          change f (a⊔b) ≤ f c 
+          rw [map_sup]
+          exact sup_le ha hb }
+
+/-- A type endowed with `⊓` is a `semilattice_inf`, if it admits an injective map that
+preserves `⊓` to a `semilattice_inf`.
+See note [reducible non-instances]. -/
+@[reducible]
+protected def Function.Injective.semilatticeInf [HasInf α] [SemilatticeInf β] (f : α → β)
+  (hf_inj : Function.Injective f) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) : SemilatticeInf α :=
+  { PartialOrderₓ.lift f hf_inj with inf := HasInf.inf,
+    inf_le_left :=
+      fun a b =>
+        by 
+          change f (a⊓b) ≤ f a 
+          rw [map_inf]
+          exact inf_le_left,
+    inf_le_right :=
+      fun a b =>
+        by 
+          change f (a⊓b) ≤ f b 
+          rw [map_inf]
+          exact inf_le_right,
+    le_inf :=
+      fun a b c ha hb =>
+        by 
+          change f a ≤ f (b⊓c)
+          rw [map_inf]
+          exact le_inf ha hb }
+
+/-- A type endowed with `⊔` and `⊓` is a `lattice`, if it admits an injective map that
+preserves `⊔` and `⊓` to a `lattice`.
+See note [reducible non-instances]. -/
+@[reducible]
+protected def Function.Injective.lattice [HasSup α] [HasInf α] [Lattice β] (f : α → β) (hf_inj : Function.Injective f)
+  (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) : Lattice α :=
+  { hf_inj.semilattice_sup f map_sup, hf_inj.semilattice_inf f map_inf with  }
+
+/-- A type endowed with `⊔` and `⊓` is a `distrib_lattice`, if it admits an injective map that
+preserves `⊔` and `⊓` to a `distrib_lattice`.
+See note [reducible non-instances]. -/
+@[reducible]
+protected def Function.Injective.distribLattice [HasSup α] [HasInf α] [DistribLattice β] (f : α → β)
+  (hf_inj : Function.Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) :
+  DistribLattice α :=
+  { hf_inj.lattice f map_sup map_inf with
+    le_sup_inf :=
+      fun a b c =>
+        by 
+          change f ((a⊔b)⊓(a⊔c)) ≤ f (a⊔b⊓c)
+          rw [map_inf, map_sup, map_sup, map_sup, map_inf]
+          exact le_sup_inf }
+
+end lift
 

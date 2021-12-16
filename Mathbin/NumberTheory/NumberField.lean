@@ -74,14 +74,14 @@ theorem is_integral_coe (x : ring_of_integers K) : IsIntegral ℤ (x : K) :=
   x.2
 
 /-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
-protected noncomputable def Equiv (R : Type _) [CommRingₓ R] [Algebra R K] [IsIntegralClosure R ℤ K] :
+protected noncomputable def Equivₓ (R : Type _) [CommRingₓ R] [Algebra R K] [IsIntegralClosure R ℤ K] :
   ring_of_integers K ≃+* R :=
   (IsIntegralClosure.equiv ℤ R K _).symm.toRingEquiv
 
 variable (K)
 
 instance [NumberField K] : CharZero (ring_of_integers K) :=
-  CharZero.of_algebra K
+  CharZero.of_module _ K
 
 instance [NumberField K] : IsDedekindDomain (ring_of_integers K) :=
   IsIntegralClosure.is_dedekind_domain ℤ ℚ K _

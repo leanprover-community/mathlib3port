@@ -46,7 +46,7 @@ section Jacobson
 
 /-- The Jacobson radical of `I` is the infimum of all maximal ideals containing `I`. -/
 def jacobson (I : Ideal R) : Ideal R :=
-  Inf { J:Ideal R | I ≤ J ∧ is_maximal J }
+  Inf { J : Ideal R | I ≤ J ∧ is_maximal J }
 
 theorem le_jacobson : I ≤ jacobson I :=
   fun x hx => mem_Inf.mpr fun J hJ => hJ.left hx
@@ -134,12 +134,13 @@ theorem is_unit_of_sub_one_mem_jacobson_bot (r : R) (h : r - 1 ∈ jacobson (⊥
     rw [mem_bot, sub_eq_zero] at hs 
     exact is_unit_of_mul_eq_one _ _ hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » M)
 /-- An ideal equals its Jacobson radical iff it is the intersection of a set of maximal ideals.
 Allowing the set to include ⊤ is equivalent, and is included only to simplify some proofs. -/
 theorem eq_jacobson_iff_Inf_maximal :
   I.jacobson = I ↔ ∃ M : Set (Ideal R), (∀ J _ : J ∈ M, is_maximal J ∨ J = ⊤) ∧ I = Inf M :=
   by 
-    use fun hI => ⟨{ J:Ideal R | I ≤ J ∧ J.is_maximal }, ⟨fun _ hJ => Or.inl hJ.right, hI.symm⟩⟩
+    use fun hI => ⟨{ J : Ideal R | I ≤ J ∧ J.is_maximal }, ⟨fun _ hJ => Or.inl hJ.right, hI.symm⟩⟩
     rintro ⟨M, hM, hInf⟩
     refine' le_antisymmₓ (fun x hx => _) le_jacobson 
     rw [hInf, mem_Inf]
@@ -150,6 +151,7 @@ theorem eq_jacobson_iff_Inf_maximal :
     ·
       exact is_top.symm ▸ Submodule.mem_top
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » M)
 theorem eq_jacobson_iff_Inf_maximal' :
   I.jacobson = I ↔ ∃ M : Set (Ideal R), (∀ J _ : J ∈ M K : Ideal R, J < K → K = ⊤) ∧ I = Inf M :=
   eq_jacobson_iff_Inf_maximal.trans
@@ -162,11 +164,12 @@ theorem eq_jacobson_iff_Inf_maximal' :
         let ⟨M, hM⟩ := h
         ⟨M, ⟨fun J hJ => Or.rec_on (Classical.em (J = ⊤)) (fun h => Or.inr h) fun h => Or.inl ⟨⟨h, hM.1 J hJ⟩⟩, hM.2⟩⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∉ » I)
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ x _ : x ∉ I, ∃ M : Ideal R, (I ≤ M ∧ M.is_maximal) ∧ x ∉ M :=
   by 
-    split 
+    constructor
     ·
       intro h x hx 
       erw [←h, mem_Inf] at hx 
@@ -179,54 +182,56 @@ theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ x _ : x ∉ I, ∃ M : 
       pushNeg 
       exact h x hx
 
--- error in RingTheory.JacobsonIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_jacobson_of_surjective
-{f : «expr →+* »(R, S)}
-(hf : function.surjective f) : «expr ≤ »(ring_hom.ker f, I) → «expr = »(map f I.jacobson, (map f I).jacobson) :=
-begin
-  intro [ident h],
-  unfold [ident ideal.jacobson] [],
-  have [] [":", expr ∀
-   J «expr ∈ » {J : ideal R | «expr ∧ »(«expr ≤ »(I, J), J.is_maximal)}, «expr ≤ »(f.ker, J)] [":=", expr λ
-   J hJ, le_trans h hJ.left],
-  refine [expr trans (map_Inf hf this) (le_antisymm _ _)],
-  { refine [expr Inf_le_Inf (λ J hJ, ⟨comap f J, ⟨⟨le_comap_of_map_le hJ.1, _⟩, map_comap_of_surjective f hf J⟩⟩)],
-    haveI [] [":", expr J.is_maximal] [":=", expr hJ.right],
-    exact [expr comap_is_maximal_of_surjective f hf] },
-  { refine [expr Inf_le_Inf_of_subset_insert_top (λ j hj, hj.rec_on (λ J hJ, _))],
-    rw ["<-", expr hJ.2] [],
-    cases [expr map_eq_top_or_is_maximal_of_surjective f hf hJ.left.right] ["with", ident htop, ident hmax],
-    { exact [expr «expr ▸ »(htop.symm, set.mem_insert «expr⊤»() _)] },
-    { exact [expr set.mem_insert_of_mem «expr⊤»() ⟨map_mono hJ.1.1, hmax⟩] } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » {J : ideal R | «expr ∧ »(«expr ≤ »(I, J), J.is_maximal)})
+theorem map_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) :
+  RingHom.ker f ≤ I → map f I.jacobson = (map f I).jacobson :=
+  by 
+    intro h 
+    unfold Ideal.jacobson 
+    have  : ∀ J _ : J ∈ { J : Ideal R | I ≤ J ∧ J.is_maximal }, f.ker ≤ J := fun J hJ => le_transₓ h hJ.left 
+    refine' trans (map_Inf hf this) (le_antisymmₓ _ _)
+    ·
+      refine' Inf_le_Inf fun J hJ => ⟨comap f J, ⟨⟨le_comap_of_map_le hJ.1, _⟩, map_comap_of_surjective f hf J⟩⟩
+      have  : J.is_maximal := hJ.right 
+      exact comap_is_maximal_of_surjective f hf
+    ·
+      refine' Inf_le_Inf_of_subset_insert_top fun j hj => hj.rec_on fun J hJ => _ 
+      rw [←hJ.2]
+      cases' map_eq_top_or_is_maximal_of_surjective f hf hJ.left.right with htop hmax
+      ·
+        exact htop.symm ▸ Set.mem_insert ⊤ _
+      ·
+        exact Set.mem_insert_of_mem ⊤ ⟨map_mono hJ.1.1, hmax⟩
 
 theorem map_jacobson_of_bijective {f : R →+* S} (hf : Function.Bijective f) : map f I.jacobson = (map f I).jacobson :=
   map_jacobson_of_surjective hf.right (le_transₓ (le_of_eqₓ (f.injective_iff_ker_eq_bot.1 hf.left)) bot_le)
 
 theorem comap_jacobson {f : R →+* S} {K : Ideal S} :
-  comap f K.jacobson = Inf (comap f '' { J:Ideal S | K ≤ J ∧ J.is_maximal }) :=
+  comap f K.jacobson = Inf (comap f '' { J : Ideal S | K ≤ J ∧ J.is_maximal }) :=
   trans (comap_Inf' f _) Inf_eq_infi.symm
 
--- error in RingTheory.JacobsonIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comap_jacobson_of_surjective
-{f : «expr →+* »(R, S)}
-(hf : function.surjective f)
-{K : ideal S} : «expr = »(comap f K.jacobson, (comap f K).jacobson) :=
-begin
-  unfold [ident ideal.jacobson] [],
-  refine [expr le_antisymm _ _],
-  { refine [expr le_trans (comap_mono (le_of_eq (trans top_inf_eq.symm Inf_insert.symm))) _],
-    rw ["[", expr comap_Inf', ",", expr Inf_eq_infi, "]"] [],
-    refine [expr infi_le_infi_of_subset (λ J hJ, _)],
-    have [] [":", expr «expr = »(comap f (map f J), J)] [":=", expr trans (comap_map_of_surjective f hf J) (le_antisymm (sup_le_iff.2 ⟨le_of_eq rfl, le_trans (comap_mono bot_le) hJ.left⟩) le_sup_left)],
-    cases [expr map_eq_top_or_is_maximal_of_surjective _ hf hJ.right] ["with", ident htop, ident hmax],
-    { refine [expr ⟨«expr⊤»(), ⟨set.mem_insert «expr⊤»() _, «expr ▸ »(htop, this)⟩⟩] },
-    { refine [expr ⟨map f J, ⟨set.mem_insert_of_mem _ ⟨le_map_of_comap_le_of_surjective f hf hJ.1, hmax⟩, this⟩⟩] } },
-  { rw [expr comap_Inf] [],
-    refine [expr le_infi_iff.2 (λ J, le_infi_iff.2 (λ hJ, _))],
-    haveI [] [":", expr J.is_maximal] [":=", expr hJ.right],
-    refine [expr Inf_le ⟨comap_mono hJ.left, comap_is_maximal_of_surjective _ hf⟩] }
-end
+theorem comap_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) {K : Ideal S} :
+  comap f K.jacobson = (comap f K).jacobson :=
+  by 
+    unfold Ideal.jacobson 
+    refine' le_antisymmₓ _ _
+    ·
+      refine' le_transₓ (comap_mono (le_of_eqₓ (trans top_inf_eq.symm Inf_insert.symm))) _ 
+      rw [comap_Inf', Inf_eq_infi]
+      refine' infi_le_infi_of_subset fun J hJ => _ 
+      have  : comap f (map f J) = J :=
+        trans (comap_map_of_surjective f hf J)
+          (le_antisymmₓ (sup_le_iff.2 ⟨le_of_eqₓ rfl, le_transₓ (comap_mono bot_le) hJ.left⟩) le_sup_left)
+      cases' map_eq_top_or_is_maximal_of_surjective _ hf hJ.right with htop hmax
+      ·
+        refine' ⟨⊤, ⟨Set.mem_insert ⊤ _, htop ▸ this⟩⟩
+      ·
+        refine' ⟨map f J, ⟨Set.mem_insert_of_mem _ ⟨le_map_of_comap_le_of_surjective f hf hJ.1, hmax⟩, this⟩⟩
+    ·
+      rw [comap_Inf]
+      refine' le_infi_iff.2 fun J => le_infi_iff.2 fun hJ => _ 
+      have  : J.is_maximal := hJ.right 
+      refine' Inf_le ⟨comap_mono hJ.left, comap_is_maximal_of_surjective _ hf⟩
 
 theorem mem_jacobson_bot {x : R} : x ∈ jacobson (⊥ : Ideal R) ↔ ∀ y, IsUnit ((x*y)+1) :=
   ⟨fun hx y =>
@@ -245,39 +250,40 @@ theorem mem_jacobson_bot {x : R} : x ∈ jacobson (⊥ : Ideal R) ↔ ∀ y, IsU
                 by 
                   ring)⟩⟩
 
--- error in RingTheory.JacobsonIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An ideal `I` of `R` is equal to its Jacobson radical if and only if
 the Jacobson radical of the quotient ring `R/I` is the zero ideal -/
-theorem jacobson_eq_iff_jacobson_quotient_eq_bot : «expr ↔ »(«expr = »(I.jacobson, I), «expr = »(jacobson («expr⊥»() : ideal I.quotient), «expr⊥»())) :=
-begin
-  have [ident hf] [":", expr function.surjective (quotient.mk I)] [":=", expr submodule.quotient.mk_surjective I],
-  split,
-  { intro [ident h],
-    replace [ident h] [] [":=", expr congr_arg (map (quotient.mk I)) h],
-    rw [expr map_jacobson_of_surjective hf (le_of_eq mk_ker)] ["at", ident h],
-    simpa [] [] [] [] [] ["using", expr h] },
-  { intro [ident h],
-    replace [ident h] [] [":=", expr congr_arg (comap (quotient.mk I)) h],
-    rw ["[", expr comap_jacobson_of_surjective hf, ",", "<-", expr (quotient.mk I).ker_eq_comap_bot, "]"] ["at", ident h],
-    simpa [] [] [] [] [] ["using", expr h] }
-end
+theorem jacobson_eq_iff_jacobson_quotient_eq_bot : I.jacobson = I ↔ jacobson (⊥ : Ideal (R ⧸ I)) = ⊥ :=
+  by 
+    have hf : Function.Surjective (Quotientₓ.mk I) := Submodule.Quotient.mk_surjective I 
+    constructor
+    ·
+      intro h 
+      replace h := congr_argₓ (map (Quotientₓ.mk I)) h 
+      rw [map_jacobson_of_surjective hf (le_of_eqₓ mk_ker)] at h 
+      simpa using h
+    ·
+      intro h 
+      replace h := congr_argₓ (comap (Quotientₓ.mk I)) h 
+      rw [comap_jacobson_of_surjective hf, ←(Quotientₓ.mk I).ker_eq_comap_bot] at h 
+      simpa using h
 
--- error in RingTheory.JacobsonIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The standard radical and Jacobson radical of an ideal `I` of `R` are equal if and only if
 the nilradical and Jacobson radical of the quotient ring `R/I` coincide -/
-theorem radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot : «expr ↔ »(«expr = »(I.radical, I.jacobson), «expr = »(radical («expr⊥»() : ideal I.quotient), jacobson «expr⊥»())) :=
-begin
-  have [ident hf] [":", expr function.surjective (quotient.mk I)] [":=", expr submodule.quotient.mk_surjective I],
-  split,
-  { intro [ident h],
-    have [] [] [":=", expr congr_arg (map (quotient.mk I)) h],
-    rw ["[", expr map_radical_of_surjective hf (le_of_eq mk_ker), ",", expr map_jacobson_of_surjective hf (le_of_eq mk_ker), "]"] ["at", ident this],
-    simpa [] [] [] [] [] ["using", expr this] },
-  { intro [ident h],
-    have [] [] [":=", expr congr_arg (comap (quotient.mk I)) h],
-    rw ["[", expr comap_radical, ",", expr comap_jacobson_of_surjective hf, ",", "<-", expr (quotient.mk I).ker_eq_comap_bot, "]"] ["at", ident this],
-    simpa [] [] [] [] [] ["using", expr this] }
-end
+theorem radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot :
+  I.radical = I.jacobson ↔ radical (⊥ : Ideal (R ⧸ I)) = jacobson ⊥ :=
+  by 
+    have hf : Function.Surjective (Quotientₓ.mk I) := Submodule.Quotient.mk_surjective I 
+    constructor
+    ·
+      intro h 
+      have  := congr_argₓ (map (Quotientₓ.mk I)) h 
+      rw [map_radical_of_surjective hf (le_of_eqₓ mk_ker), map_jacobson_of_surjective hf (le_of_eqₓ mk_ker)] at this 
+      simpa using this
+    ·
+      intro h 
+      have  := congr_argₓ (comap (Quotientₓ.mk I)) h 
+      rw [comap_radical, comap_jacobson_of_surjective hf, ←(Quotientₓ.mk I).ker_eq_comap_bot] at this 
+      simpa using this
 
 @[mono]
 theorem jacobson_mono {I J : Ideal R} : I ≤ J → I.jacobson ≤ J.jacobson :=
@@ -298,22 +304,24 @@ section Polynomial
 
 open Polynomial
 
--- error in RingTheory.JacobsonIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem jacobson_bot_polynomial_le_Inf_map_maximal : «expr ≤ »(jacobson («expr⊥»() : ideal (polynomial R)), Inf «expr '' »(map C, {J : ideal R | J.is_maximal})) :=
-begin
-  refine [expr le_Inf (λ J, exists_imp_distrib.2 (λ j hj, _))],
-  haveI [] [":", expr j.is_maximal] [":=", expr hj.1],
-  refine [expr trans (jacobson_mono bot_le) (le_of_eq _ : «expr ≤ »(J.jacobson, J))],
-  suffices [] [":", expr «expr = »((«expr⊥»() : ideal (polynomial j.quotient)).jacobson, «expr⊥»())],
-  { rw ["[", "<-", expr hj.2, ",", expr jacobson_eq_iff_jacobson_quotient_eq_bot, "]"] [],
-    replace [ident this] [] [":=", expr congr_arg (map (polynomial_quotient_equiv_quotient_polynomial j).to_ring_hom) this],
-    rwa ["[", expr map_jacobson_of_bijective _, ",", expr map_bot, "]"] ["at", ident this],
-    exact [expr ring_equiv.bijective (polynomial_quotient_equiv_quotient_polynomial j)] },
-  refine [expr eq_bot_iff.2 (λ f hf, _)],
-  simpa [] [] [] ["[", expr (λ
-   hX, by simpa [] [] [] [] [] ["using", expr congr_arg (λ
-     f, coeff f 1) hX] : «expr ≠ »((X : polynomial j.quotient), 0)), "]"] [] ["using", expr eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit (mem_jacobson_bot.1 hf X))]
-end
+theorem jacobson_bot_polynomial_le_Inf_map_maximal :
+  jacobson (⊥ : Ideal (Polynomial R)) ≤ Inf (map C '' { J : Ideal R | J.is_maximal }) :=
+  by 
+    refine' le_Inf fun J => exists_imp_distrib.2 fun j hj => _ 
+    have  : j.is_maximal := hj.1
+    refine' trans (jacobson_mono bot_le) (le_of_eqₓ _ : J.jacobson ≤ J)
+    suffices  : (⊥ : Ideal (Polynomial (R ⧸ j))).jacobson = ⊥
+    ·
+      rw [←hj.2, jacobson_eq_iff_jacobson_quotient_eq_bot]
+      replace this := congr_argₓ (map (polynomial_quotient_equiv_quotient_polynomial j).toRingHom) this 
+      rwa [map_jacobson_of_bijective _, map_bot] at this 
+      exact RingEquiv.bijective (polynomial_quotient_equiv_quotient_polynomial j)
+    refine' eq_bot_iff.2 fun f hf => _ 
+    simpa [(fun hX =>
+        by 
+          simpa using congr_argₓ (fun f => coeff f 1) hX :
+      (X : Polynomial (R ⧸ j)) ≠ 0)] using
+      eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit ((mem_jacobson_bot.1 hf) X))
 
 theorem jacobson_bot_polynomial_of_jacobson_bot (h : jacobson (⊥ : Ideal R) = ⊥) :
   jacobson (⊥ : Ideal (Polynomial R)) = ⊥ :=

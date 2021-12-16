@@ -26,7 +26,7 @@ category of abelian groups.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u
 

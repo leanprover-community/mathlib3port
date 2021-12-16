@@ -27,7 +27,7 @@ section Pi
 
 /-- The product of an indexed family of filters. -/
 def pi (f : ∀ i, Filter (α i)) : Filter (∀ i, α i) :=
-  ⨅i, comap (eval i) (f i)
+  ⨅ i, comap (eval i) (f i)
 
 theorem tendsto_eval_pi (f : ∀ i, Filter (α i)) (i : ι) : tendsto (eval i) (pi f) (f i) :=
   tendsto_infi' i tendsto_comap
@@ -47,6 +47,7 @@ theorem pi_mono (h : ∀ i, f₁ i ≤ f₂ i) : pi f₁ ≤ pi f₂ :=
 theorem mem_pi_of_mem (i : ι) {s : Set (α i)} (hs : s ∈ f i) : eval i ⁻¹' s ∈ pi f :=
   mem_infi_of_mem i$ preimage_mem_comap hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 theorem pi_mem_pi {I : Set ι} (hI : finite I) (h : ∀ i _ : i ∈ I, s i ∈ f i) : I.pi s ∈ pi f :=
   by 
     rw [pi_def, bInter_eq_Inter]
@@ -56,7 +57,7 @@ theorem pi_mem_pi {I : Set ι} (hI : finite I) (h : ∀ i _ : i ∈ I, s i ∈ f
 theorem mem_pi {s : Set (∀ i, α i)} :
   s ∈ pi f ↔ ∃ I : Set ι, finite I ∧ ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ I.pi t ⊆ s :=
   by 
-    split 
+    constructor
     ·
       simp only [pi, mem_infi', mem_comap, pi_def]
       rintro ⟨I, If, V, hVf, hVI, rfl, -⟩
@@ -67,51 +68,46 @@ theorem mem_pi {s : Set (∀ i, α i)} :
       exact mem_of_superset (pi_mem_pi If$ fun i _ => htf i) hts
 
 theorem mem_pi' {s : Set (∀ i, α i)} :
-  s ∈ pi f ↔ ∃ I : Finset ι, ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ Set.Pi («expr↑ » I) t ⊆ s :=
+  s ∈ pi f ↔ ∃ I : Finset ι, ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ Set.Pi (↑I) t ⊆ s :=
   mem_pi.trans exists_finite_iff_finset
 
--- error in Order.Filter.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_of_pi_mem_pi
-[∀ i, ne_bot (f i)]
-{I : set ι}
-(h : «expr ∈ »(I.pi s, pi f))
-{i : ι}
-(hi : «expr ∈ »(i, I)) : «expr ∈ »(s i, f i) :=
-begin
-  rcases [expr mem_pi.1 h, "with", "⟨", ident I', ",", ident I'f, ",", ident t, ",", ident htf, ",", ident hts, "⟩"],
-  refine [expr mem_of_superset (htf i) (λ x hx, _)],
-  have [] [":", expr ∀ i, (t i).nonempty] [],
-  from [expr λ i, nonempty_of_mem (htf i)],
-  choose [] [ident g] [ident hg] [],
-  have [] [":", expr «expr ∈ »(update g i x, I'.pi t)] [],
-  { intros [ident j, ident hj],
-    rcases [expr eq_or_ne j i, "with", "(", ident rfl, "|", ident hne, ")"]; simp [] [] [] ["*"] [] [] },
-  simpa [] [] [] [] [] ["using", expr hts this i hi]
-end
+theorem mem_of_pi_mem_pi [∀ i, ne_bot (f i)] {I : Set ι} (h : I.pi s ∈ pi f) {i : ι} (hi : i ∈ I) : s i ∈ f i :=
+  by 
+    rcases mem_pi.1 h with ⟨I', I'f, t, htf, hts⟩
+    refine' mem_of_superset (htf i) fun x hx => _ 
+    have  : ∀ i, (t i).Nonempty 
+    exact fun i => nonempty_of_mem (htf i)
+    choose g hg 
+    have  : update g i x ∈ I'.pi t
+    ·
+      intro j hj 
+      rcases eq_or_ne j i with (rfl | hne) <;> simp 
+    simpa using hts this i hi
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 @[simp]
 theorem pi_mem_pi_iff [∀ i, ne_bot (f i)] {I : Set ι} (hI : finite I) : I.pi s ∈ pi f ↔ ∀ i _ : i ∈ I, s i ∈ f i :=
   ⟨fun h i hi => mem_of_pi_mem_pi h hi, pi_mem_pi hI⟩
 
--- error in Order.Filter.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem pi_inf_principal_univ_pi_eq_bot : «expr ↔ »(«expr = »(«expr ⊓ »(pi f, expr𝓟() (set.pi univ s)), «expr⊥»()), «expr∃ , »((i), «expr = »(«expr ⊓ »(f i, expr𝓟() (s i)), «expr⊥»()))) :=
-begin
-  split,
-  { simp [] [] ["only"] ["[", expr inf_principal_eq_bot, ",", expr mem_pi, "]"] [] [],
-    contrapose ["!"] [],
-    rintros ["(", ident hsf, ":", expr ∀
-     i, «expr∃ᶠ in , »((x), f i, «expr ∈ »(x, s i)), ")", ident I, ident If, ident t, ident htf, ident hts],
-    have [] [":", expr ∀ i, «expr ∩ »(s i, t i).nonempty] [],
-    from [expr λ i, ((hsf i).and_eventually (htf i)).exists],
-    choose [] [ident x] [ident hxs, ident hxt] [],
-    exact [expr hts (λ i hi, hxt i) (mem_univ_pi.2 hxs)] },
-  { simp [] [] ["only"] ["[", expr inf_principal_eq_bot, "]"] [] [],
-    rintro ["⟨", ident i, ",", ident hi, "⟩"],
-    filter_upwards ["[", expr mem_pi_of_mem i hi, "]"] [],
-    exact [expr λ x, mt (λ h, h i trivial)] }
-end
+theorem pi_inf_principal_univ_pi_eq_bot : pi f⊓𝓟 (Set.Pi univ s) = ⊥ ↔ ∃ i, f i⊓𝓟 (s i) = ⊥ :=
+  by 
+    constructor
+    ·
+      simp only [inf_principal_eq_bot, mem_pi]
+      contrapose! 
+      rintro (hsf : ∀ i, ∃ᶠ x in f i, x ∈ s i) I If t htf hts 
+      have  : ∀ i, (s i ∩ t i).Nonempty 
+      exact fun i => ((hsf i).and_eventually (htf i)).exists 
+      choose x hxs hxt 
+      exact hts (fun i hi => hxt i) (mem_univ_pi.2 hxs)
+    ·
+      simp only [inf_principal_eq_bot]
+      rintro ⟨i, hi⟩
+      filterUpwards [mem_pi_of_mem i hi]
+      exact fun x => mt fun h => h i trivialₓ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 @[simp]
 theorem pi_inf_principal_pi_eq_bot [∀ i, ne_bot (f i)] {I : Set ι} :
   pi f⊓𝓟 (Set.Pi I s) = ⊥ ↔ ∃ (i : _)(_ : i ∈ I), f i⊓𝓟 (s i) = ⊥ :=
@@ -125,6 +121,7 @@ theorem pi_inf_principal_univ_pi_ne_bot : ne_bot (pi f⊓𝓟 (Set.Pi univ s)) �
   by 
     simp [ne_bot_iff]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 @[simp]
 theorem pi_inf_principal_pi_ne_bot [∀ i, ne_bot (f i)] {I : Set ι} :
   ne_bot (pi f⊓𝓟 (I.pi s)) ↔ ∀ i _ : i ∈ I, ne_bot (f i⊓𝓟 (s i)) :=
@@ -156,15 +153,16 @@ section Coprod
 
 /-- Coproduct of filters. -/
 protected def Coprod (f : ∀ i, Filter (α i)) : Filter (∀ i, α i) :=
-  ⨆i : ι, comap (eval i) (f i)
+  ⨆ i : ι, comap (eval i) (f i)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t₁ «expr ∈ » f i)
 theorem mem_Coprod_iff {s : Set (∀ i, α i)} :
   s ∈ Filter.coprodₓ f ↔ ∀ i : ι, ∃ (t₁ : _)(_ : t₁ ∈ f i), eval i ⁻¹' t₁ ⊆ s :=
   by 
     simp [Filter.coprodₓ]
 
 theorem compl_mem_Coprod_iff {s : Set (∀ i, α i)} :
-  «expr ᶜ» s ∈ Filter.coprodₓ f ↔ ∃ t : ∀ i, Set (α i), (∀ i, «expr ᶜ» (t i) ∈ f i) ∧ s ⊆ Set.Pi univ fun i => t i :=
+  sᶜ ∈ Filter.coprodₓ f ↔ ∃ t : ∀ i, Set (α i), (∀ i, t iᶜ ∈ f i) ∧ s ⊆ Set.Pi univ fun i => t i :=
   by 
     rw [(surjective_pi_map fun i => @compl_surjective (Set (α i)) _).exists]
     simpRw [mem_Coprod_iff, Classical.skolem, exists_prop, @subset_compl_comm _ _ s, ←preimage_compl, ←subset_Inter_iff,
@@ -199,7 +197,7 @@ theorem map_pi_map_Coprod_le :
     simp only [le_def, mem_map, mem_Coprod_iff]
     intro s h i 
     obtain ⟨t, H, hH⟩ := h i 
-    exact ⟨{ x:α i | m i x ∈ t }, H, fun x hx => hH hx⟩
+    exact ⟨{ x : α i | m i x ∈ t }, H, fun x hx => hH hx⟩
 
 theorem tendsto.pi_map_Coprod {g : ∀ i, Filter (β i)} (h : ∀ i, tendsto (m i) (f i) (g i)) :
   tendsto (fun k : ∀ i, α i => fun i => m i (k i)) (Filter.coprodₓ f) (Filter.coprodₓ g) :=

@@ -31,7 +31,7 @@ variable {X : Type u} {Y : Type v} [TopologicalSpace X] [TopologicalSpace Y]
 
 variable {x₀ x₁ x₂ : X}
 
-noncomputable theory
+noncomputable section 
 
 open_locale UnitInterval
 

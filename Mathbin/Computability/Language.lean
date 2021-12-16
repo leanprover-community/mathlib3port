@@ -15,12 +15,13 @@ universe u v
 
 variable {α : Type u}
 
--- error in Computability.Language: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_mem (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_mem (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_singleton (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_insert (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler complete_boolean_algebra
 /-- A language is a set of strings over an alphabet. -/
-@[derive #["[", expr has_mem (list α), ",", expr has_singleton (list α), ",", expr has_insert (list α), ",",
-   expr complete_boolean_algebra, "]"]]
-def language (α) :=
-set (list α)
+def Language α :=
+  Set (List α)deriving [anonymous], [anonymous], [anonymous], [anonymous]
 
 namespace Language
 
@@ -56,13 +57,18 @@ theorem add_def (l m : Language α) : (l+m) = l ∪ m :=
 theorem mul_def (l m : Language α) : (l*m) = Set.Image2 (· ++ ·) l m :=
   rfl
 
-/-- The star of a language `L` is the set of all strings which can be written by concatenating
-  strings from `L`. -/
-def star (l : Language α) : Language α :=
-  { x | ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The star of a language `L` is the set of all strings which can be written by concatenating
+      strings from `L`. -/
+  def star ( l : Language α ) : Language α := { x | ∃ S : List List α , x = S.join ∧ ∀ y _ : y ∈ S , y ∈ l }
 
-theorem star_def (l : Language α) : l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l } :=
-  rfl
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem star_def ( l : Language α ) : l.star = { x | ∃ S : List List α , x = S.join ∧ ∀ y _ : y ∈ S , y ∈ l } := rfl
 
 @[simp]
 theorem mem_one (x : List α) : x ∈ (1 : Language α) ↔ x = [] :=
@@ -78,6 +84,7 @@ theorem mem_mul (l m : Language α) (x : List α) : (x ∈ l*m) ↔ ∃ a b, a �
   by 
     simp [mul_def]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
 theorem mem_star (l : Language α) (x : List α) : x ∈ l.star ↔ ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l :=
   Iff.rfl
 
@@ -116,23 +123,22 @@ instance : Semiringₓ (Language α) :=
 theorem add_self (l : Language α) : (l+l) = l :=
   sup_idem
 
-theorem star_def_nonempty (l : Language α) :
-  l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l ∧ y ≠ [] } :=
-  by 
-    ext x 
-    split 
-    ·
-      rintro ⟨S, rfl, h⟩
-      refine'
-        ⟨S.filter fun l => ¬List.empty l,
-          by 
-            simp ,
-          fun y hy => _⟩
-      rw [List.mem_filterₓ, List.empty_iff_eq_nil] at hy 
-      exact ⟨h y hy.1, hy.2⟩
-    ·
-      rintro ⟨S, hx, h⟩
-      exact ⟨S, hx, fun y hy => (h y hy).1⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  star_def_nonempty
+  ( l : Language α ) : l.star = { x | ∃ S : List List α , x = S.join ∧ ∀ y _ : y ∈ S , y ∈ l ∧ y ≠ [ ] }
+  :=
+    by
+      ext x
+        constructor
+        ·
+          rintro ⟨ S , rfl , h ⟩
+            refine' ⟨ S.filter fun l => ¬ List.empty l , by simp , fun y hy => _ ⟩
+            rw [ List.mem_filterₓ , List.empty_iff_eq_nil ] at hy
+            exact ⟨ h y hy . 1 , hy . 2 ⟩
+        · rintro ⟨ S , hx , h ⟩ exact ⟨ S , hx , fun y hy => h y hy . 1 ⟩
 
 theorem le_iff (l m : Language α) : l ≤ m ↔ (l+m) = m :=
   sup_eq_right.symm
@@ -146,28 +152,29 @@ theorem le_mul_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l�
 theorem le_add_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → (l₁+l₂) ≤ m₁+m₂ :=
   sup_le_sup
 
-theorem mem_supr {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ ⨆i, l i) ↔ ∃ i, x ∈ l i :=
+theorem mem_supr {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ ⨆ i, l i) ↔ ∃ i, x ∈ l i :=
   Set.mem_Union
 
-theorem supr_mul {ι : Sort v} (l : ι → Language α) (m : Language α) : ((⨆i, l i)*m) = ⨆i, l i*m :=
+theorem supr_mul {ι : Sort v} (l : ι → Language α) (m : Language α) : ((⨆ i, l i)*m) = ⨆ i, l i*m :=
   Set.image2_Union_left _ _ _
 
-theorem mul_supr {ι : Sort v} (l : ι → Language α) (m : Language α) : (m*⨆i, l i) = ⨆i, m*l i :=
+theorem mul_supr {ι : Sort v} (l : ι → Language α) (m : Language α) : (m*⨆ i, l i) = ⨆ i, m*l i :=
   Set.image2_Union_right _ _ _
 
-theorem supr_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) : ((⨆i, l i)+m) = ⨆i, l i+m :=
+theorem supr_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) : ((⨆ i, l i)+m) = ⨆ i, l i+m :=
   supr_sup
 
-theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) : (m+⨆i, l i) = ⨆i, m+l i :=
+theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) : (m+⨆ i, l i) = ⨆ i, m+l i :=
   sup_supr
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
 theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
   x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y _ : y ∈ S, y ∈ l :=
   by 
     induction' n with n ihn generalizing x
     ·
       simp only [mem_one, pow_zeroₓ, List.length_eq_zero]
-      split 
+      constructor
       ·
         rintro rfl 
         exact ⟨[], rfl, rfl, fun y h => h.elim⟩
@@ -176,7 +183,7 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
         rfl
     ·
       simp only [pow_succₓ, mem_mul, ihn]
-      split 
+      constructor
       ·
         rintro ⟨a, b, ha, ⟨S, rfl, rfl, hS⟩, rfl⟩
         exact ⟨a :: S, rfl, rfl, List.forall_mem_consₓ.2 ⟨ha, hS⟩⟩
@@ -185,11 +192,11 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
         rw [List.forall_mem_consₓ] at hS 
         exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 
-theorem star_eq_supr_pow (l : Language α) : l.star = ⨆i : ℕ, l ^ i :=
+theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i :=
   by 
     ext x 
     simp only [mem_star, mem_supr, mem_pow]
-    split 
+    constructor
     ·
       rintro ⟨S, rfl, hS⟩
       exact ⟨_, S, rfl, rfl, hS⟩

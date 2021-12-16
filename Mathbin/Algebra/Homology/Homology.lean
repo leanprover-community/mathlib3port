@@ -28,7 +28,7 @@ variable {c : ComplexShape ι} (C : HomologicalComplex V c)
 
 open_locale Classical ZeroObject
 
-noncomputable theory
+noncomputable section 
 
 namespace HomologicalComplex
 

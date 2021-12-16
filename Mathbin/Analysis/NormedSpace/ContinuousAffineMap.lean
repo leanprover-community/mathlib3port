@@ -73,8 +73,7 @@ theorem coe_cont_linear_eq_linear (f : P →A[R] Q) : (f.cont_linear : V →ₗ[
 theorem coe_mk_const_linear_eq_linear (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q).contLinear : V → W) = f.linear :=
   rfl
 
-theorem coe_linear_eq_coe_cont_linear (f : P →A[R] Q) :
-  ((f : P →ᵃ[R] Q).linear : V → W) = («expr⇑ » f.cont_linear : V → W) :=
+theorem coe_linear_eq_coe_cont_linear (f : P →A[R] Q) : ((f : P →ᵃ[R] Q).linear : V → W) = (⇑f.cont_linear : V → W) :=
   rfl
 
 include W₂
@@ -97,27 +96,29 @@ theorem cont_linear_map_vsub (f : P →A[R] Q) (p₁ p₂ : P) : f.cont_linear (
 theorem const_cont_linear (q : Q) : (const R P q).contLinear = 0 :=
   rfl
 
--- error in Analysis.NormedSpace.ContinuousAffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cont_linear_eq_zero_iff_exists_const
-(f : «expr →A[ ] »(P, R, Q)) : «expr ↔ »(«expr = »(f.cont_linear, 0), «expr∃ , »((q), «expr = »(f, const R P q))) :=
-begin
-  have [ident h₁] [":", expr «expr ↔ »(«expr = »(f.cont_linear, 0), «expr = »((f : «expr →ᵃ[ ] »(P, R, Q)).linear, 0))] [],
-  { refine [expr ⟨λ h, _, λ h, _⟩]; ext [] [] [],
-    { rw ["[", "<-", expr coe_cont_linear_eq_linear, ",", expr h, "]"] [],
-      refl },
-    { rw ["[", "<-", expr coe_linear_eq_coe_cont_linear, ",", expr h, "]"] [],
-      refl } },
-  have [ident h₂] [":", expr ∀
-   q : Q, «expr ↔ »(«expr = »(f, const R P q), «expr = »((f : «expr →ᵃ[ ] »(P, R, Q)), affine_map.const R P q))] [],
-  { intros [ident q],
-    refine [expr ⟨λ h, _, λ h, _⟩]; ext [] [] [],
-    { rw [expr h] [],
-      refl },
-    { rw ["[", "<-", expr coe_to_affine_map, ",", expr h, "]"] [],
-      refl } },
-  simp_rw ["[", expr h₁, ",", expr h₂, "]"] [],
-  exact [expr (f : «expr →ᵃ[ ] »(P, R, Q)).linear_eq_zero_iff_exists_const]
-end
+theorem cont_linear_eq_zero_iff_exists_const (f : P →A[R] Q) : f.cont_linear = 0 ↔ ∃ q, f = const R P q :=
+  by 
+    have h₁ : f.cont_linear = 0 ↔ (f : P →ᵃ[R] Q).linear = 0
+    ·
+      refine' ⟨fun h => _, fun h => _⟩ <;> ext
+      ·
+        rw [←coe_cont_linear_eq_linear, h]
+        rfl
+      ·
+        rw [←coe_linear_eq_coe_cont_linear, h]
+        rfl 
+    have h₂ : ∀ q : Q, f = const R P q ↔ (f : P →ᵃ[R] Q) = AffineMap.const R P q
+    ·
+      intro q 
+      refine' ⟨fun h => _, fun h => _⟩ <;> ext
+      ·
+        rw [h]
+        rfl
+      ·
+        rw [←coe_to_affine_map, h]
+        rfl 
+    simpRw [h₁, h₂]
+    exact (f : P →ᵃ[R] Q).linear_eq_zero_iff_exists_const
 
 @[simp]
 theorem to_affine_map_cont_linear (f : V →L[R] W) : f.to_continuous_affine_map.cont_linear = f :=
@@ -225,7 +226,7 @@ noncomputable instance : NormedSpace 𝕜 (V →A[𝕜] W) :=
 theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ (∥f∥*∥g∥)+∥f 0∥ :=
   by 
     rw [norm_def, max_le_iff]
-    split 
+    constructor
     ·
       calc ∥f.comp g 0∥ = ∥f (g 0)∥ :=
         by 

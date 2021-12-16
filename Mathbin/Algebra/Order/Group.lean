@@ -363,7 +363,7 @@ variable (α)
 /-- `x ↦ x⁻¹` as an order-reversing equivalence. -/
 @[toAdditive "`x ↦ -x` as an order-reversing equivalence.", simps]
 def OrderIso.inv : α ≃o OrderDual α :=
-  { toEquiv := (Equiv.inv α).trans OrderDual.toDual, map_rel_iff' := fun a b => @inv_le_inv_iff α _ _ _ _ _ _ }
+  { toEquiv := (Equivₓ.inv α).trans OrderDual.toDual, map_rel_iff' := fun a b => @inv_le_inv_iff α _ _ _ _ _ _ }
 
 end 
 
@@ -706,7 +706,7 @@ instance (priority := 100) AddGroupₓ.toHasOrderedSub {α : Type _} [AddGroup�
 @[toAdditive "`equiv.add_right` as an `order_iso`. See also `order_embedding.add_right`.",
   simps (config := { simpRhs := tt }) toEquiv apply]
 def OrderIso.mulRight (a : α) : α ≃o α :=
-  { map_rel_iff' := fun _ _ => mul_le_mul_iff_right a, toEquiv := Equiv.mulRight a }
+  { map_rel_iff' := fun _ _ => mul_le_mul_iff_right a, toEquiv := Equivₓ.mulRight a }
 
 @[simp, toAdditive]
 theorem OrderIso.mul_right_symm (a : α) : (OrderIso.mulRight a).symm = OrderIso.mulRight (a⁻¹) :=
@@ -724,7 +724,7 @@ variable [CovariantClass α α (·*·) (· ≤ ·)]
 @[toAdditive "`equiv.add_left` as an `order_iso`. See also `order_embedding.add_left`.",
   simps (config := { simpRhs := tt }) toEquiv apply]
 def OrderIso.mulLeft (a : α) : α ≃o α :=
-  { map_rel_iff' := fun _ _ => mul_le_mul_iff_left a, toEquiv := Equiv.mulLeft a }
+  { map_rel_iff' := fun _ _ => mul_le_mul_iff_left a, toEquiv := Equivₓ.mulLeft a }
 
 @[simp, toAdditive]
 theorem OrderIso.mul_left_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.mulLeft (a⁻¹) :=
@@ -989,6 +989,7 @@ theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b*ε) : a 
         _ = c := mul_inv_cancel_left b c
         
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr < » 1)
 @[toAdditive]
 theorem le_of_forall_lt_one_mul_le (h : ∀ ε _ : ε < 1, (a*ε) ≤ b) : a ≤ b :=
   @le_of_forall_one_lt_le_mul (OrderDual α) _ _ _ _ _ _ h
@@ -1004,6 +1005,7 @@ theorem le_of_forall_one_lt_div_le (h : ∀ ε : α, 1 < ε → a / ε ≤ b) : 
 theorem le_iff_forall_one_lt_le_mul : a ≤ b ↔ ∀ ε, 1 < ε → a ≤ b*ε :=
   ⟨fun h ε ε_pos => le_mul_of_le_of_one_le h ε_pos.le, le_of_forall_one_lt_le_mul⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr < » 1)
 @[toAdditive]
 theorem le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀ ε _ : ε < 1, (a*ε) ≤ b :=
   @le_iff_forall_one_lt_le_mul (OrderDual α) _ _ _ _ _ _
@@ -1136,7 +1138,8 @@ section Neg
 instance (priority := 100) hasInvLatticeHasAbs [HasInv α] [Lattice α] : HasAbs α :=
   ⟨fun a => a⊔a⁻¹⟩
 
-theorem abs_eq_sup_neg {α : Type _} [Neg α] [Lattice α] (a : α) : abs a = a⊔-a :=
+@[toAdditive]
+theorem abs_eq_sup_inv [HasInv α] [Lattice α] (a : α) : |a| = a⊔a⁻¹ :=
   rfl
 
 variable [Neg α] [LinearOrderₓ α] {a b : α}
@@ -1296,6 +1299,10 @@ theorem abs_le : |a| ≤ b ↔ -b ≤ a ∧ a ≤ b :=
   by 
     rw [abs_le', And.comm, neg_le]
 
+theorem le_abs' : a ≤ |b| ↔ b ≤ -a ∨ a ≤ b :=
+  by 
+    rw [le_abs, Or.comm, le_neg]
+
 theorem neg_le_of_abs_le (h : |a| ≤ b) : -b ≤ a :=
   (abs_le.mp h).1
 
@@ -1384,7 +1391,7 @@ theorem eq_of_abs_sub_nonpos (h : |a - b| ≤ 0) : a = b :=
 theorem max_sub_max_le_max (a b c d : α) : max a b - max c d ≤ max (a - c) (b - d) :=
   by 
     simp only [sub_le_iff_le_add, max_le_iff]
-    split 
+    constructor 
     calc a = (a - c)+c := (sub_add_cancel a c).symm _ ≤ max (a - c) (b - d)+max c d :=
       add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)
     calc b = (b - d)+d := (sub_add_cancel b d).symm _ ≤ max (a - c) (b - d)+max c d :=

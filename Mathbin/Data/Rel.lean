@@ -26,11 +26,11 @@ Relations are also known as set-valued functions, or partial multifunctions.
 
 variable {α β γ : Type _}
 
--- error in Data.Rel: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler complete_lattice
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler complete_lattice
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- A relation on `α` and `β`, aka a set-valued function, aka a partial multifunction --/
-@[derive #[expr complete_lattice], derive #[expr inhabited]]
-def rel (α β : Type*) :=
-α → β → exprProp()
+def Rel (α β : Type _) :=
+  α → β → Prop deriving [anonymous], [anonymous]
 
 namespace Rel
 
@@ -48,16 +48,16 @@ theorem inv_invₓ : inv (inv r) = r :=
     ext x y 
     rfl
 
-/-- Domain of a relation -/
-def dom :=
-  { x | ∃ y, r x y }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Domain of a relation -/ def dom := { x | ∃ y , r x y }
 
 theorem dom_mono {r s : Rel α β} (h : r ≤ s) : dom r ⊆ dom s :=
   fun a ⟨b, hx⟩ => ⟨b, h a b hx⟩
 
-/-- Codomain aka range of a relation -/
-def codom :=
-  { y | ∃ x, r x y }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Codomain aka range of a relation -/ def codom := { y | ∃ x , r x y }
 
 theorem codom_inv : r.inv.codom = r.dom :=
   by 
@@ -79,7 +79,7 @@ theorem comp_assoc (r : Rel α β) (s : Rel β γ) (t : Rel γ δ) : ((r ∘ s) 
   by 
     unfold comp 
     ext x w 
-    split 
+    constructor
     ·
       rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩
       exact ⟨y, rxy, z, syz, tzw⟩
@@ -103,17 +103,19 @@ theorem comp_left_id (r : Rel α β) : (@Eq α ∘ r) = r :=
 theorem inv_id : inv (@Eq α) = @Eq α :=
   by 
     ext x y 
-    split  <;> apply Eq.symm
+    constructor <;> apply Eq.symm
 
 theorem inv_comp (r : Rel α β) (s : Rel β γ) : inv (r ∘ s) = (inv s ∘ inv r) :=
   by 
     ext x z 
     simp [comp, inv, flip, And.comm]
 
-/-- Image of a set under a relation -/
-def image (s : Set α) : Set β :=
-  { y | ∃ (x : _)(_ : x ∈ s), r x y }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Image of a set under a relation -/ def image ( s : Set α ) : Set β := { y | ∃ ( x : _ ) ( _ : x ∈ s ) , r x y }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem mem_image (y : β) (s : Set α) : y ∈ image r s ↔ ∃ (x : _)(_ : x ∈ s), r x y :=
   Iff.rfl
 
@@ -140,7 +142,7 @@ theorem image_comp (s : Rel β γ) (t : Set α) : image (r ∘ s) t = image s (i
   by 
     ext z 
     simp only [mem_image, comp]
-    split 
+    constructor
     ·
       rintro ⟨x, xt, y, rxy, syz⟩
       exact ⟨y, ⟨x, xt, rxy⟩, syz⟩
@@ -156,11 +158,17 @@ theorem image_univ : r.image Set.Univ = r.codom :=
 def preimage (s : Set β) : Set α :=
   r.inv.image s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem mem_preimage (x : α) (s : Set β) : x ∈ r.preimage s ↔ ∃ (y : _)(_ : y ∈ s), r x y :=
   Iff.rfl
 
-theorem preimage_def (s : Set β) : preimage r s = { x | ∃ (y : _)(_ : y ∈ s), r x y } :=
-  Set.ext$ fun x => mem_preimage _ _ _
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  preimage_def
+  ( s : Set β ) : preimage r s = { x | ∃ ( y : _ ) ( _ : y ∈ s ) , r x y }
+  := Set.ext $ fun x => mem_preimage _ _ _
 
 theorem preimage_mono {s t : Set β} (h : s ⊆ t) : r.preimage s ⊆ r.preimage t :=
   image_mono _ h
@@ -183,10 +191,12 @@ theorem preimage_univ : r.preimage Set.Univ = r.dom :=
   by 
     rw [preimage, image_univ, codom_inv]
 
-/-- Core of a set `s : set β` w.r.t `r : rel α β` is the set of `x : α` that are related *only*
-to elements of `s`. Other generalization of `function.preimage`. -/
-def core (s : Set β) :=
-  { x | ∀ y, r x y → y ∈ s }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Core of a set `s : set β` w.r.t `r : rel α β` is the set of `x : α` that are related *only*
+    to elements of `s`. Other generalization of `function.preimage`. -/
+  def core ( s : Set β ) := { x | ∀ y , r x y → y ∈ s }
 
 theorem mem_core (x : α) (s : Set β) : x ∈ r.core s ↔ ∀ y, r x y → y ∈ s :=
   Iff.rfl
@@ -219,7 +229,7 @@ theorem core_comp (s : Rel β γ) (t : Set γ) : core (r ∘ s) t = core r (core
   by 
     ext x 
     simp [core, comp]
-    split 
+    constructor
     ·
       exact fun h y rxy z => h z y rxy
     ·

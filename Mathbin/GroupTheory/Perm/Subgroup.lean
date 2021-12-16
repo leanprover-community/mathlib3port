@@ -16,7 +16,7 @@ these subgroups.
 -/
 
 
-namespace Equiv
+namespace Equivₓ
 
 namespace Perm
 
@@ -60,5 +60,5 @@ noncomputable def subgroup_of_mul_action (G H : Type _) [Groupₓ G] [MulAction 
 
 end Perm
 
-end Equiv
+end Equivₓ
 

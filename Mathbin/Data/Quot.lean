@@ -27,24 +27,24 @@ namespace Quot
 
 variable {ra : α → α → Prop} {rb : β → β → Prop} {φ : Quot ra → Quot rb → Sort _}
 
--- error in Data.Quot: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
-local notation `⟦`:max a `⟧` := quot.mk _ a
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+local notation:999 "⟦" a "⟧" => Quot.mk _ a
 
 instance [Inhabited α] : Inhabited (Quot ra) :=
-  ⟨«expr⟦ ⟧» (default _)⟩
+  ⟨⟦default _⟧⟩
 
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
-protected def hrec_on₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ («expr⟦ ⟧» a) («expr⟦ ⟧» b))
+protected def hrec_on₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
   (ca : ∀ {b a₁ a₂}, ra a₁ a₂ → HEq (f a₁ b) (f a₂ b)) (cb : ∀ {a b₁ b₂}, rb b₁ b₂ → HEq (f a b₁) (f a b₂)) : φ qa qb :=
   (Quot.hrecOnₓ qa fun a => Quot.hrecOnₓ qb (f a) fun b₁ b₂ pb => cb pb)$
     fun a₁ a₂ pa =>
       Quot.induction_on qb$
         fun b =>
-          calc HEq (@Quot.hrecOnₓ _ _ (φ _) («expr⟦ ⟧» b) (f a₁) (@cb _)) (f a₁ b) :=
+          calc HEq (@Quot.hrecOnₓ _ _ (φ _) (⟦b⟧) (f a₁) (@cb _)) (f a₁ b) :=
             by 
               simp [heq_self_iff_true]
             HEq _ (f a₂ b) := ca pa 
-            HEq _ (@Quot.hrecOnₓ _ _ (φ _) («expr⟦ ⟧» b) (f a₂) (@cb _)) :=
+            HEq _ (@Quot.hrecOnₓ _ _ (φ _) (⟦b⟧) (f a₂) (@cb _)) :=
             by 
               simp [heq_self_iff_true]
             
@@ -52,7 +52,7 @@ protected def hrec_on₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ («expr�
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`
 to a map `quot ra → quot rb`. -/
 protected def map (f : α → β) (h : (ra⇒rb) f f) : Quot ra → Quot rb :=
-  (Quot.lift fun x => «expr⟦ ⟧» (f x))$ fun x y h₁ : ra x y => Quot.sound$ h h₁
+  (Quot.lift fun x => ⟦f x⟧)$ fun x y h₁ : ra x y => Quot.sound$ h h₁
 
 /-- If `ra` is a subrelation of `ra'`, then we have a natural map `quot ra → quot ra'`. -/
 protected def map_right {ra' : α → α → Prop} (h : ∀ a₁ a₂, ra a₁ a₂ → ra' a₁ a₂) : Quot ra → Quot ra' :=
@@ -133,10 +133,10 @@ variable [sa : Setoidₓ α] [sb : Setoidₓ β]
 variable {φ : Quotientₓ sa → Quotientₓ sb → Sort _}
 
 instance [Inhabited α] : Inhabited (Quotientₓ sa) :=
-  ⟨«expr⟦ ⟧» (default _)⟩
+  ⟨⟦default _⟧⟩
 
 /-- Induction on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
-protected def hrec_on₂ (qa : Quotientₓ sa) (qb : Quotientₓ sb) (f : ∀ a b, φ («expr⟦ ⟧» a) («expr⟦ ⟧» b))
+protected def hrec_on₂ (qa : Quotientₓ sa) (qb : Quotientₓ sb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
   (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) : φ qa qb :=
   Quot.hrecOn₂ qa qb f (fun _ _ _ p => c _ _ _ _ p (Setoidₓ.refl _)) fun _ _ _ p => c _ _ _ _ (Setoidₓ.refl _) p
 
@@ -147,7 +147,7 @@ protected def map (f : α → β) (h : (· ≈ ·⇒· ≈ ·) f f) : Quotient�
 
 @[simp]
 theorem map_mk (f : α → β) (h : (· ≈ ·⇒· ≈ ·) f f) (x : α) :
-  Quotientₓ.map f h («expr⟦ ⟧» x : Quotientₓ sa) = («expr⟦ ⟧» (f x) : Quotientₓ sb) :=
+  Quotientₓ.map f h (⟦x⟧ : Quotientₓ sa) = (⟦f x⟧ : Quotientₓ sb) :=
   rfl
 
 variable {γ : Sort _} [sc : Setoidₓ γ]
@@ -156,11 +156,11 @@ variable {γ : Sort _} [sc : Setoidₓ γ]
 to a function `f : quotient sa → quotient sb → quotient sc`.
 Useful to define binary operations on quotients. -/
 protected def map₂ (f : α → β → γ) (h : (· ≈ ·⇒· ≈ ·⇒· ≈ ·) f f) : Quotientₓ sa → Quotientₓ sb → Quotientₓ sc :=
-  Quotientₓ.lift₂ (fun x y => «expr⟦ ⟧» (f x y)) fun x₁ y₁ x₂ y₂ h₁ h₂ => Quot.sound$ h h₁ h₂
+  Quotientₓ.lift₂ (fun x y => ⟦f x y⟧) fun x₁ y₁ x₂ y₂ h₁ h₂ => Quot.sound$ h h₁ h₂
 
 @[simp]
 theorem map₂_mk (f : α → β → γ) (h : (· ≈ ·⇒· ≈ ·⇒· ≈ ·) f f) (x : α) (y : β) :
-  Quotientₓ.map₂ f h («expr⟦ ⟧» x : Quotientₓ sa) («expr⟦ ⟧» y : Quotientₓ sb) = («expr⟦ ⟧» (f x y) : Quotientₓ sc) :=
+  Quotientₓ.map₂ f h (⟦x⟧ : Quotientₓ sa) (⟦y⟧ : Quotientₓ sb) = (⟦f x y⟧ : Quotientₓ sc) :=
   rfl
 
 end Quotientₓ
@@ -169,11 +169,11 @@ theorem Quot.eq {α : Type _} {r : α → α → Prop} {x y : α} : Quot.mk r x 
   ⟨Quot.exact r, Quot.eqv_gen_sound⟩
 
 @[simp]
-theorem Quotientₓ.eq [r : Setoidₓ α] {x y : α} : «expr⟦ ⟧» x = «expr⟦ ⟧» y ↔ x ≈ y :=
+theorem Quotientₓ.eq [r : Setoidₓ α] {x y : α} : ⟦x⟧ = ⟦y⟧ ↔ x ≈ y :=
   ⟨Quotientₓ.exact, Quotientₓ.sound⟩
 
 theorem forall_quotient_iff {α : Type _} [r : Setoidₓ α] {p : Quotientₓ r → Prop} :
-  (∀ a : Quotientₓ r, p a) ↔ ∀ a : α, p («expr⟦ ⟧» a) :=
+  (∀ a : Quotientₓ r, p a) ↔ ∀ a : α, p (⟦a⟧) :=
   ⟨fun h x => h _, fun h a => a.induction_on h⟩
 
 @[simp]
@@ -226,18 +226,18 @@ noncomputable def Quotientₓ.out [s : Setoidₓ α] : Quotientₓ s → α :=
   Quot.out
 
 @[simp]
-theorem Quotientₓ.out_eq [s : Setoidₓ α] (q : Quotientₓ s) : «expr⟦ ⟧» q.out = q :=
+theorem Quotientₓ.out_eq [s : Setoidₓ α] (q : Quotientₓ s) : ⟦q.out⟧ = q :=
   q.out_eq
 
-theorem Quotientₓ.mk_out [s : Setoidₓ α] (a : α) : («expr⟦ ⟧» a).out ≈ a :=
+theorem Quotientₓ.mk_out [s : Setoidₓ α] (a : α) : ⟦a⟧.out ≈ a :=
   Quotientₓ.exact (Quotientₓ.out_eq _)
 
-theorem Quotientₓ.mk_eq_iff_out [s : Setoidₓ α] {x : α} {y : Quotientₓ s} : «expr⟦ ⟧» x = y ↔ x ≈ Quotientₓ.out y :=
+theorem Quotientₓ.mk_eq_iff_out [s : Setoidₓ α] {x : α} {y : Quotientₓ s} : ⟦x⟧ = y ↔ x ≈ Quotientₓ.out y :=
   by 
     refine' Iff.trans _ Quotientₓ.eq 
     rw [Quotientₓ.out_eq y]
 
-theorem Quotientₓ.eq_mk_iff_out [s : Setoidₓ α] {x : Quotientₓ s} {y : α} : x = «expr⟦ ⟧» y ↔ Quotientₓ.out x ≈ y :=
+theorem Quotientₓ.eq_mk_iff_out [s : Setoidₓ α] {x : Quotientₓ s} {y : α} : x = ⟦y⟧ ↔ Quotientₓ.out x ≈ y :=
   by 
     refine' Iff.trans _ Quotientₓ.eq 
     rw [Quotientₓ.out_eq x]
@@ -262,14 +262,14 @@ noncomputable def Quotientₓ.choice {ι : Type _} {α : ι → Type _} [S : ∀
   @Quotientₓ (∀ i, α i)
     (by 
       infer_instance) :=
-  «expr⟦ ⟧» fun i => (f i).out
+  ⟦fun i => (f i).out⟧
 
 theorem Quotientₓ.choice_eq {ι : Type _} {α : ι → Type _} [∀ i, Setoidₓ (α i)] (f : ∀ i, α i) :
-  (Quotientₓ.choice fun i => «expr⟦ ⟧» (f i)) = «expr⟦ ⟧» f :=
+  (Quotientₓ.choice fun i => ⟦f i⟧) = ⟦f⟧ :=
   Quotientₓ.sound$ fun i => Quotientₓ.mk_out _
 
 theorem nonempty_quotient_iff (s : Setoidₓ α) : Nonempty (Quotientₓ s) ↔ Nonempty α :=
-  ⟨fun ⟨a⟩ => Quotientₓ.induction_on a Nonempty.intro, fun ⟨a⟩ => ⟨«expr⟦ ⟧» a⟩⟩
+  ⟨fun ⟨a⟩ => Quotientₓ.induction_on a Nonempty.intro, fun ⟨a⟩ => ⟨⟦a⟧⟩⟩
 
 /-- `trunc α` is the quotient of `α` by the always-true relation. This
   is related to the propositional truncation in HoTT, and is similar
@@ -447,16 +447,15 @@ protected theorem induction_on₃' {p : Quotientₓ s₁ → Quotientₓ s₂ �
 /-- A version of `quotient.rec_on_subsingleton` taking `{s₁ : setoid α}` as an implicit argument
 instead of an instance argument. -/
 @[elab_as_eliminator]
-protected def rec_on_subsingleton' {φ : Quotientₓ s₁ → Sort _} [h : ∀ a, Subsingleton (φ («expr⟦ ⟧» a))]
-  (q : Quotientₓ s₁) (f : ∀ a, φ (Quotientₓ.mk' a)) : φ q :=
+protected def rec_on_subsingleton' {φ : Quotientₓ s₁ → Sort _} [h : ∀ a, Subsingleton (φ (⟦a⟧))] (q : Quotientₓ s₁)
+  (f : ∀ a, φ (Quotientₓ.mk' a)) : φ q :=
   Quotientₓ.recOnSubsingleton q f
 
 /-- A version of `quotient.rec_on_subsingleton₂` taking `{s₁ : setoid α} {s₂ : setoid α}`
 as implicit arguments instead of instance arguments. -/
 @[reducible, elab_as_eliminator]
-protected def rec_on_subsingleton₂' {φ : Quotientₓ s₁ → Quotientₓ s₂ → Sort _}
-  [h : ∀ a b, Subsingleton (φ («expr⟦ ⟧» a) («expr⟦ ⟧» b))] (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂)
-  (f : ∀ a₁ a₂, φ (Quotientₓ.mk' a₁) (Quotientₓ.mk' a₂)) : φ q₁ q₂ :=
+protected def rec_on_subsingleton₂' {φ : Quotientₓ s₁ → Quotientₓ s₂ → Sort _} [h : ∀ a b, Subsingleton (φ (⟦a⟧) (⟦b⟧))]
+  (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂) (f : ∀ a₁ a₂, φ (Quotientₓ.mk' a₁) (Quotientₓ.mk' a₂)) : φ q₁ q₂ :=
   Quotientₓ.recOnSubsingleton₂ q₁ q₂ f
 
 /-- Recursion on a `quotient` argument `a`, result type depends on `⟦a⟧`. -/

@@ -31,7 +31,7 @@ variable (𝕜) [AddCommMonoidₓ E] [AddCommMonoidₓ F] [Module 𝕜 E] [Modul
 
 /-- The convex hull of a set `s` is the minimal convex set that includes `s`. -/
 def convexHull : ClosureOperator (Set E) :=
-  ClosureOperator.mk₃ (fun s => ⋂(t : Set E)(hst : s ⊆ t)(ht : Convex 𝕜 t), t) (Convex 𝕜)
+  ClosureOperator.mk₃ (fun s => ⋂ (t : Set E)(hst : s ⊆ t)(ht : Convex 𝕜 t), t) (Convex 𝕜)
     (fun s => Set.subset_Inter fun t => Set.subset_Inter$ fun hst => Set.subset_Inter$ fun ht => hst)
     (fun s => convex_Inter$ fun t => convex_Inter$ fun ht => convex_Inter id)
     fun s t hst ht => Set.Inter_subset_of_subset t$ Set.Inter_subset_of_subset hst$ Set.Inter_subset _ ht
@@ -67,7 +67,7 @@ theorem convex_hull_empty : convexHull 𝕜 (∅ : Set E) = ∅ :=
 @[simp]
 theorem convex_hull_empty_iff : convexHull 𝕜 s = ∅ ↔ s = ∅ :=
   by 
-    split 
+    constructor
     ·
       intro h 
       rw [←Set.subset_empty_iff, ←h]
@@ -89,7 +89,7 @@ theorem convex_hull_singleton {x : E} : convexHull 𝕜 ({x} : Set E) = {x} :=
 theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Convex 𝕜 s) (x : E) :
   Convex 𝕜 (s \ {x}) ↔ x ∉ convexHull 𝕜 (s \ {x}) :=
   by 
-    split 
+    constructor
     ·
       rintro hsx hx 
       rw [hsx.convex_hull_eq] at hx 
@@ -148,7 +148,7 @@ theorem AffineMap.image_convex_hull (f : E →ᵃ[𝕜] F) : f '' convexHull �
     apply Set.Subset.antisymm
     ·
       rw [Set.image_subset_iff]
-      refine' convex_hull_min _ ((convex_convex_hull 𝕜 («expr⇑ » f '' s)).affine_preimage f)
+      refine' convex_hull_min _ ((convex_convex_hull 𝕜 (⇑f '' s)).affine_preimage f)
       rw [←Set.image_subset_iff]
       exact subset_convex_hull 𝕜 (f '' s)
     ·

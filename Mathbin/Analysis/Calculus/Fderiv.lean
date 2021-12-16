@@ -113,7 +113,7 @@ open Filter Asymptotics ContinuousLinearMap Set Metric
 
 open_locale TopologicalSpace Classical Nnreal Filter Asymptotics Ennreal
 
-noncomputable theory
+noncomputable section 
 
 section 
 
@@ -174,6 +174,7 @@ set to `0`. -/
 def fderiv (f : E → F) (x : E) : E →L[𝕜] F :=
   if h : ∃ f', HasFderivAt f f' x then Classical.some h else 0
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- `differentiable_on 𝕜 f s` means that `f` is differentiable within `s` at any point of `s`. -/
 def DifferentiableOn (f : E → F) (s : Set E) :=
   ∀ x _ : x ∈ s, DifferentiableWithinAt 𝕜 f s x
@@ -209,57 +210,42 @@ theorem fderiv_zero_of_not_differentiable_at (h : ¬DifferentiableAt 𝕜 f x) :
 
 section DerivativeUniqueness
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function f has a derivative f' at x, a rescaled version of f around x converges to f',
 i.e., `n (f (x + (1/n) v) - f x)` converges to `f' v`. More generally, if `c n` tends to infinity
 and `c n * d n` tends to `v`, then `c n * (f (x + d n) - f x)` tends to `f' v`. This lemma expresses
 this fact, for functions having a derivative within a set. Its specific formulation is useful for
 tangent cone related discussions. -/
-theorem has_fderiv_within_at.lim
-(h : has_fderiv_within_at f f' s x)
-{α : Type*}
-(l : filter α)
-{c : α → 𝕜}
-{d : α → E}
-{v : E}
-(dtop : «expr∀ᶠ in , »((n), l, «expr ∈ »(«expr + »(x, d n), s)))
-(clim : tendsto (λ n, «expr∥ ∥»(c n)) l at_top)
-(cdlim : tendsto (λ
-  n, «expr • »(c n, d n)) l (expr𝓝() v)) : tendsto (λ
- n, «expr • »(c n, «expr - »(f «expr + »(x, d n), f x))) l (expr𝓝() (f' v)) :=
-begin
-  have [ident tendsto_arg] [":", expr tendsto (λ n, «expr + »(x, d n)) l «expr𝓝[ ] »(s, x)] [],
-  { conv [] ["in", expr «expr𝓝[ ] »(s, x)] { rw ["<-", expr add_zero x] },
-    rw ["[", expr nhds_within, ",", expr tendsto_inf, "]"] [],
-    split,
-    { apply [expr tendsto_const_nhds.add (tangent_cone_at.lim_zero l clim cdlim)] },
-    { rwa [expr tendsto_principal] [] } },
-  have [] [":", expr is_o (λ
-    y, «expr - »(«expr - »(f y, f x), f' «expr - »(y, x))) (λ y, «expr - »(y, x)) «expr𝓝[ ] »(s, x)] [":=", expr h],
-  have [] [":", expr is_o (λ
-    n, «expr - »(«expr - »(f «expr + »(x, d n), f x), f' «expr - »(«expr + »(x, d n), x))) (λ
-    n, «expr - »(«expr + »(x, d n), x)) l] [":=", expr this.comp_tendsto tendsto_arg],
-  have [] [":", expr is_o (λ
-    n, «expr - »(«expr - »(f «expr + »(x, d n), f x), f' (d n))) d l] [":=", expr by simpa [] [] ["only"] ["[", expr add_sub_cancel', "]"] [] []],
-  have [] [":", expr is_o (λ
-    n, «expr • »(c n, «expr - »(«expr - »(f «expr + »(x, d n), f x), f' (d n)))) (λ
-    n, «expr • »(c n, d n)) l] [":=", expr (is_O_refl c l).smul_is_o this],
-  have [] [":", expr is_o (λ
-    n, «expr • »(c n, «expr - »(«expr - »(f «expr + »(x, d n), f x), f' (d n)))) (λ
-    n, (1 : exprℝ())) l] [":=", expr this.trans_is_O (is_O_one_of_tendsto exprℝ() cdlim)],
-  have [ident L1] [":", expr tendsto (λ
-    n, «expr • »(c n, «expr - »(«expr - »(f «expr + »(x, d n), f x), f' (d n)))) l (expr𝓝() 0)] [":=", expr (is_o_one_iff exprℝ()).1 this],
-  have [ident L2] [":", expr tendsto (λ
-    n, f' «expr • »(c n, d n)) l (expr𝓝() (f' v))] [":=", expr tendsto.comp f'.cont.continuous_at cdlim],
-  have [ident L3] [":", expr tendsto (λ
-    n, «expr + »(«expr • »(c n, «expr - »(«expr - »(f «expr + »(x, d n), f x), f' (d n))), f' «expr • »(c n, d n))) l (expr𝓝() «expr + »(0, f' v))] [":=", expr L1.add L2],
-  have [] [":", expr «expr = »(λ
-    n, «expr + »(«expr • »(c n, «expr - »(«expr - »(f «expr + »(x, d n), f x), f' (d n))), f' «expr • »(c n, d n)), λ
-    n, «expr • »(c n, «expr - »(f «expr + »(x, d n), f x)))] [],
-  by { ext [] [ident n] [],
-    simp [] [] [] ["[", expr smul_add, ",", expr smul_sub, "]"] [] [] },
-  rwa ["[", expr this, ",", expr zero_add, "]"] ["at", ident L3]
-end
+theorem HasFderivWithinAt.lim (h : HasFderivWithinAt f f' s x) {α : Type _} (l : Filter α) {c : α → 𝕜} {d : α → E}
+  {v : E} (dtop : ∀ᶠ n in l, (x+d n) ∈ s) (clim : tendsto (fun n => ∥c n∥) l at_top)
+  (cdlim : tendsto (fun n => c n • d n) l (𝓝 v)) : tendsto (fun n => c n • (f (x+d n) - f x)) l (𝓝 (f' v)) :=
+  by 
+    have tendsto_arg : tendsto (fun n => x+d n) l (𝓝[s] x)
+    ·
+      conv  in 𝓝[s] x => rw [←add_zeroₓ x]
+      rw [nhdsWithin, tendsto_inf]
+      constructor
+      ·
+        apply tendsto_const_nhds.add (TangentConeAt.lim_zero l clim cdlim)
+      ·
+        rwa [tendsto_principal]
+    have  : is_o (fun y => f y - f x - f' (y - x)) (fun y => y - x) (𝓝[s] x) := h 
+    have  : is_o (fun n => f (x+d n) - f x - f' ((x+d n) - x)) (fun n => (x+d n) - x) l :=
+      this.comp_tendsto tendsto_arg 
+    have  : is_o (fun n => f (x+d n) - f x - f' (d n)) d l :=
+      by 
+        simpa only [add_sub_cancel']
+    have  : is_o (fun n => c n • (f (x+d n) - f x - f' (d n))) (fun n => c n • d n) l := (is_O_refl c l).smul_is_o this 
+    have  : is_o (fun n => c n • (f (x+d n) - f x - f' (d n))) (fun n => (1 : ℝ)) l :=
+      this.trans_is_O (is_O_one_of_tendsto ℝ cdlim)
+    have L1 : tendsto (fun n => c n • (f (x+d n) - f x - f' (d n))) l (𝓝 0) := (is_o_one_iff ℝ).1 this 
+    have L2 : tendsto (fun n => f' (c n • d n)) l (𝓝 (f' v)) := tendsto.comp f'.cont.continuous_at cdlim 
+    have L3 : tendsto (fun n => (c n • (f (x+d n) - f x - f' (d n)))+f' (c n • d n)) l (𝓝 (0+f' v)) := L1.add L2 
+    have  : (fun n => (c n • (f (x+d n) - f x - f' (d n)))+f' (c n • d n)) = fun n => c n • (f (x+d n) - f x)
+    ·
+      ·
+        ext n 
+        simp [smul_add, smul_sub]
+    rwa [this, zero_addₓ] at L3
 
 /-- If `f'` and `f₁'` are two derivatives of `f` within `s` at `x`, then they are equal on the
 tangent cone to `s` at `x` -/
@@ -313,7 +299,7 @@ theorem has_fderiv_at_iff_is_o_nhds_zero :
 on a neighborhood of `x₀` then it its derivative at `x₀` has norm bounded by `C`. This version
 only assumes that `∥f x - f x₀∥ ≤ C * ∥x - x₀∥` in a neighborhood of `x`. -/
 theorem HasFderivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (hf : HasFderivAt f f' x₀) {C : ℝ} (hC₀ : 0 ≤ C)
-  (hlip : ∀ᶠx in 𝓝 x₀, ∥f x - f x₀∥ ≤ C*∥x - x₀∥) : ∥f'∥ ≤ C :=
+  (hlip : ∀ᶠ x in 𝓝 x₀, ∥f x - f x₀∥ ≤ C*∥x - x₀∥) : ∥f'∥ ≤ C :=
   by 
     refine' le_of_forall_pos_le_add fun ε ε0 => op_norm_le_of_nhds_zero _ _ 
     exact add_nonneg hC₀ ε0.le 
@@ -373,20 +359,18 @@ protected theorem HasStrictFderivAt.has_fderiv_at (hf : HasStrictFderivAt f f' x
 protected theorem HasStrictFderivAt.differentiable_at (hf : HasStrictFderivAt f f' x) : DifferentiableAt 𝕜 f x :=
   hf.has_fderiv_at.differentiable_at
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » expr𝓝() x)
 /-- If `f` is strictly differentiable at `x` with derivative `f'` and `K > ∥f'∥₊`, then `f` is
 `K`-Lipschitz in a neighborhood of `x`. -/
-theorem has_strict_fderiv_at.exists_lipschitz_on_with_of_nnnorm_lt
-(hf : has_strict_fderiv_at f f' x)
-(K : «exprℝ≥0»())
-(hK : «expr < »(«expr∥ ∥₊»(f'), K)) : «expr∃ , »((s «expr ∈ » expr𝓝() x), lipschitz_on_with K f s) :=
-begin
-  have [] [] [":=", expr hf.add_is_O_with (f'.is_O_with_comp _ _) hK],
-  simp [] [] ["only"] ["[", expr sub_add_cancel, ",", expr is_O_with, "]"] [] ["at", ident this],
-  rcases [expr exists_nhds_square this, "with", "⟨", ident U, ",", ident Uo, ",", ident xU, ",", ident hU, "⟩"],
-  exact [expr ⟨U, Uo.mem_nhds xU, «expr $ »(lipschitz_on_with_iff_norm_sub_le.2, λ x hx y hy, hU (mk_mem_prod hx hy))⟩]
-end
+theorem HasStrictFderivAt.exists_lipschitz_on_with_of_nnnorm_lt (hf : HasStrictFderivAt f f' x) (K :  ℝ≥0 )
+  (hK : ∥f'∥₊ < K) : ∃ (s : _)(_ : s ∈ 𝓝 x), LipschitzOnWith K f s :=
+  by 
+    have  := hf.add_is_O_with (f'.is_O_with_comp _ _) hK 
+    simp only [sub_add_cancel, is_O_with] at this 
+    rcases exists_nhds_square this with ⟨U, Uo, xU, hU⟩
+    exact ⟨U, Uo.mem_nhds xU, lipschitz_on_with_iff_norm_sub_le.2$ fun x hx y hy => hU (mk_mem_prod hx hy)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » expr𝓝() x)
 /-- If `f` is strictly differentiable at `x` with derivative `f'`, then `f` is Lipschitz in a
 neighborhood of `x`. See also `has_strict_fderiv_at.exists_lipschitz_on_with_of_nnnorm_lt` for a
 more precise statement. -/
@@ -519,6 +503,7 @@ theorem differentiable_on_univ : DifferentiableOn 𝕜 f univ ↔ Differentiable
 theorem Differentiable.differentiable_on (h : Differentiable 𝕜 f) : DifferentiableOn 𝕜 f s :=
   (differentiable_on_univ.2 h).mono (subset_univ _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem differentiable_on_of_locally_differentiable_on
   (h : ∀ x _ : x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ DifferentiableOn 𝕜 f (s ∩ u)) : DifferentiableOn 𝕜 f s :=
   by 
@@ -530,40 +515,41 @@ theorem fderiv_within_subset (st : s ⊆ t) (ht : UniqueDiffWithinAt 𝕜 s x) (
   fderivWithin 𝕜 f s x = fderivWithin 𝕜 f t x :=
   ((DifferentiableWithinAt.has_fderiv_within_at h).mono st).fderivWithin ht
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem fderiv_within_univ : «expr = »(fderiv_within 𝕜 f univ, fderiv 𝕜 f) :=
-begin
-  ext [] [ident x] [":", 1],
-  by_cases [expr h, ":", expr differentiable_at 𝕜 f x],
-  { apply [expr has_fderiv_within_at.fderiv_within _ unique_diff_within_at_univ],
-    rw [expr has_fderiv_within_at_univ] [],
-    apply [expr h.has_fderiv_at] },
-  { have [] [":", expr «expr¬ »(differentiable_within_at 𝕜 f univ x)] [],
-    by contrapose ["!"] [ident h]; rwa ["<-", expr differentiable_within_at_univ] [],
-    rw ["[", expr fderiv_zero_of_not_differentiable_at h, ",", expr fderiv_within_zero_of_not_differentiable_within_at this, "]"] [] }
-end
+@[simp]
+theorem fderiv_within_univ : fderivWithin 𝕜 f univ = fderiv 𝕜 f :=
+  by 
+    ext x : 1
+    byCases' h : DifferentiableAt 𝕜 f x
+    ·
+      apply HasFderivWithinAt.fderiv_within _ unique_diff_within_at_univ 
+      rw [has_fderiv_within_at_univ]
+      apply h.has_fderiv_at
+    ·
+      have  : ¬DifferentiableWithinAt 𝕜 f univ x
+      ·
+        contrapose! h <;> rwa [←differentiable_within_at_univ]
+      rw [fderiv_zero_of_not_differentiable_at h, fderiv_within_zero_of_not_differentiable_within_at this]
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fderiv_within_inter
-(ht : «expr ∈ »(t, expr𝓝() x))
-(hs : unique_diff_within_at 𝕜 s x) : «expr = »(fderiv_within 𝕜 f «expr ∩ »(s, t) x, fderiv_within 𝕜 f s x) :=
-begin
-  by_cases [expr h, ":", expr differentiable_within_at 𝕜 f «expr ∩ »(s, t) x],
-  { apply [expr fderiv_within_subset (inter_subset_left _ _) _ ((differentiable_within_at_inter ht).1 h)],
-    apply [expr hs.inter ht] },
-  { have [] [":", expr «expr¬ »(differentiable_within_at 𝕜 f s x)] [],
-    by contrapose ["!"] [ident h]; rw [expr differentiable_within_at_inter] []; assumption,
-    rw ["[", expr fderiv_within_zero_of_not_differentiable_within_at h, ",", expr fderiv_within_zero_of_not_differentiable_within_at this, "]"] [] }
-end
+theorem fderiv_within_inter (ht : t ∈ 𝓝 x) (hs : UniqueDiffWithinAt 𝕜 s x) :
+  fderivWithin 𝕜 f (s ∩ t) x = fderivWithin 𝕜 f s x :=
+  by 
+    byCases' h : DifferentiableWithinAt 𝕜 f (s ∩ t) x
+    ·
+      apply fderiv_within_subset (inter_subset_left _ _) _ ((differentiable_within_at_inter ht).1 h)
+      apply hs.inter ht
+    ·
+      have  : ¬DifferentiableWithinAt 𝕜 f s x
+      ·
+        contrapose! h <;> rw [differentiable_within_at_inter] <;> assumption 
+      rw [fderiv_within_zero_of_not_differentiable_within_at h, fderiv_within_zero_of_not_differentiable_within_at this]
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fderiv_within_of_mem_nhds (h : «expr ∈ »(s, expr𝓝() x)) : «expr = »(fderiv_within 𝕜 f s x, fderiv 𝕜 f x) :=
-begin
-  have [] [":", expr «expr = »(s, «expr ∩ »(univ, s))] [],
-  by simp [] [] ["only"] ["[", expr univ_inter, "]"] [] [],
-  rw ["[", expr this, ",", "<-", expr fderiv_within_univ, "]"] [],
-  exact [expr fderiv_within_inter h (unique_diff_on_univ _ (mem_univ _))]
-end
+theorem fderiv_within_of_mem_nhds (h : s ∈ 𝓝 x) : fderivWithin 𝕜 f s x = fderiv 𝕜 f x :=
+  by 
+    have  : s = univ ∩ s
+    ·
+      simp only [univ_inter]
+    rw [this, ←fderiv_within_univ]
+    exact fderiv_within_inter h (unique_diff_on_univ _ (mem_univ _))
 
 theorem fderiv_within_of_open (hs : IsOpen s) (hx : x ∈ s) : fderivWithin 𝕜 f s x = fderiv 𝕜 f x :=
   fderiv_within_of_mem_nhds (IsOpen.mem_nhds hs hx)
@@ -577,7 +563,7 @@ theorem fderiv_within_eq_fderiv (hs : UniqueDiffWithinAt 𝕜 s x) (h : Differen
 theorem fderiv_mem_iff {f : E → F} {s : Set (E →L[𝕜] F)} {x : E} :
   fderiv 𝕜 f x ∈ s ↔ DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ s ∨ (0 : E →L[𝕜] F) ∈ s ∧ ¬DifferentiableAt 𝕜 f x :=
   by 
-    split 
+    constructor
     ·
       intro hfx 
       byCases' hx : DifferentiableAt 𝕜 f x
@@ -600,19 +586,19 @@ section Continuous
 /-! ### Deducing continuity from differentiability -/
 
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_fderiv_at_filter.tendsto_nhds
-(hL : «expr ≤ »(L, expr𝓝() x))
-(h : has_fderiv_at_filter f f' x L) : tendsto f L (expr𝓝() (f x)) :=
-begin
-  have [] [":", expr tendsto (λ x', «expr - »(f x', f x)) L (expr𝓝() 0)] [],
-  { refine [expr h.is_O_sub.trans_tendsto (tendsto.mono_left _ hL)],
-    rw ["<-", expr sub_self x] [],
-    exact [expr tendsto_id.sub tendsto_const_nhds] },
-  have [] [] [":=", expr tendsto.add this tendsto_const_nhds],
-  rw [expr zero_add (f x)] ["at", ident this],
-  exact [expr this.congr (by simp [] [] [] [] [] [])]
-end
+theorem HasFderivAtFilter.tendsto_nhds (hL : L ≤ 𝓝 x) (h : HasFderivAtFilter f f' x L) : tendsto f L (𝓝 (f x)) :=
+  by 
+    have  : tendsto (fun x' => f x' - f x) L (𝓝 0)
+    ·
+      refine' h.is_O_sub.trans_tendsto (tendsto.mono_left _ hL)
+      rw [←sub_self x]
+      exact tendsto_id.sub tendsto_const_nhds 
+    have  := tendsto.add this tendsto_const_nhds 
+    rw [zero_addₓ (f x)] at this 
+    exact
+      this.congr
+        (by 
+          simp )
 
 theorem HasFderivWithinAt.continuous_within_at (h : HasFderivWithinAt f f' s x) : ContinuousWithinAt f s x :=
   HasFderivAtFilter.tendsto_nhds inf_le_left h
@@ -678,14 +664,17 @@ theorem HasFderivAtFilter.congr_of_eventually_eq (h : HasFderivAtFilter f f' x L
   HasFderivAtFilter f₁ f' x L :=
   (hL.has_fderiv_at_filter_iff hx$ fun _ => rfl).2 h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem HasFderivWithinAt.congr_mono (h : HasFderivWithinAt f f' s x) (ht : ∀ x _ : x ∈ t, f₁ x = f x) (hx : f₁ x = f x)
   (h₁ : t ⊆ s) : HasFderivWithinAt f₁ f' t x :=
   HasFderivAtFilter.congr_of_eventually_eq (h.mono h₁) (Filter.mem_inf_of_right ht) hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem HasFderivWithinAt.congr (h : HasFderivWithinAt f f' s x) (hs : ∀ x _ : x ∈ s, f₁ x = f x) (hx : f₁ x = f x) :
   HasFderivWithinAt f₁ f' s x :=
   h.congr_mono hs hx (subset.refl _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem HasFderivWithinAt.congr' (h : HasFderivWithinAt f f' s x) (hs : ∀ x _ : x ∈ s, f₁ x = f x) (hx : x ∈ s) :
   HasFderivWithinAt f₁ f' s x :=
   h.congr hs (hs x hx)
@@ -697,10 +686,12 @@ theorem HasFderivWithinAt.congr_of_eventually_eq (h : HasFderivWithinAt f f' s x
 theorem HasFderivAt.congr_of_eventually_eq (h : HasFderivAt f f' x) (h₁ : f₁ =ᶠ[𝓝 x] f) : HasFderivAt f₁ f' x :=
   HasFderivAtFilter.congr_of_eventually_eq h h₁ (mem_of_mem_nhds h₁ : _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem DifferentiableWithinAt.congr_mono (h : DifferentiableWithinAt 𝕜 f s x) (ht : ∀ x _ : x ∈ t, f₁ x = f x)
   (hx : f₁ x = f x) (h₁ : t ⊆ s) : DifferentiableWithinAt 𝕜 f₁ t x :=
   (HasFderivWithinAt.congr_mono h.has_fderiv_within_at ht hx h₁).DifferentiableWithinAt
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem DifferentiableWithinAt.congr (h : DifferentiableWithinAt 𝕜 f s x) (ht : ∀ x _ : x ∈ s, f₁ x = f x)
   (hx : f₁ x = f x) : DifferentiableWithinAt 𝕜 f₁ s x :=
   DifferentiableWithinAt.congr_mono h ht hx (subset.refl _)
@@ -709,14 +700,17 @@ theorem DifferentiableWithinAt.congr_of_eventually_eq (h : DifferentiableWithinA
   (hx : f₁ x = f x) : DifferentiableWithinAt 𝕜 f₁ s x :=
   (h.has_fderiv_within_at.congr_of_eventually_eq h₁ hx).DifferentiableWithinAt
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem DifferentiableOn.congr_mono (h : DifferentiableOn 𝕜 f s) (h' : ∀ x _ : x ∈ t, f₁ x = f x) (h₁ : t ⊆ s) :
   DifferentiableOn 𝕜 f₁ t :=
   fun x hx => (h x (h₁ hx)).congr_mono h' (h' x hx) h₁
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem DifferentiableOn.congr (h : DifferentiableOn 𝕜 f s) (h' : ∀ x _ : x ∈ s, f₁ x = f x) :
   DifferentiableOn 𝕜 f₁ s :=
   fun x hx => (h x hx).congr h' (h' x hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem differentiable_on_congr (h' : ∀ x _ : x ∈ s, f₁ x = f x) : DifferentiableOn 𝕜 f₁ s ↔ DifferentiableOn 𝕜 f s :=
   ⟨fun h => DifferentiableOn.congr h fun y hy => (h' y hy).symm, fun h => DifferentiableOn.congr h h'⟩
 
@@ -724,6 +718,7 @@ theorem DifferentiableAt.congr_of_eventually_eq (h : DifferentiableAt 𝕜 f x) 
   DifferentiableAt 𝕜 f₁ x :=
   HasFderivAt.differentiable_at (HasFderivAtFilter.congr_of_eventually_eq h.has_fderiv_at hL (mem_of_mem_nhds hL : _))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 theorem DifferentiableWithinAt.fderiv_within_congr_mono (h : DifferentiableWithinAt 𝕜 f s x)
   (hs : ∀ x _ : x ∈ t, f₁ x = f x) (hx : f₁ x = f x) (hxt : UniqueDiffWithinAt 𝕜 t x) (h₁ : t ⊆ s) :
   fderivWithin 𝕜 f₁ t x = fderivWithin 𝕜 f s x :=
@@ -738,6 +733,7 @@ theorem Filter.EventuallyEq.fderiv_within_eq (hs : UniqueDiffWithinAt 𝕜 s x) 
     by 
       rw [fderiv_within_zero_of_not_differentiable_within_at h, fderiv_within_zero_of_not_differentiable_within_at h']
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem fderiv_within_congr (hs : UniqueDiffWithinAt 𝕜 s x) (hL : ∀ y _ : y ∈ s, f₁ y = f y) (hx : f₁ x = f x) :
   fderivWithin 𝕜 f₁ s x = fderivWithin 𝕜 f s x :=
   by 
@@ -745,15 +741,12 @@ theorem fderiv_within_congr (hs : UniqueDiffWithinAt 𝕜 s x) (hL : ∀ y _ : y
     apply mem_of_superset self_mem_nhds_within 
     exact hL
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem filter.eventually_eq.fderiv_eq
-(hL : «expr =ᶠ[ ] »(f₁, expr𝓝() x, f)) : «expr = »(fderiv 𝕜 f₁ x, fderiv 𝕜 f x) :=
-begin
-  have [ident A] [":", expr «expr = »(f₁ x, f x)] [":=", expr hL.eq_of_nhds],
-  rw ["[", "<-", expr fderiv_within_univ, ",", "<-", expr fderiv_within_univ, "]"] [],
-  rw ["<-", expr nhds_within_univ] ["at", ident hL],
-  exact [expr hL.fderiv_within_eq unique_diff_within_at_univ A]
-end
+theorem Filter.EventuallyEq.fderiv_eq (hL : f₁ =ᶠ[𝓝 x] f) : fderiv 𝕜 f₁ x = fderiv 𝕜 f x :=
+  by 
+    have A : f₁ x = f x := hL.eq_of_nhds 
+    rw [←fderiv_within_univ, ←fderiv_within_univ]
+    rw [←nhds_within_univ] at hL 
+    exact hL.fderiv_within_eq unique_diff_within_at_univ A
 
 protected theorem Filter.EventuallyEq.fderiv (h : f₁ =ᶠ[𝓝 x] f) : fderiv 𝕜 f₁ =ᶠ[𝓝 x] fderiv 𝕜 f :=
   h.eventually_eq_nhds.mono$ fun x h => h.fderiv_eq
@@ -874,22 +867,14 @@ theorem differentiable_const (c : F) : Differentiable 𝕜 fun x : E => c :=
 theorem differentiable_on_const (c : F) : DifferentiableOn 𝕜 (fun x => c) s :=
   (differentiable_const _).DifferentiableOn
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_fderiv_at_of_subsingleton
-{R X Y : Type*}
-[nondiscrete_normed_field R]
-[normed_group X]
-[normed_group Y]
-[normed_space R X]
-[normed_space R Y]
-[h : subsingleton X]
-(f : X → Y)
-(x : X) : has_fderiv_at f (0 : «expr →L[ ] »(X, R, Y)) x :=
-begin
-  rw [expr subsingleton_iff] ["at", ident h],
-  have [ident key] [":", expr «expr = »(function.const X (f 0), f)] [":=", expr by ext [] [ident x'] []; rw [expr h x' 0] []],
-  exact [expr «expr ▸ »(key, has_fderiv_at_const (f 0) _)]
-end
+theorem has_fderiv_at_of_subsingleton {R X Y : Type _} [NondiscreteNormedField R] [NormedGroup X] [NormedGroup Y]
+  [NormedSpace R X] [NormedSpace R Y] [h : Subsingleton X] (f : X → Y) (x : X) : HasFderivAt f (0 : X →L[R] Y) x :=
+  by 
+    rw [subsingleton_iff] at h 
+    have key : Function.const X (f 0) = f :=
+      by 
+        ext x' <;> rw [h x' 0]
+    exact key ▸ has_fderiv_at_const (f 0) _
 
 end Const
 
@@ -989,69 +974,51 @@ get confused since there are too many possibilities for composition -/
 
 variable (x)
 
-theorem HasFderivAtFilter.comp {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAtFilter g g' (f x) (L.map f))
-  (hf : HasFderivAtFilter f f' x L) : HasFderivAtFilter (g ∘ f) (g'.comp f') x L :=
+theorem HasFderivAtFilter.comp {g : F → G} {g' : F →L[𝕜] G} {L' : Filter F} (hg : HasFderivAtFilter g g' (f x) L')
+  (hf : HasFderivAtFilter f f' x L) (hL : tendsto f L L') : HasFderivAtFilter (g ∘ f) (g'.comp f') x L :=
   let eq₁ := (g'.is_O_comp _ _).trans_is_o hf 
-  let eq₂ := (hg.comp_tendsto tendsto_map).trans_is_O hf.is_O_sub 
+  let eq₂ := (hg.comp_tendsto hL).trans_is_O hf.is_O_sub 
   by 
     refine' eq₂.triangle (eq₁.congr_left fun x' => _)
     simp 
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-example
-{g : F → G}
-{g' : «expr →L[ ] »(F, 𝕜, G)}
-(hg : has_fderiv_at_filter g g' (f x) (L.map f))
-(hf : has_fderiv_at_filter f f' x L) : has_fderiv_at_filter «expr ∘ »(g, f) (g'.comp f') x L :=
-begin
-  unfold [ident has_fderiv_at_filter] ["at", ident hg],
-  have [] [":", expr is_o (λ
-    x', «expr - »(«expr - »(g (f x'), g (f x)), g' «expr - »(f x', f x))) (λ x', «expr - »(f x', f x)) L] [],
-  from [expr hg.comp_tendsto (le_refl _)],
-  have [ident eq₁] [":", expr is_o (λ
-    x', «expr - »(«expr - »(g (f x'), g (f x)), g' «expr - »(f x', f x))) (λ x', «expr - »(x', x)) L] [],
-  from [expr this.trans_is_O hf.is_O_sub],
-  have [ident eq₂] [":", expr is_o (λ
-    x', «expr - »(«expr - »(f x', f x), f' «expr - »(x', x))) (λ x', «expr - »(x', x)) L] [],
-  from [expr hf],
-  have [] [":", expr is_O (λ
-    x', g' «expr - »(«expr - »(f x', f x), f' «expr - »(x', x))) (λ
-    x', «expr - »(«expr - »(f x', f x), f' «expr - »(x', x))) L] [],
-  from [expr g'.is_O_comp _ _],
-  have [] [":", expr is_o (λ
-    x', g' «expr - »(«expr - »(f x', f x), f' «expr - »(x', x))) (λ x', «expr - »(x', x)) L] [],
-  from [expr this.trans_is_o eq₂],
-  have [ident eq₃] [":", expr is_o (λ
-    x', «expr - »(g' «expr - »(f x', f x), g' (f' «expr - »(x', x)))) (λ x', «expr - »(x', x)) L] [],
-  by { refine [expr this.congr_left _],
-    simp [] [] [] [] [] [] },
-  exact [expr eq₁.triangle eq₃]
-end
+example {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAtFilter g g' (f x) (L.map f)) (hf : HasFderivAtFilter f f' x L) :
+  HasFderivAtFilter (g ∘ f) (g'.comp f') x L :=
+  by 
+    unfold HasFderivAtFilter  at hg 
+    have  : is_o (fun x' => g (f x') - g (f x) - g' (f x' - f x)) (fun x' => f x' - f x) L 
+    exact hg.comp_tendsto (le_reflₓ _)
+    have eq₁ : is_o (fun x' => g (f x') - g (f x) - g' (f x' - f x)) (fun x' => x' - x) L 
+    exact this.trans_is_O hf.is_O_sub 
+    have eq₂ : is_o (fun x' => f x' - f x - f' (x' - x)) (fun x' => x' - x) L 
+    exact hf 
+    have  : is_O (fun x' => g' (f x' - f x - f' (x' - x))) (fun x' => f x' - f x - f' (x' - x)) L 
+    exact g'.is_O_comp _ _ 
+    have  : is_o (fun x' => g' (f x' - f x - f' (x' - x))) (fun x' => x' - x) L 
+    exact this.trans_is_o eq₂ 
+    have eq₃ : is_o (fun x' => g' (f x' - f x) - g' (f' (x' - x))) (fun x' => x' - x) L
+    ·
+      ·
+        refine' this.congr_left _ 
+        simp 
+    exact eq₁.triangle eq₃
 
 theorem HasFderivWithinAt.comp {g : F → G} {g' : F →L[𝕜] G} {t : Set F} (hg : HasFderivWithinAt g g' t (f x))
-  (hf : HasFderivWithinAt f f' s x) (hst : s ⊆ f ⁻¹' t) : HasFderivWithinAt (g ∘ f) (g'.comp f') s x :=
-  by 
-    apply HasFderivAtFilter.comp _ (HasFderivAtFilter.mono hg _) hf 
-    calc map f (𝓝[s] x) ≤ 𝓝[f '' s] f x := hf.continuous_within_at.tendsto_nhds_within_image _ ≤ 𝓝[t] f x :=
-      nhds_within_mono _ (image_subset_iff.mpr hst)
+  (hf : HasFderivWithinAt f f' s x) (hst : maps_to f s t) : HasFderivWithinAt (g ∘ f) (g'.comp f') s x :=
+  hg.comp x hf$ hf.continuous_within_at.tendsto_nhds_within hst
+
+theorem HasFderivAt.comp_has_fderiv_within_at {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAt g g' (f x))
+  (hf : HasFderivWithinAt f f' s x) : HasFderivWithinAt (g ∘ f) (g'.comp f') s x :=
+  hg.comp x hf hf.continuous_within_at
 
 /-- The chain rule. -/
 theorem HasFderivAt.comp {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAt g g' (f x)) (hf : HasFderivAt f f' x) :
   HasFderivAt (g ∘ f) (g'.comp f') x :=
-  (hg.mono hf.continuous_at).comp x hf
-
-theorem HasFderivAt.comp_has_fderiv_within_at {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAt g g' (f x))
-  (hf : HasFderivWithinAt f f' s x) : HasFderivWithinAt (g ∘ f) (g'.comp f') s x :=
-  by 
-    rw [←has_fderiv_within_at_univ] at hg 
-    exact HasFderivWithinAt.comp x hg hf subset_preimage_univ
+  hg.comp x hf hf.continuous_at
 
 theorem DifferentiableWithinAt.comp {g : F → G} {t : Set F} (hg : DifferentiableWithinAt 𝕜 g t (f x))
-  (hf : DifferentiableWithinAt 𝕜 f s x) (h : s ⊆ f ⁻¹' t) : DifferentiableWithinAt 𝕜 (g ∘ f) s x :=
-  by 
-    rcases hf with ⟨f', hf'⟩
-    rcases hg with ⟨g', hg'⟩
-    exact ⟨ContinuousLinearMap.comp g' f', hg'.comp x hf' h⟩
+  (hf : DifferentiableWithinAt 𝕜 f s x) (h : maps_to f s t) : DifferentiableWithinAt 𝕜 (g ∘ f) s x :=
+  (hg.has_fderiv_within_at.comp x hf.has_fderiv_within_at h).DifferentiableWithinAt
 
 theorem DifferentiableWithinAt.comp' {g : F → G} {t : Set F} (hg : DifferentiableWithinAt 𝕜 g t (f x))
   (hf : DifferentiableWithinAt 𝕜 f s x) : DifferentiableWithinAt 𝕜 (g ∘ f) (s ∩ f ⁻¹' t) x :=
@@ -1063,28 +1030,20 @@ theorem DifferentiableAt.comp {g : F → G} (hg : DifferentiableAt 𝕜 g (f x))
 
 theorem DifferentiableAt.comp_differentiable_within_at {g : F → G} (hg : DifferentiableAt 𝕜 g (f x))
   (hf : DifferentiableWithinAt 𝕜 f s x) : DifferentiableWithinAt 𝕜 (g ∘ f) s x :=
-  (differentiable_within_at_univ.2 hg).comp x hf
-    (by 
-      simp )
+  hg.differentiable_within_at.comp x hf (maps_to_univ _ _)
 
 theorem fderivWithin.comp {g : F → G} {t : Set F} (hg : DifferentiableWithinAt 𝕜 g t (f x))
   (hf : DifferentiableWithinAt 𝕜 f s x) (h : maps_to f s t) (hxs : UniqueDiffWithinAt 𝕜 s x) :
   fderivWithin 𝕜 (g ∘ f) s x = (fderivWithin 𝕜 g t (f x)).comp (fderivWithin 𝕜 f s x) :=
-  by 
-    apply HasFderivWithinAt.fderiv_within _ hxs 
-    exact HasFderivWithinAt.comp x hg.has_fderiv_within_at hf.has_fderiv_within_at h
+  (hg.has_fderiv_within_at.comp x hf.has_fderiv_within_at h).fderivWithin hxs
 
 theorem fderiv.comp {g : F → G} (hg : DifferentiableAt 𝕜 g (f x)) (hf : DifferentiableAt 𝕜 f x) :
   fderiv 𝕜 (g ∘ f) x = (fderiv 𝕜 g (f x)).comp (fderiv 𝕜 f x) :=
-  by 
-    apply HasFderivAt.fderiv 
-    exact HasFderivAt.comp x hg.has_fderiv_at hf.has_fderiv_at
+  (hg.has_fderiv_at.comp x hf.has_fderiv_at).fderiv
 
 theorem fderiv.comp_fderiv_within {g : F → G} (hg : DifferentiableAt 𝕜 g (f x)) (hf : DifferentiableWithinAt 𝕜 f s x)
   (hxs : UniqueDiffWithinAt 𝕜 s x) : fderivWithin 𝕜 (g ∘ f) s x = (fderiv 𝕜 g (f x)).comp (fderivWithin 𝕜 f s x) :=
-  by 
-    apply HasFderivWithinAt.fderiv_within _ hxs 
-    exact HasFderivAt.comp_has_fderiv_within_at x hg.has_fderiv_at hf.has_fderiv_within_at
+  (hg.has_fderiv_at.comp_has_fderiv_within_at x hf.has_fderiv_within_at).fderivWithin hxs
 
 theorem DifferentiableOn.comp {g : F → G} {t : Set F} (hg : DifferentiableOn 𝕜 g t) (hf : DifferentiableOn 𝕜 f s)
   (st : s ⊆ f ⁻¹' t) : DifferentiableOn 𝕜 (g ∘ f) s :=
@@ -1123,11 +1082,9 @@ protected theorem HasFderivAtFilter.iterate {f : E → E} {f' : E →L[𝕜] E} 
     ·
       exact has_fderiv_at_filter_id x L
     ·
-      change HasFderivAtFilter (f^[n] ∘ f) (f' ^ n+1) x L 
-      rw [pow_succ'ₓ]
-      refine' HasFderivAtFilter.comp x _ hf 
-      rw [hx]
-      exact ihn.mono hL
+      rw [Function.iterate_succ, pow_succ'ₓ]
+      rw [←hx] at ihn 
+      exact ihn.comp x hf hL
 
 protected theorem HasFderivAt.iterate {f : E → E} {f' : E →L[𝕜] E} (hf : HasFderivAt f f' x) (hx : f x = x) (n : ℕ) :
   HasFderivAt (f^[n]) (f' ^ n) x :=
@@ -1150,18 +1107,17 @@ protected theorem HasStrictFderivAt.iterate {f : E → E} {f' : E →L[𝕜] E} 
     ·
       exact has_strict_fderiv_at_id x
     ·
-      change HasStrictFderivAt (f^[n] ∘ f) (f' ^ n+1) x 
-      rw [pow_succ'ₓ]
-      refine' HasStrictFderivAt.comp x _ hf 
-      rwa [hx]
+      rw [Function.iterate_succ, pow_succ'ₓ]
+      rw [←hx] at ihn 
+      exact ihn.comp x hf
 
 protected theorem DifferentiableAt.iterate {f : E → E} (hf : DifferentiableAt 𝕜 f x) (hx : f x = x) (n : ℕ) :
   DifferentiableAt 𝕜 (f^[n]) x :=
-  Exists.elim hf$ fun f' hf => (hf.iterate hx n).DifferentiableAt
+  (hf.has_fderiv_at.iterate hx n).DifferentiableAt
 
 protected theorem DifferentiableWithinAt.iterate {f : E → E} (hf : DifferentiableWithinAt 𝕜 f s x) (hx : f x = x)
   (hs : maps_to f s s) (n : ℕ) : DifferentiableWithinAt 𝕜 (f^[n]) s x :=
-  Exists.elim hf$ fun f' hf => (hf.iterate hx hs n).DifferentiableWithinAt
+  (hf.has_fderiv_within_at.iterate hx hs n).DifferentiableWithinAt
 
 end Composition
 
@@ -1215,9 +1171,7 @@ theorem DifferentiableAt.fderiv_prod (hf₁ : DifferentiableAt 𝕜 f₁ x) (hf�
 theorem DifferentiableAt.fderiv_within_prod (hf₁ : DifferentiableWithinAt 𝕜 f₁ s x)
   (hf₂ : DifferentiableWithinAt 𝕜 f₂ s x) (hxs : UniqueDiffWithinAt 𝕜 s x) :
   fderivWithin 𝕜 (fun x : E => (f₁ x, f₂ x)) s x = (fderivWithin 𝕜 f₁ s x).Prod (fderivWithin 𝕜 f₂ s x) :=
-  by 
-    apply HasFderivWithinAt.fderiv_within _ hxs 
-    exact HasFderivWithinAt.prod hf₁.has_fderiv_within_at hf₂.has_fderiv_within_at
+  (hf₁.has_fderiv_within_at.prod hf₂.has_fderiv_within_at).fderivWithin hxs
 
 end Prod
 
@@ -1237,7 +1191,7 @@ theorem has_fderiv_at_filter_fst {L : Filter (E × F)} : HasFderivAtFilter (@Pro
 
 protected theorem HasFderivAtFilter.fst (h : HasFderivAtFilter f₂ f₂' x L) :
   HasFderivAtFilter (fun x => (f₂ x).1) ((fst 𝕜 F G).comp f₂') x L :=
-  has_fderiv_at_filter_fst.comp x h
+  has_fderiv_at_filter_fst.comp x h tendsto_map
 
 theorem has_fderiv_at_fst : HasFderivAt (@Prod.fst E F) (fst 𝕜 E F) p :=
   has_fderiv_at_filter_fst
@@ -1311,7 +1265,7 @@ theorem has_fderiv_at_filter_snd {L : Filter (E × F)} : HasFderivAtFilter (@Pro
 
 protected theorem HasFderivAtFilter.snd (h : HasFderivAtFilter f₂ f₂' x L) :
   HasFderivAtFilter (fun x => (f₂ x).2) ((snd 𝕜 F G).comp f₂') x L :=
-  has_fderiv_at_filter_snd.comp x h
+  has_fderiv_at_filter_snd.comp x h tendsto_map
 
 theorem has_fderiv_at_snd : HasFderivAt (@Prod.snd E F) (snd 𝕜 E F) p :=
   has_fderiv_at_filter_snd
@@ -1403,7 +1357,7 @@ theorem HasStrictFderivAt.const_smul (h : HasStrictFderivAt f f' x) (c : R) :
 
 theorem HasFderivAtFilter.const_smul (h : HasFderivAtFilter f f' x L) (c : R) :
   HasFderivAtFilter (fun x => c • f x) (c • f') x L :=
-  (c • (1 : F →L[𝕜] F)).HasFderivAtFilter.comp x h
+  (c • (1 : F →L[𝕜] F)).HasFderivAtFilter.comp x h tendsto_map
 
 theorem HasFderivWithinAt.const_smul (h : HasFderivWithinAt f f' s x) (c : R) :
   HasFderivWithinAt (fun x => c • f x) (c • f') s x :=
@@ -1630,51 +1584,61 @@ open_locale BigOperators
 
 variable {ι : Type _} {u : Finset ι} {A : ι → E → F} {A' : ι → E →L[𝕜] F}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 theorem HasStrictFderivAt.sum (h : ∀ i _ : i ∈ u, HasStrictFderivAt (A i) (A' i) x) :
-  HasStrictFderivAt (fun y => ∑i in u, A i y) (∑i in u, A' i) x :=
+  HasStrictFderivAt (fun y => ∑ i in u, A i y) (∑ i in u, A' i) x :=
   by 
     dsimp [HasStrictFderivAt]  at *
     convert is_o.sum h 
     simp [Finset.sum_sub_distrib, ContinuousLinearMap.sum_apply]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 theorem HasFderivAtFilter.sum (h : ∀ i _ : i ∈ u, HasFderivAtFilter (A i) (A' i) x L) :
-  HasFderivAtFilter (fun y => ∑i in u, A i y) (∑i in u, A' i) x L :=
+  HasFderivAtFilter (fun y => ∑ i in u, A i y) (∑ i in u, A' i) x L :=
   by 
     dsimp [HasFderivAtFilter]  at *
     convert is_o.sum h 
     simp [ContinuousLinearMap.sum_apply]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 theorem HasFderivWithinAt.sum (h : ∀ i _ : i ∈ u, HasFderivWithinAt (A i) (A' i) s x) :
-  HasFderivWithinAt (fun y => ∑i in u, A i y) (∑i in u, A' i) s x :=
+  HasFderivWithinAt (fun y => ∑ i in u, A i y) (∑ i in u, A' i) s x :=
   HasFderivAtFilter.sum h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 theorem HasFderivAt.sum (h : ∀ i _ : i ∈ u, HasFderivAt (A i) (A' i) x) :
-  HasFderivAt (fun y => ∑i in u, A i y) (∑i in u, A' i) x :=
+  HasFderivAt (fun y => ∑ i in u, A i y) (∑ i in u, A' i) x :=
   HasFderivAtFilter.sum h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 theorem DifferentiableWithinAt.sum (h : ∀ i _ : i ∈ u, DifferentiableWithinAt 𝕜 (A i) s x) :
-  DifferentiableWithinAt 𝕜 (fun y => ∑i in u, A i y) s x :=
+  DifferentiableWithinAt 𝕜 (fun y => ∑ i in u, A i y) s x :=
   HasFderivWithinAt.differentiable_within_at$ HasFderivWithinAt.sum$ fun i hi => (h i hi).HasFderivWithinAt
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 @[simp]
 theorem DifferentiableAt.sum (h : ∀ i _ : i ∈ u, DifferentiableAt 𝕜 (A i) x) :
-  DifferentiableAt 𝕜 (fun y => ∑i in u, A i y) x :=
+  DifferentiableAt 𝕜 (fun y => ∑ i in u, A i y) x :=
   HasFderivAt.differentiable_at$ HasFderivAt.sum$ fun i hi => (h i hi).HasFderivAt
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 theorem DifferentiableOn.sum (h : ∀ i _ : i ∈ u, DifferentiableOn 𝕜 (A i) s) :
-  DifferentiableOn 𝕜 (fun y => ∑i in u, A i y) s :=
+  DifferentiableOn 𝕜 (fun y => ∑ i in u, A i y) s :=
   fun x hx => DifferentiableWithinAt.sum$ fun i hi => h i hi x hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 @[simp]
-theorem Differentiable.sum (h : ∀ i _ : i ∈ u, Differentiable 𝕜 (A i)) : Differentiable 𝕜 fun y => ∑i in u, A i y :=
+theorem Differentiable.sum (h : ∀ i _ : i ∈ u, Differentiable 𝕜 (A i)) : Differentiable 𝕜 fun y => ∑ i in u, A i y :=
   fun x => DifferentiableAt.sum$ fun i hi => h i hi x
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 theorem fderiv_within_sum (hxs : UniqueDiffWithinAt 𝕜 s x) (h : ∀ i _ : i ∈ u, DifferentiableWithinAt 𝕜 (A i) s x) :
-  fderivWithin 𝕜 (fun y => ∑i in u, A i y) s x = ∑i in u, fderivWithin 𝕜 (A i) s x :=
+  fderivWithin 𝕜 (fun y => ∑ i in u, A i y) s x = ∑ i in u, fderivWithin 𝕜 (A i) s x :=
   (HasFderivWithinAt.sum fun i hi => (h i hi).HasFderivWithinAt).fderivWithin hxs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » u)
 theorem fderiv_sum (h : ∀ i _ : i ∈ u, DifferentiableAt 𝕜 (A i) x) :
-  fderiv 𝕜 (fun y => ∑i in u, A i y) x = ∑i in u, fderiv 𝕜 (A i) x :=
+  fderiv 𝕜 (fun y => ∑ i in u, A i y) x = ∑ i in u, fderiv 𝕜 (A i) x :=
   (HasFderivAt.sum fun i hi => (h i hi).HasFderivAt).fderiv
 
 end Sum
@@ -1776,7 +1740,7 @@ theorem HasStrictFderivAt.neg (h : HasStrictFderivAt f f' x) : HasStrictFderivAt
   (-1 : F →L[𝕜] F).HasStrictFderivAt.comp x h
 
 theorem HasFderivAtFilter.neg (h : HasFderivAtFilter f f' x L) : HasFderivAtFilter (fun x => -f x) (-f') x L :=
-  (-1 : F →L[𝕜] F).HasFderivAtFilter.comp x h
+  (-1 : F →L[𝕜] F).HasFderivAtFilter.comp x h tendsto_map
 
 theorem HasFderivWithinAt.neg (h : HasFderivWithinAt f f' s x) : HasFderivWithinAt (fun x => -f x) (-f') s x :=
   h.neg
@@ -2021,37 +1985,33 @@ variable {b : E × F → G} {u : Set (E × F)}
 
 open NormedField
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_bounded_bilinear_map.has_strict_fderiv_at
-(h : is_bounded_bilinear_map 𝕜 b)
-(p : «expr × »(E, F)) : has_strict_fderiv_at b (h.deriv p) p :=
-begin
-  rw [expr has_strict_fderiv_at] [],
-  set [] [ident T] [] [":="] [expr «expr × »(«expr × »(E, F), «expr × »(E, F))] [],
-  have [] [":", expr is_o (λ
-    q : T, b «expr - »(q.1, q.2)) (λ q : T, «expr * »(«expr∥ ∥»(«expr - »(q.1, q.2)), 1)) (expr𝓝() (p, p))] [],
-  { refine [expr (h.is_O'.comp_tendsto le_top).trans_is_o _],
-    simp [] [] ["only"] ["[", expr («expr ∘ »), "]"] [] [],
-    refine [expr (is_O_refl (λ
-       q : T, «expr∥ ∥»(«expr - »(q.1, q.2))) _).mul_is_o «expr $ »(is_o.norm_left, (is_o_one_iff _).2 _)],
-    rw ["[", "<-", expr sub_self p, "]"] [],
-    exact [expr continuous_at_fst.sub continuous_at_snd] },
-  simp [] [] ["only"] ["[", expr mul_one, ",", expr is_o_norm_right, "]"] [] ["at", ident this],
-  refine [expr (is_o.congr_of_sub _).1 this],
-  clear [ident this],
-  convert_to [expr is_o (λ
-    q : T, h.deriv «expr - »(p, q.2) «expr - »(q.1, q.2)) (λ q : T, «expr - »(q.1, q.2)) (expr𝓝() (p, p))] [],
-  { ext [] ["⟨", "⟨", ident x₁, ",", ident y₁, "⟩", ",", "⟨", ident x₂, ",", ident y₂, "⟩", "⟩"] [],
-    rcases [expr p, "with", "⟨", ident x, ",", ident y, "⟩"],
-    simp [] [] ["only"] ["[", expr is_bounded_bilinear_map_deriv_coe, ",", expr prod.mk_sub_mk, ",", expr h.map_sub_left, ",", expr h.map_sub_right, "]"] [] [],
-    abel [] [] [] },
-  have [] [":", expr is_o (λ q : T, «expr - »(p, q.2)) (λ q, (1 : exprℝ())) (expr𝓝() (p, p))] [],
-  from [expr (is_o_one_iff _).2 «expr ▸ »(sub_self p, tendsto_const_nhds.sub continuous_at_snd)],
-  apply [expr is_bounded_bilinear_map_apply.is_O_comp.trans_is_o],
-  refine [expr is_o.trans_is_O _ (is_O_const_mul_self 1 _ _).of_norm_right],
-  refine [expr is_o.mul_is_O _ (is_O_refl _ _)],
-  exact [expr (((h.is_bounded_linear_map_deriv.is_O_id «expr⊤»()).comp_tendsto le_top : _).trans_is_o this).norm_left]
-end
+theorem IsBoundedBilinearMap.has_strict_fderiv_at (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
+  HasStrictFderivAt b (h.deriv p) p :=
+  by 
+    rw [HasStrictFderivAt]
+    set T := (E × F) × E × F 
+    have  : is_o (fun q : T => b (q.1 - q.2)) (fun q : T => ∥q.1 - q.2∥*1) (𝓝 (p, p))
+    ·
+      refine' (h.is_O'.comp_tendsto le_top).trans_is_o _ 
+      simp only [· ∘ ·]
+      refine' (is_O_refl (fun q : T => ∥q.1 - q.2∥) _).mul_is_o (is_o.norm_left$ (is_o_one_iff _).2 _)
+      rw [←sub_self p]
+      exact continuous_at_fst.sub continuous_at_snd 
+    simp only [mul_oneₓ, is_o_norm_right] at this 
+    refine' (is_o.congr_of_sub _).1 this 
+    clear this 
+    convertTo is_o (fun q : T => h.deriv (p - q.2) (q.1 - q.2)) (fun q : T => q.1 - q.2) (𝓝 (p, p))
+    ·
+      ext ⟨⟨x₁, y₁⟩, ⟨x₂, y₂⟩⟩
+      rcases p with ⟨x, y⟩
+      simp only [is_bounded_bilinear_map_deriv_coe, Prod.mk_sub_mk, h.map_sub_left, h.map_sub_right]
+      abel 
+    have  : is_o (fun q : T => p - q.2) (fun q => (1 : ℝ)) (𝓝 (p, p))
+    exact (is_o_one_iff _).2 (sub_self p ▸ tendsto_const_nhds.sub continuous_at_snd)
+    apply is_bounded_bilinear_map_apply.is_O_comp.trans_is_o 
+    refine' is_o.trans_is_O _ (is_O_const_mul_self 1 _ _).of_norm_right 
+    refine' is_o.mul_is_O _ (is_O_refl _ _)
+    exact (((h.is_bounded_linear_map_deriv.is_O_id ⊤).comp_tendsto le_top : _).trans_is_o this).norm_left
 
 theorem IsBoundedBilinearMap.has_fderiv_at (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) : HasFderivAt b (h.deriv p) p :=
   (h.has_strict_fderiv_at p).HasFderivAt
@@ -2443,35 +2403,34 @@ variable {R : Type _} [NormedRing R] [NormedAlgebra 𝕜 R] [CompleteSpace R]
 
 open NormedRing ContinuousLinearMap Ringₓ
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- At an invertible element `x` of a normed algebra `R`, the Fréchet derivative of the inversion
 operation is the linear map `λ t, - x⁻¹ * t * x⁻¹`. -/
-theorem has_fderiv_at_ring_inverse
-(x : units R) : has_fderiv_at ring.inverse «expr- »(lmul_left_right 𝕜 R «expr↑ »(«expr ⁻¹»(x)) «expr↑ »(«expr ⁻¹»(x))) x :=
-begin
-  have [ident h_is_o] [":", expr is_o (λ
-    t : R, «expr + »(«expr - »(inverse «expr + »(«expr↑ »(x), t), «expr↑ »(«expr ⁻¹»(x))), «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(x)), t), «expr↑ »(«expr ⁻¹»(x))))) (λ
-    t : R, t) (expr𝓝() 0)] [],
-  { refine [expr (inverse_add_norm_diff_second_order x).trans_is_o (is_o_norm_norm.mp _)],
-    simp [] [] ["only"] ["[", expr normed_field.norm_pow, ",", expr norm_norm, "]"] [] [],
-    have [ident h12] [":", expr «expr < »(1, 2)] [":=", expr by norm_num [] []],
-    convert [] [expr (asymptotics.is_o_pow_pow h12).comp_tendsto tendsto_norm_zero] [],
-    ext [] [] [],
-    simp [] [] [] [] [] [] },
-  have [ident h_lim] [":", expr tendsto (λ y : R, «expr - »(y, x)) (expr𝓝() x) (expr𝓝() 0)] [],
-  { refine [expr tendsto_zero_iff_norm_tendsto_zero.mpr _],
-    exact [expr tendsto_iff_norm_tendsto_zero.mp tendsto_id] },
-  simp [] [] ["only"] ["[", expr has_fderiv_at, ",", expr has_fderiv_at_filter, "]"] [] [],
-  convert [] [expr h_is_o.comp_tendsto h_lim] [],
-  ext [] [ident y] [],
-  simp [] [] ["only"] ["[", expr coe_comp', ",", expr function.comp_app, ",", expr lmul_left_right_apply, ",", expr neg_apply, ",", expr inverse_unit x, ",", expr units.inv_mul, ",", expr add_sub_cancel'_right, ",", expr mul_sub, ",", expr sub_mul, ",", expr one_mul, ",", expr sub_neg_eq_add, "]"] [] []
-end
+theorem has_fderiv_at_ring_inverse (x : Units R) : HasFderivAt Ring.inverse (-lmul_left_right 𝕜 R (↑x⁻¹) (↑x⁻¹)) x :=
+  by 
+    have h_is_o : is_o (fun t : R => (inverse ((↑x)+t) - ↑x⁻¹)+((↑x⁻¹)*t)*↑x⁻¹) (fun t : R => t) (𝓝 0)
+    ·
+      refine' (inverse_add_norm_diff_second_order x).trans_is_o (is_o_norm_norm.mp _)
+      simp only [NormedField.norm_pow, norm_norm]
+      have h12 : 1 < 2 :=
+        by 
+          normNum 
+      convert (Asymptotics.is_o_pow_pow h12).comp_tendsto tendsto_norm_zero 
+      ext 
+      simp 
+    have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0)
+    ·
+      refine' tendsto_zero_iff_norm_tendsto_zero.mpr _ 
+      exact tendsto_iff_norm_tendsto_zero.mp tendsto_id 
+    simp only [HasFderivAt, HasFderivAtFilter]
+    convert h_is_o.comp_tendsto h_lim 
+    ext y 
+    simp only [coe_comp', Function.comp_app, lmul_left_right_apply, neg_apply, inverse_unit x, Units.inv_mul,
+      add_sub_cancel'_right, mul_sub, sub_mul, one_mulₓ, sub_neg_eq_add]
 
 theorem differentiable_at_inverse (x : Units R) : DifferentiableAt 𝕜 (@Ring.inverse R _) x :=
   (has_fderiv_at_ring_inverse x).DifferentiableAt
 
-theorem fderiv_inverse (x : Units R) :
-  fderiv 𝕜 (@Ring.inverse R _) x = -lmul_left_right 𝕜 R («expr↑ » (x⁻¹)) («expr↑ » (x⁻¹)) :=
+theorem fderiv_inverse (x : Units R) : fderiv 𝕜 (@Ring.inverse R _) x = -lmul_left_right 𝕜 R (↑x⁻¹) (↑x⁻¹) :=
   (has_fderiv_at_ring_inverse x).fderiv
 
 end AlgebraInverse
@@ -2510,16 +2469,13 @@ protected theorem Differentiable : Differentiable 𝕜 iso :=
 protected theorem DifferentiableOn : DifferentiableOn 𝕜 iso s :=
   iso.differentiable.differentiable_on
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comp_differentiable_within_at_iff
-{f : G → E}
-{s : set G}
-{x : G} : «expr ↔ »(differentiable_within_at 𝕜 «expr ∘ »(iso, f) s x, differentiable_within_at 𝕜 f s x) :=
-begin
-  refine [expr ⟨λ H, _, λ H, iso.differentiable.differentiable_at.comp_differentiable_within_at x H⟩],
-  have [] [":", expr differentiable_within_at 𝕜 «expr ∘ »(iso.symm, «expr ∘ »(iso, f)) s x] [":=", expr iso.symm.differentiable.differentiable_at.comp_differentiable_within_at x H],
-  rwa ["[", "<-", expr function.comp.assoc iso.symm iso f, ",", expr iso.symm_comp_self, "]"] ["at", ident this]
-end
+theorem comp_differentiable_within_at_iff {f : G → E} {s : Set G} {x : G} :
+  DifferentiableWithinAt 𝕜 (iso ∘ f) s x ↔ DifferentiableWithinAt 𝕜 f s x :=
+  by 
+    refine' ⟨fun H => _, fun H => iso.differentiable.differentiable_at.comp_differentiable_within_at x H⟩
+    have  : DifferentiableWithinAt 𝕜 (iso.symm ∘ iso ∘ f) s x :=
+      iso.symm.differentiable.differentiable_at.comp_differentiable_within_at x H 
+    rwa [←Function.comp.assoc iso.symm iso f, iso.symm_comp_self] at this
 
 theorem comp_differentiable_at_iff {f : G → E} {x : G} : DifferentiableAt 𝕜 (iso ∘ f) x ↔ DifferentiableAt 𝕜 f x :=
   by 
@@ -2535,22 +2491,20 @@ theorem comp_differentiable_iff {f : G → E} : Differentiable 𝕜 (iso ∘ f) 
     rw [←differentiable_on_univ, ←differentiable_on_univ]
     exact iso.comp_differentiable_on_iff
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comp_has_fderiv_within_at_iff
-{f : G → E}
-{s : set G}
-{x : G}
-{f' : «expr →L[ ] »(G, 𝕜, E)} : «expr ↔ »(has_fderiv_within_at «expr ∘ »(iso, f) ((iso : «expr →L[ ] »(E, 𝕜, F)).comp f') s x, has_fderiv_within_at f f' s x) :=
-begin
-  refine [expr ⟨λ H, _, λ H, iso.has_fderiv_at.comp_has_fderiv_within_at x H⟩],
-  have [ident A] [":", expr «expr = »(f, «expr ∘ »(iso.symm, «expr ∘ »(iso, f)))] [],
-  by { rw ["[", "<-", expr function.comp.assoc, ",", expr iso.symm_comp_self, "]"] [],
-    refl },
-  have [ident B] [":", expr «expr = »(f', (iso.symm : «expr →L[ ] »(F, 𝕜, E)).comp ((iso : «expr →L[ ] »(E, 𝕜, F)).comp f'))] [],
-  by rw ["[", "<-", expr continuous_linear_map.comp_assoc, ",", expr iso.coe_symm_comp_coe, ",", expr continuous_linear_map.id_comp, "]"] [],
-  rw ["[", expr A, ",", expr B, "]"] [],
-  exact [expr iso.symm.has_fderiv_at.comp_has_fderiv_within_at x H]
-end
+theorem comp_has_fderiv_within_at_iff {f : G → E} {s : Set G} {x : G} {f' : G →L[𝕜] E} :
+  HasFderivWithinAt (iso ∘ f) ((iso : E →L[𝕜] F).comp f') s x ↔ HasFderivWithinAt f f' s x :=
+  by 
+    refine' ⟨fun H => _, fun H => iso.has_fderiv_at.comp_has_fderiv_within_at x H⟩
+    have A : f = (iso.symm ∘ iso ∘ f)
+    ·
+      ·
+        rw [←Function.comp.assoc, iso.symm_comp_self]
+        rfl 
+    have B : f' = (iso.symm : F →L[𝕜] E).comp ((iso : E →L[𝕜] F).comp f')
+    ·
+      rw [←ContinuousLinearMap.comp_assoc, iso.coe_symm_comp_coe, ContinuousLinearMap.id_comp]
+    rw [A, B]
+    exact iso.symm.has_fderiv_at.comp_has_fderiv_within_at x H
 
 theorem comp_has_strict_fderiv_at_iff {f : G → E} {x : G} {f' : G →L[𝕜] E} :
   HasStrictFderivAt (iso ∘ f) ((iso : E →L[𝕜] F).comp f') x ↔ HasStrictFderivAt f f' x :=
@@ -2574,19 +2528,17 @@ theorem comp_has_fderiv_at_iff' {f : G → E} {x : G} {f' : G →L[𝕜] F} :
   by 
     rw [←has_fderiv_within_at_univ, ←has_fderiv_within_at_univ, iso.comp_has_fderiv_within_at_iff']
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comp_fderiv_within
-{f : G → E}
-{s : set G}
-{x : G}
-(hxs : unique_diff_within_at 𝕜 s x) : «expr = »(fderiv_within 𝕜 «expr ∘ »(iso, f) s x, (iso : «expr →L[ ] »(E, 𝕜, F)).comp (fderiv_within 𝕜 f s x)) :=
-begin
-  by_cases [expr h, ":", expr differentiable_within_at 𝕜 f s x],
-  { rw ["[", expr fderiv.comp_fderiv_within x iso.differentiable_at h hxs, ",", expr iso.fderiv, "]"] [] },
-  { have [] [":", expr «expr¬ »(differentiable_within_at 𝕜 «expr ∘ »(iso, f) s x)] [],
-    from [expr mt iso.comp_differentiable_within_at_iff.1 h],
-    rw ["[", expr fderiv_within_zero_of_not_differentiable_within_at h, ",", expr fderiv_within_zero_of_not_differentiable_within_at this, ",", expr continuous_linear_map.comp_zero, "]"] [] }
-end
+theorem comp_fderiv_within {f : G → E} {s : Set G} {x : G} (hxs : UniqueDiffWithinAt 𝕜 s x) :
+  fderivWithin 𝕜 (iso ∘ f) s x = (iso : E →L[𝕜] F).comp (fderivWithin 𝕜 f s x) :=
+  by 
+    byCases' h : DifferentiableWithinAt 𝕜 f s x
+    ·
+      rw [fderiv.comp_fderiv_within x iso.differentiable_at h hxs, iso.fderiv]
+    ·
+      have  : ¬DifferentiableWithinAt 𝕜 (iso ∘ f) s x 
+      exact mt iso.comp_differentiable_within_at_iff.1 h 
+      rw [fderiv_within_zero_of_not_differentiable_within_at h, fderiv_within_zero_of_not_differentiable_within_at this,
+        ContinuousLinearMap.comp_zero]
 
 theorem comp_fderiv {f : G → E} {x : G} : fderiv 𝕜 (iso ∘ f) x = (iso : E →L[𝕜] F).comp (fderiv 𝕜 f x) :=
   by 
@@ -2671,68 +2623,58 @@ theorem comp_fderiv {f : G → E} {x : G} : fderiv 𝕜 (iso ∘ f) x = (iso : E
 
 end LinearIsometryEquiv
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f (g y) = y` for `y` in some neighborhood of `a`, `g` is continuous at `a`, and `f` has an
 invertible derivative `f'` at `g a` in the strict sense, then `g` has the derivative `f'⁻¹` at `a`
 in the strict sense.
 
 This is one of the easy parts of the inverse function theorem: it assumes that we already have an
 inverse function. -/
-theorem has_strict_fderiv_at.of_local_left_inverse
-{f : E → F}
-{f' : «expr ≃L[ ] »(E, 𝕜, F)}
-{g : F → E}
-{a : F}
-(hg : continuous_at g a)
-(hf : has_strict_fderiv_at f (f' : «expr →L[ ] »(E, 𝕜, F)) (g a))
-(hfg : «expr∀ᶠ in , »((y), expr𝓝() a, «expr = »(f (g y), y))) : has_strict_fderiv_at g (f'.symm : «expr →L[ ] »(F, 𝕜, E)) a :=
-begin
-  replace [ident hg] [] [":=", expr hg.prod_map' hg],
-  replace [ident hfg] [] [":=", expr hfg.prod_mk_nhds hfg],
-  have [] [":", expr is_O (λ
-    p : «expr × »(F, F), «expr - »(«expr - »(g p.1, g p.2), f'.symm «expr - »(p.1, p.2))) (λ
-    p : «expr × »(F, F), «expr - »(f' «expr - »(g p.1, g p.2), «expr - »(p.1, p.2))) (expr𝓝() (a, a))] [],
-  { refine [expr ((f'.symm : «expr →L[ ] »(F, 𝕜, E)).is_O_comp _ _).congr (λ x, _) (λ _, rfl)],
-    simp [] [] [] [] [] [] },
-  refine [expr this.trans_is_o _],
-  clear [ident this],
-  refine [expr ((hf.comp_tendsto hg).symm.congr' (hfg.mono _) «expr $ »(eventually_of_forall, λ _, rfl)).trans_is_O _],
-  { rintros [ident p, "⟨", ident hp1, ",", ident hp2, "⟩"],
-    simp [] [] [] ["[", expr hp1, ",", expr hp2, "]"] [] [] },
-  { refine [expr (hf.is_O_sub_rev.comp_tendsto hg).congr' «expr $ »(eventually_of_forall, λ _, rfl) (hfg.mono _)],
-    rintros [ident p, "⟨", ident hp1, ",", ident hp2, "⟩"],
-    simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr hp1, ",", expr hp2, "]"] [] [] }
-end
+theorem HasStrictFderivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜] F} {g : F → E} {a : F} (hg : ContinuousAt g a)
+  (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) (g a)) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) :
+  HasStrictFderivAt g (f'.symm : F →L[𝕜] E) a :=
+  by 
+    replace hg := hg.prod_map' hg 
+    replace hfg := hfg.prod_mk_nhds hfg 
+    have  :
+      is_O (fun p : F × F => g p.1 - g p.2 - f'.symm (p.1 - p.2)) (fun p : F × F => f' (g p.1 - g p.2) - (p.1 - p.2))
+        (𝓝 (a, a))
+    ·
+      refine' ((f'.symm : F →L[𝕜] E).is_O_comp _ _).congr (fun x => _) fun _ => rfl 
+      simp 
+    refine' this.trans_is_o _ 
+    clear this 
+    refine' ((hf.comp_tendsto hg).symm.congr' (hfg.mono _) (eventually_of_forall$ fun _ => rfl)).trans_is_O _
+    ·
+      rintro p ⟨hp1, hp2⟩
+      simp [hp1, hp2]
+    ·
+      refine' (hf.is_O_sub_rev.comp_tendsto hg).congr' (eventually_of_forall$ fun _ => rfl) (hfg.mono _)
+      rintro p ⟨hp1, hp2⟩
+      simp only [· ∘ ·, hp1, hp2]
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f (g y) = y` for `y` in some neighborhood of `a`, `g` is continuous at `a`, and `f` has an
 invertible derivative `f'` at `g a`, then `g` has the derivative `f'⁻¹` at `a`.
 
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
-theorem has_fderiv_at.of_local_left_inverse
-{f : E → F}
-{f' : «expr ≃L[ ] »(E, 𝕜, F)}
-{g : F → E}
-{a : F}
-(hg : continuous_at g a)
-(hf : has_fderiv_at f (f' : «expr →L[ ] »(E, 𝕜, F)) (g a))
-(hfg : «expr∀ᶠ in , »((y), expr𝓝() a, «expr = »(f (g y), y))) : has_fderiv_at g (f'.symm : «expr →L[ ] »(F, 𝕜, E)) a :=
-begin
-  have [] [":", expr is_O (λ
-    x : F, «expr - »(«expr - »(g x, g a), f'.symm «expr - »(x, a))) (λ
-    x : F, «expr - »(f' «expr - »(g x, g a), «expr - »(x, a))) (expr𝓝() a)] [],
-  { refine [expr ((f'.symm : «expr →L[ ] »(F, 𝕜, E)).is_O_comp _ _).congr (λ x, _) (λ _, rfl)],
-    simp [] [] [] [] [] [] },
-  refine [expr this.trans_is_o _],
-  clear [ident this],
-  refine [expr ((hf.comp_tendsto hg).symm.congr' (hfg.mono _) «expr $ »(eventually_of_forall, λ _, rfl)).trans_is_O _],
-  { rintros [ident p, ident hp],
-    simp [] [] [] ["[", expr hp, ",", expr hfg.self_of_nhds, "]"] [] [] },
-  { refine [expr (hf.is_O_sub_rev.comp_tendsto hg).congr' «expr $ »(eventually_of_forall, λ _, rfl) (hfg.mono _)],
-    rintros [ident p, ident hp],
-    simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr hp, ",", expr hfg.self_of_nhds, "]"] [] [] }
-end
+theorem HasFderivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜] F} {g : F → E} {a : F} (hg : ContinuousAt g a)
+  (hf : HasFderivAt f (f' : E →L[𝕜] F) (g a)) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) :
+  HasFderivAt g (f'.symm : F →L[𝕜] E) a :=
+  by 
+    have  : is_O (fun x : F => g x - g a - f'.symm (x - a)) (fun x : F => f' (g x - g a) - (x - a)) (𝓝 a)
+    ·
+      refine' ((f'.symm : F →L[𝕜] E).is_O_comp _ _).congr (fun x => _) fun _ => rfl 
+      simp 
+    refine' this.trans_is_o _ 
+    clear this 
+    refine' ((hf.comp_tendsto hg).symm.congr' (hfg.mono _) (eventually_of_forall$ fun _ => rfl)).trans_is_O _
+    ·
+      rintro p hp 
+      simp [hp, hfg.self_of_nhds]
+    ·
+      refine' (hf.is_O_sub_rev.comp_tendsto hg).congr' (eventually_of_forall$ fun _ => rfl) (hfg.mono _)
+      rintro p hp 
+      simp only [· ∘ ·, hp, hfg.self_of_nhds]
 
 /-- If `f` is a local homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has an
 invertible derivative `f'` in the sense of strict differentiability at `f.symm a`, then `f.symm` has
@@ -2753,24 +2695,17 @@ theorem LocalHomeomorph.has_fderiv_at_symm (f : LocalHomeomorph E F) {f' : E ≃
   (htff' : HasFderivAt f (f' : E →L[𝕜] F) (f.symm a)) : HasFderivAt f.symm (f'.symm : F →L[𝕜] E) a :=
   htff'.of_local_left_inverse (f.symm.continuous_at ha) (f.eventually_right_inverse ha)
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_fderiv_within_at.eventually_ne
-(h : has_fderiv_within_at f f' s x)
-(hf' : «expr∃ , »((C), ∀
-  z, «expr ≤ »(«expr∥ ∥»(z), «expr * »(C, «expr∥ ∥»(f' z))))) : «expr∀ᶠ in , »((z), «expr𝓝[ ] »(«expr \ »(s, {x}), x), «expr ≠ »(f z, f x)) :=
-begin
-  rw ["[", expr nhds_within, ",", expr diff_eq, ",", "<-", expr inf_principal, ",", "<-", expr inf_assoc, ",", expr eventually_inf_principal, "]"] [],
-  have [ident A] [":", expr is_O (λ
-    z, «expr - »(z, x)) (λ
-    z, f' «expr - »(z, x)) «expr𝓝[ ] »(s, x)] [":=", expr «expr $ »(is_O_iff.2, «expr $ »(hf'.imp, λ
-     C hC, «expr $ »(eventually_of_forall, λ z, hC _)))],
-  have [] [":", expr «expr ~[ ] »(λ
-    z, «expr - »(f z, f x), «expr𝓝[ ] »(s, x), λ z, f' «expr - »(z, x))] [":=", expr h.trans_is_O A],
-  simpa [] [] [] ["[", expr not_imp_not, ",", expr sub_eq_zero, "]"] [] ["using", expr (A.trans this.is_O_symm).eq_zero_imp]
-end
+theorem HasFderivWithinAt.eventually_ne (h : HasFderivWithinAt f f' s x) (hf' : ∃ C, ∀ z, ∥z∥ ≤ C*∥f' z∥) :
+  ∀ᶠ z in 𝓝[s \ {x}] x, f z ≠ f x :=
+  by 
+    rw [nhdsWithin, diff_eq, ←inf_principal, ←inf_assoc, eventually_inf_principal]
+    have A : is_O (fun z => z - x) (fun z => f' (z - x)) (𝓝[s] x) :=
+      is_O_iff.2$ hf'.imp$ fun C hC => eventually_of_forall$ fun z => hC _ 
+    have  : (fun z => f z - f x) ~[𝓝[s] x] fun z => f' (z - x) := h.trans_is_O A 
+    simpa [not_imp_not, sub_eq_zero] using (A.trans this.is_O_symm).eq_zero_imp
 
 theorem HasFderivAt.eventually_ne (h : HasFderivAt f f' x) (hf' : ∃ C, ∀ z, ∥z∥ ≤ C*∥f' z∥) :
-  ∀ᶠz in 𝓝[«expr ᶜ» {x}] x, f z ≠ f x :=
+  ∀ᶠ z in 𝓝[{x}ᶜ] x, f z ≠ f x :=
   by 
     simpa only [compl_eq_univ_diff] using (has_fderiv_within_at_univ.2 h).eventually_ne hf'
 
@@ -2784,19 +2719,16 @@ variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
 
 variable {f : E → F} {f' : E →L[ℝ] F} {x : E}
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_fderiv_at_filter_real_equiv
-{L : filter E} : «expr ↔ »(tendsto (λ
-  x' : E, «expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x', x))), «expr∥ ∥»(«expr - »(«expr - »(f x', f x), f' «expr - »(x', x))))) L (expr𝓝() 0), tendsto (λ
-  x' : E, «expr • »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x', x))), «expr - »(«expr - »(f x', f x), f' «expr - »(x', x)))) L (expr𝓝() 0)) :=
-begin
-  symmetry,
-  rw ["[", expr tendsto_iff_norm_tendsto_zero, "]"] [],
-  refine [expr tendsto_congr (λ x', _)],
-  have [] [":", expr «expr ≥ »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x', x))), 0)] [],
-  from [expr inv_nonneg.mpr (norm_nonneg _)],
-  simp [] [] [] ["[", expr norm_smul, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg this, "]"] [] []
-end
+theorem has_fderiv_at_filter_real_equiv {L : Filter E} :
+  tendsto (fun x' : E => ∥x' - x∥⁻¹*∥f x' - f x - f' (x' - x)∥) L (𝓝 0) ↔
+    tendsto (fun x' : E => ∥x' - x∥⁻¹ • (f x' - f x - f' (x' - x))) L (𝓝 0) :=
+  by 
+    symm 
+    rw [tendsto_iff_norm_tendsto_zero]
+    refine' tendsto_congr fun x' => _ 
+    have  : ∥x' - x∥⁻¹ ≥ 0 
+    exact inv_nonneg.mpr (norm_nonneg _)
+    simp [norm_smul, Real.norm_eq_abs, abs_of_nonneg this]
 
 theorem HasFderivAt.lim_real (hf : HasFderivAt f f' x) (v : E) :
   tendsto (fun c : ℝ => c • (f (x+c⁻¹ • v) - f x)) at_top (𝓝 (f' v)) :=
@@ -2812,18 +2744,19 @@ section TangentCone
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
   [NormedGroup F] [NormedSpace 𝕜 F] {f : E → F} {s : Set E} {f' : E →L[𝕜] F}
 
--- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The image of a tangent cone under the differential of a map is included in the tangent cone to
-the image. -/
-theorem has_fderiv_within_at.maps_to_tangent_cone
-{x : E}
-(h : has_fderiv_within_at f f' s x) : maps_to f' (tangent_cone_at 𝕜 s x) (tangent_cone_at 𝕜 «expr '' »(f, s) (f x)) :=
-begin
-  rintros [ident v, "⟨", ident c, ",", ident d, ",", ident dtop, ",", ident clim, ",", ident cdlim, "⟩"],
-  refine [expr ⟨c, λ
-    n, «expr - »(f «expr + »(x, d n), f x), mem_of_superset dtop _, clim, h.lim at_top dtop clim cdlim⟩],
-  simp [] [] [] ["[", "-", ident mem_image, ",", expr mem_image_of_mem, "]"] [] [] { contextual := tt }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The image of a tangent cone under the differential of a map is included in the tangent cone to
+    the image. -/
+  theorem
+    HasFderivWithinAt.maps_to_tangent_cone
+    { x : E } ( h : HasFderivWithinAt f f' s x ) : maps_to f' TangentConeAt 𝕜 s x TangentConeAt 𝕜 f '' s f x
+    :=
+      by
+        rintro v ⟨ c , d , dtop , clim , cdlim ⟩
+          refine' ⟨ c , fun n => f x + d n - f x , mem_of_superset dtop _ , clim , h.lim at_top dtop clim cdlim ⟩
+          simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ - mem_image , mem_image_of_mem ]
 
 /-- If a set has the unique differentiability property at a point x, then the image of this set
 under a map with onto derivative has also the unique differentiability property at the image point.
@@ -2832,11 +2765,12 @@ theorem HasFderivWithinAt.unique_diff_within_at {x : E} (h : HasFderivWithinAt f
   (h' : DenseRange f') : UniqueDiffWithinAt 𝕜 (f '' s) (f x) :=
   by 
     refine' ⟨h'.dense_of_maps_to f'.continuous hs.1 _, h.continuous_within_at.mem_closure_image hs.2⟩
-    show
-      Submodule.span 𝕜 (TangentConeAt 𝕜 s x) ≤ (Submodule.span 𝕜 (TangentConeAt 𝕜 (f '' s) (f x))).comap («expr↑ » f')
+    show Submodule.span 𝕜 (TangentConeAt 𝕜 s x) ≤ (Submodule.span 𝕜 (TangentConeAt 𝕜 (f '' s) (f x))).comap (↑f')
     rw [Submodule.span_le]
     exact h.maps_to_tangent_cone.mono (subset.refl _) Submodule.subset_span
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem UniqueDiffOn.image {f' : E → E →L[𝕜] F} (hs : UniqueDiffOn 𝕜 s)
   (hf' : ∀ x _ : x ∈ s, HasFderivWithinAt f (f' x) s x) (hd : ∀ x _ : x ∈ s, DenseRange (f' x)) :
   UniqueDiffOn 𝕜 (f '' s) :=
@@ -2891,6 +2825,10 @@ theorem HasStrictFderivAt.restrict_scalars (h : HasStrictFderivAt f f' x) :
   HasStrictFderivAt f (f'.restrict_scalars 𝕜) x :=
   h
 
+theorem HasFderivAtFilter.restrict_scalars {L} (h : HasFderivAtFilter f f' x L) :
+  HasFderivAtFilter f (f'.restrict_scalars 𝕜) x L :=
+  h
+
 theorem HasFderivAt.restrict_scalars (h : HasFderivAt f f' x) : HasFderivAt f (f'.restrict_scalars 𝕜) x :=
   h
 
@@ -2931,7 +2869,7 @@ theorem differentiable_within_at_iff_restrict_scalars (hf : DifferentiableWithin
   (hs : UniqueDiffWithinAt 𝕜 s x) :
   DifferentiableWithinAt 𝕜' f s x ↔ ∃ g' : E →L[𝕜'] F, g'.restrict_scalars 𝕜 = fderivWithin 𝕜 f s x :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨g', hg'⟩
       exact ⟨g', hs.eq (hg'.restrict_scalars 𝕜) hf.has_fderiv_within_at⟩

@@ -61,7 +61,7 @@ theorem map_swap_antidiagonal {n : ℕ} :
     ext 
     simp only [exists_prop, mem_map, mem_antidiagonal, Prod.exists]
     rw [add_commₓ]
-    split 
+    constructor
     ·
       rintro ⟨b, c, ⟨rfl, rfl⟩⟩
       simp 
@@ -95,7 +95,7 @@ section EquivProd
 /-- The disjoint union of antidiagonals `Σ (n : ℕ), antidiagonal n` is equivalent to the product
     `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
 @[simps]
-def sigma_antidiagonal_equiv_prod : (Σn : ℕ, antidiagonal n) ≃ ℕ × ℕ :=
+def sigma_antidiagonal_equiv_prod : (Σ n : ℕ, antidiagonal n) ≃ ℕ × ℕ :=
   { toFun := fun x => x.2, invFun := fun x => ⟨x.1+x.2, x, mem_antidiagonal.mpr rfl⟩,
     left_inv :=
       by 

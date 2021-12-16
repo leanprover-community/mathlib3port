@@ -125,7 +125,7 @@ theorem comp_assoc : (r ∘r p) ∘r q = r ∘r p ∘r q :=
   by 
     funext a d 
     apply propext 
-    split 
+    constructor 
     exact fun ⟨c, ⟨b, hab, hbc⟩, hcd⟩ => ⟨b, hab, c, hbc, hcd⟩
     exact fun ⟨b, hab, c, hbc, hcd⟩ => ⟨c, ⟨b, hab, hbc⟩, hcd⟩
 
@@ -133,7 +133,7 @@ theorem flip_comp : flip (r ∘r p) = flip p ∘r flip r :=
   by 
     funext c a 
     apply propext 
-    split 
+    constructor 
     exact fun ⟨b, hab, hbc⟩ => ⟨b, hbc, hab⟩
     exact fun ⟨b, hbc, hab⟩ => ⟨b, hab, hbc⟩
 
@@ -246,7 +246,7 @@ theorem cases_head (h : refl_trans_gen r a b) : a = b ∨ ∃ c, r a c ∧ refl_
     ·
       right 
       exists _ 
-      split  <;> assumption
+      constructor <;> assumption
 
 theorem cases_head_iff : refl_trans_gen r a b ↔ a = b ∨ ∃ c, r a c ∧ refl_trans_gen r c b :=
   by 
@@ -498,31 +498,36 @@ section Join
 
 open ReflTransGen ReflGen
 
--- error in Logic.Relation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A sufficient condition for the Church-Rosser property. -/
-theorem church_rosser
-(h : ∀ a b c, r a b → r a c → «expr∃ , »((d), «expr ∧ »(refl_gen r b d, refl_trans_gen r c d)))
-(hab : refl_trans_gen r a b)
-(hac : refl_trans_gen r a c) : join (refl_trans_gen r) b c :=
-begin
-  induction [expr hab] [] [] [],
-  case [ident refl_trans_gen.refl] { exact [expr ⟨c, hac, refl⟩] },
-  case [ident refl_trans_gen.tail, ":", ident d, ident e, ident had, ident hde, ident ih] { clear [ident hac, ident had, ident a],
-    rcases [expr ih, "with", "⟨", ident b, ",", ident hdb, ",", ident hcb, "⟩"],
-    have [] [":", expr «expr∃ , »((a), «expr ∧ »(refl_trans_gen r e a, refl_gen r b a))] [],
-    { clear [ident hcb],
-      induction [expr hdb] [] [] [],
-      case [ident refl_trans_gen.refl] { exact [expr ⟨e, refl, refl_gen.single hde⟩] },
-      case [ident refl_trans_gen.tail, ":", ident f, ident b, ident hdf, ident hfb, ident ih] { rcases [expr ih, "with", "⟨", ident a, ",", ident hea, ",", ident hfa, "⟩"],
-        cases [expr hfa] ["with", "_", ident hfa],
-        { exact [expr ⟨b, hea.tail hfb, refl_gen.refl⟩] },
-        { rcases [expr h _ _ _ hfb hfa, "with", "⟨", ident c, ",", ident hbc, ",", ident hac, "⟩"],
-          exact [expr ⟨c, hea.trans hac, hbc⟩] } } },
-    rcases [expr this, "with", "⟨", ident a, ",", ident hea, ",", ident hba, "⟩"],
-    cases [expr hba] ["with", "_", ident hba],
-    { exact [expr ⟨b, hea, hcb⟩] },
-    { exact [expr ⟨a, hea, hcb.tail hba⟩] } }
-end
+theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, refl_gen r b d ∧ refl_trans_gen r c d)
+  (hab : refl_trans_gen r a b) (hac : refl_trans_gen r a c) : join (refl_trans_gen r) b c :=
+  by 
+    induction hab 
+    case refl_trans_gen.refl => 
+      exact ⟨c, hac, refl⟩
+    case refl_trans_gen.tail d e had hde ih => 
+      clear hac had a 
+      rcases ih with ⟨b, hdb, hcb⟩
+      have  : ∃ a, refl_trans_gen r e a ∧ refl_gen r b a
+      ·
+        clear hcb 
+        induction hdb 
+        case refl_trans_gen.refl => 
+          exact ⟨e, refl, refl_gen.single hde⟩
+        case refl_trans_gen.tail f b hdf hfb ih => 
+          rcases ih with ⟨a, hea, hfa⟩
+          cases' hfa with _ hfa
+          ·
+            exact ⟨b, hea.tail hfb, refl_gen.refl⟩
+          ·
+            rcases h _ _ _ hfb hfa with ⟨c, hbc, hac⟩
+            exact ⟨c, hea.trans hac, hbc⟩
+      rcases this with ⟨a, hea, hba⟩
+      cases' hba with _ hba
+      ·
+        exact ⟨b, hea, hcb⟩
+      ·
+        exact ⟨a, hea, hcb.tail hba⟩
 
 theorem join_of_single (h : Reflexive r) (hab : r a b) : join r a b :=
   ⟨b, hab, h b⟩

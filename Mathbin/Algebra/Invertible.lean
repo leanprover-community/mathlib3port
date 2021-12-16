@@ -134,10 +134,10 @@ theorem is_unit_of_invertible [Monoidₓ α] (a : α) [Invertible a] : IsUnit a 
 
 /-- Units are invertible in their associated monoid. -/
 def Units.invertible [Monoidₓ α] (u : Units α) : Invertible (u : α) :=
-  { invOf := «expr↑ » (u⁻¹), inv_of_mul_self := u.inv_mul, mul_inv_of_self := u.mul_inv }
+  { invOf := ↑u⁻¹, inv_of_mul_self := u.inv_mul, mul_inv_of_self := u.mul_inv }
 
 @[simp]
-theorem inv_of_units [Monoidₓ α] (u : Units α) [Invertible (u : α)] : ⅟ (u : α) = «expr↑ » (u⁻¹) :=
+theorem inv_of_units [Monoidₓ α] (u : Units α) [Invertible (u : α)] : ⅟ (u : α) = ↑u⁻¹ :=
   inv_of_eq_right_inv u.mul_inv
 
 theorem IsUnit.nonempty_invertible [Monoidₓ α] {a : α} (h : IsUnit a) : Nonempty (Invertible a) :=

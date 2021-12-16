@@ -25,7 +25,7 @@ following https://stacks.math.columbia.edu/tag/007X.
 
 universe v
 
-noncomputable theory
+noncomputable section 
 
 open Top
 
@@ -89,49 +89,51 @@ theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalk_to_fibe
     obtain ⟨U, m, s, rfl⟩ := F.germ_exist _ t
     ·
       use ⟨U, m⟩
-      fsplit
+      fconstructor
       ·
         exact fun y => F.germ y s
       ·
         exact ⟨prelocal_predicate.sheafify_of ⟨s, fun _ => rfl⟩, rfl⟩
 
--- error in Topology.Sheaves.Sheafify: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem stalk_to_fiber_injective (x : X) : function.injective (F.stalk_to_fiber x) :=
-begin
-  apply [expr stalk_to_fiber_injective],
-  intros [],
-  rcases [expr hU ⟨x, U.2⟩, "with", "⟨", ident U', ",", ident mU, ",", ident iU, ",", ident gU, ",", ident wU, "⟩"],
-  rcases [expr hV ⟨x, V.2⟩, "with", "⟨", ident V', ",", ident mV, ",", ident iV, ",", ident gV, ",", ident wV, "⟩"],
-  have [ident wUx] [] [":=", expr wU ⟨x, mU⟩],
-  dsimp [] [] [] ["at", ident wUx],
-  erw [expr wUx] ["at", ident e],
-  clear [ident wUx],
-  have [ident wVx] [] [":=", expr wV ⟨x, mV⟩],
-  dsimp [] [] [] ["at", ident wVx],
-  erw [expr wVx] ["at", ident e],
-  clear [ident wVx],
-  rcases [expr F.germ_eq x mU mV gU gV e, "with", "⟨", ident W, ",", ident mW, ",", ident iU', ",", ident iV', ",", ident e', "⟩"],
-  dsimp [] [] [] ["at", ident e'],
-  use [expr ⟨«expr ⊓ »(W, «expr ⊓ »(U', V')), ⟨mW, mU, mV⟩⟩],
-  refine [expr ⟨_, _, _⟩],
-  { change [expr «expr ⟶ »(«expr ⊓ »(W, «expr ⊓ »(U', V')), U.val)] [] [],
-    exact [expr «expr ≫ »(opens.inf_le_right _ _, «expr ≫ »(opens.inf_le_left _ _, iU))] },
-  { change [expr «expr ⟶ »(«expr ⊓ »(W, «expr ⊓ »(U', V')), V.val)] [] [],
-    exact [expr «expr ≫ »(opens.inf_le_right _ _, «expr ≫ »(opens.inf_le_right _ _, iV))] },
-  { intro [ident w],
-    dsimp [] [] [] [],
-    specialize [expr wU ⟨w.1, w.2.2.1⟩],
-    dsimp [] [] [] ["at", ident wU],
-    specialize [expr wV ⟨w.1, w.2.2.2⟩],
-    dsimp [] [] [] ["at", ident wV],
-    erw ["[", expr wU, ",", "<-", expr F.germ_res iU' ⟨w, w.2.1⟩, ",", expr wV, ",", "<-", expr F.germ_res iV' ⟨w, w.2.1⟩, ",", expr category_theory.types_comp_apply, ",", expr category_theory.types_comp_apply, ",", expr e', "]"] [] }
-end
+theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalk_to_fiber x) :=
+  by 
+    apply stalk_to_fiber_injective 
+    intros 
+    rcases hU ⟨x, U.2⟩ with ⟨U', mU, iU, gU, wU⟩
+    rcases hV ⟨x, V.2⟩ with ⟨V', mV, iV, gV, wV⟩
+    have wUx := wU ⟨x, mU⟩
+    dsimp  at wUx 
+    erw [wUx] at e 
+    clear wUx 
+    have wVx := wV ⟨x, mV⟩
+    dsimp  at wVx 
+    erw [wVx] at e 
+    clear wVx 
+    rcases F.germ_eq x mU mV gU gV e with ⟨W, mW, iU', iV', e'⟩
+    dsimp  at e' 
+    use ⟨W⊓(U'⊓V'), ⟨mW, mU, mV⟩⟩
+    refine' ⟨_, _, _⟩
+    ·
+      change W⊓(U'⊓V') ⟶ U.val 
+      exact opens.inf_le_right _ _ ≫ opens.inf_le_left _ _ ≫ iU
+    ·
+      change W⊓(U'⊓V') ⟶ V.val 
+      exact opens.inf_le_right _ _ ≫ opens.inf_le_right _ _ ≫ iV
+    ·
+      intro w 
+      dsimp 
+      specialize wU ⟨w.1, w.2.2.1⟩
+      dsimp  at wU 
+      specialize wV ⟨w.1, w.2.2.2⟩
+      dsimp  at wV 
+      erw [wU, ←F.germ_res iU' ⟨w, w.2.1⟩, wV, ←F.germ_res iV' ⟨w, w.2.1⟩, CategoryTheory.types_comp_apply,
+        CategoryTheory.types_comp_apply, e']
 
 /--
 The isomorphism betweeen a stalk of the sheafification and the original stalk.
 -/
 def sheafify_stalk_iso (x : X) : F.sheafify.1.stalk x ≅ F.stalk x :=
-  (Equiv.ofBijective _ ⟨stalk_to_fiber_injective _ _, stalk_to_fiber_surjective _ _⟩).toIso
+  (Equivₓ.ofBijective _ ⟨stalk_to_fiber_injective _ _, stalk_to_fiber_surjective _ _⟩).toIso
 
 end Top.Presheaf
 

@@ -33,14 +33,15 @@ instance (priority := 100) has_limits_of_shape_of_has_finite_limits (J : Type v)
   [has_finite_limits C] : has_limits_of_shape J C :=
   has_finite_limits.out J
 
--- error in CategoryTheory.Limits.Shapes.FiniteLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[priority 100]
-instance has_finite_limits_of_has_limits_of_size [has_limits_of_size.{v', u'} C] : has_finite_limits C :=
-⟨λ J hJ hJ', by { haveI [] [] [":=", expr has_limits_of_size_shrink.{0, 0} C],
-   exact [expr has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)] }⟩
+instance (priority := 100) has_finite_limits_of_has_limits_of_size [has_limits_of_size.{v', u'} C] :
+  has_finite_limits C :=
+  ⟨fun J hJ hJ' =>
+      by 
+        have  := has_limits_of_size_shrink.{0, 0} C 
+        exact has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 
 /-- If `C` has all limits, it has finite limits. -/
-theorem has_finite_limits_of_has_limits [has_limits C] : has_finite_limits C :=
+instance (priority := 100) has_finite_limits_of_has_limits [has_limits C] : has_finite_limits C :=
   inferInstance
 
 /--
@@ -56,14 +57,15 @@ instance (priority := 100) has_limits_of_shape_of_has_finite_colimits (J : Type 
   [has_finite_colimits C] : has_colimits_of_shape J C :=
   has_finite_colimits.out J
 
--- error in CategoryTheory.Limits.Shapes.FiniteLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[priority 100]
-instance has_finite_colimits_of_has_colimits_of_size [has_colimits_of_size.{v', u'} C] : has_finite_colimits C :=
-⟨λ J hJ hJ', by { haveI [] [] [":=", expr has_colimits_of_size_shrink.{0, 0} C],
-   exact [expr has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)] }⟩
+instance (priority := 100) has_finite_colimits_of_has_colimits_of_size [has_colimits_of_size.{v', u'} C] :
+  has_finite_colimits C :=
+  ⟨fun J hJ hJ' =>
+      by 
+        have  := has_colimits_of_size_shrink.{0, 0} C 
+        exact has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 
 /-- If `C` has all colimits, it has finite colimits. -/
-theorem has_finite_colimits_of_has_colimits [has_colimits C] : has_finite_colimits C :=
+instance (priority := 100) has_finite_colimits_of_has_colimits [has_colimits C] : has_finite_colimits C :=
   inferInstance
 
 section 
@@ -181,13 +183,11 @@ for every finite collection of morphisms
 class has_finite_wide_pullbacks : Prop where 
   out (J : Type v) [DecidableEq J] [Fintype J] : has_limits_of_shape (wide_pullback_shape J) C
 
--- error in CategoryTheory.Limits.Shapes.FiniteLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance has_limits_of_shape_wide_pullback_shape
-(J : Type v)
-[fintype J]
-[has_finite_wide_pullbacks C] : has_limits_of_shape (wide_pullback_shape J) C :=
-by { haveI [] [] [":=", expr @has_finite_wide_pullbacks.out C _ _ J (classical.dec_eq _)],
-  apply_instance }
+instance has_limits_of_shape_wide_pullback_shape (J : Type v) [Fintype J] [has_finite_wide_pullbacks C] :
+  has_limits_of_shape (wide_pullback_shape J) C :=
+  by 
+    have  := @has_finite_wide_pullbacks.out C _ _ J (Classical.decEq _)
+    infer_instance
 
 /--
 `has_finite_wide_pushouts` represents a choice of wide pushout
@@ -196,13 +196,11 @@ for every finite collection of morphisms
 class has_finite_wide_pushouts : Prop where 
   out (J : Type v) [DecidableEq J] [Fintype J] : has_colimits_of_shape (wide_pushout_shape J) C
 
--- error in CategoryTheory.Limits.Shapes.FiniteLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance has_colimits_of_shape_wide_pushout_shape
-(J : Type v)
-[fintype J]
-[has_finite_wide_pushouts C] : has_colimits_of_shape (wide_pushout_shape J) C :=
-by { haveI [] [] [":=", expr @has_finite_wide_pushouts.out C _ _ J (classical.dec_eq _)],
-  apply_instance }
+instance has_colimits_of_shape_wide_pushout_shape (J : Type v) [Fintype J] [has_finite_wide_pushouts C] :
+  has_colimits_of_shape (wide_pushout_shape J) C :=
+  by 
+    have  := @has_finite_wide_pushouts.out C _ _ J (Classical.decEq _)
+    infer_instance
 
 /--
 Finite wide pullbacks are finite limits, so if `C` has all finite limits,

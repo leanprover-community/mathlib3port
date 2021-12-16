@@ -14,15 +14,15 @@ unsafe inductive exprterm : Type
   | exp : Int → expr → exprterm
   | add : exprterm → exprterm → exprterm
 
--- error in Tactic.Omega.Int.Preterm: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
 the terms represented by the said exprs. -/
-@[derive #[expr has_reflect], derive #[expr inhabited]]
 inductive preterm : Type
-| cst : int → preterm
-| var : int → nat → preterm
-| add : preterm → preterm → preterm
+  | cst : Int → preterm
+  | var : Int → Nat → preterm
+  | add : preterm → preterm → preterm deriving [anonymous], [anonymous]
 
 localized [Omega.Int] notation "&" k => Omega.Int.Preterm.cst k
 

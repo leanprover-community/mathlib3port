@@ -45,40 +45,40 @@ theorem log_of_left_le_one {b n : ℕ} (hb : b ≤ 1) : log b n = 0 :=
   by 
     rw [log, if_neg fun h : b ≤ n ∧ 1 < b => h.2.not_le hb]
 
--- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem log_eq_zero_iff
-{b n : exprℕ()} : «expr ↔ »(«expr = »(log b n, 0), «expr ∨ »(«expr < »(n, b), «expr ≤ »(b, 1))) :=
-begin
-  split,
-  { intro [ident h_log],
-    by_contra [ident h],
-    push_neg ["at", ident h],
-    have [] [] [":=", expr log_of_one_lt_of_le h.2 h.1],
-    rw [expr h_log] ["at", ident this],
-    exact [expr succ_ne_zero _ this.symm] },
-  { exact [expr log_eq_zero] }
-end
+theorem log_eq_zero_iff {b n : ℕ} : log b n = 0 ↔ n < b ∨ b ≤ 1 :=
+  by 
+    constructor
+    ·
+      intro h_log 
+      byContra h 
+      pushNeg  at h 
+      have  := log_of_one_lt_of_le h.2 h.1
+      rw [h_log] at this 
+      exact succ_ne_zero _ this.symm
+    ·
+      exact log_eq_zero
 
--- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem log_eq_one_iff
-{b
- n : exprℕ()} : «expr ↔ »(«expr = »(log b n, 1), «expr ∧ »(«expr < »(n, «expr * »(b, b)), «expr ∧ »(«expr < »(1, b), «expr ≤ »(b, n)))) :=
-begin
-  split,
-  { intro [ident h_log],
-    have [ident bound] [":", expr «expr ∧ »(«expr < »(1, b), «expr ≤ »(b, n))] [],
-    { contrapose [] [ident h_log],
-      rw ["[", expr not_and_distrib, ",", expr not_lt, ",", expr not_le, ",", expr or_comm, ",", "<-", expr log_eq_zero_iff, "]"] ["at", ident h_log],
-      rw [expr h_log] [],
-      exact [expr nat.zero_ne_one] },
-    cases [expr bound] ["with", ident one_lt_b, ident b_le_n],
-    refine [expr ⟨_, one_lt_b, b_le_n⟩],
-    rw ["[", expr log_of_one_lt_of_le one_lt_b b_le_n, ",", expr succ_inj', ",", expr log_eq_zero_iff, ",", expr nat.div_lt_iff_lt_mul _ _ (lt_trans zero_lt_one one_lt_b), "]"] ["at", ident h_log],
-    exact [expr h_log.resolve_right (λ b_small, lt_irrefl _ (lt_of_lt_of_le one_lt_b b_small))] },
-  { rintros ["⟨", ident h, ",", ident one_lt_b, ",", ident b_le_n, "⟩"],
-    rw ["[", expr log_of_one_lt_of_le one_lt_b b_le_n, ",", expr succ_inj', ",", expr log_eq_zero_iff, ",", expr nat.div_lt_iff_lt_mul _ _ (lt_trans zero_lt_one one_lt_b), "]"] [],
-    exact [expr or.inl h] }
-end
+theorem log_eq_one_iff {b n : ℕ} : log b n = 1 ↔ (n < b*b) ∧ 1 < b ∧ b ≤ n :=
+  by 
+    constructor
+    ·
+      intro h_log 
+      have bound : 1 < b ∧ b ≤ n
+      ·
+        contrapose h_log 
+        rw [not_and_distrib, not_ltₓ, not_leₓ, or_comm, ←log_eq_zero_iff] at h_log 
+        rw [h_log]
+        exact Nat.zero_ne_one 
+      cases' bound with one_lt_b b_le_n 
+      refine' ⟨_, one_lt_b, b_le_n⟩
+      rw [log_of_one_lt_of_le one_lt_b b_le_n, succ_inj', log_eq_zero_iff,
+        Nat.div_lt_iff_lt_mulₓ _ _ (lt_transₓ zero_lt_one one_lt_b)] at h_log 
+      exact h_log.resolve_right fun b_small => lt_irreflₓ _ (lt_of_lt_of_leₓ one_lt_b b_small)
+    ·
+      rintro ⟨h, one_lt_b, b_le_n⟩
+      rw [log_of_one_lt_of_le one_lt_b b_le_n, succ_inj', log_eq_zero_iff,
+        Nat.div_lt_iff_lt_mulₓ _ _ (lt_transₓ zero_lt_one one_lt_b)]
+      exact Or.inl h
 
 @[simp]
 theorem log_zero_left (n : ℕ) : log 0 n = 0 :=
@@ -98,25 +98,23 @@ theorem log_one_left (n : ℕ) : log 1 n = 0 :=
 theorem log_one_right (b : ℕ) : log b 1 = 0 :=
   if h : b ≤ 1 then log_of_left_le_one h else log_of_lt (not_leₓ.mp h)
 
--- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `pow b` and `log b` (almost) form a Galois connection. -/
-theorem pow_le_iff_le_log
-{b : exprℕ()}
-(hb : «expr < »(1, b))
-{x y : exprℕ()}
-(hy : «expr < »(0, y)) : «expr ↔ »(«expr ≤ »(«expr ^ »(b, x), y), «expr ≤ »(x, log b y)) :=
-begin
-  induction [expr y] ["using", ident nat.strong_induction_on] ["with", ident y, ident ih] ["generalizing", ident x],
-  cases [expr x] [],
-  { exact [expr iff_of_true hy (zero_le _)] },
-  rw [expr log] [],
-  split_ifs [] [],
-  { have [ident b_pos] [":", expr «expr < »(0, b)] [":=", expr zero_le_one.trans_lt hb],
-    rw ["[", expr succ_eq_add_one, ",", expr add_le_add_iff_right, ",", "<-", expr ih «expr / »(y, b) (div_lt_self hy hb) (nat.div_pos h.1 b_pos), ",", expr le_div_iff_mul_le _ _ b_pos, ",", expr pow_succ', "]"] [] },
-  { refine [expr iff_of_false (λ hby, h ⟨le_trans _ hby, hb⟩) (not_succ_le_zero _)],
-    convert [] [expr pow_mono hb.le (zero_lt_succ x)] [],
-    exact [expr (pow_one b).symm] }
-end
+theorem pow_le_iff_le_log {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : 0 < y) : b ^ x ≤ y ↔ x ≤ log b y :=
+  by 
+    induction' y using Nat.strong_induction_onₓ with y ih generalizing x 
+    cases x
+    ·
+      exact iff_of_true hy (zero_le _)
+    rw [log]
+    splitIfs
+    ·
+      have b_pos : 0 < b := zero_le_one.trans_lt hb 
+      rw [succ_eq_add_one, add_le_add_iff_right, ←ih (y / b) (div_lt_self hy hb) (Nat.div_pos h.1 b_pos),
+        le_div_iff_mul_le _ _ b_pos, pow_succ'ₓ]
+    ·
+      refine' iff_of_false (fun hby => h ⟨le_transₓ _ hby, hb⟩) (not_succ_le_zero _)
+      convert pow_mono hb.le (zero_lt_succ x)
+      exact (pow_oneₓ b).symm
 
 theorem log_pow {b : ℕ} (hb : 1 < b) (x : ℕ) : log b (b ^ x) = x :=
   eq_of_forall_le_iff$
@@ -220,35 +218,34 @@ theorem clog_pos {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : 0 < clog b n :=
     rw [clog_of_two_le hb hn]
     exact zero_lt_succ _
 
--- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem clog_eq_one {b n : exprℕ()} (hn : «expr ≤ »(2, n)) (h : «expr ≤ »(n, b)) : «expr = »(clog b n, 1) :=
-begin
-  rw ["[", expr clog_of_two_le (hn.trans h) hn, ",", expr clog_of_right_le_one, "]"] [],
-  have [ident n_pos] [":", expr «expr < »(0, n)] [":=", expr zero_lt_two.trans_le hn],
-  rw ["[", "<-", expr lt_succ_iff, ",", expr nat.div_lt_iff_lt_mul _ _ (n_pos.trans_le h), ",", "<-", expr succ_le_iff, ",", "<-", expr pred_eq_sub_one, ",", expr succ_pred_eq_of_pos (add_pos n_pos (n_pos.trans_le h)), ",", expr succ_mul, ",", expr one_mul, "]"] [],
-  exact [expr add_le_add_right h _]
-end
+theorem clog_eq_one {b n : ℕ} (hn : 2 ≤ n) (h : n ≤ b) : clog b n = 1 :=
+  by 
+    rw [clog_of_two_le (hn.trans h) hn, clog_of_right_le_one]
+    have n_pos : 0 < n := zero_lt_two.trans_le hn 
+    rw [←lt_succ_iff, Nat.div_lt_iff_lt_mulₓ _ _ (n_pos.trans_le h), ←succ_le_iff, ←pred_eq_sub_one,
+      succ_pred_eq_of_pos (add_pos n_pos (n_pos.trans_le h)), succ_mul, one_mulₓ]
+    exact add_le_add_right h _
 
--- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--`clog b` and `pow b` form a Galois connection. -/
-theorem le_pow_iff_clog_le
-{b : exprℕ()}
-(hb : «expr < »(1, b))
-{x y : exprℕ()} : «expr ↔ »(«expr ≤ »(x, «expr ^ »(b, y)), «expr ≤ »(clog b x, y)) :=
-begin
-  induction [expr x] ["using", ident nat.strong_induction_on] ["with", ident x, ident ih] ["generalizing", ident y],
-  cases [expr y] [],
-  { rw ["[", expr pow_zero, "]"] [],
-    refine [expr ⟨λ h, (clog_of_right_le_one h b).le, _⟩],
-    simp_rw ["<-", expr not_lt] [],
-    contrapose ["!"] [],
-    exact [expr clog_pos hb] },
-  have [ident b_pos] [":", expr «expr < »(0, b)] [":=", expr zero_lt_two.trans_le hb],
-  rw [expr clog] [],
-  split_ifs [] [],
-  { rw ["[", expr succ_eq_add_one, ",", expr add_le_add_iff_right, ",", "<-", expr ih «expr / »(«expr - »(«expr + »(x, b), 1), b) (add_pred_div_lt hb h.2), ",", expr nat.div_le_iff_le_mul_add_pred b_pos, ",", "<-", expr pow_succ, ",", expr add_tsub_assoc_of_le (nat.succ_le_of_lt b_pos), ",", expr add_le_add_iff_right, "]"] [] },
-  { exact [expr iff_of_true «expr $ »((not_lt.1 (not_and.1 h hb)).trans, «expr $ »(succ_le_of_lt, pow_pos b_pos _)) (zero_le _)] }
-end
+theorem le_pow_iff_clog_le {b : ℕ} (hb : 1 < b) {x y : ℕ} : x ≤ b ^ y ↔ clog b x ≤ y :=
+  by 
+    induction' x using Nat.strong_induction_onₓ with x ih generalizing y 
+    cases y
+    ·
+      rw [pow_zeroₓ]
+      refine' ⟨fun h => (clog_of_right_le_one h b).le, _⟩
+      simpRw [←not_ltₓ]
+      contrapose! 
+      exact clog_pos hb 
+    have b_pos : 0 < b := zero_lt_two.trans_le hb 
+    rw [clog]
+    splitIfs
+    ·
+      rw [succ_eq_add_one, add_le_add_iff_right, ←ih (((x+b) - 1) / b) (add_pred_div_lt hb h.2),
+        Nat.div_le_iff_le_mul_add_pred b_pos, ←pow_succₓ, add_tsub_assoc_of_le (Nat.succ_le_of_ltₓ b_pos),
+        add_le_add_iff_right]
+    ·
+      exact iff_of_true ((not_ltₓ.1 (not_and.1 h hb)).trans$ succ_le_of_lt$ pow_pos b_pos _) (zero_le _)
 
 theorem clog_pow (b x : ℕ) (hb : 1 < b) : clog b (b ^ x) = x :=
   eq_of_forall_ge_iff$
@@ -272,13 +269,8 @@ theorem clog_le_clog_of_le (b : ℕ) {n m : ℕ} (h : n ≤ m) : clog b n ≤ cl
       rw [clog_of_left_le_one hb]
       exact zero_le _
     ·
-      obtain rfl | hn := n.eq_zero_or_pos
-      ·
-        rw [clog_zero_right]
-        exact zero_le _
-      ·
-        rw [←le_pow_iff_clog_le hb]
-        exact h.trans (le_pow_clog hb _)
+      rw [←le_pow_iff_clog_le hb]
+      exact h.trans (le_pow_clog hb _)
 
 theorem clog_le_clog_of_left_ge {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog b n ≤ clog c n :=
   by 

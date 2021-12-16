@@ -35,7 +35,8 @@ that `A` is a possibly infinite tree.
 
 ## Reference
 
- * [Jeremy Avigad, Mario M. Carneiro and Simon Hudon, *Data Types as Quotients of Polynomial Functors*][avigad-carneiro-hudon2019]
+ * Jeremy Avigad, Mario M. Carneiro and Simon Hudon.
+   [*Data Types as Quotients of Polynomial Functors*][avigad-carneiro-hudon2019]
 -/
 
 
@@ -173,7 +174,7 @@ theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.obj (α.append
     dsimp 
     rw [Mvpfunctor.map_eq]
     congr 
-    conv  => toRHS rw [←split_drop_fun_last_fun f, append_fun_comp_split_fun]
+    conv  => rhs rw [←split_drop_fun_last_fun f, append_fun_comp_split_fun]
     rfl
 
 theorem M.bisim_lemma {α : Typevec n} {a₁ : (Mp P).A} {f₁ : (Mp P).B a₁ ⟹ α} {a' : P.A} {f' : (P.B a').drop ⟹ α}
@@ -187,111 +188,106 @@ theorem M.bisim_lemma {α : Typevec n} {a₁ : (Mp P).A} {f₁ : (Mp P).B a₁ �
     cases e₁ 
     exact ⟨_, e₁', split_fun_inj ef⟩
 
--- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem M.bisim
-{α : typevec n}
-(R : P.M α → P.M α → exprProp())
-(h : ∀
- x
- y, R x y → «expr∃ , »((a
-   f
-   f₁
-   f₂), «expr ∧ »(«expr = »(M.dest P x, ⟨a, split_fun f f₁⟩), «expr ∧ »(«expr = »(M.dest P y, ⟨a, split_fun f f₂⟩), ∀
-    i, R (f₁ i) (f₂ i)))))
-(x y)
-(r : R x y) : «expr = »(x, y) :=
-begin
-  cases [expr x] ["with", ident a₁, ident f₁],
-  cases [expr y] ["with", ident a₂, ident f₂],
-  dsimp [] ["[", expr Mp, "]"] [] ["at", "*"],
-  have [] [":", expr «expr = »(a₁, a₂)] [],
-  { refine [expr pfunctor.M.bisim (λ
-      a₁
-      a₂, «expr∃ , »((x
-        y), «expr ∧ »(R x y, «expr ∧ »(«expr = »(x.1, a₁), «expr = »(y.1, a₂))))) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩],
-    rintro ["_", "_", "⟨", "⟨", ident a₁, ",", ident f₁, "⟩", ",", "⟨", ident a₂, ",", ident f₂, "⟩", ",", ident r, ",", ident rfl, ",", ident rfl, "⟩"],
-    rcases [expr h _ _ r, "with", "⟨", ident a', ",", ident f', ",", ident f₁', ",", ident f₂', ",", ident e₁, ",", ident e₂, ",", ident h', "⟩"],
-    rcases [expr M.bisim_lemma P e₁, "with", "⟨", ident g₁', ",", ident e₁', ",", ident rfl, ",", ident rfl, "⟩"],
-    rcases [expr M.bisim_lemma P e₂, "with", "⟨", ident g₂', ",", ident e₂', ",", "_", ",", ident rfl, "⟩"],
-    rw ["[", expr e₁', ",", expr e₂', "]"] [],
-    exact [expr ⟨_, _, _, rfl, rfl, λ b, ⟨_, _, h' b, rfl, rfl⟩⟩] },
-  subst [expr this],
-  congr' [] ["with", ident i, ident p],
-  induction [expr p] [] ["with", ident x, ident a, ident f, ident h', ident i, ident c, ident x, ident a, ident f, ident h', ident i, ident c, ident p, ident IH] ["generalizing", ident f₁, ident f₂]; try { rcases [expr h _ _ r, "with", "⟨", ident a', ",", ident f', ",", ident f₁', ",", ident f₂', ",", ident e₁, ",", ident e₂, ",", ident h'', "⟩"],
-    rcases [expr M.bisim_lemma P e₁, "with", "⟨", ident g₁', ",", ident e₁', ",", ident rfl, ",", ident rfl, "⟩"],
-    rcases [expr M.bisim_lemma P e₂, "with", "⟨", ident g₂', ",", ident e₂', ",", ident e₃, ",", ident rfl, "⟩"],
-    cases [expr h'.symm.trans e₁'] [],
-    cases [expr h'.symm.trans e₂'] [] },
-  { exact [expr (congr_fun (congr_fun e₃ i) c : _)] },
-  { exact [expr IH _ _ (h'' _)] }
-end
+theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
+  (h :
+    ∀ x y,
+      R x y → ∃ a f f₁ f₂, M.dest P x = ⟨a, split_fun f f₁⟩ ∧ M.dest P y = ⟨a, split_fun f f₂⟩ ∧ ∀ i, R (f₁ i) (f₂ i))
+  x y (r : R x y) : x = y :=
+  by 
+    cases' x with a₁ f₁ 
+    cases' y with a₂ f₂ 
+    dsimp [Mp]  at *
+    have  : a₁ = a₂
+    ·
+      refine' Pfunctor.M.bisim (fun a₁ a₂ => ∃ x y, R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
+      rintro _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
+      rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h'⟩
+      rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩
+      rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', _, rfl⟩
+      rw [e₁', e₂']
+      exact ⟨_, _, _, rfl, rfl, fun b => ⟨_, _, h' b, rfl, rfl⟩⟩
+    subst this 
+    congr with i p 
+    induction' p with x a f h' i c x a f h' i c p IH generalizing f₁ f₂ <;>
+      try 
+        rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h''⟩
+        rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩
+        rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', e₃, rfl⟩
+        cases h'.symm.trans e₁' 
+        cases h'.symm.trans e₂'
+    ·
+      exact (congr_funₓ (congr_funₓ e₃ i) c : _)
+    ·
+      exact IH _ _ (h'' _)
 
--- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem M.bisim₀
-{α : typevec n}
-(R : P.M α → P.M α → exprProp())
-(h₀ : equivalence R)
-(h : ∀
- x
- y, R x y → «expr = »(«expr <$$> »([«expr ::: »/«expr ::: »](id, quot.mk R), M.dest _ x), «expr <$$> »([«expr ::: »/«expr ::: »](id, quot.mk R), M.dest _ y)))
-(x y)
-(r : R x y) : «expr = »(x, y) :=
-begin
-  apply [expr M.bisim P R _ _ _ r],
-  clear [ident r, ident x, ident y],
-  introv [ident Hr],
-  specialize [expr h _ _ Hr],
-  clear [ident Hr],
-  rcases [expr M.dest P x, "with", "⟨", ident ax, ",", ident fx, "⟩"],
-  rcases [expr M.dest P y, "with", "⟨", ident ay, ",", ident fy, "⟩"],
-  intro [ident h],
-  rw ["[", expr map_eq, ",", expr map_eq, "]"] ["at", ident h],
-  injection [expr h] ["with", ident h₀, ident h₁],
-  subst [expr ay],
-  simp [] [] [] [] [] ["at", ident h₁],
-  clear [ident h],
-  have [ident Hdrop] [":", expr «expr = »(drop_fun fx, drop_fun fy)] [],
-  { replace [ident h₁] [] [":=", expr congr_arg drop_fun h₁],
-    simpa [] [] [] [] [] ["using", expr h₁] },
-  existsi ["[", expr ax, ",", expr drop_fun fx, ",", expr last_fun fx, ",", expr last_fun fy, "]"],
-  rw ["[", expr split_drop_fun_last_fun, ",", expr Hdrop, ",", expr split_drop_fun_last_fun, "]"] [],
-  simp [] [] [] [] [] [],
-  intro [ident i],
-  replace [ident h₁] [] [":=", expr congr_fun (congr_fun h₁ fin2.fz) i],
-  simp [] [] [] ["[", expr («expr ⊚ »), ",", expr append_fun, ",", expr split_fun, "]"] [] ["at", ident h₁],
-  replace [ident h₁] [] [":=", expr quot.exact _ h₁],
-  rw [expr h₀.eqv_gen_iff] ["at", ident h₁],
-  exact [expr h₁]
-end
+-- failed to format: format: uncaught backtrack exception
+theorem
+  M.bisim₀
+  { α : Typevec n }
+      ( R : P.M α → P.M α → Prop )
+      ( h₀ : Equivalenceₓ R )
+      ( h : ∀ x y , R x y → ( id ::: Quot.mk R ) <$$> M.dest _ x = ( id ::: Quot.mk R ) <$$> M.dest _ y )
+      x y
+      ( r : R x y )
+    : x = y
+  :=
+    by
+      apply M.bisim P R _ _ _ r
+        clear r x y
+        introv Hr
+        specialize h _ _ Hr
+        clear Hr
+        rcases M.dest P x with ⟨ ax , fx ⟩
+        rcases M.dest P y with ⟨ ay , fy ⟩
+        intro h
+        rw [ map_eq , map_eq ] at h
+        injection h with h₀ h₁
+        subst ay
+        simp at h₁
+        clear h
+        have Hdrop : drop_fun fx = drop_fun fy
+        · replace h₁ := congr_argₓ drop_fun h₁ simpa using h₁
+        exists ax , drop_fun fx , last_fun fx , last_fun fy
+        rw [ split_drop_fun_last_fun , Hdrop , split_drop_fun_last_fun ]
+        simp
+        intro i
+        replace h₁ := congr_funₓ ( congr_funₓ h₁ Fin2.fz ) i
+        simp [ · ⊚ · , append_fun , split_fun ] at h₁
+        replace h₁ := Quot.exact _ h₁
+        rw [ h₀.eqv_gen_iff ] at h₁
+        exact h₁
 
--- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem M.bisim'
-{α : typevec n}
-(R : P.M α → P.M α → exprProp())
-(h : ∀
- x
- y, R x y → «expr = »(«expr <$$> »([«expr ::: »/«expr ::: »](id, quot.mk R), M.dest _ x), «expr <$$> »([«expr ::: »/«expr ::: »](id, quot.mk R), M.dest _ y)))
-(x y)
-(r : R x y) : «expr = »(x, y) :=
-begin
-  have [] [] [":=", expr M.bisim₀ P (eqv_gen R) _ _],
-  { solve_by_elim [] [] ["[", expr eqv_gen.rel, "]"] [] },
-  { apply [expr eqv_gen.is_equivalence] },
-  { clear [ident r, ident x, ident y],
-    introv [ident Hr],
-    have [] [":", expr ∀ x y, R x y → eqv_gen R x y] [":=", expr @eqv_gen.rel _ R],
-    induction [expr Hr] [] [] [],
-    { rw ["<-", expr quot.factor_mk_eq R (eqv_gen R) this] [],
-      rwa ["[", expr append_fun_comp_id, ",", "<-", expr mvfunctor.map_map, ",", "<-", expr mvfunctor.map_map, ",", expr h, "]"] [] },
-    all_goals { cc } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: format: uncaught backtrack exception
+theorem
+  M.bisim'
+  { α : Typevec n }
+      ( R : P.M α → P.M α → Prop )
+      ( h : ∀ x y , R x y → id ::: Quot.mk R <$$> M.dest _ x = id ::: Quot.mk R <$$> M.dest _ y )
+      x y
+      ( r : R x y )
+    : x = y
+  :=
+    by
+      have := M.bisim₀ P EqvGen R _ _
+        · solveByElim [ EqvGen.rel ]
+        · apply EqvGen.is_equivalence
+        ·
+          clear r x y
+            introv Hr
+            have : ∀ x y , R x y → EqvGen R x y := @ EqvGen.rel _ R
+            induction Hr
+            ·
+              rw [ ← Quot.factor_mk_eq R EqvGen R this ]
+                rwa [ append_fun_comp_id , ← Mvfunctor.map_map , ← Mvfunctor.map_map , h ]
+            all_goals cc
 
 theorem M.dest_map {α β : Typevec n} (g : α ⟹ β) (x : P.M α) :
   M.dest P (g <$$> x) = (append_fun g fun x => g <$$> x) <$$> M.dest P x :=
   by 
     cases' x with a f 
     rw [map_eq]
-    conv  => toRHS rw [M.dest, M.dest', map_eq, append_fun_comp_split_fun]
+    conv  => rhs rw [M.dest, M.dest', map_eq, append_fun_comp_split_fun]
     rfl
 
 theorem M.map_dest {α β : Typevec n} (g : (α ::: P.M α) ⟹ (β ::: P.M β)) (x : P.M α)

@@ -31,18 +31,17 @@ variable {R : Type u} [CommRingₓ R]
 
 variable {n : Type w} [DecidableEq n] [Fintype n]
 
--- error in Algebra.Lie.Matrix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
 is compatible with the Lie algebra structures. -/
-def lie_equiv_matrix' : «expr ≃ₗ⁅ ⁆ »(module.End R (n → R), R, matrix n n R) :=
-{ map_lie' := λ T S, begin
-    let [ident f] [] [":=", expr @linear_map.to_matrix' R _ n n _ _],
-    change [expr «expr = »(f «expr - »(T.comp S, S.comp T), «expr - »(«expr * »(f T, f S), «expr * »(f S, f T)))] [] [],
-    have [ident h] [":", expr ∀
-     T S : module.End R _, «expr = »(f (T.comp S), «expr ⬝ »(f T, f S))] [":=", expr linear_map.to_matrix'_comp],
-    rw ["[", expr linear_equiv.map_sub, ",", expr h, ",", expr h, ",", expr matrix.mul_eq_mul, ",", expr matrix.mul_eq_mul, "]"] []
-  end,
-  ..linear_map.to_matrix' }
+def lieEquivMatrix' : Module.End R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
+  { LinearMap.toMatrix' with
+    map_lie' :=
+      fun T S =>
+        by 
+          let f := @LinearMap.toMatrix' R _ n n _ _ 
+          change f (T.comp S - S.comp T) = (f T*f S) - f S*f T 
+          have h : ∀ T S : Module.End R _, f (T.comp S) = f T ⬝ f S := LinearMap.to_matrix'_comp 
+          rw [LinearEquiv.map_sub, h, h, Matrix.mul_eq_mul, Matrix.mul_eq_mul] }
 
 @[simp]
 theorem lie_equiv_matrix'_apply (f : Module.End R (n → R)) : lieEquivMatrix' f = f.to_matrix' :=
@@ -75,7 +74,7 @@ def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
     map_lie' :=
       fun M N =>
         by 
-          simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply, ←Matrix.minor_mul_equiv _ _ _ _,
+          simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply, Matrix.minor_mul_equiv,
             Matrix.mul_eq_mul, Matrix.minor_sub, Pi.sub_apply] }
 
 @[simp]

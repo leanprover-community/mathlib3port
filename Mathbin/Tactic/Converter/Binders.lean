@@ -227,13 +227,15 @@ section
 
 variable [CompleteLattice α]
 
-example {s : Set β} {f : β → α} : Inf (Set.Image f s) = ⨅(a : _)(_ : a ∈ s), f a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+example {s : Set β} {f : β → α} : Inf (Set.Image f s) = ⨅ (a : _)(_ : a ∈ s), f a :=
   by 
     simp [Inf_eq_infi, infi_and]
     runTac 
       conversion infi_eq_elim.old_conv
 
-example {s : Set β} {f : β → α} : Sup (Set.Image f s) = ⨆(a : _)(_ : a ∈ s), f a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+example {s : Set β} {f : β → α} : Sup (Set.Image f s) = ⨆ (a : _)(_ : a ∈ s), f a :=
   by 
     simp [Sup_eq_supr, supr_and]
     runTac 

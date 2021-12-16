@@ -56,14 +56,14 @@ theorem ext {p q : SubMulAction R M} (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
 
 /-- Copy of a sub_mul_action with a new `carrier` equal to the old one. Useful to fix definitional
 equalities.-/
-protected def copy (p : SubMulAction R M) (s : Set M) (hs : s = «expr↑ » p) : SubMulAction R M :=
+protected def copy (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : SubMulAction R M :=
   { Carrier := s, smul_mem' := hs.symm ▸ p.smul_mem' }
 
 @[simp]
-theorem coe_copy (p : SubMulAction R M) (s : Set M) (hs : s = «expr↑ » p) : (p.copy s hs : Set M) = s :=
+theorem coe_copy (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : (p.copy s hs : Set M) = s :=
   rfl
 
-theorem copy_eq (p : SubMulAction R M) (s : Set M) (hs : s = «expr↑ » p) : p.copy s hs = p :=
+theorem copy_eq (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : p.copy s hs = p :=
   SetLike.coe_injective hs
 
 instance : HasBot (SubMulAction R M) :=
@@ -93,7 +93,7 @@ instance : HasScalar R p :=
 variable {p}
 
 @[simp, normCast]
-theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • «expr↑ » x :=
+theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • ↑x :=
   rfl
 
 @[simp, normCast]
@@ -135,16 +135,20 @@ instance has_scalar' : HasScalar S p :=
   { smul := fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩ }
 
 instance : IsScalarTower S R p :=
-  { smul_assoc := fun s r x => Subtype.ext$ smul_assoc s r («expr↑ » x) }
+  { smul_assoc := fun s r x => Subtype.ext$ smul_assoc s r (↑x) }
 
 @[simp, normCast]
-theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • «expr↑ » x :=
+theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
   rfl
 
 @[simp]
 theorem smul_mem_iff' {G} [Groupₓ G] [HasScalar G R] [MulAction G M] [IsScalarTower G R M] (g : G) {x : M} :
   g • x ∈ p ↔ x ∈ p :=
   ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem (g⁻¹) h, p.smul_of_tower_mem g⟩
+
+instance [HasScalar (Sᵐᵒᵖ) R] [HasScalar (Sᵐᵒᵖ) M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] :
+  IsCentralScalar S p :=
+  { op_smul_eq_smul := fun r x => Subtype.ext$ op_smul_eq_smul r x }
 
 end 
 

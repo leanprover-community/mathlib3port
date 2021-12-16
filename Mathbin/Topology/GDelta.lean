@@ -28,7 +28,7 @@ Gδ set, residual set
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical TopologicalSpace Filter uniformity
 
@@ -40,6 +40,7 @@ section IsGδ
 
 variable [TopologicalSpace α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » T)
 /-- A Gδ set is a countable intersection of open sets. -/
 def IsGδ (s : Set α) : Prop :=
   ∃ T : Set (Set α), (∀ t _ : t ∈ T, IsOpen t) ∧ countable T ∧ s = ⋂₀T
@@ -59,8 +60,10 @@ theorem is_Gδ_empty : IsGδ (∅ : Set α) :=
 theorem is_Gδ_univ : IsGδ (univ : Set α) :=
   is_open_univ.IsGδ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 theorem is_Gδ_bInter_of_open {I : Set ι} (hI : countable I) {f : ι → Set α} (hf : ∀ i _ : i ∈ I, IsOpen (f i)) :
-  IsGδ (⋂(i : _)(_ : i ∈ I), f i) :=
+  IsGδ (⋂ (i : _)(_ : i ∈ I), f i) :=
   ⟨f '' I,
     by 
       rwa [ball_image_iff],
@@ -68,7 +71,7 @@ theorem is_Gδ_bInter_of_open {I : Set ι} (hI : countable I) {f : ι → Set α
     by 
       rw [sInter_image]⟩
 
-theorem is_Gδ_Inter_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsOpen (f i)) : IsGδ (⋂i, f i) :=
+theorem is_Gδ_Inter_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsOpen (f i)) : IsGδ (⋂ i, f i) :=
   ⟨range f,
     by 
       rwa [forall_range_iff],
@@ -77,25 +80,24 @@ theorem is_Gδ_Inter_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsO
       rw [sInter_range]⟩
 
 /-- The intersection of an encodable family of Gδ sets is a Gδ set. -/
-theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)) : IsGδ (⋂i, s i) :=
+theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)) : IsGδ (⋂ i, s i) :=
   by 
     choose T hTo hTc hTs using hs 
     obtain rfl : s = fun i => ⋂₀T i := funext hTs 
-    refine' ⟨⋃i, T i, _, countable_Union hTc, (sInter_Union _).symm⟩
+    refine' ⟨⋃ i, T i, _, countable_Union hTc, (sInter_Union _).symm⟩
     simpa [@forall_swap ι] using hTo
 
--- error in Topology.GDelta: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_Gδ_bInter
-{s : set ι}
-(hs : countable s)
-{t : ∀ i «expr ∈ » s, set α}
-(ht : ∀ i «expr ∈ » s, is_Gδ (t i «expr‹ ›»(_))) : is_Gδ «expr⋂ , »((i «expr ∈ » s), t i «expr‹ ›»(_)) :=
-begin
-  rw ["[", expr bInter_eq_Inter, "]"] [],
-  haveI [] [] [":=", expr hs.to_encodable],
-  exact [expr is_Gδ_Inter (λ x, ht x x.2)]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem is_Gδ_bInter {s : Set ι} (hs : countable s) {t : ∀ i _ : i ∈ s, Set α} (ht : ∀ i _ : i ∈ s, IsGδ (t i ‹_›)) :
+  IsGδ (⋂ (i : _)(_ : i ∈ s), t i ‹_›) :=
+  by 
+    rw [bInter_eq_Inter]
+    have  := hs.to_encodable 
+    exact is_Gδ_Inter fun x => ht x x.2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 /-- A countable intersection of Gδ sets is a Gδ set. -/
 theorem is_Gδ_sInter {S : Set (Set α)} (h : ∀ s _ : s ∈ S, IsGδ s) (hS : countable S) : IsGδ (⋂₀S) :=
   by 
@@ -116,9 +118,11 @@ theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ 
     rintro ⟨a, b⟩ ⟨ha, hb⟩
     exact (Sopen a ha).union (Topen b hb)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- The union of finitely many Gδ sets is a Gδ set. -/
 theorem is_Gδ_bUnion {s : Set ι} (hs : s.finite) {f : ι → Set α} (h : ∀ i _ : i ∈ s, IsGδ (f i)) :
-  IsGδ (⋃(i : _)(_ : i ∈ s), f i) :=
+  IsGδ (⋃ (i : _)(_ : i ∈ s), f i) :=
   by 
     refine'
       finite.induction_on hs
@@ -130,7 +134,7 @@ theorem is_Gδ_bUnion {s : Set ι} (hs : s.finite) {f : ι → Set α} (h : ∀ 
 
 theorem IsClosed.is_Gδ {α} [UniformSpace α] [is_countably_generated (𝓤 α)] {s : Set α} (hs : IsClosed s) : IsGδ s :=
   by 
-    rcases(@uniformity_has_basis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -, -⟩
+    rcases(@uniformity_has_basis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩
     rw [←hs.closure_eq, ←hU.bInter_bUnion_ball]
     refine' is_Gδ_bInter (countable_encodable _) fun n hn => IsOpen.is_Gδ _ 
     exact is_open_bUnion fun x hx => UniformSpace.is_open_ball _ (hUo _).2
@@ -139,21 +143,21 @@ section T1Space
 
 variable [T1Space α]
 
-theorem is_Gδ_compl_singleton (a : α) : IsGδ («expr ᶜ» {a} : Set α) :=
+theorem is_Gδ_compl_singleton (a : α) : IsGδ ({a}ᶜ : Set α) :=
   is_open_compl_singleton.IsGδ
 
-theorem Set.Countable.is_Gδ_compl {s : Set α} (hs : countable s) : IsGδ («expr ᶜ» s) :=
+theorem Set.Countable.is_Gδ_compl {s : Set α} (hs : countable s) : IsGδ (sᶜ) :=
   by 
     rw [←bUnion_of_singleton s, compl_bUnion]
     exact is_Gδ_bInter hs fun x _ => is_Gδ_compl_singleton x
 
-theorem Set.Finite.is_Gδ_compl {s : Set α} (hs : finite s) : IsGδ («expr ᶜ» s) :=
+theorem Set.Finite.is_Gδ_compl {s : Set α} (hs : finite s) : IsGδ (sᶜ) :=
   hs.countable.is_Gδ_compl
 
-theorem Set.Subsingleton.is_Gδ_compl {s : Set α} (hs : s.subsingleton) : IsGδ («expr ᶜ» s) :=
+theorem Set.Subsingleton.is_Gδ_compl {s : Set α} (hs : s.subsingleton) : IsGδ (sᶜ) :=
   hs.finite.is_Gδ_compl
 
-theorem Finset.is_Gδ_compl (s : Finset α) : IsGδ («expr ᶜ» s : Set α) :=
+theorem Finset.is_Gδ_compl (s : Finset α) : IsGδ (sᶜ : Set α) :=
   s.finite_to_set.is_Gδ_compl
 
 open TopologicalSpace
@@ -181,18 +185,24 @@ open_locale uniformity
 
 variable [TopologicalSpace α]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The set of points where a function is continuous is a Gδ set. -/
-theorem is_Gδ_set_of_continuous_at [UniformSpace β] [is_countably_generated (𝓤 β)] (f : α → β) :
-  IsGδ { x | ContinuousAt f x } :=
-  by 
-    obtain ⟨U, hUo, hU⟩ := (@uniformity_has_basis_open_symmetric β _).exists_antitone_subbasis 
-    simp only [Uniform.continuous_at_iff_prod, nhds_prod_eq]
-    simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true, set_of_forall, id]
-    refine' is_Gδ_Inter fun k => IsOpen.is_Gδ$ is_open_iff_mem_nhds.2$ fun x => _ 
-    rintro ⟨s, ⟨hsx, hso⟩, hsU⟩
-    filterUpwards [IsOpen.mem_nhds hso hsx]
-    intro y hy 
-    exact ⟨s, ⟨hy, hso⟩, hsU⟩
+  theorem
+    is_Gδ_set_of_continuous_at
+    [ UniformSpace β ] [ is_countably_generated 𝓤 β ] ( f : α → β ) : IsGδ { x | ContinuousAt f x }
+    :=
+      by
+        obtain ⟨ U , hUo , hU ⟩ := @ uniformity_has_basis_open_symmetric β _ . exists_antitone_subbasis
+          simp only [ Uniform.continuous_at_iff_prod , nhds_prod_eq ]
+          simp
+            only
+            [ nhds_basis_opens _ . prod_self . tendsto_iff hU.to_has_basis , forall_prop_of_true , set_of_forall , id ]
+          refine' is_Gδ_Inter fun k => IsOpen.is_Gδ $ is_open_iff_mem_nhds . 2 $ fun x => _
+          rintro ⟨ s , ⟨ hsx , hso ⟩ , hsU ⟩
+          filterUpwards [ IsOpen.mem_nhds hso hsx ]
+          intro y hy
+          exact ⟨ s , ⟨ hy , hso ⟩ , hsU ⟩
 
 end ContinuousAt
 
@@ -202,5 +212,5 @@ end ContinuousAt
 For technical reasons we define the filter `residual` in any topological space but in a non-Baire
 space it is not useful because it may contain some non-residual sets. -/
 def residual (α : Type _) [TopologicalSpace α] : Filter α :=
-  ⨅(t : _)(ht : IsGδ t)(ht' : Dense t), 𝓟 t
+  ⨅ (t : _)(ht : IsGδ t)(ht' : Dense t), 𝓟 t
 

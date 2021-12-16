@@ -12,7 +12,7 @@ asserts the existence of some `P.factor_thru f : X ⟶ (P : C)` making the obvio
 
 universe v₁ v₂ u₁ u₂
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
@@ -59,7 +59,7 @@ def factors {X Y : C} (P : subobject Y) (f : X ⟶ Y) : Prop :=
     (by 
       rintro P Q ⟨h⟩
       apply propext 
-      split 
+      constructor
       ·
         rintro ⟨i, w⟩
         exact
@@ -142,7 +142,7 @@ theorem factor_thru_comp_arrow {X Y : C} {P : subobject Y} (f : X ⟶ P) h : P.f
 theorem factor_thru_eq_zero [has_zero_morphisms C] {X Y : C} {P : subobject Y} {f : X ⟶ Y} {h : factors P f} :
   P.factor_thru f h = 0 ↔ f = 0 :=
   by 
-    fsplit
+    fconstructor
     ·
       intro w 
       replace w := w =≫ P.arrow 

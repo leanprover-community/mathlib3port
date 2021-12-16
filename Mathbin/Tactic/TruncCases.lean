@@ -25,6 +25,7 @@ private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tacti
     tactic.swap 
     return e
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic expr :=
   do 

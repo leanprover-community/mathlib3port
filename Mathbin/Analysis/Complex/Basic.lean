@@ -25,7 +25,7 @@ We also register the fact that `ℂ` is an `is_R_or_C` field.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Complex
 
@@ -317,7 +317,7 @@ end
 theorem has_sum_iff {α} (f : α → ℂ) (c : ℂ) :
   HasSum f c ↔ HasSum (fun x => (f x).re) c.re ∧ HasSum (fun x => (f x).im) c.im :=
   by 
-    refine' ⟨fun h => ⟨h.mapL re_clm, h.mapL im_clm⟩, _⟩
+    refine' ⟨fun h => ⟨re_clm.has_sum h, im_clm.has_sum h⟩, _⟩
     rintro ⟨h₁, h₂⟩
     convert (h₁.prod_mk h₂).mapL equiv_real_prodₗ.symm.to_continuous_linear_map
     ·

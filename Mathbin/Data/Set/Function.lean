@@ -1,4 +1,4 @@
-import Mathbin.Data.Set.Basic 
+import Mathbin.Data.Set.Prod 
 import Mathbin.Logic.Function.Conjugate
 
 /-!
@@ -58,14 +58,18 @@ theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coeₓ 
   by 
     rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a _ : a ∈ s, β) (g : ∀ a _ : a ∉ s, β) :
   restrict (fun a => if h : a ∈ s then f a h else g a h) s = fun a => f a a.2 :=
   funext$ fun a => dif_pos a.2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a _ : a ∈ s, β) (g : ∀ a _ : a ∉ s, β) :
-  restrict (fun a => if h : a ∈ s then f a h else g a h) («expr ᶜ» s) = fun a => g a a.2 :=
+  restrict (fun a => if h : a ∈ s then f a h else g a h) (sᶜ) = fun a => g a a.2 :=
   funext$ fun a => dif_neg a.2
 
 @[simp]
@@ -75,7 +79,7 @@ theorem restrict_ite (f g : α → β) (s : Set α) [∀ x, Decidable (x ∈ s)]
 
 @[simp]
 theorem restrict_ite_compl (f g : α → β) (s : Set α) [∀ x, Decidable (x ∈ s)] :
-  restrict (fun a => if a ∈ s then f a else g a) («expr ᶜ» s) = restrict g («expr ᶜ» s) :=
+  restrict (fun a => if a ∈ s then f a else g a) (sᶜ) = restrict g (sᶜ) :=
   restrict_dite_compl _ _
 
 @[simp]
@@ -85,7 +89,7 @@ theorem restrict_piecewise (f g : α → β) (s : Set α) [∀ x, Decidable (x �
 
 @[simp]
 theorem restrict_piecewise_compl (f g : α → β) (s : Set α) [∀ x, Decidable (x ∈ s)] :
-  restrict (piecewise s f g) («expr ᶜ» s) = restrict g («expr ᶜ» s) :=
+  restrict (piecewise s f g) (sᶜ) = restrict g (sᶜ) :=
   restrict_ite_compl _ _ _
 
 theorem restrict_extend_range (f : α → β) (g : α → γ) (g' : β → γ) :
@@ -95,12 +99,11 @@ theorem restrict_extend_range (f : α → β) (g : α → γ) (g' : β → γ) :
 
 @[simp]
 theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β → γ) :
-  restrict (extend f g g') («expr ᶜ» (range f)) = g' ∘ coeₓ :=
+  restrict (extend f g g') (range fᶜ) = g' ∘ coeₓ :=
   by 
     convert restrict_dite_compl _ _
 
-theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) :
-  range (extend f g g') ⊆ range g ∪ g' '' «expr ᶜ» (range f) :=
+theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : range (extend f g g') ⊆ range g ∪ g' '' range fᶜ :=
   by 
     classical 
     rintro _ ⟨y, rfl⟩
@@ -109,7 +112,7 @@ theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) :
     exacts[Or.inl (mem_range_self _), Or.inr (mem_image_of_mem _ h)]
 
 theorem range_extend {f : α → β} (hf : injective f) (g : α → γ) (g' : β → γ) :
-  range (extend f g g') = range g ∪ g' '' «expr ᶜ» (range f) :=
+  range (extend f g g') = range g ∪ g' '' range fᶜ :=
   by 
     refine' (range_extend_subset _ _ _).antisymm _ 
     rintro z (⟨x, rfl⟩ | ⟨y, hy, rfl⟩)
@@ -297,7 +300,7 @@ theorem surjective_maps_to_image_restrict (f : α → β) (s : Set α) :
   surjective ((maps_to_image f s).restrict f s (f '' s)) :=
   fun ⟨y, x, hs, hxy⟩ => ⟨⟨x, hs⟩, Subtype.ext hxy⟩
 
-theorem maps_to.mem_iff (h : maps_to f s t) (hc : maps_to f («expr ᶜ» s) («expr ᶜ» t)) {x} : f x ∈ t ↔ x ∈ s :=
+theorem maps_to.mem_iff (h : maps_to f s t) (hc : maps_to f (sᶜ) (tᶜ)) {x} : f x ∈ t ↔ x ∈ s :=
   ⟨fun ht => by_contra$ fun hs => hc hs ht, fun hx => h hx⟩
 
 /-! ### Injectivity on a set -/
@@ -331,6 +334,8 @@ theorem eq_on.inj_on_iff (H : eq_on f₁ f₂ s) : inj_on f₁ s ↔ inj_on f₂
 theorem inj_on.mono (h : s₁ ⊆ s₂) (ht : inj_on f s₂) : inj_on f s₁ :=
   fun x hx y hy H => ht (h hx) (h hy) H
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s₂)
 theorem inj_on_union (h : Disjoint s₁ s₂) :
   inj_on f (s₁ ∪ s₂) ↔ inj_on f s₁ ∧ inj_on f s₂ ∧ ∀ x _ : x ∈ s₁ y _ : y ∈ s₂, f x ≠ f y :=
   by 
@@ -424,20 +429,16 @@ theorem surj_on.union (h₁ : surj_on f s t₁) (h₂ : surj_on f s t₂) : surj
 theorem surj_on.union_union (h₁ : surj_on f s₁ t₁) (h₂ : surj_on f s₂ t₂) : surj_on f (s₁ ∪ s₂) (t₁ ∪ t₂) :=
   (h₁.mono (subset_union_left _ _) (subset.refl _)).union (h₂.mono (subset_union_right _ _) (subset.refl _))
 
--- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem surj_on.inter_inter
-(h₁ : surj_on f s₁ t₁)
-(h₂ : surj_on f s₂ t₂)
-(h : inj_on f «expr ∪ »(s₁, s₂)) : surj_on f «expr ∩ »(s₁, s₂) «expr ∩ »(t₁, t₂) :=
-begin
-  intros [ident y, ident hy],
-  rcases [expr h₁ hy.1, "with", "⟨", ident x₁, ",", ident hx₁, ",", ident rfl, "⟩"],
-  rcases [expr h₂ hy.2, "with", "⟨", ident x₂, ",", ident hx₂, ",", ident heq, "⟩"],
-  have [] [":", expr «expr = »(x₁, x₂)] [],
-  from [expr h (or.inl hx₁) (or.inr hx₂) heq.symm],
-  subst [expr x₂],
-  exact [expr mem_image_of_mem f ⟨hx₁, hx₂⟩]
-end
+theorem surj_on.inter_inter (h₁ : surj_on f s₁ t₁) (h₂ : surj_on f s₂ t₂) (h : inj_on f (s₁ ∪ s₂)) :
+  surj_on f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
+  by 
+    intro y hy 
+    rcases h₁ hy.1 with ⟨x₁, hx₁, rfl⟩
+    rcases h₂ hy.2 with ⟨x₂, hx₂, heq⟩
+    have  : x₁ = x₂ 
+    exact h (Or.inl hx₁) (Or.inr hx₂) HEq.symm 
+    subst x₂ 
+    exact mem_image_of_mem f ⟨hx₁, hx₂⟩
 
 theorem surj_on.inter (h₁ : surj_on f s₁ t) (h₂ : surj_on f s₂ t) (h : inj_on f (s₁ ∪ s₂)) : surj_on f (s₁ ∩ s₂) t :=
   inter_self t ▸ h₁.inter_inter h₂ h
@@ -460,12 +461,12 @@ theorem surj_on_iff_surjective : surj_on f s univ ↔ surjective (restrict f s) 
 theorem surj_on.image_eq_of_maps_to (h₁ : surj_on f s t) (h₂ : maps_to f s t) : f '' s = t :=
   eq_of_subset_of_subset h₂.image_subset h₁
 
-theorem surj_on.maps_to_compl (h : surj_on f s t) (h' : injective f) : maps_to f («expr ᶜ» s) («expr ᶜ» t) :=
+theorem surj_on.maps_to_compl (h : surj_on f s t) (h' : injective f) : maps_to f (sᶜ) (tᶜ) :=
   fun x hs ht =>
     let ⟨x', hx', HEq⟩ := h ht 
     hs$ h' HEq ▸ hx'
 
-theorem maps_to.surj_on_compl (h : maps_to f s t) (h' : surjective f) : surj_on f («expr ᶜ» s) («expr ᶜ» t) :=
+theorem maps_to.surj_on_compl (h : maps_to f s t) (h' : surjective f) : surj_on f (sᶜ) (tᶜ) :=
   h'.forall.2$ fun x ht => mem_image_of_mem _$ fun hs => ht (h hs)
 
 /-! ### Bijectivity -/
@@ -533,7 +534,7 @@ theorem bijective_iff_bij_on_univ : bijective f ↔ bij_on f univ univ :=
       let ⟨map, inj, surj⟩ := h
       ⟨Iff.mpr injective_iff_inj_on_univ inj, Iff.mpr surjective_iff_surj_on_univ surj⟩
 
-theorem bij_on.compl (hst : bij_on f s t) (hf : bijective f) : bij_on f («expr ᶜ» s) («expr ᶜ» t) :=
+theorem bij_on.compl (hst : bij_on f s t) (hf : bijective f) : bij_on f (sᶜ) (tᶜ) :=
   ⟨hst.surj_on.maps_to_compl hf.1, hf.1.InjOn _, hst.maps_to.surj_on_compl hf.2⟩
 
 /-! ### left inverse -/
@@ -723,21 +724,24 @@ theorem surj_on.bij_on_subset [Nonempty α] (h : surj_on f s t) : bij_on f (inv_
     rintro _ ⟨y, hy, rfl⟩
     rwa [h.right_inv_on_inv_fun_on hy]
 
--- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem surj_on_iff_exists_bij_on_subset : «expr ↔ »(surj_on f s t, «expr∃ , »((s' «expr ⊆ » s), bij_on f s' t)) :=
-begin
-  split,
-  { rcases [expr eq_empty_or_nonempty t, "with", ident rfl, "|", ident ht],
-    { exact [expr λ _, ⟨«expr∅»(), empty_subset _, bij_on_empty f⟩] },
-    { assume [binders (h)],
-      haveI [] [":", expr nonempty α] [":=", expr ⟨classical.some (h.comap_nonempty ht)⟩],
-      exact [expr ⟨_, h.maps_to_inv_fun_on.image_subset, h.bij_on_subset⟩] } },
-  { rintros ["⟨", ident s', ",", ident hs', ",", ident hfs', "⟩"],
-    exact [expr hfs'.surj_on.mono hs' (subset.refl _)] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s' «expr ⊆ » s)
+theorem surj_on_iff_exists_bij_on_subset : surj_on f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), bij_on f s' t :=
+  by 
+    constructor
+    ·
+      rcases eq_empty_or_nonempty t with (rfl | ht)
+      ·
+        exact fun _ => ⟨∅, empty_subset _, bij_on_empty f⟩
+      ·
+        intro h 
+        have  : Nonempty α := ⟨Classical.some (h.comap_nonempty ht)⟩
+        exact ⟨_, h.maps_to_inv_fun_on.image_subset, h.bij_on_subset⟩
+    ·
+      rintro ⟨s', hs', hfs'⟩
+      exact hfs'.surj_on.mono hs' (subset.refl _)
 
 theorem preimage_inv_fun_of_mem [n : Nonempty α] {f : α → β} (hf : injective f) {s : Set α}
-  (h : Classical.choice n ∈ s) : inv_fun f ⁻¹' s = f '' s ∪ «expr ᶜ» (range f) :=
+  (h : Classical.choice n ∈ s) : inv_fun f ⁻¹' s = f '' s ∪ range fᶜ :=
   by 
     ext x 
     rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
@@ -746,21 +750,17 @@ theorem preimage_inv_fun_of_mem [n : Nonempty α] {f : α → β} (hf : injectiv
     ·
       simp [mem_preimage, inv_fun_neg hx, h, hx]
 
--- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem preimage_inv_fun_of_not_mem
-[n : nonempty α]
-{f : α → β}
-(hf : injective f)
-{s : set α}
-(h : «expr ∉ »(classical.choice n, s)) : «expr = »(«expr ⁻¹' »(inv_fun f, s), «expr '' »(f, s)) :=
-begin
-  ext [] [ident x] [],
-  rcases [expr em «expr ∈ »(x, range f), "with", "⟨", ident a, ",", ident rfl, "⟩", "|", ident hx],
-  { rw ["[", expr mem_preimage, ",", expr left_inverse_inv_fun hf, ",", expr hf.mem_set_image, "]"] [] },
-  { have [] [":", expr «expr ∉ »(x, «expr '' »(f, s))] [],
-    from [expr λ h', hx (image_subset_range _ _ h')],
-    simp [] [] ["only"] ["[", expr mem_preimage, ",", expr inv_fun_neg hx, ",", expr h, ",", expr this, "]"] [] [] }
-end
+theorem preimage_inv_fun_of_not_mem [n : Nonempty α] {f : α → β} (hf : injective f) {s : Set α}
+  (h : Classical.choice n ∉ s) : inv_fun f ⁻¹' s = f '' s :=
+  by 
+    ext x 
+    rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
+    ·
+      rw [mem_preimage, left_inverse_inv_fun hf, hf.mem_set_image]
+    ·
+      have  : x ∉ f '' s 
+      exact fun h' => hx (image_subset_range _ _ h')
+      simp only [mem_preimage, inv_fun_neg hx, h, this]
 
 end Set
 
@@ -808,7 +808,7 @@ theorem piecewise_insert_self {j : α} [∀ i, Decidable (i ∈ insert j s)] : (
 
 variable [∀ j, Decidable (j ∈ s)]
 
-instance compl.decidable_mem (j : α) : Decidable (j ∈ «expr ᶜ» s) :=
+instance compl.decidable_mem (j : α) : Decidable (j ∈ sᶜ) :=
   Not.decidable
 
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
@@ -845,9 +845,11 @@ theorem piecewise_singleton (x : α) [∀ y, Decidable (y ∈ ({x} : Set α))] [
 theorem piecewise_eq_on (f g : α → β) : eq_on (s.piecewise f g) f s :=
   fun _ => piecewise_eq_of_mem _ _ _
 
-theorem piecewise_eq_on_compl (f g : α → β) : eq_on (s.piecewise f g) g («expr ᶜ» s) :=
+theorem piecewise_eq_on_compl (f g : α → β) : eq_on (s.piecewise f g) g (sᶜ) :=
   fun _ => piecewise_eq_of_not_mem _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
   (h₁ : ∀ i _ : i ∈ s, f₁ i ≤ g i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g :=
   fun i =>
@@ -858,10 +860,14 @@ theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set �
       by 
         simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
   (h₁ : ∀ i _ : i ∈ s, g i ≤ f₁ i) (h₂ : ∀ i _ : i ∉ s, g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => OrderDual (δ i)) _ s _ _ _ _ h₁ h₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
   {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀ i _ : i ∈ s, f₁ i ≤ g₁ i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g₂ i) :
   s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ :=
@@ -875,7 +881,7 @@ theorem piecewise_insert_of_ne {i j : α} (h : i ≠ j) [∀ i, Decidable (i ∈
     simp [piecewise, h]
 
 @[simp]
-theorem piecewise_compl [∀ i, Decidable (i ∈ «expr ᶜ» s)] : («expr ᶜ» s).piecewise f g = s.piecewise g f :=
+theorem piecewise_compl [∀ i, Decidable (i ∈ sᶜ)] : sᶜ.piecewise f g = s.piecewise g f :=
   funext$
     fun x =>
       if hx : x ∈ s then
@@ -891,21 +897,20 @@ theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j 
   comp_eq_of_eq_on_range$ piecewise_eq_on _ _ _
 
 theorem maps_to.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁ f₂ : α → β} [∀ i, Decidable (i ∈ s)]
-  (h₁ : maps_to f₁ (s₁ ∩ s) (t₁ ∩ t)) (h₂ : maps_to f₂ (s₂ ∩ «expr ᶜ» s) (t₂ ∩ «expr ᶜ» t)) :
+  (h₁ : maps_to f₁ (s₁ ∩ s) (t₁ ∩ t)) (h₂ : maps_to f₂ (s₂ ∩ sᶜ) (t₂ ∩ tᶜ)) :
   maps_to (s.piecewise f₁ f₂) (s.ite s₁ s₂) (t.ite t₁ t₂) :=
   by 
     refine' (h₁.congr _).union_union (h₂.congr _)
     exacts[(piecewise_eq_on s f₁ f₂).symm.mono (inter_subset_right _ _),
       (piecewise_eq_on_compl s f₁ f₂).symm.mono (inter_subset_right _ _)]
 
-theorem eq_on_piecewise {f f' g : α → β} {t} :
-  eq_on (s.piecewise f f') g t ↔ eq_on f g (t ∩ s) ∧ eq_on f' g (t ∩ «expr ᶜ» s) :=
+theorem eq_on_piecewise {f f' g : α → β} {t} : eq_on (s.piecewise f f') g t ↔ eq_on f g (t ∩ s) ∧ eq_on f' g (t ∩ sᶜ) :=
   by 
     simp only [eq_on, ←forall_and_distrib]
     refine' forall_congrₓ fun a => _ 
     byCases' a ∈ s <;> simp 
 
-theorem eq_on.piecewise_ite' {f f' g : α → β} {t t'} (h : eq_on f g (t ∩ s)) (h' : eq_on f' g (t' ∩ «expr ᶜ» s)) :
+theorem eq_on.piecewise_ite' {f f' g : α → β} {t t'} (h : eq_on f g (t ∩ s)) (h' : eq_on f' g (t' ∩ sᶜ)) :
   eq_on (s.piecewise f f') g (s.ite t t') :=
   by 
     simp [eq_on_piecewise]
@@ -946,18 +951,20 @@ theorem piecewise_same : s.piecewise f f = f :=
     ext x 
     byCases' hx : x ∈ s <;> simp [hx]
 
-theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪ g '' «expr ᶜ» s :=
+theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪ g '' sᶜ :=
   by 
     ext y 
-    split 
+    constructor
     ·
       rintro ⟨x, rfl⟩
       byCases' h : x ∈ s <;> [left, right] <;> use x <;> simp [h]
     ·
       rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∉ » s)
 theorem injective_piecewise_iff {f g : α → β} :
-  injective (s.piecewise f g) ↔ inj_on f s ∧ inj_on g («expr ᶜ» s) ∧ ∀ x _ : x ∈ s y _ : y ∉ s, f x ≠ g y :=
+  injective (s.piecewise f g) ↔ inj_on f s ∧ inj_on g (sᶜ) ∧ ∀ x _ : x ∈ s y _ : y ∉ s, f x ≠ g y :=
   by 
     rw [injective_iff_inj_on_univ, ←union_compl_self s, inj_on_union (@disjoint_compl_right _ s _),
       (piecewise_eq_on s f g).inj_on_iff, (piecewise_eq_on_compl s f g).inj_on_iff]
@@ -1082,18 +1089,13 @@ theorem maps_to_preimage (h : semiconj f fa fb) {s t : Set β} (hb : maps_to fb 
     by 
       simp only [mem_preimage, h x, hb hx]
 
--- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inj_on_preimage
-(h : semiconj f fa fb)
-{s : set β}
-(hb : inj_on fb s)
-(hf : inj_on f «expr ⁻¹' »(f, s)) : inj_on fa «expr ⁻¹' »(f, s) :=
-begin
-  intros [ident x, ident hx, ident y, ident hy, ident H],
-  have [] [] [":=", expr congr_arg f H],
-  rw ["[", expr h.eq, ",", expr h.eq, "]"] ["at", ident this],
-  exact [expr hf hx hy (hb hx hy this)]
-end
+theorem inj_on_preimage (h : semiconj f fa fb) {s : Set β} (hb : inj_on fb s) (hf : inj_on f (f ⁻¹' s)) :
+  inj_on fa (f ⁻¹' s) :=
+  by 
+    intro x hx y hy H 
+    have  := congr_argₓ f H 
+    rw [h.eq, h.eq] at this 
+    exact hf hx hy (hb hx hy this)
 
 end Semiconj
 

@@ -42,14 +42,14 @@ free group, free groupoid, Nielsen-Schreier
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
 universe v u
 
--- error in GroupTheory.NielsenSchreier: ././Mathport/Syntax/Translate/Basic.lean:882:11: unsupported: unusual advanced open style
-open category_theory category_theory.action_category category_theory.single_obj quiver is_free_group as fgp
+-- ././Mathport/Syntax/Translate/Basic.lean:930:11: unsupported: unusual advanced open style
+open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver
 
 /-- `is_free_groupoid.generators G` is a type synonym for `G`. We think of this as
 the vertices of the generating quiver of `G` when `G` is free. We can't use `G` directly,
@@ -71,7 +71,7 @@ class IsFreeGroupoid (G) [groupoid.{v} G] where
   of : ∀ {a b : IsFreeGroupoid.Generators G}, (a ⟶ b) → ((show G from a) ⟶ b)
   unique_lift :
   ∀ {X : Type v} [Groupₓ X] f : labelling (IsFreeGroupoid.Generators G) X,
-    ∃!F : G ⥤ single_obj X, ∀ a b g : a ⟶ b, F.map (of g) = f g
+    ∃! F : G ⥤ single_obj X, ∀ a b g : a ⟶ b, F.map (of g) = f g
 
 namespace IsFreeGroupoid
 
@@ -85,51 +85,56 @@ theorem ext_functor {G} [groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Group�
   let ⟨_, _, u⟩ := @unique_lift G _ _ X _ fun a b : generators G e : a ⟶ b => g.map (of e)
   trans (u _ h) (u _ fun _ _ _ => rfl).symm
 
--- error in GroupTheory.NielsenSchreier: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An action groupoid over a free froup is free. More generally, one could show that the groupoid
 of elements over a free groupoid is free, but this version is easier to prove and suffices for our
 purposes.
 
 Analogous to the fact that a covering space of a graph is a graph. (A free groupoid is like a graph,
 and a groupoid of elements is like a covering space.) -/
-instance action_groupoid_is_free
-{G A : Type u}
-[group G]
-[is_free_group G]
-[mul_action G A] : is_free_groupoid (action_category G A) :=
-{ quiver_generators := ⟨λ a b, {e : fgp.generators G // «expr = »(«expr • »(fgp.of e, a.back), b.back)}⟩,
-  of := λ a b e, ⟨fgp.of e, e.property⟩,
-  unique_lift := begin
-    introsI [ident X, "_", ident f],
-    let [ident f'] [":", expr fgp.generators G → «expr ⋊[ ] »(A → X, mul_aut_arrow, G)] [":=", expr λ
-     e, ⟨λ b, @f ⟨(), _⟩ ⟨(), b⟩ ⟨e, smul_inv_smul _ b⟩, fgp.of e⟩],
-    rcases [expr fgp.unique_lift f', "with", "⟨", ident F', ",", ident hF', ",", ident uF', "⟩"],
-    refine [expr ⟨uncurry F' _, _, _⟩],
-    { suffices [] [":", expr «expr = »(semidirect_product.right_hom.comp F', monoid_hom.id _)],
-      { exact [expr monoid_hom.ext_iff.mp this] },
-      ext [] [] [],
-      rw ["[", expr monoid_hom.comp_apply, ",", expr hF', "]"] [],
-      refl },
-    { rintros ["⟨", "⟨", "⟩", ",", ident a, ":", expr A, "⟩", "⟨", "⟨", "⟩", ",", ident b, "⟩", "⟨", ident e, ",", ident h, ":", expr «expr = »(«expr • »(fgp.of e, a), b), "⟩"],
-      change [expr «expr = »((F' (fgp.of _)).left _, _)] [] [],
-      rw [expr hF'] [],
-      cases [expr inv_smul_eq_iff.mpr h.symm] [],
-      refl },
-    { intros [ident E, ident hE],
-      have [] [":", expr «expr = »(curry E, F')] [],
-      { apply [expr uF'],
-        intro [ident e],
-        ext [] [] [],
-        { convert [] [expr hE _ _ _] [],
-          refl },
-        { refl } },
-      apply [expr functor.hext],
-      { intro [],
-        apply [expr unit.ext] },
-      { refine [expr action_category.cases _],
-        intros [],
-        simp [] [] ["only"] ["[", "<-", expr this, ",", expr uncurry_map, ",", expr curry_apply_left, ",", expr coe_back, ",", expr hom_of_pair.val, "]"] [] [] } }
-  end }
+instance action_groupoid_is_free {G A : Type u} [Groupₓ G] [IsFreeGroup G] [MulAction G A] :
+  IsFreeGroupoid (action_category G A) :=
+  { quiverGenerators := ⟨fun a b => { e : fgp.generators G // fgp.of e • a.back = b.back }⟩,
+    of := fun a b e => ⟨fgp.of e, e.property⟩,
+    unique_lift :=
+      by 
+        intros X _ f 
+        let f' : fgp.generators G → (A → X) ⋊[mulAutArrow] G :=
+          fun e => ⟨fun b => @f ⟨(), _⟩ ⟨(), b⟩ ⟨e, smul_inv_smul _ b⟩, fgp.of e⟩
+        rcases fgp.unique_lift f' with ⟨F', hF', uF'⟩
+        refine' ⟨uncurry F' _, _, _⟩
+        ·
+          suffices  : semidirect_product.right_hom.comp F' = MonoidHom.id _
+          ·
+            exact monoid_hom.ext_iff.mp this 
+          ext 
+          rw [MonoidHom.comp_apply, hF']
+          rfl
+        ·
+          rintro ⟨⟨⟩, a : A⟩ ⟨⟨⟩, b⟩ ⟨e, h : fgp.of e • a = b⟩
+          change (F' (fgp.of _)).left _ = _ 
+          rw [hF']
+          cases inv_smul_eq_iff.mpr h.symm 
+          rfl
+        ·
+          intro E hE 
+          have  : curry E = F'
+          ·
+            apply uF' 
+            intro e 
+            ext
+            ·
+              convert hE _ _ _ 
+              rfl
+            ·
+              rfl 
+          apply functor.hext
+          ·
+            intro 
+            apply Unit.ext
+          ·
+            refine' action_category.cases _ 
+            intros 
+            simp only [←this, uncurry_map, curry_apply_left, coe_back, hom_of_pair.val] }
 
 namespace SpanningTree
 
@@ -162,6 +167,7 @@ theorem tree_hom_root : tree_hom T (root' T) = 𝟙 _ :=
 def loop_of_hom {a b : G} (p : a ⟶ b) : End (root' T) :=
   tree_hom T a ≫ p ≫ inv (tree_hom T b)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify T a b)
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loop_of_hom_eq_id {a b : generators G} e (_ : e ∈ wide_subquiver_symmetrify T a b) :
   loop_of_hom T (of e) = 𝟙 (root' T) :=
@@ -257,7 +263,7 @@ theorem path_nonempty_of_hom {G} [groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G
     rintro ⟨p⟩
     rw [←weakly_connected_component.eq, eq_comm, ←free_group.of_injective.eq_iff, ←mul_inv_eq_one]
     let X := FreeGroup (weakly_connected_component$ symmetrify$ generators G)
-    let f : G → X := fun g => FreeGroup.of («expr↑ » (symgen g))
+    let f : G → X := fun g => FreeGroup.of (↑symgen g)
     let F : G ⥤ single_obj X := single_obj.difference_functor f 
     change F.map p = ((CategoryTheory.Functor.const G).obj ()).map p 
     congr 

@@ -110,14 +110,14 @@ theorem ext {S T : Subring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 
 /-- Copy of a subring with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (S : Subring R) (s : Set R) (hs : s = «expr↑ » S) : Subring R :=
+protected def copy (S : Subring R) (s : Set R) (hs : s = ↑S) : Subring R :=
   { S.to_subsemiring.copy s hs with Carrier := s, neg_mem' := hs.symm ▸ S.neg_mem' }
 
 @[simp]
-theorem coe_copy (S : Subring R) (s : Set R) (hs : s = «expr↑ » S) : (S.copy s hs : Set R) = s :=
+theorem coe_copy (S : Subring R) (s : Set R) (hs : s = ↑S) : (S.copy s hs : Set R) = s :=
   rfl
 
-theorem copy_eq (S : Subring R) (s : Set R) (hs : s = «expr↑ » S) : S.copy s hs = S :=
+theorem copy_eq (S : Subring R) (s : Set R) (hs : s = ↑S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 
 theorem to_subsemiring_injective : Function.Injective (to_subsemiring : Subring R → Subsemiring R)
@@ -155,8 +155,7 @@ theorem to_submonoid_mono : Monotone (to_submonoid : Subring R → Submonoid R) 
 
 /-- Construct a `subring R` from a set `s`, a submonoid `sm`, and an additive
 subgroup `sa` such that `x ∈ s ↔ x ∈ sm ↔ x ∈ sa`. -/
-protected def mk' (s : Set R) (sm : Submonoid R) (sa : AddSubgroup R) (hm : «expr↑ » sm = s) (ha : «expr↑ » sa = s) :
-  Subring R :=
+protected def mk' (s : Set R) (sm : Submonoid R) (sa : AddSubgroup R) (hm : ↑sm = s) (ha : ↑sa = s) : Subring R :=
   { Carrier := s, zero_mem' := ha ▸ sa.zero_mem, one_mem' := hm ▸ sm.one_mem,
     add_mem' :=
       fun x y =>
@@ -172,23 +171,23 @@ protected def mk' (s : Set R) (sm : Submonoid R) (sa : AddSubgroup R) (hm : «ex
           simpa only [←ha] using sa.neg_mem }
 
 @[simp]
-theorem coe_mk' {s : Set R} {sm : Submonoid R} (hm : «expr↑ » sm = s) {sa : AddSubgroup R} (ha : «expr↑ » sa = s) :
+theorem coe_mk' {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgroup R} (ha : ↑sa = s) :
   (Subring.mk' s sm sa hm ha : Set R) = s :=
   rfl
 
 @[simp]
-theorem mem_mk' {s : Set R} {sm : Submonoid R} (hm : «expr↑ » sm = s) {sa : AddSubgroup R} (ha : «expr↑ » sa = s)
-  {x : R} : x ∈ Subring.mk' s sm sa hm ha ↔ x ∈ s :=
+theorem mem_mk' {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgroup R} (ha : ↑sa = s) {x : R} :
+  x ∈ Subring.mk' s sm sa hm ha ↔ x ∈ s :=
   Iff.rfl
 
 @[simp]
-theorem mk'_to_submonoid {s : Set R} {sm : Submonoid R} (hm : «expr↑ » sm = s) {sa : AddSubgroup R}
-  (ha : «expr↑ » sa = s) : (Subring.mk' s sm sa hm ha).toSubmonoid = sm :=
+theorem mk'_to_submonoid {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgroup R} (ha : ↑sa = s) :
+  (Subring.mk' s sm sa hm ha).toSubmonoid = sm :=
   SetLike.coe_injective hm.symm
 
 @[simp]
-theorem mk'_to_add_subgroup {s : Set R} {sm : Submonoid R} (hm : «expr↑ » sm = s) {sa : AddSubgroup R}
-  (ha : «expr↑ » sa = s) : (Subring.mk' s sm sa hm ha).toAddSubgroup = sa :=
+theorem mk'_to_add_subgroup {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgroup R} (ha : ↑sa = s) :
+  (Subring.mk' s sm sa hm ha).toAddSubgroup = sa :=
   SetLike.coe_injective ha.symm
 
 end Subring
@@ -233,33 +232,39 @@ theorem sub_mem {x y : R} (hx : x ∈ s) (hy : y ∈ s) : x - y ∈ s :=
     rw [sub_eq_add_neg]
     exact s.add_mem hx (s.neg_mem hy)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- Product of a list of elements in a subring is in the subring. -/
 theorem list_prod_mem {l : List R} : (∀ x _ : x ∈ l, x ∈ s) → l.prod ∈ s :=
   s.to_submonoid.list_prod_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- Sum of a list of elements in a subring is in the subring. -/
 theorem list_sum_mem {l : List R} : (∀ x _ : x ∈ l, x ∈ s) → l.sum ∈ s :=
   s.to_add_subgroup.list_sum_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » m)
 /-- Product of a multiset of elements in a subring of a `comm_ring` is in the subring. -/
 theorem multiset_prod_mem {R} [CommRingₓ R] (s : Subring R) (m : Multiset R) : (∀ a _ : a ∈ m, a ∈ s) → m.prod ∈ s :=
   s.to_submonoid.multiset_prod_mem m
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » m)
 /-- Sum of a multiset of elements in an `subring` of a `ring` is
 in the `subring`. -/
 theorem multiset_sum_mem {R} [Ringₓ R] (s : Subring R) (m : Multiset R) : (∀ a _ : a ∈ m, a ∈ s) → m.sum ∈ s :=
   s.to_add_subgroup.multiset_sum_mem m
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
 /-- Product of elements of a subring of a `comm_ring` indexed by a `finset` is in the
     subring. -/
 theorem prod_mem {R : Type _} [CommRingₓ R] (s : Subring R) {ι : Type _} {t : Finset ι} {f : ι → R}
-  (h : ∀ c _ : c ∈ t, f c ∈ s) : (∏i in t, f i) ∈ s :=
+  (h : ∀ c _ : c ∈ t, f c ∈ s) : (∏ i in t, f i) ∈ s :=
   s.to_submonoid.prod_mem h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
 /-- Sum of elements in a `subring` of a `ring` indexed by a `finset`
 is in the `subring`. -/
 theorem sum_mem {R : Type _} [Ringₓ R] (s : Subring R) {ι : Type _} {t : Finset ι} {f : ι → R}
-  (h : ∀ c _ : c ∈ t, f c ∈ s) : (∑i in t, f i) ∈ s :=
+  (h : ∀ c _ : c ∈ t, f c ∈ s) : (∑ i in t, f i) ∈ s :=
   s.to_add_subgroup.sum_mem h
 
 theorem pow_mem {x : R} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
@@ -279,15 +284,15 @@ instance to_ring : Ringₓ s :=
     left_distrib := fun x y z => Subtype.eq$ left_distrib x y z }
 
 @[simp, normCast]
-theorem coe_add (x y : s) : («expr↑ » (x+y) : R) = «expr↑ » x+«expr↑ » y :=
+theorem coe_add (x y : s) : (↑x+y : R) = (↑x)+↑y :=
   rfl
 
 @[simp, normCast]
-theorem coe_neg (x : s) : («expr↑ » (-x) : R) = -«expr↑ » x :=
+theorem coe_neg (x : s) : (↑(-x) : R) = -↑x :=
   rfl
 
 @[simp, normCast]
-theorem coe_mul (x y : s) : («expr↑ » (x*y) : R) = «expr↑ » x*«expr↑ » y :=
+theorem coe_mul (x y : s) : (↑x*y : R) = (↑x)*↑y :=
   rfl
 
 @[simp, normCast]
@@ -299,7 +304,7 @@ theorem coe_one : ((1 : s) : R) = 1 :=
   rfl
 
 @[simp, normCast]
-theorem coe_pow (x : s) (n : ℕ) : («expr↑ » (x ^ n) : R) = x ^ n :=
+theorem coe_pow (x : s) (n : ℕ) : (↑(x ^ n) : R) = x ^ n :=
   s.to_submonoid.coe_pow x n
 
 @[simp]
@@ -344,7 +349,7 @@ def Subtype (s : Subring R) : s →+* R :=
   { s.to_submonoid.subtype, s.to_add_subgroup.subtype with toFun := coeₓ }
 
 @[simp]
-theorem coeSubtype : «expr⇑ » s.subtype = coeₓ :=
+theorem coeSubtype : ⇑s.subtype = coeₓ :=
   rfl
 
 @[simp, normCast]
@@ -418,6 +423,7 @@ def map {R : Type u} {S : Type v} [Ringₓ R] [Ringₓ S] (f : R →+* S) (s : S
 theorem coe_map (f : R →+* S) (s : Subring R) : (s.map f : Set S) = f '' s :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[simp]
 theorem mem_map {f : R →+* S} {s : Subring R} {y : S} : y ∈ s.map f ↔ ∃ (x : _)(_ : x ∈ s), f x = y :=
   Set.mem_image_iff_bex
@@ -437,7 +443,7 @@ theorem gc_map_comap (f : R →+* S) : GaloisConnection (map f) (comap f) :=
 
 /-- A subring is isomorphic to its image under an injective function -/
 noncomputable def equiv_map_of_injective (f : R →+* S) (hf : Function.Injective f) : s ≃+* s.map f :=
-  { Equiv.Set.image f s hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _),
+  { Equivₓ.Set.image f s hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _),
     map_add' := fun _ _ => Subtype.ext (f.map_add _ _) }
 
 @[simp]
@@ -506,7 +512,7 @@ instance : Inhabited (Subring R) :=
 theorem coe_bot : ((⊥ : Subring R) : Set R) = Set.Range (coeₓ : ℤ → R) :=
   RingHom.coe_range (Int.castRingHom R)
 
-theorem mem_bot {x : R} : x ∈ (⊥ : Subring R) ↔ ∃ n : ℤ, «expr↑ » n = x :=
+theorem mem_bot {x : R} : x ∈ (⊥ : Subring R) ↔ ∃ n : ℤ, ↑n = x :=
   RingHom.mem_range
 
 /-! ## inf -/
@@ -524,29 +530,36 @@ theorem coe_inf (p p' : Subring R) : ((p⊓p' : Subring R) : Set R) = p ∩ p' :
 theorem mem_inf {p p' : Subring R} {x : R} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 instance : HasInfₓ (Subring R) :=
   ⟨fun s =>
-      Subring.mk' (⋂(t : _)(_ : t ∈ s), «expr↑ » t) (⨅(t : _)(_ : t ∈ s), Subring.toSubmonoid t)
-        (⨅(t : _)(_ : t ∈ s), Subring.toAddSubgroup t)
+      Subring.mk' (⋂ (t : _)(_ : t ∈ s), ↑t) (⨅ (t : _)(_ : t ∈ s), Subring.toSubmonoid t)
+        (⨅ (t : _)(_ : t ∈ s), Subring.toAddSubgroup t)
         (by 
           simp )
         (by 
           simp )⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 @[simp, normCast]
-theorem coe_Inf (S : Set (Subring R)) : ((Inf S : Subring R) : Set R) = ⋂(s : _)(_ : s ∈ S), «expr↑ » s :=
+theorem coe_Inf (S : Set (Subring R)) : ((Inf S : Subring R) : Set R) = ⋂ (s : _)(_ : s ∈ S), ↑s :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » S)
 theorem mem_Inf {S : Set (Subring R)} {x : R} : x ∈ Inf S ↔ ∀ p _ : p ∈ S, x ∈ p :=
   Set.mem_bInter_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 @[simp]
-theorem Inf_to_submonoid (s : Set (Subring R)) : (Inf s).toSubmonoid = ⨅(t : _)(_ : t ∈ s), Subring.toSubmonoid t :=
+theorem Inf_to_submonoid (s : Set (Subring R)) : (Inf s).toSubmonoid = ⨅ (t : _)(_ : t ∈ s), Subring.toSubmonoid t :=
   mk'_to_submonoid _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 @[simp]
 theorem Inf_to_add_subgroup (s : Set (Subring R)) :
-  (Inf s).toAddSubgroup = ⨅(t : _)(_ : t ∈ s), Subring.toAddSubgroup t :=
+  (Inf s).toAddSubgroup = ⨅ (t : _)(_ : t ∈ s), Subring.toAddSubgroup t :=
   mk'_to_add_subgroup _ _
 
 /-- Subrings of a ring form a complete lattice. -/
@@ -575,7 +588,7 @@ variable (R)
 def center : Subring R :=
   { Subsemiring.center R with Carrier := Set.Center R, neg_mem' := fun a => Set.neg_mem_center }
 
-theorem coe_center : «expr↑ » (center R) = Set.Center R :=
+theorem coe_center : ↑center R = Set.Center R :=
   rfl
 
 @[simp]
@@ -623,9 +636,9 @@ end DivisionRing
 /-! ## subring closure of a subset -/
 
 
-/-- The `subring` generated by a set. -/
-def closure (s : Set R) : Subring R :=
-  Inf { S | s ⊆ S }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The `subring` generated by a set. -/ def closure ( s : Set R ) : Subring R := Inf { S | s ⊆ S }
 
 theorem mem_closure {x : R} {s : Set R} : x ∈ closure s ↔ ∀ S : Subring R, s ⊆ S → x ∈ S :=
   mem_Inf
@@ -651,6 +664,7 @@ theorem closure_mono ⦃s t : Set R⦄ (h : s ⊆ t) : closure s ≤ closure t :
 theorem closure_eq_of_le {s : Set R} {t : Subring R} (h₁ : s ⊆ t) (h₂ : t ≤ closure s) : closure s = t :=
   le_antisymmₓ (closure_le.2 h₁) h₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- An induction principle for closure membership. If `p` holds for `0`, `1`, and all elements
 of `s`, and is preserved under addition, negation, and multiplication, then `p` holds for all
 elements of the closure of `s`. -/
@@ -660,74 +674,90 @@ theorem closure_induction {s : Set R} {p : R → Prop} {x} (h : x ∈ closure s)
   p x :=
   (@closure_le _ _ _ ⟨p, H1, Hmul, H0, Hadd, Hneg⟩).2 Hs h
 
--- error in RingTheory.Subring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_closure_iff
-{s : set R}
-{x} : «expr ↔ »(«expr ∈ »(x, closure s), «expr ∈ »(x, add_subgroup.closure (submonoid.closure s : set R))) :=
-⟨λ
- h, closure_induction h (λ
-  x
-  hx, «expr $ »(add_subgroup.subset_closure, submonoid.subset_closure hx)) (add_subgroup.zero_mem _) (add_subgroup.subset_closure (submonoid.one_mem (submonoid.closure s))) (λ
-  x
-  y
-  hx
-  hy, add_subgroup.add_mem _ hx hy) (λ
-  x
-  hx, add_subgroup.neg_mem _ hx) (λ
-  x
-  y
-  hx
-  hy, add_subgroup.closure_induction hy (λ
-   q
-   hq, add_subgroup.closure_induction hx (λ
-    p
-    hp, add_subgroup.subset_closure ((submonoid.closure s).mul_mem hp hq)) (begin
-      rw [expr zero_mul q] [],
-      apply [expr add_subgroup.zero_mem _]
-    end) (λ p₁ p₂ ihp₁ ihp₂, begin
-      rw [expr add_mul p₁ p₂ q] [],
-      apply [expr add_subgroup.add_mem _ ihp₁ ihp₂]
-    end) (λ x hx, begin
-      have [ident f] [":", expr «expr = »(«expr * »(«expr- »(x), q), «expr- »(«expr * »(x, q)))] [":=", expr by simp [] [] [] [] [] []],
-      rw [expr f] [],
-      apply [expr add_subgroup.neg_mem _ hx]
-    end)) (begin
-     rw [expr mul_zero x] [],
-     apply [expr add_subgroup.zero_mem _]
-   end) (λ q₁ q₂ ihq₁ ihq₂, begin
-     rw [expr mul_add x q₁ q₂] [],
-     apply [expr add_subgroup.add_mem _ ihq₁ ihq₂]
-   end) (λ z hz, begin
-     have [ident f] [":", expr «expr = »(«expr * »(x, «expr- »(z)), «expr- »(«expr * »(x, z)))] [":=", expr by simp [] [] [] [] [] []],
-     rw [expr f] [],
-     apply [expr add_subgroup.neg_mem _ hz]
-   end)), λ
- h, add_subgroup.closure_induction h (λ
-  x
-  hx, submonoid.closure_induction hx (λ
-   x
-   hx, subset_closure hx) (one_mem _) (λ
-   x y hx hy, mul_mem _ hx hy)) (zero_mem _) (λ x y hx hy, add_mem _ hx hy) (λ x hx, neg_mem _ hx)⟩
+theorem mem_closure_iff {s : Set R} {x} : x ∈ closure s ↔ x ∈ AddSubgroup.closure (Submonoid.closure s : Set R) :=
+  ⟨fun h =>
+      closure_induction h (fun x hx => AddSubgroup.subset_closure$ Submonoid.subset_closure hx) (AddSubgroup.zero_mem _)
+        (AddSubgroup.subset_closure (Submonoid.one_mem (Submonoid.closure s)))
+        (fun x y hx hy => AddSubgroup.add_mem _ hx hy) (fun x hx => AddSubgroup.neg_mem _ hx)
+        fun x y hx hy =>
+          AddSubgroup.closure_induction hy
+            (fun q hq =>
+              AddSubgroup.closure_induction hx
+                (fun p hp => AddSubgroup.subset_closure ((Submonoid.closure s).mul_mem hp hq))
+                (by 
+                  rw [zero_mul q]
+                  apply AddSubgroup.zero_mem _)
+                (fun p₁ p₂ ihp₁ ihp₂ =>
+                  by 
+                    rw [add_mulₓ p₁ p₂ q]
+                    apply AddSubgroup.add_mem _ ihp₁ ihp₂)
+                fun x hx =>
+                  by 
+                    have f : ((-x)*q) = -x*q :=
+                      by 
+                        simp 
+                    rw [f]
+                    apply AddSubgroup.neg_mem _ hx)
+            (by 
+              rw [mul_zero x]
+              apply AddSubgroup.zero_mem _)
+            (fun q₁ q₂ ihq₁ ihq₂ =>
+              by 
+                rw [mul_addₓ x q₁ q₂]
+                apply AddSubgroup.add_mem _ ihq₁ ihq₂)
+            fun z hz =>
+              by 
+                have f : (x*-z) = -x*z :=
+                  by 
+                    simp 
+                rw [f]
+                apply AddSubgroup.neg_mem _ hz,
+    fun h =>
+      AddSubgroup.closure_induction h
+        (fun x hx =>
+          Submonoid.closure_induction hx (fun x hx => subset_closure hx) (one_mem _) fun x y hx hy => mul_mem _ hx hy)
+        (zero_mem _) (fun x y hx hy => add_mem _ hx hy) fun x hx => neg_mem _ hx⟩
 
--- error in RingTheory.Subring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_list_of_mem_closure
-{s : set R}
-{x : R}
-(h : «expr ∈ »(x, closure s)) : «expr∃ , »((L : list (list R)), «expr ∧ »(∀
-  t «expr ∈ » L, ∀
-  y «expr ∈ » t, «expr ∨ »(«expr ∈ »(y, s), «expr = »(y, («expr- »(1) : R))), «expr = »((L.map list.prod).sum, x))) :=
-add_subgroup.closure_induction (mem_closure_iff.1 h) (λ
- x hx, let ⟨l, hl, h⟩ := submonoid.exists_list_of_mem_closure hx in
- ⟨«expr[ , ]»([l]), by simp [] [] [] ["[", expr h, "]"] [] []; clear_aux_decl; tauto ["!"]⟩) ⟨«expr[ , ]»([]), by simp [] [] [] [] [] []⟩ (λ
- (x y)
- ⟨l, hl1, hl2⟩
- ⟨m, hm1, hm2⟩, ⟨«expr ++ »(l, m), λ
-  t
-  ht, (list.mem_append.1 ht).elim (hl1 t) (hm1 t), by simp [] [] [] ["[", expr hl2, ",", expr hm2, "]"] [] []⟩) (λ
- (x)
- ⟨L, hL⟩, ⟨L.map (list.cons «expr- »(1)), «expr $ »(list.forall_mem_map_iff.2, λ
-   j
-   hj, list.forall_mem_cons.2 ⟨or.inr rfl, hL.1 j hj⟩), «expr ▸ »(hL.2, list.rec_on L (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr list.map_cons, ",", expr add_comm, "]"] [] [] { contextual := tt }))⟩)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » L)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  exists_list_of_mem_closure
+  { s : Set R } { x : R } ( h : x ∈ closure s )
+    : ∃ L : List List R , ∀ t _ : t ∈ L , ∀ y _ : y ∈ t , y ∈ s ∨ y = ( - 1 : R ) ∧ L.map List.prod . Sum = x
+  :=
+    AddSubgroup.closure_induction
+      mem_closure_iff . 1 h
+        fun
+          x hx
+            =>
+            let
+              ⟨ l , hl , h ⟩ := Submonoid.exists_list_of_mem_closure hx
+              ⟨ [ l ] , by simp [ h ] <;> clearAuxDecl <;> tauto! ⟩
+        ⟨ [ ] , by simp ⟩
+        fun
+          x y ⟨ l , hl1 , hl2 ⟩ ⟨ m , hm1 , hm2 ⟩
+            =>
+            ⟨ l ++ m , fun t ht => List.mem_appendₓ . 1 ht . elim hl1 t hm1 t , by simp [ hl2 , hm2 ] ⟩
+        fun
+          x ⟨ L , hL ⟩
+            =>
+            ⟨
+              L.map List.cons - 1
+                ,
+                List.forall_mem_map_iffₓ . 2 $ fun j hj => List.forall_mem_consₓ . 2 ⟨ Or.inr rfl , hL . 1 j hj ⟩
+                ,
+                hL . 2
+                  ▸
+                  List.recOn
+                    L
+                      by simp
+                      by
+                        simp
+                          ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                          [ List.map_consₓ , add_commₓ ]
+              ⟩
 
 variable (R)
 
@@ -753,22 +783,23 @@ theorem closure_univ : closure (Set.Univ : Set R) = ⊤ :=
 theorem closure_union (s t : Set R) : closure (s ∪ t) = closure s⊔closure t :=
   (Subring.gi R).gc.l_sup
 
-theorem closure_Union {ι} (s : ι → Set R) : closure (⋃i, s i) = ⨆i, closure (s i) :=
+theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
   (Subring.gi R).gc.l_supr
 
-theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀s) = ⨆(t : _)(_ : t ∈ s), closure t :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
+theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀s) = ⨆ (t : _)(_ : t ∈ s), closure t :=
   (Subring.gi R).gc.l_Sup
 
 theorem map_sup (s t : Subring R) (f : R →+* S) : (s⊔t).map f = s.map f⊔t.map f :=
   (gc_map_comap f).l_sup
 
-theorem map_supr {ι : Sort _} (f : R →+* S) (s : ι → Subring R) : (supr s).map f = ⨆i, (s i).map f :=
+theorem map_supr {ι : Sort _} (f : R →+* S) (s : ι → Subring R) : (supr s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 
 theorem comap_inf (s t : Subring S) (f : R →+* S) : (s⊓t).comap f = s.comap f⊓t.comap f :=
   (gc_map_comap f).u_inf
 
-theorem comap_infi {ι : Sort _} (f : R →+* S) (s : ι → Subring S) : (infi s).comap f = ⨅i, (s i).comap f :=
+theorem comap_infi {ι : Sort _} (f : R →+* S) (s : ι → Subring S) : (infi s).comap f = ⨅ i, (s i).comap f :=
   (gc_map_comap f).u_infi
 
 @[simp]
@@ -819,51 +850,48 @@ theorem top_prod_top : (⊤ : Subring R).Prod (⊤ : Subring S) = ⊤ :=
 
 /-- Product of subrings is isomorphic to their product as rings. -/
 def prod_equiv (s : Subring R) (t : Subring S) : s.prod t ≃+* s × t :=
-  { Equiv.Set.prod («expr↑ » s) («expr↑ » t) with map_mul' := fun x y => rfl, map_add' := fun x y => rfl }
+  { Equivₓ.Set.prod (↑s) (↑t) with map_mul' := fun x y => rfl, map_add' := fun x y => rfl }
 
 /-- The underlying set of a non-empty directed Sup of subrings is just a union of the subrings.
   Note that this fails without the directedness assumption (the union of two subrings is
   typically not a subring) -/
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS : Directed (· ≤ ·) S) {x : R} :
-  (x ∈ ⨆i, S i) ↔ ∃ i, x ∈ S i :=
+  (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i :=
   by 
     refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1$ le_supr S i) hi⟩
     let U : Subring R :=
-      Subring.mk' (⋃i, (S i : Set R)) (⨆i, (S i).toSubmonoid) (⨆i, (S i).toAddSubgroup)
+      Subring.mk' (⋃ i, (S i : Set R)) (⨆ i, (S i).toSubmonoid) (⨆ i, (S i).toAddSubgroup)
         (Submonoid.coe_supr_of_directed$ hS.mono_comp _ fun _ _ => id)
         (AddSubgroup.coe_supr_of_directed$ hS.mono_comp _ fun _ _ => id)
-    suffices  : (⨆i, S i) ≤ U
+    suffices  : (⨆ i, S i) ≤ U
     ·
       simpa using @this x 
     exact supr_le fun i x hx => Set.mem_Union.2 ⟨i, hx⟩
 
 theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS : Directed (· ≤ ·) S) :
-  ((⨆i, S i : Subring R) : Set R) = ⋃i, «expr↑ » (S i) :=
+  ((⨆ i, S i : Subring R) : Set R) = ⋃ i, ↑S i :=
   Set.ext$
     fun x =>
       by 
         simp [mem_supr_of_directed hS]
 
--- error in RingTheory.Subring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_Sup_of_directed_on
-{S : set (subring R)}
-(Sne : S.nonempty)
-(hS : directed_on ((«expr ≤ »)) S)
-{x : R} : «expr ↔ »(«expr ∈ »(x, Sup S), «expr∃ , »((s «expr ∈ » S), «expr ∈ »(x, s))) :=
-begin
-  haveI [] [":", expr nonempty S] [":=", expr Sne.to_subtype],
-  simp [] [] ["only"] ["[", expr Sup_eq_supr', ",", expr mem_supr_of_directed hS.directed_coe, ",", expr set_coe.exists, ",", expr subtype.coe_mk, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+theorem mem_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : R} :
+  x ∈ Sup S ↔ ∃ (s : _)(_ : s ∈ S), x ∈ s :=
+  by 
+    have  : Nonempty S := Sne.to_subtype 
+    simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 theorem coe_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
-  («expr↑ » (Sup S) : Set R) = ⋃(s : _)(_ : s ∈ S), «expr↑ » s :=
+  (↑Sup S : Set R) = ⋃ (s : _)(_ : s ∈ S), ↑s :=
   Set.ext$
     fun x =>
       by 
         simp [mem_Sup_of_directed_on Sne hS]
 
 theorem mem_map_equiv {f : R ≃+* S} {K : Subring R} {x : S} : x ∈ K.map (f : R →+* S) ↔ f.symm x ∈ K :=
-  @Set.mem_image_equiv _ _ («expr↑ » K) f.to_equiv x
+  @Set.mem_image_equiv _ _ (↑K) f.to_equiv x
 
 theorem map_equiv_eq_comap_symm (f : R ≃+* S) (K : Subring R) : K.map (f : R →+* S) = K.comap f.symm :=
   SetLike.coe_injective (f.to_equiv.image_eq_preimage K)
@@ -913,10 +941,15 @@ theorem range_top_iff_surjective {f : R →+* S} : f.range = (⊤ : Subring S) �
 theorem range_top_of_surjective (f : R →+* S) (hf : Function.Surjective f) : f.range = (⊤ : Subring S) :=
   range_top_iff_surjective.2 hf
 
-/-- The subring of elements `x : R` such that `f x = g x`, i.e.,
-  the equalizer of f and g as a subring of R -/
-def eq_locus (f g : R →+* S) : Subring R :=
-  { (f : R →* S).eqMlocus g, (f : R →+ S).eqLocus g with Carrier := { x | f x = g x } }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The subring of elements `x : R` such that `f x = g x`, i.e.,
+      the equalizer of f and g as a subring of R -/
+  def
+    eq_locus
+    ( f g : R →+* S ) : Subring R
+    := { ( f : R →* S ) . eqMlocus g , ( f : R →+ S ) . eqLocus g with Carrier := { x | f x = g x } }
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subring closure. -/
 theorem eq_on_set_closure {f g : R →+* S} {s : Set R} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
@@ -977,7 +1010,7 @@ variable {s t : Subring R}
 /-- Makes the identity isomorphism from a proof two subrings of a multiplicative
     monoid are equal. -/
 def subring_congr (h : s = t) : s ≃+* t :=
-  { Equiv.setCongr$ congr_argₓ _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr$ congr_argₓ _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.range`. -/
@@ -993,7 +1026,7 @@ def of_left_inverse {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f)
 
 @[simp]
 theorem of_left_inverse_apply {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) (x : R) :
-  «expr↑ » (of_left_inverse h x) = f x :=
+  ↑of_left_inverse h x = f x :=
   rfl
 
 @[simp]
@@ -1009,55 +1042,74 @@ variable {s : Set R}
 
 attribute [local reducible] closure
 
--- error in RingTheory.Subring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » L)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » s)
 @[elab_as_eliminator]
-protected
-theorem in_closure.rec_on
-{C : R → exprProp()}
-{x : R}
-(hx : «expr ∈ »(x, closure s))
-(h1 : C 1)
-(hneg1 : C «expr- »(1))
-(hs : ∀ z «expr ∈ » s, ∀ n, C n → C «expr * »(z, n))
-(ha : ∀ {x y}, C x → C y → C «expr + »(x, y)) : C x :=
-begin
-  have [ident h0] [":", expr C 0] [":=", expr «expr ▸ »(add_neg_self (1 : R), ha h1 hneg1)],
-  rcases [expr exists_list_of_mem_closure hx, "with", "⟨", ident L, ",", ident HL, ",", ident rfl, "⟩"],
-  clear [ident hx],
-  induction [expr L] [] ["with", ident hd, ident tl, ident ih] [],
-  { exact [expr h0] },
-  rw [expr list.forall_mem_cons] ["at", ident HL],
-  suffices [] [":", expr C (list.prod hd)],
-  { rw ["[", expr list.map_cons, ",", expr list.sum_cons, "]"] [],
-    exact [expr ha this (ih HL.2)] },
-  replace [ident HL] [] [":=", expr HL.1],
-  clear [ident ih, ident tl],
-  suffices [] [":", expr «expr∃ , »((L : list R), «expr ∧ »(∀
-     x «expr ∈ » L, «expr ∈ »(x, s), «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))],
-  { rcases [expr this, "with", "⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩"],
-    { rw [expr HP] [],
-      clear [ident HP, ident HL, ident hd],
-      induction [expr L] [] ["with", ident hd, ident tl, ident ih] [],
-      { exact [expr h1] },
-      rw [expr list.forall_mem_cons] ["at", ident HL'],
-      rw [expr list.prod_cons] [],
-      exact [expr hs _ HL'.1 _ (ih HL'.2)] },
-    rw [expr HP] [],
-    clear [ident HP, ident HL, ident hd],
-    induction [expr L] [] ["with", ident hd, ident tl, ident ih] [],
-    { exact [expr hneg1] },
-    rw ["[", expr list.prod_cons, ",", expr neg_mul_eq_mul_neg, "]"] [],
-    rw [expr list.forall_mem_cons] ["at", ident HL'],
-    exact [expr hs _ HL'.1 _ (ih HL'.2)] },
-  induction [expr hd] [] ["with", ident hd, ident tl, ident ih] [],
-  { exact [expr ⟨«expr[ , ]»([]), list.forall_mem_nil _, or.inl rfl⟩] },
-  rw [expr list.forall_mem_cons] ["at", ident HL],
-  rcases [expr ih HL.2, "with", "⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩"]; cases [expr HL.1] ["with", ident hhd, ident hhd],
-  { exact [expr ⟨[«expr :: »/«expr :: »/«expr :: »](hd, L), list.forall_mem_cons.2 ⟨hhd, HL'⟩, «expr $ »(or.inl, by rw ["[", expr list.prod_cons, ",", expr list.prod_cons, ",", expr HP, "]"] [])⟩] },
-  { exact [expr ⟨L, HL', «expr $ »(or.inr, by rw ["[", expr list.prod_cons, ",", expr hhd, ",", expr neg_one_mul, ",", expr HP, "]"] [])⟩] },
-  { exact [expr ⟨[«expr :: »/«expr :: »/«expr :: »](hd, L), list.forall_mem_cons.2 ⟨hhd, HL'⟩, «expr $ »(or.inr, by rw ["[", expr list.prod_cons, ",", expr list.prod_cons, ",", expr HP, ",", expr neg_mul_eq_mul_neg, "]"] [])⟩] },
-  { exact [expr ⟨L, HL', «expr $ »(or.inl, by rw ["[", expr list.prod_cons, ",", expr hhd, ",", expr HP, ",", expr neg_one_mul, ",", expr neg_neg, "]"] [])⟩] }
-end
+protected theorem in_closure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1) (hneg1 : C (-1))
+  (hs : ∀ z _ : z ∈ s, ∀ n, C n → C (z*n)) (ha : ∀ {x y}, C x → C y → C (x+y)) : C x :=
+  by 
+    have h0 : C 0 := add_neg_selfₓ (1 : R) ▸ ha h1 hneg1 
+    rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
+    clear hx 
+    induction' L with hd tl ih
+    ·
+      exact h0 
+    rw [List.forall_mem_consₓ] at HL 
+    suffices  : C (List.prod hd)
+    ·
+      rw [List.map_consₓ, List.sum_cons]
+      exact ha this (ih HL.2)
+    replace HL := HL.1
+    clear ih tl 
+    suffices  : ∃ L : List R, (∀ x _ : x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
+    ·
+      rcases this with ⟨L, HL', HP | HP⟩
+      ·
+        rw [HP]
+        clear HP HL hd 
+        induction' L with hd tl ih
+        ·
+          exact h1 
+        rw [List.forall_mem_consₓ] at HL' 
+        rw [List.prod_cons]
+        exact hs _ HL'.1 _ (ih HL'.2)
+      rw [HP]
+      clear HP HL hd 
+      induction' L with hd tl ih
+      ·
+        exact hneg1 
+      rw [List.prod_cons, neg_mul_eq_mul_neg]
+      rw [List.forall_mem_consₓ] at HL' 
+      exact hs _ HL'.1 _ (ih HL'.2)
+    induction' hd with hd tl ih
+    ·
+      exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
+    rw [List.forall_mem_consₓ] at HL 
+    rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
+    ·
+      exact
+        ⟨hd :: L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
+          Or.inl$
+            by 
+              rw [List.prod_cons, List.prod_cons, HP]⟩
+    ·
+      exact
+        ⟨L, HL',
+          Or.inr$
+            by 
+              rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
+    ·
+      exact
+        ⟨hd :: L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
+          Or.inr$
+            by 
+              rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
+    ·
+      exact
+        ⟨L, HL',
+          Or.inl$
+            by 
+              rw [List.prod_cons, hhd, HP, neg_one_mul, neg_negₓ]⟩
 
 theorem closure_preimage_le (f : R →+* S) (s : Set S) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
   closure_le.2$ fun x hx => SetLike.mem_coe.2$ mem_comap.2$ subset_closure hx
@@ -1123,10 +1175,18 @@ end Subring
 
 end Actions
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The subgroup of positive units of a linear ordered semiring. -/
-def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup (Units R) :=
-  { (posSubmonoid R).comap (Units.coeHom R) with Carrier := { x | (0 : R) < x },
-    inv_mem' := fun x hx : (0 : R) < x => (zero_lt_mul_left hx).mp$ x.mul_inv.symm ▸ zero_lt_one }
+  def
+    Units.posSubgroup
+    ( R : Type _ ) [ LinearOrderedSemiring R ] : Subgroup Units R
+    :=
+      {
+        posSubmonoid R . comap Units.coeHom R with
+        Carrier := { x | ( 0 : R ) < x } ,
+          inv_mem' := fun x hx : ( 0 : R ) < x => zero_lt_mul_left hx . mp $ x.mul_inv.symm ▸ zero_lt_one
+        }
 
 @[simp]
 theorem Units.mem_pos_subgroup {R : Type _} [LinearOrderedSemiring R] (u : Units R) :

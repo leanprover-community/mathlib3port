@@ -113,7 +113,7 @@ theorem not_step_nil : ¬step [] L :=
 theorem step.cons_left_iff {a : α} {b : Bool} :
   step ((a, b) :: L₁) L₂ ↔ (∃ L, step L₁ L ∧ L₂ = (a, b) :: L) ∨ L₁ = (a, bnot b) :: L₂ :=
   by 
-    split 
+    constructor
     ·
       generalize hL : ((a, b) :: L₁ : List _) = L 
       intro h 
@@ -139,10 +139,16 @@ theorem not_step_singleton : ∀ {p : α × Bool}, ¬step [p] L
   by 
     simp [step.cons_left_iff, not_step_nil]
 
--- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem step.cons_cons_iff : ∀
-{p : «expr × »(α, bool)}, «expr ↔ »(step [«expr :: »/«expr :: »/«expr :: »](p, L₁) [«expr :: »/«expr :: »/«expr :: »](p, L₂), step L₁ L₂) :=
-by simp [] [] [] ["[", expr step.cons_left_iff, ",", expr iff_def, ",", expr or_imp_distrib, "]"] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  step.cons_cons_iff
+  : ∀ { p : α × Bool } , step p :: L₁ p :: L₂ ↔ step L₁ L₂
+  :=
+    by
+      simp
+        ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+        [ step.cons_left_iff , iff_def , or_imp_distrib ]
 
 theorem step.append_left_iff : ∀ L, step (L ++ L₁) (L ++ L₂) ↔ step L₁ L₂
 | [] =>
@@ -241,25 +247,35 @@ theorem append_append_left_iff : ∀ L, red (L ++ L₁) (L ++ L₂) ↔ red L₁
 theorem append_append (h₁ : red L₁ L₃) (h₂ : red L₂ L₄) : red (L₁ ++ L₂) (L₃ ++ L₄) :=
   (h₁.lift (fun L => L ++ L₂) fun a b => step.append_right).trans ((append_append_left_iff _).2 h₂)
 
--- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_append_iff : «expr ↔ »(red L «expr ++ »(L₁, L₂), «expr∃ , »((L₃
-   L₄), «expr ∧ »(«expr = »(L, «expr ++ »(L₃, L₄)), «expr ∧ »(red L₃ L₁, red L₄ L₂)))) :=
-iff.intro (begin
-   generalize [ident eq] [":"] [expr «expr = »(«expr ++ »(L₁, L₂), L₁₂)],
-   assume [binders (h)],
-   induction [expr h] [] ["with", ident L', ident L₁₂, ident hLL', ident h, ident ih] ["generalizing", ident L₁, ident L₂],
-   { exact [expr ⟨_, _, eq.symm, by refl, by refl⟩] },
-   { cases [expr h] ["with", ident s, ident e, ident a, ident b],
-     rcases [expr list.append_eq_append_iff.1 eq, "with", "⟨", ident s', ",", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident e', ",", ident rfl, ",", ident rfl, "⟩"],
-     { have [] [":", expr «expr = »(«expr ++ »(L₁, «expr ++ »(s', [«expr :: »/«expr :: »/«expr :: »]((a, b), [«expr :: »/«expr :: »/«expr :: »]((a, bnot b), e)))), «expr ++ »(«expr ++ »(L₁, s'), [«expr :: »/«expr :: »/«expr :: »]((a, b), [«expr :: »/«expr :: »/«expr :: »]((a, bnot b), e))))] [],
-       { simp [] [] [] [] [] [] },
-       rcases [expr ih this, "with", "⟨", ident w₁, ",", ident w₂, ",", ident rfl, ",", ident h₁, ",", ident h₂, "⟩"],
-       exact [expr ⟨w₁, w₂, rfl, h₁, h₂.tail step.bnot⟩] },
-     { have [] [":", expr «expr = »(«expr ++ »(«expr ++ »(s, [«expr :: »/«expr :: »/«expr :: »]((a, b), [«expr :: »/«expr :: »/«expr :: »]((a, bnot b), e'))), L₂), «expr ++ »(s, [«expr :: »/«expr :: »/«expr :: »]((a, b), [«expr :: »/«expr :: »/«expr :: »]((a, bnot b), «expr ++ »(e', L₂)))))] [],
-       { simp [] [] [] [] [] [] },
-       rcases [expr ih this, "with", "⟨", ident w₁, ",", ident w₂, ",", ident rfl, ",", ident h₁, ",", ident h₂, "⟩"],
-       exact [expr ⟨w₁, w₂, rfl, h₁.tail step.bnot, h₂⟩] } }
- end) (assume ⟨L₃, L₄, eq, h₃, h₄⟩, «expr ▸ »(eq.symm, append_append h₃ h₄))
+theorem to_append_iff : red L (L₁ ++ L₂) ↔ ∃ L₃ L₄, L = L₃ ++ L₄ ∧ red L₃ L₁ ∧ red L₄ L₂ :=
+  Iff.intro
+    (by 
+      generalize eq : L₁ ++ L₂ = L₁₂ 
+      intro h 
+      induction' h with L' L₁₂ hLL' h ih generalizing L₁ L₂
+      ·
+        exact
+          ⟨_, _, Eq.symm,
+            by 
+              rfl,
+            by 
+              rfl⟩
+      ·
+        cases' h with s e a b 
+        rcases List.append_eq_append_iff.1 Eq with (⟨s', rfl, rfl⟩ | ⟨e', rfl, rfl⟩)
+        ·
+          have  : L₁ ++ (s' ++ (a, b) :: (a, bnot b) :: e) = L₁ ++ s' ++ (a, b) :: (a, bnot b) :: e
+          ·
+            simp 
+          rcases ih this with ⟨w₁, w₂, rfl, h₁, h₂⟩
+          exact ⟨w₁, w₂, rfl, h₁, h₂.tail step.bnot⟩
+        ·
+          have  : s ++ (a, b) :: (a, bnot b) :: e' ++ L₂ = s ++ (a, b) :: (a, bnot b) :: (e' ++ L₂)
+          ·
+            simp 
+          rcases ih this with ⟨w₁, w₂, rfl, h₁, h₂⟩
+          exact ⟨w₁, w₂, rfl, h₁.tail step.bnot, h₂⟩)
+    fun ⟨L₃, L₄, Eq, h₃, h₄⟩ => Eq.symm ▸ append_append h₃ h₄
 
 /-- The empty word `[]` only reduces to itself. -/
 theorem nil_iff : red [] L ↔ L = [] :=
@@ -294,30 +310,30 @@ theorem red_iff_irreducible {x1 b1 x2 b2} (h : (x1, b1) ≠ (x2, b2)) :
     simp  at h 
     contradiction
 
--- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x` and `y` are distinct letters and `w₁ w₂` are words such that `xw₁` reduces to `yw₂`, then
 `w₁` reduces to `x⁻¹yw₂`. -/
-theorem inv_of_red_of_ne
-{x1 b1 x2 b2}
-(H1 : «expr ≠ »((x1, b1), (x2, b2)))
-(H2 : red [«expr :: »/«expr :: »/«expr :: »]((x1, b1), L₁) [«expr :: »/«expr :: »/«expr :: »]((x2, b2), L₂)) : red L₁ [«expr :: »/«expr :: »/«expr :: »]((x1, bnot b1), [«expr :: »/«expr :: »/«expr :: »]((x2, b2), L₂)) :=
-begin
-  have [] [":", expr red [«expr :: »/«expr :: »/«expr :: »]((x1, b1), L₁) «expr ++ »(«expr[ , ]»([(x2, b2)]), L₂)] [],
-  from [expr H2],
-  rcases [expr to_append_iff.1 this, "with", "⟨", "_", "|", "⟨", ident p, ",", ident L₃, "⟩", ",", ident L₄, ",", ident eq, ",", ident h₁, ",", ident h₂, "⟩"],
-  { simp [] [] [] ["[", expr nil_iff, "]"] [] ["at", ident h₁],
-    contradiction },
-  { cases [expr eq] [],
-    show [expr red «expr ++ »(L₃, L₄) «expr ++ »(«expr[ , ]»([(x1, bnot b1), (x2, b2)]), L₂)],
-    apply [expr append_append _ h₂],
-    have [ident h₁] [":", expr red [«expr :: »/«expr :: »/«expr :: »]((x1, bnot b1), [«expr :: »/«expr :: »/«expr :: »]((x1, b1), L₃)) «expr[ , ]»([(x1, bnot b1), (x2, b2)])] [],
-    { exact [expr cons_cons h₁] },
-    have [ident h₂] [":", expr red [«expr :: »/«expr :: »/«expr :: »]((x1, bnot b1), [«expr :: »/«expr :: »/«expr :: »]((x1, b1), L₃)) L₃] [],
-    { exact [expr step.cons_bnot_rev.to_red] },
-    rcases [expr church_rosser h₁ h₂, "with", "⟨", ident L', ",", ident h₁, ",", ident h₂, "⟩"],
-    rw ["[", expr red_iff_irreducible H1, "]"] ["at", ident h₁],
-    rwa ["[", expr h₁, "]"] ["at", ident h₂] }
-end
+theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2)) (H2 : red ((x1, b1) :: L₁) ((x2, b2) :: L₂)) :
+  red L₁ ((x1, bnot b1) :: (x2, b2) :: L₂) :=
+  by 
+    have  : red ((x1, b1) :: L₁) ([(x2, b2)] ++ L₂)
+    exact H2 
+    rcases to_append_iff.1 this with ⟨_ | ⟨p, L₃⟩, L₄, eq, h₁, h₂⟩
+    ·
+      simp [nil_iff] at h₁ 
+      contradiction
+    ·
+      cases Eq 
+      show red (L₃ ++ L₄) ([(x1, bnot b1), (x2, b2)] ++ L₂)
+      apply append_append _ h₂ 
+      have h₁ : red ((x1, bnot b1) :: (x1, b1) :: L₃) [(x1, bnot b1), (x2, b2)]
+      ·
+        exact cons_cons h₁ 
+      have h₂ : red ((x1, bnot b1) :: (x1, b1) :: L₃) L₃
+      ·
+        exact step.cons_bnot_rev.to_red 
+      rcases church_rosser h₁ h₂ with ⟨L', h₁, h₂⟩
+      rw [red_iff_irreducible H1] at h₁ 
+      rwa [h₁] at h₂
 
 theorem step.sublist (H : red.step L₁ L₂) : L₂ <+ L₁ :=
   by 
@@ -328,18 +344,22 @@ theorem sublist : red L₁ L₂ → L₂ <+ L₁ :=
   refl_trans_gen_of_transitive_reflexive (fun l => List.Sublist.refl l)
     (fun a b c hab hbc => List.Sublist.trans hbc hab) fun a b => red.step.sublist
 
--- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sizeof_of_step : ∀ {L₁ L₂ : list «expr × »(α, bool)}, step L₁ L₂ → «expr < »(L₂.sizeof, L₁.sizeof)
-| _, _, @step.bnot _ L1 L2 x b := begin
-  induction [expr L1] [] ["with", ident hd, ident tl, ident ih] [],
-  case [ident list.nil] { dsimp [] ["[", expr list.sizeof, "]"] [] [],
-    have [ident H] [":", expr «expr = »(«expr + »(«expr + »(1, sizeof (x, b)), «expr + »(«expr + »(1, sizeof (x, bnot b)), list.sizeof L2)), «expr + »(«expr + »(list.sizeof L2, 1), «expr + »(«expr + »(sizeof (x, b), sizeof (x, bnot b)), 1)))] [],
-    { ac_refl },
-    rw [expr H] [],
-    exact [expr nat.le_add_right _ _] },
-  case [ident list.cons] { dsimp [] ["[", expr list.sizeof, "]"] [] [],
-    exact [expr nat.add_lt_add_left ih _] }
-end
+theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, step L₁ L₂ → L₂.sizeof < L₁.sizeof
+| _, _, @step.bnot _ L1 L2 x b =>
+  by 
+    induction' L1 with hd tl ih 
+    case list.nil => 
+      dsimp [List.sizeof]
+      have H :
+        ((1+sizeof (x, b))+(1+sizeof (x, bnot b))+List.sizeof L2) =
+          (List.sizeof L2+1)+(sizeof (x, b)+sizeof (x, bnot b))+1
+      ·
+        acRfl 
+      rw [H]
+      exact Nat.le_add_rightₓ _ _ 
+    case list.cons => 
+      dsimp [List.sizeof]
+      exact Nat.add_lt_add_leftₓ ih _
 
 theorem length (h : red L₁ L₂) : ∃ n, L₁.length = L₂.length+2*n :=
   by 
@@ -914,35 +934,40 @@ theorem reduce.red : red L (reduce L) :=
           rw [if_neg h]
           exact red.cons_cons ih
 
--- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem reduce.not
-{p : exprProp()} : ∀
-{L₁ L₂ L₃ : list «expr × »(α, bool)}
-{x
- b}, «expr = »(reduce L₁, «expr ++ »(L₂, [«expr :: »/«expr :: »/«expr :: »]((x, b), [«expr :: »/«expr :: »/«expr :: »]((x, bnot b), L₃)))) → p
-| «expr[ , ]»([]), L2, L3, _, _ := λ h, by cases [expr L2] []; injections []
-| [«expr :: »/«expr :: »/«expr :: »]((x, b), L1), L2, L3, x', b' := begin
-  dsimp [] [] [] [],
-  cases [expr r, ":", expr reduce L1] [],
-  { dsimp [] [] [] [],
-    intro [ident h],
-    have [] [] [":=", expr congr_arg list.length h],
-    simp [] [] [] ["[", "-", ident add_comm, "]"] [] ["at", ident this],
-    exact [expr absurd this exprdec_trivial()] },
-  cases [expr hd] ["with", ident y, ident c],
-  by_cases [expr «expr ∧ »(«expr = »(x, y), «expr = »(b, bnot c))]; simp [] [] [] ["[", expr h, "]"] [] []; intro [ident H],
-  { rw [expr H] ["at", ident r],
-    exact [expr @reduce.not L1 [«expr :: »/«expr :: »/«expr :: »]((y, c), L2) L3 x' b' r] },
-  rcases [expr L2, "with", "_", "|", "⟨", ident a, ",", ident L2, "⟩"],
-  { injections [],
-    subst_vars,
-    simp [] [] [] [] [] ["at", ident h],
-    cc },
-  { refine [expr @reduce.not L1 L2 L3 x' b' _],
-    injection [expr H] ["with", "_", ident H],
-    rw ["[", expr r, ",", expr H, "]"] [],
-    refl }
-end
+theorem reduce.not {p : Prop} : ∀ {L₁ L₂ L₃ : List (α × Bool)} {x b}, reduce L₁ = L₂ ++ (x, b) :: (x, bnot b) :: L₃ → p
+| [], L2, L3, _, _ =>
+  fun h =>
+    by 
+      cases L2 <;> injections
+| (x, b) :: L1, L2, L3, x', b' =>
+  by 
+    dsimp 
+    cases r : reduce L1
+    ·
+      dsimp 
+      intro h 
+      have  := congr_argₓ List.length h 
+      simp [-add_commₓ] at this 
+      exact
+        absurd this
+          (by 
+            decide)
+    cases' hd with y c 
+    byCases' x = y ∧ b = bnot c <;> simp [h] <;> intro H
+    ·
+      rw [H] at r 
+      exact @reduce.not L1 ((y, c) :: L2) L3 x' b' r 
+    rcases L2 with (_ | ⟨a, L2⟩)
+    ·
+      injections 
+      substVars 
+      simp  at h 
+      cc
+    ·
+      refine' @reduce.not L1 L2 L3 x' b' _ 
+      injection H with _ H 
+      rw [r, H]
+      rfl
 
 /-- The second theorem that characterises the
 function `reduce`: the maximal reduction of a word

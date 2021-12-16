@@ -317,6 +317,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 library_note "forgetful inheritance"
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -593,7 +594,7 @@ theorem zpow_zero (a : G) : a ^ (0 : ℤ) = 1 :=
 theorem zpow_coe_nat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
 | 0 => (zpow_zero _).trans (pow_zeroₓ _).symm
 | n+1 =>
-  calc a ^ («expr↑ » (n+1) : ℤ) = a*a ^ (n : ℤ) := DivInvMonoidₓ.zpow_succ' _ _ 
+  calc a ^ (↑n+1 : ℤ) = a*a ^ (n : ℤ) := DivInvMonoidₓ.zpow_succ' _ _ 
     _ = a*a ^ n := congr_argₓ ((·*·) a) (zpow_coe_nat n)
     _ = a ^ n+1 := (pow_succₓ _ _).symm
     

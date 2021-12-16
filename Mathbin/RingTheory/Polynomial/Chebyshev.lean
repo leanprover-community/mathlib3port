@@ -45,7 +45,7 @@ and do not have `map (int.cast_ring_hom R)` interfering all the time.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Polynomial.Chebyshev
 
@@ -87,13 +87,13 @@ variable {R S}
 theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (T R n) = T S n
 | 0 =>
   by 
-    simp only [T_zero, map_one]
+    simp only [T_zero, Polynomial.map_one]
 | 1 =>
   by 
     simp only [T_one, map_X]
 | n+2 =>
   by 
-    simp only [T_add_two, map_mul, map_sub, map_X, bit0, map_add, map_one]
+    simp only [T_add_two, Polynomial.map_mul, Polynomial.map_sub, map_X, bit0, Polynomial.map_add, Polynomial.map_one]
     rw [map_T (n+1), map_T n]
 
 variable (R S)
@@ -185,15 +185,15 @@ variable {R S}
 theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (U R n) = U S n
 | 0 =>
   by 
-    simp only [U_zero, map_one]
+    simp only [U_zero, Polynomial.map_one]
 | 1 =>
   by 
-    simp only [U_one, map_X, map_mul, map_add, map_one]
+    simp only [U_one, map_X, Polynomial.map_mul, Polynomial.map_add, Polynomial.map_one]
     change (map f (1+1)*X) = 2*X 
-    simpa only [map_add, map_one]
+    simpa only [Polynomial.map_add, Polynomial.map_one]
 | n+2 =>
   by 
-    simp only [U_add_two, map_mul, map_sub, map_X, bit0, map_add, map_one]
+    simp only [U_add_two, Polynomial.map_mul, Polynomial.map_sub, map_X, bit0, Polynomial.map_add, Polynomial.map_one]
     rw [map_U (n+1), map_U n]
 
 theorem T_derivative_eq_U : ∀ n : ℕ, derivative (T R (n+1)) = (n+1)*U R n
@@ -222,7 +222,7 @@ theorem T_derivative_eq_U : ∀ n : ℕ, derivative (T R (n+1)) = (n+1)*U R n
     _ = ((n+2)+1)*U R (n+2) :=
     by 
       ring 
-    _ = («expr↑ » (n+2)+1)*U R (n+2) :=
+    _ = ((↑n+2)+1)*U R (n+2) :=
     by 
       normCast
     
@@ -243,70 +243,103 @@ theorem one_sub_X_sq_mul_derivative_T_eq_poly_in_T (n : ℕ) :
       ring
     
 
--- error in RingTheory.Polynomial.Chebyshev: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_one_mul_T_eq_poly_in_U
-(n : exprℕ()) : «expr = »(«expr * »(«expr + »((n : polynomial R), 1), T R «expr + »(n, 1)), «expr - »(«expr * »(X, U R n), «expr * »(«expr - »(1, «expr ^ »(X, 2)), derivative (U R n)))) :=
-begin
-  have [ident h] [":", expr «expr = »(derivative (T R «expr + »(n, 2)), «expr - »(«expr + »(«expr + »(«expr - »(U R «expr + »(n, 1), «expr * »(X, U R n)), «expr * »(X, derivative (T R «expr + »(n, 1)))), «expr * »(«expr * »(2, X), U R n)), «expr * »(«expr - »(1, «expr ^ »(X, 2)), derivative (U R n))))] [],
-  { conv_lhs [] [] { rw [expr T_eq_X_mul_T_sub_pol_U] },
-    simp [] [] ["only"] ["[", expr derivative_sub, ",", expr derivative_mul, ",", expr derivative_X, ",", expr derivative_one, ",", expr derivative_X_pow, ",", expr one_mul, ",", expr T_derivative_eq_U, "]"] [] [],
-    rw ["[", expr T_eq_U_sub_X_mul_U, ",", expr nat.cast_bit0, ",", expr nat.cast_one, "]"] [],
-    ring [] },
-  calc
-    «expr = »(«expr * »(«expr + »((n : polynomial R), 1), T R «expr + »(n, 1)), «expr - »(«expr - »(«expr * »(«expr + »(«expr + »((n : polynomial R), 1), 1), «expr + »(«expr * »(X, U R n), T R «expr + »(n, 1))), «expr * »(X, «expr * »(«expr + »(n, 1), U R n))), «expr + »(«expr * »(X, U R n), T R «expr + »(n, 1)))) : by ring []
-    «expr = »(..., «expr - »(«expr - »(derivative (T R «expr + »(n, 2)), «expr * »(X, derivative (T R «expr + »(n, 1)))), U R «expr + »(n, 1))) : by rw ["[", "<-", expr U_eq_X_mul_U_add_T, ",", "<-", expr T_derivative_eq_U, ",", "<-", expr nat.cast_one, ",", "<-", expr nat.cast_add, ",", expr nat.cast_one, ",", "<-", expr T_derivative_eq_U «expr + »(n, 1), "]"] []
-    «expr = »(..., «expr - »(«expr - »(«expr - »(«expr + »(«expr + »(«expr - »(U R «expr + »(n, 1), «expr * »(X, U R n)), «expr * »(X, derivative (T R «expr + »(n, 1)))), «expr * »(«expr * »(2, X), U R n)), «expr * »(«expr - »(1, «expr ^ »(X, 2)), derivative (U R n))), «expr * »(X, derivative (T R «expr + »(n, 1)))), U R «expr + »(n, 1))) : by rw [expr h] []
-    «expr = »(..., «expr - »(«expr * »(X, U R n), «expr * »(«expr - »(1, «expr ^ »(X, 2)), derivative (U R n)))) : by ring []
-end
+theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
+  (((n : Polynomial R)+1)*T R (n+1)) = (X*U R n) - (1 - X ^ 2)*derivative (U R n) :=
+  by 
+    have h :
+      derivative (T R (n+2)) =
+        (((U R (n+1) - X*U R n)+X*derivative (T R (n+1)))+(2*X)*U R n) - (1 - X ^ 2)*derivative (U R n)
+    ·
+      convLHS => rw [T_eq_X_mul_T_sub_pol_U]
+      simp only [derivative_sub, derivative_mul, derivative_X, derivative_one, derivative_X_pow, one_mulₓ,
+        T_derivative_eq_U]
+      rw [T_eq_U_sub_X_mul_U, Nat.cast_bit0, Nat.cast_one]
+      ring 
+    calc
+      (((n : Polynomial R)+1)*T R (n+1)) =
+        (((((n : Polynomial R)+1)+1)*(X*U R n)+T R (n+1)) - X*(n+1)*U R n) - (X*U R n)+T R (n+1) :=
+      by 
+        ring _ = (derivative (T R (n+2)) - X*derivative (T R (n+1))) - U R (n+1) :=
+      by 
+        rw [←U_eq_X_mul_U_add_T, ←T_derivative_eq_U, ←Nat.cast_one, ←Nat.cast_add, Nat.cast_one,
+          ←T_derivative_eq_U
+            (n+1)]_ =
+        (((((U R (n+1) - X*U R n)+X*derivative (T R (n+1)))+(2*X)*U R n) - (1 - X ^ 2)*derivative (U R n)) -
+            X*derivative (T R (n+1))) -
+          U R (n+1) :=
+      by 
+        rw [h]_ = (X*U R n) - (1 - X ^ 2)*derivative (U R n) :=
+      by 
+        ring
 
 variable (R)
 
--- error in RingTheory.Polynomial.Chebyshev: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of two Chebyshev polynomials is the sum of two other Chebyshev polynomials. -/
-theorem mul_T : ∀
-m : exprℕ(), ∀
-k, «expr = »(«expr * »(«expr * »(2, T R m), T R «expr + »(m, k)), «expr + »(T R «expr + »(«expr * »(2, m), k), T R k))
-| 0 := by simp [] [] [] ["[", expr two_mul, ",", expr add_mul, "]"] [] []
-| 1 := by simp [] [] [] ["[", expr add_comm, "]"] [] []
-| «expr + »(m, 2) := begin
-  intros [ident k],
-  suffices [] [":", expr «expr = »(«expr * »(«expr * »(2, T R «expr + »(m, 2)), T R «expr + »(«expr + »(m, k), 2)), «expr + »(T R «expr + »(«expr + »(«expr * »(2, m), k), 4), T R k))],
-  { have [ident h_nat₁] [":", expr «expr = »(«expr + »(«expr * »(2, «expr + »(m, 2)), k), «expr + »(«expr + »(«expr * »(2, m), k), 4))] [":=", expr by ring []],
-    have [ident h_nat₂] [":", expr «expr = »(«expr + »(«expr + »(m, 2), k), «expr + »(«expr + »(m, k), 2))] [":=", expr by simp [] [] [] ["[", expr add_comm, ",", expr add_assoc, "]"] [] []],
-    simpa [] [] [] ["[", expr h_nat₁, ",", expr h_nat₂, "]"] [] ["using", expr this] },
-  have [ident H₁] [":", expr «expr = »(«expr * »(«expr * »(2, T R «expr + »(m, 1)), T R «expr + »(«expr + »(m, k), 2)), «expr + »(T R «expr + »(«expr + »(«expr * »(2, m), k), 3), T R «expr + »(k, 1)))] [],
-  { have [ident h_nat₁] [":", expr «expr = »(«expr + »(«expr + »(m, 1), «expr + »(k, 1)), «expr + »(«expr + »(m, k), 2))] [":=", expr by ring []],
-    have [ident h_nat₂] [":", expr «expr = »(«expr + »(«expr * »(2, «expr + »(m, 1)), «expr + »(k, 1)), «expr + »(«expr + »(«expr * »(2, m), k), 3))] [":=", expr by ring []],
-    simpa [] [] [] ["[", expr h_nat₁, ",", expr h_nat₂, "]"] [] ["using", expr mul_T «expr + »(m, 1) «expr + »(k, 1)] },
-  have [ident H₂] [":", expr «expr = »(«expr * »(«expr * »(2, T R m), T R «expr + »(«expr + »(m, k), 2)), «expr + »(T R «expr + »(«expr + »(«expr * »(2, m), k), 2), T R «expr + »(k, 2)))] [],
-  { have [ident h_nat₁] [":", expr «expr = »(«expr + »(«expr * »(2, m), «expr + »(k, 2)), «expr + »(«expr + »(«expr * »(2, m), k), 2))] [":=", expr by simp [] [] [] ["[", expr add_assoc, "]"] [] []],
-    have [ident h_nat₂] [":", expr «expr = »(«expr + »(m, «expr + »(k, 2)), «expr + »(«expr + »(m, k), 2))] [":=", expr by simp [] [] [] ["[", expr add_assoc, "]"] [] []],
-    simpa [] [] [] ["[", expr h_nat₁, ",", expr h_nat₂, "]"] [] ["using", expr mul_T m «expr + »(k, 2)] },
-  have [ident h₁] [] [":=", expr T_add_two R m],
-  have [ident h₂] [] [":=", expr T_add_two R «expr + »(«expr + »(«expr * »(2, m), k), 2)],
-  have [ident h₃] [] [":=", expr T_add_two R k],
-  apply_fun [expr λ p, «expr * »(«expr * »(2, X), p)] ["at", ident H₁] [],
-  apply_fun [expr λ p, «expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), p)] ["at", ident h₁] [],
-  have [ident e₁] [] [":=", expr congr (congr_arg has_add.add H₁) h₁],
-  have [ident e₂] [] [":=", expr congr (congr_arg has_sub.sub e₁) H₂],
-  have [ident e₃] [] [":=", expr congr (congr_arg has_sub.sub e₂) h₂],
-  have [ident e₄] [] [":=", expr congr (congr_arg has_sub.sub e₃) h₃],
-  rw ["<-", expr sub_eq_zero] ["at", ident e₄, "⊢"],
-  rw ["<-", expr e₄] [],
-  ring []
-end
+theorem mul_T : ∀ m : ℕ, ∀ k, ((2*T R m)*T R (m+k)) = T R ((2*m)+k)+T R k
+| 0 =>
+  by 
+    simp [two_mul, add_mulₓ]
+| 1 =>
+  by 
+    simp [add_commₓ]
+| m+2 =>
+  by 
+    intro k 
+    suffices  : ((2*T R (m+2))*T R ((m+k)+2)) = T R (((2*m)+k)+4)+T R k
+    ·
+      have h_nat₁ : ((2*m+2)+k) = ((2*m)+k)+4 :=
+        by 
+          ring 
+      have h_nat₂ : ((m+2)+k) = (m+k)+2 :=
+        by 
+          simp [add_commₓ, add_assocₓ]
+      simpa [h_nat₁, h_nat₂] using this 
+    have H₁ : ((2*T R (m+1))*T R ((m+k)+2)) = T R (((2*m)+k)+3)+T R (k+1)
+    ·
+      have h_nat₁ : ((m+1)+k+1) = (m+k)+2 :=
+        by 
+          ring 
+      have h_nat₂ : ((2*m+1)+k+1) = ((2*m)+k)+3 :=
+        by 
+          ring 
+      simpa [h_nat₁, h_nat₂] using mul_T (m+1) (k+1)
+    have H₂ : ((2*T R m)*T R ((m+k)+2)) = T R (((2*m)+k)+2)+T R (k+2)
+    ·
+      have h_nat₁ : ((2*m)+k+2) = ((2*m)+k)+2 :=
+        by 
+          simp [add_assocₓ]
+      have h_nat₂ : (m+k+2) = (m+k)+2 :=
+        by 
+          simp [add_assocₓ]
+      simpa [h_nat₁, h_nat₂] using mul_T m (k+2)
+    have h₁ := T_add_two R m 
+    have h₂ := T_add_two R (((2*m)+k)+2)
+    have h₃ := T_add_two R k 
+    applyFun fun p => (2*X)*p  at H₁ 
+    applyFun fun p => (2*T R ((m+k)+2))*p  at h₁ 
+    have e₁ := congr (congr_argₓ Add.add H₁) h₁ 
+    have e₂ := congr (congr_argₓ Sub.sub e₁) H₂ 
+    have e₃ := congr (congr_argₓ Sub.sub e₂) h₂ 
+    have e₄ := congr (congr_argₓ Sub.sub e₃) h₃ 
+    rw [←sub_eq_zero] at e₄⊢
+    rw [←e₄]
+    ring
 
--- error in RingTheory.Polynomial.Chebyshev: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `(m * n)`-th Chebyshev polynomial is the composition of the `m`-th and `n`-th -/
-theorem T_mul : ∀ m : exprℕ(), ∀ n : exprℕ(), «expr = »(T R «expr * »(m, n), (T R m).comp (T R n))
-| 0 := by simp [] [] [] [] [] []
-| 1 := by simp [] [] [] [] [] []
-| «expr + »(m, 2) := begin
-  intros [ident n],
-  have [] [":", expr «expr = »(«expr * »(«expr * »(2, T R n), T R «expr * »(«expr + »(m, 1), n)), «expr + »(T R «expr * »(«expr + »(m, 2), n), T R «expr * »(m, n)))] [],
-  { convert [] [expr mul_T R n «expr * »(m, n)] []; ring [] },
-  simp [] [] [] ["[", expr this, ",", expr T_mul m, ",", "<-", expr T_mul «expr + »(m, 1), "]"] [] []
-end
+theorem T_mul : ∀ m : ℕ, ∀ n : ℕ, T R (m*n) = (T R m).comp (T R n)
+| 0 =>
+  by 
+    simp 
+| 1 =>
+  by 
+    simp 
+| m+2 =>
+  by 
+    intro n 
+    have  : ((2*T R n)*T R ((m+1)*n)) = T R ((m+2)*n)+T R (m*n)
+    ·
+      convert mul_T R n (m*n) <;> ring 
+    simp [this, T_mul m, ←T_mul (m+1)]
 
 end Polynomial.Chebyshev
 

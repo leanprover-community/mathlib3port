@@ -73,6 +73,7 @@ section Sort
 
 variable {α β γ : Type _} {ι ι' : Sort _}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » sets)
 /-- A filter basis `B` on a type `α` is a nonempty collection of sets of `α`
 such that the intersection of two elements of this collection contains some element
 of the collection. -/
@@ -97,7 +98,7 @@ instance : Inhabited (FilterBasis ℕ) :=
           rintro _ _ ⟨n, rfl⟩ ⟨m, rfl⟩
           refine' ⟨Ici (max n m), mem_range_self _, _⟩
           rintro p p_in 
-          split  <;> rw [mem_Ici] at *
+          constructor <;> rw [mem_Ici] at *
           exact le_of_max_le_left p_in 
           exact le_of_max_le_right p_in }⟩
 
@@ -110,17 +111,23 @@ namespace Filter
 
 namespace IsBasis
 
-/-- Constructs a filter basis from an indexed family of sets satisfying `is_basis`. -/
-protected def FilterBasis {p : ι → Prop} {s : ι → Set α} (h : is_basis p s) : FilterBasis α :=
-  { Sets := { t | ∃ i, p i ∧ s i = t },
-    Nonempty :=
-      let ⟨i, hi⟩ := h.nonempty
-      ⟨s i, ⟨i, hi, rfl⟩⟩,
-    inter_sets :=
-      by 
-        rintro _ _ ⟨i, hi, rfl⟩ ⟨j, hj, rfl⟩
-        rcases h.inter hi hj with ⟨k, hk, hk'⟩
-        exact ⟨_, ⟨k, hk, rfl⟩, hk'⟩ }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Constructs a filter basis from an indexed family of sets satisfying `is_basis`. -/ protected
+  def
+    FilterBasis
+    { p : ι → Prop } { s : ι → Set α } ( h : is_basis p s ) : FilterBasis α
+    :=
+      {
+        Sets := { t | ∃ i , p i ∧ s i = t } ,
+          Nonempty := let ⟨ i , hi ⟩ := h.nonempty ⟨ s i , ⟨ i , hi , rfl ⟩ ⟩ ,
+          inter_sets
+            :=
+            by
+              rintro _ _ ⟨ i , hi , rfl ⟩ ⟨ j , hj , rfl ⟩
+                rcases h.inter hi hj with ⟨ k , hk , hk' ⟩
+                exact ⟨ _ , ⟨ k , hk , rfl ⟩ , hk' ⟩
+        }
 
 variable {p : ι → Prop} {s : ι → Set α} (h : is_basis p s)
 
@@ -133,35 +140,45 @@ end Filter
 
 namespace FilterBasis
 
-/-- The filter associated to a filter basis. -/
-protected def Filter (B : FilterBasis α) : Filter α :=
-  { Sets := { s | ∃ (t : _)(_ : t ∈ B), t ⊆ s },
-    univ_sets :=
-      let ⟨s, s_in⟩ := B.nonempty
-      ⟨s, s_in, s.subset_univ⟩,
-    sets_of_superset := fun x y ⟨s, s_in, h⟩ hxy => ⟨s, s_in, Set.Subset.trans h hxy⟩,
-    inter_sets :=
-      fun x y ⟨s, s_in, hs⟩ ⟨t, t_in, ht⟩ =>
-        let ⟨u, u_in, u_sub⟩ := B.inter_sets s_in t_in
-        ⟨u, u_in, Set.Subset.trans u_sub$ Set.inter_subset_inter hs ht⟩ }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » B)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The filter associated to a filter basis. -/ protected
+  def
+    Filter
+    ( B : FilterBasis α ) : Filter α
+    :=
+      {
+        Sets := { s | ∃ ( t : _ ) ( _ : t ∈ B ) , t ⊆ s } ,
+          univ_sets := let ⟨ s , s_in ⟩ := B.nonempty ⟨ s , s_in , s.subset_univ ⟩ ,
+          sets_of_superset := fun x y ⟨ s , s_in , h ⟩ hxy => ⟨ s , s_in , Set.Subset.trans h hxy ⟩ ,
+          inter_sets
+            :=
+            fun
+              x y ⟨ s , s_in , hs ⟩ ⟨ t , t_in , ht ⟩
+                =>
+                let
+                  ⟨ u , u_in , u_sub ⟩ := B.inter_sets s_in t_in
+                  ⟨ u , u_in , Set.Subset.trans u_sub $ Set.inter_subset_inter hs ht ⟩
+        }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » B)
 theorem mem_filter_iff (B : FilterBasis α) {U : Set α} : U ∈ B.filter ↔ ∃ (s : _)(_ : s ∈ B), s ⊆ U :=
   Iff.rfl
 
 theorem mem_filter_of_mem (B : FilterBasis α) {U : Set α} : U ∈ B → U ∈ B.filter :=
   fun U_in => ⟨U, U_in, subset.refl _⟩
 
--- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_infi_principal (B : filter_basis α) : «expr = »(B.filter, «expr⨅ , »((s : B.sets), expr𝓟() s)) :=
-begin
-  have [] [":", expr directed ((«expr ≥ »)) (λ s : B.sets, expr𝓟() (s : set α))] [],
-  { rintros ["⟨", ident U, ",", ident U_in, "⟩", "⟨", ident V, ",", ident V_in, "⟩"],
-    rcases [expr B.inter_sets U_in V_in, "with", "⟨", ident W, ",", ident W_in, ",", ident W_sub, "⟩"],
-    use ["[", expr W, ",", expr W_in, "]"],
-    finish [] [] },
-  ext [] [ident U] [],
-  simp [] [] [] ["[", expr mem_filter_iff, ",", expr mem_infi_of_directed this, "]"] [] []
-end
+theorem eq_infi_principal (B : FilterBasis α) : B.filter = ⨅ s : B.sets, 𝓟 s :=
+  by 
+    have  : Directed (· ≥ ·) fun s : B.sets => 𝓟 (s : Set α)
+    ·
+      rintro ⟨U, U_in⟩ ⟨V, V_in⟩
+      rcases B.inter_sets U_in V_in with ⟨W, W_in, W_sub⟩
+      use W, W_in 
+      finish 
+    ext U 
+    simp [mem_filter_iff, mem_infi_of_directed this]
 
 protected theorem generate (B : FilterBasis α) : generate B.sets = B.filter :=
   by 
@@ -190,16 +207,19 @@ protected theorem mem_filter_iff (h : is_basis p s) {U : Set α} : U ∈ h.filte
   by 
     erw [h.filter_basis.mem_filter_iff]
     simp only [mem_filter_basis_iff h, exists_prop]
-    split 
+    constructor
     ·
       rintro ⟨_, ⟨i, pi, rfl⟩, h⟩
       tauto
     ·
       tauto
 
-theorem filter_eq_generate (h : is_basis p s) : h.filter = generate { U | ∃ i, p i ∧ s i = U } :=
-  by 
-    erw [h.filter_basis.generate] <;> rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  filter_eq_generate
+  ( h : is_basis p s ) : h.filter = generate { U | ∃ i , p i ∧ s i = U }
+  := by erw [ h.filter_basis.generate ] <;> rfl
 
 end IsBasis
 
@@ -220,16 +240,25 @@ theorem has_basis_generate (s : Set (Set α)) : (generate s).HasBasis (fun t => 
       apply exists_congr 
       tauto⟩
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The smallest filter basis containing a given collection of sets. -/
-def filter_basis.of_sets (s : Set (Set α)) : FilterBasis α :=
-  { Sets := sInter '' { t | finite t ∧ t ⊆ s }, Nonempty := ⟨univ, ∅, ⟨⟨finite_empty, empty_subset s⟩, sInter_empty⟩⟩,
-    inter_sets :=
-      by 
-        rintro _ _ ⟨a, ⟨fina, suba⟩, rfl⟩ ⟨b, ⟨finb, subb⟩, rfl⟩
-        exact
-          ⟨⋂₀(a ∪ b), mem_image_of_mem _ ⟨fina.union finb, union_subset suba subb⟩,
-            by 
-              rw [sInter_union]⟩ }
+  def
+    filter_basis.of_sets
+    ( s : Set Set α ) : FilterBasis α
+    :=
+      {
+        Sets := sInter '' { t | finite t ∧ t ⊆ s } ,
+          Nonempty := ⟨ univ , ∅ , ⟨ ⟨ finite_empty , empty_subset s ⟩ , sInter_empty ⟩ ⟩ ,
+          inter_sets
+            :=
+            by
+              rintro _ _ ⟨ a , ⟨ fina , suba ⟩ , rfl ⟩ ⟨ b , ⟨ finb , subb ⟩ , rfl ⟩
+                exact
+                  ⟨
+                    ⋂₀ a ∪ b , mem_image_of_mem _ ⟨ fina.union finb , union_subset suba subb ⟩ , by rw [ sInter_union ]
+                    ⟩
+        }
 
 /-- Definition of `has_basis` unfolded with implicit set argument. -/
 theorem has_basis.mem_iff (hl : l.has_basis p s) : t ∈ l ↔ ∃ (i : _)(hi : p i), s i ⊆ t :=
@@ -288,13 +317,19 @@ theorem has_basis.filter_eq (h : l.has_basis p s) : h.is_basis.filter = l :=
     ext U 
     simp [h.mem_iff, is_basis.mem_filter_iff]
 
-theorem has_basis.eq_generate (h : l.has_basis p s) : l = generate { U | ∃ i, p i ∧ s i = U } :=
-  by 
-    rw [←h.is_basis.filter_eq_generate, h.filter_eq]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  has_basis.eq_generate
+  ( h : l.has_basis p s ) : l = generate { U | ∃ i , p i ∧ s i = U }
+  := by rw [ ← h.is_basis.filter_eq_generate , h.filter_eq ]
 
-theorem generate_eq_generate_inter (s : Set (Set α)) : generate s = generate (sInter '' { t | finite t ∧ t ⊆ s }) :=
-  by 
-    erw [(filter_basis.of_sets s).generate, ←(has_basis_generate s).filter_eq] <;> rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  generate_eq_generate_inter
+  ( s : Set Set α ) : generate s = generate sInter '' { t | finite t ∧ t ⊆ s }
+  := by erw [ filter_basis.of_sets s . generate , ← has_basis_generate s . filter_eq ] <;> rfl
 
 theorem of_sets_filter_eq_generate (s : Set (Set α)) : (filter_basis.of_sets s).filter = generate s :=
   by 
@@ -324,15 +359,17 @@ theorem has_basis.to_subset (hl : l.has_basis p s) {t : ι → Set α} (h : ∀ 
   hl.to_has_basis' (fun i hi => ⟨i, hi, h i hi⟩) ht
 
 theorem has_basis.eventually_iff (hl : l.has_basis p s) {q : α → Prop} :
-  (∀ᶠx in l, q x) ↔ ∃ i, p i ∧ ∀ ⦃x⦄, x ∈ s i → q x :=
+  (∀ᶠ x in l, q x) ↔ ∃ i, p i ∧ ∀ ⦃x⦄, x ∈ s i → q x :=
   by 
     simpa using hl.mem_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s i)
 theorem has_basis.frequently_iff (hl : l.has_basis p s) {q : α → Prop} :
-  (∃ᶠx in l, q x) ↔ ∀ i, p i → ∃ (x : _)(_ : x ∈ s i), q x :=
+  (∃ᶠ x in l, q x) ↔ ∀ i, p i → ∃ (x : _)(_ : x ∈ s i), q x :=
   by 
     simp [Filter.Frequently, hl.eventually_iff]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l)
 theorem has_basis.exists_iff (hl : l.has_basis p s) {P : Set α → Prop} (mono : ∀ ⦃s t⦄, s ⊆ t → P t → P s) :
   (∃ (s : _)(_ : s ∈ l), P s) ↔ ∃ (i : _)(hi : p i), P (s i) :=
   ⟨fun ⟨s, hs, hP⟩ =>
@@ -340,6 +377,7 @@ theorem has_basis.exists_iff (hl : l.has_basis p s) {P : Set α → Prop} (mono 
       ⟨i, hi, mono his hP⟩,
     fun ⟨i, hi, hP⟩ => ⟨s i, hl.mem_of_mem hi, hP⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l)
 theorem has_basis.forall_iff (hl : l.has_basis p s) {P : Set α → Prop} (mono : ∀ ⦃s t⦄, s ⊆ t → P s → P t) :
   (∀ s _ : s ∈ l, P s) ↔ ∀ i, p i → P (s i) :=
   ⟨fun H i hi => H (s i)$ hl.mem_of_mem hi,
@@ -360,6 +398,8 @@ theorem has_basis.eq_bot_iff (hl : l.has_basis p s) : l = ⊥ ↔ ∃ i, p i ∧
 theorem basis_sets (l : Filter α) : l.has_basis (fun s : Set α => s ∈ l) id :=
   ⟨fun t => exists_mem_subset_iff.symm⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (r «expr ∈ » l)
 theorem has_basis_self {l : Filter α} {P : Set α → Prop} :
   has_basis l (fun s => s ∈ l ∧ P s) id ↔ ∀ t _ : t ∈ l, ∃ (r : _)(_ : r ∈ l), P r ∧ r ⊆ t :=
   by 
@@ -394,6 +434,7 @@ theorem has_basis.ge_iff (hl' : l'.has_basis p' s') : l ≤ l' ↔ ∀ i', p' i'
       let ⟨i', hi', hs⟩ := hl'.mem_iff.1 hs 
       mem_of_superset (h _ hi') hs⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » l')
 theorem has_basis.le_iff (hl : l.has_basis p s) : l ≤ l' ↔ ∀ t _ : t ∈ l', ∃ (i : _)(hi : p i), s i ⊆ t :=
   by 
     simp only [le_def, hl.mem_iff]
@@ -418,7 +459,7 @@ theorem has_basis.inf' (hl : l.has_basis p s) (hl' : l'.has_basis p' s') :
   (l⊓l').HasBasis (fun i : PProd ι ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∩ s' i.2 :=
   ⟨by 
       intro t 
-      split 
+      constructor
       ·
         simp only [mem_inf_iff, exists_prop, hl.mem_iff, hl'.mem_iff]
         rintro ⟨t, ⟨i, hi, ht⟩, t', ⟨i', hi', ht'⟩, rfl⟩
@@ -456,7 +497,7 @@ theorem has_basis.sup {ι ι' : Type _} {p : ι → Prop} {s : ι → Set α} {p
 
 theorem has_basis_supr {ι : Sort _} {ι' : ι → Type _} {l : ι → Filter α} {p : ∀ i, ι' i → Prop} {s : ∀ i, ι' i → Set α}
   (hl : ∀ i, (l i).HasBasis (p i) (s i)) :
-  (⨆i, l i).HasBasis (fun f : ∀ i, ι' i => ∀ i, p i (f i)) fun f : ∀ i, ι' i => ⋃i, s i (f i) :=
+  (⨆ i, l i).HasBasis (fun f : ∀ i, ι' i => ∀ i, p i (f i)) fun f : ∀ i, ι' i => ⋃ i, s i (f i) :=
   has_basis_iff.mpr$
     fun t =>
       by 
@@ -493,9 +534,12 @@ theorem has_basis.inf_principal_ne_bot_iff (hl : l.has_basis p s) {t : Set α} :
 theorem inf_ne_bot_iff : ne_bot (l⊓l') ↔ ∀ ⦃s : Set α⦄ hs : s ∈ l ⦃s'⦄ hs' : s' ∈ l', (s ∩ s').Nonempty :=
   l.basis_sets.inf_ne_bot_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » l)
 theorem inf_principal_ne_bot_iff {s : Set α} : ne_bot (l⊓𝓟 s) ↔ ∀ U _ : U ∈ l, (U ∩ s).Nonempty :=
   l.basis_sets.inf_principal_ne_bot_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » g)
 theorem inf_eq_bot_iff {f g : Filter α} : f⊓g = ⊥ ↔ ∃ (U : _)(_ : U ∈ f)(V : _)(_ : V ∈ g), U ∩ V = ∅ :=
   not_iff_not.1$
     ne_bot_iff.symm.trans$
@@ -503,10 +547,12 @@ theorem inf_eq_bot_iff {f g : Filter α} : f⊓g = ⊥ ↔ ∃ (U : _)(_ : U ∈
         by 
           simp [←ne_empty_iff_nonempty]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » g)
 protected theorem disjoint_iff {f g : Filter α} : Disjoint f g ↔ ∃ (U : _)(_ : U ∈ f)(V : _)(_ : V ∈ g), U ∩ V = ∅ :=
   disjoint_iff.trans inf_eq_bot_iff
 
-theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f⊓𝓟 («expr ᶜ» s) = ⊥ :=
+theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f⊓𝓟 (sᶜ) = ⊥ :=
   by 
     refine' not_iff_not.1 ((inf_principal_ne_bot_iff.trans _).symm.trans ne_bot_iff)
     exact
@@ -515,41 +561,43 @@ theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f
             simpa [empty_not_nonempty] using h s hs,
         fun hs t ht => inter_compl_nonempty_iff.2$ fun hts => hs$ mem_of_superset ht hts⟩
 
-theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∉ f ↔ ne_bot (f⊓𝓟 («expr ᶜ» s)) :=
+theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∉ f ↔ ne_bot (f⊓𝓟 (sᶜ)) :=
   (not_congr mem_iff_inf_principal_compl).trans ne_bot_iff.symm
 
-theorem mem_iff_disjoint_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ Disjoint f (𝓟 («expr ᶜ» s)) :=
+theorem mem_iff_disjoint_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ Disjoint f (𝓟 (sᶜ)) :=
   mem_iff_inf_principal_compl.trans disjoint_iff.symm
 
-theorem le_iff_forall_disjoint_principal_compl {f g : Filter α} : f ≤ g ↔ ∀ V _ : V ∈ g, Disjoint f (𝓟 («expr ᶜ» V)) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » g)
+theorem le_iff_forall_disjoint_principal_compl {f g : Filter α} : f ≤ g ↔ ∀ V _ : V ∈ g, Disjoint f (𝓟 (Vᶜ)) :=
   forall_congrₓ$ fun _ => forall_congrₓ$ fun _ => mem_iff_disjoint_principal_compl
 
-theorem le_iff_forall_inf_principal_compl {f g : Filter α} : f ≤ g ↔ ∀ V _ : V ∈ g, f⊓𝓟 («expr ᶜ» V) = ⊥ :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » g)
+theorem le_iff_forall_inf_principal_compl {f g : Filter α} : f ≤ g ↔ ∀ V _ : V ∈ g, f⊓𝓟 (Vᶜ) = ⊥ :=
   forall_congrₓ$ fun _ => forall_congrₓ$ fun _ => mem_iff_inf_principal_compl
 
 theorem inf_ne_bot_iff_frequently_left {f g : Filter α} :
-  ne_bot (f⊓g) ↔ ∀ {p : α → Prop}, (∀ᶠx in f, p x) → ∃ᶠx in g, p x :=
+  ne_bot (f⊓g) ↔ ∀ {p : α → Prop}, (∀ᶠ x in f, p x) → ∃ᶠ x in g, p x :=
   by 
     simpa only [inf_ne_bot_iff, frequently_iff, exists_prop, and_comm]
 
 theorem inf_ne_bot_iff_frequently_right {f g : Filter α} :
-  ne_bot (f⊓g) ↔ ∀ {p : α → Prop}, (∀ᶠx in g, p x) → ∃ᶠx in f, p x :=
+  ne_bot (f⊓g) ↔ ∀ {p : α → Prop}, (∀ᶠ x in g, p x) → ∃ᶠ x in f, p x :=
   by 
     rw [inf_comm]
     exact inf_ne_bot_iff_frequently_left
 
-theorem has_basis.eq_binfi (h : l.has_basis p s) : l = ⨅(i : _)(_ : p i), 𝓟 (s i) :=
+theorem has_basis.eq_binfi (h : l.has_basis p s) : l = ⨅ (i : _)(_ : p i), 𝓟 (s i) :=
   eq_binfi_of_mem_iff_exists_mem$
     fun t =>
       by 
         simp only [h.mem_iff, mem_principal]
 
-theorem has_basis.eq_infi (h : l.has_basis (fun _ => True) s) : l = ⨅i, 𝓟 (s i) :=
+theorem has_basis.eq_infi (h : l.has_basis (fun _ => True) s) : l = ⨅ i, 𝓟 (s i) :=
   by 
     simpa only [infi_true] using h.eq_binfi
 
 theorem has_basis_infi_principal {s : ι → Set α} (h : Directed (· ≥ ·) s) [Nonempty ι] :
-  (⨅i, 𝓟 (s i)).HasBasis (fun _ => True) s :=
+  (⨅ i, 𝓟 (s i)).HasBasis (fun _ => True) s :=
   ⟨by 
       refine'
         fun t =>
@@ -558,17 +606,19 @@ theorem has_basis_infi_principal {s : ι → Set α} (h : Directed (· ≥ ·) s
               simp only [exists_prop, true_andₓ, mem_principal]
       exact fun _ _ => principal_mono.2⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- If `s : ι → set α` is an indexed family of sets, then finite intersections of `s i` form a basis
 of `⨅ i, 𝓟 (s i)`.  -/
 theorem has_basis_infi_principal_finite {ι : Type _} (s : ι → Set α) :
-  (⨅i, 𝓟 (s i)).HasBasis (fun t : Set ι => finite t) fun t => ⋂(i : _)(_ : i ∈ t), s i :=
+  (⨅ i, 𝓟 (s i)).HasBasis (fun t : Set ι => finite t) fun t => ⋂ (i : _)(_ : i ∈ t), s i :=
   by 
     refine' ⟨fun U => (mem_infi_finite _).trans _⟩
     simp only [infi_principal_finset, mem_Union, mem_principal, exists_prop, exists_finite_iff_finset,
       Finset.set_bInter_coe]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » S)
 theorem has_basis_binfi_principal {s : β → Set α} {S : Set β} (h : DirectedOn (s ⁻¹'o (· ≥ ·)) S) (ne : S.nonempty) :
-  (⨅(i : _)(_ : i ∈ S), 𝓟 (s i)).HasBasis (fun i => i ∈ S) s :=
+  (⨅ (i : _)(_ : i ∈ S), 𝓟 (s i)).HasBasis (fun i => i ∈ S) s :=
   ⟨by 
       refine'
         fun t =>
@@ -581,7 +631,7 @@ theorem has_basis_binfi_principal {s : β → Set α} {S : Set β} (h : Directed
 
 theorem has_basis_binfi_principal' {ι : Type _} {p : ι → Prop} {s : ι → Set α}
   (h : ∀ i, p i → ∀ j, p j → ∃ (k : _)(h : p k), s k ⊆ s i ∧ s k ⊆ s j) (ne : ∃ i, p i) :
-  (⨅(i : _)(h : p i), 𝓟 (s i)).HasBasis p s :=
+  (⨅ (i : _)(h : p i), 𝓟 (s i)).HasBasis p s :=
   Filter.has_basis_binfi_principal h Ne
 
 theorem has_basis.map (f : α → β) (hl : l.has_basis p s) : (l.map f).HasBasis p fun i => f '' s i :=
@@ -593,7 +643,7 @@ theorem has_basis.comap (f : β → α) (hl : l.has_basis p s) : (l.comap f).Has
   ⟨by 
       intro t 
       simp only [mem_comap, exists_prop, hl.mem_iff]
-      split 
+      constructor
       ·
         rintro ⟨t', ⟨i, hi, ht'⟩, H⟩
         exact ⟨i, hi, subset.trans (preimage_mono ht') H⟩
@@ -608,7 +658,7 @@ theorem has_basis.prod_self (hl : l.has_basis p s) : (l ×ᶠ l).HasBasis p fun 
   ⟨by 
       intro t 
       apply mem_prod_iff.trans 
-      split 
+      constructor
       ·
         rintro ⟨t₁, ht₁, t₂, ht₂, H⟩
         rcases hl.mem_iff.1 (inter_mem ht₁ ht₂) with ⟨i, hi, ht⟩
@@ -617,17 +667,19 @@ theorem has_basis.prod_self (hl : l.has_basis p s) : (l ×ᶠ l).HasBasis p fun 
         rintro ⟨i, hi, H⟩
         exact ⟨s i, hl.mem_of_mem hi, s i, hl.mem_of_mem hi, H⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » l)
 theorem mem_prod_self_iff {s} : s ∈ l ×ᶠ l ↔ ∃ (t : _)(_ : t ∈ l), Set.Prod t t ⊆ s :=
   l.basis_sets.prod_self.mem_iff
 
-theorem has_basis.sInter_sets (h : has_basis l p s) : ⋂₀l.sets = ⋂(i : _)(hi : p i), s i :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » l)
+theorem has_basis.sInter_sets (h : has_basis l p s) : ⋂₀l.sets = ⋂ (i : _)(hi : p i), s i :=
   by 
     ext x 
     suffices  : (∀ t _ : t ∈ l, x ∈ t) ↔ ∀ i, p i → x ∈ s i
     ·
       simpa only [mem_Inter, mem_set_of_eq, mem_sInter]
     simpRw [h.mem_iff]
-    split 
+    constructor
     ·
       intro h i hi 
       exact h (s i) ⟨i, hi, subset.refl _⟩
@@ -635,20 +687,18 @@ theorem has_basis.sInter_sets (h : has_basis l p s) : ⋂₀l.sets = ⋂(i : _)(
       rintro h _ ⟨i, hi, sub⟩
       exact sub (h i hi)
 
-variable {ι'' : Type _} [Preorderₓ ι''] (l) (p'' : ι'' → Prop) (s'' : ι'' → Set α)
+variable {ι'' : Type _} [Preorderₓ ι''] (l) (s'' : ι'' → Set α)
 
-/-- `is_antitone_basis p s` means the image of `s` bounded by `p` is a filter basis
-such that `s` is decreasing and `p` is increasing, ie `i ≤ j → p i → p j`. -/
-structure is_antitone_basis extends is_basis p'' s'' : Prop where 
-  decreasing : ∀ {i j}, p'' i → p'' j → i ≤ j → s'' j ⊆ s'' i 
-  mono : Monotone p''
+/-- `is_antitone_basis s` means the image of `s` is a filter basis such that `s` is decreasing. -/
+@[protectProj]
+structure is_antitone_basis extends is_basis (fun _ => True) s'' : Prop where 
+  Antitone : Antitone s''
 
-/-- We say that a filter `l` has an antitone basis `s : ι → set α` bounded by `p : ι → Prop`,
-if `t ∈ l` if and only if `t` includes `s i` for some `i` such that `p i`,
-and `s` is decreasing and `p` is increasing, ie `i ≤ j → p i → p j`. -/
-structure has_antitone_basis (l : Filter α) (p : ι'' → Prop) (s : ι'' → Set α) extends has_basis l p s : Prop where 
-  decreasing : ∀ {i j}, p i → p j → i ≤ j → s j ⊆ s i 
-  mono : Monotone p
+/-- We say that a filter `l` has an antitone basis `s : ι → set α`, if `t ∈ l` if and only if `t`
+includes `s i` for some `i`, and `s` is decreasing. -/
+@[protectProj]
+structure has_antitone_basis (l : Filter α) (s : ι'' → Set α) extends has_basis l (fun _ => True) s : Prop where 
+  Antitone : Antitone s
 
 end SameType
 
@@ -656,6 +706,7 @@ section TwoTypes
 
 variable {la : Filter α} {pa : ι → Prop} {sa : ι → Set α} {lb : Filter β} {pb : ι' → Prop} {sb : ι' → Set β} {f : α → β}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » lb)
 theorem has_basis.tendsto_left_iff (hla : la.has_basis pa sa) :
   tendsto f la lb ↔ ∀ t _ : t ∈ lb, ∃ (i : _)(hi : pa i), maps_to f (sa i) t :=
   by 
@@ -663,22 +714,25 @@ theorem has_basis.tendsto_left_iff (hla : la.has_basis pa sa) :
     rfl
 
 theorem has_basis.tendsto_right_iff (hlb : lb.has_basis pb sb) :
-  tendsto f la lb ↔ ∀ i hi : pb i, ∀ᶠx in la, f x ∈ sb i :=
+  tendsto f la lb ↔ ∀ i hi : pb i, ∀ᶠ x in la, f x ∈ sb i :=
   by 
     simpa only [tendsto, hlb.ge_iff, mem_map, Filter.Eventually]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » sa ia)
 theorem has_basis.tendsto_iff (hla : la.has_basis pa sa) (hlb : lb.has_basis pb sb) :
   tendsto f la lb ↔ ∀ ib hib : pb ib, ∃ (ia : _)(hia : pa ia), ∀ x _ : x ∈ sa ia, f x ∈ sb ib :=
   by 
     simp [hlb.tendsto_right_iff, hla.eventually_iff]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » lb)
 theorem tendsto.basis_left (H : tendsto f la lb) (hla : la.has_basis pa sa) :
   ∀ t _ : t ∈ lb, ∃ (i : _)(hi : pa i), maps_to f (sa i) t :=
   hla.tendsto_left_iff.1 H
 
-theorem tendsto.basis_right (H : tendsto f la lb) (hlb : lb.has_basis pb sb) : ∀ i hi : pb i, ∀ᶠx in la, f x ∈ sb i :=
+theorem tendsto.basis_right (H : tendsto f la lb) (hlb : lb.has_basis pb sb) : ∀ i hi : pb i, ∀ᶠ x in la, f x ∈ sb i :=
   hlb.tendsto_right_iff.1 H
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » sa ia)
 theorem tendsto.basis_both (H : tendsto f la lb) (hla : la.has_basis pa sa) (hlb : lb.has_basis pb sb) :
   ∀ ib hib : pb ib, ∃ (ia : _)(hia : pa ia), ∀ x _ : x ∈ sa ia, f x ∈ sb ib :=
   (hla.tendsto_iff hlb).1 H
@@ -740,15 +794,18 @@ structure countable_filter_basis (α : Type _) extends FilterBasis α where
 instance nat.inhabited_countable_filter_basis : Inhabited (countable_filter_basis ℕ) :=
   ⟨{ default$ FilterBasis ℕ with Countable := countable_range fun n => Ici n }⟩
 
-theorem has_countable_basis.is_countably_generated {f : Filter α} {p : ι → Prop} {s : ι → Set α}
-  (h : f.has_countable_basis p s) : f.is_countably_generated :=
-  ⟨⟨{ t | ∃ i, p i ∧ s i = t }, h.countable.image s, h.to_has_basis.eq_generate⟩⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  has_countable_basis.is_countably_generated
+  { f : Filter α } { p : ι → Prop } { s : ι → Set α } ( h : f.has_countable_basis p s ) : f.is_countably_generated
+  := ⟨ ⟨ { t | ∃ i , p i ∧ s i = t } , h.countable.image s , h.to_has_basis.eq_generate ⟩ ⟩
 
-theorem antitone_seq_of_seq (s : ℕ → Set α) :
-  ∃ t : ℕ → Set α, (∀ i j, i ≤ j → t j ⊆ t i) ∧ (⨅i, 𝓟$ s i) = ⨅i, 𝓟 (t i) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≤ » n)
+theorem antitone_seq_of_seq (s : ℕ → Set α) : ∃ t : ℕ → Set α, Antitone t ∧ (⨅ i, 𝓟$ s i) = ⨅ i, 𝓟 (t i) :=
   by 
-    use fun n => ⋂(m : _)(_ : m ≤ n), s m 
-    split 
+    use fun n => ⋂ (m : _)(_ : m ≤ n), s m 
+    constructor
     ·
       exact fun i j hij => bInter_mono' (Iic_subset_Iic.2 hij) fun n hn => subset.refl _ 
     apply le_antisymmₓ <;> rw [le_infi_iff] <;> intro i
@@ -767,8 +824,9 @@ theorem antitone_seq_of_seq (s : ℕ → Set α) :
       apply h 
       rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » B)
 theorem countable_binfi_eq_infi_seq [CompleteLattice α] {B : Set ι} (Bcbl : countable B) (Bne : B.nonempty)
-  (f : ι → α) : ∃ x : ℕ → ι, (⨅(t : _)(_ : t ∈ B), f t) = ⨅i, f (x i) :=
+  (f : ι → α) : ∃ x : ℕ → ι, (⨅ (t : _)(_ : t ∈ B), f t) = ⨅ i, f (x i) :=
   by 
     rw [countable_iff_exists_surjective_to_subtype Bne] at Bcbl 
     rcases Bcbl with ⟨g, gsurj⟩
@@ -784,8 +842,9 @@ theorem countable_binfi_eq_infi_seq [CompleteLattice α] {B : Set ι} (Bcbl : co
       rcases gsurj a with ⟨i, rfl⟩
       apply infi_le
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » B)
 theorem countable_binfi_eq_infi_seq' [CompleteLattice α] {B : Set ι} (Bcbl : countable B) (f : ι → α) {i₀ : ι}
-  (h : f i₀ = ⊤) : ∃ x : ℕ → ι, (⨅(t : _)(_ : t ∈ B), f t) = ⨅i, f (x i) :=
+  (h : f i₀ = ⊤) : ∃ x : ℕ → ι, (⨅ (t : _)(_ : t ∈ B), f t) = ⨅ i, f (x i) :=
   by 
     cases' B.eq_empty_or_nonempty with hB Bnonempty
     ·
@@ -795,66 +854,60 @@ theorem countable_binfi_eq_infi_seq' [CompleteLattice α] {B : Set ι} (Bcbl : c
     ·
       exact countable_binfi_eq_infi_seq Bcbl Bnonempty f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » B)
 theorem countable_binfi_principal_eq_seq_infi {B : Set (Set α)} (Bcbl : countable B) :
-  ∃ x : ℕ → Set α, (⨅(t : _)(_ : t ∈ B), 𝓟 t) = ⨅i, 𝓟 (x i) :=
+  ∃ x : ℕ → Set α, (⨅ (t : _)(_ : t ∈ B), 𝓟 t) = ⨅ i, 𝓟 (x i) :=
   countable_binfi_eq_infi_seq' Bcbl 𝓟 principal_univ
 
 section IsCountablyGenerated
 
--- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is countably generated and `f.has_basis p s`, then `f` admits a decreasing basis
 enumerated by natural numbers such that all sets have the form `s i`. More precisely, there is a
 sequence `i n` such that `p (i n)` for all `n` and `s (i n)` is a decreasing sequence of sets which
 forms a basis of `f`-/
-theorem has_basis.exists_antitone_subbasis
-{f : filter α}
-[h : f.is_countably_generated]
-{p : ι → exprProp()}
-{s : ι → set α}
-(hs : f.has_basis p s) : «expr∃ , »((x : exprℕ() → ι), «expr ∧ »(∀
-  i, p (x i), f.has_antitone_basis (λ _, true) (λ i, s (x i)))) :=
-begin
-  obtain ["⟨", ident x', ",", ident hx', "⟩", ":", expr «expr∃ , »((x : exprℕ() → set α), «expr = »(f, «expr⨅ , »((i), expr𝓟() (x i))))],
-  { unfreezingI { rcases [expr h, "with", "⟨", ident s, ",", ident hsc, ",", ident rfl, "⟩"] },
-    rw [expr generate_eq_binfi] [],
-    exact [expr countable_binfi_principal_eq_seq_infi hsc] },
-  have [] [":", expr ∀
-   i, «expr ∈ »(x' i, f)] [":=", expr λ i, «expr ▸ »(hx'.symm, infi_le (λ i, expr𝓟() (x' i)) i (mem_principal_self _))],
-  let [ident x] [":", expr exprℕ() → {i : ι // p i}] [":=", expr λ
-   n, nat.rec_on n «expr $ »(hs.index _, this 0) (λ
-    n xn, «expr $ »(hs.index _, inter_mem «expr $ »(this, «expr + »(n, 1)) (hs.mem_of_mem xn.coe_prop)))],
-  have [ident x_mono] [":", expr antitone (λ i, s (x i))] [],
-  { refine [expr antitone_nat_of_succ_le (λ i, _)],
-    exact [expr (hs.set_index_subset _).trans (inter_subset_right _ _)] },
-  have [ident x_subset] [":", expr ∀ i, «expr ⊆ »(s (x i), x' i)] [],
-  { rintro ["(", "_", "|", ident i, ")"],
-    exacts ["[", expr hs.set_index_subset _, ",", expr subset.trans (hs.set_index_subset _) (inter_subset_left _ _), "]"] },
-  refine [expr ⟨λ i, x i, λ i, (x i).2, _⟩],
-  have [] [":", expr «expr⨅ , »((i), expr𝓟() (s (x i))).has_antitone_basis (λ
-    _, true) (λ
-    i, s (x i))] [":=", expr ⟨has_basis_infi_principal (directed_of_sup x_mono), λ
-    i j _ _ hij, x_mono hij, monotone_const⟩],
-  convert [] [expr this] [],
-  exact [expr le_antisymm «expr $ »(le_infi, λ
-    i, «expr $ »(le_principal_iff.2, by cases [expr i] []; apply [expr hs.set_index_mem])) «expr ▸ »(hx'.symm, le_infi (λ
-     i, «expr $ »(le_principal_iff.2, this.to_has_basis.mem_iff.2 ⟨i, trivial, x_subset i⟩)))]
-end
+theorem has_basis.exists_antitone_subbasis {f : Filter α} [h : f.is_countably_generated] {p : ι → Prop} {s : ι → Set α}
+  (hs : f.has_basis p s) : ∃ x : ℕ → ι, (∀ i, p (x i)) ∧ f.has_antitone_basis fun i => s (x i) :=
+  by 
+    obtain ⟨x', hx'⟩ : ∃ x : ℕ → Set α, f = ⨅ i, 𝓟 (x i)
+    ·
+      (
+        rcases h with ⟨s, hsc, rfl⟩)
+      rw [generate_eq_binfi]
+      exact countable_binfi_principal_eq_seq_infi hsc 
+    have  : ∀ i, x' i ∈ f := fun i => hx'.symm ▸ (infi_le (fun i => 𝓟 (x' i)) i) (mem_principal_self _)
+    let x : ℕ → { i : ι // p i } :=
+      fun n =>
+        Nat.recOn n (hs.index _$ this 0) fun n xn => hs.index _$ inter_mem (this$ n+1) (hs.mem_of_mem xn.coe_prop)
+    have x_mono : Antitone fun i => s (x i)
+    ·
+      refine' antitone_nat_of_succ_le fun i => _ 
+      exact (hs.set_index_subset _).trans (inter_subset_right _ _)
+    have x_subset : ∀ i, s (x i) ⊆ x' i
+    ·
+      rintro (_ | i)
+      exacts[hs.set_index_subset _, subset.trans (hs.set_index_subset _) (inter_subset_left _ _)]
+    refine' ⟨fun i => x i, fun i => (x i).2, _⟩
+    have  : (⨅ i, 𝓟 (s (x i))).HasAntitoneBasis fun i => s (x i) :=
+      ⟨has_basis_infi_principal (directed_of_sup x_mono), x_mono⟩
+    convert this 
+    exact
+      le_antisymmₓ
+        (le_infi$
+          fun i =>
+            le_principal_iff.2$
+              by 
+                cases i <;> apply hs.set_index_mem)
+        (hx'.symm ▸ le_infi fun i => le_principal_iff.2$ this.to_has_basis.mem_iff.2 ⟨i, trivialₓ, x_subset i⟩)
 
 /-- A countably generated filter admits a basis formed by an antitone sequence of sets. -/
-theorem exists_antitone_basis (f : Filter α) [f.is_countably_generated] :
-  ∃ x : ℕ → Set α, f.has_antitone_basis (fun _ => True) x :=
+theorem exists_antitone_basis (f : Filter α) [f.is_countably_generated] : ∃ x : ℕ → Set α, f.has_antitone_basis x :=
   let ⟨x, hxf, hx⟩ := f.basis_sets.exists_antitone_subbasis
   ⟨x, hx⟩
-
-theorem exists_antitone_eq_infi_principal (f : Filter α) [f.is_countably_generated] :
-  ∃ x : ℕ → Set α, Antitone x ∧ f = ⨅n, 𝓟 (x n) :=
-  let ⟨x, hxf⟩ := f.exists_antitone_basis
-  ⟨x, fun i j => hxf.decreasing trivialₓ trivialₓ, hxf.to_has_basis.eq_infi⟩
 
 theorem exists_antitone_seq (f : Filter α) [f.is_countably_generated] :
   ∃ x : ℕ → Set α, Antitone x ∧ ∀ {s}, s ∈ f ↔ ∃ i, x i ⊆ s :=
   let ⟨x, hx⟩ := f.exists_antitone_basis
-  ⟨x, fun i j => hx.decreasing trivialₓ trivialₓ,
+  ⟨x, hx.antitone,
     fun s =>
       by 
         simp [hx.to_has_basis.mem_iff]⟩
@@ -881,24 +934,26 @@ instance sup.is_countably_generated (f g : Filter α) [is_countably_generated f]
 end IsCountablyGenerated
 
 @[instance]
-theorem is_countably_generated_seq [Encodable β] (x : β → Set α) : is_countably_generated (⨅i, 𝓟$ x i) :=
+theorem is_countably_generated_seq [Encodable β] (x : β → Set α) : is_countably_generated (⨅ i, 𝓟$ x i) :=
   by 
     use range x, countable_range x 
     rw [generate_eq_binfi, infi_range]
 
-theorem is_countably_generated_of_seq {f : Filter α} (h : ∃ x : ℕ → Set α, f = ⨅i, 𝓟$ x i) : f.is_countably_generated :=
+theorem is_countably_generated_of_seq {f : Filter α} (h : ∃ x : ℕ → Set α, f = ⨅ i, 𝓟$ x i) :
+  f.is_countably_generated :=
   let ⟨x, h⟩ := h 
   by 
     rw [h] <;> apply is_countably_generated_seq
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » B)
 theorem is_countably_generated_binfi_principal {B : Set$ Set α} (h : countable B) :
-  is_countably_generated (⨅(s : _)(_ : s ∈ B), 𝓟 s) :=
+  is_countably_generated (⨅ (s : _)(_ : s ∈ B), 𝓟 s) :=
   is_countably_generated_of_seq (countable_binfi_principal_eq_seq_infi h)
 
 theorem is_countably_generated_iff_exists_antitone_basis {f : Filter α} :
-  is_countably_generated f ↔ ∃ x : ℕ → Set α, f.has_antitone_basis (fun _ => True) x :=
+  is_countably_generated f ↔ ∃ x : ℕ → Set α, f.has_antitone_basis x :=
   by 
-    split 
+    constructor
     ·
       intro h 
       exact f.exists_antitone_basis

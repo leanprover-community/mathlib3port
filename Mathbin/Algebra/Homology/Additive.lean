@@ -16,7 +16,7 @@ universe v u
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory CategoryTheory.Limits HomologicalComplex
 

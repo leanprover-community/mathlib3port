@@ -576,20 +576,19 @@ def lift_monoid : (α →* R) ≃ (FreeAbelianGroup α →+* R) :=
                 ·
                   intro y1 y2 ih1 ih2 
                   rw [mul_addₓ, AddMonoidHom.map_add, AddMonoidHom.map_add, mul_addₓ, ih1, ih2] },
-    invFun := fun F => MonoidHom.comp («expr↑ » F) of_mul_hom, left_inv := fun f => MonoidHom.ext$ lift.of _,
-    right_inv :=
-      fun F => RingHom.coe_add_monoid_hom_injective$ lift.apply_symm_apply («expr↑ » F : FreeAbelianGroup α →+ R) }
+    invFun := fun F => MonoidHom.comp (↑F) of_mul_hom, left_inv := fun f => MonoidHom.ext$ lift.of _,
+    right_inv := fun F => RingHom.coe_add_monoid_hom_injective$ lift.apply_symm_apply (↑F : FreeAbelianGroup α →+ R) }
 
 @[simp]
-theorem lift_monoid_coe_add_monoid_hom (f : α →* R) : «expr↑ » (lift_monoid f) = lift f :=
+theorem lift_monoid_coe_add_monoid_hom (f : α →* R) : ↑lift_monoid f = lift f :=
   rfl
 
 @[simp]
-theorem lift_monoid_coe (f : α →* R) : «expr⇑ » (lift_monoid f) = lift f :=
+theorem lift_monoid_coe (f : α →* R) : ⇑lift_monoid f = lift f :=
   rfl
 
 @[simp]
-theorem lift_monoid_symm_coe (f : FreeAbelianGroup α →+* R) : «expr⇑ » (lift_monoid.symm f) = lift.symm («expr↑ » f) :=
+theorem lift_monoid_symm_coe (f : FreeAbelianGroup α →+* R) : ⇑lift_monoid.symm f = lift.symm (↑f) :=
   rfl
 
 theorem one_def : (1 : FreeAbelianGroup α) = of 1 :=
@@ -669,12 +668,12 @@ def equiv_of_equiv {α β : Type _} (f : α ≃ β) : FreeAbelianGroup α ≃+ F
     left_inv :=
       by 
         intro x 
-        rw [←map_comp_apply, Equiv.symm_comp_self, map_id]
+        rw [←map_comp_apply, Equivₓ.symm_comp_self, map_id]
         rfl,
     right_inv :=
       by 
         intro x 
-        rw [←map_comp_apply, Equiv.self_comp_symm, map_id]
+        rw [←map_comp_apply, Equivₓ.self_comp_symm, map_id]
         rfl,
     map_add' := AddMonoidHom.map_add _ }
 

@@ -31,7 +31,7 @@ separable degree, degree, polynomial
 
 namespace Polynomial
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -105,73 +105,61 @@ theorem irreducible_has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : 
       rcases exists_separable_of_irreducible q irred ‹q.prime›.ne_zero with ⟨n, g, hgs, hge⟩
       exact ⟨g, hgs, n, hge⟩
 
--- error in FieldTheory.SeparableDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A helper lemma: if two expansions (along the positive characteristic) of two polynomials `g` and
 `g'` agree, and the one with the larger degree is separable, then their degrees are the same. -/
-theorem contraction_degree_eq_aux
-[hq : fact q.prime]
-[hF : char_p F q]
-(g g' : polynomial F)
-(m m' : exprℕ())
-(h_expand : «expr = »(expand F «expr ^ »(q, m) g, expand F «expr ^ »(q, m') g'))
-(h : «expr < »(m, m'))
-(hg : g.separable) : «expr = »(g.nat_degree, g'.nat_degree) :=
-begin
-  obtain ["⟨", ident s, ",", ident rfl, "⟩", ":=", expr nat.exists_eq_add_of_lt h],
-  rw ["[", expr add_assoc, ",", expr pow_add, ",", expr expand_mul, "]"] ["at", ident h_expand],
-  let [ident aux] [] [":=", expr expand_injective (pow_pos hq.1.pos m) h_expand],
-  rw [expr aux] ["at", ident hg],
-  have [] [] [":=", expr (is_unit_or_eq_zero_of_separable_expand q «expr + »(s, 1) hq.out.pos hg).resolve_right s.succ_ne_zero],
-  rw ["[", expr aux, ",", expr nat_degree_expand, ",", expr nat_degree_eq_of_degree_eq_some (degree_eq_zero_of_is_unit this), ",", expr zero_mul, "]"] []
-end
+theorem contraction_degree_eq_aux [hq : Fact q.prime] [hF : CharP F q] (g g' : Polynomial F) (m m' : ℕ)
+  (h_expand : expand F (q^m) g = expand F (q^m') g') (h : m < m') (hg : g.separable) : g.nat_degree = g'.nat_degree :=
+  by 
+    obtain ⟨s, rfl⟩ := Nat.exists_eq_add_of_lt h 
+    rw [add_assocₓ, pow_addₓ, expand_mul] at h_expand 
+    let aux := expand_injective (pow_pos hq.1.Pos m) h_expand 
+    rw [aux] at hg 
+    have  := (is_unit_or_eq_zero_of_separable_expand q (s+1) hq.out.pos hg).resolve_right s.succ_ne_zero 
+    rw [aux, nat_degree_expand, nat_degree_eq_of_degree_eq_some (degree_eq_zero_of_is_unit this), zero_mul]
 
--- error in FieldTheory.SeparableDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If two expansions (along the positive characteristic) of two separable polynomials
 `g` and `g'` agree, then they have the same degree. -/
-theorem contraction_degree_eq_or_insep
-[hq : fact q.prime]
-[char_p F q]
-(g g' : polynomial F)
-(m m' : exprℕ())
-(h_expand : «expr = »(expand F «expr ^ »(q, m) g, expand F «expr ^ »(q, m') g'))
-(hg : g.separable)
-(hg' : g'.separable) : «expr = »(g.nat_degree, g'.nat_degree) :=
-begin
-  by_cases [expr h, ":", expr «expr = »(m, m')],
-  { rw [expr h] ["at", ident h_expand],
-    have [ident expand_deg] [":", expr «expr = »((expand F «expr ^ »(q, m') g).nat_degree, (expand F «expr ^ »(q, m') g').nat_degree)] [],
-    by rw [expr h_expand] [],
-    rw ["[", expr nat_degree_expand «expr ^ »(q, m') g, ",", expr nat_degree_expand «expr ^ »(q, m') g', "]"] ["at", ident expand_deg],
-    apply [expr nat.eq_of_mul_eq_mul_left (pow_pos hq.1.pos m')],
-    rw ["[", expr mul_comm, "]"] ["at", ident expand_deg],
-    rw [expr expand_deg] [],
-    rw ["[", expr mul_comm, "]"] [] },
-  { cases [expr ne.lt_or_lt h] [],
-    { exact [expr contraction_degree_eq_aux q g g' m m' h_expand h_1 hg] },
-    { exact [expr (contraction_degree_eq_aux q g' g m' m h_expand.symm h_1 hg').symm] } }
-end
+theorem contraction_degree_eq_or_insep [hq : Fact q.prime] [CharP F q] (g g' : Polynomial F) (m m' : ℕ)
+  (h_expand : expand F (q^m) g = expand F (q^m') g') (hg : g.separable) (hg' : g'.separable) :
+  g.nat_degree = g'.nat_degree :=
+  by 
+    byCases' h : m = m'
+    ·
+      rw [h] at h_expand 
+      have expand_deg : ((expand F (q^m')) g).natDegree = (expand F (q^m') g').natDegree
+      ·
+        rw [h_expand]
+      rw [nat_degree_expand (q^m') g, nat_degree_expand (q^m') g'] at expand_deg 
+      apply Nat.eq_of_mul_eq_mul_leftₓ (pow_pos hq.1.Pos m')
+      rw [mul_commₓ] at expand_deg 
+      rw [expand_deg]
+      rw [mul_commₓ]
+    ·
+      cases Ne.lt_or_lt h
+      ·
+        exact contraction_degree_eq_aux q g g' m m' h_expand h_1 hg
+      ·
+        exact (contraction_degree_eq_aux q g' g m' m h_expand.symm h_1 hg').symm
 
--- error in FieldTheory.SeparableDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The separable degree equals the degree of any separable contraction, i.e., it is unique. -/
-theorem is_separable_contraction.degree_eq
-[hF : exp_char F q]
-(g : polynomial F)
-(hg : is_separable_contraction q f g) : «expr = »(g.nat_degree, hf.degree) :=
-begin
-  casesI [expr hF] [],
-  { rcases [expr hg, "with", "⟨", ident g, ",", ident m, ",", ident hm, "⟩"],
-    rw ["[", expr one_pow, ",", expr expand_one, "]"] ["at", ident hm],
-    rw [expr hf.eq_degree] [],
-    rw [expr hm] [] },
-  { rcases [expr hg, "with", "⟨", ident hg, ",", ident m, ",", ident hm, "⟩"],
-    let [ident g'] [] [":=", expr classical.some hf],
-    cases [expr (classical.some_spec hf).2] ["with", ident m', ident hm'],
-    haveI [] [":", expr fact q.prime] [":=", expr fact_iff.2 hF_hprime],
-    apply [expr contraction_degree_eq_or_insep q g g' m m'],
-    rw ["[", expr hm, ",", expr hm', "]"] [],
-    exact [expr hg],
-    exact [expr (classical.some_spec hf).1] }
-end
+theorem is_separable_contraction.degree_eq [hF : ExpChar F q] (g : Polynomial F) (hg : is_separable_contraction q f g) :
+  g.nat_degree = hf.degree :=
+  by 
+    cases' hF
+    ·
+      rcases hg with ⟨g, m, hm⟩
+      rw [one_pow, expand_one] at hm 
+      rw [hf.eq_degree]
+      rw [hm]
+    ·
+      rcases hg with ⟨hg, m, hm⟩
+      let g' := Classical.some hf 
+      cases' (Classical.some_spec hf).2 with m' hm' 
+      have  : Fact q.prime := fact_iff.2 hF_hprime 
+      apply contraction_degree_eq_or_insep q g g' m m' 
+      rw [hm, hm']
+      exact hg 
+      exact (Classical.some_spec hf).1
 
 end Field
 

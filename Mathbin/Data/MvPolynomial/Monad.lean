@@ -41,7 +41,7 @@ since it is not a monad in `Type` but in `CommRing` (or rather `CommSemiRing`).
 
 open_locale BigOperators
 
-noncomputable theory
+noncomputable section 
 
 namespace MvPolynomial
 
@@ -289,14 +289,14 @@ theorem eval₂_hom_bind₂ (f : S →+* T) (g : σ → T) (h : R →+* MvPolyno
   RingHom.congr_fun (eval₂_hom_comp_bind₂ f g h) φ
 
 theorem aeval_bind₂ [Algebra S T] (f : σ → T) (g : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) :
-  aeval f (bind₂ g φ) = eval₂_hom ((«expr↑ » (aeval f : _ →ₐ[S] _) : _ →+* _).comp g) f φ :=
+  aeval f (bind₂ g φ) = eval₂_hom ((↑(aeval f : _ →ₐ[S] _) : _ →+* _).comp g) f φ :=
   eval₂_hom_bind₂ _ _ _ _
 
 theorem eval₂_hom_C_left (f : σ → MvPolynomial τ R) : eval₂_hom C f = bind₁ f :=
   rfl
 
 theorem bind₁_monomial (f : σ → MvPolynomial τ R) (d : σ →₀ ℕ) (r : R) :
-  bind₁ f (monomial d r) = C r*∏i in d.support, f i ^ d i :=
+  bind₁ f (monomial d r) = C r*∏ i in d.support, f i ^ d i :=
   by 
     simp only [monomial_eq, AlgHom.map_mul, bind₁_C_right, Finsupp.prod, AlgHom.map_prod, AlgHom.map_pow, bind₁_X_right]
 

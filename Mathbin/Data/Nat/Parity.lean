@@ -62,9 +62,9 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n :=
   by 
     rw [not_even_iff, odd_iff]
 
-theorem is_compl_even_odd : IsCompl { n:ℕ | Even n } { n | Odd n } :=
-  by 
-    simp [←Set.compl_set_of, is_compl_compl]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_compl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by simp [ ← Set.compl_set_of , is_compl_compl ]
 
 theorem even_or_odd (n : ℕ) : Even n ∨ Odd n :=
   Or.imp_rightₓ odd_iff_not_even.2$ em$ Even n
@@ -162,7 +162,7 @@ theorem two_not_dvd_two_mul_sub_one : ∀ {n} w : 0 < n, ¬2 ∣ (2*n) - 1
 @[parity_simps]
 theorem even_sub (h : n ≤ m) : Even (m - n) ↔ (Even m ↔ Even n) :=
   by 
-    conv  => toRHS rw [←tsub_add_cancel_of_le h, even_add]
+    conv  => rhs rw [←tsub_add_cancel_of_le h, even_add]
     byCases' h : Even n <;> simp [h]
 
 theorem even.sub_even (hm : Even m) (hn : Even n) : Even (m - n) :=

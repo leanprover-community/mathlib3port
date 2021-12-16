@@ -1,6 +1,7 @@
 import Mathbin.Algebra.Group.Defs 
 import Mathbin.Algebra.Group.Hom 
 import Mathbin.Algebra.Group.TypeTags 
+import Mathbin.Algebra.Opposites 
 import Mathbin.Logic.Embedding
 
 /-!
@@ -22,6 +23,7 @@ interaction of different group actions,
 
 * `smul_comm_class M N α` and its additive version `vadd_comm_class M N α`;
 * `is_scalar_tower M N α` (no additive version).
+* `is_central_scalar M α` (no additive version).
 
 ## Notation
 
@@ -200,6 +202,21 @@ theorem smul_assoc {M N} [HasScalar M N] [HasScalar N α] [HasScalar M α] [IsSc
 instance Semigroupₓ.is_scalar_tower [Semigroupₓ α] : IsScalarTower α α α :=
   ⟨mul_assocₓ⟩
 
+/-- A typeclass indicating that the right (aka `mul_opposite`) and left actions by `M` on `α` are
+equal, that is that `M` acts centrally on `α`. This can be thought of as a version of commutativity
+for `•`. -/
+class IsCentralScalar (M α : Type _) [HasScalar M α] [HasScalar (Mᵐᵒᵖ) α] : Prop where 
+  op_smul_eq_smul : ∀ m : M a : α, MulOpposite.op m • a = m • a
+
+theorem IsCentralScalar.unop_smul_eq_smul {M α : Type _} [HasScalar M α] [HasScalar (Mᵐᵒᵖ) α] [IsCentralScalar M α]
+  (m : Mᵐᵒᵖ) (a : α) : MulOpposite.unop m • a = m • a :=
+  MulOpposite.rec
+    (by 
+      exact fun m => (IsCentralScalar.op_smul_eq_smul _ _).symm)
+    m
+
+export IsCentralScalar(op_smul_eq_smul unop_smul_eq_smul)
+
 namespace HasScalar
 
 variable [HasScalar M α]
@@ -223,7 +240,6 @@ def comp (g : N → M) : HasScalar N α :=
 
 variable {α}
 
--- error in GroupTheory.GroupAction.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a tower of scalar actions `M → α → β`, if we use `has_scalar.comp`
 to pull back both of `M`'s actions by a map `g : N → M`, then we obtain a new
 tower of scalar actions `N → α → β`.
@@ -231,29 +247,23 @@ tower of scalar actions `N → α → β`.
 This cannot be an instance because it can cause infinite loops whenever the `has_scalar` arguments
 are still metavariables.
 -/
-@[priority 100]
-theorem comp.is_scalar_tower
-[has_scalar M β]
-[has_scalar α β]
-[is_scalar_tower M α β]
-(g : N → M) : by haveI [] [] [":=", expr comp α g]; haveI [] [] [":=", expr comp β g]; exact [expr is_scalar_tower N α β] :=
-by exact [expr { smul_assoc := λ n, @smul_assoc _ _ _ _ _ _ _ (g n) }]
+theorem comp.is_scalar_tower [HasScalar M β] [HasScalar α β] [IsScalarTower M α β] (g : N → M) :
+  by 
+    have  := comp α g <;> have  := comp β g <;> exact IsScalarTower N α β :=
+  by 
+    exact { smul_assoc := fun n => @smul_assoc _ _ _ _ _ _ _ (g n) }
 
--- error in GroupTheory.GroupAction.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[priority 100]
-instance comp.smul_comm_class
-[has_scalar β α]
-[smul_comm_class M β α]
-(g : N → M) : by haveI [] [] [":=", expr comp α g]; exact [expr smul_comm_class N β α] :=
-by exact [expr { smul_comm := λ n, @smul_comm _ _ _ _ _ _ (g n) }]
+instance (priority := 100) comp.smul_comm_class [HasScalar β α] [SmulCommClass M β α] (g : N → M) :
+  by 
+    have  := comp α g <;> exact SmulCommClass N β α :=
+  by 
+    exact { smul_comm := fun n => @smul_comm _ _ _ _ _ _ (g n) }
 
--- error in GroupTheory.GroupAction.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[priority 100]
-instance comp.smul_comm_class'
-[has_scalar β α]
-[smul_comm_class β M α]
-(g : N → M) : by haveI [] [] [":=", expr comp α g]; exact [expr smul_comm_class β N α] :=
-by exact [expr { smul_comm := λ _ n, @smul_comm _ _ _ _ _ _ _ (g n) }]
+instance (priority := 100) comp.smul_comm_class' [HasScalar β α] [SmulCommClass β M α] (g : N → M) :
+  by 
+    have  := comp α g <;> exact SmulCommClass β N α :=
+  by 
+    exact { smul_comm := fun _ n => @smul_comm _ _ _ _ _ _ _ (g n) }
 
 end HasScalar
 
@@ -317,6 +327,24 @@ protected def Function.Surjective.mulAction [HasScalar M β] (f : α → β) (hf
         by 
           rcases hf y with ⟨x, rfl⟩
           simp only [←smul, mul_smul] }
+
+/-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
+
+See also `function.surjective.distrib_mul_action_left` and `function.surjective.module_left`.
+-/
+@[reducible, toAdditive "Push forward the action of `R` on `M` along a compatible\nsurjective map `f : R →+ S`."]
+def Function.Surjective.mulActionLeft {R S M : Type _} [Monoidₓ R] [MulAction R M] [Monoidₓ S] [HasScalar S M]
+  (f : R →* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) : MulAction S M :=
+  { smul := · • ·,
+    one_smul :=
+      fun b =>
+        by 
+          rw [←f.map_one, hsmul, one_smul],
+    mul_smul :=
+      hf.forall₂.mpr$
+        fun a b x =>
+          by 
+            simp only [←f.map_mul, hsmul, mul_smul] }
 
 section 
 
@@ -491,6 +519,26 @@ protected def Function.Surjective.distribMulAction [AddMonoidₓ B] [HasScalar M
       fun c =>
         by 
           simp only [←f.map_zero, ←smul, smul_zero] }
+
+/-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
+
+See also `function.surjective.mul_action_left` and `function.surjective.module_left`.
+-/
+@[reducible]
+def Function.Surjective.distribMulActionLeft {R S M : Type _} [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M]
+  [Monoidₓ S] [HasScalar S M] (f : R →* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) :
+  DistribMulAction S M :=
+  { hf.mul_action_left f hsmul with smul := · • ·,
+    smul_zero :=
+      hf.forall.mpr$
+        fun c =>
+          by 
+            rw [hsmul, smul_zero],
+    smul_add :=
+      hf.forall.mpr$
+        fun c x y =>
+          by 
+            simp only [hsmul, smul_add] }
 
 variable (A)
 

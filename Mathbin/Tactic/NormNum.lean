@@ -739,36 +739,34 @@ unsafe def prove_ne_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tacti
       let (ic, p) ← prove_lt_rat ic b a nb na 
       ic.mk_app `` ne_of_gtₓ [a, b, p]
 
-theorem nat_cast_zero {α} [Semiringₓ α] : «expr↑ » (0 : ℕ) = (0 : α) :=
+theorem nat_cast_zero {α} [Semiringₓ α] : ↑(0 : ℕ) = (0 : α) :=
   Nat.cast_zero
 
-theorem nat_cast_one {α} [Semiringₓ α] : «expr↑ » (1 : ℕ) = (1 : α) :=
+theorem nat_cast_one {α} [Semiringₓ α] : ↑(1 : ℕ) = (1 : α) :=
   Nat.cast_one
 
-theorem nat_cast_bit0 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : «expr↑ » a = a') : «expr↑ » (bit0 a) = bit0 a' :=
+theorem nat_cast_bit0 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : ↑a = a') : ↑bit0 a = bit0 a' :=
   h ▸ Nat.cast_bit0 _
 
-theorem nat_cast_bit1 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : «expr↑ » a = a') : «expr↑ » (bit1 a) = bit1 a' :=
+theorem nat_cast_bit1 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : ↑a = a') : ↑bit1 a = bit1 a' :=
   h ▸ Nat.cast_bit1 _
 
-theorem int_cast_zero {α} [Ringₓ α] : «expr↑ » (0 : ℤ) = (0 : α) :=
+theorem int_cast_zero {α} [Ringₓ α] : ↑(0 : ℤ) = (0 : α) :=
   Int.cast_zero
 
-theorem int_cast_one {α} [Ringₓ α] : «expr↑ » (1 : ℤ) = (1 : α) :=
+theorem int_cast_one {α} [Ringₓ α] : ↑(1 : ℤ) = (1 : α) :=
   Int.cast_one
 
-theorem int_cast_bit0 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : «expr↑ » a = a') : «expr↑ » (bit0 a) = bit0 a' :=
+theorem int_cast_bit0 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑bit0 a = bit0 a' :=
   h ▸ Int.cast_bit0 _
 
-theorem int_cast_bit1 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : «expr↑ » a = a') : «expr↑ » (bit1 a) = bit1 a' :=
+theorem int_cast_bit1 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑bit1 a = bit1 a' :=
   h ▸ Int.cast_bit1 _
 
-theorem rat_cast_bit0 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : «expr↑ » a = a') :
-  «expr↑ » (bit0 a) = bit0 a' :=
+theorem rat_cast_bit0 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑bit0 a = bit0 a' :=
   h ▸ Rat.cast_bit0 _
 
-theorem rat_cast_bit1 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : «expr↑ » a = a') :
-  «expr↑ » (bit1 a) = bit1 a' :=
+theorem rat_cast_bit1 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑bit1 a = bit1 a' :=
   h ▸ Rat.cast_bit1 _
 
 /-- Given `a' : α` a natural numeral, returns `(a : ℕ, ⊢ ↑a = a')`.
@@ -861,8 +859,8 @@ unsafe def prove_rat_uncast_nat (ic qc : instance_cache) (cz_inst : expr) :
       return (ic, qc, a1, p)
   | _ => failed
 
-theorem rat_cast_div {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : «expr↑ » a = a')
-  (hb : «expr↑ » b = b') : «expr↑ » (a / b) = a' / b' :=
+theorem rat_cast_div {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') :
+  ↑(a / b) = a' / b' :=
   ha ▸ hb ▸ Rat.cast_div _ _
 
 /-- Given `a' : α` a nonnegative rational numeral, returns `(a : ℚ, ⊢ ↑a = a')`.
@@ -878,10 +876,10 @@ unsafe def prove_rat_uncast_nonneg (ic qc : instance_cache) (cz_inst a' : expr) 
       let (ic, p) ← ic.mk_app `` rat_cast_div [cz_inst, a, b, a', b', pa, pb]
       return (ic, qc, e, p)
 
-theorem int_cast_neg {α} [Ringₓ α] (a : ℤ) (a' : α) (h : «expr↑ » a = a') : «expr↑ » (-a) = -a' :=
+theorem int_cast_neg {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑(-a) = -a' :=
   h ▸ Int.cast_neg _
 
-theorem rat_cast_neg {α} [DivisionRing α] (a : ℚ) (a' : α) (h : «expr↑ » a = a') : «expr↑ » (-a) = -a' :=
+theorem rat_cast_neg {α} [DivisionRing α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑(-a) = -a' :=
   h ▸ Rat.cast_neg _
 
 /-- Given `a' : α` an integer numeral, returns `(a : ℤ, ⊢ ↑a = a')`.
@@ -910,16 +908,16 @@ unsafe def prove_rat_uncast (ic qc : instance_cache) (cz_inst a' : expr) (na' : 
       return (ic, qc, e, p)
   | none => prove_rat_uncast_nonneg ic qc cz_inst a' na'
 
-theorem nat_cast_ne {α} [Semiringₓ α] [CharZero α] (a b : ℕ) (a' b' : α) (ha : «expr↑ » a = a') (hb : «expr↑ » b = b')
-  (h : a ≠ b) : a' ≠ b' :=
+theorem nat_cast_ne {α} [Semiringₓ α] [CharZero α] (a b : ℕ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') (h : a ≠ b) :
+  a' ≠ b' :=
   ha ▸ hb ▸ mt Nat.cast_inj.1 h
 
-theorem int_cast_ne {α} [Ringₓ α] [CharZero α] (a b : ℤ) (a' b' : α) (ha : «expr↑ » a = a') (hb : «expr↑ » b = b')
-  (h : a ≠ b) : a' ≠ b' :=
+theorem int_cast_ne {α} [Ringₓ α] [CharZero α] (a b : ℤ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') (h : a ≠ b) :
+  a' ≠ b' :=
   ha ▸ hb ▸ mt Int.cast_inj.1 h
 
-theorem rat_cast_ne {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : «expr↑ » a = a')
-  (hb : «expr↑ » b = b') (h : a ≠ b) : a' ≠ b' :=
+theorem rat_cast_ne {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') (h : a ≠ b) :
+  a' ≠ b' :=
   ha ▸ hb ▸ mt Rat.cast_inj.1 h
 
 /-- Given `a`,`b` rational numerals, proves `⊢ a ≠ b`. Currently it tries two methods:
@@ -1543,38 +1541,49 @@ theorem dvd_eq_int (a b c : ℤ) p (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a 
           rw [←h₁, Int.dvd_iff_mod_eq_zero]).trans
     h₂
 
--- error in Tactic.NormNum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem int_to_nat_pos
-(a : exprℤ())
-(b : exprℕ())
-(h : «expr = »((by haveI [] [] [":=", expr @nat.cast_coe exprℤ()]; exact [expr b] : exprℤ()), a)) : «expr = »(a.to_nat, b) :=
-by rw ["<-", expr h] []; simp [] [] [] [] [] []
+theorem int_to_nat_pos (a : ℤ) (b : ℕ)
+  (h :
+    (by 
+        have  := @Nat.castCoe ℤ <;> exact b :
+      ℤ) =
+      a) :
+  a.to_nat = b :=
+  by 
+    rw [←h] <;> simp 
 
 theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 :=
   by 
     simp only [Int.to_nat_of_nonpos, h.le, neg_nonpos]
 
--- error in Tactic.NormNum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nat_abs_pos
-(a : exprℤ())
-(b : exprℕ())
-(h : «expr = »((by haveI [] [] [":=", expr @nat.cast_coe exprℤ()]; exact [expr b] : exprℤ()), a)) : «expr = »(a.nat_abs, b) :=
-by rw ["<-", expr h] []; simp [] [] [] [] [] []
+theorem nat_abs_pos (a : ℤ) (b : ℕ)
+  (h :
+    (by 
+        have  := @Nat.castCoe ℤ <;> exact b :
+      ℤ) =
+      a) :
+  a.nat_abs = b :=
+  by 
+    rw [←h] <;> simp 
 
--- error in Tactic.NormNum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nat_abs_neg
-(a : exprℤ())
-(b : exprℕ())
-(h : «expr = »((by haveI [] [] [":=", expr @nat.cast_coe exprℤ()]; exact [expr b] : exprℤ()), a)) : «expr = »(«expr- »(a).nat_abs, b) :=
-by rw ["<-", expr h] []; simp [] [] [] [] [] []
+theorem nat_abs_neg (a : ℤ) (b : ℕ)
+  (h :
+    (by 
+        have  := @Nat.castCoe ℤ <;> exact b :
+      ℤ) =
+      a) :
+  (-a).natAbs = b :=
+  by 
+    rw [←h] <;> simp 
 
--- error in Tactic.NormNum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem neg_succ_of_nat
-(a b : exprℕ())
-(c : exprℤ())
-(h₁ : «expr = »(«expr + »(a, 1), b))
-(h₂ : «expr = »((by haveI [] [] [":=", expr @nat.cast_coe exprℤ()]; exact [expr b] : exprℤ()), c)) : «expr = »(«expr-[1+ ]»(a), «expr- »(c)) :=
-by rw ["[", "<-", expr h₂, ",", "<-", expr h₁, ",", expr int.nat_cast_eq_coe_nat, "]"] []; refl
+theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : (a+1) = b)
+  (h₂ :
+    (by 
+        have  := @Nat.castCoe ℤ <;> exact b :
+      ℤ) =
+      c) :
+  -[1+ a] = -c :=
+  by 
+    rw [←h₂, ←h₁, Int.nat_cast_eq_coe_nat] <;> rfl
 
 /-- Evaluates some extra numeric operations on `nat` and `int`, specifically
 `nat.succ`, `/` and `%`, and `∣` (divisibility). -/
@@ -1644,12 +1653,17 @@ unsafe def eval_nat_int_ext : expr → tactic (expr × expr)
     pure (quote.1 (-%%ₓc : ℤ), (quote.1 neg_succ_of_nat).mk_app [a, b, c, p₁, p₂])
 | _ => failed
 
--- error in Tactic.NormNum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem int_to_nat_cast
-(a : exprℕ())
-(b : exprℤ())
-(h : «expr = »((by haveI [] [] [":=", expr @nat.cast_coe exprℤ()]; exact [expr a] : exprℤ()), b)) : «expr = »(«expr↑ »(a), b) :=
-eq.trans (by simp [] [] [] [] [] []) h
+theorem int_to_nat_cast (a : ℕ) (b : ℤ)
+  (h :
+    (by 
+        have  := @Nat.castCoe ℤ <;> exact a :
+      ℤ) =
+      b) :
+  ↑a = b :=
+  Eq.trans
+    (by 
+      simp )
+    h
 
 /-- Evaluates the `↑n` cast operation from `ℕ`, `ℤ`, `ℚ` to an arbitrary type `α`. -/
 unsafe def eval_cast : expr → tactic (expr × expr)

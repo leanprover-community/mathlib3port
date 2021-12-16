@@ -1,7 +1,8 @@
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers 
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts 
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products 
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers 
+import Mathbin.CategoryTheory.Limits.Preserves.Finite
 
 /-!
 # Constructing limits from products and equalizers.
@@ -33,9 +34,9 @@ variable {J : Type v} [small_category J]
 
 namespace HasLimitOfHasProductsOfHasEqualizers
 
-variable {F : J ⥤ C} {c₁ : fan F.obj} {c₂ : fan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2} (s t : c₁.X ⟶ c₂.X)
-  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, s ≫ c₂.π.app f = c₁.π.app f.1.1 ≫ F.map f.2)
-  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app f = c₁.π.app f.1.2) (i : fork s t)
+variable {F : J ⥤ C} {c₁ : fan F.obj} {c₂ : fan fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.2} (s t : c₁.X ⟶ c₂.X)
+  (hs : ∀ f : Σ p : J × J, p.1 ⟶ p.2, s ≫ c₂.π.app f = c₁.π.app f.1.1 ≫ F.map f.2)
+  (ht : ∀ f : Σ p : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app f = c₁.π.app f.1.2) (i : fork s t)
 
 include hs ht
 
@@ -89,7 +90,7 @@ Given the existence of the appropriate (possibly finite) products and equalizers
 (This assumes the existence of all equalizers, which is technically stronger than needed.)
 -/
 theorem has_limit_of_equalizer_and_product (F : J ⥤ C) [has_limit (discrete.functor F.obj)]
-  [has_limit (discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [has_equalizers C] : has_limit F :=
+  [has_limit (discrete.functor fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [has_equalizers C] : has_limit F :=
   has_limit.mk
     { Cone := _,
       IsLimit :=
@@ -128,15 +129,15 @@ theorem finite_limits_from_equalizers_and_finite_products [has_finite_products C
 
 variable {D : Type u₂} [category.{v} D]
 
-noncomputable theory
+noncomputable section 
 
 section 
 
-variable [has_limits_of_shape (discrete J) C] [has_limits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) C]
+variable [has_limits_of_shape (discrete.{v} J) C] [has_limits_of_shape (discrete.{v} (Σ p : J × J, p.1 ⟶ p.2)) C]
   [has_equalizers C]
 
-variable (G : C ⥤ D) [preserves_limits_of_shape walking_parallel_pair G] [preserves_limits_of_shape (discrete J) G]
-  [preserves_limits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) G]
+variable (G : C ⥤ D) [preserves_limits_of_shape walking_parallel_pair.{v} G]
+  [preserves_limits_of_shape (discrete.{v} J) G] [preserves_limits_of_shape (discrete.{v} (Σ p : J × J, p.1 ⟶ p.2)) G]
 
 /-- If a functor preserves equalizers and the appropriate products, it preserves limits. -/
 def preserves_limit_of_preserves_equalizers_and_product : preserves_limits_of_shape J G :=
@@ -144,7 +145,7 @@ def preserves_limit_of_preserves_equalizers_and_product : preserves_limits_of_sh
       fun K =>
         by 
           let P := ∏ K.obj 
-          let Q := ∏ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.2
+          let Q := ∏ fun f : Σ p : J × J, p.fst ⟶ p.snd => K.obj f.1.2
           let s : P ⟶ Q := pi.lift fun f => limit.π _ _ ≫ K.map f.2
           let t : P ⟶ Q := pi.lift fun f => limit.π _ f.1.2
           let I := equalizer s t 
@@ -193,14 +194,15 @@ end
 
 /-- If G preserves equalizers and finite products, it preserves finite limits. -/
 def preserves_finite_limits_of_preserves_equalizers_and_finite_products [has_equalizers C] [has_finite_products C]
-  (G : C ⥤ D) [preserves_limits_of_shape walking_parallel_pair G]
-  [∀ J [Fintype J], preserves_limits_of_shape (discrete J) G] (J : Type v) [small_category J] [fin_category J] :
-  preserves_limits_of_shape J G :=
-  preserves_limit_of_preserves_equalizers_and_product G
+  (G : C ⥤ D) [preserves_limits_of_shape walking_parallel_pair.{v} G]
+  [∀ J [Fintype J], preserves_limits_of_shape (discrete.{v} J) G] : preserves_finite_limits G :=
+  ⟨fun _ _ _ =>
+      by 
+        exact preserves_limit_of_preserves_equalizers_and_product G⟩
 
 /-- If G preserves equalizers and products, it preserves all limits. -/
 def preserves_limits_of_preserves_equalizers_and_products [has_equalizers C] [has_products C] (G : C ⥤ D)
-  [preserves_limits_of_shape walking_parallel_pair G] [∀ J, preserves_limits_of_shape (discrete J) G] :
+  [preserves_limits_of_shape walking_parallel_pair.{v} G] [∀ J, preserves_limits_of_shape (discrete.{v} J) G] :
   preserves_limits G :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
@@ -214,9 +216,9 @@ We now dualize the above constructions, resorting to copy-paste.
 
 namespace HasColimitOfHasCoproductsOfHasCoequalizers
 
-variable {F : J ⥤ C} {c₁ : cofan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1} {c₂ : cofan F.obj} (s t : c₁.X ⟶ c₂.X)
-  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ s = F.map f.2 ≫ c₂.ι.app f.1.2)
-  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ t = c₂.ι.app f.1.1) (i : cofork s t)
+variable {F : J ⥤ C} {c₁ : cofan fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.1} {c₂ : cofan F.obj} (s t : c₁.X ⟶ c₂.X)
+  (hs : ∀ f : Σ p : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ s = F.map f.2 ≫ c₂.ι.app f.1.2)
+  (ht : ∀ f : Σ p : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ t = c₂.ι.app f.1.1) (i : cofork s t)
 
 include hs ht
 
@@ -271,7 +273,7 @@ we know a colimit of `F` exists.
 (This assumes the existence of all coequalizers, which is technically stronger than needed.)
 -/
 theorem has_colimit_of_coequalizer_and_coproduct (F : J ⥤ C) [has_colimit (discrete.functor F.obj)]
-  [has_colimit (discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [has_coequalizers C] : has_colimit F :=
+  [has_colimit (discrete.functor fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [has_coequalizers C] : has_colimit F :=
   has_colimit.mk
     { Cocone := _,
       IsColimit :=
@@ -309,15 +311,16 @@ theorem finite_colimits_from_coequalizers_and_finite_coproducts [has_finite_copr
             by 
               exact has_colimit_of_coequalizer_and_coproduct F }⟩
 
-noncomputable theory
+noncomputable section 
 
 section 
 
-variable [has_colimits_of_shape (discrete J) C] [has_colimits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) C]
+variable [has_colimits_of_shape (discrete.{v} J) C] [has_colimits_of_shape (discrete.{v} (Σ p : J × J, p.1 ⟶ p.2)) C]
   [has_coequalizers C]
 
-variable (G : C ⥤ D) [preserves_colimits_of_shape walking_parallel_pair G] [preserves_colimits_of_shape (discrete J) G]
-  [preserves_colimits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) G]
+variable (G : C ⥤ D) [preserves_colimits_of_shape walking_parallel_pair.{v} G]
+  [preserves_colimits_of_shape (discrete.{v} J) G]
+  [preserves_colimits_of_shape (discrete.{v} (Σ p : J × J, p.1 ⟶ p.2)) G]
 
 /-- If a functor preserves coequalizers and the appropriate coproducts, it preserves colimits. -/
 def preserves_colimit_of_preserves_coequalizers_and_coproduct : preserves_colimits_of_shape J G :=
@@ -325,7 +328,7 @@ def preserves_colimit_of_preserves_coequalizers_and_coproduct : preserves_colimi
       fun K =>
         by 
           let P := ∐ K.obj 
-          let Q := ∐ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.1
+          let Q := ∐ fun f : Σ p : J × J, p.fst ⟶ p.snd => K.obj f.1.1
           let s : Q ⟶ P := sigma.desc fun f => K.map f.2 ≫ colimit.ι (discrete.functor K.obj) _ 
           let t : Q ⟶ P := sigma.desc fun f => colimit.ι (discrete.functor K.obj) f.1.1
           let I := coequalizer s t 
@@ -374,14 +377,15 @@ end
 
 /-- If G preserves coequalizers and finite coproducts, it preserves finite colimits. -/
 def preserves_finite_colimits_of_preserves_coequalizers_and_finite_coproducts [has_coequalizers C]
-  [has_finite_coproducts C] (G : C ⥤ D) [preserves_colimits_of_shape walking_parallel_pair G]
-  [∀ J [Fintype J], preserves_colimits_of_shape (discrete J) G] (J : Type v) [small_category J] [fin_category J] :
-  preserves_colimits_of_shape J G :=
-  preserves_colimit_of_preserves_coequalizers_and_coproduct G
+  [has_finite_coproducts C] (G : C ⥤ D) [preserves_colimits_of_shape walking_parallel_pair.{v} G]
+  [∀ J [Fintype J], preserves_colimits_of_shape (discrete.{v} J) G] : preserves_finite_colimits G :=
+  ⟨fun _ _ _ =>
+      by 
+        exact preserves_colimit_of_preserves_coequalizers_and_coproduct G⟩
 
 /-- If G preserves coequalizers and coproducts, it preserves all colimits. -/
 def preserves_colimits_of_preserves_coequalizers_and_coproducts [has_coequalizers C] [has_coproducts C] (G : C ⥤ D)
-  [preserves_colimits_of_shape walking_parallel_pair G] [∀ J, preserves_colimits_of_shape (discrete J) G] :
+  [preserves_colimits_of_shape walking_parallel_pair.{v} G] [∀ J, preserves_colimits_of_shape (discrete.{v} J) G] :
   preserves_colimits G :=
   { PreservesColimitsOfShape :=
       fun J 𝒥 =>

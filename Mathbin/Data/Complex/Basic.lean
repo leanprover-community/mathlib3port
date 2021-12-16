@@ -203,15 +203,15 @@ theorem of_real_mul (r s : ℝ) : ((r*s : ℝ) : ℂ) = r*s :=
     by 
       simp 
 
-theorem of_real_mul_re (r : ℝ) (z : ℂ) : («expr↑ » r*z).re = r*z.re :=
+theorem of_real_mul_re (r : ℝ) (z : ℂ) : ((↑r)*z).re = r*z.re :=
   by 
     simp 
 
-theorem of_real_mul_im (r : ℝ) (z : ℂ) : («expr↑ » r*z).im = r*z.im :=
+theorem of_real_mul_im (r : ℝ) (z : ℂ) : ((↑r)*z).im = r*z.im :=
   by 
     simp 
 
-theorem of_real_mul' (r : ℝ) (z : ℂ) : («expr↑ » r*z) = ⟨r*z.re, r*z.im⟩ :=
+theorem of_real_mul' (r : ℝ) (z : ℂ) : ((↑r)*z) = ⟨r*z.re, r*z.im⟩ :=
   ext (of_real_mul_re _ _) (of_real_mul_im _ _)
 
 /-! ### The imaginary unit, `I` -/
@@ -277,7 +277,7 @@ instance : CommRingₓ ℂ :=
         try 
             rfl <;>
           apply ext_iff.2 <;>
-            split  <;>
+            constructor <;>
               simp  <;>
                 ·
                   first |
@@ -863,7 +863,7 @@ theorem abs_cast_nat (n : ℕ) : abs (n : ℂ) = n :=
     rw [←of_real_nat_cast, abs_of_nonneg (Nat.cast_nonneg n)]
 
 @[simp, normCast]
-theorem int_cast_abs (n : ℤ) : «expr↑ » |n| = abs n :=
+theorem int_cast_abs (n : ℤ) : ↑|n| = abs n :=
   by 
     rw [←of_real_int_cast, abs_of_real, Int.cast_abs]
 
@@ -926,7 +926,7 @@ With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is an ordered ring.
 -/
 protected def OrderedCommRing : OrderedCommRing ℂ :=
   { Complex.partialOrder, Complex.commRing with zero_le_one := ⟨zero_le_one, rfl⟩,
-    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2 (·+·) rfl h.2⟩,
+    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2ₓ (·+·) rfl h.2⟩,
     mul_pos :=
       fun z w hz hw =>
         by 
@@ -992,29 +992,27 @@ theorem is_cau_seq_abs {f : ℕ → ℂ} (hf : IsCauSeq abs f) : IsCauSeq abs' (
 noncomputable def lim_aux (f : CauSeq ℂ abs) : ℂ :=
   ⟨CauSeq.lim (cau_seq_re f), CauSeq.lim (cau_seq_im f)⟩
 
--- error in Data.Complex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem equiv_lim_aux (f : cau_seq exprℂ() abs) : «expr ≈ »(f, cau_seq.const abs (lim_aux f)) :=
-λ
-ε
-ε0, «expr $ »((exists_forall_ge_and (cau_seq.equiv_lim ⟨_, is_cau_seq_re f⟩ _ (half_pos ε0)) (cau_seq.equiv_lim ⟨_, is_cau_seq_im f⟩ _ (half_pos ε0))).imp, λ
- i H j ij, begin
-   cases [expr H _ ij] ["with", ident H₁, ident H₂],
-   apply [expr lt_of_le_of_lt (abs_le_abs_re_add_abs_im _)],
-   dsimp [] ["[", expr lim_aux, "]"] [] ["at", "*"],
-   have [] [] [":=", expr add_lt_add H₁ H₂],
-   rwa [expr add_halves] ["at", ident this]
- end)
+theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (lim_aux f) :=
+  fun ε ε0 =>
+    (exists_forall_ge_and (CauSeq.equiv_lim ⟨_, is_cau_seq_re f⟩ _ (half_pos ε0))
+          (CauSeq.equiv_lim ⟨_, is_cau_seq_im f⟩ _ (half_pos ε0))).imp$
+      fun i H j ij =>
+        by 
+          cases' H _ ij with H₁ H₂ 
+          apply lt_of_le_of_ltₓ (abs_le_abs_re_add_abs_im _)
+          dsimp [lim_aux]  at *
+          have  := add_lt_add H₁ H₂ 
+          rwa [add_halves] at this
 
 noncomputable instance : CauSeq.IsComplete ℂ abs :=
   ⟨fun f => ⟨lim_aux f, equiv_lim_aux f⟩⟩
 
 open CauSeq
 
-theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) :
-  limₓ f = «expr↑ » (limₓ (cau_seq_re f))+«expr↑ » (limₓ (cau_seq_im f))*I :=
+theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) : limₓ f = (↑limₓ (cau_seq_re f))+(↑limₓ (cau_seq_im f))*I :=
   lim_eq_of_equiv_const$
     calc f ≈ _ := equiv_lim_aux f 
-      _ = CauSeq.const abs («expr↑ » (limₓ (cau_seq_re f))+«expr↑ » (limₓ (cau_seq_im f))*I) :=
+      _ = CauSeq.const abs ((↑limₓ (cau_seq_re f))+(↑limₓ (cau_seq_im f))*I) :=
       CauSeq.ext
         fun _ =>
           Complex.ext
@@ -1062,11 +1060,11 @@ theorem lim_abs (f : CauSeq ℂ abs) : limₓ (cau_seq_abs f) = abs (limₓ f) :
       ⟨i, fun j hj => lt_of_le_of_ltₓ (abs_abs_sub_le_abs_sub _ _) (hi j hj)⟩
 
 @[simp, normCast]
-theorem of_real_prod {α : Type _} (s : Finset α) (f : α → ℝ) : ((∏i in s, f i : ℝ) : ℂ) = ∏i in s, (f i : ℂ) :=
+theorem of_real_prod {α : Type _} (s : Finset α) (f : α → ℝ) : ((∏ i in s, f i : ℝ) : ℂ) = ∏ i in s, (f i : ℂ) :=
   RingHom.map_prod of_real _ _
 
 @[simp, normCast]
-theorem of_real_sum {α : Type _} (s : Finset α) (f : α → ℝ) : ((∑i in s, f i : ℝ) : ℂ) = ∑i in s, (f i : ℂ) :=
+theorem of_real_sum {α : Type _} (s : Finset α) (f : α → ℝ) : ((∑ i in s, f i : ℝ) : ℂ) = ∑ i in s, (f i : ℂ) :=
   RingHom.map_sum of_real _ _
 
 end Complex

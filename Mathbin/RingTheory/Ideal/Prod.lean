@@ -16,20 +16,26 @@ variable {R : Type u} {S : Type v} [Ringₓ R] [Ringₓ S] (I I' : Ideal R) (J J
 
 namespace Ideal
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- `I × J` as an ideal of `R × S`. -/
-def Prod : Ideal (R × S) :=
-  { Carrier := { x | x.fst ∈ I ∧ x.snd ∈ J },
-    zero_mem' :=
-      by 
-        simp ,
-    add_mem' :=
-      by 
-        rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ⟨ha₁, ha₂⟩ ⟨hb₁, hb₂⟩
-        exact ⟨I.add_mem ha₁ hb₁, J.add_mem ha₂ hb₂⟩,
-    smul_mem' :=
-      by 
-        rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ⟨hb₁, hb₂⟩
-        exact ⟨I.mul_mem_left _ hb₁, J.mul_mem_left _ hb₂⟩ }
+  def
+    Prod
+    : Ideal R × S
+    :=
+      {
+        Carrier := { x | x.fst ∈ I ∧ x.snd ∈ J } ,
+          zero_mem' := by simp ,
+          add_mem'
+              :=
+              by
+                rintro ⟨ a₁ , a₂ ⟩ ⟨ b₁ , b₂ ⟩ ⟨ ha₁ , ha₂ ⟩ ⟨ hb₁ , hb₂ ⟩
+                  exact ⟨ I.add_mem ha₁ hb₁ , J.add_mem ha₂ hb₂ ⟩
+            ,
+          smul_mem'
+            :=
+            by rintro ⟨ a₁ , a₂ ⟩ ⟨ b₁ , b₂ ⟩ ⟨ hb₁ , hb₂ ⟩ exact ⟨ I.mul_mem_left _ hb₁ , J.mul_mem_left _ hb₂ ⟩
+        }
 
 @[simp]
 theorem mem_prod {r : R} {s : S} : (⟨r, s⟩ : R × S) ∈ Prod I J ↔ r ∈ I ∧ s ∈ J :=
@@ -76,7 +82,7 @@ theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (Prod I
         fun h => ⟨⟨0, x⟩, ⟨⟨Ideal.zero_mem _, h⟩, rfl⟩⟩⟩
 
 @[simp]
-theorem map_prod_comm_prod : map («expr↑ » (RingEquiv.prodComm : R × S ≃+* S × R)) (Prod I J) = Prod J I :=
+theorem map_prod_comm_prod : map (↑(RingEquiv.prodComm : R × S ≃+* S × R)) (Prod I J) = Prod J I :=
   by 
     refine' trans (ideal_prod_eq _) _ 
     simp [map_map]
@@ -99,18 +105,20 @@ theorem Prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : Prod I J = Prod I' J' �
   by 
     simp only [←ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iffₓ]
 
--- error in RingTheory.Ideal.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_prime_of_is_prime_prod_top {I : ideal R} (h : (ideal.prod I («expr⊤»() : ideal S)).is_prime) : I.is_prime :=
-begin
-  split,
-  { unfreezingI { contrapose ["!"] [ident h] },
-    simp [] [] [] ["[", expr is_prime_iff, ",", expr h, "]"] [] [] },
-  { intros [ident x, ident y, ident hxy],
-    have [] [":", expr «expr ∈ »(«expr * »((⟨x, 1⟩ : «expr × »(R, S)), ⟨y, 1⟩), prod I «expr⊤»())] [],
-    { rw ["[", expr prod.mk_mul_mk, ",", expr mul_one, ",", expr mem_prod, "]"] [],
-      exact [expr ⟨hxy, trivial⟩] },
-    simpa [] [] [] [] [] ["using", expr h.mem_or_mem this] }
-end
+theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) : I.is_prime :=
+  by 
+    constructor
+    ·
+      (
+        contrapose! h)
+      simp [is_prime_iff, h]
+    ·
+      intro x y hxy 
+      have  : ((⟨x, 1⟩ : R × S)*⟨y, 1⟩) ∈ Prod I ⊤
+      ·
+        rw [Prod.mk_mul_mk, mul_oneₓ, mem_prod]
+        exact ⟨hxy, trivialₓ⟩
+      simpa using h.mem_or_mem this
 
 theorem is_prime_of_is_prime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) : I.is_prime :=
   by 
@@ -120,7 +128,7 @@ theorem is_prime_of_is_prime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ide
 
 theorem is_prime_ideal_prod_top {I : Ideal R} [h : I.is_prime] : (Prod I (⊤ : Ideal S)).IsPrime :=
   by 
-    split 
+    constructor
     ·
       (
         rcases h with ⟨h, -⟩
@@ -159,7 +167,7 @@ theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} : (Ideal.prod I J).IsPr
 theorem ideal_prod_prime (I : Ideal (R × S)) :
   I.is_prime ↔ (∃ p : Ideal R, p.is_prime ∧ I = Ideal.prod p ⊤) ∨ ∃ p : Ideal S, p.is_prime ∧ I = Ideal.prod ⊤ p :=
   by 
-    split 
+    constructor
     ·
       rw [ideal_prod_eq I]
       intros hI 
@@ -199,10 +207,10 @@ variable (R S)
     of `R` and the prime ideals of `S`. -/
 noncomputable def prime_ideals_equiv :
   { K : Ideal (R × S) // K.is_prime } ≃ Sum { I : Ideal R // I.is_prime } { J : Ideal S // J.is_prime } :=
-  Equiv.symm$
-    Equiv.ofBijective prime_ideals_equiv_impl
+  Equivₓ.symm$
+    Equivₓ.ofBijective prime_ideals_equiv_impl
       (by 
-        split 
+        constructor
         ·
           rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;> simp [Prod.ext_iff] at h
           ·

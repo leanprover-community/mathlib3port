@@ -26,7 +26,7 @@ Radon-Nikodym theorem
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical MeasureTheory Nnreal Ennreal
 
@@ -38,26 +38,25 @@ namespace Measureₓ
 
 include m
 
--- error in MeasureTheory.Decomposition.RadonNikodym: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem with_density_rn_deriv_eq
-(μ ν : measure α)
-[have_lebesgue_decomposition μ ν]
-(h : «expr ≪ »(μ, ν)) : «expr = »(ν.with_density (rn_deriv μ ν), μ) :=
-begin
-  obtain ["⟨", ident hf₁, ",", "⟨", ident E, ",", ident hE₁, ",", ident hE₂, ",", ident hE₃, "⟩", ",", ident hadd, "⟩", ":=", expr have_lebesgue_decomposition_spec μ ν],
-  have [] [":", expr «expr = »(singular_part μ ν, 0)] [],
-  { refine [expr le_antisymm (λ A hA, _) (measure.zero_le _)],
-    suffices [] [":", expr «expr = »(singular_part μ ν set.univ, 0)],
-    { rw ["[", expr measure.coe_zero, ",", expr pi.zero_apply, ",", "<-", expr this, "]"] [],
-      exact [expr measure_mono (set.subset_univ _)] },
-    rw ["[", "<-", expr set.union_compl_self E, ",", expr measure_union (@disjoint_compl_right _ E _) hE₁ hE₁.compl, ",", expr hE₂, ",", expr zero_add, "]"] [],
-    have [] [":", expr «expr = »(«expr + »(singular_part μ ν, ν.with_density (rn_deriv μ ν)) «expr ᶜ»(E), μ «expr ᶜ»(E))] [],
-    { rw ["<-", expr hadd] [] },
-    rw ["[", expr measure.coe_add, ",", expr pi.add_apply, ",", expr h hE₃, "]"] ["at", ident this],
-    exact [expr (add_eq_zero_iff.1 this).1] },
-  rw ["[", expr this, ",", expr zero_add, "]"] ["at", ident hadd],
-  exact [expr hadd.symm]
-end
+theorem with_density_rn_deriv_eq (μ ν : Measureₓ α) [have_lebesgue_decomposition μ ν] (h : μ ≪ ν) :
+  ν.with_density (rn_deriv μ ν) = μ :=
+  by 
+    obtain ⟨hf₁, ⟨E, hE₁, hE₂, hE₃⟩, hadd⟩ := have_lebesgue_decomposition_spec μ ν 
+    have  : singular_part μ ν = 0
+    ·
+      refine' le_antisymmₓ (fun A hA => _) (measure.zero_le _)
+      suffices  : singular_part μ ν Set.Univ = 0
+      ·
+        rw [measure.coe_zero, Pi.zero_apply, ←this]
+        exact measure_mono (Set.subset_univ _)
+      rw [←Set.union_compl_self E, measure_union (@disjoint_compl_right _ E _) hE₁ hE₁.compl, hE₂, zero_addₓ]
+      have  : (singular_part μ ν+ν.with_density (rn_deriv μ ν)) (Eᶜ) = μ (Eᶜ)
+      ·
+        rw [←hadd]
+      rw [measure.coe_add, Pi.add_apply, h hE₃] at this 
+      exact (add_eq_zero_iff.1 this).1
+    rw [this, zero_addₓ] at hadd 
+    exact hadd.symm
 
 /-- **The Radon-Nikodym theorem**: Given two measures `μ` and `ν`, if
 `have_lebesgue_decomposition μ ν`, then `μ` is absolutely continuous to `ν` if and only if
@@ -67,7 +66,7 @@ theorem absolutely_continuous_iff_with_density_rn_deriv_eq {μ ν : Measureₓ �
   ⟨with_density_rn_deriv_eq μ ν, fun h => h ▸ with_density_absolutely_continuous _ _⟩
 
 theorem with_density_rn_deriv_to_real_eq {μ ν : Measureₓ α} [is_finite_measure μ] [have_lebesgue_decomposition μ ν]
-  (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) : (∫x in i, (μ.rn_deriv ν x).toReal ∂ν) = (μ i).toReal :=
+  (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) : (∫ x in i, (μ.rn_deriv ν x).toReal ∂ν) = (μ i).toReal :=
   by 
     rw [integral_to_real, ←with_density_apply _ hi, with_density_rn_deriv_eq μ ν h]
     ·

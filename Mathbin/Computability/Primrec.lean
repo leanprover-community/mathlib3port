@@ -293,36 +293,47 @@ protected theorem of_nat α [Denumerable α] : Primrec (of_nat α) :=
 theorem option_some_iff {f : α → σ} : (Primrec fun a => some (f a)) ↔ Primrec f :=
   ⟨fun h => encode_iff.1$ pred.comp$ encode_iff.2 h, option_some.comp⟩
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_equiv
-{β}
-{e : «expr ≃ »(β, α)} : by haveI [] [] [":=", expr primcodable.of_equiv α e]; exact [expr primrec e] :=
-by letI [] [":", expr primcodable β] [":=", expr primcodable.of_equiv α e]; exact [expr encode_iff.1 primrec.encode]
+theorem of_equiv {β} {e : β ≃ α} :
+  by 
+    have  := Primcodable.ofEquiv α e <;> exact Primrec e :=
+  by 
+    let this' : Primcodable β := Primcodable.ofEquiv α e <;> exact encode_iff.1 Primrec.encode
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_equiv_symm
-{β}
-{e : «expr ≃ »(β, α)} : by haveI [] [] [":=", expr primcodable.of_equiv α e]; exact [expr primrec e.symm] :=
-by letI [] [] [":=", expr primcodable.of_equiv α e]; exact [expr encode_iff.1 (show primrec (λ
-   a, encode (e (e.symm a))), by simp [] [] [] ["[", expr primrec.encode, "]"] [] [])]
+theorem of_equiv_symm {β} {e : β ≃ α} :
+  by 
+    have  := Primcodable.ofEquiv α e <;> exact Primrec e.symm :=
+  by 
+    let this' := Primcodable.ofEquiv α e <;>
+      exact
+        encode_iff.1
+          (show Primrec fun a => encode (e (e.symm a))by 
+            simp [Primrec.encode])
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_equiv_iff
-{β}
-(e : «expr ≃ »(β, α))
-{f : σ → β} : by haveI [] [] [":=", expr primcodable.of_equiv α e]; exact [expr «expr ↔ »(primrec (λ
-   a, e (f a)), primrec f)] :=
-by letI [] [] [":=", expr primcodable.of_equiv α e]; exact [expr ⟨λ
-  h, (of_equiv_symm.comp h).of_eq (λ a, by simp [] [] [] [] [] []), of_equiv.comp⟩]
+theorem of_equiv_iff {β} (e : β ≃ α) {f : σ → β} :
+  by 
+    have  := Primcodable.ofEquiv α e <;> exact (Primrec fun a => e (f a)) ↔ Primrec f :=
+  by 
+    let this' := Primcodable.ofEquiv α e <;>
+      exact
+        ⟨fun h =>
+            (of_equiv_symm.comp h).of_eq
+              fun a =>
+                by 
+                  simp ,
+          of_equiv.comp⟩
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_equiv_symm_iff
-{β}
-(e : «expr ≃ »(β, α))
-{f : σ → α} : by haveI [] [] [":=", expr primcodable.of_equiv α e]; exact [expr «expr ↔ »(primrec (λ
-   a, e.symm (f a)), primrec f)] :=
-by letI [] [] [":=", expr primcodable.of_equiv α e]; exact [expr ⟨λ
-  h, (of_equiv.comp h).of_eq (λ a, by simp [] [] [] [] [] []), of_equiv_symm.comp⟩]
+theorem of_equiv_symm_iff {β} (e : β ≃ α) {f : σ → α} :
+  by 
+    have  := Primcodable.ofEquiv α e <;> exact (Primrec fun a => e.symm (f a)) ↔ Primrec f :=
+  by 
+    let this' := Primcodable.ofEquiv α e <;>
+      exact
+        ⟨fun h =>
+            (of_equiv.comp h).of_eq
+              fun a =>
+                by 
+                  simp ,
+          of_equiv_symm.comp⟩
 
 end Primrec
 
@@ -767,14 +778,13 @@ theorem list_find_index₁ {p : α → β → Prop} [∀ a b, Decidable (p a b)]
 theorem list_index_of₁ [DecidableEq α] (l : List α) : Primrec fun a => l.index_of a :=
   list_find_index₁ Primrec.eq l
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dom_fintype [fintype α] (f : α → σ) : primrec f :=
-let ⟨l, nd, m⟩ := fintype.exists_univ_list α in
-«expr $ »(option_some_iff.1, begin
-   haveI [] [] [":=", expr decidable_eq_of_encodable α],
-   refine [expr ((list_nth₁ (l.map f)).comp (list_index_of₁ l)).of_eq (λ a, _)],
-   rw ["[", expr list.nth_map, ",", expr list.nth_le_nth (list.index_of_lt_length.2 (m _)), ",", expr list.index_of_nth_le, "]"] []; refl
- end)
+theorem dom_fintype [Fintype α] (f : α → σ) : Primrec f :=
+  let ⟨l, nd, m⟩ := Fintype.exists_univ_list α 
+  option_some_iff.1$
+    by 
+      have  := decidable_eq_of_encodable α 
+      refine' ((list_nth₁ (l.map f)).comp (list_index_of₁ l)).of_eq fun a => _ 
+      rw [List.nth_map, List.nth_le_nth (List.index_of_lt_length.2 (m _)), List.index_of_nth_le] <;> rfl
 
 theorem nat_bodd_div2 : Primrec Nat.boddDiv2 :=
   (nat_elim' Primrec.id (const (ff, 0))
@@ -806,37 +816,53 @@ theorem nat_bit : Primrec₂ Nat.bit :=
       by 
         cases n.1 <;> rfl
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nat_div_mod : primrec₂ (λ n k : exprℕ(), («expr / »(n, k), «expr % »(n, k))) :=
-let f
-    (a : «expr × »(exprℕ(), exprℕ())) : «expr × »(exprℕ(), exprℕ()) := a.1.elim (0, 0) (λ
-     _ IH, if «expr = »(nat.succ IH.2, a.2) then (nat.succ IH.1, 0) else (IH.1, nat.succ IH.2)) in
-have hf : primrec f, from «expr $ »(nat_elim' fst (const (0, 0)), ((ite ((@primrec.eq exprℕ() _ _).comp «expr $ »(succ.comp, snd.comp snd) fst) (pair «expr $ »(succ.comp, fst.comp snd) (const 0)) (pair (fst.comp snd) «expr $ »(succ.comp, snd.comp snd))).comp (pair (snd.comp fst) (snd.comp snd))).to₂),
-suffices ∀
-k
-n, «expr = »((«expr / »(n, k), «expr % »(n, k)), f (n, k)), from «expr $ »(hf.of_eq, λ
- ⟨m, n⟩, by simp [] [] [] ["[", expr this, "]"] [] []),
-λ k n, begin
-  have [] [":", expr «expr ∧ »(«expr = »(«expr + »((f (n, k)).2, «expr * »(k, (f (n, k)).1)), n), «expr ∧ »(«expr < »(0, k) → «expr < »((f (n, k)).2, k), «expr = »(k, 0) → «expr = »((f (n, k)).1, 0)))] [],
-  { induction [expr n] [] ["with", ident n, ident IH] [],
-    { exact [expr ⟨rfl, id, λ _, rfl⟩] },
-    rw ["[", expr λ
-     n : exprℕ(), show «expr = »(f (n.succ, k), _root_.ite «expr = »((f (n, k)).2.succ, k) (nat.succ (f (n, k)).1, 0) ((f (n, k)).1, (f (n, k)).2.succ)), from rfl, "]"] [],
-    by_cases [expr h, ":", expr «expr = »((f (n, k)).2.succ, k)]; simp [] [] [] ["[", expr h, "]"] [] [],
-    { have [] [] [":=", expr congr_arg nat.succ IH.1],
-      refine [expr ⟨_, λ k0, nat.no_confusion (h.trans k0)⟩],
-      rwa ["[", "<-", expr nat.succ_add, ",", expr h, ",", expr add_comm, ",", "<-", expr nat.mul_succ, "]"] ["at", ident this] },
-    { exact [expr ⟨by rw ["[", expr nat.succ_add, ",", expr IH.1, "]"] [], λ
-        k0, lt_of_le_of_ne (IH.2.1 k0) h, IH.2.2⟩] } },
-  revert [ident this],
-  cases [expr f (n, k)] ["with", ident D, ident M],
-  simp [] [] [] [] [] [],
-  intros [ident h₁, ident h₂, ident h₃],
-  cases [expr nat.eq_zero_or_pos k] [],
-  { simp [] [] [] ["[", expr h, ",", expr h₃ h, "]"] [] ["at", ident h₁, "⊢"],
-    simp [] [] [] ["[", expr h₁, "]"] [] [] },
-  { exact [expr (nat.div_mod_unique h).2 ⟨h₁, h₂ h⟩] }
-end
+theorem nat_div_mod : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
+  let f (a : ℕ × ℕ) : ℕ × ℕ :=
+    a.1.elim (0, 0) fun _ IH => if Nat.succ IH.2 = a.2 then (Nat.succ IH.1, 0) else (IH.1, Nat.succ IH.2)
+  have hf : Primrec f :=
+    nat_elim' fst (const (0, 0))$
+      ((ite ((@Primrec.eq ℕ _ _).comp (succ.comp$ snd.comp snd) fst) (pair (succ.comp$ fst.comp snd) (const 0))
+              (pair (fst.comp snd) (succ.comp$ snd.comp snd))).comp
+          (pair (snd.comp fst) (snd.comp snd))).to₂
+        
+  suffices ∀ k n, (n / k, n % k) = f (n, k) from
+    hf.of_eq$
+      fun ⟨m, n⟩ =>
+        by 
+          simp [this]
+  fun k n =>
+    by 
+      have  : ((f (n, k)).2+k*(f (n, k)).1) = n ∧ (0 < k → (f (n, k)).2 < k) ∧ (k = 0 → (f (n, k)).1 = 0)
+      ·
+        induction' n with n IH
+        ·
+          exact ⟨rfl, id, fun _ => rfl⟩
+        rw
+          [fun n : ℕ =>
+            show
+              f (n.succ, k) =
+                _root_.ite ((f (n, k)).2.succ = k) (Nat.succ (f (n, k)).1, 0) ((f (n, k)).1, (f (n, k)).2.succ) from
+              rfl]
+        byCases' h : (f (n, k)).2.succ = k <;> simp [h]
+        ·
+          have  := congr_argₓ Nat.succ IH.1
+          refine' ⟨_, fun k0 => Nat.noConfusion (h.trans k0)⟩
+          rwa [←Nat.succ_add, h, add_commₓ, ←Nat.mul_succ] at this
+        ·
+          exact
+            ⟨by 
+                rw [Nat.succ_add, IH.1],
+              fun k0 => lt_of_le_of_neₓ (IH.2.1 k0) h, IH.2.2⟩
+      revert this 
+      cases' f (n, k) with D M 
+      simp 
+      intro h₁ h₂ h₃ 
+      cases Nat.eq_zero_or_posₓ k
+      ·
+        simp [h, h₃ h] at h₁⊢
+        simp [h₁]
+      ·
+        exact (Nat.div_mod_unique h).2 ⟨h₁, h₂ h⟩
 
 theorem nat_div : Primrec₂ (· / · : ℕ → ℕ → ℕ) :=
   fst.comp₂ nat_div_mod
@@ -861,64 +887,83 @@ open Primrec
 private def prim : Primcodable (List β) :=
   ⟨H⟩
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem list_cases'
-{f : α → list β}
-{g : α → σ}
-{h : α → «expr × »(β, list β) → σ}
-(hf : by haveI [] [] [":=", expr prim H]; exact [expr primrec f])
-(hg : primrec g)
-(hh : by haveI [] [] [":=", expr prim H]; exact [expr primrec₂ h]) : @primrec _ σ _ _ (λ
- a, list.cases_on (f a) (g a) (λ b l, h a (b, l))) :=
-by letI [] [] [":=", expr prim H]; exact [expr have @primrec _ (option σ) _ _ (λ
-  a, (decode (option «expr × »(β, list β)) (encode (f a))).map (λ
-   o, option.cases_on o (g a) (h a))), from «expr $ »((@map_decode_iff _ (option «expr × »(β, list β)) _ _ _ _ _).2, «expr $ »(to₂, option_cases snd (hg.comp fst) (hh.comp₂ (fst.comp₂ primrec₂.left) primrec₂.right))).comp primrec.id (encode_iff.2 hf),
- «expr $ »(option_some_iff.1, «expr $ »(this.of_eq, λ
-   a, by cases [expr f a] ["with", ident b, ident l]; simp [] [] [] ["[", expr encodek, "]"] [] []; refl))]
+private theorem list_cases' {f : α → List β} {g : α → σ} {h : α → β × List β → σ}
+  (hf :
+    by 
+      have  := prim H <;> exact Primrec f)
+  (hg : Primrec g)
+  (hh :
+    by 
+      have  := prim H <;> exact Primrec₂ h) :
+  @Primrec _ σ _ _ fun a => List.casesOn (f a) (g a) fun b l => h a (b, l) :=
+  by 
+    let this' := prim H <;>
+      exact
+        have  :
+          @Primrec _ (Option σ) _ _
+            fun a => (decode (Option (β × List β)) (encode (f a))).map fun o => Option.casesOn o (g a) (h a) :=
+          ((@map_decode_iff _ (Option (β × List β)) _ _ _ _ _).2$
+                to₂$ option_cases snd (hg.comp fst) (hh.comp₂ (fst.comp₂ Primrec₂.left) Primrec₂.right)).comp
+            Primrec.id (encode_iff.2 hf)
+        option_some_iff.1$
+          this.of_eq$
+            fun a =>
+              by 
+                cases' f a with b l <;> simp [encodek] <;> rfl
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem list_foldl'
-{f : α → list β}
-{g : α → σ}
-{h : α → «expr × »(σ, β) → σ}
-(hf : by haveI [] [] [":=", expr prim H]; exact [expr primrec f])
-(hg : primrec g)
-(hh : by haveI [] [] [":=", expr prim H]; exact [expr primrec₂ h]) : primrec (λ
- a, (f a).foldl (λ s b, h a (s, b)) (g a)) :=
-by letI [] [] [":=", expr prim H]; exact [expr let G
-     (a : α)
-     (IH : «expr × »(σ, list β)) : «expr × »(σ, list β) := list.cases_on IH.2 IH (λ b l, (h a (IH.1, b), l)) in
- let F (a : α) (n : exprℕ()) := «expr ^[ ]»(G a, n) (g a, f a) in
- have primrec (λ
-  a, (F a (encode (f a))).1), from «expr $ »(fst.comp, «expr $ »(nat_iterate (encode_iff.2 hf) (pair hg hf), «expr $ »(list_cases' H (snd.comp snd) snd, «expr $ »(to₂, pair «expr $ »(hh.comp (fst.comp fst), pair ((fst.comp snd).comp fst) (fst.comp snd)) (snd.comp snd))))),
- «expr $ »(this.of_eq, λ a, begin
-    have [] [":", expr ∀
-     n, «expr = »(F a n, ((list.take n (f a)).foldl (λ s b, h a (s, b)) (g a), list.drop n (f a)))] [],
-    { intro [],
-      simp [] [] [] ["[", expr F, "]"] [] [],
-      generalize [] [":"] [expr «expr = »(f a, l)],
-      generalize [] [":"] [expr «expr = »(g a, x)],
-      induction [expr n] [] ["with", ident n, ident IH] ["generalizing", ident l, ident x],
-      { refl },
-      simp [] [] [] [] [] [],
-      cases [expr l] ["with", ident b, ident l]; simp [] [] [] ["[", expr IH, "]"] [] [] },
-    rw ["[", expr this, ",", expr list.take_all_of_le (length_le_encode _), "]"] []
-  end)]
+private theorem list_foldl' {f : α → List β} {g : α → σ} {h : α → σ × β → σ}
+  (hf :
+    by 
+      have  := prim H <;> exact Primrec f)
+  (hg : Primrec g)
+  (hh :
+    by 
+      have  := prim H <;> exact Primrec₂ h) :
+  Primrec fun a => (f a).foldl (fun s b => h a (s, b)) (g a) :=
+  by 
+    let this' := prim H <;>
+      exact
+        let G (a : α) (IH : σ × List β) : σ × List β := List.casesOn IH.2 IH fun b l => (h a (IH.1, b), l)
+        let F (a : α) (n : ℕ) := (G a^[n]) (g a, f a)
+        have  : Primrec fun a => (F a (encode (f a))).1 :=
+          fst.comp$
+            nat_iterate (encode_iff.2 hf) (pair hg hf)$
+              list_cases' H (snd.comp snd) snd$
+                to₂$ pair (hh.comp (fst.comp fst)$ pair ((fst.comp snd).comp fst) (fst.comp snd)) (snd.comp snd)
+        this.of_eq$
+          fun a =>
+            by 
+              have  : ∀ n, F a n = ((List.takeₓ n (f a)).foldl (fun s b => h a (s, b)) (g a), List.dropₓ n (f a))
+              ·
+                intro 
+                simp [F]
+                generalize f a = l 
+                generalize g a = x 
+                induction' n with n IH generalizing l x
+                ·
+                  rfl 
+                simp 
+                cases' l with b l <;> simp [IH]
+              rw [this, List.take_all_of_le (length_le_encode _)]
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private theorem list_cons' : by haveI [] [] [":=", expr prim H]; exact [expr primrec₂ (@list.cons β)] :=
-by letI [] [] [":=", expr prim H]; exact [expr encode_iff.1 «expr $ »(succ.comp, primrec₂.mkpair.comp (encode_iff.2 fst) (encode_iff.2 snd))]
+private theorem list_cons' :
+  by 
+    have  := prim H <;> exact Primrec₂ (@List.cons β) :=
+  by 
+    let this' := prim H <;> exact encode_iff.1 (succ.comp$ primrec₂.mkpair.comp (encode_iff.2 fst) (encode_iff.2 snd))
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private theorem list_reverse' : by haveI [] [] [":=", expr prim H]; exact [expr primrec (@list.reverse β)] :=
-by letI [] [] [":=", expr prim H]; exact [expr «expr $ »(list_foldl' H primrec.id (const «expr[ , ]»([])), «expr $ »(to₂, ((list_cons' H).comp snd fst).comp snd)).of_eq (suffices ∀
-  l
-  r, «expr = »(list.foldl (λ
-    (s : list β)
-    (b : β), [«expr :: »/«expr :: »/«expr :: »](b, s)) r l, list.reverse_core l r), from λ l, this l «expr[ , ]»([]),
-  λ l, by induction [expr l] [] [] []; simp [] [] [] ["[", "*", ",", expr list.reverse_core, "]"] [] [])]
+private theorem list_reverse' :
+  by 
+    have  := prim H <;> exact Primrec (@List.reverse β) :=
+  by 
+    let this' := prim H <;>
+      exact
+        (list_foldl' H Primrec.id (const [])$ to₂$ ((list_cons' H).comp snd fst).comp snd).of_eq
+          (suffices ∀ l r, List.foldlₓ (fun s : List β b : β => b :: s) r l = List.reverseCore l r from
+            fun l => this l []
+          fun l =>
+            by 
+              induction l <;> simp [List.reverseCore])
 
 end 
 
@@ -946,34 +991,40 @@ instance Sum : Primcodable (Sum α β) :=
             ·
               cases decode β n.div2 <;> rfl⟩
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance list : primcodable (list α) :=
-⟨by letI [ident H] [] [":=", expr primcodable.prim (list exprℕ())]; exact [expr have primrec₂ (λ
-   (a : α)
-   (o : option (list exprℕ())), o.map (list.cons (encode a))), from «expr $ »(option_map snd, (list_cons' H).comp ((@primrec.encode α _).comp (fst.comp fst)) snd),
-  have primrec (λ
-   n, (of_nat (list exprℕ()) n).reverse.foldl (λ
-    o
-    m, (decode α m).bind (λ
-     a, o.map (list.cons (encode a)))) (some «expr[ , ]»([]))), from list_foldl' H ((list_reverse' H).comp (primrec.of_nat (list exprℕ()))) (const (some «expr[ , ]»([]))) (primrec.comp₂ «expr $ »(bind_decode_iff.2, primrec₂.swap this) primrec₂.right),
-  «expr $ »(nat_iff.1, «expr $ »((encode_iff.2 this).of_eq, λ n, begin
-      rw [expr list.foldl_reverse] [],
-      apply [expr nat.case_strong_induction_on n],
-      { simp [] [] [] [] [] [] },
-      intros [ident n, ident IH],
-      simp [] [] [] [] [] [],
-      cases [expr decode α n.unpair.1] ["with", ident a],
-      { refl },
-      simp [] [] [] [] [] [],
-      suffices [] [":", expr ∀
-       (o : option (list exprℕ()))
-       (p)
-       (_ : «expr = »(encode o, encode p)), «expr = »(encode (option.map (list.cons (encode a)) o), encode (option.map (list.cons a) p))],
-      from [expr this _ _ (IH _ (nat.unpair_right_le n))],
-      intros [ident o, ident p, ident IH],
-      cases [expr o] []; cases [expr p] []; injection [expr IH] ["with", ident h],
-      exact [expr congr_arg (λ k, (nat.mkpair (encode a) k).succ.succ) h]
-    end))]⟩
+instance List : Primcodable (List α) :=
+  ⟨by 
+      let H := Primcodable.prim (List ℕ) <;>
+        exact
+          have  : Primrec₂ fun a : α o : Option (List ℕ) => o.map (List.cons (encode a)) :=
+            option_map snd$ (list_cons' H).comp ((@Primrec.encode α _).comp (fst.comp fst)) snd 
+          have  :
+            Primrec
+              fun n =>
+                (of_nat (List ℕ) n).reverse.foldl (fun o m => (decode α m).bind fun a => o.map (List.cons (encode a)))
+                  (some []) :=
+            list_foldl' H ((list_reverse' H).comp (Primrec.of_nat (List ℕ))) (const (some []))
+              (Primrec.comp₂ (bind_decode_iff.2$ Primrec₂.swap this) Primrec₂.right)
+          nat_iff.1$
+            (encode_iff.2 this).of_eq$
+              fun n =>
+                by 
+                  rw [List.foldl_reverse]
+                  apply Nat.case_strong_induction_onₓ n
+                  ·
+                    simp 
+                  intro n IH 
+                  simp 
+                  cases' decode α n.unpair.1 with a
+                  ·
+                    rfl 
+                  simp 
+                  suffices  :
+                    ∀ o : Option (List ℕ) p _ : encode o = encode p,
+                      encode (Option.map (List.cons (encode a)) o) = encode (Option.map (List.cons a) p)
+                  exact this _ _ (IH _ (Nat.unpair_right_le n))
+                  intro o p IH 
+                  cases o <;> cases p <;> injection IH with h 
+                  exact congr_argₓ (fun k => (Nat.mkpair (encode a) k).succ.succ) h⟩
 
 end Primcodable
 
@@ -1170,16 +1221,16 @@ def Subtype {p : α → Prop} [DecidablePred p] (hp : PrimrecPred p) : Primcodab
             byCases' h : p a <;> simp [h] <;> rfl⟩
 
 instance Finₓ {n} : Primcodable (Finₓ n) :=
-  @of_equiv _ _ (Subtype$ nat_lt.comp Primrec.id (const n)) (Equiv.finEquivSubtype _)
+  @of_equiv _ _ (Subtype$ nat_lt.comp Primrec.id (const n)) (Equivₓ.finEquivSubtype _)
 
 instance Vector {n} : Primcodable (Vector α n) :=
   Subtype ((@Primrec.eq _ _ Nat.decidableEq).comp list_length (const _))
 
 instance fin_arrow {n} : Primcodable (Finₓ n → α) :=
-  of_equiv _ (Equiv.vectorEquivFin _ _).symm
+  of_equiv _ (Equivₓ.vectorEquivFin _ _).symm
 
 instance Arrayₓ {n} : Primcodable (Arrayₓ n α) :=
-  of_equiv _ (Equiv.arrayEquivFin _ _)
+  of_equiv _ (Equivₓ.arrayEquivFin _ _)
 
 section Ulower
 
@@ -1205,44 +1256,32 @@ variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
 variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem subtype_val
-{p : α → exprProp()}
-[decidable_pred p]
-{hp : primrec_pred p} : by haveI [] [] [":=", expr primcodable.subtype hp]; exact [expr primrec (@subtype.val α p)] :=
-begin
-  letI [] [] [":=", expr primcodable.subtype hp],
-  refine [expr (primcodable.prim (subtype p)).of_eq (λ n, _)],
-  rcases [expr decode (subtype p) n, "with", "_", "|", "⟨", ident a, ",", ident h, "⟩"]; refl
-end
+theorem subtype_val {p : α → Prop} [DecidablePred p] {hp : PrimrecPred p} :
+  by 
+    have  := Primcodable.subtype hp <;> exact Primrec (@Subtype.val α p) :=
+  by 
+    let this' := Primcodable.subtype hp 
+    refine' (Primcodable.prim (Subtype p)).of_eq fun n => _ 
+    rcases decode (Subtype p) n with (_ | ⟨a, h⟩) <;> rfl
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem subtype_val_iff
-{p : β → exprProp()}
-[decidable_pred p]
-{hp : primrec_pred p}
-{f : α → subtype p} : by haveI [] [] [":=", expr primcodable.subtype hp]; exact [expr «expr ↔ »(primrec (λ
-   a, (f a).1), primrec f)] :=
-begin
-  letI [] [] [":=", expr primcodable.subtype hp],
-  refine [expr ⟨λ h, _, λ hf, subtype_val.comp hf⟩],
-  refine [expr nat.primrec.of_eq h (λ n, _)],
-  cases [expr decode α n] ["with", ident a],
-  { refl },
-  simp [] [] [] [] [] [],
-  cases [expr f a] []; refl
-end
+theorem subtype_val_iff {p : β → Prop} [DecidablePred p] {hp : PrimrecPred p} {f : α → Subtype p} :
+  by 
+    have  := Primcodable.subtype hp <;> exact (Primrec fun a => (f a).1) ↔ Primrec f :=
+  by 
+    let this' := Primcodable.subtype hp 
+    refine' ⟨fun h => _, fun hf => subtype_val.comp hf⟩
+    refine' Nat.Primrec.of_eq h fun n => _ 
+    cases' decode α n with a
+    ·
+      rfl 
+    simp 
+    cases f a <;> rfl
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem subtype_mk
-{p : β → exprProp()}
-[decidable_pred p]
-{hp : primrec_pred p}
-{f : α → β}
-{h : ∀ a, p (f a)}
-(hf : primrec f) : by haveI [] [] [":=", expr primcodable.subtype hp]; exact [expr primrec (λ
-  a, @subtype.mk β p (f a) (h a))] :=
-subtype_val_iff.1 hf
+theorem subtype_mk {p : β → Prop} [DecidablePred p] {hp : PrimrecPred p} {f : α → β} {h : ∀ a, p (f a)}
+  (hf : Primrec f) :
+  by 
+    have  := Primcodable.subtype hp <;> exact Primrec fun a => @Subtype.mk β p (f a) (h a) :=
+  subtype_val_iff.1 hf
 
 theorem option_get {f : α → Option β} {h : ∀ a, (f a).isSome} : Primrec f → Primrec fun a => Option.get (h a) :=
   by 
@@ -1251,15 +1290,15 @@ theorem option_get {f : α → Option β} {h : ∀ a, (f a).isSome} : Primrec f 
     generalize hx : decode α n = x 
     cases x <;> simp 
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ulower_down : primrec (ulower.down : α → ulower α) :=
-by letI [] [":", expr ∀
- a, decidable «expr ∈ »(a, set.range (encode : α → exprℕ()))] [":=", expr decidable_range_encode _]; exact [expr subtype_mk primrec.encode]
+theorem ulower_down : Primrec (Ulower.down : α → Ulower α) :=
+  by 
+    let this' : ∀ a, Decidable (a ∈ Set.Range (encode : α → ℕ)) := decidable_range_encode _ <;>
+      exact subtype_mk Primrec.encode
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ulower_up : primrec (ulower.up : ulower α → α) :=
-by letI [] [":", expr ∀
- a, decidable «expr ∈ »(a, set.range (encode : α → exprℕ()))] [":=", expr decidable_range_encode _]; exact [expr option_get (primrec.decode₂.comp subtype_val)]
+theorem ulower_up : Primrec (Ulower.up : Ulower α → α) :=
+  by 
+    let this' : ∀ a, Decidable (a ∈ Set.Range (encode : α → ℕ)) := decidable_range_encode _ <;>
+      exact option_get (primrec.decode₂.comp subtype_val)
 
 theorem fin_val_iff {n} {f : α → Finₓ n} : (Primrec fun a => (f a).1) ↔ Primrec f :=
   by 
@@ -1381,9 +1420,7 @@ open nat(Primrec')
 
 open Nat.Primrec'
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:1230:6: unsupported: hide command
-hide ite
-
+-- ././Mathport/Syntax/Translate/Basic.lean:1292:6: unsupported: hide command
 theorem to_prim {n f} (pf : @primrec' n f) : Primrec f :=
   by 
     induction pf 
@@ -1507,53 +1544,54 @@ protected theorem encode : ∀ {n}, @primrec' n encode
         rw [v.eq_nil] <;> rfl
 | n+1 => (succ.comp₁ _ (mkpair.comp₂ _ head (tail encode))).of_eq$ fun ⟨a :: l, e⟩ => rfl
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sqrt : @primrec' 1 (λ v, v.head.sqrt) :=
-begin
-  suffices [ident H] [":", expr ∀
-   n : exprℕ(), «expr = »(n.sqrt, n.elim 0 (λ
-     x y, if «expr < »(x.succ, «expr * »(y.succ, y.succ)) then y else y.succ))],
-  { simp [] [] [] ["[", expr H, "]"] [] [],
-    have [] [] [":=", expr @prec' 1 _ _ (λ
-      v, by have [ident x] [] [":=", expr v.head]; have [ident y] [] [":=", expr v.tail.head]; from [expr if «expr < »(x.succ, «expr * »(y.succ, y.succ)) then y else y.succ]) head (const 0) _],
-    { convert [] [expr this] [],
-      funext [],
-      congr,
-      funext [ident x, ident y],
-      congr; simp [] [] [] [] [] [] },
-    have [ident x1] [] [":=", expr succ.comp₁ _ head],
-    have [ident y1] [] [":=", expr succ.comp₁ _ (tail head)],
-    exact [expr if_lt x1 (mul.comp₂ _ y1 y1) (tail head) y1] },
-  intro [],
-  symmetry,
-  induction [expr n] [] ["with", ident n, ident IH] [],
-  { simp [] [] [] [] [] [] },
-  dsimp [] [] [] [],
-  rw [expr IH] [],
-  split_ifs [] [],
-  { exact [expr le_antisymm (nat.sqrt_le_sqrt (nat.le_succ _)) «expr $ »(nat.lt_succ_iff.1, nat.sqrt_lt.2 h)] },
-  { exact [expr nat.eq_sqrt.2 ⟨not_lt.1 h, «expr $ »(nat.sqrt_lt.1, «expr $ »(nat.lt_succ_iff.2, nat.sqrt_succ_le_succ_sqrt _))⟩] }
-end
+theorem sqrt : @primrec' 1 fun v => v.head.sqrt :=
+  by 
+    suffices H : ∀ n : ℕ, n.sqrt = n.elim 0 fun x y => if x.succ < y.succ*y.succ then y else y.succ
+    ·
+      simp [H]
+      have  :=
+        @prec' 1 _ _
+          (fun v =>
+            by 
+              have x := v.head <;> have y := v.tail.head <;> exact if x.succ < y.succ*y.succ then y else y.succ)
+          head (const 0) _
+      ·
+        convert this 
+        funext 
+        congr 
+        funext x y 
+        congr <;> simp 
+      have x1 := succ.comp₁ _ head 
+      have y1 := succ.comp₁ _ (tail head)
+      exact if_lt x1 (mul.comp₂ _ y1 y1) (tail head) y1 
+    intro 
+    symm 
+    induction' n with n IH
+    ·
+      simp 
+    dsimp 
+    rw [IH]
+    splitIfs
+    ·
+      exact le_antisymmₓ (Nat.sqrt_le_sqrt (Nat.le_succₓ _)) (Nat.lt_succ_iff.1$ Nat.sqrt_lt.2 h)
+    ·
+      exact Nat.eq_sqrt.2 ⟨not_ltₓ.1 h, Nat.sqrt_lt.1$ Nat.lt_succ_iff.2$ Nat.sqrt_succ_le_succ_sqrt _⟩
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem unpair₁ {n f} (hf : @primrec' n f) : @primrec' n (λ v, (f v).unpair.1) :=
-begin
-  have [ident s] [] [":=", expr sqrt.comp₁ _ hf],
-  have [ident fss] [] [":=", expr sub.comp₂ _ hf (mul.comp₂ _ s s)],
-  refine [expr (if_lt fss s fss s).of_eq (λ v, _)],
-  simp [] [] [] ["[", expr nat.unpair, "]"] [] [],
-  split_ifs [] []; refl
-end
+theorem unpair₁ {n f} (hf : @primrec' n f) : @primrec' n fun v => (f v).unpair.1 :=
+  by 
+    have s := sqrt.comp₁ _ hf 
+    have fss := sub.comp₂ _ hf (mul.comp₂ _ s s)
+    refine' (if_lt fss s fss s).of_eq fun v => _ 
+    simp [Nat.unpair]
+    splitIfs <;> rfl
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem unpair₂ {n f} (hf : @primrec' n f) : @primrec' n (λ v, (f v).unpair.2) :=
-begin
-  have [ident s] [] [":=", expr sqrt.comp₁ _ hf],
-  have [ident fss] [] [":=", expr sub.comp₂ _ hf (mul.comp₂ _ s s)],
-  refine [expr (if_lt fss s s (sub.comp₂ _ fss s)).of_eq (λ v, _)],
-  simp [] [] [] ["[", expr nat.unpair, "]"] [] [],
-  split_ifs [] []; refl
-end
+theorem unpair₂ {n f} (hf : @primrec' n f) : @primrec' n fun v => (f v).unpair.2 :=
+  by 
+    have s := sqrt.comp₁ _ hf 
+    have fss := sub.comp₂ _ hf (mul.comp₂ _ s s)
+    refine' (if_lt fss s s (sub.comp₂ _ fss s)).of_eq fun v => _ 
+    simp [Nat.unpair]
+    splitIfs <;> rfl
 
 theorem of_prim : ∀ {n f}, Primrec f → @primrec' n f :=
   suffices ∀ f, Nat.Primrec f → @primrec' 1 fun v => f v.head from

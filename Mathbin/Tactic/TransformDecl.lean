@@ -66,7 +66,7 @@ using the dictionary `f`.
 `pre` is the declaration that got the `@[to_additive]` attribute and `tgt_pre` is the target of this
 declaration. -/
 unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replace_all trace : Bool)
-  (relevant : name_map ℕ) (ignore reorder : name_map$ List ℕ) (pre tgt_pre : Name) : Name → exprcommand :=
+  (relevant : name_map ℕ) (ignore reorder : name_map$ List ℕ) (pre tgt_pre : Name) : Name → command :=
   fun src =>
     do 
       let tt ← return (src = pre ∨ src.is_internal : Bool) |
@@ -107,7 +107,7 @@ replacing fragments of the names of identifiers in the type and the body using t
 This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_all trace : Bool) (relevant : name_map ℕ)
-  (ignore reorder : name_map$ List ℕ) (src tgt : Name) (attrs : List Name) : exprcommand :=
+  (ignore reorder : name_map$ List ℕ) (src tgt : Name) (attrs : List Name) : command :=
   do 
     transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt src 
     let ls ← get_eqn_lemmas_for tt src 
@@ -131,7 +131,7 @@ the body using the dictionary `dict`.
 This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_dict (dict : name_map Name) (replace_all trace : Bool) (relevant : name_map ℕ)
-  (ignore reorder : name_map$ List ℕ) (src tgt : Name) (attrs : List Name) : exprcommand :=
+  (ignore reorder : name_map$ List ℕ) (src tgt : Name) (attrs : List Name) : command :=
   transform_decl_with_prefix_fun dict.find replace_all trace relevant ignore reorder src tgt attrs
 
 end Tactic

@@ -59,11 +59,11 @@ section
 
 variable (C)
 
--- error in CategoryTheory.Monoidal.CommMon_: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- The forgetful functor from commutative monoid objects to monoid objects. -/
-@[derive #["[", expr full, ",", expr faithful, "]"]]
-def forget₂_Mon_ : «expr ⥤ »(CommMon_ C, Mon_ C) :=
-induced_functor CommMon_.to_Mon_
+def forget₂_Mon_ : CommMon_ C ⥤ Mon_ C :=
+  induced_functor CommMon_.toMon_ deriving [anonymous], [anonymous]
 
 @[simp]
 theorem forget₂_Mon_obj_one (A : CommMon_ C) : ((forget₂_Mon_ C).obj A).one = A.one :=
@@ -93,21 +93,23 @@ namespace CategoryTheory.LaxBraidedFunctor
 
 variable {C} {D : Type u₂} [category.{v₂} D] [monoidal_category.{v₂} D] [braided_category.{v₂} D]
 
--- error in CategoryTheory.Monoidal.CommMon_: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A lax braided functor takes commutative monoid objects to commutative monoid objects.
 
 That is, a lax braided functor `F : C ⥤ D` induces a functor `CommMon_ C ⥤ CommMon_ D`.
--/ @[simps #[]] def map_CommMon (F : lax_braided_functor C D) : «expr ⥤ »(CommMon_ C, CommMon_ D) :=
-{ obj := λ
-  A, { mul_comm' := begin
-      dsimp [] [] [] [],
-      have [] [] [":=", expr F.braided],
-      slice_lhs [1] [2] { rw ["<-", expr this] },
-      slice_lhs [2] [3] { rw ["[", "<-", expr category_theory.functor.map_comp, ",", expr A.mul_comm, "]"] }
-    end,
-    ..F.to_lax_monoidal_functor.map_Mon.obj A.to_Mon_ },
-  map := λ A B f, F.to_lax_monoidal_functor.map_Mon.map f }
+-/
+@[simps]
+def map_CommMon (F : lax_braided_functor C D) : CommMon_ C ⥤ CommMon_ D :=
+  { obj :=
+      fun A =>
+        { F.to_lax_monoidal_functor.map_Mon.obj A.to_Mon_ with
+          mul_comm' :=
+            by 
+              dsimp 
+              have  := F.braided 
+              sliceLHS 1 2 => rw [←this]
+              sliceLHS 2 3 => rw [←CategoryTheory.Functor.map_comp, A.mul_comm] },
+    map := fun A B f => F.to_lax_monoidal_functor.map_Mon.map f }
 
 variable (C) (D)
 

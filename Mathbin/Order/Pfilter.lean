@@ -135,6 +135,7 @@ section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {F : pfilter P}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » F)
 /-- A specific witness of `pfilter.directed` when `P` has meets. -/
 theorem inf_mem x y (_ : x ∈ F) (_ : y ∈ F) : x⊓y ∈ F :=
   ideal.sup_mem x y ‹x ∈ F› ‹y ∈ F›

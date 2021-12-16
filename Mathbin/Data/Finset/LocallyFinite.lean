@@ -347,7 +347,7 @@ theorem image_add_left_Icc (a b c : α) : (Icc a b).Image ((·+·) c) = Icc (c+a
   by 
     ext x 
     rw [mem_image, mem_Icc]
-    split 
+    constructor
     ·
       rintro ⟨y, hy, rfl⟩
       rw [mem_Icc] at hy 
@@ -363,7 +363,7 @@ theorem image_add_left_Ico (a b c : α) : (Ico a b).Image ((·+·) c) = Ico (c+a
   by 
     ext x 
     rw [mem_image, mem_Ico]
-    split 
+    constructor
     ·
       rintro ⟨y, hy, rfl⟩
       rw [mem_Ico] at hy 

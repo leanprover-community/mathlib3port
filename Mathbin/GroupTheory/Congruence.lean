@@ -248,7 +248,7 @@ protected def hrec_on₂ {cM : Con M} {cN : Con N} {φ : cM.quotient → cN.quot
 @[simp, toAdditive]
 theorem hrec_on₂_coe {cM : Con M} {cN : Con N} {φ : cM.quotient → cN.quotient → Sort _} (a : M) (b : N)
   (f : ∀ x : M y : N, φ x y) (h : ∀ x y x' y', cM x x' → cN y y' → HEq (f x y) (f x' y')) :
-  Con.hrecOn₂ («expr↑ » a) («expr↑ » b) f h = f a b :=
+  Con.hrecOn₂ (↑a) (↑b) f h = f a b :=
   rfl
 
 variable {c}
@@ -294,7 +294,7 @@ variable {c}
     definition). -/
 @[simp,
   toAdditive "The coercion to the quotient of an additive congruence relation commutes with\naddition (by definition)."]
-theorem coe_mul (x y : M) : («expr↑ » (x*y) : c.quotient) = «expr↑ » x*«expr↑ » y :=
+theorem coe_mul (x y : M) : (↑x*y : c.quotient) = (↑x)*↑y :=
   rfl
 
 /-- Definition of the function on the quotient by a congruence relation `c` induced by a function
@@ -311,7 +311,7 @@ protected theorem lift_on_coe {β} (c : Con M) (f : M → β) (h : ∀ a b, c a 
 @[toAdditive
       "Makes an additive isomorphism of quotients by two additive congruence relations,\ngiven that the relations are equal."]
 protected def congr {c d : Con M} (h : c = d) : c.quotient ≃* d.quotient :=
-  { Quotientₓ.congr (Equiv.refl M)$
+  { Quotientₓ.congr (Equivₓ.refl M)$
       by 
         apply ext_iff.2 h with
     map_mul' :=
@@ -356,7 +356,7 @@ theorem Inf_to_setoid (S : Set (Con M)) : (Inf S).toSetoid = Inf (to_setoid '' S
     under the map to the underlying binary relation. -/
 @[toAdditive
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
-theorem Inf_def (S : Set (Con M)) : «expr⇑ » (Inf S) = Inf (@Set.Image (Con M) (M → M → Prop) coeFn S) :=
+theorem Inf_def (S : Set (Con M)) : ⇑Inf S = Inf (@Set.Image (Con M) (M → M → Prop) coeFn S) :=
   by 
     ext 
     simp only [Inf_image, infi_apply, infi_Prop_eq]
@@ -368,6 +368,7 @@ instance : PartialOrderₓ (Con M) :=
     le_trans := fun c1 c2 c3 h1 h2 x y h => h2$ h1 h, lt_iff_le_not_le := fun _ _ => Iff.rfl,
     le_antisymm := fun c d hc hd => ext$ fun x y => ⟨fun h => hc h, fun h => hd h⟩ }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (r «expr ∈ » s)
 /-- The complete lattice of congruence relations on a given type with a multiplication. -/
 @[toAdditive "The complete lattice of additive congruence relations on a given type with\nan addition."]
 instance : CompleteLattice (Con M) :=
@@ -401,7 +402,7 @@ theorem inf_iff_and {c d : Con M} {x y} : (c⊓d) x y ↔ c x y ∧ d x y :=
     the infimum of the set of congruence relations containing `r`. -/
 @[toAdditive add_con_gen_eq
       "The inductively defined smallest additive congruence relation\ncontaining a binary relation `r` equals the infimum of the set of additive congruence relations\ncontaining `r`."]
-theorem con_gen_eq (r : M → M → Prop) : conGen r = Inf { s:Con M | ∀ x y, r x y → s x y } :=
+theorem con_gen_eq (r : M → M → Prop) : conGen r = Inf { s : Con M | ∀ x y, r x y → s x y } :=
   le_antisymmₓ
     (fun x y H =>
       (ConGen.Rel.rec_on H (fun _ _ h _ hs => hs _ _ h) (Con.refl _) (fun _ _ _ => Con.symm _)
@@ -623,10 +624,15 @@ theorem coe_one : ((1 : M) : c.quotient) = 1 :=
 
 variable (M c)
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The submonoid of `M × M` defined by a congruence relation on a monoid `M`. -/
-@[toAdditive "The `add_submonoid` of `M × M` defined by an additive congruence\nrelation on an `add_monoid` `M`."]
-protected def Submonoid : Submonoid (M × M) :=
-  { Carrier := { x | c x.1 x.2 }, one_mem' := c.iseqv.1 1, mul_mem' := fun _ _ => c.mul }
+    @[ toAdditive "The `add_submonoid` of `M × M` defined by an additive congruence\nrelation on an `add_monoid` `M`." ]
+    protected
+  def
+    Submonoid
+    : Submonoid M × M
+    := { Carrier := { x | c x . 1 x . 2 } , one_mem' := c.iseqv . 1 1 , mul_mem' := fun _ _ => c.mul }
 
 variable {M c}
 
@@ -645,14 +651,14 @@ instance to_submonoid : Coe (Con M) (Submonoid (M × M)) :=
   ⟨fun c => c.submonoid M⟩
 
 @[toAdditive]
-theorem mem_coe {c : Con M} {x y} : (x, y) ∈ («expr↑ » c : Submonoid (M × M)) ↔ (x, y) ∈ c :=
+theorem mem_coe {c : Con M} {x y} : (x, y) ∈ (↑c : Submonoid (M × M)) ↔ (x, y) ∈ c :=
   Iff.rfl
 
 @[toAdditive]
 theorem to_submonoid_inj (c d : Con M) (H : (c : Submonoid (M × M)) = d) : c = d :=
   ext$
     fun x y =>
-      show (x, y) ∈ (c : Submonoid (M × M)) ↔ (x, y) ∈ «expr↑ » d by 
+      show (x, y) ∈ (c : Submonoid (M × M)) ↔ (x, y) ∈ ↑d by 
         rw [H]
 
 @[toAdditive]
@@ -765,7 +771,7 @@ theorem lift_comp_mk' (H : c ≤ ker f) : (c.lift f H).comp c.mk' = f :=
 theorem lift_apply_mk' (f : c.quotient →* P) :
   (c.lift (f.comp c.mk')
       fun x y h =>
-        show f («expr↑ » x) = f («expr↑ » y)by 
+        show f (↑x) = f (↑y)by 
           rw [c.eq.2 h]) =
     f :=
   by 
@@ -800,7 +806,7 @@ theorem lift_range (H : c ≤ ker f) : (c.lift f H).mrange = f.mrange :=
     fun x =>
       ⟨by 
           rintro ⟨⟨y⟩, hy⟩ <;> exact ⟨y, hy⟩,
-        fun ⟨y, hy⟩ => ⟨«expr↑ » y, hy⟩⟩
+        fun ⟨y, hy⟩ => ⟨↑y, hy⟩⟩
 
 /-- Surjective monoid homomorphisms constant on a congruence relation `c`'s equivalence classes
     induce a surjective homomorphism on `c`'s quotient. -/
@@ -869,10 +875,10 @@ variable (c)
 /-- The first isomorphism theorem for monoids. -/
 @[toAdditive "The first isomorphism theorem for `add_monoid`s."]
 noncomputable def quotient_ker_equiv_range (f : M →* P) : (ker f).Quotient ≃* f.mrange :=
-  { Equiv.ofBijective
+  { Equivₓ.ofBijective
         ((@MulEquiv.toMonoidHom (ker_lift f).mrange _ _ _$ MulEquiv.submonoidCongr ker_lift_range_eq).comp
           (ker_lift f).mrangeRestrict)$
-      (Equiv.bijective _).comp
+      (Equivₓ.bijective _).comp
         ⟨fun x y h =>
             ker_lift_injective f$
               by 
@@ -985,7 +991,7 @@ def lift_on_units (u : Units c.quotient) (f : ∀ x y : M, c (x*y) 1 → c (y*x)
   (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx') : α :=
   by 
     refine'
-      @Con.hrecOn₂ M M _ _ c c (fun x y => (x*y) = 1 → (y*x) = 1 → α) (u : c.quotient) («expr↑ » (u⁻¹) : c.quotient)
+      @Con.hrecOn₂ M M _ _ c c (fun x y => (x*y) = 1 → (y*x) = 1 → α) (u : c.quotient) (↑u⁻¹ : c.quotient)
         (fun x y : M hxy : (x*y : c.quotient) = 1 hyx : (y*x : c.quotient) = 1 => f x y (c.eq.1 hxy) (c.eq.1 hyx))
         (fun x y x' y' hx hy => _) u.3 u.4 
     ext1

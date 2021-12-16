@@ -250,11 +250,11 @@ theorem AddMonoidHom.mul_apply (x y : R) : AddMonoidHom.mul x y = x*y :=
   rfl
 
 @[simp]
-theorem AddMonoidHom.coe_mul : «expr⇑ » (AddMonoidHom.mul : R →+ R →+ R) = AddMonoidHom.mulLeft :=
+theorem AddMonoidHom.coe_mul : ⇑(AddMonoidHom.mul : R →+ R →+ R) = AddMonoidHom.mulLeft :=
   rfl
 
 @[simp]
-theorem AddMonoidHom.coe_flip_mul : «expr⇑ » (AddMonoidHom.mul : R →+ R →+ R).flip = AddMonoidHom.mulRight :=
+theorem AddMonoidHom.coe_flip_mul : ⇑(AddMonoidHom.mul : R →+ R →+ R).flip = AddMonoidHom.mulRight :=
   rfl
 
 /-- An `add_monoid_hom` preserves multiplication if pre- and post- composition with

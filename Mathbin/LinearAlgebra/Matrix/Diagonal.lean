@@ -12,7 +12,7 @@ matrix, diagonal, linear_map
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open LinearMap Matrix Set Submodule
 
@@ -56,46 +56,54 @@ variable {m n : Type _} [Fintype m] [Fintype n]
 
 variable {K : Type u} [Field K]
 
--- error in LinearAlgebra.Matrix.Diagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ker_diagonal_to_lin'
-[decidable_eq m]
-(w : m → K) : «expr = »(ker (diagonal w).to_lin', «expr⨆ , »((i «expr ∈ » {i | «expr = »(w i, 0)}), range (linear_map.std_basis K (λ
-    i, K) i))) :=
-begin
-  rw ["[", "<-", expr comap_bot, ",", "<-", expr infi_ker_proj, ",", expr comap_infi, "]"] [],
-  have [] [] [":=", expr λ i : m, ker_comp (to_lin' (diagonal w)) (proj i)],
-  simp [] [] ["only"] ["[", expr comap_infi, ",", "<-", expr this, ",", expr proj_diagonal, ",", expr ker_smul', "]"] [] [],
-  have [] [":", expr «expr ⊆ »(univ, «expr ∪ »({i : m | «expr = »(w i, 0)}, «expr ᶜ»({i : m | «expr = »(w i, 0)})))] [],
-  { rw [expr set.union_compl_self] [] },
-  exact [expr (supr_range_std_basis_eq_infi_ker_proj K (λ
-     i : m, K) disjoint_compl_right this (finite.of_fintype _)).symm]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » {i | «expr = »(w i, 0)})
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  ker_diagonal_to_lin'
+  [ DecidableEq m ] ( w : m → K )
+    : ker diagonal w . toLin' = ⨆ ( i : _ ) ( _ : i ∈ { i | w i = 0 } ) , range LinearMap.stdBasis K fun i => K i
+  :=
+    by
+      rw [ ← comap_bot , ← infi_ker_proj , comap_infi ]
+        have := fun i : m => ker_comp to_lin' diagonal w proj i
+        simp only [ comap_infi , ← this , proj_diagonal , ker_smul' ]
+        have : univ ⊆ { i : m | w i = 0 } ∪ { i : m | w i = 0 } ᶜ
+        · rw [ Set.union_compl_self ]
+        exact
+          supr_range_std_basis_eq_infi_ker_proj K fun i : m => K disjoint_compl_right this finite.of_fintype _ . symm
 
-theorem range_diagonal [DecidableEq m] (w : m → K) :
-  (diagonal w).toLin'.range = ⨆(i : _)(_ : i ∈ { i | w i ≠ 0 }), (LinearMap.stdBasis K (fun i => K) i).range :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » {i | «expr ≠ »(w i, 0)})
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  range_diagonal
+  [ DecidableEq m ] ( w : m → K )
+    : diagonal w . toLin' . range = ⨆ ( i : _ ) ( _ : i ∈ { i | w i ≠ 0 } ) , LinearMap.stdBasis K fun i => K i . range
+  :=
+    by
+      dsimp only [ mem_set_of_eq ]
+        rw [ ← map_top , ← supr_range_std_basis , map_supr ]
+        congr
+        funext i
+        rw [ ← LinearMap.range_comp , diagonal_comp_std_basis , ← range_smul' ]
+
+theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
+  rank (diagonal w).toLin' = Fintype.card { i // w i ≠ 0 } :=
   by 
-    dsimp only [mem_set_of_eq]
-    rw [←map_top, ←supr_range_std_basis, map_supr]
-    congr 
-    funext i 
-    rw [←LinearMap.range_comp, diagonal_comp_std_basis, ←range_smul']
-
--- error in LinearAlgebra.Matrix.Diagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rank_diagonal
-[decidable_eq m]
-[decidable_eq K]
-(w : m → K) : «expr = »(rank (diagonal w).to_lin', fintype.card {i // «expr ≠ »(w i, 0)}) :=
-begin
-  have [ident hu] [":", expr «expr ⊆ »(univ, «expr ∪ »(«expr ᶜ»({i : m | «expr = »(w i, 0)}), {i : m | «expr = »(w i, 0)}))] [],
-  { rw [expr set.compl_union_self] [] },
-  have [ident hd] [":", expr disjoint {i : m | «expr ≠ »(w i, 0)} {i : m | «expr = »(w i, 0)}] [":=", expr disjoint_compl_left],
-  have [ident B₁] [] [":=", expr supr_range_std_basis_eq_infi_ker_proj K (λ i : m, K) hd hu (finite.of_fintype _)],
-  have [ident B₂] [] [":=", expr @infi_ker_proj_equiv K _ _ (λ
-    i : m, K) _ _ _ _ (by simp [] [] [] [] [] []; apply_instance) hd hu],
-  rw ["[", expr rank, ",", expr range_diagonal, ",", expr B₁, ",", "<-", expr @dim_fun' K, "]"] [],
-  apply [expr linear_equiv.dim_eq],
-  apply [expr B₂]
-end
+    have hu : univ ⊆ { i : m | w i = 0 }ᶜ ∪ { i : m | w i = 0 }
+    ·
+      rw [Set.compl_union_self]
+    have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjoint_compl_left 
+    have B₁ := supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) hd hu (finite.of_fintype _)
+    have B₂ :=
+      @infi_ker_proj_equiv K _ _ (fun i : m => K) _ _ _ _
+        (by 
+          simp  <;> infer_instance)
+        hd hu 
+    rw [rank, range_diagonal, B₁, ←@dim_fun' K]
+    apply LinearEquiv.dim_eq 
+    apply B₂
 
 end Field
 

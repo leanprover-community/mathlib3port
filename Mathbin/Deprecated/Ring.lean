@@ -150,7 +150,7 @@ def of {f : α → β} (hf : IsSemiringHom f) : α →+* β :=
   { MonoidHom.of hf.to_is_monoid_hom, AddMonoidHom.of hf.to_is_add_monoid_hom with toFun := f }
 
 @[simp]
-theorem coe_of {f : α → β} (hf : IsSemiringHom f) : «expr⇑ » (of hf) = f :=
+theorem coe_of {f : α → β} (hf : IsSemiringHom f) : ⇑of hf = f :=
   rfl
 
 theorem to_is_semiring_hom (f : α →+* β) : IsSemiringHom f :=

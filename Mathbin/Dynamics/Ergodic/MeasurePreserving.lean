@@ -111,32 +111,31 @@ protected theorem iterate {f : α → α} (hf : measure_preserving f μa μa) : 
 
 variable {μ : Measureₓ α} {f : α → α} {s : Set α}
 
--- error in Dynamics.Ergodic.MeasurePreserving: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » Ioo 0 n)
 /-- If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
-theorem exists_mem_image_mem_of_volume_lt_mul_volume
-(hf : measure_preserving f μ μ)
-(hs : measurable_set s)
-{n : exprℕ()}
-(hvol : «expr < »(μ (univ : set α), «expr * »(n, μ s))) : «expr∃ , »((x «expr ∈ » s)
- (m «expr ∈ » Ioo 0 n), «expr ∈ »(«expr ^[ ]»(f, m) x, s)) :=
-begin
-  have [ident A] [":", expr ∀
-   m, measurable_set «expr ⁻¹' »(«expr ^[ ]»(f, m), s)] [":=", expr λ m, (hf.iterate m).measurable hs],
-  have [ident B] [":", expr ∀ m, «expr = »(μ «expr ⁻¹' »(«expr ^[ ]»(f, m), s), μ s)] [],
-  from [expr λ m, (hf.iterate m).measure_preimage hs],
-  have [] [":", expr «expr < »(μ (univ : set α), (finset.range n).sum (λ m, μ «expr ⁻¹' »(«expr ^[ ]»(f, m), s)))] [],
-  by simpa [] [] ["only"] ["[", expr B, ",", expr nsmul_eq_mul, ",", expr finset.sum_const, ",", expr finset.card_range, "]"] [] [],
-  rcases [expr exists_nonempty_inter_of_measure_univ_lt_sum_measure μ (λ
-    m
-    hm, A m) this, "with", "⟨", ident i, ",", ident hi, ",", ident j, ",", ident hj, ",", ident hij, ",", ident x, ",", ident hxi, ",", ident hxj, "⟩"],
-  wlog [ident hlt] [":", expr «expr < »(i, j)] [":=", expr hij.lt_or_lt] ["using", "[", ident i, ident j, ",", ident j, ident i, "]"] tactic.skip,
-  { simp [] [] ["only"] ["[", expr set.mem_preimage, ",", expr finset.mem_range, "]"] [] ["at", ident hi, ident hj, ident hxi, ident hxj],
-    refine [expr ⟨«expr ^[ ]»(f, i) x, hxi, «expr - »(j, i), ⟨tsub_pos_of_lt hlt, lt_of_le_of_lt (j.sub_le i) hj⟩, _⟩],
-    rwa ["[", "<-", expr iterate_add_apply, ",", expr tsub_add_cancel_of_le hlt.le, "]"] [] },
-  { exact [expr λ hi hj hij hxi hxj, this hj hi hij.symm hxj hxi] }
-end
+theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : measure_preserving f μ μ) (hs : MeasurableSet s) {n : ℕ}
+  (hvol : μ (univ : Set α) < n*μ s) : ∃ (x : _)(_ : x ∈ s)(m : _)(_ : m ∈ Ioo 0 n), (f^[m]) x ∈ s :=
+  by 
+    have A : ∀ m, MeasurableSet (f^[m] ⁻¹' s) := fun m => (hf.iterate m).Measurable hs 
+    have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s 
+    exact fun m => (hf.iterate m).measure_preimage hs 
+    have  : μ (univ : Set α) < (Finset.range n).Sum fun m => μ (f^[m] ⁻¹' s)
+    ·
+      simpa only [B, nsmul_eq_mul, Finset.sum_const, Finset.card_range]
+    rcases exists_nonempty_inter_of_measure_univ_lt_sum_measure μ (fun m hm => A m) this with
+      ⟨i, hi, j, hj, hij, x, hxi, hxj⟩
+    wlog (discharger := tactic.skip) hlt : i < j := hij.lt_or_lt using i j, j i
+    ·
+      simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj 
+      refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_ltₓ (j.sub_le i) hj⟩, _⟩
+      rwa [←iterate_add_apply, tsub_add_cancel_of_le hlt.le]
+    ·
+      exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≠ » 0)
 /-- A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
 `x ∈ s` comes back to `s` under iterations of `f`. Actually, a.e. point of `s` comes back to `s`
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about

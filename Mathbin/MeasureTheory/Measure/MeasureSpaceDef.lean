@@ -48,7 +48,7 @@ measure, almost everywhere, measure space
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Classical Set
 
@@ -67,7 +67,7 @@ measurable sets, with the additional assumption that the outer measure is the ca
 extension of the restricted measure. -/
 structure Measureₓ (α : Type _) [MeasurableSpace α] extends outer_measure α where 
   m_Union ⦃f : ℕ → Set α⦄ :
-  (∀ i, MeasurableSet (f i)) → Pairwise (Disjoint on f) → measure_of (⋃i, f i) = ∑'i, measure_of (f i)
+  (∀ i, MeasurableSet (f i)) → Pairwise (Disjoint on f) → measure_of (⋃ i, f i) = ∑' i, measure_of (f i)
   trimmed : to_outer_measure.trim = to_outer_measure
 
 /-- Measure projections for a measure space.
@@ -92,12 +92,12 @@ namespace Measureₓ
 def of_measurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m ∅ MeasurableSet.empty = 0)
   (mU :
     ∀ ⦃f : ℕ → Set α⦄ h : ∀ i, MeasurableSet (f i),
-      Pairwise (Disjoint on f) → m (⋃i, f i) (MeasurableSet.Union h) = ∑'i, m (f i) (h i)) :
+      Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.Union h) = ∑' i, m (f i) (h i)) :
   Measureₓ α :=
   { induced_outer_measure m _ m0 with
     m_Union :=
       fun f hf hd =>
-        show induced_outer_measure m _ m0 (Union f) = ∑'i, induced_outer_measure m _ m0 (f i)by 
+        show induced_outer_measure m _ m0 (Union f) = ∑' i, induced_outer_measure m _ m0 (f i)by 
           rw [induced_outer_measure_eq m0 mU, mU hf hd]
           congr 
           funext n 
@@ -112,7 +112,7 @@ def of_measurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m �
 theorem of_measurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞} {m0 : m ∅ MeasurableSet.empty = 0}
   {mU :
     ∀ ⦃f : ℕ → Set α⦄ h : ∀ i, MeasurableSet (f i),
-      Pairwise (Disjoint on f) → m (⋃i, f i) (MeasurableSet.Union h) = ∑'i, m (f i) (h i)}
+      Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.Union h) = ∑' i, m (f i) (h i)}
   (s : Set α) (hs : MeasurableSet s) : of_measurable m m0 mU s = m s hs :=
   induced_outer_measure_eq m0 mU hs
 
@@ -137,7 +137,7 @@ theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s
 end Measureₓ
 
 @[simp]
-theorem coe_to_outer_measure : «expr⇑ » μ.to_outer_measure = μ :=
+theorem coe_to_outer_measure : ⇑μ.to_outer_measure = μ :=
   rfl
 
 theorem to_outer_measure_apply (s : Set α) : μ.to_outer_measure s = μ s :=
@@ -147,14 +147,14 @@ theorem measure_eq_trim (s : Set α) : μ s = μ.to_outer_measure.trim s :=
   by 
     rw [μ.trimmed] <;> rfl
 
-theorem measure_eq_infi (s : Set α) : μ s = ⨅(t : _)(st : s ⊆ t)(ht : MeasurableSet t), μ t :=
+theorem measure_eq_infi (s : Set α) : μ s = ⨅ (t : _)(st : s ⊆ t)(ht : MeasurableSet t), μ t :=
   by 
     rw [measure_eq_trim, outer_measure.trim_eq_infi] <;> rfl
 
 /-- A variant of `measure_eq_infi` which has a single `infi`. This is useful when applying a
   lemma next that only works for non-empty infima, in which case you can use
   `nonempty_measurable_superset`. -/
-theorem measure_eq_infi' (μ : Measureₓ α) (s : Set α) : μ s = ⨅t : { t // s ⊆ t ∧ MeasurableSet t }, μ t :=
+theorem measure_eq_infi' (μ : Measureₓ α) (s : Set α) : μ s = ⨅ t : { t // s ⊆ t ∧ MeasurableSet t }, μ t :=
   by 
     simpRw [infi_subtype, infi_and, Subtype.coe_mk, ←measure_eq_infi]
 
@@ -203,32 +203,32 @@ theorem exists_measurable_superset_of_null (h : μ s = 0) : ∃ t, s ⊆ t ∧ M
 theorem exists_measurable_superset_iff_measure_eq_zero : (∃ t, s ⊆ t ∧ MeasurableSet t ∧ μ t = 0) ↔ μ s = 0 :=
   ⟨fun ⟨t, hst, _, ht⟩ => measure_mono_null hst ht, exists_measurable_superset_of_null⟩
 
-theorem measure_Union_le [Encodable β] (s : β → Set α) : μ (⋃i, s i) ≤ ∑'i, μ (s i) :=
+theorem measure_Union_le [Encodable β] (s : β → Set α) : μ (⋃ i, s i) ≤ ∑' i, μ (s i) :=
   μ.to_outer_measure.Union _
 
--- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem measure_bUnion_le
-{s : set β}
-(hs : countable s)
-(f : β → set α) : «expr ≤ »(μ «expr⋃ , »((b «expr ∈ » s), f b), «expr∑' , »((p : s), μ (f p))) :=
-begin
-  haveI [] [] [":=", expr hs.to_encodable],
-  rw ["[", expr bUnion_eq_Union, "]"] [],
-  apply [expr measure_Union_le]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+theorem measure_bUnion_le {s : Set β} (hs : countable s) (f : β → Set α) :
+  μ (⋃ (b : _)(_ : b ∈ s), f b) ≤ ∑' p : s, μ (f p) :=
+  by 
+    have  := hs.to_encodable 
+    rw [bUnion_eq_Union]
+    apply measure_Union_le
 
-theorem measure_bUnion_finset_le (s : Finset β) (f : β → Set α) : μ (⋃(b : _)(_ : b ∈ s), f b) ≤ ∑p in s, μ (f p) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+theorem measure_bUnion_finset_le (s : Finset β) (f : β → Set α) : μ (⋃ (b : _)(_ : b ∈ s), f b) ≤ ∑ p in s, μ (f p) :=
   by 
     rw [←Finset.sum_attach, Finset.attach_eq_univ, ←tsum_fintype]
     exact measure_bUnion_le s.countable_to_set f
 
-theorem measure_Union_fintype_le [Fintype β] (f : β → Set α) : μ (⋃b, f b) ≤ ∑p, μ (f p) :=
+theorem measure_Union_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, f b) ≤ ∑ p, μ (f p) :=
   by 
     convert measure_bUnion_finset_le Finset.univ f 
     simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : finite s) (hfin : ∀ i _ : i ∈ s, μ (f i) ≠ ∞) :
-  μ (⋃(i : _)(_ : i ∈ s), f i) < ∞ :=
+  μ (⋃ (i : _)(_ : i ∈ s), f i) < ∞ :=
   by 
     convert (measure_bUnion_finset_le hs.to_finset f).trans_lt _
     ·
@@ -237,22 +237,23 @@ theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : finite s) (
     apply Ennreal.sum_lt_top 
     simpa only [finite.mem_to_finset]
 
-theorem measure_Union_null [Encodable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃i, s i) = 0 :=
+theorem measure_Union_null [Encodable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃ i, s i) = 0 :=
   μ.to_outer_measure.Union_null
 
 @[simp]
-theorem measure_Union_null_iff [Encodable ι] {s : ι → Set α} : μ (⋃i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
+theorem measure_Union_null_iff [Encodable ι] {s : ι → Set α} : μ (⋃ i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
   ⟨fun h i => measure_mono_null (subset_Union _ _) h, measure_Union_null⟩
 
--- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem measure_bUnion_null_iff
-{s : set ι}
-(hs : countable s)
-{t : ι → set α} : «expr ↔ »(«expr = »(μ «expr⋃ , »((i «expr ∈ » s), t i), 0), ∀ i «expr ∈ » s, «expr = »(μ (t i), 0)) :=
-by { haveI [] [] [":=", expr hs.to_encodable],
-  rw ["[", expr bUnion_eq_Union, ",", expr measure_Union_null_iff, ",", expr set_coe.forall, "]"] [],
-  refl }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem measure_bUnion_null_iff {s : Set ι} (hs : countable s) {t : ι → Set α} :
+  μ (⋃ (i : _)(_ : i ∈ s), t i) = 0 ↔ ∀ i _ : i ∈ s, μ (t i) = 0 :=
+  by 
+    have  := hs.to_encodable 
+    rw [bUnion_eq_Union, measure_Union_null_iff, SetCoe.forall]
+    rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : countable S) : μ (⋃₀S) = 0 ↔ ∀ s _ : s ∈ S, μ s = 0 :=
   by 
     rw [sUnion_eq_bUnion, measure_bUnion_null_iff hS]
@@ -281,7 +282,7 @@ theorem measure_union_lt_top_iff : μ (s ∪ t) < ∞ ↔ μ s < ∞ ∧ μ t < 
 theorem measure_union_ne_top (hs : μ s ≠ ∞) (ht : μ t ≠ ∞) : μ (s ∪ t) ≠ ∞ :=
   ((measure_union_le s t).trans_lt (lt_top_iff_ne_top.mpr (Ennreal.add_ne_top.mpr ⟨hs, ht⟩))).Ne
 
-theorem exists_measure_pos_of_not_measure_Union_null [Encodable β] {s : β → Set α} (hs : μ (⋃n, s n) ≠ 0) :
+theorem exists_measure_pos_of_not_measure_Union_null [Encodable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
   ∃ n, 0 < μ (s n) :=
   by 
     byContra 
@@ -304,65 +305,71 @@ theorem measure_inter_null_of_null_left {S : Set α} (T : Set α) (h : μ S = 0)
 /-! ### The almost everywhere filter -/
 
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The “almost everywhere” filter of co-null sets. -/
-def measure.ae {α} {m : MeasurableSpace α} (μ : Measureₓ α) : Filter α :=
-  { Sets := { s | μ («expr ᶜ» s) = 0 },
-    univ_sets :=
-      by 
-        simp ,
-    inter_sets :=
-      fun s t hs ht =>
-        by 
-          simp only [compl_inter, mem_set_of_eq] <;> exact measure_union_null hs ht,
-    sets_of_superset := fun s t hs hst => measure_mono_null (Set.compl_subset_compl.2 hst) hs }
+  def
+    measure.ae
+    { α } { m : MeasurableSpace α } ( μ : Measureₓ α ) : Filter α
+    :=
+      {
+        Sets := { s | μ s ᶜ = 0 } ,
+          univ_sets := by simp ,
+          inter_sets := fun s t hs ht => by simp only [ compl_inter , mem_set_of_eq ] <;> exact measure_union_null hs ht
+            ,
+          sets_of_superset := fun s t hs hst => measure_mono_null Set.compl_subset_compl . 2 hst hs
+        }
 
-notation3  "∀ᵐ" (...) " ∂" μ ", " r:(scoped P => Filter.Eventually P measure.ae μ) => r
+notation3 "∀ᵐ " (...) " ∂" μ ", " r:(scoped P => Filter.Eventually P measure.ae μ) => r
 
-notation3  "∃ᵐ" (...) " ∂" μ ", " r:(scoped P => Filter.Frequently P measure.ae μ) => r
+notation3 "∃ᵐ " (...) " ∂" μ ", " r:(scoped P => Filter.Frequently P measure.ae μ) => r
 
 notation:50 f " =ᵐ[" μ:50 "] " g:50 => f =ᶠ[measure.ae μ] g
 
 notation:50 f " ≤ᵐ[" μ:50 "] " g:50 => f ≤ᶠ[measure.ae μ] g
 
-theorem mem_ae_iff {s : Set α} : s ∈ μ.ae ↔ μ («expr ᶜ» s) = 0 :=
+theorem mem_ae_iff {s : Set α} : s ∈ μ.ae ↔ μ (sᶜ) = 0 :=
   Iff.rfl
 
-theorem ae_iff {p : α → Prop} : (∀ᵐa ∂μ, p a) ↔ μ { a | ¬p a } = 0 :=
-  Iff.rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem ae_iff { p : α → Prop } : ∀ᵐ a ∂ μ , p a ↔ μ { a | ¬ p a } = 0 := Iff.rfl
 
-theorem compl_mem_ae_iff {s : Set α} : «expr ᶜ» s ∈ μ.ae ↔ μ s = 0 :=
+theorem compl_mem_ae_iff {s : Set α} : sᶜ ∈ μ.ae ↔ μ s = 0 :=
   by 
     simp only [mem_ae_iff, compl_compl]
 
-theorem frequently_ae_iff {p : α → Prop} : (∃ᵐa ∂μ, p a) ↔ μ { a | p a } ≠ 0 :=
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem frequently_ae_iff { p : α → Prop } : ∃ᵐ a ∂ μ , p a ↔ μ { a | p a } ≠ 0 := not_congr compl_mem_ae_iff
+
+theorem frequently_ae_mem_iff {s : Set α} : (∃ᵐ a ∂μ, a ∈ s) ↔ μ s ≠ 0 :=
   not_congr compl_mem_ae_iff
 
-theorem frequently_ae_mem_iff {s : Set α} : (∃ᵐa ∂μ, a ∈ s) ↔ μ s ≠ 0 :=
-  not_congr compl_mem_ae_iff
-
-theorem measure_zero_iff_ae_nmem {s : Set α} : μ s = 0 ↔ ∀ᵐa ∂μ, a ∉ s :=
+theorem measure_zero_iff_ae_nmem {s : Set α} : μ s = 0 ↔ ∀ᵐ a ∂μ, a ∉ s :=
   compl_mem_ae_iff.symm
 
-theorem ae_of_all {p : α → Prop} (μ : Measureₓ α) : (∀ a, p a) → ∀ᵐa ∂μ, p a :=
+theorem ae_of_all {p : α → Prop} (μ : Measureₓ α) : (∀ a, p a) → ∀ᵐ a ∂μ, p a :=
   eventually_of_forall
 
--- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : countable_Inter_filter μ.ae :=
-⟨begin
-   intros [ident S, ident hSc, ident hS],
-   simp [] [] ["only"] ["[", expr mem_ae_iff, ",", expr compl_sInter, ",", expr sUnion_image, ",", expr bUnion_eq_Union, "]"] [] ["at", ident hS, "⊢"],
-   haveI [] [] [":=", expr hSc.to_encodable],
-   exact [expr measure_Union_null (subtype.forall.2 hS)]
- end⟩
+instance : CountableInterFilter μ.ae :=
+  ⟨by 
+      intro S hSc hS 
+      simp only [mem_ae_iff, compl_sInter, sUnion_image, bUnion_eq_Union] at hS⊢
+      have  := hSc.to_encodable 
+      exact measure_Union_null (Subtype.forall.2 hS)⟩
 
-theorem ae_imp_iff {p : α → Prop} {q : Prop} : (∀ᵐx ∂μ, q → p x) ↔ q → ∀ᵐx ∂μ, p x :=
+theorem ae_imp_iff {p : α → Prop} {q : Prop} : (∀ᵐ x ∂μ, q → p x) ↔ q → ∀ᵐ x ∂μ, p x :=
   Filter.eventually_imp_distrib_left
 
-theorem ae_all_iff [Encodable ι] {p : α → ι → Prop} : (∀ᵐa ∂μ, ∀ i, p a i) ↔ ∀ i, ∀ᵐa ∂μ, p a i :=
+theorem ae_all_iff [Encodable ι] {p : α → ι → Prop} : (∀ᵐ a ∂μ, ∀ i, p a i) ↔ ∀ i, ∀ᵐ a ∂μ, p a i :=
   eventually_countable_forall
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » S)
 theorem ae_ball_iff {S : Set ι} (hS : countable S) {p : ∀ x : α i _ : i ∈ S, Prop} :
-  (∀ᵐx ∂μ, ∀ i _ : i ∈ S, p x i ‹_›) ↔ ∀ i _ : i ∈ S, ∀ᵐx ∂μ, p x i ‹_› :=
+  (∀ᵐ x ∂μ, ∀ i _ : i ∈ S, p x i ‹_›) ↔ ∀ i _ : i ∈ S, ∀ᵐ x ∂μ, p x i ‹_› :=
   eventually_countable_ball hS
 
 theorem ae_eq_refl (f : α → δ) : f =ᵐ[μ] f :=
@@ -374,7 +381,7 @@ theorem ae_eq_symm {f g : α → δ} (h : f =ᵐ[μ] g) : g =ᵐ[μ] f :=
 theorem ae_eq_trans {f g h : α → δ} (h₁ : f =ᵐ[μ] g) (h₂ : g =ᵐ[μ] h) : f =ᵐ[μ] h :=
   h₁.trans h₂
 
-theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐx ∂μ, f x < g x) : f ≤ᵐ[μ] g :=
+theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x) : f ≤ᵐ[μ] g :=
   by 
     rw [Filter.EventuallyLe, ae_iff]
     rw [ae_iff] at h 
@@ -388,7 +395,7 @@ theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
       simp [ae_iff]
 
 theorem ae_le_set : s ≤ᵐ[μ] t ↔ μ (s \ t) = 0 :=
-  calc s ≤ᵐ[μ] t ↔ ∀ᵐx ∂μ, x ∈ s → x ∈ t := Iff.rfl 
+  calc s ≤ᵐ[μ] t ↔ ∀ᵐ x ∂μ, x ∈ s → x ∈ t := Iff.rfl 
     _ ↔ μ (s \ t) = 0 :=
     by 
       simp [ae_iff] <;> rfl
@@ -437,6 +444,7 @@ alias measure_mono_ae ← Filter.EventuallyLe.measure_le
 theorem measure_congr (H : s =ᵐ[μ] t) : μ s = μ t :=
   le_antisymmₓ H.le.measure_le H.symm.le.measure_le
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ⊇ » s)
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisifies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u`, see `measure_to_measurable_inter`. If `s` is a null measurable set, then
 we also have `t =ᵐ[μ] s`, see `null_measurable_set.to_measurable_ae_eq`. -/
@@ -478,12 +486,13 @@ add_decl_doc volume
 
 section MeasureSpace
 
-notation3  "∀ᵐ" (...) ", " r:(scoped P =>
+notation3 "∀ᵐ " (...) ", " r:(scoped P =>
   Filter.Eventually P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
 
-notation3  "∃ᵐ" (...) ", " r:(scoped P =>
+notation3 "∃ᵐ " (...) ", " r:(scoped P =>
   Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

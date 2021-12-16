@@ -199,7 +199,7 @@ def equiv_range_encode (α : Type _) [Encodable α] : α ≃ Set.Range (@encode 
         by 
           apply Subtype.eq 
           dsimp 
-          conv  => toRHS rw [←hx]
+          conv  => rhs rw [←hx]
           rw [encode_injective.eq_iff, ←Option.some_inj, Option.some_get, ←hx, encodek₂] }
 
 /-- A type with unique element is encodable. This is not an instance to avoid diamonds. -/
@@ -243,7 +243,7 @@ theorem decode_sum_val (n : ℕ) : decode (Sum α β) n = decode_sum n :=
 end Sum
 
 instance Bool : Encodable Bool :=
-  of_equiv (Sum Unit Unit) Equiv.boolEquivPunitSumPunit
+  of_equiv (Sum Unit Unit) Equivₓ.boolEquivPunitSumPunit
 
 @[simp]
 theorem encode_tt : encode tt = 1 :=
@@ -261,22 +261,24 @@ theorem decode_zero : decode Bool 0 = some ff :=
 theorem decode_one : decode Bool 1 = some tt :=
   rfl
 
--- error in Data.Equiv.Encodable.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem decode_ge_two (n) (h : «expr ≤ »(2, n)) : «expr = »(decode bool n, none) :=
-begin
-  suffices [] [":", expr «expr = »(decode_sum n, none)],
-  { change [expr «expr = »((decode_sum n).map _, none)] [] [],
-    rw [expr this] [],
-    refl },
-  have [] [":", expr «expr ≤ »(1, div2 n)] [],
-  { rw ["[", expr div2_val, ",", expr nat.le_div_iff_mul_le, "]"] [],
-    exacts ["[", expr h, ",", expr exprdec_trivial(), "]"] },
-  cases [expr exists_eq_succ_of_ne_zero (ne_of_gt this)] ["with", ident m, ident e],
-  simp [] [] [] ["[", expr decode_sum, "]"] [] []; cases [expr bodd n] []; simp [] [] [] ["[", expr decode_sum, "]"] [] []; rw [expr e] []; refl
-end
+theorem decode_ge_two n (h : 2 ≤ n) : decode Bool n = none :=
+  by 
+    suffices  : decode_sum n = none
+    ·
+      change (decode_sum n).map _ = none 
+      rw [this]
+      rfl 
+    have  : 1 ≤ div2 n
+    ·
+      rw [div2_val, Nat.le_div_iff_mul_leₓ]
+      exacts[h,
+        by 
+          decide]
+    cases' exists_eq_succ_of_ne_zero (ne_of_gtₓ this) with m e 
+    simp [decode_sum] <;> cases bodd n <;> simp [decode_sum] <;> rw [e] <;> rfl
 
 noncomputable instance Prop : Encodable Prop :=
-  of_equiv Bool Equiv.propEquivBool
+  of_equiv Bool Equivₓ.propEquivBool
 
 section Sigma
 
@@ -315,12 +317,12 @@ variable [Encodable α] [Encodable β]
 
 /-- If `α` and `β` are encodable, then so is their product. -/
 instance Prod : Encodable (α × β) :=
-  of_equiv _ (Equiv.sigmaEquivProd α β).symm
+  of_equiv _ (Equivₓ.sigmaEquivProd α β).symm
 
 @[simp]
 theorem decode_prod_val (n : ℕ) :
   decode (α × β) n = (decode α n.unpair.1).bind fun a => (decode β n.unpair.2).map$ Prod.mk a :=
-  show (decode (Sigma fun _ => β) n).map (Equiv.sigmaEquivProd α β) = _ by 
+  show (decode (Sigma fun _ => β) n).map (Equivₓ.sigmaEquivProd α β) = _ by 
     simp  <;> cases decode α n.unpair.1 <;> simp  <;> cases decode β n.unpair.2 <;> rfl
 
 @[simp]
@@ -361,21 +363,21 @@ theorem subtype.encode_eq (a : Subtype P) : encode a = encode a.val :=
 end Subtype
 
 instance Finₓ n : Encodable (Finₓ n) :=
-  of_equiv _ (Equiv.finEquivSubtype _)
+  of_equiv _ (Equivₓ.finEquivSubtype _)
 
 instance Int : Encodable ℤ :=
-  of_equiv _ Equiv.intEquivNat
+  of_equiv _ Equivₓ.intEquivNat
 
 instance Pnat : Encodable ℕ+ :=
-  of_equiv _ Equiv.pnatEquivNat
+  of_equiv _ Equivₓ.pnatEquivNat
 
 /-- The lift of an encodable type is encodable. -/
 instance Ulift [Encodable α] : Encodable (Ulift α) :=
-  of_equiv _ Equiv.ulift
+  of_equiv _ Equivₓ.ulift
 
 /-- The lift of an encodable type is encodable. -/
 instance Plift [Encodable α] : Encodable (Plift α) :=
-  of_equiv _ Equiv.plift
+  of_equiv _ Equivₓ.plift
 
 /-- If `β` is encodable and there is an injection `f : α → β`, then `α` is encodable as well. -/
 noncomputable def of_inj [Encodable β] (f : α → β) (hf : injective f) : Encodable α :=
@@ -387,11 +389,11 @@ section Ulower
 
 attribute [local instance] Encodable.decidableRangeEncode
 
--- error in Data.Equiv.Encodable.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler encodable
 /-- `ulower α : Type` is an equivalent type in the lowest universe, given `encodable α`. -/
-@[derive #[expr decidable_eq], derive #[expr encodable]]
-def ulower (α : Type*) [encodable α] : Type :=
-set.range (encodable.encode : α → exprℕ())
+def Ulower (α : Type _) [Encodable α] : Type :=
+  Set.Range (Encodable.encode : α → ℕ)deriving [anonymous], [anonymous]
 
 end Ulower
 
@@ -400,37 +402,37 @@ namespace Ulower
 variable (α : Type _) [Encodable α]
 
 /-- The equivalence between the encodable type `α` and `ulower α : Type`. -/
-def Equiv : α ≃ Ulower α :=
+def Equivₓ : α ≃ Ulower α :=
   Encodable.equivRangeEncode α
 
 variable {α}
 
 /-- Lowers an `a : α` into `ulower α`. -/
 def down (a : α) : Ulower α :=
-  Equiv α a
+  Equivₓ α a
 
 instance [Inhabited α] : Inhabited (Ulower α) :=
   ⟨down (default _)⟩
 
 /-- Lifts an `a : ulower α` into `α`. -/
 def up (a : Ulower α) : α :=
-  (Equiv α).symm a
+  (Equivₓ α).symm a
 
 @[simp]
 theorem down_up {a : Ulower α} : down a.up = a :=
-  Equiv.right_inv _ _
+  Equivₓ.right_inv _ _
 
 @[simp]
 theorem up_down {a : α} : (down a).up = a :=
-  Equiv.left_inv _ _
+  Equivₓ.left_inv _ _
 
 @[simp]
 theorem up_eq_up {a b : Ulower α} : a.up = b.up ↔ a = b :=
-  Equiv.apply_eq_iff_eq _
+  Equivₓ.apply_eq_iff_eq _
 
 @[simp]
 theorem down_eq_down {a b : α} : down a = down b ↔ a = b :=
-  Equiv.apply_eq_iff_eq _
+  Equivₓ.apply_eq_iff_eq _
 
 @[ext]
 protected theorem ext {a b : Ulower α} : a.up = b.up → a = b :=
@@ -556,14 +558,14 @@ on an encodable type. -/
 def Quotientₓ.rep (q : Quotientₓ s) : α :=
   choose (exists_rep q)
 
-theorem Quotientₓ.rep_spec (q : Quotientₓ s) : «expr⟦ ⟧» q.rep = q :=
+theorem Quotientₓ.rep_spec (q : Quotientₓ s) : ⟦q.rep⟧ = q :=
   choose_spec (exists_rep q)
 
 /-- The quotient of an encodable space by a decidable equivalence relation is encodable. -/
 def encodableQuotient : Encodable (Quotientₓ s) :=
   ⟨fun q => encode q.rep, fun n => Quotientₓ.mk <$> decode α n,
     by 
-      rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_argₓ some («expr⟦ ⟧» l).rep_spec⟩
+      rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_argₓ some ⟦l⟧.rep_spec⟩
 
 end Quotientₓ
 

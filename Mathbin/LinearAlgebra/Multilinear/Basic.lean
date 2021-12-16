@@ -83,7 +83,7 @@ theorem to_fun_eq_coe : f.to_fun = f :=
   rfl
 
 @[simp]
-theorem coe_mk (f : (∀ i, M₁ i) → M₂) h₁ h₂ : «expr⇑ » (⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f :=
+theorem coe_mk (f : (∀ i, M₁ i) → M₂) h₁ h₂ : ⇑(⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f :=
   rfl
 
 theorem congr_funₓ {f g : MultilinearMap R M₁ M₂} (h : f = g) (x : ∀ i, M₁ i) : f x = g x :=
@@ -118,20 +118,20 @@ theorem mk_coe (f : MultilinearMap R M₁ M₂) h₁ h₂ : (⟨f, h₁, h₂⟩
     rfl
 
 @[simp]
-theorem map_add (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) : f (update m i (x+y)) = f (update m i x)+f (update m i y) :=
+protected theorem map_add (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) :
+  f (update m i (x+y)) = f (update m i x)+f (update m i y) :=
   f.map_add' m i x y
 
 @[simp]
 theorem map_smul (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M₁ i) : f (update m i (c • x)) = c • f (update m i x) :=
   f.map_smul' m i c x
 
--- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : «expr = »(m i, 0)) : «expr = »(f m, 0) :=
-begin
-  have [] [":", expr «expr = »(«expr • »((0 : R), (0 : M₁ i)), 0)] [],
-  by simp [] [] [] [] [] [],
-  rw ["[", "<-", expr update_eq_self i m, ",", expr h, ",", "<-", expr this, ",", expr f.map_smul, ",", expr zero_smul, "]"] []
-end
+theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 :=
+  by 
+    have  : (0 : R) • (0 : M₁ i) = 0
+    ·
+      simp 
+    rw [←update_eq_self i m, h, ←this, f.map_smul, zero_smul]
 
 @[simp]
 theorem map_update_zero (m : ∀ i, M₁ i) (i : ι) : f (update m i 0) = 0 :=
@@ -209,7 +209,7 @@ instance : AddCommMonoidₓ (MultilinearMap R M₁ M₂) :=
 
 @[simp]
 theorem sum_apply {α : Type _} (f : α → MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
-  ∀ {s : Finset α}, (∑a in s, f a) m = ∑a in s, f a m :=
+  ∀ {s : Finset α}, (∑ a in s, f a) m = ∑ a in s, f a m :=
   by 
     classical 
     apply Finset.induction
@@ -341,6 +341,8 @@ section
 
 variable {M₁' : ι → Type _} [∀ i, AddCommMonoidₓ (M₁' i)] [∀ i, Module R (M₁' i)]
 
+variable {M₁'' : ι → Type _} [∀ i, AddCommMonoidₓ (M₁'' i)] [∀ i, Module R (M₁'' i)]
+
 /-- If `g` is a multilinear map and `f` is a collection of linear maps,
 then `g (f₁ m₁, ..., fₙ mₙ)` is again a multilinear map, that we call
 `g.comp_linear_map f`. -/
@@ -364,50 +366,98 @@ theorem comp_linear_map_apply (g : MultilinearMap R M₁' M₂) (f : ∀ i, M₁
   g.comp_linear_map f m = g fun i => f i (m i) :=
   rfl
 
+/-- Composing a multilinear map twice with a linear map in each argument is
+the same as composing with their composition. -/
+theorem comp_linear_map_assoc (g : MultilinearMap R M₁'' M₂) (f₁ : ∀ i, M₁' i →ₗ[R] M₁'' i)
+  (f₂ : ∀ i, M₁ i →ₗ[R] M₁' i) : (g.comp_linear_map f₁).compLinearMap f₂ = g.comp_linear_map fun i => f₁ i ∘ₗ f₂ i :=
+  rfl
+
+/-- Composing the zero multilinear map with a linear map in each argument. -/
+@[simp]
+theorem zero_comp_linear_map (f : ∀ i, M₁ i →ₗ[R] M₁' i) : (0 : MultilinearMap R M₁' M₂).compLinearMap f = 0 :=
+  ext$ fun _ => rfl
+
+/-- Composing a multilinear map with the identity linear map in each argument. -/
+@[simp]
+theorem comp_linear_map_id (g : MultilinearMap R M₁' M₂) : (g.comp_linear_map fun i => LinearMap.id) = g :=
+  ext$ fun _ => rfl
+
+/-- Composing with a family of surjective linear maps is injective. -/
+theorem comp_linear_map_injective (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ i, surjective (f i)) :
+  injective fun g : MultilinearMap R M₁' M₂ => g.comp_linear_map f :=
+  fun g₁ g₂ h =>
+    ext$
+      fun x =>
+        by 
+          simpa [fun i => surj_inv_eq (hf i)] using ext_iff.mp h fun i => surj_inv (hf i) (x i)
+
+theorem comp_linear_map_inj (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ i, surjective (f i)) (g₁ g₂ : MultilinearMap R M₁' M₂) :
+  g₁.comp_linear_map f = g₂.comp_linear_map f ↔ g₁ = g₂ :=
+  (comp_linear_map_injective _ hf).eq_iff
+
+/-- Composing a multilinear map with a linear equiv on each argument gives the zero map
+if and only if the multilinear map is the zero map. -/
+@[simp]
+theorem comp_linear_equiv_eq_zero_iff (g : MultilinearMap R M₁' M₂) (f : ∀ i, M₁ i ≃ₗ[R] M₁' i) :
+  (g.comp_linear_map fun i => (f i : M₁ i →ₗ[R] M₁' i)) = 0 ↔ g = 0 :=
+  by 
+    set f' := fun i => (f i : M₁ i →ₗ[R] M₁' i)
+    rw [←zero_comp_linear_map f', comp_linear_map_inj f' fun i => (f i).Surjective]
+
 end 
 
--- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If one adds to a vector `m'` another vector `m`, but only for coordinates in a finset `t`, then
 the image under a multilinear map `f` is the sum of `f (s.piecewise m m')` along all subsets `s` of
 `t`. This is mainly an auxiliary statement to prove the result when `t = univ`, given in
 `map_add_univ`, although it can be useful in its own right as it does not require the index set `ι`
 to be finite.-/
-theorem map_piecewise_add
-(m m' : ∀ i, M₁ i)
-(t : finset ι) : «expr = »(f (t.piecewise «expr + »(m, m') m'), «expr∑ in , »((s), t.powerset, f (s.piecewise m m'))) :=
-begin
-  revert [ident m'],
-  refine [expr finset.induction_on t (by simp [] [] [] [] [] []) _],
-  assume [binders (i t hit Hrec m')],
-  have [ident A] [":", expr «expr = »((insert i t).piecewise «expr + »(m, m') m', update (t.piecewise «expr + »(m, m') m') i «expr + »(m i, m' i))] [":=", expr t.piecewise_insert _ _ _],
-  have [ident B] [":", expr «expr = »(update (t.piecewise «expr + »(m, m') m') i (m' i), t.piecewise «expr + »(m, m') m')] [],
-  { ext [] [ident j] [],
-    by_cases [expr h, ":", expr «expr = »(j, i)],
-    { rw [expr h] [],
-      simp [] [] [] ["[", expr hit, "]"] [] [] },
-    { simp [] [] [] ["[", expr h, "]"] [] [] } },
-  let [ident m''] [] [":=", expr update m' i (m i)],
-  have [ident C] [":", expr «expr = »(update (t.piecewise «expr + »(m, m') m') i (m i), t.piecewise «expr + »(m, m'') m'')] [],
-  { ext [] [ident j] [],
-    by_cases [expr h, ":", expr «expr = »(j, i)],
-    { rw [expr h] [],
-      simp [] [] [] ["[", expr m'', ",", expr hit, "]"] [] [] },
-    { by_cases [expr h', ":", expr «expr ∈ »(j, t)]; simp [] [] [] ["[", expr h, ",", expr hit, ",", expr m'', ",", expr h', "]"] [] [] } },
-  rw ["[", expr A, ",", expr f.map_add, ",", expr B, ",", expr C, ",", expr finset.sum_powerset_insert hit, ",", expr Hrec, ",", expr Hrec, ",", expr add_comm, "]"] [],
-  congr' [1] [],
-  apply [expr finset.sum_congr rfl (λ s hs, _)],
-  have [] [":", expr «expr = »((insert i s).piecewise m m', s.piecewise m m'')] [],
-  { ext [] [ident j] [],
-    by_cases [expr h, ":", expr «expr = »(j, i)],
-    { rw [expr h] [],
-      simp [] [] [] ["[", expr m'', ",", expr finset.not_mem_of_mem_powerset_of_not_mem hs hit, "]"] [] [] },
-    { by_cases [expr h', ":", expr «expr ∈ »(j, s)]; simp [] [] [] ["[", expr h, ",", expr m'', ",", expr h', "]"] [] [] } },
-  rw [expr this] []
-end
+theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finset ι) :
+  f (t.piecewise (m+m') m') = ∑ s in t.powerset, f (s.piecewise m m') :=
+  by 
+    revert m' 
+    refine'
+      Finset.induction_on t
+        (by 
+          simp )
+        _ 
+    intro i t hit Hrec m' 
+    have A : (insert i t).piecewise (m+m') m' = update (t.piecewise (m+m') m') i (m i+m' i) := t.piecewise_insert _ _ _ 
+    have B : update (t.piecewise (m+m') m') i (m' i) = t.piecewise (m+m') m'
+    ·
+      ext j 
+      byCases' h : j = i
+      ·
+        rw [h]
+        simp [hit]
+      ·
+        simp [h]
+    let m'' := update m' i (m i)
+    have C : update (t.piecewise (m+m') m') i (m i) = t.piecewise (m+m'') m''
+    ·
+      ext j 
+      byCases' h : j = i
+      ·
+        rw [h]
+        simp [m'', hit]
+      ·
+        byCases' h' : j ∈ t <;> simp [h, hit, m'', h']
+    rw [A, f.map_add, B, C, Finset.sum_powerset_insert hit, Hrec, Hrec, add_commₓ]
+    congr 1
+    apply Finset.sum_congr rfl fun s hs => _ 
+    have  : (insert i s).piecewise m m' = s.piecewise m m''
+    ·
+      ext j 
+      byCases' h : j = i
+      ·
+        rw [h]
+        simp [m'', Finset.not_mem_of_mem_powerset_of_not_mem hs hit]
+      ·
+        byCases' h' : j ∈ s <;> simp [h, m'', h']
+    rw [this]
 
 /-- Additivity of a multilinear map along all coordinates at the same time,
 writing `f (m + m')` as the sum  of `f (s.piecewise m m')` over all sets `s`. -/
-theorem map_add_univ [Fintype ι] (m m' : ∀ i, M₁ i) : f (m+m') = ∑s : Finset ι, f (s.piecewise m m') :=
+theorem map_add_univ [Fintype ι] (m m' : ∀ i, M₁ i) : f (m+m') = ∑ s : Finset ι, f (s.piecewise m m') :=
   by 
     simpa using f.map_piecewise_add m m' Finset.univ
 
@@ -419,164 +469,198 @@ open_locale Classical
 
 open Fintype Finset
 
--- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » A i)
 /-- If `f` is multilinear, then `f (Σ_{j₁ ∈ A₁} g₁ j₁, ..., Σ_{jₙ ∈ Aₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions with `r 1 ∈ A₁`, ...,
 `r n ∈ Aₙ`. This follows from multilinearity by expanding successively with respect to each
 coordinate. Here, we give an auxiliary statement tailored for an inductive proof. Use instead
 `map_sum_finset`. -/
-theorem map_sum_finset_aux
-[fintype ι]
-{n : exprℕ()}
-(h : «expr = »(«expr∑ , »((i), (A i).card), n)) : «expr = »(f (λ
-  i, «expr∑ in , »((j), A i, g i j)), «expr∑ in , »((r), pi_finset A, f (λ i, g i (r i)))) :=
-begin
-  induction [expr n] ["using", ident nat.strong_induction_on] ["with", ident n, ident IH] ["generalizing", ident A],
-  by_cases [expr Ai_empty, ":", expr «expr∃ , »((i), «expr = »(A i, «expr∅»()))],
-  { rcases [expr Ai_empty, "with", "⟨", ident i, ",", ident hi, "⟩"],
-    have [] [":", expr «expr = »(«expr∑ in , »((j), A i, g i j), 0)] [],
-    by rw ["[", expr hi, ",", expr finset.sum_empty, "]"] [],
-    rw [expr f.map_coord_zero i this] [],
-    have [] [":", expr «expr = »(pi_finset A, «expr∅»())] [],
-    { apply [expr finset.eq_empty_of_forall_not_mem (λ r hr, _)],
-      have [] [":", expr «expr ∈ »(r i, A i)] [":=", expr mem_pi_finset.mp hr i],
-      rwa [expr hi] ["at", ident this] },
-    rw ["[", expr this, ",", expr finset.sum_empty, "]"] [] },
-  push_neg ["at", ident Ai_empty],
-  by_cases [expr Ai_singleton, ":", expr ∀ i, «expr ≤ »((A i).card, 1)],
-  { have [ident Ai_card] [":", expr ∀ i, «expr = »((A i).card, 1)] [],
-    { assume [binders (i)],
-      have [ident pos] [":", expr «expr ≠ »(finset.card (A i), 0)] [],
-      by simp [] [] [] ["[", expr finset.card_eq_zero, ",", expr Ai_empty i, "]"] [] [],
-      have [] [":", expr «expr ≤ »(finset.card (A i), 1)] [":=", expr Ai_singleton i],
-      exact [expr le_antisymm this (nat.succ_le_of_lt (_root_.pos_iff_ne_zero.mpr pos))] },
-    have [] [":", expr ∀
-     r : ∀
-     i, α i, «expr ∈ »(r, pi_finset A) → «expr = »(f (λ i, g i (r i)), f (λ i, «expr∑ in , »((j), A i, g i j)))] [],
-    { assume [binders (r hr)],
-      unfold_coes [],
-      congr' [] ["with", ident i],
-      have [] [":", expr ∀ j «expr ∈ » A i, «expr = »(g i j, g i (r i))] [],
-      { assume [binders (j hj)],
-        congr,
-        apply [expr finset.card_le_one_iff.1 (Ai_singleton i) hj],
-        exact [expr mem_pi_finset.mp hr i] },
-      simp [] [] ["only"] ["[", expr finset.sum_congr rfl this, ",", expr finset.mem_univ, ",", expr finset.sum_const, ",", expr Ai_card i, ",", expr one_nsmul, "]"] [] [] },
-    simp [] [] ["only"] ["[", expr sum_congr rfl this, ",", expr Ai_card, ",", expr card_pi_finset, ",", expr prod_const_one, ",", expr one_nsmul, ",", expr finset.sum_const, "]"] [] [] },
-  push_neg ["at", ident Ai_singleton],
-  obtain ["⟨", ident i₀, ",", ident hi₀, "⟩", ":", expr «expr∃ , »((i), «expr < »(1, (A i).card)), ":=", expr Ai_singleton],
-  obtain ["⟨", ident j₁, ",", ident j₂, ",", ident hj₁, ",", ident hj₂, ",", ident j₁_ne_j₂, "⟩", ":", expr «expr∃ , »((j₁
-     j₂), «expr ∧ »(«expr ∈ »(j₁, A i₀), «expr ∧ »(«expr ∈ »(j₂, A i₀), «expr ≠ »(j₁, j₂)))), ":=", expr finset.one_lt_card_iff.1 hi₀],
-  let [ident B] [] [":=", expr function.update A i₀ «expr \ »(A i₀, {j₂})],
-  let [ident C] [] [":=", expr function.update A i₀ {j₂}],
-  have [ident B_subset_A] [":", expr ∀ i, «expr ⊆ »(B i, A i)] [],
-  { assume [binders (i)],
-    by_cases [expr hi, ":", expr «expr = »(i, i₀)],
-    { rw [expr hi] [],
-      simp [] [] ["only"] ["[", expr B, ",", expr sdiff_subset, ",", expr update_same, "]"] [] [] },
-    { simp [] [] ["only"] ["[", expr hi, ",", expr B, ",", expr update_noteq, ",", expr ne.def, ",", expr not_false_iff, ",", expr finset.subset.refl, "]"] [] [] } },
-  have [ident C_subset_A] [":", expr ∀ i, «expr ⊆ »(C i, A i)] [],
-  { assume [binders (i)],
-    by_cases [expr hi, ":", expr «expr = »(i, i₀)],
-    { rw [expr hi] [],
-      simp [] [] ["only"] ["[", expr C, ",", expr hj₂, ",", expr finset.singleton_subset_iff, ",", expr update_same, "]"] [] [] },
-    { simp [] [] ["only"] ["[", expr hi, ",", expr C, ",", expr update_noteq, ",", expr ne.def, ",", expr not_false_iff, ",", expr finset.subset.refl, "]"] [] [] } },
-  have [ident A_eq_BC] [":", expr «expr = »(λ
-    i, «expr∑ in , »((j), A i, g i j), function.update (λ
-     i, «expr∑ in , »((j), A i, g i j)) i₀ «expr + »(«expr∑ in , »((j), B i₀, g i₀ j), «expr∑ in , »((j), C i₀, g i₀ j)))] [],
-  { ext [] [ident i] [],
-    by_cases [expr hi, ":", expr «expr = »(i, i₀)],
-    { rw ["[", expr hi, "]"] [],
-      simp [] [] ["only"] ["[", expr function.update_same, "]"] [] [],
-      have [] [":", expr «expr = »(A i₀, «expr ∪ »(B i₀, C i₀))] [],
-      { simp [] [] ["only"] ["[", expr B, ",", expr C, ",", expr function.update_same, ",", expr finset.sdiff_union_self_eq_union, "]"] [] [],
-        symmetry,
-        simp [] [] ["only"] ["[", expr hj₂, ",", expr finset.singleton_subset_iff, ",", expr finset.union_eq_left_iff_subset, "]"] [] [] },
-      rw [expr this] [],
-      apply [expr finset.sum_union],
-      apply [expr finset.disjoint_right.2 (λ j hj, _)],
-      have [] [":", expr «expr = »(j, j₂)] [],
-      by { dsimp [] ["[", expr C, "]"] [] ["at", ident hj],
-        simpa [] [] [] [] [] ["using", expr hj] },
-      rw [expr this] [],
-      dsimp [] ["[", expr B, "]"] [] [],
-      simp [] [] ["only"] ["[", expr mem_sdiff, ",", expr eq_self_iff_true, ",", expr not_true, ",", expr not_false_iff, ",", expr finset.mem_singleton, ",", expr update_same, ",", expr and_false, "]"] [] [] },
-    { simp [] [] [] ["[", expr hi, "]"] [] [] } },
-  have [ident Beq] [":", expr «expr = »(function.update (λ
-     i, «expr∑ in , »((j), A i, g i j)) i₀ «expr∑ in , »((j), B i₀, g i₀ j), λ i, «expr∑ in , »((j), B i, g i j))] [],
-  { ext [] [ident i] [],
-    by_cases [expr hi, ":", expr «expr = »(i, i₀)],
-    { rw [expr hi] [],
-      simp [] [] ["only"] ["[", expr update_same, "]"] [] [] },
-    { simp [] [] ["only"] ["[", expr hi, ",", expr B, ",", expr update_noteq, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [] } },
-  have [ident Ceq] [":", expr «expr = »(function.update (λ
-     i, «expr∑ in , »((j), A i, g i j)) i₀ «expr∑ in , »((j), C i₀, g i₀ j), λ i, «expr∑ in , »((j), C i, g i j))] [],
-  { ext [] [ident i] [],
-    by_cases [expr hi, ":", expr «expr = »(i, i₀)],
-    { rw [expr hi] [],
-      simp [] [] ["only"] ["[", expr update_same, "]"] [] [] },
-    { simp [] [] ["only"] ["[", expr hi, ",", expr C, ",", expr update_noteq, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [] } },
-  have [ident Brec] [":", expr «expr = »(f (λ
-     i, «expr∑ in , »((j), B i, g i j)), «expr∑ in , »((r), pi_finset B, f (λ i, g i (r i))))] [],
-  { have [] [":", expr «expr < »(«expr∑ , »((i), finset.card (B i)), «expr∑ , »((i), finset.card (A i)))] [],
-    { refine [expr finset.sum_lt_sum (λ i hi, finset.card_le_of_subset (B_subset_A i)) ⟨i₀, finset.mem_univ _, _⟩],
-      have [] [":", expr «expr ⊆ »({j₂}, A i₀)] [],
-      by simp [] [] [] ["[", expr hj₂, "]"] [] [],
-      simp [] [] ["only"] ["[", expr B, ",", expr finset.card_sdiff this, ",", expr function.update_same, ",", expr finset.card_singleton, "]"] [] [],
-      exact [expr nat.pred_lt (ne_of_gt (lt_trans nat.zero_lt_one hi₀))] },
-    rw [expr h] ["at", ident this],
-    exact [expr IH _ this B rfl] },
-  have [ident Crec] [":", expr «expr = »(f (λ
-     i, «expr∑ in , »((j), C i, g i j)), «expr∑ in , »((r), pi_finset C, f (λ i, g i (r i))))] [],
-  { have [] [":", expr «expr < »(«expr∑ , »((i), finset.card (C i)), «expr∑ , »((i), finset.card (A i)))] [":=", expr finset.sum_lt_sum (λ
-      i
-      hi, finset.card_le_of_subset (C_subset_A i)) ⟨i₀, finset.mem_univ _, by simp [] [] [] ["[", expr C, ",", expr hi₀, "]"] [] []⟩],
-    rw [expr h] ["at", ident this],
-    exact [expr IH _ this C rfl] },
-  have [ident D] [":", expr disjoint (pi_finset B) (pi_finset C)] [],
-  { have [] [":", expr disjoint (B i₀) (C i₀)] [],
-    by simp [] [] [] ["[", expr B, ",", expr C, "]"] [] [],
-    exact [expr pi_finset_disjoint_of_disjoint B C this] },
-  have [ident pi_BC] [":", expr «expr = »(pi_finset A, «expr ∪ »(pi_finset B, pi_finset C))] [],
-  { apply [expr finset.subset.antisymm],
-    { assume [binders (r hr)],
-      by_cases [expr hri₀, ":", expr «expr = »(r i₀, j₂)],
-      { apply [expr finset.mem_union_right],
-        apply [expr mem_pi_finset.2 (λ i, _)],
-        by_cases [expr hi, ":", expr «expr = »(i, i₀)],
-        { have [] [":", expr «expr ∈ »(r i₀, C i₀)] [],
-          by simp [] [] [] ["[", expr C, ",", expr hri₀, "]"] [] [],
-          convert [] [expr this] [] },
-        { simp [] [] [] ["[", expr C, ",", expr hi, ",", expr mem_pi_finset.1 hr i, "]"] [] [] } },
-      { apply [expr finset.mem_union_left],
-        apply [expr mem_pi_finset.2 (λ i, _)],
-        by_cases [expr hi, ":", expr «expr = »(i, i₀)],
-        { have [] [":", expr «expr ∈ »(r i₀, B i₀)] [],
-          by simp [] [] [] ["[", expr B, ",", expr hri₀, ",", expr mem_pi_finset.1 hr i₀, "]"] [] [],
-          convert [] [expr this] [] },
-        { simp [] [] [] ["[", expr B, ",", expr hi, ",", expr mem_pi_finset.1 hr i, "]"] [] [] } } },
-    { exact [expr finset.union_subset (pi_finset_subset _ _ (λ
-         i, B_subset_A i)) (pi_finset_subset _ _ (λ i, C_subset_A i))] } },
-  rw [expr A_eq_BC] [],
-  simp [] [] ["only"] ["[", expr multilinear_map.map_add, ",", expr Beq, ",", expr Ceq, ",", expr Brec, ",", expr Crec, ",", expr pi_BC, "]"] [] [],
-  rw ["<-", expr finset.sum_union D] []
-end
+theorem map_sum_finset_aux [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) :
+  (f fun i => ∑ j in A i, g i j) = ∑ r in pi_finset A, f fun i => g i (r i) :=
+  by 
+    induction' n using Nat.strong_induction_onₓ with n IH generalizing A 
+    byCases' Ai_empty : ∃ i, A i = ∅
+    ·
+      rcases Ai_empty with ⟨i, hi⟩
+      have  : (∑ j in A i, g i j) = 0
+      ·
+        rw [hi, Finset.sum_empty]
+      rw [f.map_coord_zero i this]
+      have  : pi_finset A = ∅
+      ·
+        apply Finset.eq_empty_of_forall_not_mem fun r hr => _ 
+        have  : r i ∈ A i := mem_pi_finset.mp hr i 
+        rwa [hi] at this 
+      rw [this, Finset.sum_empty]
+    pushNeg  at Ai_empty 
+    byCases' Ai_singleton : ∀ i, (A i).card ≤ 1
+    ·
+      have Ai_card : ∀ i, (A i).card = 1
+      ·
+        intro i 
+        have pos : Finset.card (A i) ≠ 0
+        ·
+          simp [Finset.card_eq_zero, Ai_empty i]
+        have  : Finset.card (A i) ≤ 1 := Ai_singleton i 
+        exact le_antisymmₓ this (Nat.succ_le_of_ltₓ (_root_.pos_iff_ne_zero.mpr Pos))
+      have  : ∀ r : ∀ i, α i, r ∈ pi_finset A → (f fun i => g i (r i)) = f fun i => ∑ j in A i, g i j
+      ·
+        intro r hr 
+        unfoldCoes 
+        congr with i 
+        have  : ∀ j _ : j ∈ A i, g i j = g i (r i)
+        ·
+          intro j hj 
+          congr 
+          apply Finset.card_le_one_iff.1 (Ai_singleton i) hj 
+          exact mem_pi_finset.mp hr i 
+        simp only [Finset.sum_congr rfl this, Finset.mem_univ, Finset.sum_const, Ai_card i, one_nsmul]
+      simp only [sum_congr rfl this, Ai_card, card_pi_finset, prod_const_one, one_nsmul, Finset.sum_const]
+    pushNeg  at Ai_singleton 
+    obtain ⟨i₀, hi₀⟩ : ∃ i, 1 < (A i).card := Ai_singleton 
+    obtain ⟨j₁, j₂, hj₁, hj₂, j₁_ne_j₂⟩ : ∃ j₁ j₂, j₁ ∈ A i₀ ∧ j₂ ∈ A i₀ ∧ j₁ ≠ j₂ := Finset.one_lt_card_iff.1 hi₀ 
+    let B := Function.update A i₀ (A i₀ \ {j₂})
+    let C := Function.update A i₀ {j₂}
+    have B_subset_A : ∀ i, B i ⊆ A i
+    ·
+      intro i 
+      byCases' hi : i = i₀
+      ·
+        rw [hi]
+        simp only [B, sdiff_subset, update_same]
+      ·
+        simp only [hi, B, update_noteq, Ne.def, not_false_iff, Finset.Subset.refl]
+    have C_subset_A : ∀ i, C i ⊆ A i
+    ·
+      intro i 
+      byCases' hi : i = i₀
+      ·
+        rw [hi]
+        simp only [C, hj₂, Finset.singleton_subset_iff, update_same]
+      ·
+        simp only [hi, C, update_noteq, Ne.def, not_false_iff, Finset.Subset.refl]
+    have A_eq_BC :
+      (fun i => ∑ j in A i, g i j) =
+        Function.update (fun i => ∑ j in A i, g i j) i₀ ((∑ j in B i₀, g i₀ j)+∑ j in C i₀, g i₀ j)
+    ·
+      ext i 
+      byCases' hi : i = i₀
+      ·
+        rw [hi]
+        simp only [Function.update_same]
+        have  : A i₀ = B i₀ ∪ C i₀
+        ·
+          simp only [B, C, Function.update_same, Finset.sdiff_union_self_eq_union]
+          symm 
+          simp only [hj₂, Finset.singleton_subset_iff, Finset.union_eq_left_iff_subset]
+        rw [this]
+        apply Finset.sum_union 
+        apply Finset.disjoint_right.2 fun j hj => _ 
+        have  : j = j₂
+        ·
+          ·
+            dsimp [C]  at hj 
+            simpa using hj 
+        rw [this]
+        dsimp [B]
+        simp only [mem_sdiff, eq_self_iff_true, not_true, not_false_iff, Finset.mem_singleton, update_same, and_falseₓ]
+      ·
+        simp [hi]
+    have Beq : Function.update (fun i => ∑ j in A i, g i j) i₀ (∑ j in B i₀, g i₀ j) = fun i => ∑ j in B i, g i j
+    ·
+      ext i 
+      byCases' hi : i = i₀
+      ·
+        rw [hi]
+        simp only [update_same]
+      ·
+        simp only [hi, B, update_noteq, Ne.def, not_false_iff]
+    have Ceq : Function.update (fun i => ∑ j in A i, g i j) i₀ (∑ j in C i₀, g i₀ j) = fun i => ∑ j in C i, g i j
+    ·
+      ext i 
+      byCases' hi : i = i₀
+      ·
+        rw [hi]
+        simp only [update_same]
+      ·
+        simp only [hi, C, update_noteq, Ne.def, not_false_iff]
+    have Brec : (f fun i => ∑ j in B i, g i j) = ∑ r in pi_finset B, f fun i => g i (r i)
+    ·
+      have  : (∑ i, Finset.card (B i)) < ∑ i, Finset.card (A i)
+      ·
+        refine' Finset.sum_lt_sum (fun i hi => Finset.card_le_of_subset (B_subset_A i)) ⟨i₀, Finset.mem_univ _, _⟩
+        have  : {j₂} ⊆ A i₀
+        ·
+          simp [hj₂]
+        simp only [B, Finset.card_sdiff this, Function.update_same, Finset.card_singleton]
+        exact Nat.pred_ltₓ (ne_of_gtₓ (lt_transₓ Nat.zero_lt_oneₓ hi₀))
+      rw [h] at this 
+      exact IH _ this B rfl 
+    have Crec : (f fun i => ∑ j in C i, g i j) = ∑ r in pi_finset C, f fun i => g i (r i)
+    ·
+      have  : (∑ i, Finset.card (C i)) < ∑ i, Finset.card (A i) :=
+        Finset.sum_lt_sum (fun i hi => Finset.card_le_of_subset (C_subset_A i))
+          ⟨i₀, Finset.mem_univ _,
+            by 
+              simp [C, hi₀]⟩
+      rw [h] at this 
+      exact IH _ this C rfl 
+    have D : Disjoint (pi_finset B) (pi_finset C)
+    ·
+      have  : Disjoint (B i₀) (C i₀)
+      ·
+        simp [B, C]
+      exact pi_finset_disjoint_of_disjoint B C this 
+    have pi_BC : pi_finset A = pi_finset B ∪ pi_finset C
+    ·
+      apply Finset.Subset.antisymm
+      ·
+        intro r hr 
+        byCases' hri₀ : r i₀ = j₂
+        ·
+          apply Finset.mem_union_right 
+          apply mem_pi_finset.2 fun i => _ 
+          byCases' hi : i = i₀
+          ·
+            have  : r i₀ ∈ C i₀
+            ·
+              simp [C, hri₀]
+            convert this
+          ·
+            simp [C, hi, mem_pi_finset.1 hr i]
+        ·
+          apply Finset.mem_union_left 
+          apply mem_pi_finset.2 fun i => _ 
+          byCases' hi : i = i₀
+          ·
+            have  : r i₀ ∈ B i₀
+            ·
+              simp [B, hri₀, mem_pi_finset.1 hr i₀]
+            convert this
+          ·
+            simp [B, hi, mem_pi_finset.1 hr i]
+      ·
+        exact
+          Finset.union_subset (pi_finset_subset _ _ fun i => B_subset_A i) (pi_finset_subset _ _ fun i => C_subset_A i)
+    rw [A_eq_BC]
+    simp only [MultilinearMap.map_add, Beq, Ceq, Brec, Crec, pi_BC]
+    rw [←Finset.sum_union D]
 
 /-- If `f` is multilinear, then `f (Σ_{j₁ ∈ A₁} g₁ j₁, ..., Σ_{jₙ ∈ Aₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions with `r 1 ∈ A₁`, ...,
 `r n ∈ Aₙ`. This follows from multilinearity by expanding successively with respect to each
 coordinate. -/
-theorem map_sum_finset [Fintype ι] : (f fun i => ∑j in A i, g i j) = ∑r in pi_finset A, f fun i => g i (r i) :=
+theorem map_sum_finset [Fintype ι] : (f fun i => ∑ j in A i, g i j) = ∑ r in pi_finset A, f fun i => g i (r i) :=
   f.map_sum_finset_aux _ _ rfl
 
 /-- If `f` is multilinear, then `f (Σ_{j₁} g₁ j₁, ..., Σ_{jₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions `r`. This follows from
 multilinearity by expanding successively with respect to each coordinate. -/
-theorem map_sum [Fintype ι] [∀ i, Fintype (α i)] : (f fun i => ∑j, g i j) = ∑r : ∀ i, α i, f fun i => g i (r i) :=
+theorem map_sum [Fintype ι] [∀ i, Fintype (α i)] : (f fun i => ∑ j, g i j) = ∑ r : ∀ i, α i, f fun i => g i (r i) :=
   f.map_sum_finset g fun i => Finset.univ
 
 theorem map_update_sum {α : Type _} (t : Finset α) (i : ι) (g : α → M₁ i) (m : ∀ i, M₁ i) :
-  f (update m i (∑a in t, g a)) = ∑a in t, f (update m i (g a)) :=
+  f (update m i (∑ a in t, g a)) = ∑ a in t, f (update m i (g a)) :=
   by 
     induction' t using Finset.induction with a t has ih h
     ·
@@ -597,7 +681,7 @@ def restrict_scalars (f : MultilinearMap A M₁ M₂) : MultilinearMap R M₁ M�
   { toFun := f, map_add' := f.map_add, map_smul' := fun m i => (f.to_linear_map m i).map_smul_of_tower }
 
 @[simp]
-theorem coe_restrict_scalars (f : MultilinearMap A M₁ M₂) : «expr⇑ » (f.restrict_scalars R) = f :=
+theorem coe_restrict_scalars (f : MultilinearMap A M₁ M₂) : ⇑f.restrict_scalars R = f :=
   rfl
 
 end RestrictScalar
@@ -628,7 +712,7 @@ theorem dom_dom_congr_trans (σ₁ : ι₁ ≃ ι₂) (σ₂ : ι₂ ≃ ι₃) 
   m.dom_dom_congr (σ₁.trans σ₂) = (m.dom_dom_congr σ₁).domDomCongr σ₂ :=
   rfl
 
-theorem dom_dom_congr_mul (σ₁ : Equiv.Perm ι₁) (σ₂ : Equiv.Perm ι₁) (m : MultilinearMap R (fun i : ι₁ => M₂) M₃) :
+theorem dom_dom_congr_mul (σ₁ : Equivₓ.Perm ι₁) (σ₂ : Equivₓ.Perm ι₁) (m : MultilinearMap R (fun i : ι₁ => M₂) M₃) :
   m.dom_dom_congr (σ₂*σ₁) = (m.dom_dom_congr σ₁).domDomCongr σ₂ :=
   rfl
 
@@ -686,8 +770,7 @@ def comp_multilinear_map (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M�
           simp  }
 
 @[simp]
-theorem coe_comp_multilinear_map (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) :
-  «expr⇑ » (g.comp_multilinear_map f) = g ∘ f :=
+theorem coe_comp_multilinear_map (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) : ⇑g.comp_multilinear_map f = g ∘ f :=
   rfl
 
 theorem comp_multilinear_map_apply (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
@@ -713,47 +796,46 @@ section CommSemiringₓ
 variable [CommSemiringₓ R] [∀ i, AddCommMonoidₓ (M₁ i)] [∀ i, AddCommMonoidₓ (M i)] [AddCommMonoidₓ M₂]
   [∀ i, Module R (M i)] [∀ i, Module R (M₁ i)] [Module R M₂] (f f' : MultilinearMap R M₁ M₂)
 
--- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If one multiplies by `c i` the coordinates in a finset `s`, then the image under a multilinear
 map is multiplied by `∏ i in s, c i`. This is mainly an auxiliary statement to prove the result when
 `s = univ`, given in `map_smul_univ`, although it can be useful in its own right as it does not
 require the index set `ι` to be finite. -/
-theorem map_piecewise_smul
-(c : ι → R)
-(m : ∀ i, M₁ i)
-(s : finset ι) : «expr = »(f (s.piecewise (λ i, «expr • »(c i, m i)) m), «expr • »(«expr∏ in , »((i), s, c i), f m)) :=
-begin
-  refine [expr s.induction_on (by simp [] [] [] [] [] []) _],
-  assume [binders (j s j_not_mem_s Hrec)],
-  have [ident A] [":", expr «expr = »(function.update (s.piecewise (λ
-      i, «expr • »(c i, m i)) m) j (m j), s.piecewise (λ i, «expr • »(c i, m i)) m)] [],
-  { ext [] [ident i] [],
-    by_cases [expr h, ":", expr «expr = »(i, j)],
-    { rw [expr h] [],
-      simp [] [] [] ["[", expr j_not_mem_s, "]"] [] [] },
-    { simp [] [] [] ["[", expr h, "]"] [] [] } },
-  rw ["[", expr s.piecewise_insert, ",", expr f.map_smul, ",", expr A, ",", expr Hrec, "]"] [],
-  simp [] [] [] ["[", expr j_not_mem_s, ",", expr mul_smul, "]"] [] []
-end
+theorem map_piecewise_smul (c : ι → R) (m : ∀ i, M₁ i) (s : Finset ι) :
+  f (s.piecewise (fun i => c i • m i) m) = (∏ i in s, c i) • f m :=
+  by 
+    refine'
+      s.induction_on
+        (by 
+          simp )
+        _ 
+    intro j s j_not_mem_s Hrec 
+    have A : Function.update (s.piecewise (fun i => c i • m i) m) j (m j) = s.piecewise (fun i => c i • m i) m
+    ·
+      ext i 
+      byCases' h : i = j
+      ·
+        rw [h]
+        simp [j_not_mem_s]
+      ·
+        simp [h]
+    rw [s.piecewise_insert, f.map_smul, A, Hrec]
+    simp [j_not_mem_s, mul_smul]
 
 /-- Multiplicativity of a multilinear map along all coordinates at the same time,
 writing `f (λi, c i • m i)` as `(∏ i, c i) • f m`. -/
-theorem map_smul_univ [Fintype ι] (c : ι → R) (m : ∀ i, M₁ i) : (f fun i => c i • m i) = (∏i, c i) • f m :=
+theorem map_smul_univ [Fintype ι] (c : ι → R) (m : ∀ i, M₁ i) : (f fun i => c i • m i) = (∏ i, c i) • f m :=
   by 
     simpa using map_piecewise_smul f c m Finset.univ
 
--- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem map_update_smul
-[fintype ι]
-(m : ∀ i, M₁ i)
-(i : ι)
-(c : R)
-(x : M₁ i) : «expr = »(f (update «expr • »(c, m) i x), «expr • »(«expr ^ »(c, «expr - »(fintype.card ι, 1)), f (update m i x))) :=
-begin
-  have [] [":", expr «expr = »(f ((finset.univ.erase i).piecewise «expr • »(c, update m i x) (update m i x)), «expr • »(«expr∏ in , »((i), finset.univ.erase i, c), f (update m i x)))] [":=", expr map_piecewise_smul f _ _ _],
-  simpa [] [] [] ["[", "<-", expr function.update_smul c m, "]"] [] ["using", expr this]
-end
+theorem map_update_smul [Fintype ι] (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M₁ i) :
+  f (update (c • m) i x) = c ^ (Fintype.card ι - 1) • f (update m i x) :=
+  by 
+    have  :
+      f ((finset.univ.erase i).piecewise (c • update m i x) (update m i x)) =
+        (∏ i in finset.univ.erase i, c) • f (update m i x) :=
+      map_piecewise_smul f _ _ _ 
+    simpa [←Function.update_smul c m] using this
 
 section DistribMulAction
 
@@ -774,7 +856,7 @@ instance : HasScalar R' (MultilinearMap A M₁ M₂) :=
 theorem smul_apply (f : MultilinearMap A M₁ M₂) (c : R') (m : ∀ i, M₁ i) : (c • f) m = c • f m :=
   rfl
 
-theorem coe_smul (c : R') (f : MultilinearMap A M₁ M₂) : «expr⇑ » (c • f) = c • f :=
+theorem coe_smul (c : R') (f : MultilinearMap A M₁ M₂) : ⇑(c • f) = c • f :=
   rfl
 
 instance : DistribMulAction R' (MultilinearMap A M₁ M₂) :=
@@ -829,7 +911,7 @@ to `m` the product of all the `m i`.
 See also `multilinear_map.mk_pi_algebra_fin` for a version that works with a non-commutative
 algebra `A` but requires `ι = fin n`. -/
 protected def mk_pi_algebra : MultilinearMap R (fun i : ι => A) A :=
-  { toFun := fun m => ∏i, m i,
+  { toFun := fun m => ∏ i, m i,
     map_add' :=
       fun m i x y =>
         by 
@@ -842,7 +924,7 @@ protected def mk_pi_algebra : MultilinearMap R (fun i : ι => A) A :=
 variable {R A ι}
 
 @[simp]
-theorem mk_pi_algebra_apply (m : ι → A) : MultilinearMap.mkPiAlgebra R ι A m = ∏i, m i :=
+theorem mk_pi_algebra_apply (m : ι → A) : MultilinearMap.mkPiAlgebra R ι A m = ∏ i, m i :=
   rfl
 
 end 
@@ -851,25 +933,28 @@ section
 
 variable (R n) (A : Type _) [Semiringₓ A] [Algebra R A]
 
--- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given an `R`-algebra `A`, `mk_pi_algebra_fin` is the multilinear map on `A^n` associating
 to `m` the product of all the `m i`.
 
 See also `multilinear_map.mk_pi_algebra` for a version that assumes `[comm_semiring A]` but works
-for `A^ι` with any finite type `ι`. -/ protected def mk_pi_algebra_fin : multilinear_map R (λ i : fin n, A) A :=
-{ to_fun := λ m, (list.of_fn m).prod,
-  map_add' := begin
-    intros [ident m, ident i, ident x, ident y],
-    have [] [":", expr «expr < »((list.fin_range n).index_of i, n)] [],
-    by simpa [] [] [] [] [] ["using", expr list.index_of_lt_length.2 (list.mem_fin_range i)],
-    simp [] [] [] ["[", expr list.of_fn_eq_map, ",", expr (list.nodup_fin_range n).map_update, ",", expr list.prod_update_nth, ",", expr add_mul, ",", expr this, ",", expr mul_add, ",", expr add_mul, "]"] [] []
-  end,
-  map_smul' := begin
-    intros [ident m, ident i, ident c, ident x],
-    have [] [":", expr «expr < »((list.fin_range n).index_of i, n)] [],
-    by simpa [] [] [] [] [] ["using", expr list.index_of_lt_length.2 (list.mem_fin_range i)],
-    simp [] [] [] ["[", expr list.of_fn_eq_map, ",", expr (list.nodup_fin_range n).map_update, ",", expr list.prod_update_nth, ",", expr this, "]"] [] []
-  end }
+for `A^ι` with any finite type `ι`. -/
+protected def mk_pi_algebra_fin : MultilinearMap R (fun i : Finₓ n => A) A :=
+  { toFun := fun m => (List.ofFn m).Prod,
+    map_add' :=
+      by 
+        intro m i x y 
+        have  : (List.finRange n).indexOf i < n
+        ·
+          simpa using List.index_of_lt_length.2 (List.mem_fin_range i)
+        simp [List.of_fn_eq_map, (List.nodup_fin_range n).map_update, List.prod_update_nth, add_mulₓ, this, mul_addₓ,
+          add_mulₓ],
+    map_smul' :=
+      by 
+        intro m i c x 
+        have  : (List.finRange n).indexOf i < n
+        ·
+          simpa using List.index_of_lt_length.2 (List.mem_fin_range i)
+        simp [List.of_fn_eq_map, (List.nodup_fin_range n).map_update, List.prod_update_nth, this] }
 
 variable {R A n}
 
@@ -904,21 +989,20 @@ variable {R ι}
 
 @[simp]
 theorem mk_pi_ring_apply [Fintype ι] (z : M₂) (m : ι → R) :
-  (MultilinearMap.mkPiRing R ι z : (ι → R) → M₂) m = (∏i, m i) • z :=
+  (MultilinearMap.mkPiRing R ι z : (ι → R) → M₂) m = (∏ i, m i) • z :=
   rfl
 
--- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mk_pi_ring_apply_one_eq_self
-[fintype ι]
-(f : multilinear_map R (λ i : ι, R) M₂) : «expr = »(multilinear_map.mk_pi_ring R ι (f (λ i, 1)), f) :=
-begin
-  ext [] [ident m] [],
-  have [] [":", expr «expr = »(m, λ i, «expr • »(m i, 1))] [],
-  by { ext [] [ident j] [],
-    simp [] [] [] [] [] [] },
-  conv_rhs [] [] { rw ["[", expr this, ",", expr f.map_smul_univ, "]"] },
-  refl
-end
+theorem mk_pi_ring_apply_one_eq_self [Fintype ι] (f : MultilinearMap R (fun i : ι => R) M₂) :
+  MultilinearMap.mkPiRing R ι (f fun i => 1) = f :=
+  by 
+    ext m 
+    have  : m = fun i => m i • 1
+    ·
+      ·
+        ext j 
+        simp 
+    convRHS => rw [this, f.map_smul_univ]
+    rfl
 
 end CommSemiringₓ
 
@@ -946,7 +1030,7 @@ instance : Sub (MultilinearMap R M₁ M₂) :=
       ⟨fun m => f m - g m,
         fun m i x y =>
           by 
-            simp only [map_add, sub_eq_add_neg, neg_add]
+            simp only [MultilinearMap.map_add, sub_eq_add_neg, neg_add]
             cc,
         fun m i c x =>
           by 
@@ -993,12 +1077,12 @@ variable [Semiringₓ R] [∀ i, AddCommGroupₓ (M₁ i)] [AddCommGroupₓ M₂
 theorem map_neg (m : ∀ i, M₁ i) (i : ι) (x : M₁ i) : f (update m i (-x)) = -f (update m i x) :=
   eq_neg_of_add_eq_zero$
     by 
-      rw [←map_add, add_left_negₓ, f.map_coord_zero i (update_same i 0 m)]
+      rw [←MultilinearMap.map_add, add_left_negₓ, f.map_coord_zero i (update_same i 0 m)]
 
 @[simp]
 theorem map_sub (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) : f (update m i (x - y)) = f (update m i x) - f (update m i y) :=
   by 
-    rw [sub_eq_add_neg, sub_eq_add_neg, map_add, map_neg]
+    rw [sub_eq_add_neg, sub_eq_add_neg, MultilinearMap.map_add, map_neg]
 
 end AddCommGroupₓ
 
@@ -1074,7 +1158,7 @@ def LinearMap.uncurryLeft (f : M 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n 
             revert x y 
             rw [←succ_pred i h]
             intro x y 
-            rw [tail_update_succ, map_add, tail_update_succ, tail_update_succ],
+            rw [tail_update_succ, MultilinearMap.map_add, tail_update_succ, tail_update_succ],
     map_smul' :=
       fun m i c x =>
         by 
@@ -1168,39 +1252,46 @@ variable {R M M₂}
 /-! #### Right currying -/
 
 
--- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a multilinear map `f` in `n` variables to the space of linear maps from `M (last n)` to
 `M₂`, construct the corresponding multilinear map on `n+1` variables obtained by concatenating
 the variables, given by `m ↦ f (init m) (m (last n))`-/
-def multilinear_map.uncurry_right
-(f : multilinear_map R (λ i : fin n, M i.cast_succ) «expr →ₗ[ ] »(M (last n), R, M₂)) : multilinear_map R M M₂ :=
-{ to_fun := λ m, f (init m) (m (last n)),
-  map_add' := λ m i x y, begin
-    by_cases [expr h, ":", expr «expr < »(i.val, n)],
-    { have [] [":", expr «expr ≠ »(last n, i)] [":=", expr ne.symm (ne_of_lt h)],
-      rw ["[", expr update_noteq this, ",", expr update_noteq this, ",", expr update_noteq this, "]"] [],
-      revert [ident x, ident y],
-      rw ["[", expr (cast_succ_cast_lt i h).symm, "]"] [],
-      assume [binders (x y)],
-      rw ["[", expr init_update_cast_succ, ",", expr map_add, ",", expr init_update_cast_succ, ",", expr init_update_cast_succ, ",", expr linear_map.add_apply, "]"] [] },
-    { revert [ident x, ident y],
-      rw [expr eq_last_of_not_lt h] [],
-      assume [binders (x y)],
-      rw ["[", expr init_update_last, ",", expr init_update_last, ",", expr init_update_last, ",", expr update_same, ",", expr update_same, ",", expr update_same, ",", expr linear_map.map_add, "]"] [] }
-  end,
-  map_smul' := λ m i c x, begin
-    by_cases [expr h, ":", expr «expr < »(i.val, n)],
-    { have [] [":", expr «expr ≠ »(last n, i)] [":=", expr ne.symm (ne_of_lt h)],
-      rw ["[", expr update_noteq this, ",", expr update_noteq this, "]"] [],
-      revert [ident x],
-      rw ["[", expr (cast_succ_cast_lt i h).symm, "]"] [],
-      assume [binders (x)],
-      rw ["[", expr init_update_cast_succ, ",", expr init_update_cast_succ, ",", expr map_smul, ",", expr linear_map.smul_apply, "]"] [] },
-    { revert [ident x],
-      rw [expr eq_last_of_not_lt h] [],
-      assume [binders (x)],
-      rw ["[", expr update_same, ",", expr update_same, ",", expr init_update_last, ",", expr init_update_last, ",", expr linear_map.map_smul, "]"] [] }
-  end }
+def MultilinearMap.uncurryRight (f : MultilinearMap R (fun i : Finₓ n => M i.cast_succ) (M (last n) →ₗ[R] M₂)) :
+  MultilinearMap R M M₂ :=
+  { toFun := fun m => f (init m) (m (last n)),
+    map_add' :=
+      fun m i x y =>
+        by 
+          byCases' h : i.val < n
+          ·
+            have  : last n ≠ i := Ne.symm (ne_of_ltₓ h)
+            rw [update_noteq this, update_noteq this, update_noteq this]
+            revert x y 
+            rw [(cast_succ_cast_lt i h).symm]
+            intro x y 
+            rw [init_update_cast_succ, MultilinearMap.map_add, init_update_cast_succ, init_update_cast_succ,
+              LinearMap.add_apply]
+          ·
+            revert x y 
+            rw [eq_last_of_not_lt h]
+            intro x y 
+            rw [init_update_last, init_update_last, init_update_last, update_same, update_same, update_same,
+              LinearMap.map_add],
+    map_smul' :=
+      fun m i c x =>
+        by 
+          byCases' h : i.val < n
+          ·
+            have  : last n ≠ i := Ne.symm (ne_of_ltₓ h)
+            rw [update_noteq this, update_noteq this]
+            revert x 
+            rw [(cast_succ_cast_lt i h).symm]
+            intro x 
+            rw [init_update_cast_succ, init_update_cast_succ, map_smul, LinearMap.smul_apply]
+          ·
+            revert x 
+            rw [eq_last_of_not_lt h]
+            intro x 
+            rw [update_same, update_same, init_update_last, init_update_last, LinearMap.map_smul] }
 
 @[simp]
 theorem MultilinearMap.uncurry_right_apply
@@ -1328,8 +1419,8 @@ def uncurry_sum (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun 
       fun u i x y =>
         by 
           cases i <;>
-            simp only [map_add, add_apply, Sum.update_inl_comp_inl, Sum.update_inl_comp_inr, Sum.update_inr_comp_inl,
-              Sum.update_inr_comp_inr],
+            simp only [MultilinearMap.map_add, add_apply, Sum.update_inl_comp_inl, Sum.update_inl_comp_inr,
+              Sum.update_inr_comp_inl, Sum.update_inr_comp_inr],
     map_smul' :=
       fun u i c x =>
         by 
@@ -1376,11 +1467,11 @@ def curry_sum_equiv :
 variable {ι ι' R M₂ M'}
 
 @[simp]
-theorem coe_curry_sum_equiv : «expr⇑ » (curry_sum_equiv R ι M₂ M' ι') = curry_sum :=
+theorem coe_curry_sum_equiv : ⇑curry_sum_equiv R ι M₂ M' ι' = curry_sum :=
   rfl
 
 @[simp]
-theorem coe_curr_sum_equiv_symm : «expr⇑ » (curry_sum_equiv R ι M₂ M' ι').symm = uncurry_sum :=
+theorem coe_curr_sum_equiv_symm : ⇑(curry_sum_equiv R ι M₂ M' ι').symm = uncurry_sum :=
   rfl
 
 variable (R M₂ M')
@@ -1389,7 +1480,7 @@ variable (R M₂ M')
 `l`, then the space of multilinear maps on `λ i : fin n, M'` is isomorphic to the space of
 multilinear maps on `λ i : fin k, M'` taking values in the space of multilinear maps
 on `λ i : fin l, M'`. -/
-def curry_fin_finset {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l) :
+def curry_fin_finset {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : sᶜ.card = l) :
   MultilinearMap R (fun x : Finₓ n => M') M₂ ≃ₗ[R]
     MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂) :=
   (dom_dom_congr_linear_equiv M' M₂ R R (finSumEquivOfFinset hk hl).symm).trans
@@ -1398,13 +1489,13 @@ def curry_fin_finset {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl
 variable {R M₂ M'}
 
 @[simp]
-theorem curry_fin_finset_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
+theorem curry_fin_finset_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : sᶜ.card = l)
   (f : MultilinearMap R (fun x : Finₓ n => M') M₂) (mk : Finₓ k → M') (ml : Finₓ l → M') :
   curry_fin_finset R M₂ M' hk hl f mk ml = f fun i => Sum.elim mk ml ((finSumEquivOfFinset hk hl).symm i) :=
   rfl
 
 @[simp]
-theorem curry_fin_finset_symm_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
+theorem curry_fin_finset_symm_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : sᶜ.card = l)
   (f : MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂)) (m : Finₓ n → M') :
   (curry_fin_finset R M₂ M' hk hl).symm f m =
     f (fun i => m$ finSumEquivOfFinset hk hl (Sum.inl i)) fun i => m$ finSumEquivOfFinset hk hl (Sum.inr i) :=
@@ -1412,8 +1503,8 @@ theorem curry_fin_finset_symm_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : 
 
 @[simp]
 theorem curry_fin_finset_symm_apply_piecewise_const {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k)
-  (hl : («expr ᶜ» s).card = l)
-  (f : MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂)) (x y : M') :
+  (hl : sᶜ.card = l) (f : MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂))
+  (x y : M') :
   (curry_fin_finset R M₂ M' hk hl).symm f (s.piecewise (fun _ => x) fun _ => y) = f (fun _ => x) fun _ => y :=
   by 
     rw [curry_fin_finset_symm_apply]
@@ -1428,14 +1519,13 @@ theorem curry_fin_finset_symm_apply_piecewise_const {k l n : ℕ} {s : Finset (F
       exact Finset.mem_compl.1 (Finset.order_emb_of_fin_mem _ _ _)
 
 @[simp]
-theorem curry_fin_finset_symm_apply_const {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k)
-  (hl : («expr ᶜ» s).card = l)
+theorem curry_fin_finset_symm_apply_const {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : sᶜ.card = l)
   (f : MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂)) (x : M') :
   ((curry_fin_finset R M₂ M' hk hl).symm f fun _ => x) = f (fun _ => x) fun _ => x :=
   rfl
 
 @[simp]
-theorem curry_fin_finset_apply_const {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
+theorem curry_fin_finset_apply_const {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : sᶜ.card = l)
   (f : MultilinearMap R (fun x : Finₓ n => M') M₂) (x y : M') :
   (curry_fin_finset R M₂ M' hk hl f (fun _ => x) fun _ => y) = f (s.piecewise (fun _ => x) fun _ => y) :=
   by 
@@ -1453,24 +1543,31 @@ variable {R M M₂} [Ringₓ R] [∀ i, AddCommMonoidₓ (M₁ i)] [AddCommMonoi
 
 namespace MultilinearMap
 
-/-- The pushforward of an indexed collection of submodule `p i ⊆ M₁ i` by `f : M₁ → M₂`.
-
-Note that this is not a submodule - it is not closed under addition. -/
-def map [Nonempty ι] (f : MultilinearMap R M₁ M₂) (p : ∀ i, Submodule R (M₁ i)) : SubMulAction R M₂ :=
-  { Carrier := f '' { v | ∀ i, v i ∈ p i },
-    smul_mem' :=
-      fun c _ ⟨x, hx, hf⟩ =>
-        let ⟨i⟩ := ‹Nonempty ι›
-        by 
-          refine' ⟨update x i (c • x i), fun j => if hij : j = i then _ else _, hf ▸ _⟩
-          ·
-            rw [hij, update_same]
-            exact (p i).smul_mem _ (hx i)
-          ·
-            rw [update_noteq hij]
-            exact hx j
-          ·
-            rw [f.map_smul, update_eq_self] }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The pushforward of an indexed collection of submodule `p i ⊆ M₁ i` by `f : M₁ → M₂`.
+    
+    Note that this is not a submodule - it is not closed under addition. -/
+  def
+    map
+    [ Nonempty ι ] ( f : MultilinearMap R M₁ M₂ ) ( p : ∀ i , Submodule R M₁ i ) : SubMulAction R M₂
+    :=
+      {
+        Carrier := f '' { v | ∀ i , v i ∈ p i } ,
+          smul_mem'
+            :=
+            fun
+              c _ ⟨ x , hx , hf ⟩
+                =>
+                let
+                  ⟨ i ⟩ := ‹ Nonempty ι ›
+                  by
+                    refine' ⟨ update x i c • x i , fun j => if hij : j = i then _ else _ , hf ▸ _ ⟩
+                      · rw [ hij , update_same ] exact p i . smul_mem _ hx i
+                      · rw [ update_noteq hij ] exact hx j
+                      · rw [ f.map_smul , update_eq_self ]
+        }
 
 /-- The map is always nonempty. This lemma is needed to apply `sub_mul_action.zero_mem`. -/
 theorem map_nonempty [Nonempty ι] (f : MultilinearMap R M₁ M₂) (p : ∀ i, Submodule R (M₁ i)) :

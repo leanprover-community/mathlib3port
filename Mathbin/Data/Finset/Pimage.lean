@@ -36,9 +36,13 @@ theorem to_finset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {
   by 
     simp [to_finset]
 
-@[simp]
-theorem coe_to_finset (o : Part α) [Decidable o.dom] : (o.to_finset : Set α) = { x | x ∈ o } :=
-  Set.ext$ fun x => mem_to_finset
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    coe_to_finset
+    ( o : Part α ) [ Decidable o.dom ] : ( o.to_finset : Set α ) = { x | x ∈ o }
+    := Set.ext $ fun x => mem_to_finset
 
 end Part
 
@@ -50,6 +54,7 @@ variable [DecidableEq β] {f g : α →. β} [∀ x, Decidable (f x).Dom] [∀ x
 def pimage (f : α →. β) [∀ x, Decidable (f x).Dom] (s : Finset α) : Finset β :=
   s.bUnion fun x => (f x).toFinset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[simp]
 theorem mem_pimage : b ∈ s.pimage f ↔ ∃ (a : _)(_ : a ∈ s), b ∈ f a :=
   by 
@@ -66,13 +71,13 @@ theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some
     ext 
     simp [eq_comm]
 
--- error in Data.Finset.Pimage: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pimage_congr
-(h₁ : «expr = »(s, t))
-(h₂ : ∀ x «expr ∈ » t, «expr = »(f x, g x)) : «expr = »(s.pimage f, t.pimage g) :=
-by { subst [expr s],
-  ext [] [ident y] [],
-  simp [] [] [] ["[", expr h₂, "]"] [] [] { contextual := tt } }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  pimage_congr
+  ( h₁ : s = t ) ( h₂ : ∀ x _ : x ∈ t , f x = g x ) : s.pimage f = t.pimage g
+  := by subst s ext y simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ h₂ ]
 
 /-- Rewrite `s.pimage f` in terms of `finset.filter`, `finset.attach`, and `finset.image`. -/
 theorem pimage_eq_image_filter :
@@ -92,6 +97,8 @@ theorem pimage_empty : pimage f ∅ = ∅ :=
     ext 
     simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » f x)
 theorem pimage_subset {t : Finset β} : s.pimage f ⊆ t ↔ ∀ x _ : x ∈ s y _ : y ∈ f x, y ∈ t :=
   by 
     simp [subset_iff, @forall_swap _ β]

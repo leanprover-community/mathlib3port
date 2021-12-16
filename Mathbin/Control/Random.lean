@@ -1,6 +1,6 @@
 import Mathbin.Control.Monad.Basic 
 import Mathbin.Data.Int.Basic 
-import Mathbin.Data.Stream.Basic 
+import Mathbin.Data.Stream.Defs 
 import Mathbin.Control.Uliftable 
 import Mathbin.Tactic.NormNum 
 import Mathbin.Data.Bitvec.Basic
@@ -52,7 +52,7 @@ def Rand :=
   RandG StdGen
 
 instance (g : Type) : Uliftable (RandG.{u} g) (RandG.{v} g) :=
-  @StateTₓ.uliftable' _ _ _ _ _ (Equiv.ulift.trans Equiv.ulift.symm)
+  @StateTₓ.uliftable' _ _ _ _ _ (Equivₓ.ulift.trans Equivₓ.ulift.symm)
 
 open Ulift hiding Inhabited
 
@@ -285,15 +285,13 @@ def randomFinOfPos : ∀ {n : ℕ} h : 0 < n, Random (Finₓ n)
 | succ n, _ => finRandom _
 | 0, h => False.elim (Nat.not_lt_zeroₓ _ h)
 
--- error in Control.Random: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat
-(x y : bool)
-(n : exprℕ()) : «expr ∈ »(n, «expr .. »(x.to_nat, y.to_nat)) → «expr ∈ »(bool.of_nat n, «expr .. »(x, y)) :=
-begin
-  simp [] [] ["only"] ["[", expr and_imp, ",", expr set.mem_Icc, "]"] [] [],
-  intros [ident h₀, ident h₁],
-  split; [have [ident h₂] [] [":=", expr bool.of_nat_le_of_nat h₀], have [ident h₂] [] [":=", expr bool.of_nat_le_of_nat h₁]]; rw [expr bool.of_nat_to_nat] ["at", ident h₂]; exact [expr h₂]
-end
+theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
+  n ∈ (x.to_nat .. y.to_nat) → Bool.ofNat n ∈ (x .. y) :=
+  by 
+    simp only [and_imp, Set.mem_Icc]
+    intro h₀ h₁ 
+    constructor <;> [have h₂ := Bool.of_nat_le_of_nat h₀, have h₂ := Bool.of_nat_le_of_nat h₁] <;>
+      rw [Bool.of_nat_to_nat] at h₂ <;> exact h₂
 
 instance : Random Bool :=
   { Random := fun g inst => (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandom.randomR ℕ _ _ g inst 0 1 (Nat.zero_leₓ _) }
@@ -319,7 +317,7 @@ def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :
       replace h₀ := Bitvec.of_fin_le_of_fin_of_le h₀ 
       replace h₁ := Bitvec.of_fin_le_of_fin_of_le h₁ 
       rw [Bitvec.of_fin_to_fin] at h₀ h₁ 
-      split  <;> assumption 
+      constructor <;> assumption 
   Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.to_fin y.to_fin (Bitvec.to_fin_le_to_fin_of_le h)
 
 open Nat

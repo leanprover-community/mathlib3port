@@ -252,7 +252,7 @@ theorem dvd_iff_multiplicity_pos {a b : α} : (0 : Enat) < multiplicity a b ↔ 
       lt_of_le_of_neₓ (zero_le _)
         fun heq =>
           IsGreatest
-            (show multiplicity a b < «expr↑ » 1by 
+            (show multiplicity a b < ↑1by 
               simpa only [HEq, Nat.cast_zero] using enat.coe_lt_coe.mpr zero_lt_one)
             (by 
               rwa [pow_oneₓ a])⟩
@@ -385,9 +385,9 @@ theorem multiplicity_add_eq_min {p a b : α} (h : multiplicity p a ≠ multiplic
 
 end CommRingₓ
 
-section CommCancelMonoidWithZero
+section CancelCommMonoidWithZero
 
-variable [CommCancelMonoidWithZero α]
+variable [CancelCommMonoidWithZero α]
 
 theorem finite_mul_aux {p : α} (hp : Prime p) :
   ∀ {n m : ℕ} {a b : α}, ¬(p ^ n+1) ∣ a → ¬(p ^ m+1) ∣ b → ¬(p ^ (n+m)+1) ∣ a*b
@@ -542,7 +542,7 @@ protected theorem mul {p a b : α} (hp : Prime p) : multiplicity p (a*b) = multi
       cases' not_and_distrib.1 h with h h <;> simp [eq_top_iff_not_finite.2 h]
 
 theorem Finset.prod {β : Type _} {p : α} (hp : Prime p) (s : Finset β) (f : β → α) :
-  multiplicity p (∏x in s, f x) = ∑x in s, multiplicity p (f x) :=
+  multiplicity p (∏ x in s, f x) = ∑ x in s, multiplicity p (f x) :=
   by 
     classical 
     induction' s using Finset.induction with a s has ih h
@@ -583,7 +583,7 @@ theorem multiplicity_pow_self {p : α} (h0 : p ≠ 0) (hu : ¬IsUnit p) (n : ℕ
 theorem multiplicity_pow_self_of_prime {p : α} (hp : Prime p) (n : ℕ) : multiplicity p (p ^ n) = n :=
   multiplicity_pow_self hp.ne_zero hp.not_unit n
 
-end CommCancelMonoidWithZero
+end CancelCommMonoidWithZero
 
 section Valuation
 
@@ -606,20 +606,15 @@ section Nat
 
 open multiplicity
 
--- error in RingTheory.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem multiplicity_eq_zero_of_coprime
-{p a b : exprℕ()}
-(hp : «expr ≠ »(p, 1))
-(hle : «expr ≤ »(multiplicity p a, multiplicity p b))
-(hab : nat.coprime a b) : «expr = »(multiplicity p a, 0) :=
-begin
-  rw ["[", expr multiplicity_le_multiplicity_iff, "]"] ["at", ident hle],
-  rw ["[", "<-", expr nonpos_iff_eq_zero, ",", "<-", expr not_lt, ",", expr enat.pos_iff_one_le, ",", "<-", expr nat.cast_one, ",", "<-", expr pow_dvd_iff_le_multiplicity, "]"] [],
-  assume [binders (h)],
-  have [] [] [":=", expr nat.dvd_gcd h (hle _ h)],
-  rw ["[", expr coprime.gcd_eq_one hab, ",", expr nat.dvd_one, ",", expr pow_one, "]"] ["at", ident this],
-  exact [expr hp this]
-end
+theorem multiplicity_eq_zero_of_coprime {p a b : ℕ} (hp : p ≠ 1) (hle : multiplicity p a ≤ multiplicity p b)
+  (hab : Nat.Coprime a b) : multiplicity p a = 0 :=
+  by 
+    rw [multiplicity_le_multiplicity_iff] at hle 
+    rw [←nonpos_iff_eq_zero, ←not_ltₓ, Enat.pos_iff_one_le, ←Nat.cast_one, ←pow_dvd_iff_le_multiplicity]
+    intro h 
+    have  := Nat.dvd_gcdₓ h (hle _ h)
+    rw [coprime.gcd_eq_one hab, Nat.dvd_one, pow_oneₓ] at this 
+    exact hp this
 
 end Nat
 

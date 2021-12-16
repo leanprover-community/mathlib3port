@@ -109,12 +109,14 @@ end Linexp
 /-! ### Inequalities -/
 
 
--- error in Tactic.Linarith.Datatypes: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The three-element type `ineq` is used to represent the strength of a comparison between
-terms. -/ @[derive #[expr decidable_eq], derive #[expr inhabited]] inductive ineq : Type
-| eq
-| le
-| lt
+terms. -/
+inductive ineq : Type
+  | Eq
+  | le
+  | lt deriving [anonymous], [anonymous]
 
 namespace Ineq
 
@@ -161,14 +163,17 @@ end Ineq
 /-! ### Comparisons with 0 -/
 
 
--- error in Tactic.Linarith.Datatypes: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 The main datatype for FM elimination.
 Variables are represented by natural numbers, each of which has an integer coefficient.
 Index 0 is reserved for constants, i.e. `coeffs.find 0` is the coefficient of 1.
 The represented term is `coeffs.sum (λ ⟨k, v⟩, v * Var[k])`.
 str determines the strength of the comparison -- is it < 0, ≤ 0, or = 0?
--/ @[derive #[expr inhabited]] structure comp : Type := (str : ineq) (coeffs : linexp)
+-/
+structure comp : Type where 
+  str : ineq 
+  coeffs : linexp deriving [anonymous]
 
 /-- `c.vars` returns the list of variables that appear in the linear expression contained in `c`. -/
 def comp.vars : comp → List ℕ :=
@@ -309,6 +314,7 @@ The default `certificate_oracle` used by `linarith` is
 unsafe def certificate_oracle : Type :=
   List comp → ℕ → tactic (rb_map ℕ ℕ)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- A configuration object for `linarith`. -/
 unsafe structure linarith_config : Type where 
   discharger : tactic Unit := sorry 
@@ -323,6 +329,7 @@ unsafe structure linarith_config : Type where
   preprocessors : Option (List global_branching_preprocessor) := none 
   oracle : Option certificate_oracle := none
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
@@ -364,6 +371,7 @@ unsafe def parse_into_comp_and_expr : expr → Option (ineq × expr)
 | quote.1 ((%%ₓe) = 0) => (ineq.eq, e)
 | _ => none
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.
 It produces a pair `(R', h')`, where `h'` is a proof of `c*t R' 0`.

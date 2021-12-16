@@ -24,7 +24,7 @@ theorem epi_iff_surjective {X Y : Top.{u}} (f : X ⟶ Y) : epi f ↔ Function.Su
     ·
       rw [this, CategoryTheory.epi_iff_surjective]
       rfl 
-    split 
+    constructor
     ·
       apply left_adjoint_preserves_epi adj₂
     ·
@@ -36,7 +36,7 @@ theorem mono_iff_injective {X Y : Top.{u}} (f : X ⟶ Y) : mono f ↔ Function.I
     ·
       rw [this, CategoryTheory.mono_iff_injective]
       rfl 
-    split 
+    constructor
     ·
       apply right_adjoint_preserves_mono adj₁
     ·

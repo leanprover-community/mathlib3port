@@ -14,11 +14,10 @@ relation, `functor_map_eq_iff` says that no unnecessary identifications have bee
 -/
 
 
--- error in CategoryTheory.Quotient: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- A `hom_rel` on `C` consists of a relation on every hom-set. -/
-@[derive #[expr inhabited]]
-def hom_rel (C) [quiver C] :=
-∀ {{X Y : C}}, «expr ⟶ »(X, Y) → «expr ⟶ »(X, Y) → exprProp()
+def HomRel C [Quiver C] :=
+  ∀ ⦃X Y : C⦄, (X ⟶ Y) → (X ⟶ Y) → Prop deriving [anonymous]
 
 namespace CategoryTheory
 
@@ -110,7 +109,7 @@ protected theorem sound {a b : C} {f₁ f₂ : a ⟶ b} (h : r f₁ f₂) : (Fun
 
 theorem functor_map_eq_iff [congruence r] {X Y : C} (f f' : X ⟶ Y) : (Functor r).map f = (Functor r).map f' ↔ r f f' :=
   by 
-    split 
+    constructor
     ·
       erw [Quot.eq]
       intro h 

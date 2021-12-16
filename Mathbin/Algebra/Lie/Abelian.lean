@@ -105,21 +105,20 @@ protected theorem mem_ker (x : L) : x ∈ LieModule.ker R L M ↔ ∀ m : M, ⁅
   by 
     simp only [LieModule.ker, LieHom.mem_ker, LinearMap.ext_iff, LinearMap.zero_apply, to_endomorphism_apply_apply]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The largest submodule of a Lie module `M` on which the Lie algebra `L` acts trivially. -/
-def max_triv_submodule : LieSubmodule R L M :=
-  { Carrier := { m | ∀ x : L, ⁅x,m⁆ = 0 }, zero_mem' := fun x => lie_zero x,
-    add_mem' :=
-      fun x y hx hy z =>
-        by 
-          rw [lie_add, hx, hy, add_zeroₓ],
-    smul_mem' :=
-      fun c x hx y =>
-        by 
-          rw [lie_smul, hx, smul_zero],
-    lie_mem :=
-      fun x m hm y =>
-        by 
-          rw [hm, lie_zero] }
+  def
+    max_triv_submodule
+    : LieSubmodule R L M
+    :=
+      {
+        Carrier := { m | ∀ x : L , ⁅ x , m ⁆ = 0 } ,
+          zero_mem' := fun x => lie_zero x ,
+          add_mem' := fun x y hx hy z => by rw [ lie_add , hx , hy , add_zeroₓ ] ,
+          smul_mem' := fun c x hx y => by rw [ lie_smul , hx , smul_zero ] ,
+          lie_mem := fun x m hm y => by rw [ hm , lie_zero ]
+        }
 
 @[simp]
 theorem mem_max_triv_submodule (m : M) : m ∈ max_triv_submodule R L M ↔ ∀ x : L, ⁅x,m⁆ = 0 :=
@@ -134,7 +133,7 @@ theorem trivial_iff_le_maximal_trivial (N : LieSubmodule R L M) : is_trivial L N
 
 theorem is_trivial_iff_max_triv_eq_top : is_trivial L M ↔ max_triv_submodule R L M = ⊤ :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨h⟩
       ext 
@@ -189,8 +188,7 @@ def max_triv_equiv (e : M ≃ₗ⁅R,L⁆ N) : max_triv_submodule R L M ≃ₗ�
           simp  }
 
 @[normCast, simp]
-theorem coe_max_triv_equiv_apply (e : M ≃ₗ⁅R,L⁆ N) (m : max_triv_submodule R L M) :
-  (max_triv_equiv e m : N) = e («expr↑ » m) :=
+theorem coe_max_triv_equiv_apply (e : M ≃ₗ⁅R,L⁆ N) (m : max_triv_submodule R L M) : (max_triv_equiv e m : N) = e (↑m) :=
   rfl
 
 @[simp]
@@ -203,23 +201,45 @@ theorem max_triv_equiv_of_refl_eq_refl : max_triv_equiv (LieModuleEquiv.refl : M
 theorem max_triv_equiv_of_equiv_symm_eq_symm (e : M ≃ₗ⁅R,L⁆ N) : (max_triv_equiv e).symm = max_triv_equiv e.symm :=
   rfl
 
--- error in Algebra.Lie.Abelian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A linear map between two Lie modules is a morphism of Lie modules iff the Lie algebra action
 on it is trivial. -/
-def max_triv_linear_map_equiv_lie_module_hom : «expr ≃ₗ[ ] »(max_triv_submodule R L «expr →ₗ[ ] »(M, R, N), R, «expr →ₗ⁅ , ⁆ »(M, R, L, N)) :=
-{ to_fun := λ
-  f, { to_linear_map := f.val,
-    map_lie' := λ x m, by { have [ident hf] [":", expr «expr = »(«expr⁅ , ⁆»(x, f.val) m, 0)] [],
-      { rw ["[", expr f.property x, ",", expr linear_map.zero_apply, "]"] [] },
-      rw ["[", expr lie_hom.lie_apply, ",", expr sub_eq_zero, ",", "<-", expr linear_map.to_fun_eq_coe, "]"] ["at", ident hf],
-      exact [expr hf.symm] } },
-  map_add' := λ f g, by { ext [] [] [],
-    simp [] [] [] [] [] [] },
-  map_smul' := λ F G, by { ext [] [] [],
-    simp [] [] [] [] [] [] },
-  inv_fun := λ F, ⟨F, λ x, by { ext [] [] [], simp [] [] [] [] [] [] }⟩,
-  left_inv := λ f, by simp [] [] [] [] [] [],
-  right_inv := λ F, by simp [] [] [] [] [] [] }
+def max_triv_linear_map_equiv_lie_module_hom : max_triv_submodule R L (M →ₗ[R] N) ≃ₗ[R] M →ₗ⁅R,L⁆ N :=
+  { toFun :=
+      fun f =>
+        { toLinearMap := f.val,
+          map_lie' :=
+            fun x m =>
+              by 
+                have hf : ⁅x,f.val⁆ m = 0
+                ·
+                  rw [f.property x, LinearMap.zero_apply]
+                rw [LieHom.lie_apply, sub_eq_zero, ←LinearMap.to_fun_eq_coe] at hf 
+                exact hf.symm },
+    map_add' :=
+      fun f g =>
+        by 
+          ext 
+          simp ,
+    map_smul' :=
+      fun F G =>
+        by 
+          ext 
+          simp ,
+    invFun :=
+      fun F =>
+        ⟨F,
+          fun x =>
+            by 
+              ext 
+              simp ⟩,
+    left_inv :=
+      fun f =>
+        by 
+          simp ,
+    right_inv :=
+      fun F =>
+        by 
+          simp  }
 
 @[simp]
 theorem coe_max_triv_linear_map_equiv_lie_module_hom (f : max_triv_submodule R L (M →ₗ[R] N)) :
@@ -268,12 +288,10 @@ theorem self_module_ker_eq_center : LieModule.ker R L L = center R L :=
     ext y 
     simp only [LieModule.mem_max_triv_submodule, LieModule.mem_ker, ←lie_skew _ y, neg_eq_zero]
 
--- error in Algebra.Lie.Abelian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem abelian_of_le_center (I : lie_ideal R L) (h : «expr ≤ »(I, center R L)) : is_lie_abelian I :=
-begin
-  haveI [] [":", expr lie_module.is_trivial L I] [":=", expr (lie_module.trivial_iff_le_maximal_trivial R L L I).mpr h],
-  exact [expr lie_ideal.is_lie_abelian_of_trivial R L I]
-end
+theorem abelian_of_le_center (I : LieIdeal R L) (h : I ≤ center R L) : IsLieAbelian I :=
+  by 
+    have  : LieModule.IsTrivial L I := (LieModule.trivial_iff_le_maximal_trivial R L L I).mpr h 
+    exact LieIdeal.is_lie_abelian_of_trivial R L I
 
 theorem is_lie_abelian_iff_center_eq_top : IsLieAbelian L ↔ center R L = ⊤ :=
   LieModule.is_trivial_iff_max_triv_eq_top R L L

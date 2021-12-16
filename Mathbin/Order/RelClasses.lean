@@ -322,12 +322,11 @@ instance (priority := 100) IsWellOrder.is_asymm {α} (r : α → α → Prop) [I
   by 
     infer_instance
 
--- error in Order.RelClasses: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a decidable linear order from a well-founded linear order. -/
-noncomputable
-def is_well_order.linear_order (r : α → α → exprProp()) [is_well_order α r] : linear_order α :=
-by { letI [] [] [":=", expr λ x y, classical.dec «expr¬ »(r x y)],
-  exact [expr linear_order_of_STO' r] }
+noncomputable def IsWellOrder.linearOrder (r : α → α → Prop) [IsWellOrder α r] : LinearOrderₓ α :=
+  by 
+    let this' := fun x y => Classical.dec ¬r x y 
+    exact linearOrderOfSTO' r
 
 instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRelation :=
   { trichotomous := fun a b => Or.inr$ Or.inl$ Subsingleton.elimₓ _ _, irrefl := fun a => id,
@@ -381,10 +380,12 @@ instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOr
             exact Prod.Lex.right _ (trans ab bc),
     wf := Prod.lex_wf IsWellOrder.wf IsWellOrder.wf }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 /-- An unbounded or cofinal set -/
 def Unbounded (r : α → α → Prop) (s : Set α) : Prop :=
   ∀ a, ∃ (b : _)(_ : b ∈ s), ¬r b a
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 /-- A bounded or final set -/
 def Bounded (r : α → α → Prop) (s : Set α) : Prop :=
   ∃ a, ∀ b _ : b ∈ s, r b a

@@ -207,7 +207,7 @@ end GradedObject
 
 namespace GradedObject
 
-noncomputable theory
+noncomputable section 
 
 variable (β : Type)
 

@@ -468,7 +468,7 @@ def permutations_aux2 (t : α) (ts : List α) (r : List β) : List α → (List 
   let (us, zs) := permutations_aux2 ys fun x : List α => f (y :: x)
   (y :: us, f (t :: y :: us) :: zs)
 
-private def meas : (Σ'_ : List α, List α) → ℕ × ℕ
+private def meas : (Σ' _ : List α, List α) → ℕ × ℕ
 | ⟨l, i⟩ => (length l+length i, length l)
 
 local infixl:50 " ≺ " => InvImage (Prod.Lex (· < ·) (· < ·)) meas
@@ -561,7 +561,7 @@ def product (l₁ : List α) (l₂ : List β) : List (α × β) :=
 /-- `sigma l₁ l₂` is the list of dependent pairs `(a, b)` where `a ∈ l₁` and `b ∈ l₂ a`.
 
      sigma [1, 2] (λ_, [(5 : ℕ), 6]) = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
-protected def Sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σa, σ a) :=
+protected def Sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σ a, σ a) :=
   l₁.bind$ fun a => (l₂ a).map$ Sigma.mk a
 
 /-- Auxliary definition used to define `of_fn`.
@@ -589,6 +589,7 @@ section Pairwise
 
 variable (R : α → α → Prop)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a' «expr ∈ » l)
 /-- `pairwise R l` means that all the elements with earlier indexes are
   `R`-related to all the elements with later indexes.
 
@@ -602,6 +603,7 @@ inductive pairwise : List α → Prop
 
 variable {R}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a' «expr ∈ » l)
 @[simp]
 theorem pairwise_cons {a : α} {l : List α} : pairwise R (a :: l) ↔ (∀ a' _ : a' ∈ l, R a a') ∧ pairwise R l :=
   ⟨fun p =>
@@ -617,6 +619,7 @@ instance decidable_pairwise [DecidableRel R] (l : List α) : Decidable (pairwise
 
 end Pairwise
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » IH)
 /-- `pw_filter R l` is a maximal sublist of `l` which is `pairwise R`.
   `pw_filter (≠)` is the erase duplicates function (cf. `erase_dup`), and `pw_filter (<)` finds
   a maximal increasing subsequence in `l`. For example,

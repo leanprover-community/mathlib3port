@@ -18,30 +18,43 @@ open Subgroup
 
 variable {G G' : Type _} [Groupₓ G] [Groupₓ G'] {f : G →* G'}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The commutator of two subgroups `H₁` and `H₂`. -/
-instance generalCommutator : HasBracket (Subgroup G) (Subgroup G) :=
-  ⟨fun H₁ H₂ => closure { x | ∃ (p : _)(_ : p ∈ H₁)(q : _)(_ : q ∈ H₂), (((p*q)*p⁻¹)*q⁻¹) = x }⟩
+  instance
+    generalCommutator
+    : HasBracket Subgroup G Subgroup G
+    := ⟨ fun H₁ H₂ => closure { x | ∃ ( p : _ ) ( _ : p ∈ H₁ ) ( q : _ ) ( _ : q ∈ H₂ ) , p * q * p ⁻¹ * q ⁻¹ = x } ⟩
 
-theorem general_commutator_def (H₁ H₂ : Subgroup G) :
-  ⁅H₁,H₂⁆ = closure { x | ∃ (p : _)(_ : p ∈ H₁)(q : _)(_ : q ∈ H₂), (((p*q)*p⁻¹)*q⁻¹) = x } :=
-  rfl
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  general_commutator_def
+  ( H₁ H₂ : Subgroup G )
+    : ⁅ H₁ , H₂ ⁆ = closure { x | ∃ ( p : _ ) ( _ : p ∈ H₁ ) ( q : _ ) ( _ : q ∈ H₂ ) , p * q * p ⁻¹ * q ⁻¹ = x }
+  := rfl
 
-instance general_commutator_normal (H₁ H₂ : Subgroup G) [h₁ : H₁.normal] [h₂ : H₂.normal] : normal ⁅H₁,H₂⁆ :=
-  by 
-    let base : Set G := { x | ∃ (p : _)(_ : p ∈ H₁)(q : _)(_ : q ∈ H₂), (((p*q)*p⁻¹)*q⁻¹) = x }
-    suffices h_base : base = Groupₓ.ConjugatesOfSet base
-    ·
-      dsimp only [general_commutator_def, ←base]
-      rw [h_base]
-      exact Subgroup.normal_closure_normal 
-    apply Set.Subset.antisymm Groupₓ.subset_conjugates_of_set 
-    intro a h 
-    simpRw [Groupₓ.mem_conjugates_of_set_iff, is_conj_iff]  at h 
-    rcases h with ⟨b, ⟨c, hc, e, he, rfl⟩, d, rfl⟩
-    exact
-      ⟨(d*c)*d⁻¹, h₁.conj_mem c hc d, (d*e)*d⁻¹, h₂.conj_mem e he d,
-        by 
-          group⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  general_commutator_normal
+  ( H₁ H₂ : Subgroup G ) [ h₁ : H₁.normal ] [ h₂ : H₂.normal ] : normal ⁅ H₁ , H₂ ⁆
+  :=
+    by
+      let base : Set G := { x | ∃ ( p : _ ) ( _ : p ∈ H₁ ) ( q : _ ) ( _ : q ∈ H₂ ) , p * q * p ⁻¹ * q ⁻¹ = x }
+        suffices h_base : base = Groupₓ.ConjugatesOfSet base
+        · dsimp only [ general_commutator_def , ← base ] rw [ h_base ] exact Subgroup.normal_closure_normal
+        apply Set.Subset.antisymm Groupₓ.subset_conjugates_of_set
+        intro a h
+        simpRw [ Groupₓ.mem_conjugates_of_set_iff , is_conj_iff ] at h
+        rcases h with ⟨ b , ⟨ c , hc , e , he , rfl ⟩ , d , rfl ⟩
+        exact ⟨ d * c * d ⁻¹ , h₁.conj_mem c hc d , d * e * d ⁻¹ , h₂.conj_mem e he d , by group ⟩
 
 theorem general_commutator_mono {H₁ H₂ K₁ K₂ : Subgroup G} (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,H₂⁆ ≤ ⁅K₁,K₂⁆ :=
   by 
@@ -49,16 +62,23 @@ theorem general_commutator_mono {H₁ H₂ K₁ K₂ : Subgroup G} (h₁ : H₁ 
     rintro x ⟨p, hp, q, hq, rfl⟩
     exact ⟨p, h₁ hp, q, h₂ hq, rfl⟩
 
-theorem general_commutator_def' (H₁ H₂ : Subgroup G) [H₁.normal] [H₂.normal] :
-  ⁅H₁,H₂⁆ = normal_closure { x | ∃ (p : _)(_ : p ∈ H₁)(q : _)(_ : q ∈ H₂), (((p*q)*p⁻¹)*q⁻¹) = x } :=
-  by 
-    rw [←normal_closure_eq_self ⁅H₁,H₂⁆, general_commutator_def, normal_closure_closure_eq_normal_closure]
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  general_commutator_def'
+  ( H₁ H₂ : Subgroup G ) [ H₁.normal ] [ H₂.normal ]
+    : ⁅ H₁ , H₂ ⁆ = normal_closure { x | ∃ ( p : _ ) ( _ : p ∈ H₁ ) ( q : _ ) ( _ : q ∈ H₂ ) , p * q * p ⁻¹ * q ⁻¹ = x }
+  := by rw [ ← normal_closure_eq_self ⁅ H₁ , H₂ ⁆ , general_commutator_def , normal_closure_closure_eq_normal_closure ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
 theorem general_commutator_le (H₁ H₂ : Subgroup G) (K : Subgroup G) :
   ⁅H₁,H₂⁆ ≤ K ↔ ∀ p _ : p ∈ H₁ q _ : q ∈ H₂, (((p*q)*p⁻¹)*q⁻¹) ∈ K :=
   by 
     rw [generalCommutator, closure_le]
-    split 
+    constructor
     ·
       intro h p hp q hq 
       exact h ⟨p, hp, q, hq, rfl⟩
@@ -70,18 +90,21 @@ theorem general_commutator_containment (H₁ H₂ : Subgroup G) {p q : G} (hp : 
   (((p*q)*p⁻¹)*q⁻¹) ∈ ⁅H₁,H₂⁆ :=
   (general_commutator_le H₁ H₂ ⁅H₁,H₂⁆).mp (le_reflₓ ⁅H₁,H₂⁆) p hp q hq
 
--- error in GroupTheory.GeneralCommutator: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem general_commutator_comm (H₁ H₂ : subgroup G) : «expr = »(«expr⁅ , ⁆»(H₁, H₂), «expr⁅ , ⁆»(H₂, H₁)) :=
-begin
-  suffices [] [":", expr ∀ H₁ H₂ : subgroup G, «expr ≤ »(«expr⁅ , ⁆»(H₁, H₂), «expr⁅ , ⁆»(H₂, H₁))],
-  { exact [expr le_antisymm (this _ _) (this _ _)] },
-  intros [ident H₁, ident H₂],
-  rw [expr general_commutator_le] [],
-  intros [ident p, ident hp, ident q, ident hq],
-  have [ident h] [":", expr «expr ∈ »(«expr ⁻¹»(«expr * »(«expr * »(«expr * »(p, q), «expr ⁻¹»(p)), «expr ⁻¹»(q))), «expr⁅ , ⁆»(H₂, H₁))] [":=", expr subset_closure ⟨q, hq, p, hp, by group []⟩],
-  convert [] [expr inv_mem «expr⁅ , ⁆»(H₂, H₁) h] [],
-  group []
-end
+theorem general_commutator_comm (H₁ H₂ : Subgroup G) : ⁅H₁,H₂⁆ = ⁅H₂,H₁⁆ :=
+  by 
+    suffices  : ∀ H₁ H₂ : Subgroup G, ⁅H₁,H₂⁆ ≤ ⁅H₂,H₁⁆
+    ·
+      exact le_antisymmₓ (this _ _) (this _ _)
+    intro H₁ H₂ 
+    rw [general_commutator_le]
+    intro p hp q hq 
+    have h : (((p*q)*p⁻¹)*q⁻¹)⁻¹ ∈ ⁅H₂,H₁⁆ :=
+      subset_closure
+        ⟨q, hq, p, hp,
+          by 
+            group⟩
+    convert inv_mem ⁅H₂,H₁⁆ h 
+    group
 
 theorem general_commutator_le_right (H₁ H₂ : Subgroup G) [h : normal H₂] : ⁅H₁,H₂⁆ ≤ H₂ :=
   by 

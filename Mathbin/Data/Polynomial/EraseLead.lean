@@ -13,7 +13,7 @@ and thus works for polynomials over semirings as well as rings.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 

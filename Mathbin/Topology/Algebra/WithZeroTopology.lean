@@ -37,12 +37,14 @@ namespace LinearOrderedCommGroupWithZero
 
 variable (Γ₀ : Type _) [LinearOrderedCommGroupWithZero Γ₀]
 
-/-- The neighbourhoods around γ ∈ Γ₀, used in the definition of the topology on Γ₀.
-These neighbourhoods are defined as follows:
-A set s is a neighbourhood of 0 if there is an invertible γ₀ ∈ Γ₀ such that {γ | γ < γ₀} ⊆ s.
-If γ ≠ 0, then every set that contains γ is a neighbourhood of γ. -/
-def nhds_fun (x : Γ₀) : Filter Γ₀ :=
-  if x = 0 then ⨅γ₀ : Units Γ₀, principal { γ | γ < γ₀ } else pure x
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The neighbourhoods around γ ∈ Γ₀, used in the definition of the topology on Γ₀.
+    These neighbourhoods are defined as follows:
+    A set s is a neighbourhood of 0 if there is an invertible γ₀ ∈ Γ₀ such that {γ | γ < γ₀} ⊆ s.
+    If γ ≠ 0, then every set that contains γ is a neighbourhood of γ. -/
+  def nhds_fun ( x : Γ₀ ) : Filter Γ₀ := if x = 0 then ⨅ γ₀ : Units Γ₀ , principal { γ | γ < γ₀ } else pure x
 
 /-- The topology on a linearly ordered commutative group with a zero element adjoined.
 A subset U is open if 0 ∉ U or if there is an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
@@ -53,15 +55,15 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 /-- The neighbourhoods {γ | γ < γ₀} of 0 form a directed set indexed by the invertible 
 elements γ₀. -/
-theorem directed_lt : Directed (· ≥ ·) fun γ₀ : Units Γ₀ => principal { γ:Γ₀ | γ < γ₀ } :=
+theorem directed_lt : Directed (· ≥ ·) fun γ₀ : Units Γ₀ => principal { γ : Γ₀ | γ < γ₀ } :=
   by 
     intro γ₁ γ₂ 
     use LinearOrderₓ.min γ₁ γ₂ <;> dsimp only 
-    split  <;> rw [ge_iff_le, principal_mono] <;> intro x x_in
+    constructor <;> rw [ge_iff_le, principal_mono] <;> intro x x_in
     ·
-      calc x < «expr↑ » (LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
+      calc x < ↑LinearOrderₓ.min γ₁ γ₂ := x_in _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
     ·
-      calc x < «expr↑ » (LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₂ := min_le_rightₓ γ₁ γ₂
+      calc x < ↑LinearOrderₓ.min γ₁ γ₂ := x_in _ ≤ γ₂ := min_le_rightₓ γ₁ γ₂
 
 /-- At all points of a linearly ordered commutative group with a zero element adjoined,
 the pure filter is smaller than the filter given by nhds_fun. -/
@@ -70,6 +72,8 @@ theorem pure_le_nhds_fun : pure ≤ nhds_fun Γ₀ :=
     by 
       byCases' hx : x = 0 <;> simp [hx, nhds_fun]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » nhds_fun Γ₀ x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- For every point Γ₀, and every “neighbourhood” s of it (described by nhds_fun), there is a
 smaller “neighbourhood” t ⊆ s, such that s is a “neighbourhood“ of all the points in t. -/
 theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhds_fun Γ₀ x) :
@@ -79,9 +83,9 @@ theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhds_fun Γ₀ x) :
     ·
       simp only [hx, nhds_fun, exists_prop, if_true, eq_self_iff_true] at s_in⊢
       cases' (mem_infi_of_directed (directed_lt Γ₀) _).mp s_in with γ₀ h 
-      use { γ:Γ₀ | γ < γ₀ }
+      use { γ : Γ₀ | γ < γ₀ }
       rw [mem_principal] at h 
-      split 
+      constructor
       ·
         apply mem_infi_of_mem γ₀ 
         rw [mem_principal]
@@ -128,7 +132,7 @@ theorem singleton_nhds_of_ne_zero (γ : Γ₀) (h : γ ≠ 0) : ({γ} : Set Γ�
 
 /-- If U is a neighbourhood of 0 in a linearly ordered group with zero element adjoined,
 then there exists an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
-theorem has_basis_nhds_zero : has_basis (𝓝 (0 : Γ₀)) (fun _ => True) fun γ₀ : Units Γ₀ => { γ:Γ₀ | γ < γ₀ } :=
+theorem has_basis_nhds_zero : has_basis (𝓝 (0 : Γ₀)) (fun _ => True) fun γ₀ : Units Γ₀ => { γ : Γ₀ | γ < γ₀ } :=
   ⟨by 
       intro U 
       rw [nhds_mk_of_nhds (nhds_fun Γ₀) 0 (pure_le_nhds_fun Γ₀) (nhds_fun_ok Γ₀)]
@@ -137,20 +141,20 @@ theorem has_basis_nhds_zero : has_basis (𝓝 (0 : Γ₀)) (fun _ => True) fun �
 
 /-- If γ is an invertible element of a linearly ordered group with zero element adjoined,
 then {x | x < γ} is a neighbourhood of 0. -/
-theorem nhds_zero_of_units (γ : Units Γ₀) : { x:Γ₀ | x < γ } ∈ 𝓝 (0 : Γ₀) :=
+theorem nhds_zero_of_units (γ : Units Γ₀) : { x : Γ₀ | x < γ } ∈ 𝓝 (0 : Γ₀) :=
   by 
     rw [has_basis_nhds_zero.mem_iff]
     use γ 
     simp 
 
 theorem tendsto_zero {α : Type _} {F : Filter α} {f : α → Γ₀} :
-  tendsto f F (𝓝 (0 : Γ₀)) ↔ ∀ γ₀ : Units Γ₀, { x:α | f x < γ₀ } ∈ F :=
+  tendsto f F (𝓝 (0 : Γ₀)) ↔ ∀ γ₀ : Units Γ₀, { x : α | f x < γ₀ } ∈ F :=
   by 
     simpa using has_basis_nhds_zero.tendsto_right_iff
 
 /-- If γ is a nonzero element of a linearly ordered group with zero element adjoined,
 then {x | x < γ} is a neighbourhood of 0. -/
-theorem nhds_zero_of_ne_zero (γ : Γ₀) (h : γ ≠ 0) : { x:Γ₀ | x < γ } ∈ 𝓝 (0 : Γ₀) :=
+theorem nhds_zero_of_ne_zero (γ : Γ₀) (h : γ ≠ 0) : { x : Γ₀ | x < γ } ∈ 𝓝 (0 : Γ₀) :=
   nhds_zero_of_units (Units.mk0 _ h)
 
 theorem has_basis_nhds_units (γ : Units Γ₀) : has_basis (𝓝 (γ : Γ₀)) (fun i : Unit => True) fun i => {γ} :=
@@ -162,128 +166,147 @@ theorem has_basis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) : has_basis (𝓝 x)
   has_basis_nhds_units (Units.mk0 x h)
 
 theorem tendsto_units {α : Type _} {F : Filter α} {f : α → Γ₀} {γ₀ : Units Γ₀} :
-  tendsto f F (𝓝 (γ₀ : Γ₀)) ↔ { x:α | f x = γ₀ } ∈ F :=
+  tendsto f F (𝓝 (γ₀ : Γ₀)) ↔ { x : α | f x = γ₀ } ∈ F :=
   by 
     rw [(has_basis_nhds_units γ₀).tendsto_right_iff]
     simpa
 
 theorem tendsto_of_ne_zero {α : Type _} {F : Filter α} {f : α → Γ₀} {γ : Γ₀} (h : γ ≠ 0) :
-  tendsto f F (𝓝 γ) ↔ { x:α | f x = γ } ∈ F :=
+  tendsto f F (𝓝 γ) ↔ { x : α | f x = γ } ∈ F :=
   @tendsto_units _ _ _ F f (Units.mk0 γ h)
 
 variable (Γ₀)
 
--- error in Topology.Algebra.WithZeroTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The topology on a linearly ordered group with zero element adjoined
-is compatible with the order structure. -/ @[priority 100] instance ordered_topology : order_closed_topology Γ₀ :=
-{ is_closed_le' := begin
-    rw ["<-", expr is_open_compl_iff] [],
-    show [expr is_open {p : «expr × »(Γ₀, Γ₀) | «expr¬ »(«expr ≤ »(p.fst, p.snd))}],
-    simp [] [] ["only"] ["[", expr not_le, "]"] [] [],
-    rw [expr is_open_iff_mem_nhds] [],
-    rintros ["⟨", ident a, ",", ident b, "⟩", ident hab],
-    change [expr «expr < »(b, a)] [] ["at", ident hab],
-    have [ident ha] [":", expr «expr ≠ »(a, 0)] [":=", expr ne_zero_of_lt hab],
-    rw ["[", expr nhds_prod_eq, ",", expr mem_prod_iff, "]"] [],
-    by_cases [expr hb, ":", expr «expr = »(b, 0)],
-    { subst [expr b],
-      use ["[", expr {a}, ",", expr singleton_nhds_of_ne_zero _ ha, ",", expr {x : Γ₀ | «expr < »(x, a)}, ",", expr nhds_zero_of_ne_zero _ ha, "]"],
-      intros [ident p, ident p_in],
-      cases [expr mem_prod.1 p_in] ["with", ident h1, ident h2],
-      rw [expr mem_singleton_iff] ["at", ident h1],
-      change [expr «expr < »(p.2, p.1)] [] [],
-      rwa [expr h1] [] },
-    { use ["[", expr {a}, ",", expr singleton_nhds_of_ne_zero _ ha, ",", expr {b}, ",", expr singleton_nhds_of_ne_zero _ hb, "]"],
-      intros [ident p, ident p_in],
-      cases [expr mem_prod.1 p_in] ["with", ident h1, ident h2],
-      rw [expr mem_singleton_iff] ["at", ident h1, ident h2],
-      change [expr «expr < »(p.2, p.1)] [] [],
-      rwa ["[", expr h1, ",", expr h2, "]"] [] }
-  end }
+is compatible with the order structure. -/
+instance (priority := 100) ordered_topology : OrderClosedTopology Γ₀ :=
+  { is_closed_le' :=
+      by 
+        rw [←is_open_compl_iff]
+        show IsOpen { p : Γ₀ × Γ₀ | ¬p.fst ≤ p.snd }
+        simp only [not_leₓ]
+        rw [is_open_iff_mem_nhds]
+        rintro ⟨a, b⟩ hab 
+        change b < a at hab 
+        have ha : a ≠ 0 := ne_zero_of_lt hab 
+        rw [nhds_prod_eq, mem_prod_iff]
+        byCases' hb : b = 0
+        ·
+          subst b 
+          use {a}, singleton_nhds_of_ne_zero _ ha, { x : Γ₀ | x < a }, nhds_zero_of_ne_zero _ ha 
+          intro p p_in 
+          cases' mem_prod.1 p_in with h1 h2 
+          rw [mem_singleton_iff] at h1 
+          change p.2 < p.1
+          rwa [h1]
+        ·
+          use {a}, singleton_nhds_of_ne_zero _ ha, {b}, singleton_nhds_of_ne_zero _ hb 
+          intro p p_in 
+          cases' mem_prod.1 p_in with h1 h2 
+          rw [mem_singleton_iff] at h1 h2 
+          change p.2 < p.1
+          rwa [h1, h2] }
 
--- error in Topology.Algebra.WithZeroTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The topology on a linearly ordered group with zero element adjoined is T₃ (aka regular). -/
-@[priority 100]
-instance regular_space : regular_space Γ₀ :=
-begin
-  haveI [] [":", expr t1_space Γ₀] [":=", expr t2_space.t1_space],
-  split,
-  intros [ident s, ident x, ident s_closed, ident x_not_in_s],
-  by_cases [expr hx, ":", expr «expr = »(x, 0)],
-  { refine [expr ⟨s, _, subset.rfl, _⟩],
-    { subst [expr x],
-      rw [expr is_open_iff_mem_nhds] [],
-      intros [ident y, ident hy],
-      by_cases [expr hy', ":", expr «expr = »(y, 0)],
-      { subst [expr y],
-        contradiction },
-      simpa [] [] [] ["[", expr hy', "]"] [] [] },
-    { erw [expr inf_eq_bot_iff] [],
-      use [expr «expr ᶜ»(s)],
-      simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_principal, "]"] [] [],
-      exact [expr ⟨s_closed.compl_mem_nhds x_not_in_s, ⟨s, subset.refl s, by simp [] [] [] [] [] []⟩⟩] } },
-  { simp [] [] ["only"] ["[", expr nhds_within, ",", expr inf_eq_bot_iff, ",", expr exists_prop, ",", expr mem_principal, "]"] [] [],
-    exact [expr ⟨«expr ᶜ»({x}), is_open_compl_iff.mpr is_closed_singleton, by rwa [expr subset_compl_singleton_iff] [], {x}, singleton_nhds_of_ne_zero x hx, «expr ᶜ»({x}), by simp [] [] [] ["[", expr subset.refl, "]"] [] []⟩] }
-end
+instance (priority := 100) RegularSpace : RegularSpace Γ₀ :=
+  by 
+    have  : T1Space Γ₀ := T2Space.t1_space 
+    constructor 
+    intro s x s_closed x_not_in_s 
+    byCases' hx : x = 0
+    ·
+      refine' ⟨s, _, subset.rfl, _⟩
+      ·
+        subst x 
+        rw [is_open_iff_mem_nhds]
+        intro y hy 
+        byCases' hy' : y = 0
+        ·
+          subst y 
+          contradiction 
+        simpa [hy']
+      ·
+        erw [inf_eq_bot_iff]
+        use sᶜ
+        simp only [exists_prop, mem_principal]
+        exact
+          ⟨s_closed.compl_mem_nhds x_not_in_s,
+            ⟨s, subset.refl s,
+              by 
+                simp ⟩⟩
+    ·
+      simp only [nhdsWithin, inf_eq_bot_iff, exists_prop, mem_principal]
+      exact
+        ⟨{x}ᶜ, is_open_compl_iff.mpr is_closed_singleton,
+          by 
+            rwa [subset_compl_singleton_iff],
+          {x}, singleton_nhds_of_ne_zero x hx, {x}ᶜ,
+          by 
+            simp [subset.refl]⟩
 
--- error in Topology.Algebra.WithZeroTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
-monoid. -/ @[priority 100] instance : has_continuous_mul Γ₀ :=
-⟨begin
-   have [ident common] [":", expr ∀
-    y «expr ≠ » (0 : Γ₀), continuous_at (λ p : «expr × »(Γ₀, Γ₀), «expr * »(p.fst, p.snd)) (0, y)] [],
-   { intros [ident y, ident hy],
-     set [] [ident γ] [] [":="] [expr units.mk0 y hy] [],
-     suffices [] [":", expr tendsto (λ
-       p : «expr × »(Γ₀, Γ₀), «expr * »(p.fst, p.snd)) ((expr𝓝() 0).prod (expr𝓝() γ)) (expr𝓝() 0)],
-     by simpa [] [] [] ["[", expr continuous_at, ",", expr nhds_prod_eq, "]"] [] [],
-     suffices [] [":", expr ∀
-      γ' : units Γ₀, «expr∃ , »((γ'' : units Γ₀), ∀
-       a b : Γ₀, «expr < »(a, γ'') → «expr = »(b, y) → «expr < »(«expr * »(a, b), γ'))],
-     { rw [expr «expr $ »(has_basis_nhds_zero.prod, has_basis_nhds_units γ).tendsto_iff has_basis_nhds_zero] [],
-       simpa [] [] [] [] [] [] },
-     intros [ident γ'],
-     use [expr «expr * »(«expr ⁻¹»(γ), γ')],
-     rintros [ident a, ident b, ident ha, ident hb],
-     rw ["[", expr hb, ",", expr mul_comm, "]"] [],
-     rw ["[", expr units.coe_mul, "]"] ["at", ident ha],
-     simpa [] [] [] [] [] ["using", expr inv_mul_lt_of_lt_mul₀ ha] },
-   rw [expr continuous_iff_continuous_at] [],
-   rintros ["⟨", ident x, ",", ident y, "⟩"],
-   by_cases [expr hx, ":", expr «expr = »(x, 0)]; by_cases [expr hy, ":", expr «expr = »(y, 0)],
-   { suffices [] [":", expr tendsto (λ p : «expr × »(Γ₀, Γ₀), «expr * »(p.fst, p.snd)) (expr𝓝() (0, 0)) (expr𝓝() 0)],
-     by simpa [] [] [] ["[", expr hx, ",", expr hy, ",", expr continuous_at, "]"] [] [],
-     suffices [] [":", expr ∀
-      γ : units Γ₀, «expr∃ , »((γ' : units Γ₀), ∀
-       a b : Γ₀, «expr < »(a, γ') → «expr < »(b, γ') → «expr < »(«expr * »(a, b), γ))],
-     by simpa [] [] [] ["[", expr nhds_prod_eq, ",", expr has_basis_nhds_zero.prod_self.tendsto_iff has_basis_nhds_zero, "]"] [] [],
-     intros [ident γ],
-     rcases [expr exists_square_le γ, "with", "⟨", ident γ', ",", ident h, "⟩"],
-     use [expr γ'],
-     intros [ident a, ident b, ident ha, ident hb],
-     calc
-       «expr < »(«expr * »(a, b), «expr * »(γ', γ')) : mul_lt_mul₀ ha hb
-       «expr ≤ »(..., γ) : by exact_mod_cast [expr h] },
-   { rw [expr hx] [],
-     exact [expr common y hy] },
-   { rw [expr hy] [],
-     have [] [":", expr «expr = »(λ
-       p : «expr × »(Γ₀, Γ₀), «expr * »(p.fst, p.snd), «expr ∘ »(λ
-        p : «expr × »(Γ₀, Γ₀), «expr * »(p.fst, p.snd), λ p : «expr × »(Γ₀, Γ₀), (p.2, p.1)))] [],
-     by { ext [] [] [],
-       rw ["[", expr mul_comm, "]"] [] },
-     rw [expr this] [],
-     apply [expr continuous_at.comp _ continuous_swap.continuous_at],
-     exact [expr common x hx] },
-   { change [expr tendsto _ _ _] [] [],
-     rw ["[", expr nhds_prod_eq, "]"] [],
-     rw [expr ((has_basis_nhds_of_ne_zero hx).prod (has_basis_nhds_of_ne_zero hy)).tendsto_iff «expr $ »(has_basis_nhds_of_ne_zero, mul_ne_zero hx hy)] [],
-     suffices [] [":", expr ∀
-      a b : Γ₀, «expr = »(a, x) → «expr = »(b, y) → «expr = »(«expr * »(a, b), «expr * »(x, y))],
-     by simpa [] [] [] [] [] [],
-     rintros [ident a, ident b, ident rfl, ident rfl],
-     refl }
- end⟩
+monoid. -/
+instance (priority := 100) : HasContinuousMul Γ₀ :=
+  ⟨by 
+      have common : ∀ y _ : y ≠ (0 : Γ₀), ContinuousAt (fun p : Γ₀ × Γ₀ => p.fst*p.snd) (0, y)
+      ·
+        intro y hy 
+        set γ := Units.mk0 y hy 
+        suffices  : tendsto (fun p : Γ₀ × Γ₀ => p.fst*p.snd) ((𝓝 0).Prod (𝓝 γ)) (𝓝 0)
+        ·
+          simpa [ContinuousAt, nhds_prod_eq]
+        suffices  : ∀ γ' : Units Γ₀, ∃ γ'' : Units Γ₀, ∀ a b : Γ₀, a < γ'' → b = y → (a*b) < γ'
+        ·
+          rw [(has_basis_nhds_zero.prod$ has_basis_nhds_units γ).tendsto_iff has_basis_nhds_zero]
+          simpa 
+        intro γ' 
+        use γ⁻¹*γ' 
+        rintro a b ha hb 
+        rw [hb, mul_commₓ]
+        rw [Units.coe_mul] at ha 
+        simpa using inv_mul_lt_of_lt_mul₀ ha 
+      rw [continuous_iff_continuous_at]
+      rintro ⟨x, y⟩
+      byCases' hx : x = 0 <;> byCases' hy : y = 0
+      ·
+        suffices  : tendsto (fun p : Γ₀ × Γ₀ => p.fst*p.snd) (𝓝 (0, 0)) (𝓝 0)
+        ·
+          simpa [hx, hy, ContinuousAt]
+        suffices  : ∀ γ : Units Γ₀, ∃ γ' : Units Γ₀, ∀ a b : Γ₀, a < γ' → b < γ' → (a*b) < γ
+        ·
+          simpa [nhds_prod_eq, has_basis_nhds_zero.prod_self.tendsto_iff has_basis_nhds_zero]
+        intro γ 
+        rcases exists_square_le γ with ⟨γ', h⟩
+        use γ' 
+        intro a b ha hb 
+        calc (a*b) < γ'*γ' := mul_lt_mul₀ ha hb _ ≤ γ :=
+          by 
+            exactModCast h
+      ·
+        rw [hx]
+        exact common y hy
+      ·
+        rw [hy]
+        have  : (fun p : Γ₀ × Γ₀ => p.fst*p.snd) = ((fun p : Γ₀ × Γ₀ => p.fst*p.snd) ∘ fun p : Γ₀ × Γ₀ => (p.2, p.1))
+        ·
+          ·
+            ext 
+            rw [mul_commₓ]
+        rw [this]
+        apply ContinuousAt.comp _ continuous_swap.continuous_at 
+        exact common x hx
+      ·
+        change tendsto _ _ _ 
+        rw [nhds_prod_eq]
+        rw
+          [((has_basis_nhds_of_ne_zero hx).Prod (has_basis_nhds_of_ne_zero hy)).tendsto_iff
+            (has_basis_nhds_of_ne_zero$ mul_ne_zero hx hy)]
+        suffices  : ∀ a b : Γ₀, a = x → b = y → (a*b) = x*y
+        ·
+          simpa 
+        rintro a b rfl rfl 
+        rfl⟩
 
 end LinearOrderedCommGroupWithZero
 

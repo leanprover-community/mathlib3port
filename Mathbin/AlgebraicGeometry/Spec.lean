@@ -30,7 +30,7 @@ TODO: provide the unit, and prove the triangle identities.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u v
 
@@ -66,7 +66,7 @@ theorem Spec.Top_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
 The spectrum, as a contravariant functor from commutative rings to topological spaces.
 -/
 @[simps]
-def Spec.to_Top : «expr ᵒᵖ» CommRingₓₓ ⥤ Top :=
+def Spec.to_Top : CommRingₓₓᵒᵖ ⥤ Top :=
   { obj := fun R => Spec.Top_obj (unop R), map := fun R S f => Spec.Top_map f.unop,
     map_id' :=
       fun R =>
@@ -116,6 +116,7 @@ theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S
         fun U =>
           by 
             dsimp 
+            rw [CategoryTheory.Functor.map_id]
             rw [category.comp_id]
             erw [comap_comp f g]
             rfl
@@ -124,7 +125,7 @@ theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S
 Spec, as a contravariant functor from commutative rings to sheafed spaces.
 -/
 @[simps]
-def Spec.to_SheafedSpace : «expr ᵒᵖ» CommRingₓₓ ⥤ SheafedSpace CommRingₓₓ :=
+def Spec.to_SheafedSpace : CommRingₓₓᵒᵖ ⥤ SheafedSpace CommRingₓₓ :=
   { obj := fun R => Spec.SheafedSpace_obj (unop R), map := fun R S f => Spec.SheafedSpace_map f.unop,
     map_id' :=
       fun R =>
@@ -138,11 +139,11 @@ def Spec.to_SheafedSpace : «expr ᵒᵖ» CommRingₓₓ ⥤ SheafedSpace CommR
 /--
 Spec, as a contravariant functor from commutative rings to presheafed spaces.
 -/
-def Spec.to_PresheafedSpace : «expr ᵒᵖ» CommRingₓₓ ⥤ PresheafedSpace CommRingₓₓ :=
+def Spec.to_PresheafedSpace : CommRingₓₓᵒᵖ ⥤ PresheafedSpace CommRingₓₓ :=
   Spec.to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace
 
 @[simp]
-theorem Spec.to_PresheafedSpace_obj (R : «expr ᵒᵖ» CommRingₓₓ) :
+theorem Spec.to_PresheafedSpace_obj (R : CommRingₓₓᵒᵖ) :
   Spec.to_PresheafedSpace.obj R = (Spec.SheafedSpace_obj (unop R)).toPresheafedSpace :=
   rfl
 
@@ -151,7 +152,7 @@ theorem Spec.to_PresheafedSpace_obj_op (R : CommRingₓₓ) :
   rfl
 
 @[simp]
-theorem Spec.to_PresheafedSpace_map (R S : «expr ᵒᵖ» CommRingₓₓ) (f : R ⟶ S) :
+theorem Spec.to_PresheafedSpace_map (R S : CommRingₓₓᵒᵖ) (f : R ⟶ S) :
   Spec.to_PresheafedSpace.map f = Spec.SheafedSpace_map f.unop :=
   rfl
 
@@ -237,7 +238,7 @@ theorem Spec.LocallyRingedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) 
 Spec, as a contravariant functor from commutative rings to locally ringed spaces.
 -/
 @[simps]
-def Spec.to_LocallyRingedSpace : «expr ᵒᵖ» CommRingₓₓ ⥤ LocallyRingedSpace :=
+def Spec.to_LocallyRingedSpace : CommRingₓₓᵒᵖ ⥤ LocallyRingedSpace :=
   { obj := fun R => Spec.LocallyRingedSpace_obj (unop R), map := fun R S f => Spec.LocallyRingedSpace_map f.unop,
     map_id' :=
       fun R =>
@@ -275,6 +276,23 @@ def Spec_Γ_identity : Spec.to_LocallyRingedSpace.rightOp ⋙ Γ ≅ 𝟭 _ :=
   iso.symm$ nat_iso.of_components (fun R => as_iso (to_Spec_Γ R) : _) fun _ _ => Spec_Γ_naturality
 
 end SpecΓ
+
+/-- The stalk map of `Spec M⁻¹R ⟶ Spec R` is an iso for each `p : Spec M⁻¹R`. -/
+theorem Spec_map_localization_is_iso (R : CommRingₓₓ) (M : Submonoid R) (x : PrimeSpectrum (Localization M)) :
+  is_iso
+    (PresheafedSpace.stalk_map (Spec.to_PresheafedSpace.map (CommRingₓₓ.ofHom (algebraMap R (Localization M))).op) x) :=
+  by 
+    erw [←local_ring_hom_comp_stalk_iso]
+    apply is_iso.comp_is_iso with { instances := ff }
+    infer_instance 
+    apply is_iso.comp_is_iso with { instances := ff }
+    exact
+      show
+        is_iso
+          (IsLocalization.localizationLocalizationAtPrimeIsoLocalization M x.as_ideal).toRingEquiv.toCommRingIso.Hom by
+        
+        infer_instance 
+    infer_instance
 
 end AlgebraicGeometry
 

@@ -18,7 +18,7 @@ multilinear, formal series
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Set Finₓ
 
@@ -27,20 +27,12 @@ open_locale TopologicalSpace
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
   [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
--- error in Analysis.Calculus.FormalMultilinearSeries: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_group
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler add_comm_group
 /-- A formal multilinear series over a field `𝕜`, from `E` to `F`, is given by a family of
 multilinear maps from `E^n` to `F` for all `n`. -/
-@[derive #[expr add_comm_group]]
-def formal_multilinear_series
-(𝕜 : Type*)
-[nondiscrete_normed_field 𝕜]
-(E : Type*)
-[normed_group E]
-[normed_space 𝕜 E]
-(F : Type*)
-[normed_group F]
-[normed_space 𝕜 F] :=
-∀ n : exprℕ(), «expr [× ]→L[ ] »(E, n, 𝕜, F)
+def FormalMultilinearSeries (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E]
+  (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] :=
+  ∀ n : ℕ, E[×n]→L[𝕜] F deriving [anonymous]
 
 instance : Inhabited (FormalMultilinearSeries 𝕜 E F) :=
   ⟨0⟩
@@ -49,13 +41,13 @@ section Module
 
 attribute [local reducible] FormalMultilinearSeries
 
--- error in Analysis.Calculus.FormalMultilinearSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : module 𝕜 (formal_multilinear_series 𝕜 E F) :=
-begin
-  letI [] [":", expr ∀
-   n, module 𝕜 (continuous_multilinear_map 𝕜 (λ i : fin n, E) F)] [":=", expr λ n, by apply_instance],
-  apply_instance
-end
+instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) :=
+  by 
+    let this' : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) F) :=
+      fun n =>
+        by 
+          infer_instance 
+    infer_instance
 
 end Module
 

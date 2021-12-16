@@ -14,6 +14,27 @@ Suppose we have an `R`-algebra `S` with a finite basis. For each `s : S`,
 the trace of the linear map given by multiplying by `s` gives information about
 the roots of the minimal polynomial of `s` over `R`.
 
+## Main definitions
+
+ * `algebra.trace R S x`: the trace of an element `s` of an `R`-algebra `S`
+ * `algebra.trace_form R S`: bilinear form sending `x`, `y` to the trace of `x * y`
+ * `algebra.trace_matrix R b`: the matrix whose `(i j)`-th element is the trace of `b i * b j`.
+ * `algebra.embeddings_matrix A C b : matrix κ (B →ₐ[A] C) C` is the matrix whose
+   `(i, σ)` coefficient is `σ (b i)`.
+ * `algebra.embeddings_matrix_reindex A C b e : matrix κ κ C` is the matrix whose `(i, j)`
+   coefficient is `σⱼ (b i)`, where `σⱼ : B →ₐ[A] C` is the embedding corresponding to `j : κ`
+   given by a bijection `e : κ ≃ (B →ₐ[A] C)`.
+
+## Main results
+
+ * `trace_algebra_map_of_basis`, `trace_algebra_map`: if `x : K`, then `Tr_{L/K} x = [L : K] x`
+ * `trace_trace_of_basis`, `trace_trace`: `Tr_{L/K} (Tr_{F/L} x) = Tr_{F/K} x`
+ * `trace_eq_sum_roots`: the trace of `x : K(x)` is the sum of all conjugate roots of `x`
+ * `trace_eq_sum_embeddings`: the trace of `x : K(x)` is the sum of all embeddings of `x` into an
+   algebraically closed field
+ * `trace_form_nondegenerate`: the trace form over a separable extension is a nondegenerate
+   bilinear form
+
 ## Implementation notes
 
 Typically, the trace is defined specifically for finite field extensions.
@@ -31,7 +52,7 @@ For now, the definitions assume `S` is commutative, so the choice doesn't matter
 -/
 
 
-universe u v w
+universe u v w z
 
 variable {R S T : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ T]
 
@@ -39,7 +60,7 @@ variable [Algebra R S] [Algebra R T]
 
 variable {K L : Type _} [Field K] [Field L] [Algebra K L]
 
-variable {ι : Type w} [Fintype ι]
+variable {ι κ : Type w} [Fintype ι]
 
 open FiniteDimensional
 
@@ -81,16 +102,14 @@ theorem trace_eq_matrix_trace [DecidableEq ι] (b : Basis ι R S) (s : S) :
   by 
     rw [trace_apply, LinearMap.trace_eq_matrix_trace _ b, to_matrix_lmul_eq]
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x` is in the base field `K`, then the trace is `[L : K] * x`. -/
-theorem trace_algebra_map_of_basis (x : R) : «expr = »(trace R S (algebra_map R S x), «expr • »(fintype.card ι, x)) :=
-begin
-  haveI [] [] [":=", expr classical.dec_eq ι],
-  rw ["[", expr trace_apply, ",", expr linear_map.trace_eq_matrix_trace R b, ",", expr trace_diag, "]"] [],
-  convert [] [expr finset.sum_const _] [],
-  ext [] [ident i] [],
-  simp [] [] [] [] [] []
-end
+theorem trace_algebra_map_of_basis (x : R) : trace R S (algebraMap R S x) = Fintype.card ι • x :=
+  by 
+    have  := Classical.decEq ι 
+    rw [trace_apply, LinearMap.trace_eq_matrix_trace R b, trace_diag]
+    convert Finset.sum_const _ 
+    ext i 
+    simp 
 
 omit b
 
@@ -107,24 +126,16 @@ theorem trace_algebra_map (x : K) : trace K L (algebraMap K L x) = finrank K L �
     ·
       simp [trace_eq_zero_of_not_exists_basis K H, finrank_eq_zero_of_not_exists_basis_finset H]
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem trace_trace_of_basis
-[algebra S T]
-[is_scalar_tower R S T]
-{ι κ : Type*}
-[fintype ι]
-[fintype κ]
-(b : basis ι R S)
-(c : basis κ S T)
-(x : T) : «expr = »(trace R S (trace S T x), trace R T x) :=
-begin
-  haveI [] [] [":=", expr classical.dec_eq ι],
-  haveI [] [] [":=", expr classical.dec_eq κ],
-  rw ["[", expr trace_eq_matrix_trace (b.smul c), ",", expr trace_eq_matrix_trace b, ",", expr trace_eq_matrix_trace c, ",", expr matrix.trace_apply, ",", expr matrix.trace_apply, ",", expr matrix.trace_apply, ",", "<-", expr finset.univ_product_univ, ",", expr finset.sum_product, "]"] [],
-  refine [expr finset.sum_congr rfl (λ i _, _)],
-  simp [] [] ["only"] ["[", expr alg_hom.map_sum, ",", expr smul_left_mul_matrix, ",", expr finset.sum_apply, ",", expr finset.sum_apply i _ (λ
-    y, left_mul_matrix b (left_mul_matrix c x y y)), "]"] [] []
-end
+theorem trace_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Fintype ι] [Fintype κ]
+  (b : Basis ι R S) (c : Basis κ S T) (x : T) : trace R S (trace S T x) = trace R T x :=
+  by 
+    have  := Classical.decEq ι 
+    have  := Classical.decEq κ 
+    rw [trace_eq_matrix_trace (b.smul c), trace_eq_matrix_trace b, trace_eq_matrix_trace c, Matrix.trace_apply,
+      Matrix.trace_apply, Matrix.trace_apply, ←Finset.univ_product_univ, Finset.sum_product]
+    refine' Finset.sum_congr rfl fun i _ => _ 
+    simp only [AlgHom.map_sum, smul_left_mul_matrix, Finset.sum_apply,
+      Finset.sum_apply i _ fun y => left_mul_matrix b (left_mul_matrix c x y y)]
 
 theorem trace_comp_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Fintype ι] [Fintype κ]
   (b : Basis ι R S) (c : Basis κ S T) : (trace R S).comp ((trace S T).restrictScalars R) = trace R T :=
@@ -184,62 +195,93 @@ variable {F : Type _} [Field F]
 
 variable [Algebra K S] [Algebra K F]
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem power_basis.trace_gen_eq_sum_roots
-[nontrivial S]
-(pb : power_basis K S)
-(hf : (minpoly K pb.gen).splits (algebra_map K F)) : «expr = »(algebra_map K F (trace K S pb.gen), ((minpoly K pb.gen).map (algebra_map K F)).roots.sum) :=
-begin
-  have [ident d_pos] [":", expr «expr < »(0, pb.dim)] [":=", expr power_basis.dim_pos pb],
-  have [ident d_pos'] [":", expr «expr < »(0, (minpoly K pb.gen).nat_degree)] [],
-  { simpa [] [] [] [] [] [] },
-  haveI [] [":", expr nonempty (fin pb.dim)] [":=", expr ⟨⟨0, d_pos⟩⟩],
-  rw ["[", expr trace_eq_matrix_trace pb.basis, ",", expr trace_eq_neg_charpoly_coeff, ",", expr charpoly_left_mul_matrix, ",", expr ring_hom.map_neg, ",", "<-", expr pb.nat_degree_minpoly, ",", expr fintype.card_fin, ",", "<-", expr next_coeff_of_pos_nat_degree _ d_pos', ",", "<-", expr next_coeff_map (algebra_map K F).injective, "]"] [],
-  conv_lhs [] [] { rw [expr eq_prod_roots_of_splits hf] },
-  rw ["[", expr monic.next_coeff_mul, ",", expr next_coeff_C_eq_zero, ",", expr zero_add, ",", expr monic.next_coeff_multiset_prod, "]"] [],
-  simp_rw ["[", expr next_coeff_X_sub_C, ",", expr multiset.sum_map_neg, ",", expr neg_neg, "]"] [],
-  { intros [],
-    apply [expr monic_X_sub_C] },
-  { convert [] [expr monic_one] [],
-    simp [] [] [] ["[", expr (minpoly.monic pb.is_integral_gen).leading_coeff, "]"] [] [] },
-  { apply [expr monic_multiset_prod_of_monic],
-    intros [],
-    apply [expr monic_X_sub_C] }
-end
+theorem PowerBasis.trace_gen_eq_sum_roots [Nontrivial S] (pb : PowerBasis K S)
+  (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
+  algebraMap K F (trace K S pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Sum :=
+  by 
+    have d_pos : 0 < pb.dim := PowerBasis.dim_pos pb 
+    have d_pos' : 0 < (minpoly K pb.gen).natDegree
+    ·
+      simpa 
+    have  : Nonempty (Finₓ pb.dim) := ⟨⟨0, d_pos⟩⟩
+    rw [trace_eq_matrix_trace pb.basis, trace_eq_neg_charpoly_coeff, charpoly_left_mul_matrix, RingHom.map_neg,
+      ←pb.nat_degree_minpoly, Fintype.card_fin, ←next_coeff_of_pos_nat_degree _ d_pos',
+      ←next_coeff_map (algebraMap K F).Injective]
+    convLHS => rw [eq_prod_roots_of_splits hf]
+    rw [monic.next_coeff_mul, next_coeff_C_eq_zero, zero_addₓ, monic.next_coeff_multiset_prod]
+    simpRw [next_coeff_X_sub_C, Multiset.sum_map_neg, neg_negₓ]
+    ·
+      intros 
+      apply monic_X_sub_C
+    ·
+      convert monic_one 
+      simp [(minpoly.monic pb.is_integral_gen).leadingCoeff]
+    ·
+      apply monic_multiset_prod_of_monic 
+      intros 
+      apply monic_X_sub_C
 
 namespace IntermediateField.AdjoinSimple
 
 open IntermediateField
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in refine: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem trace_gen_eq_zero
-{x : L}
-(hx : «expr¬ »(is_integral K x)) : «expr = »(algebra.trace K «expr ⟮ , ⟯»(K, [x]) (adjoin_simple.gen K x), 0) :=
-begin
-  rw ["[", expr trace_eq_zero_of_not_exists_basis, ",", expr linear_map.zero_apply, "]"] [],
-  contrapose ["!"] [ident hx],
-  obtain ["⟨", ident s, ",", "⟨", ident b, "⟩", "⟩", ":=", expr hx],
-  refine [expr is_integral_of_mem_of_fg «expr ⟮ , ⟯»(K, [x]).to_subalgebra _ x _],
-  { exact [expr (submodule.fg_iff_finite_dimensional _).mpr (finite_dimensional.of_finset_basis b)] },
-  { exact [expr subset_adjoin K _ (set.mem_singleton x)] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) :
+  Algebra.trace K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+      (adjoin_simple.gen K x) =
+    0 :=
+  by 
+    rw [trace_eq_zero_of_not_exists_basis, LinearMap.zero_apply]
+    contrapose! hx 
+    obtain ⟨s, ⟨b⟩⟩ := hx 
+    refine'
+      is_integral_of_mem_of_fg
+        («expr ⟮ , ⟯» K
+            "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»").toSubalgebra
+        _ x _
+    ·
+      exact (Submodule.fg_iff_finite_dimensional _).mpr (FiniteDimensional.of_finset_basis b)
+    ·
+      exact subset_adjoin K _ (Set.mem_singleton x)
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in have: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem trace_gen_eq_sum_roots
-(x : L)
-(hf : (minpoly K x).splits (algebra_map K F)) : «expr = »(algebra_map K F (trace K «expr ⟮ , ⟯»(K, [x]) (adjoin_simple.gen K x)), ((minpoly K x).map (algebra_map K F)).roots.sum) :=
-begin
-  have [ident injKKx] [":", expr function.injective (algebra_map K «expr ⟮ , ⟯»(K, [x]))] [":=", expr ring_hom.injective _],
-  have [ident injKxL] [":", expr function.injective (algebra_map «expr ⟮ , ⟯»(K, [x]) L)] [":=", expr ring_hom.injective _],
-  by_cases [expr hx, ":", expr is_integral K x],
-  swap,
-  { simp [] [] [] ["[", expr minpoly.eq_zero hx, ",", expr trace_gen_eq_zero hx, "]"] [] [] },
-  have [ident hx'] [":", expr is_integral K (adjoin_simple.gen K x)] [],
-  { rwa ["[", "<-", expr is_integral_algebra_map_iff injKxL, ",", expr adjoin_simple.algebra_map_gen, "]"] [],
-    apply_instance },
-  rw ["[", "<-", expr adjoin.power_basis_gen hx, ",", expr (adjoin.power_basis hx).trace_gen_eq_sum_roots, "]"] []; rw ["[", expr adjoin.power_basis_gen hx, ",", expr minpoly.eq_of_algebra_map_eq injKxL hx', "]"] []; try { simp [] [] ["only"] ["[", expr adjoin_simple.algebra_map_gen _ _, "]"] [] [] },
-  exact [expr hf]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem trace_gen_eq_sum_roots (x : L) (hf : (minpoly K x).Splits (algebraMap K F)) :
+  algebraMap K F
+      (trace K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+        (adjoin_simple.gen K x)) =
+    ((minpoly K x).map (algebraMap K F)).roots.Sum :=
+  by 
+    have injKKx :
+      Function.Injective
+        (algebraMap K
+          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")) :=
+      RingHom.injective _ 
+    have injKxL :
+      Function.Injective
+        (algebraMap
+          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") L) :=
+      RingHom.injective _ 
+    byCases' hx : IsIntegral K x 
+    swap
+    ·
+      simp [minpoly.eq_zero hx, trace_gen_eq_zero hx]
+    have hx' : IsIntegral K (adjoin_simple.gen K x)
+    ·
+      rwa [←is_integral_algebra_map_iff injKxL, adjoin_simple.algebra_map_gen]
+      infer_instance 
+    rw [←adjoin.power_basis_gen hx, (adjoin.power_basis hx).trace_gen_eq_sum_roots] <;>
+      rw [adjoin.power_basis_gen hx, minpoly.eq_of_algebra_map_eq injKxL hx'] <;>
+        try 
+          simp only [adjoin_simple.algebra_map_gen _ _]
+    exact hf
 
 end IntermediateField.AdjoinSimple
 
@@ -247,24 +289,36 @@ open IntermediateField
 
 variable (K)
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in rw: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem trace_eq_trace_adjoin
-[finite_dimensional K L]
-(x : L) : «expr = »(algebra.trace K L x, «expr • »(finrank «expr ⟮ , ⟯»(K, [x]) L, trace K «expr ⟮ , ⟯»(K, [x]) (adjoin_simple.gen K x))) :=
-begin
-  rw ["<-", expr @trace_trace _ _ K «expr ⟮ , ⟯»(K, [x]) _ _ _ _ _ _ _ _ x] [],
-  conv [] ["in", expr x] { rw ["<-", expr intermediate_field.adjoin_simple.algebra_map_gen K x] },
-  rw ["[", expr trace_algebra_map, ",", expr linear_map.map_smul_of_tower, "]"] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem trace_eq_trace_adjoin [FiniteDimensional K L] (x : L) :
+  Algebra.trace K L x =
+    finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") L •
+      trace K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+        (adjoin_simple.gen K x) :=
+  by 
+    rw
+      [←@trace_trace _ _ K
+        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") _ _ _ _ _
+        _ _ _ x]
+    conv  in x => rw [←IntermediateField.AdjoinSimple.algebra_map_gen K x]
+    rw [trace_algebra_map, LinearMap.map_smul_of_tower]
 
 variable {K}
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem trace_eq_sum_roots
-[finite_dimensional K L]
-{x : L}
-(hF : (minpoly K x).splits (algebra_map K F)) : «expr = »(algebra_map K F (algebra.trace K L x), «expr • »(finrank «expr ⟮ , ⟯»(K, [x]) L, ((minpoly K x).map (algebra_map K _)).roots.sum)) :=
-by rw ["[", expr trace_eq_trace_adjoin K x, ",", expr algebra.smul_def, ",", expr ring_hom.map_mul, ",", "<-", expr algebra.smul_def, ",", expr intermediate_field.adjoin_simple.trace_gen_eq_sum_roots _ hF, ",", expr is_scalar_tower.algebra_map_smul, "]"] []
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem trace_eq_sum_roots [FiniteDimensional K L] {x : L} (hF : (minpoly K x).Splits (algebraMap K F)) :
+  algebraMap K F (Algebra.trace K L x) =
+    finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") L •
+      ((minpoly K x).map (algebraMap K _)).roots.Sum :=
+  by 
+    rw [trace_eq_trace_adjoin K x, Algebra.smul_def, RingHom.map_mul, ←Algebra.smul_def,
+      IntermediateField.AdjoinSimple.trace_gen_eq_sum_roots _ hF, IsScalarTower.algebra_map_smul]
 
 end EqSumRoots
 
@@ -274,23 +328,22 @@ variable [Algebra R L] [Algebra L F] [Algebra R F] [IsScalarTower R L F]
 
 open Polynomial
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem algebra.is_integral_trace
-[finite_dimensional L F]
-{x : F}
-(hx : _root_.is_integral R x) : _root_.is_integral R (algebra.trace L F x) :=
-begin
-  have [ident hx'] [":", expr _root_.is_integral L x] [":=", expr is_integral_of_is_scalar_tower _ hx],
-  rw ["[", "<-", expr is_integral_algebra_map_iff (algebra_map L (algebraic_closure F)).injective, ",", expr trace_eq_sum_roots, "]"] [],
-  { refine [expr (is_integral.multiset_sum _).nsmul _],
-    intros [ident y, ident hy],
-    rw [expr mem_roots_map (minpoly.ne_zero hx')] ["at", ident hy],
-    use ["[", expr minpoly R x, ",", expr minpoly.monic hx, "]"],
-    rw ["<-", expr aeval_def] ["at", "⊢", ident hy],
-    exact [expr minpoly.aeval_of_is_scalar_tower R x y hy] },
-  { apply [expr is_alg_closed.splits_codomain] },
-  { apply_instance }
-end
+theorem Algebra.is_integral_trace [FiniteDimensional L F] {x : F} (hx : _root_.is_integral R x) :
+  _root_.is_integral R (Algebra.trace L F x) :=
+  by 
+    have hx' : _root_.is_integral L x := is_integral_of_is_scalar_tower _ hx 
+    rw [←is_integral_algebra_map_iff (algebraMap L (AlgebraicClosure F)).Injective, trace_eq_sum_roots]
+    ·
+      refine' (IsIntegral.multiset_sum _).nsmul _ 
+      intro y hy 
+      rw [mem_roots_map (minpoly.ne_zero hx')] at hy 
+      use minpoly R x, minpoly.monic hx 
+      rw [←aeval_def] at hy⊢
+      exact minpoly.aeval_of_is_scalar_tower R x y hy
+    ·
+      apply IsAlgClosed.splits_codomain
+    ·
+      infer_instance
 
 section EqSumEmbeddings
 
@@ -300,111 +353,212 @@ open Algebra IntermediateField
 
 variable (F) (E : Type _) [Field E] [Algebra K E]
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem trace_eq_sum_embeddings_gen
-(pb : power_basis K L)
-(hE : (minpoly K pb.gen).splits (algebra_map K E))
-(hfx : (minpoly K pb.gen).separable) : «expr = »(algebra_map K E (algebra.trace K L pb.gen), (@@finset.univ (power_basis.alg_hom.fintype pb)).sum (λ
-  σ, σ pb.gen)) :=
-begin
-  letI [] [] [":=", expr classical.dec_eq E],
-  rw ["[", expr pb.trace_gen_eq_sum_roots hE, ",", expr fintype.sum_equiv pb.lift_equiv', ",", expr finset.sum_mem_multiset, ",", expr finset.sum_eq_multiset_sum, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr _, ",", expr multiset.map_id, "]"] [],
-  { exact [expr nodup_roots ((separable_map _).mpr hfx)] },
-  { intro [ident x],
-    refl },
-  { intro [ident σ],
-    rw ["[", expr power_basis.lift_equiv'_apply_coe, ",", expr id.def, "]"] [] }
-end
+theorem trace_eq_sum_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.gen).Splits (algebraMap K E))
+  (hfx : (minpoly K pb.gen).Separable) :
+  algebraMap K E (Algebra.trace K L pb.gen) = (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Sum fun σ => σ pb.gen :=
+  by 
+    let this' := Classical.decEq E 
+    rw [pb.trace_gen_eq_sum_roots hE, Fintype.sum_equiv pb.lift_equiv', Finset.sum_mem_multiset,
+      Finset.sum_eq_multiset_sum, Multiset.to_finset_val, multiset.erase_dup_eq_self.mpr _, Multiset.map_id]
+    ·
+      exact nodup_roots ((separable_map _).mpr hfx)
+    ·
+      intro x 
+      rfl
+    ·
+      intro σ 
+      rw [PowerBasis.lift_equiv'_apply_coe, id.def]
 
 variable [IsAlgClosed E]
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sum_embeddings_eq_finrank_mul
-[finite_dimensional K F]
-[is_separable K F]
-(pb : power_basis K L) : «expr = »(«expr∑ , »((σ : «expr →ₐ[ ] »(F, K, E)), σ (algebra_map L F pb.gen)), «expr • »(finrank L F, (@@finset.univ (power_basis.alg_hom.fintype pb)).sum (λ
-   σ : «expr →ₐ[ ] »(L, K, E), σ pb.gen))) :=
-begin
-  haveI [] [":", expr finite_dimensional L F] [":=", expr finite_dimensional.right K L F],
-  haveI [] [":", expr is_separable L F] [":=", expr is_separable_tower_top_of_is_separable K L F],
-  letI [] [":", expr fintype «expr →ₐ[ ] »(L, K, E)] [":=", expr power_basis.alg_hom.fintype pb],
-  letI [] [":", expr ∀
-   f : «expr →ₐ[ ] »(L, K, E), fintype (@@alg_hom L F E _ _ _ _ f.to_ring_hom.to_algebra)] [":=", expr _],
-  rw ["[", expr fintype.sum_equiv alg_hom_equiv_sigma (λ
-    σ : «expr →ₐ[ ] »(F, K, E), _) (λ
-    σ, σ.1 pb.gen), ",", "<-", expr finset.univ_sigma_univ, ",", expr finset.sum_sigma, ",", "<-", expr finset.sum_nsmul, "]"] [],
-  refine [expr finset.sum_congr rfl (λ σ _, _)],
-  { letI [] [":", expr algebra L E] [":=", expr σ.to_ring_hom.to_algebra],
-    simp [] [] ["only"] ["[", expr finset.sum_const, ",", expr finset.card_univ, "]"] [] [],
-    rw [expr alg_hom.card L F E] [] },
-  { intros [ident σ],
-    simp [] [] ["only"] ["[", expr alg_hom_equiv_sigma, ",", expr equiv.coe_fn_mk, ",", expr alg_hom.restrict_domain, ",", expr alg_hom.comp_apply, ",", expr is_scalar_tower.coe_to_alg_hom', "]"] [] [] }
-end
+theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F] (pb : PowerBasis K L) :
+  (∑ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
+    finrank L F • (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Sum fun σ : L →ₐ[K] E => σ pb.gen :=
+  by 
+    have  : FiniteDimensional L F := FiniteDimensional.right K L F 
+    have  : IsSeparable L F := is_separable_tower_top_of_is_separable K L F 
+    let this' : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb 
+    let this' : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _ 
+    rw [Fintype.sum_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ←Finset.univ_sigma_univ,
+      Finset.sum_sigma, ←Finset.sum_nsmul]
+    refine' Finset.sum_congr rfl fun σ _ => _
+    ·
+      let this' : Algebra L E := σ.to_ring_hom.to_algebra 
+      simp only [Finset.sum_const, Finset.card_univ]
+      rw [AlgHom.card L F E]
+    ·
+      intro σ 
+      simp only [algHomEquivSigma, Equivₓ.coe_fn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
+        IsScalarTower.coe_to_alg_hom']
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in haveI: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem trace_eq_sum_embeddings
-[finite_dimensional K L]
-[is_separable K L]
-{x : L} : «expr = »(algebra_map K E (algebra.trace K L x), «expr∑ , »((σ : «expr →ₐ[ ] »(L, K, E)), σ x)) :=
-begin
-  have [ident hx] [] [":=", expr is_separable.is_integral K x],
-  rw ["[", expr trace_eq_trace_adjoin K x, ",", expr algebra.smul_def, ",", expr ring_hom.map_mul, ",", "<-", expr adjoin.power_basis_gen hx, ",", expr trace_eq_sum_embeddings_gen E (adjoin.power_basis hx) (is_alg_closed.splits_codomain _), ",", "<-", expr algebra.smul_def, ",", expr algebra_map_smul, "]"] [],
-  { exact [expr (sum_embeddings_eq_finrank_mul L E (adjoin.power_basis hx)).symm] },
-  { haveI [] [] [":=", expr is_separable_tower_bot_of_is_separable K «expr ⟮ , ⟯»(K, [x]) L],
-    exact [expr is_separable.separable K _] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem trace_eq_sum_embeddings [FiniteDimensional K L] [IsSeparable K L] {x : L} :
+  algebraMap K E (Algebra.trace K L x) = ∑ σ : L →ₐ[K] E, σ x :=
+  by 
+    have hx := IsSeparable.is_integral K x 
+    rw [trace_eq_trace_adjoin K x, Algebra.smul_def, RingHom.map_mul, ←adjoin.power_basis_gen hx,
+      trace_eq_sum_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splits_codomain _), ←Algebra.smul_def,
+      algebra_map_smul]
+    ·
+      exact (sum_embeddings_eq_finrank_mul L E (adjoin.power_basis hx)).symm
+    ·
+      have  :=
+        is_separable_tower_bot_of_is_separable K
+          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") L 
+      exact IsSeparable.separable K _
 
 end EqSumEmbeddings
 
 section DetNeZero
 
+namespace Algebra
+
+variable (A : Type u) {B : Type v} (C : Type z)
+
+variable [CommRingₓ A] [CommRingₓ B] [Algebra A B] [CommRingₓ C] [Algebra A C]
+
+open Finset
+
+/-- Given an `A`-algebra `B` and `b`, an `κ`-indexed family of elements of `B`, we define
+`trace_matrix A b` as the matrix whose `(i j)`-th element is the trace of `b i * b j`. -/
+@[simp]
+noncomputable def trace_matrix (b : κ → B) : Matrix κ κ A
+| i, j => trace_form A B (b i) (b j)
+
+theorem trace_matrix_def (b : κ → B) : trace_matrix A b = fun i j => trace_form A B (b i) (b j) :=
+  rfl
+
+variable {A}
+
+theorem trace_matrix_of_matrix_vec_mul [Fintype κ] (b : κ → B) (P : Matrix κ κ A) :
+  trace_matrix A ((P.map (algebraMap A B)).vecMul b) = (P)ᵀ ⬝ trace_matrix A b ⬝ P :=
+  by 
+    ext α β 
+    rw [trace_matrix, vec_mul, dot_product, vec_mul, dot_product, Matrix.mul_apply, BilinForm.sum_left,
+      Fintype.sum_congr _ _
+        fun i : κ =>
+          @BilinForm.sum_right _ _ _ _ _ _ _ _ (b i*P.map (algebraMap A B) i α)
+            fun y : κ => b y*P.map (algebraMap A B) y β,
+      sum_comm]
+    congr 
+    ext x 
+    rw [Matrix.mul_apply, sum_mul]
+    congr 
+    ext y 
+    rw [map_apply, trace_form_apply, mul_commₓ (b y), ←smul_def]
+    simp only [id.smul_eq_mul, RingHom.id_apply, map_apply, transpose_apply, LinearMap.map_smulₛₗ, trace_form_apply,
+      Algebra.smul_mul_assoc]
+    rw [mul_commₓ (b x), ←smul_def]
+    ringNF 
+    simp 
+
+theorem trace_matrix_of_matrix_mul_vec [Fintype κ] (b : κ → B) (P : Matrix κ κ A) :
+  trace_matrix A ((P.map (algebraMap A B)).mulVec b) = P ⬝ trace_matrix A b ⬝ (P)ᵀ :=
+  by 
+    refine' AddEquiv.injective transpose_add_equiv _ 
+    rw [transpose_add_equiv_apply, transpose_add_equiv_apply, ←vec_mul_transpose, ←transpose_map,
+      trace_matrix_of_matrix_vec_mul, transpose_transpose, transpose_mul, transpose_transpose, transpose_mul]
+
+theorem trace_matrix_of_basis [Fintype κ] [DecidableEq κ] (b : Basis κ A B) :
+  trace_matrix A b = BilinForm.toMatrix b (trace_form A B) :=
+  by 
+    ext i j 
+    rw [trace_matrix, trace_form_apply, trace_form_to_matrix]
+
+variable (A)
+
+/-- `embeddings_matrix A C b : matrix κ (B →ₐ[A] C) C` is the matrix whose `(i, σ)` coefficient is
+  `σ (b i)`. It is mostly useful for fields when `fintype.card κ = finrank A B` and `C` is
+  algebraically closed. -/
+@[simp]
+def embeddings_matrix (b : κ → B) : Matrix κ (B →ₐ[A] C) C
+| i, σ => σ (b i)
+
+/-- `embeddings_matrix_reindex A C b e : matrix κ κ C` is the matrix whose `(i, j)` coefficient
+  is `σⱼ (b i)`, where `σⱼ : B →ₐ[A] C` is the embedding corresponding to `j : κ` given by a
+  bijection `e : κ ≃ (B →ₐ[A] C)`. It is mostly useful for fields and `C` is algebraically closed.
+  In this case, in presence of `h : fintype.card κ = finrank A B`, one can take
+  `e := equiv_of_card_eq ((alg_hom.card A B C).trans h.symm)`. -/
+def embeddings_matrix_reindex (b : κ → B) (e : κ ≃ (B →ₐ[A] C)) :=
+  reindex (Equivₓ.refl κ) e.symm (embeddings_matrix A C b)
+
+variable {A}
+
+theorem embeddings_matrix_reindex_eq_vandermonde (pb : PowerBasis A B) (e : Finₓ pb.dim ≃ (B →ₐ[A] C)) :
+  embeddings_matrix_reindex A C pb.basis e = (vandermonde fun i => e i pb.gen)ᵀ :=
+  by 
+    ext i j 
+    simp [embeddings_matrix_reindex, embeddings_matrix]
+
+section Field
+
+variable (K) {L} (E : Type z) [Field E]
+
+variable [Algebra K E]
+
+variable [Module.Finite K L] [IsSeparable K L] [IsAlgClosed E]
+
+variable (b : κ → L) (pb : PowerBasis K L)
+
+theorem trace_matrix_eq_embeddings_matrix_mul_trans :
+  (trace_matrix K b).map (algebraMap K E) = embeddings_matrix K E b ⬝ (embeddings_matrix K E b)ᵀ :=
+  by 
+    ext i j 
+    simp [trace_eq_sum_embeddings, embeddings_matrix, Matrix.mul_apply]
+
+theorem trace_matrix_eq_embeddings_matrix_reindex_mul_trans [Fintype κ] (e : κ ≃ (L →ₐ[K] E)) :
+  (trace_matrix K b).map (algebraMap K E) = embeddings_matrix_reindex K E b e ⬝ (embeddings_matrix_reindex K E b e)ᵀ :=
+  by 
+    rw [trace_matrix_eq_embeddings_matrix_mul_trans, embeddings_matrix_reindex, reindex_apply, transpose_minor,
+      ←minor_mul_transpose_minor, ←Equivₓ.coe_refl, Equivₓ.refl_symm]
+
+end Field
+
+end Algebra
+
 open Algebra
 
 variable (pb : PowerBasis K L)
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem det_trace_form_ne_zero'
-[is_separable K L] : «expr ≠ »(det (bilin_form.to_matrix pb.basis (trace_form K L)), 0) :=
-begin
-  suffices [] [":", expr «expr ≠ »(algebra_map K (algebraic_closure L) (det (bilin_form.to_matrix pb.basis (trace_form K L))), 0)],
-  { refine [expr mt (λ ht, _) this],
-    rw ["[", expr ht, ",", expr ring_hom.map_zero, "]"] [] },
-  haveI [] [":", expr finite_dimensional K L] [":=", expr pb.finite_dimensional],
-  let [ident e] [":", expr «expr ≃ »(«expr →ₐ[ ] »(L, K, algebraic_closure L), fin pb.dim)] [":=", expr fintype.equiv_fin_of_card_eq _],
-  let [ident M] [":", expr matrix (fin pb.dim) (fin pb.dim) (algebraic_closure L)] [":=", expr vandermonde (λ
-    i, e.symm i pb.gen)],
-  calc
-    «expr = »(algebra_map K (algebraic_closure _) (bilin_form.to_matrix pb.basis (trace_form K L)).det, det «expr $ »((algebra_map K _).map_matrix, bilin_form.to_matrix pb.basis (trace_form K L))) : ring_hom.map_det _ _
-    «expr = »(..., det «expr ⬝ »(«expr ᵀ»(M), M)) : _
-    «expr = »(..., «expr * »(det M, det M)) : by rw ["[", expr det_mul, ",", expr det_transpose, "]"] []
-    «expr ≠ »(..., 0) : mt mul_self_eq_zero.mp _,
-  { refine [expr congr_arg det _],
-    ext [] [ident i, ident j] [],
-    rw ["[", expr vandermonde_transpose_mul_vandermonde, ",", expr ring_hom.map_matrix_apply, ",", expr matrix.map_apply, ",", expr bilin_form.to_matrix_apply, ",", expr pb.basis_eq_pow, ",", expr pb.basis_eq_pow, ",", expr trace_form_apply, ",", "<-", expr pow_add, ",", expr trace_eq_sum_embeddings (algebraic_closure L), ",", expr fintype.sum_equiv e, "]"] [],
-    intros [ident σ],
-    rw ["[", expr e.symm_apply_apply, ",", expr σ.map_pow, "]"] [] },
-  { simp [] [] ["only"] ["[", expr det_vandermonde, ",", expr finset.prod_eq_zero_iff, ",", expr not_exists, ",", expr sub_eq_zero, "]"] [] [],
-    intros [ident i, "_", ident j, ident hij, ident h],
-    exact [expr (finset.mem_filter.mp hij).2.ne' «expr $ »(e.symm.injective, pb.alg_hom_ext h)] },
-  { rw ["[", expr alg_hom.card, ",", expr pb.finrank, "]"] [] }
-end
+theorem det_trace_matrix_ne_zero' [IsSeparable K L] : det (trace_matrix K pb.basis) ≠ 0 :=
+  by 
+    suffices  : algebraMap K (AlgebraicClosure L) (det (trace_matrix K pb.basis)) ≠ 0
+    ·
+      refine' mt (fun ht => _) this 
+      rw [ht, RingHom.map_zero]
+    have  : FiniteDimensional K L := pb.finite_dimensional 
+    let e : Finₓ pb.dim ≃ (L →ₐ[K] AlgebraicClosure L) := (Fintype.equivFinOfCardEq _).symm 
+    rw [RingHom.map_det, RingHom.map_matrix_apply, trace_matrix_eq_embeddings_matrix_reindex_mul_trans K _ _ e,
+      embeddings_matrix_reindex_eq_vandermonde, det_mul, det_transpose]
+    refine' mt mul_self_eq_zero.mp _
+    ·
+      simp only [det_vandermonde, Finset.prod_eq_zero_iff, not_exists, sub_eq_zero]
+      intro i _ j hij h 
+      exact (finset.mem_filter.mp hij).2.ne' (e.injective$ pb.alg_hom_ext h)
+    ·
+      rw [AlgHom.card, pb.finrank]
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem det_trace_form_ne_zero
-[is_separable K L]
-[decidable_eq ι]
-(b : basis ι K L) : «expr ≠ »(det (bilin_form.to_matrix b (trace_form K L)), 0) :=
-begin
-  haveI [] [":", expr finite_dimensional K L] [":=", expr finite_dimensional.of_fintype_basis b],
-  let [ident pb] [":", expr power_basis K L] [":=", expr field.power_basis_of_finite_of_separable _ _],
-  rw ["[", "<-", expr bilin_form.to_matrix_mul_basis_to_matrix pb.basis b, ",", "<-", expr det_comm' (pb.basis.to_matrix_mul_to_matrix_flip b) _, ",", "<-", expr matrix.mul_assoc, ",", expr det_mul, "]"] [],
-  swap,
-  { apply [expr basis.to_matrix_mul_to_matrix_flip] },
-  refine [expr mul_ne_zero (is_unit_of_mul_eq_one _ «expr ⬝ »(«expr ᵀ»(b.to_matrix pb.basis), b.to_matrix pb.basis).det _).ne_zero (det_trace_form_ne_zero' pb)],
-  calc
-    «expr = »(«expr * »(«expr ⬝ »(pb.basis.to_matrix b, «expr ᵀ»(pb.basis.to_matrix b)).det, «expr ⬝ »(«expr ᵀ»(b.to_matrix pb.basis), b.to_matrix pb.basis).det), «expr ⬝ »(«expr ⬝ »(pb.basis.to_matrix b, «expr ᵀ»(«expr ⬝ »(b.to_matrix pb.basis, pb.basis.to_matrix b))), b.to_matrix pb.basis).det) : by simp [] [] ["only"] ["[", "<-", expr det_mul, ",", expr matrix.mul_assoc, ",", expr matrix.transpose_mul, "]"] [] []
-    «expr = »(..., 1) : by simp [] [] ["only"] ["[", expr basis.to_matrix_mul_to_matrix_flip, ",", expr matrix.transpose_one, ",", expr matrix.mul_one, ",", expr matrix.det_one, "]"] [] []
-end
+theorem det_trace_form_ne_zero [IsSeparable K L] [DecidableEq ι] (b : Basis ι K L) :
+  det (BilinForm.toMatrix b (trace_form K L)) ≠ 0 :=
+  by 
+    have  : FiniteDimensional K L := FiniteDimensional.of_fintype_basis b 
+    let pb : PowerBasis K L := Field.powerBasisOfFiniteOfSeparable _ _ 
+    rw [←BilinForm.to_matrix_mul_basis_to_matrix pb.basis b, ←det_comm' (pb.basis.to_matrix_mul_to_matrix_flip b) _,
+      ←Matrix.mul_assoc, det_mul]
+    swap
+    ·
+      apply Basis.to_matrix_mul_to_matrix_flip 
+    refine' mul_ne_zero (is_unit_of_mul_eq_one _ ((b.to_matrix pb.basis)ᵀ ⬝ b.to_matrix pb.basis).det _).ne_zero _
+    ·
+      calc
+        ((pb.basis.to_matrix b ⬝ (pb.basis.to_matrix b)ᵀ).det*((b.to_matrix pb.basis)ᵀ ⬝ b.to_matrix pb.basis).det) =
+          (pb.basis.to_matrix b ⬝ (b.to_matrix pb.basis ⬝ pb.basis.to_matrix b)ᵀ ⬝ b.to_matrix pb.basis).det :=
+        by 
+          simp only [←det_mul, Matrix.mul_assoc, Matrix.transpose_mul]_ = 1 :=
+        by 
+          simp only [Basis.to_matrix_mul_to_matrix_flip, Matrix.transpose_one, Matrix.mul_one, Matrix.det_one]
+    simpa only [trace_matrix_of_basis] using det_trace_matrix_ne_zero' pb
 
 variable (K L)
 

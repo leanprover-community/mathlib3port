@@ -30,7 +30,7 @@ of a finite group is semisimple (i.e. a direct sum of irreducibles).
 
 universe u
 
-noncomputable theory
+noncomputable section 
 
 open Module
 
@@ -99,22 +99,47 @@ The sum of the conjugates of `π` by each element `g : G`, as a `k`-linear map.
 (We postpone dividing by the size of the group as long as possible.)
 -/
 def sum_of_conjugates : W →ₗ[k] V :=
-  ∑g : G, π.conjugate g
+  ∑ g : G, π.conjugate g
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear map.
--/
-def sum_of_conjugates_equivariant : W →ₗ[MonoidAlgebra k G] V :=
-  MonoidAlgebra.equivariantOfLinearOfComm (π.sum_of_conjugates G)
-    fun g v =>
-      by 
-        dsimp [sum_of_conjugates]
-        simp only [LinearMap.sum_apply, Finset.smul_sum]
-        dsimp [conjugate]
-        convLHS => rw [←Finset.univ_map_embedding (mulRightEmbedding (g⁻¹))]simp only [mulRightEmbedding]
-        simp only [←mul_smul, single_mul_single, mul_inv_rev, mul_oneₓ, Function.Embedding.coe_fn_mk, Finset.sum_map,
-          inv_invₓ, inv_mul_cancel_right]
-        recover
+    In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear map.
+    -/
+  def
+    sum_of_conjugates_equivariant
+    : W →ₗ[ MonoidAlgebra k G ] V
+    :=
+      MonoidAlgebra.equivariantOfLinearOfComm
+        π.sum_of_conjugates G
+          fun
+            g v
+              =>
+              by
+                dsimp [ sum_of_conjugates ]
+                  simp only [ LinearMap.sum_apply , Finset.smul_sum ]
+                  dsimp [ conjugate ]
+                  convLHS => rw [ ← Finset.univ_map_embedding mulRightEmbedding g ⁻¹ ] simp only [ mulRightEmbedding ]
+                  simp
+                    only
+                    [
+                      ← mul_smul
+                        ,
+                        single_mul_single
+                        ,
+                        mul_inv_rev
+                        ,
+                        mul_oneₓ
+                        ,
+                        Function.Embedding.coe_fn_mk
+                        ,
+                        Finset.sum_map
+                        ,
+                        inv_invₓ
+                        ,
+                        inv_mul_cancel_right
+                      ]
+                  recover
 
 section 
 
@@ -170,21 +195,21 @@ variable {W : Type u} [AddCommGroupₓ W] [Module k W] [Module (MonoidAlgebra k 
 
 variable [IsScalarTower k (MonoidAlgebra k G) W]
 
--- error in RepresentationTheory.Maschke: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_left_inverse_of_injective
-(f : «expr →ₗ[ ] »(V, monoid_algebra k G, W))
-(hf : «expr = »(f.ker, «expr⊥»())) : «expr∃ , »((g : «expr →ₗ[ ] »(W, monoid_algebra k G, V)), «expr = »(g.comp f, linear_map.id)) :=
-begin
-  obtain ["⟨", ident φ, ",", ident hφ, "⟩", ":=", expr (f.restrict_scalars k).exists_left_inverse_of_injective (by simp [] [] ["only"] ["[", expr hf, ",", expr submodule.restrict_scalars_bot, ",", expr linear_map.ker_restrict_scalars, "]"] [] [])],
-  refine [expr ⟨φ.equivariant_projection G, _⟩],
-  apply [expr linear_map.ext],
-  intro [ident v],
-  simp [] [] ["only"] ["[", expr linear_map.id_coe, ",", expr id.def, ",", expr linear_map.comp_apply, "]"] [] [],
-  apply [expr linear_map.equivariant_projection_condition],
-  intro [ident v],
-  have [] [] [":=", expr congr_arg linear_map.to_fun hφ],
-  exact [expr congr_fun this v]
-end
+theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf : f.ker = ⊥) :
+  ∃ g : W →ₗ[MonoidAlgebra k G] V, g.comp f = LinearMap.id :=
+  by 
+    obtain ⟨φ, hφ⟩ :=
+      (f.restrict_scalars k).exists_left_inverse_of_injective
+        (by 
+          simp only [hf, Submodule.restrict_scalars_bot, LinearMap.ker_restrict_scalars])
+    refine' ⟨φ.equivariant_projection G, _⟩
+    apply LinearMap.ext 
+    intro v 
+    simp only [LinearMap.id_coe, id.def, LinearMap.comp_apply]
+    apply LinearMap.equivariant_projection_condition 
+    intro v 
+    have  := congr_argₓ LinearMap.toFun hφ 
+    exact congr_funₓ this v
 
 namespace Submodule
 

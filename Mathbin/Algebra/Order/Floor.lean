@@ -31,7 +31,7 @@ for `nnnorm`.
 
 ## TODO
 
-Some `nat.floor` and `nat.ceil` lemmas require `linear_ordered_ring α`.Is `has_ordered_sub` enough?
+Some `nat.floor` and `nat.ceil` lemmas require `linear_ordered_ring α`. Is `has_ordered_sub` enough?
 
 `linear_ordered_ring`/`linear_ordered_semiring` can be relaxed to `order_ring`/`order_semiring` in
 many lemmas.
@@ -167,7 +167,7 @@ theorem pos_of_floor_pos (h : 0 < ⌊a⌋₊) : 0 < a :=
         by 
           rwa [floor_of_nonpos ha] at h
 
-theorem lt_of_lt_floor (h : n < ⌊a⌋₊) : «expr↑ » n < a :=
+theorem lt_of_lt_floor (h : n < ⌊a⌋₊) : ↑n < a :=
   (Nat.cast_lt.2 h).trans_le$ floor_le (pos_of_floor_pos$ (Nat.zero_leₓ n).trans_lt h).le
 
 @[simp]
@@ -176,18 +176,20 @@ theorem floor_eq_zero : ⌊a⌋₊ = 0 ↔ a < 1 :=
     rw [←lt_one_iff, ←@cast_one α]
     exact floor_lt' Nat.one_ne_zero
 
-theorem floor_eq_iff (ha : 0 ≤ a) : ⌊a⌋₊ = n ↔ «expr↑ » n ≤ a ∧ a < «expr↑ » n+1 :=
+theorem floor_eq_iff (ha : 0 ≤ a) : ⌊a⌋₊ = n ↔ ↑n ≤ a ∧ a < (↑n)+1 :=
   by 
     rw [←le_floor_iff ha, ←Nat.cast_one, ←Nat.cast_add, ←floor_lt ha, Nat.lt_add_one_iff, le_antisymm_iffₓ, And.comm]
 
-theorem floor_eq_iff' (hn : n ≠ 0) : ⌊a⌋₊ = n ↔ «expr↑ » n ≤ a ∧ a < «expr↑ » n+1 :=
+theorem floor_eq_iff' (hn : n ≠ 0) : ⌊a⌋₊ = n ↔ ↑n ≤ a ∧ a < (↑n)+1 :=
   by 
     rw [←le_floor_iff' hn, ←Nat.cast_one, ←Nat.cast_add, ←floor_lt' (Nat.add_one_ne_zero n), Nat.lt_add_one_iff,
       le_antisymm_iffₓ, And.comm]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » (set.Ico n «expr + »(n, 1) : set α))
 theorem floor_eq_on_Ico (n : ℕ) : ∀ a _ : a ∈ (Set.Ico n (n+1) : Set α), ⌊a⌋₊ = n :=
   fun a ⟨h₀, h₁⟩ => (floor_eq_iff$ n.cast_nonneg.trans h₀).mpr ⟨h₀, h₁⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » (set.Ico n «expr + »(n, 1) : set α))
 theorem floor_eq_on_Ico' (n : ℕ) : ∀ a _ : a ∈ (Set.Ico n (n+1) : Set α), (⌊a⌋₊ : α) = n :=
   fun x hx =>
     by 
@@ -237,6 +239,15 @@ theorem lt_of_ceil_lt (h : ⌈a⌉₊ < n) : a < n :=
 theorem le_of_ceil_le (h : ⌈a⌉₊ ≤ n) : a ≤ n :=
   (le_ceil a).trans (Nat.cast_le.2 h)
 
+theorem floor_le_ceil (a : α) : ⌊a⌋₊ ≤ ⌈a⌉₊ :=
+  by 
+    obtain ha | ha := le_totalₓ a 0
+    ·
+      rw [floor_of_nonpos ha]
+      exact Nat.zero_leₓ _
+    ·
+      exact cast_le.1 ((floor_le ha).trans$ le_ceil _)
+
 theorem floor_lt_ceil_of_lt_of_pos {a b : α} (h : a < b) (h' : 0 < b) : ⌊a⌋₊ < ⌈b⌉₊ :=
   by 
     rcases le_or_ltₓ 0 a with (ha | ha)
@@ -246,7 +257,7 @@ theorem floor_lt_ceil_of_lt_of_pos {a b : α} (h : a < b) (h' : 0 < b) : ⌊a⌋
     ·
       rwa [floor_of_nonpos ha.le, lt_ceil]
 
-theorem ceil_eq_iff (hn : n ≠ 0) : ⌈a⌉₊ = n ↔ «expr↑ » (n - 1) < a ∧ a ≤ n :=
+theorem ceil_eq_iff (hn : n ≠ 0) : ⌈a⌉₊ = n ↔ ↑(n - 1) < a ∧ a ≤ n :=
   by 
     rw [←ceil_le, ←not_leₓ, ←ceil_le, not_leₓ, tsub_lt_iff_right (Nat.add_one_le_iff.2 (pos_iff_ne_zero.2 hn)),
       Nat.lt_add_one_iff, le_antisymm_iffₓ, And.comm]
@@ -255,7 +266,7 @@ theorem ceil_eq_iff (hn : n ≠ 0) : ⌈a⌉₊ = n ↔ «expr↑ » (n - 1) < a
 theorem preimage_ceil_zero : (Nat.ceil : α → ℕ) ⁻¹' {0} = Iic 0 :=
   ext$ fun x => ceil_eq_zero
 
-theorem preimage_ceil_of_ne_zero (hn : n ≠ 0) : (Nat.ceil : α → ℕ) ⁻¹' {n} = Ioc («expr↑ » (n - 1)) n :=
+theorem preimage_ceil_of_ne_zero (hn : n ≠ 0) : (Nat.ceil : α → ℕ) ⁻¹' {n} = Ioc (↑(n - 1)) n :=
   ext$ fun x => ceil_eq_iff hn
 
 end LinearOrderedSemiring
@@ -280,6 +291,18 @@ theorem floor_add_one (ha : 0 ≤ a) : ⌊a+1⌋₊ = ⌊a⌋₊+1 :=
   by 
     convert floor_add_nat ha 1 
     exact cast_one.symm
+
+theorem floor_sub_nat (a : α) (n : ℕ) : ⌊a - n⌋₊ = ⌊a⌋₊ - n :=
+  by 
+    obtain ha | ha := le_totalₓ a 0
+    ·
+      rw [floor_of_nonpos ha, floor_of_nonpos (sub_nonpos_of_le (ha.trans n.cast_nonneg)), zero_tsub]
+    cases le_totalₓ a n
+    ·
+      rw [floor_of_nonpos (tsub_nonpos_of_le h), eq_comm, tsub_eq_zero_iff_le]
+      exact Nat.cast_le.1 ((Nat.floor_le ha).trans h)
+    ·
+      rw [eq_tsub_iff_add_eq_of_le (le_floor h), ←floor_add_nat (sub_nonneg_of_le h), sub_add_cancel]
 
 theorem sub_one_lt_floor (a : α) : a - 1 < ⌊a⌋₊ :=
   sub_lt_iff_lt_add.2$ lt_floor_add_one a
@@ -307,25 +330,61 @@ theorem ceil_lt_add_one (ha : 0 ≤ a) : (⌈a⌉₊ : α) < a+1 :=
 
 end LinearOrderedRing
 
+section LinearOrderedField
+
+variable [LinearOrderedField α] [FloorSemiring α]
+
+theorem floor_div_nat (a : α) (n : ℕ) : ⌊a / n⌋₊ = ⌊a⌋₊ / n :=
+  by 
+    cases' le_totalₓ a 0 with ha ha
+    ·
+      rw [floor_of_nonpos, floor_of_nonpos ha]
+      ·
+        simp 
+      apply div_nonpos_of_nonpos_of_nonneg ha n.cast_nonneg 
+    obtain rfl | hn := n.eq_zero_or_pos
+    ·
+      rw [cast_zero, div_zero, Nat.div_zeroₓ, floor_zero]
+    refine' (floor_eq_iff _).2 _
+    ·
+      exact div_nonneg ha n.cast_nonneg 
+    constructor
+    ·
+      exact cast_div_le.trans (div_le_div_of_le_of_nonneg (floor_le ha) n.cast_nonneg)
+    rw [div_lt_iff, add_mulₓ, one_mulₓ, ←cast_mul, ←cast_add, ←floor_lt ha]
+    ·
+      exact lt_div_mul_add hn
+    ·
+      exact cast_pos.2 hn
+
+/-- Natural division is the floor of field division. -/
+theorem floor_div_eq_div (m n : ℕ) : ⌊(m : α) / n⌋₊ = m / n :=
+  by 
+    convert floor_div_nat (m : α) n 
+    rw [m.floor_coe]
+
+end LinearOrderedField
+
 end Nat
 
--- error in Algebra.Order.Floor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- There exists at most one `floor_semiring` structure on a linear ordered semiring. -/
-theorem subsingleton_floor_semiring {α} [linear_ordered_semiring α] : subsingleton (floor_semiring α) :=
-begin
-  refine [expr ⟨λ H₁ H₂, _⟩],
-  have [] [":", expr «expr = »(H₁.ceil, H₂.ceil)] [],
-  from [expr funext (λ a, «expr $ »(H₁.gc_ceil.l_unique H₂.gc_ceil, λ n, rfl))],
-  have [] [":", expr «expr = »(H₁.floor, H₂.floor)] [],
-  { ext [] [ident a] [],
-    cases [expr lt_or_le a 0] [],
-    { rw ["[", expr H₁.floor_of_neg, ",", expr H₂.floor_of_neg, "]"] []; exact [expr h] },
-    { refine [expr eq_of_forall_le_iff (λ n, _)],
-      rw ["[", expr H₁.gc_floor, ",", expr H₂.gc_floor, "]"] []; exact [expr h] } },
-  cases [expr H₁] [],
-  cases [expr H₂] [],
-  congr; assumption
-end
+theorem subsingleton_floor_semiring {α} [LinearOrderedSemiring α] : Subsingleton (FloorSemiring α) :=
+  by 
+    refine' ⟨fun H₁ H₂ => _⟩
+    have  : H₁.ceil = H₂.ceil 
+    exact funext fun a => H₁.gc_ceil.l_unique H₂.gc_ceil$ fun n => rfl 
+    have  : H₁.floor = H₂.floor
+    ·
+      ext a 
+      cases lt_or_leₓ a 0
+      ·
+        rw [H₁.floor_of_neg, H₂.floor_of_neg] <;> exact h
+      ·
+        refine' eq_of_forall_le_iff fun n => _ 
+        rw [H₁.gc_floor, H₂.gc_floor] <;> exact h 
+    cases H₁ 
+    cases H₂ 
+    congr <;> assumption
 
 /-! ### Floor rings -/
 
@@ -470,7 +529,7 @@ theorem floor_add_one (a : α) : ⌊a+1⌋ = ⌊a⌋+1 :=
     exact cast_one.symm
 
 @[simp]
-theorem floor_int_add (z : ℤ) (a : α) : ⌊«expr↑ » z+a⌋ = z+⌊a⌋ :=
+theorem floor_int_add (z : ℤ) (a : α) : ⌊(↑z)+a⌋ = z+⌊a⌋ :=
   by 
     simpa only [add_commₓ] using floor_add_int a z
 
@@ -479,7 +538,7 @@ theorem floor_add_nat (a : α) (n : ℕ) : ⌊a+n⌋ = ⌊a⌋+n :=
   floor_add_int a n
 
 @[simp]
-theorem floor_nat_add (n : ℕ) (a : α) : ⌊«expr↑ » n+a⌋ = n+⌊a⌋ :=
+theorem floor_nat_add (n : ℕ) (a : α) : ⌊(↑n)+a⌋ = n+⌊a⌋ :=
   floor_int_add n a
 
 @[simp]
@@ -493,29 +552,30 @@ theorem floor_sub_int (a : α) (z : ℤ) : ⌊a - z⌋ = ⌊a⌋ - z :=
 theorem floor_sub_nat (a : α) (n : ℕ) : ⌊a - n⌋ = ⌊a⌋ - n :=
   floor_sub_int a n
 
--- error in Algebra.Order.Floor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem abs_sub_lt_one_of_floor_eq_floor
-{α : Type*}
-[linear_ordered_comm_ring α]
-[floor_ring α]
-{a b : α}
-(h : «expr = »(«expr⌊ ⌋»(a), «expr⌊ ⌋»(b))) : «expr < »(«expr| |»(«expr - »(a, b)), 1) :=
-begin
-  have [] [":", expr «expr < »(a, «expr + »(«expr⌊ ⌋»(a), 1))] [":=", expr lt_floor_add_one a],
-  have [] [":", expr «expr < »(b, «expr + »(«expr⌊ ⌋»(b), 1))] [":=", expr lt_floor_add_one b],
-  have [] [":", expr «expr = »((«expr⌊ ⌋»(a) : α), «expr⌊ ⌋»(b))] [":=", expr int.cast_inj.2 h],
-  have [] [":", expr «expr ≤ »((«expr⌊ ⌋»(a) : α), a)] [":=", expr floor_le a],
-  have [] [":", expr «expr ≤ »((«expr⌊ ⌋»(b) : α), b)] [":=", expr floor_le b],
-  exact [expr abs_sub_lt_iff.2 ⟨by linarith [] [] [], by linarith [] [] []⟩]
-end
+theorem abs_sub_lt_one_of_floor_eq_floor {α : Type _} [LinearOrderedCommRing α] [FloorRing α] {a b : α}
+  (h : ⌊a⌋ = ⌊b⌋) : |a - b| < 1 :=
+  by 
+    have  : a < ⌊a⌋+1 := lt_floor_add_one a 
+    have  : b < ⌊b⌋+1 := lt_floor_add_one b 
+    have  : (⌊a⌋ : α) = ⌊b⌋ := Int.cast_inj.2 h 
+    have  : (⌊a⌋ : α) ≤ a := floor_le a 
+    have  : (⌊b⌋ : α) ≤ b := floor_le b 
+    exact
+      abs_sub_lt_iff.2
+        ⟨by 
+            linarith,
+          by 
+            linarith⟩
 
-theorem floor_eq_iff : ⌊a⌋ = z ↔ «expr↑ » z ≤ a ∧ a < z+1 :=
+theorem floor_eq_iff : ⌊a⌋ = z ↔ ↑z ≤ a ∧ a < z+1 :=
   by 
     rw [le_antisymm_iffₓ, le_floor, ←Int.lt_add_one_iff, floor_lt, Int.cast_add, Int.cast_one, And.comm]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » set.Ico (n : α) «expr + »(n, 1))
 theorem floor_eq_on_Ico (n : ℤ) : ∀ a _ : a ∈ Set.Ico (n : α) (n+1), ⌊a⌋ = n :=
   fun a ⟨h₀, h₁⟩ => floor_eq_iff.mpr ⟨h₀, h₁⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » set.Ico (n : α) «expr + »(n, 1))
 theorem floor_eq_on_Ico' (n : ℤ) : ∀ a _ : a ∈ Set.Ico (n : α) (n+1), (⌊a⌋ : α) = n :=
   fun a ha => congr_argₓ _$ floor_eq_on_Ico n a ha
 
@@ -551,7 +611,7 @@ theorem fract_sub_int (a : α) (m : ℤ) : fract (a - m) = fract a :=
     simp 
 
 @[simp]
-theorem fract_int_add (m : ℤ) (a : α) : fract («expr↑ » m+a) = fract a :=
+theorem fract_int_add (m : ℤ) (a : α) : fract ((↑m)+a) = fract a :=
   by 
     rw [add_commₓ, fract_add_int]
 
@@ -605,7 +665,7 @@ theorem fract_eq_iff {a b : α} : fract a = b ↔ 0 ≤ b ∧ b < 1 ∧ ∃ z : 
       rw [eq_sub_iff_add_eq, add_commₓ, ←eq_sub_iff_add_eq]
       rw [hz, Int.cast_inj, floor_eq_iff, ←hz]
       clear hz 
-      split  <;> simpa [sub_eq_add_neg, add_assocₓ]⟩
+      constructor <;> simpa [sub_eq_add_neg, add_assocₓ]⟩
 
 theorem fract_eq_fract {a b : α} : fract a = fract b ↔ ∃ z : ℤ, a - b = z :=
   ⟨fun h =>
@@ -646,7 +706,7 @@ theorem fract_mul_nat (a : α) (b : ℕ) : ∃ z : ℤ, (fract a*b) - fract (a*b
     rw [Int.cast_sub, ←hz, ←hy]
     abel
 
-theorem preimage_fract (s : Set α) : fract ⁻¹' s = ⋃m : ℤ, (fun x => x - m) ⁻¹' (s ∩ Ico (0 : α) 1) :=
+theorem preimage_fract (s : Set α) : fract ⁻¹' s = ⋃ m : ℤ, (fun x => x - m) ⁻¹' (s ∩ Ico (0 : α) 1) :=
   by 
     ext x 
     simp only [mem_preimage, mem_Union, mem_inter_eq]
@@ -656,11 +716,11 @@ theorem preimage_fract (s : Set α) : fract ⁻¹' s = ⋃m : ℤ, (fun x => x -
     exact floor_eq_iff.2 ⟨sub_nonneg.1 hm0, sub_lt_iff_lt_add'.1 hm1⟩
     exact hms
 
-theorem image_fract (s : Set α) : fract '' s = ⋃m : ℤ, (fun x => x - m) '' s ∩ Ico 0 1 :=
+theorem image_fract (s : Set α) : fract '' s = ⋃ m : ℤ, (fun x => x - m) '' s ∩ Ico 0 1 :=
   by 
     ext x 
     simp only [mem_image, mem_inter_eq, mem_Union]
-    split 
+    constructor
     ·
       rintro ⟨y, hy, rfl⟩
       exact ⟨⌊y⌋, ⟨y, hy, rfl⟩, fract_nonneg y, fract_lt_one y⟩
@@ -751,17 +811,22 @@ theorem ceil_nonneg (ha : 0 ≤ a) : 0 ≤ ⌈a⌉ :=
   by 
     exactModCast ha.trans (le_ceil a)
 
-theorem ceil_eq_iff : ⌈a⌉ = z ↔ «expr↑ » z - 1 < a ∧ a ≤ z :=
+theorem ceil_eq_iff : ⌈a⌉ = z ↔ ↑z - 1 < a ∧ a ≤ z :=
   by 
     rw [←ceil_le, ←Int.cast_one, ←Int.cast_sub, ←lt_ceil, Int.sub_one_lt_iff, le_antisymm_iffₓ, And.comm]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » set.Ioc («expr - »(z, 1) : α) z)
 theorem ceil_eq_on_Ioc (z : ℤ) : ∀ a _ : a ∈ Set.Ioc (z - 1 : α) z, ⌈a⌉ = z :=
   fun a ⟨h₀, h₁⟩ => ceil_eq_iff.mpr ⟨h₀, h₁⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » set.Ioc («expr - »(z, 1) : α) z)
 theorem ceil_eq_on_Ioc' (z : ℤ) : ∀ a _ : a ∈ Set.Ioc (z - 1 : α) z, (⌈a⌉ : α) = z :=
   fun a ha =>
     by 
       exactModCast ceil_eq_on_Ioc z a ha
+
+theorem floor_le_ceil (a : α) : ⌊a⌋ ≤ ⌈a⌉ :=
+  cast_le.1$ (floor_le _).trans$ le_ceil _
 
 theorem floor_lt_ceil_of_lt {a b : α} (h : a < b) : ⌊a⌋ < ⌈b⌉ :=
   cast_lt.1$ (floor_le a).trans_lt$ h.trans_le$ le_ceil b
@@ -846,17 +911,13 @@ theorem preimage_Iic : (coeₓ : ℤ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋ 
 
 end Int
 
--- error in Algebra.Order.Floor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- There exists at most one `floor_ring` structure on a given linear ordered ring. -/
-theorem subsingleton_floor_ring {α} [linear_ordered_ring α] : subsingleton (floor_ring α) :=
-begin
-  refine [expr ⟨λ H₁ H₂, _⟩],
-  have [] [":", expr «expr = »(H₁.floor, H₂.floor)] [":=", expr funext (λ
-    a, «expr $ »(H₁.gc_coe_floor.u_unique H₂.gc_coe_floor, λ _, rfl))],
-  have [] [":", expr «expr = »(H₁.ceil, H₂.ceil)] [":=", expr funext (λ
-    a, «expr $ »(H₁.gc_ceil_coe.l_unique H₂.gc_ceil_coe, λ _, rfl))],
-  cases [expr H₁] [],
-  cases [expr H₂] [],
-  congr; assumption
-end
+theorem subsingleton_floor_ring {α} [LinearOrderedRing α] : Subsingleton (FloorRing α) :=
+  by 
+    refine' ⟨fun H₁ H₂ => _⟩
+    have  : H₁.floor = H₂.floor := funext fun a => H₁.gc_coe_floor.u_unique H₂.gc_coe_floor$ fun _ => rfl 
+    have  : H₁.ceil = H₂.ceil := funext fun a => H₁.gc_ceil_coe.l_unique H₂.gc_ceil_coe$ fun _ => rfl 
+    cases H₁ 
+    cases H₂ 
+    congr <;> assumption
 

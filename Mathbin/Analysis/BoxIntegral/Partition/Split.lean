@@ -31,7 +31,7 @@ rectangular box, partition, hyperplane
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators Filter
 
@@ -52,14 +52,44 @@ variable {I : box ι} {i : ι} {x : ℝ} {y : ι → ℝ}
 def split_lower (I : box ι) (i : ι) (x : ℝ) : WithBot (box ι) :=
   mk' I.lower (update I.upper i (min x (I.upper i)))
 
-@[simp]
-theorem coe_split_lower : (split_lower I i x : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
-  by 
-    rw [split_lower, coe_mk']
-    ext y 
-    simp only [mem_univ_pi, mem_Ioc, mem_inter_eq, mem_coe, mem_set_of_eq, forall_and_distrib, ←Pi.le_def,
-      le_update_iff, le_min_iff, and_assoc, and_forall_ne i, mem_def]
-    rw [and_comm (y i ≤ x), Pi.le_def]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    coe_split_lower
+    : ( split_lower I i x : Set ι → ℝ ) = I ∩ { y | y i ≤ x }
+    :=
+      by
+        rw [ split_lower , coe_mk' ]
+          ext y
+          simp
+            only
+            [
+              mem_univ_pi
+                ,
+                mem_Ioc
+                ,
+                mem_inter_eq
+                ,
+                mem_coe
+                ,
+                mem_set_of_eq
+                ,
+                forall_and_distrib
+                ,
+                ← Pi.le_def
+                ,
+                le_update_iff
+                ,
+                le_min_iff
+                ,
+                and_assoc
+                ,
+                and_forall_ne i
+                ,
+                mem_def
+              ]
+          rw [ and_comm y i ≤ x , Pi.le_def ]
 
 theorem split_lower_le : I.split_lower i x ≤ I :=
   with_bot_coe_subset_iff.1$
@@ -93,14 +123,42 @@ theorem split_lower_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.upp
 def split_upper (I : box ι) (i : ι) (x : ℝ) : WithBot (box ι) :=
   mk' (update I.lower i (max x (I.lower i))) I.upper
 
-@[simp]
-theorem coe_split_upper : (split_upper I i x : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
-  by 
-    rw [split_upper, coe_mk']
-    ext y 
-    simp only [mem_univ_pi, mem_Ioc, mem_inter_eq, mem_coe, mem_set_of_eq, forall_and_distrib,
-      forall_update_iff I.lower fun j z => z < y j, max_lt_iff, and_assoc (x < y i), and_forall_ne i, mem_def]
-    exact and_comm _ _
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    coe_split_upper
+    : ( split_upper I i x : Set ι → ℝ ) = I ∩ { y | x < y i }
+    :=
+      by
+        rw [ split_upper , coe_mk' ]
+          ext y
+          simp
+            only
+            [
+              mem_univ_pi
+                ,
+                mem_Ioc
+                ,
+                mem_inter_eq
+                ,
+                mem_coe
+                ,
+                mem_set_of_eq
+                ,
+                forall_and_distrib
+                ,
+                forall_update_iff I.lower fun j z => z < y j
+                ,
+                max_lt_iff
+                ,
+                and_assoc x < y i
+                ,
+                and_forall_ne i
+                ,
+                mem_def
+              ]
+          exact and_comm _ _
 
 theorem split_upper_le : I.split_upper i x ≤ I :=
   with_bot_coe_subset_iff.1$
@@ -165,14 +223,16 @@ def split (I : box ι) (i : ι) (x : ℝ) : prepartition I :=
       exact I.disjoint_split_lower_split_upper i x)
 
 @[simp]
-theorem mem_split_iff : J ∈ split I i x ↔ «expr↑ » J = I.split_lower i x ∨ «expr↑ » J = I.split_upper i x :=
+theorem mem_split_iff : J ∈ split I i x ↔ ↑J = I.split_lower i x ∨ ↑J = I.split_upper i x :=
   by 
     simp [split]
 
-theorem mem_split_iff' :
-  J ∈ split I i x ↔ (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } ∨ (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
-  by 
-    simp [mem_split_iff, ←box.with_bot_coe_inj]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_split_iff'
+  : J ∈ split I i x ↔ ( J : Set ι → ℝ ) = I ∩ { y | y i ≤ x } ∨ ( J : Set ι → ℝ ) = I ∩ { y | x < y i }
+  := by simp [ mem_split_iff , ← box.with_bot_coe_inj ]
 
 @[simp]
 theorem Union_split (I : box ι) (i : ι) (x : ℝ) : (split I i x).Union = I :=
@@ -183,7 +243,7 @@ theorem is_partition_split (I : box ι) (i : ι) (x : ℝ) : is_partition (split
   is_partition_iff_Union_eq.2$ Union_split I i x
 
 theorem sum_split_boxes {M : Type _} [AddCommMonoidₓ M] (I : box ι) (i : ι) (x : ℝ) (f : box ι → M) :
-  (∑J in (split I i x).boxes, f J) = (I.split_lower i x).elim 0 f+(I.split_upper i x).elim 0 f :=
+  (∑ J in (split I i x).boxes, f J) = (I.split_lower i x).elim 0 f+(I.split_upper i x).elim 0 f :=
   by 
     rw [split, sum_of_with_bot, Finset.sum_pair (I.split_lower_ne_split_upper i x)]
 
@@ -201,32 +261,28 @@ theorem split_of_not_mem_Ioo (h : x ∉ Ioo (I.lower i) (I.upper i)) : split I i
     ·
       rwa [eq_comm, box.split_lower_eq_self]
 
-theorem coe_eq_of_mem_split_of_mem_le {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J) (h₃ : y i ≤ x) :
-  (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
-  (mem_split_iff'.1 h₁).resolve_right$
-    fun H =>
-      by 
-        rw [←box.mem_coe, H] at h₂ 
-        exact h₃.not_lt h₂.2
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  coe_eq_of_mem_split_of_mem_le
+  { y : ι → ℝ } ( h₁ : J ∈ split I i x ) ( h₂ : y ∈ J ) ( h₃ : y i ≤ x ) : ( J : Set ι → ℝ ) = I ∩ { y | y i ≤ x }
+  := mem_split_iff' . 1 h₁ . resolve_right $ fun H => by rw [ ← box.mem_coe , H ] at h₂ exact h₃.not_lt h₂ . 2
 
-theorem coe_eq_of_mem_split_of_lt_mem {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J) (h₃ : x < y i) :
-  (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
-  (mem_split_iff'.1 h₁).resolve_left$
-    fun H =>
-      by 
-        rw [←box.mem_coe, H] at h₂ 
-        exact h₃.not_le h₂.2
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  coe_eq_of_mem_split_of_lt_mem
+  { y : ι → ℝ } ( h₁ : J ∈ split I i x ) ( h₂ : y ∈ J ) ( h₃ : x < y i ) : ( J : Set ι → ℝ ) = I ∩ { y | x < y i }
+  := mem_split_iff' . 1 h₁ . resolve_left $ fun H => by rw [ ← box.mem_coe , H ] at h₂ exact h₃.not_le h₂ . 2
 
--- error in Analysis.BoxIntegral.Partition.Split: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem restrict_split (h : «expr ≤ »(I, J)) (i : ι) (x : exprℝ()) : «expr = »((split J i x).restrict I, split I i x) :=
-begin
-  refine [expr ((is_partition_split J i x).restrict h).eq_of_boxes_subset _],
-  simp [] [] ["only"] ["[", expr finset.subset_iff, ",", expr mem_boxes, ",", expr mem_restrict', ",", expr exists_prop, ",", expr mem_split_iff', "]"] [] [],
-  have [] [":", expr ∀ s, «expr ⊆ »((«expr ∩ »(I, s) : set (ι → exprℝ())), J)] [],
-  from [expr λ s, (inter_subset_left _ _).trans h],
-  rintro [ident J₁, "⟨", ident J₂, ",", "(", ident H₂, "|", ident H₂, ")", ",", ident H₁, "⟩"]; [left, right]; simp [] [] [] ["[", expr H₁, ",", expr H₂, ",", expr inter_left_comm «expr↑ »(I), ",", expr this, "]"] [] []
-end
+theorem restrict_split (h : I ≤ J) (i : ι) (x : ℝ) : (split J i x).restrict I = split I i x :=
+  by 
+    refine' ((is_partition_split J i x).restrict h).eq_of_boxes_subset _ 
+    simp only [Finset.subset_iff, mem_boxes, mem_restrict', exists_prop, mem_split_iff']
+    have  : ∀ s, (I ∩ s : Set (ι → ℝ)) ⊆ J 
+    exact fun s => (inter_subset_left _ _).trans h 
+    rintro J₁ ⟨J₂, H₂ | H₂, H₁⟩ <;> [left, right] <;> simp [H₁, H₂, inter_left_comm (↑I), this]
 
 theorem inf_split (π : prepartition I) (i : ι) (x : ℝ) : π⊓split I i x = π.bUnion fun J => split J i x :=
   bUnion_congr_of_le rfl$ fun J hJ => restrict_split hJ i x
@@ -271,42 +327,41 @@ theorem inf_split_many {I : box ι} (π : prepartition I) (s : Finset (ι × ℝ
     ·
       simpRw [split_many_insert, ←inf_assoc, ihp, inf_split, bUnion_assoc]
 
--- error in Analysis.BoxIntegral.Partition.Split: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Let `s : finset (ι × ℝ)` be a set of hyperplanes `{x : ι → ℝ | x i = r}` in `ι → ℝ` encoded as
 pairs `(i, r)`. Suppose that this set contains all faces of a box `J`. The hyperplanes of `s` split
 a box `I` into subboxes. Let `Js` be one of them. If `J` and `Js` have nonempty intersection, then
 `Js` is a subbox of `J`.  -/
-theorem not_disjoint_imp_le_of_subset_of_mem_split_many
-{I J Js : box ι}
-{s : finset «expr × »(ι, exprℝ())}
-(H : ∀ i, «expr ⊆ »({(i, J.lower i), (i, J.upper i)}, s))
-(HJs : «expr ∈ »(Js, split_many I s))
-(Hn : «expr¬ »(disjoint (J : with_bot (box ι)) Js)) : «expr ≤ »(Js, J) :=
-begin
-  simp [] [] ["only"] ["[", expr finset.insert_subset, ",", expr finset.singleton_subset_iff, "]"] [] ["at", ident H],
-  rcases [expr box.not_disjoint_coe_iff_nonempty_inter.mp Hn, "with", "⟨", ident x, ",", ident hx, ",", ident hxs, "⟩"],
-  refine [expr λ y hy i, ⟨_, _⟩],
-  { rcases [expr split_many_le_split I (H i).1 HJs, "with", "⟨", ident Jl, ",", ident Hmem, ":", expr «expr ∈ »(Jl, split I i (J.lower i)), ",", ident Hle, "⟩"],
-    have [] [] [":=", expr Hle hxs],
-    rw ["[", "<-", expr box.coe_subset_coe, ",", expr coe_eq_of_mem_split_of_lt_mem Hmem this (hx i).1, "]"] ["at", ident Hle],
-    exact [expr (Hle hy).2] },
-  { rcases [expr split_many_le_split I (H i).2 HJs, "with", "⟨", ident Jl, ",", ident Hmem, ":", expr «expr ∈ »(Jl, split I i (J.upper i)), ",", ident Hle, "⟩"],
-    have [] [] [":=", expr Hle hxs],
-    rw ["[", "<-", expr box.coe_subset_coe, ",", expr coe_eq_of_mem_split_of_mem_le Hmem this (hx i).2, "]"] ["at", ident Hle],
-    exact [expr (Hle hy).2] }
-end
+theorem not_disjoint_imp_le_of_subset_of_mem_split_many {I J Js : box ι} {s : Finset (ι × ℝ)}
+  (H : ∀ i, {(i, J.lower i), (i, J.upper i)} ⊆ s) (HJs : Js ∈ split_many I s)
+  (Hn : ¬Disjoint (J : WithBot (box ι)) Js) : Js ≤ J :=
+  by 
+    simp only [Finset.insert_subset, Finset.singleton_subset_iff] at H 
+    rcases box.not_disjoint_coe_iff_nonempty_inter.mp Hn with ⟨x, hx, hxs⟩
+    refine' fun y hy i => ⟨_, _⟩
+    ·
+      rcases split_many_le_split I (H i).1 HJs with ⟨Jl, Hmem : Jl ∈ split I i (J.lower i), Hle⟩
+      have  := Hle hxs 
+      rw [←box.coe_subset_coe, coe_eq_of_mem_split_of_lt_mem Hmem this (hx i).1] at Hle 
+      exact (Hle hy).2
+    ·
+      rcases split_many_le_split I (H i).2 HJs with ⟨Jl, Hmem : Jl ∈ split I i (J.upper i), Hle⟩
+      have  := Hle hxs 
+      rw [←box.coe_subset_coe, coe_eq_of_mem_split_of_mem_le Hmem this (hx i).2] at Hle 
+      exact (Hle hy).2
 
 section Fintype
 
 variable [Fintype ι]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » split_many I t)
 /-- Let `s` be a finite set of boxes in `ℝⁿ = ι → ℝ`. Then there exists a finite set `t₀` of
 hyperplanes (namely, the set of all hyperfaces of boxes in `s`) such that for any `t ⊇ t₀`
 and any box `I` in `ℝⁿ` the following holds. The hyperplanes from `t` split `I` into subboxes.
 Let `J'` be one of them, and let `J` be one of the boxes in `s`. If these boxes have a nonempty
 intersection, then `J' ≤ J`. -/
 theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (box ι)) :
-  ∀ᶠt : Finset (ι × ℝ) in at_top,
+  ∀ᶠ t : Finset (ι × ℝ) in at_top,
     ∀ I : box ι J _ : J ∈ s J' _ : J' ∈ split_many I t, ¬Disjoint (J : WithBot (box ι)) J' → J' ≤ J :=
   by 
     refine'
@@ -316,7 +371,7 @@ theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (box ι)) :
     exact fun p hp => ht (Finset.mem_bUnion.2 ⟨J, hJ, Finset.mem_bUnion.2 ⟨i, Finset.mem_univ _, hp⟩⟩)
 
 theorem eventually_split_many_inf_eq_filter (π : prepartition I) :
-  ∀ᶠt : Finset (ι × ℝ) in at_top, π⊓split_many I t = (split_many I t).filter fun J => «expr↑ » J ⊆ π.Union :=
+  ∀ᶠ t : Finset (ι × ℝ) in at_top, π⊓split_many I t = (split_many I t).filter fun J => ↑J ⊆ π.Union :=
   by 
     refine' (eventually_not_disjoint_imp_le_of_mem_split_many π.boxes).mono fun t ht => _ 
     refine' le_antisymmₓ ((bUnion_le_iff _).2$ fun J hJ => _) (le_inf (fun J hJ => _) (filter_le _ _))
@@ -332,16 +387,12 @@ theorem eventually_split_many_inf_eq_filter (π : prepartition I) :
       refine' ⟨J', hJ', ht I _ hJ' _ hJ.1$ box.not_disjoint_coe_iff_nonempty_inter.2 _⟩
       exact ⟨J.upper, hmem, J.upper_mem⟩
 
--- error in Analysis.BoxIntegral.Partition.Split: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_split_many_inf_eq_filter_of_finite
-(s : set (prepartition I))
-(hs : s.finite) : «expr∃ , »((t : finset «expr × »(ι, exprℝ())), ∀
- π «expr ∈ » s, «expr = »(«expr ⊓ »(π, split_many I t), (split_many I t).filter (λ
-   J, «expr ⊆ »(«expr↑ »(J), π.Union)))) :=
-begin
-  have [] [] [":=", expr λ (π) (hπ : «expr ∈ »(π, s)), eventually_split_many_inf_eq_filter π],
-  exact [expr (hs.eventually_all.2 this).exists]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (π «expr ∈ » s)
+theorem exists_split_many_inf_eq_filter_of_finite (s : Set (prepartition I)) (hs : s.finite) :
+  ∃ t : Finset (ι × ℝ), ∀ π _ : π ∈ s, π⊓split_many I t = (split_many I t).filter fun J => ↑J ⊆ π.Union :=
+  by 
+    have  := fun π hπ : π ∈ s => eventually_split_many_inf_eq_filter π 
+    exact (hs.eventually_all.2 this).exists
 
 /-- If `π` is a partition of `I`, then there exists a finite set `s` of hyperplanes such that
 `split_many I s ≤ π`. -/

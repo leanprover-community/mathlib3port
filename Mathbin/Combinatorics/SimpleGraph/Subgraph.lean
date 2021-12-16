@@ -20,7 +20,7 @@ sub-relation of the adjacency relation of the simple graph.
 * `subgraph.is_spanning` for whether a subgraph is a spanning subgraph and
   `subgraph.is_induced` for whether a subgraph is an induced subgraph.
 
-* A `bounded_order (subgraph G)` instance, under the `subgraph` relation.
+* Instances for `lattice (subgraph G)` and `bounded_order (subgraph G)`.
 
 * `simple_graph.to_subgraph`: If a `simple_graph` is a subgraph of another, then you can turn it
   into a member of the larger graph's `simple_graph.subgraph` type.
@@ -159,7 +159,7 @@ theorem edge_set_subset (G' : subgraph G) : G'.edge_set ⊆ G.edge_set :=
   fun e => Quotientₓ.ind (fun e h => G'.adj_sub h) e
 
 @[simp]
-theorem mem_edge_set {G' : subgraph G} {v w : V} : «expr⟦ ⟧» (v, w) ∈ G'.edge_set ↔ G'.adj v w :=
+theorem mem_edge_set {G' : subgraph G} {v w : V} : ⟦(v, w)⟧ ∈ G'.edge_set ↔ G'.adj v w :=
   Iff.rfl
 
 theorem mem_verts_if_mem_edge {G' : subgraph G} {e : Sym2 V} {v : V} (he : e ∈ G'.edge_set) (hv : v ∈ e) :
@@ -174,9 +174,10 @@ theorem mem_verts_if_mem_edge {G' : subgraph G} {e : Sym2 V} {v : V} (he : e ∈
     ·
       exact G'.edge_vert (G'.symm he)
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The `incidence_set` is the set of edges incident to a given vertex. -/
-def incidence_set (G' : subgraph G) (v : V) : Set (Sym2 V) :=
-  { e∈G'.edge_set | v ∈ e }
+  def incidence_set ( G' : subgraph G ) ( v : V ) : Set Sym2 V := { e ∈ G'.edge_set | v ∈ e }
 
 theorem incidence_set_subset_incidence_set (G' : subgraph G) (v : V) : G'.incidence_set v ⊆ G.incidence_set v :=
   fun e h => ⟨G'.edge_set_subset h.1, h.2⟩
@@ -260,6 +261,28 @@ instance : BoundedOrder (subgraph G) :=
   { top := top, bot := bot, le_top := fun x => ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩,
     bot_le := fun x => ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩ }
 
+@[simp]
+theorem top_adj_iff {v w : V} : (⊤ : subgraph G).Adj v w ↔ G.adj v w :=
+  Iff.rfl
+
+@[simp]
+theorem top_verts : (⊤ : subgraph G).Verts = Set.Univ :=
+  rfl
+
+@[simp]
+theorem bot_adj_iff : (⊥ : subgraph G).Verts = ∅ :=
+  rfl
+
+@[simp]
+theorem bot_verts {v w : V} : ¬(⊥ : subgraph G).Adj v w :=
+  not_false
+
+@[simp]
+theorem spanning_coe_top : (⊤ : subgraph G).spanningCoe = G :=
+  by 
+    ext 
+    rfl
+
 /-- Turn a subgraph of a `simple_graph` into a member of its subgraph type. -/
 @[simps]
 def _root_.simple_graph.to_subgraph (H : SimpleGraph V) (h : H ≤ G) : G.subgraph :=
@@ -276,8 +299,8 @@ theorem spanning_coe.is_subgraph_of_is_subgraph {H H' : subgraph G} (h : H ≤ H
 
 /-- The top of the `subgraph G` lattice is equivalent to the graph itself. -/
 def top_equiv : (⊤ : subgraph G).coe ≃g G :=
-  { toFun := fun v => «expr↑ » v, invFun := fun v => ⟨v, trivialₓ⟩, left_inv := fun ⟨v, _⟩ => rfl,
-    right_inv := fun v => rfl, map_rel_iff' := fun a b => Iff.rfl }
+  { toFun := fun v => ↑v, invFun := fun v => ⟨v, trivialₓ⟩, left_inv := fun ⟨v, _⟩ => rfl, right_inv := fun v => rfl,
+    map_rel_iff' := fun a b => Iff.rfl }
 
 /-- The bottom of the `subgraph G` lattice is equivalent to the empty graph on the empty
 vertex type. -/
@@ -288,7 +311,7 @@ def bot_equiv : (⊥ : subgraph G).coe ≃g (⊥ : SimpleGraph Empty) :=
 /-- Given two subgraphs, one a subgraph of the other, there is an induced injective homomorphism of
 the subgraphs as graphs. -/
 def map {x y : subgraph G} (h : x ≤ y) : x.coe →g y.coe :=
-  { toFun := fun v => ⟨«expr↑ » v, And.left h v.property⟩, map_rel' := fun v w hvw => h.2 hvw }
+  { toFun := fun v => ⟨↑v, And.left h v.property⟩, map_rel' := fun v w hvw => h.2 hvw }
 
 theorem map.injective {x y : subgraph G} (h : x ≤ y) : Function.Injective (map h) :=
   fun v w h =>
@@ -306,6 +329,15 @@ theorem map_top.injective {x : subgraph G} : Function.Injective x.map_top :=
 @[simp]
 theorem map_top_to_fun {x : subgraph G} (v : x.verts) : x.map_top v = v :=
   rfl
+
+/-- There is an induced injective homomorphism of a subgraph of `G` as
+a spanning subgraph into `G`. -/
+@[simps]
+def map_spanning_top (x : subgraph G) : x.spanning_coe →g G :=
+  { toFun := id, map_rel' := fun v w hvw => x.adj_sub hvw }
+
+theorem map_spanning_top.injective {x : subgraph G} : Function.Injective x.map_spanning_top :=
+  fun v w h => h
 
 theorem neighbor_set_subset_of_subgraph {x y : subgraph G} (h : x ≤ y) (v : V) : x.neighbor_set v ⊆ y.neighbor_set v :=
   fun w h' => h.2 h'

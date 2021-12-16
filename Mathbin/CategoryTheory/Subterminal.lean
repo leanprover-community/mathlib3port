@@ -24,7 +24,7 @@ We also construct the subcategory of subterminal objects.
 
 universe v₁ v₂ u₁ u₂
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -91,45 +91,46 @@ theorem is_subterminal.is_iso_diag (hA : is_subterminal A) [has_binary_product A
           rw [is_subterminal.def] at hA 
           tidy⟩⟩⟩
 
--- error in CategoryTheory.Subterminal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If the diagonal morphism of `A` is an isomorphism, then it is subterminal.
 The converse of `is_subterminal.is_iso_diag`.
--/ theorem is_subterminal_of_is_iso_diag [has_binary_product A A] [is_iso (diag A)] : is_subterminal A :=
-λ Z f g, begin
-  have [] [":", expr «expr = »((limits.prod.fst : «expr ⟶ »(«expr ⨯ »(A, A), _)), limits.prod.snd)] [],
-  { simp [] [] [] ["[", "<-", expr cancel_epi (diag A), "]"] [] [] },
-  rw ["[", "<-", expr prod.lift_fst f g, ",", expr this, ",", expr prod.lift_snd, "]"] []
-end
+-/
+theorem is_subterminal_of_is_iso_diag [has_binary_product A A] [is_iso (diag A)] : is_subterminal A :=
+  fun Z f g =>
+    by 
+      have  : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd
+      ·
+        simp [←cancel_epi (diag A)]
+      rw [←prod.lift_fst f g, this, prod.lift_snd]
 
--- error in CategoryTheory.Subterminal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/
-@[simps #[]]
-def is_subterminal.iso_diag (hA : is_subterminal A) [has_binary_product A A] : «expr ≅ »(«expr ⨯ »(A, A), A) :=
-begin
-  letI [] [] [":=", expr is_subterminal.is_iso_diag hA],
-  apply [expr (as_iso (diag A)).symm]
-end
+@[simps]
+def is_subterminal.iso_diag (hA : is_subterminal A) [has_binary_product A A] : A ⨯ A ≅ A :=
+  by 
+    let this' := is_subterminal.is_iso_diag hA 
+    apply (as_iso (diag A)).symm
 
 variable (C)
 
--- error in CategoryTheory.Subterminal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /--
 The (full sub)category of subterminal objects.
 TODO: If `C` is the category of sheaves on a topological space `X`, this category is equivalent
 to the lattice of open subsets of `X`. More generally, if `C` is a topos, this is the lattice of
 "external truth values".
--/ @[derive #[expr category]] def subterminals (C : Type u₁) [category.{v₁} C] :=
-{A : C // is_subterminal A}
+-/
+def subterminals (C : Type u₁) [category.{v₁} C] :=
+  { A : C // is_subterminal A }deriving [anonymous]
 
 instance [has_terminal C] : Inhabited (subterminals C) :=
   ⟨⟨⊤_ C, is_subterminal_of_terminal⟩⟩
 
--- error in CategoryTheory.Subterminal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- The inclusion of the subterminal objects into the original category. -/
-@[derive #["[", expr full, ",", expr faithful, "]"], simps #[]]
-def subterminal_inclusion : «expr ⥤ »(subterminals C, C) :=
-full_subcategory_inclusion _
+@[simps]
+def subterminal_inclusion : subterminals C ⥤ C :=
+  full_subcategory_inclusion _ deriving [anonymous], [anonymous]
 
 instance subterminals_thin (X Y : subterminals C) : Subsingleton (X ⟶ Y) :=
   ⟨fun f g => Y.2 f g⟩

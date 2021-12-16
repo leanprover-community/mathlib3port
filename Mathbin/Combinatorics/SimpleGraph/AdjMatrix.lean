@@ -130,8 +130,7 @@ variable {A}
 theorem compl [HasZero α] [HasOne α] (h : is_adj_matrix A) : is_adj_matrix A.compl :=
   is_adj_matrix_compl A h.symm
 
-theorem to_graph_compl_eq [MulZeroOneClass α] [Nontrivial α] (h : is_adj_matrix A) :
-  h.compl.to_graph = «expr ᶜ» h.to_graph :=
+theorem to_graph_compl_eq [MulZeroOneClass α] [Nontrivial α] (h : is_adj_matrix A) : h.compl.to_graph = h.to_graphᶜ :=
   by 
     ext v w 
     cases' h.zero_or_one v w with h h <;> byCases' hvw : v = w <;> simp [Matrix.compl, h, hvw]
@@ -192,25 +191,25 @@ variable {α} [Fintype V]
 
 @[simp]
 theorem adj_matrix_dot_product [NonAssocSemiring α] (v : V) (vec : V → α) :
-  dot_product (G.adj_matrix α v) vec = ∑u in G.neighbor_finset v, vec u :=
+  dot_product (G.adj_matrix α v) vec = ∑ u in G.neighbor_finset v, vec u :=
   by 
     simp [neighbor_finset_eq_filter, dot_product, sum_filter]
 
 @[simp]
 theorem dot_product_adj_matrix [NonAssocSemiring α] (v : V) (vec : V → α) :
-  dot_product vec (G.adj_matrix α v) = ∑u in G.neighbor_finset v, vec u :=
+  dot_product vec (G.adj_matrix α v) = ∑ u in G.neighbor_finset v, vec u :=
   by 
     simp [neighbor_finset_eq_filter, dot_product, sum_filter, Finset.sum_apply]
 
 @[simp]
 theorem adj_matrix_mul_vec_apply [NonAssocSemiring α] (v : V) (vec : V → α) :
-  ((G.adj_matrix α).mulVec vec) v = ∑u in G.neighbor_finset v, vec u :=
+  ((G.adj_matrix α).mulVec vec) v = ∑ u in G.neighbor_finset v, vec u :=
   by 
     rw [mul_vec, adj_matrix_dot_product]
 
 @[simp]
 theorem adj_matrix_vec_mul_apply [NonAssocSemiring α] (v : V) (vec : V → α) :
-  ((G.adj_matrix α).vecMul vec) v = ∑u in G.neighbor_finset v, vec u :=
+  ((G.adj_matrix α).vecMul vec) v = ∑ u in G.neighbor_finset v, vec u :=
   by 
     rw [←dot_product_adj_matrix, vec_mul]
     refine' congr rfl _ 
@@ -219,13 +218,13 @@ theorem adj_matrix_vec_mul_apply [NonAssocSemiring α] (v : V) (vec : V → α) 
 
 @[simp]
 theorem adj_matrix_mul_apply [NonAssocSemiring α] (M : Matrix V V α) (v w : V) :
-  (G.adj_matrix α ⬝ M) v w = ∑u in G.neighbor_finset v, M u w :=
+  (G.adj_matrix α ⬝ M) v w = ∑ u in G.neighbor_finset v, M u w :=
   by 
     simp [mul_apply, neighbor_finset_eq_filter, sum_filter]
 
 @[simp]
 theorem mul_adj_matrix_apply [NonAssocSemiring α] (M : Matrix V V α) (v w : V) :
-  (M ⬝ G.adj_matrix α) v w = ∑u in G.neighbor_finset w, M v u :=
+  (M ⬝ G.adj_matrix α) v w = ∑ u in G.neighbor_finset w, M v u :=
   by 
     simp [mul_apply, neighbor_finset_eq_filter, sum_filter, adj_comm]
 

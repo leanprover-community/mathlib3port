@@ -184,7 +184,7 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.
       ·
         exact ⟨(w' (Finset.mem_of_mem_insert_of_ne mY h)).some ≫ right_to_max _ _⟩
 
-variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ' (X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
 /--
 Given any `finset` of objects `{X, ...}` and
@@ -195,7 +195,7 @@ such that the triangles commute: `f ≫ T Y = T X`, for `f : X ⟶ Y` in the `fi
 theorem sup_exists :
   ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (X ⟶ S)),
     ∀ {X Y : C} mX : X ∈ O mY : Y ∈ O {f : X ⟶ Y},
-      (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
+      (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
   by 
     classical 
     apply Finset.induction_on H
@@ -244,7 +244,7 @@ noncomputable def to_sup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
 The triangles of consisting of a morphism in `H` and the maps to `sup O H` commute.
 -/
 theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
-  (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : f ≫ to_sup O H mY = to_sup O H mX :=
+  (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : f ≫ to_sup O H mY = to_sup O H mX :=
   (sup_exists O H).some_spec.some_spec mX mY mf
 
 variable {J : Type v} [small_category J] [fin_category J]
@@ -257,7 +257,7 @@ theorem cocone_nonempty (F : J ⥤ C) : _root_.nonempty (cocone F) :=
   by 
     classical 
     let O := finset.univ.image F.obj 
-    let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+    let H : Finset (Σ' (X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
       finset.univ.bUnion
         fun X : J =>
           finset.univ.bUnion
@@ -405,11 +405,11 @@ theorem bowtie {j₁ j₂ k₁ k₂ : C} (f₁ : j₁ ⟶ k₁) (g₁ : j₁ ⟶
     let sd := max sb sc 
     let s := coeq ((coeq_hom _ _ : sa ⟶ sb) ≫ left_to_max _ _) ((coeq_hom _ _ : sa ⟶ sc) ≫ right_to_max _ _)
     use s 
-    fsplit 
+    fconstructor 
     exact left_to_max k₁ k₂ ≫ coeq_hom _ _ ≫ left_to_max sb sc ≫ coeq_hom _ _ 
-    fsplit 
+    fconstructor 
     exact right_to_max k₁ k₂ ≫ coeq_hom _ _ ≫ right_to_max sb sc ≫ coeq_hom _ _ 
-    fsplit
+    fconstructor
     ·
       sliceLHS 1 3 => rw [←category.assoc, coeq_condition]
       sliceLHS 3 5 => rw [←category.assoc, coeq_condition]
@@ -452,11 +452,11 @@ theorem tulip {j₁ j₂ j₃ k₁ k₂ l : C} (f₁ : j₁ ⟶ k₁) (f₂ : j�
     use first_to_max₃ k₁ l k₂ ≫ coeq_hom _ _ ≫ first_to_max₃ sb sc sd ≫ coeq₃_hom _ _ _ 
     use second_to_max₃ k₁ l k₂ ≫ coeq_hom _ _ ≫ second_to_max₃ sb sc sd ≫ coeq₃_hom _ _ _ 
     use third_to_max₃ k₁ l k₂ ≫ coeq_hom _ _ ≫ third_to_max₃ sb sc sd ≫ coeq₃_hom _ _ _ 
-    fsplit 
+    fconstructor 
     sliceLHS 1 3 => rw [←category.assoc, coeq_condition]
     sliceLHS 3 6 => rw [←category.assoc, coeq₃_condition₁]
     simp only [category.assoc]
-    fsplit 
+    fconstructor 
     sliceLHS 3 6 => rw [←category.assoc, coeq₃_condition₁]
     sliceLHS 1 3 => rw [←category.assoc, coeq_condition]
     sliceRHS 3 6 => rw [←category.assoc, ←coeq₃_condition₂]
@@ -587,7 +587,7 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.
       ·
         exact ⟨min_to_right _ _ ≫ (w' (Finset.mem_of_mem_insert_of_ne mY h)).some⟩
 
-variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ' (X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
 /--
 Given any `finset` of objects `{X, ...}` and
@@ -598,7 +598,7 @@ such that the triangles commute: `T X ≫ f = T Y`, for `f : X ⟶ Y` in the `fi
 theorem inf_exists :
   ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (S ⟶ X)),
     ∀ {X Y : C} mX : X ∈ O mY : Y ∈ O {f : X ⟶ Y},
-      (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
+      (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
   by 
     classical 
     apply Finset.induction_on H
@@ -647,7 +647,7 @@ noncomputable def inf_to {X : C} (m : X ∈ O) : inf O H ⟶ X :=
 The triangles consisting of a morphism in `H` and the maps from `inf O H` commute.
 -/
 theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
-  (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : inf_to O H mX ≫ f = inf_to O H mY :=
+  (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : inf_to O H mX ≫ f = inf_to O H mY :=
   (inf_exists O H).some_spec.some_spec mX mY mf
 
 variable {J : Type v} [small_category J] [fin_category J]
@@ -660,7 +660,7 @@ theorem cone_nonempty (F : J ⥤ C) : _root_.nonempty (cone F) :=
   by 
     classical 
     let O := finset.univ.image F.obj 
-    let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+    let H : Finset (Σ' (X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
       finset.univ.bUnion
         fun X : J =>
           finset.univ.bUnion
@@ -730,7 +730,7 @@ section Opposite
 
 open Opposite
 
-instance is_cofiltered_op_of_is_filtered [is_filtered C] : is_cofiltered («expr ᵒᵖ» C) :=
+instance is_cofiltered_op_of_is_filtered [is_filtered C] : is_cofiltered (Cᵒᵖ) :=
   { cocone_objs :=
       fun X Y =>
         ⟨op (is_filtered.max X.unop Y.unop), (is_filtered.left_to_max _ _).op, (is_filtered.right_to_max _ _).op,
@@ -749,7 +749,7 @@ instance is_cofiltered_op_of_is_filtered [is_filtered C] : is_cofiltered («expr
             exact is_filtered.coeq_condition f.unop g.unop⟩,
     Nonempty := ⟨op is_filtered.nonempty.some⟩ }
 
-instance is_filtered_op_of_is_cofiltered [is_cofiltered C] : is_filtered («expr ᵒᵖ» C) :=
+instance is_filtered_op_of_is_cofiltered [is_cofiltered C] : is_filtered (Cᵒᵖ) :=
   { cocone_objs :=
       fun X Y =>
         ⟨op (is_cofiltered.min X.unop Y.unop), (is_cofiltered.min_to_left X.unop Y.unop).op,

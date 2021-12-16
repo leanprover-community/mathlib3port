@@ -40,7 +40,7 @@ namespace Monadₓ
 
 open Limits
 
-noncomputable theory
+noncomputable section 
 
 namespace MonadicityInternal
 
@@ -223,11 +223,11 @@ def creates_G_split_coequalizers_of_monadic [monadic_right_adjoint G] ⦃A B⦄ 
     apply monadic_creates_colimit_of_preserves_colimit _ _ 
     infer_instance
     ·
-      apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair _).symm 
+      apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair.{v₁} _).symm 
       dsimp 
       infer_instance
     ·
-      apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair _).symm 
+      apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair.{v₁} _).symm 
       dsimp 
       infer_instance
 
@@ -235,71 +235,74 @@ variable [is_right_adjoint G]
 
 section BeckMonadicity
 
--- error in CategoryTheory.Monad.Monadicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 To show `G` is a monadic right adjoint, we can show it preserves and reflects `G`-split
 coequalizers, and `C` has them.
 -/
 def monadic_of_has_preserves_reflects_G_split_coequalizers
-[∀ {{A B}} (f g : «expr ⟶ »(A, B)) [G.is_split_pair f g], has_coequalizer f g]
-[∀ {{A B}} (f g : «expr ⟶ »(A, B)) [G.is_split_pair f g], preserves_colimit (parallel_pair f g) G]
-[∀
- {{A B}}
- (f g : «expr ⟶ »(A, B))
- [G.is_split_pair f g], reflects_colimit (parallel_pair f g) G] : monadic_right_adjoint G :=
-begin
-  let [ident L] [":", expr «expr ⥤ »((adjunction.of_right_adjoint G).to_monad.algebra, D)] [":=", expr left_adjoint_comparison],
-  letI [ident i] [":", expr is_right_adjoint (comparison (of_right_adjoint G))] [":=", expr ⟨_, comparison_adjunction⟩],
-  constructor,
-  let [] [":", expr ∀
-   X : (of_right_adjoint G).to_monad.algebra, is_iso ((of_right_adjoint (comparison (of_right_adjoint G))).unit.app X)] [],
-  { intro [ident X],
-    apply [expr is_iso_of_reflects_iso _ (monad.forget (of_right_adjoint G).to_monad)],
-    { change [expr is_iso (comparison_adjunction.unit.app X).f] [] [],
-      rw [expr comparison_adjunction_unit_f] [],
-      change [expr is_iso (is_colimit.cocone_point_unique_up_to_iso (beck_coequalizer X) (unit_colimit_of_preserves_coequalizer X)).hom] [] [],
-      refine [expr is_iso.of_iso (is_colimit.cocone_point_unique_up_to_iso _ _)] } },
-  let [] [":", expr ∀ Y : D, is_iso ((of_right_adjoint (comparison (of_right_adjoint G))).counit.app Y)] [],
-  { intro [ident Y],
-    change [expr is_iso (comparison_adjunction.counit.app Y)] [] [],
-    rw [expr comparison_adjunction_counit_app] [],
-    change [expr is_iso (is_colimit.cocone_point_unique_up_to_iso _ _).hom] [] [],
-    apply_instance,
-    apply [expr counit_coequalizer_of_reflects_coequalizer _],
-    letI [] [":", expr G.is_split_pair ((left_adjoint G).map (G.map ((adjunction.of_right_adjoint G).counit.app Y))) ((adjunction.of_right_adjoint G).counit.app ((left_adjoint G).obj (G.obj Y)))] [":=", expr monadicity_internal.main_pair_G_split ((comparison (adjunction.of_right_adjoint G)).obj Y)],
-    apply_instance },
-  exactI [expr adjunction.is_right_adjoint_to_is_equivalence]
-end
+  [∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], has_coequalizer f g]
+  [∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], preserves_colimit (parallel_pair f g) G]
+  [∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], reflects_colimit (parallel_pair f g) G] : monadic_right_adjoint G :=
+  by 
+    let L : (adjunction.of_right_adjoint G).toMonad.Algebra ⥤ D := left_adjoint_comparison 
+    let i : is_right_adjoint (comparison (of_right_adjoint G)) := ⟨_, comparison_adjunction⟩
+    constructor 
+    let  :
+      ∀ X : (of_right_adjoint G).toMonad.Algebra,
+        is_iso ((of_right_adjoint (comparison (of_right_adjoint G))).Unit.app X)
+    ·
+      intro X 
+      apply is_iso_of_reflects_iso _ (monad.forget (of_right_adjoint G).toMonad)
+      ·
+        change is_iso (comparison_adjunction.unit.app X).f 
+        rw [comparison_adjunction_unit_f]
+        change
+          is_iso
+            (is_colimit.cocone_point_unique_up_to_iso (beck_coequalizer X)
+                (unit_colimit_of_preserves_coequalizer X)).Hom
+              
+        refine' is_iso.of_iso (is_colimit.cocone_point_unique_up_to_iso _ _)
+    let  : ∀ Y : D, is_iso ((of_right_adjoint (comparison (of_right_adjoint G))).counit.app Y)
+    ·
+      intro Y 
+      change is_iso (comparison_adjunction.counit.app Y)
+      rw [comparison_adjunction_counit_app]
+      change is_iso (is_colimit.cocone_point_unique_up_to_iso _ _).Hom 
+      infer_instance 
+      apply counit_coequalizer_of_reflects_coequalizer _ 
+      let this' :
+        G.is_split_pair ((left_adjoint G).map (G.map ((adjunction.of_right_adjoint G).counit.app Y)))
+          ((adjunction.of_right_adjoint G).counit.app ((left_adjoint G).obj (G.obj Y))) :=
+        monadicity_internal.main_pair_G_split ((comparison (adjunction.of_right_adjoint G)).obj Y)
+      infer_instance 
+    exact adjunction.is_right_adjoint_to_is_equivalence
 
--- error in CategoryTheory.Monad.Monadicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Beck's monadicity theorem. If `G` has a right adjoint and creates coequalizers of `G`-split pairs,
 then it is monadic.
 This is the converse of `creates_G_split_of_monadic`.
 -/
 def monadic_of_creates_G_split_coequalizers
-[∀
- {{A B}}
- (f g : «expr ⟶ »(A, B))
- [G.is_split_pair f g], creates_colimit (parallel_pair f g) G] : monadic_right_adjoint G :=
-begin
-  letI [] [":", expr ∀
-   {{A B}}
-   (f g : «expr ⟶ »(A, B))
-   [G.is_split_pair f g], has_colimit «expr ⋙ »(parallel_pair f g, G)] [],
-  { introsI [ident A, ident B, ident f, ident g, ident i],
-    apply [expr has_colimit_of_iso (diagram_iso_parallel_pair.{v₁} _)],
-    change [expr has_coequalizer (G.map f) (G.map g)] [] [],
-    apply_instance },
-  apply [expr monadic_of_has_preserves_reflects_G_split_coequalizers _],
-  { apply_instance },
-  { introsI [ident A, ident B, ident f, ident g, ident i],
-    apply [expr has_colimit_of_created (parallel_pair f g) G] },
-  { introsI [ident A, ident B, ident f, ident g, ident i],
-    apply_instance },
-  { introsI [ident A, ident B, ident f, ident g, ident i],
-    apply_instance }
-end
+  [∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], creates_colimit (parallel_pair f g) G] : monadic_right_adjoint G :=
+  by 
+    let  : ∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], has_colimit (parallel_pair f g ⋙ G)
+    ·
+      intros A B f g i 
+      apply has_colimit_of_iso (diagram_iso_parallel_pair.{v₁} _)
+      change has_coequalizer (G.map f) (G.map g)
+      infer_instance 
+    apply monadic_of_has_preserves_reflects_G_split_coequalizers _
+    ·
+      infer_instance
+    ·
+      intros A B f g i 
+      apply has_colimit_of_created (parallel_pair f g) G
+    ·
+      intros A B f g i 
+      infer_instance
+    ·
+      intros A B f g i 
+      infer_instance
 
 /--
 An alternate version of Beck's monadicity theorem. If `G` reflects isomorphisms, preserves
@@ -328,33 +331,40 @@ variable [has_reflexive_coequalizers D] [reflects_isomorphisms G]
 
 variable [∀ ⦃A B⦄ f g : A ⟶ B [is_reflexive_pair f g], preserves_colimit (parallel_pair f g) G]
 
--- error in CategoryTheory.Monad.Monadicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Reflexive (crude) monadicity theorem. If `G` has a right adjoint, `D` has and `G` preserves
 reflexive coequalizers and `G` reflects isomorphisms, then `G` is monadic.
--/ def monadic_of_has_preserves_reflexive_coequalizers_of_reflects_isomorphisms : monadic_right_adjoint G :=
-begin
-  let [ident L] [":", expr «expr ⥤ »((adjunction.of_right_adjoint G).to_monad.algebra, D)] [":=", expr left_adjoint_comparison],
-  letI [ident i] [":", expr is_right_adjoint (comparison (adjunction.of_right_adjoint G))] [":=", expr ⟨_, comparison_adjunction⟩],
-  constructor,
-  let [] [":", expr ∀
-   X : (adjunction.of_right_adjoint G).to_monad.algebra, is_iso ((adjunction.of_right_adjoint (comparison (adjunction.of_right_adjoint G))).unit.app X)] [],
-  { intro [ident X],
-    apply [expr is_iso_of_reflects_iso _ (monad.forget (adjunction.of_right_adjoint G).to_monad)],
-    { change [expr is_iso (comparison_adjunction.unit.app X).f] [] [],
-      rw [expr comparison_adjunction_unit_f] [],
-      change [expr is_iso (is_colimit.cocone_point_unique_up_to_iso (beck_coequalizer X) (unit_colimit_of_preserves_coequalizer X)).hom] [] [],
-      apply [expr is_iso.of_iso (is_colimit.cocone_point_unique_up_to_iso _ _)] } },
-  let [] [":", expr ∀ Y : D, is_iso ((of_right_adjoint (comparison (adjunction.of_right_adjoint G))).counit.app Y)] [],
-  { intro [ident Y],
-    change [expr is_iso (comparison_adjunction.counit.app Y)] [] [],
-    rw [expr comparison_adjunction_counit_app] [],
-    change [expr is_iso (is_colimit.cocone_point_unique_up_to_iso _ _).hom] [] [],
-    apply_instance,
-    apply [expr counit_coequalizer_of_reflects_coequalizer _],
-    apply [expr reflects_colimit_of_reflects_isomorphisms] },
-  exactI [expr adjunction.is_right_adjoint_to_is_equivalence]
-end
+-/
+def monadic_of_has_preserves_reflexive_coequalizers_of_reflects_isomorphisms : monadic_right_adjoint G :=
+  by 
+    let L : (adjunction.of_right_adjoint G).toMonad.Algebra ⥤ D := left_adjoint_comparison 
+    let i : is_right_adjoint (comparison (adjunction.of_right_adjoint G)) := ⟨_, comparison_adjunction⟩
+    constructor 
+    let  :
+      ∀ X : (adjunction.of_right_adjoint G).toMonad.Algebra,
+        is_iso ((adjunction.of_right_adjoint (comparison (adjunction.of_right_adjoint G))).Unit.app X)
+    ·
+      intro X 
+      apply is_iso_of_reflects_iso _ (monad.forget (adjunction.of_right_adjoint G).toMonad)
+      ·
+        change is_iso (comparison_adjunction.unit.app X).f 
+        rw [comparison_adjunction_unit_f]
+        change
+          is_iso
+            (is_colimit.cocone_point_unique_up_to_iso (beck_coequalizer X)
+                (unit_colimit_of_preserves_coequalizer X)).Hom
+              
+        apply is_iso.of_iso (is_colimit.cocone_point_unique_up_to_iso _ _)
+    let  : ∀ Y : D, is_iso ((of_right_adjoint (comparison (adjunction.of_right_adjoint G))).counit.app Y)
+    ·
+      intro Y 
+      change is_iso (comparison_adjunction.counit.app Y)
+      rw [comparison_adjunction_counit_app]
+      change is_iso (is_colimit.cocone_point_unique_up_to_iso _ _).Hom 
+      infer_instance 
+      apply counit_coequalizer_of_reflects_coequalizer _ 
+      apply reflects_colimit_of_reflects_isomorphisms 
+    exact adjunction.is_right_adjoint_to_is_equivalence
 
 end ReflexiveMonadicity
 

@@ -27,25 +27,28 @@ noncomputable def sq_local_homeomorph : LocalHomeomorph ℝ ℝ :=
     open_source := is_open_Ioi, open_target := is_open_Ioi, continuous_to_fun := (continuous_pow 2).ContinuousOn,
     continuous_inv_fun := continuous_on_id.sqrt }
 
--- error in Analysis.SpecialFunctions.Sqrt: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem deriv_sqrt_aux
-{x : exprℝ()}
-(hx : «expr ≠ »(x, 0)) : «expr ∧ »(has_strict_deriv_at sqrt «expr / »(1, «expr * »(2, sqrt x)) x, ∀
- n, times_cont_diff_at exprℝ() n sqrt x) :=
-begin
-  cases [expr hx.lt_or_lt] ["with", ident hx, ident hx],
-  { rw ["[", expr sqrt_eq_zero_of_nonpos hx.le, ",", expr mul_zero, ",", expr div_zero, "]"] [],
-    have [] [":", expr «expr =ᶠ[ ] »(sqrt, expr𝓝() x, λ
-      _, 0)] [":=", expr (gt_mem_nhds hx).mono (λ x hx, sqrt_eq_zero_of_nonpos hx.le)],
-    exact [expr ⟨(has_strict_deriv_at_const x (0 : exprℝ())).congr_of_eventually_eq this.symm, λ
-      n, times_cont_diff_at_const.congr_of_eventually_eq this⟩] },
-  { have [] [":", expr «expr ≠ »(«expr * »(«expr↑ »(2), «expr ^ »(sqrt x, «expr - »(2, 1))), 0)] [],
-    by simp [] [] [] ["[", expr (sqrt_pos.2 hx).ne', ",", expr @two_ne_zero exprℝ(), "]"] [] [],
-    split,
-    { simpa [] [] [] [] [] ["using", expr sq_local_homeomorph.has_strict_deriv_at_symm hx this (has_strict_deriv_at_pow 2 _)] },
-    { exact [expr λ
-       n, sq_local_homeomorph.times_cont_diff_at_symm_deriv this hx (has_deriv_at_pow 2 (sqrt x)) (times_cont_diff_at_id.pow 2)] } }
-end
+theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) :
+  HasStrictDerivAt sqrt (1 / 2*sqrt x) x ∧ ∀ n, TimesContDiffAt ℝ n sqrt x :=
+  by 
+    cases' hx.lt_or_lt with hx hx
+    ·
+      rw [sqrt_eq_zero_of_nonpos hx.le, mul_zero, div_zero]
+      have  : sqrt =ᶠ[𝓝 x] fun _ => 0 := (gt_mem_nhds hx).mono fun x hx => sqrt_eq_zero_of_nonpos hx.le 
+      exact
+        ⟨(has_strict_deriv_at_const x (0 : ℝ)).congr_of_eventually_eq this.symm,
+          fun n => times_cont_diff_at_const.congr_of_eventually_eq this⟩
+    ·
+      have  : ((↑2)*sqrt x^2 - 1) ≠ 0
+      ·
+        simp [(sqrt_pos.2 hx).ne', @two_ne_zero ℝ]
+      constructor
+      ·
+        simpa using sq_local_homeomorph.has_strict_deriv_at_symm hx this (has_strict_deriv_at_pow 2 _)
+      ·
+        exact
+          fun n =>
+            sq_local_homeomorph.times_cont_diff_at_symm_deriv this hx (has_deriv_at_pow 2 (sqrt x))
+              (times_cont_diff_at_id.pow 2)
 
 theorem has_strict_deriv_at_sqrt {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt sqrt (1 / 2*sqrt x) x :=
   (deriv_sqrt_aux hx).1
@@ -114,6 +117,7 @@ theorem DifferentiableAt.sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
   DifferentiableAt ℝ (fun y => sqrt (f y)) x :=
   (hf.has_fderiv_at.sqrt hx).DifferentiableAt
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem DifferentiableOn.sqrt (hf : DifferentiableOn ℝ f s) (hs : ∀ x _ : x ∈ s, f x ≠ 0) :
   DifferentiableOn ℝ (fun y => sqrt (f y)) s :=
   fun x hx => (hf x hx).sqrt (hs x hx)
@@ -138,6 +142,7 @@ theorem TimesContDiffWithinAt.sqrt (hf : TimesContDiffWithinAt ℝ n f s x) (hx 
   TimesContDiffWithinAt ℝ n (fun y => sqrt (f y)) s x :=
   (times_cont_diff_at_sqrt hx).comp_times_cont_diff_within_at x hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem TimesContDiffOn.sqrt (hf : TimesContDiffOn ℝ n f s) (hs : ∀ x _ : x ∈ s, f x ≠ 0) :
   TimesContDiffOn ℝ n (fun y => sqrt (f y)) s :=
   fun x hx => (hf x hx).sqrt (hs x hx)

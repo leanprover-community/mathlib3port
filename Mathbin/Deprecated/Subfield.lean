@@ -47,9 +47,15 @@ theorem Range.is_subfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (S
 
 namespace Field
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » ring.closure S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » ring.closure S)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- `field.closure s` is the minimal subfield that includes `s`. -/
-def closure : Set F :=
-  { x | ∃ (y : _)(_ : y ∈ Ringₓ.Closure S), ∃ (z : _)(_ : z ∈ Ringₓ.Closure S), y / z = x }
+  def
+    closure
+    : Set F
+    := { x | ∃ ( y : _ ) ( _ : y ∈ Ringₓ.Closure S ) , ∃ ( z : _ ) ( _ : z ∈ Ringₓ.Closure S ) , y / z = x }
 
 variable {S}
 
@@ -95,10 +101,6 @@ theorem closure.is_subfield : IsSubfield (closure S) :=
     inv_mem :=
       by 
         rintro _ ⟨p, hp, q, hq, rfl⟩
-        classical 
-        byCases' hp0 : p = 0
-        ·
-          simp [hp0, h0]
         exact ⟨q, hq, p, hp, inv_div.symm⟩ }
 
 theorem mem_closure {a : F} (ha : a ∈ S) : a ∈ closure S :=
@@ -121,7 +123,7 @@ theorem closure_mono {s t : Set F} (H : s ⊆ t) : closure s ⊆ closure t :=
 end Field
 
 theorem is_subfield_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set F} (hs : ∀ i, IsSubfield (s i))
-  (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) : IsSubfield (⋃i, s i) :=
+  (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) : IsSubfield (⋃ i, s i) :=
   { inv_mem :=
       fun x hx =>
         let ⟨i, hi⟩ := Set.mem_Union.1 hx 

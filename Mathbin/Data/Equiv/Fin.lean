@@ -13,11 +13,11 @@ variable {m n : ℕ}
 
 /-- Equivalence between `fin 0` and `empty`. -/
 def finZeroEquiv : Finₓ 0 ≃ Empty :=
-  Equiv.equivEmpty _
+  Equivₓ.equivEmpty _
 
 /-- Equivalence between `fin 0` and `pempty`. -/
 def finZeroEquiv' : Finₓ 0 ≃ Pempty.{u} :=
-  Equiv.equivPempty _
+  Equivₓ.equivPempty _
 
 /-- Equivalence between `fin 1` and `unit`. -/
 def finOneEquiv : Finₓ 1 ≃ Unit :=
@@ -49,38 +49,42 @@ def piFinTwoEquiv (α : Finₓ 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1 :=
   { toFun := fun f => (f 0, f 1), invFun := fun p => Finₓ.cons p.1$ Finₓ.cons p.2 finZeroElim,
     left_inv := fun f => funext$ Finₓ.forall_fin_two.2 ⟨rfl, rfl⟩, right_inv := fun ⟨x, y⟩ => rfl }
 
--- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fin.preimage_apply_01_prod
-{α : fin 2 → Type u}
-(s : set (α 0))
-(t : set (α 1)) : «expr = »(«expr ⁻¹' »(λ
-  f : ∀ i, α i, (f 0, f 1), s.prod t), set.pi set.univ «expr $ »(fin.cons s, fin.cons t fin.elim0)) :=
-begin
-  ext [] [ident f] [],
-  have [] [":", expr «expr = »((fin.cons s (fin.cons t fin.elim0) : ∀ i, set (α i)) 1, t)] [":=", expr rfl],
-  simp [] [] [] ["[", expr fin.forall_fin_two, ",", expr this, "]"] [] []
-end
+theorem Finₓ.preimage_apply_01_prod {α : Finₓ 2 → Type u} (s : Set (α 0)) (t : Set (α 1)) :
+  (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s.prod t = Set.Pi Set.Univ (Finₓ.cons s$ Finₓ.cons t Finₓ.elim0) :=
+  by 
+    ext f 
+    have  : (Finₓ.cons s (Finₓ.cons t Finₓ.elim0) : ∀ i, Set (α i)) 1 = t := rfl 
+    simp [Finₓ.forall_fin_two, this]
 
--- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-theorem fin.preimage_apply_01_prod'
-{α : Type u}
-(s t : set α) : «expr = »(«expr ⁻¹' »(λ f : fin 2 → α, (f 0, f 1), s.prod t), set.pi set.univ «expr![ , ]»([s, t])) :=
-fin.preimage_apply_01_prod s t
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+theorem Finₓ.preimage_apply_01_prod' {α : Type u} (s t : Set α) :
+  (fun f : Finₓ 2 → α => (f 0, f 1)) ⁻¹' s.prod t =
+    Set.Pi Set.Univ
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") :=
+  Finₓ.preimage_apply_01_prod s t
 
--- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 /-- A product space `α × β` is equivalent to the space `Π i : fin 2, γ i`, where
 `γ = fin.cons α (fin.cons β fin_zero_elim)`. See also `pi_fin_two_equiv` and
 `fin_two_arrow_equiv`. -/
-@[simps #[expr { fully_applied := ff }]]
-def prod_equiv_pi_fin_two (α β : Type u) : «expr ≃ »(«expr × »(α, β), ∀ i : fin 2, «expr![ , ]»([α, β]) i) :=
-(pi_fin_two_equiv (fin.cons α (fin.cons β fin_zero_elim))).symm
+@[simps (config := { fullyApplied := ff })]
+def prodEquivPiFinTwo (α β : Type u) :
+  α × β ≃
+    ∀ i : Finₓ 2,
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") i :=
+  (piFinTwoEquiv (Finₓ.cons α (Finₓ.cons β finZeroElim))).symm
 
--- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 /-- The space of functions `fin 2 → α` is equivalent to `α × α`. See also `pi_fin_two_equiv` and
 `prod_equiv_pi_fin_two`. -/
-@[simps #[expr { fully_applied := ff }]]
-def fin_two_arrow_equiv (α : Type*) : «expr ≃ »(fin 2 → α, «expr × »(α, α)) :=
-{ inv_fun := λ x, «expr![ , ]»([x.1, x.2]), ..pi_fin_two_equiv (λ _, α) }
+@[simps (config := { fullyApplied := ff })]
+def finTwoArrowEquiv (α : Type _) : (Finₓ 2 → α) ≃ α × α :=
+  { piFinTwoEquiv fun _ => α with
+    invFun :=
+      fun x => «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" }
 
 /-- `Π i : fin 2, α i` is order equivalent to `α 0 × α 1`. See also `order_iso.fin_two_arrow_equiv`
 for a non-dependent version. -/
@@ -232,7 +236,7 @@ theorem fin_succ_equiv_last_symm_some {n : ℕ} (i : Finₓ n) : finSuccEquivLas
   fin_succ_equiv'_symm_some_below i.2
 
 @[simp]
-theorem fin_succ_equiv_last_symm_coe {n : ℕ} (i : Finₓ n) : finSuccEquivLast.symm («expr↑ » i) = i.cast_succ :=
+theorem fin_succ_equiv_last_symm_coe {n : ℕ} (i : Finₓ n) : finSuccEquivLast.symm (↑i) = i.cast_succ :=
   fin_succ_equiv'_symm_some_below i.2
 
 @[simp]
@@ -270,7 +274,7 @@ theorem fin_sum_fin_equiv_symm_apply_nat_add (x : Finₓ n) : finSumFinEquiv.sym
 
 /-- The equivalence between `fin (m + n)` and `fin (n + m)` which rotates by `n`. -/
 def finAddFlip : Finₓ (m+n) ≃ Finₓ (n+m) :=
-  (finSumFinEquiv.symm.trans (Equiv.sumComm _ _)).trans finSumFinEquiv
+  (finSumFinEquiv.symm.trans (Equivₓ.sumComm _ _)).trans finSumFinEquiv
 
 @[simp]
 theorem fin_add_flip_apply_cast_add (k : Finₓ m) (n : ℕ) : finAddFlip (Finₓ.castAdd n k) = Finₓ.natAdd n k :=
@@ -299,8 +303,8 @@ theorem fin_add_flip_apply_mk_right {k : ℕ} (h₁ : m ≤ k) (h₂ : k < m+n) 
       rwa [add_commₓ]
 
 /-- Rotate `fin n` one step to the right. -/
-def finRotate : ∀ n, Equiv.Perm (Finₓ n)
-| 0 => Equiv.refl _
+def finRotate : ∀ n, Equivₓ.Perm (Finₓ n)
+| 0 => Equivₓ.refl _
 | n+1 => finAddFlip.trans (finCongr (add_commₓ _ _))
 
 theorem fin_rotate_of_lt {k : ℕ} (h : k < n) :
@@ -318,30 +322,29 @@ theorem fin_rotate_last' : finRotate (n+1) ⟨n, lt_add_one _⟩ = ⟨0, Nat.zer
 theorem fin_rotate_last : finRotate (n+1) (Finₓ.last _) = 0 :=
   fin_rotate_last'
 
--- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fin.snoc_eq_cons_rotate
-{α : Type*}
-(v : fin n → α)
-(a : α) : «expr = »(@fin.snoc _ (λ _, α) v a, λ i, @fin.cons _ (λ _, α) a v (fin_rotate _ i)) :=
-begin
-  ext [] ["⟨", ident i, ",", ident h, "⟩"] [],
-  by_cases [expr h', ":", expr «expr < »(i, n)],
-  { rw ["[", expr fin_rotate_of_lt h', ",", expr fin.snoc, ",", expr fin.cons, ",", expr dif_pos h', "]"] [],
-    refl },
-  { have [ident h''] [":", expr «expr = »(n, i)] [],
-    { simp [] [] ["only"] ["[", expr not_lt, "]"] [] ["at", ident h'],
-      exact [expr (nat.eq_of_le_of_lt_succ h' h).symm] },
-    subst [expr h''],
-    rw ["[", expr fin_rotate_last', ",", expr fin.snoc, ",", expr fin.cons, ",", expr dif_neg (lt_irrefl _), "]"] [],
-    refl }
-end
+theorem Finₓ.snoc_eq_cons_rotate {α : Type _} (v : Finₓ n → α) (a : α) :
+  @Finₓ.snoc _ (fun _ => α) v a = fun i => @Finₓ.cons _ (fun _ => α) a v (finRotate _ i) :=
+  by 
+    ext ⟨i, h⟩
+    byCases' h' : i < n
+    ·
+      rw [fin_rotate_of_lt h', Finₓ.snoc, Finₓ.cons, dif_pos h']
+      rfl
+    ·
+      have h'' : n = i
+      ·
+        simp only [not_ltₓ] at h' 
+        exact (Nat.eq_of_le_of_lt_succ h' h).symm 
+      subst h'' 
+      rw [fin_rotate_last', Finₓ.snoc, Finₓ.cons, dif_neg (lt_irreflₓ _)]
+      rfl
 
 @[simp]
-theorem fin_rotate_zero : finRotate 0 = Equiv.refl _ :=
+theorem fin_rotate_zero : finRotate 0 = Equivₓ.refl _ :=
   rfl
 
 @[simp]
-theorem fin_rotate_one : finRotate 1 = Equiv.refl _ :=
+theorem fin_rotate_one : finRotate 1 = Equivₓ.refl _ :=
   Subsingleton.elimₓ _ _
 
 @[simp]
@@ -363,16 +366,11 @@ theorem fin_rotate_apply_zero {n : ℕ} : finRotate n.succ 0 = 1 :=
   by 
     rw [fin_rotate_succ_apply, zero_addₓ]
 
--- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coe_fin_rotate_of_ne_last
-{n : exprℕ()}
-{i : fin n.succ}
-(h : «expr ≠ »(i, fin.last n)) : «expr = »((fin_rotate n.succ i : exprℕ()), «expr + »(i, 1)) :=
-begin
-  rw [expr fin_rotate_succ_apply] [],
-  have [] [":", expr «expr < »((i : exprℕ()), n)] [":=", expr lt_of_le_of_ne (nat.succ_le_succ_iff.mp i.2) (fin.coe_injective.ne h)],
-  exact [expr fin.coe_add_one_of_lt this]
-end
+theorem coe_fin_rotate_of_ne_last {n : ℕ} {i : Finₓ n.succ} (h : i ≠ Finₓ.last n) : (finRotate n.succ i : ℕ) = i+1 :=
+  by 
+    rw [fin_rotate_succ_apply]
+    have  : (i : ℕ) < n := lt_of_le_of_neₓ (nat.succ_le_succ_iff.mp i.2) (fin.coe_injective.ne h)
+    exact Finₓ.coe_add_one_of_lt this
 
 theorem coe_fin_rotate {n : ℕ} (i : Finₓ n.succ) : (finRotate n.succ i : ℕ) = if i = Finₓ.last n then 0 else i+1 :=
   by 

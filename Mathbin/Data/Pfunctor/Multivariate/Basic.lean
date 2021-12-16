@@ -30,7 +30,7 @@ variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 
 /-- Applying `P` to an object of `Type` -/
 def obj (α : Typevec.{u} n) : Type u :=
-  Σa : P.A, P.B a ⟹ α
+  Σ a : P.A, P.B a ⟹ α
 
 /-- Applying `P` to a morphism of `Type` -/
 def map {α β : Typevec n} (f : α ⟹ β) : P.obj α → P.obj β :=
@@ -98,7 +98,7 @@ end Const
 
 /-- Functor composition on polynomial functors -/
 def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m :=
-  { A := Σa₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1, B := fun a => fun i => Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i }
+  { A := Σ a₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1, B := fun a => fun i => Σ (j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i }
 
 variable {P} {Q : Fin2 n → Mvpfunctor.{u} m} {α β : Typevec.{u} m}
 
@@ -116,6 +116,7 @@ theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
     cases x 
     rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem comp.get_mk (x : P.obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x :=
   by 
@@ -139,7 +140,7 @@ theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x :=
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.obj α) :
   liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨y, hy⟩
       cases' h : y with a f 
@@ -154,7 +155,7 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.obj �
 theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
   @liftp.{u} _ P.obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) :=
   by 
-    simp only [liftp_iff, Sigma.mk.inj_iff] <;> split  <;> intro 
+    simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro 
     ·
       casesM* Exists _, _ ∧ _ 
       substVars 
@@ -167,16 +168,16 @@ theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (
 theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.obj α) :
   liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨u, xeq, yeq⟩
       cases' h : u with a f 
       use a, fun i j => (f i j).val.fst, fun i j => (f i j).val.snd 
-      split 
+      constructor
       ·
         rw [←xeq, h]
         rfl 
-      split 
+      constructor
       ·
         rw [←yeq, h]
         rfl 
@@ -185,7 +186,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
     use ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
     dsimp 
-    split 
+    constructor
     ·
       rw [xeq]
       rfl 
@@ -199,7 +200,7 @@ theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) i :
   by 
     ext 
     simp only [supp, image_univ, mem_range, mem_set_of_eq]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       apply @h fun i x => ∃ y : P.B a i, f i y = x 
       rw [liftp_iff']

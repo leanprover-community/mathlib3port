@@ -14,14 +14,20 @@ the multiplicity of `p` in this factors multiset being the p-adic valuation of `
 -/
 
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_repr
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler canonically_ordered_add_monoid
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler distrib_lattice
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler semilattice_sup
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler order_bot
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_sub
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_ordered_sub
 /-- The type of multisets of prime numbers.  Unique factorization
  gives an equivalence between this set and ℕ+, as we will formalize
  below. -/
-@[derive #["[", expr inhabited, ",", expr has_repr, ",", expr canonically_ordered_add_monoid, ",", expr distrib_lattice,
-   ",", expr semilattice_sup, ",", expr order_bot, ",", expr has_sub, ",", expr has_ordered_sub, "]"]]
-def prime_multiset :=
-multiset nat.primes
+def PrimeMultiset :=
+  Multiset Nat.Primes deriving [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous],
+  [anonymous], [anonymous]
 
 namespace PrimeMultiset
 
@@ -106,16 +112,13 @@ theorem coePnatNat (v : PrimeMultiset) : ((v : Multiset ℕ+) : Multiset ℕ) = 
 def Prod (v : PrimeMultiset) : ℕ+ :=
   (v : Multiset Pnat).Prod
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coe_prod (v : prime_multiset) : «expr = »((v.prod : exprℕ()), (v : multiset exprℕ()).prod) :=
-begin
-  let [ident h] [":", expr «expr = »((v.prod : exprℕ()), ((v.map coe).map coe).prod)] [":=", expr pnat.coe_monoid_hom.map_multiset_prod v.to_pnat_multiset],
-  rw ["[", expr multiset.map_map, "]"] ["at", ident h],
-  have [] [":", expr «expr = »(«expr ∘ »((coe : «exprℕ+»() → exprℕ()), (coe : nat.primes → «exprℕ+»())), coe)] [":=", expr funext (λ
-    p, rfl)],
-  rw ["[", expr this, "]"] ["at", ident h],
-  exact [expr h]
-end
+theorem coe_prod (v : PrimeMultiset) : (v.prod : ℕ) = (v : Multiset ℕ).Prod :=
+  by 
+    let h : (v.prod : ℕ) = ((v.map coeₓ).map coeₓ).Prod := pnat.coe_monoid_hom.map_multiset_prod v.to_pnat_multiset 
+    rw [Multiset.map_map] at h 
+    have  : (coeₓ : ℕ+ → ℕ) ∘ (coeₓ : Nat.Primes → ℕ+) = coeₓ := funext fun p => rfl 
+    rw [this] at h 
+    exact h
 
 theorem prod_of_prime (p : Nat.Primes) : (of_prime p).Prod = (p : ℕ+) :=
   Multiset.prod_singleton _
@@ -124,16 +127,15 @@ theorem prod_of_prime (p : Nat.Primes) : (of_prime p).Prod = (p : ℕ+) :=
 def of_nat_multiset (v : Multiset ℕ) (h : ∀ p : ℕ, p ∈ v → p.prime) : PrimeMultiset :=
   @Multiset.pmap ℕ Nat.Primes Nat.Prime (fun p hp => ⟨p, hp⟩) v h
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_of_nat_multiset (v : multiset exprℕ()) (h) : «expr = »((of_nat_multiset v h : multiset exprℕ()), v) :=
-begin
-  unfold_coes [],
-  dsimp [] ["[", expr of_nat_multiset, ",", expr to_nat_multiset, "]"] [] [],
-  have [] [":", expr «expr = »(λ
-    (p : exprℕ())
-    (h : p.prime), ((⟨p, h⟩ : nat.primes) : exprℕ()), λ p h, id p)] [":=", expr by { funext [ident p, ident h], refl }],
-  rw ["[", expr multiset.map_pmap, ",", expr this, ",", expr multiset.pmap_eq_map, ",", expr multiset.map_id, "]"] []
-end
+theorem to_of_nat_multiset (v : Multiset ℕ) h : (of_nat_multiset v h : Multiset ℕ) = v :=
+  by 
+    unfoldCoes 
+    dsimp [of_nat_multiset, to_nat_multiset]
+    have  : (fun p : ℕ h : p.prime => ((⟨p, h⟩ : Nat.Primes) : ℕ)) = fun p h => id p :=
+      by 
+        funext p h 
+        rfl 
+    rw [Multiset.map_pmap, this, Multiset.pmap_eq_map, Multiset.map_id]
 
 theorem prod_of_nat_multiset (v : Multiset ℕ) h : ((of_nat_multiset v h).Prod : ℕ) = (v.prod : ℕ) :=
   by 
@@ -143,19 +145,16 @@ theorem prod_of_nat_multiset (v : Multiset ℕ) h : ((of_nat_multiset v h).Prod 
 def of_pnat_multiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.prime) : PrimeMultiset :=
   @Multiset.pmap ℕ+ Nat.Primes Pnat.Prime (fun p hp => ⟨(p : ℕ), hp⟩) v h
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_of_pnat_multiset
-(v : multiset «exprℕ+»())
-(h) : «expr = »((of_pnat_multiset v h : multiset «exprℕ+»()), v) :=
-begin
-  unfold_coes [],
-  dsimp [] ["[", expr of_pnat_multiset, ",", expr to_pnat_multiset, "]"] [] [],
-  have [] [":", expr «expr = »(λ
-    (p : «exprℕ+»())
-    (h : p.prime), (coe : nat.primes → «exprℕ+»()) ⟨p, h⟩, λ
-    p h, id p)] [":=", expr by { funext [ident p, ident h], apply [expr subtype.eq], refl }],
-  rw ["[", expr multiset.map_pmap, ",", expr this, ",", expr multiset.pmap_eq_map, ",", expr multiset.map_id, "]"] []
-end
+theorem to_of_pnat_multiset (v : Multiset ℕ+) h : (of_pnat_multiset v h : Multiset ℕ+) = v :=
+  by 
+    unfoldCoes 
+    dsimp [of_pnat_multiset, to_pnat_multiset]
+    have  : (fun p : ℕ+ h : p.prime => (coeₓ : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p :=
+      by 
+        funext p h 
+        apply Subtype.eq 
+        rfl 
+    rw [Multiset.map_pmap, this, Multiset.pmap_eq_map, Multiset.map_id]
 
 theorem prod_of_pnat_multiset (v : Multiset ℕ+) h : ((of_pnat_multiset v h).Prod : ℕ+) = v.prod :=
   by 
@@ -167,22 +166,22 @@ about how this interacts with our constructions on multisets. -/
 def of_nat_list (l : List ℕ) (h : ∀ p : ℕ, p ∈ l → p.prime) : PrimeMultiset :=
   of_nat_multiset (l : Multiset ℕ) h
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prod_of_nat_list (l : list exprℕ()) (h) : «expr = »(((of_nat_list l h).prod : exprℕ()), l.prod) :=
-by { have [] [] [":=", expr prod_of_nat_multiset (l : multiset exprℕ()) h],
-  rw ["[", expr multiset.coe_prod, "]"] ["at", ident this],
-  exact [expr this] }
+theorem prod_of_nat_list (l : List ℕ) h : ((of_nat_list l h).Prod : ℕ) = l.prod :=
+  by 
+    have  := prod_of_nat_multiset (l : Multiset ℕ) h 
+    rw [Multiset.coe_prod] at this 
+    exact this
 
 /-- If a `list ℕ+` consists only of primes, it can be recast as a `prime_multiset` with
 the coercion from lists to multisets. -/
 def of_pnat_list (l : List ℕ+) (h : ∀ p : ℕ+, p ∈ l → p.prime) : PrimeMultiset :=
   of_pnat_multiset (l : Multiset ℕ+) h
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prod_of_pnat_list (l : list «exprℕ+»()) (h) : «expr = »((of_pnat_list l h).prod, l.prod) :=
-by { have [] [] [":=", expr prod_of_pnat_multiset (l : multiset «exprℕ+»()) h],
-  rw ["[", expr multiset.coe_prod, "]"] ["at", ident this],
-  exact [expr this] }
+theorem prod_of_pnat_list (l : List ℕ+) h : (of_pnat_list l h).Prod = l.prod :=
+  by 
+    have  := prod_of_pnat_multiset (l : Multiset ℕ+) h 
+    rw [Multiset.coe_prod] at this 
+    exact this
 
 /-- The product map gives a homomorphism from the additive monoid
 of multisets to the multiplicative monoid ℕ+. -/
@@ -226,25 +225,23 @@ end Pnat
 
 namespace PrimeMultiset
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If we start with a multiset of primes, take the product and
  then factor it, we get back the original multiset. -/
-theorem factor_multiset_prod (v : prime_multiset) : «expr = »(v.prod.factor_multiset, v) :=
-begin
-  apply [expr prime_multiset.coe_nat_injective],
-  rw ["[", expr v.prod.coe_nat_factor_multiset, ",", expr prime_multiset.coe_prod, "]"] [],
-  rcases [expr v, "with", "⟨", ident l, "⟩"],
-  unfold_coes [],
-  dsimp [] ["[", expr prime_multiset.to_nat_multiset, "]"] [] [],
-  rw ["[", expr multiset.coe_prod, "]"] [],
-  let [ident l'] [] [":=", expr l.map (coe : nat.primes → exprℕ())],
-  have [] [":", expr ∀
-   p : exprℕ(), «expr ∈ »(p, l') → p.prime] [":=", expr λ
-   p
-   hp, by { rcases [expr list.mem_map.mp hp, "with", "⟨", "⟨", ident p', ",", ident hp', "⟩", ",", "⟨", ident h_mem, ",", ident h_eq, "⟩", "⟩"],
-     exact [expr «expr ▸ »(h_eq, hp')] }],
-  exact [expr multiset.coe_eq_coe.mpr (@nat.factors_unique _ l' rfl this).symm]
-end
+theorem factor_multiset_prod (v : PrimeMultiset) : v.prod.factor_multiset = v :=
+  by 
+    apply PrimeMultiset.coe_nat_injective 
+    rw [v.prod.coe_nat_factor_multiset, PrimeMultiset.coe_prod]
+    rcases v with ⟨l⟩
+    unfoldCoes 
+    dsimp [PrimeMultiset.toNatMultiset]
+    rw [Multiset.coe_prod]
+    let l' := l.map (coeₓ : Nat.Primes → ℕ)
+    have  : ∀ p : ℕ, p ∈ l' → p.prime :=
+      fun p hp =>
+        by 
+          rcases list.mem_map.mp hp with ⟨⟨p', hp'⟩, ⟨h_mem, h_eq⟩⟩
+          exact h_eq ▸ hp' 
+    exact multiset.coe_eq_coe.mpr (@Nat.factors_unique _ l' rfl this).symm
 
 end PrimeMultiset
 
@@ -261,30 +258,25 @@ theorem factor_multiset_one : factor_multiset 1 = 0 :=
   by 
     simp [factor_multiset, PrimeMultiset.ofNatList, PrimeMultiset.ofNatMultiset]
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem factor_multiset_mul
-(n m : «exprℕ+»()) : «expr = »(factor_multiset «expr * »(n, m), «expr + »(factor_multiset n, factor_multiset m)) :=
-begin
-  let [ident u] [] [":=", expr factor_multiset n],
-  let [ident v] [] [":=", expr factor_multiset m],
-  have [] [":", expr «expr = »(n, u.prod)] [":=", expr (prod_factor_multiset n).symm],
-  rw ["[", expr this, "]"] [],
-  have [] [":", expr «expr = »(m, v.prod)] [":=", expr (prod_factor_multiset m).symm],
-  rw ["[", expr this, "]"] [],
-  rw ["[", "<-", expr prime_multiset.prod_add, "]"] [],
-  repeat { rw ["[", expr prime_multiset.factor_multiset_prod, "]"] [] }
-end
+theorem factor_multiset_mul (n m : ℕ+) : factor_multiset (n*m) = factor_multiset n+factor_multiset m :=
+  by 
+    let u := factor_multiset n 
+    let v := factor_multiset m 
+    have  : n = u.prod := (prod_factor_multiset n).symm 
+    rw [this]
+    have  : m = v.prod := (prod_factor_multiset m).symm 
+    rw [this]
+    rw [←PrimeMultiset.prod_add]
+    repeat' 
+      rw [PrimeMultiset.factor_multiset_prod]
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem factor_multiset_pow
-(n : «exprℕ+»())
-(m : exprℕ()) : «expr = »(factor_multiset «expr ^ »(n, m), «expr • »(m, factor_multiset n)) :=
-begin
-  let [ident u] [] [":=", expr factor_multiset n],
-  have [] [":", expr «expr = »(n, u.prod)] [":=", expr (prod_factor_multiset n).symm],
-  rw ["[", expr this, ",", "<-", expr prime_multiset.prod_smul, "]"] [],
-  repeat { rw ["[", expr prime_multiset.factor_multiset_prod, "]"] [] }
-end
+theorem factor_multiset_pow (n : ℕ+) (m : ℕ) : factor_multiset (n ^ m) = m • factor_multiset n :=
+  by 
+    let u := factor_multiset n 
+    have  : n = u.prod := (prod_factor_multiset n).symm 
+    rw [this, ←PrimeMultiset.prod_smul]
+    repeat' 
+      rw [PrimeMultiset.factor_multiset_prod]
 
 /-- Factoring a prime gives the corresponding one-element multiset. -/
 theorem factor_multiset_of_prime (p : Nat.Primes) : (p : ℕ+).factorMultiset = PrimeMultiset.ofPrime p :=
@@ -298,7 +290,7 @@ theorem factor_multiset_of_prime (p : Nat.Primes) : (p : ℕ+).factorMultiset = 
  of positive integers. -/
 theorem factor_multiset_le_iff {m n : ℕ+} : factor_multiset m ≤ factor_multiset n ↔ m ∣ n :=
   by 
-    split 
+    constructor
     ·
       intro h 
       rw [←prod_factor_multiset m, ←prod_factor_multiset m]
@@ -341,7 +333,7 @@ theorem factor_multiset_gcd (m n : ℕ+) : factor_multiset (gcd m n) = factor_mu
   by 
     apply le_antisymmₓ
     ·
-      apply le_inf_iff.mpr <;> split  <;> apply factor_multiset_le_iff.mpr 
+      apply le_inf_iff.mpr <;> constructor <;> apply factor_multiset_le_iff.mpr 
       exact gcd_dvd_left m n 
       exact gcd_dvd_right m n
     ·
@@ -359,7 +351,7 @@ theorem factor_multiset_lcm (m n : ℕ+) : factor_multiset (lcm m n) = factor_mu
       exact le_sup_left 
       exact le_sup_right
     ·
-      apply sup_le_iff.mpr <;> split  <;> apply factor_multiset_le_iff.mpr 
+      apply sup_le_iff.mpr <;> constructor <;> apply factor_multiset_le_iff.mpr 
       exact dvd_lcm_left m n 
       exact dvd_lcm_right m n
 
@@ -372,7 +364,7 @@ theorem count_factor_multiset (m : ℕ+) (p : Nat.Primes) (k : ℕ) : (p : ℕ+)
     rw [←factor_multiset_le_iff, factor_multiset_pow, factor_multiset_of_prime]
     congr 2
     apply multiset.eq_repeat.mpr 
-    split 
+    constructor
     ·
       rw [Multiset.card_nsmul, PrimeMultiset.card_of_prime, mul_oneₓ]
     ·
@@ -384,31 +376,27 @@ end Pnat
 
 namespace PrimeMultiset
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prod_inf (u v : prime_multiset) : «expr = »(«expr ⊓ »(u, v).prod, pnat.gcd u.prod v.prod) :=
-begin
-  let [ident n] [] [":=", expr u.prod],
-  let [ident m] [] [":=", expr v.prod],
-  change [expr «expr = »(«expr ⊓ »(u, v).prod, pnat.gcd n m)] [] [],
-  have [] [":", expr «expr = »(u, n.factor_multiset)] [":=", expr u.factor_multiset_prod.symm],
-  rw ["[", expr this, "]"] [],
-  have [] [":", expr «expr = »(v, m.factor_multiset)] [":=", expr v.factor_multiset_prod.symm],
-  rw ["[", expr this, "]"] [],
-  rw ["[", "<-", expr pnat.factor_multiset_gcd n m, ",", expr pnat.prod_factor_multiset, "]"] []
-end
+theorem prod_inf (u v : PrimeMultiset) : (u⊓v).Prod = Pnat.gcd u.prod v.prod :=
+  by 
+    let n := u.prod 
+    let m := v.prod 
+    change (u⊓v).Prod = Pnat.gcd n m 
+    have  : u = n.factor_multiset := u.factor_multiset_prod.symm 
+    rw [this]
+    have  : v = m.factor_multiset := v.factor_multiset_prod.symm 
+    rw [this]
+    rw [←Pnat.factor_multiset_gcd n m, Pnat.prod_factor_multiset]
 
--- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prod_sup (u v : prime_multiset) : «expr = »(«expr ⊔ »(u, v).prod, pnat.lcm u.prod v.prod) :=
-begin
-  let [ident n] [] [":=", expr u.prod],
-  let [ident m] [] [":=", expr v.prod],
-  change [expr «expr = »(«expr ⊔ »(u, v).prod, pnat.lcm n m)] [] [],
-  have [] [":", expr «expr = »(u, n.factor_multiset)] [":=", expr u.factor_multiset_prod.symm],
-  rw ["[", expr this, "]"] [],
-  have [] [":", expr «expr = »(v, m.factor_multiset)] [":=", expr v.factor_multiset_prod.symm],
-  rw ["[", expr this, "]"] [],
-  rw ["[", "<-", expr pnat.factor_multiset_lcm n m, ",", expr pnat.prod_factor_multiset, "]"] []
-end
+theorem prod_sup (u v : PrimeMultiset) : (u⊔v).Prod = Pnat.lcm u.prod v.prod :=
+  by 
+    let n := u.prod 
+    let m := v.prod 
+    change (u⊔v).Prod = Pnat.lcm n m 
+    have  : u = n.factor_multiset := u.factor_multiset_prod.symm 
+    rw [this]
+    have  : v = m.factor_multiset := v.factor_multiset_prod.symm 
+    rw [this]
+    rw [←Pnat.factor_multiset_lcm n m, Pnat.prod_factor_multiset]
 
 end PrimeMultiset
 

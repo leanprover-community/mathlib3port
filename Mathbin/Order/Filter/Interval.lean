@@ -76,6 +76,8 @@ theorem tendsto.Ioo {l₁ l₂ : Filter α} [tendsto_Ixx_class Ioo l₁ l₂] {l
   (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) : tendsto (fun x => Ioo (u₁ x) (u₂ x)) lb (l₂.lift' powerset) :=
   tendsto_Ixx_class.tendsto_Ixx.comp$ h₁.prod_mk h₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} :
   tendsto_Ixx_class Ixx (𝓟 s) (𝓟 t) ↔ ∀ x _ : x ∈ s y _ : y ∈ s, Ixx x y ⊆ t :=
   by 
@@ -91,6 +93,8 @@ theorem tendsto_Ixx_class_of_subset {l₁ l₂ : Filter α} {Ixx Ixx' : α → �
   [h' : tendsto_Ixx_class Ixx' l₁ l₂] : tendsto_Ixx_class Ixx l₁ l₂ :=
   ⟨tendsto_lift'_powerset_mono h'.1$ eventually_of_forall$ Prod.forall.2 h⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s i)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s i)
 theorem has_basis.tendsto_Ixx_class {ι : Type _} {p : ι → Prop} {s} {l : Filter α} (hl : l.has_basis p s)
   {Ixx : α → α → Set α} (H : ∀ i, p i → ∀ x _ : x ∈ s i y _ : y ∈ s i, Ixx x y ⊆ s i) : tendsto_Ixx_class Ixx l l :=
   ⟨(hl.prod_self.tendsto_iff (hl.lift' monotone_powerset)).2$ fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
@@ -194,15 +198,19 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
--- error in Order.Filter.Interval: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
-instance tendsto_Icc_interval_interval
-{a b : α} : tendsto_Ixx_class Icc (expr𝓟() «expr[ , ]»(a, b)) (expr𝓟() «expr[ , ]»(a, b)) :=
-filter.tendsto_Icc_Icc_icc
+-- ././Mathport/Syntax/Translate/Basic.lean:589:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:589:47: unsupported (impossible)
+instance tendsto_Icc_interval_interval {a b : α} :
+  tendsto_Ixx_class Icc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:589:47: unsupported (impossible)")
+    (𝓟 "././Mathport/Syntax/Translate/Basic.lean:589:47: unsupported (impossible)") :=
+  Filter.tendsto_Icc_Icc_icc
 
--- error in Order.Filter.Interval: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
-instance tendsto_Ioc_interval_interval
-{a b : α} : tendsto_Ixx_class Ioc (expr𝓟() «expr[ , ]»(a, b)) (expr𝓟() «expr[ , ]»(a, b)) :=
-«expr $ »(tendsto_Ixx_class_of_subset, λ _ _, Ioc_subset_Icc_self)
+-- ././Mathport/Syntax/Translate/Basic.lean:589:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:589:47: unsupported (impossible)
+instance tendsto_Ioc_interval_interval {a b : α} :
+  tendsto_Ixx_class Ioc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:589:47: unsupported (impossible)")
+    (𝓟 "././Mathport/Syntax/Translate/Basic.lean:589:47: unsupported (impossible)") :=
+  tendsto_Ixx_class_of_subset$ fun _ _ => Ioc_subset_Icc_self
 
 end LinearOrderₓ
 

@@ -22,16 +22,15 @@ mk_iff_of_inductive_prop List.Forall₂ List.forall₂_iff
 theorem forall₂_cons {R : α → β → Prop} {a b l₁ l₂} : forall₂ R (a :: l₁) (b :: l₂) ↔ R a b ∧ forall₂ R l₁ l₂ :=
   ⟨fun h =>
       by 
-        cases' h with h₁ h₂ <;> split  <;> assumption,
+        cases' h with h₁ h₂ <;> constructor <;> assumption,
     fun ⟨h₁, h₂⟩ => forall₂.cons h₁ h₂⟩
 
--- error in Data.List.Forall2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem forall₂.imp
-{R S : α → β → exprProp()}
-(H : ∀ a b, R a b → S a b)
-{l₁ l₂}
-(h : forall₂ R l₁ l₂) : forall₂ S l₁ l₂ :=
-by induction [expr h] [] [] []; constructor; solve_by_elim [] [] [] []
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  forall₂.imp
+  { R S : α → β → Prop } ( H : ∀ a b , R a b → S a b ) { l₁ l₂ } ( h : forall₂ R l₁ l₂ ) : forall₂ S l₁ l₂
+  := by induction h <;> constructor <;> solveByElim
 
 theorem forall₂.mp {r q s : α → β → Prop} (h : ∀ a b, r a b → q a b → s a b) :
   ∀ {l₁ l₂}, forall₂ r l₁ l₂ → forall₂ q l₁ l₂ → forall₂ s l₁ l₂
@@ -42,6 +41,7 @@ theorem forall₂.flip : ∀ {a b}, forall₂ (flip r) b a → forall₂ r a b
 | _, _, forall₂.nil => forall₂.nil
 | a :: as, b :: bs, forall₂.cons h₁ h₂ => forall₂.cons h₁ h₂.flip
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem forall₂_same {r : α → α → Prop} : ∀ {l}, (∀ x _ : x ∈ l, r x x) → forall₂ r l l
 | [], _ => forall₂.nil
 | a :: as, h => forall₂.cons (h _ (mem_cons_self _ _)) (forall₂_same$ fun a ha => h a$ mem_cons_of_mem _ ha)
@@ -53,13 +53,13 @@ theorem forall₂_eq_eq_eq : forall₂ (· = · : α → α → Prop) = (· = ·
   by 
     funext a b 
     apply propext 
-    split 
+    constructor
     ·
       intro h 
       induction h
       ·
         rfl 
-      simp only  <;> split  <;> rfl
+      simp only  <;> constructor <;> rfl
     ·
       intro h 
       subst h 
@@ -99,6 +99,7 @@ theorem forall₂_cons_right_iff {b l u} : forall₂ r u (b :: l) ↔ ∃ a u', 
       match u, h with 
       | _, ⟨b, u', h₁, h₂, rfl⟩ => forall₂.cons h₁ h₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem forall₂_and_left {r : α → β → Prop} {p : α → Prop} :
   ∀ l u, forall₂ (fun a b => p a ∧ r a b) l u ↔ (∀ a _ : a ∈ l, p a) ∧ forall₂ r l u
 | [], u =>
@@ -245,23 +246,22 @@ theorem rel_foldr : ((r⇒p⇒p)⇒p⇒forall₂ r⇒p) foldr foldr
 | f, g, hfg, _, _, h, _, _, forall₂.nil => h
 | f, g, hfg, x, y, hxy, _, _, forall₂.cons hab hs => hfg hab (rel_foldr (@hfg) hxy hs)
 
--- error in Data.List.Forall2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rel_filter
-{p : α → exprProp()}
-{q : β → exprProp()}
-[decidable_pred p]
-[decidable_pred q]
-(hpq : «expr ⇒ »(r, («expr ↔ »)) p q) : «expr ⇒ »(forall₂ r, forall₂ r) (filter p) (filter q)
-| _, _, forall₂.nil := forall₂.nil
-| «expr :: »(a, as), «expr :: »(b, bs), forall₂.cons h₁ h₂ := begin
-  by_cases [expr p a],
-  { have [] [":", expr q b] [],
-    { rwa ["[", "<-", expr hpq h₁, "]"] [] },
-    simp [] [] ["only"] ["[", expr filter_cons_of_pos _ h, ",", expr filter_cons_of_pos _ this, ",", expr forall₂_cons, ",", expr h₁, ",", expr rel_filter h₂, ",", expr and_true, "]"] [] [] },
-  { have [] [":", expr «expr¬ »(q b)] [],
-    { rwa ["[", "<-", expr hpq h₁, "]"] [] },
-    simp [] [] ["only"] ["[", expr filter_cons_of_neg _ h, ",", expr filter_cons_of_neg _ this, ",", expr rel_filter h₂, "]"] [] [] }
-end
+theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [DecidablePred q] (hpq : (r⇒(· ↔ ·)) p q) :
+  (forall₂ r⇒forall₂ r) (filter p) (filter q)
+| _, _, forall₂.nil => forall₂.nil
+| a :: as, b :: bs, forall₂.cons h₁ h₂ =>
+  by 
+    byCases' p a
+    ·
+      have  : q b
+      ·
+        rwa [←hpq h₁]
+      simp only [filter_cons_of_pos _ h, filter_cons_of_pos _ this, forall₂_cons, h₁, rel_filter h₂, and_trueₓ]
+    ·
+      have  : ¬q b
+      ·
+        rwa [←hpq h₁]
+      simp only [filter_cons_of_neg _ h, filter_cons_of_neg _ this, rel_filter h₂]
 
 theorem rel_filter_map : ((r⇒Option.Rel p)⇒forall₂ r⇒forall₂ p) filter_map filter_map
 | f, g, hfg, _, _, forall₂.nil => forall₂.nil
@@ -286,7 +286,7 @@ inductive sublist_forall₂ (r : α → β → Prop) : List α → List β → P
 
 theorem sublist_forall₂_iff {l₁ : List α} {l₂ : List β} : sublist_forall₂ r l₁ l₂ ↔ ∃ l, forall₂ r l₁ l ∧ l <+ l₂ :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       induction' h with _ a b l1 l2 rab rll ih b l1 l2 hl ih
       ·

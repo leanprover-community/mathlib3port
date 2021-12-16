@@ -11,7 +11,7 @@ function on `ℕ`.
 
 open Nat
 
-namespace Equiv
+namespace Equivₓ
 
 variable {α : Type _}
 
@@ -79,5 +79,5 @@ def pnat_equiv_nat : ℕ+ ≃ ℕ :=
       by 
         simp [succ_pnat]⟩
 
-end Equiv
+end Equivₓ
 

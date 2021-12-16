@@ -21,15 +21,15 @@ open_locale BigOperators
 
 /-- `scale_roots p s` is a polynomial with root `r * s` for each root `r` of `p`. -/
 noncomputable def scaleRoots (p : Polynomial R) (s : R) : Polynomial R :=
-  ∑i in p.support, monomial i (p.coeff i*s ^ (p.nat_degree - i))
+  ∑ i in p.support, monomial i (p.coeff i*s ^ (p.nat_degree - i))
 
--- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp]
-theorem coeff_scale_roots
-(p : polynomial R)
-(s : R)
-(i : exprℕ()) : «expr = »((scale_roots p s).coeff i, «expr * »(coeff p i, «expr ^ »(s, «expr - »(p.nat_degree, i)))) :=
-by simp [] [] [] ["[", expr scale_roots, ",", expr coeff_monomial, "]"] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    coeff_scale_roots
+    ( p : Polynomial R ) ( s : R ) ( i : ℕ ) : scaleRoots p s . coeff i = coeff p i * s ^ p.nat_degree - i
+    := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ scaleRoots , coeff_monomial ]
 
 theorem coeff_scale_roots_nat_degree (p : Polynomial R) (s : R) :
   (scaleRoots p s).coeff p.nat_degree = p.leading_coeff :=
@@ -42,47 +42,43 @@ theorem zero_scale_roots (s : R) : scaleRoots 0 s = 0 :=
     ext 
     simp 
 
--- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem scale_roots_ne_zero {p : polynomial R} (hp : «expr ≠ »(p, 0)) (s : R) : «expr ≠ »(scale_roots p s, 0) :=
-begin
-  intro [ident h],
-  have [] [":", expr «expr ≠ »(p.coeff p.nat_degree, 0)] [":=", expr mt leading_coeff_eq_zero.mp hp],
-  have [] [":", expr «expr = »((scale_roots p s).coeff p.nat_degree, 0)] [":=", expr congr_fun (congr_arg (coeff : polynomial R → exprℕ() → R) h) p.nat_degree],
-  rw ["[", expr coeff_scale_roots_nat_degree, "]"] ["at", ident this],
-  contradiction
-end
+theorem scale_roots_ne_zero {p : Polynomial R} (hp : p ≠ 0) (s : R) : scaleRoots p s ≠ 0 :=
+  by 
+    intro h 
+    have  : p.coeff p.nat_degree ≠ 0 := mt leading_coeff_eq_zero.mp hp 
+    have  : (scaleRoots p s).coeff p.nat_degree = 0 :=
+      congr_funₓ (congr_argₓ (coeff : Polynomial R → ℕ → R) h) p.nat_degree 
+    rw [coeff_scale_roots_nat_degree] at this 
+    contradiction
 
 theorem support_scale_roots_le (p : Polynomial R) (s : R) : (scaleRoots p s).support ≤ p.support :=
   by 
     intro 
     simpa using left_ne_zero_of_mul
 
--- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem support_scale_roots_eq
-(p : polynomial R)
-{s : R}
-(hs : «expr ∈ »(s, non_zero_divisors R)) : «expr = »((scale_roots p s).support, p.support) :=
-le_antisymm (support_scale_roots_le p s) (begin
-   intro [ident i],
-   simp [] [] ["only"] ["[", expr coeff_scale_roots, ",", expr polynomial.mem_support_iff, "]"] [] [],
-   intros [ident p_ne_zero, ident ps_zero],
-   have [] [] [":=", expr (non_zero_divisors R).pow_mem hs «expr - »(p.nat_degree, i) _ ps_zero],
-   contradiction
- end)
+theorem support_scale_roots_eq (p : Polynomial R) {s : R} (hs : s ∈ nonZeroDivisors R) :
+  (scaleRoots p s).support = p.support :=
+  le_antisymmₓ (support_scale_roots_le p s)
+    (by 
+      intro i 
+      simp only [coeff_scale_roots, Polynomial.mem_support_iff]
+      intro p_ne_zero ps_zero 
+      have  := ((nonZeroDivisors R).pow_mem hs (p.nat_degree - i)) _ ps_zero 
+      contradiction)
 
--- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem degree_scale_roots (p : polynomial R) {s : R} : «expr = »(degree (scale_roots p s), degree p) :=
-begin
-  haveI [] [] [":=", expr classical.prop_decidable],
-  by_cases [expr hp, ":", expr «expr = »(p, 0)],
-  { rw ["[", expr hp, ",", expr zero_scale_roots, "]"] [] },
-  have [] [] [":=", expr scale_roots_ne_zero hp s],
-  refine [expr le_antisymm (finset.sup_mono (support_scale_roots_le p s)) (degree_le_degree _)],
-  rw [expr coeff_scale_roots_nat_degree] [],
-  intro [ident h],
-  have [] [] [":=", expr leading_coeff_eq_zero.mp h],
-  contradiction
-end
+@[simp]
+theorem degree_scale_roots (p : Polynomial R) {s : R} : degree (scaleRoots p s) = degree p :=
+  by 
+    have  := Classical.propDecidable 
+    byCases' hp : p = 0
+    ·
+      rw [hp, zero_scale_roots]
+    have  := scale_roots_ne_zero hp s 
+    refine' le_antisymmₓ (Finset.sup_mono (support_scale_roots_le p s)) (degree_le_degree _)
+    rw [coeff_scale_roots_nat_degree]
+    intro h 
+    have  := leading_coeff_eq_zero.mp h 
+    contradiction
 
 @[simp]
 theorem nat_degree_scale_roots (p : Polynomial R) (s : R) : nat_degree (scaleRoots p s) = nat_degree p :=

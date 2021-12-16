@@ -22,56 +22,56 @@ variable {I : Type w₁} {C : I → Type u₁} [∀ i, category.{v₁} (C i)]
 The type of morphisms of a disjoint union of categories: for `X : C i` and `Y : C j`, a morphism
 `(i, X) ⟶ (j, Y)` if `i = j` is just a morphism `X ⟶ Y`, and if `i ≠ j` there are no such morphisms.
 -/
-inductive sigma_hom : (Σi, C i) → (Σi, C i) → Type max w₁ v₁ u₁
+inductive sigma_hom : (Σ i, C i) → (Σ i, C i) → Type max w₁ v₁ u₁
   | mk : ∀ {i : I} {X Y : C i}, (X ⟶ Y) → sigma_hom ⟨i, X⟩ ⟨i, Y⟩
 
 namespace SigmaHom
 
 /-- The identity morphism on an object. -/
-def id : ∀ X : Σi, C i, sigma_hom X X
+def id : ∀ X : Σ i, C i, sigma_hom X X
 | ⟨i, X⟩ => mk (𝟙 _)
 
-instance (X : Σi, C i) : Inhabited (sigma_hom X X) :=
+instance (X : Σ i, C i) : Inhabited (sigma_hom X X) :=
   ⟨id X⟩
 
 /-- Composition of sigma homomorphisms. -/
-def comp : ∀ {X Y Z : Σi, C i}, sigma_hom X Y → sigma_hom Y Z → sigma_hom X Z
+def comp : ∀ {X Y Z : Σ i, C i}, sigma_hom X Y → sigma_hom Y Z → sigma_hom X Z
 | _, _, _, mk f, mk g => mk (f ≫ g)
 
-instance : category_struct (Σi, C i) :=
+instance : category_struct (Σ i, C i) :=
   { Hom := sigma_hom, id := id, comp := fun X Y Z f g => comp f g }
 
 @[simp]
 theorem comp_def (i : I) (X Y Z : C i) (f : X ⟶ Y) (g : Y ⟶ Z) : comp (mk f) (mk g) = mk (f ≫ g) :=
   rfl
 
-theorem assoc : ∀ X Y Z W : Σi, C i f : X ⟶ Y g : Y ⟶ Z h : Z ⟶ W, (f ≫ g) ≫ h = f ≫ g ≫ h
+theorem assoc : ∀ X Y Z W : Σ i, C i f : X ⟶ Y g : Y ⟶ Z h : Z ⟶ W, (f ≫ g) ≫ h = f ≫ g ≫ h
 | _, _, _, _, mk f, mk g, mk h => congr_argₓ mk (category.assoc _ _ _)
 
-theorem id_comp : ∀ X Y : Σi, C i f : X ⟶ Y, 𝟙 X ≫ f = f
+theorem id_comp : ∀ X Y : Σ i, C i f : X ⟶ Y, 𝟙 X ≫ f = f
 | _, _, mk f => congr_argₓ mk (category.id_comp _)
 
-theorem comp_id : ∀ X Y : Σi, C i f : X ⟶ Y, f ≫ 𝟙 Y = f
+theorem comp_id : ∀ X Y : Σ i, C i f : X ⟶ Y, f ≫ 𝟙 Y = f
 | _, _, mk f => congr_argₓ mk (category.comp_id _)
 
 end SigmaHom
 
-instance Sigma : category (Σi, C i) :=
+instance Sigma : category (Σ i, C i) :=
   { id_comp' := sigma_hom.id_comp, comp_id' := sigma_hom.comp_id, assoc' := sigma_hom.assoc }
 
 /-- The inclusion functor into the disjoint union of categories. -/
 @[simps map]
-def incl (i : I) : C i ⥤ Σi, C i :=
+def incl (i : I) : C i ⥤ Σ i, C i :=
   { obj := fun X => ⟨i, X⟩, map := fun X Y => sigma_hom.mk }
 
 @[simp]
 theorem incl_obj {i : I} (X : C i) : (incl i).obj X = ⟨i, X⟩ :=
   rfl
 
-instance (i : I) : full (incl i : C i ⥤ Σi, C i) :=
+instance (i : I) : full (incl i : C i ⥤ Σ i, C i) :=
   { Preimage := fun X Y ⟨f⟩ => f, witness' := fun X Y ⟨f⟩ => rfl }
 
-instance (i : I) : faithful (incl i : C i ⥤ Σi, C i) :=
+instance (i : I) : faithful (incl i : C i ⥤ Σ i, C i) :=
   {  }
 
 section 
@@ -82,7 +82,7 @@ variable {D : Type u₂} [category.{v₂} D] (F : ∀ i, C i ⥤ D)
 To build a natural transformation over the sigma category, it suffices to specify it restricted to
 each subcategory.
 -/
-def nat_trans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) : F ⟶ G :=
+def nat_trans {F G : (Σ i, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) : F ⟶ G :=
   { app := fun ⟨j, X⟩ => (h j).app X,
     naturality' :=
       by 
@@ -90,12 +90,12 @@ def nat_trans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i �
         apply (h j).naturality }
 
 @[simp]
-theorem nat_trans_app {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) (i : I) (X : C i) :
+theorem nat_trans_app {F G : (Σ i, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) (i : I) (X : C i) :
   (nat_trans h).app ⟨i, X⟩ = (h i).app X :=
   rfl
 
 /-- (Implementation). An auxiliary definition to build the functor `desc`. -/
-def desc_map : ∀ X Y : Σi, C i, (X ⟶ Y) → ((F X.1).obj X.2 ⟶ (F Y.1).obj Y.2)
+def desc_map : ∀ X Y : Σ i, C i, (X ⟶ Y) → ((F X.1).obj X.2 ⟶ (F Y.1).obj Y.2)
 | _, _, sigma_hom.mk g => (F _).map g
 
 /--
@@ -108,7 +108,7 @@ this property.
 This witnesses that the sigma-type is the coproduct in Cat.
 -/
 @[simps obj]
-def desc : (Σi, C i) ⥤ D :=
+def desc : (Σ i, C i) ⥤ D :=
   { obj := fun X => (F X.1).obj X.2, map := fun X Y g => desc_map F X Y g,
     map_id' :=
       by 
@@ -144,19 +144,19 @@ theorem incl_desc_inv_app (i : I) (X : C i) : (incl_desc F i).inv.app X = 𝟙 (
 If `q` when restricted to each subcategory `C i` agrees with `F i`, then `q` is isomorphic to
 `desc F`.
 -/
-def desc_uniq (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) : q ≅ desc F :=
+def desc_uniq (q : (Σ i, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) : q ≅ desc F :=
   (nat_iso.of_components fun ⟨i, X⟩ => (h i).app X)$
     by 
       rintro ⟨i, X⟩ ⟨_, _⟩ ⟨_, _, Y, f⟩
       apply (h i).Hom.naturality f
 
 @[simp]
-theorem desc_uniq_hom_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
+theorem desc_uniq_hom_app (q : (Σ i, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
   (desc_uniq F q h).Hom.app ⟨i, X⟩ = (h i).Hom.app X :=
   rfl
 
 @[simp]
-theorem desc_uniq_inv_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
+theorem desc_uniq_inv_app (q : (Σ i, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
   (desc_uniq F q h).inv.app ⟨i, X⟩ = (h i).inv.app X :=
   rfl
 
@@ -164,7 +164,7 @@ theorem desc_uniq_inv_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F 
 If `q₁` and `q₂` when restricted to each subcategory `C i` agree, then `q₁` and `q₂` are isomorphic.
 -/
 @[simps]
-def nat_iso {q₁ q₂ : (Σi, C i) ⥤ D} (h : ∀ i, incl i ⋙ q₁ ≅ incl i ⋙ q₂) : q₁ ≅ q₂ :=
+def nat_iso {q₁ q₂ : (Σ i, C i) ⥤ D} (h : ∀ i, incl i ⋙ q₁ ≅ incl i ⋙ q₂) : q₁ ≅ q₂ :=
   { Hom := nat_trans fun i => (h i).Hom, inv := nat_trans fun i => (h i).inv }
 
 end 
@@ -174,7 +174,7 @@ section
 variable (C) {J : Type w₂} (g : J → I)
 
 /-- A function `J → I` induces a functor `Σ j, C (g j) ⥤ Σ i, C i`. -/
-def map : (Σj : J, C (g j)) ⥤ Σi : I, C i :=
+def map : (Σ j : J, C (g j)) ⥤ Σ i : I, C i :=
   desc fun j => incl (g j)
 
 @[simp]
@@ -196,7 +196,7 @@ variable (I)
 
 /-- The functor `sigma.map` applied to the identity function is just the identity functor. -/
 @[simps]
-def map_id : map C (id : I → I) ≅ 𝟭 (Σi, C i) :=
+def map_id : map C (id : I → I) ≅ 𝟭 (Σ i, C i) :=
   nat_iso
     fun i =>
       nat_iso.of_components (fun X => iso.refl _)
@@ -221,7 +221,7 @@ variable {D : I → Type u₁} [∀ i, category.{v₁} (D i)]
 /--
 Assemble an `I`-indexed family of functors into a functor between the sigma types.
 -/
-def Sigma (F : ∀ i, C i ⥤ D i) : (Σi, C i) ⥤ Σi, D i :=
+def Sigma (F : ∀ i, C i ⥤ D i) : (Σ i, C i) ⥤ Σ i, D i :=
   desc fun i => F i ⋙ incl i
 
 end Functor

@@ -175,8 +175,7 @@ theorem fixed_points_eq_center : fixed_points (ConjAct G) G = center G :=
 instance subgroup.conj_action {H : Subgroup G} [hH : H.normal] : HasScalar (ConjAct G) H :=
   ⟨fun g h => ⟨g • h, hH.conj_mem h.1 h.2 (of_conj_act g)⟩⟩
 
-theorem subgroup.coe_conj_smul {H : Subgroup G} [hH : H.normal] (g : ConjAct G) (h : H) :
-  «expr↑ » (g • h) = g • (h : G) :=
+theorem subgroup.coe_conj_smul {H : Subgroup G} [hH : H.normal] (g : ConjAct G) (h : H) : ↑(g • h) = g • (h : G) :=
   rfl
 
 instance subgroup.conj_mul_distrib_mul_action {H : Subgroup G} [hH : H.normal] : MulDistribMulAction (ConjAct G) H :=
@@ -188,12 +187,12 @@ def _root_.mul_aut.conj_normal {H : Subgroup G} [hH : H.normal] : G →* MulAut 
 
 @[simp]
 theorem _root_.mul_aut.conj_normal_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
-  «expr↑ » (MulAut.conjNormal g h) = (g*h)*g⁻¹ :=
+  ↑MulAut.conjNormal g h = (g*h)*g⁻¹ :=
   rfl
 
 @[simp]
 theorem _root_.mul_aut.conj_normal_symm_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
-  «expr↑ » ((MulAut.conjNormal g).symm h) = (g⁻¹*h)*g :=
+  ↑(MulAut.conjNormal g).symm h = (g⁻¹*h)*g :=
   by 
     change (_*_⁻¹⁻¹) = _ 
     rw [inv_invₓ]
@@ -201,11 +200,10 @@ theorem _root_.mul_aut.conj_normal_symm_apply {H : Subgroup G} [H.normal] (g : G
 
 @[simp]
 theorem _root_.mul_aut.conj_normal_inv_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
-  «expr↑ » ((MulAut.conjNormal g⁻¹) h) = (g⁻¹*h)*g :=
+  ↑(MulAut.conjNormal g⁻¹) h = (g⁻¹*h)*g :=
   MulAut.conj_normal_symm_apply g h
 
-theorem _root_.mul_aut.conj_normal_coe {H : Subgroup G} [H.normal] {h : H} :
-  MulAut.conjNormal («expr↑ » h) = MulAut.conj h :=
+theorem _root_.mul_aut.conj_normal_coe {H : Subgroup G} [H.normal] {h : H} : MulAut.conjNormal (↑h) = MulAut.conj h :=
   MulEquiv.ext fun x => rfl
 
 instance normal_of_characteristic_of_normal {H : Subgroup G} [hH : H.normal] {K : Subgroup H} [h : K.characteristic] :

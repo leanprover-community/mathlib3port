@@ -77,10 +77,19 @@ section Preorderₓ
 
 variable [Preorderₓ P] {x y : P} {I J : ideal P}
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The smallest ideal containing a given element. -/
-def principal (p : P) : ideal P :=
-  { Carrier := { x | x ≤ p }, Nonempty := ⟨p, le_reflₓ _⟩, Directed := fun x hx y hy => ⟨p, le_reflₓ _, hx, hy⟩,
-    mem_of_le := fun x y hxy hy => le_transₓ hxy hy }
+  def
+    principal
+    ( p : P ) : ideal P
+    :=
+      {
+        Carrier := { x | x ≤ p } ,
+          Nonempty := ⟨ p , le_reflₓ _ ⟩ ,
+          Directed := fun x hx y hy => ⟨ p , le_reflₓ _ , hx , hy ⟩ ,
+          mem_of_le := fun x y hxy hy => le_transₓ hxy hy
+        }
 
 instance [Inhabited P] : Inhabited (ideal P) :=
   ⟨ideal.principal$ default P⟩
@@ -131,7 +140,7 @@ theorem mem_of_mem_of_le : x ∈ I → I ≤ J → x ∈ J :=
 theorem principal_le_iff : principal x ≤ I ↔ x ∈ I :=
   ⟨fun h : ∀ {y}, y ≤ x → y ∈ I => h (le_reflₓ x), fun h_mem y h_le : y ≤ x => I.mem_of_le h_le h_mem⟩
 
-theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ «expr ᶜ» (I : Set P) → y ∈ «expr ᶜ» (I : Set P) :=
+theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ (I : Set P)ᶜ → y ∈ (I : Set P)ᶜ :=
   fun h => mt (I.mem_of_le h)
 
 /-- A proper ideal is one that is not the whole set.
@@ -143,7 +152,7 @@ class is_proper (I : ideal P) : Prop where
 theorem is_proper_of_not_mem {I : ideal P} {p : P} (nmem : p ∉ I) : is_proper I :=
   ⟨fun hp =>
       by 
-        change p ∉ «expr↑ » I at nmem 
+        change p ∉ ↑I at nmem 
         rw [hp] at nmem 
         exact nmem (Set.mem_univ p)⟩
 
@@ -170,14 +179,14 @@ class ideal_inter_nonempty : Prop where
     satisfies that its ideal poset is a complete lattice.
 -/
 class ideal_Inter_nonempty : Prop where 
-  Inter_nonempty : (⋂I : ideal P, (I : Set P)).Nonempty
+  Inter_nonempty : (⋂ I : ideal P, (I : Set P)).Nonempty
 
 variable {P}
 
 theorem inter_nonempty [ideal_inter_nonempty P] : ∀ I J : ideal P, ((I : Set P) ∩ (J : Set P)).Nonempty :=
   ideal_inter_nonempty.inter_nonempty
 
-theorem Inter_nonempty [ideal_Inter_nonempty P] : (⋂I : ideal P, (I : Set P)).Nonempty :=
+theorem Inter_nonempty [ideal_Inter_nonempty P] : (⋂ I : ideal P, (I : Set P)).Nonempty :=
   ideal_Inter_nonempty.Inter_nonempty
 
 theorem ideal_Inter_nonempty.exists_all_mem [ideal_Inter_nonempty P] : ∃ a : P, ∀ I : ideal P, a ∈ I :=
@@ -238,7 +247,7 @@ theorem top_of_mem_top {I : ideal P} (mem_top : ⊤ ∈ I) : I = ⊤ :=
   by 
     ext 
     change x ∈ I ↔ x ∈ ((⊤ : ideal P) : Set P)
-    split 
+    constructor
     ·
       simp [coe_top]
     ·
@@ -291,6 +300,7 @@ section SemilatticeSup
 
 variable [SemilatticeSup P] {x y : P} {I : ideal P}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » I)
 /-- A specific witness of `I.directed` when `P` has joins. -/
 theorem sup_mem x y (_ : x ∈ I) (_ : y ∈ I) : x⊔y ∈ I :=
   let ⟨z, h_mem, hx, hy⟩ := I.directed x ‹_› y ‹_›
@@ -316,32 +326,56 @@ def inf (I J : ideal P) : ideal P :=
             simp ⟩,
     mem_of_le := fun x y h ⟨_, _⟩ => ⟨mem_of_le I h ‹_›, mem_of_le J h ‹_›⟩ }
 
-/-- There is a smallest ideal containing two ideals, when their intersection is nonempty and
-    `P` has joins. -/
-def sup (I J : ideal P) : ideal P :=
-  { Carrier := { x | ∃ (i : _)(_ : i ∈ I)(j : _)(_ : j ∈ J), x ≤ i⊔j },
-    Nonempty :=
-      by 
-        cases inter_nonempty I J 
-        exact ⟨w, w, h.1, w, h.2, le_sup_left⟩,
-    Directed :=
-      fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
-        ⟨x⊔y,
-          ⟨xi⊔yi, sup_mem xi yi ‹_› ‹_›, xj⊔yj, sup_mem xj yj ‹_› ‹_›,
-            sup_le
-              (calc x ≤ xi⊔xj := ‹_›
-                _ ≤ xi⊔yi⊔(xj⊔yj) := sup_le_sup le_sup_left le_sup_left
-                )
-              (calc y ≤ yi⊔yj := ‹_›
-                _ ≤ xi⊔yi⊔(xj⊔yj) := sup_le_sup le_sup_right le_sup_right
-                )⟩,
-          le_sup_left, le_sup_right⟩,
-    mem_of_le := fun x y _ ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, le_transₓ ‹x ≤ y› ‹_›⟩ }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » J)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    There is a smallest ideal containing two ideals, when their intersection is nonempty and
+        `P` has joins. -/
+  def
+    sup
+    ( I J : ideal P ) : ideal P
+    :=
+      {
+        Carrier := { x | ∃ ( i : _ ) ( _ : i ∈ I ) ( j : _ ) ( _ : j ∈ J ) , x ≤ i ⊔ j } ,
+          Nonempty := by cases inter_nonempty I J exact ⟨ w , w , h . 1 , w , h . 2 , le_sup_left ⟩ ,
+          Directed
+              :=
+              fun
+                x ⟨ xi , _ , xj , _ , _ ⟩ y ⟨ yi , _ , yj , _ , _ ⟩
+                  =>
+                  ⟨
+                    x ⊔ y
+                      ,
+                      ⟨
+                        xi ⊔ yi
+                          ,
+                          sup_mem xi yi ‹ _ › ‹ _ ›
+                          ,
+                          xj ⊔ yj
+                          ,
+                          sup_mem xj yj ‹ _ › ‹ _ ›
+                          ,
+                          sup_le
+                            calc x ≤ xi ⊔ xj := ‹ _ › _ ≤ xi ⊔ yi ⊔ xj ⊔ yj := sup_le_sup le_sup_left le_sup_left
+                              calc y ≤ yi ⊔ yj := ‹ _ › _ ≤ xi ⊔ yi ⊔ xj ⊔ yj := sup_le_sup le_sup_right le_sup_right
+                        ⟩
+                      ,
+                      le_sup_left
+                      ,
+                      le_sup_right
+                    ⟩
+            ,
+          mem_of_le := fun x y _ ⟨ yi , _ , yj , _ , _ ⟩ => ⟨ yi , ‹ _ › , yj , ‹ _ › , le_transₓ ‹ x ≤ y › ‹ _ › ⟩
+        }
 
 theorem sup_le : I ≤ K → J ≤ K → sup I J ≤ K :=
   fun hIK hJK x ⟨i, hiI, j, hjJ, hxij⟩ =>
     K.mem_of_le hxij$ sup_mem i j (mem_of_mem_of_le hiI hIK) (mem_of_mem_of_le hjJ hJK)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » J)
 instance : Lattice (ideal P) :=
   { ideal.partial_order with sup := sup,
     le_sup_left :=
@@ -361,6 +395,8 @@ instance : Lattice (ideal P) :=
 theorem mem_inf : x ∈ I⊓J ↔ x ∈ I ∧ x ∈ J :=
   iff_of_eq rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » J)
 @[simp]
 theorem mem_sup : x ∈ I⊔J ↔ ∃ (i : _)(_ : i ∈ I)(j : _)(_ : j ∈ J), x ≤ i⊔j :=
   iff_of_eq rfl
@@ -387,7 +423,7 @@ instance (priority := 100) ideal_Inter_nonempty.ideal_inter_nonempty : ideal_int
 
 variable {α β γ : Type _} {ι : Sort _}
 
-theorem ideal_Inter_nonempty.all_Inter_nonempty {f : ι → ideal P} : (⋂x, (f x : Set P)).Nonempty :=
+theorem ideal_Inter_nonempty.all_Inter_nonempty {f : ι → ideal P} : (⋂ x, (f x : Set P)).Nonempty :=
   by 
     obtain ⟨a, ha⟩ : ∃ a : P, ∀ I : ideal P, a ∈ I := ideal_Inter_nonempty.exists_all_mem 
     exact
@@ -395,8 +431,9 @@ theorem ideal_Inter_nonempty.all_Inter_nonempty {f : ι → ideal P} : (⋂x, (f
         by 
           simp [ha]⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem ideal_Inter_nonempty.all_bInter_nonempty {f : α → ideal P} {s : Set α} :
-  (⋂(x : _)(_ : x ∈ s), (f x : Set P)).Nonempty :=
+  (⋂ (x : _)(_ : x ∈ s), (f x : Set P)).Nonempty :=
   by 
     obtain ⟨a, ha⟩ : ∃ a : P, ∀ I : ideal P, a ∈ I := ideal_Inter_nonempty.exists_all_mem 
     exact
@@ -410,10 +447,11 @@ section SemilatticeSupIdealInterNonempty
 
 variable [SemilatticeSup P] [ideal_Inter_nonempty P] {x : P} {I J K : ideal P}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ∈ » s)
 instance : HasInfₓ (ideal P) :=
   { inf :=
       fun s =>
-        { Carrier := ⋂(I : _)(_ : I ∈ s), (I : Set P), Nonempty := ideal_Inter_nonempty.all_bInter_nonempty,
+        { Carrier := ⋂ (I : _)(_ : I ∈ s), (I : Set P), Nonempty := ideal_Inter_nonempty.all_bInter_nonempty,
           Directed :=
             fun x hx y hy =>
               ⟨x⊔y,
@@ -432,14 +470,18 @@ instance : HasInfₓ (ideal P) :=
 
 variable {s : Set (ideal P)}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ∈ » s)
 @[simp]
 theorem mem_Inf : x ∈ Inf s ↔ ∀ I _ : I ∈ s, x ∈ I :=
   by 
-    change (x ∈ ⋂(I : _)(_ : I ∈ s), (I : Set P)) ↔ ∀ I _ : I ∈ s, x ∈ I 
+    change (x ∈ ⋂ (I : _)(_ : I ∈ s), (I : Set P)) ↔ ∀ I _ : I ∈ s, x ∈ I 
     simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ∈ » s)
 @[simp]
-theorem coe_Inf : «expr↑ » (Inf s) = ⋂(I : _)(_ : I ∈ s), (I : Set P) :=
+theorem coe_Inf : ↑Inf s = ⋂ (I : _)(_ : I ∈ s), (I : Set P) :=
   rfl
 
 theorem Inf_le (hI : I ∈ s) : Inf s ≤ I :=
@@ -449,6 +491,7 @@ theorem Inf_le (hI : I ∈ s) : Inf s ≤ I :=
         by 
           simp [hI]⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » s)
 theorem le_Inf (h : ∀ J _ : J ∈ s, I ≤ J) : I ≤ Inf s :=
   fun _ _ =>
     by 
@@ -483,17 +526,31 @@ variable [DistribLattice P]
 
 variable {I J : ideal P}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i' «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j' «expr ∈ » J)
 theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i⊔j) :
   ∃ (i' : _)(_ : i' ∈ I)(j' : _)(_ : j' ∈ J), x = i'⊔j' :=
   by 
     refine' ⟨x⊓i, I.mem_of_le inf_le_right hi, x⊓j, J.mem_of_le inf_le_right hj, _⟩
     calc x = x⊓(i⊔j) := left_eq_inf.mpr hx _ = x⊓i⊔x⊓j := inf_sup_left
 
-theorem coe_sup_eq : «expr↑ » (I⊔J) = { x | ∃ (i : _)(_ : i ∈ I), ∃ (j : _)(_ : j ∈ J), x = i⊔j } :=
-  by 
-    ext 
-    rw [mem_coe, mem_sup]
-    exact ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ => ⟨i, ‹_›, j, ‹_›, le_of_eqₓ ‹_›⟩⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » J)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  coe_sup_eq
+  : ↑ I ⊔ J = { x | ∃ ( i : _ ) ( _ : i ∈ I ) , ∃ ( j : _ ) ( _ : j ∈ J ) , x = i ⊔ j }
+  :=
+    by
+      ext
+        rw [ mem_coe , mem_sup ]
+        exact
+          ⟨
+            fun ⟨ _ , _ , _ , _ , _ ⟩ => eq_sup_of_le_sup ‹ _ › ‹ _ › ‹ _ ›
+              ,
+              fun ⟨ i , _ , j , _ , _ ⟩ => ⟨ i , ‹ _ › , j , ‹ _ › , le_of_eqₓ ‹ _ › ⟩
+            ⟩
 
 end DistribLattice
 
@@ -501,17 +558,15 @@ section BooleanAlgebra
 
 variable [BooleanAlgebra P] {x : P} {I : ideal P}
 
--- error in Order.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_proper.not_mem_of_compl_mem (hI : is_proper I) (hxc : «expr ∈ »(«expr ᶜ»(x), I)) : «expr ∉ »(x, I) :=
-begin
-  intro [ident hx],
-  apply [expr hI.top_not_mem],
-  have [ident ht] [":", expr «expr ∈ »(«expr ⊔ »(x, «expr ᶜ»(x)), I)] [":=", expr sup_mem _ _ «expr‹ ›»(_) «expr‹ ›»(_)],
-  rwa [expr sup_compl_eq_top] ["at", ident ht]
-end
+theorem is_proper.not_mem_of_compl_mem (hI : is_proper I) (hxc : xᶜ ∈ I) : x ∉ I :=
+  by 
+    intro hx 
+    apply hI.top_not_mem 
+    have ht : x⊔xᶜ ∈ I := sup_mem _ _ ‹_› ‹_›
+    rwa [sup_compl_eq_top] at ht
 
-theorem is_proper.not_mem_or_compl_not_mem (hI : is_proper I) : x ∉ I ∨ «expr ᶜ» x ∉ I :=
-  have h : «expr ᶜ» x ∈ I → x ∉ I := hI.not_mem_of_compl_mem 
+theorem is_proper.not_mem_or_compl_not_mem (hI : is_proper I) : x ∉ I ∨ xᶜ ∉ I :=
+  have h : xᶜ ∈ I → x ∉ I := hI.not_mem_of_compl_mem 
   by 
     tauto
 
@@ -519,6 +574,7 @@ end BooleanAlgebra
 
 end Ideal
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » carrier)
 /-- For a preorder `P`, `cofinal P` is the type of subsets of `P`
   containing arbitrarily large elements. They are the dense sets in
   the topology whose open sets are terminal segments. -/
@@ -587,7 +643,7 @@ theorem sequence_of_cofinals.encode_mem (i : ι) : sequence_of_cofinals p 𝒟 (
 
   This proves the Rasiowa–Sikorski lemma. -/
 def ideal_of_cofinals : ideal P :=
-  { Carrier := { x:P | ∃ n, x ≤ sequence_of_cofinals p 𝒟 n }, Nonempty := ⟨p, 0, le_reflₓ _⟩,
+  { Carrier := { x : P | ∃ n, x ≤ sequence_of_cofinals p 𝒟 n }, Nonempty := ⟨p, 0, le_reflₓ _⟩,
     Directed :=
       fun x ⟨n, hn⟩ y ⟨m, hm⟩ =>
         ⟨_, ⟨max n m, le_reflₓ _⟩, le_transₓ hn$ sequence_of_cofinals.monotone p 𝒟 (le_max_leftₓ _ _),

@@ -90,36 +90,32 @@ variable {M : Type u} [Monoidₓ M]
 
 /-- If `a` semiconjugates a unit `x` to a unit `y`, then it semiconjugates `x⁻¹` to `y⁻¹`. -/
 @[toAdditive]
-theorem units_inv_right {a : M} {x y : Units M} (h : SemiconjBy a x y) :
-  SemiconjBy a («expr↑ » (x⁻¹)) («expr↑ » (y⁻¹)) :=
-  calc (a*«expr↑ » (x⁻¹)) = («expr↑ » (y⁻¹)*y*a)*«expr↑ » (x⁻¹) :=
+theorem units_inv_right {a : M} {x y : Units M} (h : SemiconjBy a x y) : SemiconjBy a (↑x⁻¹) (↑y⁻¹) :=
+  calc (a*↑x⁻¹) = ((↑y⁻¹)*y*a)*↑x⁻¹ :=
     by 
       rw [Units.inv_mul_cancel_left]
-    _ = «expr↑ » (y⁻¹)*a :=
+    _ = (↑y⁻¹)*a :=
     by 
       rw [←h.eq, mul_assocₓ, Units.mul_inv_cancel_right]
     
 
 @[simp, toAdditive]
-theorem units_inv_right_iff {a : M} {x y : Units M} :
-  SemiconjBy a («expr↑ » (x⁻¹)) («expr↑ » (y⁻¹)) ↔ SemiconjBy a x y :=
+theorem units_inv_right_iff {a : M} {x y : Units M} : SemiconjBy a (↑x⁻¹) (↑y⁻¹) ↔ SemiconjBy a x y :=
   ⟨units_inv_right, units_inv_right⟩
 
 /-- If a unit `a` semiconjugates `x` to `y`, then `a⁻¹` semiconjugates `y` to `x`. -/
 @[toAdditive]
-theorem units_inv_symm_left {a : Units M} {x y : M} (h : SemiconjBy («expr↑ » a) x y) :
-  SemiconjBy («expr↑ » (a⁻¹)) y x :=
-  calc («expr↑ » (a⁻¹)*y) = «expr↑ » (a⁻¹)*(y*a)*«expr↑ » (a⁻¹) :=
+theorem units_inv_symm_left {a : Units M} {x y : M} (h : SemiconjBy (↑a) x y) : SemiconjBy (↑a⁻¹) y x :=
+  calc ((↑a⁻¹)*y) = (↑a⁻¹)*(y*a)*↑a⁻¹ :=
     by 
       rw [Units.mul_inv_cancel_right]
-    _ = x*«expr↑ » (a⁻¹) :=
+    _ = x*↑a⁻¹ :=
     by 
       rw [←h.eq, ←mul_assocₓ, Units.inv_mul_cancel_left]
     
 
 @[simp, toAdditive]
-theorem units_inv_symm_left_iff {a : Units M} {x y : M} :
-  SemiconjBy («expr↑ » (a⁻¹)) y x ↔ SemiconjBy («expr↑ » a) x y :=
+theorem units_inv_symm_left_iff {a : Units M} {x y : M} : SemiconjBy (↑a⁻¹) y x ↔ SemiconjBy (↑a) x y :=
   ⟨units_inv_symm_left, units_inv_symm_left⟩
 
 @[toAdditive]
@@ -194,8 +190,7 @@ theorem semiconj_by_iff_eq {M : Type u} [CancelCommMonoid M] {a x y : M} : Semic
 
 /-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[toAdditive]
-theorem Units.mk_semiconj_by {M : Type u} [Monoidₓ M] (u : Units M) (x : M) :
-  SemiconjBy («expr↑ » u) x ((u*x)*«expr↑ » (u⁻¹)) :=
+theorem Units.mk_semiconj_by {M : Type u} [Monoidₓ M] (u : Units M) (x : M) : SemiconjBy (↑u) x ((u*x)*↑u⁻¹) :=
   by 
     unfold SemiconjBy <;> rw [Units.inv_mul_cancel_right]
 

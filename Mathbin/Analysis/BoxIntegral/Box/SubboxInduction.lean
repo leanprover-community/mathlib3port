@@ -26,7 +26,7 @@ open Set Finset Function Filter Metric
 
 open_locale Classical TopologicalSpace Filter Ennreal
 
-noncomputable theory
+noncomputable section 
 
 namespace BoxIntegral
 
@@ -71,10 +71,18 @@ theorem disjoint_split_center_box (I : box ι) {s t : Set ι} (h : s ≠ t) :
 theorem injective_split_center_box (I : box ι) : injective I.split_center_box :=
   fun s t H => by_contra$ fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
 
-@[simp]
-theorem exists_mem_split_center_box {I : box ι} {x : ι → ℝ} : (∃ s, x ∈ I.split_center_box s) ↔ x ∈ I :=
-  ⟨fun ⟨s, hs⟩ => I.split_center_box_le s hs,
-    fun hx => ⟨{ i | (I.lower i+I.upper i) / 2 < x i }, mem_split_center_box.2 ⟨hx, fun i => Iff.rfl⟩⟩⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    exists_mem_split_center_box
+    { I : box ι } { x : ι → ℝ } : ∃ s , x ∈ I.split_center_box s ↔ x ∈ I
+    :=
+      ⟨
+        fun ⟨ s , hs ⟩ => I.split_center_box_le s hs
+          ,
+          fun hx => ⟨ { i | I.lower i + I.upper i / 2 < x i } , mem_split_center_box . 2 ⟨ hx , fun i => Iff.rfl ⟩ ⟩
+        ⟩
 
 /-- `box_integral.box.split_center_box` bundled as a `function.embedding`. -/
 @[simps]
@@ -82,7 +90,7 @@ def split_center_box_emb (I : box ι) : Set ι ↪ box ι :=
   ⟨split_center_box I, injective_split_center_box I⟩
 
 @[simp]
-theorem Union_coe_split_center_box (I : box ι) : (⋃s, (I.split_center_box s : Set (ι → ℝ))) = I :=
+theorem Union_coe_split_center_box (I : box ι) : (⋃ s, (I.split_center_box s : Set (ι → ℝ))) = I :=
   by 
     ext x 
     simp 
@@ -93,7 +101,10 @@ theorem upper_sub_lower_split_center_box (I : box ι) (s : Set ι) (i : ι) :
   by 
     byCases' hs : i ∈ s <;> fieldSimp [split_center_box, hs, mul_two, two_mul]
 
--- error in Analysis.BoxIntegral.Box.SubboxInduction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ≤ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » I.Icc)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » «expr𝓝[ ] »(I.Icc, z))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ≤ » I)
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
 hold true.
 
@@ -110,66 +121,72 @@ Then `p I` is true. See also `box_integral.box.subbox_induction_on` for a versio
 The proof still works if we assume `H_ind` only for subboxes `J ≤ I` that are homothetic to `I` with
 a coefficient of the form `2⁻ᵐ` but we do not need this generalization yet. -/
 @[elab_as_eliminator]
-theorem subbox_induction_on'
-{p : box ι → exprProp()}
-(I : box ι)
-(H_ind : ∀ J «expr ≤ » I, ∀ s, p (split_center_box J s) → p J)
-(H_nhds : ∀
- z «expr ∈ » I.Icc, «expr∃ , »((U «expr ∈ » «expr𝓝[ ] »(I.Icc, z)), ∀
-  (J «expr ≤ » I)
-  (m : exprℕ()), «expr ∈ »(z, J.Icc) → «expr ⊆ »(J.Icc, U) → ∀
-  i, «expr = »(«expr - »(J.upper i, J.lower i), «expr / »(«expr - »(I.upper i, I.lower i), «expr ^ »(2, m))) → p J)) : p I :=
-begin
-  by_contra [ident hpI],
-  replace [ident H_ind] [] [":=", expr λ J hJ, not_imp_not.2 (H_ind J hJ)],
-  simp [] [] ["only"] ["[", expr exists_imp_distrib, ",", expr not_forall, "]"] [] ["at", ident H_ind],
-  choose ["!"] [ident s] [ident hs] ["using", expr H_ind],
-  set [] [ident J] [":", expr exprℕ() → box ι] [":="] [expr λ m, «expr ^[ ]»(λ J, split_center_box J (s J), m) I] [],
-  have [ident J_succ] [":", expr ∀
-   m, «expr = »(J «expr + »(m, 1), split_center_box (J m) «expr $ »(s, J m))] [":=", expr λ
-   m, iterate_succ_apply' _ _ _],
-  have [ident hJmono] [":", expr antitone J] [],
-  from [expr antitone_nat_of_succ_le (λ
-    n, by simpa [] [] [] ["[", expr J_succ, "]"] [] ["using", expr split_center_box_le _ _])],
-  have [ident hJle] [":", expr ∀ m, «expr ≤ »(J m, I)] [],
-  from [expr λ m, hJmono (zero_le m)],
-  have [ident hJp] [":", expr ∀ m, «expr¬ »(p (J m))] [],
-  from [expr λ
-   m, nat.rec_on m hpI (λ m, by simpa [] [] ["only"] ["[", expr J_succ, "]"] [] ["using", expr hs (J m) (hJle m)])],
-  have [ident hJsub] [":", expr ∀
-   m
-   i, «expr = »(«expr - »((J m).upper i, (J m).lower i), «expr / »(«expr - »(I.upper i, I.lower i), «expr ^ »(2, m)))] [],
-  { intros [ident m, ident i],
-    induction [expr m] [] ["with", ident m, ident ihm] [],
-    { simp [] [] [] ["[", expr J, "]"] [] [] },
-    simp [] [] ["only"] ["[", expr pow_succ', ",", expr J_succ, ",", expr upper_sub_lower_split_center_box, ",", expr ihm, ",", expr div_div_eq_div_mul, "]"] [] [] },
-  have [ident h0] [":", expr «expr = »(J 0, I)] [],
-  from [expr rfl],
-  clear_value [ident J],
-  clear [ident hpI, ident hs, ident J_succ, ident s],
-  set [] [ident z] [":", expr ι → exprℝ()] [":="] [expr «expr⨆ , »((m), (J m).lower)] [],
-  have [ident hzJ] [":", expr ∀ m, «expr ∈ »(z, (J m).Icc)] [],
-  from [expr mem_Inter.1 (csupr_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).monotone.comp_antitone hJmono) (λ
-     m, (J m).lower_le_upper))],
-  have [ident hJl_mem] [":", expr ∀ m, «expr ∈ »((J m).lower, I.Icc)] [],
-  from [expr λ m, le_iff_Icc.1 (hJle m) (J m).lower_mem_Icc],
-  have [ident hJu_mem] [":", expr ∀ m, «expr ∈ »((J m).upper, I.Icc)] [],
-  from [expr λ m, le_iff_Icc.1 (hJle m) (J m).upper_mem_Icc],
-  have [ident hJlz] [":", expr tendsto (λ m, (J m).lower) at_top (expr𝓝() z)] [],
-  from [expr tendsto_at_top_csupr (antitone_lower.comp hJmono) ⟨I.upper, λ (x) ⟨m, hm⟩, «expr ▸ »(hm, (hJl_mem m).2)⟩],
-  have [ident hJuz] [":", expr tendsto (λ m, (J m).upper) at_top (expr𝓝() z)] [],
-  { suffices [] [":", expr tendsto (λ m, «expr - »((J m).upper, (J m).lower)) at_top (expr𝓝() 0)],
-    by simpa [] [] [] [] [] ["using", expr hJlz.add this],
-    refine [expr tendsto_pi_nhds.2 (λ i, _)],
-    simpa [] [] [] ["[", expr hJsub, "]"] [] ["using", expr tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt (@one_lt_two exprℝ() _ _))] },
-  replace [ident hJlz] [":", expr tendsto (λ m, (J m).lower) at_top «expr𝓝[ ] »(Icc I.lower I.upper, z)] [],
-  from [expr tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJlz (eventually_of_forall hJl_mem)],
-  replace [ident hJuz] [":", expr tendsto (λ m, (J m).upper) at_top «expr𝓝[ ] »(Icc I.lower I.upper, z)] [],
-  from [expr tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJuz (eventually_of_forall hJu_mem)],
-  rcases [expr H_nhds z «expr ▸ »(h0, hzJ 0), "with", "⟨", ident U, ",", ident hUz, ",", ident hU, "⟩"],
-  rcases [expr (tendsto_lift'.1 (hJlz.Icc hJuz) U hUz).exists, "with", "⟨", ident m, ",", ident hUm, "⟩"],
-  exact [expr hJp m (hU (J m) (hJle m) m (hzJ m) hUm (hJsub m))]
-end
+theorem subbox_induction_on' {p : box ι → Prop} (I : box ι)
+  (H_ind : ∀ J _ : J ≤ I, (∀ s, p (split_center_box J s)) → p J)
+  (H_nhds :
+    ∀ z _ : z ∈ I.Icc,
+      ∃ (U : _)(_ : U ∈ 𝓝[I.Icc] z),
+        ∀ J _ : J ≤ I m : ℕ,
+          z ∈ J.Icc → J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
+  p I :=
+  by 
+    byContra hpI 
+    replace H_ind := fun J hJ => not_imp_not.2 (H_ind J hJ)
+    simp only [exists_imp_distrib, not_forall] at H_ind 
+    choose! s hs using H_ind 
+    set J : ℕ → box ι := fun m => ((fun J => split_center_box J (s J))^[m]) I 
+    have J_succ : ∀ m, J (m+1) = split_center_box (J m) (s$ J m) := fun m => iterate_succ_apply' _ _ _ 
+    have hJmono : Antitone J 
+    exact
+      antitone_nat_of_succ_le
+        fun n =>
+          by 
+            simpa [J_succ] using split_center_box_le _ _ 
+    have hJle : ∀ m, J m ≤ I 
+    exact fun m => hJmono (zero_le m)
+    have hJp : ∀ m, ¬p (J m)
+    exact
+      fun m =>
+        Nat.recOn m hpI
+          fun m =>
+            by 
+              simpa only [J_succ] using hs (J m) (hJle m)
+    have hJsub : ∀ m i, (J m).upper i - (J m).lower i = (I.upper i - I.lower i) / 2 ^ m
+    ·
+      intro m i 
+      induction' m with m ihm
+      ·
+        simp [J]
+      simp only [pow_succ'ₓ, J_succ, upper_sub_lower_split_center_box, ihm, div_div_eq_div_mul]
+    have h0 : J 0 = I 
+    exact rfl 
+    clearValue J 
+    clear hpI hs J_succ s 
+    set z : ι → ℝ := ⨆ m, (J m).lower 
+    have hzJ : ∀ m, z ∈ (J m).Icc 
+    exact
+      mem_Inter.1
+        (csupr_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m => (J m).lower_le_upper)
+    have hJl_mem : ∀ m, (J m).lower ∈ I.Icc 
+    exact fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_Icc 
+    have hJu_mem : ∀ m, (J m).upper ∈ I.Icc 
+    exact fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_Icc 
+    have hJlz : tendsto (fun m => (J m).lower) at_top (𝓝 z)
+    exact tendsto_at_top_csupr (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
+    have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z)
+    ·
+      suffices  : tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0)
+      ·
+        simpa using hJlz.add this 
+      refine' tendsto_pi_nhds.2 fun i => _ 
+      simpa [hJsub] using tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt (@one_lt_two ℝ _ _))
+    replace hJlz : tendsto (fun m => (J m).lower) at_top (𝓝[Icc I.lower I.upper] z)
+    exact tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJlz (eventually_of_forall hJl_mem)
+    replace hJuz : tendsto (fun m => (J m).upper) at_top (𝓝[Icc I.lower I.upper] z)
+    exact tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJuz (eventually_of_forall hJu_mem)
+    rcases H_nhds z (h0 ▸ hzJ 0) with ⟨U, hUz, hU⟩
+    rcases(tendsto_lift'.1 (hJlz.Icc hJuz) U hUz).exists with ⟨m, hUm⟩
+    exact hJp m (hU (J m) (hJle m) m (hzJ m) hUm (hJsub m))
 
 end Box
 

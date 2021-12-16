@@ -22,7 +22,7 @@ universe u
 
 variable {α : Type u} {β : α → Type u}
 
-noncomputable theory
+noncomputable section 
 
 namespace WType
 

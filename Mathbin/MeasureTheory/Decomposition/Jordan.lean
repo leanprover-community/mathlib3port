@@ -35,7 +35,7 @@ Jordan decomposition theorem
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical MeasureTheory Ennreal Nnreal
 
@@ -163,8 +163,7 @@ theorem to_signed_measure_smul (r :  ℝ≥0 ) : (r • j).toSignedMeasure = r �
 theorem exists_compl_positive_negative :
   ∃ S : Set α,
     MeasurableSet S ∧
-      j.to_signed_measure ≤[S] 0 ∧
-        0 ≤[«expr ᶜ» S] j.to_signed_measure ∧ j.pos_part S = 0 ∧ j.neg_part («expr ᶜ» S) = 0 :=
+      j.to_signed_measure ≤[S] 0 ∧ 0 ≤[Sᶜ] j.to_signed_measure ∧ j.pos_part S = 0 ∧ j.neg_part (Sᶜ) = 0 :=
   by 
     obtain ⟨S, hS₁, hS₂, hS₃⟩ := j.mutually_singular 
     refine' ⟨S, hS₁, _, _, hS₂, hS₃⟩
@@ -198,11 +197,11 @@ theorem, and is shown by
 def to_jordan_decomposition (s : signed_measure α) : jordan_decomposition α :=
   let i := some s.exists_compl_positive_negative 
   let hi := some_spec s.exists_compl_positive_negative
-  { posPart := s.to_measure_of_zero_le i hi.1 hi.2.1, negPart := s.to_measure_of_le_zero («expr ᶜ» i) hi.1.Compl hi.2.2,
+  { posPart := s.to_measure_of_zero_le i hi.1 hi.2.1, negPart := s.to_measure_of_le_zero (iᶜ) hi.1.Compl hi.2.2,
     pos_part_finite := inferInstance, neg_part_finite := inferInstance,
     MutuallySingular :=
       by 
-        refine' ⟨«expr ᶜ» i, hi.1.Compl, _, _⟩
+        refine' ⟨iᶜ, hi.1.Compl, _, _⟩
         ·
           rw [to_measure_of_zero_le_apply _ _ hi.1 hi.1.Compl]
           simp 
@@ -211,9 +210,9 @@ def to_jordan_decomposition (s : signed_measure α) : jordan_decomposition α :=
           simp  }
 
 theorem to_jordan_decomposition_spec (s : signed_measure α) :
-  ∃ (i : Set α)(hi₁ : MeasurableSet i)(hi₂ : 0 ≤[i] s)(hi₃ : s ≤[«expr ᶜ» i] 0),
+  ∃ (i : Set α)(hi₁ : MeasurableSet i)(hi₂ : 0 ≤[i] s)(hi₃ : s ≤[iᶜ] 0),
     s.to_jordan_decomposition.pos_part = s.to_measure_of_zero_le i hi₁ hi₂ ∧
-      s.to_jordan_decomposition.neg_part = s.to_measure_of_le_zero («expr ᶜ» i) hi₁.compl hi₃ :=
+      s.to_jordan_decomposition.neg_part = s.to_measure_of_le_zero (iᶜ) hi₁.compl hi₃ :=
   by 
     set i := some s.exists_compl_positive_negative 
     obtain ⟨hi₁, hi₂, hi₃⟩ := some_spec s.exists_compl_positive_negative 
@@ -238,7 +237,7 @@ theorem to_signed_measure_to_jordan_decomposition (s : signed_measure α) :
       to_measure_of_le_zero_apply _ hi₃ hi₁.compl hk]
     simp only [Ennreal.coe_to_real, Subtype.coe_mk, Ennreal.some_eq_coe, sub_neg_eq_add]
     rw [←of_union _ (MeasurableSet.inter hi₁ hk) (MeasurableSet.inter hi₁.compl hk), Set.inter_comm i,
-      Set.inter_comm («expr ᶜ» i), Set.inter_union_compl _ _]
+      Set.inter_comm (iᶜ), Set.inter_union_compl _ _]
     ·
       infer_instance
     ·
@@ -249,112 +248,85 @@ section
 
 variable {u v w : Set α}
 
--- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subset `v` of a null-set `w` has zero measure if `w` is a subset of a positive set `u`. -/
-theorem subset_positive_null_set
-(hu : measurable_set u)
-(hv : measurable_set v)
-(hw : measurable_set w)
-(hsu : «expr ≤[ ] »(0, u, s))
-(hw₁ : «expr = »(s w, 0))
-(hw₂ : «expr ⊆ »(w, u))
-(hwt : «expr ⊆ »(v, w)) : «expr = »(s v, 0) :=
-begin
-  have [] [":", expr «expr = »(«expr + »(s v, s «expr \ »(w, v)), 0)] [],
-  { rw ["[", "<-", expr hw₁, ",", "<-", expr of_union set.disjoint_diff hv (hw.diff hv), ",", expr set.union_diff_self, ",", expr set.union_eq_self_of_subset_left hwt, "]"] [],
-    apply_instance },
-  have [ident h₁] [] [":=", expr nonneg_of_zero_le_restrict _ (restrict_le_restrict_subset _ _ hu hsu (hwt.trans hw₂))],
-  have [ident h₂] [] [":=", expr nonneg_of_zero_le_restrict _ (restrict_le_restrict_subset _ _ hu hsu ((w.diff_subset v).trans hw₂))],
-  linarith [] [] []
-end
+theorem subset_positive_null_set (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w) (hsu : 0 ≤[u] s)
+  (hw₁ : s w = 0) (hw₂ : w ⊆ u) (hwt : v ⊆ w) : s v = 0 :=
+  by 
+    have  : (s v+s (w \ v)) = 0
+    ·
+      rw [←hw₁, ←of_union Set.disjoint_diff hv (hw.diff hv), Set.union_diff_self, Set.union_eq_self_of_subset_left hwt]
+      infer_instance 
+    have h₁ := nonneg_of_zero_le_restrict _ (restrict_le_restrict_subset _ _ hu hsu (hwt.trans hw₂))
+    have h₂ := nonneg_of_zero_le_restrict _ (restrict_le_restrict_subset _ _ hu hsu ((w.diff_subset v).trans hw₂))
+    linarith
 
--- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subset `v` of a null-set `w` has zero measure if `w` is a subset of a negative set `u`. -/
-theorem subset_negative_null_set
-(hu : measurable_set u)
-(hv : measurable_set v)
-(hw : measurable_set w)
-(hsu : «expr ≤[ ] »(s, u, 0))
-(hw₁ : «expr = »(s w, 0))
-(hw₂ : «expr ⊆ »(w, u))
-(hwt : «expr ⊆ »(v, w)) : «expr = »(s v, 0) :=
-begin
-  rw ["[", "<-", expr s.neg_le_neg_iff _ hu, ",", expr neg_zero, "]"] ["at", ident hsu],
-  have [] [] [":=", expr subset_positive_null_set hu hv hw hsu],
-  simp [] [] ["only"] ["[", expr pi.neg_apply, ",", expr neg_eq_zero, ",", expr coe_neg, "]"] [] ["at", ident this],
-  exact [expr this hw₁ hw₂ hwt]
-end
+theorem subset_negative_null_set (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w) (hsu : s ≤[u] 0)
+  (hw₁ : s w = 0) (hw₂ : w ⊆ u) (hwt : v ⊆ w) : s v = 0 :=
+  by 
+    rw [←s.neg_le_neg_iff _ hu, neg_zero] at hsu 
+    have  := subset_positive_null_set hu hv hw hsu 
+    simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this 
+    exact this hw₁ hw₂ hwt
 
--- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the symmetric difference of two positive sets is a null-set, then so are the differences
 between the two sets. -/
-theorem of_diff_eq_zero_of_symm_diff_eq_zero_positive
-(hu : measurable_set u)
-(hv : measurable_set v)
-(hsu : «expr ≤[ ] »(0, u, s))
-(hsv : «expr ≤[ ] »(0, v, s))
-(hs : «expr = »(s «expr Δ »(u, v), 0)) : «expr ∧ »(«expr = »(s «expr \ »(u, v), 0), «expr = »(s «expr \ »(v, u), 0)) :=
-begin
-  rw [expr restrict_le_restrict_iff] ["at", ident hsu, ident hsv],
-  have [ident a] [] [":=", expr hsu (hu.diff hv) (u.diff_subset v)],
-  have [ident b] [] [":=", expr hsv (hv.diff hu) (v.diff_subset u)],
-  erw ["[", expr of_union (set.disjoint_of_subset_left (u.diff_subset v) set.disjoint_diff) (hu.diff hv) (hv.diff hu), "]"] ["at", ident hs],
-  rw [expr zero_apply] ["at", ident a, ident b],
-  split,
-  all_goals { linarith [] [] [] <|> apply_instance <|> assumption }
-end
+theorem of_diff_eq_zero_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : MeasurableSet v) (hsu : 0 ≤[u] s)
+  (hsv : 0 ≤[v] s) (hs : s (u Δ v) = 0) : s (u \ v) = 0 ∧ s (v \ u) = 0 :=
+  by 
+    rw [restrict_le_restrict_iff] at hsu hsv 
+    have a := hsu (hu.diff hv) (u.diff_subset v)
+    have b := hsv (hv.diff hu) (v.diff_subset u)
+    erw [of_union (Set.disjoint_of_subset_left (u.diff_subset v) Set.disjoint_diff) (hu.diff hv) (hv.diff hu)] at hs 
+    rw [zero_apply] at a b 
+    constructor 
+    all_goals 
+      first |
+        linarith|
+        infer_instance|
+        assumption
 
--- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the symmetric difference of two negative sets is a null-set, then so are the differences
 between the two sets. -/
-theorem of_diff_eq_zero_of_symm_diff_eq_zero_negative
-(hu : measurable_set u)
-(hv : measurable_set v)
-(hsu : «expr ≤[ ] »(s, u, 0))
-(hsv : «expr ≤[ ] »(s, v, 0))
-(hs : «expr = »(s «expr Δ »(u, v), 0)) : «expr ∧ »(«expr = »(s «expr \ »(u, v), 0), «expr = »(s «expr \ »(v, u), 0)) :=
-begin
-  rw ["[", "<-", expr s.neg_le_neg_iff _ hu, ",", expr neg_zero, "]"] ["at", ident hsu],
-  rw ["[", "<-", expr s.neg_le_neg_iff _ hv, ",", expr neg_zero, "]"] ["at", ident hsv],
-  have [] [] [":=", expr of_diff_eq_zero_of_symm_diff_eq_zero_positive hu hv hsu hsv],
-  simp [] [] ["only"] ["[", expr pi.neg_apply, ",", expr neg_eq_zero, ",", expr coe_neg, "]"] [] ["at", ident this],
-  exact [expr this hs]
-end
+theorem of_diff_eq_zero_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv : MeasurableSet v) (hsu : s ≤[u] 0)
+  (hsv : s ≤[v] 0) (hs : s (u Δ v) = 0) : s (u \ v) = 0 ∧ s (v \ u) = 0 :=
+  by 
+    rw [←s.neg_le_neg_iff _ hu, neg_zero] at hsu 
+    rw [←s.neg_le_neg_iff _ hv, neg_zero] at hsv 
+    have  := of_diff_eq_zero_of_symm_diff_eq_zero_positive hu hv hsu hsv 
+    simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this 
+    exact this hs
 
--- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_inter_eq_of_symm_diff_eq_zero_positive
-(hu : measurable_set u)
-(hv : measurable_set v)
-(hw : measurable_set w)
-(hsu : «expr ≤[ ] »(0, u, s))
-(hsv : «expr ≤[ ] »(0, v, s))
-(hs : «expr = »(s «expr Δ »(u, v), 0)) : «expr = »(s «expr ∩ »(w, u), s «expr ∩ »(w, v)) :=
-begin
-  have [ident hwuv] [":", expr «expr = »(s «expr Δ »(«expr ∩ »(w, u), «expr ∩ »(w, v)), 0)] [],
-  { refine [expr subset_positive_null_set (hu.union hv) ((hw.inter hu).symm_diff (hw.inter hv)) (hu.symm_diff hv) (restrict_le_restrict_union _ _ hu hsu hv hsv) hs _ _],
-    { exact [expr symm_diff_le_sup u v] },
-    { rintro [ident x, "(", "⟨", "⟨", ident hxw, ",", ident hxu, "⟩", ",", ident hx, "⟩", "|", "⟨", "⟨", ident hxw, ",", ident hxv, "⟩", ",", ident hx, "⟩", ")"]; rw ["[", expr set.mem_inter_eq, ",", expr not_and, "]"] ["at", ident hx],
-      { exact [expr or.inl ⟨hxu, hx hxw⟩] },
-      { exact [expr or.inr ⟨hxv, hx hxw⟩] } } },
-  obtain ["⟨", ident huv, ",", ident hvu, "⟩", ":=", expr of_diff_eq_zero_of_symm_diff_eq_zero_positive (hw.inter hu) (hw.inter hv) (restrict_le_restrict_subset _ _ hu hsu (w.inter_subset_right u)) (restrict_le_restrict_subset _ _ hv hsv (w.inter_subset_right v)) hwuv],
-  rw ["[", "<-", expr of_diff_of_diff_eq_zero (hw.inter hu) (hw.inter hv) hvu, ",", expr huv, ",", expr zero_add, "]"] []
-end
+theorem of_inter_eq_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w)
+  (hsu : 0 ≤[u] s) (hsv : 0 ≤[v] s) (hs : s (u Δ v) = 0) : s (w ∩ u) = s (w ∩ v) :=
+  by 
+    have hwuv : s ((w ∩ u) Δ (w ∩ v)) = 0
+    ·
+      refine'
+        subset_positive_null_set (hu.union hv) ((hw.inter hu).symmDiff (hw.inter hv)) (hu.symm_diff hv)
+          (restrict_le_restrict_union _ _ hu hsu hv hsv) hs _ _
+      ·
+        exact symm_diff_le_sup u v
+      ·
+        rintro x (⟨⟨hxw, hxu⟩, hx⟩ | ⟨⟨hxw, hxv⟩, hx⟩) <;> rw [Set.mem_inter_eq, not_and] at hx
+        ·
+          exact Or.inl ⟨hxu, hx hxw⟩
+        ·
+          exact Or.inr ⟨hxv, hx hxw⟩
+    obtain ⟨huv, hvu⟩ :=
+      of_diff_eq_zero_of_symm_diff_eq_zero_positive (hw.inter hu) (hw.inter hv)
+        (restrict_le_restrict_subset _ _ hu hsu (w.inter_subset_right u))
+        (restrict_le_restrict_subset _ _ hv hsv (w.inter_subset_right v)) hwuv 
+    rw [←of_diff_of_diff_eq_zero (hw.inter hu) (hw.inter hv) hvu, huv, zero_addₓ]
 
--- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_inter_eq_of_symm_diff_eq_zero_negative
-(hu : measurable_set u)
-(hv : measurable_set v)
-(hw : measurable_set w)
-(hsu : «expr ≤[ ] »(s, u, 0))
-(hsv : «expr ≤[ ] »(s, v, 0))
-(hs : «expr = »(s «expr Δ »(u, v), 0)) : «expr = »(s «expr ∩ »(w, u), s «expr ∩ »(w, v)) :=
-begin
-  rw ["[", "<-", expr s.neg_le_neg_iff _ hu, ",", expr neg_zero, "]"] ["at", ident hsu],
-  rw ["[", "<-", expr s.neg_le_neg_iff _ hv, ",", expr neg_zero, "]"] ["at", ident hsv],
-  have [] [] [":=", expr of_inter_eq_of_symm_diff_eq_zero_positive hu hv hw hsu hsv],
-  simp [] [] ["only"] ["[", expr pi.neg_apply, ",", expr neg_inj, ",", expr neg_eq_zero, ",", expr coe_neg, "]"] [] ["at", ident this],
-  exact [expr this hs]
-end
+theorem of_inter_eq_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w)
+  (hsu : s ≤[u] 0) (hsv : s ≤[v] 0) (hs : s (u Δ v) = 0) : s (w ∩ u) = s (w ∩ v) :=
+  by 
+    rw [←s.neg_le_neg_iff _ hu, neg_zero] at hsu 
+    rw [←s.neg_le_neg_iff _ hv, neg_zero] at hsv 
+    have  := of_inter_eq_of_symm_diff_eq_zero_positive hu hv hw hsu hsv 
+    simp only [Pi.neg_apply, neg_inj, neg_eq_zero, coe_neg] at this 
+    exact this hs
 
 end 
 
@@ -379,35 +351,60 @@ private theorem eq_of_pos_part_eq_pos_part {j₁ j₂ : jordan_decomposition α}
         exact sub_right_inj.mp this 
       convert hj'
 
--- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Jordan decomposition of a signed measure is unique. -/
-theorem to_signed_measure_injective : «expr $ »(injective, @jordan_decomposition.to_signed_measure α _) :=
-begin
-  intros [ident j₁, ident j₂, ident hj],
-  obtain ["⟨", ident S, ",", ident hS₁, ",", ident hS₂, ",", ident hS₃, ",", ident hS₄, ",", ident hS₅, "⟩", ":=", expr j₁.exists_compl_positive_negative],
-  obtain ["⟨", ident T, ",", ident hT₁, ",", ident hT₂, ",", ident hT₃, ",", ident hT₄, ",", ident hT₅, "⟩", ":=", expr j₂.exists_compl_positive_negative],
-  rw ["<-", expr hj] ["at", ident hT₂, ident hT₃],
-  obtain ["⟨", ident hST₁, ",", "-", "⟩", ":=", expr of_symm_diff_compl_positive_negative hS₁.compl hT₁.compl ⟨hS₃, «expr ▸ »((compl_compl S).symm, hS₂)⟩ ⟨hT₃, «expr ▸ »((compl_compl T).symm, hT₂)⟩],
-  refine [expr eq_of_pos_part_eq_pos_part _ hj],
-  ext1 [] [ident i, ident hi],
-  have [ident hμ₁] [":", expr «expr = »((j₁.pos_part i).to_real, j₁.to_signed_measure «expr ∩ »(i, «expr ᶜ»(S)))] [],
-  { rw ["[", expr to_signed_measure, ",", expr to_signed_measure_sub_apply (hi.inter hS₁.compl), ",", expr show «expr = »(j₁.neg_part «expr ∩ »(i, «expr ᶜ»(S)), 0), by exact [expr nonpos_iff_eq_zero.1 «expr ▸ »(hS₅, measure_mono (set.inter_subset_right _ _))], ",", expr ennreal.zero_to_real, ",", expr sub_zero, "]"] [],
-    conv_lhs [] [] { rw ["<-", expr set.inter_union_compl i S] },
-    rw ["[", expr measure_union, ",", expr show «expr = »(j₁.pos_part «expr ∩ »(i, S), 0), by exact [expr nonpos_iff_eq_zero.1 «expr ▸ »(hS₄, measure_mono (set.inter_subset_right _ _))], ",", expr zero_add, "]"] [],
-    { refine [expr set.disjoint_of_subset_left (set.inter_subset_right _ _) (set.disjoint_of_subset_right (set.inter_subset_right _ _) disjoint_compl_right)] },
-    { exact [expr hi.inter hS₁] },
-    { exact [expr hi.inter hS₁.compl] } },
-  have [ident hμ₂] [":", expr «expr = »((j₂.pos_part i).to_real, j₂.to_signed_measure «expr ∩ »(i, «expr ᶜ»(T)))] [],
-  { rw ["[", expr to_signed_measure, ",", expr to_signed_measure_sub_apply (hi.inter hT₁.compl), ",", expr show «expr = »(j₂.neg_part «expr ∩ »(i, «expr ᶜ»(T)), 0), by exact [expr nonpos_iff_eq_zero.1 «expr ▸ »(hT₅, measure_mono (set.inter_subset_right _ _))], ",", expr ennreal.zero_to_real, ",", expr sub_zero, "]"] [],
-    conv_lhs [] [] { rw ["<-", expr set.inter_union_compl i T] },
-    rw ["[", expr measure_union, ",", expr show «expr = »(j₂.pos_part «expr ∩ »(i, T), 0), by exact [expr nonpos_iff_eq_zero.1 «expr ▸ »(hT₄, measure_mono (set.inter_subset_right _ _))], ",", expr zero_add, "]"] [],
-    { exact [expr set.disjoint_of_subset_left (set.inter_subset_right _ _) (set.disjoint_of_subset_right (set.inter_subset_right _ _) disjoint_compl_right)] },
-    { exact [expr hi.inter hT₁] },
-    { exact [expr hi.inter hT₁.compl] } },
-  rw ["[", "<-", expr ennreal.to_real_eq_to_real (measure_ne_top _ _) (measure_ne_top _ _), ",", expr hμ₁, ",", expr hμ₂, ",", "<-", expr hj, "]"] [],
-  exact [expr of_inter_eq_of_symm_diff_eq_zero_positive hS₁.compl hT₁.compl hi hS₃ hT₃ hST₁],
-  all_goals { apply_instance }
-end
+theorem to_signed_measure_injective : injective$ @jordan_decomposition.to_signed_measure α _ :=
+  by 
+    intro j₁ j₂ hj 
+    obtain ⟨S, hS₁, hS₂, hS₃, hS₄, hS₅⟩ := j₁.exists_compl_positive_negative 
+    obtain ⟨T, hT₁, hT₂, hT₃, hT₄, hT₅⟩ := j₂.exists_compl_positive_negative 
+    rw [←hj] at hT₂ hT₃ 
+    obtain ⟨hST₁, -⟩ :=
+      of_symm_diff_compl_positive_negative hS₁.compl hT₁.compl ⟨hS₃, (compl_compl S).symm ▸ hS₂⟩
+        ⟨hT₃, (compl_compl T).symm ▸ hT₂⟩
+    refine' eq_of_pos_part_eq_pos_part _ hj 
+    ext1 i hi 
+    have hμ₁ : (j₁.pos_part i).toReal = j₁.to_signed_measure (i ∩ Sᶜ)
+    ·
+      rw [to_signed_measure, to_signed_measure_sub_apply (hi.inter hS₁.compl),
+        show j₁.neg_part (i ∩ Sᶜ) = 0 by 
+          exact nonpos_iff_eq_zero.1 (hS₅ ▸ measure_mono (Set.inter_subset_right _ _)),
+        Ennreal.zero_to_real, sub_zero]
+      convLHS => rw [←Set.inter_union_compl i S]
+      rw [measure_union,
+        show j₁.pos_part (i ∩ S) = 0 by 
+          exact nonpos_iff_eq_zero.1 (hS₄ ▸ measure_mono (Set.inter_subset_right _ _)),
+        zero_addₓ]
+      ·
+        refine'
+          Set.disjoint_of_subset_left (Set.inter_subset_right _ _)
+            (Set.disjoint_of_subset_right (Set.inter_subset_right _ _) disjoint_compl_right)
+      ·
+        exact hi.inter hS₁
+      ·
+        exact hi.inter hS₁.compl 
+    have hμ₂ : (j₂.pos_part i).toReal = j₂.to_signed_measure (i ∩ Tᶜ)
+    ·
+      rw [to_signed_measure, to_signed_measure_sub_apply (hi.inter hT₁.compl),
+        show j₂.neg_part (i ∩ Tᶜ) = 0 by 
+          exact nonpos_iff_eq_zero.1 (hT₅ ▸ measure_mono (Set.inter_subset_right _ _)),
+        Ennreal.zero_to_real, sub_zero]
+      convLHS => rw [←Set.inter_union_compl i T]
+      rw [measure_union,
+        show j₂.pos_part (i ∩ T) = 0 by 
+          exact nonpos_iff_eq_zero.1 (hT₄ ▸ measure_mono (Set.inter_subset_right _ _)),
+        zero_addₓ]
+      ·
+        exact
+          Set.disjoint_of_subset_left (Set.inter_subset_right _ _)
+            (Set.disjoint_of_subset_right (Set.inter_subset_right _ _) disjoint_compl_right)
+      ·
+        exact hi.inter hT₁
+      ·
+        exact hi.inter hT₁.compl 
+    rw [←Ennreal.to_real_eq_to_real (measure_ne_top _ _) (measure_ne_top _ _), hμ₁, hμ₂, ←hj]
+    exact of_inter_eq_of_symm_diff_eq_zero_positive hS₁.compl hT₁.compl hi hS₃ hT₃ hST₁ 
+    all_goals 
+      infer_instance
 
 @[simp]
 theorem to_jordan_decomposition_to_signed_measure (j : jordan_decomposition α) :
@@ -509,38 +506,37 @@ theorem null_of_total_variation_zero (s : signed_measure α) {i : Set α} (hs : 
 theorem absolutely_continuous_ennreal_iff (s : signed_measure α) (μ : vector_measure α ℝ≥0∞) :
   s ≪ᵥ μ ↔ s.total_variation ≪ μ.ennreal_to_measure :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _ 
       obtain ⟨i, hi₁, hi₂, hi₃, hpos, hneg⟩ := s.to_jordan_decomposition_spec 
       rw [total_variation, measure.add_apply, hpos, hneg, to_measure_of_zero_le_apply _ _ _ hS₁,
         to_measure_of_le_zero_apply _ _ _ hS₁]
       rw [←vector_measure.absolutely_continuous.ennreal_to_measure] at h 
-      simp [h (measure_mono_null (i.inter_subset_right S) hS₂),
-        h (measure_mono_null ((«expr ᶜ» i).inter_subset_right S) hS₂)]
+      simp [h (measure_mono_null (i.inter_subset_right S) hS₂), h (measure_mono_null (iᶜ.inter_subset_right S) hS₂)]
     ·
       refine' vector_measure.absolutely_continuous.mk fun S hS₁ hS₂ => _ 
       rw [←vector_measure.ennreal_to_measure_apply hS₁] at hS₂ 
       exact null_of_total_variation_zero s (h hS₂)
 
--- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem total_variation_absolutely_continuous_iff
-(s : signed_measure α)
-(μ : measure α) : «expr ↔ »(«expr ≪ »(s.total_variation, μ), «expr ∧ »(«expr ≪ »(s.to_jordan_decomposition.pos_part, μ), «expr ≪ »(s.to_jordan_decomposition.neg_part, μ))) :=
-begin
-  split; intro [ident h],
-  { split,
-    all_goals { refine [expr measure.absolutely_continuous.mk (λ S hS₁ hS₂, _)],
-      have [] [] [":=", expr h hS₂],
-      rw ["[", expr total_variation, ",", expr measure.add_apply, ",", expr add_eq_zero_iff, "]"] ["at", ident this] },
-    exacts ["[", expr this.1, ",", expr this.2, "]"] },
-  { refine [expr measure.absolutely_continuous.mk (λ S hS₁ hS₂, _)],
-    rw ["[", expr total_variation, ",", expr measure.add_apply, ",", expr h.1 hS₂, ",", expr h.2 hS₂, ",", expr add_zero, "]"] [] }
-end
+theorem total_variation_absolutely_continuous_iff (s : signed_measure α) (μ : Measureₓ α) :
+  s.total_variation ≪ μ ↔ s.to_jordan_decomposition.pos_part ≪ μ ∧ s.to_jordan_decomposition.neg_part ≪ μ :=
+  by 
+    constructor <;> intro h
+    ·
+      constructor 
+      all_goals 
+        refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _ 
+        have  := h hS₂ 
+        rw [total_variation, measure.add_apply, add_eq_zero_iff] at this 
+      exacts[this.1, this.2]
+    ·
+      refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _ 
+      rw [total_variation, measure.add_apply, h.1 hS₂, h.2 hS₂, add_zeroₓ]
 
 theorem mutually_singular_iff (s t : signed_measure α) : s ⊥ᵥ t ↔ s.total_variation ⊥ₘ t.total_variation :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨u, hmeas, hu₁, hu₂⟩
       obtain ⟨i, hi₁, hi₂, hi₃, hipos, hineg⟩ := s.to_jordan_decomposition_spec 
@@ -563,7 +559,7 @@ theorem mutually_singular_iff (s t : signed_measure α) : s ⊥ᵥ t ↔ s.total
 theorem mutually_singular_ennreal_iff (s : signed_measure α) (μ : vector_measure α ℝ≥0∞) :
   s ⊥ᵥ μ ↔ s.total_variation ⊥ₘ μ.ennreal_to_measure :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨u, hmeas, hu₁, hu₂⟩
       obtain ⟨i, hi₁, hi₂, hi₃, hpos, hneg⟩ := s.to_jordan_decomposition_spec 

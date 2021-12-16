@@ -71,53 +71,57 @@ theorem cons_zero : cons x p 0 = x :=
   by 
     simp [cons]
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Updating a tuple and adding an element at the beginning commute. -/
 @[simp]
-theorem cons_update : «expr = »(cons x (update p i y), update (cons x p) i.succ y) :=
-begin
-  ext [] [ident j] [],
-  by_cases [expr h, ":", expr «expr = »(j, 0)],
-  { rw [expr h] [],
-    simp [] [] [] ["[", expr ne.symm (succ_ne_zero i), "]"] [] [] },
-  { let [ident j'] [] [":=", expr pred j h],
-    have [] [":", expr «expr = »(j'.succ, j)] [":=", expr succ_pred j h],
-    rw ["[", "<-", expr this, ",", expr cons_succ, "]"] [],
-    by_cases [expr h', ":", expr «expr = »(j', i)],
-    { rw [expr h'] [],
-      simp [] [] [] [] [] [] },
-    { have [] [":", expr «expr ≠ »(j'.succ, i.succ)] [],
-      by rwa ["[", expr ne.def, ",", expr succ_inj, "]"] [],
-      rw ["[", expr update_noteq h', ",", expr update_noteq this, ",", expr cons_succ, "]"] [] } }
-end
+theorem cons_update : cons x (update p i y) = update (cons x p) i.succ y :=
+  by 
+    ext j 
+    byCases' h : j = 0
+    ·
+      rw [h]
+      simp [Ne.symm (succ_ne_zero i)]
+    ·
+      let j' := pred j h 
+      have  : j'.succ = j := succ_pred j h 
+      rw [←this, cons_succ]
+      byCases' h' : j' = i
+      ·
+        rw [h']
+        simp 
+      ·
+        have  : j'.succ ≠ i.succ
+        ·
+          rwa [Ne.def, succ_inj]
+        rw [update_noteq h', update_noteq this, cons_succ]
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Adding an element at the beginning of a tuple and then updating it amounts to adding it
-directly. -/ theorem update_cons_zero : «expr = »(update (cons x p) 0 z, cons z p) :=
-begin
-  ext [] [ident j] [],
-  by_cases [expr h, ":", expr «expr = »(j, 0)],
-  { rw [expr h] [],
-    simp [] [] [] [] [] [] },
-  { simp [] [] ["only"] ["[", expr h, ",", expr update_noteq, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [],
-    let [ident j'] [] [":=", expr pred j h],
-    have [] [":", expr «expr = »(j'.succ, j)] [":=", expr succ_pred j h],
-    rw ["[", "<-", expr this, ",", expr cons_succ, ",", expr cons_succ, "]"] [] }
-end
+directly. -/
+theorem update_cons_zero : update (cons x p) 0 z = cons z p :=
+  by 
+    ext j 
+    byCases' h : j = 0
+    ·
+      rw [h]
+      simp 
+    ·
+      simp only [h, update_noteq, Ne.def, not_false_iff]
+      let j' := pred j h 
+      have  : j'.succ = j := succ_pred j h 
+      rw [←this, cons_succ, cons_succ]
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Concatenating the first element of a tuple with its tail gives back the original tuple -/
 @[simp]
-theorem cons_self_tail : «expr = »(cons (q 0) (tail q), q) :=
-begin
-  ext [] [ident j] [],
-  by_cases [expr h, ":", expr «expr = »(j, 0)],
-  { rw [expr h] [],
-    simp [] [] [] [] [] [] },
-  { let [ident j'] [] [":=", expr pred j h],
-    have [] [":", expr «expr = »(j'.succ, j)] [":=", expr succ_pred j h],
-    rw ["[", "<-", expr this, ",", expr tail, ",", expr cons_succ, "]"] [] }
-end
+theorem cons_self_tail : cons (q 0) (tail q) = q :=
+  by 
+    ext j 
+    byCases' h : j = 0
+    ·
+      rw [h]
+      simp 
+    ·
+      let j' := pred j h 
+      have  : j'.succ = j := succ_pred j h 
+      rw [←this, tail, cons_succ]
 
 /-- Updating the first element of a tuple does not change the tail. -/
 @[simp]
@@ -138,22 +142,17 @@ theorem tail_update_succ : tail (update q i.succ y) = update (tail q) i y :=
     ·
       simp [tail, (Finₓ.succ_injective n).Ne h, h]
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comp_cons
-{α : Type*}
-{β : Type*}
-(g : α → β)
-(y : α)
-(q : fin n → α) : «expr = »(«expr ∘ »(g, cons y q), cons (g y) «expr ∘ »(g, q)) :=
-begin
-  ext [] [ident j] [],
-  by_cases [expr h, ":", expr «expr = »(j, 0)],
-  { rw [expr h] [],
-    refl },
-  { let [ident j'] [] [":=", expr pred j h],
-    have [] [":", expr «expr = »(j'.succ, j)] [":=", expr succ_pred j h],
-    rw ["[", "<-", expr this, ",", expr cons_succ, ",", expr comp_app, ",", expr cons_succ, "]"] [] }
-end
+theorem comp_cons {α : Type _} {β : Type _} (g : α → β) (y : α) (q : Finₓ n → α) : g ∘ cons y q = cons (g y) (g ∘ q) :=
+  by 
+    ext j 
+    byCases' h : j = 0
+    ·
+      rw [h]
+      rfl
+    ·
+      let j' := pred j h 
+      have  : j'.succ = j := succ_pred j h 
+      rw [←this, cons_succ, comp_app, cons_succ]
 
 theorem comp_tail {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n.succ → α) : g ∘ tail q = tail (g ∘ q) :=
   by 
@@ -179,7 +178,7 @@ theorem range_cons {α : Type _} {n : ℕ} (x : α) (b : Finₓ n → α) :
   by 
     ext y 
     simp only [Set.mem_range, Set.mem_insert_iff]
-    split 
+    constructor
     ·
       rintro ⟨i, rfl⟩
       refine' cases (Or.inl (cons_zero _ _)) (fun i => Or.inr ⟨i, _⟩) i 
@@ -240,92 +239,105 @@ def snoc (p : ∀ i : Finₓ n, α i.cast_succ) (x : α (last n)) (i : Finₓ (n
         rw [eq_last_of_not_lt h])
       x
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem init_snoc : «expr = »(init (snoc p x), p) :=
-begin
-  ext [] [ident i] [],
-  have [ident h'] [] [":=", expr fin.cast_lt_cast_succ i i.is_lt],
-  simp [] [] [] ["[", expr init, ",", expr snoc, ",", expr i.is_lt, ",", expr h', "]"] [] [],
-  convert [] [expr cast_eq rfl (p i)] []
-end
+@[simp]
+theorem init_snoc : init (snoc p x) = p :=
+  by 
+    ext i 
+    have h' := Finₓ.cast_lt_cast_succ i i.is_lt 
+    simp [init, snoc, i.is_lt, h']
+    convert cast_eq rfl (p i)
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem snoc_cast_succ : «expr = »(snoc p x i.cast_succ, p i) :=
-begin
-  have [] [":", expr «expr < »(i.cast_succ.val, n)] [":=", expr i.is_lt],
-  have [ident h'] [] [":=", expr fin.cast_lt_cast_succ i i.is_lt],
-  simp [] [] [] ["[", expr snoc, ",", expr this, ",", expr h', "]"] [] [],
-  convert [] [expr cast_eq rfl (p i)] []
-end
+@[simp]
+theorem snoc_cast_succ : snoc p x i.cast_succ = p i :=
+  by 
+    have  : i.cast_succ.val < n := i.is_lt 
+    have h' := Finₓ.cast_lt_cast_succ i i.is_lt 
+    simp [snoc, this, h']
+    convert cast_eq rfl (p i)
 
 @[simp]
 theorem snoc_last : snoc p x (last n) = x :=
   by 
     simp [snoc]
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Updating a tuple and adding an element at the end commute. -/
 @[simp]
-theorem snoc_update : «expr = »(snoc (update p i y) x, update (snoc p x) i.cast_succ y) :=
-begin
-  ext [] [ident j] [],
-  by_cases [expr h, ":", expr «expr < »(j.val, n)],
-  { simp [] [] ["only"] ["[", expr snoc, ",", expr h, ",", expr dif_pos, "]"] [] [],
-    by_cases [expr h', ":", expr «expr = »(j, cast_succ i)],
-    { have [ident C1] [":", expr «expr = »(α i.cast_succ, α j)] [],
-      by rw [expr h'] [],
-      have [ident E1] [":", expr «expr = »(update (snoc p x) i.cast_succ y j, _root_.cast C1 y)] [],
-      { have [] [":", expr «expr = »(update (snoc p x) j (_root_.cast C1 y) j, _root_.cast C1 y)] [],
-        by simp [] [] [] [] [] [],
-        convert [] [expr this] [],
-        { exact [expr h'.symm] },
-        { exact [expr heq_of_cast_eq (congr_arg α (eq.symm h')) rfl] } },
-      have [ident C2] [":", expr «expr = »(α i.cast_succ, α (cast_succ (cast_lt j h)))] [],
-      by rw ["[", expr cast_succ_cast_lt, ",", expr h', "]"] [],
-      have [ident E2] [":", expr «expr = »(update p i y (cast_lt j h), _root_.cast C2 y)] [],
-      { have [] [":", expr «expr = »(update p (cast_lt j h) (_root_.cast C2 y) (cast_lt j h), _root_.cast C2 y)] [],
-        by simp [] [] [] [] [] [],
-        convert [] [expr this] [],
-        { simp [] [] [] ["[", expr h, ",", expr h', "]"] [] [] },
-        { exact [expr heq_of_cast_eq C2 rfl] } },
-      rw ["[", expr E1, ",", expr E2, "]"] [],
-      exact [expr eq_rec_compose _ _ _] },
-    { have [] [":", expr «expr¬ »(«expr = »(cast_lt j h, i))] [],
-      by { assume [binders (E)],
-        apply [expr h'],
-        rw ["[", "<-", expr E, ",", expr cast_succ_cast_lt, "]"] [] },
-      simp [] [] [] ["[", expr h', ",", expr this, ",", expr snoc, ",", expr h, "]"] [] [] } },
-  { rw [expr eq_last_of_not_lt h] [],
-    simp [] [] [] ["[", expr ne.symm (ne_of_lt (cast_succ_lt_last i)), "]"] [] [] }
-end
+theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.cast_succ y :=
+  by 
+    ext j 
+    byCases' h : j.val < n
+    ·
+      simp only [snoc, h, dif_pos]
+      byCases' h' : j = cast_succ i
+      ·
+        have C1 : α i.cast_succ = α j
+        ·
+          rw [h']
+        have E1 : update (snoc p x) i.cast_succ y j = _root_.cast C1 y
+        ·
+          have  : update (snoc p x) j (_root_.cast C1 y) j = _root_.cast C1 y
+          ·
+            simp 
+          convert this
+          ·
+            exact h'.symm
+          ·
+            exact heq_of_cast_eq (congr_argₓ α (Eq.symm h')) rfl 
+        have C2 : α i.cast_succ = α (cast_succ (cast_lt j h))
+        ·
+          rw [cast_succ_cast_lt, h']
+        have E2 : update p i y (cast_lt j h) = _root_.cast C2 y
+        ·
+          have  : update p (cast_lt j h) (_root_.cast C2 y) (cast_lt j h) = _root_.cast C2 y
+          ·
+            simp 
+          convert this
+          ·
+            simp [h, h']
+          ·
+            exact heq_of_cast_eq C2 rfl 
+        rw [E1, E2]
+        exact eq_rec_compose _ _ _
+      ·
+        have  : ¬cast_lt j h = i
+        ·
+          ·
+            intro E 
+            apply h' 
+            rw [←E, cast_succ_cast_lt]
+        simp [h', this, snoc, h]
+    ·
+      rw [eq_last_of_not_lt h]
+      simp [Ne.symm (ne_of_ltₓ (cast_succ_lt_last i))]
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Adding an element at the beginning of a tuple and then updating it amounts to adding it
-directly. -/ theorem update_snoc_last : «expr = »(update (snoc p x) (last n) z, snoc p z) :=
-begin
-  ext [] [ident j] [],
-  by_cases [expr h, ":", expr «expr < »(j.val, n)],
-  { have [] [":", expr «expr ≠ »(j, last n)] [":=", expr ne_of_lt h],
-    simp [] [] [] ["[", expr h, ",", expr update_noteq, ",", expr this, ",", expr snoc, "]"] [] [] },
-  { rw [expr eq_last_of_not_lt h] [],
-    simp [] [] [] [] [] [] }
-end
+directly. -/
+theorem update_snoc_last : update (snoc p x) (last n) z = snoc p z :=
+  by 
+    ext j 
+    byCases' h : j.val < n
+    ·
+      have  : j ≠ last n := ne_of_ltₓ h 
+      simp [h, update_noteq, this, snoc]
+    ·
+      rw [eq_last_of_not_lt h]
+      simp 
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Concatenating the first element of a tuple with its tail gives back the original tuple -/
 @[simp]
-theorem snoc_init_self : «expr = »(snoc (init q) (q (last n)), q) :=
-begin
-  ext [] [ident j] [],
-  by_cases [expr h, ":", expr «expr < »(j.val, n)],
-  { have [] [":", expr «expr ≠ »(j, last n)] [":=", expr ne_of_lt h],
-    simp [] [] [] ["[", expr h, ",", expr update_noteq, ",", expr this, ",", expr snoc, ",", expr init, ",", expr cast_succ_cast_lt, "]"] [] [],
-    have [ident A] [":", expr «expr = »(cast_succ (cast_lt j h), j)] [":=", expr cast_succ_cast_lt _ _],
-    rw ["<-", expr cast_eq rfl (q j)] [],
-    congr' [1] []; rw [expr A] [] },
-  { rw [expr eq_last_of_not_lt h] [],
-    simp [] [] [] [] [] [] }
-end
+theorem snoc_init_self : snoc (init q) (q (last n)) = q :=
+  by 
+    ext j 
+    byCases' h : j.val < n
+    ·
+      have  : j ≠ last n := ne_of_ltₓ h 
+      simp [h, update_noteq, this, snoc, init, cast_succ_cast_lt]
+      have A : cast_succ (cast_lt j h) = j := cast_succ_cast_lt _ _ 
+      rw [←cast_eq rfl (q j)]
+      congr 1 <;> rw [A]
+    ·
+      rw [eq_last_of_not_lt h]
+      simp 
 
 /-- Updating the last element of a tuple does not change the beginning. -/
 @[simp]
@@ -353,48 +365,42 @@ theorem tail_init_eq_init_tail {β : Type _} (q : Finₓ (n+2) → β) : tail (i
     ext i 
     simp [tail, init, cast_succ_fin_succ]
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `cons` and `snoc` commute. We state this lemma in a non-dependent setting, as otherwise it
 would involve a cast to convince Lean that the two types are equal, making it harder to use. -/
-theorem cons_snoc_eq_snoc_cons
-{β : Type*}
-(a : β)
-(q : fin n → β)
-(b : β) : «expr = »(@cons n.succ (λ i, β) a (snoc q b), snoc (cons a q) b) :=
-begin
-  ext [] [ident i] [],
-  by_cases [expr h, ":", expr «expr = »(i, 0)],
-  { rw [expr h] [],
-    refl },
-  set [] [ident j] [] [":="] [expr pred i h] ["with", ident ji],
-  have [] [":", expr «expr = »(i, j.succ)] [],
-  by rw ["[", expr ji, ",", expr succ_pred, "]"] [],
-  rw ["[", expr this, ",", expr cons_succ, "]"] [],
-  by_cases [expr h', ":", expr «expr < »(j.val, n)],
-  { set [] [ident k] [] [":="] [expr cast_lt j h'] ["with", ident jk],
-    have [] [":", expr «expr = »(j, k.cast_succ)] [],
-    by rw ["[", expr jk, ",", expr cast_succ_cast_lt, "]"] [],
-    rw ["[", expr this, ",", "<-", expr cast_succ_fin_succ, "]"] [],
-    simp [] [] [] [] [] [] },
-  rw ["[", expr eq_last_of_not_lt h', ",", expr succ_last, "]"] [],
-  simp [] [] [] [] [] []
-end
+theorem cons_snoc_eq_snoc_cons {β : Type _} (a : β) (q : Finₓ n → β) (b : β) :
+  @cons n.succ (fun i => β) a (snoc q b) = snoc (cons a q) b :=
+  by 
+    ext i 
+    byCases' h : i = 0
+    ·
+      rw [h]
+      rfl 
+    set j := pred i h with ji 
+    have  : i = j.succ
+    ·
+      rw [ji, succ_pred]
+    rw [this, cons_succ]
+    byCases' h' : j.val < n
+    ·
+      set k := cast_lt j h' with jk 
+      have  : j = k.cast_succ
+      ·
+        rw [jk, cast_succ_cast_lt]
+      rw [this, ←cast_succ_fin_succ]
+      simp 
+    rw [eq_last_of_not_lt h', succ_last]
+    simp 
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comp_snoc
-{α : Type*}
-{β : Type*}
-(g : α → β)
-(q : fin n → α)
-(y : α) : «expr = »(«expr ∘ »(g, snoc q y), snoc «expr ∘ »(g, q) (g y)) :=
-begin
-  ext [] [ident j] [],
-  by_cases [expr h, ":", expr «expr < »(j.val, n)],
-  { have [] [":", expr «expr ≠ »(j, last n)] [":=", expr ne_of_lt h],
-    simp [] [] [] ["[", expr h, ",", expr this, ",", expr snoc, ",", expr cast_succ_cast_lt, "]"] [] [] },
-  { rw [expr eq_last_of_not_lt h] [],
-    simp [] [] [] [] [] [] }
-end
+theorem comp_snoc {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n → α) (y : α) : g ∘ snoc q y = snoc (g ∘ q) (g y) :=
+  by 
+    ext j 
+    byCases' h : j.val < n
+    ·
+      have  : j ≠ last n := ne_of_ltₓ h 
+      simp [h, this, snoc, cast_succ_cast_lt]
+    ·
+      rw [eq_last_of_not_lt h]
+      simp 
 
 theorem comp_init {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n.succ → α) : g ∘ init q = init (g ∘ q) :=
   by 
@@ -626,65 +632,76 @@ theorem find_spec :
       rw [←Option.some_inj.1 hi]
       exact find_spec _ h
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `find p` does not return `none` if and only if `p i` holds at some index `i`. -/
-theorem is_some_find_iff : ∀
-{n : exprℕ()}
-{p : fin n → exprProp()}
-[decidable_pred p], by exactI [expr «expr ↔ »((find p).is_some, «expr∃ , »((i), p i))]
-| 0, p, _ := iff_of_false (λ h, bool.no_confusion h) (λ ⟨i, _⟩, fin_zero_elim i)
-| «expr + »(n, 1), p, _ := ⟨λ h, begin
-   rw ["[", expr option.is_some_iff_exists, "]"] ["at", ident h],
-   cases [expr h] ["with", ident i, ident hi],
-   exactI [expr ⟨i, find_spec _ hi⟩]
- end, λ ⟨⟨i, hin⟩, hi⟩, begin
-   resetI,
-   dsimp [] ["[", expr find, "]"] [] [],
-   cases [expr h, ":", expr find (λ i : fin n, p (i.cast_lt (nat.lt_succ_of_lt i.2)))] ["with", ident j],
-   { split_ifs [] ["with", ident hl, ident hl],
-     { exact [expr option.is_some_some] },
-     { have [] [] [":=", expr (@is_some_find_iff n (λ
-          x, p (x.cast_lt (nat.lt_succ_of_lt x.2))) _).2 ⟨⟨i, lt_of_le_of_ne (nat.le_of_lt_succ hin) (λ
-           h, by clear_aux_decl; cases [expr h] []; exact [expr hl hi])⟩, hi⟩],
-       rw [expr h] ["at", ident this],
-       exact [expr this] } },
-   { simp [] [] [] [] [] [] }
- end⟩
+theorem is_some_find_iff :
+  ∀ {n : ℕ} {p : Finₓ n → Prop} [DecidablePred p],
+    by 
+      exact (find p).isSome ↔ ∃ i, p i
+| 0, p, _ => iff_of_false (fun h => Bool.noConfusion h) fun ⟨i, _⟩ => finZeroElim i
+| n+1, p, _ =>
+  ⟨fun h =>
+      by 
+        rw [Option.is_some_iff_exists] at h 
+        cases' h with i hi 
+        exact ⟨i, find_spec _ hi⟩,
+    fun ⟨⟨i, hin⟩, hi⟩ =>
+      by 
+        skip 
+        dsimp [find]
+        cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with j
+        ·
+          splitIfs with hl hl
+          ·
+            exact Option.is_some_some
+          ·
+            have  :=
+              (@is_some_find_iff n (fun x => p (x.cast_lt (Nat.lt_succ_of_ltₓ x.2))) _).2
+                ⟨⟨i,
+                    lt_of_le_of_neₓ (Nat.le_of_lt_succₓ hin)
+                      fun h =>
+                        by 
+                          clearAuxDecl <;> cases h <;> exact hl hi⟩,
+                  hi⟩
+            rw [h] at this 
+            exact this
+        ·
+          simp ⟩
 
 /-- `find p` returns `none` if and only if `p i` never holds. -/
 theorem find_eq_none_iff {n : ℕ} {p : Finₓ n → Prop} [DecidablePred p] : find p = none ↔ ∀ i, ¬p i :=
   by 
     rw [←not_exists, ←is_some_find_iff] <;> cases find p <;> simp 
 
--- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `find p` returns `some i`, then `p j` does not hold for `j < i`, i.e., `i` is minimal among
 the indices where `p` holds. -/
-theorem find_min : ∀
-{n : exprℕ()}
-{p : fin n → exprProp()}
-[decidable_pred p]
-{i : fin n}
-(hi : «expr ∈ »(i, by exactI [expr fin.find p]))
-{j : fin n}
-(hj : «expr < »(j, i)), «expr¬ »(p j)
-| 0, p, _, i, hi, j, hj, hpj := option.no_confusion hi
-| «expr + »(n, 1), p, _, i, hi, ⟨j, hjn⟩, hj, hpj := begin
-  resetI,
-  dsimp [] ["[", expr find, "]"] [] ["at", ident hi],
-  cases [expr h, ":", expr find (λ i : fin n, p (i.cast_lt (nat.lt_succ_of_lt i.2)))] ["with", ident k],
-  { rw ["[", expr h, "]"] ["at", ident hi],
-    split_ifs ["at", ident hi] ["with", ident hl, ident hl],
-    { have [] [] [":=", expr option.some_inj.1 hi],
-      subst [expr this],
-      rw ["[", expr find_eq_none_iff, "]"] ["at", ident h],
-      exact [expr h ⟨j, hj⟩ hpj] },
-    { exact [expr option.no_confusion hi] } },
-  { rw [expr h] ["at", ident hi],
-    dsimp [] [] [] ["at", ident hi],
-    have [] [] [":=", expr option.some_inj.1 hi],
-    subst [expr this],
-    exact [expr find_min h (show «expr < »((⟨j, lt_trans hj k.2⟩ : fin n), k), from hj) hpj] }
-end
+theorem find_min :
+  ∀ {n : ℕ} {p : Finₓ n → Prop} [DecidablePred p] {i : Finₓ n} hi :
+    i ∈
+      by 
+        exact Finₓ.find p
+    {j : Finₓ n} hj : j < i, ¬p j
+| 0, p, _, i, hi, j, hj, hpj => Option.noConfusion hi
+| n+1, p, _, i, hi, ⟨j, hjn⟩, hj, hpj =>
+  by 
+    skip 
+    dsimp [find]  at hi 
+    cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with k
+    ·
+      rw [h] at hi 
+      splitIfs  at hi with hl hl
+      ·
+        have  := Option.some_inj.1 hi 
+        subst this 
+        rw [find_eq_none_iff] at h 
+        exact h ⟨j, hj⟩ hpj
+      ·
+        exact Option.noConfusion hi
+    ·
+      rw [h] at hi 
+      dsimp  at hi 
+      have  := Option.some_inj.1 hi 
+      subst this 
+      exact find_min h (show (⟨j, lt_transₓ hj k.2⟩ : Finₓ n) < k from hj) hpj
 
 theorem find_min' {p : Finₓ n → Prop} [DecidablePred p] {i : Finₓ n} (h : i ∈ Finₓ.find p) {j : Finₓ n} (hj : p j) :
   i ≤ j :=

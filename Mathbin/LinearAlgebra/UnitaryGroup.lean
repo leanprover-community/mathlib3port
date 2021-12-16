@@ -35,19 +35,26 @@ section
 
 variable (M : Type v) [Monoidₓ M] [StarMonoid M]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-In a `star_monoid M`, `unitary_submonoid M` is the submonoid consisting of all the elements of
-`M` such that `star A * A = 1`.
--/
-def unitarySubmonoid : Submonoid M :=
-  { Carrier := { A | (star A*A) = 1 },
-    one_mem' :=
-      by 
-        simp ,
-    mul_mem' :=
-      fun A B hA : (star A*A) = 1 hB : (star B*B) = 1 =>
-        show (star (A*B)*A*B) = 1by 
-          rwa [star_mul, ←mul_assocₓ, mul_assocₓ _ _ A, hA, mul_oneₓ] }
+    In a `star_monoid M`, `unitary_submonoid M` is the submonoid consisting of all the elements of
+    `M` such that `star A * A = 1`.
+    -/
+  def
+    unitarySubmonoid
+    : Submonoid M
+    :=
+      {
+        Carrier := { A | star A * A = 1 } ,
+          one_mem' := by simp ,
+          mul_mem'
+            :=
+            fun
+              A B hA : star A * A = 1 hB : star B * B = 1
+                =>
+                show star A * B * A * B = 1 by rwa [ star_mul , ← mul_assocₓ , mul_assocₓ _ _ A , hA , mul_oneₓ ]
+        }
 
 end 
 
@@ -63,11 +70,12 @@ variable (n : Type u) [DecidableEq n] [Fintype n]
 
 variable (α : Type v) [CommRingₓ α] [StarRing α]
 
--- error in LinearAlgebra.UnitaryGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monoid
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler monoid
 /--
 `unitary_group n` is the group of `n` by `n` matrices where the star-transpose is the inverse.
--/ @[derive #[expr monoid]] def unitary_group : Type* :=
-unitary_submonoid (matrix n n α)
+-/
+def unitary_group : Type _ :=
+  unitarySubmonoid (Matrix n n α)deriving [anonymous]
 
 end 
 
@@ -131,27 +139,27 @@ section CoeLemmas
 variable (A B : unitary_group n α)
 
 @[simp]
-theorem inv_val : «expr↑ » (A⁻¹) = (star A : Matrix n n α) :=
+theorem inv_val : ↑A⁻¹ = (star A : Matrix n n α) :=
   rfl
 
 @[simp]
-theorem inv_apply : «expr⇑ » (A⁻¹) = (star A : Matrix n n α) :=
+theorem inv_apply : ⇑A⁻¹ = (star A : Matrix n n α) :=
   rfl
 
 @[simp]
-theorem mul_val : «expr↑ » (A*B) = A ⬝ B :=
+theorem mul_val : (↑A*B) = A ⬝ B :=
   rfl
 
 @[simp]
-theorem mul_apply : «expr⇑ » (A*B) = A ⬝ B :=
+theorem mul_apply : (⇑A*B) = A ⬝ B :=
   rfl
 
 @[simp]
-theorem one_val : «expr↑ » (1 : unitary_group n α) = (1 : Matrix n n α) :=
+theorem one_val : ↑(1 : unitary_group n α) = (1 : Matrix n n α) :=
   rfl
 
 @[simp]
-theorem one_apply : «expr⇑ » (1 : unitary_group n α) = (1 : Matrix n n α) :=
+theorem one_apply : ⇑(1 : unitary_group n α) = (1 : Matrix n n α) :=
   rfl
 
 @[simp]
@@ -193,7 +201,7 @@ def to_linear_equiv (A : unitary_group n α) : (n → α) ≃ₗ[α] n → α :=
 def to_GL (A : unitary_group n α) : general_linear_group α (n → α) :=
   general_linear_group.of_linear_equiv (to_linear_equiv A)
 
-theorem coe_to_GL (A : unitary_group n α) : «expr↑ » (to_GL A) = A.to_lin' :=
+theorem coe_to_GL (A : unitary_group n α) : ↑to_GL A = A.to_lin' :=
   rfl
 
 @[simp]

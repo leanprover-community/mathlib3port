@@ -185,8 +185,8 @@ variable {J : Type v₁}
 open Opposite
 
 /-- A discrete category is equivalent to its opposite category. -/
-protected def Opposite (α : Type u₁) : «expr ᵒᵖ» (discrete α) ≌ discrete α :=
-  let F : discrete α ⥤ «expr ᵒᵖ» (discrete α) := discrete.functor fun x => op x 
+protected def Opposite (α : Type u₁) : discrete αᵒᵖ ≌ discrete α :=
+  let F : discrete α ⥤ discrete αᵒᵖ := discrete.functor fun x => op x 
   by 
     refine'
       equivalence.mk (functor.left_op F) F _
@@ -204,20 +204,16 @@ protected def Opposite (α : Type u₁) : «expr ᵒᵖ» (discrete α) ≌ disc
 
 variable {C : Type u₂} [category.{v₂} C]
 
--- error in CategoryTheory.DiscreteCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem functor_map_id
-(F : «expr ⥤ »(discrete J, C))
-{j : discrete J}
-(f : «expr ⟶ »(j, j)) : «expr = »(F.map f, «expr𝟙»() (F.obj j)) :=
-begin
-  have [ident h] [":", expr «expr = »(f, «expr𝟙»() j)] [],
-  { cases [expr f] [],
-    cases [expr f] [],
-    ext [] [] [] },
-  rw [expr h] [],
-  simp [] [] [] [] [] []
-end
+theorem functor_map_id (F : discrete J ⥤ C) {j : discrete J} (f : j ⟶ j) : F.map f = 𝟙 (F.obj j) :=
+  by 
+    have h : f = 𝟙 j
+    ·
+      cases f 
+      cases f 
+      ext 
+    rw [h]
+    simp 
 
 end Discrete
 

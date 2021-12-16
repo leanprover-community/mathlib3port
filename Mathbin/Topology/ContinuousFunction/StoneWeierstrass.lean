@@ -36,7 +36,7 @@ on non-compact spaces.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace ContinuousMap
 
@@ -76,20 +76,20 @@ theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) 
     rw [polynomial_comp_attach_bound]
     apply SetLike.coe_mem
 
--- error in Topology.ContinuousFunction.StoneWeierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comp_attach_bound_mem_closure
-(A : subalgebra exprℝ() «exprC( , )»(X, exprℝ()))
-(f : A)
-(p : «exprC( , )»(set.Icc «expr- »(«expr∥ ∥»(f)) «expr∥ ∥»(f), exprℝ())) : «expr ∈ »(p.comp (attach_bound f), A.topological_closure) :=
-begin
-  have [ident mem_closure] [":", expr «expr ∈ »(p, (polynomial_functions (set.Icc «expr- »(«expr∥ ∥»(f)) «expr∥ ∥»(f))).topological_closure)] [":=", expr continuous_map_mem_polynomial_functions_closure _ _ p],
-  have [ident frequently_mem_polynomials] [] [":=", expr mem_closure_iff_frequently.mp mem_closure],
-  apply [expr mem_closure_iff_frequently.mpr],
-  refine [expr ((comp_right_continuous_map exprℝ() (attach_bound (f : «exprC( , )»(X, exprℝ())))).continuous_at p).tendsto.frequently_map _ _ frequently_mem_polynomials],
-  rintros ["_", "⟨", ident g, ",", "⟨", "-", ",", ident rfl, "⟩", "⟩"],
-  simp [] [] ["only"] ["[", expr set_like.mem_coe, ",", expr alg_hom.coe_to_ring_hom, ",", expr comp_right_continuous_map_apply, ",", expr polynomial.to_continuous_map_on_alg_hom_apply, "]"] [] [],
-  apply [expr polynomial_comp_attach_bound_mem]
-end
+theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p : C(Set.Icc (-∥f∥) ∥f∥, ℝ)) :
+  p.comp (attach_bound f) ∈ A.topological_closure :=
+  by 
+    have mem_closure : p ∈ (polynomialFunctions (Set.Icc (-∥f∥) ∥f∥)).topologicalClosure :=
+      continuous_map_mem_polynomial_functions_closure _ _ p 
+    have frequently_mem_polynomials := mem_closure_iff_frequently.mp mem_closure 
+    apply mem_closure_iff_frequently.mpr 
+    refine'
+      ((comp_right_continuous_map ℝ (attach_bound (f : C(X, ℝ)))).ContinuousAt p).Tendsto.frequently_map _ _
+        frequently_mem_polynomials 
+    rintro _ ⟨g, ⟨-, rfl⟩⟩
+    simp only [SetLike.mem_coe, AlgHom.coe_to_ring_hom, comp_right_continuous_map_apply,
+      Polynomial.to_continuous_map_on_alg_hom_apply]
+    apply polynomial_comp_attach_bound_mem
 
 theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f : C(X, ℝ)).abs ∈ A.topological_closure :=
   by 
@@ -145,108 +145,117 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open_locale TopologicalSpace
 
--- error in Topology.ContinuousFunction.StoneWeierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sublattice_closure_eq_top
-(L : set «exprC( , )»(X, exprℝ()))
-(nA : L.nonempty)
-(inf_mem : ∀ f g «expr ∈ » L, «expr ∈ »(«expr ⊓ »(f, g), L))
-(sup_mem : ∀ f g «expr ∈ » L, «expr ∈ »(«expr ⊔ »(f, g), L))
-(sep : L.separates_points_strongly) : «expr = »(closure L, «expr⊤»()) :=
-begin
-  apply [expr eq_top_iff.mpr],
-  rintros [ident f, "-"],
-  refine [expr filter.frequently.mem_closure ((filter.has_basis.frequently_iff metric.nhds_basis_ball).mpr (λ
-     ε pos, _))],
-  simp [] [] ["only"] ["[", expr exists_prop, ",", expr metric.mem_ball, "]"] [] [],
-  by_cases [expr nX, ":", expr nonempty X],
-  swap,
-  exact [expr ⟨nA.some, (dist_lt_iff pos).mpr (λ x, false.elim (nX ⟨x⟩)), nA.some_spec⟩],
-  dsimp [] ["[", expr set.separates_points_strongly, "]"] [] ["at", ident sep],
-  let [ident g] [":", expr X → X → L] [":=", expr λ x y, (sep f x y).some],
-  have [ident w₁] [":", expr ∀ x y, «expr = »(g x y x, f x)] [":=", expr λ x y, (sep f x y).some_spec.1],
-  have [ident w₂] [":", expr ∀ x y, «expr = »(g x y y, f y)] [":=", expr λ x y, (sep f x y).some_spec.2],
-  let [ident U] [":", expr X → X → set X] [":=", expr λ x y, {z | «expr < »(«expr - »(f z, ε), g x y z)}],
-  have [ident U_nhd_y] [":", expr ∀ x y, «expr ∈ »(U x y, expr𝓝() y)] [],
-  { intros [ident x, ident y],
-    refine [expr is_open.mem_nhds _ _],
-    { apply [expr is_open_lt]; continuity [] [] },
-    { rw ["[", expr set.mem_set_of_eq, ",", expr w₂, "]"] [],
-      exact [expr sub_lt_self _ pos] } },
-  let [ident ys] [":", expr ∀ x, finset X] [":=", expr λ x, (compact_space.elim_nhds_subcover (U x) (U_nhd_y x)).some],
-  let [ident ys_w] [":", expr ∀
-   x, «expr = »(«expr⋃ , »((y «expr ∈ » ys x), U x y), «expr⊤»())] [":=", expr λ
-   x, (compact_space.elim_nhds_subcover (U x) (U_nhd_y x)).some_spec],
-  have [ident ys_nonempty] [":", expr ∀
-   x, (ys x).nonempty] [":=", expr λ x, set.nonempty_of_union_eq_top_of_nonempty _ _ nX (ys_w x)],
-  let [ident h] [":", expr ∀
-   x, L] [":=", expr λ
-   x, ⟨(ys x).sup' (ys_nonempty x) (λ
-     y, (g x y : «exprC( , )»(X, exprℝ()))), finset.sup'_mem _ sup_mem _ _ _ (λ y _, (g x y).2)⟩],
-  have [ident lt_h] [":", expr ∀ x z, «expr < »(«expr - »(f z, ε), h x z)] [],
-  { intros [ident x, ident z],
-    obtain ["⟨", ident y, ",", ident ym, ",", ident zm, "⟩", ":=", expr set.exists_set_mem_of_union_eq_top _ _ (ys_w x) z],
-    dsimp [] ["[", expr h, "]"] [] [],
-    simp [] [] ["only"] ["[", expr coe_fn_coe_base', ",", expr subtype.coe_mk, ",", expr sup'_coe, ",", expr finset.sup'_apply, ",", expr finset.lt_sup'_iff, "]"] [] [],
-    exact [expr ⟨y, ym, zm⟩] },
-  have [ident h_eq] [":", expr ∀ x, «expr = »(h x x, f x)] [],
-  { intro [ident x],
-    simp [] [] ["only"] ["[", expr coe_fn_coe_base', "]"] [] ["at", ident w₁],
-    simp [] [] [] ["[", expr coe_fn_coe_base', ",", expr w₁, "]"] [] [] },
-  let [ident W] [":", expr ∀ x, set X] [":=", expr λ x, {z | «expr < »(h x z, «expr + »(f z, ε))}],
-  have [ident W_nhd] [":", expr ∀ x, «expr ∈ »(W x, expr𝓝() x)] [],
-  { intros [ident x],
-    refine [expr is_open.mem_nhds _ _],
-    { apply [expr is_open_lt]; continuity [] [] },
-    { dsimp ["only"] ["[", expr W, ",", expr set.mem_set_of_eq, "]"] [] [],
-      rw [expr h_eq] [],
-      exact [expr lt_add_of_pos_right _ pos] } },
-  let [ident xs] [":", expr finset X] [":=", expr (compact_space.elim_nhds_subcover W W_nhd).some],
-  let [ident xs_w] [":", expr «expr = »(«expr⋃ , »((x «expr ∈ » xs), W x), «expr⊤»())] [":=", expr (compact_space.elim_nhds_subcover W W_nhd).some_spec],
-  have [ident xs_nonempty] [":", expr xs.nonempty] [":=", expr set.nonempty_of_union_eq_top_of_nonempty _ _ nX xs_w],
-  let [ident k] [":", expr (L : Type*)] [":=", expr ⟨xs.inf' xs_nonempty (λ
-     x, (h x : «exprC( , )»(X, exprℝ()))), finset.inf'_mem _ inf_mem _ _ _ (λ x _, (h x).2)⟩],
-  refine [expr ⟨k.1, _, k.2⟩],
-  rw [expr dist_lt_iff pos] [],
-  intro [ident z],
-  rw ["[", expr show ∀
-   a
-   b
-   ε : exprℝ(), «expr ↔ »(«expr < »(dist a b, ε), «expr ∧ »(«expr < »(a, «expr + »(b, ε)), «expr < »(«expr - »(b, ε), a))), by { intros [],
-     simp [] [] ["only"] ["[", "<-", expr metric.mem_ball, ",", expr real.ball_eq_Ioo, ",", expr set.mem_Ioo, ",", expr and_comm, "]"] [] [] }, "]"] [],
-  fsplit,
-  { dsimp [] ["[", expr k, "]"] [] [],
-    simp [] [] ["only"] ["[", expr finset.inf'_lt_iff, ",", expr continuous_map.inf'_apply, "]"] [] [],
-    exact [expr set.exists_set_mem_of_union_eq_top _ _ xs_w z] },
-  { dsimp [] ["[", expr k, "]"] [] [],
-    simp [] [] ["only"] ["[", expr finset.lt_inf'_iff, ",", expr continuous_map.inf'_apply, "]"] [] [],
-    intros [ident x, ident xm],
-    apply [expr lt_h] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » ys x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » xs)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  sublattice_closure_eq_top
+  ( L : Set C( X , ℝ ) )
+      ( nA : L.nonempty )
+      ( inf_mem : ∀ f g _ : f ∈ L _ : g ∈ L , f ⊓ g ∈ L )
+      ( sup_mem : ∀ f g _ : f ∈ L _ : g ∈ L , f ⊔ g ∈ L )
+      ( sep : L.separates_points_strongly )
+    : Closure L = ⊤
+  :=
+    by
+      apply eq_top_iff.mpr
+        rintro f -
+        refine' Filter.Frequently.mem_closure Filter.HasBasis.frequently_iff Metric.nhds_basis_ball . mpr fun ε pos => _
+        simp only [ exists_prop , Metric.mem_ball ]
+        byCases' nX : Nonempty X
+        swap
+        exact ⟨ nA.some , dist_lt_iff Pos . mpr fun x => False.elim nX ⟨ x ⟩ , nA.some_spec ⟩
+        dsimp [ Set.SeparatesPointsStrongly ] at sep
+        let g : X → X → L := fun x y => sep f x y . some
+        have w₁ : ∀ x y , g x y x = f x := fun x y => sep f x y . some_spec . 1
+        have w₂ : ∀ x y , g x y y = f y := fun x y => sep f x y . some_spec . 2
+        let U : X → X → Set X := fun x y => { z | f z - ε < g x y z }
+        have U_nhd_y : ∀ x y , U x y ∈ 𝓝 y
+        ·
+          intro x y
+            refine' IsOpen.mem_nhds _ _
+            · apply is_open_lt <;> continuity
+            · rw [ Set.mem_set_of_eq , w₂ ] exact sub_lt_self _ Pos
+        let ys : ∀ x , Finset X := fun x => CompactSpace.elim_nhds_subcover U x U_nhd_y x . some
+        let
+          ys_w
+            : ∀ x , ⋃ ( y : _ ) ( _ : y ∈ ys x ) , U x y = ⊤
+            :=
+            fun x => CompactSpace.elim_nhds_subcover U x U_nhd_y x . some_spec
+        have ys_nonempty : ∀ x , ys x . Nonempty := fun x => Set.nonempty_of_union_eq_top_of_nonempty _ _ nX ys_w x
+        let
+          h
+            : ∀ x , L
+            :=
+            fun
+              x
+                =>
+                ⟨
+                  ys x . sup' ys_nonempty x fun y => ( g x y : C( X , ℝ ) )
+                    ,
+                    Finset.sup'_mem _ sup_mem _ _ _ fun y _ => g x y . 2
+                  ⟩
+        have lt_h : ∀ x z , f z - ε < h x z
+        ·
+          intro x z
+            obtain ⟨ y , ym , zm ⟩ := Set.exists_set_mem_of_union_eq_top _ _ ys_w x z
+            dsimp [ h ]
+            simp only [ coe_fn_coe_base' , Subtype.coe_mk , sup'_coe , Finset.sup'_apply , Finset.lt_sup'_iff ]
+            exact ⟨ y , ym , zm ⟩
+        have h_eq : ∀ x , h x x = f x
+        · intro x simp only [ coe_fn_coe_base' ] at w₁ simp [ coe_fn_coe_base' , w₁ ]
+        let W : ∀ x , Set X := fun x => { z | h x z < f z + ε }
+        have W_nhd : ∀ x , W x ∈ 𝓝 x
+        ·
+          intro x
+            refine' IsOpen.mem_nhds _ _
+            · apply is_open_lt <;> continuity
+            · dsimp only [ W , Set.mem_set_of_eq ] rw [ h_eq ] exact lt_add_of_pos_right _ Pos
+        let xs : Finset X := CompactSpace.elim_nhds_subcover W W_nhd . some
+        let xs_w : ⋃ ( x : _ ) ( _ : x ∈ xs ) , W x = ⊤ := CompactSpace.elim_nhds_subcover W W_nhd . some_spec
+        have xs_nonempty : xs.nonempty := Set.nonempty_of_union_eq_top_of_nonempty _ _ nX xs_w
+        let
+          k
+            : ( L : Type _ )
+            :=
+            ⟨ xs.inf' xs_nonempty fun x => ( h x : C( X , ℝ ) ) , Finset.inf'_mem _ inf_mem _ _ _ fun x _ => h x . 2 ⟩
+        refine' ⟨ k . 1 , _ , k . 2 ⟩
+        rw [ dist_lt_iff Pos ]
+        intro z
+        rw
+          [
+            show
+              ∀ a b ε : ℝ , dist a b < ε ↔ a < b + ε ∧ b - ε < a
+              by intros simp only [ ← Metric.mem_ball , Real.ball_eq_Ioo , Set.mem_Ioo , and_comm ]
+            ]
+        fconstructor
+        ·
+          dsimp [ k ]
+            simp only [ Finset.inf'_lt_iff , ContinuousMap.inf'_apply ]
+            exact Set.exists_set_mem_of_union_eq_top _ _ xs_w z
+        · dsimp [ k ] simp only [ Finset.lt_inf'_iff , ContinuousMap.inf'_apply ] intro x xm apply lt_h
 
--- error in Topology.ContinuousFunction.StoneWeierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The **Stone-Weierstrass Approximation Theorem**,
 that a subalgebra `A` of `C(X, ℝ)`, where `X` is a compact topological space,
 is dense if it separates points.
 -/
-theorem subalgebra_topological_closure_eq_top_of_separates_points
-(A : subalgebra exprℝ() «exprC( , )»(X, exprℝ()))
-(w : A.separates_points) : «expr = »(A.topological_closure, «expr⊤»()) :=
-begin
-  apply [expr set_like.ext'],
-  let [ident L] [] [":=", expr A.topological_closure],
-  have [ident n] [":", expr set.nonempty (L : set «exprC( , )»(X, exprℝ()))] [":=", expr ⟨(1 : «exprC( , )»(X, exprℝ())), A.subalgebra_topological_closure A.one_mem⟩],
-  convert [] [expr sublattice_closure_eq_top (L : set «exprC( , )»(X, exprℝ())) n (λ
-    f
-    g
-    fm
-    gm, inf_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩) (λ
-    f
-    g
-    fm
-    gm, sup_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩) (subalgebra.separates_points.strongly (subalgebra.separates_points_monotone A.subalgebra_topological_closure w))] [],
-  { simp [] [] [] [] [] [] }
-end
+theorem subalgebra_topological_closure_eq_top_of_separates_points (A : Subalgebra ℝ C(X, ℝ)) (w : A.separates_points) :
+  A.topological_closure = ⊤ :=
+  by 
+    apply SetLike.ext' 
+    let L := A.topological_closure 
+    have n : Set.Nonempty (L : Set C(X, ℝ)) := ⟨(1 : C(X, ℝ)), A.subalgebra_topological_closure A.one_mem⟩
+    convert
+      sublattice_closure_eq_top (L : Set C(X, ℝ)) n
+        (fun f g fm gm => inf_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
+        (fun f g fm gm => sup_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
+        (Subalgebra.SeparatesPoints.strongly (Subalgebra.separates_points_monotone A.subalgebra_topological_closure w))
+    ·
+      simp 
 
 /--
 An alternative statement of the Stone-Weierstrass theorem.
@@ -260,7 +269,6 @@ theorem continuous_map_mem_subalgebra_closure_of_separates_points (A : Subalgebr
     rw [subalgebra_topological_closure_eq_top_of_separates_points A w]
     simp 
 
--- error in Topology.ContinuousFunction.StoneWeierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An alternative statement of the Stone-Weierstrass theorem,
 for those who like their epsilons.
@@ -268,19 +276,14 @@ for those who like their epsilons.
 If `A` is a subalgebra of `C(X, ℝ)` which separates points (and `X` is compact),
 every real-valued continuous function on `X` is within any `ε > 0` of some element of `A`.
 -/
-theorem exists_mem_subalgebra_near_continuous_map_of_separates_points
-(A : subalgebra exprℝ() «exprC( , )»(X, exprℝ()))
-(w : A.separates_points)
-(f : «exprC( , )»(X, exprℝ()))
-(ε : exprℝ())
-(pos : «expr < »(0, ε)) : «expr∃ , »((g : A), «expr < »(«expr∥ ∥»(«expr - »((g : «exprC( , )»(X, exprℝ())), f)), ε)) :=
-begin
-  have [ident w] [] [":=", expr mem_closure_iff_frequently.mp (continuous_map_mem_subalgebra_closure_of_separates_points A w f)],
-  rw [expr metric.nhds_basis_ball.frequently_iff] ["at", ident w],
-  obtain ["⟨", ident g, ",", ident H, ",", ident m, "⟩", ":=", expr w ε pos],
-  rw ["[", expr metric.mem_ball, ",", expr dist_eq_norm, "]"] ["at", ident H],
-  exact [expr ⟨⟨g, m⟩, H⟩]
-end
+theorem exists_mem_subalgebra_near_continuous_map_of_separates_points (A : Subalgebra ℝ C(X, ℝ))
+  (w : A.separates_points) (f : C(X, ℝ)) (ε : ℝ) (pos : 0 < ε) : ∃ g : A, ∥(g : C(X, ℝ)) - f∥ < ε :=
+  by 
+    have w := mem_closure_iff_frequently.mp (continuous_map_mem_subalgebra_closure_of_separates_points A w f)
+    rw [metric.nhds_basis_ball.frequently_iff] at w 
+    obtain ⟨g, H, m⟩ := w ε Pos 
+    rw [Metric.mem_ball, dist_eq_norm] at H 
+    exact ⟨⟨g, m⟩, H⟩
 
 /--
 An alternative statement of the Stone-Weierstrass theorem,
@@ -318,63 +321,61 @@ end ContinuousMap
 
 open ContinuousMap
 
--- error in Topology.ContinuousFunction.StoneWeierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a conjugation-invariant subalgebra of `C(X, ℂ)` separates points, then the real subalgebra
 of its purely real-valued elements also separates points. -/
-theorem subalgebra.separates_points.complex_to_real
-{A : subalgebra exprℂ() «exprC( , )»(X, exprℂ())}
-(hA : A.separates_points)
-(hA' : conj_invariant_subalgebra (A.restrict_scalars exprℝ())) : ((A.restrict_scalars exprℝ()).comap' (of_real_am.comp_left_continuous exprℝ() continuous_of_real)).separates_points :=
-begin
-  intros [ident x₁, ident x₂, ident hx],
-  obtain ["⟨", "_", ",", "⟨", ident f, ",", ident hfA, ",", ident rfl, "⟩", ",", ident hf, "⟩", ":=", expr hA hx],
-  let [ident F] [":", expr «exprC( , )»(X, exprℂ())] [":=", expr «expr - »(f, const (f x₂))],
-  have [ident hFA] [":", expr «expr ∈ »(F, A)] [],
-  { refine [expr A.sub_mem hfA _],
-    convert [] [expr A.smul_mem A.one_mem (f x₂)] [],
-    ext1 [] [],
-    simp [] [] [] [] [] [] },
-  refine [expr ⟨_, ⟨(⟨complex.norm_sq, continuous_norm_sq⟩ : «exprC( , )»(exprℂ(), exprℝ())).comp F, _, rfl⟩, _⟩],
-  { rw ["[", expr set_like.mem_coe, ",", expr subalgebra.mem_comap, "]"] [],
-    convert [] [expr (A.restrict_scalars exprℝ()).mul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA] [],
-    ext1 [] [],
-    exact [expr complex.norm_sq_eq_conj_mul_self] },
-  { have [] [":", expr «expr ≠ »(«expr - »(f x₁, f x₂), 0)] [":=", expr sub_ne_zero.mpr hf],
-    simpa [] [] [] [] [] ["using", expr this] }
-end
+theorem Subalgebra.SeparatesPoints.complex_to_real {A : Subalgebra ℂ C(X, ℂ)} (hA : A.separates_points)
+  (hA' : conj_invariant_subalgebra (A.restrict_scalars ℝ)) :
+  ((A.restrict_scalars ℝ).comap' (of_real_am.compLeftContinuous ℝ continuous_of_real)).SeparatesPoints :=
+  by 
+    intro x₁ x₂ hx 
+    obtain ⟨_, ⟨f, hfA, rfl⟩, hf⟩ := hA hx 
+    let F : C(X, ℂ) := f - const (f x₂)
+    have hFA : F ∈ A
+    ·
+      refine' A.sub_mem hfA _ 
+      convert A.smul_mem A.one_mem (f x₂)
+      ext1 
+      simp 
+    refine' ⟨_, ⟨(⟨Complex.normSq, continuous_norm_sq⟩ : C(ℂ, ℝ)).comp F, _, rfl⟩, _⟩
+    ·
+      rw [SetLike.mem_coe, Subalgebra.mem_comap]
+      convert (A.restrict_scalars ℝ).mul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA 
+      ext1 
+      exact Complex.norm_sq_eq_conj_mul_self
+    ·
+      have  : f x₁ - f x₂ ≠ 0 := sub_ne_zero.mpr hf 
+      simpa using this
 
 variable [CompactSpace X]
 
--- error in Topology.ContinuousFunction.StoneWeierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The Stone-Weierstrass approximation theorem, complex version,
 that a subalgebra `A` of `C(X, ℂ)`, where `X` is a compact topological space,
 is dense if it is conjugation-invariant and separates points.
 -/
-theorem continuous_map.subalgebra_complex_topological_closure_eq_top_of_separates_points
-(A : subalgebra exprℂ() «exprC( , )»(X, exprℂ()))
-(hA : A.separates_points)
-(hA' : conj_invariant_subalgebra (A.restrict_scalars exprℝ())) : «expr = »(A.topological_closure, «expr⊤»()) :=
-begin
-  rw [expr algebra.eq_top_iff] [],
-  let [ident I] [":", expr «expr →ₗ[ ] »(«exprC( , )»(X, exprℝ()), exprℝ(), «exprC( , )»(X, exprℂ()))] [":=", expr of_real_clm.comp_left_continuous exprℝ() X],
-  have [ident key] [":", expr «expr ≤ »(I.range, (A.to_submodule.restrict_scalars exprℝ()).topological_closure)] [],
-  { let [ident A₀] [":", expr submodule exprℝ() «exprC( , )»(X, exprℝ())] [":=", expr (A.to_submodule.restrict_scalars exprℝ()).comap I],
-    have [ident SW] [":", expr «expr = »(A₀.topological_closure, «expr⊤»())] [],
-    { have [] [] [":=", expr subalgebra_topological_closure_eq_top_of_separates_points _ (hA.complex_to_real hA')],
-      exact [expr congr_arg subalgebra.to_submodule this] },
-    rw ["[", "<-", expr submodule.map_top, ",", "<-", expr SW, "]"] [],
-    have [ident h₁] [] [":=", expr A₀.topological_closure_map (of_real_clm.comp_left_continuous_compact X)],
-    have [ident h₂] [] [":=", expr (A.to_submodule.restrict_scalars exprℝ()).map_comap_le I],
-    exact [expr h₁.trans (submodule.topological_closure_mono h₂)] },
-  intros [ident f],
-  let [ident f_re] [":", expr «exprC( , )»(X, exprℝ())] [":=", expr (⟨complex.re, complex.re_clm.continuous⟩ : «exprC( , )»(exprℂ(), exprℝ())).comp f],
-  let [ident f_im] [":", expr «exprC( , )»(X, exprℝ())] [":=", expr (⟨complex.im, complex.im_clm.continuous⟩ : «exprC( , )»(exprℂ(), exprℝ())).comp f],
-  have [ident h_f_re] [":", expr «expr ∈ »(I f_re, A.topological_closure)] [":=", expr key ⟨f_re, rfl⟩],
-  have [ident h_f_im] [":", expr «expr ∈ »(I f_im, A.topological_closure)] [":=", expr key ⟨f_im, rfl⟩],
-  convert [] [expr A.topological_closure.add_mem h_f_re (A.topological_closure.smul_mem h_f_im complex.I)] [],
-  ext [] [] []; simp [] [] [] ["[", expr I, "]"] [] []
-end
+theorem ContinuousMap.subalgebra_complex_topological_closure_eq_top_of_separates_points (A : Subalgebra ℂ C(X, ℂ))
+  (hA : A.separates_points) (hA' : conj_invariant_subalgebra (A.restrict_scalars ℝ)) : A.topological_closure = ⊤ :=
+  by 
+    rw [Algebra.eq_top_iff]
+    let I : C(X, ℝ) →ₗ[ℝ] C(X, ℂ) := of_real_clm.comp_left_continuous ℝ X 
+    have key : I.range ≤ (A.to_submodule.restrict_scalars ℝ).topologicalClosure
+    ·
+      let A₀ : Submodule ℝ C(X, ℝ) := (A.to_submodule.restrict_scalars ℝ).comap I 
+      have SW : A₀.topological_closure = ⊤
+      ·
+        have  := subalgebra_topological_closure_eq_top_of_separates_points _ (hA.complex_to_real hA')
+        exact congr_argₓ Subalgebra.toSubmodule this 
+      rw [←Submodule.map_top, ←SW]
+      have h₁ := A₀.topological_closure_map (of_real_clm.comp_left_continuous_compact X)
+      have h₂ := (A.to_submodule.restrict_scalars ℝ).map_comap_le I 
+      exact h₁.trans (Submodule.topological_closure_mono h₂)
+    intro f 
+    let f_re : C(X, ℝ) := (⟨Complex.re, complex.re_clm.continuous⟩ : C(ℂ, ℝ)).comp f 
+    let f_im : C(X, ℝ) := (⟨Complex.im, complex.im_clm.continuous⟩ : C(ℂ, ℝ)).comp f 
+    have h_f_re : I f_re ∈ A.topological_closure := key ⟨f_re, rfl⟩
+    have h_f_im : I f_im ∈ A.topological_closure := key ⟨f_im, rfl⟩
+    convert A.topological_closure.add_mem h_f_re (A.topological_closure.smul_mem h_f_im Complex.i)
+    ext <;> simp [I]
 
 end Complex
 

@@ -49,7 +49,7 @@ instance : CoeFun (E →ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
   ⟨fun f => f.to_fun⟩
 
 @[simp]
-theorem coe_to_linear_map : «expr⇑ » f.to_linear_map = f :=
+theorem coe_to_linear_map : ⇑f.to_linear_map = f :=
   rfl
 
 theorem to_linear_map_injective : injective (to_linear_map : (E →ₛₗᵢ[σ₁₂] E₂) → E →ₛₗ[σ₁₂] E₂)
@@ -92,6 +92,18 @@ theorem nnnorm_map (x : E) : nnnorm (f x) = nnnorm x :=
 
 protected theorem Isometry : Isometry f :=
   f.to_linear_map.to_add_monoid_hom.isometry_of_norm f.norm_map
+
+@[simp]
+theorem is_complete_image_iff {s : Set E} : IsComplete (f '' s) ↔ IsComplete s :=
+  is_complete_image_iff f.isometry.uniform_inducing
+
+theorem is_complete_map_iff [RingHomSurjective σ₁₂] {p : Submodule R E} :
+  IsComplete (p.map f.to_linear_map : Set E₂) ↔ IsComplete (p : Set E) :=
+  f.is_complete_image_iff
+
+instance complete_space_map [RingHomSurjective σ₁₂] (p : Submodule R E) [CompleteSpace p] :
+  CompleteSpace (p.map f.to_linear_map) :=
+  (f.is_complete_map_iff.2$ complete_space_coe_iff_is_complete.1 ‹_›).complete_space_coe
 
 @[simp]
 theorem dist_map (x y : E) : dist (f x) (f y) = dist x y :=
@@ -138,7 +150,7 @@ def to_continuous_linear_map : E →SL[σ₁₂] E₂ :=
   ⟨f.to_linear_map, f.continuous⟩
 
 @[simp]
-theorem coe_to_continuous_linear_map : «expr⇑ » f.to_continuous_linear_map = f :=
+theorem coe_to_continuous_linear_map : ⇑f.to_continuous_linear_map = f :=
   rfl
 
 @[simp]
@@ -171,7 +183,7 @@ def comp (g : E₂ →ₛₗᵢ[σ₂₃] E₃) (f : E →ₛₗᵢ[σ₁₂] E�
 include σ₁₃
 
 @[simp]
-theorem coe_comp (g : E₂ →ₛₗᵢ[σ₂₃] E₃) (f : E →ₛₗᵢ[σ₁₂] E₂) : «expr⇑ » (g.comp f) = (g ∘ f) :=
+theorem coe_comp (g : E₂ →ₛₗᵢ[σ₂₃] E₃) (f : E →ₛₗᵢ[σ₁₂] E₂) : ⇑g.comp f = (g ∘ f) :=
   rfl
 
 omit σ₁₃
@@ -200,7 +212,7 @@ theorem coe_one : ((1 : E →ₗᵢ[R] E) : E → E) = _root_.id :=
   rfl
 
 @[simp]
-theorem coe_mul (f g : E →ₗᵢ[R] E) : «expr⇑ » (f*g) = (f ∘ g) :=
+theorem coe_mul (f g : E →ₗᵢ[R] E) : (⇑f*g) = (f ∘ g) :=
   rfl
 
 end LinearIsometry
@@ -222,7 +234,7 @@ def subtypeₗᵢ : p →ₗᵢ[R'] E :=
   ⟨p.subtype, fun x => rfl⟩
 
 @[simp]
-theorem coe_subtypeₗᵢ : «expr⇑ » p.subtypeₗᵢ = p.subtype :=
+theorem coe_subtypeₗᵢ : ⇑p.subtypeₗᵢ = p.subtype :=
   rfl
 
 @[simp]
@@ -238,7 +250,7 @@ theorem coe_subtypeL : (p.subtypeL : p →ₗ[R'] E) = p.subtype :=
   rfl
 
 @[simp]
-theorem coe_subtypeL' : «expr⇑ » p.subtypeL = p.subtype :=
+theorem coe_subtypeL' : ⇑p.subtypeL = p.subtype :=
   rfl
 
 @[simp]
@@ -272,11 +284,11 @@ instance : CoeFun (E ≃ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
   ⟨fun f => f.to_fun⟩
 
 @[simp]
-theorem coe_mk (e : E ≃ₛₗ[σ₁₂] E₂) (he : ∀ x, ∥e x∥ = ∥x∥) : «expr⇑ » (mk e he) = e :=
+theorem coe_mk (e : E ≃ₛₗ[σ₁₂] E₂) (he : ∀ x, ∥e x∥ = ∥x∥) : ⇑mk e he = e :=
   rfl
 
 @[simp]
-theorem coe_to_linear_equiv (e : E ≃ₛₗᵢ[σ₁₂] E₂) : «expr⇑ » e.to_linear_equiv = e :=
+theorem coe_to_linear_equiv (e : E ≃ₛₗᵢ[σ₁₂] E₂) : ⇑e.to_linear_equiv = e :=
   rfl
 
 theorem to_linear_equiv_injective : injective (to_linear_equiv : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ₛₗ[σ₁₂] E₂)
@@ -304,7 +316,7 @@ def to_linear_isometry : E →ₛₗᵢ[σ₁₂] E₂ :=
   ⟨e.1, e.2⟩
 
 @[simp]
-theorem coe_to_linear_isometry : «expr⇑ » e.to_linear_isometry = e :=
+theorem coe_to_linear_isometry : ⇑e.to_linear_isometry = e :=
   rfl
 
 protected theorem Isometry : Isometry e :=
@@ -315,7 +327,7 @@ def to_isometric : E ≃ᵢ E₂ :=
   ⟨e.to_linear_equiv.to_equiv, e.isometry⟩
 
 @[simp]
-theorem coe_to_isometric : «expr⇑ » e.to_isometric = e :=
+theorem coe_to_isometric : ⇑e.to_isometric = e :=
   rfl
 
 theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.Range e = Set.Univ :=
@@ -328,7 +340,7 @@ def to_homeomorph : E ≃ₜ E₂ :=
   e.to_isometric.to_homeomorph
 
 @[simp]
-theorem coe_to_homeomorph : «expr⇑ » e.to_homeomorph = e :=
+theorem coe_to_homeomorph : ⇑e.to_homeomorph = e :=
   rfl
 
 protected theorem Continuous : Continuous e :=
@@ -348,7 +360,7 @@ def to_continuous_linear_equiv : E ≃SL[σ₁₂] E₂ :=
   { e.to_linear_isometry.to_continuous_linear_map, e.to_homeomorph with  }
 
 @[simp]
-theorem coe_to_continuous_linear_equiv : «expr⇑ » e.to_continuous_linear_equiv = e :=
+theorem coe_to_continuous_linear_equiv : ⇑e.to_continuous_linear_equiv = e :=
   rfl
 
 omit σ₂₁
@@ -365,7 +377,7 @@ instance : Inhabited (E ≃ₗᵢ[R] E) :=
   ⟨refl R E⟩
 
 @[simp]
-theorem coe_refl : «expr⇑ » (refl R E) = id :=
+theorem coe_refl : ⇑refl R E = id :=
   rfl
 
 /-- The inverse `linear_isometry_equiv`. -/
@@ -409,7 +421,7 @@ def trans (e' : E₂ ≃ₛₗᵢ[σ₂₃] E₃) : E ≃ₛₗᵢ[σ₁₃] E�
 include σ₁₃ σ₂₁
 
 @[simp]
-theorem coeTransₓ (e₁ : E ≃ₛₗᵢ[σ₁₂] E₂) (e₂ : E₂ ≃ₛₗᵢ[σ₂₃] E₃) : «expr⇑ » (e₁.trans e₂) = (e₂ ∘ e₁) :=
+theorem coeTransₓ (e₁ : E ≃ₛₗᵢ[σ₁₂] E₂) (e₂ : E₂ ≃ₛₗᵢ[σ₂₃] E₃) : ⇑e₁.trans e₂ = (e₂ ∘ e₁) :=
   rfl
 
 omit σ₁₃ σ₂₁ σ₃₁ σ₃₂
@@ -441,8 +453,7 @@ theorem self_comp_symm : (e ∘ e.symm) = id :=
 include σ₁₃ σ₂₁ σ₃₂ σ₃₁
 
 @[simp]
-theorem coe_symm_trans (e₁ : E ≃ₛₗᵢ[σ₁₂] E₂) (e₂ : E₂ ≃ₛₗᵢ[σ₂₃] E₃) :
-  «expr⇑ » (e₁.trans e₂).symm = (e₁.symm ∘ e₂.symm) :=
+theorem coe_symm_trans (e₁ : E ≃ₛₗᵢ[σ₁₂] E₂) (e₂ : E₂ ≃ₛₗᵢ[σ₂₃] E₃) : ⇑(e₁.trans e₂).symm = (e₁.symm ∘ e₂.symm) :=
   rfl
 
 include σ₁₄ σ₄₁ σ₄₂ σ₄₃ σ₂₄
@@ -458,15 +469,15 @@ instance : Groupₓ (E ≃ₗᵢ[R] E) :=
     mul_assoc := fun _ _ _ => trans_assoc _ _ _, mul_left_inv := self_trans_symm }
 
 @[simp]
-theorem coe_one : «expr⇑ » (1 : E ≃ₗᵢ[R] E) = id :=
+theorem coe_one : ⇑(1 : E ≃ₗᵢ[R] E) = id :=
   rfl
 
 @[simp]
-theorem coe_mul (e e' : E ≃ₗᵢ[R] E) : «expr⇑ » (e*e') = (e ∘ e') :=
+theorem coe_mul (e e' : E ≃ₗᵢ[R] E) : (⇑e*e') = (e ∘ e') :=
   rfl
 
 @[simp]
-theorem coe_inv (e : E ≃ₗᵢ[R] E) : «expr⇑ » (e⁻¹) = e.symm :=
+theorem coe_inv (e : E ≃ₗᵢ[R] E) : ⇑e⁻¹ = e.symm :=
   rfl
 
 include σ₂₁
@@ -476,10 +487,10 @@ instance : CoeTₓ (E ≃ₛₗᵢ[σ₁₂] E₂) (E ≃SL[σ₁₂] E₂) :=
   ⟨fun e => ⟨e.to_linear_equiv, e.continuous, e.to_isometric.symm.continuous⟩⟩
 
 instance : CoeTₓ (E ≃ₛₗᵢ[σ₁₂] E₂) (E →SL[σ₁₂] E₂) :=
-  ⟨fun e => «expr↑ » (e : E ≃SL[σ₁₂] E₂)⟩
+  ⟨fun e => ↑(e : E ≃SL[σ₁₂] E₂)⟩
 
 @[simp]
-theorem coe_coe : «expr⇑ » (e : E ≃SL[σ₁₂] E₂) = e :=
+theorem coe_coe : ⇑(e : E ≃SL[σ₁₂] E₂) = e :=
   rfl
 
 @[simp]
@@ -487,7 +498,7 @@ theorem coe_coe' : ((e : E ≃SL[σ₁₂] E₂) : E →SL[σ₁₂] E₂) = e :
   rfl
 
 @[simp]
-theorem coe_coe'' : «expr⇑ » (e : E →SL[σ₁₂] E₂) = e :=
+theorem coe_coe'' : ⇑(e : E →SL[σ₁₂] E₂) = e :=
   rfl
 
 omit σ₂₁
@@ -564,6 +575,10 @@ theorem comp_continuous_on_iff {f : α → E} {s : Set α} : ContinuousOn (e ∘
 theorem comp_continuous_iff {f : α → E} : Continuous (e ∘ f) ↔ Continuous f :=
   e.isometry.comp_continuous_iff
 
+instance complete_space_map (p : Submodule R E) [CompleteSpace p] :
+  CompleteSpace (p.map (e.to_linear_equiv : E →ₛₗ[σ₁₂] E₂)) :=
+  e.to_linear_isometry.complete_space_map p
+
 include σ₂₁
 
 /-- Construct a linear isometry equiv from a surjective linear isometry. -/
@@ -592,7 +607,7 @@ variable (R E E₂ E₃)
 
 /-- The natural equivalence `(E × E₂) × E₃ ≃ E × (E₂ × E₃)` is a linear isometry. -/
 noncomputable def prod_assoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R] E × E₂ × E₃ :=
-  { Equiv.prodAssoc E E₂ E₃ with toFun := Equiv.prodAssoc E E₂ E₃, invFun := (Equiv.prodAssoc E E₂ E₃).symm,
+  { Equivₓ.prodAssoc E E₂ E₃ with toFun := Equivₓ.prodAssoc E E₂ E₃, invFun := (Equivₓ.prodAssoc E E₂ E₃).symm,
     map_add' :=
       by 
         simp ,
@@ -602,16 +617,16 @@ noncomputable def prod_assoc [Module R E₂] [Module R E₃] : (E × E₂) × E�
     norm_map' :=
       by 
         rintro ⟨⟨e, f⟩, g⟩
-        simp only [LinearEquiv.coe_mk, Equiv.prod_assoc_apply, Prod.semi_norm_def, max_assocₓ] }
+        simp only [LinearEquiv.coe_mk, Equivₓ.prod_assoc_apply, Prod.semi_norm_def, max_assocₓ] }
 
 @[simp]
 theorem coe_prod_assoc [Module R E₂] [Module R E₃] :
-  (prod_assoc R E E₂ E₃ : (E × E₂) × E₃ → E × E₂ × E₃) = Equiv.prodAssoc E E₂ E₃ :=
+  (prod_assoc R E E₂ E₃ : (E × E₂) × E₃ → E × E₂ × E₃) = Equivₓ.prodAssoc E E₂ E₃ :=
   rfl
 
 @[simp]
 theorem coe_prod_assoc_symm [Module R E₂] [Module R E₃] :
-  ((prod_assoc R E E₂ E₃).symm : E × E₂ × E₃ → (E × E₂) × E₃) = (Equiv.prodAssoc E E₂ E₃).symm :=
+  ((prod_assoc R E E₂ E₃).symm : E × E₂ × E₃ → (E × E₂) × E₃) = (Equivₓ.prodAssoc E E₂ E₃).symm :=
   rfl
 
 end LinearIsometryEquiv

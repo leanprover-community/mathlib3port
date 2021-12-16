@@ -16,7 +16,7 @@ open CategoryTheory.Limits
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 namespace AlgebraCat
 
@@ -46,15 +46,13 @@ instance limit_semiring (F : J ⥤ AlgebraCat R) : Ringₓ (types.limit_cone (F 
     change Ringₓ (sections_subalgebra F)
     infer_instance
 
--- error in Algebra.Category.Algebra.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance limit_algebra
-(F : «expr ⥤ »(J, Algebra R)) : algebra R (types.limit_cone «expr ⋙ »(F, forget (Algebra.{v} R))).X :=
-begin
-  have [] [":", expr «expr = »(algebra R (types.limit_cone «expr ⋙ »(F, forget (Algebra.{v} R))).X, algebra R (sections_subalgebra F))] [],
-  by refl,
-  rw [expr this] [],
-  apply_instance
-end
+instance limit_algebra (F : J ⥤ AlgebraCat R) : Algebra R (types.limit_cone (F ⋙ forget (AlgebraCat.{v} R))).x :=
+  by 
+    have  : Algebra R (types.limit_cone (F ⋙ forget (AlgebraCat.{v} R))).x = Algebra R (sections_subalgebra F)
+    ·
+      rfl 
+    rw [this]
+    infer_instance
 
 /-- `limit.π (F ⋙ forget (Algebra R)) j` as a `alg_hom`. -/
 def limit_π_alg_hom (F : J ⥤ AlgebraCat.{v} R) j :
@@ -104,9 +102,9 @@ end HasLimits
 
 open HasLimits
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The category of R-algebras has all limits. -/
-@[irreducible]
-instance has_limits : has_limits (AlgebraCat R) :=
+irreducible_def has_limits : has_limits (AlgebraCat R) :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 

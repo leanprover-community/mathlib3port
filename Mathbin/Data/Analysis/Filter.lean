@@ -47,14 +47,26 @@ theorem of_equiv_val (E : σ ≃ τ) (F : Cfilter α σ) (a : τ) : F.of_equiv E
 
 end 
 
-/-- The filter represented by a `cfilter` is the collection of supersets of
-  elements of the filter base. -/
-def to_filter (F : Cfilter (Set α) σ) : Filter α :=
-  { Sets := { a | ∃ b, F b ⊆ a }, univ_sets := ⟨F.pt, subset_univ _⟩,
-    sets_of_superset := fun x y ⟨b, h⟩ s => ⟨b, subset.trans h s⟩,
-    inter_sets :=
-      fun x y ⟨a, h₁⟩ ⟨b, h₂⟩ =>
-        ⟨F.inf a b, subset_inter (subset.trans (F.inf_le_left _ _) h₁) (subset.trans (F.inf_le_right _ _) h₂)⟩ }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The filter represented by a `cfilter` is the collection of supersets of
+      elements of the filter base. -/
+  def
+    to_filter
+    ( F : Cfilter Set α σ ) : Filter α
+    :=
+      {
+        Sets := { a | ∃ b , F b ⊆ a } ,
+          univ_sets := ⟨ F.pt , subset_univ _ ⟩ ,
+          sets_of_superset := fun x y ⟨ b , h ⟩ s => ⟨ b , subset.trans h s ⟩ ,
+          inter_sets
+            :=
+            fun
+              x y ⟨ a , h₁ ⟩ ⟨ b , h₂ ⟩
+                =>
+                ⟨ F.inf a b , subset_inter subset.trans F.inf_le_left _ _ h₁ subset.trans F.inf_le_right _ _ h₂ ⟩
+        }
 
 @[simp]
 theorem mem_to_filter_sets (F : Cfilter (Set α) σ) {a : Set α} : a ∈ F.to_filter ↔ ∃ b, F b ⊆ a :=
@@ -221,7 +233,7 @@ protected def inf {f g : Filter α} (F : f.realizer) (G : g.realizer) : (f⊓g).
     by 
       ext x 
       cases F <;> cases G <;> substs f g <;> simp [Cfilter.toFilter]
-      split 
+      constructor
       ·
         rintro ⟨s : F_σ, t : G_σ, h⟩
         apply mem_inf_of_inter _ _ h 
@@ -231,36 +243,66 @@ protected def inf {f g : Filter α} (F : f.realizer) (G : g.realizer) : (f⊓g).
         rintro ⟨s, ⟨a, ha⟩, t, ⟨b, hb⟩, rfl⟩
         exact ⟨a, b, inter_subset_inter ha hb⟩⟩
 
-/-- Construct a realizer for the cofinite filter -/
-protected def cofinite [DecidableEq α] : (@cofinite α).Realizer :=
-  ⟨Finset α,
-    { f := fun s => { a | a ∉ s }, pt := ∅, inf := · ∪ ·, inf_le_left := fun s t a => mt (Finset.mem_union_left _),
-      inf_le_right := fun s t a => mt (Finset.mem_union_right _) },
-    filter_eq$
-      Set.ext$
-        fun x =>
-          ⟨fun ⟨s, h⟩ => s.finite_to_set.subset (compl_subset_comm.1 h),
-            fun ⟨fs⟩ =>
-              by 
-                exact
-                  ⟨(«expr ᶜ» x).toFinset,
-                    fun a h : a ∉ («expr ᶜ» x).toFinset =>
-                      Classical.by_contradiction$ fun h' => h (mem_to_finset.2 h')⟩⟩⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Construct a realizer for the cofinite filter -/ protected
+  def
+    cofinite
+    [ DecidableEq α ] : @ cofinite α . Realizer
+    :=
+      ⟨
+        Finset α
+          ,
+          {
+            f := fun s => { a | a ∉ s } ,
+              pt := ∅ ,
+              inf := · ∪ · ,
+              inf_le_left := fun s t a => mt Finset.mem_union_left _ ,
+              inf_le_right := fun s t a => mt Finset.mem_union_right _
+            }
+          ,
+          filter_eq
+            $
+            Set.ext
+              $
+              fun
+                x
+                  =>
+                  ⟨
+                    fun ⟨ s , h ⟩ => s.finite_to_set.subset compl_subset_comm . 1 h
+                      ,
+                      fun
+                        ⟨ fs ⟩
+                          =>
+                          by
+                            exact
+                              ⟨
+                                x ᶜ . toFinset
+                                  ,
+                                  fun
+                                    a h : a ∉ x ᶜ . toFinset
+                                      =>
+                                      Classical.by_contradiction $ fun h' => h mem_to_finset . 2 h'
+                                ⟩
+                    ⟩
+        ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » F.F s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » F.F s)
 /-- Construct a realizer for filter bind -/
 protected def bind {f : Filter α} {m : α → Filter β} (F : f.realizer) (G : ∀ i, (m i).Realizer) : (f.bind m).Realizer :=
-  ⟨Σs : F.σ, ∀ i _ : i ∈ F.F s, (G i).σ,
-    { f := fun ⟨s, f⟩ => ⋃(i : _)(_ : i ∈ F.F s), (G i).f (f i H), pt := ⟨F.F.pt, fun i H => (G i).f.pt⟩,
+  ⟨Σ s : F.σ, ∀ i _ : i ∈ F.F s, (G i).σ,
+    { f := fun ⟨s, f⟩ => ⋃ (i : _)(_ : i ∈ F.F s), (G i).f (f i H), pt := ⟨F.F.pt, fun i H => (G i).f.pt⟩,
       inf :=
         fun ⟨a, f⟩ ⟨b, f'⟩ =>
           ⟨F.F.inf a b, fun i h => (G i).f.inf (f i (F.F.inf_le_left _ _ h)) (f' i (F.F.inf_le_right _ _ h))⟩,
       inf_le_left :=
         fun ⟨a, f⟩ ⟨b, f'⟩ x =>
-          show (x ∈ ⋃(i : α)(H : i ∈ F.F (F.F.inf a b)), _) → x ∈ ⋃(i : _)(H : i ∈ F.F a), (G i).f (f i H)by 
+          show (x ∈ ⋃ (i : α)(H : i ∈ F.F (F.F.inf a b)), _) → x ∈ ⋃ (i : _)(H : i ∈ F.F a), (G i).f (f i H)by 
             simp  <;> exact fun i h₁ h₂ => ⟨i, F.F.inf_le_left _ _ h₁, (G i).f.inf_le_left _ _ h₂⟩,
       inf_le_right :=
         fun ⟨a, f⟩ ⟨b, f'⟩ x =>
-          show (x ∈ ⋃(i : α)(H : i ∈ F.F (F.F.inf a b)), _) → x ∈ ⋃(i : _)(H : i ∈ F.F b), (G i).f (f' i H)by 
+          show (x ∈ ⋃ (i : α)(H : i ∈ F.F (F.F.inf a b)), _) → x ∈ ⋃ (i : _)(H : i ∈ F.F b), (G i).f (f' i H)by 
             simp  <;> exact fun i h₁ h₂ => ⟨i, F.F.inf_le_right _ _ h₁, (G i).f.inf_le_right _ _ h₂⟩ },
     filter_eq$
       Set.ext$
@@ -278,15 +320,15 @@ protected def bind {f : Filter α} {m : α → Filter β} (F : f.realizer) (G : 
                         ⟨s, fun i h => f' ⟨i, h⟩, fun a ⟨_, ⟨i, rfl⟩, _, ⟨H, rfl⟩, m⟩ => h' ⟨_, H⟩ m⟩⟩⟩
 
 /-- Construct a realizer for indexed supremum -/
-protected def Sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆i, f i).Realizer :=
-  let F' : (⨆i, f i).Realizer :=
+protected def Sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i, f i).Realizer :=
+  let F' : (⨆ i, f i).Realizer :=
     (realizer.bind realizer.top F).of_eq$
       filter_eq$
         Set.ext$
           by 
             simp [Filter.bind, eq_univ_iff_forall, supr_sets_eq]
   F'.of_equiv$
-    show (Σu : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
+    show (Σ u : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
       ⟨fun ⟨_, f⟩ i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩,
         fun ⟨⟨⟩, f⟩ =>
           by 
@@ -305,6 +347,7 @@ theorem le_iff {f g : Filter α} (F : f.realizer) (G : g.realizer) : f ≤ g ↔
         let ⟨t, h₂⟩ := H s
         ⟨t, subset.trans h₂ h₁⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » L₁.F a)
 theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ : l₁.realizer) (L₂ : l₂.realizer) :
   tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀ x _ : x ∈ L₁.F a, f x ∈ L₂.F b :=
   (le_iff (L₁.map f) L₂).trans$ forall_congrₓ$ fun b => exists_congr$ fun a => image_subset_iff

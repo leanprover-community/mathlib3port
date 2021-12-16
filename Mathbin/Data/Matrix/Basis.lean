@@ -52,7 +52,7 @@ theorem std_basis_matrix_add (i : m) (j : n) (a b : α) :
     splitIfs with h <;> simp [h]
 
 theorem matrix_eq_sum_std_basis (x : Matrix n m α) [Fintype n] [Fintype m] :
-  x = ∑(i : n)(j : m), std_basis_matrix i j (x i j) :=
+  x = ∑ (i : n)(j : m), std_basis_matrix i j (x i j) :=
   by 
     ext 
     symm 
@@ -70,7 +70,7 @@ theorem std_basis_eq_basis_mul_basis (i : m) (j : n) :
   by 
     ext 
     normNum [std_basis_matrix, vec_mul_vec]
-    splitIfs <;> tauto
+    exact ite_and _ _ _ _
 
 @[elab_as_eliminator]
 protected theorem induction_on' [Fintype m] [Fintype n] {P : Matrix m n α → Prop} (M : Matrix m n α) (h_zero : P 0)

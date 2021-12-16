@@ -31,11 +31,14 @@ universe u v
 
 namespace SlimCheck
 
--- error in Testing.SlimCheck.Gen: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler is_lawful_monad
 /-- Monad to generate random examples to test properties with.
 It has a `nat` parameter so that the caller can decide on the
-size of the examples. -/ @[reducible, derive #["[", expr monad, ",", expr is_lawful_monad, "]"]] def gen (α : Type u) :=
-reader_t (ulift exprℕ()) rand α
+size of the examples. -/
+@[reducible]
+def gen (α : Type u) :=
+  ReaderTₓ (Ulift ℕ) Rand α deriving [anonymous], [anonymous]
 
 variable (α : Type u)
 
@@ -79,7 +82,7 @@ def choose_nat' (x y : ℕ) (p : x < y) : gen (Set.Ico x y) :=
 open Nat
 
 instance : Uliftable gen.{u} gen.{v} :=
-  ReaderTₓ.uliftable' (Equiv.ulift.trans Equiv.ulift.symm)
+  ReaderTₓ.uliftable' (Equivₓ.ulift.trans Equivₓ.ulift.symm)
 
 instance : HasOrelse gen.{u} :=
   ⟨fun α x y =>

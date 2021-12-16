@@ -62,7 +62,7 @@ build the general theory. We do not define it here.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
   [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
@@ -82,7 +82,7 @@ variable (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 }
 converges for all `∥y∥ < r`. This implies that `Σ pₙ yⁿ` converges for all `∥y∥ < r`, but these
 definitions are *not* equivalent in general. -/
 def radius (p : FormalMultilinearSeries 𝕜 E F) : ℝ≥0∞ :=
-  ⨆(r :  ℝ≥0 )(C : ℝ)(hr : ∀ n, (∥p n∥*r ^ n) ≤ C), (r : ℝ≥0∞)
+  ⨆ (r :  ℝ≥0 )(C : ℝ)(hr : ∀ n, (∥p n∥*r ^ n) ≤ C), (r : ℝ≥0∞)
 
 /-- If `∥pₙ∥ rⁿ` is bounded in `n`, then the radius of `p` is at least `r`. -/
 theorem le_radius_of_bound (C : ℝ) {r :  ℝ≥0 } (h : ∀ n : ℕ, (∥p n∥*r ^ n) ≤ C) : (r : ℝ≥0∞) ≤ p.radius :=
@@ -96,10 +96,10 @@ theorem le_radius_of_bound_nnreal (C :  ℝ≥0 ) {r :  ℝ≥0 } (h : ∀ n : �
         exactModCast h n
 
 /-- If `∥pₙ∥ rⁿ = O(1)`, as `n → ∞`, then the radius of `p` is at least `r`. -/
-theorem le_radius_of_is_O (h : is_O (fun n => ∥p n∥*r ^ n) (fun n => (1 : ℝ)) at_top) : «expr↑ » r ≤ p.radius :=
+theorem le_radius_of_is_O (h : is_O (fun n => ∥p n∥*r ^ n) (fun n => (1 : ℝ)) at_top) : ↑r ≤ p.radius :=
   Exists.elim (is_O_one_nat_at_top_iff.1 h)$ fun C hC => p.le_radius_of_bound C$ fun n => (le_abs_self _).trans (hC n)
 
-theorem le_radius_of_eventually_le C (h : ∀ᶠn in at_top, (∥p n∥*r ^ n) ≤ C) : «expr↑ » r ≤ p.radius :=
+theorem le_radius_of_eventually_le C (h : ∀ᶠ n in at_top, (∥p n∥*r ^ n) ≤ C) : ↑r ≤ p.radius :=
   p.le_radius_of_is_O$
     is_O.of_bound C$
       h.mono$
@@ -107,10 +107,10 @@ theorem le_radius_of_eventually_le C (h : ∀ᶠn in at_top, (∥p n∥*r ^ n) �
           by 
             simpa
 
-theorem le_radius_of_summable_nnnorm (h : Summable fun n => ∥p n∥₊*r ^ n) : «expr↑ » r ≤ p.radius :=
-  p.le_radius_of_bound_nnreal (∑'n, ∥p n∥₊*r ^ n)$ fun n => le_tsum' h _
+theorem le_radius_of_summable_nnnorm (h : Summable fun n => ∥p n∥₊*r ^ n) : ↑r ≤ p.radius :=
+  p.le_radius_of_bound_nnreal (∑' n, ∥p n∥₊*r ^ n)$ fun n => le_tsum' h _
 
-theorem le_radius_of_summable (h : Summable fun n => ∥p n∥*r ^ n) : «expr↑ » r ≤ p.radius :=
+theorem le_radius_of_summable (h : Summable fun n => ∥p n∥*r ^ n) : ↑r ≤ p.radius :=
   p.le_radius_of_summable_nnnorm$
     by 
       simp only [←coe_nnnorm] at h 
@@ -120,7 +120,7 @@ theorem radius_eq_top_of_forall_nnreal_is_O (h : ∀ r :  ℝ≥0 , is_O (fun n 
   p.radius = ∞ :=
   Ennreal.eq_top_of_forall_nnreal_le$ fun r => p.le_radius_of_is_O (h r)
 
-theorem radius_eq_top_of_eventually_eq_zero (h : ∀ᶠn in at_top, p n = 0) : p.radius = ∞ :=
+theorem radius_eq_top_of_eventually_eq_zero (h : ∀ᶠ n in at_top, p n = 0) : p.radius = ∞ :=
   p.radius_eq_top_of_forall_nnreal_is_O$
     fun r =>
       (is_O_zero _ _).congr'
@@ -133,71 +133,71 @@ theorem radius_eq_top_of_eventually_eq_zero (h : ∀ᶠn in at_top, p n = 0) : p
 theorem radius_eq_top_of_forall_image_add_eq_zero (n : ℕ) (hn : ∀ m, p (m+n) = 0) : p.radius = ∞ :=
   p.radius_eq_top_of_eventually_eq_zero$ mem_at_top_sets.2 ⟨n, fun k hk => tsub_add_cancel_of_le hk ▸ hn _⟩
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ` tends to zero exponentially:
 for some `0 < a < 1`, `∥p n∥ rⁿ = o(aⁿ)`. -/
-theorem is_o_of_lt_radius
-(h : «expr < »(«expr↑ »(r), p.radius)) : «expr∃ , »((a «expr ∈ » Ioo (0 : exprℝ()) 1), is_o (λ
-  n, «expr * »(«expr∥ ∥»(p n), «expr ^ »(r, n))) (pow a) at_top) :=
-begin
-  rw [expr (tfae_exists_lt_is_o_pow (λ n, «expr * »(«expr∥ ∥»(p n), «expr ^ »(r, n))) 1).out 1 4] [],
-  simp [] [] ["only"] ["[", expr radius, ",", expr lt_supr_iff, "]"] [] ["at", ident h],
-  rcases [expr h, "with", "⟨", ident t, ",", ident C, ",", ident hC, ",", ident rt, "⟩"],
-  rw ["[", expr ennreal.coe_lt_coe, ",", "<-", expr nnreal.coe_lt_coe, "]"] ["at", ident rt],
-  have [] [":", expr «expr < »(0, (t : exprℝ()))] [],
-  from [expr r.coe_nonneg.trans_lt rt],
-  rw ["[", "<-", expr div_lt_one this, "]"] ["at", ident rt],
-  refine [expr ⟨_, rt, C, or.inr zero_lt_one, λ n, _⟩],
-  calc
-    «expr = »(«expr| |»(«expr * »(«expr∥ ∥»(p n), «expr ^ »(r, n))), «expr * »(«expr * »(«expr∥ ∥»(p n), «expr ^ »(t, n)), «expr ^ »(«expr / »(r, t), n))) : by field_simp [] ["[", expr mul_right_comm, ",", expr abs_mul, ",", expr this.ne', "]"] [] []
-    «expr ≤ »(..., «expr * »(C, «expr ^ »(«expr / »(r, t), n))) : mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
-end
+theorem is_o_of_lt_radius (h : ↑r < p.radius) :
+  ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1), is_o (fun n => ∥p n∥*r ^ n) (pow a) at_top :=
+  by 
+    rw [(tfae_exists_lt_is_o_pow (fun n => ∥p n∥*r ^ n) 1).out 1 4]
+    simp only [radius, lt_supr_iff] at h 
+    rcases h with ⟨t, C, hC, rt⟩
+    rw [Ennreal.coe_lt_coe, ←Nnreal.coe_lt_coe] at rt 
+    have  : 0 < (t : ℝ)
+    exact r.coe_nonneg.trans_lt rt 
+    rw [←div_lt_one this] at rt 
+    refine' ⟨_, rt, C, Or.inr zero_lt_one, fun n => _⟩
+    calc |∥p n∥*r ^ n| = (∥p n∥*t ^ n)*(r / t) ^ n :=
+      by 
+        fieldSimp [mul_right_commₓ, abs_mul, this.ne']_ ≤ C*(r / t) ^ n :=
+      mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
 
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ = o(1)`. -/
-theorem is_o_one_of_lt_radius (h : «expr↑ » r < p.radius) : is_o (fun n => ∥p n∥*r ^ n) (fun _ => 1 : ℕ → ℝ) at_top :=
+theorem is_o_one_of_lt_radius (h : ↑r < p.radius) : is_o (fun n => ∥p n∥*r ^ n) (fun _ => 1 : ℕ → ℝ) at_top :=
   let ⟨a, ha, hp⟩ := p.is_o_of_lt_radius h 
   hp.trans$ (is_o_pow_pow_of_lt_left ha.1.le ha.2).congr (fun n => rfl) one_pow
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ` tends to zero exponentially:
 for some `0 < a < 1` and `C > 0`,  `∥p n∥ * r ^ n ≤ C * a ^ n`. -/
-theorem norm_mul_pow_le_mul_pow_of_lt_radius (h : «expr↑ » r < p.radius) :
+theorem norm_mul_pow_le_mul_pow_of_lt_radius (h : ↑r < p.radius) :
   ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1)(C : _)(_ : C > 0), ∀ n, (∥p n∥*r ^ n) ≤ C*a ^ n :=
   by 
     rcases((tfae_exists_lt_is_o_pow (fun n => ∥p n∥*r ^ n) 1).out 1 5).mp (p.is_o_of_lt_radius h) with ⟨a, ha, C, hC, H⟩
     exact ⟨a, ha, C, hC, fun n => (le_abs_self _).trans (H n)⟩
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `r ≠ 0` and `∥pₙ∥ rⁿ = O(aⁿ)` for some `-1 < a < 1`, then `r < p.radius`. -/
-theorem lt_radius_of_is_O
-(h₀ : «expr ≠ »(r, 0))
-{a : exprℝ()}
-(ha : «expr ∈ »(a, Ioo («expr- »(1) : exprℝ()) 1))
-(hp : is_O (λ n, «expr * »(«expr∥ ∥»(p n), «expr ^ »(r, n))) (pow a) at_top) : «expr < »(«expr↑ »(r), p.radius) :=
-begin
-  rcases [expr ((tfae_exists_lt_is_o_pow (λ
-      n, «expr * »(«expr∥ ∥»(p n), «expr ^ »(r, n))) 1).out 2 5).mp ⟨a, ha, hp⟩, "with", "⟨", ident a, ",", ident ha, ",", ident C, ",", ident hC, ",", ident hp, "⟩"],
-  rw ["[", "<-", expr pos_iff_ne_zero, ",", "<-", expr nnreal.coe_pos, "]"] ["at", ident h₀],
-  lift [expr a] ["to", expr «exprℝ≥0»()] ["using", expr ha.1.le] [],
-  have [] [":", expr «expr < »((r : exprℝ()), «expr / »(r, a))] [":=", expr by simpa [] [] ["only"] ["[", expr div_one, "]"] [] ["using", expr (div_lt_div_left h₀ zero_lt_one ha.1).2 ha.2]],
-  norm_cast ["at", ident this],
-  rw ["[", "<-", expr ennreal.coe_lt_coe, "]"] ["at", ident this],
-  refine [expr this.trans_le «expr $ »(p.le_radius_of_bound C, λ n, _)],
-  rw ["[", expr nnreal.coe_div, ",", expr div_pow, ",", "<-", expr mul_div_assoc, ",", expr div_le_iff (pow_pos ha.1 n), "]"] [],
-  exact [expr (le_abs_self _).trans (hp n)]
-end
+theorem lt_radius_of_is_O (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ) 1)
+  (hp : is_O (fun n => ∥p n∥*r ^ n) (pow a) at_top) : ↑r < p.radius :=
+  by 
+    rcases((tfae_exists_lt_is_o_pow (fun n => ∥p n∥*r ^ n) 1).out 2 5).mp ⟨a, ha, hp⟩ with ⟨a, ha, C, hC, hp⟩
+    rw [←pos_iff_ne_zero, ←Nnreal.coe_pos] at h₀ 
+    lift a to  ℝ≥0  using ha.1.le 
+    have  : (r : ℝ) < r / a :=
+      by 
+        simpa only [div_one] using (div_lt_div_left h₀ zero_lt_one ha.1).2 ha.2
+    normCast  at this 
+    rw [←Ennreal.coe_lt_coe] at this 
+    refine' this.trans_le (p.le_radius_of_bound C$ fun n => _)
+    rw [Nnreal.coe_div, div_pow, ←mul_div_assoc, div_le_iff (pow_pos ha.1 n)]
+    exact (le_abs_self _).trans (hp n)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ` is bounded. -/
 theorem norm_mul_pow_le_of_lt_radius (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h : (r : ℝ≥0∞) < p.radius) :
   ∃ (C : _)(_ : C > 0), ∀ n, (∥p n∥*r ^ n) ≤ C :=
   let ⟨a, ha, C, hC, h⟩ := p.norm_mul_pow_le_mul_pow_of_lt_radius h
   ⟨C, hC, fun n => (h n).trans$ mul_le_of_le_one_right hC.lt.le (pow_le_one _ ha.1.le ha.2.le)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ` is bounded. -/
 theorem norm_le_div_pow_of_pos_of_lt_radius (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h0 : 0 < r)
   (h : (r : ℝ≥0∞) < p.radius) : ∃ (C : _)(_ : C > 0), ∀ n, ∥p n∥ ≤ C / r ^ n :=
   let ⟨C, hC, hp⟩ := p.norm_mul_pow_le_of_lt_radius h
   ⟨C, hC, fun n => Iff.mpr (le_div_iff (pow_pos h0 _)) (hp n)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ` is bounded. -/
 theorem nnnorm_mul_pow_le_of_lt_radius (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h : (r : ℝ≥0∞) < p.radius) :
   ∃ (C : _)(_ : C > 0), ∀ n, (∥p n∥₊*r ^ n) ≤ C :=
@@ -207,18 +207,18 @@ theorem nnnorm_mul_pow_le_of_lt_radius (p : FormalMultilinearSeries 𝕜 E F) {r
       exactModCast hp⟩
 
 theorem le_radius_of_tendsto (p : FormalMultilinearSeries 𝕜 E F) {l : ℝ}
-  (h : tendsto (fun n => ∥p n∥*r ^ n) at_top (𝓝 l)) : «expr↑ » r ≤ p.radius :=
+  (h : tendsto (fun n => ∥p n∥*r ^ n) at_top (𝓝 l)) : ↑r ≤ p.radius :=
   p.le_radius_of_is_O (is_O_one_of_tendsto _ h)
 
 theorem le_radius_of_summable_norm (p : FormalMultilinearSeries 𝕜 E F) (hs : Summable fun n => ∥p n∥*r ^ n) :
-  «expr↑ » r ≤ p.radius :=
+  ↑r ≤ p.radius :=
   p.le_radius_of_tendsto hs.tendsto_at_top_zero
 
 theorem not_summable_norm_of_radius_lt_nnnorm (p : FormalMultilinearSeries 𝕜 E F) {x : E} (h : p.radius < ∥x∥₊) :
   ¬Summable fun n => ∥p n∥*∥x∥ ^ n :=
   fun hs => not_le_of_lt h (p.le_radius_of_summable_norm hs)
 
-theorem summable_norm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h : «expr↑ » r < p.radius) :
+theorem summable_norm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h : ↑r < p.radius) :
   Summable fun n : ℕ => ∥p n∥*r ^ n :=
   by 
     obtain ⟨a, ha : a ∈ Ioo (0 : ℝ) 1, C, hC : 0 < C, hp⟩ := p.norm_mul_pow_le_mul_pow_of_lt_radius h 
@@ -235,7 +235,7 @@ theorem summable_norm_apply (p : FormalMultilinearSeries 𝕜 E F) {x : E} (hx :
         (p.summable_norm_mul_pow hx)
     simp 
 
-theorem summable_nnnorm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h : «expr↑ » r < p.radius) :
+theorem summable_nnnorm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h : ↑r < p.radius) :
   Summable fun n : ℕ => ∥p n∥₊*r ^ n :=
   by 
     rw [←Nnreal.summable_coe]
@@ -253,7 +253,7 @@ theorem radius_eq_top_of_summable_norm (p : FormalMultilinearSeries 𝕜 E F)
 theorem radius_eq_top_iff_summable_norm (p : FormalMultilinearSeries 𝕜 E F) :
   p.radius = ∞ ↔ ∀ r :  ℝ≥0 , Summable fun n => ∥p n∥*r ^ n :=
   by 
-    split 
+    constructor
     ·
       intro h r 
       obtain ⟨a, ha : a ∈ Ioo (0 : ℝ) 1, C, hC : 0 < C, hp⟩ :=
@@ -266,35 +266,32 @@ theorem radius_eq_top_iff_summable_norm (p : FormalMultilinearSeries 𝕜 E F) :
     ·
       exact p.radius_eq_top_of_summable_norm
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the radius of `p` is positive, then `∥pₙ∥` grows at most geometrically. -/
-theorem le_mul_pow_of_radius_pos
-(p : formal_multilinear_series 𝕜 E F)
-(h : «expr < »(0, p.radius)) : «expr∃ , »((C r)
- (hC : «expr < »(0, C))
- (hr : «expr < »(0, r)), ∀ n, «expr ≤ »(«expr∥ ∥»(p n), «expr * »(C, «expr ^ »(r, n)))) :=
-begin
-  rcases [expr ennreal.lt_iff_exists_nnreal_btwn.1 h, "with", "⟨", ident r, ",", ident r0, ",", ident rlt, "⟩"],
-  have [ident rpos] [":", expr «expr < »(0, (r : exprℝ()))] [],
-  by simp [] [] [] ["[", expr ennreal.coe_pos.1 r0, "]"] [] [],
-  rcases [expr norm_le_div_pow_of_pos_of_lt_radius p rpos rlt, "with", "⟨", ident C, ",", ident Cpos, ",", ident hCp, "⟩"],
-  refine [expr ⟨C, «expr ⁻¹»(r), Cpos, by simp [] [] [] ["[", expr rpos, "]"] [] [], λ n, _⟩],
-  convert [] [expr hCp n] [],
-  exact [expr inv_pow₀ _ _]
-end
+theorem le_mul_pow_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F) (h : 0 < p.radius) :
+  ∃ (C r : _)(hC : 0 < C)(hr : 0 < r), ∀ n, ∥p n∥ ≤ C*r ^ n :=
+  by 
+    rcases Ennreal.lt_iff_exists_nnreal_btwn.1 h with ⟨r, r0, rlt⟩
+    have rpos : 0 < (r : ℝ)
+    ·
+      simp [Ennreal.coe_pos.1 r0]
+    rcases norm_le_div_pow_of_pos_of_lt_radius p rpos rlt with ⟨C, Cpos, hCp⟩
+    refine'
+      ⟨C, r⁻¹, Cpos,
+        by 
+          simp [rpos],
+        fun n => _⟩
+    convert hCp n 
+    exact inv_pow₀ _ _
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The radius of the sum of two formal series is at least the minimum of their two radii. -/
-theorem min_radius_le_radius_add
-(p q : formal_multilinear_series 𝕜 E F) : «expr ≤ »(min p.radius q.radius, «expr + »(p, q).radius) :=
-begin
-  refine [expr ennreal.le_of_forall_nnreal_lt (λ r hr, _)],
-  rw [expr lt_min_iff] ["at", ident hr],
-  have [] [] [":=", expr ((p.is_o_one_of_lt_radius hr.1).add (q.is_o_one_of_lt_radius hr.2)).is_O],
-  refine [expr «expr + »(p, q).le_radius_of_is_O («expr $ »(is_O_of_le _, λ n, _).trans this)],
-  rw ["[", "<-", expr add_mul, ",", expr normed_field.norm_mul, ",", expr normed_field.norm_mul, ",", expr norm_norm, "]"] [],
-  exact [expr mul_le_mul_of_nonneg_right ((norm_add_le _ _).trans (le_abs_self _)) (norm_nonneg _)]
-end
+theorem min_radius_le_radius_add (p q : FormalMultilinearSeries 𝕜 E F) : min p.radius q.radius ≤ (p+q).radius :=
+  by 
+    refine' Ennreal.le_of_forall_nnreal_lt fun r hr => _ 
+    rw [lt_min_iff] at hr 
+    have  := ((p.is_o_one_of_lt_radius hr.1).add (q.is_o_one_of_lt_radius hr.2)).IsO 
+    refine' (p+q).le_radius_of_is_O ((is_O_of_le _$ fun n => _).trans this)
+    rw [←add_mulₓ, NormedField.norm_mul, NormedField.norm_mul, norm_norm]
+    exact mul_le_mul_of_nonneg_right ((norm_add_le _ _).trans (le_abs_self _)) (norm_nonneg _)
 
 @[simp]
 theorem radius_neg (p : FormalMultilinearSeries 𝕜 E F) : (-p).radius = p.radius :=
@@ -304,7 +301,7 @@ theorem radius_neg (p : FormalMultilinearSeries 𝕜 E F) : (-p).radius = p.radi
 /-- Given a formal multilinear series `p` and a vector `x`, then `p.sum x` is the sum `Σ pₙ xⁿ`. A
 priori, it only behaves well when `∥x∥ < p.radius`. -/
 protected def Sum (p : FormalMultilinearSeries 𝕜 E F) (x : E) : F :=
-  ∑'n : ℕ, p n fun i => x
+  ∑' n : ℕ, p n fun i => x
 
 protected theorem HasSum [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
   (hx : x ∈ Emetric.Ball (0 : E) p.radius) : HasSum (fun n : ℕ => p n fun _ => x) (p.sum x) :=
@@ -313,7 +310,7 @@ protected theorem HasSum [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F
 /-- Given a formal multilinear series `p` and a vector `x`, then `p.partial_sum n x` is the sum
 `Σ pₖ xᵏ` for `k ∈ {0,..., n-1}`. -/
 def partial_sum (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) (x : E) : F :=
-  ∑k in Finset.range n, p k fun i : Finₓ k => x
+  ∑ k in Finset.range n, p k fun i : Finₓ k => x
 
 /-- The partial sums of a formal multilinear series are continuous. -/
 theorem partial_sum_continuous (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) : Continuous (p.partial_sum n) :=
@@ -380,7 +377,7 @@ theorem HasFpowerSeriesOnBall.mono (hf : HasFpowerSeriesOnBall f p x r) (r'_pos 
   ⟨le_transₓ hr hf.1, r'_pos, fun y hy => hf.has_sum (Emetric.ball_subset_ball hr hy)⟩
 
 protected theorem HasFpowerSeriesAt.eventually (hf : HasFpowerSeriesAt f p x) :
-  ∀ᶠr : ℝ≥0∞ in 𝓝[Ioi 0] 0, HasFpowerSeriesOnBall f p x r :=
+  ∀ᶠ r : ℝ≥0∞ in 𝓝[Ioi 0] 0, HasFpowerSeriesOnBall f p x r :=
   let ⟨r, hr⟩ := hf 
   mem_of_superset (Ioo_mem_nhds_within_Ioi (left_mem_Ico.2 hr.r_pos))$ fun r' hr' => hr.mono hr'.1 hr'.2.le
 
@@ -429,91 +426,102 @@ theorem AnalyticAt.sub (hf : AnalyticAt 𝕜 f x) (hg : AnalyticAt 𝕜 g x) : A
   by 
     simpa only [sub_eq_add_neg] using hf.add hg.neg
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_fpower_series_on_ball.coeff_zero
-(hf : has_fpower_series_on_ball f pf x r)
-(v : fin 0 → E) : «expr = »(pf 0 v, f x) :=
-begin
-  have [ident v_eq] [":", expr «expr = »(v, λ i, 0)] [":=", expr subsingleton.elim _ _],
-  have [ident zero_mem] [":", expr «expr ∈ »((0 : E), emetric.ball (0 : E) r)] [],
-  by simp [] [] [] ["[", expr hf.r_pos, "]"] [] [],
-  have [] [":", expr ∀ i «expr ≠ » 0, «expr = »(pf i (λ j, 0), 0)] [],
-  { assume [binders (i hi)],
-    have [] [":", expr «expr < »(0, i)] [":=", expr pos_iff_ne_zero.2 hi],
-    exact [expr continuous_multilinear_map.map_coord_zero _ (⟨0, this⟩ : fin i) rfl] },
-  have [ident A] [] [":=", expr (hf.has_sum zero_mem).unique (has_sum_single _ this)],
-  simpa [] [] [] ["[", expr v_eq, "]"] [] ["using", expr A.symm]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≠ » 0)
+theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Finₓ 0 → E) : pf 0 v = f x :=
+  by 
+    have v_eq : v = fun i => 0 := Subsingleton.elimₓ _ _ 
+    have zero_mem : (0 : E) ∈ Emetric.Ball (0 : E) r
+    ·
+      simp [hf.r_pos]
+    have  : ∀ i _ : i ≠ 0, (pf i fun j => 0) = 0
+    ·
+      intro i hi 
+      have  : 0 < i := pos_iff_ne_zero.2 hi 
+      exact ContinuousMultilinearMap.map_coord_zero _ (⟨0, this⟩ : Finₓ i) rfl 
+    have A := (hf.has_sum zero_mem).unique (has_sum_single _ this)
+    simpa [v_eq] using A.symm
 
 theorem HasFpowerSeriesAt.coeff_zero (hf : HasFpowerSeriesAt f pf x) (v : Finₓ 0 → E) : pf 0 v = f x :=
   let ⟨rf, hrf⟩ := hf 
   hrf.coeff_zero v
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » metric.ball (0 : E) r')
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
 sums of this power series on strict subdisks of the disk of convergence.
 
 This version provides an upper estimate that decreases both in `∥y∥` and `n`. See also
 `has_fpower_series_on_ball.uniform_geometric_approx` for a weaker version. -/
-theorem has_fpower_series_on_ball.uniform_geometric_approx'
-{r' : «exprℝ≥0»()}
-(hf : has_fpower_series_on_ball f p x r)
-(h : «expr < »((r' : «exprℝ≥0∞»()), r)) : «expr∃ , »((a «expr ∈ » Ioo (0 : exprℝ()) 1)
- (C «expr > » 0), ∀
- y «expr ∈ » metric.ball (0 : E) r', ∀
- n, «expr ≤ »(«expr∥ ∥»(«expr - »(f «expr + »(x, y), p.partial_sum n y)), «expr * »(C, «expr ^ »(«expr * »(a, «expr / »(«expr∥ ∥»(y), r')), n)))) :=
-begin
-  obtain ["⟨", ident a, ",", ident ha, ",", ident C, ",", ident hC, ",", ident hp, "⟩", ":", expr «expr∃ , »((a «expr ∈ » Ioo (0 : exprℝ()) 1)
-    (C «expr > » 0), ∀
-    n, «expr ≤ »(«expr * »(«expr∥ ∥»(p n), «expr ^ »(r', n)), «expr * »(C, «expr ^ »(a, n)))), ":=", expr p.norm_mul_pow_le_mul_pow_of_lt_radius (h.trans_le hf.r_le)],
-  refine [expr ⟨a, ha, «expr / »(C, «expr - »(1, a)), div_pos hC (sub_pos.2 ha.2), λ y hy n, _⟩],
-  have [ident yr'] [":", expr «expr < »(«expr∥ ∥»(y), r')] [],
-  by { rw [expr ball_zero_eq] ["at", ident hy],
-    exact [expr hy] },
-  have [ident hr'0] [":", expr «expr < »(0, (r' : exprℝ()))] [],
-  from [expr (norm_nonneg _).trans_lt yr'],
-  have [] [":", expr «expr ∈ »(y, emetric.ball (0 : E) r)] [],
-  { refine [expr mem_emetric_ball_zero_iff.2 (lt_trans _ h)],
-    exact_mod_cast [expr yr'] },
-  rw ["[", expr norm_sub_rev, ",", "<-", expr mul_div_right_comm, "]"] [],
-  have [ident ya] [":", expr «expr ≤ »(«expr * »(a, «expr / »(«expr∥ ∥»(y), «expr↑ »(r'))), a)] [],
-  from [expr mul_le_of_le_one_right ha.1.le (div_le_one_of_le yr'.le r'.coe_nonneg)],
-  suffices [] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(p.partial_sum n y, f «expr + »(x, y))), «expr / »(«expr * »(C, «expr ^ »(«expr * »(a, «expr / »(«expr∥ ∥»(y), r')), n)), «expr - »(1, «expr * »(a, «expr / »(«expr∥ ∥»(y), r')))))],
-  { refine [expr this.trans _],
-    apply_rules ["[", expr div_le_div_of_le_left, ",", expr sub_pos.2, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr pow_nonneg, ",", expr hC.lt.le, ",", expr ha.1.le, ",", expr norm_nonneg, ",", expr nnreal.coe_nonneg, ",", expr ha.2, ",", expr (sub_le_sub_iff_left _).2, "]"]; apply_instance },
-  apply [expr norm_sub_le_of_geometric_bound_of_has_sum (ya.trans_lt ha.2) _ (hf.has_sum this)],
-  assume [binders (n)],
-  calc
-    «expr ≤ »(«expr∥ ∥»(p n (λ
-       i : fin n, y)), «expr * »(«expr∥ ∥»(p n), «expr∏ , »((i : fin n), «expr∥ ∥»(y)))) : continuous_multilinear_map.le_op_norm _ _
-    «expr = »(..., «expr * »(«expr * »(«expr∥ ∥»(p n), «expr ^ »(r', n)), «expr ^ »(«expr / »(«expr∥ ∥»(y), r'), n))) : by field_simp [] ["[", expr hr'0.ne', ",", expr mul_right_comm, "]"] [] []
-    «expr ≤ »(..., «expr * »(«expr * »(C, «expr ^ »(a, n)), «expr ^ »(«expr / »(«expr∥ ∥»(y), r'), n))) : mul_le_mul_of_nonneg_right (hp n) (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _)
-    «expr ≤ »(..., «expr * »(C, «expr ^ »(«expr * »(a, «expr / »(«expr∥ ∥»(y), r')), n))) : by rw ["[", expr mul_pow, ",", expr mul_assoc, "]"] []
-end
+theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' :  ℝ≥0 } (hf : HasFpowerSeriesOnBall f p x r)
+  (h : (r' : ℝ≥0∞) < r) :
+  ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1)(C : _)(_ : C > 0),
+    ∀ y _ : y ∈ Metric.Ball (0 : E) r', ∀ n, ∥f (x+y) - p.partial_sum n y∥ ≤ C*(a*∥y∥ / r') ^ n :=
+  by 
+    obtain ⟨a, ha, C, hC, hp⟩ : ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1)(C : _)(_ : C > 0), ∀ n, (∥p n∥*r' ^ n) ≤ C*a ^ n :=
+      p.norm_mul_pow_le_mul_pow_of_lt_radius (h.trans_le hf.r_le)
+    refine' ⟨a, ha, C / (1 - a), div_pos hC (sub_pos.2 ha.2), fun y hy n => _⟩
+    have yr' : ∥y∥ < r'
+    ·
+      ·
+        rw [ball_zero_eq] at hy 
+        exact hy 
+    have hr'0 : 0 < (r' : ℝ)
+    exact (norm_nonneg _).trans_lt yr' 
+    have  : y ∈ Emetric.Ball (0 : E) r
+    ·
+      refine' mem_emetric_ball_zero_iff.2 (lt_transₓ _ h)
+      exactModCast yr' 
+    rw [norm_sub_rev, ←mul_div_right_comm]
+    have ya : (a*∥y∥ / ↑r') ≤ a 
+    exact mul_le_of_le_one_right ha.1.le (div_le_one_of_le yr'.le r'.coe_nonneg)
+    suffices  : ∥p.partial_sum n y - f (x+y)∥ ≤ (C*(a*∥y∥ / r') ^ n) / (1 - a*∥y∥ / r')
+    ·
+      refine' this.trans _ 
+      applyRules [div_le_div_of_le_left, sub_pos.2, div_nonneg, mul_nonneg, pow_nonneg, hC.lt.le, ha.1.le, norm_nonneg,
+          Nnreal.coe_nonneg, ha.2, (sub_le_sub_iff_left _).2] <;>
+        infer_instance 
+    apply norm_sub_le_of_geometric_bound_of_has_sum (ya.trans_lt ha.2) _ (hf.has_sum this)
+    intro n 
+    calc ∥(p n) fun i : Finₓ n => y∥ ≤ ∥p n∥*∏ i : Finₓ n, ∥y∥ :=
+      ContinuousMultilinearMap.le_op_norm _ _ _ = (∥p n∥*r' ^ n)*(∥y∥ / r') ^ n :=
+      by 
+        fieldSimp [hr'0.ne', mul_right_commₓ]_ ≤ (C*a ^ n)*(∥y∥ / r') ^ n :=
+      mul_le_mul_of_nonneg_right (hp n)
+        (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _)_ ≤ C*(a*∥y∥ / r') ^ n :=
+      by 
+        rw [mul_powₓ, mul_assocₓ]
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » metric.ball (0 : E) r')
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » metric.ball (0 : E) r')
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
 sums of this power series on strict subdisks of the disk of convergence. -/
-theorem has_fpower_series_on_ball.uniform_geometric_approx
-{r' : «exprℝ≥0»()}
-(hf : has_fpower_series_on_ball f p x r)
-(h : «expr < »((r' : «exprℝ≥0∞»()), r)) : «expr∃ , »((a «expr ∈ » Ioo (0 : exprℝ()) 1)
- (C «expr > » 0), ∀
- y «expr ∈ » metric.ball (0 : E) r', ∀
- n, «expr ≤ »(«expr∥ ∥»(«expr - »(f «expr + »(x, y), p.partial_sum n y)), «expr * »(C, «expr ^ »(a, n)))) :=
-begin
-  obtain ["⟨", ident a, ",", ident ha, ",", ident C, ",", ident hC, ",", ident hp, "⟩", ":", expr «expr∃ , »((a «expr ∈ » Ioo (0 : exprℝ()) 1)
-    (C «expr > » 0), ∀
-    y «expr ∈ » metric.ball (0 : E) r', ∀
-    n, «expr ≤ »(«expr∥ ∥»(«expr - »(f «expr + »(x, y), p.partial_sum n y)), «expr * »(C, «expr ^ »(«expr * »(a, «expr / »(«expr∥ ∥»(y), r')), n))))],
-  from [expr hf.uniform_geometric_approx' h],
-  refine [expr ⟨a, ha, C, hC, λ y hy n, (hp y hy n).trans _⟩],
-  have [ident yr'] [":", expr «expr < »(«expr∥ ∥»(y), r')] [],
-  by rwa [expr ball_zero_eq] ["at", ident hy],
-  refine [expr mul_le_mul_of_nonneg_left (pow_le_pow_of_le_left _ _ _) hC.lt.le],
-  exacts ["[", expr mul_nonneg ha.1.le (div_nonneg (norm_nonneg y) r'.coe_nonneg), ",", expr mul_le_of_le_one_right ha.1.le (div_le_one_of_le yr'.le r'.coe_nonneg), "]"]
-end
+theorem HasFpowerSeriesOnBall.uniform_geometric_approx {r' :  ℝ≥0 } (hf : HasFpowerSeriesOnBall f p x r)
+  (h : (r' : ℝ≥0∞) < r) :
+  ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1)(C : _)(_ : C > 0),
+    ∀ y _ : y ∈ Metric.Ball (0 : E) r', ∀ n, ∥f (x+y) - p.partial_sum n y∥ ≤ C*a ^ n :=
+  by 
+    obtain ⟨a, ha, C, hC, hp⟩ :
+      ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1)(C : _)(_ : C > 0),
+        ∀ y _ : y ∈ Metric.Ball (0 : E) r', ∀ n, ∥f (x+y) - p.partial_sum n y∥ ≤ C*(a*∥y∥ / r') ^ n 
+    exact hf.uniform_geometric_approx' h 
+    refine' ⟨a, ha, C, hC, fun y hy n => (hp y hy n).trans _⟩
+    have yr' : ∥y∥ < r'
+    ·
+      rwa [ball_zero_eq] at hy 
+    refine' mul_le_mul_of_nonneg_left (pow_le_pow_of_le_left _ _ _) hC.lt.le 
+    exacts[mul_nonneg ha.1.le (div_nonneg (norm_nonneg y) r'.coe_nonneg),
+      mul_le_of_le_one_right ha.1.le (div_le_one_of_le yr'.le r'.coe_nonneg)]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » metric.ball (0 : E) r')
 /-- Taylor formula for an analytic function, `is_O` version. -/
 theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x) (n : ℕ) :
   is_O (fun y : E => f (x+y) - p.partial_sum n y) (fun y => ∥y∥ ^ n) (𝓝 0) :=
@@ -534,69 +542,81 @@ theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x
 
 attribute [-instance] Unique.subsingleton Pi.subsingleton
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » emetric.ball (x, x) r')
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. This lemma formulates this property using `is_O` and
 `filter.principal` on `E × E`. -/
-theorem has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal
-(hf : has_fpower_series_on_ball f p x r)
-(hr : «expr < »(r', r)) : is_O (λ
- y : «expr × »(E, E), «expr - »(«expr - »(f y.1, f y.2), p 1 (λ
-   _, «expr - »(y.1, y.2)))) (λ
- y, «expr * »(«expr∥ ∥»(«expr - »(y, (x, x))), «expr∥ ∥»(«expr - »(y.1, y.2)))) «expr $ »(expr𝓟(), emetric.ball (x, x) r') :=
-begin
-  lift [expr r'] ["to", expr «exprℝ≥0»()] ["using", expr ne_top_of_lt hr] [],
-  rcases [expr (zero_le r').eq_or_lt, "with", ident rfl, "|", ident hr'0],
-  { simp [] [] ["only"] ["[", expr is_O_bot, ",", expr emetric.ball_zero, ",", expr principal_empty, ",", expr ennreal.coe_zero, "]"] [] [] },
-  obtain ["⟨", ident a, ",", ident ha, ",", ident C, ",", ident hC, ":", expr «expr < »(0, C), ",", ident hp, "⟩", ":", expr «expr∃ , »((a «expr ∈ » Ioo (0 : exprℝ()) 1)
-    (C «expr > » 0), ∀
-    n : exprℕ(), «expr ≤ »(«expr * »(«expr∥ ∥»(p n), «expr ^ »(«expr↑ »(r'), n)), «expr * »(C, «expr ^ »(a, n))))],
-  from [expr p.norm_mul_pow_le_mul_pow_of_lt_radius (hr.trans_le hf.r_le)],
-  simp [] [] ["only"] ["[", "<-", expr le_div_iff (pow_pos (nnreal.coe_pos.2 hr'0) _), "]"] [] ["at", ident hp],
-  set [] [ident L] [":", expr «expr × »(E, E) → exprℝ()] [":="] [expr λ
-   y, «expr * »(«expr * »(«expr * »(C, «expr ^ »(«expr / »(a, r'), 2)), «expr * »(«expr∥ ∥»(«expr - »(y, (x, x))), «expr∥ ∥»(«expr - »(y.1, y.2)))), «expr + »(«expr / »(a, «expr ^ »(«expr - »(1, a), 2)), «expr / »(2, «expr - »(1, a))))] [],
-  have [ident hL] [":", expr ∀
-   y «expr ∈ » emetric.ball (x, x) r', «expr ≤ »(«expr∥ ∥»(«expr - »(«expr - »(f y.1, f y.2), p 1 (λ
-       _, «expr - »(y.1, y.2)))), L y)] [],
-  { intros [ident y, ident hy'],
-    have [ident hy] [":", expr «expr ∈ »(y, (emetric.ball x r).prod (emetric.ball x r))] [],
-    { rw ["[", expr emetric.ball_prod_same, "]"] [],
-      exact [expr emetric.ball_subset_ball hr.le hy'] },
-    set [] [ident A] [":", expr exprℕ() → F] [":="] [expr λ
-     n, «expr - »(p n (λ _, «expr - »(y.1, x)), p n (λ _, «expr - »(y.2, x)))] [],
-    have [ident hA] [":", expr has_sum (λ
-      n, A «expr + »(n, 2)) «expr - »(«expr - »(f y.1, f y.2), p 1 (λ _, «expr - »(y.1, y.2)))] [],
-    { convert [] [expr (has_sum_nat_add_iff' 2).2 ((hf.has_sum_sub hy.1).sub (hf.has_sum_sub hy.2))] ["using", 1],
-      rw ["[", expr finset.sum_range_succ, ",", expr finset.sum_range_one, ",", expr hf.coeff_zero, ",", expr hf.coeff_zero, ",", expr sub_self, ",", expr zero_add, ",", "<-", expr subsingleton.pi_single_eq (0 : fin 1) «expr - »(y.1, x), ",", expr pi.single, ",", "<-", expr subsingleton.pi_single_eq (0 : fin 1) «expr - »(y.2, x), ",", expr pi.single, ",", "<-", expr (p 1).map_sub, ",", "<-", expr pi.single, ",", expr subsingleton.pi_single_eq, ",", expr sub_sub_sub_cancel_right, "]"] [] },
-    rw ["[", expr emetric.mem_ball, ",", expr edist_eq_coe_nnnorm_sub, ",", expr ennreal.coe_lt_coe, "]"] ["at", ident hy'],
-    set [] [ident B] [":", expr exprℕ() → exprℝ()] [":="] [expr λ
-     n, «expr * »(«expr * »(«expr * »(C, «expr ^ »(«expr / »(a, r'), 2)), «expr * »(«expr∥ ∥»(«expr - »(y, (x, x))), «expr∥ ∥»(«expr - »(y.1, y.2)))), «expr * »(«expr + »(n, 2), «expr ^ »(a, n)))] [],
-    have [ident hAB] [":", expr ∀
-     n, «expr ≤ »(«expr∥ ∥»(A «expr + »(n, 2)), B n)] [":=", expr λ n, calc
-       «expr ≤ »(«expr∥ ∥»(A «expr + »(n, 2)), «expr * »(«expr * »(«expr * »(«expr∥ ∥»(p «expr + »(n, 2)), «expr↑ »(«expr + »(n, 2))), «expr ^ »(«expr∥ ∥»(«expr - »(y, (x, x))), «expr + »(n, 1))), «expr∥ ∥»(«expr - »(y.1, y.2)))) : by simpa [] [] ["only"] ["[", expr fintype.card_fin, ",", expr pi_norm_const, ",", expr prod.norm_def, ",", expr pi.sub_def, ",", expr prod.fst_sub, ",", expr prod.snd_sub, ",", expr sub_sub_sub_cancel_right, "]"] [] ["using", expr «expr $ »(p, «expr + »(n, 2)).norm_image_sub_le (λ
-         _, «expr - »(y.1, x)) (λ _, «expr - »(y.2, x))]
-       «expr = »(..., «expr * »(«expr * »(«expr∥ ∥»(p «expr + »(n, 2)), «expr ^ »(«expr∥ ∥»(«expr - »(y, (x, x))), n)), «expr * »(«expr * »(«expr↑ »(«expr + »(n, 2)), «expr∥ ∥»(«expr - »(y, (x, x)))), «expr∥ ∥»(«expr - »(y.1, y.2))))) : by { rw ["[", expr pow_succ «expr∥ ∥»(«expr - »(y, (x, x))), "]"] [],
-         ac_refl }
-       «expr ≤ »(..., «expr * »(«expr * »(«expr / »(«expr * »(C, «expr ^ »(a, «expr + »(n, 2))), «expr ^ »(r', «expr + »(n, 2))), «expr ^ »(r', n)), «expr * »(«expr * »(«expr↑ »(«expr + »(n, 2)), «expr∥ ∥»(«expr - »(y, (x, x)))), «expr∥ ∥»(«expr - »(y.1, y.2))))) : by apply_rules ["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul, ",", expr hp, ",", expr pow_le_pow_of_le_left, ",", expr hy'.le, ",", expr norm_nonneg, ",", expr pow_nonneg, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr nat.cast_nonneg, ",", expr hC.le, ",", expr r'.coe_nonneg, ",", expr ha.1.le, "]"]
-       «expr = »(..., B n) : by { field_simp [] ["[", expr B, ",", expr pow_succ, ",", expr hr'0.ne', "]"] [] [],
-         simp [] [] ["only"] ["[", expr mul_assoc, ",", expr mul_comm, ",", expr mul_left_comm, "]"] [] [] }],
-    have [ident hBL] [":", expr has_sum B (L y)] [],
-    { apply [expr has_sum.mul_left],
-      simp [] [] ["only"] ["[", expr add_mul, "]"] [] [],
-      have [] [":", expr «expr < »(«expr∥ ∥»(a), 1)] [],
-      by simp [] [] ["only"] ["[", expr real.norm_eq_abs, ",", expr abs_of_pos ha.1, ",", expr ha.2, "]"] [] [],
-      convert [] [expr (has_sum_coe_mul_geometric_of_norm_lt_1 this).add ((has_sum_geometric_of_norm_lt_1 this).mul_left 2)] [] },
-    exact [expr hA.norm_le_of_bounded hBL hAB] },
-  suffices [] [":", expr is_O L (λ
-    y, «expr * »(«expr∥ ∥»(«expr - »(y, (x, x))), «expr∥ ∥»(«expr - »(y.1, y.2)))) (expr𝓟() (emetric.ball (x, x) r'))],
-  { refine [expr (is_O.of_bound 1 «expr $ »(eventually_principal.2, λ y hy, _)).trans this],
-    rw [expr one_mul] [],
-    exact [expr (hL y hy).trans (le_abs_self _)] },
-  simp_rw ["[", expr L, ",", expr mul_right_comm _ «expr * »(_, _), "]"] [],
-  exact [expr (is_O_refl _ _).const_mul_left _]
-end
+theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : HasFpowerSeriesOnBall f p x r)
+  (hr : r' < r) :
+  is_O (fun y : E × E => f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) (fun y => ∥y - (x, x)∥*∥y.1 - y.2∥)
+    (𝓟$ Emetric.Ball (x, x) r') :=
+  by 
+    lift r' to  ℝ≥0  using ne_top_of_lt hr 
+    rcases(zero_le r').eq_or_lt with (rfl | hr'0)
+    ·
+      simp only [is_O_bot, Emetric.ball_zero, principal_empty, Ennreal.coe_zero]
+    obtain ⟨a, ha, C, hC : 0 < C, hp⟩ :
+      ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1)(C : _)(_ : C > 0), ∀ n : ℕ, (∥p n∥*↑r' ^ n) ≤ C*a ^ n 
+    exact p.norm_mul_pow_le_mul_pow_of_lt_radius (hr.trans_le hf.r_le)
+    simp only [←le_div_iff (pow_pos (Nnreal.coe_pos.2 hr'0) _)] at hp 
+    set L : E × E → ℝ := fun y => ((C*(a / r') ^ 2)*∥y - (x, x)∥*∥y.1 - y.2∥)*(a / (1 - a) ^ 2)+2 / (1 - a)
+    have hL : ∀ y _ : y ∈ Emetric.Ball (x, x) r', ∥f y.1 - f y.2 - p 1 fun _ => y.1 - y.2∥ ≤ L y
+    ·
+      intro y hy' 
+      have hy : y ∈ (Emetric.Ball x r).Prod (Emetric.Ball x r)
+      ·
+        rw [Emetric.ball_prod_same]
+        exact Emetric.ball_subset_ball hr.le hy' 
+      set A : ℕ → F := fun n => (p n fun _ => y.1 - x) - p n fun _ => y.2 - x 
+      have hA : HasSum (fun n => A (n+2)) (f y.1 - f y.2 - p 1 fun _ => y.1 - y.2)
+      ·
+        convert (has_sum_nat_add_iff' 2).2 ((hf.has_sum_sub hy.1).sub (hf.has_sum_sub hy.2)) using 1
+        rw [Finset.sum_range_succ, Finset.sum_range_one, hf.coeff_zero, hf.coeff_zero, sub_self, zero_addₓ,
+          ←Subsingleton.pi_single_eq (0 : Finₓ 1) (y.1 - x), Pi.single,
+          ←Subsingleton.pi_single_eq (0 : Finₓ 1) (y.2 - x), Pi.single, ←(p 1).map_sub, ←Pi.single,
+          Subsingleton.pi_single_eq, sub_sub_sub_cancel_right]
+      rw [Emetric.mem_ball, edist_eq_coe_nnnorm_sub, Ennreal.coe_lt_coe] at hy' 
+      set B : ℕ → ℝ := fun n => ((C*(a / r') ^ 2)*∥y - (x, x)∥*∥y.1 - y.2∥)*(n+2)*a ^ n 
+      have hAB : ∀ n, ∥A (n+2)∥ ≤ B n :=
+        fun n =>
+          calc ∥A (n+2)∥ ≤ ((∥p (n+2)∥*↑n+2)*∥y - (x, x)∥ ^ n+1)*∥y.1 - y.2∥ :=
+            by 
+              simpa only [Fintype.card_fin, pi_norm_const, Prod.norm_def, Pi.sub_def, Prod.fst_sub, Prod.snd_sub,
+                sub_sub_sub_cancel_right] using (p$ n+2).norm_image_sub_le (fun _ => y.1 - x) fun _ => y.2 - x 
+            _ = (∥p (n+2)∥*∥y - (x, x)∥ ^ n)*((↑n+2)*∥y - (x, x)∥)*∥y.1 - y.2∥ :=
+            by 
+              rw [pow_succₓ ∥y - (x, x)∥]
+              acRfl 
+            _ ≤ (((C*a ^ n+2) / r' ^ n+2)*r' ^ n)*((↑n+2)*∥y - (x, x)∥)*∥y.1 - y.2∥ :=
+            by 
+              applyRules [mul_le_mul_of_nonneg_right, mul_le_mul, hp, pow_le_pow_of_le_left, hy'.le, norm_nonneg,
+                pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le, r'.coe_nonneg, ha.1.le]
+            _ = B n :=
+            by 
+              fieldSimp [B, pow_succₓ, hr'0.ne']
+              simp only [mul_assocₓ, mul_commₓ, mul_left_commₓ]
+            
+      have hBL : HasSum B (L y)
+      ·
+        apply HasSum.mul_left 
+        simp only [add_mulₓ]
+        have  : ∥a∥ < 1
+        ·
+          simp only [Real.norm_eq_abs, abs_of_pos ha.1, ha.2]
+        convert (has_sum_coe_mul_geometric_of_norm_lt_1 this).add ((has_sum_geometric_of_norm_lt_1 this).mul_left 2)
+      exact hA.norm_le_of_bounded hBL hAB 
+    suffices  : is_O L (fun y => ∥y - (x, x)∥*∥y.1 - y.2∥) (𝓟 (Emetric.Ball (x, x) r'))
+    ·
+      refine' (is_O.of_bound 1 (eventually_principal.2$ fun y hy => _)).trans this 
+      rw [one_mulₓ]
+      exact (hL y hy).trans (le_abs_self _)
+    simpRw [L, mul_right_commₓ _ (_*_)]
+    exact (is_O_refl _ _).const_mul_left _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. -/
@@ -619,44 +639,39 @@ theorem HasFpowerSeriesAt.is_O_image_sub_norm_mul_norm_sub (hf : HasFpowerSeries
     refine' (hf.is_O_image_sub_image_sub_deriv_principal h).mono _ 
     exact le_principal_iff.2 (Emetric.ball_mem_nhds _ r'0)
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » Ioo (0 : exprℝ()) 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » metric.ball (0 : E) r')
 /-- If a function admits a power series expansion at `x`, then it is the uniform limit of the
 partial sums of this power series on strict subdisks of the disk of convergence, i.e., `f (x + y)`
 is the uniform limit of `p.partial_sum n y` there. -/
-theorem has_fpower_series_on_ball.tendsto_uniformly_on
-{r' : «exprℝ≥0»()}
-(hf : has_fpower_series_on_ball f p x r)
-(h : «expr < »((r' : «exprℝ≥0∞»()), r)) : tendsto_uniformly_on (λ
- n y, p.partial_sum n y) (λ y, f «expr + »(x, y)) at_top (metric.ball (0 : E) r') :=
-begin
-  obtain ["⟨", ident a, ",", ident ha, ",", ident C, ",", ident hC, ",", ident hp, "⟩", ":", expr «expr∃ , »((a «expr ∈ » Ioo (0 : exprℝ()) 1)
-    (C «expr > » 0), ∀
-    y «expr ∈ » metric.ball (0 : E) r', ∀
-    n, «expr ≤ »(«expr∥ ∥»(«expr - »(f «expr + »(x, y), p.partial_sum n y)), «expr * »(C, «expr ^ »(a, n))))],
-  from [expr hf.uniform_geometric_approx h],
-  refine [expr metric.tendsto_uniformly_on_iff.2 (λ ε εpos, _)],
-  have [ident L] [":", expr tendsto (λ
-    n, «expr * »((C : exprℝ()), «expr ^ »(a, n))) at_top (expr𝓝() «expr * »((C : exprℝ()), 0))] [":=", expr tendsto_const_nhds.mul (tendsto_pow_at_top_nhds_0_of_lt_1 ha.1.le ha.2)],
-  rw [expr mul_zero] ["at", ident L],
-  refine [expr (L.eventually (gt_mem_nhds εpos)).mono (λ n hn y hy, _)],
-  rw [expr dist_eq_norm] [],
-  exact [expr (hp y hy n).trans_lt hn]
-end
+theorem HasFpowerSeriesOnBall.tendsto_uniformly_on {r' :  ℝ≥0 } (hf : HasFpowerSeriesOnBall f p x r)
+  (h : (r' : ℝ≥0∞) < r) :
+  TendstoUniformlyOn (fun n y => p.partial_sum n y) (fun y => f (x+y)) at_top (Metric.Ball (0 : E) r') :=
+  by 
+    obtain ⟨a, ha, C, hC, hp⟩ :
+      ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1)(C : _)(_ : C > 0),
+        ∀ y _ : y ∈ Metric.Ball (0 : E) r', ∀ n, ∥f (x+y) - p.partial_sum n y∥ ≤ C*a ^ n 
+    exact hf.uniform_geometric_approx h 
+    refine' Metric.tendsto_uniformly_on_iff.2 fun ε εpos => _ 
+    have L : tendsto (fun n => (C : ℝ)*a ^ n) at_top (𝓝 ((C : ℝ)*0)) :=
+      tendsto_const_nhds.mul (tendsto_pow_at_top_nhds_0_of_lt_1 ha.1.le ha.2)
+    rw [mul_zero] at L 
+    refine' (L.eventually (gt_mem_nhds εpos)).mono fun n hn y hy => _ 
+    rw [dist_eq_norm]
+    exact (hp y hy n).trans_lt hn
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function admits a power series expansion at `x`, then it is the locally uniform limit of
 the partial sums of this power series on the disk of convergence, i.e., `f (x + y)`
 is the locally uniform limit of `p.partial_sum n y` there. -/
-theorem has_fpower_series_on_ball.tendsto_locally_uniformly_on
-(hf : has_fpower_series_on_ball f p x r) : tendsto_locally_uniformly_on (λ
- n y, p.partial_sum n y) (λ y, f «expr + »(x, y)) at_top (emetric.ball (0 : E) r) :=
-begin
-  assume [binders (u hu x hx)],
-  rcases [expr ennreal.lt_iff_exists_nnreal_btwn.1 hx, "with", "⟨", ident r', ",", ident xr', ",", ident hr', "⟩"],
-  have [] [":", expr «expr ∈ »(emetric.ball (0 : E) r', expr𝓝() x)] [":=", expr is_open.mem_nhds emetric.is_open_ball xr'],
-  refine [expr ⟨emetric.ball (0 : E) r', mem_nhds_within_of_mem_nhds this, _⟩],
-  simpa [] [] [] ["[", expr metric.emetric_ball_nnreal, "]"] [] ["using", expr hf.tendsto_uniformly_on hr' u hu]
-end
+theorem HasFpowerSeriesOnBall.tendsto_locally_uniformly_on (hf : HasFpowerSeriesOnBall f p x r) :
+  TendstoLocallyUniformlyOn (fun n y => p.partial_sum n y) (fun y => f (x+y)) at_top (Emetric.Ball (0 : E) r) :=
+  by 
+    intro u hu x hx 
+    rcases Ennreal.lt_iff_exists_nnreal_btwn.1 hx with ⟨r', xr', hr'⟩
+    have  : Emetric.Ball (0 : E) r' ∈ 𝓝 x := IsOpen.mem_nhds Emetric.is_open_ball xr' 
+    refine' ⟨Emetric.Ball (0 : E) r', mem_nhds_within_of_mem_nhds this, _⟩
+    simpa [Metric.emetric_ball_nnreal] using hf.tendsto_uniformly_on hr' u hu
 
 /-- If a function admits a power series expansion at `x`, then it is the uniform limit of the
 partial sums of this power series on strict subdisks of the disk of convergence, i.e., `f y`
@@ -671,22 +686,21 @@ theorem HasFpowerSeriesOnBall.tendsto_uniformly_on' {r' :  ℝ≥0 } (hf : HasFp
       ext z 
       simp [dist_eq_norm]
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function admits a power series expansion at `x`, then it is the locally uniform limit of
 the  partial sums of this power series on the disk of convergence, i.e., `f y`
 is the locally uniform limit of `p.partial_sum n (y - x)` there. -/
-theorem has_fpower_series_on_ball.tendsto_locally_uniformly_on'
-(hf : has_fpower_series_on_ball f p x r) : tendsto_locally_uniformly_on (λ
- n y, p.partial_sum n «expr - »(y, x)) f at_top (emetric.ball (x : E) r) :=
-begin
-  have [ident A] [":", expr continuous_on (λ
-    y : E, «expr - »(y, x)) (emetric.ball (x : E) r)] [":=", expr (continuous_id.sub continuous_const).continuous_on],
-  convert [] [expr hf.tendsto_locally_uniformly_on.comp (λ y : E, «expr - »(y, x)) _ A] [],
-  { ext [] [ident z] [],
-    simp [] [] [] [] [] [] },
-  { assume [binders (z)],
-    simp [] [] [] ["[", expr edist_eq_coe_nnnorm, ",", expr edist_eq_coe_nnnorm_sub, "]"] [] [] }
-end
+theorem HasFpowerSeriesOnBall.tendsto_locally_uniformly_on' (hf : HasFpowerSeriesOnBall f p x r) :
+  TendstoLocallyUniformlyOn (fun n y => p.partial_sum n (y - x)) f at_top (Emetric.Ball (x : E) r) :=
+  by 
+    have A : ContinuousOn (fun y : E => y - x) (Emetric.Ball (x : E) r) :=
+      (continuous_id.sub continuous_const).ContinuousOn 
+    convert hf.tendsto_locally_uniformly_on.comp (fun y : E => y - x) _ A
+    ·
+      ext z 
+      simp 
+    ·
+      intro z 
+      simp [edist_eq_coe_nnnorm, edist_eq_coe_nnnorm_sub]
 
 /-- If a function admits a power series expansion on a disk, then it is continuous there. -/
 protected theorem HasFpowerSeriesOnBall.continuous_on (hf : HasFpowerSeriesOnBall f p x r) :
@@ -799,16 +813,16 @@ Given a formal multilinear series `p` and a point `x` in its ball of convergence
 `p.change_origin x` is a formal multilinear series such that
 `p.sum (x+y) = (p.change_origin x).sum y` when this makes sense. -/
 def change_origin_series (k : ℕ) : FormalMultilinearSeries 𝕜 E (E[×k]→L[𝕜] F) :=
-  fun l => ∑s : { s : Finset (Finₓ (k+l)) // Finset.card s = l }, p.change_origin_series_term k l s s.2
+  fun l => ∑ s : { s : Finset (Finₓ (k+l)) // Finset.card s = l }, p.change_origin_series_term k l s s.2
 
 theorem nnnorm_change_origin_series_le_tsum (k l : ℕ) :
-  ∥p.change_origin_series k l∥₊ ≤ ∑'x : { s : Finset (Finₓ (k+l)) // s.card = l }, ∥p (k+l)∥₊ :=
+  ∥p.change_origin_series k l∥₊ ≤ ∑' x : { s : Finset (Finₓ (k+l)) // s.card = l }, ∥p (k+l)∥₊ :=
   (nnnorm_sum_le _ _).trans_eq$
     by 
       simp only [tsum_fintype, nnnorm_change_origin_series_term]
 
 theorem nnnorm_change_origin_series_apply_le_tsum (k l : ℕ) (x : E) :
-  ∥p.change_origin_series k l fun _ => x∥₊ ≤ ∑'s : { s : Finset (Finₓ (k+l)) // s.card = l }, ∥p (k+l)∥₊*∥x∥₊ ^ l :=
+  ∥p.change_origin_series k l fun _ => x∥₊ ≤ ∑' s : { s : Finset (Finₓ (k+l)) // s.card = l }, ∥p (k+l)∥₊*∥x∥₊ ^ l :=
   by 
     rw [Nnreal.tsum_mul_right, ←Finₓ.prod_const]
     exact (p.change_origin_series k l).le_of_op_nnnorm_le _ (p.nnnorm_change_origin_series_le_tsum _ _)
@@ -829,7 +843,7 @@ The forward map sends `(k, l, s)` to `(k + l, s)` and the inverse map sends `(n,
 `(n - finset.card s, finset.card s, s)`. The actual definition is less readable because of problems
 with non-definitional equalities. -/
 @[simps]
-def change_origin_index_equiv : (Σk l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l }) ≃ Σn : ℕ, Finset (Finₓ n) :=
+def change_origin_index_equiv : (Σ k l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l }) ≃ Σ n : ℕ, Finset (Finₓ n) :=
   { toFun := fun s => ⟨s.1+s.2.1, s.2.2⟩,
     invFun :=
       fun s =>
@@ -846,50 +860,47 @@ def change_origin_index_equiv : (Σk l : ℕ, { s : Finset (Finₓ (k+l)) // s.c
               l' = l →
                 ∀ hkl : (k+l) = k'+l' hs',
                   (⟨k', l', ⟨Finset.map (Finₓ.cast hkl).toEquiv.toEmbedding s, hs'⟩⟩ :
-                    Σk l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l }) =
+                    Σ k l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l }) =
                     ⟨k, l, ⟨s, hs⟩⟩
         ·
           apply this <;> simp only [hs, add_tsub_cancel_right]
         rintro _ _ rfl rfl hkl hs' 
-        simp only [Equiv.refl_to_embedding, Finₓ.cast_refl, Finset.map_refl, eq_self_iff_true, OrderIso.refl_to_equiv,
+        simp only [Equivₓ.refl_to_embedding, Finₓ.cast_refl, Finset.map_refl, eq_self_iff_true, OrderIso.refl_to_equiv,
           and_selfₓ, heq_iff_eq],
     right_inv :=
       by 
         rintro ⟨n, s⟩
         simp [tsub_add_cancel_of_le (card_finset_fin_le s), Finₓ.cast_to_equiv] }
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem change_origin_series_summable_aux₁
-{r r' : «exprℝ≥0»()}
-(hr : «expr < »((«expr + »(r, r') : «exprℝ≥0∞»()), p.radius)) : summable (λ
- s : «exprΣ , »((k
-   l : exprℕ()), {s : finset (fin «expr + »(k, l)) // «expr = »(s.card, l)}), «expr * »(«expr * »(«expr∥ ∥₊»(p «expr + »(s.1, s.2.1)), «expr ^ »(r, s.2.1)), «expr ^ »(r', s.1))) :=
-begin
-  rw ["<-", expr change_origin_index_equiv.symm.summable_iff] [],
-  dsimp ["only"] ["[", expr («expr ∘ »), ",", expr change_origin_index_equiv_symm_apply_fst, ",", expr change_origin_index_equiv_symm_apply_snd_fst, "]"] [] [],
-  have [] [":", expr ∀
-   n : exprℕ(), has_sum (λ
-    s : finset (fin n), «expr * »(«expr * »(«expr∥ ∥₊»(p «expr + »(«expr - »(n, s.card), s.card)), «expr ^ »(r, s.card)), «expr ^ »(r', «expr - »(n, s.card)))) «expr * »(«expr∥ ∥₊»(p n), «expr ^ »(«expr + »(r, r'), n))] [],
-  { intro [ident n],
-    convert_to [expr has_sum (λ
-      s : finset (fin n), «expr * »(«expr∥ ∥₊»(p n), «expr * »(«expr ^ »(r, s.card), «expr ^ »(r', «expr - »(n, s.card))))) _] [],
-    { ext1 [] [ident s],
-      rw ["[", expr tsub_add_cancel_of_le (card_finset_fin_le _), ",", expr mul_assoc, "]"] [] },
-    rw ["<-", expr fin.sum_pow_mul_eq_add_pow] [],
-    exact [expr (has_sum_fintype _).mul_left _] },
-  refine [expr nnreal.summable_sigma.2 ⟨λ n, (this n).summable, _⟩],
-  simp [] [] ["only"] ["[", expr (this _).tsum_eq, "]"] [] [],
-  exact [expr p.summable_nnnorm_mul_pow hr]
-end
+theorem change_origin_series_summable_aux₁ {r r' :  ℝ≥0 } (hr : (r+r' : ℝ≥0∞) < p.radius) :
+  Summable fun s : Σ k l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l } => (∥p (s.1+s.2.1)∥₊*r ^ s.2.1)*r' ^ s.1 :=
+  by 
+    rw [←change_origin_index_equiv.symm.summable_iff]
+    dsimp only [· ∘ ·, change_origin_index_equiv_symm_apply_fst, change_origin_index_equiv_symm_apply_snd_fst]
+    have  :
+      ∀ n : ℕ,
+        HasSum (fun s : Finset (Finₓ n) => (∥p ((n - s.card)+s.card)∥₊*r ^ s.card)*r' ^ (n - s.card))
+          (∥p n∥₊*(r+r') ^ n)
+    ·
+      intro n 
+      convertTo HasSum (fun s : Finset (Finₓ n) => ∥p n∥₊*(r ^ s.card)*r' ^ (n - s.card)) _
+      ·
+        ext1 s 
+        rw [tsub_add_cancel_of_le (card_finset_fin_le _), mul_assocₓ]
+      rw [←Finₓ.sum_pow_mul_eq_add_pow]
+      exact (has_sum_fintype _).mul_left _ 
+    refine' Nnreal.summable_sigma.2 ⟨fun n => (this n).Summable, _⟩
+    simp only [(this _).tsum_eq]
+    exact p.summable_nnnorm_mul_pow hr
 
 theorem change_origin_series_summable_aux₂ (hr : (r : ℝ≥0∞) < p.radius) (k : ℕ) :
-  Summable fun s : Σl : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l } => ∥p (k+s.1)∥₊*r ^ s.1 :=
+  Summable fun s : Σ l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l } => ∥p (k+s.1)∥₊*r ^ s.1 :=
   by 
     rcases Ennreal.lt_iff_exists_add_pos_lt.1 hr with ⟨r', h0, hr'⟩
     simpa only [mul_inv_cancel_right₀ (pow_pos h0 _).ne'] using
       ((Nnreal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr')).1 k).mul_right ((r' ^ k)⁻¹)
 
-theorem change_origin_series_summable_aux₃ {r :  ℝ≥0 } (hr : «expr↑ » r < p.radius) (k : ℕ) :
+theorem change_origin_series_summable_aux₃ {r :  ℝ≥0 } (hr : ↑r < p.radius) (k : ℕ) :
   Summable fun l : ℕ => ∥p.change_origin_series k l∥₊*r ^ l :=
   by 
     refine' Nnreal.summable_of_le (fun n => _) (Nnreal.summable_sigma.1$ p.change_origin_series_summable_aux₂ hr k).2
@@ -899,34 +910,31 @@ theorem change_origin_series_summable_aux₃ {r :  ℝ≥0 } (hr : «expr↑ » 
 theorem le_change_origin_series_radius (k : ℕ) : p.radius ≤ (p.change_origin_series k).radius :=
   Ennreal.le_of_forall_nnreal_lt$ fun r hr => le_radius_of_summable_nnnorm _ (p.change_origin_series_summable_aux₃ hr k)
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nnnorm_change_origin_le
-(k : exprℕ())
-(h : «expr < »((«expr∥ ∥₊»(x) : «exprℝ≥0∞»()), p.radius)) : «expr ≤ »(«expr∥ ∥₊»(p.change_origin x k), «expr∑' , »((s : «exprΣ , »((l : exprℕ()), {s : finset (fin «expr + »(k, l)) // «expr = »(s.card, l)})), «expr * »(«expr∥ ∥₊»(p «expr + »(k, s.1)), «expr ^ »(«expr∥ ∥₊»(x), s.1)))) :=
-begin
-  refine [expr tsum_of_nnnorm_bounded _ (λ l, p.nnnorm_change_origin_series_apply_le_tsum k l x)],
-  have [] [] [":=", expr p.change_origin_series_summable_aux₂ h k],
-  refine [expr has_sum.sigma this.has_sum (λ l, _)],
-  exact [expr ((nnreal.summable_sigma.1 this).1 l).has_sum]
-end
+theorem nnnorm_change_origin_le (k : ℕ) (h : (∥x∥₊ : ℝ≥0∞) < p.radius) :
+  ∥p.change_origin x k∥₊ ≤ ∑' s : Σ l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l }, ∥p (k+s.1)∥₊*∥x∥₊ ^ s.1 :=
+  by 
+    refine' tsum_of_nnnorm_bounded _ fun l => p.nnnorm_change_origin_series_apply_le_tsum k l x 
+    have  := p.change_origin_series_summable_aux₂ h k 
+    refine' HasSum.sigma this.has_sum fun l => _ 
+    exact ((Nnreal.summable_sigma.1 this).1 l).HasSum
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The radius of convergence of `p.change_origin x` is at least `p.radius - ∥x∥`. In other words,
 `p.change_origin x` is well defined on the largest ball contained in the original ball of
 convergence.-/
-theorem change_origin_radius : «expr ≤ »(«expr - »(p.radius, «expr∥ ∥₊»(x)), (p.change_origin x).radius) :=
-begin
-  refine [expr ennreal.le_of_forall_pos_nnreal_lt (λ r h0 hr, _)],
-  rw ["[", expr lt_tsub_iff_right, ",", expr add_comm, "]"] ["at", ident hr],
-  have [ident hr'] [":", expr «expr < »((«expr∥ ∥₊»(x) : «exprℝ≥0∞»()), p.radius)] [],
-  from [expr (le_add_right le_rfl).trans_lt hr],
-  apply [expr le_radius_of_summable_nnnorm],
-  have [] [":", expr ∀
-   k : exprℕ(), «expr ≤ »(«expr * »(«expr∥ ∥₊»(p.change_origin x k), «expr ^ »(r, k)), «expr * »(«expr∑' , »((s : «exprΣ , »((l : exprℕ()), {s : finset (fin «expr + »(k, l)) // «expr = »(s.card, l)})), «expr * »(«expr∥ ∥₊»(p «expr + »(k, s.1)), «expr ^ »(«expr∥ ∥₊»(x), s.1))), «expr ^ »(r, k)))] [],
-  from [expr λ k, mul_le_mul_right' (p.nnnorm_change_origin_le k hr') «expr ^ »(r, k)],
-  refine [expr nnreal.summable_of_le this _],
-  simpa [] [] ["only"] ["[", "<-", expr nnreal.tsum_mul_right, "]"] [] ["using", expr (nnreal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr)).2]
-end
+theorem change_origin_radius : p.radius - ∥x∥₊ ≤ (p.change_origin x).radius :=
+  by 
+    refine' Ennreal.le_of_forall_pos_nnreal_lt fun r h0 hr => _ 
+    rw [lt_tsub_iff_right, add_commₓ] at hr 
+    have hr' : (∥x∥₊ : ℝ≥0∞) < p.radius 
+    exact (le_add_right le_rfl).trans_lt hr 
+    apply le_radius_of_summable_nnnorm 
+    have  :
+      ∀ k : ℕ,
+        (∥p.change_origin x k∥₊*r ^ k) ≤
+          (∑' s : Σ l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l }, ∥p (k+s.1)∥₊*∥x∥₊ ^ s.1)*r ^ k 
+    exact fun k => mul_le_mul_right' (p.nnnorm_change_origin_le k hr') (r ^ k)
+    refine' Nnreal.summable_of_le this _ 
+    simpa only [←Nnreal.tsum_mul_right] using (Nnreal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr)).2
 
 end 
 
@@ -937,58 +945,65 @@ theorem has_fpower_series_on_ball_change_origin (k : ℕ) (hr : 0 < p.radius) :
   have  := p.le_change_origin_series_radius k
   ((p.change_origin_series k).HasFpowerSeriesOnBall (hr.trans_le this)).mono hr this
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Summing the series `p.change_origin x` at a point `y` gives back `p (x + y)`-/
-theorem change_origin_eval
-(h : «expr < »((«expr + »(«expr∥ ∥₊»(x), «expr∥ ∥₊»(y)) : «exprℝ≥0∞»()), p.radius)) : «expr = »((p.change_origin x).sum y, p.sum «expr + »(x, y)) :=
-begin
-  have [ident radius_pos] [":", expr «expr < »(0, p.radius)] [":=", expr lt_of_le_of_lt (zero_le _) h],
-  have [ident x_mem_ball] [":", expr «expr ∈ »(x, emetric.ball (0 : E) p.radius)] [],
-  from [expr mem_emetric_ball_zero_iff.2 ((le_add_right le_rfl).trans_lt h)],
-  have [ident y_mem_ball] [":", expr «expr ∈ »(y, emetric.ball (0 : E) (p.change_origin x).radius)] [],
-  { refine [expr mem_emetric_ball_zero_iff.2 (lt_of_lt_of_le _ p.change_origin_radius)],
-    rwa ["[", expr lt_tsub_iff_right, ",", expr add_comm, "]"] [] },
-  have [ident x_add_y_mem_ball] [":", expr «expr ∈ »(«expr + »(x, y), emetric.ball (0 : E) p.radius)] [],
-  { refine [expr mem_emetric_ball_zero_iff.2 (lt_of_le_of_lt _ h)],
-    exact_mod_cast [expr nnnorm_add_le x y] },
-  set [] [ident f] [":", expr «exprΣ , »((k
-     l : exprℕ()), {s : finset (fin «expr + »(k, l)) // «expr = »(s.card, l)}) → F] [":="] [expr λ
-   s, p.change_origin_series_term s.1 s.2.1 s.2.2 s.2.2.2 (λ _, x) (λ _, y)] [],
-  have [ident hsf] [":", expr summable f] [],
-  { refine [expr summable_of_nnnorm_bounded _ (p.change_origin_series_summable_aux₁ h) _],
-    rintro ["⟨", ident k, ",", ident l, ",", ident s, ",", ident hs, "⟩"],
-    dsimp ["only"] ["[", expr subtype.coe_mk, "]"] [] [],
-    exact [expr p.nnnorm_change_origin_series_term_apply_le _ _ _ _ _ _] },
-  have [ident hf] [":", expr has_sum f ((p.change_origin x).sum y)] [],
-  { refine [expr has_sum.sigma_of_has_sum ((p.change_origin x).summable y_mem_ball).has_sum (λ k, _) hsf],
-    { dsimp ["only"] ["[", expr f, "]"] [] [],
-      refine [expr continuous_multilinear_map.has_sum_eval _ _],
-      have [] [] [":=", expr (p.has_fpower_series_on_ball_change_origin k radius_pos).has_sum x_mem_ball],
-      rw [expr zero_add] ["at", ident this],
-      refine [expr has_sum.sigma_of_has_sum this (λ l, _) _],
-      { simp [] [] ["only"] ["[", expr change_origin_series, ",", expr continuous_multilinear_map.sum_apply, "]"] [] [],
-        apply [expr has_sum_fintype] },
-      { refine [expr summable_of_nnnorm_bounded _ (p.change_origin_series_summable_aux₂ (mem_emetric_ball_zero_iff.1 x_mem_ball) k) (λ
-          s, _)],
-        refine [expr (continuous_multilinear_map.le_op_nnnorm _ _).trans_eq _],
-        simp [] [] [] [] [] [] } } },
-  refine [expr hf.unique (change_origin_index_equiv.symm.has_sum_iff.1 _)],
-  refine [expr has_sum.sigma_of_has_sum (p.has_sum x_add_y_mem_ball) (λ
-    n, _) (change_origin_index_equiv.symm.summable_iff.2 hsf)],
-  erw ["[", expr (p n).map_add_univ (λ _, x) (λ _, y), "]"] [],
-  convert [] [expr has_sum_fintype _] [],
-  ext1 [] [ident s],
-  dsimp ["only"] ["[", expr f, ",", expr change_origin_series_term, ",", expr («expr ∘ »), ",", expr change_origin_index_equiv_symm_apply_fst, ",", expr change_origin_index_equiv_symm_apply_snd_fst, ",", expr change_origin_index_equiv_symm_apply_snd_snd_coe, "]"] [] [],
-  rw [expr continuous_multilinear_map.curry_fin_finset_apply_const] [],
-  have [] [":", expr ∀
-   (m)
-   (hm : «expr = »(n, m)), «expr = »(p n (s.piecewise (λ
-      _, x) (λ _, y)), p m ((s.map (fin.cast hm).to_equiv.to_embedding).piecewise (λ _, x) (λ _, y)))] [],
-  { rintro [ident m, ident rfl],
-    simp [] [] [] [] [] [],
-    congr },
-  apply [expr this]
-end
+theorem change_origin_eval (h : (∥x∥₊+∥y∥₊ : ℝ≥0∞) < p.radius) : (p.change_origin x).Sum y = p.sum (x+y) :=
+  by 
+    have radius_pos : 0 < p.radius := lt_of_le_of_ltₓ (zero_le _) h 
+    have x_mem_ball : x ∈ Emetric.Ball (0 : E) p.radius 
+    exact mem_emetric_ball_zero_iff.2 ((le_add_right le_rfl).trans_lt h)
+    have y_mem_ball : y ∈ Emetric.Ball (0 : E) (p.change_origin x).radius
+    ·
+      refine' mem_emetric_ball_zero_iff.2 (lt_of_lt_of_leₓ _ p.change_origin_radius)
+      rwa [lt_tsub_iff_right, add_commₓ]
+    have x_add_y_mem_ball : (x+y) ∈ Emetric.Ball (0 : E) p.radius
+    ·
+      refine' mem_emetric_ball_zero_iff.2 (lt_of_le_of_ltₓ _ h)
+      exactModCast nnnorm_add_le x y 
+    set f : (Σ k l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l }) → F :=
+      fun s => p.change_origin_series_term s.1 s.2.1 s.2.2 s.2.2.2 (fun _ => x) fun _ => y 
+    have hsf : Summable f
+    ·
+      refine' summable_of_nnnorm_bounded _ (p.change_origin_series_summable_aux₁ h) _ 
+      rintro ⟨k, l, s, hs⟩
+      dsimp only [Subtype.coe_mk]
+      exact p.nnnorm_change_origin_series_term_apply_le _ _ _ _ _ _ 
+    have hf : HasSum f ((p.change_origin x).Sum y)
+    ·
+      refine' HasSum.sigma_of_has_sum ((p.change_origin x).Summable y_mem_ball).HasSum (fun k => _) hsf
+      ·
+        dsimp only [f]
+        refine' ContinuousMultilinearMap.has_sum_eval _ _ 
+        have  := (p.has_fpower_series_on_ball_change_origin k radius_pos).HasSum x_mem_ball 
+        rw [zero_addₓ] at this 
+        refine' HasSum.sigma_of_has_sum this (fun l => _) _
+        ·
+          simp only [change_origin_series, ContinuousMultilinearMap.sum_apply]
+          apply has_sum_fintype
+        ·
+          refine'
+            summable_of_nnnorm_bounded _
+              (p.change_origin_series_summable_aux₂ (mem_emetric_ball_zero_iff.1 x_mem_ball) k) fun s => _ 
+          refine' (ContinuousMultilinearMap.le_op_nnnorm _ _).trans_eq _ 
+          simp 
+    refine' hf.unique (change_origin_index_equiv.symm.has_sum_iff.1 _)
+    refine'
+      HasSum.sigma_of_has_sum (p.has_sum x_add_y_mem_ball) (fun n => _)
+        (change_origin_index_equiv.symm.summable_iff.2 hsf)
+    erw [(p n).map_add_univ (fun _ => x) fun _ => y]
+    convert has_sum_fintype _ 
+    ext1 s 
+    dsimp only [f, change_origin_series_term, · ∘ ·, change_origin_index_equiv_symm_apply_fst,
+      change_origin_index_equiv_symm_apply_snd_fst, change_origin_index_equiv_symm_apply_snd_snd_coe]
+    rw [ContinuousMultilinearMap.curry_fin_finset_apply_const]
+    have  :
+      ∀ m hm : n = m,
+        p n (s.piecewise (fun _ => x) fun _ => y) =
+          p m ((s.map (Finₓ.cast hm).toEquiv.toEmbedding).piecewise (fun _ => x) fun _ => y)
+    ·
+      rintro m rfl 
+      simp 
+      congr 
+    apply this
 
 end FormalMultilinearSeries
 
@@ -1021,29 +1036,33 @@ theorem HasFpowerSeriesOnBall.change_origin (hf : HasFpowerSeriesOnBall f p x r)
             refine' Emetric.ball_subset_ball (le_transₓ _ p.change_origin_radius) hz 
             exact tsub_le_tsub hf.r_le le_rfl }
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function admits a power series expansion `p` on an open ball `B (x, r)`, then
 it is analytic at every point of this ball. -/
-theorem has_fpower_series_on_ball.analytic_at_of_mem
-(hf : has_fpower_series_on_ball f p x r)
-(h : «expr ∈ »(y, emetric.ball x r)) : analytic_at 𝕜 f y :=
-begin
-  have [] [":", expr «expr < »((«expr∥ ∥₊»(«expr - »(y, x)) : «exprℝ≥0∞»()), r)] [],
-  by simpa [] [] [] ["[", expr edist_eq_coe_nnnorm_sub, "]"] [] ["using", expr h],
-  have [] [] [":=", expr hf.change_origin this],
-  rw ["[", expr add_sub_cancel'_right, "]"] ["at", ident this],
-  exact [expr this.analytic_at]
-end
+theorem HasFpowerSeriesOnBall.analytic_at_of_mem (hf : HasFpowerSeriesOnBall f p x r) (h : y ∈ Emetric.Ball x r) :
+  AnalyticAt 𝕜 f y :=
+  by 
+    have  : (∥y - x∥₊ : ℝ≥0∞) < r
+    ·
+      simpa [edist_eq_coe_nnnorm_sub] using h 
+    have  := hf.change_origin this 
+    rw [add_sub_cancel'_right] at this 
+    exact this.analytic_at
 
 variable (𝕜 f)
 
-/-- For any function `f` from a normed vector space to a Banach space, the set of points `x` such
-that `f` is analytic at `x` is open. -/
-theorem is_open_analytic_at : IsOpen { x | AnalyticAt 𝕜 f x } :=
-  by 
-    rw [is_open_iff_mem_nhds]
-    rintro x ⟨p, r, hr⟩
-    exact mem_of_superset (Emetric.ball_mem_nhds _ hr.r_pos) fun y hy => hr.analytic_at_of_mem hy
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    For any function `f` from a normed vector space to a Banach space, the set of points `x` such
+    that `f` is analytic at `x` is open. -/
+  theorem
+    is_open_analytic_at
+    : IsOpen { x | AnalyticAt 𝕜 f x }
+    :=
+      by
+        rw [ is_open_iff_mem_nhds ]
+          rintro x ⟨ p , r , hr ⟩
+          exact mem_of_superset Emetric.ball_mem_nhds _ hr.r_pos fun y hy => hr.analytic_at_of_mem hy
 
 end 
 

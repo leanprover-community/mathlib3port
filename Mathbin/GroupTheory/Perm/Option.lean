@@ -6,7 +6,7 @@ import Mathbin.Data.Equiv.Option
 -/
 
 
-open Equiv
+open Equivₓ
 
 theorem EquivFunctor.map_equiv_option_injective {α β : Type _} :
   Function.Injective (EquivFunctor.mapEquiv Option : α ≃ β → Option α ≃ Option β) :=
@@ -24,7 +24,7 @@ theorem map_equiv_option_one {α : Type _} : EquivFunctor.mapEquiv Option (1 : p
     simp [EquivFunctor.mapEquiv, EquivFunctor.map]
 
 @[simp]
-theorem map_equiv_option_refl {α : Type _} : EquivFunctor.mapEquiv Option (Equiv.refl α) = 1 :=
+theorem map_equiv_option_refl {α : Type _} : EquivFunctor.mapEquiv Option (Equivₓ.refl α) = 1 :=
   map_equiv_option_one
 
 @[simp]
@@ -35,7 +35,9 @@ theorem map_equiv_option_swap {α : Type _} [DecidableEq α] (x y : α) :
     ·
       simp [swap_apply_of_ne_of_ne]
     ·
-      byCases' hx : i = x <;> byCases' hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne, EquivFunctor.map]
+      byCases' hx : i = x 
+      simp [hx, swap_apply_of_ne_of_ne, EquivFunctor.map]
+      byCases' hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne, EquivFunctor.map]
 
 @[simp]
 theorem EquivFunctor.Option.sign {α : Type _} [DecidableEq α] [Fintype α] (e : perm α) :
@@ -48,48 +50,57 @@ theorem EquivFunctor.Option.sign {α : Type _} [DecidableEq α] [Fintype α] (e 
       intro f x y hne h 
       simp [h, hne, perm.mul_def, ←EquivFunctor.map_equiv_trans]
 
--- error in GroupTheory.Perm.Option: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem map_equiv_remove_none
-{α : Type*}
-[decidable_eq α]
-(σ : perm (option α)) : «expr = »(equiv_functor.map_equiv option (remove_none σ), «expr * »(swap none (σ none), σ)) :=
-begin
-  ext1 [] [ident x],
-  have [] [":", expr «expr = »(option.map «expr⇑ »(remove_none σ) x, swap none (σ none) (σ x))] [],
-  { cases [expr x] [],
-    { simp [] [] [] [] [] [] },
-    { cases [expr h, ":", expr σ (some x)] [],
-      { simp [] [] [] ["[", expr remove_none_none _ h, "]"] [] [] },
-      { have [ident hn] [":", expr «expr ≠ »(σ (some x), none)] [":=", expr by simp [] [] [] ["[", expr h, "]"] [] []],
-        have [ident hσn] [":", expr «expr ≠ »(σ (some x), σ none)] [":=", expr σ.injective.ne (by simp [] [] [] [] [] [])],
-        simp [] [] [] ["[", expr remove_none_some _ ⟨_, h⟩, ",", "<-", expr h, ",", expr swap_apply_of_ne_of_ne hn hσn, "]"] [] [] } } },
-  simpa [] [] [] [] [] ["using", expr this]
-end
+theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : perm (Option α)) :
+  EquivFunctor.mapEquiv Option (remove_none σ) = swap none (σ none)*σ :=
+  by 
+    ext1 x 
+    have  : Option.map (⇑remove_none σ) x = (swap none (σ none)) (σ x)
+    ·
+      cases x
+      ·
+        simp 
+      ·
+        cases h : σ (some x)
+        ·
+          simp [remove_none_none _ h]
+        ·
+          have hn : σ (some x) ≠ none :=
+            by 
+              simp [h]
+          have hσn : σ (some x) ≠ σ none :=
+            σ.injective.ne
+              (by 
+                simp )
+          simp [remove_none_some _ ⟨_, h⟩, ←h, swap_apply_of_ne_of_ne hn hσn]
+    simpa using this
 
--- error in GroupTheory.Perm.Option: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Permutations of `option α` are equivalent to fixing an
 `option α` and permuting the remaining with a `perm α`.
 The fixed `option α` is swapped with `none`. -/
-@[simps #[]]
-def equiv.perm.decompose_option
-{α : Type*}
-[decidable_eq α] : «expr ≃ »(perm (option α), «expr × »(option α, perm α)) :=
-{ to_fun := λ σ, (σ none, remove_none σ),
-  inv_fun := λ i, «expr * »(swap none i.1, equiv_functor.map_equiv option i.2),
-  left_inv := λ σ, by simp [] [] [] [] [] [],
-  right_inv := λ ⟨x, σ⟩, begin
-    have [] [":", expr «expr = »(remove_none «expr * »(swap none x, equiv_functor.map_equiv option σ), σ)] [":=", expr equiv_functor.map_equiv_option_injective (by simp [] [] [] ["[", "<-", expr mul_assoc, ",", expr equiv_functor.map, "]"] [] [])],
-    simp [] [] [] ["[", "<-", expr perm.eq_inv_iff_eq, ",", expr equiv_functor.map, ",", expr this, "]"] [] []
-  end }
+@[simps]
+def Equivₓ.Perm.decomposeOption {α : Type _} [DecidableEq α] : perm (Option α) ≃ Option α × perm α :=
+  { toFun := fun σ => (σ none, remove_none σ), invFun := fun i => swap none i.1*EquivFunctor.mapEquiv Option i.2,
+    left_inv :=
+      fun σ =>
+        by 
+          simp ,
+    right_inv :=
+      fun ⟨x, σ⟩ =>
+        by 
+          have  : remove_none (swap none x*EquivFunctor.mapEquiv Option σ) = σ :=
+            EquivFunctor.map_equiv_option_injective
+              (by 
+                simp [←mul_assocₓ, EquivFunctor.map])
+          simp [←perm.eq_inv_iff_eq, EquivFunctor.map, this] }
 
-theorem Equiv.Perm.decompose_option_symm_of_none_apply {α : Type _} [DecidableEq α] (e : perm α) (i : Option α) :
-  Equiv.Perm.decomposeOption.symm (none, e) i = i.map e :=
+theorem Equivₓ.Perm.decompose_option_symm_of_none_apply {α : Type _} [DecidableEq α] (e : perm α) (i : Option α) :
+  Equivₓ.Perm.decomposeOption.symm (none, e) i = i.map e :=
   by 
     simp [EquivFunctor.map]
 
-theorem Equiv.Perm.decompose_option_symm_sign {α : Type _} [DecidableEq α] [Fintype α] (e : perm α) :
-  perm.sign (Equiv.Perm.decomposeOption.symm (none, e)) = perm.sign e :=
+theorem Equivₓ.Perm.decompose_option_symm_sign {α : Type _} [DecidableEq α] [Fintype α] (e : perm α) :
+  perm.sign (Equivₓ.Perm.decomposeOption.symm (none, e)) = perm.sign e :=
   by 
     simp 
 
@@ -97,6 +108,6 @@ theorem Equiv.Perm.decompose_option_symm_sign {α : Type _} [DecidableEq α] [Fi
 permutations of `α` by each element of `option α` in turn. -/
 theorem Finset.univ_perm_option {α : Type _} [DecidableEq α] [Fintype α] :
   @Finset.univ (perm$ Option α) _ =
-    (Finset.univ : Finset$ Option α × perm α).map Equiv.Perm.decomposeOption.symm.toEmbedding :=
+    (Finset.univ : Finset$ Option α × perm α).map Equivₓ.Perm.decomposeOption.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
 

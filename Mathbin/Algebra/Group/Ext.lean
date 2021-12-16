@@ -19,22 +19,22 @@ monoid, group, extensionality
 
 universe u
 
--- error in Algebra.Group.Ext: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[ext #[], to_additive #[]]
-theorem monoid.ext {M : Type u} {{m₁ m₂ : monoid M}} (h_mul : «expr = »(m₁.mul, m₂.mul)) : «expr = »(m₁, m₂) :=
-begin
-  have [ident h₁] [":", expr «expr = »((@monoid.to_mul_one_class _ m₁).one, (@monoid.to_mul_one_class _ m₂).one)] [],
-  from [expr congr_arg (@mul_one_class.one M) (mul_one_class.ext h_mul)],
-  set [] [ident f] [":", expr @monoid_hom M M (@monoid.to_mul_one_class _ m₁) (@monoid.to_mul_one_class _ m₂)] [":="] [expr { to_fun := id,
-     map_one' := h₁,
-     map_mul' := λ x y, congr_fun (congr_fun h_mul x) y }] [],
-  have [ident hpow] [":", expr «expr = »(m₁.npow, m₂.npow)] [],
-  by { ext [] [ident n, ident x] [],
-    exact [expr @monoid_hom.map_pow M M m₁ m₂ f x n] },
-  unfreezingI { cases [expr m₁] [],
-    cases [expr m₂] [] },
-  congr; assumption
-end
+@[ext, toAdditive]
+theorem Monoidₓ.ext {M : Type u} ⦃m₁ m₂ : Monoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
+  by 
+    have h₁ : (@Monoidₓ.toMulOneClass _ m₁).one = (@Monoidₓ.toMulOneClass _ m₂).one 
+    exact congr_argₓ (@MulOneClass.one M) (MulOneClass.ext h_mul)
+    set f : @MonoidHom M M (@Monoidₓ.toMulOneClass _ m₁) (@Monoidₓ.toMulOneClass _ m₂) :=
+      { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
+    have hpow : m₁.npow = m₂.npow
+    ·
+      ·
+        ext n x 
+        exact @MonoidHom.map_pow M M m₁ m₂ f x n
+    (
+      cases m₁ 
+      cases m₂)
+    congr <;> assumption
 
 @[toAdditive]
 theorem CommMonoidₓ.to_monoid_injective {M : Type u} : Function.Injective (@CommMonoidₓ.toMonoid M) :=
@@ -88,40 +88,44 @@ theorem CancelCommMonoid.to_comm_monoid_injective {M : Type u} :
 theorem CancelCommMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelCommMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
   CancelCommMonoid.to_comm_monoid_injective$ CommMonoidₓ.ext h_mul
 
--- error in Algebra.Group.Ext: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[ext #[], to_additive #[]]
-theorem div_inv_monoid.ext
-{M : Type*}
-{{m₁ m₂ : div_inv_monoid M}}
-(h_mul : «expr = »(m₁.mul, m₂.mul))
-(h_inv : «expr = »(m₁.inv, m₂.inv)) : «expr = »(m₁, m₂) :=
-begin
-  have [ident h₁] [":", expr «expr = »((@div_inv_monoid.to_monoid _ m₁).one, (@div_inv_monoid.to_monoid _ m₂).one)] [],
-  from [expr congr_arg (@monoid.one M) (monoid.ext h_mul)],
-  set [] [ident f] [":", expr @monoid_hom M M (by letI [] [] [":=", expr m₁]; apply_instance) (by letI [] [] [":=", expr m₂]; apply_instance)] [":="] [expr { to_fun := id,
-     map_one' := h₁,
-     map_mul' := λ x y, congr_fun (congr_fun h_mul x) y }] [],
-  have [ident hpow] [":", expr «expr = »((@div_inv_monoid.to_monoid _ m₁).npow, (@div_inv_monoid.to_monoid _ m₂).npow)] [":=", expr congr_arg (@monoid.npow M) (monoid.ext h_mul)],
-  have [ident hzpow] [":", expr «expr = »(m₁.zpow, m₂.zpow)] [],
-  { ext [] [ident m, ident x] [],
-    exact [expr @monoid_hom.map_zpow' M M m₁ m₂ f (congr_fun h_inv) x m] },
-  have [ident hdiv] [":", expr «expr = »(m₁.div, m₂.div)] [],
-  { ext [] [ident a, ident b] [],
-    exact [expr @monoid_hom.map_div' M M m₁ m₂ f (congr_fun h_inv) a b] },
-  unfreezingI { cases [expr m₁] [],
-    cases [expr m₂] [] },
-  congr,
-  exacts ["[", expr h_mul, ",", expr h₁, ",", expr hpow, ",", expr h_inv, ",", expr hdiv, ",", expr hzpow, "]"]
-end
+@[ext, toAdditive]
+theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) (h_inv : m₁.inv = m₂.inv) :
+  m₁ = m₂ :=
+  by 
+    have h₁ : (@DivInvMonoidₓ.toMonoid _ m₁).one = (@DivInvMonoidₓ.toMonoid _ m₂).one 
+    exact congr_argₓ (@Monoidₓ.one M) (Monoidₓ.ext h_mul)
+    set f :
+      @MonoidHom M M
+        (by 
+          let this' := m₁ <;> infer_instance)
+        (by 
+          let this' := m₂ <;> infer_instance) :=
+      { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
+    have hpow : (@DivInvMonoidₓ.toMonoid _ m₁).npow = (@DivInvMonoidₓ.toMonoid _ m₂).npow :=
+      congr_argₓ (@Monoidₓ.npow M) (Monoidₓ.ext h_mul)
+    have hzpow : m₁.zpow = m₂.zpow
+    ·
+      ext m x 
+      exact @MonoidHom.map_zpow' M M m₁ m₂ f (congr_funₓ h_inv) x m 
+    have hdiv : m₁.div = m₂.div
+    ·
+      ext a b 
+      exact @MonoidHom.map_div' M M m₁ m₂ f (congr_funₓ h_inv) a b
+    (
+      cases m₁ 
+      cases m₂)
+    congr 
+    exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
 
--- error in Algebra.Group.Ext: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[ext #[], to_additive #[]]
-theorem group.ext {G : Type*} {{g₁ g₂ : group G}} (h_mul : «expr = »(g₁.mul, g₂.mul)) : «expr = »(g₁, g₂) :=
-begin
-  set [] [ident f] [] [":="] [expr @monoid_hom.mk' G G (by letI [] [] [":=", expr g₁]; apply_instance) g₂ id (λ
-    a b, congr_fun (congr_fun h_mul a) b)] [],
-  exact [expr group.to_div_inv_monoid_injective (div_inv_monoid.ext h_mul «expr $ »(funext, @monoid_hom.map_inv G G g₁ g₂ f))]
-end
+@[ext, toAdditive]
+theorem Groupₓ.ext {G : Type _} ⦃g₁ g₂ : Groupₓ G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=
+  by 
+    set f :=
+      @MonoidHom.mk' G G
+        (by 
+          let this' := g₁ <;> infer_instance)
+        g₂ id fun a b => congr_funₓ (congr_funₓ h_mul a) b 
+    exact Groupₓ.to_div_inv_monoid_injective (DivInvMonoidₓ.ext h_mul (funext$ @MonoidHom.map_inv G G g₁ g₂ f))
 
 @[ext, toAdditive]
 theorem CommGroupₓ.ext {G : Type _} ⦃g₁ g₂ : CommGroupₓ G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=

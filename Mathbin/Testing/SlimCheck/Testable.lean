@@ -177,7 +177,7 @@ variable (f : Type → Prop)
 
 namespace SlimCheck
 
--- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Result of trying to disprove `p`
 
 The constructors are:
@@ -197,10 +197,11 @@ The constructors are:
      `failure h vs n` also carries a proof that `p` does not hold. This way, we can
      guarantee that there will be no false positive. The last component, `n`,
      is the number of times that the counter-example was shrunk.
--/ @[derive #[expr inhabited]] inductive test_result (p : exprProp())
-| success : psum unit p → test_result
-| gave_up {} : exprℕ() → test_result
-| failure : «expr¬ »(p) → list string → exprℕ() → test_result
+-/
+inductive test_result (p : Prop)
+  | success : Psum Unit p → test_result
+  | gave_up{} : ℕ → test_result
+  | failure : ¬p → List Stringₓ → ℕ → test_result deriving [anonymous]
 
 /-- format a `test_result` as a string. -/
 protected def test_result.to_string {p} : test_result p → Stringₓ
@@ -209,18 +210,18 @@ protected def test_result.to_string {p} : test_result p → Stringₓ
 | test_result.gave_up n => s! "gave up {n} times"
 | test_result.failure a vs _ => s! "failed {vs}"
 
--- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- configuration for testing a property -/
-@[derive #["[", expr has_reflect, ",", expr inhabited, "]"]]
-structure slim_check_cfg :=
-  (num_inst : exprℕ() := 100)
-  (max_size : exprℕ() := 100)
-  (trace_discarded : bool := ff)
-  (trace_success : bool := ff)
-  (trace_shrink : bool := ff)
-  (trace_shrink_candidates : bool := ff)
-  (random_seed : option exprℕ() := none)
-  (quiet : bool := ff)
+structure slim_check_cfg where 
+  numInst : ℕ := 100
+  maxSize : ℕ := 100
+  traceDiscarded : Bool := ff 
+  traceSuccess : Bool := ff 
+  traceShrink : Bool := ff 
+  traceShrinkCandidates : Bool := ff 
+  randomSeed : Option ℕ := none 
+  quiet : Bool := ff deriving [anonymous], [anonymous]
 
 instance {p} : HasToString (test_result p) :=
   ⟨test_result.to_string⟩
@@ -389,37 +390,71 @@ def trace_if_giveup {p α β} [HasRepr α] (tracing_enabled : Bool) (var : Strin
 | test_result.gave_up _ => if tracing_enabled then trace s! " {var } := {reprₓ val}" else ·$ ()
 | _ => ·$ ()
 
--- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- testable instance for a property iterating over the element of a list -/
-@[priority 5000]
-instance test_forall_in_list
-[∀ x, testable (β x)]
-[has_repr α] : ∀
-xs : list α, testable «expr $ »(named_binder var, ∀ x, «expr $ »(named_binder var', «expr ∈ »(x, xs) → β x))
-| «expr[ , ]»([]) := ⟨λ
- tracing min, «expr $ »(return, «expr $ »(success, psum.inr (by { introv [ident x, ident h], cases [expr h] [] })))⟩
-| [«expr :: »/«expr :: »/«expr :: »/«expr :: »](x, xs) := ⟨λ cfg min, do {
- r ← testable.run (β x) cfg min,
-   «expr $ »(trace_if_giveup cfg.trace_discarded var x r, match r with
-    | failure _ _ _ := «expr $ »(return, add_var_to_counter_example var x (by { intro [ident h],
-        apply [expr h],
-        left,
-        refl }) r)
-    | success hp := do {
-    rs ← @testable.run _ (test_forall_in_list xs) cfg min,
-      «expr $ »(return, convert_counter_example (by { intros [ident h, ident i, ident h'],
-          apply [expr h],
-          right,
-          apply [expr h'] }) rs (combine «expr $ »(psum.inr, by { intros [ident j, ident h],
-           simp [] [] ["only"] ["[", expr ball_cons, ",", expr named_binder, "]"] [] [],
-           split; assumption }) hp)) }
-    | gave_up n := do {
-    rs ← @testable.run _ (test_forall_in_list xs) cfg min,
-      match rs with
-      | success _ := «expr $ »(return, gave_up n)
-      | failure Hce xs n := «expr $ »(return, failure (by { simp [] [] ["only"] ["[", expr ball_cons, ",", expr named_binder, "]"] [] [],
-          apply [expr not_and_of_not_right _ Hce] }) xs n)
-      | gave_up n' := «expr $ »(return, gave_up «expr + »(n, n')) end } end) }⟩
+  instance
+    ( priority := 5000 )
+    test_forall_in_list
+    [ ∀ x , testable ( β x ) ] [ HasRepr α ]
+      : ∀ xs : List α , testable ( named_binder var $ ∀ x , named_binder var' $ x ∈ xs → β x )
+    | [ ] => ⟨ fun tracing min => return $ success $ Psum.inr ( by introv x h cases h ) ⟩
+      |
+        x :: xs
+        =>
+        ⟨
+          fun
+            cfg min
+              =>
+              do
+                let r ← testable.run ( β x ) cfg min
+                  trace_if_giveup cfg.trace_discarded var x r
+                    $
+                    match
+                      r
+                      with
+                      | failure _ _ _ => return $ add_var_to_counter_example var x ( by intro h apply h left rfl ) r
+                        |
+                          success hp
+                          =>
+                          do
+                            let rs ← @ testable.run _ ( test_forall_in_list xs ) cfg min
+                              return
+                                $
+                                convert_counter_example
+                                  ( by intro h i h' apply h right apply h' )
+                                    rs
+                                    (
+                                      combine
+                                        (
+                                            Psum.inr
+                                              $
+                                              by
+                                                intro j h
+                                                  simp only [ ball_cons , named_binder ]
+                                                  constructor <;> assumption
+                                            )
+                                          hp
+                                      )
+                        |
+                          gave_up n
+                          =>
+                          do
+                            let rs ← @ testable.run _ ( test_forall_in_list xs ) cfg min
+                              match
+                                rs
+                                with
+                                | success _ => return $ gave_up n
+                                  |
+                                    failure Hce xs n
+                                    =>
+                                    return
+                                      $
+                                      failure
+                                        ( by simp only [ ball_cons , named_binder ] apply not_and_of_not_right _ Hce )
+                                          xs
+                                          n
+                                  | gave_up n' => return $ gave_up ( n + n' )
+          ⟩
 
 /-- Test proposition `p` by randomly selecting one of the provided
 testable instances. -/
@@ -470,7 +505,7 @@ The process is guaranteed to terminate because `shrink x` produces
 a proof that all the values it produces are smaller (according to `sizeof`)
 than `x`. -/
 def minimize_aux [sampleable_ext α] [∀ x, testable (β x)] (cfg : slim_check_cfg) (var : Stringₓ) :
-  proxy_repr α → ℕ → OptionTₓ gen (Σx, test_result (β (interp α x))) :=
+  proxy_repr α → ℕ → OptionTₓ gen (Σ x, test_result (β (interp α x))) :=
   WellFounded.fix HasWellFounded.wf$
     fun x f_rec n =>
       do 
@@ -489,7 +524,7 @@ def minimize_aux [sampleable_ext α] [∀ x, testable (β x)] (cfg : slim_check_
                   let ⟨r⟩ ←
                     monad_lift
                         (Uliftable.up$ testable.run (β (interp α a)) cfg tt : gen (Ulift$ test_result$ β$ interp α a))
-                  if is_failure r then pure (⟨a, r, ⟨h⟩⟩ : Σa, test_result (β (interp α a)) × Plift (sizeof_lt a x))
+                  if is_failure r then pure (⟨a, r, ⟨h⟩⟩ : Σ a, test_result (β (interp α a)) × Plift (sizeof_lt a x))
                     else failure 
         if cfg.trace_shrink then
             return$ trace ((s! "{var } := {reprₓ y}") ++ format_failure' "Shrink counter-example:" r) () else pure ()
@@ -498,7 +533,7 @@ def minimize_aux [sampleable_ext α] [∀ x, testable (β x)] (cfg : slim_check_
 /-- Once a property fails to hold on an example, look for smaller counter-examples
 to show the user. -/
 def minimize [sampleable_ext α] [∀ x, testable (β x)] (cfg : slim_check_cfg) (var : Stringₓ) (x : proxy_repr α)
-  (r : test_result (β (interp α x))) : gen (Σx, test_result (β (interp α x))) :=
+  (r : test_result (β (interp α x))) : gen (Σ x, test_result (β (interp α x))) :=
   do 
     if cfg.trace_shrink then
         return$ trace ((s! "{var } := {reprₓ x}") ++ format_failure' "Shrink counter-example:" r) () else pure ()

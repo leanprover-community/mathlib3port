@@ -15,12 +15,12 @@ namespace Tactic
 
 namespace Explode
 
--- error in Tactic.Explode: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-@[derive #[expr inhabited]] inductive status : Type
-| reg
-| intro
-| lam
-| sintro
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+inductive status : Type
+  | reg
+  | intro
+  | lam
+  | sintro deriving [anonymous]
 
 /--
 A type to distinguish introduction or elimination rules represented as
@@ -51,8 +51,10 @@ unsafe def pad_right (l : List Stringₓ) : List Stringₓ :=
   let n := l.foldl (fun r s : Stringₓ => max r s.length) 0
   l.map$ fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
 
--- error in Tactic.Explode: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-@[derive #[expr inhabited]] meta structure entries : Type := mk' :: (s : expr_map entry) (l : list entry)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+unsafe structure entries : Type where mk' :: 
+  s : expr_map entry 
+  l : List entry deriving [anonymous]
 
 unsafe def entries.find (es : entries) (e : expr) : Option entry :=
   es.s.find e

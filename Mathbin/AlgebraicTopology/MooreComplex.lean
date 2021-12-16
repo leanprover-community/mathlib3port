@@ -26,7 +26,7 @@ This functor is one direction of the Dold-Kan equivalence, which we're still wor
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory CategoryTheory.Limits
 

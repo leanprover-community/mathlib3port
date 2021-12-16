@@ -16,6 +16,7 @@ def push_neg : preform → preform
 | ¬* p => p
 | p => ¬* p
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem push_neg_equiv : ∀ {p : preform}, preform.equiv (push_neg p) (¬* p) :=
   by 
     runTac 
@@ -44,6 +45,7 @@ def is_nnf : preform → Prop
 | p ∧* q => is_nnf p ∧ is_nnf q
 | _ => False
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_push_neg : ∀ p : preform, is_nnf p → is_nnf (push_neg p) :=
   by 
     runTac 
@@ -70,6 +72,7 @@ theorem is_nnf_push_neg : ∀ p : preform, is_nnf p → is_nnf (push_neg p) :=
             apply ihq] <;>
         assumption
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_nnf : ∀ p : preform, is_nnf (nnf p) :=
   by 
     runTac 
@@ -81,6 +84,7 @@ theorem is_nnf_nnf : ∀ p : preform, is_nnf (nnf p) :=
     ·
       constructor <;> assumption
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem nnf_equiv : ∀ {p : preform}, preform.equiv (nnf p) p :=
   by 
     runTac 
@@ -102,6 +106,7 @@ def neg_elim_core : preform → preform
 | p ∧* q => neg_elim_core p ∧* neg_elim_core q
 | p => p
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem neg_free_neg_elim_core : ∀ p, is_nnf p → (neg_elim_core p).NegFree :=
   by 
     runTac 
@@ -139,6 +144,7 @@ theorem le_and_le_iff_eq {α : Type} [PartialOrderₓ α] {a b : α} : a ≤ b �
     ·
       constructor <;> apply le_of_eqₓ <;> rw [h1]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 theorem implies_neg_elim_core : ∀ {p : preform}, preform.implies p (neg_elim_core p) :=
   by 
     runTac 

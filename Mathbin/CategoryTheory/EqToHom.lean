@@ -116,7 +116,7 @@ theorem eq_to_hom_op {X Y : C} (h : X = Y) : (eq_to_hom h).op = eq_to_hom (congr
     rfl
 
 @[simp]
-theorem eq_to_hom_unop {X Y : «expr ᵒᵖ» C} (h : X = Y) : (eq_to_hom h).unop = eq_to_hom (congr_argₓ unop h.symm) :=
+theorem eq_to_hom_unop {X Y : Cᵒᵖ} (h : X = Y) : (eq_to_hom h).unop = eq_to_hom (congr_argₓ unop h.symm) :=
   by 
     cases h 
     rfl
@@ -134,43 +134,34 @@ variable {D : Type u₂} [category.{v₂} D]
 
 namespace Functor
 
--- error in CategoryTheory.EqToHom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Proving equality between functors. This isn't an extensionality lemma,
   because usually you don't really want to do this. -/
-theorem ext
-{F G : «expr ⥤ »(C, D)}
-(h_obj : ∀ X, «expr = »(F.obj X, G.obj X))
-(h_map : ∀
- X
- Y
- f, «expr = »(F.map f, «expr ≫ »(eq_to_hom (h_obj X), «expr ≫ »(G.map f, eq_to_hom (h_obj Y).symm)))) : «expr = »(F, G) :=
-begin
-  cases [expr F] ["with", ident F_obj, "_", "_", "_"],
-  cases [expr G] ["with", ident G_obj, "_", "_", "_"],
-  have [] [":", expr «expr = »(F_obj, G_obj)] [],
-  by ext [] [ident X] []; apply [expr h_obj],
-  subst [expr this],
-  congr,
-  funext [ident X, ident Y, ident f],
-  simpa [] [] [] [] [] ["using", expr h_map X Y f]
-end
+theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
+  (h_map : ∀ X Y f, F.map f = eq_to_hom (h_obj X) ≫ G.map f ≫ eq_to_hom (h_obj Y).symm) : F = G :=
+  by 
+    cases' F with F_obj _ _ _ 
+    cases' G with G_obj _ _ _ 
+    have  : F_obj = G_obj
+    ·
+      ext X <;> apply h_obj 
+    subst this 
+    congr 
+    funext X Y f 
+    simpa using h_map X Y f
 
--- error in CategoryTheory.EqToHom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Proving equality between functors using heterogeneous equality. -/
-theorem hext
-{F G : «expr ⥤ »(C, D)}
-(h_obj : ∀ X, «expr = »(F.obj X, G.obj X))
-(h_map : ∀ (X Y) (f : «expr ⟶ »(X, Y)), «expr == »(F.map f, G.map f)) : «expr = »(F, G) :=
-begin
-  cases [expr F] ["with", ident F_obj, "_", "_", "_"],
-  cases [expr G] ["with", ident G_obj, "_", "_", "_"],
-  have [] [":", expr «expr = »(F_obj, G_obj)] [],
-  by ext [] [ident X] []; apply [expr h_obj],
-  subst [expr this],
-  congr,
-  funext [ident X, ident Y, ident f],
-  exact [expr eq_of_heq (h_map X Y f)]
-end
+theorem hext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X) (h_map : ∀ X Y f : X ⟶ Y, HEq (F.map f) (G.map f)) :
+  F = G :=
+  by 
+    cases' F with F_obj _ _ _ 
+    cases' G with G_obj _ _ _ 
+    have  : F_obj = G_obj
+    ·
+      ext X <;> apply h_obj 
+    subst this 
+    congr 
+    funext X Y f 
+    exact eq_of_heq (h_map X Y f)
 
 theorem congr_obj {F G : C ⥤ D} (h : F = G) X : F.obj X = G.obj X :=
   by 

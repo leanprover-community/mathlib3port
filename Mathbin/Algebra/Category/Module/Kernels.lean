@@ -54,17 +54,17 @@ def kernel_is_limit : is_limit (kernel_cone f) :=
 def cokernel_cocone : cokernel_cofork f :=
   cokernel_cofork.of_π (as_hom f.range.mkq)$ LinearMap.range_mkq_comp _
 
--- error in Algebra.Category.Module.Kernels: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The projection onto the quotient is a cokernel in the categorical sense. -/
 def cokernel_is_colimit : is_colimit (cokernel_cocone f) :=
-cofork.is_colimit.mk _ (λ
- s, «expr $ »(f.range.liftq (cofork.π s), «expr $ »(linear_map.range_le_ker_iff.2, cokernel_cofork.condition s))) (λ
- s, f.range.liftq_mkq (cofork.π s) _) (λ s m h, begin
-   haveI [] [":", expr epi (as_hom f.range.mkq)] [":=", expr (epi_iff_range_eq_top _).mpr (submodule.range_mkq _)],
-   apply [expr (cancel_epi (as_hom f.range.mkq)).1],
-   convert [] [expr h walking_parallel_pair.one] [],
-   exact [expr submodule.liftq_mkq _ _ _]
- end)
+  cofork.is_colimit.mk _
+    (fun s => f.range.liftq (cofork.π s)$ LinearMap.range_le_ker_iff.2$ cokernel_cofork.condition s)
+    (fun s => f.range.liftq_mkq (cofork.π s) _)
+    fun s m h =>
+      by 
+        have  : epi (as_hom f.range.mkq) := (epi_iff_range_eq_top _).mpr (Submodule.range_mkq _)
+        apply (cancel_epi (as_hom f.range.mkq)).1
+        convert h walking_parallel_pair.one 
+        exact Submodule.liftq_mkq _ _ _
 
 end 
 
@@ -104,7 +104,7 @@ The categorical cokernel of a morphism in `Module`
 agrees with the usual module-theoretical quotient.
 -/
 noncomputable def cokernel_iso_range_quotient {G H : ModuleCat.{v} R} (f : G ⟶ H) :
-  cokernel f ≅ ModuleCat.of R f.range.quotient :=
+  cokernel f ≅ ModuleCat.of R (H ⧸ f.range) :=
   colimit.iso_colimit_cocone ⟨_, cokernel_is_colimit f⟩
 
 @[simp, elementwise]

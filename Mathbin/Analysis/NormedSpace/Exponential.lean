@@ -80,31 +80,29 @@ theorem exp_series_apply_eq_field (x : 𝕂) (n : ℕ) : (expSeries 𝕂 𝕂 n 
 theorem exp_series_apply_eq_field' (x : 𝕂) : (fun n => expSeries 𝕂 𝕂 n fun _ => x) = fun n => (x^n) / n ! :=
   funext (exp_series_apply_eq_field x)
 
-theorem exp_series_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑'n : ℕ, (1 / n ! : 𝕂) • (x^n) :=
+theorem exp_series_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑' n : ℕ, (1 / n ! : 𝕂) • (x^n) :=
   tsum_congr fun n => exp_series_apply_eq x n
 
-theorem exp_series_sum_eq_field (x : 𝕂) : (expSeries 𝕂 𝕂).Sum x = ∑'n : ℕ, (x^n) / n ! :=
+theorem exp_series_sum_eq_field (x : 𝕂) : (expSeries 𝕂 𝕂).Sum x = ∑' n : ℕ, (x^n) / n ! :=
   tsum_congr fun n => exp_series_apply_eq_field x n
 
-theorem exp_eq_tsum : exp 𝕂 𝔸 = fun x : 𝔸 => ∑'n : ℕ, (1 / n ! : 𝕂) • (x^n) :=
+theorem exp_eq_tsum : exp 𝕂 𝔸 = fun x : 𝔸 => ∑' n : ℕ, (1 / n ! : 𝕂) • (x^n) :=
   funext exp_series_sum_eq
 
-theorem exp_eq_tsum_field : exp 𝕂 𝕂 = fun x : 𝕂 => ∑'n : ℕ, (x^n) / n ! :=
+theorem exp_eq_tsum_field : exp 𝕂 𝕂 = fun x : 𝕂 => ∑' n : ℕ, (x^n) / n ! :=
   funext exp_series_sum_eq_field
 
--- error in Analysis.NormedSpace.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exp_zero : «expr = »(exp 𝕂 𝔸 0, 1) :=
-begin
-  suffices [] [":", expr «expr = »(λ
-    x : 𝔸, «expr∑' , »((n : exprℕ()), «expr • »((«expr / »(1, «expr !»(n)) : 𝕂), «expr ^ »(x, n))) 0, «expr∑' , »((n : exprℕ()), if «expr = »(n, 0) then 1 else 0))],
-  { have [ident key] [":", expr ∀
-     n «expr ∉ » ({0} : finset exprℕ()), «expr = »(if «expr = »(n, 0) then (1 : 𝔸) else 0, 0)] [],
-    from [expr λ n hn, if_neg (finset.not_mem_singleton.mp hn)],
-    rw ["[", expr exp_eq_tsum, ",", expr this, ",", expr tsum_eq_sum key, ",", expr finset.sum_singleton, "]"] [],
-    simp [] [] [] [] [] [] },
-  refine [expr tsum_congr (λ n, _)],
-  split_ifs [] ["with", ident h, ident h]; simp [] [] [] ["[", expr h, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
+theorem exp_zero : exp 𝕂 𝔸 0 = 1 :=
+  by 
+    suffices  : (fun x : 𝔸 => ∑' n : ℕ, (1 / n ! : 𝕂) • (x^n)) 0 = ∑' n : ℕ, if n = 0 then 1 else 0
+    ·
+      have key : ∀ n _ : n ∉ ({0} : Finset ℕ), (if n = 0 then (1 : 𝔸) else 0) = 0 
+      exact fun n hn => if_neg (finset.not_mem_singleton.mp hn)
+      rw [exp_eq_tsum, this, tsum_eq_sum key, Finset.sum_singleton]
+      simp 
+    refine' tsum_congr fun n => _ 
+    splitIfs with h h <;> simp [h]
 
 theorem norm_exp_series_summable_of_mem_ball (x : 𝔸) (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
   Summable fun n => ∥expSeries 𝕂 𝔸 n fun _ => x∥ :=
@@ -167,39 +165,34 @@ theorem has_fpower_series_at_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 �
 theorem continuous_on_exp : ContinuousOn (exp 𝕂 𝔸) (Emetric.Ball 0 (expSeries 𝕂 𝔸).radius) :=
   FormalMultilinearSeries.continuous_on
 
--- error in Analysis.NormedSpace.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem analytic_at_exp_of_mem_ball
-(x : 𝔸)
-(hx : «expr ∈ »(x, emetric.ball (0 : 𝔸) (exp_series 𝕂 𝔸).radius)) : analytic_at 𝕂 (exp 𝕂 𝔸) x :=
-begin
-  by_cases [expr h, ":", expr «expr = »((exp_series 𝕂 𝔸).radius, 0)],
-  { rw [expr h] ["at", ident hx],
-    exact [expr (ennreal.not_lt_zero hx).elim] },
-  { have [ident h] [] [":=", expr pos_iff_ne_zero.mpr h],
-    exact [expr (has_fpower_series_on_ball_exp_of_radius_pos h).analytic_at_of_mem hx] }
-end
+theorem analytic_at_exp_of_mem_ball (x : 𝔸) (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
+  AnalyticAt 𝕂 (exp 𝕂 𝔸) x :=
+  by 
+    byCases' h : (expSeries 𝕂 𝔸).radius = 0
+    ·
+      rw [h] at hx 
+      exact (Ennreal.not_lt_zero hx).elim
+    ·
+      have h := pos_iff_ne_zero.mpr h 
+      exact (has_fpower_series_on_ball_exp_of_radius_pos h).analytic_at_of_mem hx
 
--- error in Analysis.NormedSpace.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a Banach-algebra `𝔸` over a normed field `𝕂` of characteristic zero, if `x` and `y` are
 in the disk of convergence and commute, then `exp 𝕂 𝔸 (x + y) = (exp 𝕂 𝔸 x) * (exp 𝕂 𝔸 y)`. -/
-theorem exp_add_of_commute_of_mem_ball
-[char_zero 𝕂]
-{x y : 𝔸}
-(hxy : commute x y)
-(hx : «expr ∈ »(x, emetric.ball (0 : 𝔸) (exp_series 𝕂 𝔸).radius))
-(hy : «expr ∈ »(y, emetric.ball (0 : 𝔸) (exp_series 𝕂 𝔸).radius)) : «expr = »(exp 𝕂 𝔸 «expr + »(x, y), «expr * »(exp 𝕂 𝔸 x, exp 𝕂 𝔸 y)) :=
-begin
-  rw ["[", expr exp_eq_tsum, ",", expr tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm (norm_exp_series_summable_of_mem_ball' x hx) (norm_exp_series_summable_of_mem_ball' y hy), "]"] [],
-  dsimp ["only"] [] [] [],
-  conv_lhs [] [] { congr,
-    funext,
-    rw ["[", expr hxy.add_pow' _, ",", expr finset.smul_sum, "]"] },
-  refine [expr tsum_congr (λ n, «expr $ »(finset.sum_congr rfl, λ kl hkl, _))],
-  rw ["[", expr nsmul_eq_smul_cast 𝕂, ",", expr smul_smul, ",", expr smul_mul_smul, ",", "<-", expr finset.nat.mem_antidiagonal.mp hkl, ",", expr nat.cast_add_choose, ",", expr finset.nat.mem_antidiagonal.mp hkl, "]"] [],
-  congr' [1] [],
-  have [] [":", expr «expr ≠ »((«expr !»(n) : 𝕂), 0)] [":=", expr nat.cast_ne_zero.mpr n.factorial_ne_zero],
-  field_simp [] ["[", expr this, "]"] [] []
-end
+theorem exp_add_of_commute_of_mem_ball [CharZero 𝕂] {x y : 𝔸} (hxy : Commute x y)
+  (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) (hy : y ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
+  exp 𝕂 𝔸 (x+y) = exp 𝕂 𝔸 x*exp 𝕂 𝔸 y :=
+  by 
+    rw [exp_eq_tsum,
+      tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm (norm_exp_series_summable_of_mem_ball' x hx)
+        (norm_exp_series_summable_of_mem_ball' y hy)]
+    dsimp only 
+    convLHS => congr ext rw [hxy.add_pow' _, Finset.smul_sum]
+    refine' tsum_congr fun n => Finset.sum_congr rfl$ fun kl hkl => _ 
+    rw [nsmul_eq_smul_cast 𝕂, smul_smul, smul_mul_smul, ←finset.nat.mem_antidiagonal.mp hkl, Nat.cast_add_choose,
+      finset.nat.mem_antidiagonal.mp hkl]
+    congr 1
+    have  : (n ! : 𝕂) ≠ 0 := nat.cast_ne_zero.mpr n.factorial_ne_zero 
+    fieldSimp [this]
 
 end CompleteAlgebra
 
@@ -223,19 +216,19 @@ section AnyAlgebra
 
 variable (𝕂 𝔸 : Type _) [IsROrC 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸]
 
--- error in Analysis.NormedSpace.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a normed algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, the series defining the exponential map
 has an infinite radius of convergence. -/
-theorem exp_series_radius_eq_top : «expr = »((exp_series 𝕂 𝔸).radius, «expr∞»()) :=
-begin
-  refine [expr (exp_series 𝕂 𝔸).radius_eq_top_of_summable_norm (λ r, _)],
-  refine [expr summable_of_norm_bounded_eventually _ (real.summable_pow_div_factorial r) _],
-  filter_upwards ["[", expr eventually_cofinite_ne 0, "]"] [],
-  intros [ident n, ident hn],
-  rw ["[", expr norm_mul, ",", expr norm_norm (exp_series 𝕂 𝔸 n), ",", expr exp_series, ",", expr norm_smul, ",", expr norm_div, ",", expr norm_one, ",", expr norm_pow, ",", expr nnreal.norm_eq, ",", expr norm_eq_abs, ",", expr abs_cast_nat, ",", expr mul_comm, ",", "<-", expr mul_assoc, ",", "<-", expr mul_div_assoc, ",", expr mul_one, "]"] [],
-  have [] [":", expr «expr ≤ »(«expr∥ ∥»(continuous_multilinear_map.mk_pi_algebra_fin 𝕂 n 𝔸), 1)] [":=", expr norm_mk_pi_algebra_fin_le_of_pos (nat.pos_of_ne_zero hn)],
-  exact [expr mul_le_of_le_one_right (div_nonneg (pow_nonneg r.coe_nonneg n) «expr !»(n).cast_nonneg) this]
-end
+theorem exp_series_radius_eq_top : (expSeries 𝕂 𝔸).radius = ∞ :=
+  by 
+    refine' (expSeries 𝕂 𝔸).radius_eq_top_of_summable_norm fun r => _ 
+    refine' summable_of_norm_bounded_eventually _ (Real.summable_pow_div_factorial r) _ 
+    filterUpwards [eventually_cofinite_ne 0]
+    intro n hn 
+    rw [norm_mul, norm_norm (expSeries 𝕂 𝔸 n), expSeries, norm_smul, norm_div, norm_one, norm_pow, Nnreal.norm_eq,
+      norm_eq_abs, abs_cast_nat, mul_commₓ, ←mul_assocₓ, ←mul_div_assoc, mul_oneₓ]
+    have  : ∥ContinuousMultilinearMap.mkPiAlgebraFin 𝕂 n 𝔸∥ ≤ 1 :=
+      norm_mk_pi_algebra_fin_le_of_pos (Nat.pos_of_ne_zeroₓ hn)
+    exact mul_le_of_le_one_right (div_nonneg (pow_nonneg r.coe_nonneg n) n !.cast_nonneg) this
 
 theorem exp_series_radius_pos : 0 < (expSeries 𝕂 𝔸).radius :=
   by 

@@ -27,10 +27,11 @@ open Set Filter Metric
 
 open_locale Filter TopologicalSpace
 
-theorem is_Gδ_irrational : IsGδ { x | Irrational x } :=
-  (countable_range _).is_Gδ_compl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_Gδ_irrational : IsGδ { x | Irrational x } := countable_range _ . is_Gδ_compl
 
-theorem dense_irrational : Dense { x:ℝ | Irrational x } :=
+theorem dense_irrational : Dense { x : ℝ | Irrational x } :=
   by 
     refine' real.is_topological_basis_Ioo_rat.dense_iff.2 _ 
     simp only [mem_Union, mem_singleton_iff]
@@ -38,7 +39,7 @@ theorem dense_irrational : Dense { x:ℝ | Irrational x } :=
     rw [inter_comm]
     exact exists_irrational_btwn (Rat.cast_lt.2 hlt)
 
-theorem eventually_residual_irrational : ∀ᶠx in residual ℝ, Irrational x :=
+theorem eventually_residual_irrational : ∀ᶠ x in residual ℝ, Irrational x :=
   eventually_residual.2 ⟨_, is_Gδ_irrational, dense_irrational, fun _ => id⟩
 
 namespace Irrational
@@ -68,29 +69,27 @@ instance : DenselyOrdered { x // Irrational x } :=
       let ⟨z, hz, hxz, hzy⟩ := exists_irrational_btwn hlt
       ⟨⟨z, hz⟩, hxz, hzy⟩⟩
 
--- error in Topology.Instances.Irrational: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eventually_forall_le_dist_cast_div
-(hx : irrational x)
-(n : exprℕ()) : «expr∀ᶠ in , »((ε : exprℝ()), expr𝓝() 0, ∀ m : exprℤ(), «expr ≤ »(ε, dist x «expr / »(m, n))) :=
-begin
-  have [ident A] [":", expr is_closed (range (λ m, «expr * »(«expr ⁻¹»(n), m) : exprℤ() → exprℝ()))] [],
-  from [expr ((is_closed_map_smul₀ («expr ⁻¹»(n) : exprℝ())).comp int.closed_embedding_coe_real.is_closed_map).closed_range],
-  have [ident B] [":", expr «expr ∉ »(x, range (λ m, «expr * »(«expr ⁻¹»(n), m) : exprℤ() → exprℝ()))] [],
-  { rintro ["⟨", ident m, ",", ident rfl, "⟩"],
-    simpa [] [] [] [] [] ["using", expr hx] },
-  rcases [expr metric.mem_nhds_iff.1 (A.is_open_compl.mem_nhds B), "with", "⟨", ident ε, ",", ident ε0, ",", ident hε, "⟩"],
-  refine [expr (ge_mem_nhds ε0).mono (λ δ hδ m, «expr $ »(not_lt.1, λ hlt, _))],
-  rw [expr dist_comm] ["at", ident hlt],
-  refine [expr hε (ball_subset_ball hδ hlt) ⟨m, _⟩],
-  simp [] [] [] ["[", expr div_eq_inv_mul, "]"] [] []
-end
+theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) : ∀ᶠ ε : ℝ in 𝓝 0, ∀ m : ℤ, ε ≤ dist x (m / n) :=
+  by 
+    have A : IsClosed (range (fun m => n⁻¹*m : ℤ → ℝ))
+    exact ((is_closed_map_smul₀ (n⁻¹ : ℝ)).comp int.closed_embedding_coe_real.is_closed_map).closed_range 
+    have B : x ∉ range (fun m => n⁻¹*m : ℤ → ℝ)
+    ·
+      rintro ⟨m, rfl⟩
+      simpa using hx 
+    rcases Metric.mem_nhds_iff.1 (A.is_open_compl.mem_nhds B) with ⟨ε, ε0, hε⟩
+    refine' (ge_mem_nhds ε0).mono fun δ hδ m => not_ltₓ.1$ fun hlt => _ 
+    rw [dist_comm] at hlt 
+    refine' hε (ball_subset_ball hδ hlt) ⟨m, _⟩
+    simp [div_eq_inv_mul]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr ≤ » n)
 theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : ℕ) :
-  ∀ᶠε : ℝ in 𝓝 0, ∀ k _ : k ≤ n m : ℤ, ε ≤ dist x (m / k) :=
+  ∀ᶠ ε : ℝ in 𝓝 0, ∀ k _ : k ≤ n m : ℤ, ε ≤ dist x (m / k) :=
   (finite_le_nat n).eventually_all.2$ fun k hk => hx.eventually_forall_le_dist_cast_div k
 
 theorem eventually_forall_le_dist_cast_rat_of_denom_le (hx : Irrational x) (n : ℕ) :
-  ∀ᶠε : ℝ in 𝓝 0, ∀ r : ℚ, r.denom ≤ n → ε ≤ dist x r :=
+  ∀ᶠ ε : ℝ in 𝓝 0, ∀ r : ℚ, r.denom ≤ n → ε ≤ dist x r :=
   (hx.eventually_forall_le_dist_cast_div_of_denom_le n).mono$ fun ε H r hr => H r.denom hr r.num
 
 end Irrational

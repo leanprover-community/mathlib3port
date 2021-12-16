@@ -26,7 +26,7 @@ normed space, extended norm
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 attribute [local instance] Classical.propDecidable
 
@@ -123,23 +123,35 @@ instance : PartialOrderₓ (Enorm 𝕜 V) :=
     le_trans := fun e₁ e₂ e₃ h₁₂ h₂₃ x => le_transₓ (h₁₂ x) (h₂₃ x),
     le_antisymm := fun e₁ e₂ h₁₂ h₂₁ => ext$ fun x => le_antisymmₓ (h₁₂ x) (h₂₁ x) }
 
--- error in Analysis.NormedSpace.Enorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The `enorm` sending each non-zero vector to infinity. -/ noncomputable instance : has_top (enorm 𝕜 V) :=
-⟨{ to_fun := λ x, if «expr = »(x, 0) then 0 else «expr⊤»(),
-   eq_zero' := λ x, by { split_ifs [] []; simp [] [] [] ["[", "*", "]"] [] [] },
-   map_add_le' := λ x y, begin
-     split_ifs [] ["with", ident hxy, ident hx, ident hy, ident hy, ident hx, ident hy, ident hy]; try { simp [] [] [] ["[", "*", "]"] [] [] },
-     simpa [] [] [] ["[", expr hx, ",", expr hy, "]"] [] ["using", expr hxy]
-   end,
-   map_smul_le' := λ c x, begin
-     split_ifs [] ["with", ident hcx, ident hx, ident hx]; simp [] [] ["only"] ["[", expr smul_eq_zero, ",", expr not_or_distrib, "]"] [] ["at", ident hcx],
-     { simp [] [] ["only"] ["[", expr mul_zero, ",", expr le_refl, "]"] [] [] },
-     { have [] [":", expr «expr = »(c, 0)] [],
-       by tauto [],
-       simp [] [] [] ["[", expr this, "]"] [] [] },
-     { tauto [] },
-     { simp [] [] [] ["[", expr hcx.1, "]"] [] [] }
-   end }⟩
+/-- The `enorm` sending each non-zero vector to infinity. -/
+noncomputable instance : HasTop (Enorm 𝕜 V) :=
+  ⟨{ toFun := fun x => if x = 0 then 0 else ⊤,
+      eq_zero' :=
+        fun x =>
+          by 
+            splitIfs <;> simp ,
+      map_add_le' :=
+        fun x y =>
+          by 
+            splitIfs with hxy hx hy hy hx hy hy <;>
+              try 
+                simp 
+            simpa [hx, hy] using hxy,
+      map_smul_le' :=
+        fun c x =>
+          by 
+            splitIfs with hcx hx hx <;> simp only [smul_eq_zero, not_or_distrib] at hcx
+            ·
+              simp only [mul_zero, le_reflₓ]
+            ·
+              have  : c = 0
+              ·
+                tauto 
+              simp [this]
+            ·
+              tauto
+            ·
+              simp [hcx.1] }⟩
 
 noncomputable instance : Inhabited (Enorm 𝕜 V) :=
   ⟨⊤⟩
@@ -176,7 +188,7 @@ noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
     sup_le := fun e₁ e₂ e₃ h₁ h₂ x => max_leₓ (h₁ x) (h₂ x) }
 
 @[simp, normCast]
-theorem coe_max (e₁ e₂ : Enorm 𝕜 V) : «expr⇑ » (e₁⊔e₂) = fun x => max (e₁ x) (e₂ x) :=
+theorem coe_max (e₁ e₂ : Enorm 𝕜 V) : ⇑(e₁⊔e₂) = fun x => max (e₁ x) (e₂ x) :=
   rfl
 
 @[normCast]
@@ -203,28 +215,33 @@ def EmetricSpace : EmetricSpace V :=
           _ ≤ e (x - y)+e (y - z) := e.map_add_le (x - y) (y - z)
            }
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The subspace of vectors with finite enorm. -/
-def finite_subspace : Subspace 𝕜 V :=
-  { Carrier := { x | e x < ⊤ },
-    zero_mem' :=
-      by 
-        simp ,
-    add_mem' := fun x y hx hy => lt_of_le_of_ltₓ (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩),
-    smul_mem' :=
-      fun c x hx : _ < _ =>
-        calc e (c • x) = nnnorm c*e x := e.map_smul c x 
-          _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.ne
-           }
+  def
+    finite_subspace
+    : Subspace 𝕜 V
+    :=
+      {
+        Carrier := { x | e x < ⊤ } ,
+          zero_mem' := by simp ,
+          add_mem' := fun x y hx hy => lt_of_le_of_ltₓ e.map_add_le x y Ennreal.add_lt_top . 2 ⟨ hx , hy ⟩ ,
+          smul_mem'
+            :=
+            fun
+              c x hx : _ < _
+                =>
+                calc e c • x = nnnorm c * e x := e.map_smul c x _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.ne
+        }
 
--- error in Analysis.NormedSpace.Enorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Metric space structure on `e.finite_subspace`. We use `emetric_space.to_metric_space_of_dist`
-to ensure that this definition agrees with `e.emetric_space`. -/ instance : metric_space e.finite_subspace :=
-begin
-  letI [] [] [":=", expr e.emetric_space],
-  refine [expr emetric_space.to_metric_space_of_dist _ (λ x y, _) (λ x y, rfl)],
-  change [expr «expr ≠ »(e «expr - »(x, y), «expr⊤»())] [] [],
-  exact [expr ne_top_of_le_ne_top (ennreal.add_lt_top.2 ⟨x.2, y.2⟩).ne (e.map_sub_le x y)]
-end
+to ensure that this definition agrees with `e.emetric_space`. -/
+instance : MetricSpace e.finite_subspace :=
+  by 
+    let this' := e.emetric_space 
+    refine' EmetricSpace.toMetricSpaceOfDist _ (fun x y => _) fun x y => rfl 
+    change e (x - y) ≠ ⊤
+    exact ne_top_of_le_ne_top (Ennreal.add_lt_top.2 ⟨x.2, y.2⟩).Ne (e.map_sub_le x y)
 
 theorem finite_dist_eq (x y : e.finite_subspace) : dist x y = (e (x - y)).toReal :=
   rfl

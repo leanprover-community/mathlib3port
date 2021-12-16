@@ -11,6 +11,8 @@ This file allows to state that all propositions in a list are equivalent. It is 
 
 namespace List
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
 /--
 tfae: The Following (propositions) Are Equivalent.
 
@@ -47,21 +49,22 @@ theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : tfae (a :: l) ↔
 theorem tfae_cons_cons {a b} {l : List Prop} : tfae (a :: b :: l) ↔ (a ↔ b) ∧ tfae (b :: l) :=
   tfae_cons_of_mem (Or.inl rfl)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀ a _ : a ∈ l, a ↔ b) : tfae l :=
   fun a₁ h₁ a₂ h₂ => (h _ h₁).trans (h _ h₂).symm
 
--- error in Data.List.Tfae: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tfae_of_cycle
-{a b}
-{l : list exprProp()} : list.chain ((«->»)) a «expr :: »(b, l) → (ilast' b l → a) → tfae «expr :: »(a, «expr :: »(b, l)) :=
-begin
-  induction [expr l] [] ["with", ident c, ident l, ident IH] ["generalizing", ident a, ident b]; simp [] [] ["only"] ["[", expr tfae_cons_cons, ",", expr tfae_singleton, ",", expr and_true, ",", expr chain_cons, ",", expr chain.nil, "]"] [] ["at", "*"],
-  { intros [ident a, ident b],
-    exact [expr iff.intro a b] },
-  rintros ["⟨", ident ab, ",", "⟨", ident bc, ",", ident ch, "⟩", "⟩", ident la],
-  have [] [] [":=", expr IH ⟨bc, ch⟩ «expr ∘ »(ab, la)],
-  exact [expr ⟨⟨ab, «expr ∘ »(la, «expr ∘ »((this.2 c (or.inl rfl) _ (ilast'_mem _ _)).1, bc))⟩, this⟩]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:445:4: warning: unsupported binary notation `«->»
+theorem tfae_of_cycle {a b} {l : List Prop} :
+  List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → tfae (a :: b :: l) :=
+  by 
+    induction' l with c l IH generalizing a b <;>
+      simp only [tfae_cons_cons, tfae_singleton, and_trueₓ, chain_cons, chain.nil] at *
+    ·
+      intro a b 
+      exact Iff.intro a b 
+    rintro ⟨ab, ⟨bc, ch⟩⟩ la 
+    have  := IH ⟨bc, ch⟩ (ab ∘ la)
+    exact ⟨⟨ab, la ∘ (this.2 c (Or.inl rfl) _ (ilast'_mem _ _)).1 ∘ bc⟩, this⟩
 
 theorem tfae.out {l} (h : tfae l) n₁ n₂ {a b}
   (h₁ : List.nth l n₁ = some a :=  by 

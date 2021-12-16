@@ -236,6 +236,7 @@ theorem perm.filter (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} (s
   by 
     rw [←filter_map_eq_filter] <;> apply s.filter_map _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
   ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' :=
   by 
@@ -292,7 +293,7 @@ theorem perm_comp_perm : (perm ∘r perm : List α → List α → Prop) = perm 
   by 
     funext a c 
     apply propext 
-    split 
+    constructor
     ·
       exact fun ⟨b, hab, hba⟩ => perm.trans hab hba
     ·
@@ -317,20 +318,20 @@ theorem perm_comp_forall₂ {l u v} (hlu : perm l u) (huv : forall₂ r u v) : (
       rcases ih₁ hab₂ with ⟨lb₁, hab₁, h₁₂⟩
       exact ⟨lb₁, hab₁, perm.trans h₁₂ h₂₃⟩
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem forall₂_comp_perm_eq_perm_comp_forall₂ : «expr = »(«expr ∘r »(forall₂ r, perm), «expr ∘r »(perm, forall₂ r)) :=
-begin
-  funext [ident l₁, ident l₃],
-  apply [expr propext],
-  split,
-  { assume [binders (h)],
-    rcases [expr h, "with", "⟨", ident l₂, ",", ident h₁₂, ",", ident h₂₃, "⟩"],
-    have [] [":", expr forall₂ (flip r) l₂ l₁] [],
-    from [expr h₁₂.flip],
-    rcases [expr perm_comp_forall₂ h₂₃.symm this, "with", "⟨", ident l', ",", ident h₁, ",", ident h₂, "⟩"],
-    exact [expr ⟨l', h₂.symm, h₁.flip⟩] },
-  { exact [expr assume ⟨l₂, h₁₂, h₂₃⟩, perm_comp_forall₂ h₁₂ h₂₃] }
-end
+theorem forall₂_comp_perm_eq_perm_comp_forall₂ : forall₂ r ∘r perm = perm ∘r forall₂ r :=
+  by 
+    funext l₁ l₃ 
+    apply propext 
+    constructor
+    ·
+      intro h 
+      rcases h with ⟨l₂, h₁₂, h₂₃⟩
+      have  : forall₂ (flip r) l₂ l₁ 
+      exact h₁₂.flip 
+      rcases perm_comp_forall₂ h₂₃.symm this with ⟨l', h₁, h₂⟩
+      exact ⟨l', h₂.symm, h₁.flip⟩
+    ·
+      exact fun ⟨l₂, h₁₂, h₂₃⟩ => perm_comp_forall₂ h₁₂ h₂₃
 
 theorem rel_perm_imp (hr : right_unique r) : (forall₂ r⇒forall₂ r⇒Implies) perm perm :=
   fun a b h₁ c d h₂ h =>
@@ -349,6 +350,7 @@ end Rel
 
 section Subperm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ~ » l₁)
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
   multiplicities of elements, and is used for the `≤` relation on multisets. -/
@@ -430,6 +432,8 @@ theorem perm.count_eq [DecidableEq α] {l₁ l₂ : List α} (p : l₁ ~ l₂) a
 theorem subperm.count_le [DecidableEq α] {l₁ l₂ : List α} (s : l₁ <+~ l₂) a : count a l₁ ≤ count a l₂ :=
   s.countp_le _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l₁)
 theorem perm.foldl_eq' {f : β → α → β} {l₁ l₂ : List α} (p : l₁ ~ l₂) :
   (∀ x _ : x ∈ l₁ y _ : y ∈ l₁ z, f (f z x) y = f (f z y) x) → ∀ b, foldl f b l₁ = foldl f b l₂ :=
   perm_induction_on p (fun H b => rfl) (fun x t₁ t₂ p r H b => r (fun x hx y hy => H _ (Or.inr hx) _ (Or.inr hy)) _)
@@ -511,67 +515,71 @@ theorem prod_reverse (l : List α) : Prod l.reverse = Prod l :=
 
 end CommMonoidₓ
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem perm_inv_core
-{a : α}
-{l₁
- l₂
- r₁
- r₂ : list α} : «expr ~ »(«expr ++ »(l₁, «expr :: »(a, r₁)), «expr ++ »(l₂, «expr :: »(a, r₂))) → «expr ~ »(«expr ++ »(l₁, r₁), «expr ++ »(l₂, r₂)) :=
-begin
-  generalize [ident e₁] [":"] [expr «expr = »(«expr ++ »(l₁, «expr :: »(a, r₁)), s₁)],
-  generalize [ident e₂] [":"] [expr «expr = »(«expr ++ »(l₂, «expr :: »(a, r₂)), s₂)],
-  intro [ident p],
-  revert [ident l₁, ident l₂, ident r₁, ident r₂, ident e₁, ident e₂],
-  refine [expr perm_induction_on p _ (λ
-    x
-    t₁
-    t₂
-    p
-    IH, _) (λ
-    x
-    y
-    t₁
-    t₂
-    p
-    IH, _) (λ t₁ t₂ t₃ p₁ p₂ IH₁ IH₂, _)]; intros [ident l₁, ident l₂, ident r₁, ident r₂, ident e₁, ident e₂],
-  { apply [expr (not_mem_nil a).elim],
-    rw ["<-", expr e₁] [],
-    simp [] [] [] [] [] [] },
-  { cases [expr l₁] ["with", ident y, ident l₁]; cases [expr l₂] ["with", ident z, ident l₂]; dsimp [] [] [] ["at", ident e₁, ident e₂]; injections []; subst [expr x],
-    { substs [ident t₁, ident t₂],
-      exact [expr p] },
-    { substs [ident z, ident t₁, ident t₂],
-      exact [expr p.trans perm_middle] },
-    { substs [ident y, ident t₁, ident t₂],
-      exact [expr perm_middle.symm.trans p] },
-    { substs [ident z, ident t₁, ident t₂],
-      exact [expr (IH rfl rfl).cons y] } },
-  { rcases [expr l₁, "with", "_", "|", "⟨", ident y, ",", "_", "|", "⟨", ident z, ",", ident l₁, "⟩", "⟩"]; rcases [expr l₂, "with", "_", "|", "⟨", ident u, ",", "_", "|", "⟨", ident v, ",", ident l₂, "⟩", "⟩"]; dsimp [] [] [] ["at", ident e₁, ident e₂]; injections []; substs [ident x, ident y],
-    { substs [ident r₁, ident r₂],
-      exact [expr p.cons a] },
-    { substs [ident r₁, ident r₂],
-      exact [expr p.cons u] },
-    { substs [ident r₁, ident v, ident t₂],
-      exact [expr (p.trans perm_middle).cons u] },
-    { substs [ident r₁, ident r₂],
-      exact [expr p.cons y] },
-    { substs [ident r₁, ident r₂, ident y, ident u],
-      exact [expr p.cons a] },
-    { substs [ident r₁, ident u, ident v, ident t₂],
-      exact [expr ((p.trans perm_middle).cons y).trans (swap _ _ _)] },
-    { substs [ident r₂, ident z, ident t₁],
-      exact [expr (perm_middle.symm.trans p).cons y] },
-    { substs [ident r₂, ident y, ident z, ident t₁],
-      exact [expr (swap _ _ _).trans ((perm_middle.symm.trans p).cons u)] },
-    { substs [ident u, ident v, ident t₁, ident t₂],
-      exact [expr (IH rfl rfl).swap' _ _] } },
-  { substs [ident t₁, ident t₃],
-    have [] [":", expr «expr ∈ »(a, t₂)] [":=", expr p₁.subset (by simp [] [] [] [] [] [])],
-    rcases [expr mem_split this, "with", "⟨", ident l₂, ",", ident r₂, ",", ident e₂, "⟩"],
-    subst [expr t₂],
-    exact [expr (IH₁ rfl rfl).trans (IH₂ rfl rfl)] }
-end
+theorem perm_inv_core {a : α} {l₁ l₂ r₁ r₂ : List α} : l₁ ++ a :: r₁ ~ l₂ ++ a :: r₂ → l₁ ++ r₁ ~ l₂ ++ r₂ :=
+  by 
+    generalize e₁ : l₁ ++ a :: r₁ = s₁ 
+    generalize e₂ : l₂ ++ a :: r₂ = s₂ 
+    intro p 
+    revert l₁ l₂ r₁ r₂ e₁ e₂ 
+    refine' perm_induction_on p _ (fun x t₁ t₂ p IH => _) (fun x y t₁ t₂ p IH => _) fun t₁ t₂ t₃ p₁ p₂ IH₁ IH₂ => _ <;>
+      intro l₁ l₂ r₁ r₂ e₁ e₂
+    ·
+      apply (not_mem_nil a).elim 
+      rw [←e₁]
+      simp 
+    ·
+      cases' l₁ with y l₁ <;> cases' l₂ with z l₂ <;> dsimp  at e₁ e₂ <;> injections <;> subst x
+      ·
+        substs t₁ t₂ 
+        exact p
+      ·
+        substs z t₁ t₂ 
+        exact p.trans perm_middle
+      ·
+        substs y t₁ t₂ 
+        exact perm_middle.symm.trans p
+      ·
+        substs z t₁ t₂ 
+        exact (IH rfl rfl).cons y
+    ·
+      rcases l₁ with (_ | ⟨y, _ | ⟨z, l₁⟩⟩) <;>
+        rcases l₂ with (_ | ⟨u, _ | ⟨v, l₂⟩⟩) <;> dsimp  at e₁ e₂ <;> injections <;> substs x y
+      ·
+        substs r₁ r₂ 
+        exact p.cons a
+      ·
+        substs r₁ r₂ 
+        exact p.cons u
+      ·
+        substs r₁ v t₂ 
+        exact (p.trans perm_middle).cons u
+      ·
+        substs r₁ r₂ 
+        exact p.cons y
+      ·
+        substs r₁ r₂ y u 
+        exact p.cons a
+      ·
+        substs r₁ u v t₂ 
+        exact ((p.trans perm_middle).cons y).trans (swap _ _ _)
+      ·
+        substs r₂ z t₁ 
+        exact (perm_middle.symm.trans p).cons y
+      ·
+        substs r₂ y z t₁ 
+        exact (swap _ _ _).trans ((perm_middle.symm.trans p).cons u)
+      ·
+        substs u v t₁ t₂ 
+        exact (IH rfl rfl).swap' _ _
+    ·
+      substs t₁ t₃ 
+      have  : a ∈ t₂ :=
+        p₁.subset
+          (by 
+            simp )
+      rcases mem_split this with ⟨l₂, r₂, e₂⟩
+      subst t₂ 
+      exact (IH₁ rfl rfl).trans (IH₂ rfl rfl)
 
 theorem perm.cons_inv {a : α} {l₁ l₂ : List α} : a :: l₁ ~ a :: l₂ → l₁ ~ l₂ :=
   @perm_inv_core _ _ [] [] _ _
@@ -614,33 +622,32 @@ theorem subperm_cons (a : α) {l₁ l₂ : List α} : a :: l₁ <+~ a :: l₂ �
           exact ⟨u, p.cons_inv, s'⟩,
     fun ⟨l, p, s⟩ => ⟨a :: l, p.cons a, s.cons2 _ _ _⟩⟩
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cons_subperm_of_mem
-{a : α}
-{l₁ l₂ : list α}
-(d₁ : nodup l₁)
-(h₁ : «expr ∉ »(a, l₁))
-(h₂ : «expr ∈ »(a, l₂))
-(s : «expr <+~ »(l₁, l₂)) : «expr <+~ »(«expr :: »(a, l₁), l₂) :=
-begin
-  rcases [expr s, "with", "⟨", ident l, ",", ident p, ",", ident s, "⟩"],
-  induction [expr s] [] [] ["generalizing", ident l₁],
-  case [ident list.sublist.slnil] { cases [expr h₂] [] },
-  case [ident list.sublist.cons, ":", ident r₁, ident r₂, ident b, ident s', ident ih] { simp [] [] [] [] [] ["at", ident h₂],
-    cases [expr h₂] ["with", ident e, ident m],
-    { subst [expr b],
-      exact [expr ⟨«expr :: »(a, r₁), p.cons a, s'.cons2 _ _ _⟩] },
-    { rcases [expr ih m d₁ h₁ p, "with", "⟨", ident t, ",", ident p', ",", ident s', "⟩"],
-      exact [expr ⟨t, p', s'.cons _ _ _⟩] } },
-  case [ident list.sublist.cons2, ":", ident r₁, ident r₂, ident b, ident s', ident ih] { have [ident bm] [":", expr «expr ∈ »(b, l₁)] [":=", expr «expr $ »(p.subset, mem_cons_self _ _)],
-    have [ident am] [":", expr «expr ∈ »(a, r₂)] [":=", expr h₂.resolve_left (λ
-      e, «expr $ »(h₁, «expr ▸ »(e.symm, bm)))],
-    rcases [expr mem_split bm, "with", "⟨", ident t₁, ",", ident t₂, ",", ident rfl, "⟩"],
-    have [ident st] [":", expr «expr <+ »(«expr ++ »(t₁, t₂), «expr ++ »(t₁, «expr :: »(b, t₂)))] [":=", expr by simp [] [] [] [] [] []],
-    rcases [expr ih am (nodup_of_sublist st d₁) (mt (λ
-       x, st.subset x) h₁) «expr $ »(perm.cons_inv, p.trans perm_middle), "with", "⟨", ident t, ",", ident p', ",", ident s', "⟩"],
-    exact [expr ⟨«expr :: »(b, t), «expr $ »((p'.cons b).trans, (swap _ _ _).trans (perm_middle.symm.cons a)), s'.cons2 _ _ _⟩] }
-end
+theorem cons_subperm_of_mem {a : α} {l₁ l₂ : List α} (d₁ : nodup l₁) (h₁ : a ∉ l₁) (h₂ : a ∈ l₂) (s : l₁ <+~ l₂) :
+  a :: l₁ <+~ l₂ :=
+  by 
+    rcases s with ⟨l, p, s⟩
+    induction s generalizing l₁ 
+    case list.sublist.slnil => 
+      cases h₂ 
+    case list.sublist.cons r₁ r₂ b s' ih => 
+      simp  at h₂ 
+      cases' h₂ with e m
+      ·
+        subst b 
+        exact ⟨a :: r₁, p.cons a, s'.cons2 _ _ _⟩
+      ·
+        rcases ih m d₁ h₁ p with ⟨t, p', s'⟩
+        exact ⟨t, p', s'.cons _ _ _⟩
+    case list.sublist.cons2 r₁ r₂ b s' ih => 
+      have bm : b ∈ l₁ := p.subset$ mem_cons_self _ _ 
+      have am : a ∈ r₂ := h₂.resolve_left fun e => h₁$ e.symm ▸ bm 
+      rcases mem_split bm with ⟨t₁, t₂, rfl⟩
+      have st : t₁ ++ t₂ <+ t₁ ++ b :: t₂ :=
+        by 
+          simp 
+      rcases ih am (nodup_of_sublist st d₁) (mt (fun x => st.subset x) h₁) (perm.cons_inv$ p.trans perm_middle) with
+        ⟨t, p', s'⟩
+      exact ⟨b :: t, (p'.cons b).trans$ (swap _ _ _).trans (perm_middle.symm.cons a), s'.cons2 _ _ _⟩
 
 theorem subperm_append_left {l₁ l₂ : List α} : ∀ l, l ++ l₁ <+~ l ++ l₂ ↔ l₁ <+~ l₂
 | [] => Iff.rfl
@@ -649,24 +656,29 @@ theorem subperm_append_left {l₁ l₂ : List α} : ∀ l, l ++ l₁ <+~ l ++ l�
 theorem subperm_append_right {l₁ l₂ : List α} l : l₁ ++ l <+~ l₂ ++ l ↔ l₁ <+~ l₂ :=
   (perm_append_comm.subperm_left.trans perm_append_comm.subperm_right).trans (subperm_append_left l)
 
-theorem subperm.exists_of_length_lt {l₁ l₂ : List α} : l₁ <+~ l₂ → length l₁ < length l₂ → ∃ a, a :: l₁ <+~ l₂
-| ⟨l, p, s⟩, h =>
-  suffices length l < length l₂ → ∃ a : α, a :: l <+~ l₂ from
-    (this$ p.symm.length_eq ▸ h).imp fun a => (p.cons a).subperm_right.1
-  by 
-    clear subperm.exists_of_length_lt p h l₁ 
-    rename' l₂ => u 
-    induction' s with l₁ l₂ a s IH _ _ b s IH <;> intro h
-    ·
-      cases h
-    ·
-      cases' lt_or_eq_of_leₓ (Nat.le_of_lt_succₓ h : length l₁ ≤ length l₂) with h h
-      ·
-        exact (IH h).imp fun a s => s.trans (sublist_cons _ _).Subperm
-      ·
-        exact ⟨a, eq_of_sublist_of_length_eq s h ▸ subperm.refl _⟩
-    ·
-      exact (IH$ Nat.lt_of_succ_lt_succₓ h).imp fun a s => (swap _ _ _).subperm_right.1$ (subperm_cons _).2 s
+-- failed to format: format: uncaught backtrack exception
+theorem
+  subperm.exists_of_length_lt
+  { l₁ l₂ : List α } : l₁ <+~ l₂ → length l₁ < length l₂ → ∃ a , a :: l₁ <+~ l₂
+  |
+    ⟨ l , p , s ⟩ , h
+    =>
+    suffices
+      length l < length l₂ → ∃ a : α , a :: l <+~ l₂
+        from ( this $ p.symm.length_eq ▸ h ) . imp fun a => ( p.cons a ) . subperm_right . 1
+      by
+        clear subperm.exists_of_length_lt p h l₁
+          rename' l₂
+          induction' s with l₁ l₂ a s IH _ _ b s IH <;> intro h
+          · cases h
+          ·
+            cases' lt_or_eq_of_leₓ ( Nat.le_of_lt_succₓ h : length l₁ ≤ length l₂ ) with h h
+              · exact ( IH h ) . imp fun a s => s.trans ( sublist_cons _ _ ) . Subperm
+              · exact ⟨ a , eq_of_sublist_of_length_eq s h ▸ subperm.refl _ ⟩
+          ·
+            exact
+              ( IH $ Nat.lt_of_succ_lt_succₓ h ) . imp
+                fun a s => ( swap _ _ _ ) . subperm_right . 1 $ ( subperm_cons _ ) . 2 s
 
 theorem subperm_of_subset_nodup {l₁ l₂ : List α} (d : nodup l₁) (H : l₁ ⊆ l₂) : l₁ <+~ l₂ :=
   by 
@@ -823,48 +835,58 @@ theorem cons_perm_iff_perm_erase {a : α} {l₁ l₂ : List α} : a :: l₁ ~ l�
       ⟨this, (h.trans$ perm_cons_erase this).cons_inv⟩,
     fun ⟨m, h⟩ => (h.cons a).trans (perm_cons_erase m).symm⟩
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem perm_iff_count {l₁ l₂ : list α} : «expr ↔ »(«expr ~ »(l₁, l₂), ∀ a, «expr = »(count a l₁, count a l₂)) :=
-⟨perm.count_eq, λ H, begin
-   induction [expr l₁] [] ["with", ident a, ident l₁, ident IH] ["generalizing", ident l₂],
-   { cases [expr l₂] ["with", ident b, ident l₂],
-     { refl },
-     specialize [expr H b],
-     simp [] [] [] [] [] ["at", ident H],
-     contradiction },
-   { have [] [":", expr «expr ∈ »(a, l₂)] [":=", expr count_pos.1 (by rw ["<-", expr H] []; simp [] [] [] [] [] []; apply [expr nat.succ_pos])],
-     refine [expr («expr $ »(IH, λ b, _).cons a).trans (perm_cons_erase this).symm],
-     specialize [expr H b],
-     rw [expr (perm_cons_erase this).count_eq] ["at", ident H],
-     by_cases [expr «expr = »(b, a)]; simp [] [] [] ["[", expr h, "]"] [] ["at", ident H, "⊢"]; assumption }
- end⟩
+theorem perm_iff_count {l₁ l₂ : List α} : l₁ ~ l₂ ↔ ∀ a, count a l₁ = count a l₂ :=
+  ⟨perm.count_eq,
+    fun H =>
+      by 
+        induction' l₁ with a l₁ IH generalizing l₂
+        ·
+          cases' l₂ with b l₂
+          ·
+            rfl 
+          specialize H b 
+          simp  at H 
+          contradiction
+        ·
+          have  : a ∈ l₂ :=
+            count_pos.1
+              (by 
+                rw [←H] <;> simp  <;> apply Nat.succ_posₓ)
+          refine' ((IH$ fun b => _).cons a).trans (perm_cons_erase this).symm 
+          specialize H b 
+          rw [(perm_cons_erase this).count_eq] at H 
+          byCases' b = a <;> simp [h] at H⊢ <;> assumption⟩
 
 theorem subperm.cons_right {α : Type _} {l l' : List α} (x : α) (h : l <+~ l') : l <+~ x :: l' :=
   h.trans (sublist_cons x l').Subperm
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
 /-- The list version of `add_tsub_cancel_of_le` for multisets. -/
-theorem subperm_append_diff_self_of_count_le
-{l₁ l₂ : list α}
-(h : ∀ x «expr ∈ » l₁, «expr ≤ »(count x l₁, count x l₂)) : «expr ~ »(«expr ++ »(l₁, l₂.diff l₁), l₂) :=
-begin
-  induction [expr l₁] [] ["with", ident hd, ident tl, ident IH] ["generalizing", ident l₂],
-  { simp [] [] [] [] [] [] },
-  { have [] [":", expr «expr ∈ »(hd, l₂)] [],
-    { rw ["<-", expr count_pos] [],
-      exact [expr lt_of_lt_of_le (count_pos.mpr (mem_cons_self _ _)) (h hd (mem_cons_self _ _))] },
-    replace [ident this] [":", expr «expr ~ »(l₂, «expr :: »(hd, l₂.erase hd))] [":=", expr perm_cons_erase this],
-    refine [expr perm.trans _ this.symm],
-    rw ["[", expr cons_append, ",", expr diff_cons, ",", expr perm_cons, "]"] [],
-    refine [expr IH (λ x hx, _)],
-    specialize [expr h x (mem_cons_of_mem _ hx)],
-    rw [expr perm_iff_count.mp this] ["at", ident h],
-    by_cases [expr hx, ":", expr «expr = »(x, hd)],
-    { subst [expr hd],
-      simpa [] [] [] ["[", expr nat.succ_le_succ_iff, "]"] [] ["using", expr h] },
-    { simpa [] [] [] ["[", expr hx, "]"] [] ["using", expr h] } }
-end
+theorem subperm_append_diff_self_of_count_le {l₁ l₂ : List α} (h : ∀ x _ : x ∈ l₁, count x l₁ ≤ count x l₂) :
+  l₁ ++ l₂.diff l₁ ~ l₂ :=
+  by 
+    induction' l₁ with hd tl IH generalizing l₂
+    ·
+      simp 
+    ·
+      have  : hd ∈ l₂
+      ·
+        rw [←count_pos]
+        exact lt_of_lt_of_leₓ (count_pos.mpr (mem_cons_self _ _)) (h hd (mem_cons_self _ _))
+      replace this : l₂ ~ hd :: l₂.erase hd := perm_cons_erase this 
+      refine' perm.trans _ this.symm 
+      rw [cons_append, diff_cons, perm_cons]
+      refine' IH fun x hx => _ 
+      specialize h x (mem_cons_of_mem _ hx)
+      rw [perm_iff_count.mp this] at h 
+      byCases' hx : x = hd
+      ·
+        subst hd 
+        simpa [Nat.succ_le_succ_iff] using h
+      ·
+        simpa [hx] using h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
 /-- The list version of `multiset.le_iff_count`. -/
 theorem subperm_ext_iff {l₁ l₂ : List α} : l₁ <+~ l₂ ↔ ∀ x _ : x ∈ l₁, count x l₁ ≤ count x l₂ :=
   by 
@@ -888,11 +910,16 @@ theorem subperm.cons_left {l₁ l₂ : List α} (h : l₁ <+~ l₂) (x : α) (hx
       refine' h y _ 
       simpa [hy'] using hy
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance decidable_perm : ∀ l₁ l₂ : list α, decidable «expr ~ »(l₁, l₂)
-| «expr[ , ]»([]), «expr[ , ]»([]) := «expr $ »(is_true, perm.refl _)
-| «expr[ , ]»([]), «expr :: »(b, l₂) := «expr $ »(is_false, λ h, by have [] [] [":=", expr h.nil_eq]; contradiction)
-| «expr :: »(a, l₁), l₂ := by haveI [] [] [":=", expr decidable_perm l₁ (l₂.erase a)]; exact [expr decidable_of_iff' _ cons_perm_iff_perm_erase]
+instance decidable_perm : ∀ l₁ l₂ : List α, Decidable (l₁ ~ l₂)
+| [], [] => is_true$ perm.refl _
+| [], b :: l₂ =>
+  is_false$
+    fun h =>
+      by 
+        have  := h.nil_eq <;> contradiction
+| a :: l₁, l₂ =>
+  by 
+    have  := decidable_perm l₁ (l₂.erase a) <;> exact decidableOfIff' _ cons_perm_iff_perm_erase
 
 theorem perm.erase_dup {l₁ l₂ : List α} (p : l₁ ~ l₂) : erase_dup l₁ ~ erase_dup l₂ :=
   perm_iff_count.2$
@@ -973,43 +1000,48 @@ theorem perm.inter_left (l : List α) {t₁ t₂ : List α} (p : t₁ ~ t₂) : 
 theorem perm.inter {l₁ l₂ t₁ t₂ : List α} (p₁ : l₁ ~ l₂) (p₂ : t₁ ~ t₂) : l₁ ∩ t₁ ~ l₂ ∩ t₂ :=
   p₂.inter_left l₂ ▸ p₁.inter_right t₁
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem perm.inter_append
-{l t₁ t₂ : list α}
-(h : disjoint t₁ t₂) : «expr ~ »(«expr ∩ »(l, «expr ++ »(t₁, t₂)), «expr ++ »(«expr ∩ »(l, t₁), «expr ∩ »(l, t₂))) :=
-begin
-  induction [expr l] [] [] [],
-  case [ident list.nil] { simp [] [] [] [] [] [] },
-  case [ident list.cons, ":", ident x, ident xs, ident l_ih] { by_cases [expr h₁, ":", expr «expr ∈ »(x, t₁)],
-    { have [ident h₂] [":", expr «expr ∉ »(x, t₂)] [":=", expr h h₁],
-      simp [] [] [] ["*"] [] [] },
-    by_cases [expr h₂, ":", expr «expr ∈ »(x, t₂)],
-    { simp [] [] ["only"] ["[", "*", ",", expr inter_cons_of_not_mem, ",", expr false_or, ",", expr mem_append, ",", expr inter_cons_of_mem, ",", expr not_false_iff, "]"] [] [],
-      transitivity [],
-      { apply [expr perm.cons _ l_ih] },
-      change [expr «expr ~ »(«expr ++ »(«expr ++ »(«expr[ , ]»([x]), «expr ∩ »(xs, t₁)), «expr ∩ »(xs, t₂)), «expr ++ »(«expr ∩ »(xs, t₁), «expr ++ »(«expr[ , ]»([x]), «expr ∩ »(xs, t₂))))] [] [],
-      rw ["[", "<-", expr list.append_assoc, "]"] [],
-      solve_by_elim [] [] ["[", expr perm.append_right, ",", expr perm_append_comm, "]"] [] },
-    { simp [] [] [] ["*"] [] [] } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  perm.inter_append
+  { l t₁ t₂ : List α } ( h : Disjoint t₁ t₂ ) : l ∩ t₁ ++ t₂ ~ l ∩ t₁ ++ l ∩ t₂
+  :=
+    by
+      induction l
+        case list.nil => simp
+        case
+          list.cons
+          x xs l_ih
+          =>
+          byCases' h₁ : x ∈ t₁
+            · have h₂ : x ∉ t₂ := h h₁ simp
+            byCases' h₂ : x ∈ t₂
+            ·
+              simp only [ inter_cons_of_not_mem , false_orₓ , mem_append , inter_cons_of_mem , not_false_iff ]
+                trans
+                · apply perm.cons _ l_ih
+                change [ x ] ++ xs ∩ t₁ ++ xs ∩ t₂ ~ xs ∩ t₁ ++ [ x ] ++ xs ∩ t₂
+                rw [ ← List.append_assoc ]
+                solveByElim [ perm.append_right , perm_append_comm ]
+            · simp
 
 end 
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem perm.pairwise_iff
-{R : α → α → exprProp()}
-(S : symmetric R) : ∀ {l₁ l₂ : list α} (p : «expr ~ »(l₁, l₂)), «expr ↔ »(pairwise R l₁, pairwise R l₂) :=
-suffices ∀ {l₁ l₂}, «expr ~ »(l₁, l₂) → pairwise R l₁ → pairwise R l₂, from λ l₁ l₂ p, ⟨this p, this p.symm⟩,
-λ l₁ l₂ p d, begin
-  induction [expr d] [] ["with", ident a, ident l₁, ident h, ident d, ident IH] ["generalizing", ident l₂],
-  { rw ["<-", expr p.nil_eq] [],
-    constructor },
-  { have [] [":", expr «expr ∈ »(a, l₂)] [":=", expr p.subset (mem_cons_self _ _)],
-    rcases [expr mem_split this, "with", "⟨", ident s₂, ",", ident t₂, ",", ident rfl, "⟩"],
-    have [ident p'] [] [":=", expr (p.trans perm_middle).cons_inv],
-    refine [expr (pairwise_middle S).2 (pairwise_cons.2 ⟨λ b m, _, IH _ p'⟩)],
-    exact [expr h _ (p'.symm.subset m)] }
-end
+theorem perm.pairwise_iff {R : α → α → Prop} (S : Symmetric R) :
+  ∀ {l₁ l₂ : List α} p : l₁ ~ l₂, Pairwise R l₁ ↔ Pairwise R l₂ :=
+  suffices ∀ {l₁ l₂}, l₁ ~ l₂ → Pairwise R l₁ → Pairwise R l₂ from fun l₁ l₂ p => ⟨this p, this p.symm⟩
+  fun l₁ l₂ p d =>
+    by 
+      induction' d with a l₁ h d IH generalizing l₂
+      ·
+        rw [←p.nil_eq]
+        constructor
+      ·
+        have  : a ∈ l₂ := p.subset (mem_cons_self _ _)
+        rcases mem_split this with ⟨s₂, t₂, rfl⟩
+        have p' := (p.trans perm_middle).cons_inv 
+        refine' (pairwise_middle S).2 (pairwise_cons.2 ⟨fun b m => _, IH _ p'⟩)
+        exact h _ (p'.symm.subset m)
 
 theorem perm.nodup_iff {l₁ l₂ : List α} : l₁ ~ l₂ → (nodup l₁ ↔ nodup l₂) :=
   perm.pairwise_iff$ @Ne.symm α
@@ -1104,6 +1136,10 @@ theorem revzip_sublists' (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip 
       ·
         exact (IH _ _ h).cons _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » f a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (d «expr ∈ » f b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » f a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (d «expr ∈ » f b)
 theorem perm_lookmap (f : α → Option α) {l₁ l₂ : List α}
   (H : Pairwise (fun a b => ∀ c _ : c ∈ f a d _ : d ∈ f b, a = b ∧ c = d) l₁) (p : l₁ ~ l₂) :
   lookmap f l₁ ~ lookmap f l₂ :=
@@ -1164,188 +1200,281 @@ theorem perm.erasep (f : α → Prop) [DecidablePred f] {l₁ l₂ : List α} (H
       refine' (IH₁ H).trans (IH₂ ((p₁.pairwise_iff _).1 H))
       exact fun a b h h₁ h₂ => h h₂ h₁
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem perm.take_inter
-{α}
-[decidable_eq α]
-{xs ys : list α}
-(n : exprℕ())
-(h : «expr ~ »(xs, ys))
-(h' : ys.nodup) : «expr ~ »(xs.take n, ys.inter (xs.take n)) :=
-begin
-  simp [] [] ["only"] ["[", expr list.inter, "]"] [] ["at", "*"],
-  induction [expr h] [] [] ["generalizing", ident n],
-  case [ident list.perm.nil, ":", ident n] { simp [] [] ["only"] ["[", expr not_mem_nil, ",", expr filter_false, ",", expr take_nil, "]"] [] [] },
-  case [ident list.perm.cons, ":", ident h_x, ident h_l₁, ident h_l₂, ident h_a, ident h_ih, ident n] { cases [expr n] []; simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr true_or, ",", expr eq_self_iff_true, ",", expr filter_cons_of_pos, ",", expr perm_cons, ",", expr take, ",", expr not_mem_nil, ",", expr filter_false, "]"] [] [],
-    cases [expr h'] ["with", "_", "_", ident h₁, ident h₂],
-    convert [] [expr h_ih h₂ n] ["using", 1],
-    apply [expr filter_congr],
-    introv [ident h],
-    simp [] [] ["only"] ["[", expr (h₁ x h).symm, ",", expr false_or, "]"] [] [] },
-  case [ident list.perm.swap, ":", ident h_x, ident h_y, ident h_l, ident n] { cases [expr h'] ["with", "_", "_", ident h₁, ident h₂],
-    cases [expr h₂] ["with", "_", "_", ident h₂, ident h₃],
-    have [] [] [":=", expr h₁ _ (or.inl rfl)],
-    cases [expr n] []; simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr not_mem_nil, ",", expr filter_false, ",", expr take, "]"] [] [],
-    cases [expr n] []; simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr false_or, ",", expr true_or, ",", expr filter, ",", "*", ",", expr nat.nat_zero_eq_zero, ",", expr if_true, ",", expr not_mem_nil, ",", expr eq_self_iff_true, ",", expr or_false, ",", expr if_false, ",", expr perm_cons, ",", expr take, "]"] [] [],
-    { rw [expr filter_eq_nil.2] [],
-      intros [],
-      solve_by_elim [] [] ["[", expr ne.symm, "]"] [] },
-    { convert [] [expr perm.swap _ _ _] [],
-      rw [expr @filter_congr _ _ ((«expr ∈ » take n h_l))] [],
-      { clear [ident h₁],
-        induction [expr n] [] [] ["generalizing", ident h_l]; simp [] [] ["only"] ["[", expr not_mem_nil, ",", expr filter_false, ",", expr take, "]"] [] [],
-        cases [expr h_l] []; simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr true_or, ",", expr eq_self_iff_true, ",", expr filter_cons_of_pos, ",", expr true_and, ",", expr take, ",", expr not_mem_nil, ",", expr filter_false, ",", expr take_nil, "]"] [] [],
-        cases [expr h₃] ["with", "_", "_", ident h₃, ident h₄],
-        rwa ["[", expr @filter_congr _ _ ((«expr ∈ » take n_n h_l_tl)), ",", expr n_ih, "]"] [],
-        { introv [ident h],
-          apply [expr h₂ _ (or.inr h)] },
-        { introv [ident h],
-          simp [] [] ["only"] ["[", expr (h₃ x h).symm, ",", expr false_or, "]"] [] [] } },
-      { introv [ident h],
-        simp [] [] ["only"] ["[", expr (h₂ x h).symm, ",", expr (h₁ x (or.inr h)).symm, ",", expr false_or, "]"] [] [] } } },
-  case [ident list.perm.trans, ":", ident h_l₁, ident h_l₂, ident h_l₃, ident h₀, ident h₁, ident h_ih₀, ident h_ih₁, ident n] { transitivity [],
-    { apply [expr h_ih₀],
-      rwa [expr h₁.nodup_iff] [] },
-    { apply [expr perm.filter _ h₁] } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: format: uncaught backtrack exception
+theorem
+  perm.take_inter
+  { α } [ DecidableEq α ] { xs ys : List α } ( n : ℕ ) ( h : xs ~ ys ) ( h' : ys.nodup )
+    : xs.take n ~ ys.inter xs.take n
+  :=
+    by
+      simp only [ List.interₓ ] at *
+        induction h generalizing n
+        case list.perm.nil n => simp only [ not_mem_nil , filter_false , take_nil ]
+        case
+          list.perm.cons
+          h_x h_l₁ h_l₂ h_a h_ih n
+          =>
+          cases n
+              <;>
+              simp
+                only
+                [
+                  mem_cons_iff
+                    ,
+                    true_orₓ
+                    ,
+                    eq_self_iff_true
+                    ,
+                    filter_cons_of_pos
+                    ,
+                    perm_cons
+                    ,
+                    take
+                    ,
+                    not_mem_nil
+                    ,
+                    filter_false
+                  ]
+            cases' h' with _ _ h₁ h₂
+            convert h_ih h₂ n using 1
+            apply filter_congr
+            introv h
+            simp only [ h₁ x h . symm , false_orₓ ]
+        case
+          list.perm.swap
+          h_x h_y h_l n
+          =>
+          cases' h' with _ _ h₁ h₂
+            cases' h₂ with _ _ h₂ h₃
+            have := h₁ _ Or.inl rfl
+            cases n <;> simp only [ mem_cons_iff , not_mem_nil , filter_false , take ]
+            cases n
+              <;>
+              simp
+                only
+                [
+                  mem_cons_iff
+                    ,
+                    false_orₓ
+                    ,
+                    true_orₓ
+                    ,
+                    filter
+                    ,
+                    Nat.nat_zero_eq_zero
+                    ,
+                    if_true
+                    ,
+                    not_mem_nil
+                    ,
+                    eq_self_iff_true
+                    ,
+                    or_falseₓ
+                    ,
+                    if_false
+                    ,
+                    perm_cons
+                    ,
+                    take
+                  ]
+            · rw [ filter_eq_nil . 2 ] intros solveByElim [ Ne.symm ]
+            ·
+              convert perm.swap _ _ _
+                rw [ @ filter_congr _ _ · ∈ take n h_l ]
+                ·
+                  clear h₁
+                    induction n generalizing h_l <;> simp only [ not_mem_nil , filter_false , take ]
+                    cases h_l
+                      <;>
+                      simp
+                        only
+                        [
+                          mem_cons_iff
+                            ,
+                            true_orₓ
+                            ,
+                            eq_self_iff_true
+                            ,
+                            filter_cons_of_pos
+                            ,
+                            true_andₓ
+                            ,
+                            take
+                            ,
+                            not_mem_nil
+                            ,
+                            filter_false
+                            ,
+                            take_nil
+                          ]
+                    cases' h₃ with _ _ h₃ h₄
+                    rwa [ @ filter_congr _ _ · ∈ take n_n h_l_tl , n_ih ]
+                    · introv h apply h₂ _ Or.inr h
+                    · introv h simp only [ h₃ x h . symm , false_orₓ ]
+                · introv h simp only [ h₂ x h . symm , h₁ x Or.inr h . symm , false_orₓ ]
+        case
+          list.perm.trans
+          h_l₁ h_l₂ h_l₃ h₀ h₁ h_ih₀ h_ih₁ n
+          =>
+          trans · apply h_ih₀ rwa [ h₁.nodup_iff ] · apply perm.filter _ h₁
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem perm.drop_inter
-{α}
-[decidable_eq α]
-{xs ys : list α}
-(n : exprℕ())
-(h : «expr ~ »(xs, ys))
-(h' : ys.nodup) : «expr ~ »(xs.drop n, ys.inter (xs.drop n)) :=
-begin
-  by_cases [expr h'', ":", expr «expr ≤ »(n, xs.length)],
-  { let [ident n'] [] [":=", expr «expr - »(xs.length, n)],
-    have [ident h₀] [":", expr «expr = »(n, «expr - »(xs.length, n'))] [],
-    { dsimp [] ["[", expr n', "]"] [] [],
-      rwa [expr tsub_tsub_cancel_of_le] [] },
-    have [ident h₁] [":", expr «expr ≤ »(n', xs.length)] [],
-    { apply [expr tsub_le_self] },
-    have [ident h₂] [":", expr «expr = »(xs.drop n, (xs.reverse.take n').reverse)] [],
-    { rw ["[", expr reverse_take _ h₁, ",", expr h₀, ",", expr reverse_reverse, "]"] [] },
-    rw ["[", expr h₂, "]"] [],
-    apply [expr (reverse_perm _).trans],
-    rw [expr inter_reverse] [],
-    apply [expr perm.take_inter _ _ h'],
-    apply [expr (reverse_perm _).trans]; assumption },
-  { have [] [":", expr «expr = »(drop n xs, «expr[ , ]»([]))] [],
-    { apply [expr eq_nil_of_length_eq_zero],
-      rw ["[", expr length_drop, ",", expr tsub_eq_zero_iff_le, "]"] [],
-      apply [expr le_of_not_ge h''] },
-    simp [] [] [] ["[", expr this, ",", expr list.inter, "]"] [] [] }
-end
+theorem perm.drop_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : xs ~ ys) (h' : ys.nodup) :
+  xs.drop n ~ ys.inter (xs.drop n) :=
+  by 
+    byCases' h'' : n ≤ xs.length
+    ·
+      let n' := xs.length - n 
+      have h₀ : n = xs.length - n'
+      ·
+        dsimp [n']
+        rwa [tsub_tsub_cancel_of_le]
+      have h₁ : n' ≤ xs.length
+      ·
+        apply tsub_le_self 
+      have h₂ : xs.drop n = (xs.reverse.take n').reverse
+      ·
+        rw [reverse_take _ h₁, h₀, reverse_reverse]
+      rw [h₂]
+      apply (reverse_perm _).trans 
+      rw [inter_reverse]
+      apply perm.take_inter _ _ h' 
+      apply (reverse_perm _).trans <;> assumption
+    ·
+      have  : drop n xs = []
+      ·
+        apply eq_nil_of_length_eq_zero 
+        rw [length_drop, tsub_eq_zero_iff_le]
+        apply le_of_not_geₓ h'' 
+      simp [this, List.interₓ]
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem perm.slice_inter
-{α}
-[decidable_eq α]
-{xs ys : list α}
-(n m : exprℕ())
-(h : «expr ~ »(xs, ys))
-(h' : ys.nodup) : «expr ~ »(list.slice n m xs, «expr ∩ »(ys, list.slice n m xs)) :=
-begin
-  simp [] [] ["only"] ["[", expr slice_eq, "]"] [] [],
-  have [] [":", expr «expr ≤ »(n, «expr + »(n, m))] [":=", expr nat.le_add_right _ _],
-  have [] [] [":=", expr h.nodup_iff.2 h'],
-  apply [expr perm.trans _ (perm.inter_append _).symm]; solve_by_elim [] [] ["[", expr perm.append, ",", expr perm.drop_inter, ",", expr perm.take_inter, ",", expr disjoint_take_drop, ",", expr h, ",", expr h', "]"] [] { max_depth := 7 }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  perm.slice_inter
+  { α } [ DecidableEq α ] { xs ys : List α } ( n m : ℕ ) ( h : xs ~ ys ) ( h' : ys.nodup )
+    : List.slice n m xs ~ ys ∩ List.slice n m xs
+  :=
+    by
+      simp only [ slice_eq ]
+        have : n ≤ n + m := Nat.le_add_rightₓ _ _
+        have := h.nodup_iff . 2 h'
+        apply perm.trans _ perm.inter_append _ . symm
+          <;>
+          solveByElim
+            ( config := { max_depth := 7 } )
+            [ perm.append , perm.drop_inter , perm.take_inter , disjoint_take_drop , h , h' ]
 
 section Permutations
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem perm_of_mem_permutations_aux : ∀
-{ts is l : list α}, «expr ∈ »(l, permutations_aux ts is) → «expr ~ »(l, «expr ++ »(ts, is)) :=
-begin
-  refine [expr permutations_aux.rec (by simp [] [] [] [] [] []) _],
-  introv [ident IH1, ident IH2, ident m],
-  rw ["[", expr permutations_aux_cons, ",", expr permutations, ",", expr mem_foldr_permutations_aux2, "]"] ["at", ident m],
-  rcases [expr m, "with", ident m, "|", "⟨", ident l₁, ",", ident l₂, ",", ident m, ",", "_", ",", ident e, "⟩"],
-  { exact [expr (IH1 m).trans perm_middle] },
-  { subst [expr e],
-    have [ident p] [":", expr «expr ~ »(«expr ++ »(l₁, l₂), is)] [],
-    { simp [] [] [] ["[", expr permutations, "]"] [] ["at", ident m],
-      cases [expr m] ["with", ident e, ident m],
-      { simp [] [] [] ["[", expr e, "]"] [] [] },
-      exact [expr «expr ▸ »(is.append_nil, IH2 m)] },
-    exact [expr ((perm_middle.trans (p.cons _)).append_right _).trans (perm_append_comm.cons _)] }
-end
+-- failed to format: format: uncaught backtrack exception
+theorem
+  perm_of_mem_permutations_aux
+  : ∀ { ts is l : List α } , l ∈ permutations_aux ts is → l ~ ts ++ is
+  :=
+    by
+      refine' permutations_aux.rec ( by simp ) _
+        introv IH1 IH2 m
+        rw [ permutations_aux_cons , permutations , mem_foldr_permutations_aux2 ] at m
+        rcases m with ( m | ⟨ l₁ , l₂ , m , _ , e ⟩ )
+        · exact ( IH1 m ) . trans perm_middle
+        ·
+          subst e
+            have p : l₁ ++ l₂ ~ is
+            · simp [ permutations ] at m cases' m with e m · simp [ e ] exact is.append_nil ▸ IH2 m
+            exact ( ( perm_middle.trans ( p.cons _ ) ) . append_right _ ) . trans ( perm_append_comm.cons _ )
 
 theorem perm_of_mem_permutations {l₁ l₂ : List α} (h : l₁ ∈ permutations l₂) : l₁ ~ l₂ :=
   (eq_or_mem_of_mem_cons h).elim (fun e => e ▸ perm.refl _) fun m => append_nil l₂ ▸ perm_of_mem_permutations_aux m
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem length_permutations_aux : ∀
-ts
-is : list α, «expr = »(«expr + »(length (permutations_aux ts is), «expr !»(is.length)), «expr !»(«expr + »(length ts, length is))) :=
-begin
-  refine [expr permutations_aux.rec (by simp [] [] [] [] [] []) _],
-  intros [ident t, ident ts, ident is, ident IH1, ident IH2],
-  have [ident IH2] [":", expr «expr = »(«expr + »(length (permutations_aux is nil), 1), «expr !»(is.length))] [],
-  { simpa [] [] [] [] [] ["using", expr IH2] },
-  simp [] [] [] ["[", "-", ident add_comm, ",", expr nat.factorial, ",", expr nat.add_succ, ",", expr mul_comm, "]"] [] ["at", ident IH1],
-  rw ["[", expr permutations_aux_cons, ",", expr length_foldr_permutations_aux2' _ _ _ _ _ (λ
-    l
-    m, (perm_of_mem_permutations m).length_eq), ",", expr permutations, ",", expr length, ",", expr length, ",", expr IH2, ",", expr nat.succ_add, ",", expr nat.factorial_succ, ",", expr mul_comm (nat.succ _), ",", "<-", expr IH1, ",", expr add_comm «expr * »(_, _), ",", expr add_assoc, ",", expr nat.mul_succ, ",", expr mul_comm, "]"] []
-end
+theorem length_permutations_aux :
+  ∀ ts is : List α, (length (permutations_aux ts is)+is.length !) = (length ts+length is)! :=
+  by 
+    refine'
+      permutations_aux.rec
+        (by 
+          simp )
+        _ 
+    intro t ts is IH1 IH2 
+    have IH2 : (length (permutations_aux is nil)+1) = is.length !
+    ·
+      simpa using IH2 
+    simp [-add_commₓ, Nat.factorial, Nat.add_succ, mul_commₓ] at IH1 
+    rw [permutations_aux_cons,
+      length_foldr_permutations_aux2' _ _ _ _ _ fun l m => (perm_of_mem_permutations m).length_eq, permutations, length,
+      length, IH2, Nat.succ_add, Nat.factorial_succ, mul_commₓ (Nat.succ _), ←IH1, add_commₓ (_*_), add_assocₓ,
+      Nat.mul_succ, mul_commₓ]
 
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ts' «expr ~ » «expr[ , ]»([]))
 theorem mem_permutations_of_perm_lemma {is l : List α}
   (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutations_aux is []) :
   l ~ is → l ∈ permutations is :=
   by 
     simpa [permutations, perm_nil] using H
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_permutations_aux_of_perm : ∀
-{ts
- is
- l : list α}, «expr ~ »(l, «expr ++ »(is, ts)) → «expr ∨ »(«expr∃ , »((is' «expr ~ » is), «expr = »(l, «expr ++ »(is', ts))), «expr ∈ »(l, permutations_aux ts is)) :=
-begin
-  refine [expr permutations_aux.rec (by simp [] [] [] [] [] []) _],
-  intros [ident t, ident ts, ident is, ident IH1, ident IH2, ident l, ident p],
-  rw ["[", expr permutations_aux_cons, ",", expr mem_foldr_permutations_aux2, "]"] [],
-  rcases [expr IH1 (p.trans perm_middle), "with", "⟨", ident is', ",", ident p', ",", ident e, "⟩", "|", ident m],
-  { clear [ident p],
-    subst [expr e],
-    rcases [expr mem_split (p'.symm.subset (mem_cons_self _ _)), "with", "⟨", ident l₁, ",", ident l₂, ",", ident e, "⟩"],
-    subst [expr is'],
-    have [ident p] [] [":=", expr (perm_middle.symm.trans p').cons_inv],
-    cases [expr l₂] ["with", ident a, ident l₂'],
-    { exact [expr or.inl ⟨l₁, by simpa [] [] [] [] [] ["using", expr p]⟩] },
-    { exact [expr or.inr (or.inr ⟨l₁, «expr :: »(a, l₂'), mem_permutations_of_perm_lemma IH2 p, by simp [] [] [] [] [] []⟩)] } },
-  { exact [expr or.inr (or.inl m)] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (is' «expr ~ » is)
+theorem mem_permutations_aux_of_perm :
+  ∀ {ts is l : List α}, l ~ is ++ ts → (∃ (is' : _)(_ : is' ~ is), l = is' ++ ts) ∨ l ∈ permutations_aux ts is :=
+  by 
+    refine'
+      permutations_aux.rec
+        (by 
+          simp )
+        _ 
+    intro t ts is IH1 IH2 l p 
+    rw [permutations_aux_cons, mem_foldr_permutations_aux2]
+    rcases IH1 (p.trans perm_middle) with (⟨is', p', e⟩ | m)
+    ·
+      clear p 
+      subst e 
+      rcases mem_split (p'.symm.subset (mem_cons_self _ _)) with ⟨l₁, l₂, e⟩
+      subst is' 
+      have p := (perm_middle.symm.trans p').cons_inv 
+      cases' l₂ with a l₂'
+      ·
+        exact
+          Or.inl
+            ⟨l₁,
+              by 
+                simpa using p⟩
+      ·
+        exact
+          Or.inr
+            (Or.inr
+              ⟨l₁, a :: l₂', mem_permutations_of_perm_lemma IH2 p,
+                by 
+                  simp ⟩)
+    ·
+      exact Or.inr (Or.inl m)
 
 @[simp]
 theorem mem_permutations {s t : List α} : s ∈ permutations t ↔ s ~ t :=
   ⟨perm_of_mem_permutations, mem_permutations_of_perm_lemma mem_permutations_aux_of_perm⟩
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem perm_permutations'_aux_comm
-(a b : α)
-(l : list α) : «expr ~ »((permutations'_aux a l).bind (permutations'_aux b), (permutations'_aux b l).bind (permutations'_aux a)) :=
-begin
-  induction [expr l] [] ["with", ident c, ident l, ident ih] [],
-  { simp [] [] [] ["[", expr swap, "]"] [] [] },
-  simp [] [] [] ["[", expr permutations'_aux, "]"] [] [],
-  apply [expr perm.swap'],
-  have [] [":", expr ∀
-   a
-   b, «expr ~ »((map (cons c) (permutations'_aux a l)).bind (permutations'_aux b), «expr ++ »(map «expr ∘ »(cons b, cons c) (permutations'_aux a l), map (cons c) ((permutations'_aux a l).bind (permutations'_aux b))))] [],
-  { intros [],
-    simp [] [] ["only"] ["[", expr map_bind, ",", expr permutations'_aux, "]"] [] [],
-    refine [expr (bind_append_perm _ (λ x, «expr[ , ]»([_])) _).symm.trans _],
-    rw ["[", "<-", expr map_eq_bind, ",", "<-", expr bind_map, "]"] [] },
-  refine [expr (((this _ _).append_left _).trans _).trans ((this _ _).append_left _).symm],
-  rw ["[", "<-", expr append_assoc, ",", "<-", expr append_assoc, "]"] [],
-  exact [expr perm_append_comm.append (ih.map _)]
-end
+theorem perm_permutations'_aux_comm (a b : α) (l : List α) :
+  (permutations'_aux a l).bind (permutations'_aux b) ~ (permutations'_aux b l).bind (permutations'_aux a) :=
+  by 
+    induction' l with c l ih
+    ·
+      simp [swap]
+    simp [permutations'_aux]
+    apply perm.swap' 
+    have  :
+      ∀ a b,
+        (map (cons c) (permutations'_aux a l)).bind (permutations'_aux b) ~
+          map (cons b ∘ cons c) (permutations'_aux a l) ++
+            map (cons c) ((permutations'_aux a l).bind (permutations'_aux b))
+    ·
+      intros 
+      simp only [map_bind, permutations'_aux]
+      refine' (bind_append_perm _ (fun x => [_]) _).symm.trans _ 
+      rw [←map_eq_bind, ←bind_map]
+    refine' (((this _ _).append_left _).trans _).trans ((this _ _).append_left _).symm 
+    rw [←append_assoc, ←append_assoc]
+    exact perm_append_comm.append (ih.map _)
 
 theorem perm.permutations' {s t : List α} (p : s ~ t) : permutations' s ~ permutations' t :=
   by 
@@ -1363,23 +1492,29 @@ theorem perm.permutations' {s t : List α} (p : s ~ t) : permutations' s ~ permu
     ·
       exact IH₁.trans IH₂
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem permutations_perm_permutations' (ts : list α) : «expr ~ »(ts.permutations, ts.permutations') :=
-begin
-  obtain ["⟨", ident n, ",", ident h, "⟩", ":", expr «expr∃ , »((n), «expr < »(length ts, n)), ":=", expr ⟨_, nat.lt_succ_self _⟩],
-  induction [expr n] [] ["with", ident n, ident IH] ["generalizing", ident ts],
-  { cases [expr h] [] },
-  refine [expr list.reverse_rec_on ts (λ h, _) (λ ts t _ h, _) h],
-  { simp [] [] [] ["[", expr permutations, "]"] [] [] },
-  rw ["[", "<-", expr concat_eq_append, ",", expr length_concat, ",", expr nat.succ_lt_succ_iff, "]"] ["at", ident h],
-  have [ident IH₂] [] [":=", expr (IH ts.reverse (by rwa ["[", expr length_reverse, "]"] [])).trans (reverse_perm _).permutations'],
-  simp [] [] ["only"] ["[", expr permutations_append, ",", expr foldr_permutations_aux2, ",", expr permutations_aux_nil, ",", expr permutations_aux_cons, ",", expr append_nil, "]"] [] [],
-  refine [expr (perm_append_comm.trans ((IH₂.bind_right _).append ((IH _ h).map _))).trans (perm.trans _ perm_append_comm.permutations')],
-  rw ["[", expr map_eq_bind, ",", expr singleton_append, ",", expr permutations', "]"] [],
-  convert [] [expr bind_append_perm _ _ _] [],
-  funext [ident ys],
-  rw ["[", expr permutations'_aux_eq_permutations_aux2, ",", expr permutations_aux2_append, "]"] []
-end
+theorem permutations_perm_permutations' (ts : List α) : ts.permutations ~ ts.permutations' :=
+  by 
+    obtain ⟨n, h⟩ : ∃ n, length ts < n := ⟨_, Nat.lt_succ_selfₓ _⟩
+    induction' n with n IH generalizing ts
+    ·
+      cases h 
+    refine' List.reverseRecOn ts (fun h => _) (fun ts t _ h => _) h
+    ·
+      simp [permutations]
+    rw [←concat_eq_append, length_concat, Nat.succ_lt_succ_iff] at h 
+    have IH₂ :=
+      (IH ts.reverse
+            (by 
+              rwa [length_reverse])).trans
+        (reverse_perm _).permutations' 
+    simp only [permutations_append, foldr_permutations_aux2, permutations_aux_nil, permutations_aux_cons, append_nil]
+    refine'
+      (perm_append_comm.trans ((IH₂.bind_right _).append ((IH _ h).map _))).trans
+        (perm.trans _ perm_append_comm.permutations')
+    rw [map_eq_bind, singleton_append, permutations']
+    convert bind_append_perm _ _ _ 
+    funext ys 
+    rw [permutations'_aux_eq_permutations_aux2, permutations_aux2_append]
 
 @[simp]
 theorem mem_permutations' {s t : List α} : s ∈ permutations' t ↔ s ~ t :=
@@ -1449,15 +1584,21 @@ theorem permutations'_aux_nth_le_zero (s : List α) (x : α)
   (permutations'_aux x s).nthLe 0 hn = x :: s :=
   nth_le_permutations'_aux _ _ _ _
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem injective_permutations'_aux (x : α) : function.injective (permutations'_aux x) :=
-begin
-  intros [ident s, ident t, ident h],
-  apply [expr insert_nth_injective s.length x],
-  have [ident hl] [":", expr «expr = »(s.length, t.length)] [":=", expr by simpa [] [] [] [] [] ["using", expr congr_arg length h]],
-  rw ["[", "<-", expr nth_le_permutations'_aux s x s.length (by simp [] [] [] [] [] []), ",", "<-", expr nth_le_permutations'_aux t x s.length (by simp [] [] [] ["[", expr hl, "]"] [] []), "]"] [],
-  simp [] [] [] ["[", expr h, ",", expr hl, "]"] [] []
-end
+theorem injective_permutations'_aux (x : α) : Function.Injective (permutations'_aux x) :=
+  by 
+    intro s t h 
+    apply insert_nth_injective s.length x 
+    have hl : s.length = t.length :=
+      by 
+        simpa using congr_argₓ length h 
+    rw
+      [←nth_le_permutations'_aux s x s.length
+        (by 
+          simp ),
+      ←nth_le_permutations'_aux t x s.length
+        (by 
+          simp [hl])]
+    simp [h, hl]
 
 theorem nodup_permutations'_aux_of_not_mem (s : List α) (x : α) (hx : x ∉ s) : nodup (permutations'_aux x s) :=
   by 
@@ -1474,79 +1615,108 @@ theorem nodup_permutations'_aux_of_not_mem (s : List α) (x : α) (hx : x ∉ s)
       ·
         simp 
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nodup_permutations'_aux_iff {s : list α} {x : α} : «expr ↔ »(nodup (permutations'_aux x s), «expr ∉ »(x, s)) :=
-begin
-  refine [expr ⟨λ h, _, nodup_permutations'_aux_of_not_mem _ _⟩],
-  intro [ident H],
-  obtain ["⟨", ident k, ",", ident hk, ",", ident hk', "⟩", ":=", expr nth_le_of_mem H],
-  rw [expr nodup_iff_nth_le_inj] ["at", ident h],
-  suffices [] [":", expr «expr = »(k, «expr + »(k, 1))],
-  { simpa [] [] [] [] [] ["using", expr this] },
-  refine [expr h k «expr + »(k, 1) _ _ _],
-  { simpa [] [] [] ["[", expr nat.lt_succ_iff, "]"] [] ["using", expr hk.le] },
-  { simpa [] [] [] [] [] ["using", expr hk] },
-  rw ["[", expr nth_le_permutations'_aux, ",", expr nth_le_permutations'_aux, "]"] [],
-  have [ident hl] [":", expr «expr = »(length (insert_nth k x s), length (insert_nth «expr + »(k, 1) x s))] [],
-  { rw ["[", expr length_insert_nth _ _ hk.le, ",", expr length_insert_nth _ _ (nat.succ_le_of_lt hk), "]"] [] },
-  refine [expr ext_le hl (λ n hn hn', _)],
-  rcases [expr lt_trichotomy n k, "with", ident H, "|", ident rfl, "|", ident H],
-  { rw ["[", expr nth_le_insert_nth_of_lt _ _ _ _ H (H.trans hk), ",", expr nth_le_insert_nth_of_lt _ _ _ _ (H.trans (nat.lt_succ_self _)), "]"] [] },
-  { rw ["[", expr nth_le_insert_nth_self _ _ _ hk.le, ",", expr nth_le_insert_nth_of_lt _ _ _ _ (nat.lt_succ_self _) hk, ",", expr hk', "]"] [] },
-  { rcases [expr (nat.succ_le_of_lt H).eq_or_lt, "with", ident rfl, "|", ident H'],
-    { rw ["[", expr nth_le_insert_nth_self _ _ _ (nat.succ_le_of_lt hk), "]"] [],
-      convert [] [expr hk'] ["using", 1],
-      convert [] [expr nth_le_insert_nth_add_succ _ _ _ 0 _] [],
-      simpa [] [] [] [] [] ["using", expr hk] },
-    { obtain ["⟨", ident m, ",", ident rfl, "⟩", ":=", expr nat.exists_eq_add_of_lt H'],
-      rw ["[", expr length_insert_nth _ _ hk.le, ",", expr nat.succ_lt_succ_iff, ",", expr nat.succ_add, "]"] ["at", ident hn],
-      rw [expr nth_le_insert_nth_add_succ] [],
-      convert [] [expr nth_le_insert_nth_add_succ s x k m.succ _] ["using", 2],
-      { simp [] [] [] ["[", expr nat.add_succ, ",", expr nat.succ_add, "]"] [] [] },
-      { simp [] [] [] ["[", expr add_left_comm, ",", expr add_comm, "]"] [] [] },
-      { simpa [] [] [] ["[", expr nat.add_succ, "]"] [] ["using", expr hn] },
-      { simpa [] [] [] ["[", expr nat.succ_add, "]"] [] ["using", expr hn] } } }
-end
+theorem nodup_permutations'_aux_iff {s : List α} {x : α} : nodup (permutations'_aux x s) ↔ x ∉ s :=
+  by 
+    refine' ⟨fun h => _, nodup_permutations'_aux_of_not_mem _ _⟩
+    intro H 
+    obtain ⟨k, hk, hk'⟩ := nth_le_of_mem H 
+    rw [nodup_iff_nth_le_inj] at h 
+    suffices  : k = k+1
+    ·
+      simpa using this 
+    refine' h k (k+1) _ _ _
+    ·
+      simpa [Nat.lt_succ_iff] using hk.le
+    ·
+      simpa using hk 
+    rw [nth_le_permutations'_aux, nth_le_permutations'_aux]
+    have hl : length (insert_nth k x s) = length (insert_nth (k+1) x s)
+    ·
+      rw [length_insert_nth _ _ hk.le, length_insert_nth _ _ (Nat.succ_le_of_ltₓ hk)]
+    refine' ext_le hl fun n hn hn' => _ 
+    rcases lt_trichotomyₓ n k with (H | rfl | H)
+    ·
+      rw [nth_le_insert_nth_of_lt _ _ _ _ H (H.trans hk),
+        nth_le_insert_nth_of_lt _ _ _ _ (H.trans (Nat.lt_succ_selfₓ _))]
+    ·
+      rw [nth_le_insert_nth_self _ _ _ hk.le, nth_le_insert_nth_of_lt _ _ _ _ (Nat.lt_succ_selfₓ _) hk, hk']
+    ·
+      rcases(Nat.succ_le_of_ltₓ H).eq_or_lt with (rfl | H')
+      ·
+        rw [nth_le_insert_nth_self _ _ _ (Nat.succ_le_of_ltₓ hk)]
+        convert hk' using 1
+        convert nth_le_insert_nth_add_succ _ _ _ 0 _ 
+        simpa using hk
+      ·
+        obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_lt H' 
+        rw [length_insert_nth _ _ hk.le, Nat.succ_lt_succ_iff, Nat.succ_add] at hn 
+        rw [nth_le_insert_nth_add_succ]
+        convert nth_le_insert_nth_add_succ s x k m.succ _ using 2
+        ·
+          simp [Nat.add_succ, Nat.succ_add]
+        ·
+          simp [add_left_commₓ, add_commₓ]
+        ·
+          simpa [Nat.add_succ] using hn
+        ·
+          simpa [Nat.succ_add] using hn
 
--- error in Data.List.Perm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nodup_permutations (s : list α) (hs : nodup s) : nodup s.permutations :=
-begin
-  rw [expr (permutations_perm_permutations' s).nodup_iff] [],
-  induction [expr hs] [] ["with", ident x, ident l, ident h, ident h', ident IH] [],
-  { simp [] [] [] [] [] [] },
-  { rw ["[", expr permutations', "]"] [],
-    rw [expr nodup_bind] [],
-    split,
-    { intros [ident ys, ident hy],
-      rw [expr mem_permutations'] ["at", ident hy],
-      rw ["[", expr nodup_permutations'_aux_iff, ",", expr hy.mem_iff, "]"] [],
-      exact [expr λ H, h x H rfl] },
-    { refine [expr IH.pairwise_of_forall_ne (λ as ha bs hb H, _)],
-      rw [expr disjoint_iff_ne] [],
-      rintro [ident a, ident ha', ident b, ident hb', ident rfl],
-      obtain ["⟨", ident n, ",", ident hn, ",", ident hn', "⟩", ":=", expr nth_le_of_mem ha'],
-      obtain ["⟨", ident m, ",", ident hm, ",", ident hm', "⟩", ":=", expr nth_le_of_mem hb'],
-      rw [expr mem_permutations'] ["at", ident ha, ident hb],
-      have [ident hl] [":", expr «expr = »(as.length, bs.length)] [":=", expr (ha.trans hb.symm).length_eq],
-      simp [] [] ["only"] ["[", expr nat.lt_succ_iff, ",", expr length_permutations'_aux, "]"] [] ["at", ident hn, ident hm],
-      rw [expr nth_le_permutations'_aux] ["at", ident hn', ident hm'],
-      have [ident hx] [":", expr «expr = »(nth_le (insert_nth n x as) m (by rwa ["[", expr length_insert_nth _ _ hn, ",", expr nat.lt_succ_iff, ",", expr hl, "]"] []), x)] [],
-      { simp [] [] [] ["[", expr hn', ",", "<-", expr hm', ",", expr hm, "]"] [] [] },
-      have [ident hx'] [":", expr «expr = »(nth_le (insert_nth m x bs) n (by rwa ["[", expr length_insert_nth _ _ hm, ",", expr nat.lt_succ_iff, ",", "<-", expr hl, "]"] []), x)] [],
-      { simp [] [] [] ["[", expr hm', ",", "<-", expr hn', ",", expr hn, "]"] [] [] },
-      rcases [expr lt_trichotomy n m, "with", ident ht, "|", ident ht, "|", ident ht],
-      { suffices [] [":", expr «expr ∈ »(x, bs)],
-        { exact [expr h x (hb.subset this) rfl] },
-        rw ["[", "<-", expr hx', ",", expr nth_le_insert_nth_of_lt _ _ _ _ ht (ht.trans_le hm), "]"] [],
-        exact [expr nth_le_mem _ _ _] },
-      { simp [] [] ["only"] ["[", expr ht, "]"] [] ["at", ident hm', ident hn'],
-        rw ["<-", expr hm'] ["at", ident hn'],
-        exact [expr H (insert_nth_injective _ _ hn')] },
-      { suffices [] [":", expr «expr ∈ »(x, as)],
-        { exact [expr h x (ha.subset this) rfl] },
-        rw ["[", "<-", expr hx, ",", expr nth_le_insert_nth_of_lt _ _ _ _ ht (ht.trans_le hn), "]"] [],
-        exact [expr nth_le_mem _ _ _] } } }
-end
+theorem nodup_permutations (s : List α) (hs : nodup s) : nodup s.permutations :=
+  by 
+    rw [(permutations_perm_permutations' s).nodup_iff]
+    induction' hs with x l h h' IH
+    ·
+      simp 
+    ·
+      rw [permutations']
+      rw [nodup_bind]
+      constructor
+      ·
+        intro ys hy 
+        rw [mem_permutations'] at hy 
+        rw [nodup_permutations'_aux_iff, hy.mem_iff]
+        exact fun H => h x H rfl
+      ·
+        refine' IH.pairwise_of_forall_ne fun as ha bs hb H => _ 
+        rw [disjoint_iff_ne]
+        rintro a ha' b hb' rfl 
+        obtain ⟨n, hn, hn'⟩ := nth_le_of_mem ha' 
+        obtain ⟨m, hm, hm'⟩ := nth_le_of_mem hb' 
+        rw [mem_permutations'] at ha hb 
+        have hl : as.length = bs.length := (ha.trans hb.symm).length_eq 
+        simp only [Nat.lt_succ_iff, length_permutations'_aux] at hn hm 
+        rw [nth_le_permutations'_aux] at hn' hm' 
+        have hx :
+          nth_le (insert_nth n x as) m
+              (by 
+                rwa [length_insert_nth _ _ hn, Nat.lt_succ_iff, hl]) =
+            x
+        ·
+          simp [hn', ←hm', hm]
+        have hx' :
+          nth_le (insert_nth m x bs) n
+              (by 
+                rwa [length_insert_nth _ _ hm, Nat.lt_succ_iff, ←hl]) =
+            x
+        ·
+          simp [hm', ←hn', hn]
+        rcases lt_trichotomyₓ n m with (ht | ht | ht)
+        ·
+          suffices  : x ∈ bs
+          ·
+            exact h x (hb.subset this) rfl 
+          rw [←hx', nth_le_insert_nth_of_lt _ _ _ _ ht (ht.trans_le hm)]
+          exact nth_le_mem _ _ _
+        ·
+          simp only [ht] at hm' hn' 
+          rw [←hm'] at hn' 
+          exact H (insert_nth_injective _ _ hn')
+        ·
+          suffices  : x ∈ as
+          ·
+            exact h x (ha.subset this) rfl 
+          rw [←hx, nth_le_insert_nth_of_lt _ _ _ _ ht (ht.trans_le hn)]
+          exact nth_le_mem _ _ _
 
 end Permutations
 

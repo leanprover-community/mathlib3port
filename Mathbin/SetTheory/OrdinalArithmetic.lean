@@ -44,9 +44,9 @@ Some properties of the operations are also used to discuss general tools on ordi
 -/
 
 
-noncomputable theory
+noncomputable section 
 
-open Function Cardinal Set Equiv
+open Function Cardinal Set Equivₓ
 
 open_locale Classical Cardinal
 
@@ -64,52 +64,66 @@ theorem lift_add a b : lift (a+b) = lift a+lift b :=
   Quotientₓ.induction_on₂ a b$
     fun ⟨α, r, _⟩ ⟨β, s, _⟩ =>
       Quotientₓ.sound
-        ⟨(RelIso.preimage Equiv.ulift _).trans
-            (RelIso.sumLexCongr (RelIso.preimage Equiv.ulift _) (RelIso.preimage Equiv.ulift _)).symm⟩
+        ⟨(RelIso.preimage Equivₓ.ulift _).trans
+            (RelIso.sumLexCongr (RelIso.preimage Equivₓ.ulift _) (RelIso.preimage Equivₓ.ulift _)).symm⟩
 
 @[simp]
 theorem lift_succ a : lift (succ a) = succ (lift a) :=
   by 
     unfold succ <;> simp only [lift_add, lift_one]
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_le_add_iff_left
-(a)
-{b c : ordinal} : «expr ↔ »(«expr ≤ »(«expr + »(a, b), «expr + »(a, c)), «expr ≤ »(b, c)) :=
-⟨«expr $ »(induction_on a, λ
-  α
-  r
-  hr, «expr $ »(induction_on b, λ
-   β₁
-   s₁
-   hs₁, «expr $ »(induction_on c, λ
-    (β₂ s₂ hs₂)
-    ⟨f⟩, ⟨have fl : ∀
-     a, «expr = »(f (sum.inl a), sum.inl a) := λ
-     a, by simpa [] [] ["only"] ["[", expr initial_seg.trans_apply, ",", expr initial_seg.le_add_apply, "]"] [] ["using", expr @initial_seg.eq _ _ _ _ (@sum.lex.is_well_order _ _ _ _ hr hs₂) ((initial_seg.le_add r s₁).trans f) (initial_seg.le_add r s₂) a],
-     have ∀ b, {b' // «expr = »(f (sum.inr b), sum.inr b')}, begin
-       intro [ident b],
-       cases [expr e, ":", expr f (sum.inr b)] [],
-       { rw ["<-", expr fl] ["at", ident e],
-         have [] [] [":=", expr f.inj' e],
-         contradiction },
-       { exact [expr ⟨_, rfl⟩] }
-     end,
-     let g (b) := (this b).1 in
-     have fr : ∀ b, «expr = »(f (sum.inr b), sum.inr (g b)), from λ b, (this b).2,
-     ⟨⟨⟨g, λ
-        x
-        y
-        h, by injection [expr f.inj' (by rw ["[", expr fr, ",", expr fr, ",", expr h, "]"] [] : «expr = »(f (sum.inr x), f (sum.inr y)))] []⟩, λ
-       a
-       b, by simpa [] [] ["only"] ["[", expr sum.lex_inr_inr, ",", expr fr, ",", expr rel_embedding.coe_fn_to_embedding, ",", expr initial_seg.coe_fn_to_rel_embedding, ",", expr function.embedding.coe_fn_mk, "]"] [] ["using", expr @rel_embedding.map_rel_iff _ _ _ _ f.to_rel_embedding (sum.inr a) (sum.inr b)]⟩, λ
-      a b H, begin
-        rcases [expr f.init' (by rw [expr fr] []; exact [expr sum.lex_inr_inr.2 H]), "with", "⟨", ident a', "|", ident a', ",", ident h, "⟩"],
-        { rw [expr fl] ["at", ident h],
-          cases [expr h] [] },
-        { rw [expr fr] ["at", ident h],
-          exact [expr ⟨a', sum.inr.inj h⟩] }
-      end⟩⟩))), λ h, add_le_add_left h _⟩
+theorem add_le_add_iff_left a {b c : Ordinal} : ((a+b) ≤ a+c) ↔ b ≤ c :=
+  ⟨induction_on a$
+      fun α r hr =>
+        induction_on b$
+          fun β₁ s₁ hs₁ =>
+            induction_on c$
+              fun β₂ s₂ hs₂ ⟨f⟩ =>
+                ⟨have fl : ∀ a, f (Sum.inl a) = Sum.inl a :=
+                    fun a =>
+                      by 
+                        simpa only [InitialSeg.trans_apply, InitialSeg.le_add_apply] using
+                          @InitialSeg.eq _ _ _ _ (@Sum.Lex.is_well_order _ _ _ _ hr hs₂)
+                            ((InitialSeg.leAdd r s₁).trans f) (InitialSeg.leAdd r s₂) a 
+                  have  : ∀ b, { b' // f (Sum.inr b) = Sum.inr b' } :=
+                    by 
+                      intro b 
+                      cases e : f (Sum.inr b)
+                      ·
+                        rw [←fl] at e 
+                        have  := f.inj' e 
+                        contradiction
+                      ·
+                        exact ⟨_, rfl⟩
+                  let g b := (this b).1
+                  have fr : ∀ b, f (Sum.inr b) = Sum.inr (g b) := fun b => (this b).2
+                  ⟨⟨⟨g,
+                        fun x y h =>
+                          by 
+                            injection
+                              f.inj'
+                                (by 
+                                  rw [fr, fr, h] :
+                                f (Sum.inr x) = f (Sum.inr y))⟩,
+                      fun a b =>
+                        by 
+                          simpa only [Sum.lex_inr_inr, fr, RelEmbedding.coe_fn_to_embedding,
+                            InitialSeg.coe_fn_to_rel_embedding, Function.Embedding.coe_fn_mk] using
+                            @RelEmbedding.map_rel_iff _ _ _ _ f.to_rel_embedding (Sum.inr a) (Sum.inr b)⟩,
+                    fun a b H =>
+                      by 
+                        rcases
+                          f.init'
+                            (by 
+                              rw [fr] <;> exact Sum.lex_inr_inr.2 H) with
+                          ⟨a' | a', h⟩
+                        ·
+                          rw [fl] at h 
+                          cases h
+                        ·
+                          rw [fr] at h 
+                          exact ⟨a', Sum.inr.injₓ h⟩⟩⟩,
+    fun h => add_le_add_left h _⟩
 
 theorem add_succ (o₁ o₂ : Ordinal) : (o₁+succ o₂) = succ (o₁+o₂) :=
   (add_assocₓ _ _ _).symm
@@ -221,9 +235,11 @@ theorem zero_lt_one : (0 : Ordinal) < 1 :=
 def pred (o : Ordinal.{u}) : Ordinal.{u} :=
   if h : ∃ a, o = succ a then Classical.some h else o
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem pred_succ (o) : «expr = »(pred (succ o), o) :=
-by have [ident h] [":", expr «expr∃ , »((a), «expr = »(succ o, succ a))] [":=", expr ⟨_, rfl⟩]; simpa [] [] ["only"] ["[", expr pred, ",", expr dif_pos h, "]"] [] ["using", expr «expr $ »(succ_inj.1, classical.some_spec h).symm]
+@[simp]
+theorem pred_succ o : pred (succ o) = o :=
+  by 
+    have h : ∃ a, succ o = succ a := ⟨_, rfl⟩ <;>
+      simpa only [pred, dif_pos h] using (succ_inj.1$ Classical.some_spec h).symm
 
 theorem pred_le_self o : pred o ≤ o :=
   if h : ∃ a, o = succ a then
@@ -292,6 +308,7 @@ theorem lift_pred o : lift (pred o) = pred (lift o) :=
 /-! ### Limit ordinals -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr < » o)
 /-- A limit ordinal is an ordinal which is not zero and not a successor. -/
 def is_limit (o : Ordinal) : Prop :=
   o ≠ 0 ∧ ∀ a _ : a < o, succ a < o
@@ -311,10 +328,12 @@ theorem succ_lt_of_is_limit {o} (h : is_limit o) {a} : succ a < o ↔ a < o :=
 theorem le_succ_of_is_limit {o} (h : is_limit o) {a} : o ≤ succ a ↔ o ≤ a :=
   le_iff_le_iff_lt_iff_lt.2$ succ_lt_of_is_limit h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » o)
 theorem limit_le {o} (h : is_limit o) {a} : o ≤ a ↔ ∀ x _ : x < o, x ≤ a :=
   ⟨fun h x l => le_transₓ (le_of_ltₓ l) h,
     fun H => (le_succ_of_is_limit h).1$ le_of_not_ltₓ$ fun hn => not_lt_of_le (H _ hn) (lt_succ_self _)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » o)
 theorem lt_limit {o} (h : is_limit o) {a} : a < o ↔ ∃ (x : _)(_ : x < o), a < x :=
   by 
     simpa only [not_ball, not_leₓ] using not_congr (@limit_le _ h a)
@@ -349,6 +368,7 @@ theorem zero_or_succ_or_limit (o : Ordinal) : o = 0 ∨ (∃ a, o = succ a) ∨ 
   if o0 : o = 0 then Or.inl o0 else
     if h : ∃ a, o = succ a then Or.inr (Or.inl h) else Or.inr$ Or.inr ⟨o0, fun a => (succ_lt_of_not_succ h).2⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (o' «expr < » o)
 /-- Main induction principle of ordinals: if one can prove a property by
   induction at successor ordinals and at limit ordinals, then it holds for all ordinals. -/
 @[elab_as_eliminator]
@@ -371,23 +391,19 @@ theorem limit_rec_on_zero {C} H₁ H₂ H₃ : @limit_rec_on C 0 H₁ H₂ H₃ 
   by 
     rw [limit_rec_on, WellFounded.fix_eq, dif_pos rfl] <;> rfl
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem limit_rec_on_succ
-{C}
-(o H₁ H₂ H₃) : «expr = »(@limit_rec_on C (succ o) H₁ H₂ H₃, H₂ o (@limit_rec_on C o H₁ H₂ H₃)) :=
-begin
-  have [ident h] [":", expr «expr∃ , »((a), «expr = »(succ o, succ a))] [":=", expr ⟨_, rfl⟩],
-  rw ["[", expr limit_rec_on, ",", expr well_founded.fix_eq, ",", expr dif_neg (succ_ne_zero o), ",", expr dif_pos h, "]"] [],
-  generalize [] [":"] [expr «expr = »(limit_rec_on._proof_2 (succ o) h, h₂)],
-  generalize [] [":"] [expr «expr = »(limit_rec_on._proof_3 (succ o) h, h₃)],
-  revert [ident h₂, ident h₃],
-  generalize [ident e] [":"] [expr «expr = »(pred (succ o), o')],
-  intros [],
-  rw [expr pred_succ] ["at", ident e],
-  subst [expr o'],
-  refl
-end
+theorem limit_rec_on_succ {C} o H₁ H₂ H₃ : @limit_rec_on C (succ o) H₁ H₂ H₃ = H₂ o (@limit_rec_on C o H₁ H₂ H₃) :=
+  by 
+    have h : ∃ a, succ o = succ a := ⟨_, rfl⟩
+    rw [limit_rec_on, WellFounded.fix_eq, dif_neg (succ_ne_zero o), dif_pos h]
+    generalize limit_rec_on._proof_2 (succ o) h = h₂ 
+    generalize limit_rec_on._proof_3 (succ o) h = h₃ 
+    revert h₂ h₃ 
+    generalize e : pred (succ o) = o' 
+    intros 
+    rw [pred_succ] at e 
+    subst o' 
+    rfl
 
 @[simp]
 theorem limit_rec_on_limit {C} o H₁ H₂ H₃ h :
@@ -402,7 +418,7 @@ theorem has_succ_of_is_limit {α} {r : α → α → Prop} [wo : IsWellOrder α 
     convert (enum_lt (typein_lt_type r x) _).mpr (lt_succ_self _)
     rw [enum_typein]
 
-theorem type_subrel_lt (o : Ordinal.{u}) : type (Subrel (· < ·) { o':Ordinal | o' < o }) = Ordinal.lift.{u + 1} o :=
+theorem type_subrel_lt (o : Ordinal.{u}) : type (Subrel (· < ·) { o' : Ordinal | o' < o }) = Ordinal.lift.{u + 1} o :=
   by 
     refine' Quotientₓ.induction_on o _ 
     rintro ⟨α, r, wo⟩
@@ -410,35 +426,40 @@ theorem type_subrel_lt (o : Ordinal.{u}) : type (Subrel (· < ·) { o':Ordinal |
     apply Quotientₓ.sound 
     constructor 
     symm 
-    refine' (RelIso.preimage Equiv.ulift r).trans (typein_iso r)
+    refine' (RelIso.preimage Equivₓ.ulift r).trans (typein_iso r)
 
-theorem mk_initial_seg (o : Ordinal.{u}) : # { o':Ordinal | o' < o } = Cardinal.lift.{u + 1} o.card :=
+theorem mk_initial_seg (o : Ordinal.{u}) : # { o' : Ordinal | o' < o } = Cardinal.lift.{u + 1} o.card :=
   by 
     rw [lift_card, ←type_subrel_lt, card_type]
 
 /-! ### Normal ordinal functions -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr < » o)
 /-- A normal ordinal function is a strictly increasing function which is
   order-continuous, i.e., the image `f o` of a limit ordinal `o` is the sup of `f a` for
   `a < o`.  -/
 def is_normal (f : Ordinal → Ordinal) : Prop :=
   (∀ o, f o < f (succ o)) ∧ ∀ o, is_limit o → ∀ a, f o ≤ a ↔ ∀ b _ : b < o, f b ≤ a
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr < » o)
 theorem is_normal.limit_le {f} (H : is_normal f) : ∀ {o}, is_limit o → ∀ {a}, f o ≤ a ↔ ∀ b _ : b < o, f b ≤ a :=
   H.2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr < » o)
 theorem is_normal.limit_lt {f} (H : is_normal f) {o} (h : is_limit o) {a} : a < f o ↔ ∃ (b : _)(_ : b < o), a < f b :=
   not_iff_not.1$
     by 
       simpa only [exists_prop, not_exists, not_and, not_ltₓ] using H.2 _ h a
 
+theorem is_normal.strict_mono {f} (H : is_normal f) : StrictMono f :=
+  fun a b =>
+    limit_rec_on b (Not.elim (not_lt_of_le$ Ordinal.zero_le _))
+      (fun b IH h => (lt_or_eq_of_leₓ (lt_succ.1 h)).elim (fun h => lt_transₓ (IH h) (H.1 _)) fun e => e ▸ H.1 _)
+      fun b l IH h => lt_of_lt_of_leₓ (H.1 a) ((H.2 _ l _).1 (le_reflₓ _) _ (l.2 _ h))
+
 theorem is_normal.lt_iff {f} (H : is_normal f) {a b} : f a < f b ↔ a < b :=
-  StrictMono.lt_iff_lt$
-    fun a b =>
-      limit_rec_on b (Not.elim (not_lt_of_le$ Ordinal.zero_le _))
-        (fun b IH h => (lt_or_eq_of_leₓ (lt_succ.1 h)).elim (fun h => lt_transₓ (IH h) (H.1 _)) fun e => e ▸ H.1 _)
-        fun b l IH h => lt_of_lt_of_leₓ (H.1 a) ((H.2 _ l _).1 (le_reflₓ _) _ (l.2 _ h))
+  StrictMono.lt_iff_lt$ H.strict_mono
 
 theorem is_normal.le_iff {f} (H : is_normal f) {a b} : f a ≤ f b ↔ a ≤ b :=
   le_iff_le_iff_lt_iff_lt.2 H.lt_iff
@@ -448,35 +469,31 @@ theorem is_normal.inj {f} (H : is_normal f) {a b} : f a = f b ↔ a = b :=
     simp only [le_antisymm_iffₓ, H.le_iff]
 
 theorem is_normal.le_self {f} (H : is_normal f) a : a ≤ f a :=
-  limit_rec_on a (Ordinal.zero_le _) (fun a IH => succ_le.2$ lt_of_le_of_ltₓ IH (H.1 _))
-    fun a l IH => (limit_le l).2$ fun b h => le_transₓ (IH b h)$ H.le_iff.2$ le_of_ltₓ h
+  well_founded.self_le_of_strict_mono wf H.strict_mono a
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_normal.le_set
-{f}
-(H : is_normal f)
-(p : ordinal → exprProp())
-(p0 : «expr∃ , »((x), p x))
-(S)
-(H₂ : ∀ o, «expr ↔ »(«expr ≤ »(S, o), ∀ a, p a → «expr ≤ »(a, o)))
-{o} : «expr ↔ »(«expr ≤ »(f S, o), ∀ a, p a → «expr ≤ »(f a, o)) :=
-⟨λ h a pa, le_trans (H.le_iff.2 ((H₂ _).1 (le_refl _) _ pa)) h, λ h, begin
-   revert [ident H₂],
-   apply [expr limit_rec_on S],
-   { intro [ident H₂],
-     cases [expr p0] ["with", ident x, ident px],
-     have [] [] [":=", expr ordinal.le_zero.1 ((H₂ _).1 (ordinal.zero_le _) _ px)],
-     rw [expr this] ["at", ident px],
-     exact [expr h _ px] },
-   { intros [ident S, "_", ident H₂],
-     rcases [expr not_ball.1 «expr $ »(mt (H₂ S).2, «expr $ »(not_le_of_lt, lt_succ_self _)), "with", "⟨", ident a, ",", ident h₁, ",", ident h₂, "⟩"],
-     exact [expr le_trans «expr $ »(H.le_iff.2, «expr $ »(succ_le.2, not_le.1 h₂)) (h _ h₁)] },
-   { intros [ident S, ident L, "_", ident H₂],
-     apply [expr (H.2 _ L _).2],
-     intros [ident a, ident h'],
-     rcases [expr not_ball.1 (mt (H₂ a).2 (not_le.2 h')), "with", "⟨", ident b, ",", ident h₁, ",", ident h₂, "⟩"],
-     exact [expr le_trans «expr $ »(H.le_iff.2, «expr $ »(le_of_lt, not_le.1 h₂)) (h _ h₁)] }
- end⟩
+theorem is_normal.le_set {f} (H : is_normal f) (p : Ordinal → Prop) (p0 : ∃ x, p x) S
+  (H₂ : ∀ o, S ≤ o ↔ ∀ a, p a → a ≤ o) {o} : f S ≤ o ↔ ∀ a, p a → f a ≤ o :=
+  ⟨fun h a pa => le_transₓ (H.le_iff.2 ((H₂ _).1 (le_reflₓ _) _ pa)) h,
+    fun h =>
+      by 
+        revert H₂ 
+        apply limit_rec_on S
+        ·
+          intro H₂ 
+          cases' p0 with x px 
+          have  := Ordinal.le_zero.1 ((H₂ _).1 (Ordinal.zero_le _) _ px)
+          rw [this] at px 
+          exact h _ px
+        ·
+          intro S _ H₂ 
+          rcases not_ball.1 (mt (H₂ S).2$ not_le_of_lt$ lt_succ_self _) with ⟨a, h₁, h₂⟩
+          exact le_transₓ (H.le_iff.2$ succ_le.2$ not_leₓ.1 h₂) (h _ h₁)
+        ·
+          intro S L _ H₂ 
+          apply (H.2 _ L _).2
+          intro a h' 
+          rcases not_ball.1 (mt (H₂ a).2 (not_leₓ.2 h')) with ⟨b, h₁, h₂⟩
+          exact le_transₓ (H.le_iff.2$ le_of_ltₓ$ not_leₓ.1 h₂) (h _ h₁)⟩
 
 theorem is_normal.le_set' {f} (H : is_normal f) (p : α → Prop) (g : α → Ordinal) (p0 : ∃ x, p x) S
   (H₂ : ∀ o, S ≤ o ↔ ∀ a, p a → g a ≤ o) {o} : f S ≤ o ↔ ∀ a, p a → f (g a) ≤ o :=
@@ -498,33 +515,43 @@ theorem is_normal.is_limit {f} (H : is_normal f) {o} (l : is_limit o) : is_limit
       let ⟨b, h₁, h₂⟩ := (H.limit_lt l).1 h 
       lt_of_le_of_ltₓ (succ_le.2 h₂) (H.lt_iff.2 h₁)⟩
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_le_of_limit
-{a b c : ordinal.{u}}
-(h : is_limit b) : «expr ↔ »(«expr ≤ »(«expr + »(a, b), c), ∀ b' «expr < » b, «expr ≤ »(«expr + »(a, b'), c)) :=
-⟨λ
- h
- b'
- l, le_trans (add_le_add_left (le_of_lt l) _) h, λ
- H, «expr $ »(le_of_not_lt, induction_on a (λ
-   α
-   r
-   _, «expr $ »(induction_on b, λ β s _ h H l, begin
-      resetI,
-      suffices [] [":", expr ∀ x : β, sum.lex r s (sum.inr x) (enum _ _ l)],
-      { cases [expr enum _ _ l] ["with", ident x, ident x],
-        { cases [expr this (enum s 0 h.pos)] [] },
-        { exact [expr irrefl _ (this _)] } },
-      intros [ident x],
-      rw ["[", "<-", expr typein_lt_typein (sum.lex r s), ",", expr typein_enum, "]"] [],
-      have [] [] [":=", expr H _ (h.2 _ (typein_lt_type s x))],
-      rw ["[", expr add_succ, ",", expr succ_le, "]"] ["at", ident this],
-      refine [expr lt_of_le_of_lt (type_le'.2 ⟨rel_embedding.of_monotone (λ a, _) (λ a b, _)⟩) this],
-      { rcases [expr a, "with", "⟨", ident a, "|", ident b, ",", ident h, "⟩"],
-        { exact [expr sum.inl a] },
-        { exact [expr sum.inr ⟨b, by cases [expr h] []; assumption⟩] } },
-      { rcases [expr a, "with", "⟨", ident a, "|", ident a, ",", ident h₁, "⟩"]; rcases [expr b, "with", "⟨", ident b, "|", ident b, ",", ident h₂, "⟩"]; cases [expr h₁] []; cases [expr h₂] []; rintro ["⟨", "⟩"]; constructor; assumption }
-    end)) h H)⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b' «expr < » b)
+theorem add_le_of_limit {a b c : Ordinal.{u}} (h : is_limit b) : (a+b) ≤ c ↔ ∀ b' _ : b' < b, (a+b') ≤ c :=
+  ⟨fun h b' l => le_transₓ (add_le_add_left (le_of_ltₓ l) _) h,
+    fun H =>
+      le_of_not_ltₓ$
+        induction_on a
+          (fun α r _ =>
+            induction_on b$
+              fun β s _ h H l =>
+                by 
+                  skip 
+                  suffices  : ∀ x : β, Sum.Lex r s (Sum.inr x) (enum _ _ l)
+                  ·
+                    cases' enum _ _ l with x x
+                    ·
+                      cases this (enum s 0 h.pos)
+                    ·
+                      exact irrefl _ (this _)
+                  intro x 
+                  rw [←typein_lt_typein (Sum.Lex r s), typein_enum]
+                  have  := H _ (h.2 _ (typein_lt_type s x))
+                  rw [add_succ, succ_le] at this 
+                  refine' lt_of_le_of_ltₓ (type_le'.2 ⟨RelEmbedding.ofMonotone (fun a => _) fun a b => _⟩) this
+                  ·
+                    rcases a with ⟨a | b, h⟩
+                    ·
+                      exact Sum.inl a
+                    ·
+                      exact
+                        Sum.inr
+                          ⟨b,
+                            by 
+                              cases h <;> assumption⟩
+                  ·
+                    rcases a with ⟨a | a, h₁⟩ <;>
+                      rcases b with ⟨b | b, h₂⟩ <;> cases h₁ <;> cases h₂ <;> rintro ⟨⟩ <;> constructor <;> assumption)
+          h H⟩
 
 theorem add_is_normal (a : Ordinal) : is_normal ((·+·) a) :=
   ⟨fun b => (add_lt_add_iff_left a).2 (lt_succ_self _), fun b l c => add_le_of_limit l⟩
@@ -535,16 +562,19 @@ theorem add_is_limit a {b} : is_limit b → is_limit (a+b) :=
 /-! ### Subtraction on ordinals-/
 
 
-/-- `a - b` is the unique ordinal satisfying
-  `b + (a - b) = a` when `b ≤ a`. -/
-def sub (a b : Ordinal.{u}) : Ordinal.{u} :=
-  omin { o | a ≤ b+o } ⟨a, le_add_left _ _⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    `a - b` is the unique ordinal satisfying
+      `b + (a - b) = a` when `b ≤ a`. -/
+  def sub ( a b : Ordinal .{ u } ) : Ordinal .{ u } := omin { o | a ≤ b + o } ⟨ a , le_add_left _ _ ⟩
 
 instance : Sub Ordinal :=
   ⟨sub⟩
 
-theorem le_add_sub (a b : Ordinal) : a ≤ b+a - b :=
-  omin_mem { o | a ≤ b+o } _
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem le_add_sub ( a b : Ordinal ) : a ≤ b + a - b := omin_mem { o | a ≤ b + o } _
 
 theorem sub_le {a b c : Ordinal} : a - b ≤ c ↔ a ≤ b+c :=
   ⟨fun h => le_transₓ (le_add_sub a b) (add_le_add_left h _), fun h => omin_le h⟩
@@ -616,19 +646,24 @@ theorem sub_is_limit {a b} (l : is_limit a) (h : b < a) : is_limit (a - b) :=
       by 
         rw [lt_sub, add_succ] <;> exact l.2 _ (lt_sub.1 h)⟩
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem one_add_omega : «expr = »(«expr + »(1, omega.{u}), omega) :=
-begin
-  refine [expr le_antisymm _ (le_add_left _ _)],
-  rw ["[", expr omega, ",", expr one_eq_lift_type_unit, ",", "<-", expr lift_add, ",", expr lift_le, ",", expr type_add, "]"] [],
-  have [] [":", expr is_well_order unit empty_relation] [":=", expr by apply_instance],
-  refine [expr ⟨rel_embedding.collapse (rel_embedding.of_monotone _ _)⟩],
-  { apply [expr sum.rec],
-    exact [expr λ _, 0],
-    exact [expr nat.succ] },
-  { intros [ident a, ident b],
-    cases [expr a] []; cases [expr b] []; intro [ident H]; cases [expr H] ["with", "_", "_", ident H, "_", "_", ident H]; [cases [expr H] [], exact [expr nat.succ_pos _], exact [expr nat.succ_lt_succ H]] }
-end
+@[simp]
+theorem one_add_omega : (1+omega.{u}) = omega :=
+  by 
+    refine' le_antisymmₓ _ (le_add_left _ _)
+    rw [omega, one_eq_lift_type_unit, ←lift_add, lift_le, type_add]
+    have  : IsWellOrder Unit EmptyRelation :=
+      by 
+        infer_instance 
+    refine' ⟨RelEmbedding.collapse (RelEmbedding.ofMonotone _ _)⟩
+    ·
+      apply Sum.rec 
+      exact fun _ => 0 
+      exact Nat.succ
+    ·
+      intro a b 
+      cases a <;>
+        cases b <;>
+          intro H <;> cases' H with _ _ H _ _ H <;> [cases H, exact Nat.succ_posₓ _, exact Nat.succ_lt_succₓ H]
 
 @[simp]
 theorem one_add_of_omega_le {o} (h : omega ≤ o) : (1+o) = o :=
@@ -645,10 +680,9 @@ instance : Monoidₓ Ordinal.{u} :=
       fun a b =>
         Quotientₓ.liftOn₂ a b
             (fun ⟨α, r, wo⟩ ⟨β, s, wo'⟩ =>
-              «expr⟦ ⟧»
-                ⟨β × α, Prod.Lex s r,
+              ⟦⟨β × α, Prod.Lex s r,
                   by 
-                    exact Prod.Lex.is_well_order⟩ :
+                    exact Prod.Lex.is_well_order⟩⟧ :
             WellOrder → WellOrder → Ordinal)$
           fun ⟨α₁, r₁, o₁⟩ ⟨α₂, r₂, o₂⟩ ⟨β₁, s₁, p₁⟩ ⟨β₂, s₂, p₂⟩ ⟨f⟩ ⟨g⟩ => Quot.sound ⟨RelIso.prodLexCongr g f⟩,
     one := 1,
@@ -698,8 +732,8 @@ theorem lift_mul a b : lift (a*b) = lift a*lift b :=
   Quotientₓ.induction_on₂ a b$
     fun ⟨α, r, _⟩ ⟨β, s, _⟩ =>
       Quotientₓ.sound
-        ⟨(RelIso.preimage Equiv.ulift _).trans
-            (RelIso.prodLexCongr (RelIso.preimage Equiv.ulift _) (RelIso.preimage Equiv.ulift _)).symm⟩
+        ⟨(RelIso.preimage Equivₓ.ulift _).trans
+            (RelIso.prodLexCongr (RelIso.preimage Equivₓ.ulift _) (RelIso.preimage Equivₓ.ulift _)).symm⟩
 
 @[simp]
 theorem card_mul a b : card (a*b) = card a*card b :=
@@ -767,53 +801,61 @@ theorem mul_le_mul_right {a b} (c : Ordinal) : a ≤ b → (a*c) ≤ b*c :=
 theorem mul_le_mul {a b c d : Ordinal} (h₁ : a ≤ c) (h₂ : b ≤ d) : (a*b) ≤ c*d :=
   le_transₓ (mul_le_mul_left _ h₂) (mul_le_mul_right _ h₁)
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem mul_le_of_limit_aux
-{α β r s}
-[is_well_order α r]
-[is_well_order β s]
-{c}
-(h : is_limit (type s))
-(H : ∀ b' «expr < » type s, «expr ≤ »(«expr * »(type r, b'), c))
-(l : «expr < »(c, «expr * »(type r, type s))) : false :=
-begin
-  suffices [] [":", expr ∀ a b, prod.lex s r (b, a) (enum _ _ l)],
-  { cases [expr enum _ _ l] ["with", ident b, ident a],
-    exact [expr irrefl _ (this _ _)] },
-  intros [ident a, ident b],
-  rw ["[", "<-", expr typein_lt_typein (prod.lex s r), ",", expr typein_enum, "]"] [],
-  have [] [] [":=", expr H _ (h.2 _ (typein_lt_type s b))],
-  rw ["[", expr mul_succ, "]"] ["at", ident this],
-  have [] [] [":=", expr lt_of_lt_of_le ((add_lt_add_iff_left _).2 (typein_lt_type _ a)) this],
-  refine [expr lt_of_le_of_lt _ this],
-  refine [expr type_le'.2 _],
-  constructor,
-  refine [expr rel_embedding.of_monotone (λ a, _) (λ a b, _)],
-  { rcases [expr a, "with", "⟨", "⟨", ident b', ",", ident a', "⟩", ",", ident h, "⟩"],
-    by_cases [expr e, ":", expr «expr = »(b, b')],
-    { refine [expr sum.inr ⟨a', _⟩],
-      subst [expr e],
-      cases [expr h] ["with", "_", "_", "_", "_", ident h, "_", "_", "_", ident h],
-      { exact [expr (irrefl _ h).elim] },
-      { exact [expr h] } },
-    { refine [expr sum.inl (⟨b', _⟩, a')],
-      cases [expr h] ["with", "_", "_", "_", "_", ident h, "_", "_", "_", ident h],
-      { exact [expr h] },
-      { exact [expr (e rfl).elim] } } },
-  { rcases [expr a, "with", "⟨", "⟨", ident b₁, ",", ident a₁, "⟩", ",", ident h₁, "⟩"],
-    rcases [expr b, "with", "⟨", "⟨", ident b₂, ",", ident a₂, "⟩", ",", ident h₂, "⟩"],
-    intro [ident h],
-    by_cases [expr e₁, ":", expr «expr = »(b, b₁)]; by_cases [expr e₂, ":", expr «expr = »(b, b₂)],
-    { substs [ident b₁, ident b₂],
-      simpa [] [] ["only"] ["[", expr subrel_val, ",", expr prod.lex_def, ",", expr @irrefl _ s _ b, ",", expr true_and, ",", expr false_or, ",", expr eq_self_iff_true, ",", expr dif_pos, ",", expr sum.lex_inr_inr, "]"] [] ["using", expr h] },
-    { subst [expr b₁],
-      simp [] [] ["only"] ["[", expr subrel_val, ",", expr prod.lex_def, ",", expr e₂, ",", expr prod.lex_def, ",", expr dif_pos, ",", expr subrel_val, ",", expr eq_self_iff_true, ",", expr or_false, ",", expr dif_neg, ",", expr not_false_iff, ",", expr sum.lex_inr_inl, ",", expr false_and, "]"] [] ["at", ident h, "⊢"],
-      cases [expr h₂] []; [exact [expr asymm h h₂_h], exact [expr e₂ rfl]] },
-    { simp [] [] ["only"] ["[", expr e₂, ",", expr dif_pos, ",", expr eq_self_iff_true, ",", expr dif_neg e₁, ",", expr not_false_iff, ",", expr sum.lex.sep, "]"] [] [] },
-    { simpa [] [] ["only"] ["[", expr dif_neg e₁, ",", expr dif_neg e₂, ",", expr prod.lex_def, ",", expr subrel_val, ",", expr subtype.mk_eq_mk, ",", expr sum.lex_inl_inl, "]"] [] ["using", expr h] } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b' «expr < » type s)
+private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder β s] {c} (h : is_limit (type s))
+  (H : ∀ b' _ : b' < type s, (type r*b') ≤ c) (l : c < type r*type s) : False :=
+  by 
+    suffices  : ∀ a b, Prod.Lex s r (b, a) (enum _ _ l)
+    ·
+      cases' enum _ _ l with b a 
+      exact irrefl _ (this _ _)
+    intro a b 
+    rw [←typein_lt_typein (Prod.Lex s r), typein_enum]
+    have  := H _ (h.2 _ (typein_lt_type s b))
+    rw [mul_succ] at this 
+    have  := lt_of_lt_of_leₓ ((add_lt_add_iff_left _).2 (typein_lt_type _ a)) this 
+    refine' lt_of_le_of_ltₓ _ this 
+    refine' type_le'.2 _ 
+    constructor 
+    refine' RelEmbedding.ofMonotone (fun a => _) fun a b => _
+    ·
+      rcases a with ⟨⟨b', a'⟩, h⟩
+      byCases' e : b = b'
+      ·
+        refine' Sum.inr ⟨a', _⟩
+        subst e 
+        cases' h with _ _ _ _ h _ _ _ h
+        ·
+          exact (irrefl _ h).elim
+        ·
+          exact h
+      ·
+        refine' Sum.inl (⟨b', _⟩, a')
+        cases' h with _ _ _ _ h _ _ _ h
+        ·
+          exact h
+        ·
+          exact (e rfl).elim
+    ·
+      rcases a with ⟨⟨b₁, a₁⟩, h₁⟩
+      rcases b with ⟨⟨b₂, a₂⟩, h₂⟩
+      intro h 
+      byCases' e₁ : b = b₁ <;> byCases' e₂ : b = b₂
+      ·
+        substs b₁ b₂ 
+        simpa only [subrel_val, Prod.lex_def, @irrefl _ s _ b, true_andₓ, false_orₓ, eq_self_iff_true, dif_pos,
+          Sum.lex_inr_inr] using h
+      ·
+        subst b₁ 
+        simp only [subrel_val, Prod.lex_def, e₂, Prod.lex_def, dif_pos, subrel_val, eq_self_iff_true, or_falseₓ,
+          dif_neg, not_false_iff, Sum.lex_inr_inl, false_andₓ] at h⊢
+        cases h₂ <;> [exact asymm h h₂_h, exact e₂ rfl]
+      ·
+        simp only [e₂, dif_pos, eq_self_iff_true, dif_neg e₁, not_false_iff, Sum.Lex.sep]
+      ·
+        simpa only [dif_neg e₁, dif_neg e₂, Prod.lex_def, subrel_val, Subtype.mk_eq_mk, Sum.lex_inl_inl] using h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b' «expr < » b)
 theorem mul_le_of_limit {a b c : Ordinal.{u}} (h : is_limit b) : (a*b) ≤ c ↔ ∀ b' _ : b' < b, (a*b') ≤ c :=
   ⟨fun h b' l => le_transₓ (mul_le_mul_left _ (le_of_ltₓ l)) h,
     fun H =>
@@ -832,6 +874,7 @@ theorem mul_is_normal {a : Ordinal} (h : 0 < a) : is_normal ((·*·) a) :=
         rw [mul_succ] <;> simpa only [add_zeroₓ] using (add_lt_add_iff_left (a*b)).2 h,
     fun b l c => mul_le_of_limit l⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c' «expr < » c)
 theorem lt_mul_of_limit {a b c : Ordinal.{u}} (h : is_limit c) : (a < b*c) ↔ ∃ (c' : _)(_ : c' < c), a < b*c' :=
   by 
     simpa only [not_ball, not_leₓ] using not_congr (@mul_le_of_limit b c a h)
@@ -876,16 +919,35 @@ theorem mul_is_limit_left {a b : Ordinal} (l : is_limit a) (b0 : 0 < b) : is_lim
 /-! ### Division on ordinals -/
 
 
-protected theorem div_aux (a b : Ordinal.{u}) (h : b ≠ 0) : Set.Nonempty { o | a < b*succ o } :=
-  ⟨a,
-    succ_le.1$
-      by 
-        simpa only [succ_zero, one_mulₓ] using mul_le_mul_right (succ a) (succ_le.2 (Ordinal.pos_iff_ne_zero.2 h))⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+protected
+  theorem
+    div_aux
+    ( a b : Ordinal .{ u } ) ( h : b ≠ 0 ) : Set.Nonempty { o | a < b * succ o }
+    :=
+      ⟨
+        a
+          ,
+          succ_le . 1
+            $
+            by
+              simpa
+                only
+                [ succ_zero , one_mulₓ ]
+                using mul_le_mul_right succ a succ_le . 2 Ordinal.pos_iff_ne_zero . 2 h
+        ⟩
 
-/-- `a / b` is the unique ordinal `o` satisfying
-  `a = b * o + o'` with `o' < b`. -/
-protected def div (a b : Ordinal.{u}) : Ordinal.{u} :=
-  if h : b = 0 then 0 else omin { o | a < b*succ o } (Ordinal.div_aux a b h)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      `a / b` is the unique ordinal `o` satisfying
+        `a = b * o + o'` with `o' < b`. -/
+    protected
+  def
+    div
+    ( a b : Ordinal .{ u } ) : Ordinal .{ u }
+    := if h : b = 0 then 0 else omin { o | a < b * succ o } Ordinal.div_aux a b h
 
 instance : Div Ordinal :=
   ⟨Ordinal.div⟩
@@ -894,12 +956,16 @@ instance : Div Ordinal :=
 theorem div_zero (a : Ordinal) : a / 0 = 0 :=
   dif_pos rfl
 
-theorem div_def a {b : Ordinal} (h : b ≠ 0) : a / b = omin { o | a < b*succ o } (Ordinal.div_aux a b h) :=
-  dif_neg h
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem div_def a { b : Ordinal } ( h : b ≠ 0 ) : a / b = omin { o | a < b * succ o } Ordinal.div_aux a b h := dif_neg h
 
-theorem lt_mul_succ_div a {b : Ordinal} (h : b ≠ 0) : a < b*succ (a / b) :=
-  by 
-    rw [div_def a h] <;> exact omin_mem { o | a < b*succ o } _
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lt_mul_succ_div
+  a { b : Ordinal } ( h : b ≠ 0 ) : a < b * succ a / b
+  := by rw [ div_def a h ] <;> exact omin_mem { o | a < b * succ o } _
 
 theorem lt_mul_div_add a {b : Ordinal} (h : b ≠ 0) : a < (b*a / b)+b :=
   by 
@@ -915,17 +981,21 @@ theorem lt_div {a b c : Ordinal} (c0 : c ≠ 0) : a < b / c ↔ (c*succ a) ≤ b
   by 
     rw [←not_leₓ, div_le c0, not_ltₓ]
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_div
-{a b c : ordinal}
-(c0 : «expr ≠ »(c, 0)) : «expr ↔ »(«expr ≤ »(a, «expr / »(b, c)), «expr ≤ »(«expr * »(c, a), b)) :=
-begin
-  apply [expr limit_rec_on a],
-  { simp [] [] ["only"] ["[", expr mul_zero, ",", expr ordinal.zero_le, "]"] [] [] },
-  { intros [],
-    rw ["[", expr succ_le, ",", expr lt_div c0, "]"] [] },
-  { simp [] [] ["only"] ["[", expr mul_le_of_limit, ",", expr limit_le, ",", expr iff_self, ",", expr forall_true_iff, "]"] [] [] { contextual := tt } }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  le_div
+  { a b c : Ordinal } ( c0 : c ≠ 0 ) : a ≤ b / c ↔ c * a ≤ b
+  :=
+    by
+      apply limit_rec_on a
+        · simp only [ mul_zero , Ordinal.zero_le ]
+        · intros rw [ succ_le , lt_div c0 ]
+        ·
+          simp
+            ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+            only
+            [ mul_le_of_limit , limit_le , iff_selfₓ , forall_true_iff ]
 
 theorem div_lt {a b c : Ordinal} (b0 : b ≠ 0) : a / b < c ↔ a < b*c :=
   lt_iff_lt_of_le_iff_le$ le_div b0
@@ -992,7 +1062,7 @@ theorem mul_sub (a b c : Ordinal) : (a*b - c) = (a*b) - a*c :=
 
 theorem is_limit_add_iff {a b} : is_limit (a+b) ↔ is_limit b ∨ b = 0 ∧ is_limit a :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       byCases' h' : b = 0
       ·
@@ -1107,14 +1177,24 @@ theorem mod_one (a : Ordinal) : a % 1 = 0 :=
 /-! ### Supremum of a family of ordinals -/
 
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The supremum of a family of ordinals -/
-def sup {ι} (f : ι → Ordinal) : Ordinal :=
-  omin { c | ∀ i, f i ≤ c }
-    ⟨(sup (Cardinal.succ ∘ card ∘ f)).ord,
-      fun i => le_of_ltₓ$ Cardinal.lt_ord.2 (lt_of_lt_of_leₓ (Cardinal.lt_succ_self _) (le_sup _ _))⟩
+  def
+    sup
+    { ι } ( f : ι → Ordinal ) : Ordinal
+    :=
+      omin
+        { c | ∀ i , f i ≤ c }
+          ⟨
+            sup Cardinal.succ ∘ card ∘ f . ord
+              ,
+              fun i => le_of_ltₓ $ Cardinal.lt_ord . 2 lt_of_lt_of_leₓ Cardinal.lt_succ_self _ le_sup _ _
+            ⟩
 
-theorem le_sup {ι} (f : ι → Ordinal) : ∀ i, f i ≤ sup f :=
-  omin_mem { c | ∀ i, f i ≤ c } _
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem le_sup { ι } ( f : ι → Ordinal ) : ∀ i , f i ≤ sup f := omin_mem { c | ∀ i , f i ≤ c } _
 
 theorem sup_le {ι} {f : ι → Ordinal} {a} : sup f ≤ a ↔ ∀ i, f i ≤ a :=
   ⟨fun h i => le_transₓ (le_sup _ _) h, fun h => omin_le h⟩
@@ -1160,6 +1240,7 @@ theorem unbounded_range_of_sup_ge {α β : Type u} (r : α → α → Prop) [IsW
     apply hx 
     apply mem_range_self
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr < » o)
 /-- The supremum of a family of ordinals indexed by the set
   of ordinals less than some `o : ordinal.{u}`.
   (This is not a special case of `sup` over the subtype,
@@ -1194,9 +1275,11 @@ theorem bsup_type (r : α → α → Prop) [IsWellOrder α r] f :
                 by 
                   simpa only [typein_enum] using H (enum r i h)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr < » o)
 theorem le_bsup {o} (f : ∀ a _ : a < o, Ordinal) i h : f i h ≤ bsup o f :=
   bsup_le.1 (le_reflₓ _) _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr < » o)
 theorem lt_bsup {o : Ordinal} {f : ∀ a _ : a < o, Ordinal}
   (hf : ∀ {a a'} ha : a < o ha' : a' < o, a < a' → f a ha < f a' ha') (ho : o.is_limit) i h : f i h < bsup o f :=
   lt_of_lt_of_leₓ (hf _ _$ lt_succ_self i) (le_bsup f i.succ$ ho.2 _ h)
@@ -1215,6 +1298,7 @@ theorem bsup_id {o} (ho : is_limit o) : (bsup.{u, u} o fun x _ => x) = o :=
     intros 
     assumption
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr < » o)
 theorem is_normal.bsup {f} (H : is_normal f) {o : Ordinal} :
   ∀ g : ∀ a _ : a < o, Ordinal h : o ≠ 0, f (bsup o g) = bsup o fun a h => f (g a h) :=
   induction_on o$
@@ -1265,10 +1349,12 @@ theorem power_limit {a b : Ordinal} (a0 : a ≠ 0) (h : is_limit b) : (a^b) = bs
   by 
     simp only [pow, power, if_neg a0] <;> rw [limit_rec_on_limit _ _ _ _ h] <;> rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b' «expr < » b)
 theorem power_le_of_limit {a b c : Ordinal} (a0 : a ≠ 0) (h : is_limit b) : (a^b) ≤ c ↔ ∀ b' _ : b' < b, (a^b') ≤ c :=
   by 
     rw [power_limit a0 h, bsup_le]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c' «expr < » c)
 theorem lt_power_of_limit {a b c : Ordinal} (b0 : b ≠ 0) (h : is_limit c) :
   a < (b^c) ↔ ∃ (c' : _)(_ : c' < c), a < (b^c') :=
   by 
@@ -1298,18 +1384,20 @@ theorem one_power (a : Ordinal) : (1^a) = 1 :=
           by 
             rwa [IH _ h]⟩
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem power_pos {a : ordinal} (b) (a0 : «expr < »(0, a)) : «expr < »(0, «expr ^ »(a, b)) :=
-begin
-  have [ident h0] [":", expr «expr < »(0, «expr ^ »(a, 0))] [],
-  { simp [] [] ["only"] ["[", expr power_zero, ",", expr zero_lt_one, "]"] [] [] },
-  apply [expr limit_rec_on b],
-  { exact [expr h0] },
-  { intros [ident b, ident IH],
-    rw ["[", expr power_succ, "]"] [],
-    exact [expr mul_pos IH a0] },
-  { exact [expr λ b l _, (lt_power_of_limit (ordinal.pos_iff_ne_zero.1 a0) l).2 ⟨0, l.pos, h0⟩] }
-end
+theorem power_pos {a : Ordinal} b (a0 : 0 < a) : 0 < (a^b) :=
+  by 
+    have h0 : 0 < (a^0)
+    ·
+      simp only [power_zero, zero_lt_one]
+    apply limit_rec_on b
+    ·
+      exact h0
+    ·
+      intro b IH 
+      rw [power_succ]
+      exact mul_pos IH a0
+    ·
+      exact fun b l _ => (lt_power_of_limit (Ordinal.pos_iff_ne_zero.1 a0) l).2 ⟨0, l.pos, h0⟩
 
 theorem power_ne_zero {a : Ordinal} b (a0 : a ≠ 0) : (a^b) ≠ 0 :=
   Ordinal.pos_iff_ne_zero.1$ power_pos b$ Ordinal.pos_iff_ne_zero.2 a0
@@ -1389,28 +1477,31 @@ theorem power_lt_power_left_of_succ {a b c : Ordinal} (ab : a < b) : (a^succ c) 
         lt_of_le_of_ltₓ (mul_le_mul_right _$ power_le_power_left _$ le_of_ltₓ ab)
           (mul_lt_mul_of_pos_left ab (power_pos _ (lt_of_le_of_ltₓ (Ordinal.zero_le _) ab)))
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem power_add
-(a b c : ordinal) : «expr = »(«expr ^ »(a, «expr + »(b, c)), «expr * »(«expr ^ »(a, b), «expr ^ »(a, c))) :=
-begin
-  by_cases [expr a0, ":", expr «expr = »(a, 0)],
-  { subst [expr a],
-    by_cases [expr c0, ":", expr «expr = »(c, 0)],
-    { simp [] [] ["only"] ["[", expr c0, ",", expr add_zero, ",", expr power_zero, ",", expr mul_one, "]"] [] [] },
-    have [] [":", expr «expr ≠ »(«expr + »(b, c), 0)] [":=", expr ne_of_gt (lt_of_lt_of_le (ordinal.pos_iff_ne_zero.2 c0) (le_add_left _ _))],
-    simp [] [] ["only"] ["[", expr zero_power c0, ",", expr zero_power this, ",", expr mul_zero, "]"] [] [] },
-  cases [expr eq_or_lt_of_le (one_le_iff_ne_zero.2 a0)] ["with", ident a1, ident a1],
-  { subst [expr a1],
-    simp [] [] ["only"] ["[", expr one_power, ",", expr mul_one, "]"] [] [] },
-  apply [expr limit_rec_on c],
-  { simp [] [] ["only"] ["[", expr add_zero, ",", expr power_zero, ",", expr mul_one, "]"] [] [] },
-  { intros [ident c, ident IH],
-    rw ["[", expr add_succ, ",", expr power_succ, ",", expr IH, ",", expr power_succ, ",", expr mul_assoc, "]"] [] },
-  { intros [ident c, ident l, ident IH],
-    refine [expr eq_of_forall_ge_iff (λ d, (((power_is_normal a1).trans (add_is_normal b)).limit_le l).trans _)],
-    simp [] [] ["only"] ["[", expr IH, "]"] [] [] { contextual := tt },
-    exact [expr ((«expr $ »(mul_is_normal, power_pos b (ordinal.pos_iff_ne_zero.2 a0)).trans (power_is_normal a1)).limit_le l).symm] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  power_add
+  ( a b c : Ordinal ) : a ^ b + c = a ^ b * a ^ c
+  :=
+    by
+      byCases' a0 : a = 0
+        ·
+          subst a
+            byCases' c0 : c = 0
+            · simp only [ c0 , add_zeroₓ , power_zero , mul_oneₓ ]
+            have : b + c ≠ 0 := ne_of_gtₓ lt_of_lt_of_leₓ Ordinal.pos_iff_ne_zero . 2 c0 le_add_left _ _
+            simp only [ zero_power c0 , zero_power this , mul_zero ]
+        cases' eq_or_lt_of_le one_le_iff_ne_zero . 2 a0 with a1 a1
+        · subst a1 simp only [ one_power , mul_oneₓ ]
+        apply limit_rec_on c
+        · simp only [ add_zeroₓ , power_zero , mul_oneₓ ]
+        · intro c IH rw [ add_succ , power_succ , IH , power_succ , mul_assocₓ ]
+        ·
+          intro c l IH
+            refine' eq_of_forall_ge_iff fun d => power_is_normal a1 . trans add_is_normal b . limit_le l . trans _
+            simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) only [ IH ]
+            exact
+              mul_is_normal $ power_pos b Ordinal.pos_iff_ne_zero . 2 a0 . trans power_is_normal a1 . limit_le l . symm
 
 theorem power_dvd_power a {b c : Ordinal} (h : b ≤ c) : (a^b) ∣ (a^c) :=
   by 
@@ -1425,47 +1516,58 @@ theorem power_dvd_power_iff {a b c : Ordinal} (a1 : 1 < a) : (a^b) ∣ (a^c) ↔
             le_of_dvd (power_ne_zero _$ one_le_iff_ne_zero.1$ le_of_ltₓ a1) h,
     power_dvd_power _⟩
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem power_mul (a b c : ordinal) : «expr = »(«expr ^ »(a, «expr * »(b, c)), «expr ^ »(«expr ^ »(a, b), c)) :=
-begin
-  by_cases [expr b0, ":", expr «expr = »(b, 0)],
-  { simp [] [] ["only"] ["[", expr b0, ",", expr zero_mul, ",", expr power_zero, ",", expr one_power, "]"] [] [] },
-  by_cases [expr a0, ":", expr «expr = »(a, 0)],
-  { subst [expr a],
-    by_cases [expr c0, ":", expr «expr = »(c, 0)],
-    { simp [] [] ["only"] ["[", expr c0, ",", expr mul_zero, ",", expr power_zero, "]"] [] [] },
-    simp [] [] ["only"] ["[", expr zero_power b0, ",", expr zero_power c0, ",", expr zero_power (mul_ne_zero b0 c0), "]"] [] [] },
-  cases [expr eq_or_lt_of_le (one_le_iff_ne_zero.2 a0)] ["with", ident a1, ident a1],
-  { subst [expr a1],
-    simp [] [] ["only"] ["[", expr one_power, "]"] [] [] },
-  apply [expr limit_rec_on c],
-  { simp [] [] ["only"] ["[", expr mul_zero, ",", expr power_zero, "]"] [] [] },
-  { intros [ident c, ident IH],
-    rw ["[", expr mul_succ, ",", expr power_add, ",", expr IH, ",", expr power_succ, "]"] [] },
-  { intros [ident c, ident l, ident IH],
-    refine [expr eq_of_forall_ge_iff (λ
-      d, (((power_is_normal a1).trans (mul_is_normal (ordinal.pos_iff_ne_zero.2 b0))).limit_le l).trans _)],
-    simp [] [] ["only"] ["[", expr IH, "]"] [] [] { contextual := tt },
-    exact [expr (power_le_of_limit (power_ne_zero _ a0) l).symm] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  power_mul
+  ( a b c : Ordinal ) : a ^ b * c = a ^ b ^ c
+  :=
+    by
+      byCases' b0 : b = 0
+        · simp only [ b0 , zero_mul , power_zero , one_power ]
+        byCases' a0 : a = 0
+        ·
+          subst a
+            byCases' c0 : c = 0
+            · simp only [ c0 , mul_zero , power_zero ]
+            simp only [ zero_power b0 , zero_power c0 , zero_power mul_ne_zero b0 c0 ]
+        cases' eq_or_lt_of_le one_le_iff_ne_zero . 2 a0 with a1 a1
+        · subst a1 simp only [ one_power ]
+        apply limit_rec_on c
+        · simp only [ mul_zero , power_zero ]
+        · intro c IH rw [ mul_succ , power_add , IH , power_succ ]
+        ·
+          intro c l IH
+            refine'
+              eq_of_forall_ge_iff
+                fun d => power_is_normal a1 . trans mul_is_normal Ordinal.pos_iff_ne_zero . 2 b0 . limit_le l . trans _
+            simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) only [ IH ]
+            exact power_le_of_limit power_ne_zero _ a0 l . symm
 
 /-! ### Ordinal logarithm -/
 
 
-/-- The ordinal logarithm is the solution `u` to the equation
-  `x = b ^ u * v + w` where `v < b` and `w < b`. -/
-def log (b : Ordinal) (x : Ordinal) : Ordinal :=
-  if h : 1 < b then pred$ omin { o | x < (b^o) } ⟨succ x, succ_le.1 (le_power_self _ h)⟩ else 0
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The ordinal logarithm is the solution `u` to the equation
+      `x = b ^ u * v + w` where `v < b` and `w < b`. -/
+  def
+    log
+    ( b : Ordinal ) ( x : Ordinal ) : Ordinal
+    := if h : 1 < b then pred $ omin { o | x < b ^ o } ⟨ succ x , succ_le . 1 le_power_self _ h ⟩ else 0
 
 @[simp]
 theorem log_not_one_lt {b : Ordinal} (b1 : ¬1 < b) (x : Ordinal) : log b x = 0 :=
   by 
     simp only [log, dif_neg b1]
 
-theorem log_def {b : Ordinal} (b1 : 1 < b) (x : Ordinal) :
-  log b x = pred (omin { o | x < (b^o) } (log._proof_1 b x b1)) :=
-  by 
-    simp only [log, dif_pos b1]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  log_def
+  { b : Ordinal } ( b1 : 1 < b ) ( x : Ordinal ) : log b x = pred omin { o | x < b ^ o } log._proof_1 b x b1
+  := by simp only [ log , dif_pos b1 ]
 
 @[simp]
 theorem log_zero (b : Ordinal) : log b 0 = 0 :=
@@ -1477,45 +1579,48 @@ theorem log_zero (b : Ordinal) : log b 0 = 0 :=
     by 
       simp only [log_not_one_lt b1]
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem succ_log_def
-{b x : ordinal}
-(b1 : «expr < »(1, b))
-(x0 : «expr < »(0, x)) : «expr = »(succ (log b x), omin {o | «expr < »(x, «expr ^ »(b, o))} (log._proof_1 b x b1)) :=
-begin
-  let [ident t] [] [":=", expr omin {o | «expr < »(x, «expr ^ »(b, o))} (log._proof_1 b x b1)],
-  have [] [":", expr «expr < »(x, «expr ^ »(b, t))] [":=", expr omin_mem {o | «expr < »(x, «expr ^ »(b, o))} _],
-  rcases [expr zero_or_succ_or_limit t, "with", ident h, "|", ident h, "|", ident h],
-  { refine [expr (not_lt_of_le (one_le_iff_pos.2 x0) _).elim],
-    simpa [] [] ["only"] ["[", expr h, ",", expr power_zero, "]"] [] [] },
-  { rw ["[", expr show «expr = »(log b x, pred t), from log_def b1 x, ",", expr succ_pred_iff_is_succ.2 h, "]"] [] },
-  { rcases [expr (lt_power_of_limit «expr $ »(ne_of_gt, lt_trans zero_lt_one b1) h).1 this, "with", "⟨", ident a, ",", ident h₁, ",", ident h₂, "⟩"],
-    exact [expr (not_le_of_lt h₁).elim (le_omin.1 (le_refl t) a h₂)] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  succ_log_def
+  { b x : Ordinal } ( b1 : 1 < b ) ( x0 : 0 < x ) : succ log b x = omin { o | x < b ^ o } log._proof_1 b x b1
+  :=
+    by
+      let t := omin { o | x < b ^ o } log._proof_1 b x b1
+        have : x < b ^ t := omin_mem { o | x < b ^ o } _
+        rcases zero_or_succ_or_limit t with ( h | h | h )
+        · refine' not_lt_of_le one_le_iff_pos . 2 x0 _ . elim simpa only [ h , power_zero ]
+        · rw [ show log b x = pred t from log_def b1 x , succ_pred_iff_is_succ . 2 h ]
+        ·
+          rcases lt_power_of_limit ne_of_gtₓ $ lt_transₓ zero_lt_one b1 h . 1 this with ⟨ a , h₁ , h₂ ⟩
+            exact not_le_of_lt h₁ . elim le_omin . 1 le_reflₓ t a h₂
 
-theorem lt_power_succ_log {b : Ordinal} (b1 : 1 < b) (x : Ordinal) : x < (b^succ (log b x)) :=
-  by 
-    cases' lt_or_eq_of_leₓ (Ordinal.zero_le x) with x0 x0
-    ·
-      rw [succ_log_def b1 x0]
-      exact omin_mem { o | x < (b^o) } _
-    ·
-      subst x 
-      apply power_pos _ (lt_transₓ zero_lt_one b1)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lt_power_succ_log
+  { b : Ordinal } ( b1 : 1 < b ) ( x : Ordinal ) : x < b ^ succ log b x
+  :=
+    by
+      cases' lt_or_eq_of_leₓ Ordinal.zero_le x with x0 x0
+        · rw [ succ_log_def b1 x0 ] exact omin_mem { o | x < b ^ o } _
+        · subst x apply power_pos _ lt_transₓ zero_lt_one b1
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem power_log_le (b) {x : ordinal} (x0 : «expr < »(0, x)) : «expr ≤ »(«expr ^ »(b, log b x), x) :=
-begin
-  by_cases [expr b0, ":", expr «expr = »(b, 0)],
-  { rw ["[", expr b0, ",", expr zero_power', "]"] [],
-    refine [expr le_trans (sub_le_self _ _) (one_le_iff_pos.2 x0)] },
-  cases [expr lt_or_eq_of_le (one_le_iff_ne_zero.2 b0)] ["with", ident b1, ident b1],
-  { refine [expr le_of_not_lt (λ h, not_le_of_lt (lt_succ_self (log b x)) _)],
-    have [] [] [":=", expr @omin_le {o | «expr < »(x, «expr ^ »(b, o))} _ _ h],
-    rwa ["<-", expr succ_log_def b1 x0] ["at", ident this] },
-  { rw ["[", "<-", expr b1, ",", expr one_power, "]"] [],
-    exact [expr one_le_iff_pos.2 x0] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  power_log_le
+  b { x : Ordinal } ( x0 : 0 < x ) : b ^ log b x ≤ x
+  :=
+    by
+      byCases' b0 : b = 0
+        · rw [ b0 , zero_power' ] refine' le_transₓ sub_le_self _ _ one_le_iff_pos . 2 x0
+        cases' lt_or_eq_of_leₓ one_le_iff_ne_zero . 2 b0 with b1 b1
+        ·
+          refine' le_of_not_ltₓ fun h => not_le_of_lt lt_succ_self log b x _
+            have := @ omin_le { o | x < b ^ o } _ _ h
+            rwa [ ← succ_log_def b1 x0 ] at this
+        · rw [ ← b1 , one_power ] exact one_le_iff_pos . 2 x0
 
 theorem le_log {b x c : Ordinal} (b1 : 1 < b) (x0 : 0 < x) : c ≤ log b x ↔ (b^c) ≤ x :=
   ⟨fun h => le_transₓ ((power_le_power_iff_right b1).2 h) (power_log_le b x0),
@@ -1607,6 +1712,7 @@ theorem CNF_foldr {b : Ordinal} (b0 : b ≠ 0) o : (CNF b o).foldr (fun p r => (
         rw [CNF_ne_zero b0 o0, List.foldr_cons, IH, div_add_mod])
     o
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » CNF b o)
 theorem CNF_pairwise_aux (b := omega) o :
   (∀ p _ : p ∈ CNF b o, Prod.fst p ≤ log b o) ∧ (CNF b o).Pairwise fun p q => q.1 < p.1 :=
   by 
@@ -1647,22 +1753,28 @@ theorem CNF_pairwise_aux (b := omega) o :
 theorem CNF_pairwise (b := omega) o : (CNF b o).Pairwise fun p q => Prod.fst q < p.1 :=
   (CNF_pairwise_aux _ _).2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » CNF b o)
 theorem CNF_fst_le_log (b := omega) o : ∀ p _ : p ∈ CNF b o, Prod.fst p ≤ log b o :=
   (CNF_pairwise_aux _ _).1
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » CNF b o)
 theorem CNF_fst_le (b := omega) o p (_ : p ∈ CNF b o) : Prod.fst p ≤ o :=
   le_transₓ (CNF_fst_le_log _ _ p H) (log_le_self _ _)
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem CNF_snd_lt {b : ordinal} (b1 : «expr < »(1, b)) (o) : ∀ p «expr ∈ » CNF b o, «expr < »(prod.snd p, b) :=
-begin
-  have [ident b0] [] [":=", expr ne_of_gt (lt_trans zero_lt_one b1)],
-  refine [expr CNF_rec b0 (λ _, by rw ["[", expr CNF_zero, "]"] []; exact [expr false.elim]) _ o],
-  intros [ident o, ident o0, ident H, ident IH],
-  simp [] [] ["only"] ["[", expr CNF_ne_zero b0 o0, ",", expr list.mem_cons_iff, ",", expr forall_eq_or_imp, ",", expr iff_true_intro IH, ",", expr and_true, "]"] [] [],
-  rw ["[", expr div_lt (power_ne_zero _ b0), ",", "<-", expr power_succ, "]"] [],
-  exact [expr lt_power_succ_log b1 _]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » CNF b o)
+theorem CNF_snd_lt {b : Ordinal} (b1 : 1 < b) o : ∀ p _ : p ∈ CNF b o, Prod.snd p < b :=
+  by 
+    have b0 := ne_of_gtₓ (lt_transₓ zero_lt_one b1)
+    refine'
+      CNF_rec b0
+        (fun _ =>
+          by 
+            rw [CNF_zero] <;> exact False.elim)
+        _ o 
+    intro o o0 H IH 
+    simp only [CNF_ne_zero b0 o0, List.mem_cons_iffₓ, forall_eq_or_imp, iff_true_intro IH, and_trueₓ]
+    rw [div_lt (power_ne_zero _ b0), ←power_succ]
+    exact lt_power_succ_log b1 _
 
 theorem CNF_sorted (b := omega) o : ((CNF b o).map Prod.fst).Sorted (· > ·) :=
   by 
@@ -1896,29 +2008,30 @@ theorem power_lt_omega {a b : Ordinal} (ha : a < omega) (hb : b < omega) : (a^b)
     by 
       rw [←nat_cast_power] <;> apply nat_lt_omega
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_omega_power
-{a b : ordinal}
-(h : «expr < »(a, «expr ^ »(omega, b))) : «expr = »(«expr + »(a, «expr ^ »(omega, b)), «expr ^ »(omega, b)) :=
-begin
-  refine [expr le_antisymm _ (le_add_left _ _)],
-  revert [ident h],
-  apply [expr limit_rec_on b],
-  { intro [ident h],
-    rw ["[", expr power_zero, ",", "<-", expr succ_zero, ",", expr lt_succ, ",", expr ordinal.le_zero, "]"] ["at", ident h],
-    rw ["[", expr h, ",", expr zero_add, "]"] [] },
-  { intros [ident b, "_", ident h],
-    rw ["[", expr power_succ, "]"] ["at", ident h],
-    rcases [expr (lt_mul_of_limit omega_is_limit).1 h, "with", "⟨", ident x, ",", ident xo, ",", ident ax, "⟩"],
-    refine [expr le_trans (add_le_add_right (le_of_lt ax) _) _],
-    rw ["[", expr power_succ, ",", "<-", expr mul_add, ",", expr add_omega xo, "]"] [] },
-  { intros [ident b, ident l, ident IH, ident h],
-    rcases [expr (lt_power_of_limit omega_ne_zero l).1 h, "with", "⟨", ident x, ",", ident xb, ",", ident ax, "⟩"],
-    refine [expr (((add_is_normal a).trans (power_is_normal one_lt_omega)).limit_le l).2 (λ y yb, _)],
-    let [ident z] [] [":=", expr max x y],
-    have [] [] [":=", expr IH z (max_lt xb yb) «expr $ »(lt_of_lt_of_le ax, power_le_power_right omega_pos (le_max_left _ _))],
-    exact [expr le_trans (add_le_add_left (power_le_power_right omega_pos (le_max_right _ _)) _) (le_trans this «expr $ »(power_le_power_right omega_pos, «expr $ »(le_of_lt, max_lt xb yb)))] }
-end
+theorem add_omega_power {a b : Ordinal} (h : a < (omega^b)) : (a+omega^b) = (omega^b) :=
+  by 
+    refine' le_antisymmₓ _ (le_add_left _ _)
+    revert h 
+    apply limit_rec_on b
+    ·
+      intro h 
+      rw [power_zero, ←succ_zero, lt_succ, Ordinal.le_zero] at h 
+      rw [h, zero_addₓ]
+    ·
+      intro b _ h 
+      rw [power_succ] at h 
+      rcases(lt_mul_of_limit omega_is_limit).1 h with ⟨x, xo, ax⟩
+      refine' le_transₓ (add_le_add_right (le_of_ltₓ ax) _) _ 
+      rw [power_succ, ←mul_addₓ, add_omega xo]
+    ·
+      intro b l IH h 
+      rcases(lt_power_of_limit omega_ne_zero l).1 h with ⟨x, xb, ax⟩
+      refine' (((add_is_normal a).trans (power_is_normal one_lt_omega)).limit_le l).2 fun y yb => _ 
+      let z := max x y 
+      have  := IH z (max_ltₓ xb yb) (lt_of_lt_of_leₓ ax$ power_le_power_right omega_pos (le_max_leftₓ _ _))
+      exact
+        le_transₓ (add_le_add_left (power_le_power_right omega_pos (le_max_rightₓ _ _)) _)
+          (le_transₓ this (power_le_power_right omega_pos$ le_of_ltₓ$ max_ltₓ xb yb))
 
 theorem add_lt_omega_power {a b c : Ordinal} (h₁ : a < (omega^c)) (h₂ : b < (omega^c)) : (a+b) < (omega^c) :=
   by 
@@ -1928,29 +2041,30 @@ theorem add_absorp {a b c : Ordinal} (h₁ : a < (omega^b)) (h₂ : (omega^b) �
   by 
     rw [←Ordinal.add_sub_cancel_of_le h₂, ←add_assocₓ, add_omega_power h₁]
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_absorp_iff
-{o : ordinal}
-(o0 : «expr < »(0, o)) : «expr ↔ »(∀
- a «expr < » o, «expr = »(«expr + »(a, o), o), «expr∃ , »((a), «expr = »(o, «expr ^ »(omega, a)))) :=
-⟨λ
- H, ⟨log omega o, begin
-    refine [expr «expr $ »((lt_or_eq_of_le (power_log_le _ o0)).resolve_left, λ h, _).symm],
-    have [] [] [":=", expr H _ h],
-    have [] [] [":=", expr lt_power_succ_log one_lt_omega o],
-    rw ["[", expr power_succ, ",", expr lt_mul_of_limit omega_is_limit, "]"] ["at", ident this],
-    rcases [expr this, "with", "⟨", ident a, ",", ident ao, ",", ident h', "⟩"],
-    rcases [expr lt_omega.1 ao, "with", "⟨", ident n, ",", ident rfl, "⟩"],
-    clear [ident ao],
-    revert [ident h'],
-    apply [expr not_lt_of_le],
-    suffices [ident e] [":", expr «expr = »(«expr + »(«expr * »(«expr ^ »(omega, log omega o), «expr↑ »(n)), o), o)],
-    { simpa [] [] ["only"] ["[", expr e, "]"] [] ["using", expr le_add_right «expr * »(«expr ^ »(omega, log omega o), «expr↑ »(n)) o] },
-    induction [expr n] [] ["with", ident n, ident IH] [],
-    { simp [] [] ["only"] ["[", expr nat.cast_zero, ",", expr mul_zero, ",", expr zero_add, "]"] [] [] },
-    simp [] [] ["only"] ["[", expr nat.cast_succ, ",", expr mul_add_one, ",", expr add_assoc, ",", expr this, ",", expr IH, "]"] [] []
-  end⟩, λ ⟨b, e⟩, «expr ▸ »(e.symm, λ a, add_omega_power)⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr < » o)
+theorem add_absorp_iff {o : Ordinal} (o0 : 0 < o) : (∀ a _ : a < o, (a+o) = o) ↔ ∃ a, o = (omega^a) :=
+  ⟨fun H =>
+      ⟨log omega o,
+        by 
+          refine' ((lt_or_eq_of_leₓ (power_log_le _ o0)).resolve_left$ fun h => _).symm 
+          have  := H _ h 
+          have  := lt_power_succ_log one_lt_omega o 
+          rw [power_succ, lt_mul_of_limit omega_is_limit] at this 
+          rcases this with ⟨a, ao, h'⟩
+          rcases lt_omega.1 ao with ⟨n, rfl⟩
+          clear ao 
+          revert h' 
+          apply not_lt_of_le 
+          suffices e : (((omega^log omega o)*↑n)+o) = o
+          ·
+            simpa only [e] using le_add_right ((omega^log omega o)*↑n) o 
+          induction' n with n IH
+          ·
+            simp only [Nat.cast_zero, mul_zero, zero_addₓ]
+          simp only [Nat.cast_succ, mul_add_one, add_assocₓ, this, IH]⟩,
+    fun ⟨b, e⟩ => e.symm ▸ fun a => add_omega_power⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c' «expr < » c)
 theorem add_mul_limit_aux {a b c : Ordinal} (ba : (b+a) = a) (l : is_limit c)
   (IH : ∀ c' _ : c' < c, ((a+b)*succ c') = (a*succ c')+b) : ((a+b)*c) = a*c :=
   le_antisymmₓ
@@ -1968,20 +2082,18 @@ theorem add_mul_limit_aux {a b c : Ordinal} (ba : (b+a) = a) (l : is_limit c)
             exact le_add_right _ _)
     (mul_le_mul_right _ (le_add_right _ _))
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_mul_succ
-{a b : ordinal}
-(c)
-(ba : «expr = »(«expr + »(b, a), a)) : «expr = »(«expr * »(«expr + »(a, b), succ c), «expr + »(«expr * »(a, succ c), b)) :=
-begin
-  apply [expr limit_rec_on c],
-  { simp [] [] ["only"] ["[", expr succ_zero, ",", expr mul_one, "]"] [] [] },
-  { intros [ident c, ident IH],
-    rw ["[", expr mul_succ, ",", expr IH, ",", "<-", expr add_assoc, ",", expr add_assoc _ b, ",", expr ba, ",", "<-", expr mul_succ, "]"] [] },
-  { intros [ident c, ident l, ident IH],
-    have [] [] [":=", expr add_mul_limit_aux ba l IH],
-    rw ["[", expr mul_succ, ",", expr add_mul_limit_aux ba l IH, ",", expr mul_succ, ",", expr add_assoc, "]"] [] }
-end
+theorem add_mul_succ {a b : Ordinal} c (ba : (b+a) = a) : ((a+b)*succ c) = (a*succ c)+b :=
+  by 
+    apply limit_rec_on c
+    ·
+      simp only [succ_zero, mul_oneₓ]
+    ·
+      intro c IH 
+      rw [mul_succ, IH, ←add_assocₓ, add_assocₓ _ b, ba, ←mul_succ]
+    ·
+      intro c l IH 
+      have  := add_mul_limit_aux ba l IH 
+      rw [mul_succ, add_mul_limit_aux ba l IH, mul_succ, add_assocₓ]
 
 theorem add_mul_limit {a b c : Ordinal} (ba : (b+a) = a) (l : is_limit c) : ((a+b)*c) = a*c :=
   add_mul_limit_aux ba l fun c' _ => add_mul_succ c' ba
@@ -1992,25 +2104,21 @@ theorem mul_omega {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : (a*omega) = omeg
       simpa only [one_mulₓ] using mul_le_mul_right omega (one_le_iff_pos.2 a0))
 
 theorem mul_lt_omega_power {a b c : Ordinal} (c0 : 0 < c) (ha : a < (omega^c)) (hb : b < omega) : (a*b) < (omega^c) :=
-  if b0 : b = 0 then
-    by 
-      simp only [b0, mul_zero, power_pos _ omega_pos]
-  else
-    by 
-      rcases zero_or_succ_or_limit c with (rfl | ⟨c, rfl⟩ | l)
-      ·
-        exact (lt_irreflₓ _).elim c0
-      ·
-        rw [power_succ] at ha 
-        rcases((mul_is_normal$ power_pos _ omega_pos).limit_lt omega_is_limit).1 ha with ⟨n, hn, an⟩
-        refine' lt_of_le_of_ltₓ (mul_le_mul_right _ (le_of_ltₓ an)) _ 
-        rw [power_succ, mul_assocₓ, mul_lt_mul_iff_left (power_pos _ omega_pos)]
-        exact mul_lt_omega hn hb
-      ·
-        rcases((power_is_normal one_lt_omega).limit_lt l).1 ha with ⟨x, hx, ax⟩
-        refine' lt_of_le_of_ltₓ (mul_le_mul (le_of_ltₓ ax) (le_of_ltₓ hb)) _ 
-        rw [←power_succ, power_lt_power_iff_right one_lt_omega]
-        exact l.2 _ hx
+  by 
+    rcases zero_or_succ_or_limit c with (rfl | ⟨c, rfl⟩ | l)
+    ·
+      exact (lt_irreflₓ _).elim c0
+    ·
+      rw [power_succ] at ha 
+      rcases((mul_is_normal$ power_pos _ omega_pos).limit_lt omega_is_limit).1 ha with ⟨n, hn, an⟩
+      refine' lt_of_le_of_ltₓ (mul_le_mul_right _ (le_of_ltₓ an)) _ 
+      rw [power_succ, mul_assocₓ, mul_lt_mul_iff_left (power_pos _ omega_pos)]
+      exact mul_lt_omega hn hb
+    ·
+      rcases((power_is_normal one_lt_omega).limit_lt l).1 ha with ⟨x, hx, ax⟩
+      refine' lt_of_le_of_ltₓ (mul_le_mul (le_of_ltₓ ax) (le_of_ltₓ hb)) _ 
+      rw [←power_succ, power_lt_power_iff_right one_lt_omega]
+      exact l.2 _ hx
 
 theorem mul_omega_dvd {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : ∀ {b}, omega ∣ b → (a*b) = b
 | _, ⟨b, rfl⟩ =>
@@ -2076,24 +2184,30 @@ theorem is_normal.nfp_le_fp {f} (H : is_normal f) {a b} (ab : a ≤ b) (h : f b 
           exact ab 
         exact IH (le_transₓ (H.le_iff.2 ab) h)
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_normal.nfp_fp {f} (H : is_normal f) (a) : «expr = »(f (nfp f a), nfp f a) :=
-begin
-  refine [expr le_antisymm _ (H.le_self _)],
-  cases [expr le_or_lt (f a) a] ["with", ident aa, ident aa],
-  { rwa [expr le_antisymm (H.nfp_le_fp (le_refl _) aa) (le_nfp_self _ _)] [] },
-  rcases [expr zero_or_succ_or_limit (nfp f a), "with", ident e, "|", "⟨", ident b, ",", ident e, "⟩", "|", ident l],
-  { refine [expr @le_trans _ _ _ (f a) _ (H.le_iff.2 _) (iterate_le_nfp f a 1)],
-    simp [] [] ["only"] ["[", expr e, ",", expr ordinal.zero_le, "]"] [] [] },
-  { have [] [":", expr «expr < »(f b, nfp f a)] [":=", expr H.lt_nfp.2 (by simp [] [] ["only"] ["[", expr e, ",", expr lt_succ_self, "]"] [] [])],
-    rw ["[", expr e, ",", expr lt_succ, "]"] ["at", ident this],
-    have [ident ab] [":", expr «expr ≤ »(a, b)] [],
-    { rw ["[", "<-", expr lt_succ, ",", "<-", expr e, "]"] [],
-      exact [expr lt_of_lt_of_le aa (iterate_le_nfp f a 1)] },
-    refine [expr le_trans (H.le_iff.2 (H.nfp_le_fp ab this)) (le_trans this (le_of_lt _))],
-    simp [] [] ["only"] ["[", expr e, ",", expr lt_succ_self, "]"] [] [] },
-  { exact [expr (H.2 _ l _).2 (λ b h, le_of_lt (H.lt_nfp.2 h))] }
-end
+theorem is_normal.nfp_fp {f} (H : is_normal f) a : f (nfp f a) = nfp f a :=
+  by 
+    refine' le_antisymmₓ _ (H.le_self _)
+    cases' le_or_ltₓ (f a) a with aa aa
+    ·
+      rwa [le_antisymmₓ (H.nfp_le_fp (le_reflₓ _) aa) (le_nfp_self _ _)]
+    rcases zero_or_succ_or_limit (nfp f a) with (e | ⟨b, e⟩ | l)
+    ·
+      refine' @le_transₓ _ _ _ (f a) _ (H.le_iff.2 _) (iterate_le_nfp f a 1)
+      simp only [e, Ordinal.zero_le]
+    ·
+      have  : f b < nfp f a :=
+        H.lt_nfp.2
+          (by 
+            simp only [e, lt_succ_self])
+      rw [e, lt_succ] at this 
+      have ab : a ≤ b
+      ·
+        rw [←lt_succ, ←e]
+        exact lt_of_lt_of_leₓ aa (iterate_le_nfp f a 1)
+      refine' le_transₓ (H.le_iff.2 (H.nfp_le_fp ab this)) (le_transₓ this (le_of_ltₓ _))
+      simp only [e, lt_succ_self]
+    ·
+      exact (H.2 _ l _).2 fun b h => le_of_ltₓ (H.lt_nfp.2 h)
 
 theorem is_normal.le_nfp {f} (H : is_normal f) {a b} : f b ≤ nfp f a ↔ b ≤ nfp f a :=
   ⟨le_transₓ (H.le_self _),
@@ -2133,18 +2247,20 @@ theorem deriv_is_normal f : is_normal (deriv f) :=
       by 
         rw [deriv_limit _ l, bsup_le]⟩
 
--- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_normal.deriv_fp {f} (H : is_normal f) (o) : «expr = »(f (deriv.{u} f o), deriv f o) :=
-begin
-  apply [expr limit_rec_on o],
-  { rw ["[", expr deriv_zero, ",", expr H.nfp_fp, "]"] [] },
-  { intros [ident o, ident ih],
-    rw ["[", expr deriv_succ, ",", expr H.nfp_fp, "]"] [] },
-  intros [ident o, ident l, ident IH],
-  rw ["[", expr deriv_limit _ l, ",", expr is_normal.bsup.{u, u, u} H _ l.1, "]"] [],
-  refine [expr eq_of_forall_ge_iff (λ c, _)],
-  simp [] [] ["only"] ["[", expr bsup_le, ",", expr IH, "]"] [] [] { contextual := tt }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_normal.deriv_fp
+  { f } ( H : is_normal f ) o : f deriv .{ u } f o = deriv f o
+  :=
+    by
+      apply limit_rec_on o
+        · rw [ deriv_zero , H.nfp_fp ]
+        · intro o ih rw [ deriv_succ , H.nfp_fp ]
+        intro o l IH
+        rw [ deriv_limit _ l , is_normal.bsup .{ u , u , u } H _ l . 1 ]
+        refine' eq_of_forall_ge_iff fun c => _
+        simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) only [ bsup_le , IH ]
 
 theorem is_normal.fp_iff_deriv {f} (H : is_normal f) {a} : f a ≤ a ↔ ∃ o, a = deriv f o :=
   ⟨fun ha =>

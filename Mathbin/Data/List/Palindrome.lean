@@ -44,17 +44,15 @@ theorem reverse_eq {l : List α} (p : Palindrome l) : reverse l = l :=
       by 
         simp [h]
 
--- error in Data.List.Palindrome: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_reverse_eq {l : list α} : «expr = »(reverse l, l) → palindrome l :=
-begin
-  refine [expr bidirectional_rec_on l (λ _, palindrome.nil) (λ a _, palindrome.singleton a) _],
-  intros [ident x, ident l, ident y, ident hp, ident hr],
-  rw ["[", expr reverse_cons, ",", expr reverse_append, "]"] ["at", ident hr],
-  rw [expr head_eq_of_cons_eq hr] [],
-  have [] [":", expr palindrome l] [],
-  from [expr hp (append_inj_left' (tail_eq_of_cons_eq hr) rfl)],
-  exact [expr palindrome.cons_concat x this]
-end
+theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l :=
+  by 
+    refine' bidirectional_rec_on l (fun _ => Palindrome.nil) (fun a _ => Palindrome.singleton a) _ 
+    intro x l y hp hr 
+    rw [reverse_cons, reverse_append] at hr 
+    rw [head_eq_of_cons_eq hr]
+    have  : Palindrome l 
+    exact hp (append_inj_left' (tail_eq_of_cons_eq hr) rfl)
+    exact Palindrome.cons_concat x this
 
 theorem iff_reverse_eq {l : List α} : Palindrome l ↔ reverse l = l :=
   Iff.intro reverse_eq of_reverse_eq

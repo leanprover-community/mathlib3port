@@ -72,18 +72,12 @@ theorem pow_eq_mod_exponent {n : ℕ} (g : G) : (g^n) = (g^n % exponent G) :=
       simp [pow_addₓ, pow_mulₓ, pow_exponent_eq_one]
     
 
--- error in GroupTheory.Exponent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem exponent_pos_of_exists
-(n : exprℕ())
-(hpos : «expr < »(0, n))
-(hG : ∀ g : G, «expr = »(«expr ^ »(g, n), 1)) : «expr < »(0, exponent G) :=
-begin
-  have [ident h] [":", expr «expr∃ , »((n), «expr ∧ »(«expr < »(0, n), ∀
-     g : G, «expr = »(«expr ^ »(g, n), 1)))] [":=", expr ⟨n, hpos, hG⟩],
-  rw ["[", expr exponent, ",", expr dif_pos, "]"] [],
-  exact [expr (nat.find_spec h).1]
-end
+@[toAdditive]
+theorem exponent_pos_of_exists (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, (g^n) = 1) : 0 < exponent G :=
+  by 
+    have h : ∃ n, 0 < n ∧ ∀ g : G, (g^n) = 1 := ⟨n, hpos, hG⟩
+    rw [exponent, dif_pos]
+    exact (Nat.find_specₓ h).1
 
 @[toAdditive]
 theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, (g^n) = 1) : exponent G ≤ n :=
@@ -95,18 +89,13 @@ theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, (g^n) = 1) : exp
     ·
       exact ⟨n, hpos, hG⟩
 
--- error in GroupTheory.Exponent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem exponent_min
-(m : exprℕ())
-(hpos : «expr < »(0, m))
-(hm : «expr < »(m, exponent G)) : «expr∃ , »((g : G), «expr ≠ »(«expr ^ »(g, m), 1)) :=
-begin
-  by_contradiction [],
-  push_neg ["at", ident h],
-  have [ident hcon] [":", expr «expr ≤ »(exponent G, m)] [":=", expr exponent_min' G m hpos h],
-  linarith [] [] []
-end
+@[toAdditive]
+theorem exponent_min (m : ℕ) (hpos : 0 < m) (hm : m < exponent G) : ∃ g : G, (g^m) ≠ 1 :=
+  by 
+    byContra 
+    pushNeg  at h 
+    have hcon : exponent G ≤ m := exponent_min' G m hpos h 
+    linarith
 
 @[simp, toAdditive]
 theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 :=
@@ -124,23 +113,19 @@ theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 :=
 theorem order_dvd_exponent (g : G) : orderOf g ∣ exponent G :=
   order_of_dvd_of_pow_eq_one (pow_exponent_eq_one G g)
 
--- error in GroupTheory.Exponent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem exponent_dvd_of_forall_pow_eq_one
-(n : exprℕ())
-(hpos : «expr < »(0, n))
-(hG : ∀ g : G, «expr = »(«expr ^ »(g, n), 1)) : «expr ∣ »(exponent G, n) :=
-begin
-  apply [expr nat.dvd_of_mod_eq_zero],
-  by_contradiction [ident h],
-  have [ident h₁] [] [":=", expr nat.pos_of_ne_zero h],
-  have [ident h₂] [":", expr «expr < »(«expr % »(n, exponent G), exponent G)] [":=", expr nat.mod_lt _ (exponent_pos_of_exists _ n hpos hG)],
-  have [ident h₃] [":", expr «expr ≤ »(exponent G, «expr % »(n, exponent G))] [],
-  { apply [expr exponent_min' _ _ h₁],
-    simp_rw ["<-", expr pow_eq_mod_exponent] [],
-    exact [expr hG] },
-  linarith [] [] []
-end
+@[toAdditive]
+theorem exponent_dvd_of_forall_pow_eq_one (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, (g^n) = 1) : exponent G ∣ n :=
+  by 
+    apply Nat.dvd_of_mod_eq_zeroₓ 
+    byContra h 
+    have h₁ := Nat.pos_of_ne_zeroₓ h 
+    have h₂ : n % exponent G < exponent G := Nat.mod_ltₓ _ (exponent_pos_of_exists _ n hpos hG)
+    have h₃ : exponent G ≤ n % exponent G
+    ·
+      apply exponent_min' _ _ h₁ 
+      simpRw [←pow_eq_mod_exponent]
+      exact hG 
+    linarith
 
 variable [Fintype G]
 
@@ -151,28 +136,27 @@ theorem lcm_order_of_dvd_exponent : (Finset.univ : Finset G).lcm orderOf ∣ exp
     intro g hg 
     exact order_dvd_exponent G g
 
--- error in GroupTheory.Exponent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[ident lcm_add_order_eq_exponent]]
-theorem lcm_order_eq_exponent
-{H : Type u}
-[fintype H]
-[left_cancel_monoid H] : «expr = »((finset.univ : finset H).lcm order_of, exponent H) :=
-begin
-  apply [expr nat.dvd_antisymm (lcm_order_of_dvd_exponent H)],
-  apply [expr exponent_dvd_of_forall_pow_eq_one],
-  { apply [expr nat.pos_of_ne_zero],
-    by_contradiction [],
-    rw [expr finset.lcm_eq_zero_iff] ["at", ident h],
-    cases [expr h] ["with", ident g, ident hg],
-    simp [] [] ["only"] ["[", expr true_and, ",", expr set.mem_univ, ",", expr finset.coe_univ, "]"] [] ["at", ident hg],
-    exact [expr ne_of_gt (order_of_pos g) hg] },
-  { intro [ident g],
-    have [ident h] [":", expr «expr ∣ »(order_of g, (finset.univ : finset H).lcm order_of)] [],
-    { apply [expr finset.dvd_lcm],
-      exact [expr finset.mem_univ g] },
-    cases [expr h] ["with", ident m, ident hm],
-    rw ["[", expr hm, ",", expr pow_mul, ",", expr pow_order_of_eq_one, ",", expr one_pow, "]"] [] }
-end
+@[toAdditive lcm_add_order_eq_exponent]
+theorem lcm_order_eq_exponent {H : Type u} [Fintype H] [LeftCancelMonoid H] :
+  (Finset.univ : Finset H).lcm orderOf = exponent H :=
+  by 
+    apply Nat.dvd_antisymm (lcm_order_of_dvd_exponent H)
+    apply exponent_dvd_of_forall_pow_eq_one
+    ·
+      apply Nat.pos_of_ne_zeroₓ 
+      byContra 
+      rw [Finset.lcm_eq_zero_iff] at h 
+      cases' h with g hg 
+      simp only [true_andₓ, Set.mem_univ, Finset.coe_univ] at hg 
+      exact ne_of_gtₓ (order_of_pos g) hg
+    ·
+      intro g 
+      have h : orderOf g ∣ (Finset.univ : Finset H).lcm orderOf
+      ·
+        apply Finset.dvd_lcm 
+        exact Finset.mem_univ g 
+      cases' h with m hm 
+      rw [hm, pow_mulₓ, pow_order_of_eq_one, one_pow]
 
 end Monoidₓ
 

@@ -1,4 +1,4 @@
-import Mathbin.Data.Bool 
+import Mathbin.Data.Bool.Basic 
 import Mathbin.Data.Mllist 
 import Mathbin.Tactic.SolveByElim
 
@@ -56,18 +56,20 @@ unsafe def allowed_head_symbols : expr → List Name
 | expr.const n _ => [normalize_synonym n]
 | _ => [`_]
 
--- error in Tactic.Suggest: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 A declaration can match the head symbol of the current goal in four possible ways:
 * `ex`  : an exact match
 * `mp`  : the declaration returns an `iff`, and the right hand side matches the goal
 * `mpr` : the declaration returns an `iff`, and the left hand side matches the goal
 * `both`: the declaration returns an `iff`, and the both sides match the goal
--/ @[derive #[expr decidable_eq], derive #[expr inhabited]] inductive head_symbol_match
-| ex
-| mp
-| mpr
-| both
+-/
+inductive head_symbol_match
+  | ex
+  | mp
+  | mpr
+  | both deriving [anonymous], [anonymous]
 
 open HeadSymbolMatch
 

@@ -21,7 +21,7 @@ rectangular box, measure
 
 open Set
 
-noncomputable theory
+noncomputable section 
 
 open_locale Ennreal BigOperators Classical BoxIntegral
 
@@ -35,13 +35,11 @@ namespace Box
 
 variable (I : box ι)
 
--- error in Analysis.BoxIntegral.Partition.Measure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem measurable_set_coe [fintype ι] (I : box ι) : measurable_set (I : set (ι → exprℝ())) :=
-begin
-  rw ["[", expr coe_eq_pi, "]"] [],
-  haveI [] [] [":=", expr fintype.encodable ι],
-  exact [expr measurable_set.univ_pi (λ i, measurable_set_Ioc)]
-end
+theorem measurable_set_coe [Fintype ι] (I : box ι) : MeasurableSet (I : Set (ι → ℝ)) :=
+  by 
+    rw [coe_eq_pi]
+    have  := Fintype.encodable ι 
+    exact MeasurableSet.univ_pi fun i => measurable_set_Ioc
 
 theorem measurable_set_Icc [Fintype ι] (I : box ι) : MeasurableSet I.Icc :=
   measurable_set_Icc
@@ -55,7 +53,7 @@ theorem measure_coe_lt_top (μ : Measureₓ (ι → ℝ)) [is_locally_finite_mea
 end Box
 
 theorem prepartition.measure_Union_to_real [Fintype ι] {I : box ι} (π : prepartition I) (μ : Measureₓ (ι → ℝ))
-  [is_locally_finite_measure μ] : (μ π.Union).toReal = ∑J in π.boxes, (μ J).toReal :=
+  [is_locally_finite_measure μ] : (μ π.Union).toReal = ∑ J in π.boxes, (μ J).toReal :=
   by 
     erw [←Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
     exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
@@ -91,12 +89,12 @@ open MeasureTheory
 namespace Box
 
 @[simp]
-theorem volume_apply (I : box ι) : (volume : Measureₓ (ι → ℝ)).toBoxAdditive I = ∏i, I.upper i - I.lower i :=
+theorem volume_apply (I : box ι) : (volume : Measureₓ (ι → ℝ)).toBoxAdditive I = ∏ i, I.upper i - I.lower i :=
   by 
     rw [measure.to_box_additive_apply, coe_eq_pi, Real.volume_pi_Ioc_to_real I.lower_le_upper]
 
 theorem volume_face_mul {n} (i : Finₓ (n+1)) (I : box (Finₓ (n+1))) :
-  ((∏j, (I.face i).upper j - (I.face i).lower j)*I.upper i - I.lower i) = ∏j, I.upper j - I.lower j :=
+  ((∏ j, (I.face i).upper j - (I.face i).lower j)*I.upper i - I.lower i) = ∏ j, I.upper j - I.lower j :=
   by 
     simp only [face_lower, face_upper, · ∘ ·, Finₓ.prod_univ_succ_above _ i, mul_commₓ]
 
@@ -110,8 +108,8 @@ protected def volume {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : ι →�
   (volume : Measureₓ (ι → ℝ)).toBoxAdditive.toSmul
 
 theorem volume_apply {E : Type _} [NormedGroup E] [NormedSpace ℝ E] (I : box ι) (x : E) :
-  box_additive_map.volume I x = (∏j, I.upper j - I.lower j) • x :=
-  congr_arg2 (· • ·) I.volume_apply rfl
+  box_additive_map.volume I x = (∏ j, I.upper j - I.lower j) • x :=
+  congr_arg2ₓ (· • ·) I.volume_apply rfl
 
 end BoxAdditiveMap
 

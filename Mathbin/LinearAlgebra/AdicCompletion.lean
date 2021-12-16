@@ -69,32 +69,36 @@ variable (I M)
 /-- The Hausdorffification of a module with respect to an ideal. -/
 @[reducible]
 def Hausdorffification : Type _ :=
-  (⨅n : ℕ, (I^n) • ⊤ : Submodule R M).Quotient
+  M ⧸ (⨅ n : ℕ, (I^n) • ⊤ : Submodule R M)
 
-/-- The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
-In fact, this is only complete if the ideal is finitely generated. -/
-def adicCompletion : Submodule R (∀ n : ℕ, ((I^n) • ⊤ : Submodule R M).Quotient) :=
-  { Carrier :=
-      { f |
-        ∀ {m n} h : m ≤ n,
-          liftq _ (mkq _)
-              (by 
-                rw [ker_mkq]
-                exact smul_mono (Ideal.pow_le_pow h) (le_reflₓ _))
-              (f n) =
-            f m },
-    zero_mem' :=
-      fun m n hmn =>
-        by 
-          rw [Pi.zero_apply, Pi.zero_apply, LinearMap.map_zero],
-    add_mem' :=
-      fun f g hf hg m n hmn =>
-        by 
-          rw [Pi.add_apply, Pi.add_apply, LinearMap.map_add, hf hmn, hg hmn],
-    smul_mem' :=
-      fun c f hf m n hmn =>
-        by 
-          rw [Pi.smul_apply, Pi.smul_apply, LinearMap.map_smul, hf hmn] }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
+    In fact, this is only complete if the ideal is finitely generated. -/
+  def
+    adicCompletion
+    : Submodule R ∀ n : ℕ , M ⧸ ( I ^ n • ⊤ : Submodule R M )
+    :=
+      {
+        Carrier
+              :=
+              {
+                f
+                |
+                ∀
+                  { m n } h : m ≤ n
+                  ,
+                  liftq _ mkq _ by rw [ ker_mkq ] exact smul_mono Ideal.pow_le_pow h le_reflₓ _ f n = f m
+                }
+            ,
+          zero_mem' := fun m n hmn => by rw [ Pi.zero_apply , Pi.zero_apply , LinearMap.map_zero ] ,
+          add_mem'
+              :=
+              fun f g hf hg m n hmn => by rw [ Pi.add_apply , Pi.add_apply , LinearMap.map_add , hf hmn , hg hmn ]
+            ,
+          smul_mem' := fun c f hf m n hmn => by rw [ Pi.smul_apply , Pi.smul_apply , LinearMap.map_smul , hf hmn ]
+        }
 
 namespace IsHausdorff
 
@@ -121,7 +125,7 @@ instance (priority := 100) of_subsingleton [Subsingleton M] : IsHausdorff I M :=
 
 variable {I M}
 
-theorem infi_pow_smul (h : IsHausdorff I M) : (⨅n : ℕ, (I^n) • ⊤ : Submodule R M) = ⊥ :=
+theorem infi_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, (I^n) • ⊤ : Submodule R M) = ⊥ :=
   eq_bot_iff.2$ fun x hx => (mem_bot _).2$ h.haus x$ fun n => Smodeq.zero.2$ (mem_infi$ fun n : ℕ => (I^n) • ⊤).1 hx n
 
 end IsHausdorff
@@ -140,18 +144,18 @@ theorem induction_on {C : Hausdorffification I M → Prop} (x : Hausdorffificati
 
 variable (I M)
 
--- error in LinearAlgebra.AdicCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : is_Hausdorff I (Hausdorffification I M) :=
-⟨λ
- x, «expr $ »(quotient.induction_on' x, λ
-  x
-  hx, «expr $ »((quotient.mk_eq_zero _).2, «expr $ »((mem_infi _).2, λ n, begin
-      have [] [] [":=", expr comap_map_mkq («expr⨅ , »((n : exprℕ()), «expr • »(«expr ^ »(I, n), «expr⊤»())) : submodule R M) «expr • »(«expr ^ »(I, n), «expr⊤»())],
-      simp [] [] ["only"] ["[", expr sup_of_le_right (infi_le (λ
-         n, («expr • »(«expr ^ »(I, n), «expr⊤»()) : submodule R M)) n), "]"] [] ["at", ident this],
-      rw ["[", "<-", expr this, ",", expr map_smul'', ",", expr mem_comap, ",", expr map_top, ",", expr range_mkq, ",", "<-", expr smodeq.zero, "]"] [],
-      exact [expr hx n]
-    end)))⟩
+instance : IsHausdorff I (Hausdorffification I M) :=
+  ⟨fun x =>
+      Quotientₓ.induction_on' x$
+        fun x hx =>
+          (quotient.mk_eq_zero _).2$
+            (mem_infi _).2$
+              fun n =>
+                by 
+                  have  := comap_map_mkq (⨅ n : ℕ, (I^n) • ⊤ : Submodule R M) ((I^n) • ⊤)
+                  simp only [sup_of_le_right (infi_le (fun n => ((I^n) • ⊤ : Submodule R M)) n)] at this 
+                  rw [←this, map_smul'', mem_comap, map_top, range_mkq, ←Smodeq.zero]
+                  exact hx n⟩
 
 variable {M} [h : IsHausdorff I N]
 
@@ -228,11 +232,11 @@ theorem of_apply (x : M) (n : ℕ) : (of I M x).1 n = mkq _ x :=
   rfl
 
 /-- Linearly evaluating a sequence in the completion at a given input. -/
-def eval (n : ℕ) : adicCompletion I M →ₗ[R] ((I^n) • ⊤ : Submodule R M).Quotient :=
+def eval (n : ℕ) : adicCompletion I M →ₗ[R] M ⧸ ((I^n) • ⊤ : Submodule R M) :=
   { toFun := fun f => f.1 n, map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
 
 @[simp]
-theorem coe_eval (n : ℕ) : (eval I M n : adicCompletion I M → ((I^n) • ⊤ : Submodule R M).Quotient) = fun f => f.1 n :=
+theorem coe_eval (n : ℕ) : (eval I M n : adicCompletion I M → M ⧸ ((I^n) • ⊤ : Submodule R M)) = fun f => f.1 n :=
   rfl
 
 theorem eval_apply (n : ℕ) (f : adicCompletion I M) : eval I M n f = f.1 n :=
@@ -288,41 +292,44 @@ instance (priority := 100) of_subsingleton [Subsingleton M] : IsAdicComplete I M
 
 open_locale BigOperators
 
--- error in LinearAlgebra.AdicCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_jacobson_bot [is_adic_complete I R] : «expr ≤ »(I, («expr⊥»() : ideal R).jacobson) :=
-begin
-  intros [ident x, ident hx],
-  rw ["[", "<-", expr ideal.neg_mem_iff, ",", expr ideal.mem_jacobson_bot, "]"] [],
-  intros [ident y],
-  rw [expr add_comm] [],
-  let [ident f] [":", expr exprℕ() → R] [":=", expr geom_sum «expr * »(x, y)],
-  have [ident hf] [":", expr ∀
-   m n, «expr ≤ »(m, n) → «expr ≡ [SMOD ]»(f m, f n, «expr • »(«expr ^ »(I, m), («expr⊤»() : submodule R R)))] [],
-  { intros [ident m, ident n, ident h],
-    simp [] [] ["only"] ["[", expr f, ",", expr geom_sum_def, ",", expr algebra.id.smul_eq_mul, ",", expr ideal.mul_top, ",", expr smodeq.sub_mem, "]"] [] [],
-    rw ["[", "<-", expr add_tsub_cancel_of_le h, ",", expr finset.sum_range_add, ",", "<-", expr sub_sub, ",", expr sub_self, ",", expr zero_sub, ",", expr neg_mem_iff, "]"] [],
-    apply [expr submodule.sum_mem],
-    intros [ident n, ident hn],
-    rw ["[", expr mul_pow, ",", expr pow_add, ",", expr mul_assoc, "]"] [],
-    exact [expr ideal.mul_mem_right _ «expr ^ »(I, m) (ideal.pow_mem_pow hx m)] },
-  obtain ["⟨", ident L, ",", ident hL, "⟩", ":=", expr is_precomplete.prec to_is_precomplete hf],
-  { rw [expr is_unit_iff_exists_inv] [],
-    use [expr L],
-    rw ["[", "<-", expr sub_eq_zero, ",", expr neg_mul_eq_neg_mul_symm, "]"] [],
-    apply [expr is_Hausdorff.haus (to_is_Hausdorff : is_Hausdorff I R)],
-    intros [ident n],
-    specialize [expr hL n],
-    rw ["[", expr smodeq.sub_mem, ",", expr algebra.id.smul_eq_mul, ",", expr ideal.mul_top, "]"] ["at", "⊢", ident hL],
-    rw [expr sub_zero] [],
-    suffices [] [":", expr «expr ∈ »(«expr - »(«expr * »(«expr - »(1, «expr * »(x, y)), f n), 1), «expr ^ »(I, n))],
-    { convert [] [expr ideal.sub_mem _ this (ideal.mul_mem_left _ «expr + »(1, «expr- »(«expr * »(x, y))) hL)] ["using", 1],
-      ring [] },
-    cases [expr n] [],
-    { simp [] [] ["only"] ["[", expr ideal.one_eq_top, ",", expr pow_zero, "]"] [] [] },
-    { dsimp [] ["[", expr f, "]"] [] [],
-      rw ["[", "<-", expr neg_sub _ (1 : R), ",", expr neg_mul_eq_neg_mul_symm, ",", expr mul_geom_sum, ",", expr neg_sub, ",", expr sub_sub, ",", expr add_comm, ",", "<-", expr sub_sub, ",", expr sub_self, ",", expr zero_sub, ",", expr neg_mem_iff, ",", expr mul_pow, "]"] [],
-      exact [expr ideal.mul_mem_right _ «expr ^ »(I, _) (ideal.pow_mem_pow hx _)] } }
-end
+theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
+  by 
+    intro x hx 
+    rw [←Ideal.neg_mem_iff, Ideal.mem_jacobson_bot]
+    intro y 
+    rw [add_commₓ]
+    let f : ℕ → R := geomSum (x*y)
+    have hf : ∀ m n, m ≤ n → f m ≡ f n [SMOD (I^m) • (⊤ : Submodule R R)]
+    ·
+      intro m n h 
+      simp only [f, geom_sum_def, Algebra.id.smul_eq_mul, Ideal.mul_top, Smodeq.sub_mem]
+      rw [←add_tsub_cancel_of_le h, Finset.sum_range_add, ←sub_sub, sub_self, zero_sub, neg_mem_iff]
+      apply Submodule.sum_mem 
+      intro n hn 
+      rw [mul_powₓ, pow_addₓ, mul_assocₓ]
+      exact Ideal.mul_mem_right _ (I^m) (Ideal.pow_mem_pow hx m)
+    obtain ⟨L, hL⟩ := IsPrecomplete.prec to_is_precomplete hf
+    ·
+      rw [is_unit_iff_exists_inv]
+      use L 
+      rw [←sub_eq_zero, neg_mul_eq_neg_mul_symm]
+      apply IsHausdorff.haus (to_is_Hausdorff : IsHausdorff I R)
+      intro n 
+      specialize hL n 
+      rw [Smodeq.sub_mem, Algebra.id.smul_eq_mul, Ideal.mul_top] at hL⊢
+      rw [sub_zero]
+      suffices  : ((1 - x*y)*f n) - 1 ∈ (I^n)
+      ·
+        convert Ideal.sub_mem _ this (Ideal.mul_mem_left _ (1+-x*y) hL) using 1
+        ring 
+      cases n
+      ·
+        simp only [Ideal.one_eq_top, pow_zeroₓ]
+      ·
+        dsimp [f]
+        rw [←neg_sub _ (1 : R), neg_mul_eq_neg_mul_symm, mul_geom_sum, neg_sub, sub_sub, add_commₓ, ←sub_sub, sub_self,
+          zero_sub, neg_mem_iff, mul_powₓ]
+        exact Ideal.mul_mem_right _ (I^_) (Ideal.pow_mem_pow hx _)
 
 end IsAdicComplete
 

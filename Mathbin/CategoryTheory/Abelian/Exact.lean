@@ -21,7 +21,7 @@ true in more general settings.
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -43,7 +43,7 @@ iff `image_subobject f = kernel_subobject g`.
 -/
 theorem exact_iff_image_eq_kernel : exact f g ↔ image_subobject f = kernel_subobject g :=
   by 
-    split 
+    constructor
     ·
       intro h 
       fapply subobject.eq_of_comm
@@ -57,35 +57,39 @@ theorem exact_iff_image_eq_kernel : exact f g ↔ image_subobject f = kernel_sub
     ·
       apply exact_of_image_eq_kernel
 
--- error in CategoryTheory.Abelian.Exact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exact_iff : «expr ↔ »(exact f g, «expr ∧ »(«expr = »(«expr ≫ »(f, g), 0), «expr = »(«expr ≫ »(kernel.ι g, cokernel.π f), 0))) :=
-begin
-  split,
-  { introI [ident h],
-    exact [expr ⟨h.1, kernel_comp_cokernel f g⟩] },
-  { refine [expr λ h, ⟨h.1, _⟩],
-    suffices [ident hl] [":", expr is_limit (kernel_fork.of_ι (image_subobject f).arrow (image_subobject_arrow_comp_eq_zero h.1))],
-    { have [] [":", expr «expr = »(image_to_kernel f g h.1, «expr ≫ »((is_limit.cone_point_unique_up_to_iso hl (limit.is_limit _)).hom, (kernel_subobject_iso _).inv))] [],
-      { ext [] [] [],
-        simp [] [] [] [] [] [] },
-      rw [expr this] [],
-      apply_instance },
-    refine [expr is_limit.of_ι _ _ _ _ _],
-    { refine [expr λ
-       W
-       u
-       hu, «expr ≫ »(kernel.lift (cokernel.π f) u _, «expr ≫ »((image_iso_image f).hom, (image_subobject_iso _).inv))],
-      rw ["[", "<-", expr kernel.lift_ι g u hu, ",", expr category.assoc, ",", expr h.2, ",", expr has_zero_morphisms.comp_zero, "]"] [] },
-    { tidy [] },
-    { intros [],
-      rw ["[", "<-", expr cancel_mono (image_subobject f).arrow, ",", expr w, "]"] [],
-      simp [] [] [] [] [] [] } }
-end
+theorem exact_iff : exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f = 0 :=
+  by 
+    constructor
+    ·
+      intro h 
+      exact ⟨h.1, kernel_comp_cokernel f g⟩
+    ·
+      refine' fun h => ⟨h.1, _⟩
+      suffices hl : is_limit (kernel_fork.of_ι (image_subobject f).arrow (image_subobject_arrow_comp_eq_zero h.1))
+      ·
+        have  :
+          imageToKernel f g h.1 =
+            (is_limit.cone_point_unique_up_to_iso hl (limit.is_limit _)).Hom ≫ (kernel_subobject_iso _).inv
+        ·
+          ext 
+          simp 
+        rw [this]
+        infer_instance 
+      refine' is_limit.of_ι _ _ _ _ _
+      ·
+        refine' fun W u hu => kernel.lift (cokernel.π f) u _ ≫ (image_iso_image f).Hom ≫ (image_subobject_iso _).inv 
+        rw [←kernel.lift_ι g u hu, category.assoc, h.2, has_zero_morphisms.comp_zero]
+      ·
+        tidy
+      ·
+        intros 
+        rw [←cancel_mono (image_subobject f).arrow, w]
+        simp 
 
 theorem exact_iff' {cg : kernel_fork g} (hg : is_limit cg) {cf : cokernel_cofork f} (hf : is_colimit cf) :
   exact f g ↔ f ≫ g = 0 ∧ cg.ι ≫ cf.π = 0 :=
   by 
-    split 
+    constructor
     ·
       intro h 
       exact ⟨h.1, fork_ι_comp_cofork_π f g cg cf⟩

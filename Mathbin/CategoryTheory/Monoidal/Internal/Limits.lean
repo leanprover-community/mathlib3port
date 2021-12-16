@@ -20,7 +20,7 @@ open CategoryTheory.Monoidal
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 namespace Mon_
 

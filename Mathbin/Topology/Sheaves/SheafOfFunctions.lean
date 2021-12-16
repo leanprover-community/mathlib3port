@@ -32,7 +32,7 @@ open TopologicalSpace.Opens
 
 universe u
 
-noncomputable theory
+noncomputable section 
 
 variable (X : Top.{u})
 

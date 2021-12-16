@@ -54,7 +54,7 @@ product measure, Fubini's theorem, Tonelli's theorem, Fubini-Tonelli theorem
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical TopologicalSpace Ennreal MeasureTheory
 
@@ -145,54 +145,52 @@ theorem generate_from_eq_prod {C : Set (Set α)} {D : Set (Set β)} (hC : genera
 /-- The product σ-algebra is generated from boxes, i.e. `s.prod t` for sets `s : set α` and
   `t : set β`. -/
 theorem generate_from_prod :
-  generate_from (image2 Set.Prod { s:Set α | MeasurableSet s } { t:Set β | MeasurableSet t }) = Prod.measurableSpace :=
+  generate_from (image2 Set.Prod { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) =
+    Prod.measurableSpace :=
   generate_from_eq_prod generate_from_measurable_set generate_from_measurable_set is_countably_spanning_measurable_set
     is_countably_spanning_measurable_set
 
 /-- Rectangles form a π-system. -/
-theorem is_pi_system_prod : IsPiSystem (image2 Set.Prod { s:Set α | MeasurableSet s } { t:Set β | MeasurableSet t }) :=
+theorem is_pi_system_prod :
+  IsPiSystem (image2 Set.Prod { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) :=
   is_pi_system_measurable_set.Prod is_pi_system_measurable_set
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `ν` is a finite measure, and `s ⊆ α × β` is measurable, then `x ↦ ν { y | (x, y) ∈ s }` is
   a measurable function. `measurable_measure_prod_mk_left` is strictly more general. -/
-theorem measurable_measure_prod_mk_left_finite
-[is_finite_measure ν]
-{s : set «expr × »(α, β)}
-(hs : measurable_set s) : measurable (λ x, ν «expr ⁻¹' »(prod.mk x, s)) :=
-begin
-  refine [expr induction_on_inter generate_from_prod.symm is_pi_system_prod _ _ _ _ hs],
-  { simp [] [] [] ["[", expr measurable_zero, ",", expr const_def, "]"] [] [] },
-  { rintro ["_", "⟨", ident s, ",", ident t, ",", ident hs, ",", ident ht, ",", ident rfl, "⟩"],
-    simp [] [] ["only"] ["[", expr mk_preimage_prod_right_eq_if, ",", expr measure_if, "]"] [] [],
-    exact [expr measurable_const.indicator hs] },
-  { intros [ident t, ident ht, ident h2t],
-    simp_rw ["[", expr preimage_compl, ",", expr measure_compl (measurable_prod_mk_left ht) (measure_ne_top ν _), "]"] [],
-    exact [expr h2t.const_sub _] },
-  { intros [ident f, ident h1f, ident h2f, ident h3f],
-    simp_rw ["[", expr preimage_Union, "]"] [],
-    have [] [":", expr ∀
-     b, «expr = »(ν «expr⋃ , »((i), «expr ⁻¹' »(prod.mk b, f i)), «expr∑' , »((i), ν «expr ⁻¹' »(prod.mk b, f i)))] [":=", expr λ
-     b, measure_Union (λ i j hij, disjoint.preimage _ (h1f i j hij)) (λ i, measurable_prod_mk_left (h2f i))],
-    simp_rw ["[", expr this, "]"] [],
-    apply [expr measurable.ennreal_tsum h3f] }
-end
+theorem measurable_measure_prod_mk_left_finite [is_finite_measure ν] {s : Set (α × β)} (hs : MeasurableSet s) :
+  Measurable fun x => ν (Prod.mk x ⁻¹' s) :=
+  by 
+    refine' induction_on_inter generate_from_prod.symm is_pi_system_prod _ _ _ _ hs
+    ·
+      simp [measurable_zero, const_def]
+    ·
+      rintro _ ⟨s, t, hs, ht, rfl⟩
+      simp only [mk_preimage_prod_right_eq_if, measure_if]
+      exact measurable_const.indicator hs
+    ·
+      intro t ht h2t 
+      simpRw [preimage_compl, measure_compl (measurable_prod_mk_left ht) (measure_ne_top ν _)]
+      exact h2t.const_sub _
+    ·
+      intro f h1f h2f h3f 
+      simpRw [preimage_Union]
+      have  : ∀ b, ν (⋃ i, Prod.mk b ⁻¹' f i) = ∑' i, ν (Prod.mk b ⁻¹' f i) :=
+        fun b =>
+          measure_Union (fun i j hij => Disjoint.preimage _ (h1f i j hij)) fun i => measurable_prod_mk_left (h2f i)
+      simpRw [this]
+      apply Measurable.ennreal_tsum h3f
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `ν` is a σ-finite measure, and `s ⊆ α × β` is measurable, then `x ↦ ν { y | (x, y) ∈ s }` is
   a measurable function. -/
-theorem measurable_measure_prod_mk_left
-[sigma_finite ν]
-{s : set «expr × »(α, β)}
-(hs : measurable_set s) : measurable (λ x, ν «expr ⁻¹' »(prod.mk x, s)) :=
-begin
-  have [] [":", expr ∀ x, measurable_set «expr ⁻¹' »(prod.mk x, s)] [":=", expr λ x, measurable_prod_mk_left hs],
-  simp [] [] ["only"] ["[", "<-", expr @supr_restrict_spanning_sets _ _ ν, ",", expr this, "]"] [] [],
-  apply [expr measurable_supr],
-  intro [ident i],
-  haveI [] [] [":=", expr fact.mk (measure_spanning_sets_lt_top ν i)],
-  exact [expr measurable_measure_prod_mk_left_finite hs]
-end
+theorem measurable_measure_prod_mk_left [sigma_finite ν] {s : Set (α × β)} (hs : MeasurableSet s) :
+  Measurable fun x => ν (Prod.mk x ⁻¹' s) :=
+  by 
+    have  : ∀ x, MeasurableSet (Prod.mk x ⁻¹' s) := fun x => measurable_prod_mk_left hs 
+    simp only [←@supr_restrict_spanning_sets _ _ ν, this]
+    apply measurable_supr 
+    intro i 
+    have  := Fact.mk (measure_spanning_sets_lt_top ν i)
+    exact measurable_measure_prod_mk_left_finite hs
 
 /-- If `μ` is a σ-finite measure, and `s ⊆ α × β` is measurable, then `y ↦ μ { x | (x, y) ∈ s }` is
   a measurable function. -/
@@ -215,114 +213,127 @@ theorem Measurable.map_prod_mk_right {μ : Measureₓ α} [sigma_finite μ] :
     simpRw [map_apply measurable_prod_mk_right hs]
     exact measurable_measure_prod_mk_right hs
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
   Tonelli's theorem is measurable. -/
-theorem measurable.lintegral_prod_right'
-[sigma_finite ν] : ∀
-{f : «expr × »(α, β) → «exprℝ≥0∞»()}
-(hf : measurable f), measurable (λ x, «expr∫⁻ , ∂ »((y), f (x, y), ν)) :=
-begin
-  have [ident m] [] [":=", expr @measurable_prod_mk_left],
-  refine [expr measurable.ennreal_induction _ _ _],
-  { intros [ident c, ident s, ident hs],
-    simp [] [] ["only"] ["[", "<-", expr indicator_comp_right, "]"] [] [],
-    suffices [] [":", expr measurable (λ x, «expr * »(c, ν «expr ⁻¹' »(prod.mk x, s)))],
-    { simpa [] [] [] ["[", expr lintegral_indicator _ (m hs), "]"] [] [] },
-    exact [expr (measurable_measure_prod_mk_left hs).const_mul _] },
-  { rintro [ident f, ident g, "-", ident hf, ident hg, ident h2f, ident h2g],
-    simp_rw ["[", expr pi.add_apply, ",", expr lintegral_add (hf.comp m) (hg.comp m), "]"] [],
-    exact [expr h2f.add h2g] },
-  { intros [ident f, ident hf, ident h2f, ident h3f],
-    have [] [] [":=", expr measurable_supr h3f],
-    have [] [":", expr ∀ x, monotone (λ n y, f n (x, y))] [":=", expr λ x i j hij y, h2f hij (x, y)],
-    simpa [] [] [] ["[", expr lintegral_supr (λ n, (hf n).comp m), ",", expr this, "]"] [] [] }
-end
+theorem Measurable.lintegral_prod_right' [sigma_finite ν] :
+  ∀ {f : α × β → ℝ≥0∞} hf : Measurable f, Measurable fun x => ∫⁻ y, f (x, y) ∂ν :=
+  by 
+    have m := @measurable_prod_mk_left 
+    refine' Measurable.ennreal_induction _ _ _
+    ·
+      intro c s hs 
+      simp only [←indicator_comp_right]
+      suffices  : Measurable fun x => c*ν (Prod.mk x ⁻¹' s)
+      ·
+        simpa [lintegral_indicator _ (m hs)]
+      exact (measurable_measure_prod_mk_left hs).const_mul _
+    ·
+      rintro f g - hf hg h2f h2g 
+      simpRw [Pi.add_apply, lintegral_add (hf.comp m) (hg.comp m)]
+      exact h2f.add h2g
+    ·
+      intro f hf h2f h3f 
+      have  := measurable_supr h3f 
+      have  : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
+      simpa [lintegral_supr fun n => (hf n).comp m, this]
 
 /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
   Tonelli's theorem is measurable.
   This version has the argument `f` in curried form. -/
 theorem Measurable.lintegral_prod_right [sigma_finite ν] {f : α → β → ℝ≥0∞} (hf : Measurable (uncurry f)) :
-  Measurable fun x => ∫⁻y, f x y ∂ν :=
+  Measurable fun x => ∫⁻ y, f x y ∂ν :=
   hf.lintegral_prod_right'
 
 /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
   the symmetric version of Tonelli's theorem is measurable. -/
 theorem Measurable.lintegral_prod_left' [sigma_finite μ] {f : α × β → ℝ≥0∞} (hf : Measurable f) :
-  Measurable fun y => ∫⁻x, f (x, y) ∂μ :=
+  Measurable fun y => ∫⁻ x, f (x, y) ∂μ :=
   (measurable_swap_iff.mpr hf).lintegral_prod_right'
 
 /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
   the symmetric version of Tonelli's theorem is measurable.
   This version has the argument `f` in curried form. -/
 theorem Measurable.lintegral_prod_left [sigma_finite μ] {f : α → β → ℝ≥0∞} (hf : Measurable (uncurry f)) :
-  Measurable fun y => ∫⁻x, f x y ∂μ :=
+  Measurable fun y => ∫⁻ x, f x y ∂μ :=
   hf.lintegral_prod_left'
 
-theorem measurable_set_integrable [sigma_finite ν] [OpensMeasurableSpace E] ⦃f : α → β → E⦄
-  (hf : Measurable (uncurry f)) : MeasurableSet { x | integrable (f x) ν } :=
-  by 
-    simpRw [integrable, hf.of_uncurry_left.ae_measurable, true_andₓ]
-    exact measurable_set_lt (Measurable.lintegral_prod_right hf.ennnorm) measurable_const
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  measurable_set_integrable
+  [ sigma_finite ν ] [ OpensMeasurableSpace E ] ⦃ f : α → β → E ⦄ ( hf : Measurable uncurry f )
+    : MeasurableSet { x | integrable f x ν }
+  :=
+    by
+      simpRw [ integrable , hf.of_uncurry_left.ae_measurable , true_andₓ ]
+        exact measurable_set_lt Measurable.lintegral_prod_right hf.ennnorm measurable_const
 
 section 
 
 variable [second_countable_topology E] [NormedSpace ℝ E] [CompleteSpace E] [BorelSpace E]
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
-  Fubini's theorem is measurable.
-  This version has `f` in curried form. -/
-theorem measurable.integral_prod_right
-[sigma_finite ν]
-{{f : α → β → E}}
-(hf : measurable (uncurry f)) : measurable (λ x, «expr∫ , ∂ »((y), f x y, ν)) :=
-begin
-  let [ident s] [":", expr exprℕ() → simple_func «expr × »(α, β) E] [":=", expr simple_func.approx_on _ hf univ _ (mem_univ 0)],
-  let [ident s'] [":", expr exprℕ() → α → simple_func β E] [":=", expr λ
-   n x, (s n).comp (prod.mk x) measurable_prod_mk_left],
-  let [ident f'] [":", expr exprℕ() → α → E] [":=", expr λ
-   n, {x | integrable (f x) ν}.indicator (λ x, (s' n x).integral ν)],
-  have [ident hf'] [":", expr ∀ n, measurable (f' n)] [],
-  { intro [ident n],
-    refine [expr measurable.indicator _ (measurable_set_integrable hf)],
-    have [] [":", expr ∀ x, «expr ⊆ »((s' n x).range.filter (λ x, «expr ≠ »(x, 0)), (s n).range)] [],
-    { intros [ident x],
-      refine [expr finset.subset.trans (finset.filter_subset _ _) _],
-      intro [ident y],
-      simp_rw ["[", expr simple_func.mem_range, "]"] [],
-      rintro ["⟨", ident z, ",", ident rfl, "⟩"],
-      exact [expr ⟨(x, z), rfl⟩] },
-    simp [] [] ["only"] ["[", expr simple_func.integral_eq_sum_of_subset (this _), "]"] [] [],
-    refine [expr finset.measurable_sum _ (λ x _, _)],
-    refine [expr (measurable.ennreal_to_real _).smul_const _],
-    simp [] [] ["only"] ["[", expr simple_func.coe_comp, ",", expr preimage_comp, "]"] [] [] { single_pass := tt },
-    apply [expr measurable_measure_prod_mk_left],
-    exact [expr (s n).measurable_set_fiber x] },
-  have [ident h2f'] [":", expr tendsto f' at_top (expr𝓝() (λ x : α, «expr∫ , ∂ »((y : β), f x y, ν)))] [],
-  { rw ["[", expr tendsto_pi_nhds, "]"] [],
-    intro [ident x],
-    by_cases [expr hfx, ":", expr integrable (f x) ν],
-    { have [] [":", expr ∀ n, integrable (s' n x) ν] [],
-      { intro [ident n],
-        apply [expr (hfx.norm.add hfx.norm).mono' (s' n x).measurable.ae_measurable],
-        apply [expr eventually_of_forall],
-        intro [ident y],
-        simp_rw ["[", expr s', ",", expr simple_func.coe_comp, "]"] [],
-        exact [expr simple_func.norm_approx_on_zero_le _ _ (x, y) n] },
-      simp [] [] ["only"] ["[", expr f', ",", expr hfx, ",", expr simple_func.integral_eq_integral _ (this _), ",", expr indicator_of_mem, ",", expr mem_set_of_eq, "]"] [] [],
-      refine [expr tendsto_integral_of_dominated_convergence (λ
-        y, «expr + »(«expr∥ ∥»(f x y), «expr∥ ∥»(f x y))) (λ n, (s' n x).ae_measurable) (hfx.norm.add hfx.norm) _ _],
-      { exact [expr λ n, eventually_of_forall (λ y, simple_func.norm_approx_on_zero_le _ _ (x, y) n)] },
-      { exact [expr eventually_of_forall (λ y, simple_func.tendsto_approx_on _ _ (by simp [] [] [] [] [] []))] } },
-    { simpa [] [] [] ["[", expr f', ",", expr hfx, ",", expr integral_undef, "]"] [] ["using", expr @tendsto_const_nhds _ _ _ (0 : E) _] } },
-  exact [expr measurable_of_tendsto_metric hf' h2f']
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
+      Fubini's theorem is measurable.
+      This version has `f` in curried form. -/
+  theorem
+    Measurable.integral_prod_right
+    [ sigma_finite ν ] ⦃ f : α → β → E ⦄ ( hf : Measurable uncurry f ) : Measurable fun x => ∫ y , f x y ∂ ν
+    :=
+      by
+        let s : ℕ → simple_func α × β E := simple_func.approx_on _ hf univ _ mem_univ 0
+          let s' : ℕ → α → simple_func β E := fun n x => s n . comp Prod.mk x measurable_prod_mk_left
+          let f' : ℕ → α → E := fun n => { x | integrable f x ν } . indicator fun x => s' n x . integral ν
+          have hf' : ∀ n , Measurable f' n
+          ·
+            intro n
+              refine' Measurable.indicator _ measurable_set_integrable hf
+              have : ∀ x , s' n x . range . filter fun x => x ≠ 0 ⊆ s n . range
+              ·
+                intro x
+                  refine' Finset.Subset.trans Finset.filter_subset _ _ _
+                  intro y
+                  simpRw [ simple_func.mem_range ]
+                  rintro ⟨ z , rfl ⟩
+                  exact ⟨ ( x , z ) , rfl ⟩
+              simp only [ simple_func.integral_eq_sum_of_subset this _ ]
+              refine' Finset.measurable_sum _ fun x _ => _
+              refine' Measurable.ennreal_to_real _ . smul_const _
+              simp
+                ( config := { singlePass := Bool.true._@._internal._hyg.0 } )
+                only
+                [ simple_func.coe_comp , preimage_comp ]
+              apply measurable_measure_prod_mk_left
+              exact s n . measurable_set_fiber x
+          have h2f' : tendsto f' at_top 𝓝 fun x : α => ∫ y : β , f x y ∂ ν
+          ·
+            rw [ tendsto_pi_nhds ]
+              intro x
+              byCases' hfx : integrable f x ν
+              ·
+                have : ∀ n , integrable s' n x ν
+                  ·
+                    intro n
+                      apply hfx.norm.add hfx.norm . mono' s' n x . Measurable . AeMeasurable
+                      apply eventually_of_forall
+                      intro y
+                      simpRw [ s' , simple_func.coe_comp ]
+                      exact simple_func.norm_approx_on_zero_le _ _ ( x , y ) n
+                  simp only [ f' , hfx , simple_func.integral_eq_integral _ this _ , indicator_of_mem , mem_set_of_eq ]
+                  refine'
+                    tendsto_integral_of_dominated_convergence
+                      fun y => ∥ f x y ∥ + ∥ f x y ∥ fun n => s' n x . AeMeasurable hfx.norm.add hfx.norm _ _
+                  · exact fun n => eventually_of_forall fun y => simple_func.norm_approx_on_zero_le _ _ ( x , y ) n
+                  · exact eventually_of_forall fun y => simple_func.tendsto_approx_on _ _ by simp
+              · simpa [ f' , hfx , integral_undef ] using @ tendsto_const_nhds _ _ _ ( 0 : E ) _
+          exact measurable_of_tendsto_metric hf' h2f'
 
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   Fubini's theorem is measurable. -/
 theorem Measurable.integral_prod_right' [sigma_finite ν] ⦃f : α × β → E⦄ (hf : Measurable f) :
-  Measurable fun x => ∫y, f (x, y) ∂ν :=
+  Measurable fun x => ∫ y, f (x, y) ∂ν :=
   by 
     rw [←uncurry_curry f] at hf 
     exact hf.integral_prod_right
@@ -331,13 +342,13 @@ theorem Measurable.integral_prod_right' [sigma_finite ν] ⦃f : α × β → E�
   the symmetric version of Fubini's theorem is measurable.
   This version has `f` in curried form. -/
 theorem Measurable.integral_prod_left [sigma_finite μ] ⦃f : α → β → E⦄ (hf : Measurable (uncurry f)) :
-  Measurable fun y => ∫x, f x y ∂μ :=
+  Measurable fun y => ∫ x, f x y ∂μ :=
   (hf.comp measurable_swap).integral_prod_right'
 
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   the symmetric version of Fubini's theorem is measurable. -/
 theorem Measurable.integral_prod_left' [sigma_finite μ] ⦃f : α × β → E⦄ (hf : Measurable f) :
-  Measurable fun y => ∫x, f (x, y) ∂μ :=
+  Measurable fun y => ∫ x, f (x, y) ∂μ :=
   (hf.comp measurable_swap).integral_prod_right'
 
 end 
@@ -351,8 +362,7 @@ namespace Measureₓ
 
 /-- The binary product of measures. They are defined for arbitrary measures, but we basically
   prove all properties under the assumption that at least one of them is σ-finite. -/
-@[irreducible]
-protected def Prod (μ : Measureₓ α) (ν : Measureₓ β) : Measureₓ (α × β) :=
+protected irreducible_def Prod (μ : Measureₓ α) (ν : Measureₓ β) : Measureₓ (α × β) :=
   bind μ$ fun x : α => map (Prod.mk x) ν
 
 instance prod.measure_space {α β} [measure_space α] [measure_space β] : measure_space (α × β) :=
@@ -364,42 +374,67 @@ theorem volume_eq_prod α β [measure_space α] [measure_space β] :
   (volume : Measureₓ (α × β)) = (volume : Measureₓ α).Prod (volume : Measureₓ β) :=
   rfl
 
-theorem prod_apply {s : Set (α × β)} (hs : MeasurableSet s) : μ.prod ν s = ∫⁻x, ν (Prod.mk x ⁻¹' s) ∂μ :=
+theorem prod_apply {s : Set (α × β)} (hs : MeasurableSet s) : μ.prod ν s = ∫⁻ x, ν (Prod.mk x ⁻¹' s) ∂μ :=
   by 
     simpRw [measure.prod, bind_apply hs Measurable.map_prod_mk_left, map_apply measurable_prod_mk_left hs]
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The product measure of the product of two sets is the product of their measures. Note that we
-do not need the sets to be measurable. -/
-@[simp]
-theorem prod_prod (s : set α) (t : set β) : «expr = »(μ.prod ν (s.prod t), «expr * »(μ s, ν t)) :=
-begin
-  apply [expr le_antisymm],
-  { set [] [ident ST] [] [":="] [expr (to_measurable μ s).prod (to_measurable ν t)] [],
-    have [ident hSTm] [":", expr measurable_set ST] [":=", expr (measurable_set_to_measurable _ _).prod (measurable_set_to_measurable _ _)],
-    calc
-      «expr ≤ »(μ.prod ν (s.prod t), μ.prod ν ST) : «expr $ »(measure_mono, set.prod_mono (subset_to_measurable _ _) (subset_to_measurable _ _))
-      «expr = »(..., «expr * »(μ (to_measurable μ s), ν (to_measurable ν t))) : by simp_rw ["[", expr prod_apply hSTm, ",", expr mk_preimage_prod_right_eq_if, ",", expr measure_if, ",", expr lintegral_indicator _ (measurable_set_to_measurable _ _), ",", expr lintegral_const, ",", expr restrict_apply_univ, ",", expr mul_comm, "]"] []
-      «expr = »(..., «expr * »(μ s, ν t)) : by rw ["[", expr measure_to_measurable, ",", expr measure_to_measurable, "]"] [] },
-  { set [] [ident ST] [] [":="] [expr to_measurable (μ.prod ν) (s.prod t)] [],
-    have [ident hSTm] [":", expr measurable_set ST] [":=", expr measurable_set_to_measurable _ _],
-    have [ident hST] [":", expr «expr ⊆ »(s.prod t, ST)] [":=", expr subset_to_measurable _ _],
-    set [] [ident f] [":", expr α → «exprℝ≥0∞»()] [":="] [expr λ x, ν «expr ⁻¹' »(prod.mk x, ST)] [],
-    have [ident hfm] [":", expr measurable f] [":=", expr measurable_measure_prod_mk_left hSTm],
-    set [] [ident s'] [":", expr set α] [":="] [expr {x | «expr ≤ »(ν t, f x)}] [],
-    have [ident hss'] [":", expr «expr ⊆ »(s, s')] [":=", expr λ
-     x hx, measure_mono (λ y hy, «expr $ »(hST, mk_mem_prod hx hy))],
-    calc
-      «expr ≤ »(«expr * »(μ s, ν t), «expr * »(μ s', ν t)) : mul_le_mul_right' (measure_mono hss') _
-      «expr = »(..., «expr∫⁻ in , ∂ »((x), s', ν t, μ)) : by rw ["[", expr set_lintegral_const, ",", expr mul_comm, "]"] []
-      «expr ≤ »(..., «expr∫⁻ in , ∂ »((x), s', f x, μ)) : set_lintegral_mono measurable_const hfm (λ x, id)
-      «expr ≤ »(..., «expr∫⁻ , ∂ »((x), f x, μ)) : lintegral_mono' restrict_le_self le_rfl
-      «expr = »(..., μ.prod ν ST) : (prod_apply hSTm).symm
-      «expr = »(..., μ.prod ν (s.prod t)) : measure_to_measurable _ }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      The product measure of the product of two sets is the product of their measures. Note that we
+      do not need the sets to be measurable. -/
+    @[ simp ]
+  theorem
+    prod_prod
+    ( s : Set α ) ( t : Set β ) : μ.prod ν s.prod t = μ s * ν t
+    :=
+      by
+        apply le_antisymmₓ
+          ·
+            set ST := to_measurable μ s . Prod to_measurable ν t
+              have hSTm : MeasurableSet ST := measurable_set_to_measurable _ _ . Prod measurable_set_to_measurable _ _
+              calc
+                μ.prod ν s.prod t ≤ μ.prod ν ST
+                    :=
+                    measure_mono $ Set.prod_mono subset_to_measurable _ _ subset_to_measurable _ _
+                  _ = μ to_measurable μ s * ν to_measurable ν t
+                    :=
+                    by
+                      simpRw
+                        [
+                          prod_apply hSTm
+                            ,
+                            mk_preimage_prod_right_eq_if
+                            ,
+                            measure_if
+                            ,
+                            lintegral_indicator _ measurable_set_to_measurable _ _
+                            ,
+                            lintegral_const
+                            ,
+                            restrict_apply_univ
+                            ,
+                            mul_commₓ
+                          ]
+                  _ = μ s * ν t := by rw [ measure_to_measurable , measure_to_measurable ]
+          ·
+            set ST := to_measurable μ.prod ν s.prod t
+              have hSTm : MeasurableSet ST := measurable_set_to_measurable _ _
+              have hST : s.prod t ⊆ ST := subset_to_measurable _ _
+              set f : α → ℝ≥0∞ := fun x => ν Prod.mk x ⁻¹' ST
+              have hfm : Measurable f := measurable_measure_prod_mk_left hSTm
+              set s' : Set α := { x | ν t ≤ f x }
+              have hss' : s ⊆ s' := fun x hx => measure_mono fun y hy => hST $ mk_mem_prod hx hy
+              calc
+                μ s * ν t ≤ μ s' * ν t := mul_le_mul_right' measure_mono hss' _
+                  _ = ∫⁻ x in s' , ν t ∂ μ := by rw [ set_lintegral_const , mul_commₓ ]
+                  _ ≤ ∫⁻ x in s' , f x ∂ μ := set_lintegral_mono measurable_const hfm fun x => id
+                  _ ≤ ∫⁻ x , f x ∂ μ := lintegral_mono' restrict_le_self le_rfl
+                  _ = μ.prod ν ST := prod_apply hSTm . symm
+                  _ = μ.prod ν s.prod t := measure_to_measurable _
 
 theorem ae_measure_lt_top {s : Set (α × β)} (hs : MeasurableSet s) (h2s : (μ.prod ν) s ≠ ∞) :
-  ∀ᵐx ∂μ, ν (Prod.mk x ⁻¹' s) < ∞ :=
+  ∀ᵐ x ∂μ, ν (Prod.mk x ⁻¹' s) < ∞ :=
   by 
     simpRw [prod_apply hs]  at h2s 
     refine' ae_lt_top (measurable_measure_prod_mk_left hs) h2s
@@ -438,25 +473,22 @@ theorem measure_ae_null_of_prod_null {s : Set (α × β)} (h : μ.prod ν s = 0)
 
 /-- Note: the converse is not true. For a counterexample, see
   Walter Rudin *Real and Complex Analysis*, example (c) in section 8.9. -/
-theorem ae_ae_of_ae_prod {p : α × β → Prop} (h : ∀ᵐz ∂μ.prod ν, p z) : ∀ᵐx ∂μ, ∀ᵐy ∂ν, p (x, y) :=
+theorem ae_ae_of_ae_prod {p : α × β → Prop} (h : ∀ᵐ z ∂μ.prod ν, p z) : ∀ᵐ x ∂μ, ∀ᵐ y ∂ν, p (x, y) :=
   measure_ae_null_of_prod_null h
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `μ.prod ν` has finite spanning sets in rectangles of finite spanning sets. -/
-def finite_spanning_sets_in.prod
-{ν : measure β}
-{C : set (set α)}
-{D : set (set β)}
-(hμ : μ.finite_spanning_sets_in C)
-(hν : ν.finite_spanning_sets_in D) : (μ.prod ν).finite_spanning_sets_in (image2 set.prod C D) :=
-begin
-  haveI [] [] [":=", expr hν.sigma_finite],
-  refine [expr ⟨λ
-    n, (hμ.set n.unpair.1).prod (hν.set n.unpair.2), λ n, mem_image2_of_mem (hμ.set_mem _) (hν.set_mem _), λ n, _, _⟩],
-  { rw ["[", expr prod_prod, "]"] [],
-    exact [expr mul_lt_top (hμ.finite _).ne (hν.finite _).ne] },
-  { simp_rw ["[", expr Union_unpair_prod, ",", expr hμ.spanning, ",", expr hν.spanning, ",", expr univ_prod_univ, "]"] [] }
-end
+def finite_spanning_sets_in.prod {ν : Measureₓ β} {C : Set (Set α)} {D : Set (Set β)} (hμ : μ.finite_spanning_sets_in C)
+  (hν : ν.finite_spanning_sets_in D) : (μ.prod ν).FiniteSpanningSetsIn (image2 Set.Prod C D) :=
+  by 
+    have  := hν.sigma_finite 
+    refine'
+      ⟨fun n => (hμ.set n.unpair.1).Prod (hν.set n.unpair.2), fun n => mem_image2_of_mem (hμ.set_mem _) (hν.set_mem _),
+        fun n => _, _⟩
+    ·
+      rw [prod_prod]
+      exact mul_lt_top (hμ.finite _).Ne (hν.finite _).Ne
+    ·
+      simpRw [Union_unpair_prod, hμ.spanning, hν.spanning, univ_prod_univ]
 
 theorem prod_fst_absolutely_continuous : map Prod.fst (μ.prod ν) ≪ μ :=
   by 
@@ -473,28 +505,22 @@ variable [sigma_finite μ]
 instance prod.sigma_finite : sigma_finite (μ.prod ν) :=
   (μ.to_finite_spanning_sets_in.prod ν.to_finite_spanning_sets_in).SigmaFinite
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » C)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » D)
 /-- A measure on a product space equals the product measure if they are equal on rectangles
   with as sides sets that generate the corresponding σ-algebras. -/
-theorem prod_eq_generate_from
-{μ : measure α}
-{ν : measure β}
-{C : set (set α)}
-{D : set (set β)}
-(hC : «expr = »(generate_from C, «expr‹ ›»(_)))
-(hD : «expr = »(generate_from D, «expr‹ ›»(_)))
-(h2C : is_pi_system C)
-(h2D : is_pi_system D)
-(h3C : μ.finite_spanning_sets_in C)
-(h3D : ν.finite_spanning_sets_in D)
-{μν : measure «expr × »(α, β)}
-(h₁ : ∀ (s «expr ∈ » C) (t «expr ∈ » D), «expr = »(μν (set.prod s t), «expr * »(μ s, ν t))) : «expr = »(μ.prod ν, μν) :=
-begin
-  refine [expr (h3C.prod h3D).ext (generate_from_eq_prod hC hD h3C.is_countably_spanning h3D.is_countably_spanning).symm (h2C.prod h2D) _],
-  { rintro ["_", "⟨", ident s, ",", ident t, ",", ident hs, ",", ident ht, ",", ident rfl, "⟩"],
-    haveI [] [] [":=", expr h3D.sigma_finite],
-    rw ["[", expr h₁ s hs t ht, ",", expr prod_prod, "]"] [] }
-end
+theorem prod_eq_generate_from {μ : Measureₓ α} {ν : Measureₓ β} {C : Set (Set α)} {D : Set (Set β)}
+  (hC : generate_from C = ‹_›) (hD : generate_from D = ‹_›) (h2C : IsPiSystem C) (h2D : IsPiSystem D)
+  (h3C : μ.finite_spanning_sets_in C) (h3D : ν.finite_spanning_sets_in D) {μν : Measureₓ (α × β)}
+  (h₁ : ∀ s _ : s ∈ C t _ : t ∈ D, μν (Set.Prod s t) = μ s*ν t) : μ.prod ν = μν :=
+  by 
+    refine'
+      (h3C.prod h3D).ext (generate_from_eq_prod hC hD h3C.is_countably_spanning h3D.is_countably_spanning).symm
+        (h2C.prod h2D) _
+    ·
+      rintro _ ⟨s, t, hs, ht, rfl⟩
+      have  := h3D.sigma_finite 
+      rw [h₁ s hs t ht, prod_prod]
 
 /-- A measure on a product space equals the product measure if they are equal on rectangles. -/
 theorem prod_eq {μν : Measureₓ (α × β)} (h : ∀ s t, MeasurableSet s → MeasurableSet t → μν (s.prod t) = μ s*ν t) :
@@ -508,7 +534,7 @@ theorem prod_swap : map Prod.swap (μ.prod ν) = ν.prod μ :=
     intro s t hs ht 
     simpRw [map_apply measurable_swap (hs.prod ht), preimage_swap_prod, prod_prod, mul_commₓ]
 
-theorem prod_apply_symm {s : Set (α × β)} (hs : MeasurableSet s) : μ.prod ν s = ∫⁻y, μ ((fun x => (x, y)) ⁻¹' s) ∂ν :=
+theorem prod_apply_symm {s : Set (α × β)} (hs : MeasurableSet s) : μ.prod ν s = ∫⁻ y, μ ((fun x => (x, y)) ⁻¹' s) ∂ν :=
   by 
     rw [←prod_swap, map_apply measurable_swap hs]
     simp only [prod_apply (measurable_swap hs)]
@@ -524,7 +550,7 @@ theorem prod_assoc_prod [sigma_finite τ] : map MeasurableEquiv.prodAssoc ((μ.p
     rintro s hs _ ⟨t, u, ht, hu, rfl⟩
     rw [mem_set_of_eq] at hs ht hu 
     simpRw [map_apply (MeasurableEquiv.measurable _) (hs.prod (ht.prod hu)), MeasurableEquiv.prodAssoc,
-      MeasurableEquiv.coe_mk, Equiv.prod_assoc_preimage, prod_prod, mul_assocₓ]
+      MeasurableEquiv.coe_mk, Equivₓ.prod_assoc_preimage, prod_prod, mul_assocₓ]
 
 /-! ### The product of specific measures -/
 
@@ -534,12 +560,10 @@ theorem prod_restrict (s : Set α) (t : Set β) : (μ.restrict s).Prod (ν.restr
     refine' prod_eq fun s' t' hs' ht' => _ 
     rw [restrict_apply (hs'.prod ht'), prod_inter_prod, prod_prod, restrict_apply hs', restrict_apply ht']
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem restrict_prod_eq_prod_univ (s : set α) : «expr = »((μ.restrict s).prod ν, (μ.prod ν).restrict (s.prod univ)) :=
-begin
-  have [] [":", expr «expr = »(ν, ν.restrict set.univ)] [":=", expr measure.restrict_univ.symm],
-  rwa ["[", expr this, ",", expr measure.prod_restrict, ",", "<-", expr this, "]"] []
-end
+theorem restrict_prod_eq_prod_univ (s : Set α) : (μ.restrict s).Prod ν = (μ.prod ν).restrict (s.prod univ) :=
+  by 
+    have  : ν = ν.restrict Set.Univ := measure.restrict_univ.symm 
+    rwa [this, measure.prod_restrict, ←this]
 
 theorem prod_dirac (y : β) : μ.prod (dirac y) = map (fun x => (x, y)) μ :=
   by 
@@ -590,24 +614,14 @@ theorem prod_zero (μ : Measureₓ α) : μ.prod (0 : Measureₓ β) = 0 :=
   by 
     simp [measure.prod]
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_prod_map
-{δ}
-[measurable_space δ]
-{f : α → β}
-{g : γ → δ}
-{μa : measure α}
-{μc : measure γ}
-(hfa : sigma_finite (map f μa))
-(hgc : sigma_finite (map g μc))
-(hf : measurable f)
-(hg : measurable g) : «expr = »((map f μa).prod (map g μc), map (prod.map f g) (μa.prod μc)) :=
-begin
-  haveI [] [] [":=", expr hgc.of_map μc hg],
-  refine [expr prod_eq (λ s t hs ht, _)],
-  rw ["[", expr map_apply (hf.prod_map hg) (hs.prod ht), ",", expr map_apply hf hs, ",", expr map_apply hg ht, "]"] [],
-  exact [expr prod_prod «expr ⁻¹' »(f, s) «expr ⁻¹' »(g, t)]
-end
+theorem map_prod_map {δ} [MeasurableSpace δ] {f : α → β} {g : γ → δ} {μa : Measureₓ α} {μc : Measureₓ γ}
+  (hfa : sigma_finite (map f μa)) (hgc : sigma_finite (map g μc)) (hf : Measurable f) (hg : Measurable g) :
+  (map f μa).Prod (map g μc) = map (Prod.map f g) (μa.prod μc) :=
+  by 
+    have  := hgc.of_map μc hg 
+    refine' prod_eq fun s t hs ht => _ 
+    rw [map_apply (hf.prod_map hg) (hs.prod ht), map_apply hf hs, map_apply hg ht]
+    exact prod_prod (f ⁻¹' s) (g ⁻¹' t)
 
 end Measureₓ
 
@@ -617,39 +631,37 @@ open Measureₓ
 
 variable {δ : Type _} [MeasurableSpace δ] {μa : Measureₓ α} {μb : Measureₓ β} {μc : Measureₓ γ} {μd : Measureₓ δ}
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem skew_product
-[sigma_finite μb]
-[sigma_finite μd]
-{f : α → β}
-(hf : measure_preserving f μa μb)
-{g : α → γ → δ}
-(hgm : measurable (uncurry g))
-(hg : «expr∀ᵐ ∂ , »((x), μa, «expr = »(map (g x) μc, μd))) : measure_preserving (λ
- p : «expr × »(α, γ), (f p.1, g p.1 p.2)) (μa.prod μc) (μb.prod μd) :=
-begin
-  classical,
-  have [] [":", expr measurable (λ
-    p : «expr × »(α, γ), (f p.1, g p.1 p.2))] [":=", expr (hf.1.comp measurable_fst).prod_mk hgm],
-  rcases [expr eq_or_ne μa 0, "with", "(", ident rfl, "|", ident ha, ")"],
-  { rw ["[", "<-", expr hf.map_eq, ",", expr zero_prod, ",", expr (map f).map_zero, ",", expr zero_prod, "]"] [],
-    exact [expr ⟨this, (map _).map_zero⟩] },
-  haveI [] [":", expr sigma_finite μc] [],
-  { rcases [expr (ae_ne_bot.2 ha).nonempty_of_mem hg, "with", "⟨", ident x, ",", ident hx, ":", expr «expr = »(map (g x) μc, μd), "⟩"],
-    exact [expr sigma_finite.of_map _ hgm.of_uncurry_left (by rwa [expr hx] [])] },
-  refine [expr ⟨this, «expr $ »(prod_eq, λ s t hs ht, _).symm⟩],
-  rw ["[", expr map_apply this (hs.prod ht), "]"] [],
-  refine [expr (prod_apply «expr $ »(this, hs.prod ht)).trans _],
-  have [] [":", expr «expr∀ᵐ ∂ , »((x), μa, «expr = »(μc «expr ⁻¹' »(λ
-      y, (f x, g x y), s.prod t), indicator «expr ⁻¹' »(f, s) (λ y, μd t) x))] [],
-  { refine [expr hg.mono (λ x hx, _)],
-    unfreezingI { subst [expr hx] },
-    simp [] [] ["only"] ["[", expr mk_preimage_prod_right_fn_eq_if, ",", expr indicator_apply, ",", expr mem_preimage, "]"] [] [],
-    split_ifs [] [],
-    exacts ["[", expr (map_apply hgm.of_uncurry_left ht).symm, ",", expr measure_empty, "]"] },
-  simp [] [] ["only"] ["[", expr preimage_preimage, "]"] [] [],
-  rw ["[", expr lintegral_congr_ae this, ",", expr lintegral_indicator _ (hf.1 hs), ",", expr set_lintegral_const, ",", expr hf.measure_preimage hs, ",", expr mul_comm, "]"] []
-end
+theorem skew_product [sigma_finite μb] [sigma_finite μd] {f : α → β} (hf : measure_preserving f μa μb) {g : α → γ → δ}
+  (hgm : Measurable (uncurry g)) (hg : ∀ᵐ x ∂μa, map (g x) μc = μd) :
+  measure_preserving (fun p : α × γ => (f p.1, g p.1 p.2)) (μa.prod μc) (μb.prod μd) :=
+  by 
+    classical 
+    have  : Measurable fun p : α × γ => (f p.1, g p.1 p.2) := (hf.1.comp measurable_fst).prod_mk hgm 
+    rcases eq_or_ne μa 0 with (rfl | ha)
+    ·
+      rw [←hf.map_eq, zero_prod, (map f).map_zero, zero_prod]
+      exact ⟨this, (map _).map_zero⟩
+    have  : sigma_finite μc
+    ·
+      rcases(ae_ne_bot.2 ha).nonempty_of_mem hg with ⟨x, hx : map (g x) μc = μd⟩
+      exact
+        sigma_finite.of_map _ hgm.of_uncurry_left
+          (by 
+            rwa [hx])
+    refine' ⟨this, (prod_eq$ fun s t hs ht => _).symm⟩
+    rw [map_apply this (hs.prod ht)]
+    refine' (prod_apply (this$ hs.prod ht)).trans _ 
+    have  : ∀ᵐ x ∂μa, μc ((fun y => (f x, g x y)) ⁻¹' s.prod t) = indicator (f ⁻¹' s) (fun y => μd t) x
+    ·
+      refine' hg.mono fun x hx => _
+      (
+        subst hx)
+      simp only [mk_preimage_prod_right_fn_eq_if, indicator_apply, mem_preimage]
+      splitIfs 
+      exacts[(map_apply hgm.of_uncurry_left ht).symm, measure_empty]
+    simp only [preimage_preimage]
+    rw [lintegral_congr_ae this, lintegral_indicator _ (hf.1 hs), set_lintegral_const, hf.measure_preimage hs,
+      mul_commₓ]
 
 /-- If `f : α → β` sends the measure `μa` to `μb` and `g : γ → δ` sends the measure `μc` to `μd`,
 then `prod.map f g` sends `μa.prod μc` to `μb.prod μd`. -/
@@ -684,15 +696,15 @@ theorem AeMeasurable.snd [sigma_finite ν] {f : β → γ} (hf : AeMeasurable f 
   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/
 theorem AeMeasurable.integral_prod_right' [sigma_finite ν] [second_countable_topology E] [NormedSpace ℝ E]
   [BorelSpace E] [CompleteSpace E] ⦃f : α × β → E⦄ (hf : AeMeasurable f (μ.prod ν)) :
-  AeMeasurable (fun x => ∫y, f (x, y) ∂ν) μ :=
-  ⟨fun x => ∫y, hf.mk f (x, y) ∂ν, hf.measurable_mk.integral_prod_right',
+  AeMeasurable (fun x => ∫ y, f (x, y) ∂ν) μ :=
+  ⟨fun x => ∫ y, hf.mk f (x, y) ∂ν, hf.measurable_mk.integral_prod_right',
     by 
       filterUpwards [ae_ae_of_ae_prod hf.ae_eq_mk]
       intro x hx 
       exact integral_congr_ae hx⟩
 
 theorem AeMeasurable.prod_mk_left [sigma_finite ν] {f : α × β → γ} (hf : AeMeasurable f (μ.prod ν)) :
-  ∀ᵐx ∂μ, AeMeasurable (fun y => f (x, y)) ν :=
+  ∀ᵐ x ∂μ, AeMeasurable (fun y => f (x, y)) ν :=
   by 
     filterUpwards [ae_ae_of_ae_prod hf.ae_eq_mk]
     intro x hx 
@@ -708,56 +720,52 @@ namespace MeasureTheory
 variable [sigma_finite ν]
 
 theorem lintegral_prod_swap [sigma_finite μ] (f : α × β → ℝ≥0∞) (hf : AeMeasurable f (μ.prod ν)) :
-  (∫⁻z, f z.swap ∂ν.prod μ) = ∫⁻z, f z ∂μ.prod ν :=
+  (∫⁻ z, f z.swap ∂ν.prod μ) = ∫⁻ z, f z ∂μ.prod ν :=
   by 
     rw [←prod_swap] at hf 
     rw [←lintegral_map' hf measurable_swap, prod_swap]
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Tonelli's Theorem**: For `ℝ≥0∞`-valued measurable functions on `α × β`,
   the integral of `f` is equal to the iterated integral. -/
-theorem lintegral_prod_of_measurable : ∀
-(f : «expr × »(α, β) → «exprℝ≥0∞»())
-(hf : measurable f), «expr = »(«expr∫⁻ , ∂ »((z), f z, μ.prod ν), «expr∫⁻ , ∂ »((x), «expr∫⁻ , ∂ »((y), f (x, y), ν), μ)) :=
-begin
-  have [ident m] [] [":=", expr @measurable_prod_mk_left],
-  refine [expr measurable.ennreal_induction _ _ _],
-  { intros [ident c, ident s, ident hs],
-    simp [] [] ["only"] ["[", "<-", expr indicator_comp_right, "]"] [] [],
-    simp [] [] [] ["[", expr lintegral_indicator, ",", expr m hs, ",", expr hs, ",", expr lintegral_const_mul, ",", expr measurable_measure_prod_mk_left hs, ",", expr prod_apply, "]"] [] [] },
-  { rintro [ident f, ident g, "-", ident hf, ident hg, ident h2f, ident h2g],
-    simp [] [] [] ["[", expr lintegral_add, ",", expr measurable.lintegral_prod_right', ",", expr hf.comp m, ",", expr hg.comp m, ",", expr hf, ",", expr hg, ",", expr h2f, ",", expr h2g, "]"] [] [] },
-  { intros [ident f, ident hf, ident h2f, ident h3f],
-    have [ident kf] [":", expr ∀ x n, measurable (λ y, f n (x, y))] [":=", expr λ x n, (hf n).comp m],
-    have [ident k2f] [":", expr ∀ x, monotone (λ n y, f n (x, y))] [":=", expr λ x i j hij y, h2f hij (x, y)],
-    have [ident lf] [":", expr ∀
-     n, measurable (λ x, «expr∫⁻ , ∂ »((y), f n (x, y), ν))] [":=", expr λ n, (hf n).lintegral_prod_right'],
-    have [ident l2f] [":", expr monotone (λ
-      n x, «expr∫⁻ , ∂ »((y), f n (x, y), ν))] [":=", expr λ i j hij x, lintegral_mono (k2f x hij)],
-    simp [] [] ["only"] ["[", expr lintegral_supr hf h2f, ",", expr lintegral_supr (kf _), ",", expr k2f, ",", expr lintegral_supr lf l2f, ",", expr h3f, "]"] [] [] }
-end
+theorem lintegral_prod_of_measurable :
+  ∀ f : α × β → ℝ≥0∞ hf : Measurable f, (∫⁻ z, f z ∂μ.prod ν) = ∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ :=
+  by 
+    have m := @measurable_prod_mk_left 
+    refine' Measurable.ennreal_induction _ _ _
+    ·
+      intro c s hs 
+      simp only [←indicator_comp_right]
+      simp [lintegral_indicator, m hs, hs, lintegral_const_mul, measurable_measure_prod_mk_left hs, prod_apply]
+    ·
+      rintro f g - hf hg h2f h2g 
+      simp [lintegral_add, Measurable.lintegral_prod_right', hf.comp m, hg.comp m, hf, hg, h2f, h2g]
+    ·
+      intro f hf h2f h3f 
+      have kf : ∀ x n, Measurable fun y => f n (x, y) := fun x n => (hf n).comp m 
+      have k2f : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
+      have lf : ∀ n, Measurable fun x => ∫⁻ y, f n (x, y) ∂ν := fun n => (hf n).lintegral_prod_right' 
+      have l2f : Monotone fun n x => ∫⁻ y, f n (x, y) ∂ν := fun i j hij x => lintegral_mono (k2f x hij)
+      simp only [lintegral_supr hf h2f, lintegral_supr (kf _), k2f, lintegral_supr lf l2f, h3f]
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Tonelli's Theorem**: For `ℝ≥0∞`-valued almost everywhere measurable functions on `α × β`,
   the integral of `f` is equal to the iterated integral. -/
-theorem lintegral_prod
-(f : «expr × »(α, β) → «exprℝ≥0∞»())
-(hf : ae_measurable f (μ.prod ν)) : «expr = »(«expr∫⁻ , ∂ »((z), f z, μ.prod ν), «expr∫⁻ , ∂ »((x), «expr∫⁻ , ∂ »((y), f (x, y), ν), μ)) :=
-begin
-  have [ident A] [":", expr «expr = »(«expr∫⁻ , ∂ »((z), f z, μ.prod ν), «expr∫⁻ , ∂ »((z), hf.mk f z, μ.prod ν))] [":=", expr lintegral_congr_ae hf.ae_eq_mk],
-  have [ident B] [":", expr «expr = »(«expr∫⁻ , ∂ »((x), «expr∫⁻ , ∂ »((y), f (x, y), ν), μ), «expr∫⁻ , ∂ »((x), «expr∫⁻ , ∂ »((y), hf.mk f (x, y), ν), μ))] [],
-  { apply [expr lintegral_congr_ae],
-    filter_upwards ["[", expr ae_ae_of_ae_prod hf.ae_eq_mk, "]"] [],
-    assume [binders (a ha)],
-    exact [expr lintegral_congr_ae ha] },
-  rw ["[", expr A, ",", expr B, ",", expr lintegral_prod_of_measurable _ hf.measurable_mk, "]"] [],
-  apply_instance
-end
+theorem lintegral_prod (f : α × β → ℝ≥0∞) (hf : AeMeasurable f (μ.prod ν)) :
+  (∫⁻ z, f z ∂μ.prod ν) = ∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ :=
+  by 
+    have A : (∫⁻ z, f z ∂μ.prod ν) = ∫⁻ z, hf.mk f z ∂μ.prod ν := lintegral_congr_ae hf.ae_eq_mk 
+    have B : (∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂ν ∂μ
+    ·
+      apply lintegral_congr_ae 
+      filterUpwards [ae_ae_of_ae_prod hf.ae_eq_mk]
+      intro a ha 
+      exact lintegral_congr_ae ha 
+    rw [A, B, lintegral_prod_of_measurable _ hf.measurable_mk]
+    infer_instance
 
 /-- The symmetric verion of Tonelli's Theorem: For `ℝ≥0∞`-valued almost everywhere measurable
 functions on `α × β`,  the integral of `f` is equal to the iterated integral, in reverse order. -/
 theorem lintegral_prod_symm [sigma_finite μ] (f : α × β → ℝ≥0∞) (hf : AeMeasurable f (μ.prod ν)) :
-  (∫⁻z, f z ∂μ.prod ν) = ∫⁻y, ∫⁻x, f (x, y) ∂μ ∂ν :=
+  (∫⁻ z, f z ∂μ.prod ν) = ∫⁻ y, ∫⁻ x, f (x, y) ∂μ ∂ν :=
   by 
     simpRw [←lintegral_prod_swap f hf]
     exact lintegral_prod _ hf.prod_swap
@@ -765,28 +773,28 @@ theorem lintegral_prod_symm [sigma_finite μ] (f : α × β → ℝ≥0∞) (hf 
 /-- The symmetric verion of Tonelli's Theorem: For `ℝ≥0∞`-valued measurable
 functions on `α × β`,  the integral of `f` is equal to the iterated integral, in reverse order. -/
 theorem lintegral_prod_symm' [sigma_finite μ] (f : α × β → ℝ≥0∞) (hf : Measurable f) :
-  (∫⁻z, f z ∂μ.prod ν) = ∫⁻y, ∫⁻x, f (x, y) ∂μ ∂ν :=
+  (∫⁻ z, f z ∂μ.prod ν) = ∫⁻ y, ∫⁻ x, f (x, y) ∂μ ∂ν :=
   lintegral_prod_symm f hf.ae_measurable
 
 /-- The reversed version of **Tonelli's Theorem**. In this version `f` is in curried form, which
 makes it easier for the elaborator to figure out `f` automatically. -/
 theorem lintegral_lintegral ⦃f : α → β → ℝ≥0∞⦄ (hf : AeMeasurable (uncurry f) (μ.prod ν)) :
-  (∫⁻x, ∫⁻y, f x y ∂ν ∂μ) = ∫⁻z, f z.1 z.2 ∂μ.prod ν :=
+  (∫⁻ x, ∫⁻ y, f x y ∂ν ∂μ) = ∫⁻ z, f z.1 z.2 ∂μ.prod ν :=
   (lintegral_prod _ hf).symm
 
 /-- The reversed version of **Tonelli's Theorem** (symmetric version). In this version `f` is in
 curried form, which makes it easier for the elaborator to figure out `f` automatically. -/
 theorem lintegral_lintegral_symm [sigma_finite μ] ⦃f : α → β → ℝ≥0∞⦄ (hf : AeMeasurable (uncurry f) (μ.prod ν)) :
-  (∫⁻x, ∫⁻y, f x y ∂ν ∂μ) = ∫⁻z, f z.2 z.1 ∂ν.prod μ :=
+  (∫⁻ x, ∫⁻ y, f x y ∂ν ∂μ) = ∫⁻ z, f z.2 z.1 ∂ν.prod μ :=
   (lintegral_prod_symm _ hf.prod_swap).symm
 
 /-- Change the order of Lebesgue integration. -/
 theorem lintegral_lintegral_swap [sigma_finite μ] ⦃f : α → β → ℝ≥0∞⦄ (hf : AeMeasurable (uncurry f) (μ.prod ν)) :
-  (∫⁻x, ∫⁻y, f x y ∂ν ∂μ) = ∫⁻y, ∫⁻x, f x y ∂μ ∂ν :=
+  (∫⁻ x, ∫⁻ y, f x y ∂ν ∂μ) = ∫⁻ y, ∫⁻ x, f x y ∂μ ∂ν :=
   (lintegral_lintegral hf).trans (lintegral_prod_symm _ hf)
 
 theorem lintegral_prod_mul {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (hf : AeMeasurable f μ) (hg : AeMeasurable g ν) :
-  (∫⁻z, f z.1*g z.2 ∂μ.prod ν) = (∫⁻x, f x ∂μ)*∫⁻y, g y ∂ν :=
+  (∫⁻ z, f z.1*g z.2 ∂μ.prod ν) = (∫⁻ x, f x ∂μ)*∫⁻ y, g y ∂ν :=
   by 
     simp [lintegral_prod _ (hf.fst.mul hg.snd), lintegral_lintegral_mul hf hg]
 
@@ -810,39 +818,37 @@ theorem integrable_swap_iff [sigma_finite μ] ⦃f : α × β → E⦄ :
         rfl,
     fun hf => hf.swap⟩
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_finite_integral_prod_iff
-{{f : «expr × »(α, β) → E}}
-(h1f : measurable f) : «expr ↔ »(has_finite_integral f (μ.prod ν), «expr ∧ »(«expr∀ᵐ ∂ , »((x), μ, has_finite_integral (λ
-    y, f (x, y)) ν), has_finite_integral (λ x, «expr∫ , ∂ »((y), «expr∥ ∥»(f (x, y)), ν)) μ)) :=
-begin
-  simp [] [] ["only"] ["[", expr has_finite_integral, ",", expr lintegral_prod_of_measurable _ h1f.ennnorm, "]"] [] [],
-  have [] [":", expr ∀
-   x, «expr∀ᵐ ∂ , »((y), ν, «expr ≤ »(0, «expr∥ ∥»(f (x, y))))] [":=", expr λ
-   x, eventually_of_forall (λ y, norm_nonneg _)],
-  simp_rw ["[", expr integral_eq_lintegral_of_nonneg_ae (this _) (h1f.norm.comp measurable_prod_mk_left).ae_measurable, ",", expr ennnorm_eq_of_real to_real_nonneg, ",", expr of_real_norm_eq_coe_nnnorm, "]"] [],
-  have [] [":", expr ∀
-   {p q r : exprProp()}
-   (h1 : r → p), «expr ↔ »(«expr ↔ »(r, «expr ∧ »(p, q)), p → «expr ↔ »(r, q))] [":=", expr λ
-   p q r h1, by rw ["[", "<-", expr and.congr_right_iff, ",", expr and_iff_right_of_imp h1, "]"] []],
-  rw ["[", expr this, "]"] [],
-  { intro [ident h2f],
-    rw [expr lintegral_congr_ae] [],
-    refine [expr h2f.mp _],
-    apply [expr eventually_of_forall],
-    intros [ident x, ident hx],
-    dsimp ["only"] [] [] [],
-    rw ["[", expr of_real_to_real, "]"] [],
-    rw ["[", "<-", expr lt_top_iff_ne_top, "]"] [],
-    exact [expr hx] },
-  { intro [ident h2f],
-    refine [expr ae_lt_top _ h2f.ne],
-    exact [expr h1f.ennnorm.lintegral_prod_right'] }
-end
+theorem has_finite_integral_prod_iff ⦃f : α × β → E⦄ (h1f : Measurable f) :
+  has_finite_integral f (μ.prod ν) ↔
+    (∀ᵐ x ∂μ, has_finite_integral (fun y => f (x, y)) ν) ∧ has_finite_integral (fun x => ∫ y, ∥f (x, y)∥ ∂ν) μ :=
+  by 
+    simp only [has_finite_integral, lintegral_prod_of_measurable _ h1f.ennnorm]
+    have  : ∀ x, ∀ᵐ y ∂ν, 0 ≤ ∥f (x, y)∥ := fun x => eventually_of_forall fun y => norm_nonneg _ 
+    simpRw [integral_eq_lintegral_of_nonneg_ae (this _) (h1f.norm.comp measurable_prod_mk_left).AeMeasurable,
+      ennnorm_eq_of_real to_real_nonneg, of_real_norm_eq_coe_nnnorm]
+    have  : ∀ {p q r : Prop} h1 : r → p, (r ↔ p ∧ q) ↔ p → (r ↔ q) :=
+      fun p q r h1 =>
+        by 
+          rw [←And.congr_right_iff, and_iff_right_of_imp h1]
+    rw [this]
+    ·
+      intro h2f 
+      rw [lintegral_congr_ae]
+      refine' h2f.mp _ 
+      apply eventually_of_forall 
+      intro x hx 
+      dsimp only 
+      rw [of_real_to_real]
+      rw [←lt_top_iff_ne_top]
+      exact hx
+    ·
+      intro h2f 
+      refine' ae_lt_top _ h2f.ne 
+      exact h1f.ennnorm.lintegral_prod_right'
 
 theorem has_finite_integral_prod_iff' ⦃f : α × β → E⦄ (h1f : AeMeasurable f (μ.prod ν)) :
   has_finite_integral f (μ.prod ν) ↔
-    (∀ᵐx ∂μ, has_finite_integral (fun y => f (x, y)) ν) ∧ has_finite_integral (fun x => ∫y, ∥f (x, y)∥ ∂ν) μ :=
+    (∀ᵐ x ∂μ, has_finite_integral (fun y => f (x, y)) ν) ∧ has_finite_integral (fun x => ∫ y, ∥f (x, y)∥ ∂ν) μ :=
   by 
     rw [has_finite_integral_congr h1f.ae_eq_mk, has_finite_integral_prod_iff h1f.measurable_mk]
     apply and_congr
@@ -862,32 +868,32 @@ theorem has_finite_integral_prod_iff' ⦃f : α × β → E⦄ (h1f : AeMeasurab
 /-- A binary function is integrable if the function `y ↦ f (x, y)` is integrable for almost every
   `x` and the function `x ↦ ∫ ∥f (x, y)∥ dy` is integrable. -/
 theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AeMeasurable f (μ.prod ν)) :
-  integrable f (μ.prod ν) ↔ (∀ᵐx ∂μ, integrable (fun y => f (x, y)) ν) ∧ integrable (fun x => ∫y, ∥f (x, y)∥ ∂ν) μ :=
+  integrable f (μ.prod ν) ↔ (∀ᵐ x ∂μ, integrable (fun y => f (x, y)) ν) ∧ integrable (fun x => ∫ y, ∥f (x, y)∥ ∂ν) μ :=
   by 
     simp [integrable, h1f, has_finite_integral_prod_iff', h1f.norm.integral_prod_right', h1f.prod_mk_left]
 
 /-- A binary function is integrable if the function `x ↦ f (x, y)` is integrable for almost every
   `y` and the function `y ↦ ∫ ∥f (x, y)∥ dx` is integrable. -/
 theorem integrable_prod_iff' [sigma_finite μ] ⦃f : α × β → E⦄ (h1f : AeMeasurable f (μ.prod ν)) :
-  integrable f (μ.prod ν) ↔ (∀ᵐy ∂ν, integrable (fun x => f (x, y)) μ) ∧ integrable (fun y => ∫x, ∥f (x, y)∥ ∂μ) ν :=
+  integrable f (μ.prod ν) ↔ (∀ᵐ y ∂ν, integrable (fun x => f (x, y)) μ) ∧ integrable (fun y => ∫ x, ∥f (x, y)∥ ∂μ) ν :=
   by 
     convert integrable_prod_iff h1f.prod_swap using 1
     rw [integrable_swap_iff]
 
 theorem integrable.prod_left_ae [sigma_finite μ] ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
-  ∀ᵐy ∂ν, integrable (fun x => f (x, y)) μ :=
+  ∀ᵐ y ∂ν, integrable (fun x => f (x, y)) μ :=
   ((integrable_prod_iff' hf.ae_measurable).mp hf).1
 
 theorem integrable.prod_right_ae [sigma_finite μ] ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
-  ∀ᵐx ∂μ, integrable (fun y => f (x, y)) ν :=
+  ∀ᵐ x ∂μ, integrable (fun y => f (x, y)) ν :=
   hf.swap.prod_left_ae
 
 theorem integrable.integral_norm_prod_left ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
-  integrable (fun x => ∫y, ∥f (x, y)∥ ∂ν) μ :=
+  integrable (fun x => ∫ y, ∥f (x, y)∥ ∂ν) μ :=
   ((integrable_prod_iff hf.ae_measurable).mp hf).2
 
 theorem integrable.integral_norm_prod_right [sigma_finite μ] ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
-  integrable (fun y => ∫x, ∥f (x, y)∥ ∂μ) ν :=
+  integrable (fun y => ∫ x, ∥f (x, y)∥ ∂μ) ν :=
   hf.swap.integral_norm_prod_left
 
 end 
@@ -895,7 +901,7 @@ end
 variable [second_countable_topology E] [NormedSpace ℝ E] [CompleteSpace E] [BorelSpace E]
 
 theorem integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
-  integrable (fun x => ∫y, f (x, y) ∂ν) μ :=
+  integrable (fun x => ∫ y, f (x, y) ∂ν) μ :=
   integrable.mono hf.integral_norm_prod_left hf.ae_measurable.integral_prod_right'$
     eventually_of_forall$
       fun x =>
@@ -903,7 +909,7 @@ theorem integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : integrable 
           (norm_of_nonneg$ integral_nonneg_of_ae$ eventually_of_forall$ fun y => (norm_nonneg (f (x, y)) : _)).symm
 
 theorem integrable.integral_prod_right [sigma_finite μ] ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
-  integrable (fun y => ∫x, f (x, y) ∂μ) ν :=
+  integrable (fun y => ∫ x, f (x, y) ∂μ) ν :=
   hf.swap.integral_prod_left
 
 /-! ### The Bochner integral on a product -/
@@ -912,7 +918,7 @@ theorem integrable.integral_prod_right [sigma_finite μ] ⦃f : α × β → E�
 variable [sigma_finite μ]
 
 theorem integral_prod_swap (f : α × β → E) (hf : AeMeasurable f (μ.prod ν)) :
-  (∫z, f z.swap ∂ν.prod μ) = ∫z, f z ∂μ.prod ν :=
+  (∫ z, f z.swap ∂ν.prod μ) = ∫ z, f z ∂μ.prod ν :=
   by 
     rw [←prod_swap] at hf 
     rw [←integral_map measurable_swap hf, prod_swap]
@@ -927,7 +933,7 @@ variable {E' : Type _} [MeasurableSpace E'] [NormedGroup E'] [BorelSpace E'] [Co
 /-- Integrals commute with addition inside another integral. `F` can be any function. -/
 theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf : integrable f (μ.prod ν))
   (hg : integrable g (μ.prod ν)) :
-  (∫x, F (∫y, f (x, y)+g (x, y) ∂ν) ∂μ) = ∫x, F ((∫y, f (x, y) ∂ν)+∫y, g (x, y) ∂ν) ∂μ :=
+  (∫ x, F (∫ y, f (x, y)+g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν)+∫ y, g (x, y) ∂ν) ∂μ :=
   by 
     refine' integral_congr_ae _ 
     filterUpwards [hf.prod_right_ae, hg.prod_right_ae]
@@ -938,7 +944,7 @@ theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf :
   `F` can be any measurable function. -/
 theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf : integrable f (μ.prod ν))
   (hg : integrable g (μ.prod ν)) :
-  (∫x, F (∫y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫x, F ((∫y, f (x, y) ∂ν) - ∫y, g (x, y) ∂ν) ∂μ :=
+  (∫ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ :=
   by 
     refine' integral_congr_ae _ 
     filterUpwards [hf.prod_right_ae, hg.prod_right_ae]
@@ -949,7 +955,7 @@ theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf :
   `F` can be any function. -/
 theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0∞) (hf : integrable f (μ.prod ν))
   (hg : integrable g (μ.prod ν)) :
-  (∫⁻x, F (∫y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫⁻x, F ((∫y, f (x, y) ∂ν) - ∫y, g (x, y) ∂ν) ∂μ :=
+  (∫⁻ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫⁻ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ :=
   by 
     refine' lintegral_congr_ae _ 
     filterUpwards [hf.prod_right_ae, hg.prod_right_ae]
@@ -958,59 +964,55 @@ theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0�
 
 /-- Double integrals commute with addition. -/
 theorem integral_integral_add ⦃f g : α × β → E⦄ (hf : integrable f (μ.prod ν)) (hg : integrable g (μ.prod ν)) :
-  (∫x, ∫y, f (x, y)+g (x, y) ∂ν ∂μ) = (∫x, ∫y, f (x, y) ∂ν ∂μ)+∫x, ∫y, g (x, y) ∂ν ∂μ :=
+  (∫ x, ∫ y, f (x, y)+g (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ)+∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   (integral_fn_integral_add id hf hg).trans$ integral_add hf.integral_prod_left hg.integral_prod_left
 
 /-- Double integrals commute with addition. This is the version with `(f + g) (x, y)`
   (instead of `f (x, y) + g (x, y)`) in the LHS. -/
 theorem integral_integral_add' ⦃f g : α × β → E⦄ (hf : integrable f (μ.prod ν)) (hg : integrable g (μ.prod ν)) :
-  (∫x, ∫y, (f+g) (x, y) ∂ν ∂μ) = (∫x, ∫y, f (x, y) ∂ν ∂μ)+∫x, ∫y, g (x, y) ∂ν ∂μ :=
+  (∫ x, ∫ y, (f+g) (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ)+∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   integral_integral_add hf hg
 
 /-- Double integrals commute with subtraction. -/
 theorem integral_integral_sub ⦃f g : α × β → E⦄ (hf : integrable f (μ.prod ν)) (hg : integrable g (μ.prod ν)) :
-  (∫x, ∫y, f (x, y) - g (x, y) ∂ν ∂μ) = (∫x, ∫y, f (x, y) ∂ν ∂μ) - ∫x, ∫y, g (x, y) ∂ν ∂μ :=
+  (∫ x, ∫ y, f (x, y) - g (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ) - ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   (integral_fn_integral_sub id hf hg).trans$ integral_sub hf.integral_prod_left hg.integral_prod_left
 
 /-- Double integrals commute with subtraction. This is the version with `(f - g) (x, y)`
   (instead of `f (x, y) - g (x, y)`) in the LHS. -/
 theorem integral_integral_sub' ⦃f g : α × β → E⦄ (hf : integrable f (μ.prod ν)) (hg : integrable g (μ.prod ν)) :
-  (∫x, ∫y, (f - g) (x, y) ∂ν ∂μ) = (∫x, ∫y, f (x, y) ∂ν ∂μ) - ∫x, ∫y, g (x, y) ∂ν ∂μ :=
+  (∫ x, ∫ y, (f - g) (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ) - ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   integral_integral_sub hf hg
 
--- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The map that sends an L¹-function `f : α × β → E` to `∫∫f` is continuous. -/
-theorem continuous_integral_integral : continuous (λ
- f : «expr →₁[ ] »(«expr × »(α, β), μ.prod ν, E), «expr∫ , ∂ »((x), «expr∫ , ∂ »((y), f (x, y), ν), μ)) :=
-begin
-  rw ["[", expr continuous_iff_continuous_at, "]"] [],
-  intro [ident g],
-  refine [expr tendsto_integral_of_L1 _ (L1.integrable_coe_fn g).integral_prod_left «expr $ »(eventually_of_forall, λ
-    h, (L1.integrable_coe_fn h).integral_prod_left) _],
-  simp_rw ["[", "<-", expr lintegral_fn_integral_sub (λ
-    x, (nnnorm x : «exprℝ≥0∞»())) (L1.integrable_coe_fn _) (L1.integrable_coe_fn g), "]"] [],
-  refine [expr tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds _ (λ i, zero_le _) _],
-  { exact [expr λ i, «expr∫⁻ , ∂ »((x), «expr∫⁻ , ∂ »((y), nnnorm «expr - »(i (x, y), g (x, y)), ν), μ)] },
-  swap,
-  { exact [expr λ i, lintegral_mono (λ x, ennnorm_integral_le_lintegral_ennnorm _)] },
-  show [expr tendsto (λ
-    i : «expr →₁[ ] »(«expr × »(α, β), μ.prod ν, E), «expr∫⁻ , ∂ »((x), «expr∫⁻ , ∂ »((y : β), nnnorm «expr - »(i (x, y), g (x, y)), ν), μ)) (expr𝓝() g) (expr𝓝() 0)],
-  have [] [":", expr ∀
-   i : «expr →₁[ ] »(«expr × »(α, β), μ.prod ν, E), measurable (λ
-    z, (nnnorm «expr - »(i z, g z) : «exprℝ≥0∞»()))] [":=", expr λ
-   i, ((Lp.measurable i).sub (Lp.measurable g)).ennnorm],
-  simp_rw ["[", "<-", expr lintegral_prod_of_measurable _ (this _), ",", "<-", expr L1.of_real_norm_sub_eq_lintegral, ",", "<-", expr of_real_zero, "]"] [],
-  refine [expr (continuous_of_real.tendsto 0).comp _],
-  rw ["[", "<-", expr tendsto_iff_norm_tendsto_zero, "]"] [],
-  exact [expr tendsto_id]
-end
+theorem continuous_integral_integral : Continuous fun f : α × β →₁[μ.prod ν] E => ∫ x, ∫ y, f (x, y) ∂ν ∂μ :=
+  by 
+    rw [continuous_iff_continuous_at]
+    intro g 
+    refine'
+      tendsto_integral_of_L1 _ (L1.integrable_coe_fn g).integral_prod_left
+        (eventually_of_forall$ fun h => (L1.integrable_coe_fn h).integral_prod_left) _ 
+    simpRw [←lintegral_fn_integral_sub (fun x => (nnnorm x : ℝ≥0∞)) (L1.integrable_coe_fn _) (L1.integrable_coe_fn g)]
+    refine' tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds _ (fun i => zero_le _) _
+    ·
+      exact fun i => ∫⁻ x, ∫⁻ y, nnnorm (i (x, y) - g (x, y)) ∂ν ∂μ 
+    swap
+    ·
+      exact fun i => lintegral_mono fun x => ennnorm_integral_le_lintegral_ennnorm _ 
+    show tendsto (fun i : α × β →₁[μ.prod ν] E => ∫⁻ x, ∫⁻ y : β, nnnorm (i (x, y) - g (x, y)) ∂ν ∂μ) (𝓝 g) (𝓝 0)
+    have  : ∀ i : α × β →₁[μ.prod ν] E, Measurable fun z => (nnnorm (i z - g z) : ℝ≥0∞) :=
+      fun i => ((Lp.measurable i).sub (Lp.measurable g)).ennnorm 
+    simpRw [←lintegral_prod_of_measurable _ (this _), ←L1.of_real_norm_sub_eq_lintegral, ←of_real_zero]
+    refine' (continuous_of_real.tendsto 0).comp _ 
+    rw [←tendsto_iff_norm_tendsto_zero]
+    exact tendsto_id
 
 /-- **Fubini's Theorem**: For integrable functions on `α × β`,
   the Bochner integral of `f` is equal to the iterated Bochner integral.
   `integrable_prod_iff` can be useful to show that the function in question in integrable.
   `measure_theory.integrable.integral_prod_right` is useful to show that the inner integral
   of the right-hand side is integrable. -/
-theorem integral_prod : ∀ f : α × β → E hf : integrable f (μ.prod ν), (∫z, f z ∂μ.prod ν) = ∫x, ∫y, f (x, y) ∂ν ∂μ :=
+theorem integral_prod : ∀ f : α × β → E hf : integrable f (μ.prod ν), (∫ z, f z ∂μ.prod ν) = ∫ x, ∫ y, f (x, y) ∂ν ∂μ :=
   by 
     apply integrable.induction
     ·
@@ -1039,29 +1041,29 @@ theorem integral_prod : ∀ f : α × β → E hf : integrable f (μ.prod ν), (
   the Bochner integral of `f` is equal to the iterated Bochner integral.
   This version has the integrals on the right-hand side in the other order. -/
 theorem integral_prod_symm (f : α × β → E) (hf : integrable f (μ.prod ν)) :
-  (∫z, f z ∂μ.prod ν) = ∫y, ∫x, f (x, y) ∂μ ∂ν :=
+  (∫ z, f z ∂μ.prod ν) = ∫ y, ∫ x, f (x, y) ∂μ ∂ν :=
   by 
     simpRw [←integral_prod_swap f hf.ae_measurable]
     exact integral_prod _ hf.swap
 
 /-- Reversed version of **Fubini's Theorem**. -/
 theorem integral_integral {f : α → β → E} (hf : integrable (uncurry f) (μ.prod ν)) :
-  (∫x, ∫y, f x y ∂ν ∂μ) = ∫z, f z.1 z.2 ∂μ.prod ν :=
+  (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ z, f z.1 z.2 ∂μ.prod ν :=
   (integral_prod _ hf).symm
 
 /-- Reversed version of **Fubini's Theorem** (symmetric version). -/
 theorem integral_integral_symm {f : α → β → E} (hf : integrable (uncurry f) (μ.prod ν)) :
-  (∫x, ∫y, f x y ∂ν ∂μ) = ∫z, f z.2 z.1 ∂ν.prod μ :=
+  (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ z, f z.2 z.1 ∂ν.prod μ :=
   (integral_prod_symm _ hf.swap).symm
 
 /-- Change the order of Bochner integration. -/
 theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : integrable (uncurry f) (μ.prod ν)) :
-  (∫x, ∫y, f x y ∂ν ∂μ) = ∫y, ∫x, f x y ∂μ ∂ν :=
+  (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ y, ∫ x, f x y ∂μ ∂ν :=
   (integral_integral hf).trans (integral_prod_symm _ hf)
 
 /-- **Fubini's Theorem** for set integrals. -/
 theorem set_integral_prod (f : α × β → E) {s : Set α} {t : Set β} (hf : integrable_on f (s.prod t) (μ.prod ν)) :
-  (∫z in s.prod t, f z ∂μ.prod ν) = ∫x in s, ∫y in t, f (x, y) ∂ν ∂μ :=
+  (∫ z in s.prod t, f z ∂μ.prod ν) = ∫ x in s, ∫ y in t, f (x, y) ∂ν ∂μ :=
   by 
     simp only [←measure.prod_restrict s t, integrable_on] at hf⊢
     exact integral_prod f hf

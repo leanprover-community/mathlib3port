@@ -144,38 +144,38 @@ protected def tprod : ∀ l : List ι t : ∀ i, Set (α i), Set (tprod α l)
 | [], t => univ
 | i :: is, t => (t i).Prod (tprod is t)
 
--- error in Data.Tprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mk_preimage_tprod : ∀
-(l : list ι)
-(t : ∀ i, set (α i)), «expr = »(«expr ⁻¹' »(tprod.mk l, set.tprod l t), {i | «expr ∈ »(i, l)}.pi t)
-| «expr[ , ]»([]), t := by simp [] [] [] ["[", expr set.tprod, "]"] [] []
-| «expr :: »(i, l), t := begin
-  ext [] [ident f] [],
-  have [] [":", expr «expr ↔ »(«expr ∈ »(f, «expr ⁻¹' »(tprod.mk l, set.tprod l t)), «expr ∈ »(f, {x | «expr ∈ »(x, l)}.pi t))] [],
-  { rw ["[", expr mk_preimage_tprod l t, "]"] [] },
-  change [expr «expr ↔ »(«expr ∈ »(tprod.mk l f, set.tprod l t), ∀
-    i : ι, «expr ∈ »(i, l) → «expr ∈ »(f i, t i))] [] ["at", ident this],
-  rw ["[", expr set.tprod, ",", expr tprod.mk, ",", expr mem_preimage, ",", expr mem_pi, ",", expr prod_mk_mem_set_prod_eq, "]"] [],
-  simp_rw ["[", expr mem_set_of_eq, ",", expr mem_cons_iff, "]"] [],
-  rw ["[", expr forall_eq_or_imp, ",", expr and.congr_right_iff, "]"] [],
-  exact [expr λ _, this]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mk_preimage_tprod
+  : ∀ l : List ι t : ∀ i , Set α i , tprod.mk l ⁻¹' Set.Tprodₓ l t = { i | i ∈ l } . pi t
+  | [ ] , t => by simp [ Set.Tprodₓ ]
+    |
+      i :: l , t
+      =>
+      by
+        ext f
+          have : f ∈ tprod.mk l ⁻¹' Set.Tprodₓ l t ↔ f ∈ { x | x ∈ l } . pi t
+          · rw [ mk_preimage_tprod l t ]
+          change tprod.mk l f ∈ Set.Tprodₓ l t ↔ ∀ i : ι , i ∈ l → f i ∈ t i at this
+          rw [ Set.Tprodₓ , tprod.mk , mem_preimage , mem_pi , prod_mk_mem_set_prod_eq ]
+          simpRw [ mem_set_of_eq , mem_cons_iff ]
+          rw [ forall_eq_or_imp , And.congr_right_iff ]
+          exact fun _ => this
 
--- error in Data.Tprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem elim_preimage_pi
-[decidable_eq ι]
-{l : list ι}
-(hnd : l.nodup)
-(h : ∀ i, «expr ∈ »(i, l))
-(t : ∀ i, set (α i)) : «expr = »(«expr ⁻¹' »(tprod.elim' h, pi univ t), set.tprod l t) :=
-begin
-  have [] [":", expr «expr = »({i | «expr ∈ »(i, l)}, univ)] [],
-  { ext [] [ident i] [],
-    simp [] [] [] ["[", expr h, "]"] [] [] },
-  rw ["[", "<-", expr this, ",", "<-", expr mk_preimage_tprod, ",", expr preimage_preimage, "]"] [],
-  convert [] [expr preimage_id] [],
-  simp [] [] [] ["[", expr tprod.mk_elim hnd h, ",", expr id_def, "]"] [] []
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  elim_preimage_pi
+  [ DecidableEq ι ] { l : List ι } ( hnd : l.nodup ) ( h : ∀ i , i ∈ l ) ( t : ∀ i , Set α i )
+    : tprod.elim' h ⁻¹' pi univ t = Set.Tprodₓ l t
+  :=
+    by
+      have : { i | i ∈ l } = univ
+        · ext i simp [ h ]
+        rw [ ← this , ← mk_preimage_tprod , preimage_preimage ]
+        convert preimage_id
+        simp [ tprod.mk_elim hnd h , id_def ]
 
 end Set
 

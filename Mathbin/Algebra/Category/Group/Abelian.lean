@@ -15,7 +15,7 @@ open CategoryTheory.Limits
 
 universe u
 
-noncomputable theory
+noncomputable section 
 
 namespace AddCommGroupₓₓ
 

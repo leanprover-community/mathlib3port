@@ -28,7 +28,7 @@ namespace Finset
 
 open Multiset
 
-variable [CommCancelMonoidWithZero α] [NormalizedGcdMonoid α]
+variable [CancelCommMonoidWithZero α] [NormalizedGcdMonoid α]
 
 /-! ### lcm -/
 
@@ -48,6 +48,7 @@ theorem lcm_def : s.lcm f = (s.1.map f).lcm :=
 theorem lcm_empty : (∅ : Finset β).lcm f = 1 :=
   fold_empty
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 @[simp]
 theorem lcm_dvd_iff {a : α} : s.lcm f ∣ a ↔ ∀ b _ : b ∈ s, f b ∣ a :=
   by 
@@ -55,6 +56,7 @@ theorem lcm_dvd_iff {a : α} : s.lcm f ∣ a ↔ ∀ b _ : b ∈ s, f b ∣ a :=
     simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
     exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem lcm_dvd {a : α} : (∀ b _ : b ∈ s, f b ∣ a) → s.lcm f ∣ a :=
   lcm_dvd_iff.2
 
@@ -86,11 +88,13 @@ theorem lcm_union [DecidableEq β] : (s₁ ∪ s₂).lcm f = GcdMonoid.lcm (s₁
       by 
         rw [insert_union, lcm_insert, lcm_insert, ih, lcm_assoc]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s₂)
 theorem lcm_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a _ : a ∈ s₂, f a = g a) : s₁.lcm f = s₂.lcm g :=
   by 
     subst hs 
     exact Finset.fold_congr hfg
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem lcm_mono_fun {g : β → α} (h : ∀ b _ : b ∈ s, f b ∣ g b) : s.lcm f ∣ s.lcm g :=
   lcm_dvd fun b hb => (h b hb).trans (dvd_lcm hb)
 
@@ -121,6 +125,7 @@ theorem gcd_def : s.gcd f = (s.1.map f).gcd :=
 theorem gcd_empty : (∅ : Finset β).gcd f = 0 :=
   fold_empty
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀ b _ : b ∈ s, a ∣ f b :=
   by 
     apply Iff.trans Multiset.dvd_gcd 
@@ -130,6 +135,7 @@ theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀ b _ : b ∈ s, a ∣ f b :=
 theorem gcd_dvd {b : β} (hb : b ∈ s) : s.gcd f ∣ f b :=
   dvd_gcd_iff.1 dvd_rfl _ hb
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem dvd_gcd {a : α} : (∀ b _ : b ∈ s, a ∣ f b) → a ∣ s.gcd f :=
   dvd_gcd_iff.2
 
@@ -158,21 +164,31 @@ theorem gcd_union [DecidableEq β] : (s₁ ∪ s₂).gcd f = GcdMonoid.gcd (s₁
       by 
         rw [insert_union, gcd_insert, gcd_insert, ih, gcd_assoc]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s₂)
 theorem gcd_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a _ : a ∈ s₂, f a = g a) : s₁.gcd f = s₂.gcd g :=
   by 
     subst hs 
     exact Finset.fold_congr hfg
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem gcd_mono_fun {g : β → α} (h : ∀ b _ : b ∈ s, f b ∣ g b) : s.gcd f ∣ s.gcd g :=
   dvd_gcd fun b hb => (gcd_dvd hb).trans (h b hb)
 
 theorem gcd_mono (h : s₁ ⊆ s₂) : s₂.gcd f ∣ s₁.gcd f :=
   dvd_gcd$ fun b hb => gcd_dvd (h hb)
 
+theorem gcd_image {g : γ → β} (s : Finset γ) [DecidableEq β] [IsIdempotent α GcdMonoid.gcd] :
+  (s.image g).gcd f = s.gcd (f ∘ g) :=
+  by 
+    simp [gcd, fold_image_idem]
+
+theorem gcd_eq_gcd_image [DecidableEq α] [IsIdempotent α GcdMonoid.gcd] : s.gcd f = (s.image f).gcd id :=
+  (@gcd_image _ _ _ _ _ id _ _ _ _).symm
+
 theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 :=
   by 
     rw [gcd_def, Multiset.gcd_eq_zero_iff]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       intro b bs 
       apply h (f b)

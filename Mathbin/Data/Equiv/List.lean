@@ -123,30 +123,33 @@ instance Vector [Encodable α] {n} : Encodable (Vector α n) :=
 
 /-- If `α` is encodable, then so is `fin n → α`. -/
 instance fin_arrow [Encodable α] {n} : Encodable (Finₓ n → α) :=
-  of_equiv _ (Equiv.vectorEquivFin _ _).symm
+  of_equiv _ (Equivₓ.vectorEquivFin _ _).symm
 
 instance fin_pi n (π : Finₓ n → Type _) [∀ i, Encodable (π i)] : Encodable (∀ i, π i) :=
-  of_equiv _ (Equiv.piEquivSubtypeSigma (Finₓ n) π)
+  of_equiv _ (Equivₓ.piEquivSubtypeSigma (Finₓ n) π)
 
 /-- If `α` is encodable, then so is `array n α`. -/
 instance Arrayₓ [Encodable α] {n} : Encodable (Arrayₓ n α) :=
-  of_equiv _ (Equiv.arrayEquivFin _ _)
+  of_equiv _ (Equivₓ.arrayEquivFin _ _)
 
--- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- If `α` is encodable, then so is `finset α`. -/ instance finset [encodable α] : encodable (finset α) :=
-by haveI [] [] [":=", expr decidable_eq_of_encodable α]; exact [expr of_equiv {s : multiset α // s.nodup} ⟨λ
-  ⟨a, b⟩, ⟨a, b⟩, λ ⟨a, b⟩, ⟨a, b⟩, λ ⟨a, b⟩, rfl, λ ⟨a, b⟩, rfl⟩]
+/-- If `α` is encodable, then so is `finset α`. -/
+instance Finset [Encodable α] : Encodable (Finset α) :=
+  by 
+    have  := decidable_eq_of_encodable α <;>
+      exact
+        of_equiv { s : Multiset α // s.nodup }
+          ⟨fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
 
 def fintype_arrow (α : Type _) (β : Type _) [DecidableEq α] [Fintype α] [Encodable β] : Trunc (Encodable (α → β)) :=
   (Fintype.truncEquivFin α).map$
-    fun f => Encodable.ofEquiv (Finₓ (Fintype.card α) → β)$ Equiv.arrowCongr f (Equiv.refl _)
+    fun f => Encodable.ofEquiv (Finₓ (Fintype.card α) → β)$ Equivₓ.arrowCongr f (Equivₓ.refl _)
 
 def fintype_pi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [∀ a, Encodable (π a)] :
   Trunc (Encodable (∀ a, π a)) :=
   (Encodable.truncEncodableOfFintype α).bind$
     fun a =>
-      (@fintype_arrow α (Σa, π a) _ _ (@Encodable.sigma _ _ a _)).bind$
-        fun f => Trunc.mk$ @Encodable.ofEquiv _ _ (@Encodable.subtype _ _ f _) (Equiv.piEquivSubtypeSigma α π)
+      (@fintype_arrow α (Σ a, π a) _ _ (@Encodable.sigma _ _ a _)).bind$
+        fun f => Trunc.mk$ @Encodable.ofEquiv _ _ (@Encodable.subtype _ _ f _) (Equivₓ.piEquivSubtypeSigma α π)
 
 /-- The elements of a `fintype` as a sorted list. -/
 def sorted_univ α [Fintype α] [Encodable α] : List α :=
@@ -168,19 +171,18 @@ theorem sorted_univ_nodup α [Fintype α] [Encodable α] : (sorted_univ α).Nodu
 theorem sorted_univ_to_finset α [Fintype α] [Encodable α] [DecidableEq α] : (sorted_univ α).toFinset = Finset.univ :=
   Finset.sort_to_finset _ _
 
--- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An encodable `fintype` is equivalent to the same size `fin`. -/
-def fintype_equiv_fin {α} [fintype α] [encodable α] : «expr ≃ »(α, fin (fintype.card α)) :=
-begin
-  haveI [] [":", expr decidable_eq α] [":=", expr encodable.decidable_eq_of_encodable _],
-  transitivity [],
-  { exact [expr ((sorted_univ_nodup α).nth_le_equiv_of_forall_mem_list _ mem_sorted_univ).symm] },
-  exact [expr equiv.cast (congr_arg _ (length_sorted_univ α))]
-end
+def fintype_equiv_fin {α} [Fintype α] [Encodable α] : α ≃ Finₓ (Fintype.card α) :=
+  by 
+    have  : DecidableEq α := Encodable.decidableEqOfEncodable _ 
+    trans
+    ·
+      exact ((sorted_univ_nodup α).nthLeEquivOfForallMemList _ mem_sorted_univ).symm 
+    exact Equivₓ.cast (congr_argₓ _ (length_sorted_univ α))
 
 /-- If `α` and `β` are encodable and `α` is a fintype, then `α → β` is encodable as well. -/
 instance fintype_arrow_of_encodable {α β : Type _} [Encodable α] [Fintype α] [Encodable β] : Encodable (α → β) :=
-  of_equiv (Finₓ (Fintype.card α) → β)$ Equiv.arrowCongr fintype_equiv_fin (Equiv.refl _)
+  of_equiv (Finₓ (Fintype.card α) → β)$ Equivₓ.arrowCongr fintype_equiv_fin (Equivₓ.refl _)
 
 end Encodable
 
@@ -192,19 +194,23 @@ open Encodable
 
 section List
 
--- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem denumerable_list_aux : ∀ n : exprℕ(), «expr∃ , »((a «expr ∈ » @decode_list α _ n), «expr = »(encode_list a, n))
-| 0 := by rw [expr decode_list] []; exact [expr ⟨_, rfl, rfl⟩]
-| succ v := begin
-  cases [expr e, ":", expr unpair v] ["with", ident v₁, ident v₂],
-  have [ident h] [] [":=", expr unpair_right_le v],
-  rw [expr e] ["at", ident h],
-  rcases [expr have «expr < »(v₂, succ v), from lt_succ_of_le h,
-   denumerable_list_aux v₂, "with", "⟨", ident a, ",", ident h₁, ",", ident h₂, "⟩"],
-  rw [expr option.mem_def] ["at", ident h₁],
-  use [expr [«expr :: »/«expr :: »/«expr :: »](of_nat α v₁, a)],
-  simp [] [] [] ["[", expr decode_list, ",", expr e, ",", expr h₂, ",", expr h₁, ",", expr encode_list, ",", expr mkpair_unpair' e, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » @decode_list α _ n)
+theorem denumerable_list_aux : ∀ n : ℕ, ∃ (a : _)(_ : a ∈ @decode_list α _ n), encode_list a = n
+| 0 =>
+  by 
+    rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
+| succ v =>
+  by 
+    cases' e : unpair v with v₁ v₂ 
+    have h := unpair_right_le v 
+    rw [e] at h 
+    rcases
+      have  : v₂ < succ v := lt_succ_of_le h 
+      denumerable_list_aux v₂ with
+      ⟨a, h₁, h₂⟩
+    rw [Option.mem_def] at h₁ 
+    use of_nat α v₁ :: a 
+    simp [decode_list, e, h₂, h₁, encode_list, mkpair_unpair' e]
 
 /-- If `α` is denumerable, then so is `list α`. -/
 instance denumerable_list : Denumerable (List α) :=
@@ -261,16 +267,19 @@ theorem raise_sorted : ∀ l n, List.Sorted (· ≤ ·) (raise l n)
 | [], n => List.sorted_nil
 | m :: l, n => (List.chain_iff_pairwise (@le_transₓ _ _)).1 (raise_chain _ _)
 
--- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `α` is denumerable, then so is `multiset α`. Warning: this is *not* the same encoding as used
-in `encodable.multiset`. -/ instance multiset : denumerable (multiset α) :=
-mk' ⟨λ
- s : multiset α, «expr $ »(encode, lower ((s.map encode).sort ((«expr ≤ »))) 0), λ
- n, multiset.map (of_nat α) (raise (of_nat (list exprℕ()) n) 0), λ
- s, by have [] [] [":=", expr raise_lower (list.sorted_cons.2 ⟨λ
-    n
-    _, zero_le n, (s.map encode).sort_sorted _⟩)]; simp [] [] [] ["[", "-", ident multiset.coe_map, ",", expr this, "]"] [] [], λ
- n, by simp [] [] [] ["[", "-", ident multiset.coe_map, ",", expr list.merge_sort_eq_self _ (raise_sorted _ _), ",", expr lower_raise, "]"] [] []⟩
+in `encodable.multiset`. -/
+instance Multiset : Denumerable (Multiset α) :=
+  mk'
+    ⟨fun s : Multiset α => encode$ lower ((s.map encode).sort (· ≤ ·)) 0,
+      fun n => Multiset.map (of_nat α) (raise (of_nat (List ℕ) n) 0),
+      fun s =>
+        by 
+          have  := raise_lower (List.sorted_cons.2 ⟨fun n _ => zero_le n, (s.map encode).sort_sorted _⟩) <;>
+            simp [-Multiset.coe_map, this],
+      fun n =>
+        by 
+          simp [-Multiset.coe_map, List.merge_sort_eq_self _ (raise_sorted _ _), lower_raise]⟩
 
 end Multiset
 
@@ -295,6 +304,8 @@ theorem lower_raise' : ∀ l n, lower' (raise' l n) n = l
   by 
     simp [raise', lower', add_tsub_cancel_right, lower_raise']
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » l)
 theorem raise_lower' : ∀ {l n}, (∀ m _ : m ∈ l, n ≤ m) → List.Sorted (· < ·) l → raise' (lower' l n) n = l
 | [], n, h₁, h₂ => rfl
 | m :: l, n, h₁, h₂ =>
@@ -335,7 +346,7 @@ end Finset
 
 end Denumerable
 
-namespace Equiv
+namespace Equivₓ
 
 /-- The type lists on unit is canonically equivalent to the natural numbers. -/
 def list_unit_equiv : List Unit ≃ ℕ :=
@@ -358,5 +369,5 @@ def list_equiv_self_of_equiv_nat {α : Type} (e : α ≃ ℕ) : List α ≃ α :
     _ ≃ α := e.symm
     
 
-end Equiv
+end Equivₓ
 

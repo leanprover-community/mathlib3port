@@ -61,11 +61,11 @@ variable {ι : Type _} {R : Type _} {M : Type _}
 section Defs
 
 /-- Interpret a `finsupp` as a homogenous `dfinsupp`. -/
-def Finsupp.toDfinsupp [HasZero M] (f : ι →₀ M) : Π₀i : ι, M :=
-  «expr⟦ ⟧» ⟨f, f.support.1, fun i => (Classical.em (f i = 0)).symm.imp_left Finsupp.mem_support_iff.mpr⟩
+def Finsupp.toDfinsupp [HasZero M] (f : ι →₀ M) : Π₀ i : ι, M :=
+  ⟦⟨f, f.support.1, fun i => (Classical.em (f i = 0)).symm.imp_left Finsupp.mem_support_iff.mpr⟩⟧
 
 @[simp]
-theorem Finsupp.to_dfinsupp_coe [HasZero M] (f : ι →₀ M) : «expr⇑ » f.to_dfinsupp = f :=
+theorem Finsupp.to_dfinsupp_coe [HasZero M] (f : ι →₀ M) : ⇑f.to_dfinsupp = f :=
   rfl
 
 section 
@@ -91,25 +91,25 @@ theorem to_dfinsupp_support (f : ι →₀ M) : f.to_dfinsupp.support = f.suppor
 Note that the elaborator has a lot of trouble with this definition - it is often necessary to
 write `(dfinsupp.to_finsupp f : ι →₀ M)` instead of `f.to_finsupp`, as for some unknown reason
 using dot notation or omitting the type ascription prevents the type being resolved correctly. -/
-def Dfinsupp.toFinsupp (f : Π₀i : ι, M) : ι →₀ M :=
+def Dfinsupp.toFinsupp (f : Π₀ i : ι, M) : ι →₀ M :=
   ⟨f.support, f,
     fun i =>
       by 
         simp only [Dfinsupp.mem_support_iff]⟩
 
 @[simp]
-theorem Dfinsupp.to_finsupp_coe (f : Π₀i : ι, M) : «expr⇑ » f.to_finsupp = f :=
+theorem Dfinsupp.to_finsupp_coe (f : Π₀ i : ι, M) : ⇑f.to_finsupp = f :=
   rfl
 
 @[simp]
-theorem Dfinsupp.to_finsupp_support (f : Π₀i : ι, M) : f.to_finsupp.support = f.support :=
+theorem Dfinsupp.to_finsupp_support (f : Π₀ i : ι, M) : f.to_finsupp.support = f.support :=
   by 
     ext 
     simp 
 
 @[simp]
 theorem Dfinsupp.to_finsupp_single (i : ι) (m : M) :
-  (Dfinsupp.single i m : Π₀i : ι, M).toFinsupp = Finsupp.single i m :=
+  (Dfinsupp.single i m : Π₀ i : ι, M).toFinsupp = Finsupp.single i m :=
   by 
     ext 
     simp [Finsupp.single_apply, Dfinsupp.single_apply]
@@ -119,7 +119,7 @@ theorem Finsupp.to_dfinsupp_to_finsupp (f : ι →₀ M) : f.to_dfinsupp.to_fins
   Finsupp.coe_fn_injective rfl
 
 @[simp]
-theorem Dfinsupp.to_finsupp_to_dfinsupp (f : Π₀i : ι, M) : f.to_finsupp.to_dfinsupp = f :=
+theorem Dfinsupp.to_finsupp_to_dfinsupp (f : Π₀ i : ι, M) : f.to_finsupp.to_dfinsupp = f :=
   Dfinsupp.coe_fn_injective rfl
 
 end 
@@ -165,23 +165,23 @@ theorem to_finsupp_zero [HasZero M] [∀ m : M, Decidable (m ≠ 0)] : to_finsup
   Finsupp.coe_fn_injective rfl
 
 @[simp]
-theorem to_finsupp_add [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀i : ι, M) :
+theorem to_finsupp_add [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
   (to_finsupp (f+g) : ι →₀ M) = to_finsupp f+to_finsupp g :=
   Finsupp.coe_fn_injective$ Dfinsupp.coe_add _ _
 
 @[simp]
-theorem to_finsupp_neg [AddGroupₓ M] [∀ m : M, Decidable (m ≠ 0)] (f : Π₀i : ι, M) :
+theorem to_finsupp_neg [AddGroupₓ M] [∀ m : M, Decidable (m ≠ 0)] (f : Π₀ i : ι, M) :
   (to_finsupp (-f) : ι →₀ M) = -to_finsupp f :=
   Finsupp.coe_fn_injective$ Dfinsupp.coe_neg _
 
 @[simp]
-theorem to_finsupp_sub [AddGroupₓ M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀i : ι, M) :
+theorem to_finsupp_sub [AddGroupₓ M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
   (to_finsupp (f - g) : ι →₀ M) = to_finsupp f - to_finsupp g :=
   Finsupp.coe_fn_injective$ Dfinsupp.coe_sub _ _
 
 @[simp]
 theorem to_finsupp_smul [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] [∀ m : M, Decidable (m ≠ 0)] (r : R)
-  (f : Π₀i : ι, M) : (to_finsupp (r • f) : ι →₀ M) = r • to_finsupp f :=
+  (f : Π₀ i : ι, M) : (to_finsupp (r • f) : ι →₀ M) = r • to_finsupp f :=
   Finsupp.coe_fn_injective$ Dfinsupp.coe_smul _ _
 
 end Dfinsupp
@@ -195,7 +195,7 @@ section Equivs
 
 /-- `finsupp.to_dfinsupp` and `dfinsupp.to_finsupp` together form an equiv. -/
 @[simps (config := { fullyApplied := ff })]
-def finsuppEquivDfinsupp [DecidableEq ι] [HasZero M] [∀ m : M, Decidable (m ≠ 0)] : (ι →₀ M) ≃ Π₀i : ι, M :=
+def finsuppEquivDfinsupp [DecidableEq ι] [HasZero M] [∀ m : M, Decidable (m ≠ 0)] : (ι →₀ M) ≃ Π₀ i : ι, M :=
   { toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp, left_inv := Finsupp.to_dfinsupp_to_finsupp,
     right_inv := Dfinsupp.to_finsupp_to_dfinsupp }
 
@@ -203,7 +203,7 @@ def finsuppEquivDfinsupp [DecidableEq ι] [HasZero M] [∀ m : M, Decidable (m �
 `finsupp.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := ff })]
 noncomputable def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] :
-  (ι →₀ M) ≃+ Π₀i : ι, M :=
+  (ι →₀ M) ≃+ Π₀ i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
     map_add' := Finsupp.to_dfinsupp_add }
 
@@ -213,14 +213,14 @@ variable (R)
 `finsupp.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := ff })]
 noncomputable def finsuppLequivDfinsupp [DecidableEq ι] [Semiringₓ R] [AddCommMonoidₓ M] [∀ m : M, Decidable (m ≠ 0)]
-  [Module R M] : (ι →₀ M) ≃ₗ[R] Π₀i : ι, M :=
+  [Module R M] : (ι →₀ M) ≃ₗ[R] Π₀ i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
     map_smul' := Finsupp.to_dfinsupp_smul, map_add' := Finsupp.to_dfinsupp_add }
 
 section Sigma
 
-/-- ### Stronger versions of `finsupp.split` -/
-noncomputable theory
+-- ././Mathport/Syntax/Translate/Basic.lean:1297:4: ignoring doc comment on noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -229,15 +229,14 @@ variable {η : ι → Type _} {N : Type _} [Semiringₓ R]
 open Finsupp
 
 /-- `finsupp.split` is an equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
-def sigmaFinsuppEquivDfinsupp [HasZero N] : ((Σi, η i) →₀ N) ≃ Π₀i, η i →₀ N :=
+def sigmaFinsuppEquivDfinsupp [HasZero N] : ((Σ i, η i) →₀ N) ≃ Π₀ i, η i →₀ N :=
   { toFun :=
       fun f =>
-        «expr⟦ ⟧»
-          ⟨split f, (split_support f : Finset ι).val,
+        ⟦⟨split f, (split_support f : Finset ι).val,
             fun i =>
               by 
                 rw [←Finset.mem_def, mem_split_support_iff_nonzero]
-                exact (Decidable.em _).symm⟩,
+                exact (Decidable.em _).symm⟩⟧,
     invFun :=
       fun f =>
         by 
@@ -260,54 +259,54 @@ def sigmaFinsuppEquivDfinsupp [HasZero N] : ((Σi, η i) →₀ N) ≃ Π₀i, �
           simp [split] }
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_apply [HasZero N] (f : (Σi, η i) →₀ N) :
+theorem sigma_finsupp_equiv_dfinsupp_apply [HasZero N] (f : (Σ i, η i) →₀ N) :
   (sigmaFinsuppEquivDfinsupp f : ∀ i, η i →₀ N) = Finsupp.split f :=
   rfl
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_symm_apply [HasZero N] (f : Π₀i, η i →₀ N) (s : Σi, η i) :
-  (sigmaFinsuppEquivDfinsupp.symm f : (Σi, η i) →₀ N) s = f s.1 s.2 :=
+theorem sigma_finsupp_equiv_dfinsupp_symm_apply [HasZero N] (f : Π₀ i, η i →₀ N) (s : Σ i, η i) :
+  (sigmaFinsuppEquivDfinsupp.symm f : (Σ i, η i) →₀ N) s = f s.1 s.2 :=
   rfl
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_support [HasZero N] (f : (Σi, η i) →₀ N) :
+theorem sigma_finsupp_equiv_dfinsupp_support [HasZero N] (f : (Σ i, η i) →₀ N) :
   (sigmaFinsuppEquivDfinsupp f).support = Finsupp.splitSupport f :=
   by 
     ext 
     rw [Dfinsupp.mem_support_to_fun]
     exact (Finsupp.mem_split_support_iff_nonzero _ _).symm
 
--- error in Data.Finsupp.ToDfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_single
-[has_zero N]
-(a : «exprΣ , »((i), η i))
-(n : N) : «expr = »(sigma_finsupp_equiv_dfinsupp (finsupp.single a n), @dfinsupp.single _ (λ
-  i, «expr →₀ »(η i, N)) _ _ a.1 (finsupp.single a.2 n)) :=
-begin
-  obtain ["⟨", ident i, ",", ident a, "⟩", ":=", expr a],
-  ext [] [ident j, ident b] [],
-  by_cases [expr h, ":", expr «expr = »(i, j)],
-  { subst [expr h],
-    simp [] [] [] ["[", expr split_apply, ",", expr finsupp.single_apply, "]"] [] [] },
-  suffices [] [":", expr «expr = »(finsupp.single (⟨i, a⟩ : «exprΣ , »((i), η i)) n ⟨j, b⟩, 0)],
-  { simp [] [] [] ["[", expr split_apply, ",", expr dif_neg h, ",", expr this, "]"] [] [] },
-  have [ident H] [":", expr «expr ≠ »((⟨i, a⟩ : «exprΣ , »((i), η i)), ⟨j, b⟩)] [":=", expr by simp [] [] [] ["[", expr h, "]"] [] []],
-  rw ["[", expr finsupp.single_apply, ",", expr if_neg H, "]"] []
-end
+theorem sigma_finsupp_equiv_dfinsupp_single [HasZero N] (a : Σ i, η i) (n : N) :
+  sigmaFinsuppEquivDfinsupp (Finsupp.single a n) =
+    @Dfinsupp.single _ (fun i => η i →₀ N) _ _ a.1 (Finsupp.single a.2 n) :=
+  by 
+    obtain ⟨i, a⟩ := a 
+    ext j b 
+    byCases' h : i = j
+    ·
+      subst h 
+      simp [split_apply, Finsupp.single_apply]
+    suffices  : Finsupp.single (⟨i, a⟩ : Σ i, η i) n ⟨j, b⟩ = 0
+    ·
+      simp [split_apply, dif_neg h, this]
+    have H : (⟨i, a⟩ : Σ i, η i) ≠ ⟨j, b⟩ :=
+      by 
+        simp [h]
+    rw [Finsupp.single_apply, if_neg H]
 
 attribute [-instance] Finsupp.hasZero
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →₀ N) :
-  sigmaFinsuppEquivDfinsupp (f+g) = (sigmaFinsuppEquivDfinsupp f+sigmaFinsuppEquivDfinsupp g : Π₀i : ι, η i →₀ N) :=
+theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σ i, η i) →₀ N) :
+  sigmaFinsuppEquivDfinsupp (f+g) = (sigmaFinsuppEquivDfinsupp f+sigmaFinsuppEquivDfinsupp g : Π₀ i : ι, η i →₀ N) :=
   by 
     ext 
     rfl
 
 /-- `finsupp.split` is an additive equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 @[simps]
-def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σi, η i) →₀ N) ≃+ Π₀i, η i →₀ N :=
+def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σ i, η i) →₀ N) ≃+ Π₀ i, η i →₀ N :=
   { sigmaFinsuppEquivDfinsupp with toFun := sigmaFinsuppEquivDfinsupp, invFun := sigmaFinsuppEquivDfinsupp.symm,
     map_add' := sigma_finsupp_equiv_dfinsupp_add }
 
@@ -315,9 +314,9 @@ attribute [-instance] Finsupp.addZeroClass
 
 @[simp]
 theorem sigma_finsupp_equiv_dfinsupp_smul {R} [Monoidₓ R] [AddMonoidₓ N] [DistribMulAction R N] (r : R)
-  (f : (Σi, η i) →₀ N) :
+  (f : (Σ i, η i) →₀ N) :
   sigmaFinsuppEquivDfinsupp (r • f) =
-    @HasScalar.smul R (Π₀i, η i →₀ N) MulAction.toHasScalar r (sigmaFinsuppEquivDfinsupp f) :=
+    @HasScalar.smul R (Π₀ i, η i →₀ N) MulAction.toHasScalar r (sigmaFinsuppEquivDfinsupp f) :=
   by 
     ext 
     rfl
@@ -326,7 +325,7 @@ attribute [-instance] Finsupp.addMonoid
 
 /-- `finsupp.split` is a linear equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 @[simps]
-def sigmaFinsuppLequivDfinsupp [AddCommMonoidₓ N] [Module R N] : ((Σi, η i) →₀ N) ≃ₗ[R] Π₀i, η i →₀ N :=
+def sigmaFinsuppLequivDfinsupp [AddCommMonoidₓ N] [Module R N] : ((Σ i, η i) →₀ N) ≃ₗ[R] Π₀ i, η i →₀ N :=
   { sigmaFinsuppAddEquivDfinsupp with map_smul' := sigma_finsupp_equiv_dfinsupp_smul }
 
 end Sigma

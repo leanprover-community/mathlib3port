@@ -290,16 +290,14 @@ def typevec_cases_cons₃ (n : ℕ) {β : ∀ v v' : Typevec (n+1), v ⟹ v' →
     rw [←split_drop_fun_last_fun fs]
     apply F
 
--- error in Data.Typevec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- specialized cases distinction for an arrow in the category of 0-length type vectors -/
-def typevec_cases_nil₂ {β : «expr ⟹ »(fin2.elim0, fin2.elim0) → Sort*} (f : β nil_fun) : ∀ f, β f :=
-begin
-  intro [ident g],
-  have [] [":", expr «expr = »(g, nil_fun)] [],
-  ext [] ["⟨", "⟩"] [],
-  rw [expr this] [],
-  exact [expr f]
-end
+def typevec_cases_nil₂ {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort _} (f : β nil_fun) : ∀ f, β f :=
+  by 
+    intro g 
+    have  : g = nil_fun 
+    ext ⟨⟩
+    rw [this]
+    exact f
 
 /-- specialized cases distinction for an arrow in the category of (n+1)-length type vectors -/
 def typevec_cases_cons₂ (n : ℕ) (t t' : Type _) (v v' : Typevec n) {β : (v ::: t) ⟹ (v' ::: t') → Sort _}

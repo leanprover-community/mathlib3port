@@ -108,11 +108,11 @@ protected theorem MdifferentiableOn (h : M ≃ₘ^n⟮I,I'⟯ M') (s : Set M) (h
   (h.mdifferentiable hn).MdifferentiableOn
 
 @[simp]
-theorem coe_to_equiv (h : M ≃ₘ^n⟮I,I'⟯ M') : «expr⇑ » h.to_equiv = h :=
+theorem coe_to_equiv (h : M ≃ₘ^n⟮I,I'⟯ M') : ⇑h.to_equiv = h :=
   rfl
 
 @[simp, normCast]
-theorem coe_coe (h : M ≃ₘ^n⟮I,I'⟯ M') : «expr⇑ » (h : C^n⟮I, M; I', M'⟯) = h :=
+theorem coe_coe (h : M ≃ₘ^n⟮I,I'⟯ M') : ⇑(h : C^n⟮I, M; I', M'⟯) = h :=
   rfl
 
 theorem to_equiv_injective : injective (Diffeomorph.toEquiv : (M ≃ₘ^n⟮I,I'⟯ M') → M ≃ M')
@@ -124,7 +124,7 @@ theorem to_equiv_inj {h h' : M ≃ₘ^n⟮I,I'⟯ M'} : h.to_equiv = h'.to_equiv
 
 /-- Coercion to function `λ h : M ≃ₘ^n⟮I, I'⟯ M', (h : M → M')` is injective. -/
 theorem coe_fn_injective : injective fun h : M ≃ₘ^n⟮I,I'⟯ M' x : M => h x :=
-  Equiv.coe_fn_injective.comp to_equiv_injective
+  Equivₓ.coe_fn_injective.comp to_equiv_injective
 
 @[ext]
 theorem ext {h h' : M ≃ₘ^n⟮I,I'⟯ M'} (Heq : ∀ x, h x = h' x) : h = h' :=
@@ -137,14 +137,14 @@ variable (M I n)
 /-- Identity map as a diffeomorphism. -/
 protected def refl : M ≃ₘ^n⟮I,I⟯ M :=
   { times_cont_mdiff_to_fun := times_cont_mdiff_id, times_cont_mdiff_inv_fun := times_cont_mdiff_id,
-    toEquiv := Equiv.refl M }
+    toEquiv := Equivₓ.refl M }
 
 @[simp]
-theorem refl_to_equiv : (Diffeomorph.refl I M n).toEquiv = Equiv.refl _ :=
+theorem refl_to_equiv : (Diffeomorph.refl I M n).toEquiv = Equivₓ.refl _ :=
   rfl
 
 @[simp]
-theorem coe_refl : «expr⇑ » (Diffeomorph.refl I M n) = id :=
+theorem coe_refl : ⇑Diffeomorph.refl I M n = id :=
   rfl
 
 end 
@@ -164,7 +164,7 @@ theorem refl_trans (h : M ≃ₘ^n⟮I,I'⟯ M') : (Diffeomorph.refl I M n).tran
   ext$ fun _ => rfl
 
 @[simp]
-theorem coeTransₓ (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : M' ≃ₘ^n⟮I',J⟯ N) : «expr⇑ » (h₁.trans h₂) = (h₂ ∘ h₁) :=
+theorem coeTransₓ (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : M' ≃ₘ^n⟮I',J⟯ N) : ⇑h₁.trans h₂ = (h₂ ∘ h₁) :=
   rfl
 
 /-- Inverse of a diffeomorphism. -/
@@ -201,7 +201,7 @@ theorem symm_to_equiv (h : M ≃ₘ^n⟮I,J⟯ N) : h.symm.to_equiv = h.to_equiv
   rfl
 
 @[simp, mfld_simps]
-theorem to_equiv_coe_symm (h : M ≃ₘ^n⟮I,J⟯ N) : «expr⇑ » h.to_equiv.symm = h.symm :=
+theorem to_equiv_coe_symm (h : M ≃ₘ^n⟮I,J⟯ N) : ⇑h.to_equiv.symm = h.symm :=
   rfl
 
 theorem image_eq_preimage (h : M ≃ₘ^n⟮I,J⟯ N) (s : Set M) : h '' s = h.symm ⁻¹' s :=
@@ -236,18 +236,18 @@ theorem symm_to_homeomorph (h : M ≃ₘ^n⟮I,J⟯ N) : h.symm.to_homeomorph = 
   rfl
 
 @[simp]
-theorem coe_to_homeomorph (h : M ≃ₘ^n⟮I,J⟯ N) : «expr⇑ » h.to_homeomorph = h :=
+theorem coe_to_homeomorph (h : M ≃ₘ^n⟮I,J⟯ N) : ⇑h.to_homeomorph = h :=
   rfl
 
 @[simp]
-theorem coe_to_homeomorph_symm (h : M ≃ₘ^n⟮I,J⟯ N) : «expr⇑ » h.to_homeomorph.symm = h.symm :=
+theorem coe_to_homeomorph_symm (h : M ≃ₘ^n⟮I,J⟯ N) : ⇑h.to_homeomorph.symm = h.symm :=
   rfl
 
 @[simp]
 theorem times_cont_mdiff_within_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {s x} (hm : m ≤ n) :
   TimesContMdiffWithinAt I I' m (f ∘ h) s x ↔ TimesContMdiffWithinAt J I' m f (h.symm ⁻¹' s) (h x) :=
   by 
-    split 
+    constructor
     ·
       intro Hfh 
       rw [←h.symm_apply_apply x] at Hfh 
@@ -343,7 +343,7 @@ def to_diffeomorph : E ≃ₘ[𝕜] E' :=
     times_cont_mdiff_inv_fun := e.symm.times_cont_diff.times_cont_mdiff, toEquiv := e.to_linear_equiv.to_equiv }
 
 @[simp]
-theorem coe_to_diffeomorph : «expr⇑ » e.to_diffeomorph = e :=
+theorem coe_to_diffeomorph : ⇑e.to_diffeomorph = e :=
   rfl
 
 @[simp]
@@ -351,7 +351,7 @@ theorem symm_to_diffeomorph : e.symm.to_diffeomorph = e.to_diffeomorph.symm :=
   rfl
 
 @[simp]
-theorem coe_to_diffeomorph_symm : «expr⇑ » e.to_diffeomorph.symm = e.symm :=
+theorem coe_to_diffeomorph_symm : ⇑e.to_diffeomorph.symm = e.symm :=
   rfl
 
 end ContinuousLinearEquiv
@@ -373,22 +373,21 @@ def trans_diffeomorph (I : ModelWithCorners 𝕜 E H) (e : E ≃ₘ[𝕜] E') : 
     continuous_inv_fun := I.continuous_symm.comp e.symm.continuous }
 
 @[simp, mfld_simps]
-theorem coe_trans_diffeomorph : «expr⇑ » (I.trans_diffeomorph e) = (e ∘ I) :=
+theorem coe_trans_diffeomorph : ⇑I.trans_diffeomorph e = (e ∘ I) :=
   rfl
 
 @[simp, mfld_simps]
-theorem coe_trans_diffeomorph_symm : «expr⇑ » (I.trans_diffeomorph e).symm = (I.symm ∘ e.symm) :=
+theorem coe_trans_diffeomorph_symm : ⇑(I.trans_diffeomorph e).symm = (I.symm ∘ e.symm) :=
   rfl
 
 theorem trans_diffeomorph_range : range (I.trans_diffeomorph e) = e '' range I :=
   range_comp e I
 
-theorem coe_ext_chart_at_trans_diffeomorph (x : M) :
-  «expr⇑ » (extChartAt (I.trans_diffeomorph e) x) = (e ∘ extChartAt I x) :=
+theorem coe_ext_chart_at_trans_diffeomorph (x : M) : ⇑extChartAt (I.trans_diffeomorph e) x = (e ∘ extChartAt I x) :=
   rfl
 
 theorem coe_ext_chart_at_trans_diffeomorph_symm (x : M) :
-  «expr⇑ » (extChartAt (I.trans_diffeomorph e) x).symm = ((extChartAt I x).symm ∘ e.symm) :=
+  ⇑(extChartAt (I.trans_diffeomorph e) x).symm = ((extChartAt I x).symm ∘ e.symm) :=
   rfl
 
 theorem ext_chart_at_trans_diffeomorph_target (x : M) :
@@ -416,14 +415,15 @@ variable (I M)
 /-- The identity diffeomorphism between a manifold with model `I` and the same manifold
 with model `I.trans_diffeomorph e`. -/
 def to_trans_diffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.trans_diffeomorph e⟯ M :=
-  { toEquiv := Equiv.refl M,
+  { toEquiv := Equivₓ.refl M,
     times_cont_mdiff_to_fun :=
       fun x =>
         by 
           refine' times_cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
           refine' e.times_cont_diff.times_cont_diff_within_at.congr' (fun y hy => _) _
           ·
-            simp only [Equiv.coe_refl, id, · ∘ ·, I.coe_ext_chart_at_trans_diffeomorph, (extChartAt I x).right_inv hy.1]
+            simp only [Equivₓ.coe_refl, id, · ∘ ·, I.coe_ext_chart_at_trans_diffeomorph,
+              (extChartAt I x).right_inv hy.1]
           exact
             ⟨(extChartAt I x).map_source (mem_ext_chart_source I x), trivialₓ,
               by 
@@ -435,12 +435,12 @@ def to_trans_diffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.trans_diffeomor
           refine' e.symm.times_cont_diff.times_cont_diff_within_at.congr' (fun y hy => _) _
           ·
             simp only [mem_inter_eq, I.ext_chart_at_trans_diffeomorph_target] at hy 
-            simp only [Equiv.coe_refl, Equiv.refl_symm, id, · ∘ ·, I.coe_ext_chart_at_trans_diffeomorph_symm,
+            simp only [Equivₓ.coe_refl, Equivₓ.refl_symm, id, · ∘ ·, I.coe_ext_chart_at_trans_diffeomorph_symm,
               (extChartAt I x).right_inv hy.1]
           exact
             ⟨(extChartAt _ x).map_source (mem_ext_chart_source _ x), trivialₓ,
               by 
-                simp' only [e.symm_apply_apply, Equiv.refl_symm, Equiv.coe_refl] with mfld_simps⟩ }
+                simp' only [e.symm_apply_apply, Equivₓ.refl_symm, Equivₓ.coe_refl] with mfld_simps⟩ }
 
 variable {I M}
 

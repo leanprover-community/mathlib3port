@@ -47,11 +47,11 @@ instance : CoeFun (α ≃ₜ β) fun _ => α → β :=
   ⟨fun e => e.to_equiv⟩
 
 @[simp]
-theorem homeomorph_mk_coe (a : Equiv α β) b c : (Homeomorph.mk a b c : α → β) = a :=
+theorem homeomorph_mk_coe (a : Equivₓ α β) b c : (Homeomorph.mk a b c : α → β) = a :=
   rfl
 
 @[simp]
-theorem coe_to_equiv (h : α ≃ₜ β) : «expr⇑ » h.to_equiv = h :=
+theorem coe_to_equiv (h : α ≃ₜ β) : ⇑h.to_equiv = h :=
   rfl
 
 /-- Inverse of a homeomorphism. -/
@@ -74,21 +74,25 @@ theorem to_equiv_injective : Function.Injective (to_equiv : α ≃ₜ β → α 
 
 @[ext]
 theorem ext {h h' : α ≃ₜ β} (H : ∀ x, h x = h' x) : h = h' :=
-  to_equiv_injective$ Equiv.ext H
+  to_equiv_injective$ Equivₓ.ext H
 
 /-- Identity map as a homeomorphism. -/
 @[simps (config := { fullyApplied := ff }) apply]
 protected def refl (α : Type _) [TopologicalSpace α] : α ≃ₜ α :=
-  { continuous_to_fun := continuous_id, continuous_inv_fun := continuous_id, toEquiv := Equiv.refl α }
+  { continuous_to_fun := continuous_id, continuous_inv_fun := continuous_id, toEquiv := Equivₓ.refl α }
 
 /-- Composition of two homeomorphisms. -/
 protected def trans (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) : α ≃ₜ γ :=
   { continuous_to_fun := h₂.continuous_to_fun.comp h₁.continuous_to_fun,
     continuous_inv_fun := h₁.continuous_inv_fun.comp h₂.continuous_inv_fun,
-    toEquiv := Equiv.trans h₁.to_equiv h₂.to_equiv }
+    toEquiv := Equivₓ.trans h₁.to_equiv h₂.to_equiv }
 
 @[simp]
-theorem homeomorph_mk_coe_symm (a : Equiv α β) b c : ((Homeomorph.mk a b c).symm : β → α) = a.symm :=
+theorem trans_apply (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) (a : α) : h₁.trans h₂ a = h₂ (h₁ a) :=
+  rfl
+
+@[simp]
+theorem homeomorph_mk_coe_symm (a : Equivₓ α β) b c : ((Homeomorph.mk a b c).symm : β → α) = a.symm :=
   rfl
 
 @[simp]
@@ -143,11 +147,11 @@ def change_inv (f : α ≃ₜ β) (g : β → α) (hg : Function.RightInverse g 
         convert f.symm.continuous }
 
 @[simp]
-theorem symm_comp_self (h : α ≃ₜ β) : («expr⇑ » h.symm ∘ «expr⇑ » h) = id :=
+theorem symm_comp_self (h : α ≃ₜ β) : (⇑h.symm ∘ ⇑h) = id :=
   funext h.symm_apply_apply
 
 @[simp]
-theorem self_comp_symm (h : α ≃ₜ β) : («expr⇑ » h ∘ «expr⇑ » h.symm) = id :=
+theorem self_comp_symm (h : α ≃ₜ β) : (⇑h ∘ ⇑h.symm) = id :=
   funext h.apply_symm_apply
 
 @[simp]
@@ -189,7 +193,7 @@ protected theorem Embedding (h : α ≃ₜ β) : Embedding h :=
 
 /-- Homeomorphism given an embedding. -/
 noncomputable def of_embedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.Range f :=
-  { Equiv.ofInjective f hf.inj with continuous_to_fun := continuous_subtype_mk _ hf.continuous,
+  { Equivₓ.ofInjective f hf.inj with continuous_to_fun := continuous_subtype_mk _ hf.continuous,
     continuous_inv_fun :=
       by 
         simp [hf.continuous_iff, continuous_subtype_coe] }
@@ -335,7 +339,7 @@ theorem comp_is_open_map_iff' (h : α ≃ₜ β) {f : β → γ} : IsOpenMap (f 
 /-- If two sets are equal, then they are homeomorphic. -/
 def set_congr {s t : Set α} (h : s = t) : s ≃ₜ t :=
   { continuous_to_fun := continuous_subtype_mk _ continuous_subtype_val,
-    continuous_inv_fun := continuous_subtype_mk _ continuous_subtype_val, toEquiv := Equiv.setCongr h }
+    continuous_inv_fun := continuous_subtype_mk _ continuous_subtype_val, toEquiv := Equivₓ.setCongr h }
 
 /-- Sum of two homeomorphisms. -/
 def sum_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : Sum α γ ≃ₜ Sum β δ :=
@@ -362,7 +366,7 @@ theorem prod_congr_symm (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : (h₁.prod
   rfl
 
 @[simp]
-theorem coe_prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : «expr⇑ » (h₁.prod_congr h₂) = Prod.map h₁ h₂ :=
+theorem coe_prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : ⇑h₁.prod_congr h₂ = Prod.map h₁ h₂ :=
   rfl
 
 section 
@@ -372,14 +376,14 @@ variable (α β γ)
 /-- `α × β` is homeomorphic to `β × α`. -/
 def prod_comm : α × β ≃ₜ β × α :=
   { continuous_to_fun := continuous_snd.prod_mk continuous_fst,
-    continuous_inv_fun := continuous_snd.prod_mk continuous_fst, toEquiv := Equiv.prodComm α β }
+    continuous_inv_fun := continuous_snd.prod_mk continuous_fst, toEquiv := Equivₓ.prodComm α β }
 
 @[simp]
 theorem prod_comm_symm : (prod_comm α β).symm = prod_comm β α :=
   rfl
 
 @[simp]
-theorem coe_prod_comm : «expr⇑ » (prod_comm α β) = Prod.swap :=
+theorem coe_prod_comm : ⇑prod_comm α β = Prod.swap :=
   rfl
 
 /-- `(α × β) × γ` is homeomorphic to `α × (β × γ)`. -/
@@ -388,12 +392,12 @@ def prod_assoc : (α × β) × γ ≃ₜ α × β × γ :=
       (continuous_fst.comp continuous_fst).prod_mk ((continuous_snd.comp continuous_fst).prod_mk continuous_snd),
     continuous_inv_fun :=
       (continuous_fst.prod_mk (continuous_fst.comp continuous_snd)).prod_mk (continuous_snd.comp continuous_snd),
-    toEquiv := Equiv.prodAssoc α β γ }
+    toEquiv := Equivₓ.prodAssoc α β γ }
 
 /-- `α × {*}` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := ff }) apply]
 def prod_punit : α × PUnit ≃ₜ α :=
-  { toEquiv := Equiv.prodPunit α, continuous_to_fun := continuous_fst,
+  { toEquiv := Equivₓ.prodPunit α, continuous_to_fun := continuous_fst,
     continuous_inv_fun := continuous_id.prod_mk continuous_const }
 
 /-- `{*} × α` is homeomorphic to `α`. -/
@@ -401,21 +405,21 @@ def punit_prod : PUnit × α ≃ₜ α :=
   (prod_comm _ _).trans (prod_punit _)
 
 @[simp]
-theorem coe_punit_prod : «expr⇑ » (punit_prod α) = Prod.snd :=
+theorem coe_punit_prod : ⇑punit_prod α = Prod.snd :=
   rfl
 
 end 
 
 /-- `ulift α` is homeomorphic to `α`. -/
 def Ulift.{u, v} {α : Type u} [TopologicalSpace α] : Ulift.{v, u} α ≃ₜ α :=
-  { continuous_to_fun := continuous_ulift_down, continuous_inv_fun := continuous_ulift_up, toEquiv := Equiv.ulift }
+  { continuous_to_fun := continuous_ulift_down, continuous_inv_fun := continuous_ulift_up, toEquiv := Equivₓ.ulift }
 
 section Distrib
 
 /-- `(α ⊕ β) × γ` is homeomorphic to `α × γ ⊕ β × γ`. -/
 def sum_prod_distrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) :=
   by 
-    refine' (Homeomorph.homeomorphOfContinuousOpen (Equiv.sumProdDistrib α β γ).symm _ _).symm
+    refine' (Homeomorph.homeomorphOfContinuousOpen (Equivₓ.sumProdDistrib α β γ).symm _ _).symm
     ·
       convert
         continuous_sum_rec ((continuous_inl.comp continuous_fst).prod_mk continuous_snd)
@@ -434,9 +438,9 @@ def prod_sum_distrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
 variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
 /-- `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/
-def sigma_prod_distrib : (Σi, σ i) × β ≃ₜ Σi, σ i × β :=
+def sigma_prod_distrib : (Σ i, σ i) × β ≃ₜ Σ i, σ i × β :=
   Homeomorph.symm$
-    homeomorph_of_continuous_open (Equiv.sigmaProdDistrib σ β).symm
+    homeomorph_of_continuous_open (Equivₓ.sigmaProdDistrib σ β).symm
       (continuous_sigma$ fun i => (continuous_sigma_mk.comp continuous_fst).prod_mk continuous_snd)
       (is_open_map_sigma$ fun i => (open_embedding_sigma_mk.Prod open_embedding_id).IsOpenMap)
 
@@ -445,7 +449,7 @@ end Distrib
 /-- If `ι` has a unique element, then `ι → α` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := ff })]
 def fun_unique (ι α : Type _) [Unique ι] [TopologicalSpace α] : (ι → α) ≃ₜ α :=
-  { toEquiv := Equiv.funUnique ι α, continuous_to_fun := continuous_apply _,
+  { toEquiv := Equivₓ.funUnique ι α, continuous_to_fun := continuous_apply _,
     continuous_inv_fun := continuous_pi fun _ => continuous_id }
 
 /-- Homeomorphism between dependent functions `Π i : fin 2, α i` and `α 0 × α 1`. -/

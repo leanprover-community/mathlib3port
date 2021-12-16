@@ -44,7 +44,7 @@ free commutative ring, free ring
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -52,11 +52,11 @@ universe u v
 
 variable (α : Type u)
 
--- error in RingTheory.FreeCommRing: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler comm_ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler comm_ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- `free_comm_ring α` is the free commutative ring on the type `α`. -/
-@[derive #["[", expr comm_ring, ",", expr inhabited, "]"]]
-def free_comm_ring (α : Type u) : Type u :=
-«expr $ »(free_abelian_group, «expr $ »(multiplicative, multiset α))
+def FreeCommRing (α : Type u) : Type u :=
+  FreeAbelianGroup$ Multiplicative$ Multiset α deriving [anonymous], [anonymous]
 
 namespace FreeCommRing
 
@@ -116,7 +116,7 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
 /-- Lift a map `α → R` to a additive group homomorphism `free_comm_ring α → R`.
 For a version producing a bundled homomorphism, see `lift_hom`. -/
 def lift : (α → R) ≃ (FreeCommRing α →+* R) :=
-  Equiv.trans lift_to_multiset FreeAbelianGroup.liftMonoid
+  Equivₓ.trans lift_to_multiset FreeAbelianGroup.liftMonoid
 
 @[simp]
 theorem lift_of (x : α) : lift f (of x) = f x :=
@@ -182,7 +182,7 @@ theorem is_supported_zero : is_supported 0 s :=
 theorem is_supported_one : is_supported 1 s :=
   Subring.one_mem _
 
-theorem is_supported_int {i : ℤ} {s : Set α} : is_supported («expr↑ » i) s :=
+theorem is_supported_int {i : ℤ} {s : Set α} : is_supported (↑i) s :=
   Int.induction_on i is_supported_zero
     (fun i hi =>
       by 
@@ -208,42 +208,46 @@ theorem restriction_of p : restriction s (of p) = if H : p ∈ s then of ⟨p, H
 
 end Restriction
 
--- error in RingTheory.FreeCommRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_supported_of {p} {s : set α} : «expr ↔ »(is_supported (of p) s, «expr ∈ »(p, s)) :=
-suffices is_supported (of p) s → «expr ∈ »(p, s), from ⟨this, λ hps, subring.subset_closure ⟨p, hps, rfl⟩⟩,
-assume hps : is_supported (of p) s, begin
-  haveI [] [] [":=", expr classical.dec_pred s],
-  have [] [":", expr ∀
-   x, is_supported x s → «expr∃ , »((n : exprℤ()), «expr = »(lift (λ
-      a, if «expr ∈ »(a, s) then (0 : polynomial exprℤ()) else polynomial.X) x, n))] [],
-  { intros [ident x, ident hx],
-    refine [expr subring.in_closure.rec_on hx _ _ _ _],
-    { use [expr 1],
-      rw ["[", expr ring_hom.map_one, "]"] [],
-      norm_cast [] },
-    { use [expr «expr- »(1)],
-      rw ["[", expr ring_hom.map_neg, ",", expr ring_hom.map_one, "]"] [],
-      norm_cast [] },
-    { rintros ["_", "⟨", ident z, ",", ident hzs, ",", ident rfl, "⟩", "_", "_"],
-      use [expr 0],
-      rw ["[", expr ring_hom.map_mul, ",", expr lift_of, ",", expr if_pos hzs, ",", expr zero_mul, "]"] [],
-      norm_cast [] },
-    { rintros [ident x, ident y, "⟨", ident q, ",", ident hq, "⟩", "⟨", ident r, ",", ident hr, "⟩"],
-      refine [expr ⟨«expr + »(q, r), _⟩],
-      rw ["[", expr ring_hom.map_add, ",", expr hq, ",", expr hr, "]"] [],
-      norm_cast [] } },
-  specialize [expr this (of p) hps],
-  rw ["[", expr lift_of, "]"] ["at", ident this],
-  split_ifs ["at", ident this] [],
-  { exact [expr h] },
-  exfalso,
-  apply [expr ne.symm int.zero_ne_one],
-  rcases [expr this, "with", "⟨", ident w, ",", ident H, "⟩"],
-  rw ["<-", expr polynomial.C_eq_int_cast] ["at", ident H],
-  have [] [":", expr «expr = »(polynomial.X.coeff 1, (polynomial.C «expr↑ »(w)).coeff 1)] [],
-  by rw [expr H] [],
-  rwa ["[", expr polynomial.coeff_C, ",", expr if_neg (one_ne_zero : «expr ≠ »(1, 0)), ",", expr polynomial.coeff_X, ",", expr if_pos rfl, "]"] ["at", ident this]
-end
+theorem is_supported_of {p} {s : Set α} : is_supported (of p) s ↔ p ∈ s :=
+  suffices is_supported (of p) s → p ∈ s from ⟨this, fun hps => Subring.subset_closure ⟨p, hps, rfl⟩⟩
+  fun hps : is_supported (of p) s =>
+    by 
+      have  := Classical.decPred s 
+      have  : ∀ x, is_supported x s → ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : Polynomial ℤ) else Polynomial.x) x = n
+      ·
+        intro x hx 
+        refine' Subring.InClosure.rec_on hx _ _ _ _
+        ·
+          use 1
+          rw [RingHom.map_one]
+          normCast
+        ·
+          use -1
+          rw [RingHom.map_neg, RingHom.map_one]
+          normCast
+        ·
+          rintro _ ⟨z, hzs, rfl⟩ _ _ 
+          use 0
+          rw [RingHom.map_mul, lift_of, if_pos hzs, zero_mul]
+          normCast
+        ·
+          rintro x y ⟨q, hq⟩ ⟨r, hr⟩
+          refine' ⟨q+r, _⟩
+          rw [RingHom.map_add, hq, hr]
+          normCast 
+      specialize this (of p) hps 
+      rw [lift_of] at this 
+      splitIfs  at this
+      ·
+        exact h 
+      exfalso 
+      apply Ne.symm Int.zero_ne_one 
+      rcases this with ⟨w, H⟩
+      rw [←Polynomial.C_eq_int_cast] at H 
+      have  : polynomial.X.coeff 1 = (Polynomial.c (↑w)).coeff 1
+      ·
+        rw [H]
+      rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this
 
 theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)] (hxs : is_supported x s) :
   map (Subtype.val : s → α) (restriction s x) = x :=
@@ -274,7 +278,7 @@ theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite
         is_supported_mul (is_supported_upwards hxs$ Set.subset_union_left s t)
           (is_supported_upwards hxt$ Set.subset_union_right s t)⟩
 
-theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finset α, is_supported x («expr↑ » s) :=
+theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finset α, is_supported x (↑s) :=
   let ⟨s, hfs, hxs⟩ := exists_finite_support x
   ⟨hfs.to_finset,
     by 
@@ -301,33 +305,33 @@ def coe_ring_hom : FreeRing α →+* FreeCommRing α :=
   to_free_comm_ring
 
 @[simp, normCast]
-protected theorem coe_zero : «expr↑ » (0 : FreeRing α) = (0 : FreeCommRing α) :=
+protected theorem coe_zero : ↑(0 : FreeRing α) = (0 : FreeCommRing α) :=
   rfl
 
 @[simp, normCast]
-protected theorem coe_one : «expr↑ » (1 : FreeRing α) = (1 : FreeCommRing α) :=
+protected theorem coe_one : ↑(1 : FreeRing α) = (1 : FreeCommRing α) :=
   rfl
 
 variable {α}
 
 @[simp]
-protected theorem coe_of (a : α) : «expr↑ » (FreeRing.of a) = FreeCommRing.of a :=
+protected theorem coe_of (a : α) : ↑FreeRing.of a = FreeCommRing.of a :=
   FreeRing.lift_of _ _
 
 @[simp, normCast]
-protected theorem coe_neg (x : FreeRing α) : «expr↑ » (-x) = -(x : FreeCommRing α) :=
+protected theorem coe_neg (x : FreeRing α) : ↑(-x) = -(x : FreeCommRing α) :=
   (FreeRing.lift _).map_neg _
 
 @[simp, normCast]
-protected theorem coe_add (x y : FreeRing α) : «expr↑ » (x+y) = (x : FreeCommRing α)+y :=
+protected theorem coe_add (x y : FreeRing α) : (↑x+y) = (x : FreeCommRing α)+y :=
   (FreeRing.lift _).map_add _ _
 
 @[simp, normCast]
-protected theorem coe_sub (x y : FreeRing α) : «expr↑ » (x - y) = (x : FreeCommRing α) - y :=
+protected theorem coe_sub (x y : FreeRing α) : ↑(x - y) = (x : FreeCommRing α) - y :=
   (FreeRing.lift _).map_sub _ _
 
 @[simp, normCast]
-protected theorem coe_mul (x y : FreeRing α) : «expr↑ » (x*y) = (x : FreeCommRing α)*y :=
+protected theorem coe_mul (x y : FreeRing α) : (↑x*y) = (x : FreeCommRing α)*y :=
   (FreeRing.lift _).map_mul _ _
 
 variable (α)

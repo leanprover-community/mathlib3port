@@ -150,14 +150,14 @@ theorem act_inv_act_eq (x y : R) : x ◃ x ◃⁻¹ y = y :=
 
 theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' :=
   by 
-    split 
+    constructor 
     apply (act x).Injective 
     rintro rfl 
     rfl
 
 theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y = y' :=
   by 
-    split 
+    constructor 
     apply (act x).symm.Injective 
     rintro rfl 
     rfl
@@ -186,7 +186,7 @@ theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = (act x*act y)*
 /--
 The opposite rack, swapping the roles of `◃` and `◃⁻¹`.
 -/
-instance opposite_rack : Rack («expr ᵐᵒᵖ» R) :=
+instance opposite_rack : Rack (Rᵐᵒᵖ) :=
   { act := fun x y => op (inv_act (unop x) (unop y)),
     self_distrib :=
       MulOpposite.rec$
@@ -227,10 +227,11 @@ theorem self_act_act_eq {x y : R} : (x ◃ x) ◃ y = x ◃ y :=
   by 
     rw [←right_inv x y, ←self_distrib]
 
--- error in Algebra.Quandle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem self_inv_act_inv_act_eq {x y : R} : «expr = »(«expr ◃⁻¹ »(«expr ◃⁻¹ »(x, x), y), «expr ◃⁻¹ »(x, y)) :=
-by { have [ident h] [] [":=", expr @self_act_act_eq _ _ (op x) (op y)],
-  simpa [] [] [] [] [] ["using", expr h] }
+@[simp]
+theorem self_inv_act_inv_act_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y :=
+  by 
+    have h := @self_act_act_eq _ _ (op x) (op y)
+    simpa using h
 
 @[simp]
 theorem self_act_inv_act_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y :=
@@ -240,14 +241,15 @@ theorem self_act_inv_act_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y :=
     rw [self_act_act_eq]
     rw [right_inv]
 
--- error in Algebra.Quandle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem self_inv_act_act_eq {x y : R} : «expr = »(«expr ◃ »(«expr ◃⁻¹ »(x, x), y), «expr ◃ »(x, y)) :=
-by { have [ident h] [] [":=", expr @self_act_inv_act_eq _ _ (op x) (op y)],
-  simpa [] [] [] [] [] ["using", expr h] }
+@[simp]
+theorem self_inv_act_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y :=
+  by 
+    have h := @self_act_inv_act_eq _ _ (op x) (op y)
+    simpa using h
 
 theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
   by 
-    split 
+    constructor 
     swap 
     rintro rfl 
     rfl 
@@ -256,11 +258,10 @@ theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
     rw [←left_cancel (x ◃ x), right_inv, self_act_act_eq]
     rw [h, ←left_cancel (y ◃ y), right_inv, self_act_act_eq]
 
--- error in Algebra.Quandle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem self_inv_act_eq_iff_eq
-{x y : R} : «expr ↔ »(«expr = »(«expr ◃⁻¹ »(x, x), «expr ◃⁻¹ »(y, y)), «expr = »(x, y)) :=
-by { have [ident h] [] [":=", expr @self_act_eq_iff_eq _ _ (op x) (op y)],
-  simpa [] [] [] [] [] ["using", expr h] }
+theorem self_inv_act_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y :=
+  by 
+    have h := @self_act_eq_iff_eq _ _ (op x) (op y)
+    simpa using h
 
 /--
 The map `x ↦ x ◃ x` is a bijection.  (This has applications for the
@@ -362,7 +363,7 @@ theorem fix_inv {x : Q} : x ◃⁻¹ x = x :=
     rw [←left_cancel x]
     simp 
 
-instance opposite_quandle : Quandle («expr ᵐᵒᵖ» Q) :=
+instance opposite_quandle : Quandle (Qᵐᵒᵖ) :=
   { fix :=
       fun x =>
         by 
@@ -407,7 +408,7 @@ theorem conj_act_eq_conj {G : Type _} [Groupₓ G] (x y : conj G) : x ◃ y = ((
 theorem conj_swap {G : Type _} [Groupₓ G] (x y : conj G) : x ◃ y = y ↔ y ◃ x = x :=
   by 
     dsimp 
-    split 
+    constructor 
     repeat' 
       intro h 
       convRHS => rw [eq_mul_inv_of_mul_eq (eq_mul_inv_of_mul_eq h)]
@@ -602,9 +603,9 @@ instance pre_envel_group.setoid (R : Type _) [Rack R] : Setoidₓ (pre_envel_gro
   { R := pre_envel_group_rel R,
     iseqv :=
       by 
-        split 
+        constructor 
         apply pre_envel_group_rel.refl 
-        split 
+        constructor 
         apply pre_envel_group_rel.symm 
         apply pre_envel_group_rel.trans }
 
@@ -617,12 +618,12 @@ def envel_group (R : Type _) [Rack R] :=
 instance (R : Type _) [Rack R] : DivInvMonoidₓ (envel_group R) :=
   { mul :=
       fun a b =>
-        Quotientₓ.liftOn₂ a b (fun a b => «expr⟦ ⟧» (pre_envel_group.mul a b))
+        Quotientₓ.liftOn₂ a b (fun a b => ⟦pre_envel_group.mul a b⟧)
           fun a b a' b' ⟨ha⟩ ⟨hb⟩ => Quotientₓ.sound (pre_envel_group_rel'.congr_mul ha hb).Rel,
-    one := «expr⟦ ⟧» Unit,
+    one := ⟦Unit⟧,
     inv :=
       fun a =>
-        Quotientₓ.liftOn a (fun a => «expr⟦ ⟧» (pre_envel_group.inv a))
+        Quotientₓ.liftOn a (fun a => ⟦pre_envel_group.inv a⟧)
           fun a a' ⟨ha⟩ => Quotientₓ.sound (pre_envel_group_rel'.congr_inv ha).Rel,
     mul_assoc :=
       fun a b c => Quotientₓ.induction_on₃ a b c fun a b c => Quotientₓ.sound (pre_envel_group_rel'.assoc a b c).Rel,
@@ -642,8 +643,7 @@ The canonical homomorphism from a rack to its enveloping group.
 Satisfies universal properties given by `to_envel_group.map` and `to_envel_group.univ`.
 -/
 def to_envel_group (R : Type _) [Rack R] : R →◃ Quandle.Conj (envel_group R) :=
-  { toFun := fun x => «expr⟦ ⟧» (incl x),
-    map_act' := fun x y => Quotientₓ.sound (pre_envel_group_rel'.act_incl x y).symm.Rel }
+  { toFun := fun x => ⟦incl x⟧, map_act' := fun x y => Quotientₓ.sound (pre_envel_group_rel'.act_incl x y).symm.Rel }
 
 /--
 The preliminary definition of the induced map from the enveloping group.
@@ -692,43 +692,51 @@ theorem well_def {R : Type _} [Rack R] {G : Type _} [Groupₓ G] (f : R →◃ Q
 
 end ToEnvelGroup.MapAux
 
--- error in Algebra.Quandle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a map from a rack to a group, lift it to being a map from the enveloping group.
 More precisely, the `envel_group` functor is left adjoint to `quandle.conj`.
 -/
-def to_envel_group.map
-{R : Type*}
-[rack R]
-{G : Type*}
-[group G] : «expr ≃ »(«expr →◃ »(R, quandle.conj G), «expr →* »(envel_group R, G)) :=
-{ to_fun := λ
-  f, { to_fun := λ
-    x, quotient.lift_on x (to_envel_group.map_aux f) (λ (a b) ⟨hab⟩, to_envel_group.map_aux.well_def f hab),
-    map_one' := begin
-      change [expr «expr = »(quotient.lift_on «expr⟦ ⟧»(unit) (to_envel_group.map_aux f) _, 1)] [] [],
-      simp [] [] [] ["[", expr to_envel_group.map_aux, "]"] [] []
-    end,
-    map_mul' := λ
-    x
-    y, quotient.induction_on₂ x y (λ x y, begin
-       change [expr «expr = »(quotient.lift_on «expr⟦ ⟧»(mul x y) (to_envel_group.map_aux f) _, _)] [] [],
-       simp [] [] [] ["[", expr to_envel_group.map_aux, "]"] [] []
-     end) },
-  inv_fun := λ F, (quandle.conj.map F).comp (to_envel_group R),
-  left_inv := λ f, by { ext [] [] [],
-    refl },
-  right_inv := λ
-  F, «expr $ »(monoid_hom.ext, λ
-   x, «expr $ »(quotient.induction_on x, λ x, begin
-      induction [expr x] [] [] [],
-      { exact [expr F.map_one.symm] },
-      { refl },
-      { have [ident hm] [":", expr «expr = »(«expr⟦ ⟧»(x_a.mul x_b), @has_mul.mul (envel_group R) _ «expr⟦ ⟧»(x_a) «expr⟦ ⟧»(x_b))] [":=", expr rfl],
-        rw ["[", expr hm, ",", expr F.map_mul, ",", expr monoid_hom.map_mul, ",", "<-", expr x_ih_a, ",", "<-", expr x_ih_b, "]"] [] },
-      { have [ident hm] [":", expr «expr = »(«expr⟦ ⟧»(x_a.inv), @has_inv.inv (envel_group R) _ «expr⟦ ⟧»(x_a))] [":=", expr rfl],
-        rw ["[", expr hm, ",", expr F.map_inv, ",", expr monoid_hom.map_inv, ",", expr x_ih, "]"] [] }
-    end)) }
+def to_envel_group.map {R : Type _} [Rack R] {G : Type _} [Groupₓ G] : (R →◃ Quandle.Conj G) ≃ (envel_group R →* G) :=
+  { toFun :=
+      fun f =>
+        { toFun :=
+            fun x =>
+              Quotientₓ.liftOn x (to_envel_group.map_aux f) fun a b ⟨hab⟩ => to_envel_group.map_aux.well_def f hab,
+          map_one' :=
+            by 
+              change Quotientₓ.liftOn (⟦Unit⟧) (to_envel_group.map_aux f) _ = 1
+              simp [to_envel_group.map_aux],
+          map_mul' :=
+            fun x y =>
+              Quotientₓ.induction_on₂ x y
+                fun x y =>
+                  by 
+                    change Quotientₓ.liftOn (⟦mul x y⟧) (to_envel_group.map_aux f) _ = _ 
+                    simp [to_envel_group.map_aux] },
+    invFun := fun F => (Quandle.Conj.map F).comp (to_envel_group R),
+    left_inv :=
+      fun f =>
+        by 
+          ext 
+          rfl,
+    right_inv :=
+      fun F =>
+        MonoidHom.ext$
+          fun x =>
+            Quotientₓ.induction_on x$
+              fun x =>
+                by 
+                  induction x
+                  ·
+                    exact F.map_one.symm
+                  ·
+                    rfl
+                  ·
+                    have hm : ⟦x_a.mul x_b⟧ = @Mul.mul (envel_group R) _ (⟦x_a⟧) (⟦x_b⟧) := rfl 
+                    rw [hm, F.map_mul, MonoidHom.map_mul, ←x_ih_a, ←x_ih_b]
+                  ·
+                    have hm : ⟦x_a.inv⟧ = @HasInv.inv (envel_group R) _ (⟦x_a⟧) := rfl 
+                    rw [hm, F.map_inv, MonoidHom.map_inv, x_ih] }
 
 /--
 Given a homomorphism from a rack to a group, it factors through the enveloping group.

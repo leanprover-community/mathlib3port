@@ -34,7 +34,7 @@ The definition of conformality in this file does NOT require the maps to be orie
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open LinearIsometry ContinuousLinearMap
 
@@ -65,20 +65,25 @@ theorem LinearIsometry.is_conformal_map (f' : M →ₗᵢ[R] N) : IsConformalMap
       ext 
       simp ⟩
 
--- error in Analysis.NormedSpace.ConformalLinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_conformal_map_of_subsingleton [h : subsingleton M] (f' : «expr →L[ ] »(M, R, N)) : is_conformal_map f' :=
-begin
-  rw [expr subsingleton_iff] ["at", ident h],
-  have [ident minor] [":", expr «expr = »((f' : M → N), function.const M 0)] [":=", expr by ext [] [ident x'] []; rw [expr h x' 0] []; exact [expr f'.map_zero]],
-  have [ident key] [":", expr ∀
-   x' : M, «expr = »(«expr∥ ∥»((0 : «expr →ₗ[ ] »(M, R, N)) x'), «expr∥ ∥»(x'))] [":=", expr λ
-   x', by { rw ["[", expr linear_map.zero_apply, ",", expr h x' 0, "]"] [],
-     repeat { rw [expr norm_zero] [] } }],
-  exact [expr ⟨(1 : R), one_ne_zero, ⟨0, key⟩, by { rw [expr pi.smul_def] [],
-      ext [] [ident p] [],
-      rw ["[", expr one_smul, ",", expr minor, "]"] [],
-      refl }⟩]
-end
+theorem is_conformal_map_of_subsingleton [h : Subsingleton M] (f' : M →L[R] N) : IsConformalMap f' :=
+  by 
+    rw [subsingleton_iff] at h 
+    have minor : (f' : M → N) = Function.const M 0 :=
+      by 
+        ext x' <;> rw [h x' 0] <;> exact f'.map_zero 
+    have key : ∀ x' : M, ∥(0 : M →ₗ[R] N) x'∥ = ∥x'∥ :=
+      fun x' =>
+        by 
+          rw [LinearMap.zero_apply, h x' 0]
+          repeat' 
+            rw [norm_zero]
+    exact
+      ⟨(1 : R), one_ne_zero, ⟨0, key⟩,
+        by 
+          rw [Pi.smul_def]
+          ext p 
+          rw [one_smul, minor]
+          rfl⟩
 
 namespace IsConformalMap
 
@@ -96,15 +101,14 @@ theorem injective {f' : M' →L[R] N} (h : IsConformalMap f') : Function.Injecti
   by 
     simp only [hf', Pi.smul_def] <;> exact (smul_right_injective _ hc).comp li.injective
 
--- error in Analysis.NormedSpace.ConformalLinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ne_zero [nontrivial M'] {f' : «expr →L[ ] »(M', R, N)} (hf' : is_conformal_map f') : «expr ≠ »(f', 0) :=
-begin
-  intros [ident w],
-  rcases [expr exists_ne (0 : M'), "with", "⟨", ident a, ",", ident ha, "⟩"],
-  have [] [":", expr «expr = »(f' a, f' 0)] [],
-  { simp_rw ["[", expr w, ",", expr continuous_linear_map.zero_apply, "]"] [] },
-  exact [expr ha (hf'.injective this)]
-end
+theorem ne_zero [Nontrivial M'] {f' : M' →L[R] N} (hf' : IsConformalMap f') : f' ≠ 0 :=
+  by 
+    intro w 
+    rcases exists_ne (0 : M') with ⟨a, ha⟩
+    have  : f' a = f' 0
+    ·
+      simpRw [w, ContinuousLinearMap.zero_apply]
+    exact ha (hf'.injective this)
 
 end IsConformalMap
 

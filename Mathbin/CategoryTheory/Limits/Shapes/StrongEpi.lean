@@ -48,30 +48,44 @@ section
 
 variable {R : C} (f : P ⟶ Q) (g : Q ⟶ R)
 
--- error in CategoryTheory.Limits.Shapes.StrongEpi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of two strong epimorphisms is a strong epimorphism. -/
-theorem strong_epi_comp [strong_epi f] [strong_epi g] : strong_epi «expr ≫ »(f, g) :=
-{ epi := epi_comp _ _,
-  has_lift := begin
-    introsI [],
-    have [ident h₀] [":", expr «expr = »(«expr ≫ »(u, z), «expr ≫ »(f, «expr ≫ »(g, v)))] [],
-    by simpa [] [] [] ["[", expr category.assoc, "]"] [] ["using", expr h],
-    let [ident w] [":", expr «expr ⟶ »(Q, X)] [":=", expr arrow.lift (arrow.hom_mk' h₀)],
-    have [ident h₁] [":", expr «expr = »(«expr ≫ »(w, z), «expr ≫ »(g, v))] [],
-    by rw [expr arrow.lift_mk'_right] [],
-    exact [expr arrow.has_lift.mk ⟨(arrow.lift (arrow.hom_mk' h₁) : «expr ⟶ »(R, X)), by simp [] [] [] [] [] [], by simp [] [] [] [] [] []⟩]
-  end }
+theorem strong_epi_comp [strong_epi f] [strong_epi g] : strong_epi (f ≫ g) :=
+  { Epi := epi_comp _ _,
+    HasLift :=
+      by 
+        intros 
+        have h₀ : u ≫ z = f ≫ g ≫ v
+        ·
+          simpa [category.assoc] using h 
+        let w : Q ⟶ X := arrow.lift (arrow.hom_mk' h₀)
+        have h₁ : w ≫ z = g ≫ v
+        ·
+          rw [arrow.lift_mk'_right]
+        exact
+          arrow.has_lift.mk
+            ⟨(arrow.lift (arrow.hom_mk' h₁) : R ⟶ X),
+              by 
+                simp ,
+              by 
+                simp ⟩ }
 
--- error in CategoryTheory.Limits.Shapes.StrongEpi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f ≫ g` is a strong epimorphism, then so is g. -/
-theorem strong_epi_of_strong_epi [strong_epi «expr ≫ »(f, g)] : strong_epi g :=
-{ epi := epi_of_epi f g,
-  has_lift := begin
-    introsI [],
-    have [ident h₀] [":", expr «expr = »(«expr ≫ »(«expr ≫ »(f, u), z), «expr ≫ »(«expr ≫ »(f, g), v))] [],
-    by simp [] [] ["only"] ["[", expr category.assoc, ",", expr h, "]"] [] [],
-    exact [expr arrow.has_lift.mk ⟨(arrow.lift (arrow.hom_mk' h₀) : «expr ⟶ »(R, X)), (cancel_mono z).1 (by simp [] [] [] ["[", expr h, "]"] [] []), by simp [] [] [] [] [] []⟩]
-  end }
+theorem strong_epi_of_strong_epi [strong_epi (f ≫ g)] : strong_epi g :=
+  { Epi := epi_of_epi f g,
+    HasLift :=
+      by 
+        intros 
+        have h₀ : (f ≫ u) ≫ z = (f ≫ g) ≫ v
+        ·
+          simp only [category.assoc, h]
+        exact
+          arrow.has_lift.mk
+            ⟨(arrow.lift (arrow.hom_mk' h₀) : R ⟶ X),
+              (cancel_mono z).1
+                (by 
+                  simp [h]),
+              by 
+                simp ⟩ }
 
 /-- An isomorphism is in particular a strong epimorphism. -/
 instance (priority := 100) strong_epi_of_is_iso [is_iso f] : strong_epi f :=

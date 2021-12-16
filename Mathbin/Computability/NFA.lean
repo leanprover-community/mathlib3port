@@ -34,6 +34,7 @@ instance : Inhabited (NFA α σ) :=
 def step_set : Set σ → α → Set σ :=
   fun Ss a => Ss >>= fun S => M.step S a
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » S)
 theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.step_set S a ↔ ∃ (t : _)(_ : t ∈ S), s ∈ M.step t a :=
   by 
     simp only [step_set, Set.mem_Union, Set.bind_def]
@@ -48,22 +49,29 @@ def eval_from (start : Set σ) : List α → Set σ :=
 def eval :=
   M.eval_from M.start
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » M.accept)
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
 def accepts : Language α :=
   fun x => ∃ (S : _)(_ : S ∈ M.accept), S ∈ M.eval x
 
-/-- `M.to_DFA` is an `DFA` constructed from a `NFA` `M` using the subset construction. The
-  states is the type of `set`s of `M.state` and the step function is `M.step_set`. -/
-def to_DFA : DFA α (Set σ) :=
-  { step := M.step_set, start := M.start, accept := { S | ∃ (s : _)(_ : s ∈ S), s ∈ M.accept } }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    `M.to_DFA` is an `DFA` constructed from a `NFA` `M` using the subset construction. The
+      states is the type of `set`s of `M.state` and the step function is `M.step_set`. -/
+  def
+    to_DFA
+    : DFA α Set σ
+    := { step := M.step_set , start := M.start , accept := { S | ∃ ( s : _ ) ( _ : s ∈ S ) , s ∈ M.accept } }
 
-@[simp]
-theorem to_DFA_correct : M.to_DFA.accepts = M.accepts :=
-  by 
-    ext x 
-    rw [accepts, DFA.Accepts, eval, DFA.eval]
-    change List.foldlₓ _ _ _ ∈ { S | _ } ↔ _ 
-    finish
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    to_DFA_correct
+    : M.to_DFA.accepts = M.accepts
+    := by ext x rw [ accepts , DFA.Accepts , eval , DFA.eval ] change List.foldlₓ _ _ _ ∈ { S | _ } ↔ _ finish
 
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
   ∃ a b c,
@@ -81,23 +89,22 @@ namespace DFA
 def to_NFA (M : DFA α σ') : NFA α σ' :=
   { step := fun s a => {M.step s a}, start := {M.start}, accept := M.accept }
 
--- error in Computability.NFA: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem to_NFA_eval_from_match
-(M : DFA α σ)
-(start : σ)
-(s : list α) : «expr = »(M.to_NFA.eval_from {start} s, {M.eval_from start s}) :=
-begin
-  change [expr «expr = »(list.foldl M.to_NFA.step_set {start} s, {list.foldl M.step start s})] [] [],
-  induction [expr s] [] ["with", ident a, ident s, ident ih] ["generalizing", ident start],
-  { tauto [] },
-  { rw ["[", expr list.foldl, ",", expr list.foldl, "]"] [],
-    have [ident h] [":", expr «expr = »(M.to_NFA.step_set {start} a, {M.step start a})] [],
-    { rw [expr NFA.step_set] [],
-      finish [] [] },
-    rw [expr h] [],
-    tauto [] }
-end
+theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
+  M.to_NFA.eval_from {start} s = {M.eval_from start s} :=
+  by 
+    change List.foldlₓ M.to_NFA.step_set {start} s = {List.foldlₓ M.step start s}
+    induction' s with a s ih generalizing start
+    ·
+      tauto
+    ·
+      rw [List.foldlₓ, List.foldlₓ]
+      have h : M.to_NFA.step_set {start} a = {M.step start a}
+      ·
+        rw [NFA.StepSet]
+        finish 
+      rw [h]
+      tauto
 
 @[simp]
 theorem to_NFA_correct (M : DFA α σ) : M.to_NFA.accepts = M.accepts :=
@@ -105,7 +112,7 @@ theorem to_NFA_correct (M : DFA α σ) : M.to_NFA.accepts = M.accepts :=
     ext x 
     change (∃ S H, S ∈ M.to_NFA.eval_from {M.start} x) ↔ _ 
     rw [to_NFA_eval_from_match]
-    split 
+    constructor
     ·
       rintro ⟨S, hS₁, hS₂⟩
       rw [Set.mem_singleton_iff] at hS₂ 

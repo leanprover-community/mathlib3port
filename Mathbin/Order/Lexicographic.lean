@@ -16,7 +16,9 @@ and linear orders.
 
 ## See also
 
-The lexicographic ordering on lists is provided in `data.list.basic`.
+The lexicographic order on lists is provided in `data.list.lex`.
+
+The lexicographic order on a sigma type is to be found in `data.sigma.lex`.
 -/
 
 
@@ -74,11 +76,11 @@ instance lexPreorder [Preorderₓ α] [Preorderₓ β] : Preorderₓ (Lex α β)
     lt_iff_le_not_le :=
       by 
         rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
-        split 
+        constructor
         ·
           rintro (⟨_, _, _, _, hlt⟩ | ⟨_, _, _, hlt⟩)
           ·
-            split 
+            constructor
             ·
               left 
               assumption
@@ -90,7 +92,7 @@ instance lexPreorder [Preorderₓ α] [Preorderₓ β] : Preorderₓ (Lex α β)
               ·
                 apply lt_irreflₓ _ hlt
           ·
-            split 
+            constructor
             ·
               right 
               rw [lt_iff_le_not_leₓ] at hlt 
@@ -112,7 +114,7 @@ instance lexPreorder [Preorderₓ α] [Preorderₓ β] : Preorderₓ (Lex α β)
           ·
             right 
             rw [lt_iff_le_not_leₓ]
-            split 
+            constructor
             ·
               assumption
             ·
@@ -121,21 +123,24 @@ instance lexPreorder [Preorderₓ α] [Preorderₓ β] : Preorderₓ (Lex α β)
               right 
               exact h }
 
--- error in Order.Lexicographic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Dictionary / lexicographic partial_order for pairs. -/
-instance lex_partial_order [partial_order α] [partial_order β] : partial_order (lex α β) :=
-{ le_antisymm := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩", "(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt₁, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt₁, "⟩", ")", "(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt₂, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt₂, "⟩", ")"],
-    { exfalso,
-      exact [expr lt_irrefl a₁ (lt_trans hlt₁ hlt₂)] },
-    { exfalso,
-      exact [expr lt_irrefl a₁ hlt₁] },
-    { exfalso,
-      exact [expr lt_irrefl a₁ hlt₂] },
-    { have [] [] [":=", expr le_antisymm hlt₁ hlt₂],
-      simp [] [] [] ["[", expr this, "]"] [] [] }
-  end,
-  ..lex_preorder }
+instance lexPartialOrder [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (Lex α β) :=
+  { lexPreorder with
+    le_antisymm :=
+      by 
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, _, _, hlt₁⟩ | ⟨_, _, _, hlt₁⟩) (⟨_, _, _, _, hlt₂⟩ | ⟨_, _, _, hlt₂⟩)
+        ·
+          exfalso 
+          exact lt_irreflₓ a₁ (lt_transₓ hlt₁ hlt₂)
+        ·
+          exfalso 
+          exact lt_irreflₓ a₁ hlt₁
+        ·
+          exfalso 
+          exact lt_irreflₓ a₁ hlt₂
+        ·
+          have  := le_antisymmₓ hlt₁ hlt₂ 
+          simp [this] }
 
 /-- Dictionary / lexicographic linear_order for pairs. -/
 instance lexLinearOrder [LinearOrderₓ α] [LinearOrderₓ β] : LinearOrderₓ (Lex α β) :=
@@ -225,14 +230,14 @@ The 'pointwise' partial order `prod.has_le` doesn't make
 sense for dependent pairs, so it's safe to mark these as
 instances here.
 -/
-instance dlexHasLe [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : LE (Σ'a, Z a) :=
+instance dlexHasLe [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : LE (Σ' a, Z a) :=
   { le := Psigma.Lex (· < ·) fun a => · ≤ · }
 
-instance dlexHasLt [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : LT (Σ'a, Z a) :=
+instance dlexHasLt [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : LT (Σ' a, Z a) :=
   { lt := Psigma.Lex (· < ·) fun a => · < · }
 
 /-- Dictionary / lexicographic preorder on dependent pairs. -/
-instance dlexPreorder [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : Preorderₓ (Σ'a, Z a) :=
+instance dlexPreorder [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : Preorderₓ (Σ' a, Z a) :=
   { dlexHasLe, dlexHasLt with
     le_refl :=
       fun ⟨l, r⟩ =>
@@ -261,11 +266,11 @@ instance dlexPreorder [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : Preorderₓ 
     lt_iff_le_not_le :=
       by 
         rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
-        split 
+        constructor
         ·
           rintro (⟨_, _, _, _, hlt⟩ | ⟨_, _, _, hlt⟩)
           ·
-            split 
+            constructor
             ·
               left 
               assumption
@@ -277,7 +282,7 @@ instance dlexPreorder [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : Preorderₓ 
               ·
                 apply lt_irreflₓ _ hlt
           ·
-            split 
+            constructor
             ·
               right 
               rw [lt_iff_le_not_leₓ] at hlt 
@@ -299,7 +304,7 @@ instance dlexPreorder [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : Preorderₓ 
           ·
             right 
             rw [lt_iff_le_not_leₓ]
-            split 
+            constructor
             ·
               assumption
             ·
@@ -308,24 +313,27 @@ instance dlexPreorder [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : Preorderₓ 
               right 
               exact h }
 
--- error in Order.Lexicographic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Dictionary / lexicographic partial_order for dependent pairs. -/
-instance dlex_partial_order [partial_order α] [∀ a, partial_order (Z a)] : partial_order «exprΣ' , »((a), Z a) :=
-{ le_antisymm := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩", "(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt₁, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt₁, "⟩", ")", "(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt₂, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt₂, "⟩", ")"],
-    { exfalso,
-      exact [expr lt_irrefl a₁ (lt_trans hlt₁ hlt₂)] },
-    { exfalso,
-      exact [expr lt_irrefl a₁ hlt₁] },
-    { exfalso,
-      exact [expr lt_irrefl a₁ hlt₂] },
-    { have [] [] [":=", expr le_antisymm hlt₁ hlt₂],
-      simp [] [] [] ["[", expr this, "]"] [] [] }
-  end,
-  ..dlex_preorder }
+instance dlexPartialOrder [PartialOrderₓ α] [∀ a, PartialOrderₓ (Z a)] : PartialOrderₓ (Σ' a, Z a) :=
+  { dlexPreorder with
+    le_antisymm :=
+      by 
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, _, _, hlt₁⟩ | ⟨_, _, _, hlt₁⟩) (⟨_, _, _, _, hlt₂⟩ | ⟨_, _, _, hlt₂⟩)
+        ·
+          exfalso 
+          exact lt_irreflₓ a₁ (lt_transₓ hlt₁ hlt₂)
+        ·
+          exfalso 
+          exact lt_irreflₓ a₁ hlt₁
+        ·
+          exfalso 
+          exact lt_irreflₓ a₁ hlt₂
+        ·
+          have  := le_antisymmₓ hlt₁ hlt₂ 
+          simp [this] }
 
 /-- Dictionary / lexicographic linear_order for pairs. -/
-instance dlexLinearOrder [LinearOrderₓ α] [∀ a, LinearOrderₓ (Z a)] : LinearOrderₓ (Σ'a, Z a) :=
+instance dlexLinearOrder [LinearOrderₓ α] [∀ a, LinearOrderₓ (Z a)] : LinearOrderₓ (Σ' a, Z a) :=
   { dlexPartialOrder with
     le_total :=
       by 

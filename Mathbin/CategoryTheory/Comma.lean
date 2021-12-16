@@ -1,5 +1,6 @@
 import Mathbin.CategoryTheory.Isomorphism 
-import Mathbin.CategoryTheory.FunctorCategory
+import Mathbin.CategoryTheory.FunctorCategory 
+import Mathbin.CategoryTheory.EqToHom
 
 /-!
 # Comma categories
@@ -134,6 +135,28 @@ def snd : comma L R ⥤ B :=
 @[simps]
 def nat_trans : fst L R ⋙ L ⟶ snd L R ⋙ R :=
   { app := fun X => X.hom }
+
+@[simp]
+theorem eq_to_hom_left (X Y : comma L R) (H : X = Y) :
+  comma_morphism.left (eq_to_hom H) =
+    eq_to_hom
+      (by 
+        cases H 
+        rfl) :=
+  by 
+    cases H 
+    rfl
+
+@[simp]
+theorem eq_to_hom_right (X Y : comma L R) (H : X = Y) :
+  comma_morphism.right (eq_to_hom H) =
+    eq_to_hom
+      (by 
+        cases H 
+        rfl) :=
+  by 
+    cases H 
+    rfl
 
 section 
 

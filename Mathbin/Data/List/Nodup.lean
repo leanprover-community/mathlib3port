@@ -79,35 +79,36 @@ theorem nodup_iff_nth_le_inj {l : List α} : nodup l ↔ ∀ i j h₁ h₂, nth_
         ((lt_trichotomyₓ _ _).resolve_left fun h' => H _ _ h₂ h' h).resolve_right fun h' => H _ _ h₁ h' h.symm,
       fun H i j h₁ h₂ h => ne_of_ltₓ h₂ (H _ _ _ _ h)⟩
 
--- error in Data.List.Nodup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nodup.nth_le_inj_iff
-{α : Type*}
-{l : list α}
-(h : nodup l)
-{i j : exprℕ()}
-(hi : «expr < »(i, l.length))
-(hj : «expr < »(j, l.length)) : «expr ↔ »(«expr = »(l.nth_le i hi, l.nth_le j hj), «expr = »(i, j)) :=
-⟨nodup_iff_nth_le_inj.mp h _ _ _ _, by simp [] [] [] [] [] [] { contextual := tt }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  nodup.nth_le_inj_iff
+  { α : Type _ } { l : List α } ( h : nodup l ) { i j : ℕ } ( hi : i < l.length ) ( hj : j < l.length )
+    : l.nth_le i hi = l.nth_le j hj ↔ i = j
+  := ⟨ nodup_iff_nth_le_inj . mp h _ _ _ _ , by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) ⟩
 
--- error in Data.List.Nodup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nodup.ne_singleton_iff
-{l : list α}
-(h : nodup l)
-(x : α) : «expr ↔ »(«expr ≠ »(l, «expr[ , ]»([x])), «expr ∨ »(«expr = »(l, «expr[ , ]»([])), «expr∃ , »((y «expr ∈ » l), «expr ≠ »(y, x)))) :=
-begin
-  induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
-  { simp [] [] [] [] [] [] },
-  { specialize [expr hl (nodup_of_nodup_cons h)],
-    by_cases [expr hx, ":", expr «expr = »(tl, «expr[ , ]»([x]))],
-    { simpa [] [] [] ["[", expr hx, ",", expr and.comm, ",", expr and_or_distrib_left, "]"] [] ["using", expr h] },
-    { rw ["[", "<-", expr ne.def, ",", expr hl, "]"] ["at", ident hx],
-      rcases [expr hx, "with", ident rfl, "|", "⟨", ident y, ",", ident hy, ",", ident hx, "⟩"],
-      { simp [] [] [] [] [] [] },
-      { have [] [":", expr «expr ≠ »(tl, «expr[ , ]»([]))] [":=", expr ne_nil_of_mem hy],
-        suffices [] [":", expr «expr∃ , »((y : α) (H : «expr ∈ »(y, «expr :: »(hd, tl))), «expr ≠ »(y, x))],
-        { simpa [] [] [] ["[", expr ne_nil_of_mem hy, "]"] [] [] },
-        exact [expr ⟨y, mem_cons_of_mem _ hy, hx⟩] } } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
+theorem nodup.ne_singleton_iff {l : List α} (h : nodup l) (x : α) : l ≠ [x] ↔ l = [] ∨ ∃ (y : _)(_ : y ∈ l), y ≠ x :=
+  by 
+    induction' l with hd tl hl
+    ·
+      simp 
+    ·
+      specialize hl (nodup_of_nodup_cons h)
+      byCases' hx : tl = [x]
+      ·
+        simpa [hx, And.comm, and_or_distrib_left] using h
+      ·
+        rw [←Ne.def, hl] at hx 
+        rcases hx with (rfl | ⟨y, hy, hx⟩)
+        ·
+          simp 
+        ·
+          have  : tl ≠ [] := ne_nil_of_mem hy 
+          suffices  : ∃ (y : α)(H : y ∈ hd :: tl), y ≠ x
+          ·
+            simpa [ne_nil_of_mem hy]
+          exact ⟨y, mem_cons_of_mem _ hy, hx⟩
 
 theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length) (hm : m < xs.length)
   (h : xs.nth_le n hn = xs.nth_le m hm) (hne : n ≠ m) : ¬nodup xs :=
@@ -170,6 +171,8 @@ theorem nodup_middle {a : α} {l₁ l₂ : List α} : nodup (l₁ ++ a :: l₂) 
 theorem nodup_of_nodup_map (f : α → β) {l : List α} : nodup (map f l) → nodup l :=
   pairwise_of_pairwise_map f$ fun a b => mt$ congr_argₓ f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
 theorem nodup_map_on {f : α → β} {l : List α} (H : ∀ x _ : x ∈ l, ∀ y _ : y ∈ l, f x = f y → x = y) (d : nodup l) :
   nodup (map f l) :=
   pairwise_map_of_pairwise _
@@ -195,6 +198,8 @@ theorem inj_on_of_nodup_map {f : α → β} {l : List α} (d : nodup (map f l)) 
       ·
         apply ih d.2 h₁ h₂ h₃
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
 theorem nodup_map_iff_inj_on {f : α → β} {l : List α} (d : nodup l) :
   nodup (map f l) ↔ ∀ x _ : x ∈ l y _ : y ∈ l, f x = f y → x = y :=
   ⟨inj_on_of_nodup_map, fun h => nodup_map_on h d⟩
@@ -263,10 +268,12 @@ theorem mem_erase_iff_of_nodup [DecidableEq α] {a b : α} {l} (d : nodup l) : a
 theorem mem_erase_of_nodup [DecidableEq α] {a : α} {l} (h : nodup l) : a ∉ l.erase a :=
   fun H => ((mem_erase_iff_of_nodup h).1 H).1 rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » L)
 theorem nodup_join {L : List (List α)} : nodup (join L) ↔ (∀ l _ : l ∈ L, nodup l) ∧ Pairwise Disjoint L :=
   by 
     simp only [nodup, pairwise_join, disjoint_left.symm, forall_mem_ne]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
 theorem nodup_bind {l₁ : List α} {f : α → List β} :
   nodup (l₁.bind f) ↔ (∀ x _ : x ∈ l₁, nodup (f x)) ∧ Pairwise (fun a b : α => Disjoint (f a) (f b)) l₁ :=
   by 
@@ -315,7 +322,7 @@ theorem nodup_insert [DecidableEq α] {a : α} {l : List α} (h : nodup l) : nod
       rw [insert_of_mem h'] <;> exact h
   else
     by 
-      rw [insert_of_not_mem h', nodup_cons] <;> split  <;> assumption
+      rw [insert_of_not_mem h', nodup_cons] <;> constructor <;> assumption
 
 theorem nodup_union [DecidableEq α] (l₁ : List α) {l₂ : List α} (h : nodup l₂) : nodup (l₁ ∪ l₂) :=
   by 
@@ -379,6 +386,8 @@ theorem nodup.map_update [DecidableEq α] {l : List α} (hl : l.nodup) (f : α �
     ·
       simp [Ne.symm H, H, update_nth, ←apply_ite (cons (f hd))]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.nodup)
   (h : ∀ a _ : a ∈ l b _ : b ∈ l, a ≠ b → r a b) : l.pairwise r :=
   by 
@@ -388,9 +397,12 @@ theorem nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl :
     rw [nodup_iff_count_le_one] at hl 
     exact absurd (hl x) hx.not_le
 
-theorem nodup.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (hl : l.nodup) (h : { x | x ∈ l }.Pairwise r) :
-  l.pairwise r :=
-  hl.pairwise_of_forall_ne h
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  nodup.pairwise_of_set_pairwise
+  { l : List α } { r : α → α → Prop } ( hl : l.nodup ) ( h : { x | x ∈ l } . Pairwise r ) : l.pairwise r
+  := hl.pairwise_of_forall_ne h
 
 end List
 

@@ -26,7 +26,7 @@ open_locale BigOperators
 
 open_locale Matrix
 
-open Equiv
+open Equivₓ
 
 namespace Matrix
 
@@ -65,17 +65,17 @@ theorem vandermonde_succ {n : ℕ} (v : Finₓ n.succ → R) :
     simp only [Finₓ.tail]
 
 theorem vandermonde_mul_vandermonde_transpose {n : ℕ} (v w : Finₓ n → R) i j :
-  (vandermonde v ⬝ (vandermonde w)ᵀ) i j = ∑k : Finₓ n, (v i*w j)^(k : ℕ) :=
+  (vandermonde v ⬝ (vandermonde w)ᵀ) i j = ∑ k : Finₓ n, (v i*w j)^(k : ℕ) :=
   by 
     simp only [vandermonde_apply, Matrix.mul_apply, Matrix.transpose_apply, mul_powₓ]
 
 theorem vandermonde_transpose_mul_vandermonde {n : ℕ} (v : Finₓ n → R) i j :
-  ((vandermonde v)ᵀ ⬝ vandermonde v) i j = ∑k : Finₓ n, v k^(i+j : ℕ) :=
+  ((vandermonde v)ᵀ ⬝ vandermonde v) i j = ∑ k : Finₓ n, v k^(i+j : ℕ) :=
   by 
     simp only [vandermonde_apply, Matrix.mul_apply, Matrix.transpose_apply, pow_addₓ]
 
 theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) :
-  det (vandermonde v) = ∏i : Finₓ n, ∏j in Finset.univ.filter fun j => i < j, v j - v i :=
+  det (vandermonde v) = ∏ i : Finₓ n, ∏ j in Finset.univ.filter fun j => i < j, v j - v i :=
   by 
     unfold vandermonde 
     induction' n with n ih
@@ -97,7 +97,7 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) :
         simpRw [det_succ_column_zero, Finₓ.sum_univ_succ, Finₓ.cons_zero, minor, Finₓ.cons_succ, Finₓ.coe_zero,
           pow_zeroₓ, one_mulₓ, sub_self, mul_zero, zero_mul, Finset.sum_const_zero,
           add_zeroₓ]_ =
-        det fun i j : Finₓ n => (v (Finₓ.succ i) - v 0)*∑k in Finset.range (j+1 : ℕ), (v i.succ^k)*v 0^(j - k : ℕ) :=
+        det fun i j : Finₓ n => (v (Finₓ.succ i) - v 0)*∑ k in Finset.range (j+1 : ℕ), (v i.succ^k)*v 0^(j - k : ℕ) :=
       by 
         congr 
         ext i j 
@@ -105,11 +105,12 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) :
         exact
           (geom_sum₂_mul (v i.succ) (v 0) (j+1 : ℕ)).symm
             _ =
-        (∏i : Finₓ n,
-            v (Finₓ.succ i) - v 0)*det fun i j : Finₓ n => ∑k in Finset.range (j+1 : ℕ), (v i.succ^k)*v 0^(j - k : ℕ) :=
+        (∏ i : Finₓ n,
+            v (Finₓ.succ i) -
+              v 0)*det fun i j : Finₓ n => ∑ k in Finset.range (j+1 : ℕ), (v i.succ^k)*v 0^(j - k : ℕ) :=
       det_mul_column (fun i => v (Finₓ.succ i) - v 0)
-        _ _ = (∏i : Finₓ n, v (Finₓ.succ i) - v 0)*det fun i j : Finₓ n => v (Finₓ.succ i)^(j : ℕ) :=
-      congr_argₓ ((·*·) _) _ _ = ∏i : Finₓ n.succ, ∏j in finset.univ.filter fun j => i < j, v j - v i :=
+        _ _ = (∏ i : Finₓ n, v (Finₓ.succ i) - v 0)*det fun i j : Finₓ n => v (Finₓ.succ i)^(j : ℕ) :=
+      congr_argₓ ((·*·) _) _ _ = ∏ i : Finₓ n.succ, ∏ j in finset.univ.filter fun j => i < j, v j - v i :=
       by 
         simpRw [ih (v ∘ Finₓ.succ), Finₓ.prod_univ_succ, Finₓ.prod_filter_zero_lt, Finₓ.prod_filter_succ_lt]
     ·

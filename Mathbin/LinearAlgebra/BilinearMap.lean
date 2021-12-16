@@ -139,7 +139,7 @@ theorem map_smulₛₗ₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (r
   (flip f y).map_smulₛₗ _ _
 
 theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (t : Finset ι) (x : ι → M) y :
-  f (∑i in t, x i) y = ∑i in t, f (x i) y :=
+  f (∑ i in t, x i) y = ∑ i in t, f (x i) y :=
   (flip f y).map_sum
 
 end Semiringₓ

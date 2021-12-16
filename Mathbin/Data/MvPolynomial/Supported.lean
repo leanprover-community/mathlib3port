@@ -1,4 +1,3 @@
-import Mathbin.RingTheory.Adjoin.Polynomial 
 import Mathbin.Data.MvPolynomial.Variables
 
 /-!
@@ -57,16 +56,16 @@ theorem supported_equiv_mv_polynomial_symm_C (s : Set σ) (x : R) :
 
 @[simp]
 theorem supported_equiv_mv_polynomial_symm_X (s : Set σ) (i : s) :
-  («expr↑ » ((supported_equiv_mv_polynomial s).symm (X i : MvPolynomial s R)) : MvPolynomial σ R) = X i :=
+  (↑(supported_equiv_mv_polynomial s).symm (X i : MvPolynomial s R) : MvPolynomial σ R) = X i :=
   by 
     simp [supported_equiv_mv_polynomial]
 
 variable {s t : Set σ}
 
-theorem mem_supported : p ∈ supported R s ↔ «expr↑ » p.vars ⊆ s :=
+theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s :=
   by 
     rw [supported_eq_range_rename, AlgHom.mem_range]
-    split 
+    constructor
     ·
       rintro ⟨p, rfl⟩
       refine' trans (Finset.coe_subset.2 (vars_rename _ _)) _ 
@@ -78,11 +77,15 @@ theorem mem_supported : p ∈ supported R s ↔ «expr↑ » p.vars ⊆ s :=
           (by 
             simpa)
 
-theorem supported_eq_vars_subset : (supported R s : Set (MvPolynomial σ R)) = { p | «expr↑ » p.vars ⊆ s } :=
-  Set.ext$ fun _ => mem_supported
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  supported_eq_vars_subset
+  : ( supported R s : Set MvPolynomial σ R ) = { p | ↑ p.vars ⊆ s }
+  := Set.ext $ fun _ => mem_supported
 
 @[simp]
-theorem mem_supported_vars (p : MvPolynomial σ R) : p ∈ supported R («expr↑ » p.vars : Set σ) :=
+theorem mem_supported_vars (p : MvPolynomial σ R) : p ∈ supported R (↑p.vars : Set σ) :=
   by 
     rw [mem_supported]
 
@@ -114,7 +117,7 @@ theorem X_mem_supported [Nontrivial R] {i : σ} : X i ∈ supported R s ↔ i �
 @[simp]
 theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported R t ↔ s ⊆ t :=
   by 
-    split 
+    constructor
     ·
       intro h i 
       simpa using @h (X i)

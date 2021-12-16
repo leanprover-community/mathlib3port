@@ -82,7 +82,7 @@ theorem injective.is_fixed_pt_apply_iff (hf : injective f) {x : α} : is_fixed_p
 
 /-- The set of fixed points of a map `f : α → α`. -/
 def fixed_points (f : α → α) : Set α :=
-  { x:α | is_fixed_pt f x }
+  { x : α | is_fixed_pt f x }
 
 instance fixed_points.decidable [DecidableEq α] (f : α → α) (x : α) : Decidable (x ∈ fixed_points f) :=
   is_fixed_pt.decidable

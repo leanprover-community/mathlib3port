@@ -33,7 +33,7 @@ The ring of Witt vectors is the projective limit of all the rings of truncated W
 
 open function(Injective Surjective)
 
-noncomputable theory
+noncomputable section 
 
 variable {p : ℕ} [hp : Fact p.prime] (n : ℕ) (R : Type _)
 
@@ -113,7 +113,7 @@ theorem out_injective : injective (@out p n R _) :=
     intro x y h 
     ext i 
     rw [WittVector.ext_iff] at h 
-    simpa only [coeff_out] using h («expr↑ » i)
+    simpa only [coeff_out] using h (↑i)
 
 end TruncatedWittVector
 
@@ -194,6 +194,7 @@ theorem coeff_zero (i : Finₓ n) : (0 : TruncatedWittVector p n R).coeff i = 0 
 
 end TruncatedWittVector
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- A macro tactic used to prove that `truncate_fun` respects ring operations. -/
 unsafe def tactic.interactive.witt_truncate_fun_tac : tactic Unit :=
   sorry
@@ -284,6 +285,7 @@ theorem coeff_truncate (x : 𝕎 R) (i : Finₓ n) : (truncate n x).coeff i = x.
 
 variable (n)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » n)
 theorem mem_ker_truncate (x : 𝕎 R) : x ∈ (@truncate p _ n R _).ker ↔ ∀ i _ : i < n, x.coeff i = 0 :=
   by 
     simp only [RingHom.mem_ker, truncate, truncate_fun, RingHom.coe_mk, TruncatedWittVector.ext_iff,
@@ -371,7 +373,7 @@ theorem card {R : Type _} [Fintype R] : Fintype.card (TruncatedWittVector p n R)
 
 end Fintype
 
-theorem infi_ker_truncate : (⨅i : ℕ, (@WittVector.truncate p _ i R _).ker) = ⊥ :=
+theorem infi_ker_truncate : (⨅ i : ℕ, (@WittVector.truncate p _ i R _).ker) = ⊥ :=
   by 
     rw [Submodule.eq_bot_iff]
     intro x hx 

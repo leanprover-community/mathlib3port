@@ -31,7 +31,7 @@ so the definition does not apply. Hence the definition should be more general, a
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Manifold
 

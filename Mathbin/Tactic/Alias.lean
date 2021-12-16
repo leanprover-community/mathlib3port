@@ -138,7 +138,7 @@ unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse$ tk "alias") : lean
     (do 
           tk "←" <|> tk "<-"
           let aliases ← many ident
-          «expr↑ » (aliases.mmap'$ fun al => alias_direct d (doc al) al)) <|>
+          ↑(aliases.mmap'$ fun al => alias_direct d (doc al) al)) <|>
         do 
           tk "↔" <|> tk "<->"
           let (left, right) ←

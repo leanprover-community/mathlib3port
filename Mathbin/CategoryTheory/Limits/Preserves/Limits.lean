@@ -15,7 +15,7 @@ The duals of these are also given. For functors which preserve (co)limits of spe
 
 universe v u₁ u₂
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -66,6 +66,20 @@ theorem lift_comp_preserves_limits_iso_hom (t : cone F) :
     ext 
     simp [←G.map_comp]
 
+variable [preserves_limits_of_shape J G] [has_limits_of_shape J D] [has_limits_of_shape J C]
+
+/-- If `C, D` has all limits of shape `J`, and `G` preserves them, then `preserves_limit_iso` is
+functorial wrt `F`. -/
+@[simps]
+def preserves_limit_nat_iso : lim ⋙ G ≅ (whiskering_right J C D).obj G ⋙ lim :=
+  nat_iso.of_components (fun F => preserves_limit_iso G F)
+    (by 
+      intro _ _ f 
+      ext 
+      dsimp 
+      simp only [preserves_limits_iso_hom_π, whisker_right_app, lim_map_π, category.assoc,
+        preserves_limits_iso_hom_π_assoc, ←G.map_comp])
+
 end 
 
 section 
@@ -104,6 +118,23 @@ theorem preserves_colimits_iso_inv_comp_desc (t : cocone F) :
   by 
     ext 
     simp [←G.map_comp]
+
+variable [preserves_colimits_of_shape J G] [has_colimits_of_shape J D] [has_colimits_of_shape J C]
+
+/-- If `C, D` has all colimits of shape `J`, and `G` preserves them, then `preserves_colimit_iso`
+is functorial wrt `F`. -/
+@[simps]
+def preserves_colimit_nat_iso : colim ⋙ G ≅ (whiskering_right J C D).obj G ⋙ colim :=
+  nat_iso.of_components (fun F => preserves_colimit_iso G F)
+    (by 
+      intro _ _ f 
+      rw [←iso.inv_comp_eq, ←category.assoc, ←iso.eq_comp_inv]
+      ext 
+      dsimp 
+      erw [ι_colim_map_assoc]
+      simp only [ι_preserves_colimits_iso_inv, whisker_right_app, category.assoc, ι_preserves_colimits_iso_inv_assoc,
+        ←G.map_comp]
+      erw [ι_colim_map])
 
 end 
 

@@ -27,109 +27,202 @@ variable {C : Type u₁} [category.{v₁} C] [monoidal_category.{v₁} C]
 
 variable {D : Type u₂} [category.{v₂} D]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-Transport a monoidal structure along an equivalence of (plain) categories.
--/
-@[simps]
-def transport (e : C ≌ D) : monoidal_category.{v₂} D :=
-  { tensorObj := fun X Y => e.functor.obj (e.inverse.obj X ⊗ e.inverse.obj Y),
-    tensorHom := fun W X Y Z f g => e.functor.map (e.inverse.map f ⊗ e.inverse.map g),
-    tensorUnit := e.functor.obj (𝟙_ C),
-    associator :=
-      fun X Y Z =>
-        e.functor.map_iso
-          (((e.unit_iso.app _).symm ⊗ iso.refl _) ≪≫
-            α_ (e.inverse.obj X) (e.inverse.obj Y) (e.inverse.obj Z) ≪≫ (iso.refl _ ⊗ e.unit_iso.app _)),
-    leftUnitor :=
-      fun X => e.functor.map_iso (((e.unit_iso.app _).symm ⊗ iso.refl _) ≪≫ λ_ (e.inverse.obj X)) ≪≫ e.counit_iso.app _,
-    rightUnitor :=
-      fun X => e.functor.map_iso ((iso.refl _ ⊗ (e.unit_iso.app _).symm) ≪≫ ρ_ (e.inverse.obj X)) ≪≫ e.counit_iso.app _,
-    triangle' :=
-      fun X Y =>
-        by 
-          dsimp 
-          simp only [iso.hom_inv_id_app_assoc, comp_tensor_id, equivalence.unit_inverse_comp, assoc,
-            equivalence.inv_fun_map, comp_id, functor.map_comp, id_tensor_comp, e.inverse.map_id]
-          simp only [←e.functor.map_comp]
-          congr 2
-          sliceLHS 2 3 => rw [←id_tensor_comp]simp dsimp rw [tensor_id]
-          rw [category.id_comp, ←associator_naturality_assoc, triangle],
-    pentagon' :=
-      fun W X Y Z =>
-        by 
-          dsimp 
-          simp only [iso.hom_inv_id_app_assoc, comp_tensor_id, assoc, equivalence.inv_fun_map, functor.map_comp,
-            id_tensor_comp, e.inverse.map_id]
-          simp only [←e.functor.map_comp]
-          congr 2
-          sliceLHS 4 5 => rw [←comp_tensor_id, iso.hom_inv_id_app]dsimp rw [tensor_id]
-          simp only [category.id_comp, category.assoc]
-          sliceLHS 5 6 => rw [←id_tensor_comp, iso.hom_inv_id_app]dsimp rw [tensor_id]
-          simp only [category.id_comp, category.assoc]
-          sliceRHS 2 3 => rw [id_tensor_comp_tensor_id, ←tensor_id_comp_id_tensor]
-          sliceRHS 1 2 => rw [←tensor_id, ←associator_naturality]
-          sliceRHS 3 4 => rw [←tensor_id, associator_naturality]
-          sliceRHS 2 3 => rw [←pentagon]
-          simp only [category.assoc]
-          congr 2
-          sliceLHS 1 2 => rw [associator_naturality]
-          simp only [category.assoc]
-          congr 1
-          sliceLHS 1 2 => rw [←id_tensor_comp, ←comp_tensor_id, iso.hom_inv_id_app]dsimp rw [tensor_id, tensor_id]
-          simp only [category.id_comp, category.assoc],
-    left_unitor_naturality' :=
-      fun X Y f =>
-        by 
-          dsimp 
-          simp only [functor.map_comp, Functor.map_id, category.assoc]
-          erw [←e.counit_iso.hom.naturality]
-          simp only [functor.comp_map, ←e.functor.map_comp_assoc]
-          congr 2
-          rw [e.inverse.map_id, id_tensor_comp_tensor_id_assoc, ←tensor_id_comp_id_tensor_assoc,
-            left_unitor_naturality],
-    right_unitor_naturality' :=
-      fun X Y f =>
-        by 
-          dsimp 
-          simp only [functor.map_comp, Functor.map_id, category.assoc]
-          erw [←e.counit_iso.hom.naturality]
-          simp only [functor.comp_map, ←e.functor.map_comp_assoc]
-          congr 2
-          rw [e.inverse.map_id, tensor_id_comp_id_tensor_assoc, ←id_tensor_comp_tensor_id_assoc,
-            right_unitor_naturality],
-    associator_naturality' :=
-      fun X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ =>
-        by 
-          dsimp 
-          simp only [equivalence.inv_fun_map, functor.map_comp, category.assoc]
-          simp only [←e.functor.map_comp]
-          congr 1
-          convLHS => rw [←tensor_id_comp_id_tensor]
-          sliceLHS 2 3 => rw [id_tensor_comp_tensor_id, ←tensor_id_comp_id_tensor, ←tensor_id]
-          simp only [category.assoc]
-          sliceLHS 3 4 => rw [associator_naturality]
-          convLHS => simp only [comp_tensor_id]
-          sliceLHS 3 4 => rw [←comp_tensor_id, iso.hom_inv_id_app]dsimp rw [tensor_id]
-          simp only [category.id_comp, category.assoc]
-          sliceLHS 2 3 => rw [associator_naturality]
-          simp only [category.assoc]
-          congr 2
-          sliceLHS 1 1 => rw [←tensor_id_comp_id_tensor]
-          sliceLHS 2 3 => rw [←id_tensor_comp, tensor_id_comp_id_tensor]
-          sliceLHS 1 2 => rw [tensor_id_comp_id_tensor]
-          convRHS => congr skip rw [←id_tensor_comp_tensor_id, id_tensor_comp]
-          simp only [category.assoc]
-          sliceRHS 1 2 => rw [←id_tensor_comp, iso.hom_inv_id_app]dsimp rw [tensor_id]
-          simp only [category.id_comp, category.assoc]
-          convRHS => rw [id_tensor_comp]
-          sliceRHS 2 3 => rw [id_tensor_comp_tensor_id, ←tensor_id_comp_id_tensor]
-          sliceRHS 1 2 => rw [id_tensor_comp_tensor_id] }
+      Transport a monoidal structure along an equivalence of (plain) categories.
+      -/
+    @[ simps ]
+  def
+    transport
+    ( e : C ≌ D ) : monoidal_category .{ v₂ } D
+    :=
+      {
+        tensorObj := fun X Y => e.functor.obj e.inverse.obj X ⊗ e.inverse.obj Y ,
+          tensorHom := fun W X Y Z f g => e.functor.map e.inverse.map f ⊗ e.inverse.map g ,
+          tensorUnit := e.functor.obj 𝟙_ C ,
+          associator
+              :=
+              fun
+                X Y Z
+                  =>
+                  e.functor.map_iso
+                    e.unit_iso.app _ . symm ⊗ iso.refl _
+                      ≪≫
+                      α_ e.inverse.obj X e.inverse.obj Y e.inverse.obj Z ≪≫ iso.refl _ ⊗ e.unit_iso.app _
+            ,
+          leftUnitor
+              :=
+              fun
+                X => e.functor.map_iso e.unit_iso.app _ . symm ⊗ iso.refl _ ≪≫ λ_ e.inverse.obj X ≪≫ e.counit_iso.app _
+            ,
+          rightUnitor
+              :=
+              fun
+                X => e.functor.map_iso iso.refl _ ⊗ e.unit_iso.app _ . symm ≪≫ ρ_ e.inverse.obj X ≪≫ e.counit_iso.app _
+            ,
+          triangle'
+              :=
+              fun
+                X Y
+                  =>
+                  by
+                    dsimp
+                      simp
+                        only
+                        [
+                          iso.hom_inv_id_app_assoc
+                            ,
+                            comp_tensor_id
+                            ,
+                            equivalence.unit_inverse_comp
+                            ,
+                            assoc
+                            ,
+                            equivalence.inv_fun_map
+                            ,
+                            comp_id
+                            ,
+                            functor.map_comp
+                            ,
+                            id_tensor_comp
+                            ,
+                            e.inverse.map_id
+                          ]
+                      simp only [ ← e.functor.map_comp ]
+                      congr 2
+                      sliceLHS 2 3 => rw [ ← id_tensor_comp ] simp dsimp rw [ tensor_id ]
+                      rw [ category.id_comp , ← associator_naturality_assoc , triangle ]
+            ,
+          pentagon'
+              :=
+              fun
+                W X Y Z
+                  =>
+                  by
+                    dsimp
+                      simp
+                        only
+                        [
+                          iso.hom_inv_id_app_assoc
+                            ,
+                            comp_tensor_id
+                            ,
+                            assoc
+                            ,
+                            equivalence.inv_fun_map
+                            ,
+                            functor.map_comp
+                            ,
+                            id_tensor_comp
+                            ,
+                            e.inverse.map_id
+                          ]
+                      simp only [ ← e.functor.map_comp ]
+                      congr 2
+                      sliceLHS 4 5 => rw [ ← comp_tensor_id , iso.hom_inv_id_app ] dsimp rw [ tensor_id ]
+                      simp only [ category.id_comp , category.assoc ]
+                      sliceLHS 5 6 => rw [ ← id_tensor_comp , iso.hom_inv_id_app ] dsimp rw [ tensor_id ]
+                      simp only [ category.id_comp , category.assoc ]
+                      sliceRHS 2 3 => rw [ id_tensor_comp_tensor_id , ← tensor_id_comp_id_tensor ]
+                      sliceRHS 1 2 => rw [ ← tensor_id , ← associator_naturality ]
+                      sliceRHS 3 4 => rw [ ← tensor_id , associator_naturality ]
+                      sliceRHS 2 3 => rw [ ← pentagon ]
+                      simp only [ category.assoc ]
+                      congr 2
+                      sliceLHS 1 2 => rw [ associator_naturality ]
+                      simp only [ category.assoc ]
+                      congr 1
+                      sliceLHS
+                        1
+                        2
+                        =>
+                        rw [ ← id_tensor_comp , ← comp_tensor_id , iso.hom_inv_id_app ]
+                          dsimp
+                          rw [ tensor_id , tensor_id ]
+                      simp only [ category.id_comp , category.assoc ]
+            ,
+          left_unitor_naturality'
+              :=
+              fun
+                X Y f
+                  =>
+                  by
+                    dsimp
+                      simp only [ functor.map_comp , Functor.map_id , category.assoc ]
+                      erw [ ← e.counit_iso.hom.naturality ]
+                      simp only [ functor.comp_map , ← e.functor.map_comp_assoc ]
+                      congr 2
+                      rw
+                        [
+                          e.inverse.map_id
+                            ,
+                            id_tensor_comp_tensor_id_assoc
+                            ,
+                            ← tensor_id_comp_id_tensor_assoc
+                            ,
+                            left_unitor_naturality
+                          ]
+            ,
+          right_unitor_naturality'
+              :=
+              fun
+                X Y f
+                  =>
+                  by
+                    dsimp
+                      simp only [ functor.map_comp , Functor.map_id , category.assoc ]
+                      erw [ ← e.counit_iso.hom.naturality ]
+                      simp only [ functor.comp_map , ← e.functor.map_comp_assoc ]
+                      congr 2
+                      rw
+                        [
+                          e.inverse.map_id
+                            ,
+                            tensor_id_comp_id_tensor_assoc
+                            ,
+                            ← id_tensor_comp_tensor_id_assoc
+                            ,
+                            right_unitor_naturality
+                          ]
+            ,
+          associator_naturality'
+            :=
+            fun
+              X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃
+                =>
+                by
+                  dsimp
+                    simp only [ equivalence.inv_fun_map , functor.map_comp , category.assoc ]
+                    simp only [ ← e.functor.map_comp ]
+                    congr 1
+                    convLHS => rw [ ← tensor_id_comp_id_tensor ]
+                    sliceLHS 2 3 => rw [ id_tensor_comp_tensor_id , ← tensor_id_comp_id_tensor , ← tensor_id ]
+                    simp only [ category.assoc ]
+                    sliceLHS 3 4 => rw [ associator_naturality ]
+                    convLHS => simp only [ comp_tensor_id ]
+                    sliceLHS 3 4 => rw [ ← comp_tensor_id , iso.hom_inv_id_app ] dsimp rw [ tensor_id ]
+                    simp only [ category.id_comp , category.assoc ]
+                    sliceLHS 2 3 => rw [ associator_naturality ]
+                    simp only [ category.assoc ]
+                    congr 2
+                    sliceLHS 1 1 => rw [ ← tensor_id_comp_id_tensor ]
+                    sliceLHS 2 3 => rw [ ← id_tensor_comp , tensor_id_comp_id_tensor ]
+                    sliceLHS 1 2 => rw [ tensor_id_comp_id_tensor ]
+                    convRHS => congr skip rw [ ← id_tensor_comp_tensor_id , id_tensor_comp ]
+                    simp only [ category.assoc ]
+                    sliceRHS 1 2 => rw [ ← id_tensor_comp , iso.hom_inv_id_app ] dsimp rw [ tensor_id ]
+                    simp only [ category.id_comp , category.assoc ]
+                    convRHS => rw [ id_tensor_comp ]
+                    sliceRHS 2 3 => rw [ id_tensor_comp_tensor_id , ← tensor_id_comp_id_tensor ]
+                    sliceRHS 1 2 => rw [ id_tensor_comp_tensor_id ]
+        }
 
--- error in CategoryTheory.Monoidal.Transport: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- A type synonym for `D`, which will carry the transported monoidal structure. -/
-@[derive #[expr category], nolint #[ident unused_arguments]]
-def transported (e : «expr ≌ »(C, D)) :=
-D
+@[nolint unused_arguments]
+def transported (e : C ≌ D) :=
+  D deriving [anonymous]
 
 instance (e : C ≌ D) : monoidal_category (transported e) :=
   transport e

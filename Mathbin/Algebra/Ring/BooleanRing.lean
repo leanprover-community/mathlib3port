@@ -197,7 +197,7 @@ theorem sup_inf_sdiff (a b : α) : a⊓b⊔a \ b = a :=
       rw [add_self, add_zeroₓ]
     
 
-theorem inf_inf_sdiff (a b : α) : a⊓b⊓(a \ b) = ⊥ :=
+theorem inf_inf_sdiff (a b : α) : a⊓b⊓a \ b = ⊥ :=
   calc ((a*b)*a*1+b) = (a*a)*b*1+b :=
     by 
       acRfl 

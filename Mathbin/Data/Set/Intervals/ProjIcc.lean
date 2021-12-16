@@ -48,15 +48,16 @@ theorem proj_Icc_eq_left (h : a < b) : proj_Icc a b h.le x = ⟨a, left_mem_Icc.
     simpRw [Subtype.ext_iff_val, proj_Icc, max_eq_left_iff, min_le_iff, h.not_le, false_orₓ]  at h' 
     exact h'
 
--- error in Data.Set.Intervals.ProjIcc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem proj_Icc_eq_right
-(h : «expr < »(a, b)) : «expr ↔ »(«expr = »(proj_Icc a b h.le x, ⟨b, right_mem_Icc.mpr h.le⟩), «expr ≤ »(b, x)) :=
-begin
-  refine [expr ⟨λ h', _, proj_Icc_of_right_le _⟩],
-  simp_rw ["[", expr subtype.ext_iff_val, ",", expr proj_Icc, "]"] ["at", ident h'],
-  have [] [] [":=", expr ((max_choice _ _).resolve_left (by simp [] [] [] ["[", expr h.ne', ",", expr h', "]"] [] [])).symm.trans h'],
-  exact [expr min_eq_left_iff.mp this]
-end
+theorem proj_Icc_eq_right (h : a < b) : proj_Icc a b h.le x = ⟨b, right_mem_Icc.mpr h.le⟩ ↔ b ≤ x :=
+  by 
+    refine' ⟨fun h' => _, proj_Icc_of_right_le _⟩
+    simpRw [Subtype.ext_iff_val, proj_Icc]  at h' 
+    have  :=
+      ((max_choice _ _).resolve_left
+              (by 
+                simp [h.ne', h'])).symm.trans
+        h' 
+    exact min_eq_left_iff.mp this
 
 theorem proj_Icc_of_mem (hx : x ∈ Icc a b) : proj_Icc a b h x = ⟨x, hx⟩ :=
   by 

@@ -28,15 +28,16 @@ end Tree
 
 namespace Tactic.Ring2
 
--- error in Tactic.Ring2: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
 /-- A reflected/meta representation of an expression in a commutative
 semiring. This representation is a direct translation of such
-expressions - see `horner_expr` for a normal form. -/ @[derive #[expr has_reflect]] inductive csring_expr
-| atom : pos_num → csring_expr
-| const : num → csring_expr
-| add : csring_expr → csring_expr → csring_expr
-| mul : csring_expr → csring_expr → csring_expr
-| pow : csring_expr → num → csring_expr
+expressions - see `horner_expr` for a normal form. -/
+inductive csring_expr
+  | atom : PosNum → csring_expr
+  | const : Num → csring_expr
+  | add : csring_expr → csring_expr → csring_expr
+  | mul : csring_expr → csring_expr → csring_expr
+  | pow : csring_expr → Num → csring_expr deriving [anonymous]
 
 namespace CsringExpr
 
@@ -55,14 +56,15 @@ def eval {α} [CommSemiringₓ α] (t : Tree α) : csring_expr → α
 
 end CsringExpr
 
--- error in Tactic.Ring2: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- An efficient representation of expressions in a commutative
 semiring using the sparse Horner normal form. This type admits
 non-optimal instantiations (e.g. `P` can be represented as `P+0+0`),
 so to get good performance out of it, care must be taken to maintain
-an optimal, *canonical* form. -/ @[derive #[expr decidable_eq]] inductive horner_expr
-| const : znum → horner_expr
-| horner : horner_expr → pos_num → num → horner_expr → horner_expr
+an optimal, *canonical* form. -/
+inductive horner_expr
+  | const : Znum → horner_expr
+  | horner : horner_expr → PosNum → Num → horner_expr → horner_expr deriving [anonymous]
 
 namespace HornerExpr
 
@@ -199,6 +201,9 @@ theorem cseval_atom {α} [CommSemiringₓ α] (t : Tree α) (n : PosNum) :
   (atom n).IsCs ∧ cseval t (atom n) = t.get_or_zero n :=
   ⟨⟨⟨1, rfl⟩, ⟨0, rfl⟩⟩, (Tactic.Ring.horner_atomₓ _).symm⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem cseval_add_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : horner_expr} (cs : e.is_cs) :
   (add_const k.to_znum e).IsCs ∧ cseval t (add_const k.to_znum e) = k+cseval t e :=
   by 
@@ -223,6 +228,8 @@ theorem cseval_add_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : 
       rw [←Tactic.Ring.horner_add_constₓ, add_commₓ]
       rw [add_commₓ]
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) a x n b (h₁ : is_cs a) (h₂ : is_cs b) :
   (horner' a x n b).IsCs ∧
     cseval t (horner' a x n b) = Tactic.Ring.hornerₓ (cseval t a) (t.get_or_zero x) n (cseval t b) :=
@@ -240,71 +247,90 @@ theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) a x n b (h₁ : i
     ·
       exact ⟨⟨h₁, h₂⟩, rfl⟩
 
--- error in Tactic.Ring2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cseval_add
-{α}
-[comm_semiring α]
-(t : tree α)
-{e₁ e₂ : horner_expr}
-(cs₁ : e₁.is_cs)
-(cs₂ : e₂.is_cs) : «expr ∧ »((add e₁ e₂).is_cs, «expr = »(cseval t (add e₁ e₂), «expr + »(cseval t e₁, cseval t e₂))) :=
-begin
-  induction [expr e₁] [] ["with", ident n₁, ident a₁, ident x₁, ident n₁, ident b₁, ident A₁, ident B₁] ["generalizing", ident e₂]; simp ["!"] [] [] [] [] [],
-  { rcases [expr cs₁, "with", "⟨", ident n₁, ",", ident rfl, "⟩"],
-    simpa [] [] [] [] [] ["using", expr cseval_add_const t n₁ cs₂] },
-  induction [expr e₂] [] ["with", ident n₂, ident a₂, ident x₂, ident n₂, ident b₂, ident A₂, ident B₂] ["generalizing", ident n₁, ident b₁],
-  { rcases [expr cs₂, "with", "⟨", ident n₂, ",", ident rfl, "⟩"],
-    simp ["!"] [] [] ["[", expr cseval_add_const t n₂ cs₁, ",", expr add_comm, "]"] [] [] },
-  cases [expr cs₁] ["with", ident csa₁, ident csb₁],
-  cases [expr id cs₂] ["with", ident csa₂, ident csb₂],
-  simp ["!"] [] [] [] [] [],
-  have [ident C] [] [":=", expr pos_num.cmp_to_nat x₁ x₂],
-  cases [expr pos_num.cmp x₁ x₂] []; simp ["!"] [] [] [] [] [],
-  { rcases [expr B₁ csb₁ cs₂, "with", "⟨", ident csh, ",", ident h, "⟩"],
-    refine [expr ⟨⟨csa₁, csh⟩, eq.symm _⟩],
-    apply [expr tactic.ring.horner_add_const],
-    exact [expr h.symm] },
-  { cases [expr C] [],
-    have [ident B0] [":", expr is_cs 0 → ∀
-     {e₂ : horner_expr}, is_cs e₂ → «expr ∧ »(is_cs (add 0 e₂), «expr = »(cseval t (add 0 e₂), «expr + »(cseval t 0, cseval t e₂)))] [":=", expr λ
-     _ e₂ c, ⟨c, (zero_add _).symm⟩],
-    cases [expr e, ":", expr num.sub' n₁ n₂] ["with", ident k, ident k]; simp ["!"] [] [] [] [] [],
-    { have [] [":", expr «expr = »(n₁, n₂)] [],
-      { have [] [] [":=", expr congr_arg (coe : znum → exprℤ()) e],
-        simp [] [] [] [] [] ["at", ident this],
-        have [] [] [":=", expr sub_eq_zero.1 this],
-        rw ["[", "<-", expr num.to_nat_to_int, ",", "<-", expr num.to_nat_to_int, "]"] ["at", ident this],
-        exact [expr num.to_nat_inj.1 (int.coe_nat_inj this)] },
-      subst [expr n₂],
-      rcases [expr cseval_horner' _ _ _ _ _ _ _, "with", "⟨", ident csh, ",", ident h, "⟩"],
-      { refine [expr ⟨csh, h.trans (eq.symm _)⟩],
-        simp [] [] [] ["*"] [] [],
-        apply [expr tactic.ring.horner_add_horner_eq]; try { refl } },
-      all_goals { simp ["!"] [] [] ["*"] [] [] } },
-    { simp [] [] [] ["[", expr B₁ csb₁ csb₂, ",", expr add_comm, "]"] [] [],
-      rcases [expr A₂ csa₂ _ _ B0 ⟨csa₁, 0, rfl⟩, "with", "⟨", ident csh, ",", ident h, "⟩"],
-      refine [expr ⟨csh, eq.symm _⟩],
-      rw ["[", expr show «expr = »(id, add 0), from rfl, ",", expr h, "]"] [],
-      apply [expr tactic.ring.horner_add_horner_gt],
-      { change [expr «expr = »((«expr + »(_, k) : exprℕ()), _)] [] [],
-        rw ["[", "<-", expr int.coe_nat_inj', ",", expr int.coe_nat_add, ",", expr eq_comm, ",", "<-", expr sub_eq_iff_eq_add', "]"] [],
-        simpa [] [] [] [] [] ["using", expr congr_arg (coe : znum → exprℤ()) e] },
-      { refl },
-      { apply [expr add_comm] } },
-    { have [] [":", expr (horner a₂ x₁ (num.pos k) 0).is_cs] [":=", expr ⟨csa₂, 0, rfl⟩],
-      simp [] [] [] ["[", expr B₁ csb₁ csb₂, ",", expr A₁ csa₁ this, "]"] [] [],
-      symmetry,
-      apply [expr tactic.ring.horner_add_horner_lt],
-      { change [expr «expr = »((«expr + »(_, k) : exprℕ()), _)] [] [],
-        rw ["[", "<-", expr int.coe_nat_inj', ",", expr int.coe_nat_add, ",", expr eq_comm, ",", "<-", expr sub_eq_iff_eq_add', ",", "<-", expr neg_inj, ",", expr neg_sub, "]"] [],
-        simpa [] [] [] [] [] ["using", expr congr_arg (coe : znum → exprℤ()) e] },
-      all_goals { refl } } },
-  { rcases [expr B₂ csb₂ _ _ B₁ ⟨csa₁, csb₁⟩, "with", "⟨", ident csh, ",", ident h, "⟩"],
-    refine [expr ⟨⟨csa₂, csh⟩, eq.symm _⟩],
-    apply [expr tactic.ring.const_add_horner],
-    simp [] [] [] ["[", expr h, "]"] [] [] }
-end
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_expr} (cs₁ : e₁.is_cs) (cs₂ : e₂.is_cs) :
+  (add e₁ e₂).IsCs ∧ cseval t (add e₁ e₂) = cseval t e₁+cseval t e₂ :=
+  by 
+    induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp 
+    ·
+      rcases cs₁ with ⟨n₁, rfl⟩
+      simpa using cseval_add_const t n₁ cs₂ 
+    induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂ generalizing n₁ b₁
+    ·
+      rcases cs₂ with ⟨n₂, rfl⟩
+      simp [cseval_add_const t n₂ cs₁, add_commₓ]
+    cases' cs₁ with csa₁ csb₁ 
+    cases' id cs₂ with csa₂ csb₂ 
+    simp 
+    have C := PosNum.cmp_to_nat x₁ x₂ 
+    cases PosNum.cmp x₁ x₂ <;> simp 
+    ·
+      rcases B₁ csb₁ cs₂ with ⟨csh, h⟩
+      refine' ⟨⟨csa₁, csh⟩, Eq.symm _⟩
+      apply Tactic.Ring.horner_add_constₓ 
+      exact h.symm
+    ·
+      cases C 
+      have B0 :
+        is_cs 0 → ∀ {e₂ : horner_expr}, is_cs e₂ → is_cs (add 0 e₂) ∧ cseval t (add 0 e₂) = cseval t 0+cseval t e₂ :=
+        fun _ e₂ c => ⟨c, (zero_addₓ _).symm⟩
+      cases' e : Num.sub' n₁ n₂ with k k <;> simp 
+      ·
+        have  : n₁ = n₂
+        ·
+          have  := congr_argₓ (coeₓ : Znum → ℤ) e 
+          simp  at this 
+          have  := sub_eq_zero.1 this 
+          rw [←Num.to_nat_to_int, ←Num.to_nat_to_int] at this 
+          exact Num.to_nat_inj.1 (Int.coe_nat_inj this)
+        subst n₂ 
+        rcases cseval_horner' _ _ _ _ _ _ _ with ⟨csh, h⟩
+        ·
+          refine' ⟨csh, h.trans (Eq.symm _)⟩
+          simp 
+          apply Tactic.Ring.horner_add_horner_eqₓ <;>
+            try 
+              rfl 
+        all_goals 
+          simp 
+      ·
+        simp [B₁ csb₁ csb₂, add_commₓ]
+        rcases A₂ csa₂ _ _ B0 ⟨csa₁, 0, rfl⟩ with ⟨csh, h⟩
+        refine' ⟨csh, Eq.symm _⟩
+        rw [show id = add 0 from rfl, h]
+        apply Tactic.Ring.horner_add_horner_gtₓ
+        ·
+          change (_+k : ℕ) = _ 
+          rw [←Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ←sub_eq_iff_eq_add']
+          simpa using congr_argₓ (coeₓ : Znum → ℤ) e
+        ·
+          rfl
+        ·
+          apply add_commₓ
+      ·
+        have  : (horner a₂ x₁ (Num.pos k) 0).IsCs := ⟨csa₂, 0, rfl⟩
+        simp [B₁ csb₁ csb₂, A₁ csa₁ this]
+        symm 
+        apply Tactic.Ring.horner_add_horner_ltₓ
+        ·
+          change (_+k : ℕ) = _ 
+          rw [←Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ←sub_eq_iff_eq_add', ←neg_inj, neg_sub]
+          simpa using congr_argₓ (coeₓ : Znum → ℤ) e 
+        all_goals 
+          rfl
+    ·
+      rcases B₂ csb₂ _ _ B₁ ⟨csa₁, csb₁⟩ with ⟨csh, h⟩
+      refine' ⟨⟨csa₂, csh⟩, Eq.symm _⟩
+      apply Tactic.Ring.const_add_hornerₓ 
+      simp [h]
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : horner_expr} (cs : e.is_cs) :
   (mul_const k.to_znum e).IsCs ∧ cseval t (mul_const k.to_znum e) = cseval t e*k :=
   by 
@@ -332,49 +358,61 @@ theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : 
       symm 
       apply Tactic.Ring.horner_mul_constₓ <;> rfl
 
--- error in Tactic.Ring2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cseval_mul
-{α}
-[comm_semiring α]
-(t : tree α)
-{e₁ e₂ : horner_expr}
-(cs₁ : e₁.is_cs)
-(cs₂ : e₂.is_cs) : «expr ∧ »((mul e₁ e₂).is_cs, «expr = »(cseval t (mul e₁ e₂), «expr * »(cseval t e₁, cseval t e₂))) :=
-begin
-  induction [expr e₁] [] ["with", ident n₁, ident a₁, ident x₁, ident n₁, ident b₁, ident A₁, ident B₁] ["generalizing", ident e₂]; simp ["!"] [] [] [] [] [],
-  { rcases [expr cs₁, "with", "⟨", ident n₁, ",", ident rfl, "⟩"],
-    simpa [] [] [] ["[", expr mul_comm, "]"] [] ["using", expr cseval_mul_const t n₁ cs₂] },
-  induction [expr e₂] [] ["with", ident n₂, ident a₂, ident x₂, ident n₂, ident b₂, ident A₂, ident B₂] [],
-  { rcases [expr cs₂, "with", "⟨", ident n₂, ",", ident rfl, "⟩"],
-    simpa ["!"] [] [] [] [] ["using", expr cseval_mul_const t n₂ cs₁] },
-  cases [expr cs₁] ["with", ident csa₁, ident csb₁],
-  cases [expr id cs₂] ["with", ident csa₂, ident csb₂],
-  simp ["!"] [] [] [] [] [],
-  have [ident C] [] [":=", expr pos_num.cmp_to_nat x₁ x₂],
-  cases [expr A₂ csa₂] ["with", ident csA₂, ident hA₂],
-  cases [expr pos_num.cmp x₁ x₂] []; simp ["!"] [] [] [] [] [],
-  { simp [] [] [] ["[", expr A₁ csa₁ cs₂, ",", expr B₁ csb₁ cs₂, "]"] [] [],
-    symmetry,
-    apply [expr tactic.ring.horner_mul_const]; refl },
-  { cases [expr cseval_horner' t _ x₁ n₂ 0 csA₂ ⟨0, rfl⟩] ["with", ident csh₁, ident h₁],
-    cases [expr C] [],
-    split_ifs [] [],
-    { subst [expr b₂],
-      refine [expr ⟨csh₁, h₁.trans (eq.symm _)⟩],
-      apply [expr tactic.ring.horner_mul_horner_zero]; try { refl },
-      simp ["!"] [] [] ["[", expr hA₂, "]"] [] [] },
-    { cases [expr A₁ csa₁ csb₂] ["with", ident csA₁, ident hA₁],
-      cases [expr cseval_add t csh₁ _] ["with", ident csh₂, ident h₂],
-      { refine [expr ⟨csh₂, h₂.trans (eq.symm _)⟩],
-        apply [expr tactic.ring.horner_mul_horner]; try { refl },
-        simp ["!"] [] [] ["*"] [] [] },
-      exact [expr ⟨csA₁, (B₁ csb₁ csb₂).1⟩] } },
-  { simp [] [] [] ["[", expr A₂ csa₂, ",", expr B₂ csb₂, "]"] [] [],
-    rw ["[", expr mul_comm, ",", expr eq_comm, "]"] [],
-    apply [expr tactic.ring.horner_const_mul],
-    { apply [expr mul_comm] },
-    { refl } }
-end
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_expr} (cs₁ : e₁.is_cs) (cs₂ : e₂.is_cs) :
+  (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁*cseval t e₂ :=
+  by 
+    induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp 
+    ·
+      rcases cs₁ with ⟨n₁, rfl⟩
+      simpa [mul_commₓ] using cseval_mul_const t n₁ cs₂ 
+    induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂
+    ·
+      rcases cs₂ with ⟨n₂, rfl⟩
+      simpa! using cseval_mul_const t n₂ cs₁ 
+    cases' cs₁ with csa₁ csb₁ 
+    cases' id cs₂ with csa₂ csb₂ 
+    simp 
+    have C := PosNum.cmp_to_nat x₁ x₂ 
+    cases' A₂ csa₂ with csA₂ hA₂ 
+    cases PosNum.cmp x₁ x₂ <;> simp 
+    ·
+      simp [A₁ csa₁ cs₂, B₁ csb₁ cs₂]
+      symm 
+      apply Tactic.Ring.horner_mul_constₓ <;> rfl
+    ·
+      cases' cseval_horner' t _ x₁ n₂ 0 csA₂ ⟨0, rfl⟩ with csh₁ h₁ 
+      cases C 
+      splitIfs
+      ·
+        subst b₂ 
+        refine' ⟨csh₁, h₁.trans (Eq.symm _)⟩
+        apply Tactic.Ring.horner_mul_horner_zeroₓ <;>
+          try 
+            rfl 
+        simp [hA₂]
+      ·
+        cases' A₁ csa₁ csb₂ with csA₁ hA₁ 
+        cases' cseval_add t csh₁ _ with csh₂ h₂
+        ·
+          refine' ⟨csh₂, h₂.trans (Eq.symm _)⟩
+          apply Tactic.Ring.horner_mul_hornerₓ <;>
+            try 
+              rfl 
+          simp 
+        exact ⟨csA₁, (B₁ csb₁ csb₂).1⟩
+    ·
+      simp [A₂ csa₂, B₂ csb₂]
+      rw [mul_commₓ, eq_comm]
+      apply Tactic.Ring.horner_const_mulₓ
+      ·
+        apply mul_commₓ
+      ·
+        rfl
 
 theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : horner_expr} (cs : x.is_cs) :
   ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
@@ -395,6 +433,9 @@ theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : horner_expr} (cs
       cases' cseval_mul t ep.1 ep.1 with cs₀ h₀ 
       simp 
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 /-- For any given tree `t` of atoms and any reflected expression `r`,
 the Horner form of `r` is a valid csring expression, and under `t`,
 the Horner form evaluates to the same thing as `r`. -/
@@ -489,6 +530,7 @@ open Tactic.Ring2
 
 local postfix:9001 "?" => optionalₓ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- `ring2` solves equations in the language of rings.
 
 It supports only the commutative semiring operations, i.e. it does not normalize subtraction or

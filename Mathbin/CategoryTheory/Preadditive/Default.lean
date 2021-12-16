@@ -139,11 +139,11 @@ theorem comp_sub : f ≫ (g - g') = f ≫ g - f ≫ g' :=
 
 @[simp, reassoc]
 theorem neg_comp : -f ≫ g = -(f ≫ g) :=
-  map_neg (right_comp _ _) _
+  map_neg (right_comp P g) f
 
 @[reassoc, simp]
 theorem comp_neg : f ≫ -g = -(f ≫ g) :=
-  map_neg (left_comp _ _) _
+  map_neg (left_comp R f) g
 
 @[reassoc]
 theorem neg_comp_neg : -f ≫ -g = f ≫ g :=
@@ -151,25 +151,25 @@ theorem neg_comp_neg : -f ≫ -g = f ≫ g :=
     simp 
 
 theorem nsmul_comp (n : ℕ) : (n • f) ≫ g = n • f ≫ g :=
-  map_nsmul (right_comp _ _) _ _
+  map_nsmul (right_comp P g) f n
 
 theorem comp_nsmul (n : ℕ) : f ≫ (n • g) = n • f ≫ g :=
-  map_nsmul (left_comp _ _) _ _
+  map_nsmul (left_comp R f) g n
 
 theorem zsmul_comp (n : ℤ) : (n • f) ≫ g = n • f ≫ g :=
-  map_zsmul (right_comp _ _) _ _
+  map_zsmul (right_comp P g) f n
 
 theorem comp_zsmul (n : ℤ) : f ≫ (n • g) = n • f ≫ g :=
-  map_zsmul (left_comp _ _) _ _
+  map_zsmul (left_comp R f) g n
 
 @[reassoc]
 theorem comp_sum {P Q R : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
-  (f ≫ ∑j in s, g j) = ∑j in s, f ≫ g j :=
+  (f ≫ ∑ j in s, g j) = ∑ j in s, f ≫ g j :=
   map_sum (left_comp R f) _ _
 
 @[reassoc]
 theorem sum_comp {P Q R : C} {J : Type _} (s : Finset J) (f : J → (P ⟶ Q)) (g : Q ⟶ R) :
-  (∑j in s, f j) ≫ g = ∑j in s, f j ≫ g :=
+  (∑ j in s, f j) ≫ g = ∑ j in s, f j ≫ g :=
   map_sum (right_comp P g) _ _
 
 instance {P Q : C} {f : P ⟶ Q} [epi f] : epi (-f) :=
@@ -183,8 +183,8 @@ instance {P Q : C} {f : P ⟶ Q} [mono f] : mono (-f) :=
         rwa [comp_neg, comp_neg, ←neg_comp, ←neg_comp, cancel_mono, neg_inj] at H⟩
 
 instance (priority := 100) preadditive_has_zero_morphisms : has_zero_morphisms C :=
-  { HasZero := inferInstance, comp_zero' := fun P Q f R => map_zero$ left_comp R f,
-    zero_comp' := fun P Q R f => map_zero$ right_comp P f }
+  { HasZero := inferInstance, comp_zero' := fun P Q f R => show left_comp R f 0 = 0 from map_zero _,
+    zero_comp' := fun P Q R f => show right_comp P f 0 = 0 from map_zero _ }
 
 theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} g : P ⟶ Q, g ≫ f = 0 → g = 0) : mono f :=
   ⟨fun P g g' hg => sub_eq_zero.1$ h _$ (map_sub (right_comp P f) g g').trans$ sub_eq_zero.2 hg⟩

@@ -10,7 +10,7 @@ import Mathbin.Data.Polynomial.Eval
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Finset
 
@@ -155,7 +155,8 @@ theorem iterate_derivative_sub {R : Type _} [Ringₓ R] {k : ℕ} {f g : Polynom
       simp [Nat.iterate, ih]
 
 @[simp]
-theorem derivative_sum {s : Finset ι} {f : ι → Polynomial R} : derivative (∑b in s, f b) = ∑b in s, derivative (f b) :=
+theorem derivative_sum {s : Finset ι} {f : ι → Polynomial R} :
+  derivative (∑ b in s, f b) = ∑ b in s, derivative (f b) :=
   derivative.map_sum
 
 @[simp]
@@ -230,7 +231,7 @@ theorem derivative_mul {f g : Polynomial R} : derivative (f*g) = (derivative f*g
                         pow_zeroₓ, pow_addₓ, one_mulₓ, pow_succₓ, mul_commₓ, mul_left_commₓ]
     _ = (derivative f*g)+f*derivative g :=
     by 
-      conv  => toRHS congr·rw [←sum_C_mul_X_eq g]·rw [←sum_C_mul_X_eq f]
+      conv  => rhs congr·rw [←sum_C_mul_X_eq g]·rw [←sum_C_mul_X_eq f]
       simp only [Sum, sum_add_distrib, Finset.mul_sum, Finset.sum_mul, derivative_apply]
     
 
@@ -275,9 +276,9 @@ theorem derivative_map [CommSemiringₓ S] (p : Polynomial R) (f : R →+* S) : 
         rw [map_add, derivative_add, ihp, ihq, derivative_add, map_add])
     fun n r ih =>
       by 
-        rw [map_mul, map_C, map_pow, map_X, derivative_mul, derivative_pow_succ, derivative_C, zero_mul, zero_addₓ,
-          derivative_X, mul_oneₓ, derivative_mul, derivative_pow_succ, derivative_C, zero_mul, zero_addₓ, derivative_X,
-          mul_oneₓ, map_mul, map_C, map_mul, map_pow, map_add, map_nat_cast, map_one, map_X]
+        rw [map_mul, map_C, Polynomial.map_pow, map_X, derivative_mul, derivative_pow_succ, derivative_C, zero_mul,
+          zero_addₓ, derivative_X, mul_oneₓ, derivative_mul, derivative_pow_succ, derivative_C, zero_mul, zero_addₓ,
+          derivative_X, mul_oneₓ, map_mul, map_C, map_mul, Polynomial.map_pow, map_add, map_nat_cast, map_one, map_X]
 
 @[simp]
 theorem iterate_derivative_map [CommSemiringₓ S] (p : Polynomial R) (f : R →+* S) (k : ℕ) :
@@ -422,53 +423,54 @@ theorem mem_support_derivative [CharZero R] (p : Polynomial R) (n : ℕ) :
     rw [Nat.cast_eq_zero]
     simp only [Nat.succ_ne_zero, or_falseₓ]
 
--- error in Data.Polynomial.Derivative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem degree_derivative_eq
-[char_zero R]
-(p : polynomial R)
-(hp : «expr < »(0, nat_degree p)) : «expr = »(degree (derivative p), («expr - »(nat_degree p, 1) : exprℕ())) :=
-begin
-  have [ident h0] [":", expr «expr ≠ »(p, 0)] [],
-  { contrapose ["!"] [ident hp],
-    simp [] [] [] ["[", expr hp, "]"] [] [] },
-  apply [expr le_antisymm],
-  { rw [expr derivative_apply] [],
-    apply [expr le_trans (degree_sum_le _ _) (sup_le (λ n hn, _))],
-    apply [expr le_trans (degree_C_mul_X_pow_le _ _) (with_bot.coe_le_coe.2 (tsub_le_tsub_right _ _))],
-    apply [expr le_nat_degree_of_mem_supp _ hn] },
-  { refine [expr le_sup _],
-    rw ["[", expr mem_support_derivative, ",", expr tsub_add_cancel_of_le, ",", expr mem_support_iff, "]"] [],
-    { show [expr «expr¬ »(«expr = »(leading_coeff p, 0))],
-      rw ["[", expr leading_coeff_eq_zero, "]"] [],
-      assume [binders (h)],
-      rw ["[", expr h, ",", expr nat_degree_zero, "]"] ["at", ident hp],
-      exact [expr lt_irrefl 0 (lt_of_le_of_lt (zero_le _) hp)] },
-    exact [expr hp] }
-end
+theorem degree_derivative_eq [CharZero R] (p : Polynomial R) (hp : 0 < nat_degree p) :
+  degree (derivative p) = (nat_degree p - 1 : ℕ) :=
+  by 
+    have h0 : p ≠ 0
+    ·
+      contrapose! hp 
+      simp [hp]
+    apply le_antisymmₓ
+    ·
+      rw [derivative_apply]
+      apply le_transₓ (degree_sum_le _ _) (sup_le fun n hn => _)
+      apply le_transₓ (degree_C_mul_X_pow_le _ _) (WithBot.coe_le_coe.2 (tsub_le_tsub_right _ _))
+      apply le_nat_degree_of_mem_supp _ hn
+    ·
+      refine' le_sup _ 
+      rw [mem_support_derivative, tsub_add_cancel_of_le, mem_support_iff]
+      ·
+        show ¬leading_coeff p = 0
+        rw [leading_coeff_eq_zero]
+        intro h 
+        rw [h, nat_degree_zero] at hp 
+        exact lt_irreflₓ 0 (lt_of_le_of_ltₓ (zero_le _) hp)
+      exact hp
 
--- error in Data.Polynomial.Derivative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nat_degree_eq_zero_of_derivative_eq_zero
-[char_zero R]
-{f : polynomial R}
-(h : «expr = »(f.derivative, 0)) : «expr = »(f.nat_degree, 0) :=
-begin
-  by_cases [expr hf, ":", expr «expr = »(f, 0)],
-  { exact [expr (congr_arg polynomial.nat_degree hf).trans rfl] },
-  { rw [expr nat_degree_eq_zero_iff_degree_le_zero] [],
-    by_contra [ident absurd],
-    have [ident f_nat_degree_pos] [":", expr «expr < »(0, f.nat_degree)] [],
-    { rwa ["[", expr not_le, ",", "<-", expr nat_degree_pos_iff_degree_pos, "]"] ["at", ident absurd] },
-    let [ident m] [] [":=", expr «expr - »(f.nat_degree, 1)],
-    have [ident hm] [":", expr «expr = »(«expr + »(m, 1), f.nat_degree)] [":=", expr tsub_add_cancel_of_le f_nat_degree_pos],
-    have [ident h2] [] [":=", expr coeff_derivative f m],
-    rw [expr polynomial.ext_iff] ["at", ident h],
-    rw ["[", expr h m, ",", expr coeff_zero, ",", expr zero_eq_mul, "]"] ["at", ident h2],
-    cases [expr h2] [],
-    { rw ["[", expr hm, ",", "<-", expr leading_coeff, ",", expr leading_coeff_eq_zero, "]"] ["at", ident h2],
-      exact [expr hf h2] },
-    { norm_cast ["at", ident h2] } }
-end
+theorem nat_degree_eq_zero_of_derivative_eq_zero [CharZero R] {f : Polynomial R} (h : f.derivative = 0) :
+  f.nat_degree = 0 :=
+  by 
+    byCases' hf : f = 0
+    ·
+      exact (congr_argₓ Polynomial.natDegree hf).trans rfl
+    ·
+      rw [nat_degree_eq_zero_iff_degree_le_zero]
+      byContra absurd 
+      have f_nat_degree_pos : 0 < f.nat_degree
+      ·
+        rwa [not_leₓ, ←nat_degree_pos_iff_degree_pos] at absurd 
+      let m := f.nat_degree - 1
+      have hm : (m+1) = f.nat_degree := tsub_add_cancel_of_le f_nat_degree_pos 
+      have h2 := coeff_derivative f m 
+      rw [Polynomial.ext_iff] at h 
+      rw [h m, coeff_zero, zero_eq_mul] at h2 
+      cases h2
+      ·
+        rw [hm, ←leading_coeff, leading_coeff_eq_zero] at h2 
+        exact hf h2
+      ·
+        normCast  at h2
 
 end IsDomain
 

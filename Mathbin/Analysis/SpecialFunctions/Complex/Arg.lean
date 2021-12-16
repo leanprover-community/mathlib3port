@@ -9,7 +9,7 @@ while `arg 0` defaults to `0`
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Complex
 
@@ -32,68 +32,89 @@ theorem sin_arg (x : ℂ) : Real.sin (arg x) = x.im / x.abs :=
           Real.sin_arcsin (abs_le.1 (abs_im_div_abs_le_one x)).1 (abs_le.1 (abs_im_div_abs_le_one x)).2, Real.sin_add,
           neg_div, Real.arcsin_neg, Real.sin_neg]
 
--- error in Analysis.SpecialFunctions.Complex.Arg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cos_arg {x : exprℂ()} (hx : «expr ≠ »(x, 0)) : «expr = »(real.cos (arg x), «expr / »(x.re, x.abs)) :=
-begin
-  have [ident habs] [":", expr «expr < »(0, abs x)] [":=", expr abs_pos.2 hx],
-  have [ident him] [":", expr «expr ≤ »(«expr| |»(«expr / »(im x, abs x)), 1)] [],
-  { rw ["[", expr _root_.abs_div, ",", expr abs_abs, "]"] [],
-    exact [expr div_le_one_of_le x.abs_im_le_abs x.abs_nonneg] },
-  rw [expr abs_le] ["at", ident him],
-  rw [expr arg] [],
-  split_ifs [] ["with", ident h₁, ident h₂, ident h₂],
-  { rw ["[", expr real.cos_arcsin, "]"] []; field_simp [] ["[", expr real.sqrt_sq, ",", expr habs.le, ",", "*", "]"] [] [] },
-  { rw ["[", expr real.cos_add_pi, ",", expr real.cos_arcsin, "]"] [],
-    { field_simp [] ["[", expr real.sqrt_div (sq_nonneg _), ",", expr real.sqrt_sq_eq_abs, ",", expr _root_.abs_of_neg (not_le.1 h₁), ",", "*", "]"] [] [] },
-    { simpa [] [] [] ["[", expr neg_div, "]"] [] ["using", expr him.2] },
-    { simpa [] [] [] ["[", expr neg_div, ",", expr neg_le, "]"] [] ["using", expr him.1] } },
-  { rw ["[", expr real.cos_sub_pi, ",", expr real.cos_arcsin, "]"] [],
-    { field_simp [] ["[", expr real.sqrt_div (sq_nonneg _), ",", expr real.sqrt_sq_eq_abs, ",", expr _root_.abs_of_neg (not_le.1 h₁), ",", "*", "]"] [] [] },
-    { simpa [] [] [] ["[", expr neg_div, "]"] [] ["using", expr him.2] },
-    { simpa [] [] [] ["[", expr neg_div, ",", expr neg_le, "]"] [] ["using", expr him.1] } }
-end
+theorem cos_arg {x : ℂ} (hx : x ≠ 0) : Real.cos (arg x) = x.re / x.abs :=
+  by 
+    have habs : 0 < abs x := abs_pos.2 hx 
+    have him : |im x / abs x| ≤ 1
+    ·
+      rw [_root_.abs_div, abs_abs]
+      exact div_le_one_of_le x.abs_im_le_abs x.abs_nonneg 
+    rw [abs_le] at him 
+    rw [arg]
+    splitIfs with h₁ h₂ h₂
+    ·
+      rw [Real.cos_arcsin] <;> fieldSimp [Real.sqrt_sq, habs.le, *]
+    ·
+      rw [Real.cos_add_pi, Real.cos_arcsin]
+      ·
+        fieldSimp [Real.sqrt_div (sq_nonneg _), Real.sqrt_sq_eq_abs, _root_.abs_of_neg (not_leₓ.1 h₁), *]
+      ·
+        simpa [neg_div] using him.2
+      ·
+        simpa [neg_div, neg_le] using him.1
+    ·
+      rw [Real.cos_sub_pi, Real.cos_arcsin]
+      ·
+        fieldSimp [Real.sqrt_div (sq_nonneg _), Real.sqrt_sq_eq_abs, _root_.abs_of_neg (not_leₓ.1 h₁), *]
+      ·
+        simpa [neg_div] using him.2
+      ·
+        simpa [neg_div, neg_le] using him.1
 
--- error in Analysis.SpecialFunctions.Complex.Arg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem abs_mul_exp_arg_mul_I (x : exprℂ()) : «expr = »(«expr * »(«expr↑ »(abs x), exp «expr * »(arg x, I)), x) :=
-begin
-  rcases [expr eq_or_ne x 0, "with", "(", ident rfl, "|", ident hx, ")"],
-  { simp [] [] [] [] [] [] },
-  { have [] [":", expr «expr ≠ »(abs x, 0)] [":=", expr abs_ne_zero.2 hx],
-    ext [] [] []; field_simp [] ["[", expr sin_arg, ",", expr cos_arg hx, ",", expr this, ",", expr mul_comm (abs x), "]"] [] [] }
-end
+theorem abs_mul_exp_arg_mul_I (x : ℂ) : ((↑abs x)*exp (arg x*I)) = x :=
+  by 
+    rcases eq_or_ne x 0 with (rfl | hx)
+    ·
+      simp 
+    ·
+      have  : abs x ≠ 0 := abs_ne_zero.2 hx 
+      ext <;> fieldSimp [sin_arg, cos_arg hx, this, mul_commₓ (abs x)]
 
 @[simp]
 theorem abs_mul_cos_add_sin_mul_I (x : ℂ) : (abs x*cos (arg x)+sin (arg x)*I : ℂ) = x :=
   by 
     rw [←exp_mul_I, abs_mul_exp_arg_mul_I]
 
--- error in Analysis.SpecialFunctions.Complex.Arg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem arg_mul_cos_add_sin_mul_I
-{r : exprℝ()}
-(hr : «expr < »(0, r))
-{θ : exprℝ()}
-(hθ : «expr ∈ »(θ, Ioc «expr- »(exprπ()) exprπ())) : «expr = »(arg «expr * »(r, «expr + »(cos θ, «expr * »(sin θ, I))), θ) :=
-begin
-  have [ident hπ] [] [":=", expr real.pi_pos],
-  simp [] [] ["only"] ["[", expr arg, ",", expr abs_mul, ",", expr abs_cos_add_sin_mul_I, ",", expr abs_of_nonneg hr.le, ",", expr mul_one, "]"] [] [],
-  simp [] [] ["only"] ["[", expr of_real_mul_re, ",", expr of_real_mul_im, ",", expr neg_im, ",", "<-", expr of_real_cos, ",", "<-", expr of_real_sin, ",", "<-", expr mk_eq_add_mul_I, ",", expr neg_div, ",", expr mul_div_cancel_left _ hr.ne', ",", expr mul_nonneg_iff_right_nonneg_of_pos hr, "]"] [] [],
-  by_cases [expr h₁, ":", expr «expr ∈ »(θ, Icc «expr- »(«expr / »(exprπ(), 2)) «expr / »(exprπ(), 2))],
-  { rw [expr if_pos] [],
-    exacts ["[", expr real.arcsin_sin' h₁, ",", expr real.cos_nonneg_of_mem_Icc h₁, "]"] },
-  { rw ["[", expr mem_Icc, ",", expr not_and_distrib, ",", expr not_le, ",", expr not_le, "]"] ["at", ident h₁],
-    cases [expr h₁] [],
-    { replace [ident hθ] [] [":=", expr hθ.1],
-      have [ident hcos] [":", expr «expr < »(real.cos θ, 0)] [],
-      { rw ["[", "<-", expr neg_pos, ",", "<-", expr real.cos_add_pi, "]"] [],
-        refine [expr real.cos_pos_of_mem_Ioo ⟨_, _⟩]; linarith [] [] [] },
-      have [ident hsin] [":", expr «expr < »(real.sin θ, 0)] [":=", expr real.sin_neg_of_neg_of_neg_pi_lt (by linarith [] [] []) hθ],
-      rw ["[", expr if_neg, ",", expr if_neg, ",", "<-", expr real.sin_add_pi, ",", expr real.arcsin_sin, ",", expr add_sub_cancel, "]"] []; [linarith [] [] [], linarith [] [] [], exact [expr hsin.not_le], exact [expr hcos.not_le]] },
-    { replace [ident hθ] [] [":=", expr hθ.2],
-      have [ident hcos] [":", expr «expr < »(real.cos θ, 0)] [":=", expr real.cos_neg_of_pi_div_two_lt_of_lt h₁ (by linarith [] [] [])],
-      have [ident hsin] [":", expr «expr ≤ »(0, real.sin θ)] [":=", expr real.sin_nonneg_of_mem_Icc ⟨by linarith [] [] [], hθ⟩],
-      rw ["[", expr if_neg, ",", expr if_pos, ",", "<-", expr real.sin_sub_pi, ",", expr real.arcsin_sin, ",", expr sub_add_cancel, "]"] []; [linarith [] [] [], linarith [] [] [], exact [expr hsin], exact [expr hcos.not_le]] } }
-end
+theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) : arg (r*cos θ+sin θ*I) = θ :=
+  by 
+    have hπ := Real.pi_pos 
+    simp only [arg, abs_mul, abs_cos_add_sin_mul_I, abs_of_nonneg hr.le, mul_oneₓ]
+    simp only [of_real_mul_re, of_real_mul_im, neg_im, ←of_real_cos, ←of_real_sin, ←mk_eq_add_mul_I, neg_div,
+      mul_div_cancel_left _ hr.ne', mul_nonneg_iff_right_nonneg_of_pos hr]
+    byCases' h₁ : θ ∈ Icc (-(π / 2)) (π / 2)
+    ·
+      rw [if_pos]
+      exacts[Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
+    ·
+      rw [mem_Icc, not_and_distrib, not_leₓ, not_leₓ] at h₁ 
+      cases h₁
+      ·
+        replace hθ := hθ.1
+        have hcos : Real.cos θ < 0
+        ·
+          rw [←neg_pos, ←Real.cos_add_pi]
+          refine' Real.cos_pos_of_mem_Ioo ⟨_, _⟩ <;> linarith 
+        have hsin : Real.sin θ < 0 :=
+          Real.sin_neg_of_neg_of_neg_pi_lt
+            (by 
+              linarith)
+            hθ 
+        rw [if_neg, if_neg, ←Real.sin_add_pi, Real.arcsin_sin, add_sub_cancel] <;> [linarith, linarith,
+          exact hsin.not_le, exact hcos.not_le]
+      ·
+        replace hθ := hθ.2
+        have hcos : Real.cos θ < 0 :=
+          Real.cos_neg_of_pi_div_two_lt_of_lt h₁
+            (by 
+              linarith)
+        have hsin : 0 ≤ Real.sin θ :=
+          Real.sin_nonneg_of_mem_Icc
+            ⟨by 
+                linarith,
+              hθ⟩
+        rw [if_neg, if_pos, ←Real.sin_sub_pi, Real.arcsin_sin, sub_add_cancel] <;> [linarith, linarith, exact hsin,
+          exact hcos.not_le]
 
 theorem arg_cos_add_sin_mul_I {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) : arg (cos θ+sin θ*I) = θ :=
   by 
@@ -111,18 +132,16 @@ theorem ext_abs_arg {x y : ℂ} (h₁ : x.abs = y.abs) (h₂ : x.arg = y.arg) : 
 theorem ext_abs_arg_iff {x y : ℂ} : x = y ↔ abs x = abs y ∧ arg x = arg y :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, and_imp.2 ext_abs_arg⟩
 
--- error in Analysis.SpecialFunctions.Complex.Arg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem arg_mem_Ioc (z : exprℂ()) : «expr ∈ »(arg z, Ioc «expr- »(exprπ()) exprπ()) :=
-begin
-  have [ident hπ] [":", expr «expr < »(0, exprπ())] [":=", expr real.pi_pos],
-  rcases [expr eq_or_ne z 0, "with", "(", ident rfl, "|", ident hz, ")"],
-  simp [] [] [] ["[", expr hπ, ",", expr hπ.le, "]"] [] [],
-  rcases [expr exists_unique_add_zsmul_mem_Ioc real.two_pi_pos (arg z) «expr- »(exprπ()), "with", "⟨", ident N, ",", ident hN, ",", "-", "⟩"],
-  rw ["[", expr two_mul, ",", expr neg_add_cancel_left, ",", "<-", expr two_mul, ",", expr zsmul_eq_mul, "]"] ["at", ident hN],
-  rw ["[", "<-", expr abs_mul_cos_add_sin_mul_I z, ",", "<-", expr cos_add_int_mul_two_pi _ N, ",", "<-", expr sin_add_int_mul_two_pi _ N, "]"] [],
-  simp [] [] ["only"] ["[", "<-", expr of_real_one, ",", "<-", expr of_real_bit0, ",", "<-", expr of_real_mul, ",", "<-", expr of_real_add, ",", "<-", expr of_real_int_cast, "]"] [] [],
-  rwa ["[", expr arg_mul_cos_add_sin_mul_I (abs_pos.2 hz) hN, "]"] []
-end
+theorem arg_mem_Ioc (z : ℂ) : arg z ∈ Ioc (-π) π :=
+  by 
+    have hπ : 0 < π := Real.pi_pos 
+    rcases eq_or_ne z 0 with (rfl | hz)
+    simp [hπ, hπ.le]
+    rcases exists_unique_add_zsmul_mem_Ioc Real.two_pi_pos (arg z) (-π) with ⟨N, hN, -⟩
+    rw [two_mul, neg_add_cancel_leftₓ, ←two_mul, zsmul_eq_mul] at hN 
+    rw [←abs_mul_cos_add_sin_mul_I z, ←cos_add_int_mul_two_pi _ N, ←sin_add_int_mul_two_pi _ N]
+    simp only [←of_real_one, ←of_real_bit0, ←of_real_mul, ←of_real_add, ←of_real_int_cast]
+    rwa [arg_mul_cos_add_sin_mul_I (abs_pos.2 hz) hN]
 
 @[simp]
 theorem range_arg : range arg = Ioc (-π) π :=
@@ -222,7 +241,7 @@ theorem arg_eq_pi_iff {z : ℂ} : arg z = π ↔ z.re < 0 ∧ z.im = 0 :=
     byCases' h₀ : z = 0
     ·
       simp [h₀, lt_irreflₓ, real.pi_ne_zero.symm]
-    split 
+    constructor
     ·
       intro h 
       rw [←abs_mul_cos_add_sin_mul_I z, h]
@@ -241,7 +260,7 @@ theorem arg_eq_pi_div_two_iff {z : ℂ} : arg z = π / 2 ↔ z.re = 0 ∧ 0 < z.
     byCases' h₀ : z = 0
     ·
       simp [h₀, lt_irreflₓ, real.pi_div_two_pos.ne]
-    split 
+    constructor
     ·
       intro h 
       rw [←abs_mul_cos_add_sin_mul_I z, h]
@@ -256,7 +275,7 @@ theorem arg_eq_neg_pi_div_two_iff {z : ℂ} : arg z = -(π / 2) ↔ z.re = 0 ∧
     byCases' h₀ : z = 0
     ·
       simp [h₀, lt_irreflₓ, Real.pi_ne_zero]
-    split 
+    constructor
     ·
       intro h 
       rw [←abs_mul_cos_add_sin_mul_I z, h]
@@ -287,16 +306,12 @@ theorem arg_of_im_nonneg_of_ne_zero {z : ℂ} (h₁ : 0 ≤ z.im) (h₂ : z ≠ 
 theorem arg_of_im_pos {z : ℂ} (hz : 0 < z.im) : arg z = Real.arccos (z.re / abs z) :=
   arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne'$ h.symm ▸ rfl
 
--- error in Analysis.SpecialFunctions.Complex.Arg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem arg_of_im_neg
-{z : exprℂ()}
-(hz : «expr < »(z.im, 0)) : «expr = »(arg z, «expr- »(real.arccos «expr / »(z.re, abs z))) :=
-begin
-  have [ident h₀] [":", expr «expr ≠ »(z, 0)] [],
-  from [expr mt (congr_arg im) hz.ne],
-  rw ["[", "<-", expr cos_arg h₀, ",", "<-", expr real.cos_neg, ",", expr real.arccos_cos, ",", expr neg_neg, "]"] [],
-  exacts ["[", expr neg_nonneg.2 (arg_neg_iff.2 hz).le, ",", expr neg_le.2 (neg_pi_lt_arg z).le, "]"]
-end
+theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / abs z) :=
+  by 
+    have h₀ : z ≠ 0 
+    exact mt (congr_argₓ im) hz.ne 
+    rw [←cos_arg h₀, ←Real.cos_neg, Real.arccos_cos, neg_negₓ]
+    exacts[neg_nonneg.2 (arg_neg_iff.2 hz).le, neg_le.2 (neg_pi_lt_arg z).le]
 
 section Continuity
 
@@ -308,7 +323,7 @@ theorem arg_eq_nhds_of_re_pos (hx : 0 < x.re) : arg =ᶠ[𝓝 x] fun x => Real.a
 theorem arg_eq_nhds_of_re_neg_of_im_pos (hx_re : x.re < 0) (hx_im : 0 < x.im) :
   arg =ᶠ[𝓝 x] fun x => Real.arcsin ((-x).im / x.abs)+π :=
   by 
-    suffices h_forall_nhds : ∀ᶠy : ℂ in 𝓝 x, y.re < 0 ∧ 0 < y.im 
+    suffices h_forall_nhds : ∀ᶠ y : ℂ in 𝓝 x, y.re < 0 ∧ 0 < y.im 
     exact h_forall_nhds.mono fun y hy => arg_of_re_neg_of_im_nonneg hy.1 hy.2.le 
     refine' IsOpen.eventually_mem _ (⟨hx_re, hx_im⟩ : x.re < 0 ∧ 0 < x.im)
     exact IsOpen.and (is_open_lt continuous_re continuous_zero) (is_open_lt continuous_zero continuous_im)
@@ -316,7 +331,7 @@ theorem arg_eq_nhds_of_re_neg_of_im_pos (hx_re : x.re < 0) (hx_im : 0 < x.im) :
 theorem arg_eq_nhds_of_re_neg_of_im_neg (hx_re : x.re < 0) (hx_im : x.im < 0) :
   arg =ᶠ[𝓝 x] fun x => Real.arcsin ((-x).im / x.abs) - π :=
   by 
-    suffices h_forall_nhds : ∀ᶠy : ℂ in 𝓝 x, y.re < 0 ∧ y.im < 0 
+    suffices h_forall_nhds : ∀ᶠ y : ℂ in 𝓝 x, y.re < 0 ∧ y.im < 0 
     exact h_forall_nhds.mono fun y hy => arg_of_re_neg_of_im_neg hy.1 hy.2
     refine' IsOpen.eventually_mem _ (⟨hx_re, hx_im⟩ : x.re < 0 ∧ x.im < 0)
     exact IsOpen.and (is_open_lt continuous_re continuous_zero) (is_open_lt continuous_im continuous_zero)
@@ -327,60 +342,70 @@ theorem arg_eq_nhds_of_im_pos (hz : 0 < im z) : arg =ᶠ[𝓝 z] fun x => Real.a
 theorem arg_eq_nhds_of_im_neg (hz : im z < 0) : arg =ᶠ[𝓝 z] fun x => -Real.arccos (x.re / abs x) :=
   ((continuous_im.Tendsto _).Eventually (gt_mem_nhds hz)).mono$ fun x => arg_of_im_neg
 
--- error in Analysis.SpecialFunctions.Complex.Arg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_at_arg (h : «expr ∨ »(«expr < »(0, x.re), «expr ≠ »(x.im, 0))) : continuous_at arg x :=
-begin
-  have [ident h₀] [":", expr «expr ≠ »(abs x, 0)] [],
-  { rw [expr abs_ne_zero] [],
-    rintro [ident rfl],
-    simpa [] [] [] [] [] ["using", expr h] },
-  rw ["[", "<-", expr lt_or_lt_iff_ne, "]"] ["at", ident h],
-  rcases [expr h, "with", "(", ident hx_re, "|", ident hx_im, "|", ident hx_im, ")"],
-  exacts ["[", expr (real.continuous_at_arcsin.comp (continuous_im.continuous_at.div continuous_abs.continuous_at h₀)).congr (arg_eq_nhds_of_re_pos hx_re).symm, ",", expr (real.continuous_arccos.continuous_at.comp (continuous_re.continuous_at.div continuous_abs.continuous_at h₀)).neg.congr (arg_eq_nhds_of_im_neg hx_im).symm, ",", expr (real.continuous_arccos.continuous_at.comp (continuous_re.continuous_at.div continuous_abs.continuous_at h₀)).congr (arg_eq_nhds_of_im_pos hx_im).symm, "]"]
-end
+theorem continuous_at_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x :=
+  by 
+    have h₀ : abs x ≠ 0
+    ·
+      rw [abs_ne_zero]
+      rintro rfl 
+      simpa using h 
+    rw [←lt_or_lt_iff_ne] at h 
+    rcases h with (hx_re | hx_im | hx_im)
+    exacts[(real.continuous_at_arcsin.comp (continuous_im.continuous_at.div continuous_abs.continuous_at h₀)).congr
+        (arg_eq_nhds_of_re_pos hx_re).symm,
+      (real.continuous_arccos.continuous_at.comp
+              (continuous_re.continuous_at.div continuous_abs.continuous_at h₀)).neg.congr
+        (arg_eq_nhds_of_im_neg hx_im).symm,
+      (real.continuous_arccos.continuous_at.comp
+            (continuous_re.continuous_at.div continuous_abs.continuous_at h₀)).congr
+        (arg_eq_nhds_of_im_pos hx_im).symm]
 
--- error in Analysis.SpecialFunctions.Complex.Arg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero
-{z : exprℂ()}
-(hre : «expr < »(z.re, 0))
-(him : «expr = »(z.im, 0)) : tendsto arg «expr𝓝[ ] »({z : exprℂ() | «expr < »(z.im, 0)}, z) (expr𝓝() «expr- »(exprπ())) :=
-begin
-  suffices [ident H] [":", expr tendsto (λ
-    x : exprℂ(), «expr - »(real.arcsin «expr / »(«expr- »(x).im, x.abs), exprπ())) «expr𝓝[ ] »({z : exprℂ() | «expr < »(z.im, 0)}, z) (expr𝓝() «expr- »(exprπ()))],
-  { refine [expr H.congr' _],
-    have [] [":", expr «expr∀ᶠ in , »((x : exprℂ()), expr𝓝() z, «expr < »(x.re, 0))] [],
-    from [expr continuous_re.tendsto z (gt_mem_nhds hre)],
-    filter_upwards ["[", expr self_mem_nhds_within, ",", expr mem_nhds_within_of_mem_nhds this, "]"] [],
-    intros [ident w, ident him, ident hre],
-    rw ["[", expr arg, ",", expr if_neg hre.not_le, ",", expr if_neg him.not_le, "]"] [] },
-  convert [] [expr (real.continuous_at_arcsin.comp_continuous_within_at ((continuous_im.continuous_at.comp_continuous_within_at continuous_within_at_neg).div continuous_abs.continuous_within_at _)).sub tendsto_const_nhds] [],
-  { simp [] [] [] ["[", expr him, "]"] [] [] },
-  { lift [expr z] ["to", expr exprℝ()] ["using", expr him] [],
-    simpa [] [] [] [] [] ["using", expr hre.ne] }
-end
+theorem tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
+  tendsto arg (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π)) :=
+  by 
+    suffices H : tendsto (fun x : ℂ => Real.arcsin ((-x).im / x.abs) - π) (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π))
+    ·
+      refine' H.congr' _ 
+      have  : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 
+      exact continuous_re.tendsto z (gt_mem_nhds hre)
+      filterUpwards [self_mem_nhds_within, mem_nhds_within_of_mem_nhds this]
+      intro w him hre 
+      rw [arg, if_neg hre.not_le, if_neg him.not_le]
+    convert
+      (real.continuous_at_arcsin.comp_continuous_within_at
+            ((continuous_im.continuous_at.comp_continuous_within_at continuous_within_at_neg).div
+              continuous_abs.continuous_within_at _)).sub
+        tendsto_const_nhds
+    ·
+      simp [him]
+    ·
+      lift z to ℝ using him 
+      simpa using hre.ne
 
--- error in Analysis.SpecialFunctions.Complex.Arg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_within_at_arg_of_re_neg_of_im_zero
-{z : exprℂ()}
-(hre : «expr < »(z.re, 0))
-(him : «expr = »(z.im, 0)) : continuous_within_at arg {z : exprℂ() | «expr ≤ »(0, z.im)} z :=
-begin
-  have [] [":", expr «expr =ᶠ[ ] »(arg, «expr𝓝[ ] »({z : exprℂ() | «expr ≤ »(0, z.im)}, z), λ
-    x, «expr + »(real.arcsin «expr / »(«expr- »(x).im, x.abs), exprπ()))] [],
-  { have [] [":", expr «expr∀ᶠ in , »((x : exprℂ()), expr𝓝() z, «expr < »(x.re, 0))] [],
-    from [expr continuous_re.tendsto z (gt_mem_nhds hre)],
-    filter_upwards ["[", expr self_mem_nhds_within, ",", expr mem_nhds_within_of_mem_nhds this, "]"] [],
-    intros [ident w, ident him, ident hre],
-    rw ["[", expr arg, ",", expr if_neg hre.not_le, ",", expr if_pos him, "]"] [] },
-  refine [expr continuous_within_at.congr_of_eventually_eq _ this _],
-  { refine [expr (real.continuous_at_arcsin.comp_continuous_within_at ((continuous_im.continuous_at.comp_continuous_within_at continuous_within_at_neg).div continuous_abs.continuous_within_at _)).add tendsto_const_nhds],
-    lift [expr z] ["to", expr exprℝ()] ["using", expr him] [],
-    simpa [] [] [] [] [] ["using", expr hre.ne] },
-  { rw ["[", expr arg, ",", expr if_neg hre.not_le, ",", expr if_pos him.ge, "]"] [] }
-end
+theorem continuous_within_at_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
+  ContinuousWithinAt arg { z : ℂ | 0 ≤ z.im } z :=
+  by 
+    have  : arg =ᶠ[𝓝[{ z : ℂ | 0 ≤ z.im }] z] fun x => Real.arcsin ((-x).im / x.abs)+π
+    ·
+      have  : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 
+      exact continuous_re.tendsto z (gt_mem_nhds hre)
+      filterUpwards [self_mem_nhds_within, mem_nhds_within_of_mem_nhds this]
+      intro w him hre 
+      rw [arg, if_neg hre.not_le, if_pos him]
+    refine' ContinuousWithinAt.congr_of_eventually_eq _ this _
+    ·
+      refine'
+        (real.continuous_at_arcsin.comp_continuous_within_at
+              ((continuous_im.continuous_at.comp_continuous_within_at continuous_within_at_neg).div
+                continuous_abs.continuous_within_at _)).add
+          tendsto_const_nhds 
+      lift z to ℝ using him 
+      simpa using hre.ne
+    ·
+      rw [arg, if_neg hre.not_le, if_pos him.ge]
 
 theorem tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-  tendsto arg (𝓝[{ z:ℂ | 0 ≤ z.im }] z) (𝓝 π) :=
+  tendsto arg (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 π) :=
   by 
     simpa only [arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_arg_of_re_neg_of_im_zero hre him).Tendsto
 

@@ -134,7 +134,7 @@ theorem range_inl : range (inl R M M₂) = ker (snd R M M₂) :=
   by 
     ext x 
     simp only [mem_ker, mem_range]
-    split 
+    constructor
     ·
       rintro ⟨y, rfl⟩
       rfl
@@ -149,7 +149,7 @@ theorem range_inr : range (inr R M M₂) = ker (fst R M M₂) :=
   by 
     ext x 
     simp only [mem_ker, mem_range]
-    split 
+    constructor
     ·
       rintro ⟨y, rfl⟩
       rfl
@@ -300,7 +300,7 @@ theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) : (LinearM
     dsimp only [ker]
     rw [←prod_map_comap_prod, Submodule.prod_bot]
 
-section MapMul
+section map_mul
 
 variable {A : Type _} [NonUnitalNonAssocSemiring A] [Module R A]
 
@@ -317,7 +317,7 @@ theorem inr_map_mul (b₁ b₂ : B) : LinearMap.inr R A B (b₁*b₂) = LinearMa
       simp )
     rfl
 
-end MapMul
+end map_mul
 
 end LinearMap
 
@@ -338,7 +338,7 @@ theorem range_coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : (f.copro
 
 theorem is_compl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).range :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨_, _⟩ ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
       simp only [Prod.ext_iff, inl_apply, inr_apply, mem_bot] at hx hy⊢
@@ -352,9 +352,18 @@ theorem is_compl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).ran
 theorem sup_range_inl_inr : (inl R M M₂).range⊔(inr R M M₂).range = ⊤ :=
   is_compl_range_inl_inr.sup_eq_top
 
--- error in LinearAlgebra.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem disjoint_inl_inr : disjoint (inl R M M₂).range (inr R M M₂).range :=
-by simp [] [] [] ["[", expr disjoint_def, ",", expr @eq_comm M 0, ",", expr @eq_comm M₂ 0, "]"] [] [] { contextual := tt }; intros []; refl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  disjoint_inl_inr
+  : Disjoint inl R M M₂ . range inr R M M₂ . range
+  :=
+    by
+      simp
+          ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+          [ disjoint_def , @ eq_comm M 0 , @ eq_comm M₂ 0 ]
+        <;>
+        intros <;> rfl
 
 theorem map_coprod_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (p : Submodule R M) (q : Submodule R M₂) :
   map (coprod f g) (p.prod q) = map f p⊔map g q :=
@@ -406,42 +415,36 @@ theorem range_prod_le (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : range (Pro
     rintro _ x rfl 
     exact ⟨⟨x, rfl⟩, ⟨x, rfl⟩⟩
 
--- error in LinearAlgebra.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ker_prod_ker_le_ker_coprod
-{M₂ : Type*}
-[add_comm_group M₂]
-[module R M₂]
-{M₃ : Type*}
-[add_comm_group M₃]
-[module R M₃]
-(f : «expr →ₗ[ ] »(M, R, M₃))
-(g : «expr →ₗ[ ] »(M₂, R, M₃)) : «expr ≤ »((ker f).prod (ker g), ker (f.coprod g)) :=
-by { rintros ["⟨", ident y, ",", ident z, "⟩"],
-  simp [] [] [] [] [] [] { contextual := tt } }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  ker_prod_ker_le_ker_coprod
+  { M₂ : Type _ }
+      [ AddCommGroupₓ M₂ ]
+      [ Module R M₂ ]
+      { M₃ : Type _ }
+      [ AddCommGroupₓ M₃ ]
+      [ Module R M₃ ]
+      ( f : M →ₗ[ R ] M₃ )
+      ( g : M₂ →ₗ[ R ] M₃ )
+    : ker f . Prod ker g ≤ ker f.coprod g
+  := by rintro ⟨ y , z ⟩ simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
 
--- error in LinearAlgebra.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ker_coprod_of_disjoint_range
-{M₂ : Type*}
-[add_comm_group M₂]
-[module R M₂]
-{M₃ : Type*}
-[add_comm_group M₃]
-[module R M₃]
-(f : «expr →ₗ[ ] »(M, R, M₃))
-(g : «expr →ₗ[ ] »(M₂, R, M₃))
-(hd : disjoint f.range g.range) : «expr = »(ker (f.coprod g), (ker f).prod (ker g)) :=
-begin
-  apply [expr le_antisymm _ (ker_prod_ker_le_ker_coprod f g)],
-  rintros ["⟨", ident y, ",", ident z, "⟩", ident h],
-  simp [] [] ["only"] ["[", expr mem_ker, ",", expr mem_prod, ",", expr coprod_apply, "]"] [] ["at", ident h, "⊢"],
-  have [] [":", expr «expr ∈ »(f y, «expr ⊓ »(f.range, g.range))] [],
-  { simp [] [] ["only"] ["[", expr true_and, ",", expr mem_range, ",", expr mem_inf, ",", expr exists_apply_eq_apply, "]"] [] [],
-    use [expr «expr- »(z)],
-    rwa ["[", expr eq_comm, ",", expr map_neg, ",", "<-", expr sub_eq_zero, ",", expr sub_neg_eq_add, "]"] [] },
-  rw ["[", expr hd.eq_bot, ",", expr mem_bot, "]"] ["at", ident this],
-  rw ["[", expr this, "]"] ["at", ident h],
-  simpa [] [] [] ["[", expr this, "]"] [] ["using", expr h]
-end
+theorem ker_coprod_of_disjoint_range {M₂ : Type _} [AddCommGroupₓ M₂] [Module R M₂] {M₃ : Type _} [AddCommGroupₓ M₃]
+  [Module R M₃] (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (hd : Disjoint f.range g.range) :
+  ker (f.coprod g) = (ker f).Prod (ker g) :=
+  by 
+    apply le_antisymmₓ _ (ker_prod_ker_le_ker_coprod f g)
+    rintro ⟨y, z⟩ h 
+    simp only [mem_ker, mem_prod, coprod_apply] at h⊢
+    have  : f y ∈ f.range⊓g.range
+    ·
+      simp only [true_andₓ, mem_range, mem_inf, exists_apply_eq_applyₓ]
+      use -z 
+      rwa [eq_comm, map_neg, ←sub_eq_zero, sub_neg_eq_add]
+    rw [hd.eq_bot, mem_bot] at this 
+    rw [this] at h 
+    simpa [this] using h
 
 end LinearMap
 
@@ -639,7 +642,7 @@ variable (e₁ : M ≃ₗ[R] M₂) (e₂ : M₃ ≃ₗ[R] M₄)
 
 /-- Product of linear equivalences; the maps come from `equiv.prod_congr`. -/
 protected def Prod : (M × M₃) ≃ₗ[R] M₂ × M₄ :=
-  { Equiv.prodCongr e₁.to_equiv e₂.to_equiv with map_add' := fun x y => Prod.extₓ (e₁.map_add _ _) (e₂.map_add _ _),
+  { Equivₓ.prodCongr e₁.to_equiv e₂.to_equiv with map_add' := fun x y => Prod.extₓ (e₁.map_add _ _) (e₂.map_add _ _),
     map_smul' := fun c x => Prod.extₓ (e₁.map_smulₛₗ c _) (e₂.map_smulₛₗ c _) }
 
 theorem prod_symm : (e₁.prod e₂).symm = e₁.symm.prod e₂.symm :=
@@ -705,25 +708,25 @@ variable [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
 variable [Module R M] [Module R M₂] [Module R M₃]
 
--- error in LinearAlgebra.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the union of the kernels `ker f` and `ker g` spans the domain, then the range of
 `prod f g` is equal to the product of `range f` and `range g`. -/
-theorem range_prod_eq
-{f : «expr →ₗ[ ] »(M, R, M₂)}
-{g : «expr →ₗ[ ] »(M, R, M₃)}
-(h : «expr = »(«expr ⊔ »(ker f, ker g), «expr⊤»())) : «expr = »(range (prod f g), (range f).prod (range g)) :=
-begin
-  refine [expr le_antisymm (f.range_prod_le g) _],
-  simp [] [] ["only"] ["[", expr set_like.le_def, ",", expr prod_apply, ",", expr mem_range, ",", expr set_like.mem_coe, ",", expr mem_prod, ",", expr exists_imp_distrib, ",", expr and_imp, ",", expr prod.forall, "]"] [] [],
-  rintros ["_", "_", ident x, ident rfl, ident y, ident rfl],
-  simp [] [] ["only"] ["[", expr prod.mk.inj_iff, ",", "<-", expr sub_mem_ker_iff, "]"] [] [],
-  have [] [":", expr «expr ∈ »(«expr - »(y, x), «expr ⊔ »(ker f, ker g))] [],
-  { simp [] [] ["only"] ["[", expr h, ",", expr mem_top, "]"] [] [] },
-  rcases [expr mem_sup.1 this, "with", "⟨", ident x', ",", ident hx', ",", ident y', ",", ident hy', ",", ident H, "⟩"],
-  refine [expr ⟨«expr + »(x', x), _, _⟩],
-  { rwa [expr add_sub_cancel] [] },
-  { rwa ["[", "<-", expr eq_sub_iff_add_eq.1 H, ",", expr add_sub_add_right_eq_sub, ",", "<-", expr neg_mem_iff, ",", expr neg_sub, ",", expr add_sub_cancel', "]"] [] }
-end
+theorem range_prod_eq {f : M →ₗ[R] M₂} {g : M →ₗ[R] M₃} (h : ker f⊔ker g = ⊤) :
+  range (Prod f g) = (range f).Prod (range g) :=
+  by 
+    refine' le_antisymmₓ (f.range_prod_le g) _ 
+    simp only [SetLike.le_def, prod_apply, mem_range, SetLike.mem_coe, mem_prod, exists_imp_distrib, and_imp,
+      Prod.forall]
+    rintro _ _ x rfl y rfl 
+    simp only [Prod.mk.inj_iffₓ, ←sub_mem_ker_iff]
+    have  : y - x ∈ ker f⊔ker g
+    ·
+      simp only [h, mem_top]
+    rcases mem_sup.1 this with ⟨x', hx', y', hy', H⟩
+    refine' ⟨x'+x, _, _⟩
+    ·
+      rwa [add_sub_cancel]
+    ·
+      rwa [←eq_sub_iff_add_eq.1 H, add_sub_add_right_eq_sub, ←neg_mem_iff, neg_sub, add_sub_cancel']
 
 end LinearMap
 
@@ -759,17 +762,17 @@ open Function
 /-- An auxiliary construction for `tunnel`.
 The composition of `f`, followed by the isomorphism back to `K`,
 followed by the inclusion of this submodule back into `M`. -/
-def tunnel_aux (f : M × N →ₗ[R] M) (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
+def tunnel_aux (f : M × N →ₗ[R] M) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
   (Kφ.1.Subtype.comp Kφ.2.symm.toLinearMap).comp f
 
-theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : injective f) (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) :
+theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : injective f) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) :
   injective (tunnel_aux f Kφ) :=
   (Subtype.val_injective.comp Kφ.2.symm.Injective).comp i
 
-noncomputable theory
+noncomputable section 
 
 /-- Auxiliary definition for `tunnel`. -/
-noncomputable def tunnel' (f : M × N →ₗ[R] M) (i : injective f) : ℕ → ΣK : Submodule R M, K ≃ₗ[R] M
+noncomputable def tunnel' (f : M × N →ₗ[R] M) (i : injective f) : ℕ → Σ K : Submodule R M, K ≃ₗ[R] M
 | 0 => ⟨⊤, LinearEquiv.ofTop ⊤ rfl⟩
 | n+1 =>
   ⟨(Submodule.fst R M N).map (tunnel_aux f (tunnel' n)),

@@ -71,13 +71,12 @@ theorem ess_sup_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essSup f μ �
 theorem ess_inf_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essInf f μ ≤ essInf g μ :=
   liminf_le_liminf hfg
 
--- error in MeasureTheory.Function.EssSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ess_sup_const (c : β) (hμ : «expr ≠ »(μ, 0)) : «expr = »(ess_sup (λ x : α, c) μ, c) :=
-begin
-  haveI [ident hμ_ne_bot] [":", expr μ.ae.ne_bot] [],
-  { rwa ["[", expr ne_bot_iff, ",", expr ne.def, ",", expr ae_eq_bot, "]"] [] },
-  exact [expr limsup_const c]
-end
+theorem ess_sup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c :=
+  by 
+    have hμ_ne_bot : μ.ae.ne_bot
+    ·
+      rwa [ne_bot_iff, Ne.def, ae_eq_bot]
+    exact limsup_const c
 
 theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => c) : essSup f μ ≤ c :=
   by 
@@ -142,46 +141,63 @@ section CompleteLinearOrder
 
 variable [CompleteLinearOrder β]
 
-theorem ae_lt_of_ess_sup_lt {f : α → β} {x : β} (hf : essSup f μ < x) : ∀ᵐy ∂μ, f y < x :=
+theorem ae_lt_of_ess_sup_lt {f : α → β} {x : β} (hf : essSup f μ < x) : ∀ᵐ y ∂μ, f y < x :=
   Filter.eventually_lt_of_limsup_lt hf
 
-theorem ae_lt_of_lt_ess_inf {f : α → β} {x : β} (hf : x < essInf f μ) : ∀ᵐy ∂μ, x < f y :=
+theorem ae_lt_of_lt_ess_inf {f : α → β} {x : β} (hf : x < essInf f μ) : ∀ᵐ y ∂μ, x < f y :=
   @ae_lt_of_ess_sup_lt α (OrderDual β) _ _ _ _ _ hf
 
--- error in MeasureTheory.Function.EssSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ess_sup_indicator_eq_ess_sup_restrict
-[has_zero β]
-{s : set α}
-{f : α → β}
-(hf : «expr ≤ᵐ[ ] »(0, μ.restrict s, f))
-(hs : measurable_set s)
-(hs_not_null : «expr ≠ »(μ s, 0)) : «expr = »(ess_sup (s.indicator f) μ, ess_sup f (μ.restrict s)) :=
-begin
-  refine [expr le_antisymm _ (Limsup_le_Limsup_of_le (map_restrict_ae_le_map_indicator_ae hs) (by is_bounded_default) (by is_bounded_default))],
-  refine [expr Limsup_le_Limsup (by is_bounded_default) (by is_bounded_default) (λ c h_restrict_le, _)],
-  rw [expr eventually_map] ["at", ident h_restrict_le, "⊢"],
-  rw [expr ae_restrict_iff' hs] ["at", ident h_restrict_le],
-  have [ident hc] [":", expr «expr ≤ »(0, c)] [],
-  { suffices [] [":", expr «expr∃ , »((x), «expr ∧ »(«expr ≤ »(0, f x), «expr ≤ »(f x, c)))],
-    by { obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr this],
-      exact [expr hx.1.trans hx.2] },
-    refine [expr frequently.exists _],
-    { exact [expr μ.ae] },
-    rw ["[", expr eventually_le, ",", expr ae_restrict_iff' hs, "]"] ["at", ident hf],
-    have [ident hs'] [":", expr «expr∃ᵐ ∂ , »((x), μ, «expr ∈ »(x, s))] [],
-    { contrapose ["!"] [ident hs_not_null],
-      rw ["[", expr not_frequently, ",", expr ae_iff, "]"] ["at", ident hs_not_null],
-      suffices [] [":", expr «expr = »({a : α | «expr¬ »(«expr ∉ »(a, s))}, s)],
-      by rwa ["<-", expr this] [],
-      simp [] [] [] [] [] [] },
-    refine [expr hs'.mp (hf.mp (h_restrict_le.mono (λ x hxs_imp_c hxf_nonneg hxs, _)))],
-    rw [expr pi.zero_apply] ["at", ident hxf_nonneg],
-    exact [expr ⟨hxf_nonneg hxs, hxs_imp_c hxs⟩] },
-  refine [expr h_restrict_le.mono (λ x hxc, _)],
-  by_cases [expr hxs, ":", expr «expr ∈ »(x, s)],
-  { simpa [] [] [] ["[", expr hxs, "]"] [] ["using", expr hxc hxs] },
-  { simpa [] [] [] ["[", expr hxs, "]"] [] ["using", expr hc] }
-end
+theorem ess_sup_indicator_eq_ess_sup_restrict [HasZero β] {s : Set α} {f : α → β} (hf : 0 ≤ᵐ[μ.restrict s] f)
+  (hs : MeasurableSet s) (hs_not_null : μ s ≠ 0) : essSup (s.indicator f) μ = essSup f (μ.restrict s) :=
+  by 
+    refine'
+      le_antisymmₓ _
+        (Limsup_le_Limsup_of_le (map_restrict_ae_le_map_indicator_ae hs)
+          (by 
+            runTac 
+              is_bounded_default)
+          (by 
+            runTac 
+              is_bounded_default))
+    refine'
+      Limsup_le_Limsup
+        (by 
+          runTac 
+            is_bounded_default)
+        (by 
+          runTac 
+            is_bounded_default)
+        fun c h_restrict_le => _ 
+    rw [eventually_map] at h_restrict_le⊢
+    rw [ae_restrict_iff' hs] at h_restrict_le 
+    have hc : 0 ≤ c
+    ·
+      suffices  : ∃ x, 0 ≤ f x ∧ f x ≤ c
+      ·
+        ·
+          obtain ⟨x, hx⟩ := this 
+          exact hx.1.trans hx.2
+      refine' frequently.exists _
+      ·
+        exact μ.ae 
+      rw [eventually_le, ae_restrict_iff' hs] at hf 
+      have hs' : ∃ᵐ x ∂μ, x ∈ s
+      ·
+        contrapose! hs_not_null 
+        rw [not_frequently, ae_iff] at hs_not_null 
+        suffices  : { a : α | ¬a ∉ s } = s
+        ·
+          rwa [←this]
+        simp 
+      refine' hs'.mp (hf.mp (h_restrict_le.mono fun x hxs_imp_c hxf_nonneg hxs => _))
+      rw [Pi.zero_apply] at hxf_nonneg 
+      exact ⟨hxf_nonneg hxs, hxs_imp_c hxs⟩
+    refine' h_restrict_le.mono fun x hxc => _ 
+    byCases' hxs : x ∈ s
+    ·
+      simpa [hxs] using hxc hxs
+    ·
+      simpa [hxs] using hc
 
 end CompleteLinearOrder
 
@@ -189,7 +205,7 @@ namespace Ennreal
 
 variable {f : α → ℝ≥0∞}
 
-theorem ae_le_ess_sup (f : α → ℝ≥0∞) : ∀ᵐy ∂μ, f y ≤ essSup f μ :=
+theorem ae_le_ess_sup (f : α → ℝ≥0∞) : ∀ᵐ y ∂μ, f y ≤ essSup f μ :=
   eventually_le_limsup f
 
 @[simp]

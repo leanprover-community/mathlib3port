@@ -172,7 +172,7 @@ theorem numeric_add : ∀ {x y : Pgame} ox : numeric x oy : numeric y, numeric (
       ·
         exact @add_lt_add_left ⟨xl, xr, xL, xR⟩ _ _ (oy.1 iy jy),
     by 
-      split 
+      constructor
       ·
         rintro (ix | iy)
         ·
@@ -202,11 +202,11 @@ theorem numeric_omega : numeric omega :=
 /-- The pre-game `half` is numeric. -/
 theorem numeric_half : numeric half :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨⟩ ⟨⟩
       exact zero_lt_one 
-    split  <;> rintro ⟨⟩
+    constructor <;> rintro ⟨⟩
     ·
       exact numeric_zero
     ·
@@ -214,7 +214,7 @@ theorem numeric_half : numeric half :=
 
 theorem half_add_half_equiv_one : (half+half) ≈ 1 :=
   by 
-    split  <;> rw [le_def] <;> split 
+    constructor <;> rw [le_def] <;> constructor
     ·
       rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩)
       ·
@@ -224,9 +224,9 @@ theorem half_add_half_equiv_one : (half+half) ≈ 1 :=
           ((half+half).moveLeft (Sum.inl PUnit.unit)).moveRight (Sum.inr PUnit.unit) =
             (half.move_left PUnit.unit+half).moveRight (Sum.inr PUnit.unit) :=
           by 
-            fsplit _ = (0+half).moveRight (Sum.inr PUnit.unit) :=
+            fconstructor _ = (0+half).moveRight (Sum.inr PUnit.unit) :=
           by 
-            fsplit _ ≈ 1 :=
+            fconstructor _ ≈ 1 :=
           zero_add_equiv 1_ ≤ 1 := Pgame.le_refl 1
       ·
         right 
@@ -235,9 +235,9 @@ theorem half_add_half_equiv_one : (half+half) ≈ 1 :=
           ((half+half).moveLeft (Sum.inr PUnit.unit)).moveRight (Sum.inl PUnit.unit) =
             (half+half.move_left PUnit.unit).moveRight (Sum.inl PUnit.unit) :=
           by 
-            fsplit _ = (half+0).moveRight (Sum.inl PUnit.unit) :=
+            fconstructor _ = (half+0).moveRight (Sum.inl PUnit.unit) :=
           by 
-            fsplit _ ≈ 1 :=
+            fconstructor _ ≈ 1 :=
           add_zero_equiv 1_ ≤ 1 := Pgame.le_refl 1
     ·
       rintro ⟨⟩
@@ -248,7 +248,7 @@ theorem half_add_half_equiv_one : (half+half) ≈ 1 :=
       calc 0 ≤ half := le_of_ltₓ numeric_zero numeric_half zero_lt_half _ ≈ 0+half :=
         (zero_add_equiv half).symm _ = (half+half).moveLeft (Sum.inl PUnit.unit) :=
         by 
-          fsplit
+          fconstructor
     ·
       rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> left
       ·
@@ -280,10 +280,10 @@ def mk (x : Pgame) (h : x.numeric) : Surreal :=
   Quotientₓ.mk ⟨x, h⟩
 
 instance : HasZero Surreal :=
-  { zero := «expr⟦ ⟧» ⟨0, numeric_zero⟩ }
+  { zero := ⟦⟨0, numeric_zero⟩⟧ }
 
 instance : HasOne Surreal :=
-  { one := «expr⟦ ⟧» ⟨1, numeric_one⟩ }
+  { one := ⟦⟨1, numeric_one⟩⟧ }
 
 instance : Inhabited Surreal :=
   ⟨0⟩
@@ -321,13 +321,13 @@ theorem not_leₓ : ∀ {x y : Surreal}, ¬le x y ↔ lt y x :=
 /-- Addition on surreals is inherited from pre-game addition:
 the sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
 def add : Surreal → Surreal → Surreal :=
-  Surreal.lift₂ (fun x y : Pgame ox oy => «expr⟦ ⟧» ⟨x+y, numeric_add ox oy⟩)
+  Surreal.lift₂ (fun x y : Pgame ox oy => ⟦⟨x+y, numeric_add ox oy⟩⟧)
     fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => Quotientₓ.sound (Pgame.add_congr hx hy)
 
 /-- Negation for surreal numbers is inherited from pre-game negation:
 the negation of `{L | R}` is `{-R | -L}`. -/
 def neg : Surreal → Surreal :=
-  Surreal.lift (fun x ox => «expr⟦ ⟧» ⟨-x, Pgame.numeric_neg ox⟩) fun _ _ _ _ a => Quotientₓ.sound (Pgame.neg_congr a)
+  Surreal.lift (fun x ox => ⟦⟨-x, Pgame.numeric_neg ox⟩⟧) fun _ _ _ _ a => Quotientₓ.sound (Pgame.neg_congr a)
 
 instance : LE Surreal :=
   ⟨le⟩

@@ -8,7 +8,7 @@ and `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the who
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Real
 
@@ -50,45 +50,48 @@ theorem tan_int_mul_pi_div_two (n : ℤ) : tan ((n*π) / 2) = 0 :=
     (by 
       use n)
 
--- error in Analysis.SpecialFunctions.Trigonometric.Arctan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_on_tan : continuous_on tan {x | «expr ≠ »(cos x, 0)} :=
-begin
-  suffices [] [":", expr continuous_on (λ x, «expr / »(sin x, cos x)) {x | «expr ≠ »(cos x, 0)}],
-  { have [ident h_eq] [":", expr «expr = »(λ x, «expr / »(sin x, cos x), tan)] [],
-    by { ext1 [] [ident x],
-      rw [expr tan_eq_sin_div_cos] [] },
-    rwa [expr h_eq] ["at", ident this] },
-  exact [expr continuous_on_sin.div continuous_on_cos (λ x, id)]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  continuous_on_tan
+  : ContinuousOn tan { x | cos x ≠ 0 }
+  :=
+    by
+      suffices : ContinuousOn fun x => sin x / cos x { x | cos x ≠ 0 }
+        · have h_eq : fun x => sin x / cos x = tan · · ext1 x rw [ tan_eq_sin_div_cos ] rwa [ h_eq ] at this
+        exact continuous_on_sin.div continuous_on_cos fun x => id
 
 @[continuity]
-theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
+theorem continuous_tan : Continuous fun x => tan x :=
   continuous_on_iff_continuous_restrict.1 continuous_on_tan
 
--- error in Analysis.SpecialFunctions.Trigonometric.Arctan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_on_tan_Ioo : continuous_on tan (Ioo «expr- »(«expr / »(exprπ(), 2)) «expr / »(exprπ(), 2)) :=
-begin
-  refine [expr continuous_on.mono continuous_on_tan (λ x, _)],
-  simp [] [] ["only"] ["[", expr and_imp, ",", expr mem_Ioo, ",", expr mem_set_of_eq, ",", expr ne.def, "]"] [] [],
-  rw [expr cos_eq_zero_iff] [],
-  rintros [ident hx_gt, ident hx_lt, "⟨", ident r, ",", ident hxr_eq, "⟩"],
-  cases [expr le_or_lt 0 r] [],
-  { rw [expr lt_iff_not_ge] ["at", ident hx_lt],
-    refine [expr hx_lt _],
-    rw ["[", expr hxr_eq, ",", "<-", expr one_mul «expr / »(exprπ(), 2), ",", expr mul_div_assoc, ",", expr ge_iff_le, ",", expr mul_le_mul_right (half_pos pi_pos), "]"] [],
-    simp [] [] [] ["[", expr h, "]"] [] [] },
-  { rw [expr lt_iff_not_ge] ["at", ident hx_gt],
-    refine [expr hx_gt _],
-    rw ["[", expr hxr_eq, ",", "<-", expr one_mul «expr / »(exprπ(), 2), ",", expr mul_div_assoc, ",", expr ge_iff_le, ",", expr neg_mul_eq_neg_mul, ",", expr mul_le_mul_right (half_pos pi_pos), "]"] [],
-    have [ident hr_le] [":", expr «expr ≤ »(r, «expr- »(1))] [],
-    by rwa ["[", expr int.lt_iff_add_one_le, ",", "<-", expr le_neg_iff_add_nonpos_right, "]"] ["at", ident h],
-    rw ["[", "<-", expr le_sub_iff_add_le, ",", expr mul_comm, ",", "<-", expr le_div_iff, "]"] [],
-    { norm_num [] [],
-      rw ["[", "<-", expr int.cast_one, ",", "<-", expr int.cast_neg, "]"] [],
-      norm_cast [],
-      exact [expr hr_le] },
-    { exact [expr zero_lt_two] } }
-end
+theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) :=
+  by 
+    refine' ContinuousOn.mono continuous_on_tan fun x => _ 
+    simp only [and_imp, mem_Ioo, mem_set_of_eq, Ne.def]
+    rw [cos_eq_zero_iff]
+    rintro hx_gt hx_lt ⟨r, hxr_eq⟩
+    cases le_or_ltₓ 0 r
+    ·
+      rw [lt_iff_not_geₓ] at hx_lt 
+      refine' hx_lt _ 
+      rw [hxr_eq, ←one_mulₓ (π / 2), mul_div_assoc, ge_iff_le, mul_le_mul_right (half_pos pi_pos)]
+      simp [h]
+    ·
+      rw [lt_iff_not_geₓ] at hx_gt 
+      refine' hx_gt _ 
+      rw [hxr_eq, ←one_mulₓ (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mul, mul_le_mul_right (half_pos pi_pos)]
+      have hr_le : r ≤ -1
+      ·
+        rwa [Int.lt_iff_add_one_le, ←le_neg_iff_add_nonpos_right] at h 
+      rw [←le_sub_iff_add_le, mul_commₓ, ←le_div_iff]
+      ·
+        normNum 
+        rw [←Int.cast_one, ←Int.cast_neg]
+        normCast 
+        exact hr_le
+      ·
+        exact zero_lt_two
 
 theorem surj_on_tan : surj_on tan (Ioo (-(π / 2)) (π / 2)) univ :=
   have  := neg_lt_self pi_div_two_pos 
@@ -168,7 +171,7 @@ theorem arctan_eq_of_tan_eq {x y : ℝ} (h : tan x = y) (hx : x ∈ Ioo (-(π / 
 theorem arctan_one : arctan 1 = π / 4 :=
   arctan_eq_of_tan_eq tan_pi_div_four$
     by 
-      split  <;> linarith [pi_pos]
+      constructor <;> linarith [pi_pos]
 
 @[simp]
 theorem arctan_neg (x : ℝ) : arctan (-x) = -arctan x :=
@@ -190,11 +193,11 @@ def tan_local_homeomorph : LocalHomeomorph ℝ ℝ :=
     continuous_to_fun := continuous_on_tan_Ioo, continuous_inv_fun := continuous_arctan.ContinuousOn }
 
 @[simp]
-theorem coe_tan_local_homeomorph : «expr⇑ » tan_local_homeomorph = tan :=
+theorem coe_tan_local_homeomorph : ⇑tan_local_homeomorph = tan :=
   rfl
 
 @[simp]
-theorem coe_tan_local_homeomorph_symm : «expr⇑ » tan_local_homeomorph.symm = arctan :=
+theorem coe_tan_local_homeomorph_symm : ⇑tan_local_homeomorph.symm = arctan :=
   rfl
 
 end Real

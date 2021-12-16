@@ -22,7 +22,7 @@ instance : LocallyFiniteOrder ℤ :=
         by 
           simpRw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
             Nat.cast_embedding_apply, add_left_embedding_apply, nat_cast_eq_coe_nat]
-          split 
+          constructor
           ·
             rintro ⟨a, h, rfl⟩
             rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_commₓ] at h 
@@ -38,7 +38,7 @@ instance : LocallyFiniteOrder ℤ :=
         by 
           simpRw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
             Nat.cast_embedding_apply, add_left_embedding_apply, nat_cast_eq_coe_nat]
-          split 
+          constructor
           ·
             rintro ⟨a, h, rfl⟩
             exact ⟨Int.Le.intro rfl, lt_sub_iff_add_lt'.mp h⟩
@@ -52,7 +52,7 @@ instance : LocallyFiniteOrder ℤ :=
         by 
           simpRw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
             Nat.cast_embedding_apply, add_left_embedding_apply, nat_cast_eq_coe_nat]
-          split 
+          constructor
           ·
             rintro ⟨a, h, rfl⟩
             rw [←add_one_le_iff, le_sub_iff_add_le', add_commₓ _ (1 : ℤ), ←add_assocₓ] at h 
@@ -67,7 +67,7 @@ instance : LocallyFiniteOrder ℤ :=
         by 
           simpRw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
             Nat.cast_embedding_apply, add_left_embedding_apply, nat_cast_eq_coe_nat]
-          split 
+          constructor
           ·
             rintro ⟨a, h, rfl⟩
             rw [sub_sub, lt_sub_iff_add_lt'] at h 

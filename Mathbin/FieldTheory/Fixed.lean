@@ -21,7 +21,7 @@ then `finrank (fixed_points G F) F = fintype.card G`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -38,9 +38,9 @@ variable (F : Type v) [Field F] [MulSemiringAction M F] [MulSemiringAction G F] 
 /-- The subfield of F fixed by the field endomorphism `m`. -/
 def FixedBy.subfield : Subfield F :=
   { Carrier := fixed_by M F m, zero_mem' := smul_zero m,
-    add_mem' := fun x y hx hy => (smul_add m x y).trans$ congr_arg2 _ hx hy,
+    add_mem' := fun x y hx hy => (smul_add m x y).trans$ congr_arg2ₓ _ hx hy,
     neg_mem' := fun x hx => (smul_neg m x).trans$ congr_argₓ _ hx, one_mem' := smul_one m,
-    mul_mem' := fun x y hx hy => (smul_mul' m x y).trans$ congr_arg2 _ hx hy,
+    mul_mem' := fun x y hx hy => (smul_mul' m x y).trans$ congr_arg2ₓ _ hx hy,
     inv_mem' := fun x hx => (smul_inv'' m x).trans$ congr_argₓ _ hx }
 
 section InvariantSubfields
@@ -70,7 +70,7 @@ variable (M)
 
 /-- The subfield of fixed points by a monoid action. -/
 def Subfield : Subfield F :=
-  Subfield.copy (⨅m : M, FixedBy.subfield F m) (fixed_points M F)
+  Subfield.copy (⨅ m : M, FixedBy.subfield F m) (fixed_points M F)
     (by 
       ext z 
       simp [fixed_points, FixedBy.subfield, infi, Subfield.mem_Inf])
@@ -84,7 +84,7 @@ instance : IsInvariantSubfield M (FixedPoints.subfield M F) :=
 instance : SmulCommClass M (FixedPoints.subfield M F) F :=
   { smul_comm :=
       fun m f f' =>
-        show (m • «expr↑ » f*f') = f*m • f' by 
+        show (m • (↑f)*f') = f*m • f' by 
           rw [smul_mul', f.prop m] }
 
 instance smul_comm_class' : SmulCommClass (FixedPoints.subfield M F) M F :=
@@ -113,51 +113,43 @@ instance : Algebra (FixedPoints.subfield M F) F :=
 theorem coe_algebra_map : algebraMap (FixedPoints.subfield M F) F = Subfield.subtype (FixedPoints.subfield M F) :=
   rfl
 
--- error in FieldTheory.Fixed: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent_smul_of_linear_independent
-{s : finset F} : linear_independent (fixed_points.subfield G F) (λ
- i : (s : set F), (i : F)) → linear_independent F (λ i : (s : set F), mul_action.to_fun G F i) :=
-begin
-  haveI [] [":", expr is_empty ((«expr∅»() : finset F) : set F)] [":=", expr ⟨subtype.prop⟩],
-  refine [expr finset.induction_on s (λ _, linear_independent_empty_type) (λ a s has ih hs, _)],
-  rw [expr coe_insert] ["at", ident hs, "⊢"],
-  rw [expr linear_independent_insert (mt mem_coe.1 has)] ["at", ident hs],
-  rw [expr linear_independent_insert' (mt mem_coe.1 has)] [],
-  refine [expr ⟨ih hs.1, λ ha, _⟩],
-  rw [expr finsupp.mem_span_image_iff_total] ["at", ident ha],
-  rcases [expr ha, "with", "⟨", ident l, ",", ident hl, ",", ident hla, "⟩"],
-  rw ["[", expr finsupp.total_apply_of_mem_supported F hl, "]"] ["at", ident hla],
-  suffices [] [":", expr ∀ i «expr ∈ » s, «expr ∈ »(l i, fixed_points.subfield G F)],
-  { replace [ident hla] [] [":=", expr (sum_apply _ _ (λ
-       i, «expr • »(l i, to_fun G F i))).symm.trans (congr_fun hla 1)],
-    simp_rw ["[", expr pi.smul_apply, ",", expr to_fun_apply, ",", expr one_smul, "]"] ["at", ident hla],
-    refine [expr hs.2 «expr ▸ »(hla, submodule.sum_mem _ (λ c hcs, _))],
-    change [expr «expr ∈ »(«expr • »((⟨l c, this c hcs⟩ : fixed_points.subfield G F), c), _)] [] [],
-    exact [expr submodule.smul_mem _ _ «expr $ »(submodule.subset_span, mem_coe.2 hcs)] },
-  intros [ident i, ident his, ident g],
-  refine [expr eq_of_sub_eq_zero (linear_independent_iff'.1 (ih hs.1) s.attach (λ
-    i, «expr - »(«expr • »(g, l i), l i)) _ ⟨i, his⟩ (mem_attach _ _) : _)],
-  refine [expr (@sum_attach _ _ s _ (λ i, «expr • »(«expr - »(«expr • »(g, l i), l i), to_fun G F i))).trans _],
-  ext [] [ident g'] [],
-  dsimp ["only"] [] [] [],
-  conv_lhs [] [] { rw [expr sum_apply],
-    congr,
-    skip,
-    funext,
-    rw ["[", expr pi.smul_apply, ",", expr sub_smul, ",", expr smul_eq_mul, "]"] },
-  rw ["[", expr sum_sub_distrib, ",", expr pi.zero_apply, ",", expr sub_eq_zero, "]"] [],
-  conv_lhs [] [] { congr,
-    skip,
-    funext,
-    rw ["[", expr to_fun_apply, ",", "<-", expr mul_inv_cancel_left g g', ",", expr mul_smul, ",", "<-", expr smul_mul', ",", "<-", expr to_fun_apply _ x, "]"] },
-  show [expr «expr = »(«expr∑ in , »((x), s, «expr • »(g, λ
-      y, «expr • »(l y, to_fun G F y) x «expr * »(«expr ⁻¹»(g), g'))), «expr∑ in , »((x), s, λ
-     y, «expr • »(l y, to_fun G F y) x g'))],
-  rw ["[", "<-", expr smul_sum, ",", "<-", expr sum_apply _ _ (λ
-    y, «expr • »(l y, to_fun G F y)), ",", "<-", expr sum_apply _ _ (λ y, «expr • »(l y, to_fun G F y)), "]"] [],
-  dsimp ["only"] [] [] [],
-  rw ["[", expr hla, ",", expr to_fun_apply, ",", expr to_fun_apply, ",", expr smul_smul, ",", expr mul_inv_cancel_left, "]"] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+theorem linear_independent_smul_of_linear_independent {s : Finset F} :
+  (LinearIndependent (FixedPoints.subfield G F) fun i : (s : Set F) => (i : F)) →
+    LinearIndependent F fun i : (s : Set F) => MulAction.toFun G F i :=
+  by 
+    have  : IsEmpty ((∅ : Finset F) : Set F) := ⟨Subtype.prop⟩
+    refine' Finset.induction_on s (fun _ => linear_independent_empty_type) fun a s has ih hs => _ 
+    rw [coe_insert] at hs⊢
+    rw [linear_independent_insert (mt mem_coe.1 has)] at hs 
+    rw [linear_independent_insert' (mt mem_coe.1 has)]
+    refine' ⟨ih hs.1, fun ha => _⟩
+    rw [Finsupp.mem_span_image_iff_total] at ha 
+    rcases ha with ⟨l, hl, hla⟩
+    rw [Finsupp.total_apply_of_mem_supported F hl] at hla 
+    suffices  : ∀ i _ : i ∈ s, l i ∈ FixedPoints.subfield G F
+    ·
+      replace hla := (sum_apply _ _ fun i => l i • to_fun G F i).symm.trans (congr_funₓ hla 1)
+      simpRw [Pi.smul_apply, to_fun_apply, one_smul]  at hla 
+      refine' hs.2 (hla ▸ Submodule.sum_mem _ fun c hcs => _)
+      change (⟨l c, this c hcs⟩ : FixedPoints.subfield G F) • c ∈ _ 
+      exact Submodule.smul_mem _ _ (Submodule.subset_span$ mem_coe.2 hcs)
+    intro i his g 
+    refine'
+      eq_of_sub_eq_zero
+        (linear_independent_iff'.1 (ih hs.1) s.attach (fun i => g • l i - l i) _ ⟨i, his⟩ (mem_attach _ _) : _)
+    refine' (@sum_attach _ _ s _ fun i => (g • l i - l i) • MulAction.toFun G F i).trans _ 
+    ext g' 
+    dsimp only 
+    convLHS => rw [sum_apply]congr skip ext rw [Pi.smul_apply, sub_smul, smul_eq_mul]
+    rw [sum_sub_distrib, Pi.zero_apply, sub_eq_zero]
+    convLHS => congr skip ext rw [to_fun_apply, ←mul_inv_cancel_left g g', mul_smul, ←smul_mul', ←to_fun_apply _ x]
+    show
+      (∑ x in s, g • (fun y => l y • MulAction.toFun G F y) x (g⁻¹*g')) =
+        ∑ x in s, (fun y => l y • MulAction.toFun G F y) x g' 
+    rw [←smul_sum, ←sum_apply _ _ fun y => l y • to_fun G F y, ←sum_apply _ _ fun y => l y • to_fun G F y]
+    dsimp only 
+    rw [hla, to_fun_apply, to_fun_apply, smul_smul, mul_inv_cancel_left]
 
 variable [Fintype G] (x : F)
 
@@ -204,31 +196,36 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
       ←MulSemiringActionHom.map_smul, smul_polynomial, MulSemiringActionHom.coe_polynomial,
       IsInvariantSubring.coe_subtype_hom', Polynomial.eval_map, Subfield.toSubring.subtype_eq_subtype, hf, smul_zero]
 
--- error in FieldTheory.Fixed: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem irreducible_aux
-(f g : polynomial (fixed_points.subfield G F))
-(hf : f.monic)
-(hg : g.monic)
-(hfg : «expr = »(«expr * »(f, g), minpoly G F x)) : «expr ∨ »(«expr = »(f, 1), «expr = »(g, 1)) :=
-begin
-  have [ident hf2] [":", expr «expr ∣ »(f, minpoly G F x)] [],
-  { rw ["<-", expr hfg] [],
-    exact [expr dvd_mul_right _ _] },
-  have [ident hg2] [":", expr «expr ∣ »(g, minpoly G F x)] [],
-  { rw ["<-", expr hfg] [],
-    exact [expr dvd_mul_left _ _] },
-  have [] [] [":=", expr eval₂ G F x],
-  rw ["[", "<-", expr hfg, ",", expr polynomial.eval₂_mul, ",", expr mul_eq_zero, "]"] ["at", ident this],
-  cases [expr this] [],
-  { right,
-    have [ident hf3] [":", expr «expr = »(f, minpoly G F x)] [],
-    { exact [expr polynomial.eq_of_monic_of_associated hf (monic G F x) «expr $ »(associated_of_dvd_dvd hf2, @of_eval₂ G _ F _ _ _ x f this)] },
-    rwa ["[", "<-", expr mul_one (minpoly G F x), ",", expr hf3, ",", expr mul_right_inj' (monic G F x).ne_zero, "]"] ["at", ident hfg] },
-  { left,
-    have [ident hg3] [":", expr «expr = »(g, minpoly G F x)] [],
-    { exact [expr polynomial.eq_of_monic_of_associated hg (monic G F x) «expr $ »(associated_of_dvd_dvd hg2, @of_eval₂ G _ F _ _ _ x g this)] },
-    rwa ["[", "<-", expr one_mul (minpoly G F x), ",", expr hg3, ",", expr mul_left_inj' (monic G F x).ne_zero, "]"] ["at", ident hfg] }
-end
+theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.monic) (hg : g.monic)
+  (hfg : (f*g) = minpoly G F x) : f = 1 ∨ g = 1 :=
+  by 
+    have hf2 : f ∣ minpoly G F x
+    ·
+      rw [←hfg]
+      exact dvd_mul_right _ _ 
+    have hg2 : g ∣ minpoly G F x
+    ·
+      rw [←hfg]
+      exact dvd_mul_left _ _ 
+    have  := eval₂ G F x 
+    rw [←hfg, Polynomial.eval₂_mul, mul_eq_zero] at this 
+    cases this
+    ·
+      right 
+      have hf3 : f = minpoly G F x
+      ·
+        exact
+          Polynomial.eq_of_monic_of_associated hf (monic G F x)
+            (associated_of_dvd_dvd hf2$ @of_eval₂ G _ F _ _ _ x f this)
+      rwa [←mul_oneₓ (minpoly G F x), hf3, mul_right_inj' (monic G F x).ne_zero] at hfg
+    ·
+      left 
+      have hg3 : g = minpoly G F x
+      ·
+        exact
+          Polynomial.eq_of_monic_of_associated hg (monic G F x)
+            (associated_of_dvd_dvd hg2$ @of_eval₂ G _ F _ _ _ x g this)
+      rwa [←one_mulₓ (minpoly G F x), hg3, mul_left_inj' (monic G F x).ne_zero] at hfg
 
 theorem Irreducible : Irreducible (minpoly G F x) :=
   (Polynomial.irreducible_of_monic (monic G F x) (ne_one G F x)).2 (irreducible_aux G F x)
@@ -319,7 +316,7 @@ theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [F
   [HasFaithfulScalar G F] : Function.Bijective (MulSemiringAction.toAlgHom _ _ : G → F →ₐ[Subfield G F] F) :=
   by 
     rw [Fintype.bijective_iff_injective_and_card]
-    split 
+    constructor
     ·
       exact MulSemiringAction.to_alg_hom_injective _ F
     ·
@@ -333,7 +330,7 @@ theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [F
 /-- Bijection between G and algebra homomorphisms that fix the fixed points -/
 def to_alg_hom_equiv (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
   [HasFaithfulScalar G F] : G ≃ (F →ₐ[FixedPoints.subfield G F] F) :=
-  Equiv.ofBijective _ (to_alg_hom_bijective G F)
+  Equivₓ.ofBijective _ (to_alg_hom_bijective G F)
 
 end FixedPoints
 

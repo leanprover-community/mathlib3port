@@ -40,7 +40,7 @@ in general not be used once the basic API for polynomials is constructed.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 /-- `polynomial R` is the type of univariate polynomials over `R`.
 
@@ -70,20 +70,16 @@ theorem exists_iff_exists_finsupp (P : Polynomial R → Prop) : (∃ p, P p) ↔
   ⟨fun ⟨⟨p⟩, hp⟩ => ⟨p, hp⟩, fun ⟨q, hq⟩ => ⟨⟨q⟩, hq⟩⟩
 
 /-- The function version of `monomial`. Use `monomial` instead of this one. -/
-@[irreducible]
-def monomial_fun (n : ℕ) (a : R) : Polynomial R :=
+irreducible_def monomial_fun (n : ℕ) (a : R) : Polynomial R :=
   ⟨Finsupp.single n a⟩
 
-@[irreducible]
-private def add : Polynomial R → Polynomial R → Polynomial R
+private irreducible_def add : Polynomial R → Polynomial R → Polynomial R
 | ⟨a⟩, ⟨b⟩ => ⟨a+b⟩
 
-@[irreducible]
-private def neg {R : Type u} [Ringₓ R] : Polynomial R → Polynomial R
+private irreducible_def neg {R : Type u} [Ringₓ R] : Polynomial R → Polynomial R
 | ⟨a⟩ => ⟨-a⟩
 
-@[irreducible]
-private def mul : Polynomial R → Polynomial R → Polynomial R
+private irreducible_def mul : Polynomial R → Polynomial R → Polynomial R
 | ⟨a⟩, ⟨b⟩ => ⟨a*b⟩
 
 instance : HasZero (Polynomial R) :=
@@ -193,6 +189,12 @@ instance {S₁ S₂} [HasScalar S₁ S₂] [Monoidₓ S₁] [Monoidₓ S₂] [Di
       rintro _ _ ⟨⟩
       simp [smul_to_finsupp]⟩
 
+instance {S} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction (Sᵐᵒᵖ) R] [IsCentralScalar S R] :
+  IsCentralScalar S (Polynomial R) :=
+  ⟨by 
+      rintro _ ⟨⟩
+      simp [smul_to_finsupp, op_smul_eq_smul]⟩
+
 instance [Subsingleton R] : Unique (Polynomial R) :=
   { Polynomial.inhabited with
     uniq :=
@@ -220,13 +222,13 @@ def to_finsupp_iso : Polynomial R ≃+* AddMonoidAlgebra R ℕ :=
 
 /-- Ring isomorphism between `(polynomial R)ᵐᵒᵖ` and `polynomial Rᵐᵒᵖ`. -/
 @[simps]
-def op_ring_equiv : «expr ᵐᵒᵖ» (Polynomial R) ≃+* Polynomial («expr ᵐᵒᵖ» R) :=
+def op_ring_equiv : Polynomial Rᵐᵒᵖ ≃+* Polynomial (Rᵐᵒᵖ) :=
   ((to_finsupp_iso R).op.trans AddMonoidAlgebra.opRingEquiv).trans (to_finsupp_iso _).symm
 
 variable {R}
 
 theorem sum_to_finsupp {ι : Type _} (s : Finset ι) (f : ι → AddMonoidAlgebra R ℕ) :
-  (∑i in s, (⟨f i⟩ : Polynomial R)) = ⟨∑i in s, f i⟩ :=
+  (∑ i in s, (⟨f i⟩ : Polynomial R)) = ⟨∑ i in s, f i⟩ :=
   ((to_finsupp_iso R).symm.toAddMonoidHom.map_sum f s).symm
 
 /--
@@ -261,15 +263,13 @@ def monomial (n : ℕ) : R →ₗ[R] Polynomial R :=
 
 @[simp]
 theorem monomial_zero_right (n : ℕ) : monomial n (0 : R) = 0 :=
-  by 
-    simp [monomial, monomial_fun]
+  (monomial n).map_zero
 
 theorem monomial_zero_one : monomial 0 (1 : R) = 1 :=
   rfl
 
 theorem monomial_add (n : ℕ) (r s : R) : monomial n (r+s) = monomial n r+monomial n s :=
-  by 
-    simp [monomial, monomial_fun]
+  (monomial n).map_add _ _
 
 theorem monomial_mul_monomial (n m : ℕ) (r s : R) : (monomial n r*monomial m s) = monomial (n+m) (r*s) :=
   by 
@@ -547,30 +547,31 @@ theorem ext_iff {p q : Polynomial R} : p = q ↔ ∀ n, coeff p n = coeff q n :=
 theorem ext {p q : Polynomial R} : (∀ n, coeff p n = coeff q n) → p = q :=
   ext_iff.2
 
--- error in Data.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_hom_ext
-{M : Type*}
-[add_monoid M]
-{f g : «expr →+ »(polynomial R, M)}
-(h : ∀ n a, «expr = »(f (monomial n a), g (monomial n a))) : «expr = »(f, g) :=
-begin
-  set [] [ident f'] [":", expr «expr →+ »(add_monoid_algebra R exprℕ(), M)] [":="] [expr f.comp (to_finsupp_iso R).symm] ["with", ident hf'],
-  set [] [ident g'] [":", expr «expr →+ »(add_monoid_algebra R exprℕ(), M)] [":="] [expr g.comp (to_finsupp_iso R).symm] ["with", ident hg'],
-  have [] [":", expr ∀
-   n
-   a, «expr = »(f' (single n a), g' (single n a))] [":=", expr λ
-   n, by simp [] [] [] ["[", expr hf', ",", expr hg', ",", expr h n, "]"] [] []],
-  have [ident A] [":", expr «expr = »(f', g')] [":=", expr finsupp.add_hom_ext this],
-  have [ident B] [":", expr «expr = »(f, f'.comp (to_finsupp_iso R))] [],
-  by { rw ["[", expr hf', ",", expr add_monoid_hom.comp_assoc, "]"] [],
-    ext [] [ident x] [],
-    simp [] [] ["only"] ["[", expr ring_equiv.symm_apply_apply, ",", expr add_monoid_hom.coe_comp, ",", expr function.comp_app, ",", expr ring_hom.coe_add_monoid_hom, ",", expr ring_equiv.coe_to_ring_hom, ",", expr coe_coe, "]"] [] [] },
-  have [ident C] [":", expr «expr = »(g, g'.comp (to_finsupp_iso R))] [],
-  by { rw ["[", expr hg', ",", expr add_monoid_hom.comp_assoc, "]"] [],
-    ext [] [ident x] [],
-    simp [] [] ["only"] ["[", expr ring_equiv.symm_apply_apply, ",", expr add_monoid_hom.coe_comp, ",", expr function.comp_app, ",", expr ring_hom.coe_add_monoid_hom, ",", expr ring_equiv.coe_to_ring_hom, ",", expr coe_coe, "]"] [] [] },
-  rw ["[", expr B, ",", expr C, ",", expr A, "]"] []
-end
+theorem add_hom_ext {M : Type _} [AddMonoidₓ M] {f g : Polynomial R →+ M}
+  (h : ∀ n a, f (monomial n a) = g (monomial n a)) : f = g :=
+  by 
+    set f' : AddMonoidAlgebra R ℕ →+ M := f.comp (to_finsupp_iso R).symm with hf' 
+    set g' : AddMonoidAlgebra R ℕ →+ M := g.comp (to_finsupp_iso R).symm with hg' 
+    have  : ∀ n a, f' (single n a) = g' (single n a) :=
+      fun n =>
+        by 
+          simp [hf', hg', h n]
+    have A : f' = g' := Finsupp.add_hom_ext this 
+    have B : f = f'.comp (to_finsupp_iso R)
+    ·
+      ·
+        rw [hf', AddMonoidHom.comp_assoc]
+        ext x 
+        simp only [RingEquiv.symm_apply_apply, AddMonoidHom.coe_comp, Function.comp_app, RingHom.coe_add_monoid_hom,
+          RingEquiv.coe_to_ring_hom, coe_coe]
+    have C : g = g'.comp (to_finsupp_iso R)
+    ·
+      ·
+        rw [hg', AddMonoidHom.comp_assoc]
+        ext x 
+        simp only [RingEquiv.symm_apply_apply, AddMonoidHom.coe_comp, Function.comp_app, RingHom.coe_add_monoid_hom,
+          RingEquiv.coe_to_ring_hom, coe_coe]
+    rw [B, C, A]
 
 @[ext]
 theorem add_hom_ext' {M : Type _} [AddMonoidₓ M] {f g : Polynomial R →+ M}
@@ -637,21 +638,21 @@ theorem nat_cast_mul {R : Type _} [Semiringₓ R] (n : ℕ) (p : Polynomial R) :
 
 /-- Summing the values of a function applied to the coefficients of a polynomial -/
 def Sum {S : Type _} [AddCommMonoidₓ S] (p : Polynomial R) (f : ℕ → R → S) : S :=
-  ∑n in p.support, f n (p.coeff n)
+  ∑ n in p.support, f n (p.coeff n)
 
 theorem sum_def {S : Type _} [AddCommMonoidₓ S] (p : Polynomial R) (f : ℕ → R → S) :
-  p.sum f = ∑n in p.support, f n (p.coeff n) :=
+  p.sum f = ∑ n in p.support, f n (p.coeff n) :=
   rfl
 
 theorem sum_eq_of_subset {S : Type _} [AddCommMonoidₓ S] (p : Polynomial R) (f : ℕ → R → S) (hf : ∀ i, f i 0 = 0)
-  (s : Finset ℕ) (hs : p.support ⊆ s) : p.sum f = ∑n in s, f n (p.coeff n) :=
+  (s : Finset ℕ) (hs : p.support ⊆ s) : p.sum f = ∑ n in s, f n (p.coeff n) :=
   by 
     apply Finset.sum_subset hs fun n hn h'n => _ 
     rw [not_mem_support_iff] at h'n 
     simp [h'n, hf]
 
 /-- Expressing the product of two polynomials as a double sum. -/
-theorem mul_eq_sum_sum : (p*q) = ∑i in p.support, q.sum fun j a => (monomial (i+j)) (p.coeff i*a) :=
+theorem mul_eq_sum_sum : (p*q) = ∑ i in p.support, q.sum fun j a => (monomial (i+j)) (p.coeff i*a) :=
   by 
     rcases p with ⟨⟩
     rcases q with ⟨⟩
@@ -706,8 +707,7 @@ theorem sum_smul_index {S : Type _} [AddCommMonoidₓ S] (p : Polynomial R) (b :
     exact Finsupp.sum_smul_index hf
 
 /-- `erase p n` is the polynomial `p` in which the `X^n` term has been erased. -/
-@[irreducible]
-def erase (n : ℕ) : Polynomial R → Polynomial R
+irreducible_def erase (n : ℕ) : Polynomial R → Polynomial R
 | ⟨p⟩ => ⟨p.erase n⟩
 
 @[simp]
@@ -715,7 +715,6 @@ theorem support_erase (p : Polynomial R) (n : ℕ) : support (p.erase n) = (supp
   by 
     rcases p with ⟨⟩
     simp only [support, erase, support_erase]
-    congr
 
 theorem monomial_add_erase (p : Polynomial R) (n : ℕ) : (monomial n (coeff p n)+p.erase n) = p :=
   by 
@@ -762,7 +761,6 @@ theorem coeff_update (p : Polynomial R) (n : ℕ) (a : R) : (p.update n a).coeff
     ext 
     cases p 
     simp only [coeff, update, Function.update_apply, coe_update]
-    congr
 
 theorem coeff_update_apply (p : Polynomial R) (n : ℕ) (a : R) (i : ℕ) :
   (p.update n a).coeff i = if i = n then a else p.coeff i :=
@@ -875,14 +873,14 @@ section NonzeroSemiring
 
 variable [Semiringₓ R] [Nontrivial R]
 
--- error in Data.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : nontrivial (polynomial R) :=
-begin
-  have [ident h] [":", expr nontrivial (add_monoid_algebra R exprℕ())] [":=", expr by apply_instance],
-  rcases [expr h.exists_pair_ne, "with", "⟨", ident x, ",", ident y, ",", ident hxy, "⟩"],
-  refine [expr ⟨⟨⟨x⟩, ⟨y⟩, _⟩⟩],
-  simp [] [] [] ["[", expr hxy, "]"] [] []
-end
+instance : Nontrivial (Polynomial R) :=
+  by 
+    have h : Nontrivial (AddMonoidAlgebra R ℕ) :=
+      by 
+        infer_instance 
+    rcases h.exists_pair_ne with ⟨x, y, hxy⟩
+    refine' ⟨⟨⟨x⟩, ⟨y⟩, _⟩⟩
+    simp [hxy]
 
 theorem X_ne_zero : (X : Polynomial R) ≠ 0 :=
   mt (congr_argₓ fun p => coeff p 1)

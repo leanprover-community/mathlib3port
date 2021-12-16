@@ -38,7 +38,7 @@ variable [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)]
 
 variable [∀ i, LieRingModule L (M i)] [∀ i, LieModule R L (M i)]
 
-instance : LieRingModule L (⨁i, M i) :=
+instance : LieRingModule L (⨁ i, M i) :=
   { bracket := fun x m => m.map_range (fun i m' => ⁅x,m'⁆) fun i => lie_zero x,
     add_lie :=
       fun x y m =>
@@ -57,10 +57,10 @@ instance : LieRingModule L (⨁i, M i) :=
           simp only [map_range_apply, lie_lie, add_apply, sub_add_cancel] }
 
 @[simp]
-theorem lie_module_bracket_apply (x : L) (m : ⨁i, M i) (i : ι) : ⁅x,m⁆ i = ⁅x,m i⁆ :=
+theorem lie_module_bracket_apply (x : L) (m : ⨁ i, M i) (i : ι) : ⁅x,m⁆ i = ⁅x,m i⁆ :=
   map_range_apply _ _ m i
 
-instance : LieModule R L (⨁i, M i) :=
+instance : LieModule R L (⨁ i, M i) :=
   { smul_lie :=
       fun t x m =>
         by 
@@ -75,7 +75,7 @@ instance : LieModule R L (⨁i, M i) :=
 variable (R ι L M)
 
 /-- The inclusion of each component into a direct sum as a morphism of Lie modules. -/
-def lie_module_of [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁i, M i :=
+def lie_module_of [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
   { lof R ι M j with
     map_lie' :=
       fun x m =>
@@ -89,7 +89,7 @@ def lie_module_of [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁i, M i :=
             simp [lof, single_eq_of_ne h] }
 
 /-- The projection map onto one component, as a morphism of Lie modules. -/
-def lie_module_component (j : ι) : (⨁i, M i) →ₗ⁅R,L⁆ M j :=
+def lie_module_component (j : ι) : (⨁ i, M i) →ₗ⁅R,L⁆ M j :=
   { component R ι M j with
     map_lie' :=
       fun x m =>
@@ -107,7 +107,7 @@ variable (L : ι → Type w)
 
 variable [∀ i, LieRing (L i)] [∀ i, LieAlgebra R (L i)]
 
-instance LieRing : LieRing (⨁i, L i) :=
+instance LieRing : LieRing (⨁ i, L i) :=
   { (inferInstance : AddCommGroupₓ _) with bracket := zip_with (fun i => fun x y => ⁅x,y⁆) fun i => lie_zero 0,
     add_lie :=
       fun x y z =>
@@ -132,10 +132,10 @@ instance LieRing : LieRing (⨁i, L i) :=
           apply leibniz_lie }
 
 @[simp]
-theorem bracket_apply (x y : ⨁i, L i) (i : ι) : ⁅x,y⁆ i = ⁅x i,y i⁆ :=
+theorem bracket_apply (x y : ⨁ i, L i) (i : ι) : ⁅x,y⁆ i = ⁅x i,y i⁆ :=
   zip_with_apply _ _ x y i
 
-instance LieAlgebra : LieAlgebra R (⨁i, L i) :=
+instance LieAlgebra : LieAlgebra R (⨁ i, L i) :=
   { (inferInstance : Module R _) with
     lie_smul :=
       fun c x y =>
@@ -147,7 +147,7 @@ variable (R ι L)
 
 /-- The inclusion of each component into the direct sum as morphism of Lie algebras. -/
 @[simps]
-def lie_algebra_of [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁i, L i :=
+def lie_algebra_of [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
   { lof R ι L j with toFun := of L j,
     map_lie' :=
       fun x y =>
@@ -162,7 +162,7 @@ def lie_algebra_of [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁i, L i :=
 
 /-- The projection map onto one component, as a morphism of Lie algebras. -/
 @[simps]
-def lie_algebra_component (j : ι) : (⨁i, L i) →ₗ⁅R⁆ L j :=
+def lie_algebra_component (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
   { component R ι L j with toFun := component R ι L j,
     map_lie' :=
       fun x y =>
@@ -170,7 +170,7 @@ def lie_algebra_component (j : ι) : (⨁i, L i) →ₗ⁅R⁆ L j :=
           simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
 
 @[ext]
-theorem lie_algebra_ext {x y : ⨁i, L i} (h : ∀ i, lie_algebra_component R ι L i x = lie_algebra_component R ι L i y) :
+theorem lie_algebra_ext {x y : ⨁ i, L i} (h : ∀ i, lie_algebra_component R ι L i x = lie_algebra_component R ι L i y) :
   x = y :=
   Dfinsupp.ext h
 
@@ -188,18 +188,14 @@ theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : 
     ·
       simp only [dif_neg, not_false_iff, zero_lie, hik]
 
--- error in Algebra.Lie.DirectSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lie_of_of_eq
-[decidable_eq ι]
-{i j : ι}
-(hij : «expr = »(j, i))
-(x : L i)
-(y : L j) : «expr = »(«expr⁅ , ⁆»(of L i x, of L j y), of L i «expr⁅ , ⁆»(x, hij.rec_on y)) :=
-begin
-  have [] [":", expr «expr = »(of L j y, of L i (hij.rec_on y))] [],
-  { exact [expr eq.drec (eq.refl _) hij] },
-  rw ["[", expr this, ",", "<-", expr lie_algebra_of_apply R ι L i «expr⁅ , ⁆»(x, hij.rec_on y), ",", expr lie_hom.map_lie, ",", expr lie_algebra_of_apply, ",", expr lie_algebra_of_apply, "]"] []
-end
+theorem lie_of_of_eq [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L j) :
+  ⁅of L i x,of L j y⁆ = of L i ⁅x,hij.rec_on y⁆ :=
+  by 
+    have  : of L j y = of L i (hij.rec_on y)
+    ·
+      exact Eq.drec (Eq.refl _) hij 
+    rw [this, ←lie_algebra_of_apply R ι L i ⁅x,hij.rec_on y⁆, LieHom.map_lie, lie_algebra_of_apply,
+      lie_algebra_of_apply]
 
 @[simp]
 theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
@@ -213,56 +209,51 @@ theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
 
 variable {R L ι}
 
--- error in Algebra.Lie.DirectSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a family of Lie algebras `L i`, together with a family of morphisms of Lie algebras
 `f i : L i →ₗ⁅R⁆ L'` into a fixed Lie algebra `L'`, we have a natural linear map:
 `(⨁ i, L i) →ₗ[R] L'`. If in addition `⁅f i x, f j y⁆ = 0` for any `x ∈ L i` and `y ∈ L j` (`i ≠ j`)
 then this map is a morphism of Lie algebras. -/
-@[simps #[]]
-def to_lie_algebra
-[decidable_eq ι]
-(L' : Type w₁)
-[lie_ring L']
-[lie_algebra R L']
-(f : ∀ i, «expr →ₗ⁅ ⁆ »(L i, R, L'))
-(hf : ∀
- i
- j : ι, «expr ≠ »(i, j) → ∀
- (x : L i)
- (y : L j), «expr = »(«expr⁅ , ⁆»(f i x, f j y), 0)) : «expr →ₗ⁅ ⁆ »(«expr⨁ , »((i), L i), R, L') :=
-{ to_fun := to_module R ι L' (λ i, (f i : «expr →ₗ[ ] »(L i, R, L'))),
-  map_lie' := λ x y, begin
-    let [ident f'] [] [":=", expr λ i, (f i : «expr →ₗ[ ] »(L i, R, L'))],
-    suffices [] [":", expr ∀
-     (i : ι)
-     (y : L i), «expr = »(to_module R ι L' f' «expr⁅ , ⁆»(x, of L i y), «expr⁅ , ⁆»(to_module R ι L' f' x, to_module R ι L' f' (of L i y)))],
-    { simp [] [] ["only"] ["[", "<-", expr lie_algebra.ad_apply R, "]"] [] [],
-      rw ["[", "<-", expr linear_map.comp_apply, ",", "<-", expr linear_map.comp_apply, "]"] [],
-      congr,
-      clear [ident y],
-      ext [] [ident i, ident y] [],
-      exact [expr this i y] },
-    suffices [] [":", expr ∀
-     (i j)
-     (y : L i)
-     (x : L j), «expr = »(to_module R ι L' f' «expr⁅ , ⁆»(of L j x, of L i y), «expr⁅ , ⁆»(to_module R ι L' f' (of L j x), to_module R ι L' f' (of L i y)))],
-    { intros [ident i, ident y],
-      rw ["[", "<-", expr lie_skew x, ",", "<-", expr lie_skew (to_module R ι L' f' x), "]"] [],
-      simp [] [] ["only"] ["[", expr linear_map.map_neg, ",", expr neg_inj, ",", "<-", expr lie_algebra.ad_apply R, "]"] [] [],
-      rw ["[", "<-", expr linear_map.comp_apply, ",", "<-", expr linear_map.comp_apply, "]"] [],
-      congr,
-      clear [ident x],
-      ext [] [ident j, ident x] [],
-      exact [expr this j i x y] },
-    intros [ident i, ident j, ident y, ident x],
-    simp [] [] ["only"] ["[", expr lie_of R, ",", expr lie_algebra_of_apply, ",", expr lie_hom.coe_to_linear_map, ",", expr to_add_monoid_of, ",", expr coe_to_module_eq_coe_to_add_monoid, ",", expr linear_map.to_add_monoid_hom_coe, "]"] [] [],
-    rcases [expr eq_or_ne i j, "with", ident h, "|", ident h],
-    { have [ident h'] [":", expr «expr = »(f j (h.rec_on y), f i y)] [],
-      { exact [expr eq.drec (eq.refl _) h] },
-      simp [] [] ["only"] ["[", expr h, ",", expr h', ",", expr lie_hom.coe_to_linear_map, ",", expr dif_pos, ",", expr lie_hom.map_lie, ",", expr to_add_monoid_of, ",", expr linear_map.to_add_monoid_hom_coe, "]"] [] [] },
-    { simp [] [] ["only"] ["[", expr h, ",", expr hf j i h.symm x y, ",", expr dif_neg, ",", expr not_false_iff, ",", expr add_monoid_hom.map_zero, "]"] [] [] }
-  end,
-  ..to_module R ι L' (λ i, (f i : «expr →ₗ[ ] »(L i, R, L'))) }
+@[simps]
+def to_lie_algebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'] (f : ∀ i, L i →ₗ⁅R⁆ L')
+  (hf : ∀ i j : ι, i ≠ j → ∀ x : L i y : L j, ⁅f i x,f j y⁆ = 0) : (⨁ i, L i) →ₗ⁅R⁆ L' :=
+  { to_module R ι L' fun i => (f i : L i →ₗ[R] L') with toFun := to_module R ι L' fun i => (f i : L i →ₗ[R] L'),
+    map_lie' :=
+      fun x y =>
+        by 
+          let f' := fun i => (f i : L i →ₗ[R] L')
+          suffices  :
+            ∀ i : ι y : L i, to_module R ι L' f' ⁅x,of L i y⁆ = ⁅to_module R ι L' f' x,to_module R ι L' f' (of L i y)⁆
+          ·
+            simp only [←LieAlgebra.ad_apply R]
+            rw [←LinearMap.comp_apply, ←LinearMap.comp_apply]
+            congr 
+            clear y 
+            ext i y 
+            exact this i y 
+          suffices  :
+            ∀ i j y : L i x : L j,
+              to_module R ι L' f' ⁅of L j x,of L i y⁆ = ⁅to_module R ι L' f' (of L j x),to_module R ι L' f' (of L i y)⁆
+          ·
+            intro i y 
+            rw [←lie_skew x, ←lie_skew (to_module R ι L' f' x)]
+            simp only [LinearMap.map_neg, neg_inj, ←LieAlgebra.ad_apply R]
+            rw [←LinearMap.comp_apply, ←LinearMap.comp_apply]
+            congr 
+            clear x 
+            ext j x 
+            exact this j i x y 
+          intro i j y x 
+          simp only [lie_of R, lie_algebra_of_apply, LieHom.coe_to_linear_map, to_add_monoid_of,
+            coe_to_module_eq_coe_to_add_monoid, LinearMap.to_add_monoid_hom_coe]
+          rcases eq_or_ne i j with (h | h)
+          ·
+            have h' : f j (h.rec_on y) = f i y
+            ·
+              exact Eq.drec (Eq.refl _) h 
+            simp only [h, h', LieHom.coe_to_linear_map, dif_pos, LieHom.map_lie, to_add_monoid_of,
+              LinearMap.to_add_monoid_hom_coe]
+          ·
+            simp only [h, hf j i h.symm x y, dif_neg, not_false_iff, AddMonoidHom.map_zero] }
 
 end Algebras
 
@@ -281,12 +272,12 @@ def lie_algebra_is_internal [DecidableEq ι] : Prop :=
 /-- The fact that this instance is necessary seems to be a bug in typeclass inference. See
 [this Zulip thread](https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/
 Typeclass.20resolution.20under.20binders/near/245151099). -/
-instance lie_ring_of_ideals : LieRing (⨁i, I i) :=
-  DirectSum.lieRing fun i => «expr↥ » (I i)
+instance lie_ring_of_ideals : LieRing (⨁ i, I i) :=
+  DirectSum.lieRing fun i => ↥I i
 
 /-- See `direct_sum.lie_ring_of_ideals` comment. -/
-instance lie_algebra_of_ideals : LieAlgebra R (⨁i, I i) :=
-  DirectSum.lieAlgebra fun i => «expr↥ » (I i)
+instance lie_algebra_of_ideals : LieAlgebra R (⨁ i, I i) :=
+  DirectSum.lieAlgebra fun i => ↥I i
 
 end Ideals
 

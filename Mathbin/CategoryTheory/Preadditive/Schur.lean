@@ -32,22 +32,14 @@ variable {C : Type u} [category.{v} C]
 
 variable [preadditive C]
 
--- error in CategoryTheory.Preadditive.Schur: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The part of **Schur's lemma** that holds in any preadditive category with kernels:
 that a nonzero morphism between simple objects is an isomorphism.
 -/
-theorem is_iso_of_hom_simple
-[has_kernels C]
-{X Y : C}
-[simple X]
-[simple Y]
-{f : «expr ⟶ »(X, Y)}
-(w : «expr ≠ »(f, 0)) : is_iso f :=
-begin
-  haveI [] [":", expr mono f] [":=", expr preadditive.mono_of_kernel_zero (kernel_zero_of_nonzero_from_simple w)],
-  exact [expr is_iso_of_mono_of_nonzero w]
-end
+theorem is_iso_of_hom_simple [has_kernels C] {X Y : C} [simple X] [simple Y] {f : X ⟶ Y} (w : f ≠ 0) : is_iso f :=
+  by 
+    have  : mono f := preadditive.mono_of_kernel_zero (kernel_zero_of_nonzero_from_simple w)
+    exact is_iso_of_mono_of_nonzero w
 
 /--
 As a corollary of Schur's lemma for preadditive categories,
@@ -65,57 +57,61 @@ open FiniteDimensional
 
 variable (𝕜 : Type _) [Field 𝕜]
 
--- error in CategoryTheory.Preadditive.Schur: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Part of **Schur's lemma** for `𝕜`-linear categories:
 the hom space between two non-isomorphic simple objects is 0-dimensional.
 -/
-theorem finrank_hom_simple_simple_eq_zero_of_not_iso
-[has_kernels C]
-[linear 𝕜 C]
-{X Y : C}
-[simple.{v} X]
-[simple.{v} Y]
-(h : «expr ≅ »(X, Y) → false) : «expr = »(finrank 𝕜 «expr ⟶ »(X, Y), 0) :=
-begin
-  haveI [] [] [":=", expr subsingleton_of_forall_eq (0 : «expr ⟶ »(X, Y)) (λ f, begin
-      have [ident p] [] [":=", expr not_congr (is_iso_iff_nonzero f)],
-      simp [] [] ["only"] ["[", expr not_not, ",", expr ne.def, "]"] [] ["at", ident p],
-      refine [expr p.mp (λ _, by exactI [expr h (as_iso f)])]
-    end)],
-  exact [expr finrank_zero_of_subsingleton]
-end
+theorem finrank_hom_simple_simple_eq_zero_of_not_iso [has_kernels C] [linear 𝕜 C] {X Y : C} [simple.{v} X]
+  [simple.{v} Y] (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 :=
+  by 
+    have  :=
+      subsingleton_of_forall_eq (0 : X ⟶ Y)
+        fun f =>
+          by 
+            have p := not_congr (is_iso_iff_nonzero f)
+            simp only [not_not, Ne.def] at p 
+            refine'
+              p.mp
+                fun _ =>
+                  by 
+                    exact h (as_iso f)
+    exact finrank_zero_of_subsingleton
 
 variable [IsAlgClosed 𝕜] [linear 𝕜 C]
 
 attribute [local ext] Module DistribMulAction MulAction HasScalar
 
--- error in CategoryTheory.Preadditive.Schur: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An auxiliary lemma for Schur's lemma.
 
 If `X ⟶ X` is finite dimensional, and every nonzero endomorphism is invertible,
 then `X ⟶ X` is 1-dimensional.
 -/
-theorem finrank_endomorphism_eq_one
-{X : C}
-(is_iso_iff_nonzero : ∀ f : «expr ⟶ »(X, X), «expr ↔ »(is_iso f, «expr ≠ »(f, 0)))
-[I : finite_dimensional 𝕜 «expr ⟶ »(X, X)] : «expr = »(finrank 𝕜 «expr ⟶ »(X, X), 1) :=
-begin
-  have [ident id_nonzero] [] [":=", expr (is_iso_iff_nonzero («expr𝟙»() X)).mp (by apply_instance)],
-  apply [expr finrank_eq_one («expr𝟙»() X)],
-  { exact [expr id_nonzero] },
-  { intro [ident f],
-    haveI [] [":", expr nontrivial (End X)] [":=", expr nontrivial_of_ne _ _ id_nonzero],
-    obtain ["⟨", ident c, ",", ident nu, "⟩", ":=", expr @exists_spectrum_of_is_alg_closed_of_finite_dimensional 𝕜 _ _ (End X) _ _ _ (by { convert [] [expr I] [],
-        ext [] [] [],
-        refl,
-        ext [] [] [],
-        refl }) (End.of f)],
-    use [expr c],
-    rw ["[", expr is_unit_iff_is_iso, ",", expr is_iso_iff_nonzero, ",", expr ne.def, ",", expr not_not, ",", expr sub_eq_zero, ",", expr algebra.algebra_map_eq_smul_one, "]"] ["at", ident nu],
-    exact [expr nu.symm] }
-end
+theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ X, is_iso f ↔ f ≠ 0)
+  [I : FiniteDimensional 𝕜 (X ⟶ X)] : finrank 𝕜 (X ⟶ X) = 1 :=
+  by 
+    have id_nonzero :=
+      (is_iso_iff_nonzero (𝟙 X)).mp
+        (by 
+          infer_instance)
+    apply finrank_eq_one (𝟙 X)
+    ·
+      exact id_nonzero
+    ·
+      intro f 
+      have  : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero 
+      obtain ⟨c, nu⟩ :=
+        @exists_spectrum_of_is_alg_closed_of_finite_dimensional 𝕜 _ _ (End X) _ _ _
+          (by 
+            convert I 
+            ext 
+            rfl 
+            ext 
+            rfl)
+          (End.of f)
+      use c 
+      rw [is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def, not_not, sub_eq_zero, Algebra.algebra_map_eq_smul_one] at nu 
+      exact nu.symm
 
 variable [has_kernels C]
 
@@ -130,7 +126,6 @@ theorem endomorphism_simple_eq_smul_id {X : C} [simple.{v} X] [I : FiniteDimensi
   ∃ c : 𝕜, c • 𝟙 X = f :=
   (finrank_eq_one_iff_of_nonzero' (𝟙 X) (id_nonzero X)).mp (finrank_endomorphism_simple_eq_one 𝕜 X) f
 
--- error in CategoryTheory.Preadditive.Schur: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 **Schur's lemma** for `𝕜`-linear categories:
 if hom spaces are finite dimensional, then the hom space between simples is at most 1-dimensional.
@@ -138,57 +133,58 @@ if hom spaces are finite dimensional, then the hom space between simples is at m
 See `finrank_hom_simple_simple_eq_one_iff` and `finrank_hom_simple_simple_eq_zero_iff` below
 for the refinements when we know whether or not the simples are isomorphic.
 -/
-theorem finrank_hom_simple_simple_le_one
-(X Y : C)
-[∀ X Y : C, finite_dimensional 𝕜 «expr ⟶ »(X, Y)]
-[simple.{v} X]
-[simple.{v} Y] : «expr ≤ »(finrank 𝕜 «expr ⟶ »(X, Y), 1) :=
-begin
-  cases [expr subsingleton_or_nontrivial «expr ⟶ »(X, Y)] ["with", ident h],
-  { resetI,
-    convert [] [expr zero_le_one] [],
-    exact [expr finrank_zero_of_subsingleton] },
-  { obtain ["⟨", ident f, ",", ident nz, "⟩", ":=", expr (nontrivial_iff_exists_ne 0).mp h],
-    haveI [ident fi] [] [":=", expr (is_iso_iff_nonzero f).mpr nz],
-    apply [expr finrank_le_one f],
-    intro [ident g],
-    obtain ["⟨", ident c, ",", ident w, "⟩", ":=", expr endomorphism_simple_eq_smul_id 𝕜 «expr ≫ »(g, inv f)],
-    exact [expr ⟨c, by simpa [] [] [] [] [] ["using", expr «expr =≫ »(w, f)]⟩] }
-end
+theorem finrank_hom_simple_simple_le_one (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [simple.{v} X]
+  [simple.{v} Y] : finrank 𝕜 (X ⟶ Y) ≤ 1 :=
+  by 
+    cases' subsingleton_or_nontrivial (X ⟶ Y) with h
+    ·
+      skip 
+      convert zero_le_one 
+      exact finrank_zero_of_subsingleton
+    ·
+      obtain ⟨f, nz⟩ := (nontrivial_iff_exists_ne 0).mp h 
+      have fi := (is_iso_iff_nonzero f).mpr nz 
+      apply finrank_le_one f 
+      intro g 
+      obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
+      exact
+        ⟨c,
+          by 
+            simpa using w =≫ f⟩
 
--- error in CategoryTheory.Preadditive.Schur: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem finrank_hom_simple_simple_eq_one_iff
-(X Y : C)
-[∀ X Y : C, finite_dimensional 𝕜 «expr ⟶ »(X, Y)]
-[simple.{v} X]
-[simple.{v} Y] : «expr ↔ »(«expr = »(finrank 𝕜 «expr ⟶ »(X, Y), 1), nonempty «expr ≅ »(X, Y)) :=
-begin
-  fsplit,
-  { intro [ident h],
-    rw [expr finrank_eq_one_iff'] ["at", ident h],
-    obtain ["⟨", ident f, ",", ident nz, ",", "-", "⟩", ":=", expr h],
-    rw ["<-", expr is_iso_iff_nonzero] ["at", ident nz],
-    exactI [expr ⟨as_iso f⟩] },
-  { rintro ["⟨", ident f, "⟩"],
-    have [ident le_one] [] [":=", expr finrank_hom_simple_simple_le_one 𝕜 X Y],
-    have [ident zero_lt] [":", expr «expr < »(0, finrank 𝕜 «expr ⟶ »(X, Y))] [":=", expr finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (is_iso_iff_nonzero f.hom).mp infer_instance⟩],
-    linarith [] [] [] }
-end
+theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [simple.{v} X]
+  [simple.{v} Y] : finrank 𝕜 (X ⟶ Y) = 1 ↔ Nonempty (X ≅ Y) :=
+  by 
+    fconstructor
+    ·
+      intro h 
+      rw [finrank_eq_one_iff'] at h 
+      obtain ⟨f, nz, -⟩ := h 
+      rw [←is_iso_iff_nonzero] at nz 
+      exact ⟨as_iso f⟩
+    ·
+      rintro ⟨f⟩
+      have le_one := finrank_hom_simple_simple_le_one 𝕜 X Y 
+      have zero_lt : 0 < finrank 𝕜 (X ⟶ Y) :=
+        finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (is_iso_iff_nonzero f.hom).mp inferInstance⟩
+      linarith
 
--- error in CategoryTheory.Preadditive.Schur: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem finrank_hom_simple_simple_eq_zero_iff
-(X Y : C)
-[∀ X Y : C, finite_dimensional 𝕜 «expr ⟶ »(X, Y)]
-[simple.{v} X]
-[simple.{v} Y] : «expr ↔ »(«expr = »(finrank 𝕜 «expr ⟶ »(X, Y), 0), is_empty «expr ≅ »(X, Y)) :=
-begin
-  rw ["[", "<-", expr not_nonempty_iff, ",", "<-", expr not_congr (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y), "]"] [],
-  refine [expr ⟨λ h, by { rw [expr h] [], simp [] [] [] [] [] [] }, λ h, _⟩],
-  have [] [] [":=", expr finrank_hom_simple_simple_le_one 𝕜 X Y],
-  interval_cases [expr finrank 𝕜 «expr ⟶ »(X, Y)] [] ["with", ident h'],
-  { exact [expr h'] },
-  { exact [expr false.elim (h h')] }
-end
+theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [simple.{v} X]
+  [simple.{v} Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) :=
+  by 
+    rw [←not_nonempty_iff, ←not_congr (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y)]
+    refine'
+      ⟨fun h =>
+          by 
+            rw [h]
+            simp ,
+        fun h => _⟩
+    have  := finrank_hom_simple_simple_le_one 𝕜 X Y 
+    intervalCases finrank 𝕜 (X ⟶ Y) with h'
+    ·
+      exact h'
+    ·
+      exact False.elim (h h')
 
 end CategoryTheory
 

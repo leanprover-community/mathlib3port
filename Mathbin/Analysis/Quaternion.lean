@@ -26,7 +26,7 @@ localized [Quaternion] notation "ℍ" => Quaternion ℝ
 
 open_locale RealInnerProductSpace
 
-noncomputable theory
+noncomputable section 
 
 namespace Quaternion
 
@@ -101,12 +101,12 @@ theorem coe_complex_im_k (z : ℂ) : (z : ℍ).imK = 0 :=
   rfl
 
 @[simp, normCast]
-theorem coe_complex_add (z w : ℂ) : «expr↑ » (z+w) = (z+w : ℍ) :=
+theorem coe_complex_add (z w : ℂ) : (↑z+w) = (z+w : ℍ) :=
   by 
     ext <;> simp 
 
 @[simp, normCast]
-theorem coe_complex_mul (z w : ℂ) : «expr↑ » (z*w) = (z*w : ℍ) :=
+theorem coe_complex_mul (z w : ℂ) : (↑z*w) = (z*w : ℍ) :=
   by 
     ext <;> simp 
 
@@ -119,7 +119,7 @@ theorem coe_complex_one : ((1 : ℂ) : ℍ) = 1 :=
   rfl
 
 @[simp, normCast]
-theorem coe_real_complex_mul (r : ℝ) (z : ℂ) : (r • z : ℍ) = «expr↑ » r*«expr↑ » z :=
+theorem coe_real_complex_mul (r : ℝ) (z : ℂ) : (r • z : ℍ) = (↑r)*↑z :=
   by 
     ext <;> simp 
 
@@ -133,7 +133,7 @@ def of_complex : ℂ →ₐ[ℝ] ℍ :=
     commutes' := fun x => rfl }
 
 @[simp]
-theorem coe_of_complex : «expr⇑ » of_complex = coeₓ :=
+theorem coe_of_complex : ⇑of_complex = coeₓ :=
   rfl
 
 end Quaternion

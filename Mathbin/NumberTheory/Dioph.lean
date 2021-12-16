@@ -78,6 +78,7 @@ theorem list_all_cons {α} (p : α → Prop) (x : α) : ∀ l : List α, ListAll
 | [] => (and_trueₓ _).symm
 | x :: l => Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem list_all_iff_forall {α} (p : α → Prop) : ∀ l : List α, ListAll p l ↔ ∀ x _ : x ∈ l, p x
 | [] => (iff_true_intro$ List.ball_nil _).symm
 | x :: l =>
@@ -267,13 +268,27 @@ theorem sumsq_nonneg x : ∀ l, 0 ≤ sumsq l x
   by 
     rw [sumsq] <;> simp [-add_commₓ] <;> exact add_nonneg (mul_self_nonneg _) (sumsq_nonneg ps)
 
--- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sumsq_eq_zero (x) : ∀ l, «expr ↔ »(«expr = »(sumsq l x, 0), list_all (λ a : poly α, «expr = »(a x, 0)) l)
-| «expr[ , ]»([]) := eq_self_iff_true _
-| [«expr :: »/«expr :: »/«expr :: »/«expr :: »](p, ps) := by rw ["[", expr list_all_cons, ",", "<-", expr sumsq_eq_zero ps, "]"] []; rw [expr sumsq] []; simp [] [] [] ["[", "-", ident add_comm, "]"] [] []; exact [expr ⟨λ
-  h : «expr = »(«expr + »(«expr * »(p x, p x), sumsq ps x), 0), have «expr = »(p x, 0), from «expr $ »(eq_zero_of_mul_self_eq_zero, le_antisymm (by rw ["<-", expr h] []; have [ident t] [] [":=", expr add_le_add_left (sumsq_nonneg x ps) «expr * »(p x, p x)]; rwa ["[", expr add_zero, "]"] ["at", ident t]) (mul_self_nonneg _)),
-  ⟨this, by simp [] [] [] ["[", expr this, "]"] [] ["at", ident h]; exact [expr h]⟩, λ
-  ⟨h1, h2⟩, by rw ["[", expr h1, ",", expr h2, "]"] []; refl⟩]
+theorem sumsq_eq_zero x : ∀ l, sumsq l x = 0 ↔ ListAll (fun a : Poly α => a x = 0) l
+| [] => eq_self_iff_true _
+| p :: ps =>
+  by 
+    rw [list_all_cons, ←sumsq_eq_zero ps] <;>
+      rw [sumsq] <;>
+        simp [-add_commₓ] <;>
+          exact
+            ⟨fun h : ((p x*p x)+sumsq ps x) = 0 =>
+                have  : p x = 0 :=
+                  eq_zero_of_mul_self_eq_zero$
+                    le_antisymmₓ
+                      (by 
+                        rw [←h] <;> have t := add_le_add_left (sumsq_nonneg x ps) (p x*p x) <;> rwa [add_zeroₓ] at t)
+                      (mul_self_nonneg _)
+                ⟨this,
+                  by 
+                    simp [this] at h <;> exact h⟩,
+              fun ⟨h1, h2⟩ =>
+                by 
+                  rw [h1, h2] <;> rfl⟩
 
 end 
 
@@ -357,23 +372,35 @@ theorem of_no_dummies (S : Set (α → ℕ)) (p : Poly α) (h : ∀ v : α → �
             by 
               simp  at ht <;> rwa [show (v ⊗ t ∘ inl) = v from rfl] at ht⟩⟩
 
--- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inject_dummies_lem
-(f : β → γ)
-(g : γ → option β)
-(inv : ∀ x, «expr = »(g (f x), some x))
-(p : poly «expr ⊕ »(α, β))
-(v : α → exprℕ()) : «expr ↔ »(«expr∃ , »((t), «expr = »(p «expr ⊗ »(v, t), 0)), «expr∃ , »((t), «expr = »(p.remap «expr ⊗ »(inl, «expr ∘ »(inr, f)) «expr ⊗ »(v, t), 0))) :=
-begin
-  simp [] [] [] [] [] [],
-  refine [expr ⟨λ t, _, λ t, _⟩]; cases [expr t] ["with", ident t, ident ht],
-  { have [] [":", expr «expr = »(«expr ∘ »(«expr ⊗ »(v, «expr ∘ »([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](0, t), g)), «expr ⊗ »(inl, «expr ∘ »(inr, f))), «expr ⊗ »(v, t))] [":=", expr funext (λ
-      s, by cases [expr s] ["with", ident a, ident b]; dsimp [] ["[", expr join, ",", expr («expr ∘ »), "]"] [] []; try { rw [expr inv] [] }; refl)],
-    exact [expr ⟨«expr ∘ »([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](0, t), g), by rwa [expr this] []⟩] },
-  { have [] [":", expr «expr = »(«expr ⊗ »(v, «expr ∘ »(t, f)), «expr ∘ »(«expr ⊗ »(v, t), «expr ⊗ »(inl, «expr ∘ »(inr, f))))] [":=", expr funext (λ
-      s, by cases [expr s] ["with", ident a, ident b]; refl)],
-    exact [expr ⟨«expr ∘ »(t, f), by rwa [expr this] []⟩] }
-end
+theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x) (p : Poly (Sum α β))
+  (v : α → ℕ) : (∃ t, p (v ⊗ t) = 0) ↔ ∃ t, p.remap (inl ⊗ (inr ∘ f)) (v ⊗ t) = 0 :=
+  by 
+    simp 
+    refine' ⟨fun t => _, fun t => _⟩ <;> cases' t with t ht
+    ·
+      have  : (v ⊗ (0 :: t ∘ g) ∘ inl ⊗ (inr ∘ f)) = v ⊗ t :=
+        funext
+          fun s =>
+            by 
+              cases' s with a b <;>
+                dsimp [join, · ∘ ·] <;>
+                  try 
+                      rw [inv] <;>
+                    rfl 
+      exact
+        ⟨0 :: t ∘ g,
+          by 
+            rwa [this]⟩
+    ·
+      have  : v ⊗ (t ∘ f) = (v ⊗ t ∘ inl ⊗ (inr ∘ f)) :=
+        funext
+          fun s =>
+            by 
+              cases' s with a b <;> rfl 
+      exact
+        ⟨t ∘ f,
+          by 
+            rwa [this]⟩
 
 theorem inject_dummies {S : Set (α → ℕ)} (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x)
   (p : Poly (Sum α β)) (h : ∀ v : α → ℕ, S v ↔ ∃ t, p (v ⊗ t) = 0) :
@@ -691,11 +718,11 @@ localized [Dioph] notation:35 x " D∨ " y => Dioph.or_dioph x y
 
 localized [Dioph] notation:30 "D∃" => Dioph.vec_ex1_dioph
 
--- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
-localized [expr "prefix `&`:max := of_nat'", [command <some 4>], "in", ident dioph]
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+localized [Dioph] prefix:999 "&" => of_nat'
 
-theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [is_lt m n] : dioph_fn fun v : Vector3 ℕ n => v («expr& » m) :=
-  proj_dioph («expr& » m)
+theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [is_lt m n] : dioph_fn fun v : Vector3 ℕ n => v (&m) :=
+  proj_dioph (&m)
 
 localized [Dioph] prefix:100 "D&" => Dioph.proj_dioph_of_nat
 
@@ -708,13 +735,13 @@ variable {f g : (α → ℕ) → ℕ} (df : dioph_fn f) (dg : dioph_fn g)
 
 include df dg
 
-theorem dioph_comp2 {S : ℕ → ℕ → Prop} (d : Dioph fun v : Vector3 ℕ 2 => S (v («expr& » 0)) (v («expr& » 1))) :
+theorem dioph_comp2 {S : ℕ → ℕ → Prop} (d : Dioph fun v : Vector3 ℕ 2 => S (v (&0)) (v (&1))) :
   Dioph fun v => S (f v) (g v) :=
   dioph_comp d [f, g]
     (by 
       exact ⟨df, dg⟩)
 
-theorem dioph_fn_comp2 {h : ℕ → ℕ → ℕ} (d : dioph_fn fun v : Vector3 ℕ 2 => h (v («expr& » 0)) (v («expr& » 1))) :
+theorem dioph_fn_comp2 {h : ℕ → ℕ → ℕ} (d : dioph_fn fun v : Vector3 ℕ 2 => h (v (&0)) (v (&1))) :
   dioph_fn fun v => h (f v) (g v) :=
   dioph_fn_comp d [f, g]
     (by 
@@ -722,20 +749,18 @@ theorem dioph_fn_comp2 {h : ℕ → ℕ → ℕ} (d : dioph_fn fun v : Vector3 �
 
 theorem eq_dioph : Dioph fun v => f v = g v :=
   dioph_comp2 df dg$
-    of_no_dummies _ (Poly.proj («expr& » 0) - Poly.proj («expr& » 1))
-      fun v =>
-        (Int.coe_nat_eq_coe_nat_iff _ _).symm.trans
-          ⟨@sub_eq_zero_of_eq ℤ _ (v («expr& » 0)) (v («expr& » 1)), eq_of_sub_eq_zero⟩
+    of_no_dummies _ (Poly.proj (&0) - Poly.proj (&1))
+      fun v => (Int.coe_nat_eq_coe_nat_iff _ _).symm.trans ⟨@sub_eq_zero_of_eq ℤ _ (v (&0)) (v (&1)), eq_of_sub_eq_zero⟩
 
 localized [Dioph] infixl:50 " D= " => Dioph.eq_dioph
 
 theorem add_dioph : dioph_fn fun v => f v+g v :=
-  dioph_fn_comp2 df dg$ abs_poly_dioph (Poly.proj («expr& » 0)+Poly.proj («expr& » 1))
+  dioph_fn_comp2 df dg$ abs_poly_dioph (Poly.proj (&0)+Poly.proj (&1))
 
 localized [Dioph] infixl:80 " D+ " => Dioph.add_dioph
 
 theorem mul_dioph : dioph_fn fun v => f v*g v :=
-  dioph_fn_comp2 df dg$ abs_poly_dioph (Poly.proj («expr& » 0)*Poly.proj («expr& » 1))
+  dioph_fn_comp2 df dg$ abs_poly_dioph (Poly.proj (&0)*Poly.proj (&1))
 
 localized [Dioph] infixl:90 " D* " => Dioph.mul_dioph
 
@@ -787,11 +812,7 @@ theorem dvd_dioph : Dioph fun v => f v ∣ g v :=
 localized [Dioph] infixl:50 " D∣ " => Dioph.dvd_dioph
 
 theorem mod_dioph : dioph_fn fun v => f v % g v :=
-  have  :
-    Dioph
-      fun v : Vector3 ℕ 3 =>
-        (v («expr& » 2) = 0 ∨ v («expr& » 0) < v («expr& » 2)) ∧
-          ∃ x : ℕ, (v («expr& » 0)+v («expr& » 2)*x) = v («expr& » 1) :=
+  have  : Dioph fun v : Vector3 ℕ 3 => (v (&2) = 0 ∨ v (&0) < v (&2)) ∧ ∃ x : ℕ, (v (&0)+v (&2)*x) = v (&1) :=
     (D&2 D= D.0 D∨ D&0 D< D&2) D∧ (D∃) 3$ D&1 D+ D&3 D* D&0 D= D&2
   dioph_fn_comp2 df dg$
     (dioph_fn_vec _).2$
@@ -818,10 +839,7 @@ localized [Dioph] notation "D≡" => Dioph.modeq_dioph
 
 theorem div_dioph : dioph_fn fun v => f v / g v :=
   have  :
-    Dioph
-      fun v : Vector3 ℕ 3 =>
-        v («expr& » 2) = 0 ∧ v («expr& » 0) = 0 ∨
-          (v («expr& » 0)*v («expr& » 2)) ≤ v («expr& » 1) ∧ v («expr& » 1) < (v («expr& » 0)+1)*v («expr& » 2) :=
+    Dioph fun v : Vector3 ℕ 3 => v (&2) = 0 ∧ v (&0) = 0 ∨ (v (&0)*v (&2)) ≤ v (&1) ∧ v (&1) < (v (&0)+1)*v (&2) :=
     (D&2 D= D.0 D∧ D&0 D= D.0) D∨ D&0 D* D&2 D≤ D&1 D∧ D&1 D< (D&0 D+ D.1) D* D&2
   dioph_fn_comp2 df dg$
     (dioph_fn_vec _).2$
@@ -850,28 +868,21 @@ omit df dg
 
 open Pell
 
-theorem pell_dioph :
-  Dioph
-    fun v : Vector3 ℕ 4 =>
-      ∃ h : 1 < v («expr& » 0), xn h (v («expr& » 1)) = v («expr& » 2) ∧ yn h (v («expr& » 1)) = v («expr& » 3) :=
+theorem pell_dioph : Dioph fun v : Vector3 ℕ 4 => ∃ h : 1 < v (&0), xn h (v (&1)) = v (&2) ∧ yn h (v (&1)) = v (&3) :=
   have  :
     Dioph
-      { v:Vector3 ℕ 4 |
-        1 < v («expr& » 0) ∧
-          v («expr& » 1) ≤ v («expr& » 3) ∧
-            (v («expr& » 2) = 1 ∧ v («expr& » 3) = 0 ∨
+      { v : Vector3 ℕ 4 |
+        1 < v (&0) ∧
+          v (&1) ≤ v (&3) ∧
+            (v (&2) = 1 ∧ v (&3) = 0 ∨
               ∃ u w s t b : ℕ,
-                ((v («expr& » 2)*v («expr& » 2)) -
-                      (((v («expr& » 0)*v («expr& » 0)) - 1)*v («expr& » 3))*v («expr& » 3)) =
-                    1 ∧
-                  ((u*u) - (((v («expr& » 0)*v («expr& » 0)) - 1)*w)*w) = 1 ∧
+                ((v (&2)*v (&2)) - (((v (&0)*v (&0)) - 1)*v (&3))*v (&3)) = 1 ∧
+                  ((u*u) - (((v (&0)*v (&0)) - 1)*w)*w) = 1 ∧
                     ((s*s) - (((b*b) - 1)*t)*t) = 1 ∧
                       1 < b ∧
-                        b ≡ 1 [MOD 4*v («expr& » 3)] ∧
-                          b ≡ v («expr& » 0) [MOD u] ∧
-                            0 < w ∧
-                              (v («expr& » 3)*v («expr& » 3)) ∣ w ∧
-                                s ≡ v («expr& » 2) [MOD u] ∧ t ≡ v («expr& » 1) [MOD 4*v («expr& » 3)]) } :=
+                        b ≡ 1 [MOD 4*v (&3)] ∧
+                          b ≡ v (&0) [MOD u] ∧
+                            0 < w ∧ (v (&3)*v (&3)) ∣ w ∧ s ≡ v (&2) [MOD u] ∧ t ≡ v (&1) [MOD 4*v (&3)]) } :=
     D.1 D< D&0 D∧
       D&1 D≤ D&3 D∧
         (D&2 D= D.1 D∧ D&3 D= D.0) D∨
@@ -889,12 +900,9 @@ theorem pell_dioph :
                                 D.0 D< D&3 D∧ D&8 D* D&8 D∣ D&3 D∧ D≡ (D&2) (D&7) (D&4) D∧ D≡ (D&1) (D&6) (D.4 D* D&8)
   Dioph.ext this$ fun v => matiyasevic.symm
 
-theorem xn_dioph : dioph_pfun fun v : Vector3 ℕ 2 => ⟨1 < v («expr& » 0), fun h => xn h (v («expr& » 1))⟩ :=
-  have  :
-    Dioph
-      fun v : Vector3 ℕ 3 =>
-        ∃ y, ∃ h : 1 < v («expr& » 1), xn h (v («expr& » 2)) = v («expr& » 0) ∧ yn h (v («expr& » 2)) = y :=
-    let D_pell := @reindex_dioph _ (Fin2 4) _ pell_dioph [«expr& » 2, «expr& » 3, «expr& » 1, «expr& » 0]
+theorem xn_dioph : dioph_pfun fun v : Vector3 ℕ 2 => ⟨1 < v (&0), fun h => xn h (v (&1))⟩ :=
+  have  : Dioph fun v : Vector3 ℕ 3 => ∃ y, ∃ h : 1 < v (&1), xn h (v (&2)) = v (&0) ∧ yn h (v (&2)) = y :=
+    let D_pell := @reindex_dioph _ (Fin2 4) _ pell_dioph [&2, &3, &1, &0]
     (D∃) 3 D_pell
   (dioph_pfun_vec _).2$ Dioph.ext this$ fun v => ⟨fun ⟨y, h, xe, ye⟩ => ⟨h, xe⟩, fun ⟨h, xe⟩ => ⟨_, h, xe, rfl⟩⟩
 
@@ -904,18 +912,17 @@ include df dg
 theorem pow_dioph : dioph_fn fun v => f v ^ g v :=
   have  :
     Dioph
-      { v:Vector3 ℕ 3 |
-        v («expr& » 2) = 0 ∧ v («expr& » 0) = 1 ∨
-          0 < v («expr& » 2) ∧
-            (v («expr& » 1) = 0 ∧ v («expr& » 0) = 0 ∨
-              0 < v («expr& » 1) ∧
+      { v : Vector3 ℕ 3 |
+        v (&2) = 0 ∧ v (&0) = 1 ∨
+          0 < v (&2) ∧
+            (v (&1) = 0 ∧ v (&0) = 0 ∨
+              0 < v (&1) ∧
                 ∃ w a t z x y : ℕ,
-                  (∃ a1 : 1 < a, xn a1 (v («expr& » 2)) = x ∧ yn a1 (v («expr& » 2)) = y) ∧
-                    x ≡ (y*a - v («expr& » 1))+v («expr& » 0) [MOD t] ∧
-                      (((2*a)*v («expr& » 1)) = t+(v («expr& » 1)*v («expr& » 1))+1) ∧
-                        v («expr& » 0) < t ∧
-                          v («expr& » 1) ≤ w ∧ v («expr& » 2) ≤ w ∧ ((a*a) - ((((w+1)*w+1) - 1)*w*z)*w*z) = 1) } :=
-    let D_pell := @reindex_dioph _ (Fin2 9) _ pell_dioph [«expr& » 4, «expr& » 8, «expr& » 1, «expr& » 0]
+                  (∃ a1 : 1 < a, xn a1 (v (&2)) = x ∧ yn a1 (v (&2)) = y) ∧
+                    x ≡ (y*a - v (&1))+v (&0) [MOD t] ∧
+                      (((2*a)*v (&1)) = t+(v (&1)*v (&1))+1) ∧
+                        v (&0) < t ∧ v (&1) ≤ w ∧ v (&2) ≤ w ∧ ((a*a) - ((((w+1)*w+1) - 1)*w*z)*w*z) = 1) } :=
+    let D_pell := @reindex_dioph _ (Fin2 9) _ pell_dioph [&4, &8, &1, &0]
     (D&2 D= D.0 D∧ D&0 D= D.1) D∨
       D.0 D< D&2 D∧
         (D&1 D= D.0 D∧ D&0 D= D.0) D∨

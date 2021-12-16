@@ -120,19 +120,19 @@ protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β} 
   let ⟨x, y, h⟩ := exists_pair_ne α
   ⟨⟨f x, f y, hf.ne h⟩⟩
 
--- error in Logic.Nontrivial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Pullback a `nontrivial` instance along a surjective function. -/
-protected
-theorem function.surjective.nontrivial [nontrivial β] {f : α → β} (hf : function.surjective f) : nontrivial α :=
-begin
-  rcases [expr exists_pair_ne β, "with", "⟨", ident x, ",", ident y, ",", ident h, "⟩"],
-  rcases [expr hf x, "with", "⟨", ident x', ",", ident hx', "⟩"],
-  rcases [expr hf y, "with", "⟨", ident y', ",", ident hy', "⟩"],
-  have [] [":", expr «expr ≠ »(x', y')] [],
-  by { contrapose ["!"] [ident h],
-    rw ["[", "<-", expr hx', ",", "<-", expr hy', ",", expr h, "]"] [] },
-  exact [expr ⟨⟨x', y', this⟩⟩]
-end
+protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β} (hf : Function.Surjective f) :
+  Nontrivial α :=
+  by 
+    rcases exists_pair_ne β with ⟨x, y, h⟩
+    rcases hf x with ⟨x', hx'⟩
+    rcases hf y with ⟨y', hy'⟩
+    have  : x' ≠ y'
+    ·
+      ·
+        contrapose! h 
+        rw [←hx', ←hy', h]
+    exact ⟨⟨x', y', this⟩⟩
 
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
@@ -202,6 +202,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
         fail f! "Could not prove goal assuming `subsingleton {α }`"
     reset_instance_cache
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.

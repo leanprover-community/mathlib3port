@@ -53,20 +53,19 @@ class is_semisimple : Prop where
 theorem is_semisimple_iff_no_solvable_ideals : is_semisimple R L ↔ ∀ I : LieIdeal R L, is_solvable R I → I = ⊥ :=
   ⟨fun h => Sup_eq_bot.mp h.semisimple, fun h => ⟨Sup_eq_bot.mpr h⟩⟩
 
--- error in Algebra.Lie.Semisimple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_semisimple_iff_no_abelian_ideals : «expr ↔ »(is_semisimple R L, ∀
- I : lie_ideal R L, is_lie_abelian I → «expr = »(I, «expr⊥»())) :=
-begin
-  rw [expr is_semisimple_iff_no_solvable_ideals] [],
-  split; intros [ident h₁, ident I, ident h₂],
-  { haveI [] [":", expr is_lie_abelian I] [":=", expr h₂],
-    apply [expr h₁],
-    exact [expr lie_algebra.of_abelian_is_solvable R I] },
-  { haveI [] [":", expr is_solvable R I] [":=", expr h₂],
-    rw ["<-", expr abelian_of_solvable_ideal_eq_bot_iff] [],
-    apply [expr h₁],
-    exact [expr abelian_derived_abelian_of_ideal I] }
-end
+theorem is_semisimple_iff_no_abelian_ideals : is_semisimple R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ :=
+  by 
+    rw [is_semisimple_iff_no_solvable_ideals]
+    constructor <;> intro h₁ I h₂
+    ·
+      have  : IsLieAbelian I := h₂ 
+      apply h₁ 
+      exact LieAlgebra.of_abelian_is_solvable R I
+    ·
+      have  : is_solvable R I := h₂ 
+      rw [←abelian_of_solvable_ideal_eq_bot_iff]
+      apply h₁ 
+      exact abelian_derived_abelian_of_ideal I
 
 @[simp]
 theorem center_eq_bot_of_semisimple [h : is_semisimple R L] : center R L = ⊥ :=
@@ -106,7 +105,7 @@ the label 'reductive' should mean when the coefficients are not a field of chara
 theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
   IsLieAbelian (radical R L) ↔ ∀ I : LieIdeal R L, is_solvable R I → IsLieAbelian I :=
   by 
-    split 
+    constructor
     ·
       rintro h₁ I h₂ 
       rw [lie_ideal.solvable_iff_le_radical] at h₂ 

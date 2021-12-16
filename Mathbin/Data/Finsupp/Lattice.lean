@@ -8,9 +8,7 @@ This file provides instances of ordered structures on finsupps.
 -/
 
 
-open_locale Classical
-
-noncomputable theory
+noncomputable section 
 
 variable {α : Type _} {β : Type _} [HasZero β] {μ : Type _} [CanonicallyOrderedAddMonoid μ]
 
@@ -27,7 +25,7 @@ theorem inf_apply [SemilatticeInf β] {a : α} {f g : α →₀ β} : (f⊓g) a 
   rfl
 
 @[simp]
-theorem support_inf {f g : α →₀ γ} : (f⊓g).Support = f.support ∩ g.support :=
+theorem support_inf [DecidableEq α] {f g : α →₀ γ} : (f⊓g).Support = f.support ∩ g.support :=
   by 
     ext 
     simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
@@ -42,7 +40,7 @@ theorem sup_apply [SemilatticeSup β] {a : α} {f g : α →₀ β} : (f⊔g) a 
   rfl
 
 @[simp]
-theorem support_sup {f g : α →₀ γ} : (f⊔g).Support = f.support ∪ g.support :=
+theorem support_sup [DecidableEq α] {f g : α →₀ γ} : (f⊔g).Support = f.support ∪ g.support :=
   by 
     ext 
     simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ←bot_eq_zero]
@@ -55,7 +53,7 @@ instance Lattice [Lattice β] : Lattice (α →₀ β) :=
 theorem bot_eq_zero : (⊥ : α →₀ γ) = 0 :=
   rfl
 
-theorem disjoint_iff {x y : α →₀ γ} : Disjoint x y ↔ Disjoint x.support y.support :=
+theorem disjoint_iff [DecidableEq α] {x y : α →₀ γ} : Disjoint x y ↔ Disjoint x.support y.support :=
   by 
     unfold Disjoint 
     repeat' 

@@ -92,7 +92,7 @@ def left_adjoint_preserves_colimits : preserves_colimits F :=
                       fun c hc =>
                         is_colimit.iso_unique_cocone_morphism.inv
                           fun s =>
-                            @Equiv.unique _ _ (is_colimit.iso_unique_cocone_morphism.hom hc _)
+                            @Equivₓ.unique _ _ (is_colimit.iso_unique_cocone_morphism.hom hc _)
                               ((adj.functoriality_is_left_adjoint _).adj.homEquiv _ _) } } }
 
 omit adj
@@ -100,17 +100,19 @@ omit adj
 instance (priority := 100) is_equivalence_preserves_colimits (E : C ⥤ D) [is_equivalence E] : preserves_colimits E :=
   left_adjoint_preserves_colimits E.adjunction
 
--- error in CategoryTheory.Adjunction.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[priority 100]
-instance is_equivalence_reflects_colimits (E : «expr ⥤ »(D, C)) [is_equivalence E] : reflects_colimits E :=
-{ reflects_colimits_of_shape := λ
-  J
-  𝒥, by exactI [expr { reflects_colimit := λ
-     K, { reflects := λ c t, begin
-         have [ident l] [] [":=", expr (is_colimit_of_preserves E.inv t).map_cocone_equiv E.as_equivalence.unit_iso.symm],
-         refine [expr ((is_colimit.precompose_inv_equiv K.right_unitor _).symm l).of_iso_colimit _],
-         tidy []
-       end } }] }
+instance (priority := 100) is_equivalence_reflects_colimits (E : D ⥤ C) [is_equivalence E] : reflects_colimits E :=
+  { ReflectsColimitsOfShape :=
+      fun J 𝒥 =>
+        by 
+          exact
+            { ReflectsColimit :=
+                fun K =>
+                  { reflects :=
+                      fun c t =>
+                        by 
+                          have l := (is_colimit_of_preserves E.inv t).mapCoconeEquiv E.as_equivalence.unit_iso.symm 
+                          refine' ((is_colimit.precompose_inv_equiv K.right_unitor _).symm l).ofIsoColimit _ 
+                          tidy } } }
 
 instance (priority := 100) is_equivalence_creates_colimits (H : D ⥤ C) [is_equivalence H] : creates_colimits H :=
   { CreatesColimitsOfShape :=
@@ -202,7 +204,7 @@ def right_adjoint_preserves_limits : preserves_limits G :=
                       fun c hc =>
                         is_limit.iso_unique_cone_morphism.inv
                           fun s =>
-                            @Equiv.unique _ _ (is_limit.iso_unique_cone_morphism.hom hc _)
+                            @Equivₓ.unique _ _ (is_limit.iso_unique_cone_morphism.hom hc _)
                               ((adj.functoriality_is_right_adjoint _).adj.homEquiv _ _).symm } } }
 
 omit adj
@@ -210,16 +212,19 @@ omit adj
 instance (priority := 100) is_equivalence_preserves_limits (E : D ⥤ C) [is_equivalence E] : preserves_limits E :=
   right_adjoint_preserves_limits E.inv.adjunction
 
--- error in CategoryTheory.Adjunction.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[priority 100] instance is_equivalence_reflects_limits (E : «expr ⥤ »(D, C)) [is_equivalence E] : reflects_limits E :=
-{ reflects_limits_of_shape := λ
-  J
-  𝒥, by exactI [expr { reflects_limit := λ
-     K, { reflects := λ c t, begin
-         have [] [] [":=", expr (is_limit_of_preserves E.inv t).map_cone_equiv E.as_equivalence.unit_iso.symm],
-         refine [expr ((is_limit.postcompose_hom_equiv K.left_unitor _).symm this).of_iso_limit _],
-         tidy []
-       end } }] }
+instance (priority := 100) is_equivalence_reflects_limits (E : D ⥤ C) [is_equivalence E] : reflects_limits E :=
+  { ReflectsLimitsOfShape :=
+      fun J 𝒥 =>
+        by 
+          exact
+            { ReflectsLimit :=
+                fun K =>
+                  { reflects :=
+                      fun c t =>
+                        by 
+                          have  := (is_limit_of_preserves E.inv t).mapConeEquiv E.as_equivalence.unit_iso.symm 
+                          refine' ((is_limit.postcompose_hom_equiv K.left_unitor _).symm this).ofIsoLimit _ 
+                          tidy } } }
 
 instance (priority := 100) is_equivalence_creates_limits (H : D ⥤ C) [is_equivalence H] : creates_limits H :=
   { CreatesLimitsOfShape :=
@@ -293,7 +298,7 @@ def cocones_iso {J : Type v} [small_category J] {K : J ⥤ C} :
 
 /-- auxiliary construction for `cones_iso` -/
 @[simps]
-def cones_iso_component_hom {J : Type v} [small_category J] {K : J ⥤ D} (X : «expr ᵒᵖ» C)
+def cones_iso_component_hom {J : Type v} [small_category J] {K : J ⥤ D} (X : Cᵒᵖ)
   (t : (functor.op F ⋙ (cones J D).obj K).obj X) : ((cones J C).obj (K ⋙ G)).obj X :=
   { app := fun j => (adj.hom_equiv (unop X) (K.obj j)) (t.app j),
     naturality' :=
@@ -304,7 +309,7 @@ def cones_iso_component_hom {J : Type v} [small_category J] {K : J ⥤ D} (X : �
 
 /-- auxiliary construction for `cones_iso` -/
 @[simps]
-def cones_iso_component_inv {J : Type v} [small_category J] {K : J ⥤ D} (X : «expr ᵒᵖ» C)
+def cones_iso_component_inv {J : Type v} [small_category J] {K : J ⥤ D} (X : Cᵒᵖ)
   (t : ((cones J C).obj (K ⋙ G)).obj X) : (functor.op F ⋙ (cones J D).obj K).obj X :=
   { app := fun j => (adj.hom_equiv (unop X) (K.obj j)).symm (t.app j),
     naturality' :=

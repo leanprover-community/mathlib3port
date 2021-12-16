@@ -16,6 +16,7 @@ typeclass.
 -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » decode n)
 /-- A denumerable type is (constructively) bijective with `ℕ`. Typeclass equivalent of `α ≃ ℕ`. -/
 class Denumerable (α : Type _) extends Encodable α where 
   decode_inv : ∀ n, ∃ (a : _)(_ : a ∈ decode n), encode a = n
@@ -105,6 +106,7 @@ instance Option : Denumerable (Option α) :=
           rw [decode_option_succ, decode_eq_of_nat, Option.map_some', Option.mem_def]
         rw [encode_some, encode_of_nat]⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » @decode_sum α β _ _ n)
 /-- If `α` and `β` are denumerable, then so is their sum. -/
 instance Sum : Denumerable (Sum α β) :=
   ⟨fun n =>
@@ -138,7 +140,7 @@ end Sigma
 
 /-- If `α` and `β` are denumerable, then so is their product. -/
 instance Prod : Denumerable (α × β) :=
-  of_equiv _ (Equiv.sigmaEquivProd α β).symm
+  of_equiv _ (Equivₓ.sigmaEquivProd α β).symm
 
 @[simp]
 theorem prod_of_nat_val (n : ℕ) : of_nat (α × β) n = (of_nat α (unpair n).1, of_nat β (unpair n).2) :=
@@ -151,18 +153,18 @@ theorem prod_nat_of_nat : of_nat (ℕ × ℕ) = unpair :=
     funext  <;> simp 
 
 instance Int : Denumerable ℤ :=
-  Denumerable.mk' Equiv.intEquivNat
+  Denumerable.mk' Equivₓ.intEquivNat
 
 instance Pnat : Denumerable ℕ+ :=
-  Denumerable.mk' Equiv.pnatEquivNat
+  Denumerable.mk' Equivₓ.pnatEquivNat
 
 /-- The lift of a denumerable type is denumerable. -/
 instance Ulift : Denumerable (Ulift α) :=
-  of_equiv _ Equiv.ulift
+  of_equiv _ Equivₓ.ulift
 
 /-- The lift of a denumerable type is denumerable. -/
 instance Plift : Denumerable (Plift α) :=
-  of_equiv _ Equiv.plift
+  of_equiv _ Equivₓ.plift
 
 /-- If `α` is denumerable, then `α × α` and `α` are equivalent. -/
 def pair : α × α ≃ α :=
@@ -185,7 +187,7 @@ section Classical
 
 open_locale Classical
 
-theorem exists_succ (x : s) : ∃ n, ((«expr↑ » x+n)+1) ∈ s :=
+theorem exists_succ (x : s) : ∃ n, (((↑x)+n)+1) ∈ s :=
   Classical.by_contradiction$
     fun h =>
       have  : ∀ a : ℕ ha : a ∈ s, a < succ x :=
@@ -209,24 +211,25 @@ variable [DecidablePred (· ∈ s)]
 
 /-- Returns the next natural in a set, according to the usual ordering of `ℕ`. -/
 def succ (x : s) : s :=
-  have h : ∃ m, ((«expr↑ » x+m)+1) ∈ s := exists_succ x
-  ⟨(«expr↑ » x+Nat.findₓ h)+1, Nat.find_specₓ h⟩
+  have h : ∃ m, (((↑x)+m)+1) ∈ s := exists_succ x
+  ⟨((↑x)+Nat.findₓ h)+1, Nat.find_specₓ h⟩
 
 theorem succ_le_of_lt {x y : s} (h : y < x) : succ y ≤ x :=
-  have hx : ∃ m, ((«expr↑ » y+m)+1) ∈ s := exists_succ _ 
+  have hx : ∃ m, (((↑y)+m)+1) ∈ s := exists_succ _ 
   let ⟨k, hk⟩ := Nat.exists_eq_add_of_lt h 
   have  : Nat.findₓ hx ≤ k := Nat.find_min'ₓ _ (hk ▸ x.2)
   show (((y : ℕ)+Nat.findₓ hx)+1) ≤ x by 
     rw [hk] <;> exact add_le_add_right (add_le_add_left this _) _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr < » x)
 theorem le_succ_of_forall_lt_le {x y : s} (h : ∀ z _ : z < x, z ≤ y) : x ≤ succ y :=
-  have hx : ∃ m, ((«expr↑ » y+m)+1) ∈ s := exists_succ _ 
-  show «expr↑ » x ≤ («expr↑ » y+Nat.findₓ hx)+1 from
+  have hx : ∃ m, (((↑y)+m)+1) ∈ s := exists_succ _ 
+  show ↑x ≤ ((↑y)+Nat.findₓ hx)+1 from
     le_of_not_gtₓ$
       fun hxy =>
         (h ⟨_, Nat.find_specₓ hx⟩ hxy).not_lt$
-          calc «expr↑ » y ≤ «expr↑ » y+Nat.findₓ hx := le_add_of_nonneg_right (Nat.zero_leₓ _)
-            _ < («expr↑ » y+Nat.findₓ hx)+1 := Nat.lt_succ_selfₓ _
+          calc ↑y ≤ (↑y)+Nat.findₓ hx := le_add_of_nonneg_right (Nat.zero_leₓ _)
+            _ < ((↑y)+Nat.findₓ hx)+1 := Nat.lt_succ_selfₓ _
             
 
 theorem lt_succ_self (x : s) : x < succ x :=
@@ -252,7 +255,7 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, of_nat s n = 
     have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ :=
       by 
         simp [List.mem_filterₓ, Subtype.ext_iff_val, t] <;> intros  <;> rfl 
-    have wf : ∀ m : s, List.maximum t = m → «expr↑ » m < x :=
+    have wf : ∀ m : s, List.maximum t = m → ↑m < x :=
       fun m hmax =>
         by 
           simpa [hmt] using List.maximum_mem hmax 
@@ -322,7 +325,7 @@ private theorem right_inverse_aux : ∀ n, to_fun_aux (of_nat s n) = n
               h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h => ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
   by 
     simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
-    conv  => toRHS rw [←ih, ←card_insert_of_not_mem h₁, ←h₂]
+    conv  => rhs rw [←ih, ←card_insert_of_not_mem h₁, ←h₂]
 
 /-- Any infinite set of naturals is denumerable. -/
 def Denumerable (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : Denumerable s :=
@@ -337,14 +340,14 @@ namespace Denumerable
 
 open Encodable
 
--- error in Data.Equiv.Denumerable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An infinite encodable type is denumerable. -/
-def of_encodable_of_infinite (α : Type*) [encodable α] [infinite α] : denumerable α :=
-begin
-  letI [] [] [":=", expr @decidable_range_encode α _]; letI [] [":", expr infinite (set.range (@encode α _))] [":=", expr infinite.of_injective _ (equiv.of_injective _ encode_injective).injective],
-  letI [] [] [":=", expr nat.subtype.denumerable (set.range (@encode α _))],
-  exact [expr denumerable.of_equiv (set.range (@encode α _)) (equiv_range_encode α)]
-end
+def of_encodable_of_infinite (α : Type _) [Encodable α] [Infinite α] : Denumerable α :=
+  by 
+    let this' := @decidable_range_encode α _ <;>
+      let this' : Infinite (Set.Range (@encode α _)) :=
+        Infinite.of_injective _ (Equivₓ.ofInjective _ encode_injective).Injective 
+    let this' := Nat.Subtype.denumerable (Set.Range (@encode α _))
+    exact Denumerable.ofEquiv (Set.Range (@encode α _)) (equiv_range_encode α)
 
 end Denumerable
 

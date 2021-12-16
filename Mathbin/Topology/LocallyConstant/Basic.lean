@@ -33,55 +33,80 @@ def IsLocallyConstant (f : X → Y) : Prop :=
 
 namespace IsLocallyConstant
 
-protected theorem tfae (f : X → Y) :
-  tfae
-    [IsLocallyConstant f, ∀ x, ∀ᶠx' in 𝓝 x, f x' = f x, ∀ x, IsOpen { x' | f x' = f x }, ∀ y, IsOpen (f ⁻¹' {y}),
-      ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' _ : x' ∈ U, f x' = f x] :=
-  by 
-    tfaeHave 1 → 4 
-    exact fun h y => h {y}
-    tfaeHave 4 → 3 
-    exact fun h x => h (f x)
-    tfaeHave 3 → 2 
-    exact fun h x => IsOpen.mem_nhds (h x) rfl 
-    tfaeHave 2 → 5
-    ·
-      intro h x 
-      rcases mem_nhds_iff.1 (h x) with ⟨U, eq, hU, hx⟩
-      exact ⟨U, hU, hx, Eq⟩
-    tfaeHave 5 → 1
-    ·
-      intro h s 
-      refine' is_open_iff_forall_mem_open.2 fun x hx => _ 
-      rcases h x with ⟨U, hU, hxU, eq⟩
-      exact ⟨U, fun x' hx' => mem_preimage.2$ (Eq x' hx').symm ▸ hx, hU, hxU⟩
-    tfaeFinish
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x' «expr ∈ » U)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+protected
+  theorem
+    tfae
+    ( f : X → Y )
+      :
+        tfae
+          [
+            IsLocallyConstant f
+              ,
+              ∀ x , ∀ᶠ x' in 𝓝 x , f x' = f x
+              ,
+              ∀ x , IsOpen { x' | f x' = f x }
+              ,
+              ∀ y , IsOpen f ⁻¹' { y }
+              ,
+              ∀ x , ∃ ( U : Set X ) ( hU : IsOpen U ) ( hx : x ∈ U ) , ∀ x' _ : x' ∈ U , f x' = f x
+            ]
+    :=
+      by
+        tfaeHave 1 → 4
+          exact fun h y => h { y }
+          tfaeHave 4 → 3
+          exact fun h x => h f x
+          tfaeHave 3 → 2
+          exact fun h x => IsOpen.mem_nhds h x rfl
+          tfaeHave 2 → 5
+          · intro h x rcases mem_nhds_iff . 1 h x with ⟨ U , eq , hU , hx ⟩ exact ⟨ U , hU , hx , Eq ⟩
+          tfaeHave 5 → 1
+          ·
+            intro h s
+              refine' is_open_iff_forall_mem_open . 2 fun x hx => _
+              rcases h x with ⟨ U , hU , hxU , eq ⟩
+              exact ⟨ U , fun x' hx' => mem_preimage . 2 $ Eq x' hx' . symm ▸ hx , hU , hxU ⟩
+          tfaeFinish
 
 @[nontriviality]
 theorem of_discrete [DiscreteTopology X] (f : X → Y) : IsLocallyConstant f :=
   fun s => is_open_discrete _
 
-theorem is_open_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsOpen { x | f x = y } :=
-  hf {y}
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_open_fiber { f : X → Y } ( hf : IsLocallyConstant f ) ( y : Y ) : IsOpen { x | f x = y } := hf { y }
 
-theorem is_closed_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed { x | f x = y } :=
-  ⟨hf («expr ᶜ» {y})⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_closed_fiber
+  { f : X → Y } ( hf : IsLocallyConstant f ) ( y : Y ) : IsClosed { x | f x = y }
+  := ⟨ hf { y } ᶜ ⟩
 
-theorem is_clopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClopen { x | f x = y } :=
-  ⟨is_open_fiber hf _, is_closed_fiber hf _⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_clopen_fiber
+  { f : X → Y } ( hf : IsLocallyConstant f ) ( y : Y ) : IsClopen { x | f x = y }
+  := ⟨ is_open_fiber hf _ , is_closed_fiber hf _ ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x' «expr ∈ » U)
 theorem iff_exists_open (f : X → Y) :
   IsLocallyConstant f ↔ ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' _ : x' ∈ U, f x' = f x :=
   (IsLocallyConstant.tfae f).out 0 4
 
-theorem iff_eventually_eq (f : X → Y) : IsLocallyConstant f ↔ ∀ x, ∀ᶠy in 𝓝 x, f y = f x :=
+theorem iff_eventually_eq (f : X → Y) : IsLocallyConstant f ↔ ∀ x, ∀ᶠ y in 𝓝 x, f y = f x :=
   (IsLocallyConstant.tfae f).out 0 1
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x' «expr ∈ » U)
 theorem exists_open {f : X → Y} (hf : IsLocallyConstant f) (x : X) :
   ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' _ : x' ∈ U, f x' = f x :=
   (iff_exists_open f).1 hf x
 
-protected theorem eventually_eq {f : X → Y} (hf : IsLocallyConstant f) (x : X) : ∀ᶠy in 𝓝 x, f y = f x :=
+protected theorem eventually_eq {f : X → Y} (hf : IsLocallyConstant f) (x : X) : ∀ᶠ y in 𝓝 x, f y = f x :=
   (iff_eventually_eq f).1 hf x
 
 protected theorem Continuous [TopologicalSpace Y] {f : X → Y} (hf : IsLocallyConstant f) : Continuous f :=
@@ -126,10 +151,10 @@ theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s 
   (hx : x ∈ s) (hy : y ∈ s) : f x = f y :=
   by 
     let U := f ⁻¹' {f y}
-    suffices  : x ∉ «expr ᶜ» U 
+    suffices  : x ∉ Uᶜ
     exact not_not.1 this 
     intro hxV 
-    specialize hs U («expr ᶜ» U) (hf {f y}) (hf («expr ᶜ» {f y})) _ ⟨y, ⟨hy, rfl⟩⟩ ⟨x, ⟨hx, hxV⟩⟩
+    specialize hs U (Uᶜ) (hf {f y}) (hf ({f y}ᶜ)) _ ⟨y, ⟨hy, rfl⟩⟩ ⟨x, ⟨hx, hxV⟩⟩
     ·
       simp only [union_compl_self, subset_univ]
     ·
@@ -138,14 +163,12 @@ theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s 
 theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f ↔ ∀ x y, f x = f y :=
   ⟨fun h x y => h.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ, of_constant _⟩
 
--- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem range_finite [compact_space X] {f : X → Y} (hf : is_locally_constant f) : (set.range f).finite :=
-begin
-  letI [] [":", expr topological_space Y] [":=", expr «expr⊥»()],
-  haveI [] [":", expr discrete_topology Y] [":=", expr ⟨rfl⟩],
-  rw [expr @iff_continuous X Y «expr‹ ›»(_) «expr‹ ›»(_)] ["at", ident hf],
-  exact [expr finite_of_is_compact_of_discrete _ (is_compact_range hf)]
-end
+theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) : (Set.Range f).Finite :=
+  by 
+    let this' : TopologicalSpace Y := ⊥
+    have  : DiscreteTopology Y := ⟨rfl⟩
+    rw [@iff_continuous X Y ‹_› ‹_›] at hf 
+    exact finite_of_is_compact_of_discrete _ (is_compact_range hf)
 
 @[toAdditive]
 theorem one [HasOne Y] : IsLocallyConstant (1 : X → Y) :=
@@ -163,25 +186,24 @@ theorem mul [Mul Y] ⦃f g : X → Y⦄ (hf : IsLocallyConstant f) (hg : IsLocal
 theorem div [Div Y] ⦃f g : X → Y⦄ (hf : IsLocallyConstant f) (hg : IsLocallyConstant g) : IsLocallyConstant (f / g) :=
   hf.comp₂ hg (· / ·)
 
--- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a composition of a function `f` followed by an injection `g` is locally
 constant, then the locally constant property descends to `f`. -/
-theorem desc
-{α β : Type*}
-(f : X → α)
-(g : α → β)
-(h : is_locally_constant «expr ∘ »(g, f))
-(inj : function.injective g) : is_locally_constant f :=
-begin
-  rw [expr (is_locally_constant.tfae f).out 0 3] [],
-  intros [ident a],
-  have [] [":", expr «expr = »(«expr ⁻¹' »(f, {a}), «expr ⁻¹' »(«expr ∘ »(g, f), {g a}))] [],
-  { ext [] [ident x] [],
-    simp [] [] ["only"] ["[", expr mem_singleton_iff, ",", expr function.comp_app, ",", expr mem_preimage, "]"] [] [],
-    exact [expr ⟨λ h, by rw [expr h] [], λ h, inj h⟩] },
-  rw [expr this] [],
-  apply [expr h]
-end
+theorem desc {α β : Type _} (f : X → α) (g : α → β) (h : IsLocallyConstant (g ∘ f)) (inj : Function.Injective g) :
+  IsLocallyConstant f :=
+  by 
+    rw [(IsLocallyConstant.tfae f).out 0 3]
+    intro a 
+    have  : f ⁻¹' {a} = (g ∘ f) ⁻¹' {g a}
+    ·
+      ext x 
+      simp only [mem_singleton_iff, Function.comp_app, mem_preimage]
+      exact
+        ⟨fun h =>
+            by 
+              rw [h],
+          fun h => inj h⟩
+    rw [this]
+    apply h
 
 end IsLocallyConstant
 
@@ -205,7 +227,7 @@ theorem to_fun_eq_coe (f : LocallyConstant X Y) : f.to_fun = f :=
   rfl
 
 @[simp]
-theorem coe_mk (f : X → Y) h : «expr⇑ » (⟨f, h⟩ : LocallyConstant X Y) = f :=
+theorem coe_mk (f : X → Y) h : ⇑(⟨f, h⟩ : LocallyConstant X Y) = f :=
   rfl
 
 theorem congr_funₓ {f g : LocallyConstant X Y} (h : f = g) (x : X) : f x = g x :=
@@ -298,27 +320,22 @@ theorem of_clopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ 
 
 @[simp]
 theorem of_clopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
-  of_clopen hU ⁻¹' ({1} : Set (Finₓ 2)) = «expr ᶜ» U :=
+  of_clopen hU ⁻¹' ({1} : Set (Finₓ 2)) = Uᶜ :=
   by 
     ext 
     simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, coe_mk, Finₓ.zero_eq_one_iff, mem_preimage,
       ite_eq_right_iff, mem_compl_eq]
     tauto
 
--- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem locally_constant_eq_of_fiber_zero_eq
-{X : Type*}
-[topological_space X]
-(f g : locally_constant X (fin 2))
-(h : «expr = »(«expr ⁻¹' »(f, ({0} : set (fin 2))), «expr ⁻¹' »(g, {0}))) : «expr = »(f, g) :=
-begin
-  simp [] [] ["only"] ["[", expr set.ext_iff, ",", expr mem_singleton_iff, ",", expr mem_preimage, "]"] [] ["at", ident h],
-  ext1 [] [ident x],
-  have [] [] [":=", expr h x],
-  set [] [ident a] [] [":="] [expr f x] [],
-  set [] [ident b] [] [":="] [expr g x] [],
-  fin_cases [ident a] []; fin_cases [ident b] []; finish [] []
-end
+theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X] (f g : LocallyConstant X (Finₓ 2))
+  (h : f ⁻¹' ({0} : Set (Finₓ 2)) = g ⁻¹' {0}) : f = g :=
+  by 
+    simp only [Set.ext_iff, mem_singleton_iff, mem_preimage] at h 
+    ext1 x 
+    have  := h x 
+    set a := f x 
+    set b := g x 
+    finCases a <;> finCases b <;> finish
 
 theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.Range f).Finite :=
   f.is_locally_constant.range_finite
@@ -351,7 +368,7 @@ def map (f : Y → Z) : LocallyConstant X Y → LocallyConstant X Z :=
           apply g.is_locally_constant⟩
 
 @[simp]
-theorem map_apply (f : Y → Z) (g : LocallyConstant X Y) : «expr⇑ » (map f g) = (f ∘ g) :=
+theorem map_apply (f : Y → Z) (g : LocallyConstant X Y) : ⇑map f g = (f ∘ g) :=
   rfl
 
 @[simp]
@@ -371,27 +388,22 @@ functions with values in β indexed by α. -/
 def flip {X α β : Type _} [TopologicalSpace X] (f : LocallyConstant X (α → β)) (a : α) : LocallyConstant X β :=
   f.map fun f => f a
 
--- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If α is finite, this constructs a locally constant function to `α → β` given a
 family of locally constant functions with values in β indexed by α. -/
-def unflip
-{X α β : Type*}
-[fintype α]
-[topological_space X]
-(f : α → locally_constant X β) : locally_constant X (α → β) :=
-{ to_fun := λ x a, f a x,
-  is_locally_constant := begin
-    rw [expr (is_locally_constant.tfae (λ x a, f a x)).out 0 3] [],
-    intros [ident g],
-    have [] [":", expr «expr = »(«expr ⁻¹' »(λ
-       (x : X)
-       (a : α), f a x, {g}), «expr⋂ , »((a : α), «expr ⁻¹' »(f a, {g a})))] [],
-    by tidy [],
-    rw [expr this] [],
-    apply [expr is_open_Inter],
-    intros [ident a],
-    apply [expr (f a).is_locally_constant]
-  end }
+def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
+  LocallyConstant X (α → β) :=
+  { toFun := fun x a => f a x,
+    IsLocallyConstant :=
+      by 
+        rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
+        intro g 
+        have  : (fun x : X a : α => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a}
+        ·
+          tidy 
+        rw [this]
+        apply is_open_Inter 
+        intro a 
+        apply (f a).IsLocallyConstant }
 
 @[simp]
 theorem unflip_flip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : LocallyConstant X (α → β)) :
@@ -434,7 +446,7 @@ noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant 
         exact (H ⟨x⟩).elim
 
 @[simp]
-theorem coe_comap (f : X → Y) (g : LocallyConstant Y Z) (hf : Continuous f) : «expr⇑ » (comap f g) = (g ∘ f) :=
+theorem coe_comap (f : X → Y) (g : LocallyConstant Y Z) (hf : Continuous f) : ⇑comap f g = (g ∘ f) :=
   by 
     rw [comap, dif_pos hf]
     rfl
@@ -482,7 +494,7 @@ def desc {X α β : Type _} [TopologicalSpace X] {g : α → β} (f : X → α) 
 
 @[simp]
 theorem coe_desc {X α β : Type _} [TopologicalSpace X] (f : X → α) (g : α → β) (h : LocallyConstant X β)
-  (cond : (g ∘ f) = h) (inj : Function.Injective g) : «expr⇑ » (desc f h cond inj) = f :=
+  (cond : (g ∘ f) = h) (inj : Function.Injective g) : ⇑desc f h cond inj = f :=
   rfl
 
 end Desc

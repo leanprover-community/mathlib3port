@@ -28,59 +28,73 @@ open_locale Rat
 protected def nonneg (r : ℚ) : Prop :=
   0 ≤ r.num
 
--- error in Data.Rat.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mk_nonneg
-(a : exprℤ())
-{b : exprℤ()}
-(h : «expr < »(0, b)) : «expr ↔ »(«expr /. »(a, b).nonneg, «expr ≤ »(0, a)) :=
-begin
-  generalize [ident ha] [":"] [expr «expr = »(«expr /. »(a, b), x)],
-  cases [expr x] ["with", ident n₁, ident d₁, ident h₁, ident c₁],
-  rw [expr num_denom'] ["at", ident ha],
-  simp [] [] [] ["[", expr rat.nonneg, "]"] [] [],
-  have [ident d0] [] [":=", expr int.coe_nat_lt.2 h₁],
-  have [] [] [":=", expr (mk_eq (ne_of_gt h) (ne_of_gt d0)).1 ha],
-  constructor; intro [ident h₂],
-  { apply [expr nonneg_of_mul_nonneg_right _ d0],
-    rw [expr this] [],
-    exact [expr mul_nonneg h₂ (le_of_lt h)] },
-  { apply [expr nonneg_of_mul_nonneg_right _ h],
-    rw ["<-", expr this] [],
-    exact [expr mul_nonneg h₂ (int.coe_zero_le _)] }
-end
+theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a :=
+  by 
+    generalize ha : a /. b = x 
+    cases' x with n₁ d₁ h₁ c₁ 
+    rw [num_denom'] at ha 
+    simp [Rat.Nonneg]
+    have d0 := Int.coe_nat_lt.2 h₁ 
+    have  := (mk_eq (ne_of_gtₓ h) (ne_of_gtₓ d0)).1 ha 
+    constructor <;> intro h₂
+    ·
+      apply nonneg_of_mul_nonneg_right _ d0 
+      rw [this]
+      exact mul_nonneg h₂ (le_of_ltₓ h)
+    ·
+      apply nonneg_of_mul_nonneg_right _ h 
+      rw [←this]
+      exact mul_nonneg h₂ (Int.coe_zero_le _)
 
--- error in Data.Rat.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected theorem nonneg_add {a b} : rat.nonneg a → rat.nonneg b → rat.nonneg «expr + »(a, b) :=
-«expr $ »(num_denom_cases_on' a, λ
- n₁
- d₁
- h₁, «expr $ »(num_denom_cases_on' b, λ n₂ d₂ h₂, begin
-    have [ident d₁0] [":", expr «expr < »(0, (d₁ : exprℤ()))] [":=", expr int.coe_nat_pos.2 (nat.pos_of_ne_zero h₁)],
-    have [ident d₂0] [":", expr «expr < »(0, (d₂ : exprℤ()))] [":=", expr int.coe_nat_pos.2 (nat.pos_of_ne_zero h₂)],
-    simp [] [] [] ["[", expr d₁0, ",", expr d₂0, ",", expr h₁, ",", expr h₂, ",", expr mul_pos d₁0 d₂0, "]"] [] [],
-    intros [ident n₁0, ident n₂0],
-    apply [expr add_nonneg]; apply [expr mul_nonneg]; { assumption <|> apply [expr int.coe_zero_le] }
-  end))
+protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a+b) :=
+  num_denom_cases_on' a$
+    fun n₁ d₁ h₁ =>
+      num_denom_cases_on' b$
+        fun n₂ d₂ h₂ =>
+          by 
+            have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₁)
+            have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₂)
+            simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
+            intro n₁0 n₂0 
+            apply add_nonneg <;>
+              apply mul_nonneg <;>
+                ·
+                  first |
+                    assumption|
+                    apply Int.coe_zero_le
 
--- error in Data.Rat.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected theorem nonneg_mul {a b} : rat.nonneg a → rat.nonneg b → rat.nonneg «expr * »(a, b) :=
-«expr $ »(num_denom_cases_on' a, λ
- n₁
- d₁
- h₁, «expr $ »(num_denom_cases_on' b, λ n₂ d₂ h₂, begin
-    have [ident d₁0] [":", expr «expr < »(0, (d₁ : exprℤ()))] [":=", expr int.coe_nat_pos.2 (nat.pos_of_ne_zero h₁)],
-    have [ident d₂0] [":", expr «expr < »(0, (d₂ : exprℤ()))] [":=", expr int.coe_nat_pos.2 (nat.pos_of_ne_zero h₂)],
-    simp [] [] [] ["[", expr d₁0, ",", expr d₂0, ",", expr h₁, ",", expr h₂, ",", expr mul_pos d₁0 d₂0, ",", expr mul_nonneg, "]"] [] [] { contextual := tt }
-  end))
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+protected
+  theorem
+    nonneg_mul
+    { a b } : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg a * b
+    :=
+      num_denom_cases_on' a
+        $
+        fun
+          n₁ d₁ h₁
+            =>
+            num_denom_cases_on' b
+              $
+              fun
+                n₂ d₂ h₂
+                  =>
+                  by
+                    have d₁0 : 0 < ( d₁ : ℤ ) := Int.coe_nat_pos . 2 Nat.pos_of_ne_zeroₓ h₁
+                      have d₂0 : 0 < ( d₂ : ℤ ) := Int.coe_nat_pos . 2 Nat.pos_of_ne_zeroₓ h₂
+                      simp
+                        ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                        [ d₁0 , d₂0 , h₁ , h₂ , mul_pos d₁0 d₂0 , mul_nonneg ]
 
--- error in Data.Rat.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected theorem nonneg_antisymm {a} : rat.nonneg a → rat.nonneg «expr- »(a) → «expr = »(a, 0) :=
-«expr $ »(num_denom_cases_on' a, λ n d h, begin
-   have [ident d0] [":", expr «expr < »(0, (d : exprℤ()))] [":=", expr int.coe_nat_pos.2 (nat.pos_of_ne_zero h)],
-   simp [] [] [] ["[", expr d0, ",", expr h, "]"] [] [],
-   exact [expr λ h₁ h₂, le_antisymm h₂ h₁]
- end)
+protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a = 0 :=
+  num_denom_cases_on' a$
+    fun n d h =>
+      by 
+        have d0 : 0 < (d : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h)
+        simp [d0, h]
+        exact fun h₁ h₂ => le_antisymmₓ h₂ h₁
 
 protected theorem nonneg_total : Rat.Nonneg a ∨ Rat.Nonneg (-a) :=
   by 
@@ -113,14 +127,18 @@ protected theorem le_reflₓ : a ≤ a :=
   show Rat.Nonneg (a - a)by 
     rw [sub_self] <;> exact le_reflₓ (0 : ℤ)
 
--- error in Data.Rat.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected theorem le_total : «expr ∨ »(«expr ≤ »(a, b), «expr ≤ »(b, a)) :=
-by have [] [] [":=", expr rat.nonneg_total «expr - »(b, a)]; rwa [expr neg_sub] ["at", ident this]
+protected theorem le_totalₓ : a ≤ b ∨ b ≤ a :=
+  by 
+    have  := Rat.nonneg_total (b - a) <;> rwa [neg_sub] at this
 
--- error in Data.Rat.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected theorem le_antisymm {a b : exprℚ()} (hab : «expr ≤ »(a, b)) (hba : «expr ≤ »(b, a)) : «expr = »(a, b) :=
-by { have [] [] [":=", expr eq_neg_of_add_eq_zero «expr $ »(rat.nonneg_antisymm hba, by rwa ["[", "<-", expr sub_eq_add_neg, ",", expr neg_sub, "]"] [])],
-  rwa [expr neg_neg] ["at", ident this] }
+protected theorem le_antisymmₓ {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b :=
+  by 
+    have  :=
+      eq_neg_of_add_eq_zero
+        (Rat.nonneg_antisymm hba$
+          by 
+            rwa [←sub_eq_add_neg, neg_sub])
+    rwa [neg_negₓ] at this
 
 protected theorem le_transₓ {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c :=
   have  : Rat.Nonneg ((b - a)+c - b) := Rat.nonneg_add hab hbc 
@@ -171,30 +189,31 @@ instance : Preorderₓ ℚ :=
   by 
     infer_instance
 
-protected theorem le_def' {p q : ℚ} : p ≤ q ↔ (p.num*q.denom) ≤ q.num*p.denom :=
-  by 
-    rw [←@num_denom q, ←@num_denom p]
-    convRHS => simp only [num_denom]
-    exact
-      Rat.le_def
-        (by 
-          exactModCast p.pos)
-        (by 
-          exactModCast q.pos)
-
--- error in Data.Rat.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 protected
-theorem lt_def
-{p q : exprℚ()} : «expr ↔ »(«expr < »(p, q), «expr < »(«expr * »(p.num, q.denom), «expr * »(q.num, p.denom))) :=
-begin
-  rw ["[", expr lt_iff_le_and_ne, ",", expr rat.le_def', "]"] [],
-  suffices [] [":", expr «expr ↔ »(«expr ≠ »(p, q), «expr ≠ »(«expr * »(p.num, q.denom), «expr * »(q.num, p.denom)))],
-  by { split; intro [ident h],
-    { exact [expr lt_iff_le_and_ne.elim_right ⟨h.left, this.elim_left h.right⟩] },
-    { have [ident tmp] [] [":=", expr lt_iff_le_and_ne.elim_left h],
-      exact [expr ⟨tmp.left, this.elim_right tmp.right⟩] } },
-  exact [expr not_iff_not.elim_right eq_iff_mul_eq_mul]
-end
+  theorem
+    le_def'
+    { p q : ℚ } : p ≤ q ↔ p.num * q.denom ≤ q.num * p.denom
+    :=
+      by
+        rw [ ← @ num_denom q , ← @ num_denom p ]
+          convRHS => simp only [ num_denom ]
+          exact Rat.le_def by exactModCast p.pos by exactModCast q.pos
+
+protected theorem lt_def {p q : ℚ} : p < q ↔ (p.num*q.denom) < q.num*p.denom :=
+  by 
+    rw [lt_iff_le_and_ne, Rat.le_def']
+    suffices  : p ≠ q ↔ (p.num*q.denom) ≠ q.num*p.denom
+    ·
+      ·
+        constructor <;> intro h
+        ·
+          exact lt_iff_le_and_ne.elim_right ⟨h.left, this.elim_left h.right⟩
+        ·
+          have tmp := lt_iff_le_and_ne.elim_left h 
+          exact ⟨tmp.left, this.elim_right tmp.right⟩
+    exact not_iff_not.elim_right eq_iff_mul_eq_mul
 
 theorem nonneg_iff_zero_le {a} : Rat.Nonneg a ↔ 0 ≤ a :=
   show Rat.Nonneg a ↔ Rat.Nonneg (a - 0)by 
@@ -258,8 +277,6 @@ instance : OrderedAddCommMonoid ℚ :=
   by 
     infer_instance
 
-attribute [irreducible] Rat.Le
-
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le$
     by 
@@ -278,20 +295,9 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
       apply not_iff_not_of_iff 
       simp [div_num_denom, Rat.le_def d_pos b_pos]
 
--- error in Data.Rat.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_one_iff_num_lt_denom {q : exprℚ()} : «expr ↔ »(«expr < »(q, 1), «expr < »(q.num, q.denom)) :=
-begin
-  cases [expr decidable.em «expr < »(0, q)] ["with", ident q_pos, ident q_nonpos],
-  { simp [] [] [] ["[", expr rat.lt_def, "]"] [] [] },
-  { replace [ident q_nonpos] [":", expr «expr ≤ »(q, 0)] [],
-    from [expr not_lt.elim_left q_nonpos],
-    have [] [":", expr «expr < »(q.num, q.denom)] [],
-    by { have [] [":", expr «expr ↔ »(«expr¬ »(«expr < »(0, q.num)), «expr¬ »(«expr < »(0, q)))] [],
-      from [expr not_iff_not.elim_right num_pos_iff_pos],
-      simp [] [] ["only"] ["[", expr not_lt, "]"] [] ["at", ident this],
-      exact [expr lt_of_le_of_lt (this.elim_right q_nonpos) (by exact_mod_cast [expr q.pos])] },
-    simp [] [] ["only"] ["[", expr this, ",", expr lt_of_le_of_lt q_nonpos zero_lt_one, "]"] [] [] }
-end
+theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom :=
+  by 
+    simp [Rat.lt_def]
 
 theorem abs_def (q : ℚ) : |q| = q.num.nat_abs /. q.denom :=
   by 

@@ -17,9 +17,9 @@ In the following, `f g : equiv.perm α`.
 -/
 
 
-open Equiv Finset
+open Equivₓ Finset
 
-namespace Equiv.Perm
+namespace Equivₓ.Perm
 
 variable {α : Type _}
 
@@ -44,7 +44,7 @@ theorem disjoint_comm : Disjoint f g ↔ Disjoint g f :=
   ⟨Disjoint.symm, Disjoint.symm⟩
 
 theorem disjoint.commute (h : Disjoint f g) : Commute f g :=
-  Equiv.ext$
+  Equivₓ.ext$
     fun x =>
       (h x).elim
         (fun hf =>
@@ -113,6 +113,7 @@ theorem disjoint.mul_right (H1 : Disjoint f g) (H2 : Disjoint f h) : Disjoint f 
     rw [disjoint_comm]
     exact H1.symm.mul_left H2.symm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » l)
 theorem disjoint_prod_right (l : List (perm α)) (h : ∀ g _ : g ∈ l, Disjoint f g) : Disjoint f l.prod :=
   by 
     induction' l with g l ih
@@ -209,7 +210,7 @@ theorem is_swap.of_subtype_is_swap {p : α → Prop} [DecidablePred p] {f : perm
     by 
       simp only [Ne.def] at hxy 
       exact hxy.1,
-    Equiv.ext$
+    Equivₓ.ext$
       fun z =>
         by 
           rw [hxy.2, of_subtype]
@@ -224,7 +225,7 @@ theorem ne_and_ne_of_swap_mul_apply_ne_self {f : perm α} {x y : α} (hy : (swap
     simp only [swap_apply_def, mul_apply, f.injective.eq_iff] at *
     byCases' h : f y = x
     ·
-      split  <;> intro  <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
+      constructor <;> intro  <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
     ·
       splitIfs  at hy <;> cc
 
@@ -236,28 +237,39 @@ section Set
 
 variable (p q : perm α)
 
-theorem set_support_inv_eq : { x | (p⁻¹) x ≠ x } = { x | p x ≠ x } :=
-  by 
-    ext x 
-    simp only [Set.mem_set_of_eq, Ne.def]
-    rw [inv_def, symm_apply_eq, eq_comm]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  set_support_inv_eq
+  : { x | p ⁻¹ x ≠ x } = { x | p x ≠ x }
+  := by ext x simp only [ Set.mem_set_of_eq , Ne.def ] rw [ inv_def , symm_apply_eq , eq_comm ]
 
-theorem set_support_apply_mem {p : perm α} {a : α} : p a ∈ { x | p x ≠ x } ↔ a ∈ { x | p x ≠ x } :=
-  by 
-    simp 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem set_support_apply_mem { p : perm α } { a : α } : p a ∈ { x | p x ≠ x } ↔ a ∈ { x | p x ≠ x } := by simp
 
-theorem set_support_zpow_subset (n : ℤ) : { x | (p ^ n) x ≠ x } ⊆ { x | p x ≠ x } :=
-  by 
-    intro x 
-    simp only [Set.mem_set_of_eq, Ne.def]
-    intro hx H 
-    simpa [zpow_apply_eq_self_of_apply_eq_self H] using hx
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  set_support_zpow_subset
+  ( n : ℤ ) : { x | p ^ n x ≠ x } ⊆ { x | p x ≠ x }
+  :=
+    by
+      intro x
+        simp only [ Set.mem_set_of_eq , Ne.def ]
+        intro hx H
+        simpa [ zpow_apply_eq_self_of_apply_eq_self H ] using hx
 
-theorem set_support_mul_subset : { x | (p*q) x ≠ x } ⊆ { x | p x ≠ x } ∪ { x | q x ≠ x } :=
-  by 
-    intro x 
-    simp only [perm.coe_mul, Function.comp_app, Ne.def, Set.mem_union_eq, Set.mem_set_of_eq]
-    byCases' hq : q x = x <;> simp [hq]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  set_support_mul_subset
+  : { x | p * q x ≠ x } ⊆ { x | p x ≠ x } ∪ { x | q x ≠ x }
+  :=
+    by
+      intro x
+        simp only [ perm.coe_mul , Function.comp_app , Ne.def , Set.mem_union_eq , Set.mem_set_of_eq ]
+        byCases' hq : q x = x <;> simp [ hq ]
 
 end Set
 
@@ -276,15 +288,14 @@ theorem not_mem_support {x : α} : x ∉ f.support ↔ f x = x :=
   by 
     simp 
 
-theorem coe_support_eq_set_support (f : perm α) : (f.support : Set α) = { x | f x ≠ x } :=
-  by 
-    ext 
-    simp 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem coe_support_eq_set_support ( f : perm α ) : ( f.support : Set α ) = { x | f x ≠ x } := by ext simp
 
 @[simp]
 theorem support_eq_empty_iff {σ : perm α} : σ.support = ∅ ↔ σ = 1 :=
   by 
-    simpRw [Finset.ext_iff, mem_support, Finset.not_mem_empty, iff_falseₓ, not_not, Equiv.Perm.ext_iff, one_apply]
+    simpRw [Finset.ext_iff, mem_support, Finset.not_mem_empty, iff_falseₓ, not_not, Equivₓ.Perm.ext_iff, one_apply]
 
 @[simp]
 theorem support_one : (1 : perm α).support = ∅ :=
@@ -292,9 +303,10 @@ theorem support_one : (1 : perm α).support = ∅ :=
     rw [support_eq_empty_iff]
 
 @[simp]
-theorem support_refl : support (Equiv.refl α) = ∅ :=
+theorem support_refl : support (Equivₓ.refl α) = ∅ :=
   support_one
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » g.support)
 theorem support_congr (h : f.support ⊆ g.support) (h' : ∀ x _ : x ∈ g.support, f x = g x) : f = g :=
   by 
     ext x 
@@ -353,6 +365,8 @@ theorem zpow_apply_mem_support {n : ℤ} {x : α} : (f ^ n) x ∈ f.support ↔ 
     ·
       rw [zpow_neg_succ_of_nat, ←support_inv, ←inv_pow, pow_apply_mem_support]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(f.support, g.support))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(f.support, g.support))
 theorem pow_eq_on_of_mem_support (h : ∀ x _ : x ∈ f.support ∩ g.support, f x = g x) (k : ℕ) :
   ∀ x _ : x ∈ f.support ∩ g.support, (f ^ k) x = (g ^ k) x :=
   by 
@@ -379,17 +393,16 @@ theorem disjoint.support_mul (h : Disjoint f g) : (f*g).support = f.support ∪ 
       (h a).elim (fun hf h => ⟨hf, f.apply_eq_iff_eq.mp (h.trans hf.symm)⟩)
         fun hg h => ⟨(congr_argₓ f hg).symm.trans h, hg⟩
 
--- error in GroupTheory.Perm.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem support_prod_of_pairwise_disjoint
-(l : list (perm α))
-(h : l.pairwise disjoint) : «expr = »(l.prod.support, (l.map support).foldr ((«expr ⊔ »)) «expr⊥»()) :=
-begin
-  induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
-  { simp [] [] [] [] [] [] },
-  { rw ["[", expr list.pairwise_cons, "]"] ["at", ident h],
-    have [] [":", expr disjoint hd tl.prod] [":=", expr disjoint_prod_right _ h.left],
-    simp [] [] [] ["[", expr this.support_mul, ",", expr hl h.right, "]"] [] [] }
-end
+theorem support_prod_of_pairwise_disjoint (l : List (perm α)) (h : l.pairwise Disjoint) :
+  l.prod.support = (l.map support).foldr (·⊔·) ⊥ :=
+  by 
+    induction' l with hd tl hl
+    ·
+      simp 
+    ·
+      rw [List.pairwise_consₓ] at h 
+      have  : Disjoint hd tl.prod := disjoint_prod_right _ h.left 
+      simp [this.support_mul, hl h.right]
 
 theorem support_prod_le (l : List (perm α)) : l.prod.support ≤ (l.map support).foldr (·⊔·) ⊥ :=
   by 
@@ -408,23 +421,23 @@ theorem support_zpow_le (σ : perm α) (n : ℤ) : (σ ^ n).support ≤ σ.suppo
 theorem support_swap {x y : α} (h : x ≠ y) : support (swap x y) = {x, y} :=
   by 
     ext z 
-    byCases' hx : z = x <;> byCases' hy : z = y 
+    byCases' hx : z = x 
     any_goals 
-      simpa [hx, hy] using h.symm
-    ·
-      simp [swap_apply_of_ne_of_ne, hx, hy]
+      simpa [hx] using h.symm 
+    byCases' hy : z = y <;>
+      ·
+        simp [swap_apply_of_ne_of_ne, hx, hy] <;> cc
 
--- error in GroupTheory.Perm.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem support_swap_iff (x y : α) : «expr ↔ »(«expr = »(support (swap x y), {x, y}), «expr ≠ »(x, y)) :=
-begin
-  refine [expr ⟨λ h H, _, support_swap⟩],
-  subst [expr H],
-  simp [] [] ["only"] ["[", expr swap_self, ",", expr support_refl, ",", expr insert_singleton_self_eq, "]"] [] ["at", ident h],
-  have [] [":", expr «expr ∈ »(x, «expr∅»())] [],
-  { rw [expr h] [],
-    exact [expr mem_singleton.mpr rfl] },
-  simpa [] [] [] [] [] []
-end
+theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y :=
+  by 
+    refine' ⟨fun h H => _, support_swap⟩
+    subst H 
+    simp only [swap_self, support_refl, insert_singleton_self_eq] at h 
+    have  : x ∈ ∅
+    ·
+      rw [h]
+      exact mem_singleton.mpr rfl 
+    simpa
 
 theorem support_swap_mul_swap {x y z : α} (h : List.Nodup [x, y, z]) : support (swap x y*swap y z) = {x, y, z} :=
   by 
@@ -475,13 +488,14 @@ theorem mem_support_swap_mul_imp_mem_support_ne {x y : α} (hy : y ∈ support (
     simp only [mem_support, swap_apply_def, mul_apply, f.injective.eq_iff] at *
     byCases' h : f y = x
     ·
-      split  <;> intro  <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
+      constructor <;> intro  <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
     ·
       splitIfs  at hy <;> cc
 
 theorem disjoint.mem_imp (h : Disjoint f g) {x : α} (hx : x ∈ f.support) : x ∉ g.support :=
   fun H => h.disjoint_support (mem_inter_of_mem hx H)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » f.support)
 theorem eq_on_support_mem_disjoint {l : List (perm α)} (h : f ∈ l) (hl : l.pairwise Disjoint) :
   ∀ x _ : x ∈ f.support, f x = l.prod x :=
   by 
@@ -527,7 +541,7 @@ theorem support_extend_domain (f : α ≃ Subtype p) {g : perm α} :
     byCases' pb : p b
     ·
       rw [extend_domain_apply_subtype _ _ pb]
-      split 
+      constructor
       ·
         rintro h 
         refine'
@@ -610,28 +624,34 @@ theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).support.card =
       by 
         simp [support_swap hxy, Finset.ext_iff]
 
--- error in GroupTheory.Perm.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem card_support_eq_two {f : perm α} : «expr ↔ »(«expr = »(f.support.card, 2), is_swap f) :=
-begin
-  split; intro [ident h],
-  { obtain ["⟨", ident x, ",", ident t, ",", ident hmem, ",", ident hins, ",", ident ht, "⟩", ":=", expr card_eq_succ.1 h],
-    obtain ["⟨", ident y, ",", ident rfl, "⟩", ":=", expr card_eq_one.1 ht],
-    rw [expr mem_singleton] ["at", ident hmem],
-    refine [expr ⟨x, y, hmem, _⟩],
-    ext [] [ident a] [],
-    have [ident key] [":", expr ∀
-     b, «expr ↔ »(«expr ≠ »(f b, b), _)] [":=", expr λ
-     b, by rw ["[", "<-", expr mem_support, ",", "<-", expr hins, ",", expr mem_insert, ",", expr mem_singleton, "]"] []],
-    by_cases [expr ha, ":", expr «expr = »(f a, a)],
-    { have [ident ha'] [] [":=", expr not_or_distrib.mp (mt (key a).mpr (not_not.mpr ha))],
-      rw ["[", expr ha, ",", expr swap_apply_of_ne_of_ne ha'.1 ha'.2, "]"] [] },
-    { have [ident ha'] [] [":=", expr (key (f a)).mp (mt f.apply_eq_iff_eq.mp ha)],
-      obtain [ident rfl, "|", ident rfl, ":=", expr (key a).mp ha],
-      { rw ["[", expr or.resolve_left ha' ha, ",", expr swap_apply_left, "]"] [] },
-      { rw ["[", expr or.resolve_right ha' ha, ",", expr swap_apply_right, "]"] [] } } },
-  { obtain ["⟨", ident x, ",", ident y, ",", ident hxy, ",", ident rfl, "⟩", ":=", expr h],
-    exact [expr card_support_swap hxy] }
-end
+@[simp]
+theorem card_support_eq_two {f : perm α} : f.support.card = 2 ↔ is_swap f :=
+  by 
+    constructor <;> intro h
+    ·
+      obtain ⟨x, t, hmem, hins, ht⟩ := card_eq_succ.1 h 
+      obtain ⟨y, rfl⟩ := card_eq_one.1 ht 
+      rw [mem_singleton] at hmem 
+      refine' ⟨x, y, hmem, _⟩
+      ext a 
+      have key : ∀ b, f b ≠ b ↔ _ :=
+        fun b =>
+          by 
+            rw [←mem_support, ←hins, mem_insert, mem_singleton]
+      byCases' ha : f a = a
+      ·
+        have ha' := not_or_distrib.mp (mt (key a).mpr (not_not.mpr ha))
+        rw [ha, swap_apply_of_ne_of_ne ha'.1 ha'.2]
+      ·
+        have ha' := (key (f a)).mp (mt f.apply_eq_iff_eq.mp ha)
+        obtain rfl | rfl := (key a).mp ha
+        ·
+          rw [Or.resolve_left ha' ha, swap_apply_left]
+        ·
+          rw [Or.resolve_right ha' ha, swap_apply_right]
+    ·
+      obtain ⟨x, y, hxy, rfl⟩ := h 
+      exact card_support_swap hxy
 
 theorem disjoint.card_support_mul (h : Disjoint f g) : (f*g).support.card = f.support.card+g.support.card :=
   by 
@@ -658,5 +678,5 @@ end Card
 
 end Support
 
-end Equiv.Perm
+end Equivₓ.Perm
 

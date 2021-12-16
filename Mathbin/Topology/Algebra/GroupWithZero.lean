@@ -94,7 +94,7 @@ is continuous at all nonzero points. In this section we prove dot-style `*.inv'`
 theorem tendsto_inv₀ {x : G₀} (hx : x ≠ 0) : tendsto HasInv.inv (𝓝 x) (𝓝 (x⁻¹)) :=
   continuous_at_inv₀ hx
 
-theorem continuous_on_inv₀ : ContinuousOn (HasInv.inv : G₀ → G₀) («expr ᶜ» {0}) :=
+theorem continuous_on_inv₀ : ContinuousOn (HasInv.inv : G₀ → G₀) ({0}ᶜ) :=
   fun x hx => (continuous_at_inv₀ hx).ContinuousWithinAt
 
 /-- If a function converges to a nonzero value, its inverse converges to the inverse of this value.
@@ -116,6 +116,7 @@ theorem ContinuousAt.inv₀ (hf : ContinuousAt f a) (ha : f a ≠ 0) : Continuou
 theorem Continuous.inv₀ (hf : Continuous f) (h0 : ∀ x, f x ≠ 0) : Continuous fun x => f x⁻¹ :=
   continuous_iff_continuous_at.2$ fun x => (hf.tendsto x).inv₀ (h0 x)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀ x _ : x ∈ s, f x ≠ 0) : ContinuousOn (fun x => f x⁻¹) s :=
   fun x hx => (hf x hx).inv₀ (h0 x hx)
 
@@ -144,6 +145,7 @@ theorem ContinuousWithinAt.div (hf : ContinuousWithinAt f s a) (hg : ContinuousW
   ContinuousWithinAt (f / g) s a :=
   hf.div hg h₀
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem ContinuousOn.div (hf : ContinuousOn f s) (hg : ContinuousOn g s) (h₀ : ∀ x _ : x ∈ s, g x ≠ 0) :
   ContinuousOn (f / g) s :=
   fun x hx => (hf x hx).div (hg x hx) (h₀ x hx)
@@ -158,8 +160,12 @@ theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g 
   by 
     simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ h₀)
 
-theorem continuous_on_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
-  continuous_on_fst.div continuous_on_snd$ fun _ => id
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  continuous_on_div
+  : ContinuousOn fun p : G₀ × G₀ => p . 1 / p . 2 { p | p . 2 ≠ 0 }
+  := continuous_on_fst . div continuous_on_snd $ fun _ => id
 
 /-- The function `f x / g x` is discontinuous when `g x = 0`.
 However, under appropriate conditions, `h x (f x / g x)` is still continuous.
@@ -168,10 +174,10 @@ with no information about `y`. This is represented by the `⊤` filter.
 Note: `filter.tendsto_prod_top_iff` characterizes this convergence in uniform spaces.
 See also `filter.prod_top` and `filter.mem_prod_top`. -/
 theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β) (hf : ContinuousAt f a) (hg : ContinuousAt g a)
-  (hh : g a ≠ 0 → ContinuousAt («expr↿ » h) (a, f a / g a))
-  (h2h : g a = 0 → tendsto («expr↿ » h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) : ContinuousAt (fun x => h x (f x / g x)) a :=
+  (hh : g a ≠ 0 → ContinuousAt (↿h) (a, f a / g a)) (h2h : g a = 0 → tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
+  ContinuousAt (fun x => h x (f x / g x)) a :=
   by 
-    show ContinuousAt («expr↿ » h ∘ fun x => (x, f x / g x)) a 
+    show ContinuousAt (↿h ∘ fun x => (x, f x / g x)) a 
     byCases' hga : g a = 0
     ·
       rw [ContinuousAt]
@@ -183,8 +189,8 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
 /-- `h x (f x / g x)` is continuous under certain conditions, even if the denominator is sometimes
   `0`. See docstring of `continuous_at.comp_div_cases`. -/
 theorem Continuous.comp_div_cases {f g : α → G₀} (h : α → G₀ → β) (hf : Continuous f) (hg : Continuous g)
-  (hh : ∀ a, g a ≠ 0 → ContinuousAt («expr↿ » h) (a, f a / g a))
-  (h2h : ∀ a, g a = 0 → tendsto («expr↿ » h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) : Continuous fun x => h x (f x / g x) :=
+  (hh : ∀ a, g a ≠ 0 → ContinuousAt (↿h) (a, f a / g a)) (h2h : ∀ a, g a = 0 → tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
+  Continuous fun x => h x (f x / g x) :=
   continuous_iff_continuous_at.mpr$ fun a => hf.continuous_at.comp_div_cases _ hg.continuous_at (hh a) (h2h a)
 
 end Div
@@ -199,16 +205,16 @@ variable [TopologicalSpace α] [GroupWithZeroₓ α] [HasContinuousMul α]
 /-- Left multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mul_left₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
-  { Equiv.mulLeft₀ c hc with continuous_to_fun := continuous_mul_left _, continuous_inv_fun := continuous_mul_left _ }
+  { Equivₓ.mulLeft₀ c hc with continuous_to_fun := continuous_mul_left _, continuous_inv_fun := continuous_mul_left _ }
 
 /-- Right multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mul_right₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
-  { Equiv.mulRight₀ c hc with continuous_to_fun := continuous_mul_right _,
+  { Equivₓ.mulRight₀ c hc with continuous_to_fun := continuous_mul_right _,
     continuous_inv_fun := continuous_mul_right _ }
 
 @[simp]
-theorem coe_mul_left₀ (c : α) (hc : c ≠ 0) : «expr⇑ » (Homeomorph.mulLeft₀ c hc) = (·*·) c :=
+theorem coe_mul_left₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulLeft₀ c hc = (·*·) c :=
   rfl
 
 @[simp]
@@ -216,7 +222,7 @@ theorem mul_left₀_symm_apply (c : α) (hc : c ≠ 0) : ((Homeomorph.mulLeft₀
   rfl
 
 @[simp]
-theorem coe_mul_right₀ (c : α) (hc : c ≠ 0) : «expr⇑ » (Homeomorph.mulRight₀ c hc) = fun x => x*c :=
+theorem coe_mul_right₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulRight₀ c hc = fun x => x*c :=
   rfl
 
 @[simp]
@@ -229,21 +235,18 @@ section Zpow
 
 variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀]
 
--- error in Topology.Algebra.GroupWithZero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_at_zpow
-(x : G₀)
-(m : exprℤ())
-(h : «expr ∨ »(«expr ≠ »(x, 0), «expr ≤ »(0, m))) : continuous_at (λ x, «expr ^ »(x, m)) x :=
-begin
-  cases [expr m] [],
-  { simpa [] [] ["only"] ["[", expr zpow_of_nat, "]"] [] ["using", expr continuous_at_pow x m] },
-  { simp [] [] ["only"] ["[", expr zpow_neg_succ_of_nat, "]"] [] [],
-    have [ident hx] [":", expr «expr ≠ »(x, 0)] [],
-    from [expr h.resolve_right (int.neg_succ_of_nat_lt_zero m).not_le],
-    exact [expr (continuous_at_pow x «expr + »(m, 1)).inv₀ (pow_ne_zero _ hx)] }
-end
+theorem continuous_at_zpow (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) : ContinuousAt (fun x => x ^ m) x :=
+  by 
+    cases m
+    ·
+      simpa only [zpow_of_nat] using continuous_at_pow x m
+    ·
+      simp only [zpow_neg_succ_of_nat]
+      have hx : x ≠ 0 
+      exact h.resolve_right (Int.neg_succ_of_nat_lt_zero m).not_le 
+      exact (continuous_at_pow x (m+1)).inv₀ (pow_ne_zero _ hx)
 
-theorem continuous_on_zpow (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) («expr ᶜ» {0}) :=
+theorem continuous_on_zpow (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) ({0}ᶜ) :=
   fun x hx => (continuous_at_zpow _ _ (Or.inl hx)).ContinuousWithinAt
 
 theorem Filter.Tendsto.zpow {f : α → G₀} {l : Filter α} {a : G₀} (hf : tendsto f l (𝓝 a)) (m : ℤ) (h : a ≠ 0 ∨ 0 ≤ m) :
@@ -259,6 +262,7 @@ theorem ContinuousWithinAt.zpow (hf : ContinuousWithinAt f s a) (m : ℤ) (h : f
   ContinuousWithinAt (fun x => f x ^ m) s a :=
   hf.zpow m h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem ContinuousOn.zpow (hf : ContinuousOn f s) (m : ℤ) (h : ∀ a _ : a ∈ s, f a ≠ 0 ∨ 0 ≤ m) :
   ContinuousOn (fun x => f x ^ m) s :=
   fun a ha => (hf a ha).zpow m (h a ha)

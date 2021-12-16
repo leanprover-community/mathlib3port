@@ -28,12 +28,14 @@ group, semidirect product
 
 variable (N : Type _) (G : Type _) {H : Type _} [Groupₓ N] [Groupₓ G] [Groupₓ H]
 
--- error in GroupTheory.SemidirectProduct: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- The semidirect product of groups `N` and `G`, given a map `φ` from `G` to the automorphism
   group of `N`. It the product of sets with the group operation
   `⟨n₁, g₁⟩ * ⟨n₂, g₂⟩ = ⟨n₁ * φ g₁ n₂, g₁ * g₂⟩` -/
-@[ext #[], derive #[expr decidable_eq]]
-structure semidirect_product (φ : «expr →* »(G, mul_aut N)) := (left : N) (right : G)
+@[ext]
+structure SemidirectProduct (φ : G →* MulAut N) where 
+  left : N 
+  right : G deriving [anonymous]
 
 attribute [pp_using_anonymous_constructor] SemidirectProduct
 
@@ -116,7 +118,7 @@ theorem right_inl (n : N) : (inl n : N ⋊[φ] G).right = 1 :=
   rfl
 
 theorem inl_injective : Function.Injective (inl : N → N ⋊[φ] G) :=
-  Function.injective_iff_has_left_inverse.2 ⟨left, left_inl⟩
+  Function.injective_iff_has_left_inverseₓ.2 ⟨left, left_inl⟩
 
 @[simp]
 theorem inl_inj {n₁ n₂ : N} : (inl n₁ : N ⋊[φ] G) = inl n₂ ↔ n₁ = n₂ :=
@@ -138,7 +140,7 @@ theorem right_inr (g : G) : (inr g : N ⋊[φ] G).right = g :=
   rfl
 
 theorem inr_injective : Function.Injective (inr : G → N ⋊[φ] G) :=
-  Function.injective_iff_has_left_inverse.2 ⟨right, right_inr⟩
+  Function.injective_iff_has_left_inverseₓ.2 ⟨right, right_inr⟩
 
 @[simp]
 theorem inr_inj {g₁ g₂ : G} : (inr g₁ : N ⋊[φ] G) = inr g₂ ↔ g₁ = g₂ :=
@@ -193,30 +195,33 @@ theorem right_hom_inr (g : G) : right_hom (inr g : N ⋊[φ] G) = g :=
 theorem right_hom_surjective : Function.Surjective (right_hom : N ⋊[φ] G → G) :=
   Function.surjective_iff_has_right_inverse.2 ⟨inr, right_hom_inr⟩
 
--- error in GroupTheory.SemidirectProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem range_inl_eq_ker_right_hom : «expr = »((inl : «expr →* »(N, «expr ⋊[ ] »(N, φ, G))).range, right_hom.ker) :=
-le_antisymm (λ
- _, by simp [] [] [] ["[", expr monoid_hom.mem_ker, ",", expr eq_comm, "]"] [] [] { contextual := tt }) (λ
- x hx, ⟨x.left, by ext [] [] []; simp [] [] [] ["[", "*", ",", expr monoid_hom.mem_ker, "]"] [] ["at", "*"]⟩)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  range_inl_eq_ker_right_hom
+  : ( inl : N →* N ⋊[ φ ] G ) . range = right_hom . ker
+  :=
+    le_antisymmₓ
+      fun _ => by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ MonoidHom.mem_ker , eq_comm ]
+        fun x hx => ⟨ x.left , by ext <;> simp_all [ MonoidHom.mem_ker ] ⟩
 
 section lift
 
 variable (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁)
 
--- error in GroupTheory.SemidirectProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define a group hom `N ⋊[φ] G →* H`, by defining maps `N →* H` and `G →* H`  -/
-def lift
-(f₁ : «expr →* »(N, H))
-(f₂ : «expr →* »(G, H))
-(h : ∀
- g, «expr = »(f₁.comp (φ g).to_monoid_hom, (mul_aut.conj (f₂ g)).to_monoid_hom.comp f₁)) : «expr →* »(«expr ⋊[ ] »(N, φ, G), H) :=
-{ to_fun := λ a, «expr * »(f₁ a.1, f₂ a.2),
-  map_one' := by simp [] [] [] [] [] [],
-  map_mul' := λ a b, begin
-    have [] [] [":=", expr λ n g, monoid_hom.ext_iff.1 (h n) g],
-    simp [] [] ["only"] ["[", expr mul_aut.conj_apply, ",", expr monoid_hom.comp_apply, ",", expr mul_equiv.coe_to_monoid_hom, "]"] [] ["at", ident this],
-    simp [] [] [] ["[", expr this, ",", expr mul_assoc, "]"] [] []
-  end }
+def lift (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁) :
+  N ⋊[φ] G →* H :=
+  { toFun := fun a => f₁ a.1*f₂ a.2,
+    map_one' :=
+      by 
+        simp ,
+    map_mul' :=
+      fun a b =>
+        by 
+          have  := fun n g => MonoidHom.ext_iff.1 (h n) g 
+          simp only [MulAut.conj_apply, MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom] at this 
+          simp [this, mul_assocₓ] }
 
 @[simp]
 theorem lift_inl (n : N) : lift f₁ f₂ h (inl n) = f₁ n :=

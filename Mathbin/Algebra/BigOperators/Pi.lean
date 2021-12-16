@@ -27,30 +27,34 @@ end Pi
 
 @[simp, toAdditive]
 theorem Finset.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoidₓ (β a)] (a : α) (s : Finset γ)
-  (g : γ → ∀ a, β a) : (∏c in s, g c) a = ∏c in s, g c a :=
+  (g : γ → ∀ a, β a) : (∏ c in s, g c) a = ∏ c in s, g c a :=
   (Pi.evalMonoidHom β a).map_prod _ _
 
 /-- An 'unapplied' analogue of `finset.prod_apply`. -/
 @[toAdditive "An 'unapplied' analogue of `finset.sum_apply`."]
 theorem Finset.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoidₓ (β a)] (s : Finset γ) (g : γ → ∀ a, β a) :
-  (∏c in s, g c) = fun a => ∏c in s, g c a :=
+  (∏ c in s, g c) = fun a => ∏ c in s, g c a :=
   funext fun a => Finset.prod_apply _ _ _
 
 @[simp, toAdditive]
 theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fintype γ] [∀ a, CommMonoidₓ (β a)] (a : α)
-  (g : γ → ∀ a, β a) : (∏c, g c) a = ∏c, g c a :=
+  (g : γ → ∀ a, β a) : (∏ c, g c) a = ∏ c, g c a :=
   Finset.prod_apply a Finset.univ g
 
--- error in Algebra.BigOperators.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[ident prod_mk_sum]]
-theorem prod_mk_prod
-{α β γ : Type*}
-[comm_monoid α]
-[comm_monoid β]
-(s : finset γ)
-(f : γ → α)
-(g : γ → β) : «expr = »((«expr∏ in , »((x), s, f x), «expr∏ in , »((x), s, g x)), «expr∏ in , »((x), s, (f x, g x))) :=
-by haveI [] [] [":=", expr classical.dec_eq γ]; exact [expr finset.induction_on s rfl (by simp [] [] [] ["[", expr prod.ext_iff, "]"] [] [] { contextual := tt })]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ toAdditive prod_mk_sum ]
+  theorem
+    prod_mk_prod
+    { α β γ : Type _ } [ CommMonoidₓ α ] [ CommMonoidₓ β ] ( s : Finset γ ) ( f : γ → α ) ( g : γ → β )
+      : ( ∏ x in s , f x , ∏ x in s , g x ) = ∏ x in s , ( f x , g x )
+    :=
+      by
+        have := Classical.decEq γ
+          <;>
+          exact
+            Finset.induction_on
+              s rfl by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ Prod.ext_iff ]
 
 section Single
 
@@ -58,7 +62,7 @@ variable {I : Type _} [DecidableEq I] {Z : I → Type _}
 
 variable [∀ i, AddCommMonoidₓ (Z i)]
 
-theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑i, Pi.single i (f i)) = f :=
+theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑ i, Pi.single i (f i)) = f :=
   by 
     ext a 
     simp 
@@ -100,11 +104,11 @@ namespace Prod
 variable {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] {s : Finset γ} {f : γ → α × β}
 
 @[toAdditive]
-theorem fst_prod : (∏c in s, f c).1 = ∏c in s, (f c).1 :=
+theorem fst_prod : (∏ c in s, f c).1 = ∏ c in s, (f c).1 :=
   (MonoidHom.fst α β).map_prod f s
 
 @[toAdditive]
-theorem snd_prod : (∏c in s, f c).2 = ∏c in s, (f c).2 :=
+theorem snd_prod : (∏ c in s, f c).2 = ∏ c in s, (f c).2 :=
   (MonoidHom.snd α β).map_prod f s
 
 end Prod

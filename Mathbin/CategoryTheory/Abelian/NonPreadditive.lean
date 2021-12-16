@@ -43,7 +43,7 @@ this natural structure. However, we have not formalized this isomorphism.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -69,6 +69,7 @@ class non_preadditive_abelian where
   NormalMono : ∀ {X Y : C} f : X ⟶ Y [mono f], normal_mono f 
   NormalEpi : ∀ {X Y : C} f : X ⟶ Y [epi f], normal_epi f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option default_priority
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object
@@ -123,9 +124,9 @@ theorem is_iso_of_mono_of_epi [mono f] [epi f] : is_iso f :=
 
 end MonoEpiIso
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The pullback of two monomorphisms exists. -/
-@[irreducible]
-theorem pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [mono a] [mono b] : has_limit (cospan a b) :=
+irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [mono a] [mono b] : has_limit (cospan a b) :=
   let ⟨P, f, haf, i⟩ := non_preadditive_abelian.normal_mono a 
   let ⟨Q, g, hbg, i'⟩ := non_preadditive_abelian.normal_mono b 
   let ⟨a', ha'⟩ :=
@@ -207,9 +208,9 @@ theorem pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [mono a] [mono 
                   rw [kernel.lift_ι]
                  }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The pushout of two epimorphisms exists. -/
-@[irreducible]
-theorem pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [epi a] [epi b] : has_colimit (span a b) :=
+irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [epi a] [epi b] : has_colimit (span a b) :=
   let ⟨P, f, hfa, i⟩ := non_preadditive_abelian.normal_epi a 
   let ⟨Q, g, hgb, i'⟩ := non_preadditive_abelian.normal_epi b 
   let ⟨a', ha'⟩ :=
@@ -299,9 +300,9 @@ attribute [local instance] pullback_of_mono
 private abbrev P {X Y : C} (f g : X ⟶ Y) [mono (prod.lift (𝟙 X) f)] [mono (prod.lift (𝟙 X) g)] : C :=
   pullback (prod.lift (𝟙 X) f) (prod.lift (𝟙 X) g)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The equalizer of `f` and `g` exists. -/
-@[irreducible]
-theorem has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_limit (parallel_pair f g) :=
+irreducible_def has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_limit (parallel_pair f g) :=
   have huv : (pullback.fst : P f g ⟶ X) = pullback.snd :=
     calc (pullback.fst : P f g ⟶ X) = pullback.fst ≫ 𝟙 _ := Eq.symm$ category.comp_id _ 
       _ = pullback.fst ≫ prod.lift (𝟙 X) f ≫ limits.prod.fst :=
@@ -359,9 +360,9 @@ attribute [local instance] pushout_of_epi
 private abbrev Q {X Y : C} (f g : X ⟶ Y) [epi (coprod.desc (𝟙 Y) f)] [epi (coprod.desc (𝟙 Y) g)] : C :=
   pushout (coprod.desc (𝟙 Y) f) (coprod.desc (𝟙 Y) g)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The coequalizer of `f` and `g` exists. -/
-@[irreducible]
-theorem has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_colimit (parallel_pair f g) :=
+irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_colimit (parallel_pair f g) :=
   have huv : (pushout.inl : Y ⟶ Q f g) = pushout.inr :=
     calc (pushout.inl : Y ⟶ Q f g) = 𝟙 _ ≫ pushout.inl := Eq.symm$ category.id_comp _ 
       _ = (coprod.inl ≫ coprod.desc (𝟙 Y) f) ≫ pushout.inl :=
@@ -433,45 +434,51 @@ end
 
 section 
 
--- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a zero morphism is a kernel of `f`, then `f` is a monomorphism. -/
-theorem mono_of_zero_kernel
-{X Y : C}
-(f : «expr ⟶ »(X, Y))
-(Z : C)
-(l : is_limit (kernel_fork.of_ι (0 : «expr ⟶ »(Z, X)) (show «expr = »(«expr ≫ »(0, f), 0), by simp [] [] [] [] [] []))) : mono f :=
-⟨λ P u v huv, begin
-   obtain ["⟨", ident W, ",", ident w, ",", ident hw, ",", ident hl, "⟩", ":=", expr non_preadditive_abelian.normal_epi (coequalizer.π u v)],
-   obtain ["⟨", ident m, ",", ident hm, "⟩", ":=", expr coequalizer.desc' f huv],
-   have [ident hwf] [":", expr «expr = »(«expr ≫ »(w, f), 0)] [],
-   { rw ["[", "<-", expr hm, ",", expr reassoc_of hw, ",", expr zero_comp, "]"] [] },
-   obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr kernel_fork.is_limit.lift' l _ hwf],
-   rw ["[", expr fork.ι_of_ι, ",", expr has_zero_morphisms.comp_zero, "]"] ["at", ident hn],
-   haveI [] [":", expr is_iso (coequalizer.π u v)] [],
-   { apply [expr is_iso_colimit_cocone_parallel_pair_of_eq hn.symm hl] },
-   apply [expr (cancel_mono (coequalizer.π u v)).1],
-   exact [expr coequalizer.condition _ _]
- end⟩
+theorem mono_of_zero_kernel {X Y : C} (f : X ⟶ Y) (Z : C)
+  (l :
+    is_limit
+      (kernel_fork.of_ι (0 : Z ⟶ X)
+        (show 0 ≫ f = 0 by 
+          simp ))) :
+  mono f :=
+  ⟨fun P u v huv =>
+      by 
+        obtain ⟨W, w, hw, hl⟩ := non_preadditive_abelian.normal_epi (coequalizer.π u v)
+        obtain ⟨m, hm⟩ := coequalizer.desc' f huv 
+        have hwf : w ≫ f = 0
+        ·
+          rw [←hm, reassoc_of hw, zero_comp]
+        obtain ⟨n, hn⟩ := kernel_fork.is_limit.lift' l _ hwf 
+        rw [fork.ι_of_ι, has_zero_morphisms.comp_zero] at hn 
+        have  : is_iso (coequalizer.π u v)
+        ·
+          apply is_iso_colimit_cocone_parallel_pair_of_eq hn.symm hl 
+        apply (cancel_mono (coequalizer.π u v)).1 
+        exact coequalizer.condition _ _⟩
 
--- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a zero morphism is a cokernel of `f`, then `f` is an epimorphism. -/
-theorem epi_of_zero_cokernel
-{X Y : C}
-(f : «expr ⟶ »(X, Y))
-(Z : C)
-(l : is_colimit (cokernel_cofork.of_π (0 : «expr ⟶ »(Y, Z)) (show «expr = »(«expr ≫ »(f, 0), 0), by simp [] [] [] [] [] []))) : epi f :=
-⟨λ P u v huv, begin
-   obtain ["⟨", ident W, ",", ident w, ",", ident hw, ",", ident hl, "⟩", ":=", expr non_preadditive_abelian.normal_mono (equalizer.ι u v)],
-   obtain ["⟨", ident m, ",", ident hm, "⟩", ":=", expr equalizer.lift' f huv],
-   have [ident hwf] [":", expr «expr = »(«expr ≫ »(f, w), 0)] [],
-   { rw ["[", "<-", expr hm, ",", expr category.assoc, ",", expr hw, ",", expr comp_zero, "]"] [] },
-   obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr cokernel_cofork.is_colimit.desc' l _ hwf],
-   rw ["[", expr cofork.π_of_π, ",", expr zero_comp, "]"] ["at", ident hn],
-   haveI [] [":", expr is_iso (equalizer.ι u v)] [],
-   { apply [expr is_iso_limit_cone_parallel_pair_of_eq hn.symm hl] },
-   apply [expr (cancel_epi (equalizer.ι u v)).1],
-   exact [expr equalizer.condition _ _]
- end⟩
+theorem epi_of_zero_cokernel {X Y : C} (f : X ⟶ Y) (Z : C)
+  (l :
+    is_colimit
+      (cokernel_cofork.of_π (0 : Y ⟶ Z)
+        (show f ≫ 0 = 0 by 
+          simp ))) :
+  epi f :=
+  ⟨fun P u v huv =>
+      by 
+        obtain ⟨W, w, hw, hl⟩ := non_preadditive_abelian.normal_mono (equalizer.ι u v)
+        obtain ⟨m, hm⟩ := equalizer.lift' f huv 
+        have hwf : f ≫ w = 0
+        ·
+          rw [←hm, category.assoc, hw, comp_zero]
+        obtain ⟨n, hn⟩ := cokernel_cofork.is_colimit.desc' l _ hwf 
+        rw [cofork.π_of_π, zero_comp] at hn 
+        have  : is_iso (equalizer.ι u v)
+        ·
+          apply is_iso_limit_cone_parallel_pair_of_eq hn.symm hl 
+        apply (cancel_epi (equalizer.ι u v)).1 
+        exact equalizer.condition _ _⟩
 
 open_locale ZeroObject
 
@@ -534,38 +541,36 @@ protected abbrev factor_thru_image : P ⟶ non_preadditive_abelian.image f :=
 protected theorem image.fac : non_preadditive_abelian.factor_thru_image f ≫ image.ι f = f :=
   kernel.lift_ι _ _ _
 
--- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The map `p : P ⟶ image f` is an epimorphism -/ instance : epi (non_preadditive_abelian.factor_thru_image f) :=
-let I := non_preadditive_abelian.image f,
-    p := non_preadditive_abelian.factor_thru_image f,
-    i := kernel.ι (cokernel.π f) in
-«expr $ »(epi_of_zero_cancel _, λ (R) (g : «expr ⟶ »(I, R)) (hpg : «expr = »(«expr ≫ »(p, g), 0)), begin
-   let [ident u] [] [":=", expr «expr ≫ »(kernel.ι g, i)],
-   haveI [] [":", expr mono u] [":=", expr mono_comp _ _],
-   haveI [ident hu] [] [":=", expr non_preadditive_abelian.normal_mono u],
-   let [ident h] [] [":=", expr hu.g],
-   obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr kernel.lift' g p hpg],
-   have [ident fh] [":", expr «expr = »(«expr ≫ »(f, h), 0)] [],
-   calc
-     «expr = »(«expr ≫ »(f, h), «expr ≫ »(«expr ≫ »(p, i), h)) : «expr ▸ »((image.fac f).symm, rfl)
-     «expr = »(..., «expr ≫ »(«expr ≫ »(«expr ≫ »(t, kernel.ι g), i), h)) : «expr ▸ »(ht, rfl)
-     «expr = »(..., «expr ≫ »(t, «expr ≫ »(u, h))) : by simp [] [] ["only"] ["[", expr category.assoc, "]"] [] []; conv_lhs [] [] { congr,
-       skip,
-       rw ["<-", expr category.assoc] }
-     «expr = »(..., «expr ≫ »(t, 0)) : «expr ▸ »(hu.w, rfl)
-     «expr = »(..., 0) : has_zero_morphisms.comp_zero _ _,
-   obtain ["⟨", ident l, ",", ident hl, "⟩", ":=", expr cokernel.desc' f h fh],
-   have [ident hih] [":", expr «expr = »(«expr ≫ »(i, h), 0)] [],
-   calc
-     «expr = »(«expr ≫ »(i, h), «expr ≫ »(i, «expr ≫ »(cokernel.π f, l))) : «expr ▸ »(hl, rfl)
-     «expr = »(..., «expr ≫ »(0, l)) : by rw ["[", "<-", expr category.assoc, ",", expr kernel.condition, "]"] []
-     «expr = »(..., 0) : zero_comp,
-   obtain ["⟨", ident s, ",", ident hs, "⟩", ":=", expr normal_mono.lift' u i hih],
-   have [ident hs'] [":", expr «expr = »(«expr ≫ »(«expr ≫ »(s, kernel.ι g), i), «expr ≫ »(«expr𝟙»() I, i))] [],
-   by rw ["[", expr category.assoc, ",", expr hs, ",", expr category.id_comp, "]"] [],
-   haveI [] [":", expr epi (kernel.ι g)] [":=", expr epi_of_epi_fac ((cancel_mono _).1 hs')],
-   exact [expr zero_of_epi_comp _ (kernel.condition g)]
- end)
+/-- The map `p : P ⟶ image f` is an epimorphism -/
+instance : epi (non_preadditive_abelian.factor_thru_image f) :=
+  let I := non_preadditive_abelian.image f 
+  let p := non_preadditive_abelian.factor_thru_image f 
+  let i := kernel.ι (cokernel.π f)
+  epi_of_zero_cancel _$
+    fun R g : I ⟶ R hpg : p ≫ g = 0 =>
+      by 
+        let u := kernel.ι g ≫ i 
+        have  : mono u := mono_comp _ _ 
+        have hu := non_preadditive_abelian.normal_mono u 
+        let h := hu.g 
+        obtain ⟨t, ht⟩ := kernel.lift' g p hpg 
+        have fh : f ≫ h = 0
+        calc f ≫ h = (p ≫ i) ≫ h := (image.fac f).symm ▸ rfl _ = ((t ≫ kernel.ι g) ≫ i) ≫ h := ht ▸ rfl _ = t ≫ u ≫ h :=
+          by 
+            simp only [category.assoc] <;> convLHS => congr skip rw [←category.assoc]_ = t ≫ 0 :=
+          hu.w ▸ rfl _ = 0 := has_zero_morphisms.comp_zero _ _ 
+        obtain ⟨l, hl⟩ := cokernel.desc' f h fh 
+        have hih : i ≫ h = 0
+        calc i ≫ h = i ≫ cokernel.π f ≫ l := hl ▸ rfl _ = 0 ≫ l :=
+          by 
+            rw [←category.assoc, kernel.condition]_ = 0 :=
+          zero_comp 
+        obtain ⟨s, hs⟩ := normal_mono.lift' u i hih 
+        have hs' : (s ≫ kernel.ι g) ≫ i = 𝟙 I ≫ i
+        ·
+          rw [category.assoc, hs, category.id_comp]
+        have  : epi (kernel.ι g) := epi_of_epi_fac ((cancel_mono _).1 hs')
+        exact zero_of_epi_comp _ (kernel.condition g)
 
 instance mono_factor_thru_image [mono f] : mono (non_preadditive_abelian.factor_thru_image f) :=
   mono_of_mono_fac$ image.fac f
@@ -589,39 +594,38 @@ protected abbrev factor_thru_coimage : non_preadditive_abelian.coimage f ⟶ Q :
 protected theorem coimage.fac : coimage.π f ≫ non_preadditive_abelian.factor_thru_coimage f = f :=
   cokernel.π_desc _ _ _
 
--- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The canonical morphism `i : coimage f ⟶ Q` is a monomorphism -/
 instance : mono (non_preadditive_abelian.factor_thru_coimage f) :=
-let I := non_preadditive_abelian.coimage f,
-    i := non_preadditive_abelian.factor_thru_coimage f,
-    p := cokernel.π (kernel.ι f) in
-«expr $ »(mono_of_cancel_zero _, λ (R) (g : «expr ⟶ »(R, I)) (hgi : «expr = »(«expr ≫ »(g, i), 0)), begin
-   let [ident u] [] [":=", expr «expr ≫ »(p, cokernel.π g)],
-   haveI [] [":", expr epi u] [":=", expr epi_comp _ _],
-   haveI [ident hu] [] [":=", expr non_preadditive_abelian.normal_epi u],
-   let [ident h] [] [":=", expr hu.g],
-   obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr cokernel.desc' g i hgi],
-   have [ident hf] [":", expr «expr = »(«expr ≫ »(h, f), 0)] [],
-   calc
-     «expr = »(«expr ≫ »(h, f), «expr ≫ »(h, «expr ≫ »(p, i))) : «expr ▸ »((coimage.fac f).symm, rfl)
-     «expr = »(..., «expr ≫ »(h, «expr ≫ »(p, «expr ≫ »(cokernel.π g, t)))) : «expr ▸ »(ht, rfl)
-     «expr = »(..., «expr ≫ »(h, «expr ≫ »(u, t))) : by simp [] [] ["only"] ["[", expr category.assoc, "]"] [] []; conv_lhs [] [] { congr,
-       skip,
-       rw ["<-", expr category.assoc] }
-     «expr = »(..., «expr ≫ »(0, t)) : by rw ["[", "<-", expr category.assoc, ",", expr hu.w, "]"] []
-     «expr = »(..., 0) : zero_comp,
-   obtain ["⟨", ident l, ",", ident hl, "⟩", ":=", expr kernel.lift' f h hf],
-   have [ident hhp] [":", expr «expr = »(«expr ≫ »(h, p), 0)] [],
-   calc
-     «expr = »(«expr ≫ »(h, p), «expr ≫ »(«expr ≫ »(l, kernel.ι f), p)) : «expr ▸ »(hl, rfl)
-     «expr = »(..., «expr ≫ »(l, 0)) : by rw ["[", expr category.assoc, ",", expr cokernel.condition, "]"] []
-     «expr = »(..., 0) : comp_zero,
-   obtain ["⟨", ident s, ",", ident hs, "⟩", ":=", expr normal_epi.desc' u p hhp],
-   have [ident hs'] [":", expr «expr = »(«expr ≫ »(p, «expr ≫ »(cokernel.π g, s)), «expr ≫ »(p, «expr𝟙»() I))] [],
-   by rw ["[", "<-", expr category.assoc, ",", expr hs, ",", expr category.comp_id, "]"] [],
-   haveI [] [":", expr mono (cokernel.π g)] [":=", expr mono_of_mono_fac ((cancel_epi _).1 hs')],
-   exact [expr zero_of_comp_mono _ (cokernel.condition g)]
- end)
+  let I := non_preadditive_abelian.coimage f 
+  let i := non_preadditive_abelian.factor_thru_coimage f 
+  let p := cokernel.π (kernel.ι f)
+  mono_of_cancel_zero _$
+    fun R g : R ⟶ I hgi : g ≫ i = 0 =>
+      by 
+        let u := p ≫ cokernel.π g 
+        have  : epi u := epi_comp _ _ 
+        have hu := non_preadditive_abelian.normal_epi u 
+        let h := hu.g 
+        obtain ⟨t, ht⟩ := cokernel.desc' g i hgi 
+        have hf : h ≫ f = 0
+        calc h ≫ f = h ≫ p ≫ i := (coimage.fac f).symm ▸ rfl _ = h ≫ p ≫ cokernel.π g ≫ t := ht ▸ rfl _ = h ≫ u ≫ t :=
+          by 
+            simp only [category.assoc] <;> convLHS => congr skip rw [←category.assoc]_ = 0 ≫ t :=
+          by 
+            rw [←category.assoc, hu.w]_ = 0 :=
+          zero_comp 
+        obtain ⟨l, hl⟩ := kernel.lift' f h hf 
+        have hhp : h ≫ p = 0
+        calc h ≫ p = (l ≫ kernel.ι f) ≫ p := hl ▸ rfl _ = l ≫ 0 :=
+          by 
+            rw [category.assoc, cokernel.condition]_ = 0 :=
+          comp_zero 
+        obtain ⟨s, hs⟩ := normal_epi.desc' u p hhp 
+        have hs' : p ≫ cokernel.π g ≫ s = p ≫ 𝟙 I
+        ·
+          rw [←category.assoc, hs, category.comp_id]
+        have  : mono (cokernel.π g) := mono_of_mono_fac ((cancel_epi _).1 hs')
+        exact zero_of_comp_mono _ (cokernel.condition g)
 
 instance epi_factor_thru_coimage [epi f] : epi (non_preadditive_abelian.factor_thru_coimage f) :=
   epi_of_epi_fac$ coimage.fac f
@@ -667,53 +671,59 @@ abbrev r (A : C) : A ⟶ cokernel (diag A) :=
 instance mono_Δ {A : C} : mono (diag A) :=
   mono_of_mono_fac$ prod.lift_fst _ _
 
--- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance mono_r {A : C} : mono (r A) :=
-begin
-  let [ident hl] [":", expr is_limit (kernel_fork.of_ι (diag A) (cokernel.condition (diag A)))] [],
-  { exact [expr mono_is_kernel_of_cokernel _ (colimit.is_colimit _)] },
-  apply [expr mono_of_cancel_zero],
-  intros [ident Z, ident x, ident hx],
-  have [ident hxx] [":", expr «expr = »(«expr ≫ »(«expr ≫ »(x, prod.lift («expr𝟙»() A) (0 : «expr ⟶ »(A, A))), cokernel.π (diag A)), 0)] [],
-  { rw ["[", expr category.assoc, ",", expr hx, "]"] [] },
-  obtain ["⟨", ident y, ",", ident hy, "⟩", ":=", expr kernel_fork.is_limit.lift' hl _ hxx],
-  rw [expr kernel_fork.ι_of_ι] ["at", ident hy],
-  have [ident hyy] [":", expr «expr = »(y, 0)] [],
-  { erw ["[", "<-", expr category.comp_id y, ",", "<-", expr limits.prod.lift_snd («expr𝟙»() A) («expr𝟙»() A), ",", "<-", expr category.assoc, ",", expr hy, ",", expr category.assoc, ",", expr prod.lift_snd, ",", expr has_zero_morphisms.comp_zero, "]"] [] },
-  haveI [] [":", expr mono (prod.lift («expr𝟙»() A) (0 : «expr ⟶ »(A, A)))] [":=", expr mono_of_mono_fac (prod.lift_fst _ _)],
-  apply [expr (cancel_mono (prod.lift («expr𝟙»() A) (0 : «expr ⟶ »(A, A)))).1],
-  rw ["[", "<-", expr hy, ",", expr hyy, ",", expr zero_comp, ",", expr zero_comp, "]"] []
-end
+  by 
+    let hl : is_limit (kernel_fork.of_ι (diag A) (cokernel.condition (diag A)))
+    ·
+      exact mono_is_kernel_of_cokernel _ (colimit.is_colimit _)
+    apply mono_of_cancel_zero 
+    intro Z x hx 
+    have hxx : (x ≫ prod.lift (𝟙 A) (0 : A ⟶ A)) ≫ cokernel.π (diag A) = 0
+    ·
+      rw [category.assoc, hx]
+    obtain ⟨y, hy⟩ := kernel_fork.is_limit.lift' hl _ hxx 
+    rw [kernel_fork.ι_of_ι] at hy 
+    have hyy : y = 0
+    ·
+      erw [←category.comp_id y, ←limits.prod.lift_snd (𝟙 A) (𝟙 A), ←category.assoc, hy, category.assoc, prod.lift_snd,
+        has_zero_morphisms.comp_zero]
+    have  : mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
+    apply (cancel_mono (prod.lift (𝟙 A) (0 : A ⟶ A))).1
+    rw [←hy, hyy, zero_comp, zero_comp]
 
--- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance epi_r {A : C} : epi (r A) :=
-begin
-  have [ident hlp] [":", expr «expr = »(«expr ≫ »(prod.lift («expr𝟙»() A) (0 : «expr ⟶ »(A, A)), limits.prod.snd), 0)] [":=", expr prod.lift_snd _ _],
-  let [ident hp1] [":", expr is_limit (kernel_fork.of_ι (prod.lift («expr𝟙»() A) (0 : «expr ⟶ »(A, A))) hlp)] [],
-  { refine [expr fork.is_limit.mk _ (λ s, «expr ≫ »(fork.ι s, limits.prod.fst)) _ _],
-    { intro [ident s],
-      ext [] [] []; simp [] [] [] [] [] [],
-      erw [expr category.comp_id] [] },
-    { intros [ident s, ident m, ident h],
-      haveI [] [":", expr mono (prod.lift («expr𝟙»() A) (0 : «expr ⟶ »(A, A)))] [":=", expr mono_of_mono_fac (prod.lift_fst _ _)],
-      apply [expr (cancel_mono (prod.lift («expr𝟙»() A) (0 : «expr ⟶ »(A, A)))).1],
-      convert [] [expr h walking_parallel_pair.zero] [],
-      ext [] [] []; simp [] [] [] [] [] [] } },
-  let [ident hp2] [":", expr is_colimit (cokernel_cofork.of_π (limits.prod.snd : «expr ⟶ »(«expr ⨯ »(A, A), A)) hlp)] [],
-  { exact [expr epi_is_cokernel_of_kernel _ hp1] },
-  apply [expr epi_of_zero_cancel],
-  intros [ident Z, ident z, ident hz],
-  have [ident h] [":", expr «expr = »(«expr ≫ »(prod.lift («expr𝟙»() A) (0 : «expr ⟶ »(A, A)), «expr ≫ »(cokernel.π (diag A), z)), 0)] [],
-  { rw ["[", "<-", expr category.assoc, ",", expr hz, "]"] [] },
-  obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr cokernel_cofork.is_colimit.desc' hp2 _ h],
-  rw [expr cokernel_cofork.π_of_π] ["at", ident ht],
-  have [ident htt] [":", expr «expr = »(t, 0)] [],
-  { rw ["[", "<-", expr category.id_comp t, "]"] [],
-    change [expr «expr = »(«expr ≫ »(«expr𝟙»() A, t), 0)] [] [],
-    rw ["[", "<-", expr limits.prod.lift_snd («expr𝟙»() A) («expr𝟙»() A), ",", expr category.assoc, ",", expr ht, ",", "<-", expr category.assoc, ",", expr cokernel.condition, ",", expr zero_comp, "]"] [] },
-  apply [expr (cancel_epi (cokernel.π (diag A))).1],
-  rw ["[", "<-", expr ht, ",", expr htt, ",", expr comp_zero, ",", expr comp_zero, "]"] []
-end
+  by 
+    have hlp : prod.lift (𝟙 A) (0 : A ⟶ A) ≫ limits.prod.snd = 0 := prod.lift_snd _ _ 
+    let hp1 : is_limit (kernel_fork.of_ι (prod.lift (𝟙 A) (0 : A ⟶ A)) hlp)
+    ·
+      refine' fork.is_limit.mk _ (fun s => fork.ι s ≫ limits.prod.fst) _ _
+      ·
+        intro s 
+        ext <;> simp 
+        erw [category.comp_id]
+      ·
+        intro s m h 
+        have  : mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
+        apply (cancel_mono (prod.lift (𝟙 A) (0 : A ⟶ A))).1
+        convert h walking_parallel_pair.zero 
+        ext <;> simp 
+    let hp2 : is_colimit (cokernel_cofork.of_π (limits.prod.snd : A ⨯ A ⟶ A) hlp)
+    ·
+      exact epi_is_cokernel_of_kernel _ hp1 
+    apply epi_of_zero_cancel 
+    intro Z z hz 
+    have h : prod.lift (𝟙 A) (0 : A ⟶ A) ≫ cokernel.π (diag A) ≫ z = 0
+    ·
+      rw [←category.assoc, hz]
+    obtain ⟨t, ht⟩ := cokernel_cofork.is_colimit.desc' hp2 _ h 
+    rw [cokernel_cofork.π_of_π] at ht 
+    have htt : t = 0
+    ·
+      rw [←category.id_comp t]
+      change 𝟙 A ≫ t = 0
+      rw [←limits.prod.lift_snd (𝟙 A) (𝟙 A), category.assoc, ht, ←category.assoc, cokernel.condition, zero_comp]
+    apply (cancel_epi (cokernel.π (diag A))).1
+    rw [←ht, htt, comp_zero, comp_zero]
 
 instance is_iso_r {A : C} : is_iso (r A) :=
   is_iso_of_mono_of_epi _

@@ -24,7 +24,7 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
-namespace Equiv
+namespace Equivₓ
 
 section Instances
 
@@ -36,7 +36,7 @@ protected def HasOne [HasOne β] : HasOne α :=
   ⟨e.symm 1⟩
 
 @[toAdditive]
-theorem one_def [HasOne β] : @HasOne.one _ (Equiv.hasOne e) = e.symm 1 :=
+theorem one_def [HasOne β] : @HasOne.one _ (Equivₓ.hasOne e) = e.symm 1 :=
   rfl
 
 /-- Transfer `has_mul` across an `equiv` -/
@@ -45,7 +45,7 @@ protected def Mul [Mul β] : Mul α :=
   ⟨fun x y => e.symm (e x*e y)⟩
 
 @[toAdditive]
-theorem mul_def [Mul β] (x y : α) : @Mul.mul _ (Equiv.hasMul e) x y = e.symm (e x*e y) :=
+theorem mul_def [Mul β] (x y : α) : @Mul.mul _ (Equivₓ.hasMul e) x y = e.symm (e x*e y) :=
   rfl
 
 /-- Transfer `has_div` across an `equiv` -/
@@ -54,7 +54,7 @@ protected def Div [Div β] : Div α :=
   ⟨fun x y => e.symm (e x / e y)⟩
 
 @[toAdditive]
-theorem div_def [Div β] (x y : α) : @Div.div _ (Equiv.hasDiv e) x y = e.symm (e x / e y) :=
+theorem div_def [Div β] (x y : α) : @Div.div _ (Equivₓ.hasDiv e) x y = e.symm (e x / e y) :=
   rfl
 
 /-- Transfer `has_inv` across an `equiv` -/
@@ -63,7 +63,7 @@ protected def HasInv [HasInv β] : HasInv α :=
   ⟨fun x => e.symm (e x⁻¹)⟩
 
 @[toAdditive]
-theorem inv_def [HasInv β] (x : α) : @HasInv.inv _ (Equiv.hasInv e) x = e.symm (e x⁻¹) :=
+theorem inv_def [HasInv β] (x : α) : @HasInv.inv _ (Equivₓ.hasInv e) x = e.symm (e x⁻¹) :=
   rfl
 
 /-- Transfer `has_scalar` across an `equiv` -/
@@ -71,71 +71,83 @@ protected def HasScalar {R : Type _} [HasScalar R β] : HasScalar R α :=
   ⟨fun r x => e.symm (r • e x)⟩
 
 theorem smul_def {R : Type _} [HasScalar R β] (r : R) (x : α) :
-  @HasScalar.smul _ _ (Equiv.hasScalar e) r x = e.symm (r • e x) :=
+  @HasScalar.smul _ _ (Equivₓ.hasScalar e) r x = e.symm (r • e x) :=
   rfl
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An equivalence `e : α ≃ β` gives a multiplicative equivalence `α ≃* β`
 where the multiplicative structure on `α` is
 the one obtained by transporting a multiplicative structure on `β` back along `e`.
 -/
-@[to_additive #[expr "An equivalence `e : α ≃ β` gives a additive equivalence `α ≃+ β`\nwhere the additive structure on `α` is\nthe one obtained by transporting an additive structure on `β` back along `e`."]]
-def mul_equiv (e : «expr ≃ »(α, β)) [has_mul β] : by { letI [] [] [":=", expr equiv.has_mul e],
-  exact [expr «expr ≃* »(α, β)] } :=
-begin
-  introsI [],
-  exact [expr { map_mul' := λ x y, by { apply [expr e.symm.injective], simp [] [] [] [] [] [], refl }, ..e }]
-end
+@[toAdditive
+      "An equivalence `e : α ≃ β` gives a additive equivalence `α ≃+ β`\nwhere the additive structure on `α` is\nthe one obtained by transporting an additive structure on `β` back along `e`."]
+def MulEquiv (e : α ≃ β) [Mul β] :
+  by 
+    let this' := Equivₓ.hasMul e 
+    exact α ≃* β :=
+  by 
+    intros 
+    exact
+      { e with
+        map_mul' :=
+          fun x y =>
+            by 
+              apply e.symm.injective 
+              simp 
+              rfl }
 
 @[simp, toAdditive]
 theorem mul_equiv_apply (e : α ≃ β) [Mul β] (a : α) : (MulEquiv e) a = e a :=
   rfl
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem mul_equiv_symm_apply (e : «expr ≃ »(α, β)) [has_mul β] (b : β) : by { letI [] [] [":=", expr equiv.has_mul e],
-  exact [expr «expr = »((mul_equiv e).symm b, e.symm b)] } :=
-begin
-  intros [],
-  refl
-end
+@[toAdditive]
+theorem mul_equiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
+  by 
+    let this' := Equivₓ.hasMul e 
+    exact (MulEquiv e).symm b = e.symm b :=
+  by 
+    intros 
+    rfl
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An equivalence `e : α ≃ β` gives a ring equivalence `α ≃+* β`
 where the ring structure on `α` is
 the one obtained by transporting a ring structure on `β` back along `e`.
--/ def ring_equiv (e : «expr ≃ »(α, β)) [has_add β] [has_mul β] : by { letI [] [] [":=", expr equiv.has_add e],
-  letI [] [] [":=", expr equiv.has_mul e],
-  exact [expr «expr ≃+* »(α, β)] } :=
-begin
-  introsI [],
-  exact [expr { map_add' := λ x y, by { apply [expr e.symm.injective],
-       simp [] [] [] [] [] [],
-       refl },
-     map_mul' := λ x y, by { apply [expr e.symm.injective],
-       simp [] [] [] [] [] [],
-       refl },
-     ..e }]
-end
+-/
+def RingEquiv (e : α ≃ β) [Add β] [Mul β] :
+  by 
+    let this' := Equivₓ.hasAdd e 
+    let this' := Equivₓ.hasMul e 
+    exact α ≃+* β :=
+  by 
+    intros 
+    exact
+      { e with
+        map_add' :=
+          fun x y =>
+            by 
+              apply e.symm.injective 
+              simp 
+              rfl,
+        map_mul' :=
+          fun x y =>
+            by 
+              apply e.symm.injective 
+              simp 
+              rfl }
 
 @[simp]
 theorem ring_equiv_apply (e : α ≃ β) [Add β] [Mul β] (a : α) : (RingEquiv e) a = e a :=
   rfl
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ring_equiv_symm_apply
-(e : «expr ≃ »(α, β))
-[has_add β]
-[has_mul β]
-(b : β) : by { letI [] [] [":=", expr equiv.has_add e],
-  letI [] [] [":=", expr equiv.has_mul e],
-  exact [expr «expr = »((ring_equiv e).symm b, e.symm b)] } :=
-begin
-  intros [],
-  refl
-end
+theorem ring_equiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) :
+  by 
+    let this' := Equivₓ.hasAdd e 
+    let this' := Equivₓ.hasMul e 
+    exact (RingEquiv e).symm b = e.symm b :=
+  by 
+    intros 
+    rfl
 
 /-- Transfer `semigroup` across an `equiv` -/
 @[toAdditive "Transfer `add_semigroup` across an `equiv`"]
@@ -328,7 +340,7 @@ variable [Monoidₓ R]
 
 /-- Transfer `mul_action` across an `equiv` -/
 protected def MulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
-  { Equiv.hasScalar e with
+  { Equivₓ.hasScalar e with
     one_smul :=
       by 
         simp [smul_def],
@@ -336,20 +348,23 @@ protected def MulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
       by 
         simp [smul_def, mul_smul] }
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Transfer `distrib_mul_action` across an `equiv` -/
-protected
-def distrib_mul_action (e : «expr ≃ »(α, β)) [add_comm_monoid β] : begin
-  letI [] [] [":=", expr equiv.add_comm_monoid e],
-  exact [expr ∀ [distrib_mul_action R β], distrib_mul_action R α]
-end :=
-begin
-  intros [],
-  letI [] [] [":=", expr equiv.add_comm_monoid e],
-  exact [expr ({ smul_zero := by simp [] [] [] ["[", expr zero_def, ",", expr smul_def, "]"] [] [],
-     smul_add := by simp [] [] [] ["[", expr add_def, ",", expr smul_def, ",", expr smul_add, "]"] [] [],
-     ..equiv.mul_action R e } : distrib_mul_action R α)]
-end
+protected def DistribMulAction (e : α ≃ β) [AddCommMonoidₓ β] :
+  by 
+    let this' := Equivₓ.addCommMonoid e 
+    exact ∀ [DistribMulAction R β], DistribMulAction R α :=
+  by 
+    intros 
+    let this' := Equivₓ.addCommMonoid e 
+    exact
+      ({ Equivₓ.mulAction R e with
+        smul_zero :=
+          by 
+            simp [zero_def, smul_def],
+        smul_add :=
+          by 
+            simp [add_def, smul_def, smul_add] } :
+      DistribMulAction R α)
 
 end 
 
@@ -357,35 +372,43 @@ section
 
 variable [Semiringₓ R]
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Transfer `module` across an `equiv` -/ protected def module (e : «expr ≃ »(α, β)) [add_comm_monoid β] : begin
-  letI [] [] [":=", expr equiv.add_comm_monoid e],
-  exact [expr ∀ [module R β], module R α]
-end :=
-begin
-  introsI [],
-  exact [expr ({ zero_smul := by simp [] [] [] ["[", expr zero_def, ",", expr smul_def, "]"] [] [],
-     add_smul := by simp [] [] [] ["[", expr add_def, ",", expr smul_def, ",", expr add_smul, "]"] [] [],
-     ..equiv.distrib_mul_action R e } : module R α)]
-end
+/-- Transfer `module` across an `equiv` -/
+protected def Module (e : α ≃ β) [AddCommMonoidₓ β] :
+  by 
+    let this' := Equivₓ.addCommMonoid e 
+    exact ∀ [Module R β], Module R α :=
+  by 
+    intros 
+    exact
+      ({ Equivₓ.distribMulAction R e with
+        zero_smul :=
+          by 
+            simp [zero_def, smul_def],
+        add_smul :=
+          by 
+            simp [add_def, smul_def, add_smul] } :
+      Module R α)
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An equivalence `e : α ≃ β` gives a linear equivalence `α ≃ₗ[R] β`
 where the `R`-module structure on `α` is
 the one obtained by transporting an `R`-module structure on `β` back along `e`.
--/ def linear_equiv (e : «expr ≃ »(α, β)) [add_comm_monoid β] [module R β] : begin
-  letI [] [] [":=", expr equiv.add_comm_monoid e],
-  letI [] [] [":=", expr equiv.module R e],
-  exact [expr «expr ≃ₗ[ ] »(α, R, β)]
-end :=
-begin
-  introsI [],
-  exact [expr { map_smul' := λ r x, by { apply [expr e.symm.injective],
-       simp [] [] [] [] [] [],
-       refl },
-     ..equiv.add_equiv e }]
-end
+-/
+def LinearEquiv (e : α ≃ β) [AddCommMonoidₓ β] [Module R β] :
+  by 
+    let this' := Equivₓ.addCommMonoid e 
+    let this' := Equivₓ.module R e 
+    exact α ≃ₗ[R] β :=
+  by 
+    intros 
+    exact
+      { Equivₓ.addEquiv e with
+        map_smul' :=
+          fun r x =>
+            by 
+              apply e.symm.injective 
+              simp 
+              rfl }
 
 end 
 
@@ -393,43 +416,47 @@ section
 
 variable [CommSemiringₓ R]
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Transfer `algebra` across an `equiv` -/ protected def algebra (e : «expr ≃ »(α, β)) [semiring β] : begin
-  letI [] [] [":=", expr equiv.semiring e],
-  exact [expr ∀ [algebra R β], algebra R α]
-end :=
-begin
-  introsI [],
-  fapply [expr ring_hom.to_algebra'],
-  { exact [expr ((ring_equiv e).symm : «expr →+* »(β, α)).comp (algebra_map R β)] },
-  { intros [ident r, ident x],
-    simp [] [] ["only"] ["[", expr function.comp_app, ",", expr ring_hom.coe_comp, "]"] [] [],
-    have [ident p] [] [":=", expr ring_equiv_symm_apply e],
-    dsimp [] [] [] ["at", ident p],
-    erw [expr p] [],
-    clear [ident p],
-    apply [expr (ring_equiv e).injective],
-    simp [] [] ["only"] ["[", expr (ring_equiv e).map_mul, "]"] [] [],
-    simp [] [] [] ["[", expr algebra.commutes, "]"] [] [] }
-end
+/-- Transfer `algebra` across an `equiv` -/
+protected def Algebra (e : α ≃ β) [Semiringₓ β] :
+  by 
+    let this' := Equivₓ.semiring e 
+    exact ∀ [Algebra R β], Algebra R α :=
+  by 
+    intros 
+    fapply RingHom.toAlgebra'
+    ·
+      exact ((RingEquiv e).symm : β →+* α).comp (algebraMap R β)
+    ·
+      intro r x 
+      simp only [Function.comp_app, RingHom.coe_comp]
+      have p := ring_equiv_symm_apply e 
+      dsimp  at p 
+      erw [p]
+      clear p 
+      apply (RingEquiv e).Injective 
+      simp only [(RingEquiv e).map_mul]
+      simp [Algebra.commutes]
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An equivalence `e : α ≃ β` gives an algebra equivalence `α ≃ₐ[R] β`
 where the `R`-algebra structure on `α` is
 the one obtained by transporting an `R`-algebra structure on `β` back along `e`.
--/ def alg_equiv (e : «expr ≃ »(α, β)) [semiring β] [algebra R β] : begin
-  letI [] [] [":=", expr equiv.semiring e],
-  letI [] [] [":=", expr equiv.algebra R e],
-  exact [expr «expr ≃ₐ[ ] »(α, R, β)]
-end :=
-begin
-  introsI [],
-  exact [expr { commutes' := λ r, by { apply [expr e.symm.injective],
-       simp [] [] [] [] [] [],
-       refl },
-     ..equiv.ring_equiv e }]
-end
+-/
+def AlgEquiv (e : α ≃ β) [Semiringₓ β] [Algebra R β] :
+  by 
+    let this' := Equivₓ.semiring e 
+    let this' := Equivₓ.algebra R e 
+    exact α ≃ₐ[R] β :=
+  by 
+    intros 
+    exact
+      { Equivₓ.ringEquiv e with
+        commutes' :=
+          fun r =>
+            by 
+              apply e.symm.injective 
+              simp 
+              rfl }
 
 end 
 
@@ -437,17 +464,14 @@ end R
 
 end Instances
 
-end Equiv
+end Equivₓ
 
 namespace RingEquiv
 
--- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem local_ring {A B : Type*} [comm_ring A] [local_ring A] [comm_ring B] (e : «expr ≃+* »(A, B)) : local_ring B :=
-begin
-  haveI [] [] [":=", expr e.symm.to_equiv.nontrivial],
-  refine [expr @local_of_surjective A B _ _ _ _ e e.to_equiv.surjective]
-end
+protected theorem LocalRing {A B : Type _} [CommRingₓ A] [LocalRing A] [CommRingₓ B] (e : A ≃+* B) : LocalRing B :=
+  by 
+    have  := e.symm.to_equiv.nontrivial 
+    refine' @local_of_surjective A B _ _ _ _ e e.to_equiv.surjective
 
 end RingEquiv
 

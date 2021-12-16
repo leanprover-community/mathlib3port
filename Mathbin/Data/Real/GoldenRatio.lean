@@ -16,7 +16,7 @@ Binet's formula.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 /-- The golden ratio `φ := (1 + √5)/2`. -/
 @[reducible]
@@ -32,15 +32,20 @@ localized [Real] notation "φ" => goldenRatio
 
 localized [Real] notation "ψ" => goldenConj
 
--- error in Data.Real.GoldenRatio: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inverse of the golden ratio is the opposite of its conjugate. -/
-theorem inv_gold : «expr = »(«expr ⁻¹»(exprφ()), «expr- »(exprψ())) :=
-begin
-  have [] [":", expr «expr ≠ »(«expr + »(1, real.sqrt 5), 0)] [],
-  from [expr ne_of_gt «expr $ »(add_pos (by norm_num [] []), real.sqrt_pos.mpr (by norm_num [] []))],
-  field_simp [] ["[", expr sub_mul, ",", expr mul_add, "]"] [] [],
-  norm_num [] []
-end
+theorem inv_gold : φ⁻¹ = -ψ :=
+  by 
+    have  : (1+Real.sqrt 5) ≠ 0 
+    exact
+      ne_of_gtₓ
+        (add_pos
+            (by 
+              normNum)$
+          real.sqrt_pos.mpr
+            (by 
+              normNum))
+    fieldSimp [sub_mul, mul_addₓ]
+    normNum
 
 /-- The opposite of the golden ratio is the inverse of its conjugate. -/
 theorem inv_gold_conj : ψ⁻¹ = -φ :=
@@ -126,25 +131,35 @@ theorem neg_one_lt_gold_conj : -1 < ψ :=
 -/
 
 
--- error in Data.Real.GoldenRatio: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The golden ratio is irrational. -/ theorem gold_irrational : irrational exprφ() :=
-begin
-  have [] [] [":=", expr nat.prime.irrational_sqrt (show nat.prime 5, by norm_num [] [])],
-  have [] [] [":=", expr this.rat_add 1],
-  have [] [] [":=", expr this.rat_mul (show «expr ≠ »((1/2 : exprℚ()), 0), by norm_num [] [])],
-  convert [] [expr this] [],
-  field_simp [] [] [] []
-end
+/-- The golden ratio is irrational. -/
+theorem gold_irrational : Irrational φ :=
+  by 
+    have  :=
+      Nat.Prime.irrational_sqrt
+        (show Nat.Prime 5by 
+          normNum)
+    have  := this.rat_add 1
+    have  :=
+      this.rat_mul
+        (show (0.5 : ℚ) ≠ 0 by 
+          normNum)
+    convert this 
+    fieldSimp
 
--- error in Data.Real.GoldenRatio: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The conjugate of the golden ratio is irrational. -/ theorem gold_conj_irrational : irrational exprψ() :=
-begin
-  have [] [] [":=", expr nat.prime.irrational_sqrt (show nat.prime 5, by norm_num [] [])],
-  have [] [] [":=", expr this.rat_sub 1],
-  have [] [] [":=", expr this.rat_mul (show «expr ≠ »((1/2 : exprℚ()), 0), by norm_num [] [])],
-  convert [] [expr this] [],
-  field_simp [] [] [] []
-end
+/-- The conjugate of the golden ratio is irrational. -/
+theorem gold_conj_irrational : Irrational ψ :=
+  by 
+    have  :=
+      Nat.Prime.irrational_sqrt
+        (show Nat.Prime 5by 
+          normNum)
+    have  := this.rat_sub 1
+    have  :=
+      this.rat_mul
+        (show (0.5 : ℚ) ≠ 0 by 
+          normNum)
+    convert this 
+    fieldSimp
 
 /-!
 ## Links with Fibonacci sequence
@@ -155,9 +170,12 @@ section Fibrec
 
 variable {α : Type _} [CommSemiringₓ α]
 
--- error in Data.Real.GoldenRatio: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-/-- The recurrence relation satisfied by the Fibonacci sequence. -/ def fib_rec : linear_recurrence α :=
-{ order := 2, coeffs := «expr![ , ]»([1, 1]) }
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+/-- The recurrence relation satisfied by the Fibonacci sequence. -/
+def fibRec : LinearRecurrence α :=
+  { order := 2,
+    coeffs := «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" }
 
 section Poly
 
@@ -177,7 +195,7 @@ theorem fib_is_sol_fib_rec : fibRec.IsSolution (fun x => x.fib : ℕ → α) :=
     rw [fibRec]
     intro n 
     simp only 
-    rw [Nat.fib_succ_succ, add_commₓ]
+    rw [Nat.fib_add_two, add_commₓ]
     simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ']
 
 /-- The geometric sequence `λ n, φ^n` is a solution of `fib_rec`. -/

@@ -18,7 +18,7 @@ a functor decomposes into a essentially surjective functor and a fully faithful 
 
 universe v₁ v₂ u₁ u₂
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -65,11 +65,12 @@ theorem obj_mem_ess_image (F : D ⥤ C) (Y : D) : F.obj Y ∈ ess_image F :=
 instance : category F.ess_image :=
   CategoryTheory.fullSubcategory _
 
--- error in CategoryTheory.EssentialImage: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- The essential image as a subcategory has a fully faithful inclusion into the target category. -/
-@[derive #["[", expr full, ",", expr faithful, "]"], simps #[]]
-def ess_image_inclusion (F : «expr ⥤ »(C, D)) : «expr ⥤ »(F.ess_image, D) :=
-full_subcategory_inclusion _
+@[simps]
+def ess_image_inclusion (F : C ⥤ D) : F.ess_image ⥤ D :=
+  full_subcategory_inclusion _ deriving [anonymous], [anonymous]
 
 /--
 Given a functor `F : C ⥤ D`, we have an (essentially surjective) functor from `C` to the essential
@@ -120,13 +121,11 @@ def functor.obj_obj_preimage_iso (Y : D) : F.obj (F.obj_preimage Y) ≅ Y :=
 instance faithful.to_ess_image (F : C ⥤ D) [faithful F] : faithful F.to_ess_image :=
   faithful.of_comp_iso F.to_ess_image_comp_essential_image_inclusion
 
--- error in CategoryTheory.EssentialImage: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The induced functor of a full functor is full -/
-instance full.to_ess_image (F : «expr ⥤ »(C, D)) [full F] : full F.to_ess_image :=
-begin
-  haveI [] [] [":=", expr full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm],
-  exactI [expr full.of_comp_faithful F.to_ess_image F.ess_image_inclusion]
-end
+instance full.to_ess_image (F : C ⥤ D) [full F] : full F.to_ess_image :=
+  by 
+    have  := full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm 
+    exact full.of_comp_faithful F.to_ess_image F.ess_image_inclusion
 
 end CategoryTheory
 

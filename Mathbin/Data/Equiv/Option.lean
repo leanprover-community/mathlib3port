@@ -12,7 +12,7 @@ To construct an `f : option α ≃ option β` from `e : α ≃ β` such that
 -/
 
 
-namespace Equiv
+namespace Equivₓ
 
 variable {α β : Type _} (e : Option α ≃ Option β)
 
@@ -78,23 +78,22 @@ theorem option_symm_apply_none_iff : e.symm none = none ↔ e none = none :=
       by 
         simpa using (congr_argₓ e.symm h).symm⟩
 
--- error in Data.Equiv.Option: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem some_remove_none_iff
-{x : α} : «expr ↔ »(«expr = »(some (remove_none e x), e none), «expr = »(e.symm none, some x)) :=
-begin
-  cases [expr h, ":", expr e (some x)] ["with", ident a],
-  { rw [expr remove_none_none _ h] [],
-    simpa [] [] [] [] [] ["using", expr (congr_arg e.symm h).symm] },
-  { rw [expr remove_none_some _ ⟨a, h⟩] [],
-    have [] [] [":=", expr congr_arg e.symm h],
-    rw ["[", expr symm_apply_apply, "]"] ["at", ident this],
-    simp [] [] ["only"] ["[", expr false_iff, ",", expr apply_eq_iff_eq, "]"] [] [],
-    simp [] [] [] ["[", expr this, "]"] [] [] }
-end
+theorem some_remove_none_iff {x : α} : some (remove_none e x) = e none ↔ e.symm none = some x :=
+  by 
+    cases' h : e (some x) with a
+    ·
+      rw [remove_none_none _ h]
+      simpa using (congr_argₓ e.symm h).symm
+    ·
+      rw [remove_none_some _ ⟨a, h⟩]
+      have  := congr_argₓ e.symm h 
+      rw [symm_apply_apply] at this 
+      simp only [false_iffₓ, apply_eq_iff_eq]
+      simp [this]
 
 @[simp]
 theorem remove_none_map_equiv {α β : Type _} (e : α ≃ β) : remove_none (EquivFunctor.mapEquiv Option e) = e :=
-  Equiv.ext$
+  Equivₓ.ext$
     fun x =>
       Option.some_injective _$
         remove_none_some _
@@ -102,5 +101,5 @@ theorem remove_none_map_equiv {α β : Type _} (e : α ≃ β) : remove_none (Eq
             by 
               simp [EquivFunctor.map]⟩
 
-end Equiv
+end Equivₓ
 

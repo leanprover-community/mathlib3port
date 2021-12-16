@@ -116,7 +116,7 @@ theorem subset_right_C (c : CU X) : c.C ⊆ c.right.C :=
 /-- `n`-th approximation to a continuous function `f : X → ℝ` such that `f = 0` on `c.C` and `f = 1`
 outside of `c.U`. -/
 noncomputable def approx : ℕ → CU X → X → ℝ
-| 0, c, x => indicator («expr ᶜ» c.U) 1 x
+| 0, c, x => indicator (c.Uᶜ) 1 x
 | n+1, c, x => midpoint ℝ (approx n c.left x) (approx n c.right x)
 
 theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) : c.approx n x = 0 :=
@@ -200,7 +200,7 @@ theorem approx_mono (c : CU X) (x : X) : Monotone fun n => c.approx n x :=
 * `f` equals zero on `c.C` and equals one outside of `c.U`;
 -/
 protected noncomputable def limₓ (c : CU X) (x : X) : ℝ :=
-  ⨆n, c.approx n x
+  ⨆ n, c.approx n x
 
 theorem tendsto_approx_at_top (c : CU X) (x : X) : tendsto (fun n => c.approx n x) at_top (𝓝$ c.lim x) :=
   tendsto_at_top_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
@@ -257,7 +257,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim :=
         rw [dist_self, add_zeroₓ, div_eq_inv_mul]
         exact mul_le_mul h1234.le hyd dist_nonneg (h0.trans h1234).le
       ·
-        replace hxl : x ∈ «expr ᶜ» c.left.right.C 
+        replace hxl : x ∈ c.left.right.Cᶜ
         exact compl_subset_compl.2 c.left.right.subset hxl 
         filterUpwards [IsOpen.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl, ihn c.left.right, ihn c.right]
         intro y hyl hydl hydr 
@@ -295,6 +295,6 @@ then there exists a continuous function `f : X → ℝ` such that
 theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
   ∃ f : C(X, ℝ), eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
   by 
-    set c : Urysohns.CU X := ⟨s, «expr ᶜ» t, hs, ht.is_open_compl, fun _ => disjoint_left.1 hd⟩
+    set c : Urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, fun _ => disjoint_left.1 hd⟩
     exact ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C, fun x hx => c.lim_of_nmem_U _ fun h => h hx, c.lim_mem_Icc⟩
 

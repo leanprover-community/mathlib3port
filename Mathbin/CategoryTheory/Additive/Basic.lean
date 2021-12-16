@@ -11,7 +11,7 @@ see https://ncatlab.org/nlab/show/biproduct#BiproductsImplyEnrichment
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 

@@ -12,6 +12,15 @@ are defined.
 -/
 
 
--- error in Tactic.ReservedNotation: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
-reserve prefix `#where`:max
-
+-- ././Mathport/Syntax/Translate/Basic.lean:1283:35: warning: unsupported: precedence command
+-- ././Mathport/Syntax/Translate/Basic.lean:1188:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1188:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1188:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1188:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1188:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:1188:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1188:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1188:11: warning: suppressing unsupported reserve notation
+-- ././Mathport/Syntax/Translate/Basic.lean:1283:35: warning: unsupported: precedence command
+-- ././Mathport/Syntax/Translate/Basic.lean:1283:35: warning: unsupported: precedence command

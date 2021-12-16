@@ -1,4 +1,5 @@
 import Mathbin.Topology.ContinuousOn 
+import Mathbin.Topology.Separation 
 import Mathbin.GroupTheory.Submonoid.Operations 
 import Mathbin.Algebra.Group.Prod 
 import Mathbin.Algebra.Pointwise 
@@ -120,37 +121,32 @@ open_locale Filter
 
 open Function
 
--- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem has_continuous_mul.of_nhds_one
-{M : Type u}
-[monoid M]
-[topological_space M]
-(hmul : «expr $ »(tendsto (uncurry ((«expr * ») : M → M → M)) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1), expr𝓝() 1))
-(hleft : ∀ x₀ : M, «expr = »(expr𝓝() x₀, map (λ x, «expr * »(x₀, x)) (expr𝓝() 1)))
-(hright : ∀ x₀ : M, «expr = »(expr𝓝() x₀, map (λ x, «expr * »(x, x₀)) (expr𝓝() 1))) : has_continuous_mul M :=
-⟨begin
-   rw [expr continuous_iff_continuous_at] [],
-   rintros ["⟨", ident x₀, ",", ident y₀, "⟩"],
-   have [ident key] [":", expr «expr = »(λ
-     p : «expr × »(M, M), «expr * »(«expr * »(x₀, p.1), «expr * »(p.2, y₀)), «expr ∘ »(«expr ∘ »(λ
-       x, «expr * »(x₀, x), λ x, «expr * »(x, y₀)), uncurry ((«expr * »))))] [],
-   { ext [] [ident p] [],
-     simp [] [] [] ["[", expr uncurry, ",", expr mul_assoc, "]"] [] [] },
-   have [ident key₂] [":", expr «expr = »(«expr ∘ »(λ
-      x, «expr * »(x₀, x), λ x, «expr * »(y₀, x)), λ x, «expr * »(«expr * »(x₀, y₀), x))] [],
-   { ext [] [ident x] [],
-     simp [] [] [] [] [] [] },
-   calc
-     «expr = »(map (uncurry ((«expr * »))) (expr𝓝() (x₀, y₀)), map (uncurry ((«expr * »))) «expr ×ᶠ »(expr𝓝() x₀, expr𝓝() y₀)) : by rw [expr nhds_prod_eq] []
-     «expr = »(..., map (λ
-       p : «expr × »(M, M), «expr * »(«expr * »(x₀, p.1), «expr * »(p.2, y₀))) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1)) : by rw ["[", expr uncurry, ",", expr hleft x₀, ",", expr hright y₀, ",", expr prod_map_map_eq, ",", expr filter.map_map, "]"] []
-     «expr = »(..., map «expr ∘ »(λ
-       x, «expr * »(x₀, x), λ
-       x, «expr * »(x, y₀)) (map (uncurry ((«expr * »))) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1))) : by { rw ["[", expr key, ",", "<-", expr filter.map_map, "]"] [] }
-     «expr ≤ »(..., map «expr ∘ »(λ x : M, «expr * »(x₀, x), λ x, «expr * »(x, y₀)) (expr𝓝() 1)) : map_mono hmul
-     «expr = »(..., expr𝓝() «expr * »(x₀, y₀)) : by rw ["[", "<-", expr filter.map_map, ",", "<-", expr hright, ",", expr hleft y₀, ",", expr filter.map_map, ",", expr key₂, ",", "<-", expr hleft, "]"] []
- end⟩
+@[toAdditive]
+theorem HasContinuousMul.of_nhds_one {M : Type u} [Monoidₓ M] [TopologicalSpace M]
+  (hmul : tendsto (uncurry (·*· : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1)$ 𝓝 1) (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀*x) (𝓝 1))
+  (hright : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x*x₀) (𝓝 1)) : HasContinuousMul M :=
+  ⟨by 
+      rw [continuous_iff_continuous_at]
+      rintro ⟨x₀, y₀⟩
+      have key : (fun p : M × M => (x₀*p.1)*p.2*y₀) = (((fun x => x₀*x) ∘ fun x => x*y₀) ∘ uncurry (·*·))
+      ·
+        ext p 
+        simp [uncurry, mul_assocₓ]
+      have key₂ : ((fun x => x₀*x) ∘ fun x => y₀*x) = fun x => (x₀*y₀)*x
+      ·
+        ext x 
+        simp 
+      calc map (uncurry (·*·)) (𝓝 (x₀, y₀)) = map (uncurry (·*·)) (𝓝 x₀ ×ᶠ 𝓝 y₀) :=
+        by 
+          rw [nhds_prod_eq]_ = map (fun p : M × M => (x₀*p.1)*p.2*y₀) (𝓝 1 ×ᶠ 𝓝 1) :=
+        by 
+          rw [uncurry, hleft x₀, hright y₀, prod_map_map_eq,
+            Filter.map_map]_ = map ((fun x => x₀*x) ∘ fun x => x*y₀) (map (uncurry (·*·)) (𝓝 1 ×ᶠ 𝓝 1)) :=
+        by 
+          rw [key, ←Filter.map_map]_ ≤ map ((fun x : M => x₀*x) ∘ fun x => x*y₀) (𝓝 1) :=
+        map_mono hmul _ = 𝓝 (x₀*y₀) :=
+        by 
+          rw [←Filter.map_map, ←hright, hleft y₀, Filter.map_map, key₂, ←hleft]⟩
 
 @[toAdditive]
 theorem has_continuous_mul_of_comm_of_nhds_one (M : Type u) [CommMonoidₓ M] [TopologicalSpace M]
@@ -162,6 +158,29 @@ theorem has_continuous_mul_of_comm_of_nhds_one (M : Type u) [CommMonoidₓ M] [T
     simpRw [mul_commₓ, hleft x₀]
 
 end HasContinuousMul
+
+section PointwiseLimits
+
+variable {M₁ M₂ : Type _} [TopologicalSpace M₂] [T2Space M₂] {l : Filter α} {f : M₁ → M₂}
+
+/-- Construct a bundled monoid homomorphism from a pointwise limit of
+monoid homomorphisms -/
+@[toAdditive "Construct a bundled additive monoid homomorphism from\na pointwise limit of monoid homomorphisms", simps]
+def monoidHomOfTendsto [Monoidₓ M₁] [Monoidₓ M₂] [HasContinuousMul M₂] (g : α → M₁ →* M₂) [l.ne_bot]
+  (h : tendsto (fun a x => g a x) l (𝓝 f)) : M₁ →* M₂ :=
+  { toFun := f,
+    map_one' :=
+      by 
+        refine' tendsto_nhds_unique (tendsto_pi_nhds.mp h 1) _ 
+        simpa only [MonoidHom.map_one] using tendsto_const_nhds,
+    map_mul' :=
+      fun x y =>
+        by 
+          rw [tendsto_pi_nhds] at h 
+          refine' tendsto_nhds_unique (h (x*y)) _ 
+          simpa only [MonoidHom.map_mul] using (h x).mul (h y) }
+
+end PointwiseLimits
 
 namespace Submonoid
 
@@ -222,6 +241,8 @@ theorem Submonoid.topological_closure_minimal (s : Submonoid M) {t : Submonoid M
   (ht : IsClosed (t : Set M)) : s.topological_closure ≤ t :=
   closure_minimal h ht
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » V)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » V)
 @[toAdditive exists_open_nhds_zero_half]
 theorem exists_open_nhds_one_split {s : Set M} (hs : s ∈ 𝓝 (1 : M)) :
   ∃ V : Set M, IsOpen V ∧ (1 : M) ∈ V ∧ ∀ v _ : v ∈ V w _ : w ∈ V, (v*w) ∈ s :=
@@ -232,12 +253,16 @@ theorem exists_open_nhds_one_split {s : Set M} (hs : s ∈ 𝓝 (1 : M)) :
   by 
     simpa only [prod_subset_iff] using exists_nhds_square this
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » expr𝓝() (1 : M))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » V)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (w «expr ∈ » V)
 @[toAdditive exists_nhds_zero_half]
 theorem exists_nhds_one_split {s : Set M} (hs : s ∈ 𝓝 (1 : M)) :
   ∃ (V : _)(_ : V ∈ 𝓝 (1 : M)), ∀ v _ : v ∈ V w _ : w ∈ V, (v*w) ∈ s :=
   let ⟨V, Vo, V1, hV⟩ := exists_open_nhds_one_split hs
   ⟨V, IsOpen.mem_nhds Vo V1, hV⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » expr𝓝() (1 : M))
 @[toAdditive exists_nhds_zero_quarter]
 theorem exists_nhds_one_split4 {u : Set M} (hu : u ∈ 𝓝 (1 : M)) :
   ∃ (V : _)(_ : V ∈ 𝓝 (1 : M)), ∀ {v w s t}, v ∈ V → w ∈ V → s ∈ V → t ∈ V → (((v*w)*s)*t) ∈ u :=
@@ -259,6 +284,7 @@ theorem exists_open_nhds_one_mul_subset {U : Set M} (hU : U ∈ 𝓝 (1 : M)) :
     rintro _ ⟨x, y, hx, hy, rfl⟩
     exact hV _ hx _ hy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » l)
 @[toAdditive]
 theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
   ∀ l : List ι,
@@ -271,6 +297,7 @@ theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
     simp only [List.map_consₓ, List.prod_cons]
     exact (h f (List.mem_cons_selfₓ _ _)).mul (tendsto_list_prod l fun c hc => h c (List.mem_cons_of_memₓ _ hc))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » l)
 @[toAdditive]
 theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀ i _ : i ∈ l, Continuous (f i)) :
   Continuous fun a => (l.map fun i => f i a).Prod :=
@@ -317,21 +344,21 @@ section Op
 open MulOpposite
 
 /-- Put the same topological space structure on the opposite monoid as on the original space. -/
-instance [_i : TopologicalSpace α] : TopologicalSpace («expr ᵐᵒᵖ» α) :=
-  TopologicalSpace.induced (unop : «expr ᵐᵒᵖ» α → α) _i
+instance [_i : TopologicalSpace α] : TopologicalSpace (αᵐᵒᵖ) :=
+  TopologicalSpace.induced (unop : αᵐᵒᵖ → α) _i
 
 variable [TopologicalSpace α]
 
-theorem continuous_unop : Continuous (unop : «expr ᵐᵒᵖ» α → α) :=
+theorem continuous_unop : Continuous (unop : αᵐᵒᵖ → α) :=
   continuous_induced_dom
 
-theorem continuous_op : Continuous (op : α → «expr ᵐᵒᵖ» α) :=
+theorem continuous_op : Continuous (op : α → αᵐᵒᵖ) :=
   continuous_induced_rng continuous_id
 
 variable [Monoidₓ α] [HasContinuousMul α]
 
 /-- If multiplication is continuous in the monoid `α`, then it also is in the monoid `αᵐᵒᵖ`. -/
-instance : HasContinuousMul («expr ᵐᵒᵖ» α) :=
+instance : HasContinuousMul (αᵐᵒᵖ) :=
   ⟨let h₁ := @continuous_mul α _ _ _ 
     let h₂ : Continuous fun p : α × α => _ := continuous_snd.prod_mk continuous_fst 
     continuous_induced_rng$ (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop)⟩
@@ -365,7 +392,7 @@ with respect to the induced topology, is continuous.
 Inversion is also continuous, but we register this in a later file, `topology.algebra.group`,
 because the predicate `has_continuous_inv` has not yet been defined. -/
 instance : HasContinuousMul (Units α) :=
-  ⟨let h := @continuous_mul (α × «expr ᵐᵒᵖ» α) _ _ _ 
+  ⟨let h := @continuous_mul (α × αᵐᵒᵖ) _ _ _ 
     continuous_induced_rng$ h.comp$ continuous_embed_product.prod_map continuous_embed_product⟩
 
 end Units
@@ -380,6 +407,7 @@ theorem Submonoid.mem_nhds_one (S : Submonoid M) (oS : IsOpen (S : Set M)) : (S 
 
 variable [HasContinuousMul M]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[toAdditive]
 theorem tendsto_multiset_prod {f : ι → α → M} {x : Filter α} {a : ι → M} (s : Multiset ι) :
   (∀ i _ : i ∈ s, tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => (s.map fun c => f c b).Prod) x (𝓝 (s.map a).Prod) :=
@@ -387,11 +415,13 @@ theorem tendsto_multiset_prod {f : ι → α → M} {x : Filter α} {a : ι → 
     rcases s with ⟨l⟩
     simpa using tendsto_list_prod l
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[toAdditive]
 theorem tendsto_finset_prod {f : ι → α → M} {x : Filter α} {a : ι → M} (s : Finset ι) :
-  (∀ i _ : i ∈ s, tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => ∏c in s, f c b) x (𝓝 (∏c in s, a c)) :=
+  (∀ i _ : i ∈ s, tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => ∏ c in s, f c b) x (𝓝 (∏ c in s, a c)) :=
   tendsto_multiset_prod _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[continuity, toAdditive]
 theorem continuous_multiset_prod {f : ι → X → M} (s : Multiset ι) :
   (∀ i _ : i ∈ s, Continuous (f i)) → Continuous fun a => (s.map fun i => f i a).Prod :=
@@ -399,33 +429,30 @@ theorem continuous_multiset_prod {f : ι → X → M} (s : Multiset ι) :
     rcases s with ⟨l⟩
     simpa using continuous_list_prod l
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[continuity, toAdditive]
 theorem continuous_finset_prod {f : ι → X → M} (s : Finset ι) :
-  (∀ i _ : i ∈ s, Continuous (f i)) → Continuous fun a => ∏i in s, f i a :=
+  (∀ i _ : i ∈ s, Continuous (f i)) → Continuous fun a => ∏ i in s, f i a :=
   continuous_multiset_prod _
 
 open Function
 
--- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem continuous_finprod
-{f : ι → X → M}
-(hc : ∀ i, continuous (f i))
-(hf : locally_finite (λ i, mul_support (f i))) : continuous (λ x, «expr∏ᶠ , »((i), f i x)) :=
-begin
-  refine [expr continuous_iff_continuous_at.2 (λ x, _)],
-  rcases [expr hf x, "with", "⟨", ident U, ",", ident hxU, ",", ident hUf, "⟩"],
-  have [] [":", expr continuous_at (λ x, «expr∏ in , »((i), hUf.to_finset, f i x)) x] [],
-  from [expr tendsto_finset_prod _ (λ i hi, (hc i).continuous_at)],
-  refine [expr this.congr «expr $ »(mem_of_superset hxU, λ y hy, _)],
-  refine [expr (finprod_eq_prod_of_mul_support_subset _ (λ i hi, _)).symm],
-  rw ["[", expr hUf.coe_to_finset, "]"] [],
-  exact [expr ⟨y, hi, hy⟩]
-end
+@[toAdditive]
+theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i))
+  (hf : LocallyFinite fun i => mul_support (f i)) : Continuous fun x => ∏ᶠ i, f i x :=
+  by 
+    refine' continuous_iff_continuous_at.2 fun x => _ 
+    rcases hf x with ⟨U, hxU, hUf⟩
+    have  : ContinuousAt (fun x => ∏ i in hUf.to_finset, f i x) x 
+    exact tendsto_finset_prod _ fun i hi => (hc i).ContinuousAt 
+    refine' this.congr (mem_of_superset hxU$ fun y hy => _)
+    refine' (finprod_eq_prod_of_mul_support_subset _ fun i hi => _).symm 
+    rw [hUf.coe_to_finset]
+    exact ⟨y, hi, hy⟩
 
 @[toAdditive]
 theorem continuous_finprod_cond {f : ι → X → M} {p : ι → Prop} (hc : ∀ i, p i → Continuous (f i))
-  (hf : LocallyFinite fun i => mul_support (f i)) : Continuous fun x => ∏ᶠ(i : _)(hi : p i), f i x :=
+  (hf : LocallyFinite fun i => mul_support (f i)) : Continuous fun x => ∏ᶠ (i : _)(hi : p i), f i x :=
   by 
     simp only [←finprod_subtype_eq_finprod_cond]
     exact continuous_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)

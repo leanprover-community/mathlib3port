@@ -74,15 +74,15 @@ theorem content_dvd_coeff {p : Polynomial R} (n : ℕ) : p.content ∣ p.coeff n
     rw [h]
     apply dvd_zero
 
--- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem content_C {r : R} : «expr = »((C r).content, normalize r) :=
-begin
-  rw [expr content] [],
-  by_cases [expr h0, ":", expr «expr = »(r, 0)],
-  { simp [] [] [] ["[", expr h0, "]"] [] [] },
-  have [ident h] [":", expr «expr = »((C r).support, {0})] [":=", expr support_monomial _ _ h0],
-  simp [] [] [] ["[", expr h, "]"] [] []
-end
+@[simp]
+theorem content_C {r : R} : (C r).content = normalize r :=
+  by 
+    rw [content]
+    byCases' h0 : r = 0
+    ·
+      simp [h0]
+    have h : (C r).Support = {0} := support_monomial _ _ h0 
+    simp [h]
 
 @[simp]
 theorem content_zero : content (0 : Polynomial R) = 0 :=
@@ -94,31 +94,33 @@ theorem content_one : content (1 : Polynomial R) = 1 :=
   by 
     rw [←C_1, content_C, normalize_one]
 
--- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem content_X_mul {p : polynomial R} : «expr = »(content «expr * »(X, p), content p) :=
-begin
-  rw ["[", expr content, ",", expr content, ",", expr finset.gcd_def, ",", expr finset.gcd_def, "]"] [],
-  refine [expr congr rfl _],
-  have [ident h] [":", expr «expr = »(«expr * »(X, p).support, p.support.map ⟨nat.succ, nat.succ_injective⟩)] [],
-  { ext [] [ident a] [],
-    simp [] [] ["only"] ["[", expr exists_prop, ",", expr finset.mem_map, ",", expr function.embedding.coe_fn_mk, ",", expr ne.def, ",", expr mem_support_iff, "]"] [] [],
-    cases [expr a] [],
-    { simp [] [] [] ["[", expr coeff_X_mul_zero, ",", expr nat.succ_ne_zero, "]"] [] [] },
-    rw ["[", expr mul_comm, ",", expr coeff_mul_X, "]"] [],
-    split,
-    { intro [ident h],
-      use [expr a],
-      simp [] [] [] ["[", expr h, "]"] [] [] },
-    { rintros ["⟨", ident b, ",", "⟨", ident h1, ",", ident h2, "⟩", "⟩"],
-      rw ["<-", expr nat.succ_injective h2] [],
-      apply [expr h1] } },
-  rw [expr h] [],
-  simp [] [] ["only"] ["[", expr finset.map_val, ",", expr function.comp_app, ",", expr function.embedding.coe_fn_mk, ",", expr multiset.map_map, "]"] [] [],
-  refine [expr congr (congr rfl _) rfl],
-  ext [] [ident a] [],
-  rw [expr mul_comm] [],
-  simp [] [] [] ["[", expr coeff_mul_X, "]"] [] []
-end
+theorem content_X_mul {p : Polynomial R} : content (X*p) = content p :=
+  by 
+    rw [content, content, Finset.gcd_def, Finset.gcd_def]
+    refine' congr rfl _ 
+    have h : (X*p).Support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩
+    ·
+      ext a 
+      simp only [exists_prop, Finset.mem_map, Function.Embedding.coe_fn_mk, Ne.def, mem_support_iff]
+      cases a
+      ·
+        simp [coeff_X_mul_zero, Nat.succ_ne_zero]
+      rw [mul_commₓ, coeff_mul_X]
+      constructor
+      ·
+        intro h 
+        use a 
+        simp [h]
+      ·
+        rintro ⟨b, ⟨h1, h2⟩⟩
+        rw [←Nat.succ_injective h2]
+        apply h1 
+    rw [h]
+    simp only [Finset.map_val, Function.comp_app, Function.Embedding.coe_fn_mk, Multiset.map_map]
+    refine' congr (congr rfl _) rfl 
+    ext a 
+    rw [mul_commₓ]
+    simp [coeff_mul_X]
 
 @[simp]
 theorem content_X_pow {k : ℕ} : content ((X : Polynomial R)^k) = 1 :=
@@ -151,7 +153,7 @@ theorem content_monomial {r : R} {k : ℕ} : content (monomial k r) = normalize 
 theorem content_eq_zero_iff {p : Polynomial R} : content p = 0 ↔ p = 0 :=
   by 
     rw [content, Finset.gcd_eq_zero_iff]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       ext n 
       byCases' h0 : n ∈ p.support
@@ -203,7 +205,7 @@ theorem content_eq_gcd_leading_coeff_content_erase_lead (p : Polynomial R) :
 theorem dvd_content_iff_C_dvd {p : Polynomial R} {r : R} : r ∣ p.content ↔ C r ∣ p :=
   by 
     rw [C_dvd_iff_dvd_coeff]
-    split 
+    constructor
     ·
       intro h i 
       apply h.trans (content_dvd_coeff _)
@@ -227,7 +229,7 @@ theorem is_primitive.content_eq_one {p : Polynomial R} (hp : p.is_primitive) : p
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
 section PrimPart
 
@@ -283,7 +285,7 @@ theorem is_unit_prim_part_C (r : R) : IsUnit (C r).primPart :=
       simp [h0]
     unfold IsUnit 
     refine'
-      ⟨⟨C («expr↑ » (norm_unit r⁻¹)), C («expr↑ » (norm_unit r)),
+      ⟨⟨C (↑norm_unit r⁻¹), C (↑norm_unit r),
           by 
             rw [←RingHom.map_mul, Units.inv_mul, C_1],
           by 
@@ -406,54 +408,54 @@ theorem is_primitive.dvd_prim_part_iff_dvd {p q : Polynomial R} (hp : p.is_primi
     apply Dvd.intro _ 
     rw [prim_part_mul hq, hp.prim_part_eq]
 
--- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_primitive_lcm_of_is_primitive
-{p q : polynomial R}
-(hp : p.is_primitive)
-(hq : q.is_primitive) : «expr∃ , »((r : polynomial R), «expr ∧ »(r.is_primitive, ∀
-  s : polynomial R, «expr ↔ »(«expr ∧ »(«expr ∣ »(p, s), «expr ∣ »(q, s)), «expr ∣ »(r, s)))) :=
-begin
-  classical,
-  have [ident h] [":", expr «expr∃ , »((n : exprℕ())
-    (r : polynomial R), «expr ∧ »(«expr = »(r.nat_degree, n), «expr ∧ »(r.is_primitive, «expr ∧ »(«expr ∣ »(p, r), «expr ∣ »(q, r)))))] [":=", expr ⟨«expr * »(p, q).nat_degree, «expr * »(p, q), rfl, hp.mul hq, dvd_mul_right _ _, dvd_mul_left _ _⟩],
-  rcases [expr nat.find_spec h, "with", "⟨", ident r, ",", ident rdeg, ",", ident rprim, ",", ident pr, ",", ident qr, "⟩"],
-  refine [expr ⟨r, rprim, λ s, ⟨_, λ rs, ⟨pr.trans rs, qr.trans rs⟩⟩⟩],
-  suffices [ident hs] [":", expr ∀
-   (n : exprℕ())
-   (s : polynomial R), «expr = »(s.nat_degree, n) → «expr ∧ »(«expr ∣ »(p, s), «expr ∣ »(q, s)) → «expr ∣ »(r, s)],
-  { apply [expr hs s.nat_degree s rfl] },
-  clear [ident s],
-  by_contra [ident con],
-  push_neg ["at", ident con],
-  rcases [expr nat.find_spec con, "with", "⟨", ident s, ",", ident sdeg, ",", "⟨", ident ps, ",", ident qs, "⟩", ",", ident rs, "⟩"],
-  have [ident s0] [":", expr «expr ≠ »(s, 0)] [],
-  { contrapose ["!"] [ident rs],
-    simp [] [] [] ["[", expr rs, "]"] [] [] },
-  have [ident hs] [] [":=", expr nat.find_min' h ⟨_, s.nat_degree_prim_part, s.is_primitive_prim_part, (hp.dvd_prim_part_iff_dvd s0).2 ps, (hq.dvd_prim_part_iff_dvd s0).2 qs⟩],
-  rw ["<-", expr rdeg] ["at", ident hs],
-  by_cases [expr sC, ":", expr «expr ≤ »(s.nat_degree, 0)],
-  { rw ["[", expr eq_C_of_nat_degree_le_zero (le_trans hs sC), ",", expr is_primitive_iff_content_eq_one, ",", expr content_C, ",", expr normalize_eq_one, "]"] ["at", ident rprim],
-    rw ["[", expr eq_C_of_nat_degree_le_zero (le_trans hs sC), ",", "<-", expr dvd_content_iff_C_dvd, "]"] ["at", ident rs],
-    apply [expr rs rprim.dvd] },
-  have [ident hcancel] [] [":=", expr nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree hs (lt_of_not_ge sC)],
-  rw [expr sdeg] ["at", ident hcancel],
-  apply [expr nat.find_min con hcancel],
-  refine [expr ⟨_, rfl, ⟨dvd_cancel_leads_of_dvd_of_dvd pr ps, dvd_cancel_leads_of_dvd_of_dvd qr qs⟩, λ rcs, rs _⟩],
-  rw ["<-", expr rprim.dvd_prim_part_iff_dvd s0] [],
-  rw ["[", expr cancel_leads, ",", expr tsub_eq_zero_iff_le.mpr hs, ",", expr pow_zero, ",", expr mul_one, "]"] ["at", ident rcs],
-  have [ident h] [] [":=", expr dvd_add rcs (dvd.intro_left _ rfl)],
-  have [ident hC0] [] [":=", expr rprim.ne_zero],
-  rw ["[", expr ne.def, ",", "<-", expr leading_coeff_eq_zero, ",", "<-", expr C_eq_zero, "]"] ["at", ident hC0],
-  rw ["[", expr sub_add_cancel, ",", "<-", expr rprim.dvd_prim_part_iff_dvd (mul_ne_zero hC0 s0), "]"] ["at", ident h],
-  rcases [expr is_unit_prim_part_C r.leading_coeff, "with", "⟨", ident u, ",", ident hu, "⟩"],
-  apply [expr h.trans (associated.symm ⟨u, _⟩).dvd],
-  rw ["[", expr prim_part_mul (mul_ne_zero hC0 s0), ",", expr hu, ",", expr mul_comm, "]"] []
-end
+theorem exists_primitive_lcm_of_is_primitive {p q : Polynomial R} (hp : p.is_primitive) (hq : q.is_primitive) :
+  ∃ r : Polynomial R, r.is_primitive ∧ ∀ s : Polynomial R, p ∣ s ∧ q ∣ s ↔ r ∣ s :=
+  by 
+    classical 
+    have h : ∃ (n : ℕ)(r : Polynomial R), r.nat_degree = n ∧ r.is_primitive ∧ p ∣ r ∧ q ∣ r :=
+      ⟨(p*q).natDegree, p*q, rfl, hp.mul hq, dvd_mul_right _ _, dvd_mul_left _ _⟩
+    rcases Nat.find_specₓ h with ⟨r, rdeg, rprim, pr, qr⟩
+    refine' ⟨r, rprim, fun s => ⟨_, fun rs => ⟨pr.trans rs, qr.trans rs⟩⟩⟩
+    suffices hs : ∀ n : ℕ s : Polynomial R, s.nat_degree = n → p ∣ s ∧ q ∣ s → r ∣ s
+    ·
+      apply hs s.nat_degree s rfl 
+    clear s 
+    byContra con 
+    pushNeg  at con 
+    rcases Nat.find_specₓ Con with ⟨s, sdeg, ⟨ps, qs⟩, rs⟩
+    have s0 : s ≠ 0
+    ·
+      contrapose! rs 
+      simp [rs]
+    have hs :=
+      Nat.find_min'ₓ h
+        ⟨_, s.nat_degree_prim_part, s.is_primitive_prim_part, (hp.dvd_prim_part_iff_dvd s0).2 ps,
+          (hq.dvd_prim_part_iff_dvd s0).2 qs⟩
+    rw [←rdeg] at hs 
+    byCases' sC : s.nat_degree ≤ 0
+    ·
+      rw [eq_C_of_nat_degree_le_zero (le_transₓ hs sC), is_primitive_iff_content_eq_one, content_C, normalize_eq_one] at
+        rprim 
+      rw [eq_C_of_nat_degree_le_zero (le_transₓ hs sC), ←dvd_content_iff_C_dvd] at rs 
+      apply rs rprim.dvd 
+    have hcancel := nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree hs (lt_of_not_geₓ sC)
+    rw [sdeg] at hcancel 
+    apply Nat.find_minₓ Con hcancel 
+    refine' ⟨_, rfl, ⟨dvd_cancel_leads_of_dvd_of_dvd pr ps, dvd_cancel_leads_of_dvd_of_dvd qr qs⟩, fun rcs => rs _⟩
+    rw [←rprim.dvd_prim_part_iff_dvd s0]
+    rw [cancel_leads, tsub_eq_zero_iff_le.mpr hs, pow_zeroₓ, mul_oneₓ] at rcs 
+    have h := dvd_add rcs (Dvd.intro_left _ rfl)
+    have hC0 := rprim.ne_zero 
+    rw [Ne.def, ←leading_coeff_eq_zero, ←C_eq_zero] at hC0 
+    rw [sub_add_cancel, ←rprim.dvd_prim_part_iff_dvd (mul_ne_zero hC0 s0)] at h 
+    rcases is_unit_prim_part_C r.leading_coeff with ⟨u, hu⟩
+    apply h.trans (Associated.symm ⟨u, _⟩).Dvd 
+    rw [prim_part_mul (mul_ne_zero hC0 s0), hu, mul_commₓ]
 
 theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : Polynomial R} (hq : q ≠ 0) :
   p ∣ q ↔ p.content ∣ q.content ∧ p.prim_part ∣ q.prim_part :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rcases h with ⟨r, rfl⟩
       rw [content_mul, p.is_primitive_prim_part.dvd_prim_part_iff_dvd hq]
@@ -483,14 +485,10 @@ instance (priority := 100) NormalizedGcdMonoid : NormalizedGcdMonoid (Polynomial
           IsUnit.mul_left_dvd _ _ _ (is_unit_prim_part_C (lcm p.content q.content)), ←hr s.prim_part]
         tauto
 
--- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem degree_gcd_le_left {p : polynomial R} (hp : «expr ≠ »(p, 0)) (q) : «expr ≤ »((gcd p q).degree, p.degree) :=
-begin
-  by_cases [expr hq, ":", expr «expr = »(q, 0)],
-  { simp [] [] [] ["[", expr hq, "]"] [] [] },
-  have [] [] [":=", expr nat_degree_le_iff_degree_le.mp (nat_degree_le_of_dvd (gcd_dvd_left p q) hp)],
-  rwa [expr degree_eq_nat_degree hp] []
-end
+theorem degree_gcd_le_left {p : Polynomial R} (hp : p ≠ 0) q : (gcd p q).degree ≤ p.degree :=
+  by 
+    have  := nat_degree_le_iff_degree_le.mp (nat_degree_le_of_dvd (gcd_dvd_left p q) hp)
+    rwa [degree_eq_nat_degree hp]
 
 theorem degree_gcd_le_right p {q : Polynomial R} (hq : q ≠ 0) : (gcd p q).degree ≤ q.degree :=
   by 

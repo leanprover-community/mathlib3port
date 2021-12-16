@@ -86,11 +86,12 @@ def colimit_setoid : Setoidₓ (prequotient F) :=
 
 attribute [instance] colimit_setoid
 
--- error in Algebra.Category.CommRing.Colimits: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 The underlying type of the colimit of a diagram in `CommRing`.
--/ @[derive #[expr inhabited]] def colimit_type : Type v :=
-quotient (colimit_setoid F)
+-/
+def colimit_type : Type v :=
+  Quotientₓ (colimit_setoid F)deriving [anonymous]
 
 instance : CommRingₓ (colimit_type F) :=
   { zero :=
@@ -413,24 +414,30 @@ def desc_morphism (s : cocone F) : colimit F ⟶ s.X :=
         by 
           induction x <;> induction y <;> rfl }
 
--- error in Algebra.Category.CommRing.Colimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Evidence that the proposed colimit is the colimit. -/ def colimit_is_colimit : is_colimit (colimit_cocone F) :=
-{ desc := λ s, desc_morphism F s,
-  uniq' := λ s m w, begin
-    ext [] [] [],
-    induction [expr x] [] [] [],
-    induction [expr x] [] [] [],
-    { have [ident w'] [] [":=", expr congr_fun (congr_arg (λ
-         f : «expr ⟶ »(F.obj x_j, s.X), (f : F.obj x_j → s.X)) (w x_j)) x_x],
-      erw [expr w'] [],
-      refl },
-    { simp [] [] [] [] [] [] },
-    { simp [] [] [] [] [] [] },
-    { simp [] [] [] ["*"] [] [] },
-    { simp [] [] [] ["*"] [] [] },
-    { simp [] [] [] ["*"] [] [] },
-    refl
-  end }
+/-- Evidence that the proposed colimit is the colimit. -/
+def colimit_is_colimit : is_colimit (colimit_cocone F) :=
+  { desc := fun s => desc_morphism F s,
+    uniq' :=
+      fun s m w =>
+        by 
+          ext 
+          induction x 
+          induction x
+          ·
+            have w' := congr_funₓ (congr_argₓ (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x 
+            erw [w']
+            rfl
+          ·
+            simp 
+          ·
+            simp 
+          ·
+            simp 
+          ·
+            simp 
+          ·
+            simp 
+          rfl }
 
 instance has_colimits_CommRing : has_colimits CommRingₓₓ :=
   { HasColimitsOfShape :=

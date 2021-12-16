@@ -35,7 +35,7 @@ colimit, representable, presheaf, free cocompletion
 
 namespace CategoryTheory
 
-noncomputable theory
+noncomputable section 
 
 open Category Limits
 
@@ -58,14 +58,14 @@ In the case where `ℰ = Cᵒᵖ ⥤ Type u` and `A = yoneda`, this functor is i
 Defined as in [MM92], Chapter I, Section 5, Theorem 2.
 -/
 @[simps]
-def restricted_yoneda : ℰ ⥤ «expr ᵒᵖ» C ⥤ Type u₁ :=
+def restricted_yoneda : ℰ ⥤ Cᵒᵖ ⥤ Type u₁ :=
   yoneda ⋙ (whiskering_left _ _ (Type u₁)).obj (functor.op A)
 
 /--
 The functor `restricted_yoneda` is isomorphic to the identity functor when evaluated at the yoneda
 embedding.
 -/
-def restricted_yoneda_yoneda : restricted_yoneda (yoneda : C ⥤ «expr ᵒᵖ» C ⥤ Type u₁) ≅ 𝟭 _ :=
+def restricted_yoneda_yoneda : restricted_yoneda (yoneda : C ⥤ Cᵒᵖ ⥤ Type u₁) ≅ 𝟭 _ :=
   nat_iso.of_components
     (fun P =>
       nat_iso.of_components (fun X => yoneda_sections_small X.unop _)
@@ -84,7 +84,7 @@ def restricted_yoneda_yoneda : restricted_yoneda (yoneda : C ⥤ «expr ᵒᵖ»
 `colimit_adj.restricted_yoneda`.
 It is shown in `restrict_yoneda_hom_equiv_natural` that this is a natural bijection.
 -/
-def restrict_yoneda_hom_equiv (P : «expr ᵒᵖ» C ⥤ Type u₁) (E : ℰ) {c : cocone ((category_of_elements.π P).leftOp ⋙ A)}
+def restrict_yoneda_hom_equiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ) {c : cocone ((category_of_elements.π P).leftOp ⋙ A)}
   (t : is_colimit c) : (c.X ⟶ E) ≃ (P ⟶ (restricted_yoneda A).obj E) :=
   ((ulift_trivial _).symm ≪≫ t.hom_iso' E).toEquiv.trans
     { toFun :=
@@ -96,7 +96,7 @@ def restrict_yoneda_hom_equiv (P : «expr ᵒᵖ» C ⥤ Type u₁) (E : ℰ) {c
                   fun p =>
                     (k.2
                         (Quiver.Hom.op ⟨f, rfl⟩ :
-                        (Opposite.op ⟨c', P.map f p⟩ : «expr ᵒᵖ» P.elements) ⟶ Opposite.op ⟨c, p⟩)).symm },
+                        (Opposite.op ⟨c', P.map f p⟩ : P.elementsᵒᵖ) ⟶ Opposite.op ⟨c, p⟩)).symm },
       invFun :=
         fun τ =>
           { val := fun p => τ.app p.unop.1 p.unop.2,
@@ -120,7 +120,7 @@ def restrict_yoneda_hom_equiv (P : «expr ᵒᵖ» C ⥤ Type u₁) (E : ℰ) {c
 /--
 (Implementation). Show that the bijection in `restrict_yoneda_hom_equiv` is natural (on the right).
 -/
-theorem restrict_yoneda_hom_equiv_natural (P : «expr ᵒᵖ» C ⥤ Type u₁) (E₁ E₂ : ℰ) (g : E₁ ⟶ E₂) {c : cocone _}
+theorem restrict_yoneda_hom_equiv_natural (P : Cᵒᵖ ⥤ Type u₁) (E₁ E₂ : ℰ) (g : E₁ ⟶ E₂) {c : cocone _}
   (t : is_colimit c) (k : c.X ⟶ E₁) :
   restrict_yoneda_hom_equiv A P E₂ t (k ≫ g) = restrict_yoneda_hom_equiv A P E₁ t k ≫ (restricted_yoneda A).map g :=
   by 
@@ -134,16 +134,16 @@ The left adjoint to the functor `restricted_yoneda` (shown in `yoneda_adjunction
 extension of `A` along the yoneda embedding (shown in `is_extension_along_yoneda`), in particular
 it is the left Kan extension of `A` through the yoneda embedding.
 -/
-def extend_along_yoneda : («expr ᵒᵖ» C ⥤ Type u₁) ⥤ ℰ :=
+def extend_along_yoneda : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ :=
   adjunction.left_adjoint_of_equiv (fun P E => restrict_yoneda_hom_equiv A P E (colimit.is_colimit _))
     fun P E E' g => restrict_yoneda_hom_equiv_natural A P E E' g _
 
 @[simp]
-theorem extend_along_yoneda_obj (P : «expr ᵒᵖ» C ⥤ Type u₁) :
+theorem extend_along_yoneda_obj (P : Cᵒᵖ ⥤ Type u₁) :
   (extend_along_yoneda A).obj P = colimit ((category_of_elements.π P).leftOp ⋙ A) :=
   rfl
 
-theorem extend_along_yoneda_map {X Y : «expr ᵒᵖ» C ⥤ Type u₁} (f : X ⟶ Y) :
+theorem extend_along_yoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
   (extend_along_yoneda A).map f = colimit.pre ((category_of_elements.π Y).leftOp ⋙ A) (category_of_elements.map f).op :=
   by 
     ext J 
@@ -186,7 +186,7 @@ property (up to isomorphism).
 The first part of [MM92], Chapter I, Section 5, Corollary 4.
 See Property 1 of https://ncatlab.org/nlab/show/Yoneda+extension#properties.
 -/
-def is_extension_along_yoneda : (yoneda : C ⥤ «expr ᵒᵖ» C ⥤ Type u₁) ⋙ extend_along_yoneda A ≅ A :=
+def is_extension_along_yoneda : (yoneda : C ⥤ Cᵒᵖ ⥤ Type u₁) ⋙ extend_along_yoneda A ≅ A :=
   nat_iso.of_components
     (fun X =>
       (colimit.is_colimit _).coconePointUniqueUpToIso
@@ -258,9 +258,21 @@ def extend_along_yoneda_iso_Kan : extend_along_yoneda A ≅ (Lan yoneda : (_ ⥤
       congr 1
       apply category_of_elements.costructured_arrow_yoneda_equivalence_naturality)
 
+/-- extending `F ⋙ yoneda` along the yoneda embedding is isomorphic to `Lan F.op`. -/
+@[simps]
+def extend_of_comp_yoneda_iso_Lan {D : Type u₁} [small_category D] (F : C ⥤ D) :
+  extend_along_yoneda (F ⋙ yoneda) ≅ Lan F.op :=
+  Adjunction.natIsoOfRightAdjointNatIso (yoneda_adjunction (F ⋙ yoneda)) (Lan.adjunction (Type u₁) F.op)
+    (iso_whisker_right curried_yoneda_lemma' ((whiskering_left (Cᵒᵖ) (Dᵒᵖ) (Type u₁)).obj F.op : _))
+
 end ColimitAdj
 
 open ColimitAdj
+
+/-- `F ⋙ yoneda` is naturally isomorphic to `yoneda ⋙ Lan F.op`. -/
+@[simps]
+def comp_yoneda_iso_yoneda_comp_Lan {D : Type u₁} [small_category D] (F : C ⥤ D) : F ⋙ yoneda ≅ yoneda ⋙ Lan F.op :=
+  (is_extension_along_yoneda (F ⋙ yoneda)).symm ≪≫ iso_whisker_left yoneda (extend_of_comp_yoneda_iso_Lan F)
 
 /--
 Since `extend_along_yoneda A` is adjoint to `restricted_yoneda A`, if we use `A = yoneda`
@@ -274,7 +286,7 @@ A functor to the presheaf category in which everything in the image is represent
 by the fact that it factors through the yoneda embedding).
 `cocone_of_representable` gives a cocone for this functor which is a colimit and has point `P`.
 -/
-def functor_to_representables (P : «expr ᵒᵖ» C ⥤ Type u₁) : «expr ᵒᵖ» P.elements ⥤ «expr ᵒᵖ» C ⥤ Type u₁ :=
+def functor_to_representables (P : Cᵒᵖ ⥤ Type u₁) : P.elementsᵒᵖ ⥤ Cᵒᵖ ⥤ Type u₁ :=
   (category_of_elements.π P).leftOp ⋙ yoneda
 
 /--
@@ -284,20 +296,20 @@ presheaf `P` as a colimit of representables.
 
 The construction of [MM92], Chapter I, Section 5, Corollary 3.
 -/
-def cocone_of_representable (P : «expr ᵒᵖ» C ⥤ Type u₁) : cocone (functor_to_representables P) :=
+def cocone_of_representable (P : Cᵒᵖ ⥤ Type u₁) : cocone (functor_to_representables P) :=
   cocone.extend (colimit.cocone _) (extend_along_yoneda_yoneda.Hom.app P)
 
 @[simp]
-theorem cocone_of_representable_X (P : «expr ᵒᵖ» C ⥤ Type u₁) : (cocone_of_representable P).x = P :=
+theorem cocone_of_representable_X (P : Cᵒᵖ ⥤ Type u₁) : (cocone_of_representable P).x = P :=
   rfl
 
 /-- An explicit formula for the legs of the cocone `cocone_of_representable`. -/
-theorem cocone_of_representable_ι_app (P : «expr ᵒᵖ» C ⥤ Type u₁) (j : «expr ᵒᵖ» P.elements) :
+theorem cocone_of_representable_ι_app (P : Cᵒᵖ ⥤ Type u₁) (j : P.elementsᵒᵖ) :
   (cocone_of_representable P).ι.app j = (yoneda_sections_small _ _).inv j.unop.2 :=
   colimit.ι_desc _ _
 
 /-- The legs of the cocone `cocone_of_representable` are natural in the choice of presheaf. -/
-theorem cocone_of_representable_naturality {P₁ P₂ : «expr ᵒᵖ» C ⥤ Type u₁} (α : P₁ ⟶ P₂) (j : «expr ᵒᵖ» P₁.elements) :
+theorem cocone_of_representable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (α : P₁ ⟶ P₂) (j : P₁.elementsᵒᵖ) :
   (cocone_of_representable P₁).ι.app j ≫ α =
     (cocone_of_representable P₂).ι.app ((category_of_elements.map α).op.obj j) :=
   by 
@@ -310,42 +322,44 @@ arbitrary presheaf `P` as a colimit of representables.
 
 The result of [MM92], Chapter I, Section 5, Corollary 3.
 -/
-def colimit_of_representable (P : «expr ᵒᵖ» C ⥤ Type u₁) : is_colimit (cocone_of_representable P) :=
+def colimit_of_representable (P : Cᵒᵖ ⥤ Type u₁) : is_colimit (cocone_of_representable P) :=
   by 
     apply is_colimit.of_point_iso (colimit.is_colimit (functor_to_representables P))
     change is_iso (colimit.desc _ (cocone.extend _ _))
     rw [colimit.desc_extend, colimit.desc_cocone]
     infer_instance
 
--- error in CategoryTheory.Limits.Presheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given two functors L₁ and L₂ which preserve colimits, if they agree when restricted to the
 representable presheaves then they agree everywhere.
 -/
-def nat_iso_of_nat_iso_on_representables
-(L₁ L₂ : «expr ⥤ »(«expr ⥤ »(«expr ᵒᵖ»(C), Type u₁), ℰ))
-[preserves_colimits L₁]
-[preserves_colimits L₂]
-(h : «expr ≅ »(«expr ⋙ »(yoneda, L₁), «expr ⋙ »(yoneda, L₂))) : «expr ≅ »(L₁, L₂) :=
-begin
-  apply [expr nat_iso.of_components _ _],
-  { intro [ident P],
-    refine [expr (is_colimit_of_preserves L₁ (colimit_of_representable P)).cocone_points_iso_of_nat_iso (is_colimit_of_preserves L₂ (colimit_of_representable P)) _],
-    apply [expr «expr ≪≫ »(functor.associator _ _ _, _)],
-    exact [expr iso_whisker_left (category_of_elements.π P).left_op h] },
-  { intros [ident P₁, ident P₂, ident f],
-    apply [expr (is_colimit_of_preserves L₁ (colimit_of_representable P₁)).hom_ext],
-    intro [ident j],
-    dsimp ["only"] ["[", expr id.def, ",", expr is_colimit.cocone_points_iso_of_nat_iso_hom, ",", expr iso_whisker_left_hom, "]"] [] [],
-    have [] [":", expr «expr = »(«expr ≫ »((L₁.map_cocone (cocone_of_representable P₁)).ι.app j, L₁.map f), (L₁.map_cocone (cocone_of_representable P₂)).ι.app ((category_of_elements.map f).op.obj j))] [],
-    { dsimp [] [] [] [],
-      rw ["[", "<-", expr L₁.map_comp, ",", expr cocone_of_representable_naturality, "]"] [],
-      refl },
-    rw ["[", expr reassoc_of this, ",", expr is_colimit.ι_map_assoc, ",", expr is_colimit.ι_map, "]"] [],
-    dsimp [] [] [] [],
-    rw ["[", "<-", expr L₂.map_comp, ",", expr cocone_of_representable_naturality, "]"] [],
-    refl }
-end
+def nat_iso_of_nat_iso_on_representables (L₁ L₂ : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ) [preserves_colimits L₁] [preserves_colimits L₂]
+  (h : yoneda ⋙ L₁ ≅ yoneda ⋙ L₂) : L₁ ≅ L₂ :=
+  by 
+    apply nat_iso.of_components _ _
+    ·
+      intro P 
+      refine'
+        (is_colimit_of_preserves L₁ (colimit_of_representable P)).coconePointsIsoOfNatIso
+          (is_colimit_of_preserves L₂ (colimit_of_representable P)) _ 
+      apply functor.associator _ _ _ ≪≫ _ 
+      exact iso_whisker_left (category_of_elements.π P).leftOp h
+    ·
+      intro P₁ P₂ f 
+      apply (is_colimit_of_preserves L₁ (colimit_of_representable P₁)).hom_ext 
+      intro j 
+      dsimp only [id.def, is_colimit.cocone_points_iso_of_nat_iso_hom, iso_whisker_left_hom]
+      have  :
+        (L₁.map_cocone (cocone_of_representable P₁)).ι.app j ≫ L₁.map f =
+          (L₁.map_cocone (cocone_of_representable P₂)).ι.app ((category_of_elements.map f).op.obj j)
+      ·
+        dsimp 
+        rw [←L₁.map_comp, cocone_of_representable_naturality]
+        rfl 
+      rw [reassoc_of this, is_colimit.ι_map_assoc, is_colimit.ι_map]
+      dsimp 
+      rw [←L₂.map_comp, cocone_of_representable_naturality]
+      rfl
 
 variable [has_colimits ℰ]
 
@@ -356,7 +370,7 @@ the presheaf category.
 The second part of [MM92], Chapter I, Section 5, Corollary 4.
 See Property 3 of https://ncatlab.org/nlab/show/Yoneda+extension#properties.
 -/
-def unique_extension_along_yoneda (L : («expr ᵒᵖ» C ⥤ Type u₁) ⥤ ℰ) (hL : yoneda ⋙ L ≅ A) [preserves_colimits L] :
+def unique_extension_along_yoneda (L : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ) (hL : yoneda ⋙ L ≅ A) [preserves_colimits L] :
   L ≅ extend_along_yoneda A :=
   nat_iso_of_nat_iso_on_representables _ _ (hL ≪≫ (is_extension_along_yoneda _).symm)
 
@@ -364,8 +378,7 @@ def unique_extension_along_yoneda (L : («expr ᵒᵖ» C ⥤ Type u₁) ⥤ ℰ
 If `L` preserves colimits and `ℰ` has them, then it is a left adjoint. This is a special case of
 `is_left_adjoint_of_preserves_colimits` used to prove that.
 -/
-def is_left_adjoint_of_preserves_colimits_aux (L : («expr ᵒᵖ» C ⥤ Type u₁) ⥤ ℰ) [preserves_colimits L] :
-  is_left_adjoint L :=
+def is_left_adjoint_of_preserves_colimits_aux (L : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ) [preserves_colimits L] : is_left_adjoint L :=
   { right := restricted_yoneda (yoneda ⋙ L),
     adj := (yoneda_adjunction _).ofNatIsoLeft (unique_extension_along_yoneda _ L (iso.refl _)).symm }
 

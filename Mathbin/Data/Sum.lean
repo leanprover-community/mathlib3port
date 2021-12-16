@@ -35,8 +35,8 @@ def Sum.isRight {α β} : Sum α β → Bool
 | inl _ => ff
 | inr _ => tt
 
--- error in Data.Sum: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
-attribute [derive #[expr decidable_eq]] sum
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+deriving instance [anonymous] for Sum
 
 @[simp]
 theorem Sum.forall {p : Sum α β → Prop} : (∀ x, p x) ↔ (∀ a, p (inl a)) ∧ ∀ b, p (inr b) :=
@@ -135,29 +135,23 @@ theorem elim_comp_inl_inr {α β γ : Sort _} (f : Sum α β → γ) : Sum.elim 
 
 open function(update update_eq_iff update_comp_eq_of_injective update_comp_eq_of_forall_ne)
 
--- error in Data.Sum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp]
-theorem update_elim_inl
-{α β γ}
-[decidable_eq α]
-[decidable_eq «expr ⊕ »(α, β)]
-{f : α → γ}
-{g : β → γ}
-{i : α}
-{x : γ} : «expr = »(update (sum.elim f g) (inl i) x, sum.elim (update f i x) g) :=
-update_eq_iff.2 ⟨by simp [] [] [] [] [] [], by simp [] [] [] [] [] [] { contextual := tt }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    update_elim_inl
+    { α β γ } [ DecidableEq α ] [ DecidableEq Sum α β ] { f : α → γ } { g : β → γ } { i : α } { x : γ }
+      : update Sum.elim f g inl i x = Sum.elim update f i x g
+    := update_eq_iff . 2 ⟨ by simp , by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) ⟩
 
--- error in Data.Sum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp]
-theorem update_elim_inr
-{α β γ}
-[decidable_eq β]
-[decidable_eq «expr ⊕ »(α, β)]
-{f : α → γ}
-{g : β → γ}
-{i : β}
-{x : γ} : «expr = »(update (sum.elim f g) (inr i) x, sum.elim f (update g i x)) :=
-update_eq_iff.2 ⟨by simp [] [] [] [] [] [], by simp [] [] [] [] [] [] { contextual := tt }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    update_elim_inr
+    { α β γ } [ DecidableEq β ] [ DecidableEq Sum α β ] { f : α → γ } { g : β → γ } { i : β } { x : γ }
+      : update Sum.elim f g inr i x = Sum.elim f update g i x
+    := update_eq_iff . 2 ⟨ by simp , by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) ⟩
 
 @[simp]
 theorem update_inl_comp_inl {α β γ} [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :

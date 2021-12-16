@@ -81,7 +81,7 @@ theorem mem_divisors {m : ℕ} : n ∈ divisors m ↔ n ∣ m ∧ m ≠ 0 :=
     simp only [divisors, Finset.mem_Ico, Ne.def, Finset.mem_filter, succ_ne_zero, and_trueₓ, and_iff_right_iff_imp,
       not_false_iff]
     intro hdvd 
-    split 
+    constructor
     ·
       apply Nat.pos_of_ne_zeroₓ 
       rintro rfl 
@@ -109,7 +109,7 @@ theorem mem_divisors_antidiagonal {x : ℕ × ℕ} : x ∈ divisors_antidiagonal
     rw [and_comm]
     apply and_congr_right 
     rintro rfl 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       contrapose! h 
       simp [h]
@@ -227,7 +227,7 @@ theorem map_swap_divisors_antidiagonal :
     ext 
     simp only [exists_prop, mem_divisors_antidiagonal, Finset.mem_map, Function.Embedding.coe_fn_mk, Ne.def,
       Prod.swap_prod_mkₓ, Prod.exists]
-    split 
+    constructor
     ·
       rintro ⟨x, y, ⟨⟨rfl, h⟩, rfl⟩⟩
       simp [mul_commₓ, h]
@@ -237,7 +237,7 @@ theorem map_swap_divisors_antidiagonal :
       rw [mul_commₓ]
       simp [h]
 
-theorem sum_divisors_eq_sum_proper_divisors_add_self : (∑i in divisors n, i) = (∑i in proper_divisors n, i)+n :=
+theorem sum_divisors_eq_sum_proper_divisors_add_self : (∑ i in divisors n, i) = (∑ i in proper_divisors n, i)+n :=
   by 
     cases n
     ·
@@ -249,15 +249,15 @@ theorem sum_divisors_eq_sum_proper_divisors_add_self : (∑i in divisors n, i) =
 /-- `n : ℕ` is perfect if and only the sum of the proper divisors of `n` is `n` and `n`
   is positive. -/
 def perfect (n : ℕ) : Prop :=
-  (∑i in proper_divisors n, i) = n ∧ 0 < n
+  (∑ i in proper_divisors n, i) = n ∧ 0 < n
 
-theorem perfect_iff_sum_proper_divisors (h : 0 < n) : perfect n ↔ (∑i in proper_divisors n, i) = n :=
+theorem perfect_iff_sum_proper_divisors (h : 0 < n) : perfect n ↔ (∑ i in proper_divisors n, i) = n :=
   and_iff_left h
 
-theorem perfect_iff_sum_divisors_eq_two_mul (h : 0 < n) : perfect n ↔ (∑i in divisors n, i) = 2*n :=
+theorem perfect_iff_sum_divisors_eq_two_mul (h : 0 < n) : perfect n ↔ (∑ i in divisors n, i) = 2*n :=
   by 
     rw [perfect_iff_sum_proper_divisors h, sum_divisors_eq_sum_proper_divisors_add_self, two_mul]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rw [h]
     ·
@@ -287,75 +287,79 @@ theorem divisors_prime_pow {p : ℕ} (pp : p.prime) (k : ℕ) :
     ext 
     simp [mem_divisors_prime_pow, pp, Nat.lt_succ_iff, @eq_comm _ a]
 
--- error in NumberTheory.Divisors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_proper_divisors_of_subset_of_sum_eq_sum
-{s : finset exprℕ()}
-(hsub : «expr ⊆ »(s, n.proper_divisors)) : «expr = »(«expr∑ in , »((x), s, x), «expr∑ in , »((x), n.proper_divisors, x)) → «expr = »(s, n.proper_divisors) :=
-begin
-  cases [expr n] [],
-  { rw ["[", expr proper_divisors_zero, ",", expr subset_empty, "]"] ["at", ident hsub],
-    simp [] [] [] ["[", expr hsub, "]"] [] [] },
-  classical,
-  rw ["[", "<-", expr sum_sdiff hsub, "]"] [],
-  intros [ident h],
-  apply [expr subset.antisymm hsub],
-  rw ["[", "<-", expr sdiff_eq_empty_iff_subset, "]"] [],
-  contrapose [] [ident h],
-  rw ["[", "<-", expr ne.def, ",", "<-", expr nonempty_iff_ne_empty, "]"] ["at", ident h],
-  apply [expr ne_of_lt],
-  rw ["[", "<-", expr zero_add «expr∑ in , »((x), s, x), ",", "<-", expr add_assoc, ",", expr add_zero, "]"] [],
-  apply [expr add_lt_add_right],
-  have [ident hlt] [] [":=", expr sum_lt_sum_of_nonempty h (λ x hx, pos_of_mem_proper_divisors (sdiff_subset _ _ hx))],
-  simp [] [] ["only"] ["[", expr sum_const_zero, "]"] [] ["at", ident hlt],
-  apply [expr hlt]
-end
+theorem eq_proper_divisors_of_subset_of_sum_eq_sum {s : Finset ℕ} (hsub : s ⊆ n.proper_divisors) :
+  ((∑ x in s, x) = ∑ x in n.proper_divisors, x) → s = n.proper_divisors :=
+  by 
+    cases n
+    ·
+      rw [proper_divisors_zero, subset_empty] at hsub 
+      simp [hsub]
+    classical 
+    rw [←sum_sdiff hsub]
+    intro h 
+    apply subset.antisymm hsub 
+    rw [←sdiff_eq_empty_iff_subset]
+    contrapose h 
+    rw [←Ne.def, ←nonempty_iff_ne_empty] at h 
+    apply ne_of_ltₓ 
+    rw [←zero_addₓ (∑ x in s, x), ←add_assocₓ, add_zeroₓ]
+    apply add_lt_add_right 
+    have hlt := sum_lt_sum_of_nonempty h fun x hx => pos_of_mem_proper_divisors (sdiff_subset _ _ hx)
+    simp only [sum_const_zero] at hlt 
+    apply hlt
 
--- error in NumberTheory.Divisors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sum_proper_divisors_dvd
-(h : «expr ∣ »(«expr∑ in , »((x), n.proper_divisors, x), n)) : «expr ∨ »(«expr = »(«expr∑ in , »((x), n.proper_divisors, x), 1), «expr = »(«expr∑ in , »((x), n.proper_divisors, x), n)) :=
-begin
-  cases [expr n] [],
-  { simp [] [] [] [] [] [] },
-  cases [expr n] [],
-  { contrapose ["!"] [ident h],
-    simp [] [] [] [] [] [] },
-  rw [expr or_iff_not_imp_right] [],
-  intro [ident ne_n],
-  have [ident hlt] [":", expr «expr < »(«expr∑ in , »((x), n.succ.succ.proper_divisors, x), n.succ.succ)] [":=", expr lt_of_le_of_ne (nat.le_of_dvd (nat.succ_pos _) h) ne_n],
-  symmetry,
-  rw ["[", "<-", expr mem_singleton, ",", expr eq_proper_divisors_of_subset_of_sum_eq_sum (singleton_subset_iff.2 (mem_proper_divisors.2 ⟨h, hlt⟩)) sum_singleton, ",", expr mem_proper_divisors, "]"] [],
-  refine [expr ⟨one_dvd _, nat.succ_lt_succ (nat.succ_pos _)⟩]
-end
+theorem sum_proper_divisors_dvd (h : (∑ x in n.proper_divisors, x) ∣ n) :
+  (∑ x in n.proper_divisors, x) = 1 ∨ (∑ x in n.proper_divisors, x) = n :=
+  by 
+    cases n
+    ·
+      simp 
+    cases n
+    ·
+      contrapose! h 
+      simp 
+    rw [or_iff_not_imp_right]
+    intro ne_n 
+    have hlt : (∑ x in n.succ.succ.proper_divisors, x) < n.succ.succ :=
+      lt_of_le_of_neₓ (Nat.le_of_dvdₓ (Nat.succ_posₓ _) h) ne_n 
+    symm 
+    rw [←mem_singleton,
+      eq_proper_divisors_of_subset_of_sum_eq_sum (singleton_subset_iff.2 (mem_proper_divisors.2 ⟨h, hlt⟩))
+        sum_singleton,
+      mem_proper_divisors]
+    refine' ⟨one_dvd _, Nat.succ_lt_succₓ (Nat.succ_posₓ _)⟩
 
 @[simp, toAdditive]
 theorem prime.prod_proper_divisors {α : Type _} [CommMonoidₓ α] {p : ℕ} {f : ℕ → α} (h : p.prime) :
-  (∏x in p.proper_divisors, f x) = f 1 :=
+  (∏ x in p.proper_divisors, f x) = f 1 :=
   by 
     simp [h.proper_divisors]
 
 @[simp, toAdditive]
 theorem prime.prod_divisors {α : Type _} [CommMonoidₓ α] {p : ℕ} {f : ℕ → α} (h : p.prime) :
-  (∏x in p.divisors, f x) = f p*f 1 :=
+  (∏ x in p.divisors, f x) = f p*f 1 :=
   by 
     rw [divisors_eq_proper_divisors_insert_self_of_pos h.pos, prod_insert proper_divisors.not_self_mem,
       h.prod_proper_divisors]
 
--- error in NumberTheory.Divisors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem proper_divisors_eq_singleton_one_iff_prime : «expr ↔ »(«expr = »(n.proper_divisors, {1}), n.prime) :=
-⟨λ h, begin
-   have [ident h1] [] [":=", expr mem_singleton.2 rfl],
-   rw ["[", "<-", expr h, ",", expr mem_proper_divisors, "]"] ["at", ident h1],
-   refine [expr ⟨h1.2, _⟩],
-   intros [ident m, ident hdvd],
-   rw ["[", "<-", expr mem_singleton, ",", "<-", expr h, ",", expr mem_proper_divisors, "]"] [],
-   cases [expr lt_or_eq_of_le (nat.le_of_dvd (lt_trans (nat.succ_pos _) h1.2) hdvd)] [],
-   { left,
-     exact [expr ⟨hdvd, h_1⟩] },
-   { right,
-     exact [expr h_1] }
- end, prime.proper_divisors⟩
+theorem proper_divisors_eq_singleton_one_iff_prime : n.proper_divisors = {1} ↔ n.prime :=
+  ⟨fun h =>
+      by 
+        have h1 := mem_singleton.2 rfl 
+        rw [←h, mem_proper_divisors] at h1 
+        refine' ⟨h1.2, _⟩
+        intro m hdvd 
+        rw [←mem_singleton, ←h, mem_proper_divisors]
+        cases lt_or_eq_of_leₓ (Nat.le_of_dvdₓ (lt_transₓ (Nat.succ_posₓ _) h1.2) hdvd)
+        ·
+          left 
+          exact ⟨hdvd, h_1⟩
+        ·
+          right 
+          exact h_1,
+    prime.proper_divisors⟩
 
-theorem sum_proper_divisors_eq_one_iff_prime : (∑x in n.proper_divisors, x) = 1 ↔ n.prime :=
+theorem sum_proper_divisors_eq_one_iff_prime : (∑ x in n.proper_divisors, x) = 1 ↔ n.prime :=
   by 
     cases n
     ·
@@ -378,7 +382,7 @@ theorem mem_proper_divisors_prime_pow {p : ℕ} (pp : p.prime) (k : ℕ) {x : �
     simp only [exists_prop, and_assoc]
     apply exists_congr 
     intro a 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rcases h with ⟨h_left, rfl, h_right⟩
       rwa [pow_lt_pow_iff pp.one_lt] at h_right 
@@ -396,13 +400,13 @@ theorem proper_divisors_prime_pow {p : ℕ} (pp : p.prime) (k : ℕ) :
 
 @[simp, toAdditive]
 theorem prod_proper_divisors_prime_pow {α : Type _} [CommMonoidₓ α] {k p : ℕ} {f : ℕ → α} (h : p.prime) :
-  (∏x in (p ^ k).properDivisors, f x) = ∏x in range k, f (p ^ x) :=
+  (∏ x in (p ^ k).properDivisors, f x) = ∏ x in range k, f (p ^ x) :=
   by 
     simp [h, proper_divisors_prime_pow]
 
 @[simp, toAdditive]
 theorem prod_divisors_prime_pow {α : Type _} [CommMonoidₓ α] {k p : ℕ} {f : ℕ → α} (h : p.prime) :
-  (∏x in (p ^ k).divisors, f x) = ∏x in range (k+1), f (p ^ x) :=
+  (∏ x in (p ^ k).divisors, f x) = ∏ x in range (k+1), f (p ^ x) :=
   by 
     simp [h, divisors_prime_pow]
 

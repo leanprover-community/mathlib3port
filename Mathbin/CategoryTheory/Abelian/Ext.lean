@@ -25,7 +25,7 @@ let alone start the harder project of showing they agree.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -36,7 +36,7 @@ variable (R : Type _) [Ringₓ R] (C : Type _) [category C] [abelian C] [linear 
 (which is the second argument of `linear_yoneda`).
 -/
 @[simps]
-def ext (n : ℕ) : «expr ᵒᵖ» C ⥤ C ⥤ ModuleCat R :=
+def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
   functor.flip
     { obj := fun Y => (((linear_yoneda R C).obj Y).rightOp.leftDerived n).leftOp,
       map := fun Y Y' f => (nat_trans.left_derived ((linear_yoneda R C).map f).rightOp n).leftOp,
@@ -63,7 +63,7 @@ def extSuccOfProjective (X Y : C) [projective X] (n : ℕ) : ((ext R C (n+1)).ob
     { Hom := 0, inv := 0,
       hom_inv_id' :=
         by 
-          let Z : «expr ᵒᵖ» (ModuleCat R) := 0
+          let Z : ModuleCat Rᵒᵖ := 0
           rw [←(0 : 0 ⟶ Z.unop).unop_op, ←(0 : Z.unop ⟶ 0).unop_op, ←unop_id, ←unop_comp]
           congr 1
           dsimp 

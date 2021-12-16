@@ -1,6 +1,5 @@
 import Mathbin.Algebra.BigOperators.Order 
-import Mathbin.Data.MvPolynomial.Monad 
-import Mathbin.Data.Set.Pairwise
+import Mathbin.Data.MvPolynomial.Monad
 
 /-!
 # Degrees and variables of polynomials
@@ -50,7 +49,7 @@ This will give rise to a monomial in `mv_polynomial σ R` which mathematicians m
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -83,13 +82,13 @@ The maximal degrees of each variable in a multi-variable polynomial, expressed a
 def degrees (p : MvPolynomial σ R) : Multiset σ :=
   p.support.sup fun s : σ →₀ ℕ => s.to_multiset
 
--- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem degrees_monomial (s : «expr →₀ »(σ, exprℕ())) (a : R) : «expr ≤ »(degrees (monomial s a), s.to_multiset) :=
-«expr $ »(finset.sup_le, assume t h, begin
-   have [] [] [":=", expr finsupp.support_single_subset h],
-   rw ["[", expr finset.mem_singleton, "]"] ["at", ident this],
-   rw [expr this] []
- end)
+theorem degrees_monomial (s : σ →₀ ℕ) (a : R) : degrees (monomial s a) ≤ s.to_multiset :=
+  Finset.sup_le$
+    fun t h =>
+      by 
+        have  := Finsupp.support_single_subset h 
+        rw [Finset.mem_singleton] at this 
+        rw [this]
 
 theorem degrees_monomial_eq (s : σ →₀ ℕ) (a : R) (ha : a ≠ 0) : degrees (monomial s a) = s.to_multiset :=
   le_antisymmₓ (degrees_monomial s a)$
@@ -117,19 +116,19 @@ theorem degrees_zero : degrees (0 : MvPolynomial σ R) = 0 :=
 theorem degrees_one : degrees (1 : MvPolynomial σ R) = 0 :=
   degrees_C 1
 
--- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem degrees_add (p q : mv_polynomial σ R) : «expr ≤ »(«expr + »(p, q).degrees, «expr ⊔ »(p.degrees, q.degrees)) :=
-begin
-  refine [expr finset.sup_le (assume b hb, _)],
-  have [] [] [":=", expr finsupp.support_add hb],
-  rw [expr finset.mem_union] ["at", ident this],
-  cases [expr this] [],
-  { exact [expr le_sup_of_le_left (finset.le_sup this)] },
-  { exact [expr le_sup_of_le_right (finset.le_sup this)] }
-end
+theorem degrees_add (p q : MvPolynomial σ R) : (p+q).degrees ≤ p.degrees⊔q.degrees :=
+  by 
+    refine' Finset.sup_le fun b hb => _ 
+    have  := Finsupp.support_add hb 
+    rw [Finset.mem_union] at this 
+    cases this
+    ·
+      exact le_sup_of_le_left (Finset.le_sup this)
+    ·
+      exact le_sup_of_le_right (Finset.le_sup this)
 
 theorem degrees_sum {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
-  (∑i in s, f i).degrees ≤ s.sup fun i => (f i).degrees :=
+  (∑ i in s, f i).degrees ≤ s.sup fun i => (f i).degrees :=
   by 
     refine' s.induction _ _
     ·
@@ -140,19 +139,17 @@ theorem degrees_sum {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R)
       rw [Finset.sup_insert, Finset.sum_insert his]
       exact le_transₓ (degrees_add _ _) (sup_le_sup_left ih _)
 
--- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem degrees_mul (p q : mv_polynomial σ R) : «expr ≤ »(«expr * »(p, q).degrees, «expr + »(p.degrees, q.degrees)) :=
-begin
-  refine [expr finset.sup_le (assume b hb, _)],
-  have [] [] [":=", expr support_mul p q hb],
-  simp [] [] ["only"] ["[", expr finset.mem_bUnion, ",", expr finset.mem_singleton, "]"] [] ["at", ident this],
-  rcases [expr this, "with", "⟨", ident a₁, ",", ident h₁, ",", ident a₂, ",", ident h₂, ",", ident rfl, "⟩"],
-  rw ["[", expr finsupp.to_multiset_add, "]"] [],
-  exact [expr add_le_add (finset.le_sup h₁) (finset.le_sup h₂)]
-end
+theorem degrees_mul (p q : MvPolynomial σ R) : (p*q).degrees ≤ p.degrees+q.degrees :=
+  by 
+    refine' Finset.sup_le fun b hb => _ 
+    have  := support_mul p q hb 
+    simp only [Finset.mem_bUnion, Finset.mem_singleton] at this 
+    rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
+    rw [Finsupp.to_multiset_add]
+    exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
 
 theorem degrees_prod {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
-  (∏i in s, f i).degrees ≤ ∑i in s, (f i).degrees :=
+  (∏ i in s, f i).degrees ≤ ∑ i in s, (f i).degrees :=
   by 
     refine' s.induction _ _
     ·
@@ -183,7 +180,7 @@ theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.disjoint q.degre
     rw [Multiset.disjoint_iff_ne] at h 
     rw [Multiset.le_iff_count]
     intro i 
-    rw [degrees, Multiset.count_sup]
+    rw [degrees, Multiset.count_finset_sup]
     simp only [Finsupp.count_to_multiset]
     byCases' h0 : d = 0
     ·
@@ -309,32 +306,27 @@ theorem vars_add_of_disjoint (h : Disjoint p.vars q.vars) : (p+q).vars = p.vars 
 
 section Mul
 
--- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem vars_mul (φ ψ : mv_polynomial σ R) : «expr ⊆ »(«expr * »(φ, ψ).vars, «expr ∪ »(φ.vars, ψ.vars)) :=
-begin
-  intro [ident i],
-  simp [] [] ["only"] ["[", expr mem_vars, ",", expr finset.mem_union, "]"] [] [],
-  rintro ["⟨", ident d, ",", ident hd, ",", ident hi, "⟩"],
-  rw ["[", expr mem_support_iff, ",", expr coeff_mul, "]"] ["at", ident hd],
-  contrapose ["!"] [ident hd],
-  cases [expr hd] [],
-  rw [expr finset.sum_eq_zero] [],
-  rintro ["⟨", ident d₁, ",", ident d₂, "⟩", ident H],
-  rw [expr finsupp.mem_antidiagonal] ["at", ident H],
-  subst [expr H],
-  obtain [ident H, "|", ident H, ":", expr «expr ∨ »(«expr ∈ »(i, d₁.support), «expr ∈ »(i, d₂.support))],
-  { simpa [] [] ["only"] ["[", expr finset.mem_union, "]"] [] ["using", expr finsupp.support_add hi] },
-  { suffices [] [":", expr «expr = »(coeff d₁ φ, 0)],
-    by simp [] [] [] ["[", expr this, "]"] [] [],
-    rw ["[", expr coeff, ",", "<-", expr finsupp.not_mem_support_iff, "]"] [],
-    intro [],
-    solve_by_elim [] [] [] [] },
-  { suffices [] [":", expr «expr = »(coeff d₂ ψ, 0)],
-    by simp [] [] [] ["[", expr this, "]"] [] [],
-    rw ["[", expr coeff, ",", "<-", expr finsupp.not_mem_support_iff, "]"] [],
-    intro [],
-    solve_by_elim [] [] [] [] }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  vars_mul
+  ( φ ψ : MvPolynomial σ R ) : φ * ψ . vars ⊆ φ.vars ∪ ψ.vars
+  :=
+    by
+      intro i
+        simp only [ mem_vars , Finset.mem_union ]
+        rintro ⟨ d , hd , hi ⟩
+        rw [ mem_support_iff , coeff_mul ] at hd
+        contrapose! hd
+        cases hd
+        rw [ Finset.sum_eq_zero ]
+        rintro ⟨ d₁ , d₂ ⟩ H
+        rw [ Finsupp.mem_antidiagonal ] at H
+        subst H
+        obtain H | H : i ∈ d₁.support ∨ i ∈ d₂.support
+        · simpa only [ Finset.mem_union ] using Finsupp.support_add hi
+        · suffices : coeff d₁ φ = 0 · simp [ this ] rw [ coeff , ← Finsupp.not_mem_support_iff ] intro solveByElim
+        · suffices : coeff d₂ ψ = 0 · simp [ this ] rw [ coeff , ← Finsupp.not_mem_support_iff ] intro solveByElim
 
 @[simp]
 theorem vars_one : (1 : MvPolynomial σ R).vars = ∅ :=
@@ -355,7 +347,7 @@ The variables of the product of a family of polynomials
 are a subset of the union of the sets of variables of each polynomial.
 -/
 theorem vars_prod {ι : Type _} {s : Finset ι} (f : ι → MvPolynomial σ R) :
-  (∏i in s, f i).vars ⊆ s.bUnion fun i => (f i).vars :=
+  (∏ i in s, f i).vars ⊆ s.bUnion fun i => (f i).vars :=
   by 
     apply s.induction_on
     ·
@@ -387,7 +379,7 @@ section Sum
 
 variable {ι : Type _} (t : Finset ι) (φ : ι → MvPolynomial σ R)
 
-theorem vars_sum_subset : (∑i in t, φ i).vars ⊆ Finset.bUnion t fun i => (φ i).vars :=
+theorem vars_sum_subset : (∑ i in t, φ i).vars ⊆ Finset.bUnion t fun i => (φ i).vars :=
   by 
     apply t.induction_on
     ·
@@ -399,7 +391,7 @@ theorem vars_sum_subset : (∑i in t, φ i).vars ⊆ Finset.bUnion t fun i => (�
       assumption
 
 theorem vars_sum_of_disjoint (h : Pairwise$ (Disjoint on fun i => (φ i).vars)) :
-  (∑i in t, φ i).vars = Finset.bUnion t fun i => (φ i).vars :=
+  (∑ i in t, φ i).vars = Finset.bUnion t fun i => (φ i).vars :=
   by 
     apply t.induction_on
     ·
@@ -457,6 +449,76 @@ section DegreeOf
 /-- `degree_of n p` gives the highest power of X_n that appears in `p` -/
 def degree_of (n : σ) (p : MvPolynomial σ R) : ℕ :=
   p.degrees.count n
+
+theorem degree_of_eq_sup (n : σ) (f : MvPolynomial σ R) : degree_of n f = f.support.sup fun m => m n :=
+  by 
+    rw [degree_of, degrees, Multiset.count_finset_sup]
+    congr 
+    ext 
+    simp 
+
+theorem degree_of_lt_iff {n : σ} {f : MvPolynomial σ R} {d : ℕ} (h : 0 < d) :
+  degree_of n f < d ↔ ∀ m : σ →₀ ℕ, m ∈ f.support → m n < d :=
+  by 
+    rwa [degree_of_eq_sup n f, Finset.sup_lt_iff]
+
+@[simp]
+theorem degree_of_zero (n : σ) : degree_of n (0 : MvPolynomial σ R) = 0 :=
+  by 
+    simp only [degree_of, degrees_zero, Multiset.count_zero]
+
+@[simp]
+theorem degree_of_C (a : R) (x : σ) : degree_of x (C a : MvPolynomial σ R) = 0 :=
+  by 
+    simp [degree_of, degrees_C]
+
+theorem degree_of_X (i j : σ) [Nontrivial R] : degree_of i (X j : MvPolynomial σ R) = if i = j then 1 else 0 :=
+  by 
+    byCases' c : i = j
+    ·
+      simp only [c, if_true, eq_self_iff_true, degree_of, degrees_X, Multiset.count_singleton]
+    simp [c, if_false, degree_of, degrees_X]
+
+theorem degree_of_add_le (n : σ) (f g : MvPolynomial σ R) : degree_of n (f+g) ≤ max (degree_of n f) (degree_of n g) :=
+  by 
+    repeat' 
+      rw [degree_of]
+    apply (Multiset.count_le_of_le n (degrees_add f g)).trans 
+    dsimp 
+    rw [Multiset.count_union]
+
+theorem monomial_le_degree_of (i : σ) {f : MvPolynomial σ R} {m : σ →₀ ℕ} (h_m : m ∈ f.support) : m i ≤ degree_of i f :=
+  by 
+    rw [degree_of_eq_sup i]
+    apply Finset.le_sup h_m
+
+theorem degree_of_mul_le (i : σ) (f g : MvPolynomial σ R) : degree_of i (f*g) ≤ degree_of i f+degree_of i g :=
+  by 
+    repeat' 
+      rw [degree_of]
+    convert Multiset.count_le_of_le i (degrees_mul f g)
+    rw [Multiset.count_add]
+
+theorem degree_of_mul_X_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) : degree_of i (f*X j) = degree_of i f :=
+  by 
+    repeat' 
+      rw [degree_of_eq_sup i]
+    rw [support_mul_X]
+    simp only [Finset.sup_map]
+    congr 
+    ext 
+    simp only [single, Nat.one_ne_zero, add_right_eq_selfₓ, add_right_embedding_apply, coe_mk, Pi.add_apply, comp_app,
+      ite_eq_right_iff, coe_add]
+    cc
+
+theorem degree_of_mul_X_eq (j : σ) (f : MvPolynomial σ R) : degree_of j (f*X j) ≤ degree_of j f+1 :=
+  by 
+    repeat' 
+      rw [degree_of]
+    apply (Multiset.count_le_of_le j (degrees_mul f (X j))).trans 
+    simp only [Multiset.count_add, add_le_add_iff_left]
+    convert Multiset.count_le_of_le j (degrees_X' j)
+    rw [Multiset.count_singleton_self]
 
 end DegreeOf
 
@@ -519,6 +581,37 @@ theorem total_degree_add (a b : MvPolynomial σ R) : (a+b).totalDegree ≤ max a
         ·
           exact le_max_of_le_right (Finset.le_sup this)
 
+theorem total_degree_add_eq_left_of_total_degree_lt {p q : MvPolynomial σ R} (h : q.total_degree < p.total_degree) :
+  (p+q).totalDegree = p.total_degree :=
+  by 
+    classical 
+    apply le_antisymmₓ
+    ·
+      rw [←max_eq_left_of_ltₓ h]
+      exact total_degree_add p q 
+    byCases' hp : p = 0
+    ·
+      simp [hp]
+    obtain ⟨b, hb₁, hb₂⟩ :=
+      p.support.exists_mem_eq_sup (finsupp.support_nonempty_iff.mpr hp) fun m : σ →₀ ℕ => m.to_multiset.card 
+    have hb : ¬b ∈ q.support
+    ·
+      contrapose! h 
+      rw [total_degree_eq p, hb₂, total_degree_eq]
+      apply Finset.le_sup h 
+    have hbb : b ∈ (p+q).support
+    ·
+      apply support_sdiff_support_subset_support_add 
+      rw [Finset.mem_sdiff]
+      exact ⟨hb₁, hb⟩
+    rw [total_degree_eq, hb₂, total_degree_eq]
+    exact Finset.le_sup hbb
+
+theorem total_degree_add_eq_right_of_total_degree_lt {p q : MvPolynomial σ R} (h : q.total_degree < p.total_degree) :
+  (q+p).totalDegree = p.total_degree :=
+  by 
+    rw [add_commₓ, total_degree_add_eq_left_of_total_degree_lt h]
+
 theorem total_degree_mul (a b : MvPolynomial σ R) : (a*b).totalDegree ≤ a.total_degree+b.total_degree :=
   Finset.sup_le$
     fun n hn =>
@@ -565,7 +658,7 @@ theorem total_degree_multiset_prod (s : Multiset (MvPolynomial σ R)) :
     exact total_degree_list_prod l
 
 theorem total_degree_finset_prod {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
-  (s.prod f).totalDegree ≤ ∑i in s, (f i).totalDegree :=
+  (s.prod f).totalDegree ≤ ∑ i in s, (f i).totalDegree :=
   by 
     refine' le_transₓ (total_degree_multiset_prod _) _ 
     rw [Multiset.map_map]
@@ -575,9 +668,9 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ) (h : f.t
   (hd : d ∈ f.support) : ∃ i, d i < n :=
   by 
     contrapose! h 
-    calc (n*Fintype.card σ) = ∑s : σ, n :=
+    calc (n*Fintype.card σ) = ∑ s : σ, n :=
       by 
-        rw [Finset.sum_const, Nat.nsmul_eq_mul, mul_commₓ, Finset.card_univ]_ ≤ ∑s, d s :=
+        rw [Finset.sum_const, Nat.nsmul_eq_mul, mul_commₓ, Finset.card_univ]_ ≤ ∑ s, d s :=
       Finset.sum_le_sum fun s _ => h s _ ≤ d.sum fun i e => e :=
       by 
         rw [Finsupp.sum_fintype]
@@ -586,7 +679,7 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ) (h : f.t
       Finset.le_sup hd
 
 theorem coeff_eq_zero_of_total_degree_lt {f : MvPolynomial σ R} {d : σ →₀ ℕ}
-  (h : f.total_degree < ∑i in d.support, d i) : coeff d f = 0 :=
+  (h : f.total_degree < ∑ i in d.support, d i) : coeff d f = 0 :=
   by 
     classical 
     rw [total_degree, Finset.sup_lt_iff] at h
@@ -598,21 +691,19 @@ theorem coeff_eq_zero_of_total_degree_lt {f : MvPolynomial σ R} {d : σ →₀ 
     ·
       exact lt_of_le_of_ltₓ (Nat.zero_leₓ _) h
 
--- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem total_degree_rename_le
-(f : σ → τ)
-(p : mv_polynomial σ R) : «expr ≤ »((rename f p).total_degree, p.total_degree) :=
-«expr $ »(finset.sup_le, assume b, begin
-   assume [binders (h)],
-   rw [expr rename_eq] ["at", ident h],
-   have [ident h'] [] [":=", expr finsupp.map_domain_support h],
-   rw [expr finset.mem_image] ["at", ident h'],
-   rcases [expr h', "with", "⟨", ident s, ",", ident hs, ",", ident rfl, "⟩"],
-   rw [expr finsupp.sum_map_domain_index] [],
-   exact [expr le_trans (le_refl _) (finset.le_sup hs)],
-   exact [expr assume _, rfl],
-   exact [expr assume _ _ _, rfl]
- end)
+theorem total_degree_rename_le (f : σ → τ) (p : MvPolynomial σ R) : (rename f p).totalDegree ≤ p.total_degree :=
+  Finset.sup_le$
+    fun b =>
+      by 
+        intro h 
+        rw [rename_eq] at h 
+        have h' := Finsupp.map_domain_support h 
+        rw [Finset.mem_image] at h' 
+        rcases h' with ⟨s, hs, rfl⟩
+        rw [Finsupp.sum_map_domain_index]
+        exact le_transₓ (le_reflₓ _) (Finset.le_sup hs)
+        exact fun _ => rfl 
+        exact fun _ _ _ => rfl
 
 end TotalDegree
 
@@ -623,6 +714,7 @@ section EvalVars
 
 variable [CommSemiringₓ S]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » p.vars)
 theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p : MvPolynomial σ R}
   (hp : ∀ i _ : i ∈ p.vars, g i = 0) : eval₂_hom f g p = f (constant_coeff p) :=
   by 
@@ -654,33 +746,31 @@ theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p 
       intro 
       contradiction
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » p.vars)
 theorem aeval_eq_constant_coeff_of_vars [Algebra R S] {g : σ → S} {p : MvPolynomial σ R}
   (hp : ∀ i _ : i ∈ p.vars, g i = 0) : aeval g p = algebraMap _ _ (constant_coeff p) :=
   eval₂_hom_eq_constant_coeff_of_vars _ hp
 
--- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eval₂_hom_congr'
-{f₁ f₂ : «expr →+* »(R, S)}
-{g₁ g₂ : σ → S}
-{p₁
- p₂ : mv_polynomial σ R} : «expr = »(f₁, f₂) → ∀
-i, «expr ∈ »(i, p₁.vars) → «expr ∈ »(i, p₂.vars) → «expr = »(g₁ i, g₂ i) → «expr = »(p₁, p₂) → «expr = »(eval₂_hom f₁ g₁ p₁, eval₂_hom f₂ g₂ p₂) :=
-begin
-  rintro [ident rfl, ident h, ident rfl],
-  rename ["[", ident p₁, ident p, ",", ident f₁, ident f, "]"],
-  rw [expr p.as_sum] [],
-  simp [] [] ["only"] ["[", expr ring_hom.map_sum, ",", expr eval₂_hom_monomial, "]"] [] [],
-  apply [expr finset.sum_congr rfl],
-  intros [ident d, ident hd],
-  congr' [1] [],
-  simp [] [] ["only"] ["[", expr finsupp.prod, "]"] [] [],
-  apply [expr finset.prod_congr rfl],
-  intros [ident i, ident hi],
-  have [] [":", expr «expr ∈ »(i, p.vars)] [],
-  { rw [expr mem_vars] [],
-    exact [expr ⟨d, hd, hi⟩] },
-  rw [expr h i this this] []
-end
+-- failed to format: format: uncaught backtrack exception
+theorem
+  eval₂_hom_congr'
+  { f₁ f₂ : R →+* S } { g₁ g₂ : σ → S } { p₁ p₂ : MvPolynomial σ R }
+    : f₁ = f₂ → ( ∀ i , i ∈ p₁.vars → i ∈ p₂.vars → g₁ i = g₂ i ) → p₁ = p₂ → eval₂_hom f₁ g₁ p₁ = eval₂_hom f₂ g₂ p₂
+  :=
+    by
+      rintro rfl h rfl
+        rename' p₁ , f₁
+        rw [ p.as_sum ]
+        simp only [ RingHom.map_sum , eval₂_hom_monomial ]
+        apply Finset.sum_congr rfl
+        intro d hd
+        congr 1
+        simp only [ Finsupp.prod ]
+        apply Finset.prod_congr rfl
+        intro i hi
+        have : i ∈ p.vars
+        · rw [ mem_vars ] exact ⟨ d , hd , hi ⟩
+        rw [ h i this this ]
 
 /-- If `f₁` and `f₂` are ring homs out of the polynomial ring and `p₁` and `p₂` are polynomials,
   then `f₁ p₁ = f₂ p₂` if `p₁ = p₂` and `f₁` and `f₂` are equal on `R` and on the variables
@@ -701,7 +791,7 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
     
 
 theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ → σ) (hfi : injective f)
-  (hf : «expr↑ » p.vars ⊆ Set.Range f) : ∃ q : MvPolynomial τ R, rename f q = p :=
+  (hf : ↑p.vars ⊆ Set.Range f) : ∃ q : MvPolynomial τ R, rename f q = p :=
   ⟨bind₁ (fun i : σ => Option.elim (partial_inv f i) 0 X) p,
     by 
       show (rename f).toRingHom.comp _ p = RingHom.id _ p 
@@ -723,7 +813,7 @@ theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
       by 
         rw [←AlgHom.map_sum,
           ←φ.as_sum]_ ≤ φ.support.bUnion fun i : σ →₀ ℕ => ((bind₁ f) (monomial i (coeff i φ))).vars :=
-      vars_sum_subset _ _ _ = φ.support.bUnion fun d : σ →₀ ℕ => (C (coeff d φ)*∏i in d.support, f i ^ d i).vars :=
+      vars_sum_subset _ _ _ = φ.support.bUnion fun d : σ →₀ ℕ => (C (coeff d φ)*∏ i in d.support, f i ^ d i).vars :=
       by 
         simp only [bind₁_monomial]_ ≤ φ.support.bUnion fun d : σ →₀ ℕ => d.support.bUnion fun i => (f i).vars :=
       _ _ ≤ φ.vars.bUnion fun i : σ => (f i).vars := _
@@ -731,9 +821,9 @@ theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
       apply Finset.bUnion_mono 
       intro d hd 
       calc
-        (C (coeff d φ)*∏i : σ in d.support, f i ^ d i).vars ≤
-          (C (coeff d φ)).vars ∪ (∏i : σ in d.support, f i ^ d i).vars :=
-        vars_mul _ _ _ ≤ (∏i : σ in d.support, f i ^ d i).vars :=
+        (C (coeff d φ)*∏ i : σ in d.support, f i ^ d i).vars ≤
+          (C (coeff d φ)).vars ∪ (∏ i : σ in d.support, f i ^ d i).vars :=
+        vars_mul _ _ _ ≤ (∏ i : σ in d.support, f i ^ d i).vars :=
         by 
           simp only [Finset.empty_union, vars_C, Finset.le_iff_subset,
             Finset.Subset.refl]_ ≤ d.support.bUnion fun i : σ => (f i ^ d i).vars :=

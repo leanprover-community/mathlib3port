@@ -99,7 +99,7 @@ unsafe instance : Coe normal_expr expr :=
   ⟨normal_expr.e⟩
 
 unsafe instance : CoeFun normal_expr fun _ => expr → expr :=
-  ⟨fun e => «expr⇑ » (e : expr)⟩
+  ⟨fun e => ⇑(e : expr)⟩
 
 unsafe def normal_expr.term' (c : context) (n : expr × ℤ) (x : expr) (a : normal_expr) : normal_expr :=
   normal_expr.nterm (c.mk_term n.1 x a) n x a
@@ -124,7 +124,7 @@ unsafe def normal_expr.pp (e : normal_expr) : tactic format :=
             do 
               let pe ← pp e 
               return (to_fmt n ++ " • (" ++ pe ++ ")")
-    return$ format.join$ l.intersperse («expr↑ » " + ")
+    return$ format.join$ l.intersperse (↑" + ")
 
 unsafe instance : has_to_tactic_format normal_expr :=
   ⟨normal_expr.pp⟩
@@ -281,15 +281,39 @@ theorem subst_into_smulg {α} [AddCommGroupₓ α] l r tl tr t (prl : l = tl) (p
   by 
     simp [prl, prr, prt]
 
-/-- Deal with a `smul` term of the form `e₁ • e₂`, handling both natural and integer `e₁`. -/
-unsafe def eval_smul' (c : context) (eval : expr → tactic (normal_expr × expr)) (e₁ e₂ : expr) :
+theorem subst_into_smul_upcast {α} [AddCommGroupₓ α] l r tl zl tr t (prl₁ : l = tl) (prl₂ : ↑tl = zl) (prr : r = tr)
+  (prt : @smulg α _ zl tr = t) : smul l r = t :=
+  by 
+    simp [←prt, prl₁, ←prl₂, prr, smul, smulg]
+
+/-- Normalize a term of the form `smul e₁ e₂` or `smulg e₁ e₂`.
+  Normalized terms use `smul` for monoids and `smulg` for groups,
+  so there are actually four cases to handle:
+  * Using `smul` in a monoid just simplifies the pieces using `subst_into_smul`
+  * Using `smulg` in a group just simplifies the pieces using `subst_into_smulg`
+  * Using `smul a b` in a group requires converting `a` from a nat to an int and
+    then simplifying `smulg ↑a b` using `subst_into_smul_upcast`
+  * Using `smulg` in a monoid is impossible (or at least out of scope),
+    because you need a group argument to write a `smulg` term -/
+unsafe def eval_smul' (c : context) (eval : expr → tactic (normal_expr × expr)) (is_smulg : Bool) (e₁ e₂ : expr) :
   tactic (normal_expr × expr) :=
   do 
     let (e₁', p₁) ← norm_num.derive e₁ <|> refl_conv e₁ 
-    let n ← if c.is_group then e₁'.to_int else coeₓ <$> e₁'.to_nat 
+    let n ← if is_smulg then e₁'.to_int else coeₓ <$> e₁'.to_nat 
     let (e₂', p₂) ← eval e₂ 
-    let (e', p) ← eval_smul c (e₁', n) e₂' 
-    return (e', c.iapp `` subst_into_smul [e₁, e₂, e₁', e₂', e', p₁, p₂, p])
+    if c.is_group = is_smulg then
+        do 
+          let (e', p) ← eval_smul c (e₁', n) e₂' 
+          return (e', c.iapp `` subst_into_smul [e₁, e₂, e₁', e₂', e', p₁, p₂, p])
+      else
+        do 
+          guardb c.is_group 
+          let ic ← mk_instance_cache (quote.1 ℤ)
+          let nc ← mk_instance_cache (quote.1 ℕ)
+          let (ic, zl) ← ic.of_int n 
+          let (_, _, _, p₁') ← norm_num.prove_nat_uncast ic nc zl 
+          let (e', p) ← eval_smul c (zl, n) e₂' 
+          return (e', c.app `` subst_into_smul_upcast c.inst [e₁, e₂, e₁', zl, e₂', e', p₁, p₁', p₂, p])
 
 unsafe def eval (c : context) : expr → tactic (normal_expr × expr)
 | quote.1 ((%%ₓe₁)+%%ₓe₂) =>
@@ -322,10 +346,10 @@ unsafe def eval (c : context) : expr → tactic (normal_expr × expr)
     guardb c.is_group 
     let (e', p) ← eval$ c.iapp `` smul [e₁, e₂]
     return (e', c.app `` unfold_zsmul c.inst [e₁, e₂, e', p])
-| quote.1 (@HasScalar.smul Nat _ AddMonoidₓ.hasScalarNat (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval e₁ e₂
-| quote.1 (@HasScalar.smul Int _ SubNegMonoidₓ.hasScalarInt (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval e₁ e₂
-| quote.1 (smul (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval e₁ e₂
-| quote.1 (smulg (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval e₁ e₂
+| quote.1 (@HasScalar.smul Nat _ AddMonoidₓ.hasScalarNat (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval ff e₁ e₂
+| quote.1 (@HasScalar.smul Int _ SubNegMonoidₓ.hasScalarInt (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval tt e₁ e₂
+| quote.1 (smul (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval ff e₁ e₂
+| quote.1 (smulg (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval tt e₁ e₂
 | e => eval_atom c e
 
 unsafe def eval' (c : context) (e : expr) : tactic (expr × expr) :=
@@ -333,10 +357,10 @@ unsafe def eval' (c : context) (e : expr) : tactic (expr × expr) :=
     let (e', p) ← eval c e 
     return (e', p)
 
--- error in Tactic.Abel: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
-@[derive #[expr has_reflect]] inductive normalize_mode
-| raw
-| term
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+inductive normalize_mode
+  | raw
+  | term deriving [anonymous]
 
 instance : Inhabited normalize_mode :=
   ⟨normalize_mode.term⟩

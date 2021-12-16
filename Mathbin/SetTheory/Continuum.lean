@@ -44,7 +44,7 @@ theorem omega_lt_continuum : ω < 𝔠 :=
 theorem omega_le_continuum : ω ≤ 𝔠 :=
   omega_lt_continuum.le
 
-theorem nat_lt_continuum (n : ℕ) : «expr↑ » n < 𝔠 :=
+theorem nat_lt_continuum (n : ℕ) : ↑n < 𝔠 :=
   (nat_lt_omega n).trans omega_lt_continuum
 
 theorem mk_set_nat : # (Set ℕ) = 𝔠 :=
@@ -75,7 +75,7 @@ theorem continuum_add_self : (𝔠+𝔠) = 𝔠 :=
   add_eq_right omega_le_continuum le_rfl
 
 @[simp]
-theorem nat_add_continuum (n : ℕ) : («expr↑ » n+𝔠) = 𝔠 :=
+theorem nat_add_continuum (n : ℕ) : ((↑n)+𝔠) = 𝔠 :=
   add_eq_right omega_le_continuum (nat_lt_continuum n).le
 
 @[simp]
@@ -100,7 +100,7 @@ theorem omega_mul_continuum : (ω*𝔠) = 𝔠 :=
   (mul_commₓ _ _).trans continuum_mul_omega
 
 @[simp]
-theorem nat_mul_continuum {n : ℕ} (hn : n ≠ 0) : («expr↑ » n*𝔠) = 𝔠 :=
+theorem nat_mul_continuum {n : ℕ} (hn : n ≠ 0) : ((↑n)*𝔠) = 𝔠 :=
   mul_eq_right omega_le_continuum (nat_lt_continuum n).le (Nat.cast_ne_zero.2 hn)
 
 @[simp]

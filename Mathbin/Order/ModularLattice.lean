@@ -117,18 +117,18 @@ def infIccOrderIsoIccSup (a b : α) : Set.Icc (a⊓b) a ≃o Set.Icc b (a⊔b) :
       fun x =>
         Subtype.ext
           (by 
-            change a⊓(«expr↑ » x⊔b) = «expr↑ » x 
+            change a⊓(↑x⊔b) = ↑x 
             rw [sup_comm, ←inf_sup_assoc_of_le _ x.prop.2, sup_eq_right.2 x.prop.1]),
     right_inv :=
       fun x =>
         Subtype.ext
           (by 
-            change a⊓«expr↑ » x⊔b = «expr↑ » x 
+            change a⊓↑x⊔b = ↑x 
             rw [inf_comm, inf_sup_assoc_of_le _ x.prop.1, inf_eq_left.2 x.prop.2]),
     map_rel_iff' :=
       fun x y =>
         by 
-          simp only [Subtype.mk_le_mk, Equiv.coe_fn_mk, and_trueₓ, le_sup_right]
+          simp only [Subtype.mk_le_mk, Equivₓ.coe_fn_mk, and_trueₓ, le_sup_right]
           rw [←Subtype.coe_le_coe]
           refine' ⟨fun h => _, fun h => sup_le_sup_right h _⟩
           rw [←sup_eq_right.2 x.prop.1, inf_sup_assoc_of_le _ x.prop.2, sup_comm, ←sup_eq_right.2 y.prop.1,
@@ -184,12 +184,10 @@ namespace IsModularLattice
 variable [Lattice α] [IsModularLattice α] {a : α}
 
 instance is_modular_lattice_Iic : IsModularLattice (Set.Iic a) :=
-  ⟨fun x y z xz =>
-      (sup_inf_le_assoc_of_le (y : α) xz : («expr↑ » x⊔«expr↑ » y)⊓«expr↑ » z ≤ «expr↑ » x⊔«expr↑ » y⊓«expr↑ » z)⟩
+  ⟨fun x y z xz => (sup_inf_le_assoc_of_le (y : α) xz : (↑x⊔↑y)⊓↑z ≤ ↑x⊔↑y⊓↑z)⟩
 
 instance is_modular_lattice_Ici : IsModularLattice (Set.Ici a) :=
-  ⟨fun x y z xz =>
-      (sup_inf_le_assoc_of_le (y : α) xz : («expr↑ » x⊔«expr↑ » y)⊓«expr↑ » z ≤ «expr↑ » x⊔«expr↑ » y⊓«expr↑ » z)⟩
+  ⟨fun x y z xz => (sup_inf_le_assoc_of_le (y : α) xz : (↑x⊔↑y)⊓↑z ≤ ↑x⊔↑y⊓↑z)⟩
 
 section IsComplemented
 
@@ -200,7 +198,7 @@ instance is_complemented_Iic : IsComplemented (Set.Iic a) :=
       let ⟨y, hy⟩ := exists_is_compl x
       ⟨⟨y⊓a, Set.mem_Iic.2 inf_le_right⟩,
         by 
-          split 
+          constructor
           ·
             change x⊓(y⊓a) ≤ ⊥
             rw [←inf_assoc]
@@ -214,7 +212,7 @@ instance is_complemented_Ici : IsComplemented (Set.Ici a) :=
       let ⟨y, hy⟩ := exists_is_compl x
       ⟨⟨y⊔a, Set.mem_Ici.2 le_sup_right⟩,
         by 
-          split 
+          constructor
           ·
             change x⊓(y⊔a) ≤ a 
             rw [←inf_sup_assoc_of_le _ (Set.mem_Ici.1 hx), le_bot_iff.1 hy.1, bot_sup_eq]

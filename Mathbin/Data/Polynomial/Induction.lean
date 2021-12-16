@@ -7,7 +7,7 @@ The main results are `induction_on` and `as_sum`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Finsupp Finset
 
@@ -32,34 +32,30 @@ theorem sum_monomial_eq (p : Polynomial R) : (p.sum fun n a => monomial n a) = p
   by 
     simp only [monomial_eq_C_mul_X, sum_C_mul_X_eq]
 
--- error in Data.Polynomial.Induction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[elab_as_eliminator]
-protected
-theorem induction_on
-{M : polynomial R → exprProp()}
-(p : polynomial R)
-(h_C : ∀ a, M (C a))
-(h_add : ∀ p q, M p → M q → M «expr + »(p, q))
-(h_monomial : ∀
- (n : exprℕ())
- (a : R), M «expr * »(C a, «expr ^ »(X, n)) → M «expr * »(C a, «expr ^ »(X, «expr + »(n, 1)))) : M p :=
-begin
-  have [ident A] [":", expr ∀ {n : exprℕ()} {a}, M «expr * »(C a, «expr ^ »(X, n))] [],
-  { assume [binders (n a)],
-    induction [expr n] [] ["with", ident n, ident ih] [],
-    { simp [] [] ["only"] ["[", expr pow_zero, ",", expr mul_one, ",", expr h_C, "]"] [] [] },
-    { exact [expr h_monomial _ _ ih] } },
-  have [ident B] [":", expr ∀
-   s : finset exprℕ(), M (s.sum (λ n : exprℕ(), «expr * »(C (p.coeff n), «expr ^ »(X, n))))] [],
-  { apply [expr finset.induction],
-    { convert [] [expr h_C 0] [],
-      exact [expr C_0.symm] },
-    { assume [binders (n s ns ih)],
-      rw [expr sum_insert ns] [],
-      exact [expr h_add _ _ A ih] } },
-  rw ["[", "<-", expr sum_C_mul_X_eq p, ",", expr polynomial.sum, "]"] [],
-  exact [expr B _]
-end
+protected theorem induction_on {M : Polynomial R → Prop} (p : Polynomial R) (h_C : ∀ a, M (C a))
+  (h_add : ∀ p q, M p → M q → M (p+q)) (h_monomial : ∀ n : ℕ a : R, M (C a*X ^ n) → M (C a*X ^ n+1)) : M p :=
+  by 
+    have A : ∀ {n : ℕ} {a}, M (C a*X ^ n)
+    ·
+      intro n a 
+      induction' n with n ih
+      ·
+        simp only [pow_zeroₓ, mul_oneₓ, h_C]
+      ·
+        exact h_monomial _ _ ih 
+    have B : ∀ s : Finset ℕ, M (s.sum fun n : ℕ => C (p.coeff n)*X ^ n)
+    ·
+      apply Finset.induction
+      ·
+        convert h_C 0 
+        exact C_0.symm
+      ·
+        intro n s ns ih 
+        rw [sum_insert ns]
+        exact h_add _ _ A ih 
+    rw [←sum_C_mul_X_eq p, Polynomial.sum]
+    exact B _
 
 /--
 To prove something about polynomials,
@@ -97,30 +93,31 @@ open Submodule Polynomial Set
 
 variable {f : Polynomial R} {I : Submodule (Polynomial R) (Polynomial R)}
 
-/--  If the coefficients of a polynomial belong to n ideal contains the submodule span of the
-coefficients of a polynomial. -/
-theorem span_le_of_coeff_mem_C_inverse (cf : ∀ i : ℕ, f.coeff i ∈ C ⁻¹' I.carrier) :
-  span (Polynomial R) { g | ∃ i, g = C (f.coeff i) } ≤ I :=
-  by 
-    refine' bInter_subset_of_mem _ 
-    rintro _ ⟨i, rfl⟩
-    exact set_like.mem_coe.mpr (cf i)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    If the coefficients of a polynomial belong to n ideal contains the submodule span of the
+    coefficients of a polynomial. -/
+  theorem
+    span_le_of_coeff_mem_C_inverse
+    ( cf : ∀ i : ℕ , f.coeff i ∈ C ⁻¹' I.carrier ) : span Polynomial R { g | ∃ i , g = C f.coeff i } ≤ I
+    := by refine' bInter_subset_of_mem _ rintro _ ⟨ i , rfl ⟩ exact set_like.mem_coe.mpr cf i
 
--- error in Data.Polynomial.Induction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_span_C_coeff : «expr ∈ »(f, span (polynomial R) {g : polynomial R | «expr∃ , »((i : exprℕ()), «expr = »(g, C (coeff f i)))}) :=
-begin
-  let [ident p] [] [":=", expr span (polynomial R) {g : polynomial R | «expr∃ , »((i : exprℕ()), «expr = »(g, C (coeff f i)))}],
-  nth_rewrite [0] [expr (sum_C_mul_X_eq f).symm] [],
-  refine [expr submodule.sum_mem _ (λ n hn, _)],
-  dsimp [] [] [] [],
-  have [] [":", expr «expr ∈ »(C (coeff f n), p)] [],
-  by { apply [expr subset_span],
-    simp [] [] [] [] [] [] },
-  have [] [":", expr «expr ∈ »(«expr • »(monomial n (1 : R), C (coeff f n)), p)] [":=", expr p.smul_mem _ this],
-  convert [] [expr this] ["using", 1],
-  simp [] [] ["only"] ["[", expr monomial_mul_C, ",", expr one_mul, ",", expr smul_eq_mul, "]"] [] [],
-  rw [expr monomial_eq_C_mul_X] []
-end
+theorem mem_span_C_coeff : f ∈ span (Polynomial R) { g : Polynomial R | ∃ i : ℕ, g = C (coeff f i) } :=
+  by 
+    let p := span (Polynomial R) { g : Polynomial R | ∃ i : ℕ, g = C (coeff f i) }
+    nthRw 0[(sum_C_mul_X_eq f).symm]
+    refine' Submodule.sum_mem _ fun n hn => _ 
+    dsimp 
+    have  : C (coeff f n) ∈ p
+    ·
+      ·
+        apply subset_span 
+        simp 
+    have  : monomial n (1 : R) • C (coeff f n) ∈ p := p.smul_mem _ this 
+    convert this using 1
+    simp only [monomial_mul_C, one_mulₓ, smul_eq_mul]
+    rw [monomial_eq_C_mul_X]
 
 theorem exists_coeff_not_mem_C_inverse : f ∉ I → ∃ i : ℕ, coeff f i ∉ C ⁻¹' I.carrier :=
   imp_of_not_imp_not _ _

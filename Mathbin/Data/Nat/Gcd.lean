@@ -97,6 +97,17 @@ theorem eq_zero_of_gcd_eq_zero_right {m n : ℕ} (H : gcd m n = 0) : n = 0 :=
   by 
     rw [gcd_comm] at H <;> exact eq_zero_of_gcd_eq_zero_left H
 
+@[simp]
+theorem gcd_eq_zero_iff {i j : ℕ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 :=
+  by 
+    constructor
+    ·
+      intro h 
+      exact ⟨eq_zero_of_gcd_eq_zero_left h, eq_zero_of_gcd_eq_zero_right h⟩
+    ·
+      rintro ⟨rfl, rfl⟩
+      exact Nat.gcd_zero_rightₓ 0
+
 theorem gcd_div {m n k : ℕ} (H1 : k ∣ m) (H2 : k ∣ n) : gcd (m / k) (n / k) = gcd m n / k :=
   Or.elim (Nat.eq_zero_or_posₓ k)
     (fun k0 =>
@@ -170,20 +181,67 @@ theorem gcd_gcd_self_left_left (m n : ℕ) : gcd (gcd m n) m = gcd m n :=
   by 
     rw [gcd_comm m n, gcd_gcd_self_left_right]
 
-theorem gcd_add_mul_self (m n k : ℕ) : gcd m (n+k*m) = gcd m n :=
+@[simp]
+theorem gcd_add_mul_right_right (m n k : ℕ) : gcd m (n+k*m) = gcd m n :=
   by 
     simp [gcd_rec m (n+k*m), gcd_rec m n]
 
-theorem gcd_eq_zero_iff {i j : ℕ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 :=
+@[simp]
+theorem gcd_add_mul_left_right (m n k : ℕ) : gcd m (n+m*k) = gcd m n :=
   by 
-    split 
-    ·
-      intro h 
-      exact ⟨eq_zero_of_gcd_eq_zero_left h, eq_zero_of_gcd_eq_zero_right h⟩
-    ·
-      intro h 
-      rw [h.1, h.2]
-      exact Nat.gcd_zero_rightₓ _
+    simp [gcd_rec m (n+m*k), gcd_rec m n]
+
+@[simp]
+theorem gcd_mul_right_add_right (m n k : ℕ) : gcd m ((k*m)+n) = gcd m n :=
+  by 
+    simp [add_commₓ _ n]
+
+@[simp]
+theorem gcd_mul_left_add_right (m n k : ℕ) : gcd m ((m*k)+n) = gcd m n :=
+  by 
+    simp [add_commₓ _ n]
+
+@[simp]
+theorem gcd_add_mul_right_left (m n k : ℕ) : gcd (m+k*n) n = gcd m n :=
+  by 
+    rw [gcd_comm, gcd_add_mul_right_right, gcd_comm]
+
+@[simp]
+theorem gcd_add_mul_left_left (m n k : ℕ) : gcd (m+n*k) n = gcd m n :=
+  by 
+    rw [gcd_comm, gcd_add_mul_left_right, gcd_comm]
+
+@[simp]
+theorem gcd_mul_right_add_left (m n k : ℕ) : gcd ((k*n)+m) n = gcd m n :=
+  by 
+    rw [gcd_comm, gcd_mul_right_add_right, gcd_comm]
+
+@[simp]
+theorem gcd_mul_left_add_left (m n k : ℕ) : gcd ((n*k)+m) n = gcd m n :=
+  by 
+    rw [gcd_comm, gcd_mul_left_add_right, gcd_comm]
+
+@[simp]
+theorem gcd_add_self_right (m n : ℕ) : gcd m (n+m) = gcd m n :=
+  Eq.trans
+    (by 
+      rw [one_mulₓ])
+    (gcd_add_mul_right_right m n 1)
+
+@[simp]
+theorem gcd_add_self_left (m n : ℕ) : gcd (m+n) n = gcd m n :=
+  by 
+    rw [gcd_comm, gcd_add_self_right, gcd_comm]
+
+@[simp]
+theorem gcd_self_add_left (m n : ℕ) : gcd (m+n) m = gcd n m :=
+  by 
+    rw [add_commₓ, gcd_add_self_left]
+
+@[simp]
+theorem gcd_self_add_right (m n : ℕ) : gcd m (m+n) = gcd m n :=
+  by 
+    rw [add_commₓ, gcd_add_self_right]
 
 /-! ### `lcm` -/
 
@@ -240,6 +298,9 @@ theorem lcm_dvd {m n k : ℕ} (H1 : m ∣ k) (H2 : n ∣ k) : lcm m n ∣ k :=
         by 
           rw [gcd_mul_lcm, ←gcd_mul_right, mul_commₓ n k] <;>
             exact dvd_gcd (mul_dvd_mul_left _ H2) (mul_dvd_mul_right H1 _)
+
+theorem lcm_dvd_mul (m n : ℕ) : lcm m n ∣ m*n :=
+  lcm_dvd (dvd_mul_right _ _) (dvd_mul_left _ _)
 
 theorem lcm_dvd_iff {m n k : ℕ} : lcm m n ∣ k ↔ m ∣ k ∧ n ∣ k :=
   ⟨fun h => ⟨(dvd_lcm_left _ _).trans h, (dvd_lcm_right _ _).trans h⟩, and_imp.2 lcm_dvd⟩
@@ -335,6 +396,66 @@ theorem exists_coprime {m n : ℕ} (H : 0 < gcd m n) : ∃ m' n', coprime m' n' 
 theorem exists_coprime' {m n : ℕ} (H : 0 < gcd m n) : ∃ g m' n', 0 < g ∧ coprime m' n' ∧ (m = m'*g) ∧ n = n'*g :=
   let ⟨m', n', h⟩ := exists_coprime H
   ⟨_, m', n', H, h⟩
+
+@[simp]
+theorem coprime_add_self_right {m n : ℕ} : coprime m (n+m) ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_add_self_right]
+
+@[simp]
+theorem coprime_self_add_right {m n : ℕ} : coprime m (m+n) ↔ coprime m n :=
+  by 
+    rw [add_commₓ, coprime_add_self_right]
+
+@[simp]
+theorem coprime_add_self_left {m n : ℕ} : coprime (m+n) n ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_add_self_left]
+
+@[simp]
+theorem coprime_self_add_left {m n : ℕ} : coprime (m+n) m ↔ coprime n m :=
+  by 
+    rw [coprime, coprime, gcd_self_add_left]
+
+@[simp]
+theorem coprime_add_mul_right_right (m n k : ℕ) : coprime m (n+k*m) ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_add_mul_right_right]
+
+@[simp]
+theorem coprime_add_mul_left_right (m n k : ℕ) : coprime m (n+m*k) ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_add_mul_left_right]
+
+@[simp]
+theorem coprime_mul_right_add_right (m n k : ℕ) : coprime m ((k*m)+n) ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_mul_right_add_right]
+
+@[simp]
+theorem coprime_mul_left_add_right (m n k : ℕ) : coprime m ((m*k)+n) ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_mul_left_add_right]
+
+@[simp]
+theorem coprime_add_mul_right_left (m n k : ℕ) : coprime (m+k*n) n ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_add_mul_right_left]
+
+@[simp]
+theorem coprime_add_mul_left_left (m n k : ℕ) : coprime (m+n*k) n ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_add_mul_left_left]
+
+@[simp]
+theorem coprime_mul_right_add_left (m n k : ℕ) : coprime ((k*n)+m) n ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_mul_right_add_left]
+
+@[simp]
+theorem coprime_mul_left_add_left (m n k : ℕ) : coprime ((n*k)+m) n ↔ coprime m n :=
+  by 
+    rw [coprime, coprime, gcd_mul_left_add_left]
 
 theorem coprime.mul {m n k : ℕ} (H1 : coprime m k) (H2 : coprime n k) : coprime (m*n) k :=
   (H1.gcd_mul_left_cancel n).trans H2
@@ -462,59 +583,55 @@ theorem coprime.eq_of_mul_eq_zero {m n : ℕ} (h : m.coprime n) (hmn : (m*n) = 0
   (Nat.eq_zero_of_mul_eq_zero hmn).imp (fun hm => ⟨hm, n.coprime_zero_left.mp$ hm ▸ h⟩)
     fun hn => ⟨m.coprime_zero_left.mp$ hn ▸ h.symm, hn⟩
 
--- error in Data.Nat.Gcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Represent a divisor of `m * n` as a product of a divisor of `m` and a divisor of `n`. -/
-def prod_dvd_and_dvd_of_dvd_prod
-{m n k : exprℕ()}
-(H : «expr ∣ »(k, «expr * »(m, n))) : {d : «expr × »({m' // «expr ∣ »(m', m)}, {n' // «expr ∣ »(n', n)}) // «expr = »(k, «expr * »(d.1, d.2))} :=
-begin
-  cases [expr h0, ":", expr gcd k m] [],
-  case [ident nat.zero] { have [] [":", expr «expr = »(k, 0)] [":=", expr eq_zero_of_gcd_eq_zero_left h0],
-    subst [expr this],
-    have [] [":", expr «expr = »(m, 0)] [":=", expr eq_zero_of_gcd_eq_zero_right h0],
-    subst [expr this],
-    exact [expr ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (zero_mul n).symm⟩] },
-  case [ident nat.succ, ":", ident tmp] { have [ident hpos] [":", expr «expr < »(0, gcd k m)] [":=", expr «expr ▸ »(h0.symm, nat.zero_lt_succ _)]; clear [ident h0, ident tmp],
-    have [ident hd] [":", expr «expr = »(«expr * »(gcd k m, «expr / »(k, gcd k m)), k)] [":=", expr nat.mul_div_cancel' (gcd_dvd_left k m)],
-    refine [expr ⟨⟨⟨gcd k m, gcd_dvd_right k m⟩, ⟨«expr / »(k, gcd k m), _⟩⟩, hd.symm⟩],
-    apply [expr dvd_of_mul_dvd_mul_left hpos],
-    rw ["[", expr hd, ",", "<-", expr gcd_mul_right, "]"] [],
-    exact [expr dvd_gcd (dvd_mul_right _ _) H] }
-end
+def prod_dvd_and_dvd_of_dvd_prod {m n k : ℕ} (H : k ∣ m*n) :
+  { d : { m' // m' ∣ m } × { n' // n' ∣ n } // k = d.1*d.2 } :=
+  by 
+    cases h0 : gcd k m 
+    case nat.zero => 
+      have  : k = 0 := eq_zero_of_gcd_eq_zero_left h0 
+      subst this 
+      have  : m = 0 := eq_zero_of_gcd_eq_zero_right h0 
+      subst this 
+      exact ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (zero_mul n).symm⟩
+    case nat.succ tmp => 
+      have hpos : 0 < gcd k m := h0.symm ▸ Nat.zero_lt_succₓ _ <;> clear h0 tmp 
+      have hd : (gcd k m*k / gcd k m) = k := Nat.mul_div_cancel'ₓ (gcd_dvd_left k m)
+      refine' ⟨⟨⟨gcd k m, gcd_dvd_right k m⟩, ⟨k / gcd k m, _⟩⟩, hd.symm⟩
+      apply dvd_of_mul_dvd_mul_left hpos 
+      rw [hd, ←gcd_mul_right]
+      exact dvd_gcd (dvd_mul_right _ _) H
 
--- error in Data.Nat.Gcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gcd_mul_dvd_mul_gcd (k m n : exprℕ()) : «expr ∣ »(gcd k «expr * »(m, n), «expr * »(gcd k m, gcd k n)) :=
-begin
-  rcases [expr «expr $ »(prod_dvd_and_dvd_of_dvd_prod, gcd_dvd_right k «expr * »(m, n)), "with", "⟨", "⟨", "⟨", ident m', ",", ident hm', "⟩", ",", "⟨", ident n', ",", ident hn', "⟩", "⟩", ",", ident h, "⟩"],
-  replace [ident h] [":", expr «expr = »(gcd k «expr * »(m, n), «expr * »(m', n'))] [":=", expr h],
-  rw [expr h] [],
-  have [ident hm'n'] [":", expr «expr ∣ »(«expr * »(m', n'), k)] [":=", expr «expr ▸ »(h, gcd_dvd_left _ _)],
-  apply [expr mul_dvd_mul],
-  { have [ident hm'k] [":", expr «expr ∣ »(m', k)] [":=", expr (dvd_mul_right m' n').trans hm'n'],
-    exact [expr dvd_gcd hm'k hm'] },
-  { have [ident hn'k] [":", expr «expr ∣ »(n', k)] [":=", expr (dvd_mul_left n' m').trans hm'n'],
-    exact [expr dvd_gcd hn'k hn'] }
-end
+theorem gcd_mul_dvd_mul_gcd (k m n : ℕ) : gcd k (m*n) ∣ gcd k m*gcd k n :=
+  by 
+    rcases prod_dvd_and_dvd_of_dvd_prod$ gcd_dvd_right k (m*n) with ⟨⟨⟨m', hm'⟩, ⟨n', hn'⟩⟩, h⟩
+    replace h : gcd k (m*n) = m'*n' := h 
+    rw [h]
+    have hm'n' : (m'*n') ∣ k := h ▸ gcd_dvd_left _ _ 
+    apply mul_dvd_mul
+    ·
+      have hm'k : m' ∣ k := (dvd_mul_right m' n').trans hm'n' 
+      exact dvd_gcd hm'k hm'
+    ·
+      have hn'k : n' ∣ k := (dvd_mul_left n' m').trans hm'n' 
+      exact dvd_gcd hn'k hn'
 
 theorem coprime.gcd_mul (k : ℕ) {m n : ℕ} (h : coprime m n) : gcd k (m*n) = gcd k m*gcd k n :=
   dvd_antisymm (gcd_mul_dvd_mul_gcd k m n)
     ((h.gcd_both k k).mul_dvd_of_dvd_of_dvd (gcd_dvd_gcd_mul_right_right _ _ _) (gcd_dvd_gcd_mul_left_right _ _ _))
 
--- error in Data.Nat.Gcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pow_dvd_pow_iff
-{a b n : exprℕ()}
-(n0 : «expr < »(0, n)) : «expr ↔ »(«expr ∣ »(«expr ^ »(a, n), «expr ^ »(b, n)), «expr ∣ »(a, b)) :=
-begin
-  refine [expr ⟨λ h, _, λ h, pow_dvd_pow_of_dvd h _⟩],
-  cases [expr nat.eq_zero_or_pos (gcd a b)] ["with", ident g0, ident g0],
-  { simp [] [] [] ["[", expr eq_zero_of_gcd_eq_zero_right g0, "]"] [] [] },
-  rcases [expr exists_coprime' g0, "with", "⟨", ident g, ",", ident a', ",", ident b', ",", ident g0', ",", ident co, ",", ident rfl, ",", ident rfl, "⟩"],
-  rw ["[", expr mul_pow, ",", expr mul_pow, "]"] ["at", ident h],
-  replace [ident h] [] [":=", expr dvd_of_mul_dvd_mul_right (pow_pos g0' _) h],
-  have [] [] [":=", expr pow_dvd_pow a' n0],
-  rw ["[", expr pow_one, ",", expr (co.pow n n).eq_one_of_dvd h, "]"] ["at", ident this],
-  simp [] [] [] ["[", expr eq_one_of_dvd_one this, "]"] [] []
-end
+theorem pow_dvd_pow_iff {a b n : ℕ} (n0 : 0 < n) : a ^ n ∣ b ^ n ↔ a ∣ b :=
+  by 
+    refine' ⟨fun h => _, fun h => pow_dvd_pow_of_dvd h _⟩
+    cases' Nat.eq_zero_or_posₓ (gcd a b) with g0 g0
+    ·
+      simp [eq_zero_of_gcd_eq_zero_right g0]
+    rcases exists_coprime' g0 with ⟨g, a', b', g0', co, rfl, rfl⟩
+    rw [mul_powₓ, mul_powₓ] at h 
+    replace h := dvd_of_mul_dvd_mul_right (pow_pos g0' _) h 
+    have  := pow_dvd_pow a' n0 
+    rw [pow_oneₓ, (co.pow n n).eq_one_of_dvd h] at this 
+    simp [eq_one_of_dvd_one this]
 
 theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.coprime d) (h : (a*b) = c*d) :
   (a.gcd c*b.gcd c) = c :=
@@ -530,19 +647,13 @@ theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.coprime d)
       rw [h, gcd_mul_right_right d c]
       apply gcd_mul_dvd_mul_gcd
 
--- error in Data.Nat.Gcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `k:ℕ` divides coprime `a` and `b` then `k = 1` -/
-theorem eq_one_of_dvd_coprimes
-{a b k : exprℕ()}
-(h_ab_coprime : coprime a b)
-(hka : «expr ∣ »(k, a))
-(hkb : «expr ∣ »(k, b)) : «expr = »(k, 1) :=
-begin
-  rw [expr coprime_iff_gcd_eq_one] ["at", ident h_ab_coprime],
-  have [ident h1] [] [":=", expr dvd_gcd hka hkb],
-  rw [expr h_ab_coprime] ["at", ident h1],
-  exact [expr nat.dvd_one.mp h1]
-end
+theorem eq_one_of_dvd_coprimes {a b k : ℕ} (h_ab_coprime : coprime a b) (hka : k ∣ a) (hkb : k ∣ b) : k = 1 :=
+  by 
+    rw [coprime_iff_gcd_eq_one] at h_ab_coprime 
+    have h1 := dvd_gcd hka hkb 
+    rw [h_ab_coprime] at h1 
+    exact nat.dvd_one.mp h1
 
 end Nat
 

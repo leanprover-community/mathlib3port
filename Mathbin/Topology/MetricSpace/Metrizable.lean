@@ -20,76 +20,112 @@ namespace TopologicalSpace
 
 variable (X : Type _) [TopologicalSpace X] [NormalSpace X] [second_countable_topology X]
 
--- error in Topology.MetricSpace.Metrizable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- A normal topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
--/ theorem exists_embedding_l_infty : «expr∃ , »((f : X → «expr →ᵇ »(exprℕ(), exprℝ())), embedding f) :=
-begin
-  rcases [expr exists_countable_basis X, "with", "⟨", ident B, ",", ident hBc, ",", "-", ",", ident hB, "⟩"],
-  set [] [ident s] [":", expr set «expr × »(set X, set X)] [":="] [expr {UV ∈ B.prod B | «expr ⊆ »(closure UV.1, UV.2)}] [],
-  haveI [] [":", expr encodable s] [":=", expr ((hBc.prod hBc).mono (inter_subset_left _ _)).to_encodable],
-  letI [] [":", expr topological_space s] [":=", expr «expr⊥»()],
-  haveI [] [":", expr discrete_topology s] [":=", expr ⟨rfl⟩],
-  suffices [] [":", expr «expr∃ , »((f : X → «expr →ᵇ »(s, exprℝ())), embedding f)],
-  { rcases [expr this, "with", "⟨", ident f, ",", ident hf, "⟩"],
-    exact [expr ⟨λ
-      x, (f x).extend (encodable.encode' s) 0, (bounded_continuous_function.isometry_extend (encodable.encode' s) (0 : «expr →ᵇ »(exprℕ(), exprℝ()))).embedding.comp hf⟩] },
-  have [ident hd] [":", expr ∀
-   UV : s, disjoint (closure UV.1.1) «expr ᶜ»(UV.1.2)] [":=", expr λ
-   UV, disjoint_compl_right.mono_right (compl_subset_compl.2 UV.2.2)],
-  obtain ["⟨", ident ε, ",", ident ε01, ",", ident hε, "⟩", ":", expr «expr∃ , »((ε : s → exprℝ()), «expr ∧ »(∀
-     UV, «expr ∈ »(ε UV, Ioc (0 : exprℝ()) 1), tendsto ε cofinite (expr𝓝() 0)))],
-  { rcases [expr pos_sum_of_encodable zero_lt_one s, "with", "⟨", ident ε, ",", ident ε0, ",", ident c, ",", ident hεc, ",", ident hc1, "⟩"],
-    refine [expr ⟨ε, λ UV, ⟨ε0 UV, _⟩, hεc.summable.tendsto_cofinite_zero⟩],
-    exact [expr «expr $ »(le_has_sum hεc UV, λ _ _, (ε0 _).le).trans hc1] },
-  have [] [":", expr ∀
-   UV : s, «expr∃ , »((f : «exprC( , )»(X, exprℝ())), «expr ∧ »(eq_on f 0 UV.1.1, «expr ∧ »(eq_on f (λ
-       _, ε UV) «expr ᶜ»(UV.1.2), ∀ x, «expr ∈ »(f x, Icc 0 (ε UV)))))] [],
-  { intro [ident UV],
-    rcases [expr exists_continuous_zero_one_of_closed is_closed_closure (hB.is_open UV.2.1.2).is_closed_compl (hd UV), "with", "⟨", ident f, ",", ident hf₀, ",", ident hf₁, ",", ident hf01, "⟩"],
-    exact [expr ⟨«expr • »(ε UV, f), λ
-      x
-      hx, by simp [] [] [] ["[", expr hf₀ (subset_closure hx), "]"] [] [], λ
-      x
-      hx, by simp [] [] [] ["[", expr hf₁ hx, "]"] [] [], λ
-      x, ⟨mul_nonneg (ε01 _).1.le (hf01 _).1, mul_le_of_le_one_right (ε01 _).1.le (hf01 _).2⟩⟩] },
-  choose [] [ident f] [ident hf0, ident hfε, ident hf0ε] [],
-  have [ident hf01] [":", expr ∀ UV x, «expr ∈ »(f UV x, Icc (0 : exprℝ()) 1)] [],
-  from [expr λ UV x, Icc_subset_Icc_right (ε01 _).2 (hf0ε _ _)],
-  set [] [ident F] [":", expr X → «expr →ᵇ »(s, exprℝ())] [":="] [expr λ
-   x, ⟨⟨λ
-     UV, f UV x, continuous_of_discrete_topology⟩, 1, λ UV₁ UV₂, real.dist_le_of_mem_Icc_01 (hf01 _ _) (hf01 _ _)⟩] [],
-  have [ident hF] [":", expr ∀ x UV, «expr = »(F x UV, f UV x)] [":=", expr λ _ _, rfl],
-  refine [expr ⟨F, embedding.mk' _ (λ x y hxy, _) (λ x, le_antisymm _ _)⟩],
-  { refine [expr not_not.1 (λ Hne, _)],
-    rcases [expr hB.mem_nhds_iff.1 (is_open_ne.mem_nhds Hne), "with", "⟨", ident V, ",", ident hVB, ",", ident hxV, ",", ident hVy, "⟩"],
-    rcases [expr hB.exists_closure_subset (hB.mem_nhds hVB hxV), "with", "⟨", ident U, ",", ident hUB, ",", ident hxU, ",", ident hUV, "⟩"],
-    set [] [ident UV] [":", expr «expr↥ »(s)] [":="] [expr ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩] [],
-    apply [expr (ε01 UV).1.ne],
-    calc
-      «expr = »((0 : exprℝ()), F x UV) : (hf0 UV hxU).symm
-      «expr = »(..., F y UV) : by rw [expr hxy] []
-      «expr = »(..., ε UV) : hfε UV (λ h : «expr ∈ »(y, V), hVy h rfl) },
-  { refine [expr ((nhds_basis_ball.comap _).le_basis_iff hB.nhds_has_basis).2 _],
-    rintro [ident V, "⟨", ident hVB, ",", ident hxV, "⟩"],
-    rcases [expr hB.exists_closure_subset (hB.mem_nhds hVB hxV), "with", "⟨", ident U, ",", ident hUB, ",", ident hxU, ",", ident hUV, "⟩"],
-    set [] [ident UV] [":", expr «expr↥ »(s)] [":="] [expr ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩] [],
-    refine [expr ⟨ε UV, (ε01 UV).1, λ (y) (hy : «expr < »(dist (F y) (F x), ε UV)), _⟩],
-    replace [ident hy] [":", expr «expr < »(dist (F y UV) (F x UV), ε UV)] [],
-    from [expr (bounded_continuous_function.dist_coe_le_dist _).trans_lt hy],
-    contrapose ["!"] [ident hy],
-    rw ["[", expr hF, ",", expr hF, ",", expr hfε UV hy, ",", expr hf0 UV hxU, ",", expr pi.zero_apply, ",", expr dist_zero_right, "]"] [],
-    exact [expr le_abs_self _] },
-  { refine [expr (nhds_basis_closed_ball.comap _).ge_iff.2 (λ δ δ0, _)],
-    have [ident h_fin] [":", expr finite {UV : s | «expr ≤ »(δ, ε UV)}] [],
-    by simpa [] [] ["only"] ["[", "<-", expr not_lt, "]"] [] ["using", expr hε (gt_mem_nhds δ0)],
-    have [] [":", expr «expr∀ᶠ in , »((y), expr𝓝() x, ∀
-      UV, «expr ≤ »(δ, ε UV) → «expr ≤ »(dist (F y UV) (F x UV), δ))] [],
-    { refine [expr (eventually_all_finite h_fin).2 (λ UV hUV, _)],
-      exact [expr (f UV).continuous.tendsto x (closed_ball_mem_nhds _ δ0)] },
-    refine [expr this.mono (λ y hy, «expr $ »((bounded_continuous_function.dist_le δ0.le).2, λ UV, _))],
-    cases [expr le_total δ (ε UV)] ["with", ident hle, ident hle],
-    exacts ["[", expr hy _ hle, ",", expr (real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [expr sub_zero] []), "]"] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    A normal topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
+    -/
+  theorem
+    exists_embedding_l_infty
+    : ∃ f : X → ℕ →ᵇ ℝ , Embedding f
+    :=
+      by
+        rcases exists_countable_basis X with ⟨ B , hBc , - , hB ⟩
+          set s : Set Set X × Set X := { UV ∈ B.prod B | Closure UV . 1 ⊆ UV . 2 }
+          have : Encodable s := hBc.prod hBc . mono inter_subset_left _ _ . toEncodable
+          let this' : TopologicalSpace s := ⊥
+          have : DiscreteTopology s := ⟨ rfl ⟩
+          suffices : ∃ f : X → s →ᵇ ℝ , Embedding f
+          ·
+            rcases this with ⟨ f , hf ⟩
+              exact
+                ⟨
+                  fun x => f x . extend Encodable.encode' s 0
+                    ,
+                    BoundedContinuousFunction.isometry_extend Encodable.encode' s ( 0 : ℕ →ᵇ ℝ ) . Embedding . comp hf
+                  ⟩
+          have
+            hd
+              : ∀ UV : s , Disjoint Closure UV . 1 . 1 UV . 1 . 2 ᶜ
+              :=
+              fun UV => disjoint_compl_right.mono_right compl_subset_compl . 2 UV . 2 . 2
+          obtain ⟨ ε , ε01 , hε ⟩ : ∃ ε : s → ℝ , ∀ UV , ε UV ∈ Ioc ( 0 : ℝ ) 1 ∧ tendsto ε cofinite 𝓝 0
+          ·
+            rcases posSumOfEncodable zero_lt_one s with ⟨ ε , ε0 , c , hεc , hc1 ⟩
+              refine' ⟨ ε , fun UV => ⟨ ε0 UV , _ ⟩ , hεc.summable.tendsto_cofinite_zero ⟩
+              exact le_has_sum hεc UV $ fun _ _ => ε0 _ . le . trans hc1
+          have
+            :
+              ∀
+                UV : s
+                ,
+                ∃ f : C( X , ℝ ) , eq_on f 0 UV . 1 . 1 ∧ eq_on f fun _ => ε UV UV . 1 . 2 ᶜ ∧ ∀ x , f x ∈ Icc 0 ε UV
+          ·
+            intro UV
+              rcases
+                exists_continuous_zero_one_of_closed is_closed_closure hB.is_open UV . 2 . 1 . 2 . is_closed_compl hd UV
+                with ⟨ f , hf₀ , hf₁ , hf01 ⟩
+              exact
+                ⟨
+                  ε UV • f
+                    ,
+                    fun x hx => by simp [ hf₀ subset_closure hx ]
+                    ,
+                    fun x hx => by simp [ hf₁ hx ]
+                    ,
+                    fun x => ⟨ mul_nonneg ε01 _ . 1 . le hf01 _ . 1 , mul_le_of_le_one_right ε01 _ . 1 . le hf01 _ . 2 ⟩
+                  ⟩
+          choose f hf0 hfε hf0ε
+          have hf01 : ∀ UV x , f UV x ∈ Icc ( 0 : ℝ ) 1
+          exact fun UV x => Icc_subset_Icc_right ε01 _ . 2 hf0ε _ _
+          set
+            F
+            : X → s →ᵇ ℝ
+            :=
+            fun
+              x
+                =>
+                ⟨
+                  ⟨ fun UV => f UV x , continuous_of_discrete_topology ⟩
+                    ,
+                    1
+                    ,
+                    fun UV₁ UV₂ => Real.dist_le_of_mem_Icc_01 hf01 _ _ hf01 _ _
+                  ⟩
+          have hF : ∀ x UV , F x UV = f UV x := fun _ _ => rfl
+          refine' ⟨ F , Embedding.mk' _ fun x y hxy => _ fun x => le_antisymmₓ _ _ ⟩
+          ·
+            refine' not_not . 1 fun Hne => _
+              rcases hB.mem_nhds_iff . 1 is_open_ne.mem_nhds Hne with ⟨ V , hVB , hxV , hVy ⟩
+              rcases hB.exists_closure_subset hB.mem_nhds hVB hxV with ⟨ U , hUB , hxU , hUV ⟩
+              set UV : ↥ s := ⟨ ( U , V ) , ⟨ hUB , hVB ⟩ , hUV ⟩
+              apply ε01 UV . 1 . Ne
+              calc
+                ( 0 : ℝ ) = F x UV := hf0 UV hxU . symm
+                  _ = F y UV := by rw [ hxy ]
+                  _ = ε UV := hfε UV fun h : y ∈ V => hVy h rfl
+          ·
+            refine' nhds_basis_ball.comap _ . le_basis_iff hB.nhds_has_basis . 2 _
+              rintro V ⟨ hVB , hxV ⟩
+              rcases hB.exists_closure_subset hB.mem_nhds hVB hxV with ⟨ U , hUB , hxU , hUV ⟩
+              set UV : ↥ s := ⟨ ( U , V ) , ⟨ hUB , hVB ⟩ , hUV ⟩
+              refine' ⟨ ε UV , ε01 UV . 1 , fun y hy : dist F y F x < ε UV => _ ⟩
+              replace hy : dist F y UV F x UV < ε UV
+              exact BoundedContinuousFunction.dist_coe_le_dist _ . trans_lt hy
+              contrapose! hy
+              rw [ hF , hF , hfε UV hy , hf0 UV hxU , Pi.zero_apply , dist_zero_right ]
+              exact le_abs_self _
+          ·
+            refine' nhds_basis_closed_ball.comap _ . ge_iff . 2 fun δ δ0 => _
+              have h_fin : finite { UV : s | δ ≤ ε UV }
+              · simpa only [ ← not_ltₓ ] using hε gt_mem_nhds δ0
+              have : ∀ᶠ y in 𝓝 x , ∀ UV , δ ≤ ε UV → dist F y UV F x UV ≤ δ
+              ·
+                refine' eventually_all_finite h_fin . 2 fun UV hUV => _
+                  exact f UV . Continuous . Tendsto x closed_ball_mem_nhds _ δ0
+              refine' this.mono fun y hy => BoundedContinuousFunction.dist_le δ0.le . 2 $ fun UV => _
+              cases' le_totalₓ δ ε UV with hle hle
+              exacts [ hy _ hle , Real.dist_le_of_mem_Icc hf0ε _ _ hf0ε _ _ . trans by rwa [ sub_zero ] ]
 
 /-- A normal topological space with second countable topology `X` is metrizable: there exists a
 metric space structure that generates the same topology. This definition provides a `metric_space`

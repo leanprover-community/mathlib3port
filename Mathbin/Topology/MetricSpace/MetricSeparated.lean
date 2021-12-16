@@ -13,8 +13,11 @@ This notion is useful, e.g., to define metric outer measures.
 
 open Emetric Set
 
-noncomputable theory
+noncomputable section 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (r «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
@@ -47,7 +50,7 @@ protected theorem Disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
       by 
         simpa using hr x hx.1 x hx.2
 
-theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ «expr ᶜ» t :=
+theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ :=
   fun x hs ht => h.disjoint ⟨hs, ht⟩
 
 @[mono]
@@ -83,8 +86,10 @@ theorem union_right {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t
 theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=
   comm.trans$ union_left_iff.trans$ and_congr comm comm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : ι → Set X} {t : Set X} :
-  IsMetricSeparated (⋃(i : _)(_ : i ∈ I), s i) t ↔ ∀ i _ : i ∈ I, IsMetricSeparated (s i) t :=
+  IsMetricSeparated (⋃ (i : _)(_ : i ∈ I), s i) t ↔ ∀ i _ : i ∈ I, IsMetricSeparated (s i) t :=
   by 
     refine'
       finite.induction_on hI
@@ -95,21 +100,27 @@ theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : ι
 
 alias finite_Union_left_iff ↔ _ IsMetricSeparated.finite_Union_left
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : Set X} {t : ι → Set X} :
-  IsMetricSeparated s (⋃(i : _)(_ : i ∈ I), t i) ↔ ∀ i _ : i ∈ I, IsMetricSeparated s (t i) :=
+  IsMetricSeparated s (⋃ (i : _)(_ : i ∈ I), t i) ↔ ∀ i _ : i ∈ I, IsMetricSeparated s (t i) :=
   by 
     simpa only [@comm _ _ s] using finite_Union_left_iff hI
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 @[simp]
 theorem finset_Union_left_iff {ι : Type _} {I : Finset ι} {s : ι → Set X} {t : Set X} :
-  IsMetricSeparated (⋃(i : _)(_ : i ∈ I), s i) t ↔ ∀ i _ : i ∈ I, IsMetricSeparated (s i) t :=
+  IsMetricSeparated (⋃ (i : _)(_ : i ∈ I), s i) t ↔ ∀ i _ : i ∈ I, IsMetricSeparated (s i) t :=
   finite_Union_left_iff I.finite_to_set
 
 alias finset_Union_left_iff ↔ _ IsMetricSeparated.finset_Union_left
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » I)
 @[simp]
 theorem finset_Union_right_iff {ι : Type _} {I : Finset ι} {s : Set X} {t : ι → Set X} :
-  IsMetricSeparated s (⋃(i : _)(_ : i ∈ I), t i) ↔ ∀ i _ : i ∈ I, IsMetricSeparated s (t i) :=
+  IsMetricSeparated s (⋃ (i : _)(_ : i ∈ I), t i) ↔ ∀ i _ : i ∈ I, IsMetricSeparated s (t i) :=
   finite_Union_right_iff I.finite_to_set
 
 alias finset_Union_right_iff ↔ _ IsMetricSeparated.finset_Union_right

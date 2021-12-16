@@ -31,12 +31,14 @@ open Nat
 
 namespace Pnat
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- A term of xgcd_type is a system of six naturals.  They should
  be thought of as representing the matrix
  [[w, x], [y, z]] = [[wp + 1, x], [y, zp + 1]]
  together with the vector [a, b] = [ap + 1, bp + 1].
--/ @[derive #[expr inhabited]] structure xgcd_type := (wp x y zp ap bp : exprℕ())
+-/
+structure xgcd_type where 
+  (wp x y zp ap bp : ℕ)deriving [anonymous]
 
 namespace XgcdType
 
@@ -111,7 +113,7 @@ def is_special' : Prop :=
 theorem is_special_iff : u.is_special ↔ u.is_special' :=
   by 
     dsimp [is_special, is_special']
-    split  <;> intro h
+    constructor <;> intro h
     ·
       apply Eq 
       dsimp [w, z, succ_pnat]
@@ -173,7 +175,7 @@ theorem flip_b : (flip u).b = u.a :=
 theorem flip_is_reduced : (flip u).IsReduced ↔ u.is_reduced :=
   by 
     dsimp [is_reduced, flip]
-    split  <;> intro h <;> exact h.symm
+    constructor <;> intro h <;> exact h.symm
 
 theorem flip_is_special : (flip u).IsSpecial ↔ u.is_special :=
   by 
@@ -239,37 +241,35 @@ theorem finish_is_special (hs : u.is_special) : u.finish.is_special :=
     rw [add_mulₓ _ _ u.y, add_commₓ _ (u.x*u.y), ←hs]
     ring
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem finish_v (hr : «expr = »(u.r, 0)) : «expr = »(u.finish.v, u.v) :=
-begin
-  let [ident ha] [":", expr «expr = »(«expr + »(u.r, «expr * »(u.b, u.q)), u.a)] [":=", expr u.rq_eq],
-  rw ["[", expr hr, ",", expr zero_add, "]"] ["at", ident ha],
-  ext [] [] [],
-  { change [expr «expr = »(«expr + »(«expr * »(«expr + »(u.wp, 1), u.b), «expr * »(«expr + »(«expr * »(«expr + »(u.wp, 1), u.qp), u.x), u.b)), «expr + »(«expr * »(u.w, u.a), «expr * »(u.x, u.b)))] [] [],
-    have [] [":", expr «expr = »(«expr + »(u.wp, 1), u.w)] [":=", expr rfl],
-    rw ["[", expr this, ",", "<-", expr ha, ",", expr u.qp_eq hr, "]"] [],
-    ring [] },
-  { change [expr «expr = »(«expr + »(«expr * »(u.y, u.b), «expr * »(«expr + »(«expr * »(u.y, u.qp), u.z), u.b)), «expr + »(«expr * »(u.y, u.a), «expr * »(u.z, u.b)))] [] [],
-    rw ["[", "<-", expr ha, ",", expr u.qp_eq hr, "]"] [],
-    ring [] }
-end
+theorem finish_v (hr : u.r = 0) : u.finish.v = u.v :=
+  by 
+    let ha : (u.r+u.b*u.q) = u.a := u.rq_eq 
+    rw [hr, zero_addₓ] at ha 
+    ext
+    ·
+      change (((u.wp+1)*u.b)+(((u.wp+1)*u.qp)+u.x)*u.b) = (u.w*u.a)+u.x*u.b 
+      have  : (u.wp+1) = u.w := rfl 
+      rw [this, ←ha, u.qp_eq hr]
+      ring
+    ·
+      change ((u.y*u.b)+((u.y*u.qp)+u.z)*u.b) = (u.y*u.a)+u.z*u.b 
+      rw [←ha, u.qp_eq hr]
+      ring
 
 /-- This is the main reduction step, which is used when u.r ≠ 0, or
  equivalently b does not divide a. -/
 def step : xgcd_type :=
   xgcd_type.mk ((u.y*u.q)+u.zp) u.y (((u.wp+1)*u.q)+u.x) u.wp u.bp (u.r - 1)
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- We will apply the above step recursively.  The following result
  is used to ensure that the process terminates. -/
-theorem step_wf (hr : «expr ≠ »(u.r, 0)) : «expr < »(sizeof u.step, sizeof u) :=
-begin
-  change [expr «expr < »(«expr - »(u.r, 1), u.bp)] [] [],
-  have [ident h₀] [":", expr «expr = »(«expr + »(«expr - »(u.r, 1), 1), u.r)] [":=", expr nat.succ_pred_eq_of_pos (nat.pos_of_ne_zero hr)],
-  have [ident h₁] [":", expr «expr < »(u.r, «expr + »(u.bp, 1))] [":=", expr nat.mod_lt «expr + »(u.ap, 1) u.bp.succ_pos],
-  rw ["[", "<-", expr h₀, "]"] ["at", ident h₁],
-  exact [expr lt_of_succ_lt_succ h₁]
-end
+theorem step_wf (hr : u.r ≠ 0) : sizeof u.step < sizeof u :=
+  by 
+    change u.r - 1 < u.bp 
+    have h₀ : ((u.r - 1)+1) = u.r := Nat.succ_pred_eq_of_posₓ (Nat.pos_of_ne_zeroₓ hr)
+    have h₁ : u.r < u.bp+1 := Nat.mod_ltₓ (u.ap+1) u.bp.succ_pos 
+    rw [←h₀] at h₁ 
+    exact lt_of_succ_lt_succ h₁
 
 theorem step_is_special (hs : u.is_special) : u.step.is_special :=
   by 
@@ -401,68 +401,79 @@ theorem gcd_b'_coe : (gcd_b' a b : ℕ) = gcd_y a b+gcd_z a b :=
     dsimp [gcd_b', gcd_y, gcd_z, xgcd_type.z]
     rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_assocₓ]
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gcd_props : let d := gcd_d a b,
-    w := gcd_w a b,
-    x := gcd_x a b,
-    y := gcd_y a b,
-    z := gcd_z a b,
-    a' := gcd_a' a b,
-    b' := gcd_b' a b in
-«expr ∧ »(«expr = »(«expr * »(w, z), succ_pnat «expr * »(x, y)), «expr ∧ »(«expr = »(a, «expr * »(a', d)), «expr ∧ »(«expr = »(b, «expr * »(b', d)), «expr ∧ »(«expr = »(«expr * »(z, a'), succ_pnat «expr * »(x, b')), «expr ∧ »(«expr = »(«expr * »(w, b'), succ_pnat «expr * »(y, a')), «expr ∧ »(«expr = »((«expr * »(z, a) : exprℕ()), «expr + »(«expr * »(x, b), d)), «expr = »((«expr * »(w, b) : exprℕ()), «expr + »(«expr * »(y, a), d)))))))) :=
-begin
-  intros [],
-  let [ident u] [] [":=", expr xgcd_type.start a b],
-  let [ident ur] [] [":=", expr u.reduce],
-  have [ident ha] [":", expr «expr = »(d, ur.a)] [":=", expr rfl],
-  have [ident hb] [":", expr «expr = »(d, ur.b)] [":=", expr u.reduce_reduced'],
-  have [ident ha'] [":", expr «expr = »((a' : exprℕ()), «expr + »(w, x))] [":=", expr gcd_a'_coe a b],
-  have [ident hb'] [":", expr «expr = »((b' : exprℕ()), «expr + »(y, z))] [":=", expr gcd_b'_coe a b],
-  have [ident hdet] [":", expr «expr = »(«expr * »(w, z), succ_pnat «expr * »(x, y))] [":=", expr u.reduce_special' rfl],
-  split,
-  exact [expr hdet],
-  have [ident hdet'] [":", expr «expr = »((«expr * »(w, z) : exprℕ()), «expr + »(«expr * »(x, y), 1))] [":=", expr by { rw ["[", "<-", expr mul_coe, ",", expr hdet, ",", expr succ_pnat_coe, "]"] [] }],
-  have [ident huv] [":", expr «expr = »(u.v, ⟨a, b⟩)] [":=", expr xgcd_type.start_v a b],
-  let [ident hv] [":", expr «expr = »(prod.mk («expr + »(«expr * »(w, d), «expr * »(x, ur.b)) : exprℕ()) («expr + »(«expr * »(y, d), «expr * »(z, ur.b)) : exprℕ()), ⟨a, b⟩)] [":=", expr u.reduce_v.trans (xgcd_type.start_v a b)],
-  rw ["[", "<-", expr hb, ",", "<-", expr add_mul, ",", "<-", expr add_mul, ",", "<-", expr ha', ",", "<-", expr hb', "]"] ["at", ident hv],
-  have [ident ha''] [":", expr «expr = »((a : exprℕ()), «expr * »(a', d))] [":=", expr (congr_arg prod.fst hv).symm],
-  have [ident hb''] [":", expr «expr = »((b : exprℕ()), «expr * »(b', d))] [":=", expr (congr_arg prod.snd hv).symm],
-  split,
-  exact [expr eq ha''],
-  split,
-  exact [expr eq hb''],
-  have [ident hza'] [":", expr «expr = »((«expr * »(z, a') : exprℕ()), «expr + »(«expr * »(x, b'), 1))] [],
-  by { rw ["[", expr ha', ",", expr hb', ",", expr mul_add, ",", expr mul_add, ",", expr mul_comm (z : exprℕ()), ",", expr hdet', "]"] [],
-    ring [] },
-  have [ident hwb'] [":", expr «expr = »((«expr * »(w, b') : exprℕ()), «expr + »(«expr * »(y, a'), 1))] [],
-  by { rw ["[", expr ha', ",", expr hb', ",", expr mul_add, ",", expr mul_add, ",", expr hdet', "]"] [],
-    ring [] },
-  split,
-  { apply [expr eq],
-    rw ["[", expr succ_pnat_coe, ",", expr nat.succ_eq_add_one, ",", expr mul_coe, ",", expr hza', "]"] [] },
-  split,
-  { apply [expr eq],
-    rw ["[", expr succ_pnat_coe, ",", expr nat.succ_eq_add_one, ",", expr mul_coe, ",", expr hwb', "]"] [] },
-  rw ["[", expr ha'', ",", expr hb'', "]"] [],
-  repeat { rw ["[", "<-", expr mul_assoc, "]"] [] },
-  rw ["[", expr hza', ",", expr hwb', "]"] [],
-  split; ring []
-end
+theorem gcd_props :
+  let d := gcd_d a b 
+  let w := gcd_w a b 
+  let x := gcd_x a b 
+  let y := gcd_y a b 
+  let z := gcd_z a b 
+  let a' := gcd_a' a b 
+  let b' := gcd_b' a b
+  (w*z) = succ_pnat (x*y) ∧
+    (a = a'*d) ∧
+      (b = b'*d) ∧
+        (z*a') = succ_pnat (x*b') ∧ (w*b') = succ_pnat (y*a') ∧ ((z*a : ℕ) = (x*b)+d) ∧ (w*b : ℕ) = (y*a)+d :=
+  by 
+    intros 
+    let u := xgcd_type.start a b 
+    let ur := u.reduce 
+    have ha : d = ur.a := rfl 
+    have hb : d = ur.b := u.reduce_reduced' 
+    have ha' : (a' : ℕ) = w+x := gcd_a'_coe a b 
+    have hb' : (b' : ℕ) = y+z := gcd_b'_coe a b 
+    have hdet : (w*z) = succ_pnat (x*y) := u.reduce_special' rfl 
+    constructor 
+    exact hdet 
+    have hdet' : (w*z : ℕ) = (x*y)+1 :=
+      by 
+        rw [←mul_coe, hdet, succ_pnat_coe]
+    have huv : u.v = ⟨a, b⟩ := xgcd_type.start_v a b 
+    let hv : Prod.mk ((w*d)+x*ur.b : ℕ) ((y*d)+z*ur.b : ℕ) = ⟨a, b⟩ := u.reduce_v.trans (xgcd_type.start_v a b)
+    rw [←hb, ←add_mulₓ, ←add_mulₓ, ←ha', ←hb'] at hv 
+    have ha'' : (a : ℕ) = a'*d := (congr_argₓ Prod.fst hv).symm 
+    have hb'' : (b : ℕ) = b'*d := (congr_argₓ Prod.snd hv).symm 
+    constructor 
+    exact Eq ha'' 
+    constructor 
+    exact Eq hb'' 
+    have hza' : (z*a' : ℕ) = (x*b')+1
+    ·
+      ·
+        rw [ha', hb', mul_addₓ, mul_addₓ, mul_commₓ (z : ℕ), hdet']
+        ring 
+    have hwb' : (w*b' : ℕ) = (y*a')+1
+    ·
+      ·
+        rw [ha', hb', mul_addₓ, mul_addₓ, hdet']
+        ring 
+    constructor
+    ·
+      apply Eq 
+      rw [succ_pnat_coe, Nat.succ_eq_add_one, mul_coe, hza']
+    constructor
+    ·
+      apply Eq 
+      rw [succ_pnat_coe, Nat.succ_eq_add_one, mul_coe, hwb']
+    rw [ha'', hb'']
+    repeat' 
+      rw [←mul_assocₓ]
+    rw [hza', hwb']
+    constructor <;> ring
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gcd_eq : «expr = »(gcd_d a b, gcd a b) :=
-begin
-  rcases [expr gcd_props a b, "with", "⟨", ident h₀, ",", ident h₁, ",", ident h₂, ",", ident h₃, ",", ident h₄, ",", ident h₅, ",", ident h₆, "⟩"],
-  apply [expr dvd_antisymm],
-  { apply [expr dvd_gcd],
-    exact [expr dvd.intro (gcd_a' a b) (h₁.trans (mul_comm _ _)).symm],
-    exact [expr dvd.intro (gcd_b' a b) (h₂.trans (mul_comm _ _)).symm] },
-  { have [ident h₇] [":", expr «expr ∣ »((gcd a b : exprℕ()), «expr * »(gcd_z a b, a))] [":=", expr (nat.gcd_dvd_left a b).trans (dvd_mul_left _ _)],
-    have [ident h₈] [":", expr «expr ∣ »((gcd a b : exprℕ()), «expr * »(gcd_x a b, b))] [":=", expr (nat.gcd_dvd_right a b).trans (dvd_mul_left _ _)],
-    rw ["[", expr h₅, "]"] ["at", ident h₇],
-    rw [expr dvd_iff] [],
-    exact [expr (nat.dvd_add_iff_right h₈).mpr h₇] }
-end
+theorem gcd_eq : gcd_d a b = gcd a b :=
+  by 
+    rcases gcd_props a b with ⟨h₀, h₁, h₂, h₃, h₄, h₅, h₆⟩
+    apply dvd_antisymm
+    ·
+      apply dvd_gcd 
+      exact Dvd.intro (gcd_a' a b) (h₁.trans (mul_commₓ _ _)).symm 
+      exact Dvd.intro (gcd_b' a b) (h₂.trans (mul_commₓ _ _)).symm
+    ·
+      have h₇ : (gcd a b : ℕ) ∣ gcd_z a b*a := (Nat.gcd_dvd_leftₓ a b).trans (dvd_mul_left _ _)
+      have h₈ : (gcd a b : ℕ) ∣ gcd_x a b*b := (Nat.gcd_dvd_rightₓ a b).trans (dvd_mul_left _ _)
+      rw [h₅] at h₇ 
+      rw [dvd_iff]
+      exact (Nat.dvd_add_iff_right h₈).mpr h₇
 
 theorem gcd_det_eq : (gcd_w a b*gcd_z a b) = succ_pnat (gcd_x a b*gcd_y a b) :=
   (gcd_props a b).1

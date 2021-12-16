@@ -43,7 +43,7 @@ open CategoryTheory CategoryTheory.Preadditive
 
 open_locale BigOperators
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -79,7 +79,7 @@ def id (M : Mat_ C) : hom M M :=
 
 /-- Composition of matrices using matrix multiplication. -/
 def comp {M N K : Mat_ C} (f : hom M N) (g : hom N K) : hom M K :=
-  fun i k => ∑j : N.ι, f i j ≫ g j k
+  fun i k => ∑ j : N.ι, f i j ≫ g j k
 
 end Hom
 
@@ -121,11 +121,11 @@ theorem id_apply_of_ne (M : Mat_ C) (i j : M.ι) (h : i ≠ j) : (𝟙 M : hom M
   by 
     simp [id_apply, h]
 
-theorem comp_def {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) : f ≫ g = fun i k => ∑j : N.ι, f i j ≫ g j k :=
+theorem comp_def {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) : f ≫ g = fun i k => ∑ j : N.ι, f i j ≫ g j k :=
   rfl
 
 @[simp]
-theorem comp_apply {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) i k : (f ≫ g) i k = ∑j : N.ι, f i j ≫ g j k :=
+theorem comp_apply {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) i k : (f ≫ g) i k = ∑ j : N.ι, f i j ≫ g j k :=
   rfl
 
 instance (M N : Mat_ C) : Inhabited (M ⟶ N) :=
@@ -172,7 +172,7 @@ instance has_finite_biproducts : has_finite_biproducts (Mat_ C) :=
             { HasBiproduct :=
                 fun f =>
                   has_biproduct_of_total
-                    { x := ⟨Σj : J, (f j).ι, fun p => (f p.1).x p.2⟩,
+                    { x := ⟨Σ j : J, (f j).ι, fun p => (f p.1).x p.2⟩,
                       π :=
                         fun j x y =>
                           by 

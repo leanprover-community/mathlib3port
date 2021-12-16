@@ -16,7 +16,7 @@ euclidean domain
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -26,6 +26,7 @@ section GcdMonoid
 
 variable {R : Type _} [EuclideanDomain R] [GcdMonoid R]
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
 theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GcdMonoid.gcd p q ≠ 0 :=
   by 
     obtain ⟨r, hr⟩ := GcdMonoid.gcd_dvd_left p q 
@@ -33,6 +34,7 @@ theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GcdMonoid.gcd p q �
     rw [hr, mul_commₓ, mul_div_cancel _ pq0]
     exact r0
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
 theorem right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) : q / GcdMonoid.gcd p q ≠ 0 :=
   by 
     obtain ⟨r, hr⟩ := GcdMonoid.gcd_dvd_right p q 
@@ -56,42 +58,27 @@ def GcdMonoid R [EuclideanDomain R] : GcdMonoid R :=
 
 variable {α : Type _} [EuclideanDomain α] [DecidableEq α]
 
--- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem span_gcd {α} [euclidean_domain α] (x y : α) : «expr = »(span ({gcd x y} : set α), span ({x, y} : set α)) :=
-begin
-  letI [] [] [":=", expr euclidean_domain.gcd_monoid α],
-  exact [expr span_gcd x y]
-end
+theorem span_gcd {α} [EuclideanDomain α] (x y : α) : span ({gcd x y} : Set α) = span ({x, y} : Set α) :=
+  by 
+    let this' := EuclideanDomain.gcdMonoid α 
+    exact span_gcd x y
 
--- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gcd_is_unit_iff {α} [euclidean_domain α] {x y : α} : «expr ↔ »(is_unit (gcd x y), is_coprime x y) :=
-begin
-  letI [] [] [":=", expr euclidean_domain.gcd_monoid α],
-  exact [expr gcd_is_unit_iff x y]
-end
+theorem gcd_is_unit_iff {α} [EuclideanDomain α] {x y : α} : IsUnit (gcd x y) ↔ IsCoprime x y :=
+  by 
+    let this' := EuclideanDomain.gcdMonoid α 
+    exact gcd_is_unit_iff x y
 
--- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_coprime_of_dvd
-{α}
-[euclidean_domain α]
-{x y : α}
-(z : «expr¬ »(«expr ∧ »(«expr = »(x, 0), «expr = »(y, 0))))
-(H : ∀ z «expr ∈ » nonunits α, «expr ≠ »(z, 0) → «expr ∣ »(z, x) → «expr¬ »(«expr ∣ »(z, y))) : is_coprime x y :=
-begin
-  letI [] [] [":=", expr euclidean_domain.gcd_monoid α],
-  exact [expr is_coprime_of_dvd x y z H]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » nonunits α)
+theorem is_coprime_of_dvd {α} [EuclideanDomain α] {x y : α} (nonzero : ¬(x = 0 ∧ y = 0))
+  (H : ∀ z _ : z ∈ Nonunits α, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
+  by 
+    let this' := EuclideanDomain.gcdMonoid α 
+    exact is_coprime_of_dvd x y nonzero H
 
--- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dvd_or_coprime
-{α}
-[euclidean_domain α]
-(x y : α)
-(h : irreducible x) : «expr ∨ »(«expr ∣ »(x, y), is_coprime x y) :=
-begin
-  letI [] [] [":=", expr euclidean_domain.gcd_monoid α],
-  exact [expr dvd_or_coprime x y h]
-end
+theorem dvd_or_coprime {α} [EuclideanDomain α] (x y : α) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y :=
+  by 
+    let this' := EuclideanDomain.gcdMonoid α 
+    exact dvd_or_coprime x y h
 
 end EuclideanDomain
 

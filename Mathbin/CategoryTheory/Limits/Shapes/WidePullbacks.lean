@@ -28,28 +28,25 @@ namespace CategoryTheory.Limits
 
 variable (J : Type v)
 
--- error in CategoryTheory.Limits.Shapes.WidePullbacks: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- A wide pullback shape for any type `J` can be written simply as `option J`. -/
-@[derive #[expr inhabited]]
 def wide_pullback_shape :=
-option J
+  Option J deriving [anonymous]
 
--- error in CategoryTheory.Limits.Shapes.WidePullbacks: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- A wide pushout shape for any type `J` can be written simply as `option J`. -/
-@[derive #[expr inhabited]]
 def wide_pushout_shape :=
-option J
+  Option J deriving [anonymous]
 
 namespace WidePullbackShape
 
 variable {J}
 
--- error in CategoryTheory.Limits.Shapes.WidePullbacks: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- The type of arrows for the shape indexing a wide pullback. -/
-@[derive #[expr decidable_eq]]
 inductive hom : wide_pullback_shape J → wide_pullback_shape J → Type v
-| id : ∀ X, hom X X
-| term : ∀ j : J, hom (some j) none
+  | id : ∀ X, hom X X
+  | term : ∀ j : J, hom (some j) none deriving [anonymous]
 
 attribute [nolint unused_arguments] hom.decidable_eq
 
@@ -95,7 +92,15 @@ def wide_cospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : wi
           ·
             apply 𝟙 _
           ·
-            exact arrows j }
+            exact arrows j,
+    map_comp' :=
+      fun _ _ _ f g =>
+        by 
+          cases f
+          ·
+            simpa 
+          cases g 
+          simpa }
 
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_cospan` -/
 def diagram_iso_wide_cospan (F : wide_pullback_shape J ⥤ C) :
@@ -130,12 +135,11 @@ namespace WidePushoutShape
 
 variable {J}
 
--- error in CategoryTheory.Limits.Shapes.WidePullbacks: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- The type of arrows for the shape indexing a wide psuhout. -/
-@[derive #[expr decidable_eq]]
 inductive hom : wide_pushout_shape J → wide_pushout_shape J → Type v
-| id : ∀ X, hom X X
-| init : ∀ j : J, hom none (some j)
+  | id : ∀ X, hom X X
+  | init : ∀ j : J, hom none (some j)deriving [anonymous]
 
 attribute [nolint unused_arguments] hom.decidable_eq
 

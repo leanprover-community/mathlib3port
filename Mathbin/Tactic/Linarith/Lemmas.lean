@@ -12,55 +12,55 @@ If you find yourself looking for a theorem here, you might be in the wrong place
 
 namespace Linarith
 
-theorem Int.coe_nat_bit0 (n : ℕ) : («expr↑ » (bit0 n : ℕ) : ℤ) = bit0 («expr↑ » n : ℤ) :=
+theorem Int.coe_nat_bit0 (n : ℕ) : (↑(bit0 n : ℕ) : ℤ) = bit0 (↑n : ℤ) :=
   by 
     simp [bit0]
 
-theorem Int.coe_nat_bit1 (n : ℕ) : («expr↑ » (bit1 n : ℕ) : ℤ) = bit1 («expr↑ » n : ℤ) :=
+theorem Int.coe_nat_bit1 (n : ℕ) : (↑(bit1 n : ℕ) : ℤ) = bit1 (↑n : ℤ) :=
   by 
     simp [bit1, bit0]
 
-theorem int.coe_nat_bit0_mul (n : ℕ) (x : ℕ) : («expr↑ » (bit0 n*x) : ℤ) = («expr↑ » (bit0 n) : ℤ)*(«expr↑ » x : ℤ) :=
+theorem int.coe_nat_bit0_mul (n : ℕ) (x : ℕ) : (↑bit0 n*x : ℤ) = (↑bit0 n : ℤ)*(↑x : ℤ) :=
   by 
     simp 
 
-theorem int.coe_nat_bit1_mul (n : ℕ) (x : ℕ) : («expr↑ » (bit1 n*x) : ℤ) = («expr↑ » (bit1 n) : ℤ)*(«expr↑ » x : ℤ) :=
+theorem int.coe_nat_bit1_mul (n : ℕ) (x : ℕ) : (↑bit1 n*x : ℤ) = (↑bit1 n : ℤ)*(↑x : ℤ) :=
   by 
     simp 
 
-theorem int.coe_nat_one_mul (x : ℕ) : («expr↑ » (1*x) : ℤ) = 1*(«expr↑ » x : ℤ) :=
+theorem int.coe_nat_one_mul (x : ℕ) : (↑1*x : ℤ) = 1*(↑x : ℤ) :=
   by 
     simp 
 
-theorem int.coe_nat_zero_mul (x : ℕ) : («expr↑ » (0*x) : ℤ) = 0*(«expr↑ » x : ℤ) :=
+theorem int.coe_nat_zero_mul (x : ℕ) : (↑0*x : ℤ) = 0*(↑x : ℤ) :=
   by 
     simp 
 
-theorem int.coe_nat_mul_bit0 (n : ℕ) (x : ℕ) : («expr↑ » (x*bit0 n) : ℤ) = («expr↑ » x : ℤ)*(«expr↑ » (bit0 n) : ℤ) :=
+theorem int.coe_nat_mul_bit0 (n : ℕ) (x : ℕ) : (↑x*bit0 n : ℤ) = (↑x : ℤ)*(↑bit0 n : ℤ) :=
   by 
     simp 
 
-theorem int.coe_nat_mul_bit1 (n : ℕ) (x : ℕ) : («expr↑ » (x*bit1 n) : ℤ) = («expr↑ » x : ℤ)*(«expr↑ » (bit1 n) : ℤ) :=
+theorem int.coe_nat_mul_bit1 (n : ℕ) (x : ℕ) : (↑x*bit1 n : ℤ) = (↑x : ℤ)*(↑bit1 n : ℤ) :=
   by 
     simp 
 
-theorem int.coe_nat_mul_one (x : ℕ) : («expr↑ » (x*1) : ℤ) = («expr↑ » x : ℤ)*1 :=
+theorem int.coe_nat_mul_one (x : ℕ) : (↑x*1 : ℤ) = (↑x : ℤ)*1 :=
   by 
     simp 
 
-theorem int.coe_nat_mul_zero (x : ℕ) : («expr↑ » (x*0) : ℤ) = («expr↑ » x : ℤ)*0 :=
+theorem int.coe_nat_mul_zero (x : ℕ) : (↑x*0 : ℤ) = (↑x : ℤ)*0 :=
   by 
     simp 
 
-theorem nat_eq_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 = n2) (h1 : «expr↑ » n1 = z1) (h2 : «expr↑ » n2 = z2) : z1 = z2 :=
+theorem nat_eq_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 = n2) (h1 : ↑n1 = z1) (h2 : ↑n2 = z2) : z1 = z2 :=
   by 
     simpa [Eq.symm h1, Eq.symm h2, Int.coe_nat_eq_coe_nat_iff]
 
-theorem nat_le_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 ≤ n2) (h1 : «expr↑ » n1 = z1) (h2 : «expr↑ » n2 = z2) : z1 ≤ z2 :=
+theorem nat_le_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 ≤ n2) (h1 : ↑n1 = z1) (h2 : ↑n2 = z2) : z1 ≤ z2 :=
   by 
     simpa [Eq.symm h1, Eq.symm h2, Int.coe_nat_le]
 
-theorem nat_lt_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 < n2) (h1 : «expr↑ » n1 = z1) (h2 : «expr↑ » n2 = z2) : z1 < z2 :=
+theorem nat_lt_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 < n2) (h1 : ↑n1 = z1) (h2 : ↑n2 = z2) : z1 < z2 :=
   by 
     simpa [Eq.symm h1, Eq.symm h2, Int.coe_nat_lt]
 

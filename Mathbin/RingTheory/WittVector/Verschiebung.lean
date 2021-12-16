@@ -20,7 +20,7 @@ variable {p : ℕ} {R S : Type _} [hp : Fact p.prime] [CommRingₓ R] [CommRing�
 
 local notation "𝕎" => WittVector p
 
-noncomputable theory
+noncomputable section 
 
 /--
 `verschiebung_fun x` shifts the coefficients of `x` up by one,

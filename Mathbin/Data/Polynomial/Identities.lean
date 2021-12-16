@@ -8,7 +8,7 @@ The main def is `binom_expansion`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Polynomial
 
@@ -37,9 +37,9 @@ def pow_add_expansion {R : Type _} [CommSemiringₓ R] (x y : R) :
     exists ((x*z)+(n+1)*x ^ n)+z*y 
     calc ((x+y) ^ n+2) = (x+y)*(x+y) ^ n+1 :=
       by 
-        ringExp _ = (x+y)*((x ^ n+1)+(«expr↑ » (n+1)*x ^ ((n+1) - 1))*y)+z*y ^ 2 :=
+        ringExp _ = (x+y)*((x ^ n+1)+((↑n+1)*x ^ ((n+1) - 1))*y)+z*y ^ 2 :=
       by 
-        rw [hz]_ = ((x ^ n+2)+(«expr↑ » (n+2)*x ^ n+1)*y)+(((x*z)+(n+1)*x ^ n)+z*y)*y ^ 2 :=
+        rw [hz]_ = ((x ^ n+2)+((↑n+2)*x ^ n+1)*y)+(((x*z)+(n+1)*x ^ n)+z*y)*y ^ 2 :=
       by 
         pushCast 
         ringExp!

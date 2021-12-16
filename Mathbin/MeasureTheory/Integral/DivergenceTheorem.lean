@@ -69,7 +69,8 @@ local notation "front_face" i:2000 => Finₓ.insertNth i (b i)
 
 local notation "back_face" i:2000 => Finₓ.insertNth i (a i)
 
--- error in MeasureTheory.Integral.DivergenceTheorem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr \ »(Icc a b, s))
 /-- **Divergence theorem** for Bochner integral. If `f : ℝⁿ⁺¹ → Eⁿ⁺¹` is differentiable on a
 rectangular box `[a, b] : set ℝⁿ⁺¹`, `a ≤ b`, with derivative `f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹` and the
 divergence `λ x, ∑ i, f' x eᵢ i` is integrable on `[a, b]`, where `eᵢ = pi.single i 1` is the `i`-th
@@ -85,54 +86,55 @@ We represent both faces `x i = a i` and `x i = b i` as the box
 of `f : ℝⁿ⁺¹ → Eⁿ⁺¹` to these faces are given by `f ∘ back_face i` and `f ∘ front_face i`, where
 `back_face i = fin.insert_nth i (a i)` and `front_face i = fin.insert_nth i (b i)` are embeddings
 `ℝⁿ → ℝⁿ⁺¹` that take `y : ℝⁿ` and insert `a i` (resp., `b i`) as `i`-th coordinate. -/
-theorem integral_divergence_of_has_fderiv_within_at_off_countable
-(hle : «expr ≤ »(a, b))
-(f : «exprℝⁿ⁺¹»() → «exprEⁿ⁺¹»())
-(f' : «exprℝⁿ⁺¹»() → «expr →L[ ] »(«exprℝⁿ⁺¹»(), exprℝ(), «exprEⁿ⁺¹»()))
-(s : set «exprℝⁿ⁺¹»())
-(hs : countable s)
-(Hc : ∀ x «expr ∈ » s, continuous_within_at f (Icc a b) x)
-(Hd : ∀ x «expr ∈ » «expr \ »(Icc a b, s), has_fderiv_within_at f (f' x) (Icc a b) x)
-(Hi : integrable_on (λ
-  x, «expr∑ , »((i), f' x (pi.single i 1) i)) (Icc a b)) : «expr = »(«expr∫ in , »((x), Icc a b, «expr∑ , »((i), f' x «expre »(i) i)), «expr∑ , »((i : fin «expr + »(n, 1)), «expr - »(«expr∫ in , »((x), «exprface »(i), f («exprfront_face »(i) x) i), «expr∫ in , »((x), «exprface »(i), f («exprback_face »(i) x) i)))) :=
-begin
-  simp [] [] ["only"] ["[", expr volume_pi, ",", "<-", expr set_integral_congr_set_ae measure.univ_pi_Ioc_ae_eq_Icc, "]"] [] [],
-  by_cases [expr heq, ":", expr «expr∃ , »((i), «expr = »(a i, b i))],
-  { rcases [expr heq, "with", "⟨", ident i, ",", ident hi, "⟩"],
-    have [ident hi'] [":", expr «expr = »(Ioc (a i) (b i), «expr∅»())] [":=", expr Ioc_eq_empty hi.not_lt],
-    have [] [":", expr «expr = »(pi set.univ (λ j, Ioc (a j) (b j)), «expr∅»())] [],
-    from [expr univ_pi_eq_empty hi'],
-    rw ["[", expr this, ",", expr integral_empty, ",", expr sum_eq_zero, "]"] [],
-    rintro [ident j, "-"],
-    rcases [expr eq_or_ne i j, "with", ident rfl, "|", ident hne],
-    { simp [] [] [] ["[", expr hi, "]"] [] [] },
-    { rcases [expr fin.exists_succ_above_eq hne, "with", "⟨", ident i, ",", ident rfl, "⟩"],
-      have [] [":", expr «expr = »(pi set.univ (λ
-         k : fin n, Ioc «expr $ »(a, j.succ_above k) «expr $ »(b, j.succ_above k)), «expr∅»())] [],
-      from [expr univ_pi_eq_empty hi'],
-      rw ["[", expr this, ",", expr integral_empty, ",", expr integral_empty, ",", expr sub_self, "]"] [] } },
-  { push_neg ["at", ident heq],
-    obtain ["⟨", ident I, ",", ident rfl, ",", ident rfl, "⟩", ":", expr «expr∃ , »((I : box_integral.box (fin «expr + »(n, 1))), «expr ∧ »(«expr = »(I.lower, a), «expr = »(I.upper, b)))],
-    from [expr ⟨⟨a, b, λ i, (hle i).lt_of_ne (heq i)⟩, rfl, rfl⟩],
-    simp [] [] ["only"] ["[", "<-", expr box.coe_eq_pi, ",", "<-", expr box.face_lower, ",", "<-", expr box.face_upper, "]"] [] [],
-    have [ident A] [] [":=", expr (Hi.mono_set box.coe_subset_Icc).has_box_integral «expr⊥»() rfl],
-    have [ident B] [] [":=", expr has_integral_bot_divergence_of_forall_has_deriv_within_at I f f' s hs Hc Hd],
-    have [ident Hc] [":", expr continuous_on f I.Icc] [],
-    { intros [ident x, ident hx],
-      by_cases [expr hxs, ":", expr «expr ∈ »(x, s)],
-      exacts ["[", expr Hc x hxs, ",", expr (Hd x ⟨hx, hxs⟩).continuous_within_at, "]"] },
-    rw [expr continuous_on_pi] ["at", ident Hc],
-    refine [expr (A.unique B).trans «expr $ »(sum_congr rfl, λ i hi, _)],
-    refine [expr congr_arg2 has_sub.sub _ _],
-    { have [] [] [":=", expr box.continuous_on_face_Icc (Hc i) (set.right_mem_Icc.2 (hle i))],
-      have [] [] [":=", expr (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc],
-      exact [expr (this.has_box_integral «expr⊥»() rfl).integral_eq],
-      apply_instance },
-    { have [] [] [":=", expr box.continuous_on_face_Icc (Hc i) (set.left_mem_Icc.2 (hle i))],
-      have [] [] [":=", expr (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc],
-      exact [expr (this.has_box_integral «expr⊥»() rfl).integral_eq],
-      apply_instance } }
-end
+theorem integral_divergence_of_has_fderiv_within_at_off_countable (hle : a ≤ b) (f : ℝⁿ⁺¹ → Eⁿ⁺¹)
+  (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹) (s : Set ℝⁿ⁺¹) (hs : countable s) (Hc : ∀ x _ : x ∈ s, ContinuousWithinAt f (Icc a b) x)
+  (Hd : ∀ x _ : x ∈ Icc a b \ s, HasFderivWithinAt f (f' x) (Icc a b) x)
+  (Hi : integrable_on (fun x => ∑ i, f' x (Pi.single i 1) i) (Icc a b)) :
+  (∫ x in Icc a b, ∑ i, f' x (e i) i) =
+    ∑ i : Finₓ (n+1), (∫ x in face i, f ((front_face(i)) x) i) - ∫ x in face i, f ((back_face(i)) x) i :=
+  by 
+    simp only [volume_pi, ←set_integral_congr_set_ae measure.univ_pi_Ioc_ae_eq_Icc]
+    byCases' heq : ∃ i, a i = b i
+    ·
+      rcases HEq with ⟨i, hi⟩
+      have hi' : Ioc (a i) (b i) = ∅ := Ioc_eq_empty hi.not_lt 
+      have  : (pi Set.Univ fun j => Ioc (a j) (b j)) = ∅
+      exact univ_pi_eq_empty hi' 
+      rw [this, integral_empty, sum_eq_zero]
+      rintro j -
+      rcases eq_or_ne i j with (rfl | hne)
+      ·
+        simp [hi]
+      ·
+        rcases Finₓ.exists_succ_above_eq hne with ⟨i, rfl⟩
+        have  : (pi Set.Univ fun k : Finₓ n => Ioc (a$ j.succ_above k) (b$ j.succ_above k)) = ∅
+        exact univ_pi_eq_empty hi' 
+        rw [this, integral_empty, integral_empty, sub_self]
+    ·
+      pushNeg  at heq 
+      obtain ⟨I, rfl, rfl⟩ : ∃ I : BoxIntegral.Box (Finₓ (n+1)), I.lower = a ∧ I.upper = b 
+      exact ⟨⟨a, b, fun i => (hle i).lt_of_ne (HEq i)⟩, rfl, rfl⟩
+      simp only [←box.coe_eq_pi, ←box.face_lower, ←box.face_upper]
+      have A := (Hi.mono_set box.coe_subset_Icc).has_box_integral ⊥ rfl 
+      have B := has_integral_bot_divergence_of_forall_has_deriv_within_at I f f' s hs Hc Hd 
+      have Hc : ContinuousOn f I.Icc
+      ·
+        intro x hx 
+        byCases' hxs : x ∈ s 
+        exacts[Hc x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
+      rw [continuous_on_pi] at Hc 
+      refine' (A.unique B).trans (sum_congr rfl$ fun i hi => _)
+      refine' congr_arg2ₓ Sub.sub _ _
+      ·
+        have  := box.continuous_on_face_Icc (Hc i) (Set.right_mem_Icc.2 (hle i))
+        have  := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc 
+        exact (this.has_box_integral ⊥ rfl).integral_eq 
+        infer_instance
+      ·
+        have  := box.continuous_on_face_Icc (Hc i) (Set.left_mem_Icc.2 (hle i))
+        have  := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc 
+        exact (this.has_box_integral ⊥ rfl).integral_eq 
+        infer_instance
 
 end 
 

@@ -1,6 +1,5 @@
 import Mathbin.Algebra.Divisibility 
-import Mathbin.Algebra.Regular.Basic 
-import Mathbin.Data.Set.Basic
+import Mathbin.Algebra.Regular.Basic
 
 /-!
 # Properties and homomorphisms of semirings and rings
@@ -256,11 +255,13 @@ def Even (a : α) : Prop :=
 theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a :=
   Iff.rfl
 
-@[simp]
-theorem range_two_mul (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => 2*x) = { a | Even a } :=
-  by 
-    ext x 
-    simp [Even, eq_comm]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    range_two_mul
+    ( α : Type _ ) [ Semiringₓ α ] : Set.Range fun x : α => 2 * x = { a | Even a }
+    := by ext x simp [ Even , eq_comm ]
 
 @[simp]
 theorem even_bit0 (a : α) : Even (bit0 a) :=
@@ -278,11 +279,13 @@ theorem odd_bit1 (a : α) : Odd (bit1 a) :=
     by 
       rw [bit1, bit0, two_mul]⟩
 
-@[simp]
-theorem range_two_mul_add_one (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => (2*x)+1) = { a | Odd a } :=
-  by 
-    ext x 
-    simp [Odd, eq_comm]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    range_two_mul_add_one
+    ( α : Type _ ) [ Semiringₓ α ] : Set.Range fun x : α => 2 * x + 1 = { a | Odd a }
+    := by ext x simp [ Odd , eq_comm ]
 
 theorem dvd_add {a b c : α} (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b+c :=
   Dvd.elim h₁
@@ -316,7 +319,7 @@ def mul_left {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R :=
   { toFun := (·*·) r, map_zero' := mul_zero r, map_add' := mul_addₓ r }
 
 @[simp]
-theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : «expr⇑ » (mul_left r) = (·*·) r :=
+theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : ⇑mul_left r = (·*·) r :=
   rfl
 
 /-- Right multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
@@ -324,7 +327,7 @@ def mul_right {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R :=
   { toFun := fun a => a*r, map_zero' := zero_mul r, map_add' := fun _ _ => add_mulₓ _ _ r }
 
 @[simp]
-theorem coe_mul_right {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : «expr⇑ » (mul_right r) = ·*r :=
+theorem coe_mul_right {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : ⇑mul_right r = ·*r :=
   rfl
 
 theorem mul_right_apply {R : Type _} [NonUnitalNonAssocSemiring R] (a r : R) : mul_right r a = a*r :=
@@ -353,6 +356,32 @@ add_decl_doc RingHom.toMonoidHom
 The `simp`-normal form is `(f : R →+ S)`. -/
 add_decl_doc RingHom.toAddMonoidHom
 
+section RingHomClass
+
+/-- `ring_hom_class F R S` states that `F` is a type of (semi)ring homomorphisms.
+You should extend this class when you extend `ring_hom`.
+
+This extends from both `monoid_hom_class` and `monoid_with_zero_hom_class` in
+order to put the fields in a sensible order, even though
+`monoid_with_zero_hom_class` already extends `monoid_hom_class`. -/
+class RingHomClass (F : Type _) (R S : outParam (Type _)) [NonAssocSemiring R] [NonAssocSemiring S] extends
+  MonoidHomClass F R S, AddMonoidHomClass F R S, MonoidWithZeroHomClass F R S
+
+variable {F : Type _} [NonAssocSemiring α] [NonAssocSemiring β] [RingHomClass F α β]
+
+/-- Ring homomorphisms preserve `bit0`. -/
+@[simp]
+theorem map_bit0 (f : F) (a : α) : (f (bit0 a) : β) = bit0 (f a) :=
+  map_add _ _ _
+
+/-- Ring homomorphisms preserve `bit1`. -/
+@[simp]
+theorem map_bit1 (f : F) (a : α) : (f (bit1 a) : β) = bit1 (f a) :=
+  by 
+    simp [bit1]
+
+end RingHomClass
+
 namespace RingHom
 
 section coeₓ
@@ -367,6 +396,17 @@ variable {rα : NonAssocSemiring α} {rβ : NonAssocSemiring β}
 
 include rα rβ
 
+instance : RingHomClass (α →+* β) α β :=
+  { coe := RingHom.toFun,
+    coe_injective' :=
+      fun f g h =>
+        by 
+          cases f <;> cases g <;> congr,
+    map_add := RingHom.map_add', map_zero := RingHom.map_zero', map_mul := RingHom.map_mul',
+    map_one := RingHom.map_one' }
+
+/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
+-/
 instance : CoeFun (α →+* β) fun _ => α → β :=
   ⟨RingHom.toFun⟩
 
@@ -377,14 +417,14 @@ theorem to_fun_eq_coe (f : α →+* β) : f.to_fun = f :=
   rfl
 
 @[simp]
-theorem coe_mk (f : α → β) h₁ h₂ h₃ h₄ : «expr⇑ » (⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) = f :=
+theorem coe_mk (f : α → β) h₁ h₂ h₃ h₄ : ⇑(⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) = f :=
   rfl
 
 instance has_coe_monoid_hom : Coe (α →+* β) (α →* β) :=
   ⟨RingHom.toMonoidHom⟩
 
 @[simp, normCast]
-theorem coe_monoid_hom (f : α →+* β) : «expr⇑ » (f : α →* β) = f :=
+theorem coe_monoid_hom (f : α →+* β) : ⇑(f : α →* β) = f :=
   rfl
 
 @[simp]
@@ -403,7 +443,7 @@ instance has_coe_add_monoid_hom : Coe (α →+* β) (α →+ β) :=
   ⟨RingHom.toAddMonoidHom⟩
 
 @[simp, normCast]
-theorem coe_add_monoid_hom (f : α →+* β) : «expr⇑ » (f : α →+ β) = f :=
+theorem coe_add_monoid_hom (f : α →+* β) : ⇑(f : α →+ β) = f :=
   rfl
 
 @[simp]
@@ -425,21 +465,20 @@ include rα rβ
 variable (f : α →+* β) {x y : α} {rα rβ}
 
 theorem congr_funₓ {f g : α →+* β} (h : f = g) (x : α) : f x = g x :=
-  congr_argₓ (fun h : α →+* β => h x) h
+  FunLike.congr_fun h x
 
 theorem congr_argₓ (f : α →+* β) {x y : α} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : α => f x) h
+  FunLike.congr_arg f h
 
 theorem coe_inj ⦃f g : α →+* β⦄ (h : (f : α → β) = g) : f = g :=
-  by 
-    cases f <;> cases g <;> cases h <;> rfl
+  FunLike.coe_injective h
 
 @[ext]
 theorem ext ⦃f g : α →+* β⦄ (h : ∀ x, f x = g x) : f = g :=
-  coe_inj (funext h)
+  FunLike.ext _ _ h
 
 theorem ext_iff {f g : α →+* β} : f = g ↔ ∀ x, f x = g x :=
-  ⟨fun h x => h ▸ rfl, fun h => ext h⟩
+  FunLike.ext_iff
 
 @[simp]
 theorem mk_coe (f : α →+* β) h₁ h₂ h₃ h₄ : RingHom.mk f h₁ h₂ h₃ h₄ = f :=
@@ -452,33 +491,27 @@ theorem coe_monoid_hom_injective : Function.Injective (coeₓ : (α →+* β) �
   fun f g h => ext fun x => MonoidHom.congr_fun h x
 
 /-- Ring homomorphisms map zero to zero. -/
-@[simp]
-theorem map_zero (f : α →+* β) : f 0 = 0 :=
-  f.map_zero'
+protected theorem map_zero (f : α →+* β) : f 0 = 0 :=
+  map_zero f
 
 /-- Ring homomorphisms map one to one. -/
-@[simp]
-theorem map_one (f : α →+* β) : f 1 = 1 :=
-  f.map_one'
+protected theorem map_one (f : α →+* β) : f 1 = 1 :=
+  map_one f
 
 /-- Ring homomorphisms preserve addition. -/
-@[simp]
-theorem map_add (f : α →+* β) (a b : α) : f (a+b) = f a+f b :=
-  f.map_add' a b
+protected theorem map_add (f : α →+* β) (a b : α) : f (a+b) = f a+f b :=
+  map_add f a b
 
 /-- Ring homomorphisms preserve multiplication. -/
-@[simp]
-theorem map_mul (f : α →+* β) (a b : α) : f (a*b) = f a*f b :=
-  f.map_mul' a b
+protected theorem map_mul (f : α →+* β) (a b : α) : f (a*b) = f a*f b :=
+  map_mul f a b
 
 /-- Ring homomorphisms preserve `bit0`. -/
-@[simp]
-theorem map_bit0 (f : α →+* β) (a : α) : f (bit0 a) = bit0 (f a) :=
+protected theorem map_bit0 (f : α →+* β) (a : α) : f (bit0 a) = bit0 (f a) :=
   map_add _ _ _
 
 /-- Ring homomorphisms preserve `bit1`. -/
-@[simp]
-theorem map_bit1 (f : α →+* β) (a : α) : f (bit1 a) = bit1 (f a) :=
+protected theorem map_bit1 (f : α →+* β) (a : α) : f (bit1 a) = bit1 (f a) :=
   by 
     simp [bit1]
 
@@ -603,20 +636,20 @@ theorem one_def : (1 : α →+* α) = id α :=
   rfl
 
 @[simp]
-theorem coe_one : «expr⇑ » (1 : α →+* α) = _root_.id :=
+theorem coe_one : ⇑(1 : α →+* α) = _root_.id :=
   rfl
 
 theorem mul_def (f g : α →+* α) : (f*g) = f.comp g :=
   rfl
 
 @[simp]
-theorem coe_mul (f g : α →+* α) : «expr⇑ » (f*g) = f ∘ g :=
+theorem coe_mul (f g : α →+* α) : (⇑f*g) = f ∘ g :=
   rfl
 
 include rβ rγ
 
 theorem cancel_right {g₁ g₂ : β →+* γ} {f : α →+* β} (hf : surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => RingHom.ext$ (forall_iff_forall_surj hf).1 (ext_iff.1 h), fun h => h ▸ rfl⟩
+  ⟨fun h => RingHom.ext$ hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
 
 theorem cancel_left {g : β →+* γ} {f₁ f₂ : α →+* β} (hg : injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
@@ -677,6 +710,9 @@ protected def Function.Surjective.commSemiring [HasZero γ] [HasOne γ] [Add γ]
 theorem add_mul_self_eq (a b : α) : ((a+b)*a+b) = ((a*a)+(2*a)*b)+b*b :=
   by 
     simp only [two_mul, add_mulₓ, mul_addₓ, add_assocₓ, mul_commₓ b]
+
+theorem HasDvd.Dvd.linear_comb {d x y : α} (hdx : d ∣ x) (hdy : d ∣ y) (a b : α) : d ∣ (a*x)+b*y :=
+  dvd_add (hdx.mul_left a) (hdy.mul_left b)
 
 end CommSemiringₓ
 
@@ -821,7 +857,7 @@ variable [Ringₓ α] {a b : α}
 /-- Each element of the group of units of a ring has an additive inverse. -/
 instance : Neg (Units α) :=
   ⟨fun u =>
-      ⟨-«expr↑ » u, -«expr↑ » (u⁻¹),
+      ⟨-↑u, -↑u⁻¹,
         by 
           simp ,
         by 
@@ -830,7 +866,7 @@ instance : Neg (Units α) :=
 /-- Representing an element of a ring's unit group as an element of the ring commutes with
     mapping this element to its additive inverse. -/
 @[simp, normCast]
-protected theorem coe_neg (u : Units α) : («expr↑ » (-u) : α) = -u :=
+protected theorem coe_neg (u : Units α) : (↑(-u) : α) = -u :=
   rfl
 
 @[simp, normCast]
@@ -884,14 +920,12 @@ theorem IsUnit.neg_iff [Ringₓ α] (a : α) : IsUnit (-a) ↔ IsUnit a :=
 namespace RingHom
 
 /-- Ring homomorphisms preserve additive inverse. -/
-@[simp]
-theorem map_neg {α β} [Ringₓ α] [Ringₓ β] (f : α →+* β) (x : α) : f (-x) = -f x :=
-  (f : α →+ β).map_neg x
+protected theorem map_neg {α β} [Ringₓ α] [Ringₓ β] (f : α →+* β) (x : α) : f (-x) = -f x :=
+  map_neg f x
 
 /-- Ring homomorphisms preserve subtraction. -/
-@[simp]
-theorem map_sub {α β} [Ringₓ α] [Ringₓ β] (f : α →+* β) (x y : α) : f (x - y) = f x - f y :=
-  (f : α →+ β).map_sub x y
+protected theorem map_sub {α β} [Ringₓ α] [Ringₓ β] (f : α →+* β) (x y : α) : f (x - y) = f x - f y :=
+  map_sub f x y
 
 /-- A ring homomorphism is injective iff its kernel is trivial. -/
 theorem injective_iff {α β} [Ringₓ α] [NonAssocSemiring β] (f : α →+* β) :
@@ -961,9 +995,11 @@ theorem dvd_sub (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b - c :=
     rw [sub_eq_add_neg]
     exact dvd_add h₁ (dvd_neg_of_dvd h₂)
 
--- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dvd_add_iff_left (h : «expr ∣ »(a, c)) : «expr ↔ »(«expr ∣ »(a, b), «expr ∣ »(a, «expr + »(b, c))) :=
-⟨λ h₂, dvd_add h₂ h, λ H, by have [ident t] [] [":=", expr dvd_sub H h]; rwa [expr add_sub_cancel] ["at", ident t]⟩
+theorem dvd_add_iff_left (h : a ∣ c) : a ∣ b ↔ a ∣ b+c :=
+  ⟨fun h₂ => dvd_add h₂ h,
+    fun H =>
+      by 
+        have t := dvd_sub H h <;> rwa [add_sub_cancel] at t⟩
 
 theorem dvd_add_iff_right (h : a ∣ b) : a ∣ c ↔ a ∣ b+c :=
   by 
@@ -994,7 +1030,7 @@ theorem dvd_add_self_right {a b : α} : (a ∣ b+a) ↔ a ∣ b :=
 
 theorem dvd_iff_dvd_of_dvd_sub {a b c : α} (h : a ∣ b - c) : a ∣ b ↔ a ∣ c :=
   by 
-    split 
+    constructor
     ·
       intro h' 
       convert dvd_sub h' h 
@@ -1052,21 +1088,24 @@ theorem mul_self_sub_one (a : α) : (a*a) - 1 = (a+1)*a - 1 :=
   by 
     rw [←mul_self_sub_mul_self, mul_oneₓ]
 
--- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Vieta's formula for a quadratic equation, relating the coefficients of the polynomial with
   its roots. This particular version states that if we have a root `x` of a monic quadratic
   polynomial, then there is another root `y` such that `x + y` is negative the `a_1` coefficient
   and `x * y` is the `a_0` coefficient. -/
-theorem Vieta_formula_quadratic
-{b c x : α}
-(h : «expr = »(«expr + »(«expr - »(«expr * »(x, x), «expr * »(b, x)), c), 0)) : «expr∃ , »((y : α), «expr ∧ »(«expr = »(«expr + »(«expr - »(«expr * »(y, y), «expr * »(b, y)), c), 0), «expr ∧ »(«expr = »(«expr + »(x, y), b), «expr = »(«expr * »(x, y), c)))) :=
-begin
-  have [] [":", expr «expr = »(c, «expr- »(«expr - »(«expr * »(x, x), «expr * »(b, x))))] [":=", expr (neg_eq_of_add_eq_zero h).symm],
-  have [] [":", expr «expr = »(c, «expr * »(x, «expr - »(b, x)))] [],
-  by subst [expr this]; simp [] [] [] ["[", expr mul_sub, ",", expr mul_comm, "]"] [] [],
-  refine [expr ⟨«expr - »(b, x), _, by simp [] [] [] [] [] [], by rw [expr this] []⟩],
-  rw ["[", expr this, ",", expr sub_add, ",", "<-", expr sub_mul, ",", expr sub_self, "]"] []
-end
+theorem Vieta_formula_quadratic {b c x : α} (h : (((x*x) - b*x)+c) = 0) :
+  ∃ y : α, (((y*y) - b*y)+c) = 0 ∧ (x+y) = b ∧ (x*y) = c :=
+  by 
+    have  : c = -((x*x) - b*x) := (neg_eq_of_add_eq_zeroₓ h).symm 
+    have  : c = x*b - x
+    ·
+      subst this <;> simp [mul_sub, mul_commₓ]
+    refine'
+      ⟨b - x, _,
+        by 
+          simp ,
+        by 
+          rw [this]⟩
+    rw [this, sub_add, ←sub_mul, sub_self]
 
 theorem dvd_mul_sub_mul {k a b x y : α} (hab : k ∣ a - b) (hxy : k ∣ x - y) : k ∣ (a*x) - b*y :=
   by 
@@ -1145,7 +1184,7 @@ section CommRingₓ
 
 variable [CommRingₓ α] [IsDomain α]
 
-instance (priority := 100) IsDomain.toCommCancelMonoidWithZero : CommCancelMonoidWithZero α :=
+instance (priority := 100) IsDomain.toCancelCommMonoidWithZero : CancelCommMonoidWithZero α :=
   { CommSemiringₓ.toCommMonoidWithZero, IsDomain.toCancelMonoidWithZero with  }
 
 theorem mul_self_eq_mul_self_iff {a b : α} : ((a*a) = b*b) ↔ a = b ∨ a = -b :=
@@ -1165,27 +1204,23 @@ theorem Units.inv_eq_self_iff (u : Units α) : u⁻¹ = u ↔ u = 1 ∨ u = -1 :
     pushCast 
     exact mul_self_eq_one_iff
 
--- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Makes a ring homomorphism from an additive group homomorphism from a commutative ring to an integral
 domain that commutes with self multiplication, assumes that two is nonzero and one is sent to one.
 -/
-def add_monoid_hom.mk_ring_hom_of_mul_self_of_two_ne_zero
-[comm_ring β]
-(f : «expr →+ »(β, α))
-(h : ∀ x, «expr = »(f «expr * »(x, x), «expr * »(f x, f x)))
-(h_two : «expr ≠ »((2 : α), 0))
-(h_one : «expr = »(f 1, 1)) : «expr →+* »(β, α) :=
-{ map_one' := h_one,
-  map_mul' := begin
-    intros [ident x, ident y],
-    have [ident hxy] [] [":=", expr h «expr + »(x, y)],
-    rw ["[", expr mul_add, ",", expr add_mul, ",", expr add_mul, ",", expr f.map_add, ",", expr f.map_add, ",", expr f.map_add, ",", expr f.map_add, ",", expr h x, ",", expr h y, ",", expr add_mul, ",", expr mul_add, ",", expr mul_add, ",", "<-", expr sub_eq_zero, ",", expr add_comm, ",", "<-", expr sub_sub, ",", "<-", expr sub_sub, ",", "<-", expr sub_sub, ",", expr mul_comm y x, ",", expr mul_comm (f y) (f x), "]"] ["at", ident hxy],
-    simp [] [] ["only"] ["[", expr add_assoc, ",", expr add_sub_assoc, ",", expr add_sub_cancel'_right, "]"] [] ["at", ident hxy],
-    rw ["[", expr sub_sub, ",", "<-", expr two_mul, ",", "<-", expr add_sub_assoc, ",", "<-", expr two_mul, ",", "<-", expr mul_sub, ",", expr mul_eq_zero, ",", expr sub_eq_zero, ",", expr or_iff_not_imp_left, "]"] ["at", ident hxy],
-    exact [expr hxy h_two]
-  end,
-  ..f }
+def AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero [CommRingₓ β] (f : β →+ α) (h : ∀ x, f (x*x) = f x*f x)
+  (h_two : (2 : α) ≠ 0) (h_one : f 1 = 1) : β →+* α :=
+  { f with map_one' := h_one,
+    map_mul' :=
+      by 
+        intro x y 
+        have hxy := h (x+y)
+        rw [mul_addₓ, add_mulₓ, add_mulₓ, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mulₓ, mul_addₓ,
+          mul_addₓ, ←sub_eq_zero, add_commₓ, ←sub_sub, ←sub_sub, ←sub_sub, mul_commₓ y x, mul_commₓ (f y) (f x)] at hxy 
+        simp only [add_assocₓ, add_sub_assoc, add_sub_cancel'_right] at hxy 
+        rw [sub_sub, ←two_mul, ←add_sub_assoc, ←two_mul, ←mul_sub, mul_eq_zero, sub_eq_zero, or_iff_not_imp_left] at
+          hxy 
+        exact hxy h_two }
 
 @[simp]
 theorem AddMonoidHom.coe_fn_mk_ring_hom_of_mul_self_of_two_ne_zero [CommRingₓ β] (f : β →+ α) h h_two h_one :

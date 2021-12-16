@@ -53,7 +53,7 @@ theorem pointwise_smul_def {a : M} (S : Subring R) : a • S = S.map (MulSemirin
   rfl
 
 @[simp]
-theorem coe_pointwise_smul (m : M) (S : Subring R) : «expr↑ » (m • S) = m • (S : Set R) :=
+theorem coe_pointwise_smul (m : M) (S : Subring R) : ↑(m • S) = m • (S : Set R) :=
   rfl
 
 @[simp]
@@ -66,6 +66,13 @@ theorem pointwise_smul_to_subsemiring (m : M) (S : Subring R) : (m • S).toSubs
 
 theorem smul_mem_pointwise_smul (m : M) (r : R) (S : Subring R) : r ∈ S → m • r ∈ m • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ m • (S : Set R))
+
+instance pointwise_central_scalar [MulSemiringAction (Mᵐᵒᵖ) R] [IsCentralScalar M R] : IsCentralScalar M (Subring R) :=
+  ⟨fun a S =>
+      (congr_argₓ fun f => S.map f)$
+        RingHom.ext$
+          by 
+            exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 

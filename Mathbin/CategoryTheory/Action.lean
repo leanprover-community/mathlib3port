@@ -31,11 +31,12 @@ def action_as_functor : single_obj M ⥤ Type u :=
   { obj := fun _ => X, map := fun _ _ => · • ·, map_id' := fun _ => funext$ MulAction.one_smul,
     map_comp' := fun _ _ _ f g => funext$ fun x => (smul_smul g f x).symm }
 
--- error in CategoryTheory.Action: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- A multiplicative action M ↻ X induces a category strucure on X, where a morphism
  from x to y is a scalar taking x to y. Due to implementation details, the object type
- of this category is not equal to X, but is in bijection with X. -/ @[derive #[expr category]] def action_category :=
-(action_as_functor M X).elements
+ of this category is not equal to X, but is in bijection with X. -/
+def action_category :=
+  (action_as_functor M X).Elements deriving [anonymous]
 
 namespace ActionCategory
 
@@ -63,11 +64,11 @@ instance : CoeTₓ X (action_category M X) :=
   ⟨fun x => ⟨(), x⟩⟩
 
 @[simp]
-theorem coe_back (x : X) : («expr↑ » x : action_category M X).back = x :=
+theorem coe_back (x : X) : (↑x : action_category M X).back = x :=
   rfl
 
 @[simp]
-theorem back_coe (x : action_category M X) : «expr↑ » x.back = x :=
+theorem back_coe (x : action_category M X) : ↑x.back = x :=
   by 
     ext <;> rfl
 
@@ -81,7 +82,7 @@ theorem hom_as_subtype (p q : action_category M X) : (p ⟶ q) = { m : M // m �
   rfl
 
 instance [Inhabited X] : Inhabited (action_category M X) :=
-  { default := «expr↑ » (default X) }
+  { default := ↑default X }
 
 instance [Nonempty X] : Nonempty (action_category M X) :=
   Nonempty.map (obj_equiv M X) inferInstance
@@ -90,7 +91,7 @@ variable {X} (x : X)
 
 /-- The stabilizer of a point is isomorphic to the endomorphism monoid at the
   corresponding point. In fact they are definitionally equivalent. -/
-def stabilizer_iso_End : stabilizer.submonoid M x ≃* End («expr↑ » x : action_category M X) :=
+def stabilizer_iso_End : stabilizer.submonoid M x ≃* End (↑x : action_category M X) :=
   MulEquiv.refl _
 
 @[simp]
@@ -123,12 +124,11 @@ noncomputable instance : groupoid (action_category G X) :=
   CategoryTheory.groupoidOfElements _
 
 /-- Any subgroup of `G` is a vertex group in its action groupoid. -/
-def End_mul_equiv_subgroup (H : Subgroup G) : End (obj_equiv G (QuotientGroup.Quotient H) («expr↑ » (1 : G))) ≃* H :=
-  MulEquiv.trans (stabilizer_iso_End G ((1 : G) : QuotientGroup.Quotient H)).symm
-    (MulEquiv.subgroupCongr$ stabilizer_quotient H)
+def End_mul_equiv_subgroup (H : Subgroup G) : End (obj_equiv G (G ⧸ H) (↑(1 : G))) ≃* H :=
+  MulEquiv.trans (stabilizer_iso_End G ((1 : G) : G ⧸ H)).symm (MulEquiv.subgroupCongr$ stabilizer_quotient H)
 
 /-- A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/
-def hom_of_pair (t : X) (g : G) : «expr↑ » (g⁻¹ • t) ⟶ (t : action_category G X) :=
+def hom_of_pair (t : X) (g : G) : ↑(g⁻¹ • t) ⟶ (t : action_category G X) :=
   Subtype.mk g (smul_inv_smul g t)
 
 @[simp]

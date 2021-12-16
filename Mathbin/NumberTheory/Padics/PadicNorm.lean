@@ -2,7 +2,8 @@ import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.FieldPower 
 import Mathbin.RingTheory.Int.Basic 
 import Mathbin.Tactic.Basic 
-import Mathbin.Tactic.RingExp
+import Mathbin.Tactic.RingExp 
+import Mathbin.NumberTheory.Divisors
 
 /-!
 # p-adic norm
@@ -152,43 +153,47 @@ theorem zero_le_padic_val_rat_of_nat (p n : ℕ) : 0 ≤ padicValRat p n :=
 `padic_val_rat` coincides with `padic_val_nat`.
 -/
 @[simp, normCast]
-theorem padic_val_rat_of_nat (p n : ℕ) : «expr↑ » (padicValNat p n) = padicValRat p n :=
+theorem padic_val_rat_of_nat (p n : ℕ) : ↑padicValNat p n = padicValRat p n :=
   by 
     unfold padicValNat 
     rw [Int.to_nat_of_nonneg (zero_le_padic_val_rat_of_nat p n)]
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A simplification of `padic_val_nat` when one input is prime, by analogy with `padic_val_rat_def`.
 -/
-theorem padic_val_nat_def
-{p : exprℕ()}
-[hp : fact p.prime]
-{n : exprℕ()}
-(hn : «expr ≠ »(n, 0)) : «expr = »(padic_val_nat p n, (multiplicity p n).get (multiplicity.finite_nat_iff.2 ⟨nat.prime.ne_one hp.1, bot_lt_iff_ne_bot.mpr hn⟩)) :=
-begin
-  have [ident n_nonzero] [":", expr «expr ≠ »((n : exprℚ()), 0)] [],
-  by simpa [] [] ["only"] ["[", expr cast_eq_zero, ",", expr ne.def, "]"] [] [],
-  simpa [] [] ["only"] ["[", expr int.coe_nat_multiplicity p n, ",", expr rat.coe_nat_denom n, ",", expr (padic_val_rat_of_nat p n).symm, ",", expr int.coe_nat_zero, ",", expr int.coe_nat_inj', ",", expr sub_zero, ",", expr get_one_right, ",", expr int.coe_nat_succ, ",", expr zero_add, ",", expr rat.coe_nat_num, "]"] [] ["using", expr padic_val_rat_def p n_nonzero]
-end
+theorem padic_val_nat_def {p : ℕ} [hp : Fact p.prime] {n : ℕ} (hn : n ≠ 0) :
+  padicValNat p n =
+    (multiplicity p n).get (multiplicity.finite_nat_iff.2 ⟨Nat.Prime.ne_one hp.1, bot_lt_iff_ne_bot.mpr hn⟩) :=
+  by 
+    have n_nonzero : (n : ℚ) ≠ 0
+    ·
+      simpa only [cast_eq_zero, Ne.def]
+    simpa only [int.coe_nat_multiplicity p n, Rat.coe_nat_denom n, (padic_val_rat_of_nat p n).symm, Int.coe_nat_zero,
+      Int.coe_nat_inj', sub_zero, get_one_right, Int.coe_nat_succ, zero_addₓ, Rat.coe_nat_num] using
+      padic_val_rat_def p n_nonzero
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem one_le_padic_val_nat_of_dvd
-{n p : nat}
-[prime : fact p.prime]
-(nonzero : «expr ≠ »(n, 0))
-(div : «expr ∣ »(p, n)) : «expr ≤ »(1, padic_val_nat p n) :=
-begin
-  rw [expr @padic_val_nat_def _ prime _ nonzero] [],
-  let [ident one_le_mul] [":", expr «expr ≤ »(_, multiplicity p n)] [":=", expr @multiplicity.le_multiplicity_of_pow_dvd _ _ _ p n 1 (begin
-      norm_num [] [],
-      exact [expr div]
-    end)],
-  simp [] [] ["only"] ["[", expr nat.cast_one, "]"] [] ["at", ident one_le_mul],
-  rcases [expr one_le_mul, "with", "⟨", "_", ",", ident q, "⟩"],
-  dsimp [] [] [] ["at", ident q],
-  solve_by_elim [] [] [] []
-end
+@[simp]
+theorem padic_val_nat_self (p : ℕ) [Fact p.prime] : padicValNat p p = 1 :=
+  by 
+    simp [padic_val_nat_def (Fact.out p.prime).ne_zero]
+
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  one_le_padic_val_nat_of_dvd
+  { n p : Nat } [ prime : Fact p.prime ] ( nonzero : n ≠ 0 ) ( div : p ∣ n ) : 1 ≤ padicValNat p n
+  :=
+    by
+      rw [ @ padic_val_nat_def _ Prime _ nonzero ]
+        let
+          one_le_mul
+            : _ ≤ multiplicity p n
+            :=
+            @ multiplicity.le_multiplicity_of_pow_dvd _ _ _ p n 1 by normNum exact div
+        simp only [ Nat.cast_one ] at one_le_mul
+        rcases one_le_mul with ⟨ _ , q ⟩
+        dsimp at q
+        solveByElim
 
 @[simp]
 theorem padic_val_nat_zero (m : Nat) : padicValNat m 0 = 0 :=
@@ -246,7 +251,7 @@ protected theorem defn {q : ℚ} {n d : ℤ} (hqz : q ≠ 0) (qdf : q = n /. d) 
 A rewrite lemma for `padic_val_rat p (q * r)` with conditions `q ≠ 0`, `r ≠ 0`.
 -/
 protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) : padicValRat p (q*r) = padicValRat p q+padicValRat p r :=
-  have  : (q*r) = (q.num*r.num) /. «expr↑ » q.denom*«expr↑ » r.denom :=
+  have  : (q*r) = (q.num*r.num) /. (↑q.denom)*↑r.denom :=
     by 
       rwModCast [Rat.mul_num_denom]
   have hq' : q.num /. q.denom ≠ 0 :=
@@ -287,13 +292,12 @@ A condition for `padic_val_rat p (n₁ / d₁) ≤ padic_val_rat p (n₂ / d₂)
 in terms of divisibility by `p^n`.
 -/
 theorem padic_val_rat_le_padic_val_rat_iff {n₁ n₂ d₁ d₂ : ℤ} (hn₁ : n₁ ≠ 0) (hn₂ : n₂ ≠ 0) (hd₁ : d₁ ≠ 0)
-  (hd₂ : d₂ ≠ 0) :
-  padicValRat p (n₁ /. d₁) ≤ padicValRat p (n₂ /. d₂) ↔ ∀ n : ℕ, ((«expr↑ » p^n) ∣ n₁*d₂) → («expr↑ » p^n) ∣ n₂*d₁ :=
+  (hd₂ : d₂ ≠ 0) : padicValRat p (n₁ /. d₁) ≤ padicValRat p (n₂ /. d₂) ↔ ∀ n : ℕ, ((↑p^n) ∣ n₁*d₂) → (↑p^n) ∣ n₂*d₁ :=
   have hf1 : finite (p : ℤ) (n₁*d₂) := finite_int_prime_iff.2 (mul_ne_zero hn₁ hd₂)
   have hf2 : finite (p : ℤ) (n₂*d₁) := finite_int_prime_iff.2 (mul_ne_zero hn₂ hd₁)
   by 
     conv  =>
-      toLHS
+      lhs
         rw [padicValRat.defn p (Rat.mk_ne_zero_of_ne_zero hn₁ hd₁) rfl,
         padicValRat.defn p (Rat.mk_ne_zero_of_ne_zero hn₂ hd₂) rfl, sub_le_iff_le_add', ←add_sub_assoc,
         le_sub_iff_add_le]normCast
@@ -314,9 +318,8 @@ theorem le_padic_val_rat_add_of_le {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) (hq
   have hrd : (r.denom : ℤ) ≠ 0 :=
     by 
       exactModCast Rat.denom_ne_zero _ 
-  have hqreq : (q+r) = ((q.num*r.denom)+q.denom*r.num : ℤ) /. («expr↑ » q.denom*«expr↑ » r.denom : ℤ) :=
-    Rat.add_num_denom _ _ 
-  have hqrd : ((q.num*«expr↑ » r.denom)+«expr↑ » q.denom*r.num) ≠ 0 := Rat.mk_num_ne_zero_of_ne_zero hqr hqreq 
+  have hqreq : (q+r) = ((q.num*r.denom)+q.denom*r.num : ℤ) /. ((↑q.denom)*↑r.denom : ℤ) := Rat.add_num_denom _ _ 
+  have hqrd : ((q.num*↑r.denom)+(↑q.denom)*r.num) ≠ 0 := Rat.mk_num_ne_zero_of_ne_zero hqr hqreq 
   by 
     convLHS => rw [←@Rat.num_denom q]
     rw [hqreq, padic_val_rat_le_padic_val_rat_iff p hqn hqrd hqd (mul_ne_zero hqd hrd),
@@ -324,10 +327,7 @@ theorem le_padic_val_rat_add_of_le {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) (hq
       add_mulₓ]
     rw [←@Rat.num_denom q, ←@Rat.num_denom r, padic_val_rat_le_padic_val_rat_iff p hqn hrn hqd hrd,
       ←multiplicity_le_multiplicity_iff] at h 
-    calc
-      _ ≤
-        min (multiplicity («expr↑ » p) ((q.num*«expr↑ » r.denom)*«expr↑ » q.denom))
-          (multiplicity («expr↑ » p) ((«expr↑ » q.denom*r.num)*«expr↑ » q.denom)) :=
+    calc _ ≤ min (multiplicity (↑p) ((q.num*↑r.denom)*↑q.denom)) (multiplicity (↑p) (((↑q.denom)*r.num)*↑q.denom)) :=
       le_minₓ
         (by 
           rw [@multiplicity.mul _ _ _ _ (_*_) _ (Nat.prime_iff_prime_int.1 p_prime.1), add_commₓ])
@@ -356,28 +356,29 @@ theorem min_le_padic_val_rat_add {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) (hqr 
 
 open_locale BigOperators
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite sum of rationals with positive p-adic valuation has positive p-adic valuation
   (if the sum is non-zero). -/
-theorem sum_pos_of_pos
-{n : exprℕ()}
-{F : exprℕ() → exprℚ()}
-(hF : ∀ i, «expr < »(i, n) → «expr < »(0, padic_val_rat p (F i)))
-(hn0 : «expr ≠ »(«expr∑ in , »((i), finset.range n, F i), 0)) : «expr < »(0, padic_val_rat p «expr∑ in , »((i), finset.range n, F i)) :=
-begin
-  induction [expr n] [] ["with", ident d, ident hd] [],
-  { exact [expr false.elim (hn0 rfl)] },
-  { rw [expr finset.sum_range_succ] ["at", ident hn0, "⊢"],
-    by_cases [expr h, ":", expr «expr = »(«expr∑ in , »((x : exprℕ()), finset.range d, F x), 0)],
-    { rw ["[", expr h, ",", expr zero_add, "]"] [],
-      exact [expr hF d (lt_add_one _)] },
-    { refine [expr lt_of_lt_of_le _ (min_le_padic_val_rat_add p h (λ h1, _) hn0)],
-      { refine [expr lt_min (hd (λ i hi, _) h) (hF d (lt_add_one _))],
-        exact [expr hF _ (lt_trans hi (lt_add_one _))] },
-      { have [ident h2] [] [":=", expr hF d (lt_add_one _)],
-        rw [expr h1] ["at", ident h2],
-        exact [expr lt_irrefl _ h2] } } }
-end
+theorem sum_pos_of_pos {n : ℕ} {F : ℕ → ℚ} (hF : ∀ i, i < n → 0 < padicValRat p (F i))
+  (hn0 : (∑ i in Finset.range n, F i) ≠ 0) : 0 < padicValRat p (∑ i in Finset.range n, F i) :=
+  by 
+    induction' n with d hd
+    ·
+      exact False.elim (hn0 rfl)
+    ·
+      rw [Finset.sum_range_succ] at hn0⊢
+      byCases' h : (∑ x : ℕ in Finset.range d, F x) = 0
+      ·
+        rw [h, zero_addₓ]
+        exact hF d (lt_add_one _)
+      ·
+        refine' lt_of_lt_of_leₓ _ (min_le_padic_val_rat_add p h (fun h1 => _) hn0)
+        ·
+          refine' lt_minₓ (hd (fun i hi => _) h) (hF d (lt_add_one _))
+          exact hF _ (lt_transₓ hi (lt_add_one _))
+        ·
+          have h2 := hF d (lt_add_one _)
+          rw [h1] at h2 
+          exact lt_irreflₓ _ h2
 
 end padicValRat
 
@@ -396,24 +397,24 @@ protected theorem mul (p : ℕ) [p_prime : Fact p.prime] {q r : ℕ} (hq : q ≠
     exact cast_ne_zero.mpr hq 
     exact cast_ne_zero.mpr hr
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected theorem div_of_dvd (p : ℕ) [hp : Fact p.prime] {a b : ℕ} (h : b ∣ a) :
+  padicValNat p (a / b) = padicValNat p a - padicValNat p b :=
+  by 
+    rcases eq_or_ne a 0 with (rfl | ha)
+    ·
+      simp 
+    obtain ⟨k, rfl⟩ := h 
+    obtain ⟨hb, hk⟩ := mul_ne_zero_iff.mp ha 
+    rw [mul_commₓ, k.mul_div_cancel hb.bot_lt, padicValNat.mul p hk hb, Nat.add_sub_cancel]
+
 /--
 Dividing out by a prime factor reduces the padic_val_nat by 1.
 -/
-protected
-theorem div
-{p : exprℕ()}
-[p_prime : fact p.prime]
-{b : exprℕ()}
-(dvd : «expr ∣ »(p, b)) : «expr = »(padic_val_nat p «expr / »(b, p), «expr - »(padic_val_nat p b, 1)) :=
-begin
-  by_cases [expr b_split, ":", expr «expr = »(b, 0)],
-  { simp [] [] [] ["[", expr b_split, "]"] [] [] },
-  { have [ident split_frac] [":", expr «expr = »(padic_val_rat p «expr / »(b, p), «expr - »(padic_val_rat p b, padic_val_rat p p))] [":=", expr padic_val_rat.div p (nat.cast_ne_zero.mpr b_split) (nat.cast_ne_zero.mpr (nat.prime.ne_zero p_prime.1))],
-    rw [expr padic_val_rat.padic_val_rat_self (nat.prime.one_lt p_prime.1)] ["at", ident split_frac],
-    have [ident r] [":", expr «expr ≤ »(1, padic_val_nat p b)] [":=", expr one_le_padic_val_nat_of_dvd b_split dvd],
-    exact_mod_cast [expr split_frac] }
-end
+protected theorem div {p : ℕ} [p_prime : Fact p.prime] {b : ℕ} (dvd : p ∣ b) :
+  padicValNat p (b / p) = padicValNat p b - 1 :=
+  by 
+    convert padicValNat.div_of_dvd p dvd 
+    rw [padic_val_nat_self p]
 
 /-- A version of `padic_val_rat.pow` for `padic_val_nat` -/
 protected theorem pow (p q n : ℕ) [Fact p.prime] (hq : q ≠ 0) : padicValNat p (q^n) = n*padicValNat p q :=
@@ -421,6 +422,17 @@ protected theorem pow (p q n : ℕ) [Fact p.prime] (hq : q ≠ 0) : padicValNat 
     apply @Nat.cast_injective ℤ 
     pushCast 
     exact padicValRat.pow _ (cast_ne_zero.mpr hq)
+
+@[simp]
+protected theorem prime_pow (p n : ℕ) [Fact p.prime] : padicValNat p (p^n) = n :=
+  by 
+    rw [padicValNat.pow p _ _ (Fact.out p.prime).ne_zero, padic_val_nat_self p, mul_oneₓ]
+
+protected theorem div_pow {p : ℕ} [p_prime : Fact p.prime] {b k : ℕ} (dvd : (p^k) ∣ b) :
+  padicValNat p (b / (p^k)) = padicValNat p b - k :=
+  by 
+    convert padicValNat.div_of_dvd p dvd 
+    rw [padicValNat.prime_pow]
 
 end padicValNat
 
@@ -512,80 +524,121 @@ protected theorem padicValNat.div' {p : ℕ} [p_prime : Fact p.prime] :
         ·
           exact hc
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem padic_val_nat_eq_factors_count
-(p : exprℕ())
-[hp : fact p.prime] : ∀ n : exprℕ(), «expr = »(padic_val_nat p n, (factors n).count p)
-| 0 := by simp [] [] [] [] [] []
-| 1 := by simp [] [] [] [] [] []
-| «expr + »(m, 2) := let n := «expr + »(m, 2) in
-let q := min_fac n in
-have hq : fact q.prime := ⟨min_fac_prime (show «expr ≠ »(«expr + »(m, 2), 1), by linarith [] [] [])⟩,
-have wf : «expr < »(«expr / »(n, q), n) := nat.div_lt_self (nat.succ_pos _) hq.1.one_lt,
-begin
-  rw [expr factors_add_two] [],
-  show [expr «expr = »(padic_val_nat p n, list.count p [«expr :: »/«expr :: »/«expr :: »](q, factors «expr / »(n, q)))],
-  rw ["[", expr list.count_cons', ",", "<-", expr padic_val_nat_eq_factors_count, "]"] [],
-  split_ifs [] ["with", ident h],
-  have [ident p_dvd_n] [":", expr «expr ∣ »(p, n)] [],
-  { have [] [":", expr «expr ∣ »(q, n)] [":=", expr nat.min_fac_dvd n],
-    cc },
-  { rw ["[", "<-", expr h, ",", expr padic_val_nat.div, "]"] [],
-    { have [] [":", expr «expr ≤ »(1, padic_val_nat p n)] [":=", expr one_le_padic_val_nat_of_dvd (by linarith [] [] []) p_dvd_n],
-      exact [expr (tsub_eq_iff_eq_add_of_le this).mp rfl] },
-    { exact [expr p_dvd_n] } },
-  { suffices [] [":", expr p.coprime q],
-    { rw ["[", expr padic_val_nat.div' this (min_fac_dvd n), ",", expr add_zero, "]"] [] },
-    rwa [expr nat.coprime_primes hp.1 hq.1] [] }
-end
-
-@[simp]
-theorem padic_val_nat_self (p : ℕ) [Fact p.prime] : padicValNat p p = 1 :=
+theorem padic_val_nat_eq_factors_count (p : ℕ) [hp : Fact p.prime] : ∀ n : ℕ, padicValNat p n = (factors n).count p
+| 0 =>
   by 
-    simp [padic_val_nat_def (Fact.out p.prime).ne_zero]
-
-@[simp]
-theorem padic_val_nat_prime_pow (p n : ℕ) [Fact p.prime] : padicValNat p (p^n) = n :=
+    simp 
+| 1 =>
   by 
-    rw [padicValNat.pow p _ _ (Fact.out p.prime).ne_zero, padic_val_nat_self p, mul_oneₓ]
+    simp 
+| m+2 =>
+  let n := m+2
+  let q := min_fac n 
+  have hq : Fact q.prime :=
+    ⟨min_fac_prime
+        (show (m+2) ≠ 1by 
+          linarith)⟩
+  have wf : n / q < n := Nat.div_lt_selfₓ (Nat.succ_posₓ _) hq.1.one_lt 
+  by 
+    rw [factors_add_two]
+    show padicValNat p n = List.count p (q :: factors (n / q))
+    rw [List.count_cons', ←padic_val_nat_eq_factors_count]
+    splitIfs with h 
+    have p_dvd_n : p ∣ n
+    ·
+      have  : q ∣ n := Nat.min_fac_dvd n 
+      cc
+    ·
+      rw [←h, padicValNat.div]
+      ·
+        have  : 1 ≤ padicValNat p n :=
+          one_le_padic_val_nat_of_dvd
+            (by 
+              linarith)
+            p_dvd_n 
+        exact (tsub_eq_iff_eq_add_of_le this).mp rfl
+      ·
+        exact p_dvd_n
+    ·
+      suffices  : p.coprime q
+      ·
+        rw [padicValNat.div' this (min_fac_dvd n), add_zeroₓ]
+      rwa [Nat.coprime_primes hp.1 hq.1]
 
 open_locale BigOperators
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prod_pow_prime_padic_val_nat
-(n : nat)
-(hn : «expr ≠ »(n, 0))
-(m : nat)
-(pr : «expr < »(n, m)) : «expr = »(«expr∏ in , »((p), finset.filter nat.prime (finset.range m), «expr ^ »(p, padic_val_nat p n)), n) :=
-begin
-  rw ["<-", expr pos_iff_ne_zero] ["at", ident hn],
-  have [ident H] [":", expr «expr = »((factors n : multiset exprℕ()).prod, n)] [],
-  { rw ["[", expr multiset.coe_prod, ",", expr prod_factors hn, "]"] [] },
-  rw [expr finset.prod_multiset_count] ["at", ident H],
-  conv_rhs [] [] { rw ["<-", expr H] },
-  refine [expr finset.prod_bij_ne_one (λ p hp hp', p) _ _ _ _],
-  { rintro [ident p, ident hp, ident hpn],
-    rw ["[", expr finset.mem_filter, ",", expr finset.mem_range, "]"] ["at", ident hp],
-    rw ["[", expr multiset.mem_to_finset, ",", expr multiset.mem_coe, ",", expr mem_factors_iff_dvd hn hp.2, "]"] [],
-    contrapose ["!"] [ident hpn],
-    haveI [ident Hp] [":", expr fact p.prime] [":=", expr ⟨hp.2⟩],
-    rw ["[", expr padic_val_nat_of_not_dvd hpn, ",", expr pow_zero, "]"] [] },
-  { intros [],
-    assumption },
-  { intros [ident p, ident hp, ident hpn],
-    rw ["[", expr multiset.mem_to_finset, ",", expr multiset.mem_coe, "]"] ["at", ident hp],
-    haveI [ident Hp] [":", expr fact p.prime] [":=", expr ⟨prime_of_mem_factors hp⟩],
-    simp [] [] ["only"] ["[", expr exists_prop, ",", expr ne.def, ",", expr finset.mem_filter, ",", expr finset.mem_range, "]"] [] [],
-    refine [expr ⟨p, ⟨_, Hp.1⟩, ⟨_, rfl⟩⟩],
-    { rw [expr mem_factors_iff_dvd hn Hp.1] ["at", ident hp],
-      exact [expr lt_of_le_of_lt (le_of_dvd hn hp) pr] },
-    { rw [expr padic_val_nat_eq_factors_count] [],
-      simpa [] [] [] ["[", expr ne.def, ",", expr multiset.coe_count, "]"] [] ["using", expr hpn] } },
-  { intros [ident p, ident hp, ident hpn],
-    rw ["[", expr finset.mem_filter, ",", expr finset.mem_range, "]"] ["at", ident hp],
-    haveI [ident Hp] [":", expr fact p.prime] [":=", expr ⟨hp.2⟩],
-    rw ["[", expr padic_val_nat_eq_factors_count, ",", expr multiset.coe_count, "]"] [] }
-end
+theorem prod_pow_prime_padic_val_nat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n < m) :
+  (∏ p in Finset.filter Nat.Prime (Finset.range m), p^padicValNat p n) = n :=
+  by 
+    rw [←pos_iff_ne_zero] at hn 
+    have H : (factors n : Multiset ℕ).Prod = n
+    ·
+      rw [Multiset.coe_prod, prod_factors hn]
+    rw [Finset.prod_multiset_count] at H 
+    convRHS => rw [←H]
+    refine' Finset.prod_bij_ne_one (fun p hp hp' => p) _ _ _ _
+    ·
+      rintro p hp hpn 
+      rw [Finset.mem_filter, Finset.mem_range] at hp 
+      rw [Multiset.mem_to_finset, Multiset.mem_coe, mem_factors_iff_dvd hn hp.2]
+      contrapose! hpn 
+      have Hp : Fact p.prime := ⟨hp.2⟩
+      rw [padic_val_nat_of_not_dvd hpn, pow_zeroₓ]
+    ·
+      intros 
+      assumption
+    ·
+      intro p hp hpn 
+      rw [Multiset.mem_to_finset, Multiset.mem_coe] at hp 
+      have Hp : Fact p.prime := ⟨prime_of_mem_factors hp⟩
+      simp only [exists_prop, Ne.def, Finset.mem_filter, Finset.mem_range]
+      refine' ⟨p, ⟨_, Hp.1⟩, ⟨_, rfl⟩⟩
+      ·
+        rw [mem_factors_iff_dvd hn Hp.1] at hp 
+        exact lt_of_le_of_ltₓ (le_of_dvd hn hp) pr
+      ·
+        rw [padic_val_nat_eq_factors_count]
+        simpa [Ne.def, Multiset.coe_count] using hpn
+    ·
+      intro p hp hpn 
+      rw [Finset.mem_filter, Finset.mem_range] at hp 
+      have Hp : Fact p.prime := ⟨hp.2⟩
+      rw [padic_val_nat_eq_factors_count, Multiset.coe_count]
+
+theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (p : ℕ) [Fact p.prime] (hn : n ≠ 0) :
+  (Finset.range (padicValNat p n+1)).Image (pow p) ⊆ n.divisors :=
+  by 
+    intro t ht 
+    simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht 
+    obtain ⟨k, hk, rfl⟩ := ht 
+    rw [Nat.mem_divisors]
+    exact
+      ⟨(pow_dvd_pow p$
+              by 
+                linarith).trans
+          pow_padic_val_nat_dvd,
+        hn⟩
+
+theorem range_pow_padic_val_nat_subset_divisors' {n : ℕ} (p : ℕ) [h : Fact p.prime] :
+  ((Finset.range (padicValNat p n)).Image fun t => p^t+1) ⊆ n.divisors \ {1} :=
+  by 
+    rcases eq_or_ne n 0 with (rfl | hn)
+    ·
+      simp 
+    intro t ht 
+    simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht 
+    obtain ⟨k, hk, rfl⟩ := ht 
+    rw [Finset.mem_sdiff, Nat.mem_divisors]
+    refine'
+      ⟨⟨(pow_dvd_pow p$
+                by 
+                  linarith).trans
+            pow_padic_val_nat_dvd,
+          hn⟩,
+        _⟩
+    rw [Finset.mem_singleton]
+    nthRw 1[←one_pow (k+1)]
+    exact (Nat.pow_lt_pow_of_lt_left h.1.one_lt$ Nat.succ_posₓ k).ne'
 
 end padicValNat
 
@@ -594,7 +647,7 @@ If `q ≠ 0`, the p-adic norm of a rational `q` is `p ^ (-(padic_val_rat p q))`.
 If `q = 0`, the p-adic norm of `q` is 0.
 -/
 def padicNorm (p : ℕ) (q : ℚ) : ℚ :=
-  if q = 0 then 0 else («expr↑ » p : ℚ)^-padicValRat p q
+  if q = 0 then 0 else (↑p : ℚ)^-padicValRat p q
 
 namespace padicNorm
 
@@ -662,18 +715,14 @@ See also `padic_norm.padic_norm_p` for a version that assumes `1 < p`.
 theorem padic_norm_p_of_prime (p : ℕ) [Fact p.prime] : padicNorm p p = 1 / p :=
   padic_norm_p$ Nat.Prime.one_lt (Fact.out _)
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The p-adic norm of `q` is `1` if `q` is prime and not equal to `p`. -/
-theorem padic_norm_of_prime_of_ne
-{p q : exprℕ()}
-[p_prime : fact p.prime]
-[q_prime : fact q.prime]
-(neq : «expr ≠ »(p, q)) : «expr = »(padic_norm p q, 1) :=
-begin
-  have [ident p] [":", expr «expr = »(padic_val_rat p q, 0)] [],
-  { exact_mod_cast [expr @padic_val_nat_primes p q p_prime q_prime neq] },
-  simp [] [] [] ["[", expr padic_norm, ",", expr p, ",", expr q_prime.1.1, ",", expr q_prime.1.ne_zero, "]"] [] []
-end
+theorem padic_norm_of_prime_of_ne {p q : ℕ} [p_prime : Fact p.prime] [q_prime : Fact q.prime] (neq : p ≠ q) :
+  padicNorm p q = 1 :=
+  by 
+    have p : padicValRat p q = 0
+    ·
+      exactModCast @padic_val_nat_primes p q p_prime q_prime neq 
+    simp [padicNorm, p, q_prime.1.1, q_prime.1.ne_zero]
 
 /--
 The p-adic norm of `p` is less than 1 if `1 < p`.
@@ -756,7 +805,7 @@ protected theorem mul (q r : ℚ) : padicNorm p (q*r) = padicNorm p q*padicNorm 
         simp [hr]
     else
       have  : (q*r) ≠ 0 := mul_ne_zero hq hr 
-      have  : («expr↑ » p : ℚ) ≠ 0 :=
+      have  : (↑p : ℚ) ≠ 0 :=
         by 
           simp [hp.1.ne_zero]
       by 
@@ -778,7 +827,7 @@ protected theorem div (q r : ℚ) : padicNorm p (q / r) = padicNorm p q / padicN
 /--
 The p-adic norm of an integer is at most 1.
 -/
-protected theorem of_int (z : ℤ) : padicNorm p («expr↑ » z) ≤ 1 :=
+protected theorem of_int (z : ℤ) : padicNorm p (↑z) ≤ 1 :=
   if hz : z = 0 then
     by 
       simp [hz, zero_le_one]
@@ -796,26 +845,38 @@ protected theorem of_int (z : ℤ) : padicNorm p («expr↑ » z) ≤ 1 :=
           simp 
       exactModCast hz
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem nonarchimedean_aux
-{q r : exprℚ()}
-(h : «expr ≤ »(padic_val_rat p q, padic_val_rat p r)) : «expr ≤ »(padic_norm p «expr + »(q, r), max (padic_norm p q) (padic_norm p r)) :=
-have hnqp : «expr ≥ »(padic_norm p q, 0), from padic_norm.nonneg _ _,
-have hnrp : «expr ≥ »(padic_norm p r, 0), from padic_norm.nonneg _ _,
-if hq : «expr = »(q, 0) then by simp [] [] [] ["[", expr hq, ",", expr max_eq_right hnrp, ",", expr le_max_right, "]"] [] [] else if hr : «expr = »(r, 0) then by simp [] [] [] ["[", expr hr, ",", expr max_eq_left hnqp, ",", expr le_max_left, "]"] [] [] else if hqr : «expr = »(«expr + »(q, r), 0) then le_trans (by simpa [] [] [] ["[", expr hqr, "]"] [] ["using", expr hnqp]) (le_max_left _ _) else begin
-  unfold [ident padic_norm] [],
-  split_ifs [] [],
-  apply [expr le_max_iff.2],
-  left,
-  apply [expr zpow_le_of_le],
-  { exact_mod_cast [expr le_of_lt hp.1.one_lt] },
-  { apply [expr neg_le_neg],
-    have [] [":", expr «expr = »(padic_val_rat p q, min (padic_val_rat p q) (padic_val_rat p r))] [],
-    from [expr (min_eq_left h).symm],
-    rw [expr this] [],
-    apply [expr min_le_padic_val_rat_add]; assumption }
-end
+private theorem nonarchimedean_aux {q r : ℚ} (h : padicValRat p q ≤ padicValRat p r) :
+  padicNorm p (q+r) ≤ max (padicNorm p q) (padicNorm p r) :=
+  have hnqp : padicNorm p q ≥ 0 := padicNorm.nonneg _ _ 
+  have hnrp : padicNorm p r ≥ 0 := padicNorm.nonneg _ _ 
+  if hq : q = 0 then
+    by 
+      simp [hq, max_eq_rightₓ hnrp, le_max_rightₓ]
+  else
+    if hr : r = 0 then
+      by 
+        simp [hr, max_eq_leftₓ hnqp, le_max_leftₓ]
+    else
+      if hqr : (q+r) = 0 then
+        le_transₓ
+          (by 
+            simpa [hqr] using hnqp)
+          (le_max_leftₓ _ _)
+      else
+        by 
+          unfold padicNorm 
+          splitIfs 
+          apply le_max_iff.2
+          left 
+          apply zpow_le_of_le
+          ·
+            exactModCast le_of_ltₓ hp.1.one_lt
+          ·
+            apply neg_le_neg 
+            have  : padicValRat p q = min (padicValRat p q) (padicValRat p r)
+            exact (min_eq_leftₓ h).symm 
+            rw [this]
+            apply min_le_padic_val_rat_add <;> assumption
 
 /--
 The p-adic norm is nonarchimedean: the norm of `p + q` is at most the max of the norm of `p` and
@@ -843,36 +904,42 @@ protected theorem sub {q r : ℚ} : padicNorm p (q - r) ≤ max (padicNorm p q) 
   by 
     rw [sub_eq_add_neg, ←padicNorm.neg p r] <;> apply padicNorm.nonarchimedean
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If the p-adic norms of `q` and `r` are different, then the norm of `q + r` is equal to the max of
 the norms of `q` and `r`.
 -/
-theorem add_eq_max_of_ne
-{q r : exprℚ()}
-(hne : «expr ≠ »(padic_norm p q, padic_norm p r)) : «expr = »(padic_norm p «expr + »(q, r), max (padic_norm p q) (padic_norm p r)) :=
-begin
-  wlog [ident hle] [] [":=", expr le_total (padic_norm p r) (padic_norm p q)] ["using", "[", ident q, ident r, "]"],
-  have [ident hlt] [":", expr «expr < »(padic_norm p r, padic_norm p q)] [],
-  from [expr lt_of_le_of_ne hle hne.symm],
-  have [] [":", expr «expr ≤ »(padic_norm p q, max (padic_norm p «expr + »(q, r)) (padic_norm p r))] [],
-  from [expr calc
-     «expr = »(padic_norm p q, padic_norm p «expr - »(«expr + »(q, r), r)) : by congr; ring []
-     «expr ≤ »(..., max (padic_norm p «expr + »(q, r)) (padic_norm p «expr- »(r))) : padic_norm.nonarchimedean p
-     «expr = »(..., max (padic_norm p «expr + »(q, r)) (padic_norm p r)) : by simp [] [] [] [] [] []],
-  have [ident hnge] [":", expr «expr ≤ »(padic_norm p r, padic_norm p «expr + »(q, r))] [],
-  { apply [expr le_of_not_gt],
-    intro [ident hgt],
-    rw [expr max_eq_right_of_lt hgt] ["at", ident this],
-    apply [expr not_lt_of_ge this],
-    assumption },
-  have [] [":", expr «expr ≤ »(padic_norm p q, padic_norm p «expr + »(q, r))] [],
-  by rwa ["[", expr max_eq_left hnge, "]"] ["at", ident this],
-  apply [expr _root_.le_antisymm],
-  { apply [expr padic_norm.nonarchimedean p] },
-  { rw [expr max_eq_left_of_lt hlt] [],
-    assumption }
-end
+theorem add_eq_max_of_ne {q r : ℚ} (hne : padicNorm p q ≠ padicNorm p r) :
+  padicNorm p (q+r) = max (padicNorm p q) (padicNorm p r) :=
+  by 
+    wlog hle := le_totalₓ (padicNorm p r) (padicNorm p q) using q r 
+    have hlt : padicNorm p r < padicNorm p q 
+    exact lt_of_le_of_neₓ hle hne.symm 
+    have  : padicNorm p q ≤ max (padicNorm p (q+r)) (padicNorm p r)
+    exact
+      calc padicNorm p q = padicNorm p ((q+r) - r) :=
+        by 
+          congr <;> ring 
+        _ ≤ max (padicNorm p (q+r)) (padicNorm p (-r)) := padicNorm.nonarchimedean p 
+        _ = max (padicNorm p (q+r)) (padicNorm p r) :=
+        by 
+          simp 
+        
+    have hnge : padicNorm p r ≤ padicNorm p (q+r)
+    ·
+      apply le_of_not_gtₓ 
+      intro hgt 
+      rw [max_eq_right_of_ltₓ hgt] at this 
+      apply not_lt_of_geₓ this 
+      assumption 
+    have  : padicNorm p q ≤ padicNorm p (q+r)
+    ·
+      rwa [max_eq_leftₓ hnge] at this 
+    apply _root_.le_antisymm
+    ·
+      apply padicNorm.nonarchimedean p
+    ·
+      rw [max_eq_left_of_ltₓ hlt]
+      assumption
 
 /--
 The p-adic norm is an absolute value: positive-definite and multiplicative, satisfying the triangle
@@ -893,25 +960,27 @@ instance : IsAbsoluteValue (padicNorm p) :=
 
 variable {p}
 
--- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dvd_iff_norm_le
-{n : exprℕ()}
-{z : exprℤ()} : «expr ↔ »(«expr ∣ »(«expr↑ »(«expr ^ »(p, n)), z), «expr ≤ »(padic_norm p z, «expr ^ »(«expr↑ »(p), («expr- »(n) : exprℤ())))) :=
-begin
-  unfold [ident padic_norm] [],
-  split_ifs [] ["with", ident hz],
-  { norm_cast ["at", ident hz],
-    have [] [":", expr «expr ≤ »(0, («expr ^ »(p, n) : exprℚ()))] [],
-    { apply [expr pow_nonneg],
-      exact_mod_cast [expr le_of_lt hp.1.pos] },
-    simp [] [] [] ["[", expr hz, ",", expr this, "]"] [] [] },
-  { rw ["[", expr zpow_le_iff_le, ",", expr neg_le_neg_iff, ",", expr padic_val_rat_of_int _ hp.1.ne_one _, "]"] [],
-    { norm_cast [],
-      rw ["[", "<-", expr enat.coe_le_coe, ",", expr enat.coe_get, ",", "<-", expr multiplicity.pow_dvd_iff_le_multiplicity, "]"] [],
-      simp [] [] [] [] [] [] },
-    { exact_mod_cast [expr hz] },
-    { exact_mod_cast [expr hp.1.one_lt] } }
-end
+theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p^n) ∣ z ↔ padicNorm p z ≤ (↑p^(-n : ℤ)) :=
+  by 
+    unfold padicNorm 
+    splitIfs with hz
+    ·
+      normCast  at hz 
+      have  : 0 ≤ (p^n : ℚ)
+      ·
+        apply pow_nonneg 
+        exactModCast le_of_ltₓ hp.1.Pos 
+      simp [hz, this]
+    ·
+      rw [zpow_le_iff_le, neg_le_neg_iff, padic_val_rat_of_int _ hp.1.ne_one _]
+      ·
+        normCast 
+        rw [←Enat.coe_le_coe, Enat.coe_get, ←multiplicity.pow_dvd_iff_le_multiplicity]
+        simp 
+      ·
+        exactModCast hz
+      ·
+        exactModCast hp.1.one_lt
 
 end padicNorm
 

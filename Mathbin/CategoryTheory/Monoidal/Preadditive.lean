@@ -9,7 +9,7 @@ is linear in both factors.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 

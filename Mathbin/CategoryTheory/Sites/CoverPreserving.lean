@@ -34,7 +34,7 @@ cover-preserving and compatible-preserving, then `G ⋙ -` (`uᵖ`) as a functor
 
 universe w v₁ v₂ v₃ u₁ u₂ u₃
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -138,12 +138,12 @@ theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : compatible_
     change family_of_elements (G.op ⋙ ℱ.val ⋙ coyoneda.obj (op X)) _ at x 
     let H := ℱ.2 X _ (hG₂.cover_preserve hS)
     let hx' := hx.functor_pushforward hG₁ (sheaf_over ℱ X)
-    split 
+    constructor 
     swap
     ·
       apply H.amalgamate (x.functor_pushforward G)
       exact hx' 
-    split 
+    constructor
     ·
       intro V f hf 
       convert H.is_amalgamation hx' (G.map f) (image_mem_functor_pushforward G S hf)
@@ -153,6 +153,7 @@ theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : compatible_
       refine' H.is_separated_for _ y _ _ (H.is_amalgamation (hx.functor_pushforward hG₁ (sheaf_over ℱ X)))
       rintro V f ⟨Z, f', g', h, rfl⟩
       erw [family_of_elements.comp_of_compatible (S.functor_pushforward G) hx' (image_mem_functor_pushforward G S h) g']
+      dsimp  at hy⊢
       simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ←hy f' h]
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/

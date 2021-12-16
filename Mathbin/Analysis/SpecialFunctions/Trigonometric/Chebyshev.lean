@@ -14,21 +14,25 @@ namespace Polynomial.Chebyshev
 
 open Polynomial Complex
 
--- error in Analysis.SpecialFunctions.Trigonometric.Chebyshev: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `n`-th Chebyshev polynomial of the first kind evaluates on `cos θ` to the
 value `cos (n * θ)`. -/
-theorem T_complex_cos (θ : exprℂ()) : ∀ n, «expr = »((T exprℂ() n).eval (cos θ), cos «expr * »(n, θ))
-| 0 := by simp [] [] ["only"] ["[", expr T_zero, ",", expr eval_one, ",", expr nat.cast_zero, ",", expr zero_mul, ",", expr cos_zero, "]"] [] []
-| 1 := by simp [] [] ["only"] ["[", expr eval_X, ",", expr one_mul, ",", expr T_one, ",", expr nat.cast_one, "]"] [] []
-| «expr + »(n, 2) := begin
-  simp [] [] ["only"] ["[", expr eval_X, ",", expr eval_one, ",", expr T_add_two, ",", expr eval_sub, ",", expr eval_bit0, ",", expr nat.cast_succ, ",", expr eval_mul, "]"] [] [],
-  rw ["[", expr T_complex_cos «expr + »(n, 1), ",", expr T_complex_cos n, "]"] [],
-  have [ident aux] [":", expr «expr = »(«expr * »(sin θ, sin θ), «expr - »(1, «expr * »(cos θ, cos θ)))] [],
-  { rw ["<-", expr sin_sq_add_cos_sq θ] [],
-    ring [] },
-  simp [] [] ["only"] ["[", expr nat.cast_add, ",", expr nat.cast_one, ",", expr add_mul, ",", expr cos_add, ",", expr one_mul, ",", expr sin_add, ",", expr mul_assoc, ",", expr aux, "]"] [] [],
-  ring []
-end
+theorem T_complex_cos (θ : ℂ) : ∀ n, (T ℂ n).eval (cos θ) = cos (n*θ)
+| 0 =>
+  by 
+    simp only [T_zero, eval_one, Nat.cast_zero, zero_mul, cos_zero]
+| 1 =>
+  by 
+    simp only [eval_X, one_mulₓ, T_one, Nat.cast_one]
+| n+2 =>
+  by 
+    simp only [eval_X, eval_one, T_add_two, eval_sub, eval_bit0, Nat.cast_succ, eval_mul]
+    rw [T_complex_cos (n+1), T_complex_cos n]
+    have aux : (sin θ*sin θ) = 1 - cos θ*cos θ
+    ·
+      rw [←sin_sq_add_cos_sq θ]
+      ring 
+    simp only [Nat.cast_add, Nat.cast_one, add_mulₓ, cos_add, one_mulₓ, sin_add, mul_assocₓ, aux]
+    ring
 
 /-- `cos (n * θ)` is equal to the `n`-th Chebyshev polynomial of the first kind evaluated
 on `cos θ`. -/

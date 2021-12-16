@@ -31,7 +31,7 @@ properties of eigenvalues and eigenvectors.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Finset
 
@@ -55,14 +55,14 @@ variable {α : Type _} [CommSemiringₓ α] (E : LinearRecurrence α)
 /-- We say that a sequence `u` is solution of `linear_recurrence order coeffs` when we have
   `u (n + order) = ∑ i : fin order, coeffs i * u (n + i)` for any `n`. -/
 def is_solution (u : ℕ → α) :=
-  ∀ n, u (n+E.order) = ∑i, E.coeffs i*u (n+i)
+  ∀ n, u (n+E.order) = ∑ i, E.coeffs i*u (n+i)
 
 /-- A solution of a `linear_recurrence` which satisfies certain initial conditions.
   We will prove this is the only such solution. -/
 def mk_sol (init : Finₓ E.order → α) : ℕ → α
 | n =>
   if h : n < E.order then init ⟨n, h⟩ else
-    ∑k : Finₓ E.order,
+    ∑ k : Finₓ E.order,
       have  : ((n - E.order)+k) < n :=
         by 
           rw [add_commₓ, ←add_tsub_assoc_of_le (not_lt.mp h), tsub_lt_iff_left]
@@ -118,21 +118,19 @@ theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Finₓ E.order → 
   (heq : ∀ n : Finₓ E.order, u n = init n) : u = E.mk_sol init :=
   funext (E.eq_mk_of_is_sol_of_eq_init h HEq)
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
-def sol_space : Submodule α (ℕ → α) :=
-  { Carrier := { u | E.is_solution u },
-    zero_mem' :=
-      fun n =>
-        by 
-          simp ,
-    add_mem' :=
-      fun u v hu hv n =>
-        by 
-          simp [mul_addₓ, sum_add_distrib, hu n, hv n],
-    smul_mem' :=
-      fun a u hu n =>
-        by 
-          simp [hu n, mul_sum] <;> congr <;> ext <;> acRfl }
+  def
+    sol_space
+    : Submodule α ℕ → α
+    :=
+      {
+        Carrier := { u | E.is_solution u } ,
+          zero_mem' := fun n => by simp ,
+          add_mem' := fun u v hu hv n => by simp [ mul_addₓ , sum_add_distrib , hu n , hv n ] ,
+          smul_mem' := fun a u hu n => by simp [ hu n , mul_sum ] <;> congr <;> ext <;> acRfl
+        }
 
 /-- Defining property of the solution space : `u` is a solution
   iff it belongs to the solution space. -/
@@ -162,12 +160,12 @@ def to_init : E.sol_space ≃ₗ[α] Finₓ E.order → α :=
 
 /-- Two solutions are equal iff they are equal on `range E.order`. -/
 theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.is_solution u) (hv : E.is_solution v) :
-  u = v ↔ Set.EqOn u v («expr↑ » (range E.order)) :=
+  u = v ↔ Set.EqOn u v (↑range E.order) :=
   by 
     refine' Iff.intro (fun h x hx => h ▸ rfl) _ 
     intro h 
-    set u' : «expr↥ » E.sol_space := ⟨u, hu⟩
-    set v' : «expr↥ » E.sol_space := ⟨v, hv⟩
+    set u' : ↥E.sol_space := ⟨u, hu⟩
+    set v' : ↥E.sol_space := ⟨v, hv⟩
     change u'.val = v'.val 
     suffices h' : u' = v' 
     exact h' ▸ rfl 
@@ -183,7 +181,7 @@ theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.is_solution u) (hv : E.is_s
 /-- `E.tuple_succ` maps `![s₀, s₁, ..., sₙ]` to `![s₁, ..., sₙ, ∑ (E.coeffs i) * sᵢ]`,
   where `n := E.order`. -/
 def tuple_succ : (Finₓ E.order → α) →ₗ[α] Finₓ E.order → α :=
-  { toFun := fun X i => if h : ((i : ℕ)+1) < E.order then X ⟨i+1, h⟩ else ∑i, E.coeffs i*X i,
+  { toFun := fun X i => if h : ((i : ℕ)+1) < E.order then X ⟨i+1, h⟩ else ∑ i, E.coeffs i*X i,
     map_add' :=
       fun x y =>
         by 
@@ -219,7 +217,7 @@ variable {α : Type _} [CommRingₓ α] (E : LinearRecurrence α)
 /-- The characteristic polynomial of `E` is
 `X ^ E.order - ∑ i : fin E.order, (E.coeffs i) * X ^ i`. -/
 def char_poly : Polynomial α :=
-  Polynomial.monomial E.order 1 - ∑i : Finₓ E.order, Polynomial.monomial i (E.coeffs i)
+  Polynomial.monomial E.order 1 - ∑ i : Finₓ E.order, Polynomial.monomial i (E.coeffs i)
 
 /-- The geometric sequence `q^n` is a solution of `E` iff
   `q` is a root of `E`'s characteristic polynomial. -/
@@ -227,7 +225,7 @@ theorem geom_sol_iff_root_char_poly (q : α) : (E.is_solution fun n => q^n) ↔ 
   by 
     rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
     simp only [Polynomial.eval₂_finset_sum, one_mulₓ, RingHom.id_apply, Polynomial.eval₂_monomial, Polynomial.eval₂_sub]
-    split 
+    constructor
     ·
       intro h 
       simpa [sub_eq_zero] using h 0

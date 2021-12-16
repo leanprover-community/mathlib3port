@@ -39,7 +39,8 @@ initialize
 initialize 
   registerTraceClass.1 `simps.debug
 
--- error in Tactic.Simps: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 Projection data for a single projection of a structure, consisting of the following fields:
 - the name used in the generated `simp` lemmas
@@ -56,14 +57,13 @@ Projection data for a single projection of a structure, consisting of the follow
 - A boolean specifying whether `simp` lemmas are generated for this projection by default.
 - A boolean specifying whether this projection is written as prefix.
 -/
-@[protect_proj #[], derive #["[", expr has_reflect, ",", expr inhabited, "]"]]
-meta
-structure projection_data :=
-  (name : name)
-  (expr : expr)
-  (proj_nrs : list exprℕ())
-  (is_default : bool)
-  (is_prefix : bool)
+@[protectProj]
+unsafe structure projection_data where 
+  Name : Name 
+  expr : expr 
+  proj_nrs : List ℕ 
+  is_default : Bool 
+  IsPrefix : Bool deriving [anonymous], [anonymous]
 
 /-- Temporary projection data parsed from `initialize_simps_projections` before the expression
   matching this projection has been found. Only used internally in `simps_get_raw_projections`. -/
@@ -513,7 +513,8 @@ add_tactic_doc
   { Name := "initialize_simps_projections", category := DocCategory.cmd,
     declNames := [`initialize_simps_projections_cmd], tags := ["simplification"] }
 
--- error in Tactic.Simps: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
   Configuration options for the `@[simps]` attribute.
   * `attrs` specifies the list of attributes given to the generated lemmas. Default: ``[`simp]``.
@@ -552,16 +553,15 @@ add_tactic_doc
     `@[to_additive, simps]` (in that order), where `nm` is the additive name of the original
     declaration.
 -/
-@[derive #["[", expr has_reflect, ",", expr inhabited, "]"]]
-structure simps_cfg :=
-  (attrs := «expr[ , ]»([`simp]))
-  (simp_rhs := ff)
-  (type_md := transparency.instances)
-  (rhs_md := transparency.none)
-  (fully_applied := tt)
-  (not_recursive := «expr[ , ]»([`prod, `pprod]))
-  (trace := ff)
-  (add_additive := @none name)
+structure SimpsCfg where 
+  attrs := [`simp]
+  simpRhs := ff 
+  typeMd := transparency.instances 
+  rhsMd := transparency.none 
+  fullyApplied := tt 
+  notRecursive := [`prod, `pprod]
+  trace := ff 
+  addAdditive := @none Name deriving [anonymous], [anonymous]
 
 /-- A common configuration for `@[simps]`: generate equalities between functions instead equalities
   between fully applied expressions. -/

@@ -37,16 +37,14 @@ variable {f : Polynomial R} (hf : f.is_primitive)
 
 include hinj hf
 
--- error in RingTheory.Polynomial.GaussLemma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_primitive.is_unit_iff_is_unit_map_of_injective : «expr ↔ »(is_unit f, is_unit (map φ f)) :=
-begin
-  refine [expr ⟨(map_ring_hom φ).is_unit_map, λ h, _⟩],
-  rcases [expr is_unit_iff.1 h, "with", "⟨", "_", ",", "⟨", ident u, ",", ident rfl, "⟩", ",", ident hu, "⟩"],
-  have [ident hdeg] [] [":=", expr degree_C u.ne_zero],
-  rw ["[", expr hu, ",", expr degree_map' hinj, "]"] ["at", ident hdeg],
-  rw ["[", expr eq_C_of_degree_eq_zero hdeg, ",", expr is_primitive_iff_content_eq_one, ",", expr content_C, ",", expr normalize_eq_one, "]"] ["at", ident hf],
-  rwa ["[", expr eq_C_of_degree_eq_zero hdeg, ",", expr is_unit_C, "]"] []
-end
+theorem is_primitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) :=
+  by 
+    refine' ⟨(map_ring_hom φ).is_unit_map, fun h => _⟩
+    rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
+    have hdeg := degree_C u.ne_zero 
+    rw [hu, degree_map' hinj] at hdeg 
+    rw [eq_C_of_degree_eq_zero hdeg, is_primitive_iff_content_eq_one, content_C, normalize_eq_one] at hf 
+    rwa [eq_C_of_degree_eq_zero hdeg, is_unit_C]
 
 theorem is_primitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreducible (map φ f)) : Irreducible f :=
   by 
@@ -84,7 +82,7 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : Polyn
     apply is_unit_of_mul_is_unit_right 
     rw [←hc, (integer_normalization R⁰ p).eq_C_content_mul_prim_part, ←hu, ←RingHom.map_mul, is_unit_iff]
     refine'
-      ⟨algebraMap R K ((integer_normalization R⁰ p).content*«expr↑ » u), is_unit_iff_ne_zero.2 fun con => _,
+      ⟨algebraMap R K ((integer_normalization R⁰ p).content*↑u), is_unit_iff_ne_zero.2 fun con => _,
         by 
           simp ⟩
     replace con := (algebraMap R K).injective_iff.1 (IsFractionRing.injective _ _) _ Con 
@@ -95,69 +93,73 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : Polyn
     ·
       apply Units.ne_zero _ Con
 
--- error in RingTheory.Polynomial.GaussLemma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Gauss's Lemma** states that a primitive polynomial is irreducible iff it is irreducible in the
   fraction field. -/
-theorem is_primitive.irreducible_iff_irreducible_map_fraction_map
-{p : polynomial R}
-(hp : p.is_primitive) : «expr ↔ »(irreducible p, irreducible (p.map (algebra_map R K))) :=
-begin
-  refine [expr ⟨λ
-    hi, ⟨λ
-     h, hi.not_unit (hp.is_unit_iff_is_unit_map.2 h), λ
-     a b hab, _⟩, hp.irreducible_of_irreducible_map_of_injective (is_fraction_ring.injective _ _)⟩],
-  obtain ["⟨", "⟨", ident c, ",", ident c0, "⟩", ",", ident hc, "⟩", ":=", expr integer_normalization_map_to_map «expr ⁰»(R) a],
-  obtain ["⟨", "⟨", ident d, ",", ident d0, "⟩", ",", ident hd, "⟩", ":=", expr integer_normalization_map_to_map «expr ⁰»(R) b],
-  rw ["[", expr algebra.smul_def, ",", expr algebra_map_apply, ",", expr subtype.coe_mk, "]"] ["at", ident hc, ident hd],
-  rw [expr mem_non_zero_divisors_iff_ne_zero] ["at", ident c0, ident d0],
-  have [ident hcd0] [":", expr «expr ≠ »(«expr * »(c, d), 0)] [":=", expr mul_ne_zero c0 d0],
-  rw ["[", expr ne.def, ",", "<-", expr C_eq_zero, "]"] ["at", ident hcd0],
-  have [ident h1] [":", expr «expr = »(«expr * »(«expr * »(C c, C d), p), «expr * »(integer_normalization «expr ⁰»(R) a, integer_normalization «expr ⁰»(R) b))] [],
-  { apply [expr map_injective (algebra_map R K) (is_fraction_ring.injective _ _) _],
-    rw ["[", expr map_mul, ",", expr map_mul, ",", expr map_mul, ",", expr hc, ",", expr hd, ",", expr map_C, ",", expr map_C, ",", expr hab, "]"] [],
-    ring [] },
-  obtain ["⟨", ident u, ",", ident hu, "⟩", ":", expr associated «expr * »(c, d) «expr * »(content (integer_normalization «expr ⁰»(R) a), content (integer_normalization «expr ⁰»(R) b))],
-  { rw ["[", "<-", expr dvd_dvd_iff_associated, ",", "<-", expr normalize_eq_normalize_iff, ",", expr normalize.map_mul, ",", expr normalize.map_mul, ",", expr normalize_content, ",", expr normalize_content, ",", "<-", expr mul_one «expr * »(normalize c, normalize d), ",", "<-", expr hp.content_eq_one, ",", "<-", expr content_C, ",", "<-", expr content_C, ",", "<-", expr content_mul, ",", "<-", expr content_mul, ",", "<-", expr content_mul, ",", expr h1, "]"] [] },
-  rw ["[", "<-", expr ring_hom.map_mul, ",", expr eq_comm, ",", expr (integer_normalization «expr ⁰»(R) a).eq_C_content_mul_prim_part, ",", expr (integer_normalization «expr ⁰»(R) b).eq_C_content_mul_prim_part, ",", expr mul_assoc, ",", expr mul_comm _ «expr * »(C _, _), ",", "<-", expr mul_assoc, ",", "<-", expr mul_assoc, ",", "<-", expr ring_hom.map_mul, ",", "<-", expr hu, ",", expr ring_hom.map_mul, ",", expr mul_assoc, ",", expr mul_assoc, ",", "<-", expr mul_assoc (C «expr↑ »(u)), "]"] ["at", ident h1],
-  have [ident h0] [":", expr «expr ∧ »(«expr ≠ »(a, 0), «expr ≠ »(b, 0))] [],
-  { classical,
-    rw ["[", expr ne.def, ",", expr ne.def, ",", "<-", expr decidable.not_or_iff_and_not, ",", "<-", expr mul_eq_zero, ",", "<-", expr hab, "]"] [],
-    intro [ident con],
-    apply [expr hp.ne_zero (map_injective (algebra_map R K) (is_fraction_ring.injective _ _) _)],
-    simp [] [] [] ["[", expr con, "]"] [] [] },
-  rcases [expr hi.is_unit_or_is_unit (mul_left_cancel₀ hcd0 h1).symm, "with", ident h, "|", ident h],
-  { right,
-    apply [expr is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.2 (is_unit_of_mul_is_unit_right h)] },
-  { left,
-    apply [expr is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.1 h] }
-end
+theorem is_primitive.irreducible_iff_irreducible_map_fraction_map {p : Polynomial R} (hp : p.is_primitive) :
+  Irreducible p ↔ Irreducible (p.map (algebraMap R K)) :=
+  by 
+    refine'
+      ⟨fun hi => ⟨fun h => hi.not_unit (hp.is_unit_iff_is_unit_map.2 h), fun a b hab => _⟩,
+        hp.irreducible_of_irreducible_map_of_injective (IsFractionRing.injective _ _)⟩
+    obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ a 
+    obtain ⟨⟨d, d0⟩, hd⟩ := integer_normalization_map_to_map R⁰ b 
+    rw [Algebra.smul_def, algebra_map_apply, Subtype.coe_mk] at hc hd 
+    rw [mem_non_zero_divisors_iff_ne_zero] at c0 d0 
+    have hcd0 : (c*d) ≠ 0 := mul_ne_zero c0 d0 
+    rw [Ne.def, ←C_eq_zero] at hcd0 
+    have h1 : ((C c*C d)*p) = integer_normalization R⁰ a*integer_normalization R⁰ b
+    ·
+      apply map_injective (algebraMap R K) (IsFractionRing.injective _ _) _ 
+      rw [map_mul, map_mul, map_mul, hc, hd, map_C, map_C, hab]
+      ring 
+    obtain ⟨u, hu⟩ : Associated (c*d) (content (integer_normalization R⁰ a)*content (integer_normalization R⁰ b))
+    ·
+      rw [←dvd_dvd_iff_associated, ←normalize_eq_normalize_iff, normalize.map_mul, normalize.map_mul, normalize_content,
+        normalize_content, ←mul_oneₓ (normalize c*normalize d), ←hp.content_eq_one, ←content_C, ←content_C,
+        ←content_mul, ←content_mul, ←content_mul, h1]
+    rw [←RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_prim_part,
+      (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assocₓ, mul_commₓ _ (C _*_), ←mul_assocₓ,
+      ←mul_assocₓ, ←RingHom.map_mul, ←hu, RingHom.map_mul, mul_assocₓ, mul_assocₓ, ←mul_assocₓ (C (↑u))] at h1 
+    have h0 : a ≠ 0 ∧ b ≠ 0
+    ·
+      classical 
+      rw [Ne.def, Ne.def, ←Decidable.not_or_iff_and_not, ←mul_eq_zero, ←hab]
+      intro con 
+      apply hp.ne_zero (map_injective (algebraMap R K) (IsFractionRing.injective _ _) _)
+      simp [Con]
+    rcases hi.is_unit_or_is_unit (mul_left_cancel₀ hcd0 h1).symm with (h | h)
+    ·
+      right 
+      apply is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.2 (is_unit_of_mul_is_unit_right h)
+    ·
+      left 
+      apply is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.1 h
 
--- error in RingTheory.Polynomial.GaussLemma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_primitive.dvd_of_fraction_map_dvd_fraction_map
-{p q : polynomial R}
-(hp : p.is_primitive)
-(hq : q.is_primitive)
-(h_dvd : «expr ∣ »(p.map (algebra_map R K), q.map (algebra_map R K))) : «expr ∣ »(p, q) :=
-begin
-  rcases [expr h_dvd, "with", "⟨", ident r, ",", ident hr, "⟩"],
-  obtain ["⟨", "⟨", ident s, ",", ident s0, "⟩", ",", ident hs, "⟩", ":=", expr integer_normalization_map_to_map «expr ⁰»(R) r],
-  rw ["[", expr subtype.coe_mk, ",", expr algebra.smul_def, ",", expr algebra_map_apply, "]"] ["at", ident hs],
-  have [ident h] [":", expr «expr ∣ »(p, «expr * »(q, C s))] [],
-  { use [expr integer_normalization «expr ⁰»(R) r],
-    apply [expr map_injective (algebra_map R K) (is_fraction_ring.injective _ _)],
-    rw ["[", expr map_mul, ",", expr map_mul, ",", expr hs, ",", expr hr, ",", expr mul_assoc, ",", expr mul_comm r, "]"] [],
-    simp [] [] [] [] [] [] },
-  rw ["[", "<-", expr hp.dvd_prim_part_iff_dvd, ",", expr prim_part_mul, ",", expr hq.prim_part_eq, ",", expr associated.dvd_iff_dvd_right, "]"] ["at", ident h],
-  { exact [expr h] },
-  { symmetry,
-    rcases [expr is_unit_prim_part_C s, "with", "⟨", ident u, ",", ident hu, "⟩"],
-    use [expr u],
-    rw [expr hu] [] },
-  iterate [2] { apply [expr mul_ne_zero hq.ne_zero],
-    rw ["[", expr ne.def, ",", expr C_eq_zero, "]"] [],
-    contrapose ["!"] [ident s0],
-    simp [] [] [] ["[", expr s0, ",", expr mem_non_zero_divisors_iff_ne_zero, "]"] [] [] }
-end
+theorem is_primitive.dvd_of_fraction_map_dvd_fraction_map {p q : Polynomial R} (hp : p.is_primitive)
+  (hq : q.is_primitive) (h_dvd : p.map (algebraMap R K) ∣ q.map (algebraMap R K)) : p ∣ q :=
+  by 
+    rcases h_dvd with ⟨r, hr⟩
+    obtain ⟨⟨s, s0⟩, hs⟩ := integer_normalization_map_to_map R⁰ r 
+    rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hs 
+    have h : p ∣ q*C s
+    ·
+      use integer_normalization R⁰ r 
+      apply map_injective (algebraMap R K) (IsFractionRing.injective _ _)
+      rw [map_mul, map_mul, hs, hr, mul_assocₓ, mul_commₓ r]
+      simp 
+    rw [←hp.dvd_prim_part_iff_dvd, prim_part_mul, hq.prim_part_eq, Associated.dvd_iff_dvd_right] at h
+    ·
+      exact h
+    ·
+      symm 
+      rcases is_unit_prim_part_C s with ⟨u, hu⟩
+      use u 
+      rw [hu]
+    iterate 2 
+      apply mul_ne_zero hq.ne_zero 
+      rw [Ne.def, C_eq_zero]
+      contrapose! s0 
+      simp [s0, mem_non_zero_divisors_iff_ne_zero]
 
 variable (K)
 

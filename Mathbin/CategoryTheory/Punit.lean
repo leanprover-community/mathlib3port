@@ -56,7 +56,7 @@ abbrev from_punit (X : C) : discrete PUnit.{v + 1} ⥤ C :=
 
 /-- Functors from `discrete punit` are equivalent to the category itself. -/
 @[simps]
-def Equiv : discrete PUnit ⥤ C ≌ C :=
+def Equivₓ : discrete PUnit ⥤ C ≌ C :=
   { Functor := { obj := fun F => F.obj PUnit.unit, map := fun F G θ => θ.app PUnit.unit }, inverse := Functor.Const _,
     unitIso :=
       by 

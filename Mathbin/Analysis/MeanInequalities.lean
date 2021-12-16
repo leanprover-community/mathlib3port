@@ -87,7 +87,7 @@ open Finset
 
 open_locale Classical BigOperators Nnreal Ennreal
 
-noncomputable theory
+noncomputable section 
 
 variable {ι : Type u} (s : Finset ι)
 
@@ -98,33 +98,40 @@ section GeomMeanLeArithMean
 
 namespace Real
 
--- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- AM-GM inequality: the **geometric mean is less than or equal to the arithmetic mean**, weighted
 version for real-valued nonnegative functions. -/
-theorem geom_mean_le_arith_mean_weighted
-(w z : ι → exprℝ())
-(hw : ∀ i «expr ∈ » s, «expr ≤ »(0, w i))
-(hw' : «expr = »(«expr∑ in , »((i), s, w i), 1))
-(hz : ∀
- i «expr ∈ » s, «expr ≤ »(0, z i)) : «expr ≤ »(«expr∏ in , »((i), s, «expr ^ »(z i, w i)), «expr∑ in , »((i), s, «expr * »(w i, z i))) :=
-begin
-  by_cases [expr A, ":", expr «expr∃ , »((i «expr ∈ » s), «expr ∧ »(«expr = »(z i, 0), «expr ≠ »(w i, 0)))],
-  { rcases [expr A, "with", "⟨", ident i, ",", ident his, ",", ident hzi, ",", ident hwi, "⟩"],
-    rw ["[", expr prod_eq_zero his, "]"] [],
-    { exact [expr sum_nonneg (λ j hj, mul_nonneg (hw j hj) (hz j hj))] },
-    { rw [expr hzi] [],
-      exact [expr zero_rpow hwi] } },
-  { simp [] [] ["only"] ["[", expr not_exists, ",", expr not_and, ",", expr ne.def, ",", expr not_not, "]"] [] ["at", ident A],
-    have [] [] [":=", expr convex_on_exp.map_sum_le hw hw' (λ i _, «expr $ »(set.mem_univ, log (z i)))],
-    simp [] [] ["only"] ["[", expr exp_sum, ",", expr («expr ∘ »), ",", expr smul_eq_mul, ",", expr mul_comm (w _) (log _), "]"] [] ["at", ident this],
-    convert [] [expr this] ["using", 1]; [apply [expr prod_congr rfl], apply [expr sum_congr rfl]]; intros [ident i, ident hi],
-    { cases [expr eq_or_lt_of_le (hz i hi)] ["with", ident hz, ident hz],
-      { simp [] [] [] ["[", expr A i hi hz.symm, "]"] [] [] },
-      { exact [expr rpow_def_of_pos hz _] } },
-    { cases [expr eq_or_lt_of_le (hz i hi)] ["with", ident hz, ident hz],
-      { simp [] [] [] ["[", expr A i hi hz.symm, "]"] [] [] },
-      { rw ["[", expr exp_log hz, "]"] [] } } }
-end
+theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ) (hw : ∀ i _ : i ∈ s, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
+  (hz : ∀ i _ : i ∈ s, 0 ≤ z i) : (∏ i in s, z i^w i) ≤ ∑ i in s, w i*z i :=
+  by 
+    byCases' A : ∃ (i : _)(_ : i ∈ s), z i = 0 ∧ w i ≠ 0
+    ·
+      rcases A with ⟨i, his, hzi, hwi⟩
+      rw [prod_eq_zero his]
+      ·
+        exact sum_nonneg fun j hj => mul_nonneg (hw j hj) (hz j hj)
+      ·
+        rw [hzi]
+        exact zero_rpow hwi
+    ·
+      simp only [not_exists, not_and, Ne.def, not_not] at A 
+      have  := convex_on_exp.map_sum_le hw hw' fun i _ => Set.mem_univ$ log (z i)
+      simp only [exp_sum, · ∘ ·, smul_eq_mul, mul_commₓ (w _) (log _)] at this 
+      convert this using 1 <;> [apply prod_congr rfl, apply sum_congr rfl] <;> intro i hi
+      ·
+        cases' eq_or_lt_of_le (hz i hi) with hz hz
+        ·
+          simp [A i hi hz.symm]
+        ·
+          exact rpow_def_of_pos hz _
+      ·
+        cases' eq_or_lt_of_le (hz i hi) with hz hz
+        ·
+          simp [A i hi hz.symm]
+        ·
+          rw [exp_log hz]
 
 end Real
 
@@ -132,8 +139,8 @@ namespace Nnreal
 
 /-- The geometric mean is less than or equal to the arithmetic mean, weighted version
 for `nnreal`-valued functions. -/
-theorem geom_mean_le_arith_mean_weighted (w z : ι →  ℝ≥0 ) (hw' : (∑i in s, w i) = 1) :
-  (∏i in s, z i^(w i : ℝ)) ≤ ∑i in s, w i*z i :=
+theorem geom_mean_le_arith_mean_weighted (w z : ι →  ℝ≥0 ) (hw' : (∑ i in s, w i) = 1) :
+  (∏ i in s, z i^(w i : ℝ)) ≤ ∑ i in s, w i*z i :=
   by 
     exactModCast
       Real.geom_mean_le_arith_mean_weighted _ _ _ (fun i _ => (w i).coe_nonneg)
@@ -141,6 +148,10 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι →  ℝ≥0 ) (hw' : (∑i i
           assumptionModCast)
         fun i _ => (z i).coe_nonneg
 
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 /-- The geometric mean is less than or equal to the arithmetic mean, weighted version
 for two `nnreal` numbers. -/
 theorem geom_mean_le_arith_mean2_weighted (w₁ w₂ p₁ p₂ :  ℝ≥0 ) :
@@ -148,25 +159,35 @@ theorem geom_mean_le_arith_mean2_weighted (w₁ w₂ p₁ p₂ :  ℝ≥0 ) :
   by 
     simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
       Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ] using
-      geom_mean_le_arith_mean_weighted (univ : Finset (Finₓ 2)) (Finₓ.cons w₁$ Finₓ.cons w₂ finZeroElim)
-        (Finₓ.cons p₁$ Finₓ.cons p₂$ finZeroElim)
+      geom_mean_le_arith_mean_weighted univ
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
 
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 theorem geom_mean_le_arith_mean3_weighted (w₁ w₂ w₃ p₁ p₂ p₃ :  ℝ≥0 ) :
   ((w₁+w₂)+w₃) = 1 → (((p₁^(w₁ : ℝ))*p₂^(w₂ : ℝ))*p₃^(w₃ : ℝ)) ≤ ((w₁*p₁)+w₂*p₂)+w₃*p₃ :=
   by 
     simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
       Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ←add_assocₓ, mul_assocₓ] using
-      geom_mean_le_arith_mean_weighted (univ : Finset (Finₓ 3)) (Finₓ.cons w₁$ Finₓ.cons w₂$ Finₓ.cons w₃ finZeroElim)
-        (Finₓ.cons p₁$ Finₓ.cons p₂$ Finₓ.cons p₃ finZeroElim)
+      geom_mean_le_arith_mean_weighted univ
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
 
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 theorem geom_mean_le_arith_mean4_weighted (w₁ w₂ w₃ w₄ p₁ p₂ p₃ p₄ :  ℝ≥0 ) :
   (((w₁+w₂)+w₃)+w₄) = 1 → ((((p₁^(w₁ : ℝ))*p₂^(w₂ : ℝ))*p₃^(w₃ : ℝ))*p₄^(w₄ : ℝ)) ≤ (((w₁*p₁)+w₂*p₂)+w₃*p₃)+w₄*p₄ :=
   by 
     simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
       Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ←add_assocₓ, mul_assocₓ] using
-      geom_mean_le_arith_mean_weighted (univ : Finset (Finₓ 4))
-        (Finₓ.cons w₁$ Finₓ.cons w₂$ Finₓ.cons w₃$ Finₓ.cons w₄ finZeroElim)
-        (Finₓ.cons p₁$ Finₓ.cons p₂$ Finₓ.cons p₃$ Finₓ.cons p₄ finZeroElim)
+      geom_mean_le_arith_mean_weighted univ
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
 
 end Nnreal
 
@@ -275,31 +296,30 @@ section HolderMinkowski
 
 namespace Nnreal
 
--- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem inner_le_Lp_mul_Lp_of_norm_le_one
-(f g : ι → «exprℝ≥0»())
-{p q : exprℝ()}
-(hpq : p.is_conjugate_exponent q)
-(hf : «expr ≤ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), 1))
-(hg : «expr ≤ »(«expr∑ in , »((i), s, «expr ^ »(g i, q)), 1)) : «expr ≤ »(«expr∑ in , »((i), s, «expr * »(f i, g i)), 1) :=
-begin
-  have [ident hp_ne_zero] [":", expr «expr ≠ »(real.to_nnreal p, 0)] [],
-  from [expr (zero_lt_one.trans hpq.one_lt_nnreal).ne.symm],
-  have [ident hq_ne_zero] [":", expr «expr ≠ »(real.to_nnreal q, 0)] [],
-  from [expr (zero_lt_one.trans hpq.symm.one_lt_nnreal).ne.symm],
-  calc
-    «expr ≤ »(«expr∑ in , »((i), s, «expr * »(f i, g i)), «expr∑ in , »((i), s, «expr + »(«expr / »(«expr ^ »(f i, p), real.to_nnreal p), «expr / »(«expr ^ »(g i, q), real.to_nnreal q)))) : finset.sum_le_sum (λ
-     i his, young_inequality_real (f i) (g i) hpq)
-    «expr = »(..., «expr + »(«expr / »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), real.to_nnreal p), «expr / »(«expr∑ in , »((i), s, «expr ^ »(g i, q)), real.to_nnreal q))) : by rw ["[", expr sum_add_distrib, ",", expr sum_div, ",", expr sum_div, "]"] []
-    «expr ≤ »(..., «expr + »(«expr / »(1, real.to_nnreal p), «expr / »(1, real.to_nnreal q))) : by { refine [expr add_le_add _ _],
-      { rwa ["[", expr div_le_iff hp_ne_zero, ",", expr div_mul_cancel _ hp_ne_zero, "]"] [] },
-      { rwa ["[", expr div_le_iff hq_ne_zero, ",", expr div_mul_cancel _ hq_ne_zero, "]"] [] } }
-    «expr = »(..., 1) : hpq.inv_add_inv_conj_nnreal
-end
+private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι →  ℝ≥0 ) {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+  (hf : (∑ i in s, f i^p) ≤ 1) (hg : (∑ i in s, g i^q) ≤ 1) : (∑ i in s, f i*g i) ≤ 1 :=
+  by 
+    have hp_ne_zero : Real.toNnreal p ≠ 0 
+    exact (zero_lt_one.trans hpq.one_lt_nnreal).Ne.symm 
+    have hq_ne_zero : Real.toNnreal q ≠ 0 
+    exact (zero_lt_one.trans hpq.symm.one_lt_nnreal).Ne.symm 
+    calc (∑ i in s, f i*g i) ≤ ∑ i in s, ((f i^p) / Real.toNnreal p)+(g i^q) / Real.toNnreal q :=
+      Finset.sum_le_sum
+        fun i his =>
+          young_inequality_real (f i) (g i)
+            hpq _ = ((∑ i in s, f i^p) / Real.toNnreal p)+(∑ i in s, g i^q) / Real.toNnreal q :=
+      by 
+        rw [sum_add_distrib, sum_div, sum_div]_ ≤ (1 / Real.toNnreal p)+1 / Real.toNnreal q :=
+      by 
+        refine' add_le_add _ _
+        ·
+          rwa [div_le_iff hp_ne_zero, div_mul_cancel _ hp_ne_zero]
+        ·
+          rwa [div_le_iff hq_ne_zero, div_mul_cancel _ hq_ne_zero]_ = 1 :=
+      hpq.inv_add_inv_conj_nnreal
 
 private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι →  ℝ≥0 ) {p q : ℝ} (hpq : p.is_conjugate_exponent q)
-  (hf : (∑i in s, f i^p) = 0) : (∑i in s, f i*g i) ≤ ((∑i in s, f i^p)^1 / p)*(∑i in s, g i^q)^1 / q :=
+  (hf : (∑ i in s, f i^p) = 0) : (∑ i in s, f i*g i) ≤ ((∑ i in s, f i^p)^1 / p)*(∑ i in s, g i^q)^1 / q :=
   by 
     simp only [hf, hpq.ne_zero, one_div, sum_eq_zero_iff, zero_rpow, zero_mul, inv_eq_zero, Ne.def, not_false_iff,
       le_zero_iff, mul_eq_zero]
@@ -312,22 +332,23 @@ private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι →  ℝ≥0 ) {p q
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with `ℝ≥0`-valued functions. -/
 theorem inner_le_Lp_mul_Lq (f g : ι →  ℝ≥0 ) {p q : ℝ} (hpq : p.is_conjugate_exponent q) :
-  (∑i in s, f i*g i) ≤ ((∑i in s, f i^p)^1 / p)*(∑i in s, g i^q)^1 / q :=
+  (∑ i in s, f i*g i) ≤ ((∑ i in s, f i^p)^1 / p)*(∑ i in s, g i^q)^1 / q :=
   by 
-    byCases' hF_zero : (∑i in s, f i^p) = 0
+    byCases' hF_zero : (∑ i in s, f i^p) = 0
     ·
       exact inner_le_Lp_mul_Lp_of_norm_eq_zero s f g hpq hF_zero 
-    byCases' hG_zero : (∑i in s, g i^q) = 0
+    byCases' hG_zero : (∑ i in s, g i^q) = 0
     ·
-      calc (∑i in s, f i*g i) = ∑i in s, g i*f i :=
+      calc (∑ i in s, f i*g i) = ∑ i in s, g i*f i :=
         by 
           congr with i 
-          rw [mul_commₓ]_ ≤ ((∑i in s, g i^q)^1 / q)*(∑i in s, f i^p)^1 / p :=
-        inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm hG_zero _ = ((∑i in s, f i^p)^1 / p)*(∑i in s, g i^q)^1 / q :=
+          rw [mul_commₓ]_ ≤ ((∑ i in s, g i^q)^1 / q)*(∑ i in s, f i^p)^1 / p :=
+        inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm
+          hG_zero _ = ((∑ i in s, f i^p)^1 / p)*(∑ i in s, g i^q)^1 / q :=
         mul_commₓ _ _ 
-    let f' := fun i => f i / ((∑i in s, f i^p)^1 / p)
-    let g' := fun i => g i / ((∑i in s, g i^q)^1 / q)
-    suffices  : (∑i in s, f' i*g' i) ≤ 1
+    let f' := fun i => f i / ((∑ i in s, f i^p)^1 / p)
+    let g' := fun i => g i / ((∑ i in s, g i^q)^1 / q)
+    suffices  : (∑ i in s, f' i*g' i) ≤ 1
     ·
       simpRw [f', g', div_mul_div, ←sum_div]  at this 
       rwa [div_le_iff, one_mulₓ] at this 
@@ -344,51 +365,81 @@ theorem inner_le_Lp_mul_Lq (f g : ι →  ℝ≥0 ) {p q : ℝ} (hpq : p.is_conj
     ·
       simpRw [g', div_rpow, ←sum_div, ←rpow_mul, one_div, inv_mul_cancel hpq.symm.ne_zero, rpow_one, div_self hG_zero]
 
--- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The `L_p` seminorm of a vector `f` is the greatest value of the inner product
-`∑ i in s, f i * g i` over functions `g` of `L_q` seminorm less than or equal to one. -/
-theorem is_greatest_Lp
-(f : ι → «exprℝ≥0»())
-{p q : exprℝ()}
-(hpq : p.is_conjugate_exponent q) : is_greatest «expr '' »(λ
- g : ι → «exprℝ≥0»(), «expr∑ in , »((i), s, «expr * »(f i, g i)), {g | «expr ≤ »(«expr∑ in , »((i), s, «expr ^ »(g i, q)), 1)}) «expr ^ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), «expr / »(1, p)) :=
-begin
-  split,
-  { use [expr λ
-     i, «expr / »(«expr / »(«expr ^ »(f i, p), f i), «expr ^ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), «expr / »(1, q)))],
-    by_cases [expr hf, ":", expr «expr = »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), 0)],
-    { simp [] [] [] ["[", expr hf, ",", expr hpq.ne_zero, ",", expr hpq.symm.ne_zero, "]"] [] [] },
-    { have [ident A] [":", expr «expr ≠ »(«expr - »(«expr + »(p, q), q), 0)] [],
-      by simp [] [] [] ["[", expr hpq.ne_zero, "]"] [] [],
-      have [ident B] [":", expr ∀
-       y : «exprℝ≥0»(), «expr = »(«expr / »(«expr * »(y, «expr ^ »(y, p)), y), «expr ^ »(y, p))] [],
-      { refine [expr λ y, mul_div_cancel_left_of_imp (λ h, _)],
-        simpa [] [] [] ["[", expr h, ",", expr hpq.ne_zero, "]"] [] [] },
-      simp [] [] ["only"] ["[", expr set.mem_set_of_eq, ",", expr div_rpow, ",", "<-", expr sum_div, ",", "<-", expr rpow_mul, ",", expr div_mul_cancel _ hpq.symm.ne_zero, ",", expr rpow_one, ",", expr div_le_iff hf, ",", expr one_mul, ",", expr hpq.mul_eq_add, ",", "<-", expr rpow_sub' _ A, ",", expr _root_.add_sub_cancel, ",", expr le_refl, ",", expr true_and, ",", "<-", expr mul_div_assoc, ",", expr B, "]"] [] [],
-      rw ["[", expr div_eq_iff, ",", "<-", expr rpow_add hf, ",", expr hpq.inv_add_inv_conj, ",", expr rpow_one, "]"] [],
-      simpa [] [] [] ["[", expr hpq.symm.ne_zero, "]"] [] ["using", expr hf] } },
-  { rintros ["_", "⟨", ident g, ",", ident hg, ",", ident rfl, "⟩"],
-    apply [expr le_trans (inner_le_Lp_mul_Lq s f g hpq)],
-    simpa [] [] ["only"] ["[", expr mul_one, "]"] [] ["using", expr mul_le_mul_left' (nnreal.rpow_le_one hg (le_of_lt hpq.symm.one_div_pos)) _] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The `L_p` seminorm of a vector `f` is the greatest value of the inner product
+    `∑ i in s, f i * g i` over functions `g` of `L_q` seminorm less than or equal to one. -/
+  theorem
+    is_greatest_Lp
+    ( f : ι → ℝ≥0 ) { p q : ℝ } ( hpq : p.is_conjugate_exponent q )
+      : IsGreatest fun g : ι → ℝ≥0 => ∑ i in s , f i * g i '' { g | ∑ i in s , g i ^ q ≤ 1 } ∑ i in s , f i ^ p ^ 1 / p
+    :=
+      by
+        constructor
+          ·
+            use fun i => f i ^ p / f i / ∑ i in s , f i ^ p ^ 1 / q
+              byCases' hf : ∑ i in s , f i ^ p = 0
+              · simp [ hf , hpq.ne_zero , hpq.symm.ne_zero ]
+              ·
+                have A : p + q - q ≠ 0
+                  · simp [ hpq.ne_zero ]
+                  have B : ∀ y : ℝ≥0 , y * y ^ p / y = y ^ p
+                  · refine' fun y => mul_div_cancel_left_of_imp fun h => _ simpa [ h , hpq.ne_zero ]
+                  simp
+                    only
+                    [
+                      Set.mem_set_of_eq
+                        ,
+                        div_rpow
+                        ,
+                        ← sum_div
+                        ,
+                        ← rpow_mul
+                        ,
+                        div_mul_cancel _ hpq.symm.ne_zero
+                        ,
+                        rpow_one
+                        ,
+                        div_le_iff hf
+                        ,
+                        one_mulₓ
+                        ,
+                        hpq.mul_eq_add
+                        ,
+                        ← rpow_sub' _ A
+                        ,
+                        _root_.add_sub_cancel
+                        ,
+                        le_reflₓ
+                        ,
+                        true_andₓ
+                        ,
+                        ← mul_div_assoc
+                        ,
+                        B
+                      ]
+                  rw [ div_eq_iff , ← rpow_add hf , hpq.inv_add_inv_conj , rpow_one ]
+                  simpa [ hpq.symm.ne_zero ] using hf
+          ·
+            rintro _ ⟨ g , hg , rfl ⟩
+              apply le_transₓ inner_le_Lp_mul_Lq s f g hpq
+              simpa only [ mul_oneₓ ] using mul_le_mul_left' Nnreal.rpow_le_one hg le_of_ltₓ hpq.symm.one_div_pos _
 
--- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `nnreal`-valued functions. -/
-theorem Lp_add_le
-(f g : ι → «exprℝ≥0»())
-{p : exprℝ()}
-(hp : «expr ≤ »(1, p)) : «expr ≤ »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(«expr + »(f i, g i), p)), «expr / »(1, p)), «expr + »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), «expr / »(1, p)), «expr ^ »(«expr∑ in , »((i), s, «expr ^ »(g i, p)), «expr / »(1, p)))) :=
-begin
-  rcases [expr eq_or_lt_of_le hp, "with", ident rfl, "|", ident hp],
-  { simp [] [] [] ["[", expr finset.sum_add_distrib, "]"] [] [] },
-  have [ident hpq] [] [":=", expr real.is_conjugate_exponent_conjugate_exponent hp],
-  have [] [] [":=", expr is_greatest_Lp s «expr + »(f, g) hpq],
-  simp [] [] ["only"] ["[", expr pi.add_apply, ",", expr add_mul, ",", expr sum_add_distrib, "]"] [] ["at", ident this],
-  rcases [expr this.1, "with", "⟨", ident φ, ",", ident hφ, ",", ident H, "⟩"],
-  rw ["<-", expr H] [],
-  exact [expr add_le_add ((is_greatest_Lp s f hpq).2 ⟨φ, hφ, rfl⟩) ((is_greatest_Lp s g hpq).2 ⟨φ, hφ, rfl⟩)]
-end
+theorem Lp_add_le (f g : ι →  ℝ≥0 ) {p : ℝ} (hp : 1 ≤ p) :
+  ((∑ i in s, (f i+g i)^p)^1 / p) ≤ ((∑ i in s, f i^p)^1 / p)+(∑ i in s, g i^p)^1 / p :=
+  by 
+    rcases eq_or_lt_of_le hp with (rfl | hp)
+    ·
+      simp [Finset.sum_add_distrib]
+    have hpq := Real.is_conjugate_exponent_conjugate_exponent hp 
+    have  := is_greatest_Lp s (f+g) hpq 
+    simp only [Pi.add_apply, add_mulₓ, sum_add_distrib] at this 
+    rcases this.1 with ⟨φ, hφ, H⟩
+    rw [←H]
+    exact add_le_add ((is_greatest_Lp s f hpq).2 ⟨φ, hφ, rfl⟩) ((is_greatest_Lp s g hpq).2 ⟨φ, hφ, rfl⟩)
 
 end Nnreal
 
@@ -396,50 +447,50 @@ namespace Real
 
 variable (f g : ι → ℝ) {p q : ℝ}
 
--- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with real-valued functions. -/
-theorem inner_le_Lp_mul_Lq
-(hpq : is_conjugate_exponent p q) : «expr ≤ »(«expr∑ in , »((i), s, «expr * »(f i, g i)), «expr * »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(«expr $ »(abs, f i), p)), «expr / »(1, p)), «expr ^ »(«expr∑ in , »((i), s, «expr ^ »(«expr $ »(abs, g i), q)), «expr / »(1, q)))) :=
-begin
-  have [] [] [":=", expr nnreal.coe_le_coe.2 (nnreal.inner_le_Lp_mul_Lq s (λ
-     i, ⟨_, abs_nonneg (f i)⟩) (λ i, ⟨_, abs_nonneg (g i)⟩) hpq)],
-  push_cast [] ["at", ident this],
-  refine [expr le_trans «expr $ »(sum_le_sum, λ i hi, _) this],
-  simp [] [] ["only"] ["[", "<-", expr abs_mul, ",", expr le_abs_self, "]"] [] []
-end
+theorem inner_le_Lp_mul_Lq (hpq : is_conjugate_exponent p q) :
+  (∑ i in s, f i*g i) ≤ ((∑ i in s, abs$ f i^p)^1 / p)*(∑ i in s, abs$ g i^q)^1 / q :=
+  by 
+    have  :=
+      Nnreal.coe_le_coe.2
+        (Nnreal.inner_le_Lp_mul_Lq s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hpq)
+    pushCast  at this 
+    refine' le_transₓ (sum_le_sum$ fun i hi => _) this 
+    simp only [←abs_mul, le_abs_self]
 
--- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `real`-valued functions. -/
-theorem Lp_add_le
-(hp : «expr ≤ »(1, p)) : «expr ≤ »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(«expr $ »(abs, «expr + »(f i, g i)), p)), «expr / »(1, p)), «expr + »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(«expr $ »(abs, f i), p)), «expr / »(1, p)), «expr ^ »(«expr∑ in , »((i), s, «expr ^ »(«expr $ »(abs, g i), p)), «expr / »(1, p)))) :=
-begin
-  have [] [] [":=", expr nnreal.coe_le_coe.2 (nnreal.Lp_add_le s (λ
-     i, ⟨_, abs_nonneg (f i)⟩) (λ i, ⟨_, abs_nonneg (g i)⟩) hp)],
-  push_cast [] ["at", ident this],
-  refine [expr le_trans (rpow_le_rpow _ «expr $ »(sum_le_sum, λ
-     i
-     hi, _) _) this]; simp [] [] [] ["[", expr sum_nonneg, ",", expr rpow_nonneg_of_nonneg, ",", expr abs_nonneg, ",", expr le_trans zero_le_one hp, ",", expr abs_add, ",", expr rpow_le_rpow, "]"] [] []
-end
+theorem Lp_add_le (hp : 1 ≤ p) :
+  ((∑ i in s, (abs$ f i+g i)^p)^1 / p) ≤ ((∑ i in s, abs$ f i^p)^1 / p)+(∑ i in s, abs$ g i^p)^1 / p :=
+  by 
+    have  :=
+      Nnreal.coe_le_coe.2 (Nnreal.Lp_add_le s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hp)
+    pushCast  at this 
+    refine' le_transₓ (rpow_le_rpow _ (sum_le_sum$ fun i hi => _) _) this <;>
+      simp [sum_nonneg, rpow_nonneg_of_nonneg, abs_nonneg, le_transₓ zero_le_one hp, abs_add, rpow_le_rpow]
 
 variable {f g}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with real-valued nonnegative functions. -/
 theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : is_conjugate_exponent p q) (hf : ∀ i _ : i ∈ s, 0 ≤ f i)
-  (hg : ∀ i _ : i ∈ s, 0 ≤ g i) : (∑i in s, f i*g i) ≤ ((∑i in s, f i^p)^1 / p)*(∑i in s, g i^q)^1 / q :=
+  (hg : ∀ i _ : i ∈ s, 0 ≤ g i) : (∑ i in s, f i*g i) ≤ ((∑ i in s, f i^p)^1 / p)*(∑ i in s, g i^q)^1 / q :=
   by 
     convert inner_le_Lp_mul_Lq s f g hpq using 3 <;>
       apply sum_congr rfl <;> intro i hi <;> simp only [abs_of_nonneg, hf i hi, hg i hi]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `real`-valued nonnegative
 functions. -/
 theorem Lp_add_le_of_nonneg (hp : 1 ≤ p) (hf : ∀ i _ : i ∈ s, 0 ≤ f i) (hg : ∀ i _ : i ∈ s, 0 ≤ g i) :
-  ((∑i in s, (f i+g i)^p)^1 / p) ≤ ((∑i in s, f i^p)^1 / p)+(∑i in s, g i^p)^1 / p :=
+  ((∑ i in s, (f i+g i)^p)^1 / p) ≤ ((∑ i in s, f i^p)^1 / p)+(∑ i in s, g i^p)^1 / p :=
   by 
     convert Lp_add_le s f g hp using 2 <;> [skip, congr 1, congr 1] <;>
       apply sum_congr rfl <;> intro i hi <;> simp only [abs_of_nonneg, hf i hi, hg i hi, add_nonneg]
@@ -450,55 +501,69 @@ namespace Ennreal
 
 variable (f g : ι → ℝ≥0∞) {p q : ℝ}
 
--- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with `ℝ≥0∞`-valued functions. -/
-theorem inner_le_Lp_mul_Lq
-(hpq : p.is_conjugate_exponent q) : «expr ≤ »(«expr∑ in , »((i), s, «expr * »(f i, g i)), «expr * »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), «expr / »(1, p)), «expr ^ »(«expr∑ in , »((i), s, «expr ^ »(g i, q)), «expr / »(1, q)))) :=
-begin
-  by_cases [expr H, ":", expr «expr ∨ »(«expr = »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), «expr / »(1, p)), 0), «expr = »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(g i, q)), «expr / »(1, q)), 0))],
-  { replace [ident H] [":", expr «expr ∨ »(∀ i «expr ∈ » s, «expr = »(f i, 0), ∀ i «expr ∈ » s, «expr = »(g i, 0))] [],
-    by simpa [] [] [] ["[", expr ennreal.rpow_eq_zero_iff, ",", expr hpq.pos, ",", expr hpq.symm.pos, ",", expr asymm hpq.pos, ",", expr asymm hpq.symm.pos, ",", expr sum_eq_zero_iff_of_nonneg, "]"] [] ["using", expr H],
-    have [] [":", expr ∀
-     i «expr ∈ » s, «expr = »(«expr * »(f i, g i), 0)] [":=", expr λ
-     i hi, by cases [expr H] []; simp [] [] [] ["[", expr H i hi, "]"] [] []],
-    have [] [":", expr «expr = »(«expr∑ in , »((i), s, «expr * »(f i, g i)), «expr∑ in , »((i), s, 0))] [":=", expr sum_congr rfl this],
-    simp [] [] [] ["[", expr this, "]"] [] [] },
-  push_neg ["at", ident H],
-  by_cases [expr H', ":", expr «expr ∨ »(«expr = »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), «expr / »(1, p)), «expr⊤»()), «expr = »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(g i, q)), «expr / »(1, q)), «expr⊤»()))],
-  { cases [expr H'] []; simp [] [] [] ["[", expr H', ",", "-", ident one_div, ",", expr H, "]"] [] [] },
-  replace [ident H'] [":", expr «expr ∧ »(∀
-    i «expr ∈ » s, «expr ≠ »(f i, «expr⊤»()), ∀ i «expr ∈ » s, «expr ≠ »(g i, «expr⊤»()))] [],
-  by simpa [] [] [] ["[", expr ennreal.rpow_eq_top_iff, ",", expr asymm hpq.pos, ",", expr asymm hpq.symm.pos, ",", expr hpq.pos, ",", expr hpq.symm.pos, ",", expr ennreal.sum_eq_top_iff, ",", expr not_or_distrib, "]"] [] ["using", expr H'],
-  have [] [] [":=", expr ennreal.coe_le_coe.2 (@nnreal.inner_le_Lp_mul_Lq _ s (λ
-     i, ennreal.to_nnreal (f i)) (λ i, ennreal.to_nnreal (g i)) _ _ hpq)],
-  simp [] [] [] ["[", "<-", expr ennreal.coe_rpow_of_nonneg, ",", expr le_of_lt hpq.pos, ",", expr le_of_lt hpq.one_div_pos, ",", expr le_of_lt hpq.symm.pos, ",", expr le_of_lt hpq.symm.one_div_pos, "]"] [] ["at", ident this],
-  convert [] [expr this] ["using", 1]; [skip, congr' [2] []]; [skip, skip, simp [] [] [] [] [] [], skip, simp [] [] [] [] [] []]; { apply [expr finset.sum_congr rfl (λ
-      i hi, _)],
-    simp [] [] [] ["[", expr H'.1 i hi, ",", expr H'.2 i hi, ",", "-", ident with_zero.coe_mul, ",", expr with_top.coe_mul.symm, "]"] [] [] }
-end
+theorem inner_le_Lp_mul_Lq (hpq : p.is_conjugate_exponent q) :
+  (∑ i in s, f i*g i) ≤ ((∑ i in s, f i^p)^1 / p)*(∑ i in s, g i^q)^1 / q :=
+  by 
+    byCases' H : ((∑ i in s, f i^p)^1 / p) = 0 ∨ ((∑ i in s, g i^q)^1 / q) = 0
+    ·
+      replace H : (∀ i _ : i ∈ s, f i = 0) ∨ ∀ i _ : i ∈ s, g i = 0
+      ·
+        simpa [Ennreal.rpow_eq_zero_iff, hpq.pos, hpq.symm.pos, asymm hpq.pos, asymm hpq.symm.pos,
+          sum_eq_zero_iff_of_nonneg] using H 
+      have  : ∀ i _ : i ∈ s, (f i*g i) = 0 :=
+        fun i hi =>
+          by 
+            cases H <;> simp [H i hi]
+      have  : (∑ i in s, f i*g i) = ∑ i in s, 0 := sum_congr rfl this 
+      simp [this]
+    pushNeg  at H 
+    byCases' H' : ((∑ i in s, f i^p)^1 / p) = ⊤ ∨ ((∑ i in s, g i^q)^1 / q) = ⊤
+    ·
+      cases H' <;> simp [H', -one_div, H]
+    replace H' : (∀ i _ : i ∈ s, f i ≠ ⊤) ∧ ∀ i _ : i ∈ s, g i ≠ ⊤
+    ·
+      simpa [Ennreal.rpow_eq_top_iff, asymm hpq.pos, asymm hpq.symm.pos, hpq.pos, hpq.symm.pos, Ennreal.sum_eq_top_iff,
+        not_or_distrib] using H' 
+    have  :=
+      Ennreal.coe_le_coe.2
+        (@Nnreal.inner_le_Lp_mul_Lq _ s (fun i => Ennreal.toNnreal (f i)) (fun i => Ennreal.toNnreal (g i)) _ _ hpq)
+    simp [←Ennreal.coe_rpow_of_nonneg, le_of_ltₓ hpq.pos, le_of_ltₓ hpq.one_div_pos, le_of_ltₓ hpq.symm.pos,
+      le_of_ltₓ hpq.symm.one_div_pos] at this 
+    convert this using 1 <;> [skip, congr 2] <;> [skip, skip, simp , skip, simp ] <;>
+      ·
+        apply Finset.sum_congr rfl fun i hi => _ 
+        simp [H'.1 i hi, H'.2 i hi, -WithZero.coe_mul, with_top.coe_mul.symm]
 
--- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `ℝ≥0∞` valued nonnegative
 functions. -/
-theorem Lp_add_le
-(hp : «expr ≤ »(1, p)) : «expr ≤ »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(«expr + »(f i, g i), p)), «expr / »(1, p)), «expr + »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), «expr / »(1, p)), «expr ^ »(«expr∑ in , »((i), s, «expr ^ »(g i, p)), «expr / »(1, p)))) :=
-begin
-  by_cases [expr H', ":", expr «expr ∨ »(«expr = »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(f i, p)), «expr / »(1, p)), «expr⊤»()), «expr = »(«expr ^ »(«expr∑ in , »((i), s, «expr ^ »(g i, p)), «expr / »(1, p)), «expr⊤»()))],
-  { cases [expr H'] []; simp [] [] [] ["[", expr H', ",", "-", ident one_div, "]"] [] [] },
-  have [ident pos] [":", expr «expr < »(0, p)] [":=", expr lt_of_lt_of_le zero_lt_one hp],
-  replace [ident H'] [":", expr «expr ∧ »(∀
-    i «expr ∈ » s, «expr ≠ »(f i, «expr⊤»()), ∀ i «expr ∈ » s, «expr ≠ »(g i, «expr⊤»()))] [],
-  by simpa [] [] [] ["[", expr ennreal.rpow_eq_top_iff, ",", expr asymm pos, ",", expr pos, ",", expr ennreal.sum_eq_top_iff, ",", expr not_or_distrib, "]"] [] ["using", expr H'],
-  have [] [] [":=", expr ennreal.coe_le_coe.2 (@nnreal.Lp_add_le _ s (λ
-     i, ennreal.to_nnreal (f i)) (λ i, ennreal.to_nnreal (g i)) _ hp)],
-  push_cast ["[", "<-", expr ennreal.coe_rpow_of_nonneg, ",", expr le_of_lt pos, ",", expr le_of_lt (one_div_pos.2 pos), "]"] ["at", ident this],
-  convert [] [expr this] ["using", 2]; [skip, congr' [1] [], congr' [1] []]; { apply [expr finset.sum_congr rfl (λ
-      i hi, _)],
-    simp [] [] [] ["[", expr H'.1 i hi, ",", expr H'.2 i hi, "]"] [] [] }
-end
+theorem Lp_add_le (hp : 1 ≤ p) : ((∑ i in s, (f i+g i)^p)^1 / p) ≤ ((∑ i in s, f i^p)^1 / p)+(∑ i in s, g i^p)^1 / p :=
+  by 
+    byCases' H' : ((∑ i in s, f i^p)^1 / p) = ⊤ ∨ ((∑ i in s, g i^p)^1 / p) = ⊤
+    ·
+      cases H' <;> simp [H', -one_div]
+    have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one hp 
+    replace H' : (∀ i _ : i ∈ s, f i ≠ ⊤) ∧ ∀ i _ : i ∈ s, g i ≠ ⊤
+    ·
+      simpa [Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, not_or_distrib] using H' 
+    have  :=
+      Ennreal.coe_le_coe.2
+        (@Nnreal.Lp_add_le _ s (fun i => Ennreal.toNnreal (f i)) (fun i => Ennreal.toNnreal (g i)) _ hp)
+    pushCast [←Ennreal.coe_rpow_of_nonneg, le_of_ltₓ Pos, le_of_ltₓ (one_div_pos.2 Pos)]  at this 
+    convert this using 2 <;> [skip, congr 1, congr 1] <;>
+      ·
+        apply Finset.sum_congr rfl fun i hi => _ 
+        simp [H'.1 i hi, H'.2 i hi]
 
 end Ennreal
 

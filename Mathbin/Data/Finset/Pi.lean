@@ -24,6 +24,7 @@ def pi.empty (β : α → Sort _) (a : α) (h : a ∈ (∅ : Finset α)) : β a 
 
 variable {δ : α → Type _} [DecidableEq α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- Given a finset `s` of `α` and for all `a : α` a finset `t a` of `δ a`, then one can define the
 finset `s.pi t` of all functions defined on elements of `s` taking values in `t a` for `a ∈ s`.
 Note that the elements of `s.pi t` are only partially defined, on `s`. -/
@@ -34,6 +35,7 @@ def pi (s : Finset α) (t : ∀ a, Finset (δ a)) : Finset (∀ a _ : a ∈ s, �
 theorem pi_val (s : Finset α) (t : ∀ a, Finset (δ a)) : (s.pi t).1 = s.1.pi fun a => (t a).1 :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[simp]
 theorem mem_pi {s : Finset α} {t : ∀ a, Finset (δ a)} {f : ∀ a _ : a ∈ s, δ a} :
   f ∈ s.pi t ↔ ∀ a h : a ∈ s, f a h ∈ t a :=
@@ -104,7 +106,7 @@ theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, F
 theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun a => ({f a} : Finset β)) = {fun a _ => f a} :=
   by 
     rw [eq_singleton_iff_unique_mem]
-    split 
+    constructor
     ·
       simp 
     intro a ha 
@@ -115,9 +117,11 @@ theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun 
 theorem pi_const_singleton {β : Type _} (s : Finset α) (i : β) : (s.pi fun _ => ({i} : Finset β)) = {fun _ _ => i} :=
   pi_singletons s fun _ => i
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem pi_subset {s : Finset α} (t₁ t₂ : ∀ a, Finset (δ a)) (h : ∀ a _ : a ∈ s, t₁ a ⊆ t₂ a) : s.pi t₁ ⊆ s.pi t₂ :=
   fun g hg => mem_pi.2$ fun a ha => h a ha (mem_pi.mp hg a ha)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem pi_disjoint_of_disjoint {δ : α → Type _} [∀ a, DecidableEq (δ a)] {s : Finset α}
   [DecidableEq (∀ a _ : a ∈ s, δ a)] (t₁ t₂ : ∀ a, Finset (δ a)) {a : α} (ha : a ∈ s) (h : Disjoint (t₁ a) (t₂ a)) :
   Disjoint (s.pi t₁) (s.pi t₂) :=

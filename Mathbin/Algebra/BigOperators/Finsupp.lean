@@ -19,7 +19,7 @@ variable {s : Finset α} {f : α → ι →₀ A} (i : ι)
 
 variable (g : ι →₀ A) (k : ι → A → γ → B) (x : γ)
 
-theorem Finset.sum_apply' : (∑k in s, f k) i = ∑k in s, f k i :=
+theorem Finset.sum_apply' : (∑ k in s, f k) i = ∑ k in s, f k i :=
   (Finsupp.applyAddHom i : (ι →₀ A) →+ A).map_sum f s
 
 theorem Finsupp.sum_apply' : g.sum k x = g.sum fun i b => k i b x :=
@@ -31,7 +31,7 @@ include h0 h1
 
 open_locale Classical
 
-theorem Finsupp.sum_sum_index' : (∑x in s, f x).Sum t = ∑x in s, (f x).Sum t :=
+theorem Finsupp.sum_sum_index' : (∑ x in s, f x).Sum t = ∑ x in s, (f x).Sum t :=
   Finset.induction_on s rfl$
     fun a s has ih =>
       by 

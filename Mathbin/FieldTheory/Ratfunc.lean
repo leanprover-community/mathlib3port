@@ -42,7 +42,7 @@ and `is_localization.alg_equiv`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -87,8 +87,7 @@ If `q = 0`, then `mk` returns 0.
 This is an auxiliary definition used to define an `algebra` structure on `ratfunc`;
 the `simp` normal form of `mk p q` is `algebra_map _ _ p / algebra_map _ _ q`.
 -/
-@[irreducible]
-protected def mk (p q : Polynomial K) : Ratfunc K :=
+protected irreducible_def mk (p q : Polynomial K) : Ratfunc K :=
   of_fraction_ring (algebraMap _ _ p / algebraMap _ _ q)
 
 theorem mk_eq_div' (p q : Polynomial K) : Ratfunc.mk p q = of_fraction_ring (algebraMap _ _ p / algebraMap _ _ q) :=
@@ -135,8 +134,7 @@ for all elements of `ratfunc K` by setting `lift_on (p / q) f _ = f p q`.
 The value of `f p 0` for any `p` is never used and in principle this may be anything,
 although many usages of `lift_on` assume `f p 0 = f 0 1`.
 -/
-@[irreducible]
-protected def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
+protected irreducible_def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
   (H : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, ((p*q') = p'*q) → f p q = f p' q') : P :=
   Localization.liftOn (to_fraction_ring x) (fun p q => f p q)
     fun p p' q q' h =>
@@ -156,7 +154,6 @@ theorem lift_on_mk {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K
     ·
       simp only [mk_eq_localization_mk _ hq, Localization.lift_on_mk, SetLike.coe_mk]
 
--- error in FieldTheory.Ratfunc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Non-dependent recursion principle for `ratfunc K`: if `f p q : P` for all `p q`,
 such that `f (a * p) (a * q) = f p q`, then we can find a value of `P`
 for all elements of `ratfunc K` by setting `lift_on' (p / q) f _ = f p q`.
@@ -164,46 +161,42 @@ for all elements of `ratfunc K` by setting `lift_on' (p / q) f _ = f p q`.
 The value of `f p 0` for any `p` is never used and in principle this may be anything,
 although many usages of `lift_on'` assume `f p 0 = f 0 1`.
 -/
-@[irreducible]
-protected
-def lift_on'
-{P : Sort v}
-(x : ratfunc K)
-(f : ∀ p q : polynomial K, P)
-(H : ∀
- {p q a}
- (hq : «expr ≠ »(q, 0))
- (ha : «expr ≠ »(a, 0)), «expr = »(f «expr * »(a, p) «expr * »(a, q), f p q)) : P :=
-x.lift_on f (λ p q p' q' hq hq' h, begin
-   have [ident H0] [":", expr «expr = »(f 0 q, f 0 q')] [],
-   { calc
-       «expr = »(f 0 q, f «expr * »(q', 0) «expr * »(q', q)) : (H hq hq').symm
-       «expr = »(..., f «expr * »(q, 0) «expr * »(q, q')) : by rw ["[", expr mul_zero, ",", expr mul_zero, ",", expr mul_comm, "]"] []
-       «expr = »(..., f 0 q') : H hq' hq },
-   by_cases [expr hp, ":", expr «expr = »(p, 0)],
-   { simp [] [] [] ["[", expr hp, ",", expr hq, "]"] [] ["at", "⊢", ident h],
-     rw ["[", expr h, ",", expr H0, "]"] [] },
-   by_cases [expr hp', ":", expr «expr = »(p', 0)],
-   { simp [] [] [] ["[", expr hp', ",", expr hq', "]"] [] ["at", "⊢", ident h],
-     rw ["[", expr h, ",", expr H0, "]"] [] },
-   calc
-     «expr = »(f p q, f «expr * »(p', p) «expr * »(p', q)) : (H hq hp').symm
-     «expr = »(..., f «expr * »(p, p') «expr * »(p, q')) : by rw ["[", expr mul_comm p p', ",", expr h, "]"] []
-     «expr = »(..., f p' q') : H hq' hp
- end)
+protected irreducible_def lift_on' {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
+  (H : ∀ {p q a} hq : q ≠ 0 ha : a ≠ 0, f (a*p) (a*q) = f p q) : P :=
+  x.lift_on f
+    fun p q p' q' hq hq' h =>
+      by 
+        have H0 : f 0 q = f 0 q'
+        ·
+          calc f 0 q = f (q'*0) (q'*q) := (H hq hq').symm _ = f (q*0) (q*q') :=
+            by 
+              rw [mul_zero, mul_zero, mul_commₓ]_ = f 0 q' :=
+            H hq' hq 
+        byCases' hp : p = 0
+        ·
+          simp [hp, hq] at h⊢
+          rw [h, H0]
+        byCases' hp' : p' = 0
+        ·
+          simp [hp', hq'] at h⊢
+          rw [h, H0]
+        calc f p q = f (p'*p) (p'*q) := (H hq hp').symm _ = f (p*p') (p*q') :=
+          by 
+            rw [mul_commₓ p p', h]_ = f p' q' :=
+          H hq' hp
 
 theorem lift_on'_mk {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1)
   (H : ∀ {p q a} hq : q ≠ 0 ha : a ≠ 0, f (a*p) (a*q) = f p q) : (Ratfunc.mk p q).liftOn' f @H = f p q :=
   by 
     rw [Ratfunc.liftOn', Ratfunc.lift_on_mk _ _ _ f0]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- Induction principle for `ratfunc K`: if `f p q : P (ratfunc.mk p q)` for all `p q`,
 then `P` holds on all elements of `ratfunc K`.
 
 See also `induction_on`, which is a recursion principle defined in terms of `algebra_map`.
 -/
-@[irreducible]
-protected theorem induction_on' {P : Ratfunc K → Prop} :
+protected irreducible_def induction_on' {P : Ratfunc K → Prop} :
   ∀ x : Ratfunc K f : ∀ p q : Polynomial K hq : q ≠ 0, P (Ratfunc.mk p q), P x
 | ⟨x⟩, f =>
   Localization.induction_on x
@@ -219,8 +212,7 @@ section Field
 
 
 /-- The zero rational function. -/
-@[irreducible]
-protected def zero : Ratfunc K :=
+protected irreducible_def zero : Ratfunc K :=
   ⟨0⟩
 
 instance : HasZero (Ratfunc K) :=
@@ -231,8 +223,7 @@ theorem of_fraction_ring_zero : (of_fraction_ring 0 : Ratfunc K) = 0 :=
     unfold HasZero.zero Ratfunc.zero
 
 /-- Addition of rational functions. -/
-@[irreducible]
-protected def add : Ratfunc K → Ratfunc K → Ratfunc K
+protected irreducible_def add : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p+q⟩
 
 instance : Add (Ratfunc K) :=
@@ -244,8 +235,7 @@ theorem of_fraction_ring_add (p q : FractionRing (Polynomial K)) :
     unfold Add.add Ratfunc.add
 
 /-- Subtraction of rational functions. -/
-@[irreducible]
-protected def sub : Ratfunc K → Ratfunc K → Ratfunc K
+protected irreducible_def sub : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p - q⟩
 
 instance : Sub (Ratfunc K) :=
@@ -257,8 +247,7 @@ theorem of_fraction_ring_sub (p q : FractionRing (Polynomial K)) :
     unfold Sub.sub Ratfunc.sub
 
 /-- Additive inverse of a rational function. -/
-@[irreducible]
-protected def neg : Ratfunc K → Ratfunc K
+protected irreducible_def neg : Ratfunc K → Ratfunc K
 | ⟨p⟩ => ⟨-p⟩
 
 instance : Neg (Ratfunc K) :=
@@ -269,8 +258,7 @@ theorem of_fraction_ring_neg (p : FractionRing (Polynomial K)) : of_fraction_rin
     unfold Neg.neg Ratfunc.neg
 
 /-- The multiplicative unit of rational functions. -/
-@[irreducible]
-protected def one : Ratfunc K :=
+protected irreducible_def one : Ratfunc K :=
   ⟨1⟩
 
 instance : HasOne (Ratfunc K) :=
@@ -281,8 +269,7 @@ theorem of_fraction_ring_one : (of_fraction_ring 1 : Ratfunc K) = 1 :=
     unfold HasOne.one Ratfunc.one
 
 /-- Multiplication of rational functions. -/
-@[irreducible]
-protected def mul : Ratfunc K → Ratfunc K → Ratfunc K
+protected irreducible_def mul : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p*q⟩
 
 instance : Mul (Ratfunc K) :=
@@ -296,8 +283,7 @@ theorem of_fraction_ring_mul (p q : FractionRing (Polynomial K)) :
 include hdomain
 
 /-- Division of rational functions. -/
-@[irreducible]
-protected def div : Ratfunc K → Ratfunc K → Ratfunc K
+protected irreducible_def div : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p / q⟩
 
 instance : Div (Ratfunc K) :=
@@ -309,8 +295,7 @@ theorem of_fraction_ring_div (p q : FractionRing (Polynomial K)) :
     unfold Div.div Ratfunc.div
 
 /-- Multiplicative inverse of a rational function. -/
-@[irreducible]
-protected def inv : Ratfunc K → Ratfunc K
+protected irreducible_def inv : Ratfunc K → Ratfunc K
 | ⟨p⟩ => ⟨p⁻¹⟩
 
 instance : HasInv (Ratfunc K) :=
@@ -379,10 +364,12 @@ instance [IsDomain K] : Nontrivial (Ratfunc K) :=
 
 omit hring
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Solve equations for `ratfunc K` by working in `fraction_ring (polynomial K)`. -/
 unsafe def frac_tac : tactic Unit :=
   sorry
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Solve equations for `ratfunc K` by applying `ratfunc.induction_on`. -/
 unsafe def smul_tac : tactic Unit :=
   sorry
@@ -662,27 +649,35 @@ variable [hfield : Field K]
 
 include hfield
 
--- error in FieldTheory.Ratfunc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `ratfunc.num_denom` are numerator and denominator of a rational function over a field,
 normalized such that the denominator is monic. -/
-def num_denom (x : ratfunc K) : «expr × »(polynomial K, polynomial K) :=
-x.lift_on' (λ p q, if «expr = »(q, 0) then ⟨0, 1⟩ else let r := gcd p q in
- ⟨«expr * »(polynomial.C «expr ⁻¹»(«expr / »(q, r).leading_coeff), «expr / »(p, r)), «expr * »(polynomial.C «expr ⁻¹»(«expr / »(q, r).leading_coeff), «expr / »(q, r))⟩) (begin
-   intros [ident p, ident q, ident a, ident hq, ident ha],
-   rw ["[", expr if_neg hq, ",", expr if_neg (mul_ne_zero ha hq), "]"] [],
-   have [ident hpq] [":", expr «expr ≠ »(gcd p q, 0)] [":=", expr mt «expr ∘ »(and.right, (gcd_eq_zero_iff _ _).mp) hq],
-   have [ident ha'] [":", expr «expr ≠ »(a.leading_coeff, 0)] [":=", expr polynomial.leading_coeff_ne_zero.mpr ha],
-   have [ident hainv] [":", expr «expr ≠ »(«expr ⁻¹»(a.leading_coeff), 0)] [":=", expr inv_ne_zero ha'],
-   simp [] [] ["only"] ["[", expr prod.ext_iff, ",", expr gcd_mul_left, ",", expr normalize_apply, ",", expr polynomial.coe_norm_unit, ",", expr mul_assoc, ",", expr comm_group_with_zero.coe_norm_unit _ ha', "]"] [] [],
-   have [ident hdeg] [":", expr «expr ≤ »((gcd p q).degree, q.degree)] [":=", expr degree_gcd_le_right _ hq],
-   have [ident hdeg'] [":", expr «expr ≤ »(«expr * »(polynomial.C «expr ⁻¹»(a.leading_coeff), gcd p q).degree, q.degree)] [],
-   { rw ["[", expr polynomial.degree_mul, ",", expr polynomial.degree_C hainv, ",", expr zero_add, "]"] [],
-     exact [expr hdeg] },
-   have [ident hdivp] [":", expr «expr ∣ »(«expr * »(polynomial.C «expr ⁻¹»(a.leading_coeff), gcd p q), p)] [":=", expr (C_mul_dvd hainv).mpr (gcd_dvd_left p q)],
-   have [ident hdivq] [":", expr «expr ∣ »(«expr * »(polynomial.C «expr ⁻¹»(a.leading_coeff), gcd p q), q)] [":=", expr (C_mul_dvd hainv).mpr (gcd_dvd_right p q)],
-   rw ["[", expr euclidean_domain.mul_div_mul_cancel ha hdivp, ",", expr euclidean_domain.mul_div_mul_cancel ha hdivq, ",", expr leading_coeff_div hdeg, ",", expr leading_coeff_div hdeg', ",", expr polynomial.leading_coeff_mul, ",", expr polynomial.leading_coeff_C, ",", expr div_C_mul, ",", expr div_C_mul, ",", "<-", expr mul_assoc, ",", "<-", expr polynomial.C_mul, ",", "<-", expr mul_assoc, ",", "<-", expr polynomial.C_mul, "]"] [],
-   split; congr; rw ["[", expr inv_div, ",", expr mul_comm, ",", expr mul_div_assoc, ",", "<-", expr mul_assoc, ",", expr inv_inv₀, ",", expr _root_.mul_inv_cancel ha', ",", expr one_mul, ",", expr inv_div, "]"] []
- end)
+def num_denom (x : Ratfunc K) : Polynomial K × Polynomial K :=
+  x.lift_on'
+    (fun p q =>
+      if q = 0 then ⟨0, 1⟩ else
+        let r := gcd p q
+        ⟨Polynomial.c ((q / r).leadingCoeff⁻¹)*p / r, Polynomial.c ((q / r).leadingCoeff⁻¹)*q / r⟩)
+    (by 
+      intro p q a hq ha 
+      rw [if_neg hq, if_neg (mul_ne_zero ha hq)]
+      have hpq : gcd p q ≠ 0 := mt (And.right ∘ (gcd_eq_zero_iff _ _).mp) hq 
+      have ha' : a.leading_coeff ≠ 0 := polynomial.leading_coeff_ne_zero.mpr ha 
+      have hainv : a.leading_coeff⁻¹ ≠ 0 := inv_ne_zero ha' 
+      simp only [Prod.ext_iff, gcd_mul_left, normalize_apply, Polynomial.coe_norm_unit, mul_assocₓ,
+        CommGroupWithZero.coe_norm_unit _ ha']
+      have hdeg : (gcd p q).degree ≤ q.degree := degree_gcd_le_right _ hq 
+      have hdeg' : (Polynomial.c (a.leading_coeff⁻¹)*gcd p q).degree ≤ q.degree
+      ·
+        rw [Polynomial.degree_mul, Polynomial.degree_C hainv, zero_addₓ]
+        exact hdeg 
+      have hdivp : (Polynomial.c (a.leading_coeff⁻¹)*gcd p q) ∣ p := (C_mul_dvd hainv).mpr (gcd_dvd_left p q)
+      have hdivq : (Polynomial.c (a.leading_coeff⁻¹)*gcd p q) ∣ q := (C_mul_dvd hainv).mpr (gcd_dvd_right p q)
+      rw [EuclideanDomain.mul_div_mul_cancel ha hdivp, EuclideanDomain.mul_div_mul_cancel ha hdivq,
+        leading_coeff_div hdeg, leading_coeff_div hdeg', Polynomial.leading_coeff_mul, Polynomial.leading_coeff_C,
+        div_C_mul, div_C_mul, ←mul_assocₓ, ←Polynomial.C_mul, ←mul_assocₓ, ←Polynomial.C_mul]
+      constructor <;>
+        congr <;>
+          rw [inv_div, mul_commₓ, mul_div_assoc, ←mul_assocₓ, inv_inv₀, _root_.mul_inv_cancel ha', one_mulₓ, inv_div])
 
 @[simp]
 theorem num_denom_div (p : Polynomial K) {q : Polynomial K} (hq : q ≠ 0) :
@@ -777,21 +772,26 @@ theorem denom_div_dvd (p : Polynomial K) {q : Polynomial K} (hq : q ≠ 0) :
     ·
       simpa only [Ne.def, inv_eq_zero, Polynomial.leading_coeff_eq_zero] using right_div_gcd_ne_zero hq
 
--- error in FieldTheory.Ratfunc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem num_div_denom (x : ratfunc K) : «expr = »(«expr / »(algebra_map _ _ (num x), algebra_map _ _ (denom x)), x) :=
-x.induction_on (λ p q hq, begin
-   by_cases [expr hp, ":", expr «expr = »(p, 0)],
-   { simp [] [] [] ["[", expr hp, "]"] [] [] },
-   have [ident q_div_ne_zero] [] [":=", expr right_div_gcd_ne_zero hq],
-   rw ["[", expr num_div p hq, ",", expr denom_div p hq, ",", expr ring_hom.map_mul, ",", expr ring_hom.map_mul, ",", expr mul_div_mul_left, ",", expr div_eq_div_iff, ",", "<-", expr ring_hom.map_mul, ",", "<-", expr ring_hom.map_mul, ",", expr mul_comm _ q, ",", "<-", expr euclidean_domain.mul_div_assoc, ",", "<-", expr euclidean_domain.mul_div_assoc, ",", expr mul_comm, "]"] [],
-   { apply [expr gcd_dvd_right] },
-   { apply [expr gcd_dvd_left] },
-   { exact [expr algebra_map_ne_zero q_div_ne_zero] },
-   { exact [expr algebra_map_ne_zero hq] },
-   { refine [expr algebra_map_ne_zero (mt polynomial.C_eq_zero.mp _)],
-     exact [expr inv_ne_zero (polynomial.leading_coeff_ne_zero.mpr q_div_ne_zero)] }
- end)
+theorem num_div_denom (x : Ratfunc K) : algebraMap _ _ (Num x) / algebraMap _ _ (denom x) = x :=
+  x.induction_on
+    fun p q hq =>
+      by 
+        have q_div_ne_zero := right_div_gcd_ne_zero hq 
+        rw [num_div p hq, denom_div p hq, RingHom.map_mul, RingHom.map_mul, mul_div_mul_left, div_eq_div_iff,
+          ←RingHom.map_mul, ←RingHom.map_mul, mul_commₓ _ q, ←EuclideanDomain.mul_div_assoc,
+          ←EuclideanDomain.mul_div_assoc, mul_commₓ]
+        ·
+          apply gcd_dvd_right
+        ·
+          apply gcd_dvd_left
+        ·
+          exact algebra_map_ne_zero q_div_ne_zero
+        ·
+          exact algebra_map_ne_zero hq
+        ·
+          refine' algebra_map_ne_zero (mt polynomial.C_eq_zero.mp _)
+          exact inv_ne_zero (polynomial.leading_coeff_ne_zero.mpr q_div_ne_zero)
 
 @[simp]
 theorem num_eq_zero_iff {x : Ratfunc K} : Num x = 0 ↔ x = 0 :=
@@ -830,7 +830,7 @@ theorem num_denom_mul (x y : Ratfunc K) : ((x*y).num*x.denom*y.denom) = (x.num*y
 theorem num_dvd {x : Ratfunc K} {p : Polynomial K} (hp : p ≠ 0) :
   Num x ∣ p ↔ ∃ (q : Polynomial K)(hq : q ≠ 0), x = algebraMap _ _ p / algebraMap _ _ q :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨q, rfl⟩
       obtain ⟨hx, hq⟩ := mul_ne_zero_iff.mp hp 
@@ -847,7 +847,7 @@ theorem num_dvd {x : Ratfunc K} {p : Polynomial K} (hp : p ≠ 0) :
 theorem denom_dvd {x : Ratfunc K} {q : Polynomial K} (hq : q ≠ 0) :
   denom x ∣ q ↔ ∃ p : Polynomial K, x = algebraMap _ _ p / algebraMap _ _ q :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨p, rfl⟩
       obtain ⟨hx, hp⟩ := mul_ne_zero_iff.mp hq 
@@ -990,7 +990,6 @@ theorem eval_algebra_map {S : Type _} [CommSemiringₓ S] [Algebra S (Polynomial
   by 
     simp [eval, IsScalarTower.algebra_map_apply S (Polynomial K) (Ratfunc K)]
 
--- error in FieldTheory.Ratfunc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `eval` is an additive homomorphism except when a denominator evaluates to `0`.
 
 Counterexample: `eval _ 1 (X / (X-1)) + eval _ 1 (-1 / (X-1)) = 0`
@@ -998,44 +997,41 @@ Counterexample: `eval _ 1 (X / (X-1)) + eval _ 1 (-1 / (X-1)) = 0`
 
 See also `ratfunc.eval₂_denom_ne_zero` to make the hypotheses simpler but less general.
 -/
-theorem eval_add
-{x y : ratfunc K}
-(hx : «expr ≠ »(polynomial.eval₂ f a (denom x), 0))
-(hy : «expr ≠ »(polynomial.eval₂ f a (denom y), 0)) : «expr = »(eval f a «expr + »(x, y), «expr + »(eval f a x, eval f a y)) :=
-begin
-  unfold [ident eval] [],
-  by_cases [expr hxy, ":", expr «expr = »(polynomial.eval₂ f a (denom «expr + »(x, y)), 0)],
-  { have [] [] [":=", expr polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_add_dvd x y) hxy],
-    rw [expr polynomial.eval₂_mul] ["at", ident this],
-    cases [expr mul_eq_zero.mp this] []; contradiction },
-  rw ["[", expr div_add_div _ _ hx hy, ",", expr eq_div_iff (mul_ne_zero hx hy), ",", expr div_eq_mul_inv, ",", expr mul_right_comm, ",", "<-", expr div_eq_mul_inv, ",", expr div_eq_iff hxy, "]"] [],
-  simp [] [] ["only"] ["[", "<-", expr polynomial.eval₂_mul, ",", "<-", expr polynomial.eval₂_add, "]"] [] [],
-  congr' [1] [],
-  apply [expr num_denom_add]
-end
+theorem eval_add {x y : Ratfunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0) (hy : Polynomial.eval₂ f a (denom y) ≠ 0) :
+  eval f a (x+y) = eval f a x+eval f a y :=
+  by 
+    unfold eval 
+    byCases' hxy : Polynomial.eval₂ f a (denom (x+y)) = 0
+    ·
+      have  := Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_add_dvd x y) hxy 
+      rw [Polynomial.eval₂_mul] at this 
+      cases mul_eq_zero.mp this <;> contradiction 
+    rw [div_add_div _ _ hx hy, eq_div_iff (mul_ne_zero hx hy), div_eq_mul_inv, mul_right_commₓ, ←div_eq_mul_inv,
+      div_eq_iff hxy]
+    simp only [←Polynomial.eval₂_mul, ←Polynomial.eval₂_add]
+    congr 1
+    apply num_denom_add
 
--- error in FieldTheory.Ratfunc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `eval` is a multiplicative homomorphism except when a denominator evaluates to `0`.
 
 Counterexample: `eval _ 0 X * eval _ 0 (1/X) = 0 ≠ 1 = eval _ 0 1 = eval _ 0 (X * 1/X)`.
 
 See also `ratfunc.eval₂_denom_ne_zero` to make the hypotheses simpler but less general.
 -/
-theorem eval_mul
-{x y : ratfunc K}
-(hx : «expr ≠ »(polynomial.eval₂ f a (denom x), 0))
-(hy : «expr ≠ »(polynomial.eval₂ f a (denom y), 0)) : «expr = »(eval f a «expr * »(x, y), «expr * »(eval f a x, eval f a y)) :=
-begin
-  unfold [ident eval] [],
-  by_cases [expr hxy, ":", expr «expr = »(polynomial.eval₂ f a (denom «expr * »(x, y)), 0)],
-  { have [] [] [":=", expr polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_mul_dvd x y) hxy],
-    rw [expr polynomial.eval₂_mul] ["at", ident this],
-    cases [expr mul_eq_zero.mp this] []; contradiction },
-  rw ["[", expr div_mul_div, ",", expr eq_div_iff (mul_ne_zero hx hy), ",", expr div_eq_mul_inv, ",", expr mul_right_comm, ",", "<-", expr div_eq_mul_inv, ",", expr div_eq_iff hxy, "]"] [],
-  repeat { rw ["<-", expr polynomial.eval₂_mul] [] },
-  congr' [1] [],
-  apply [expr num_denom_mul]
-end
+theorem eval_mul {x y : Ratfunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0) (hy : Polynomial.eval₂ f a (denom y) ≠ 0) :
+  eval f a (x*y) = eval f a x*eval f a y :=
+  by 
+    unfold eval 
+    byCases' hxy : Polynomial.eval₂ f a (denom (x*y)) = 0
+    ·
+      have  := Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_mul_dvd x y) hxy 
+      rw [Polynomial.eval₂_mul] at this 
+      cases mul_eq_zero.mp this <;> contradiction 
+    rw [div_mul_div, eq_div_iff (mul_ne_zero hx hy), div_eq_mul_inv, mul_right_commₓ, ←div_eq_mul_inv, div_eq_iff hxy]
+    repeat' 
+      rw [←Polynomial.eval₂_mul]
+    congr 1
+    apply num_denom_mul
 
 end Eval
 

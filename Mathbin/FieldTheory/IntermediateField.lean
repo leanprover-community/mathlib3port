@@ -38,6 +38,8 @@ open_locale BigOperators
 
 variable (K L : Type _) [Field K] [Field L] [Algebra K L]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » carrier)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » carrier)
 /-- `S : intermediate_field K L` is a subset of `L` such that there is a field
 tower `L / S / K`. -/
 structure IntermediateField extends Subalgebra K L where 
@@ -131,30 +133,36 @@ theorem inv_mem : ∀ {x : L}, x ∈ S → x⁻¹ ∈ S :=
 theorem div_mem {x y : L} (hx : x ∈ S) (hy : y ∈ S) : x / y ∈ S :=
   S.to_subfield.div_mem hx hy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- Product of a list of elements in an intermediate_field is in the intermediate_field. -/
 theorem list_prod_mem {l : List L} : (∀ x _ : x ∈ l, x ∈ S) → l.prod ∈ S :=
   S.to_subfield.list_prod_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- Sum of a list of elements in an intermediate field is in the intermediate_field. -/
 theorem list_sum_mem {l : List L} : (∀ x _ : x ∈ l, x ∈ S) → l.sum ∈ S :=
   S.to_subfield.list_sum_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » m)
 /-- Product of a multiset of elements in an intermediate field is in the intermediate_field. -/
 theorem multiset_prod_mem (m : Multiset L) : (∀ a _ : a ∈ m, a ∈ S) → m.prod ∈ S :=
   S.to_subfield.multiset_prod_mem m
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » m)
 /-- Sum of a multiset of elements in a `intermediate_field` is in the `intermediate_field`. -/
 theorem multiset_sum_mem (m : Multiset L) : (∀ a _ : a ∈ m, a ∈ S) → m.sum ∈ S :=
   S.to_subfield.multiset_sum_mem m
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
 /-- Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
 -/
-theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c _ : c ∈ t, f c ∈ S) : (∏i in t, f i) ∈ S :=
+theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c _ : c ∈ t, f c ∈ S) : (∏ i in t, f i) ∈ S :=
   S.to_subfield.prod_mem h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
 /-- Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
 -/
-theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c _ : c ∈ t, f c ∈ S) : (∑i in t, f i) ∈ S :=
+theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c _ : c ∈ t, f c ∈ S) : (∑ i in t, f i) ∈ S :=
   S.to_subfield.sum_mem h
 
 theorem pow_mem {x : L} (hx : x ∈ S) : ∀ n : ℤ, (x^n) ∈ S
@@ -176,10 +184,12 @@ theorem coe_int_mem (n : ℤ) : (n : L) ∈ S :=
 
 end IntermediateField
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 /-- Turn a subalgebra closed under inverses into an intermediate field -/
 def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀ x _ : x ∈ S, x⁻¹ ∈ S) : IntermediateField K L :=
   { S with neg_mem' := fun x => S.neg_mem, inv_mem' := inv_mem }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 @[simp]
 theorem to_subalgebra_to_intermediate_field (S : Subalgebra K L) (inv_mem : ∀ x _ : x ∈ S, x⁻¹ ∈ S) :
   (S.to_intermediate_field inv_mem).toSubalgebra = S :=
@@ -187,6 +197,7 @@ theorem to_subalgebra_to_intermediate_field (S : Subalgebra K L) (inv_mem : ∀ 
     ext 
     rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S.to_subalgebra)
 @[simp]
 theorem to_intermediate_field_to_subalgebra (S : IntermediateField K L)
   (inv_mem : ∀ x _ : x ∈ S.to_subalgebra, x⁻¹ ∈ S) : S.to_subalgebra.to_intermediate_field inv_mem = S :=
@@ -206,19 +217,19 @@ instance to_field : Field S :=
   S.to_subfield.to_field
 
 @[simp, normCast]
-theorem coe_add (x y : S) : («expr↑ » (x+y) : L) = «expr↑ » x+«expr↑ » y :=
+theorem coe_add (x y : S) : (↑x+y : L) = (↑x)+↑y :=
   rfl
 
 @[simp, normCast]
-theorem coe_neg (x : S) : («expr↑ » (-x) : L) = -«expr↑ » x :=
+theorem coe_neg (x : S) : (↑(-x) : L) = -↑x :=
   rfl
 
 @[simp, normCast]
-theorem coe_mul (x y : S) : («expr↑ » (x*y) : L) = «expr↑ » x*«expr↑ » y :=
+theorem coe_mul (x y : S) : (↑x*y : L) = (↑x)*↑y :=
   rfl
 
 @[simp, normCast]
-theorem coe_inv (x : S) : («expr↑ » (x⁻¹) : L) = «expr↑ » x⁻¹ :=
+theorem coe_inv (x : S) : (↑x⁻¹ : L) = (↑x)⁻¹ :=
   rfl
 
 @[simp, normCast]
@@ -230,7 +241,7 @@ theorem coe_one : ((1 : S) : L) = 1 :=
   rfl
 
 @[simp, normCast]
-theorem coe_pow (x : S) (n : ℕ) : («expr↑ » (x^n) : L) = («expr↑ » x^n) :=
+theorem coe_pow (x : S) (n : ℕ) : (↑(x^n) : L) = (↑x^n) :=
   by 
     induction' n with n ih
     ·
@@ -252,7 +263,7 @@ instance IsScalarTower {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScala
 
 @[simp]
 theorem coe_smul {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScalarTower R K L] (r : R) (x : S) :
-  «expr↑ » (r • x) = (r • x : L) :=
+  ↑(r • x) = (r • x : L) :=
   rfl
 
 instance algebra' {K'} [CommSemiringₓ K'] [HasScalar K' K] [Algebra K' L] [IsScalarTower K' K L] : Algebra K' S :=
@@ -292,7 +303,7 @@ def val : S →ₐ[K] L :=
   S.to_subalgebra.val
 
 @[simp]
-theorem coe_val : «expr⇑ » S.val = coeₓ :=
+theorem coe_val : ⇑S.val = coeₓ :=
   rfl
 
 @[simp]
@@ -347,7 +358,7 @@ instance has_lift2 {F : IntermediateField K L} : HasLiftT (IntermediateField F L
 
 @[simp]
 theorem mem_lift2 {F : IntermediateField K L} {E : IntermediateField F L} {x : L} :
-  x ∈ («expr↑ » E : IntermediateField K L) ↔ x ∈ E :=
+  x ∈ (↑E : IntermediateField K L) ↔ x ∈ E :=
   Iff.rfl
 
 /-- This was formerly an instance called `lift2_alg`, but an instance above already provides it. -/
@@ -363,8 +374,7 @@ instance lift2_tower {F : IntermediateField K L} {E : IntermediateField F L} : I
   E.is_scalar_tower
 
 /-- `lift2` is isomorphic to the original `intermediate_field`. -/
-def lift2_alg_equiv {F : IntermediateField K L} (E : IntermediateField F L) :
-  («expr↑ » E : IntermediateField K L) ≃ₐ[K] E :=
+def lift2_alg_equiv {F : IntermediateField K L} (E : IntermediateField F L) : (↑E : IntermediateField K L) ≃ₐ[K] E :=
   AlgEquiv.refl
 
 end Tower
@@ -401,18 +411,14 @@ theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E) (h_finra
 theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K F = finrank K E) : F = E :=
   eq_of_le_of_finrank_le h_le h_finrank.ge
 
--- error in FieldTheory.IntermediateField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_of_le_of_finrank_le'
-[finite_dimensional K L]
-(h_le : «expr ≤ »(F, E))
-(h_finrank : «expr ≤ »(finrank F L, finrank E L)) : «expr = »(F, E) :=
-begin
-  apply [expr eq_of_le_of_finrank_le h_le],
-  have [ident h1] [] [":=", expr finrank_mul_finrank K F L],
-  have [ident h2] [] [":=", expr finrank_mul_finrank K E L],
-  have [ident h3] [":", expr «expr < »(0, finrank E L)] [":=", expr finrank_pos],
-  nlinarith [] [] []
-end
+theorem eq_of_le_of_finrank_le' [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank F L ≤ finrank E L) :
+  F = E :=
+  by 
+    apply eq_of_le_of_finrank_le h_le 
+    have h1 := finrank_mul_finrank K F L 
+    have h2 := finrank_mul_finrank K E L 
+    have h3 : 0 < finrank E L := finrank_pos 
+    nlinarith
 
 theorem eq_of_le_of_finrank_eq' [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank F L = finrank E L) :
   F = E :=

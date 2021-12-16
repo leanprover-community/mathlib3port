@@ -140,7 +140,7 @@ def blocks_fun : Finₓ c.length → ℕ :=
 theorem of_fn_blocks_fun : of_fn c.blocks_fun = c.blocks :=
   of_fn_nth_le _
 
-theorem sum_blocks_fun : (∑i, c.blocks_fun i) = n :=
+theorem sum_blocks_fun : (∑ i, c.blocks_fun i) = n :=
   by 
     convRHS => rw [←c.blocks_sum, ←of_fn_blocks_fun, sum_of_fn]
 
@@ -274,23 +274,20 @@ def embedding (i : Finₓ c.length) : Finₓ (c.blocks_fun i) ↪o Finₓ n :=
 theorem coe_embedding (i : Finₓ c.length) (j : Finₓ (c.blocks_fun i)) : (c.embedding i j : ℕ) = c.size_up_to i+j :=
   rfl
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 `index_exists` asserts there is some `i` with `j < c.size_up_to (i+1)`.
 In the next definition `index` we use `nat.find` to produce the minimal such index.
 -/
-theorem index_exists
-{j : exprℕ()}
-(h : «expr < »(j, n)) : «expr∃ , »((i : exprℕ()), «expr ∧ »(«expr < »(j, c.size_up_to i.succ), «expr < »(i, c.length))) :=
-begin
-  have [ident n_pos] [":", expr «expr < »(0, n)] [":=", expr lt_of_le_of_lt (zero_le j) h],
-  have [] [":", expr «expr < »(0, c.blocks.sum)] [],
-  by rwa ["[", "<-", expr c.blocks_sum, "]"] ["at", ident n_pos],
-  have [ident length_pos] [":", expr «expr < »(0, c.blocks.length)] [":=", expr length_pos_of_sum_pos (blocks c) this],
-  refine [expr ⟨c.length.pred, _, nat.pred_lt (ne_of_gt length_pos)⟩],
-  have [] [":", expr «expr = »(c.length.pred.succ, c.length)] [":=", expr nat.succ_pred_eq_of_pos length_pos],
-  simp [] [] [] ["[", expr this, ",", expr h, "]"] [] []
-end
+theorem index_exists {j : ℕ} (h : j < n) : ∃ i : ℕ, j < c.size_up_to i.succ ∧ i < c.length :=
+  by 
+    have n_pos : 0 < n := lt_of_le_of_ltₓ (zero_le j) h 
+    have  : 0 < c.blocks.sum
+    ·
+      rwa [←c.blocks_sum] at n_pos 
+    have length_pos : 0 < c.blocks.length := length_pos_of_sum_pos (blocks c) this 
+    refine' ⟨c.length.pred, _, Nat.pred_ltₓ (ne_of_gtₓ length_pos)⟩
+    have  : c.length.pred.succ = c.length := Nat.succ_pred_eq_of_posₓ length_pos 
+    simp [this, h]
 
 /-- `c.index j` is the index of the block in the composition `c` containing `j`. -/
 def index (j : Finₓ n) : Finₓ c.length :=
@@ -299,24 +296,23 @@ def index (j : Finₓ n) : Finₓ c.length :=
 theorem lt_size_up_to_index_succ (j : Finₓ n) : (j : ℕ) < c.size_up_to (c.index j).succ :=
   (Nat.find_specₓ (c.index_exists j.2)).1
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem size_up_to_index_le (j : fin n) : «expr ≤ »(c.size_up_to (c.index j), j) :=
-begin
-  by_contradiction [ident H],
-  set [] [ident i] [] [":="] [expr c.index j] ["with", ident hi],
-  push_neg ["at", ident H],
-  have [ident i_pos] [":", expr «expr < »((0 : exprℕ()), i)] [],
-  { by_contradiction [ident i_pos],
-    push_neg ["at", ident i_pos],
-    revert [ident H],
-    simp [] [] [] ["[", expr nonpos_iff_eq_zero.1 i_pos, ",", expr c.size_up_to_zero, "]"] [] [] },
-  let [ident i₁] [] [":=", expr (i : exprℕ()).pred],
-  have [ident i₁_lt_i] [":", expr «expr < »(i₁, i)] [":=", expr nat.pred_lt (ne_of_gt i_pos)],
-  have [ident i₁_succ] [":", expr «expr = »(i₁.succ, i)] [":=", expr nat.succ_pred_eq_of_pos i_pos],
-  have [] [] [":=", expr nat.find_min (c.index_exists j.2) i₁_lt_i],
-  simp [] [] [] ["[", expr lt_trans i₁_lt_i (c.index j).2, ",", expr i₁_succ, "]"] [] ["at", ident this],
-  exact [expr nat.lt_le_antisymm H this]
-end
+theorem size_up_to_index_le (j : Finₓ n) : c.size_up_to (c.index j) ≤ j :=
+  by 
+    byContra H 
+    set i := c.index j with hi 
+    pushNeg  at H 
+    have i_pos : (0 : ℕ) < i
+    ·
+      byContra i_pos 
+      pushNeg  at i_pos 
+      revert H 
+      simp [nonpos_iff_eq_zero.1 i_pos, c.size_up_to_zero]
+    let i₁ := (i : ℕ).pred 
+    have i₁_lt_i : i₁ < i := Nat.pred_ltₓ (ne_of_gtₓ i_pos)
+    have i₁_succ : i₁.succ = i := Nat.succ_pred_eq_of_posₓ i_pos 
+    have  := Nat.find_minₓ (c.index_exists j.2) i₁_lt_i 
+    simp [lt_transₓ i₁_lt_i (c.index j).2, i₁_succ] at this 
+    exact Nat.lt_le_antisymmₓ H this
 
 /-- Mapping an element `j` of `fin n` to the element in the block containing it, identified with
 `fin (c.blocks_fun (c.index j))` through the canonical increasing bijection. -/
@@ -341,7 +337,7 @@ theorem embedding_comp_inv (j : Finₓ n) : c.embedding (c.index j) (c.inv_embed
 theorem mem_range_embedding_iff {j : Finₓ n} {i : Finₓ c.length} :
   j ∈ Set.Range (c.embedding i) ↔ c.size_up_to i ≤ j ∧ (j : ℕ) < c.size_up_to (i : ℕ).succ :=
   by 
-    split 
+    constructor
     ·
       intro h 
       rcases Set.mem_range.2 h with ⟨k, hk⟩
@@ -363,37 +359,31 @@ theorem mem_range_embedding_iff {j : Finₓ n} {i : Finₓ c.length} :
         rw [Finₓ.ext_iff]
         exact add_tsub_cancel_of_le h.1
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The embeddings of different blocks of a composition are disjoint. -/
-theorem disjoint_range
-{i₁ i₂ : fin c.length}
-(h : «expr ≠ »(i₁, i₂)) : disjoint (set.range (c.embedding i₁)) (set.range (c.embedding i₂)) :=
-begin
-  classical,
-  wlog [ident h'] [":", expr «expr ≤ »(i₁, i₂)] [] ["using", ident i₁, ident i₂],
-  swap,
-  exact [expr (this h.symm).symm],
-  by_contradiction [ident d],
-  obtain ["⟨", ident x, ",", ident hx₁, ",", ident hx₂, "⟩", ":", expr «expr∃ , »((x : fin n), «expr ∧ »(«expr ∈ »(x, set.range (c.embedding i₁)), «expr ∈ »(x, set.range (c.embedding i₂)))), ":=", expr set.not_disjoint_iff.1 d],
-  have [] [":", expr «expr < »(i₁, i₂)] [":=", expr lt_of_le_of_ne h' h],
-  have [ident A] [":", expr «expr ≤ »((i₁ : exprℕ()).succ, i₂)] [":=", expr nat.succ_le_of_lt this],
-  apply [expr lt_irrefl (x : exprℕ())],
-  calc
-    «expr < »((x : exprℕ()), c.size_up_to (i₁ : exprℕ()).succ) : (c.mem_range_embedding_iff.1 hx₁).2
-    «expr ≤ »(..., c.size_up_to (i₂ : exprℕ())) : monotone_sum_take _ A
-    «expr ≤ »(..., x) : (c.mem_range_embedding_iff.1 hx₂).1
-end
+theorem disjoint_range {i₁ i₂ : Finₓ c.length} (h : i₁ ≠ i₂) :
+  Disjoint (Set.Range (c.embedding i₁)) (Set.Range (c.embedding i₂)) :=
+  by 
+    classical 
+    wlog h' : i₁ ≤ i₂ using i₁ i₂ 
+    swap 
+    exact (this h.symm).symm 
+    byContra d 
+    obtain ⟨x, hx₁, hx₂⟩ : ∃ x : Finₓ n, x ∈ Set.Range (c.embedding i₁) ∧ x ∈ Set.Range (c.embedding i₂) :=
+      Set.not_disjoint_iff.1 d 
+    have  : i₁ < i₂ := lt_of_le_of_neₓ h' h 
+    have A : (i₁ : ℕ).succ ≤ i₂ := Nat.succ_le_of_ltₓ this 
+    apply lt_irreflₓ (x : ℕ)
+    calc (x : ℕ) < c.size_up_to (i₁ : ℕ).succ := (c.mem_range_embedding_iff.1 hx₁).2_ ≤ c.size_up_to (i₂ : ℕ) :=
+      monotone_sum_take _ A _ ≤ x := (c.mem_range_embedding_iff.1 hx₂).1
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_range_embedding (j : fin n) : «expr ∈ »(j, set.range (c.embedding (c.index j))) :=
-begin
-  have [] [":", expr «expr ∈ »(c.embedding (c.index j) (c.inv_embedding j), set.range (c.embedding (c.index j)))] [":=", expr set.mem_range_self _],
-  rwa [expr c.embedding_comp_inv j] ["at", ident this]
-end
+theorem mem_range_embedding (j : Finₓ n) : j ∈ Set.Range (c.embedding (c.index j)) :=
+  by 
+    have  : c.embedding (c.index j) (c.inv_embedding j) ∈ Set.Range (c.embedding (c.index j)) := Set.mem_range_self _ 
+    rwa [c.embedding_comp_inv j] at this
 
 theorem mem_range_embedding_iff' {j : Finₓ n} {i : Finₓ c.length} : j ∈ Set.Range (c.embedding i) ↔ i = c.index j :=
   by 
-    split 
+    constructor
     ·
       rw [←not_imp_not]
       intro h 
@@ -416,7 +406,7 @@ theorem inv_embedding_comp (i : Finₓ c.length) (j : Finₓ (c.blocks_fun i)) :
 
 /-- Equivalence between the disjoint union of the blocks (each of them seen as
 `fin (c.blocks_fun i)`) with `fin n`. -/
-def blocks_fin_equiv : (Σi : Finₓ c.length, Finₓ (c.blocks_fun i)) ≃ Finₓ n :=
+def blocks_fin_equiv : (Σ i : Finₓ c.length, Finₓ (c.blocks_fun i)) ≃ Finₓ n :=
   { toFun := fun x => c.embedding x.1 x.2, invFun := fun j => ⟨c.index j, c.inv_embedding j⟩,
     left_inv :=
       fun x =>
@@ -443,23 +433,25 @@ theorem blocks_fun_congr {n₁ n₂ : ℕ} (c₁ : Composition n₁) (c₂ : Com
     congr 
     rwa [Finₓ.ext_iff]
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two compositions (possibly of different integers) coincide if and only if they have the
 same sequence of blocks. -/
-theorem sigma_eq_iff_blocks_eq
-{c : «exprΣ , »((n), composition n)}
-{c' : «exprΣ , »((n), composition n)} : «expr ↔ »(«expr = »(c, c'), «expr = »(c.2.blocks, c'.2.blocks)) :=
-begin
-  refine [expr ⟨λ H, by rw [expr H] [], λ H, _⟩],
-  rcases [expr c, "with", "⟨", ident n, ",", ident c, "⟩"],
-  rcases [expr c', "with", "⟨", ident n', ",", ident c', "⟩"],
-  have [] [":", expr «expr = »(n, n')] [],
-  by { rw ["[", "<-", expr c.blocks_sum, ",", "<-", expr c'.blocks_sum, ",", expr H, "]"] [] },
-  induction [expr this] [] [] [],
-  simp [] [] ["only"] ["[", expr true_and, ",", expr eq_self_iff_true, ",", expr heq_iff_eq, "]"] [] [],
-  ext1 [] [],
-  exact [expr H]
-end
+theorem sigma_eq_iff_blocks_eq {c : Σ n, Composition n} {c' : Σ n, Composition n} : c = c' ↔ c.2.blocks = c'.2.blocks :=
+  by 
+    refine'
+      ⟨fun H =>
+          by 
+            rw [H],
+        fun H => _⟩
+    rcases c with ⟨n, c⟩
+    rcases c' with ⟨n', c'⟩
+    have  : n = n'
+    ·
+      ·
+        rw [←c.blocks_sum, ←c'.blocks_sum, H]
+    induction this 
+    simp only [true_andₓ, eq_self_iff_true, heq_iff_eq]
+    ext1 
+    exact H
 
 /-! ### The composition `composition.ones` -/
 
@@ -501,35 +493,41 @@ theorem ones_embedding (i : Finₓ (ones n).length) (h : 0 < (ones n).blocksFun 
     ext 
     simpa using i.2.le
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_ones_iff {c : composition n} : «expr ↔ »(«expr = »(c, ones n), ∀ i «expr ∈ » c.blocks, «expr = »(i, 1)) :=
-begin
-  split,
-  { rintro [ident rfl],
-    exact [expr λ i, eq_of_mem_repeat] },
-  { assume [binders (H)],
-    ext1 [] [],
-    have [ident A] [":", expr «expr = »(c.blocks, repeat 1 c.blocks.length)] [":=", expr eq_repeat_of_mem H],
-    have [] [":", expr «expr = »(c.blocks.length, n)] [],
-    by { conv_rhs [] [] { rw ["[", "<-", expr c.blocks_sum, ",", expr A, "]"] },
-      simp [] [] [] [] [] [] },
-    rw ["[", expr A, ",", expr this, ",", expr ones_blocks, "]"] [] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » c.blocks)
+theorem eq_ones_iff {c : Composition n} : c = ones n ↔ ∀ i _ : i ∈ c.blocks, i = 1 :=
+  by 
+    constructor
+    ·
+      rintro rfl 
+      exact fun i => eq_of_mem_repeat
+    ·
+      intro H 
+      ext1 
+      have A : c.blocks = repeat 1 c.blocks.length := eq_repeat_of_mem H 
+      have  : c.blocks.length = n
+      ·
+        ·
+          convRHS => rw [←c.blocks_sum, A]
+          simp 
+      rw [A, this, ones_blocks]
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ne_ones_iff
-{c : composition n} : «expr ↔ »(«expr ≠ »(c, ones n), «expr∃ , »((i «expr ∈ » c.blocks), «expr < »(1, i))) :=
-begin
-  refine [expr (not_congr eq_ones_iff).trans _],
-  have [] [":", expr ∀
-   j «expr ∈ » c.blocks, «expr ↔ »(«expr = »(j, 1), «expr ≤ »(j, 1))] [":=", expr λ
-   j hj, by simp [] [] [] ["[", expr le_antisymm_iff, ",", expr c.one_le_blocks hj, "]"] [] []],
-  simp [] [] [] ["[", expr this, "]"] [] [] { contextual := tt }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » c.blocks)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » c.blocks)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  ne_ones_iff
+  { c : Composition n } : c ≠ ones n ↔ ∃ ( i : _ ) ( _ : i ∈ c.blocks ) , 1 < i
+  :=
+    by
+      refine' not_congr eq_ones_iff . trans _
+        have : ∀ j _ : j ∈ c.blocks , j = 1 ↔ j ≤ 1 := fun j hj => by simp [ le_antisymm_iffₓ , c.one_le_blocks hj ]
+        simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ this ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » c.blocks)
 theorem eq_ones_iff_length {c : Composition n} : c = ones n ↔ c.length = n :=
   by 
-    split 
+    constructor
     ·
       rintro rfl 
       exact ones_length n
@@ -537,9 +535,9 @@ theorem eq_ones_iff_length {c : Composition n} : c = ones n ↔ c.length = n :=
       contrapose 
       intro H length_n 
       apply lt_irreflₓ n 
-      calc n = ∑i : Finₓ c.length, 1 :=
+      calc n = ∑ i : Finₓ c.length, 1 :=
         by 
-          simp [length_n]_ < ∑i : Finₓ c.length, c.blocks_fun i :=
+          simp [length_n]_ < ∑ i : Finₓ c.length, c.blocks_fun i :=
         by 
           obtain ⟨i, hi, i_blocks⟩ : ∃ (i : _)(_ : i ∈ c.blocks), 1 < i := ne_ones_iff.1 H 
           rw [←of_fn_blocks_fun, mem_of_fn c.blocks_fun, Set.mem_range] at hi 
@@ -588,47 +586,48 @@ theorem single_embedding {n : ℕ} (h : 0 < n) (i : Finₓ n) :
     ext 
     simp 
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_single_iff_length
-{n : exprℕ()}
-(h : «expr < »(0, n))
-{c : composition n} : «expr ↔ »(«expr = »(c, single n h), «expr = »(c.length, 1)) :=
-begin
-  split,
-  { assume [binders (H)],
-    rw [expr H] [],
-    exact [expr single_length h] },
-  { assume [binders (H)],
-    ext1 [] [],
-    have [ident A] [":", expr «expr = »(c.blocks.length, 1)] [":=", expr «expr ▸ »(H, c.blocks_length)],
-    have [ident B] [":", expr «expr = »(c.blocks.sum, n)] [":=", expr c.blocks_sum],
-    rw [expr eq_cons_of_length_one A] ["at", ident B, "⊢"],
-    simpa [] [] [] ["[", expr single_blocks, "]"] [] ["using", expr B] }
-end
+theorem eq_single_iff_length {n : ℕ} (h : 0 < n) {c : Composition n} : c = single n h ↔ c.length = 1 :=
+  by 
+    constructor
+    ·
+      intro H 
+      rw [H]
+      exact single_length h
+    ·
+      intro H 
+      ext1 
+      have A : c.blocks.length = 1 := H ▸ c.blocks_length 
+      have B : c.blocks.sum = n := c.blocks_sum 
+      rw [eq_cons_of_length_one A] at B⊢
+      simpa [single_blocks] using B
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ne_single_iff
-{n : exprℕ()}
-(hn : «expr < »(0, n))
-{c : composition n} : «expr ↔ »(«expr ≠ »(c, single n hn), ∀ i, «expr < »(c.blocks_fun i, n)) :=
-begin
-  rw ["<-", expr not_iff_not] [],
-  push_neg [],
-  split,
-  { rintros [ident rfl],
-    exact [expr ⟨⟨0, by simp [] [] [] [] [] []⟩, by simp [] [] [] [] [] []⟩] },
-  { rintros ["⟨", ident i, ",", ident hi, "⟩"],
-    rw [expr eq_single_iff_length] [],
-    have [] [":", expr ∀ j : fin c.length, «expr = »(j, i)] [],
-    { intros [ident j],
-      by_contradiction [ident ji],
-      apply [expr lt_irrefl «expr∑ , »((k), c.blocks_fun k)],
-      calc
-        «expr ≤ »(«expr∑ , »((k), c.blocks_fun k), c.blocks_fun i) : by simp [] [] ["only"] ["[", expr c.sum_blocks_fun, ",", expr hi, "]"] [] []
-        «expr < »(..., «expr∑ , »((k), c.blocks_fun k)) : finset.single_lt_sum ji (finset.mem_univ _) (finset.mem_univ _) (c.one_le_blocks_fun j) (λ
-         _ _ _, zero_le _) },
-    simpa [] [] [] [] [] ["using", expr fintype.card_eq_one_of_forall_eq this] }
-end
+theorem ne_single_iff {n : ℕ} (hn : 0 < n) {c : Composition n} : c ≠ single n hn ↔ ∀ i, c.blocks_fun i < n :=
+  by 
+    rw [←not_iff_not]
+    pushNeg 
+    constructor
+    ·
+      rintro rfl 
+      exact
+        ⟨⟨0,
+            by 
+              simp ⟩,
+          by 
+            simp ⟩
+    ·
+      rintro ⟨i, hi⟩
+      rw [eq_single_iff_length]
+      have  : ∀ j : Finₓ c.length, j = i
+      ·
+        intro j 
+        byContra ji 
+        apply lt_irreflₓ (∑ k, c.blocks_fun k)
+        calc (∑ k, c.blocks_fun k) ≤ c.blocks_fun i :=
+          by 
+            simp only [c.sum_blocks_fun, hi]_ < ∑ k, c.blocks_fun k :=
+          Finset.single_lt_sum ji (Finset.mem_univ _) (Finset.mem_univ _) (c.one_le_blocks_fun j)
+            fun _ _ _ => zero_le _ 
+      simpa using Fintype.card_eq_one_of_forall_eq this
 
 end Composition
 
@@ -676,17 +675,15 @@ theorem length_split_wrt_composition_aux (l : List α) ns : length (l.split_wrt_
 theorem length_split_wrt_composition (l : List α) (c : Composition n) : length (l.split_wrt_composition c) = c.length :=
   length_split_wrt_composition_aux _ _
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_length_split_wrt_composition_aux
-{ns : list exprℕ()} : ∀
-{l : list α}, «expr ≤ »(ns.sum, l.length) → «expr = »(map length (l.split_wrt_composition_aux ns), ns) :=
-begin
-  induction [expr ns] [] ["with", ident n, ident ns, ident IH] []; intros [ident l, ident h]; simp [] [] [] [] [] ["at", ident h, "⊢"],
-  have [] [] [":=", expr le_trans (nat.le_add_right _ _) h],
-  rw [expr IH] [],
-  { simp [] [] [] ["[", expr this, "]"] [] [] },
-  rwa ["[", expr length_drop, ",", expr le_tsub_iff_left this, "]"] []
-end
+theorem map_length_split_wrt_composition_aux {ns : List ℕ} :
+  ∀ {l : List α}, ns.sum ≤ l.length → map length (l.split_wrt_composition_aux ns) = ns :=
+  by 
+    induction' ns with n ns IH <;> intro l h <;> simp  at h⊢
+    have  := le_transₓ (Nat.le_add_rightₓ _ _) h 
+    rw [IH]
+    ·
+      simp [this]
+    rwa [length_drop, le_tsub_iff_left this]
 
 /-- When one splits a list along a composition `c`, the lengths of the sublists thus created are
 given by the block sizes in `c`. -/
@@ -694,16 +691,12 @@ theorem map_length_split_wrt_composition (l : List α) (c : Composition l.length
   map length (l.split_wrt_composition c) = c.blocks :=
   map_length_split_wrt_composition_aux (le_of_eqₓ c.blocks_sum)
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem length_pos_of_mem_split_wrt_composition
-{l l' : list α}
-{c : composition l.length}
-(h : «expr ∈ »(l', l.split_wrt_composition c)) : «expr < »(0, length l') :=
-begin
-  have [] [":", expr «expr ∈ »(l'.length, (l.split_wrt_composition c).map list.length)] [":=", expr list.mem_map_of_mem list.length h],
-  rw [expr map_length_split_wrt_composition] ["at", ident this],
-  exact [expr c.blocks_pos this]
-end
+theorem length_pos_of_mem_split_wrt_composition {l l' : List α} {c : Composition l.length}
+  (h : l' ∈ l.split_wrt_composition c) : 0 < length l' :=
+  by 
+    have  : l'.length ∈ (l.split_wrt_composition c).map List.length := List.mem_map_of_memₓ List.length h 
+    rw [map_length_split_wrt_composition] at this 
+    exact c.blocks_pos this
 
 theorem sum_take_map_length_split_wrt_composition (l : List α) (c : Composition l.length) (i : ℕ) :
   (((l.split_wrt_composition c).map length).take i).Sum = c.size_up_to i :=
@@ -764,78 +757,98 @@ Combinatorial viewpoints on compositions, seen as finite subsets of `fin (n+1)` 
 -/
 
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bijection between compositions of `n` and subsets of `{0, ..., n-2}`, defined by
 considering the restriction of the subset to `{1, ..., n-1}` and shifting to the left by one. -/
-def composition_as_set_equiv (n : exprℕ()) : «expr ≃ »(composition_as_set n, finset (fin «expr - »(n, 1))) :=
-{ to_fun := λ
-  c, {i : fin «expr - »(n, 1) | «expr ∈ »((⟨«expr + »(1, (i : exprℕ())), begin
-      apply [expr (add_lt_add_left i.is_lt 1).trans_le],
-      rw ["[", expr nat.succ_eq_add_one, ",", expr add_comm, "]"] [],
-      exact [expr add_le_add (nat.sub_le n 1) (le_refl 1)]
-    end⟩ : fin n.succ), c.boundaries)}.to_finset,
-  inv_fun := λ
-  s, { boundaries := {i : fin n.succ | «expr ∨ »(«expr = »(i, 0), «expr ∨ »(«expr = »(i, fin.last n), «expr∃ , »((j : fin «expr - »(n, 1))
-       (hj : «expr ∈ »(j, s)), «expr = »((i : exprℕ()), «expr + »(j, 1)))))}.to_finset,
-    zero_mem := by simp [] [] [] [] [] [],
-    last_mem := by simp [] [] [] [] [] [] },
-  left_inv := begin
-    assume [binders (c)],
-    ext [] [ident i] [],
-    simp [] [] ["only"] ["[", expr exists_prop, ",", expr add_comm, ",", expr set.mem_to_finset, ",", expr true_or, ",", expr or_true, ",", expr set.mem_set_of_eq, "]"] [] [],
-    split,
-    { rintro ["(", ident rfl, "|", ident rfl, "|", "⟨", ident j, ",", ident hj1, ",", ident hj2, "⟩", ")"],
-      { exact [expr c.zero_mem] },
-      { exact [expr c.last_mem] },
-      { convert [] [expr hj1] [],
-        rwa [expr fin.ext_iff] [] } },
-    { simp [] [] ["only"] ["[", expr or_iff_not_imp_left, "]"] [] [],
-      assume [binders (i_mem i_ne_zero i_ne_last)],
-      simp [] [] [] ["[", expr fin.ext_iff, "]"] [] ["at", ident i_ne_zero, ident i_ne_last],
-      have [ident A] [":", expr «expr = »((«expr + »(1, «expr - »(i, 1)) : exprℕ()), (i : exprℕ()))] [],
-      by { rw [expr add_comm] [],
-        exact [expr nat.succ_pred_eq_of_pos (pos_iff_ne_zero.mpr i_ne_zero)] },
-      refine [expr ⟨⟨«expr - »(i, 1), _⟩, _, _⟩],
-      { have [] [":", expr «expr < »((i : exprℕ()), «expr + »(n, 1))] [":=", expr i.2],
-        simp [] [] [] ["[", expr nat.lt_succ_iff_lt_or_eq, ",", expr i_ne_last, "]"] [] ["at", ident this],
-        exact [expr nat.pred_lt_pred i_ne_zero this] },
-      { convert [] [expr i_mem] [],
-        rw [expr fin.ext_iff] [],
-        simp [] [] ["only"] ["[", expr fin.coe_mk, ",", expr A, "]"] [] [] },
-      { simp [] [] [] ["[", expr A, "]"] [] [] } }
-  end,
-  right_inv := begin
-    assume [binders (s)],
-    ext [] [ident i] [],
-    have [] [":", expr «expr ≠ »(«expr + »(1, (i : exprℕ())), n)] [],
-    { apply [expr ne_of_lt],
-      convert [] [expr add_lt_add_left i.is_lt 1] [],
-      rw [expr add_comm] [],
-      apply [expr (nat.succ_pred_eq_of_pos _).symm],
-      exact [expr (zero_le i.val).trans_lt (i.2.trans_le (nat.sub_le n 1))] },
-    simp [] [] ["only"] ["[", expr fin.ext_iff, ",", expr exists_prop, ",", expr fin.coe_zero, ",", expr add_comm, ",", expr set.mem_to_finset, ",", expr set.mem_set_of_eq, ",", expr fin.coe_last, "]"] [] [],
-    erw ["[", expr set.mem_set_of_eq, "]"] [],
-    simp [] [] ["only"] ["[", expr this, ",", expr false_or, ",", expr add_right_inj, ",", expr add_eq_zero_iff, ",", expr one_ne_zero, ",", expr false_and, ",", expr fin.coe_mk, "]"] [] [],
-    split,
-    { rintros ["⟨", ident j, ",", ident js, ",", ident hj, "⟩"],
-      convert [] [expr js] [],
-      exact [expr (fin.ext_iff _ _).2 hj] },
-    { assume [binders (h)],
-      exact [expr ⟨i, h, rfl⟩] }
-  end }
+def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Finₓ (n - 1)) :=
+  { toFun :=
+      fun c =>
+        { i : Finₓ (n - 1) |
+            (⟨1+(i : ℕ),
+                by 
+                  apply (add_lt_add_left i.is_lt 1).trans_le 
+                  rw [Nat.succ_eq_add_one, add_commₓ]
+                  exact add_le_add (Nat.sub_leₓ n 1) (le_reflₓ 1)⟩ :
+              Finₓ n.succ) ∈
+              c.boundaries }.toFinset,
+    invFun :=
+      fun s =>
+        { boundaries :=
+            { i : Finₓ n.succ | i = 0 ∨ i = Finₓ.last n ∨ ∃ (j : Finₓ (n - 1))(hj : j ∈ s), (i : ℕ) = j+1 }.toFinset,
+          zero_mem :=
+            by 
+              simp ,
+          last_mem :=
+            by 
+              simp  },
+    left_inv :=
+      by 
+        intro c 
+        ext i 
+        simp only [exists_prop, add_commₓ, Set.mem_to_finset, true_orₓ, or_trueₓ, Set.mem_set_of_eq]
+        constructor
+        ·
+          rintro (rfl | rfl | ⟨j, hj1, hj2⟩)
+          ·
+            exact c.zero_mem
+          ·
+            exact c.last_mem
+          ·
+            convert hj1 
+            rwa [Finₓ.ext_iff]
+        ·
+          simp only [or_iff_not_imp_left]
+          intro i_mem i_ne_zero i_ne_last 
+          simp [Finₓ.ext_iff] at i_ne_zero i_ne_last 
+          have A : (1+i - 1 : ℕ) = (i : ℕ)
+          ·
+            ·
+              rw [add_commₓ]
+              exact Nat.succ_pred_eq_of_posₓ (pos_iff_ne_zero.mpr i_ne_zero)
+          refine' ⟨⟨i - 1, _⟩, _, _⟩
+          ·
+            have  : (i : ℕ) < n+1 := i.2
+            simp [Nat.lt_succ_iff_lt_or_eq, i_ne_last] at this 
+            exact Nat.pred_lt_predₓ i_ne_zero this
+          ·
+            convert i_mem 
+            rw [Finₓ.ext_iff]
+            simp only [Finₓ.coe_mk, A]
+          ·
+            simp [A],
+    right_inv :=
+      by 
+        intro s 
+        ext i 
+        have  : (1+(i : ℕ)) ≠ n
+        ·
+          apply ne_of_ltₓ 
+          convert add_lt_add_left i.is_lt 1
+          rw [add_commₓ]
+          apply (Nat.succ_pred_eq_of_posₓ _).symm 
+          exact (zero_le i.val).trans_lt (i.2.trans_le (Nat.sub_leₓ n 1))
+        simp only [Finₓ.ext_iff, exists_prop, Finₓ.coe_zero, add_commₓ, Set.mem_to_finset, Set.mem_set_of_eq,
+          Finₓ.coe_last]
+        erw [Set.mem_set_of_eq]
+        simp only [this, false_orₓ, add_right_injₓ, add_eq_zero_iff, one_ne_zero, false_andₓ, Finₓ.coe_mk]
+        constructor
+        ·
+          rintro ⟨j, js, hj⟩
+          convert js 
+          exact (Finₓ.ext_iff _ _).2 hj
+        ·
+          intro h 
+          exact ⟨i, h, rfl⟩ }
 
 instance compositionAsSetFintype (n : ℕ) : Fintype (CompositionAsSet n) :=
   Fintype.ofEquiv _ (compositionAsSetEquiv n).symm
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem composition_as_set_card
-(n : exprℕ()) : «expr = »(fintype.card (composition_as_set n), «expr ^ »(2, «expr - »(n, 1))) :=
-begin
-  have [] [":", expr «expr = »(fintype.card (finset (fin «expr - »(n, 1))), «expr ^ »(2, «expr - »(n, 1)))] [],
-  by simp [] [] [] [] [] [],
-  rw ["<-", expr this] [],
-  exact [expr fintype.card_congr (composition_as_set_equiv n)]
-end
+theorem composition_as_set_card (n : ℕ) : Fintype.card (CompositionAsSet n) = 2 ^ (n - 1) :=
+  by 
+    have  : Fintype.card (Finset (Finₓ (n - 1))) = 2 ^ (n - 1)
+    ·
+      simp 
+    rw [←this]
+    exact Fintype.card_congr (compositionAsSetEquiv n)
 
 namespace CompositionAsSet
 
@@ -885,12 +898,10 @@ theorem boundary_length : c.boundary ⟨c.length, c.length_lt_card_boundaries⟩
 def blocks_fun (i : Finₓ c.length) : ℕ :=
   c.boundary ⟨(i : ℕ)+1, c.lt_length i⟩ - c.boundary ⟨i, c.lt_length' i⟩
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem blocks_fun_pos (i : fin c.length) : «expr < »(0, c.blocks_fun i) :=
-begin
-  have [] [":", expr «expr < »((⟨i, c.lt_length' i⟩ : fin c.boundaries.card), ⟨«expr + »(i, 1), c.lt_length i⟩)] [":=", expr nat.lt_succ_self _],
-  exact [expr lt_tsub_iff_left.mpr ((c.boundaries.order_emb_of_fin rfl).strict_mono this)]
-end
+theorem blocks_fun_pos (i : Finₓ c.length) : 0 < c.blocks_fun i :=
+  by 
+    have  : (⟨i, c.lt_length' i⟩ : Finₓ c.boundaries.card) < ⟨i+1, c.lt_length i⟩ := Nat.lt_succ_selfₓ _ 
+    exact lt_tsub_iff_left.mpr ((c.boundaries.order_emb_of_fin rfl).StrictMono this)
 
 /-- List of the sizes of the blocks in a `composition_as_set`. -/
 def blocks (c : CompositionAsSet n) : List ℕ :=
@@ -900,48 +911,52 @@ def blocks (c : CompositionAsSet n) : List ℕ :=
 theorem blocks_length : c.blocks.length = c.length :=
   length_of_fn _
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem blocks_partial_sum
-{i : exprℕ()}
-(h : «expr < »(i, c.boundaries.card)) : «expr = »((c.blocks.take i).sum, c.boundary ⟨i, h⟩) :=
-begin
-  induction [expr i] [] ["with", ident i, ident IH] [],
-  { simp [] [] [] [] [] [] },
-  have [ident A] [":", expr «expr < »(i, c.blocks.length)] [],
-  { rw [expr c.card_boundaries_eq_succ_length] ["at", ident h],
-    simp [] [] [] ["[", expr blocks, ",", expr nat.lt_of_succ_lt_succ h, "]"] [] [] },
-  have [ident B] [":", expr «expr < »(i, c.boundaries.card)] [":=", expr lt_of_lt_of_le A (by simp [] [] [] ["[", expr blocks, ",", expr length, ",", expr nat.sub_le, "]"] [] [])],
-  rw ["[", expr sum_take_succ _ _ A, ",", expr IH B, "]"] [],
-  simp [] [] ["only"] ["[", expr blocks, ",", expr blocks_fun, ",", expr nth_le_of_fn', "]"] [] [],
-  apply [expr add_tsub_cancel_of_le],
-  simp [] [] [] [] [] []
-end
+theorem blocks_partial_sum {i : ℕ} (h : i < c.boundaries.card) : (c.blocks.take i).Sum = c.boundary ⟨i, h⟩ :=
+  by 
+    induction' i with i IH
+    ·
+      simp 
+    have A : i < c.blocks.length
+    ·
+      rw [c.card_boundaries_eq_succ_length] at h 
+      simp [blocks, Nat.lt_of_succ_lt_succₓ h]
+    have B : i < c.boundaries.card :=
+      lt_of_lt_of_leₓ A
+        (by 
+          simp [blocks, length, Nat.sub_leₓ])
+    rw [sum_take_succ _ _ A, IH B]
+    simp only [blocks, blocks_fun, nth_le_of_fn']
+    apply add_tsub_cancel_of_le 
+    simp 
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_boundaries_iff_exists_blocks_sum_take_eq
-{j : fin «expr + »(n, 1)} : «expr ↔ »(«expr ∈ »(j, c.boundaries), «expr∃ , »((i «expr < » c.boundaries.card), «expr = »((c.blocks.take i).sum, j))) :=
-begin
-  split,
-  { assume [binders (hj)],
-    rcases [expr (c.boundaries.order_iso_of_fin rfl).surjective ⟨j, hj⟩, "with", "⟨", ident i, ",", ident hi, "⟩"],
-    rw ["[", expr subtype.ext_iff, ",", expr subtype.coe_mk, "]"] ["at", ident hi],
-    refine [expr ⟨i.1, i.2, _⟩],
-    rw ["[", "<-", expr hi, ",", expr c.blocks_partial_sum i.2, "]"] [],
-    refl },
-  { rintros ["⟨", ident i, ",", ident hi, ",", ident H, "⟩"],
-    convert [] [expr (c.boundaries.order_iso_of_fin rfl ⟨i, hi⟩).2] [],
-    have [] [":", expr «expr = »(c.boundary ⟨i, hi⟩, j)] [],
-    by rwa ["[", expr fin.ext_iff, ",", "<-", expr c.blocks_partial_sum hi, "]"] [],
-    exact [expr this.symm] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » c.boundaries.card)
+theorem mem_boundaries_iff_exists_blocks_sum_take_eq {j : Finₓ (n+1)} :
+  j ∈ c.boundaries ↔ ∃ (i : _)(_ : i < c.boundaries.card), (c.blocks.take i).Sum = j :=
+  by 
+    constructor
+    ·
+      intro hj 
+      rcases(c.boundaries.order_iso_of_fin rfl).Surjective ⟨j, hj⟩ with ⟨i, hi⟩
+      rw [Subtype.ext_iff, Subtype.coe_mk] at hi 
+      refine' ⟨i.1, i.2, _⟩
+      rw [←hi, c.blocks_partial_sum i.2]
+      rfl
+    ·
+      rintro ⟨i, hi, H⟩
+      convert (c.boundaries.order_iso_of_fin rfl ⟨i, hi⟩).2
+      have  : c.boundary ⟨i, hi⟩ = j
+      ·
+        rwa [Finₓ.ext_iff, ←c.blocks_partial_sum hi]
+      exact this.symm
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem blocks_sum : «expr = »(c.blocks.sum, n) :=
-begin
-  have [] [":", expr «expr = »(c.blocks.take c.length, c.blocks)] [":=", expr take_all_of_le (by simp [] [] [] ["[", expr blocks, "]"] [] [])],
-  rw ["[", "<-", expr this, ",", expr c.blocks_partial_sum c.length_lt_card_boundaries, ",", expr c.boundary_length, "]"] [],
-  refl
-end
+theorem blocks_sum : c.blocks.sum = n :=
+  by 
+    have  : c.blocks.take c.length = c.blocks :=
+      take_all_of_le
+        (by 
+          simp [blocks])
+    rw [←this, c.blocks_partial_sum c.length_lt_card_boundaries, c.boundary_length]
+    rfl
 
 /-- Associating a `composition n` to a `composition_as_set n`, by registering the sizes of the
 blocks as a list of positive integers. -/
@@ -973,52 +988,60 @@ theorem CompositionAsSet.to_composition_length (c : CompositionAsSet n) : c.to_c
   by 
     simp [CompositionAsSet.toComposition, Composition.length, Composition.blocks]
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≤ » d.blocks.length)
 @[simp]
-theorem composition.to_composition_as_set_blocks
-(c : composition n) : «expr = »(c.to_composition_as_set.blocks, c.blocks) :=
-begin
-  let [ident d] [] [":=", expr c.to_composition_as_set],
-  change [expr «expr = »(d.blocks, c.blocks)] [] [],
-  have [ident length_eq] [":", expr «expr = »(d.blocks.length, c.blocks.length)] [],
-  { convert [] [expr c.to_composition_as_set_length] [],
-    simp [] [] [] ["[", expr composition_as_set.blocks, "]"] [] [] },
-  suffices [ident H] [":", expr ∀ i «expr ≤ » d.blocks.length, «expr = »((d.blocks.take i).sum, (c.blocks.take i).sum)],
-  from [expr eq_of_sum_take_eq length_eq H],
-  assume [binders (i hi)],
-  have [ident i_lt] [":", expr «expr < »(i, d.boundaries.card)] [],
-  { convert [] [expr nat.lt_succ_iff.2 hi] [],
-    convert [] [expr d.card_boundaries_eq_succ_length] [],
-    exact [expr length_of_fn _] },
-  have [ident i_lt'] [":", expr «expr < »(i, c.boundaries.card)] [":=", expr i_lt],
-  have [ident i_lt''] [":", expr «expr < »(i, «expr + »(c.length, 1))] [],
-  by rwa [expr c.card_boundaries_eq_succ_length] ["at", ident i_lt'],
-  have [ident A] [":", expr «expr = »(d.boundaries.order_emb_of_fin rfl ⟨i, i_lt⟩, c.boundaries.order_emb_of_fin c.card_boundaries_eq_succ_length ⟨i, i_lt''⟩)] [":=", expr rfl],
-  have [ident B] [":", expr «expr = »(c.size_up_to i, c.boundary ⟨i, i_lt''⟩)] [":=", expr rfl],
-  rw ["[", expr d.blocks_partial_sum i_lt, ",", expr composition_as_set.boundary, ",", "<-", expr composition.size_up_to, ",", expr B, ",", expr A, ",", expr c.order_emb_of_fin_boundaries, "]"] []
-end
+theorem Composition.to_composition_as_set_blocks (c : Composition n) : c.to_composition_as_set.blocks = c.blocks :=
+  by 
+    let d := c.to_composition_as_set 
+    change d.blocks = c.blocks 
+    have length_eq : d.blocks.length = c.blocks.length
+    ·
+      convert c.to_composition_as_set_length 
+      simp [CompositionAsSet.blocks]
+    suffices H : ∀ i _ : i ≤ d.blocks.length, (d.blocks.take i).Sum = (c.blocks.take i).Sum 
+    exact eq_of_sum_take_eq length_eq H 
+    intro i hi 
+    have i_lt : i < d.boundaries.card
+    ·
+      convert Nat.lt_succ_iff.2 hi 
+      convert d.card_boundaries_eq_succ_length 
+      exact length_of_fn _ 
+    have i_lt' : i < c.boundaries.card := i_lt 
+    have i_lt'' : i < c.length+1
+    ·
+      rwa [c.card_boundaries_eq_succ_length] at i_lt' 
+    have A :
+      d.boundaries.order_emb_of_fin rfl ⟨i, i_lt⟩ =
+        c.boundaries.order_emb_of_fin c.card_boundaries_eq_succ_length ⟨i, i_lt''⟩ :=
+      rfl 
+    have B : c.size_up_to i = c.boundary ⟨i, i_lt''⟩ := rfl 
+    rw [d.blocks_partial_sum i_lt, CompositionAsSet.boundary, ←Composition.sizeUpTo, B, A,
+      c.order_emb_of_fin_boundaries]
 
 @[simp]
 theorem CompositionAsSet.to_composition_blocks (c : CompositionAsSet n) : c.to_composition.blocks = c.blocks :=
   rfl
 
--- error in Combinatorics.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem composition_as_set.to_composition_boundaries
-(c : composition_as_set n) : «expr = »(c.to_composition.boundaries, c.boundaries) :=
-begin
-  ext [] [ident j] [],
-  simp [] [] [] ["[", expr c.mem_boundaries_iff_exists_blocks_sum_take_eq, ",", expr c.card_boundaries_eq_succ_length, ",", expr composition.boundary, ",", expr fin.ext_iff, ",", expr composition.size_up_to, ",", expr exists_prop, ",", expr finset.mem_univ, ",", expr take, ",", expr exists_prop_of_true, ",", expr finset.mem_image, ",", expr composition_as_set.to_composition_blocks, ",", expr composition.boundaries, "]"] [] [],
-  split,
-  { rintros ["⟨", ident i, ",", ident hi, "⟩"],
-    refine [expr ⟨i.1, _, hi⟩],
-    convert [] [expr i.2] [],
-    simp [] [] [] [] [] [] },
-  { rintros ["⟨", ident i, ",", ident i_lt, ",", ident hi, "⟩"],
-    have [] [":", expr «expr < »(i, «expr + »(c.to_composition.length, 1))] [],
-    by simpa [] [] [] [] [] ["using", expr i_lt],
-    exact [expr ⟨⟨i, this⟩, hi⟩] }
-end
+theorem CompositionAsSet.to_composition_boundaries (c : CompositionAsSet n) :
+  c.to_composition.boundaries = c.boundaries :=
+  by 
+    ext j 
+    simp [c.mem_boundaries_iff_exists_blocks_sum_take_eq, c.card_boundaries_eq_succ_length, Composition.boundary,
+      Finₓ.ext_iff, Composition.sizeUpTo, exists_prop, Finset.mem_univ, take, exists_prop_of_true, Finset.mem_image,
+      CompositionAsSet.to_composition_blocks, Composition.boundaries]
+    constructor
+    ·
+      rintro ⟨i, hi⟩
+      refine' ⟨i.1, _, hi⟩
+      convert i.2
+      simp 
+    ·
+      rintro ⟨i, i_lt, hi⟩
+      have  : i < c.to_composition.length+1
+      ·
+        simpa using i_lt 
+      exact ⟨⟨i, this⟩, hi⟩
 
 @[simp]
 theorem Composition.to_composition_as_set_boundaries (c : Composition n) :

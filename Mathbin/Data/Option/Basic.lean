@@ -72,7 +72,7 @@ theorem get_or_else_none (x : α) : Option.getOrElse none x = x :=
   rfl
 
 @[simp]
-theorem get_or_else_coe (x y : α) : Option.getOrElse («expr↑ » x) y = x :=
+theorem get_or_else_coe (x y : α) : Option.getOrElse (↑x) y = x :=
   rfl
 
 theorem get_or_else_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.get_or_else y) = x :=
@@ -225,6 +225,7 @@ theorem map_eq_none' {x : Option α} {f : α → β} : x.map f = none ↔ x = no
   by 
     cases x <;> simp only [map_none', map_some', eq_self_iff_true]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » x)
 theorem map_congr {f g : α → β} {x : Option α} (h : ∀ a _ : a ∈ x, f a = g a) : Option.map f x = Option.map g x :=
   by 
     cases x <;> simp only [map_none', map_some', h, mem_def]
@@ -302,6 +303,7 @@ theorem pmap_none (f : ∀ a : α, p a → β) {H} : pmap f (@none α) H = none 
 theorem pmap_some (f : ∀ a : α, p a → β) {x : α} (h : p x) : pmap f (some x) = fun _ => some (f x h) :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » x)
 theorem mem_pmem {a : α} (h : ∀ a _ : a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h :=
   by 
     rw [mem_def] at ha⊢
@@ -322,6 +324,7 @@ theorem pmap_eq_map (p : α → Prop) (f : α → β) x H : @pmap _ _ p (fun a _
   by 
     cases x <;> simp only [map_none', map_some', pmap]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » g a)
 theorem pmap_bind {α β γ} {x : Option α} {g : α → Option β} {p : β → Prop} {f : ∀ b, p b → γ} H
   (H' : ∀ a : α b _ : b ∈ g a, b ∈ x >>= g) :
   pmap f (x >>= g) H = x >>= fun a => pmap f (g a) fun b h => H _ (H' a _ h) :=
@@ -335,6 +338,7 @@ theorem bind_pmap {α β γ} {p : α → Prop} (f : ∀ a, p a → β) (x : Opti
 
 variable {f x}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » x)
 theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a _ : a ∈ x, f a H = none → x = none) :
   x.pbind f = none ↔ x = none :=
   by 
@@ -346,6 +350,7 @@ theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a _ : a 
       intro h 
       cases h' x rfl h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » x)
 theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} :
   x.pbind f = some y ↔ ∃ (z : _)(_ : z ∈ x), f z H = some y :=
   by 
@@ -354,7 +359,7 @@ theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} :
       simp 
     ·
       simp only [pbind]
-      split 
+      constructor
       ·
         intro h 
         use x 
@@ -376,7 +381,7 @@ theorem pmap_eq_some_iff {hf} {y : β} : pmap f x hf = some y ↔ ∃ (a : α)(H
     ·
       simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
     ·
-      split 
+      constructor
       ·
         intro h 
         simp only [pmap] at h 
@@ -468,6 +473,7 @@ theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x =
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
   ne_none_iff_exists.trans$ exists_congr$ fun _ => eq_comm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ =>
       ⟨get$ ne_none_iff_is_some.1 hx,
@@ -475,6 +481,7 @@ theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x
           rwa [some_get]⟩,
     fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem ball_ne_none {p : Option α → Prop} : (∀ x _ : x ≠ none, p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x),
     fun h x hx =>
@@ -568,7 +575,7 @@ theorem choice_eq_none (α : Type _) [IsEmpty α] : choice α = none :=
 
 theorem choice_is_some_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonempty α :=
   by 
-    fsplit
+    fconstructor
     ·
       intro h 
       exact ⟨Option.get h⟩

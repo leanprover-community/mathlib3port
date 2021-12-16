@@ -27,7 +27,7 @@ product, sum, disjoint union, subspace, quotient space
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open TopologicalSpace Set Filter
 
@@ -55,10 +55,10 @@ instance [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : Topological
   coinduced Sum.inl t₁⊔coinduced Sum.inr t₂
 
 instance {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : TopologicalSpace (Sigma β) :=
-  ⨆a, coinduced (Sigma.mk a) (t₂ a)
+  ⨆ a, coinduced (Sigma.mk a) (t₂ a)
 
 instance Pi.topologicalSpace {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : TopologicalSpace (∀ a, β a) :=
-  ⨅a, induced (fun f => f a) (t₂ a)
+  ⨅ a, induced (fun f => f a) (t₂ a)
 
 instance Ulift.topologicalSpace [t : TopologicalSpace α] : TopologicalSpace (Ulift.{v, u} α) :=
   t.induced Ulift.down
@@ -94,6 +94,7 @@ section Topα
 
 variable [TopologicalSpace α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓝() (a : α))
 theorem mem_nhds_subtype (s : Set α) (a : { x // x ∈ s }) (t : Set { x // x ∈ s }) :
   t ∈ 𝓝 a ↔ ∃ (u : _)(_ : u ∈ 𝓝 (a : α)), coeₓ ⁻¹' u ⊆ t :=
   mem_nhds_induced coeₓ a t
@@ -148,16 +149,16 @@ theorem Continuous.prod_map {f : γ → α} {g : δ → β} (hf : Continuous f) 
   Continuous fun x : γ × δ => (f x.1, g x.2) :=
   (hf.comp continuous_fst).prod_mk (hg.comp continuous_snd)
 
-theorem Filter.Eventually.prod_inl_nhds {p : α → Prop} {a : α} (h : ∀ᶠx in 𝓝 a, p x) (b : β) :
-  ∀ᶠx in 𝓝 (a, b), p (x : α × β).1 :=
+theorem Filter.Eventually.prod_inl_nhds {p : α → Prop} {a : α} (h : ∀ᶠ x in 𝓝 a, p x) (b : β) :
+  ∀ᶠ x in 𝓝 (a, b), p (x : α × β).1 :=
   continuous_at_fst h
 
-theorem Filter.Eventually.prod_inr_nhds {p : β → Prop} {b : β} (h : ∀ᶠx in 𝓝 b, p x) (a : α) :
-  ∀ᶠx in 𝓝 (a, b), p (x : α × β).2 :=
+theorem Filter.Eventually.prod_inr_nhds {p : β → Prop} {b : β} (h : ∀ᶠ x in 𝓝 b, p x) (a : α) :
+  ∀ᶠ x in 𝓝 (a, b), p (x : α × β).2 :=
   continuous_at_snd h
 
-theorem Filter.Eventually.prod_mk_nhds {pa : α → Prop} {a} (ha : ∀ᶠx in 𝓝 a, pa x) {pb : β → Prop} {b}
-  (hb : ∀ᶠy in 𝓝 b, pb y) : ∀ᶠp in 𝓝 (a, b), pa (p : α × β).1 ∧ pb p.2 :=
+theorem Filter.Eventually.prod_mk_nhds {pa : α → Prop} {a} (ha : ∀ᶠ x in 𝓝 a, pa x) {pb : β → Prop} {b}
+  (hb : ∀ᶠ y in 𝓝 b, pb y) : ∀ᶠ p in 𝓝 (a, b), pa (p : α × β).1 ∧ pb p.2 :=
   (ha.prod_inl_nhds b).And (hb.prod_inr_nhds a)
 
 theorem continuous_swap : Continuous (Prod.swap : α × β → β × α) :=
@@ -189,6 +190,8 @@ theorem nhds_prod_eq {a : α} {b : β} : 𝓝 (a, b) = 𝓝 a ×ᶠ 𝓝 b :=
   by 
     rw [Filter.prod, Prod.topologicalSpace, nhds_inf, nhds_induced, nhds_induced]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓝() a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » expr𝓝() b)
 theorem mem_nhds_prod_iff {a : α} {b : β} {s : Set (α × β)} :
   s ∈ 𝓝 (a, b) ↔ ∃ (u : _)(_ : u ∈ 𝓝 a)(v : _)(_ : v ∈ 𝓝 b), Set.Prod u v ⊆ s :=
   by 
@@ -198,7 +201,7 @@ theorem mem_nhds_prod_iff' {a : α} {b : β} {s : Set (α × β)} :
   s ∈ 𝓝 (a, b) ↔ ∃ u v, IsOpen u ∧ a ∈ u ∧ IsOpen v ∧ b ∈ v ∧ Set.Prod u v ⊆ s :=
   by 
     rw [mem_nhds_prod_iff]
-    split 
+    constructor
     ·
       rintro ⟨u, Hu, v, Hv, h⟩
       rcases mem_nhds_iff.1 Hu with ⟨u', u'u, u'_open, Hu'⟩
@@ -245,8 +248,8 @@ theorem Filter.Tendsto.prod_mk_nhds {γ} {a : α} {b : β} {f : Filter γ} {ma :
   by 
     rw [nhds_prod_eq] <;> exact Filter.Tendsto.prod_mk ha hb
 
-theorem Filter.Eventually.curry_nhds {p : α × β → Prop} {x : α} {y : β} (h : ∀ᶠx in 𝓝 (x, y), p x) :
-  ∀ᶠx' in 𝓝 x, ∀ᶠy' in 𝓝 y, p (x', y') :=
+theorem Filter.Eventually.curry_nhds {p : α × β → Prop} {x : α} {y : β} (h : ∀ᶠ x in 𝓝 (x, y), p x) :
+  ∀ᶠ x' in 𝓝 x, ∀ᶠ y' in 𝓝 y, p (x', y') :=
   by 
     rw [nhds_prod_eq] at h 
     exact h.curry
@@ -265,47 +268,113 @@ theorem ContinuousAt.prod_map' {f : α → γ} {g : β → δ} {x : α} {y : β}
   have hg : ContinuousAt g (x, y).snd := hg 
   hf.prod_map hg
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prod_generate_from_generate_from_eq
-{α β : Type*}
-{s : set (set α)}
-{t : set (set β)}
-(hs : «expr = »(«expr⋃₀ »(s), univ))
-(ht : «expr = »(«expr⋃₀ »(t), univ)) : «expr = »(@prod.topological_space α β (generate_from s) (generate_from t), generate_from {g | «expr∃ , »((u «expr ∈ » s), «expr∃ , »((v «expr ∈ » t), «expr = »(g, set.prod u v)))}) :=
-let G := generate_from {g | «expr∃ , »((u «expr ∈ » s), «expr∃ , »((v «expr ∈ » t), «expr = »(g, set.prod u v)))} in
-le_antisymm «expr $ »(le_generate_from, assume
- (g)
- ⟨u, hu, v, hv, g_eq⟩, «expr ▸ »(g_eq.symm, @is_open.prod _ _ (generate_from s) (generate_from t) _ _ (generate_open.basic _ hu) (generate_open.basic _ hv))) (le_inf «expr $ »(coinduced_le_iff_le_induced.mp, «expr $ »(le_generate_from, assume
-   u hu, have «expr = »(«expr⋃ , »((v «expr ∈ » t), set.prod u v), «expr ⁻¹' »(prod.fst, u)), from calc
-     «expr = »(«expr⋃ , »((v «expr ∈ » t), set.prod u v), set.prod u univ) : «expr $ »(set.ext, assume
-      ⟨a, b⟩, by rw ["<-", expr ht] []; simp [] [] [] ["[", expr and.left_comm, "]"] [] [] { contextual := tt })
-     «expr = »(..., «expr ⁻¹' »(prod.fst, u)) : by simp [] [] [] ["[", expr set.prod, ",", expr preimage, "]"] [] [],
-   show G.is_open «expr ⁻¹' »(prod.fst, u), from «expr $ »(«expr ▸ »(this, @is_open_Union _ _ G _), assume
-    v, «expr $ »(@is_open_Union _ _ G _, assume
-     hv, generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)))) «expr $ »(coinduced_le_iff_le_induced.mp, «expr $ »(le_generate_from, assume
-   v hv, have «expr = »(«expr⋃ , »((u «expr ∈ » s), set.prod u v), «expr ⁻¹' »(prod.snd, v)), from calc
-     «expr = »(«expr⋃ , »((u «expr ∈ » s), set.prod u v), set.prod univ v) : «expr $ »(set.ext, assume
-      ⟨a, b⟩, by rw ["[", "<-", expr hs, "]"] []; by_cases [expr «expr ∈ »(b, v)]; simp [] [] [] ["[", expr h, "]"] [] [] { contextual := tt })
-     «expr = »(..., «expr ⁻¹' »(prod.snd, v)) : by simp [] [] [] ["[", expr set.prod, ",", expr preimage, "]"] [] [],
-   show G.is_open «expr ⁻¹' »(prod.snd, v), from «expr $ »(«expr ▸ »(this, @is_open_Union _ _ G _), assume
-    u, «expr $ »(@is_open_Union _ _ G _, assume hu, generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)))))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » t)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  prod_generate_from_generate_from_eq
+  { α β : Type _ } { s : Set Set α } { t : Set Set β } ( hs : ⋃₀ s = univ ) ( ht : ⋃₀ t = univ )
+    :
+      @ Prod.topologicalSpace α β generate_from s generate_from t
+        =
+        generate_from { g | ∃ ( u : _ ) ( _ : u ∈ s ) , ∃ ( v : _ ) ( _ : v ∈ t ) , g = Set.Prod u v }
+  :=
+    let
+      G := generate_from { g | ∃ ( u : _ ) ( _ : u ∈ s ) , ∃ ( v : _ ) ( _ : v ∈ t ) , g = Set.Prod u v }
+      le_antisymmₓ
+        le_generate_from
+            $
+            fun
+              g ⟨ u , hu , v , hv , g_eq ⟩
+                =>
+                g_eq.symm
+                  ▸
+                  @ IsOpen.prod
+                    _ _ generate_from s generate_from t _ _ generate_open.basic _ hu generate_open.basic _ hv
+          le_inf
+            coinduced_le_iff_le_induced . mp
+                $
+                le_generate_from
+                  $
+                  fun
+                    u hu
+                      =>
+                      have
+                        : ⋃ ( v : _ ) ( _ : v ∈ t ) , Set.Prod u v = Prod.fst ⁻¹' u
+                          :=
+                          calc
+                            ⋃ ( v : _ ) ( _ : v ∈ t ) , Set.Prod u v = Set.Prod u univ
+                                :=
+                                Set.ext
+                                  $
+                                  fun
+                                    ⟨ a , b ⟩
+                                      =>
+                                      by
+                                        rw [ ← ht ]
+                                          <;>
+                                          simp
+                                            ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                                            [ And.left_comm ]
+                              _ = Prod.fst ⁻¹' u := by simp [ Set.Prod , preimage ]
+                        show
+                          G.is_open Prod.fst ⁻¹' u
+                          from
+                            this ▸ @ is_open_Union _ _ G _
+                              $
+                              fun
+                                v => @ is_open_Union _ _ G _ $ fun hv => generate_open.basic _ ⟨ _ , hu , _ , hv , rfl ⟩
+              coinduced_le_iff_le_induced . mp
+                $
+                le_generate_from
+                  $
+                  fun
+                    v hv
+                      =>
+                      have
+                        : ⋃ ( u : _ ) ( _ : u ∈ s ) , Set.Prod u v = Prod.snd ⁻¹' v
+                          :=
+                          calc
+                            ⋃ ( u : _ ) ( _ : u ∈ s ) , Set.Prod u v = Set.Prod univ v
+                                :=
+                                Set.ext
+                                  $
+                                  fun
+                                    ⟨ a , b ⟩
+                                      =>
+                                      by
+                                        rw [ ← hs ]
+                                          <;>
+                                          byCases' b ∈ v
+                                            <;>
+                                            simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ h ]
+                              _ = Prod.snd ⁻¹' v := by simp [ Set.Prod , preimage ]
+                        show
+                          G.is_open Prod.snd ⁻¹' v
+                          from
+                            this ▸ @ is_open_Union _ _ G _
+                              $
+                              fun
+                                u => @ is_open_Union _ _ G _ $ fun hu => generate_open.basic _ ⟨ _ , hu , _ , hv , rfl ⟩
 
-theorem prod_eq_generate_from :
-  Prod.topologicalSpace = generate_from { g | ∃ (s : Set α)(t : Set β), IsOpen s ∧ IsOpen t ∧ g = Set.Prod s t } :=
-  le_antisymmₓ (le_generate_from$ fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.prod ht)
-    (le_inf
-      (ball_image_of_ball$
-        fun t ht =>
-          generate_open.basic _
-            ⟨t, univ,
-              by 
-                simpa [Set.prod_eq] using ht⟩)
-      (ball_image_of_ball$
-        fun t ht =>
-          generate_open.basic _
-            ⟨univ, t,
-              by 
-                simpa [Set.prod_eq] using ht⟩))
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  prod_eq_generate_from
+  : Prod.topologicalSpace = generate_from { g | ∃ ( s : Set α ) ( t : Set β ) , IsOpen s ∧ IsOpen t ∧ g = Set.Prod s t }
+  :=
+    le_antisymmₓ
+      le_generate_from $ fun g ⟨ s , t , hs , ht , g_eq ⟩ => g_eq.symm ▸ hs.prod ht
+        le_inf
+          ball_image_of_ball $ fun t ht => generate_open.basic _ ⟨ t , univ , by simpa [ Set.prod_eq ] using ht ⟩
+            ball_image_of_ball $ fun t ht => generate_open.basic _ ⟨ univ , t , by simpa [ Set.prod_eq ] using ht ⟩
 
 theorem is_open_prod_iff {s : Set (α × β)} :
   IsOpen s ↔ ∀ a b, (a, b) ∈ s → ∃ u v, IsOpen u ∧ IsOpen v ∧ a ∈ u ∧ b ∈ v ∧ Set.Prod u v ⊆ s :=
@@ -315,27 +384,19 @@ theorem is_open_prod_iff {s : Set (α × β)} :
       exists_prop]
     simp only [and_assoc, And.left_comm]
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A product of induced topologies is induced by the product map -/
-theorem prod_induced_induced
-{α γ : Type*}
-(f : α → β)
-(g : γ → δ) : «expr = »(@prod.topological_space α γ (induced f «expr‹ ›»(_)) (induced g «expr‹ ›»(_)), induced (λ
-  p, (f p.1, g p.2)) prod.topological_space) :=
-begin
-  set [] [ident fxg] [] [":="] [expr λ p : «expr × »(α, γ), (f p.1, g p.2)] [],
-  have [ident key1] [":", expr «expr = »(«expr ∘ »(f, (prod.fst : «expr × »(α, γ) → α)), «expr ∘ »((prod.fst : «expr × »(β, δ) → β), fxg))] [],
-  from [expr rfl],
-  have [ident key2] [":", expr «expr = »(«expr ∘ »(g, (prod.snd : «expr × »(α, γ) → γ)), «expr ∘ »((prod.snd : «expr × »(β, δ) → δ), fxg))] [],
-  from [expr rfl],
-  unfold [ident prod.topological_space] [],
-  conv_lhs [] [] { rw ["[", expr induced_compose, ",", expr induced_compose, ",", expr key1, ",", expr key2, "]"],
-    congr,
-    rw ["<-", expr induced_compose],
-    skip,
-    rw ["<-", expr induced_compose] },
-  rw [expr induced_inf] []
-end
+theorem prod_induced_induced {α γ : Type _} (f : α → β) (g : γ → δ) :
+  @Prod.topologicalSpace α γ (induced f ‹_›) (induced g ‹_›) =
+    induced (fun p => (f p.1, g p.2)) Prod.topologicalSpace :=
+  by 
+    set fxg := fun p : α × γ => (f p.1, g p.2)
+    have key1 : (f ∘ (Prod.fst : α × γ → α)) = ((Prod.fst : β × δ → β) ∘ fxg)
+    exact rfl 
+    have key2 : (g ∘ (Prod.snd : α × γ → γ)) = ((Prod.snd : β × δ → δ) ∘ fxg)
+    exact rfl 
+    unfold Prod.topologicalSpace 
+    convLHS => rw [induced_compose, induced_compose, key1, key2]congr rw [←induced_compose]skip rw [←induced_compose]
+    rw [induced_inf]
 
 theorem continuous_uncurry_of_discrete_topology_left [DiscreteTopology α] {f : α → β → γ} (h : ∀ a, Continuous (f a)) :
   Continuous (Function.uncurry f) :=
@@ -389,30 +450,32 @@ theorem map_snd_nhds (x : α × β) : map Prod.snd (𝓝 x) = 𝓝 x.2 :=
 theorem is_open_map_snd : IsOpenMap (@Prod.snd α β) :=
   is_open_map_iff_nhds_le.2$ fun x => (map_snd_nhds x).Ge
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A product set is open in a product space if and only if each factor is open, or one of them is
 empty -/
-theorem is_open_prod_iff'
-{s : set α}
-{t : set β} : «expr ↔ »(is_open (set.prod s t), «expr ∨ »(«expr ∧ »(is_open s, is_open t), «expr ∨ »(«expr = »(s, «expr∅»()), «expr = »(t, «expr∅»())))) :=
-begin
-  cases [expr (set.prod s t).eq_empty_or_nonempty] ["with", ident h, ident h],
-  { simp [] [] [] ["[", expr h, ",", expr prod_eq_empty_iff.1 h, "]"] [] [] },
-  { have [ident st] [":", expr «expr ∧ »(s.nonempty, t.nonempty)] [],
-    from [expr prod_nonempty_iff.1 h],
-    split,
-    { assume [binders (H : is_open (set.prod s t))],
-      refine [expr or.inl ⟨_, _⟩],
-      show [expr is_open s],
-      { rw ["<-", expr fst_image_prod s st.2] [],
-        exact [expr is_open_map_fst _ H] },
-      show [expr is_open t],
-      { rw ["<-", expr snd_image_prod st.1 t] [],
-        exact [expr is_open_map_snd _ H] } },
-    { assume [binders (H)],
-      simp [] [] ["only"] ["[", expr st.1.ne_empty, ",", expr st.2.ne_empty, ",", expr not_false_iff, ",", expr or_false, "]"] [] ["at", ident H],
-      exact [expr H.1.prod H.2] } }
-end
+theorem is_open_prod_iff' {s : Set α} {t : Set β} : IsOpen (Set.Prod s t) ↔ IsOpen s ∧ IsOpen t ∨ s = ∅ ∨ t = ∅ :=
+  by 
+    cases' (Set.Prod s t).eq_empty_or_nonempty with h h
+    ·
+      simp [h, prod_eq_empty_iff.1 h]
+    ·
+      have st : s.nonempty ∧ t.nonempty 
+      exact prod_nonempty_iff.1 h 
+      constructor
+      ·
+        intro (H : IsOpen (Set.Prod s t))
+        refine' Or.inl ⟨_, _⟩
+        show IsOpen s
+        ·
+          rw [←fst_image_prod s st.2]
+          exact is_open_map_fst _ H 
+        show IsOpen t
+        ·
+          rw [←snd_image_prod st.1 t]
+          exact is_open_map_snd _ H
+      ·
+        intro H 
+        simp only [st.1.ne_empty, st.2.ne_empty, not_false_iff, or_falseₓ] at H 
+        exact H.1.Prod H.2
 
 theorem closure_prod_eq {s : Set α} {t : Set β} : Closure (Set.Prod s t) = Set.Prod (Closure s) (Closure t) :=
   Set.ext$
@@ -524,62 +587,55 @@ theorem continuous_sum_rec {f : α → γ} {g : β → γ} (hf : Continuous f) (
 theorem is_open_sum_iff {s : Set (Sum α β)} : IsOpen s ↔ IsOpen (inl ⁻¹' s) ∧ IsOpen (inr ⁻¹' s) :=
   Iff.rfl
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_open_map_sum
-{f : «expr ⊕ »(α, β) → γ}
-(h₁ : is_open_map (λ a, f (inl a)))
-(h₂ : is_open_map (λ b, f (inr b))) : is_open_map f :=
-begin
-  intros [ident u, ident hu],
-  rw [expr is_open_sum_iff] ["at", ident hu],
-  cases [expr hu] ["with", ident hu₁, ident hu₂],
-  have [] [":", expr «expr = »(u, «expr ∪ »(«expr '' »(inl, «expr ⁻¹' »(inl, u)), «expr '' »(inr, «expr ⁻¹' »(inr, u))))] [],
-  { ext [] ["(", "_", "|", "_", ")"] []; simp [] [] [] [] [] [] },
-  rw ["[", expr this, ",", expr set.image_union, ",", expr set.image_image, ",", expr set.image_image, "]"] [],
-  exact [expr is_open.union (h₁ _ hu₁) (h₂ _ hu₂)]
-end
+theorem is_open_map_sum {f : Sum α β → γ} (h₁ : IsOpenMap fun a => f (inl a)) (h₂ : IsOpenMap fun b => f (inr b)) :
+  IsOpenMap f :=
+  by 
+    intro u hu 
+    rw [is_open_sum_iff] at hu 
+    cases' hu with hu₁ hu₂ 
+    have  : u = inl '' (inl ⁻¹' u) ∪ inr '' (inr ⁻¹' u)
+    ·
+      ext (_ | _) <;> simp 
+    rw [this, Set.image_union, Set.image_image, Set.image_image]
+    exact IsOpen.union (h₁ _ hu₁) (h₂ _ hu₂)
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem embedding_inl : embedding (@inl α β) :=
-{ induced := begin
-    unfold [ident sum.topological_space] [],
-    apply [expr le_antisymm],
-    { rw ["<-", expr coinduced_le_iff_le_induced] [],
-      exact [expr le_sup_left] },
-    { intros [ident u, ident hu],
-      existsi [expr «expr '' »(inl, u)],
-      change [expr «expr ∧ »(«expr ∧ »(is_open «expr ⁻¹' »(inl, «expr '' »(@inl α β, u)), is_open «expr ⁻¹' »(inr, «expr '' »(@inl α β, u))), «expr = »(«expr ⁻¹' »(inl, «expr '' »(inl, u)), u))] [] [],
-      have [] [":", expr «expr = »(«expr ⁻¹' »(inl, «expr '' »(@inl α β, u)), u)] [":=", expr preimage_image_eq u (λ
-        _ _, inl.inj_iff.mp)],
-      rw [expr this] [],
-      have [] [":", expr «expr = »(«expr ⁻¹' »(inr, «expr '' »(@inl α β, u)), «expr∅»())] [":=", expr eq_empty_iff_forall_not_mem.mpr (assume
-        (a)
-        ⟨b, _, h⟩, inl_ne_inr h)],
-      rw [expr this] [],
-      exact [expr ⟨⟨hu, is_open_empty⟩, rfl⟩] }
-  end,
-  inj := λ _ _, inl.inj_iff.mp }
+theorem embedding_inl : Embedding (@inl α β) :=
+  { induced :=
+      by 
+        unfold Sum.topologicalSpace 
+        apply le_antisymmₓ
+        ·
+          rw [←coinduced_le_iff_le_induced]
+          exact le_sup_left
+        ·
+          intro u hu 
+          exists inl '' u 
+          change (IsOpen (inl ⁻¹' (@inl α β '' u)) ∧ IsOpen (inr ⁻¹' (@inl α β '' u))) ∧ inl ⁻¹' (inl '' u) = u 
+          have  : inl ⁻¹' (@inl α β '' u) = u := preimage_image_eq u fun _ _ => inl.inj_iff.mp 
+          rw [this]
+          have  : inr ⁻¹' (@inl α β '' u) = ∅ := eq_empty_iff_forall_not_mem.mpr fun a ⟨b, _, h⟩ => inl_ne_inr h 
+          rw [this]
+          exact ⟨⟨hu, is_open_empty⟩, rfl⟩,
+    inj := fun _ _ => inl.inj_iff.mp }
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem embedding_inr : embedding (@inr α β) :=
-{ induced := begin
-    unfold [ident sum.topological_space] [],
-    apply [expr le_antisymm],
-    { rw ["<-", expr coinduced_le_iff_le_induced] [],
-      exact [expr le_sup_right] },
-    { intros [ident u, ident hu],
-      existsi [expr «expr '' »(inr, u)],
-      change [expr «expr ∧ »(«expr ∧ »(is_open «expr ⁻¹' »(inl, «expr '' »(@inr α β, u)), is_open «expr ⁻¹' »(inr, «expr '' »(@inr α β, u))), «expr = »(«expr ⁻¹' »(inr, «expr '' »(inr, u)), u))] [] [],
-      have [] [":", expr «expr = »(«expr ⁻¹' »(inl, «expr '' »(@inr α β, u)), «expr∅»())] [":=", expr eq_empty_iff_forall_not_mem.mpr (assume
-        (b)
-        ⟨a, _, h⟩, inr_ne_inl h)],
-      rw [expr this] [],
-      have [] [":", expr «expr = »(«expr ⁻¹' »(inr, «expr '' »(@inr α β, u)), u)] [":=", expr preimage_image_eq u (λ
-        _ _, inr.inj_iff.mp)],
-      rw [expr this] [],
-      exact [expr ⟨⟨is_open_empty, hu⟩, rfl⟩] }
-  end,
-  inj := λ _ _, inr.inj_iff.mp }
+theorem embedding_inr : Embedding (@inr α β) :=
+  { induced :=
+      by 
+        unfold Sum.topologicalSpace 
+        apply le_antisymmₓ
+        ·
+          rw [←coinduced_le_iff_le_induced]
+          exact le_sup_right
+        ·
+          intro u hu 
+          exists inr '' u 
+          change (IsOpen (inl ⁻¹' (@inr α β '' u)) ∧ IsOpen (inr ⁻¹' (@inr α β '' u))) ∧ inr ⁻¹' (inr '' u) = u 
+          have  : inl ⁻¹' (@inr α β '' u) = ∅ := eq_empty_iff_forall_not_mem.mpr fun b ⟨a, _, h⟩ => inr_ne_inl h 
+          rw [this]
+          have  : inr ⁻¹' (@inr α β '' u) = u := preimage_image_eq u fun _ _ => inr.inj_iff.mp 
+          rw [this]
+          exact ⟨⟨is_open_empty, hu⟩, rfl⟩,
+    inj := fun _ _ => inr.inj_iff.mp }
 
 theorem is_open_range_inl : IsOpen (range (inl : α → Sum α β)) :=
   is_open_sum_iff.2$
@@ -606,10 +662,12 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {p : 
 theorem embedding_subtype_coe : Embedding (coeₓ : Subtype p → α) :=
   ⟨⟨rfl⟩, Subtype.coe_injective⟩
 
-theorem closed_embedding_subtype_coe (h : IsClosed { a | p a }) : ClosedEmbedding (coeₓ : Subtype p → α) :=
-  ⟨embedding_subtype_coe,
-    by 
-      rwa [Subtype.range_coe_subtype]⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  closed_embedding_subtype_coe
+  ( h : IsClosed { a | p a } ) : ClosedEmbedding ( coeₓ : Subtype p → α )
+  := ⟨ embedding_subtype_coe , by rwa [ Subtype.range_coe_subtype ] ⟩
 
 @[continuity]
 theorem continuous_subtype_val : Continuous (@Subtype.val α p) :=
@@ -642,11 +700,12 @@ theorem continuous_inclusion {s t : Set α} (h : s ⊆ t) : Continuous (inclusio
 theorem continuous_at_subtype_coe {p : α → Prop} {a : Subtype p} : ContinuousAt (coeₓ : Subtype p → α) a :=
   continuous_iff_continuous_at.mp continuous_subtype_coe _
 
-theorem map_nhds_subtype_coe_eq {a : α} (ha : p a) (h : { a | p a } ∈ 𝓝 a) :
-  map (coeₓ : Subtype p → α) (𝓝 ⟨a, ha⟩) = 𝓝 a :=
-  map_nhds_induced_of_mem$
-    by 
-      simpa only [Subtype.coe_mk, Subtype.range_coe] using h
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  map_nhds_subtype_coe_eq
+  { a : α } ( ha : p a ) ( h : { a | p a } ∈ 𝓝 a ) : map ( coeₓ : Subtype p → α ) 𝓝 ⟨ a , ha ⟩ = 𝓝 a
+  := map_nhds_induced_of_mem $ by simpa only [ Subtype.coe_mk , Subtype.range_coe ] using h
 
 theorem nhds_subtype_eq_comap {a : α} {h : p a} : 𝓝 (⟨a, h⟩ : Subtype p) = comap coeₓ (𝓝 a) :=
   nhds_induced _ _
@@ -657,43 +716,68 @@ theorem tendsto_subtype_rng {β : Type _} {p : α → Prop} {b : Filter β} {f :
   by 
     rw [nhds_subtype_eq_comap, tendsto_comap_iff, Subtype.coe_mk]
 
-theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → α → Prop}
-  (c_cover : ∀ x : α, ∃ i, { x | c i x } ∈ 𝓝 x) (f_cont : ∀ i, Continuous fun x : Subtype (c i) => f x) :
-  Continuous f :=
-  continuous_iff_continuous_at.mpr$
-    fun x =>
-      let ⟨i, (c_sets : { x | c i x } ∈ 𝓝 x)⟩ := c_cover x 
-      let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
-      calc map f (𝓝 x) = map f (map coeₓ (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _$ c_sets).symm 
-        _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl 
-        _ ≤ 𝓝 (f x) := continuous_iff_continuous_at.mp (f_cont i) x'
-        
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  continuous_subtype_nhds_cover
+  { ι : Sort _ }
+      { f : α → β }
+      { c : ι → α → Prop }
+      ( c_cover : ∀ x : α , ∃ i , { x | c i x } ∈ 𝓝 x )
+      ( f_cont : ∀ i , Continuous fun x : Subtype c i => f x )
+    : Continuous f
+  :=
+    continuous_iff_continuous_at . mpr
+      $
+      fun
+        x
+          =>
+          let
+            ⟨ i , ( c_sets : { x | c i x } ∈ 𝓝 x ) ⟩ := c_cover x
+            let
+              x' : Subtype c i := ⟨ x , mem_of_mem_nhds c_sets ⟩
+              calc
+                map f 𝓝 x = map f map coeₓ 𝓝 x' := congr_argₓ map f map_nhds_subtype_coe_eq _ $ c_sets . symm
+                  _ = map fun x : Subtype c i => f x 𝓝 x' := rfl
+                  _ ≤ 𝓝 f x := continuous_iff_continuous_at . mp f_cont i x'
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_subtype_is_closed_cover
-{ι : Sort*}
-{f : α → β}
-(c : ι → α → exprProp())
-(h_lf : locally_finite (λ i, {x | c i x}))
-(h_is_closed : ∀ i, is_closed {x | c i x})
-(h_cover : ∀ x, «expr∃ , »((i), c i x))
-(f_cont : ∀ i, continuous (λ x : subtype (c i), f x)) : continuous f :=
-«expr $ »(continuous_iff_is_closed.mpr, assume
- s
- hs, have ∀
- i, is_closed «expr '' »((coe : {x | c i x} → α), «expr ⁻¹' »(«expr ∘ »(f, coe), s)), from assume
- i, (closed_embedding_subtype_coe (h_is_closed _)).is_closed_map _ (hs.preimage (f_cont i)),
- have is_closed «expr⋃ , »((i), «expr '' »((coe : {x | c i x} → α), «expr ⁻¹' »(«expr ∘ »(f, coe), s))), from locally_finite.is_closed_Union «expr $ »(h_lf.subset, assume
-  (i x)
-  ⟨⟨x', hx'⟩, _, heq⟩, «expr ▸ »(heq, hx')) this,
- have «expr = »(«expr ⁻¹' »(f, s), «expr⋃ , »((i), «expr '' »((coe : {x | c i x} → α), «expr ⁻¹' »(«expr ∘ »(f, coe), s)))), begin
-   apply [expr set.ext],
-   have [] [":", expr ∀
-    x : α, «expr ↔ »(«expr ∈ »(f x, s), «expr∃ , »((i : ι), «expr ∧ »(c i x, «expr ∈ »(f x, s))))] [":=", expr λ
-    x, ⟨λ hx, let ⟨i, hi⟩ := h_cover x in ⟨i, hi, hx⟩, λ ⟨i, hi, hx⟩, hx⟩],
-   simpa [] [] [] ["[", expr and.comm, ",", expr @and.left_comm (c _ _), ",", "<-", expr exists_and_distrib_right, "]"] [] []
- end,
- by rwa ["[", expr this, "]"] [])
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  continuous_subtype_is_closed_cover
+  { ι : Sort _ }
+      { f : α → β }
+      ( c : ι → α → Prop )
+      ( h_lf : LocallyFinite fun i => { x | c i x } )
+      ( h_is_closed : ∀ i , IsClosed { x | c i x } )
+      ( h_cover : ∀ x , ∃ i , c i x )
+      ( f_cont : ∀ i , Continuous fun x : Subtype c i => f x )
+    : Continuous f
+  :=
+    continuous_iff_is_closed . mpr
+      $
+      fun
+        s hs
+          =>
+          have
+            : ∀ i , IsClosed ( coeₓ : { x | c i x } → α ) '' f ∘ coeₓ ⁻¹' s
+              :=
+              fun i => closed_embedding_subtype_coe h_is_closed _ . IsClosedMap _ hs.preimage f_cont i
+            have
+              : IsClosed ⋃ i , ( coeₓ : { x | c i x } → α ) '' f ∘ coeₓ ⁻¹' s
+                :=
+                LocallyFinite.is_closed_Union h_lf.subset $ fun i x ⟨ ⟨ x' , hx' ⟩ , _ , HEq ⟩ => HEq ▸ hx' this
+              have
+                : f ⁻¹' s = ⋃ i , ( coeₓ : { x | c i x } → α ) '' f ∘ coeₓ ⁻¹' s
+                  :=
+                  by
+                    apply Set.ext
+                      have
+                        : ∀ x : α , f x ∈ s ↔ ∃ i : ι , c i x ∧ f x ∈ s
+                          :=
+                          fun x => ⟨ fun hx => let ⟨ i , hi ⟩ := h_cover x ⟨ i , hi , hx ⟩ , fun ⟨ i , hi , hx ⟩ => hx ⟩
+                      simpa [ And.comm , @ And.left_comm c _ _ , ← exists_and_distrib_right ]
+                by rwa [ this ]
 
 theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
   x ∈ Closure s ↔ (x : α) ∈ Closure ((coeₓ : _ → α) '' s) :=
@@ -762,8 +846,8 @@ theorem continuous_pi_iff [TopologicalSpace α] [∀ i, TopologicalSpace (π i)]
   Iff.intro (fun h i => (continuous_apply i).comp h) continuous_pi
 
 theorem nhds_pi [t : ∀ i, TopologicalSpace (π i)] {a : ∀ i, π i} : 𝓝 a = pi fun i => 𝓝 (a i) :=
-  calc 𝓝 a = ⨅i, @nhds _ (@TopologicalSpace.induced _ _ (fun x : ∀ i, π i => x i) (t i)) a := nhds_infi 
-    _ = ⨅i, comap (fun x => x i) (𝓝 (a i)) :=
+  calc 𝓝 a = ⨅ i, @nhds _ (@TopologicalSpace.induced _ _ (fun x : ∀ i, π i => x i) (t i)) a := nhds_infi 
+    _ = ⨅ i, comap (fun x => x i) (𝓝 (a i)) :=
     by 
       simp [nhds_induced]
     
@@ -823,11 +907,13 @@ theorem Continuous.fin_insert_nth {n} {π : Finₓ (n+1) → Type _} [∀ i, Top
   Continuous fun a => i.insert_nth (f a) (g a) :=
   continuous_iff_continuous_at.2$ fun a => hf.continuous_at.fin_insert_nth i hg.continuous_at
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » i)
 theorem is_open_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} (hi : finite i)
   (hs : ∀ a _ : a ∈ i, IsOpen (s a)) : IsOpen (pi i s) :=
   by 
     rw [pi_def] <;> exact is_open_bInter hi$ fun a ha => (hs _ ha).Preimage (continuous_apply _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » i)
 theorem is_closed_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)}
   (hs : ∀ a _ : a ∈ i, IsClosed (s a)) : IsClosed (pi i s) :=
   by 
@@ -839,6 +925,7 @@ theorem mem_nhds_of_pi_mem_nhds {ι : Type _} {α : ι → Type _} [∀ i : ι, 
     rw [nhds_pi] at hs 
     exact mem_of_pi_mem_pi hs hi
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » i)
 theorem set_pi_mem_nhds [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} {x : ∀ a, π a} (hi : finite i)
   (hs : ∀ a _ : a ∈ i, s a ∈ 𝓝 (x a)) : pi i s ∈ 𝓝 x :=
   by 
@@ -865,71 +952,80 @@ theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] [∀ i, Topolog
     refine' ⟨I, hts$ fun i hi => _⟩
     simpa [Finset.mem_coe.1 hi] using mem_of_mem_nhds (htx i)
 
-theorem pi_eq_generate_from [∀ a, TopologicalSpace (π a)] :
-  Pi.topologicalSpace =
-    generate_from { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a _ : a ∈ i, IsOpen (s a)) ∧ g = pi («expr↑ » i) s } :=
-  le_antisymmₓ (le_generate_from$ fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ is_open_set_pi (Finset.finite_to_set _) hi)
-    (le_infi$
-      fun a s ⟨t, ht, s_eq⟩ =>
-        generate_open.basic _$
-          ⟨Function.update (fun a => univ) a t, {a},
-            by 
-              simpa using ht,
-            s_eq ▸
-              by 
-                ext f <;> simp [Set.Pi]⟩)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » i)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  pi_eq_generate_from
+  [ ∀ a , TopologicalSpace π a ]
+    :
+      Pi.topologicalSpace
+        =
+        generate_from { g | ∃ ( s : ∀ a , Set π a ) ( i : Finset ι ) , ∀ a _ : a ∈ i , IsOpen s a ∧ g = pi ↑ i s }
+  :=
+    le_antisymmₓ
+      le_generate_from $ fun g ⟨ s , i , hi , Eq ⟩ => Eq.symm ▸ is_open_set_pi Finset.finite_to_set _ hi
+        le_infi
+          $
+          fun
+            a s ⟨ t , ht , s_eq ⟩
+              =>
+              generate_open.basic _
+                $
+                ⟨ Function.update fun a => univ a t , { a } , by simpa using ht , s_eq ▸ by ext f <;> simp [ Set.Pi ] ⟩
 
-theorem pi_generate_from_eq {g : ∀ a, Set (Set (π a))} :
-  (@Pi.topologicalSpace ι π fun a => generate_from (g a)) =
-    generate_from { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a _ : a ∈ i, s a ∈ g a) ∧ t = pi («expr↑ » i) s } :=
-  let G := { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a _ : a ∈ i, s a ∈ g a) ∧ t = pi («expr↑ » i) s }
-  by 
-    rw [pi_eq_generate_from]
-    refine' le_antisymmₓ (generate_from_mono _) (le_generate_from _)
-    exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
-    ·
-      rintro s ⟨t, i, hi, rfl⟩
-      rw [pi_def]
-      apply is_open_bInter (Finset.finite_to_set _)
-      intro a ha 
-      show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
-      refine' le_generate_from _ _ (hi a ha)
-      exact
-        fun s hs =>
-          generate_open.basic _
-            ⟨Function.update (fun a => univ) a s, {a},
-              by 
-                simp [hs]⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » i)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  pi_generate_from_eq
+  { g : ∀ a , Set Set π a }
+    :
+      @ Pi.topologicalSpace ι π fun a => generate_from g a
+        =
+        generate_from { t | ∃ ( s : ∀ a , Set π a ) ( i : Finset ι ) , ∀ a _ : a ∈ i , s a ∈ g a ∧ t = pi ↑ i s }
+  :=
+    let
+      G := { t | ∃ ( s : ∀ a , Set π a ) ( i : Finset ι ) , ∀ a _ : a ∈ i , s a ∈ g a ∧ t = pi ↑ i s }
+      by
+        rw [ pi_eq_generate_from ]
+          refine' le_antisymmₓ generate_from_mono _ le_generate_from _
+          exact fun s ⟨ t , i , ht , Eq ⟩ => ⟨ t , i , fun a ha => generate_open.basic _ ht a ha , Eq ⟩
+          ·
+            rintro s ⟨ t , i , hi , rfl ⟩
+              rw [ pi_def ]
+              apply is_open_bInter Finset.finite_to_set _
+              intro a ha
+              show generate_from G . coinduced fun f : ∀ a , π a => f a . IsOpen t a
+              refine' le_generate_from _ _ hi a ha
+              exact fun s hs => generate_open.basic _ ⟨ Function.update fun a => univ a s , { a } , by simp [ hs ] ⟩
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pi_generate_from_eq_fintype
-{g : ∀ a, set (set (π a))}
-[fintype ι]
-(hg : ∀
- a, «expr = »(«expr⋃₀ »(g a), univ)) : «expr = »(@Pi.topological_space ι π (λ
-  a, generate_from (g a)), generate_from {t | «expr∃ , »((s : ∀
-   a, set (π a)), «expr ∧ »(∀ a, «expr ∈ »(s a, g a), «expr = »(t, pi univ s)))}) :=
-begin
-  rw ["[", expr pi_generate_from_eq, "]"] [],
-  refine [expr le_antisymm (generate_from_mono _) (le_generate_from _)],
-  exact [expr assume (s) ⟨t, ht, eq⟩, ⟨t, finset.univ, by simp [] [] [] ["[", expr ht, ",", expr eq, "]"] [] []⟩],
-  { rintros [ident s, "⟨", ident t, ",", ident i, ",", ident ht, ",", ident rfl, "⟩"],
-    apply [expr is_open_iff_forall_mem_open.2 _],
-    assume [binders (f hf)],
-    choose [] [ident c] [ident hc] ["using", expr show ∀
-     a, «expr∃ , »((s), «expr ∧ »(«expr ∈ »(s, g a), «expr ∈ »(f a, s))), { assume [binders (a)],
-       have [] [":", expr «expr ∈ »(f a, «expr⋃₀ »(g a))] [],
-       { rw ["[", expr hg, "]"] [],
-         apply [expr mem_univ] },
-       simpa [] [] [] [] [] [] }],
-    refine [expr ⟨pi univ (λ a, if «expr ∈ »(a, i) then t a else (c : ∀ a, set (π a)) a), _, _, _⟩],
-    { simp [] [] [] ["[", expr pi_if, "]"] [] [] },
-    { refine [expr generate_open.basic _ ⟨_, assume a, _, rfl⟩],
-      by_cases [expr «expr ∈ »(a, i)]; simp [] [] [] ["[", "*", ",", expr set.pi, "]"] [] ["at", "*"] },
-    { have [] [":", expr «expr ∈ »(f, pi {a | «expr ∉ »(a, i)} c)] [],
-      { simp [] [] [] ["[", "*", ",", expr set.pi, "]"] [] ["at", "*"] },
-      simpa [] [] [] ["[", expr pi_if, ",", expr hf, "]"] [] [] } }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  pi_generate_from_eq_fintype
+  { g : ∀ a , Set Set π a } [ Fintype ι ] ( hg : ∀ a , ⋃₀ g a = univ )
+    :
+      @ Pi.topologicalSpace ι π fun a => generate_from g a
+        =
+        generate_from { t | ∃ s : ∀ a , Set π a , ∀ a , s a ∈ g a ∧ t = pi univ s }
+  :=
+    by
+      rw [ pi_generate_from_eq ]
+        refine' le_antisymmₓ generate_from_mono _ le_generate_from _
+        exact fun s ⟨ t , ht , Eq ⟩ => ⟨ t , Finset.univ , by simp [ ht , Eq ] ⟩
+        ·
+          rintro s ⟨ t , i , ht , rfl ⟩
+            apply is_open_iff_forall_mem_open . 2 _
+            intro f hf
+            choose
+              c hc
+              using show ∀ a , ∃ s , s ∈ g a ∧ f a ∈ s by intro a have : f a ∈ ⋃₀ g a · rw [ hg ] apply mem_univ simpa
+            refine' ⟨ pi univ fun a => if a ∈ i then t a else ( c : ∀ a , Set π a ) a , _ , _ , _ ⟩
+            · simp [ pi_if ]
+            · refine' generate_open.basic _ ⟨ _ , fun a => _ , rfl ⟩ byCases' a ∈ i <;> simp_all [ Set.Pi ]
+            · have : f ∈ pi { a | a ∉ i } c · simp_all [ Set.Pi ] simpa [ pi_if , hf ]
 
 /-- Suppose `π i` is a family of topological spaces indexed by `i : ι`, and `X` is a type
 endowed with a family of maps `f i : X → π i` for every `i : ι`, hence inducing a
@@ -937,7 +1033,7 @@ map `g : X → Π i, π i`. This lemma shows that infimum of the topologies on `
 the `f i` as `i : ι` varies is simply the topology on `X` induced by `g : X → Π i, π i`
 where `Π i, π i` is endowed with the usual product topology. -/
 theorem inducing_infi_to_pi {X : Type _} [∀ i, TopologicalSpace (π i)] (f : ∀ i, X → π i) :
-  @Inducing X (∀ i, π i) (⨅i, induced (f i) inferInstance) _ fun x i => f i x :=
+  @Inducing X (∀ i, π i) (⨅ i, induced (f i) inferInstance) _ fun x i => f i x :=
   by 
     constructor 
     erw [induced_infi]
@@ -953,7 +1049,7 @@ instance Pi.discrete_topology : DiscreteTopology (∀ i, π i) :=
     fun x =>
       by 
         rw
-          [show {x} = ⋂i, { y:∀ i, π i | y i = x i }by 
+          [show {x} = ⋂ i, { y : ∀ i, π i | y i = x i }by 
             ext 
             simp only [Function.funext_iffₓ, Set.mem_singleton_iff, Set.mem_Inter, Set.mem_set_of_eq]]
         exact is_open_Inter fun i => (continuous_apply i).is_open_preimage {x i} (is_open_discrete {x i})
@@ -976,40 +1072,56 @@ theorem is_closed_sigma_iff {s : Set (Sigma σ)} : IsClosed s ↔ ∀ i, IsClose
   by 
     simp only [←is_open_compl_iff, is_open_sigma_iff, preimage_compl]
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_open_map_sigma_mk {i : ι} : is_open_map (@sigma.mk ι σ i) :=
-begin
-  intros [ident s, ident hs],
-  rw [expr is_open_sigma_iff] [],
-  intro [ident j],
-  rcases [expr eq_or_ne i j, "with", "(", ident rfl, "|", ident hne, ")"],
-  { rwa [expr set.preimage_image_eq _ sigma_mk_injective] [] },
-  { convert [] [expr is_open_empty] [],
-    apply [expr set.eq_empty_of_subset_empty],
-    rintro [ident x, "⟨", ident y, ",", "_", ",", ident hy, "⟩"],
-    have [] [":", expr «expr = »(i, j)] [],
-    by cc,
-    contradiction }
-end
+theorem is_open_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Set (Σ a, σ a)) :=
+  by 
+    rw [is_open_sigma_iff]
+    intro a 
+    byCases' h : a ∈ s
+    ·
+      convert is_open_univ 
+      ext x 
+      simp only [h, Set.mem_preimage, Set.mem_univ]
+    ·
+      convert is_open_empty 
+      ext x 
+      simp only [h, Set.mem_empty_eq, Set.mem_preimage]
+
+theorem is_open_map_sigma_mk {i : ι} : IsOpenMap (@Sigma.mk ι σ i) :=
+  by 
+    intro s hs 
+    rw [is_open_sigma_iff]
+    intro j 
+    rcases eq_or_ne i j with (rfl | hne)
+    ·
+      rwa [Set.preimage_image_eq _ sigma_mk_injective]
+    ·
+      convert is_open_empty 
+      apply Set.eq_empty_of_subset_empty 
+      rintro x ⟨y, _, hy⟩
+      have  : i = j
+      ·
+        cc 
+      contradiction
 
 theorem is_open_range_sigma_mk {i : ι} : IsOpen (Set.Range (@Sigma.mk ι σ i)) :=
   is_open_map_sigma_mk.is_open_range
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_closed_map_sigma_mk {i : ι} : is_closed_map (@sigma.mk ι σ i) :=
-begin
-  intros [ident s, ident hs],
-  rw [expr is_closed_sigma_iff] [],
-  intro [ident j],
-  rcases [expr eq_or_ne i j, "with", "(", ident rfl, "|", ident hne, ")"],
-  { rwa [expr set.preimage_image_eq _ sigma_mk_injective] [] },
-  { convert [] [expr is_closed_empty] [],
-    apply [expr set.eq_empty_of_subset_empty],
-    rintro [ident x, "⟨", ident y, ",", "_", ",", ident hy, "⟩"],
-    have [] [":", expr «expr = »(i, j)] [],
-    by cc,
-    contradiction }
-end
+theorem is_closed_map_sigma_mk {i : ι} : IsClosedMap (@Sigma.mk ι σ i) :=
+  by 
+    intro s hs 
+    rw [is_closed_sigma_iff]
+    intro j 
+    rcases eq_or_ne i j with (rfl | hne)
+    ·
+      rwa [Set.preimage_image_eq _ sigma_mk_injective]
+    ·
+      convert is_closed_empty 
+      apply Set.eq_empty_of_subset_empty 
+      rintro x ⟨y, _, hy⟩
+      have  : i = j
+      ·
+        cc 
+      contradiction
 
 theorem is_closed_sigma_mk {i : ι} : IsClosed (Set.Range (@Sigma.mk ι σ i)) :=
   by 
@@ -1046,43 +1158,40 @@ theorem is_open_map_sigma [TopologicalSpace β] {f : Sigma σ → β} (h : ∀ i
     rw [image_image]
     exact h i _ (hs i)
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of embeddings is an embedding. -/
-theorem embedding_sigma_map
-{τ : ι → Type*}
-[∀ i, topological_space (τ i)]
-{f : ∀ i, σ i → τ i}
-(hf : ∀ i, embedding (f i)) : embedding (sigma.map id f) :=
-begin
-  refine [expr ⟨⟨_⟩, function.injective_id.sigma_map (λ i, (hf i).inj)⟩],
-  refine [expr le_antisymm (continuous_iff_le_induced.mp (continuous_sigma_map (λ i, (hf i).continuous))) _],
-  intros [ident s, ident hs],
-  replace [ident hs] [] [":=", expr is_open_sigma_iff.mp hs],
-  have [] [":", expr ∀
-   i, «expr∃ , »((t), «expr ∧ »(is_open t, «expr = »(«expr ⁻¹' »(f i, t), «expr ⁻¹' »(sigma.mk i, s))))] [],
-  { intro [ident i],
-    apply [expr is_open_induced_iff.mp],
-    convert [] [expr hs i] [],
-    exact [expr (hf i).induced.symm] },
-  choose [] [ident t] [ident ht] ["using", expr this],
-  apply [expr is_open_induced_iff.mpr],
-  refine [expr ⟨«expr⋃ , »((i), «expr '' »(sigma.mk i, t i)), is_open_Union (λ i, is_open_map_sigma_mk _ (ht i).1), _⟩],
-  ext [] ["⟨", ident i, ",", ident x, "⟩"] [],
-  change [expr «expr ↔ »(«expr ∈ »(sigma.mk i (f i x), «expr⋃ , »((i : ι), «expr '' »(sigma.mk i, t i))), «expr ∈ »(x, «expr ⁻¹' »(sigma.mk i, s)))] [] [],
-  rw ["[", "<-", expr (ht i).2, ",", expr mem_Union, "]"] [],
-  split,
-  { rintro ["⟨", ident j, ",", ident hj, "⟩"],
-    rw [expr mem_image] ["at", ident hj],
-    rcases [expr hj, "with", "⟨", ident y, ",", ident hy₁, ",", ident hy₂, "⟩"],
-    rcases [expr sigma.mk.inj_iff.mp hy₂, "with", "⟨", ident rfl, ",", ident hy, "⟩"],
-    replace [ident hy] [] [":=", expr eq_of_heq hy],
-    subst [expr y],
-    exact [expr hy₁] },
-  { intro [ident hx],
-    use [expr i],
-    rw [expr mem_image] [],
-    exact [expr ⟨f i x, hx, rfl⟩] }
-end
+theorem embedding_sigma_map {τ : ι → Type _} [∀ i, TopologicalSpace (τ i)] {f : ∀ i, σ i → τ i}
+  (hf : ∀ i, Embedding (f i)) : Embedding (Sigma.map id f) :=
+  by 
+    refine' ⟨⟨_⟩, function.injective_id.sigma_map fun i => (hf i).inj⟩
+    refine' le_antisymmₓ (continuous_iff_le_induced.mp (continuous_sigma_map fun i => (hf i).Continuous)) _ 
+    intro s hs 
+    replace hs := is_open_sigma_iff.mp hs 
+    have  : ∀ i, ∃ t, IsOpen t ∧ f i ⁻¹' t = Sigma.mk i ⁻¹' s
+    ·
+      intro i 
+      apply is_open_induced_iff.mp 
+      convert hs i 
+      exact (hf i).induced.symm 
+    choose t ht using this 
+    apply is_open_induced_iff.mpr 
+    refine' ⟨⋃ i, Sigma.mk i '' t i, is_open_Union fun i => is_open_map_sigma_mk _ (ht i).1, _⟩
+    ext ⟨i, x⟩
+    change (Sigma.mk i (f i x) ∈ ⋃ i : ι, Sigma.mk i '' t i) ↔ x ∈ Sigma.mk i ⁻¹' s 
+    rw [←(ht i).2, mem_Union]
+    constructor
+    ·
+      rintro ⟨j, hj⟩
+      rw [mem_image] at hj 
+      rcases hj with ⟨y, hy₁, hy₂⟩
+      rcases sigma.mk.inj_iff.mp hy₂ with ⟨rfl, hy⟩
+      replace hy := eq_of_heq hy 
+      subst y 
+      exact hy₁
+    ·
+      intro hx 
+      use i 
+      rw [mem_image]
+      exact ⟨f i x, hx, rfl⟩
 
 end Sigma
 
@@ -1105,6 +1214,8 @@ theorem mem_closure_of_continuous [TopologicalSpace α] [TopologicalSpace β] {f
     _ ⊆ Closure t := closure_minimal h.image_subset is_closed_closure
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » t)
 theorem mem_closure_of_continuous2 [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {f : α → β → γ}
   {a : α} {b : β} {s : Set α} {t : Set β} {u : Set γ} (hf : Continuous fun p : α × β => f p.1 p.2) (ha : a ∈ Closure s)
   (hb : b ∈ Closure t) (h : ∀ a _ : a ∈ s, ∀ b _ : b ∈ t, f a b ∈ Closure u) : f a b ∈ Closure u :=

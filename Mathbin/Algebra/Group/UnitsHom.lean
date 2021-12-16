@@ -24,11 +24,11 @@ def map (f : M →* N) : Units M →* Units N :=
     fun x y => ext (f.map_mul x y)
 
 @[simp, toAdditive]
-theorem coe_map (f : M →* N) (x : Units M) : «expr↑ » (map f x) = f x :=
+theorem coe_map (f : M →* N) (x : Units M) : ↑map f x = f x :=
   rfl
 
 @[simp, toAdditive]
-theorem coe_map_inv (f : M →* N) (u : Units M) : «expr↑ » (map f u⁻¹) = f («expr↑ » (u⁻¹)) :=
+theorem coe_map_inv (f : M →* N) (u : Units M) : ↑map f u⁻¹ = f (↑u⁻¹) :=
   rfl
 
 @[simp, toAdditive]
@@ -50,14 +50,14 @@ def coe_hom : Units M →* M :=
 variable {M}
 
 @[simp, toAdditive]
-theorem coe_hom_apply (x : Units M) : coe_hom M x = «expr↑ » x :=
+theorem coe_hom_apply (x : Units M) : coe_hom M x = ↑x :=
   rfl
 
 /-- If a map `g : M → units N` agrees with a homomorphism `f : M →* N`, then
 this map is a monoid homomorphism too. -/
 @[toAdditive
       "If a map `g : M → add_units N` agrees with a homomorphism `f : M →+ N`, then this map\nis an add_monoid homomorphism too."]
-def lift_right (f : M →* N) (g : M → Units N) (h : ∀ x, «expr↑ » (g x) = f x) : M →* Units N :=
+def lift_right (f : M →* N) (g : M → Units N) (h : ∀ x, ↑g x = f x) : M →* Units N :=
   { toFun := g, map_one' := Units.ext$ (h 1).symm ▸ f.map_one,
     map_mul' :=
       fun x y =>
@@ -66,19 +66,16 @@ def lift_right (f : M →* N) (g : M → Units N) (h : ∀ x, «expr↑ » (g x)
             simp only [h, coe_mul, f.map_mul] }
 
 @[simp, toAdditive]
-theorem coe_lift_right {f : M →* N} {g : M → Units N} (h : ∀ x, «expr↑ » (g x) = f x) x :
-  (lift_right f g h x : N) = f x :=
+theorem coe_lift_right {f : M →* N} {g : M → Units N} (h : ∀ x, ↑g x = f x) x : (lift_right f g h x : N) = f x :=
   h x
 
 @[simp, toAdditive]
-theorem mul_lift_right_inv {f : M →* N} {g : M → Units N} (h : ∀ x, «expr↑ » (g x) = f x) x :
-  (f x*«expr↑ » (lift_right f g h x⁻¹)) = 1 :=
+theorem mul_lift_right_inv {f : M →* N} {g : M → Units N} (h : ∀ x, ↑g x = f x) x : (f x*↑lift_right f g h x⁻¹) = 1 :=
   by 
     rw [Units.mul_inv_eq_iff_eq_mul, one_mulₓ, coe_lift_right]
 
 @[simp, toAdditive]
-theorem lift_right_inv_mul {f : M →* N} {g : M → Units N} (h : ∀ x, «expr↑ » (g x) = f x) x :
-  («expr↑ » (lift_right f g h x⁻¹)*f x) = 1 :=
+theorem lift_right_inv_mul {f : M →* N} {g : M → Units N} (h : ∀ x, ↑g x = f x) x : ((↑lift_right f g h x⁻¹)*f x) = 1 :=
   by 
     rw [Units.inv_mul_eq_iff_eq_mul, mul_oneₓ, coe_lift_right]
 
@@ -130,12 +127,12 @@ theorem IsUnit.coe_lift_right [Monoidₓ M] [Monoidₓ N] (f : M →* N) (hf : �
 
 @[simp, toAdditive]
 theorem IsUnit.mul_lift_right_inv [Monoidₓ M] [Monoidₓ N] (f : M →* N) (h : ∀ x, IsUnit (f x)) x :
-  (f x*«expr↑ » (IsUnit.liftRight f h x⁻¹)) = 1 :=
+  (f x*↑IsUnit.liftRight f h x⁻¹) = 1 :=
   Units.mul_lift_right_inv (fun y => Classical.some_spec$ h y) x
 
 @[simp, toAdditive]
 theorem IsUnit.lift_right_inv_mul [Monoidₓ M] [Monoidₓ N] (f : M →* N) (h : ∀ x, IsUnit (f x)) x :
-  («expr↑ » (IsUnit.liftRight f h x⁻¹)*f x) = 1 :=
+  ((↑IsUnit.liftRight f h x⁻¹)*f x) = 1 :=
   Units.lift_right_inv_mul (fun y => Classical.some_spec$ h y) x
 
 end IsUnit

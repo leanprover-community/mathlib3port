@@ -98,6 +98,7 @@ structure almost_mono {α ι κ : Type _} (C : (ι → Option α) → κ) where
 instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_mono fun v : ι → Option α => default κ) :=
   ⟨{ line := default _, Color := default κ, has_color := fun _ => rfl }⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » lines)
 /-- The type of collections of lines such that
 - each line is only one color except possibly at its endpoint
 - the lines all have the same endpoint
@@ -172,84 +173,106 @@ theorem diagonal_apply {α ι} [Nonempty ι] (x : α) : line.diagonal α ι x = 
   by 
     simpRw [line.apply, line.diagonal, Option.get_or_else_none]
 
--- error in Combinatorics.HalesJewett: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s.lines)
 /-- The Hales-Jewett theorem. This version has a restriction on universe levels which is necessary
 for the proof. See `exists_mono_in_high_dimension` for a fully universe-polymorphic version. -/
-private
-theorem exists_mono_in_high_dimension' : ∀
-(α : Type u)
-[fintype α]
-(κ : Type max v u)
-[fintype κ], «expr∃ , »((ι : Type) (_ : fintype ι), ∀ C : (ι → α) → κ, «expr∃ , »((l : line α ι), l.is_mono C)) :=
-fintype.induction_empty_option (λ
- α
- α'
- e, «expr $ »(forall_imp, λ
-  κ, «expr $ »(forall_imp, λ
-   _, «expr $ »(Exists.imp, λ
-    ι, «expr $ »(Exists.imp, λ _ h C, let ⟨l, c, lc⟩ := h (λ v, C «expr ∘ »(e, v)) in
-     ⟨l.map e, c, «expr $ »(e.forall_congr_left.mp, λ
-       x, by rw ["[", "<-", expr lc x, ",", expr line.map_apply, "]"] [])⟩))))) (begin
-   introsI [ident κ, "_"],
-   by_cases [expr h, ":", expr nonempty κ],
-   { resetI,
-     exact [expr ⟨unit, infer_instance, λ C, ⟨default _, classical.arbitrary _, pempty.rec _⟩⟩] },
-   { exact [expr ⟨empty, infer_instance, λ C, (h ⟨C (empty.rec _)⟩).elim⟩] }
- end) (begin
-   introsI [ident α, "_", ident ihα, ident κ, "_"],
-   by_cases [expr h, ":", expr nonempty α],
-   work_on_goal [1] { refine [expr ⟨unit, infer_instance, λ C, ⟨diagonal _ _, C (λ _, none), _⟩⟩],
-     rintros ["(", "_", "|", "⟨", ident a, "⟩", ")"],
-     refl,
-     exact [expr (h ⟨a⟩).elim] },
-   suffices [ident key] [":", expr ∀
-    r : exprℕ(), «expr∃ , »((ι : Type)
-     (_ : fintype ι), ∀
-     C : (ι → option α) → κ, «expr ∨ »(«expr∃ , »((s : color_focused C), «expr = »(s.lines.card, r)), «expr∃ , »((l), is_mono C l)))],
-   { obtain ["⟨", ident ι, ",", ident _inst, ",", ident hι, "⟩", ":=", expr key «expr + »(fintype.card κ, 1)],
-     refine [expr ⟨ι, _inst, λ C, (hι C).resolve_left _⟩],
-     rintro ["⟨", ident s, ",", ident sr, "⟩"],
-     apply [expr nat.not_succ_le_self (fintype.card κ)],
-     rw ["[", "<-", expr nat.add_one, ",", "<-", expr sr, ",", "<-", expr multiset.card_map, ",", "<-", expr finset.card_mk, "]"] [],
-     exact [expr finset.card_le_univ ⟨_, s.distinct_colors⟩] },
-   intro [ident r],
-   induction [expr r] [] ["with", ident r, ident ihr] [],
-   { exact [expr ⟨empty, infer_instance, λ C, or.inl ⟨default _, multiset.card_zero⟩⟩] },
-   obtain ["⟨", ident ι, ",", ident _inst, ",", ident hι, "⟩", ":=", expr ihr],
-   resetI,
-   specialize [expr ihα ((ι → option α) → κ)],
-   obtain ["⟨", ident ι', ",", ident _inst, ",", ident hι', "⟩", ":=", expr ihα],
-   resetI,
-   refine [expr ⟨«expr ⊕ »(ι, ι'), infer_instance, _⟩],
-   intro [ident C],
-   specialize [expr hι' (λ v' v, C (sum.elim v «expr ∘ »(some, v')))],
-   obtain ["⟨", ident l', ",", ident C', ",", ident hl', "⟩", ":=", expr hι'],
-   have [ident mono_of_mono] [":", expr «expr∃ , »((l), is_mono C' l) → «expr∃ , »((l), is_mono C l)] [],
-   { rintro ["⟨", ident l, ",", ident c, ",", ident hl, "⟩"],
-     refine [expr ⟨l.horizontal «expr ∘ »(some, l' (classical.arbitrary α)), c, λ x, _⟩],
-     rw ["[", expr line.horizontal_apply, ",", "<-", expr hl, ",", "<-", expr hl', "]"] [] },
-   specialize [expr hι C'],
-   rcases [expr hι, "with", "⟨", ident s, ",", ident sr, "⟩", "|", "_"],
-   work_on_goal [1] { exact [expr or.inr (mono_of_mono hι)] },
-   by_cases [expr h, ":", expr «expr∃ , »((p «expr ∈ » s.lines), «expr = »((p : almost_mono _).color, C' s.focus))],
-   { obtain ["⟨", ident p, ",", ident p_mem, ",", ident hp, "⟩", ":=", expr h],
-     refine [expr or.inr (mono_of_mono ⟨p.line, p.color, _⟩)],
-     rintro ["(", "_", "|", "_", ")"],
-     rw ["[", expr hp, ",", expr s.is_focused p p_mem, "]"] [],
-     apply [expr p.has_color] },
-   refine [expr or.inl ⟨⟨(s.lines.map _).cons ⟨(l'.map some).vertical s.focus, C' s.focus, λ
-       x, _⟩, sum.elim s.focus (l'.map some none), _, _⟩, _⟩],
-   { rw ["[", expr vertical_apply, ",", "<-", expr congr_fun (hl' x), ",", expr line.map_apply, "]"] [] },
-   { refine [expr λ p, ⟨p.line.prod (l'.map some), p.color, λ x, _⟩],
-     rw ["[", expr line.prod_apply, ",", expr line.map_apply, ",", "<-", expr p.has_color, ",", "<-", expr congr_fun (hl' x), "]"] [] },
-   { simp_rw ["[", expr multiset.mem_cons, ",", expr multiset.mem_map, "]"] [],
-     rintros ["_", "(", ident rfl, "|", "⟨", ident q, ",", ident hq, ",", ident rfl, "⟩", ")"],
-     { rw [expr line.vertical_apply] [] },
-     { rw ["[", expr line.prod_apply, ",", expr s.is_focused q hq, "]"] [] } },
-   { rw ["[", expr multiset.map_cons, ",", expr multiset.map_map, ",", expr multiset.nodup_cons, ",", expr multiset.mem_map, "]"] [],
-     exact [expr ⟨λ ⟨q, hq, he⟩, h ⟨q, hq, he⟩, s.distinct_colors⟩] },
-   { rw ["[", expr multiset.card_cons, ",", expr multiset.card_map, ",", expr sr, "]"] [] }
- end)
+private theorem exists_mono_in_high_dimension' :
+  ∀ α : Type u [Fintype α] κ : Type max v u [Fintype κ],
+    ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : line α ι, l.is_mono C :=
+  Fintype.induction_empty_option
+    (fun α α' e =>
+      forall_imp$
+        fun κ =>
+          forall_imp$
+            fun _ =>
+              Exists.impₓ$
+                fun ι =>
+                  Exists.impₓ$
+                    fun _ h C =>
+                      let ⟨l, c, lc⟩ := h fun v => C (e ∘ v)
+                      ⟨l.map e, c,
+                        e.forall_congr_left.mp$
+                          fun x =>
+                            by 
+                              rw [←lc x, line.map_apply]⟩)
+    (by 
+      intros κ _ 
+      byCases' h : Nonempty κ
+      ·
+        skip 
+        exact ⟨Unit, inferInstance, fun C => ⟨default _, Classical.arbitrary _, Pempty.rec _⟩⟩
+      ·
+        exact ⟨Empty, inferInstance, fun C => (h ⟨C (Empty.rec _)⟩).elim⟩)
+    (by 
+      intros α _ ihα κ _ 
+      byCases' h : Nonempty α 
+      workOnGoal 1
+        refine' ⟨Unit, inferInstance, fun C => ⟨diagonal _ _, C fun _ => none, _⟩⟩
+        rintro (_ | ⟨a⟩)
+        rfl 
+        exact (h ⟨a⟩).elim 
+      suffices key :
+        ∀ r : ℕ,
+          ∃ (ι : Type)(_ : Fintype ι),
+            ∀ C : (ι → Option α) → κ, (∃ s : color_focused C, s.lines.card = r) ∨ ∃ l, is_mono C l
+      ·
+        obtain ⟨ι, _inst, hι⟩ := key (Fintype.card κ+1)
+        refine' ⟨ι, _inst, fun C => (hι C).resolve_left _⟩
+        rintro ⟨s, sr⟩
+        apply Nat.not_succ_le_selfₓ (Fintype.card κ)
+        rw [←Nat.add_one, ←sr, ←Multiset.card_map, ←Finset.card_mk]
+        exact Finset.card_le_univ ⟨_, s.distinct_colors⟩
+      intro r 
+      induction' r with r ihr
+      ·
+        exact ⟨Empty, inferInstance, fun C => Or.inl ⟨default _, Multiset.card_zero⟩⟩
+      obtain ⟨ι, _inst, hι⟩ := ihr 
+      skip 
+      specialize ihα ((ι → Option α) → κ)
+      obtain ⟨ι', _inst, hι'⟩ := ihα 
+      skip 
+      refine' ⟨Sum ι ι', inferInstance, _⟩
+      intro C 
+      specialize hι' fun v' v => C (Sum.elim v (some ∘ v'))
+      obtain ⟨l', C', hl'⟩ := hι' 
+      have mono_of_mono : (∃ l, is_mono C' l) → ∃ l, is_mono C l
+      ·
+        rintro ⟨l, c, hl⟩
+        refine' ⟨l.horizontal (some ∘ l' (Classical.arbitrary α)), c, fun x => _⟩
+        rw [line.horizontal_apply, ←hl, ←hl']
+      specialize hι C' 
+      rcases hι with (⟨s, sr⟩ | _)
+      workOnGoal 1 
+        exact Or.inr (mono_of_mono hι)
+      byCases' h : ∃ (p : _)(_ : p ∈ s.lines), (p : almost_mono _).Color = C' s.focus
+      ·
+        obtain ⟨p, p_mem, hp⟩ := h 
+        refine' Or.inr (mono_of_mono ⟨p.line, p.color, _⟩)
+        rintro (_ | _)
+        rw [hp, s.is_focused p p_mem]
+        apply p.has_color 
+      refine'
+        Or.inl
+          ⟨⟨(s.lines.map _).cons ⟨(l'.map some).vertical s.focus, C' s.focus, fun x => _⟩,
+              Sum.elim s.focus (l'.map some none), _, _⟩,
+            _⟩
+      ·
+        rw [vertical_apply, ←congr_funₓ (hl' x), line.map_apply]
+      ·
+        refine' fun p => ⟨p.line.prod (l'.map some), p.color, fun x => _⟩
+        rw [line.prod_apply, line.map_apply, ←p.has_color, ←congr_funₓ (hl' x)]
+      ·
+        simpRw [Multiset.mem_cons, Multiset.mem_map]
+        rintro _ (rfl | ⟨q, hq, rfl⟩)
+        ·
+          rw [line.vertical_apply]
+        ·
+          rw [line.prod_apply, s.is_focused q hq]
+      ·
+        rw [Multiset.map_cons, Multiset.map_map, Multiset.nodup_cons, Multiset.mem_map]
+        exact ⟨fun ⟨q, hq, he⟩ => h ⟨q, hq, he⟩, s.distinct_colors⟩
+      ·
+        rw [Multiset.card_cons, Multiset.card_map, sr])
 
 /-- The Hales-Jewett theorem: for any finite types `α` and `κ`, there exists a finite type `ι` such
 that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial line. -/
@@ -266,39 +289,55 @@ theorem exists_mono_in_high_dimension (α : Type u) [Fintype α] (κ : Type v) [
 
 end Line
 
-/-- A generalization of Van der Waerden's theorem: if `M` is a finitely colored commutative
-monoid, and `S` is a finite subset, then there exists a monochromatic homothetic copy of `S`. -/
-theorem exists_mono_homothetic_copy {M κ} [AddCommMonoidₓ M] (S : Finset M) [Fintype κ] (C : M → κ) :
-  ∃ (a : _)(_ : a > 0)(b : M)(c : κ), ∀ s _ : s ∈ S, C ((a • s)+b) = c :=
-  by 
-    obtain ⟨ι, _inst, hι⟩ := line.exists_mono_in_high_dimension S κ 
-    skip 
-    specialize hι fun v => C$ ∑i, v i 
-    obtain ⟨l, c, hl⟩ := hι 
-    set s : Finset ι := { i∈Finset.univ | l.idx_fun i = none } with hs 
-    refine'
-      ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑i in «expr ᶜ» s, ((l.idx_fun i).map coeₓ).getOrElse 0, c, _⟩
-    ·
-      rw [hs, Finset.sep_def, Finset.mem_filter]
-      exact ⟨Finset.mem_univ _, l.proper.some_spec⟩
-    intro x xs 
-    rw [←hl ⟨x, xs⟩]
-    clear hl 
-    congr 
-    rw [←Finset.sum_add_sum_compl s]
-    congr 1
-    ·
-      rw [←Finset.sum_const]
-      apply Finset.sum_congr rfl 
-      intro i hi 
-      rw [hs, Finset.sep_def, Finset.mem_filter] at hi 
-      rw [l.apply_none _ _ hi.right, Subtype.coe_mk]
-    ·
-      apply Finset.sum_congr rfl 
-      intro i hi 
-      rw [hs, Finset.sep_def, Finset.compl_filter, Finset.mem_filter] at hi 
-      obtain ⟨y, hy⟩ := option.ne_none_iff_exists.mp hi.right 
-      simpRw [line.apply, ←hy, Option.map_some', Option.get_or_else_some]
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    A generalization of Van der Waerden's theorem: if `M` is a finitely colored commutative
+    monoid, and `S` is a finite subset, then there exists a monochromatic homothetic copy of `S`. -/
+  theorem
+    exists_mono_homothetic_copy
+    { M κ } [ AddCommMonoidₓ M ] ( S : Finset M ) [ Fintype κ ] ( C : M → κ )
+      : ∃ ( a : _ ) ( _ : a > 0 ) ( b : M ) ( c : κ ) , ∀ s _ : s ∈ S , C a • s + b = c
+    :=
+      by
+        obtain ⟨ ι , _inst , hι ⟩ := line.exists_mono_in_high_dimension S κ
+          skip
+          specialize hι fun v => C $ ∑ i , v i
+          obtain ⟨ l , c , hl ⟩ := hι
+          set s : Finset ι := { i ∈ Finset.univ | l.idx_fun i = none } with hs
+          refine'
+            ⟨
+              s.card
+                ,
+                finset.card_pos.mpr ⟨ l.proper.some , _ ⟩
+                ,
+                ∑ i in s ᶜ , l.idx_fun i . map coeₓ . getOrElse 0
+                ,
+                c
+                ,
+                _
+              ⟩
+          · rw [ hs , Finset.sep_def , Finset.mem_filter ] exact ⟨ Finset.mem_univ _ , l.proper.some_spec ⟩
+          intro x xs
+          rw [ ← hl ⟨ x , xs ⟩ ]
+          clear hl
+          congr
+          rw [ ← Finset.sum_add_sum_compl s ]
+          congr 1
+          ·
+            rw [ ← Finset.sum_const ]
+              apply Finset.sum_congr rfl
+              intro i hi
+              rw [ hs , Finset.sep_def , Finset.mem_filter ] at hi
+              rw [ l.apply_none _ _ hi.right , Subtype.coe_mk ]
+          ·
+            apply Finset.sum_congr rfl
+              intro i hi
+              rw [ hs , Finset.sep_def , Finset.compl_filter , Finset.mem_filter ] at hi
+              obtain ⟨ y , hy ⟩ := option.ne_none_iff_exists.mp hi.right
+              simpRw [ line.apply , ← hy , Option.map_some' , Option.get_or_else_some ]
 
 end Combinatorics
 

@@ -63,34 +63,32 @@ theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j 
     apply @le_transₓ _ _ _ (approx f j_n) _ (j_ih ‹_›)
     apply approx_mono' f
 
--- error in Control.LawfulFix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_iff
-(a : α)
-(b : β a) : «expr ↔ »(«expr ∈ »(b, part.fix f a), «expr∃ , »((i), «expr ∈ »(b, approx f i a))) :=
-begin
-  by_cases [expr h₀, ":", expr «expr∃ , »((i : exprℕ()), (approx f i a).dom)],
-  { simp [] [] ["only"] ["[", expr part.fix_def f h₀, "]"] [] [],
-    split; intro [ident hh],
-    exact [expr ⟨_, hh⟩],
-    have [ident h₁] [] [":=", expr nat.find_spec h₀],
-    rw ["[", expr dom_iff_mem, "]"] ["at", ident h₁],
-    cases [expr h₁] ["with", ident y, ident h₁],
-    replace [ident h₁] [] [":=", expr approx_mono' f _ _ h₁],
-    suffices [] [":", expr «expr = »(y, b)],
-    subst [expr this],
-    exact [expr h₁],
-    cases [expr hh] ["with", ident i, ident hh],
-    revert [ident h₁],
-    generalize [] [":"] [expr «expr = »(succ (nat.find h₀), j)],
-    intro [],
-    wlog [] [":", expr «expr ≤ »(i, j)] [":=", expr le_total i j] ["using", "[", ident i, ident j, ident b, ident y, ",", ident j, ident i, ident y, ident b, "]"],
-    replace [ident hh] [] [":=", expr approx_mono f case _ _ hh],
-    apply [expr part.mem_unique h₁ hh] },
-  { simp [] [] ["only"] ["[", expr fix_def' «expr⇑ »(f) h₀, ",", expr not_exists, ",", expr false_iff, ",", expr not_mem_none, "]"] [] [],
-    simp [] [] ["only"] ["[", expr dom_iff_mem, ",", expr not_exists, "]"] [] ["at", ident h₀],
-    intro [],
-    apply [expr h₀] }
-end
+theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx f i a :=
+  by 
+    byCases' h₀ : ∃ i : ℕ, (approx f i a).Dom
+    ·
+      simp only [Part.fix_def f h₀]
+      constructor <;> intro hh 
+      exact ⟨_, hh⟩
+      have h₁ := Nat.find_specₓ h₀ 
+      rw [dom_iff_mem] at h₁ 
+      cases' h₁ with y h₁ 
+      replace h₁ := approx_mono' f _ _ h₁ 
+      suffices  : y = b 
+      subst this 
+      exact h₁ 
+      cases' hh with i hh 
+      revert h₁ 
+      generalize succ (Nat.findₓ h₀) = j 
+      intro 
+      wlog : i ≤ j := le_totalₓ i j using i j b y, j i y b 
+      replace hh := approx_mono f case _ _ hh 
+      apply Part.mem_unique h₁ hh
+    ·
+      simp only [fix_def' (⇑f) h₀, not_exists, false_iffₓ, not_mem_none]
+      simp only [dom_iff_mem, not_exists] at h₀ 
+      intro 
+      apply h₀
 
 theorem approx_le_fix (i : ℕ) : approx f i ≤ Part.fix f :=
   fun a b hh =>
@@ -98,24 +96,24 @@ theorem approx_le_fix (i : ℕ) : approx f i ≤ Part.fix f :=
       rw [mem_iff f]
       exact ⟨_, hh⟩
 
--- error in Control.LawfulFix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_fix_le_approx (x : α) : «expr∃ , »((i), «expr ≤ »(part.fix f x, approx f i x)) :=
-begin
-  by_cases [expr hh, ":", expr «expr∃ , »((i b), «expr ∈ »(b, approx f i x))],
-  { rcases [expr hh, "with", "⟨", ident i, ",", ident b, ",", ident hb, "⟩"],
-    existsi [expr i],
-    intros [ident b', ident h'],
-    have [ident hb'] [] [":=", expr approx_le_fix f i _ _ hb],
-    have [ident hh] [] [":=", expr part.mem_unique h' hb'],
-    subst [expr hh],
-    exact [expr hb] },
-  { simp [] [] ["only"] ["[", expr not_exists, "]"] [] ["at", ident hh],
-    existsi [expr 0],
-    intros [ident b', ident h'],
-    simp [] [] ["only"] ["[", expr mem_iff f, "]"] [] ["at", ident h'],
-    cases [expr h'] ["with", ident i, ident h'],
-    cases [expr hh _ _ h'] [] }
-end
+theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x :=
+  by 
+    byCases' hh : ∃ i b, b ∈ approx f i x
+    ·
+      rcases hh with ⟨i, b, hb⟩
+      exists i 
+      intro b' h' 
+      have hb' := approx_le_fix f i _ _ hb 
+      have hh := Part.mem_unique h' hb' 
+      subst hh 
+      exact hb
+    ·
+      simp only [not_exists] at hh 
+      exists 0
+      intro b' h' 
+      simp only [mem_iff f] at h' 
+      cases' h' with i h' 
+      cases hh _ _ h'
 
 include f
 
@@ -166,7 +164,7 @@ theorem fix_eq_ωSup : Part.fix f = ωSup (approx_chain f) :=
       rfl'
     ·
       apply ωSup_le _ _ _ 
-      simp only [fix.approx_chain, PreorderHom.coe_fun_mk]
+      simp only [fix.approx_chain, OrderHom.coe_fun_mk]
       intro y x 
       apply approx_le_fix f
 
@@ -174,7 +172,7 @@ theorem fix_le {X : ∀ a, Part$ β a} (hX : f X ≤ X) : Part.fix f ≤ X :=
   by 
     rw [fix_eq_ωSup f]
     apply ωSup_le _ _ _ 
-    simp only [fix.approx_chain, PreorderHom.coe_fun_mk]
+    simp only [fix.approx_chain, OrderHom.coe_fun_mk]
     intro i 
     induction i 
     dsimp [fix.approx]
@@ -242,12 +240,12 @@ variable (α β γ)
 
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
-def monotone_curry [∀ x y, Preorderₓ$ γ x y] : (∀ x : Σa, β a, γ x.1 x.2) →ₘ ∀ a b : β a, γ a b :=
+def monotone_curry [∀ x y, Preorderₓ$ γ x y] : (∀ x : Σ a, β a, γ x.1 x.2) →ₘ ∀ a b : β a, γ a b :=
   { toFun := curry, monotone' := fun x y h a b => h ⟨a, b⟩ }
 
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
-def monotone_uncurry [∀ x y, Preorderₓ$ γ x y] : (∀ a b : β a, γ a b) →ₘ ∀ x : Σa, β a, γ x.1 x.2 :=
+def monotone_uncurry [∀ x y, Preorderₓ$ γ x y] : (∀ a b : β a, γ a b) →ₘ ∀ x : Σ a, β a, γ x.1 x.2 :=
   { toFun := uncurry, monotone' := fun x y h a => h a.1 a.2 }
 
 variable [∀ x y, OmegaCompletePartialOrder$ γ x y]
@@ -295,7 +293,7 @@ instance pi.lawful_fix' [LawfulFix$ ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (�
       fun f hc =>
         by 
           dsimp [fix]
-          conv  => toLHS erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]
+          conv  => lhs erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]
           rfl }
 
 end Pi

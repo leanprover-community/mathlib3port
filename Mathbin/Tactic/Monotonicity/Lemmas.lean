@@ -35,38 +35,32 @@ theorem mul_mono_nonpos {x y z : α} [LinearOrderedRing α] (h' : z ≤ 0) (h : 
     apply lt_of_mul_lt_mul_neg_right _ h' 
     apply lt_of_not_geₓ h''
 
--- error in Tactic.Monotonicity.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-@[mono #[]]
-theorem nat.sub_mono_left_strict
-{x y z : exprℕ()}
-(h' : «expr ≤ »(z, x))
-(h : «expr < »(x, y)) : «expr < »(«expr - »(x, z), «expr - »(y, z)) :=
-begin
-  have [] [":", expr «expr ≤ »(z, y)] [],
-  { transitivity [],
-    assumption,
-    apply [expr le_of_lt h] },
-  apply [expr @nat.lt_of_add_lt_add_left z],
-  rw ["[", expr add_tsub_cancel_of_le, ",", expr add_tsub_cancel_of_le, "]"] []; solve_by_elim [] [] [] []
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+@[ mono ]
+  theorem
+    Nat.sub_mono_left_strict
+    { x y z : ℕ } ( h' : z ≤ x ) ( h : x < y ) : x - z < y - z
+    :=
+      by
+        have : z ≤ y
+          · trans assumption apply le_of_ltₓ h
+          apply @ Nat.lt_of_add_lt_add_leftₓ z
+          rw [ add_tsub_cancel_of_le , add_tsub_cancel_of_le ] <;> solveByElim
 
--- error in Tactic.Monotonicity.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[mono #[]]
-theorem nat.sub_mono_right_strict
-{x y z : exprℕ()}
-(h' : «expr ≤ »(x, z))
-(h : «expr < »(y, x)) : «expr < »(«expr - »(z, x), «expr - »(z, y)) :=
-begin
-  have [ident h''] [":", expr «expr ≤ »(y, z)] [],
-  { transitivity [],
-    apply [expr le_of_lt h],
-    assumption },
-  apply [expr @nat.lt_of_add_lt_add_right _ x],
-  rw ["[", expr tsub_add_cancel_of_le h', "]"] [],
-  apply [expr @lt_of_le_of_lt _ _ _ «expr + »(«expr - »(z, y), y)],
-  rw ["[", expr tsub_add_cancel_of_le h'', "]"] [],
-  apply [expr nat.add_lt_add_left h]
-end
+@[mono]
+theorem Nat.sub_mono_right_strict {x y z : ℕ} (h' : x ≤ z) (h : y < x) : z - x < z - y :=
+  by 
+    have h'' : y ≤ z
+    ·
+      trans 
+      apply le_of_ltₓ h 
+      assumption 
+    apply @Nat.lt_of_add_lt_add_rightₓ _ x 
+    rw [tsub_add_cancel_of_le h']
+    apply @lt_of_le_of_ltₓ _ _ _ ((z - y)+y)
+    rw [tsub_add_cancel_of_le h'']
+    apply Nat.add_lt_add_leftₓ h
 
 open Set
 

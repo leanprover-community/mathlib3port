@@ -166,6 +166,8 @@ local postfix:9001 "*" => many
 
 open PushNeg
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Push negations in the goal of some assumption.
 

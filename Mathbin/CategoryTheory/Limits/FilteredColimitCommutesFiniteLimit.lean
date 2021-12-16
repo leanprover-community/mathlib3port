@@ -1,4 +1,8 @@
-import Mathbin.CategoryTheory.Limits.ColimitLimit
+import Mathbin.CategoryTheory.Limits.ColimitLimit 
+import Mathbin.CategoryTheory.Limits.Preserves.FunctorCategory 
+import Mathbin.CategoryTheory.Limits.Preserves.Finite 
+import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits 
+import Mathbin.CategoryTheory.Limits.Preserves.Filtered
 
 /-!
 # Filtered colimits commute with finite limits.
@@ -45,212 +49,283 @@ only that there are finitely many objects.
 
 variable [Fintype J]
 
--- error in CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
--/ theorem colimit_limit_to_limit_colimit_injective : function.injective (colimit_limit_to_limit_colimit F) :=
-begin
-  classical,
-  intros [ident x, ident y, ident h],
-  obtain ["⟨", ident kx, ",", ident x, ",", ident rfl, "⟩", ":=", expr jointly_surjective' x],
-  obtain ["⟨", ident ky, ",", ident y, ",", ident rfl, "⟩", ":=", expr jointly_surjective' y],
-  dsimp [] [] [] ["at", ident x, ident y],
-  replace [ident h] [] [":=", expr λ j, congr_arg (limit.π «expr ⋙ »(curry.obj F, colim) j) h],
-  simp [] [] [] ["[", expr colimit_eq_iff, "]"] [] ["at", ident h],
-  let [ident k] [] [":=", expr λ j, (h j).some],
-  let [ident f] [":", expr ∀ j, «expr ⟶ »(kx, k j)] [":=", expr λ j, (h j).some_spec.some],
-  let [ident g] [":", expr ∀ j, «expr ⟶ »(ky, k j)] [":=", expr λ j, (h j).some_spec.some_spec.some],
-  have [ident w] [":", expr ∀
-   j, «expr = »(F.map ((«expr𝟙»() j, f j) : «expr ⟶ »((j, kx), (j, k j))) (limit.π ((curry.obj «expr ⋙ »(swap K J, F)).obj kx) j x), F.map ((«expr𝟙»() j, g j) : «expr ⟶ »((j, ky), (j, k j))) (limit.π ((curry.obj «expr ⋙ »(swap K J, F)).obj ky) j y))] [":=", expr λ
-   j, (h j).some_spec.some_spec.some_spec],
-  let [ident O] [":", expr finset K] [":=", expr «expr ∪ »(finset.univ.image k, {kx, ky})],
-  have [ident kxO] [":", expr «expr ∈ »(kx, O)] [":=", expr finset.mem_union.mpr (or.inr (by simp [] [] [] [] [] []))],
-  have [ident kyO] [":", expr «expr ∈ »(ky, O)] [":=", expr finset.mem_union.mpr (or.inr (by simp [] [] [] [] [] []))],
-  have [ident kjO] [":", expr ∀
-   j, «expr ∈ »(k j, O)] [":=", expr λ j, finset.mem_union.mpr (or.inl (by simp [] [] [] [] [] []))],
-  let [ident H] [":", expr finset «exprΣ' , »((X Y : K)
-    (mX : «expr ∈ »(X, O))
-    (mY : «expr ∈ »(Y, O)), «expr ⟶ »(X, Y))] [":=", expr «expr ∪ »(finset.univ.image (λ
-     j : J, ⟨kx, k j, kxO, finset.mem_union.mpr (or.inl (by simp [] [] [] [] [] [])), f j⟩), finset.univ.image (λ
-     j : J, ⟨ky, k j, kyO, finset.mem_union.mpr (or.inl (by simp [] [] [] [] [] [])), g j⟩))],
-  obtain ["⟨", ident S, ",", ident T, ",", ident W, "⟩", ":=", expr is_filtered.sup_exists O H],
-  have [ident fH] [":", expr ∀
-   j, «expr ∈ »((⟨kx, k j, kxO, kjO j, f j⟩ : «exprΣ' , »((X Y : K)
-     (mX : «expr ∈ »(X, O))
-     (mY : «expr ∈ »(Y, O)), «expr ⟶ »(X, Y))), H)] [":=", expr λ
-   j, finset.mem_union.mpr (or.inl (begin
-       simp [] [] ["only"] ["[", expr true_and, ",", expr finset.mem_univ, ",", expr eq_self_iff_true, ",", expr exists_prop_of_true, ",", expr finset.mem_image, ",", expr heq_iff_eq, "]"] [] [],
-       refine [expr ⟨j, rfl, _⟩],
-       simp [] [] ["only"] ["[", expr heq_iff_eq, "]"] [] [],
-       exact [expr ⟨rfl, rfl, rfl⟩]
-     end))],
-  have [ident gH] [":", expr ∀
-   j, «expr ∈ »((⟨ky, k j, kyO, kjO j, g j⟩ : «exprΣ' , »((X Y : K)
-     (mX : «expr ∈ »(X, O))
-     (mY : «expr ∈ »(Y, O)), «expr ⟶ »(X, Y))), H)] [":=", expr λ
-   j, finset.mem_union.mpr (or.inr (begin
-       simp [] [] ["only"] ["[", expr true_and, ",", expr finset.mem_univ, ",", expr eq_self_iff_true, ",", expr exists_prop_of_true, ",", expr finset.mem_image, ",", expr heq_iff_eq, "]"] [] [],
-       refine [expr ⟨j, rfl, _⟩],
-       simp [] [] ["only"] ["[", expr heq_iff_eq, "]"] [] [],
-       exact [expr ⟨rfl, rfl, rfl⟩]
-     end))],
-  apply [expr colimit_sound' (T kxO) (T kyO)],
-  ext [] [] [],
-  simp [] [] ["only"] ["[", expr functor.comp_map, ",", expr limit.map_π_apply, ",", expr curry.obj_map_app, ",", expr swap_map, "]"] [] [],
-  rw ["<-", expr W _ _ (fH j)] [],
-  rw ["<-", expr W _ _ (gH j)] [],
-  simp [] [] [] ["[", expr w, "]"] [] []
-end
+-/
+theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimit_limit_to_limit_colimit F) :=
+  by 
+    classical 
+    intro x y h 
+    obtain ⟨kx, x, rfl⟩ := jointly_surjective' x 
+    obtain ⟨ky, y, rfl⟩ := jointly_surjective' y 
+    dsimp  at x y 
+    replace h := fun j => congr_argₓ (limit.π (curry.obj F ⋙ colim) j) h 
+    simp [colimit_eq_iff] at h 
+    let k := fun j => (h j).some 
+    let f : ∀ j, kx ⟶ k j := fun j => (h j).some_spec.some 
+    let g : ∀ j, ky ⟶ k j := fun j => (h j).some_spec.some_spec.some 
+    have w :
+      ∀ j,
+        F.map ((𝟙 j, f j) : (j, kx) ⟶ (j, k j)) (limit.π ((curry.obj (swap K J ⋙ F)).obj kx) j x) =
+          F.map ((𝟙 j, g j) : (j, ky) ⟶ (j, k j)) (limit.π ((curry.obj (swap K J ⋙ F)).obj ky) j y) :=
+      fun j => (h j).some_spec.some_spec.some_spec 
+    let O : Finset K := Finset.univ.Image k ∪ {kx, ky}
+    have kxO : kx ∈ O :=
+      finset.mem_union.mpr
+        (Or.inr
+          (by 
+            simp ))
+    have kyO : ky ∈ O :=
+      finset.mem_union.mpr
+        (Or.inr
+          (by 
+            simp ))
+    have kjO : ∀ j, k j ∈ O :=
+      fun j =>
+        finset.mem_union.mpr
+          (Or.inl
+            (by 
+              simp ))
+    let H : Finset (Σ' (X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+      (Finset.univ.Image
+          fun j : J =>
+            ⟨kx, k j, kxO,
+              finset.mem_union.mpr
+                (Or.inl
+                  (by 
+                    simp )),
+              f j⟩) ∪
+        Finset.univ.Image
+          fun j : J =>
+            ⟨ky, k j, kyO,
+              finset.mem_union.mpr
+                (Or.inl
+                  (by 
+                    simp )),
+              g j⟩
+    obtain ⟨S, T, W⟩ := is_filtered.sup_exists O H 
+    have fH : ∀ j, (⟨kx, k j, kxO, kjO j, f j⟩ : Σ' (X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H :=
+      fun j =>
+        finset.mem_union.mpr
+          (Or.inl
+            (by 
+              simp only [true_andₓ, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true, Finset.mem_image,
+                heq_iff_eq]
+              refine' ⟨j, rfl, _⟩
+              simp only [heq_iff_eq]
+              exact ⟨rfl, rfl, rfl⟩))
+    have gH : ∀ j, (⟨ky, k j, kyO, kjO j, g j⟩ : Σ' (X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H :=
+      fun j =>
+        finset.mem_union.mpr
+          (Or.inr
+            (by 
+              simp only [true_andₓ, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true, Finset.mem_image,
+                heq_iff_eq]
+              refine' ⟨j, rfl, _⟩
+              simp only [heq_iff_eq]
+              exact ⟨rfl, rfl, rfl⟩))
+    apply colimit_sound' (T kxO) (T kyO)
+    ext 
+    simp only [functor.comp_map, limit.map_π_apply, curry.obj_map_app, swap_map]
+    rw [←W _ _ (fH j)]
+    rw [←W _ _ (gH j)]
+    simp [w]
 
 end 
 
 variable [fin_category J]
 
--- error in CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 although with different names.
--/ theorem colimit_limit_to_limit_colimit_surjective : function.surjective (colimit_limit_to_limit_colimit F) :=
-begin
-  classical,
-  intro [ident x],
-  have [ident z] [] [":=", expr λ j, jointly_surjective' (limit.π «expr ⋙ »(curry.obj F, limits.colim) j x)],
-  let [ident k] [":", expr J → K] [":=", expr λ j, (z j).some],
-  let [ident y] [":", expr ∀ j, F.obj (j, k j)] [":=", expr λ j, (z j).some_spec.some],
-  have [ident e] [":", expr ∀
-   j, «expr = »(colimit.ι ((curry.obj F).obj j) (k j) (y j), limit.π «expr ⋙ »(curry.obj F, limits.colim) j x)] [":=", expr λ
-   j, (z j).some_spec.some_spec],
-  clear_value [ident k, ident y],
-  clear [ident z],
-  let [ident k'] [":", expr K] [":=", expr is_filtered.sup (finset.univ.image k) «expr∅»()],
-  have [ident g] [":", expr ∀
-   j, «expr ⟶ »(k j, k')] [":=", expr λ
-   j, is_filtered.to_sup (finset.univ.image k) «expr∅»() (by simp [] [] [] [] [] [])],
-  clear_value [ident k'],
-  have [ident w] [":", expr ∀
-   {j j' : J}
-   (f : «expr ⟶ »(j, j')), «expr = »(colimit.ι ((curry.obj F).obj j') k' (F.map ((«expr𝟙»() j', g j') : «expr ⟶ »((j', k j'), (j', k'))) (y j')), colimit.ι ((curry.obj F).obj j') k' (F.map ((f, g j) : «expr ⟶ »((j, k j), (j', k'))) (y j)))] [],
-  { intros [ident j, ident j', ident f],
-    have [ident t] [":", expr «expr = »((f, g j), («expr ≫ »(((f, «expr𝟙»() (k j)) : «expr ⟶ »((j, k j), (j', k j))), («expr𝟙»() j', g j)) : «expr ⟶ »((j, k j), (j', k'))))] [],
-    { simp [] [] ["only"] ["[", expr id_comp, ",", expr comp_id, ",", expr prod_comp, "]"] [] [] },
-    erw ["[", expr colimit.w_apply, ",", expr t, ",", expr functor_to_types.map_comp_apply, ",", expr colimit.w_apply, ",", expr e, ",", "<-", expr limit.w_apply f, ",", "<-", expr e, "]"] [],
-    simp [] [] [] [] [] [] },
-  simp_rw [expr colimit_eq_iff] ["at", ident w],
-  let [ident kf] [":", expr ∀ {j j'} (f : «expr ⟶ »(j, j')), K] [":=", expr λ _ _ f, (w f).some],
-  let [ident gf] [":", expr ∀
-   {j j'}
-   (f : «expr ⟶ »(j, j')), «expr ⟶ »(k', kf f)] [":=", expr λ _ _ f, (w f).some_spec.some],
-  let [ident hf] [":", expr ∀
-   {j j'}
-   (f : «expr ⟶ »(j, j')), «expr ⟶ »(k', kf f)] [":=", expr λ _ _ f, (w f).some_spec.some_spec.some],
-  have [ident wf] [":", expr ∀
-   {j j'}
-   (f : «expr ⟶ »(j, j')), «expr = »(F.map ((«expr𝟙»() j', «expr ≫ »(g j', gf f)) : «expr ⟶ »((j', k j'), (j', kf f))) (y j'), F.map ((f, «expr ≫ »(g j, hf f)) : «expr ⟶ »((j, k j), (j', kf f))) (y j))] [":=", expr λ
-   j j' f, begin
-     have [ident q] [":", expr «expr = »(((curry.obj F).obj j').map (gf f) (F.map _ (y j')), ((curry.obj F).obj j').map (hf f) (F.map _ (y j)))] [":=", expr (w f).some_spec.some_spec.some_spec],
-     dsimp [] [] [] ["at", ident q],
-     simp_rw ["<-", expr functor_to_types.map_comp_apply] ["at", ident q],
-     convert [] [expr q] []; simp [] [] ["only"] ["[", expr comp_id, "]"] [] []
-   end],
-  clear_value [ident kf, ident gf, ident hf],
-  clear [ident w],
-  let [ident O] [] [":=", expr «expr ∪ »(finset.univ.bUnion (λ
-     j, finset.univ.bUnion (λ j', finset.univ.image (@kf j j'))), {k'})],
-  have [ident kfO] [":", expr ∀
-   {j j'}
-   (f : «expr ⟶ »(j, j')), «expr ∈ »(kf f, O)] [":=", expr λ
-   j
-   j'
-   f, finset.mem_union.mpr (or.inl (begin
-       rw ["[", expr finset.mem_bUnion, "]"] [],
-       refine [expr ⟨j, finset.mem_univ j, _⟩],
-       rw ["[", expr finset.mem_bUnion, "]"] [],
-       refine [expr ⟨j', finset.mem_univ j', _⟩],
-       rw ["[", expr finset.mem_image, "]"] [],
-       refine [expr ⟨f, finset.mem_univ _, _⟩],
-       refl
-     end))],
-  have [ident k'O] [":", expr «expr ∈ »(k', O)] [":=", expr finset.mem_union.mpr (or.inr (finset.mem_singleton.mpr rfl))],
-  let [ident H] [":", expr finset «exprΣ' , »((X Y : K)
-    (mX : «expr ∈ »(X, O))
-    (mY : «expr ∈ »(Y, O)), «expr ⟶ »(X, Y))] [":=", expr finset.univ.bUnion (λ
-    j : J, finset.univ.bUnion (λ
-     j' : J, finset.univ.bUnion (λ
-      f : «expr ⟶ »(j, j'), {⟨k', kf f, k'O, kfO f, gf f⟩, ⟨k', kf f, k'O, kfO f, hf f⟩})))],
-  obtain ["⟨", ident k'', ",", ident i', ",", ident s', "⟩", ":=", expr is_filtered.sup_exists O H],
-  let [ident i] [":", expr ∀ {j j'} (f : «expr ⟶ »(j, j')), «expr ⟶ »(kf f, k'')] [":=", expr λ j j' f, i' (kfO f)],
-  have [ident s] [":", expr ∀
-   {j₁ j₂ j₃ j₄}
-   (f : «expr ⟶ »(j₁, j₂))
-   (f' : «expr ⟶ »(j₃, j₄)), «expr = »(«expr ≫ »(gf f, i f), «expr ≫ »(hf f', i f'))] [":=", expr begin
-     intros [],
-     rw ["[", expr s', ",", expr s', "]"] [],
-     swap 2,
-     exact [expr k'O],
-     swap 2,
-     { rw ["[", expr finset.mem_bUnion, "]"] [],
-       refine [expr ⟨j₁, finset.mem_univ _, _⟩],
-       rw ["[", expr finset.mem_bUnion, "]"] [],
-       refine [expr ⟨j₂, finset.mem_univ _, _⟩],
-       rw ["[", expr finset.mem_bUnion, "]"] [],
-       refine [expr ⟨f, finset.mem_univ _, _⟩],
-       simp [] [] ["only"] ["[", expr true_or, ",", expr eq_self_iff_true, ",", expr and_self, ",", expr finset.mem_insert, ",", expr heq_iff_eq, "]"] [] [] },
-     { rw ["[", expr finset.mem_bUnion, "]"] [],
-       refine [expr ⟨j₃, finset.mem_univ _, _⟩],
-       rw ["[", expr finset.mem_bUnion, "]"] [],
-       refine [expr ⟨j₄, finset.mem_univ _, _⟩],
-       rw ["[", expr finset.mem_bUnion, "]"] [],
-       refine [expr ⟨f', finset.mem_univ _, _⟩],
-       simp [] [] ["only"] ["[", expr eq_self_iff_true, ",", expr or_true, ",", expr and_self, ",", expr finset.mem_insert, ",", expr finset.mem_singleton, ",", expr heq_iff_eq, "]"] [] [] }
-   end],
-  clear_value [ident i],
-  clear [ident s', ident i', ident H, ident kfO, ident k'O, ident O],
-  fsplit,
-  { apply [expr colimit.ι «expr ⋙ »(curry.obj «expr ⋙ »(swap K J, F), limits.lim) k'' _],
-    dsimp [] [] [] [],
-    ext [] [] [],
-    swap,
-    { exact [expr λ
-       j, F.map (⟨«expr𝟙»() j, «expr ≫ »(g j, «expr ≫ »(gf («expr𝟙»() j), i («expr𝟙»() j)))⟩ : «expr ⟶ »((j, k j), (j, k''))) (y j)] },
-    { dsimp [] [] [] [],
-      simp [] [] ["only"] ["[", "<-", expr functor_to_types.map_comp_apply, ",", expr prod_comp, ",", expr id_comp, ",", expr comp_id, "]"] [] [],
-      calc
-        «expr = »(F.map ((f, «expr ≫ »(g j, «expr ≫ »(gf («expr𝟙»() j), i («expr𝟙»() j)))) : «expr ⟶ »((j, k j), (j', k''))) (y j), F.map ((f, «expr ≫ »(g j, «expr ≫ »(hf f, i f))) : «expr ⟶ »((j, k j), (j', k''))) (y j)) : by rw [expr s («expr𝟙»() j) f] []
-        «expr = »(..., F.map ((«expr𝟙»() j', i f) : «expr ⟶ »((j', kf f), (j', k''))) (F.map ((f, «expr ≫ »(g j, hf f)) : «expr ⟶ »((j, k j), (j', kf f))) (y j))) : by rw ["[", "<-", expr functor_to_types.map_comp_apply, ",", expr prod_comp, ",", expr comp_id, ",", expr assoc, "]"] []
-        «expr = »(..., F.map ((«expr𝟙»() j', i f) : «expr ⟶ »((j', kf f), (j', k''))) (F.map ((«expr𝟙»() j', «expr ≫ »(g j', gf f)) : «expr ⟶ »((j', k j'), (j', kf f))) (y j'))) : by rw ["<-", expr wf f] []
-        «expr = »(..., F.map ((«expr𝟙»() j', «expr ≫ »(g j', «expr ≫ »(gf f, i f))) : «expr ⟶ »((j', k j'), (j', k''))) (y j')) : by rw ["[", "<-", expr functor_to_types.map_comp_apply, ",", expr prod_comp, ",", expr id_comp, ",", expr assoc, "]"] []
-        «expr = »(..., F.map ((«expr𝟙»() j', «expr ≫ »(g j', «expr ≫ »(gf («expr𝟙»() j'), i («expr𝟙»() j')))) : «expr ⟶ »((j', k j'), (j', k''))) (y j')) : by rw ["[", expr s f («expr𝟙»() j'), ",", "<-", expr s («expr𝟙»() j') («expr𝟙»() j'), "]"] [] } },
-  { apply [expr limit_ext],
-    intro [ident j],
-    simp [] [] ["only"] ["[", "<-", expr e, ",", expr colimit_eq_iff, ",", expr curry.obj_obj_map, ",", expr limit.π_mk, ",", expr bifunctor.map_id_comp, ",", expr id.def, ",", expr types_comp_apply, ",", expr limits.ι_colimit_limit_to_limit_colimit_π_apply, "]"] [] [],
-    refine [expr ⟨k'', «expr𝟙»() k'', «expr ≫ »(g j, «expr ≫ »(gf («expr𝟙»() j), i («expr𝟙»() j))), _⟩],
-    simp [] [] ["only"] ["[", expr bifunctor.map_id_comp, ",", expr types_comp_apply, ",", expr bifunctor.map_id, ",", expr types_id_apply, "]"] [] [] }
-end
+-/
+theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit_limit_to_limit_colimit F) :=
+  by 
+    classical 
+    intro x 
+    have z := fun j => jointly_surjective' (limit.π (curry.obj F ⋙ limits.colim) j x)
+    let k : J → K := fun j => (z j).some 
+    let y : ∀ j, F.obj (j, k j) := fun j => (z j).some_spec.some 
+    have e : ∀ j, colimit.ι ((curry.obj F).obj j) (k j) (y j) = limit.π (curry.obj F ⋙ limits.colim) j x :=
+      fun j => (z j).some_spec.some_spec 
+    clearValue k y 
+    clear z 
+    let k' : K := is_filtered.sup (finset.univ.image k) ∅
+    have g : ∀ j, k j ⟶ k' :=
+      fun j =>
+        is_filtered.to_sup (finset.univ.image k) ∅
+          (by 
+            simp )
+    clearValue k' 
+    have w :
+      ∀ {j j' : J} f : j ⟶ j',
+        colimit.ι ((curry.obj F).obj j') k' (F.map ((𝟙 j', g j') : (j', k j') ⟶ (j', k')) (y j')) =
+          colimit.ι ((curry.obj F).obj j') k' (F.map ((f, g j) : (j, k j) ⟶ (j', k')) (y j))
+    ·
+      intro j j' f 
+      have t : (f, g j) = (((f, 𝟙 (k j)) : (j, k j) ⟶ (j', k j)) ≫ (𝟙 j', g j) : (j, k j) ⟶ (j', k'))
+      ·
+        simp only [id_comp, comp_id, prod_comp]
+      erw [colimit.w_apply, t, functor_to_types.map_comp_apply, colimit.w_apply, e, ←limit.w_apply f, ←e]
+      simp 
+    simpRw [colimit_eq_iff]  at w 
+    let kf : ∀ {j j'} f : j ⟶ j', K := fun _ _ f => (w f).some 
+    let gf : ∀ {j j'} f : j ⟶ j', k' ⟶ kf f := fun _ _ f => (w f).some_spec.some 
+    let hf : ∀ {j j'} f : j ⟶ j', k' ⟶ kf f := fun _ _ f => (w f).some_spec.some_spec.some 
+    have wf :
+      ∀ {j j'} f : j ⟶ j',
+        F.map ((𝟙 j', g j' ≫ gf f) : (j', k j') ⟶ (j', kf f)) (y j') =
+          F.map ((f, g j ≫ hf f) : (j, k j) ⟶ (j', kf f)) (y j) :=
+      fun j j' f =>
+        by 
+          have q :
+            ((curry.obj F).obj j').map (gf f) (F.map _ (y j')) = ((curry.obj F).obj j').map (hf f) (F.map _ (y j)) :=
+            (w f).some_spec.some_spec.some_spec 
+          dsimp  at q 
+          simpRw [←functor_to_types.map_comp_apply]  at q 
+          convert q <;> simp only [comp_id]
+    clearValue kf gf hf 
+    clear w 
+    let O := (finset.univ.bUnion fun j => finset.univ.bUnion fun j' => finset.univ.image (@kf j j')) ∪ {k'}
+    have kfO : ∀ {j j'} f : j ⟶ j', kf f ∈ O :=
+      fun j j' f =>
+        finset.mem_union.mpr
+          (Or.inl
+            (by 
+              rw [Finset.mem_bUnion]
+              refine' ⟨j, Finset.mem_univ j, _⟩
+              rw [Finset.mem_bUnion]
+              refine' ⟨j', Finset.mem_univ j', _⟩
+              rw [Finset.mem_image]
+              refine' ⟨f, Finset.mem_univ _, _⟩
+              rfl))
+    have k'O : k' ∈ O := finset.mem_union.mpr (Or.inr (finset.mem_singleton.mpr rfl))
+    let H : Finset (Σ' (X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+      finset.univ.bUnion
+        fun j : J =>
+          finset.univ.bUnion
+            fun j' : J =>
+              finset.univ.bUnion fun f : j ⟶ j' => {⟨k', kf f, k'O, kfO f, gf f⟩, ⟨k', kf f, k'O, kfO f, hf f⟩}
+    obtain ⟨k'', i', s'⟩ := is_filtered.sup_exists O H 
+    let i : ∀ {j j'} f : j ⟶ j', kf f ⟶ k'' := fun j j' f => i' (kfO f)
+    have s : ∀ {j₁ j₂ j₃ j₄} f : j₁ ⟶ j₂ f' : j₃ ⟶ j₄, gf f ≫ i f = hf f' ≫ i f' :=
+      by 
+        intros 
+        rw [s', s']
+        swap 2 
+        exact k'O 
+        swap 2
+        ·
+          rw [Finset.mem_bUnion]
+          refine' ⟨j₁, Finset.mem_univ _, _⟩
+          rw [Finset.mem_bUnion]
+          refine' ⟨j₂, Finset.mem_univ _, _⟩
+          rw [Finset.mem_bUnion]
+          refine' ⟨f, Finset.mem_univ _, _⟩
+          simp only [true_orₓ, eq_self_iff_true, and_selfₓ, Finset.mem_insert, heq_iff_eq]
+        ·
+          rw [Finset.mem_bUnion]
+          refine' ⟨j₃, Finset.mem_univ _, _⟩
+          rw [Finset.mem_bUnion]
+          refine' ⟨j₄, Finset.mem_univ _, _⟩
+          rw [Finset.mem_bUnion]
+          refine' ⟨f', Finset.mem_univ _, _⟩
+          simp only [eq_self_iff_true, or_trueₓ, and_selfₓ, Finset.mem_insert, Finset.mem_singleton, heq_iff_eq]
+    clearValue i 
+    clear s' i' H kfO k'O O 
+    fconstructor
+    ·
+      apply colimit.ι (curry.obj (swap K J ⋙ F) ⋙ limits.lim) k'' _ 
+      dsimp 
+      ext 
+      swap
+      ·
+        exact fun j => F.map (⟨𝟙 j, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)⟩ : (j, k j) ⟶ (j, k'')) (y j)
+      ·
+        dsimp 
+        simp only [←functor_to_types.map_comp_apply, prod_comp, id_comp, comp_id]
+        calc
+          F.map ((f, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)) : (j, k j) ⟶ (j', k'')) (y j) =
+            F.map ((f, g j ≫ hf f ≫ i f) : (j, k j) ⟶ (j', k'')) (y j) :=
+          by 
+            rw
+              [s (𝟙 j)
+                f]_ =
+            F.map ((𝟙 j', i f) : (j', kf f) ⟶ (j', k'')) (F.map ((f, g j ≫ hf f) : (j, k j) ⟶ (j', kf f)) (y j)) :=
+          by 
+            rw [←functor_to_types.map_comp_apply, prod_comp, comp_id,
+              assoc]_ =
+            F.map ((𝟙 j', i f) : (j', kf f) ⟶ (j', k''))
+              (F.map ((𝟙 j', g j' ≫ gf f) : (j', k j') ⟶ (j', kf f)) (y j')) :=
+          by 
+            rw [←wf f]_ = F.map ((𝟙 j', g j' ≫ gf f ≫ i f) : (j', k j') ⟶ (j', k'')) (y j') :=
+          by 
+            rw [←functor_to_types.map_comp_apply, prod_comp, id_comp,
+              assoc]_ = F.map ((𝟙 j', g j' ≫ gf (𝟙 j') ≫ i (𝟙 j')) : (j', k j') ⟶ (j', k'')) (y j') :=
+          by 
+            rw [s f (𝟙 j'), ←s (𝟙 j') (𝟙 j')]
+    ·
+      apply limit_ext 
+      intro j 
+      simp only [←e, colimit_eq_iff, curry.obj_obj_map, limit.π_mk, bifunctor.map_id_comp, id.def, types_comp_apply,
+        limits.ι_colimit_limit_to_limit_colimit_π_apply]
+      refine' ⟨k'', 𝟙 k'', g j ≫ gf (𝟙 j) ≫ i (𝟙 j), _⟩
+      simp only [bifunctor.map_id_comp, types_comp_apply, bifunctor.map_id, types_id_apply]
 
 instance colimit_limit_to_limit_colimit_is_iso : is_iso (colimit_limit_to_limit_colimit F) :=
   (is_iso_iff_bijective _).mpr ⟨colimit_limit_to_limit_colimit_injective F, colimit_limit_to_limit_colimit_surjective F⟩
 
--- error in CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance colimit_limit_to_limit_colimit_cone_iso
-(F : «expr ⥤ »(J, «expr ⥤ »(K, Type v))) : is_iso (colimit_limit_to_limit_colimit_cone F) :=
-begin
-  haveI [] [":", expr is_iso (colimit_limit_to_limit_colimit_cone F).hom] [],
-  { dsimp ["only"] ["[", expr colimit_limit_to_limit_colimit_cone, "]"] [] [],
-    apply_instance },
-  apply [expr cones.cone_iso_of_hom_iso]
-end
+instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) :
+  is_iso (colimit_limit_to_limit_colimit_cone F) :=
+  by 
+    have  : is_iso (colimit_limit_to_limit_colimit_cone F).Hom
+    ·
+      dsimp only [colimit_limit_to_limit_colimit_cone]
+      infer_instance 
+    apply cones.cone_iso_of_hom_iso
 
-noncomputable instance filtered_colim_preserves_finite_limit : preserves_limits_of_shape J (colim : (K ⥤ Type v) ⥤ _) :=
-  ⟨fun F =>
-      ⟨fun c hc =>
-          by 
-            apply is_limit.of_iso_limit (limit.is_limit _)
-            symm 
-            trans colim.map_cone (limit.cone F)
-            exact functor.map_iso _ (hc.unique_up_to_iso (limit.is_limit F))
-            exact as_iso (colimit_limit_to_limit_colimit_cone F)⟩⟩
+noncomputable instance filtered_colim_preserves_finite_limits_of_types :
+  preserves_finite_limits (colim : (K ⥤ Type v) ⥤ _) :=
+  ⟨fun J _ _ =>
+      by 
+        exact
+          ⟨fun F =>
+              ⟨fun c hc =>
+                  by 
+                    apply is_limit.of_iso_limit (limit.is_limit _)
+                    symm 
+                    trans colim.map_cone (limit.cone F)
+                    exact functor.map_iso _ (hc.unique_up_to_iso (limit.is_limit F))
+                    exact as_iso (colimit_limit_to_limit_colimit_cone F)⟩⟩⟩
+
+variable {C : Type u} [category.{v} C] [concrete_category.{v} C]
+
+section 
+
+variable [has_limits_of_shape J C] [has_colimits_of_shape K C]
+
+variable [reflects_limits_of_shape J (forget C)] [preserves_colimits_of_shape K (forget C)]
+
+variable [preserves_limits_of_shape J (forget C)]
+
+noncomputable instance filtered_colim_preserves_finite_limits : preserves_limits_of_shape J (colim : (K ⥤ C) ⥤ _) :=
+  by 
+    have  : preserves_limits_of_shape J ((colim : (K ⥤ C) ⥤ _) ⋙ forget C) :=
+      preserves_limits_of_shape_of_nat_iso (preserves_colimit_nat_iso _).symm 
+    exact preserves_limits_of_shape_of_reflects_of_preserves _ (forget C)
+
+end 
+
+attribute [local instance] reflects_limits_of_shape_of_reflects_isomorphisms
+
+noncomputable instance [preserves_finite_limits (forget C)] [preserves_filtered_colimits (forget C)]
+  [has_finite_limits C] [has_colimits_of_shape K C] [reflects_isomorphisms (forget C)] :
+  preserves_finite_limits (colim : (K ⥤ C) ⥤ _) :=
+  ⟨fun _ _ _ =>
+      by 
+        exact CategoryTheory.Limits.filteredColimPreservesFiniteLimits⟩
 
 end CategoryTheory.Limits
 

@@ -16,7 +16,7 @@ universe u
 
 namespace Pgame
 
-local infixl:0 " ≈ " => Equiv
+local infixl:0 " ≈ " => Equivₓ
 
 /-- The definition for a impartial game, defined using Conway induction -/
 def impartial_aux : Pgame → Prop
@@ -25,7 +25,7 @@ def impartial_aux : Pgame → Prop
 theorem impartial_aux_def {G : Pgame} :
   G.impartial_aux ↔ (G ≈ -G) ∧ (∀ i, impartial_aux (G.move_left i)) ∧ ∀ j, impartial_aux (G.move_right j) :=
   by 
-    split 
+    constructor
     ·
       intro hi 
       unfold1 impartial_aux  at hi 
@@ -69,11 +69,11 @@ instance impartial_add : ∀ G H : Pgame [G.impartial] [H.impartial], (G+H).Impa
   by 
     intros hG hH 
     rw [impartial_def]
-    split 
+    constructor
     ·
       apply equiv_trans _ (neg_add_relabelling G H).Equiv.symm 
       exact add_congr (neg_equiv_self _) (neg_equiv_self _)
-    split 
+    constructor 
     all_goals 
       intro i 
       first |
@@ -89,12 +89,12 @@ instance impartial_neg : ∀ G : Pgame [G.impartial], (-G).Impartial
   by 
     intro hG 
     rw [impartial_def]
-    split 
+    constructor
     ·
       rw [neg_negₓ]
       symm 
       exact neg_equiv_self G 
-    split 
+    constructor 
     all_goals 
       intro i 
       first |
@@ -103,25 +103,27 @@ instance impartial_neg : ∀ G : Pgame [G.impartial], (-G).Impartial
       simp only [move_left_left_moves_neg_symm, move_right_right_moves_neg_symm]
       exact impartial_neg _
 
--- error in SetTheory.Game.Impartial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem winner_cases (G : pgame) [G.impartial] : «expr ∨ »(G.first_loses, G.first_wins) :=
-begin
-  rcases [expr G.winner_cases, "with", ident hl, "|", ident hr, "|", ident hp, "|", ident hn],
-  { cases [expr hl] ["with", ident hpos, ident hnonneg],
-    rw ["<-", expr not_lt] ["at", ident hnonneg],
-    have [ident hneg] [] [":=", expr lt_of_lt_of_equiv hpos (neg_equiv_self G)],
-    rw ["[", expr lt_iff_neg_gt, ",", expr neg_neg, ",", expr neg_zero, "]"] ["at", ident hneg],
-    contradiction },
-  { cases [expr hr] ["with", ident hnonpos, ident hneg],
-    rw ["<-", expr not_lt] ["at", ident hnonpos],
-    have [ident hpos] [] [":=", expr lt_of_equiv_of_lt (neg_equiv_self G).symm hneg],
-    rw ["[", expr lt_iff_neg_gt, ",", expr neg_neg, ",", expr neg_zero, "]"] ["at", ident hpos],
-    contradiction },
-  { left,
-    assumption },
-  { right,
-    assumption }
-end
+theorem winner_cases (G : Pgame) [G.impartial] : G.first_loses ∨ G.first_wins :=
+  by 
+    rcases G.winner_cases with (hl | hr | hp | hn)
+    ·
+      cases' hl with hpos hnonneg 
+      rw [←not_ltₓ] at hnonneg 
+      have hneg := lt_of_lt_of_equiv hpos (neg_equiv_self G)
+      rw [lt_iff_neg_gt, neg_negₓ, neg_zero] at hneg 
+      contradiction
+    ·
+      cases' hr with hnonpos hneg 
+      rw [←not_ltₓ] at hnonpos 
+      have hpos := lt_of_equiv_of_lt (neg_equiv_self G).symm hneg 
+      rw [lt_iff_neg_gt, neg_negₓ, neg_zero] at hpos 
+      contradiction
+    ·
+      left 
+      assumption
+    ·
+      right 
+      assumption
 
 theorem not_first_wins (G : Pgame) [G.impartial] : ¬G.first_wins ↔ G.first_loses :=
   by 
@@ -135,13 +137,13 @@ theorem add_self (G : Pgame) [G.impartial] : (G+G).FirstLoses :=
 
 theorem equiv_iff_sum_first_loses (G H : Pgame) [G.impartial] [H.impartial] : (G ≈ H) ↔ (G+H).FirstLoses :=
   by 
-    split 
+    constructor
     ·
       intro heq 
       exact first_loses_of_equiv (add_congr (equiv_refl _) HEq) (add_self G)
     ·
       intro hGHp 
-      split 
+      constructor
       ·
         rw [le_iff_sub_nonneg]
         exact
@@ -174,11 +176,11 @@ theorem first_wins_symm' (G : Pgame) [G.impartial] : G.first_wins ↔ 0 < G :=
 theorem no_good_left_moves_iff_first_loses (G : Pgame) [G.impartial] :
   (∀ i : G.left_moves, (G.move_left i).FirstWins) ↔ G.first_loses :=
   by 
-    split 
+    constructor
     ·
       intro hbad 
       rw [first_loses_symm G, le_def_lt]
-      split 
+      constructor
       ·
         intro i 
         specialize hbad i 

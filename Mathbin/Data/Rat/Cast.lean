@@ -61,7 +61,7 @@ theorem cast_zero : ((0 : ℚ) : α) = 0 :=
 theorem cast_one : ((1 : ℚ) : α) = 1 :=
   (cast_of_int _).trans Int.cast_one
 
-theorem cast_commute (r : ℚ) (a : α) : Commute («expr↑ » r) a :=
+theorem cast_commute (r : ℚ) (a : α) : Commute (↑r) a :=
   (r.1.cast_commute a).div_left (r.2.cast_commute a)
 
 theorem cast_comm (r : ℚ) (a : α) : ((r : α)*a) = a*r :=
@@ -70,56 +70,82 @@ theorem cast_comm (r : ℚ) (a : α) : ((r : α)*a) = a*r :=
 theorem commute_cast (a : α) (r : ℚ) : Commute a r :=
   (r.cast_commute a).symm
 
--- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[norm_cast #[]]
-theorem cast_mk_of_ne_zero
-(a b : exprℤ())
-(b0 : «expr ≠ »((b : α), 0)) : «expr = »((«expr /. »(a, b) : α), «expr / »(a, b)) :=
-begin
-  have [ident b0'] [":", expr «expr ≠ »(b, 0)] [],
-  { refine [expr mt _ b0],
-    simp [] [] [] [] [] [] { contextual := tt } },
-  cases [expr e, ":", expr «expr /. »(a, b)] ["with", ident n, ident d, ident h, ident c],
-  have [ident d0] [":", expr «expr ≠ »((d : α), 0)] [],
-  { intro [ident d0],
-    have [ident dd] [] [":=", expr denom_dvd a b],
-    cases [expr show «expr ∣ »((d : exprℤ()), b), by rwa [expr e] ["at", ident dd]] ["with", ident k, ident ke],
-    have [] [":", expr «expr = »((b : α), «expr * »((d : α), (k : α)))] [],
-    { rw ["[", expr ke, ",", expr int.cast_mul, "]"] [],
-      refl },
-    rw ["[", expr d0, ",", expr zero_mul, "]"] ["at", ident this],
-    contradiction },
-  rw ["[", expr num_denom', "]"] ["at", ident e],
-  have [] [] [":=", expr congr_arg (coe : exprℤ() → α) («expr $ »(mk_eq b0', «expr $ »(ne_of_gt, int.coe_nat_pos.2 h)).1 e)],
-  rw ["[", expr int.cast_mul, ",", expr int.cast_mul, ",", expr int.cast_coe_nat, "]"] ["at", ident this],
-  symmetry,
-  change [expr «expr = »((«expr / »(a, b) : α), «expr / »(n, d))] [] [],
-  rw ["[", expr div_eq_mul_inv, ",", expr eq_div_iff_mul_eq d0, ",", expr mul_assoc, ",", expr (d.commute_cast _).eq, ",", "<-", expr mul_assoc, ",", expr this, ",", expr mul_assoc, ",", expr mul_inv_cancel b0, ",", expr mul_one, "]"] []
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ normCast ]
+  theorem
+    cast_mk_of_ne_zero
+    ( a b : ℤ ) ( b0 : ( b : α ) ≠ 0 ) : ( a /. b : α ) = a / b
+    :=
+      by
+        have b0' : b ≠ 0
+          · refine' mt _ b0 simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+          cases' e : a /. b with n d h c
+          have d0 : ( d : α ) ≠ 0
+          ·
+            intro d0
+              have dd := denom_dvd a b
+              cases' show ( d : ℤ ) ∣ b by rwa [ e ] at dd with k ke
+              have : ( b : α ) = ( d : α ) * ( k : α )
+              · rw [ ke , Int.cast_mul ] rfl
+              rw [ d0 , zero_mul ] at this
+              contradiction
+          rw [ num_denom' ] at e
+          have := congr_argₓ ( coeₓ : ℤ → α ) mk_eq b0' $ ne_of_gtₓ $ Int.coe_nat_pos . 2 h . 1 e
+          rw [ Int.cast_mul , Int.cast_mul , Int.cast_coe_nat ] at this
+          symm
+          change ( a / b : α ) = n / d
+          rw
+            [
+              div_eq_mul_inv
+                ,
+                eq_div_iff_mul_eq d0
+                ,
+                mul_assocₓ
+                ,
+                d.commute_cast _ . Eq
+                ,
+                ← mul_assocₓ
+                ,
+                this
+                ,
+                mul_assocₓ
+                ,
+                mul_inv_cancel b0
+                ,
+                mul_oneₓ
+              ]
 
--- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[norm_cast #[]]
-theorem cast_add_of_ne_zero : ∀
-{m
- n : exprℚ()}, «expr ≠ »((m.denom : α), 0) → «expr ≠ »((n.denom : α), 0) → «expr = »(((«expr + »(m, n) : exprℚ()) : α), «expr + »(m, n))
-| ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ := λ (d₁0 : «expr ≠ »((d₁ : α), 0)) (d₂0 : «expr ≠ »((d₂ : α), 0)), begin
-  have [ident d₁0'] [":", expr «expr ≠ »((d₁ : exprℤ()), 0)] [":=", expr int.coe_nat_ne_zero.2 (λ
-    e, by rw [expr e] ["at", ident d₁0]; exact [expr d₁0 rfl])],
-  have [ident d₂0'] [":", expr «expr ≠ »((d₂ : exprℤ()), 0)] [":=", expr int.coe_nat_ne_zero.2 (λ
-    e, by rw [expr e] ["at", ident d₂0]; exact [expr d₂0 rfl])],
-  rw ["[", expr num_denom', ",", expr num_denom', ",", expr add_def d₁0' d₂0', "]"] [],
-  suffices [] [":", expr «expr = »((«expr + »(«expr * »(n₁, «expr * »(d₂, «expr * »(«expr ⁻¹»(d₂), «expr ⁻¹»(d₁)))), «expr * »(«expr * »(n₂, «expr * »(d₁, «expr ⁻¹»(d₂))), «expr ⁻¹»(d₁))) : α), «expr + »(«expr * »(n₁, «expr ⁻¹»(d₁)), «expr * »(n₂, «expr ⁻¹»(d₂))))],
-  { rw ["[", expr cast_mk_of_ne_zero, ",", expr cast_mk_of_ne_zero, ",", expr cast_mk_of_ne_zero, "]"] [],
-    { simpa [] [] [] ["[", expr division_def, ",", expr left_distrib, ",", expr right_distrib, ",", expr mul_inv_rev₀, ",", expr d₁0, ",", expr d₂0, ",", expr mul_assoc, "]"] [] [] },
-    all_goals { simp [] [] [] ["[", expr d₁0, ",", expr d₂0, "]"] [] [] } },
-  rw ["[", "<-", expr mul_assoc (d₂ : α), ",", expr mul_inv_cancel d₂0, ",", expr one_mul, ",", expr (nat.cast_commute _ _).eq, "]"] [],
-  simp [] [] [] ["[", expr d₁0, ",", expr mul_assoc, "]"] [] []
-end
+@[normCast]
+theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m+n : ℚ) : α) = m+n
+| ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ =>
+  fun d₁0 : (d₁ : α) ≠ 0 d₂0 : (d₂ : α) ≠ 0 =>
+    by 
+      have d₁0' : (d₁ : ℤ) ≠ 0 :=
+        Int.coe_nat_ne_zero.2
+          fun e =>
+            by 
+              rw [e] at d₁0 <;> exact d₁0 rfl 
+      have d₂0' : (d₂ : ℤ) ≠ 0 :=
+        Int.coe_nat_ne_zero.2
+          fun e =>
+            by 
+              rw [e] at d₂0 <;> exact d₂0 rfl 
+      rw [num_denom', num_denom', add_def d₁0' d₂0']
+      suffices  : ((n₁*d₂*d₂⁻¹*d₁⁻¹)+(n₂*d₁*d₂⁻¹)*d₁⁻¹ : α) = (n₁*d₁⁻¹)+n₂*d₂⁻¹
+      ·
+        rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
+        ·
+          simpa [division_def, left_distrib, right_distrib, mul_inv_rev₀, d₁0, d₂0, mul_assocₓ]
+        all_goals 
+          simp [d₁0, d₂0]
+      rw [←mul_assocₓ (d₂ : α), mul_inv_cancel d₂0, one_mulₓ, (Nat.cast_commute _ _).Eq]
+      simp [d₁0, mul_assocₓ]
 
 @[simp, normCast]
 theorem cast_neg : ∀ n, ((-n : ℚ) : α) = -n
 | ⟨n, d, h, c⟩ =>
-  show («expr↑ » (-n) / d : α) = -(n / d)by 
+  show (↑(-n) / d : α) = -(n / d)by 
     rw [div_eq_mul_inv, div_eq_mul_inv, Int.cast_neg, neg_mul_eq_neg_mul]
 
 @[normCast]
@@ -130,23 +156,30 @@ theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.den
   by 
     simp [sub_eq_add_neg, cast_add_of_ne_zero m0 this]
 
--- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[norm_cast #[]]
-theorem cast_mul_of_ne_zero : ∀
-{m
- n : exprℚ()}, «expr ≠ »((m.denom : α), 0) → «expr ≠ »((n.denom : α), 0) → «expr = »(((«expr * »(m, n) : exprℚ()) : α), «expr * »(m, n))
-| ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ := λ (d₁0 : «expr ≠ »((d₁ : α), 0)) (d₂0 : «expr ≠ »((d₂ : α), 0)), begin
-  have [ident d₁0'] [":", expr «expr ≠ »((d₁ : exprℤ()), 0)] [":=", expr int.coe_nat_ne_zero.2 (λ
-    e, by rw [expr e] ["at", ident d₁0]; exact [expr d₁0 rfl])],
-  have [ident d₂0'] [":", expr «expr ≠ »((d₂ : exprℤ()), 0)] [":=", expr int.coe_nat_ne_zero.2 (λ
-    e, by rw [expr e] ["at", ident d₂0]; exact [expr d₂0 rfl])],
-  rw ["[", expr num_denom', ",", expr num_denom', ",", expr mul_def d₁0' d₂0', "]"] [],
-  suffices [] [":", expr «expr = »((«expr * »(n₁, «expr * »(«expr * »(n₂, «expr ⁻¹»(d₂)), «expr ⁻¹»(d₁))) : α), «expr * »(n₁, «expr * »(«expr ⁻¹»(d₁), «expr * »(n₂, «expr ⁻¹»(d₂)))))],
-  { rw ["[", expr cast_mk_of_ne_zero, ",", expr cast_mk_of_ne_zero, ",", expr cast_mk_of_ne_zero, "]"] [],
-    { simpa [] [] [] ["[", expr division_def, ",", expr mul_inv_rev₀, ",", expr d₁0, ",", expr d₂0, ",", expr mul_assoc, "]"] [] [] },
-    all_goals { simp [] [] [] ["[", expr d₁0, ",", expr d₂0, "]"] [] [] } },
-  rw ["[", expr (d₁.commute_cast (_ : α)).inv_right₀.eq, "]"] []
-end
+@[normCast]
+theorem cast_mul_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m*n : ℚ) : α) = m*n
+| ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ =>
+  fun d₁0 : (d₁ : α) ≠ 0 d₂0 : (d₂ : α) ≠ 0 =>
+    by 
+      have d₁0' : (d₁ : ℤ) ≠ 0 :=
+        Int.coe_nat_ne_zero.2
+          fun e =>
+            by 
+              rw [e] at d₁0 <;> exact d₁0 rfl 
+      have d₂0' : (d₂ : ℤ) ≠ 0 :=
+        Int.coe_nat_ne_zero.2
+          fun e =>
+            by 
+              rw [e] at d₂0 <;> exact d₂0 rfl 
+      rw [num_denom', num_denom', mul_def d₁0' d₂0']
+      suffices  : (n₁*(n₂*d₂⁻¹)*d₁⁻¹ : α) = n₁*d₁⁻¹*n₂*d₂⁻¹
+      ·
+        rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
+        ·
+          simpa [division_def, mul_inv_rev₀, d₁0, d₂0, mul_assocₓ]
+        all_goals 
+          simp [d₁0, d₂0]
+      rw [(d₁.commute_cast (_ : α)).inv_right₀.Eq]
 
 @[simp]
 theorem cast_inv_nat (n : ℕ) : ((n⁻¹ : ℚ) : α) = n⁻¹ :=
@@ -166,44 +199,51 @@ theorem cast_inv_int (n : ℤ) : ((n⁻¹ : ℚ) : α) = n⁻¹ :=
     ·
       simp only [Int.cast_neg_succ_of_nat, ←Nat.cast_succ, cast_neg, inv_neg, cast_inv_nat]
 
--- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[norm_cast #[]]
-theorem cast_inv_of_ne_zero : ∀
-{n : exprℚ()}, «expr ≠ »((n.num : α), 0) → «expr ≠ »((n.denom : α), 0) → «expr = »(((«expr ⁻¹»(n) : exprℚ()) : α), «expr ⁻¹»(n))
-| ⟨n, d, h, c⟩ := λ (n0 : «expr ≠ »((n : α), 0)) (d0 : «expr ≠ »((d : α), 0)), begin
-  have [ident n0'] [":", expr «expr ≠ »((n : exprℤ()), 0)] [":=", expr λ
-   e, by rw [expr e] ["at", ident n0]; exact [expr n0 rfl]],
-  have [ident d0'] [":", expr «expr ≠ »((d : exprℤ()), 0)] [":=", expr int.coe_nat_ne_zero.2 (λ
-    e, by rw [expr e] ["at", ident d0]; exact [expr d0 rfl])],
-  rw ["[", expr num_denom', ",", expr inv_def, "]"] [],
-  rw ["[", expr cast_mk_of_ne_zero, ",", expr cast_mk_of_ne_zero, ",", expr inv_div, "]"] []; simp [] [] [] ["[", expr n0, ",", expr d0, "]"] [] []
-end
+@[normCast]
+theorem cast_inv_of_ne_zero : ∀ {n : ℚ}, (n.num : α) ≠ 0 → (n.denom : α) ≠ 0 → ((n⁻¹ : ℚ) : α) = n⁻¹
+| ⟨n, d, h, c⟩ =>
+  fun n0 : (n : α) ≠ 0 d0 : (d : α) ≠ 0 =>
+    by 
+      have n0' : (n : ℤ) ≠ 0 :=
+        fun e =>
+          by 
+            rw [e] at n0 <;> exact n0 rfl 
+      have d0' : (d : ℤ) ≠ 0 :=
+        Int.coe_nat_ne_zero.2
+          fun e =>
+            by 
+              rw [e] at d0 <;> exact d0 rfl 
+      rw [num_denom', inv_def]
+      rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, inv_div] <;> simp [n0, d0]
 
--- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[norm_cast #[]]
-theorem cast_div_of_ne_zero
-{m n : exprℚ()}
-(md : «expr ≠ »((m.denom : α), 0))
-(nn : «expr ≠ »((n.num : α), 0))
-(nd : «expr ≠ »((n.denom : α), 0)) : «expr = »(((«expr / »(m, n) : exprℚ()) : α), «expr / »(m, n)) :=
-have «expr ∣ »((«expr ⁻¹»(n).denom : exprℤ()), n.num), by conv [] ["in", expr «expr ⁻¹»(n).denom] { rw ["[", "<-", expr @num_denom n, ",", expr inv_def, "]"] }; apply [expr denom_dvd],
-have «expr = »((«expr ⁻¹»(n).denom : α), 0) → «expr = »((n.num : α), 0), from λ h, let ⟨k, e⟩ := this in
-by have [] [] [":=", expr congr_arg (coe : exprℤ() → α) e]; rwa ["[", expr int.cast_mul, ",", expr int.cast_coe_nat, ",", expr h, ",", expr zero_mul, "]"] ["at", ident this],
-by rw ["[", expr division_def, ",", expr cast_mul_of_ne_zero md (mt this nn), ",", expr cast_inv_of_ne_zero nn nd, ",", expr division_def, "]"] []
+@[normCast]
+theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.denom : α) ≠ 0) (nn : (n.num : α) ≠ 0) (nd : (n.denom : α) ≠ 0) :
+  ((m / n : ℚ) : α) = m / n :=
+  have  : (n⁻¹.denom : ℤ) ∣ n.num :=
+    by 
+      conv  in n⁻¹.denom => rw [←@num_denom n, inv_def] <;> apply denom_dvd 
+  have  : (n⁻¹.denom : α) = 0 → (n.num : α) = 0 :=
+    fun h =>
+      let ⟨k, e⟩ := this 
+      by 
+        have  := congr_argₓ (coeₓ : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_coe_nat, h, zero_mul] at this 
+  by 
+    rw [division_def, cast_mul_of_ne_zero md (mt this nn), cast_inv_of_ne_zero nn nd, division_def]
 
--- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, norm_cast #[]]
-theorem cast_inj [char_zero α] : ∀ {m n : exprℚ()}, «expr ↔ »(«expr = »((m : α), n), «expr = »(m, n))
-| ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ := begin
-  refine [expr ⟨λ h, _, congr_arg _⟩],
-  have [ident d₁0] [":", expr «expr ≠ »(d₁, 0)] [":=", expr ne_of_gt h₁],
-  have [ident d₂0] [":", expr «expr ≠ »(d₂, 0)] [":=", expr ne_of_gt h₂],
-  have [ident d₁a] [":", expr «expr ≠ »((d₁ : α), 0)] [":=", expr nat.cast_ne_zero.2 d₁0],
-  have [ident d₂a] [":", expr «expr ≠ »((d₂ : α), 0)] [":=", expr nat.cast_ne_zero.2 d₂0],
-  rw ["[", expr num_denom', ",", expr num_denom', "]"] ["at", ident h, "⊢"],
-  rw ["[", expr cast_mk_of_ne_zero, ",", expr cast_mk_of_ne_zero, "]"] ["at", ident h]; simp [] [] [] ["[", expr d₁0, ",", expr d₂0, "]"] [] ["at", ident h, "⊢"],
-  rwa ["[", expr eq_div_iff_mul_eq d₂a, ",", expr division_def, ",", expr mul_assoc, ",", expr (d₁.cast_commute (d₂ : α)).inv_left₀.eq, ",", "<-", expr mul_assoc, ",", "<-", expr division_def, ",", expr eq_comm, ",", expr eq_div_iff_mul_eq d₁a, ",", expr eq_comm, ",", "<-", expr int.cast_coe_nat, ",", "<-", expr int.cast_mul, ",", "<-", expr int.cast_coe_nat, ",", "<-", expr int.cast_mul, ",", expr int.cast_inj, ",", "<-", expr mk_eq (int.coe_nat_ne_zero.2 d₁0) (int.coe_nat_ne_zero.2 d₂0), "]"] ["at", ident h]
-end
+@[simp, normCast]
+theorem cast_inj [CharZero α] : ∀ {m n : ℚ}, (m : α) = n ↔ m = n
+| ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ =>
+  by 
+    refine' ⟨fun h => _, congr_argₓ _⟩
+    have d₁0 : d₁ ≠ 0 := ne_of_gtₓ h₁ 
+    have d₂0 : d₂ ≠ 0 := ne_of_gtₓ h₂ 
+    have d₁a : (d₁ : α) ≠ 0 := Nat.cast_ne_zero.2 d₁0 
+    have d₂a : (d₂ : α) ≠ 0 := Nat.cast_ne_zero.2 d₂0 
+    rw [num_denom', num_denom'] at h⊢
+    rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero] at h <;> simp [d₁0, d₂0] at h⊢
+    rwa [eq_div_iff_mul_eq d₂a, division_def, mul_assocₓ, (d₁.cast_commute (d₂ : α)).inv_left₀.Eq, ←mul_assocₓ,
+      ←division_def, eq_comm, eq_div_iff_mul_eq d₁a, eq_comm, ←Int.cast_coe_nat, ←Int.cast_mul, ←Int.cast_coe_nat,
+      ←Int.cast_mul, Int.cast_inj, ←mk_eq (Int.coe_nat_ne_zero.2 d₁0) (Int.coe_nat_ne_zero.2 d₂0)] at h
 
 theorem cast_injective [CharZero α] : Function.Injective (coeₓ : ℚ → α)
 | m, n => cast_inj.1
@@ -246,7 +286,7 @@ def cast_hom [CharZero α] : ℚ →+* α :=
 variable {α}
 
 @[simp]
-theorem coe_cast_hom [CharZero α] : «expr⇑ » (cast_hom α) = coeₓ :=
+theorem coe_cast_hom [CharZero α] : ⇑cast_hom α = coeₓ :=
   rfl
 
 @[simp, normCast]
@@ -301,18 +341,18 @@ theorem cast_lt_zero [LinearOrderedField α] {n : ℚ} : (n : α) < 0 ↔ n < 0 
     rw [←cast_zero, cast_lt]
 
 @[simp, normCast]
-theorem cast_id : ∀ n : ℚ, «expr↑ » n = n
+theorem cast_id : ∀ n : ℚ, ↑n = n
 | ⟨n, d, h, c⟩ =>
   by 
     rw [num_denom', cast_mk, mk_eq_div]
 
 @[simp, normCast]
-theorem cast_min [LinearOrderedField α] {a b : ℚ} : («expr↑ » (min a b) : α) = min a b :=
+theorem cast_min [LinearOrderedField α] {a b : ℚ} : (↑min a b : α) = min a b :=
   by 
     byCases' a ≤ b <;> simp [h, min_def]
 
 @[simp, normCast]
-theorem cast_max [LinearOrderedField α] {a b : ℚ} : («expr↑ » (max a b) : α) = max a b :=
+theorem cast_max [LinearOrderedField α] {a b : ℚ} : (↑max a b : α) = max a b :=
   by 
     byCases' b ≤ a <;> simp [h, max_def]
 
@@ -338,23 +378,28 @@ theorem RingHom.eq_rat_cast {k} [DivisionRing k] (f : ℚ →+* k) (r : ℚ) : f
 theorem RingHom.map_rat_cast {k k'} [DivisionRing k] [CharZero k] [DivisionRing k'] (f : k →+* k') (r : ℚ) : f r = r :=
   (f.comp (cast_hom k)).eq_rat_cast r
 
--- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ring_hom.ext_rat {R : Type*} [semiring R] (f g : «expr →+* »(exprℚ(), R)) : «expr = »(f, g) :=
-begin
-  ext [] [ident r] [],
-  refine [expr rat.num_denom_cases_on' r _],
-  intros [ident a, ident b, ident b0],
-  let [ident φ] [":", expr «expr →+* »(exprℤ(), R)] [":=", expr f.comp (int.cast_ring_hom exprℚ())],
-  let [ident ψ] [":", expr «expr →+* »(exprℤ(), R)] [":=", expr g.comp (int.cast_ring_hom exprℚ())],
-  rw ["[", expr rat.mk_eq_div, ",", expr int.cast_coe_nat, "]"] [],
-  have [ident b0'] [":", expr «expr ≠ »((b : exprℚ()), 0)] [":=", expr nat.cast_ne_zero.2 b0],
-  have [] [":", expr ∀
-   n : exprℤ(), «expr = »(f n, g n)] [":=", expr λ n, show «expr = »(φ n, ψ n), by rw ["[", expr φ.ext_int ψ, "]"] []],
-  calc
-    «expr = »(f «expr * »(a, «expr ⁻¹»(b)), «expr * »(«expr * »(f a, f «expr ⁻¹»(b)), «expr * »(g (b : exprℤ()), g «expr ⁻¹»(b)))) : by rw ["[", expr int.cast_coe_nat, ",", "<-", expr g.map_mul, ",", expr mul_inv_cancel b0', ",", expr g.map_one, ",", expr mul_one, ",", expr f.map_mul, "]"] []
-    «expr = »(..., «expr * »(«expr * »(g a, f «expr ⁻¹»(b)), «expr * »(f (b : exprℤ()), g «expr ⁻¹»(b)))) : by rw ["[", expr this a, ",", "<-", expr this b, "]"] []
-    «expr = »(..., g «expr * »(a, «expr ⁻¹»(b))) : by rw ["[", expr int.cast_coe_nat, ",", expr mul_assoc, ",", "<-", expr mul_assoc (f «expr ⁻¹»(b)), ",", "<-", expr f.map_mul, ",", expr inv_mul_cancel b0', ",", expr f.map_one, ",", expr one_mul, ",", expr g.map_mul, "]"] []
-end
+theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] (f g : ℚ →+* R) : f = g :=
+  by 
+    ext r 
+    refine' Rat.numDenomCasesOn' r _ 
+    intro a b b0 
+    let φ : ℤ →+* R := f.comp (Int.castRingHom ℚ)
+    let ψ : ℤ →+* R := g.comp (Int.castRingHom ℚ)
+    rw [Rat.mk_eq_div, Int.cast_coe_nat]
+    have b0' : (b : ℚ) ≠ 0 := Nat.cast_ne_zero.2 b0 
+    have  : ∀ n : ℤ, f n = g n :=
+      fun n =>
+        show φ n = ψ n by 
+          rw [φ.ext_int ψ]
+    calc f (a*b⁻¹) = (f a*f (b⁻¹))*g (b : ℤ)*g (b⁻¹) :=
+      by 
+        rw [Int.cast_coe_nat, ←g.map_mul, mul_inv_cancel b0', g.map_one, mul_oneₓ,
+          f.map_mul]_ = (g a*f (b⁻¹))*f (b : ℤ)*g (b⁻¹) :=
+      by 
+        rw [this a, ←this b]_ = g (a*b⁻¹) :=
+      by 
+        rw [Int.cast_coe_nat, mul_assocₓ, ←mul_assocₓ (f (b⁻¹)), ←f.map_mul, inv_mul_cancel b0', f.map_one, one_mulₓ,
+          g.map_mul]
 
 instance Rat.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=
   ⟨RingHom.ext_rat⟩
@@ -363,19 +408,17 @@ namespace MonoidWithZeroHom
 
 variable {M : Type _} [GroupWithZeroₓ M]
 
--- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` and `g` agree on the integers then they are equal `φ`.
 
 See note [partially-applied ext lemmas] for why `comp` is used here. -/
-@[ext #[]]
-theorem ext_rat
-{f g : monoid_with_zero_hom exprℚ() M}
-(same_on_int : «expr = »(f.comp (int.cast_ring_hom exprℚ()).to_monoid_with_zero_hom, g.comp (int.cast_ring_hom exprℚ()).to_monoid_with_zero_hom)) : «expr = »(f, g) :=
-begin
-  have [ident same_on_int'] [":", expr ∀ k : exprℤ(), «expr = »(f k, g k)] [":=", expr congr_fun same_on_int],
-  ext [] [ident x] [],
-  rw ["[", "<-", expr @rat.num_denom x, ",", expr rat.mk_eq_div, ",", expr f.map_div, ",", expr g.map_div, ",", expr same_on_int' x.num, ",", expr same_on_int' x.denom, "]"] []
-end
+@[ext]
+theorem ext_rat {f g : MonoidWithZeroHom ℚ M}
+  (same_on_int : f.comp (Int.castRingHom ℚ).toMonoidWithZeroHom = g.comp (Int.castRingHom ℚ).toMonoidWithZeroHom) :
+  f = g :=
+  by 
+    have same_on_int' : ∀ k : ℤ, f k = g k := congr_funₓ same_on_int 
+    ext x 
+    rw [←@Rat.num_denom x, Rat.mk_eq_div, f.map_div, g.map_div, same_on_int' x.num, same_on_int' x.denom]
 
 /-- Positive integer values of a morphism `φ` and its value on `-1` completely determine `φ`. -/
 theorem ext_rat_on_pnat {f g : MonoidWithZeroHom ℚ M} (same_on_neg_one : f (-1) = g (-1))

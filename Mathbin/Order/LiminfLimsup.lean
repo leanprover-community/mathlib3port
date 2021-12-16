@@ -43,7 +43,7 @@ section Relation
 eventually, it is bounded by some uniform bound.
 `r` will be usually instantiated with `≤` or `≥`. -/
 def is_bounded (r : α → α → Prop) (f : Filter α) :=
-  ∃ b, ∀ᶠx in f, r x b
+  ∃ b, ∀ᶠ x in f, r x b
 
 /-- `f.is_bounded_under (≺) u`: the image of the filter `f` under `u` is eventually bounded w.r.t.
 the relation `≺`, i.e. eventually, it is bounded by some uniform bound. -/
@@ -52,14 +52,23 @@ def is_bounded_under (r : α → α → Prop) (f : Filter β) (u : β → α) :=
 
 variable {r : α → α → Prop} {f g : Filter α}
 
-/-- `f` is eventually bounded if and only if, there exists an admissible set on which it is
-bounded. -/
-theorem is_bounded_iff : f.is_bounded r ↔ ∃ (s : _)(_ : s ∈ f.sets), ∃ b, s ⊆ { x | r x b } :=
-  Iff.intro (fun ⟨b, hb⟩ => ⟨{ a | r a b }, hb, b, subset.refl _⟩) fun ⟨s, hs, b, hb⟩ => ⟨b, mem_of_superset hs hb⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f.sets)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    `f` is eventually bounded if and only if, there exists an admissible set on which it is
+    bounded. -/
+  theorem
+    is_bounded_iff
+    : f.is_bounded r ↔ ∃ ( s : _ ) ( _ : s ∈ f.sets ) , ∃ b , s ⊆ { x | r x b }
+    :=
+      Iff.intro
+        fun ⟨ b , hb ⟩ => ⟨ { a | r a b } , hb , b , subset.refl _ ⟩
+          fun ⟨ s , hs , b , hb ⟩ => ⟨ b , mem_of_superset hs hb ⟩
 
 /-- A bounded function `u` is in particular eventually bounded. -/
 theorem is_bounded_under_of {f : Filter β} {u : β → α} : (∃ b, ∀ x, r (u x) b) → f.is_bounded_under r u
-| ⟨b, hb⟩ => ⟨b, show ∀ᶠx in f, r (u x) b from eventually_of_forall hb⟩
+| ⟨b, hb⟩ => ⟨b, show ∀ᶠ x in f, r (u x) b from eventually_of_forall hb⟩
 
 theorem is_bounded_bot : is_bounded r ⊥ ↔ Nonempty α :=
   by 
@@ -69,6 +78,7 @@ theorem is_bounded_top : is_bounded r ⊤ ↔ ∃ t, ∀ x, r x t :=
   by 
     simp [is_bounded, eq_univ_iff_forall]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem is_bounded_principal (s : Set α) : is_bounded r (𝓟 s) ↔ ∃ t, ∀ x _ : x ∈ s, r x t :=
   by 
     simp [is_bounded, subset_def]
@@ -88,41 +98,34 @@ theorem is_bounded_under.mono {f g : Filter β} {u : β → α} (h : f ≤ g) :
 
 theorem is_bounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf : ∀ a₀ a₁, r a₀ a₁ → q (u a₀) (u a₁)) :
   f.is_bounded r → f.is_bounded_under q u
-| ⟨b, h⟩ => ⟨u b, show ∀ᶠx in f, q (u x) (u b) from h.mono fun x => hf x b⟩
+| ⟨b, h⟩ => ⟨u b, show ∀ᶠ x in f, q (u x) (u b) from h.mono fun x => hf x b⟩
 
--- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem not_is_bounded_under_of_tendsto_at_top
-[preorder β]
-[no_top_order β]
-{f : α → β}
-{l : filter α}
-[l.ne_bot]
-(hf : tendsto f l at_top) : «expr¬ »(is_bounded_under ((«expr ≤ »)) l f) :=
-begin
-  rintro ["⟨", ident b, ",", ident hb, "⟩"],
-  rw [expr eventually_map] ["at", ident hb],
-  obtain ["⟨", ident b', ",", ident h, "⟩", ":=", expr no_top b],
-  have [ident hb'] [] [":=", expr tendsto_at_top.mp hf b'],
-  have [] [":", expr «expr = »(«expr ∩ »({x : α | «expr ≤ »(f x, b)}, {x : α | «expr ≤ »(b', f x)}), «expr∅»())] [":=", expr eq_empty_of_subset_empty (λ
-    x hx, not_le_of_lt h (le_trans hx.2 hx.1))],
-  exact [expr (nonempty_of_mem (hb.and hb')).ne_empty this]
-end
+theorem not_is_bounded_under_of_tendsto_at_top [Preorderₓ β] [NoTopOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
+  (hf : tendsto f l at_top) : ¬is_bounded_under (· ≤ ·) l f :=
+  by 
+    rintro ⟨b, hb⟩
+    rw [eventually_map] at hb 
+    obtain ⟨b', h⟩ := no_top b 
+    have hb' := (tendsto_at_top.mp hf) b' 
+    have  : { x : α | f x ≤ b } ∩ { x : α | b' ≤ f x } = ∅ :=
+      eq_empty_of_subset_empty fun x hx => (not_le_of_lt h) (le_transₓ hx.2 hx.1)
+    exact (nonempty_of_mem (hb.and hb')).ne_empty this
 
 theorem not_is_bounded_under_of_tendsto_at_bot [Preorderₓ β] [NoBotOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
   (hf : tendsto f l at_bot) : ¬is_bounded_under (· ≥ ·) l f :=
   @not_is_bounded_under_of_tendsto_at_top α (OrderDual β) _ _ _ _ _ hf
 
--- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_bounded_under.bdd_above_range_of_cofinite
-[semilattice_sup β]
-{f : α → β}
-(hf : is_bounded_under ((«expr ≤ »)) cofinite f) : bdd_above (range f) :=
-begin
-  rcases [expr hf, "with", "⟨", ident b, ",", ident hb, "⟩"],
-  haveI [] [":", expr nonempty β] [":=", expr ⟨b⟩],
-  rw ["[", "<-", expr image_univ, ",", "<-", expr union_compl_self {x | «expr ≤ »(f x, b)}, ",", expr image_union, ",", expr bdd_above_union, "]"] [],
-  exact [expr ⟨⟨b, «expr $ »(ball_image_iff.2, λ x, id)⟩, (hb.image f).bdd_above⟩]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_bounded_under.bdd_above_range_of_cofinite
+  [ SemilatticeSup β ] { f : α → β } ( hf : is_bounded_under · ≤ · cofinite f ) : BddAbove range f
+  :=
+    by
+      rcases hf with ⟨ b , hb ⟩
+        have : Nonempty β := ⟨ b ⟩
+        rw [ ← image_univ , ← union_compl_self { x | f x ≤ b } , image_union , bdd_above_union ]
+        exact ⟨ ⟨ b , ball_image_iff . 2 $ fun x => id ⟩ , hb.image f . BddAbove ⟩
 
 theorem is_bounded_under.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
   (hf : is_bounded_under (· ≥ ·) cofinite f) : BddBelow (range f) :=
@@ -149,7 +152,7 @@ the edge case of the trivial filter containing the empty set: the other natural 
 would not work as well in this case.
 -/
 def is_cobounded (r : α → α → Prop) (f : Filter α) :=
-  ∃ b, ∀ a, (∀ᶠx in f, r x a) → r b a
+  ∃ b, ∀ a, (∀ᶠ x in f, r x a) → r b a
 
 /-- `is_cobounded_under (≺) f u` states that the image of the filter `f` under the map `u` does not
 tend to infinity w.r.t. `≺`. This is also called frequently bounded. Will be usually instantiated
@@ -157,6 +160,8 @@ with `≤` or `≥`. -/
 def is_cobounded_under (r : α → α → Prop) (f : Filter β) (u : β → α) :=
   (f.map u).IsCobounded r
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- To check that a filter is frequently bounded, it suffices to have a witness
 which bounds `f` at some point for every admissible set.
 
@@ -186,10 +191,18 @@ theorem is_cobounded_bot : is_cobounded r ⊥ ↔ ∃ b, ∀ x, r b x :=
   by 
     simp [is_cobounded]
 
--- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_cobounded_top : «expr ↔ »(is_cobounded r «expr⊤»(), nonempty α) :=
-by simp [] [] [] ["[", expr is_cobounded, ",", expr eq_univ_iff_forall, ",", expr exists_true_iff_nonempty, "]"] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  is_cobounded_top
+  : is_cobounded r ⊤ ↔ Nonempty α
+  :=
+    by
+      simp
+        ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+        [ is_cobounded , eq_univ_iff_forall , exists_true_iff_nonempty ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem is_cobounded_principal (s : Set α) : (𝓟 s).IsCobounded r ↔ ∃ b, ∀ a, (∀ x _ : x ∈ s, r x a) → r b a :=
   by 
     simp [is_cobounded, subset_def]
@@ -213,16 +226,16 @@ theorem is_bounded_ge_of_bot [Preorderₓ α] [OrderBot α] {f : Filter α} : f.
 
 theorem is_bounded_under_sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
   f.is_bounded_under (· ≤ ·) u → f.is_bounded_under (· ≤ ·) v → f.is_bounded_under (· ≤ ·) fun a => u a⊔v a
-| ⟨bu, (hu : ∀ᶠx in f, u x ≤ bu)⟩, ⟨bv, (hv : ∀ᶠx in f, v x ≤ bv)⟩ =>
+| ⟨bu, (hu : ∀ᶠ x in f, u x ≤ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≤ bv)⟩ =>
   ⟨bu⊔bv,
-    show ∀ᶠx in f, u x⊔v x ≤ bu⊔bv by 
+    show ∀ᶠ x in f, u x⊔v x ≤ bu⊔bv by 
       filterUpwards [hu, hv] fun x => sup_le_sup⟩
 
 theorem is_bounded_under_inf [SemilatticeInf α] {f : Filter β} {u v : β → α} :
   f.is_bounded_under (· ≥ ·) u → f.is_bounded_under (· ≥ ·) v → f.is_bounded_under (· ≥ ·) fun a => u a⊓v a
-| ⟨bu, (hu : ∀ᶠx in f, u x ≥ bu)⟩, ⟨bv, (hv : ∀ᶠx in f, v x ≥ bv)⟩ =>
+| ⟨bu, (hu : ∀ᶠ x in f, u x ≥ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≥ bv)⟩ =>
   ⟨bu⊓bv,
-    show ∀ᶠx in f, u x⊓v x ≥ bu⊓bv by 
+    show ∀ᶠ x in f, u x⊓v x ≥ bu⊓bv by 
       filterUpwards [hu, hv] fun x => inf_le_inf⟩
 
 /-- Filters are automatically bounded or cobounded in complete lattices. To use the same statements
@@ -238,15 +251,19 @@ section ConditionallyCompleteLattice
 
 variable [ConditionallyCompleteLattice α]
 
-/-- The `Limsup` of a filter `f` is the infimum of the `a` such that, eventually for `f`,
-holds `x ≤ a`. -/
-def Limsup (f : Filter α) : α :=
-  Inf { a | ∀ᶠn in f, n ≤ a }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The `Limsup` of a filter `f` is the infimum of the `a` such that, eventually for `f`,
+    holds `x ≤ a`. -/
+  def Limsup ( f : Filter α ) : α := Inf { a | ∀ᶠ n in f , n ≤ a }
 
-/-- The `Liminf` of a filter `f` is the supremum of the `a` such that, eventually for `f`,
-holds `x ≥ a`. -/
-def Liminf (f : Filter α) : α :=
-  Sup { a | ∀ᶠn in f, a ≤ n }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The `Liminf` of a filter `f` is the supremum of the `a` such that, eventually for `f`,
+    holds `x ≥ a`. -/
+  def Liminf ( f : Filter α ) : α := Sup { a | ∀ᶠ n in f , a ≤ n }
 
 /-- The `limsup` of a function `u` along a filter `f` is the infimum of the `a` such that,
 eventually for `f`, holds `u x ≤ a`. -/
@@ -262,11 +279,13 @@ section
 
 variable {f : Filter β} {u : β → α}
 
-theorem limsup_eq : f.limsup u = Inf { a | ∀ᶠn in f, u n ≤ a } :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem limsup_eq : f.limsup u = Inf { a | ∀ᶠ n in f , u n ≤ a } := rfl
 
-theorem liminf_eq : f.liminf u = Sup { a | ∀ᶠn in f, a ≤ u n } :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem liminf_eq : f.liminf u = Sup { a | ∀ᶠ n in f , a ≤ u n } := rfl
 
 end 
 
@@ -274,28 +293,28 @@ theorem Limsup_le_of_le {f : Filter α} {a}
   (hf : f.is_cobounded (· ≤ ·) :=  by 
     runTac 
       is_bounded_default)
-  (h : ∀ᶠn in f, n ≤ a) : f.Limsup ≤ a :=
+  (h : ∀ᶠ n in f, n ≤ a) : f.Limsup ≤ a :=
   cInf_le hf h
 
 theorem le_Liminf_of_le {f : Filter α} {a}
   (hf : f.is_cobounded (· ≥ ·) :=  by 
     runTac 
       is_bounded_default)
-  (h : ∀ᶠn in f, a ≤ n) : a ≤ f.Liminf :=
+  (h : ∀ᶠ n in f, a ≤ n) : a ≤ f.Liminf :=
   le_cSup hf h
 
 theorem le_Limsup_of_le {f : Filter α} {a}
   (hf : f.is_bounded (· ≤ ·) :=  by 
     runTac 
       is_bounded_default)
-  (h : ∀ b, (∀ᶠn in f, n ≤ b) → a ≤ b) : a ≤ f.Limsup :=
+  (h : ∀ b, (∀ᶠ n in f, n ≤ b) → a ≤ b) : a ≤ f.Limsup :=
   le_cInf hf h
 
 theorem Liminf_le_of_le {f : Filter α} {a}
   (hf : f.is_bounded (· ≥ ·) :=  by 
     runTac 
       is_bounded_default)
-  (h : ∀ b, (∀ᶠn in f, b ≤ n) → b ≤ a) : f.Liminf ≤ a :=
+  (h : ∀ b, (∀ᶠ n in f, b ≤ n) → b ≤ a) : f.Liminf ≤ a :=
   cSup_le hf h
 
 theorem Liminf_le_Limsup {f : Filter α} [ne_bot f]
@@ -321,7 +340,7 @@ theorem Liminf_le_Liminf {f g : Filter α}
   (hg : g.is_cobounded (· ≥ ·) :=  by 
     runTac 
       is_bounded_default)
-  (h : ∀ a, (∀ᶠn in f, a ≤ n) → ∀ᶠn in g, a ≤ n) : f.Liminf ≤ g.Liminf :=
+  (h : ∀ a, (∀ᶠ n in f, a ≤ n) → ∀ᶠ n in g, a ≤ n) : f.Liminf ≤ g.Liminf :=
   cSup_le_cSup hg hf h
 
 theorem Limsup_le_Limsup {f g : Filter α}
@@ -331,7 +350,7 @@ theorem Limsup_le_Limsup {f g : Filter α}
   (hg : g.is_bounded (· ≤ ·) :=  by 
     runTac 
       is_bounded_default)
-  (h : ∀ a, (∀ᶠn in g, n ≤ a) → ∀ᶠn in f, n ≤ a) : f.Limsup ≤ g.Limsup :=
+  (h : ∀ a, (∀ᶠ n in g, n ≤ a) → ∀ᶠ n in f, n ≤ a) : f.Limsup ≤ g.Limsup :=
   cInf_le_cInf hf hg h
 
 theorem Limsup_le_Limsup_of_le {f g : Filter α} (h : f ≤ g)
@@ -365,7 +384,7 @@ theorem limsup_le_limsup {α : Type _} [ConditionallyCompleteLattice β] {f : Fi
   Limsup_le_Limsup hu hv$ fun b => h.trans
 
 theorem liminf_le_liminf {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
-  (h : ∀ᶠa in f, u a ≤ v a)
+  (h : ∀ᶠ a in f, u a ≤ v a)
   (hu : f.is_bounded_under (· ≥ ·) u :=  by 
     runTac 
       is_bounded_default)
@@ -403,7 +422,7 @@ theorem Liminf_principal {s : Set α} (h : BddBelow s) (hs : s.nonempty) : (𝓟
   @Limsup_principal (OrderDual α) _ s h hs
 
 theorem limsup_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
-  (h : ∀ᶠa in f, u a = v a) : limsup f u = limsup f v :=
+  (h : ∀ᶠ a in f, u a = v a) : limsup f u = limsup f v :=
   by 
     rw [limsup_eq]
     congr with b 
@@ -415,7 +434,7 @@ theorem limsup_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter
               simp [hx])
 
 theorem liminf_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
-  (h : ∀ᶠa in f, u a = v a) : liminf f u = liminf f v :=
+  (h : ∀ᶠ a in f, u a = v a) : liminf f u = liminf f v :=
   @limsup_congr (OrderDual β) _ _ _ _ _ h
 
 theorem limsup_const {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} [ne_bot f] (b : β) :
@@ -482,7 +501,7 @@ theorem liminf_const_top {f : Filter β} : (liminf f fun x : β => (⊤ : α)) =
   @limsup_const_bot (OrderDual α) β _ _
 
 theorem has_basis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (h : f.has_basis p s) :
-  f.Limsup = ⨅(i : _)(hi : p i), Sup (s i) :=
+  f.Limsup = ⨅ (i : _)(hi : p i), Sup (s i) :=
   le_antisymmₓ (le_binfi$ fun i hi => Inf_le$ h.eventually_iff.2 ⟨i, hi, fun x => le_Sup⟩)
     (le_Inf$
       fun a ha =>
@@ -490,50 +509,60 @@ theorem has_basis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} 
         infi_le_of_le _$ infi_le_of_le hi$ Sup_le ha)
 
 theorem has_basis.Liminf_eq_supr_Inf {p : ι → Prop} {s : ι → Set α} {f : Filter α} (h : f.has_basis p s) :
-  f.Liminf = ⨆(i : _)(hi : p i), Inf (s i) :=
+  f.Liminf = ⨆ (i : _)(hi : p i), Inf (s i) :=
   @has_basis.Limsup_eq_infi_Sup (OrderDual α) _ _ _ _ _ h
 
-theorem Limsup_eq_infi_Sup {f : Filter α} : f.Limsup = ⨅(s : _)(_ : s ∈ f), Sup s :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f)
+theorem Limsup_eq_infi_Sup {f : Filter α} : f.Limsup = ⨅ (s : _)(_ : s ∈ f), Sup s :=
   f.basis_sets.Limsup_eq_infi_Sup
 
-theorem Liminf_eq_supr_Inf {f : Filter α} : f.Liminf = ⨆(s : _)(_ : s ∈ f), Inf s :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f)
+theorem Liminf_eq_supr_Inf {f : Filter α} : f.Liminf = ⨆ (s : _)(_ : s ∈ f), Inf s :=
   @Limsup_eq_infi_Sup (OrderDual α) _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- In a complete lattice, the limsup of a function is the infimum over sets `s` in the filter
 of the supremum of the function over `s` -/
-theorem limsup_eq_infi_supr {f : Filter β} {u : β → α} : f.limsup u = ⨅(s : _)(_ : s ∈ f), ⨆(a : _)(_ : a ∈ s), u a :=
+theorem limsup_eq_infi_supr {f : Filter β} {u : β → α} : f.limsup u = ⨅ (s : _)(_ : s ∈ f), ⨆ (a : _)(_ : a ∈ s), u a :=
   (f.basis_sets.map u).Limsup_eq_infi_Sup.trans$
     by 
       simp only [Sup_image, id]
 
-theorem limsup_eq_infi_supr_of_nat {u : ℕ → α} : limsup at_top u = ⨅n : ℕ, ⨆(i : _)(_ : i ≥ n), u i :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≥ » n)
+theorem limsup_eq_infi_supr_of_nat {u : ℕ → α} : limsup at_top u = ⨅ n : ℕ, ⨆ (i : _)(_ : i ≥ n), u i :=
   (at_top_basis.map u).Limsup_eq_infi_Sup.trans$
     by 
       simp only [Sup_image, infi_const] <;> rfl
 
-theorem limsup_eq_infi_supr_of_nat' {u : ℕ → α} : limsup at_top u = ⨅n : ℕ, ⨆i : ℕ, u (i+n) :=
+theorem limsup_eq_infi_supr_of_nat' {u : ℕ → α} : limsup at_top u = ⨅ n : ℕ, ⨆ i : ℕ, u (i+n) :=
   by 
     simp only [limsup_eq_infi_supr_of_nat, supr_ge_eq_supr_nat_add]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s i)
 theorem has_basis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.has_basis p s) :
-  f.limsup u = ⨅(i : _)(hi : p i), ⨆(a : _)(_ : a ∈ s i), u a :=
+  f.limsup u = ⨅ (i : _)(hi : p i), ⨆ (a : _)(_ : a ∈ s i), u a :=
   (h.map u).Limsup_eq_infi_Sup.trans$
     by 
       simp only [Sup_image, id]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 /-- In a complete lattice, the liminf of a function is the infimum over sets `s` in the filter
 of the supremum of the function over `s` -/
-theorem liminf_eq_supr_infi {f : Filter β} {u : β → α} : f.liminf u = ⨆(s : _)(_ : s ∈ f), ⨅(a : _)(_ : a ∈ s), u a :=
+theorem liminf_eq_supr_infi {f : Filter β} {u : β → α} : f.liminf u = ⨆ (s : _)(_ : s ∈ f), ⨅ (a : _)(_ : a ∈ s), u a :=
   @limsup_eq_infi_supr (OrderDual α) β _ _ _
 
-theorem liminf_eq_supr_infi_of_nat {u : ℕ → α} : liminf at_top u = ⨆n : ℕ, ⨅(i : _)(_ : i ≥ n), u i :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≥ » n)
+theorem liminf_eq_supr_infi_of_nat {u : ℕ → α} : liminf at_top u = ⨆ n : ℕ, ⨅ (i : _)(_ : i ≥ n), u i :=
   @limsup_eq_infi_supr_of_nat (OrderDual α) _ u
 
-theorem liminf_eq_supr_infi_of_nat' {u : ℕ → α} : liminf at_top u = ⨆n : ℕ, ⨅i : ℕ, u (i+n) :=
+theorem liminf_eq_supr_infi_of_nat' {u : ℕ → α} : liminf at_top u = ⨆ n : ℕ, ⨅ i : ℕ, u (i+n) :=
   @limsup_eq_infi_supr_of_nat' (OrderDual α) _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s i)
 theorem has_basis.liminf_eq_supr_infi {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.has_basis p s) :
-  f.liminf u = ⨆(i : _)(hi : p i), ⨅(a : _)(_ : a ∈ s i), u a :=
+  f.liminf u = ⨆ (i : _)(hi : p i), ⨅ (a : _)(_ : a ∈ s i), u a :=
   @has_basis.limsup_eq_infi_supr (OrderDual α) _ _ _ _ _ _ _ h
 
 @[simp]
@@ -546,26 +575,20 @@ theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : (at_top.liminf fun i => f (i
 theorem limsup_nat_add (f : ℕ → α) (k : ℕ) : (at_top.limsup fun i => f (i+k)) = at_top.limsup f :=
   @liminf_nat_add (OrderDual α) _ f k
 
--- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem liminf_le_of_frequently_le'
-{α β}
-[complete_lattice β]
-{f : filter α}
-{u : α → β}
-{x : β}
-(h : «expr∃ᶠ in , »((a), f, «expr ≤ »(u a, x))) : «expr ≤ »(f.liminf u, x) :=
-begin
-  rw [expr liminf_eq] [],
-  refine [expr Sup_le (λ b hb, _)],
-  have [ident hbx] [":", expr «expr∃ᶠ in , »((a), f, «expr ≤ »(b, x))] [],
-  { revert [ident h],
-    rw ["[", "<-", expr not_imp_not, ",", expr not_frequently, ",", expr not_frequently, "]"] [],
-    exact [expr λ h, hb.mp (h.mono (λ a hbx hba hax, hbx (hba.trans hax)))] },
-  exact [expr hbx.exists.some_spec]
-end
+theorem liminf_le_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α} {u : α → β} {x : β}
+  (h : ∃ᶠ a in f, u a ≤ x) : f.liminf u ≤ x :=
+  by 
+    rw [liminf_eq]
+    refine' Sup_le fun b hb => _ 
+    have hbx : ∃ᶠ a in f, b ≤ x
+    ·
+      revert h 
+      rw [←not_imp_not, not_frequently, not_frequently]
+      exact fun h => hb.mp (h.mono fun a hbx hba hax => hbx (hba.trans hax))
+    exact hbx.exists.some_spec
 
 theorem le_limsup_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α} {u : α → β} {x : β}
-  (h : ∃ᶠa in f, x ≤ u a) : x ≤ f.limsup u :=
+  (h : ∃ᶠ a in f, x ≤ u a) : x ≤ f.limsup u :=
   @liminf_le_of_frequently_le' _ (OrderDual β) _ _ _ _ h
 
 end CompleteLattice
@@ -577,9 +600,9 @@ theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearO
   (hu : f.is_bounded_under (· ≥ ·) u :=  by 
     runTac 
       is_bounded_default) :
-  ∀ᶠa in f, b < u a :=
+  ∀ᶠ a in f, b < u a :=
   by 
-    obtain ⟨c, hc, hbc⟩ : ∃ (c : β)(hc : c ∈ { c:β | ∀ᶠn : α in f, c ≤ u n }), b < c := exists_lt_of_lt_cSup hu h 
+    obtain ⟨c, hc, hbc⟩ : ∃ (c : β)(hc : c ∈ { c : β | ∀ᶠ n : α in f, c ≤ u n }), b < c := exists_lt_of_lt_cSup hu h 
     exact hc.mono fun x hx => lt_of_lt_of_leₓ hbc hx
 
 theorem eventually_lt_of_limsup_lt {f : Filter α} [ConditionallyCompleteLinearOrder β] {u : α → β} {b : β}
@@ -587,11 +610,11 @@ theorem eventually_lt_of_limsup_lt {f : Filter α} [ConditionallyCompleteLinearO
   (hu : f.is_bounded_under (· ≤ ·) u :=  by 
     runTac 
       is_bounded_default) :
-  ∀ᶠa in f, u a < b :=
+  ∀ᶠ a in f, u a < b :=
   @eventually_lt_of_lt_liminf _ (OrderDual β) _ _ _ _ h hu
 
 theorem le_limsup_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {b : β}
-  (hu_le : ∃ᶠx in f, b ≤ u x)
+  (hu_le : ∃ᶠ x in f, b ≤ u x)
   (hu : f.is_bounded_under (· ≤ ·) u :=  by 
     runTac 
       is_bounded_default) :
@@ -603,7 +626,7 @@ theorem le_limsup_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β]
     exact fun h => eventually_lt_of_limsup_lt h hu
 
 theorem liminf_le_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {b : β}
-  (hu_le : ∃ᶠx in f, u x ≤ b)
+  (hu_le : ∃ᶠ x in f, u x ≤ b)
   (hu : f.is_bounded_under (· ≥ ·) u :=  by 
     runTac 
       is_bounded_default) :
@@ -614,7 +637,7 @@ theorem frequently_lt_of_lt_limsup {α β} [ConditionallyCompleteLinearOrder β]
   (hu : f.is_cobounded_under (· ≤ ·) u :=  by 
     runTac 
       is_bounded_default)
-  (h : b < f.limsup u) : ∃ᶠx in f, b < u x :=
+  (h : b < f.limsup u) : ∃ᶠ x in f, b < u x :=
   by 
     contrapose! h 
     apply Limsup_le_of_le hu 
@@ -624,7 +647,7 @@ theorem frequently_lt_of_liminf_lt {α β} [ConditionallyCompleteLinearOrder β]
   (hu : f.is_cobounded_under (· ≥ ·) u :=  by 
     runTac 
       is_bounded_default)
-  (h : f.liminf u < b) : ∃ᶠx in f, u x < b :=
+  (h : f.liminf u < b) : ∃ᶠ x in f, u x < b :=
   @frequently_lt_of_lt_limsup _ (OrderDual β) _ f u b hu h
 
 end ConditionallyCompleteLinearOrder
@@ -650,30 +673,31 @@ theorem GaloisConnection.l_limsup_le {α β γ} [ConditionallyCompleteLattice β
     simpRw [gc _ _]  at hc⊢
     exact Limsup_le_of_le hv_co hc
 
--- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem order_iso.limsup_apply
-{γ}
-[conditionally_complete_lattice β]
-[conditionally_complete_lattice γ]
-{f : filter α}
-{u : α → β}
-(g : «expr ≃o »(β, γ))
-(hu : f.is_bounded_under ((«expr ≤ »)) u . is_bounded_default)
-(hu_co : f.is_cobounded_under ((«expr ≤ »)) u . is_bounded_default)
-(hgu : f.is_bounded_under ((«expr ≤ »)) (λ x, g (u x)) . is_bounded_default)
-(hgu_co : f.is_cobounded_under ((«expr ≤ »)) (λ
-  x, g (u x)) . is_bounded_default) : «expr = »(g (f.limsup u), f.limsup (λ x, g (u x))) :=
-begin
-  refine [expr le_antisymm (g.to_galois_connection.l_limsup_le hgu hu_co) _],
-  rw ["[", "<-", expr g.symm.symm_apply_apply (f.limsup (λ x : α, g (u x))), ",", expr g.symm_symm, "]"] [],
-  refine [expr g.monotone _],
-  have [ident hf] [":", expr «expr = »(u, λ i, g.symm (g (u i)))] [],
-  from [expr funext (λ i, (g.symm_apply_apply (u i)).symm)],
-  nth_rewrite [0] [expr hf] [],
-  refine [expr g.symm.to_galois_connection.l_limsup_le _ hgu_co],
-  simp_rw [expr g.symm_apply_apply] [],
-  exact [expr hu]
-end
+theorem OrderIso.limsup_apply {γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ] {f : Filter α}
+  {u : α → β} (g : β ≃o γ)
+  (hu : f.is_bounded_under (· ≤ ·) u :=  by 
+    runTac 
+      is_bounded_default)
+  (hu_co : f.is_cobounded_under (· ≤ ·) u :=  by 
+    runTac 
+      is_bounded_default)
+  (hgu : f.is_bounded_under (· ≤ ·) fun x => g (u x) :=  by 
+    runTac 
+      is_bounded_default)
+  (hgu_co : f.is_cobounded_under (· ≤ ·) fun x => g (u x) :=  by 
+    runTac 
+      is_bounded_default) :
+  g (f.limsup u) = f.limsup fun x => g (u x) :=
+  by 
+    refine' le_antisymmₓ (g.to_galois_connection.l_limsup_le hgu hu_co) _ 
+    rw [←g.symm.symm_apply_apply (f.limsup fun x : α => g (u x)), g.symm_symm]
+    refine' g.monotone _ 
+    have hf : u = fun i => g.symm (g (u i))
+    exact funext fun i => (g.symm_apply_apply (u i)).symm 
+    nthRw 0[hf]
+    refine' g.symm.to_galois_connection.l_limsup_le _ hgu_co 
+    simpRw [g.symm_apply_apply]
+    exact hu
 
 theorem OrderIso.liminf_apply {γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ] {f : Filter α}
   {u : α → β} (g : β ≃o γ)

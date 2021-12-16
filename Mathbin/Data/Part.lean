@@ -119,8 +119,9 @@ theorem mem.left_unique : Relator.LeftUnique (· ∈ · : α → Part α → Pro
 theorem get_eq_of_mem {o : Part α} {a} (h : a ∈ o) h' : get o h' = a :=
   mem_unique ⟨_, rfl⟩ h
 
-protected theorem Subsingleton (o : Part α) : Set.Subsingleton { a | a ∈ o } :=
-  fun a ha b hb => mem_unique ha hb
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+protected theorem Subsingleton ( o : Part α ) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb => mem_unique ha hb
 
 @[simp]
 theorem get_some {a : α} (ha : (some a).Dom) : get (some a) ha = a :=
@@ -160,7 +161,7 @@ theorem none_ne_some (x : α) : none ≠ some x :=
 
 theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x :=
   by 
-    split 
+    constructor
     ·
       rw [Ne, eq_none_iff', not_not]
       exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
@@ -292,21 +293,25 @@ theorem to_of_option (o : Option α) : to_option (of_option o) = o :=
 theorem of_to_option (o : Part α) [Decidable o.dom] : of_option (to_option o) = o :=
   ext$ fun a => mem_of_option.trans mem_to_option
 
--- error in Data.Part: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `part α` is (classically) equivalent to `option α`. -/
-noncomputable
-def equiv_option : «expr ≃ »(part α, option α) :=
-by haveI [] [] [":=", expr classical.dec]; exact [expr ⟨λ
-  o, to_option o, of_option, λ o, of_to_option o, λ o, eq.trans (by dsimp [] [] [] []; congr) (to_of_option o)⟩]
+noncomputable def equiv_option : Part α ≃ Option α :=
+  by 
+    have  := Classical.dec <;>
+      exact
+        ⟨fun o => to_option o, of_option, fun o => of_to_option o,
+          fun o =>
+            Eq.trans
+              (by 
+                dsimp <;> congr)
+              (to_of_option o)⟩
 
 /-- We give `part α` the order where everything is greater than `none`. -/
 instance : PartialOrderₓ (Part α) :=
   { le := fun x y => ∀ i, i ∈ x → i ∈ y, le_refl := fun x y => id, le_trans := fun x y z f g i => g _ ∘ f _,
     le_antisymm := fun x y f g => Part.ext$ fun z => ⟨f _, g _⟩ }
 
--- error in Data.Part: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
-instance : order_bot (part α) :=
-{ bot := none, bot_le := by { introv [ident x], rintro ["⟨", "⟨", "_", "⟩", ",", "_", "⟩"] } }
+-- failed to format: format: uncaught backtrack exception
+instance : OrderBot ( Part α ) := { bot := none , bot_le := by introv x rintro ⟨ ⟨ _ ⟩ , _ ⟩ }
 
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) : x ≤ y ∨ y ≤ x :=
   by 
@@ -342,6 +347,7 @@ def map (f : α → β) (o : Part α) : Part β :=
 theorem mem_map (f : α → β) {o : Part α} : ∀ {a}, a ∈ o → f a ∈ map f o
 | _, ⟨h, rfl⟩ => ⟨_, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » o)
 @[simp]
 theorem mem_map_iff (f : α → β) {o : Part α} {b} : b ∈ map f o ↔ ∃ (a : _)(_ : a ∈ o), f a = b :=
   ⟨match b with 
@@ -394,6 +400,7 @@ theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none 
 theorem mem_bind {f : Part α} {g : α → Part β} : ∀ {a b}, a ∈ f → b ∈ g a → b ∈ f.bind g
 | _, _, ⟨h, rfl⟩, ⟨h₂, rfl⟩ => ⟨⟨h, h₂⟩, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » f)
 @[simp]
 theorem mem_bind_iff {f : Part α} {g : α → Part β} {b} : b ∈ f.bind g ↔ ∃ (a : _)(_ : a ∈ f), b ∈ g a :=
   ⟨match b with 
@@ -481,7 +488,7 @@ theorem bind_eq_bind {α β} (f : Part α) (g : α → Part β) : f >>= g = f.bi
 
 theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) : x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       intro a h' b 
       replace h := h b 
@@ -505,7 +512,7 @@ def restrict (p : Prop) (o : Part α) (H : p → o.dom) : Part α :=
 theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.dom) (a : α) : a ∈ restrict p o h ↔ p ∧ a ∈ o :=
   by 
     dsimp [restrict, mem_eq]
-    split 
+    constructor
     ·
       rintro ⟨h₀, h₁⟩
       exact ⟨h₀, ⟨_, h₁⟩⟩

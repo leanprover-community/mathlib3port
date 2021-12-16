@@ -64,7 +64,7 @@ weak-star, weak dual
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Filter
 
@@ -141,5 +141,51 @@ theorem dual_norm_topology_le_weak_dual_topology :
 
 end NormedSpace.Dual
 
+namespace WeakDual
+
+theorem to_normed_dual.preimage_closed_unit_ball :
+  to_normed_dual ⁻¹' Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : WeakDual 𝕜 E | ∥x'.to_normed_dual∥ ≤ 1 } :=
+  by 
+    have eq : Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : dual 𝕜 E | ∥x'∥ ≤ 1 }
+    ·
+      ext x' 
+      simp only [dist_zero_right, Metric.mem_closed_ball, Set.mem_set_of_eq]
+    rw [Eq]
+    exact Set.preimage_set_of_eq
+
+variable (𝕜)
+
+/-- The polar set `polar 𝕜 s` of `s : set E` seen as a subset of the dual of `E` with the
+weak-star topology is `weak_dual.polar 𝕜 s`. -/
+def Polar (s : Set E) : Set (WeakDual 𝕜 E) :=
+  to_normed_dual ⁻¹' Polar 𝕜 s
+
+end WeakDual
+
 end WeakStarTopologyForDualsOfNormedSpaces
+
+section PolarSetsInWeakDual
+
+open Metric Set NormedSpace
+
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
+
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+
+/-- The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
+is used, i.e., when `polar 𝕜 s` is interpreted as a subset of `weak_dual 𝕜 E`. -/
+theorem WeakDual.is_closed_polar (s : Set E) : IsClosed (WeakDual.Polar 𝕜 s) :=
+  by 
+    rw [WeakDual.Polar, polar_eq_Inter, preimage_bInter]
+    apply is_closed_bInter 
+    intro z hz 
+    rw [Set.preimage_set_of_eq]
+    have eq : { x' : WeakDual 𝕜 E | ∥WeakDual.toNormedDual x' z∥ ≤ 1 } = (fun x' : WeakDual 𝕜 E => ∥x' z∥) ⁻¹' Iic 1 :=
+      by 
+        rfl 
+    rw [Eq]
+    refine' IsClosed.preimage _ is_closed_Iic 
+    apply Continuous.comp continuous_norm (WeakDual.eval_continuous _ _ z)
+
+end PolarSetsInWeakDual
 

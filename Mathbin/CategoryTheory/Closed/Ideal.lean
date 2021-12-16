@@ -23,7 +23,7 @@ following are equivalent.
 
 universe v₁ v₂ u₁ u₂
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -66,25 +66,23 @@ instance : exponential_ideal (subterminal_inclusion C) :=
     refine' ⟨⟨A ⟹ B.1, fun Z g h => _⟩, ⟨iso.refl _⟩⟩
     exact uncurry_injective (B.2 (cartesian_closed.uncurry g) (cartesian_closed.uncurry h))
 
--- error in CategoryTheory.Closed.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `D` is a reflective subcategory, the property of being an exponential ideal is equivalent to
 the presence of a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A`, that is:
 `(A ⟹ iB) ≅ i L (A ⟹ iB)`, naturally in `B`.
 The converse is given in `exponential_ideal.mk_of_iso`.
 -/
-def exponential_ideal_reflective
-(A : C)
-[reflective i]
-[exponential_ideal i] : «expr ≅ »(«expr ⋙ »(i, «expr ⋙ »(exp A, «expr ⋙ »(left_adjoint i, i))), «expr ⋙ »(i, exp A)) :=
-begin
-  symmetry,
-  apply [expr nat_iso.of_components _ _],
-  { intro [ident X],
-    haveI [] [] [":=", expr (exponential_ideal.exp_closed (i.obj_mem_ess_image X) A).unit_is_iso],
-    apply [expr as_iso ((adjunction.of_right_adjoint i).unit.app «expr ⟹ »(A, i.obj X))] },
-  { simp [] [] [] [] [] [] }
-end
+def exponential_ideal_reflective (A : C) [reflective i] [exponential_ideal i] :
+  i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A :=
+  by 
+    symm 
+    apply nat_iso.of_components _ _
+    ·
+      intro X 
+      have  := (exponential_ideal.exp_closed (i.obj_mem_ess_image X) A).unit_is_iso 
+      apply as_iso ((adjunction.of_right_adjoint i).Unit.app (A ⟹ i.obj X))
+    ·
+      simp 
 
 /--
 Given a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A`, we can show `i`
@@ -116,60 +114,65 @@ open CartesianClosed
 
 variable [has_finite_products C] [reflective i] [cartesian_closed C]
 
--- error in CategoryTheory.Closed.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If the reflector preserves binary products, the subcategory is an exponential ideal.
 This is the converse of `preserves_binary_products_of_exponential_ideal`.
 -/
-@[priority 10]
-instance exponential_ideal_of_preserves_binary_products
-[preserves_limits_of_shape (discrete walking_pair) (left_adjoint i)] : exponential_ideal i :=
-begin
-  let [ident ir] [] [":=", expr adjunction.of_right_adjoint i],
-  let [ident L] [":", expr «expr ⥤ »(C, D)] [":=", expr left_adjoint i],
-  let [ident η] [":", expr «expr ⟶ »(«expr𝟭»() C, «expr ⋙ »(L, i))] [":=", expr ir.unit],
-  let [ident ε] [":", expr «expr ⟶ »(«expr ⋙ »(i, L), «expr𝟭»() D)] [":=", expr ir.counit],
-  apply [expr exponential_ideal.mk'],
-  intros [ident B, ident A],
-  let [ident q] [":", expr «expr ⟶ »(i.obj (L.obj «expr ⟹ »(A, i.obj B)), «expr ⟹ »(A, i.obj B))] [],
-  apply [expr cartesian_closed.curry (ir.hom_equiv _ _ _)],
-  apply [expr «expr ≫ »(_, (ir.hom_equiv _ _).symm ((ev A).app (i.obj B)))],
-  refine [expr «expr ≫ »(prod_comparison L A _, «expr ≫ »(limits.prod.map («expr𝟙»() _) (ε.app _), inv (prod_comparison _ _ _)))],
-  have [] [":", expr «expr = »(«expr ≫ »(η.app «expr ⟹ »(A, i.obj B), q), «expr𝟙»() «expr ⟹ »(A, i.obj B))] [],
-  { dsimp [] [] [] [],
-    rw ["[", "<-", expr curry_natural_left, ",", expr curry_eq_iff, ",", expr uncurry_id_eq_ev, ",", "<-", expr ir.hom_equiv_naturality_left, ",", expr ir.hom_equiv_apply_eq, ",", expr assoc, ",", expr assoc, ",", expr prod_comparison_natural_assoc, ",", expr L.map_id, ",", "<-", expr prod.map_id_comp_assoc, ",", expr ir.left_triangle_components, ",", expr prod.map_id_id, ",", expr id_comp, "]"] [],
-    apply [expr is_iso.hom_inv_id_assoc] },
-  haveI [] [":", expr split_mono (η.app «expr ⟹ »(A, i.obj B))] [":=", expr ⟨_, this⟩],
-  apply [expr mem_ess_image_of_unit_split_mono]
-end
+instance (priority := 10) exponential_ideal_of_preserves_binary_products
+  [preserves_limits_of_shape (discrete.{v₁} walking_pair) (left_adjoint i)] : exponential_ideal i :=
+  by 
+    let ir := adjunction.of_right_adjoint i 
+    let L : C ⥤ D := left_adjoint i 
+    let η : 𝟭 C ⟶ L ⋙ i := ir.unit 
+    let ε : i ⋙ L ⟶ 𝟭 D := ir.counit 
+    apply exponential_ideal.mk' 
+    intro B A 
+    let q : i.obj (L.obj (A ⟹ i.obj B)) ⟶ A ⟹ i.obj B 
+    apply cartesian_closed.curry (ir.hom_equiv _ _ _)
+    apply _ ≫ (ir.hom_equiv _ _).symm ((ev A).app (i.obj B))
+    refine' prod_comparison L A _ ≫ limits.prod.map (𝟙 _) (ε.app _) ≫ inv (prod_comparison _ _ _)
+    have  : η.app (A ⟹ i.obj B) ≫ q = 𝟙 (A ⟹ i.obj B)
+    ·
+      dsimp 
+      rw [←curry_natural_left, curry_eq_iff, uncurry_id_eq_ev, ←ir.hom_equiv_naturality_left, ir.hom_equiv_apply_eq,
+        assoc, assoc, prod_comparison_natural_assoc, L.map_id, ←prod.map_id_comp_assoc, ir.left_triangle_components,
+        prod.map_id_id, id_comp]
+      apply is_iso.hom_inv_id_assoc 
+    have  : split_mono (η.app (A ⟹ i.obj B)) := ⟨_, this⟩
+    apply mem_ess_image_of_unit_split_mono
 
 variable [exponential_ideal i]
 
--- error in CategoryTheory.Closed.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `i` witnesses that `D` is a reflective subcategory and an exponential ideal, then `D` is
 itself cartesian closed.
--/ def cartesian_closed_of_reflective : cartesian_closed D :=
-{ closed := λ
-  B, { is_adj := { right := «expr ⋙ »(i, «expr ⋙ »(exp (i.obj B), left_adjoint i)),
-      adj := begin
-        apply [expr adjunction.restrict_fully_faithful i i (exp.adjunction (i.obj B))],
-        { symmetry,
-          apply [expr nat_iso.of_components _ _],
-          { intro [ident X],
-            haveI [] [] [":=", expr adjunction.right_adjoint_preserves_limits (adjunction.of_right_adjoint i)],
-            apply [expr as_iso (prod_comparison i B X)] },
-          { intros [ident X, ident Y, ident f],
-            dsimp [] [] [] [],
-            rw [expr prod_comparison_natural] [],
-            simp [] [] [] [] [] [] } },
-        { apply [expr (exponential_ideal_reflective i _).symm] }
-      end } } }
+-/
+def cartesian_closed_of_reflective : cartesian_closed D :=
+  { closed :=
+      fun B =>
+        { isAdj :=
+            { right := i ⋙ exp (i.obj B) ⋙ left_adjoint i,
+              adj :=
+                by 
+                  apply adjunction.restrict_fully_faithful i i (exp.adjunction (i.obj B))
+                  ·
+                    symm 
+                    apply nat_iso.of_components _ _
+                    ·
+                      intro X 
+                      have  := adjunction.right_adjoint_preserves_limits (adjunction.of_right_adjoint i)
+                      apply as_iso (prod_comparison i B X)
+                    ·
+                      intro X Y f 
+                      dsimp 
+                      rw [prod_comparison_natural]
+                      simp 
+                  ·
+                    apply (exponential_ideal_reflective i _).symm } } }
 
 attribute [-instance] CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit
   CategoryTheory.preservesLimitOfShapeOfCreatesLimitsOfShapeAndHasLimitsOfShape
 
--- error in CategoryTheory.Closed.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 We construct a bijection between morphisms `L(A ⨯ B) ⟶ X` and morphisms `LA ⨯ LB ⟶ X`.
 This bijection has two key properties:
@@ -180,26 +183,27 @@ This bijection has two key properties:
 Together these help show that `L` preserves binary products. This should be considered
 *internal implementation* towards `preserves_binary_products_of_exponential_ideal`.
 -/
-noncomputable
-def bijection
-(A B : C)
-(X : D) : «expr ≃ »(«expr ⟶ »((left_adjoint i).obj «expr ⨯ »(A, B), X), «expr ⟶ »(«expr ⨯ »((left_adjoint i).obj A, (left_adjoint i).obj B), X)) :=
-calc
-  «expr ≃ »(_, «expr ⟶ »(«expr ⨯ »(A, B), i.obj X)) : (adjunction.of_right_adjoint i).hom_equiv _ _
-  «expr ≃ »(..., «expr ⟶ »(«expr ⨯ »(B, A), i.obj X)) : (limits.prod.braiding _ _).hom_congr (iso.refl _)
-  «expr ≃ »(..., «expr ⟶ »(A, «expr ⟹ »(B, i.obj X))) : (exp.adjunction _).hom_equiv _ _
-  «expr ≃ »(..., «expr ⟶ »(i.obj ((left_adjoint i).obj A), «expr ⟹ »(B, i.obj X))) : unit_comp_partial_bijective _ (exponential_ideal.exp_closed (i.obj_mem_ess_image _) _)
-  «expr ≃ »(..., «expr ⟶ »(«expr ⨯ »(B, i.obj ((left_adjoint i).obj A)), i.obj X)) : ((exp.adjunction _).hom_equiv _ _).symm
-  «expr ≃ »(..., «expr ⟶ »(«expr ⨯ »(i.obj ((left_adjoint i).obj A), B), i.obj X)) : (limits.prod.braiding _ _).hom_congr (iso.refl _)
-  «expr ≃ »(..., «expr ⟶ »(B, «expr ⟹ »(i.obj ((left_adjoint i).obj A), i.obj X))) : (exp.adjunction _).hom_equiv _ _
-  «expr ≃ »(..., «expr ⟶ »(i.obj ((left_adjoint i).obj B), «expr ⟹ »(i.obj ((left_adjoint i).obj A), i.obj X))) : unit_comp_partial_bijective _ (exponential_ideal.exp_closed (i.obj_mem_ess_image _) _)
-  «expr ≃ »(..., «expr ⟶ »(«expr ⨯ »(i.obj ((left_adjoint i).obj A), i.obj ((left_adjoint i).obj B)), i.obj X)) : ((exp.adjunction _).hom_equiv _ _).symm
-  «expr ≃ »(..., «expr ⟶ »(i.obj «expr ⨯ »((left_adjoint i).obj A, (left_adjoint i).obj B), i.obj X)) : begin
-    apply [expr iso.hom_congr _ (iso.refl _)],
-    haveI [] [":", expr preserves_limits i] [":=", expr (adjunction.of_right_adjoint i).right_adjoint_preserves_limits],
-    exact [expr (preserves_limit_pair.iso _ _ _).symm]
-  end
-  «expr ≃ »(..., «expr ⟶ »(«expr ⨯ »((left_adjoint i).obj A, (left_adjoint i).obj B), X)) : (equiv_of_fully_faithful _).symm
+noncomputable def bijection (A B : C) (X : D) :
+  ((left_adjoint i).obj (A ⨯ B) ⟶ X) ≃ ((left_adjoint i).obj A ⨯ (left_adjoint i).obj B ⟶ X) :=
+  calc _ ≃ (A ⨯ B ⟶ i.obj X) := (adjunction.of_right_adjoint i).homEquiv _ _ 
+    _ ≃ (B ⨯ A ⟶ i.obj X) := (limits.prod.braiding _ _).homCongr (iso.refl _)
+    _ ≃ (A ⟶ B ⟹ i.obj X) := (exp.adjunction _).homEquiv _ _ 
+    _ ≃ (i.obj ((left_adjoint i).obj A) ⟶ B ⟹ i.obj X) :=
+    unit_comp_partial_bijective _ (exponential_ideal.exp_closed (i.obj_mem_ess_image _) _)
+    _ ≃ (B ⨯ i.obj ((left_adjoint i).obj A) ⟶ i.obj X) := ((exp.adjunction _).homEquiv _ _).symm 
+    _ ≃ (i.obj ((left_adjoint i).obj A) ⨯ B ⟶ i.obj X) := (limits.prod.braiding _ _).homCongr (iso.refl _)
+    _ ≃ (B ⟶ i.obj ((left_adjoint i).obj A) ⟹ i.obj X) := (exp.adjunction _).homEquiv _ _ 
+    _ ≃ (i.obj ((left_adjoint i).obj B) ⟶ i.obj ((left_adjoint i).obj A) ⟹ i.obj X) :=
+    unit_comp_partial_bijective _ (exponential_ideal.exp_closed (i.obj_mem_ess_image _) _)
+    _ ≃ (i.obj ((left_adjoint i).obj A) ⨯ i.obj ((left_adjoint i).obj B) ⟶ i.obj X) :=
+    ((exp.adjunction _).homEquiv _ _).symm 
+    _ ≃ (i.obj ((left_adjoint i).obj A ⨯ (left_adjoint i).obj B) ⟶ i.obj X) :=
+    by 
+      apply iso.hom_congr _ (iso.refl _)
+      have  : preserves_limits i := (adjunction.of_right_adjoint i).rightAdjointPreservesLimits 
+      exact (preserves_limit_pair.iso _ _ _).symm 
+    _ ≃ ((left_adjoint i).obj A ⨯ (left_adjoint i).obj B ⟶ X) := (equiv_of_fully_faithful _).symm
+    
 
 theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = prod_comparison _ _ _ :=
   by 
@@ -234,10 +238,10 @@ is the forward map of the identity morphism.
 theorem prod_comparison_iso (A B : C) : is_iso (prod_comparison (left_adjoint i) A B) :=
   ⟨⟨bijection i _ _ _ (𝟙 _),
       by 
-        rw [←(bijection i _ _ _).Injective.eq_iff, bijection_natural, ←bijection_symm_apply_id, Equiv.apply_symm_apply,
+        rw [←(bijection i _ _ _).Injective.eq_iff, bijection_natural, ←bijection_symm_apply_id, Equivₓ.apply_symm_apply,
           id_comp],
       by 
-        rw [←bijection_natural, id_comp, ←bijection_symm_apply_id, Equiv.apply_symm_apply]⟩⟩
+        rw [←bijection_natural, id_comp, ←bijection_symm_apply_id, Equivₓ.apply_symm_apply]⟩⟩
 
 attribute [local instance] prod_comparison_iso
 
@@ -253,19 +257,15 @@ noncomputable def preserves_binary_products_of_exponential_ideal :
           apply limits.preserves_limit_of_iso_diagram _ (diagram_iso_pair K).symm 
           apply preserves_limit_pair.of_iso_prod_comparison }
 
--- error in CategoryTheory.Closed.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a reflective subcategory is an exponential ideal, then the reflector preserves finite products.
 -/
-noncomputable
-def preserves_finite_products_of_exponential_ideal
-(J : Type*)
-[fintype J] : preserves_limits_of_shape (discrete J) (left_adjoint i) :=
-begin
-  letI [] [] [":=", expr preserves_binary_products_of_exponential_ideal i],
-  letI [] [] [":=", expr left_adjoint_preserves_terminal_of_reflective i],
-  apply [expr preserves_finite_products_of_preserves_binary_and_terminal (left_adjoint i) J]
-end
+noncomputable def preserves_finite_products_of_exponential_ideal (J : Type _) [Fintype J] :
+  preserves_limits_of_shape (discrete J) (left_adjoint i) :=
+  by 
+    let this' := preserves_binary_products_of_exponential_ideal i 
+    let this' := left_adjoint_preserves_terminal_of_reflective i 
+    apply preserves_finite_products_of_preserves_binary_and_terminal (left_adjoint i) J
 
 end 
 

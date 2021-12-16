@@ -76,7 +76,7 @@ def from_kleisli : kleisli T ⥤ C :=
     cf Lemma 5.2.11 of [Riehl][riehl2017]. -/
 def adj : to_kleisli T ⊣ from_kleisli T :=
   adjunction.mk_of_hom_equiv
-    { homEquiv := fun X Y => Equiv.refl (X ⟶ T.obj Y),
+    { homEquiv := fun X Y => Equivₓ.refl (X ⟶ T.obj Y),
       hom_equiv_naturality_left_symm' :=
         fun X Y Z f g =>
           by 

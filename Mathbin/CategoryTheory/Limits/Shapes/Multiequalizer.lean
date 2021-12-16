@@ -726,7 +726,7 @@ end MultispanIndex
 abbrev has_multiequalizer (I : multicospan_index C) :=
   has_limit I.multicospan
 
-noncomputable theory
+noncomputable section 
 
 /-- The multiequalizer of `I : multicospan_index C`. -/
 abbrev multiequalizer (I : multicospan_index C) [has_multiequalizer I] : C :=

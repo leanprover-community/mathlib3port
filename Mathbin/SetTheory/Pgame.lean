@@ -186,6 +186,7 @@ theorem subsequent.right_move {xl xr} {xL : xl → Pgame} {xR : xr → Pgame} {j
   subsequent (xR j) (mk xl xr xL xR) :=
   subsequent.right (mk xl xr xL xR) j
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry
@@ -275,31 +276,53 @@ theorem lt_def_le {x y : Pgame} :
     rw [mk_lt_mk]
     rfl
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The definition of `x ≤ y` on pre-games, in terms of `≤` two moves later. -/
-theorem le_def {x y : Pgame} :
-  x ≤ y ↔
-    (∀ i : x.left_moves,
-        (∃ i' : y.left_moves, x.move_left i ≤ y.move_left i') ∨
-          ∃ j : (x.move_left i).RightMoves, (x.move_left i).moveRight j ≤ y) ∧
-      ∀ j : y.right_moves,
-        (∃ i : (y.move_right j).LeftMoves, x ≤ (y.move_right j).moveLeft i) ∨
-          ∃ j' : x.right_moves, x.move_right j' ≤ y.move_right j :=
-  by 
-    rw [le_def_lt]
-    conv  => toLHS simp only [lt_def_le]
+  theorem
+    le_def
+    { x y : Pgame }
+      :
+        x ≤ y
+          ↔
+          ∀
+              i : x.left_moves
+              ,
+              ∃ i' : y.left_moves , x.move_left i ≤ y.move_left i'
+                ∨
+                ∃ j : x.move_left i . RightMoves , x.move_left i . moveRight j ≤ y
+            ∧
+            ∀
+              j : y.right_moves
+              ,
+              ∃ i : y.move_right j . LeftMoves , x ≤ y.move_right j . moveLeft i
+                ∨
+                ∃ j' : x.right_moves , x.move_right j' ≤ y.move_right j
+    := by rw [ le_def_lt ] conv => lhs simp only [ lt_def_le ]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The definition of `x < y` on pre-games, in terms of `<` two moves later. -/
-theorem lt_def {x y : Pgame} :
-  x < y ↔
-    (∃ i : y.left_moves,
-        (∀ i' : x.left_moves, x.move_left i' < y.move_left i) ∧
-          ∀ j : (y.move_left i).RightMoves, x < (y.move_left i).moveRight j) ∨
-      ∃ j : x.right_moves,
-        (∀ i : (x.move_right j).LeftMoves, (x.move_right j).moveLeft i < y) ∧
-          ∀ j' : y.right_moves, x.move_right j < y.move_right j' :=
-  by 
-    rw [lt_def_le]
-    conv  => toLHS simp only [le_def_lt]
+  theorem
+    lt_def
+    { x y : Pgame }
+      :
+        x < y
+          ↔
+          ∃
+              i : y.left_moves
+              ,
+              ∀ i' : x.left_moves , x.move_left i' < y.move_left i
+                ∧
+                ∀ j : y.move_left i . RightMoves , x < y.move_left i . moveRight j
+            ∨
+            ∃
+              j : x.right_moves
+              ,
+              ∀ i : x.move_right j . LeftMoves , x.move_right j . moveLeft i < y
+                ∧
+                ∀ j' : y.right_moves , x.move_right j < y.move_right j'
+    := by rw [ lt_def_le ] conv => lhs simp only [ le_def_lt ]
 
 /-- The definition of `x ≤ 0` on pre-games, in terms of `≤ 0` two moves later. -/
 theorem le_zero {x : Pgame} :
@@ -443,7 +466,7 @@ theorem lt_of_lt_of_leₓ {x y z : Pgame} (hxy : x < y) (hyz : y ≤ z) : x < z 
 
 /-- Define the equivalence relation on pre-games. Two pre-games
   `x`, `y` are equivalent if `x ≤ y` and `y ≤ x`. -/
-def Equiv (x y : Pgame) : Prop :=
+def Equivₓ (x y : Pgame) : Prop :=
   x ≤ y ∧ y ≤ x
 
 local infixl:0 " ≈ " => Pgame.Equiv
@@ -492,22 +515,22 @@ theorem equiv_of_mk_equiv {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R :
   (hl : ∀ i : x.left_moves, x.move_left i ≈ y.move_left (L i))
   (hr : ∀ j : y.right_moves, x.move_right (R.symm j) ≈ y.move_right j) : x ≈ y :=
   by 
-    fsplit <;> rw [le_def]
+    fconstructor <;> rw [le_def]
     ·
       exact ⟨fun i => Or.inl ⟨L i, (hl i).1⟩, fun j => Or.inr ⟨R.symm j, (hr j).1⟩⟩
     ·
-      fsplit
+      fconstructor
       ·
         intro i 
         left 
         specialize hl (L.symm i)
-        simp only [move_left_mk, Equiv.apply_symm_apply] at hl 
+        simp only [move_left_mk, Equivₓ.apply_symm_apply] at hl 
         use ⟨L.symm i, hl.2⟩
       ·
         intro j 
         right 
         specialize hr (R j)
-        simp only [move_right_mk, Equiv.symm_apply_apply] at hr 
+        simp only [move_right_mk, Equivₓ.symm_apply_apply] at hr 
         use ⟨R j, hr.2⟩
 
 /-- `restricted x y` says that Left always has no more moves in `x` than in `y`,
@@ -551,7 +574,7 @@ def relabelling.restricted : ∀ {x y : Pgame} r : relabelling x y, restricted x
 @[refl]
 def relabelling.refl : ∀ x : Pgame, relabelling x x
 | mk xl xr xL xR =>
-  relabelling.mk (Equiv.refl _) (Equiv.refl _) (fun i => relabelling.refl _) fun j => relabelling.refl _
+  relabelling.mk (Equivₓ.refl _) (Equivₓ.refl _) (fun i => relabelling.refl _) fun j => relabelling.refl _
 
 /-- Reverse a relabelling. -/
 @[symm]
@@ -704,68 +727,81 @@ def relabelling.neg_congr : ∀ {x y : Pgame}, x.relabelling y → (-x).Relabell
         (by 
           simpa using L_relabelling (L_equiv.symm i))⟩
 
--- error in SetTheory.Pgame: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_iff_neg_ge : ∀ {x y : pgame}, «expr ↔ »(«expr ≤ »(x, y), «expr ≤ »(«expr- »(y), «expr- »(x)))
-| mk xl xr xL xR, mk yl yr yL yR := begin
-  rw ["[", expr le_def, "]"] [],
-  rw ["[", expr le_def, "]"] [],
-  dsimp [] ["[", expr neg, "]"] [] [],
-  split,
-  { intro [ident h],
-    split,
-    { intro [ident i],
-      have [ident t] [] [":=", expr h.right i],
-      cases [expr t] [],
-      { right,
-        cases [expr t] [],
-        use [expr (@right_moves_neg (yR i)).symm t_w],
-        convert [] [expr le_iff_neg_ge.1 t_h] [],
-        simp [] [] [] [] [] [] },
-      { left,
-        cases [expr t] [],
-        use [expr t_w],
-        exact [expr le_iff_neg_ge.1 t_h] } },
-    { intro [ident j],
-      have [ident t] [] [":=", expr h.left j],
-      cases [expr t] [],
-      { right,
-        cases [expr t] [],
-        use [expr t_w],
-        exact [expr le_iff_neg_ge.1 t_h] },
-      { left,
-        cases [expr t] [],
-        use [expr (@left_moves_neg (xL j)).symm t_w],
-        convert [] [expr le_iff_neg_ge.1 t_h] [],
-        simp [] [] [] [] [] [] } } },
-  { intro [ident h],
-    split,
-    { intro [ident i],
-      have [ident t] [] [":=", expr h.right i],
-      cases [expr t] [],
-      { right,
-        cases [expr t] [],
-        use [expr @left_moves_neg (xL i) t_w],
-        convert [] [expr le_iff_neg_ge.2 _] [],
-        convert [] [expr t_h] [],
-        simp [] [] [] [] [] [] },
-      { left,
-        cases [expr t] [],
-        use [expr t_w],
-        exact [expr le_iff_neg_ge.2 t_h] } },
-    { intro [ident j],
-      have [ident t] [] [":=", expr h.left j],
-      cases [expr t] [],
-      { right,
-        cases [expr t] [],
-        use [expr t_w],
-        exact [expr le_iff_neg_ge.2 t_h] },
-      { left,
-        cases [expr t] [],
-        use [expr @right_moves_neg (yR j) t_w],
-        convert [] [expr le_iff_neg_ge.2 _] [],
-        convert [] [expr t_h] [],
-        simp [] [] [] [] [] [] } } }
-end
+theorem le_iff_neg_ge : ∀ {x y : Pgame}, x ≤ y ↔ -y ≤ -x
+| mk xl xr xL xR, mk yl yr yL yR =>
+  by 
+    rw [le_def]
+    rw [le_def]
+    dsimp [neg]
+    constructor
+    ·
+      intro h 
+      constructor
+      ·
+        intro i 
+        have t := h.right i 
+        cases t
+        ·
+          right 
+          cases t 
+          use (@right_moves_neg (yR i)).symm t_w 
+          convert le_iff_neg_ge.1 t_h 
+          simp 
+        ·
+          left 
+          cases t 
+          use t_w 
+          exact le_iff_neg_ge.1 t_h
+      ·
+        intro j 
+        have t := h.left j 
+        cases t
+        ·
+          right 
+          cases t 
+          use t_w 
+          exact le_iff_neg_ge.1 t_h
+        ·
+          left 
+          cases t 
+          use (@left_moves_neg (xL j)).symm t_w 
+          convert le_iff_neg_ge.1 t_h 
+          simp 
+    ·
+      intro h 
+      constructor
+      ·
+        intro i 
+        have t := h.right i 
+        cases t
+        ·
+          right 
+          cases t 
+          use (@left_moves_neg (xL i)) t_w 
+          convert le_iff_neg_ge.2 _ 
+          convert t_h 
+          simp 
+        ·
+          left 
+          cases t 
+          use t_w 
+          exact le_iff_neg_ge.2 t_h
+      ·
+        intro j 
+        have t := h.left j 
+        cases t
+        ·
+          right 
+          cases t 
+          use t_w 
+          exact le_iff_neg_ge.2 t_h
+        ·
+          left 
+          cases t 
+          use (@right_moves_neg (yR j)) t_w 
+          convert le_iff_neg_ge.2 _ 
+          convert t_h 
+          simp 
 
 theorem neg_congr {x y : Pgame} (h : x ≈ y) : -x ≈ -y :=
   ⟨le_iff_neg_ge.1 h.2, le_iff_neg_ge.1 h.1⟩
@@ -787,19 +823,21 @@ theorem le_zero_iff_zero_le_neg {x : Pgame} : x ≤ 0 ↔ 0 ≤ -x :=
     convert le_iff_neg_ge 
     rw [neg_zero]
 
--- error in SetTheory.Pgame: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
-def add (x y : pgame) : pgame :=
-begin
-  induction [expr x] [] ["with", ident xl, ident xr, ident xL, ident xR, ident IHxl, ident IHxr] ["generalizing", ident y],
-  induction [expr y] [] ["with", ident yl, ident yr, ident yL, ident yR, ident IHyl, ident IHyr] [],
-  have [ident y] [] [":=", expr mk yl yr yL yR],
-  refine [expr ⟨«expr ⊕ »(xl, yl), «expr ⊕ »(xr, yr), sum.rec _ _, sum.rec _ _⟩],
-  { exact [expr λ i, IHxl i y] },
-  { exact [expr λ i, IHyl i] },
-  { exact [expr λ i, IHxr i y] },
-  { exact [expr λ i, IHyr i] }
-end
+def add (x y : Pgame) : Pgame :=
+  by 
+    induction' x with xl xr xL xR IHxl IHxr generalizing y 
+    induction' y with yl yr yL yR IHyl IHyr 
+    have y := mk yl yr yL yR 
+    refine' ⟨Sum xl yl, Sum xr yr, Sum.rec _ _, Sum.rec _ _⟩
+    ·
+      exact fun i => IHxl i y
+    ·
+      exact fun i => IHyl i
+    ·
+      exact fun i => IHxr i y
+    ·
+      exact fun i => IHyr i
 
 instance : Add Pgame :=
   ⟨add⟩
@@ -808,7 +846,7 @@ instance : Add Pgame :=
 def add_zero_relabelling : ∀ x : Pgame.{u}, relabelling (x+0) x
 | mk xl xr xL xR =>
   by 
-    refine' ⟨Equiv.sumEmpty xl Pempty, Equiv.sumEmpty xr Pempty, _, _⟩
+    refine' ⟨Equivₓ.sumEmpty xl Pempty, Equivₓ.sumEmpty xr Pempty, _, _⟩
     ·
       rintro (⟨i⟩ | ⟨⟨⟩⟩)
       apply add_zero_relabelling
@@ -824,7 +862,7 @@ theorem add_zero_equiv (x : Pgame.{u}) : (x+0) ≈ x :=
 def zero_add_relabelling : ∀ x : Pgame.{u}, relabelling (0+x) x
 | mk xl xr xL xR =>
   by 
-    refine' ⟨Equiv.emptySum Pempty xl, Equiv.emptySum Pempty xr, _, _⟩
+    refine' ⟨Equivₓ.emptySum Pempty xl, Equivₓ.emptySum Pempty xr, _, _⟩
     ·
       rintro (⟨⟨⟩⟩ | ⟨i⟩)
       apply zero_add_relabelling
@@ -910,7 +948,7 @@ def relabelling.add_congr : ∀ {w x y z : Pgame.{u}}, w.relabelling x → y.rel
 | mk wl wr wL wR, mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR, ⟨L_equiv₁, R_equiv₁, L_relabelling₁, R_relabelling₁⟩,
   ⟨L_equiv₂, R_equiv₂, L_relabelling₂, R_relabelling₂⟩ =>
   by 
-    refine' ⟨Equiv.sumCongr L_equiv₁ L_equiv₂, Equiv.sumCongr R_equiv₁ R_equiv₂, _, _⟩
+    refine' ⟨Equivₓ.sumCongr L_equiv₁ L_equiv₂, Equivₓ.sumCongr R_equiv₁ R_equiv₂, _, _⟩
     ·
       rintro (i | j)
       ·
@@ -936,7 +974,7 @@ def relabelling.sub_congr {w x y z : Pgame} (h₁ : w.relabelling x) (h₂ : y.r
 /-- `-(x+y)` has exactly the same moves as `-x + -y`. -/
 def neg_add_relabelling : ∀ x y : Pgame, relabelling (-x+y) ((-x)+-y)
 | mk xl xr xL xR, mk yl yr yL yR =>
-  ⟨Equiv.refl _, Equiv.refl _,
+  ⟨Equivₓ.refl _, Equivₓ.refl _,
     fun j =>
       Sum.casesOn j (fun j => neg_add_relabelling (xR j) (mk yl yr yL yR))
         fun j => neg_add_relabelling (mk xl xr xL xR) (yR j),
@@ -951,7 +989,7 @@ theorem neg_add_le {x y : Pgame} : (-x+y) ≤ (-x)+-y :=
 def add_comm_relabelling : ∀ x y : Pgame.{u}, relabelling (x+y) (y+x)
 | mk xl xr xL xR, mk yl yr yL yR =>
   by 
-    refine' ⟨Equiv.sumComm _ _, Equiv.sumComm _ _, _, _⟩ <;>
+    refine' ⟨Equivₓ.sumComm _ _, Equivₓ.sumComm _ _, _, _⟩ <;>
       rintro (_ | _) <;>
         ·
           simp [left_moves_add, right_moves_add]
@@ -967,7 +1005,7 @@ theorem add_comm_equiv {x y : Pgame} : (x+y) ≈ y+x :=
 def add_assoc_relabelling : ∀ x y z : Pgame.{u}, relabelling ((x+y)+z) (x+y+z)
 | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR =>
   by 
-    refine' ⟨Equiv.sumAssoc _ _ _, Equiv.sumAssoc _ _ _, _, _⟩
+    refine' ⟨Equivₓ.sumAssoc _ _ _, Equivₓ.sumAssoc _ _ _, _, _⟩
     ·
       rintro (⟨i | i⟩ | i)
       ·
@@ -992,47 +1030,56 @@ def add_assoc_relabelling : ∀ x y z : Pgame.{u}, relabelling ((x+y)+z) (x+y+z)
 theorem add_assoc_equiv {x y z : Pgame} : ((x+y)+z) ≈ x+y+z :=
   (add_assoc_relabelling x y z).Equiv
 
--- error in SetTheory.Pgame: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_le_add_right : ∀ {x y z : pgame} (h : «expr ≤ »(x, y)), «expr ≤ »(«expr + »(x, z), «expr + »(y, z))
-| mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR := begin
-  intros [ident h],
-  rw [expr le_def] [],
-  split,
-  { intros [ident i],
-    change [expr «expr ⊕ »(xl, zl)] [] ["at", ident i],
-    cases [expr i] [],
-    { rw [expr le_def] ["at", ident h],
-      cases [expr h] [],
-      have [ident t] [] [":=", expr h_left i],
-      rcases [expr t, "with", "⟨", ident i', ",", ident ih, "⟩", "|", "⟨", ident j, ",", ident jh, "⟩"],
-      { left,
-        refine [expr ⟨(left_moves_add _ _).inv_fun (sum.inl i'), _⟩],
-        exact [expr add_le_add_right ih] },
-      { right,
-        refine [expr ⟨(right_moves_add _ _).inv_fun (sum.inl j), _⟩],
-        convert [] [expr add_le_add_right jh] [],
-        apply [expr add_move_right_inl] } },
-    { left,
-      refine [expr ⟨(left_moves_add _ _).inv_fun (sum.inr i), _⟩],
-      exact [expr add_le_add_right h] } },
-  { intros [ident j],
-    change [expr «expr ⊕ »(yr, zr)] [] ["at", ident j],
-    cases [expr j] [],
-    { rw [expr le_def] ["at", ident h],
-      cases [expr h] [],
-      have [ident t] [] [":=", expr h_right j],
-      rcases [expr t, "with", "⟨", ident i, ",", ident ih, "⟩", "|", "⟨", ident j', ",", ident jh, "⟩"],
-      { left,
-        refine [expr ⟨(left_moves_add _ _).inv_fun (sum.inl i), _⟩],
-        convert [] [expr add_le_add_right ih] [],
-        apply [expr add_move_left_inl] },
-      { right,
-        refine [expr ⟨(right_moves_add _ _).inv_fun (sum.inl j'), _⟩],
-        exact [expr add_le_add_right jh] } },
-    { right,
-      refine [expr ⟨(right_moves_add _ _).inv_fun (sum.inr j), _⟩],
-      exact [expr add_le_add_right h] } }
-end
+theorem add_le_add_right : ∀ {x y z : Pgame} h : x ≤ y, (x+z) ≤ y+z
+| mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR =>
+  by 
+    intro h 
+    rw [le_def]
+    constructor
+    ·
+      intro i 
+      change Sum xl zl at i 
+      cases i
+      ·
+        rw [le_def] at h 
+        cases h 
+        have t := h_left i 
+        rcases t with (⟨i', ih⟩ | ⟨j, jh⟩)
+        ·
+          left 
+          refine' ⟨(left_moves_add _ _).invFun (Sum.inl i'), _⟩
+          exact add_le_add_right ih
+        ·
+          right 
+          refine' ⟨(right_moves_add _ _).invFun (Sum.inl j), _⟩
+          convert add_le_add_right jh 
+          apply add_move_right_inl
+      ·
+        left 
+        refine' ⟨(left_moves_add _ _).invFun (Sum.inr i), _⟩
+        exact add_le_add_right h
+    ·
+      intro j 
+      change Sum yr zr at j 
+      cases j
+      ·
+        rw [le_def] at h 
+        cases h 
+        have t := h_right j 
+        rcases t with (⟨i, ih⟩ | ⟨j', jh⟩)
+        ·
+          left 
+          refine' ⟨(left_moves_add _ _).invFun (Sum.inl i), _⟩
+          convert add_le_add_right ih 
+          apply add_move_left_inl
+        ·
+          right 
+          refine' ⟨(right_moves_add _ _).invFun (Sum.inl j'), _⟩
+          exact add_le_add_right jh
+      ·
+        right 
+        refine' ⟨(right_moves_add _ _).invFun (Sum.inr j), _⟩
+        exact add_le_add_right h
 
 theorem add_le_add_left {x y z : Pgame} (h : y ≤ z) : (x+y) ≤ x+z :=
   calc (x+y) ≤ y+x := add_comm_le 
@@ -1055,7 +1102,7 @@ theorem add_left_neg_le_zero : ∀ {x : Pgame}, ((-x)+x) ≤ 0
 | ⟨xl, xr, xL, xR⟩ =>
   by 
     rw [le_def]
-    split 
+    constructor
     ·
       intro i 
       change Sum xr xl at i 
@@ -1147,7 +1194,7 @@ theorem star_lt_zero : star < 0 :=
         Or.inr
           ⟨⟨0, zero_lt_one⟩,
             by 
-              split  <;> rintro ⟨⟩⟩
+              constructor <;> rintro ⟨⟩⟩
 
 theorem zero_lt_star : 0 < star :=
   by 
@@ -1156,11 +1203,11 @@ theorem zero_lt_star : 0 < star :=
         Or.inl
           ⟨⟨0, zero_lt_one⟩,
             by 
-              split  <;> rintro ⟨⟩⟩
+              constructor <;> rintro ⟨⟩⟩
 
 /-- The pre-game `ω`. (In fact all ordinals have game and surreal representatives.) -/
 def omega : Pgame :=
-  ⟨Ulift ℕ, Pempty, fun n => «expr↑ » n.1, Pempty.elimₓ⟩
+  ⟨Ulift ℕ, Pempty, fun n => ↑n.1, Pempty.elimₓ⟩
 
 theorem zero_lt_one : (0 : Pgame) < 1 :=
   by 
@@ -1169,7 +1216,7 @@ theorem zero_lt_one : (0 : Pgame) < 1 :=
     use
       ⟨PUnit.unit,
         by 
-          split  <;> rintro ⟨⟩⟩
+          constructor <;> rintro ⟨⟩⟩
 
 /-- The pre-game `half` is defined as `{0 | 1}`. -/
 def half : Pgame :=
@@ -1188,14 +1235,14 @@ theorem zero_lt_half : 0 < half :=
     rw [lt_def]
     left 
     use PUnit.unit 
-    split  <;> rintro ⟨⟩
+    constructor <;> rintro ⟨⟩
 
 theorem half_lt_one : half < 1 :=
   by 
     rw [lt_def]
     right 
     use PUnit.unit 
-    split  <;> rintro ⟨⟩
+    constructor <;> rintro ⟨⟩
     exact zero_lt_one
 
 end Pgame

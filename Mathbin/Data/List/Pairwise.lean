@@ -83,22 +83,40 @@ theorem pairwise_of_forall {l : List α} (H : ∀ x y, R x y) : Pairwise R l :=
   by 
     induction l <;> [exact pairwise.nil, simp only [pairwise_cons, forall_2_true_iff, and_trueₓ]]
 
--- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pairwise.and_mem
-{l : list α} : «expr ↔ »(pairwise R l, pairwise (λ
-  x y, «expr ∧ »(«expr ∈ »(x, l), «expr ∧ »(«expr ∈ »(y, l), R x y))) l) :=
-pairwise.iff_of_mem (by simp [] [] ["only"] ["[", expr true_and, ",", expr iff_self, ",", expr forall_2_true_iff, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  pairwise.and_mem
+  { l : List α } : Pairwise R l ↔ Pairwise fun x y => x ∈ l ∧ y ∈ l ∧ R x y l
+  :=
+    pairwise.iff_of_mem
+      by
+        simp
+          ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+          only
+          [ true_andₓ , iff_selfₓ , forall_2_true_iff ]
 
--- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pairwise.imp_mem
-{l : list α} : «expr ↔ »(pairwise R l, pairwise (λ x y, «expr ∈ »(x, l) → «expr ∈ »(y, l) → R x y) l) :=
-pairwise.iff_of_mem (by simp [] [] ["only"] ["[", expr forall_prop_of_true, ",", expr iff_self, ",", expr forall_2_true_iff, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  pairwise.imp_mem
+  { l : List α } : Pairwise R l ↔ Pairwise fun x y => x ∈ l → y ∈ l → R x y l
+  :=
+    pairwise.iff_of_mem
+      by
+        simp
+          ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+          only
+          [ forall_prop_of_true , iff_selfₓ , forall_2_true_iff ]
 
 theorem pairwise_of_sublist : ∀ {l₁ l₂ : List α}, l₁ <+ l₂ → Pairwise R l₂ → Pairwise R l₁
 | _, _, sublist.slnil, h => h
 | _, _, sublist.cons l₁ l₂ a s, pairwise.cons i n => pairwise_of_sublist s n
 | _, _, sublist.cons2 l₁ l₂ a s, pairwise.cons i n => (pairwise_of_sublist s n).cons (Ball.imp_left s.subset i)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
 theorem forall_of_forall_of_pairwise (H : Symmetric R) {l : List α} (H₁ : ∀ x _ : x ∈ l, R x x) (H₂ : Pairwise R l) :
   ∀ x _ : x ∈ l y _ : y ∈ l, R x y :=
   by 
@@ -110,6 +128,8 @@ theorem forall_of_forall_of_pairwise (H : Symmetric R) {l : List α} (H₁ : ∀
     rintro x (rfl | hx) y (rfl | hy)
     exacts[H₁₁, H₂₁ _ hy, H (H₂₁ _ hx), IH H₁₂ H₂₂ _ hx _ hy]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem forall_of_pairwise (H : Symmetric R) {l : List α} (hl : Pairwise R l) :
   ∀ a _ : a ∈ l, ∀ b _ : b ∈ l, a ≠ b → R a b :=
   forall_of_forall_of_pairwise (fun a b h hne => H (h hne.symm)) (fun _ _ h => (h rfl).elim)
@@ -125,6 +145,8 @@ theorem pairwise_pair {a b : α} : Pairwise R [a, b] ↔ R a b :=
     simp only [pairwise_cons, mem_singleton, forall_eq, forall_prop_of_false (not_mem_nil _), forall_true_iff,
       pairwise.nil, and_trueₓ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l₂)
 theorem pairwise_append {l₁ l₂ : List α} :
   Pairwise R (l₁ ++ l₂) ↔ Pairwise R l₁ ∧ Pairwise R l₂ ∧ ∀ x _ : x ∈ l₁, ∀ y _ : y ∈ l₂, R x y :=
   by 
@@ -169,6 +191,10 @@ theorem pairwise_map_of_pairwise {S : β → β → Prop} (f : α → β) (H : �
   (p : Pairwise R l) : Pairwise S (map f l) :=
   (pairwise_map f).2$ p.imp H
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » f a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b' «expr ∈ » f a')
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » f a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b' «expr ∈ » f a')
 theorem pairwise_filter_map (f : β → Option α) {l : List β} :
   Pairwise R (filter_map f l) ↔ Pairwise (fun a a' : β => ∀ b _ : b ∈ f a b' _ : b' ∈ f a', R b b') l :=
   let S (a a' : β) := ∀ b _ : b ∈ f a b' _ : b' ∈ f a', R b b' 
@@ -188,6 +214,8 @@ theorem pairwise_filter_map (f : β → Option α) {l : List β} :
         (∀ a' : β, a' ∈ l → ∀ b' : α, f a' = some b' → R b b') ∧ Pairwise S l 
     exact and_congr ⟨fun h b mb a ma => h a b mb ma, fun h a b mb ma => h b mb a ma⟩ Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » f a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b' «expr ∈ » f a')
 theorem pairwise_filter_map_of_pairwise {S : β → β → Prop} (f : α → Option β)
   (H : ∀ a a' : α, R a a' → ∀ b _ : b ∈ f a b' _ : b' ∈ f a', S b b') {l : List α} (p : Pairwise R l) :
   Pairwise S (filter_map f l) :=
@@ -205,6 +233,7 @@ theorem pairwise_filter_of_pairwise (p : α → Prop) [DecidablePred p] {l : Lis
   Pairwise R l → Pairwise R (filter p l) :=
   pairwise_of_sublist (filter_sublist _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h : ∀ x _ : x ∈ l, p x) :
   Pairwise R (l.pmap f h) ↔ Pairwise (fun b₁ b₂ => ∀ h₁ : p b₁ h₂ : p b₂, R (f b₁ h₁) (f b₂ h₂)) l :=
   by 
@@ -219,6 +248,7 @@ theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h
     rintro H _ b hb rfl 
     exact H b hb _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem pairwise.pmap {l : List α} (hl : Pairwise R l) {p : α → Prop} {f : ∀ a, p a → β} (h : ∀ x _ : x ∈ l, p x)
   {S : β → β → Prop} (hS : ∀ ⦃x⦄ hx : p x ⦃y⦄ hy : p y, R x y → S (f x hx) (f y hy)) : Pairwise S (l.pmap f h) :=
   by 
@@ -227,23 +257,21 @@ theorem pairwise.pmap {l : List α} (hl : Pairwise R l) {p : α → Prop} {f : �
     apply hS 
     assumption
 
--- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pairwise_join
-{L : list (list α)} : «expr ↔ »(pairwise R (join L), «expr ∧ »(∀
-  l «expr ∈ » L, pairwise R l, pairwise (λ l₁ l₂, ∀ (x «expr ∈ » l₁) (y «expr ∈ » l₂), R x y) L)) :=
-begin
-  induction [expr L] [] ["with", ident l, ident L, ident IH] [],
-  { simp [] [] ["only"] ["[", expr join, ",", expr pairwise.nil, ",", expr forall_prop_of_false (not_mem_nil _), ",", expr forall_const, ",", expr and_self, "]"] [] [] },
-  have [] [":", expr «expr ↔ »(∀
-    x : α, «expr ∈ »(x, l) → ∀
-    (y : α)
-    (x_1 : list α), «expr ∈ »(x_1, L) → «expr ∈ »(y, x_1) → R x y, ∀
-    a' : list α, «expr ∈ »(a', L) → ∀
-    x : α, «expr ∈ »(x, l) → ∀
-    y : α, «expr ∈ »(y, a') → R x y)] [":=", expr ⟨λ h a b c d e, h c d e a b, λ h c d e a b, h a b c d e⟩],
-  simp [] [] ["only"] ["[", expr join, ",", expr pairwise_append, ",", expr IH, ",", expr mem_join, ",", expr exists_imp_distrib, ",", expr and_imp, ",", expr this, ",", expr forall_mem_cons, ",", expr pairwise_cons, "]"] [] [],
-  simp [] [] ["only"] ["[", expr and_assoc, ",", expr and_comm, ",", expr and.left_comm, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » L)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l₂)
+theorem pairwise_join {L : List (List α)} :
+  Pairwise R (join L) ↔ (∀ l _ : l ∈ L, Pairwise R l) ∧ Pairwise (fun l₁ l₂ => ∀ x _ : x ∈ l₁ y _ : y ∈ l₂, R x y) L :=
+  by 
+    induction' L with l L IH
+    ·
+      simp only [join, pairwise.nil, forall_prop_of_false (not_mem_nil _), forall_const, and_selfₓ]
+    have  :
+      (∀ x : α, x ∈ l → ∀ y : α x_1 : List α, x_1 ∈ L → y ∈ x_1 → R x y) ↔
+        ∀ a' : List α, a' ∈ L → ∀ x : α, x ∈ l → ∀ y : α, y ∈ a' → R x y :=
+      ⟨fun h a b c d e => h c d e a b, fun h c d e a b => h a b c d e⟩
+    simp only [join, pairwise_append, IH, mem_join, exists_imp_distrib, and_imp, this, forall_mem_cons, pairwise_cons]
+    simp only [and_assoc, and_comm, And.left_comm]
 
 @[simp]
 theorem pairwise_reverse : ∀ {R} {l : List α}, Pairwise R (reverse l) ↔ Pairwise (fun x y => R y x) l :=
@@ -255,24 +283,26 @@ theorem pairwise_reverse : ∀ {R} {l : List α}, Pairwise R (reverse l) ↔ Pai
         simpa only [reverse_cons, pairwise_append, IH, pairwise_cons, forall_prop_of_false (not_mem_nil _),
           forall_true_iff, pairwise.nil, mem_reverse, mem_singleton, forall_eq, true_andₓ] using h]
 
-theorem Pairwise.set_pairwise {l : List α} (h : Pairwise R l) (hr : Symmetric R) : Set.Pairwise { x | x ∈ l } R :=
-  by 
-    induction' h with hd tl imp h IH
-    ·
-      simp 
-    ·
-      intro x hx y hy hxy 
-      simp only [mem_cons_iff, Set.mem_set_of_eq] at hx hy 
-      rcases hx with (rfl | hx) <;> rcases hy with (rfl | hy)
-      ·
-        contradiction
-      ·
-        exact imp y hy
-      ·
-        exact hr (imp x hx)
-      ·
-        exact IH x hx y hy hxy
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  Pairwise.set_pairwise
+  { l : List α } ( h : Pairwise R l ) ( hr : Symmetric R ) : Set.Pairwise { x | x ∈ l } R
+  :=
+    by
+      induction' h with hd tl imp h IH
+        · simp
+        ·
+          intro x hx y hy hxy
+            simp only [ mem_cons_iff , Set.mem_set_of_eq ] at hx hy
+            rcases hx with ( rfl | hx ) <;> rcases hy with ( rfl | hy )
+            · contradiction
+            · exact imp y hy
+            · exact hr imp x hx
+            · exact IH hx hy hxy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α} {r : α → α → Prop}
   (hr : ∀ a, 1 < count a l → r a a) (h : ∀ a _ : a ∈ l b _ : b ∈ l, a ≠ b → r a b) : l.pairwise r :=
   by 
@@ -281,7 +311,7 @@ theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α
       simp 
     ·
       rw [List.pairwise_consₓ]
-      split 
+      constructor
       ·
         intro x hx 
         byCases' H : hd = x
@@ -306,6 +336,8 @@ theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α
           intro x hx y hy 
           exact h x (mem_cons_of_mem _ hx) y (mem_cons_of_mem _ hy)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem pairwise_of_reflexive_of_forall_ne {l : List α} {r : α → α → Prop} (hr : Reflexive r)
   (h : ∀ a _ : a ∈ l b _ : b ∈ l, a ≠ b → r a b) : l.pairwise r :=
   by 
@@ -335,26 +367,24 @@ theorem pairwise_iff_nth_le {R} :
       rcases nth_le_of_mem m with ⟨n, h, rfl⟩
       exact H _ _ (succ_lt_succ h) (succ_pos _)
 
--- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pairwise_sublists' {R} : ∀ {l : list α}, pairwise R l → pairwise (lex (swap R)) (sublists' l)
-| _, pairwise.nil := pairwise_singleton _ _
-| _, @pairwise.cons _ _ a l H₁ H₂ := begin
-  simp [] [] ["only"] ["[", expr sublists'_cons, ",", expr pairwise_append, ",", expr pairwise_map, ",", expr mem_sublists', ",", expr mem_map, ",", expr exists_imp_distrib, ",", expr and_imp, "]"] [] [],
-  have [ident IH] [] [":=", expr pairwise_sublists' H₂],
-  refine [expr ⟨IH, IH.imp (λ l₁ l₂, lex.cons), _⟩],
-  intros [ident l₁, ident sl₁, ident x, ident l₂, ident sl₂, ident e],
-  subst [expr e],
-  cases [expr l₁] ["with", ident b, ident l₁],
-  { constructor },
-  exact [expr lex.rel «expr $ »(H₁ _, «expr $ »(sl₁.subset, mem_cons_self _ _))]
-end
+theorem pairwise_sublists' {R} : ∀ {l : List α}, Pairwise R l → Pairwise (lex (swap R)) (sublists' l)
+| _, pairwise.nil => pairwise_singleton _ _
+| _, @pairwise.cons _ _ a l H₁ H₂ =>
+  by 
+    simp only [sublists'_cons, pairwise_append, pairwise_map, mem_sublists', mem_map, exists_imp_distrib, and_imp]
+    have IH := pairwise_sublists' H₂ 
+    refine' ⟨IH, IH.imp fun l₁ l₂ => lex.cons, _⟩
+    intro l₁ sl₁ x l₂ sl₂ e 
+    subst e 
+    cases' l₁ with b l₁
+    ·
+      constructor 
+    exact lex.rel (H₁ _$ sl₁.subset$ mem_cons_self _ _)
 
--- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pairwise_sublists
-{R}
-{l : list α}
-(H : pairwise R l) : pairwise (λ l₁ l₂, lex R (reverse l₁) (reverse l₂)) (sublists l) :=
-by have [] [] [":=", expr pairwise_sublists' (pairwise_reverse.2 H)]; rwa ["[", expr sublists'_reverse, ",", expr pairwise_map, "]"] ["at", ident this]
+theorem pairwise_sublists {R} {l : List α} (H : Pairwise R l) :
+  Pairwise (fun l₁ l₂ => lex R (reverse l₁) (reverse l₂)) (sublists l) :=
+  by 
+    have  := pairwise_sublists' (pairwise_reverse.2 H) <;> rwa [sublists'_reverse, pairwise_map] at this
 
 /-! ### Pairwise filtering -/
 
@@ -365,16 +395,19 @@ variable [DecidableRel R]
 theorem pw_filter_nil : pw_filter R [] = [] :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » pw_filter R l)
 @[simp]
 theorem pw_filter_cons_of_pos {a : α} {l : List α} (h : ∀ b _ : b ∈ pw_filter R l, R a b) :
   pw_filter R (a :: l) = a :: pw_filter R l :=
   if_pos h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » pw_filter R l)
 @[simp]
 theorem pw_filter_cons_of_neg {a : α} {l : List α} (h : ¬∀ b _ : b ∈ pw_filter R l, R a b) :
   pw_filter R (a :: l) = pw_filter R l :=
   if_neg h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » pw_filter R (map f xs))
 theorem pw_filter_map (f : β → α) : ∀ l : List β, pw_filter R (map f l) = map f (pw_filter (fun x y => R (f x) (f y)) l)
 | [] => rfl
 | x :: xs =>
@@ -399,6 +432,7 @@ theorem pw_filter_map (f : β → α) : ∀ l : List β, pw_filter R (map f l) =
     by 
       rw [map, pw_filter_cons_of_neg h, pw_filter_cons_of_neg h', pw_filter_map]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » pw_filter R l)
 theorem pw_filter_sublist : ∀ l : List α, pw_filter R l <+ l
 | [] => nil_sublist _
 | x :: l =>
@@ -414,6 +448,7 @@ theorem pw_filter_sublist : ∀ l : List α, pw_filter R l <+ l
 theorem pw_filter_subset (l : List α) : pw_filter R l ⊆ l :=
   (pw_filter_sublist _).Subset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » pw_filter R l)
 theorem pairwise_pw_filter : ∀ l : List α, Pairwise R (pw_filter R l)
 | [] => pairwise.nil
 | x :: l =>
@@ -440,26 +475,31 @@ theorem pw_filter_eq_self {l : List α} : pw_filter R l = l ↔ Pairwise R l :=
 theorem pw_filter_idempotent {l : List α} : pw_filter R (pw_filter R l) = pw_filter R l :=
   pw_filter_eq_self.mpr (pairwise_pw_filter l)
 
--- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem forall_mem_pw_filter
-(neg_trans : ∀ {x y z}, R x z → «expr ∨ »(R x y, R y z))
-(a : α)
-(l : list α) : «expr ↔ »(∀ b «expr ∈ » pw_filter R l, R a b, ∀ b «expr ∈ » l, R a b) :=
-⟨begin
-   induction [expr l] [] ["with", ident x, ident l, ident IH] [],
-   { exact [expr λ _ _, false.elim] },
-   simp [] [] ["only"] ["[", expr forall_mem_cons, "]"] [] [],
-   by_cases [expr ∀ y «expr ∈ » pw_filter R l, R x y]; dsimp [] [] [] ["at", ident h],
-   { simp [] [] ["only"] ["[", expr pw_filter_cons_of_pos h, ",", expr forall_mem_cons, ",", expr and_imp, "]"] [] [],
-     exact [expr λ r H, ⟨r, IH H⟩] },
-   { rw ["[", expr pw_filter_cons_of_neg h, "]"] [],
-     refine [expr λ H, ⟨_, IH H⟩],
-     cases [expr e, ":", expr find (λ y, «expr¬ »(R x y)) (pw_filter R l)] ["with", ident k],
-     { refine [expr h.elim (ball.imp_right _ (find_eq_none.1 e))],
-       exact [expr λ y _, not_not.1] },
-     { have [] [] [":=", expr find_some e],
-       exact [expr (neg_trans (H k (find_mem e))).resolve_right this] } }
- end, ball.imp_left (pw_filter_subset l)⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » pw_filter R l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » pw_filter R l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
+theorem forall_mem_pw_filter (neg_trans : ∀ {x y z}, R x z → R x y ∨ R y z) (a : α) (l : List α) :
+  (∀ b _ : b ∈ pw_filter R l, R a b) ↔ ∀ b _ : b ∈ l, R a b :=
+  ⟨by 
+      induction' l with x l IH
+      ·
+        exact fun _ _ => False.elim 
+      simp only [forall_mem_cons]
+      byCases' ∀ y _ : y ∈ pw_filter R l, R x y <;> dsimp  at h
+      ·
+        simp only [pw_filter_cons_of_pos h, forall_mem_cons, and_imp]
+        exact fun r H => ⟨r, IH H⟩
+      ·
+        rw [pw_filter_cons_of_neg h]
+        refine' fun H => ⟨_, IH H⟩
+        cases' e : find (fun y => ¬R x y) (pw_filter R l) with k
+        ·
+          refine' h.elim (Ball.imp_right _ (find_eq_none.1 e))
+          exact fun y _ => not_not.1
+        ·
+          have  := find_some e 
+          exact (neg_trans (H k (find_mem e))).resolve_right this,
+    Ball.imp_left (pw_filter_subset l)⟩
 
 end List
 

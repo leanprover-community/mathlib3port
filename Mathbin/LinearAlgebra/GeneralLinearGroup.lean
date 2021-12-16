@@ -38,7 +38,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 def det : GL n R →* Units R :=
   { toFun :=
       fun A =>
-        { val := («expr↑ » A : Matrix n n R).det, inv := («expr↑ » (A⁻¹) : Matrix n n R).det,
+        { val := (↑A : Matrix n n R).det, inv := (↑A⁻¹ : Matrix n n R).det,
           val_inv :=
             by 
               rw [←det_mul, ←mul_eq_mul, A.mul_inv, det_one],
@@ -59,6 +59,10 @@ def mk' (A : Matrix n n R) (h : Invertible (Matrix.det A)) : GL n R :=
 noncomputable def mk'' (A : Matrix n n R) (h : IsUnit (Matrix.det A)) : GL n R :=
   nonsing_inv_unit A h
 
+/--Given a matrix with non-zero determinant over a field, we get an element of `GL n K`-/
+def mk_of_det_ne_zero {K : Type _} [Field K] (A : Matrix n n K) (h : Matrix.det A ≠ 0) : GL n K :=
+  mk' A (invertibleOfNonzero h)
+
 instance coe_fun : CoeFun (GL n R) fun _ => n → n → R :=
   { coe := fun A => A.val }
 
@@ -74,23 +78,34 @@ section CoeLemmas
 variable (A B : GL n R)
 
 @[simp]
-theorem coe_fn_eq_coe : «expr⇑ » A = («expr↑ » A : Matrix n n R) :=
+theorem coe_fn_eq_coe : ⇑A = (↑A : Matrix n n R) :=
   rfl
 
 @[simp]
-theorem coe_mul : «expr↑ » (A*B) = («expr↑ » A : Matrix n n R) ⬝ («expr↑ » B : Matrix n n R) :=
+theorem coe_mul : (↑A*B) = (↑A : Matrix n n R) ⬝ (↑B : Matrix n n R) :=
   rfl
 
 @[simp]
-theorem coe_one : «expr↑ » (1 : GL n R) = (1 : Matrix n n R) :=
+theorem coe_one : ↑(1 : GL n R) = (1 : Matrix n n R) :=
   rfl
 
--- error in LinearAlgebra.GeneralLinearGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coe_inv : «expr = »(«expr↑ »(«expr ⁻¹»(A)), «expr ⁻¹»((«expr↑ »(A) : matrix n n R))) :=
-begin
-  letI [] [] [":=", expr A.invertible],
-  exact [expr inv_of_eq_nonsing_inv («expr↑ »(A) : matrix n n R)]
-end
+theorem coe_inv : ↑A⁻¹ = (↑A : Matrix n n R)⁻¹ :=
+  by 
+    let this' := A.invertible 
+    exact inv_of_eq_nonsing_inv (↑A : Matrix n n R)
+
+/-- An element of the matrix general linear group on `(n) [fintype n]` can be considered as an
+element of the endomorphism general linear group on `n → R`. -/
+def to_linear : general_linear_group n R ≃* LinearMap.GeneralLinearGroup R (n → R) :=
+  Units.mapEquiv Matrix.toLinAlgEquiv'.toRingEquiv.toMulEquiv
+
+@[simp]
+theorem coe_to_linear : (@to_linear n ‹_› ‹_› _ _ A : (n → R) →ₗ[R] n → R) = Matrix.mulVecLin A :=
+  rfl
+
+@[simp]
+theorem to_linear_apply (v : n → R) : (@to_linear n ‹_› ‹_› _ _ A) v = Matrix.mulVecLin A v :=
+  rfl
 
 end CoeLemmas
 
@@ -101,7 +116,7 @@ namespace SpecialLinearGroup
 variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
 instance has_coe_to_general_linear_group : Coe (special_linear_group n R) (GL n R) :=
-  ⟨fun A => ⟨«expr↑ » A, «expr↑ » (A⁻¹), congr_argₓ coeₓ (mul_right_invₓ A), congr_argₓ coeₓ (mul_left_invₓ A)⟩⟩
+  ⟨fun A => ⟨↑A, ↑A⁻¹, congr_argₓ coeₓ (mul_right_invₓ A), congr_argₓ coeₓ (mul_left_invₓ A)⟩⟩
 
 end SpecialLinearGroup
 
@@ -130,27 +145,27 @@ section Neg
 
 variable {n : Type u} {R : Type v} [DecidableEq n] [Fintype n] [LinearOrderedCommRing R] [Fact (Even (Fintype.card n))]
 
--- error in LinearAlgebra.GeneralLinearGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Formal operation of negation on general linear group on even cardinality `n` given by negating
-each element. -/ instance : has_neg (GL_pos n R) :=
-⟨λ
- g, ⟨«expr- »(g), begin
-    simp [] [] ["only"] ["[", expr mem_GL_pos, ",", expr general_linear_group.coe_det_apply, ",", expr units.coe_neg, "]"] [] [],
-    have [] [] [":=", expr det_smul g «expr- »(1)],
-    simp [] [] ["only"] ["[", expr general_linear_group.coe_fn_eq_coe, ",", expr one_smul, ",", expr coe_fn_coe_base', ",", expr neg_smul, "]"] [] ["at", ident this],
-    rw [expr this] [],
-    simp [] [] [] ["[", expr nat.neg_one_pow_of_even (fact.out (even (fintype.card n))), "]"] [] [],
-    have [ident gdet] [] [":=", expr g.property],
-    simp [] [] ["only"] ["[", expr mem_GL_pos, ",", expr general_linear_group.coe_det_apply, ",", expr subtype.val_eq_coe, "]"] [] ["at", ident gdet],
-    exact [expr gdet]
-  end⟩⟩
+each element. -/
+instance : Neg (GL_pos n R) :=
+  ⟨fun g =>
+      ⟨-g,
+        by 
+          simp only [mem_GL_pos, general_linear_group.coe_det_apply, Units.coe_neg]
+          have  := det_smul g (-1)
+          simp only [general_linear_group.coe_fn_eq_coe, one_smul, coe_fn_coe_base', neg_smul] at this 
+          rw [this]
+          simp [Nat.neg_one_pow_of_even (Fact.out (Even (Fintype.card n)))]
+          have gdet := g.property 
+          simp only [mem_GL_pos, general_linear_group.coe_det_apply, Subtype.val_eq_coe] at gdet 
+          exact gdet⟩⟩
 
 @[simp]
-theorem GL_pos_coe_neg (g : GL_pos n R) : «expr↑ » (-g) = -(«expr↑ » g : Matrix n n R) :=
+theorem GL_pos_coe_neg (g : GL_pos n R) : ↑(-g) = -(↑g : Matrix n n R) :=
   rfl
 
 @[simp]
-theorem GL_pos_neg_elt (g : GL_pos n R) : ∀ i j, («expr↑ » (-g) : Matrix n n R) i j = -g i j :=
+theorem GL_pos_neg_elt (g : GL_pos n R) : ∀ i j, (↑(-g) : Matrix n n R) i j = -g i j :=
   by 
     simp [coe_fn_coe_base']
 
@@ -162,7 +177,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [LinearOrderedCom
 
 /-- `special_linear_group n R` embeds into `GL_pos n R` -/
 def to_GL_pos : special_linear_group n R →* GL_pos n R :=
-  { toFun := fun A => ⟨(A : GL n R), show 0 < («expr↑ » A : Matrix n n R).det from A.prop.symm ▸ zero_lt_one⟩,
+  { toFun := fun A => ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.prop.symm ▸ zero_lt_one⟩,
     map_one' := Subtype.ext$ Units.ext$ rfl, map_mul' := fun A₁ A₂ => Subtype.ext$ Units.ext$ rfl }
 
 instance : Coe (special_linear_group n R) (GL_pos n R) :=
@@ -175,6 +190,21 @@ theorem to_GL_pos_injective : Function.Injective (to_GL_pos : special_linear_gro
   (show Function.Injective ((coeₓ : GL_pos n R → Matrix n n R) ∘ to_GL_pos) from Subtype.coe_injective).of_comp
 
 end SpecialLinearGroup
+
+section Examples
+
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+/-- The matrix [a, b; -b, a] (inspired by multiplication by a complex number); it is an element of
+$GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
+@[simps (config := { fullyApplied := ff }) coe]
+def plane_conformal_matrix {R} [Field R] (a b : R) (hab : ((a^2)+b^2) ≠ 0) : Matrix.GeneralLinearGroup (Finₓ 2) R :=
+  general_linear_group.mk_of_det_ne_zero
+    («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
+    (by 
+      simpa [det_fin_two, sq] using hab)
+
+end Examples
 
 end Matrix
 

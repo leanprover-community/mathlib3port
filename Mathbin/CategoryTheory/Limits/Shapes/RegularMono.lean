@@ -17,7 +17,7 @@ construction
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -68,41 +68,35 @@ def regular_mono.lift' {W : C} (f : X ⟶ Y) [regular_mono f] (k : W ⟶ Y)
   { l : W ⟶ X // l ≫ f = k } :=
   fork.is_limit.lift' regular_mono.is_limit _ h
 
--- error in CategoryTheory.Limits.Shapes.RegularMono: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The second leg of a pullback cone is a regular monomorphism if the right component is too.
 
 See also `pullback.snd_of_mono` for the basic monomorphism version, and
 `regular_of_is_pullback_fst_of_regular` for the flipped version.
 -/
-def regular_of_is_pullback_snd_of_regular
-{P Q R S : C}
-{f : «expr ⟶ »(P, Q)}
-{g : «expr ⟶ »(P, R)}
-{h : «expr ⟶ »(Q, S)}
-{k : «expr ⟶ »(R, S)}
-[hr : regular_mono h]
-(comm : «expr = »(«expr ≫ »(f, h), «expr ≫ »(g, k)))
-(t : is_limit (pullback_cone.mk _ _ comm)) : regular_mono g :=
-{ Z := hr.Z,
-  left := «expr ≫ »(k, hr.left),
-  right := «expr ≫ »(k, hr.right),
-  w := by rw ["[", "<-", expr reassoc_of comm, ",", "<-", expr reassoc_of comm, ",", expr hr.w, "]"] [],
-  is_limit := begin
-    apply [expr fork.is_limit.mk' _ _],
-    intro [ident s],
-    have [ident l₁] [":", expr «expr = »(«expr ≫ »(«expr ≫ »(fork.ι s, k), regular_mono.left), «expr ≫ »(«expr ≫ »(fork.ι s, k), regular_mono.right))] [],
-    rw ["[", expr category.assoc, ",", expr s.condition, ",", expr category.assoc, "]"] [],
-    obtain ["⟨", ident l, ",", ident hl, "⟩", ":=", expr fork.is_limit.lift' hr.is_limit _ l₁],
-    obtain ["⟨", ident p, ",", ident hp₁, ",", ident hp₂, "⟩", ":=", expr pullback_cone.is_limit.lift' t _ _ hl],
-    refine [expr ⟨p, hp₂, _⟩],
-    intros [ident m, ident w],
-    have [ident z] [":", expr «expr = »(«expr ≫ »(m, g), «expr ≫ »(p, g))] [":=", expr w.trans hp₂.symm],
-    apply [expr t.hom_ext],
-    apply [expr (pullback_cone.mk f g comm).equalizer_ext],
-    { erw ["[", "<-", expr cancel_mono h, ",", expr category.assoc, ",", expr category.assoc, ",", expr comm, ",", expr reassoc_of z, "]"] [] },
-    { exact [expr z] }
-  end }
+def regular_of_is_pullback_snd_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+  [hr : regular_mono h] (comm : f ≫ h = g ≫ k) (t : is_limit (pullback_cone.mk _ _ comm)) : regular_mono g :=
+  { z := hr.Z, left := k ≫ hr.left, right := k ≫ hr.right,
+    w :=
+      by 
+        rw [←reassoc_of comm, ←reassoc_of comm, hr.w],
+    IsLimit :=
+      by 
+        apply fork.is_limit.mk' _ _ 
+        intro s 
+        have l₁ : (fork.ι s ≫ k) ≫ regular_mono.left = (fork.ι s ≫ k) ≫ regular_mono.right 
+        rw [category.assoc, s.condition, category.assoc]
+        obtain ⟨l, hl⟩ := fork.is_limit.lift' hr.is_limit _ l₁ 
+        obtain ⟨p, hp₁, hp₂⟩ := pullback_cone.is_limit.lift' t _ _ hl 
+        refine' ⟨p, hp₂, _⟩
+        intro m w 
+        have z : m ≫ g = p ≫ g := w.trans hp₂.symm 
+        apply t.hom_ext 
+        apply (pullback_cone.mk f g comm).equalizer_ext
+        ·
+          erw [←cancel_mono h, category.assoc, category.assoc, comm, reassoc_of z]
+        ·
+          exact z }
 
 /--
 The first leg of a pullback cone is a regular monomorphism if the left component is too.
@@ -156,42 +150,36 @@ def regular_epi.desc' {W : C} (f : X ⟶ Y) [regular_epi f] (k : X ⟶ W)
   (h : (regular_epi.left : regular_epi.W f ⟶ X) ≫ k = regular_epi.right ≫ k) : { l : Y ⟶ W // f ≫ l = k } :=
   cofork.is_colimit.desc' regular_epi.is_colimit _ h
 
--- error in CategoryTheory.Limits.Shapes.RegularMono: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The second leg of a pushout cocone is a regular epimorphism if the right component is too.
 
 See also `pushout.snd_of_epi` for the basic epimorphism version, and
 `regular_of_is_pushout_fst_of_regular` for the flipped version.
 -/
-def regular_of_is_pushout_snd_of_regular
-{P Q R S : C}
-{f : «expr ⟶ »(P, Q)}
-{g : «expr ⟶ »(P, R)}
-{h : «expr ⟶ »(Q, S)}
-{k : «expr ⟶ »(R, S)}
-[gr : regular_epi g]
-(comm : «expr = »(«expr ≫ »(f, h), «expr ≫ »(g, k)))
-(t : is_colimit (pushout_cocone.mk _ _ comm)) : regular_epi h :=
-{ W := gr.W,
-  left := «expr ≫ »(gr.left, f),
-  right := «expr ≫ »(gr.right, f),
-  w := by rw ["[", expr category.assoc, ",", expr category.assoc, ",", expr comm, ",", expr reassoc_of gr.w, "]"] [],
-  is_colimit := begin
-    apply [expr cofork.is_colimit.mk' _ _],
-    intro [ident s],
-    have [ident l₁] [":", expr «expr = »(«expr ≫ »(gr.left, «expr ≫ »(f, s.π)), «expr ≫ »(gr.right, «expr ≫ »(f, s.π)))] [],
-    rw ["[", "<-", expr category.assoc, ",", "<-", expr category.assoc, ",", expr s.condition, "]"] [],
-    obtain ["⟨", ident l, ",", ident hl, "⟩", ":=", expr cofork.is_colimit.desc' gr.is_colimit «expr ≫ »(f, cofork.π s) l₁],
-    obtain ["⟨", ident p, ",", ident hp₁, ",", ident hp₂, "⟩", ":=", expr pushout_cocone.is_colimit.desc' t _ _ hl.symm],
-    refine [expr ⟨p, hp₁, _⟩],
-    intros [ident m, ident w],
-    have [ident z] [] [":=", expr w.trans hp₁.symm],
-    apply [expr t.hom_ext],
-    apply [expr (pushout_cocone.mk _ _ comm).coequalizer_ext],
-    { exact [expr z] },
-    { erw ["[", "<-", expr cancel_epi g, ",", "<-", expr reassoc_of comm, ",", "<-", expr reassoc_of comm, ",", expr z, "]"] [],
-      refl }
-  end }
+def regular_of_is_pushout_snd_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+  [gr : regular_epi g] (comm : f ≫ h = g ≫ k) (t : is_colimit (pushout_cocone.mk _ _ comm)) : regular_epi h :=
+  { w := gr.W, left := gr.left ≫ f, right := gr.right ≫ f,
+    w :=
+      by 
+        rw [category.assoc, category.assoc, comm, reassoc_of gr.w],
+    IsColimit :=
+      by 
+        apply cofork.is_colimit.mk' _ _ 
+        intro s 
+        have l₁ : gr.left ≫ f ≫ s.π = gr.right ≫ f ≫ s.π 
+        rw [←category.assoc, ←category.assoc, s.condition]
+        obtain ⟨l, hl⟩ := cofork.is_colimit.desc' gr.is_colimit (f ≫ cofork.π s) l₁ 
+        obtain ⟨p, hp₁, hp₂⟩ := pushout_cocone.is_colimit.desc' t _ _ hl.symm 
+        refine' ⟨p, hp₁, _⟩
+        intro m w 
+        have z := w.trans hp₁.symm 
+        apply t.hom_ext 
+        apply (pushout_cocone.mk _ _ comm).coequalizer_ext
+        ·
+          exact z
+        ·
+          erw [←cancel_epi g, ←reassoc_of comm, ←reassoc_of comm, z]
+          rfl }
 
 /--
 The first leg of a pushout cocone is a regular epimorphism if the left component is too.
@@ -207,17 +195,24 @@ def regular_of_is_pushout_fst_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ 
 theorem is_iso_of_regular_epi_of_mono (f : X ⟶ Y) [regular_epi f] [m : mono f] : is_iso f :=
   @is_iso_limit_cocone_parallel_pair_of_epi _ _ _ _ _ _ _ regular_epi.is_colimit m
 
--- error in CategoryTheory.Limits.Shapes.RegularMono: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[priority 100] instance strong_epi_of_regular_epi (f : «expr ⟶ »(X, Y)) [regular_epi f] : strong_epi f :=
-{ epi := by apply_instance,
-  has_lift := begin
-    introsI [],
-    have [] [":", expr «expr = »(«expr ≫ »((regular_epi.left : «expr ⟶ »(regular_epi.W f, X)), u), «expr ≫ »(regular_epi.right, u))] [],
-    { apply [expr (cancel_mono z).1],
-      simp [] [] ["only"] ["[", expr category.assoc, ",", expr h, ",", expr regular_epi.w_assoc, "]"] [] [] },
-    obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr regular_epi.desc' f u this],
-    exact [expr arrow.has_lift.mk ⟨t, ht, (cancel_epi f).1 (by simp [] [] ["only"] ["[", "<-", expr category.assoc, ",", expr ht, ",", "<-", expr h, ",", expr arrow.mk_hom, ",", expr arrow.hom_mk'_right, "]"] [] [])⟩]
-  end }
+instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [regular_epi f] : strong_epi f :=
+  { Epi :=
+      by 
+        infer_instance,
+    HasLift :=
+      by 
+        intros 
+        have  : (regular_epi.left : regular_epi.W f ⟶ X) ≫ u = regular_epi.right ≫ u
+        ·
+          apply (cancel_mono z).1
+          simp only [category.assoc, h, regular_epi.w_assoc]
+        obtain ⟨t, ht⟩ := regular_epi.desc' f u this 
+        exact
+          arrow.has_lift.mk
+            ⟨t, ht,
+              (cancel_epi f).1
+                (by 
+                  simp only [←category.assoc, ht, ←h, arrow.mk_hom, arrow.hom_mk'_right])⟩ }
 
 end CategoryTheory
 

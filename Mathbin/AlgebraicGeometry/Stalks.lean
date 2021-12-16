@@ -11,7 +11,7 @@ presheafed spaces does not change the stalks.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u v' u'
 
@@ -47,27 +47,21 @@ def stalk_map {X Y : PresheafedSpace C} (α : X ⟶ Y) (x : X) : Y.stalk (α.bas
 
 @[simp, elementwise, reassoc]
 theorem stalk_map_germ {X Y : PresheafedSpace C} (α : X ⟶ Y) (U : opens Y.carrier) (x : (opens.map α.base).obj U) :
-  Y.presheaf.germ ⟨α.base x, x.2⟩ ≫ stalk_map α («expr↑ » x) = α.c.app (op U) ≫ X.presheaf.germ x :=
+  Y.presheaf.germ ⟨α.base x, x.2⟩ ≫ stalk_map α (↑x) = α.c.app (op U) ≫ X.presheaf.germ x :=
   by 
     rw [stalk_map, stalk_functor_map_germ_assoc, stalk_pushforward_germ]
 
 section Restrict
 
--- error in AlgebraicGeometry.Stalks: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 For an open embedding `f : U ⟶ X` and a point `x : U`, we get an isomorphism between the stalk
 of `X` at `f x` and the stalk of the restriction of `X` along `f` at t `x`.
 -/
-def restrict_stalk_iso
-{U : Top}
-(X : PresheafedSpace C)
-{f : «expr ⟶ »(U, (X : Top.{v}))}
-(h : open_embedding f)
-(x : U) : «expr ≅ »((X.restrict h).stalk x, X.stalk (f x)) :=
-begin
-  haveI [] [] [":=", expr initial_of_adjunction (h.is_open_map.adjunction_nhds x)],
-  exact [expr final.colimit_iso (h.is_open_map.functor_nhds x).op «expr ⋙ »((open_nhds.inclusion (f x)).op, X.presheaf)]
-end
+def restrict_stalk_iso {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) (x : U) :
+  (X.restrict h).stalk x ≅ X.stalk (f x) :=
+  by 
+    have  := initial_of_adjunction (h.is_open_map.adjunction_nhds x)
+    exact final.colimit_iso (h.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)
 
 @[simp, elementwise, reassoc]
 theorem restrict_stalk_iso_hom_eq_germ {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f)
@@ -83,6 +77,25 @@ theorem restrict_stalk_iso_inv_eq_germ {U : Top} (X : PresheafedSpace C) {f : U 
     (X.restrict h).Presheaf.germ ⟨x, hx⟩ :=
   by 
     rw [←restrict_stalk_iso_hom_eq_germ, category.assoc, iso.hom_inv_id, category.comp_id]
+
+theorem restrict_stalk_iso_inv_eq_of_restrict {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})}
+  (h : OpenEmbedding f) (x : U) : (X.restrict_stalk_iso h x).inv = stalk_map (X.of_restrict h) x :=
+  by 
+    ext V 
+    induction V using Opposite.rec 
+    let i : (h.is_open_map.functor_nhds x).obj ((open_nhds.map f x).obj V) ⟶ V :=
+      hom_of_le (Set.image_preimage_subset f _)
+    erw [iso.comp_inv_eq, colimit.ι_map_assoc, colimit.ι_map_assoc, colimit.ι_pre]
+    simpRw [category.assoc]
+    erw [colimit.ι_pre ((open_nhds.inclusion (f x)).op ⋙ X.presheaf) (h.is_open_map.functor_nhds x).op]
+    erw [←X.presheaf.map_comp_assoc]
+    exact (colimit.w ((open_nhds.inclusion (f x)).op ⋙ X.presheaf) i.op).symm
+
+instance of_restrict_stalk_map_is_iso {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f)
+  (x : U) : is_iso (stalk_map (X.of_restrict h) x) :=
+  by 
+    rw [←restrict_stalk_iso_inv_eq_of_restrict]
+    infer_instance
 
 end Restrict
 
@@ -158,18 +171,27 @@ theorem congr_point {X Y : PresheafedSpace C} (α : X ⟶ Y) (x x' : X) (h : x =
   by 
     rw [stalk_map.congr α α rfl x x' h]
 
--- error in AlgebraicGeometry.Stalks: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance is_iso {X Y : PresheafedSpace C} (α : «expr ⟶ »(X, Y)) [is_iso α] (x : X) : is_iso (stalk_map α x) :=
-{ out := begin
-    let [ident β] [":", expr «expr ⟶ »(Y, X)] [":=", expr category_theory.inv α],
-    have [ident h_eq] [":", expr «expr = »(«expr ≫ »(α, β).base x, x)] [],
-    { rw ["[", expr is_iso.hom_inv_id α, ",", expr id_base, ",", expr Top.id_app, "]"] [] },
-    refine [expr ⟨«expr ≫ »(eq_to_hom (show «expr = »(X.stalk x, X.stalk («expr ≫ »(α, β).base x)), by rw [expr h_eq] []), (stalk_map β (α.base x) : _)), _, _⟩],
-    { rw ["[", "<-", expr category.assoc, ",", expr congr_point α x («expr ≫ »(α, β).base x) h_eq.symm, ",", expr category.assoc, "]"] [],
-      erw ["<-", expr stalk_map.comp β α (α.base x)] [],
-      rw ["[", expr congr_hom _ _ (is_iso.inv_hom_id α), ",", expr stalk_map.id, ",", expr eq_to_hom_trans_assoc, ",", expr eq_to_hom_refl, ",", expr category.id_comp, "]"] [] },
-    { rw ["[", expr category.assoc, ",", "<-", expr stalk_map.comp, ",", expr congr_hom _ _ (is_iso.hom_inv_id α), ",", expr stalk_map.id, ",", expr eq_to_hom_trans_assoc, ",", expr eq_to_hom_refl, ",", expr category.id_comp, "]"] [] }
-  end }
+instance is_iso {X Y : PresheafedSpace C} (α : X ⟶ Y) [is_iso α] (x : X) : is_iso (stalk_map α x) :=
+  { out :=
+      by 
+        let β : Y ⟶ X := CategoryTheory.inv α 
+        have h_eq : (α ≫ β).base x = x
+        ·
+          rw [is_iso.hom_inv_id α, id_base, Top.id_app]
+        refine'
+          ⟨eq_to_hom
+                (show X.stalk x = X.stalk ((α ≫ β).base x)by 
+                  rw [h_eq]) ≫
+              (stalk_map β (α.base x) : _),
+            _, _⟩
+        ·
+          rw [←category.assoc, congr_point α x ((α ≫ β).base x) h_eq.symm, category.assoc]
+          erw [←stalk_map.comp β α (α.base x)]
+          rw [congr_hom _ _ (is_iso.inv_hom_id α), stalk_map.id, eq_to_hom_trans_assoc, eq_to_hom_refl,
+            category.id_comp]
+        ·
+          rw [category.assoc, ←stalk_map.comp, congr_hom _ _ (is_iso.hom_inv_id α), stalk_map.id, eq_to_hom_trans_assoc,
+            eq_to_hom_refl, category.id_comp] }
 
 /--
 An isomorphism between presheafed spaces induces an isomorphism of stalks.

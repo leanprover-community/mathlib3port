@@ -17,40 +17,50 @@ namespace Nat.Partrec
 
 open Computable Part
 
--- error in Computability.Halting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem merge'
-{f g}
-(hf : nat.partrec f)
-(hg : nat.partrec g) : «expr∃ , »((h), «expr ∧ »(nat.partrec h, ∀
-  a, «expr ∧ »(∀
-   x «expr ∈ » h a, «expr ∨ »(«expr ∈ »(x, f a), «expr ∈ »(x, g a)), «expr ↔ »((h a).dom, «expr ∨ »((f a).dom, (g a).dom))))) :=
-begin
-  obtain ["⟨", ident cf, ",", ident rfl, "⟩", ":=", expr code.exists_code.1 hf],
-  obtain ["⟨", ident cg, ",", ident rfl, "⟩", ":=", expr code.exists_code.1 hg],
-  have [] [":", expr nat.partrec (λ
-    n, nat.rfind_opt (λ
-     k, «expr <|> »(cf.evaln k n, cg.evaln k n)))] [":=", expr partrec.nat_iff.1 «expr $ »(partrec.rfind_opt, primrec.option_orelse.to_comp.comp «expr $ »(code.evaln_prim.to_comp.comp, (snd.pair (const cf)).pair fst) «expr $ »(code.evaln_prim.to_comp.comp, (snd.pair (const cg)).pair fst))],
-  refine [expr ⟨_, this, λ n, _⟩],
-  suffices [] [],
-  refine [expr ⟨this, ⟨λ h, (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩],
-  { intro [ident h],
-    rw [expr nat.rfind_opt_dom] [],
-    simp [] [] ["only"] ["[", expr dom_iff_mem, ",", expr code.evaln_complete, ",", expr option.mem_def, "]"] [] ["at", ident h],
-    obtain ["⟨", ident x, ",", ident k, ",", ident e, "⟩", "|", "⟨", ident x, ",", ident k, ",", ident e, "⟩", ":=", expr h],
-    { refine [expr ⟨k, x, _⟩],
-      simp [] [] ["only"] ["[", expr e, ",", expr option.some_orelse, ",", expr option.mem_def, "]"] [] [] },
-    { refine [expr ⟨k, _⟩],
-      cases [expr cf.evaln k n] ["with", ident y],
-      { exact [expr ⟨x, by simp [] [] ["only"] ["[", expr e, ",", expr option.mem_def, ",", expr option.none_orelse, "]"] [] []⟩] },
-      { exact [expr ⟨y, by simp [] [] ["only"] ["[", expr option.some_orelse, ",", expr option.mem_def, "]"] [] []⟩] } } },
-  intros [ident x, ident h],
-  obtain ["⟨", ident k, ",", ident e, "⟩", ":=", expr nat.rfind_opt_spec h],
-  revert [ident e],
-  simp [] [] ["only"] ["[", expr option.mem_def, "]"] [] []; cases [expr e', ":", expr cf.evaln k n] ["with", ident y]; simp [] [] [] [] [] []; intro [],
-  { exact [expr or.inr (code.evaln_sound e)] },
-  { subst [expr y],
-    exact [expr or.inl (code.evaln_sound e')] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » h a)
+theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
+  ∃ h, Nat.Partrec h ∧ ∀ a, (∀ x _ : x ∈ h a, x ∈ f a ∨ x ∈ g a) ∧ ((h a).Dom ↔ (f a).Dom ∨ (g a).Dom) :=
+  by 
+    obtain ⟨cf, rfl⟩ := code.exists_code.1 hf 
+    obtain ⟨cg, rfl⟩ := code.exists_code.1 hg 
+    have  : Nat.Partrec fun n => Nat.rfindOpt fun k => cf.evaln k n <|> cg.evaln k n :=
+      Partrec.nat_iff.1
+        (Partrec.rfind_opt$
+          primrec.option_orelse.to_comp.comp (code.evaln_prim.to_comp.comp$ (snd.pair (const cf)).pair fst)
+            (code.evaln_prim.to_comp.comp$ (snd.pair (const cg)).pair fst))
+    refine' ⟨_, this, fun n => _⟩
+    suffices 
+    refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
+    ·
+      intro h 
+      rw [Nat.rfind_opt_dom]
+      simp only [dom_iff_mem, code.evaln_complete, Option.mem_def] at h 
+      obtain ⟨x, k, e⟩ | ⟨x, k, e⟩ := h
+      ·
+        refine' ⟨k, x, _⟩
+        simp only [e, Option.some_orelse, Option.mem_def]
+      ·
+        refine' ⟨k, _⟩
+        cases' cf.evaln k n with y
+        ·
+          exact
+            ⟨x,
+              by 
+                simp only [e, Option.mem_def, Option.none_orelse]⟩
+        ·
+          exact
+            ⟨y,
+              by 
+                simp only [Option.some_orelse, Option.mem_def]⟩
+    intro x h 
+    obtain ⟨k, e⟩ := Nat.rfind_opt_spec h 
+    revert e 
+    simp only [Option.mem_def] <;> cases' e' : cf.evaln k n with y <;> simp  <;> intro 
+    ·
+      exact Or.inr (code.evaln_sound e)
+    ·
+      subst y 
+      exact Or.inl (code.evaln_sound e')
 
 end Nat.Partrec
 
@@ -66,57 +76,58 @@ open nat.partrec(code)
 
 open Nat.Partrec.Code
 
--- error in Computability.Halting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem merge'
-{f g : «expr →. »(α, σ)}
-(hf : partrec f)
-(hg : partrec g) : «expr∃ , »((k : «expr →. »(α, σ)), «expr ∧ »(partrec k, ∀
-  a, «expr ∧ »(∀
-   x «expr ∈ » k a, «expr ∨ »(«expr ∈ »(x, f a), «expr ∈ »(x, g a)), «expr ↔ »((k a).dom, «expr ∨ »((f a).dom, (g a).dom))))) :=
-let ⟨k, hk, H⟩ := nat.partrec.merge' (bind_decode₂_iff.1 hf) (bind_decode₂_iff.1 hg) in
-begin
-  let [ident k'] [] [":=", expr λ a, (k (encode a)).bind (λ n, decode σ n)],
-  refine [expr ⟨k', ((nat_iff.2 hk).comp computable.encode).bind (computable.decode.of_option.comp snd).to₂, λ a, _⟩],
-  suffices [] [],
-  refine [expr ⟨this, ⟨λ h, (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩],
-  { intro [ident h],
-    rw [expr bind_dom] [],
-    have [ident hk] [":", expr (k (encode a)).dom] [":=", expr (H _).2.2 (by simpa [] [] ["only"] ["[", expr encodek₂, ",", expr bind_some, ",", expr coe_some, "]"] [] ["using", expr h])],
-    existsi [expr hk],
-    simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_map_iff, ",", expr mem_coe, ",", expr mem_bind_iff, ",", expr option.mem_def, "]"] [] ["at", ident H],
-    obtain ["⟨", ident a', ",", ident ha', ",", ident y, ",", ident hy, ",", ident e, "⟩", "|", "⟨", ident a', ",", ident ha', ",", ident y, ",", ident hy, ",", ident e, "⟩", ":=", expr (H _).1 _ ⟨hk, rfl⟩]; { simp [] [] ["only"] ["[", expr e.symm, ",", expr encodek, "]"] [] [] } },
-  intros [ident x, ident h'],
-  simp [] [] ["only"] ["[", expr k', ",", expr exists_prop, ",", expr mem_coe, ",", expr mem_bind_iff, ",", expr option.mem_def, "]"] [] ["at", ident h'],
-  obtain ["⟨", ident n, ",", ident hn, ",", ident hx, "⟩", ":=", expr h'],
-  have [] [] [":=", expr (H _).1 _ hn],
-  simp [] [] [] ["[", expr mem_decode₂, ",", expr encode_injective.eq_iff, "]"] [] ["at", ident this],
-  obtain ["⟨", ident a', ",", ident ha, ",", ident rfl, "⟩", "|", "⟨", ident a', ",", ident ha, ",", ident rfl, "⟩", ":=", expr this]; simp [] [] ["only"] ["[", expr encodek, "]"] [] ["at", ident hx]; rw [expr hx] ["at", ident ha],
-  { exact [expr or.inl ha] },
-  exact [expr or.inr ha]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » k a)
+theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
+  ∃ k : α →. σ, Partrec k ∧ ∀ a, (∀ x _ : x ∈ k a, x ∈ f a ∨ x ∈ g a) ∧ ((k a).Dom ↔ (f a).Dom ∨ (g a).Dom) :=
+  let ⟨k, hk, H⟩ := Nat.Partrec.merge' (bind_decode₂_iff.1 hf) (bind_decode₂_iff.1 hg)
+  by 
+    let k' := fun a => (k (encode a)).bind fun n => decode σ n 
+    refine' ⟨k', ((nat_iff.2 hk).comp Computable.encode).bind (computable.decode.of_option.comp snd).to₂, fun a => _⟩
+    suffices 
+    refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
+    ·
+      intro h 
+      rw [bind_dom]
+      have hk : (k (encode a)).Dom :=
+        (H _).2.2
+          (by 
+            simpa only [encodek₂, bind_some, coe_some] using h)
+      exists hk 
+      simp only [exists_prop, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H 
+      obtain ⟨a', ha', y, hy, e⟩ | ⟨a', ha', y, hy, e⟩ := (H _).1 _ ⟨hk, rfl⟩ <;>
+        ·
+          simp only [e.symm, encodek]
+    intro x h' 
+    simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h' 
+    obtain ⟨n, hn, hx⟩ := h' 
+    have  := (H _).1 _ hn 
+    simp [mem_decode₂, encode_injective.eq_iff] at this 
+    obtain ⟨a', ha, rfl⟩ | ⟨a', ha, rfl⟩ := this <;> simp only [encodek] at hx <;> rw [hx] at ha
+    ·
+      exact Or.inl ha 
+    exact Or.inr ha
 
--- error in Computability.Halting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem merge
-{f g : «expr →. »(α, σ)}
-(hf : partrec f)
-(hg : partrec g)
-(H : ∀
- (a)
- (x «expr ∈ » f a)
- (y «expr ∈ » g a), «expr = »(x, y)) : «expr∃ , »((k : «expr →. »(α, σ)), «expr ∧ »(partrec k, ∀
-  a x, «expr ↔ »(«expr ∈ »(x, k a), «expr ∨ »(«expr ∈ »(x, f a), «expr ∈ »(x, g a))))) :=
-let ⟨k, hk, K⟩ := merge' hf hg in
-⟨k, hk, λ
- a
- x, ⟨(K _).1 _, λ h, begin
-    have [] [":", expr (k a).dom] [":=", expr (K _).2.2 (h.imp Exists.fst Exists.fst)],
-    refine [expr ⟨this, _⟩],
-    cases [expr h] ["with", ident h, ident h]; cases [expr (K _).1 _ ⟨this, rfl⟩] ["with", ident h', ident h'],
-    { exact [expr mem_unique h' h] },
-    { exact [expr (H _ _ h _ h').symm] },
-    { exact [expr H _ _ h' _ h] },
-    { exact [expr mem_unique h' h] }
-  end⟩⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » f a)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » g a)
+theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ a x _ : x ∈ f a y _ : y ∈ g a, x = y) :
+  ∃ k : α →. σ, Partrec k ∧ ∀ a x, x ∈ k a ↔ x ∈ f a ∨ x ∈ g a :=
+  let ⟨k, hk, K⟩ := merge' hf hg
+  ⟨k, hk,
+    fun a x =>
+      ⟨(K _).1 _,
+        fun h =>
+          by 
+            have  : (k a).Dom := (K _).2.2 (h.imp Exists.fst Exists.fst)
+            refine' ⟨this, _⟩
+            cases' h with h h <;> cases' (K _).1 _ ⟨this, rfl⟩ with h' h'
+            ·
+              exact mem_unique h' h
+            ·
+              exact (H _ _ h _ h').symm
+            ·
+              exact H _ _ h' _ h
+            ·
+              exact mem_unique h' h⟩⟩
 
 theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computable c) (hf : Partrec f) (hg : Partrec g) :
   Partrec fun a => cond (c a) (f a) (g a) :=
@@ -254,8 +265,12 @@ theorem rice₂ (C : Set code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C �
 theorem halting_problem_re n : RePred fun c => (eval c n).Dom :=
   (eval_part.comp Computable.id (Computable.const _)).dom_re
 
-theorem halting_problem n : ¬ComputablePred fun c => (eval c n).Dom
-| h => rice { f | (f n).Dom } h Nat.Partrec.zero Nat.Partrec.none trivialₓ
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  halting_problem
+  n : ¬ ComputablePred fun c => eval c n . Dom
+  | h => rice { f | f n . Dom } h Nat.Partrec.zero Nat.Partrec.none trivialₓ
 
 @[nolint decidable_classical]
 theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
@@ -305,16 +320,17 @@ open nat(Partrec')
 
 open Nat.Partrec'
 
--- error in Computability.Halting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_part {n f} (pf : @partrec' n f) : partrec f :=
-begin
-  induction [expr pf] [] [] [],
-  case [ident nat.partrec'.prim, ":", ident n, ident f, ident hf] { exact [expr hf.to_prim.to_comp] },
-  case [ident nat.partrec'.comp, ":", ident m, ident n, ident f, ident g, "_", "_", ident hf, ident hg] { exact [expr (vector_m_of_fn (λ
-       i, hg i)).bind (hf.comp snd)] },
-  case [ident nat.partrec'.rfind, ":", ident n, ident f, "_", ident hf] { have [] [] [":=", expr ((primrec.eq.comp primrec.id (primrec.const 0)).to_comp.comp (hf.comp (vector_cons.comp snd fst))).to₂.partrec₂],
-    exact [expr this.rfind] }
-end
+theorem to_part {n f} (pf : @partrec' n f) : Partrec f :=
+  by 
+    induction pf 
+    case nat.partrec'.prim n f hf => 
+      exact hf.to_prim.to_comp 
+    case nat.partrec'.comp m n f g _ _ hf hg => 
+      exact (vector_m_of_fn fun i => hg i).bind (hf.comp snd)
+    case nat.partrec'.rfind n f _ hf => 
+      have  :=
+        ((primrec.eq.comp Primrec.id (Primrec.const 0)).to_comp.comp (hf.comp (vector_cons.comp snd fst))).to₂.Partrec₂ 
+      exact this.rfind
 
 theorem of_eq {n} {f g : Vector ℕ n →. ℕ} (hf : partrec' f) (H : ∀ i, f i = g i) : partrec' g :=
   (funext H : f = g) ▸ hf
@@ -382,28 +398,32 @@ theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @partrec
   by 
     simpa using hf.comp' (partrec'.cons hg partrec'.nil)
 
--- error in Computability.Halting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rfind_opt
-{n}
-{f : vector exprℕ() «expr + »(n, 1) → exprℕ()}
-(hf : @partrec' «expr + »(n, 1) f) : @partrec' n (λ
- v, nat.rfind_opt (λ a, of_nat (option exprℕ()) (f «expr ::ᵥ »(a, v)))) :=
-«expr $ »((«expr $ »(rfind, (of_prim (primrec.nat_sub.comp (primrec.const 1) primrec.vector_head)).comp₁ (λ
-    n, part.some «expr - »(1, n)) hf).bind ((prim nat.primrec'.pred).comp₁ nat.pred hf)).of_eq, λ
- v, «expr $ »(part.ext, λ b, begin
-    simp [] [] ["only"] ["[", expr nat.rfind_opt, ",", expr exists_prop, ",", expr tsub_eq_zero_iff_le, ",", expr pfun.coe_val, ",", expr part.mem_bind_iff, ",", expr part.mem_some_iff, ",", expr option.mem_def, ",", expr part.mem_coe, "]"] [] [],
-    refine [expr exists_congr (λ a, (and_congr (iff_of_eq _) iff.rfl).trans (and_congr_right (λ h, _)))],
-    { congr,
-      funext [ident n],
-      simp [] [] ["only"] ["[", expr part.some_inj, ",", expr pfun.coe_val, "]"] [] [],
-      cases [expr f «expr ::ᵥ »(n, v)] []; simp [] [] [] ["[", expr nat.succ_le_succ, "]"] [] []; refl },
-    { have [] [] [":=", expr nat.rfind_spec h],
-      simp [] [] ["only"] ["[", expr pfun.coe_val, ",", expr part.mem_some_iff, "]"] [] ["at", ident this],
-      cases [expr f «expr ::ᵥ »(a, v)] ["with", ident c],
-      { cases [expr this] [] },
-      rw ["[", "<-", expr option.some_inj, ",", expr eq_comm, "]"] [],
-      refl }
-  end))
+theorem rfind_opt {n} {f : Vector ℕ (n+1) → ℕ} (hf : @partrec' (n+1) f) :
+  @partrec' n fun v => Nat.rfindOpt fun a => of_nat (Option ℕ) (f (a::ᵥv)) :=
+  ((rfind$
+            (of_prim (Primrec.nat_sub.comp (Primrec.const 1) Primrec.vector_head)).comp₁ (fun n => Part.some (1 - n))
+              hf).bind
+        ((prim Nat.Primrec'.pred).comp₁ Nat.pred hf)).of_eq$
+    fun v =>
+      Part.ext$
+        fun b =>
+          by 
+            simp only [Nat.rfindOpt, exists_prop, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff,
+              Part.mem_some_iff, Option.mem_def, Part.mem_coe]
+            refine' exists_congr fun a => (and_congr (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
+            ·
+              congr 
+              funext n 
+              simp only [Part.some_inj, Pfun.coe_val]
+              cases f (n::ᵥv) <;> simp [Nat.succ_le_succₓ] <;> rfl
+            ·
+              have  := Nat.rfind_spec h 
+              simp only [Pfun.coe_val, Part.mem_some_iff] at this 
+              cases' f (a::ᵥv) with c
+              ·
+                cases this 
+              rw [←Option.some_inj, eq_comm]
+              rfl
 
 open Nat.Partrec.Code
 

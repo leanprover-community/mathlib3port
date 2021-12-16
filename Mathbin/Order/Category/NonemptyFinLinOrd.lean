@@ -50,7 +50,7 @@ instance Finₓ.nonemptyFinLinOrd (n : ℕ) : NonemptyFinLinOrd (Finₓ (n+1)) :
   { Finₓ.fintype _, Finₓ.linearOrder with  }
 
 instance Ulift.nonemptyFinLinOrd (α : Type u) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (Ulift.{v} α) :=
-  { LinearOrderₓ.lift Equiv.ulift (Equiv.injective _), Ulift.fintype _ with Nonempty := ⟨Ulift.up ⊥⟩ }
+  { LinearOrderₓ.lift Equivₓ.ulift (Equivₓ.injective _), Ulift.fintype _ with Nonempty := ⟨Ulift.up ⊥⟩ }
 
 /-- The category of nonempty finite linear orders. -/
 def NonemptyFinLinOrdₓ :=
@@ -61,8 +61,9 @@ namespace NonemptyFinLinOrdₓ
 instance : bundled_hom.parent_projection @NonemptyFinLinOrd.toLinearOrder :=
   ⟨⟩
 
--- error in Order.Category.NonemptyFinLinOrd: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] NonemptyFinLinOrd
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for NonemptyFinLinOrdₓ
 
 instance : CoeSort NonemptyFinLinOrdₓ (Type _) :=
   bundled.has_coe_to_sort

@@ -57,7 +57,7 @@ function space, almost everywhere equal, `L⁰`, ae_eq_fun
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical Ennreal
 
@@ -117,15 +117,14 @@ theorem quot_mk_eq_mk (f : α → β) hf : (Quot.mk (@Setoidₓ.R _$ μ.ae_eq_se
 theorem mk_eq_mk {f g : α → β} {hf hg} : (mk f hf : α →ₘ[μ] β) = mk g hg ↔ f =ᵐ[μ] g :=
   Quotientₓ.eq'
 
--- error in MeasureTheory.Function.AeEqFun: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem mk_coe_fn (f : «expr →ₘ[ ] »(α, μ, β)) : «expr = »(mk f f.ae_measurable, f) :=
-begin
-  conv_rhs [] [] { rw ["<-", expr quotient.out_eq' f] },
-  set [] [ident g] [":", expr {f : α → β // ae_measurable f μ}] [":="] [expr quotient.out' f] ["with", ident hg],
-  have [] [":", expr «expr = »(g, ⟨g.1, g.2⟩)] [":=", expr subtype.eq rfl],
-  rw ["[", expr this, ",", "<-", expr mk, ",", expr mk_eq_mk, "]"] [],
-  exact [expr (ae_measurable.ae_eq_mk _).symm]
-end
+@[simp]
+theorem mk_coe_fn (f : α →ₘ[μ] β) : mk f f.ae_measurable = f :=
+  by 
+    convRHS => rw [←Quotientₓ.out_eq' f]
+    set g : { f : α → β // AeMeasurable f μ } := Quotientₓ.out' f with hg 
+    have  : g = ⟨g.1, g.2⟩ := Subtype.eq rfl 
+    rw [this, ←mk, mk_eq_mk]
+    exact (AeMeasurable.ae_eq_mk _).symm
 
 @[ext]
 theorem ext {f g : α →ₘ[μ] β} (h : f =ᵐ[μ] g) : f = g :=
@@ -277,11 +276,11 @@ def lift_rel (r : β → γ → Prop) (f : α →ₘ[μ] β) (g : α →ₘ[μ] 
   f.to_germ.lift_rel r g.to_germ
 
 theorem lift_rel_mk_mk {r : β → γ → Prop} {f : α → β} {g : α → γ} {hf hg} :
-  lift_rel r (mk f hf : α →ₘ[μ] β) (mk g hg) ↔ ∀ᵐa ∂μ, r (f a) (g a) :=
+  lift_rel r (mk f hf : α →ₘ[μ] β) (mk g hg) ↔ ∀ᵐ a ∂μ, r (f a) (g a) :=
   Iff.rfl
 
 theorem lift_rel_iff_coe_fn {r : β → γ → Prop} {f : α →ₘ[μ] β} {g : α →ₘ[μ] γ} :
-  lift_rel r f g ↔ ∀ᵐa ∂μ, r (f a) (g a) :=
+  lift_rel r f g ↔ ∀ᵐ a ∂μ, r (f a) (g a) :=
   by 
     rw [←lift_rel_mk_mk, mk_coe_fn, mk_coe_fn]
 
@@ -300,6 +299,87 @@ theorem coe_fn_le [Preorderₓ β] {f g : α →ₘ[μ] β} : (f : α → β) �
 
 instance [PartialOrderₓ β] : PartialOrderₓ (α →ₘ[μ] β) :=
   PartialOrderₓ.lift to_germ to_germ_injective
+
+section Lattice
+
+section Sup
+
+variable [SemilatticeSup β] [HasMeasurableSup₂ β]
+
+instance : HasSup (α →ₘ[μ] β) :=
+  { sup := fun f g => ae_eq_fun.comp₂ (·⊔·) measurable_sup f g }
+
+theorem coe_fn_sup (f g : α →ₘ[μ] β) : ⇑(f⊔g) =ᵐ[μ] fun x => f x⊔g x :=
+  coe_fn_comp₂ _ _ _ _
+
+protected theorem le_sup_left (f g : α →ₘ[μ] β) : f ≤ f⊔g :=
+  by 
+    rw [←coe_fn_le]
+    filterUpwards [coe_fn_sup f g]
+    intro a ha 
+    rw [ha]
+    exact le_sup_left
+
+protected theorem le_sup_right (f g : α →ₘ[μ] β) : g ≤ f⊔g :=
+  by 
+    rw [←coe_fn_le]
+    filterUpwards [coe_fn_sup f g]
+    intro a ha 
+    rw [ha]
+    exact le_sup_right
+
+protected theorem sup_le (f g f' : α →ₘ[μ] β) (hf : f ≤ f') (hg : g ≤ f') : f⊔g ≤ f' :=
+  by 
+    rw [←coe_fn_le] at hf hg⊢
+    filterUpwards [hf, hg, coe_fn_sup f g]
+    intro a haf hag ha_sup 
+    rw [ha_sup]
+    exact sup_le haf hag
+
+end Sup
+
+section Inf
+
+variable [SemilatticeInf β] [HasMeasurableInf₂ β]
+
+instance : HasInf (α →ₘ[μ] β) :=
+  { inf := fun f g => ae_eq_fun.comp₂ (·⊓·) measurable_inf f g }
+
+theorem coe_fn_inf (f g : α →ₘ[μ] β) : ⇑(f⊓g) =ᵐ[μ] fun x => f x⊓g x :=
+  coe_fn_comp₂ _ _ _ _
+
+protected theorem inf_le_left (f g : α →ₘ[μ] β) : f⊓g ≤ f :=
+  by 
+    rw [←coe_fn_le]
+    filterUpwards [coe_fn_inf f g]
+    intro a ha 
+    rw [ha]
+    exact inf_le_left
+
+protected theorem inf_le_right (f g : α →ₘ[μ] β) : f⊓g ≤ g :=
+  by 
+    rw [←coe_fn_le]
+    filterUpwards [coe_fn_inf f g]
+    intro a ha 
+    rw [ha]
+    exact inf_le_right
+
+protected theorem le_inf (f' f g : α →ₘ[μ] β) (hf : f' ≤ f) (hg : f' ≤ g) : f' ≤ f⊓g :=
+  by 
+    rw [←coe_fn_le] at hf hg⊢
+    filterUpwards [hf, hg, coe_fn_inf f g]
+    intro a haf hag ha_inf 
+    rw [ha_inf]
+    exact le_inf haf hag
+
+end Inf
+
+instance [Lattice β] [HasMeasurableSup₂ β] [HasMeasurableInf₂ β] : Lattice (α →ₘ[μ] β) :=
+  { ae_eq_fun.partial_order with sup := HasSup.sup, le_sup_left := ae_eq_fun.le_sup_left,
+    le_sup_right := ae_eq_fun.le_sup_right, sup_le := ae_eq_fun.sup_le, inf := HasInf.inf,
+    inf_le_left := ae_eq_fun.inf_le_left, inf_le_right := ae_eq_fun.inf_le_right, le_inf := ae_eq_fun.le_inf }
+
+end Lattice
 
 end Order
 
@@ -327,7 +407,7 @@ theorem one_def [HasOne β] : (1 : α →ₘ[μ] β) = mk (fun a : α => 1) ae_m
   rfl
 
 @[toAdditive]
-theorem coe_fn_one [HasOne β] : «expr⇑ » (1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=
+theorem coe_fn_one [HasOne β] : ⇑(1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=
   coe_fn_const _ _
 
 @[simp, toAdditive]
@@ -347,7 +427,7 @@ theorem mk_mul_mk (f g : α → γ) hf hg : ((mk f hf : α →ₘ[μ] γ)*mk g h
   rfl
 
 @[toAdditive]
-theorem coe_fn_mul (f g : α →ₘ[μ] γ) : «expr⇑ » (f*g) =ᵐ[μ] f*g :=
+theorem coe_fn_mul (f g : α →ₘ[μ] γ) : (⇑f*g) =ᵐ[μ] f*g :=
   coe_fn_comp₂ _ _ _ _
 
 @[simp, toAdditive]
@@ -378,7 +458,7 @@ theorem inv_mk (f : α → γ) hf : (mk f hf : α →ₘ[μ] γ)⁻¹ = mk (f⁻
   rfl
 
 @[toAdditive]
-theorem coe_fn_inv (f : α →ₘ[μ] γ) : «expr⇑ » (f⁻¹) =ᵐ[μ] f⁻¹ :=
+theorem coe_fn_inv (f : α →ₘ[μ] γ) : ⇑f⁻¹ =ᵐ[μ] f⁻¹ :=
   coe_fn_comp _ _ _
 
 @[toAdditive]
@@ -396,7 +476,7 @@ theorem mk_div (f g : α → γ) hf hg : mk (f / g) (AeMeasurable.div hf hg) = (
   rfl
 
 @[toAdditive]
-theorem coe_fn_div (f g : α →ₘ[μ] γ) : «expr⇑ » (f / g) =ᵐ[μ] f / g :=
+theorem coe_fn_div (f g : α →ₘ[μ] γ) : ⇑(f / g) =ᵐ[μ] f / g :=
   coe_fn_comp₂ _ _ _ _
 
 @[toAdditive]
@@ -427,7 +507,7 @@ instance : HasScalar 𝕜 (α →ₘ[μ] γ) :=
 theorem smul_mk (c : 𝕜) (f : α → γ) hf : c • (mk f hf : α →ₘ[μ] γ) = mk (c • f) (hf.const_smul _) :=
   rfl
 
-theorem coe_fn_smul (c : 𝕜) (f : α →ₘ[μ] γ) : «expr⇑ » (c • f) =ᵐ[μ] c • f :=
+theorem coe_fn_smul (c : 𝕜) (f : α →ₘ[μ] γ) : ⇑(c • f) =ᵐ[μ] c • f :=
   coe_fn_comp _ _ _
 
 theorem smul_to_germ (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c • f.to_germ :=
@@ -444,13 +524,13 @@ open Ennreal
 
 /-- For `f : α → ℝ≥0∞`, define `∫ [f]` to be `∫ f` -/
 def lintegral (f : α →ₘ[μ] ℝ≥0∞) : ℝ≥0∞ :=
-  Quotientₓ.liftOn' f (fun f => ∫⁻a, (f : α → ℝ≥0∞) a ∂μ) fun f g => lintegral_congr_ae
+  Quotientₓ.liftOn' f (fun f => ∫⁻ a, (f : α → ℝ≥0∞) a ∂μ) fun f g => lintegral_congr_ae
 
 @[simp]
-theorem lintegral_mk (f : α → ℝ≥0∞) hf : (mk f hf : α →ₘ[μ] ℝ≥0∞).lintegral = ∫⁻a, f a ∂μ :=
+theorem lintegral_mk (f : α → ℝ≥0∞) hf : (mk f hf : α →ₘ[μ] ℝ≥0∞).lintegral = ∫⁻ a, f a ∂μ :=
   rfl
 
-theorem lintegral_coe_fn (f : α →ₘ[μ] ℝ≥0∞) : (∫⁻a, f a ∂μ) = f.lintegral :=
+theorem lintegral_coe_fn (f : α →ₘ[μ] ℝ≥0∞) : (∫⁻ a, f a ∂μ) = f.lintegral :=
   by 
     rw [←lintegral_mk, mk_coe_fn]
 
@@ -485,7 +565,7 @@ theorem pos_part_mk (f : α → γ) hf :
   pos_part (mk f hf : α →ₘ[μ] γ) = mk (fun x => max (f x) 0) (hf.max ae_measurable_const) :=
   rfl
 
-theorem coe_fn_pos_part (f : α →ₘ[μ] γ) : «expr⇑ » (pos_part f) =ᵐ[μ] fun a => max (f a) 0 :=
+theorem coe_fn_pos_part (f : α →ₘ[μ] γ) : ⇑pos_part f =ᵐ[μ] fun a => max (f a) 0 :=
   coe_fn_comp _ _ _
 
 end PosPart

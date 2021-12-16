@@ -21,7 +21,7 @@ multiset, gcd
 
 namespace Multiset
 
-variable {α : Type _} [CommCancelMonoidWithZero α] [NormalizedGcdMonoid α]
+variable {α : Type _} [CancelCommMonoidWithZero α] [NormalizedGcdMonoid α]
 
 /-! ### lcm -/
 
@@ -51,9 +51,20 @@ theorem lcm_add (s₁ s₂ : Multiset α) : (s₁+s₂).lcm = GcdMonoid.lcm s₁
       simp [lcm])
     (fold_add _ _ _ _ _)
 
--- error in Algebra.GcdMonoid.Multiset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lcm_dvd {s : multiset α} {a : α} : «expr ↔ »(«expr ∣ »(s.lcm, a), ∀ b «expr ∈ » s, «expr ∣ »(b, a)) :=
-multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr or_imp_distrib, ",", expr forall_and_distrib, ",", expr lcm_dvd_iff, "]"] [] [] { contextual := tt })
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lcm_dvd
+  { s : Multiset α } { a : α } : s.lcm ∣ a ↔ ∀ b _ : b ∈ s , b ∣ a
+  :=
+    Multiset.induction_on
+      s
+        by simp
+        by
+          simp
+            ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+            [ or_imp_distrib , forall_and_distrib , lcm_dvd_iff ]
 
 theorem dvd_lcm {s : Multiset α} {a : α} (h : a ∈ s) : a ∣ s.lcm :=
   lcm_dvd.1 dvd_rfl _ h
@@ -141,9 +152,20 @@ theorem gcd_add (s₁ s₂ : Multiset α) : (s₁+s₂).gcd = GcdMonoid.gcd s₁
       simp [gcd])
     (fold_add _ _ _ _ _)
 
--- error in Algebra.GcdMonoid.Multiset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dvd_gcd {s : multiset α} {a : α} : «expr ↔ »(«expr ∣ »(a, s.gcd), ∀ b «expr ∈ » s, «expr ∣ »(a, b)) :=
-multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr or_imp_distrib, ",", expr forall_and_distrib, ",", expr dvd_gcd_iff, "]"] [] [] { contextual := tt })
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  dvd_gcd
+  { s : Multiset α } { a : α } : a ∣ s.gcd ↔ ∀ b _ : b ∈ s , a ∣ b
+  :=
+    Multiset.induction_on
+      s
+        by simp
+        by
+          simp
+            ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+            [ or_imp_distrib , forall_and_distrib , dvd_gcd_iff ]
 
 theorem gcd_dvd {s : Multiset α} {a : α} (h : a ∈ s) : s.gcd ∣ a :=
   dvd_gcd.1 dvd_rfl _ h
@@ -162,7 +184,7 @@ theorem normalize_gcd (s : Multiset α) : normalize s.gcd = s.gcd :=
 
 theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s → x = 0 :=
   by 
-    split 
+    constructor
     ·
       intro h x hx 
       apply eq_zero_of_zero_dvd 

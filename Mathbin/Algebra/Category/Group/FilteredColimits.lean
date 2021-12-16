@@ -18,7 +18,7 @@ particular, this implies that `forget Group` preserves filtered colimits. Simila
 
 universe v
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -47,21 +47,21 @@ abbrev G : Mon :=
 
 /-- The canonical projection into the colimit, as a quotient type. -/
 @[toAdditive "The canonical projection into the colimit, as a quotient type."]
-abbrev G.mk : (Σj, F.obj j) → G :=
+abbrev G.mk : (Σ j, F.obj j) → G :=
   Quot.mk (types.quot.rel (F ⋙ forget Groupₓₓ))
 
 @[toAdditive]
-theorem G.mk_eq (x y : Σj, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
+theorem G.mk_eq (x y : Σ j, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
   G.mk x = G.mk y :=
   Quot.eqv_gen_sound (types.filtered_colimit.eqv_gen_quot_rel_of_rel (F ⋙ forget Groupₓₓ) x y h)
 
 /-- The "unlifted" version of taking inverses in the colimit. -/
 @[toAdditive "The \"unlifted\" version of negation in the colimit."]
-def colimit_inv_aux (x : Σj, F.obj j) : G :=
+def colimit_inv_aux (x : Σ j, F.obj j) : G :=
   G.mk ⟨x.1, x.2⁻¹⟩
 
 @[toAdditive]
-theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j) (h : types.filtered_colimit.rel (F ⋙ forget Groupₓₓ) x y) :
+theorem colimit_inv_aux_eq_of_rel (x y : Σ j, F.obj j) (h : types.filtered_colimit.rel (F ⋙ forget Groupₓₓ) x y) :
   colimit_inv_aux x = colimit_inv_aux y :=
   by 
     apply G.mk_eq 
@@ -83,7 +83,7 @@ instance colimit_has_inv : HasInv G :=
           exact h }
 
 @[simp, toAdditive]
-theorem colimit_inv_mk_eq (x : Σj, F.obj j) : G.mk x⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
+theorem colimit_inv_mk_eq (x : Σ j, F.obj j) : G.mk x⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
   rfl
 
 @[toAdditive]

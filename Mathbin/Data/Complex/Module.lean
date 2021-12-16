@@ -68,6 +68,12 @@ instance [HasScalar R S] [HasScalar R ℝ] [HasScalar S ℝ] [IsScalarTower R S 
         by 
           ext <;> simp [smul_re, smul_im, smul_assoc] }
 
+instance [HasScalar R ℝ] [HasScalar (Rᵐᵒᵖ) ℝ] [IsCentralScalar R ℝ] : IsCentralScalar R ℂ :=
+  { op_smul_eq_smul :=
+      fun r x =>
+        by 
+          ext <;> simp [smul_re, smul_im, op_smul_eq_smul] }
+
 instance [Monoidₓ R] [MulAction R ℝ] : MulAction R ℂ :=
   { one_smul :=
       fun x =>
@@ -150,26 +156,56 @@ end
 
 open Submodule FiniteDimensional
 
--- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-/-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/ noncomputable def basis_one_I : basis (fin 2) exprℝ() exprℂ() :=
-basis.of_equiv_fun { to_fun := λ z, «expr![ , ]»([z.re, z.im]),
-  inv_fun := λ c, «expr + »(c 0, «expr • »(c 1, I)),
-  left_inv := λ z, by simp [] [] [] [] [] [],
-  right_inv := λ c, by { ext [] [ident i] [],
-    fin_cases [ident i] []; simp [] [] [] [] [] [] },
-  map_add' := λ z z', by simp [] [] [] [] [] [],
-  map_smul' := λ c z, by simp [] [] [] [] [] [] }
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+/-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
+noncomputable def basis_one_I : Basis (Finₓ 2) ℝ ℂ :=
+  Basis.ofEquivFun
+    { toFun :=
+        fun z => «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»",
+      invFun := fun c => c 0+c 1 • I,
+      left_inv :=
+        fun z =>
+          by 
+            simp ,
+      right_inv :=
+        fun c =>
+          by 
+            ext i 
+            finCases i <;> simp ,
+      map_add' :=
+        fun z z' =>
+          by 
+            simp ,
+      map_smul' :=
+        fun c z =>
+          by 
+            simp  }
 
--- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem coe_basis_one_I_repr (z : exprℂ()) : «expr = »(«expr⇑ »(basis_one_I.repr z), «expr![ , ]»([z.re, z.im])) :=
-rfl
+theorem coe_basis_one_I_repr (z : ℂ) :
+  ⇑basis_one_I.repr z =
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  rfl
 
--- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem coe_basis_one_I : «expr = »(«expr⇑ »(basis_one_I), «expr![ , ]»([1, I])) :=
-«expr $ »(funext, λ
- i, «expr $ »(basis.apply_eq_iff.mpr, «expr $ »(finsupp.ext, λ
-   j, by fin_cases [ident i] []; fin_cases [ident j] []; simp [] [] ["only"] ["[", expr coe_basis_one_I_repr, ",", expr finsupp.single_eq_same, ",", expr finsupp.single_eq_of_ne, ",", expr matrix.cons_val_zero, ",", expr matrix.cons_val_one, ",", expr matrix.head_cons, ",", expr nat.one_ne_zero, ",", expr fin.one_eq_zero_iff, ",", expr fin.zero_eq_one_iff, ",", expr ne.def, ",", expr not_false_iff, ",", expr one_re, ",", expr one_im, ",", expr I_re, ",", expr I_im, "]"] [] [])))
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem coe_basis_one_I :
+  ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  funext$
+    fun i =>
+      Basis.apply_eq_iff.mpr$
+        Finsupp.ext$
+          fun j =>
+            by 
+              finCases i <;>
+                finCases j <;>
+                  simp only [coe_basis_one_I_repr, Finsupp.single_eq_same, Finsupp.single_eq_of_ne,
+                    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Nat.one_ne_zero, Finₓ.one_eq_zero_iff,
+                    Finₓ.zero_eq_one_iff, Ne.def, not_false_iff, one_re, one_im, I_re, I_im]
 
 instance : FiniteDimensional ℝ ℂ :=
   of_fintype_basis basis_one_I
@@ -232,7 +268,7 @@ def re_lm : ℂ →ₗ[ℝ] ℝ :=
         simp  }
 
 @[simp]
-theorem re_lm_coe : «expr⇑ » re_lm = re :=
+theorem re_lm_coe : ⇑re_lm = re :=
   rfl
 
 /-- Linear map version of the imaginary part function, from `ℂ` to `ℝ`. -/
@@ -243,7 +279,7 @@ def im_lm : ℂ →ₗ[ℝ] ℝ :=
         simp  }
 
 @[simp]
-theorem im_lm_coe : «expr⇑ » im_lm = im :=
+theorem im_lm_coe : ⇑im_lm = im :=
   rfl
 
 /-- `ℝ`-algebra morphism version of the canonical embedding of `ℝ` in `ℂ`. -/
@@ -251,7 +287,7 @@ def of_real_am : ℝ →ₐ[ℝ] ℂ :=
   Algebra.ofId ℝ ℂ
 
 @[simp]
-theorem of_real_am_coe : «expr⇑ » of_real_am = coeₓ :=
+theorem of_real_am_coe : ⇑of_real_am = coeₓ :=
   rfl
 
 /-- `ℝ`-algebra isomorphism version of the complex conjugation function from `ℂ` to `ℂ` -/
@@ -259,7 +295,7 @@ def conj_ae : ℂ ≃ₐ[ℝ] ℂ :=
   { conj with invFun := conj, left_inv := star_star, right_inv := star_star, commutes' := conj_of_real }
 
 @[simp]
-theorem conj_ae_coe : «expr⇑ » conj_ae = conj :=
+theorem conj_ae_coe : ⇑conj_ae = conj :=
   rfl
 
 section lift

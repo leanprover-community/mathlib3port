@@ -69,7 +69,7 @@ instance : CoeFun (P →ᵃⁱ[𝕜] P₂) fun _ => P → P₂ :=
 omit V V₂
 
 @[simp]
-theorem coe_to_affine_map : «expr⇑ » f.to_affine_map = f :=
+theorem coe_to_affine_map : ⇑f.to_affine_map = f :=
   rfl
 
 include V V₂
@@ -97,7 +97,7 @@ def to_affine_isometry : V →ᵃⁱ[𝕜] V₂ :=
   { f.to_linear_map.to_affine_map with norm_map := f.norm_map }
 
 @[simp]
-theorem coe_to_affine_isometry : «expr⇑ » (f.to_affine_isometry : V →ᵃⁱ[𝕜] V₂) = f :=
+theorem coe_to_affine_isometry : ⇑(f.to_affine_isometry : V →ᵃⁱ[𝕜] V₂) = f :=
   rfl
 
 @[simp]
@@ -185,7 +185,7 @@ def id : P →ᵃⁱ[𝕜] P :=
   ⟨AffineMap.id 𝕜 P, fun x => rfl⟩
 
 @[simp]
-theorem coe_id : «expr⇑ » (id : P →ᵃⁱ[𝕜] P) = _root_.id :=
+theorem coe_id : ⇑(id : P →ᵃⁱ[𝕜] P) = _root_.id :=
   rfl
 
 @[simp]
@@ -206,7 +206,7 @@ def comp (g : P₂ →ᵃⁱ[𝕜] P₃) (f : P →ᵃⁱ[𝕜] P₂) : P →ᵃ
   ⟨g.to_affine_map.comp f.to_affine_map, fun x => (g.norm_map _).trans (f.norm_map _)⟩
 
 @[simp]
-theorem coe_comp (g : P₂ →ᵃⁱ[𝕜] P₃) (f : P →ᵃⁱ[𝕜] P₂) : «expr⇑ » (g.comp f) = (g ∘ f) :=
+theorem coe_comp (g : P₂ →ᵃⁱ[𝕜] P₃) (f : P →ᵃⁱ[𝕜] P₂) : ⇑g.comp f = (g ∘ f) :=
   rfl
 
 omit V V₂ V₃
@@ -230,11 +230,11 @@ instance : Monoidₓ (P →ᵃⁱ[𝕜] P) :=
   { one := id, mul := comp, mul_assoc := comp_assoc, one_mul := id_comp, mul_one := comp_id }
 
 @[simp]
-theorem coe_one : «expr⇑ » (1 : P →ᵃⁱ[𝕜] P) = _root_.id :=
+theorem coe_one : ⇑(1 : P →ᵃⁱ[𝕜] P) = _root_.id :=
   rfl
 
 @[simp]
-theorem coe_mul (f g : P →ᵃⁱ[𝕜] P) : «expr⇑ » (f*g) = (f ∘ g) :=
+theorem coe_mul (f g : P →ᵃⁱ[𝕜] P) : (⇑f*g) = (f ∘ g) :=
   rfl
 
 end AffineIsometry
@@ -273,11 +273,11 @@ instance : CoeFun (P ≃ᵃⁱ[𝕜] P₂) fun _ => P → P₂ :=
   ⟨fun f => f.to_fun⟩
 
 @[simp]
-theorem coe_mk (e : P ≃ᵃ[𝕜] P₂) (he : ∀ x, ∥e.linear x∥ = ∥x∥) : «expr⇑ » (mk e he) = e :=
+theorem coe_mk (e : P ≃ᵃ[𝕜] P₂) (he : ∀ x, ∥e.linear x∥ = ∥x∥) : ⇑mk e he = e :=
   rfl
 
 @[simp]
-theorem coe_to_affine_equiv (e : P ≃ᵃⁱ[𝕜] P₂) : «expr⇑ » e.to_affine_equiv = e :=
+theorem coe_to_affine_equiv (e : P ≃ᵃⁱ[𝕜] P₂) : ⇑e.to_affine_equiv = e :=
   rfl
 
 theorem to_affine_equiv_injective : injective (to_affine_equiv : (P ≃ᵃⁱ[𝕜] P₂) → P ≃ᵃ[𝕜] P₂)
@@ -294,7 +294,7 @@ def to_affine_isometry : P →ᵃⁱ[𝕜] P₂ :=
   ⟨e.1.toAffineMap, e.2⟩
 
 @[simp]
-theorem coe_to_affine_isometry : «expr⇑ » e.to_affine_isometry = e :=
+theorem coe_to_affine_isometry : ⇑e.to_affine_isometry = e :=
   rfl
 
 /-- Construct an affine isometry equivalence by verifying the relation between the map and its
@@ -305,7 +305,7 @@ def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p : P₁) (h : ∀
   { AffineEquiv.mk' e e'.to_linear_equiv p h with norm_map := e'.norm_map }
 
 @[simp]
-theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) p h : «expr⇑ » (mk' e e' p h) = e :=
+theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) p h : ⇑mk' e e' p h = e :=
   rfl
 
 @[simp]
@@ -325,7 +325,7 @@ def to_affine_isometry_equiv : V ≃ᵃⁱ[𝕜] V₂ :=
   { e.to_linear_equiv.to_affine_equiv with norm_map := e.norm_map }
 
 @[simp]
-theorem coe_to_affine_isometry_equiv : «expr⇑ » (e.to_affine_isometry_equiv : V ≃ᵃⁱ[𝕜] V₂) = e :=
+theorem coe_to_affine_isometry_equiv : ⇑(e.to_affine_isometry_equiv : V ≃ᵃⁱ[𝕜] V₂) = e :=
   rfl
 
 @[simp]
@@ -358,7 +358,7 @@ def to_isometric : P ≃ᵢ P₂ :=
   ⟨e.to_affine_equiv.to_equiv, e.isometry⟩
 
 @[simp]
-theorem coe_to_isometric : «expr⇑ » e.to_isometric = e :=
+theorem coe_to_isometric : ⇑e.to_isometric = e :=
   rfl
 
 include V V₂
@@ -375,7 +375,7 @@ def to_homeomorph : P ≃ₜ P₂ :=
   e.to_isometric.to_homeomorph
 
 @[simp]
-theorem coe_to_homeomorph : «expr⇑ » e.to_homeomorph = e :=
+theorem coe_to_homeomorph : ⇑e.to_homeomorph = e :=
   rfl
 
 protected theorem Continuous : Continuous e :=
@@ -404,7 +404,7 @@ instance : Inhabited (P ≃ᵃⁱ[𝕜] P) :=
   ⟨refl 𝕜 P⟩
 
 @[simp]
-theorem coe_refl : «expr⇑ » (refl 𝕜 P) = id :=
+theorem coe_refl : ⇑refl 𝕜 P = id :=
   rfl
 
 @[simp]
@@ -458,7 +458,7 @@ def trans (e' : P₂ ≃ᵃⁱ[𝕜] P₃) : P ≃ᵃⁱ[𝕜] P₃ :=
 include V V₂
 
 @[simp]
-theorem coeTransₓ (e₁ : P ≃ᵃⁱ[𝕜] P₂) (e₂ : P₂ ≃ᵃⁱ[𝕜] P₃) : «expr⇑ » (e₁.trans e₂) = (e₂ ∘ e₁) :=
+theorem coeTransₓ (e₁ : P ≃ᵃⁱ[𝕜] P₂) (e₂ : P₂ ≃ᵃⁱ[𝕜] P₃) : ⇑e₁.trans e₂ = (e₂ ∘ e₁) :=
   rfl
 
 omit V V₂ V₃
@@ -482,7 +482,7 @@ theorem symm_trans_self : e.symm.trans e = refl 𝕜 P₂ :=
 include V V₂ V₃
 
 @[simp]
-theorem coe_symm_trans (e₁ : P ≃ᵃⁱ[𝕜] P₂) (e₂ : P₂ ≃ᵃⁱ[𝕜] P₃) : «expr⇑ » (e₁.trans e₂).symm = (e₁.symm ∘ e₂.symm) :=
+theorem coe_symm_trans (e₁ : P ≃ᵃⁱ[𝕜] P₂) (e₂ : P₂ ≃ᵃⁱ[𝕜] P₃) : ⇑(e₁.trans e₂).symm = (e₁.symm ∘ e₂.symm) :=
   rfl
 
 include V₄
@@ -499,15 +499,15 @@ instance : Groupₓ (P ≃ᵃⁱ[𝕜] P) :=
     mul_assoc := fun _ _ _ => trans_assoc _ _ _, mul_left_inv := self_trans_symm }
 
 @[simp]
-theorem coe_one : «expr⇑ » (1 : P ≃ᵃⁱ[𝕜] P) = id :=
+theorem coe_one : ⇑(1 : P ≃ᵃⁱ[𝕜] P) = id :=
   rfl
 
 @[simp]
-theorem coe_mul (e e' : P ≃ᵃⁱ[𝕜] P) : «expr⇑ » (e*e') = (e ∘ e') :=
+theorem coe_mul (e e' : P ≃ᵃⁱ[𝕜] P) : (⇑e*e') = (e ∘ e') :=
   rfl
 
 @[simp]
-theorem coe_inv (e : P ≃ᵃⁱ[𝕜] P) : «expr⇑ » (e⁻¹) = e.symm :=
+theorem coe_inv (e : P ≃ᵃⁱ[𝕜] P) : ⇑e⁻¹ = e.symm :=
   rfl
 
 omit V
@@ -581,11 +581,11 @@ variable {𝕜}
 include V
 
 @[simp]
-theorem coe_vadd_const (p : P) : «expr⇑ » (vadd_const 𝕜 p) = fun v => v +ᵥ p :=
+theorem coe_vadd_const (p : P) : ⇑vadd_const 𝕜 p = fun v => v +ᵥ p :=
   rfl
 
 @[simp]
-theorem coe_vadd_const_symm (p : P) : «expr⇑ » (vadd_const 𝕜 p).symm = fun p' => p' -ᵥ p :=
+theorem coe_vadd_const_symm (p : P) : ⇑(vadd_const 𝕜 p).symm = fun p' => p' -ᵥ p :=
   rfl
 
 @[simp]
@@ -605,7 +605,7 @@ variable {𝕜}
 include V
 
 @[simp]
-theorem coe_const_vsub (p : P) : «expr⇑ » (const_vsub 𝕜 p) = (· -ᵥ ·) p :=
+theorem coe_const_vsub (p : P) : ⇑const_vsub 𝕜 p = (· -ᵥ ·) p :=
   rfl
 
 @[simp]
@@ -627,7 +627,7 @@ def const_vadd (v : V) : P ≃ᵃⁱ[𝕜] P :=
 variable {𝕜 P}
 
 @[simp]
-theorem coe_const_vadd (v : V) : «expr⇑ » (const_vadd 𝕜 P v : P ≃ᵃⁱ[𝕜] P) = (· +ᵥ ·) v :=
+theorem coe_const_vadd (v : V) : ⇑(const_vadd 𝕜 P v : P ≃ᵃⁱ[𝕜] P) = (· +ᵥ ·) v :=
   rfl
 
 @[simp]
@@ -667,7 +667,7 @@ theorem point_reflection_self (x : P) : point_reflection 𝕜 x x = x :=
   AffineEquiv.point_reflection_self 𝕜 x
 
 theorem point_reflection_involutive (x : P) : Function.Involutive (point_reflection 𝕜 x) :=
-  Equiv.point_reflection_involutive x
+  Equivₓ.point_reflection_involutive x
 
 @[simp]
 theorem point_reflection_symm (x : P) : (point_reflection 𝕜 x).symm = point_reflection 𝕜 x :=
@@ -709,28 +709,31 @@ end AffineIsometryEquiv
 
 include V V₂
 
--- error in Analysis.NormedSpace.AffineIsometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is an affine map, then its linear part is continuous iff `f` is continuous. -/
-theorem affine_map.continuous_linear_iff {f : «expr →ᵃ[ ] »(P, 𝕜, P₂)} : «expr ↔ »(continuous f.linear, continuous f) :=
-begin
-  inhabit [expr P] [],
-  have [] [":", expr «expr = »((f.linear : V → V₂), «expr ∘ »(«expr $ »(affine_isometry_equiv.vadd_const 𝕜, «expr $ »(f, default P)).to_homeomorph.symm, «expr ∘ »(f, «expr $ »(affine_isometry_equiv.vadd_const 𝕜, default P).to_homeomorph)))] [],
-  { ext [] [ident v] [],
-    simp [] [] [] [] [] [] },
-  rw [expr this] [],
-  simp [] [] ["only"] ["[", expr homeomorph.comp_continuous_iff, ",", expr homeomorph.comp_continuous_iff', "]"] [] []
-end
+theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f.linear ↔ Continuous f :=
+  by 
+    inhabit P 
+    have  :
+      (f.linear : V → V₂) =
+        ((AffineIsometryEquiv.vaddConst 𝕜$ f$ default P).toHomeomorph.symm ∘
+          f ∘ (AffineIsometryEquiv.vaddConst 𝕜$ default P).toHomeomorph)
+    ·
+      ext v 
+      simp 
+    rw [this]
+    simp only [Homeomorph.comp_continuous_iff, Homeomorph.comp_continuous_iff']
 
--- error in Analysis.NormedSpace.AffineIsometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is an affine map, then its linear part is an open map iff `f` is an open map. -/
-theorem affine_map.is_open_map_linear_iff
-{f : «expr →ᵃ[ ] »(P, 𝕜, P₂)} : «expr ↔ »(is_open_map f.linear, is_open_map f) :=
-begin
-  inhabit [expr P] [],
-  have [] [":", expr «expr = »((f.linear : V → V₂), «expr ∘ »(«expr $ »(affine_isometry_equiv.vadd_const 𝕜, «expr $ »(f, default P)).to_homeomorph.symm, «expr ∘ »(f, «expr $ »(affine_isometry_equiv.vadd_const 𝕜, default P).to_homeomorph)))] [],
-  { ext [] [ident v] [],
-    simp [] [] [] [] [] [] },
-  rw [expr this] [],
-  simp [] [] ["only"] ["[", expr homeomorph.comp_is_open_map_iff, ",", expr homeomorph.comp_is_open_map_iff', "]"] [] []
-end
+theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f.linear ↔ IsOpenMap f :=
+  by 
+    inhabit P 
+    have  :
+      (f.linear : V → V₂) =
+        ((AffineIsometryEquiv.vaddConst 𝕜$ f$ default P).toHomeomorph.symm ∘
+          f ∘ (AffineIsometryEquiv.vaddConst 𝕜$ default P).toHomeomorph)
+    ·
+      ext v 
+      simp 
+    rw [this]
+    simp only [Homeomorph.comp_is_open_map_iff, Homeomorph.comp_is_open_map_iff']
 

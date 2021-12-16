@@ -45,7 +45,7 @@ open CategoryTheory
 
 universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 

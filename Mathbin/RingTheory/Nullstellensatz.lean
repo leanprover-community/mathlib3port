@@ -20,7 +20,7 @@ The machinery around `vanishing_ideal` and `zero_locus` is also minimal, I only 
 
 open Ideal
 
-noncomputable theory
+noncomputable section 
 
 namespace MvPolynomial
 
@@ -30,10 +30,12 @@ variable {k : Type _} [Field k]
 
 variable {σ : Type _}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » I)
 /-- Set of points that are zeroes of all polynomials in an ideal -/
 def zero_locus (I : Ideal (MvPolynomial σ k)) : Set (σ → k) :=
-  { x:σ → k | ∀ p _ : p ∈ I, eval x p = 0 }
+  { x : σ → k | ∀ p _ : p ∈ I, eval x p = 0 }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » I)
 @[simp]
 theorem mem_zero_locus_iff {I : Ideal (MvPolynomial σ k)} {x : σ → k} :
   x ∈ zero_locus I ↔ ∀ p _ : p ∈ I, eval x p = 0 :=
@@ -48,18 +50,22 @@ theorem zero_locus_bot : zero_locus (⊥ : Ideal (MvPolynomial σ k)) = ⊤ :=
 theorem zero_locus_top : zero_locus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
   eq_bot_iff.2$ fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » V)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
-def vanishing_ideal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) :=
-  { Carrier := { p | ∀ x _ : x ∈ V, eval x p = 0 }, zero_mem' := fun x hx => RingHom.map_zero _,
-    add_mem' :=
-      fun p q hp hq x hx =>
-        by 
-          simp only [hq x hx, hp x hx, add_zeroₓ, RingHom.map_add],
-    smul_mem' :=
-      fun p q hq x hx =>
-        by 
-          simp only [hq x hx, Algebra.id.smul_eq_mul, mul_zero, RingHom.map_mul] }
+  def
+    vanishing_ideal
+    ( V : Set σ → k ) : Ideal MvPolynomial σ k
+    :=
+      {
+        Carrier := { p | ∀ x _ : x ∈ V , eval x p = 0 } ,
+          zero_mem' := fun x hx => RingHom.map_zero _ ,
+          add_mem' := fun p q hp hq x hx => by simp only [ hq x hx , hp x hx , add_zeroₓ , RingHom.map_add ] ,
+          smul_mem' := fun p q hq x hx => by simp only [ hq x hx , Algebra.id.smul_eq_mul , mul_zero , RingHom.map_mul ]
+        }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » V)
 @[simp]
 theorem mem_vanishing_ideal_iff {V : Set (σ → k)} {p : MvPolynomial σ k} :
   p ∈ vanishing_ideal V ↔ ∀ x _ : x ∈ V, eval x p = 0 :=
@@ -87,23 +93,22 @@ theorem mem_vanishing_ideal_singleton_iff (x : σ → k) (p : MvPolynomial σ k)
   p ∈ (vanishing_ideal {x} : Ideal (MvPolynomial σ k)) ↔ eval x p = 0 :=
   ⟨fun h => h x rfl, fun hpx y hy => hy.symm ▸ hpx⟩
 
--- error in RingTheory.Nullstellensatz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance vanishing_ideal_singleton_is_maximal
-{x : σ → k} : (vanishing_ideal {x} : ideal (mv_polynomial σ k)).is_maximal :=
-begin
-  have [] [":", expr «expr ≃+* »((vanishing_ideal {x} : ideal (mv_polynomial σ k)).quotient, k)] [":=", expr ring_equiv.of_bijective (ideal.quotient.lift _ (eval x) (λ
-     p
-     h, (mem_vanishing_ideal_singleton_iff x p).mp h)) (begin
-      refine [expr ⟨(ring_hom.injective_iff _).mpr (λ
-         p
-         hp, _), λ
-        z, ⟨ideal.quotient.mk (vanishing_ideal {x} : ideal (mv_polynomial σ k)) (C z), by simp [] [] [] [] [] []⟩⟩],
-      obtain ["⟨", ident q, ",", ident rfl, "⟩", ":=", expr quotient.mk_surjective p],
-      rwa ["[", expr ideal.quotient.lift_mk, ",", "<-", expr mem_vanishing_ideal_singleton_iff, ",", "<-", expr quotient.eq_zero_iff_mem, "]"] ["at", ident hp]
-    end)],
-  rw ["[", "<-", expr bot_quotient_is_maximal_iff, ",", expr ring_equiv.bot_maximal_iff this, "]"] [],
-  exact [expr bot_is_maximal]
-end
+instance vanishing_ideal_singleton_is_maximal {x : σ → k} :
+  (vanishing_ideal {x} : Ideal (MvPolynomial σ k)).IsMaximal :=
+  by 
+    have  : MvPolynomial σ k ⧸ vanishing_ideal {x} ≃+* k :=
+      RingEquiv.ofBijective (Ideal.Quotient.lift _ (eval x) fun p h => (mem_vanishing_ideal_singleton_iff x p).mp h)
+        (by 
+          refine'
+            ⟨(RingHom.injective_iff _).mpr fun p hp => _,
+              fun z =>
+                ⟨(Ideal.Quotient.mk (vanishing_ideal {x} : Ideal (MvPolynomial σ k))) (C z),
+                  by 
+                    simp ⟩⟩
+          obtain ⟨q, rfl⟩ := quotient.mk_surjective p 
+          rwa [Ideal.Quotient.lift_mk, ←mem_vanishing_ideal_singleton_iff, ←quotient.eq_zero_iff_mem] at hp)
+    rw [←bot_quotient_is_maximal_iff, ring_equiv.bot_maximal_iff this]
+    exact bot_is_maximal
 
 theorem radical_le_vanishing_ideal_zero_locus (I : Ideal (MvPolynomial σ k)) :
   I.radical ≤ vanishing_ideal (zero_locus I) :=
@@ -140,7 +145,7 @@ theorem vanishing_ideal_point_to_point (V : Set (σ → k)) :
           hx.2 ▸ fun x' hx' => (Set.mem_singleton_iff.1 hx').symm ▸ hp x hx.1
 
 theorem point_to_point_zero_locus_le (I : Ideal (MvPolynomial σ k)) :
-  point_to_point '' MvPolynomial.ZeroLocus I ≤ PrimeSpectrum.ZeroLocus («expr↑ » I) :=
+  point_to_point '' MvPolynomial.ZeroLocus I ≤ PrimeSpectrum.ZeroLocus (↑I) :=
   fun J hJ =>
     let ⟨x, hx⟩ := hJ
     (le_transₓ (le_vanishing_ideal_zero_locus I) (hx.2 ▸ vanishing_ideal_anti_mono (Set.singleton_subset_iff.2 hx.1)) :
@@ -148,27 +153,35 @@ theorem point_to_point_zero_locus_le (I : Ideal (MvPolynomial σ k)) :
 
 variable [IsAlgClosed k] [Fintype σ]
 
--- error in RingTheory.Nullstellensatz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_maximal_iff_eq_vanishing_ideal_singleton
-(I : ideal (mv_polynomial σ k)) : «expr ↔ »(I.is_maximal, «expr∃ , »((x : σ → k), «expr = »(I, vanishing_ideal {x}))) :=
-begin
-  refine [expr ⟨λ hI, _, λ h, let ⟨x, hx⟩ := h in
-    «expr ▸ »(hx.symm, mv_polynomial.vanishing_ideal_singleton_is_maximal)⟩],
-  letI [] [":", expr I.is_maximal] [":=", expr hI],
-  letI [] [":", expr field I.quotient] [":=", expr quotient.field I],
-  let [ident ϕ] [":", expr «expr →+* »(k, I.quotient)] [":=", expr (ideal.quotient.mk I).comp C],
-  have [ident hϕ] [":", expr function.bijective ϕ] [":=", expr ⟨quotient_mk_comp_C_injective _ _ I hI.ne_top, is_alg_closed.algebra_map_surjective_of_is_integral' ϕ (mv_polynomial.comp_C_integral_of_surjective_of_jacobson _ quotient.mk_surjective)⟩],
-  obtain ["⟨", ident φ, ",", ident hφ, "⟩", ":=", expr function.surjective.has_right_inverse hϕ.2],
-  let [ident x] [":", expr σ → k] [":=", expr λ s, φ (ideal.quotient.mk I (X s))],
-  have [ident hx] [":", expr ∀
-   s : σ, «expr = »(ϕ (x s), ideal.quotient.mk I (X s))] [":=", expr λ s, hφ (ideal.quotient.mk I (X s))],
-  refine [expr ⟨x, (is_maximal.eq_of_le (by apply_instance) hI.ne_top _).symm⟩],
-  intros [ident p, ident hp],
-  rw ["[", "<-", expr quotient.eq_zero_iff_mem, ",", expr map_mv_polynomial_eq_eval₂ (ideal.quotient.mk I) p, ",", expr eval₂_eq', "]"] [],
-  rw ["[", expr mem_vanishing_ideal_singleton_iff, ",", expr eval_eq', "]"] ["at", ident hp],
-  convert [] [expr trans (congr_arg ϕ hp) ϕ.map_zero] [],
-  simp [] [] ["only"] ["[", expr ϕ.map_sum, ",", expr ϕ.map_mul, ",", expr ϕ.map_prod, ",", expr ϕ.map_pow, ",", expr hx, "]"] [] []
-end
+theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ k)) :
+  I.is_maximal ↔ ∃ x : σ → k, I = vanishing_ideal {x} :=
+  by 
+    refine'
+      ⟨fun hI => _,
+        fun h =>
+          let ⟨x, hx⟩ := h 
+          hx.symm ▸ MvPolynomial.vanishing_ideal_singleton_is_maximal⟩
+    let this' : I.is_maximal := hI 
+    let this' : Field (MvPolynomial σ k ⧸ I) := quotient.field I 
+    let ϕ : k →+* MvPolynomial σ k ⧸ I := (Ideal.Quotient.mk I).comp C 
+    have hϕ : Function.Bijective ϕ :=
+      ⟨quotient_mk_comp_C_injective _ _ I hI.ne_top,
+        IsAlgClosed.algebra_map_surjective_of_is_integral' ϕ
+          (mv_polynomial.comp_C_integral_of_surjective_of_jacobson _ quotient.mk_surjective)⟩
+    obtain ⟨φ, hφ⟩ := Function.Surjective.has_right_inverse hϕ.2
+    let x : σ → k := fun s => φ ((Ideal.Quotient.mk I) (X s))
+    have hx : ∀ s : σ, ϕ (x s) = (Ideal.Quotient.mk I) (X s) := fun s => hφ ((Ideal.Quotient.mk I) (X s))
+    refine'
+      ⟨x,
+        (is_maximal.eq_of_le
+            (by 
+              infer_instance)
+            hI.ne_top _).symm⟩
+    intro p hp 
+    rw [←quotient.eq_zero_iff_mem, map_mv_polynomial_eq_eval₂ (Ideal.Quotient.mk I) p, eval₂_eq']
+    rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp 
+    convert trans (congr_argₓ ϕ hp) ϕ.map_zero 
+    simp only [ϕ.map_sum, ϕ.map_mul, ϕ.map_prod, ϕ.map_pow, hx]
 
 /-- Main statement of the Nullstellensatz -/
 @[simp]

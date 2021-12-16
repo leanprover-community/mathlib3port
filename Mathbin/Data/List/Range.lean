@@ -188,6 +188,14 @@ theorem range_succ (n : ℕ) : range (succ n) = range n ++ [n] :=
 theorem range_zero : range 0 = [] :=
   rfl
 
+theorem range_add (a : ℕ) : ∀ b, range (a+b) = range a ++ (range b).map fun x => a+x
+| 0 =>
+  by 
+    rw [add_zeroₓ, range_zero, map_nil, append_nil]
+| b+1 =>
+  by 
+    rw [Nat.add_succ, range_succ, range_add b, range_succ, map_append, map_singleton, append_assoc]
+
 theorem iota_eq_reverse_range' : ∀ n : ℕ, iota n = reverse (range' 1 n)
 | 0 => rfl
 | n+1 =>
@@ -244,6 +252,20 @@ theorem length_fin_range (n : ℕ) : (fin_range n).length = n :=
 theorem fin_range_eq_nil {n : ℕ} : fin_range n = [] ↔ n = 0 :=
   by 
     rw [←length_eq_zero, length_fin_range]
+
+@[simp]
+theorem map_coe_fin_range (n : ℕ) : (fin_range n).map coeₓ = List.range n :=
+  by 
+    simpRw [fin_range, map_pmap, Finₓ.mk, Subtype.coe_mk, pmap_eq_map]
+    exact List.map_id _
+
+theorem fin_range_succ_eq_map (n : ℕ) : fin_range n.succ = 0 :: (fin_range n).map Finₓ.succ :=
+  by 
+    apply map_injective_iff.mpr Subtype.coe_injective 
+    rw [map_cons, map_coe_fin_range, range_succ_eq_map, Finₓ.coe_zero, ←map_coe_fin_range, map_map, map_map,
+      Function.comp, Function.comp]
+    congr 2 with x 
+    exact (Finₓ.coe_succ _).symm
 
 @[toAdditive]
 theorem prod_range_succ {α : Type u} [Monoidₓ α] (f : ℕ → α) (n : ℕ) :

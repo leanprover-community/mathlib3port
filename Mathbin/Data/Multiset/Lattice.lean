@@ -40,9 +40,17 @@ theorem sup_add (s₁ s₂ : Multiset α) : (s₁+s₂).sup = s₁.sup⊔s₂.su
       simp [sup])
     (fold_add _ _ _ _ _)
 
--- error in Data.Multiset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sup_le {s : multiset α} {a : α} : «expr ↔ »(«expr ≤ »(s.sup, a), ∀ b «expr ∈ » s, «expr ≤ »(b, a)) :=
-multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr or_imp_distrib, ",", expr forall_and_distrib, "]"] [] [] { contextual := tt })
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  sup_le
+  { s : Multiset α } { a : α } : s.sup ≤ a ↔ ∀ b _ : b ∈ s , b ≤ a
+  :=
+    Multiset.induction_on
+      s
+        by simp
+        by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ or_imp_distrib , forall_and_distrib ]
 
 theorem le_sup {s : Multiset α} {a : α} (h : a ∈ s) : a ≤ s.sup :=
   sup_le.1 (le_reflₓ _) _ h
@@ -113,9 +121,17 @@ theorem inf_add (s₁ s₂ : Multiset α) : (s₁+s₂).inf = s₁.inf⊓s₂.in
       simp [inf])
     (fold_add _ _ _ _ _)
 
--- error in Data.Multiset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_inf {s : multiset α} {a : α} : «expr ↔ »(«expr ≤ »(a, s.inf), ∀ b «expr ∈ » s, «expr ≤ »(a, b)) :=
-multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr or_imp_distrib, ",", expr forall_and_distrib, "]"] [] [] { contextual := tt })
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  le_inf
+  { s : Multiset α } { a : α } : a ≤ s.inf ↔ ∀ b _ : b ∈ s , a ≤ b
+  :=
+    Multiset.induction_on
+      s
+        by simp
+        by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ or_imp_distrib , forall_and_distrib ]
 
 theorem inf_le {s : Multiset α} {a : α} (h : a ∈ s) : s.inf ≤ a :=
   le_inf.1 (le_reflₓ _) _ h

@@ -25,7 +25,7 @@ We verify that when `V = Type v`, all these notion reduce to the usual ones.
 
 universe w v u₁ u₂ u₃
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -35,30 +35,31 @@ open MonoidalCategory
 
 variable (V : Type v) [category.{w} V] [monoidal_category V]
 
--- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:990:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1042:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟶[] »
 /--
 A `V`-category is a category enriched in a monoidal category `V`.
 
 Note that we do not assume that `V` is a concrete category,
 so there may not be an "honest" underlying category at all!
 -/
-class enriched_category
-(C : Type u₁) :=
-  (hom : C → C → V)
-  (notation X ` ⟶[] ` Y:10 := hom X Y)
-  (id : ∀ X, «expr ⟶ »(«expr𝟙_»() V, «expr ⟶[] »(X, X)))
-  (comp : ∀ X Y Z, «expr ⟶ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr ⟶[] »(X, Y), «expr ⟶[] »(Y, Z)), «expr ⟶[] »(X, Z)))
-  (id_comp : ∀
-   X
-   Y, «expr = »(«expr ≫ »((«exprλ_»() «expr ⟶[] »(X, Y)).inv, «expr ≫ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](id X, «expr𝟙»() _), comp X X Y)), «expr𝟙»() _) . obviously)
-  (comp_id : ∀
-   X
-   Y, «expr = »(«expr ≫ »((exprρ_() «expr ⟶[] »(X, Y)).inv, «expr ≫ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr𝟙»() _, id Y), comp X Y Y)), «expr𝟙»() _) . obviously)
-  (assoc : ∀
-   W
-   X
-   Y
-   Z, «expr = »(«expr ≫ »((exprα_() _ _ _).inv, «expr ≫ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](comp W X Y, «expr𝟙»() _), comp W Y Z)), «expr ≫ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr𝟙»() _, comp X Y Z), comp W X Z)) . obviously)
+class enriched_category (C : Type u₁) where 
+  id : ∀ X, 𝟙_ V ⟶ «expr ⟶[] » X X 
+  comp : ∀ X Y Z, «expr ⟶[] » X Y ⊗ «expr ⟶[] » Y Z ⟶ «expr ⟶[] » X Z 
+  id_comp : ∀ X Y, (λ_ («expr ⟶[] » X Y)).inv ≫ (id X ⊗ 𝟙 _) ≫ comp X X Y = 𝟙 _ :=  by 
+  runTac 
+    obviously 
+  comp_id : ∀ X Y, (ρ_ («expr ⟶[] » X Y)).inv ≫ (𝟙 _ ⊗ id Y) ≫ comp X Y Y = 𝟙 _ :=  by 
+  runTac 
+    obviously 
+  assoc : ∀ W X Y Z, (α_ _ _ _).inv ≫ (comp W X Y ⊗ 𝟙 _) ≫ comp W Y Z = (𝟙 _ ⊗ comp X Y Z) ≫ comp W X Z :=  by 
+  runTac 
+    obviously
 
 notation X " ⟶[" V "] " Y:10 => (enriched_category.hom X Y : V)
 
@@ -411,22 +412,24 @@ variable [braided_category V]
 
 open BraidedCategory
 
--- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A presheaf isomorphic to the Yoneda embedding of
 the `V`-object of natural transformations from `F` to `G`.
--/ @[simps #[]] def enriched_nat_trans_yoneda (F G : enriched_functor V C D) : «expr ⥤ »(«expr ᵒᵖ»(V), Type max u₁ w) :=
-{ obj := λ A, graded_nat_trans ((center.of_braided V).obj (unop A)) F G,
-  map := λ
-  A
-  A'
-  f
-  σ, { app := λ X, «expr ≫ »(f.unop, σ.app X),
-    naturality := λ X Y, begin
-      have [ident p] [] [":=", expr σ.naturality X Y],
-      dsimp [] [] [] ["at", ident p, "⊢"],
-      rw ["[", "<-", expr id_tensor_comp_tensor_id «expr ≫ »(f.unop, σ.app Y) _, ",", expr id_tensor_comp, ",", expr category.assoc, ",", expr category.assoc, ",", "<-", expr braiding_naturality_assoc, ",", expr id_tensor_comp_tensor_id_assoc, ",", expr p, ",", "<-", expr tensor_comp_assoc, ",", expr category.id_comp, "]"] []
-    end } }
+-/
+@[simps]
+def enriched_nat_trans_yoneda (F G : enriched_functor V C D) : Vᵒᵖ ⥤ Type max u₁ w :=
+  { obj := fun A => graded_nat_trans ((center.of_braided V).obj (unop A)) F G,
+    map :=
+      fun A A' f σ =>
+        { app := fun X => f.unop ≫ σ.app X,
+          naturality :=
+            fun X Y =>
+              by 
+                have p := σ.naturality X Y 
+                dsimp  at p⊢
+                rw [←id_tensor_comp_tensor_id (f.unop ≫ σ.app Y) _, id_tensor_comp, category.assoc, category.assoc,
+                  ←braiding_naturality_assoc, id_tensor_comp_tensor_id_assoc, p, ←tensor_comp_assoc,
+                  category.id_comp] } }
 
 end 
 

@@ -32,7 +32,7 @@ variable (P : Pfunctor) {α β : Type u}
 
 /-- Applying `P` to an object of `Type` -/
 def obj (α : Type _) :=
-  Σx : P.A, P.B x → α
+  Σ x : P.A, P.B x → α
 
 /-- Applying `P` to a morphism of `Type` -/
 def map {α β : Type _} (f : α → β) : P.obj α → P.obj β :=
@@ -98,7 +98,7 @@ variable (P)
 For `F : pfunctor`, `x : F.obj α` and `i : F.Idx`, `i` can designate
 one part of `x` or is invalid, if `i.1 ≠ x.1` -/
 def Idx :=
-  Σx : P.A, P.B x
+  Σ x : P.A, P.B x
 
 instance Idx.inhabited [Inhabited P.A] [Inhabited (P.B (default _))] : Inhabited P.Idx :=
   ⟨⟨default _, default _⟩⟩
@@ -129,7 +129,7 @@ namespace Pfunctor
 
 /-- functor composition for polynomial functors -/
 def comp (P₂ P₁ : Pfunctor.{u}) : Pfunctor.{u} :=
-  ⟨Σa₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σu : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
+  ⟨Σ a₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σ u : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
 
 /-- constructor for composition -/
 def comp.mk (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : P₂.obj (P₁.obj α)) : (comp P₂ P₁).Obj α :=
@@ -149,7 +149,7 @@ open Functor
 
 theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.obj α) : liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨y, hy⟩
       cases' h : y with a f 
@@ -163,7 +163,7 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.obj α) : liftp p x ↔
 theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
   @liftp.{u} P.obj _ α p ⟨a, f⟩ ↔ ∀ i, p (f i) :=
   by 
-    simp only [liftp_iff, Sigma.mk.inj_iff] <;> split  <;> intro 
+    simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro 
     ·
       casesM* Exists _, _ ∧ _ 
       substVars 
@@ -176,16 +176,16 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) 
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.obj α) :
   liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨u, xeq, yeq⟩
       cases' h : u with a f 
       use a, fun i => (f i).val.fst, fun i => (f i).val.snd 
-      split 
+      constructor
       ·
         rw [←xeq, h]
         rfl 
-      split 
+      constructor
       ·
         rw [←yeq, h]
         rfl 
@@ -193,7 +193,7 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.obj α) :
       exact (f i).property 
     rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
     use ⟨a, fun i => ⟨(f₀ i, f₁ i), h i⟩⟩
-    split 
+    constructor
     ·
       rw [xeq]
       rfl 
@@ -206,7 +206,7 @@ theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) : @supp.{u} P.obj _ �
   by 
     ext 
     simp only [supp, image_univ, mem_range, mem_set_of_eq]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       apply @h fun x => ∃ y : P.B a, f y = x 
       rw [liftp_iff']

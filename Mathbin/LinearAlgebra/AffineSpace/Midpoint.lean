@@ -122,7 +122,7 @@ theorem midpoint_eq_midpoint_iff_vsub_eq_vsub {x x' y y' : P} : midpoint R x y =
     rw [←@vsub_eq_zero_iff_eq V, midpoint_vsub_midpoint, midpoint_eq_iff, point_reflection_apply, vsub_eq_sub, zero_sub,
       vadd_eq_add, add_zeroₓ, neg_eq_iff_neg_eq, neg_vsub_eq_vsub_rev, eq_comm]
 
-theorem midpoint_eq_iff' {x y z : P} : midpoint R x y = z ↔ Equiv.pointReflection z x = y :=
+theorem midpoint_eq_iff' {x y z : P} : midpoint R x y = z ↔ Equivₓ.pointReflection z x = y :=
   midpoint_eq_iff
 
 /-- `midpoint` does not depend on the ring `R`. -/
@@ -153,6 +153,26 @@ theorem midpoint_eq_smul_add (x y : V) : midpoint R x y = (⅟ 2 : R) • x+y :=
   by 
     rw [midpoint_eq_iff, point_reflection_apply, vsub_eq_sub, vadd_eq_add, sub_add_eq_add_sub, ←two_smul R, smul_smul,
       mul_inv_of_self, one_smul, add_sub_cancel']
+
+@[simp]
+theorem midpoint_self_neg (x : V) : midpoint R x (-x) = 0 :=
+  by 
+    rw [midpoint_eq_smul_add, add_neg_selfₓ, smul_zero]
+
+@[simp]
+theorem midpoint_neg_self (x : V) : midpoint R (-x) x = 0 :=
+  by 
+    simpa using midpoint_self_neg R (-x)
+
+@[simp]
+theorem midpoint_sub_add (x y : V) : midpoint R (x - y) (x+y) = x :=
+  by 
+    rw [sub_eq_add_neg, ←vadd_eq_add, ←vadd_eq_add, ←midpoint_vadd_midpoint] <;> simp 
+
+@[simp]
+theorem midpoint_add_sub (x y : V) : midpoint R (x+y) (x - y) = x :=
+  by 
+    rw [midpoint_comm] <;> simp 
 
 end 
 
@@ -208,7 +228,7 @@ def of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x 
 
 @[simp]
 theorem coe_of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) :
-  «expr⇑ » (of_map_midpoint R R' f h0 hm) = f :=
+  ⇑of_map_midpoint R R' f h0 hm = f :=
   rfl
 
 end AddMonoidHom

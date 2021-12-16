@@ -1,7 +1,7 @@
 import Mathbin.Data.Set.Lattice 
 import Mathbin.Data.SetLike.Basic 
 import Mathbin.Order.GaloisConnection 
-import Mathbin.Order.PreorderHom 
+import Mathbin.Order.Hom.Basic 
 import Mathbin.Tactic.Monotonicity.Default
 
 /-!
@@ -64,7 +64,7 @@ instance [Preorderₓ α] : CoeFun (ClosureOperator α) fun _ => α → α :=
 def simps.apply [Preorderₓ α] (f : ClosureOperator α) : α → α :=
   f
 
-initialize_simps_projections ClosureOperator (to_preorder_hom_to_fun → apply, -toPreorderHom)
+initialize_simps_projections ClosureOperator (to_order_hom_to_fun → apply, -toOrderHom)
 
 section PartialOrderₓ
 
@@ -73,7 +73,7 @@ variable [PartialOrderₓ α]
 /-- The identity function as a closure operator. -/
 @[simps]
 def id : ClosureOperator α :=
-  { toPreorderHom := PreorderHom.id, le_closure' := fun _ => le_rfl, idempotent' := fun _ => rfl }
+  { toOrderHom := OrderHom.id, le_closure' := fun _ => le_rfl, idempotent' := fun _ => rfl }
 
 instance : Inhabited (ClosureOperator α) :=
   ⟨id α⟩
@@ -228,11 +228,11 @@ section CompleteLattice
 
 variable [CompleteLattice α] (c : ClosureOperator α)
 
-theorem closure_supr_closure {ι : Type u} (x : ι → α) : c (⨆i, c (x i)) = c (⨆i, x i) :=
+theorem closure_supr_closure {ι : Type u} (x : ι → α) : c (⨆ i, c (x i)) = c (⨆ i, x i) :=
   le_antisymmₓ ((c.le_closure_iff _ _).1 (supr_le fun i => c.monotone (le_supr x i)))
     (c.monotone (supr_le_supr fun i => c.le_closure _))
 
-theorem closure_bsupr_closure (p : α → Prop) : c (⨆(x : _)(H : p x), c x) = c (⨆(x : _)(H : p x), x) :=
+theorem closure_bsupr_closure (p : α → Prop) : c (⨆ (x : _)(H : p x), c x) = c (⨆ (x : _)(H : p x), x) :=
   le_antisymmₓ ((c.le_closure_iff _ _).1 (bsupr_le fun x hx => c.monotone (le_bsupr_of_le x hx (le_reflₓ x))))
     (c.monotone (bsupr_le_bsupr fun x hx => c.le_closure x))
 
@@ -387,10 +387,10 @@ section CompleteLattice
 
 variable [CompleteLattice α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
 
-theorem closure_supr_closure {ι : Type u} (x : ι → α) : u (l (⨆i, u (l (x i)))) = u (l (⨆i, x i)) :=
+theorem closure_supr_closure {ι : Type u} (x : ι → α) : u (l (⨆ i, u (l (x i)))) = u (l (⨆ i, x i)) :=
   l.closure_operator.closure_supr_closure x
 
-theorem closure_bsupr_closure (p : α → Prop) : u (l (⨆(x : _)(H : p x), u (l x))) = u (l (⨆(x : _)(H : p x), x)) :=
+theorem closure_bsupr_closure (p : α → Prop) : u (l (⨆ (x : _)(H : p x), u (l x))) = u (l (⨆ (x : _)(H : p x), x)) :=
   l.closure_operator.closure_bsupr_closure p
 
 end CompleteLattice
@@ -432,11 +432,11 @@ theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
   SetLike.coe_injective (l.closure_operator.closure_sup_closure x y)
 
 @[simp]
-theorem closure_Union_closure {ι : Type u} (x : ι → α) : l (⋃i, l (x i)) = l (⋃i, x i) :=
+theorem closure_Union_closure {ι : Type u} (x : ι → α) : l (⋃ i, l (x i)) = l (⋃ i, x i) :=
   SetLike.coe_injective (l.closure_supr_closure (coeₓ ∘ x))
 
 @[simp]
-theorem closure_bUnion_closure (p : Set β → Prop) : l (⋃(x : _)(H : p x), l x) = l (⋃(x : _)(H : p x), x) :=
+theorem closure_bUnion_closure (p : Set β → Prop) : l (⋃ (x : _)(H : p x), l x) = l (⋃ (x : _)(H : p x), x) :=
   SetLike.coe_injective (l.closure_bsupr_closure p)
 
 end CoeToSet

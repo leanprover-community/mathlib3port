@@ -152,7 +152,7 @@ derivative, differentiability, higher derivative, `C^n`, multilinear, Taylor ser
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators Nnreal
 
@@ -175,6 +175,8 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
 
 variable {p : E → FormalMultilinearSeries 𝕜 E F}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- `has_ftaylor_series_up_to_on n f p s` registers the fact that `p 0 = f` and `p (m+1)` is a
 derivative of `p m` for `m < n`, and is continuous for `m ≤ n`. This is a predicate analogous to
 `has_fderiv_within_at` but for higher order derivatives. -/
@@ -192,6 +194,7 @@ theorem HasFtaylorSeriesUpToOn.zero_eq' {n : WithTop ℕ} (h : HasFtaylorSeriesU
     symm 
     exact ContinuousMultilinearMap.uncurry0_curry0 _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- If two functions coincide on a set `s`, then a Taylor series for the first one is as well a
 Taylor series for the second one. -/
 theorem HasFtaylorSeriesUpToOn.congr {n : WithTop ℕ} (h : HasFtaylorSeriesUpToOn n f p s)
@@ -210,42 +213,41 @@ theorem HasFtaylorSeriesUpToOn.of_le {m n : WithTop ℕ} (h : HasFtaylorSeriesUp
   HasFtaylorSeriesUpToOn m f p s :=
   ⟨h.zero_eq, fun k hk x hx => h.fderiv_within k (lt_of_lt_of_leₓ hk hmn) x hx, fun k hk => h.cont k (le_transₓ hk hmn)⟩
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_ftaylor_series_up_to_on.continuous_on
-{n : with_top exprℕ()}
-(h : has_ftaylor_series_up_to_on n f p s) : continuous_on f s :=
-begin
-  have [] [] [":=", expr (h.cont 0 bot_le).congr (λ x hx, (h.zero_eq' hx).symm)],
-  rwa [expr linear_isometry_equiv.comp_continuous_on_iff] ["at", ident this]
-end
+theorem HasFtaylorSeriesUpToOn.continuous_on {n : WithTop ℕ} (h : HasFtaylorSeriesUpToOn n f p s) : ContinuousOn f s :=
+  by 
+    have  := (h.cont 0 bot_le).congr fun x hx => (h.zero_eq' hx).symm 
+    rwa [LinearIsometryEquiv.comp_continuous_on_iff] at this
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_ftaylor_series_up_to_on_zero_iff : «expr ↔ »(has_ftaylor_series_up_to_on 0 f p s, «expr ∧ »(continuous_on f s, ∀
-  x «expr ∈ » s, «expr = »((p x 0).uncurry0, f x))) :=
-begin
-  refine [expr ⟨λ H, ⟨H.continuous_on, H.zero_eq⟩, λ H, ⟨H.2, λ m hm, false.elim (not_le.2 hm bot_le), _⟩⟩],
-  assume [binders (m hm)],
-  obtain [ident rfl, ":", expr «expr = »(m, 0)],
-  by exact_mod_cast [expr hm.antisymm (zero_le _)],
-  have [] [":", expr ∀ x «expr ∈ » s, «expr = »(p x 0, (continuous_multilinear_curry_fin0 𝕜 E F).symm (f x))] [],
-  by { assume [binders (x hx)],
-    rw ["<-", expr H.2 x hx] [],
-    symmetry,
-    exact [expr continuous_multilinear_map.uncurry0_curry0 _] },
-  rw ["[", expr continuous_on_congr this, ",", expr linear_isometry_equiv.comp_continuous_on_iff, "]"] [],
-  exact [expr H.1]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+theorem has_ftaylor_series_up_to_on_zero_iff :
+  HasFtaylorSeriesUpToOn 0 f p s ↔ ContinuousOn f s ∧ ∀ x _ : x ∈ s, (p x 0).uncurry0 = f x :=
+  by 
+    refine' ⟨fun H => ⟨H.continuous_on, H.zero_eq⟩, fun H => ⟨H.2, fun m hm => False.elim (not_leₓ.2 hm bot_le), _⟩⟩
+    intro m hm 
+    obtain rfl : m = 0
+    ·
+      exactModCast hm.antisymm (zero_le _)
+    have  : ∀ x _ : x ∈ s, p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x)
+    ·
+      ·
+        intro x hx 
+        rw [←H.2 x hx]
+        symm 
+        exact ContinuousMultilinearMap.uncurry0_curry0 _ 
+    rw [continuous_on_congr this, LinearIsometryEquiv.comp_continuous_on_iff]
+    exact H.1
 
 theorem has_ftaylor_series_up_to_on_top_iff :
   HasFtaylorSeriesUpToOn ∞ f p s ↔ ∀ n : ℕ, HasFtaylorSeriesUpToOn n f p s :=
   by 
-    split 
+    constructor
     ·
       intro H n 
       exact H.of_le le_top
     ·
       intro H 
-      split 
+      constructor
       ·
         exact (H 0).zero_eq
       ·
@@ -255,32 +257,31 @@ theorem has_ftaylor_series_up_to_on_top_iff :
         intro m hm 
         apply (H m).cont m (le_reflₓ _)
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- If a function has a Taylor series at order at least `1`, then the term of order `1` of this
 series is a derivative of `f`. -/
-theorem has_ftaylor_series_up_to_on.has_fderiv_within_at
-{n : with_top exprℕ()}
-(h : has_ftaylor_series_up_to_on n f p s)
-(hn : «expr ≤ »(1, n))
-(hx : «expr ∈ »(x, s)) : has_fderiv_within_at f (continuous_multilinear_curry_fin1 𝕜 E F (p x 1)) s x :=
-begin
-  have [ident A] [":", expr ∀ y «expr ∈ » s, «expr = »(f y, continuous_multilinear_curry_fin0 𝕜 E F (p y 0))] [],
-  { assume [binders (y hy)],
-    rw ["<-", expr h.zero_eq y hy] [],
-    refl },
-  suffices [ident H] [":", expr has_fderiv_within_at (λ
-    y, continuous_multilinear_curry_fin0 𝕜 E F (p y 0)) (continuous_multilinear_curry_fin1 𝕜 E F (p x 1)) s x],
-  by exact [expr H.congr A (A x hx)],
-  rw [expr linear_isometry_equiv.comp_has_fderiv_within_at_iff'] [],
-  have [] [":", expr «expr < »(((0 : exprℕ()) : with_top exprℕ()), n)] [":=", expr lt_of_lt_of_le (with_top.coe_lt_coe.2 nat.zero_lt_one) hn],
-  convert [] [expr h.fderiv_within _ this x hx] [],
-  ext [] [ident y, ident v] [],
-  change [expr «expr = »(p x 1 (snoc 0 y), p x 1 (cons y v))] [] [],
-  unfold_coes [],
-  congr' [] ["with", ident i],
-  rw [expr unique.eq_default i] [],
-  refl
-end
+theorem HasFtaylorSeriesUpToOn.has_fderiv_within_at {n : WithTop ℕ} (h : HasFtaylorSeriesUpToOn n f p s) (hn : 1 ≤ n)
+  (hx : x ∈ s) : HasFderivWithinAt f (continuousMultilinearCurryFin1 𝕜 E F (p x 1)) s x :=
+  by 
+    have A : ∀ y _ : y ∈ s, f y = (continuousMultilinearCurryFin0 𝕜 E F) (p y 0)
+    ·
+      intro y hy 
+      rw [←h.zero_eq y hy]
+      rfl 
+    suffices H :
+      HasFderivWithinAt (fun y => continuousMultilinearCurryFin0 𝕜 E F (p y 0))
+        (continuousMultilinearCurryFin1 𝕜 E F (p x 1)) s x
+    ·
+      exact H.congr A (A x hx)
+    rw [LinearIsometryEquiv.comp_has_fderiv_within_at_iff']
+    have  : ((0 : ℕ) : WithTop ℕ) < n := lt_of_lt_of_leₓ (WithTop.coe_lt_coe.2 Nat.zero_lt_oneₓ) hn 
+    convert h.fderiv_within _ this x hx 
+    ext y v 
+    change (p x 1) (snoc 0 y) = (p x 1) (cons y v)
+    unfoldCoes 
+    congr with i 
+    rw [Unique.eq_default i]
+    rfl
 
 theorem HasFtaylorSeriesUpToOn.differentiable_on {n : WithTop ℕ} (h : HasFtaylorSeriesUpToOn n f p s) (hn : 1 ≤ n) :
   DifferentiableOn 𝕜 f s :=
@@ -295,7 +296,7 @@ theorem HasFtaylorSeriesUpToOn.has_fderiv_at {n : WithTop ℕ} (h : HasFtaylorSe
 /-- If a function has a Taylor series at order at least `1` on a neighborhood of `x`, then
 in a neighborhood of `x`, the term of order `1` of this series is a derivative of `f`. -/
 theorem HasFtaylorSeriesUpToOn.eventually_has_fderiv_at {n : WithTop ℕ} (h : HasFtaylorSeriesUpToOn n f p s)
-  (hn : 1 ≤ n) (hx : s ∈ 𝓝 x) : ∀ᶠy in 𝓝 x, HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p y 1)) y :=
+  (hn : 1 ≤ n) (hx : s ∈ 𝓝 x) : ∀ᶠ y in 𝓝 x, HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p y 1)) y :=
   (eventually_eventually_nhds.2 hx).mono$ fun y hy => h.has_fderiv_at hn hy
 
 /-- If a function has a Taylor series at order at least `1` on a neighborhood of `x`, then
@@ -304,103 +305,135 @@ theorem HasFtaylorSeriesUpToOn.differentiable_at {n : WithTop ℕ} (h : HasFtayl
   (hx : s ∈ 𝓝 x) : DifferentiableAt 𝕜 f x :=
   (h.has_fderiv_at hn hx).DifferentiableAt
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- `p` is a Taylor series of `f` up to `n+1` if and only if `p` is a Taylor series up to `n`, and
 `p (n + 1)` is a derivative of `p n`. -/
-theorem has_ftaylor_series_up_to_on_succ_iff_left
-{n : exprℕ()} : «expr ↔ »(has_ftaylor_series_up_to_on «expr + »(n, 1) f p s, «expr ∧ »(has_ftaylor_series_up_to_on n f p s, «expr ∧ »(∀
-   x «expr ∈ » s, has_fderiv_within_at (λ
-    y, p y n) (p x n.succ).curry_left s x, continuous_on (λ x, p x «expr + »(n, 1)) s))) :=
-begin
-  split,
-  { assume [binders (h)],
-    exact [expr ⟨h.of_le (with_top.coe_le_coe.2 (nat.le_succ n)), h.fderiv_within _ (with_top.coe_lt_coe.2 (lt_add_one n)), h.cont «expr + »(n, 1) (le_refl _)⟩] },
-  { assume [binders (h)],
-    split,
-    { exact [expr h.1.zero_eq] },
-    { assume [binders (m hm)],
-      by_cases [expr h', ":", expr «expr < »(m, n)],
-      { exact [expr h.1.fderiv_within m (with_top.coe_lt_coe.2 h')] },
-      { have [] [":", expr «expr = »(m, n)] [":=", expr nat.eq_of_lt_succ_of_not_lt (with_top.coe_lt_coe.1 hm) h'],
-        rw [expr this] [],
-        exact [expr h.2.1] } },
-    { assume [binders (m hm)],
-      by_cases [expr h', ":", expr «expr ≤ »(m, n)],
-      { apply [expr h.1.cont m (with_top.coe_le_coe.2 h')] },
-      { have [] [":", expr «expr = »(m, «expr + »(n, 1))] [":=", expr le_antisymm (with_top.coe_le_coe.1 hm) (not_le.1 h')],
-        rw [expr this] [],
-        exact [expr h.2.2] } } }
-end
+theorem has_ftaylor_series_up_to_on_succ_iff_left {n : ℕ} :
+  HasFtaylorSeriesUpToOn (n+1) f p s ↔
+    HasFtaylorSeriesUpToOn n f p s ∧
+      (∀ x _ : x ∈ s, HasFderivWithinAt (fun y => p y n) (p x n.succ).curryLeft s x) ∧
+        ContinuousOn (fun x => p x (n+1)) s :=
+  by 
+    constructor
+    ·
+      intro h 
+      exact
+        ⟨h.of_le (WithTop.coe_le_coe.2 (Nat.le_succₓ n)), h.fderiv_within _ (WithTop.coe_lt_coe.2 (lt_add_one n)),
+          h.cont (n+1) (le_reflₓ _)⟩
+    ·
+      intro h 
+      constructor
+      ·
+        exact h.1.zero_eq
+      ·
+        intro m hm 
+        byCases' h' : m < n
+        ·
+          exact h.1.fderivWithin m (WithTop.coe_lt_coe.2 h')
+        ·
+          have  : m = n := Nat.eq_of_lt_succ_of_not_lt (WithTop.coe_lt_coe.1 hm) h' 
+          rw [this]
+          exact h.2.1
+      ·
+        intro m hm 
+        byCases' h' : m ≤ n
+        ·
+          apply h.1.cont m (WithTop.coe_le_coe.2 h')
+        ·
+          have  : m = n+1 := le_antisymmₓ (WithTop.coe_le_coe.1 hm) (not_leₓ.1 h')
+          rw [this]
+          exact h.2.2
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- `p` is a Taylor series of `f` up to `n+1` if and only if `p.shift` is a Taylor series up to `n`
 for `p 1`, which is a derivative of `f`. -/
-theorem has_ftaylor_series_up_to_on_succ_iff_right
-{n : exprℕ()} : «expr ↔ »(has_ftaylor_series_up_to_on («expr + »(n, 1) : exprℕ()) f p s, «expr ∧ »(∀
-  x «expr ∈ » s, «expr = »((p x 0).uncurry0, f x), «expr ∧ »(∀
-   x «expr ∈ » s, has_fderiv_within_at (λ
-    y, p y 0) (p x 1).curry_left s x, has_ftaylor_series_up_to_on n (λ
-    x, continuous_multilinear_curry_fin1 𝕜 E F (p x 1)) (λ x, (p x).shift) s))) :=
-begin
-  split,
-  { assume [binders (H)],
-    refine [expr ⟨H.zero_eq, H.fderiv_within 0 (with_top.coe_lt_coe.2 (nat.succ_pos n)), _⟩],
-    split,
-    { assume [binders (x hx)],
-      refl },
-    { assume [binders (m) (hm : «expr < »((m : with_top exprℕ()), n)) (x) (hx : «expr ∈ »(x, s))],
-      have [ident A] [":", expr «expr < »((m.succ : with_top exprℕ()), n.succ)] [],
-      by { rw [expr with_top.coe_lt_coe] ["at", "⊢", ident hm],
-        exact [expr nat.lt_succ_iff.mpr hm] },
-      change [expr has_fderiv_within_at «expr ∘ »((continuous_multilinear_curry_right_equiv' 𝕜 m E F).symm, λ
-        y : E, p y m.succ) (p x m.succ.succ).curry_right.curry_left s x] [] [],
-      rw [expr linear_isometry_equiv.comp_has_fderiv_within_at_iff'] [],
-      convert [] [expr H.fderiv_within _ A x hx] [],
-      ext [] [ident y, ident v] [],
-      change [expr «expr = »(p x m.succ.succ (snoc (cons y (init v)) (v (last _))), p x (nat.succ (nat.succ m)) (cons y v))] [] [],
-      rw ["[", "<-", expr cons_snoc_eq_snoc_cons, ",", expr snoc_init_self, "]"] [] },
-    { assume [binders (m) (hm : «expr ≤ »((m : with_top exprℕ()), n))],
-      have [ident A] [":", expr «expr ≤ »((m.succ : with_top exprℕ()), n.succ)] [],
-      by { rw [expr with_top.coe_le_coe] ["at", "⊢", ident hm],
-        exact [expr nat.pred_le_iff.mp hm] },
-      change [expr continuous_on «expr ∘ »((continuous_multilinear_curry_right_equiv' 𝕜 m E F).symm, λ
-        y : E, p y m.succ) s] [] [],
-      rw [expr linear_isometry_equiv.comp_continuous_on_iff] [],
-      exact [expr H.cont _ A] } },
-  { rintros ["⟨", ident Hzero_eq, ",", ident Hfderiv_zero, ",", ident Htaylor, "⟩"],
-    split,
-    { exact [expr Hzero_eq] },
-    { assume [binders (m) (hm : «expr < »((m : with_top exprℕ()), n.succ)) (x) (hx : «expr ∈ »(x, s))],
-      cases [expr m] [],
-      { exact [expr Hfderiv_zero x hx] },
-      { have [ident A] [":", expr «expr < »((m : with_top exprℕ()), n)] [],
-        by { rw [expr with_top.coe_lt_coe] ["at", ident hm, "⊢"],
-          exact [expr nat.lt_of_succ_lt_succ hm] },
-        have [] [":", expr has_fderiv_within_at «expr ∘ »((continuous_multilinear_curry_right_equiv' 𝕜 m E F).symm, λ
-          y : E, p y m.succ) ((p x).shift m.succ).curry_left s x] [":=", expr Htaylor.fderiv_within _ A x hx],
-        rw [expr linear_isometry_equiv.comp_has_fderiv_within_at_iff'] ["at", ident this],
-        convert [] [expr this] [],
-        ext [] [ident y, ident v] [],
-        change [expr «expr = »(p x (nat.succ (nat.succ m)) (cons y v), p x m.succ.succ (snoc (cons y (init v)) (v (last _))))] [] [],
-        rw ["[", "<-", expr cons_snoc_eq_snoc_cons, ",", expr snoc_init_self, "]"] [] } },
-    { assume [binders (m) (hm : «expr ≤ »((m : with_top exprℕ()), n.succ))],
-      cases [expr m] [],
-      { have [] [":", expr differentiable_on 𝕜 (λ
-          x, p x 0) s] [":=", expr λ x hx, (Hfderiv_zero x hx).differentiable_within_at],
-        exact [expr this.continuous_on] },
-      { have [ident A] [":", expr «expr ≤ »((m : with_top exprℕ()), n)] [],
-        by { rw [expr with_top.coe_le_coe] ["at", ident hm, "⊢"],
-          exact [expr nat.lt_succ_iff.mp hm] },
-        have [] [":", expr continuous_on «expr ∘ »((continuous_multilinear_curry_right_equiv' 𝕜 m E F).symm, λ
-          y : E, p y m.succ) s] [":=", expr Htaylor.cont _ A],
-        rwa [expr linear_isometry_equiv.comp_continuous_on_iff] ["at", ident this] } } }
-end
+theorem has_ftaylor_series_up_to_on_succ_iff_right {n : ℕ} :
+  HasFtaylorSeriesUpToOn (n+1 : ℕ) f p s ↔
+    (∀ x _ : x ∈ s, (p x 0).uncurry0 = f x) ∧
+      (∀ x _ : x ∈ s, HasFderivWithinAt (fun y => p y 0) (p x 1).curryLeft s x) ∧
+        HasFtaylorSeriesUpToOn n (fun x => continuousMultilinearCurryFin1 𝕜 E F (p x 1)) (fun x => (p x).shift) s :=
+  by 
+    constructor
+    ·
+      intro H 
+      refine' ⟨H.zero_eq, H.fderiv_within 0 (WithTop.coe_lt_coe.2 (Nat.succ_posₓ n)), _⟩
+      constructor
+      ·
+        intro x hx 
+        rfl
+      ·
+        intro m(hm : (m : WithTop ℕ) < n)x(hx : x ∈ s)
+        have A : (m.succ : WithTop ℕ) < n.succ
+        ·
+          ·
+            rw [WithTop.coe_lt_coe] at hm⊢
+            exact nat.lt_succ_iff.mpr hm 
+        change
+          HasFderivWithinAt ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ fun y : E => p y m.succ)
+            (p x m.succ.succ).curryRight.curryLeft s x 
+        rw [LinearIsometryEquiv.comp_has_fderiv_within_at_iff']
+        convert H.fderiv_within _ A x hx 
+        ext y v 
+        change (p x m.succ.succ) (snoc (cons y (init v)) (v (last _))) = (p x (Nat.succ (Nat.succ m))) (cons y v)
+        rw [←cons_snoc_eq_snoc_cons, snoc_init_self]
+      ·
+        intro m(hm : (m : WithTop ℕ) ≤ n)
+        have A : (m.succ : WithTop ℕ) ≤ n.succ
+        ·
+          ·
+            rw [WithTop.coe_le_coe] at hm⊢
+            exact nat.pred_le_iff.mp hm 
+        change ContinuousOn ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ fun y : E => p y m.succ) s 
+        rw [LinearIsometryEquiv.comp_continuous_on_iff]
+        exact H.cont _ A
+    ·
+      rintro ⟨Hzero_eq, Hfderiv_zero, Htaylor⟩
+      constructor
+      ·
+        exact Hzero_eq
+      ·
+        intro m(hm : (m : WithTop ℕ) < n.succ)x(hx : x ∈ s)
+        cases m
+        ·
+          exact Hfderiv_zero x hx
+        ·
+          have A : (m : WithTop ℕ) < n
+          ·
+            ·
+              rw [WithTop.coe_lt_coe] at hm⊢
+              exact Nat.lt_of_succ_lt_succₓ hm 
+          have  :
+            HasFderivWithinAt ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ fun y : E => p y m.succ)
+              ((p x).shift m.succ).curryLeft s x :=
+            Htaylor.fderiv_within _ A x hx 
+          rw [LinearIsometryEquiv.comp_has_fderiv_within_at_iff'] at this 
+          convert this 
+          ext y v 
+          change (p x (Nat.succ (Nat.succ m))) (cons y v) = (p x m.succ.succ) (snoc (cons y (init v)) (v (last _)))
+          rw [←cons_snoc_eq_snoc_cons, snoc_init_self]
+      ·
+        intro m(hm : (m : WithTop ℕ) ≤ n.succ)
+        cases m
+        ·
+          have  : DifferentiableOn 𝕜 (fun x => p x 0) s := fun x hx => (Hfderiv_zero x hx).DifferentiableWithinAt 
+          exact this.continuous_on
+        ·
+          have A : (m : WithTop ℕ) ≤ n
+          ·
+            ·
+              rw [WithTop.coe_le_coe] at hm⊢
+              exact nat.lt_succ_iff.mp hm 
+          have  : ContinuousOn ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ fun y : E => p y m.succ) s :=
+            Htaylor.cont _ A 
+          rwa [LinearIsometryEquiv.comp_continuous_on_iff] at this
 
 /-! ### Smooth functions within a set around a point -/
 
 
 variable (𝕜)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » «expr𝓝[ ] »(insert x s, x))
 /-- A function is continuously differentiable up to order `n` within a set `s` at a point `x` if
 it admits continuous derivatives up to order `n` in a neighborhood of `x` in `s ∪ {x}`.
 For `n = ∞`, we only require that this holds up to any finite order (where the neighborhood may
@@ -416,6 +449,7 @@ def TimesContDiffWithinAt (n : WithTop ℕ) (f : E → F) (s : Set E) (x : E) :=
 
 variable {𝕜}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » «expr𝓝[ ] »(insert x s, x))
 theorem times_cont_diff_within_at_nat {n : ℕ} :
   TimesContDiffWithinAt 𝕜 n f s x ↔
     ∃ (u : _)(_ : u ∈ 𝓝[insert x s] x), ∃ p : E → FormalMultilinearSeries 𝕜 E F, HasFtaylorSeriesUpToOn n f p u :=
@@ -426,7 +460,7 @@ theorem TimesContDiffWithinAt.of_le {m n : WithTop ℕ} (h : TimesContDiffWithin
   fun k hk => h k (le_transₓ hk hmn)
 
 theorem times_cont_diff_within_at_iff_forall_nat_le {n : WithTop ℕ} :
-  TimesContDiffWithinAt 𝕜 n f s x ↔ ∀ m : ℕ, «expr↑ » m ≤ n → TimesContDiffWithinAt 𝕜 m f s x :=
+  TimesContDiffWithinAt 𝕜 n f s x ↔ ∀ m : ℕ, ↑m ≤ n → TimesContDiffWithinAt 𝕜 m f s x :=
   ⟨fun H m hm => H.of_le hm, fun H m hm => H m hm _ le_rfl⟩
 
 theorem times_cont_diff_within_at_top : TimesContDiffWithinAt 𝕜 ∞ f s x ↔ ∀ n : ℕ, TimesContDiffWithinAt 𝕜 n f s x :=
@@ -441,12 +475,27 @@ theorem TimesContDiffWithinAt.continuous_within_at {n : WithTop ℕ} (h : TimesC
     rw [mem_nhds_within_insert] at hu 
     exact (H.continuous_on.continuous_within_at hu.1).mono_of_mem hu.2
 
-theorem TimesContDiffWithinAt.congr_of_eventually_eq {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x)
-  (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) : TimesContDiffWithinAt 𝕜 n f₁ s x :=
-  fun m hm =>
-    let ⟨u, hu, p, H⟩ := h m hm
-    ⟨{ x∈u | f₁ x = f x }, Filter.inter_mem hu (mem_nhds_within_insert.2 ⟨hx, h₁⟩), p,
-      (H.mono (sep_subset _ _)).congr fun _ => And.right⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  TimesContDiffWithinAt.congr_of_eventually_eq
+  { n : WithTop ℕ } ( h : TimesContDiffWithinAt 𝕜 n f s x ) ( h₁ : f₁ =ᶠ[ 𝓝[ s ] x ] f ) ( hx : f₁ x = f x )
+    : TimesContDiffWithinAt 𝕜 n f₁ s x
+  :=
+    fun
+      m hm
+        =>
+        let
+          ⟨ u , hu , p , H ⟩ := h m hm
+          ⟨
+            { x ∈ u | f₁ x = f x }
+              ,
+              Filter.inter_mem hu mem_nhds_within_insert . 2 ⟨ hx , h₁ ⟩
+              ,
+              p
+              ,
+              H.mono sep_subset _ _ . congr fun _ => And.right
+            ⟩
 
 theorem TimesContDiffWithinAt.congr_of_eventually_eq' {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x)
   (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : x ∈ s) : TimesContDiffWithinAt 𝕜 n f₁ s x :=
@@ -456,10 +505,12 @@ theorem Filter.EventuallyEq.times_cont_diff_within_at_iff {n : WithTop ℕ} (h�
   TimesContDiffWithinAt 𝕜 n f₁ s x ↔ TimesContDiffWithinAt 𝕜 n f s x :=
   ⟨fun H => TimesContDiffWithinAt.congr_of_eventually_eq H h₁.symm hx.symm, fun H => H.congr_of_eventually_eq h₁ hx⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem TimesContDiffWithinAt.congr {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x)
   (h₁ : ∀ y _ : y ∈ s, f₁ y = f y) (hx : f₁ x = f x) : TimesContDiffWithinAt 𝕜 n f₁ s x :=
   h.congr_of_eventually_eq (Filter.eventually_eq_of_mem self_mem_nhds_within h₁) hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem TimesContDiffWithinAt.congr' {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x)
   (h₁ : ∀ y _ : y ∈ s, f₁ y = f y) (hx : x ∈ s) : TimesContDiffWithinAt 𝕜 n f₁ s x :=
   h.congr h₁ (h₁ _ hx)
@@ -491,78 +542,89 @@ theorem times_cont_diff_within_at_inter {n : WithTop ℕ} (h : t ∈ 𝓝 x) :
   TimesContDiffWithinAt 𝕜 n f (s ∩ t) x ↔ TimesContDiffWithinAt 𝕜 n f s x :=
   times_cont_diff_within_at_inter' (mem_nhds_within_of_mem_nhds h)
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is `C^n` within a set at a point, with `n ≥ 1`, then it is differentiable
 within this set at this point. -/
-theorem times_cont_diff_within_at.differentiable_within_at'
-{n : with_top exprℕ()}
-(h : times_cont_diff_within_at 𝕜 n f s x)
-(hn : «expr ≤ »(1, n)) : differentiable_within_at 𝕜 f (insert x s) x :=
-begin
-  rcases [expr h 1 hn, "with", "⟨", ident u, ",", ident hu, ",", ident p, ",", ident H, "⟩"],
-  rcases [expr mem_nhds_within.1 hu, "with", "⟨", ident t, ",", ident t_open, ",", ident xt, ",", ident tu, "⟩"],
-  rw [expr inter_comm] ["at", ident tu],
-  have [] [] [":=", expr (H.mono tu).differentiable_on (le_refl _) x ⟨mem_insert x s, xt⟩],
-  exact [expr (differentiable_within_at_inter (is_open.mem_nhds t_open xt)).1 this]
-end
+theorem TimesContDiffWithinAt.differentiable_within_at' {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x)
+  (hn : 1 ≤ n) : DifferentiableWithinAt 𝕜 f (insert x s) x :=
+  by 
+    rcases h 1 hn with ⟨u, hu, p, H⟩
+    rcases mem_nhds_within.1 hu with ⟨t, t_open, xt, tu⟩
+    rw [inter_comm] at tu 
+    have  := ((H.mono tu).DifferentiableOn (le_reflₓ _)) x ⟨mem_insert x s, xt⟩
+    exact (differentiable_within_at_inter (IsOpen.mem_nhds t_open xt)).1 this
 
 theorem TimesContDiffWithinAt.differentiable_within_at {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x)
   (hn : 1 ≤ n) : DifferentiableWithinAt 𝕜 f s x :=
   (h.differentiable_within_at' hn).mono (subset_insert x s)
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » «expr𝓝[ ] »(insert x s, x))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » u)
 /-- A function is `C^(n + 1)` on a domain iff locally, it has a derivative which is `C^n`. -/
-theorem times_cont_diff_within_at_succ_iff_has_fderiv_within_at
-{n : exprℕ()} : «expr ↔ »(times_cont_diff_within_at 𝕜 («expr + »(n, 1) : exprℕ()) f s x, «expr∃ , »((u «expr ∈ » «expr𝓝[ ] »(insert x s, x)), «expr∃ , »((f' : E → «expr →L[ ] »(E, 𝕜, F)), «expr ∧ »(∀
-    x «expr ∈ » u, has_fderiv_within_at f (f' x) u x, times_cont_diff_within_at 𝕜 n f' u x)))) :=
-begin
-  split,
-  { assume [binders (h)],
-    rcases [expr h n.succ (le_refl _), "with", "⟨", ident u, ",", ident hu, ",", ident p, ",", ident Hp, "⟩"],
-    refine [expr ⟨u, hu, λ
-      y, continuous_multilinear_curry_fin1 𝕜 E F (p y 1), λ
-      y hy, Hp.has_fderiv_within_at (with_top.coe_le_coe.2 (nat.le_add_left 1 n)) hy, _⟩],
-    assume [binders (m hm)],
-    refine [expr ⟨u, _, λ y : E, (p y).shift, _⟩],
-    { convert [] [expr self_mem_nhds_within] [],
-      have [] [":", expr «expr ∈ »(x, insert x s)] [],
-      by simp [] [] [] [] [] [],
-      exact [expr insert_eq_of_mem (mem_of_mem_nhds_within this hu)] },
-    { rw [expr has_ftaylor_series_up_to_on_succ_iff_right] ["at", ident Hp],
-      exact [expr Hp.2.2.of_le hm] } },
-  { rintros ["⟨", ident u, ",", ident hu, ",", ident f', ",", ident f'_eq_deriv, ",", ident Hf', "⟩"],
-    rw [expr times_cont_diff_within_at_nat] [],
-    rcases [expr Hf' n (le_refl _), "with", "⟨", ident v, ",", ident hv, ",", ident p', ",", ident Hp', "⟩"],
-    refine [expr ⟨«expr ∩ »(v, u), _, λ x, (p' x).unshift (f x), _⟩],
-    { apply [expr filter.inter_mem _ hu],
-      apply [expr nhds_within_le_of_mem hu],
-      exact [expr nhds_within_mono _ (subset_insert x u) hv] },
-    { rw [expr has_ftaylor_series_up_to_on_succ_iff_right] [],
-      refine [expr ⟨λ y hy, rfl, λ y hy, _, _⟩],
-      { change [expr has_fderiv_within_at (λ
-          z, (continuous_multilinear_curry_fin0 𝕜 E F).symm (f z)) (formal_multilinear_series.unshift (p' y) (f y) 1).curry_left «expr ∩ »(v, u) y] [] [],
-        rw [expr linear_isometry_equiv.comp_has_fderiv_within_at_iff'] [],
-        convert [] [expr (f'_eq_deriv y hy.2).mono (inter_subset_right v u)] [],
-        rw ["<-", expr Hp'.zero_eq y hy.1] [],
-        ext [] [ident z] [],
-        change [expr «expr = »(p' y 0 (init (@cons 0 (λ i, E) z 0)) (@cons 0 (λ i, E) z 0 (last 0)), p' y 0 0 z)] [] [],
-        unfold_coes [],
-        congr },
-      { convert [] [expr (Hp'.mono (inter_subset_left v u)).congr (λ x hx, Hp'.zero_eq x hx.1)] [],
-        { ext [] [ident x, ident y] [],
-          change [expr «expr = »(p' x 0 (init (@snoc 0 (λ i : fin 1, E) 0 y)) y, p' x 0 0 y)] [] [],
-          rw [expr init_snoc] [] },
-        { ext [] [ident x, ident k, ident v, ident y] [],
-          change [expr «expr = »(p' x k (init (@snoc k (λ
-               i : fin k.succ, E) v y)) (@snoc k (λ i : fin k.succ, E) v y (last k)), p' x k v y)] [] [],
-          rw ["[", expr snoc_last, ",", expr init_snoc, "]"] [] } } } }
-end
+theorem times_cont_diff_within_at_succ_iff_has_fderiv_within_at {n : ℕ} :
+  TimesContDiffWithinAt 𝕜 (n+1 : ℕ) f s x ↔
+    ∃ (u : _)(_ : u ∈ 𝓝[insert x s] x),
+      ∃ f' : E → E →L[𝕜] F, (∀ x _ : x ∈ u, HasFderivWithinAt f (f' x) u x) ∧ TimesContDiffWithinAt 𝕜 n f' u x :=
+  by 
+    constructor
+    ·
+      intro h 
+      rcases h n.succ (le_reflₓ _) with ⟨u, hu, p, Hp⟩
+      refine'
+        ⟨u, hu, fun y => (continuousMultilinearCurryFin1 𝕜 E F) (p y 1),
+          fun y hy => Hp.has_fderiv_within_at (WithTop.coe_le_coe.2 (Nat.le_add_leftₓ 1 n)) hy, _⟩
+      intro m hm 
+      refine' ⟨u, _, fun y : E => (p y).shift, _⟩
+      ·
+        convert self_mem_nhds_within 
+        have  : x ∈ insert x s
+        ·
+          simp 
+        exact insert_eq_of_mem (mem_of_mem_nhds_within this hu)
+      ·
+        rw [has_ftaylor_series_up_to_on_succ_iff_right] at Hp 
+        exact Hp.2.2.ofLe hm
+    ·
+      rintro ⟨u, hu, f', f'_eq_deriv, Hf'⟩
+      rw [times_cont_diff_within_at_nat]
+      rcases Hf' n (le_reflₓ _) with ⟨v, hv, p', Hp'⟩
+      refine' ⟨v ∩ u, _, fun x => (p' x).unshift (f x), _⟩
+      ·
+        apply Filter.inter_mem _ hu 
+        apply nhds_within_le_of_mem hu 
+        exact nhds_within_mono _ (subset_insert x u) hv
+      ·
+        rw [has_ftaylor_series_up_to_on_succ_iff_right]
+        refine' ⟨fun y hy => rfl, fun y hy => _, _⟩
+        ·
+          change
+            HasFderivWithinAt (fun z => (continuousMultilinearCurryFin0 𝕜 E F).symm (f z))
+              (FormalMultilinearSeries.unshift (p' y) (f y) 1).curryLeft (v ∩ u) y 
+          rw [LinearIsometryEquiv.comp_has_fderiv_within_at_iff']
+          convert (f'_eq_deriv y hy.2).mono (inter_subset_right v u)
+          rw [←Hp'.zero_eq y hy.1]
+          ext z 
+          change ((p' y 0) (init (@cons 0 (fun i => E) z 0))) (@cons 0 (fun i => E) z 0 (last 0)) = ((p' y 0) 0) z 
+          unfoldCoes 
+          congr
+        ·
+          convert (Hp'.mono (inter_subset_left v u)).congr fun x hx => Hp'.zero_eq x hx.1
+          ·
+            ext x y 
+            change p' x 0 (init (@snoc 0 (fun i : Finₓ 1 => E) 0 y)) y = p' x 0 0 y 
+            rw [init_snoc]
+          ·
+            ext x k v y 
+            change
+              p' x k (init (@snoc k (fun i : Finₓ k.succ => E) v y)) (@snoc k (fun i : Finₓ k.succ => E) v y (last k)) =
+                p' x k v y 
+            rw [snoc_last, init_snoc]
 
 /-! ### Smooth functions within a set -/
 
 
 variable (𝕜)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A function is continuously differentiable up to `n` on `s` if, for any point `x` in `s`, it
 admits continuous derivatives up to order `n` on a neighborhood of `x` in `s`.
 
@@ -578,6 +640,7 @@ theorem TimesContDiffOn.times_cont_diff_within_at {n : WithTop ℕ} (h : TimesCo
   TimesContDiffWithinAt 𝕜 n f s x :=
   h x hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » «expr𝓝[ ] »(insert x s, x))
 theorem TimesContDiffWithinAt.times_cont_diff_on {n : WithTop ℕ} {m : ℕ} (hm : (m : WithTop ℕ) ≤ n)
   (h : TimesContDiffWithinAt 𝕜 n f s x) :
   ∃ (u : _)(_ : u ∈ 𝓝[insert x s] x), u ⊆ insert x s ∧ TimesContDiffOn 𝕜 m f u :=
@@ -589,24 +652,20 @@ theorem TimesContDiffWithinAt.times_cont_diff_on {n : WithTop ℕ} {m : ℕ} (hm
     convert self_mem_nhds_within 
     exact insert_eq_of_mem hy
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem times_cont_diff_within_at.eventually
-{n : exprℕ()}
-(h : times_cont_diff_within_at 𝕜 n f s x) : «expr∀ᶠ in , »((y), «expr𝓝[ ] »(insert x s, x), times_cont_diff_within_at 𝕜 n f s y) :=
-begin
-  rcases [expr h.times_cont_diff_on le_rfl, "with", "⟨", ident u, ",", ident hu, ",", ident hu_sub, ",", ident hd, "⟩"],
-  have [] [":", expr «expr∀ᶠ in , »((y : E), «expr𝓝[ ] »(insert x s, x), «expr ∧ »(«expr ∈ »(u, «expr𝓝[ ] »(insert x s, y)), «expr ∈ »(y, u)))] [],
-  from [expr (eventually_nhds_within_nhds_within.2 hu).and hu],
-  refine [expr this.mono (λ y hy, (hd y hy.2).mono_of_mem _)],
-  exact [expr nhds_within_mono y (subset_insert _ _) hy.1]
-end
+protected theorem TimesContDiffWithinAt.eventually {n : ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x) :
+  ∀ᶠ y in 𝓝[insert x s] x, TimesContDiffWithinAt 𝕜 n f s y :=
+  by 
+    rcases h.times_cont_diff_on le_rfl with ⟨u, hu, hu_sub, hd⟩
+    have  : ∀ᶠ y : E in 𝓝[insert x s] x, u ∈ 𝓝[insert x s] y ∧ y ∈ u 
+    exact (eventually_nhds_within_nhds_within.2 hu).And hu 
+    refine' this.mono fun y hy => (hd y hy.2).mono_of_mem _ 
+    exact nhds_within_mono y (subset_insert _ _) hy.1
 
 theorem TimesContDiffOn.of_le {m n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) (hmn : m ≤ n) : TimesContDiffOn 𝕜 m f s :=
   fun x hx => (h x hx).ofLe hmn
 
 theorem times_cont_diff_on_iff_forall_nat_le {n : WithTop ℕ} :
-  TimesContDiffOn 𝕜 n f s ↔ ∀ m : ℕ, «expr↑ » m ≤ n → TimesContDiffOn 𝕜 m f s :=
+  TimesContDiffOn 𝕜 n f s ↔ ∀ m : ℕ, ↑m ≤ n → TimesContDiffOn 𝕜 m f s :=
   ⟨fun H m hm => H.of_le hm, fun H x hx m hm => H m hm x hx m le_rfl⟩
 
 theorem times_cont_diff_on_top : TimesContDiffOn 𝕜 ∞ f s ↔ ∀ n : ℕ, TimesContDiffOn 𝕜 n f s :=
@@ -623,10 +682,12 @@ theorem times_cont_diff_on_all_iff_nat : (∀ n, TimesContDiffOn 𝕜 n f s) ↔
 theorem TimesContDiffOn.continuous_on {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) : ContinuousOn f s :=
   fun x hx => (h x hx).ContinuousWithinAt
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem TimesContDiffOn.congr {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) (h₁ : ∀ x _ : x ∈ s, f₁ x = f x) :
   TimesContDiffOn 𝕜 n f₁ s :=
   fun x hx => (h x hx).congr h₁ (h₁ x hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem times_cont_diff_on_congr {n : WithTop ℕ} (h₁ : ∀ x _ : x ∈ s, f₁ x = f x) :
   TimesContDiffOn 𝕜 n f₁ s ↔ TimesContDiffOn 𝕜 n f s :=
   ⟨fun H => H.congr fun x hx => (h₁ x hx).symm, fun H => H.congr h₁⟩
@@ -635,6 +696,7 @@ theorem TimesContDiffOn.mono {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) 
   TimesContDiffOn 𝕜 n f t :=
   fun x hx => (h x (hst hx)).mono hst
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s₁)
 theorem TimesContDiffOn.congr_mono {n : WithTop ℕ} (hf : TimesContDiffOn 𝕜 n f s) (h₁ : ∀ x _ : x ∈ s₁, f₁ x = f x)
   (hs : s₁ ⊆ s) : TimesContDiffOn 𝕜 n f₁ s₁ :=
   (hf.mono hs).congr h₁
@@ -644,6 +706,7 @@ theorem TimesContDiffOn.differentiable_on {n : WithTop ℕ} (h : TimesContDiffOn
   DifferentiableOn 𝕜 f s :=
   fun x hx => (h x hx).DifferentiableWithinAt hn
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- If a function is `C^n` around each point in a set, then it is `C^n` on the set. -/
 theorem times_cont_diff_on_of_locally_times_cont_diff_on {n : WithTop ℕ}
   (h : ∀ x _ : x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ TimesContDiffOn 𝕜 n f (s ∩ u)) : TimesContDiffOn 𝕜 n f s :=
@@ -653,30 +716,34 @@ theorem times_cont_diff_on_of_locally_times_cont_diff_on {n : WithTop ℕ}
     apply (times_cont_diff_within_at_inter _).1 (hu x ⟨xs, xu⟩)
     exact IsOpen.mem_nhds u_open xu
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » «expr𝓝[ ] »(insert x s, x))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » u)
 /-- A function is `C^(n + 1)` on a domain iff locally, it has a derivative which is `C^n`. -/
-theorem times_cont_diff_on_succ_iff_has_fderiv_within_at
-{n : exprℕ()} : «expr ↔ »(times_cont_diff_on 𝕜 («expr + »(n, 1) : exprℕ()) f s, ∀
- x «expr ∈ » s, «expr∃ , »((u «expr ∈ » «expr𝓝[ ] »(insert x s, x)), «expr∃ , »((f' : E → «expr →L[ ] »(E, 𝕜, F)), «expr ∧ »(∀
-    x «expr ∈ » u, has_fderiv_within_at f (f' x) u x, times_cont_diff_on 𝕜 n f' u)))) :=
-begin
-  split,
-  { assume [binders (h x hx)],
-    rcases [expr h x hx n.succ (le_refl _), "with", "⟨", ident u, ",", ident hu, ",", ident p, ",", ident Hp, "⟩"],
-    refine [expr ⟨u, hu, λ
-      y, continuous_multilinear_curry_fin1 𝕜 E F (p y 1), λ
-      y hy, Hp.has_fderiv_within_at (with_top.coe_le_coe.2 (nat.le_add_left 1 n)) hy, _⟩],
-    rw [expr has_ftaylor_series_up_to_on_succ_iff_right] ["at", ident Hp],
-    assume [binders (z hz m hm)],
-    refine [expr ⟨u, _, λ x : E, (p x).shift, Hp.2.2.of_le hm⟩],
-    convert [] [expr self_mem_nhds_within] [],
-    exact [expr insert_eq_of_mem hz] },
-  { assume [binders (h x hx)],
-    rw [expr times_cont_diff_within_at_succ_iff_has_fderiv_within_at] [],
-    rcases [expr h x hx, "with", "⟨", ident u, ",", ident u_nhbd, ",", ident f', ",", ident hu, ",", ident hf', "⟩"],
-    have [] [":", expr «expr ∈ »(x, u)] [":=", expr mem_of_mem_nhds_within (mem_insert _ _) u_nhbd],
-    exact [expr ⟨u, u_nhbd, f', hu, hf' x this⟩] }
-end
+theorem times_cont_diff_on_succ_iff_has_fderiv_within_at {n : ℕ} :
+  TimesContDiffOn 𝕜 (n+1 : ℕ) f s ↔
+    ∀ x _ : x ∈ s,
+      ∃ (u : _)(_ : u ∈ 𝓝[insert x s] x),
+        ∃ f' : E → E →L[𝕜] F, (∀ x _ : x ∈ u, HasFderivWithinAt f (f' x) u x) ∧ TimesContDiffOn 𝕜 n f' u :=
+  by 
+    constructor
+    ·
+      intro h x hx 
+      rcases(h x hx) n.succ (le_reflₓ _) with ⟨u, hu, p, Hp⟩
+      refine'
+        ⟨u, hu, fun y => (continuousMultilinearCurryFin1 𝕜 E F) (p y 1),
+          fun y hy => Hp.has_fderiv_within_at (WithTop.coe_le_coe.2 (Nat.le_add_leftₓ 1 n)) hy, _⟩
+      rw [has_ftaylor_series_up_to_on_succ_iff_right] at Hp 
+      intro z hz m hm 
+      refine' ⟨u, _, fun x : E => (p x).shift, Hp.2.2.ofLe hm⟩
+      convert self_mem_nhds_within 
+      exact insert_eq_of_mem hz
+    ·
+      intro h x hx 
+      rw [times_cont_diff_within_at_succ_iff_has_fderiv_within_at]
+      rcases h x hx with ⟨u, u_nhbd, f', hu, hf'⟩
+      have  : x ∈ u := mem_of_mem_nhds_within (mem_insert _ _) u_nhbd 
+      exact ⟨u, u_nhbd, f', hu, hf' x this⟩
 
 /-! ### Iterated derivative within a set -/
 
@@ -720,36 +787,51 @@ theorem iterated_fderiv_within_succ_eq_comp_left {n : ℕ} :
       fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n f s) s) :=
   rfl
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem iterated_fderiv_within_succ_apply_right
-{n : exprℕ()}
-(hs : unique_diff_on 𝕜 s)
-(hx : «expr ∈ »(x, s))
-(m : fin «expr + »(n, 1) → E) : «expr = »((iterated_fderiv_within 𝕜 «expr + »(n, 1) f s x : (fin «expr + »(n, 1) → E) → F) m, iterated_fderiv_within 𝕜 n (λ
-  y, fderiv_within 𝕜 f s y) s x (init m) (m (last n))) :=
-begin
-  induction [expr n] [] ["with", ident n, ident IH] ["generalizing", ident x],
-  { rw ["[", expr iterated_fderiv_within_succ_eq_comp_left, ",", expr iterated_fderiv_within_zero_eq_comp, ",", expr iterated_fderiv_within_zero_apply, ",", expr function.comp_apply, ",", expr linear_isometry_equiv.comp_fderiv_within _ (hs x hx), "]"] [],
-    refl },
-  { let [ident I] [] [":=", expr continuous_multilinear_curry_right_equiv' 𝕜 n E F],
-    have [ident A] [":", expr ∀
-     y «expr ∈ » s, «expr = »(iterated_fderiv_within 𝕜 n.succ f s y, «expr ∘ »(I, iterated_fderiv_within 𝕜 n (λ
-        y, fderiv_within 𝕜 f s y) s) y)] [],
-    by { assume [binders (y hy)],
-      ext [] [ident m] [],
-      rw [expr @IH m y hy] [],
-      refl },
-    calc
-      «expr = »((iterated_fderiv_within 𝕜 «expr + »(n, 2) f s x : (fin «expr + »(n, 2) → E) → F) m, (fderiv_within 𝕜 (iterated_fderiv_within 𝕜 n.succ f s) s x : E → «expr [× ]→L[ ] »(E, «expr + »(n, 1), 𝕜, F)) (m 0) (tail m)) : rfl
-      «expr = »(..., (fderiv_within 𝕜 «expr ∘ »(I, iterated_fderiv_within 𝕜 n (fderiv_within 𝕜 f s) s) s x : E → «expr [× ]→L[ ] »(E, «expr + »(n, 1), 𝕜, F)) (m 0) (tail m)) : by rw [expr fderiv_within_congr (hs x hx) A (A x hx)] []
-      «expr = »(..., («expr ∘ »(I, fderiv_within 𝕜 (iterated_fderiv_within 𝕜 n (fderiv_within 𝕜 f s) s) s x) : E → «expr [× ]→L[ ] »(E, «expr + »(n, 1), 𝕜, F)) (m 0) (tail m)) : by { rw [expr linear_isometry_equiv.comp_fderiv_within _ (hs x hx)] [],
-        refl }
-      «expr = »(..., (fderiv_within 𝕜 (iterated_fderiv_within 𝕜 n (λ
-         y, fderiv_within 𝕜 f s y) s) s x : E → «expr [× ]→L[ ] »(E, n, 𝕜, «expr →L[ ] »(E, 𝕜, F))) (m 0) (init (tail m)) (tail m (last n))) : rfl
-      «expr = »(..., iterated_fderiv_within 𝕜 (nat.succ n) (λ
-        y, fderiv_within 𝕜 f s y) s x (init m) (m (last «expr + »(n, 1)))) : by { rw ["[", expr iterated_fderiv_within_succ_apply_left, ",", expr tail_init_eq_init_tail, "]"] [],
-        refl } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+theorem iterated_fderiv_within_succ_apply_right {n : ℕ} (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) (m : Finₓ (n+1) → E) :
+  (iteratedFderivWithin 𝕜 (n+1) f s x : (Finₓ (n+1) → E) → F) m =
+    iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s x (init m) (m (last n)) :=
+  by 
+    induction' n with n IH generalizing x
+    ·
+      rw [iterated_fderiv_within_succ_eq_comp_left, iterated_fderiv_within_zero_eq_comp,
+        iterated_fderiv_within_zero_apply, Function.comp_applyₓ, LinearIsometryEquiv.comp_fderiv_within _ (hs x hx)]
+      rfl
+    ·
+      let I := continuousMultilinearCurryRightEquiv' 𝕜 n E F 
+      have A :
+        ∀ y _ : y ∈ s,
+          iteratedFderivWithin 𝕜 n.succ f s y = (I ∘ iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) y
+      ·
+        ·
+          intro y hy 
+          ext m 
+          rw [@IH m y hy]
+          rfl 
+      calc
+        (iteratedFderivWithin 𝕜 (n+2) f s x : (Finₓ (n+2) → E) → F) m =
+          (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n.succ f s) s x : E → E[×n+1]→L[𝕜] F) (m 0) (tail m) :=
+        rfl
+          _ =
+          (fderivWithin 𝕜 (I ∘ iteratedFderivWithin 𝕜 n (fderivWithin 𝕜 f s) s) s x : E → E[×n+1]→L[𝕜] F) (m 0)
+            (tail m) :=
+        by 
+          rw
+            [fderiv_within_congr (hs x hx) A
+              (A x
+                hx)]_ =
+          (I ∘ fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n (fderivWithin 𝕜 f s) s) s x : E → E[×n+1]→L[𝕜] F) (m 0)
+            (tail m) :=
+        by 
+          rw [LinearIsometryEquiv.comp_fderiv_within _ (hs x hx)]
+          rfl
+            _ =
+          (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) s x : E → E[×n]→L[𝕜] E →L[𝕜] F)
+            (m 0) (init (tail m)) ((tail m) (last n)) :=
+        rfl _ = iteratedFderivWithin 𝕜 (Nat.succ n) (fun y => fderivWithin 𝕜 f s y) s x (init m) (m (last (n+1))) :=
+        by 
+          rw [iterated_fderiv_within_succ_apply_left, tail_init_eq_init_tail]
+          rfl
 
 /-- Writing explicitly the `n+1`-th derivative as the composition of a currying linear equiv,
 and the `n`-th derivative of the derivative. -/
@@ -768,70 +850,66 @@ theorem iterated_fderiv_within_one_apply (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ 
     rw [iterated_fderiv_within_succ_apply_right hs hx, iterated_fderiv_within_zero_apply]
     rfl
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- If two functions coincide on a set `s` of unique differentiability, then their iterated
 differentials within this set coincide. -/
-theorem iterated_fderiv_within_congr
-{n : exprℕ()}
-(hs : unique_diff_on 𝕜 s)
-(hL : ∀ y «expr ∈ » s, «expr = »(f₁ y, f y))
-(hx : «expr ∈ »(x, s)) : «expr = »(iterated_fderiv_within 𝕜 n f₁ s x, iterated_fderiv_within 𝕜 n f s x) :=
-begin
-  induction [expr n] [] ["with", ident n, ident IH] ["generalizing", ident x],
-  { ext [] [ident m] [],
-    simp [] [] [] ["[", expr hL x hx, "]"] [] [] },
-  { have [] [":", expr «expr = »(fderiv_within 𝕜 (λ
-       y, iterated_fderiv_within 𝕜 n f₁ s y) s x, fderiv_within 𝕜 (λ
-       y, iterated_fderiv_within 𝕜 n f s y) s x)] [":=", expr fderiv_within_congr (hs x hx) (λ y hy, IH hy) (IH hx)],
-    ext [] [ident m] [],
-    rw ["[", expr iterated_fderiv_within_succ_apply_left, ",", expr iterated_fderiv_within_succ_apply_left, ",", expr this, "]"] [] }
-end
+theorem iterated_fderiv_within_congr {n : ℕ} (hs : UniqueDiffOn 𝕜 s) (hL : ∀ y _ : y ∈ s, f₁ y = f y) (hx : x ∈ s) :
+  iteratedFderivWithin 𝕜 n f₁ s x = iteratedFderivWithin 𝕜 n f s x :=
+  by 
+    induction' n with n IH generalizing x
+    ·
+      ext m 
+      simp [hL x hx]
+    ·
+      have  :
+        fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f₁ s y) s x =
+          fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f s y) s x :=
+        fderiv_within_congr (hs x hx) (fun y hy => IH hy) (IH hx)
+      ext m 
+      rw [iterated_fderiv_within_succ_apply_left, iterated_fderiv_within_succ_apply_left, this]
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
 `s` with an open set containing `x`. -/
-theorem iterated_fderiv_within_inter_open
-{n : exprℕ()}
-(hu : is_open u)
-(hs : unique_diff_on 𝕜 «expr ∩ »(s, u))
-(hx : «expr ∈ »(x, «expr ∩ »(s, u))) : «expr = »(iterated_fderiv_within 𝕜 n f «expr ∩ »(s, u) x, iterated_fderiv_within 𝕜 n f s x) :=
-begin
-  induction [expr n] [] ["with", ident n, ident IH] ["generalizing", ident x],
-  { ext [] [ident m] [],
-    simp [] [] [] [] [] [] },
-  { have [ident A] [":", expr «expr = »(fderiv_within 𝕜 (λ
-       y, iterated_fderiv_within 𝕜 n f «expr ∩ »(s, u) y) «expr ∩ »(s, u) x, fderiv_within 𝕜 (λ
-       y, iterated_fderiv_within 𝕜 n f s y) «expr ∩ »(s, u) x)] [":=", expr fderiv_within_congr (hs x hx) (λ
-      y hy, IH hy) (IH hx)],
-    have [ident B] [":", expr «expr = »(fderiv_within 𝕜 (λ
-       y, iterated_fderiv_within 𝕜 n f s y) «expr ∩ »(s, u) x, fderiv_within 𝕜 (λ
-       y, iterated_fderiv_within 𝕜 n f s y) s x)] [":=", expr fderiv_within_inter (is_open.mem_nhds hu hx.2) ((unique_diff_within_at_inter (is_open.mem_nhds hu hx.2)).1 (hs x hx))],
-    ext [] [ident m] [],
-    rw ["[", expr iterated_fderiv_within_succ_apply_left, ",", expr iterated_fderiv_within_succ_apply_left, ",", expr A, ",", expr B, "]"] [] }
-end
+theorem iterated_fderiv_within_inter_open {n : ℕ} (hu : IsOpen u) (hs : UniqueDiffOn 𝕜 (s ∩ u)) (hx : x ∈ s ∩ u) :
+  iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
+  by 
+    induction' n with n IH generalizing x
+    ·
+      ext m 
+      simp 
+    ·
+      have A :
+        fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f (s ∩ u) y) (s ∩ u) x =
+          fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f s y) (s ∩ u) x :=
+        fderiv_within_congr (hs x hx) (fun y hy => IH hy) (IH hx)
+      have B :
+        fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f s y) (s ∩ u) x =
+          fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f s y) s x :=
+        fderiv_within_inter (IsOpen.mem_nhds hu hx.2)
+          ((unique_diff_within_at_inter (IsOpen.mem_nhds hu hx.2)).1 (hs x hx))
+      ext m 
+      rw [iterated_fderiv_within_succ_apply_left, iterated_fderiv_within_succ_apply_left, A, B]
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
 `s` with a neighborhood of `x` within `s`. -/
-theorem iterated_fderiv_within_inter'
-{n : exprℕ()}
-(hu : «expr ∈ »(u, «expr𝓝[ ] »(s, x)))
-(hs : unique_diff_on 𝕜 s)
-(xs : «expr ∈ »(x, s)) : «expr = »(iterated_fderiv_within 𝕜 n f «expr ∩ »(s, u) x, iterated_fderiv_within 𝕜 n f s x) :=
-begin
-  obtain ["⟨", ident v, ",", ident v_open, ",", ident xv, ",", ident vu, "⟩", ":", expr «expr∃ , »((v), «expr ∧ »(is_open v, «expr ∧ »(«expr ∈ »(x, v), «expr ⊆ »(«expr ∩ »(v, s), u)))), ":=", expr mem_nhds_within.1 hu],
-  have [ident A] [":", expr «expr = »(«expr ∩ »(«expr ∩ »(s, u), v), «expr ∩ »(s, v))] [],
-  { apply [expr subset.antisymm (inter_subset_inter (inter_subset_left _ _) (subset.refl _))],
-    exact [expr λ (y) ⟨ys, yv⟩, ⟨⟨ys, vu ⟨yv, ys⟩⟩, yv⟩] },
-  have [] [":", expr «expr = »(iterated_fderiv_within 𝕜 n f «expr ∩ »(s, v) x, iterated_fderiv_within 𝕜 n f s x)] [":=", expr iterated_fderiv_within_inter_open v_open (hs.inter v_open) ⟨xs, xv⟩],
-  rw ["<-", expr this] [],
-  have [] [":", expr «expr = »(iterated_fderiv_within 𝕜 n f «expr ∩ »(«expr ∩ »(s, u), v) x, iterated_fderiv_within 𝕜 n f «expr ∩ »(s, u) x)] [],
-  { refine [expr iterated_fderiv_within_inter_open v_open _ ⟨⟨xs, vu ⟨xv, xs⟩⟩, xv⟩],
-    rw [expr A] [],
-    exact [expr hs.inter v_open] },
-  rw [expr A] ["at", ident this],
-  rw ["<-", expr this] []
-end
+theorem iterated_fderiv_within_inter' {n : ℕ} (hu : u ∈ 𝓝[s] x) (hs : UniqueDiffOn 𝕜 s) (xs : x ∈ s) :
+  iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
+  by 
+    obtain ⟨v, v_open, xv, vu⟩ : ∃ v, IsOpen v ∧ x ∈ v ∧ v ∩ s ⊆ u := mem_nhds_within.1 hu 
+    have A : s ∩ u ∩ v = s ∩ v
+    ·
+      apply subset.antisymm (inter_subset_inter (inter_subset_left _ _) (subset.refl _))
+      exact fun y ⟨ys, yv⟩ => ⟨⟨ys, vu ⟨yv, ys⟩⟩, yv⟩
+    have  : iteratedFderivWithin 𝕜 n f (s ∩ v) x = iteratedFderivWithin 𝕜 n f s x :=
+      iterated_fderiv_within_inter_open v_open (hs.inter v_open) ⟨xs, xv⟩
+    rw [←this]
+    have  : iteratedFderivWithin 𝕜 n f (s ∩ u ∩ v) x = iteratedFderivWithin 𝕜 n f (s ∩ u) x
+    ·
+      refine' iterated_fderiv_within_inter_open v_open _ ⟨⟨xs, vu ⟨xv, xs⟩⟩, xv⟩
+      rw [A]
+      exact hs.inter v_open 
+    rw [A] at this 
+    rw [←this]
 
 /-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
 `s` with a neighborhood of `x`. -/
@@ -839,100 +917,112 @@ theorem iterated_fderiv_within_inter {n : ℕ} (hu : u ∈ 𝓝 x) (hs : UniqueD
   iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
   iterated_fderiv_within_inter' (mem_nhds_within_of_mem_nhds hu) hs xs
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem times_cont_diff_on_zero : «expr ↔ »(times_cont_diff_on 𝕜 0 f s, continuous_on f s) :=
-begin
-  refine [expr ⟨λ H, H.continuous_on, λ H, _⟩],
-  assume [binders (x hx m hm)],
-  have [] [":", expr «expr = »((m : with_top exprℕ()), 0)] [":=", expr le_antisymm hm bot_le],
-  rw [expr this] [],
-  refine [expr ⟨insert x s, self_mem_nhds_within, ftaylor_series_within 𝕜 f s, _⟩],
-  rw [expr has_ftaylor_series_up_to_on_zero_iff] [],
-  exact [expr ⟨by rwa [expr insert_eq_of_mem hx] [], λ
-    x hx, by simp [] [] [] ["[", expr ftaylor_series_within, "]"] [] []⟩]
-end
+@[simp]
+theorem times_cont_diff_on_zero : TimesContDiffOn 𝕜 0 f s ↔ ContinuousOn f s :=
+  by 
+    refine' ⟨fun H => H.continuous_on, fun H => _⟩
+    intro x hx m hm 
+    have  : (m : WithTop ℕ) = 0 := le_antisymmₓ hm bot_le 
+    rw [this]
+    refine' ⟨insert x s, self_mem_nhds_within, ftaylorSeriesWithin 𝕜 f s, _⟩
+    rw [has_ftaylor_series_up_to_on_zero_iff]
+    exact
+      ⟨by 
+          rwa [insert_eq_of_mem hx],
+        fun x hx =>
+          by 
+            simp [ftaylorSeriesWithin]⟩
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem times_cont_diff_within_at_zero
-(hx : «expr ∈ »(x, s)) : «expr ↔ »(times_cont_diff_within_at 𝕜 0 f s x, «expr∃ , »((u «expr ∈ » «expr𝓝[ ] »(s, x)), continuous_on f «expr ∩ »(s, u))) :=
-begin
-  split,
-  { intros [ident h],
-    obtain ["⟨", ident u, ",", ident H, ",", ident p, ",", ident hp, "⟩", ":=", expr h 0 (by norm_num [] [])],
-    refine [expr ⟨u, _, _⟩],
-    { simpa [] [] [] ["[", expr hx, "]"] [] ["using", expr H] },
-    { simp [] [] ["only"] ["[", expr with_top.coe_zero, ",", expr has_ftaylor_series_up_to_on_zero_iff, "]"] [] ["at", ident hp],
-      exact [expr hp.1.mono (inter_subset_right s u)] } },
-  { rintros ["⟨", ident u, ",", ident H, ",", ident hu, "⟩"],
-    rw ["<-", expr times_cont_diff_within_at_inter' H] [],
-    have [ident h'] [":", expr «expr ∈ »(x, «expr ∩ »(s, u))] [":=", expr ⟨hx, mem_of_mem_nhds_within hx H⟩],
-    exact [expr (times_cont_diff_on_zero.mpr hu).times_cont_diff_within_at h'] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » «expr𝓝[ ] »(s, x))
+theorem times_cont_diff_within_at_zero (hx : x ∈ s) :
+  TimesContDiffWithinAt 𝕜 0 f s x ↔ ∃ (u : _)(_ : u ∈ 𝓝[s] x), ContinuousOn f (s ∩ u) :=
+  by 
+    constructor
+    ·
+      intro h 
+      obtain ⟨u, H, p, hp⟩ :=
+        h 0
+          (by 
+            normNum)
+      refine' ⟨u, _, _⟩
+      ·
+        simpa [hx] using H
+      ·
+        simp only [WithTop.coe_zero, has_ftaylor_series_up_to_on_zero_iff] at hp 
+        exact hp.1.mono (inter_subset_right s u)
+    ·
+      rintro ⟨u, H, hu⟩
+      rw [←times_cont_diff_within_at_inter' H]
+      have h' : x ∈ s ∩ u := ⟨hx, mem_of_mem_nhds_within hx H⟩
+      exact (times_cont_diff_on_zero.mpr hu).TimesContDiffWithinAt h'
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- On a set with unique differentiability, any choice of iterated differential has to coincide
 with the one we have chosen in `iterated_fderiv_within 𝕜 m f s`. -/
-theorem has_ftaylor_series_up_to_on.eq_ftaylor_series_of_unique_diff_on
-{n : with_top exprℕ()}
-(h : has_ftaylor_series_up_to_on n f p s)
-{m : exprℕ()}
-(hmn : «expr ≤ »((m : with_top exprℕ()), n))
-(hs : unique_diff_on 𝕜 s)
-(hx : «expr ∈ »(x, s)) : «expr = »(p x m, iterated_fderiv_within 𝕜 m f s x) :=
-begin
-  induction [expr m] [] ["with", ident m, ident IH] ["generalizing", ident x],
-  { rw ["[", expr h.zero_eq' hx, ",", expr iterated_fderiv_within_zero_eq_comp, "]"] [] },
-  { have [ident A] [":", expr «expr < »((m : with_top exprℕ()), n)] [":=", expr lt_of_lt_of_le (with_top.coe_lt_coe.2 (lt_add_one m)) hmn],
-    have [] [":", expr has_fderiv_within_at (λ
-      y : E, iterated_fderiv_within 𝕜 m f s y) (continuous_multilinear_map.curry_left (p x (nat.succ m))) s x] [":=", expr (h.fderiv_within m A x hx).congr (λ
-      y hy, (IH (le_of_lt A) hy).symm) (IH (le_of_lt A) hx).symm],
-    rw ["[", expr iterated_fderiv_within_succ_eq_comp_left, ",", expr function.comp_apply, ",", expr this.fderiv_within (hs x hx), "]"] [],
-    exact [expr (continuous_multilinear_map.uncurry_curry_left _).symm] }
-end
+theorem HasFtaylorSeriesUpToOn.eq_ftaylor_series_of_unique_diff_on {n : WithTop ℕ} (h : HasFtaylorSeriesUpToOn n f p s)
+  {m : ℕ} (hmn : (m : WithTop ℕ) ≤ n) (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) : p x m = iteratedFderivWithin 𝕜 m f s x :=
+  by 
+    induction' m with m IH generalizing x
+    ·
+      rw [h.zero_eq' hx, iterated_fderiv_within_zero_eq_comp]
+    ·
+      have A : (m : WithTop ℕ) < n := lt_of_lt_of_leₓ (WithTop.coe_lt_coe.2 (lt_add_one m)) hmn 
+      have  :
+        HasFderivWithinAt (fun y : E => iteratedFderivWithin 𝕜 m f s y)
+          (ContinuousMultilinearMap.curryLeft (p x (Nat.succ m))) s x :=
+        (h.fderiv_within m A x hx).congr (fun y hy => (IH (le_of_ltₓ A) hy).symm) (IH (le_of_ltₓ A) hx).symm 
+      rw [iterated_fderiv_within_succ_eq_comp_left, Function.comp_applyₓ, this.fderiv_within (hs x hx)]
+      exact (ContinuousMultilinearMap.uncurry_curry_left _).symm
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » «expr ∩ »(s, o))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » «expr ∩ »(s, o))
 /-- When a function is `C^n` in a set `s` of unique differentiability, it admits
 `ftaylor_series_within 𝕜 f s` as a Taylor series up to order `n` in `s`. -/
-theorem times_cont_diff_on.ftaylor_series_within
-{n : with_top exprℕ()}
-(h : times_cont_diff_on 𝕜 n f s)
-(hs : unique_diff_on 𝕜 s) : has_ftaylor_series_up_to_on n f (ftaylor_series_within 𝕜 f s) s :=
-begin
-  split,
-  { assume [binders (x hx)],
-    simp [] [] ["only"] ["[", expr ftaylor_series_within, ",", expr continuous_multilinear_map.uncurry0_apply, ",", expr iterated_fderiv_within_zero_apply, "]"] [] [] },
-  { assume [binders (m hm x hx)],
-    rcases [expr h x hx m.succ (with_top.add_one_le_of_lt hm), "with", "⟨", ident u, ",", ident hu, ",", ident p, ",", ident Hp, "⟩"],
-    rw [expr insert_eq_of_mem hx] ["at", ident hu],
-    rcases [expr mem_nhds_within.1 hu, "with", "⟨", ident o, ",", ident o_open, ",", ident xo, ",", ident ho, "⟩"],
-    rw [expr inter_comm] ["at", ident ho],
-    have [] [":", expr «expr = »(p x m.succ, ftaylor_series_within 𝕜 f s x m.succ)] [],
-    { change [expr «expr = »(p x m.succ, iterated_fderiv_within 𝕜 m.succ f s x)] [] [],
-      rw ["<-", expr iterated_fderiv_within_inter (is_open.mem_nhds o_open xo) hs hx] [],
-      exact [expr (Hp.mono ho).eq_ftaylor_series_of_unique_diff_on (le_refl _) (hs.inter o_open) ⟨hx, xo⟩] },
-    rw ["[", "<-", expr this, ",", "<-", expr has_fderiv_within_at_inter (is_open.mem_nhds o_open xo), "]"] [],
-    have [ident A] [":", expr ∀ y «expr ∈ » «expr ∩ »(s, o), «expr = »(p y m, ftaylor_series_within 𝕜 f s y m)] [],
-    { rintros [ident y, "⟨", ident hy, ",", ident yo, "⟩"],
-      change [expr «expr = »(p y m, iterated_fderiv_within 𝕜 m f s y)] [] [],
-      rw ["<-", expr iterated_fderiv_within_inter (is_open.mem_nhds o_open yo) hs hy] [],
-      exact [expr (Hp.mono ho).eq_ftaylor_series_of_unique_diff_on (with_top.coe_le_coe.2 (nat.le_succ m)) (hs.inter o_open) ⟨hy, yo⟩] },
-    exact [expr ((Hp.mono ho).fderiv_within m (with_top.coe_lt_coe.2 (lt_add_one m)) x ⟨hx, xo⟩).congr (λ
-      y hy, (A y hy).symm) (A x ⟨hx, xo⟩).symm] },
-  { assume [binders (m hm)],
-    apply [expr continuous_on_of_locally_continuous_on],
-    assume [binders (x hx)],
-    rcases [expr h x hx m hm, "with", "⟨", ident u, ",", ident hu, ",", ident p, ",", ident Hp, "⟩"],
-    rcases [expr mem_nhds_within.1 hu, "with", "⟨", ident o, ",", ident o_open, ",", ident xo, ",", ident ho, "⟩"],
-    rw [expr insert_eq_of_mem hx] ["at", ident ho],
-    rw [expr inter_comm] ["at", ident ho],
-    refine [expr ⟨o, o_open, xo, _⟩],
-    have [ident A] [":", expr ∀ y «expr ∈ » «expr ∩ »(s, o), «expr = »(p y m, ftaylor_series_within 𝕜 f s y m)] [],
-    { rintros [ident y, "⟨", ident hy, ",", ident yo, "⟩"],
-      change [expr «expr = »(p y m, iterated_fderiv_within 𝕜 m f s y)] [] [],
-      rw ["<-", expr iterated_fderiv_within_inter (is_open.mem_nhds o_open yo) hs hy] [],
-      exact [expr (Hp.mono ho).eq_ftaylor_series_of_unique_diff_on (le_refl _) (hs.inter o_open) ⟨hy, yo⟩] },
-    exact [expr ((Hp.mono ho).cont m (le_refl _)).congr (λ y hy, (A y hy).symm)] }
-end
+theorem TimesContDiffOn.ftaylor_series_within {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 𝕜 s) :
+  HasFtaylorSeriesUpToOn n f (ftaylorSeriesWithin 𝕜 f s) s :=
+  by 
+    constructor
+    ·
+      intro x hx 
+      simp only [ftaylorSeriesWithin, ContinuousMultilinearMap.uncurry0_apply, iterated_fderiv_within_zero_apply]
+    ·
+      intro m hm x hx 
+      rcases(h x hx) m.succ (WithTop.add_one_le_of_lt hm) with ⟨u, hu, p, Hp⟩
+      rw [insert_eq_of_mem hx] at hu 
+      rcases mem_nhds_within.1 hu with ⟨o, o_open, xo, ho⟩
+      rw [inter_comm] at ho 
+      have  : p x m.succ = ftaylorSeriesWithin 𝕜 f s x m.succ
+      ·
+        change p x m.succ = iteratedFderivWithin 𝕜 m.succ f s x 
+        rw [←iterated_fderiv_within_inter (IsOpen.mem_nhds o_open xo) hs hx]
+        exact (Hp.mono ho).eq_ftaylor_series_of_unique_diff_on (le_reflₓ _) (hs.inter o_open) ⟨hx, xo⟩
+      rw [←this, ←has_fderiv_within_at_inter (IsOpen.mem_nhds o_open xo)]
+      have A : ∀ y _ : y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m
+      ·
+        rintro y ⟨hy, yo⟩
+        change p y m = iteratedFderivWithin 𝕜 m f s y 
+        rw [←iterated_fderiv_within_inter (IsOpen.mem_nhds o_open yo) hs hy]
+        exact
+          (Hp.mono ho).eq_ftaylor_series_of_unique_diff_on (WithTop.coe_le_coe.2 (Nat.le_succₓ m)) (hs.inter o_open)
+            ⟨hy, yo⟩
+      exact
+        ((Hp.mono ho).fderivWithin m (WithTop.coe_lt_coe.2 (lt_add_one m)) x ⟨hx, xo⟩).congr (fun y hy => (A y hy).symm)
+          (A x ⟨hx, xo⟩).symm
+    ·
+      intro m hm 
+      apply continuous_on_of_locally_continuous_on 
+      intro x hx 
+      rcases h x hx m hm with ⟨u, hu, p, Hp⟩
+      rcases mem_nhds_within.1 hu with ⟨o, o_open, xo, ho⟩
+      rw [insert_eq_of_mem hx] at ho 
+      rw [inter_comm] at ho 
+      refine' ⟨o, o_open, xo, _⟩
+      have A : ∀ y _ : y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m
+      ·
+        rintro y ⟨hy, yo⟩
+        change p y m = iteratedFderivWithin 𝕜 m f s y 
+        rw [←iterated_fderiv_within_inter (IsOpen.mem_nhds o_open yo) hs hy]
+        exact (Hp.mono ho).eq_ftaylor_series_of_unique_diff_on (le_reflₓ _) (hs.inter o_open) ⟨hy, yo⟩
+      exact ((Hp.mono ho).cont m (le_reflₓ _)).congr fun y hy => (A y hy).symm
 
 theorem times_cont_diff_on_of_continuous_on_differentiable_on {n : WithTop ℕ}
   (Hcont : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s)
@@ -942,7 +1032,7 @@ theorem times_cont_diff_on_of_continuous_on_differentiable_on {n : WithTop ℕ}
     intro x hx m hm 
     rw [insert_eq_of_mem hx]
     refine' ⟨s, self_mem_nhds_within, ftaylorSeriesWithin 𝕜 f s, _⟩
-    split 
+    constructor
     ·
       intro y hy 
       simp only [ftaylorSeriesWithin, ContinuousMultilinearMap.uncurry0_apply, iterated_fderiv_within_zero_apply]
@@ -974,10 +1064,10 @@ theorem times_cont_diff_on_iff_continuous_on_differentiable_on {n : WithTop ℕ}
     (∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s) ∧
       ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedFderivWithin 𝕜 m f s x) s :=
   by 
-    split 
+    constructor
     ·
       intro h 
-      split 
+      constructor
       ·
         intro m hm 
         exact h.continuous_on_iterated_fderiv_within hm hs
@@ -988,32 +1078,30 @@ theorem times_cont_diff_on_iff_continuous_on_differentiable_on {n : WithTop ℕ}
       intro h 
       exact times_cont_diff_on_of_continuous_on_differentiable_on h.1 h.2
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function is `C^(n + 1)` on a domain with unique derivatives if and only if it is
 differentiable there, and its derivative (expressed with `fderiv_within`) is `C^n`. -/
-theorem times_cont_diff_on_succ_iff_fderiv_within
-{n : exprℕ()}
-(hs : unique_diff_on 𝕜 s) : «expr ↔ »(times_cont_diff_on 𝕜 («expr + »(n, 1) : exprℕ()) f s, «expr ∧ »(differentiable_on 𝕜 f s, times_cont_diff_on 𝕜 n (λ
-   y, fderiv_within 𝕜 f s y) s)) :=
-begin
-  split,
-  { assume [binders (H)],
-    refine [expr ⟨H.differentiable_on (with_top.coe_le_coe.2 (nat.le_add_left 1 n)), λ x hx, _⟩],
-    rcases [expr times_cont_diff_within_at_succ_iff_has_fderiv_within_at.1 (H x hx), "with", "⟨", ident u, ",", ident hu, ",", ident f', ",", ident hff', ",", ident hf', "⟩"],
-    rcases [expr mem_nhds_within.1 hu, "with", "⟨", ident o, ",", ident o_open, ",", ident xo, ",", ident ho, "⟩"],
-    rw ["[", expr inter_comm, ",", expr insert_eq_of_mem hx, "]"] ["at", ident ho],
-    have [] [] [":=", expr hf'.mono ho],
-    rw [expr times_cont_diff_within_at_inter' (mem_nhds_within_of_mem_nhds (is_open.mem_nhds o_open xo))] ["at", ident this],
-    apply [expr this.congr_of_eventually_eq' _ hx],
-    have [] [":", expr «expr ∈ »(«expr ∩ »(o, s), «expr𝓝[ ] »(s, x))] [":=", expr mem_nhds_within.2 ⟨o, o_open, xo, subset.refl _⟩],
-    rw [expr inter_comm] ["at", ident this],
-    apply [expr filter.eventually_eq_of_mem this (λ y hy, _)],
-    have [ident A] [":", expr «expr = »(fderiv_within 𝕜 f «expr ∩ »(s, o) y, f' y)] [":=", expr ((hff' y (ho hy)).mono ho).fderiv_within (hs.inter o_open y hy)],
-    rwa [expr fderiv_within_inter (is_open.mem_nhds o_open hy.2) (hs y hy.1)] ["at", ident A] },
-  { rintros ["⟨", ident hdiff, ",", ident h, "⟩", ident x, ident hx],
-    rw ["[", expr times_cont_diff_within_at_succ_iff_has_fderiv_within_at, ",", expr insert_eq_of_mem hx, "]"] [],
-    exact [expr ⟨s, self_mem_nhds_within, fderiv_within 𝕜 f s, λ y hy, (hdiff y hy).has_fderiv_within_at, h x hx⟩] }
-end
+theorem times_cont_diff_on_succ_iff_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s) :
+  TimesContDiffOn 𝕜 (n+1 : ℕ) f s ↔ DifferentiableOn 𝕜 f s ∧ TimesContDiffOn 𝕜 n (fun y => fderivWithin 𝕜 f s y) s :=
+  by 
+    constructor
+    ·
+      intro H 
+      refine' ⟨H.differentiable_on (WithTop.coe_le_coe.2 (Nat.le_add_leftₓ 1 n)), fun x hx => _⟩
+      rcases times_cont_diff_within_at_succ_iff_has_fderiv_within_at.1 (H x hx) with ⟨u, hu, f', hff', hf'⟩
+      rcases mem_nhds_within.1 hu with ⟨o, o_open, xo, ho⟩
+      rw [inter_comm, insert_eq_of_mem hx] at ho 
+      have  := hf'.mono ho 
+      rw [times_cont_diff_within_at_inter' (mem_nhds_within_of_mem_nhds (IsOpen.mem_nhds o_open xo))] at this 
+      apply this.congr_of_eventually_eq' _ hx 
+      have  : o ∩ s ∈ 𝓝[s] x := mem_nhds_within.2 ⟨o, o_open, xo, subset.refl _⟩
+      rw [inter_comm] at this 
+      apply Filter.eventually_eq_of_mem this fun y hy => _ 
+      have A : fderivWithin 𝕜 f (s ∩ o) y = f' y := ((hff' y (ho hy)).mono ho).fderivWithin (hs.inter o_open y hy)
+      rwa [fderiv_within_inter (IsOpen.mem_nhds o_open hy.2) (hs y hy.1)] at A
+    ·
+      rintro ⟨hdiff, h⟩ x hx 
+      rw [times_cont_diff_within_at_succ_iff_has_fderiv_within_at, insert_eq_of_mem hx]
+      exact ⟨s, self_mem_nhds_within, fderivWithin 𝕜 f s, fun y hy => (hdiff y hy).HasFderivWithinAt, h x hx⟩
 
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (expressed with `fderiv`) is `C^n`. -/
@@ -1027,24 +1115,23 @@ theorem times_cont_diff_on_succ_iff_fderiv_of_open {n : ℕ} (hs : IsOpen s) :
     intro x hx 
     exact fderiv_within_of_open hs hx
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function is `C^∞` on a domain with unique derivatives if and only if it is differentiable
 there, and its derivative (expressed with `fderiv_within`) is `C^∞`. -/
-theorem times_cont_diff_on_top_iff_fderiv_within
-(hs : unique_diff_on 𝕜 s) : «expr ↔ »(times_cont_diff_on 𝕜 «expr∞»() f s, «expr ∧ »(differentiable_on 𝕜 f s, times_cont_diff_on 𝕜 «expr∞»() (λ
-   y, fderiv_within 𝕜 f s y) s)) :=
-begin
-  split,
-  { assume [binders (h)],
-    refine [expr ⟨h.differentiable_on le_top, _⟩],
-    apply [expr times_cont_diff_on_top.2 (λ n, ((times_cont_diff_on_succ_iff_fderiv_within hs).1 _).2)],
-    exact [expr h.of_le le_top] },
-  { assume [binders (h)],
-    refine [expr times_cont_diff_on_top.2 (λ n, _)],
-    have [ident A] [":", expr «expr ≤ »((n : with_top exprℕ()), «expr∞»())] [":=", expr le_top],
-    apply [expr ((times_cont_diff_on_succ_iff_fderiv_within hs).2 ⟨h.1, h.2.of_le A⟩).of_le],
-    exact [expr with_top.coe_le_coe.2 (nat.le_succ n)] }
-end
+theorem times_cont_diff_on_top_iff_fderiv_within (hs : UniqueDiffOn 𝕜 s) :
+  TimesContDiffOn 𝕜 ∞ f s ↔ DifferentiableOn 𝕜 f s ∧ TimesContDiffOn 𝕜 ∞ (fun y => fderivWithin 𝕜 f s y) s :=
+  by 
+    constructor
+    ·
+      intro h 
+      refine' ⟨h.differentiable_on le_top, _⟩
+      apply times_cont_diff_on_top.2 fun n => ((times_cont_diff_on_succ_iff_fderiv_within hs).1 _).2 
+      exact h.of_le le_top
+    ·
+      intro h 
+      refine' times_cont_diff_on_top.2 fun n => _ 
+      have A : (n : WithTop ℕ) ≤ ∞ := le_top 
+      apply ((times_cont_diff_on_succ_iff_fderiv_within hs).2 ⟨h.1, h.2.ofLe A⟩).ofLe 
+      exact WithTop.coe_le_coe.2 (Nat.le_succₓ n)
 
 /-- A function is `C^∞` on an open domain if and only if it is differentiable there, and its
 derivative (expressed with `fderiv`) is `C^∞`. -/
@@ -1058,22 +1145,20 @@ theorem times_cont_diff_on_top_iff_fderiv_of_open (hs : IsOpen s) :
     intro x hx 
     exact fderiv_within_of_open hs hx
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem times_cont_diff_on.fderiv_within
-{m n : with_top exprℕ()}
-(hf : times_cont_diff_on 𝕜 n f s)
-(hs : unique_diff_on 𝕜 s)
-(hmn : «expr ≤ »(«expr + »(m, 1), n)) : times_cont_diff_on 𝕜 m (λ y, fderiv_within 𝕜 f s y) s :=
-begin
-  cases [expr m] [],
-  { change [expr «expr ≤ »(«expr + »(«expr∞»(), 1), n)] [] ["at", ident hmn],
-    have [] [":", expr «expr = »(n, «expr∞»())] [],
-    by simpa [] [] [] [] [] ["using", expr hmn],
-    rw [expr this] ["at", ident hf],
-    exact [expr ((times_cont_diff_on_top_iff_fderiv_within hs).1 hf).2] },
-  { change [expr «expr ≤ »((m.succ : with_top exprℕ()), n)] [] ["at", ident hmn],
-    exact [expr ((times_cont_diff_on_succ_iff_fderiv_within hs).1 (hf.of_le hmn)).2] }
-end
+theorem TimesContDiffOn.fderiv_within {m n : WithTop ℕ} (hf : TimesContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 𝕜 s)
+  (hmn : (m+1) ≤ n) : TimesContDiffOn 𝕜 m (fun y => fderivWithin 𝕜 f s y) s :=
+  by 
+    cases m
+    ·
+      change (∞+1) ≤ n at hmn 
+      have  : n = ∞
+      ·
+        simpa using hmn 
+      rw [this] at hf 
+      exact ((times_cont_diff_on_top_iff_fderiv_within hs).1 hf).2
+    ·
+      change (m.succ : WithTop ℕ) ≤ n at hmn 
+      exact ((times_cont_diff_on_succ_iff_fderiv_within hs).1 (hf.of_le hmn)).2
 
 theorem TimesContDiffOn.fderiv_of_open {m n : WithTop ℕ} (hf : TimesContDiffOn 𝕜 n f s) (hs : IsOpen s)
   (hmn : (m+1) ≤ n) : TimesContDiffOn 𝕜 m (fun y => fderiv 𝕜 f y) s :=
@@ -1087,23 +1172,20 @@ theorem TimesContDiffOn.continuous_on_fderiv_of_open {n : WithTop ℕ} (h : Time
   (hn : 1 ≤ n) : ContinuousOn (fun x => fderiv 𝕜 f x) s :=
   ((times_cont_diff_on_succ_iff_fderiv_of_open hs).1 (h.of_le hn)).2.ContinuousOn
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is at least `C^1`, its bundled derivative (mapping `(x, v)` to `Df(x) v`) is
 continuous. -/
-theorem times_cont_diff_on.continuous_on_fderiv_within_apply
-{n : with_top exprℕ()}
-(h : times_cont_diff_on 𝕜 n f s)
-(hs : unique_diff_on 𝕜 s)
-(hn : «expr ≤ »(1, n)) : continuous_on (λ
- p : «expr × »(E, E), (fderiv_within 𝕜 f s p.1 : E → F) p.2) (set.prod s univ) :=
-begin
-  have [ident A] [":", expr continuous (λ
-    q : «expr × »(«expr →L[ ] »(E, 𝕜, F), E), q.1 q.2)] [":=", expr is_bounded_bilinear_map_apply.continuous],
-  have [ident B] [":", expr continuous_on (λ p : «expr × »(E, E), (fderiv_within 𝕜 f s p.1, p.2)) (set.prod s univ)] [],
-  { apply [expr continuous_on.prod _ continuous_snd.continuous_on],
-    exact [expr continuous_on.comp (h.continuous_on_fderiv_within hs hn) continuous_fst.continuous_on (prod_subset_preimage_fst _ _)] },
-  exact [expr A.comp_continuous_on B]
-end
+theorem TimesContDiffOn.continuous_on_fderiv_within_apply {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s)
+  (hs : UniqueDiffOn 𝕜 s) (hn : 1 ≤ n) :
+  ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E → F) p.2) (Set.Prod s univ) :=
+  by 
+    have A : Continuous fun q : (E →L[𝕜] F) × E => q.1 q.2 := is_bounded_bilinear_map_apply.continuous 
+    have B : ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1, p.2)) (Set.Prod s univ)
+    ·
+      apply ContinuousOn.prod _ continuous_snd.continuous_on 
+      exact
+        ContinuousOn.comp (h.continuous_on_fderiv_within hs hn) continuous_fst.continuous_on
+          (prod_subset_preimage_fst _ _)
+    exact A.comp_continuous_on B
 
 /-! ### Functions with a Taylor series on the whole space -/
 
@@ -1126,10 +1208,10 @@ theorem HasFtaylorSeriesUpTo.zero_eq' {n : WithTop ℕ} (h : HasFtaylorSeriesUpT
 theorem has_ftaylor_series_up_to_on_univ_iff {n : WithTop ℕ} :
   HasFtaylorSeriesUpToOn n f p univ ↔ HasFtaylorSeriesUpTo n f p :=
   by 
-    split 
+    constructor
     ·
       intro H 
-      split 
+      constructor
       ·
         exact fun x => H.zero_eq x (mem_univ x)
       ·
@@ -1142,7 +1224,7 @@ theorem has_ftaylor_series_up_to_on_univ_iff {n : WithTop ℕ} :
         exact H.cont m hm
     ·
       intro H 
-      split 
+      constructor
       ·
         exact fun x hx => H.zero_eq x
       ·
@@ -1247,6 +1329,8 @@ theorem TimesContDiffAt.differentiable_at {n : WithTop ℕ} (h : TimesContDiffAt
   by 
     simpa [hn, differentiable_within_at_univ] using h.differentiable_within_at
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » u)
 /-- A function is `C^(n + 1)` at a point iff locally, it has a derivative which is `C^n`. -/
 theorem times_cont_diff_at_succ_iff_has_fderiv_at {n : ℕ} :
   TimesContDiffAt 𝕜 (n+1 : ℕ) f x ↔
@@ -1254,7 +1338,7 @@ theorem times_cont_diff_at_succ_iff_has_fderiv_at {n : ℕ} :
   by 
     rw [←times_cont_diff_within_at_univ, times_cont_diff_within_at_succ_iff_has_fderiv_within_at]
     simp only [nhds_within_univ, exists_prop, mem_univ, insert_eq_of_mem]
-    split 
+    constructor
     ·
       rintro ⟨u, H, f', h_fderiv, h_times_cont_diff⟩
       rcases mem_nhds_iff.mp H with ⟨t, htu, ht, hxt⟩
@@ -1270,7 +1354,7 @@ theorem times_cont_diff_at_succ_iff_has_fderiv_at {n : ℕ} :
       exact (h_fderiv x hxu).HasFderivWithinAt
 
 protected theorem TimesContDiffAt.eventually {n : ℕ} (h : TimesContDiffAt 𝕜 n f x) :
-  ∀ᶠy in 𝓝 x, TimesContDiffAt 𝕜 n f y :=
+  ∀ᶠ y in 𝓝 x, TimesContDiffAt 𝕜 n f y :=
   by 
     simpa [nhds_within_univ] using h.eventually
 
@@ -1290,7 +1374,7 @@ variable {𝕜}
 
 theorem times_cont_diff_on_univ {n : WithTop ℕ} : TimesContDiffOn 𝕜 n f univ ↔ TimesContDiff 𝕜 n f :=
   by 
-    split 
+    constructor
     ·
       intro H 
       use ftaylorSeriesWithin 𝕜 f univ 
@@ -1328,6 +1412,7 @@ theorem times_cont_diff_zero : TimesContDiff 𝕜 0 f ↔ Continuous f :=
     rw [←times_cont_diff_on_univ, continuous_iff_continuous_on_univ]
     exact times_cont_diff_on_zero
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » expr𝓝() x)
 theorem times_cont_diff_at_zero : TimesContDiffAt 𝕜 0 f x ↔ ∃ (u : _)(_ : u ∈ 𝓝 x), ContinuousOn f u :=
   by 
     rw [←times_cont_diff_within_at_univ]
@@ -1424,7 +1509,7 @@ theorem iterated_fderiv_one_apply (m : Finₓ 1 → E) :
 theorem times_cont_diff_on_iff_ftaylor_series {n : WithTop ℕ} :
   TimesContDiff 𝕜 n f ↔ HasFtaylorSeriesUpTo n f (ftaylorSeries 𝕜 f) :=
   by 
-    split 
+    constructor
     ·
       rw [←times_cont_diff_on_univ, ←has_ftaylor_series_up_to_on_univ_iff, ←ftaylor_series_within_univ]
       exact fun h => TimesContDiffOn.ftaylor_series_within h unique_diff_on_univ
@@ -1464,21 +1549,17 @@ theorem TimesContDiff.continuous_fderiv {n : WithTop ℕ} (h : TimesContDiff �
   Continuous fun x => fderiv 𝕜 f x :=
   (times_cont_diff_succ_iff_fderiv.1 (h.of_le hn)).2.Continuous
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is at least `C^1`, its bundled derivative (mapping `(x, v)` to `Df(x) v`) is
 continuous. -/
-theorem times_cont_diff.continuous_fderiv_apply
-{n : with_top exprℕ()}
-(h : times_cont_diff 𝕜 n f)
-(hn : «expr ≤ »(1, n)) : continuous (λ p : «expr × »(E, E), (fderiv 𝕜 f p.1 : E → F) p.2) :=
-begin
-  have [ident A] [":", expr continuous (λ
-    q : «expr × »(«expr →L[ ] »(E, 𝕜, F), E), q.1 q.2)] [":=", expr is_bounded_bilinear_map_apply.continuous],
-  have [ident B] [":", expr continuous (λ p : «expr × »(E, E), (fderiv 𝕜 f p.1, p.2))] [],
-  { apply [expr continuous.prod_mk _ continuous_snd],
-    exact [expr continuous.comp (h.continuous_fderiv hn) continuous_fst] },
-  exact [expr A.comp B]
-end
+theorem TimesContDiff.continuous_fderiv_apply {n : WithTop ℕ} (h : TimesContDiff 𝕜 n f) (hn : 1 ≤ n) :
+  Continuous fun p : E × E => (fderiv 𝕜 f p.1 : E → F) p.2 :=
+  by 
+    have A : Continuous fun q : (E →L[𝕜] F) × E => q.1 q.2 := is_bounded_bilinear_map_apply.continuous 
+    have B : Continuous fun p : E × E => (fderiv 𝕜 f p.1, p.2)
+    ·
+      apply Continuous.prod_mk _ continuous_snd 
+      exact Continuous.comp (h.continuous_fderiv hn) continuous_fst 
+    exact A.comp B
 
 /-! ### Constants -/
 
@@ -1633,7 +1714,7 @@ Warning: if you think you need this lemma, it is likely that you can simplify yo
 reformulating the lemma that you're applying next using the tips in
 Note [continuity lemma statement]
 -/
-theorem times_cont_diff_prod_assoc : TimesContDiff 𝕜 ⊤$ Equiv.prodAssoc E F G :=
+theorem times_cont_diff_prod_assoc : TimesContDiff 𝕜 ⊤$ Equivₓ.prodAssoc E F G :=
   (LinearIsometryEquiv.prodAssoc 𝕜 E F G).TimesContDiff
 
 /--
@@ -1641,7 +1722,7 @@ The natural equivalence `E × (F × G) ≃ (E × F) × G` is smooth.
 
 Warning: see remarks attached to `times_cont_diff_prod_assoc`
 -/
-theorem times_cont_diff_prod_assoc_symm : TimesContDiff 𝕜 ⊤$ (Equiv.prodAssoc E F G).symm :=
+theorem times_cont_diff_prod_assoc_symm : TimesContDiff 𝕜 ⊤$ (Equivₓ.prodAssoc E F G).symm :=
   (LinearIsometryEquiv.prodAssoc 𝕜 E F G).symm.TimesContDiff
 
 /--
@@ -1679,7 +1760,7 @@ theorem HasFtaylorSeriesUpToOn.continuous_linear_map_comp {n : WithTop ℕ} (g :
   HasFtaylorSeriesUpToOn n (g ∘ f) (fun x k => g.comp_continuous_multilinear_map (p x k)) s :=
   by 
     set L : ∀ m : ℕ, (E[×m]→L[𝕜] F) →L[𝕜] E[×m]→L[𝕜] G := fun m => ContinuousLinearMap.compContinuousMultilinearMapL g 
-    split 
+    constructor
     ·
       exact fun x hx => congr_argₓ g (hf.zero_eq x hx)
     ·
@@ -1730,34 +1811,33 @@ theorem ContinuousLinearEquiv.comp_times_cont_diff_on_iff {n : WithTop ℕ} (e :
   by 
     simp [TimesContDiffOn, e.comp_times_cont_diff_within_at_iff]
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` admits a Taylor series `p` in a set `s`, and `g` is linear, then `f ∘ g` admits a Taylor
 series in `g ⁻¹' s`, whose `k`-th term is given by `p k (g v₁, ..., g vₖ)` . -/
-theorem has_ftaylor_series_up_to_on.comp_continuous_linear_map
-{n : with_top exprℕ()}
-(hf : has_ftaylor_series_up_to_on n f p s)
-(g : «expr →L[ ] »(G, 𝕜, E)) : has_ftaylor_series_up_to_on n «expr ∘ »(f, g) (λ
- x k, (p (g x) k).comp_continuous_linear_map (λ _, g)) «expr ⁻¹' »(g, s) :=
-begin
-  let [ident A] [":", expr ∀
-   m : exprℕ(), «expr [× ]→L[ ] »(E, m, 𝕜, F) → «expr [× ]→L[ ] »(G, m, 𝕜, F)] [":=", expr λ
-   m h, h.comp_continuous_linear_map (λ _, g)],
-  have [ident hA] [":", expr ∀
-   m, is_bounded_linear_map 𝕜 (A m)] [":=", expr λ m, is_bounded_linear_map_continuous_multilinear_map_comp_linear g],
-  split,
-  { assume [binders (x hx)],
-    simp [] [] ["only"] ["[", expr (hf.zero_eq (g x) hx).symm, ",", expr function.comp_app, "]"] [] [],
-    change [expr «expr = »(p (g x) 0 (λ i : fin 0, g 0), p (g x) 0 0)] [] [],
-    rw [expr continuous_linear_map.map_zero] [],
-    refl },
-  { assume [binders (m hm x hx)],
-    convert [] [expr (hA m).has_fderiv_at.comp_has_fderiv_within_at x ((hf.fderiv_within m hm (g x) hx).comp x g.has_fderiv_within_at (subset.refl _))] [],
-    ext [] [ident y, ident v] [],
-    change [expr «expr = »(p (g x) (nat.succ m) «expr ∘ »(g, cons y v), p (g x) m.succ (cons (g y) «expr ∘ »(g, v)))] [] [],
-    rw [expr comp_cons] [] },
-  { assume [binders (m hm)],
-    exact [expr (hA m).continuous.comp_continuous_on ((hf.cont m hm).comp g.continuous.continuous_on (subset.refl _))] }
-end
+theorem HasFtaylorSeriesUpToOn.comp_continuous_linear_map {n : WithTop ℕ} (hf : HasFtaylorSeriesUpToOn n f p s)
+  (g : G →L[𝕜] E) :
+  HasFtaylorSeriesUpToOn n (f ∘ g) (fun x k => (p (g x) k).compContinuousLinearMap fun _ => g) (g ⁻¹' s) :=
+  by 
+    let A : ∀ m : ℕ, (E[×m]→L[𝕜] F) → G[×m]→L[𝕜] F := fun m h => h.comp_continuous_linear_map fun _ => g 
+    have hA : ∀ m, IsBoundedLinearMap 𝕜 (A m) :=
+      fun m => is_bounded_linear_map_continuous_multilinear_map_comp_linear g 
+    constructor
+    ·
+      intro x hx 
+      simp only [(hf.zero_eq (g x) hx).symm, Function.comp_app]
+      change (p (g x) 0 fun i : Finₓ 0 => g 0) = p (g x) 0 0
+      rw [ContinuousLinearMap.map_zero]
+      rfl
+    ·
+      intro m hm x hx 
+      convert
+        (hA m).HasFderivAt.comp_has_fderiv_within_at x
+          ((hf.fderiv_within m hm (g x) hx).comp x g.has_fderiv_within_at (subset.refl _))
+      ext y v 
+      change p (g x) (Nat.succ m) (g ∘ cons y v) = p (g x) m.succ (cons (g y) (g ∘ v))
+      rw [comp_cons]
+    ·
+      intro m hm 
+      exact (hA m).Continuous.comp_continuous_on ((hf.cont m hm).comp g.continuous.continuous_on (subset.refl _))
 
 /-- Composition by continuous linear maps on the right preserves `C^n` functions at a point on
 a domain. -/
@@ -1790,7 +1870,7 @@ point in a domain. -/
 theorem ContinuousLinearEquiv.times_cont_diff_within_at_comp_iff {n : WithTop ℕ} (e : G ≃L[𝕜] E) :
   TimesContDiffWithinAt 𝕜 n (f ∘ e) (e ⁻¹' s) (e.symm x) ↔ TimesContDiffWithinAt 𝕜 n f s x :=
   by 
-    split 
+    constructor
     ·
       intro H 
       simpa [←preimage_comp, · ∘ ·] using H.comp_continuous_linear_map (e.symm : E →L[𝕜] G)
@@ -1799,24 +1879,25 @@ theorem ContinuousLinearEquiv.times_cont_diff_within_at_comp_iff {n : WithTop �
       rw [←e.apply_symm_apply x, ←e.coe_coe] at H 
       exact H.comp_continuous_linear_map _
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Composition by continuous linear equivs on the right respects higher differentiability on
 domains. -/
-theorem continuous_linear_equiv.times_cont_diff_on_comp_iff
-{n : with_top exprℕ()}
-(e : «expr ≃L[ ] »(G, 𝕜, E)) : «expr ↔ »(times_cont_diff_on 𝕜 n «expr ∘ »(f, e) «expr ⁻¹' »(e, s), times_cont_diff_on 𝕜 n f s) :=
-begin
-  refine [expr ⟨λ H, _, λ H, H.comp_continuous_linear_map (e : «expr →L[ ] »(G, 𝕜, E))⟩],
-  have [ident A] [":", expr «expr = »(f, «expr ∘ »(«expr ∘ »(f, e), e.symm))] [],
-  by { ext [] [ident y] [],
-    simp [] [] ["only"] ["[", expr function.comp_app, "]"] [] [],
-    rw [expr e.apply_symm_apply y] [] },
-  have [ident B] [":", expr «expr = »(«expr ⁻¹' »(e.symm, «expr ⁻¹' »(e, s)), s)] [],
-  by { rw ["[", "<-", expr preimage_comp, ",", expr e.self_comp_symm, "]"] [],
-    refl },
-  rw ["[", expr A, ",", "<-", expr B, "]"] [],
-  exact [expr H.comp_continuous_linear_map (e.symm : «expr →L[ ] »(E, 𝕜, G))]
-end
+theorem ContinuousLinearEquiv.times_cont_diff_on_comp_iff {n : WithTop ℕ} (e : G ≃L[𝕜] E) :
+  TimesContDiffOn 𝕜 n (f ∘ e) (e ⁻¹' s) ↔ TimesContDiffOn 𝕜 n f s :=
+  by 
+    refine' ⟨fun H => _, fun H => H.comp_continuous_linear_map (e : G →L[𝕜] E)⟩
+    have A : f = ((f ∘ e) ∘ e.symm)
+    ·
+      ·
+        ext y 
+        simp only [Function.comp_app]
+        rw [e.apply_symm_apply y]
+    have B : e.symm ⁻¹' (e ⁻¹' s) = s
+    ·
+      ·
+        rw [←preimage_comp, e.self_comp_symm]
+        rfl 
+    rw [A, ←B]
+    exact H.comp_continuous_linear_map (e.symm : E →L[𝕜] G)
 
 /-- If two functions `f` and `g` admit Taylor series `p` and `q` in a set `s`, then the cartesian
 product of `f` and `g` admits the cartesian product of `p` and `q` as a Taylor series. -/
@@ -1825,7 +1906,7 @@ theorem HasFtaylorSeriesUpToOn.prod {n : WithTop ℕ} (hf : HasFtaylorSeriesUpTo
   HasFtaylorSeriesUpToOn n (fun y => (f y, g y)) (fun y k => (p y k).Prod (q y k)) s :=
   by 
     set L := fun m => ContinuousMultilinearMap.prodL 𝕜 (fun i : Finₓ m => E) F G 
-    split 
+    constructor
     ·
       intro x hx 
       rw [←hf.zero_eq x hx, ←hg.zero_eq x hx]
@@ -1877,33 +1958,30 @@ variable {ι : Type _} [Fintype ι] {F' : ι → Type _} [∀ i, NormedGroup (F'
   {φ : ∀ i, E → F' i} {p' : ∀ i, E → FormalMultilinearSeries 𝕜 E (F' i)} {Φ : E → ∀ i, F' i}
   {P' : E → FormalMultilinearSeries 𝕜 E (∀ i, F' i)} {n : WithTop ℕ}
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_ftaylor_series_up_to_on_pi : «expr ↔ »(has_ftaylor_series_up_to_on n (λ
-  x
-  i, φ i x) (λ
-  x m, continuous_multilinear_map.pi (λ i, p' i x m)) s, ∀ i, has_ftaylor_series_up_to_on n (φ i) (p' i) s) :=
-begin
-  set [] [ident pr] [] [":="] [expr @continuous_linear_map.proj 𝕜 _ ι F' _ _ _] [],
-  letI [] [":", expr ∀
-   (m : exprℕ())
-   (i : ι), normed_space 𝕜 «expr [× ]→L[ ] »(E, m, 𝕜, F' i)] [":=", expr λ m i, infer_instance],
-  set [] [ident L] [":", expr ∀
-   m : exprℕ(), «expr ≃ₗᵢ[ ] »(∀
-    i, «expr [× ]→L[ ] »(E, m, 𝕜, F' i), 𝕜, «expr [× ]→L[ ] »(E, m, 𝕜, ∀
-     i, F' i))] [":="] [expr λ m, continuous_multilinear_map.piₗᵢ _ _] [],
-  refine [expr ⟨λ h i, _, λ h, ⟨λ x hx, _, _, _⟩⟩],
-  { convert [] [expr h.continuous_linear_map_comp (pr i)] [],
-    ext [] [] [],
-    refl },
-  { ext1 [] [ident i],
-    exact [expr (h i).zero_eq x hx] },
-  { intros [ident m, ident hm, ident x, ident hx],
-    have [] [] [":=", expr has_fderiv_within_at_pi.2 (λ i, (h i).fderiv_within m hm x hx)],
-    convert [] [expr (L m).has_fderiv_at.comp_has_fderiv_within_at x this] [] },
-  { intros [ident m, ident hm],
-    have [] [] [":=", expr continuous_on_pi.2 (λ i, (h i).cont m hm)],
-    convert [] [expr (L m).continuous.comp_continuous_on this] [] }
-end
+theorem has_ftaylor_series_up_to_on_pi :
+  HasFtaylorSeriesUpToOn n (fun x i => φ i x) (fun x m => ContinuousMultilinearMap.pi fun i => p' i x m) s ↔
+    ∀ i, HasFtaylorSeriesUpToOn n (φ i) (p' i) s :=
+  by 
+    set pr := @ContinuousLinearMap.proj 𝕜 _ ι F' _ _ _ 
+    let this' : ∀ m : ℕ i : ι, NormedSpace 𝕜 (E[×m]→L[𝕜] F' i) := fun m i => inferInstance 
+    set L : ∀ m : ℕ, (∀ i, E[×m]→L[𝕜] F' i) ≃ₗᵢ[𝕜] E[×m]→L[𝕜] ∀ i, F' i := fun m => ContinuousMultilinearMap.piₗᵢ _ _ 
+    refine' ⟨fun h i => _, fun h => ⟨fun x hx => _, _, _⟩⟩
+    ·
+      convert h.continuous_linear_map_comp (pr i)
+      ext 
+      rfl
+    ·
+      ext1 i 
+      exact (h i).zero_eq x hx
+    ·
+      intro m hm x hx 
+      have  := has_fderiv_within_at_pi.2 fun i => (h i).fderivWithin m hm x hx 
+      let this' : NormedSpace 𝕜 (E[×m]→L[𝕜] ∀ i, F' i) := inferInstance 
+      convert (L m).HasFderivAt.comp_has_fderiv_within_at x this
+    ·
+      intro m hm 
+      have  := continuous_on_pi.2 fun i => (h i).cont m hm 
+      convert (L m).Continuous.comp_continuous_on this
 
 @[simp]
 theorem has_ftaylor_series_up_to_on_pi' :
@@ -1922,7 +2000,7 @@ theorem times_cont_diff_within_at_pi :
     set pr := @ContinuousLinearMap.proj 𝕜 _ ι F' _ _ _ 
     refine' ⟨fun h i => h.continuous_linear_map_comp (pr i), fun h m hm => _⟩
     choose u hux p hp using fun i => h i m hm 
-    exact ⟨⋂i, u i, Filter.Inter_mem.2 hux, _, has_ftaylor_series_up_to_on_pi.2 fun i => (hp i).mono$ Inter_subset _ _⟩
+    exact ⟨⋂ i, u i, Filter.Inter_mem.2 hux, _, has_ftaylor_series_up_to_on_pi.2 fun i => (hp i).mono$ Inter_subset _ _⟩
 
 theorem times_cont_diff_on_pi : TimesContDiffOn 𝕜 n Φ s ↔ ∀ i, TimesContDiffOn 𝕜 n (fun x => Φ x i) s :=
   ⟨fun h i x hx => times_cont_diff_within_at_pi.1 (h x hx) _,
@@ -1966,111 +2044,110 @@ which we have already proved previously.
 -/
 
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » w)
 /-- Auxiliary lemma proving that the composition of `C^n` functions on domains is `C^n` when all
 spaces live in the same universe. Use instead `times_cont_diff_on.comp` which removes the universe
 assumption (but is deduced from this one). -/
-private
-theorem times_cont_diff_on.comp_same_univ
-{Eu : Type u}
-[normed_group Eu]
-[normed_space 𝕜 Eu]
-{Fu : Type u}
-[normed_group Fu]
-[normed_space 𝕜 Fu]
-{Gu : Type u}
-[normed_group Gu]
-[normed_space 𝕜 Gu]
-{n : with_top exprℕ()}
-{s : set Eu}
-{t : set Fu}
-{g : Fu → Gu}
-{f : Eu → Fu}
-(hg : times_cont_diff_on 𝕜 n g t)
-(hf : times_cont_diff_on 𝕜 n f s)
-(st : «expr ⊆ »(s, «expr ⁻¹' »(f, t))) : times_cont_diff_on 𝕜 n «expr ∘ »(g, f) s :=
-begin
-  unfreezingI { induction [expr n] ["using", ident with_top.nat_induction] ["with", ident n, ident IH, ident Itop] ["generalizing", ident Eu, ident Fu, ident Gu] },
-  { rw [expr times_cont_diff_on_zero] ["at", ident hf, ident hg, "⊢"],
-    exact [expr continuous_on.comp hg hf st] },
-  { rw [expr times_cont_diff_on_succ_iff_has_fderiv_within_at] ["at", ident hg, "⊢"],
-    assume [binders (x hx)],
-    rcases [expr times_cont_diff_on_succ_iff_has_fderiv_within_at.1 hf x hx, "with", "⟨", ident u, ",", ident hu, ",", ident f', ",", ident hf', ",", ident f'_diff, "⟩"],
-    rcases [expr hg (f x) (st hx), "with", "⟨", ident v, ",", ident hv, ",", ident g', ",", ident hg', ",", ident g'_diff, "⟩"],
-    rw [expr insert_eq_of_mem hx] ["at", ident hu, "⊢"],
-    have [ident xu] [":", expr «expr ∈ »(x, u)] [":=", expr mem_of_mem_nhds_within hx hu],
-    let [ident w] [] [":=", expr «expr ∩ »(s, «expr ∩ »(u, «expr ⁻¹' »(f, v)))],
-    have [ident wv] [":", expr «expr ⊆ »(w, «expr ⁻¹' »(f, v))] [":=", expr λ y hy, hy.2.2],
-    have [ident wu] [":", expr «expr ⊆ »(w, u)] [":=", expr λ y hy, hy.2.1],
-    have [ident ws] [":", expr «expr ⊆ »(w, s)] [":=", expr λ y hy, hy.1],
-    refine [expr ⟨w, _, λ y, (g' (f y)).comp (f' y), _, _⟩],
-    show [expr «expr ∈ »(w, «expr𝓝[ ] »(s, x))],
-    { apply [expr filter.inter_mem self_mem_nhds_within],
-      apply [expr filter.inter_mem hu],
-      apply [expr continuous_within_at.preimage_mem_nhds_within'],
-      { rw ["<-", expr continuous_within_at_inter' hu] [],
-        exact [expr (hf' x xu).differentiable_within_at.continuous_within_at.mono (inter_subset_right _ _)] },
-      { apply [expr nhds_within_mono _ _ hv],
-        exact [expr subset.trans (image_subset_iff.mpr st) (subset_insert (f x) t)] } },
-    show [expr ∀ y «expr ∈ » w, has_fderiv_within_at «expr ∘ »(g, f) ((g' (f y)).comp (f' y)) w y],
-    { rintros [ident y, "⟨", ident ys, ",", ident yu, ",", ident yv, "⟩"],
-      exact [expr (hg' (f y) yv).comp y ((hf' y yu).mono wu) wv] },
-    show [expr times_cont_diff_on 𝕜 n (λ y, (g' (f y)).comp (f' y)) w],
-    { have [ident A] [":", expr times_cont_diff_on 𝕜 n (λ
-        y, g' (f y)) w] [":=", expr IH g'_diff ((hf.of_le (with_top.coe_le_coe.2 (nat.le_succ n))).mono ws) wv],
-      have [ident B] [":", expr times_cont_diff_on 𝕜 n f' w] [":=", expr f'_diff.mono wu],
-      have [ident C] [":", expr times_cont_diff_on 𝕜 n (λ
-        y, (f' y, g' (f y))) w] [":=", expr times_cont_diff_on.prod B A],
-      have [ident D] [":", expr times_cont_diff_on 𝕜 n (λ
-        p : «expr × »(«expr →L[ ] »(Eu, 𝕜, Fu), «expr →L[ ] »(Fu, 𝕜, Gu)), p.2.comp p.1) univ] [":=", expr is_bounded_bilinear_map_comp.times_cont_diff.times_cont_diff_on],
-      exact [expr IH D C (subset_univ _)] } },
-  { rw [expr times_cont_diff_on_top] ["at", ident hf, ident hg, "⊢"],
-    assume [binders (n)],
-    apply [expr Itop n (hg n) (hf n) st] }
-end
+private theorem times_cont_diff_on.comp_same_univ {Eu : Type u} [NormedGroup Eu] [NormedSpace 𝕜 Eu] {Fu : Type u}
+  [NormedGroup Fu] [NormedSpace 𝕜 Fu] {Gu : Type u} [NormedGroup Gu] [NormedSpace 𝕜 Gu] {n : WithTop ℕ} {s : Set Eu}
+  {t : Set Fu} {g : Fu → Gu} {f : Eu → Fu} (hg : TimesContDiffOn 𝕜 n g t) (hf : TimesContDiffOn 𝕜 n f s)
+  (st : s ⊆ f ⁻¹' t) : TimesContDiffOn 𝕜 n (g ∘ f) s :=
+  by 
+    (
+      induction' n using WithTop.nat_induction with n IH Itop generalizing Eu Fu Gu)
+    ·
+      rw [times_cont_diff_on_zero] at hf hg⊢
+      exact ContinuousOn.comp hg hf st
+    ·
+      rw [times_cont_diff_on_succ_iff_has_fderiv_within_at] at hg⊢
+      intro x hx 
+      rcases(times_cont_diff_on_succ_iff_has_fderiv_within_at.1 hf) x hx with ⟨u, hu, f', hf', f'_diff⟩
+      rcases hg (f x) (st hx) with ⟨v, hv, g', hg', g'_diff⟩
+      rw [insert_eq_of_mem hx] at hu⊢
+      have xu : x ∈ u := mem_of_mem_nhds_within hx hu 
+      let w := s ∩ (u ∩ f ⁻¹' v)
+      have wv : w ⊆ f ⁻¹' v := fun y hy => hy.2.2
+      have wu : w ⊆ u := fun y hy => hy.2.1
+      have ws : w ⊆ s := fun y hy => hy.1
+      refine' ⟨w, _, fun y => (g' (f y)).comp (f' y), _, _⟩
+      show w ∈ 𝓝[s] x
+      ·
+        apply Filter.inter_mem self_mem_nhds_within 
+        apply Filter.inter_mem hu 
+        apply ContinuousWithinAt.preimage_mem_nhds_within'
+        ·
+          rw [←continuous_within_at_inter' hu]
+          exact (hf' x xu).DifferentiableWithinAt.ContinuousWithinAt.mono (inter_subset_right _ _)
+        ·
+          apply nhds_within_mono _ _ hv 
+          exact subset.trans (image_subset_iff.mpr st) (subset_insert (f x) t)
+      show ∀ y _ : y ∈ w, HasFderivWithinAt (g ∘ f) ((g' (f y)).comp (f' y)) w y
+      ·
+        rintro y ⟨ys, yu, yv⟩
+        exact (hg' (f y) yv).comp y ((hf' y yu).mono wu) wv 
+      show TimesContDiffOn 𝕜 n (fun y => (g' (f y)).comp (f' y)) w
+      ·
+        have A : TimesContDiffOn 𝕜 n (fun y => g' (f y)) w :=
+          IH g'_diff ((hf.of_le (WithTop.coe_le_coe.2 (Nat.le_succₓ n))).mono ws) wv 
+        have B : TimesContDiffOn 𝕜 n f' w := f'_diff.mono wu 
+        have C : TimesContDiffOn 𝕜 n (fun y => (f' y, g' (f y))) w := TimesContDiffOn.prod B A 
+        have D : TimesContDiffOn 𝕜 n (fun p : (Eu →L[𝕜] Fu) × (Fu →L[𝕜] Gu) => p.2.comp p.1) univ :=
+          is_bounded_bilinear_map_comp.times_cont_diff.times_cont_diff_on 
+        exact IH D C (subset_univ _)
+    ·
+      rw [times_cont_diff_on_top] at hf hg⊢
+      intro n 
+      apply Itop n (hg n) (hf n) st
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of `C^n` functions on domains is `C^n`. -/
-theorem times_cont_diff_on.comp
-{n : with_top exprℕ()}
-{s : set E}
-{t : set F}
-{g : F → G}
-{f : E → F}
-(hg : times_cont_diff_on 𝕜 n g t)
-(hf : times_cont_diff_on 𝕜 n f s)
-(st : «expr ⊆ »(s, «expr ⁻¹' »(f, t))) : times_cont_diff_on 𝕜 n «expr ∘ »(g, f) s :=
-begin
-  let [ident Eu] [] [":=", expr continuous_multilinear_map 𝕜 (λ i : fin 0, «expr × »(E, «expr × »(F, G))) E],
-  letI [] [":", expr normed_group Eu] [":=", expr by apply_instance],
-  letI [] [":", expr normed_space 𝕜 Eu] [":=", expr by apply_instance],
-  let [ident Fu] [] [":=", expr continuous_multilinear_map 𝕜 (λ i : fin 0, «expr × »(E, «expr × »(F, G))) F],
-  letI [] [":", expr normed_group Fu] [":=", expr by apply_instance],
-  letI [] [":", expr normed_space 𝕜 Fu] [":=", expr by apply_instance],
-  let [ident Gu] [] [":=", expr continuous_multilinear_map 𝕜 (λ i : fin 0, «expr × »(E, «expr × »(F, G))) G],
-  letI [] [":", expr normed_group Gu] [":=", expr by apply_instance],
-  letI [] [":", expr normed_space 𝕜 Gu] [":=", expr by apply_instance],
-  let [ident isoE] [":", expr «expr ≃L[ ] »(Eu, 𝕜, E)] [":=", expr continuous_multilinear_curry_fin0 𝕜 «expr × »(E, «expr × »(F, G)) E],
-  let [ident isoF] [":", expr «expr ≃L[ ] »(Fu, 𝕜, F)] [":=", expr continuous_multilinear_curry_fin0 𝕜 «expr × »(E, «expr × »(F, G)) F],
-  let [ident isoG] [":", expr «expr ≃L[ ] »(Gu, 𝕜, G)] [":=", expr continuous_multilinear_curry_fin0 𝕜 «expr × »(E, «expr × »(F, G)) G],
-  let [ident fu] [":", expr Eu → Fu] [":=", expr «expr ∘ »(«expr ∘ »(isoF.symm, f), isoE)],
-  have [ident fu_diff] [":", expr times_cont_diff_on 𝕜 n fu «expr ⁻¹' »(isoE, s)] [],
-  by rwa ["[", expr isoE.times_cont_diff_on_comp_iff, ",", expr isoF.symm.comp_times_cont_diff_on_iff, "]"] [],
-  let [ident gu] [":", expr Fu → Gu] [":=", expr «expr ∘ »(«expr ∘ »(isoG.symm, g), isoF)],
-  have [ident gu_diff] [":", expr times_cont_diff_on 𝕜 n gu «expr ⁻¹' »(isoF, t)] [],
-  by rwa ["[", expr isoF.times_cont_diff_on_comp_iff, ",", expr isoG.symm.comp_times_cont_diff_on_iff, "]"] [],
-  have [ident main] [":", expr times_cont_diff_on 𝕜 n «expr ∘ »(gu, fu) «expr ⁻¹' »(isoE, s)] [],
-  { apply [expr times_cont_diff_on.comp_same_univ gu_diff fu_diff],
-    assume [binders (y hy)],
-    simp [] [] ["only"] ["[", expr fu, ",", expr continuous_linear_equiv.coe_apply, ",", expr function.comp_app, ",", expr mem_preimage, "]"] [] [],
-    rw [expr isoF.apply_symm_apply (f (isoE y))] [],
-    exact [expr st hy] },
-  have [] [":", expr «expr = »(«expr ∘ »(gu, fu), «expr ∘ »(«expr ∘ »(isoG.symm, «expr ∘ »(g, f)), isoE))] [],
-  { ext [] [ident y] [],
-    simp [] [] ["only"] ["[", expr function.comp_apply, ",", expr gu, ",", expr fu, "]"] [] [],
-    rw [expr isoF.apply_symm_apply (f (isoE y))] [] },
-  rwa ["[", expr this, ",", expr isoE.times_cont_diff_on_comp_iff, ",", expr isoG.symm.comp_times_cont_diff_on_iff, "]"] ["at", ident main]
-end
+theorem TimesContDiffOn.comp {n : WithTop ℕ} {s : Set E} {t : Set F} {g : F → G} {f : E → F}
+  (hg : TimesContDiffOn 𝕜 n g t) (hf : TimesContDiffOn 𝕜 n f s) (st : s ⊆ f ⁻¹' t) : TimesContDiffOn 𝕜 n (g ∘ f) s :=
+  by 
+    let Eu := ContinuousMultilinearMap 𝕜 (fun i : Finₓ 0 => E × F × G) E 
+    let this' : NormedGroup Eu :=
+      by 
+        infer_instance 
+    let this' : NormedSpace 𝕜 Eu :=
+      by 
+        infer_instance 
+    let Fu := ContinuousMultilinearMap 𝕜 (fun i : Finₓ 0 => E × F × G) F 
+    let this' : NormedGroup Fu :=
+      by 
+        infer_instance 
+    let this' : NormedSpace 𝕜 Fu :=
+      by 
+        infer_instance 
+    let Gu := ContinuousMultilinearMap 𝕜 (fun i : Finₓ 0 => E × F × G) G 
+    let this' : NormedGroup Gu :=
+      by 
+        infer_instance 
+    let this' : NormedSpace 𝕜 Gu :=
+      by 
+        infer_instance 
+    let isoE : Eu ≃L[𝕜] E := continuousMultilinearCurryFin0 𝕜 (E × F × G) E 
+    let isoF : Fu ≃L[𝕜] F := continuousMultilinearCurryFin0 𝕜 (E × F × G) F 
+    let isoG : Gu ≃L[𝕜] G := continuousMultilinearCurryFin0 𝕜 (E × F × G) G 
+    let fu : Eu → Fu := (isoF.symm ∘ f) ∘ isoE 
+    have fu_diff : TimesContDiffOn 𝕜 n fu (isoE ⁻¹' s)
+    ·
+      rwa [isoE.times_cont_diff_on_comp_iff, isoF.symm.comp_times_cont_diff_on_iff]
+    let gu : Fu → Gu := (isoG.symm ∘ g) ∘ isoF 
+    have gu_diff : TimesContDiffOn 𝕜 n gu (isoF ⁻¹' t)
+    ·
+      rwa [isoF.times_cont_diff_on_comp_iff, isoG.symm.comp_times_cont_diff_on_iff]
+    have main : TimesContDiffOn 𝕜 n (gu ∘ fu) (isoE ⁻¹' s)
+    ·
+      apply times_cont_diff_on.comp_same_univ gu_diff fu_diff 
+      intro y hy 
+      simp only [fu, ContinuousLinearEquiv.coe_apply, Function.comp_app, mem_preimage]
+      rw [isoF.apply_symm_apply (f (isoE y))]
+      exact st hy 
+    have  : (gu ∘ fu) = ((isoG.symm ∘ g ∘ f) ∘ isoE)
+    ·
+      ext y 
+      simp only [Function.comp_applyₓ, gu, fu]
+      rw [isoF.apply_symm_apply (f (isoE y))]
+    rwa [this, isoE.times_cont_diff_on_comp_iff, isoG.symm.comp_times_cont_diff_on_iff] at main
 
 /-- The composition of `C^n` functions on domains is `C^n`. -/
 theorem TimesContDiffOn.comp' {n : WithTop ℕ} {s : Set E} {t : Set F} {g : F → G} {f : E → F}
@@ -2088,38 +2165,35 @@ theorem TimesContDiff.comp {n : WithTop ℕ} {g : F → G} {f : E → F} (hg : T
   times_cont_diff_on_univ.1$
     TimesContDiffOn.comp (times_cont_diff_on_univ.2 hg) (times_cont_diff_on_univ.2 hf) (subset_univ _)
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of `C^n` functions at points in domains is `C^n`. -/
-theorem times_cont_diff_within_at.comp
-{n : with_top exprℕ()}
-{s : set E}
-{t : set F}
-{g : F → G}
-{f : E → F}
-(x : E)
-(hg : times_cont_diff_within_at 𝕜 n g t (f x))
-(hf : times_cont_diff_within_at 𝕜 n f s x)
-(st : «expr ⊆ »(s, «expr ⁻¹' »(f, t))) : times_cont_diff_within_at 𝕜 n «expr ∘ »(g, f) s x :=
-begin
-  assume [binders (m hm)],
-  rcases [expr hg.times_cont_diff_on hm, "with", "⟨", ident u, ",", ident u_nhd, ",", ident ut, ",", ident hu, "⟩"],
-  rcases [expr hf.times_cont_diff_on hm, "with", "⟨", ident v, ",", ident v_nhd, ",", ident vs, ",", ident hv, "⟩"],
-  have [ident xmem] [":", expr «expr ∈ »(x, «expr ∩ »(«expr ⁻¹' »(f, u), v))] [":=", expr ⟨(mem_of_mem_nhds_within (mem_insert (f x) _) u_nhd : _), mem_of_mem_nhds_within (mem_insert x s) v_nhd⟩],
-  have [] [":", expr «expr ∈ »(«expr ⁻¹' »(f, u), «expr𝓝[ ] »(insert x s, x))] [],
-  { apply [expr hf.continuous_within_at.insert_self.preimage_mem_nhds_within'],
-    apply [expr nhds_within_mono _ _ u_nhd],
-    rw [expr image_insert_eq] [],
-    exact [expr insert_subset_insert (image_subset_iff.mpr st)] },
-  have [ident Z] [] [":=", expr (hu.comp (hv.mono (inter_subset_right «expr ⁻¹' »(f, u) v)) (inter_subset_left _ _)).times_cont_diff_within_at xmem m (le_refl _)],
-  have [] [":", expr «expr = »(«expr𝓝[ ] »(«expr ∩ »(«expr ⁻¹' »(f, u), v), x), «expr𝓝[ ] »(insert x s, x))] [],
-  { have [ident A] [":", expr «expr = »(«expr ∩ »(«expr ⁻¹' »(f, u), v), «expr ∩ »(insert x s, «expr ∩ »(«expr ⁻¹' »(f, u), v)))] [],
-    { apply [expr subset.antisymm _ (inter_subset_right _ _)],
-      rintros [ident y, "⟨", ident hy1, ",", ident hy2, "⟩"],
-      simp [] [] [] ["[", expr hy1, ",", expr hy2, ",", expr vs hy2, "]"] [] [] },
-    rw ["[", expr A, ",", "<-", expr nhds_within_restrict'', "]"] [],
-    exact [expr filter.inter_mem this v_nhd] },
-  rwa ["[", expr insert_eq_of_mem xmem, ",", expr this, "]"] ["at", ident Z]
-end
+theorem TimesContDiffWithinAt.comp {n : WithTop ℕ} {s : Set E} {t : Set F} {g : F → G} {f : E → F} (x : E)
+  (hg : TimesContDiffWithinAt 𝕜 n g t (f x)) (hf : TimesContDiffWithinAt 𝕜 n f s x) (st : s ⊆ f ⁻¹' t) :
+  TimesContDiffWithinAt 𝕜 n (g ∘ f) s x :=
+  by 
+    intro m hm 
+    rcases hg.times_cont_diff_on hm with ⟨u, u_nhd, ut, hu⟩
+    rcases hf.times_cont_diff_on hm with ⟨v, v_nhd, vs, hv⟩
+    have xmem : x ∈ f ⁻¹' u ∩ v :=
+      ⟨(mem_of_mem_nhds_within (mem_insert (f x) _) u_nhd : _), mem_of_mem_nhds_within (mem_insert x s) v_nhd⟩
+    have  : f ⁻¹' u ∈ 𝓝[insert x s] x
+    ·
+      apply hf.continuous_within_at.insert_self.preimage_mem_nhds_within' 
+      apply nhds_within_mono _ _ u_nhd 
+      rw [image_insert_eq]
+      exact insert_subset_insert (image_subset_iff.mpr st)
+    have Z :=
+      (hu.comp (hv.mono (inter_subset_right (f ⁻¹' u) v)) (inter_subset_left _ _)).TimesContDiffWithinAt xmem m
+        (le_reflₓ _)
+    have  : 𝓝[f ⁻¹' u ∩ v] x = 𝓝[insert x s] x
+    ·
+      have A : f ⁻¹' u ∩ v = insert x s ∩ (f ⁻¹' u ∩ v)
+      ·
+        apply subset.antisymm _ (inter_subset_right _ _)
+        rintro y ⟨hy1, hy2⟩
+        simp [hy1, hy2, vs hy2]
+      rw [A, ←nhds_within_restrict'']
+      exact Filter.inter_mem this v_nhd 
+    rwa [insert_eq_of_mem xmem, this] at Z
 
 /-- The composition of `C^n` functions at points in domains is `C^n`. -/
 theorem TimesContDiffWithinAt.comp' {n : WithTop ℕ} {s : Set E} {t : Set F} {g : F → G} {f : E → F} (x : E)
@@ -2136,48 +2210,36 @@ theorem TimesContDiffAt.comp {n : WithTop ℕ} (x : E) (hg : TimesContDiffAt �
   TimesContDiffAt 𝕜 n (g ∘ f) x :=
   hg.comp x hf subset_preimage_univ
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem times_cont_diff.comp_times_cont_diff_within_at
-{n : with_top exprℕ()}
-{g : F → G}
-{f : E → F}
-(h : times_cont_diff 𝕜 n g)
-(hf : times_cont_diff_within_at 𝕜 n f t x) : times_cont_diff_within_at 𝕜 n «expr ∘ »(g, f) t x :=
-begin
-  have [] [":", expr times_cont_diff_within_at 𝕜 n g univ (f x)] [":=", expr h.times_cont_diff_at.times_cont_diff_within_at],
-  exact [expr this.comp x hf (subset_univ _)]
-end
+theorem TimesContDiff.comp_times_cont_diff_within_at {n : WithTop ℕ} {g : F → G} {f : E → F} (h : TimesContDiff 𝕜 n g)
+  (hf : TimesContDiffWithinAt 𝕜 n f t x) : TimesContDiffWithinAt 𝕜 n (g ∘ f) t x :=
+  by 
+    have  : TimesContDiffWithinAt 𝕜 n g univ (f x) := h.times_cont_diff_at.times_cont_diff_within_at 
+    exact this.comp x hf (subset_univ _)
 
 theorem TimesContDiff.comp_times_cont_diff_at {n : WithTop ℕ} {g : F → G} {f : E → F} (x : E) (hg : TimesContDiff 𝕜 n g)
   (hf : TimesContDiffAt 𝕜 n f x) : TimesContDiffAt 𝕜 n (g ∘ f) x :=
   hg.comp_times_cont_diff_within_at hf
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
-theorem times_cont_diff_on_fderiv_within_apply
-{m n : with_top exprℕ()}
-{s : set E}
-{f : E → F}
-(hf : times_cont_diff_on 𝕜 n f s)
-(hs : unique_diff_on 𝕜 s)
-(hmn : «expr ≤ »(«expr + »(m, 1), n)) : times_cont_diff_on 𝕜 m (λ
- p : «expr × »(E, E), (fderiv_within 𝕜 f s p.1 : «expr →L[ ] »(E, 𝕜, F)) p.2) (set.prod s (univ : set E)) :=
-begin
-  have [ident A] [":", expr times_cont_diff 𝕜 m (λ p : «expr × »(«expr →L[ ] »(E, 𝕜, F), E), p.1 p.2)] [],
-  { apply [expr is_bounded_bilinear_map.times_cont_diff],
-    exact [expr is_bounded_bilinear_map_apply] },
-  have [ident B] [":", expr times_cont_diff_on 𝕜 m (λ
-    p : «expr × »(E, E), (fderiv_within 𝕜 f s p.fst, p.snd)) (set.prod s univ)] [],
-  { apply [expr times_cont_diff_on.prod _ _],
-    { have [ident I] [":", expr times_cont_diff_on 𝕜 m (λ
-        x : E, fderiv_within 𝕜 f s x) s] [":=", expr hf.fderiv_within hs hmn],
-      have [ident J] [":", expr times_cont_diff_on 𝕜 m (λ
-        x : «expr × »(E, E), x.1) (set.prod s univ)] [":=", expr times_cont_diff_fst.times_cont_diff_on],
-      exact [expr times_cont_diff_on.comp I J (prod_subset_preimage_fst _ _)] },
-    { apply [expr times_cont_diff.times_cont_diff_on _],
-      apply [expr is_bounded_linear_map.snd.times_cont_diff] } },
-  exact [expr A.comp_times_cont_diff_on B]
-end
+theorem times_cont_diff_on_fderiv_within_apply {m n : WithTop ℕ} {s : Set E} {f : E → F} (hf : TimesContDiffOn 𝕜 n f s)
+  (hs : UniqueDiffOn 𝕜 s) (hmn : (m+1) ≤ n) :
+  TimesContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E →L[𝕜] F) p.2) (Set.Prod s (univ : Set E)) :=
+  by 
+    have A : TimesContDiff 𝕜 m fun p : (E →L[𝕜] F) × E => p.1 p.2
+    ·
+      apply IsBoundedBilinearMap.times_cont_diff 
+      exact is_bounded_bilinear_map_apply 
+    have B : TimesContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 f s p.fst, p.snd)) (Set.Prod s univ)
+    ·
+      apply TimesContDiffOn.prod _ _
+      ·
+        have I : TimesContDiffOn 𝕜 m (fun x : E => fderivWithin 𝕜 f s x) s := hf.fderiv_within hs hmn 
+        have J : TimesContDiffOn 𝕜 m (fun x : E × E => x.1) (Set.Prod s univ) := times_cont_diff_fst.times_cont_diff_on 
+        exact TimesContDiffOn.comp I J (prod_subset_preimage_fst _ _)
+      ·
+        apply TimesContDiff.times_cont_diff_on _ 
+        apply is_bounded_linear_map.snd.times_cont_diff 
+    exact A.comp_times_cont_diff_on B
 
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
 theorem TimesContDiff.times_cont_diff_fderiv_apply {n m : WithTop ℕ} {f : E → F} (hf : TimesContDiff 𝕜 n f)
@@ -2273,9 +2335,10 @@ theorem TimesContDiff.sub {n : WithTop ℕ} {f g : E → F} (hf : TimesContDiff 
 /-! ### Sum of finitely many functions -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem TimesContDiffWithinAt.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n : WithTop ℕ} {t : Set E} {x : E}
   (h : ∀ i _ : i ∈ s, TimesContDiffWithinAt 𝕜 n (fun x => f i x) t x) :
-  TimesContDiffWithinAt 𝕜 n (fun x => ∑i in s, f i x) t x :=
+  TimesContDiffWithinAt 𝕜 n (fun x => ∑ i in s, f i x) t x :=
   by 
     classical 
     induction' s using Finset.induction_on with i s is IH
@@ -2285,17 +2348,20 @@ theorem TimesContDiffWithinAt.sum {ι : Type _} {f : ι → E → F} {s : Finset
       simp only [is, Finset.sum_insert, not_false_iff]
       exact (h _ (Finset.mem_insert_self i s)).add (IH fun j hj => h _ (Finset.mem_insert_of_mem hj))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem TimesContDiffAt.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n : WithTop ℕ} {x : E}
-  (h : ∀ i _ : i ∈ s, TimesContDiffAt 𝕜 n (fun x => f i x) x) : TimesContDiffAt 𝕜 n (fun x => ∑i in s, f i x) x :=
+  (h : ∀ i _ : i ∈ s, TimesContDiffAt 𝕜 n (fun x => f i x) x) : TimesContDiffAt 𝕜 n (fun x => ∑ i in s, f i x) x :=
   by 
     rw [←times_cont_diff_within_at_univ] at * <;> exact TimesContDiffWithinAt.sum h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem TimesContDiffOn.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n : WithTop ℕ} {t : Set E}
-  (h : ∀ i _ : i ∈ s, TimesContDiffOn 𝕜 n (fun x => f i x) t) : TimesContDiffOn 𝕜 n (fun x => ∑i in s, f i x) t :=
+  (h : ∀ i _ : i ∈ s, TimesContDiffOn 𝕜 n (fun x => f i x) t) : TimesContDiffOn 𝕜 n (fun x => ∑ i in s, f i x) t :=
   fun x hx => TimesContDiffWithinAt.sum fun i hi => h i hi x hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem TimesContDiff.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n : WithTop ℕ}
-  (h : ∀ i _ : i ∈ s, TimesContDiff 𝕜 n fun x => f i x) : TimesContDiff 𝕜 n fun x => ∑i in s, f i x :=
+  (h : ∀ i _ : i ∈ s, TimesContDiff 𝕜 n fun x => f i x) : TimesContDiff 𝕜 n fun x => ∑ i in s, f i x :=
   by 
     simp [←times_cont_diff_on_univ] at * <;> exact TimesContDiffOn.sum h
 
@@ -2469,14 +2535,14 @@ theorem times_cont_diff_at_ring_inverse [CompleteSpace R] {n : WithTop ℕ} (x :
     induction' n using WithTop.nat_induction with n IH Itop
     ·
       intro m hm 
-      refine' ⟨{ y:R | IsUnit y }, _, _⟩
+      refine' ⟨{ y : R | IsUnit y }, _, _⟩
       ·
         simp [nhds_within_univ]
         exact x.nhds
       ·
         use ftaylorSeriesWithin 𝕜 inverse univ 
         rw [le_antisymmₓ hm bot_le, has_ftaylor_series_up_to_on_zero_iff]
-        split 
+        constructor
         ·
           rintro _ ⟨x', rfl⟩
           exact (inverse_continuous_at x').ContinuousWithinAt
@@ -2486,7 +2552,7 @@ theorem times_cont_diff_at_ring_inverse [CompleteSpace R] {n : WithTop ℕ} (x :
       apply times_cont_diff_at_succ_iff_has_fderiv_at.mpr 
       refine' ⟨fun x : R => -lmul_left_right 𝕜 R (inverse x) (inverse x), _, _⟩
       ·
-        refine' ⟨{ y:R | IsUnit y }, x.nhds, _⟩
+        refine' ⟨{ y : R | IsUnit y }, x.nhds, _⟩
         rintro _ ⟨y, rfl⟩
         rw [inverse_unit]
         exact has_fderiv_at_ring_inverse y
@@ -2501,7 +2567,7 @@ theorem times_cont_diff_at_inv {x : 𝕜'} (hx : x ≠ 0) {n} : TimesContDiffAt 
   by 
     simpa only [Ring.inverse_eq_inv'] using times_cont_diff_at_ring_inverse 𝕜 (Units.mk0 x hx)
 
-theorem times_cont_diff_on_inv {n} : TimesContDiffOn 𝕜 n (HasInv.inv : 𝕜' → 𝕜') («expr ᶜ» {0}) :=
+theorem times_cont_diff_on_inv {n} : TimesContDiffOn 𝕜 n (HasInv.inv : 𝕜' → 𝕜') ({0}ᶜ) :=
   fun x hx => (times_cont_diff_at_inv 𝕜 hx).TimesContDiffWithinAt
 
 variable {𝕜}
@@ -2510,6 +2576,7 @@ theorem TimesContDiffWithinAt.inv {f : E → 𝕜'} {n} (hf : TimesContDiffWithi
   TimesContDiffWithinAt 𝕜 n (fun x => f x⁻¹) s x :=
   (times_cont_diff_at_inv 𝕜 hx).comp_times_cont_diff_within_at x hf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem TimesContDiffOn.inv {f : E → 𝕜'} {n} (hf : TimesContDiffOn 𝕜 n f s) (h : ∀ x _ : x ∈ s, f x ≠ 0) :
   TimesContDiffOn 𝕜 n (fun x => f x⁻¹) s :=
   fun x hx => (hf.times_cont_diff_within_at hx).inv (h x hx)
@@ -2529,6 +2596,7 @@ theorem TimesContDiffWithinAt.div [CompleteSpace 𝕜] {f g : E → 𝕜} {n} (h
   by 
     simpa only [div_eq_mul_inv] using hf.mul (hg.inv hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem TimesContDiffOn.div [CompleteSpace 𝕜] {f g : E → 𝕜} {n} (hf : TimesContDiffOn 𝕜 n f s)
   (hg : TimesContDiffOn 𝕜 n g s) (h₀ : ∀ x _ : x ∈ s, g x ≠ 0) : TimesContDiffOn 𝕜 n (f / g) s :=
   fun x hx => (hf x hx).div (hg x hx) (h₀ x hx)
@@ -2552,29 +2620,23 @@ section MapInverse
 
 open ContinuousLinearMap
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- At a continuous linear equivalence `e : E ≃L[𝕜] F` between Banach spaces, the operation of
 inversion is `C^n`, for all `n`. -/
-theorem times_cont_diff_at_map_inverse
-[complete_space E]
-{n : with_top exprℕ()}
-(e : «expr ≃L[ ] »(E, 𝕜, F)) : times_cont_diff_at 𝕜 n inverse (e : «expr →L[ ] »(E, 𝕜, F)) :=
-begin
-  nontriviality [expr E] [],
-  let [ident O₁] [":", expr «expr →L[ ] »(E, 𝕜, E) → «expr →L[ ] »(F, 𝕜, E)] [":=", expr λ
-   f, f.comp (e.symm : «expr →L[ ] »(F, 𝕜, E))],
-  let [ident O₂] [":", expr «expr →L[ ] »(E, 𝕜, F) → «expr →L[ ] »(E, 𝕜, E)] [":=", expr λ
-   f, (e.symm : «expr →L[ ] »(F, 𝕜, E)).comp f],
-  have [] [":", expr «expr = »(continuous_linear_map.inverse, «expr ∘ »(O₁, «expr ∘ »(ring.inverse, O₂)))] [":=", expr funext (to_ring_inverse e)],
-  rw [expr this] [],
-  have [ident h₁] [":", expr times_cont_diff 𝕜 n O₁] [],
-  from [expr is_bounded_bilinear_map_comp.times_cont_diff.comp (times_cont_diff_const.prod times_cont_diff_id)],
-  have [ident h₂] [":", expr times_cont_diff 𝕜 n O₂] [],
-  from [expr is_bounded_bilinear_map_comp.times_cont_diff.comp (times_cont_diff_id.prod times_cont_diff_const)],
-  refine [expr h₁.times_cont_diff_at.comp _ (times_cont_diff_at.comp _ _ h₂.times_cont_diff_at)],
-  convert [] [expr times_cont_diff_at_ring_inverse 𝕜 (1 : units «expr →L[ ] »(E, 𝕜, E))] [],
-  simp [] [] [] ["[", expr O₂, ",", expr one_def, "]"] [] []
-end
+theorem times_cont_diff_at_map_inverse [CompleteSpace E] {n : WithTop ℕ} (e : E ≃L[𝕜] F) :
+  TimesContDiffAt 𝕜 n inverse (e : E →L[𝕜] F) :=
+  by 
+    nontriviality E 
+    let O₁ : (E →L[𝕜] E) → F →L[𝕜] E := fun f => f.comp (e.symm : F →L[𝕜] E)
+    let O₂ : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f 
+    have  : ContinuousLinearMap.inverse = (O₁ ∘ Ring.inverse ∘ O₂) := funext (to_ring_inverse e)
+    rw [this]
+    have h₁ : TimesContDiff 𝕜 n O₁ 
+    exact is_bounded_bilinear_map_comp.times_cont_diff.comp (times_cont_diff_const.prod times_cont_diff_id)
+    have h₂ : TimesContDiff 𝕜 n O₂ 
+    exact is_bounded_bilinear_map_comp.times_cont_diff.comp (times_cont_diff_id.prod times_cont_diff_const)
+    refine' h₁.times_cont_diff_at.comp _ (TimesContDiffAt.comp _ _ h₂.times_cont_diff_at)
+    convert times_cont_diff_at_ring_inverse 𝕜 (1 : Units (E →L[𝕜] E))
+    simp [O₂, one_def]
 
 end MapInverse
 
@@ -2582,7 +2644,6 @@ section FunctionInverse
 
 open ContinuousLinearMap
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a local homeomorphism and the point `a` is in its target,
 and if `f` is `n` times continuously differentiable at `f.symm a`,
 and if the derivative at `f.symm a` is a continuous linear equivalence,
@@ -2590,52 +2651,57 @@ then `f.symm` is `n` times continuously differentiable at the point `a`.
 
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
-theorem local_homeomorph.times_cont_diff_at_symm
-[complete_space E]
-{n : with_top exprℕ()}
-(f : local_homeomorph E F)
-{f₀' : «expr ≃L[ ] »(E, 𝕜, F)}
-{a : F}
-(ha : «expr ∈ »(a, f.target))
-(hf₀' : has_fderiv_at f (f₀' : «expr →L[ ] »(E, 𝕜, F)) (f.symm a))
-(hf : times_cont_diff_at 𝕜 n f (f.symm a)) : times_cont_diff_at 𝕜 n f.symm a :=
-begin
-  induction [expr n] ["using", ident with_top.nat_induction] ["with", ident n, ident IH, ident Itop] [],
-  { rw [expr times_cont_diff_at_zero] [],
-    exact [expr ⟨f.target, is_open.mem_nhds f.open_target ha, f.continuous_inv_fun⟩] },
-  { obtain ["⟨", ident f', ",", "⟨", ident u, ",", ident hu, ",", ident hff', "⟩", ",", ident hf', "⟩", ":=", expr times_cont_diff_at_succ_iff_has_fderiv_at.mp hf],
-    apply [expr times_cont_diff_at_succ_iff_has_fderiv_at.mpr],
-    have [ident eq_f₀'] [":", expr «expr = »(f' (f.symm a), f₀')] [],
-    { exact [expr (hff' (f.symm a) (mem_of_mem_nhds hu)).unique hf₀'] },
-    refine [expr ⟨«expr ∘ »(inverse, «expr ∘ »(f', f.symm)), _, _⟩],
-    { have [ident h_nhds] [":", expr «expr ∈ »({y : E | «expr∃ , »((e : «expr ≃L[ ] »(E, 𝕜, F)), «expr = »(«expr↑ »(e), f' y))}, expr𝓝() (f.symm a))] [],
-      { have [ident hf₀'] [] [":=", expr f₀'.nhds],
-        rw ["<-", expr eq_f₀'] ["at", ident hf₀'],
-        exact [expr hf'.continuous_at.preimage_mem_nhds hf₀'] },
-      obtain ["⟨", ident t, ",", ident htu, ",", ident ht, ",", ident htf, "⟩", ":=", expr mem_nhds_iff.mp (filter.inter_mem hu h_nhds)],
-      use [expr «expr ∩ »(f.target, «expr ⁻¹' »(f.symm, t))],
-      refine [expr ⟨is_open.mem_nhds _ _, _⟩],
-      { exact [expr f.preimage_open_of_open_symm ht] },
-      { exact [expr mem_inter ha (mem_preimage.mpr htf)] },
-      intros [ident x, ident hx],
-      obtain ["⟨", ident hxu, ",", ident e, ",", ident he, "⟩", ":=", expr htu hx.2],
-      have [ident h_deriv] [":", expr has_fderiv_at f «expr↑ »(e) (f.symm x)] [],
-      { rw [expr he] [],
-        exact [expr hff' (f.symm x) hxu] },
-      convert [] [expr f.has_fderiv_at_symm hx.1 h_deriv] [],
-      simp [] [] [] ["[", "<-", expr he, "]"] [] [] },
-    { have [ident h_deriv₁] [":", expr times_cont_diff_at 𝕜 n inverse (f' (f.symm a))] [],
-      { rw [expr eq_f₀'] [],
-        exact [expr times_cont_diff_at_map_inverse _] },
-      have [ident h_deriv₂] [":", expr times_cont_diff_at 𝕜 n f.symm a] [],
-      { refine [expr IH (hf.of_le _)],
-        norm_cast [],
-        exact [expr nat.le_succ n] },
-      exact [expr (h_deriv₁.comp _ hf').comp _ h_deriv₂] } },
-  { refine [expr times_cont_diff_at_top.mpr _],
-    intros [ident n],
-    exact [expr Itop n (times_cont_diff_at_top.mp hf n)] }
-end
+theorem LocalHomeomorph.times_cont_diff_at_symm [CompleteSpace E] {n : WithTop ℕ} (f : LocalHomeomorph E F)
+  {f₀' : E ≃L[𝕜] F} {a : F} (ha : a ∈ f.target) (hf₀' : HasFderivAt f (f₀' : E →L[𝕜] F) (f.symm a))
+  (hf : TimesContDiffAt 𝕜 n f (f.symm a)) : TimesContDiffAt 𝕜 n f.symm a :=
+  by 
+    induction' n using WithTop.nat_induction with n IH Itop
+    ·
+      rw [times_cont_diff_at_zero]
+      exact ⟨f.target, IsOpen.mem_nhds f.open_target ha, f.continuous_inv_fun⟩
+    ·
+      obtain ⟨f', ⟨u, hu, hff'⟩, hf'⟩ := times_cont_diff_at_succ_iff_has_fderiv_at.mp hf 
+      apply times_cont_diff_at_succ_iff_has_fderiv_at.mpr 
+      have eq_f₀' : f' (f.symm a) = f₀'
+      ·
+        exact (hff' (f.symm a) (mem_of_mem_nhds hu)).unique hf₀' 
+      refine' ⟨inverse ∘ f' ∘ f.symm, _, _⟩
+      ·
+        have h_nhds : { y : E | ∃ e : E ≃L[𝕜] F, ↑e = f' y } ∈ 𝓝 (f.symm a)
+        ·
+          have hf₀' := f₀'.nhds 
+          rw [←eq_f₀'] at hf₀' 
+          exact hf'.continuous_at.preimage_mem_nhds hf₀' 
+        obtain ⟨t, htu, ht, htf⟩ := mem_nhds_iff.mp (Filter.inter_mem hu h_nhds)
+        use f.target ∩ f.symm ⁻¹' t 
+        refine' ⟨IsOpen.mem_nhds _ _, _⟩
+        ·
+          exact f.preimage_open_of_open_symm ht
+        ·
+          exact mem_inter ha (mem_preimage.mpr htf)
+        intro x hx 
+        obtain ⟨hxu, e, he⟩ := htu hx.2
+        have h_deriv : HasFderivAt f (↑e) (f.symm x)
+        ·
+          rw [he]
+          exact hff' (f.symm x) hxu 
+        convert f.has_fderiv_at_symm hx.1 h_deriv 
+        simp [←he]
+      ·
+        have h_deriv₁ : TimesContDiffAt 𝕜 n inverse (f' (f.symm a))
+        ·
+          rw [eq_f₀']
+          exact times_cont_diff_at_map_inverse _ 
+        have h_deriv₂ : TimesContDiffAt 𝕜 n f.symm a
+        ·
+          refine' IH (hf.of_le _)
+          normCast 
+          exact Nat.le_succₓ n 
+        exact (h_deriv₁.comp _ hf').comp _ h_deriv₂
+    ·
+      refine' times_cont_diff_at_top.mpr _ 
+      intro n 
+      exact Itop n (times_cont_diff_at_top.mp hf n)
 
 /-- Let `f` be a local homeomorphism of a nondiscrete normed field, let `a` be a point in its
 target. if `f` is `n` times continuously differentiable at `f.symm a`, and if the derivative at
@@ -2670,23 +2736,15 @@ theorem HasFtaylorSeriesUpToOn.has_strict_fderiv_at {s : Set E'} {f : E' → F'}
   has_strict_fderiv_at_of_has_fderiv_at_of_continuous_at (hf.eventually_has_fderiv_at hn hs)$
     (continuousMultilinearCurryFin1 𝕂 E' F').ContinuousAt.comp$ (hf.cont 1 hn).ContinuousAt hs
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is `C^n` with `1 ≤ n` around a point, and its derivative at that point is given to
 us as `f'`, then `f'` is also a strict derivative. -/
-theorem times_cont_diff_at.has_strict_fderiv_at'
-{f : E' → F'}
-{f' : «expr →L[ ] »(E', 𝕂, F')}
-{x : E'}
-{n : with_top exprℕ()}
-(hf : times_cont_diff_at 𝕂 n f x)
-(hf' : has_fderiv_at f f' x)
-(hn : «expr ≤ »(1, n)) : has_strict_fderiv_at f f' x :=
-begin
-  rcases [expr hf 1 hn, "with", "⟨", ident u, ",", ident H, ",", ident p, ",", ident hp, "⟩"],
-  simp [] [] ["only"] ["[", expr nhds_within_univ, ",", expr mem_univ, ",", expr insert_eq_of_mem, "]"] [] ["at", ident H],
-  have [] [] [":=", expr hp.has_strict_fderiv_at le_rfl H],
-  rwa [expr hf'.unique this.has_fderiv_at] []
-end
+theorem TimesContDiffAt.has_strict_fderiv_at' {f : E' → F'} {f' : E' →L[𝕂] F'} {x : E'} {n : WithTop ℕ}
+  (hf : TimesContDiffAt 𝕂 n f x) (hf' : HasFderivAt f f' x) (hn : 1 ≤ n) : HasStrictFderivAt f f' x :=
+  by 
+    rcases hf 1 hn with ⟨u, H, p, hp⟩
+    simp only [nhds_within_univ, mem_univ, insert_eq_of_mem] at H 
+    have  := hp.has_strict_fderiv_at le_rfl H 
+    rwa [hf'.unique this.has_fderiv_at]
 
 /-- If a function is `C^n` with `1 ≤ n` around a point, and its derivative at that point is given to
 us as `f'`, then `f'` is also a strict derivative. -/
@@ -2716,34 +2774,30 @@ theorem TimesContDiff.has_strict_deriv_at {f : 𝕂 → F'} {x : 𝕂} {n : With
   HasStrictDerivAt f (deriv f x) x :=
   hf.times_cont_diff_at.has_strict_deriv_at hn
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
 /-- If `f` has a formal Taylor series `p` up to order `1` on `{x} ∪ s`, where `s` is a convex set,
 and `∥p x 1∥₊ < K`, then `f` is `K`-Lipschitz in a neighborhood of `x` within `s`. -/
-theorem has_ftaylor_series_up_to_on.exists_lipschitz_on_with_of_nnnorm_lt
-{E F : Type*}
-[normed_group E]
-[normed_space exprℝ() E]
-[normed_group F]
-[normed_space exprℝ() F]
-{f : E → F}
-{p : E → formal_multilinear_series exprℝ() E F}
-{s : set E}
-{x : E}
-(hf : has_ftaylor_series_up_to_on 1 f p (insert x s))
-(hs : convex exprℝ() s)
-(K : «exprℝ≥0»())
-(hK : «expr < »(«expr∥ ∥₊»(p x 1), K)) : «expr∃ , »((t «expr ∈ » «expr𝓝[ ] »(s, x)), lipschitz_on_with K f t) :=
-begin
-  set [] [ident f'] [] [":="] [expr λ y, continuous_multilinear_curry_fin1 exprℝ() E F (p y 1)] [],
-  have [ident hder] [":", expr ∀ y «expr ∈ » s, has_fderiv_within_at f (f' y) s y] [],
-  from [expr λ y hy, (hf.has_fderiv_within_at le_rfl (subset_insert x s hy)).mono (subset_insert x s)],
-  have [ident hcont] [":", expr continuous_within_at f' s x] [],
-  from [expr (continuous_multilinear_curry_fin1 exprℝ() E F).continuous_at.comp_continuous_within_at ((hf.cont _ le_rfl _ (mem_insert _ _)).mono (subset_insert x s))],
-  replace [ident hK] [":", expr «expr < »(«expr∥ ∥₊»(f' x), K)] [],
-  by simpa [] [] ["only"] ["[", expr linear_isometry_equiv.nnnorm_map, "]"] [] [],
-  exact [expr hs.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_lt «expr $ »(eventually_nhds_within_iff.2, eventually_of_forall hder) hcont K hK]
-end
+theorem HasFtaylorSeriesUpToOn.exists_lipschitz_on_with_of_nnnorm_lt {E F : Type _} [NormedGroup E] [NormedSpace ℝ E]
+  [NormedGroup F] [NormedSpace ℝ F] {f : E → F} {p : E → FormalMultilinearSeries ℝ E F} {s : Set E} {x : E}
+  (hf : HasFtaylorSeriesUpToOn 1 f p (insert x s)) (hs : Convex ℝ s) (K :  ℝ≥0 ) (hK : ∥p x 1∥₊ < K) :
+  ∃ (t : _)(_ : t ∈ 𝓝[s] x), LipschitzOnWith K f t :=
+  by 
+    set f' := fun y => continuousMultilinearCurryFin1 ℝ E F (p y 1)
+    have hder : ∀ y _ : y ∈ s, HasFderivWithinAt f (f' y) s y 
+    exact fun y hy => (hf.has_fderiv_within_at le_rfl (subset_insert x s hy)).mono (subset_insert x s)
+    have hcont : ContinuousWithinAt f' s x 
+    exact
+      (continuousMultilinearCurryFin1 ℝ E F).ContinuousAt.comp_continuous_within_at
+        ((hf.cont _ le_rfl _ (mem_insert _ _)).mono (subset_insert x s))
+    replace hK : ∥f' x∥₊ < K
+    ·
+      simpa only [LinearIsometryEquiv.nnnorm_map]
+    exact
+      hs.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_lt
+        (eventually_nhds_within_iff.2$ eventually_of_forall hder) hcont K hK
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
 /-- If `f` has a formal Taylor series `p` up to order `1` on `{x} ∪ s`, where `s` is a convex set,
 then `f` is Lipschitz in a neighborhood of `x` within `s`. -/
 theorem HasFtaylorSeriesUpToOn.exists_lipschitz_on_with {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F]
@@ -2752,6 +2806,7 @@ theorem HasFtaylorSeriesUpToOn.exists_lipschitz_on_with {E F : Type _} [NormedGr
   ∃ (K : _)(t : _)(_ : t ∈ 𝓝[s] x), LipschitzOnWith K f t :=
   (no_top _).imp$ hf.exists_lipschitz_on_with_of_nnnorm_lt hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
 /-- If `f` is `C^1` within a conves set `s` at `x`, then it is Lipschitz on a neighborhood of `x`
 within `s`. -/
 theorem TimesContDiffWithinAt.exists_lipschitz_on_with {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F]
@@ -2767,12 +2822,14 @@ theorem TimesContDiffWithinAt.exists_lipschitz_on_with {E F : Type _} [NormedGro
     rw [inter_comm, ←nhds_within_restrict' _ (Metric.ball_mem_nhds _ ε0)] at hst 
     exact ⟨K, t, hst, hft⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » expr𝓝() x)
 /-- If `f` is `C^1` at `x` and `K > ∥fderiv 𝕂 f x∥`, then `f` is `K`-Lipschitz in a neighborhood of
 `x`. -/
 theorem TimesContDiffAt.exists_lipschitz_on_with_of_nnnorm_lt {f : E' → F'} {x : E'} (hf : TimesContDiffAt 𝕂 1 f x)
   (K :  ℝ≥0 ) (hK : ∥fderiv 𝕂 f x∥₊ < K) : ∃ (t : _)(_ : t ∈ 𝓝 x), LipschitzOnWith K f t :=
   (hf.has_strict_fderiv_at le_rfl).exists_lipschitz_on_with_of_nnnorm_lt K hK
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » expr𝓝() x)
 /-- If `f` is `C^1` at `x`, then `f` is Lipschitz in a neighborhood of `x`. -/
 theorem TimesContDiffAt.exists_lipschitz_on_with {f : E' → F'} {x : E'} (hf : TimesContDiffAt 𝕂 1 f x) :
   ∃ (K : _)(t : _)(_ : t ∈ 𝓝 x), LipschitzOnWith K f t :=
@@ -2795,32 +2852,34 @@ variable {f₂ : 𝕜 → F} {s₂ : Set 𝕜}
 
 open continuous_linear_map(smulRight)
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function is `C^(n + 1)` on a domain with unique derivatives if and only if it is
 differentiable there, and its derivative (formulated with `deriv_within`) is `C^n`. -/
-theorem times_cont_diff_on_succ_iff_deriv_within
-{n : exprℕ()}
-(hs : unique_diff_on 𝕜 s₂) : «expr ↔ »(times_cont_diff_on 𝕜 («expr + »(n, 1) : exprℕ()) f₂ s₂, «expr ∧ »(differentiable_on 𝕜 f₂ s₂, times_cont_diff_on 𝕜 n (deriv_within f₂ s₂) s₂)) :=
-begin
-  rw [expr times_cont_diff_on_succ_iff_fderiv_within hs] [],
-  congr' [2] [],
-  apply [expr le_antisymm],
-  { assume [binders (h)],
-    have [] [":", expr «expr = »(deriv_within f₂ s₂, «expr ∘ »(λ
-       u : «expr →L[ ] »(𝕜, 𝕜, F), u 1, fderiv_within 𝕜 f₂ s₂))] [],
-    by { ext [] [ident x] [],
-      refl },
-    simp [] [] ["only"] ["[", expr this, "]"] [] [],
-    apply [expr times_cont_diff.comp_times_cont_diff_on _ h],
-    exact [expr (is_bounded_bilinear_map_apply.is_bounded_linear_map_left _).times_cont_diff] },
-  { assume [binders (h)],
-    have [] [":", expr «expr = »(fderiv_within 𝕜 f₂ s₂, «expr ∘ »(smul_right (1 : «expr →L[ ] »(𝕜, 𝕜, 𝕜)), deriv_within f₂ s₂))] [],
-    by { ext [] [ident x] [],
-      simp [] [] [] ["[", expr deriv_within, "]"] [] [] },
-    simp [] [] ["only"] ["[", expr this, "]"] [] [],
-    apply [expr times_cont_diff.comp_times_cont_diff_on _ h],
-    exact [expr (is_bounded_bilinear_map_smul_right.is_bounded_linear_map_right _).times_cont_diff] }
-end
+theorem times_cont_diff_on_succ_iff_deriv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s₂) :
+  TimesContDiffOn 𝕜 (n+1 : ℕ) f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ TimesContDiffOn 𝕜 n (derivWithin f₂ s₂) s₂ :=
+  by 
+    rw [times_cont_diff_on_succ_iff_fderiv_within hs]
+    congr 2
+    apply le_antisymmₓ
+    ·
+      intro h 
+      have  : derivWithin f₂ s₂ = ((fun u : 𝕜 →L[𝕜] F => u 1) ∘ fderivWithin 𝕜 f₂ s₂)
+      ·
+        ·
+          ext x 
+          rfl 
+      simp only [this]
+      apply TimesContDiff.comp_times_cont_diff_on _ h 
+      exact (is_bounded_bilinear_map_apply.is_bounded_linear_map_left _).TimesContDiff
+    ·
+      intro h 
+      have  : fderivWithin 𝕜 f₂ s₂ = (smul_right (1 : 𝕜 →L[𝕜] 𝕜) ∘ derivWithin f₂ s₂)
+      ·
+        ·
+          ext x 
+          simp [derivWithin]
+      simp only [this]
+      apply TimesContDiff.comp_times_cont_diff_on _ h 
+      exact (is_bounded_bilinear_map_smul_right.is_bounded_linear_map_right _).TimesContDiff
 
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (formulated with `deriv`) is `C^n`. -/
@@ -2834,23 +2893,23 @@ theorem times_cont_diff_on_succ_iff_deriv_of_open {n : ℕ} (hs : IsOpen s₂) :
     intro x hx 
     exact deriv_within_of_open hs hx
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function is `C^∞` on a domain with unique derivatives if and only if it is differentiable
 there, and its derivative (formulated with `deriv_within`) is `C^∞`. -/
-theorem times_cont_diff_on_top_iff_deriv_within
-(hs : unique_diff_on 𝕜 s₂) : «expr ↔ »(times_cont_diff_on 𝕜 «expr∞»() f₂ s₂, «expr ∧ »(differentiable_on 𝕜 f₂ s₂, times_cont_diff_on 𝕜 «expr∞»() (deriv_within f₂ s₂) s₂)) :=
-begin
-  split,
-  { assume [binders (h)],
-    refine [expr ⟨h.differentiable_on le_top, _⟩],
-    apply [expr times_cont_diff_on_top.2 (λ n, ((times_cont_diff_on_succ_iff_deriv_within hs).1 _).2)],
-    exact [expr h.of_le le_top] },
-  { assume [binders (h)],
-    refine [expr times_cont_diff_on_top.2 (λ n, _)],
-    have [ident A] [":", expr «expr ≤ »((n : with_top exprℕ()), «expr∞»())] [":=", expr le_top],
-    apply [expr ((times_cont_diff_on_succ_iff_deriv_within hs).2 ⟨h.1, h.2.of_le A⟩).of_le],
-    exact [expr with_top.coe_le_coe.2 (nat.le_succ n)] }
-end
+theorem times_cont_diff_on_top_iff_deriv_within (hs : UniqueDiffOn 𝕜 s₂) :
+  TimesContDiffOn 𝕜 ∞ f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ TimesContDiffOn 𝕜 ∞ (derivWithin f₂ s₂) s₂ :=
+  by 
+    constructor
+    ·
+      intro h 
+      refine' ⟨h.differentiable_on le_top, _⟩
+      apply times_cont_diff_on_top.2 fun n => ((times_cont_diff_on_succ_iff_deriv_within hs).1 _).2 
+      exact h.of_le le_top
+    ·
+      intro h 
+      refine' times_cont_diff_on_top.2 fun n => _ 
+      have A : (n : WithTop ℕ) ≤ ∞ := le_top 
+      apply ((times_cont_diff_on_succ_iff_deriv_within hs).2 ⟨h.1, h.2.ofLe A⟩).ofLe 
+      exact WithTop.coe_le_coe.2 (Nat.le_succₓ n)
 
 /-- A function is `C^∞` on an open domain if and only if it is differentiable
 there, and its derivative (formulated with `deriv`) is `C^∞`. -/
@@ -2864,22 +2923,20 @@ theorem times_cont_diff_on_top_iff_deriv_of_open (hs : IsOpen s₂) :
     intro x hx 
     exact deriv_within_of_open hs hx
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem times_cont_diff_on.deriv_within
-{m n : with_top exprℕ()}
-(hf : times_cont_diff_on 𝕜 n f₂ s₂)
-(hs : unique_diff_on 𝕜 s₂)
-(hmn : «expr ≤ »(«expr + »(m, 1), n)) : times_cont_diff_on 𝕜 m (deriv_within f₂ s₂) s₂ :=
-begin
-  cases [expr m] [],
-  { change [expr «expr ≤ »(«expr + »(«expr∞»(), 1), n)] [] ["at", ident hmn],
-    have [] [":", expr «expr = »(n, «expr∞»())] [],
-    by simpa [] [] [] [] [] ["using", expr hmn],
-    rw [expr this] ["at", ident hf],
-    exact [expr ((times_cont_diff_on_top_iff_deriv_within hs).1 hf).2] },
-  { change [expr «expr ≤ »((m.succ : with_top exprℕ()), n)] [] ["at", ident hmn],
-    exact [expr ((times_cont_diff_on_succ_iff_deriv_within hs).1 (hf.of_le hmn)).2] }
-end
+theorem TimesContDiffOn.deriv_within {m n : WithTop ℕ} (hf : TimesContDiffOn 𝕜 n f₂ s₂) (hs : UniqueDiffOn 𝕜 s₂)
+  (hmn : (m+1) ≤ n) : TimesContDiffOn 𝕜 m (derivWithin f₂ s₂) s₂ :=
+  by 
+    cases m
+    ·
+      change (∞+1) ≤ n at hmn 
+      have  : n = ∞
+      ·
+        simpa using hmn 
+      rw [this] at hf 
+      exact ((times_cont_diff_on_top_iff_deriv_within hs).1 hf).2
+    ·
+      change (m.succ : WithTop ℕ) ≤ n at hmn 
+      exact ((times_cont_diff_on_succ_iff_deriv_within hs).1 (hf.of_le hmn)).2
 
 theorem TimesContDiffOn.deriv_of_open {m n : WithTop ℕ} (hf : TimesContDiffOn 𝕜 n f₂ s₂) (hs : IsOpen s₂)
   (hmn : (m+1) ≤ n) : TimesContDiffOn 𝕜 m (deriv f₂) s₂ :=

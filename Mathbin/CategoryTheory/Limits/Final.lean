@@ -51,7 +51,7 @@ Dualise condition 3 above and the implications 2 ⇒ 3 and 3 ⇒ 1 to initial fu
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 
@@ -377,7 +377,7 @@ def colimit_comp_coyoneda_iso (d : D) [is_iso (colimit.pre (coyoneda.obj (op d))
   colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit :=
   as_iso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ coyoneda.colimit_coyoneda_iso (op d)
 
-theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}
+theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : Σ X, d ⟶ F.obj X}
   (t : EqvGen (types.quot.rel (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
   zigzag (structured_arrow.mk f₁.2) (structured_arrow.mk f₂.2) :=
   by 
@@ -388,7 +388,7 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
       swap 2
       fconstructor 
       left 
-      fsplit 
+      fconstructor 
       exact { right := f }
     case eqv_gen.refl => 
       fconstructor 
@@ -400,29 +400,29 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
       exact ih₁ 
       exact ih₂
 
--- error in CategoryTheory.Limits.Final: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
-theorem cofinal_of_colimit_comp_coyoneda_iso_punit
-(I : ∀ d, «expr ≅ »(colimit «expr ⋙ »(F, coyoneda.obj (op d)), punit)) : final F :=
-⟨λ d, begin
-   haveI [] [":", expr nonempty (structured_arrow d F)] [],
-   { have [] [] [":=", expr (I d).inv punit.star],
-     obtain ["⟨", ident j, ",", ident y, ",", ident rfl, "⟩", ":=", expr limits.types.jointly_surjective' this],
-     exact [expr ⟨structured_arrow.mk y⟩] },
-   apply [expr zigzag_is_connected],
-   rintros ["⟨", "⟨", "⟩", ",", ident X₁, ",", ident f₁, "⟩", "⟨", "⟨", "⟩", ",", ident X₂, ",", ident f₂, "⟩"],
-   dsimp [] [] [] ["at", "*"],
-   let [ident y₁] [] [":=", expr colimit.ι «expr ⋙ »(F, coyoneda.obj (op d)) X₁ f₁],
-   let [ident y₂] [] [":=", expr colimit.ι «expr ⋙ »(F, coyoneda.obj (op d)) X₂ f₂],
-   have [ident e] [":", expr «expr = »(y₁, y₂)] [],
-   { apply [expr (I d).to_equiv.injective],
-     ext [] [] [] },
-   have [ident t] [] [":=", expr types.colimit_eq e],
-   clear [ident e, ident y₁, ident y₂],
-   exact [expr zigzag_of_eqv_gen_quot_rel t]
- end⟩
+theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit) : final F :=
+  ⟨fun d =>
+      by 
+        have  : Nonempty (structured_arrow d F)
+        ·
+          have  := (I d).inv PUnit.unit 
+          obtain ⟨j, y, rfl⟩ := limits.types.jointly_surjective' this 
+          exact ⟨structured_arrow.mk y⟩
+        apply zigzag_is_connected 
+        rintro ⟨⟨⟩, X₁, f₁⟩ ⟨⟨⟩, X₂, f₂⟩
+        dsimp  at *
+        let y₁ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₁ f₁ 
+        let y₂ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₂ f₂ 
+        have e : y₁ = y₂
+        ·
+          apply (I d).toEquiv.Injective 
+          ext 
+        have t := types.colimit_eq e 
+        clear e y₁ y₂ 
+        exact zigzag_of_eqv_gen_quot_rel t⟩
 
 end Final
 

@@ -43,7 +43,7 @@ theorem lists_coe (l : List α) : lists (l : Multiset α) = l.permutations.to_fi
   rfl
 
 @[simp]
-theorem mem_lists_iff (s : Multiset α) (l : List α) : l ∈ lists s ↔ s = «expr⟦ ⟧» l :=
+theorem mem_lists_iff (s : Multiset α) (l : List α) : l ∈ lists s ↔ s = ⟦l⟧ :=
   by 
     induction s using Quotientₓ.induction_on 
     simpa using perm_comm
@@ -54,15 +54,15 @@ instance fintypeNodupList [Fintype α] : Fintype { l : List α // l.nodup } :=
   Fintype.subtype ((Finset.univ : Finset α).Powerset.bUnion fun s => s.val.lists)
     fun l =>
       by 
-        suffices  : (∃ a : Finset α, a.val = «expr↑ » l) ↔ l.nodup
+        suffices  : (∃ a : Finset α, a.val = ↑l) ↔ l.nodup
         ·
           simpa 
-        split 
+        constructor
         ·
           rintro ⟨s, hs⟩
           simpa [←Multiset.coe_nodup, ←hs] using s.nodup
         ·
           intro hl 
-          refine' ⟨⟨«expr↑ » l, hl⟩, _⟩
+          refine' ⟨⟨↑l, hl⟩, _⟩
           simp 
 

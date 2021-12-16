@@ -85,15 +85,16 @@ namespace Functor
 
 variable {J : Type u} [category.{v} J]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-The sections of a functor `J ⥤ Type` are
-the choices of a point `u j : F.obj j` for each `j`,
-such that `F.map f (u j) = u j` for every morphism `f : j ⟶ j'`.
-
-We later use these to define limits in `Type` and in many concrete categories.
--/
-def sections (F : J ⥤ Type w) : Set (∀ j, F.obj j) :=
-  { u | ∀ {j j'} f : j ⟶ j', F.map f (u j) = u j' }
+    The sections of a functor `J ⥤ Type` are
+    the choices of a point `u j : F.obj j` for each `j`,
+    such that `F.map f (u j) = u j` for every morphism `f : j ⟶ j'`.
+    
+    We later use these to define limits in `Type` and in many concrete categories.
+    -/
+  def sections ( F : J ⥤ Type w ) : Set ∀ j , F.obj j := { u | ∀ { j j' } f : j ⟶ j' , F.map f u j = u j' }
 
 end Functor
 
@@ -195,17 +196,14 @@ See https://stacks.math.columbia.edu/tag/003C.
 -/
 theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : mono f ↔ Function.Injective f :=
   by 
-    split 
+    constructor
     ·
       intro H x x' h 
       skip 
       rw [←hom_of_element_eq_iff] at h⊢
       exact (cancel_mono f).mp h
     ·
-      refine' fun H => ⟨fun Z g h H₂ => _⟩
-      ext z 
-      replace H₂ := congr_funₓ H₂ z 
-      exact H H₂
+      exact fun H => ⟨fun Z => H.comp_left⟩
 
 /--
 A morphism in `Type` is an epimorphism if and only if it is surjective.
@@ -214,32 +212,16 @@ See https://stacks.math.columbia.edu/tag/003C.
 -/
 theorem epi_iff_surjective {X Y : Type u} (f : X ⟶ Y) : epi f ↔ Function.Surjective f :=
   by 
-    split 
+    constructor
     ·
-      intro H 
-      let g : Y ⟶ Ulift Prop := fun y => ⟨True⟩
-      let h : Y ⟶ Ulift Prop := fun y => ⟨∃ x, f x = y⟩
-      suffices  : f ≫ g = f ≫ h
-      ·
-        skip 
-        rw [cancel_epi] at this 
-        intro y 
-        replace this := congr_funₓ this y 
-        replace this : True = ∃ x, f x = y := congr_argₓ Ulift.down this 
-        rw [←this]
-        trivial 
-      ext x 
-      change True ↔ ∃ x', f x' = f x 
-      rw [true_iffₓ]
-      exact ⟨x, rfl⟩
+      rintro ⟨H⟩
+      refine' Function.surjective_of_right_cancellable_Prop fun g₁ g₂ hg => _ 
+      rw [←equiv.ulift.symm.injective.comp_left.eq_iff]
+      apply H 
+      change Ulift.up ∘ g₁ ∘ f = Ulift.up ∘ g₂ ∘ f 
+      rw [hg]
     ·
-      intro H 
-      constructor 
-      intro Z g h H₂ 
-      apply funext 
-      rw [←forall_iff_forall_surj H]
-      intro x 
-      exact (congr_funₓ H₂ x : _)
+      exact fun H => ⟨fun Z => H.injective_comp_right⟩
 
 section 
 
@@ -263,7 +245,7 @@ end
 
 end CategoryTheory
 
-namespace Equiv
+namespace Equivₓ
 
 universe u
 
@@ -284,7 +266,7 @@ theorem to_iso_hom {e : X ≃ Y} : e.to_iso.hom = e :=
 theorem to_iso_inv {e : X ≃ Y} : e.to_iso.inv = e.symm :=
   rfl
 
-end Equiv
+end Equivₓ
 
 universe u
 
@@ -310,7 +292,7 @@ theorem to_equiv_symm_fun (i : X ≅ Y) : (i.to_equiv.symm : Y → X) = i.inv :=
   rfl
 
 @[simp]
-theorem to_equiv_id (X : Type u) : (iso.refl X).toEquiv = Equiv.refl X :=
+theorem to_equiv_id (X : Type u) : (iso.refl X).toEquiv = Equivₓ.refl X :=
   rfl
 
 @[simp]
@@ -328,7 +310,7 @@ theorem is_iso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : is_iso f ↔ Functio
       (by 
             exact as_iso f :
           X ≅ Y).toEquiv.Bijective)
-    fun b => is_iso.of_iso (Equiv.ofBijective f b).toIso
+    fun b => is_iso.of_iso (Equivₓ.ofBijective f b).toIso
 
 end CategoryTheory
 

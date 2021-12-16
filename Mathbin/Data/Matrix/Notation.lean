@@ -108,13 +108,23 @@ end ColRow
 
 section Transpose
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem transpose_empty_rows (A : matrix m' (fin 0) α) : «expr = »(«expr ᵀ»(A), «expr![ , ]»([])) := empty_eq _
-
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem transpose_empty_cols : «expr = »(«expr ᵀ»((«expr![ , ]»([]) : matrix (fin 0) m' α)), λ i, «expr![ , ]»([])) :=
-funext (λ i, empty_eq _)
+theorem transpose_empty_rows (A : Matrix m' (Finₓ 0) α) :
+  (A)ᵀ = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem transpose_empty_cols :
+  ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :
+      Matrix (Finₓ 0) m' α))ᵀ =
+    fun i => «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  funext fun i => empty_eq _
 
 @[simp]
 theorem cons_transpose (v : n' → α) (A : Matrix (Finₓ m) n' α) : (vec_cons v A)ᵀ = fun i => vec_cons (v i) ((A)ᵀ i) :=
@@ -138,25 +148,23 @@ section Mul
 
 variable [Semiringₓ α]
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem empty_mul
-[fintype n']
-(A : matrix (fin 0) n' α)
-(B : matrix n' o' α) : «expr = »(«expr ⬝ »(A, B), «expr![ , ]»([])) :=
-empty_eq _
+theorem empty_mul [Fintype n'] (A : Matrix (Finₓ 0) n' α) (B : Matrix n' o' α) :
+  A ⬝ B = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem empty_mul_empty (A : Matrix m' (Finₓ 0) α) (B : Matrix (Finₓ 0) o' α) : A ⬝ B = 0 :=
   rfl
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem mul_empty
-[fintype n']
-(A : matrix m' n' α)
-(B : matrix n' (fin 0) α) : «expr = »(«expr ⬝ »(A, B), λ _, «expr![ , ]»([])) :=
-funext (λ _, empty_eq _)
+theorem mul_empty [Fintype n'] (A : Matrix m' n' α) (B : Matrix n' (Finₓ 0) α) :
+  A ⬝ B = fun _ => «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  funext fun _ => empty_eq _
 
 theorem mul_val_succ [Fintype n'] (A : Matrix (Finₓ m.succ) n' α) (B : Matrix n' o' α) (i : Finₓ m) (j : o') :
   (A ⬝ B) i.succ j = (vec_tail A ⬝ B) i j :=
@@ -182,10 +190,12 @@ variable [Semiringₓ α]
 theorem empty_vec_mul (v : Finₓ 0 → α) (B : Matrix (Finₓ 0) o' α) : vec_mul v B = 0 :=
   rfl
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem vec_mul_empty [fintype n'] (v : n' → α) (B : matrix n' (fin 0) α) : «expr = »(vec_mul v B, «expr![ , ]»([])) :=
-empty_eq _
+theorem vec_mul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Finₓ 0) α) :
+  vec_mul v B = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem cons_vec_mul (x : α) (v : Finₓ n → α) (B : Matrix (Finₓ n.succ) o' α) :
@@ -207,10 +217,12 @@ section MulVec
 
 variable [Semiringₓ α]
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem empty_mul_vec [fintype n'] (A : matrix (fin 0) n' α) (v : n' → α) : «expr = »(mul_vec A v, «expr![ , ]»([])) :=
-empty_eq _
+theorem empty_mul_vec [Fintype n'] (A : Matrix (Finₓ 0) n' α) (v : n' → α) :
+  mul_vec A v = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem mul_vec_empty (A : Matrix m' (Finₓ 0) α) (v : Finₓ 0 → α) : mul_vec A v = 0 :=
@@ -236,13 +248,21 @@ section VecMulVec
 
 variable [Semiringₓ α]
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem empty_vec_mul_vec (v : fin 0 → α) (w : n' → α) : «expr = »(vec_mul_vec v w, «expr![ , ]»([])) :=
-empty_eq _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem empty_vec_mul_vec (v : Finₓ 0 → α) (w : n' → α) :
+  vec_mul_vec v w =
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem vec_mul_vec_empty (v : m' → α) (w : fin 0 → α) : «expr = »(vec_mul_vec v w, λ _, «expr![ , ]»([])) :=
-funext (λ i, empty_eq _)
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem vec_mul_vec_empty (v : m' → α) (w : Finₓ 0 → α) :
+  vec_mul_vec v w =
+    fun _ => «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  funext fun i => empty_eq _
 
 @[simp]
 theorem cons_vec_mul_vec (x : α) (v : Finₓ m → α) (w : n' → α) :
@@ -264,10 +284,12 @@ section Smul
 
 variable [Semiringₓ α]
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem smul_mat_empty {m' : Type*} (x : α) (A : fin 0 → m' → α) : «expr = »(«expr • »(x, A), «expr![ , ]»([])) :=
-empty_eq _
+theorem smul_mat_empty {m' : Type _} (x : α) (A : Finₓ 0 → m' → α) :
+  x • A = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem smul_mat_cons (x : α) (v : n' → α) (A : Matrix (Finₓ m) n' α) : x • vec_cons v A = vec_cons (x • v) (x • A) :=
@@ -279,13 +301,13 @@ end Smul
 
 section Minor
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem minor_empty
-(A : matrix m' n' α)
-(row : fin 0 → m')
-(col : o' → n') : «expr = »(minor A row col, «expr![ , ]»([])) :=
-empty_eq _
+theorem minor_empty (A : Matrix m' n' α) (row : Finₓ 0 → m') (col : o' → n') :
+  minor A row col =
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem minor_cons_row (A : Matrix m' n' α) (i : m') (row : Finₓ m → m') (col : o' → n') :

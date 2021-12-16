@@ -31,9 +31,18 @@ variable {p q : Submodule R M}
 
 namespace Submodule
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The set `{0}` is the bottom element of the lattice of submodules. -/ instance : has_bot (submodule R M) :=
-⟨{ carrier := {0}, smul_mem' := by simp [] [] [] [] [] [] { contextual := tt }, ..(«expr⊥»() : add_submonoid M) }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The set `{0}` is the bottom element of the lattice of submodules. -/
+  instance
+    : HasBot Submodule R M
+    :=
+      ⟨
+        {
+          ( ⊥ : AddSubmonoid M ) with
+          Carrier := { 0 } , smul_mem' := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+          }
+        ⟩
 
 instance inhabited' : Inhabited (Submodule R M) :=
   ⟨⊥⟩
@@ -63,10 +72,13 @@ end
 instance unique_bot : Unique (⊥ : Submodule R M) :=
   ⟨inferInstance, fun x => Subtype.ext$ (mem_bot R).1 x.mem⟩
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : order_bot (submodule R M) :=
-{ bot := «expr⊥»(), bot_le := λ p x, by simp [] [] [] [] [] [] { contextual := tt } }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  : OrderBot Submodule R M
+  := { bot := ⊥ , bot_le := fun p x => by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
 protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀ x _ : x ∈ p, x = (0 : M) :=
   ⟨fun h => h.symm ▸ fun x hx => (mem_bot R).mp hx, fun h => eq_bot_iff.mpr fun x hx => (mem_bot R).mpr (h x hx)⟩
 
@@ -79,12 +91,11 @@ protected theorem bot_ext (x y : (⊥ : Submodule R M)) : x = y :=
     rw [(Submodule.eq_bot_iff _).mp rfl x xm]
     rw [(Submodule.eq_bot_iff _).mp rfl y ym]
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem ne_bot_iff
-(p : submodule R M) : «expr ↔ »(«expr ≠ »(p, «expr⊥»()), «expr∃ , »((x «expr ∈ » p), «expr ≠ »(x, (0 : M)))) :=
-by { haveI [] [] [":=", expr classical.prop_decidable],
-  simp_rw ["[", expr ne.def, ",", expr p.eq_bot_iff, ",", expr not_forall, "]"] [] }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
+protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ (x : _)(_ : x ∈ p), x ≠ (0 : M) :=
+  by 
+    have  := Classical.propDecidable 
+    simpRw [Ne.def, p.eq_bot_iff, not_forall]
 
 theorem nonzero_mem_of_bot_lt {p : Submodule R M} (bot_lt : ⊥ < p) : ∃ a : p, a ≠ 0 :=
   let ⟨b, hb₁, hb₂⟩ := p.ne_bot_iff.mp bot_lt.ne'
@@ -180,77 +191,113 @@ def top_equiv_self : (⊤ : Submodule R M) ≃ₗ[R] M :=
         intro x 
         rfl }
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : has_Inf (submodule R M) :=
-⟨λ
- S, { carrier := «expr⋂ , »((s «expr ∈ » S), (s : set M)),
-   zero_mem' := by simp [] [] [] [] [] [],
-   add_mem' := by simp [] [] [] ["[", expr add_mem, "]"] [] [] { contextual := tt },
-   smul_mem' := by simp [] [] [] ["[", expr smul_mem, "]"] [] [] { contextual := tt } }⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  : HasInfₓ Submodule R M
+  :=
+    ⟨
+      fun
+        S
+          =>
+          {
+            Carrier := ⋂ ( s : _ ) ( _ : s ∈ S ) , ( s : Set M ) ,
+              zero_mem' := by simp ,
+              add_mem' := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ add_mem ] ,
+              smul_mem' := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ smul_mem ]
+            }
+      ⟩
 
 private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → Inf S ≤ p :=
   Set.bInter_subset_of_mem
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » S)
 private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q _ : q ∈ S, p ≤ q) → p ≤ Inf S :=
   Set.subset_bInter
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : has_inf (submodule R M) :=
-⟨λ
- p
- q, { carrier := «expr ∩ »(p, q),
-   zero_mem' := by simp [] [] [] [] [] [],
-   add_mem' := by simp [] [] [] ["[", expr add_mem, "]"] [] [] { contextual := tt },
-   smul_mem' := by simp [] [] [] ["[", expr smul_mem, "]"] [] [] { contextual := tt } }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  : HasInf Submodule R M
+  :=
+    ⟨
+      fun
+        p q
+          =>
+          {
+            Carrier := p ∩ q ,
+              zero_mem' := by simp ,
+              add_mem' := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ add_mem ] ,
+              smul_mem' := by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ smul_mem ]
+            }
+      ⟩
 
-instance : CompleteLattice (Submodule R M) :=
-  { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x },
-    le_sup_left := fun a b => le_Inf'$ fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf'$ fun x ⟨ha, hb⟩ => hb,
-    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := ·⊓·, le_inf := fun a b c => Set.subset_inter,
-    inf_le_left := fun a b => Set.inter_subset_left _ _, inf_le_right := fun a b => Set.inter_subset_right _ _,
-    sup := fun tt => Inf { t | ∀ t' _ : t' ∈ tt, t' ≤ t }, le_Sup := fun s p hs => le_Inf'$ fun q hq => hq _ hs,
-    Sup_le := fun s p hs => Inf_le' hs, inf := Inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t' «expr ∈ » tt)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+instance
+  : CompleteLattice Submodule R M
+  :=
+    {
+      Submodule.orderTop , Submodule.orderBot , SetLike.partialOrder with
+      sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x } ,
+        le_sup_left := fun a b => le_Inf' $ fun x ⟨ ha , hb ⟩ => ha ,
+        le_sup_right := fun a b => le_Inf' $ fun x ⟨ ha , hb ⟩ => hb ,
+        sup_le := fun a b c h₁ h₂ => Inf_le' ⟨ h₁ , h₂ ⟩ ,
+        inf := · ⊓ · ,
+        le_inf := fun a b c => Set.subset_inter ,
+        inf_le_left := fun a b => Set.inter_subset_left _ _ ,
+        inf_le_right := fun a b => Set.inter_subset_right _ _ ,
+        sup := fun tt => Inf { t | ∀ t' _ : t' ∈ tt , t' ≤ t } ,
+        le_Sup := fun s p hs => le_Inf' $ fun q hq => hq _ hs ,
+        Sup_le := fun s p hs => Inf_le' hs ,
+        inf := Inf ,
+        le_Inf := fun s a => le_Inf' ,
+        Inf_le := fun s a => Inf_le'
+      }
 
 @[simp]
-theorem inf_coe : «expr↑ » (p⊓q) = (p ∩ q : Set M) :=
+theorem inf_coe : ↑(p⊓q) = (p ∩ q : Set M) :=
   rfl
 
 @[simp]
 theorem mem_inf {p q : Submodule R M} {x : M} : x ∈ p⊓q ↔ x ∈ p ∧ x ∈ q :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » P)
 @[simp]
-theorem Inf_coe (P : Set (Submodule R M)) : («expr↑ » (Inf P) : Set M) = ⋂(p : _)(_ : p ∈ P), «expr↑ » p :=
+theorem Inf_coe (P : Set (Submodule R M)) : (↑Inf P : Set M) = ⋂ (p : _)(_ : p ∈ P), ↑p :=
   rfl
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[simp]
-theorem finset_inf_coe
-{ι}
-(s : finset ι)
-(p : ι → submodule R M) : «expr = »((«expr↑ »(s.inf p) : set M), «expr⋂ , »((i «expr ∈ » s), «expr↑ »(p i))) :=
-begin
-  letI [] [] [":=", expr classical.dec_eq ι],
-  refine [expr s.induction_on _ (λ i s hi ih, _)],
-  { simp [] [] [] [] [] [] },
-  { rw ["[", expr finset.inf_insert, ",", expr inf_coe, ",", expr ih, "]"] [],
-    simp [] [] [] [] [] [] }
-end
+theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) : (↑s.inf p : Set M) = ⋂ (i : _)(_ : i ∈ s), ↑p i :=
+  by 
+    let this' := Classical.decEq ι 
+    refine' s.induction_on _ fun i s hi ih => _
+    ·
+      simp 
+    ·
+      rw [Finset.inf_insert, inf_coe, ih]
+      simp 
 
 @[simp]
-theorem infi_coe {ι} (p : ι → Submodule R M) : («expr↑ » (⨅i, p i) : Set M) = ⋂i, «expr↑ » (p i) :=
+theorem infi_coe {ι} (p : ι → Submodule R M) : (↑⨅ i, p i : Set M) = ⋂ i, ↑p i :=
   by 
     rw [infi, Inf_coe] <;> ext a <;> simp  <;> exact ⟨fun h i => h _ i rfl, fun h i x e => e ▸ h _⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » S)
 @[simp]
 theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ Inf S ↔ ∀ p _ : p ∈ S, x ∈ p :=
   Set.mem_bInter_iff
 
 @[simp]
-theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅i, p i) ↔ ∀ i, x ∈ p i :=
+theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅ i, p i) ↔ ∀ i, x ∈ p i :=
   by 
     rw [←SetLike.mem_coe, infi_coe, Set.mem_Inter] <;> rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[simp]
 theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} : x ∈ s.inf p ↔ ∀ i _ : i ∈ s, x ∈ p i :=
   by 
@@ -265,18 +312,20 @@ theorem mem_sup_right {S T : Submodule R M} : ∀ {x : M}, x ∈ T → x ∈ S�
 theorem add_mem_sup {S T : Submodule R M} {s t : M} (hs : s ∈ S) (ht : t ∈ T) : (s+t) ∈ S⊔T :=
   add_mem _ (mem_sup_left hs) (mem_sup_right ht)
 
-theorem mem_supr_of_mem {ι : Sort _} {b : M} {p : ι → Submodule R M} (i : ι) (h : b ∈ p i) : b ∈ ⨆i, p i :=
-  have  : p i ≤ ⨆i, p i := le_supr p i
+theorem mem_supr_of_mem {ι : Sort _} {b : M} {p : ι → Submodule R M} (i : ι) (h : b ∈ p i) : b ∈ ⨆ i, p i :=
+  have  : p i ≤ ⨆ i, p i := le_supr p i
   @this b h
 
 open_locale BigOperators
 
 theorem sum_mem_supr {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Submodule R M} (h : ∀ i, f i ∈ p i) :
-  (∑i, f i) ∈ ⨆i, p i :=
+  (∑ i, f i) ∈ ⨆ i, p i :=
   sum_mem _$ fun i hi => mem_supr_of_mem i (h i)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀ i _ : i ∈ s, f i ∈ p i) :
-  (∑i in s, f i) ∈ ⨆(i : _)(_ : i ∈ s), p i :=
+  (∑ i in s, f i) ∈ ⨆ (i : _)(_ : i ∈ s), p i :=
   sum_mem _$ fun i hi => mem_supr_of_mem i$ mem_supr_of_mem hi (h i hi)
 
 /-! Note that `submodule.mem_supr` is provided in `linear_algebra/basic.lean`. -/
@@ -296,7 +345,7 @@ def AddSubmonoid.toNatSubmodule : AddSubmonoid M ≃o Submodule ℕ M :=
 
 @[simp]
 theorem AddSubmonoid.to_nat_submodule_symm :
-  «expr⇑ » (AddSubmonoid.toNatSubmodule.symm : _ ≃o AddSubmonoid M) = Submodule.toAddSubmonoid :=
+  ⇑(AddSubmonoid.toNatSubmodule.symm : _ ≃o AddSubmonoid M) = Submodule.toAddSubmonoid :=
   rfl
 
 @[simp]
@@ -326,7 +375,7 @@ def AddSubgroup.toIntSubmodule : AddSubgroup M ≃o Submodule ℤ M :=
 
 @[simp]
 theorem AddSubgroup.to_int_submodule_symm :
-  «expr⇑ » (AddSubgroup.toIntSubmodule.symm : _ ≃o AddSubgroup M) = Submodule.toAddSubgroup :=
+  ⇑(AddSubgroup.toIntSubmodule.symm : _ ≃o AddSubgroup M) = Submodule.toAddSubgroup :=
   rfl
 
 @[simp]

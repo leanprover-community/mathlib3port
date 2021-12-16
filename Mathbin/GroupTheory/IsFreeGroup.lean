@@ -23,7 +23,7 @@ primed definition names in this file refer to the non-polymorphic versions.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u w
 
@@ -33,18 +33,16 @@ That is, it has a family `generators G` of elements, such that a group homomorph
 class IsFreeGroup (G : Type u) [Groupₓ G] : Type (u + 1) where 
   Generators : Type u 
   of : generators → G 
-  unique_lift' : ∀ {X : Type u} [Groupₓ X] f : generators → X, ∃!F : G →* X, ∀ a, F (of a) = f a
+  unique_lift' : ∀ {X : Type u} [Groupₓ X] f : generators → X, ∃! F : G →* X, ∀ a, F (of a) = f a
 
--- error in GroupTheory.IsFreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance free_group_is_free_group {A} : is_free_group (free_group A) :=
-{ generators := A,
-  of := free_group.of,
-  unique_lift' := begin
-    introsI [ident X, "_", ident f],
-    have [] [] [":=", expr free_group.lift.symm.bijective.exists_unique f],
-    simp_rw [expr function.funext_iff] ["at", ident this],
-    exact [expr this]
-  end }
+instance freeGroupIsFreeGroup {A} : IsFreeGroup (FreeGroup A) :=
+  { Generators := A, of := FreeGroup.of,
+    unique_lift' :=
+      by 
+        intros X _ f 
+        have  := free_group.lift.symm.bijective.exists_unique f 
+        simpRw [Function.funext_iffₓ]  at this 
+        exact this }
 
 namespace IsFreeGroup
 
@@ -149,7 +147,7 @@ def lift : (generators G → X) ≃ (G →* X) :=
         by 
           dsimp 
           rw [←lift_right_inv_aux]
-          simp only [Equiv.apply_symm_apply]
+          simp only [Equivₓ.apply_symm_apply]
           ext x 
           dsimp only [MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom]
           rw [MulEquiv.symm_apply_apply] }
@@ -170,17 +168,12 @@ theorem lift_eq_free_group_lift {A : Type u} : @lift (FreeGroup A) H _ _ _ = Fre
     ext 
     rfl
 
--- error in GroupTheory.IsFreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A universe-polymorphic version of `unique_lift`. -/
-theorem unique_lift
-{X : Type w}
-[group X]
-(f : generators G → X) : «expr∃! , »((F : «expr →* »(G, X)), ∀ a, «expr = »(F (of a), f a)) :=
-begin
-  have [] [] [":=", expr lift.symm.bijective.exists_unique f],
-  simp_rw [expr function.funext_iff] ["at", ident this],
-  exact [expr this]
-end
+theorem unique_lift {X : Type w} [Groupₓ X] (f : generators G → X) : ∃! F : G →* X, ∀ a, F (of a) = f a :=
+  by 
+    have  := lift.symm.bijective.exists_unique f 
+    simpRw [Function.funext_iffₓ]  at this 
+    exact this
 
 end IsFreeGroup
 

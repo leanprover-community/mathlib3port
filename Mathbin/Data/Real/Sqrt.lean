@@ -246,7 +246,7 @@ theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ sqrt y :=
 
 theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -sqrt y ≤ x ∧ x ≤ sqrt y :=
   by 
-    split 
+    constructor
     ·
       simpa only [abs_le] using abs_le_sqrt
     ·
@@ -332,7 +332,7 @@ theorem lt_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x < sqrt y ↔ x ^ 2 < y :=
 
 theorem sq_lt : x ^ 2 < y ↔ -sqrt y < x ∧ x < sqrt y :=
   by 
-    split 
+    constructor
     ·
       simpa only [←sqrt_lt_sqrt_iff (sq_nonneg x), sqrt_sq_eq_abs] using abs_lt.mp
     ·

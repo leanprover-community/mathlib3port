@@ -61,9 +61,9 @@ instance : LocallyFiniteOrder ℕ :=
             rw [tsub_eq_zero_iff_le.2 h.le, add_zeroₓ]
             exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.trans hx.2) }
 
-namespace Nat
-
 variable (a b c : ℕ)
+
+namespace Nat
 
 theorem Icc_eq_range' : Icc a b = (List.range' a ((b+1) - a)).toFinset :=
   rfl
@@ -199,7 +199,7 @@ theorem image_sub_const_Ico (h : c ≤ a) : ((Ico a b).Image fun x => x - c) = I
   by 
     ext x 
     rw [mem_image]
-    split 
+    constructor
     ·
       rintro ⟨x, hx, rfl⟩
       rw [mem_Ico] at hx⊢
@@ -210,34 +210,39 @@ theorem image_sub_const_Ico (h : c ≤ a) : ((Ico a b).Image fun x => x - c) = I
       rw [mem_Ico] at h⊢
       exact ⟨tsub_le_iff_right.1 h.1, lt_tsub_iff_right.1 h.2⟩
 
--- error in Data.Nat.Interval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ico_image_const_sub_eq_Ico
-(hac : «expr ≤ »(a, c)) : «expr = »((Ico a b).image (λ
-  x, «expr - »(c, x)), Ico «expr - »(«expr + »(c, 1), b) «expr - »(«expr + »(c, 1), a)) :=
-begin
-  ext [] [ident x] [],
-  rw ["[", expr mem_image, ",", expr mem_Ico, "]"] [],
-  split,
-  { rintro ["⟨", ident x, ",", ident hx, ",", ident rfl, "⟩"],
-    rw [expr mem_Ico] ["at", ident hx],
-    refine [expr ⟨_, ((tsub_le_tsub_iff_left hac).2 hx.1).trans_lt ((tsub_lt_tsub_iff_right hac).2 (nat.lt_succ_self _))⟩],
-    cases [expr lt_or_le c b] [],
-    { rw [expr tsub_eq_zero_iff_le.mpr (succ_le_of_lt h)] [],
-      exact [expr zero_le _] },
-    { rw ["<-", expr succ_sub_succ c] [],
-      exact [expr (tsub_le_tsub_iff_left «expr $ »(succ_le_succ, hx.2.le.trans h)).2 hx.2] } },
-  { rintro ["⟨", ident hb, ",", ident ha, "⟩"],
-    rw ["[", expr lt_tsub_iff_left, ",", expr lt_succ_iff, "]"] ["at", ident ha],
-    have [ident hx] [":", expr «expr ≤ »(x, c)] [":=", expr (nat.le_add_left _ _).trans ha],
-    refine [expr ⟨«expr - »(c, x), _, tsub_tsub_cancel_of_le hx⟩],
-    { rw [expr mem_Ico] [],
-      exact [expr ⟨le_tsub_of_add_le_right ha, «expr $ »((tsub_lt_iff_left hx).2, «expr $ »(succ_le_iff.1, tsub_le_iff_right.1 hb))⟩] } }
-end
+theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((Ico a b).Image fun x => c - x) = Ico ((c+1) - b) ((c+1) - a) :=
+  by 
+    ext x 
+    rw [mem_image, mem_Ico]
+    constructor
+    ·
+      rintro ⟨x, hx, rfl⟩
+      rw [mem_Ico] at hx 
+      refine' ⟨_, ((tsub_le_tsub_iff_left hac).2 hx.1).trans_lt ((tsub_lt_tsub_iff_right hac).2 (Nat.lt_succ_selfₓ _))⟩
+      cases lt_or_leₓ c b
+      ·
+        rw [tsub_eq_zero_iff_le.mpr (succ_le_of_lt h)]
+        exact zero_le _
+      ·
+        rw [←succ_sub_succ c]
+        exact (tsub_le_tsub_iff_left (succ_le_succ$ hx.2.le.trans h)).2 hx.2
+    ·
+      rintro ⟨hb, ha⟩
+      rw [lt_tsub_iff_left, lt_succ_iff] at ha 
+      have hx : x ≤ c := (Nat.le_add_leftₓ _ _).trans ha 
+      refine' ⟨c - x, _, tsub_tsub_cancel_of_le hx⟩
+      ·
+        rw [mem_Ico]
+        exact ⟨le_tsub_of_add_le_right ha, (tsub_lt_iff_left hx).2$ succ_le_iff.1$ tsub_le_iff_right.1 hb⟩
 
 theorem Ico_succ_left_eq_erase_Ico : Ico a.succ b = erase (Ico a b) a :=
   by 
     ext x 
     rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ←and_assoc, ne_comm, and_comm (a ≠ x), lt_iff_le_and_ne]
+
+end Nat
+
+namespace Finset
 
 theorem range_image_pred_top_sub (n : ℕ) : ((Finset.range n).Image fun j => n - 1 - j) = Finset.range n :=
   by 
@@ -245,8 +250,14 @@ theorem range_image_pred_top_sub (n : ℕ) : ((Finset.range n).Image fun j => n 
     ·
       rw [range_zero, image_empty]
     ·
-      rw [Finset.range_eq_Ico, Ico_image_const_sub_eq_Ico (zero_le _)]
+      rw [Finset.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (zero_le _)]
       simpRw [succ_sub_succ, tsub_zero, tsub_self]
 
-end Nat
+theorem range_add_eq_union : range (a+b) = range a ∪ (range b).map (addLeftEmbedding a) :=
+  by 
+    rw [Finset.range_eq_Ico, map_eq_image]
+    convert (Ico_union_Ico_eq_Ico a.zero_le le_self_add).symm 
+    exact image_add_left_Ico _ _ _
+
+end Finset
 

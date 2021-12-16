@@ -5,6 +5,7 @@ universe u v w
 def RbmapLt {α : Type u} {β : Type v} (lt : α → α → Prop) (a b : α × β) : Prop :=
   lt a.1 b.1
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option auto_param.check_exists
 set_option auto_param.check_exists false
 
 def Rbmap (α : Type u) (β : Type v)

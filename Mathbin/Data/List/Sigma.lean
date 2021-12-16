@@ -110,6 +110,7 @@ theorem nodup_of_nodupkeys {l : List (Sigma β)} : nodupkeys l → nodup l :=
 theorem perm_nodupkeys {l₁ l₂ : List (Sigma β)} (h : l₁ ~ l₂) : nodupkeys l₁ ↔ nodupkeys l₂ :=
   (h.map _).nodup_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » L)
 theorem nodupkeys_join {L : List (List (Sigma β))} :
   nodupkeys (join L) ↔ (∀ l _ : l ∈ L, nodupkeys l) ∧ Pairwise Disjoint (L.map keys) :=
   by 
@@ -156,7 +157,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.nodup) (nd₁ : l₁
       ·
         subst a 
         rw [←not_iff_not]
-        split  <;> intro  <;> assumption
+        constructor <;> intro  <;> assumption
       ·
         simp [h'] at h 
         exact h
@@ -167,7 +168,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.nodup) (nd₁ : l₁
         apply l₀_ih ‹_›
         ·
           simp 
-          split 
+          constructor
           ·
             intro 
             apply nd₁_left 
@@ -181,7 +182,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.nodup) (nd₁ : l₁
           ·
             subst a 
             rw [←not_iff_not]
-            split  <;> intro 
+            constructor <;> intro 
             simp [mem_erase_of_nodup]
             assumption
           ·
@@ -357,25 +358,24 @@ theorem lookup_all_sublist (a : α) : ∀ l : List (Sigma β), (lookup_all a l).
       simp [h]
       exact (lookup_all_sublist l).cons _ _ _
 
--- error in Data.List.Sigma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lookup_all_length_le_one
-(a : α)
-{l : list (sigma β)}
-(h : l.nodupkeys) : «expr ≤ »(length (lookup_all a l), 1) :=
-by have [] [] [":=", expr nodup_of_sublist ((lookup_all_sublist a l).map _) h]; rw [expr map_map] ["at", ident this]; rwa ["[", "<-", expr nodup_repeat, ",", "<-", expr map_const _ a, "]"] []
+theorem lookup_all_length_le_one (a : α) {l : List (Sigma β)} (h : l.nodupkeys) : length (lookup_all a l) ≤ 1 :=
+  by 
+    have  := nodup_of_sublist ((lookup_all_sublist a l).map _) h <;>
+      rw [map_map] at this <;> rwa [←nodup_repeat, ←map_const _ a]
 
--- error in Data.List.Sigma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lookup_all_eq_lookup
-(a : α)
-{l : list (sigma β)}
-(h : l.nodupkeys) : «expr = »(lookup_all a l, (lookup a l).to_list) :=
-begin
-  rw ["<-", expr head_lookup_all] [],
-  have [] [] [":=", expr lookup_all_length_le_one a h],
-  revert [ident this],
-  rcases [expr lookup_all a l, "with", "_", "|", "⟨", ident b, ",", "_", "|", "⟨", ident c, ",", ident l, "⟩", "⟩"]; intro []; try { refl },
-  exact [expr absurd this exprdec_trivial()]
-end
+theorem lookup_all_eq_lookup (a : α) {l : List (Sigma β)} (h : l.nodupkeys) : lookup_all a l = (lookup a l).toList :=
+  by 
+    rw [←head_lookup_all]
+    have  := lookup_all_length_le_one a h 
+    revert this 
+    rcases lookup_all a l with (_ | ⟨b, _ | ⟨c, l⟩⟩) <;>
+      intro  <;>
+        try 
+          rfl 
+    exact
+      absurd this
+        (by 
+          decide)
 
 theorem lookup_all_nodup (a : α) {l : List (Sigma β)} (h : l.nodupkeys) : (lookup_all a l).Nodup :=
   by 
@@ -430,9 +430,18 @@ theorem kreplace_self {a : α} {b : β a} {l : List (Sigma β)} (nd : nodupkeys 
       ·
         rintro ⟨⟩
 
--- error in Data.List.Sigma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem keys_kreplace (a : α) (b : β a) : ∀ l : list (sigma β), «expr = »((kreplace a b l).keys, l.keys) :=
-«expr $ »(lookmap_map_eq _ _, by rintro ["⟨", ident a₁, ",", ident b₂, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩"]; dsimp [] [] [] []; split_ifs [] []; simp [] [] [] ["[", expr h, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  keys_kreplace
+  ( a : α ) ( b : β a ) : ∀ l : List Sigma β , kreplace a b l . keys = l.keys
+  :=
+    lookmap_map_eq _ _
+      $
+      by
+        rintro ⟨ a₁ , b₂ ⟩ ⟨ a₂ , b₂ ⟩
+          <;>
+          dsimp <;> splitIfs <;> simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ h ]
 
 theorem kreplace_nodupkeys (a : α) (b : β a) {l : List (Sigma β)} : (kreplace a b l).Nodupkeys ↔ l.nodupkeys :=
   by 
@@ -722,24 +731,26 @@ theorem erase_dupkeys_cons {x : Sigma β} (l : List (Sigma β)) :
   erase_dupkeys (x :: l) = kinsert x.1 x.2 (erase_dupkeys l) :=
   rfl
 
--- error in Data.List.Sigma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nodupkeys_erase_dupkeys (l : list (sigma β)) : nodupkeys (erase_dupkeys l) :=
-begin
-  dsimp [] ["[", expr erase_dupkeys, "]"] [] [],
-  generalize [ident hl] [":"] [expr «expr = »(nil, l')],
-  have [] [":", expr nodupkeys l'] [],
-  { rw ["<-", expr hl] [],
-    apply [expr nodup_nil] },
-  clear [ident hl],
-  induction [expr l] [] ["with", ident x, ident xs] [],
-  { apply [expr this] },
-  { cases [expr x] [],
-    simp [] [] [] ["[", expr erase_dupkeys, "]"] [] [],
-    split,
-    { simp [] [] [] ["[", expr keys_kerase, "]"] [] [],
-      apply [expr mem_erase_of_nodup l_ih] },
-    apply [expr kerase_nodupkeys _ l_ih] }
-end
+theorem nodupkeys_erase_dupkeys (l : List (Sigma β)) : nodupkeys (erase_dupkeys l) :=
+  by 
+    dsimp [erase_dupkeys]
+    generalize hl : nil = l' 
+    have  : nodupkeys l'
+    ·
+      rw [←hl]
+      apply nodup_nil 
+    clear hl 
+    induction' l with x xs
+    ·
+      apply this
+    ·
+      cases x 
+      simp [erase_dupkeys]
+      constructor
+      ·
+        simp [keys_kerase]
+        apply mem_erase_of_nodup l_ih 
+      apply kerase_nodupkeys _ l_ih
 
 theorem lookup_erase_dupkeys (a : α) (l : List (Sigma β)) : lookup a (erase_dupkeys l) = lookup a l :=
   by 

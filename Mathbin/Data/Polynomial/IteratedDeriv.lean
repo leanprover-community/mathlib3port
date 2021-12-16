@@ -8,7 +8,7 @@ We define and prove some lemmas about iterated (formal) derivative for polynomia
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Finset Nat Polynomial
 
@@ -118,13 +118,15 @@ theorem iterated_deriv_one_zero : iterated_deriv (1 : Polynomial R) 0 = 1 :=
   by 
     simp only [iterated_deriv_zero_right]
 
--- error in Data.Polynomial.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem iterated_deriv_one : «expr < »(0, n) → «expr = »(iterated_deriv (1 : polynomial R) n, 0) :=
-λ h, begin
-  have [ident eq1] [":", expr «expr = »((1 : polynomial R), C 1)] [":=", expr by simp [] [] ["only"] ["[", expr ring_hom.map_one, "]"] [] []],
-  rw [expr eq1] [],
-  exact [expr iterated_deriv_C _ _ h]
-end
+@[simp]
+theorem iterated_deriv_one : 0 < n → iterated_deriv (1 : Polynomial R) n = 0 :=
+  fun h =>
+    by 
+      have eq1 : (1 : Polynomial R) = C 1 :=
+        by 
+          simp only [RingHom.map_one]
+      rw [eq1]
+      exact iterated_deriv_C _ _ h
 
 end Semiringₓ
 
@@ -154,42 +156,49 @@ variable [CommSemiringₓ R]
 
 variable (f p q : Polynomial R) (n k : ℕ)
 
--- error in Data.Polynomial.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coeff_iterated_deriv_as_prod_Ico : ∀
-m : exprℕ(), «expr = »((iterated_deriv f k).coeff m, «expr * »(«expr∏ in , »((i), Ico m.succ «expr + »(m, k.succ), i), f.coeff «expr + »(m, k))) :=
-begin
-  induction [expr k] [] ["with", ident k, ident ih] [],
-  { simp [] [] ["only"] ["[", expr add_zero, ",", expr forall_const, ",", expr one_mul, ",", expr Ico_self, ",", expr eq_self_iff_true, ",", expr iterated_deriv_zero_right, ",", expr prod_empty, "]"] [] [] },
-  { intro [ident m],
-    rw ["[", expr iterated_deriv_succ, ",", expr coeff_derivative, ",", expr ih «expr + »(m, 1), ",", expr mul_right_comm, "]"] [],
-    apply [expr congr_arg2],
-    { have [ident set_eq] [":", expr «expr = »(Ico m.succ «expr + »(m, k.succ.succ), «expr ∪ »(Ico «expr + »(m, 1).succ «expr + »(«expr + »(m, 1), k.succ), {«expr + »(m, 1)}))] [],
-      { rw ["[", expr union_comm, ",", "<-", expr insert_eq, ",", expr Ico_insert_succ_left, ",", expr add_succ, ",", expr add_succ, ",", expr add_succ _ k, ",", "<-", expr succ_eq_add_one, ",", expr succ_add, "]"] [],
-        rw [expr succ_eq_add_one] [],
-        linarith [] [] [] },
-      rw ["[", expr set_eq, ",", expr prod_union, "]"] [],
-      apply [expr congr_arg2],
-      { refl },
-      { simp [] [] ["only"] ["[", expr prod_singleton, "]"] [] [],
-        norm_cast [] },
-      { rw ["[", expr disjoint_singleton_right, ",", expr mem_Ico, "]"] [],
-        exact [expr λ h, (nat.lt_succ_self _).not_le h.1] } },
-    { exact [expr congr_arg _ (succ_add m k)] } }
-end
+theorem coeff_iterated_deriv_as_prod_Ico :
+  ∀ m : ℕ, (iterated_deriv f k).coeff m = (∏ i in Ico m.succ (m+k.succ), i)*f.coeff (m+k) :=
+  by 
+    induction' k with k ih
+    ·
+      simp only [add_zeroₓ, forall_const, one_mulₓ, Ico_self, eq_self_iff_true, iterated_deriv_zero_right, prod_empty]
+    ·
+      intro m 
+      rw [iterated_deriv_succ, coeff_derivative, ih (m+1), mul_right_commₓ]
+      apply congr_arg2ₓ
+      ·
+        have set_eq : Ico m.succ (m+k.succ.succ) = Ico (m+1).succ ((m+1)+k.succ) ∪ {m+1}
+        ·
+          rw [union_comm, ←insert_eq, Ico_insert_succ_left, add_succ, add_succ, add_succ _ k, ←succ_eq_add_one,
+            succ_add]
+          rw [succ_eq_add_one]
+          linarith 
+        rw [set_eq, prod_union]
+        apply congr_arg2ₓ
+        ·
+          rfl
+        ·
+          simp only [prod_singleton]
+          normCast
+        ·
+          rw [disjoint_singleton_right, mem_Ico]
+          exact fun h => (Nat.lt_succ_selfₓ _).not_le h.1
+      ·
+        exact congr_argₓ _ (succ_add m k)
 
 theorem coeff_iterated_deriv_as_prod_range :
-  ∀ m : ℕ, (iterated_deriv f k).coeff m = f.coeff (m+k)*∏i in range k, «expr↑ » ((m+k) - i) :=
+  ∀ m : ℕ, (iterated_deriv f k).coeff m = f.coeff (m+k)*∏ i in range k, ↑((m+k) - i) :=
   by 
     induction' k with k ih
     ·
       simp 
     intro m 
-    calc (f.iterated_deriv k.succ).coeff m = (f.coeff (m+k.succ)*∏i in range k, «expr↑ » ((m+k.succ) - i))*m+1 :=
+    calc (f.iterated_deriv k.succ).coeff m = (f.coeff (m+k.succ)*∏ i in range k, ↑((m+k.succ) - i))*m+1 :=
       by 
         rw [iterated_deriv_succ, coeff_derivative, ih m.succ, succ_add,
-          add_succ]_ = (f.coeff (m+k.succ)*∏i in range k, «expr↑ » ((m+k.succ) - i))*«expr↑ » (m+1) :=
+          add_succ]_ = (f.coeff (m+k.succ)*∏ i in range k, ↑((m+k.succ) - i))*↑m+1 :=
       by 
-        pushCast _ = f.coeff (m+k.succ)*∏i in range k.succ, «expr↑ » ((m+k.succ) - i) :=
+        pushCast _ = f.coeff (m+k.succ)*∏ i in range k.succ, ↑((m+k.succ) - i) :=
       by 
         rw [prod_range_succ, add_tsub_assoc_of_le k.le_succ, succ_sub le_rfl, tsub_self, mul_assocₓ]
 
@@ -200,75 +209,66 @@ theorem iterated_deriv_eq_zero_of_nat_degree_lt (h : f.nat_degree < n) : iterate
     linarith
 
 theorem iterated_deriv_mul :
-  iterated_deriv (p*q) n = ∑k in range n.succ, (C (n.choose k : R)*iterated_deriv p (n - k))*iterated_deriv q k :=
+  iterated_deriv (p*q) n = ∑ k in range n.succ, (C (n.choose k : R)*iterated_deriv p (n - k))*iterated_deriv q k :=
   by 
     induction' n with n IH
     ·
       simp 
     calc
       (p*q).iteratedDeriv n.succ =
-        (∑k : ℕ in range n.succ, (C («expr↑ » (n.choose k))*p.iterated_deriv (n - k))*q.iterated_deriv k).derivative :=
+        (∑ k : ℕ in range n.succ, (C (↑n.choose k)*p.iterated_deriv (n - k))*q.iterated_deriv k).derivative :=
       by 
         rw [iterated_deriv_succ,
           IH]_ =
-        (∑k : ℕ in range n.succ,
+        (∑ k : ℕ in range n.succ,
             (C
-                  («expr↑ »
-                    (n.choose
-                      k))*p.iterated_deriv
+                  (↑n.choose
+                      k)*p.iterated_deriv
                   ((n -
                       k)+1))*q.iterated_deriv
-                k)+∑k : ℕ in range n.succ,
-            (C («expr↑ » (n.choose k))*p.iterated_deriv (n - k))*q.iterated_deriv (k+1) :=
+                k)+∑ k : ℕ in range n.succ, (C (↑n.choose k)*p.iterated_deriv (n - k))*q.iterated_deriv (k+1) :=
       by 
         simpRw [derivative_sum, derivative_mul, derivative_C, zero_mul, zero_addₓ, iterated_deriv_succ,
           sum_add_distrib]_ =
-        ((∑k : ℕ in range n.succ,
+        ((∑ k : ℕ in range n.succ,
               (C
-                    («expr↑ »
-                      (n.choose
-                        k.succ))*p.iterated_deriv
+                    (↑n.choose
+                        k.succ)*p.iterated_deriv
                     (n -
                       k))*q.iterated_deriv
                   (k+1))+(C
-                  («expr↑ »
-                    1)*p.iterated_deriv
+                  (↑1)*p.iterated_deriv
                   n.succ)*q.iterated_deriv
-                0)+∑k : ℕ in range n.succ,
-            (C («expr↑ » (n.choose k))*p.iterated_deriv (n - k))*q.iterated_deriv (k+1) :=
+                0)+∑ k : ℕ in range n.succ, (C (↑n.choose k)*p.iterated_deriv (n - k))*q.iterated_deriv (k+1) :=
       _
         _ =
-        ((∑k : ℕ in range n.succ,
+        ((∑ k : ℕ in range n.succ,
               (C
-                    («expr↑ »
-                      (n.choose
-                        k))*p.iterated_deriv
+                    (↑n.choose
+                        k)*p.iterated_deriv
                     (n -
                       k))*q.iterated_deriv
-                  (k+1))+∑k : ℕ in range n.succ,
+                  (k+1))+∑ k : ℕ in range n.succ,
               (C
-                    («expr↑ »
-                      (n.choose
-                        k.succ))*p.iterated_deriv
-                    (n - k))*q.iterated_deriv (k+1))+(C («expr↑ » 1)*p.iterated_deriv n.succ)*q.iterated_deriv 0 :=
+                    (↑n.choose
+                        k.succ)*p.iterated_deriv
+                    (n - k))*q.iterated_deriv (k+1))+(C (↑1)*p.iterated_deriv n.succ)*q.iterated_deriv 0 :=
       by 
         ring
           _ =
-        (∑i : ℕ in range n.succ,
+        (∑ i : ℕ in range n.succ,
             (C
-                  («expr↑ »
-                    ((n+1).choose
-                      (i+1)))*p.iterated_deriv
-                  ((n+1) - i+1))*q.iterated_deriv (i+1))+(C («expr↑ » 1)*p.iterated_deriv n.succ)*q.iterated_deriv 0 :=
+                  (↑(n+1).choose
+                      (i+1))*p.iterated_deriv
+                  ((n+1) - i+1))*q.iterated_deriv (i+1))+(C (↑1)*p.iterated_deriv n.succ)*q.iterated_deriv 0 :=
       by 
         simpRw [choose_succ_succ, succ_sub_succ, cast_add, C.map_add, add_mulₓ,
           sum_add_distrib]_ =
-        ∑k : ℕ in range n.succ.succ,
-          (C («expr↑ » (n.succ.choose k))*p.iterated_deriv (n.succ - k))*q.iterated_deriv k :=
+        ∑ k : ℕ in range n.succ.succ, (C (↑n.succ.choose k)*p.iterated_deriv (n.succ - k))*q.iterated_deriv k :=
       by 
         rw [sum_range_succ' _ n.succ, choose_zero_right, tsub_zero]
     congr 
-    refine' (sum_range_succ' _ _).trans (congr_arg2 (·+·) _ _)
+    refine' (sum_range_succ' _ _).trans (congr_arg2ₓ (·+·) _ _)
     ·
       rw [sum_range_succ, Nat.choose_succ_self, cast_zero, C.map_zero, zero_mul, zero_mul, add_zeroₓ]
       refine' sum_congr rfl fun k hk => _ 

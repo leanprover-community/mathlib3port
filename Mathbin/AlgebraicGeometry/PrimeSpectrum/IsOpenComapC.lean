@@ -23,7 +23,7 @@ of the coefficients of `f` does not vanish.  Lemma `image_of_Df_eq_comap_C_compl
 proves that `image_of_Df` is the image of `(zero_locus {f})ᶜ` under the morphism
 `comap C : Spec R[x] → Spec R`. -/
 def image_of_Df f : Set (PrimeSpectrum R) :=
-  { p:PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.as_ideal }
+  { p : PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.as_ideal }
 
 theorem is_open_image_of_Df : IsOpen (image_of_Df f) :=
   by 
@@ -34,14 +34,14 @@ theorem is_open_image_of_Df : IsOpen (image_of_Df f) :=
 `Spec R` is contained in the open set where at least one of the coefficients of `f` is non-zero.
 This lemma is a reformulation of `exists_coeff_not_mem_C_inverse`. -/
 theorem comap_C_mem_image_of_Df {I : PrimeSpectrum (Polynomial R)}
-  (H : I ∈ «expr ᶜ» (zero_locus {f} : Set (PrimeSpectrum (Polynomial R)))) :
+  (H : I ∈ (zero_locus {f} : Set (PrimeSpectrum (Polynomial R)))ᶜ) :
   PrimeSpectrum.comap (Polynomial.c : R →+* Polynomial R) I ∈ image_of_Df f :=
   exists_coeff_not_mem_C_inverse (mem_compl_zero_locus_iff_not_mem.mp H)
 
 /-- The open set `image_of_Df f` coincides with the image of `basic_open f` under the
 morphism `C⁺ : Spec R[x] → Spec R`. -/
 theorem image_of_Df_eq_comap_C_compl_zero_locus :
-  image_of_Df f = PrimeSpectrum.comap (C : R →+* Polynomial R) '' «expr ᶜ» (zero_locus {f}) :=
+  image_of_Df f = PrimeSpectrum.comap (C : R →+* Polynomial R) '' zero_locus {f}ᶜ :=
   by 
     refine' ext fun x => ⟨fun hx => ⟨⟨map C x.val, is_prime_map_C_of_is_prime x.property⟩, ⟨_, _⟩⟩, _⟩
     ·

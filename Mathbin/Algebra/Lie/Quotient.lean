@@ -35,19 +35,28 @@ variable [LieRingModule L M] [LieModule R L M]
 variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 
 /-- The quotient of a Lie module by a Lie submodule. It is a Lie module. -/
-abbrev Quotientₓ :=
-  N.to_submodule.quotient
+instance : HasQuotient M (LieSubmodule R L M) :=
+  ⟨fun N => M ⧸ N.to_submodule⟩
 
 namespace Quotientₓ
 
 variable {N I}
 
+instance AddCommGroupₓ : AddCommGroupₓ (M ⧸ N) :=
+  Submodule.Quotient.addCommGroup _
+
+instance Module : Module R (M ⧸ N) :=
+  Submodule.Quotient.module _
+
+instance Inhabited : Inhabited (M ⧸ N) :=
+  ⟨0⟩
+
 /-- Map sending an element of `M` to the corresponding element of `M/N`, when `N` is a
 lie_submodule of the lie_module `N`. -/
-abbrev mk : M → N.quotient :=
+abbrev mk : M → M ⧸ N :=
   Submodule.Quotient.mk
 
-theorem is_quotient_mk (m : M) : Quotientₓ.mk' m = (mk m : N.quotient) :=
+theorem is_quotient_mk (m : M) : Quotientₓ.mk' m = (mk m : M ⧸ N) :=
   rfl
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
@@ -59,8 +68,8 @@ variable (N)
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/
-def action_as_endo_map : L →ₗ⁅R⁆ Module.End R N.quotient :=
-  { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) («expr↑ » N)) lie_submodule_invariant with
+def action_as_endo_map : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
+  { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) (↑N)) lie_submodule_invariant with
     map_lie' :=
       fun x y =>
         by 
@@ -71,11 +80,11 @@ def action_as_endo_map : L →ₗ⁅R⁆ Module.End R N.quotient :=
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there is
 a natural bracket action of `L` on the quotient `M/N`. -/
-def action_as_endo_map_bracket : HasBracket L N.quotient :=
+def action_as_endo_map_bracket : HasBracket L (M ⧸ N) :=
   ⟨fun x n => action_as_endo_map N x n⟩
 
-instance lie_quotient_lie_ring_module : LieRingModule L N.quotient :=
-  { bracket := fun x n => (action_as_endo_map N : L →ₗ[R] Module.End R N.quotient) x n,
+instance lie_quotient_lie_ring_module : LieRingModule L (M ⧸ N) :=
+  { bracket := fun x n => (action_as_endo_map N : L →ₗ[R] Module.End R (M ⧸ N)) x n,
     add_lie :=
       fun x y n =>
         by 
@@ -91,38 +100,39 @@ instance lie_quotient_lie_ring_module : LieRingModule L N.quotient :=
             LinearMap.mul_apply, LinearMap.sub_apply] }
 
 /-- The quotient of a Lie module by a Lie submodule, is a Lie module. -/
-instance lie_quotient_lie_module : LieModule R L N.quotient :=
+instance lie_quotient_lie_module : LieModule R L (M ⧸ N) :=
   { smul_lie :=
       fun t x m =>
-        show (_ : L →ₗ[R] Module.End R N.quotient) _ _ = _ by 
+        show (_ : L →ₗ[R] Module.End R (M ⧸ N)) _ _ = _ by 
           simp only [LinearMap.map_smul]
           rfl,
     lie_smul :=
       fun x t m =>
-        show (_ : L →ₗ[R] Module.End R N.quotient) _ _ = _ by 
+        show (_ : L →ₗ[R] Module.End R (M ⧸ N)) _ _ = _ by 
           simp only [LinearMap.map_smul]
           rfl }
 
--- error in Algebra.Lie.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance lie_quotient_has_bracket : has_bracket (quotient I) (quotient I) :=
-⟨begin
-   intros [ident x, ident y],
-   apply [expr quotient.lift_on₂' x y (λ x' y', mk «expr⁅ , ⁆»(x', y'))],
-   intros [ident x₁, ident x₂, ident y₁, ident y₂, ident h₁, ident h₂],
-   apply [expr (submodule.quotient.eq I.to_submodule).2],
-   have [ident h] [":", expr «expr = »(«expr - »(«expr⁅ , ⁆»(x₁, x₂), «expr⁅ , ⁆»(y₁, y₂)), «expr + »(«expr⁅ , ⁆»(x₁, «expr - »(x₂, y₂)), «expr⁅ , ⁆»(«expr - »(x₁, y₁), y₂)))] [],
-   by simp [] [] [] ["[", "-", ident lie_skew, ",", expr sub_eq_add_neg, ",", expr add_assoc, "]"] [] [],
-   rw [expr h] [],
-   apply [expr submodule.add_mem],
-   { apply [expr lie_mem_right R L I x₁ «expr - »(x₂, y₂) h₂] },
-   { apply [expr lie_mem_left R L I «expr - »(x₁, y₁) y₂ h₁] }
- end⟩
+instance lie_quotient_has_bracket : HasBracket (L ⧸ I) (L ⧸ I) :=
+  ⟨by 
+      intro x y 
+      apply Quotientₓ.liftOn₂' x y fun x' y' => mk ⁅x',y'⁆
+      intro x₁ x₂ y₁ y₂ h₁ h₂ 
+      apply (Submodule.Quotient.eq I.to_submodule).2
+      have h : ⁅x₁,x₂⁆ - ⁅y₁,y₂⁆ = ⁅x₁,x₂ - y₂⁆+⁅x₁ - y₁,y₂⁆
+      ·
+        simp [-lie_skew, sub_eq_add_neg, add_assocₓ]
+      rw [h]
+      apply Submodule.add_mem
+      ·
+        apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
+      ·
+        apply lie_mem_left R L I (x₁ - y₁) y₂ h₁⟩
 
 @[simp]
-theorem mk_bracket (x y : L) : mk ⁅x,y⁆ = ⁅(mk x : Quotientₓ I),(mk y : Quotientₓ I)⁆ :=
+theorem mk_bracket (x y : L) : mk ⁅x,y⁆ = ⁅(mk x : L ⧸ I),(mk y : L ⧸ I)⁆ :=
   rfl
 
-instance lie_quotient_lie_ring : LieRing (Quotientₓ I) :=
+instance lie_quotient_lie_ring : LieRing (L ⧸ I) :=
   { add_lie :=
       by 
         intro x' y' z' 
@@ -168,7 +178,7 @@ instance lie_quotient_lie_ring : LieRing (Quotientₓ I) :=
         apply congr_argₓ 
         apply leibniz_lie }
 
-instance lie_quotient_lie_algebra : LieAlgebra R (Quotientₓ I) :=
+instance lie_quotient_lie_algebra : LieAlgebra R (L ⧸ I) :=
   { lie_smul :=
       by 
         intro t x' y' 
@@ -184,7 +194,7 @@ instance lie_quotient_lie_algebra : LieAlgebra R (Quotientₓ I) :=
 
 /-- `lie_submodule.quotient.mk` as a `lie_module_hom`. -/
 @[simps]
-def mk' : M →ₗ⁅R,L⁆ Quotientₓ N :=
+def mk' : M →ₗ⁅R,L⁆ M ⧸ N :=
   { N.to_submodule.mkq with toFun := mk, map_lie' := fun r m => rfl }
 
 /-- Two `lie_module_hom`s from a quotient lie module are equal if their compositions with
@@ -192,7 +202,7 @@ def mk' : M →ₗ⁅R,L⁆ Quotientₓ N :=
 
 See note [partially-applied ext lemmas]. -/
 @[ext]
-theorem lie_module_hom_ext ⦃f g : Quotientₓ N →ₗ⁅R,L⁆ M⦄ (h : f.comp (mk' N) = g.comp (mk' N)) : f = g :=
+theorem lie_module_hom_ext ⦃f g : M ⧸ N →ₗ⁅R,L⁆ M⦄ (h : f.comp (mk' N) = g.comp (mk' N)) : f = g :=
   LieModuleHom.ext$ fun x => Quotientₓ.induction_on' x$ LieModuleHom.congr_fun h
 
 end Quotientₓ

@@ -30,9 +30,10 @@ variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 variable {X Y Z : C} (f : Y ⟶ X)
 
--- error in CategoryTheory.Sites.Sieves: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler complete_lattice
-/-- A set of arrows all with codomain `X`. -/ @[derive #[expr complete_lattice]] def presieve (X : C) :=
-∀ {{Y}}, set «expr ⟶ »(Y, X)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler complete_lattice
+/-- A set of arrows all with codomain `X`. -/
+def presieve (X : C) :=
+  ∀ ⦃Y⦄, Set (Y ⟶ X)deriving [anonymous]
 
 namespace Presieve
 
@@ -59,7 +60,7 @@ inductive singleton : presieve X
 @[simp]
 theorem singleton_eq_iff_domain (f g : Y ⟶ X) : singleton f g ↔ f = g :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨a, rfl⟩
       rfl
@@ -83,7 +84,7 @@ theorem pullback_singleton [has_pullbacks C] (g : Z ⟶ X) :
   pullback_arrows f (singleton g) = singleton (pullback.snd : pullback g f ⟶ _) :=
   by 
     ext W h 
-    split 
+    constructor
     ·
       rintro ⟨W, _, _, _⟩
       exact singleton.mk
@@ -98,7 +99,7 @@ inductive of_arrows {ι : Type _} (Y : ι → C) (f : ∀ i, Y i ⟶ X) : presie
 theorem of_arrows_punit : (of_arrows _ fun _ : PUnit => f) = singleton f :=
   by 
     ext Y g 
-    split 
+    constructor
     ·
       rintro ⟨_⟩
       apply singleton.mk
@@ -110,7 +111,7 @@ theorem of_arrows_pullback [has_pullbacks C] {ι : Type _} (Z : ι → C) (g : �
   (of_arrows (fun i => pullback (g i) f) fun i => pullback.snd) = pullback_arrows f (of_arrows Z g) :=
   by 
     ext T h 
-    split 
+    constructor
     ·
       rintro ⟨hk⟩
       exact pullback_arrows.mk _ _ (of_arrows.mk hk)
@@ -122,10 +123,10 @@ theorem of_arrows_pullback [has_pullbacks C] {ι : Type _} (Z : ι → C) (g : �
 theorem of_arrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X) (j : ∀ ⦃Y⦄ f : Y ⟶ X, of_arrows Z g f → Type _)
   (W : ∀ ⦃Y⦄ f : Y ⟶ X H, j f H → C) (k : ∀ ⦃Y⦄ f : Y ⟶ X H i, W f H i ⟶ Y) :
   ((of_arrows Z g).bind fun Y f H => of_arrows (W f H) (k f H)) =
-    of_arrows (fun i : Σi, j _ (of_arrows.mk i) => W (g i.1) _ i.2) fun ij => k (g ij.1) _ ij.2 ≫ g ij.1 :=
+    of_arrows (fun i : Σ i, j _ (of_arrows.mk i) => W (g i.1) _ i.2) fun ij => k (g ij.1) _ ij.2 ≫ g ij.1 :=
   by 
     ext Y f 
-    split 
+    constructor
     ·
       rintro ⟨_, _, _, ⟨i⟩, ⟨i'⟩, rfl⟩
       exact of_arrows.mk (Sigma.mk _ _)
@@ -178,7 +179,7 @@ theorem functor_pushforward_comp (R : presieve X) :
   R.functor_pushforward (F ⋙ G) = (R.functor_pushforward F).FunctorPushforward G :=
   by 
     ext x f 
-    split 
+    constructor
     ·
       rintro ⟨X, f₁, g₁, h₁, rfl⟩
       exact
@@ -236,19 +237,31 @@ protected theorem ext_iff {R S : sieve X} : R = S ↔ ∀ ⦃Y⦄ f : Y ⟶ X, R
 
 open Lattice
 
-/-- The supremum of a collection of sieves: the union of them all. -/
-protected def Sup (𝒮 : Set (sieve X)) : sieve X :=
-  { Arrows := fun Y => { f | ∃ (S : _)(_ : S ∈ 𝒮), sieve.arrows S f },
-    downward_closed' :=
-      fun Y Z f =>
-        by 
-          rintro ⟨S, hS, hf⟩ g 
-          exact ⟨S, hS, S.downward_closed hf _⟩ }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » 𝒮)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The supremum of a collection of sieves: the union of them all. -/ protected
+  def
+    Sup
+    ( 𝒮 : Set sieve X ) : sieve X
+    :=
+      {
+        Arrows := fun Y => { f | ∃ ( S : _ ) ( _ : S ∈ 𝒮 ) , sieve.arrows S f } ,
+          downward_closed' := fun Y Z f => by rintro ⟨ S , hS , hf ⟩ g exact ⟨ S , hS , S.downward_closed hf _ ⟩
+        }
 
-/-- The infimum of a collection of sieves: the intersection of them all. -/
-protected def Inf (𝒮 : Set (sieve X)) : sieve X :=
-  { Arrows := fun Y => { f | ∀ S _ : S ∈ 𝒮, sieve.arrows S f },
-    downward_closed' := fun Y Z f hf g S H => S.downward_closed (hf S H) g }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » 𝒮)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The infimum of a collection of sieves: the intersection of them all. -/ protected
+  def
+    Inf
+    ( 𝒮 : Set sieve X ) : sieve X
+    :=
+      {
+        Arrows := fun Y => { f | ∀ S _ : S ∈ 𝒮 , sieve.arrows S f } ,
+          downward_closed' := fun Y Z f hf g S H => S.downward_closed hf S H g
+        }
 
 /-- The union of two sieves is a sieve. -/
 protected def union (S R : sieve X) : sieve X :=
@@ -507,7 +520,7 @@ theorem pullback_arrows_comm [has_pullbacks C] {X Y : C} (f : Y ⟶ X) (R : pres
   sieve.generate (R.pullback_arrows f) = (sieve.generate R).pullback f :=
   by 
     ext Z g 
-    split 
+    constructor
     ·
       rintro ⟨_, h, k, hk, rfl⟩
       cases' hk with W g hg 
@@ -555,7 +568,7 @@ theorem functor_pushforward_extend_eq {R : presieve X} :
   (generate R).Arrows.FunctorPushforward F = R.functor_pushforward F :=
   by 
     ext Y f 
-    split 
+    constructor
     ·
       rintro ⟨X', g, f', ⟨X'', g', f'', h₁, rfl⟩, rfl⟩
       exact
@@ -583,7 +596,7 @@ def functor_pushforward (R : sieve X) : sieve (F.obj X) :=
 theorem functor_pushforward_id (R : sieve X) : R.functor_pushforward (𝟭 _) = R :=
   by 
     ext X f 
-    split 
+    constructor
     ·
       intro hf 
       obtain ⟨X, g, h, hg, rfl⟩ := hf 
@@ -605,7 +618,7 @@ theorem functor_galois_connection (X : C) :
   _root_.galois_connection (sieve.functor_pushforward F : sieve X → sieve (F.obj X)) (sieve.functor_pullback F) :=
   by 
     intro R S 
-    split 
+    constructor
     ·
       intro hle X f hf 
       apply hle 
@@ -690,7 +703,7 @@ end Functor
 
 /-- A sieve induces a presheaf. -/
 @[simps]
-def Functor (S : sieve X) : «expr ᵒᵖ» C ⥤ Type v₁ :=
+def Functor (S : sieve X) : Cᵒᵖ ⥤ Type v₁ :=
   { obj := fun Y => { g : Y.unop ⟶ X // S g }, map := fun Y Z f g => ⟨f.unop ≫ g.1, downward_closed _ g.2 _⟩ }
 
 /--
@@ -736,7 +749,7 @@ theorem sieve_of_subfunctor_functor_inclusion : sieve_of_subfunctor S.functor_in
   by 
     ext 
     simp only [functor_inclusion_app, sieve_of_subfunctor_apply, Subtype.val_eq_coe]
-    split 
+    constructor
     ·
       rintro ⟨⟨f, hf⟩, rfl⟩
       exact hf

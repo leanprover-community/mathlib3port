@@ -28,70 +28,71 @@ variable {E PE : Type _} [NormedGroup E] [NormedSpace ℝ E] [MetricSpace PE] [N
 
 open Set AffineMap AffineIsometryEquiv
 
-noncomputable theory
+noncomputable section 
 
 namespace Isometric
 
 include E
 
--- error in Analysis.NormedSpace.MazurUlam: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If an isometric self-homeomorphism of a normed vector space over `ℝ` fixes `x` and `y`,
 then it fixes the midpoint of `[x, y]`. This is a lemma for a more general Mazur-Ulam theorem,
 see below. -/
-theorem midpoint_fixed
-{x
- y : PE} : ∀
-e : «expr ≃ᵢ »(PE, PE), «expr = »(e x, x) → «expr = »(e y, y) → «expr = »(e (midpoint exprℝ() x y), midpoint exprℝ() x y) :=
-begin
-  set [] [ident z] [] [":="] [expr midpoint exprℝ() x y] [],
-  set [] [ident s] [] [":="] [expr {e : «expr ≃ᵢ »(PE, PE) | «expr ∧ »(«expr = »(e x, x), «expr = »(e y, y))}] [],
-  haveI [] [":", expr nonempty s] [":=", expr ⟨⟨isometric.refl PE, rfl, rfl⟩⟩],
-  have [ident h_bdd] [":", expr bdd_above «expr $ »(range, λ e : s, dist (e z) z)] [],
-  { refine [expr ⟨«expr + »(dist x z, dist x z), «expr $ »(forall_range_iff.2, subtype.forall.2 _)⟩],
-    rintro [ident e, "⟨", ident hx, ",", ident hy, "⟩"],
-    calc
-      «expr ≤ »(dist (e z) z, «expr + »(dist (e z) x, dist x z)) : dist_triangle (e z) x z
-      «expr = »(..., «expr + »(dist (e x) (e z), dist x z)) : by rw ["[", expr hx, ",", expr dist_comm, "]"] []
-      «expr = »(..., «expr + »(dist x z, dist x z)) : by erw ["[", expr e.dist_eq x z, "]"] [] },
-  set [] [ident R] [":", expr «expr ≃ᵢ »(PE, PE)] [":="] [expr (point_reflection exprℝ() z).to_isometric] [],
-  set [] [ident f] [":", expr «expr ≃ᵢ »(PE, PE) → «expr ≃ᵢ »(PE, PE)] [":="] [expr λ
-   e, ((e.trans R).trans e.symm).trans R] [],
-  have [ident hf_dist] [":", expr ∀ e, «expr = »(dist (f e z) z, «expr * »(2, dist (e z) z))] [],
-  { intro [ident e],
-    dsimp [] ["[", expr f, "]"] [] [],
-    rw ["[", expr dist_point_reflection_fixed, ",", "<-", expr e.dist_eq, ",", expr e.apply_symm_apply, ",", expr dist_point_reflection_self_real, ",", expr dist_comm, "]"] [] },
-  have [ident hf_maps_to] [":", expr maps_to f s s] [],
-  { rintros [ident e, "⟨", ident hx, ",", ident hy, "⟩"],
-    split; simp [] [] [] ["[", expr hx, ",", expr hy, ",", expr e.symm_apply_eq.2 hx.symm, ",", expr e.symm_apply_eq.2 hy.symm, "]"] [] [] },
-  set [] [ident c] [] [":="] [expr «expr⨆ , »((e : s), dist ((e : «expr ≃ᵢ »(PE, PE)) z) z)] [],
-  have [] [":", expr «expr ≤ »(c, «expr / »(c, 2))] [],
-  { apply [expr csupr_le],
-    rintros ["⟨", ident e, ",", ident he, "⟩"],
-    simp [] [] ["only"] ["[", expr subtype.coe_mk, ",", expr le_div_iff' (@zero_lt_two exprℝ() _ _), ",", "<-", expr hf_dist, "]"] [] [],
-    exact [expr le_csupr h_bdd ⟨f e, hf_maps_to he⟩] },
-  replace [] [":", expr «expr ≤ »(c, 0)] [],
-  { linarith [] [] [] },
-  refine [expr λ e hx hy, dist_le_zero.1 (le_trans _ this)],
-  exact [expr le_csupr h_bdd ⟨e, hx, hy⟩]
-end
+theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y → e (midpoint ℝ x y) = midpoint ℝ x y :=
+  by 
+    set z := midpoint ℝ x y 
+    set s := { e : PE ≃ᵢ PE | e x = x ∧ e y = y }
+    have  : Nonempty s := ⟨⟨Isometric.refl PE, rfl, rfl⟩⟩
+    have h_bdd : BddAbove (range$ fun e : s => dist (e z) z)
+    ·
+      refine' ⟨dist x z+dist x z, forall_range_iff.2$ Subtype.forall.2 _⟩
+      rintro e ⟨hx, hy⟩
+      calc dist (e z) z ≤ dist (e z) x+dist x z := dist_triangle (e z) x z _ = dist (e x) (e z)+dist x z :=
+        by 
+          rw [hx, dist_comm]_ = dist x z+dist x z :=
+        by 
+          erw [e.dist_eq x z]
+    set R : PE ≃ᵢ PE := (point_reflection ℝ z).toIsometric 
+    set f : PE ≃ᵢ PE → PE ≃ᵢ PE := fun e => ((e.trans R).trans e.symm).trans R 
+    have hf_dist : ∀ e, dist (f e z) z = 2*dist (e z) z
+    ·
+      intro e 
+      dsimp [f]
+      rw [dist_point_reflection_fixed, ←e.dist_eq, e.apply_symm_apply, dist_point_reflection_self_real, dist_comm]
+    have hf_maps_to : maps_to f s s
+    ·
+      rintro e ⟨hx, hy⟩
+      constructor <;> simp [hx, hy, e.symm_apply_eq.2 hx.symm, e.symm_apply_eq.2 hy.symm]
+    set c := ⨆ e : s, dist ((e : PE ≃ᵢ PE) z) z 
+    have  : c ≤ c / 2
+    ·
+      apply csupr_le 
+      rintro ⟨e, he⟩
+      simp only [Subtype.coe_mk, le_div_iff' (@zero_lt_two ℝ _ _), ←hf_dist]
+      exact le_csupr h_bdd ⟨f e, hf_maps_to he⟩
+    replace  : c ≤ 0
+    ·
+      linarith 
+    refine' fun e hx hy => dist_le_zero.1 (le_transₓ _ this)
+    exact le_csupr h_bdd ⟨e, hx, hy⟩
 
 include F
 
--- error in Analysis.NormedSpace.MazurUlam: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A bijective isometry sends midpoints to midpoints. -/
-theorem map_midpoint
-(f : «expr ≃ᵢ »(PE, PF))
-(x y : PE) : «expr = »(f (midpoint exprℝ() x y), midpoint exprℝ() (f x) (f y)) :=
-begin
-  set [] [ident e] [":", expr «expr ≃ᵢ »(PE, PE)] [":="] [expr («expr $ »(f.trans, «expr $ »(point_reflection exprℝ(), midpoint exprℝ() (f x) (f y)).to_isometric).trans f.symm).trans «expr $ »(point_reflection exprℝ(), midpoint exprℝ() x y).to_isometric] [],
-  have [ident hx] [":", expr «expr = »(e x, x)] [],
-  by simp [] [] [] [] [] [],
-  have [ident hy] [":", expr «expr = »(e y, y)] [],
-  by simp [] [] [] [] [] [],
-  have [ident hm] [] [":=", expr e.midpoint_fixed hx hy],
-  simp [] [] ["only"] ["[", expr e, ",", expr trans_apply, "]"] [] ["at", ident hm],
-  rwa ["[", "<-", expr eq_symm_apply, ",", expr to_isometric_symm, ",", expr point_reflection_symm, ",", expr coe_to_isometric, ",", expr coe_to_isometric, ",", expr point_reflection_self, ",", expr symm_apply_eq, ",", expr point_reflection_fixed_iff, "]"] ["at", ident hm]
-end
+theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midpoint ℝ (f x) (f y) :=
+  by 
+    set e : PE ≃ᵢ PE :=
+      ((f.trans$ (point_reflection ℝ$ midpoint ℝ (f x) (f y)).toIsometric).trans f.symm).trans
+        (point_reflection ℝ$ midpoint ℝ x y).toIsometric 
+    have hx : e x = x
+    ·
+      simp 
+    have hy : e y = y
+    ·
+      simp 
+    have hm := e.midpoint_fixed hx hy 
+    simp only [e, trans_apply] at hm 
+    rwa [←eq_symm_apply, to_isometric_symm, point_reflection_symm, coe_to_isometric, coe_to_isometric,
+      point_reflection_self, symm_apply_eq, point_reflection_fixed_iff] at hm
 
 /-!
 Since `f : PE ≃ᵢ PF` sends midpoints to midpoints, it is an affine map.
@@ -110,12 +111,12 @@ def to_real_linear_isometry_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) : 
 
 @[simp]
 theorem coe_to_real_linear_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) :
-  «expr⇑ » (f.to_real_linear_isometry_equiv_of_map_zero h0) = f :=
+  ⇑f.to_real_linear_isometry_equiv_of_map_zero h0 = f :=
   rfl
 
 @[simp]
 theorem coe_to_real_linear_equiv_of_map_zero_symm (f : E ≃ᵢ F) (h0 : f 0 = 0) :
-  «expr⇑ » (f.to_real_linear_isometry_equiv_of_map_zero h0).symm = f.symm :=
+  ⇑(f.to_real_linear_isometry_equiv_of_map_zero h0).symm = f.symm :=
   rfl
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed vector spaces
@@ -146,7 +147,7 @@ def to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : PE ≃ᵃⁱ[ℝ] PF :=
         simp 
 
 @[simp]
-theorem coe_fn_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : «expr⇑ » f.to_real_affine_isometry_equiv = f :=
+theorem coe_fn_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : ⇑f.to_real_affine_isometry_equiv = f :=
   rfl
 
 @[simp]

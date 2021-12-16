@@ -108,9 +108,9 @@ theorem circulant_mul [Semiringₓ α] [Fintype n] [AddGroupₓ n] (v w : n → 
   by 
     ext i j 
     simp only [mul_apply, mul_vec, circulant, dot_product]
-    refine' Fintype.sum_equiv (Equiv.subRight j) _ _ _ 
+    refine' Fintype.sum_equiv (Equivₓ.subRight j) _ _ _ 
     intro x 
-    simp only [Equiv.sub_right_apply, sub_sub_sub_cancel_right]
+    simp only [Equivₓ.sub_right_apply, sub_sub_sub_cancel_right]
 
 theorem fin.circulant_mul [Semiringₓ α] :
   ∀ {n} v w : Finₓ n → α, circulant v ⬝ circulant w = circulant (mul_vec (circulant v) w)
@@ -125,13 +125,13 @@ theorem circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] [Fintype 
   by 
     ext i j 
     simp only [mul_apply, circulant, mul_commₓ]
-    refine' Fintype.sum_equiv ((Equiv.subLeft i).trans (Equiv.addRight j)) _ _ _ 
+    refine' Fintype.sum_equiv ((Equivₓ.subLeft i).trans (Equivₓ.addRight j)) _ _ _ 
     intro x 
     congr 2
     ·
       simp 
     ·
-      simp only [Equiv.coe_add_right, Function.comp_app, Equiv.coe_trans, Equiv.sub_left_apply]
+      simp only [Equivₓ.coe_add_right, Function.comp_app, Equivₓ.coe_trans, Equivₓ.sub_left_apply]
       abel
 
 theorem fin.circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] :
@@ -162,7 +162,7 @@ theorem circulant_single n [Semiringₓ α] [DecidableEq n] [AddGroupₓ n] [Fin
 
 /-- Note we use `↑i = 0` instead of `i = 0` as `fin 0` has no `0`.
 This means that we cannot state this with `pi.single` as we did with `matrix.circulant_single`. -/
-theorem fin.circulant_ite α [HasZero α] [HasOne α] : ∀ n, circulant (fun i => ite («expr↑ » i = 0) 1 0 : Finₓ n → α) = 1
+theorem fin.circulant_ite α [HasZero α] [HasOne α] : ∀ n, circulant (fun i => ite (↑i = 0) 1 0 : Finₓ n → α) = 1
 | 0 =>
   by 
     decide

@@ -41,47 +41,52 @@ variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 
 section LieIdealOperations
 
-/-- Given a Lie module `M` over a Lie algebra `L`, the set of Lie ideals of `L` acts on the set
-of submodules of `M`. -/
-instance HasBracket : HasBracket (LieIdeal R L) (LieSubmodule R L M) :=
-  ⟨fun I N => lie_span R L { m | ∃ (x : I)(n : N), ⁅(x : L),(n : M)⁆ = m }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Given a Lie module `M` over a Lie algebra `L`, the set of Lie ideals of `L` acts on the set
+    of submodules of `M`. -/
+  instance
+    HasBracket
+    : HasBracket LieIdeal R L LieSubmodule R L M
+    := ⟨ fun I N => lie_span R L { m | ∃ ( x : I ) ( n : N ) , ⁅ ( x : L ) , ( n : M ) ⁆ = m } ⟩
 
-theorem lie_ideal_oper_eq_span : ⁅I,N⁆ = lie_span R L { m | ∃ (x : I)(n : N), ⁅(x : L),(n : M)⁆ = m } :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lie_ideal_oper_eq_span
+  : ⁅ I , N ⁆ = lie_span R L { m | ∃ ( x : I ) ( n : N ) , ⁅ ( x : L ) , ( n : M ) ⁆ = m }
+  := rfl
 
--- error in Algebra.Lie.IdealOperations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m' «expr ∈ » submodule.span R s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- See also `lie_submodule.lie_ideal_oper_eq_tensor_map_range`. -/
-theorem lie_ideal_oper_eq_linear_span : «expr = »((«expr↑ »(«expr⁅ , ⁆»(I, N)) : submodule R M), submodule.span R {m | «expr∃ , »((x : I)
-  (n : N), «expr = »(«expr⁅ , ⁆»((x : L), (n : M)), m))}) :=
-begin
-  apply [expr le_antisymm],
-  { let [ident s] [] [":=", expr {m : M | «expr∃ , »((x : «expr↥ »(I))
-      (n : «expr↥ »(N)), «expr = »(«expr⁅ , ⁆»((x : L), (n : M)), m))}],
-    have [ident aux] [":", expr ∀
-     (y : L)
-     (m' «expr ∈ » submodule.span R s), «expr ∈ »(«expr⁅ , ⁆»(y, m'), submodule.span R s)] [],
-    { intros [ident y, ident m', ident hm'],
-      apply [expr submodule.span_induction hm'],
-      { rintros [ident m'', "⟨", ident x, ",", ident n, ",", ident hm'', "⟩"],
-        rw ["[", "<-", expr hm'', ",", expr leibniz_lie, "]"] [],
-        refine [expr submodule.add_mem _ _ _]; apply [expr submodule.subset_span],
-        { use ["[", expr ⟨«expr⁅ , ⁆»(y, «expr↑ »(x)), I.lie_mem x.property⟩, ",", expr n, "]"],
-          refl },
-        { use ["[", expr x, ",", expr ⟨«expr⁅ , ⁆»(y, «expr↑ »(n)), N.lie_mem n.property⟩, "]"],
-          refl } },
-      { simp [] [] ["only"] ["[", expr lie_zero, ",", expr submodule.zero_mem, "]"] [] [] },
-      { intros [ident m₁, ident m₂, ident hm₁, ident hm₂],
-        rw [expr lie_add] [],
-        exact [expr submodule.add_mem _ hm₁ hm₂] },
-      { intros [ident t, ident m'', ident hm''],
-        rw [expr lie_smul] [],
-        exact [expr submodule.smul_mem _ t hm''] } },
-    change [expr «expr ≤ »(_, «expr↑ »(({ lie_mem := aux, ..submodule.span R s } : lie_submodule R L M)))] [] [],
-    rw ["[", expr coe_submodule_le_coe_submodule, ",", expr lie_ideal_oper_eq_span, ",", expr lie_span_le, "]"] [],
-    exact [expr submodule.subset_span] },
-  { rw [expr lie_ideal_oper_eq_span] [],
-    apply [expr submodule_span_le_lie_span] }
-end
+  theorem
+    lie_ideal_oper_eq_linear_span
+    : ( ↑ ⁅ I , N ⁆ : Submodule R M ) = Submodule.span R { m | ∃ ( x : I ) ( n : N ) , ⁅ ( x : L ) , ( n : M ) ⁆ = m }
+    :=
+      by
+        apply le_antisymmₓ
+          ·
+            let s := { m : M | ∃ ( x : ↥ I ) ( n : ↥ N ) , ⁅ ( x : L ) , ( n : M ) ⁆ = m }
+              have aux : ∀ y : L m' _ : m' ∈ Submodule.span R s , ⁅ y , m' ⁆ ∈ Submodule.span R s
+              ·
+                intro y m' hm'
+                  apply Submodule.span_induction hm'
+                  ·
+                    rintro m'' ⟨ x , n , hm'' ⟩
+                      rw [ ← hm'' , leibniz_lie ]
+                      refine' Submodule.add_mem _ _ _ <;> apply Submodule.subset_span
+                      · use ⟨ ⁅ y , ↑ x ⁆ , I.lie_mem x.property ⟩ , n rfl
+                      · use x , ⟨ ⁅ y , ↑ n ⁆ , N.lie_mem n.property ⟩ rfl
+                  · simp only [ lie_zero , Submodule.zero_mem ]
+                  · intro m₁ m₂ hm₁ hm₂ rw [ lie_add ] exact Submodule.add_mem _ hm₁ hm₂
+                  · intro t m'' hm'' rw [ lie_smul ] exact Submodule.smul_mem _ t hm''
+              change _ ≤ ↑ ( { Submodule.span R s with lie_mem := aux } : LieSubmodule R L M )
+              rw [ coe_submodule_le_coe_submodule , lie_ideal_oper_eq_span , lie_span_le ]
+              exact Submodule.subset_span
+          · rw [ lie_ideal_oper_eq_span ] apply submodule_span_le_lie_span
 
 theorem lie_coe_mem_lie (x : I) (m : N) : ⁅(x : L),(m : M)⁆ ∈ ⁅I,N⁆ :=
   by 
@@ -160,64 +165,69 @@ theorem mono_lie_left (h : I ≤ J) : ⁅I,N⁆ ≤ ⁅J,N⁆ :=
 theorem mono_lie_right (h : N ≤ N') : ⁅I,N⁆ ≤ ⁅I,N'⁆ :=
   mono_lie _ _ _ _ (le_reflₓ I) h
 
--- error in Algebra.Lie.IdealOperations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem lie_sup : «expr = »(«expr⁅ , ⁆»(I, «expr ⊔ »(N, N')), «expr ⊔ »(«expr⁅ , ⁆»(I, N), «expr⁅ , ⁆»(I, N'))) :=
-begin
-  have [ident h] [":", expr «expr ≤ »(«expr ⊔ »(«expr⁅ , ⁆»(I, N), «expr⁅ , ⁆»(I, N')), «expr⁅ , ⁆»(I, «expr ⊔ »(N, N')))] [],
-  { rw [expr sup_le_iff] [],
-    split; apply [expr mono_lie_right]; [exact [expr le_sup_left], exact [expr le_sup_right]] },
-  suffices [] [":", expr «expr ≤ »(«expr⁅ , ⁆»(I, «expr ⊔ »(N, N')), «expr ⊔ »(«expr⁅ , ⁆»(I, N), «expr⁅ , ⁆»(I, N')))],
-  { exact [expr le_antisymm this h] },
-  clear [ident h],
-  rw ["[", expr lie_ideal_oper_eq_span, ",", expr lie_span_le, "]"] [],
-  rintros [ident m, "⟨", ident x, ",", "⟨", ident n, ",", ident hn, "⟩", ",", ident h, "⟩"],
-  erw [expr lie_submodule.mem_sup] [],
-  erw [expr lie_submodule.mem_sup] ["at", ident hn],
-  rcases [expr hn, "with", "⟨", ident n₁, ",", ident hn₁, ",", ident n₂, ",", ident hn₂, ",", ident hn', "⟩"],
-  use [expr «expr⁅ , ⁆»((x : L), (⟨n₁, hn₁⟩ : N))],
-  split,
-  { apply [expr lie_coe_mem_lie] },
-  use [expr «expr⁅ , ⁆»((x : L), (⟨n₂, hn₂⟩ : N'))],
-  split,
-  { apply [expr lie_coe_mem_lie] },
-  simp [] [] [] ["[", "<-", expr h, ",", "<-", expr hn', "]"] [] []
-end
+theorem lie_sup : ⁅I,N⊔N'⁆ = ⁅I,N⁆⊔⁅I,N'⁆ :=
+  by 
+    have h : ⁅I,N⁆⊔⁅I,N'⁆ ≤ ⁅I,N⊔N'⁆
+    ·
+      rw [sup_le_iff]
+      constructor <;> apply mono_lie_right <;> [exact le_sup_left, exact le_sup_right]
+    suffices  : ⁅I,N⊔N'⁆ ≤ ⁅I,N⁆⊔⁅I,N'⁆
+    ·
+      exact le_antisymmₓ this h 
+    clear h 
+    rw [lie_ideal_oper_eq_span, lie_span_le]
+    rintro m ⟨x, ⟨n, hn⟩, h⟩
+    erw [LieSubmodule.mem_sup]
+    erw [LieSubmodule.mem_sup] at hn 
+    rcases hn with ⟨n₁, hn₁, n₂, hn₂, hn'⟩
+    use ⁅(x : L),(⟨n₁, hn₁⟩ : N)⁆
+    constructor
+    ·
+      apply lie_coe_mem_lie 
+    use ⁅(x : L),(⟨n₂, hn₂⟩ : N')⁆
+    constructor
+    ·
+      apply lie_coe_mem_lie 
+    simp [←h, ←hn']
 
--- error in Algebra.Lie.IdealOperations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem sup_lie : «expr = »(«expr⁅ , ⁆»(«expr ⊔ »(I, J), N), «expr ⊔ »(«expr⁅ , ⁆»(I, N), «expr⁅ , ⁆»(J, N))) :=
-begin
-  have [ident h] [":", expr «expr ≤ »(«expr ⊔ »(«expr⁅ , ⁆»(I, N), «expr⁅ , ⁆»(J, N)), «expr⁅ , ⁆»(«expr ⊔ »(I, J), N))] [],
-  { rw [expr sup_le_iff] [],
-    split; apply [expr mono_lie_left]; [exact [expr le_sup_left], exact [expr le_sup_right]] },
-  suffices [] [":", expr «expr ≤ »(«expr⁅ , ⁆»(«expr ⊔ »(I, J), N), «expr ⊔ »(«expr⁅ , ⁆»(I, N), «expr⁅ , ⁆»(J, N)))],
-  { exact [expr le_antisymm this h] },
-  clear [ident h],
-  rw ["[", expr lie_ideal_oper_eq_span, ",", expr lie_span_le, "]"] [],
-  rintros [ident m, "⟨", "⟨", ident x, ",", ident hx, "⟩", ",", ident n, ",", ident h, "⟩"],
-  erw [expr lie_submodule.mem_sup] [],
-  erw [expr lie_submodule.mem_sup] ["at", ident hx],
-  rcases [expr hx, "with", "⟨", ident x₁, ",", ident hx₁, ",", ident x₂, ",", ident hx₂, ",", ident hx', "⟩"],
-  use [expr «expr⁅ , ⁆»(((⟨x₁, hx₁⟩ : I) : L), (n : N))],
-  split,
-  { apply [expr lie_coe_mem_lie] },
-  use [expr «expr⁅ , ⁆»(((⟨x₂, hx₂⟩ : J) : L), (n : N))],
-  split,
-  { apply [expr lie_coe_mem_lie] },
-  simp [] [] [] ["[", "<-", expr h, ",", "<-", expr hx', "]"] [] []
-end
+@[simp]
+theorem sup_lie : ⁅I⊔J,N⁆ = ⁅I,N⁆⊔⁅J,N⁆ :=
+  by 
+    have h : ⁅I,N⁆⊔⁅J,N⁆ ≤ ⁅I⊔J,N⁆
+    ·
+      rw [sup_le_iff]
+      constructor <;> apply mono_lie_left <;> [exact le_sup_left, exact le_sup_right]
+    suffices  : ⁅I⊔J,N⁆ ≤ ⁅I,N⁆⊔⁅J,N⁆
+    ·
+      exact le_antisymmₓ this h 
+    clear h 
+    rw [lie_ideal_oper_eq_span, lie_span_le]
+    rintro m ⟨⟨x, hx⟩, n, h⟩
+    erw [LieSubmodule.mem_sup]
+    erw [LieSubmodule.mem_sup] at hx 
+    rcases hx with ⟨x₁, hx₁, x₂, hx₂, hx'⟩
+    use ⁅((⟨x₁, hx₁⟩ : I) : L),(n : N)⁆
+    constructor
+    ·
+      apply lie_coe_mem_lie 
+    use ⁅((⟨x₂, hx₂⟩ : J) : L),(n : N)⁆
+    constructor
+    ·
+      apply lie_coe_mem_lie 
+    simp [←h, ←hx']
 
 @[simp]
 theorem lie_inf : ⁅I,N⊓N'⁆ ≤ ⁅I,N⁆⊓⁅I,N'⁆ :=
   by 
     rw [le_inf_iff]
-    split  <;> apply mono_lie_right <;> [exact inf_le_left, exact inf_le_right]
+    constructor <;> apply mono_lie_right <;> [exact inf_le_left, exact inf_le_right]
 
 @[simp]
 theorem inf_lie : ⁅I⊓J,N⁆ ≤ ⁅I,N⁆⊓⁅J,N⁆ :=
   by 
     rw [le_inf_iff]
-    split  <;> apply mono_lie_left <;> [exact inf_le_left, exact inf_le_right]
+    constructor <;> apply mono_lie_left <;> [exact inf_le_left, exact inf_le_right]
 
 end LieIdealOperations
 
@@ -242,8 +252,8 @@ theorem map_bracket_le {I₁ I₂ : LieIdeal R L} : map f ⁅I₁,I₂⁆ ≤ �
     intro x hx 
     obtain ⟨⟨y₁, hy₁⟩, ⟨y₂, hy₂⟩, hx⟩ := hx 
     rw [←hx]
-    let fy₁ : «expr↥ » (map f I₁) := ⟨f y₁, mem_map hy₁⟩
-    let fy₂ : «expr↥ » (map f I₂) := ⟨f y₂, mem_map hy₂⟩
+    let fy₁ : ↥map f I₁ := ⟨f y₁, mem_map hy₁⟩
+    let fy₂ : ↥map f I₂ := ⟨f y₂, mem_map hy₂⟩
     change _ ∈ comap f ⁅map f I₁,map f I₂⁆
     simp only [Submodule.coe_mk, mem_comap, LieHom.map_lie]
     exact LieSubmodule.lie_coe_mem_lie _ _ fy₁ fy₂
@@ -275,36 +285,39 @@ theorem map_comap_incl {I₁ I₂ : LieIdeal R L} : map I₁.incl (comap I₁.in
     rw [←map_comap_eq]
     exact I₁.incl_is_ideal_morphism
 
--- error in Algebra.Lie.IdealOperations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem comap_bracket_eq
-{J₁ J₂ : lie_ideal R L'}
-(h : f.is_ideal_morphism) : «expr = »(comap f «expr⁅ , ⁆»(«expr ⊓ »(f.ideal_range, J₁), «expr ⊓ »(f.ideal_range, J₂)), «expr ⊔ »(«expr⁅ , ⁆»(comap f J₁, comap f J₂), f.ker)) :=
-begin
-  rw ["[", "<-", expr lie_submodule.coe_to_submodule_eq_iff, ",", expr comap_coe_submodule, ",", expr lie_submodule.sup_coe_to_submodule, ",", expr f.ker_coe_submodule, ",", "<-", expr submodule.comap_map_eq, ",", expr lie_submodule.lie_ideal_oper_eq_linear_span, ",", expr lie_submodule.lie_ideal_oper_eq_linear_span, ",", expr linear_map.map_span, "]"] [],
-  congr,
-  simp [] [] ["only"] ["[", expr lie_hom.coe_to_linear_map, ",", expr set.mem_set_of_eq, "]"] [] [],
-  ext [] [ident y] [],
-  split,
-  { rintros ["⟨", "⟨", ident x₁, ",", ident hx₁, "⟩", ",", "⟨", ident x₂, ",", ident hx₂, "⟩", ",", ident hy, "⟩"],
-    rw ["<-", expr hy] [],
-    erw ["[", expr lie_submodule.mem_inf, ",", expr f.mem_ideal_range_iff h, "]"] ["at", ident hx₁, ident hx₂],
-    obtain ["⟨", "⟨", ident z₁, ",", ident hz₁, "⟩", ",", ident hz₁', "⟩", ":=", expr hx₁],
-    rw ["<-", expr hz₁] ["at", ident hz₁'],
-    obtain ["⟨", "⟨", ident z₂, ",", ident hz₂, "⟩", ",", ident hz₂', "⟩", ":=", expr hx₂],
-    rw ["<-", expr hz₂] ["at", ident hz₂'],
-    use ["[", expr «expr⁅ , ⁆»(z₁, z₂), ",", expr ⟨z₁, hz₁'⟩, ",", expr ⟨z₂, hz₂'⟩, ",", expr rfl, "]"],
-    simp [] [] ["only"] ["[", expr hz₁, ",", expr hz₂, ",", expr submodule.coe_mk, ",", expr lie_hom.map_lie, "]"] [] [] },
-  { rintros ["⟨", ident x, ",", "⟨", "⟨", ident z₁, ",", ident hz₁, "⟩", ",", "⟨", ident z₂, ",", ident hz₂, "⟩", ",", ident hx, "⟩", ",", ident hy, "⟩"],
-    rw ["[", "<-", expr hy, ",", "<-", expr hx, "]"] [],
-    have [ident hz₁'] [":", expr «expr ∈ »(f z₁, «expr ⊓ »(f.ideal_range, J₁))] [],
-    { rw [expr lie_submodule.mem_inf] [],
-      exact [expr ⟨f.mem_ideal_range, hz₁⟩] },
-    have [ident hz₂'] [":", expr «expr ∈ »(f z₂, «expr ⊓ »(f.ideal_range, J₂))] [],
-    { rw [expr lie_submodule.mem_inf] [],
-      exact [expr ⟨f.mem_ideal_range, hz₂⟩] },
-    use ["[", expr ⟨f z₁, hz₁'⟩, ",", expr ⟨f z₂, hz₂'⟩, "]"],
-    simp [] [] ["only"] ["[", expr submodule.coe_mk, ",", expr lie_hom.map_lie, "]"] [] [] }
-end
+theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.is_ideal_morphism) :
+  comap f ⁅f.ideal_range⊓J₁,f.ideal_range⊓J₂⁆ = ⁅comap f J₁,comap f J₂⁆⊔f.ker :=
+  by 
+    rw [←LieSubmodule.coe_to_submodule_eq_iff, comap_coe_submodule, LieSubmodule.sup_coe_to_submodule,
+      f.ker_coe_submodule, ←Submodule.comap_map_eq, LieSubmodule.lie_ideal_oper_eq_linear_span,
+      LieSubmodule.lie_ideal_oper_eq_linear_span, LinearMap.map_span]
+    congr 
+    simp only [LieHom.coe_to_linear_map, Set.mem_set_of_eq]
+    ext y 
+    constructor
+    ·
+      rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩, hy⟩
+      rw [←hy]
+      erw [LieSubmodule.mem_inf, f.mem_ideal_range_iff h] at hx₁ hx₂ 
+      obtain ⟨⟨z₁, hz₁⟩, hz₁'⟩ := hx₁ 
+      rw [←hz₁] at hz₁' 
+      obtain ⟨⟨z₂, hz₂⟩, hz₂'⟩ := hx₂ 
+      rw [←hz₂] at hz₂' 
+      use ⁅z₁,z₂⁆, ⟨z₁, hz₁'⟩, ⟨z₂, hz₂'⟩, rfl 
+      simp only [hz₁, hz₂, Submodule.coe_mk, LieHom.map_lie]
+    ·
+      rintro ⟨x, ⟨⟨z₁, hz₁⟩, ⟨z₂, hz₂⟩, hx⟩, hy⟩
+      rw [←hy, ←hx]
+      have hz₁' : f z₁ ∈ f.ideal_range⊓J₁
+      ·
+        rw [LieSubmodule.mem_inf]
+        exact ⟨f.mem_ideal_range, hz₁⟩
+      have hz₂' : f z₂ ∈ f.ideal_range⊓J₂
+      ·
+        rw [LieSubmodule.mem_inf]
+        exact ⟨f.mem_ideal_range, hz₂⟩
+      use ⟨f z₁, hz₁'⟩, ⟨f z₂, hz₂'⟩
+      simp only [Submodule.coe_mk, LieHom.map_lie]
 
 theorem map_comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.is_ideal_morphism) :
   map f ⁅comap f J₁,comap f J₂⁆ = ⁅f.ideal_range⊓J₁,f.ideal_range⊓J₂⁆ :=

@@ -1,4 +1,5 @@
 import Mathbin.Algebra.GroupPower.Basic 
+import Mathbin.Algebra.Ring.Opposite 
 import Mathbin.GroupTheory.GroupAction.Opposite
 
 /-!
@@ -41,7 +42,7 @@ instance MulZeroClass.toSmulWithZero [MulZeroClass R] : SmulWithZero R R :=
   { smul := ·*·, smul_zero := mul_zero, zero_smul := zero_mul }
 
 /-- Like `mul_zero_class.to_smul_with_zero`, but multiplies on the right. -/
-instance MulZeroClass.toOppositeSmulWithZero [MulZeroClass R] : SmulWithZero («expr ᵐᵒᵖ» R) R :=
+instance MulZeroClass.toOppositeSmulWithZero [MulZeroClass R] : SmulWithZero (Rᵐᵒᵖ) R :=
   { smul := · • ·, smul_zero := fun r => zero_mul _, zero_smul := mul_zero }
 
 instance AddMonoidₓ.toSmulWithZero [AddMonoidₓ M] : SmulWithZero ℕ M :=
@@ -133,7 +134,7 @@ instance MonoidWithZeroₓ.toMulActionWithZero : MulActionWithZero R R :=
 
 /-- Like `monoid_with_zero.to_mul_action_with_zero`, but multiplies on the right. See also
 `semiring.to_opposite_module` -/
-instance MonoidWithZeroₓ.toOppositeMulActionWithZero : MulActionWithZero («expr ᵐᵒᵖ» R) R :=
+instance MonoidWithZeroₓ.toOppositeMulActionWithZero : MulActionWithZero (Rᵐᵒᵖ) R :=
   { MulZeroClass.toOppositeSmulWithZero R, Monoidₓ.toOppositeMulAction R with  }
 
 variable {R M} [MulActionWithZero R M] [HasZero M'] [HasScalar R M']

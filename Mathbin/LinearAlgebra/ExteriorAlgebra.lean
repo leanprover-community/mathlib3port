@@ -59,11 +59,14 @@ inductive rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end ExteriorAlgebra
 
--- error in LinearAlgebra.ExteriorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler algebra R
 /--
 The exterior algebra of an `R`-module `M`.
--/ @[derive #["[", expr inhabited, ",", expr semiring, ",", expr algebra R, "]"]] def exterior_algebra :=
-ring_quot (exterior_algebra.rel R M)
+-/
+def ExteriorAlgebra :=
+  RingQuot (ExteriorAlgebra.Rel R M)deriving [anonymous], [anonymous], [anonymous]
 
 namespace ExteriorAlgebra
 
@@ -143,8 +146,6 @@ theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m, (f m*f m) = 0) (g : Exter
     rw [lift_symm_apply]
     simp only 
 
-attribute [irreducible] ι lift
-
 variable {R M}
 
 @[simp]
@@ -163,32 +164,24 @@ theorem hom_ext {f g : ExteriorAlgebra R M →ₐ[R] A} (h : f.to_linear_map.com
     rw [lift_symm_apply, lift_symm_apply]
     simp only [h]
 
--- error in LinearAlgebra.ExteriorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `C` holds for the `algebra_map` of `r : R` into `exterior_algebra R M`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `exterior_algebra R M`.
 -/
 @[elab_as_eliminator]
-theorem induction
-{C : exterior_algebra R M → exprProp()}
-(h_grade0 : ∀ r, C (algebra_map R (exterior_algebra R M) r))
-(h_grade1 : ∀ x, C (ι R x))
-(h_mul : ∀ a b, C a → C b → C «expr * »(a, b))
-(h_add : ∀ a b, C a → C b → C «expr + »(a, b))
-(a : exterior_algebra R M) : C a :=
-begin
-  let [ident s] [":", expr subalgebra R (exterior_algebra R M)] [":=", expr { carrier := C,
-     mul_mem' := h_mul,
-     add_mem' := h_add,
-     algebra_map_mem' := h_grade0 }],
-  let [ident of] [":", expr {f : «expr →ₗ[ ] »(M, R, s) // ∀
-   m, «expr = »(«expr * »(f m, f m), 0)}] [":=", expr ⟨(ι R).cod_restrict s.to_submodule h_grade1, λ
-    m, «expr $ »(subtype.eq, ι_sq_zero m)⟩],
-  have [ident of_id] [":", expr «expr = »(alg_hom.id R (exterior_algebra R M), s.val.comp (lift R of))] [],
-  { ext [] [] [],
-    simp [] [] [] ["[", expr of, "]"] [] [] },
-  convert [] [expr subtype.prop (lift R of a)] [],
-  exact [expr alg_hom.congr_fun of_id a]
-end
+theorem induction {C : ExteriorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebraMap R (ExteriorAlgebra R M) r))
+  (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a*b)) (h_add : ∀ a b, C a → C b → C (a+b))
+  (a : ExteriorAlgebra R M) : C a :=
+  by 
+    let s : Subalgebra R (ExteriorAlgebra R M) :=
+      { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
+    let of : { f : M →ₗ[R] s // ∀ m, (f m*f m) = 0 } :=
+      ⟨(ι R).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq$ ι_sq_zero m⟩
+    have of_id : AlgHom.id R (ExteriorAlgebra R M) = s.val.comp (lift R of)
+    ·
+      ext 
+      simp [of]
+    convert Subtype.prop (lift R of a)
+    exact AlgHom.congr_fun of_id a
 
 /-- The left-inverse of `algebra_map`. -/
 def algebra_map_inv : ExteriorAlgebra R M →ₐ[R] R :=
@@ -225,7 +218,7 @@ variable {M}
 /-- The canonical map from `exterior_algebra R M` into `triv_sq_zero_ext R M` that sends
 `exterior_algebra.ι` to `triv_sq_zero_ext.inr`. -/
 def to_triv_sq_zero_ext : ExteriorAlgebra R M →ₐ[R] TrivSqZeroExt R M :=
-  lift R ⟨TrivSqZeroExt.inrHom R M, fun m => TrivSqZeroExt.inr_mul_inr R _ m m⟩
+  lift R ⟨TrivSqZeroExt.inrHom R M, fun m => TrivSqZeroExt.inr_mul_inr R m m⟩
 
 @[simp]
 theorem to_triv_sq_zero_ext_ι (x : M) : to_triv_sq_zero_ext (ι R x) = TrivSqZeroExt.inr x :=
@@ -256,21 +249,19 @@ theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 :=
   by 
     rw [←ι_inj R x 0, LinearMap.map_zero]
 
--- error in LinearAlgebra.ExteriorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem ι_eq_algebra_map_iff
-(x : M)
-(r : R) : «expr ↔ »(«expr = »(ι R x, algebra_map R _ r), «expr ∧ »(«expr = »(x, 0), «expr = »(r, 0))) :=
-begin
-  refine [expr ⟨λ h, _, _⟩],
-  { have [ident hf0] [":", expr «expr = »(to_triv_sq_zero_ext (ι R x), (0, x))] [],
-    from [expr to_triv_sq_zero_ext_ι _],
-    rw ["[", expr h, ",", expr alg_hom.commutes, "]"] ["at", ident hf0],
-    have [] [":", expr «expr ∧ »(«expr = »(r, 0), «expr = »(0, x))] [":=", expr prod.ext_iff.1 hf0],
-    exact [expr this.symm.imp_left eq.symm] },
-  { rintro ["⟨", ident rfl, ",", ident rfl, "⟩"],
-    rw ["[", expr linear_map.map_zero, ",", expr ring_hom.map_zero, "]"] [] }
-end
+theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 :=
+  by 
+    refine' ⟨fun h => _, _⟩
+    ·
+      have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x)
+      exact to_triv_sq_zero_ext_ι _ 
+      rw [h, AlgHom.commutes] at hf0 
+      have  : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0 
+      exact this.symm.imp_left Eq.symm
+    ·
+      rintro ⟨rfl, rfl⟩
+      rw [LinearMap.map_zero, RingHom.map_zero]
 
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 :=

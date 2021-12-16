@@ -36,7 +36,7 @@ iterated Fréchet derivative.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical TopologicalSpace BigOperators
 
@@ -90,7 +90,7 @@ theorem iterated_fderiv_within_eq_equiv_comp :
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
 theorem iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod {m : Finₓ n → 𝕜} :
-  (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) m = (∏i, m i) • iteratedDerivWithin n f s x :=
+  (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) m = (∏ i, m i) • iteratedDerivWithin n f s x :=
   by 
     rw [iterated_deriv_within_eq_iterated_fderiv_within, ←ContinuousMultilinearMap.map_smul_univ]
     simp 
@@ -219,7 +219,7 @@ theorem iterated_fderiv_eq_equiv_comp :
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
 theorem iterated_fderiv_apply_eq_iterated_deriv_mul_prod {m : Finₓ n → 𝕜} :
-  (iteratedFderiv 𝕜 n f x : (Finₓ n → 𝕜) → F) m = (∏i, m i) • iteratedDeriv n f x :=
+  (iteratedFderiv 𝕜 n f x : (Finₓ n → 𝕜) → F) m = (∏ i, m i) • iteratedDeriv n f x :=
   by 
     rw [iterated_deriv_eq_iterated_fderiv, ←ContinuousMultilinearMap.map_smul_univ]
     simp 

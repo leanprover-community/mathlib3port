@@ -42,6 +42,8 @@ theorem disjoint_left : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₁ → a ∉
 theorem disjoint_right : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₂ → a ∉ l₁ :=
   disjoint_comm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l₂)
 theorem disjoint_iff_ne : Disjoint l₁ l₂ ↔ ∀ a _ : a ∈ l₁, ∀ b _ : b ∈ l₂, a ≠ b :=
   by 
     simp only [disjoint_left, imp_not_comm, forall_eq']
@@ -114,19 +116,51 @@ theorem disjoint_of_disjoint_append_right_left (d : Disjoint l (l₁ ++ l₂)) :
 theorem disjoint_of_disjoint_append_right_right (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₂ :=
   (disjoint_append_right.1 d).2
 
--- error in Data.List.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem disjoint_take_drop {m n : exprℕ()} (hl : l.nodup) (h : «expr ≤ »(m, n)) : disjoint (l.take m) (l.drop n) :=
-begin
-  induction [expr l] [] [] ["generalizing", ident m, ident n],
-  case [ident list.nil, ":", ident m, ident n] { simp [] [] [] [] [] [] },
-  case [ident list.cons, ":", ident x, ident xs, ident xs_ih, ident m, ident n] { cases [expr m] []; cases [expr n] []; simp [] [] ["only"] ["[", expr disjoint_cons_left, ",", expr mem_cons_iff, ",", expr disjoint_cons_right, ",", expr drop, ",", expr true_or, ",", expr eq_self_iff_true, ",", expr not_true, ",", expr false_and, ",", expr disjoint_nil_left, ",", expr take, "]"] [] [],
-    { cases [expr h] [] },
-    cases [expr hl] ["with", "_", "_", ident h₀, ident h₁],
-    split,
-    { intro [ident h],
-      exact [expr h₀ _ (mem_of_mem_drop h) rfl] },
-    solve_by_elim [] [] ["[", expr le_of_succ_le_succ, "]"] [] { max_depth := 4 } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  disjoint_take_drop
+  { m n : ℕ } ( hl : l.nodup ) ( h : m ≤ n ) : Disjoint l.take m l.drop n
+  :=
+    by
+      induction l generalizing m n
+        case list.nil m n => simp
+        case
+          list.cons
+          x xs xs_ih m n
+          =>
+          cases m
+              <;>
+              cases n
+                <;>
+                simp
+                  only
+                  [
+                    disjoint_cons_left
+                      ,
+                      mem_cons_iff
+                      ,
+                      disjoint_cons_right
+                      ,
+                      drop
+                      ,
+                      true_orₓ
+                      ,
+                      eq_self_iff_true
+                      ,
+                      not_true
+                      ,
+                      false_andₓ
+                      ,
+                      disjoint_nil_left
+                      ,
+                      take
+                    ]
+            · cases h
+            cases' hl with _ _ h₀ h₁
+            constructor
+            · intro h exact h₀ _ mem_of_mem_drop h rfl
+            solveByElim ( config := { max_depth := 4 } ) [ le_of_succ_le_succ ]
 
 end Disjoint
 
@@ -171,7 +205,7 @@ theorem sublist_suffix_of_union : ∀ l₁ l₂ : List α, ∃ t, t <+ l₁ ∧ 
   else
     ⟨a :: t, s.cons_cons _,
       by 
-        simp only [cons_append, cons_union, e, insert_of_not_mem h] <;> split  <;> rfl⟩
+        simp only [cons_append, cons_union, e, insert_of_not_mem h] <;> constructor <;> rfl⟩
 
 theorem suffix_union_right (l₁ l₂ : List α) : l₂ <:+ l₁ ∪ l₂ :=
   (sublist_suffix_of_union l₁ l₂).imp fun a => And.right
@@ -180,13 +214,20 @@ theorem union_sublist_append (l₁ l₂ : List α) : l₁ ∪ l₂ <+ l₁ ++ l�
   let ⟨t, s, e⟩ := sublist_suffix_of_union l₁ l₂ 
   e ▸ (append_sublist_append_right _).2 s
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∪ »(l₁, l₂))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₂)
 theorem forall_mem_union : (∀ x _ : x ∈ l₁ ∪ l₂, p x) ↔ (∀ x _ : x ∈ l₁, p x) ∧ ∀ x _ : x ∈ l₂, p x :=
   by 
     simp only [mem_union, or_imp_distrib, forall_and_distrib]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∪ »(l₁, l₂))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
 theorem forall_mem_of_forall_mem_union_left (h : ∀ x _ : x ∈ l₁ ∪ l₂, p x) : ∀ x _ : x ∈ l₁, p x :=
   (forall_mem_union.1 h).1
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∪ »(l₁, l₂))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₂)
 theorem forall_mem_of_forall_mem_union_right (h : ∀ x _ : x ∈ l₁ ∪ l₂, p x) : ∀ x _ : x ∈ l₂, p x :=
   (forall_mem_union.1 h).2
 
@@ -236,9 +277,11 @@ theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ :=
     simp only [eq_nil_iff_forall_not_mem, mem_inter, not_and]
     rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
 theorem forall_mem_inter_of_forall_left (h : ∀ x _ : x ∈ l₁, p x) (l₂ : List α) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
   Ball.imp_left (fun x => mem_of_mem_inter_left) h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₂)
 theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀ x _ : x ∈ l₂, p x) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
   Ball.imp_left (fun x => mem_of_mem_inter_right) h
 

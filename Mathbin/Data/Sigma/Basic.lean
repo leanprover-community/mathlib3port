@@ -50,7 +50,7 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} : Sigma.mk
     simp 
 
 @[simp]
-theorem eta : ∀ x : Σa, β a, Sigma.mk x.1 x.2 = x
+theorem eta : ∀ x : Σ a, β a, Sigma.mk x.1 x.2 = x
 | ⟨i, x⟩ => rfl
 
 @[ext]
@@ -71,19 +71,19 @@ theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq
 /-- A specialized ext lemma for equality of sigma types over an indexed subtype. -/
 @[ext]
 theorem subtype_ext {β : Type _} {p : α → β → Prop} :
-  ∀ {x₀ x₁ : Σa, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
+  ∀ {x₀ x₁ : Σ a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
 | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
 
-theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σa, Subtype (p a)} :
+theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σ a, Subtype (p a)} :
   x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 
 @[simp]
-theorem forall {p : (Σa, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
+theorem forall {p : (Σ a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 
 @[simp]
-theorem exists {p : (Σa, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
+theorem exists {p : (Σ a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 
 /-- Map the left and right components of a sigma -/
@@ -95,20 +95,16 @@ end Sigma
 theorem sigma_mk_injective {i : α} : Function.Injective (@Sigma.mk α β i)
 | _, _, rfl => rfl
 
--- error in Data.Sigma.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem function.injective.sigma_map
-{f₁ : α₁ → α₂}
-{f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
-(h₁ : function.injective f₁)
-(h₂ : ∀ a, function.injective (f₂ a)) : function.injective (sigma.map f₁ f₂)
-| ⟨i, x⟩, ⟨j, y⟩, h := begin
-  have [] [":", expr «expr = »(i, j)] [],
-  from [expr h₁ (sigma.mk.inj_iff.mp h).1],
-  subst [expr j],
-  have [] [":", expr «expr = »(x, y)] [],
-  from [expr h₂ i (eq_of_heq (sigma.mk.inj_iff.mp h).2)],
-  subst [expr y]
-end
+theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Injective f₁)
+  (h₂ : ∀ a, Function.Injective (f₂ a)) : Function.Injective (Sigma.map f₁ f₂)
+| ⟨i, x⟩, ⟨j, y⟩, h =>
+  by 
+    have  : i = j 
+    exact h₁ (sigma.mk.inj_iff.mp h).1
+    subst j 
+    have  : x = y 
+    exact h₂ i (eq_of_heq (sigma.mk.inj_iff.mp h).2)
+    subst y
 
 theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Surjective f₁)
   (h₂ : ∀ a, Function.Surjective (f₂ a)) : Function.Surjective (Sigma.map f₁ f₂) :=
@@ -144,7 +140,7 @@ theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ x y : β x, �
 
 /-- Convert a product type to a Σ-type. -/
 @[simp]
-def Prod.toSigma {α β} : α × β → Σ_ : α, β
+def Prod.toSigma {α β} : α × β → Σ _ : α, β
 | ⟨x, y⟩ => ⟨x, y⟩
 
 @[simp]
@@ -210,10 +206,10 @@ theorem ext_iff {x₀ x₁ : Psigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HE
 /-- A specialized ext lemma for equality of psigma types over an indexed subtype. -/
 @[ext]
 theorem subtype_ext {β : Sort _} {p : α → β → Prop} :
-  ∀ {x₀ x₁ : Σ'a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
+  ∀ {x₀ x₁ : Σ' a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
 | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
 
-theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ'a, Subtype (p a)} :
+theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ' a, Subtype (p a)} :
   x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 

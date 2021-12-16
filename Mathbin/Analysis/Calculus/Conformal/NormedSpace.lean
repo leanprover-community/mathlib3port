@@ -36,7 +36,7 @@ Maps such as the complex conjugate are considered to be conformal.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 variable {X Y Z : Type _} [NormedGroup X] [NormedGroup Y] [NormedGroup Z] [NormedSpace ℝ X] [NormedSpace ℝ Y]
   [NormedSpace ℝ Z]
@@ -59,7 +59,7 @@ theorem conformal_at_const_smul {c : ℝ} (h : c ≠ 0) (x : X) : ConformalAt (f
 theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
   ConformalAt f x ↔ IsConformalMap (fderiv ℝ f x) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨c, hf, hf'⟩
       rw [hf.fderiv]

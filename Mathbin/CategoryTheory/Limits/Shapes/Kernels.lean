@@ -40,7 +40,7 @@ general limits can be used.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u u'
 
@@ -794,35 +794,27 @@ end HasZeroObject
 
 section HasImage
 
--- error in CategoryTheory.Limits.Shapes.Kernels: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The cokernel of the image inclusion of a morphism `f` is isomorphic to the cokernel of `f`.
 
 (This result requires that the factorisation through the image is an epimorphism.
 This holds in any category with equalizers.)
 -/
-@[simps #[]]
-def cokernel_image_ι
-{X Y : C}
-(f : «expr ⟶ »(X, Y))
-[has_image f]
-[has_cokernel (image.ι f)]
-[has_cokernel f]
-[epi (factor_thru_image f)] : «expr ≅ »(cokernel (image.ι f), cokernel f) :=
-{ hom := cokernel.desc _ (cokernel.π f) (begin
-     have [ident w] [] [":=", expr cokernel.condition f],
-     conv ["at", ident w] [] { to_lhs,
-       congr,
-       rw ["<-", expr image.fac f] },
-     rw ["[", "<-", expr has_zero_morphisms.comp_zero (limits.factor_thru_image f), ",", expr category.assoc, ",", expr cancel_epi, "]"] ["at", ident w],
-     exact [expr w]
-   end),
-  inv := cokernel.desc _ (cokernel.π _) (begin
-     conv [] [] { to_lhs,
-       congr,
-       rw ["<-", expr image.fac f] },
-     rw ["[", expr category.assoc, ",", expr cokernel.condition, ",", expr has_zero_morphisms.comp_zero, "]"] []
-   end) }
+@[simps]
+def cokernel_image_ι {X Y : C} (f : X ⟶ Y) [has_image f] [has_cokernel (image.ι f)] [has_cokernel f]
+  [epi (factor_thru_image f)] : cokernel (image.ι f) ≅ cokernel f :=
+  { Hom :=
+      cokernel.desc _ (cokernel.π f)
+        (by 
+          have w := cokernel.condition f 
+          conv  at w => lhs congr rw [←image.fac f]
+          rw [←has_zero_morphisms.comp_zero (limits.factor_thru_image f), category.assoc, cancel_epi] at w 
+          exact w),
+    inv :=
+      cokernel.desc _ (cokernel.π _)
+        (by 
+          conv  => lhs congr rw [←image.fac f]
+          rw [category.assoc, cokernel.condition, has_zero_morphisms.comp_zero]) }
 
 end HasImage
 

@@ -22,11 +22,16 @@ open_locale Classical
 variable {α β γ ι : Type _} [MeasurableSpace α] [MeasurableSpace β] {f : ι → α → β} {μ : Measureₓ α}
   {p : α → (ι → β) → Prop}
 
-/-- If we have the additional hypothesis `∀ᵐ x ∂μ, p x (λ n, f n x)`, this is a measurable set
-whose complement has measure 0 such that for all `x ∈ ae_seq_set`, `f i x` is equal to
-`(hf i).mk (f i) x` for all `i` and we have the pointwise property `p x (λ n, f n x)`. -/
-def AeSeqSet (hf : ∀ i, AeMeasurable (f i) μ) (p : α → (ι → β) → Prop) : Set α :=
-  «expr ᶜ» (to_measurable μ («expr ᶜ» { x | (∀ i, f i x = (hf i).mk (f i) x) ∧ p x fun n => f n x }))
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    If we have the additional hypothesis `∀ᵐ x ∂μ, p x (λ n, f n x)`, this is a measurable set
+    whose complement has measure 0 such that for all `x ∈ ae_seq_set`, `f i x` is equal to
+    `(hf i).mk (f i) x` for all `i` and we have the pointwise property `p x (λ n, f n x)`. -/
+  def
+    AeSeqSet
+    ( hf : ∀ i , AeMeasurable f i μ ) ( p : α → ι → β → Prop ) : Set α
+    := to_measurable μ { x | ∀ i , f i x = hf i . mk f i x ∧ p x fun n => f n x } ᶜ ᶜ
 
 /-- A sequence of measurable functions that are equal to `f` and verify property `p` on the
 measurable set `ae_seq_set hf p`. -/
@@ -37,20 +42,19 @@ namespace aeSeq
 
 section MemAeSeqSet
 
--- error in MeasureTheory.Function.AeMeasurableSequence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mk_eq_fun_of_mem_ae_seq_set
-(hf : ∀ i, ae_measurable (f i) μ)
-{x : α}
-(hx : «expr ∈ »(x, ae_seq_set hf p))
-(i : ι) : «expr = »((hf i).mk (f i) x, f i x) :=
-begin
-  have [ident h_ss] [":", expr «expr ⊆ »(ae_seq_set hf p, {x | ∀ i, «expr = »(f i x, (hf i).mk (f i) x)})] [],
-  { rw ["[", expr ae_seq_set, ",", "<-", expr compl_compl {x | ∀
-     i, «expr = »(f i x, (hf i).mk (f i) x)}, ",", expr set.compl_subset_compl, "]"] [],
-    refine [expr set.subset.trans (set.compl_subset_compl.mpr (λ x h, _)) (subset_to_measurable _ _)],
-    exact [expr h.1] },
-  exact [expr (h_ss hx i).symm]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mk_eq_fun_of_mem_ae_seq_set
+  ( hf : ∀ i , AeMeasurable f i μ ) { x : α } ( hx : x ∈ AeSeqSet hf p ) ( i : ι ) : hf i . mk f i x = f i x
+  :=
+    by
+      have h_ss : AeSeqSet hf p ⊆ { x | ∀ i , f i x = hf i . mk f i x }
+        ·
+          rw [ AeSeqSet , ← compl_compl { x | ∀ i , f i x = hf i . mk f i x } , Set.compl_subset_compl ]
+            refine' Set.Subset.trans set.compl_subset_compl.mpr fun x h => _ subset_to_measurable _ _
+            exact h . 1
+        exact h_ss hx i . symm
 
 theorem ae_seq_eq_mk_of_mem_ae_seq_set (hf : ∀ i, AeMeasurable (f i) μ) {x : α} (hx : x ∈ AeSeqSet hf p) (i : ι) :
   aeSeq hf p i x = (hf i).mk (f i) x :=
@@ -62,34 +66,30 @@ theorem ae_seq_eq_fun_of_mem_ae_seq_set (hf : ∀ i, AeMeasurable (f i) μ) {x :
   by 
     simp only [ae_seq_eq_mk_of_mem_ae_seq_set hf hx i, mk_eq_fun_of_mem_ae_seq_set hf hx i]
 
--- error in MeasureTheory.Function.AeMeasurableSequence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prop_of_mem_ae_seq_set
-(hf : ∀ i, ae_measurable (f i) μ)
-{x : α}
-(hx : «expr ∈ »(x, ae_seq_set hf p)) : p x (λ n, ae_seq hf p n x) :=
-begin
-  simp [] [] ["only"] ["[", expr ae_seq, ",", expr hx, ",", expr if_true, "]"] [] [],
-  rw [expr funext (λ n, mk_eq_fun_of_mem_ae_seq_set hf hx n)] [],
-  have [ident h_ss] [":", expr «expr ⊆ »(ae_seq_set hf p, {x | p x (λ n, f n x)})] [],
-  { rw ["[", "<-", expr compl_compl {x | p x (λ
-      n, f n x)}, ",", expr ae_seq_set, ",", expr set.compl_subset_compl, "]"] [],
-    refine [expr set.subset.trans (set.compl_subset_compl.mpr _) (subset_to_measurable _ _)],
-    exact [expr λ x hx, hx.2] },
-  have [ident hx'] [] [":=", expr set.mem_of_subset_of_mem h_ss hx],
-  exact [expr hx']
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  prop_of_mem_ae_seq_set
+  ( hf : ∀ i , AeMeasurable f i μ ) { x : α } ( hx : x ∈ AeSeqSet hf p ) : p x fun n => aeSeq hf p n x
+  :=
+    by
+      simp only [ aeSeq , hx , if_true ]
+        rw [ funext fun n => mk_eq_fun_of_mem_ae_seq_set hf hx n ]
+        have h_ss : AeSeqSet hf p ⊆ { x | p x fun n => f n x }
+        ·
+          rw [ ← compl_compl { x | p x fun n => f n x } , AeSeqSet , Set.compl_subset_compl ]
+            refine' Set.Subset.trans set.compl_subset_compl.mpr _ subset_to_measurable _ _
+            exact fun x hx => hx . 2
+        have hx' := Set.mem_of_subset_of_mem h_ss hx
+        exact hx'
 
--- error in MeasureTheory.Function.AeMeasurableSequence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fun_prop_of_mem_ae_seq_set
-(hf : ∀ i, ae_measurable (f i) μ)
-{x : α}
-(hx : «expr ∈ »(x, ae_seq_set hf p)) : p x (λ n, f n x) :=
-begin
-  have [ident h_eq] [":", expr «expr = »(λ n, f n x, λ n, ae_seq hf p n x)] [],
-  from [expr funext (λ n, (ae_seq_eq_fun_of_mem_ae_seq_set hf hx n).symm)],
-  rw [expr h_eq] [],
-  exact [expr prop_of_mem_ae_seq_set hf hx]
-end
+theorem fun_prop_of_mem_ae_seq_set (hf : ∀ i, AeMeasurable (f i) μ) {x : α} (hx : x ∈ AeSeqSet hf p) :
+  p x fun n => f n x :=
+  by 
+    have h_eq : (fun n => f n x) = fun n => aeSeq hf p n x 
+    exact funext fun n => (ae_seq_eq_fun_of_mem_ae_seq_set hf hx n).symm 
+    rw [h_eq]
+    exact prop_of_mem_ae_seq_set hf hx
 
 end MemAeSeqSet
 
@@ -99,63 +99,49 @@ theorem ae_seq_set_measurable_set {hf : ∀ i, AeMeasurable (f i) μ} : Measurab
 theorem Measurable (hf : ∀ i, AeMeasurable (f i) μ) (p : α → (ι → β) → Prop) (i : ι) : Measurable (aeSeq hf p i) :=
   Measurable.ite ae_seq_set_measurable_set (hf i).measurable_mk$ measurable_const'$ fun x y => rfl
 
--- error in MeasureTheory.Function.AeMeasurableSequence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem measure_compl_ae_seq_set_eq_zero
-[encodable ι]
-(hf : ∀ i, ae_measurable (f i) μ)
-(hp : «expr∀ᵐ ∂ , »((x), μ, p x (λ n, f n x))) : «expr = »(μ «expr ᶜ»(ae_seq_set hf p), 0) :=
-begin
-  rw ["[", expr ae_seq_set, ",", expr compl_compl, ",", expr measure_to_measurable, "]"] [],
-  have [ident hf_eq] [] [":=", expr λ i, (hf i).ae_eq_mk],
-  simp_rw ["[", expr filter.eventually_eq, ",", "<-", expr ae_all_iff, "]"] ["at", ident hf_eq],
-  exact [expr filter.eventually.and hf_eq hp]
-end
+theorem measure_compl_ae_seq_set_eq_zero [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ)
+  (hp : ∀ᵐ x ∂μ, p x fun n => f n x) : μ (AeSeqSet hf pᶜ) = 0 :=
+  by 
+    rw [AeSeqSet, compl_compl, measure_to_measurable]
+    have hf_eq := fun i => (hf i).ae_eq_mk 
+    simpRw [Filter.EventuallyEq, ←ae_all_iff]  at hf_eq 
+    exact Filter.Eventually.and hf_eq hp
 
--- error in MeasureTheory.Function.AeMeasurableSequence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ae_seq_eq_mk_ae
-[encodable ι]
-(hf : ∀ i, ae_measurable (f i) μ)
-(hp : «expr∀ᵐ ∂ , »((x), μ, p x (λ
-   n, f n x))) : «expr∀ᵐ ∂ , »((a : α), μ, ∀ i : ι, «expr = »(ae_seq hf p i a, (hf i).mk (f i) a)) :=
-begin
-  have [ident h_ss] [":", expr «expr ⊆ »(ae_seq_set hf p, {a : α | ∀
-    i, «expr = »(ae_seq hf p i a, (hf i).mk (f i) a)})] [],
-  from [expr λ x hx i, by simp [] [] ["only"] ["[", expr ae_seq, ",", expr hx, ",", expr if_true, "]"] [] []],
-  exact [expr le_antisymm (le_trans (measure_mono (set.compl_subset_compl.mpr h_ss)) (le_of_eq (measure_compl_ae_seq_set_eq_zero hf hp))) (zero_le _)]
-end
+theorem ae_seq_eq_mk_ae [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
+  ∀ᵐ a : α ∂μ, ∀ i : ι, aeSeq hf p i a = (hf i).mk (f i) a :=
+  by 
+    have h_ss : AeSeqSet hf p ⊆ { a : α | ∀ i, aeSeq hf p i a = (hf i).mk (f i) a }
+    exact
+      fun x hx i =>
+        by 
+          simp only [aeSeq, hx, if_true]
+    exact
+      le_antisymmₓ
+        (le_transₓ (measure_mono (set.compl_subset_compl.mpr h_ss))
+          (le_of_eqₓ (measure_compl_ae_seq_set_eq_zero hf hp)))
+        (zero_le _)
 
--- error in MeasureTheory.Function.AeMeasurableSequence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ae_seq_eq_fun_ae
-[encodable ι]
-(hf : ∀ i, ae_measurable (f i) μ)
-(hp : «expr∀ᵐ ∂ , »((x), μ, p x (λ
-   n, f n x))) : «expr∀ᵐ ∂ , »((a : α), μ, ∀ i : ι, «expr = »(ae_seq hf p i a, f i a)) :=
-begin
-  have [ident h_ss] [":", expr «expr ⊆ »({a : α | «expr¬ »(∀
-     i : ι, «expr = »(ae_seq hf p i a, f i a))}, «expr ᶜ»(ae_seq_set hf p))] [],
-  from [expr λ x, mt (λ hx i, ae_seq_eq_fun_of_mem_ae_seq_set hf hx i)],
-  exact [expr measure_mono_null h_ss (measure_compl_ae_seq_set_eq_zero hf hp)]
-end
+theorem ae_seq_eq_fun_ae [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
+  ∀ᵐ a : α ∂μ, ∀ i : ι, aeSeq hf p i a = f i a :=
+  by 
+    have h_ss : { a : α | ¬∀ i : ι, aeSeq hf p i a = f i a } ⊆ AeSeqSet hf pᶜ
+    exact fun x => mt fun hx i => ae_seq_eq_fun_of_mem_ae_seq_set hf hx i 
+    exact measure_mono_null h_ss (measure_compl_ae_seq_set_eq_zero hf hp)
 
-theorem ae_seq_n_eq_fun_n_ae [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐx ∂μ, p x fun n => f n x) (n : ι) :
+theorem ae_seq_n_eq_fun_n_ae [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) (n : ι) :
   aeSeq hf p n =ᵐ[μ] f n :=
   ae_all_iff.mp (ae_seq_eq_fun_ae hf hp) n
 
--- error in MeasureTheory.Function.AeMeasurableSequence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem supr
-[complete_lattice β]
-[encodable ι]
-(hf : ∀ i, ae_measurable (f i) μ)
-(hp : «expr∀ᵐ ∂ , »((x), μ, p x (λ
-   n, f n x))) : «expr =ᵐ[ ] »(«expr⨆ , »((n), ae_seq hf p n), μ, «expr⨆ , »((n), f n)) :=
-begin
-  simp_rw ["[", expr filter.eventually_eq, ",", expr ae_iff, ",", expr supr_apply, "]"] [],
-  have [ident h_ss] [":", expr «expr ⊆ »(ae_seq_set hf p, {a : α | «expr = »(«expr⨆ , »((i : ι), ae_seq hf p i a), «expr⨆ , »((i : ι), f i a))})] [],
-  { intros [ident x, ident hx],
-    congr,
-    exact [expr funext (λ i, ae_seq_eq_fun_of_mem_ae_seq_set hf hx i)] },
-  exact [expr measure_mono_null (set.compl_subset_compl.mpr h_ss) (measure_compl_ae_seq_set_eq_zero hf hp)]
-end
+theorem supr [CompleteLattice β] [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
+  (⨆ n, aeSeq hf p n) =ᵐ[μ] ⨆ n, f n :=
+  by 
+    simpRw [Filter.EventuallyEq, ae_iff, supr_apply]
+    have h_ss : AeSeqSet hf p ⊆ { a : α | (⨆ i : ι, aeSeq hf p i a) = ⨆ i : ι, f i a }
+    ·
+      intro x hx 
+      congr 
+      exact funext fun i => ae_seq_eq_fun_of_mem_ae_seq_set hf hx i 
+    exact measure_mono_null (set.compl_subset_compl.mpr h_ss) (measure_compl_ae_seq_set_eq_zero hf hp)
 
 end aeSeq
 

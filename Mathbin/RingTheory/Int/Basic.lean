@@ -1,5 +1,5 @@
 import Mathbin.RingTheory.Coprime.Basic 
-import Mathbin.RingTheory.UniqueFactorizationDomain
+import Mathbin.RingTheory.PrincipalIdealDomain
 
 /-!
 # Divisibility over ℕ and ℤ
@@ -26,7 +26,7 @@ unique factors
 
 theorem Nat.prime_iff {p : ℕ} : p.prime ↔ Prime p :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       refine' ⟨h.ne_zero, ⟨_, fun a b => _⟩⟩
       ·
@@ -156,11 +156,11 @@ instance : NormalizationMonoid ℤ :=
                     decide) }
 
 theorem normalize_of_nonneg {z : ℤ} (h : 0 ≤ z) : normalize z = z :=
-  show (z*«expr↑ » (ite _ _ _)) = z by 
+  show (z*↑ite _ _ _) = z by 
     rw [if_pos h, Units.coe_one, mul_oneₓ]
 
 theorem normalize_of_neg {z : ℤ} (h : z < 0) : normalize z = -z :=
-  show (z*«expr↑ » (ite _ _ _)) = -z by 
+  show (z*↑ite _ _ _) = -z by 
     rw [if_neg (not_le_of_gtₓ h), Units.coe_neg, Units.coe_one, mul_neg_one]
 
 theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
@@ -205,10 +205,10 @@ instance : NormalizedGcdMonoid ℤ :=
   { Int.normalizationMonoid, (inferInstance : GcdMonoid ℤ) with normalize_gcd := fun a b => normalize_coe_nat _,
     normalize_lcm := fun a b => normalize_coe_nat _ }
 
-theorem coe_gcd (i j : ℤ) : «expr↑ » (Int.gcdₓ i j) = GcdMonoid.gcd i j :=
+theorem coe_gcd (i j : ℤ) : ↑Int.gcdₓ i j = GcdMonoid.gcd i j :=
   rfl
 
-theorem coe_lcm (i j : ℤ) : «expr↑ » (Int.lcm i j) = GcdMonoid.lcm i j :=
+theorem coe_lcm (i j : ℤ) : ↑Int.lcm i j = GcdMonoid.lcm i j :=
   rfl
 
 theorem nat_abs_gcd (i j : ℤ) : nat_abs (GcdMonoid.gcd i j) = Int.gcdₓ i j :=
@@ -235,7 +235,7 @@ theorem gcd_eq_nat_abs {a b : ℤ} : Int.gcdₓ a b = Nat.gcdₓ a.nat_abs b.nat
 
 theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcdₓ a b = 1 ↔ IsCoprime a b :=
   by 
-    split 
+    constructor
     ·
       intro hg 
       obtain ⟨ua, hua, ha⟩ := exists_unit_of_abs a 
@@ -255,21 +255,20 @@ theorem coprime_iff_nat_coprime {a b : ℤ} : IsCoprime a b ↔ Nat.Coprime a.na
   by 
     rw [←gcd_eq_one_iff_coprime, Nat.coprime_iff_gcd_eq_oneₓ, gcd_eq_nat_abs]
 
--- error in RingTheory.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sq_of_gcd_eq_one
-{a b c : exprℤ()}
-(h : «expr = »(int.gcd a b, 1))
-(heq : «expr = »(«expr * »(a, b), «expr ^ »(c, 2))) : «expr∃ , »((a0 : exprℤ()), «expr ∨ »(«expr = »(a, «expr ^ »(a0, 2)), «expr = »(a, «expr- »(«expr ^ »(a0, 2))))) :=
-begin
-  have [ident h'] [":", expr is_unit (gcd_monoid.gcd a b)] [],
-  { rw ["[", "<-", expr coe_gcd, ",", expr h, ",", expr int.coe_nat_one, "]"] [],
-    exact [expr is_unit_one] },
-  obtain ["⟨", ident d, ",", "⟨", ident u, ",", ident hu, "⟩", "⟩", ":=", expr exists_associated_pow_of_mul_eq_pow h' heq],
-  use [expr d],
-  rw ["<-", expr hu] [],
-  cases [expr int.units_eq_one_or u] ["with", ident hu', ident hu']; { rw [expr hu'] [],
-    simp [] [] [] [] [] [] }
-end
+theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcdₓ a b = 1) (heq : (a*b) = (c^2)) :
+  ∃ a0 : ℤ, a = (a0^2) ∨ a = -(a0^2) :=
+  by 
+    have h' : IsUnit (GcdMonoid.gcd a b)
+    ·
+      rw [←coe_gcd, h, Int.coe_nat_one]
+      exact is_unit_one 
+    obtain ⟨d, ⟨u, hu⟩⟩ := exists_associated_pow_of_mul_eq_pow h' HEq 
+    use d 
+    rw [←hu]
+    cases' Int.units_eq_one_or u with hu' hu' <;>
+      ·
+        rw [hu']
+        simp 
 
 theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : (a*b) = (c^2)) : ∃ a0 : ℤ, a = (a0^2) ∨ a = -(a0^2) :=
   sq_of_gcd_eq_one (gcd_eq_one_iff_coprime.mpr h) HEq
@@ -286,25 +285,34 @@ theorem nat_abs_euclidean_domain_gcd (a b : ℤ) : Int.natAbs (EuclideanDomain.g
 
 end Int
 
--- error in RingTheory.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem irreducible_iff_nat_prime : ∀ a : exprℕ(), «expr ↔ »(irreducible a, nat.prime a)
-| 0 := by simp [] [] [] ["[", expr nat.not_prime_zero, "]"] [] []
-| 1 := by simp [] [] [] ["[", expr nat.prime, ",", expr one_lt_two, "]"] [] []
-| «expr + »(n, 2) := have h₁ : «expr¬ »(«expr = »(«expr + »(n, 2), 1)), from exprdec_trivial(),
-begin
-  simp [] [] [] ["[", expr h₁, ",", expr nat.prime, ",", expr irreducible_iff, ",", expr («expr ≥ »), ",", expr nat.le_add_left 2 n, ",", expr («expr ∣ »), "]"] [] [],
-  refine [expr forall_congr (assume a, «expr $ »(forall_congr, assume b, «expr $ »(forall_congr, assume hab, _)))],
-  by_cases [expr «expr = »(a, 1)]; simp [] [] [] ["[", expr h, "]"] [] [],
-  split,
-  { assume [binders (hb)],
-    simpa [] [] [] ["[", expr hb, "]"] [] ["using", expr hab.symm] },
-  { assume [binders (ha)],
-    subst [expr ha],
-    have [] [":", expr «expr > »(«expr + »(n, 2), 0)] [],
-    from [expr exprdec_trivial()],
-    refine [expr nat.eq_of_mul_eq_mul_left this _],
-    rw ["[", "<-", expr hab, ",", expr mul_one, "]"] [] }
-end
+theorem irreducible_iff_nat_prime : ∀ a : ℕ, Irreducible a ↔ Nat.Prime a
+| 0 =>
+  by 
+    simp [Nat.not_prime_zero]
+| 1 =>
+  by 
+    simp [Nat.Prime, one_lt_two]
+| n+2 =>
+  have h₁ : ¬(n+2) = 1 :=
+    by 
+      decide 
+  by 
+    simp [h₁, Nat.Prime, irreducible_iff, · ≥ ·, Nat.le_add_leftₓ 2 n, · ∣ ·]
+    refine' forall_congrₓ fun a => forall_congrₓ$ fun b => forall_congrₓ$ fun hab => _ 
+    byCases' a = 1 <;> simp [h]
+    constructor
+    ·
+      intro hb 
+      simpa [hb] using hab.symm
+    ·
+      intro ha 
+      subst ha 
+      have  : (n+2) > 0 
+      exact
+        by 
+          decide 
+      refine' Nat.eq_of_mul_eq_mul_leftₓ this _ 
+      rw [←hab, mul_oneₓ]
 
 theorem Nat.prime_iff_prime_int {p : ℕ} : p.prime ↔ _root_.prime (p : ℤ) :=
   ⟨fun hp =>
@@ -337,7 +345,7 @@ def associatesIntEquivNat : Associates ℤ ≃ ℕ :=
     ·
       intro n 
       dsimp 
-      rw [Associates.out_mk («expr↑ » n), ←Int.coe_nat_abs_eq_normalize, Int.nat_abs_of_nat, Int.nat_abs_of_nat]
+      rw [←normalize_apply, ←Int.coe_nat_abs_eq_normalize, Int.nat_abs_of_nat, Int.nat_abs_of_nat]
 
 theorem Int.Prime.dvd_mul {m n : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ m*n) : p ∣ m.nat_abs ∨ p ∣ n.nat_abs :=
   by 
@@ -405,7 +413,7 @@ namespace multiplicity
 
 theorem finite_int_iff_nat_abs_finite {a b : ℤ} : finite a b ↔ finite a.nat_abs b.nat_abs :=
   by 
-    simp only [finite_def, ←Int.nat_abs_dvd_abs_iff, Int.nat_abs_pow]
+    simp only [finite_def, ←Int.nat_abs_dvd_iff_dvd, Int.nat_abs_pow]
 
 theorem finite_int_iff {a b : ℤ} : finite a b ↔ a.nat_abs ≠ 1 ∧ b ≠ 0 :=
   by 
@@ -440,7 +448,7 @@ theorem Int.prime_iff_nat_abs_prime {k : ℤ} : Prime k ↔ Nat.Prime k.nat_abs 
 
 theorem Int.associated_iff_nat_abs {a b : ℤ} : Associated a b ↔ a.nat_abs = b.nat_abs :=
   by 
-    rw [←dvd_dvd_iff_associated, ←Int.nat_abs_dvd_abs_iff, ←Int.nat_abs_dvd_abs_iff, dvd_dvd_iff_associated]
+    rw [←dvd_dvd_iff_associated, ←Int.nat_abs_dvd_iff_dvd, ←Int.nat_abs_dvd_iff_dvd, dvd_dvd_iff_associated]
     exact associated_iff_eq
 
 theorem Int.associated_iff {a b : ℤ} : Associated a b ↔ a = b ∨ a = -b :=
@@ -458,6 +466,24 @@ theorem span_nat_abs (a : ℤ) : Ideal.span ({a.nat_abs} : Set ℤ) = Ideal.span
   by 
     rw [Ideal.span_singleton_eq_span_singleton]
     exact (associated_nat_abs _).symm
+
+theorem eq_pow_of_mul_eq_pow_bit1_left {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : (a*b) = (c^bit1 k)) :
+  ∃ d, a = (d^bit1 k) :=
+  by 
+    obtain ⟨d, hd⟩ := exists_associated_pow_of_mul_eq_pow' hab h 
+    replace hd := hd.symm 
+    rw [associated_iff_nat_abs, nat_abs_eq_nat_abs_iff, ←neg_pow_bit1] at hd 
+    obtain rfl | rfl := hd <;> exact ⟨_, rfl⟩
+
+theorem eq_pow_of_mul_eq_pow_bit1_right {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : (a*b) = (c^bit1 k)) :
+  ∃ d, b = (d^bit1 k) :=
+  eq_pow_of_mul_eq_pow_bit1_left hab.symm
+    (by 
+      rwa [mul_commₓ] at h)
+
+theorem eq_pow_of_mul_eq_pow_bit1 {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : (a*b) = (c^bit1 k)) :
+  (∃ d, a = (d^bit1 k)) ∧ ∃ e, b = (e^bit1 k) :=
+  ⟨eq_pow_of_mul_eq_pow_bit1_left hab h, eq_pow_of_mul_eq_pow_bit1_right hab h⟩
 
 end Int
 

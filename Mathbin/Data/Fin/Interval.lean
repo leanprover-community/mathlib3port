@@ -118,7 +118,7 @@ theorem map_subtype_embedding_Ici : (Ici a).map (Function.Embedding.subtype _) =
   by 
     ext x 
     simp only [exists_prop, Function.Embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
-    split 
+    constructor
     ·
       rintro ⟨x, hx, rfl⟩
       exact ⟨hx, Nat.lt_succ_iff.1 x.2⟩

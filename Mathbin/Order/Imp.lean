@@ -17,7 +17,7 @@ namespace Lattice
 
 /-- Implication as a binary operation on a boolean algebra. -/
 def imp [HasCompl α] [HasSup α] (a b : α) : α :=
-  «expr ᶜ» a⊔b
+  aᶜ⊔b
 
 infixl:65 " ⇒ₒ " => Lattice.imp
 
@@ -39,11 +39,11 @@ theorem biimp_eq_iff (p q : Prop) : p ⇔ₒ q = (p ↔ q) :=
 variable [BooleanAlgebra α] {a b c d : α}
 
 @[simp]
-theorem compl_imp (a b : α) : «expr ᶜ» (a ⇒ₒ b) = a \ b :=
+theorem compl_imp (a b : α) : (a ⇒ₒ b)ᶜ = a \ b :=
   by 
     simp [imp, sdiff_eq]
 
-theorem compl_sdiff (a b : α) : «expr ᶜ» (a \ b) = a ⇒ₒ b :=
+theorem compl_sdiff (a b : α) : (a \ b)ᶜ = a ⇒ₒ b :=
   by 
     rw [←compl_imp, compl_compl]
 
@@ -66,7 +66,7 @@ theorem imp_eq_bot_iff : a ⇒ₒ b = ⊥ ↔ a = ⊤ ∧ b = ⊥ :=
     simp [imp]
 
 @[simp]
-theorem imp_bot (a : α) : a ⇒ₒ ⊥ = «expr ᶜ» a :=
+theorem imp_bot (a : α) : a ⇒ₒ ⊥ = aᶜ :=
   sup_bot_eq
 
 @[simp]
@@ -87,7 +87,7 @@ theorem imp_self (a : α) : a ⇒ₒ a = ⊤ :=
   compl_sup_eq_top
 
 @[simp]
-theorem compl_imp_compl (a b : α) : «expr ᶜ» a ⇒ₒ «expr ᶜ» b = b ⇒ₒ a :=
+theorem compl_imp_compl (a b : α) : aᶜ ⇒ₒ bᶜ = b ⇒ₒ a :=
   by 
     simp [imp, sup_comm]
 
@@ -129,16 +129,16 @@ theorem biimp_symm : a ≤ b ⇔ₒ c ↔ a ≤ c ⇔ₒ b :=
   by 
     rw [biimp_comm]
 
-theorem compl_symm_diff (a b : α) : «expr ᶜ» (a Δ b) = a ⇔ₒ b :=
+theorem compl_symm_diff (a b : α) : (a Δ b)ᶜ = a ⇔ₒ b :=
   by 
     simp only [biimp, imp, symmDiff, sdiff_eq, compl_sup, compl_inf, compl_compl]
 
-theorem compl_biimp (a b : α) : «expr ᶜ» (a ⇔ₒ b) = a Δ b :=
+theorem compl_biimp (a b : α) : (a ⇔ₒ b)ᶜ = a Δ b :=
   by 
     rw [←compl_symm_diff, compl_compl]
 
 @[simp]
-theorem compl_biimp_compl : «expr ᶜ» a ⇔ₒ «expr ᶜ» b = a ⇔ₒ b :=
+theorem compl_biimp_compl : aᶜ ⇔ₒ bᶜ = a ⇔ₒ b :=
   by 
     simp [biimp, inf_comm]
 

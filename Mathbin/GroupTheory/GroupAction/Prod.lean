@@ -43,6 +43,10 @@ instance [HasScalar M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScala
 instance [SmulCommClass M N α] [SmulCommClass M N β] : SmulCommClass M N (α × β) :=
   { smul_comm := fun r s x => mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩ }
 
+instance [HasScalar (Mᵐᵒᵖ) α] [HasScalar (Mᵐᵒᵖ) β] [IsCentralScalar M α] [IsCentralScalar M β] :
+  IsCentralScalar M (α × β) :=
+  ⟨fun r m => Prod.extₓ (op_smul_eq_smul _ _) (op_smul_eq_smul _ _)⟩
+
 @[toAdditive has_faithful_vadd_left]
 instance has_faithful_scalar_left [HasFaithfulScalar M α] [Nonempty β] : HasFaithfulScalar M (α × β) :=
   ⟨fun x y h =>

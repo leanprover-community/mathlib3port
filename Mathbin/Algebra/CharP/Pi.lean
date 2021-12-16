@@ -18,7 +18,7 @@ instance pi (ι : Type u) [hi : Nonempty ι] (R : Type v) [Semiringₓ R] (p : �
           ⟨fun h =>
               funext$
                 fun j =>
-                  show Pi.evalRingHom (fun _ => R) j («expr↑ » x : ι → R) = 0 by 
+                  show Pi.evalRingHom (fun _ => R) j (↑x : ι → R) = 0 by 
                     rw [RingHom.map_nat_cast, h],
             fun h =>
               (Pi.evalRingHom (fun _ : ι => R) i).map_nat_cast x ▸

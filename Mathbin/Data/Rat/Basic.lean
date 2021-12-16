@@ -62,7 +62,7 @@ unsafe instance : has_to_format ℚ :=
   ⟨coeₓ ∘ Rat.repr⟩
 
 instance : Encodable ℚ :=
-  Encodable.ofEquiv (Σn : ℤ, { d : ℕ // 0 < d ∧ n.nat_abs.coprime d })
+  Encodable.ofEquiv (Σ n : ℤ, { d : ℕ // 0 < d ∧ n.nat_abs.coprime d })
     ⟨fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => rfl,
       fun ⟨a, b, c, d⟩ => rfl⟩
 
@@ -79,24 +79,28 @@ instance : HasOne ℚ :=
 instance : Inhabited ℚ :=
   ⟨0⟩
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ+` (not necessarily coprime) -/
-def mk_pnat (n : exprℤ()) : «exprℕ+»() → exprℚ()
-| ⟨d, dpos⟩ := let n' := n.nat_abs, g := n'.gcd d in
-⟨«expr / »(n, g), «expr / »(d, g), begin
-   apply [expr (nat.le_div_iff_mul_le _ _ (nat.gcd_pos_of_pos_right _ dpos)).2],
-   simp [] [] [] [] [] [],
-   exact [expr nat.le_of_dvd dpos (nat.gcd_dvd_right _ _)]
- end, begin
-   have [] [":", expr «expr = »(int.nat_abs «expr / »(n, «expr↑ »(g)), «expr / »(n', g))] [],
-   { cases [expr int.nat_abs_eq n] ["with", ident e, ident e]; rw [expr e] [],
-     { refl },
-     rw ["[", expr int.neg_div_of_dvd, ",", expr int.nat_abs_neg, "]"] [],
-     { refl },
-     exact [expr int.coe_nat_dvd.2 (nat.gcd_dvd_left _ _)] },
-   rw [expr this] [],
-   exact [expr nat.coprime_div_gcd_div_gcd (nat.gcd_pos_of_pos_right _ dpos)]
- end⟩
+def mk_pnat (n : ℤ) : ℕ+ → ℚ
+| ⟨d, dpos⟩ =>
+  let n' := n.nat_abs 
+  let g := n'.gcd d
+  ⟨n / g, d / g,
+    by 
+      apply (Nat.le_div_iff_mul_leₓ _ _ (Nat.gcd_pos_of_pos_rightₓ _ dpos)).2
+      simp 
+      exact Nat.le_of_dvdₓ dpos (Nat.gcd_dvd_rightₓ _ _),
+    by 
+      have  : Int.natAbs (n / ↑g) = n' / g
+      ·
+        cases' Int.nat_abs_eq n with e e <;> rw [e]
+        ·
+          rfl 
+        rw [Int.neg_div_of_dvd, Int.nat_abs_neg]
+        ·
+          rfl 
+        exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_leftₓ _ _)
+      rw [this]
+      exact Nat.coprime_div_gcd_div_gcdₓ (Nat.gcd_pos_of_pos_rightₓ _ dpos)⟩
 
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ`. In the case `d = 0`, we
   define `n / 0 = 0` by convention. -/
@@ -139,106 +143,118 @@ theorem zero_mk n : 0 /. n = 0 :=
 private theorem gcd_abs_dvd_left {a b} : (Nat.gcdₓ (Int.natAbs a) b : ℤ) ∣ a :=
   Int.dvd_nat_abs.1$ Int.coe_nat_dvd.2$ Nat.gcd_dvd_leftₓ (Int.natAbs a) b
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mk_eq_zero
-{a b : exprℤ()}
-(b0 : «expr ≠ »(b, 0)) : «expr ↔ »(«expr = »(«expr /. »(a, b), 0), «expr = »(a, 0)) :=
-begin
-  constructor; intro [ident h]; [skip, { subst [expr a], simp [] [] [] [] [] [] }],
-  have [] [":", expr ∀ {a b}, «expr = »(mk_pnat a b, 0) → «expr = »(a, 0)] [],
-  { intros [ident a, ident b, ident e],
-    cases [expr b] ["with", ident b, ident h],
-    injection [expr e] ["with", ident e],
-    apply [expr int.eq_mul_of_div_eq_right gcd_abs_dvd_left e] },
-  cases [expr b] ["with", ident b]; simp [] [] [] ["[", expr mk, ",", expr mk_nat, "]"] [] ["at", ident h],
-  { simp [] [] [] ["[", expr mt (congr_arg int.of_nat) b0, "]"] [] ["at", ident h],
-    exact [expr this h] },
-  { apply [expr neg_injective],
-    simp [] [] [] ["[", expr this h, "]"] [] [] }
-end
+theorem mk_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 :=
+  by 
+    constructor <;>
+      intro h <;> [skip,
+        ·
+          subst a 
+          simp ]
+    have  : ∀ {a b}, mk_pnat a b = 0 → a = 0
+    ·
+      intro a b e 
+      cases' b with b h 
+      injection e with e 
+      apply Int.eq_mul_of_div_eq_right gcd_abs_dvd_left e 
+    cases' b with b <;> simp [mk, mk_nat] at h
+    ·
+      simp [mt (congr_argₓ Int.ofNat) b0] at h 
+      exact this h
+    ·
+      apply neg_injective 
+      simp [this h]
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mk_eq : ∀
-{a b c d : exprℤ()}
-(hb : «expr ≠ »(b, 0))
-(hd : «expr ≠ »(d, 0)), «expr ↔ »(«expr = »(«expr /. »(a, b), «expr /. »(c, d)), «expr = »(«expr * »(a, d), «expr * »(c, b))) :=
-suffices ∀
-a
-b
-c
-d
-hb
-hd, «expr ↔ »(«expr = »(mk_pnat a ⟨b, hb⟩, mk_pnat c ⟨d, hd⟩), «expr = »(«expr * »(a, d), «expr * »(c, b))), begin
-  intros [],
-  cases [expr b] ["with", ident b, ident b]; simp [] [] [] ["[", expr mk, ",", expr mk_nat, ",", expr nat.succ_pnat, "]"] [] [],
-  simp [] [] [] ["[", expr mt (congr_arg int.of_nat) hb, "]"] [] [],
-  all_goals { cases [expr d] ["with", ident d, ident d]; simp [] [] [] ["[", expr mk, ",", expr mk_nat, ",", expr nat.succ_pnat, "]"] [] [],
-    simp [] [] [] ["[", expr mt (congr_arg int.of_nat) hd, "]"] [] [],
-    all_goals { rw [expr this] [],
-      try { refl } } },
-  { change [expr «expr ↔ »(«expr = »(«expr * »(a, «expr↑ »(d.succ)), «expr * »(«expr- »(c), «expr↑ »(b))), «expr = »(«expr * »(a, «expr- »(d.succ)), «expr * »(c, b)))] [] [],
-    constructor; intro [ident h]; apply [expr neg_injective]; simpa [] [] [] ["[", expr left_distrib, ",", expr neg_add_eq_iff_eq_add, ",", expr eq_neg_iff_add_eq_zero, ",", expr neg_eq_iff_add_eq_zero, "]"] [] ["using", expr h] },
-  { change [expr «expr ↔ »(«expr = »(«expr * »(«expr- »(a), «expr↑ »(d)), «expr * »(c, b.succ)), «expr = »(«expr * »(a, d), «expr * »(c, «expr- »(b.succ))))] [] [],
-    constructor; intro [ident h]; apply [expr neg_injective]; simpa [] [] [] ["[", expr left_distrib, ",", expr eq_comm, "]"] [] ["using", expr h] },
-  { change [expr «expr ↔ »(«expr = »(«expr * »(«expr- »(a), d.succ), «expr * »(«expr- »(c), b.succ)), «expr = »(«expr * »(a, «expr- »(d.succ)), «expr * »(c, «expr- »(b.succ))))] [] [],
-    simp [] [] [] ["[", expr left_distrib, ",", expr sub_eq_add_neg, "]"] [] [],
-    cc }
-end,
-begin
-  intros [],
-  simp [] [] [] ["[", expr mk_pnat, "]"] [] [],
-  constructor; intro [ident h],
-  { cases [expr h] ["with", ident ha, ident hb],
-    have [ident ha] [] [],
-    { have [ident dv] [] [":=", expr @gcd_abs_dvd_left],
-      have [] [] [":=", expr int.eq_mul_of_div_eq_right dv ha],
-      rw ["<-", expr int.mul_div_assoc _ dv] ["at", ident this],
-      exact [expr int.eq_mul_of_div_eq_left (dv.mul_left _) this.symm] },
-    have [ident hb] [] [],
-    { have [ident dv] [] [":=", expr λ {a b}, nat.gcd_dvd_right (int.nat_abs a) b],
-      have [] [] [":=", expr nat.eq_mul_of_div_eq_right dv hb],
-      rw ["<-", expr nat.mul_div_assoc _ dv] ["at", ident this],
-      exact [expr nat.eq_mul_of_div_eq_left (dv.mul_left _) this.symm] },
-    have [ident m0] [":", expr «expr ≠ »((«expr * »(a.nat_abs.gcd b, c.nat_abs.gcd d) : exprℤ()), 0)] [],
-    { refine [expr int.coe_nat_ne_zero.2 (ne_of_gt _)],
-      apply [expr mul_pos]; apply [expr nat.gcd_pos_of_pos_right]; assumption },
-    apply [expr mul_right_cancel₀ m0],
-    simpa [] [] [] ["[", expr mul_comm, ",", expr mul_left_comm, "]"] [] ["using", expr congr (congr_arg ((«expr * »)) ha.symm) (congr_arg coe hb)] },
-  { suffices [] [":", expr ∀
-     a
-     c, «expr = »(«expr * »(a, d), «expr * »(c, b)) → «expr ∧ »(«expr = »(«expr / »(a, a.gcd b), «expr / »(c, c.gcd d)), «expr = »(«expr / »(b, a.gcd b), «expr / »(d, c.gcd d)))],
-    { cases [expr this a.nat_abs c.nat_abs (by simpa [] [] [] ["[", expr int.nat_abs_mul, "]"] [] ["using", expr congr_arg int.nat_abs h])] ["with", ident h₁, ident h₂],
-      have [ident hs] [] [":=", expr congr_arg int.sign h],
-      simp [] [] [] ["[", expr int.sign_eq_one_of_pos (int.coe_nat_lt.2 hb), ",", expr int.sign_eq_one_of_pos (int.coe_nat_lt.2 hd), "]"] [] ["at", ident hs],
-      conv [] ["in", expr a] { rw ["<-", expr int.sign_mul_nat_abs a] },
-      conv [] ["in", expr c] { rw ["<-", expr int.sign_mul_nat_abs c] },
-      rw ["[", expr int.mul_div_assoc, ",", expr int.mul_div_assoc, "]"] [],
-      exact [expr ⟨congr (congr_arg ((«expr * »)) hs) (congr_arg coe h₁), h₂⟩],
-      all_goals { exact [expr int.coe_nat_dvd.2 (nat.gcd_dvd_left _ _)] } },
-    intros [ident a, ident c, ident h],
-    suffices [ident bd] [":", expr «expr = »(«expr / »(b, a.gcd b), «expr / »(d, c.gcd d))],
-    { refine [expr ⟨_, bd⟩],
-      apply [expr nat.eq_of_mul_eq_mul_left hb],
-      rw ["[", "<-", expr nat.mul_div_assoc _ (nat.gcd_dvd_left _ _), ",", expr mul_comm, ",", expr nat.mul_div_assoc _ (nat.gcd_dvd_right _ _), ",", expr bd, ",", "<-", expr nat.mul_div_assoc _ (nat.gcd_dvd_right _ _), ",", expr h, ",", expr mul_comm, ",", expr nat.mul_div_assoc _ (nat.gcd_dvd_left _ _), "]"] [] },
-    suffices [] [":", expr ∀
-     {a c : exprℕ()}
-     (b «expr > » 0)
-     (d «expr > » 0), «expr = »(«expr * »(a, d), «expr * »(c, b)) → «expr ≤ »(«expr / »(b, a.gcd b), «expr / »(d, c.gcd d))],
-    { exact [expr le_antisymm (this _ hb _ hd h) (this _ hd _ hb h.symm)] },
-    intros [ident a, ident c, ident b, ident hb, ident d, ident hd, ident h],
-    have [ident gb0] [] [":=", expr nat.gcd_pos_of_pos_right a hb],
-    have [ident gd0] [] [":=", expr nat.gcd_pos_of_pos_right c hd],
-    apply [expr nat.le_of_dvd],
-    apply [expr (nat.le_div_iff_mul_le _ _ gd0).2],
-    simp [] [] [] [] [] [],
-    apply [expr nat.le_of_dvd hd (nat.gcd_dvd_right _ _)],
-    apply [expr (nat.coprime_div_gcd_div_gcd gb0).symm.dvd_of_dvd_mul_left],
-    refine [expr ⟨«expr / »(c, c.gcd d), _⟩],
-    rw ["[", "<-", expr nat.mul_div_assoc _ (nat.gcd_dvd_left _ _), ",", "<-", expr nat.mul_div_assoc _ (nat.gcd_dvd_right _ _), "]"] [],
-    apply [expr congr_arg ((«expr / » c.gcd d))],
-    rw ["[", expr mul_comm, ",", "<-", expr nat.mul_div_assoc _ (nat.gcd_dvd_left _ _), ",", expr mul_comm, ",", expr h, ",", expr nat.mul_div_assoc _ (nat.gcd_dvd_right _ _), ",", expr mul_comm, "]"] [] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (d «expr > » 0)
+theorem mk_eq : ∀ {a b c d : ℤ} hb : b ≠ 0 hd : d ≠ 0, a /. b = c /. d ↔ (a*d) = c*b :=
+  suffices ∀ a b c d hb hd, mk_pnat a ⟨b, hb⟩ = mk_pnat c ⟨d, hd⟩ ↔ (a*d) = c*b by 
+    intros 
+    cases' b with b b <;> simp [mk, mk_nat, Nat.succPnat]
+    simp [mt (congr_argₓ Int.ofNat) hb]
+    all_goals 
+      cases' d with d d <;> simp [mk, mk_nat, Nat.succPnat]
+      simp [mt (congr_argₓ Int.ofNat) hd]
+      all_goals 
+        rw [this]
+        try 
+          rfl
+    ·
+      change ((a*↑d.succ) = (-c)*↑b) ↔ (a*-d.succ) = c*b 
+      constructor <;>
+        intro h <;>
+          apply neg_injective <;>
+            simpa [left_distrib, neg_add_eq_iff_eq_add, eq_neg_iff_add_eq_zero, neg_eq_iff_add_eq_zero] using h
+    ·
+      change (((-a)*↑d) = c*b.succ) ↔ (a*d) = c*-b.succ 
+      constructor <;> intro h <;> apply neg_injective <;> simpa [left_distrib, eq_comm] using h
+    ·
+      change (((-a)*d.succ) = (-c)*b.succ) ↔ (a*-d.succ) = c*-b.succ 
+      simp [left_distrib, sub_eq_add_neg]
+      cc 
+  by 
+    intros 
+    simp [mk_pnat]
+    constructor <;> intro h
+    ·
+      cases' h with ha hb 
+      have ha
+      ·
+        have dv := @gcd_abs_dvd_left 
+        have  := Int.eq_mul_of_div_eq_right dv ha 
+        rw [←Int.mul_div_assoc _ dv] at this 
+        exact Int.eq_mul_of_div_eq_left (dv.mul_left _) this.symm 
+      have hb
+      ·
+        have dv := fun {a b} => Nat.gcd_dvd_rightₓ (Int.natAbs a) b 
+        have  := Nat.eq_mul_of_div_eq_right dv hb 
+        rw [←Nat.mul_div_assocₓ _ dv] at this 
+        exact Nat.eq_mul_of_div_eq_left (dv.mul_left _) this.symm 
+      have m0 : (a.nat_abs.gcd b*c.nat_abs.gcd d : ℤ) ≠ 0
+      ·
+        refine' Int.coe_nat_ne_zero.2 (ne_of_gtₓ _)
+        apply mul_pos <;> apply Nat.gcd_pos_of_pos_rightₓ <;> assumption 
+      apply mul_right_cancel₀ m0 
+      simpa [mul_commₓ, mul_left_commₓ] using congr (congr_argₓ (·*·) ha.symm) (congr_argₓ coeₓ hb)
+    ·
+      suffices  : ∀ a c, ((a*d) = c*b) → a / a.gcd b = c / c.gcd d ∧ b / a.gcd b = d / c.gcd d
+      ·
+        cases'
+          this a.nat_abs c.nat_abs
+            (by 
+              simpa [Int.nat_abs_mul] using congr_argₓ Int.natAbs h) with
+          h₁ h₂ 
+        have hs := congr_argₓ Int.sign h 
+        simp [Int.sign_eq_one_of_pos (Int.coe_nat_lt.2 hb), Int.sign_eq_one_of_pos (Int.coe_nat_lt.2 hd)] at hs 
+        conv  in a => rw [←Int.sign_mul_nat_abs a]
+        conv  in c => rw [←Int.sign_mul_nat_abs c]
+        rw [Int.mul_div_assoc, Int.mul_div_assoc]
+        exact ⟨congr (congr_argₓ (·*·) hs) (congr_argₓ coeₓ h₁), h₂⟩
+        all_goals 
+          exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_leftₓ _ _)
+      intro a c h 
+      suffices bd : b / a.gcd b = d / c.gcd d
+      ·
+        refine' ⟨_, bd⟩
+        apply Nat.eq_of_mul_eq_mul_leftₓ hb 
+        rw [←Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _), mul_commₓ, Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), bd,
+          ←Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), h, mul_commₓ, Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _)]
+      suffices  : ∀ {a c : ℕ} b _ : b > 0 d _ : d > 0, ((a*d) = c*b) → b / a.gcd b ≤ d / c.gcd d
+      ·
+        exact le_antisymmₓ (this _ hb _ hd h) (this _ hd _ hb h.symm)
+      intro a c b hb d hd h 
+      have gb0 := Nat.gcd_pos_of_pos_rightₓ a hb 
+      have gd0 := Nat.gcd_pos_of_pos_rightₓ c hd 
+      apply Nat.le_of_dvdₓ 
+      apply (Nat.le_div_iff_mul_leₓ _ _ gd0).2
+      simp 
+      apply Nat.le_of_dvdₓ hd (Nat.gcd_dvd_rightₓ _ _)
+      apply (Nat.coprime_div_gcd_div_gcdₓ gb0).symm.dvd_of_dvd_mul_left 
+      refine' ⟨c / c.gcd d, _⟩
+      rw [←Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _), ←Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _)]
+      apply congr_argₓ (· / c.gcd d)
+      rw [mul_commₓ, ←Nat.mul_div_assocₓ _ (Nat.gcd_dvd_leftₓ _ _), mul_commₓ, h,
+        Nat.mul_div_assocₓ _ (Nat.gcd_dvd_rightₓ _ _), mul_commₓ]
 
 @[simp]
 theorem div_mk_div_cancel_left {a b c : ℤ} (c0 : c ≠ 0) : ((a*c) /. b*c) = a /. b :=
@@ -276,16 +292,14 @@ numbers of the form `n /. d` with `d ≠ 0`. -/
 def num_denom_cases_on'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ n : ℤ d : ℕ, d ≠ 0 → C (n /. d)) : C a :=
   num_denom_cases_on a$ fun n d h c => H n d h.ne'
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem num_dvd (a) {b : exprℤ()} (b0 : «expr ≠ »(b, 0)) : «expr ∣ »(«expr /. »(a, b).num, a) :=
-begin
-  cases [expr e, ":", expr «expr /. »(a, b)] ["with", ident n, ident d, ident h, ident c],
-  rw ["[", expr rat.num_denom', ",", expr rat.mk_eq b0 (ne_of_gt (int.coe_nat_pos.2 h)), "]"] ["at", ident e],
-  refine [expr «expr $ »(int.nat_abs_dvd.1, «expr $ »(int.dvd_nat_abs.1, «expr $ »(int.coe_nat_dvd.2, c.dvd_of_dvd_mul_right _)))],
-  have [] [] [":=", expr congr_arg int.nat_abs e],
-  simp [] [] [] ["[", expr int.nat_abs_mul, ",", expr int.nat_abs_of_nat, "]"] [] ["at", ident this],
-  simp [] [] [] ["[", expr this, "]"] [] []
-end
+theorem num_dvd a {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a :=
+  by 
+    cases' e : a /. b with n d h c 
+    rw [Rat.num_denom', Rat.mk_eq b0 (ne_of_gtₓ (Int.coe_nat_pos.2 h))] at e 
+    refine' Int.nat_abs_dvd.1$ Int.dvd_nat_abs.1$ Int.coe_nat_dvd.2$ c.dvd_of_dvd_mul_right _ 
+    have  := congr_argₓ Int.natAbs e 
+    simp [Int.nat_abs_mul, Int.nat_abs_of_nat] at this 
+    simp [this]
 
 theorem denom_dvd (a b : ℤ) : ((a /. b).denom : ℤ) ∣ b :=
   by 
@@ -305,33 +319,22 @@ protected def add : ℚ → ℚ → ℚ
 instance : Add ℚ :=
   ⟨Rat.add⟩
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lift_binop_eq
-(f : exprℚ() → exprℚ() → exprℚ())
-(f₁ : exprℤ() → exprℤ() → exprℤ() → exprℤ() → exprℤ())
-(f₂ : exprℤ() → exprℤ() → exprℤ() → exprℤ() → exprℤ())
-(fv : ∀
- {n₁ d₁ h₁ c₁ n₂ d₂ h₂ c₂}, «expr = »(f ⟨n₁, d₁, h₁, c₁⟩ ⟨n₂, d₂, h₂, c₂⟩, «expr /. »(f₁ n₁ d₁ n₂ d₂, f₂ n₁ d₁ n₂ d₂)))
-(f0 : ∀ {n₁ d₁ n₂ d₂} (d₁0 : «expr ≠ »(d₁, 0)) (d₂0 : «expr ≠ »(d₂, 0)), «expr ≠ »(f₂ n₁ d₁ n₂ d₂, 0))
-(a b c d : exprℤ())
-(b0 : «expr ≠ »(b, 0))
-(d0 : «expr ≠ »(d, 0))
-(H : ∀
- {n₁ d₁ n₂ d₂}
- (h₁ : «expr = »(«expr * »(a, d₁), «expr * »(n₁, b)))
- (h₂ : «expr = »(«expr * »(c, d₂), «expr * »(n₂, d))), «expr = »(«expr * »(f₁ n₁ d₁ n₂ d₂, f₂ a b c d), «expr * »(f₁ a b c d, f₂ n₁ d₁ n₂ d₂))) : «expr = »(f «expr /. »(a, b) «expr /. »(c, d), «expr /. »(f₁ a b c d, f₂ a b c d)) :=
-begin
-  generalize [ident ha] [":"] [expr «expr = »(«expr /. »(a, b), x)],
-  cases [expr x] ["with", ident n₁, ident d₁, ident h₁, ident c₁],
-  rw [expr num_denom'] ["at", ident ha],
-  generalize [ident hc] [":"] [expr «expr = »(«expr /. »(c, d), x)],
-  cases [expr x] ["with", ident n₂, ident d₂, ident h₂, ident c₂],
-  rw [expr num_denom'] ["at", ident hc],
-  rw [expr fv] [],
-  have [ident d₁0] [] [":=", expr ne_of_gt (int.coe_nat_lt.2 h₁)],
-  have [ident d₂0] [] [":=", expr ne_of_gt (int.coe_nat_lt.2 h₂)],
-  exact [expr (mk_eq (f0 d₁0 d₂0) (f0 b0 d0)).2 (H ((mk_eq b0 d₁0).1 ha) ((mk_eq d0 d₂0).1 hc))]
-end
+theorem lift_binop_eq (f : ℚ → ℚ → ℚ) (f₁ : ℤ → ℤ → ℤ → ℤ → ℤ) (f₂ : ℤ → ℤ → ℤ → ℤ → ℤ)
+  (fv : ∀ {n₁ d₁ h₁ c₁ n₂ d₂ h₂ c₂}, f ⟨n₁, d₁, h₁, c₁⟩ ⟨n₂, d₂, h₂, c₂⟩ = f₁ n₁ d₁ n₂ d₂ /. f₂ n₁ d₁ n₂ d₂)
+  (f0 : ∀ {n₁ d₁ n₂ d₂} d₁0 : d₁ ≠ 0 d₂0 : d₂ ≠ 0, f₂ n₁ d₁ n₂ d₂ ≠ 0) (a b c d : ℤ) (b0 : b ≠ 0) (d0 : d ≠ 0)
+  (H : ∀ {n₁ d₁ n₂ d₂} h₁ : (a*d₁) = n₁*b h₂ : (c*d₂) = n₂*d, (f₁ n₁ d₁ n₂ d₂*f₂ a b c d) = f₁ a b c d*f₂ n₁ d₁ n₂ d₂) :
+  f (a /. b) (c /. d) = f₁ a b c d /. f₂ a b c d :=
+  by 
+    generalize ha : a /. b = x 
+    cases' x with n₁ d₁ h₁ c₁ 
+    rw [num_denom'] at ha 
+    generalize hc : c /. d = x 
+    cases' x with n₂ d₂ h₂ c₂ 
+    rw [num_denom'] at hc 
+    rw [fv]
+    have d₁0 := ne_of_gtₓ (Int.coe_nat_lt.2 h₁)
+    have d₂0 := ne_of_gtₓ (Int.coe_nat_lt.2 h₂)
+    exact (mk_eq (f0 d₁0 d₂0) (f0 b0 d0)).2 (H ((mk_eq b0 d₁0).1 ha) ((mk_eq d0 d₂0).1 hc))
 
 @[simp]
 theorem add_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : ((a /. b)+c /. d) = ((a*d)+c*b) /. b*d :=
@@ -361,23 +364,23 @@ protected def neg (r : ℚ) : ℚ :=
 instance : Neg ℚ :=
   ⟨Rat.neg⟩
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem neg_def {a b : exprℤ()} : «expr = »(«expr- »(«expr /. »(a, b)), «expr /. »(«expr- »(a), b)) :=
-begin
-  by_cases [expr b0, ":", expr «expr = »(b, 0)],
-  { subst [expr b0],
-    simp [] [] [] [] [] [],
-    refl },
-  generalize [ident ha] [":"] [expr «expr = »(«expr /. »(a, b), x)],
-  cases [expr x] ["with", ident n₁, ident d₁, ident h₁, ident c₁],
-  rw [expr num_denom'] ["at", ident ha],
-  show [expr «expr = »(rat.mk' _ _ _ _, _)],
-  rw [expr num_denom'] [],
-  have [ident d0] [] [":=", expr ne_of_gt (int.coe_nat_lt.2 h₁)],
-  apply [expr (mk_eq d0 b0).2],
-  have [ident h₁] [] [":=", expr (mk_eq b0 d0).1 ha],
-  simp [] [] ["only"] ["[", expr neg_mul_eq_neg_mul_symm, ",", expr congr_arg has_neg.neg h₁, "]"] [] []
-end
+@[simp]
+theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b :=
+  by 
+    byCases' b0 : b = 0
+    ·
+      subst b0 
+      simp 
+      rfl 
+    generalize ha : a /. b = x 
+    cases' x with n₁ d₁ h₁ c₁ 
+    rw [num_denom'] at ha 
+    show Rat.mk' _ _ _ _ = _ 
+    rw [num_denom']
+    have d0 := ne_of_gtₓ (Int.coe_nat_lt.2 h₁)
+    apply (mk_eq d0 b0).2
+    have h₁ := (mk_eq b0 d0).1 ha 
+    simp only [neg_mul_eq_neg_mul_symm, congr_argₓ Neg.neg h₁]
 
 /-- Multiplication of rational numbers. Use `(*)` instead. -/
 protected def mul : ℚ → ℚ → ℚ
@@ -412,39 +415,45 @@ protected def inv : ℚ → ℚ
 instance : HasInv ℚ :=
   ⟨Rat.inv⟩
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem inv_def {a b : exprℤ()} : «expr = »(«expr ⁻¹»(«expr /. »(a, b)), «expr /. »(b, a)) :=
-begin
-  by_cases [expr a0, ":", expr «expr = »(a, 0)],
-  { subst [expr a0],
-    simp [] [] [] [] [] [],
-    refl },
-  by_cases [expr b0, ":", expr «expr = »(b, 0)],
-  { subst [expr b0],
-    simp [] [] [] [] [] [],
-    refl },
-  generalize [ident ha] [":"] [expr «expr = »(«expr /. »(a, b), x)],
-  cases [expr x] ["with", ident n, ident d, ident h, ident c],
-  rw [expr num_denom'] ["at", ident ha],
-  refine [expr eq.trans (_ : «expr = »(rat.inv ⟨n, d, h, c⟩, «expr /. »(d, n))) _],
-  { cases [expr n] ["with", ident n]; [cases [expr n] ["with", ident n], skip],
-    { refl },
-    { change [expr int.of_nat n.succ] ["with", expr («expr + »(n, 1) : exprℕ())] [],
-      unfold [ident rat.inv] [],
-      rw [expr num_denom'] [] },
-    { unfold [ident rat.inv] [],
-      rw [expr num_denom'] [],
-      refl } },
-  have [ident n0] [":", expr «expr ≠ »(n, 0)] [],
-  { refine [expr mt (λ n0 : «expr = »(n, 0), _) a0],
-    subst [expr n0],
-    simp [] [] [] [] [] ["at", ident ha],
-    exact [expr (mk_eq_zero b0).1 ha] },
-  have [ident d0] [] [":=", expr ne_of_gt (int.coe_nat_lt.2 h)],
-  have [ident ha] [] [":=", expr (mk_eq b0 d0).1 ha],
-  apply [expr (mk_eq n0 a0).2],
-  cc
-end
+@[simp]
+theorem inv_def {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
+  by 
+    byCases' a0 : a = 0
+    ·
+      subst a0 
+      simp 
+      rfl 
+    byCases' b0 : b = 0
+    ·
+      subst b0 
+      simp 
+      rfl 
+    generalize ha : a /. b = x 
+    cases' x with n d h c 
+    rw [num_denom'] at ha 
+    refine' Eq.trans (_ : Rat.inv ⟨n, d, h, c⟩ = d /. n) _
+    ·
+      cases' n with n <;> [cases' n with n, skip]
+      ·
+        rfl
+      ·
+        change Int.ofNat n.succ with (n+1 : ℕ)
+        unfold Rat.inv 
+        rw [num_denom']
+      ·
+        unfold Rat.inv 
+        rw [num_denom']
+        rfl 
+    have n0 : n ≠ 0
+    ·
+      refine' mt (fun n0 : n = 0 => _) a0 
+      subst n0 
+      simp  at ha 
+      exact (mk_eq_zero b0).1 ha 
+    have d0 := ne_of_gtₓ (Int.coe_nat_lt.2 h)
+    have ha := (mk_eq b0 d0).1 ha 
+    apply (mk_eq n0 a0).2
+    cc
 
 variable (a b c : ℚ)
 
@@ -727,14 +736,17 @@ theorem mk_denom_ne_zero_of_ne_zero {q : ℚ} {n d : ℤ} (hq : q ≠ 0) (hqnd :
 theorem mk_ne_zero_of_ne_zero {n d : ℤ} (h : n ≠ 0) (hd : d ≠ 0) : n /. d ≠ 0 :=
   fun this : n /. d = 0 => h$ (mk_eq_zero hd).1 this
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_num_denom
-(q
- r : exprℚ()) : «expr = »(«expr * »(q, r), «expr /. »(«expr * »(q.num, r.num), «expr↑ »(«expr * »(q.denom, r.denom)))) :=
-have hq' : «expr ≠ »((«expr↑ »(q.denom) : exprℤ()), 0), by have [] [] [":=", expr denom_ne_zero q]; simpa [] [] [] [] [] [],
-have hr' : «expr ≠ »((«expr↑ »(r.denom) : exprℤ()), 0), by have [] [] [":=", expr denom_ne_zero r]; simpa [] [] [] [] [] [],
-suffices «expr = »(«expr * »(«expr /. »(q.num, «expr↑ »(q.denom)), «expr /. »(r.num, «expr↑ »(r.denom))), «expr /. »(«expr * »(q.num, r.num), «expr↑ »(«expr * »(q.denom, r.denom)))), by simpa [] [] [] [] [] ["using", expr this],
-by simp [] [] [] ["[", expr mul_def hq' hr', ",", "-", ident num_denom, "]"] [] []
+theorem mul_num_denom (q r : ℚ) : (q*r) = (q.num*r.num) /. ↑q.denom*r.denom :=
+  have hq' : (↑q.denom : ℤ) ≠ 0 :=
+    by 
+      have  := denom_ne_zero q <;> simpa 
+  have hr' : (↑r.denom : ℤ) ≠ 0 :=
+    by 
+      have  := denom_ne_zero r <;> simpa 
+  suffices ((q.num /. ↑q.denom)*r.num /. ↑r.denom) = (q.num*r.num) /. ↑q.denom*r.denom by 
+    simpa using this 
+  by 
+    simp [mul_def hq' hr', -num_denom]
 
 theorem div_num_denom (q r : ℚ) : q / r = (q.num*r.denom) /. q.denom*r.num :=
   if hr : r.num = 0 then
@@ -756,30 +768,39 @@ theorem div_num_denom (q r : ℚ) : q / r = (q.num*r.denom) /. q.denom*r.num :=
         hr
       
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem num_denom_mk
-{q : exprℚ()}
-{n d : exprℤ()}
-(hn : «expr ≠ »(n, 0))
-(hd : «expr ≠ »(d, 0))
-(qdf : «expr = »(q, «expr /. »(n, d))) : «expr∃ , »((c : exprℤ()), «expr ∧ »(«expr = »(n, «expr * »(c, q.num)), «expr = »(d, «expr * »(c, q.denom)))) :=
-have hq : «expr ≠ »(q, 0), from assume: «expr = »(q, 0), «expr $ »(hn, (rat.mk_eq_zero hd).1 (by cc)),
-have «expr = »(«expr /. »(q.num, q.denom), «expr /. »(n, d)), by rwa ["[", expr num_denom, "]"] [],
-have «expr = »(«expr * »(q.num, d), «expr * »(n, «expr↑ »(q.denom))), from (rat.mk_eq (by simp [] [] [] ["[", expr rat.denom_ne_zero, "]"] [] []) hd).1 this,
-begin
-  existsi [expr «expr / »(n, q.num)],
-  have [ident hqdn] [":", expr «expr ∣ »(q.num, n)] [],
-  begin
-    rw [expr qdf] [],
-    apply [expr rat.num_dvd],
-    assumption
-  end,
-  split,
-  { rw [expr int.div_mul_cancel hqdn] [] },
-  { apply [expr int.eq_mul_div_of_mul_eq_mul_of_dvd_left],
-    { apply [expr rat.num_ne_zero_of_ne_zero hq] },
-    repeat { assumption } }
-end
+theorem num_denom_mk {q : ℚ} {n d : ℤ} (hn : n ≠ 0) (hd : d ≠ 0) (qdf : q = n /. d) :
+  ∃ c : ℤ, (n = c*q.num) ∧ d = c*q.denom :=
+  have hq : q ≠ 0 :=
+    fun this : q = 0 =>
+      hn$
+        (Rat.mk_eq_zero hd).1
+          (by 
+            cc)
+  have  : q.num /. q.denom = n /. d :=
+    by 
+      rwa [num_denom]
+  have  : (q.num*d) = n*↑q.denom :=
+    (Rat.mk_eq
+          (by 
+            simp [Rat.denom_ne_zero])
+          hd).1
+      this 
+  by 
+    exists n / q.num 
+    have hqdn : q.num ∣ n
+    ·
+      rw [qdf]
+      apply Rat.num_dvd 
+      assumption 
+    constructor
+    ·
+      rw [Int.div_mul_cancel hqdn]
+    ·
+      apply Int.eq_mul_div_of_mul_eq_mul_of_dvd_left
+      ·
+        apply Rat.num_ne_zero_of_ne_zero hq 
+      repeat' 
+        assumption
 
 theorem mk_pnat_num (n : ℤ) (d : ℕ+) : (mk_pnat n d).num = n / Nat.gcdₓ n.nat_abs d :=
   by 
@@ -826,8 +847,7 @@ theorem mul_self_denom (q : ℚ) : (q*q).denom = q.denom*q.denom :=
     rw [Rat.mul_denom, Int.nat_abs_mul, Nat.Coprime.gcd_eq_one, Nat.div_oneₓ] <;>
       exact (q.cop.mul_right q.cop).mul (q.cop.mul_right q.cop)
 
-theorem add_num_denom (q r : ℚ) :
-  (q+r) = ((q.num*r.denom)+q.denom*r.num : ℤ) /. («expr↑ » q.denom*«expr↑ » r.denom : ℤ) :=
+theorem add_num_denom (q r : ℚ) : (q+r) = ((q.num*r.denom)+q.denom*r.num : ℤ) /. ((↑q.denom)*↑r.denom : ℤ) :=
   have hqd : (q.denom : ℤ) ≠ 0 := Int.coe_nat_ne_zero_iff_pos.2 q.3
   have hrd : (r.denom : ℤ) ≠ 0 := Int.coe_nat_ne_zero_iff_pos.2 r.3
   by 
@@ -844,7 +864,7 @@ protected theorem add_mk (a b c : ℤ) : (a+b) /. c = (a /. c)+b /. c :=
       rw [add_def h h, mk_eq h (mul_ne_zero h h)]
       simp [add_mulₓ, mul_assocₓ]
 
-theorem coe_int_eq_mk : ∀ z : ℤ, «expr↑ » z = z /. 1
+theorem coe_int_eq_mk : ∀ z : ℤ, ↑z = z /. 1
 | (n : ℕ) =>
   show (n : ℚ) = n /. 1by 
     induction' n with n IH n <;> simp [Rat.add_mk]
@@ -871,18 +891,15 @@ theorem num_div_denom (r : ℚ) : (r.num / r.denom : ℚ) = r :=
   by 
     rw [←Int.cast_coe_nat, ←mk_eq_div, num_denom]
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_eq_mul_div_num_and_eq_mul_div_denom
-{n d : exprℤ()}
-(n_ne_zero : «expr ≠ »(n, 0))
-(d_ne_zero : «expr ≠ »(d, 0)) : «expr∃ , »((c : exprℤ()), «expr ∧ »(«expr = »(n, «expr * »(c, «expr / »((n : exprℚ()), d).num)), «expr = »((d : exprℤ()), «expr * »(c, «expr / »((n : exprℚ()), d).denom)))) :=
-begin
-  have [] [":", expr «expr = »(«expr / »((n : exprℚ()), d), rat.mk n d)] [],
-  by rw ["[", "<-", expr rat.mk_eq_div, "]"] [],
-  exact [expr rat.num_denom_mk n_ne_zero d_ne_zero this]
-end
+theorem exists_eq_mul_div_num_and_eq_mul_div_denom {n d : ℤ} (n_ne_zero : n ≠ 0) (d_ne_zero : d ≠ 0) :
+  ∃ c : ℤ, (n = c*((n : ℚ) / d).num) ∧ (d : ℤ) = c*((n : ℚ) / d).denom :=
+  by 
+    have  : (n : ℚ) / d = Rat.mk n d
+    ·
+      rw [←Rat.mk_eq_div]
+    exact Rat.num_denom_mk n_ne_zero d_ne_zero this
 
-theorem coe_int_eq_of_int (z : ℤ) : «expr↑ » z = of_int z :=
+theorem coe_int_eq_of_int (z : ℤ) : ↑z = of_int z :=
   (coe_int_eq_mk z).trans (of_int_eq_mk z).symm
 
 @[simp, normCast]
@@ -895,19 +912,19 @@ theorem coe_int_denom (n : ℤ) : (n : ℚ).denom = 1 :=
   by 
     rw [coe_int_eq_of_int] <;> rfl
 
-theorem coe_int_num_of_denom_eq_one {q : ℚ} (hq : q.denom = 1) : «expr↑ » q.num = q :=
+theorem coe_int_num_of_denom_eq_one {q : ℚ} (hq : q.denom = 1) : ↑q.num = q :=
   by 
     convRHS => rw [←@num_denom q, hq]
     rw [coe_int_eq_mk]
     rfl
 
-theorem denom_eq_one_iff (r : ℚ) : r.denom = 1 ↔ «expr↑ » r.num = r :=
+theorem denom_eq_one_iff (r : ℚ) : r.denom = 1 ↔ ↑r.num = r :=
   ⟨Rat.coe_int_num_of_denom_eq_one, fun h => h ▸ Rat.coe_int_denom r.num⟩
 
 instance : CanLift ℚ ℤ :=
   ⟨coeₓ, fun q => q.denom = 1, fun q hq => ⟨q.num, coe_int_num_of_denom_eq_one hq⟩⟩
 
-theorem coe_nat_eq_mk (n : ℕ) : «expr↑ » n = n /. 1 :=
+theorem coe_nat_eq_mk (n : ℕ) : ↑n = n /. 1 :=
   by 
     rw [←Int.cast_coe_nat, coe_int_eq_mk]
 
@@ -935,23 +952,30 @@ theorem inv_def' {q : ℚ} : q⁻¹ = (q.denom : ℚ) / q.num :=
     cases q 
     simp [div_num_denom]
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:341:40: in conv: ././Mathport/Syntax/Translate/Basic.lean:385:40: in for: ././Mathport/Syntax/Translate/Basic.lean:341:40: in rw: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[simp] theorem mul_denom_eq_num {q : exprℚ()} : «expr = »(«expr * »(q, q.denom), q.num) :=
-begin
-  suffices [] [":", expr «expr = »(«expr * »(mk q.num «expr↑ »(q.denom), mk «expr↑ »(q.denom) 1), mk q.num 1)],
-  by { conv [] [] { for [expr q] ["[", 1, "]"] { rw ["<-", expr @num_denom q] } },
-    rwa ["[", expr coe_int_eq_mk, ",", expr coe_nat_eq_mk, "]"] [] },
-  have [] [":", expr «expr ≠ »((q.denom : exprℤ()), 0)] [],
-  from [expr ne_of_gt (by exact_mod_cast [expr q.pos])],
-  rw ["[", expr rat.mul_def this one_ne_zero, ",", expr mul_comm (q.denom : exprℤ()) 1, ",", expr div_mk_div_cancel_left this, "]"] []
-end
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+@[simp]
+theorem mul_denom_eq_num {q : ℚ} : (q*q.denom) = q.num :=
+  by 
+    suffices  : (mk q.num (↑q.denom)*mk (↑q.denom) 1) = mk q.num 1
+    ·
+      ·
+        conv  =>
+          for q [1] => 
+            rw [←@num_denom q]
+        rwa [coe_int_eq_mk, coe_nat_eq_mk]
+    have  : (q.denom : ℤ) ≠ 0 
+    exact
+      ne_of_gtₓ
+        (by 
+          exactModCast q.pos)
+    rw [Rat.mul_def this one_ne_zero, mul_commₓ (q.denom : ℤ) 1, div_mk_div_cancel_left this]
 
 theorem denom_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).denom = 1 ↔ n ∣ m :=
   by 
     replace hn : (n : ℚ) ≠ 0
     ·
       rwa [Ne.def, ←Int.cast_zero, coe_int_inj]
-    split 
+    constructor
     ·
       intro h 
       lift (m : ℚ) / n to ℤ using h with k hk 
@@ -984,17 +1008,18 @@ theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.Coprim
     ·
       rw [←denom_div_eq_of_coprime hb0 h1, h, denom_div_eq_of_coprime hd0 h2]
 
--- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[norm_cast #[]]
-theorem coe_int_div_self (n : exprℤ()) : «expr = »(((«expr / »(n, n) : exprℤ()) : exprℚ()), «expr / »(n, n)) :=
-begin
-  by_cases [expr hn, ":", expr «expr = »(n, 0)],
-  { subst [expr hn],
-    simp [] [] ["only"] ["[", expr int.cast_zero, ",", expr euclidean_domain.zero_div, "]"] [] [] },
-  { have [] [":", expr «expr ≠ »((n : exprℚ()), 0)] [],
-    { rwa ["<-", expr coe_int_inj] ["at", ident hn] },
-    simp [] [] ["only"] ["[", expr int.div_self hn, ",", expr int.cast_one, ",", expr ne.def, ",", expr not_false_iff, ",", expr div_self this, "]"] [] [] }
-end
+@[normCast]
+theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n :=
+  by 
+    byCases' hn : n = 0
+    ·
+      subst hn 
+      simp only [Int.cast_zero, EuclideanDomain.zero_div]
+    ·
+      have  : (n : ℚ) ≠ 0
+      ·
+        rwa [←coe_int_inj] at hn 
+      simp only [Int.div_self hn, Int.cast_one, Ne.def, not_false_iff, div_self this]
 
 @[normCast]
 theorem coe_nat_div_self (n : ℕ) : ((n / n : ℕ) : ℚ) = n / n :=

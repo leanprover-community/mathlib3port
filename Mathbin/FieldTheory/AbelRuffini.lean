@@ -19,7 +19,7 @@ that is solvable by radicals has a solvable Galois group.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -57,6 +57,7 @@ theorem gal_mul_is_solvable {p q : Polynomial F} (hp : IsSolvable p.gal) (hq : I
   IsSolvable (p*q).Gal :=
   solvable_of_solvable_injective (gal.restrict_prod_injective p q)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s)
 theorem gal_prod_is_solvable {s : Multiset (Polynomial F)} (hs : ∀ p _ : p ∈ s, IsSolvable (gal p)) :
   IsSolvable s.prod.gal :=
   by 
@@ -68,162 +69,162 @@ theorem gal_prod_is_solvable {s : Multiset (Polynomial F)} (hs : ∀ p _ : p ∈
       rw [Multiset.insert_eq_cons, Multiset.prod_cons]
       exact gal_mul_is_solvable (hs p hps) ht
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gal_is_solvable_of_splits
-{p q : polynomial F}
-(hpq : fact (p.splits (algebra_map F q.splitting_field)))
-(hq : is_solvable q.gal) : is_solvable p.gal :=
-begin
-  haveI [] [":", expr is_solvable «expr ≃ₐ[ ] »(q.splitting_field, F, q.splitting_field)] [":=", expr hq],
-  exact [expr solvable_of_surjective (alg_equiv.restrict_normal_hom_surjective q.splitting_field)]
-end
+theorem gal_is_solvable_of_splits {p q : Polynomial F} (hpq : Fact (p.splits (algebraMap F q.splitting_field)))
+  (hq : IsSolvable q.gal) : IsSolvable p.gal :=
+  by 
+    have  : IsSolvable (q.splitting_field ≃ₐ[F] q.splitting_field) := hq 
+    exact solvable_of_surjective (AlgEquiv.restrict_normal_hom_surjective q.splitting_field)
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gal_is_solvable_tower
-(p q : polynomial F)
-(hpq : p.splits (algebra_map F q.splitting_field))
-(hp : is_solvable p.gal)
-(hq : is_solvable (q.map (algebra_map F p.splitting_field)).gal) : is_solvable q.gal :=
-begin
-  let [ident K] [] [":=", expr p.splitting_field],
-  let [ident L] [] [":=", expr q.splitting_field],
-  haveI [] [":", expr fact (p.splits (algebra_map F L))] [":=", expr ⟨hpq⟩],
-  let [ident ϕ] [":", expr «expr ≃* »(«expr ≃ₐ[ ] »(L, K, L), (q.map (algebra_map F K)).gal)] [":=", expr (is_splitting_field.alg_equiv L (q.map (algebra_map F K))).aut_congr],
-  have [ident ϕ_inj] [":", expr function.injective ϕ.to_monoid_hom] [":=", expr ϕ.injective],
-  haveI [] [":", expr is_solvable «expr ≃ₐ[ ] »(K, F, K)] [":=", expr hp],
-  haveI [] [":", expr is_solvable «expr ≃ₐ[ ] »(L, K, L)] [":=", expr solvable_of_solvable_injective ϕ_inj],
-  exact [expr is_solvable_of_is_scalar_tower F p.splitting_field q.splitting_field]
-end
+theorem gal_is_solvable_tower (p q : Polynomial F) (hpq : p.splits (algebraMap F q.splitting_field))
+  (hp : IsSolvable p.gal) (hq : IsSolvable (q.map (algebraMap F p.splitting_field)).Gal) : IsSolvable q.gal :=
+  by 
+    let K := p.splitting_field 
+    let L := q.splitting_field 
+    have  : Fact (p.splits (algebraMap F L)) := ⟨hpq⟩
+    let ϕ : (L ≃ₐ[K] L) ≃* (q.map (algebraMap F K)).Gal :=
+      (is_splitting_field.alg_equiv L (q.map (algebraMap F K))).autCongr 
+    have ϕ_inj : Function.Injective ϕ.to_monoid_hom := ϕ.injective 
+    have  : IsSolvable (K ≃ₐ[F] K) := hp 
+    have  : IsSolvable (L ≃ₐ[K] L) := solvable_of_solvable_injective ϕ_inj 
+    exact is_solvable_of_is_scalar_tower F p.splitting_field q.splitting_field
 
 section GalXPowSubC
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gal_X_pow_sub_one_is_solvable (n : exprℕ()) : is_solvable («expr - »(«expr ^ »(X, n), 1) : polynomial F).gal :=
-begin
-  by_cases [expr hn, ":", expr «expr = »(n, 0)],
-  { rw ["[", expr hn, ",", expr pow_zero, ",", expr sub_self, "]"] [],
-    exact [expr gal_zero_is_solvable] },
-  have [ident hn'] [":", expr «expr < »(0, n)] [":=", expr pos_iff_ne_zero.mpr hn],
-  have [ident hn''] [":", expr «expr ≠ »((«expr - »(«expr ^ »(X, n), 1) : polynomial F), 0)] [":=", expr λ
-   h, one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))],
-  apply [expr is_solvable_of_comm],
-  intros [ident σ, ident τ],
-  ext [] [ident a, ident ha] [],
-  rw ["[", expr mem_root_set hn'', ",", expr alg_hom.map_sub, ",", expr aeval_X_pow, ",", expr aeval_one, ",", expr sub_eq_zero, "]"] ["at", ident ha],
-  have [ident key] [":", expr ∀
-   σ : («expr - »(«expr ^ »(X, n), 1) : polynomial F).gal, «expr∃ , »((m : exprℕ()), «expr = »(σ a, «expr ^ »(a, m)))] [],
-  { intro [ident σ],
-    obtain ["⟨", ident m, ",", ident hm, "⟩", ":=", expr σ.to_alg_hom.to_ring_hom.map_root_of_unity_eq_pow_self ⟨is_unit.unit (is_unit_of_pow_eq_one a n ha hn'), by { ext [] [] [],
-        rwa ["[", expr units.coe_pow, ",", expr is_unit.unit_spec, ",", expr subtype.coe_mk n hn', "]"] [] }⟩],
-    use [expr m],
-    convert [] [expr hm] [],
-    all_goals { exact [expr (is_unit.unit_spec _).symm] } },
-  obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr key σ],
-  obtain ["⟨", ident d, ",", ident hd, "⟩", ":=", expr key τ],
-  rw ["[", expr σ.mul_apply, ",", expr τ.mul_apply, ",", expr hc, ",", expr τ.map_pow, ",", expr hd, ",", expr σ.map_pow, ",", expr hc, ",", "<-", expr pow_mul, ",", expr pow_mul', "]"] []
-end
+theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable ((X^n) - 1 : Polynomial F).Gal :=
+  by 
+    byCases' hn : n = 0
+    ·
+      rw [hn, pow_zeroₓ, sub_self]
+      exact gal_zero_is_solvable 
+    have hn' : 0 < n := pos_iff_ne_zero.mpr hn 
+    have hn'' : ((X^n) - 1 : Polynomial F) ≠ 0 :=
+      fun h => one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_argₓ leading_coeff h))
+    apply is_solvable_of_comm 
+    intro σ τ 
+    ext a ha 
+    rw [mem_root_set hn'', AlgHom.map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha 
+    have key : ∀ σ : ((X^n) - 1 : Polynomial F).Gal, ∃ m : ℕ, σ a = (a^m)
+    ·
+      intro σ 
+      obtain ⟨m, hm⟩ :=
+        σ.to_alg_hom.to_ring_hom.map_root_of_unity_eq_pow_self
+          ⟨IsUnit.unit (is_unit_of_pow_eq_one a n ha hn'),
+            by 
+              ext 
+              rwa [Units.coe_pow, IsUnit.unit_spec, Subtype.coe_mk n hn']⟩
+      use m 
+      convert hm 
+      all_goals 
+        exact (IsUnit.unit_spec _).symm 
+    obtain ⟨c, hc⟩ := key σ 
+    obtain ⟨d, hd⟩ := key τ 
+    rw [σ.mul_apply, τ.mul_apply, hc, τ.map_pow, hd, σ.map_pow, hc, ←pow_mulₓ, pow_mul']
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gal_X_pow_sub_C_is_solvable_aux
-(n : exprℕ())
-(a : F)
-(h : («expr - »(«expr ^ »(X, n), 1) : polynomial F).splits (ring_hom.id F)) : is_solvable «expr - »(«expr ^ »(X, n), C a).gal :=
-begin
-  by_cases [expr ha, ":", expr «expr = »(a, 0)],
-  { rw ["[", expr ha, ",", expr C_0, ",", expr sub_zero, "]"] [],
-    exact [expr gal_X_pow_is_solvable n] },
-  have [ident ha'] [":", expr «expr ≠ »(algebra_map F «expr - »(«expr ^ »(X, n), C a).splitting_field a, 0)] [":=", expr mt ((ring_hom.injective_iff _).mp (ring_hom.injective _) a) ha],
-  by_cases [expr hn, ":", expr «expr = »(n, 0)],
-  { rw ["[", expr hn, ",", expr pow_zero, ",", "<-", expr C_1, ",", "<-", expr C_sub, "]"] [],
-    exact [expr gal_C_is_solvable «expr - »(1, a)] },
-  have [ident hn'] [":", expr «expr < »(0, n)] [":=", expr pos_iff_ne_zero.mpr hn],
-  have [ident hn''] [":", expr «expr ≠ »(«expr - »(«expr ^ »(X, n), C a), 0)] [":=", expr λ
-   h, one_ne_zero ((leading_coeff_X_pow_sub_C hn').symm.trans (congr_arg leading_coeff h))],
-  have [ident hn'''] [":", expr «expr ≠ »((«expr - »(«expr ^ »(X, n), 1) : polynomial F), 0)] [":=", expr λ
-   h, one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))],
-  have [ident mem_range] [":", expr ∀
-   {c}, «expr = »(«expr ^ »(c, n), 1) → «expr∃ , »((d), «expr = »(algebra_map F «expr - »(«expr ^ »(X, n), C a).splitting_field d, c))] [":=", expr λ
-   c
-   hc, ring_hom.mem_range.mp (minpoly.mem_range_of_degree_eq_one F c (or.resolve_left h hn''' (minpoly.irreducible ((splitting_field.normal «expr - »(«expr ^ »(X, n), C a)).is_integral c)) (minpoly.dvd F c (by rwa ["[", expr map_id, ",", expr alg_hom.map_sub, ",", expr sub_eq_zero, ",", expr aeval_X_pow, ",", expr aeval_one, "]"] []))))],
-  apply [expr is_solvable_of_comm],
-  intros [ident σ, ident τ],
-  ext [] [ident b, ident hb] [],
-  rw ["[", expr mem_root_set hn'', ",", expr alg_hom.map_sub, ",", expr aeval_X_pow, ",", expr aeval_C, ",", expr sub_eq_zero, "]"] ["at", ident hb],
-  have [ident hb'] [":", expr «expr ≠ »(b, 0)] [],
-  { intro [ident hb'],
-    rw ["[", expr hb', ",", expr zero_pow hn', "]"] ["at", ident hb],
-    exact [expr ha' hb.symm] },
-  have [ident key] [":", expr ∀
-   σ : «expr - »(«expr ^ »(X, n), C a).gal, «expr∃ , »((c), «expr = »(σ b, «expr * »(b, algebra_map F _ c)))] [],
-  { intro [ident σ],
-    have [ident key] [":", expr «expr = »(«expr ^ »(«expr / »(σ b, b), n), 1)] [":=", expr by rw ["[", expr div_pow, ",", "<-", expr σ.map_pow, ",", expr hb, ",", expr σ.commutes, ",", expr div_self ha', "]"] []],
-    obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr mem_range key],
-    use [expr c],
-    rw ["[", expr hc, ",", expr mul_div_cancel' (σ b) hb', "]"] [] },
-  obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr key σ],
-  obtain ["⟨", ident d, ",", ident hd, "⟩", ":=", expr key τ],
-  rw ["[", expr σ.mul_apply, ",", expr τ.mul_apply, ",", expr hc, ",", expr τ.map_mul, ",", expr τ.commutes, ",", expr hd, ",", expr σ.map_mul, ",", expr σ.commutes, ",", expr hc, "]"] [],
-  rw ["[", expr mul_assoc, ",", expr mul_assoc, ",", expr mul_right_inj' hb', ",", expr mul_comm, "]"] []
-end
+theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : ((X^n) - 1 : Polynomial F).Splits (RingHom.id F)) :
+  IsSolvable ((X^n) - C a).Gal :=
+  by 
+    byCases' ha : a = 0
+    ·
+      rw [ha, C_0, sub_zero]
+      exact gal_X_pow_is_solvable n 
+    have ha' : algebraMap F ((X^n) - C a).SplittingField a ≠ 0 :=
+      mt ((RingHom.injective_iff _).mp (RingHom.injective _) a) ha 
+    byCases' hn : n = 0
+    ·
+      rw [hn, pow_zeroₓ, ←C_1, ←C_sub]
+      exact gal_C_is_solvable (1 - a)
+    have hn' : 0 < n := pos_iff_ne_zero.mpr hn 
+    have hn'' : (X^n) - C a ≠ 0 :=
+      fun h => one_ne_zero ((leading_coeff_X_pow_sub_C hn').symm.trans (congr_argₓ leading_coeff h))
+    have hn''' : ((X^n) - 1 : Polynomial F) ≠ 0 :=
+      fun h => one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_argₓ leading_coeff h))
+    have mem_range : ∀ {c}, (c^n) = 1 → ∃ d, algebraMap F ((X^n) - C a).SplittingField d = c :=
+      fun c hc =>
+        ring_hom.mem_range.mp
+          (minpoly.mem_range_of_degree_eq_one F c
+            (Or.resolve_left h hn''' (minpoly.irreducible ((splitting_field.normal ((X^n) - C a)).IsIntegral c))
+              (minpoly.dvd F c
+                (by 
+                  rwa [map_id, AlgHom.map_sub, sub_eq_zero, aeval_X_pow, aeval_one]))))
+    apply is_solvable_of_comm 
+    intro σ τ 
+    ext b hb 
+    rw [mem_root_set hn'', AlgHom.map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at hb 
+    have hb' : b ≠ 0
+    ·
+      intro hb' 
+      rw [hb', zero_pow hn'] at hb 
+      exact ha' hb.symm 
+    have key : ∀ σ : ((X^n) - C a).Gal, ∃ c, σ b = b*algebraMap F _ c
+    ·
+      intro σ 
+      have key : (σ b / b^n) = 1 :=
+        by 
+          rw [div_pow, ←σ.map_pow, hb, σ.commutes, div_self ha']
+      obtain ⟨c, hc⟩ := mem_range key 
+      use c 
+      rw [hc, mul_div_cancel' (σ b) hb']
+    obtain ⟨c, hc⟩ := key σ 
+    obtain ⟨d, hd⟩ := key τ 
+    rw [σ.mul_apply, τ.mul_apply, hc, τ.map_mul, τ.commutes, hd, σ.map_mul, σ.commutes, hc]
+    rw [mul_assocₓ, mul_assocₓ, mul_right_inj' hb', mul_commₓ]
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem splits_X_pow_sub_one_of_X_pow_sub_C
-{F : Type*}
-[field F]
-{E : Type*}
-[field E]
-(i : «expr →+* »(F, E))
-(n : exprℕ())
-{a : F}
-(ha : «expr ≠ »(a, 0))
-(h : «expr - »(«expr ^ »(X, n), C a).splits i) : «expr - »(«expr ^ »(X, n), 1).splits i :=
-begin
-  have [ident ha'] [":", expr «expr ≠ »(i a, 0)] [":=", expr mt (i.injective_iff.mp i.injective a) ha],
-  by_cases [expr hn, ":", expr «expr = »(n, 0)],
-  { rw ["[", expr hn, ",", expr pow_zero, ",", expr sub_self, "]"] [],
-    exact [expr splits_zero i] },
-  have [ident hn'] [":", expr «expr < »(0, n)] [":=", expr pos_iff_ne_zero.mpr hn],
-  have [ident hn''] [":", expr «expr ≠ »(«expr - »(«expr ^ »(X, n), C a).degree, 0)] [":=", expr ne_of_eq_of_ne (degree_X_pow_sub_C hn' a) (mt with_bot.coe_eq_coe.mp hn)],
-  obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr exists_root_of_splits i h hn''],
-  rw ["[", expr eval₂_sub, ",", expr eval₂_X_pow, ",", expr eval₂_C, ",", expr sub_eq_zero, "]"] ["at", ident hb],
-  have [ident hb'] [":", expr «expr ≠ »(b, 0)] [],
-  { intro [ident hb'],
-    rw ["[", expr hb', ",", expr zero_pow hn', "]"] ["at", ident hb],
-    exact [expr ha' hb.symm] },
-  let [ident s] [] [":=", expr («expr - »(«expr ^ »(X, n), C a).map i).roots],
-  have [ident hs] [":", expr «expr = »(_, «expr * »(_, (s.map _).prod))] [":=", expr eq_prod_roots_of_splits h],
-  rw ["[", expr leading_coeff_X_pow_sub_C hn', ",", expr ring_hom.map_one, ",", expr C_1, ",", expr one_mul, "]"] ["at", ident hs],
-  have [ident hs'] [":", expr «expr = »(s.card, n)] [":=", expr (nat_degree_eq_card_roots h).symm.trans nat_degree_X_pow_sub_C],
-  apply [expr @splits_of_exists_multiset F E _ _ i «expr - »(«expr ^ »(X, n), 1) (s.map (λ c : E, «expr / »(c, b)))],
-  rw ["[", expr leading_coeff_X_pow_sub_one hn', ",", expr ring_hom.map_one, ",", expr C_1, ",", expr one_mul, ",", expr multiset.map_map, "]"] [],
-  have [ident C_mul_C] [":", expr «expr = »(«expr * »(C (i «expr ⁻¹»(a)), C (i a)), 1)] [],
-  { rw ["[", "<-", expr C_mul, ",", "<-", expr i.map_mul, ",", expr inv_mul_cancel ha, ",", expr i.map_one, ",", expr C_1, "]"] [] },
-  have [ident key1] [":", expr «expr = »(«expr - »(«expr ^ »(X, n), 1).map i, «expr * »(C (i «expr ⁻¹»(a)), («expr - »(«expr ^ »(X, n), C a).map i).comp «expr * »(C b, X)))] [],
-  { rw ["[", expr map_sub, ",", expr map_sub, ",", expr map_pow, ",", expr map_X, ",", expr map_C, ",", expr map_one, ",", expr sub_comp, ",", expr pow_comp, ",", expr X_comp, ",", expr C_comp, ",", expr mul_pow, ",", "<-", expr C_pow, ",", expr hb, ",", expr mul_sub, ",", "<-", expr mul_assoc, ",", expr C_mul_C, ",", expr one_mul, "]"] [] },
-  have [ident key2] [":", expr «expr = »(«expr ∘ »(λ
-     q : polynomial E, q.comp «expr * »(C b, X), λ
-     c : E, «expr - »(X, C c)), λ c : E, «expr * »(C b, «expr - »(X, C «expr / »(c, b))))] [],
-  { ext1 [] [ident c],
-    change [expr «expr = »(«expr - »(X, C c).comp «expr * »(C b, X), «expr * »(C b, «expr - »(X, C «expr / »(c, b))))] [] [],
-    rw ["[", expr sub_comp, ",", expr X_comp, ",", expr C_comp, ",", expr mul_sub, ",", "<-", expr C_mul, ",", expr mul_div_cancel' c hb', "]"] [] },
-  rw ["[", expr key1, ",", expr hs, ",", expr prod_comp, ",", expr multiset.map_map, ",", expr key2, ",", expr multiset.prod_map_mul, ",", expr multiset.map_const, ",", expr multiset.prod_repeat, ",", expr hs', ",", "<-", expr C_pow, ",", expr hb, ",", "<-", expr mul_assoc, ",", expr C_mul_C, ",", expr one_mul, "]"] [],
-  all_goals { exact [expr field.to_nontrivial F] }
-end
+theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} [Field E] (i : F →+* E) (n : ℕ) {a : F}
+  (ha : a ≠ 0) (h : ((X^n) - C a).Splits i) : ((X^n) - 1).Splits i :=
+  by 
+    have ha' : i a ≠ 0 := mt (i.injective_iff.mp i.injective a) ha 
+    byCases' hn : n = 0
+    ·
+      rw [hn, pow_zeroₓ, sub_self]
+      exact splits_zero i 
+    have hn' : 0 < n := pos_iff_ne_zero.mpr hn 
+    have hn'' : ((X^n) - C a).degree ≠ 0 := ne_of_eq_of_ne (degree_X_pow_sub_C hn' a) (mt with_bot.coe_eq_coe.mp hn)
+    obtain ⟨b, hb⟩ := exists_root_of_splits i h hn'' 
+    rw [eval₂_sub, eval₂_X_pow, eval₂_C, sub_eq_zero] at hb 
+    have hb' : b ≠ 0
+    ·
+      intro hb' 
+      rw [hb', zero_pow hn'] at hb 
+      exact ha' hb.symm 
+    let s := (((X^n) - C a).map i).roots 
+    have hs : _ = _*(s.map _).Prod := eq_prod_roots_of_splits h 
+    rw [leading_coeff_X_pow_sub_C hn', RingHom.map_one, C_1, one_mulₓ] at hs 
+    have hs' : s.card = n := (nat_degree_eq_card_roots h).symm.trans nat_degree_X_pow_sub_C 
+    apply @splits_of_exists_multiset F E _ _ i ((X^n) - 1) (s.map fun c : E => c / b)
+    rw [leading_coeff_X_pow_sub_one hn', RingHom.map_one, C_1, one_mulₓ, Multiset.map_map]
+    have C_mul_C : (C (i (a⁻¹))*C (i a)) = 1
+    ·
+      rw [←C_mul, ←i.map_mul, inv_mul_cancel ha, i.map_one, C_1]
+    have key1 : ((X^n) - 1).map i = C (i (a⁻¹))*(((X^n) - C a).map i).comp (C b*X)
+    ·
+      rw [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, map_X, map_C, Polynomial.map_one, sub_comp,
+        pow_comp, X_comp, C_comp, mul_powₓ, ←C_pow, hb, mul_sub, ←mul_assocₓ, C_mul_C, one_mulₓ]
+    have key2 : ((fun q : Polynomial E => q.comp (C b*X)) ∘ fun c : E => X - C c) = fun c : E => C b*X - C (c / b)
+    ·
+      ext1 c 
+      change (X - C c).comp (C b*X) = C b*X - C (c / b)
+      rw [sub_comp, X_comp, C_comp, mul_sub, ←C_mul, mul_div_cancel' c hb']
+    rw [key1, hs, prod_comp, Multiset.map_map, key2, Multiset.prod_map_mul, Multiset.map_const, Multiset.prod_repeat,
+      hs', ←C_pow, hb, ←mul_assocₓ, C_mul_C, one_mulₓ]
+    all_goals 
+      exact Field.to_nontrivial F
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gal_X_pow_sub_C_is_solvable (n : exprℕ()) (x : F) : is_solvable «expr - »(«expr ^ »(X, n), C x).gal :=
-begin
-  by_cases [expr hx, ":", expr «expr = »(x, 0)],
-  { rw ["[", expr hx, ",", expr C_0, ",", expr sub_zero, "]"] [],
-    exact [expr gal_X_pow_is_solvable n] },
-  apply [expr gal_is_solvable_tower «expr - »(«expr ^ »(X, n), 1) «expr - »(«expr ^ »(X, n), C x)],
-  { exact [expr splits_X_pow_sub_one_of_X_pow_sub_C _ n hx (splitting_field.splits _)] },
-  { exact [expr gal_X_pow_sub_one_is_solvable n] },
-  { rw ["[", expr map_sub, ",", expr map_pow, ",", expr map_X, ",", expr map_C, "]"] [],
-    apply [expr gal_X_pow_sub_C_is_solvable_aux],
-    have [ident key] [] [":=", expr splitting_field.splits («expr - »(«expr ^ »(X, n), 1) : polynomial F)],
-    rwa ["[", "<-", expr splits_id_iff_splits, ",", expr map_sub, ",", expr map_pow, ",", expr map_X, ",", expr map_one, "]"] ["at", ident key] }
-end
+theorem gal_X_pow_sub_C_is_solvable (n : ℕ) (x : F) : IsSolvable ((X^n) - C x).Gal :=
+  by 
+    byCases' hx : x = 0
+    ·
+      rw [hx, C_0, sub_zero]
+      exact gal_X_pow_is_solvable n 
+    apply gal_is_solvable_tower ((X^n) - 1) ((X^n) - C x)
+    ·
+      exact splits_X_pow_sub_one_of_X_pow_sub_C _ n hx (splitting_field.splits _)
+    ·
+      exact gal_X_pow_sub_one_is_solvable n
+    ·
+      rw [Polynomial.map_sub, Polynomial.map_pow, map_X, map_C]
+      apply gal_X_pow_sub_C_is_solvable_aux 
+      have key := splitting_field.splits ((X^n) - 1 : Polynomial F)
+      rwa [←splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, map_X, Polynomial.map_one] at key
 
 end GalXPowSubC
 
@@ -264,7 +265,7 @@ theorem induction (P : solvableByRad F E → Prop) (base : ∀ α : F, P (algebr
   (rad : ∀ α : solvableByRad F E, ∀ n : ℕ, n ≠ 0 → P (α^n) → P α) (α : solvableByRad F E) : P α :=
   by 
     revert α 
-    suffices  : ∀ α : E, IsSolvableByRad F α → ∃ β : solvableByRad F E, «expr↑ » β = α ∧ P β
+    suffices  : ∀ α : E, IsSolvableByRad F α → ∃ β : solvableByRad F E, ↑β = α ∧ P β
     ·
       intro α 
       obtain ⟨α₀, hα₀, Pα⟩ := this α (Subtype.mem α)
@@ -332,7 +333,7 @@ theorem IsIntegral (α : solvableByRad F E) : IsIntegral F α :=
       exact
         fun α hα =>
           Subalgebra.inv_mem_of_algebraic (integralClosure F (solvableByRad F E))
-            (show IsAlgebraic F («expr↑ » (⟨α, hα⟩ : integralClosure F (solvableByRad F E)))by 
+            (show IsAlgebraic F (↑(⟨α, hα⟩ : integralClosure F (solvableByRad F E)))by 
               exact (is_algebraic_iff_is_integral F).mpr hα)
     ·
       intro α n hn hα 
@@ -350,68 +351,108 @@ theorem IsIntegral (α : solvableByRad F E) : IsIntegral F α :=
 def P (α : solvableByRad F E) : Prop :=
   IsSolvable (minpoly F α).Gal
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
-theorem induction3 {α : solvable_by_rad F E} {n : exprℕ()} (hn : «expr ≠ »(n, 0)) (hα : P «expr ^ »(α, n)) : P α :=
-begin
-  let [ident p] [] [":=", expr minpoly F «expr ^ »(α, n)],
-  have [ident hp] [":", expr «expr ≠ »(p.comp «expr ^ »(X, n), 0)] [],
-  { intro [ident h],
-    cases [expr comp_eq_zero_iff.mp h] ["with", ident h', ident h'],
-    { exact [expr minpoly.ne_zero (is_integral «expr ^ »(α, n)) h'] },
-    { exact [expr hn (by rw ["[", "<-", expr nat_degree_C _, ",", "<-", expr h'.2, ",", expr nat_degree_X_pow, "]"] [])] } },
-  apply [expr gal_is_solvable_of_splits],
-  { exact [expr ⟨splits_of_splits_of_dvd _ hp (splitting_field.splits (p.comp «expr ^ »(X, n))) (minpoly.dvd F α (by rw ["[", expr aeval_comp, ",", expr aeval_X_pow, ",", expr minpoly.aeval, "]"] []))⟩] },
-  { refine [expr gal_is_solvable_tower p (p.comp «expr ^ »(X, n)) _ hα _],
-    { exact [expr gal.splits_in_splitting_field_of_comp _ _ (by rwa ["[", expr nat_degree_X_pow, "]"] [])] },
-    { obtain ["⟨", ident s, ",", ident hs, "⟩", ":=", expr exists_multiset_of_splits _ (splitting_field.splits p)],
-      rw ["[", expr map_comp, ",", expr map_pow, ",", expr map_X, ",", expr hs, ",", expr mul_comp, ",", expr C_comp, "]"] [],
-      apply [expr gal_mul_is_solvable (gal_C_is_solvable _)],
-      rw [expr prod_comp] [],
-      apply [expr gal_prod_is_solvable],
-      intros [ident q, ident hq],
-      rw [expr multiset.mem_map] ["at", ident hq],
-      obtain ["⟨", ident q, ",", ident hq, ",", ident rfl, "⟩", ":=", expr hq],
-      rw [expr multiset.mem_map] ["at", ident hq],
-      obtain ["⟨", ident q, ",", ident hq, ",", ident rfl, "⟩", ":=", expr hq],
-      rw ["[", expr sub_comp, ",", expr X_comp, ",", expr C_comp, "]"] [],
-      exact [expr gal_X_pow_sub_C_is_solvable n q] } }
-end
+theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (α^n)) : P α :=
+  by 
+    let p := minpoly F (α^n)
+    have hp : p.comp (X^n) ≠ 0
+    ·
+      intro h 
+      cases' comp_eq_zero_iff.mp h with h' h'
+      ·
+        exact minpoly.ne_zero (IsIntegral (α^n)) h'
+      ·
+        exact
+          hn
+            (by 
+              rw [←nat_degree_C _, ←h'.2, nat_degree_X_pow])
+    apply gal_is_solvable_of_splits
+    ·
+      exact
+        ⟨splits_of_splits_of_dvd _ hp (splitting_field.splits (p.comp (X^n)))
+            (minpoly.dvd F α
+              (by 
+                rw [aeval_comp, aeval_X_pow, minpoly.aeval]))⟩
+    ·
+      refine' gal_is_solvable_tower p (p.comp (X^n)) _ hα _
+      ·
+        exact
+          gal.splits_in_splitting_field_of_comp _ _
+            (by 
+              rwa [nat_degree_X_pow])
+      ·
+        obtain ⟨s, hs⟩ := exists_multiset_of_splits _ (splitting_field.splits p)
+        rw [map_comp, Polynomial.map_pow, map_X, hs, mul_comp, C_comp]
+        apply gal_mul_is_solvable (gal_C_is_solvable _)
+        rw [prod_comp]
+        apply gal_prod_is_solvable 
+        intro q hq 
+        rw [Multiset.mem_map] at hq 
+        obtain ⟨q, hq, rfl⟩ := hq 
+        rw [Multiset.mem_map] at hq 
+        obtain ⟨q, hq, rfl⟩ := hq 
+        rw [sub_comp, X_comp, C_comp]
+        exact gal_X_pow_sub_C_is_solvable n q
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:341:40: in let: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
-theorem induction2
-{α β γ : solvable_by_rad F E}
-(hγ : «expr ∈ »(γ, «expr ⟮ , ⟯»(F, [α, β])))
-(hα : P α)
-(hβ : P β) : P γ :=
-begin
-  let [ident p] [] [":=", expr minpoly F α],
-  let [ident q] [] [":=", expr minpoly F β],
-  have [ident hpq] [] [":=", expr polynomial.splits_of_splits_mul _ (mul_ne_zero (minpoly.ne_zero (is_integral α)) (minpoly.ne_zero (is_integral β))) (splitting_field.splits «expr * »(p, q))],
-  let [ident f] [":", expr «expr →ₐ[ ] »(«expr ⟮ , ⟯»(F, [α, β]), F, «expr * »(p, q).splitting_field)] [":=", expr classical.choice (alg_hom_mk_adjoin_splits (begin
-       intros [ident x, ident hx],
-       cases [expr hx] [],
-       rw [expr hx] [],
-       exact [expr ⟨is_integral α, hpq.1⟩],
-       cases [expr hx] [],
-       exact [expr ⟨is_integral β, hpq.2⟩]
-     end))],
-  have [ident key] [":", expr «expr = »(minpoly F γ, minpoly F (f ⟨γ, hγ⟩))] [":=", expr minpoly.eq_of_irreducible_of_monic (minpoly.irreducible (is_integral γ)) (begin
-      suffices [] [":", expr «expr = »(aeval (⟨γ, hγ⟩ : «expr ⟮ , ⟯»(F, [α, β])) (minpoly F γ), 0)],
-      { rw ["[", expr aeval_alg_hom_apply, ",", expr this, ",", expr alg_hom.map_zero, "]"] [] },
-      apply [expr (algebra_map «expr ⟮ , ⟯»(F, [α, β]) (solvable_by_rad F E)).injective],
-      rw ["[", expr ring_hom.map_zero, ",", expr is_scalar_tower.algebra_map_aeval, "]"] [],
-      exact [expr minpoly.aeval F γ]
-    end) (minpoly.monic (is_integral γ))],
-  rw ["[", expr P, ",", expr key, "]"] [],
-  exact [expr gal_is_solvable_of_splits ⟨normal.splits (splitting_field.normal _) _⟩ (gal_mul_is_solvable hα hβ)]
-end
+theorem induction2 {α β γ : solvableByRad F E}
+  (hγ : γ ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+  (hα : P α) (hβ : P β) : P γ :=
+  by 
+    let p := minpoly F α 
+    let q := minpoly F β 
+    have hpq :=
+      Polynomial.splits_of_splits_mul _ (mul_ne_zero (minpoly.ne_zero (IsIntegral α)) (minpoly.ne_zero (IsIntegral β)))
+        (splitting_field.splits (p*q))
+    let f :
+      «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F]
+        (p*q).SplittingField :=
+      Classical.choice
+        (alg_hom_mk_adjoin_splits
+          (by 
+            intro x hx 
+            cases hx 
+            rw [hx]
+            exact ⟨IsIntegral α, hpq.1⟩
+            cases hx 
+            exact ⟨IsIntegral β, hpq.2⟩))
+    have key : minpoly F γ = minpoly F (f ⟨γ, hγ⟩) :=
+      minpoly.eq_of_irreducible_of_monic (minpoly.irreducible (IsIntegral γ))
+        (by 
+          suffices  :
+            aeval
+                (⟨γ, hγ⟩ :
+                «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+                (minpoly F γ) =
+              0
+          ·
+            rw [aeval_alg_hom_apply, this, AlgHom.map_zero]
+          apply
+            (algebraMap
+                («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+                (solvableByRad F E)).Injective
+              
+          rw [RingHom.map_zero, IsScalarTower.algebra_map_aeval]
+          exact minpoly.aeval F γ)
+        (minpoly.monic (IsIntegral γ))
+    rw [P, key]
+    exact gal_is_solvable_of_splits ⟨Normal.splits (splitting_field.normal _) _⟩ (gal_mul_is_solvable hα hβ)
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
-theorem induction1 {α β : solvable_by_rad F E} (hβ : «expr ∈ »(β, «expr ⟮ , ⟯»(F, [α]))) (hα : P α) : P β :=
-induction2 (adjoin.mono F _ _ (ge_of_eq (set.pair_eq_singleton α)) hβ) hα hα
+theorem induction1 {α β : solvableByRad F E}
+  (hβ : β ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+  (hα : P α) : P β :=
+  induction2 (adjoin.mono F _ _ (ge_of_eq (Set.pair_eq_singleton α)) hβ) hα hα
 
 theorem IsSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal :=
   by 
@@ -442,23 +483,20 @@ theorem IsSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal :=
     ·
       exact fun α n => induction3
 
--- error in FieldTheory.AbelRuffini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Abel-Ruffini Theorem** (one direction): An irreducible polynomial with an
 `is_solvable_by_rad` root has solvable Galois group -/
-theorem is_solvable'
-{α : E}
-{q : polynomial F}
-(q_irred : irreducible q)
-(q_aeval : «expr = »(aeval α q, 0))
-(hα : is_solvable_by_rad F α) : _root_.is_solvable q.gal :=
-begin
-  haveI [] [":", expr _root_.is_solvable «expr * »(q, C «expr ⁻¹»(q.leading_coeff)).gal] [],
-  { rw ["[", expr minpoly.eq_of_irreducible q_irred q_aeval, ",", "<-", expr show «expr = »(minpoly F (⟨α, hα⟩ : solvable_by_rad F E), minpoly F α), from minpoly.eq_of_algebra_map_eq (ring_hom.injective _) (is_integral ⟨α, hα⟩) rfl, "]"] [],
-    exact [expr is_solvable ⟨α, hα⟩] },
-  refine [expr solvable_of_surjective (gal.restrict_dvd_surjective ⟨C «expr ⁻¹»(q.leading_coeff), rfl⟩ _)],
-  rw ["[", expr mul_ne_zero_iff, ",", expr ne, ",", expr ne, ",", expr C_eq_zero, ",", expr inv_eq_zero, "]"] [],
-  exact [expr ⟨q_irred.ne_zero, leading_coeff_ne_zero.mpr q_irred.ne_zero⟩]
-end
+theorem is_solvable' {α : E} {q : Polynomial F} (q_irred : Irreducible q) (q_aeval : aeval α q = 0)
+  (hα : IsSolvableByRad F α) : _root_.is_solvable q.gal :=
+  by 
+    have  : _root_.is_solvable (q*C (q.leading_coeff⁻¹)).Gal
+    ·
+      rw [minpoly.eq_of_irreducible q_irred q_aeval,
+        ←show minpoly F (⟨α, hα⟩ : solvableByRad F E) = minpoly F α from
+          minpoly.eq_of_algebra_map_eq (RingHom.injective _) (IsIntegral ⟨α, hα⟩) rfl]
+      exact IsSolvable ⟨α, hα⟩
+    refine' solvable_of_surjective (gal.restrict_dvd_surjective ⟨C (q.leading_coeff⁻¹), rfl⟩ _)
+    rw [mul_ne_zero_iff, Ne, Ne, C_eq_zero, inv_eq_zero]
+    exact ⟨q_irred.ne_zero, leading_coeff_ne_zero.mpr q_irred.ne_zero⟩
 
 end solvableByRad
 

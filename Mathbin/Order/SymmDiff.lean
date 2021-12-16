@@ -89,7 +89,7 @@ theorem symm_diff_le_sup : a Δ b ≤ a⊔b :=
     rw [symm_diff_eq_sup_sdiff_inf]
     exact sdiff_le
 
-theorem sdiff_symm_diff : c \ a Δ b = c⊓a⊓b⊔c \ a⊓(c \ b) :=
+theorem sdiff_symm_diff : c \ a Δ b = c⊓a⊓b⊔c \ a⊓c \ b :=
   by 
     simp only [· Δ ·, sdiff_sdiff_sup_sdiff']
 
@@ -116,24 +116,24 @@ theorem sdiff_symm_diff_self : a \ a Δ b = a⊓b :=
   by 
     simp [sdiff_symm_diff]
 
--- error in Order.SymmDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem symm_diff_eq_iff_sdiff_eq
-{a b c : α}
-(ha : «expr ≤ »(a, c)) : «expr ↔ »(«expr = »(«expr Δ »(a, b), c), «expr = »(«expr \ »(c, a), b)) :=
-begin
-  split; intro [ident h],
-  { have [ident hba] [":", expr disjoint «expr ⊓ »(a, b) c] [":=", expr begin
-       rw ["[", "<-", expr h, ",", expr disjoint.comm, "]"] [],
-       exact [expr disjoint_symm_diff_inf _ _]
-     end],
-    have [ident hca] [":", expr _] [":=", expr congr_arg ((«expr \ » a)) h],
-    rw ["[", expr symm_diff_sdiff_left, "]"] ["at", ident hca],
-    rw ["[", "<-", expr hca, ",", expr sdiff_eq_self_iff_disjoint, "]"] [],
-    exact [expr hba.of_disjoint_inf_of_le ha] },
-  { have [ident hd] [":", expr disjoint a b] [":=", expr by { rw ["<-", expr h] [],
-       exact [expr disjoint_sdiff_self_right] }],
-    rw ["[", expr symm_diff_def, ",", expr hd.sdiff_eq_left, ",", expr hd.sdiff_eq_right, ",", "<-", expr h, ",", expr sup_sdiff_cancel_right ha, "]"] [] }
-end
+theorem symm_diff_eq_iff_sdiff_eq {a b c : α} (ha : a ≤ c) : a Δ b = c ↔ c \ a = b :=
+  by 
+    constructor <;> intro h
+    ·
+      have hba : Disjoint (a⊓b) c :=
+        by 
+          rw [←h, Disjoint.comm]
+          exact disjoint_symm_diff_inf _ _ 
+      have hca : _ := congr_argₓ (· \ a) h 
+      rw [symm_diff_sdiff_left] at hca 
+      rw [←hca, sdiff_eq_self_iff_disjoint]
+      exact hba.of_disjoint_inf_of_le ha
+    ·
+      have hd : Disjoint a b :=
+        by 
+          rw [←h]
+          exact disjoint_sdiff_self_right 
+      rw [symm_diff_def, hd.sdiff_eq_left, hd.sdiff_eq_right, ←h, sup_sdiff_cancel_right ha]
 
 theorem Disjoint.symm_diff_eq_sup {a b : α} (h : Disjoint a b) : a Δ b = a⊔b :=
   by 
@@ -141,7 +141,7 @@ theorem Disjoint.symm_diff_eq_sup {a b : α} (h : Disjoint a b) : a Δ b = a⊔b
 
 theorem symm_diff_eq_sup : a Δ b = a⊔b ↔ Disjoint a b :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rw [symm_diff_eq_sup_sdiff_inf, sdiff_eq_self_iff_disjoint] at h 
       exact h.of_disjoint_inf_of_le le_sup_left
@@ -185,14 +185,15 @@ theorem symm_diff_symm_diff_self' : a Δ b Δ a = b :=
   by 
     rw [symm_diff_comm, ←symm_diff_assoc, symm_diff_self, bot_symm_diff]
 
--- error in Order.SymmDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem symm_diff_right_inj : «expr ↔ »(«expr = »(«expr Δ »(a, b), «expr Δ »(a, c)), «expr = »(b, c)) :=
-begin
-  split; intro [ident h],
-  { have [ident H1] [] [":=", expr congr_arg (((«expr Δ »)) a) h],
-    rwa ["[", expr symm_diff_symm_diff_self, ",", expr symm_diff_symm_diff_self, "]"] ["at", ident H1] },
-  { rw [expr h] [] }
-end
+@[simp]
+theorem symm_diff_right_inj : a Δ b = a Δ c ↔ b = c :=
+  by 
+    constructor <;> intro h
+    ·
+      have H1 := congr_argₓ ((· Δ ·) a) h 
+      rwa [symm_diff_symm_diff_self, symm_diff_symm_diff_self] at H1
+    ·
+      rw [h]
 
 @[simp]
 theorem symm_diff_left_inj : a Δ b = c Δ b ↔ a = c :=
@@ -236,21 +237,21 @@ section BooleanAlgebra
 
 variable {α : Type _} [BooleanAlgebra α] (a b c : α)
 
-theorem symm_diff_eq : a Δ b = a⊓«expr ᶜ» b⊔b⊓«expr ᶜ» a :=
+theorem symm_diff_eq : a Δ b = a⊓bᶜ⊔b⊓aᶜ :=
   by 
     simp only [· Δ ·, sdiff_eq]
 
 @[simp]
-theorem symm_diff_top : a Δ ⊤ = «expr ᶜ» a :=
+theorem symm_diff_top : a Δ ⊤ = aᶜ :=
   by 
     simp [symm_diff_eq]
 
 @[simp]
-theorem top_symm_diff : ⊤ Δ a = «expr ᶜ» a :=
+theorem top_symm_diff : ⊤ Δ a = aᶜ :=
   by 
     rw [symm_diff_comm, symm_diff_top]
 
-theorem compl_symm_diff : «expr ᶜ» (a Δ b) = a⊓b⊔«expr ᶜ» a⊓«expr ᶜ» b :=
+theorem compl_symm_diff : (a Δ b)ᶜ = a⊓b⊔aᶜ⊓bᶜ :=
   by 
     simp only [←top_sdiff, sdiff_symm_diff, top_inf_eq]
 
@@ -262,24 +263,23 @@ theorem IsCompl.symm_diff_eq_top (h : IsCompl a b) : a Δ b = ⊤ :=
   (symm_diff_eq_top_iff a b).2 h
 
 @[simp]
-theorem compl_symm_diff_self : «expr ᶜ» a Δ a = ⊤ :=
+theorem compl_symm_diff_self : aᶜ Δ a = ⊤ :=
   by 
     simp only [symm_diff_eq, compl_compl, inf_idem, compl_sup_eq_top]
 
 @[simp]
-theorem symm_diff_compl_self : a Δ «expr ᶜ» a = ⊤ :=
+theorem symm_diff_compl_self : a Δ aᶜ = ⊤ :=
   by 
     rw [symm_diff_comm, compl_symm_diff_self]
 
-theorem symm_diff_symm_diff_right' :
-  a Δ (b Δ c) = a⊓b⊓c⊔a⊓«expr ᶜ» b⊓«expr ᶜ» c⊔«expr ᶜ» a⊓b⊓«expr ᶜ» c⊔«expr ᶜ» a⊓«expr ᶜ» b⊓c :=
-  calc a Δ (b Δ c) = a⊓(b⊓c⊔«expr ᶜ» b⊓«expr ᶜ» c)⊔(b⊓«expr ᶜ» c⊔c⊓«expr ᶜ» b)⊓«expr ᶜ» a :=
+theorem symm_diff_symm_diff_right' : a Δ (b Δ c) = a⊓b⊓c⊔a⊓bᶜ⊓cᶜ⊔aᶜ⊓b⊓cᶜ⊔aᶜ⊓bᶜ⊓c :=
+  calc a Δ (b Δ c) = a⊓(b⊓c⊔bᶜ⊓cᶜ)⊔(b⊓cᶜ⊔c⊓bᶜ)⊓aᶜ :=
     by 
       rw [symm_diff_eq, compl_symm_diff, symm_diff_eq]
-    _ = a⊓b⊓c⊔a⊓«expr ᶜ» b⊓«expr ᶜ» c⊔b⊓«expr ᶜ» c⊓«expr ᶜ» a⊔c⊓«expr ᶜ» b⊓«expr ᶜ» a :=
+    _ = a⊓b⊓c⊔a⊓bᶜ⊓cᶜ⊔b⊓cᶜ⊓aᶜ⊔c⊓bᶜ⊓aᶜ :=
     by 
       rw [inf_sup_left, inf_sup_right, ←sup_assoc, ←inf_assoc, ←inf_assoc]
-    _ = a⊓b⊓c⊔a⊓«expr ᶜ» b⊓«expr ᶜ» c⊔«expr ᶜ» a⊓b⊓«expr ᶜ» c⊔«expr ᶜ» a⊓«expr ᶜ» b⊓c :=
+    _ = a⊓b⊓c⊔a⊓bᶜ⊓cᶜ⊔aᶜ⊓b⊓cᶜ⊔aᶜ⊓bᶜ⊓c :=
     by 
       congr 1
       ·

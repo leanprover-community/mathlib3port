@@ -17,7 +17,7 @@ Possibly it's best to axiomatize delta functors, and obtain a unique characteris
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory.Limits
 

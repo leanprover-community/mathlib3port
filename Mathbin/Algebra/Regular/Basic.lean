@@ -266,6 +266,13 @@ by right multiplication by a fixed element.
 def mulRightEmbedding {G : Type _} [RightCancelSemigroup G] (g : G) : G ↪ G :=
   { toFun := fun h => h*g, inj' := mul_left_injective g }
 
+@[toAdditive]
+theorem mul_left_embedding_eq_mul_right_embedding {G : Type _} [CancelCommMonoid G] (g : G) :
+  mulLeftEmbedding g = mulRightEmbedding g :=
+  by 
+    ext 
+    exact mul_commₓ _ _
+
 /--  Elements of a left cancel semigroup are left regular. -/
 theorem is_left_regular_of_left_cancel_semigroup [LeftCancelSemigroup R] (g : R) : IsLeftRegular g :=
   mul_right_injective g

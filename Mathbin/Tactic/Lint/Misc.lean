@@ -1,4 +1,4 @@
-import Mathbin.Data.Bool 
+import Mathbin.Data.Bool.Basic 
 import Mathbin.Meta.RbMap 
 import Mathbin.Tactic.Lint.Basic
 
@@ -31,6 +31,7 @@ open Tactic Expr
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 20000
 
 /--
@@ -151,7 +152,7 @@ This tactic additionally filters out all unused arguments of type `parse _`.
 We skip all declarations that contain `sorry` in their value. -/
 private unsafe def unused_arguments (d : declaration) : tactic (Option Stringₓ) :=
   do 
-    let ff ← return d.value.contains_sorry | return none 
+    let ff ← d.to_name.contains_sorry | return none 
     let ns := check_unused_arguments d 
     let tt ← return ns.is_some | return none 
     let ns := ns.iget 

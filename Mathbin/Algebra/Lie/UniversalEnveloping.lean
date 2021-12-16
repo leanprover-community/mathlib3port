@@ -49,11 +49,12 @@ inductive rel : TensorAlgebra R L → TensorAlgebra R L → Prop
 
 end UniversalEnvelopingAlgebra
 
--- error in Algebra.Lie.UniversalEnveloping: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler algebra R
 /-- The universal enveloping algebra of a Lie algebra. -/
-@[derive #["[", expr inhabited, ",", expr ring, ",", expr algebra R, "]"]]
-def universal_enveloping_algebra :=
-ring_quot (universal_enveloping_algebra.rel R L)
+def UniversalEnvelopingAlgebra :=
+  RingQuot (UniversalEnvelopingAlgebra.Rel R L)deriving [anonymous], [anonymous], [anonymous]
 
 namespace UniversalEnvelopingAlgebra
 
@@ -118,7 +119,7 @@ theorem lift_ι_apply (x : L) : lift R f (ι R x) = f x :=
 theorem lift_unique (g : UniversalEnvelopingAlgebra R L →ₐ[R] A) : g ∘ ι R = f ↔ g = lift R f :=
   by 
     refine' Iff.trans _ (lift R).symm_apply_eq 
-    split  <;>
+    constructor <;>
       ·
         intro h 
         ext 

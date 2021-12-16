@@ -35,7 +35,7 @@ for those `V : opens X` such that `V ≤ U i` for some `i`.
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -87,23 +87,34 @@ end Presheaf
 
 variable (C X)
 
--- error in Topology.Sheaves.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /--
 A `sheaf C X` is a presheaf of objects from `C` over a (bundled) topological space `X`,
 satisfying the sheaf condition.
--/ @[derive #[expr category]] def sheaf : Type max u v :=
-{F : presheaf C X // F.is_sheaf}
+-/
+def sheaf : Type max u v :=
+  { F : presheaf C X // F.is_sheaf }deriving [anonymous]
 
 instance sheaf_inhabited : Inhabited (sheaf (CategoryTheory.Discrete PUnit) X) :=
   ⟨⟨functor.star _, presheaf.is_sheaf_punit _⟩⟩
 
 namespace Sheaf
 
--- error in Topology.Sheaves.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /--
 The forgetful functor from sheaves to presheaves.
--/ @[derive #["[", expr full, ",", expr faithful, "]"]] def forget : «expr ⥤ »(Top.sheaf C X, Top.presheaf C X) :=
-full_subcategory_inclusion presheaf.is_sheaf
+-/
+def forget : Top.Sheaf C X ⥤ Top.Presheaf C X :=
+  full_subcategory_inclusion presheaf.is_sheaf deriving [anonymous], [anonymous]
+
+@[simp]
+theorem id_app (F : sheaf C X) t : (𝟙 F : F ⟶ F).app t = 𝟙 _ :=
+  rfl
+
+@[simp]
+theorem comp_app {F G H : sheaf C X} (f : F ⟶ G) (g : G ⟶ H) t : (f ≫ g).app t = f.app t ≫ g.app t :=
+  rfl
 
 end Sheaf
 

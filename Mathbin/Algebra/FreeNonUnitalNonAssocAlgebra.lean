@@ -33,15 +33,16 @@ forgetful functor, adjoint functor
 
 universe u v w
 
-noncomputable theory
+noncomputable section 
 
 variable (R : Type u) (X : Type v) [Semiringₓ R]
 
--- error in Algebra.FreeNonUnitalNonAssocAlgebra: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler non_unital_non_assoc_semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler module R
 /-- The free non-unital, non-associative algebra on the type `X` with coefficients in `R`. -/
-@[derive #["[", expr inhabited, ",", expr non_unital_non_assoc_semiring, ",", expr module R, "]"]]
-def free_non_unital_non_assoc_algebra :=
-monoid_algebra R (free_magma X)
+def FreeNonUnitalNonAssocAlgebra :=
+  MonoidAlgebra R (FreeMagma X)deriving [anonymous], [anonymous], [anonymous]
 
 namespace FreeNonUnitalNonAssocAlgebra
 
@@ -86,8 +87,6 @@ theorem lift_unique (f : X → A) (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocA
   F ∘ of R = f ↔ F = lift R f :=
   (lift R).symm_apply_eq
 
-attribute [irreducible] of lift
-
 @[simp]
 theorem lift_of_apply (f : X → A) x : lift R f (of R x) = f x :=
   by 
@@ -96,7 +95,7 @@ theorem lift_of_apply (f : X → A) x : lift R f (of R x) = f x :=
 @[simp]
 theorem lift_comp_of (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) : lift R (F ∘ of R) = F :=
   by 
-    rw [←lift_symm_apply, Equiv.apply_symm_apply]
+    rw [←lift_symm_apply, Equivₓ.apply_symm_apply]
 
 @[ext]
 theorem hom_ext {F₁ F₂ : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) :

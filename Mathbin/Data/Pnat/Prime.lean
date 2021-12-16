@@ -142,7 +142,7 @@ def coprime (m n : ℕ+) : Prop :=
   m.gcd n = 1
 
 @[simp]
-theorem coprime_coe {m n : ℕ+} : Nat.Coprime («expr↑ » m) («expr↑ » n) ↔ m.coprime n :=
+theorem coprime_coe {m n : ℕ+} : Nat.Coprime (↑m) (↑n) ↔ m.coprime n :=
   by 
     unfold coprime 
     unfold Nat.Coprime 

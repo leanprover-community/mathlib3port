@@ -66,7 +66,7 @@ def to_affine_map : V₁ →ᵃ[k] V₂ :=
   { toFun := f, linear := f, map_vadd' := fun p v => f.map_add v p }
 
 @[simp]
-theorem coe_to_affine_map : «expr⇑ » f.to_affine_map = f :=
+theorem coe_to_affine_map : ⇑f.to_affine_map = f :=
   rfl
 
 @[simp]
@@ -92,7 +92,7 @@ theorem coe_mk (f : P1 → P2) linear add : ((mk f linear add : P1 →ᵃ[k] P2)
 
 /-- `to_fun` is the same as the result of coercing to a function. -/
 @[simp]
-theorem to_fun_eq_coe (f : P1 →ᵃ[k] P2) : f.to_fun = «expr⇑ » f :=
+theorem to_fun_eq_coe (f : P1 →ᵃ[k] P2) : f.to_fun = ⇑f :=
   rfl
 
 /-- An affine map on the result of adding a vector to a point produces
@@ -110,20 +110,18 @@ theorem linear_map_vsub (f : P1 →ᵃ[k] P2) (p1 p2 : P1) : f.linear (p1 -ᵥ p
   by 
     convRHS => rw [←vsub_vadd p1 p2, map_vadd, vadd_vsub]
 
--- error in LinearAlgebra.AffineSpace.AffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two affine maps are equal if they coerce to the same function. -/
-@[ext #[]]
-theorem ext {f g : «expr →ᵃ[ ] »(P1, k, P2)} (h : ∀ p, «expr = »(f p, g p)) : «expr = »(f, g) :=
-begin
-  rcases [expr f, "with", "⟨", ident f, ",", ident f_linear, ",", ident f_add, "⟩"],
-  rcases [expr g, "with", "⟨", ident g, ",", ident g_linear, ",", ident g_add, "⟩"],
-  have [] [":", expr «expr = »(f, g)] [":=", expr funext h],
-  subst [expr g],
-  congr' [] ["with", ident v],
-  cases [expr (add_torsor.nonempty : nonempty P1)] ["with", ident p],
-  apply [expr vadd_right_cancel (f p)],
-  erw ["[", "<-", expr f_add, ",", "<-", expr g_add, "]"] []
-end
+@[ext]
+theorem ext {f g : P1 →ᵃ[k] P2} (h : ∀ p, f p = g p) : f = g :=
+  by 
+    rcases f with ⟨f, f_linear, f_add⟩
+    rcases g with ⟨g, g_linear, g_add⟩
+    have  : f = g := funext h 
+    subst g 
+    congr with v 
+    cases' (AddTorsor.nonempty : Nonempty P1) with p 
+    apply vadd_right_cancel (f p)
+    erw [←f_add, ←g_add]
 
 theorem ext_iff {f g : P1 →ᵃ[k] P2} : f = g ↔ ∀ p, f p = g p :=
   ⟨fun h p => h ▸ rfl, ext⟩
@@ -148,7 +146,7 @@ def const (p : P2) : P1 →ᵃ[k] P2 :=
           simp  }
 
 @[simp]
-theorem coe_const (p : P2) : «expr⇑ » (const k P1 p) = Function.const P1 p :=
+theorem coe_const (p : P2) : ⇑const k P1 p = Function.const P1 p :=
   rfl
 
 @[simp]
@@ -183,7 +181,7 @@ def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ p' : P1, f p' =
           rw [h, h p', vadd_vsub_assoc, f'.map_add, vadd_vadd] }
 
 @[simp]
-theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : «expr⇑ » (mk' f f' p h) = f :=
+theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : ⇑mk' f f' p h = f :=
   rfl
 
 @[simp]
@@ -217,7 +215,7 @@ instance : AddCommGroupₓ (P1 →ᵃ[k] V2) :=
     add_left_neg := fun f => ext$ fun p => add_left_negₓ (f p) }
 
 @[simp, normCast]
-theorem coe_zero : «expr⇑ » (0 : P1 →ᵃ[k] V2) = 0 :=
+theorem coe_zero : ⇑(0 : P1 →ᵃ[k] V2) = 0 :=
   rfl
 
 @[simp]
@@ -225,15 +223,15 @@ theorem zero_linear : (0 : P1 →ᵃ[k] V2).linear = 0 :=
   rfl
 
 @[simp, normCast]
-theorem coe_add (f g : P1 →ᵃ[k] V2) : «expr⇑ » (f+g) = f+g :=
+theorem coe_add (f g : P1 →ᵃ[k] V2) : (⇑f+g) = f+g :=
   rfl
 
 @[simp, normCast]
-theorem coe_neg (f : P1 →ᵃ[k] V2) : «expr⇑ » (-f) = -f :=
+theorem coe_neg (f : P1 →ᵃ[k] V2) : ⇑(-f) = -f :=
   rfl
 
 @[simp, normCast]
-theorem coe_sub (f g : P1 →ᵃ[k] V2) : «expr⇑ » (f - g) = f - g :=
+theorem coe_sub (f g : P1 →ᵃ[k] V2) : ⇑(f - g) = f - g :=
   rfl
 
 @[simp]
@@ -281,7 +279,7 @@ def fst : P1 × P2 →ᵃ[k] P1 :=
   { toFun := Prod.fst, linear := LinearMap.fst k V1 V2, map_vadd' := fun _ _ => rfl }
 
 @[simp]
-theorem coe_fst : «expr⇑ » (fst : P1 × P2 →ᵃ[k] P1) = Prod.fst :=
+theorem coe_fst : ⇑(fst : P1 × P2 →ᵃ[k] P1) = Prod.fst :=
   rfl
 
 @[simp]
@@ -293,7 +291,7 @@ def snd : P1 × P2 →ᵃ[k] P2 :=
   { toFun := Prod.snd, linear := LinearMap.snd k V1 V2, map_vadd' := fun _ _ => rfl }
 
 @[simp]
-theorem coe_snd : «expr⇑ » (snd : P1 × P2 →ᵃ[k] P2) = Prod.snd :=
+theorem coe_snd : ⇑(snd : P1 × P2 →ᵃ[k] P2) = Prod.snd :=
   rfl
 
 @[simp]
@@ -310,7 +308,7 @@ def id : P1 →ᵃ[k] P1 :=
 
 /-- The identity affine map acts as the identity. -/
 @[simp]
-theorem coe_id : «expr⇑ » (id k P1) = _root_.id :=
+theorem coe_id : ⇑id k P1 = _root_.id :=
   rfl
 
 @[simp]
@@ -341,7 +339,7 @@ def comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : P1 →ᵃ[k] P3 :=
 
 /-- Composition of affine maps acts as applying the two functions. -/
 @[simp]
-theorem coe_comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : «expr⇑ » (f.comp g) = f ∘ g :=
+theorem coe_comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : ⇑f.comp g = f ∘ g :=
   rfl
 
 /-- Composition of affine maps acts as applying the two functions. -/
@@ -370,44 +368,40 @@ instance : Monoidₓ (P1 →ᵃ[k] P1) :=
   { one := id k P1, mul := comp, one_mul := id_comp, mul_one := comp_id, mul_assoc := comp_assoc }
 
 @[simp]
-theorem coe_mul (f g : P1 →ᵃ[k] P1) : «expr⇑ » (f*g) = f ∘ g :=
+theorem coe_mul (f g : P1 →ᵃ[k] P1) : (⇑f*g) = f ∘ g :=
   rfl
 
 @[simp]
-theorem coe_one : «expr⇑ » (1 : P1 →ᵃ[k] P1) = _root_.id :=
+theorem coe_one : ⇑(1 : P1 →ᵃ[k] P1) = _root_.id :=
   rfl
 
 include V2
 
--- error in LinearAlgebra.AffineSpace.AffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem injective_iff_linear_injective
-(f : «expr →ᵃ[ ] »(P1, k, P2)) : «expr ↔ »(function.injective f.linear, function.injective f) :=
-begin
-  obtain ["⟨", ident p, "⟩", ":=", expr (infer_instance : nonempty P1)],
-  have [ident h] [":", expr «expr = »(«expr⇑ »(f.linear), «expr ∘ »((equiv.vadd_const (f p)).symm, «expr ∘ »(f, equiv.vadd_const p)))] [],
-  { ext [] [ident v] [],
-    simp [] [] [] ["[", expr f.map_vadd, ",", expr vadd_vsub_assoc, "]"] [] [] },
-  rw ["[", expr h, ",", expr equiv.comp_injective, ",", expr equiv.injective_comp, "]"] []
-end
+theorem injective_iff_linear_injective (f : P1 →ᵃ[k] P2) : Function.Injective f.linear ↔ Function.Injective f :=
+  by 
+    obtain ⟨p⟩ := (inferInstance : Nonempty P1)
+    have h : ⇑f.linear = (Equivₓ.vaddConst (f p)).symm ∘ f ∘ Equivₓ.vaddConst p
+    ·
+      ext v 
+      simp [f.map_vadd, vadd_vsub_assoc]
+    rw [h, Equivₓ.comp_injective, Equivₓ.injective_comp]
 
--- error in LinearAlgebra.AffineSpace.AffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem surjective_iff_linear_surjective
-(f : «expr →ᵃ[ ] »(P1, k, P2)) : «expr ↔ »(function.surjective f.linear, function.surjective f) :=
-begin
-  obtain ["⟨", ident p, "⟩", ":=", expr (infer_instance : nonempty P1)],
-  have [ident h] [":", expr «expr = »(«expr⇑ »(f.linear), «expr ∘ »((equiv.vadd_const (f p)).symm, «expr ∘ »(f, equiv.vadd_const p)))] [],
-  { ext [] [ident v] [],
-    simp [] [] [] ["[", expr f.map_vadd, ",", expr vadd_vsub_assoc, "]"] [] [] },
-  rw ["[", expr h, ",", expr equiv.comp_surjective, ",", expr equiv.surjective_comp, "]"] []
-end
+theorem surjective_iff_linear_surjective (f : P1 →ᵃ[k] P2) : Function.Surjective f.linear ↔ Function.Surjective f :=
+  by 
+    obtain ⟨p⟩ := (inferInstance : Nonempty P1)
+    have h : ⇑f.linear = (Equivₓ.vaddConst (f p)).symm ∘ f ∘ Equivₓ.vaddConst p
+    ·
+      ext v 
+      simp [f.map_vadd, vadd_vsub_assoc]
+    rw [h, Equivₓ.comp_surjective, Equivₓ.surjective_comp]
 
 theorem image_vsub_image {s t : Set P1} (f : P1 →ᵃ[k] P2) : f '' s -ᵥ f '' t = f.linear '' (s -ᵥ t) :=
   by 
     ext v 
     simp only [Set.mem_vsub, Set.mem_image, exists_exists_and_eq_and, exists_and_distrib_left, ←f.linear_map_vsub]
-    split 
+    constructor
     ·
       rintro ⟨x, hx, y, hy, hv⟩
       exact ⟨x -ᵥ y, ⟨x, hx, y, hy, rfl⟩, hv⟩
@@ -528,11 +522,11 @@ theorem line_map_vadd_line_map (v₁ v₂ : V1) (p₁ p₂ : P1) (c : k) :
   line_map v₁ v₂ c +ᵥ line_map p₁ p₂ c = line_map (v₁ +ᵥ p₁) (v₂ +ᵥ p₂) c :=
   ((fst : V1 × P1 →ᵃ[k] V1) +ᵥ snd).apply_line_map (v₁, p₁) (v₂, p₂) c
 
--- error in LinearAlgebra.AffineSpace.AffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem line_map_vsub_line_map
-(p₁ p₂ p₃ p₄ : P1)
-(c : k) : «expr = »(«expr -ᵥ »(line_map p₁ p₂ c, line_map p₃ p₄ c), line_map «expr -ᵥ »(p₁, p₃) «expr -ᵥ »(p₂, p₄) c) :=
-by letI [] [":", expr expraffine_space() «expr × »(V1, V1) «expr × »(P1, P1)] [":=", expr prod.add_torsor]; exact [expr «expr -ᵥ »((fst : «expr →ᵃ[ ] »(«expr × »(P1, P1), k, P1)), (snd : «expr →ᵃ[ ] »(«expr × »(P1, P1), k, P1))).apply_line_map (_, _) (_, _) c]
+theorem line_map_vsub_line_map (p₁ p₂ p₃ p₄ : P1) (c : k) :
+  line_map p₁ p₂ c -ᵥ line_map p₃ p₄ c = line_map (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) c :=
+  by 
+    let this' : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor <;>
+      exact ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_line_map (_, _) (_, _) c
 
 /-- Decomposition of an affine map in the special case when the point space and vector space
 are the same. -/
@@ -553,22 +547,17 @@ theorem decomp' (f : V1 →ᵃ[k] V2) : (f.linear : V1 → V2) = f - fun z => f 
 
 omit V1
 
--- error in LinearAlgebra.AffineSpace.AffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem image_interval
-{k : Type*}
-[linear_ordered_field k]
-(f : «expr →ᵃ[ ] »(k, k, k))
-(a b : k) : «expr = »(«expr '' »(f, set.interval a b), set.interval (f a) (f b)) :=
-begin
-  have [] [":", expr «expr = »(«expr⇑ »(f), «expr ∘ »(λ
-     x, «expr + »(x, f 0), λ x, «expr * »(x, «expr - »(f 1, f 0))))] [],
-  { ext [] [ident x] [],
-    change [expr «expr = »(f x, «expr +ᵥ »(«expr • »(x, «expr -ᵥ »(f 1, f 0)), f 0))] [] [],
-    rw ["[", "<-", expr f.linear_map_vsub, ",", "<-", expr f.linear.map_smul, ",", "<-", expr f.map_vadd, "]"] [],
-    simp [] [] ["only"] ["[", expr vsub_eq_sub, ",", expr add_zero, ",", expr mul_one, ",", expr vadd_eq_add, ",", expr sub_zero, ",", expr smul_eq_mul, "]"] [] [] },
-  rw ["[", expr this, ",", expr set.image_comp, "]"] [],
-  simp [] [] ["only"] ["[", expr set.image_add_const_interval, ",", expr set.image_mul_const_interval, "]"] [] []
-end
+theorem image_interval {k : Type _} [LinearOrderedField k] (f : k →ᵃ[k] k) (a b : k) :
+  f '' Set.Interval a b = Set.Interval (f a) (f b) :=
+  by 
+    have  : ⇑f = (fun x => x+f 0) ∘ fun x => x*f 1 - f 0
+    ·
+      ext x 
+      change f x = x • (f 1 -ᵥ f 0) +ᵥ f 0
+      rw [←f.linear_map_vsub, ←f.linear.map_smul, ←f.map_vadd]
+      simp only [vsub_eq_sub, add_zeroₓ, mul_oneₓ, vadd_eq_add, sub_zero, smul_eq_mul]
+    rw [this, Set.image_comp]
+    simp only [Set.image_add_const_interval, Set.image_mul_const_interval]
 
 section 
 
@@ -617,7 +606,7 @@ instance : Module k (P1 →ᵃ[k] V2) :=
     add_smul := fun c₁ c₂ f => ext$ fun p => add_smul _ _ _, zero_smul := fun f => ext$ fun p => zero_smul _ _ }
 
 @[simp]
-theorem coe_smul (c : k) (f : P1 →ᵃ[k] V2) : «expr⇑ » (c • f) = c • f :=
+theorem coe_smul (c : k) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=
   rfl
 
 @[simp]
@@ -691,7 +680,7 @@ def homothety_hom (c : P1) : k →* P1 →ᵃ[k] P1 :=
   ⟨homothety c, homothety_one c, homothety_mul c⟩
 
 @[simp]
-theorem coe_homothety_hom (c : P1) : «expr⇑ » (homothety_hom c : k →* _) = homothety c :=
+theorem coe_homothety_hom (c : P1) : ⇑(homothety_hom c : k →* _) = homothety c :=
   rfl
 
 /-- `homothety` as an affine map. -/
@@ -699,7 +688,7 @@ def homothety_affine (c : P1) : k →ᵃ[k] P1 →ᵃ[k] P1 :=
   ⟨homothety c, (LinearMap.lsmul k _).flip (id k P1 -ᵥ const k P1 c), Function.swap (homothety_add c)⟩
 
 @[simp]
-theorem coe_homothety_affine (c : P1) : «expr⇑ » (homothety_affine c : k →ᵃ[k] _) = homothety c :=
+theorem coe_homothety_affine (c : P1) : ⇑(homothety_affine c : k →ᵃ[k] _) = homothety c :=
   rfl
 
 end AffineMap

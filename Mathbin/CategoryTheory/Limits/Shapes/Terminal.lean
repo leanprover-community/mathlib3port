@@ -11,7 +11,7 @@ import Mathbin.CategoryTheory.Category.Preorder
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u u₂
 
@@ -113,15 +113,15 @@ def is_terminal.split_mono_from {X Y : C} (t : is_terminal X) (f : X ⟶ Y) : sp
 def is_initial.split_epi_to {X Y : C} (t : is_initial X) (f : Y ⟶ X) : split_epi f :=
   ⟨t.to _, t.hom_ext _ _⟩
 
--- error in CategoryTheory.Limits.Shapes.Terminal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any morphism from a terminal object is mono. -/
-theorem is_terminal.mono_from {X Y : C} (t : is_terminal X) (f : «expr ⟶ »(X, Y)) : mono f :=
-by haveI [] [] [":=", expr t.split_mono_from f]; apply_instance
+theorem is_terminal.mono_from {X Y : C} (t : is_terminal X) (f : X ⟶ Y) : mono f :=
+  by 
+    have  := t.split_mono_from f <;> infer_instance
 
--- error in CategoryTheory.Limits.Shapes.Terminal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any morphism to an initial object is epi. -/
-theorem is_initial.epi_to {X Y : C} (t : is_initial X) (f : «expr ⟶ »(Y, X)) : epi f :=
-by haveI [] [] [":=", expr t.split_epi_to f]; apply_instance
+theorem is_initial.epi_to {X Y : C} (t : is_initial X) (f : Y ⟶ X) : epi f :=
+  by 
+    have  := t.split_epi_to f <;> infer_instance
 
 /-- If `T` and `T'` are terminal, they are isomorphic. -/
 @[simps]
@@ -243,7 +243,7 @@ def terminal_op_of_initial {X : C} (t : is_initial X) : is_terminal (Opposite.op
   { lift := fun s => (t.to s.X.unop).op, uniq' := fun s m w => Quiver.Hom.unop_inj (t.hom_ext _ _) }
 
 /-- An initial object in the opposite category is terminal in the original category. -/
-def terminal_unop_of_initial {X : «expr ᵒᵖ» C} (t : is_initial X) : is_terminal X.unop :=
+def terminal_unop_of_initial {X : Cᵒᵖ} (t : is_initial X) : is_terminal X.unop :=
   { lift := fun s => (t.to (Opposite.op s.X)).unop, uniq' := fun s m w => Quiver.Hom.op_inj (t.hom_ext _ _) }
 
 /-- A terminal object is initial in the opposite category. -/
@@ -251,7 +251,7 @@ def initial_op_of_terminal {X : C} (t : is_terminal X) : is_initial (Opposite.op
   { desc := fun s => (t.from s.X.unop).op, uniq' := fun s m w => Quiver.Hom.unop_inj (t.hom_ext _ _) }
 
 /-- A terminal object in the opposite category is initial in the original category. -/
-def initial_unop_of_terminal {X : «expr ᵒᵖ» C} (t : is_terminal X) : is_initial X.unop :=
+def initial_unop_of_terminal {X : Cᵒᵖ} (t : is_terminal X) : is_initial X.unop :=
   { desc := fun s => (t.from (Opposite.op s.X)).unop, uniq' := fun s m w => Quiver.Hom.op_inj (t.hom_ext _ _) }
 
 /-- A category is a `initial_mono_class` if the canonical morphism of an initial object is a

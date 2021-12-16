@@ -58,21 +58,25 @@ instance : CoeFun (α ≃. β) fun _ => α → Option β :=
 theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) h (x : α) : (Pequiv.mk f₁ f₂ h : α → Option β) x = f₁ x :=
   rfl
 
--- error in Data.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[ext #[]] theorem ext : ∀ {f g : «expr ≃. »(α, β)} (h : ∀ x, «expr = »(f x, g x)), «expr = »(f, g)
-| ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h := have h : «expr = »(f₁, g₁), from funext h,
-have ∀ b, «expr = »(f₂ b, g₂ b), begin
-  subst [expr h],
-  assume [binders (b)],
-  have [ident hf] [] [":=", expr λ a, hf a b],
-  have [ident hg] [] [":=", expr λ a, hg a b],
-  cases [expr h, ":", expr g₂ b] ["with", ident a],
-  { simp [] [] ["only"] ["[", expr h, ",", expr option.not_mem_none, ",", expr false_iff, "]"] [] ["at", ident hg],
-    simp [] [] ["only"] ["[", expr hg, ",", expr iff_false, "]"] [] ["at", ident hf],
-    rwa ["[", expr option.eq_none_iff_forall_not_mem, "]"] [] },
-  { rw ["[", "<-", expr option.mem_def, ",", expr hf, ",", "<-", expr hg, ",", expr h, ",", expr option.mem_def, "]"] [] }
-end,
-by simp [] [] [] ["[", "*", ",", expr funext_iff, "]"] [] []
+@[ext]
+theorem ext : ∀ {f g : α ≃. β} h : ∀ x, f x = g x, f = g
+| ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h =>
+  have h : f₁ = g₁ := funext h 
+  have  : ∀ b, f₂ b = g₂ b :=
+    by 
+      subst h 
+      intro b 
+      have hf := fun a => hf a b 
+      have hg := fun a => hg a b 
+      cases' h : g₂ b with a
+      ·
+        simp only [h, Option.not_mem_none, false_iffₓ] at hg 
+        simp only [hg, iff_falseₓ] at hf 
+        rwa [Option.eq_none_iff_forall_not_mem]
+      ·
+        rw [←Option.mem_def, hf, ←hg, h, Option.mem_def]
+  by 
+    simp [funext_iff]
 
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
   ⟨congr_funₓ ∘ congr_argₓ _, ext⟩
@@ -148,22 +152,26 @@ protected theorem inj (f : α ≃. β) {a₁ a₂ : α} {b : β} (h₁ : b ∈ f
   by 
     rw [←mem_iff_mem] at * <;> cases h : f.symm b <;> simp_all 
 
--- error in Data.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
-theorem injective_of_forall_ne_is_some
-(f : «expr ≃. »(α, β))
-(a₂ : α)
-(h : ∀ a₁ : α, «expr ≠ »(a₁, a₂) → is_some (f a₁)) : injective f :=
-has_left_inverse.injective ⟨λ b, option.rec_on b a₂ (λ b', option.rec_on (f.symm b') a₂ id), λ x, begin
-   classical,
-   cases [expr hfx, ":", expr f x] [],
-   { have [] [":", expr «expr = »(x, a₂)] [],
-     from [expr not_imp_comm.1 (h x) «expr ▸ »(hfx.symm, by simp [] [] [] [] [] [])],
-     simp [] [] [] ["[", expr this, "]"] [] [] },
-   { simp [] [] ["only"] ["[", expr hfx, "]"] [] [],
-     rw ["[", expr (eq_some_iff f).2 hfx, "]"] [],
-     refl }
- end⟩
+theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a₁ : α, a₁ ≠ a₂ → is_some (f a₁)) : injective f :=
+  has_left_inverse.injective
+    ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id,
+      fun x =>
+        by 
+          classical 
+          cases hfx : f x
+          ·
+            have  : x = a₂ 
+            exact
+              not_imp_comm.1 (h x)
+                (hfx.symm ▸
+                  by 
+                    simp )
+            simp [this]
+          ·
+            simp only [hfx]
+            rw [(eq_some_iff f).2 hfx]
+            rfl⟩
 
 /-- If the domain of a `pequiv` is all of `α`, its forward direction is injective. -/
 theorem injective_of_forall_is_some {f : α ≃. β} (h : ∀ a : α, is_some (f a)) : injective f :=
@@ -240,22 +248,26 @@ end OfSet
 theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.symm.trans f.symm :=
   rfl
 
--- error in Data.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem self_trans_symm (f : «expr ≃. »(α, β)) : «expr = »(f.trans f.symm, of_set {a | (f a).is_some}) :=
-begin
-  ext [] [] [],
-  dsimp [] ["[", expr pequiv.trans, "]"] [] [],
-  simp [] [] ["only"] ["[", expr eq_some_iff f, ",", expr option.is_some_iff_exists, ",", expr option.mem_def, ",", expr bind_eq_some', ",", expr of_set_eq_some_iff, "]"] [] [],
-  split,
-  { rintros ["⟨", ident b, ",", ident hb₁, ",", ident hb₂, "⟩"],
-    exact [expr ⟨pequiv.inj _ hb₂ hb₁, b, hb₂⟩] },
-  { simp [] [] [] [] [] [] { contextual := tt } }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  self_trans_symm
+  ( f : α ≃. β ) : f.trans f.symm = of_set { a | f a . isSome }
+  :=
+    by
+      ext
+        dsimp [ Pequiv.trans ]
+        simp only [ eq_some_iff f , Option.is_some_iff_exists , Option.mem_def , bind_eq_some' , of_set_eq_some_iff ]
+        constructor
+        · rintro ⟨ b , hb₁ , hb₂ ⟩ exact ⟨ Pequiv.inj _ hb₂ hb₁ , b , hb₂ ⟩
+        · simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
 
-theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = of_set { b | (f.symm b).isSome } :=
-  symm_injective$
-    by 
-      simp [symm_trans_rev, self_trans_symm, -symm_symm]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  symm_trans_self
+  ( f : α ≃. β ) : f.symm.trans f = of_set { b | f.symm b . isSome }
+  := symm_injective $ by simp [ symm_trans_rev , self_trans_symm , - symm_symm ]
 
 theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} : f.trans f.symm = Pequiv.refl α ↔ ∀ a, is_some (f a) :=
   by 
@@ -383,32 +395,39 @@ theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ a : α b : β, b ∈ f a →
 instance : OrderBot (α ≃. β) :=
   { Pequiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
 
--- error in Data.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [decidable_eq α] [decidable_eq β] : semilattice_inf «expr ≃. »(α, β) :=
-{ inf := λ
-  f
-  g, { to_fun := λ a, if «expr = »(f a, g a) then f a else none,
-    inv_fun := λ b, if «expr = »(f.symm b, g.symm b) then f.symm b else none,
-    inv := λ a b, begin
-      have [] [] [":=", expr @mem_iff_mem _ _ f a b],
-      have [] [] [":=", expr @mem_iff_mem _ _ g a b],
-      split_ifs [] []; finish [] []
-    end },
-  inf_le_left := λ _ _ _ _, by simp [] [] [] [] [] []; split_ifs [] []; cc,
-  inf_le_right := λ _ _ _ _, by simp [] [] [] [] [] []; split_ifs [] []; cc,
-  le_inf := λ f g h fg gh a b, begin
-    have [] [] [":=", expr fg a b],
-    have [] [] [":=", expr gh a b],
-    simp [] [] [] ["[", expr le_def, "]"] [] [],
-    split_ifs [] []; finish [] []
-  end,
-  ..pequiv.partial_order }
+instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
+  { Pequiv.partialOrder with
+    inf :=
+      fun f g =>
+        { toFun := fun a => if f a = g a then f a else none,
+          invFun := fun b => if f.symm b = g.symm b then f.symm b else none,
+          inv :=
+            fun a b =>
+              by 
+                have  := @mem_iff_mem _ _ f a b 
+                have  := @mem_iff_mem _ _ g a b 
+                splitIfs <;> finish },
+    inf_le_left :=
+      fun _ _ _ _ =>
+        by 
+          simp  <;> splitIfs <;> cc,
+    inf_le_right :=
+      fun _ _ _ _ =>
+        by 
+          simp  <;> splitIfs <;> cc,
+    le_inf :=
+      fun f g h fg gh a b =>
+        by 
+          have  := fg a b 
+          have  := gh a b 
+          simp [le_def]
+          splitIfs <;> finish }
 
 end Order
 
 end Pequiv
 
-namespace Equiv
+namespace Equivₓ
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
@@ -417,10 +436,10 @@ def to_pequiv (f : α ≃ β) : α ≃. β :=
   { toFun := some ∘ f, invFun := some ∘ f.symm,
     inv :=
       by 
-        simp [Equiv.eq_symm_apply, eq_comm] }
+        simp [Equivₓ.eq_symm_apply, eq_comm] }
 
 @[simp]
-theorem to_pequiv_refl : (Equiv.refl α).toPequiv = Pequiv.refl α :=
+theorem to_pequiv_refl : (Equivₓ.refl α).toPequiv = Pequiv.refl α :=
   rfl
 
 theorem to_pequiv_trans (f : α ≃ β) (g : β ≃ γ) : (f.trans g).toPequiv = f.to_pequiv.trans g.to_pequiv :=
@@ -432,5 +451,5 @@ theorem to_pequiv_symm (f : α ≃ β) : f.symm.to_pequiv = f.to_pequiv.symm :=
 theorem to_pequiv_apply (f : α ≃ β) (x : α) : f.to_pequiv x = some (f x) :=
   rfl
 
-end Equiv
+end Equivₓ
 

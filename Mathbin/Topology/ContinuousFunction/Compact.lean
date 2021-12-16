@@ -18,7 +18,7 @@ you should restate it here. You can also use
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale TopologicalSpace Classical Nnreal BoundedContinuousFunction
 
@@ -40,7 +40,7 @@ equivalent to `C(α, β)`.
 -/
 @[simps (config := { fullyApplied := ff })]
 def equiv_bounded_of_compact : C(α, β) ≃ (α →ᵇ β) :=
-  ⟨mk_of_compact, forget_boundedness α β,
+  ⟨mk_of_compact, to_continuous_map,
     fun f =>
       by 
         ext 
@@ -56,7 +56,7 @@ additively equivalent to `C(α, 𝕜)`.
 -/
 @[simps (config := { fullyApplied := ff }) apply symmApply]
 def add_equiv_bounded_of_compact [AddMonoidₓ β] [HasLipschitzAdd β] : C(α, β) ≃+ (α →ᵇ β) :=
-  ({ forget_boundedness_add_hom α β, (equiv_bounded_of_compact α β).symm with  } : (α →ᵇ β) ≃+ C(α, β)).symm
+  ({ to_continuous_map_add_hom α β, (equiv_bounded_of_compact α β).symm with  } : (α →ᵇ β) ≃+ C(α, β)).symm
 
 instance : MetricSpace C(α, β) :=
   MetricSpace.induced (equiv_bounded_of_compact α β) (equiv_bounded_of_compact α β).Injective
@@ -79,8 +79,8 @@ theorem _root_.bounded_continuous_function.dist_mk_of_compact (f g : C(α, β)) 
   rfl
 
 @[simp]
-theorem _root_.bounded_continuous_function.dist_forget_boundedness (f g : α →ᵇ β) :
-  dist (f.forget_boundedness _ _) (g.forget_boundedness _ _) = dist f g :=
+theorem _root_.bounded_continuous_function.dist_to_continuous_map (f g : α →ᵇ β) :
+  dist f.to_continuous_map g.to_continuous_map = dist f g :=
   rfl
 
 open BoundedContinuousFunction
@@ -138,7 +138,7 @@ theorem _root_.bounded_continuous_function.norm_mk_of_compact (f : C(α, E)) : �
   rfl
 
 @[simp]
-theorem _root_.bounded_continuous_function.norm_forget_boundedness_eq (f : α →ᵇ E) : ∥forget_boundedness α E f∥ = ∥f∥ :=
+theorem _root_.bounded_continuous_function.norm_to_continuous_map_eq (f : α →ᵇ E) : ∥f.to_continuous_map∥ = ∥f∥ :=
   rfl
 
 open BoundedContinuousFunction
@@ -181,7 +181,7 @@ theorem apply_le_norm (f : C(α, ℝ)) (x : α) : f x ≤ ∥f∥ :=
 theorem neg_norm_le_apply (f : C(α, ℝ)) (x : α) : -∥f∥ ≤ f x :=
   le_transₓ (neg_le_neg (f.norm_coe_le_norm x)) (neg_le.mp (neg_le_abs_self (f x)))
 
-theorem norm_eq_supr_norm : ∥f∥ = ⨆x : α, ∥f x∥ :=
+theorem norm_eq_supr_norm : ∥f∥ = ⨆ x : α, ∥f x∥ :=
   (mk_of_compact f).norm_eq_supr_norm
 
 end 
@@ -224,7 +224,7 @@ end
 
 @[simp]
 theorem linear_isometry_bounded_of_compact_symm_apply (f : α →ᵇ E) :
-  (linear_isometry_bounded_of_compact α E 𝕜).symm f = f.forget_boundedness α E :=
+  (linear_isometry_bounded_of_compact α E 𝕜).symm f = f.to_continuous_map :=
   rfl
 
 @[simp]
@@ -273,6 +273,7 @@ We now set up some declarations making it convenient to use uniform continuity.
 -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (δ «expr > » 0)
 theorem uniform_continuity (f : C(α, β)) (ε : ℝ) (h : 0 < ε) :
   ∃ (δ : _)(_ : δ > 0), ∀ {x y}, dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniform_continuous_iff.mp (CompactSpace.uniform_continuous_of_continuous f.continuous) ε h

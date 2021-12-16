@@ -1,5 +1,5 @@
 import Mathbin.Data.Finset.Basic 
-import Mathbin.Order.PreorderHom
+import Mathbin.Order.Hom.Basic
 
 /-!
 # Finite sets in `option α`
@@ -61,6 +61,7 @@ def insert_none : Finset α ↪o Finset (Option α) :=
             simp )$
     fun s t => cons_subset_cons.trans map_subset_map
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » o)
 @[simp]
 theorem mem_insert_none {s : Finset α} : ∀ {o : Option α}, o ∈ s.insert_none ↔ ∀ a _ : a ∈ o, a ∈ s
 | none =>
@@ -85,7 +86,7 @@ theorem card_insert_none (s : Finset α) : s.insert_none.card = s.card+1 :=
 /-- Given `s : finset (option α)`, `s.erase_none : finset α` is the set of `x : α` such that
 `some x ∈ s`. -/
 def erase_none : Finset (Option α) →ₘ Finset α :=
-  (Finset.mapEmbedding (Equiv.optionIsSomeEquiv α).toEmbedding).toPreorderHom.comp ⟨Finset.subtype _, subtype_mono⟩
+  (Finset.mapEmbedding (Equivₓ.optionIsSomeEquiv α).toEmbedding).toOrderHom.comp ⟨Finset.subtype _, subtype_mono⟩
 
 @[simp]
 theorem mem_erase_none {s : Finset (Option α)} {x : α} : x ∈ s.erase_none ↔ some x ∈ s :=

@@ -35,9 +35,10 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜]
 
 variable {R : Type _} [CommRingₓ R] (abv : R → 𝕜) [IsAbsoluteValue abv]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » 0)
 /-- The uniformity coming from an absolute value. -/
 def uniform_space_core : UniformSpace.Core R :=
-  { uniformity := ⨅(ε : _)(_ : ε > 0), 𝓟 { p:R × R | abv (p.2 - p.1) < ε },
+  { uniformity := ⨅ (ε : _)(_ : ε > 0), 𝓟 { p : R × R | abv (p.2 - p.1) < ε },
     refl :=
       le_infi$
         fun ε =>
@@ -83,19 +84,30 @@ def uniform_space_core : UniformSpace.Core R :=
 def UniformSpace : UniformSpace R :=
   UniformSpace.ofCore (uniform_space_core abv)
 
--- error in Topology.UniformSpace.AbsoluteValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_uniformity
-{s : set «expr × »(R, R)} : «expr ↔ »(«expr ∈ »(s, (uniform_space_core abv).uniformity), «expr∃ , »((ε «expr > » 0), ∀
-  {a b : R}, «expr < »(abv «expr - »(b, a), ε) → «expr ∈ »((a, b), s))) :=
-begin
-  suffices [] [":", expr «expr ↔ »(«expr ∈ »(s, «expr⨅ , »((ε : {ε : 𝕜 // «expr > »(ε, 0)}), expr𝓟() {p : «expr × »(R, R) | «expr < »(abv «expr - »(p.2, p.1), ε.val)})), _)],
-  { rw [expr infi_subtype] ["at", ident this],
-    exact [expr this] },
-  rw [expr mem_infi_of_directed] [],
-  { simp [] [] [] ["[", expr subset_def, "]"] [] [] },
-  { rintros ["⟨", ident r, ",", ident hr, "⟩", "⟨", ident p, ",", ident hp, "⟩"],
-    exact [expr ⟨⟨min r p, lt_min hr hp⟩, by simp [] [] [] ["[", expr lt_min_iff, ",", expr («expr ≥ »), "]"] [] [] { contextual := tt }⟩] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » 0)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_uniformity
+  { s : Set R × R }
+    :
+      s ∈ uniform_space_core abv . uniformity
+        ↔
+        ∃ ( ε : _ ) ( _ : ε > 0 ) , ∀ { a b : R } , abv b - a < ε → ( a , b ) ∈ s
+  :=
+    by
+      suffices : s ∈ ⨅ ε : { ε : 𝕜 // ε > 0 } , 𝓟 { p : R × R | abv p . 2 - p . 1 < ε.val } ↔ _
+        · rw [ infi_subtype ] at this exact this
+        rw [ mem_infi_of_directed ]
+        · simp [ subset_def ]
+        ·
+          rintro ⟨ r , hr ⟩ ⟨ p , hp ⟩
+            exact
+              ⟨
+                ⟨ min r p , lt_minₓ hr hp ⟩
+                  ,
+                  by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ lt_min_iff , · ≥ · ]
+                ⟩
 
 end IsAbsoluteValue
 

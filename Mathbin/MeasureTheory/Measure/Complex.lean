@@ -26,7 +26,7 @@ Complex measure
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical MeasureTheory Ennreal Nnreal
 
@@ -121,9 +121,9 @@ end
 theorem absolutely_continuous_ennreal_iff (c : complex_measure α) (μ : vector_measure α ℝ≥0∞) :
   c ≪ᵥ μ ↔ c.re ≪ᵥ μ ∧ c.im ≪ᵥ μ :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
-      split  <;>
+      constructor <;>
         ·
           intro i hi 
           simp [h hi]

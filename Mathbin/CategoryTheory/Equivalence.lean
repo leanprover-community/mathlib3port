@@ -216,30 +216,27 @@ def adjointify_η : 𝟭 C ≅ F ⋙ G :=
     _ ≅ F ⋙ G := left_unitor (F ⋙ G)
     
 
--- error in CategoryTheory.Equivalence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem adjointify_η_ε
-(X : C) : «expr = »(«expr ≫ »(F.map ((adjointify_η η ε).hom.app X), ε.hom.app (F.obj X)), «expr𝟙»() (F.obj X)) :=
-begin
-  dsimp [] ["[", expr adjointify_η, "]"] [] [],
-  simp [] [] [] [] [] [],
-  have [] [] [":=", expr ε.hom.naturality (F.map (η.inv.app X))],
-  dsimp [] [] [] ["at", ident this],
-  rw ["[", expr this, "]"] [],
-  clear [ident this],
-  rw ["[", "<-", expr assoc _ _ (F.map _), "]"] [],
-  have [] [] [":=", expr ε.hom.naturality «expr $ »(ε.inv.app, F.obj X)],
-  dsimp [] [] [] ["at", ident this],
-  rw ["[", expr this, "]"] [],
-  clear [ident this],
-  have [] [] [":=", expr «expr $ »(ε.app, F.obj X).hom_inv_id],
-  dsimp [] [] [] ["at", ident this],
-  rw ["[", expr this, "]"] [],
-  clear [ident this],
-  rw ["[", expr id_comp, "]"] [],
-  have [] [] [":=", expr «expr $ »(F.map_iso, η.app X).hom_inv_id],
-  dsimp [] [] [] ["at", ident this],
-  rw ["[", expr this, "]"] []
-end
+theorem adjointify_η_ε (X : C) : F.map ((adjointify_η η ε).Hom.app X) ≫ ε.hom.app (F.obj X) = 𝟙 (F.obj X) :=
+  by 
+    dsimp [adjointify_η]
+    simp 
+    have  := ε.hom.naturality (F.map (η.inv.app X))
+    dsimp  at this 
+    rw [this]
+    clear this 
+    rw [←assoc _ _ (F.map _)]
+    have  := ε.hom.naturality (ε.inv.app$ F.obj X)
+    dsimp  at this 
+    rw [this]
+    clear this 
+    have  := (ε.app$ F.obj X).hom_inv_id 
+    dsimp  at this 
+    rw [this]
+    clear this 
+    rw [id_comp]
+    have  := (F.map_iso$ η.app X).hom_inv_id 
+    dsimp  at this 
+    rw [this]
 
 end 
 
@@ -546,16 +543,17 @@ See https://stacks.math.columbia.edu/tag/02C3.
 theorem ess_surj_of_equivalence (F : C ⥤ D) [is_equivalence F] : ess_surj F :=
   ⟨fun Y => ⟨F.inv.obj Y, ⟨F.as_equivalence.counit_iso.app Y⟩⟩⟩
 
--- error in CategoryTheory.Equivalence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An equivalence is faithful.
 
 See https://stacks.math.columbia.edu/tag/02C3.
--/ @[priority 100] instance faithful_of_equivalence (F : «expr ⥤ »(C, D)) [is_equivalence F] : faithful F :=
-{ map_injective' := λ X Y f g w, begin
-    have [ident p] [] [":=", expr congr_arg (@category_theory.functor.map _ _ _ _ F.inv _ _) w],
-    simpa [] [] ["only"] ["[", expr cancel_epi, ",", expr cancel_mono, ",", expr is_equivalence.inv_fun_map, "]"] [] ["using", expr p]
-  end }
+-/
+instance (priority := 100) faithful_of_equivalence (F : C ⥤ D) [is_equivalence F] : faithful F :=
+  { map_injective' :=
+      fun X Y f g w =>
+        by 
+          have p := congr_argₓ (@CategoryTheory.Functor.map _ _ _ _ F.inv _ _) w 
+          simpa only [cancel_epi, cancel_mono, is_equivalence.inv_fun_map] using p }
 
 /--
 An equivalence is full.

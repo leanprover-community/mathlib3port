@@ -133,7 +133,7 @@ instance is_scalar_tower_over_bot : IsScalarTower (⊥ : IntermediateField F E) 
       intro x 
       let ϕ := Algebra.ofId F (⊥ : Subalgebra F E)
       let ψ := AlgEquiv.ofBijective ϕ (Algebra.botEquiv F E).symm.Bijective 
-      change («expr↑ » x : E) = «expr↑ » (ψ (ψ.symm ⟨x, _⟩))
+      change (↑x : E) = ↑ψ (ψ.symm ⟨x, _⟩)
       rw [AlgEquiv.apply_symm_apply ψ ⟨x, _⟩]
       rfl)
 
@@ -142,7 +142,7 @@ noncomputable def top_equiv : (⊤ : IntermediateField F E) ≃ₐ[F] E :=
   (Subalgebra.equivOfEq _ _ top_to_subalgebra).trans Algebra.topEquiv
 
 @[simp]
-theorem top_equiv_def (x : (⊤ : IntermediateField F E)) : top_equiv x = «expr↑ » x :=
+theorem top_equiv_def (x : (⊤ : IntermediateField F E)) : top_equiv x = ↑x :=
   by 
     suffices  : Algebra.toTop (top_equiv x) = Algebra.toTop (x : E)
     ·
@@ -160,15 +160,14 @@ theorem top_equiv_def (x : (⊤ : IntermediateField F E)) : top_equiv x = «expr
         (Subalgebra.equivOfEq _ _ top_to_subalgebra x)
 
 @[simp]
-theorem coe_bot_eq_self (K : IntermediateField F E) : «expr↑ » (⊥ : IntermediateField K E) = K :=
+theorem coe_bot_eq_self (K : IntermediateField F E) : ↑(⊥ : IntermediateField K E) = K :=
   by 
     ext 
     rw [mem_lift2, mem_bot]
     exact set.ext_iff.mp Subtype.range_coe x
 
 @[simp]
-theorem coe_top_eq_top (K : IntermediateField F E) :
-  «expr↑ » (⊤ : IntermediateField K E) = (⊤ : IntermediateField F E) :=
+theorem coe_top_eq_top (K : IntermediateField F E) : ↑(⊤ : IntermediateField K E) = (⊤ : IntermediateField F E) :=
   SetLike.ext_iff.mpr$ fun _ => mem_lift2.trans (iff_of_true mem_top mem_top)
 
 end Lattice
@@ -230,11 +229,11 @@ theorem adjoin_subset_adjoin_iff {F' : Type _} [Field F'] [Algebra F' E] {S S' :
     fun ⟨hF, hS⟩ => Subfield.closure_le.mpr (Set.union_subset hF hS)⟩
 
 /-- `F[S][T] = F[S ∪ T]` -/
-theorem adjoin_adjoin_left (T : Set E) : «expr↑ » (adjoin (adjoin F S) T) = adjoin F (S ∪ T) :=
+theorem adjoin_adjoin_left (T : Set E) : ↑adjoin (adjoin F S) T = adjoin F (S ∪ T) :=
   by 
     rw [SetLike.ext'_iff]
-    change «expr↑ » (adjoin (adjoin F S) T) = _ 
-    apply Set.eq_of_subset_of_subset <;> rw [adjoin_subset_adjoin_iff] <;> split 
+    change ↑adjoin (adjoin F S) T = _ 
+    apply Set.eq_of_subset_of_subset <;> rw [adjoin_subset_adjoin_iff] <;> constructor
     ·
       rintro _ ⟨⟨x, hx⟩, rfl⟩
       exact adjoin.mono _ _ _ (Set.subset_union_left _ _) hx
@@ -255,8 +254,7 @@ theorem adjoin_insert_adjoin (x : E) : adjoin F (insert x (adjoin F S : Set E)) 
     (adjoin.mono _ _ _ (Set.insert_subset_insert (subset_adjoin _ _)))
 
 /-- `F[S][T] = F[T][S]` -/
-theorem adjoin_adjoin_comm (T : Set E) :
-  «expr↑ » (adjoin (adjoin F S) T) = («expr↑ » (adjoin (adjoin F T) S) : IntermediateField F E) :=
+theorem adjoin_adjoin_comm (T : Set E) : ↑adjoin (adjoin F S) T = (↑adjoin (adjoin F T) S : IntermediateField F E) :=
   by 
     rw [adjoin_adjoin_left, adjoin_adjoin_left, Set.union_comm]
 
@@ -272,6 +270,7 @@ theorem adjoin_map {E' : Type _} [Field E'] [Algebra F E'] (f : E →ₐ[F] E') 
 theorem algebra_adjoin_le_adjoin : Algebra.adjoin F S ≤ (adjoin F S).toSubalgebra :=
   Algebra.adjoin_le (subset_adjoin _ _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » algebra.adjoin F S)
 theorem adjoin_eq_algebra_adjoin (inv_mem : ∀ x _ : x ∈ Algebra.adjoin F S, x⁻¹ ∈ Algebra.adjoin F S) :
   (adjoin F S).toSubalgebra = Algebra.adjoin F S :=
   le_antisymmₓ
@@ -292,6 +291,7 @@ theorem eq_adjoin_of_eq_algebra_adjoin (K : IntermediateField F E) (h : K.to_sub
     rw [←h]
     rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[elab_as_eliminator]
 theorem adjoin_induction {s : Set E} {p : E → Prop} {x} (h : x ∈ adjoin F s) (Hs : ∀ x _ : x ∈ s, p x)
   (Hmap : ∀ x, p (algebraMap F E x)) (Hadd : ∀ x y, p x → p y → p (x+y)) (Hneg : ∀ x, p x → p (-x))
@@ -312,62 +312,103 @@ instance (priority := 1000) insert_empty {α : Type _} : insert (∅ : Set α) :
 instance (priority := 900) insert_nonempty {α : Type _} (s : Set α) : insert s :=
   { insert := fun x => Set.Insert x s }
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
-notation K `⟮`:std.prec.max_plus l:(foldr `, ` (h t, insert.insert t h) «expr∅»()) `⟯` := adjoin K l
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:1148:9: unsupported: advanced notation (l:(foldr `, ` (h t, insert.insert t h) «expr∅»()))
+notation3:999 K "⟮"  "⟯" => adjoin K l
 
 section AdjoinSimple
 
 variable (α : E)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem mem_adjoin_simple_self : «expr ∈ »(α, «expr ⟮ , ⟯»(F, [α])) := subset_adjoin F {α} (set.mem_singleton α)
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem mem_adjoin_simple_self :
+  α ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" :=
+  subset_adjoin F {α} (Set.mem_singleton α)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-/-- generator of `F⟮α⟯` -/ def adjoin_simple.gen : «expr ⟮ , ⟯»(F, [α]) := ⟨α, mem_adjoin_simple_self F α⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+/-- generator of `F⟮α⟯` -/
+def adjoin_simple.gen :
+  «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" :=
+  ⟨α, mem_adjoin_simple_self F α⟩
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 @[simp]
-theorem adjoin_simple.algebra_map_gen : «expr = »(algebra_map «expr ⟮ , ⟯»(F, [α]) E (adjoin_simple.gen F α), α) :=
-rfl
+theorem adjoin_simple.algebra_map_gen :
+  algebraMap («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") E
+      (adjoin_simple.gen F α) =
+    α :=
+  rfl
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:341:40: in rw: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-@[simp] theorem adjoin_simple.is_integral_gen : «expr ↔ »(is_integral F (adjoin_simple.gen F α), is_integral F α) :=
-by { conv_rhs [] [] { rw ["<-", expr adjoin_simple.algebra_map_gen F α] },
-  rw [expr is_integral_algebra_map_iff (algebra_map «expr ⟮ , ⟯»(F, [α]) E).injective] [],
-  apply_instance }
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+@[simp]
+theorem adjoin_simple.is_integral_gen : IsIntegral F (adjoin_simple.gen F α) ↔ IsIntegral F α :=
+  by 
+    convRHS => rw [←adjoin_simple.algebra_map_gen F α]
+    rw
+      [is_integral_algebra_map_iff
+        (algebraMap
+            («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+            E).Injective]
+    infer_instance
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem adjoin_simple_adjoin_simple
-(β : E) : «expr = »(«expr↑ »(«expr ⟮ , ⟯»(«expr ⟮ , ⟯»(F, [α]), [β])), «expr ⟮ , ⟯»(F, [α, β])) :=
-adjoin_adjoin_left _ _ _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem adjoin_simple_adjoin_simple (β : E) :
+  ↑«expr ⟮ , ⟯» («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+        "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" =
+    «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" :=
+  adjoin_adjoin_left _ _ _
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem adjoin_simple_comm
-(β : E) : «expr = »(«expr↑ »(«expr ⟮ , ⟯»(«expr ⟮ , ⟯»(F, [α]), [β])), («expr↑ »(«expr ⟮ , ⟯»(«expr ⟮ , ⟯»(F, [β]), [α])) : intermediate_field F E)) :=
-adjoin_adjoin_comm _ _ _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem adjoin_simple_comm (β : E) :
+  ↑«expr ⟮ , ⟯» («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+        "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" =
+    (↑«expr ⟮ , ⟯»
+        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+        "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" :
+    IntermediateField F E) :=
+  adjoin_adjoin_comm _ _ _
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem adjoin_simple_to_subalgebra_of_integral
-(hα : is_integral F α) : «expr = »(«expr ⟮ , ⟯»(F, [α]).to_subalgebra, algebra.adjoin F {α}) :=
-begin
-  apply [expr adjoin_eq_algebra_adjoin],
-  intros [ident x, ident hx],
-  by_cases [expr «expr = »(x, 0)],
-  { rw ["[", expr h, ",", expr inv_zero, "]"] [],
-    exact [expr subalgebra.zero_mem (algebra.adjoin F {α})] },
-  let [ident ϕ] [] [":=", expr alg_equiv.adjoin_singleton_equiv_adjoin_root_minpoly F α],
-  haveI [] [] [":=", expr minpoly.irreducible hα],
-  suffices [] [":", expr «expr = »(«expr * »(ϕ ⟨x, hx⟩, «expr ⁻¹»(ϕ ⟨x, hx⟩)), 1)],
-  { convert [] [expr subtype.mem (ϕ.symm «expr ⁻¹»(ϕ ⟨x, hx⟩))] [],
-    refine [expr (eq_inv_of_mul_right_eq_one _).symm],
-    apply_fun [expr ϕ.symm] ["at", ident this] [],
-    rw ["[", expr alg_equiv.map_one, ",", expr alg_equiv.map_mul, ",", expr alg_equiv.symm_apply_apply, "]"] ["at", ident this],
-    rw ["[", "<-", expr subsemiring.coe_one, ",", "<-", expr this, ",", expr subsemiring.coe_mul, ",", expr subtype.coe_mk, "]"] [] },
-  rw [expr mul_inv_cancel (mt (λ key, _) h)] [],
-  rw ["<-", expr ϕ.map_zero] ["at", ident key],
-  change [expr «expr = »(«expr↑ »((⟨x, hx⟩ : algebra.adjoin F {α})), _)] [] [],
-  rw ["[", expr ϕ.injective key, ",", expr subalgebra.coe_zero, "]"] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem adjoin_simple_to_subalgebra_of_integral (hα : IsIntegral F α) :
+  («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»").toSubalgebra =
+    Algebra.adjoin F {α} :=
+  by 
+    apply adjoin_eq_algebra_adjoin 
+    intro x hx 
+    byCases' x = 0
+    ·
+      rw [h, inv_zero]
+      exact Subalgebra.zero_mem (Algebra.adjoin F {α})
+    let ϕ := AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly F α 
+    have  := minpoly.irreducible hα 
+    suffices  : (ϕ ⟨x, hx⟩*ϕ ⟨x, hx⟩⁻¹) = 1
+    ·
+      convert Subtype.mem (ϕ.symm (ϕ ⟨x, hx⟩⁻¹))
+      refine' (eq_inv_of_mul_right_eq_one _).symm 
+      applyFun ϕ.symm  at this 
+      rw [AlgEquiv.map_one, AlgEquiv.map_mul, AlgEquiv.symm_apply_apply] at this 
+      rw [←Subsemiring.coe_one, ←this, Subsemiring.coe_mul, Subtype.coe_mk]
+    rw [mul_inv_cancel (mt (fun key => _) h)]
+    rw [←ϕ.map_zero] at key 
+    change ↑(⟨x, hx⟩ : Algebra.adjoin F {α}) = _ 
+    rw [ϕ.injective key, Subalgebra.coe_zero]
 
 end AdjoinSimple
 
@@ -383,27 +424,43 @@ theorem adjoin_eq_bot_iff : adjoin F S = ⊥ ↔ S ⊆ (⊥ : IntermediateField 
     rw [eq_bot_iff, adjoin_le_iff]
     rfl
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 @[simp]
-theorem adjoin_simple_eq_bot_iff : «expr ↔ »(«expr = »(«expr ⟮ , ⟯»(F, [α]), «expr⊥»()), «expr ∈ »(α, («expr⊥»() : intermediate_field F E))) :=
-by { rw [expr adjoin_eq_bot_iff] [],
-  exact [expr set.singleton_subset_iff] }
+theorem adjoin_simple_eq_bot_iff :
+  «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" = ⊥ ↔
+    α ∈ (⊥ : IntermediateField F E) :=
+  by 
+    rw [adjoin_eq_bot_iff]
+    exact Set.singleton_subset_iff
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-@[simp] theorem adjoin_zero : «expr = »(«expr ⟮ , ⟯»(F, [(0 : E)]), «expr⊥»()) :=
-adjoin_simple_eq_bot_iff.mpr (zero_mem «expr⊥»())
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+@[simp]
+theorem adjoin_zero :
+  «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" = ⊥ :=
+  adjoin_simple_eq_bot_iff.mpr (zero_mem ⊥)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-@[simp] theorem adjoin_one : «expr = »(«expr ⟮ , ⟯»(F, [(1 : E)]), «expr⊥»()) :=
-adjoin_simple_eq_bot_iff.mpr (one_mem «expr⊥»())
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+@[simp]
+theorem adjoin_one :
+  «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" = ⊥ :=
+  adjoin_simple_eq_bot_iff.mpr (one_mem ⊥)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-@[simp] theorem adjoin_int (n : exprℤ()) : «expr = »(«expr ⟮ , ⟯»(F, [(n : E)]), «expr⊥»()) :=
-adjoin_simple_eq_bot_iff.mpr (coe_int_mem «expr⊥»() n)
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+@[simp]
+theorem adjoin_int (n : ℤ) :
+  «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" = ⊥ :=
+  adjoin_simple_eq_bot_iff.mpr (coe_int_mem ⊥ n)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-@[simp] theorem adjoin_nat (n : exprℕ()) : «expr = »(«expr ⟮ , ⟯»(F, [(n : E)]), «expr⊥»()) :=
-adjoin_simple_eq_bot_iff.mpr (coe_int_mem «expr⊥»() n)
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+@[simp]
+theorem adjoin_nat (n : ℕ) :
+  «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" = ⊥ :=
+  adjoin_simple_eq_bot_iff.mpr (coe_int_mem ⊥ n)
 
 section AdjoinDim
 
@@ -424,67 +481,110 @@ theorem finrank_eq_one_iff : finrank F K = 1 ↔ K = ⊥ :=
 theorem dim_adjoin_eq_one_iff : Module.rank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : IntermediateField F E) :=
   Iff.trans dim_eq_one_iff adjoin_eq_bot_iff
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem dim_adjoin_simple_eq_one_iff : «expr ↔ »(«expr = »(module.rank F «expr ⟮ , ⟯»(F, [α]), 1), «expr ∈ »(α, («expr⊥»() : intermediate_field F E))) :=
-by { rw [expr dim_adjoin_eq_one_iff] [],
-  exact [expr set.singleton_subset_iff] }
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem dim_adjoin_simple_eq_one_iff :
+  Module.rank F («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") =
+      1 ↔
+    α ∈ (⊥ : IntermediateField F E) :=
+  by 
+    rw [dim_adjoin_eq_one_iff]
+    exact Set.singleton_subset_iff
 
 theorem finrank_adjoin_eq_one_iff : finrank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : IntermediateField F E) :=
   Iff.trans finrank_eq_one_iff adjoin_eq_bot_iff
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem finrank_adjoin_simple_eq_one_iff : «expr ↔ »(«expr = »(finrank F «expr ⟮ , ⟯»(F, [α]), 1), «expr ∈ »(α, («expr⊥»() : intermediate_field F E))) :=
-by { rw ["[", expr finrank_adjoin_eq_one_iff, "]"] [],
-  exact [expr set.singleton_subset_iff] }
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem finrank_adjoin_simple_eq_one_iff :
+  finrank F («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") = 1 ↔
+    α ∈ (⊥ : IntermediateField F E) :=
+  by 
+    rw [finrank_adjoin_eq_one_iff]
+    exact Set.singleton_subset_iff
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- If `F⟮x⟯` has dimension `1` over `F` for every `x ∈ E` then `F = E`. -/
 theorem bot_eq_top_of_dim_adjoin_eq_one
-(h : ∀
- x : E, «expr = »(module.rank F «expr ⟮ , ⟯»(F, [x]), 1)) : «expr = »((«expr⊥»() : intermediate_field F E), «expr⊤»()) :=
-begin
-  ext [] [] [],
-  rw [expr iff_true_right intermediate_field.mem_top] [],
-  exact [expr dim_adjoin_simple_eq_one_iff.mp (h x)]
-end
+  (h :
+    ∀ x : E,
+      Module.rank F
+          («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") =
+        1) :
+  (⊥ : IntermediateField F E) = ⊤ :=
+  by 
+    ext 
+    rw [iff_true_right IntermediateField.mem_top]
+    exact dim_adjoin_simple_eq_one_iff.mp (h x)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 theorem bot_eq_top_of_finrank_adjoin_eq_one
-(h : ∀
- x : E, «expr = »(finrank F «expr ⟮ , ⟯»(F, [x]), 1)) : «expr = »((«expr⊥»() : intermediate_field F E), «expr⊤»()) :=
-begin
-  ext [] [] [],
-  rw [expr iff_true_right intermediate_field.mem_top] [],
-  exact [expr finrank_adjoin_simple_eq_one_iff.mp (h x)]
-end
+  (h :
+    ∀ x : E,
+      finrank F («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") =
+        1) :
+  (⊥ : IntermediateField F E) = ⊤ :=
+  by 
+    ext 
+    rw [iff_true_right IntermediateField.mem_top]
+    exact finrank_adjoin_simple_eq_one_iff.mp (h x)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 theorem subsingleton_of_dim_adjoin_eq_one
-(h : ∀ x : E, «expr = »(module.rank F «expr ⟮ , ⟯»(F, [x]), 1)) : subsingleton (intermediate_field F E) :=
-subsingleton_of_bot_eq_top (bot_eq_top_of_dim_adjoin_eq_one h)
+  (h :
+    ∀ x : E,
+      Module.rank F
+          («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") =
+        1) :
+  Subsingleton (IntermediateField F E) :=
+  subsingleton_of_bot_eq_top (bot_eq_top_of_dim_adjoin_eq_one h)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 theorem subsingleton_of_finrank_adjoin_eq_one
-(h : ∀ x : E, «expr = »(finrank F «expr ⟮ , ⟯»(F, [x]), 1)) : subsingleton (intermediate_field F E) :=
-subsingleton_of_bot_eq_top (bot_eq_top_of_finrank_adjoin_eq_one h)
+  (h :
+    ∀ x : E,
+      finrank F («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") =
+        1) :
+  Subsingleton (IntermediateField F E) :=
+  subsingleton_of_bot_eq_top (bot_eq_top_of_finrank_adjoin_eq_one h)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:341:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:341:40: in linarith: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- If `F⟮x⟯` has dimension `≤1` over `F` for every `x ∈ E` then `F = E`. -/
-theorem bot_eq_top_of_finrank_adjoin_le_one
-[finite_dimensional F E]
-(h : ∀
- x : E, «expr ≤ »(finrank F «expr ⟮ , ⟯»(F, [x]), 1)) : «expr = »((«expr⊥»() : intermediate_field F E), «expr⊤»()) :=
-begin
-  apply [expr bot_eq_top_of_finrank_adjoin_eq_one],
-  exact [expr λ
-   x, by linarith [] [] ["[", expr h x, ",", expr show «expr < »(0, finrank F «expr ⟮ , ⟯»(F, [x])), from finrank_pos, "]"]]
-end
+theorem bot_eq_top_of_finrank_adjoin_le_one [FiniteDimensional F E]
+  (h :
+    ∀ x : E,
+      finrank F («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") ≤
+        1) :
+  (⊥ : IntermediateField F E) = ⊤ :=
+  by 
+    apply bot_eq_top_of_finrank_adjoin_eq_one 
+    exact
+      fun x =>
+        by 
+          linarith [h x,
+            show
+              0 <
+                finrank F
+                  («expr ⟮ , ⟯» F
+                    "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") from
+              finrank_pos]
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem subsingleton_of_finrank_adjoin_le_one
-[finite_dimensional F E]
-(h : ∀ x : E, «expr ≤ »(finrank F «expr ⟮ , ⟯»(F, [x]), 1)) : subsingleton (intermediate_field F E) :=
-subsingleton_of_bot_eq_top (bot_eq_top_of_finrank_adjoin_le_one h)
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem subsingleton_of_finrank_adjoin_le_one [FiniteDimensional F E]
+  (h :
+    ∀ x : E,
+      finrank F («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") ≤
+        1) :
+  Subsingleton (IntermediateField F E) :=
+  subsingleton_of_bot_eq_top (bot_eq_top_of_finrank_adjoin_le_one h)
 
 end AdjoinDim
 
@@ -496,45 +596,73 @@ variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E] {α : E}
 
 variable {K : Type _} [Field K] [Algebra F K]
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:341:40: in have: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem minpoly_gen {α : E} (h : is_integral F α) : «expr = »(minpoly F (adjoin_simple.gen F α), minpoly F α) :=
-begin
-  rw ["<-", expr adjoin_simple.algebra_map_gen F α] ["at", ident h],
-  have [ident inj] [] [":=", expr (algebra_map «expr ⟮ , ⟯»(F, [α]) E).injective],
-  exact [expr minpoly.eq_of_algebra_map_eq inj ((is_integral_algebra_map_iff inj).mp h) (adjoin_simple.algebra_map_gen _ _).symm]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem minpoly_gen {α : E} (h : IsIntegral F α) : minpoly F (adjoin_simple.gen F α) = minpoly F α :=
+  by 
+    rw [←adjoin_simple.algebra_map_gen F α] at h 
+    have inj :=
+      (algebraMap («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+          E).Injective
+        
+    exact
+      minpoly.eq_of_algebra_map_eq inj ((is_integral_algebra_map_iff inj).mp h) (adjoin_simple.algebra_map_gen _ _).symm
 
 variable (F)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:341:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem aeval_gen_minpoly (α : E) : «expr = »(aeval (adjoin_simple.gen F α) (minpoly F α), 0) :=
-begin
-  ext [] [] [],
-  convert [] [expr minpoly.aeval F α] [],
-  conv [] ["in", expr aeval α] { rw ["[", "<-", expr adjoin_simple.algebra_map_gen F α, "]"] },
-  exact [expr is_scalar_tower.algebra_map_aeval F «expr ⟮ , ⟯»(F, [α]) E _ _]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem aeval_gen_minpoly (α : E) : aeval (adjoin_simple.gen F α) (minpoly F α) = 0 :=
+  by 
+    ext 
+    convert minpoly.aeval F α 
+    conv  in aeval α => rw [←adjoin_simple.algebra_map_gen F α]
+    exact
+      IsScalarTower.algebra_map_aeval F
+        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") E _ _
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:341:40: in suffices: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- algebra isomorphism between `adjoin_root` and `F⟮α⟯` -/
-noncomputable
-def adjoin_root_equiv_adjoin
-(h : is_integral F α) : «expr ≃ₐ[ ] »(adjoin_root (minpoly F α), F, «expr ⟮ , ⟯»(F, [α])) :=
-alg_equiv.of_bijective (adjoin_root.lift_hom (minpoly F α) (adjoin_simple.gen F α) (aeval_gen_minpoly F α)) (begin
-   set [] [ident f] [] [":="] [expr adjoin_root.lift _ _ (aeval_gen_minpoly F α : _)] [],
-   haveI [] [] [":=", expr minpoly.irreducible h],
-   split,
-   { exact [expr ring_hom.injective f] },
-   { suffices [] [":", expr «expr ≤ »(«expr ⟮ , ⟯»(F, [α]).to_subfield, ring_hom.field_range («expr ⟮ , ⟯»(F, [α]).to_subfield.subtype.comp f))],
-     { exact [expr λ x, Exists.cases_on (this (subtype.mem x)) (λ y hy, ⟨y, subtype.ext hy⟩)] },
-     exact [expr subfield.closure_le.mpr (set.union_subset (λ
-        x
-        hx, Exists.cases_on hx (λ
-         y
-         hy, ⟨y, by { rw ["[", expr ring_hom.comp_apply, ",", expr adjoin_root.lift_of, "]"] [],
-            exact [expr hy] }⟩)) (set.singleton_subset_iff.mpr ⟨adjoin_root.root (minpoly F α), by { rw ["[", expr ring_hom.comp_apply, ",", expr adjoin_root.lift_root, "]"] [],
-           refl }⟩))] }
- end)
+noncomputable def adjoin_root_equiv_adjoin (h : IsIntegral F α) :
+  AdjoinRoot (minpoly F α) ≃ₐ[F]
+    «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" :=
+  AlgEquiv.ofBijective (AdjoinRoot.liftHom (minpoly F α) (adjoin_simple.gen F α) (aeval_gen_minpoly F α))
+    (by 
+      set f := AdjoinRoot.lift _ _ (aeval_gen_minpoly F α : _)
+      have  := minpoly.irreducible h 
+      constructor
+      ·
+        exact RingHom.injective f
+      ·
+        suffices  :
+          («expr ⟮ , ⟯» F
+                "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»").toSubfield ≤
+            RingHom.fieldRange
+              ((«expr ⟮ , ⟯» F
+                        "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»").toSubfield.Subtype.comp
+                f)
+        ·
+          exact fun x => Exists.cases_on (this (Subtype.mem x)) fun y hy => ⟨y, Subtype.ext hy⟩
+        exact
+          subfield.closure_le.mpr
+            (Set.union_subset
+              (fun x hx =>
+                Exists.cases_on hx
+                  fun y hy =>
+                    ⟨y,
+                      by 
+                        rw [RingHom.comp_apply, AdjoinRoot.lift_of]
+                        exact hy⟩)
+              (set.singleton_subset_iff.mpr
+                ⟨AdjoinRoot.root (minpoly F α),
+                  by 
+                    rw [RingHom.comp_apply, AdjoinRoot.lift_root]
+                    rfl⟩)))
 
 theorem adjoin_root_equiv_adjoin_apply_root (h : IsIntegral F α) :
   adjoin_root_equiv_adjoin F h (AdjoinRoot.root (minpoly F α)) = adjoin_simple.gen F α :=
@@ -544,63 +672,80 @@ section PowerBasis
 
 variable {L : Type _} [Field L] [Algebra K L]
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- The elements `1, x, ..., x ^ (d - 1)` form a basis for `K⟮x⟯`,
 where `d` is the degree of the minimal polynomial of `x`. -/
-noncomputable
-def power_basis_aux {x : L} (hx : is_integral K x) : basis (fin (minpoly K x).nat_degree) K «expr ⟮ , ⟯»(K, [x]) :=
-(adjoin_root.power_basis (minpoly.ne_zero hx)).basis.map (adjoin_root_equiv_adjoin K hx).to_linear_equiv
+noncomputable def power_basis_aux {x : L} (hx : IsIntegral K x) :
+  Basis (Finₓ (minpoly K x).natDegree) K
+    («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") :=
+  (AdjoinRoot.powerBasis (minpoly.ne_zero hx)).Basis.map (adjoin_root_equiv_adjoin K hx).toLinearEquiv
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K⟮x⟯`,
 where `d` is the degree of the minimal polynomial of `x`. -/
-@[simps #[]]
-noncomputable
-def adjoin.power_basis {x : L} (hx : is_integral K x) : power_basis K «expr ⟮ , ⟯»(K, [x]) :=
-{ gen := adjoin_simple.gen K x,
-  dim := (minpoly K x).nat_degree,
-  basis := power_basis_aux hx,
-  basis_eq_pow := λ
-  i, by rw ["[", expr power_basis_aux, ",", expr basis.map_apply, ",", expr power_basis.basis_eq_pow, ",", expr alg_equiv.to_linear_equiv_apply, ",", expr alg_equiv.map_pow, ",", expr adjoin_root.power_basis_gen, ",", expr adjoin_root_equiv_adjoin_apply_root, "]"] [] }
+@[simps]
+noncomputable def adjoin.power_basis {x : L} (hx : IsIntegral K x) :
+  PowerBasis K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") :=
+  { gen := adjoin_simple.gen K x, dim := (minpoly K x).natDegree, Basis := power_basis_aux hx,
+    basis_eq_pow :=
+      fun i =>
+        by 
+          rw [power_basis_aux, Basis.map_apply, PowerBasis.basis_eq_pow, AlgEquiv.to_linear_equiv_apply,
+            AlgEquiv.map_pow, AdjoinRoot.power_basis_gen, adjoin_root_equiv_adjoin_apply_root] }
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem adjoin.finite_dimensional {x : L} (hx : is_integral K x) : finite_dimensional K «expr ⟮ , ⟯»(K, [x]) :=
-power_basis.finite_dimensional (adjoin.power_basis hx)
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem adjoin.finite_dimensional {x : L} (hx : IsIntegral K x) :
+  FiniteDimensional K
+    («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") :=
+  PowerBasis.finite_dimensional (adjoin.power_basis hx)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem adjoin.finrank
-{x : L}
-(hx : is_integral K x) : «expr = »(finite_dimensional.finrank K «expr ⟮ , ⟯»(K, [x]), (minpoly K x).nat_degree) :=
-begin
-  rw [expr power_basis.finrank (adjoin.power_basis hx : _)] [],
-  refl
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem adjoin.finrank {x : L} (hx : IsIntegral K x) :
+  FiniteDimensional.finrank K
+      («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»") =
+    (minpoly K x).natDegree :=
+  by 
+    rw [PowerBasis.finrank (adjoin.power_basis hx : _)]
+    rfl
 
 end PowerBasis
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- Algebra homomorphism `F⟮α⟯ →ₐ[F] K` are in bijection with the set of roots
 of `minpoly α` in `K`. -/
-noncomputable
-def alg_hom_adjoin_integral_equiv
-(h : is_integral F α) : «expr ≃ »(«expr →ₐ[ ] »(«expr ⟮ , ⟯»(F, [α]), F, K), {x // «expr ∈ »(x, ((minpoly F α).map (algebra_map F K)).roots)}) :=
-(adjoin.power_basis h).lift_equiv'.trans ((equiv.refl _).subtype_equiv (λ
-  x, by rw ["[", expr adjoin.power_basis_gen, ",", expr minpoly_gen h, ",", expr equiv.refl_apply, "]"] []))
+noncomputable def alg_hom_adjoin_integral_equiv (h : IsIntegral F α) :
+  («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F] K) ≃
+    { x // x ∈ ((minpoly F α).map (algebraMap F K)).roots } :=
+  (adjoin.power_basis h).liftEquiv'.trans
+    ((Equivₓ.refl _).subtypeEquiv
+      fun x =>
+        by 
+          rw [adjoin.power_basis_gen, minpoly_gen h, Equivₓ.refl_apply])
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- Fintype of algebra homomorphism `F⟮α⟯ →ₐ[F] K` -/
-noncomputable
-def fintype_of_alg_hom_adjoin_integral (h : is_integral F α) : fintype «expr →ₐ[ ] »(«expr ⟮ , ⟯»(F, [α]), F, K) :=
-power_basis.alg_hom.fintype (adjoin.power_basis h)
+noncomputable def fintype_of_alg_hom_adjoin_integral (h : IsIntegral F α) :
+  Fintype
+    («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F] K) :=
+  PowerBasis.AlgHom.fintype (adjoin.power_basis h)
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem card_alg_hom_adjoin_integral
-(h : is_integral F α)
-(h_sep : (minpoly F α).separable)
-(h_splits : (minpoly F α).splits (algebra_map F K)) : «expr = »(@fintype.card «expr →ₐ[ ] »(«expr ⟮ , ⟯»(F, [α]), F, K) (fintype_of_alg_hom_adjoin_integral F h), (minpoly F α).nat_degree) :=
-begin
-  rw [expr alg_hom.card_of_power_basis] []; simp [] [] ["only"] ["[", expr adjoin.power_basis_dim, ",", expr adjoin.power_basis_gen, ",", expr minpoly_gen h, ",", expr h_sep, ",", expr h_splits, "]"] [] []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem card_alg_hom_adjoin_integral (h : IsIntegral F α) (h_sep : (minpoly F α).Separable)
+  (h_splits : (minpoly F α).Splits (algebraMap F K)) :
+  @Fintype.card
+      («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F] K)
+      (fintype_of_alg_hom_adjoin_integral F h) =
+    (minpoly F α).natDegree :=
+  by 
+    rw [AlgHom.card_of_power_basis] <;>
+      simp only [adjoin.power_basis_dim, adjoin.power_basis_gen, minpoly_gen h, h_sep, h_splits]
 
 end AdjoinIntegralElement
 
@@ -611,13 +756,13 @@ variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E]
 /-- An intermediate field `S` is finitely generated if there exists `t : finset E` such that
 `intermediate_field.adjoin F t = S`. -/
 def fg (S : IntermediateField F E) : Prop :=
-  ∃ t : Finset E, adjoin F («expr↑ » t) = S
+  ∃ t : Finset E, adjoin F (↑t) = S
 
-theorem fg_adjoin_finset (t : Finset E) : (adjoin F («expr↑ » t : Set E)).Fg :=
+theorem fg_adjoin_finset (t : Finset E) : (adjoin F (↑t : Set E)).Fg :=
   ⟨t, rfl⟩
 
 theorem fg_def {S : IntermediateField F E} : S.fg ↔ ∃ t : Set E, Set.Finite t ∧ adjoin F t = S :=
-  ⟨fun ⟨t, ht⟩ => ⟨«expr↑ » t, Set.finite_mem_finset t, ht⟩,
+  ⟨fun ⟨t, ht⟩ => ⟨↑t, Set.finite_mem_finset t, ht⟩,
     fun ⟨t, ht1, ht2⟩ =>
       ⟨ht1.to_finset,
         by 
@@ -634,45 +779,44 @@ theorem fg_of_fg_to_subalgebra (S : IntermediateField F E) (h : S.to_subalgebra.
 theorem fg_of_noetherian (S : IntermediateField F E) [IsNoetherian F E] : S.fg :=
   S.fg_of_fg_to_subalgebra S.to_subalgebra.fg_of_noetherian
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem induction_on_adjoin_finset
-(S : finset E)
-(P : intermediate_field F E → exprProp())
-(base : P «expr⊥»())
-(ih : ∀
- (K : intermediate_field F E)
- (x «expr ∈ » S), P K → P «expr↑ »(«expr ⟮ , ⟯»(K, [x]))) : P (adjoin F «expr↑ »(S)) :=
-begin
-  apply [expr finset.induction_on' S],
-  { exact [expr base] },
-  { intros [ident a, ident s, ident h1, "_", "_", ident h4],
-    rw ["[", expr finset.coe_insert, ",", expr set.insert_eq, ",", expr set.union_comm, ",", "<-", expr adjoin_adjoin_left, "]"] [],
-    exact [expr ih (adjoin F s) a h1 h4] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem induction_on_adjoin_finset (S : Finset E) (P : IntermediateField F E → Prop) (base : P ⊥)
+  (ih :
+    ∀ K : IntermediateField F E x _ : x ∈ S,
+      P K → P (↑«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")) :
+  P (adjoin F (↑S)) :=
+  by 
+    apply Finset.induction_on' S
+    ·
+      exact base
+    ·
+      intro a s h1 _ _ h4 
+      rw [Finset.coe_insert, Set.insert_eq, Set.union_comm, ←adjoin_adjoin_left]
+      exact ih (adjoin F s) a h1 h4
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem induction_on_adjoin_fg
-(P : intermediate_field F E → exprProp())
-(base : P «expr⊥»())
-(ih : ∀ (K : intermediate_field F E) (x : E), P K → P «expr↑ »(«expr ⟮ , ⟯»(K, [x])))
-(K : intermediate_field F E)
-(hK : K.fg) : P K :=
-begin
-  obtain ["⟨", ident S, ",", ident rfl, "⟩", ":=", expr hK],
-  exact [expr induction_on_adjoin_finset S P base (λ K x _ hK, ih K x hK)]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem induction_on_adjoin_fg (P : IntermediateField F E → Prop) (base : P ⊥)
+  (ih :
+    ∀ K : IntermediateField F E x : E,
+      P K → P (↑«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»"))
+  (K : IntermediateField F E) (hK : K.fg) : P K :=
+  by 
+    obtain ⟨S, rfl⟩ := hK 
+    exact induction_on_adjoin_finset S P base fun K x _ hK => ih K x hK
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem induction_on_adjoin
-[fd : finite_dimensional F E]
-(P : intermediate_field F E → exprProp())
-(base : P «expr⊥»())
-(ih : ∀ (K : intermediate_field F E) (x : E), P K → P «expr↑ »(«expr ⟮ , ⟯»(K, [x])))
-(K : intermediate_field F E) : P K :=
-begin
-  letI [] [":", expr is_noetherian F E] [":=", expr is_noetherian.iff_fg.2 infer_instance],
-  exact [expr induction_on_adjoin_fg P base ih K K.fg_of_noetherian]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem induction_on_adjoin [fd : FiniteDimensional F E] (P : IntermediateField F E → Prop) (base : P ⊥)
+  (ih :
+    ∀ K : IntermediateField F E x : E,
+      P K → P (↑«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»"))
+  (K : IntermediateField F E) : P K :=
+  by 
+    let this' : IsNoetherian F E := IsNoetherian.iff_fg.2 inferInstance 
+    exact induction_on_adjoin_fg P base ih K K.fg_of_noetherian
 
 end Induction
 
@@ -682,27 +826,23 @@ variable (F E K : Type _) [Field F] [Field E] [Field K] [Algebra F E] [Algebra F
 
 /-- Lifts `L → K` of `F → K` -/
 def lifts :=
-  ΣL : IntermediateField F E, L →ₐ[F] K
+  Σ L : IntermediateField F E, L →ₐ[F] K
 
 variable {F E K}
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : partial_order (lifts F E K) :=
-{ le := λ x y, «expr ∧ »(«expr ≤ »(x.1, y.1), ∀ (s : x.1) (t : y.1), «expr = »((s : E), t) → «expr = »(x.2 s, y.2 t)),
-  le_refl := λ x, ⟨le_refl x.1, λ s t hst, congr_arg x.2 (subtype.ext hst)⟩,
-  le_trans := λ
-  x
-  y
-  z
-  hxy
-  hyz, ⟨le_trans hxy.1 hyz.1, λ s u hsu, eq.trans (hxy.2 s ⟨s, hxy.1 s.mem⟩ rfl) (hyz.2 ⟨s, hxy.1 s.mem⟩ u hsu)⟩,
-  le_antisymm := begin
-    rintros ["⟨", ident x1, ",", ident x2, "⟩", "⟨", ident y1, ",", ident y2, "⟩", "⟨", ident hxy1, ",", ident hxy2, "⟩", "⟨", ident hyx1, ",", ident hyx2, "⟩"],
-    have [] [":", expr «expr = »(x1, y1)] [":=", expr le_antisymm hxy1 hyx1],
-    subst [expr this],
-    congr,
-    exact [expr alg_hom.ext (λ s, hxy2 s s rfl)]
-  end }
+instance : PartialOrderₓ (lifts F E K) :=
+  { le := fun x y => x.1 ≤ y.1 ∧ ∀ s : x.1 t : y.1, (s : E) = t → x.2 s = y.2 t,
+    le_refl := fun x => ⟨le_reflₓ x.1, fun s t hst => congr_argₓ x.2 (Subtype.ext hst)⟩,
+    le_trans :=
+      fun x y z hxy hyz =>
+        ⟨le_transₓ hxy.1 hyz.1, fun s u hsu => Eq.trans (hxy.2 s ⟨s, hxy.1 s.mem⟩ rfl) (hyz.2 ⟨s, hxy.1 s.mem⟩ u hsu)⟩,
+    le_antisymm :=
+      by 
+        rintro ⟨x1, x2⟩ ⟨y1, y2⟩ ⟨hxy1, hxy2⟩ ⟨hyx1, hyx2⟩
+        have  : x1 = y1 := le_antisymmₓ hxy1 hyx1 
+        subst this 
+        congr 
+        exact AlgHom.ext fun s => hxy2 s s rfl }
 
 noncomputable instance : OrderBot (lifts F E K) :=
   { bot := ⟨⊥, (Algebra.ofId F K).comp (bot_equiv F E).toAlgHom⟩,
@@ -789,11 +929,12 @@ noncomputable def lifts.upper_bound_alg_hom {c : Set (lifts F E K)} (hc : Zorn.C
 noncomputable def lifts.upper_bound {c : Set (lifts F E K)} (hc : Zorn.Chain (· ≤ ·) c) : lifts F E K :=
   ⟨lifts.upper_bound_intermediate_field hc, lifts.upper_bound_alg_hom hc⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » c)
 theorem lifts.exists_upper_bound (c : Set (lifts F E K)) (hc : Zorn.Chain (· ≤ ·) c) : ∃ ub, ∀ a _ : a ∈ c, a ≤ ub :=
   ⟨lifts.upper_bound hc,
     by 
       intro x hx 
-      split 
+      constructor
       ·
         exact fun s hs => ⟨x, Set.mem_insert_of_mem ⊥ hx, hs⟩
       ·
@@ -803,37 +944,61 @@ theorem lifts.exists_upper_bound (c : Set (lifts F E K)) (hc : Zorn.Chain (· �
         rw [lifts.eq_of_le hxz, lifts.eq_of_le hyz]
         exact congr_argₓ z.2 (Subtype.ext hst)⟩
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- Extend a lift `x : lifts F E K` to an element `s : E` whose conjugates are all in `K` -/
-noncomputable
-def lifts.lift_of_splits
-(x : lifts F E K)
-{s : E}
-(h1 : is_integral F s)
-(h2 : (minpoly F s).splits (algebra_map F K)) : lifts F E K :=
-let h3 : is_integral x.1 s := is_integral_of_is_scalar_tower s h1 in
-let key : (minpoly x.1 s).splits x.2.to_ring_hom := splits_of_splits_of_dvd _ (map_ne_zero (minpoly.ne_zero h1)) ((splits_map_iff _ _).mpr (by { convert [] [expr h2] [],
-        exact [expr ring_hom.ext (λ y, x.2.commutes y)] })) (minpoly.dvd_map_of_is_scalar_tower _ _ _) in
-⟨«expr↑ »(«expr ⟮ , ⟯»(x.1, [s])), (@alg_hom_equiv_sigma F x.1 («expr↑ »(«expr ⟮ , ⟯»(x.1, [s])) : intermediate_field F E) K _ _ _ _ _ _ _ (intermediate_field.algebra «expr ⟮ , ⟯»(x.1, [s])) (is_scalar_tower.of_algebra_map_eq (λ
-    _, rfl))).inv_fun ⟨x.2, (@alg_hom_adjoin_integral_equiv x.1 _ E _ _ s K _ x.2.to_ring_hom.to_algebra h3).inv_fun ⟨root_of_splits x.2.to_ring_hom key (ne_of_gt (minpoly.degree_pos h3)), by { simp_rw ["[", expr mem_roots (map_ne_zero (minpoly.ne_zero h3)), ",", expr is_root, ",", "<-", expr eval₂_eq_eval_map, "]"] [],
-     exact [expr map_root_of_splits x.2.to_ring_hom key (ne_of_gt (minpoly.degree_pos h3))] }⟩⟩⟩
+noncomputable def lifts.lift_of_splits (x : lifts F E K) {s : E} (h1 : IsIntegral F s)
+  (h2 : (minpoly F s).Splits (algebraMap F K)) : lifts F E K :=
+  let h3 : IsIntegral x.1 s := is_integral_of_is_scalar_tower s h1 
+  let key : (minpoly x.1 s).Splits x.2.toRingHom :=
+    splits_of_splits_of_dvd _ (map_ne_zero (minpoly.ne_zero h1))
+      ((splits_map_iff _ _).mpr
+        (by 
+          convert h2 
+          exact RingHom.ext fun y => x.2.commutes y))
+      (minpoly.dvd_map_of_is_scalar_tower _ _ _)
+  ⟨↑«expr ⟮ , ⟯» x.1 "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»",
+    (@algHomEquivSigma F x.1
+          (↑«expr ⟮ , ⟯» x.1 "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" :
+          IntermediateField F E)
+          K _ _ _ _ _ _ _
+          (IntermediateField.algebra
+            («expr ⟮ , ⟯» x.1 "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»"))
+          (IsScalarTower.of_algebra_map_eq fun _ => rfl)).invFun
+      ⟨x.2,
+        (@alg_hom_adjoin_integral_equiv x.1 _ E _ _ s K _ x.2.toRingHom.toAlgebra h3).invFun
+          ⟨root_of_splits x.2.toRingHom key (ne_of_gtₓ (minpoly.degree_pos h3)),
+            by 
+              simpRw [mem_roots (map_ne_zero (minpoly.ne_zero h3)), is_root, ←eval₂_eq_eval_map]
+              exact map_root_of_splits x.2.toRingHom key (ne_of_gtₓ (minpoly.degree_pos h3))⟩⟩⟩
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
-theorem lifts.le_lifts_of_splits
-(x : lifts F E K)
-{s : E}
-(h1 : is_integral F s)
-(h2 : (minpoly F s).splits (algebra_map F K)) : «expr ≤ »(x, x.lift_of_splits h1 h2) :=
-⟨λ
- z
- hz, algebra_map_mem «expr ⟮ , ⟯»(x.1, [s]) ⟨z, hz⟩, λ
- t
- u
- htu, eq.symm (begin
-    rw ["[", "<-", expr show «expr = »(algebra_map x.1 «expr ⟮ , ⟯»(x.1, [s]) t, u), from subtype.ext htu, "]"] [],
-    letI [] [":", expr algebra x.1 K] [":=", expr x.2.to_ring_hom.to_algebra],
-    exact [expr alg_hom.commutes _ t]
-  end)⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+theorem lifts.le_lifts_of_splits (x : lifts F E K) {s : E} (h1 : IsIntegral F s)
+  (h2 : (minpoly F s).Splits (algebraMap F K)) : x ≤ x.lift_of_splits h1 h2 :=
+  ⟨fun z hz =>
+      algebra_map_mem
+        («expr ⟮ , ⟯» x.1 "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+        ⟨z, hz⟩,
+    fun t u htu =>
+      Eq.symm
+        (by 
+          rw
+            [←show
+              algebraMap x.1
+                  («expr ⟮ , ⟯» x.1
+                    "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+                  t =
+                u from
+              Subtype.ext htu]
+          let this' : Algebra x.1 K := x.2.toRingHom.toAlgebra 
+          exact AlgHom.commutes _ t)⟩
 
 theorem lifts.mem_lifts_of_splits (x : lifts F E K) {s : E} (h1 : IsIntegral F s)
   (h2 : (minpoly F s).Splits (algebraMap F K)) : s ∈ (x.lift_of_splits h1 h2).1 :=
@@ -843,6 +1008,7 @@ theorem lifts.exists_lift_of_splits (x : lifts F E K) {s : E} (h1 : IsIntegral F
   (h2 : (minpoly F s).Splits (algebraMap F K)) : ∃ y, x ≤ y ∧ s ∈ y.1 :=
   ⟨x.lift_of_splits h1 h2, x.le_lifts_of_splits h1 h2, x.mem_lifts_of_splits h1 h2⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 theorem alg_hom_mk_adjoin_splits (hK : ∀ s _ : s ∈ S, IsIntegral F (s : E) ∧ (minpoly F s).Splits (algebraMap F K)) :
   Nonempty (adjoin F S →ₐ[F] K) :=
   by 
@@ -853,6 +1019,7 @@ theorem alg_hom_mk_adjoin_splits (hK : ∀ s _ : s ∈ S, IsIntegral F (s : E) �
     rcases x.exists_lift_of_splits (hK s hs).1 (hK s hs).2 with ⟨y, h1, h2⟩
     rwa [hx y h1] at h2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 theorem alg_hom_mk_adjoin_splits' (hS : adjoin F S = ⊤)
   (hK : ∀ x _ : x ∈ S, IsIntegral F (x : E) ∧ (minpoly F x).Splits (algebraMap F K)) : Nonempty (E →ₐ[F] K) :=
   by 
@@ -872,11 +1039,20 @@ namespace PowerBasis
 
 open IntermediateField
 
--- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»
 /-- `pb.equiv_adjoin_simple` is the equivalence between `K⟮pb.gen⟯` and `L` itself. -/
-noncomputable
-def equiv_adjoin_simple (pb : power_basis K L) : «expr ≃ₐ[ ] »(«expr ⟮ , ⟯»(K, [pb.gen]), K, L) :=
-(adjoin.power_basis pb.is_integral_gen).equiv_of_minpoly pb (minpoly.eq_of_algebra_map_eq (algebra_map «expr ⟮ , ⟯»(K, [pb.gen]) L).injective (adjoin.power_basis pb.is_integral_gen).is_integral_gen (by rw ["[", expr adjoin.power_basis_gen, ",", expr adjoin_simple.algebra_map_gen, "]"] []))
+noncomputable def equiv_adjoin_simple (pb : PowerBasis K L) :
+  «expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»" ≃ₐ[K] L :=
+  (adjoin.power_basis pb.is_integral_gen).equivOfMinpoly pb
+    (minpoly.eq_of_algebra_map_eq
+      (algebraMap («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr ⟮ , ⟯»")
+          L).Injective
+      (adjoin.power_basis pb.is_integral_gen).is_integral_gen
+      (by 
+        rw [adjoin.power_basis_gen, adjoin_simple.algebra_map_gen]))
 
 @[simp]
 theorem equiv_adjoin_simple_aeval (pb : PowerBasis K L) (f : Polynomial K) :

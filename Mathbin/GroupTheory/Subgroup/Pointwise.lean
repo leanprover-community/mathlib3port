@@ -43,7 +43,7 @@ theorem pointwise_smul_def {a : α} (S : Subgroup G) : a • S = S.map (MulDistr
   rfl
 
 @[simp]
-theorem coe_pointwise_smul (a : α) (S : Subgroup G) : «expr↑ » (a • S) = a • (S : Set G) :=
+theorem coe_pointwise_smul (a : α) (S : Subgroup G) : ↑(a • S) = a • (S : Set G) :=
   rfl
 
 @[simp]
@@ -52,6 +52,14 @@ theorem pointwise_smul_to_submonoid (a : α) (S : Subgroup G) : (a • S).toSubm
 
 theorem smul_mem_pointwise_smul (m : G) (a : α) (S : Subgroup G) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set G))
+
+instance pointwise_central_scalar [MulDistribMulAction (αᵐᵒᵖ) G] [IsCentralScalar α G] :
+  IsCentralScalar α (Subgroup G) :=
+  ⟨fun a S =>
+      (congr_argₓ fun f => S.map f)$
+        MonoidHom.ext$
+          by 
+            exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -137,7 +145,7 @@ localized [Pointwise] attribute [instance] AddSubgroup.pointwiseMulAction
 open_locale Pointwise
 
 @[simp]
-theorem coe_pointwise_smul (a : α) (S : AddSubgroup A) : «expr↑ » (a • S) = a • (S : Set A) :=
+theorem coe_pointwise_smul (a : α) (S : AddSubgroup A) : ↑(a • S) = a • (S : Set A) :=
   rfl
 
 @[simp]
@@ -146,6 +154,14 @@ theorem pointwise_smul_to_add_submonoid (a : α) (S : AddSubgroup A) : (a • S)
 
 theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubgroup A) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set A))
+
+instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) A] [IsCentralScalar α A] :
+  IsCentralScalar α (AddSubgroup A) :=
+  ⟨fun a S =>
+      (congr_argₓ fun f => S.map f)$
+        AddMonoidHom.ext$
+          by 
+            exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 

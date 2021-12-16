@@ -105,7 +105,7 @@ real and complex manifolds).
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u v w u' v' w'
 
@@ -265,20 +265,16 @@ theorem unique_diff_preimage_source {β : Type _} [TopologicalSpace β] {e : Loc
 theorem unique_diff_at_image {x : H} : UniqueDiffWithinAt 𝕜 (range I) (I x) :=
   I.unique_diff _ (mem_range_self _)
 
--- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected theorem locally_compact [locally_compact_space E] (I : model_with_corners 𝕜 E H) : locally_compact_space H :=
-begin
-  have [] [":", expr ∀
-   x : H, (expr𝓝() x).has_basis (λ
-    s, «expr ∧ »(«expr ∈ »(s, expr𝓝() (I x)), is_compact s)) (λ
-    s, «expr '' »(I.symm, «expr ∩ »(s, range «expr⇑ »(I))))] [],
-  { intro [ident x],
-    rw ["<-", expr I.symm_map_nhds_within_range] [],
-    exact [expr ((compact_basis_nhds (I x)).inf_principal _).map _] },
-  refine [expr locally_compact_space_of_has_basis this _],
-  rintro [ident x, ident s, "⟨", "-", ",", ident hsc, "⟩"],
-  exact [expr (hsc.inter_right I.closed_range).image I.continuous_symm]
-end
+protected theorem locally_compact [LocallyCompactSpace E] (I : ModelWithCorners 𝕜 E H) : LocallyCompactSpace H :=
+  by 
+    have  : ∀ x : H, (𝓝 x).HasBasis (fun s => s ∈ 𝓝 (I x) ∧ IsCompact s) fun s => I.symm '' (s ∩ range (⇑I))
+    ·
+      intro x 
+      rw [←I.symm_map_nhds_within_range]
+      exact ((compact_basis_nhds (I x)).inf_principal _).map _ 
+    refine' locally_compact_space_of_has_basis this _ 
+    rintro x s ⟨-, hsc⟩
+    exact (hsc.inter_right I.closed_range).Image I.continuous_symm
 
 open TopologicalSpace
 
@@ -311,22 +307,42 @@ end
 
 section ModelWithCornersProd
 
-/-- Given two model_with_corners `I` on `(E, H)` and `I'` on `(E', H')`, we define the model with
-corners `I.prod I'` on `(E × E', model_prod H H')`. This appears in particular for the manifold
-structure on the tangent bundle to a manifold modelled on `(E, H)`: it will be modelled on
-`(E × E, H × E)`. See note [Manifold type tags] for explanation about `model_prod H H'`
-vs `H × H'`. -/
-def ModelWithCorners.prod {𝕜 : Type u} [NondiscreteNormedField 𝕜] {E : Type v} [NormedGroup E] [NormedSpace 𝕜 E]
-  {H : Type w} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {E' : Type v'} [NormedGroup E'] [NormedSpace 𝕜 E']
-  {H' : Type w'} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') : ModelWithCorners 𝕜 (E × E') (ModelProd H H') :=
-  { I.to_local_equiv.prod I'.to_local_equiv with toFun := fun x => (I x.1, I' x.2),
-    invFun := fun x => (I.symm x.1, I'.symm x.2), Source := { x | x.1 ∈ I.source ∧ x.2 ∈ I'.source },
-    source_eq :=
-      by 
-        simp' only [set_of_true] with mfld_simps,
-    unique_diff' := I.unique_diff'.prod I'.unique_diff',
-    continuous_to_fun := I.continuous_to_fun.prod_map I'.continuous_to_fun,
-    continuous_inv_fun := I.continuous_inv_fun.prod_map I'.continuous_inv_fun }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Given two model_with_corners `I` on `(E, H)` and `I'` on `(E', H')`, we define the model with
+    corners `I.prod I'` on `(E × E', model_prod H H')`. This appears in particular for the manifold
+    structure on the tangent bundle to a manifold modelled on `(E, H)`: it will be modelled on
+    `(E × E, H × E)`. See note [Manifold type tags] for explanation about `model_prod H H'`
+    vs `H × H'`. -/
+  def
+    ModelWithCorners.prod
+    { 𝕜 : Type u }
+        [ NondiscreteNormedField 𝕜 ]
+        { E : Type v }
+        [ NormedGroup E ]
+        [ NormedSpace 𝕜 E ]
+        { H : Type w }
+        [ TopologicalSpace H ]
+        ( I : ModelWithCorners 𝕜 E H )
+        { E' : Type v' }
+        [ NormedGroup E' ]
+        [ NormedSpace 𝕜 E' ]
+        { H' : Type w' }
+        [ TopologicalSpace H' ]
+        ( I' : ModelWithCorners 𝕜 E' H' )
+      : ModelWithCorners 𝕜 E × E' ModelProd H H'
+    :=
+      {
+        I.to_local_equiv.prod I'.to_local_equiv with
+        toFun := fun x => ( I x . 1 , I' x . 2 ) ,
+          invFun := fun x => ( I.symm x . 1 , I'.symm x . 2 ) ,
+          Source := { x | x . 1 ∈ I.source ∧ x . 2 ∈ I'.source } ,
+          source_eq := by simp' only [ set_of_true ] with mfld_simps ,
+          unique_diff' := I.unique_diff'.prod I'.unique_diff' ,
+          continuous_to_fun := I.continuous_to_fun.prod_map I'.continuous_to_fun ,
+          continuous_inv_fun := I.continuous_inv_fun.prod_map I'.continuous_inv_fun
+        }
 
 /-- Given a finite family of `model_with_corners` `I i` on `(E i, H i)`, we define the model with
 corners `pi I` on `(Π i, E i, model_pi H)`. See note [Manifold type tags] for explanation about
@@ -389,7 +405,7 @@ instance ModelWithCorners.range_eq_univ_prod {𝕜 : Type u} [NondiscreteNormedF
   [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type w'} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H')
   [I'.boundaryless] : (I.prod I').Boundaryless :=
   by 
-    split 
+    constructor 
     dsimp [ModelWithCorners.prod, ModelProd]
     rw [←prod_range_range_eq, ModelWithCorners.Boundaryless.range_eq_univ, ModelWithCorners.Boundaryless.range_eq_univ,
       univ_prod_univ]
@@ -406,53 +422,65 @@ variable {m n : WithTop ℕ} {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : 
 
 variable (n)
 
--- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a model with corners `(E, H)`, we define the groupoid of `C^n` transformations of `H` as
-the maps that are `C^n` when read in `E` through `I`. -/ def times_cont_diff_groupoid : structure_groupoid H :=
-pregroupoid.groupoid { property := λ
-  f s, times_cont_diff_on 𝕜 n «expr ∘ »(I, «expr ∘ »(f, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, s), range I),
-  comp := λ f g u v hf hg hu hv huv, begin
-    have [] [":", expr «expr = »(«expr ∘ »(I, «expr ∘ »(«expr ∘ »(g, f), I.symm)), «expr ∘ »(«expr ∘ »(I, «expr ∘ »(g, I.symm)), «expr ∘ »(I, «expr ∘ »(f, I.symm))))] [],
-    by { ext [] [ident x] [],
-      simp [] [] [] [] [] [] },
-    rw [expr this] [],
-    apply [expr times_cont_diff_on.comp hg _],
-    { rintros [ident x, "⟨", ident hx1, ",", ident hx2, "⟩"],
-      simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", "⊢", ident hx1],
-      exact [expr hx1.2] },
-    { refine [expr hf.mono _],
-      rintros [ident x, "⟨", ident hx1, ",", ident hx2, "⟩"],
-      exact [expr ⟨hx1.1, hx2⟩] }
-  end,
-  id_mem := begin
-    apply [expr times_cont_diff_on.congr times_cont_diff_id.times_cont_diff_on],
-    rintros [ident x, "⟨", ident hx1, ",", ident hx2, "⟩"],
-    rcases [expr mem_range.1 hx2, "with", "⟨", ident y, ",", ident hy, "⟩"],
-    rw ["<-", expr hy] [],
-    simp [] [] ["only"] [] ["with", ident mfld_simps] []
-  end,
-  locality := λ f u hu H, begin
-    apply [expr times_cont_diff_on_of_locally_times_cont_diff_on],
-    rintros [ident y, "⟨", ident hy1, ",", ident hy2, "⟩"],
-    rcases [expr mem_range.1 hy2, "with", "⟨", ident x, ",", ident hx, "⟩"],
-    rw ["<-", expr hx] ["at", "⊢", ident hy1],
-    simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", "⊢", ident hy1],
-    rcases [expr H x hy1, "with", "⟨", ident v, ",", ident v_open, ",", ident xv, ",", ident hv, "⟩"],
-    have [] [":", expr «expr = »(«expr ∩ »(«expr ⁻¹' »(I.symm, «expr ∩ »(u, v)), range I), «expr ∩ »(«expr ∩ »(«expr ⁻¹' »(I.symm, u), range I), «expr ⁻¹' »(I.symm, v)))] [],
-    { rw ["[", expr preimage_inter, ",", expr inter_assoc, ",", expr inter_assoc, "]"] [],
-      congr' [1] [],
-      rw [expr inter_comm] [] },
-    rw [expr this] ["at", ident hv],
-    exact [expr ⟨«expr ⁻¹' »(I.symm, v), v_open.preimage I.continuous_symm, by simpa [] [] [] [] [] [], hv⟩]
-  end,
-  congr := λ f g u hu fg hf, begin
-    apply [expr hf.congr],
-    rintros [ident y, "⟨", ident hy1, ",", ident hy2, "⟩"],
-    rcases [expr mem_range.1 hy2, "with", "⟨", ident x, ",", ident hx, "⟩"],
-    rw ["<-", expr hx] ["at", "⊢", ident hy1],
-    simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", "⊢", ident hy1],
-    rw [expr fg _ hy1] []
-  end }
+the maps that are `C^n` when read in `E` through `I`. -/
+def timesContDiffGroupoid : StructureGroupoid H :=
+  Pregroupoid.groupoid
+    { property := fun f s => TimesContDiffOn 𝕜 n (I ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I),
+      comp :=
+        fun f g u v hf hg hu hv huv =>
+          by 
+            have  : (I ∘ (g ∘ f) ∘ I.symm) = ((I ∘ g ∘ I.symm) ∘ I ∘ f ∘ I.symm)
+            ·
+              ·
+                ext x 
+                simp 
+            rw [this]
+            apply TimesContDiffOn.comp hg _
+            ·
+              rintro x ⟨hx1, hx2⟩
+              simp' only with mfld_simps  at hx1⊢
+              exact hx1.2
+            ·
+              refine' hf.mono _ 
+              rintro x ⟨hx1, hx2⟩
+              exact ⟨hx1.1, hx2⟩,
+      id_mem :=
+        by 
+          apply TimesContDiffOn.congr times_cont_diff_id.times_cont_diff_on 
+          rintro x ⟨hx1, hx2⟩
+          rcases mem_range.1 hx2 with ⟨y, hy⟩
+          rw [←hy]
+          simp' only with mfld_simps,
+      locality :=
+        fun f u hu H =>
+          by 
+            apply times_cont_diff_on_of_locally_times_cont_diff_on 
+            rintro y ⟨hy1, hy2⟩
+            rcases mem_range.1 hy2 with ⟨x, hx⟩
+            rw [←hx] at hy1⊢
+            simp' only with mfld_simps  at hy1⊢
+            rcases H x hy1 with ⟨v, v_open, xv, hv⟩
+            have  : I.symm ⁻¹' (u ∩ v) ∩ range I = I.symm ⁻¹' u ∩ range I ∩ I.symm ⁻¹' v
+            ·
+              rw [preimage_inter, inter_assoc, inter_assoc]
+              congr 1
+              rw [inter_comm]
+            rw [this] at hv 
+            exact
+              ⟨I.symm ⁻¹' v, v_open.preimage I.continuous_symm,
+                by 
+                  simpa,
+                hv⟩,
+      congr :=
+        fun f g u hu fg hf =>
+          by 
+            apply hf.congr 
+            rintro y ⟨hy1, hy2⟩
+            rcases mem_range.1 hy2 with ⟨x, hx⟩
+            rw [←hx] at hy1⊢
+            simp' only with mfld_simps  at hy1⊢
+            rw [fg _ hy1] }
 
 variable {n}
 
@@ -474,7 +502,7 @@ theorem times_cont_diff_groupoid_zero_eq : timesContDiffGroupoid 0 I = continuou
     change u ∈ timesContDiffGroupoid 0 I 
     rw [timesContDiffGroupoid, mem_groupoid_of_pregroupoid]
     simp only [times_cont_diff_on_zero]
-    split 
+    constructor
     ·
       apply ContinuousOn.comp (@Continuous.continuous_on _ _ _ _ _ univ I.continuous) _ (subset_univ _)
       apply ContinuousOn.comp u.continuous_to_fun I.continuous_symm.continuous_on (inter_subset_left _ _)
@@ -484,54 +512,51 @@ theorem times_cont_diff_groupoid_zero_eq : timesContDiffGroupoid 0 I = continuou
 
 variable (n)
 
--- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An identity local homeomorphism belongs to the `C^n` groupoid. -/
-theorem of_set_mem_times_cont_diff_groupoid
-{s : set H}
-(hs : is_open s) : «expr ∈ »(local_homeomorph.of_set s hs, times_cont_diff_groupoid n I) :=
-begin
-  rw ["[", expr times_cont_diff_groupoid, ",", expr mem_groupoid_of_pregroupoid, "]"] [],
-  suffices [ident h] [":", expr times_cont_diff_on 𝕜 n «expr ∘ »(I, I.symm) «expr ∩ »(«expr ⁻¹' »(I.symm, s), range I)],
-  by simp [] [] [] ["[", expr h, "]"] [] [],
-  have [] [":", expr times_cont_diff_on 𝕜 n id (univ : set E)] [":=", expr times_cont_diff_id.times_cont_diff_on],
-  exact [expr this.congr_mono (λ x hx, by simp [] [] [] ["[", expr hx.2, "]"] [] []) (subset_univ _)]
-end
+theorem of_set_mem_times_cont_diff_groupoid {s : Set H} (hs : IsOpen s) :
+  LocalHomeomorph.ofSet s hs ∈ timesContDiffGroupoid n I :=
+  by 
+    rw [timesContDiffGroupoid, mem_groupoid_of_pregroupoid]
+    suffices h : TimesContDiffOn 𝕜 n (I ∘ I.symm) (I.symm ⁻¹' s ∩ range I)
+    ·
+      simp [h]
+    have  : TimesContDiffOn 𝕜 n id (univ : Set E) := times_cont_diff_id.times_cont_diff_on 
+    exact
+      this.congr_mono
+        (fun x hx =>
+          by 
+            simp [hx.2])
+        (subset_univ _)
 
--- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of a local homeomorphism from `H` to `M` and its inverse belongs to
 the `C^n` groupoid. -/
-theorem symm_trans_mem_times_cont_diff_groupoid
-(e : local_homeomorph M H) : «expr ∈ »(e.symm.trans e, times_cont_diff_groupoid n I) :=
-begin
-  have [] [":", expr «expr ≈ »(e.symm.trans e, local_homeomorph.of_set e.target e.open_target)] [":=", expr local_homeomorph.trans_symm_self _],
-  exact [expr structure_groupoid.eq_on_source _ (of_set_mem_times_cont_diff_groupoid n I e.open_target) this]
-end
+theorem symm_trans_mem_times_cont_diff_groupoid (e : LocalHomeomorph M H) :
+  e.symm.trans e ∈ timesContDiffGroupoid n I :=
+  by 
+    have  : e.symm.trans e ≈ LocalHomeomorph.ofSet e.target e.open_target := LocalHomeomorph.trans_symm_self _ 
+    exact StructureGroupoid.eq_on_source _ (of_set_mem_times_cont_diff_groupoid n I e.open_target) this
 
 variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
 
--- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of two smooth local homeomorphisms is smooth. -/
-theorem times_cont_diff_groupoid_prod
-{I : model_with_corners 𝕜 E H}
-{I' : model_with_corners 𝕜 E' H'}
-{e : local_homeomorph H H}
-{e' : local_homeomorph H' H'}
-(he : «expr ∈ »(e, times_cont_diff_groupoid «expr⊤»() I))
-(he' : «expr ∈ »(e', times_cont_diff_groupoid «expr⊤»() I')) : «expr ∈ »(e.prod e', times_cont_diff_groupoid «expr⊤»() (I.prod I')) :=
-begin
-  cases [expr he] ["with", ident he, ident he_symm],
-  cases [expr he'] ["with", ident he', ident he'_symm],
-  simp [] [] ["only"] [] [] ["at", ident he, ident he_symm, ident he', ident he'_symm],
-  split; simp [] [] ["only"] ["[", expr local_equiv.prod_source, ",", expr local_homeomorph.prod_to_local_equiv, "]"] [] [],
-  { have [ident h3] [] [":=", expr times_cont_diff_on.prod_map he he'],
-    rw ["[", "<-", expr I.image_eq, ",", "<-", expr I'.image_eq, ",", expr set.prod_image_image_eq, "]"] ["at", ident h3],
-    rw ["<-", expr (I.prod I').image_eq] [],
-    exact [expr h3] },
-  { have [ident h3] [] [":=", expr times_cont_diff_on.prod_map he_symm he'_symm],
-    rw ["[", "<-", expr I.image_eq, ",", "<-", expr I'.image_eq, ",", expr set.prod_image_image_eq, "]"] ["at", ident h3],
-    rw ["<-", expr (I.prod I').image_eq] [],
-    exact [expr h3] }
-end
+theorem times_cont_diff_groupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCorners 𝕜 E' H'}
+  {e : LocalHomeomorph H H} {e' : LocalHomeomorph H' H'} (he : e ∈ timesContDiffGroupoid ⊤ I)
+  (he' : e' ∈ timesContDiffGroupoid ⊤ I') : e.prod e' ∈ timesContDiffGroupoid ⊤ (I.prod I') :=
+  by 
+    cases' he with he he_symm 
+    cases' he' with he' he'_symm 
+    simp only  at he he_symm he' he'_symm 
+    constructor <;> simp only [LocalEquiv.prod_source, LocalHomeomorph.prod_to_local_equiv]
+    ·
+      have h3 := TimesContDiffOn.prod_map he he' 
+      rw [←I.image_eq, ←I'.image_eq, Set.prod_image_image_eq] at h3 
+      rw [←(I.prod I').image_eq]
+      exact h3
+    ·
+      have h3 := TimesContDiffOn.prod_map he_symm he'_symm 
+      rw [←I.image_eq, ←I'.image_eq, Set.prod_image_image_eq] at h3 
+      rw [←(I.prod I').image_eq]
+      exact h3
 
 /-- The `C^n` groupoid is closed under restriction. -/
 instance : ClosedUnderRestriction (timesContDiffGroupoid n I) :=
@@ -563,26 +588,18 @@ theorem SmoothManifoldWithCorners.mk' {𝕜 : Type _} [NondiscreteNormedField �
   [ChartedSpace H M] [gr : HasGroupoid M (timesContDiffGroupoid ∞ I)] : SmoothManifoldWithCorners I M :=
   { gr with  }
 
--- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem smooth_manifold_with_corners_of_times_cont_diff_on
-{𝕜 : Type*}
-[nondiscrete_normed_field 𝕜]
-{E : Type*}
-[normed_group E]
-[normed_space 𝕜 E]
-{H : Type*}
-[topological_space H]
-(I : model_with_corners 𝕜 E H)
-(M : Type*)
-[topological_space M]
-[charted_space H M]
-(h : ∀
- e
- e' : local_homeomorph M H, «expr ∈ »(e, atlas H M) → «expr ∈ »(e', atlas H M) → times_cont_diff_on 𝕜 «expr⊤»() «expr ∘ »(I, «expr ∘ »(«expr ≫ₕ »(e.symm, e'), I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, «expr ≫ₕ »(e.symm, e').source), range I)) : smooth_manifold_with_corners I M :=
-{ compatible := begin
-    haveI [] [":", expr has_groupoid M (times_cont_diff_groupoid «expr∞»() I)] [":=", expr has_groupoid_of_pregroupoid _ h],
-    apply [expr structure_groupoid.compatible]
-  end }
+theorem smooth_manifold_with_corners_of_times_cont_diff_on {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _}
+  [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _)
+  [TopologicalSpace M] [ChartedSpace H M]
+  (h :
+    ∀ e e' : LocalHomeomorph M H,
+      e ∈ atlas H M →
+        e' ∈ atlas H M → TimesContDiffOn 𝕜 ⊤ (I ∘ e.symm ≫ₕ e' ∘ I.symm) (I.symm ⁻¹' (e.symm ≫ₕ e').Source ∩ range I)) :
+  SmoothManifoldWithCorners I M :=
+  { compatible :=
+      by 
+        have  : HasGroupoid M (timesContDiffGroupoid ∞ I) := has_groupoid_of_pregroupoid _ h 
+        apply StructureGroupoid.compatible }
 
 /-- For any model with corners, the model space is a smooth manifold -/
 instance model_space_smooth {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
@@ -616,38 +633,19 @@ theorem compatible_of_mem_maximal_atlas {e e' : LocalHomeomorph M H} (he : e ∈
   (he' : e' ∈ maximal_atlas I M) : e.symm.trans e' ∈ timesContDiffGroupoid ∞ I :=
   StructureGroupoid.compatible_of_mem_maximal_atlas he he'
 
--- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of two smooth manifolds with corners is naturally a smooth manifold with corners. -/
-instance prod
-{𝕜 : Type*}
-[nondiscrete_normed_field 𝕜]
-{E : Type*}
-[normed_group E]
-[normed_space 𝕜 E]
-{E' : Type*}
-[normed_group E']
-[normed_space 𝕜 E']
-{H : Type*}
-[topological_space H]
-{I : model_with_corners 𝕜 E H}
-{H' : Type*}
-[topological_space H']
-{I' : model_with_corners 𝕜 E' H'}
-(M : Type*)
-[topological_space M]
-[charted_space H M]
-[smooth_manifold_with_corners I M]
-(M' : Type*)
-[topological_space M']
-[charted_space H' M']
-[smooth_manifold_with_corners I' M'] : smooth_manifold_with_corners (I.prod I') «expr × »(M, M') :=
-{ compatible := begin
-    rintros [ident f, ident g, "⟨", ident f1, ",", ident f2, ",", ident hf1, ",", ident hf2, ",", ident rfl, "⟩", "⟨", ident g1, ",", ident g2, ",", ident hg1, ",", ident hg2, ",", ident rfl, "⟩"],
-    rw ["[", expr local_homeomorph.prod_symm, ",", expr local_homeomorph.prod_trans, "]"] [],
-    have [ident h1] [] [":=", expr has_groupoid.compatible (times_cont_diff_groupoid «expr⊤»() I) hf1 hg1],
-    have [ident h2] [] [":=", expr has_groupoid.compatible (times_cont_diff_groupoid «expr⊤»() I') hf2 hg2],
-    exact [expr times_cont_diff_groupoid_prod h1 h2]
-  end }
+instance Prod {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {H' : Type _}
+  [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M] (M' : Type _) [TopologicalSpace M'] [ChartedSpace H' M']
+  [SmoothManifoldWithCorners I' M'] : SmoothManifoldWithCorners (I.prod I') (M × M') :=
+  { compatible :=
+      by 
+        rintro f g ⟨f1, f2, hf1, hf2, rfl⟩ ⟨g1, g2, hg1, hg2, rfl⟩
+        rw [LocalHomeomorph.prod_symm, LocalHomeomorph.prod_trans]
+        have h1 := HasGroupoid.compatible (timesContDiffGroupoid ⊤ I) hf1 hg1 
+        have h2 := HasGroupoid.compatible (timesContDiffGroupoid ⊤ I') hf2 hg2 
+        exact times_cont_diff_groupoid_prod h1 h2 }
 
 end SmoothManifoldWithCorners
 
@@ -702,10 +700,10 @@ of `x` to the model vector space. -/
 def extChartAt (x : M) : LocalEquiv M E :=
   (chart_at H x).toLocalEquiv.trans I.to_local_equiv
 
-theorem ext_chart_at_coe : «expr⇑ » (extChartAt I x) = (I ∘ chart_at H x) :=
+theorem ext_chart_at_coe : ⇑extChartAt I x = (I ∘ chart_at H x) :=
   rfl
 
-theorem ext_chart_at_coe_symm : «expr⇑ » (extChartAt I x).symm = ((chart_at H x).symm ∘ I.symm) :=
+theorem ext_chart_at_coe_symm : ⇑(extChartAt I x).symm = ((chart_at H x).symm ∘ I.symm) :=
   rfl
 
 theorem ext_chart_at_source : (extChartAt I x).Source = (chart_at H x).Source :=

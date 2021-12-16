@@ -161,7 +161,7 @@ include hp
 
 variable (p)
 
-noncomputable theory
+noncomputable section 
 
 /-!
 ### The `is_poly` predicate
@@ -275,7 +275,8 @@ theorem comp {g f} (hg : is_poly p g) (hf : is_poly p f) : is_poly p fun R _Rcr 
 
 end IsPoly
 
--- error in RingTheory.WittVector.IsPoly: ././Mathport/Syntax/Translate/Basic.lean:341:40: in exactI: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 /--
 A binary function `f : Π R, 𝕎 R → 𝕎 R → 𝕎 R` on Witt vectors
 is said to be *polynomial* if there is a family of polynomials `φₙ` over `ℤ` such that the `n`th
@@ -288,38 +289,47 @@ and the `@[is_poly]` attribute derives certain specialized composition instances
 for declarations of type `is_poly₂ f`.
 For the most part, users are not expected to treat `is_poly₂` as a class.
 -/
-class is_poly₂
-(f : ∀
- {{R}}
- [comm_ring R], witt_vector p R → expr𝕎() R → expr𝕎() R) : exprProp() := mk' ::
-  (poly : «expr∃ , »((φ : exprℕ() → mv_polynomial «expr × »(fin 2, exprℕ()) exprℤ()), ∀
-    {{R}}
-    [comm_ring R]
-    (x y : expr𝕎() R), by exactI [expr «expr = »((f x y).coeff, λ n, peval (φ n) «expr![ , ]»([x.coeff, y.coeff]))]))
+class is_poly₂ (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R → 𝕎 R) : Prop where mk' :: 
+  poly :
+  ∃ φ : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ,
+    ∀ ⦃R⦄ [CommRingₓ R] x y : 𝕎 R,
+      by 
+        exact
+          (f x y).coeff =
+            fun n =>
+              peval (φ n)
+                («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
 
 variable {p}
 
--- error in RingTheory.WittVector.IsPoly: ././Mathport/Syntax/Translate/Basic.lean:341:40: in refine: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 /-- The composition of polynomial functions is polynomial. -/
-theorem is_poly₂.comp
-{h f g}
-(hh : is_poly₂ p h)
-(hf : is_poly p f)
-(hg : is_poly p g) : is_poly₂ p (λ R _Rcr x y, by exactI [expr h (f x) (g y)]) :=
-begin
-  unfreezingI { obtain ["⟨", ident φ, ",", ident hf, "⟩", ":=", expr hf],
-    obtain ["⟨", ident ψ, ",", ident hg, "⟩", ":=", expr hg],
-    obtain ["⟨", ident χ, ",", ident hh, "⟩", ":=", expr hh] },
-  refine [expr ⟨⟨λ
-     n, bind₁ «expr $ »(uncurry, «expr![ , ]»([λ
-        k, rename (prod.mk (0 : fin 2)) (φ k), λ k, rename (prod.mk (1 : fin 2)) (ψ k)])) (χ n), _⟩⟩],
-  intros [],
-  funext [ident n],
-  simp [] [] ["only"] ["[", expr peval, ",", expr aeval_bind₁, ",", expr function.comp, ",", expr hh, ",", expr hf, ",", expr hg, ",", expr uncurry, "]"] [] [],
-  apply [expr eval₂_hom_congr rfl _ rfl],
-  ext [] ["⟨", ident i, ",", ident n, "⟩"] [],
-  fin_cases [ident i] []; simp [] [] ["only"] ["[", expr aeval_eq_eval₂_hom, ",", expr eval₂_hom_rename, ",", expr function.comp, ",", expr matrix.cons_val_zero, ",", expr matrix.head_cons, ",", expr matrix.cons_val_one, "]"] [] []
-end
+theorem is_poly₂.comp {h f g} (hh : is_poly₂ p h) (hf : is_poly p f) (hg : is_poly p g) :
+  is_poly₂ p
+    fun R _Rcr x y =>
+      by 
+        exact h (f x) (g y) :=
+  by 
+    (
+      obtain ⟨φ, hf⟩ := hf 
+      obtain ⟨ψ, hg⟩ := hg 
+      obtain ⟨χ, hh⟩ := hh)
+    refine'
+      ⟨⟨fun n =>
+            bind₁
+              (uncurry$
+                «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
+              (χ n),
+          _⟩⟩
+    intros 
+    funext n 
+    simp only [peval, aeval_bind₁, Function.comp, hh, hf, hg, uncurry]
+    apply eval₂_hom_congr rfl _ rfl 
+    ext ⟨i, n⟩
+    finCases i <;>
+      simp only [aeval_eq_eval₂_hom, eval₂_hom_rename, Function.comp, Matrix.cons_val_zero, Matrix.head_cons,
+        Matrix.cons_val_one]
 
 /-- The composition of a polynomial function with a binary polynomial function is polynomial. -/
 theorem is_poly.comp₂ {g f} (hg : is_poly p g) (hf : is_poly₂ p f) :
@@ -335,19 +345,30 @@ theorem is_poly.comp₂ {g f} (hg : is_poly p g) (hf : is_poly₂ p f) :
     intros 
     simp only [peval, aeval_bind₁, Function.comp, hg, hf]
 
--- error in RingTheory.WittVector.IsPoly: ././Mathport/Syntax/Translate/Basic.lean:341:40: in refine: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
-theorem is_poly₂.diag {f} (hf : is_poly₂ p f) : is_poly p (λ R _Rcr x, by exactI [expr f x x]) :=
-begin
-  unfreezingI { obtain ["⟨", ident φ, ",", ident hf, "⟩", ":=", expr hf] },
-  refine [expr ⟨⟨λ n, bind₁ (uncurry «expr![ , ]»([X, X])) (φ n), _⟩⟩],
-  intros [],
-  funext [ident n],
-  simp [] [] ["only"] ["[", expr hf, ",", expr peval, ",", expr uncurry, ",", expr aeval_bind₁, "]"] [] [],
-  apply [expr eval₂_hom_congr rfl _ rfl],
-  ext [] ["⟨", ident i, ",", ident k, "⟩"] [],
-  fin_cases [ident i] []; simp [] [] ["only"] ["[", expr matrix.head_cons, ",", expr aeval_X, ",", expr matrix.cons_val_zero, ",", expr matrix.cons_val_one, "]"] [] []
-end
+theorem is_poly₂.diag {f} (hf : is_poly₂ p f) :
+  is_poly p
+    fun R _Rcr x =>
+      by 
+        exact f x x :=
+  by 
+    (
+      obtain ⟨φ, hf⟩ := hf)
+    refine'
+      ⟨⟨fun n =>
+            bind₁
+              (uncurry
+                («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»"))
+              (φ n),
+          _⟩⟩
+    intros 
+    funext n 
+    simp only [hf, peval, uncurry, aeval_bind₁]
+    apply eval₂_hom_congr rfl _ rfl 
+    ext ⟨i, k⟩
+    finCases i <;> simp only [Matrix.head_cons, aeval_X, Matrix.cons_val_zero, Matrix.cons_val_one]
 
 open Tactic
 

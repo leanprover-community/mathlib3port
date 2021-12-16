@@ -72,70 +72,85 @@ variable [Archimedean K]
 
 open Nat
 
--- error in Algebra.ContinuedFractions.Computation.ApproximationCorollaries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_convergence_epsilon : ∀
-ε «expr > » (0 : K), «expr∃ , »((N : exprℕ()), ∀
- n «expr ≥ » N, «expr < »(«expr| |»(«expr - »(v, (of v).convergents n)), ε)) :=
-begin
-  assume [binders (ε ε_pos)],
-  rcases [expr (exists_nat_gt «expr / »(1, ε) : «expr∃ , »((N' : exprℕ()), «expr < »(«expr / »(1, ε), N'))), "with", "⟨", ident N', ",", ident one_div_ε_lt_N', "⟩"],
-  let [ident N] [] [":=", expr max N' 5],
-  existsi [expr N],
-  assume [binders (n n_ge_N)],
-  let [ident g] [] [":=", expr of v],
-  cases [expr decidable.em (g.terminated_at n)] ["with", ident terminated_at_n, ident not_terminated_at_n],
-  { have [] [":", expr «expr = »(v, g.convergents n)] [],
-    from [expr of_correctness_of_terminated_at terminated_at_n],
-    have [] [":", expr «expr = »(«expr - »(v, g.convergents n), 0)] [],
-    from [expr sub_eq_zero.elim_right this],
-    rw ["[", expr this, "]"] [],
-    exact_mod_cast [expr ε_pos] },
-  { let [ident B] [] [":=", expr g.denominators n],
-    let [ident nB] [] [":=", expr g.denominators «expr + »(n, 1)],
-    have [ident abs_v_sub_conv_le] [":", expr «expr ≤ »(«expr| |»(«expr - »(v, g.convergents n)), «expr / »(1, «expr * »(B, nB)))] [],
-    from [expr abs_sub_convergents_le not_terminated_at_n],
-    suffices [] [":", expr «expr < »(«expr / »(1, «expr * »(B, nB)), ε)],
-    from [expr lt_of_le_of_lt abs_v_sub_conv_le this],
-    have [ident nB_ineq] [":", expr «expr ≤ »((fib «expr + »(n, 2) : K), nB)] [],
-    by { have [] [":", expr «expr¬ »(g.terminated_at «expr - »(«expr + »(n, 1), 1))] [],
-      from [expr not_terminated_at_n],
-      exact [expr succ_nth_fib_le_of_nth_denom (or.inr this)] },
-    have [ident B_ineq] [":", expr «expr ≤ »((fib «expr + »(n, 1) : K), B)] [],
-    by { have [] [":", expr «expr¬ »(g.terminated_at «expr - »(n, 1))] [],
-      from [expr mt (terminated_stable n.pred_le) not_terminated_at_n],
-      exact [expr succ_nth_fib_le_of_nth_denom (or.inr this)] },
-    have [ident zero_lt_B] [":", expr «expr < »(0, B)] [],
-    by { have [] [":", expr «expr < »((0 : K), fib «expr + »(n, 1))] [],
-      by exact_mod_cast [expr fib_pos n.zero_lt_succ],
-      exact [expr lt_of_lt_of_le this B_ineq] },
-    have [ident zero_lt_mul_conts] [":", expr «expr < »(0, «expr * »(B, nB))] [],
-    by { have [] [":", expr «expr < »(0, nB)] [],
-      by { have [] [":", expr «expr < »((0 : K), fib «expr + »(n, 2))] [],
-        by exact_mod_cast [expr fib_pos «expr + »(n, 1).zero_lt_succ],
-        exact [expr lt_of_lt_of_le this nB_ineq] },
-      solve_by_elim [] [] ["[", expr mul_pos, "]"] [] },
-    suffices [] [":", expr «expr < »(1, «expr * »(ε, «expr * »(B, nB)))],
-    from [expr (div_lt_iff zero_lt_mul_conts).elim_right this],
-    have [ident one_lt_ε_mul_N] [":", expr «expr < »(1, «expr * »(ε, n))] [],
-    by { have [ident one_lt_ε_mul_N'] [":", expr «expr < »(1, «expr * »(ε, (N' : K)))] [],
-      from [expr (div_lt_iff' ε_pos).elim_left one_div_ε_lt_N'],
-      have [] [":", expr «expr ≤ »((N' : K), N)] [],
-      by exact_mod_cast [expr le_max_left _ _],
-      have [] [":", expr «expr ≤ »(«expr * »(ε, N'), «expr * »(ε, n))] [],
-      from [expr (mul_le_mul_left ε_pos).elim_right (le_trans this (by exact_mod_cast [expr n_ge_N]))],
-      exact [expr lt_of_lt_of_le one_lt_ε_mul_N' this] },
-    suffices [] [":", expr «expr ≤ »(«expr * »(ε, n), «expr * »(ε, «expr * »(B, nB)))],
-    from [expr lt_of_lt_of_le one_lt_ε_mul_N this],
-    suffices [] [":", expr «expr ≤ »((n : K), «expr * »(B, nB))],
-    from [expr (mul_le_mul_left ε_pos).elim_right this],
-    show [expr «expr ≤ »((n : K), «expr * »(B, nB))],
-    calc
-      «expr ≤ »((n : K), fib n) : by exact_mod_cast [expr «expr $ »(le_fib_self, le_trans (le_max_right N' 5) n_ge_N)]
-      «expr ≤ »(..., fib «expr + »(n, 1)) : by exact_mod_cast [expr fib_le_fib_succ]
-      «expr ≤ »(..., «expr * »(fib «expr + »(n, 1), fib «expr + »(n, 1))) : by exact_mod_cast [expr (fib «expr + »(n, 1)).le_mul_self]
-      «expr ≤ »(..., «expr * »(fib «expr + »(n, 1), fib «expr + »(n, 2))) : mul_le_mul_of_nonneg_left (by exact_mod_cast [expr fib_le_fib_succ]) (by exact_mod_cast [expr (fib «expr + »(n, 1)).zero_le])
-      «expr ≤ »(..., «expr * »(B, nB)) : mul_le_mul B_ineq nB_ineq (by exact_mod_cast [expr (fib «expr + »(n, 2)).zero_le]) (le_of_lt zero_lt_B) }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : K))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ≥ » N)
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  of_convergence_epsilon
+  : ∀ ε _ : ε > ( 0 : K ) , ∃ N : ℕ , ∀ n _ : n ≥ N , | v - of v . convergents n | < ε
+  :=
+    by
+      intro ε ε_pos
+        rcases ( exists_nat_gt 1 / ε : ∃ N' : ℕ , 1 / ε < N' ) with ⟨ N' , one_div_ε_lt_N' ⟩
+        let N := max N' 5
+        exists N
+        intro n n_ge_N
+        let g := of v
+        cases' Decidable.em g.terminated_at n with terminated_at_n not_terminated_at_n
+        ·
+          have : v = g.convergents n
+            exact of_correctness_of_terminated_at terminated_at_n
+            have : v - g.convergents n = 0
+            exact sub_eq_zero.elim_right this
+            rw [ this ]
+            exactModCast ε_pos
+        ·
+          let B := g.denominators n
+            let nB := g.denominators n + 1
+            have abs_v_sub_conv_le : | v - g.convergents n | ≤ 1 / B * nB
+            exact abs_sub_convergents_le not_terminated_at_n
+            suffices : 1 / B * nB < ε
+            exact lt_of_le_of_ltₓ abs_v_sub_conv_le this
+            have nB_ineq : ( fib n + 2 : K ) ≤ nB
+            ·
+              ·
+                have : ¬ g.terminated_at n + 1 - 1
+                  exact not_terminated_at_n
+                  exact succ_nth_fib_le_of_nth_denom Or.inr this
+            have B_ineq : ( fib n + 1 : K ) ≤ B
+            ·
+              ·
+                have : ¬ g.terminated_at n - 1
+                  exact mt terminated_stable n.pred_le not_terminated_at_n
+                  exact succ_nth_fib_le_of_nth_denom Or.inr this
+            have zero_lt_B : 0 < B
+            · · have : ( 0 : K ) < fib n + 1 · exactModCast fib_pos n.zero_lt_succ exact lt_of_lt_of_leₓ this B_ineq
+            have zero_lt_mul_conts : 0 < B * nB
+            ·
+              ·
+                have : 0 < nB
+                  ·
+                    ·
+                      have : ( 0 : K ) < fib n + 2
+                        · exactModCast fib_pos n + 1 . zero_lt_succ
+                        exact lt_of_lt_of_leₓ this nB_ineq
+                  solveByElim [ mul_pos ]
+            suffices : 1 < ε * B * nB
+            exact div_lt_iff zero_lt_mul_conts . elim_right this
+            have one_lt_ε_mul_N : 1 < ε * n
+            ·
+              ·
+                have one_lt_ε_mul_N' : 1 < ε * ( N' : K )
+                  exact div_lt_iff' ε_pos . elim_left one_div_ε_lt_N'
+                  have : ( N' : K ) ≤ N
+                  · exactModCast le_max_leftₓ _ _
+                  have : ε * N' ≤ ε * n
+                  exact mul_le_mul_left ε_pos . elim_right le_transₓ this by exactModCast n_ge_N
+                  exact lt_of_lt_of_leₓ one_lt_ε_mul_N' this
+            suffices : ε * n ≤ ε * B * nB
+            exact lt_of_lt_of_leₓ one_lt_ε_mul_N this
+            suffices : ( n : K ) ≤ B * nB
+            exact mul_le_mul_left ε_pos . elim_right this
+            show ( n : K ) ≤ B * nB
+            calc
+              ( n : K ) ≤ fib n := by exactModCast le_fib_self $ le_transₓ le_max_rightₓ N' 5 n_ge_N
+                _ ≤ fib n + 1 := by exactModCast fib_le_fib_succ
+                _ ≤ fib n + 1 * fib n + 1 := by exactModCast fib n + 1 . le_mul_self
+                _ ≤ fib n + 1 * fib n + 2
+                  :=
+                  mul_le_mul_of_nonneg_left by exactModCast fib_le_fib_succ by exactModCast fib n + 1 . zero_le
+                _ ≤ B * nB := mul_le_mul B_ineq nB_ineq by exactModCast fib n + 2 . zero_le le_of_ltₓ zero_lt_B
 
 attribute [local instance] Preorderₓ.topology
 

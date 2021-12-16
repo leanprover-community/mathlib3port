@@ -223,7 +223,7 @@ theorem coe_coe_monoid_hom : (coe_monoid_hom : ℕ+ → ℕ) = coeₓ :=
 @[simp]
 theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 :=
   by 
-    split  <;>
+    constructor <;>
       intro h <;>
         try 
             apply Pnat.eq <;>
@@ -392,17 +392,17 @@ def mod (m k : ℕ+) : ℕ+ :=
 def div (m k : ℕ+) : ℕ :=
   (mod_div m k).2
 
--- error in Data.Pnat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mod_add_div (m k : «exprℕ+»()) : «expr = »((«expr + »(mod m k, «expr * »(k, div m k)) : exprℕ()), m) :=
-begin
-  let [ident h₀] [] [":=", expr nat.mod_add_div (m : exprℕ()) (k : exprℕ())],
-  have [] [":", expr «expr¬ »(«expr ∧ »(«expr = »(«expr % »((m : exprℕ()), (k : exprℕ())), 0), «expr = »(«expr / »((m : exprℕ()), (k : exprℕ())), 0)))] [],
-  by { rintro ["⟨", ident hr, ",", ident hq, "⟩"],
-    rw ["[", expr hr, ",", expr hq, ",", expr mul_zero, ",", expr zero_add, "]"] ["at", ident h₀],
-    exact [expr (m.ne_zero h₀.symm).elim] },
-  have [] [] [":=", expr mod_div_aux_spec k «expr % »((m : exprℕ()), (k : exprℕ())) «expr / »((m : exprℕ()), (k : exprℕ())) this],
-  exact [expr this.trans h₀]
-end
+theorem mod_add_div (m k : ℕ+) : (mod m k+k*div m k : ℕ) = m :=
+  by 
+    let h₀ := Nat.mod_add_divₓ (m : ℕ) (k : ℕ)
+    have  : ¬((m : ℕ) % (k : ℕ) = 0 ∧ (m : ℕ) / (k : ℕ) = 0)
+    ·
+      ·
+        rintro ⟨hr, hq⟩
+        rw [hr, hq, mul_zero, zero_addₓ] at h₀ 
+        exact (m.ne_zero h₀.symm).elim 
+    have  := mod_div_aux_spec k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ)) this 
+    exact this.trans h₀
 
 theorem div_add_mod (m k : ℕ+) : ((k*div m k)+mod m k : ℕ) = m :=
   (add_commₓ _ _).trans (mod_add_div _ _)
@@ -439,26 +439,28 @@ theorem div_coe (m k : ℕ+) : (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0)
       rw [if_neg n.succ_ne_zero]
       rfl
 
--- error in Data.Pnat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mod_le (m k : «exprℕ+»()) : «expr ∧ »(«expr ≤ »(mod m k, m), «expr ≤ »(mod m k, k)) :=
-begin
-  change [expr «expr ∧ »(«expr ≤ »((mod m k : exprℕ()), (m : exprℕ())), «expr ≤ »((mod m k : exprℕ()), (k : exprℕ())))] [] [],
-  rw ["[", expr mod_coe, "]"] [],
-  split_ifs [] [],
-  { have [ident hm] [":", expr «expr > »((m : exprℕ()), 0)] [":=", expr m.pos],
-    rw ["[", "<-", expr nat.mod_add_div (m : exprℕ()) (k : exprℕ()), ",", expr h, ",", expr zero_add, "]"] ["at", ident hm, "⊢"],
-    by_cases [expr h', ":", expr «expr = »(«expr / »((m : exprℕ()), (k : exprℕ())), 0)],
-    { rw ["[", expr h', ",", expr mul_zero, "]"] ["at", ident hm],
-      exact [expr (lt_irrefl _ hm).elim] },
-    { let [ident h'] [] [":=", expr nat.mul_le_mul_left (k : exprℕ()) (nat.succ_le_of_lt (nat.pos_of_ne_zero h'))],
-      rw ["[", expr mul_one, "]"] ["at", ident h'],
-      exact [expr ⟨h', le_refl (k : exprℕ())⟩] } },
-  { exact [expr ⟨nat.mod_le (m : exprℕ()) (k : exprℕ()), (nat.mod_lt (m : exprℕ()) k.pos).le⟩] }
-end
+theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
+  by 
+    change (mod m k : ℕ) ≤ (m : ℕ) ∧ (mod m k : ℕ) ≤ (k : ℕ)
+    rw [mod_coe]
+    splitIfs
+    ·
+      have hm : (m : ℕ) > 0 := m.pos 
+      rw [←Nat.mod_add_divₓ (m : ℕ) (k : ℕ), h, zero_addₓ] at hm⊢
+      byCases' h' : (m : ℕ) / (k : ℕ) = 0
+      ·
+        rw [h', mul_zero] at hm 
+        exact (lt_irreflₓ _ hm).elim
+      ·
+        let h' := Nat.mul_le_mul_leftₓ (k : ℕ) (Nat.succ_le_of_ltₓ (Nat.pos_of_ne_zeroₓ h'))
+        rw [mul_oneₓ] at h' 
+        exact ⟨h', le_reflₓ (k : ℕ)⟩
+    ·
+      exact ⟨Nat.mod_leₓ (m : ℕ) (k : ℕ), (Nat.mod_ltₓ (m : ℕ) k.pos).le⟩
 
 theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) :=
   by 
-    split  <;> intro h 
+    constructor <;> intro h 
     rcases h with ⟨_, rfl⟩
     apply dvd_mul_right 
     rcases h with ⟨a, h⟩
@@ -474,7 +476,7 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k :=
   by 
     rw [dvd_iff]
     rw [Nat.dvd_iff_mod_eq_zeroₓ]
-    split 
+    constructor
     ·
       intro h 
       apply Eq 

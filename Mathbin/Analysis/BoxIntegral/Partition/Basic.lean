@@ -34,18 +34,19 @@ open Set Finset Function
 
 open_locale Classical Nnreal BigOperators
 
-noncomputable theory
+noncomputable section 
 
 namespace BoxIntegral
 
 variable {ι : Type _}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
 /-- A prepartition of `I : box_integral.box ι` is a finite set of pairwise disjoint subboxes of
 `I`. -/
 structure prepartition (I : box ι) where 
   boxes : Finset (box ι)
   le_of_mem' : ∀ J _ : J ∈ boxes, J ≤ I 
-  PairwiseDisjoint : Set.Pairwise («expr↑ » boxes) (Disjoint on (coeₓ : box ι → Set (ι → ℝ)))
+  PairwiseDisjoint : Set.Pairwise (↑boxes) (Disjoint on (coeₓ : box ι → Set (ι → ℝ)))
 
 namespace Prepartition
 
@@ -63,7 +64,7 @@ theorem mem_mk {s h₁ h₂} : J ∈ (mk s h₁ h₂ : prepartition I) ↔ J ∈
   Iff.rfl
 
 theorem disjoint_coe_of_mem (h₁ : J₁ ∈ π) (h₂ : J₂ ∈ π) (h : J₁ ≠ J₂) : Disjoint (J₁ : Set (ι → ℝ)) J₂ :=
-  π.pairwise_disjoint J₁ h₁ J₂ h₂ h
+  π.pairwise_disjoint h₁ h₂ h
 
 theorem eq_of_mem_of_mem (h₁ : J₁ ∈ π) (h₂ : J₂ ∈ π) (hx₁ : x ∈ J₁) (hx₂ : x ∈ J₂) : J₁ = J₂ :=
   by_contra$ fun H => π.disjoint_coe_of_mem h₁ h₂ H ⟨hx₁, hx₂⟩
@@ -105,6 +106,7 @@ def single (I J : box ι) (h : J ≤ I) : prepartition I :=
 theorem mem_single {J'} (h : J ≤ I) : J' ∈ single I J h ↔ J' = J :=
   mem_singleton
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I' «expr ∈ » π')
 /-- We say that `π ≤ π'` if each box of `π` is a subbox of some box of `π'`. -/
 instance : LE (prepartition I) :=
   ⟨fun π π' => ∀ ⦃I⦄, I ∈ π → ∃ (I' : _)(_ : I' ∈ π'), I ≤ I'⟩
@@ -144,6 +146,8 @@ instance : OrderBot (prepartition I) :=
 instance : Inhabited (prepartition I) :=
   ⟨⊤⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π₂)
 theorem le_def : π₁ ≤ π₂ ↔ ∀ J _ : J ∈ π₁, ∃ (J' : _)(_ : J' ∈ π₂), J ≤ J' :=
   Iff.rfl
 
@@ -163,53 +167,65 @@ theorem not_mem_bot : J ∉ (⊥ : prepartition I) :=
 theorem bot_boxes : (⊥ : prepartition I).boxes = ∅ :=
   rfl
 
--- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- An auxiliary lemma used to prove that the same point can't belong to more than
-`2 ^ fintype.card ι` closed boxes of a prepartition. -/
-theorem inj_on_set_of_mem_Icc_set_of_lower_eq
-(x : ι → exprℝ()) : inj_on (λ
- J : box ι, {i | «expr = »(J.lower i, x i)}) {J | «expr ∧ »(«expr ∈ »(J, π), «expr ∈ »(x, J.Icc))} :=
-begin
-  rintros [ident J₁, "⟨", ident h₁, ",", ident hx₁, "⟩", ident J₂, "⟨", ident h₂, ",", ident hx₂, "⟩", "(", ident H, ":", expr «expr = »({i | «expr = »(J₁.lower i, x i)}, {i | «expr = »(J₂.lower i, x i)}), ")"],
-  suffices [] [":", expr ∀ i, «expr ∩ »(Ioc (J₁.lower i) (J₁.upper i), Ioc (J₂.lower i) (J₂.upper i)).nonempty],
-  { choose [] [ident y] [ident hy₁, ident hy₂] [],
-    exact [expr π.eq_of_mem_of_mem h₁ h₂ hy₁ hy₂] },
-  intro [ident i],
-  simp [] [] ["only"] ["[", expr set.ext_iff, ",", expr mem_set_of_eq, "]"] [] ["at", ident H],
-  cases [expr (hx₁.1 i).eq_or_lt] ["with", ident hi₁, ident hi₁],
-  { have [ident hi₂] [":", expr «expr = »(J₂.lower i, x i)] [],
-    from [expr (H _).1 hi₁],
-    have [ident H₁] [":", expr «expr < »(x i, J₁.upper i)] [],
-    by simpa [] [] ["only"] ["[", expr hi₁, "]"] [] ["using", expr J₁.lower_lt_upper i],
-    have [ident H₂] [":", expr «expr < »(x i, J₂.upper i)] [],
-    by simpa [] [] ["only"] ["[", expr hi₂, "]"] [] ["using", expr J₂.lower_lt_upper i],
-    rw ["[", expr Ioc_inter_Ioc, ",", expr hi₁, ",", expr hi₂, ",", expr sup_idem, ",", expr set.nonempty_Ioc, "]"] [],
-    exact [expr lt_min H₁ H₂] },
-  { have [ident hi₂] [":", expr «expr < »(J₂.lower i, x i)] [],
-    from [expr (hx₂.1 i).lt_of_ne (mt (H _).2 hi₁.ne)],
-    exact [expr ⟨x i, ⟨hi₁, hx₁.2 i⟩, ⟨hi₂, hx₂.2 i⟩⟩] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    An auxiliary lemma used to prove that the same point can't belong to more than
+    `2 ^ fintype.card ι` closed boxes of a prepartition. -/
+  theorem
+    inj_on_set_of_mem_Icc_set_of_lower_eq
+    ( x : ι → ℝ ) : inj_on fun J : box ι => { i | J.lower i = x i } { J | J ∈ π ∧ x ∈ J.Icc }
+    :=
+      by
+        rintro J₁ ⟨ h₁ , hx₁ ⟩ J₂ ⟨ h₂ , hx₂ ⟩ ( H : { i | J₁.lower i = x i } = { i | J₂.lower i = x i } )
+          suffices : ∀ i , Ioc J₁.lower i J₁.upper i ∩ Ioc J₂.lower i J₂.upper i . Nonempty
+          · choose y hy₁ hy₂ exact π.eq_of_mem_of_mem h₁ h₂ hy₁ hy₂
+          intro i
+          simp only [ Set.ext_iff , mem_set_of_eq ] at H
+          cases' hx₁ . 1 i . eq_or_lt with hi₁ hi₁
+          ·
+            have hi₂ : J₂.lower i = x i
+              exact H _ . 1 hi₁
+              have H₁ : x i < J₁.upper i
+              · simpa only [ hi₁ ] using J₁.lower_lt_upper i
+              have H₂ : x i < J₂.upper i
+              · simpa only [ hi₂ ] using J₂.lower_lt_upper i
+              rw [ Ioc_inter_Ioc , hi₁ , hi₂ , sup_idem , Set.nonempty_Ioc ]
+              exact lt_minₓ H₁ H₂
+          ·
+            have hi₂ : J₂.lower i < x i
+              exact hx₂ . 1 i . lt_of_ne mt H _ . 2 hi₁.ne
+              exact ⟨ x i , ⟨ hi₁ , hx₁ . 2 i ⟩ , ⟨ hi₂ , hx₂ . 2 i ⟩ ⟩
 
-/-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
-at most `2 ^ fintype.card ι`. -/
-theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
-  (π.boxes.filter fun J : box ι => x ∈ J.Icc).card ≤ 2 ^ Fintype.card ι :=
-  by 
-    rw [←Fintype.card_set]
-    refine' Finset.card_le_card_of_inj_on (fun J : box ι => { i | J.lower i = x i }) (fun _ _ => Finset.mem_univ _) _ 
-    simpa only [Finset.mem_filter] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The set of boxes of a prepartition that contain `x` in their closures has cardinality
+    at most `2 ^ fintype.card ι`. -/
+  theorem
+    card_filter_mem_Icc_le
+    [ Fintype ι ] ( x : ι → ℝ ) : π.boxes.filter fun J : box ι => x ∈ J.Icc . card ≤ 2 ^ Fintype.card ι
+    :=
+      by
+        rw [ ← Fintype.card_set ]
+          refine' Finset.card_le_card_of_inj_on fun J : box ι => { i | J.lower i = x i } fun _ _ => Finset.mem_univ _ _
+          simpa only [ Finset.mem_filter ] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 /-- Given a prepartition `π : box_integral.prepartition I`, `π.Union` is the part of `I` covered by
 the boxes of `π`. -/
 protected def Union : Set (ι → ℝ) :=
-  ⋃(J : _)(_ : J ∈ π), «expr↑ » J
+  ⋃ (J : _)(_ : J ∈ π), ↑J
 
-theorem Union_def : π.Union = ⋃(J : _)(_ : J ∈ π), «expr↑ » J :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
+theorem Union_def : π.Union = ⋃ (J : _)(_ : J ∈ π), ↑J :=
   rfl
 
-theorem Union_def' : π.Union = ⋃(J : _)(_ : J ∈ π.boxes), «expr↑ » J :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π.boxes)
+theorem Union_def' : π.Union = ⋃ (J : _)(_ : J ∈ π.boxes), ↑J :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 @[simp]
 theorem mem_Union : x ∈ π.Union ↔ ∃ (J : _)(_ : J ∈ π), x ∈ J :=
   Set.mem_bUnion_iff
@@ -233,7 +249,7 @@ theorem Union_eq_empty : π₁.Union = ∅ ↔ π₁ = ⊥ :=
 theorem Union_bot : (⊥ : prepartition I).Union = ∅ :=
   Union_eq_empty.2 rfl
 
-theorem subset_Union (h : J ∈ π) : «expr↑ » J ⊆ π.Union :=
+theorem subset_Union (h : J ∈ π) : ↑J ⊆ π.Union :=
   subset_bUnion_of_mem h
 
 theorem Union_subset : π.Union ⊆ I :=
@@ -249,10 +265,12 @@ theorem Union_mono (h : π₁ ≤ π₂) : π₁.Union ⊆ π₂.Union :=
 theorem disjoint_boxes_of_disjoint_Union (h : Disjoint π₁.Union π₂.Union) : Disjoint π₁.boxes π₂.boxes :=
   Finset.disjoint_left.2$ fun J h₁ h₂ => h.mono (π₁.subset_Union h₁) (π₂.subset_Union h₂) ⟨J.upper_mem, J.upper_mem⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π₂)
 theorem le_iff_nonempty_imp_le_and_Union_subset :
   π₁ ≤ π₂ ↔ (∀ J _ : J ∈ π₁ J' _ : J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J') ∧ π₁.Union ⊆ π₂.Union :=
   by 
-    fsplit
+    fconstructor
     ·
       refine' fun H => ⟨fun J hJ J' hJ' Hne => _, Union_mono H⟩
       rcases H hJ with ⟨J'', hJ'', Hle⟩
@@ -294,6 +312,7 @@ def bUnion (πi : ∀ J : box ι, prepartition J) : prepartition I :=
 
 variable {πi πi₁ πi₂ : ∀ J : box ι, prepartition J}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π)
 @[simp]
 theorem mem_bUnion : J ∈ π.bUnion πi ↔ ∃ (J' : _)(_ : J' ∈ π), J ∈ πi J' :=
   by 
@@ -310,26 +329,28 @@ theorem bUnion_top : (π.bUnion fun _ => ⊤) = π :=
     ext 
     simp 
 
--- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[congr]
-theorem bUnion_congr
-(h : «expr = »(π₁, π₂))
-(hi : ∀ J «expr ∈ » π₁, «expr = »(πi₁ J, πi₂ J)) : «expr = »(π₁.bUnion πi₁, π₂.bUnion πi₂) :=
-by { subst [expr π₂],
-  ext [] [ident J] [],
-  simp [] [] [] ["[", expr hi, "]"] [] [] { contextual := tt } }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π₁)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ congr ]
+  theorem
+    bUnion_congr
+    ( h : π₁ = π₂ ) ( hi : ∀ J _ : J ∈ π₁ , πi₁ J = πi₂ J ) : π₁.bUnion πi₁ = π₂.bUnion πi₂
+    := by subst π₂ ext J simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ hi ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ≤ » I)
 theorem bUnion_congr_of_le (h : π₁ = π₂) (hi : ∀ J _ : J ≤ I, πi₁ J = πi₂ J) : π₁.bUnion πi₁ = π₂.bUnion πi₂ :=
   bUnion_congr h$ fun J hJ => hi J (π₁.le_of_mem hJ)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 @[simp]
-theorem Union_bUnion (πi : ∀ J : box ι, prepartition J) : (π.bUnion πi).Union = ⋃(J : _)(_ : J ∈ π), (πi J).Union :=
+theorem Union_bUnion (πi : ∀ J : box ι, prepartition J) : (π.bUnion πi).Union = ⋃ (J : _)(_ : J ∈ π), (πi J).Union :=
   by 
     simp [prepartition.Union]
 
 @[simp]
 theorem sum_bUnion_boxes {M : Type _} [AddCommMonoidₓ M] (π : prepartition I) (πi : ∀ J, prepartition J)
-  (f : box ι → M) : (∑J in π.boxes.bUnion fun J => (πi J).boxes, f J) = ∑J in π.boxes, ∑J' in (πi J).boxes, f J' :=
+  (f : box ι → M) : (∑ J in π.boxes.bUnion fun J => (πi J).boxes, f J) = ∑ J in π.boxes, ∑ J' in (πi J).boxes, f J' :=
   by 
     refine' Finset.sum_bUnion fun J₁ h₁ J₂ h₂ hne => Finset.disjoint_left.2$ fun J' h₁' h₂' => _ 
     exact hne (π.eq_of_le_of_le h₁ h₂ ((πi J₁).le_of_mem h₁') ((πi J₂).le_of_mem h₂'))
@@ -370,7 +391,7 @@ theorem bUnion_assoc (πi : ∀ J, prepartition J) (πi' : box ι → ∀ J : bo
   by 
     ext J 
     simp only [mem_bUnion, exists_prop]
-    fsplit
+    fconstructor
     ·
       rintro ⟨J₁, hJ₁, J₂, hJ₂, hJ⟩
       refine' ⟨J₂, ⟨J₁, hJ₁, hJ₂⟩, _⟩
@@ -380,6 +401,7 @@ theorem bUnion_assoc (πi : ∀ J, prepartition J) (πi' : box ι → ∀ J : bo
       refine' ⟨J₂, hJ₂, J₁, hJ₁, _⟩
       rwa [π.bUnion_index_of_mem hJ₂ hJ₁] at hJ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
 /-- Create a `box_integral.prepartition` from a collection of possibly empty boxes by filtering out
 the empty one if it exists. -/
 def of_with_bot (boxes : Finset (WithBot (box ι))) (le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I)
@@ -394,44 +416,57 @@ def of_with_bot (boxes : Finset (WithBot (box ι))) (le_of_mem : ∀ J _ : J ∈
       fun J₁ h₁ J₂ h₂ hne =>
         by 
           simp only [mem_coe, mem_erase_none] at h₁ h₂ 
-          exact box.disjoint_coe.1 (pairwise_disjoint _ h₁ _ h₂ (mt Option.some_inj.1 hne)) }
+          exact box.disjoint_coe.1 (pairwise_disjoint h₁ h₂ (mt Option.some_inj.1 hne)) }
 
 @[simp]
 theorem mem_of_with_bot {boxes : Finset (WithBot (box ι))} {h₁ h₂} :
   J ∈ (of_with_bot boxes h₁ h₂ : prepartition I) ↔ (J : WithBot (box ι)) ∈ boxes :=
   mem_erase_none
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
 @[simp]
 theorem Union_of_with_bot (boxes : Finset (WithBot (box ι))) (le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I)
   (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint) :
-  (of_with_bot boxes le_of_mem pairwise_disjoint).Union = ⋃(J : _)(_ : J ∈ boxes), «expr↑ » J :=
+  (of_with_bot boxes le_of_mem pairwise_disjoint).Union = ⋃ (J : _)(_ : J ∈ boxes), ↑J :=
   by 
-    suffices  : (⋃(J : box ι)(hJ : «expr↑ » J ∈ boxes), «expr↑ » J) = ⋃(J : _)(_ : J ∈ boxes), «expr↑ » J
+    suffices  : (⋃ (J : box ι)(hJ : ↑J ∈ boxes), ↑J) = ⋃ (J : _)(_ : J ∈ boxes), ↑J
     ·
       simpa [of_with_bot, prepartition.Union]
     simp only [←box.bUnion_coe_eq_coe, @Union_comm _ _ (box ι), @Union_comm _ _ (@Eq _ _ _), Union_Union_eq_right]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π)
 theorem of_with_bot_le {boxes : Finset (WithBot (box ι))} {le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I}
   {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint}
-  (H : ∀ J _ : J ∈ boxes, J ≠ ⊥ → ∃ (J' : _)(_ : J' ∈ π), J ≤ «expr↑ » J') :
+  (H : ∀ J _ : J ∈ boxes, J ≠ ⊥ → ∃ (J' : _)(_ : J' ∈ π), J ≤ ↑J') :
   of_with_bot boxes le_of_mem pairwise_disjoint ≤ π :=
-  have  : ∀ J : box ι, «expr↑ » J ∈ boxes → ∃ (J' : _)(_ : J' ∈ π), J ≤ J' :=
+  have  : ∀ J : box ι, ↑J ∈ boxes → ∃ (J' : _)(_ : J' ∈ π), J ≤ J' :=
     fun J hJ =>
       by 
         simpa only [WithBot.coe_le_coe] using H J hJ (WithBot.coe_ne_bot J)
   by 
     simpa [of_with_bot, le_def]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » boxes)
 theorem le_of_with_bot {boxes : Finset (WithBot (box ι))} {le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I}
   {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint}
-  (H : ∀ J _ : J ∈ π, ∃ (J' : _)(_ : J' ∈ boxes), «expr↑ » J ≤ J') :
-  π ≤ of_with_bot boxes le_of_mem pairwise_disjoint :=
+  (H : ∀ J _ : J ∈ π, ∃ (J' : _)(_ : J' ∈ boxes), ↑J ≤ J') : π ≤ of_with_bot boxes le_of_mem pairwise_disjoint :=
   by 
     intro J hJ 
     rcases H J hJ with ⟨J', J'mem, hle⟩
     lift J' to box ι using ne_bot_of_le_ne_bot (WithBot.coe_ne_bot _) hle 
     exact ⟨J', mem_of_with_bot.2 J'mem, WithBot.coe_le_coe.1 hle⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » boxes₂)
 theorem of_with_bot_mono {boxes₁ : Finset (WithBot (box ι))}
   {le_of_mem₁ : ∀ J _ : J ∈ boxes₁, (J : WithBot (box ι)) ≤ I}
   {pairwise_disjoint₁ : Set.Pairwise (boxes₁ : Set (WithBot (box ι))) Disjoint} {boxes₂ : Finset (WithBot (box ι))}
@@ -441,31 +476,37 @@ theorem of_with_bot_mono {boxes₁ : Finset (WithBot (box ι))}
   of_with_bot boxes₁ le_of_mem₁ pairwise_disjoint₁ ≤ of_with_bot boxes₂ le_of_mem₂ pairwise_disjoint₂ :=
   le_of_with_bot _$ fun J hJ => H J (mem_of_with_bot.1 hJ) (WithBot.coe_ne_bot _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » boxes)
 theorem sum_of_with_bot {M : Type _} [AddCommMonoidₓ M] (boxes : Finset (WithBot (box ι)))
   (le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I)
   (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint) (f : box ι → M) :
-  (∑J in (of_with_bot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑J in boxes, Option.elim J 0 f :=
+  (∑ J in (of_with_bot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑ J in boxes, Option.elim J 0 f :=
   Finset.sum_erase_none _ _
 
--- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Restrict a prepartition to a box. -/ def restrict (π : prepartition I) (J : box ι) : prepartition J :=
-of_with_bot (π.boxes.image (λ
-  J', «expr ⊓ »(J, J'))) (λ
- J' hJ', by { rcases [expr finset.mem_image.1 hJ', "with", "⟨", ident J', ",", "-", ",", ident rfl, "⟩"],
-   exact [expr inf_le_left] }) (begin
-   simp [] [] ["only"] ["[", expr set.pairwise, ",", expr on_fun, ",", expr finset.mem_coe, ",", expr finset.mem_image, "]"] [] [],
-   rintro ["_", "⟨", ident J₁, ",", ident h₁, ",", ident rfl, "⟩", "_", "⟨", ident J₂, ",", ident h₂, ",", ident rfl, "⟩", ident Hne],
-   have [] [":", expr «expr ≠ »(J₁, J₂)] [],
-   by { rintro [ident rfl],
-     exact [expr Hne rfl] },
-   exact [expr («expr $ »(box.disjoint_coe.2, π.disjoint_coe_of_mem h₁ h₂ this).inf_left' _).inf_right' _]
- end)
+/-- Restrict a prepartition to a box. -/
+def restrict (π : prepartition I) (J : box ι) : prepartition J :=
+  of_with_bot (π.boxes.image fun J' => J⊓J')
+    (fun J' hJ' =>
+      by 
+        rcases Finset.mem_image.1 hJ' with ⟨J', -, rfl⟩
+        exact inf_le_left)
+    (by 
+      simp only [Set.Pairwise, on_fun, Finset.mem_coe, Finset.mem_image]
+      rintro _ ⟨J₁, h₁, rfl⟩ _ ⟨J₂, h₂, rfl⟩ Hne 
+      have  : J₁ ≠ J₂
+      ·
+        ·
+          rintro rfl 
+          exact Hne rfl 
+      exact ((box.disjoint_coe.2$ π.disjoint_coe_of_mem h₁ h₂ this).inf_left' _).inf_right' _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π)
 @[simp]
 theorem mem_restrict : J₁ ∈ π.restrict J ↔ ∃ (J' : _)(_ : J' ∈ π), (J₁ : WithBot (box ι)) = J⊓J' :=
   by 
     simp [restrict, eq_comm]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π)
 theorem mem_restrict' : J₁ ∈ π.restrict J ↔ ∃ (J' : _)(_ : J' ∈ π), (J₁ : Set (ι → ℝ)) = J ∩ J' :=
   by 
     simp only [mem_restrict, ←box.with_bot_coe_inj, box.coe_inf, box.coe_coe]
@@ -516,10 +557,11 @@ theorem restrict_bUnion (πi : ∀ J, prepartition J) (hJ : J ∈ π) : (π.bUni
       exact π.eq_of_mem_of_mem hJ h₁ hxJ (Union_subset _ hx)
       exact hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem bUnion_le_iff {πi : ∀ J, prepartition J} {π' : prepartition I} :
   π.bUnion πi ≤ π' ↔ ∀ J _ : J ∈ π, πi J ≤ π'.restrict J :=
   by 
-    fsplit <;> intro H J hJ
+    fconstructor <;> intro H J hJ
     ·
       rw [←π.restrict_bUnion πi hJ]
       exact restrict_mono H
@@ -530,22 +572,21 @@ theorem bUnion_le_iff {πi : ∀ J, prepartition J} {π' : prepartition I} :
       rcases π'.mem_restrict.mp h₂ with ⟨J₃, h₃, H⟩
       exact ⟨J₃, h₃, Hle.trans$ WithBot.coe_le_coe.1$ H.trans_le inf_le_right⟩
 
--- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_bUnion_iff
-{πi : ∀ J, prepartition J}
-{π' : prepartition I} : «expr ↔ »(«expr ≤ »(π', π.bUnion πi), «expr ∧ »(«expr ≤ »(π', π), ∀
-  J «expr ∈ » π, «expr ≤ »(π'.restrict J, πi J))) :=
-begin
-  refine [expr ⟨λ H, ⟨H.trans (π.bUnion_le πi), λ J hJ, _⟩, _⟩],
-  { rw ["<-", expr π.restrict_bUnion πi hJ] [],
-    exact [expr restrict_mono H] },
-  { rintro ["⟨", ident H, ",", ident Hi, "⟩", ident J', ident hJ'],
-    rcases [expr H hJ', "with", "⟨", ident J, ",", ident hJ, ",", ident hle, "⟩"],
-    have [] [":", expr «expr ∈ »(J', π'.restrict J)] [],
-    from [expr π'.mem_restrict.2 ⟨J', hJ', «expr $ »(inf_of_le_right, with_bot.coe_le_coe.2 hle).symm⟩],
-    rcases [expr Hi J hJ this, "with", "⟨", ident Ji, ",", ident hJi, ",", ident hlei, "⟩"],
-    exact [expr ⟨Ji, π.mem_bUnion.2 ⟨J, hJ, hJi⟩, hlei⟩] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
+theorem le_bUnion_iff {πi : ∀ J, prepartition J} {π' : prepartition I} :
+  π' ≤ π.bUnion πi ↔ π' ≤ π ∧ ∀ J _ : J ∈ π, π'.restrict J ≤ πi J :=
+  by 
+    refine' ⟨fun H => ⟨H.trans (π.bUnion_le πi), fun J hJ => _⟩, _⟩
+    ·
+      rw [←π.restrict_bUnion πi hJ]
+      exact restrict_mono H
+    ·
+      rintro ⟨H, Hi⟩ J' hJ' 
+      rcases H hJ' with ⟨J, hJ, hle⟩
+      have  : J' ∈ π'.restrict J 
+      exact π'.mem_restrict.2 ⟨J', hJ', (inf_of_le_right$ WithBot.coe_le_coe.2 hle).symm⟩
+      rcases Hi J hJ this with ⟨Ji, hJi, hlei⟩
+      exact ⟨Ji, π.mem_bUnion.2 ⟨J, hJ, hJi⟩, hlei⟩
 
 instance : HasInf (prepartition I) :=
   ⟨fun π₁ π₂ => π₁.bUnion fun J => π₂.restrict J⟩
@@ -553,6 +594,8 @@ instance : HasInf (prepartition I) :=
 theorem inf_def (π₁ π₂ : prepartition I) : π₁⊓π₂ = π₁.bUnion fun J => π₂.restrict J :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J₁ «expr ∈ » π₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J₂ «expr ∈ » π₂)
 @[simp]
 theorem mem_inf {π₁ π₂ : prepartition I} :
   J ∈ π₁⊓π₂ ↔ ∃ (J₁ : _)(_ : J₁ ∈ π₁)(J₂ : _)(_ : J₂ ∈ π₂), (J : WithBot (box ι)) = J₁⊓J₂ :=
@@ -584,6 +627,7 @@ theorem filter_le (π : prepartition I) (p : box ι → Prop) : π.filter p ≤ 
     let ⟨hπ, hp⟩ := π.mem_filter.1 hJ
     ⟨J, hπ, le_rfl⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem filter_of_true {p : box ι → Prop} (hp : ∀ J _ : J ∈ π, p J) : π.filter p = π :=
   by 
     ext J 
@@ -593,25 +637,26 @@ theorem filter_of_true {p : box ι → Prop} (hp : ∀ J _ : J ∈ π, p J) : π
 theorem filter_true : (π.filter fun _ => True) = π :=
   π.filter_of_true fun _ _ => trivialₓ
 
--- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp]
-theorem Union_filter_not
-(π : prepartition I)
-(p : box ι → exprProp()) : «expr = »((π.filter (λ J, «expr¬ »(p J))).Union, «expr \ »(π.Union, (π.filter p).Union)) :=
-begin
-  simp [] [] ["only"] ["[", expr prepartition.Union, "]"] [] [],
-  convert [] [expr (@set.bUnion_diff_bUnion_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm] [],
-  { ext [] [ident J, ident x] [],
-    simp [] [] [] [] [] [] { contextual := tt } },
-  { convert [] [expr π.pairwise_disjoint] [],
-    simp [] [] [] [] [] [] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    Union_filter_not
+    ( π : prepartition I ) ( p : box ι → Prop ) : π.filter fun J => ¬ p J . Union = π.Union \ π.filter p . Union
+    :=
+      by
+        simp only [ prepartition.Union ]
+          convert @ Set.bUnion_diff_bUnion_eq _ box ι π.boxes π.filter p . boxes coeₓ _ . symm
+          · ext J x simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+          · convert π.pairwise_disjoint simp
 
 theorem sum_fiberwise {α M} [AddCommMonoidₓ M] (π : prepartition I) (f : box ι → α) (g : box ι → M) :
-  (∑y in π.boxes.image f, ∑J in (π.filter fun J => f J = y).boxes, g J) = ∑J in π.boxes, g J :=
+  (∑ y in π.boxes.image f, ∑ J in (π.filter fun J => f J = y).boxes, g J) = ∑ J in π.boxes, g J :=
   by 
     convert sum_fiberwise_of_maps_to (fun _ => Finset.mem_image_of_mem f) g
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J₁ «expr ∈ » π₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J₂ «expr ∈ » π₂)
 /-- Union of two disjoint prepartitions. -/
 @[simps]
 def disj_union (π₁ π₂ : prepartition I) (h : Disjoint π₁.Union π₂.Union) : prepartition I :=
@@ -632,7 +677,7 @@ theorem Union_disj_union (h : Disjoint π₁.Union π₂.Union) : (π₁.disj_un
 
 @[simp]
 theorem sum_disj_union_boxes {M : Type _} [AddCommMonoidₓ M] (h : Disjoint π₁.Union π₂.Union) (f : box ι → M) :
-  (∑J in π₁.boxes ∪ π₂.boxes, f J) = (∑J in π₁.boxes, f J)+∑J in π₂.boxes, f J :=
+  (∑ J in π₁.boxes ∪ π₂.boxes, f J) = (∑ J in π₁.boxes, f J)+∑ J in π₂.boxes, f J :=
   sum_union$ disjoint_boxes_of_disjoint_Union h
 
 section Distortion
@@ -647,6 +692,7 @@ def distortion :  ℝ≥0  :=
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem distortion_le_iff {c :  ℝ≥0 } : π.distortion ≤ c ↔ ∀ J _ : J ∈ π, box.distortion J ≤ c :=
   sup_le_iff
 
@@ -659,6 +705,7 @@ theorem distortion_disj_union (h : Disjoint π₁.Union π₂.Union) :
   (π₁.disj_union π₂ h).distortion = max π₁.distortion π₂.distortion :=
   sup_union
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem distortion_of_const {c} (h₁ : π.boxes.nonempty) (h₂ : ∀ J _ : J ∈ π, box.distortion J = c) : π.distortion = c :=
   (sup_congr rfl h₂).trans (sup_const h₁ _)
 
@@ -672,6 +719,8 @@ theorem distortion_bot (I : box ι) : distortion (⊥ : prepartition I) = 0 :=
 
 end Distortion
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 /-- A prepartition `π` of `I` is a partition if the boxes of `π` cover the whole `I`. -/
 def is_partition (π : prepartition I) :=
   ∀ x _ : x ∈ I, ∃ (J : _)(_ : J ∈ π), x ∈ J
@@ -698,7 +747,8 @@ theorem Union_eq (h : π.is_partition) : π.Union = I :=
 theorem Union_subset (h : π.is_partition) (π₁ : prepartition I) : π₁.Union ⊆ π.Union :=
   h.Union_eq.symm ▸ π₁.Union_subset
 
-protected theorem ExistsUnique (h : π.is_partition) (hx : x ∈ I) : ∃!(J : _)(_ : J ∈ π), x ∈ J :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
+protected theorem ExistsUnique (h : π.is_partition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J :=
   by 
     rcases h x hx with ⟨J, h, hx⟩
     exact ExistsUnique.intro2 J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx
@@ -710,10 +760,13 @@ theorem nonempty_boxes (h : π.is_partition) : π.boxes.nonempty :=
 theorem eq_of_boxes_subset (h₁ : π₁.is_partition) (h₂ : π₁.boxes ⊆ π₂.boxes) : π₁ = π₂ :=
   eq_of_boxes_subset_Union_superset h₂$ h₁.Union_subset _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J' «expr ∈ » π₂)
 theorem le_iff (h : π₂.is_partition) :
   π₁ ≤ π₂ ↔ ∀ J _ : J ∈ π₁ J' _ : J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J' :=
   le_iff_nonempty_imp_le_and_Union_subset.trans$ and_iff_left$ h.Union_subset _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 protected theorem bUnion (h : is_partition π) (hi : ∀ J _ : J ∈ π, is_partition (πi J)) : is_partition (π.bUnion πi) :=
   fun x hx =>
     let ⟨J, hJ, hxi⟩ := h x hx 
@@ -732,6 +785,7 @@ protected theorem inf (h₁ : is_partition π₁) (h₂ : is_partition π₂) : 
 
 end IsPartition
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem Union_bUnion_partition (h : ∀ J _ : J ∈ π, (πi J).IsPartition) : (π.bUnion πi).Union = π.Union :=
   (Union_bUnion _ _).trans$
     Union_congr id surjective_id$ fun J => Union_congr id surjective_id$ fun hJ => (h J hJ).Union_eq

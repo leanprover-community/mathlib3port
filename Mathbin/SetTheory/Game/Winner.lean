@@ -11,7 +11,7 @@ These are defined by inequalities which can be unfolded with `pgame.lt_def` and 
 
 namespace Pgame
 
-local infixl:0 " ≈ " => Equiv
+local infixl:0 " ≈ " => Equivₓ
 
 /-- The player who goes first loses -/
 def first_loses (G : Pgame) : Prop :=

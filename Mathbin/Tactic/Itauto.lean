@@ -74,26 +74,28 @@ namespace Tactic
 
 namespace Itauto
 
--- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- Different propositional constructors that are variants of "and" for the purposes of the
-theorem prover. -/ @[derive #["[", expr has_reflect, ",", expr decidable_eq, "]"]] inductive and_kind
-| and
-| iff
-| eq
+theorem prover. -/
+inductive and_kind
+  | And
+  | Iff
+  | Eq deriving [anonymous], [anonymous]
 
 instance : Inhabited and_kind :=
   ⟨and_kind.and⟩
 
--- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- A reified inductive type for propositional logic. -/
-@[derive #["[", expr has_reflect, ",", expr decidable_eq, "]"]]
 inductive prop : Type
-| var : exprℕ() → prop
-| true : prop
-| false : prop
-| and' : and_kind → prop → prop → prop
-| or : prop → prop → prop
-| imp : prop → prop → prop
+  | var : ℕ → prop
+  | True : prop
+  | False : prop
+  | and' : and_kind → prop → prop → prop
+  | Or : prop → prop → prop
+  | imp : prop → prop → prop deriving [anonymous], [anonymous]
 
 /-- Constructor for `p ∧ q`. -/
 @[matchPattern]
@@ -179,26 +181,25 @@ instance : DecidableRel (@LT.lt prop _) :=
 
 end 
 
--- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
 /-- A reified inductive proof type for intuitionistic propositional logic. -/
-@[derive #[expr has_reflect]]
 inductive proof
-| hyp (n : name) : proof
-| triv : proof
-| exfalso' (p : proof) : proof
-| intro (x : name) (p : proof) : proof
-| and_left (ak : and_kind) (p : proof) : proof
-| and_right (ak : and_kind) (p : proof) : proof
-| and_intro (ak : and_kind) (p₁ p₂ : proof) : proof
-| curry (ak : and_kind) (p : proof) : proof
-| curry₂ (ak : and_kind) (p q : proof) : proof
-| app' : proof → proof → proof
-| or_imp_left (p : proof) : proof
-| or_imp_right (p : proof) : proof
-| or_inl (p : proof) : proof
-| or_inr (p : proof) : proof
-| or_elim (p₁ : proof) (x : name) (p₂ p₃ : proof) : proof
-| imp_imp_simp (x : name) (p : proof) : proof
+  | hyp (n : Name) : proof
+  | triv : proof
+  | exfalso' (p : proof) : proof
+  | intro (x : Name) (p : proof) : proof
+  | and_left (ak : and_kind) (p : proof) : proof
+  | and_right (ak : and_kind) (p : proof) : proof
+  | and_intro (ak : and_kind) (p₁ p₂ : proof) : proof
+  | curry (ak : and_kind) (p : proof) : proof
+  | curry₂ (ak : and_kind) (p q : proof) : proof
+  | app' : proof → proof → proof
+  | or_imp_left (p : proof) : proof
+  | or_imp_right (p : proof) : proof
+  | or_inl (p : proof) : proof
+  | or_inr (p : proof) : proof
+  | or_elim (p₁ : proof) (x : Name) (p₂ p₃ : proof) : proof
+  | imp_imp_simp (x : Name) (p : proof) : proof deriving [anonymous]
 
 instance : Inhabited proof :=
   ⟨proof.triv⟩

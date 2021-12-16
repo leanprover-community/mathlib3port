@@ -51,8 +51,9 @@ instance bundled_hom : bundled_hom assoc_monoid_hom :=
       by 
         exact @MonoidHom.coe_inj M N _ _⟩
 
--- error in Algebra.Category.Mon.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Mon
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for Mon
 
 attribute [toAdditive] Mon.largeCategory Mon.concreteCategory
 
@@ -104,8 +105,9 @@ namespace CommMon
 instance : bundled_hom.parent_projection CommMonoidₓ.toMonoid :=
   ⟨⟩
 
--- error in Algebra.Category.Mon.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommMon
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for CommMon
 
 attribute [toAdditive] CommMon.largeCategory CommMon.concreteCategory
 

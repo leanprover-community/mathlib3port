@@ -60,10 +60,10 @@ theorem rank_prod' (N : Type v) [AddCommGroupₓ N] [Module R N] [Module.Free R 
 /-- The rank of the direct sum is the sum of the ranks. -/
 @[simp]
 theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGroupₓ (M i)] [∀ i : ι, Module R (M i)]
-  [∀ i : ι, Module.Free R (M i)] : Module.rank R (⨁i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
+  [∀ i : ι, Module.Free R (M i)] : Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
   by 
     let B := fun i => choose_basis R (M i)
-    let b : Basis _ R (⨁i, M i) := Dfinsupp.basis fun i => B i 
+    let b : Basis _ R (⨁ i, M i) := Dfinsupp.basis fun i => B i 
     simp [←b.mk_eq_dim'', fun i => (B i).mk_eq_dim'']
 
 /-- The rank of a finite product is the sum of the ranks. -/
@@ -74,19 +74,14 @@ theorem rank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i : 
   by 
     rw [←(DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_direct_sum]
 
--- error in LinearAlgebra.FreeModule.Rank: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `n` and `m` are `fintype`, the rank of `n × m` matrices is `(# n).lift * (# m).lift`. -/
 @[simp]
-theorem rank_matrix
-(n : Type v)
-[fintype n]
-(m : Type w)
-[fintype m] : «expr = »(module.rank R (matrix n m R), «expr * »(lift.{max v w u, v} («expr#»() n), lift.{max v w u, w} («expr#»() m))) :=
-begin
-  have [ident h] [] [":=", expr (matrix.std_basis R n m).mk_eq_dim],
-  rw ["[", "<-", expr lift_lift.{max v w u, max v w}, ",", expr lift_inj, "]"] ["at", ident h],
-  simpa [] [] [] [] [] ["using", expr h.symm]
-end
+theorem rank_matrix (n : Type v) [Fintype n] (m : Type w) [Fintype m] :
+  Module.rank R (Matrix n m R) = lift.{max v w u, v} (# n)*lift.{max v w u, w} (# m) :=
+  by 
+    have h := (Matrix.stdBasis R n m).mk_eq_dim 
+    rw [←lift_lift.{max v w u, max v w}, lift_inj] at h 
+    simpa using h.symm
 
 /-- If `n` and `m` are `fintype` that lie in the same universe, the rank of `n × m` matrices is
   `(# n * # m).lift`. -/
@@ -113,18 +108,16 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
--- error in LinearAlgebra.FreeModule.Rank: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The rank of `M ⊗[R] N` is `(module.rank R M).lift * (module.rank R N).lift`. -/
 @[simp]
-theorem rank_tensor_product : «expr = »(module.rank R «expr ⊗[ ] »(M, R, N), «expr * »(lift.{w, v} (module.rank R M), lift.{v, w} (module.rank R N))) :=
-begin
-  let [ident ιM] [] [":=", expr choose_basis_index R M],
-  let [ident ιN] [] [":=", expr choose_basis_index R N],
-  have [ident h₁] [] [":=", expr linear_equiv.lift_dim_eq (tensor_product.congr (repr R M) (repr R N))],
-  let [ident b] [":", expr basis «expr × »(ιM, ιN) R «expr →₀ »(_, R)] [":=", expr finsupp.basis_single_one],
-  rw ["[", expr linear_equiv.dim_eq (finsupp_tensor_finsupp' R ιM ιN), ",", "<-", expr b.mk_eq_dim, ",", expr mk_prod, "]"] ["at", ident h₁],
-  rw ["[", expr lift_inj.1 h₁, ",", expr rank_eq_card_choose_basis_index R M, ",", expr rank_eq_card_choose_basis_index R N, "]"] []
-end
+theorem rank_tensor_product : Module.rank R (M ⊗[R] N) = lift.{w, v} (Module.rank R M)*lift.{v, w} (Module.rank R N) :=
+  by 
+    let ιM := choose_basis_index R M 
+    let ιN := choose_basis_index R N 
+    have h₁ := LinearEquiv.lift_dim_eq (TensorProduct.congr (reprₓ R M) (reprₓ R N))
+    let b : Basis (ιM × ιN) R (_ →₀ R) := Finsupp.basisSingleOne 
+    rw [LinearEquiv.dim_eq (finsuppTensorFinsupp' R ιM ιN), ←b.mk_eq_dim, mk_prod] at h₁ 
+    rw [lift_inj.1 h₁, rank_eq_card_choose_basis_index R M, rank_eq_card_choose_basis_index R N]
 
 /-- If `M` and `N` lie in the same universe, the rank of `M ⊗[R] N` is
   `(module.rank R M) * (module.rank R N)`. -/

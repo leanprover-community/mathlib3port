@@ -22,10 +22,10 @@ namespace Set
 
 variable (M)
 
-/-- The center of a magma. -/
-@[toAdditive add_center " The center of an additive magma. "]
-def center [Mul M] : Set M :=
-  { z | ∀ m, (m*z) = z*m }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The center of a magma. -/ @[ toAdditive add_center " The center of an additive magma. " ]
+  def center [ Mul M ] : Set M := { z | ∀ m , m * z = z * m }
 
 @[toAdditive mem_add_center]
 theorem mem_center_iff [Mul M] {z : M} : z ∈ center M ↔ ∀ g, (g*z) = z*g :=
@@ -132,7 +132,7 @@ def center : Submonoid M :=
   { Carrier := Set.Center M, one_mem' := Set.one_mem_center M, mul_mem' := fun a b => Set.mul_mem_center }
 
 @[toAdditive]
-theorem coe_center : «expr↑ » (center M) = Set.Center M :=
+theorem coe_center : ↑center M = Set.Center M :=
   rfl
 
 variable {M}

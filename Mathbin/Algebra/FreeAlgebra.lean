@@ -109,8 +109,8 @@ An inductively defined relation on `pre R X` used to force the initial algebra s
 the associated quotient.
 -/
 inductive rel : pre R X → pre R X → Prop
-  | add_scalar {r s : R} : rel («expr↑ » (r+s)) («expr↑ » r+«expr↑ » s)
-  | mul_scalar {r s : R} : rel («expr↑ » (r*s)) («expr↑ » r*«expr↑ » s)
+  | add_scalar {r s : R} : rel (↑r+s) ((↑r)+↑s)
+  | mul_scalar {r s : R} : rel (↑r*s) ((↑r)*↑s)
   | central_scalar {r : R} {a : pre R X} : rel (r*a) (a*r)
   | add_assocₓ {a b c : pre R X} : rel ((a+b)+c) (a+b+c)
   | add_commₓ {a b : pre R X} : rel (a+b) (b+a)
@@ -195,7 +195,7 @@ instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
 
 instance : HasScalar R (FreeAlgebra R X) :=
-  { smul := fun r => Quot.map ((·*·) («expr↑ » r)) fun a b => rel.mul_compat_right }
+  { smul := fun r => Quot.map ((·*·) (↑r)) fun a b => rel.mul_compat_right }
 
 instance : Algebra R (FreeAlgebra R X) :=
   { toFun := fun r => Quot.mk _ r, map_one' := rfl, map_mul' := fun _ _ => Quot.sound rel.mul_scalar, map_zero' := rfl,
@@ -361,8 +361,6 @@ definition.
 -/
 
 
-attribute [irreducible] ι lift
-
 @[simp]
 theorem lift_comp_ι (g : FreeAlgebra R X →ₐ[R] A) : lift R ((g : FreeAlgebra R X → A) ∘ ι R) = g :=
   by 
@@ -469,33 +467,26 @@ end FreeAlgebra
 
 namespace FreeAlgebra
 
--- error in Algebra.FreeAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An induction principle for the free algebra.
 
 If `C` holds for the `algebra_map` of `r : R` into `free_algebra R X`, the `ι` of `x : X`, and is
 preserved under addition and muliplication, then it holds for all of `free_algebra R X`.
 -/
 @[elab_as_eliminator]
-theorem induction
-{C : free_algebra R X → exprProp()}
-(h_grade0 : ∀ r, C (algebra_map R (free_algebra R X) r))
-(h_grade1 : ∀ x, C (ι R x))
-(h_mul : ∀ a b, C a → C b → C «expr * »(a, b))
-(h_add : ∀ a b, C a → C b → C «expr + »(a, b))
-(a : free_algebra R X) : C a :=
-begin
-  let [ident s] [":", expr subalgebra R (free_algebra R X)] [":=", expr { carrier := C,
-     mul_mem' := h_mul,
-     add_mem' := h_add,
-     algebra_map_mem' := h_grade0 }],
-  let [ident of] [":", expr X → s] [":=", expr subtype.coind (ι R) h_grade1],
-  have [ident of_id] [":", expr «expr = »(alg_hom.id R (free_algebra R X), s.val.comp (lift R of))] [],
-  { ext [] [] [],
-    simp [] [] [] ["[", expr of, ",", expr subtype.coind, "]"] [] [] },
-  convert [] [expr subtype.prop (lift R of a)] [],
-  simp [] [] [] ["[", expr alg_hom.ext_iff, "]"] [] ["at", ident of_id],
-  exact [expr of_id a]
-end
+theorem induction {C : FreeAlgebra R X → Prop} (h_grade0 : ∀ r, C (algebraMap R (FreeAlgebra R X) r))
+  (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a*b)) (h_add : ∀ a b, C a → C b → C (a+b))
+  (a : FreeAlgebra R X) : C a :=
+  by 
+    let s : Subalgebra R (FreeAlgebra R X) :=
+      { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
+    let of : X → s := Subtype.coind (ι R) h_grade1 
+    have of_id : AlgHom.id R (FreeAlgebra R X) = s.val.comp (lift R of)
+    ·
+      ext 
+      simp [of, Subtype.coind]
+    convert Subtype.prop (lift R of a)
+    simp [AlgHom.ext_iff] at of_id 
+    exact of_id a
 
 /-- The star ring formed by reversing the elements of products -/
 instance : StarRing (FreeAlgebra R X) :=
@@ -526,7 +517,7 @@ theorem star_algebra_map (r : R) : star (algebraMap R (FreeAlgebra R X) r) = alg
     simp [star, HasStar.star]
 
 /-- `star` as an `alg_equiv` -/
-def star_hom : FreeAlgebra R X ≃ₐ[R] «expr ᵐᵒᵖ» (FreeAlgebra R X) :=
+def star_hom : FreeAlgebra R X ≃ₐ[R] FreeAlgebra R Xᵐᵒᵖ :=
   { starRingEquiv with
     commutes' :=
       fun r =>

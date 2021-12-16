@@ -100,6 +100,7 @@ theorem prod_hom [Monoidₓ β] (l : List α) (f : α →* β) : (l.map f).Prod 
     simp only [Prod, foldl_map, f.map_one.symm]
     exact l.foldl_hom _ _ _ 1 f.map_mul
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » L)
 @[toAdditive]
 theorem prod_is_unit [Monoidₓ β] : ∀ {L : List β} u : ∀ m _ : m ∈ L, IsUnit m, IsUnit L.prod
 | [], _ =>
@@ -169,7 +170,7 @@ theorem _root_.mul_opposite.op_list_prod : ∀ l : List α, op l.prod = (l.map o
   by 
     rw [List.prod_cons, List.map_consₓ, List.reverse_cons', List.prod_concat, op_mul, _root_.mul_opposite.op_list_prod]
 
-theorem _root_.mul_opposite.unop_list_prod (l : List («expr ᵐᵒᵖ» α)) : l.prod.unop = (l.map unop).reverse.Prod :=
+theorem _root_.mul_opposite.unop_list_prod (l : List (αᵐᵒᵖ)) : l.prod.unop = (l.map unop).reverse.Prod :=
   by 
     rw [←op_inj, op_unop, MulOpposite.op_list_prod, map_reverse, map_map, reverse_reverse, op_comp_unop, map_id]
 
@@ -236,18 +237,14 @@ theorem prod_update_nth' (L : List α) (n : ℕ) (a : α) :
 
 end CommGroupₓ
 
--- error in Data.List.BigOperators: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_of_sum_take_eq
-[add_left_cancel_monoid α]
-{L L' : list α}
-(h : «expr = »(L.length, L'.length))
-(h' : ∀ i «expr ≤ » L.length, «expr = »((L.take i).sum, (L'.take i).sum)) : «expr = »(L, L') :=
-begin
-  apply [expr ext_le h (λ i h₁ h₂, _)],
-  have [] [":", expr «expr = »((L.take «expr + »(i, 1)).sum, (L'.take «expr + »(i, 1)).sum)] [":=", expr h' _ (nat.succ_le_of_lt h₁)],
-  rw ["[", expr sum_take_succ L i h₁, ",", expr sum_take_succ L' i h₂, ",", expr h' i (le_of_lt h₁), "]"] ["at", ident this],
-  exact [expr add_left_cancel this]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≤ » L.length)
+theorem eq_of_sum_take_eq [AddLeftCancelMonoid α] {L L' : List α} (h : L.length = L'.length)
+  (h' : ∀ i _ : i ≤ L.length, (L.take i).Sum = (L'.take i).Sum) : L = L' :=
+  by 
+    apply ext_le h fun i h₁ h₂ => _ 
+    have  : (L.take (i+1)).Sum = (L'.take (i+1)).Sum := h' _ (Nat.succ_le_of_ltₓ h₁)
+    rw [sum_take_succ L i h₁, sum_take_succ L' i h₂, h' i (le_of_ltₓ h₁)] at this 
+    exact add_left_cancelₓ this
 
 theorem monotone_sum_take [CanonicallyOrderedAddMonoid α] (L : List α) : Monotone fun i => (L.take i).Sum :=
   by 
@@ -260,6 +257,7 @@ theorem monotone_sum_take [CanonicallyOrderedAddMonoid α] (L : List α) : Monot
       pushNeg  at h 
       simp [take_all_of_le h, take_all_of_le (le_transₓ h (Nat.le_succₓ _))]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 @[toAdditive sum_nonneg]
 theorem one_le_prod_of_one_le [OrderedCommMonoid α] {l : List α} (hl₁ : ∀ x _ : x ∈ l, (1 : α) ≤ x) : 1 ≤ l.prod :=
   by 
@@ -269,6 +267,7 @@ theorem one_le_prod_of_one_le [OrderedCommMonoid α] {l : List α} (hl₁ : ∀ 
     rw [prod_cons]
     exact one_le_mul (hl₁ hd (mem_cons_self hd tl)) (ih fun x h => hl₁ x (mem_cons_of_mem hd h))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 @[toAdditive sum_pos]
 theorem one_lt_prod_of_one_lt [OrderedCommMonoid α] :
   ∀ l : List α hl : ∀ x _ : x ∈ l, (1 : α) < x hl₂ : l ≠ [], 1 < l.prod
@@ -283,6 +282,8 @@ theorem one_lt_prod_of_one_lt [OrderedCommMonoid α] :
     apply one_lt_mul_of_lt_of_le' hl₁.1
     apply le_of_ltₓ ((b :: l).one_lt_prod_of_one_lt hl₁.2 (l.cons_ne_nil b))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 @[toAdditive]
 theorem single_le_prod [OrderedCommMonoid α] {l : List α} (hl₁ : ∀ x _ : x ∈ l, (1 : α) ≤ x) :
   ∀ x _ : x ∈ l, x ≤ l.prod :=
@@ -291,17 +292,19 @@ theorem single_le_prod [OrderedCommMonoid α] {l : List α} (hl₁ : ∀ x _ : x
     ·
       simp 
     simpRw [prod_cons, forall_mem_cons]  at hl₁⊢
-    split 
+    constructor
     ·
       exact le_mul_of_one_le_right' (one_le_prod_of_one_le hl₁.2)
     ·
       exact fun x H => le_mul_of_one_le_of_le hl₁.1 (l_ih hl₁.right x H)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 @[toAdditive all_zero_of_le_zero_le_of_sum_eq_zero]
 theorem all_one_of_le_one_le_of_prod_eq_one [OrderedCommMonoid α] {l : List α} (hl₁ : ∀ x _ : x ∈ l, (1 : α) ≤ x)
   (hl₂ : l.prod = 1) {x : α} (hx : x ∈ l) : x = 1 :=
   le_antisymmₓ (hl₂ ▸ single_le_prod hl₁ _ hx) (hl₁ x hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem sum_eq_zero_iff [CanonicallyOrderedAddMonoid α] (l : List α) : l.sum = 0 ↔ ∀ x _ : x ∈ l, x = (0 : α) :=
   ⟨all_zero_of_le_zero_le_of_sum_eq_zero fun _ _ => zero_le _,
     by 
@@ -314,6 +317,7 @@ theorem sum_eq_zero_iff [CanonicallyOrderedAddMonoid α] (l : List α) : l.sum =
         rw [forall_mem_cons] at h 
         exact ⟨h.1, l_ih h.2⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » L)
 /-- If all elements in a list are bounded below by `1`, then the length of the list is bounded
 by the sum of the elements. -/
 theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀ i _ : i ∈ L, 1 ≤ i) : L.length ≤ L.sum :=
@@ -366,6 +370,7 @@ theorem sum_const_nat (m n : ℕ) : Sum (List.repeat m n) = m*n :=
   by 
     induction n <;> [rfl, simp only [repeat_succ, sum_cons, Nat.mul_succ, add_commₓ]]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem dvd_sum [CommSemiringₓ α] {a} {l : List α} (h : ∀ x _ : x ∈ l, a ∣ x) : a ∣ l.sum :=
   by 
     induction' l with x l ih
@@ -375,6 +380,7 @@ theorem dvd_sum [CommSemiringₓ α] {a} {l : List α} (h : ∀ x _ : x ∈ l, a
       rw [List.sum_cons]
       exact dvd_add (h _ (mem_cons_self _ _)) (ih fun x hx => h x (mem_cons_of_mem _ hx))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem exists_lt_of_sum_lt [LinearOrderedCancelAddCommMonoid β] {l : List α} (f g : α → β)
   (h : (l.map f).Sum < (l.map g).Sum) : ∃ (x : _)(_ : x ∈ l), f x < g x :=
   by 
@@ -388,6 +394,7 @@ theorem exists_lt_of_sum_lt [LinearOrderedCancelAddCommMonoid β] {l : List α} 
     obtain ⟨y, h1y, h2y⟩ := l_ih (lt_of_add_lt_add_left (h.trans_le$ add_le_add_right h' _))
     exact ⟨y, mem_cons_of_mem x h1y, h2y⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem exists_le_of_sum_le [LinearOrderedCancelAddCommMonoid β] {l : List α} (hl : l ≠ []) (f g : α → β)
   (h : (l.map f).Sum ≤ (l.map g).Sum) : ∃ (x : _)(_ : x ∈ l), f x ≤ g x :=
   by 
@@ -419,6 +426,7 @@ theorem head_mul_tail_prod_of_ne_nil [Monoidₓ α] [Inhabited α] (l : List α)
   by 
     cases l <;> [contradiction, simp ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 /-- The product of a list of positive natural numbers is positive,
 and likewise for any nontrivial ordered semiring. -/
 theorem prod_pos [OrderedSemiring α] [Nontrivial α] (l : List α) (h : ∀ a _ : a ∈ l, (0 : α) < a) : 0 < l.prod :=
@@ -487,8 +495,8 @@ theorem _root_.monoid_hom.map_list_prod [Monoidₓ α] [Monoidₓ β] (f : α �
 open MulOpposite
 
 /-- A morphism into the opposite monoid acts on the product by acting on the reversed elements -/
-theorem _root_.monoid_hom.unop_map_list_prod {α β : Type _} [Monoidₓ α] [Monoidₓ β] (f : α →* «expr ᵐᵒᵖ» β)
-  (l : List α) : unop (f l.prod) = (l.map (unop ∘ f)).reverse.Prod :=
+theorem _root_.monoid_hom.unop_map_list_prod {α β : Type _} [Monoidₓ α] [Monoidₓ β] (f : α →* βᵐᵒᵖ) (l : List α) :
+  unop (f l.prod) = (l.map (unop ∘ f)).reverse.Prod :=
   by 
     rw [f.map_list_prod l, unop_list_prod, List.map_mapₓ]
 

@@ -41,6 +41,10 @@ theorem product_val : (s.product t).1 = s.1.product t.1 :=
 theorem mem_product {p : α × β} : p ∈ s.product t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   mem_product
 
+@[simp, normCast]
+theorem coe_product (s : Finset α) (t : Finset β) : (s.product t : Set (α × β)) = (s : Set α).Prod t :=
+  Set.ext$ fun x => Finset.mem_product
+
 theorem subset_product [DecidableEq α] [DecidableEq β] {s : Finset (α × β)} :
   s ⊆ (s.image Prod.fst).product (s.image Prod.snd) :=
   fun p hp => mem_product.2 ⟨mem_image_of_mem _ hp, mem_image_of_mem _ hp⟩
@@ -62,6 +66,15 @@ theorem product_eq_bUnion [DecidableEq α] [DecidableEq β] (s : Finset α) (t :
         simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
           exists_and_distrib_left, exists_eq_right, exists_eq_left]
 
+theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
+  s.product t = t.bUnion fun b => s.image$ fun a => (a, b) :=
+  ext$
+    fun ⟨x, y⟩ =>
+      by 
+        simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
+          exists_and_distrib_left, exists_eq_right, exists_eq_left]
+
+/-- See also `finset.sup_product_left`. -/
 @[simp]
 theorem product_bUnion [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
   (s.product t).bUnion f = s.bUnion fun a => t.bUnion fun b => f (a, b) :=
@@ -91,7 +104,7 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
       apply congr_argₓ 
       ext ⟨a, b⟩
       simp only [filter_union_right, mem_filter, mem_product]
-      split  <;> intros  <;> finish
+      constructor <;> intros  <;> finish
     ·
       rw [disjoint_iff]
       change _ ∩ _ = ∅
@@ -121,6 +134,22 @@ theorem nonempty.snd (h : (s.product t).Nonempty) : t.nonempty :=
 @[simp]
 theorem nonempty_product : (s.product t).Nonempty ↔ s.nonempty ∧ t.nonempty :=
   ⟨fun h => ⟨h.fst, h.snd⟩, fun h => h.1.product h.2⟩
+
+@[simp]
+theorem singleton_product {a : α} : ({a} : Finset α).product t = t.map ⟨Prod.mk a, Prod.mk.inj_left _⟩ :=
+  by 
+    ext ⟨x, y⟩
+    simp [And.left_comm, eq_comm]
+
+@[simp]
+theorem product_singleton {b : β} : s.product {b} = s.map ⟨fun i => (i, b), Prod.mk.inj_right _⟩ :=
+  by 
+    ext ⟨x, y⟩
+    simp [And.left_comm, eq_comm]
+
+theorem singleton_product_singleton {a : α} {b : β} : ({a} : Finset α).product ({b} : Finset β) = {(a, b)} :=
+  by 
+    simp only [product_singleton, Function.Embedding.coe_fn_mk, map_singleton]
 
 @[simp]
 theorem union_product [DecidableEq α] [DecidableEq β] : (s ∪ s').product t = s.product t ∪ s'.product t :=
@@ -154,13 +183,13 @@ def off_diag :=
 theorem mem_diag (x : α × α) : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 :=
   by 
     simp only [diag, mem_filter, mem_product]
-    split  <;> intros  <;> finish
+    constructor <;> intros  <;> finish
 
 @[simp]
 theorem mem_off_diag (x : α × α) : x ∈ s.off_diag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 :=
   by 
     simp only [off_diag, mem_filter, mem_product]
-    split  <;> intros  <;> finish
+    constructor <;> intros  <;> finish
 
 @[simp]
 theorem diag_card : (diag s).card = s.card :=
@@ -172,7 +201,7 @@ theorem diag_card : (diag s).card = s.card :=
       finish 
     ext ⟨a₁, a₂⟩
     rw [mem_diag]
-    split  <;> intros  <;> finish
+    constructor <;> intros  <;> finish
 
 @[simp]
 theorem off_diag_card : (off_diag s).card = (s.card*s.card) - s.card :=

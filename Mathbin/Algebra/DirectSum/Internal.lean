@@ -34,9 +34,13 @@ internally graded ring
 -/
 
 
-open_locale DirectSum
+open_locale DirectSum BigOperators
 
-variable {ι : Type _} {S R : Type _} [DecidableEq ι]
+variable {ι : Type _} {S R : Type _}
+
+section DirectSum
+
+variable [DecidableEq ι]
 
 /-! #### From `add_submonoid`s -/
 
@@ -59,7 +63,7 @@ end AddSubmonoid
 
 /-- The canonical ring isomorphism between `⨁ i, A i` and `R`-/
 def DirectSum.submonoidCoeRingHom [AddMonoidₓ ι] [Semiringₓ R] (A : ι → AddSubmonoid R) [h : SetLike.GradedMonoid A] :
-  (⨁i, A i) →+* R :=
+  (⨁ i, A i) →+* R :=
   DirectSum.toSemiring (fun i => (A i).Subtype) rfl fun _ _ _ _ => rfl
 
 /-- The canonical ring isomorphism between `⨁ i, A i` and `R`-/
@@ -68,6 +72,14 @@ theorem DirectSum.submonoid_coe_ring_hom_of [AddMonoidₓ ι] [Semiringₓ R] (A
   [h : SetLike.GradedMonoid A] (i : ι) (x : A i) :
   DirectSum.submonoidCoeRingHom A (DirectSum.of (fun i => A i) i x) = x :=
   DirectSum.to_semiring_of _ _ _ _ _
+
+theorem DirectSum.coe_mul_apply_add_submonoid [AddMonoidₓ ι] [Semiringₓ R] (A : ι → AddSubmonoid R)
+  [SetLike.GradedMonoid A] [∀ i : ι x : A i, Decidable (x ≠ 0)] (r r' : ⨁ i, A i) (i : ι) :
+  ((r*r') i : R) =
+    ∑ ij in Finset.filter (fun ij : ι × ι => (ij.1+ij.2) = i) (r.support.product r'.support), r ij.1*r' ij.2 :=
+  by 
+    rw [DirectSum.mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoid.coe_finset_sum]
+    simpRw [DirectSum.coe_of_add_submonoid_apply, ←Finset.sum_filter, SetLike.coe_ghas_mul]
 
 /-! #### From `add_subgroup`s -/
 
@@ -92,13 +104,21 @@ end AddSubgroup
 
 /-- The canonical ring isomorphism between `⨁ i, A i` and `R`. -/
 def DirectSum.subgroupCoeRingHom [AddMonoidₓ ι] [Ringₓ R] (A : ι → AddSubgroup R) [SetLike.GradedMonoid A] :
-  (⨁i, A i) →+* R :=
+  (⨁ i, A i) →+* R :=
   DirectSum.toSemiring (fun i => (A i).Subtype) rfl fun _ _ _ _ => rfl
 
 @[simp]
 theorem DirectSum.subgroup_coe_ring_hom_of [AddMonoidₓ ι] [Ringₓ R] (A : ι → AddSubgroup R) [SetLike.GradedMonoid A]
   (i : ι) (x : A i) : DirectSum.subgroupCoeRingHom A (DirectSum.of (fun i => A i) i x) = x :=
   DirectSum.to_semiring_of _ _ _ _ _
+
+theorem DirectSum.coe_mul_apply_add_subgroup [AddMonoidₓ ι] [Ringₓ R] (A : ι → AddSubgroup R) [SetLike.GradedMonoid A]
+  [∀ i : ι x : A i, Decidable (x ≠ 0)] (r r' : ⨁ i, A i) (i : ι) :
+  ((r*r') i : R) =
+    ∑ ij in Finset.filter (fun ij : ι × ι => (ij.1+ij.2) = i) (r.support.product r'.support), r ij.1*r' ij.2 :=
+  by 
+    rw [DirectSum.mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubgroup.coe_finset_sum]
+    simpRw [DirectSum.coe_of_add_subgroup_apply, ←Finset.sum_filter, SetLike.coe_ghas_mul]
 
 /-! #### From `submodules`s -/
 
@@ -137,7 +157,7 @@ instance galgebra [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra
 @[simp]
 theorem set_like.coe_galgebra_to_fun [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R]
   (A : ι → Submodule S R) [h : SetLike.GradedMonoid A] (s : S) :
-  «expr↑ » (@DirectSum.Galgebra.toFun _ S (fun i => A i) _ _ _ _ _ _ _ s) = (algebraMap S R s : R) :=
+  ↑@DirectSum.Galgebra.toFun _ S (fun i => A i) _ _ _ _ _ _ _ s = (algebraMap S R s : R) :=
   rfl
 
 /-- A direct sum of powers of a submodule of an algebra has a multiplicative structure. -/
@@ -157,7 +177,7 @@ end Submodule
 
 /-- The canonical algebra isomorphism between `⨁ i, A i` and `R`. -/
 def DirectSum.submoduleCoeAlgHom [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] (A : ι → Submodule S R)
-  [h : SetLike.GradedMonoid A] : (⨁i, A i) →ₐ[S] R :=
+  [h : SetLike.GradedMonoid A] : (⨁ i, A i) →ₐ[S] R :=
   DirectSum.toAlgebra S _ (fun i => (A i).Subtype) rfl (fun _ _ _ _ => rfl) fun _ => rfl
 
 @[simp]
@@ -165,4 +185,27 @@ theorem DirectSum.submodule_coe_alg_hom_of [AddMonoidₓ ι] [CommSemiringₓ S]
   (A : ι → Submodule S R) [h : SetLike.GradedMonoid A] (i : ι) (x : A i) :
   DirectSum.submoduleCoeAlgHom A (DirectSum.of (fun i => A i) i x) = x :=
   DirectSum.to_semiring_of _ rfl (fun _ _ _ _ => rfl) _ _
+
+theorem DirectSum.coe_mul_apply_submodule [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R]
+  (A : ι → Submodule S R) [∀ i : ι x : A i, Decidable (x ≠ 0)] [SetLike.GradedMonoid A] (r r' : ⨁ i, A i) (i : ι) :
+  ((r*r') i : R) =
+    ∑ ij in Finset.filter (fun ij : ι × ι => (ij.1+ij.2) = i) (r.support.product r'.support), r ij.1*r' ij.2 :=
+  by 
+    rw [DirectSum.mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, Submodule.coe_sum]
+    simpRw [DirectSum.coe_of_submodule_apply, ←Finset.sum_filter, SetLike.coe_ghas_mul]
+
+end DirectSum
+
+section HomogeneousElement
+
+theorem SetLike.is_homogeneous_zero_submodule [HasZero ι] [Semiringₓ S] [AddCommMonoidₓ R] [Module S R]
+  (A : ι → Submodule S R) : SetLike.IsHomogeneous A (0 : R) :=
+  ⟨0, Submodule.zero_mem _⟩
+
+theorem SetLike.IsHomogeneous.smul [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] {A : ι → Submodule S R} {s : S} {r : R}
+  (hr : SetLike.IsHomogeneous A r) : SetLike.IsHomogeneous A (s • r) :=
+  let ⟨i, hi⟩ := hr
+  ⟨i, Submodule.smul_mem _ _ hi⟩
+
+end HomogeneousElement
 

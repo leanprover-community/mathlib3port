@@ -108,7 +108,7 @@ instance : Coe (A →ₐ[R] B) (A →ₗ⁅R⁆ B) :=
   ⟨to_lie_hom⟩
 
 @[simp]
-theorem to_lie_hom_coe : f.to_lie_hom = «expr↑ » f :=
+theorem to_lie_hom_coe : f.to_lie_hom = ↑f :=
   rfl
 
 @[simp]
@@ -186,7 +186,7 @@ theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ringₓ A] [Alge
 variable {R L}
 
 theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :
-  (ad R L («expr↑ » x)).comp (K.incl : K →ₗ[R] L) = (K.incl : K →ₗ[R] L).comp (ad R K x) :=
+  (ad R L (↑x)).comp (K.incl : K →ₗ[R] L) = (K.incl : K →ₗ[R] L).comp (ad R K x) :=
   by 
     ext y 
     simp only [ad_apply, LieHom.coe_to_linear_map, LieSubalgebra.coe_incl, LinearMap.coe_comp,
@@ -194,23 +194,20 @@ theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :
 
 end AdjointAction
 
--- error in Algebra.Lie.OfAssociative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subalgebra of an associative algebra is a Lie subalgebra of the associated Lie algebra. -/
-def lie_subalgebra_of_subalgebra
-(R : Type u)
-[comm_ring R]
-(A : Type v)
-[ring A]
-[algebra R A]
-(A' : subalgebra R A) : lie_subalgebra R A :=
-{ lie_mem' := λ x y hx hy, by { change [expr «expr ∈ »(«expr⁅ , ⁆»(x, y), A')] [] [],
-    change [expr «expr ∈ »(x, A')] [] ["at", ident hx],
-    change [expr «expr ∈ »(y, A')] [] ["at", ident hy],
-    rw [expr lie_ring.of_associative_ring_bracket] [],
-    have [ident hxy] [] [":=", expr A'.mul_mem hx hy],
-    have [ident hyx] [] [":=", expr A'.mul_mem hy hx],
-    exact [expr submodule.sub_mem A'.to_submodule hxy hyx] },
-  ..A'.to_submodule }
+def lieSubalgebraOfSubalgebra (R : Type u) [CommRingₓ R] (A : Type v) [Ringₓ A] [Algebra R A] (A' : Subalgebra R A) :
+  LieSubalgebra R A :=
+  { A'.to_submodule with
+    lie_mem' :=
+      fun x y hx hy =>
+        by 
+          change ⁅x,y⁆ ∈ A' 
+          change x ∈ A' at hx 
+          change y ∈ A' at hy 
+          rw [LieRing.of_associative_ring_bracket]
+          have hxy := A'.mul_mem hx hy 
+          have hyx := A'.mul_mem hy hx 
+          exact Submodule.sub_mem A'.to_submodule hxy hyx }
 
 namespace LinearEquiv
 

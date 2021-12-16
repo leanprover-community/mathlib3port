@@ -69,6 +69,7 @@ theorem chain_map_of_chain {S : β → β → Prop} (f : α → β) (H : ∀ a b
   (p : chain R a l) : chain S (f a) (map f l) :=
   (chain_map f).2$ p.imp H
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem chain_pmap_of_chain {S : β → β → Prop} {p : α → Prop} {f : ∀ a, p a → β}
   (H : ∀ a b ha hb, R a b → S (f a ha) (f b hb)) {a : α} {l : List α} (hl₁ : chain R a l) (ha : p a)
   (hl₂ : ∀ a _ : a ∈ l, p a) : chain S (f a ha) (List.pmap f l hl₂) :=
@@ -79,6 +80,7 @@ theorem chain_pmap_of_chain {S : β → β → Prop} {p : α → Prop} {f : ∀ 
     ·
       simp [H _ _ _ _ (rel_of_chain_cons hl₁), l_ih _ (chain_of_chain_cons hl₁)]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (hl₁ : ∀ a _ : a ∈ l, p a)
   {a : α} (ha : p a) (hl₂ : chain S (f a ha) (List.pmap f l hl₁)) (H : ∀ a b ha hb, S (f a ha) (f b hb) → R a b) :
   chain R a l :=
@@ -99,6 +101,7 @@ theorem chain_of_pairwise {a : α} {l : List α} (p : Pairwise R (a :: l)) : cha
     simp only [chain_cons, forall_mem_cons] at r 
     exact chain_cons.2 ⟨r.1, IH r'⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem chain_iff_pairwise (tr : Transitive R) {a : α} {l : List α} : chain R a l ↔ Pairwise R (a :: l) :=
   ⟨fun c =>
       by 
@@ -122,10 +125,10 @@ theorem chain_iff_nth_le {R} :
 | a, b :: t =>
   by 
     rw [chain_cons, chain_iff_nth_le]
-    split 
+    constructor
     ·
       rintro ⟨R, ⟨h0, h⟩⟩
-      split 
+      constructor
       ·
         intro w 
         exact R 
@@ -137,11 +140,11 @@ theorem chain_iff_nth_le {R} :
       simp only [succ_eq_add_one, add_succ_sub_one, add_zeroₓ, length, add_lt_add_iff_right] at w 
       exact lt_pred_iff.mpr w 
     rintro ⟨h0, h⟩
-    split 
+    constructor
     ·
       apply h0 
       simp 
-    split 
+    constructor
     ·
       apply h 0
     intro i w 
@@ -212,10 +215,12 @@ theorem chain'.rel_head' {x l} (h : chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head'
     rw [←cons_head'_tail hy] at h 
     exact h.rel_head
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l.head')
 theorem chain'.cons' {x} : ∀ {l : List α}, chain' R l → (∀ y _ : y ∈ l.head', R x y) → chain' R (x :: l)
 | [], _, _ => chain'_singleton x
 | a :: l, hl, H => hl.cons$ H _ rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » head' l)
 theorem chain'_cons' {x l} : chain' R (x :: l) ↔ (∀ y _ : y ∈ head' l, R x y) ∧ chain' R l :=
   ⟨fun h => ⟨h.rel_head', h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
 
@@ -232,19 +237,18 @@ theorem chain'.drop : ∀ n {l} h : chain' R l, chain' R (drop n l)
     exact chain'_nil
 | n+1, a :: b :: l, h => chain'.drop n (chain'_cons'.mp h).right
 
--- error in Data.List.Chain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem chain'.append : ∀
-{l₁ l₂ : list α}
-(h₁ : chain' R l₁)
-(h₂ : chain' R l₂)
-(h : ∀ (x «expr ∈ » l₁.last') (y «expr ∈ » l₂.head'), R x y), chain' R «expr ++ »(l₁, l₂)
-| «expr[ , ]»([]), l₂, h₁, h₂, h := h₂
-| «expr[ , ]»([a]), l₂, h₁, h₂, h := «expr $ »(h₂.cons', h _ rfl)
-| «expr :: »(a, «expr :: »(b, l)), l₂, h₁, h₂, h := begin
-  simp [] [] ["only"] ["[", expr last', "]"] [] ["at", ident h],
-  have [] [":", expr chain' R «expr :: »(b, l)] [":=", expr h₁.tail],
-  exact [expr (this.append h₂ h).cons h₁.rel_head]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁.last')
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l₂.head')
+theorem chain'.append :
+  ∀ {l₁ l₂ : List α} h₁ : chain' R l₁ h₂ : chain' R l₂ h : ∀ x _ : x ∈ l₁.last' y _ : y ∈ l₂.head', R x y,
+    chain' R (l₁ ++ l₂)
+| [], l₂, h₁, h₂, h => h₂
+| [a], l₂, h₁, h₂, h => h₂.cons'$ h _ rfl
+| a :: b :: l, l₂, h₁, h₂, h =>
+  by 
+    simp only [last'] at h 
+    have  : chain' R (b :: l) := h₁.tail 
+    exact (this.append h₂ h).cons h₁.rel_head
 
 theorem chain'_pair {x y} : chain' R [x, y] ↔ R x y :=
   by 
@@ -275,7 +279,7 @@ theorem chain'_iff_nth_le {R} :
 | a :: b :: t =>
   by 
     rw [chain'_cons, chain'_iff_nth_le]
-    split 
+    constructor
     ·
       rintro ⟨R, h⟩ i w 
       cases i
@@ -287,7 +291,7 @@ theorem chain'_iff_nth_le {R} :
         simpa using w
     ·
       rintro h 
-      split 
+      constructor
       ·
         apply h 0
         simp 
@@ -332,6 +336,7 @@ theorem exists_chain_of_relation_refl_trans_gen (h : Relation.ReflTransGen r a b
       refine' ⟨d :: l, chain.cons e hl₁, _⟩
       rwa [last_cons_cons]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » «expr :: »(a, l))
 /--
 Given a chain from `a` to `b`, and a predicate true at `b`, if `r x y → p y → p x` then
 the predicate is true everywhere in the chain and at `a`.

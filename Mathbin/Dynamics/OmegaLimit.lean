@@ -38,10 +38,11 @@ section OmegaLimit
 
 variable {τ : Type _} {α : Type _} {β : Type _} {ι : Type _}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
 /-- The ω-limit of a set `s` under `ϕ` with respect to a filter `f` is
     ⋂ u ∈ f, cl (ϕ u s). -/
 def OmegaLimit [TopologicalSpace β] (f : Filter τ) (ϕ : τ → α → β) (s : Set α) : Set β :=
-  ⋂(u : _)(_ : u ∈ f), Closure (image2 ϕ u s)
+  ⋂ (u : _)(_ : u ∈ f), Closure (image2 ϕ u s)
 
 localized [OmegaLimit] notation "ω" => OmegaLimit
 
@@ -58,7 +59,8 @@ variable (f : Filter τ) (ϕ : τ → α → β) (s s₁ s₂ : Set α)
 -/
 
 
-theorem omega_limit_def : ω f ϕ s = ⋂(u : _)(_ : u ∈ f), Closure (image2 ϕ u s) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
+theorem omega_limit_def : ω f ϕ s = ⋂ (u : _)(_ : u ∈ f), Closure (image2 ϕ u s) :=
   rfl
 
 theorem omega_limit_subset_of_tendsto {m : τ → τ} {f₁ f₂ : Filter τ} (hf : tendsto m f₁ f₂) :
@@ -83,7 +85,7 @@ theorem is_closed_omega_limit : IsClosed (ω f ϕ s) :=
   is_closed_Inter$ fun u => is_closed_Inter$ fun hu => is_closed_closure
 
 theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β} {ϕ' : τ → α' → β'}
-  {ga : α → α'} {s' : Set α'} (hs : maps_to ga s s') {gb : β → β'} (hg : ∀ᶠt in f, eq_on (gb ∘ ϕ t) (ϕ' t ∘ ga) s)
+  {ga : α → α'} {s' : Set α'} (hs : maps_to ga s s') {gb : β → β'} (hg : ∀ᶠ t in f, eq_on (gb ∘ ϕ t) (ϕ' t ∘ ga) s)
   (hgc : Continuous gb) : maps_to gb (ω f ϕ s) (ω f ϕ' s') :=
   by 
     simp only [omega_limit_def, mem_Inter, maps_to]
@@ -113,13 +115,14 @@ characterising ω-limits:
 -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ∈ » expr𝓝() y)
 /-- An element `y` is in the ω-limit set of `s` w.r.t. `f` if the
     preimages of an arbitrary neighbourhood of `y` frequently
     (w.r.t. `f`) intersects of `s`. -/
-theorem mem_omega_limit_iff_frequently (y : β) : y ∈ ω f ϕ s ↔ ∀ n _ : n ∈ 𝓝 y, ∃ᶠt in f, (s ∩ ϕ t ⁻¹' n).Nonempty :=
+theorem mem_omega_limit_iff_frequently (y : β) : y ∈ ω f ϕ s ↔ ∀ n _ : n ∈ 𝓝 y, ∃ᶠ t in f, (s ∩ ϕ t ⁻¹' n).Nonempty :=
   by 
     simpRw [frequently_iff, omega_limit_def, mem_Inter, mem_closure_iff_nhds]
-    split 
+    constructor
     ·
       intro h _ hn _ hu 
       rcases h _ hu _ hn with ⟨_, _, _, _, ht, hx, hϕtx⟩
@@ -132,10 +135,11 @@ theorem mem_omega_limit_iff_frequently (y : β) : y ∈ ω f ϕ s ↔ ∀ n _ : 
       rcases h _ hn hu with ⟨_, ht, _, hx, hϕtx⟩
       exact ⟨_, hϕtx, _, _, ht, hx, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ∈ » expr𝓝() y)
 /-- An element `y` is in the ω-limit set of `s` w.r.t. `f` if the
     forward images of `s` frequently (w.r.t. `f`) intersect arbitrary
     neighbourhoods of `y`. -/
-theorem mem_omega_limit_iff_frequently₂ (y : β) : y ∈ ω f ϕ s ↔ ∀ n _ : n ∈ 𝓝 y, ∃ᶠt in f, (ϕ t '' s ∩ n).Nonempty :=
+theorem mem_omega_limit_iff_frequently₂ (y : β) : y ∈ ω f ϕ s ↔ ∀ n _ : n ∈ 𝓝 y, ∃ᶠ t in f, (ϕ t '' s ∩ n).Nonempty :=
   by 
     simpRw [mem_omega_limit_iff_frequently, image_inter_nonempty_iff]
 
@@ -156,13 +160,13 @@ theorem omega_limit_inter : ω f ϕ (s₁ ∩ s₂) ⊆ ω f ϕ s₁ ∩ ω f ϕ
   subset_inter (omega_limit_mono_right _ _ (inter_subset_left _ _))
     (omega_limit_mono_right _ _ (inter_subset_right _ _))
 
-theorem omega_limit_Inter (p : ι → Set α) : ω f ϕ (⋂i, p i) ⊆ ⋂i, ω f ϕ (p i) :=
+theorem omega_limit_Inter (p : ι → Set α) : ω f ϕ (⋂ i, p i) ⊆ ⋂ i, ω f ϕ (p i) :=
   subset_Inter$ fun i => omega_limit_mono_right _ _ (Inter_subset _ _)
 
 theorem omega_limit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s₂ :=
   by 
     ext y 
-    split 
+    constructor
     ·
       simp only [mem_union, mem_omega_limit_iff_frequently, union_inter_distrib_right, union_nonempty,
         frequently_or_distrib]
@@ -177,7 +181,7 @@ theorem omega_limit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s
       exacts[omega_limit_mono_right _ _ (subset_union_left _ _) hy,
         omega_limit_mono_right _ _ (subset_union_right _ _) hy]
 
-theorem omega_limit_Union (p : ι → Set α) : (⋃i, ω f ϕ (p i)) ⊆ ω f ϕ (⋃i, p i) :=
+theorem omega_limit_Union (p : ι → Set α) : (⋃ i, ω f ϕ (p i)) ⊆ ω f ϕ (⋃ i, p i) :=
   by 
     rw [Union_subset_iff]
     exact fun i => omega_limit_mono_right _ _ (subset_Union _ _)
@@ -189,17 +193,17 @@ subsets of some set `v` also in `f`.
 -/
 
 
-theorem omega_limit_eq_Inter : ω f ϕ s = ⋂u : «expr↥ » f.sets, Closure (image2 ϕ u s) :=
+theorem omega_limit_eq_Inter : ω f ϕ s = ⋂ u : ↥f.sets, Closure (image2 ϕ u s) :=
   bInter_eq_Inter _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
 theorem omega_limit_eq_bInter_inter {v : Set τ} (hv : v ∈ f) :
-  ω f ϕ s = ⋂(u : _)(_ : u ∈ f), Closure (image2 ϕ (u ∩ v) s) :=
+  ω f ϕ s = ⋂ (u : _)(_ : u ∈ f), Closure (image2 ϕ (u ∩ v) s) :=
   subset.antisymm (Inter_subset_Inter2 fun u => ⟨u ∩ v, Inter_subset_Inter2 fun hu => ⟨inter_mem hu hv, subset.rfl⟩⟩)
     (Inter_subset_Inter
       fun u => Inter_subset_Inter fun hu => closure_mono (image2_subset (inter_subset_left _ _) subset.rfl))
 
-theorem omega_limit_eq_Inter_inter {v : Set τ} (hv : v ∈ f) :
-  ω f ϕ s = ⋂u : «expr↥ » f.sets, Closure (image2 ϕ (u ∩ v) s) :=
+theorem omega_limit_eq_Inter_inter {v : Set τ} (hv : v ∈ f) : ω f ϕ s = ⋂ u : ↥f.sets, Closure (image2 ϕ (u ∩ v) s) :=
   by 
     rw [omega_limit_eq_bInter_inter _ _ _ hv]
     apply bInter_eq_Inter
@@ -216,120 +220,127 @@ theorem omega_limit_subset_closure_fw_image {u : Set τ} (hu : u ∈ f) : ω f �
 -/
 
 
--- error in Dynamics.OmegaLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » g)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » g)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » g)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
 /-- A set is eventually carried into any open neighbourhood of its ω-limit:
 if `c` is a compact set such that `closure {ϕ t x | t ∈ v, x ∈ s} ⊆ c` for some `v ∈ f`
 and `n` is an open neighbourhood of `ω f ϕ s`, then for some `u ∈ f` we have
 `closure {ϕ t x | t ∈ u, x ∈ s} ⊆ n`. -/
-theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset'
-{c : set β}
-(hc₁ : is_compact c)
-(hc₂ : «expr∃ , »((v «expr ∈ » f), «expr ⊆ »(closure (image2 ϕ v s), c)))
-{n : set β}
-(hn₁ : is_open n)
-(hn₂ : «expr ⊆ »(exprω() f ϕ s, n)) : «expr∃ , »((u «expr ∈ » f), «expr ⊆ »(closure (image2 ϕ u s), n)) :=
-begin
-  rcases [expr hc₂, "with", "⟨", ident v, ",", ident hv₁, ",", ident hv₂, "⟩"],
-  let [ident k] [] [":=", expr closure (image2 ϕ v s)],
-  have [ident hk] [":", expr is_compact «expr \ »(k, n)] [":=", expr is_compact.diff (compact_of_is_closed_subset hc₁ is_closed_closure hv₂) hn₁],
-  let [ident j] [] [":=", expr λ u, «expr ᶜ»(closure (image2 ϕ «expr ∩ »(u, v) s))],
-  have [ident hj₁] [":", expr ∀ u «expr ∈ » f, is_open (j u)] [],
-  from [expr λ _ _, is_open_compl_iff.mpr is_closed_closure],
-  have [ident hj₂] [":", expr «expr ⊆ »(«expr \ »(k, n), «expr⋃ , »((u «expr ∈ » f), j u))] [],
-  begin
-    have [] [":", expr «expr = »(«expr⋃ , »((u «expr ∈ » f), j u), «expr⋃ , »((u : «expr↥ »(f.sets)), j u))] [],
-    from [expr bUnion_eq_Union _ _],
-    rw ["[", expr this, ",", expr diff_subset_comm, ",", expr diff_Union, "]"] [],
-    rw [expr omega_limit_eq_Inter_inter _ _ _ hv₁] ["at", ident hn₂],
-    simp_rw [expr diff_compl] [],
-    rw ["<-", expr inter_Inter] [],
-    exact [expr subset.trans (inter_subset_right _ _) hn₂]
-  end,
-  rcases [expr hk.elim_finite_subcover_image hj₁ hj₂, "with", "⟨", ident g, ",", ident hg₁, ":", expr ∀
-   u «expr ∈ » g, «expr ∈ »(u, f), ",", ident hg₂, ",", ident hg₃, "⟩"],
-  let [ident w] [] [":=", expr «expr ∩ »(«expr⋂ , »((u «expr ∈ » g), u), v)],
-  have [ident hw₂] [":", expr «expr ∈ »(w, f)] [],
-  by simpa [] [] [] ["*"] [] [],
-  have [ident hw₃] [":", expr «expr ⊆ »(«expr \ »(k, n), «expr ᶜ»(closure (image2 ϕ w s)))] [],
-  from [expr calc
-     «expr ⊆ »(«expr \ »(k, n), «expr⋃ , »((u «expr ∈ » g), j u)) : hg₃
-     «expr ⊆ »(..., «expr ᶜ»(closure (image2 ϕ w s))) : begin
-       simp [] [] ["only"] ["[", expr Union_subset_iff, ",", expr compl_subset_compl, "]"] [] [],
-       intros [ident u, ident hu],
-       mono ["*"] [] [] ["using", "[", expr w, "]"],
-       exact [expr Inter_subset_of_subset u (Inter_subset_of_subset hu subset.rfl)]
-     end],
-  have [ident hw₄] [":", expr «expr ⊆ »(«expr ᶜ»(k), «expr ᶜ»(closure (image2 ϕ w s)))] [],
-  begin
-    rw [expr compl_subset_compl] [],
-    calc
-      «expr ⊆ »(closure (image2 ϕ w s), _) : closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
-  end,
-  have [ident hnc] [":", expr «expr ⊆ »(«expr ᶜ»(n), «expr ∪ »(«expr \ »(k, n), «expr ᶜ»(k)))] [],
-  by rw ["[", expr union_comm, ",", "<-", expr inter_subset, ",", expr diff_eq, ",", expr inter_comm, "]"] [],
-  have [ident hw] [":", expr «expr ⊆ »(closure (image2 ϕ w s), n)] [],
-  from [expr compl_subset_compl.mp (subset.trans hnc (union_subset hw₃ hw₄))],
-  exact [expr ⟨_, hw₂, hw⟩]
-end
+theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' {c : Set β}
+  (hc₁ : IsCompact c) (hc₂ : ∃ (v : _)(_ : v ∈ f), Closure (image2 ϕ v s) ⊆ c) {n : Set β} (hn₁ : IsOpen n)
+  (hn₂ : ω f ϕ s ⊆ n) : ∃ (u : _)(_ : u ∈ f), Closure (image2 ϕ u s) ⊆ n :=
+  by 
+    rcases hc₂ with ⟨v, hv₁, hv₂⟩
+    let k := Closure (image2 ϕ v s)
+    have hk : IsCompact (k \ n) := IsCompact.diff (compact_of_is_closed_subset hc₁ is_closed_closure hv₂) hn₁ 
+    let j := fun u => Closure (image2 ϕ (u ∩ v) s)ᶜ
+    have hj₁ : ∀ u _ : u ∈ f, IsOpen (j u)
+    exact fun _ _ => is_open_compl_iff.mpr is_closed_closure 
+    have hj₂ : k \ n ⊆ ⋃ (u : _)(_ : u ∈ f), j u
+    ·
+      have  : (⋃ (u : _)(_ : u ∈ f), j u) = ⋃ u : ↥f.sets, j u 
+      exact bUnion_eq_Union _ _ 
+      rw [this, diff_subset_comm, diff_Union]
+      rw [omega_limit_eq_Inter_inter _ _ _ hv₁] at hn₂ 
+      simpRw [diff_compl]
+      rw [←inter_Inter]
+      exact subset.trans (inter_subset_right _ _) hn₂ 
+    rcases hk.elim_finite_subcover_image hj₁ hj₂ with ⟨g, hg₁ : ∀ u _ : u ∈ g, u ∈ f, hg₂, hg₃⟩
+    let w := (⋂ (u : _)(_ : u ∈ g), u) ∩ v 
+    have hw₂ : w ∈ f
+    ·
+      simpa [*]
+    have hw₃ : k \ n ⊆ Closure (image2 ϕ w s)ᶜ
+    exact
+      calc k \ n ⊆ ⋃ (u : _)(_ : u ∈ g), j u := hg₃ 
+        _ ⊆ Closure (image2 ϕ w s)ᶜ :=
+        by 
+          simp only [Union_subset_iff, compl_subset_compl]
+          intro u hu 
+          mono* using w 
+          exact Inter_subset_of_subset u (Inter_subset_of_subset hu subset.rfl)
+        
+    have hw₄ : kᶜ ⊆ Closure (image2 ϕ w s)ᶜ
+    ·
+      rw [compl_subset_compl]
+      calc Closure (image2 ϕ w s) ⊆ _ := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
+    have hnc : nᶜ ⊆ k \ n ∪ kᶜ
+    ·
+      rw [union_comm, ←inter_subset, diff_eq, inter_comm]
+    have hw : Closure (image2 ϕ w s) ⊆ n 
+    exact compl_subset_compl.mp (subset.trans hnc (union_subset hw₃ hw₄))
+    exact ⟨_, hw₂, hw⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
 /-- A set is eventually carried into any open neighbourhood of its ω-limit:
 if `c` is a compact set such that `closure {ϕ t x | t ∈ v, x ∈ s} ⊆ c` for some `v ∈ f`
 and `n` is an open neighbourhood of `ω f ϕ s`, then for some `u ∈ f` we have
 `closure {ϕ t x | t ∈ u, x ∈ s} ⊆ n`. -/
 theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset [T2Space β] {c : Set β}
-  (hc₁ : IsCompact c) (hc₂ : ∀ᶠt in f, maps_to (ϕ t) s c) {n : Set β} (hn₁ : IsOpen n) (hn₂ : ω f ϕ s ⊆ n) :
+  (hc₁ : IsCompact c) (hc₂ : ∀ᶠ t in f, maps_to (ϕ t) s c) {n : Set β} (hn₁ : IsOpen n) (hn₂ : ω f ϕ s ⊆ n) :
   ∃ (u : _)(_ : u ∈ f), Closure (image2 ϕ u s) ⊆ n :=
   eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' f ϕ _ hc₁
     ⟨_, hc₂, closure_minimal (image2_subset_iff.2 fun t => id) hc₁.is_closed⟩ hn₁ hn₂
 
 theorem eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_subset [T2Space β] {c : Set β}
-  (hc₁ : IsCompact c) (hc₂ : ∀ᶠt in f, maps_to (ϕ t) s c) {n : Set β} (hn₁ : IsOpen n) (hn₂ : ω f ϕ s ⊆ n) :
-  ∀ᶠt in f, maps_to (ϕ t) s n :=
+  (hc₁ : IsCompact c) (hc₂ : ∀ᶠ t in f, maps_to (ϕ t) s c) {n : Set β} (hn₁ : IsOpen n) (hn₂ : ω f ϕ s ⊆ n) :
+  ∀ᶠ t in f, maps_to (ϕ t) s n :=
   by 
     rcases eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset f ϕ s hc₁ hc₂ hn₁ hn₂ with
       ⟨u, hu_mem, hu⟩
     refine' mem_of_superset hu_mem fun t ht x hx => _ 
     exact hu (subset_closure$ mem_image2_of_mem ht hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » f)
 theorem eventually_closure_subset_of_is_open_of_omega_limit_subset [CompactSpace β] {v : Set β} (hv₁ : IsOpen v)
   (hv₂ : ω f ϕ s ⊆ v) : ∃ (u : _)(_ : u ∈ f), Closure (image2 ϕ u s) ⊆ v :=
   eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' _ _ _ compact_univ
     ⟨univ, univ_mem, subset_univ _⟩ hv₁ hv₂
 
 theorem eventually_maps_to_of_is_open_of_omega_limit_subset [CompactSpace β] {v : Set β} (hv₁ : IsOpen v)
-  (hv₂ : ω f ϕ s ⊆ v) : ∀ᶠt in f, maps_to (ϕ t) s v :=
+  (hv₂ : ω f ϕ s ⊆ v) : ∀ᶠ t in f, maps_to (ϕ t) s v :=
   by 
     rcases eventually_closure_subset_of_is_open_of_omega_limit_subset f ϕ s hv₁ hv₂ with ⟨u, hu_mem, hu⟩
     refine' mem_of_superset hu_mem fun t ht x hx => _ 
     exact hu (subset_closure$ mem_image2_of_mem ht hx)
 
--- error in Dynamics.OmegaLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » f)
 /-- The ω-limit of a nonempty set w.r.t. a nontrivial filter is nonempty. -/
-theorem nonempty_omega_limit_of_is_compact_absorbing
-[ne_bot f]
-{c : set β}
-(hc₁ : is_compact c)
-(hc₂ : «expr∃ , »((v «expr ∈ » f), «expr ⊆ »(closure (image2 ϕ v s), c)))
-(hs : s.nonempty) : (exprω() f ϕ s).nonempty :=
-begin
-  rcases [expr hc₂, "with", "⟨", ident v, ",", ident hv₁, ",", ident hv₂, "⟩"],
-  rw [expr omega_limit_eq_Inter_inter _ _ _ hv₁] [],
-  apply [expr is_compact.nonempty_Inter_of_directed_nonempty_compact_closed],
-  { rintro ["⟨", ident u₁, ",", ident hu₁, "⟩", "⟨", ident u₂, ",", ident hu₂, "⟩"],
-    use [expr ⟨«expr ∩ »(u₁, u₂), inter_mem hu₁ hu₂⟩],
-    split,
-    all_goals { exact [expr closure_mono (image2_subset (inter_subset_inter_left _ (by simp [] [] [] [] [] [])) subset.rfl)] } },
-  { intro [ident u],
-    have [ident hn] [":", expr (image2 ϕ «expr ∩ »(u, v) s).nonempty] [],
-    from [expr nonempty.image2 (nonempty_of_mem (inter_mem u.prop hv₁)) hs],
-    exact [expr hn.mono subset_closure] },
-  { intro ["_"],
-    apply [expr compact_of_is_closed_subset hc₁ is_closed_closure],
-    calc
-      «expr ⊆ »(_, closure (image2 ϕ v s)) : closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
-      «expr ⊆ »(..., c) : hv₂ },
-  { exact [expr λ _, is_closed_closure] }
-end
+theorem nonempty_omega_limit_of_is_compact_absorbing [ne_bot f] {c : Set β} (hc₁ : IsCompact c)
+  (hc₂ : ∃ (v : _)(_ : v ∈ f), Closure (image2 ϕ v s) ⊆ c) (hs : s.nonempty) : (ω f ϕ s).Nonempty :=
+  by 
+    rcases hc₂ with ⟨v, hv₁, hv₂⟩
+    rw [omega_limit_eq_Inter_inter _ _ _ hv₁]
+    apply IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed
+    ·
+      rintro ⟨u₁, hu₁⟩ ⟨u₂, hu₂⟩
+      use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩
+      constructor 
+      all_goals 
+        exact
+          closure_mono
+            (image2_subset
+              (inter_subset_inter_left _
+                (by 
+                  simp ))
+              subset.rfl)
+    ·
+      intro u 
+      have hn : (image2 ϕ (u ∩ v) s).Nonempty 
+      exact nonempty.image2 (nonempty_of_mem (inter_mem u.prop hv₁)) hs 
+      exact hn.mono subset_closure
+    ·
+      intro 
+      apply compact_of_is_closed_subset hc₁ is_closed_closure 
+      calc _ ⊆ Closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)_ ⊆ c := hv₂
+    ·
+      exact fun _ => is_closed_closure
 
 theorem nonempty_omega_limit [CompactSpace β] [ne_bot f] (hs : s.nonempty) : (ω f ϕ s).Nonempty :=
   nonempty_omega_limit_of_is_compact_absorbing _ _ _ compact_univ ⟨univ, univ_mem, subset_univ _⟩ hs
@@ -382,27 +393,23 @@ theorem omega_limit_image_eq (hf : ∀ t, tendsto (·+t) f f) (t : τ) : ω f ϕ
       _ ⊆ ω f ϕ (ϕ t '' s) := omega_limit_image_subset _ _ _ _ (hf _)
       
 
--- error in Dynamics.OmegaLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem omega_limit_omega_limit
-(hf : ∀ t, tendsto (((«expr + »)) t) f f) : «expr ⊆ »(exprω() f ϕ (exprω() f ϕ s), exprω() f ϕ s) :=
-begin
-  simp [] [] ["only"] ["[", expr subset_def, ",", expr mem_omega_limit_iff_frequently₂, ",", expr frequently_iff, "]"] [] [],
-  intros ["_", ident h],
-  rintro [ident n, ident hn, ident u, ident hu],
-  rcases [expr mem_nhds_iff.mp hn, "with", "⟨", ident o, ",", ident ho₁, ",", ident ho₂, ",", ident ho₃, "⟩"],
-  rcases [expr h o (is_open.mem_nhds ho₂ ho₃) hu, "with", "⟨", ident t, ",", ident ht₁, ",", ident ht₂, "⟩"],
-  have [ident l₁] [":", expr «expr ∩ »(exprω() f ϕ s, o).nonempty] [],
-  from [expr ht₂.mono (inter_subset_inter_left _ ((is_invariant_iff_image _ _).mp (is_invariant_omega_limit _ _ _ hf) _))],
-  have [ident l₂] [":", expr «expr ∩ »(closure (image2 ϕ u s), o).nonempty] [":=", expr l₁.mono (λ
-    b hb, ⟨omega_limit_subset_closure_fw_image _ _ _ hu hb.1, hb.2⟩)],
-  have [ident l₃] [":", expr «expr ∩ »(o, image2 ϕ u s).nonempty] [],
-  begin
-    rcases [expr l₂, "with", "⟨", ident b, ",", ident hb₁, ",", ident hb₂, "⟩"],
-    exact [expr mem_closure_iff_nhds.mp hb₁ o (is_open.mem_nhds ho₂ hb₂)]
-  end,
-  rcases [expr l₃, "with", "⟨", ident ϕra, ",", ident ho, ",", "⟨", "_", ",", "_", ",", ident hr, ",", ident ha, ",", ident hϕra, "⟩", "⟩"],
-  exact [expr ⟨_, hr, ϕra, ⟨_, ha, hϕra⟩, ho₁ ho⟩]
-end
+theorem omega_limit_omega_limit (hf : ∀ t, tendsto ((·+·) t) f f) : ω f ϕ (ω f ϕ s) ⊆ ω f ϕ s :=
+  by 
+    simp only [subset_def, mem_omega_limit_iff_frequently₂, frequently_iff]
+    intro _ h 
+    rintro n hn u hu 
+    rcases mem_nhds_iff.mp hn with ⟨o, ho₁, ho₂, ho₃⟩
+    rcases h o (IsOpen.mem_nhds ho₂ ho₃) hu with ⟨t, ht₁, ht₂⟩
+    have l₁ : (ω f ϕ s ∩ o).Nonempty 
+    exact ht₂.mono (inter_subset_inter_left _ ((is_invariant_iff_image _ _).mp (is_invariant_omega_limit _ _ _ hf) _))
+    have l₂ : (Closure (image2 ϕ u s) ∩ o).Nonempty :=
+      l₁.mono fun b hb => ⟨omega_limit_subset_closure_fw_image _ _ _ hu hb.1, hb.2⟩
+    have l₃ : (o ∩ image2 ϕ u s).Nonempty
+    ·
+      rcases l₂ with ⟨b, hb₁, hb₂⟩
+      exact mem_closure_iff_nhds.mp hb₁ o (IsOpen.mem_nhds ho₂ hb₂)
+    rcases l₃ with ⟨ϕra, ho, ⟨_, _, hr, ha, hϕra⟩⟩
+    exact ⟨_, hr, ϕra, ⟨_, ha, hϕra⟩, ho₁ ho⟩
 
 end Flow
 

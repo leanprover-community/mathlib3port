@@ -1,5 +1,6 @@
-import Mathbin.Data.Setoid.Basic 
-import Mathbin.Data.Set.Pairwise
+import Mathbin.Data.Fintype.Basic 
+import Mathbin.Data.Set.Finite 
+import Mathbin.Data.Setoid.Basic
 
 /-!
 # Equivalence relations: partitions
@@ -23,13 +24,16 @@ namespace Setoidₓ
 
 variable {α : Type _}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- If x ∈ α is in 2 elements of a set of sets partitioning α, those 2 sets are equal. -/
-theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) {x b b'} (hc : b ∈ c) (hb : x ∈ b)
+theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x b b'} (hc : b ∈ c) (hb : x ∈ b)
   (hc' : b' ∈ c) (hb' : x ∈ b') : b = b' :=
   (H x).unique2 hc hb hc' hb'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » c)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- Makes an equivalence relation from a set of sets partitioning α. -/
-def mk_classes (c : Set (Set α)) (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) : Setoidₓ α :=
+def mk_classes (c : Set (Set α)) (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : Setoidₓ α :=
   ⟨fun x y => ∀ s _ : s ∈ c, x ∈ s → y ∈ s,
     ⟨fun _ _ _ hx => hx,
       fun x y h s hs hy =>
@@ -46,17 +50,43 @@ def mk_classes (c : Set (Set α)) (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b)
                 have htt' : t = t' := eq_of_mem_eqv_class H ht (h2 _ ht hy) ht' hz
                 (hst.trans htt').symm ▸ hz⟩⟩
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Makes the equivalence classes of an equivalence relation. -/
-def classes (r : Setoidₓ α) : Set (Set α) :=
-  { s | ∃ y, s = { x | r.rel x y } }
+  def classes ( r : Setoidₓ α ) : Set Set α := { s | ∃ y , s = { x | r.rel x y } }
 
-theorem mem_classes (r : Setoidₓ α) y : { x | r.rel x y } ∈ r.classes :=
-  ⟨y, rfl⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem mem_classes ( r : Setoidₓ α ) y : { x | r.rel x y } ∈ r.classes := ⟨ y , rfl ⟩
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  classes_ker_subset_fiber_set
+  { β : Type _ } ( f : α → β ) : Setoidₓ.ker f . Classes ⊆ Set.Range fun y => { x | f x = y }
+  := by rintro s ⟨ x , rfl ⟩ rw [ Set.mem_range ] exact ⟨ f x , rfl ⟩
+
+theorem nonempty_fintype_classes_ker {α β : Type _} [Fintype β] (f : α → β) :
+  Nonempty (Fintype (Setoidₓ.ker f).Classes) :=
+  by 
+    classical 
+    exact ⟨Set.fintypeSubset _ (classes_ker_subset_fiber_set f)⟩
+
+theorem card_classes_ker_le {α β : Type _} [Fintype β] (f : α → β) [Fintype (Setoidₓ.ker f).Classes] :
+  Fintype.card (Setoidₓ.ker f).Classes ≤ Fintype.card β :=
+  by 
+    classical 
+    exact le_transₓ (Set.card_le_of_subset (classes_ker_subset_fiber_set f)) (Fintype.card_range_le _)
+
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Two equivalence relations are equal iff all their equivalence classes are equal. -/
-theorem eq_iff_classes_eq {r₁ r₂ : Setoidₓ α} : r₁ = r₂ ↔ ∀ x, { y | r₁.rel x y } = { y | r₂.rel x y } :=
-  ⟨fun h x => h ▸ rfl, fun h => ext'$ fun x => Set.ext_iff.1$ h x⟩
+  theorem
+    eq_iff_classes_eq
+    { r₁ r₂ : Setoidₓ α } : r₁ = r₂ ↔ ∀ x , { y | r₁.rel x y } = { y | r₂.rel x y }
+    := ⟨ fun h x => h ▸ rfl , fun h => ext' $ fun x => Set.ext_iff . 1 $ h x ⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » r.classes)
 theorem rel_iff_exists_classes (r : Setoidₓ α) {x y} : r.rel x y ↔ ∃ (c : _)(_ : c ∈ r.classes), x ∈ c ∧ y ∈ c :=
   ⟨fun h => ⟨_, r.mem_classes y, h, r.refl' y⟩,
     fun ⟨c, ⟨z, hz⟩, hx, hy⟩ =>
@@ -77,49 +107,75 @@ theorem classes_inj {r₁ r₂ : Setoidₓ α} : r₁ = r₂ ↔ r₁.classes = 
 theorem empty_not_mem_classes {r : Setoidₓ α} : ∅ ∉ r.classes :=
   fun ⟨y, hy⟩ => Set.not_mem_empty y$ hy.symm ▸ r.refl' y
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » r.classes)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Equivalence classes partition the type. -/
-theorem classes_eqv_classes {r : Setoidₓ α} a : ∃!(b : _)(_ : b ∈ r.classes), a ∈ b :=
-  ExistsUnique.intro2 { x | r.rel x a } (r.mem_classes a) (r.refl' _)$
-    by 
-      rintro _ ⟨y, rfl⟩ ha 
-      ext x 
-      exact ⟨fun hx => r.trans' hx (r.symm' ha), fun hx => r.trans' hx ha⟩
+  theorem
+    classes_eqv_classes
+    { r : Setoidₓ α } a : ∃! ( b : _ ) ( _ : b ∈ r.classes ) , a ∈ b
+    :=
+      ExistsUnique.intro2 { x | r.rel x a } r.mem_classes a r.refl' _
+        $
+        by rintro _ ⟨ y , rfl ⟩ ha ext x exact ⟨ fun hx => r.trans' hx r.symm' ha , fun hx => r.trans' hx ha ⟩
 
 /-- If x ∈ α is in 2 equivalence classes, the equivalence classes are equal. -/
 theorem eq_of_mem_classes {r : Setoidₓ α} {x b} (hc : b ∈ r.classes) (hb : x ∈ b) {b'} (hc' : b' ∈ r.classes)
   (hb' : x ∈ b') : b = b' :=
   eq_of_mem_eqv_class classes_eqv_classes hc hb hc' hb'
 
-/-- The elements of a set of sets partitioning α are the equivalence classes of the
-    equivalence relation defined by the set of sets. -/
-theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) {s y} (hs : s ∈ c) (hy : y ∈ s) :
-  s = { x | (mk_classes c H).Rel x y } :=
-  Set.ext$
-    fun x =>
-      ⟨fun hs' => symm' (mk_classes c H)$ fun b' hb' h' => eq_of_mem_eqv_class H hs hy hb' h' ▸ hs',
-        fun hx => (H x).elim2$ fun b' hc' hb' h' => (eq_of_mem_eqv_class H hs hy hc'$ hx b' hc' hb').symm ▸ hb'⟩
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » c)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The elements of a set of sets partitioning α are the equivalence classes of the
+        equivalence relation defined by the set of sets. -/
+  theorem
+    eq_eqv_class_of_mem
+    { c : Set Set α } ( H : ∀ a , ∃! ( b : _ ) ( _ : b ∈ c ) , a ∈ b ) { s y } ( hs : s ∈ c ) ( hy : y ∈ s )
+      : s = { x | mk_classes c H . Rel x y }
+    :=
+      Set.ext
+        $
+        fun
+          x
+            =>
+            ⟨
+              fun hs' => symm' mk_classes c H $ fun b' hb' h' => eq_of_mem_eqv_class H hs hy hb' h' ▸ hs'
+                ,
+                fun
+                  hx => H x . elim2 $ fun b' hc' hb' h' => eq_of_mem_eqv_class H hs hy hc' $ hx b' hc' hb' . symm ▸ hb'
+              ⟩
 
-/-- The equivalence classes of the equivalence relation defined by a set of sets
-    partitioning α are elements of the set of sets. -/
-theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) {y} :
-  { x | (mk_classes c H).Rel x y } ∈ c :=
-  (H y).elim2$ fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » c)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The equivalence classes of the equivalence relation defined by a set of sets
+        partitioning α are elements of the set of sets. -/
+  theorem
+    eqv_class_mem
+    { c : Set Set α } ( H : ∀ a , ∃! ( b : _ ) ( _ : b ∈ c ) , a ∈ b ) { y } : { x | mk_classes c H . Rel x y } ∈ c
+    := H y . elim2 $ fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
 
-theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) {x} :
-  { y:α | (mk_classes c H).Rel x y } ∈ c :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » c)
+theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x} :
+  { y : α | (mk_classes c H).Rel x y } ∈ c :=
   by 
     convert Setoidₓ.eqv_class_mem H 
     ext 
     rw [Setoidₓ.comm']
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- Distinct elements of a set of sets partitioning α are disjoint. -/
-theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) : c.pairwise_disjoint id :=
+theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : c.pairwise_disjoint id :=
   fun b₁ h₁ b₂ h₂ h =>
     Set.disjoint_left.2$ fun x hx1 hx2 => (H x).elim2$ fun b hc hx hb => h$ eq_of_mem_eqv_class H h₁ hx1 h₂ hx2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- A set of disjoint sets covering α partition α (classical). -/
 theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.SUnion c = @Set.Univ α) (H : c.pairwise_disjoint id)
-  a : ∃!(b : _)(_ : b ∈ c), a ∈ b :=
+  a : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
   let ⟨b, hc, ha⟩ :=
     Set.mem_sUnion.1$
       show a ∈ _ by 
@@ -131,24 +187,41 @@ def setoid_of_disjoint_union {c : Set (Set α)} (hu : Set.SUnion c = @Set.Univ �
   Setoidₓ α :=
   Setoidₓ.mkClasses c$ eqv_classes_of_disjoint_union hu H
 
-/-- The equivalence relation made from the equivalence classes of an equivalence
-    relation r equals r. -/
-theorem mk_classes_classes (r : Setoidₓ α) : mk_classes r.classes classes_eqv_classes = r :=
-  ext'$
-    fun x y =>
-      ⟨fun h => r.symm' (h { z | r.rel z x } (r.mem_classes x)$ r.refl' x),
-        fun h b hb hx => eq_of_mem_classes (r.mem_classes x) (r.refl' x) hb hx ▸ r.symm' h⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The equivalence relation made from the equivalence classes of an equivalence
+        relation r equals r. -/
+  theorem
+    mk_classes_classes
+    ( r : Setoidₓ α ) : mk_classes r.classes classes_eqv_classes = r
+    :=
+      ext'
+        $
+        fun
+          x y
+            =>
+            ⟨
+              fun h => r.symm' h { z | r.rel z x } r.mem_classes x $ r.refl' x
+                ,
+                fun h b hb hx => eq_of_mem_classes r.mem_classes x r.refl' x hb hx ▸ r.symm' h
+              ⟩
 
-@[simp]
-theorem sUnion_classes (r : Setoidₓ α) : ⋃₀r.classes = Set.Univ :=
-  Set.eq_univ_of_forall$ fun x => Set.mem_sUnion.2 ⟨{ y | r.rel y x }, ⟨x, rfl⟩, Setoidₓ.refl _⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    sUnion_classes
+    ( r : Setoidₓ α ) : ⋃₀ r.classes = Set.Univ
+    := Set.eq_univ_of_forall $ fun x => Set.mem_sUnion . 2 ⟨ { y | r.rel y x } , ⟨ x , rfl ⟩ , Setoidₓ.refl _ ⟩
 
 section Partition
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- A collection `c : set (set α)` of sets is a partition of `α` into pairwise
 disjoint sets if `∅ ∉ c` and each element `a : α` belongs to a unique set `b ∈ c`. -/
 def is_partition (c : Set (Set α)) :=
-  ∅ ∉ c ∧ ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b
+  ∅ ∉ c ∧ ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b
 
 /-- A partition of `α` does not contain the empty set. -/
 theorem nonempty_of_mem_partition {c : Set (Set α)} (hc : is_partition c) {s} (h : s ∈ c) : s.nonempty :=
@@ -169,11 +242,13 @@ theorem is_partition.sUnion_eq_univ {c : Set (Set α)} (hc : is_partition c) : �
           by 
             clearAuxDecl <;> finish⟩
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- All elements of a partition of α are the equivalence class of some y ∈ α. -/
-theorem exists_of_mem_partition {c : Set (Set α)} (hc : is_partition c) {s} (hs : s ∈ c) :
-  ∃ y, s = { x | (mk_classes c hc.2).Rel x y } :=
-  let ⟨y, hy⟩ := nonempty_of_mem_partition hc hs
-  ⟨y, eq_eqv_class_of_mem hc.2 hs hy⟩
+  theorem
+    exists_of_mem_partition
+    { c : Set Set α } ( hc : is_partition c ) { s } ( hs : s ∈ c ) : ∃ y , s = { x | mk_classes c hc . 2 . Rel x y }
+    := let ⟨ y , hy ⟩ := nonempty_of_mem_partition hc hs ⟨ y , eq_eqv_class_of_mem hc . 2 hs hy ⟩
 
 /-- The equivalence classes of the equivalence relation defined by a partition of α equal
     the original partition. -/
@@ -277,7 +352,7 @@ include hs
 theorem exists_mem (x : α) : ∃ i, x ∈ s i :=
   ⟨hs.index x, hs.mem_index x⟩
 
-theorem Union : (⋃i, s i) = univ :=
+theorem Union : (⋃ i, s i) = univ :=
   by 
     ext x 
     simp [hs.exists_mem x]
@@ -288,8 +363,9 @@ theorem Disjoint : ∀ {i j}, i ≠ j → Disjoint (s i) (s j) :=
 theorem mem_iff_index_eq {x i} : x ∈ s i ↔ hs.index x = i :=
   ⟨fun hxi => (hs.eq_of_mem hxi (hs.mem_index x)).symm, fun h => h ▸ hs.mem_index _⟩
 
-theorem Eq i : s i = { x | hs.index x = i } :=
-  Set.ext$ fun _ => hs.mem_iff_index_eq
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Eq i : s i = { x | hs.index x = i } := Set.ext $ fun _ => hs.mem_iff_index_eq
 
 /-- The equivalence relation associated to an indexed partition. Two
 elements are equivalent if they belong to the same set of the partition. -/

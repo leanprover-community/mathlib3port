@@ -45,17 +45,23 @@ open Set
 variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] {l : E →L[𝕜] 𝕜}
   {A B C : Set E} {X : Finset E} {x : E}
 
-/-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
-all points maximizing it). Written `is_exposed 𝕜 A B`. -/
-def IsExposed (A B : Set E) : Prop :=
-  B.nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x∈A | ∀ y _ : y ∈ A, l y ≤ l x }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » A)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
+    all points maximizing it). Written `is_exposed 𝕜 A B`. -/
+  def IsExposed ( A B : Set E ) : Prop := B.nonempty → ∃ l : E →L[ 𝕜 ] 𝕜 , B = { x ∈ A | ∀ y _ : y ∈ A , l y ≤ l x }
 
 variable {𝕜}
 
-/-- A useful way to build exposed sets from intersecting `A` with halfspaces (modelled by an
-inequality with a functional). -/
-def ContinuousLinearMap.ToExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
-  { x∈A | ∀ y _ : y ∈ A, l y ≤ l x }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » A)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    A useful way to build exposed sets from intersecting `A` with halfspaces (modelled by an
+    inequality with a functional). -/
+  def ContinuousLinearMap.ToExposed ( l : E →L[ 𝕜 ] 𝕜 ) ( A : Set E ) : Set E := { x ∈ A | ∀ y _ : y ∈ A , l y ≤ l x }
 
 theorem ContinuousLinearMap.ToExposed.is_exposed : IsExposed 𝕜 A (l.to_exposed A) :=
   fun h => ⟨l, rfl⟩
@@ -98,22 +104,36 @@ protected theorem mono (hC : IsExposed 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B)
         subset.antisymm (fun x hx => ⟨hCB hx, fun y hy => hx.2 y (hBA hy)⟩)
           fun x hx => ⟨hBA hx.1, fun y hy => (hw.2 y hy).trans (hx.2 w (hCB hw))⟩⟩
 
-/-- If `B` is an exposed subset of `A`, then `B` is the intersection of `A` with some closed
-halfspace. The converse is *not* true. It would require that the corresponding open halfspace
-doesn't intersect `A`. -/
-theorem eq_inter_halfspace (hAB : IsExposed 𝕜 A B) : ∃ l : E →L[𝕜] 𝕜, ∃ a, B = { x∈A | a ≤ l x } :=
-  by 
-    obtain hB | hB := B.eq_empty_or_nonempty
-    ·
-      refine' ⟨0, 1, _⟩
-      rw [hB, eq_comm, eq_empty_iff_forall_not_mem]
-      rintro x ⟨-, h⟩
-      rw [ContinuousLinearMap.zero_apply] at h 
-      linarith 
-    obtain ⟨l, rfl⟩ := hAB hB 
-    obtain ⟨w, hw⟩ := hB 
-    exact
-      ⟨l, l w, subset.antisymm (fun x hx => ⟨hx.1, hx.2 w hw.1⟩) fun x hx => ⟨hx.1, fun y hy => (hw.2 y hy).trans hx.2⟩⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    If `B` is an exposed subset of `A`, then `B` is the intersection of `A` with some closed
+    halfspace. The converse is *not* true. It would require that the corresponding open halfspace
+    doesn't intersect `A`. -/
+  theorem
+    eq_inter_halfspace
+    ( hAB : IsExposed 𝕜 A B ) : ∃ l : E →L[ 𝕜 ] 𝕜 , ∃ a , B = { x ∈ A | a ≤ l x }
+    :=
+      by
+        obtain hB | hB := B.eq_empty_or_nonempty
+          ·
+            refine' ⟨ 0 , 1 , _ ⟩
+              rw [ hB , eq_comm , eq_empty_iff_forall_not_mem ]
+              rintro x ⟨ - , h ⟩
+              rw [ ContinuousLinearMap.zero_apply ] at h
+              linarith
+          obtain ⟨ l , rfl ⟩ := hAB hB
+          obtain ⟨ w , hw ⟩ := hB
+          exact
+            ⟨
+              l
+                ,
+                l w
+                ,
+                subset.antisymm
+                  fun x hx => ⟨ hx . 1 , hx . 2 w hw . 1 ⟩
+                    fun x hx => ⟨ hx . 1 , fun y hy => hw . 2 y hy . trans hx . 2 ⟩
+              ⟩
 
 protected theorem inter (hB : IsExposed 𝕜 A B) (hC : IsExposed 𝕜 A C) : IsExposed 𝕜 A (B ∩ C) :=
   by 
@@ -131,6 +151,7 @@ protected theorem inter (hB : IsExposed 𝕜 A B) (hC : IsExposed 𝕜 A C) : Is
     ·
       exact (add_le_add_iff_left (l₁ x)).1 (le_transₓ (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (B «expr ∈ » F)
 theorem sInter {F : Finset (Set E)} (hF : F.nonempty) (hAF : ∀ B _ : B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀F) :=
   by 
     revert hF F 
@@ -161,20 +182,20 @@ theorem inter_right (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (
     rw [inter_comm]
     exact hC.inter_left hCA
 
--- error in Analysis.Convex.Exposed: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected theorem is_extreme (hAB : is_exposed 𝕜 A B) : is_extreme 𝕜 A B :=
-begin
-  refine [expr ⟨hAB.subset, λ x₁ x₂ hx₁A hx₂A x hxB hx, _⟩],
-  obtain ["⟨", ident l, ",", ident rfl, "⟩", ":=", expr hAB ⟨x, hxB⟩],
-  have [ident hl] [":", expr convex_on 𝕜 univ l] [":=", expr l.to_linear_map.convex_on convex_univ],
-  have [ident hlx₁] [] [":=", expr hxB.2 x₁ hx₁A],
-  have [ident hlx₂] [] [":=", expr hxB.2 x₂ hx₂A],
-  refine [expr ⟨⟨hx₁A, λ y hy, _⟩, ⟨hx₂A, λ y hy, _⟩⟩],
-  { rw [expr hlx₁.antisymm (hl.le_left_of_right_le (mem_univ _) (mem_univ _) hx hlx₂)] [],
-    exact [expr hxB.2 y hy] },
-  { rw [expr hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)] [],
-    exact [expr hxB.2 y hy] }
-end
+protected theorem IsExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B :=
+  by 
+    refine' ⟨hAB.subset, fun x₁ x₂ hx₁A hx₂A x hxB hx => _⟩
+    obtain ⟨l, rfl⟩ := hAB ⟨x, hxB⟩
+    have hl : ConvexOn 𝕜 univ l := l.to_linear_map.convex_on convex_univ 
+    have hlx₁ := hxB.2 x₁ hx₁A 
+    have hlx₂ := hxB.2 x₂ hx₂A 
+    refine' ⟨⟨hx₁A, fun y hy => _⟩, ⟨hx₂A, fun y hy => _⟩⟩
+    ·
+      rw [hlx₁.antisymm (hl.le_left_of_right_le (mem_univ _) (mem_univ _) hx hlx₂)]
+      exact hxB.2 y hy
+    ·
+      rw [hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)]
+      exact hxB.2 y hy
 
 protected theorem Convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Convex 𝕜 B :=
   by 
@@ -201,13 +222,20 @@ end IsExposed
 
 variable (𝕜)
 
-/-- A point is exposed with respect to `A` iff there exists an hyperplane whose intersection with
-`A` is exactly that point. -/
-def Set.ExposedPoints (A : Set E) : Set E :=
-  { x∈A | ∃ l : E →L[𝕜] 𝕜, ∀ y _ : y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » A)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    A point is exposed with respect to `A` iff there exists an hyperplane whose intersection with
+    `A` is exactly that point. -/
+  def
+    Set.ExposedPoints
+    ( A : Set E ) : Set E
+    := { x ∈ A | ∃ l : E →L[ 𝕜 ] 𝕜 , ∀ y _ : y ∈ A , l y ≤ l x ∧ l x ≤ l y → y = x }
 
 variable {𝕜}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » A)
 theorem exposed_point_def :
   x ∈ A.exposed_points 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀ y _ : y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) :=
   Iff.rfl

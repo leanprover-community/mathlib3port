@@ -26,6 +26,9 @@ local infixl:50 " ≼ " => r
 def Directed (f : ι → α) :=
   ∀ x y, ∃ z, f x ≼ f z ∧ f y ≼ f z
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » s)
 /-- A subset of α is directed if there is an element of the set `≼`-above any
   pair of elements in the set. -/
 def DirectedOn (s : Set α) :=

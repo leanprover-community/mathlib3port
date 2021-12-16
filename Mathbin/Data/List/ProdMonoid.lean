@@ -27,20 +27,18 @@ theorem prod_repeat [Monoidₓ α] (a : α) (n : ℕ) : (repeat a n).Prod = a ^ 
     ·
       rw [List.repeat_succ, List.prod_cons, ih, pow_succₓ]
 
--- error in Data.List.ProdMonoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem prod_le_of_forall_le
-[ordered_comm_monoid α]
-(l : list α)
-(n : α)
-(h : ∀ x «expr ∈ » l, «expr ≤ »(x, n)) : «expr ≤ »(l.prod, «expr ^ »(n, l.length)) :=
-begin
-  induction [expr l] [] ["with", ident y, ident l, ident IH] [],
-  { simp [] [] [] [] [] [] },
-  { specialize [expr IH (λ x hx, h x (mem_cons_of_mem _ hx))],
-    have [ident hy] [":", expr «expr ≤ »(y, n)] [":=", expr h y (mem_cons_self _ _)],
-    simpa [] [] [] ["[", expr pow_succ, "]"] [] ["using", expr mul_le_mul' hy IH] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+@[toAdditive]
+theorem prod_le_of_forall_le [OrderedCommMonoid α] (l : List α) (n : α) (h : ∀ x _ : x ∈ l, x ≤ n) :
+  l.prod ≤ n ^ l.length :=
+  by 
+    induction' l with y l IH
+    ·
+      simp 
+    ·
+      specialize IH fun x hx => h x (mem_cons_of_mem _ hx)
+      have hy : y ≤ n := h y (mem_cons_self _ _)
+      simpa [pow_succₓ] using mul_le_mul' hy IH
 
 end List
 

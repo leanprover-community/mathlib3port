@@ -333,14 +333,14 @@ theorem ne_zero [Nontrivial M₀] (u : Units M₀) : (u : M₀) ≠ 0 :=
 theorem mul_left_eq_zero (u : Units M₀) {a : M₀} : (a*u) = 0 ↔ a = 0 :=
   ⟨fun h =>
       by 
-        simpa using mul_eq_zero_of_left h («expr↑ » (u⁻¹)),
+        simpa using mul_eq_zero_of_left h (↑u⁻¹),
     fun h => mul_eq_zero_of_left h u⟩
 
 @[simp]
-theorem mul_right_eq_zero (u : Units M₀) {a : M₀} : («expr↑ » u*a) = 0 ↔ a = 0 :=
+theorem mul_right_eq_zero (u : Units M₀) {a : M₀} : ((↑u)*a) = 0 ↔ a = 0 :=
   ⟨fun h =>
       by 
-        simpa using mul_eq_zero_of_right («expr↑ » (u⁻¹)) h,
+        simpa using mul_eq_zero_of_right (↑u⁻¹) h,
     mul_eq_zero_of_right u⟩
 
 end Units
@@ -539,18 +539,18 @@ theorem eq_zero_of_mul_eq_self_left (h₁ : b ≠ 1) (h₂ : (b*a) = a) : a = 0 
 
 end CancelMonoidWithZero
 
-section CommCancelMonoidWithZero
+section CancelCommMonoidWithZero
 
-variable [CommCancelMonoidWithZero M₀] {a b c : M₀}
+variable [CancelCommMonoidWithZero M₀] {a b c : M₀}
 
-/-- Pullback a `comm_cancel_monoid_with_zero` class along an injective function.
+/-- Pullback a `cancel_comm_monoid_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.commCancelMonoidWithZero [HasZero M₀'] [Mul M₀'] [HasOne M₀'] (f : M₀' → M₀)
-  (hf : injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x*y) = f x*f y) : CommCancelMonoidWithZero M₀' :=
+protected def Function.Injective.cancelCommMonoidWithZero [HasZero M₀'] [Mul M₀'] [HasOne M₀'] (f : M₀' → M₀)
+  (hf : injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x*y) = f x*f y) : CancelCommMonoidWithZero M₀' :=
   { hf.comm_monoid_with_zero f zero one mul, hf.cancel_monoid_with_zero f zero one mul with  }
 
-end CommCancelMonoidWithZero
+end CancelCommMonoidWithZero
 
 section GroupWithZeroₓ
 
@@ -759,11 +759,11 @@ theorem inv_eq_one₀ : g⁻¹ = 1 ↔ g = 1 :=
 
 theorem eq_mul_inv_iff_mul_eq₀ (hc : c ≠ 0) : (a = b*c⁻¹) ↔ (a*c) = b :=
   by 
-    split  <;> rintro rfl <;> [rw [inv_mul_cancel_right₀ hc], rw [mul_inv_cancel_right₀ hc]]
+    constructor <;> rintro rfl <;> [rw [inv_mul_cancel_right₀ hc], rw [mul_inv_cancel_right₀ hc]]
 
 theorem eq_inv_mul_iff_mul_eq₀ (hb : b ≠ 0) : (a = b⁻¹*c) ↔ (b*a) = c :=
   by 
-    split  <;> rintro rfl <;> [rw [mul_inv_cancel_left₀ hb], rw [inv_mul_cancel_left₀ hb]]
+    constructor <;> rintro rfl <;> [rw [mul_inv_cancel_left₀ hb], rw [inv_mul_cancel_left₀ hb]]
 
 theorem inv_mul_eq_iff_eq_mul₀ (ha : a ≠ 0) : (a⁻¹*b) = c ↔ b = a*c :=
   by 
@@ -840,7 +840,7 @@ theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Un
     fun h => Units.ext h⟩
 
 @[simp]
-theorem exists_iff_ne_zero {x : G₀} : (∃ u : Units G₀, «expr↑ » u = x) ↔ x ≠ 0 :=
+theorem exists_iff_ne_zero {x : G₀} : (∃ u : Units G₀, ↑u = x) ↔ x ≠ 0 :=
   ⟨fun ⟨u, hu⟩ => hu ▸ u.ne_zero, fun hx => ⟨mk0 x hx, rfl⟩⟩
 
 theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : Units G₀, a = u :=
@@ -1146,7 +1146,7 @@ section CommGroupWithZero
 
 variable [CommGroupWithZero G₀] {a b c : G₀}
 
-instance (priority := 10) CommGroupWithZero.commCancelMonoidWithZero : CommCancelMonoidWithZero G₀ :=
+instance (priority := 10) CommGroupWithZero.cancelCommMonoidWithZero : CancelCommMonoidWithZero G₀ :=
   { GroupWithZeroₓ.cancelMonoidWithZero, CommGroupWithZero.toCommMonoidWithZero G₀ with  }
 
 /-- Pullback a `comm_group_with_zero` class along an injective function.
@@ -1304,19 +1304,20 @@ theorem inv_symm_left_iff₀ : SemiconjBy (a⁻¹) x y ↔ SemiconjBy a y x :=
 theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy (a⁻¹) y x :=
   SemiconjBy.inv_symm_left_iff₀.2 h
 
--- error in Algebra.GroupWithZero.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem inv_right₀ (h : semiconj_by a x y) : semiconj_by a «expr ⁻¹»(x) «expr ⁻¹»(y) :=
-begin
-  by_cases [expr ha, ":", expr «expr = »(a, 0)],
-  { simp [] [] ["only"] ["[", expr ha, ",", expr zero_left, "]"] [] [] },
-  by_cases [expr hx, ":", expr «expr = »(x, 0)],
-  { subst [expr x],
-    simp [] [] ["only"] ["[", expr semiconj_by, ",", expr mul_zero, ",", expr @eq_comm _ _ «expr * »(y, a), ",", expr mul_eq_zero, "]"] [] ["at", ident h],
-    simp [] [] [] ["[", expr h.resolve_right ha, "]"] [] [] },
-  { have [] [] [":=", expr mul_ne_zero ha hx],
-    rw ["[", expr h.eq, ",", expr mul_ne_zero_iff, "]"] ["at", ident this],
-    exact [expr @units_inv_right _ _ _ (units.mk0 x hx) (units.mk0 y this.1) h] }
-end
+theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a (x⁻¹) (y⁻¹) :=
+  by 
+    byCases' ha : a = 0
+    ·
+      simp only [ha, zero_left]
+    byCases' hx : x = 0
+    ·
+      subst x 
+      simp only [SemiconjBy, mul_zero, @eq_comm _ _ (y*a), mul_eq_zero] at h 
+      simp [h.resolve_right ha]
+    ·
+      have  := mul_ne_zero ha hx 
+      rw [h.eq, mul_ne_zero_iff] at this 
+      exact @units_inv_right _ _ _ (Units.mk0 x hx) (Units.mk0 y this.1) h
 
 @[simp]
 theorem inv_right_iff₀ : SemiconjBy a (x⁻¹) (y⁻¹) ↔ SemiconjBy a x y :=
@@ -1412,13 +1413,13 @@ end MonoidWithZeroHom
 
 @[simp]
 theorem MonoidHom.map_units_inv {M G₀ : Type _} [Monoidₓ M] [GroupWithZeroₓ G₀] (f : M →* G₀) (u : Units M) :
-  f («expr↑ » (u⁻¹)) = f u⁻¹ :=
+  f (↑u⁻¹) = f u⁻¹ :=
   by 
     rw [←Units.coe_map, ←Units.coe_map, ←Units.coe_inv', MonoidHom.map_inv]
 
 @[simp]
 theorem MonoidWithZeroHom.map_units_inv {M G₀ : Type _} [MonoidWithZeroₓ M] [GroupWithZeroₓ G₀]
-  (f : MonoidWithZeroHom M G₀) (u : Units M) : f («expr↑ » (u⁻¹)) = f u⁻¹ :=
+  (f : MonoidWithZeroHom M G₀) (u : Units M) : f (↑u⁻¹) = f u⁻¹ :=
   f.to_monoid_hom.map_units_inv u
 
 section NoncomputableDefs
@@ -1429,12 +1430,11 @@ variable {M : Type _} [Nontrivial M]
   consisting only of units and 0. -/
 noncomputable def groupWithZeroOfIsUnitOrEqZero [hM : MonoidWithZeroₓ M] (h : ∀ a : M, IsUnit a ∨ a = 0) :
   GroupWithZeroₓ M :=
-  { hM with inv := fun a => if h0 : a = 0 then 0 else «expr↑ » (((h a).resolve_right h0).Unit⁻¹),
-    inv_zero := dif_pos rfl,
+  { hM with inv := fun a => if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).Unit⁻¹, inv_zero := dif_pos rfl,
     mul_inv_cancel :=
       fun a h0 =>
         by 
-          change (a*if h0 : a = 0 then 0 else «expr↑ » (((h a).resolve_right h0).Unit⁻¹)) = 1
+          change (a*if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).Unit⁻¹) = 1
           rw [dif_neg h0, Units.mul_inv_eq_iff_eq_mul, one_mulₓ, IsUnit.unit_spec],
     exists_pair_ne := Nontrivial.exists_pair_ne }
 

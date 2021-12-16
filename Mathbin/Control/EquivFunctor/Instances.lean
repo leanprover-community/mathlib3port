@@ -8,10 +8,10 @@ We derive some `equiv_functor` instances, to enable `equiv_rw` to rewrite under 
 -/
 
 
-open Equiv
+open Equivₓ
 
 instance equivFunctorUnique : EquivFunctor Unique :=
-  { map := fun α β e => Equiv.uniqueCongr e }
+  { map := fun α β e => Equivₓ.uniqueCongr e }
 
 instance equivFunctorPerm : EquivFunctor perm :=
   { map := fun α β e p => (e.symm.trans p).trans e }

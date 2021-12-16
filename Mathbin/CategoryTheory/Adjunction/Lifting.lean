@@ -157,11 +157,11 @@ noncomputable def construct_left_adjoint [∀ X : B, regular_epi (adj₁.counit.
     refine' adjunction.left_adjoint_of_equiv (fun X Y => construct_left_adjoint_equiv R _ adj₁ adj₂ Y X) _ 
     intro X Y Y' g h 
     rw [construct_left_adjoint_equiv_apply, construct_left_adjoint_equiv_apply, Function.comp_app, Function.comp_app,
-      Equiv.trans_apply, Equiv.trans_apply, Equiv.trans_apply, Equiv.trans_apply, Equiv.symm_apply_eq, Subtype.ext_iff,
-      cofork.is_colimit.hom_iso_natural, Equiv.apply_symm_apply, Equiv.subtype_equiv_apply, Equiv.subtype_equiv_apply,
-      Equiv.subtype_equiv_apply, Equiv.subtype_equiv_apply, Subtype.coe_mk, Subtype.coe_mk, Subtype.coe_mk,
-      Subtype.coe_mk, ←adj₁.hom_equiv_naturality_right_symm, cofork.is_colimit.hom_iso_natural,
-      adj₂.hom_equiv_naturality_right, functor.comp_map]
+      Equivₓ.trans_apply, Equivₓ.trans_apply, Equivₓ.trans_apply, Equivₓ.trans_apply, Equivₓ.symm_apply_eq,
+      Subtype.ext_iff, cofork.is_colimit.hom_iso_natural, Equivₓ.apply_symm_apply, Equivₓ.subtype_equiv_apply,
+      Equivₓ.subtype_equiv_apply, Equivₓ.subtype_equiv_apply, Equivₓ.subtype_equiv_apply, Subtype.coe_mk,
+      Subtype.coe_mk, Subtype.coe_mk, Subtype.coe_mk, ←adj₁.hom_equiv_naturality_right_symm,
+      cofork.is_colimit.hom_iso_natural, adj₂.hom_equiv_naturality_right, functor.comp_map]
 
 end LiftAdjoint
 
@@ -179,34 +179,34 @@ noncomputable def adjoint_triangle_lift {U : B ⥤ C} {F : C ⥤ B} (R : A ⥤ B
   { left := lift_adjoint.construct_left_adjoint R _ adj₁ (adjunction.of_right_adjoint _),
     adj := adjunction.adjunction_of_equiv_left _ _ }
 
--- error in CategoryTheory.Adjunction.Lifting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `R ⋙ U` has a left adjoint, the domain of `R` has reflexive coequalizers and `U` is a monadic
 functor, then `R` has a left adjoint.
 This is a special case of `adjoint_triangle_lift` which is often more useful in practice.
 -/
-noncomputable
-def monadic_adjoint_triangle_lift
-(U : «expr ⥤ »(B, C))
-[monadic_right_adjoint U]
-{R : «expr ⥤ »(A, B)}
-[has_reflexive_coequalizers A]
-[is_right_adjoint «expr ⋙ »(R, U)] : is_right_adjoint R :=
-begin
-  let [ident R'] [":", expr «expr ⥤ »(A, _)] [":=", expr «expr ⋙ »(R, monad.comparison (adjunction.of_right_adjoint U))],
-  suffices [] [":", expr is_right_adjoint R'],
-  { let [] [":", expr is_right_adjoint «expr ⋙ »(R', (monad.comparison (adjunction.of_right_adjoint U)).inv)] [],
-    { resetI,
-      apply_instance },
-    { let [] [":", expr «expr ≅ »(«expr ⋙ »(R', (monad.comparison (adjunction.of_right_adjoint U)).inv), R)] [":=", expr «expr ≪≫ »((iso_whisker_left R (monad.comparison _).as_equivalence.unit_iso.symm : _), R.right_unitor)],
-      exactI [expr adjunction.right_adjoint_of_nat_iso this] } },
-  let [] [":", expr is_right_adjoint «expr ⋙ »(R', monad.forget (adjunction.of_right_adjoint U).to_monad)] [":=", expr adjunction.right_adjoint_of_nat_iso (iso_whisker_left R (monad.comparison_forget (adjunction.of_right_adjoint U)).symm : _)],
-  letI [] [":", expr ∀ X, regular_epi ((monad.adj (adjunction.of_right_adjoint U).to_monad).counit.app X)] [],
-  { intro [ident X],
-    simp [] [] ["only"] ["[", expr monad.adj_counit, "]"] [] [],
-    exact [expr ⟨_, _, _, _, monad.beck_algebra_coequalizer X⟩] },
-  exact [expr adjoint_triangle_lift R' (monad.adj _)]
-end
+noncomputable def monadic_adjoint_triangle_lift (U : B ⥤ C) [monadic_right_adjoint U] {R : A ⥤ B}
+  [has_reflexive_coequalizers A] [is_right_adjoint (R ⋙ U)] : is_right_adjoint R :=
+  by 
+    let R' : A ⥤ _ := R ⋙ monad.comparison (adjunction.of_right_adjoint U)
+    suffices  : is_right_adjoint R'
+    ·
+      let  : is_right_adjoint (R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv)
+      ·
+        skip 
+        infer_instance
+      ·
+        let this : R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv ≅ R :=
+          (iso_whisker_left R (monad.comparison _).asEquivalence.unitIso.symm : _) ≪≫ R.right_unitor 
+        exact adjunction.right_adjoint_of_nat_iso this 
+    let this : is_right_adjoint (R' ⋙ monad.forget (adjunction.of_right_adjoint U).toMonad) :=
+      adjunction.right_adjoint_of_nat_iso
+        (iso_whisker_left R (monad.comparison_forget (adjunction.of_right_adjoint U)).symm : _)
+    let  : ∀ X, regular_epi ((monad.adj (adjunction.of_right_adjoint U).toMonad).counit.app X)
+    ·
+      intro X 
+      simp only [monad.adj_counit]
+      exact ⟨_, _, _, _, monad.beck_algebra_coequalizer X⟩
+    exact adjoint_triangle_lift R' (monad.adj _)
 
 variable {D : Type u₄}
 

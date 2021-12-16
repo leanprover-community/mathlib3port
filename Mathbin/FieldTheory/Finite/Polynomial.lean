@@ -46,7 +46,7 @@ end MvPolynomial
 
 namespace MvPolynomial
 
-noncomputable theory
+noncomputable section 
 
 open_locale BigOperators Classical
 
@@ -57,7 +57,7 @@ variable {K : Type _} {σ : Type _}
 variable [Field K] [Fintype K] [Fintype σ]
 
 def indicator (a : σ → K) : MvPolynomial σ K :=
-  ∏n, 1 - (X n - C (a n)^Fintype.card K - 1)
+  ∏ n, 1 - (X n - C (a n)^Fintype.card K - 1)
 
 theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 :=
   have  : 0 < Fintype.card K - 1 :=
@@ -80,7 +80,7 @@ theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (in
     rw [FiniteField.pow_card_sub_one_eq_one, sub_self]
     rwa [· ≠ ·, sub_eq_zero]
 
-theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑s : σ, (Fintype.card K - 1) • {s} :=
+theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ, (Fintype.card K - 1) • {s} :=
   by 
     rw [indicator]
     refine' le_transₓ (degrees_prod _ _) (Finset.sum_le_sum$ fun s hs => _)
@@ -136,7 +136,7 @@ theorem evalₗ_apply (p : MvPolynomial σ K) (e : σ → K) : evalₗ K σ p e 
 theorem map_restrict_dom_evalₗ : (restrict_degree σ K (Fintype.card K - 1)).map (evalₗ K σ) = ⊤ :=
   by 
     refine' top_unique (SetLike.le_def.2$ fun e _ => mem_map.2 _)
-    refine' ⟨∑n : σ → K, e n • indicator n, _, _⟩
+    refine' ⟨∑ n : σ → K, e n • indicator n, _, _⟩
     ·
       exact sum_mem _ fun c _ => smul_mem _ _ (indicator_mem_restrict_degree _)
     ·
@@ -166,29 +166,32 @@ universe u
 
 variable (σ : Type u) (K : Type u) [Fintype σ] [Field K] [Fintype K]
 
--- error in FieldTheory.Finite.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_group
-@[derive #["[", expr add_comm_group, ",", expr module K, ",", expr inhabited, "]"]] def R : Type u :=
-restrict_degree σ K «expr - »(fintype.card K, 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler add_comm_group
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler module K
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+def R : Type u :=
+  restrict_degree σ K (Fintype.card K - 1)deriving [anonymous], [anonymous], [anonymous]
 
-noncomputable instance decidable_restrict_degree (m : ℕ) : DecidablePred (· ∈ { n:σ →₀ ℕ | ∀ i, n i ≤ m }) :=
+noncomputable instance decidable_restrict_degree (m : ℕ) : DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) :=
   by 
     simp only [Set.mem_set_of_eq] <;> infer_instance
 
 theorem dim_R : Module.rank K (R σ K) = Fintype.card (σ → K) :=
-  calc Module.rank K (R σ K) = Module.rank K («expr↥ » { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
-    LinearEquiv.dim_eq (Finsupp.supportedEquivFinsupp { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
-    _ = # { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } :=
+  calc Module.rank K (R σ K) = Module.rank K (↥{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
+    LinearEquiv.dim_eq (Finsupp.supportedEquivFinsupp { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
+    _ = # { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } :=
     by 
       rw [Finsupp.dim_eq, dim_self, mul_oneₓ]
-    _ = # { s:σ → ℕ | ∀ n : σ, s n < Fintype.card K } :=
+    _ = # { s : σ → ℕ | ∀ n : σ, s n < Fintype.card K } :=
     by 
-      refine' Quotientₓ.sound ⟨Equiv.subtypeEquiv Finsupp.equivFunOnFintype$ fun f => _⟩
+      refine' Quotientₓ.sound ⟨Equivₓ.subtypeEquiv Finsupp.equivFunOnFintype$ fun f => _⟩
       refine' forall_congrₓ fun n => le_tsub_iff_right _ 
       exact Fintype.card_pos_iff.2 ⟨0⟩
     _ = # (σ → { n // n < Fintype.card K }) :=
-    (@Equiv.subtypePiEquivPi σ (fun _ => ℕ) fun s n => n < Fintype.card K).cardinal_eq 
-    _ = # (σ → Finₓ (Fintype.card K)) := (Equiv.arrowCongr (Equiv.refl σ) (Equiv.finEquivSubtype _).symm).cardinal_eq 
-    _ = # (σ → K) := (Equiv.arrowCongr (Equiv.refl σ) (Fintype.equivFin K).symm).cardinal_eq 
+    (@Equivₓ.subtypePiEquivPi σ (fun _ => ℕ) fun s n => n < Fintype.card K).cardinal_eq 
+    _ = # (σ → Finₓ (Fintype.card K)) :=
+    (Equivₓ.arrowCongr (Equivₓ.refl σ) (Equivₓ.finEquivSubtype _).symm).cardinal_eq 
+    _ = # (σ → K) := (Equivₓ.arrowCongr (Equivₓ.refl σ) (Fintype.equivFin K).symm).cardinal_eq 
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     
 

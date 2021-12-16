@@ -22,36 +22,34 @@ def sub_subst (t s : preterm) (k : Nat) : preterm → preterm
 | x +* y => x.sub_subst +* y.sub_subst
 | x -* y => if x = t ∧ y = s then 1 ** k else x.sub_subst -* y.sub_subst
 
--- error in Tactic.Omega.Nat.SubElim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem val_sub_subst
-{k : nat}
-{x y : preterm}
-{v : nat → nat} : ∀
-{t : preterm}, «expr ≤ »(t.fresh_index, k) → «expr = »((sub_subst x y k t).val (update k «expr - »(x.val v, y.val v) v), t.val v)
-| «expr& »(m), h1 := rfl
-| «expr ** »(m, n), h1 := begin
-  have [ident h2] [":", expr «expr ≠ »(n, k)] [":=", expr ne_of_lt h1],
-  simp [] [] ["only"] ["[", expr sub_subst, ",", expr preterm.val, "]"] [] [],
-  rw [expr update_eq_of_ne _ h2] []
-end
-| «expr +* »(t, s), h1 := begin
-  simp [] [] ["only"] ["[", expr sub_subst, ",", expr val_add, "]"] [] [],
-  apply [expr fun_mono_2]; apply [expr val_sub_subst (le_trans _ h1)],
-  apply [expr le_max_left],
-  apply [expr le_max_right]
-end
-| «expr -* »(t, s), h1 := begin
-  simp [] [] ["only"] ["[", expr sub_subst, ",", expr val_sub, "]"] [] [],
-  by_cases [expr h2, ":", expr «expr ∧ »(«expr = »(t, x), «expr = »(s, y))],
-  { rw [expr if_pos h2] [],
-    simp [] [] ["only"] ["[", expr val_var, ",", expr one_mul, "]"] [] [],
-    rw ["[", expr update_eq, ",", expr h2.left, ",", expr h2.right, "]"] [] },
-  { rw [expr if_neg h2] [],
-    simp [] [] ["only"] ["[", expr val_sub, ",", expr sub_subst, "]"] [] [],
-    apply [expr fun_mono_2]; apply [expr val_sub_subst (le_trans _ h1)],
-    apply [expr le_max_left],
-    apply [expr le_max_right] }
-end
+theorem val_sub_subst {k : Nat} {x y : preterm} {v : Nat → Nat} :
+  ∀ {t : preterm}, t.fresh_index ≤ k → (sub_subst x y k t).val (update k (x.val v - y.val v) v) = t.val v
+| &m, h1 => rfl
+| m ** n, h1 =>
+  by 
+    have h2 : n ≠ k := ne_of_ltₓ h1 
+    simp only [sub_subst, preterm.val]
+    rw [update_eq_of_ne _ h2]
+| t +* s, h1 =>
+  by 
+    simp only [sub_subst, val_add]
+    apply fun_mono_2 <;> apply val_sub_subst (le_transₓ _ h1)
+    apply le_max_leftₓ 
+    apply le_max_rightₓ
+| t -* s, h1 =>
+  by 
+    simp only [sub_subst, val_sub]
+    byCases' h2 : t = x ∧ s = y
+    ·
+      rw [if_pos h2]
+      simp only [val_var, one_mulₓ]
+      rw [update_eq, h2.left, h2.right]
+    ·
+      rw [if_neg h2]
+      simp only [val_sub, sub_subst]
+      apply fun_mono_2 <;> apply val_sub_subst (le_transₓ _ h1)
+      apply le_max_leftₓ 
+      apply le_max_rightₓ
 
 end Preterm
 

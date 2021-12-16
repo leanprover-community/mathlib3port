@@ -22,7 +22,7 @@ projection, complement subspace
 variable {R : Type _} [Ringₓ R] {E : Type _} [AddCommGroupₓ E] [Module R E] {F : Type _} [AddCommGroupₓ F] [Module R F]
   {G : Type _} [AddCommGroupₓ G] [Module R G] (p q : Submodule R E)
 
-noncomputable theory
+noncomputable section 
 
 namespace LinearMap
 
@@ -45,7 +45,7 @@ theorem range_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : range f
 
 theorem is_compl_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : IsCompl p f.ker :=
   by 
-    split 
+    constructor
     ·
       rintro x ⟨hpx, hfx⟩
       erw [SetLike.mem_coe, mem_ker, hf ⟨x, hpx⟩, mk_eq_zero] at hfx 
@@ -63,7 +63,7 @@ namespace Submodule
 open LinearMap
 
 /-- If `q` is a complement of `p`, then `M/p ≃ q`. -/
-def quotient_equiv_of_is_compl (h : IsCompl p q) : p.quotient ≃ₗ[R] q :=
+def quotient_equiv_of_is_compl (h : IsCompl p q) : (E ⧸ p) ≃ₗ[R] q :=
   LinearEquiv.symm$
     LinearEquiv.ofBijective (p.mkq.comp q.subtype)
       (by 
@@ -82,8 +82,8 @@ theorem quotient_equiv_of_is_compl_apply_mk_coe (h : IsCompl p q) (x : q) :
   (quotient_equiv_of_is_compl p q h).apply_symm_apply x
 
 @[simp]
-theorem mk_quotient_equiv_of_is_compl_apply (h : IsCompl p q) (x : p.quotient) :
-  (Quotientₓ.mk (quotient_equiv_of_is_compl p q h x) : p.quotient) = x :=
+theorem mk_quotient_equiv_of_is_compl_apply (h : IsCompl p q) (x : E ⧸ p) :
+  (Quotientₓ.mk (quotient_equiv_of_is_compl p q h x) : E ⧸ p) = x :=
   (quotient_equiv_of_is_compl p q h).symm_apply_apply x
 
 /-- If `q` is a complement of `p`, then `p × q` is isomorphic to `E`. It is the unique
@@ -142,7 +142,7 @@ theorem prod_equiv_of_is_compl_symm_apply_snd_eq_zero (h : IsCompl p q) {x : E} 
 
 /-- Projection to a submodule along its complement. -/
 def linear_proj_of_is_compl (h : IsCompl p q) : E →ₗ[R] p :=
-  LinearMap.fst R p q ∘ₗ «expr↑ » (prod_equiv_of_is_compl p q h).symm
+  LinearMap.fst R p q ∘ₗ ↑(prod_equiv_of_is_compl p q h).symm
 
 variable {p q}
 
@@ -180,7 +180,7 @@ theorem linear_proj_of_is_compl_idempotent (h : IsCompl p q) (x : E) :
   linear_proj_of_is_compl p q h (linear_proj_of_is_compl p q h x) = linear_proj_of_is_compl p q h x :=
   linear_proj_of_is_compl_apply_left h _
 
-theorem exists_unique_add_of_is_compl_prod (hc : IsCompl p q) (x : E) : ∃!u : p × q, ((u.fst : E)+u.snd) = x :=
+theorem exists_unique_add_of_is_compl_prod (hc : IsCompl p q) (x : E) : ∃! u : p × q, ((u.fst : E)+u.snd) = x :=
   (prod_equiv_of_is_compl _ _ hc).toEquiv.Bijective.ExistsUnique _
 
 theorem exists_unique_add_of_is_compl (hc : IsCompl p q) (x : E) :
@@ -197,7 +197,7 @@ open Submodule
 /-- Given linear maps `φ` and `ψ` from complement submodules, `of_is_compl` is
 the induced linear map over the entire module. -/
 def of_is_compl {p q : Submodule R E} (h : IsCompl p q) (φ : p →ₗ[R] F) (ψ : q →ₗ[R] F) : E →ₗ[R] F :=
-  LinearMap.coprod φ ψ ∘ₗ «expr↑ » (Submodule.prodEquivOfIsCompl _ _ h).symm
+  LinearMap.coprod φ ψ ∘ₗ ↑(Submodule.prodEquivOfIsCompl _ _ h).symm
 
 variable {p q}
 
@@ -289,18 +289,16 @@ def of_is_compl_prod_equiv {p q : Submodule R₁ E} (h : IsCompl p q) : ((p →�
 
 end 
 
--- error in LinearAlgebra.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem linear_proj_of_is_compl_of_proj
-(f : «expr →ₗ[ ] »(E, R, p))
-(hf : ∀ x : p, «expr = »(f x, x)) : «expr = »(p.linear_proj_of_is_compl f.ker (is_compl_of_proj hf), f) :=
-begin
-  ext [] [ident x] [],
-  have [] [":", expr «expr ∈ »(x, «expr ⊔ »(p, f.ker))] [],
-  { simp [] [] ["only"] ["[", expr (is_compl_of_proj hf).sup_eq_top, ",", expr mem_top, "]"] [] [] },
-  rcases [expr mem_sup'.1 this, "with", "⟨", ident x, ",", ident y, ",", ident rfl, "⟩"],
-  simp [] [] [] ["[", expr hf, "]"] [] []
-end
+theorem linear_proj_of_is_compl_of_proj (f : E →ₗ[R] p) (hf : ∀ x : p, f x = x) :
+  p.linear_proj_of_is_compl f.ker (is_compl_of_proj hf) = f :=
+  by 
+    ext x 
+    have  : x ∈ p⊔f.ker
+    ·
+      simp only [(is_compl_of_proj hf).sup_eq_top, mem_top]
+    rcases mem_sup'.1 this with ⟨x, y, rfl⟩
+    simp [hf]
 
 /-- If `f : E →ₗ[R] F` and `g : E →ₗ[R] G` are two surjective linear maps and
 their kernels are complement of each other, then `x ↦ (f x, g x)` defines

@@ -34,7 +34,7 @@ This will give rise to a monomial in `mv_polynomial σ R` which mathematicians m
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 

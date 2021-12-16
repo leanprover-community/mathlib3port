@@ -51,7 +51,7 @@ theorem succ_to_nat : ∀ n, (succ n : ℕ) = n+1
 | bit0 p => rfl
 | bit1 p =>
   (congr_argₓ _root_.bit0 (succ_to_nat p)).trans$
-    show (((«expr↑ » p+1)+«expr↑ » p)+1) = ((«expr↑ » p+«expr↑ » p)+1)+1by 
+    show ((((↑p)+1)+↑p)+1) = (((↑p)+↑p)+1)+1by 
       simp [add_left_commₓ]
 
 theorem one_add (n : PosNum) : (1+n) = succ n :=
@@ -112,11 +112,11 @@ theorem bit1_of_bit1 (n : PosNum) : _root_.bit1 n = bit1 n :=
 theorem mul_to_nat m : ∀ n, ((m*n : PosNum) : ℕ) = m*n
 | 1 => (mul_oneₓ _).symm
 | bit0 p =>
-  show («expr↑ » (m*p)+«expr↑ » (m*p) : ℕ) = «expr↑ » m*p+p by 
+  show ((↑m*p)+↑m*p : ℕ) = (↑m)*p+p by 
     rw [mul_to_nat, left_distrib]
 | bit1 p =>
   (add_to_nat (bit0 (m*p)) m).trans$
-    show ((«expr↑ » (m*p)+«expr↑ » (m*p))+«expr↑ » m : ℕ) = («expr↑ » m*p+p)+m by 
+    show (((↑m*p)+↑m*p)+↑m : ℕ) = ((↑m)*p+p)+m by 
       rw [mul_to_nat, left_distrib]
 
 theorem to_nat_pos : ∀ n : PosNum, 0 < (n : ℕ)
@@ -141,52 +141,64 @@ theorem cmp_swap m : ∀ n, (cmp m n).swap = cmp n m :=
                 rfl <;>
               rw [←IH] <;> cases cmp m n <;> rfl
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cmp_to_nat : ∀
-m n, (ordering.cases_on (cmp m n) «expr < »((m : exprℕ()), n) «expr = »(m, n) «expr < »((n : exprℕ()), m) : exprProp())
-| 1, 1 := rfl
-| bit0 a, 1 := let h : «expr ≤ »((1 : exprℕ()), a) := to_nat_pos a in
-add_le_add h h
-| bit1 a, 1 := «expr $ »(nat.succ_lt_succ, «expr $ »(to_nat_pos, bit0 a))
-| 1, bit0 b := let h : «expr ≤ »((1 : exprℕ()), b) := to_nat_pos b in
-add_le_add h h
-| 1, bit1 b := «expr $ »(nat.succ_lt_succ, «expr $ »(to_nat_pos, bit0 b))
-| bit0 a, bit0 b := begin
-  have [] [] [":=", expr cmp_to_nat a b],
-  revert [ident this],
-  cases [expr cmp a b] []; dsimp [] [] [] []; intro [],
-  { exact [expr add_lt_add this this] },
-  { rw [expr this] [] },
-  { exact [expr add_lt_add this this] }
-end
-| bit0 a, bit1 b := begin
-  dsimp [] ["[", expr cmp, "]"] [] [],
-  have [] [] [":=", expr cmp_to_nat a b],
-  revert [ident this],
-  cases [expr cmp a b] []; dsimp [] [] [] []; intro [],
-  { exact [expr nat.le_succ_of_le (add_lt_add this this)] },
-  { rw [expr this] [],
-    apply [expr nat.lt_succ_self] },
-  { exact [expr cmp_to_nat_lemma this] }
-end
-| bit1 a, bit0 b := begin
-  dsimp [] ["[", expr cmp, "]"] [] [],
-  have [] [] [":=", expr cmp_to_nat a b],
-  revert [ident this],
-  cases [expr cmp a b] []; dsimp [] [] [] []; intro [],
-  { exact [expr cmp_to_nat_lemma this] },
-  { rw [expr this] [],
-    apply [expr nat.lt_succ_self] },
-  { exact [expr nat.le_succ_of_le (add_lt_add this this)] }
-end
-| bit1 a, bit1 b := begin
-  have [] [] [":=", expr cmp_to_nat a b],
-  revert [ident this],
-  cases [expr cmp a b] []; dsimp [] [] [] []; intro [],
-  { exact [expr nat.succ_lt_succ (add_lt_add this this)] },
-  { rw [expr this] [] },
-  { exact [expr nat.succ_lt_succ (add_lt_add this this)] }
-end
+theorem cmp_to_nat : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℕ) < n) (m = n) ((n : ℕ) < m) : Prop)
+| 1, 1 => rfl
+| bit0 a, 1 =>
+  let h : (1 : ℕ) ≤ a := to_nat_pos a 
+  add_le_add h h
+| bit1 a, 1 => Nat.succ_lt_succₓ$ to_nat_pos$ bit0 a
+| 1, bit0 b =>
+  let h : (1 : ℕ) ≤ b := to_nat_pos b 
+  add_le_add h h
+| 1, bit1 b => Nat.succ_lt_succₓ$ to_nat_pos$ bit0 b
+| bit0 a, bit0 b =>
+  by 
+    have  := cmp_to_nat a b 
+    revert this 
+    cases cmp a b <;> dsimp <;> intro 
+    ·
+      exact add_lt_add this this
+    ·
+      rw [this]
+    ·
+      exact add_lt_add this this
+| bit0 a, bit1 b =>
+  by 
+    dsimp [cmp]
+    have  := cmp_to_nat a b 
+    revert this 
+    cases cmp a b <;> dsimp <;> intro 
+    ·
+      exact Nat.le_succ_of_leₓ (add_lt_add this this)
+    ·
+      rw [this]
+      apply Nat.lt_succ_selfₓ
+    ·
+      exact cmp_to_nat_lemma this
+| bit1 a, bit0 b =>
+  by 
+    dsimp [cmp]
+    have  := cmp_to_nat a b 
+    revert this 
+    cases cmp a b <;> dsimp <;> intro 
+    ·
+      exact cmp_to_nat_lemma this
+    ·
+      rw [this]
+      apply Nat.lt_succ_selfₓ
+    ·
+      exact Nat.le_succ_of_leₓ (add_lt_add this this)
+| bit1 a, bit1 b =>
+  by 
+    have  := cmp_to_nat a b 
+    revert this 
+    cases cmp a b <;> dsimp <;> intro 
+    ·
+      exact Nat.succ_lt_succₓ (add_lt_add this this)
+    ·
+      rw [this]
+    ·
+      exact Nat.succ_lt_succₓ (add_lt_add this this)
 
 @[normCast]
 theorem lt_to_nat {m n : PosNum} : (m : ℕ) < n ↔ m < n :=
@@ -249,7 +261,7 @@ theorem add_succ : ∀ m n : Num, (m+succ n) = succ (m+n)
 theorem add_of_nat m : ∀ n, ((m+n : ℕ) : Num) = m+n
 | 0 => (add_zeroₓ _).symm
 | n+1 =>
-  show ((m+n : ℕ)+1 : Num) = m+«expr↑ » n+1by 
+  show ((m+n : ℕ)+1 : Num) = m+(↑n)+1by 
     rw [add_one, add_one, add_succ, add_of_nat]
 
 theorem bit0_of_bit0 : ∀ n : Num, bit0 n = n.bit0
@@ -328,14 +340,14 @@ theorem mul_to_nat : ∀ m n, ((m*n : Num) : ℕ) = m*n
 | Pos p, 0 => rfl
 | Pos p, Pos q => PosNum.mul_to_nat _ _
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cmp_to_nat : ∀
-m n, (ordering.cases_on (cmp m n) «expr < »((m : exprℕ()), n) «expr = »(m, n) «expr < »((n : exprℕ()), m) : exprProp())
-| 0, 0 := rfl
-| 0, pos b := to_nat_pos _
-| pos a, 0 := to_nat_pos _
-| pos a, pos b := by { have [] [] [":=", expr pos_num.cmp_to_nat a b]; revert [ident this]; dsimp [] ["[", expr cmp, "]"] [] []; cases [expr pos_num.cmp a b] [],
-  exacts ["[", expr id, ",", expr congr_arg pos, ",", expr id, "]"] }
+theorem cmp_to_nat : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℕ) < n) (m = n) ((n : ℕ) < m) : Prop)
+| 0, 0 => rfl
+| 0, Pos b => to_nat_pos _
+| Pos a, 0 => to_nat_pos _
+| Pos a, Pos b =>
+  by 
+    have  := PosNum.cmp_to_nat a b <;> revert this <;> dsimp [cmp] <;> cases PosNum.cmp a b 
+    exacts[id, congr_argₓ Pos, id]
 
 @[normCast]
 theorem lt_to_nat {m n : Num} : (m : ℕ) < n ↔ m < n :=
@@ -371,7 +383,7 @@ namespace PosNum
 theorem of_to_nat : ∀ n : PosNum, ((n : ℕ) : Num) = Num.pos n
 | 1 => rfl
 | bit0 p =>
-  show «expr↑ » (p+p : ℕ) = Num.pos p.bit0 by 
+  show ↑(p+p : ℕ) = Num.pos p.bit0 by 
     rw [Num.add_of_nat, of_to_nat] <;> exact congr_argₓ Num.pos p.bit0_of_bit0
 | bit1 p =>
   show (((p+p : ℕ) : Num)+1) = Num.pos p.bit1 by 
@@ -390,6 +402,7 @@ theorem of_to_nat : ∀ n : Num, ((n : ℕ) : Num) = n
 theorem to_nat_inj {m n : Num} : (m : ℕ) = n ↔ m = n :=
   ⟨fun h => Function.LeftInverse.injective of_to_nat h, congr_argₓ _⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 This tactic tries to turn an (in)equality about `num`s to one about `nat`s by rewriting.
 ```lean
@@ -403,6 +416,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 This tactic tries to prove (in)equalities about `num`s by transfering them to the `nat` world and
 then trying to call `simp`.
@@ -531,14 +545,14 @@ theorem to_nat_inj {m n : PosNum} : (m : ℕ) = n ↔ m = n :=
 theorem pred'_to_nat : ∀ n, (pred' n : ℕ) = Nat.pred n
 | 1 => rfl
 | bit0 n =>
-  have  : Nat.succ («expr↑ » (pred' n)) = «expr↑ » n :=
+  have  : Nat.succ (↑pred' n) = ↑n :=
     by 
       rw [pred'_to_nat n, Nat.succ_pred_eq_of_posₓ (to_nat_pos n)]
   match pred' n, this with 
   | 0, (h : ((1 : Num) : ℕ) = n) =>
     by 
       rw [←to_nat_inj.1 h] <;> rfl
-  | Num.pos p, (h : Nat.succ («expr↑ » p) = n) =>
+  | Num.pos p, (h : Nat.succ (↑p) = n) =>
     by 
       rw [←h] <;> exact (Nat.succ_add p p).symm
 | bit1 n => rfl
@@ -588,6 +602,7 @@ theorem nat_size_pos n : 0 < nat_size n :=
   by 
     cases n <;> apply Nat.succ_posₓ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
 ```lean
@@ -601,6 +616,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 This tactic tries to prove (in)equalities about `pos_num`s by transferring them to the `nat` world
 and then trying to call `simp`.
@@ -676,7 +692,7 @@ instance : LinearOrderₓ PosNum :=
         infer_instance }
 
 @[simp]
-theorem cast_to_num (n : PosNum) : «expr↑ » n = Num.pos n :=
+theorem cast_to_num (n : PosNum) : ↑n = Num.pos n :=
   by 
     rw [←cast_to_nat, ←of_to_nat n]
 
@@ -714,13 +730,20 @@ theorem cast_mul [Semiringₓ α] m n : ((m*n : PosNum) : α) = m*n :=
   by 
     rw [←cast_to_nat, mul_to_nat, Nat.cast_mul, cast_to_nat, cast_to_nat]
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem cmp_eq (m n) : «expr ↔ »(«expr = »(cmp m n, ordering.eq), «expr = »(m, n)) :=
-begin
-  have [] [] [":=", expr cmp_to_nat m n],
-  cases [expr cmp m n] []; simp [] [] [] [] [] ["at", ident this, "⊢"]; try { exact [expr this] }; { simp [] [] [] ["[", expr show «expr ≠ »(m, n), from λ
-     e, by rw [expr e] ["at", ident this]; exact [expr lt_irrefl _ this], "]"] [] [] }
-end
+@[simp]
+theorem cmp_eq m n : cmp m n = Ordering.eq ↔ m = n :=
+  by 
+    have  := cmp_to_nat m n 
+    cases cmp m n <;>
+      simp  at this⊢ <;>
+        try 
+            exact this <;>
+          ·
+            simp
+              [show m ≠ n from
+                fun e =>
+                  by 
+                    rw [e] at this <;> exact lt_irreflₓ _ this]
 
 @[simp, normCast]
 theorem cast_lt [LinearOrderedSemiring α] {m n : PosNum} : (m : α) < n ↔ m < n :=
@@ -839,18 +862,21 @@ namespace PosNum
 
 open Num
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pred_to_nat {n : pos_num} (h : «expr < »(1, n)) : «expr = »((pred n : exprℕ()), nat.pred n) :=
-begin
-  unfold [ident pred] [],
-  have [] [] [":=", expr pred'_to_nat n],
-  cases [expr e, ":", expr pred' n] [],
-  { have [] [":", expr «expr ≤ »((1 : exprℕ()), nat.pred n)] [":=", expr nat.pred_le_pred ((@cast_lt exprℕ() _ _ _).2 h)],
-    rw ["[", "<-", expr pred'_to_nat, ",", expr e, "]"] ["at", ident this],
-    exact [expr absurd this exprdec_trivial()] },
-  { rw ["[", "<-", expr pred'_to_nat, ",", expr e, "]"] [],
-    refl }
-end
+theorem pred_to_nat {n : PosNum} (h : 1 < n) : (pred n : ℕ) = Nat.pred n :=
+  by 
+    unfold pred 
+    have  := pred'_to_nat n 
+    cases e : pred' n
+    ·
+      have  : (1 : ℕ) ≤ Nat.pred n := Nat.pred_le_predₓ ((@cast_lt ℕ _ _ _).2 h)
+      rw [←pred'_to_nat, e] at this 
+      exact
+        absurd this
+          (by 
+            decide)
+    ·
+      rw [←pred'_to_nat, e]
+      rfl
 
 theorem sub'_one (a : PosNum) : sub' a 1 = (pred' a).toZnum :=
   by 
@@ -904,13 +930,19 @@ theorem cmp_swap m n : (cmp m n).swap = cmp n m :=
               rfl <;>
             apply PosNum.cmp_swap
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cmp_eq (m n) : «expr ↔ »(«expr = »(cmp m n, ordering.eq), «expr = »(m, n)) :=
-begin
-  have [] [] [":=", expr cmp_to_nat m n],
-  cases [expr cmp m n] []; simp [] [] [] [] [] ["at", ident this, "⊢"]; try { exact [expr this] }; { simp [] [] [] ["[", expr show «expr ≠ »(m, n), from λ
-     e, by rw [expr e] ["at", ident this]; exact [expr lt_irrefl _ this], "]"] [] [] }
-end
+theorem cmp_eq m n : cmp m n = Ordering.eq ↔ m = n :=
+  by 
+    have  := cmp_to_nat m n 
+    cases cmp m n <;>
+      simp  at this⊢ <;>
+        try 
+            exact this <;>
+          ·
+            simp
+              [show m ≠ n from
+                fun e =>
+                  by 
+                    rw [e] at this <;> exact lt_irreflₓ _ this]
 
 @[simp, normCast]
 theorem cast_lt [LinearOrderedSemiring α] {m n : Num} : (m : α) < n ↔ m < n :=
@@ -940,63 +972,70 @@ theorem le_iff_cmp {m n} : m ≤ n ↔ cmp m n ≠ Ordering.gt :=
               by 
                 decide
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem bitwise_to_nat
-{f : num → num → num}
-{g : bool → bool → bool}
-(p : pos_num → pos_num → num)
-(gff : «expr = »(g ff ff, ff))
-(f00 : «expr = »(f 0 0, 0))
-(f0n : ∀ n, «expr = »(f 0 (pos n), cond (g ff tt) (pos n) 0))
-(fn0 : ∀ n, «expr = »(f (pos n) 0, cond (g tt ff) (pos n) 0))
-(fnn : ∀ m n, «expr = »(f (pos m) (pos n), p m n))
-(p11 : «expr = »(p 1 1, cond (g tt tt) 1 0))
-(p1b : ∀ b n, «expr = »(p 1 (pos_num.bit b n), bit (g tt b) (cond (g ff tt) (pos n) 0)))
-(pb1 : ∀ a m, «expr = »(p (pos_num.bit a m) 1, bit (g a tt) (cond (g tt ff) (pos m) 0)))
-(pbb : ∀
- a
- b
- m
- n, «expr = »(p (pos_num.bit a m) (pos_num.bit b n), bit (g a b) (p m n))) : ∀
-m n : num, «expr = »((f m n : exprℕ()), nat.bitwise g m n) :=
-begin
-  intros [],
-  cases [expr m] ["with", ident m]; cases [expr n] ["with", ident n]; try { change [expr zero] ["with", expr 0] [] }; try { change [expr ((0 : num) : exprℕ())] ["with", expr 0] [] },
-  { rw ["[", expr f00, ",", expr nat.bitwise_zero, "]"] []; refl },
-  { unfold [ident nat.bitwise] [],
-    rw ["[", expr f0n, ",", expr nat.binary_rec_zero, "]"] [],
-    cases [expr g ff tt] []; refl },
-  { unfold [ident nat.bitwise] [],
-    generalize [ident h] [":"] [expr «expr = »((pos m : exprℕ()), m')],
-    revert [ident h],
-    apply [expr nat.bit_cases_on m' _],
-    intros [ident b, ident m', ident h],
-    rw ["[", expr fn0, ",", expr nat.binary_rec_eq, ",", expr nat.binary_rec_zero, ",", "<-", expr h, "]"] [],
-    cases [expr g tt ff] []; refl,
-    apply [expr nat.bitwise_bit_aux gff] },
-  { rw [expr fnn] [],
-    have [] [":", expr ∀
-     (b)
-     (n : pos_num), «expr = »((cond b «expr↑ »(n) 0 : exprℕ()), «expr↑ »((cond b (pos n) 0 : num)))] [":=", expr by intros []; cases [expr b] []; refl],
-    induction [expr m] [] ["with", ident m, ident IH, ident m, ident IH] ["generalizing", ident n]; cases [expr n] ["with", ident n, ident n],
-    any_goals { change [expr one] ["with", expr 1] [] },
-    any_goals { change [expr pos 1] ["with", expr 1] [] },
-    any_goals { change [expr pos_num.bit0] ["with", expr pos_num.bit ff] [] },
-    any_goals { change [expr pos_num.bit1] ["with", expr pos_num.bit tt] [] },
-    any_goals { change [expr ((1 : num) : exprℕ())] ["with", expr nat.bit tt 0] [] },
-    all_goals { repeat { rw [expr show ∀
-         b
-         n, «expr = »((pos (pos_num.bit b n) : exprℕ()), nat.bit b «expr↑ »(n)), by intros []; cases [expr b] []; refl] [] },
-      rw [expr nat.bitwise_bit] [] },
-    any_goals { assumption },
-    any_goals { rw ["[", expr nat.bitwise_zero, ",", expr p11, "]"] [],
-      cases [expr g tt tt] []; refl },
-    any_goals { rw ["[", expr nat.bitwise_zero_left, ",", expr this, ",", "<-", expr bit_to_nat, ",", expr p1b, "]"] [] },
-    any_goals { rw ["[", expr nat.bitwise_zero_right _ gff, ",", expr this, ",", "<-", expr bit_to_nat, ",", expr pb1, "]"] [] },
-    all_goals { rw ["[", "<-", expr show ∀
-       n, «expr = »(«expr↑ »(p m n), nat.bitwise g «expr↑ »(m) «expr↑ »(n)), from IH, "]"] [],
-      rw ["[", "<-", expr bit_to_nat, ",", expr pbb, "]"] [] } }
-end
+theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p : PosNum → PosNum → Num) (gff : g ff ff = ff)
+  (f00 : f 0 0 = 0) (f0n : ∀ n, f 0 (Pos n) = cond (g ff tt) (Pos n) 0)
+  (fn0 : ∀ n, f (Pos n) 0 = cond (g tt ff) (Pos n) 0) (fnn : ∀ m n, f (Pos m) (Pos n) = p m n)
+  (p11 : p 1 1 = cond (g tt tt) 1 0) (p1b : ∀ b n, p 1 (PosNum.bit b n) = bit (g tt b) (cond (g ff tt) (Pos n) 0))
+  (pb1 : ∀ a m, p (PosNum.bit a m) 1 = bit (g a tt) (cond (g tt ff) (Pos m) 0))
+  (pbb : ∀ a b m n, p (PosNum.bit a m) (PosNum.bit b n) = bit (g a b) (p m n)) :
+  ∀ m n : Num, (f m n : ℕ) = Nat.bitwiseₓ g m n :=
+  by 
+    intros 
+    cases' m with m <;>
+      cases' n with n <;>
+        try 
+            change zero with 0 <;>
+          try 
+            change ((0 : Num) : ℕ) with 0
+    ·
+      rw [f00, Nat.bitwise_zero] <;> rfl
+    ·
+      unfold Nat.bitwiseₓ 
+      rw [f0n, Nat.binary_rec_zero]
+      cases g ff tt <;> rfl
+    ·
+      unfold Nat.bitwiseₓ 
+      generalize h : (Pos m : ℕ) = m' 
+      revert h 
+      apply Nat.bitCasesOn m' _ 
+      intro b m' h 
+      rw [fn0, Nat.binary_rec_eq, Nat.binary_rec_zero, ←h]
+      cases g tt ff <;> rfl 
+      apply Nat.bitwise_bit_aux gff
+    ·
+      rw [fnn]
+      have  : ∀ b n : PosNum, (cond b (↑n) 0 : ℕ) = ↑(cond b (Pos n) 0 : Num) :=
+        by 
+          intros  <;> cases b <;> rfl 
+      induction' m with m IH m IH generalizing n <;> cases' n with n n 
+      any_goals 
+        change one with 1
+      any_goals 
+        change Pos 1 with 1
+      any_goals 
+        change PosNum.bit0 with PosNum.bit ff 
+      any_goals 
+        change PosNum.bit1 with PosNum.bit tt 
+      any_goals 
+        change ((1 : Num) : ℕ) with Nat.bit tt 0
+      all_goals 
+        repeat' 
+          rw
+            [show ∀ b n, (Pos (PosNum.bit b n) : ℕ) = Nat.bit b (↑n)by 
+              intros  <;> cases b <;> rfl]
+        rw [Nat.bitwise_bit]
+      any_goals 
+        assumption 
+      any_goals 
+        rw [Nat.bitwise_zero, p11]
+        cases g tt tt <;> rfl 
+      any_goals 
+        rw [Nat.bitwise_zero_left, this, ←bit_to_nat, p1b]
+      any_goals 
+        rw [Nat.bitwise_zero_right _ gff, this, ←bit_to_nat, pb1]
+      all_goals 
+        rw [←show ∀ n, ↑p m n = Nat.bitwiseₓ g (↑m) (↑n) from IH]
+        rw [←bit_to_nat, pbb]
 
 @[simp, normCast]
 theorem lor_to_nat : ∀ m n, (lor m n : ℕ) = Nat.lorₓ m n :=
@@ -1083,7 +1122,7 @@ theorem shiftr_to_nat m n : (shiftr m n : ℕ) = Nat.shiftr m n :=
       rw [add_commₓ n 1, Nat.shiftr_add]
       apply congr_argₓ fun x => Nat.shiftr x n 
       unfold Nat.shiftr 
-      change (bit1 («expr↑ » m) : ℕ) with Nat.bit tt m 
+      change (bit1 (↑m) : ℕ) with Nat.bit tt m 
       rw [Nat.div2_bit]
     ·
       trans 
@@ -1092,7 +1131,7 @@ theorem shiftr_to_nat m n : (shiftr m n : ℕ) = Nat.shiftr m n :=
       rw [add_commₓ n 1, Nat.shiftr_add]
       apply congr_argₓ fun x => Nat.shiftr x n 
       unfold Nat.shiftr 
-      change (bit0 («expr↑ » m) : ℕ) with Nat.bit ff m 
+      change (bit0 (↑m) : ℕ) with Nat.bit ff m 
       rw [Nat.div2_bit]
 
 @[simp]
@@ -1245,33 +1284,39 @@ theorem cast_bit0 [AddGroupₓ α] [HasOne α] : ∀ n : Znum, (n.bit0 : α) = b
   by 
     rw [Znum.bit0, cast_neg, cast_neg, PosNum.cast_bit0, _root_.bit0, _root_.bit0, neg_add_rev]
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, norm_cast #[]] theorem cast_bit1 [add_group α] [has_one α] : ∀ n : znum, «expr = »((n.bit1 : α), bit1 n)
-| 0 := by simp [] [] [] ["[", expr znum.bit1, ",", expr _root_.bit1, ",", expr _root_.bit0, "]"] [] []
-| pos p := by rw ["[", expr znum.bit1, ",", expr cast_pos, ",", expr cast_pos, "]"] []; refl
-| neg p := begin
-  rw ["[", expr znum.bit1, ",", expr cast_neg, ",", expr cast_neg, "]"] [],
-  cases [expr e, ":", expr pred' p] ["with", ident a]; have [] [":", expr «expr = »(p, _)] [":=", expr (succ'_pred' p).symm.trans (congr_arg num.succ' e)],
-  { change [expr «expr = »(p, 1)] [] ["at", ident this],
-    subst [expr p],
-    simp [] [] [] ["[", expr _root_.bit1, ",", expr _root_.bit0, "]"] [] [] },
-  { rw ["[", expr num.succ', "]"] ["at", ident this],
-    subst [expr p],
-    have [] [":", expr «expr = »((«expr↑ »((«expr- »(«expr↑ »(a)) : exprℤ())) : α), «expr + »(«expr- »(1), «expr↑ »((«expr + »(«expr- »(«expr↑ »(a)), 1) : exprℤ()))))] [],
-    { simp [] [] [] ["[", expr add_comm, "]"] [] [] },
-    simpa [] [] [] ["[", expr _root_.bit1, ",", expr _root_.bit0, ",", "-", ident add_comm, "]"] [] [] }
-end
+@[simp, normCast]
+theorem cast_bit1 [AddGroupₓ α] [HasOne α] : ∀ n : Znum, (n.bit1 : α) = bit1 n
+| 0 =>
+  by 
+    simp [Znum.bit1, _root_.bit1, _root_.bit0]
+| Pos p =>
+  by 
+    rw [Znum.bit1, cast_pos, cast_pos] <;> rfl
+| neg p =>
+  by 
+    rw [Znum.bit1, cast_neg, cast_neg]
+    cases' e : pred' p with a <;> have  : p = _ := (succ'_pred' p).symm.trans (congr_argₓ Num.succ' e)
+    ·
+      change p = 1 at this 
+      subst p 
+      simp [_root_.bit1, _root_.bit0]
+    ·
+      rw [Num.succ'] at this 
+      subst p 
+      have  : (↑(-↑a : ℤ) : α) = (-1)+↑((-↑a)+1 : ℤ)
+      ·
+        simp [add_commₓ]
+      simpa [_root_.bit1, _root_.bit0, -add_commₓ]
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem cast_bitm1 [add_group α] [has_one α] (n : znum) : «expr = »((n.bitm1 : α), «expr - »(bit0 n, 1)) :=
-begin
-  conv [] [] { to_lhs,
-    rw ["<-", expr zneg_zneg n] },
-  rw ["[", "<-", expr zneg_bit1, ",", expr cast_zneg, ",", expr cast_bit1, "]"] [],
-  have [] [":", expr «expr = »(((«expr + »(«expr + »(«expr- »(1), n), n) : exprℤ()) : α), («expr + »(«expr + »(n, n), «expr- »(1)) : exprℤ()))] [],
-  { simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] [] },
-  simpa [] [] [] ["[", expr _root_.bit1, ",", expr _root_.bit0, ",", expr sub_eq_add_neg, ",", "-", ident int.add_neg_one, "]"] [] []
-end
+@[simp]
+theorem cast_bitm1 [AddGroupₓ α] [HasOne α] (n : Znum) : (n.bitm1 : α) = bit0 n - 1 :=
+  by 
+    conv  => lhs rw [←zneg_zneg n]
+    rw [←zneg_bit1, cast_zneg, cast_bit1]
+    have  : ((((-1)+n)+n : ℤ) : α) = ((n+n)+-1 : ℤ)
+    ·
+      simp [add_commₓ, add_left_commₓ]
+    simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg, -Int.add_neg_one]
 
 theorem add_zeroₓ (n : Znum) : (n+0) = n :=
   by 
@@ -1301,34 +1346,42 @@ theorem cast_to_znum : ∀ n : PosNum, (n : Znum) = Znum.pos n
 
 attribute [-simp] Int.add_neg_one
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cast_sub' [add_group α] [has_one α] : ∀ m n : pos_num, «expr = »((sub' m n : α), «expr - »(m, n))
-| a, 1 := by rw ["[", expr sub'_one, ",", expr num.cast_to_znum, ",", "<-", expr num.cast_to_nat, ",", expr pred'_to_nat, ",", "<-", expr nat.sub_one, "]"] []; simp [] [] [] ["[", expr pos_num.cast_pos, "]"] [] []
-| 1, b := by rw ["[", expr one_sub', ",", expr num.cast_to_znum_neg, ",", "<-", expr neg_sub, ",", expr neg_inj, ",", "<-", expr num.cast_to_nat, ",", expr pred'_to_nat, ",", "<-", expr nat.sub_one, "]"] []; simp [] [] [] ["[", expr pos_num.cast_pos, "]"] [] []
-| bit0 a, bit0 b := begin
-  rw ["[", expr sub', ",", expr znum.cast_bit0, ",", expr cast_sub', "]"] [],
-  have [] [":", expr «expr = »(((«expr + »(«expr + »(a, «expr- »(b)), «expr + »(a, «expr- »(b))) : exprℤ()) : α), «expr + »(«expr + »(a, a), «expr + »(«expr- »(b), «expr- »(b))))] [],
-  { simp [] [] [] ["[", expr add_left_comm, "]"] [] [] },
-  simpa [] [] [] ["[", expr _root_.bit0, ",", expr sub_eq_add_neg, "]"] [] []
-end
-| bit0 a, bit1 b := begin
-  rw ["[", expr sub', ",", expr znum.cast_bitm1, ",", expr cast_sub', "]"] [],
-  have [] [":", expr «expr = »(((«expr + »(«expr- »(b), «expr + »(a, «expr + »(«expr- »(b), «expr- »(1)))) : exprℤ()) : α), («expr + »(«expr + »(a, «expr- »(1)), «expr + »(«expr- »(b), «expr- »(b))) : exprℤ()))] [],
-  { simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] [] },
-  simpa [] [] [] ["[", expr _root_.bit1, ",", expr _root_.bit0, ",", expr sub_eq_add_neg, "]"] [] []
-end
-| bit1 a, bit0 b := begin
-  rw ["[", expr sub', ",", expr znum.cast_bit1, ",", expr cast_sub', "]"] [],
-  have [] [":", expr «expr = »(((«expr + »(«expr- »(b), «expr + »(a, «expr + »(«expr- »(b), 1))) : exprℤ()) : α), («expr + »(«expr + »(a, 1), «expr + »(«expr- »(b), «expr- »(b))) : exprℤ()))] [],
-  { simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] [] },
-  simpa [] [] [] ["[", expr _root_.bit1, ",", expr _root_.bit0, ",", expr sub_eq_add_neg, "]"] [] []
-end
-| bit1 a, bit1 b := begin
-  rw ["[", expr sub', ",", expr znum.cast_bit0, ",", expr cast_sub', "]"] [],
-  have [] [":", expr «expr = »(((«expr + »(«expr- »(b), «expr + »(a, «expr- »(b))) : exprℤ()) : α), «expr + »(a, «expr + »(«expr- »(b), «expr- »(b))))] [],
-  { simp [] [] [] ["[", expr add_left_comm, "]"] [] [] },
-  simpa [] [] [] ["[", expr _root_.bit1, ",", expr _root_.bit0, ",", expr sub_eq_add_neg, "]"] [] []
-end
+theorem cast_sub' [AddGroupₓ α] [HasOne α] : ∀ m n : PosNum, (sub' m n : α) = m - n
+| a, 1 =>
+  by 
+    rw [sub'_one, Num.cast_to_znum, ←Num.cast_to_nat, pred'_to_nat, ←Nat.sub_one] <;> simp [PosNum.cast_pos]
+| 1, b =>
+  by 
+    rw [one_sub', Num.cast_to_znum_neg, ←neg_sub, neg_inj, ←Num.cast_to_nat, pred'_to_nat, ←Nat.sub_one] <;>
+      simp [PosNum.cast_pos]
+| bit0 a, bit0 b =>
+  by 
+    rw [sub', Znum.cast_bit0, cast_sub']
+    have  : (((a+-b)+a+-b : ℤ) : α) = (a+a)+(-b)+-b
+    ·
+      simp [add_left_commₓ]
+    simpa [_root_.bit0, sub_eq_add_neg]
+| bit0 a, bit1 b =>
+  by 
+    rw [sub', Znum.cast_bitm1, cast_sub']
+    have  : (((-b)+a+(-b)+-1 : ℤ) : α) = ((a+-1)+(-b)+-b : ℤ)
+    ·
+      simp [add_commₓ, add_left_commₓ]
+    simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg]
+| bit1 a, bit0 b =>
+  by 
+    rw [sub', Znum.cast_bit1, cast_sub']
+    have  : (((-b)+a+(-b)+1 : ℤ) : α) = ((a+1)+(-b)+-b : ℤ)
+    ·
+      simp [add_commₓ, add_left_commₓ]
+    simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg]
+| bit1 a, bit1 b =>
+  by 
+    rw [sub', Znum.cast_bit0, cast_sub']
+    have  : (((-b)+a+-b : ℤ) : α) = a+(-b)+-b
+    ·
+      simp [add_left_commₓ]
+    simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg]
 
 theorem to_nat_eq_succ_pred (n : PosNum) : (n : ℕ) = n.pred'+1 :=
   by 
@@ -1376,7 +1429,7 @@ theorem mem_of_znum' : ∀ {m : Num} {n : Znum}, m ∈ of_znum' n ↔ n = to_znu
   Option.some_inj.trans$
     by 
       cases m <;>
-        split  <;>
+        constructor <;>
           intro h <;>
             try 
                 cases h <;>
@@ -1439,12 +1492,12 @@ theorem cast_add [AddGroupₓ α] [HasOne α] : ∀ m n, ((m+n : Znum) : α) = m
   by 
     simpa only [sub_eq_add_neg] using PosNum.cast_sub' _ _
 | neg a, Pos b =>
-  have  : («expr↑ » b+-«expr↑ » a : α) = (-«expr↑ » a)+«expr↑ » b :=
+  have  : ((↑b)+-↑a : α) = (-↑a)+↑b :=
     by 
       rw [←PosNum.cast_to_int a, ←PosNum.cast_to_int b, ←Int.cast_neg, ←Int.cast_add (-a)] <;> simp [add_commₓ]
   (PosNum.cast_sub' _ _).trans$ (sub_eq_add_neg _ _).trans this
 | neg a, neg b =>
-  show -(«expr↑ » (a+b) : α) = (-a)+-b by 
+  show -(↑a+b : α) = (-a)+-b by 
     rw [PosNum.cast_add, neg_eq_iff_neg_eq, neg_add_rev, neg_negₓ, neg_negₓ, ←PosNum.cast_to_int a,
         ←PosNum.cast_to_int b, ←Int.cast_add] <;>
       simp [add_commₓ]
@@ -1464,13 +1517,13 @@ theorem mul_to_int : ∀ m n, ((m*n : Znum) : ℤ) = m*n
     cases b <;> exact (_root_.mul_zero _).symm
 | Pos a, Pos b => PosNum.cast_mul a b
 | Pos a, neg b =>
-  show -«expr↑ » (a*b) = «expr↑ » a*-«expr↑ » b by 
+  show (-↑a*b) = (↑a)*-↑b by 
     rw [PosNum.cast_mul, neg_mul_eq_mul_neg]
 | neg a, Pos b =>
-  show -«expr↑ » (a*b) = (-«expr↑ » a)*«expr↑ » b by 
+  show (-↑a*b) = (-↑a)*↑b by 
     rw [PosNum.cast_mul, neg_mul_eq_neg_mul]
 | neg a, neg b =>
-  show «expr↑ » (a*b) = (-«expr↑ » a)*-«expr↑ » b by 
+  show (↑a*b) = (-↑a)*-↑b by 
     rw [PosNum.cast_mul, neg_mul_neg]
 
 theorem cast_mul [Ringₓ α] m n : ((m*n : Znum) : α) = m*n :=
@@ -1521,22 +1574,40 @@ theorem of_int'_eq : ∀ n, Znum.ofInt' n = n
     by 
       simp [Znum.ofInt']
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cmp_to_int : ∀
-m n, (ordering.cases_on (cmp m n) «expr < »((m : exprℤ()), n) «expr = »(m, n) «expr < »((n : exprℤ()), m) : exprProp())
-| 0, 0 := rfl
-| pos a, pos b := begin
-  have [] [] [":=", expr pos_num.cmp_to_nat a b]; revert [ident this]; dsimp [] ["[", expr cmp, "]"] [] []; cases [expr pos_num.cmp a b] []; dsimp [] [] [] []; [simp [] [] [] [] [] [], exact [expr congr_arg pos], simp [] [] [] ["[", expr gt, "]"] [] []]
-end
-| neg a, neg b := begin
-  have [] [] [":=", expr pos_num.cmp_to_nat b a]; revert [ident this]; dsimp [] ["[", expr cmp, "]"] [] []; cases [expr pos_num.cmp b a] []; dsimp [] [] [] []; [simp [] [] [] [] [] [], simp [] [] [] [] [] [] { contextual := tt }, simp [] [] [] ["[", expr gt, "]"] [] []]
-end
-| pos a, 0 := pos_num.cast_pos _
-| pos a, neg b := lt_trans «expr $ »(neg_lt_zero.2, pos_num.cast_pos _) (pos_num.cast_pos _)
-| 0, neg b := «expr $ »(neg_lt_zero.2, pos_num.cast_pos _)
-| neg a, 0 := «expr $ »(neg_lt_zero.2, pos_num.cast_pos _)
-| neg a, pos b := lt_trans «expr $ »(neg_lt_zero.2, pos_num.cast_pos _) (pos_num.cast_pos _)
-| 0, pos b := pos_num.cast_pos _
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  cmp_to_int
+  : ∀ m n , ( Ordering.casesOn cmp m n ( m : ℤ ) < n m = n ( n : ℤ ) < m : Prop )
+  | 0 , 0 => rfl
+    |
+      Pos a , Pos b
+      =>
+      by
+        have := PosNum.cmp_to_nat a b
+          <;>
+          revert this
+            <;>
+            dsimp [ cmp ] <;> cases PosNum.cmp a b <;> dsimp <;> [ simp , exact congr_argₓ Pos , simp [ Gt ] ]
+    |
+      neg a , neg b
+      =>
+      by
+        have := PosNum.cmp_to_nat b a
+          <;>
+          revert this
+            <;>
+            dsimp [ cmp ]
+              <;>
+              cases PosNum.cmp b a
+                <;>
+                dsimp <;> [ simp , simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) , simp [ Gt ] ]
+    | Pos a , 0 => PosNum.cast_pos _
+    | Pos a , neg b => lt_transₓ neg_lt_zero . 2 $ PosNum.cast_pos _ PosNum.cast_pos _
+    | 0 , neg b => neg_lt_zero . 2 $ PosNum.cast_pos _
+    | neg a , 0 => neg_lt_zero . 2 $ PosNum.cast_pos _
+    | neg a , Pos b => lt_transₓ neg_lt_zero . 2 $ PosNum.cast_pos _ PosNum.cast_pos _
+    | 0 , Pos b => PosNum.cast_pos _
 
 @[normCast]
 theorem lt_to_int {m n : Znum} : (m : ℤ) < n ↔ m < n :=
@@ -1578,6 +1649,7 @@ theorem cast_inj [LinearOrderedRing α] {m n : Znum} : (m : α) = n ↔ m = n :=
   by 
     rw [←cast_to_int m, ←cast_to_int n, Int.cast_inj, to_int_inj]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 This tactic tries to turn an (in)equality about `znum`s to one about `int`s by rewriting.
 ```lean
@@ -1591,6 +1663,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 This tactic tries to prove (in)equalities about `znum`s by transfering them to the `int` world and
 then trying to call `simp`.
@@ -1720,30 +1793,29 @@ end Znum
 
 namespace PosNum
 
--- error in Data.Num.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem divmod_to_nat_aux
-{n d : pos_num}
-{q r : num}
-(h₁ : «expr = »(«expr + »((r : exprℕ()), «expr * »(d, _root_.bit0 q)), n))
-(h₂ : «expr < »((r : exprℕ()), «expr * »(2, d))) : «expr ∧ »(«expr = »((«expr + »((divmod_aux d q r).2, «expr * »(d, (divmod_aux d q r).1)) : exprℕ()), «expr↑ »(n)), «expr < »(((divmod_aux d q r).2 : exprℕ()), d)) :=
-begin
-  unfold [ident divmod_aux] [],
-  have [] [":", expr ∀
-   {r₂}, «expr ↔ »(«expr = »(num.of_znum' (num.sub' r (num.pos d)), some r₂), «expr = »((r : exprℕ()), «expr + »(r₂, d)))] [],
-  { intro [ident r₂],
-    apply [expr num.mem_of_znum'.trans],
-    rw ["[", "<-", expr znum.to_int_inj, ",", expr num.cast_to_znum, ",", expr num.cast_sub', ",", expr sub_eq_iff_eq_add, ",", "<-", expr int.coe_nat_inj', "]"] [],
-    simp [] [] [] [] [] [] },
-  cases [expr e, ":", expr num.of_znum' (num.sub' r (num.pos d))] ["with", ident r₂]; simp [] [] [] ["[", expr divmod_aux, "]"] [] [],
-  { refine [expr ⟨h₁, lt_of_not_ge (λ h, _)⟩],
-    cases [expr nat.le.dest h] ["with", ident r₂, ident e'],
-    rw ["[", "<-", expr num.to_of_nat r₂, ",", expr add_comm, "]"] ["at", ident e'],
-    cases [expr e.symm.trans (this.2 e'.symm)] [] },
-  { have [] [] [":=", expr this.1 e],
-    split,
-    { rwa ["[", expr _root_.bit1, ",", expr add_comm _ 1, ",", expr mul_add, ",", expr mul_one, ",", "<-", expr add_assoc, ",", "<-", expr this, "]"] [] },
-    { rwa ["[", expr this, ",", expr two_mul, ",", expr add_lt_add_iff_right, "]"] ["at", ident h₂] } }
-end
+theorem divmod_to_nat_aux {n d : PosNum} {q r : Num} (h₁ : ((r : ℕ)+d*_root_.bit0 q) = n) (h₂ : (r : ℕ) < 2*d) :
+  ((divmod_aux d q r).2+d*(divmod_aux d q r).1 : ℕ) = ↑n ∧ ((divmod_aux d q r).2 : ℕ) < d :=
+  by 
+    unfold divmod_aux 
+    have  : ∀ {r₂}, Num.ofZnum' (Num.sub' r (Num.pos d)) = some r₂ ↔ (r : ℕ) = r₂+d
+    ·
+      intro r₂ 
+      apply num.mem_of_znum'.trans 
+      rw [←Znum.to_int_inj, Num.cast_to_znum, Num.cast_sub', sub_eq_iff_eq_add, ←Int.coe_nat_inj']
+      simp 
+    cases' e : Num.ofZnum' (Num.sub' r (Num.pos d)) with r₂ <;> simp [divmod_aux]
+    ·
+      refine' ⟨h₁, lt_of_not_geₓ fun h => _⟩
+      cases' Nat.Le.dest h with r₂ e' 
+      rw [←Num.to_of_nat r₂, add_commₓ] at e' 
+      cases e.symm.trans (this.2 e'.symm)
+    ·
+      have  := this.1 e 
+      constructor
+      ·
+        rwa [_root_.bit1, add_commₓ _ 1, mul_addₓ, mul_oneₓ, ←add_assocₓ, ←this]
+      ·
+        rwa [this, two_mul, add_lt_add_iff_right] at h₂
 
 theorem divmod_to_nat (d n : PosNum) : (n / d : ℕ) = (divmod d n).1 ∧ (n % d : ℕ) = (divmod d n).2 :=
   by 
@@ -1761,7 +1833,7 @@ theorem divmod_to_nat (d n : PosNum) : (n / d : ℕ) = (divmod d n).1 ∧ (n % d
       simp only [divmod] at IH⊢
       apply divmod_to_nat_aux <;> simp 
       ·
-        rw [_root_.bit1, _root_.bit1, add_right_commₓ, bit0_eq_two_mul («expr↑ » n), ←IH.1, mul_addₓ, ←bit0_eq_two_mul,
+        rw [_root_.bit1, _root_.bit1, add_right_commₓ, bit0_eq_two_mul (↑n), ←IH.1, mul_addₓ, ←bit0_eq_two_mul,
           mul_left_commₓ, ←bit0_eq_two_mul]
       ·
         rw [←bit0_eq_two_mul]
@@ -1772,7 +1844,7 @@ theorem divmod_to_nat (d n : PosNum) : (n / d : ℕ) = (divmod d n).1 ∧ (n % d
       simp only [divmod] at IH⊢
       apply divmod_to_nat_aux <;> simp 
       ·
-        rw [bit0_eq_two_mul («expr↑ » n), ←IH.1, mul_addₓ, ←bit0_eq_two_mul, mul_left_commₓ, ←bit0_eq_two_mul]
+        rw [bit0_eq_two_mul (↑n), ←IH.1, mul_addₓ, ←bit0_eq_two_mul, mul_left_commₓ, ←bit0_eq_two_mul]
       ·
         rw [←bit0_eq_two_mul]
         exact Nat.bit0_lt IH.2
@@ -1904,12 +1976,12 @@ theorem div_to_int : ∀ n d, ((n / d : Znum) : ℤ) = n / d
     by 
       rw [←Num.to_nat_to_int] <;> simp 
 | neg n, Pos d =>
-  show -_ = -_ / «expr↑ » d by 
+  show -_ = -_ / ↑d by 
     rw [n.to_int_eq_succ_pred, d.to_int_eq_succ_pred, ←PosNum.to_nat_to_int, Num.succ'_to_nat, Num.div_to_nat]
-    change -[1+ n.pred' / «expr↑ » d] = -[1+ n.pred' / d.pred'+1]
+    change -[1+ n.pred' / ↑d] = -[1+ n.pred' / d.pred'+1]
     rw [d.to_nat_eq_succ_pred]
 | neg n, neg d =>
-  show «expr↑ » (PosNum.pred' n / Num.pos d).succ' = -_ / -«expr↑ » d by 
+  show ↑(PosNum.pred' n / Num.pos d).succ' = -_ / -↑d by 
     rw [n.to_int_eq_succ_pred, d.to_int_eq_succ_pred, ←PosNum.to_nat_to_int, Num.succ'_to_nat, Num.div_to_nat]
     change (Nat.succ (_ / d) : ℤ) = Nat.succ (n.pred' / d.pred'+1)
     rw [d.to_nat_eq_succ_pred]

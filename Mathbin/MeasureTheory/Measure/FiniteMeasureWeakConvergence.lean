@@ -65,7 +65,7 @@ weak convergence of measures, finite measure, probability measure
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open MeasureTheory
 
@@ -102,7 +102,7 @@ theorem coe_fn_eq_to_nnreal_coe_fn_to_measure (ν : finite_measure α) :
 
 @[simp]
 theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : finite_measure α) (s : Set α) : (ν s : ℝ≥0∞) = (ν : Measureₓ α) s :=
-  Ennreal.coe_to_nnreal (measure_lt_top («expr↑ » ν) s).Ne
+  Ennreal.coe_to_nnreal (measure_lt_top (↑ν) s).Ne
 
 @[simp]
 theorem val_eq_to_measure (ν : finite_measure α) : ν.val = (ν : Measureₓ α) :=
@@ -137,29 +137,27 @@ theorem coe_zero : (coeₓ : finite_measure α → Measureₓ α) 0 = 0 :=
   rfl
 
 @[simp, normCast]
-theorem coe_add (μ ν : finite_measure α) : «expr↑ » (μ+ν) = («expr↑ » μ+«expr↑ » ν : Measureₓ α) :=
+theorem coe_add (μ ν : finite_measure α) : (↑μ+ν) = ((↑μ)+↑ν : Measureₓ α) :=
   rfl
 
 @[simp, normCast]
-theorem coe_smul (c :  ℝ≥0 ) (μ : finite_measure α) : «expr↑ » (c • μ) = (c • «expr↑ » μ : Measureₓ α) :=
+theorem coe_smul (c :  ℝ≥0 ) (μ : finite_measure α) : ↑(c • μ) = (c • ↑μ : Measureₓ α) :=
   rfl
 
 @[simp, normCast]
-theorem coe_fn_zero : («expr⇑ » (0 : finite_measure α) : Set α →  ℝ≥0 ) = (0 : Set α →  ℝ≥0 ) :=
+theorem coe_fn_zero : (⇑(0 : finite_measure α) : Set α →  ℝ≥0 ) = (0 : Set α →  ℝ≥0 ) :=
   by 
     funext 
     rfl
 
 @[simp, normCast]
-theorem coe_fn_add (μ ν : finite_measure α) :
-  («expr⇑ » (μ+ν) : Set α →  ℝ≥0 ) = («expr⇑ » μ+«expr⇑ » ν : Set α →  ℝ≥0 ) :=
+theorem coe_fn_add (μ ν : finite_measure α) : (⇑μ+ν : Set α →  ℝ≥0 ) = ((⇑μ)+⇑ν : Set α →  ℝ≥0 ) :=
   by 
     funext 
     simp [←Ennreal.coe_eq_coe]
 
 @[simp, normCast]
-theorem coe_fn_smul (c :  ℝ≥0 ) (μ : finite_measure α) :
-  («expr⇑ » (c • μ) : Set α →  ℝ≥0 ) = c • («expr⇑ » μ : Set α →  ℝ≥0 ) :=
+theorem coe_fn_smul (c :  ℝ≥0 ) (μ : finite_measure α) : (⇑(c • μ) : Set α →  ℝ≥0 ) = c • (⇑μ : Set α →  ℝ≥0 ) :=
   by 
     funext 
     simp [←Ennreal.coe_eq_coe]

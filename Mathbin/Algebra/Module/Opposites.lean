@@ -21,32 +21,31 @@ instance : Module R (MulOpposite M) :=
     zero_smul := fun x => unop_injective$ zero_smul _ (unop x) }
 
 /-- The function `op` is a linear equivalence. -/
-def op_linear_equiv : M ≃ₗ[R] «expr ᵐᵒᵖ» M :=
+def op_linear_equiv : M ≃ₗ[R] Mᵐᵒᵖ :=
   { op_add_equiv with map_smul' := MulOpposite.op_smul }
 
 @[simp]
-theorem coe_op_linear_equiv : (op_linear_equiv R : M → «expr ᵐᵒᵖ» M) = op :=
+theorem coe_op_linear_equiv : (op_linear_equiv R : M → Mᵐᵒᵖ) = op :=
   rfl
 
 @[simp]
-theorem coe_op_linear_equiv_symm : ((op_linear_equiv R).symm : «expr ᵐᵒᵖ» M → M) = unop :=
+theorem coe_op_linear_equiv_symm : ((op_linear_equiv R).symm : Mᵐᵒᵖ → M) = unop :=
   rfl
 
 @[simp]
-theorem coe_op_linear_equiv_to_linear_map : ((op_linear_equiv R).toLinearMap : M → «expr ᵐᵒᵖ» M) = op :=
+theorem coe_op_linear_equiv_to_linear_map : ((op_linear_equiv R).toLinearMap : M → Mᵐᵒᵖ) = op :=
   rfl
 
 @[simp]
-theorem coe_op_linear_equiv_symm_to_linear_map : ((op_linear_equiv R).symm.toLinearMap : «expr ᵐᵒᵖ» M → M) = unop :=
+theorem coe_op_linear_equiv_symm_to_linear_map : ((op_linear_equiv R).symm.toLinearMap : Mᵐᵒᵖ → M) = unop :=
   rfl
 
 @[simp]
-theorem op_linear_equiv_to_add_equiv : (op_linear_equiv R : M ≃ₗ[R] «expr ᵐᵒᵖ» M).toAddEquiv = op_add_equiv :=
+theorem op_linear_equiv_to_add_equiv : (op_linear_equiv R : M ≃ₗ[R] Mᵐᵒᵖ).toAddEquiv = op_add_equiv :=
   rfl
 
 @[simp]
-theorem op_linear_equiv_symm_to_add_equiv :
-  (op_linear_equiv R : M ≃ₗ[R] «expr ᵐᵒᵖ» M).symm.toAddEquiv = op_add_equiv.symm :=
+theorem op_linear_equiv_symm_to_add_equiv : (op_linear_equiv R : M ≃ₗ[R] Mᵐᵒᵖ).symm.toAddEquiv = op_add_equiv.symm :=
   rfl
 
 end MulOpposite

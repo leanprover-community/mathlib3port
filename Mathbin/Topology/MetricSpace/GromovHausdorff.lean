@@ -35,7 +35,7 @@ i.e., it is complete and second countable. We also prove the Gromov compactness 
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical TopologicalSpace
 
@@ -71,7 +71,7 @@ def GH_space : Type :=
 
 /-- Map any nonempty compact type to `GH_space` -/
 def to_GH_space (X : Type u) [MetricSpace X] [CompactSpace X] [Nonempty X] : GH_space :=
-  «expr⟦ ⟧» (NonemptyCompacts.kuratowskiEmbedding X)
+  ⟦NonemptyCompacts.kuratowskiEmbedding X⟧
 
 instance : Inhabited GH_space :=
   ⟨Quot.mk _
@@ -84,33 +84,33 @@ instance : Inhabited GH_space :=
 def GH_space.rep (p : GH_space) : Type :=
   (Quot.out p).val
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_to_GH_space_iff
-{X : Type u}
-[metric_space X]
-[compact_space X]
-[nonempty X]
-{p : nonempty_compacts ℓ_infty_ℝ} : «expr ↔ »(«expr = »(«expr⟦ ⟧»(p), to_GH_space X), «expr∃ , »((Ψ : X → ℓ_infty_ℝ), «expr ∧ »(isometry Ψ, «expr = »(range Ψ, p.val)))) :=
-begin
-  simp [] [] ["only"] ["[", expr to_GH_space, ",", expr quotient.eq, "]"] [] [],
-  split,
-  { assume [binders (h)],
-    rcases [expr setoid.symm h, "with", "⟨", ident e, "⟩"],
-    have [ident f] [] [":=", expr (Kuratowski_embedding.isometry X).isometric_on_range.trans e],
-    use [expr λ x, f x],
-    split,
-    { apply [expr isometry_subtype_coe.comp f.isometry] },
-    { rw ["[", expr range_comp, ",", expr f.range_eq_univ, ",", expr set.image_univ, ",", expr subtype.range_coe, "]"] [] } },
-  { rintros ["⟨", ident Ψ, ",", "⟨", ident isomΨ, ",", ident rangeΨ, "⟩", "⟩"],
-    have [ident f] [] [":=", expr ((Kuratowski_embedding.isometry X).isometric_on_range.symm.trans isomΨ.isometric_on_range).symm],
-    have [ident E] [":", expr «expr = »(«expr ≃ᵢ »(range Ψ, (nonempty_compacts.Kuratowski_embedding X).val), «expr ≃ᵢ »(p.val, range (Kuratowski_embedding X)))] [],
-    by { dunfold [ident nonempty_compacts.Kuratowski_embedding] [],
-      rw ["[", expr rangeΨ, "]"] []; refl },
-    have [ident g] [] [":=", expr cast E f],
-    exact [expr ⟨g⟩] }
-end
+theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {p : nonempty_compacts ℓInftyℝ} :
+  ⟦p⟧ = to_GH_space X ↔ ∃ Ψ : X → ℓInftyℝ, Isometry Ψ ∧ range Ψ = p.val :=
+  by 
+    simp only [to_GH_space, Quotientₓ.eq]
+    constructor
+    ·
+      intro h 
+      rcases Setoidₓ.symm h with ⟨e⟩
+      have f := (kuratowskiEmbedding.isometry X).isometricOnRange.trans e 
+      use fun x => f x 
+      constructor
+      ·
+        apply isometry_subtype_coe.comp f.isometry
+      ·
+        rw [range_comp, f.range_eq_univ, Set.image_univ, Subtype.range_coe]
+    ·
+      rintro ⟨Ψ, ⟨isomΨ, rangeΨ⟩⟩
+      have f := ((kuratowskiEmbedding.isometry X).isometricOnRange.symm.trans isomΨ.isometric_on_range).symm 
+      have E : (range Ψ ≃ᵢ (NonemptyCompacts.kuratowskiEmbedding X).val) = (p.val ≃ᵢ range (kuratowskiEmbedding X))
+      ·
+        ·
+          dunfold NonemptyCompacts.kuratowskiEmbedding 
+          rw [rangeΨ] <;> rfl 
+      have g := cast E f 
+      exact ⟨g⟩
 
-theorem eq_to_GH_space {p : nonempty_compacts ℓInftyℝ} : «expr⟦ ⟧» p = to_GH_space p.val :=
+theorem eq_to_GH_space {p : nonempty_compacts ℓInftyℝ} : ⟦p⟧ = to_GH_space p.val :=
   by 
     refine' eq_to_GH_space_iff.2 ⟨(fun x => x : p.val → ℓInftyℝ), _, Subtype.range_coe⟩
     apply isometry_subtype_coe
@@ -139,52 +139,63 @@ theorem GH_space.to_GH_space_rep (p : GH_space) : to_GH_space p.rep = p :=
     rw [←eq_to_GH_space]
     exact Quot.out_eq p
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two nonempty compact spaces have the same image in `GH_space` if and only if they are
 isometric. -/
-theorem to_GH_space_eq_to_GH_space_iff_isometric
-{X : Type u}
-[metric_space X]
-[compact_space X]
-[nonempty X]
-{Y : Type v}
-[metric_space Y]
-[compact_space Y]
-[nonempty Y] : «expr ↔ »(«expr = »(to_GH_space X, to_GH_space Y), nonempty «expr ≃ᵢ »(X, Y)) :=
-⟨begin
-   simp [] [] ["only"] ["[", expr to_GH_space, ",", expr quotient.eq, "]"] [] [],
-   assume [binders (h)],
-   rcases [expr h, "with", "⟨", ident e, "⟩"],
-   have [ident I] [":", expr «expr = »(«expr ≃ᵢ »((nonempty_compacts.Kuratowski_embedding X).val, (nonempty_compacts.Kuratowski_embedding Y).val), «expr ≃ᵢ »(range (Kuratowski_embedding X), range (Kuratowski_embedding Y)))] [],
-   by { dunfold [ident nonempty_compacts.Kuratowski_embedding] [],
-     refl },
-   have [ident e'] [] [":=", expr cast I e],
-   have [ident f] [] [":=", expr (Kuratowski_embedding.isometry X).isometric_on_range],
-   have [ident g] [] [":=", expr (Kuratowski_embedding.isometry Y).isometric_on_range.symm],
-   have [ident h] [] [":=", expr (f.trans e').trans g],
-   exact [expr ⟨h⟩]
- end, begin
-   rintros ["⟨", ident e, "⟩"],
-   simp [] [] ["only"] ["[", expr to_GH_space, ",", expr quotient.eq, "]"] [] [],
-   have [ident f] [] [":=", expr (Kuratowski_embedding.isometry X).isometric_on_range.symm],
-   have [ident g] [] [":=", expr (Kuratowski_embedding.isometry Y).isometric_on_range],
-   have [ident h] [] [":=", expr (f.trans e).trans g],
-   have [ident I] [":", expr «expr = »(«expr ≃ᵢ »(range (Kuratowski_embedding X), range (Kuratowski_embedding Y)), «expr ≃ᵢ »((nonempty_compacts.Kuratowski_embedding X).val, (nonempty_compacts.Kuratowski_embedding Y).val))] [],
-   by { dunfold [ident nonempty_compacts.Kuratowski_embedding] [],
-     refl },
-   have [ident h'] [] [":=", expr cast I h],
-   exact [expr ⟨h'⟩]
- end⟩
+theorem to_GH_space_eq_to_GH_space_iff_isometric {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v}
+  [MetricSpace Y] [CompactSpace Y] [Nonempty Y] : to_GH_space X = to_GH_space Y ↔ Nonempty (X ≃ᵢ Y) :=
+  ⟨by 
+      simp only [to_GH_space, Quotientₓ.eq]
+      intro h 
+      rcases h with ⟨e⟩
+      have I :
+        ((NonemptyCompacts.kuratowskiEmbedding X).val ≃ᵢ (NonemptyCompacts.kuratowskiEmbedding Y).val) =
+          (range (kuratowskiEmbedding X) ≃ᵢ range (kuratowskiEmbedding Y))
+      ·
+        ·
+          dunfold NonemptyCompacts.kuratowskiEmbedding 
+          rfl 
+      have e' := cast I e 
+      have f := (kuratowskiEmbedding.isometry X).isometricOnRange 
+      have g := (kuratowskiEmbedding.isometry Y).isometricOnRange.symm 
+      have h := (f.trans e').trans g 
+      exact ⟨h⟩,
+    by 
+      rintro ⟨e⟩
+      simp only [to_GH_space, Quotientₓ.eq]
+      have f := (kuratowskiEmbedding.isometry X).isometricOnRange.symm 
+      have g := (kuratowskiEmbedding.isometry Y).isometricOnRange 
+      have h := (f.trans e).trans g 
+      have I :
+        (range (kuratowskiEmbedding X) ≃ᵢ range (kuratowskiEmbedding Y)) =
+          ((NonemptyCompacts.kuratowskiEmbedding X).val ≃ᵢ (NonemptyCompacts.kuratowskiEmbedding Y).val)
+      ·
+        ·
+          dunfold NonemptyCompacts.kuratowskiEmbedding 
+          rfl 
+      have h' := cast I h 
+      exact ⟨h'⟩⟩
 
-/-- Distance on `GH_space`: the distance between two nonempty compact spaces is the infimum
-Hausdorff distance between isometric copies of the two spaces in a metric space. For the definition,
-we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it works for all spaces. -/
-instance : HasDist GH_space :=
-  { dist :=
-      fun x y =>
-        Inf$
-          (fun p : nonempty_compacts ℓInftyℝ × nonempty_compacts ℓInftyℝ => Hausdorff_dist p.1.val p.2.val) ''
-            Set.Prod { a | «expr⟦ ⟧» a = x } { b | «expr⟦ ⟧» b = y } }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Distance on `GH_space`: the distance between two nonempty compact spaces is the infimum
+    Hausdorff distance between isometric copies of the two spaces in a metric space. For the definition,
+    we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it works for all spaces. -/
+  instance
+    : HasDist GH_space
+    :=
+      {
+        dist
+          :=
+          fun
+            x y
+              =>
+              Inf
+                $
+                fun p : nonempty_compacts ℓInftyℝ × nonempty_compacts ℓInftyℝ => Hausdorff_dist p . 1 . val p . 2 . val
+                  ''
+                  Set.Prod { a | ⟦ a ⟧ = x } { b | ⟦ b ⟧ = y }
+        }
 
 /-- The Gromov-Hausdorff distance between two nonempty compact metric spaces, equal by definition to
 the distance of the equivalence classes of these spaces in the Gromov-Hausdorff space. -/
@@ -196,184 +207,254 @@ theorem dist_GH_dist (p q : GH_space) : dist p q = GH_dist p.rep q.rep :=
   by 
     rw [GH_dist, p.to_GH_space_rep, q.to_GH_space_rep]
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Gromov-Hausdorff distance between two spaces is bounded by the Hausdorff distance
 of isometric copies of the spaces, in any metric space. -/
-theorem GH_dist_le_Hausdorff_dist
-{X : Type u}
-[metric_space X]
-[compact_space X]
-[nonempty X]
-{Y : Type v}
-[metric_space Y]
-[compact_space Y]
-[nonempty Y]
-{γ : Type w}
-[metric_space γ]
-{Φ : X → γ}
-{Ψ : Y → γ}
-(ha : isometry Φ)
-(hb : isometry Ψ) : «expr ≤ »(GH_dist X Y, Hausdorff_dist (range Φ) (range Ψ)) :=
-begin
-  rcases [expr exists_mem_of_nonempty X, "with", "⟨", ident xX, ",", "_", "⟩"],
-  let [ident s] [":", expr set γ] [":=", expr «expr ∪ »(range Φ, range Ψ)],
-  let [ident Φ'] [":", expr X → subtype s] [":=", expr λ y, ⟨Φ y, mem_union_left _ (mem_range_self _)⟩],
-  let [ident Ψ'] [":", expr Y → subtype s] [":=", expr λ y, ⟨Ψ y, mem_union_right _ (mem_range_self _)⟩],
-  have [ident IΦ'] [":", expr isometry Φ'] [":=", expr λ x y, ha x y],
-  have [ident IΨ'] [":", expr isometry Ψ'] [":=", expr λ x y, hb x y],
-  have [] [":", expr is_compact s] [],
-  from [expr (is_compact_range ha.continuous).union (is_compact_range hb.continuous)],
-  letI [] [":", expr metric_space (subtype s)] [":=", expr by apply_instance],
-  haveI [] [":", expr compact_space (subtype s)] [":=", expr ⟨is_compact_iff_is_compact_univ.1 «expr‹ ›»(is_compact s)⟩],
-  haveI [] [":", expr nonempty (subtype s)] [":=", expr ⟨Φ' xX⟩],
-  have [ident ΦΦ'] [":", expr «expr = »(Φ, «expr ∘ »(subtype.val, Φ'))] [],
-  by { funext [],
-    refl },
-  have [ident ΨΨ'] [":", expr «expr = »(Ψ, «expr ∘ »(subtype.val, Ψ'))] [],
-  by { funext [],
-    refl },
-  have [] [":", expr «expr = »(Hausdorff_dist (range Φ) (range Ψ), Hausdorff_dist (range Φ') (range Ψ'))] [],
-  { rw ["[", expr ΦΦ', ",", expr ΨΨ', ",", expr range_comp, ",", expr range_comp, "]"] [],
-    exact [expr Hausdorff_dist_image isometry_subtype_coe] },
-  rw [expr this] [],
-  let [ident F] [] [":=", expr Kuratowski_embedding (subtype s)],
-  have [] [":", expr «expr = »(Hausdorff_dist «expr '' »(F, range Φ') «expr '' »(F, range Ψ'), Hausdorff_dist (range Φ') (range Ψ'))] [":=", expr Hausdorff_dist_image (Kuratowski_embedding.isometry _)],
-  rw ["<-", expr this] [],
-  let [ident A] [":", expr nonempty_compacts ℓ_infty_ℝ] [":=", expr ⟨«expr '' »(F, range Φ'), ⟨(range_nonempty _).image _, (is_compact_range IΦ'.continuous).image (Kuratowski_embedding.isometry _).continuous⟩⟩],
-  let [ident B] [":", expr nonempty_compacts ℓ_infty_ℝ] [":=", expr ⟨«expr '' »(F, range Ψ'), ⟨(range_nonempty _).image _, (is_compact_range IΨ'.continuous).image (Kuratowski_embedding.isometry _).continuous⟩⟩],
-  have [ident AX] [":", expr «expr = »(«expr⟦ ⟧»(A), to_GH_space X)] [],
-  { rw [expr eq_to_GH_space_iff] [],
-    exact [expr ⟨λ x, F (Φ' x), ⟨(Kuratowski_embedding.isometry _).comp IΦ', by rw [expr range_comp] []⟩⟩] },
-  have [ident BY] [":", expr «expr = »(«expr⟦ ⟧»(B), to_GH_space Y)] [],
-  { rw [expr eq_to_GH_space_iff] [],
-    exact [expr ⟨λ x, F (Ψ' x), ⟨(Kuratowski_embedding.isometry _).comp IΨ', by rw [expr range_comp] []⟩⟩] },
-  refine [expr cInf_le ⟨0, begin
-      simp [] [] [] ["[", expr lower_bounds, "]"] [] [],
-      assume [binders (t _ _ _ _ ht)],
-      rw ["<-", expr ht] [],
-      exact [expr Hausdorff_dist_nonneg]
-    end⟩ _],
-  apply [expr (mem_image _ _ _).2],
-  existsi [expr (⟨A, B⟩ : «expr × »(nonempty_compacts ℓ_infty_ℝ, nonempty_compacts ℓ_infty_ℝ))],
-  simp [] [] [] ["[", expr AX, ",", expr BY, "]"] [] []
-end
+theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v}
+  [MetricSpace Y] [CompactSpace Y] [Nonempty Y] {γ : Type w} [MetricSpace γ] {Φ : X → γ} {Ψ : Y → γ} (ha : Isometry Φ)
+  (hb : Isometry Ψ) : GH_dist X Y ≤ Hausdorff_dist (range Φ) (range Ψ) :=
+  by 
+    rcases exists_mem_of_nonempty X with ⟨xX, _⟩
+    let s : Set γ := range Φ ∪ range Ψ 
+    let Φ' : X → Subtype s := fun y => ⟨Φ y, mem_union_left _ (mem_range_self _)⟩
+    let Ψ' : Y → Subtype s := fun y => ⟨Ψ y, mem_union_right _ (mem_range_self _)⟩
+    have IΦ' : Isometry Φ' := fun x y => ha x y 
+    have IΨ' : Isometry Ψ' := fun x y => hb x y 
+    have  : IsCompact s 
+    exact (is_compact_range ha.continuous).union (is_compact_range hb.continuous)
+    let this' : MetricSpace (Subtype s) :=
+      by 
+        infer_instance 
+    have  : CompactSpace (Subtype s) := ⟨is_compact_iff_is_compact_univ.1 ‹IsCompact s›⟩
+    have  : Nonempty (Subtype s) := ⟨Φ' xX⟩
+    have ΦΦ' : Φ = (Subtype.val ∘ Φ')
+    ·
+      ·
+        funext 
+        rfl 
+    have ΨΨ' : Ψ = (Subtype.val ∘ Ψ')
+    ·
+      ·
+        funext 
+        rfl 
+    have  : Hausdorff_dist (range Φ) (range Ψ) = Hausdorff_dist (range Φ') (range Ψ')
+    ·
+      rw [ΦΦ', ΨΨ', range_comp, range_comp]
+      exact Hausdorff_dist_image isometry_subtype_coe 
+    rw [this]
+    let F := kuratowskiEmbedding (Subtype s)
+    have  : Hausdorff_dist (F '' range Φ') (F '' range Ψ') = Hausdorff_dist (range Φ') (range Ψ') :=
+      Hausdorff_dist_image (kuratowskiEmbedding.isometry _)
+    rw [←this]
+    let A : nonempty_compacts ℓInftyℝ :=
+      ⟨F '' range Φ',
+        ⟨(range_nonempty _).Image _,
+          (is_compact_range IΦ'.continuous).Image (kuratowskiEmbedding.isometry _).Continuous⟩⟩
+    let B : nonempty_compacts ℓInftyℝ :=
+      ⟨F '' range Ψ',
+        ⟨(range_nonempty _).Image _,
+          (is_compact_range IΨ'.continuous).Image (kuratowskiEmbedding.isometry _).Continuous⟩⟩
+    have AX : ⟦A⟧ = to_GH_space X
+    ·
+      rw [eq_to_GH_space_iff]
+      exact
+        ⟨fun x => F (Φ' x),
+          ⟨(kuratowskiEmbedding.isometry _).comp IΦ',
+            by 
+              rw [range_comp]⟩⟩
+    have BY : ⟦B⟧ = to_GH_space Y
+    ·
+      rw [eq_to_GH_space_iff]
+      exact
+        ⟨fun x => F (Ψ' x),
+          ⟨(kuratowskiEmbedding.isometry _).comp IΨ',
+            by 
+              rw [range_comp]⟩⟩
+    refine'
+      cInf_le
+        ⟨0,
+          by 
+            simp [LowerBounds]
+            intro t _ _ _ _ ht 
+            rw [←ht]
+            exact Hausdorff_dist_nonneg⟩
+        _ 
+    apply (mem_image _ _ _).2 
+    exists (⟨A, B⟩ : nonempty_compacts ℓInftyℝ × nonempty_compacts ℓInftyℝ)
+    simp [AX, BY]
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » range Ψ)
 /-- The optimal coupling constructed above realizes exactly the Gromov-Hausdorff distance,
 essentially by design. -/
-theorem Hausdorff_dist_optimal
-{X : Type u}
-[metric_space X]
-[compact_space X]
-[nonempty X]
-{Y : Type v}
-[metric_space Y]
-[compact_space Y]
-[nonempty Y] : «expr = »(Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)), GH_dist X Y) :=
-begin
-  inhabit [expr X] [],
-  inhabit [expr Y] [],
-  have [ident A] [":", expr ∀
-   p
-   q : nonempty_compacts ℓ_infty_ℝ, «expr = »(«expr⟦ ⟧»(p), to_GH_space X) → «expr = »(«expr⟦ ⟧»(q), to_GH_space Y) → «expr < »(Hausdorff_dist p.val q.val, «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y))) → «expr ≤ »(Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)), Hausdorff_dist p.val q.val)] [],
-  { assume [binders (p q hp hq bound)],
-    rcases [expr eq_to_GH_space_iff.1 hp, "with", "⟨", ident Φ, ",", "⟨", ident Φisom, ",", ident Φrange, "⟩", "⟩"],
-    rcases [expr eq_to_GH_space_iff.1 hq, "with", "⟨", ident Ψ, ",", "⟨", ident Ψisom, ",", ident Ψrange, "⟩", "⟩"],
-    have [ident I] [":", expr «expr ≤ »(diam «expr ∪ »(range Φ, range Ψ), «expr + »(«expr + »(«expr * »(2, diam (univ : set X)), 1), «expr * »(2, diam (univ : set Y))))] [],
-    { rcases [expr exists_mem_of_nonempty X, "with", "⟨", ident xX, ",", "_", "⟩"],
-      have [] [":", expr «expr∃ , »((y «expr ∈ » range Ψ), «expr < »(dist (Φ xX) y, «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y))))] [],
-      { rw [expr Ψrange] [],
-        have [] [":", expr «expr ∈ »(Φ xX, p.val)] [":=", expr «expr ▸ »(Φrange, mem_range_self _)],
-        exact [expr exists_dist_lt_of_Hausdorff_dist_lt this bound (Hausdorff_edist_ne_top_of_nonempty_of_bounded p.2.1 q.2.1 p.2.2.bounded q.2.2.bounded)] },
-      rcases [expr this, "with", "⟨", ident y, ",", ident hy, ",", ident dy, "⟩"],
-      rcases [expr mem_range.1 hy, "with", "⟨", ident z, ",", ident hzy, "⟩"],
-      rw ["<-", expr hzy] ["at", ident dy],
-      have [ident DΦ] [":", expr «expr = »(diam (range Φ), diam (univ : set X))] [":=", expr Φisom.diam_range],
-      have [ident DΨ] [":", expr «expr = »(diam (range Ψ), diam (univ : set Y))] [":=", expr Ψisom.diam_range],
-      calc
-        «expr ≤ »(diam «expr ∪ »(range Φ, range Ψ), «expr + »(«expr + »(diam (range Φ), dist (Φ xX) (Ψ z)), diam (range Ψ))) : diam_union (mem_range_self _) (mem_range_self _)
-        «expr ≤ »(..., «expr + »(«expr + »(diam (univ : set X), «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y))), diam (univ : set Y))) : by { rw ["[", expr DΦ, ",", expr DΨ, "]"] [],
-          apply [expr add_le_add (add_le_add (le_refl _) (le_of_lt dy)) (le_refl _)] }
-        «expr = »(..., «expr + »(«expr + »(«expr * »(2, diam (univ : set X)), 1), «expr * »(2, diam (univ : set Y)))) : by ring [] },
-    let [ident f] [":", expr «expr ⊕ »(X, Y) → ℓ_infty_ℝ] [":=", expr λ x, match x with
-     | inl y := Φ y
-     | inr z := Ψ z end],
-    let [ident F] [":", expr «expr × »(«expr ⊕ »(X, Y), «expr ⊕ »(X, Y)) → exprℝ()] [":=", expr λ
-     p, dist (f p.1) (f p.2)],
-    have [ident Fgood] [":", expr «expr ∈ »(F, candidates X Y)] [],
-    { simp [] [] ["only"] ["[", expr candidates, ",", expr forall_const, ",", expr and_true, ",", expr add_comm, ",", expr eq_self_iff_true, ",", expr dist_eq_zero, ",", expr and_self, ",", expr set.mem_set_of_eq, "]"] [] [],
-      repeat { split },
-      { exact [expr λ x y, calc
-           «expr = »(F (inl x, inl y), dist (Φ x) (Φ y)) : rfl
-           «expr = »(..., dist x y) : Φisom.dist_eq x y] },
-      { exact [expr λ x y, calc
-           «expr = »(F (inr x, inr y), dist (Ψ x) (Ψ y)) : rfl
-           «expr = »(..., dist x y) : Ψisom.dist_eq x y] },
-      { exact [expr λ x y, dist_comm _ _] },
-      { exact [expr λ x y z, dist_triangle _ _ _] },
-      { exact [expr λ x y, calc
-           «expr ≤ »(F (x, y), diam «expr ∪ »(range Φ, range Ψ)) : begin
-             have [ident A] [":", expr ∀ z : «expr ⊕ »(X, Y), «expr ∈ »(f z, «expr ∪ »(range Φ, range Ψ))] [],
-             { assume [binders (z)],
-               cases [expr z] [],
-               { apply [expr mem_union_left],
-                 apply [expr mem_range_self] },
-               { apply [expr mem_union_right],
-                 apply [expr mem_range_self] } },
-             refine [expr dist_le_diam_of_mem _ (A _) (A _)],
-             rw ["[", expr Φrange, ",", expr Ψrange, "]"] [],
-             exact [expr (p.2.2.union q.2.2).bounded]
-           end
-           «expr ≤ »(..., «expr + »(«expr + »(«expr * »(2, diam (univ : set X)), 1), «expr * »(2, diam (univ : set Y)))) : I] } },
-    let [ident Fb] [] [":=", expr candidates_b_of_candidates F Fgood],
-    have [] [":", expr «expr ≤ »(Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)), HD Fb)] [":=", expr Hausdorff_dist_optimal_le_HD _ _ (candidates_b_of_candidates_mem F Fgood)],
-    refine [expr le_trans this (le_of_forall_le_of_dense (λ r hr, _))],
-    have [ident I1] [":", expr ∀ x : X, «expr ≤ »(«expr⨅ , »((y), Fb (inl x, inr y)), r)] [],
-    { assume [binders (x)],
-      have [] [":", expr «expr ∈ »(f (inl x), p.val)] [],
-      by { rw ["[", "<-", expr Φrange, "]"] [],
-        apply [expr mem_range_self] },
-      rcases [expr exists_dist_lt_of_Hausdorff_dist_lt this hr (Hausdorff_edist_ne_top_of_nonempty_of_bounded p.2.1 q.2.1 p.2.2.bounded q.2.2.bounded), "with", "⟨", ident z, ",", ident zq, ",", ident hz, "⟩"],
-      have [] [":", expr «expr ∈ »(z, range Ψ)] [],
-      by rwa ["[", "<-", expr Ψrange, "]"] ["at", ident zq],
-      rcases [expr mem_range.1 this, "with", "⟨", ident y, ",", ident hy, "⟩"],
-      calc
-        «expr ≤ »(«expr⨅ , »((y), Fb (inl x, inr y)), Fb (inl x, inr y)) : cinfi_le (by simpa [] [] [] [] [] ["using", expr HD_below_aux1 0]) y
-        «expr = »(..., dist (Φ x) (Ψ y)) : rfl
-        «expr = »(..., dist (f (inl x)) z) : by rw [expr hy] []
-        «expr ≤ »(..., r) : le_of_lt hz },
-    have [ident I2] [":", expr ∀ y : Y, «expr ≤ »(«expr⨅ , »((x), Fb (inl x, inr y)), r)] [],
-    { assume [binders (y)],
-      have [] [":", expr «expr ∈ »(f (inr y), q.val)] [],
-      by { rw ["[", "<-", expr Ψrange, "]"] [],
-        apply [expr mem_range_self] },
-      rcases [expr exists_dist_lt_of_Hausdorff_dist_lt' this hr (Hausdorff_edist_ne_top_of_nonempty_of_bounded p.2.1 q.2.1 p.2.2.bounded q.2.2.bounded), "with", "⟨", ident z, ",", ident zq, ",", ident hz, "⟩"],
-      have [] [":", expr «expr ∈ »(z, range Φ)] [],
-      by rwa ["[", "<-", expr Φrange, "]"] ["at", ident zq],
-      rcases [expr mem_range.1 this, "with", "⟨", ident x, ",", ident hx, "⟩"],
-      calc
-        «expr ≤ »(«expr⨅ , »((x), Fb (inl x, inr y)), Fb (inl x, inr y)) : cinfi_le (by simpa [] [] [] [] [] ["using", expr HD_below_aux2 0]) x
-        «expr = »(..., dist (Φ x) (Ψ y)) : rfl
-        «expr = »(..., dist z (f (inr y))) : by rw [expr hx] []
-        «expr ≤ »(..., r) : le_of_lt hz },
-    simp [] [] [] ["[", expr HD, ",", expr csupr_le I1, ",", expr csupr_le I2, "]"] [] [] },
-  have [ident B] [":", expr ∀
-   p
-   q : nonempty_compacts ℓ_infty_ℝ, «expr = »(«expr⟦ ⟧»(p), to_GH_space X) → «expr = »(«expr⟦ ⟧»(q), to_GH_space Y) → «expr ≤ »(Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)), Hausdorff_dist p.val q.val)] [],
-  { assume [binders (p q hp hq)],
-    by_cases [expr h, ":", expr «expr < »(Hausdorff_dist p.val q.val, «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y)))],
-    { exact [expr A p q hp hq h] },
-    { calc
-        «expr ≤ »(Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)), HD (candidates_b_dist X Y)) : Hausdorff_dist_optimal_le_HD _ _ candidates_b_dist_mem_candidates_b
-        «expr ≤ »(..., «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y))) : HD_candidates_b_dist_le
-        «expr ≤ »(..., Hausdorff_dist p.val q.val) : not_lt.1 h } },
-  refine [expr le_antisymm _ _],
-  { apply [expr le_cInf],
-    { refine [expr (set.nonempty.prod _ _).image _]; exact [expr ⟨_, rfl⟩] },
-    { rintro [ident b, "⟨", "⟨", ident p, ",", ident q, "⟩", ",", "⟨", ident hp, ",", ident hq, "⟩", ",", ident rfl, "⟩"],
-      exact [expr B p q hp hq] } },
-  { exact [expr GH_dist_le_Hausdorff_dist (isometry_optimal_GH_injl X Y) (isometry_optimal_GH_injr X Y)] }
-end
+theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v} [MetricSpace Y]
+  [CompactSpace Y] [Nonempty Y] :
+  Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)) = GH_dist X Y :=
+  by 
+    inhabit X 
+    inhabit Y 
+    have A :
+      ∀ p q : nonempty_compacts ℓInftyℝ,
+        ⟦p⟧ = to_GH_space X →
+          ⟦q⟧ = to_GH_space Y →
+            (Hausdorff_dist p.val q.val < (diam (univ : Set X)+1)+diam (univ : Set Y)) →
+              Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)) ≤ Hausdorff_dist p.val q.val
+    ·
+      intro p q hp hq bound 
+      rcases eq_to_GH_space_iff.1 hp with ⟨Φ, ⟨Φisom, Φrange⟩⟩
+      rcases eq_to_GH_space_iff.1 hq with ⟨Ψ, ⟨Ψisom, Ψrange⟩⟩
+      have I : diam (range Φ ∪ range Ψ) ≤ ((2*diam (univ : Set X))+1)+2*diam (univ : Set Y)
+      ·
+        rcases exists_mem_of_nonempty X with ⟨xX, _⟩
+        have  : ∃ (y : _)(_ : y ∈ range Ψ), dist (Φ xX) y < (diam (univ : Set X)+1)+diam (univ : Set Y)
+        ·
+          rw [Ψrange]
+          have  : Φ xX ∈ p.val := Φrange ▸ mem_range_self _ 
+          exact
+            exists_dist_lt_of_Hausdorff_dist_lt this bound
+              (Hausdorff_edist_ne_top_of_nonempty_of_bounded p.2.1 q.2.1 p.2.2.Bounded q.2.2.Bounded)
+        rcases this with ⟨y, hy, dy⟩
+        rcases mem_range.1 hy with ⟨z, hzy⟩
+        rw [←hzy] at dy 
+        have DΦ : diam (range Φ) = diam (univ : Set X) := Φisom.diam_range 
+        have DΨ : diam (range Ψ) = diam (univ : Set Y) := Ψisom.diam_range 
+        calc diam (range Φ ∪ range Ψ) ≤ (diam (range Φ)+dist (Φ xX) (Ψ z))+diam (range Ψ) :=
+          diam_union (mem_range_self _)
+            (mem_range_self
+              _)_ ≤ (diam (univ : Set X)+(diam (univ : Set X)+1)+diam (univ : Set Y))+diam (univ : Set Y) :=
+          by 
+            rw [DΦ, DΨ]
+            apply
+              add_le_add (add_le_add (le_reflₓ _) (le_of_ltₓ dy))
+                (le_reflₓ _)_ = ((2*diam (univ : Set X))+1)+2*diam (univ : Set Y) :=
+          by 
+            ring 
+      let f : Sum X Y → ℓInftyℝ :=
+        fun x =>
+          match x with 
+          | inl y => Φ y
+          | inr z => Ψ z 
+      let F : Sum X Y × Sum X Y → ℝ := fun p => dist (f p.1) (f p.2)
+      have Fgood : F ∈ candidates X Y
+      ·
+        simp only [candidates, forall_const, and_trueₓ, add_commₓ, eq_self_iff_true, dist_eq_zero, and_selfₓ,
+          Set.mem_set_of_eq]
+        repeat' 
+          constructor
+        ·
+          exact
+            fun x y =>
+              calc F (inl x, inl y) = dist (Φ x) (Φ y) := rfl 
+                _ = dist x y := Φisom.dist_eq x y
+                
+        ·
+          exact
+            fun x y =>
+              calc F (inr x, inr y) = dist (Ψ x) (Ψ y) := rfl 
+                _ = dist x y := Ψisom.dist_eq x y
+                
+        ·
+          exact fun x y => dist_comm _ _
+        ·
+          exact fun x y z => dist_triangle _ _ _
+        ·
+          exact
+            fun x y =>
+              calc F (x, y) ≤ diam (range Φ ∪ range Ψ) :=
+                by 
+                  have A : ∀ z : Sum X Y, f z ∈ range Φ ∪ range Ψ
+                  ·
+                    intro z 
+                    cases z
+                    ·
+                      apply mem_union_left 
+                      apply mem_range_self
+                    ·
+                      apply mem_union_right 
+                      apply mem_range_self 
+                  refine' dist_le_diam_of_mem _ (A _) (A _)
+                  rw [Φrange, Ψrange]
+                  exact (p.2.2.union q.2.2).Bounded 
+                _ ≤ ((2*diam (univ : Set X))+1)+2*diam (univ : Set Y) := I 
+                
+      let Fb := candidates_b_of_candidates F Fgood 
+      have  : Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)) ≤ HD Fb :=
+        Hausdorff_dist_optimal_le_HD _ _ (candidates_b_of_candidates_mem F Fgood)
+      refine' le_transₓ this (le_of_forall_le_of_dense fun r hr => _)
+      have I1 : ∀ x : X, (⨅ y, Fb (inl x, inr y)) ≤ r
+      ·
+        intro x 
+        have  : f (inl x) ∈ p.val
+        ·
+          ·
+            rw [←Φrange]
+            apply mem_range_self 
+        rcases
+          exists_dist_lt_of_Hausdorff_dist_lt this hr
+            (Hausdorff_edist_ne_top_of_nonempty_of_bounded p.2.1 q.2.1 p.2.2.Bounded q.2.2.Bounded) with
+          ⟨z, zq, hz⟩
+        have  : z ∈ range Ψ
+        ·
+          rwa [←Ψrange] at zq 
+        rcases mem_range.1 this with ⟨y, hy⟩
+        calc (⨅ y, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
+          cinfi_le
+            (by 
+              simpa using HD_below_aux1 0)
+            y _ = dist (Φ x) (Ψ y) :=
+          rfl _ = dist (f (inl x)) z :=
+          by 
+            rw [hy]_ ≤ r :=
+          le_of_ltₓ hz 
+      have I2 : ∀ y : Y, (⨅ x, Fb (inl x, inr y)) ≤ r
+      ·
+        intro y 
+        have  : f (inr y) ∈ q.val
+        ·
+          ·
+            rw [←Ψrange]
+            apply mem_range_self 
+        rcases
+          exists_dist_lt_of_Hausdorff_dist_lt' this hr
+            (Hausdorff_edist_ne_top_of_nonempty_of_bounded p.2.1 q.2.1 p.2.2.Bounded q.2.2.Bounded) with
+          ⟨z, zq, hz⟩
+        have  : z ∈ range Φ
+        ·
+          rwa [←Φrange] at zq 
+        rcases mem_range.1 this with ⟨x, hx⟩
+        calc (⨅ x, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
+          cinfi_le
+            (by 
+              simpa using HD_below_aux2 0)
+            x _ = dist (Φ x) (Ψ y) :=
+          rfl _ = dist z (f (inr y)) :=
+          by 
+            rw [hx]_ ≤ r :=
+          le_of_ltₓ hz 
+      simp [HD, csupr_le I1, csupr_le I2]
+    have B :
+      ∀ p q : nonempty_compacts ℓInftyℝ,
+        ⟦p⟧ = to_GH_space X →
+          ⟦q⟧ = to_GH_space Y →
+            Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)) ≤ Hausdorff_dist p.val q.val
+    ·
+      intro p q hp hq 
+      byCases' h : Hausdorff_dist p.val q.val < (diam (univ : Set X)+1)+diam (univ : Set Y)
+      ·
+        exact A p q hp hq h
+      ·
+        calc Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)) ≤ HD (candidates_b_dist X Y) :=
+          Hausdorff_dist_optimal_le_HD _ _
+            candidates_b_dist_mem_candidates_b _ ≤ (diam (univ : Set X)+1)+diam (univ : Set Y) :=
+          HD_candidates_b_dist_le _ ≤ Hausdorff_dist p.val q.val := not_ltₓ.1 h 
+    refine' le_antisymmₓ _ _
+    ·
+      apply le_cInf
+      ·
+        refine' (Set.Nonempty.prod _ _).Image _ <;> exact ⟨_, rfl⟩
+      ·
+        rintro b ⟨⟨p, q⟩, ⟨hp, hq⟩, rfl⟩
+        exact B p q hp hq
+    ·
+      exact GH_dist_le_Hausdorff_dist (isometry_optimal_GH_injl X Y) (isometry_optimal_GH_injr X Y)
 
 /-- The Gromov-Hausdorff distance can also be realized by a coupling in `ℓ^∞(ℝ)`, by embedding
 the optimal coupling through its Kuratowski embedding. -/
@@ -394,75 +475,169 @@ theorem GH_dist_eq_Hausdorff_dist (X : Type u) [MetricSpace X] [CompactSpace X] 
         ←Hausdorff_dist_optimal]
       exact (Hausdorff_dist_image (kuratowskiEmbedding.isometry _)).symm
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The Gromov-Hausdorff distance defines a genuine distance on the Gromov-Hausdorff space. -/
-instance : metric_space GH_space :=
-{ dist_self := λ x, begin
-    rcases [expr exists_rep x, "with", "⟨", ident y, ",", ident hy, "⟩"],
-    refine [expr le_antisymm _ _],
-    { apply [expr cInf_le],
-      { exact [expr ⟨0, by { rintro [ident b, "⟨", "⟨", ident u, ",", ident v, "⟩", ",", "⟨", ident hu, ",", ident hv, "⟩", ",", ident rfl, "⟩"],
-            exact [expr Hausdorff_dist_nonneg] }⟩] },
-      { simp [] [] [] [] [] [],
-        existsi ["[", expr y, ",", expr y, "]"],
-        simpa [] [] [] [] [] [] } },
-    { apply [expr le_cInf],
-      { exact [expr (nonempty.prod ⟨y, hy⟩ ⟨y, hy⟩).image _] },
-      { rintro [ident b, "⟨", "⟨", ident u, ",", ident v, "⟩", ",", "⟨", ident hu, ",", ident hv, "⟩", ",", ident rfl, "⟩"],
-        exact [expr Hausdorff_dist_nonneg] } }
-  end,
-  dist_comm := λ x y, begin
-    have [ident A] [":", expr «expr = »(«expr '' »(λ
-       p : «expr × »(nonempty_compacts ℓ_infty_ℝ, nonempty_compacts ℓ_infty_ℝ), Hausdorff_dist p.fst.val p.snd.val, set.prod {a | «expr = »(«expr⟦ ⟧»(a), x)} {b | «expr = »(«expr⟦ ⟧»(b), y)}), «expr '' »(«expr ∘ »(λ
-        p : «expr × »(nonempty_compacts ℓ_infty_ℝ, nonempty_compacts ℓ_infty_ℝ), Hausdorff_dist p.fst.val p.snd.val, prod.swap), set.prod {a | «expr = »(«expr⟦ ⟧»(a), x)} {b | «expr = »(«expr⟦ ⟧»(b), y)}))] [":=", expr by { congr,
-       funext [],
-       simp [] [] [] [] [] [],
-       rw [expr Hausdorff_dist_comm] [] }],
-    simp [] [] ["only"] ["[", expr dist, ",", expr A, ",", expr image_comp, ",", expr image_swap_prod, "]"] [] []
-  end,
-  eq_of_dist_eq_zero := λ x y hxy, begin
-    rcases [expr GH_dist_eq_Hausdorff_dist x.rep y.rep, "with", "⟨", ident Φ, ",", ident Ψ, ",", ident Φisom, ",", ident Ψisom, ",", ident DΦΨ, "⟩"],
-    rw ["[", "<-", expr dist_GH_dist, ",", expr hxy, "]"] ["at", ident DΦΨ],
-    have [] [":", expr «expr = »(range Φ, range Ψ)] [],
-    { have [ident hΦ] [":", expr is_compact (range Φ)] [":=", expr is_compact_range Φisom.continuous],
-      have [ident hΨ] [":", expr is_compact (range Ψ)] [":=", expr is_compact_range Ψisom.continuous],
-      apply [expr (is_closed.Hausdorff_dist_zero_iff_eq _ _ _).1 DΦΨ.symm],
-      { exact [expr hΦ.is_closed] },
-      { exact [expr hΨ.is_closed] },
-      { exact [expr Hausdorff_edist_ne_top_of_nonempty_of_bounded (range_nonempty _) (range_nonempty _) hΦ.bounded hΨ.bounded] } },
-    have [ident T] [":", expr «expr = »(«expr ≃ᵢ »(range Ψ, y.rep), «expr ≃ᵢ »(range Φ, y.rep))] [],
-    by rw [expr this] [],
-    have [ident eΨ] [] [":=", expr cast T Ψisom.isometric_on_range.symm],
-    have [ident e] [] [":=", expr Φisom.isometric_on_range.trans eΨ],
-    rw ["[", "<-", expr x.to_GH_space_rep, ",", "<-", expr y.to_GH_space_rep, ",", expr to_GH_space_eq_to_GH_space_iff_isometric, "]"] [],
-    exact [expr ⟨e⟩]
-  end,
-  dist_triangle := λ x y z, begin
-    let [ident X] [] [":=", expr x.rep],
-    let [ident Y] [] [":=", expr y.rep],
-    let [ident Z] [] [":=", expr z.rep],
-    let [ident γ1] [] [":=", expr optimal_GH_coupling X Y],
-    let [ident γ2] [] [":=", expr optimal_GH_coupling Y Z],
-    let [ident Φ] [":", expr Y → γ1] [":=", expr optimal_GH_injr X Y],
-    have [ident hΦ] [":", expr isometry Φ] [":=", expr isometry_optimal_GH_injr X Y],
-    let [ident Ψ] [":", expr Y → γ2] [":=", expr optimal_GH_injl Y Z],
-    have [ident hΨ] [":", expr isometry Ψ] [":=", expr isometry_optimal_GH_injl Y Z],
-    let [ident γ] [] [":=", expr glue_space hΦ hΨ],
-    letI [] [":", expr metric_space γ] [":=", expr metric.metric_space_glue_space hΦ hΨ],
-    have [ident Comm] [":", expr «expr = »(«expr ∘ »(to_glue_l hΦ hΨ, optimal_GH_injr X Y), «expr ∘ »(to_glue_r hΦ hΨ, optimal_GH_injl Y Z))] [":=", expr to_glue_commute hΦ hΨ],
-    calc
-      «expr = »(dist x z, dist (to_GH_space X) (to_GH_space Z)) : by rw ["[", expr x.to_GH_space_rep, ",", expr z.to_GH_space_rep, "]"] []
-      «expr ≤ »(..., Hausdorff_dist (range «expr ∘ »(to_glue_l hΦ hΨ, optimal_GH_injl X Y)) (range «expr ∘ »(to_glue_r hΦ hΨ, optimal_GH_injr Y Z))) : GH_dist_le_Hausdorff_dist ((to_glue_l_isometry hΦ hΨ).comp (isometry_optimal_GH_injl X Y)) ((to_glue_r_isometry hΦ hΨ).comp (isometry_optimal_GH_injr Y Z))
-      «expr ≤ »(..., «expr + »(Hausdorff_dist (range «expr ∘ »(to_glue_l hΦ hΨ, optimal_GH_injl X Y)) (range «expr ∘ »(to_glue_l hΦ hΨ, optimal_GH_injr X Y)), Hausdorff_dist (range «expr ∘ »(to_glue_l hΦ hΨ, optimal_GH_injr X Y)) (range «expr ∘ »(to_glue_r hΦ hΨ, optimal_GH_injr Y Z)))) : begin
-        refine [expr Hausdorff_dist_triangle (Hausdorff_edist_ne_top_of_nonempty_of_bounded (range_nonempty _) (range_nonempty _) _ _)],
-        { exact [expr (is_compact_range (isometry.continuous ((to_glue_l_isometry hΦ hΨ).comp (isometry_optimal_GH_injl X Y)))).bounded] },
-        { exact [expr (is_compact_range (isometry.continuous ((to_glue_l_isometry hΦ hΨ).comp (isometry_optimal_GH_injr X Y)))).bounded] }
-      end
-      «expr = »(..., «expr + »(Hausdorff_dist «expr '' »(to_glue_l hΦ hΨ, range (optimal_GH_injl X Y)) «expr '' »(to_glue_l hΦ hΨ, range (optimal_GH_injr X Y)), Hausdorff_dist «expr '' »(to_glue_r hΦ hΨ, range (optimal_GH_injl Y Z)) «expr '' »(to_glue_r hΦ hΨ, range (optimal_GH_injr Y Z)))) : by simp [] [] ["only"] ["[", "<-", expr range_comp, ",", expr Comm, ",", expr eq_self_iff_true, ",", expr add_right_inj, "]"] [] []
-      «expr = »(..., «expr + »(Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)), Hausdorff_dist (range (optimal_GH_injl Y Z)) (range (optimal_GH_injr Y Z)))) : by rw ["[", expr Hausdorff_dist_image (to_glue_l_isometry hΦ hΨ), ",", expr Hausdorff_dist_image (to_glue_r_isometry hΦ hΨ), "]"] []
-      «expr = »(..., «expr + »(dist (to_GH_space X) (to_GH_space Y), dist (to_GH_space Y) (to_GH_space Z))) : by rw ["[", expr Hausdorff_dist_optimal, ",", expr Hausdorff_dist_optimal, ",", expr GH_dist, ",", expr GH_dist, "]"] []
-      «expr = »(..., «expr + »(dist x y, dist y z)) : by rw ["[", expr x.to_GH_space_rep, ",", expr y.to_GH_space_rep, ",", expr z.to_GH_space_rep, "]"] []
-  end }
+  instance
+    : MetricSpace GH_space
+    :=
+      {
+        dist_self
+              :=
+              fun
+                x
+                  =>
+                  by
+                    rcases exists_rep x with ⟨ y , hy ⟩
+                      refine' le_antisymmₓ _ _
+                      ·
+                        apply cInf_le
+                          · exact ⟨ 0 , by rintro b ⟨ ⟨ u , v ⟩ , ⟨ hu , hv ⟩ , rfl ⟩ exact Hausdorff_dist_nonneg ⟩
+                          · simp exists y , y simpa
+                      ·
+                        apply le_cInf
+                          · exact nonempty.prod ⟨ y , hy ⟩ ⟨ y , hy ⟩ . Image _
+                          · rintro b ⟨ ⟨ u , v ⟩ , ⟨ hu , hv ⟩ , rfl ⟩ exact Hausdorff_dist_nonneg
+            ,
+          dist_comm
+              :=
+              fun
+                x y
+                  =>
+                  by
+                    have
+                        A
+                          :
+                            fun
+                                  p : nonempty_compacts ℓInftyℝ × nonempty_compacts ℓInftyℝ
+                                    =>
+                                    Hausdorff_dist p.fst . val p.snd . val
+                                ''
+                                Set.Prod { a | ⟦ a ⟧ = x } { b | ⟦ b ⟧ = y }
+                              =
+                              fun
+                                    p : nonempty_compacts ℓInftyℝ × nonempty_compacts ℓInftyℝ
+                                      =>
+                                      Hausdorff_dist p.fst . val p.snd . val
+                                  ∘
+                                  Prod.swap
+                                ''
+                                Set.Prod { a | ⟦ a ⟧ = x } { b | ⟦ b ⟧ = y }
+                          :=
+                          by congr funext simp rw [ Hausdorff_dist_comm ]
+                      simp only [ dist , A , image_comp , image_swap_prod ]
+            ,
+          eq_of_dist_eq_zero
+              :=
+              fun
+                x y hxy
+                  =>
+                  by
+                    rcases GH_dist_eq_Hausdorff_dist x.rep y.rep with ⟨ Φ , Ψ , Φisom , Ψisom , DΦΨ ⟩
+                      rw [ ← dist_GH_dist , hxy ] at DΦΨ
+                      have : range Φ = range Ψ
+                      ·
+                        have hΦ : IsCompact range Φ := is_compact_range Φisom.continuous
+                          have hΨ : IsCompact range Ψ := is_compact_range Ψisom.continuous
+                          apply IsClosed.Hausdorff_dist_zero_iff_eq _ _ _ . 1 DΦΨ.symm
+                          · exact hΦ.is_closed
+                          · exact hΨ.is_closed
+                          ·
+                            exact
+                              Hausdorff_edist_ne_top_of_nonempty_of_bounded
+                                range_nonempty _ range_nonempty _ hΦ.bounded hΨ.bounded
+                      have T : range Ψ ≃ᵢ y.rep = range Φ ≃ᵢ y.rep
+                      · rw [ this ]
+                      have eΨ := cast T Ψisom.isometric_on_range.symm
+                      have e := Φisom.isometric_on_range.trans eΨ
+                      rw [ ← x.to_GH_space_rep , ← y.to_GH_space_rep , to_GH_space_eq_to_GH_space_iff_isometric ]
+                      exact ⟨ e ⟩
+            ,
+          dist_triangle
+            :=
+            fun
+              x y z
+                =>
+                by
+                  let X := x.rep
+                    let Y := y.rep
+                    let Z := z.rep
+                    let γ1 := optimal_GH_coupling X Y
+                    let γ2 := optimal_GH_coupling Y Z
+                    let Φ : Y → γ1 := optimal_GH_injr X Y
+                    have hΦ : Isometry Φ := isometry_optimal_GH_injr X Y
+                    let Ψ : Y → γ2 := optimal_GH_injl Y Z
+                    have hΨ : Isometry Ψ := isometry_optimal_GH_injl Y Z
+                    let γ := glue_space hΦ hΨ
+                    let this' : MetricSpace γ := Metric.metricSpaceGlueSpace hΦ hΨ
+                    have
+                      Comm
+                        : to_glue_l hΦ hΨ ∘ optimal_GH_injr X Y = to_glue_r hΦ hΨ ∘ optimal_GH_injl Y Z
+                        :=
+                        to_glue_commute hΦ hΨ
+                    calc
+                      dist x z = dist to_GH_space X to_GH_space Z := by rw [ x.to_GH_space_rep , z.to_GH_space_rep ]
+                        _
+                            ≤
+                            Hausdorff_dist
+                              range to_glue_l hΦ hΨ ∘ optimal_GH_injl X Y range to_glue_r hΦ hΨ ∘ optimal_GH_injr Y Z
+                          :=
+                          GH_dist_le_Hausdorff_dist
+                            to_glue_l_isometry hΦ hΨ . comp isometry_optimal_GH_injl X Y
+                              to_glue_r_isometry hΦ hΨ . comp isometry_optimal_GH_injr Y Z
+                        _
+                            ≤
+                            Hausdorff_dist
+                                range to_glue_l hΦ hΨ ∘ optimal_GH_injl X Y range to_glue_l hΦ hΨ ∘ optimal_GH_injr X Y
+                              +
+                              Hausdorff_dist
+                                range to_glue_l hΦ hΨ ∘ optimal_GH_injr X Y range to_glue_r hΦ hΨ ∘ optimal_GH_injr Y Z
+                          :=
+                          by
+                            refine'
+                                Hausdorff_dist_triangle
+                                  Hausdorff_edist_ne_top_of_nonempty_of_bounded range_nonempty _ range_nonempty _ _ _
+                              ·
+                                exact
+                                  is_compact_range
+                                      Isometry.continuous to_glue_l_isometry hΦ hΨ . comp isometry_optimal_GH_injl X Y
+                                    .
+                                    Bounded
+                              ·
+                                exact
+                                  is_compact_range
+                                      Isometry.continuous to_glue_l_isometry hΦ hΨ . comp isometry_optimal_GH_injr X Y
+                                    .
+                                    Bounded
+                        _
+                            =
+                            Hausdorff_dist
+                                to_glue_l hΦ hΨ '' range optimal_GH_injl X Y
+                                  to_glue_l hΦ hΨ '' range optimal_GH_injr X Y
+                              +
+                              Hausdorff_dist
+                                to_glue_r hΦ hΨ '' range optimal_GH_injl Y Z
+                                  to_glue_r hΦ hΨ '' range optimal_GH_injr Y Z
+                          :=
+                          by simp only [ ← range_comp , Comm , eq_self_iff_true , add_right_injₓ ]
+                        _
+                            =
+                            Hausdorff_dist range optimal_GH_injl X Y range optimal_GH_injr X Y
+                              +
+                              Hausdorff_dist range optimal_GH_injl Y Z range optimal_GH_injr Y Z
+                          :=
+                          by
+                            rw
+                              [
+                                Hausdorff_dist_image to_glue_l_isometry hΦ hΨ
+                                  ,
+                                  Hausdorff_dist_image to_glue_r_isometry hΦ hΨ
+                                ]
+                        _ = dist to_GH_space X to_GH_space Y + dist to_GH_space Y to_GH_space Z
+                          :=
+                          by rw [ Hausdorff_dist_optimal , Hausdorff_dist_optimal , GH_dist , GH_dist ]
+                        _ = dist x y + dist y z := by rw [ x.to_GH_space_rep , y.to_GH_space_rep , z.to_GH_space_rep ]
+        }
 
 end GHSpace
 
@@ -482,21 +657,20 @@ section NonemptyCompacts
 
 variable {X : Type u} [MetricSpace X]
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem GH_dist_le_nonempty_compacts_dist
-(p q : nonempty_compacts X) : «expr ≤ »(dist p.to_GH_space q.to_GH_space, dist p q) :=
-begin
-  have [ident ha] [":", expr isometry (coe : p.val → X)] [":=", expr isometry_subtype_coe],
-  have [ident hb] [":", expr isometry (coe : q.val → X)] [":=", expr isometry_subtype_coe],
-  have [ident A] [":", expr «expr = »(dist p q, Hausdorff_dist p.val q.val)] [":=", expr rfl],
-  have [ident I] [":", expr «expr = »(p.val, range (coe : p.val → X))] [],
-  by simp [] [] [] [] [] [],
-  have [ident J] [":", expr «expr = »(q.val, range (coe : q.val → X))] [],
-  by simp [] [] [] [] [] [],
-  rw ["[", expr I, ",", expr J, "]"] ["at", ident A],
-  rw [expr A] [],
-  exact [expr GH_dist_le_Hausdorff_dist ha hb]
-end
+theorem GH_dist_le_nonempty_compacts_dist (p q : nonempty_compacts X) : dist p.to_GH_space q.to_GH_space ≤ dist p q :=
+  by 
+    have ha : Isometry (coeₓ : p.val → X) := isometry_subtype_coe 
+    have hb : Isometry (coeₓ : q.val → X) := isometry_subtype_coe 
+    have A : dist p q = Hausdorff_dist p.val q.val := rfl 
+    have I : p.val = range (coeₓ : p.val → X)
+    ·
+      simp 
+    have J : q.val = range (coeₓ : q.val → X)
+    ·
+      simp 
+    rw [I, J] at A 
+    rw [A]
+    exact GH_dist_le_Hausdorff_dist ha hb
 
 theorem to_GH_space_lipschitz : LipschitzWith 1 (nonempty_compacts.to_GH_space : nonempty_compacts X → GH_space) :=
   LipschitzWith.mk_one GH_dist_le_nonempty_compacts_dist
@@ -513,328 +687,437 @@ variable {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v}
 
 attribute [local instance] Sum.topologicalSpace Sum.uniformSpace
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 /-- If there are subsets which are `ε₁`-dense and `ε₃`-dense in two spaces, and
 isometric up to `ε₂`, then the Gromov-Hausdorff distance between the spaces is bounded by
 `ε₁ + ε₂/2 + ε₃`. -/
-theorem GH_dist_le_of_approx_subsets
-{s : set X}
-(Φ : s → Y)
-{ε₁ ε₂ ε₃ : exprℝ()}
-(hs : ∀ x : X, «expr∃ , »((y «expr ∈ » s), «expr ≤ »(dist x y, ε₁)))
-(hs' : ∀ x : Y, «expr∃ , »((y : s), «expr ≤ »(dist x (Φ y), ε₃)))
-(H : ∀
- x
- y : s, «expr ≤ »(«expr| |»(«expr - »(dist x y, dist (Φ x) (Φ y))), ε₂)) : «expr ≤ »(GH_dist X Y, «expr + »(«expr + »(ε₁, «expr / »(ε₂, 2)), ε₃)) :=
-begin
-  refine [expr le_of_forall_pos_le_add (λ δ δ0, _)],
-  rcases [expr exists_mem_of_nonempty X, "with", "⟨", ident xX, ",", "_", "⟩"],
-  rcases [expr hs xX, "with", "⟨", ident xs, ",", ident hxs, ",", ident Dxs, "⟩"],
-  have [ident sne] [":", expr s.nonempty] [":=", expr ⟨xs, hxs⟩],
-  letI [] [":", expr nonempty s] [":=", expr sne.to_subtype],
-  have [] [":", expr «expr ≤ »(0, ε₂)] [":=", expr le_trans (abs_nonneg _) (H ⟨xs, hxs⟩ ⟨xs, hxs⟩)],
-  have [] [":", expr ∀
-   p
-   q : s, «expr ≤ »(«expr| |»(«expr - »(dist p q, dist (Φ p) (Φ q))), «expr * »(2, «expr + »(«expr / »(ε₂, 2), δ)))] [":=", expr λ
-   p q, calc
-     «expr ≤ »(«expr| |»(«expr - »(dist p q, dist (Φ p) (Φ q))), ε₂) : H p q
-     «expr ≤ »(..., «expr * »(2, «expr + »(«expr / »(ε₂, 2), δ))) : by linarith [] [] []],
-  letI [] [":", expr metric_space «expr ⊕ »(X, Y)] [":=", expr glue_metric_approx (λ
-    x : s, (x : X)) (λ x, Φ x) «expr + »(«expr / »(ε₂, 2), δ) (by linarith [] [] []) this],
-  let [ident Fl] [] [":=", expr @sum.inl X Y],
-  let [ident Fr] [] [":=", expr @sum.inr X Y],
-  have [ident Il] [":", expr isometry Fl] [":=", expr isometry_emetric_iff_metric.2 (λ x y, rfl)],
-  have [ident Ir] [":", expr isometry Fr] [":=", expr isometry_emetric_iff_metric.2 (λ x y, rfl)],
-  have [] [":", expr «expr ≤ »(GH_dist X Y, Hausdorff_dist (range Fl) (range Fr))] [":=", expr GH_dist_le_Hausdorff_dist Il Ir],
-  have [] [":", expr «expr ≤ »(Hausdorff_dist (range Fl) (range Fr), «expr + »(Hausdorff_dist (range Fl) «expr '' »(Fl, s), Hausdorff_dist «expr '' »(Fl, s) (range Fr)))] [],
-  { have [ident B] [":", expr bounded (range Fl)] [":=", expr (is_compact_range Il.continuous).bounded],
-    exact [expr Hausdorff_dist_triangle (Hausdorff_edist_ne_top_of_nonempty_of_bounded (range_nonempty _) (sne.image _) B (B.mono (image_subset_range _ _)))] },
-  have [] [":", expr «expr ≤ »(Hausdorff_dist «expr '' »(Fl, s) (range Fr), «expr + »(Hausdorff_dist «expr '' »(Fl, s) «expr '' »(Fr, range Φ), Hausdorff_dist «expr '' »(Fr, range Φ) (range Fr)))] [],
-  { have [ident B] [":", expr bounded (range Fr)] [":=", expr (is_compact_range Ir.continuous).bounded],
-    exact [expr Hausdorff_dist_triangle' (Hausdorff_edist_ne_top_of_nonempty_of_bounded ((range_nonempty _).image _) (range_nonempty _) (bounded.mono (image_subset_range _ _) B) B)] },
-  have [] [":", expr «expr ≤ »(Hausdorff_dist (range Fl) «expr '' »(Fl, s), ε₁)] [],
-  { rw ["[", "<-", expr image_univ, ",", expr Hausdorff_dist_image Il, "]"] [],
-    have [] [":", expr «expr ≤ »(0, ε₁)] [":=", expr le_trans dist_nonneg Dxs],
-    refine [expr Hausdorff_dist_le_of_mem_dist this (λ
-      x hx, hs x) (λ x hx, ⟨x, mem_univ _, by simpa [] [] [] [] [] []⟩)] },
-  have [] [":", expr «expr ≤ »(Hausdorff_dist «expr '' »(Fl, s) «expr '' »(Fr, range Φ), «expr + »(«expr / »(ε₂, 2), δ))] [],
-  { refine [expr Hausdorff_dist_le_of_mem_dist (by linarith [] [] []) _ _],
-    { assume [binders (x' hx')],
-      rcases [expr (set.mem_image _ _ _).1 hx', "with", "⟨", ident x, ",", "⟨", ident x_in_s, ",", ident xx', "⟩", "⟩"],
-      rw ["<-", expr xx'] [],
-      use ["[", expr Fr (Φ ⟨x, x_in_s⟩), ",", expr mem_image_of_mem Fr (mem_range_self _), "]"],
-      exact [expr le_of_eq (glue_dist_glued_points (λ x : s, (x : X)) Φ «expr + »(«expr / »(ε₂, 2), δ) ⟨x, x_in_s⟩)] },
-    { assume [binders (x' hx')],
-      rcases [expr (set.mem_image _ _ _).1 hx', "with", "⟨", ident y, ",", "⟨", ident y_in_s', ",", ident yx', "⟩", "⟩"],
-      rcases [expr mem_range.1 y_in_s', "with", "⟨", ident x, ",", ident xy, "⟩"],
-      use ["[", expr Fl x, ",", expr mem_image_of_mem _ x.2, "]"],
-      rw ["[", "<-", expr yx', ",", "<-", expr xy, ",", expr dist_comm, "]"] [],
-      exact [expr le_of_eq (glue_dist_glued_points (@subtype.val X s) Φ «expr + »(«expr / »(ε₂, 2), δ) x)] } },
-  have [] [":", expr «expr ≤ »(Hausdorff_dist «expr '' »(Fr, range Φ) (range Fr), ε₃)] [],
-  { rw ["[", "<-", expr @image_univ _ _ Fr, ",", expr Hausdorff_dist_image Ir, "]"] [],
-    rcases [expr exists_mem_of_nonempty Y, "with", "⟨", ident xY, ",", "_", "⟩"],
-    rcases [expr hs' xY, "with", "⟨", ident xs', ",", ident Dxs', "⟩"],
-    have [] [":", expr «expr ≤ »(0, ε₃)] [":=", expr le_trans dist_nonneg Dxs'],
-    refine [expr Hausdorff_dist_le_of_mem_dist this (λ x hx, ⟨x, mem_univ _, by simpa [] [] [] [] [] []⟩) (λ x _, _)],
-    rcases [expr hs' x, "with", "⟨", ident y, ",", ident Dy, "⟩"],
-    exact [expr ⟨Φ y, mem_range_self _, Dy⟩] },
-  linarith [] [] []
-end
+theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε₃ : ℝ}
+  (hs : ∀ x : X, ∃ (y : _)(_ : y ∈ s), dist x y ≤ ε₁) (hs' : ∀ x : Y, ∃ y : s, dist x (Φ y) ≤ ε₃)
+  (H : ∀ x y : s, |dist x y - dist (Φ x) (Φ y)| ≤ ε₂) : GH_dist X Y ≤ (ε₁+ε₂ / 2)+ε₃ :=
+  by 
+    refine' le_of_forall_pos_le_add fun δ δ0 => _ 
+    rcases exists_mem_of_nonempty X with ⟨xX, _⟩
+    rcases hs xX with ⟨xs, hxs, Dxs⟩
+    have sne : s.nonempty := ⟨xs, hxs⟩
+    let this' : Nonempty s := sne.to_subtype 
+    have  : 0 ≤ ε₂ := le_transₓ (abs_nonneg _) (H ⟨xs, hxs⟩ ⟨xs, hxs⟩)
+    have  : ∀ p q : s, |dist p q - dist (Φ p) (Φ q)| ≤ 2*(ε₂ / 2)+δ :=
+      fun p q =>
+        calc |dist p q - dist (Φ p) (Φ q)| ≤ ε₂ := H p q 
+          _ ≤ 2*(ε₂ / 2)+δ :=
+          by 
+            linarith 
+          
+    let this' : MetricSpace (Sum X Y) :=
+      glue_metric_approx (fun x : s => (x : X)) (fun x => Φ x) ((ε₂ / 2)+δ)
+        (by 
+          linarith)
+        this 
+    let Fl := @Sum.inl X Y 
+    let Fr := @Sum.inr X Y 
+    have Il : Isometry Fl := isometry_emetric_iff_metric.2 fun x y => rfl 
+    have Ir : Isometry Fr := isometry_emetric_iff_metric.2 fun x y => rfl 
+    have  : GH_dist X Y ≤ Hausdorff_dist (range Fl) (range Fr) := GH_dist_le_Hausdorff_dist Il Ir 
+    have  :
+      Hausdorff_dist (range Fl) (range Fr) ≤ Hausdorff_dist (range Fl) (Fl '' s)+Hausdorff_dist (Fl '' s) (range Fr)
+    ·
+      have B : Bounded (range Fl) := (is_compact_range Il.continuous).Bounded 
+      exact
+        Hausdorff_dist_triangle
+          (Hausdorff_edist_ne_top_of_nonempty_of_bounded (range_nonempty _) (sne.image _) B
+            (B.mono (image_subset_range _ _)))
+    have  :
+      Hausdorff_dist (Fl '' s) (range Fr) ≤
+        Hausdorff_dist (Fl '' s) (Fr '' range Φ)+Hausdorff_dist (Fr '' range Φ) (range Fr)
+    ·
+      have B : Bounded (range Fr) := (is_compact_range Ir.continuous).Bounded 
+      exact
+        Hausdorff_dist_triangle'
+          (Hausdorff_edist_ne_top_of_nonempty_of_bounded ((range_nonempty _).Image _) (range_nonempty _)
+            (bounded.mono (image_subset_range _ _) B) B)
+    have  : Hausdorff_dist (range Fl) (Fl '' s) ≤ ε₁
+    ·
+      rw [←image_univ, Hausdorff_dist_image Il]
+      have  : 0 ≤ ε₁ := le_transₓ dist_nonneg Dxs 
+      refine'
+        Hausdorff_dist_le_of_mem_dist this (fun x hx => hs x)
+          fun x hx =>
+            ⟨x, mem_univ _,
+              by 
+                simpa⟩
+    have  : Hausdorff_dist (Fl '' s) (Fr '' range Φ) ≤ (ε₂ / 2)+δ
+    ·
+      refine'
+        Hausdorff_dist_le_of_mem_dist
+          (by 
+            linarith)
+          _ _
+      ·
+        intro x' hx' 
+        rcases(Set.mem_image _ _ _).1 hx' with ⟨x, ⟨x_in_s, xx'⟩⟩
+        rw [←xx']
+        use Fr (Φ ⟨x, x_in_s⟩), mem_image_of_mem Fr (mem_range_self _)
+        exact le_of_eqₓ (glue_dist_glued_points (fun x : s => (x : X)) Φ ((ε₂ / 2)+δ) ⟨x, x_in_s⟩)
+      ·
+        intro x' hx' 
+        rcases(Set.mem_image _ _ _).1 hx' with ⟨y, ⟨y_in_s', yx'⟩⟩
+        rcases mem_range.1 y_in_s' with ⟨x, xy⟩
+        use Fl x, mem_image_of_mem _ x.2
+        rw [←yx', ←xy, dist_comm]
+        exact le_of_eqₓ (glue_dist_glued_points (@Subtype.val X s) Φ ((ε₂ / 2)+δ) x)
+    have  : Hausdorff_dist (Fr '' range Φ) (range Fr) ≤ ε₃
+    ·
+      rw [←@image_univ _ _ Fr, Hausdorff_dist_image Ir]
+      rcases exists_mem_of_nonempty Y with ⟨xY, _⟩
+      rcases hs' xY with ⟨xs', Dxs'⟩
+      have  : 0 ≤ ε₃ := le_transₓ dist_nonneg Dxs' 
+      refine'
+        Hausdorff_dist_le_of_mem_dist this
+          (fun x hx =>
+            ⟨x, mem_univ _,
+              by 
+                simpa⟩)
+          fun x _ => _ 
+      rcases hs' x with ⟨y, Dy⟩
+      exact ⟨Φ y, mem_range_self _, Dy⟩
+    linarith
 
 end 
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The Gromov-Hausdorff space is second countable. -/ instance : second_countable_topology GH_space :=
-begin
-  refine [expr second_countable_of_countable_discretization (λ δ δpos, _)],
-  let [ident ε] [] [":=", expr «expr * »(«expr / »(2, 5), δ)],
-  have [ident εpos] [":", expr «expr < »(0, ε)] [":=", expr mul_pos (by norm_num [] []) δpos],
-  have [] [":", expr ∀
-   p : GH_space, «expr∃ , »((s : set p.rep), «expr ∧ »(finite s, «expr ⊆ »(univ, «expr⋃ , »((x «expr ∈ » s), ball x ε))))] [":=", expr λ
-   p, by simpa [] [] [] [] [] ["using", expr finite_cover_balls_of_compact (@compact_univ p.rep _ _) εpos]],
-  choose [] [ident s] [ident hs] ["using", expr this],
-  have [] [":", expr ∀
-   p : GH_space, ∀ t : set p.rep, finite t → «expr∃ , »((n : exprℕ()), «expr∃ , »((e : equiv t (fin n)), true))] [],
-  { assume [binders (p t ht)],
-    letI [] [":", expr fintype t] [":=", expr finite.fintype ht],
-    exact [expr ⟨fintype.card t, fintype.equiv_fin t, trivial⟩] },
-  choose [] [ident N] [ident e, ident hne] ["using", expr this],
-  let [ident N] [] [":=", expr λ p : GH_space, N p (s p) (hs p).1],
-  let [ident E] [] [":=", expr λ p : GH_space, e p (s p) (hs p).1],
-  let [ident F] [":", expr GH_space → «exprΣ , »((n : exprℕ()), fin n → fin n → exprℤ())] [":=", expr λ
-   p, ⟨N p, λ a b, «expr⌊ ⌋»(«expr * »(«expr ⁻¹»(ε), dist ((E p).symm a) ((E p).symm b)))⟩],
-  refine [expr ⟨«exprΣ , »((n), fin n → fin n → exprℤ()), by apply_instance, F, λ p q hpq, _⟩],
-  have [ident Npq] [":", expr «expr = »(N p, N q)] [":=", expr (sigma.mk.inj_iff.1 hpq).1],
-  let [ident Ψ] [":", expr s p → s q] [":=", expr λ x, (E q).symm (fin.cast Npq (E p x))],
-  let [ident Φ] [":", expr s p → q.rep] [":=", expr λ x, Ψ x],
-  have [ident main] [":", expr «expr ≤ »(GH_dist p.rep q.rep, «expr + »(«expr + »(ε, «expr / »(ε, 2)), ε))] [],
-  { refine [expr GH_dist_le_of_approx_subsets Φ _ _ _],
-    show [expr ∀ x : p.rep, «expr∃ , »((y : p.rep) (H : «expr ∈ »(y, s p)), «expr ≤ »(dist x y, ε))],
-    { assume [binders (x)],
-      have [] [":", expr «expr ∈ »(x, «expr⋃ , »((y «expr ∈ » s p), ball y ε))] [":=", expr (hs p).2 (mem_univ _)],
-      rcases [expr mem_bUnion_iff.1 this, "with", "⟨", ident y, ",", ident ys, ",", ident hy, "⟩"],
-      exact [expr ⟨y, ys, le_of_lt hy⟩] },
-    show [expr ∀ x : q.rep, «expr∃ , »((z : s p), «expr ≤ »(dist x (Φ z), ε))],
-    { assume [binders (x)],
-      have [] [":", expr «expr ∈ »(x, «expr⋃ , »((y «expr ∈ » s q), ball y ε))] [":=", expr (hs q).2 (mem_univ _)],
-      rcases [expr mem_bUnion_iff.1 this, "with", "⟨", ident y, ",", ident ys, ",", ident hy, "⟩"],
-      let [ident i] [":", expr exprℕ()] [":=", expr E q ⟨y, ys⟩],
-      let [ident hi] [] [":=", expr (E q ⟨y, ys⟩).is_lt],
-      have [ident ihi_eq] [":", expr «expr = »((⟨i, hi⟩ : fin (N q)), E q ⟨y, ys⟩)] [],
-      by rw ["[", expr fin.ext_iff, ",", expr fin.coe_mk, "]"] [],
-      have [ident hiq] [":", expr «expr < »(i, N q)] [":=", expr hi],
-      have [ident hip] [":", expr «expr < »(i, N p)] [],
-      { rwa [expr Npq.symm] ["at", ident hiq] },
-      let [ident z] [] [":=", expr (E p).symm ⟨i, hip⟩],
-      use [expr z],
-      have [ident C1] [":", expr «expr = »(E p z, ⟨i, hip⟩)] [":=", expr (E p).apply_symm_apply ⟨i, hip⟩],
-      have [ident C2] [":", expr «expr = »(fin.cast Npq ⟨i, hip⟩, ⟨i, hi⟩)] [":=", expr rfl],
-      have [ident C3] [":", expr «expr = »((E q).symm ⟨i, hi⟩, ⟨y, ys⟩)] [],
-      by { rw [expr ihi_eq] [],
-        exact [expr (E q).symm_apply_apply ⟨y, ys⟩] },
-      have [] [":", expr «expr = »(Φ z, y)] [":=", expr by { simp [] [] ["only"] ["[", expr Φ, ",", expr Ψ, "]"] [] [],
-         rw ["[", expr C1, ",", expr C2, ",", expr C3, "]"] [],
-         refl }],
-      rw [expr this] [],
-      exact [expr le_of_lt hy] },
-    show [expr ∀ x y : s p, «expr ≤ »(«expr| |»(«expr - »(dist x y, dist (Φ x) (Φ y))), ε)],
-    { assume [binders (x y)],
-      have [] [":", expr «expr = »(dist (Φ x) (Φ y), dist (Ψ x) (Ψ y))] [":=", expr rfl],
-      rw [expr this] [],
-      let [ident i] [":", expr exprℕ()] [":=", expr E p x],
-      have [ident hip] [":", expr «expr < »(i, N p)] [":=", expr (E p x).2],
-      have [ident hiq] [":", expr «expr < »(i, N q)] [],
-      by rwa [expr Npq] ["at", ident hip],
-      have [ident i'] [":", expr «expr = »(i, E q (Ψ x))] [],
-      by { simp [] [] [] ["[", expr Ψ, "]"] [] [] },
-      let [ident j] [":", expr exprℕ()] [":=", expr E p y],
-      have [ident hjp] [":", expr «expr < »(j, N p)] [":=", expr (E p y).2],
-      have [ident hjq] [":", expr «expr < »(j, N q)] [],
-      by rwa [expr Npq] ["at", ident hjp],
-      have [ident j'] [":", expr «expr = »(j, (E q (Ψ y)).1)] [],
-      by { simp [] [] [] ["[", expr Ψ, "]"] [] [] },
-      have [] [":", expr «expr = »((F p).2 (E p x) (E p y), floor «expr * »(«expr ⁻¹»(ε), dist x y))] [],
-      by simp [] [] ["only"] ["[", expr F, ",", expr (E p).symm_apply_apply, "]"] [] [],
-      have [ident Ap] [":", expr «expr = »((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩, floor «expr * »(«expr ⁻¹»(ε), dist x y))] [],
-      by { rw ["<-", expr this] [],
-        congr; apply [expr (fin.ext_iff _ _).2]; refl },
-      have [] [":", expr «expr = »((F q).2 (E q (Ψ x)) (E q (Ψ y)), floor «expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y)))] [],
-      by simp [] [] ["only"] ["[", expr F, ",", expr (E q).symm_apply_apply, "]"] [] [],
-      have [ident Aq] [":", expr «expr = »((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩, floor «expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y)))] [],
-      by { rw ["<-", expr this] [],
-        congr; apply [expr (fin.ext_iff _ _).2]; [exact [expr i'], exact [expr j']] },
-      have [] [":", expr «expr = »((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩, (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩)] [],
-      { revert [ident hiq, ident hjq],
-        change [expr N q] ["with", expr (F q).1] [],
-        generalize_hyp [] [":"] [expr «expr = »(F q, f)] ["at", ident hpq, "⊢"],
-        subst [expr hpq],
-        intros [],
-        refl },
-      rw ["[", expr Ap, ",", expr Aq, "]"] ["at", ident this],
-      have [ident I] [] [":=", expr calc
-         «expr = »(«expr * »(«expr| |»(«expr ⁻¹»(ε)), «expr| |»(«expr - »(dist x y, dist (Ψ x) (Ψ y)))), «expr| |»(«expr * »(«expr ⁻¹»(ε), «expr - »(dist x y, dist (Ψ x) (Ψ y))))) : (abs_mul _ _).symm
-         «expr = »(..., «expr| |»(«expr - »(«expr * »(«expr ⁻¹»(ε), dist x y), «expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y))))) : by { congr,
-           ring [] }
-         «expr ≤ »(..., 1) : le_of_lt (abs_sub_lt_one_of_floor_eq_floor this)],
-      calc
-        «expr = »(«expr| |»(«expr - »(dist x y, dist (Ψ x) (Ψ y))), «expr * »(«expr * »(ε, «expr ⁻¹»(ε)), «expr| |»(«expr - »(dist x y, dist (Ψ x) (Ψ y))))) : by rw ["[", expr mul_inv_cancel (ne_of_gt εpos), ",", expr one_mul, "]"] []
-        «expr = »(..., «expr * »(ε, «expr * »(«expr| |»(«expr ⁻¹»(ε)), «expr| |»(«expr - »(dist x y, dist (Ψ x) (Ψ y)))))) : by rw ["[", expr abs_of_nonneg (le_of_lt (inv_pos.2 εpos)), ",", expr mul_assoc, "]"] []
-        «expr ≤ »(..., «expr * »(ε, 1)) : mul_le_mul_of_nonneg_left I (le_of_lt εpos)
-        «expr = »(..., ε) : mul_one _ } },
-  calc
-    «expr = »(dist p q, GH_dist p.rep q.rep) : dist_GH_dist p q
-    «expr ≤ »(..., «expr + »(«expr + »(ε, «expr / »(ε, 2)), ε)) : main
-    «expr = »(..., δ) : by { simp [] [] [] ["[", expr ε, "]"] [] [],
-      ring [] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s p)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s q)
+/-- The Gromov-Hausdorff space is second countable. -/
+instance : second_countable_topology GH_space :=
+  by 
+    refine' second_countable_of_countable_discretization fun δ δpos => _ 
+    let ε := (2 / 5)*δ 
+    have εpos : 0 < ε :=
+      mul_pos
+        (by 
+          normNum)
+        δpos 
+    have  : ∀ p : GH_space, ∃ s : Set p.rep, finite s ∧ univ ⊆ ⋃ (x : _)(_ : x ∈ s), ball x ε :=
+      fun p =>
+        by 
+          simpa using finite_cover_balls_of_compact (@compact_univ p.rep _ _) εpos 
+    choose s hs using this 
+    have  : ∀ p : GH_space, ∀ t : Set p.rep, finite t → ∃ n : ℕ, ∃ e : Equivₓ t (Finₓ n), True
+    ·
+      intro p t ht 
+      let this' : Fintype t := finite.fintype ht 
+      exact ⟨Fintype.card t, Fintype.equivFin t, trivialₓ⟩
+    choose N e hne using this 
+    let N := fun p : GH_space => N p (s p) (hs p).1
+    let E := fun p : GH_space => e p (s p) (hs p).1
+    let F : GH_space → Σ n : ℕ, Finₓ n → Finₓ n → ℤ :=
+      fun p => ⟨N p, fun a b => ⌊ε⁻¹*dist ((E p).symm a) ((E p).symm b)⌋⟩
+    refine'
+      ⟨Σ n, Finₓ n → Finₓ n → ℤ,
+        by 
+          infer_instance,
+        F, fun p q hpq => _⟩
+    have Npq : N p = N q := (Sigma.mk.inj_iff.1 hpq).1
+    let Ψ : s p → s q := fun x => (E q).symm (Finₓ.cast Npq ((E p) x))
+    let Φ : s p → q.rep := fun x => Ψ x 
+    have main : GH_dist p.rep q.rep ≤ (ε+ε / 2)+ε
+    ·
+      refine' GH_dist_le_of_approx_subsets Φ _ _ _ 
+      show ∀ x : p.rep, ∃ (y : p.rep)(H : y ∈ s p), dist x y ≤ ε
+      ·
+        intro x 
+        have  : x ∈ ⋃ (y : _)(_ : y ∈ s p), ball y ε := (hs p).2 (mem_univ _)
+        rcases mem_bUnion_iff.1 this with ⟨y, ys, hy⟩
+        exact ⟨y, ys, le_of_ltₓ hy⟩
+      show ∀ x : q.rep, ∃ z : s p, dist x (Φ z) ≤ ε
+      ·
+        intro x 
+        have  : x ∈ ⋃ (y : _)(_ : y ∈ s q), ball y ε := (hs q).2 (mem_univ _)
+        rcases mem_bUnion_iff.1 this with ⟨y, ys, hy⟩
+        let i : ℕ := E q ⟨y, ys⟩
+        let hi := ((E q) ⟨y, ys⟩).is_lt 
+        have ihi_eq : (⟨i, hi⟩ : Finₓ (N q)) = (E q) ⟨y, ys⟩
+        ·
+          rw [Finₓ.ext_iff, Finₓ.coe_mk]
+        have hiq : i < N q := hi 
+        have hip : i < N p
+        ·
+          rwa [Npq.symm] at hiq 
+        let z := (E p).symm ⟨i, hip⟩
+        use z 
+        have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
+        have C2 : Finₓ.cast Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl 
+        have C3 : (E q).symm ⟨i, hi⟩ = ⟨y, ys⟩
+        ·
+          ·
+            rw [ihi_eq]
+            exact (E q).symm_apply_apply ⟨y, ys⟩
+        have  : Φ z = y :=
+          by 
+            simp only [Φ, Ψ]
+            rw [C1, C2, C3]
+            rfl 
+        rw [this]
+        exact le_of_ltₓ hy 
+      show ∀ x y : s p, |dist x y - dist (Φ x) (Φ y)| ≤ ε
+      ·
+        intro x y 
+        have  : dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) := rfl 
+        rw [this]
+        let i : ℕ := E p x 
+        have hip : i < N p := ((E p) x).2
+        have hiq : i < N q
+        ·
+          rwa [Npq] at hip 
+        have i' : i = (E q) (Ψ x)
+        ·
+          ·
+            simp [Ψ]
+        let j : ℕ := E p y 
+        have hjp : j < N p := ((E p) y).2
+        have hjq : j < N q
+        ·
+          rwa [Npq] at hjp 
+        have j' : j = ((E q) (Ψ y)).1
+        ·
+          ·
+            simp [Ψ]
+        have  : (F p).2 ((E p) x) ((E p) y) = floor (ε⁻¹*dist x y)
+        ·
+          simp only [F, (E p).symm_apply_apply]
+        have Ap : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = floor (ε⁻¹*dist x y)
+        ·
+          ·
+            rw [←this]
+            congr <;> apply (Finₓ.ext_iff _ _).2 <;> rfl 
+        have  : (F q).2 ((E q) (Ψ x)) ((E q) (Ψ y)) = floor (ε⁻¹*dist (Ψ x) (Ψ y))
+        ·
+          simp only [F, (E q).symm_apply_apply]
+        have Aq : (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ = floor (ε⁻¹*dist (Ψ x) (Ψ y))
+        ·
+          ·
+            rw [←this]
+            congr <;> apply (Finₓ.ext_iff _ _).2 <;> [exact i', exact j']
+        have  : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩
+        ·
+          revert hiq hjq 
+          change N q with (F q).1
+          generalize F q = f  at hpq⊢
+          subst hpq 
+          intros 
+          rfl 
+        rw [Ap, Aq] at this 
+        have I :=
+          calc (|ε⁻¹|*|dist x y - dist (Ψ x) (Ψ y)|) = |ε⁻¹*dist x y - dist (Ψ x) (Ψ y)| := (abs_mul _ _).symm 
+            _ = |(ε⁻¹*dist x y) - ε⁻¹*dist (Ψ x) (Ψ y)| :=
+            by 
+              congr 
+              ring 
+            _ ≤ 1 := le_of_ltₓ (abs_sub_lt_one_of_floor_eq_floor this)
+            
+        calc |dist x y - dist (Ψ x) (Ψ y)| = (ε*ε⁻¹)*|dist x y - dist (Ψ x) (Ψ y)| :=
+          by 
+            rw [mul_inv_cancel (ne_of_gtₓ εpos), one_mulₓ]_ = ε*|ε⁻¹|*|dist x y - dist (Ψ x) (Ψ y)| :=
+          by 
+            rw [abs_of_nonneg (le_of_ltₓ (inv_pos.2 εpos)), mul_assocₓ]_ ≤ ε*1 :=
+          mul_le_mul_of_nonneg_left I (le_of_ltₓ εpos)_ = ε := mul_oneₓ _ 
+    calc dist p q = GH_dist p.rep q.rep := dist_GH_dist p q _ ≤ (ε+ε / 2)+ε := main _ = δ :=
+      by 
+        simp [ε]
+        ring
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (N «expr ≤ » K n)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s p)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s q)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- Compactness criterion: a closed set of compact metric spaces is compact if the spaces have
 a uniformly bounded diameter, and for all `ε` the number of balls of radius `ε` required
 to cover the spaces is uniformly bounded. This is an equivalence, but we only prove the
 interesting direction that these conditions imply compactness. -/
-theorem totally_bounded
-{t : set GH_space}
-{C : exprℝ()}
-{u : exprℕ() → exprℝ()}
-{K : exprℕ() → exprℕ()}
-(ulim : tendsto u at_top (expr𝓝() 0))
-(hdiam : ∀ p «expr ∈ » t, «expr ≤ »(diam (univ : set (GH_space.rep p)), C))
-(hcov : ∀
- p «expr ∈ » t, ∀
- n : exprℕ(), «expr∃ , »((s : set (GH_space.rep p)), «expr ∧ »(«expr ≤ »(cardinal.mk s, K n), «expr ⊆ »(univ, «expr⋃ , »((x «expr ∈ » s), ball x (u n)))))) : totally_bounded t :=
-begin
-  refine [expr metric.totally_bounded_of_finite_discretization (λ δ δpos, _)],
-  let [ident ε] [] [":=", expr «expr * »(«expr / »(1, 5), δ)],
-  have [ident εpos] [":", expr «expr < »(0, ε)] [":=", expr mul_pos (by norm_num [] []) δpos],
-  rcases [expr metric.tendsto_at_top.1 ulim ε εpos, "with", "⟨", ident n, ",", ident hn, "⟩"],
-  have [ident u_le_ε] [":", expr «expr ≤ »(u n, ε)] [],
-  { have [] [] [":=", expr hn n (le_refl _)],
-    simp [] [] ["only"] ["[", expr real.dist_eq, ",", expr add_zero, ",", expr sub_eq_add_neg, ",", expr neg_zero, "]"] [] ["at", ident this],
-    exact [expr le_of_lt (lt_of_le_of_lt (le_abs_self _) this)] },
-  have [] [":", expr ∀
-   p : GH_space, «expr∃ , »((s : set p.rep), «expr∃ , »((N «expr ≤ » K n), «expr∃ , »((E : equiv s (fin N)), «expr ∈ »(p, t) → «expr ⊆ »(univ, «expr⋃ , »((x «expr ∈ » s), ball x (u n))))))] [],
-  { assume [binders (p)],
-    by_cases [expr hp, ":", expr «expr ∉ »(p, t)],
-    { have [] [":", expr nonempty (equiv («expr∅»() : set p.rep) (fin 0))] [],
-      { rw ["<-", expr fintype.card_eq] [],
-        simp [] [] [] [] [] [] },
-      use ["[", expr «expr∅»(), ",", expr 0, ",", expr bot_le, ",", expr choice this, "]"] },
-    { rcases [expr hcov _ (set.not_not_mem.1 hp) n, "with", "⟨", ident s, ",", "⟨", ident scard, ",", ident scover, "⟩", "⟩"],
-      rcases [expr cardinal.lt_omega.1 (lt_of_le_of_lt scard (cardinal.nat_lt_omega _)), "with", "⟨", ident N, ",", ident hN, "⟩"],
-      rw ["[", expr hN, ",", expr cardinal.nat_cast_le, "]"] ["at", ident scard],
-      have [] [":", expr «expr = »(cardinal.mk s, cardinal.mk (fin N))] [],
-      by rw ["[", expr hN, ",", expr cardinal.mk_fin, "]"] [],
-      cases [expr quotient.exact this] ["with", ident E],
-      use ["[", expr s, ",", expr N, ",", expr scard, ",", expr E, "]"],
-      simp [] [] [] ["[", expr hp, ",", expr scover, "]"] [] [] } },
-  choose [] [ident s] [ident N, ident hN, ident E, ident hs] ["using", expr this],
-  let [ident M] [] [":=", expr «expr⌊ ⌋₊»(«expr * »(«expr ⁻¹»(ε), max C 0))],
-  let [ident F] [":", expr GH_space → «exprΣ , »((k : fin (K n).succ), fin k → fin k → fin M.succ)] [":=", expr λ
-   p, ⟨⟨N p, lt_of_le_of_lt (hN p) (nat.lt_succ_self _)⟩, λ
-    a
-    b, ⟨min M «expr⌊ ⌋₊»(«expr * »(«expr ⁻¹»(ε), dist ((E p).symm a) ((E p).symm b))), (min_le_left _ _).trans_lt (nat.lt_succ_self _)⟩⟩],
-  refine [expr ⟨_, _, λ p, F p, _⟩],
-  apply_instance,
-  rintros ["⟨", ident p, ",", ident pt, "⟩", "⟨", ident q, ",", ident qt, "⟩", ident hpq],
-  have [ident Npq] [":", expr «expr = »(N p, N q)] [":=", expr (fin.ext_iff _ _).1 (sigma.mk.inj_iff.1 hpq).1],
-  let [ident Ψ] [":", expr s p → s q] [":=", expr λ x, (E q).symm (fin.cast Npq (E p x))],
-  let [ident Φ] [":", expr s p → q.rep] [":=", expr λ x, Ψ x],
-  have [ident main] [":", expr «expr ≤ »(GH_dist p.rep q.rep, «expr + »(«expr + »(ε, «expr / »(ε, 2)), ε))] [],
-  { refine [expr GH_dist_le_of_approx_subsets Φ _ _ _],
-    show [expr ∀ x : p.rep, «expr∃ , »((y : p.rep) (H : «expr ∈ »(y, s p)), «expr ≤ »(dist x y, ε))],
-    { assume [binders (x)],
-      have [] [":", expr «expr ∈ »(x, «expr⋃ , »((y «expr ∈ » s p), ball y (u n)))] [":=", expr hs p pt (mem_univ _)],
-      rcases [expr mem_bUnion_iff.1 this, "with", "⟨", ident y, ",", ident ys, ",", ident hy, "⟩"],
-      exact [expr ⟨y, ys, le_trans (le_of_lt hy) u_le_ε⟩] },
-    show [expr ∀ x : q.rep, «expr∃ , »((z : s p), «expr ≤ »(dist x (Φ z), ε))],
-    { assume [binders (x)],
-      have [] [":", expr «expr ∈ »(x, «expr⋃ , »((y «expr ∈ » s q), ball y (u n)))] [":=", expr hs q qt (mem_univ _)],
-      rcases [expr mem_bUnion_iff.1 this, "with", "⟨", ident y, ",", ident ys, ",", ident hy, "⟩"],
-      let [ident i] [":", expr exprℕ()] [":=", expr E q ⟨y, ys⟩],
-      let [ident hi] [] [":=", expr (E q ⟨y, ys⟩).2],
-      have [ident ihi_eq] [":", expr «expr = »((⟨i, hi⟩ : fin (N q)), E q ⟨y, ys⟩)] [],
-      by rw ["[", expr fin.ext_iff, ",", expr fin.coe_mk, "]"] [],
-      have [ident hiq] [":", expr «expr < »(i, N q)] [":=", expr hi],
-      have [ident hip] [":", expr «expr < »(i, N p)] [],
-      { rwa [expr Npq.symm] ["at", ident hiq] },
-      let [ident z] [] [":=", expr (E p).symm ⟨i, hip⟩],
-      use [expr z],
-      have [ident C1] [":", expr «expr = »(E p z, ⟨i, hip⟩)] [":=", expr (E p).apply_symm_apply ⟨i, hip⟩],
-      have [ident C2] [":", expr «expr = »(fin.cast Npq ⟨i, hip⟩, ⟨i, hi⟩)] [":=", expr rfl],
-      have [ident C3] [":", expr «expr = »((E q).symm ⟨i, hi⟩, ⟨y, ys⟩)] [],
-      by { rw [expr ihi_eq] [],
-        exact [expr (E q).symm_apply_apply ⟨y, ys⟩] },
-      have [] [":", expr «expr = »(Φ z, y)] [":=", expr by { simp [] [] ["only"] ["[", expr Φ, ",", expr Ψ, "]"] [] [],
-         rw ["[", expr C1, ",", expr C2, ",", expr C3, "]"] [],
-         refl }],
-      rw [expr this] [],
-      exact [expr le_trans (le_of_lt hy) u_le_ε] },
-    show [expr ∀ x y : s p, «expr ≤ »(«expr| |»(«expr - »(dist x y, dist (Φ x) (Φ y))), ε)],
-    { assume [binders (x y)],
-      have [] [":", expr «expr = »(dist (Φ x) (Φ y), dist (Ψ x) (Ψ y))] [":=", expr rfl],
-      rw [expr this] [],
-      let [ident i] [":", expr exprℕ()] [":=", expr E p x],
-      have [ident hip] [":", expr «expr < »(i, N p)] [":=", expr (E p x).2],
-      have [ident hiq] [":", expr «expr < »(i, N q)] [],
-      by rwa [expr Npq] ["at", ident hip],
-      have [ident i'] [":", expr «expr = »(i, E q (Ψ x))] [],
-      by { simp [] [] [] ["[", expr Ψ, "]"] [] [] },
-      let [ident j] [":", expr exprℕ()] [":=", expr E p y],
-      have [ident hjp] [":", expr «expr < »(j, N p)] [":=", expr (E p y).2],
-      have [ident hjq] [":", expr «expr < »(j, N q)] [],
-      by rwa [expr Npq] ["at", ident hjp],
-      have [ident j'] [":", expr «expr = »(j, E q (Ψ y))] [],
-      by { simp [] [] [] ["[", expr Ψ, "]"] [] [] },
-      have [ident Ap] [":", expr «expr = »(((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1, «expr⌊ ⌋₊»(«expr * »(«expr ⁻¹»(ε), dist x y)))] [":=", expr calc
-         «expr = »(((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1, ((F p).2 (E p x) (E p y)).1) : by { congr; apply [expr (fin.ext_iff _ _).2]; refl }
-         «expr = »(..., min M «expr⌊ ⌋₊»(«expr * »(«expr ⁻¹»(ε), dist x y))) : by simp [] [] ["only"] ["[", expr F, ",", expr (E p).symm_apply_apply, "]"] [] []
-         «expr = »(..., «expr⌊ ⌋₊»(«expr * »(«expr ⁻¹»(ε), dist x y))) : begin
-           refine [expr min_eq_right (nat.floor_mono _)],
-           refine [expr mul_le_mul_of_nonneg_left (le_trans _ (le_max_left _ _)) (inv_pos.2 εpos).le],
-           change [expr «expr ≤ »(dist (x : p.rep) y, C)] [] [],
-           refine [expr le_trans (dist_le_diam_of_mem compact_univ.bounded (mem_univ _) (mem_univ _)) _],
-           exact [expr hdiam p pt]
-         end],
-      have [ident Aq] [":", expr «expr = »(((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1, «expr⌊ ⌋₊»(«expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y))))] [":=", expr calc
-         «expr = »(((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1, ((F q).2 (E q (Ψ x)) (E q (Ψ y))).1) : by { congr; apply [expr (fin.ext_iff _ _).2]; [exact [expr i'], exact [expr j']] }
-         «expr = »(..., min M «expr⌊ ⌋₊»(«expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y)))) : by simp [] [] ["only"] ["[", expr F, ",", expr (E q).symm_apply_apply, "]"] [] []
-         «expr = »(..., «expr⌊ ⌋₊»(«expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y)))) : begin
-           refine [expr min_eq_right (nat.floor_mono _)],
-           refine [expr mul_le_mul_of_nonneg_left (le_trans _ (le_max_left _ _)) (inv_pos.2 εpos).le],
-           change [expr «expr ≤ »(dist (Ψ x : q.rep) (Ψ y), C)] [] [],
-           refine [expr le_trans (dist_le_diam_of_mem compact_univ.bounded (mem_univ _) (mem_univ _)) _],
-           exact [expr hdiam q qt]
-         end],
-      have [] [":", expr «expr = »(((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1, ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1)] [],
-      { revert [ident hiq, ident hjq],
-        change [expr N q] ["with", expr (F q).1] [],
-        generalize_hyp [] [":"] [expr «expr = »(F q, f)] ["at", ident hpq, "⊢"],
-        subst [expr hpq],
-        intros [],
-        refl },
-      have [] [":", expr «expr = »(«expr⌊ ⌋»(«expr * »(«expr ⁻¹»(ε), dist x y)), «expr⌊ ⌋»(«expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y))))] [],
-      { rw ["[", expr Ap, ",", expr Aq, "]"] ["at", ident this],
-        have [ident D] [":", expr «expr ≤ »(0, «expr⌊ ⌋»(«expr * »(«expr ⁻¹»(ε), dist x y)))] [":=", expr floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)],
-        have [ident D'] [":", expr «expr ≤ »(0, «expr⌊ ⌋»(«expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y))))] [":=", expr floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)],
-        rw ["[", "<-", expr int.to_nat_of_nonneg D, ",", "<-", expr int.to_nat_of_nonneg D', ",", expr int.floor_to_nat, ",", expr int.floor_to_nat, ",", expr this, "]"] [] },
-      have [ident I] [] [":=", expr calc
-         «expr = »(«expr * »(«expr| |»(«expr ⁻¹»(ε)), «expr| |»(«expr - »(dist x y, dist (Ψ x) (Ψ y)))), «expr| |»(«expr * »(«expr ⁻¹»(ε), «expr - »(dist x y, dist (Ψ x) (Ψ y))))) : (abs_mul _ _).symm
-         «expr = »(..., «expr| |»(«expr - »(«expr * »(«expr ⁻¹»(ε), dist x y), «expr * »(«expr ⁻¹»(ε), dist (Ψ x) (Ψ y))))) : by { congr,
-           ring [] }
-         «expr ≤ »(..., 1) : le_of_lt (abs_sub_lt_one_of_floor_eq_floor this)],
-      calc
-        «expr = »(«expr| |»(«expr - »(dist x y, dist (Ψ x) (Ψ y))), «expr * »(«expr * »(ε, «expr ⁻¹»(ε)), «expr| |»(«expr - »(dist x y, dist (Ψ x) (Ψ y))))) : by rw ["[", expr mul_inv_cancel (ne_of_gt εpos), ",", expr one_mul, "]"] []
-        «expr = »(..., «expr * »(ε, «expr * »(«expr| |»(«expr ⁻¹»(ε)), «expr| |»(«expr - »(dist x y, dist (Ψ x) (Ψ y)))))) : by rw ["[", expr abs_of_nonneg (le_of_lt (inv_pos.2 εpos)), ",", expr mul_assoc, "]"] []
-        «expr ≤ »(..., «expr * »(ε, 1)) : mul_le_mul_of_nonneg_left I (le_of_lt εpos)
-        «expr = »(..., ε) : mul_one _ } },
-  calc
-    «expr = »(dist p q, GH_dist p.rep q.rep) : dist_GH_dist p q
-    «expr ≤ »(..., «expr + »(«expr + »(ε, «expr / »(ε, 2)), ε)) : main
-    «expr = »(..., «expr / »(δ, 2)) : by { simp [] [] [] ["[", expr ε, "]"] [] [],
-      ring [] }
-    «expr < »(..., δ) : half_lt_self δpos
-end
+theorem TotallyBounded {t : Set GH_space} {C : ℝ} {u : ℕ → ℝ} {K : ℕ → ℕ} (ulim : tendsto u at_top (𝓝 0))
+  (hdiam : ∀ p _ : p ∈ t, diam (univ : Set (GH_space.rep p)) ≤ C)
+  (hcov :
+    ∀ p _ : p ∈ t,
+      ∀ n : ℕ, ∃ s : Set (GH_space.rep p), Cardinal.mk s ≤ K n ∧ univ ⊆ ⋃ (x : _)(_ : x ∈ s), ball x (u n)) :
+  TotallyBounded t :=
+  by 
+    refine' Metric.totally_bounded_of_finite_discretization fun δ δpos => _ 
+    let ε := (1 / 5)*δ 
+    have εpos : 0 < ε :=
+      mul_pos
+        (by 
+          normNum)
+        δpos 
+    rcases Metric.tendsto_at_top.1 ulim ε εpos with ⟨n, hn⟩
+    have u_le_ε : u n ≤ ε
+    ·
+      have  := hn n (le_reflₓ _)
+      simp only [Real.dist_eq, add_zeroₓ, sub_eq_add_neg, neg_zero] at this 
+      exact le_of_ltₓ (lt_of_le_of_ltₓ (le_abs_self _) this)
+    have  :
+      ∀ p : GH_space,
+        ∃ s : Set p.rep,
+          ∃ (N : _)(_ : N ≤ K n), ∃ E : Equivₓ s (Finₓ N), p ∈ t → univ ⊆ ⋃ (x : _)(_ : x ∈ s), ball x (u n)
+    ·
+      intro p 
+      byCases' hp : p ∉ t
+      ·
+        have  : Nonempty (Equivₓ (∅ : Set p.rep) (Finₓ 0))
+        ·
+          rw [←Fintype.card_eq]
+          simp 
+        use ∅, 0, bot_le, choice this
+      ·
+        rcases hcov _ (Set.not_not_mem.1 hp) n with ⟨s, ⟨scard, scover⟩⟩
+        rcases Cardinal.lt_omega.1 (lt_of_le_of_ltₓ scard (Cardinal.nat_lt_omega _)) with ⟨N, hN⟩
+        rw [hN, Cardinal.nat_cast_le] at scard 
+        have  : Cardinal.mk s = Cardinal.mk (Finₓ N)
+        ·
+          rw [hN, Cardinal.mk_fin]
+        cases' Quotientₓ.exact this with E 
+        use s, N, scard, E 
+        simp [hp, scover]
+    choose s N hN E hs using this 
+    let M := ⌊ε⁻¹*max C 0⌋₊
+    let F : GH_space → Σ k : Finₓ (K n).succ, Finₓ k → Finₓ k → Finₓ M.succ :=
+      fun p =>
+        ⟨⟨N p, lt_of_le_of_ltₓ (hN p) (Nat.lt_succ_selfₓ _)⟩,
+          fun a b =>
+            ⟨min M ⌊ε⁻¹*dist ((E p).symm a) ((E p).symm b)⌋₊, (min_le_leftₓ _ _).trans_lt (Nat.lt_succ_selfₓ _)⟩⟩
+    refine' ⟨_, _, fun p => F p, _⟩
+    infer_instance 
+    rintro ⟨p, pt⟩ ⟨q, qt⟩ hpq 
+    have Npq : N p = N q := (Finₓ.ext_iff _ _).1 (Sigma.mk.inj_iff.1 hpq).1
+    let Ψ : s p → s q := fun x => (E q).symm (Finₓ.cast Npq ((E p) x))
+    let Φ : s p → q.rep := fun x => Ψ x 
+    have main : GH_dist p.rep q.rep ≤ (ε+ε / 2)+ε
+    ·
+      refine' GH_dist_le_of_approx_subsets Φ _ _ _ 
+      show ∀ x : p.rep, ∃ (y : p.rep)(H : y ∈ s p), dist x y ≤ ε
+      ·
+        intro x 
+        have  : x ∈ ⋃ (y : _)(_ : y ∈ s p), ball y (u n) := (hs p pt) (mem_univ _)
+        rcases mem_bUnion_iff.1 this with ⟨y, ys, hy⟩
+        exact ⟨y, ys, le_transₓ (le_of_ltₓ hy) u_le_ε⟩
+      show ∀ x : q.rep, ∃ z : s p, dist x (Φ z) ≤ ε
+      ·
+        intro x 
+        have  : x ∈ ⋃ (y : _)(_ : y ∈ s q), ball y (u n) := (hs q qt) (mem_univ _)
+        rcases mem_bUnion_iff.1 this with ⟨y, ys, hy⟩
+        let i : ℕ := E q ⟨y, ys⟩
+        let hi := ((E q) ⟨y, ys⟩).2
+        have ihi_eq : (⟨i, hi⟩ : Finₓ (N q)) = (E q) ⟨y, ys⟩
+        ·
+          rw [Finₓ.ext_iff, Finₓ.coe_mk]
+        have hiq : i < N q := hi 
+        have hip : i < N p
+        ·
+          rwa [Npq.symm] at hiq 
+        let z := (E p).symm ⟨i, hip⟩
+        use z 
+        have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
+        have C2 : Finₓ.cast Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl 
+        have C3 : (E q).symm ⟨i, hi⟩ = ⟨y, ys⟩
+        ·
+          ·
+            rw [ihi_eq]
+            exact (E q).symm_apply_apply ⟨y, ys⟩
+        have  : Φ z = y :=
+          by 
+            simp only [Φ, Ψ]
+            rw [C1, C2, C3]
+            rfl 
+        rw [this]
+        exact le_transₓ (le_of_ltₓ hy) u_le_ε 
+      show ∀ x y : s p, |dist x y - dist (Φ x) (Φ y)| ≤ ε
+      ·
+        intro x y 
+        have  : dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) := rfl 
+        rw [this]
+        let i : ℕ := E p x 
+        have hip : i < N p := ((E p) x).2
+        have hiq : i < N q
+        ·
+          rwa [Npq] at hip 
+        have i' : i = (E q) (Ψ x)
+        ·
+          ·
+            simp [Ψ]
+        let j : ℕ := E p y 
+        have hjp : j < N p := ((E p) y).2
+        have hjq : j < N q
+        ·
+          rwa [Npq] at hjp 
+        have j' : j = (E q) (Ψ y)
+        ·
+          ·
+            simp [Ψ]
+        have Ap : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ⌊ε⁻¹*dist x y⌋₊ :=
+          calc ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ((F p).2 ((E p) x) ((E p) y)).1 :=
+            by 
+              congr <;> apply (Finₓ.ext_iff _ _).2 <;> rfl 
+            _ = min M ⌊ε⁻¹*dist x y⌋₊ :=
+            by 
+              simp only [F, (E p).symm_apply_apply]
+            _ = ⌊ε⁻¹*dist x y⌋₊ :=
+            by 
+              refine' min_eq_rightₓ (Nat.floor_mono _)
+              refine' mul_le_mul_of_nonneg_left (le_transₓ _ (le_max_leftₓ _ _)) (inv_pos.2 εpos).le 
+              change dist (x : p.rep) y ≤ C 
+              refine' le_transₓ (dist_le_diam_of_mem compact_univ.bounded (mem_univ _) (mem_univ _)) _ 
+              exact hdiam p pt 
+            
+        have Aq : ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ⌊ε⁻¹*dist (Ψ x) (Ψ y)⌋₊ :=
+          calc ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ((F q).2 ((E q) (Ψ x)) ((E q) (Ψ y))).1 :=
+            by 
+              congr <;> apply (Finₓ.ext_iff _ _).2 <;> [exact i', exact j']
+            _ = min M ⌊ε⁻¹*dist (Ψ x) (Ψ y)⌋₊ :=
+            by 
+              simp only [F, (E q).symm_apply_apply]
+            _ = ⌊ε⁻¹*dist (Ψ x) (Ψ y)⌋₊ :=
+            by 
+              refine' min_eq_rightₓ (Nat.floor_mono _)
+              refine' mul_le_mul_of_nonneg_left (le_transₓ _ (le_max_leftₓ _ _)) (inv_pos.2 εpos).le 
+              change dist (Ψ x : q.rep) (Ψ y) ≤ C 
+              refine' le_transₓ (dist_le_diam_of_mem compact_univ.bounded (mem_univ _) (mem_univ _)) _ 
+              exact hdiam q qt 
+            
+        have  : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1
+        ·
+          revert hiq hjq 
+          change N q with (F q).1
+          generalize F q = f  at hpq⊢
+          subst hpq 
+          intros 
+          rfl 
+        have  : ⌊ε⁻¹*dist x y⌋ = ⌊ε⁻¹*dist (Ψ x) (Ψ y)⌋
+        ·
+          rw [Ap, Aq] at this 
+          have D : 0 ≤ ⌊ε⁻¹*dist x y⌋ := floor_nonneg.2 (mul_nonneg (le_of_ltₓ (inv_pos.2 εpos)) dist_nonneg)
+          have D' : 0 ≤ ⌊ε⁻¹*dist (Ψ x) (Ψ y)⌋ := floor_nonneg.2 (mul_nonneg (le_of_ltₓ (inv_pos.2 εpos)) dist_nonneg)
+          rw [←Int.to_nat_of_nonneg D, ←Int.to_nat_of_nonneg D', Int.floor_to_nat, Int.floor_to_nat, this]
+        have I :=
+          calc (|ε⁻¹|*|dist x y - dist (Ψ x) (Ψ y)|) = |ε⁻¹*dist x y - dist (Ψ x) (Ψ y)| := (abs_mul _ _).symm 
+            _ = |(ε⁻¹*dist x y) - ε⁻¹*dist (Ψ x) (Ψ y)| :=
+            by 
+              congr 
+              ring 
+            _ ≤ 1 := le_of_ltₓ (abs_sub_lt_one_of_floor_eq_floor this)
+            
+        calc |dist x y - dist (Ψ x) (Ψ y)| = (ε*ε⁻¹)*|dist x y - dist (Ψ x) (Ψ y)| :=
+          by 
+            rw [mul_inv_cancel (ne_of_gtₓ εpos), one_mulₓ]_ = ε*|ε⁻¹|*|dist x y - dist (Ψ x) (Ψ y)| :=
+          by 
+            rw [abs_of_nonneg (le_of_ltₓ (inv_pos.2 εpos)), mul_assocₓ]_ ≤ ε*1 :=
+          mul_le_mul_of_nonneg_left I (le_of_ltₓ εpos)_ = ε := mul_oneₓ _ 
+    calc dist p q = GH_dist p.rep q.rep := dist_GH_dist p q _ ≤ (ε+ε / 2)+ε := main _ = δ / 2 :=
+      by 
+        simp [ε]
+        ring _ < δ :=
+      half_lt_self δpos
 
 section Complete
 
@@ -855,92 +1138,127 @@ instance (A : Type) [MetricSpace A] : Inhabited (aux_gluing_struct A) :=
           infer_instance,
       embed := id, isom := fun x y => rfl }⟩
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Auxiliary sequence of metric spaces, containing copies of `X 0`, ..., `X n`, where each
 `X i` is glued to `X (i+1)` in an optimal way. The space at step `n+1` is obtained from the space
 at step `n` by adding `X (n+1)`, glued in an optimal way to the `X n` already sitting there. -/
-def aux_gluing (n : exprℕ()) : aux_gluing_struct (X n) :=
-nat.rec_on n { space := X 0,
-  metric := by apply_instance,
-  embed := id,
-  isom := λ
-  x
-  y, rfl } (λ
- n
- Y, by letI [] [":", expr metric_space Y.space] [":=", expr Y.metric]; exact [expr { space := glue_space Y.isom (isometry_optimal_GH_injl (X n) (X «expr + »(n, 1))),
-    metric := by apply_instance,
-    embed := «expr ∘ »(to_glue_r Y.isom (isometry_optimal_GH_injl (X n) (X «expr + »(n, 1))), optimal_GH_injr (X n) (X «expr + »(n, 1))),
-    isom := (to_glue_r_isometry _ _).comp (isometry_optimal_GH_injr (X n) (X «expr + »(n, 1))) }])
+def aux_gluing (n : ℕ) : aux_gluing_struct (X n) :=
+  Nat.recOn n
+    { Space := X 0,
+      metric :=
+        by 
+          infer_instance,
+      embed := id, isom := fun x y => rfl }
+    fun n Y =>
+      by 
+        let this' : MetricSpace Y.space := Y.metric <;>
+          exact
+            { Space := glue_space Y.isom (isometry_optimal_GH_injl (X n) (X (n+1))),
+              metric :=
+                by 
+                  infer_instance,
+              embed := to_glue_r Y.isom (isometry_optimal_GH_injl (X n) (X (n+1))) ∘ optimal_GH_injr (X n) (X (n+1)),
+              isom := (to_glue_r_isometry _ _).comp (isometry_optimal_GH_injr (X n) (X (n+1))) }
 
--- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The Gromov-Hausdorff space is complete. -/ instance : complete_space GH_space :=
-begin
-  have [] [":", expr ∀ n : exprℕ(), «expr < »(0, «expr ^ »(«expr / »((1 : exprℝ()), 2), n))] [],
-  by { apply [expr pow_pos],
-    norm_num [] [] },
-  refine [expr metric.complete_of_convergent_controlled_sequences (λ
-    n, «expr ^ »(«expr / »(1, 2), n)) this (λ u hu, _)],
-  let [ident X] [] [":=", expr λ n, (u n).rep],
-  let [ident Y] [] [":=", expr aux_gluing X],
-  letI [] [":", expr ∀ n, metric_space (Y n).space] [":=", expr λ n, (Y n).metric],
-  have [ident E] [":", expr ∀
-   n : exprℕ(), «expr = »(glue_space (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ)), (Y n.succ).space)] [":=", expr λ
-   n, by { simp [] [] [] ["[", expr Y, ",", expr aux_gluing, "]"] [] [],
-     refl }],
-  let [ident c] [] [":=", expr λ n, cast (E n)],
-  have [ident ic] [":", expr ∀ n, isometry (c n)] [":=", expr λ n x y, rfl],
-  let [ident f] [":", expr ∀
-   n, (Y n).space → (Y n.succ).space] [":=", expr λ
-   n, «expr ∘ »(c n, to_glue_l (aux_gluing X n).isom (isometry_optimal_GH_injl (X n) (X n.succ)))],
-  have [ident I] [":", expr ∀ n, isometry (f n)] [],
-  { assume [binders (n)],
-    apply [expr isometry.comp],
-    { assume [binders (x y)],
-      refl },
-    { apply [expr to_glue_l_isometry] } },
-  let [ident Z0] [] [":=", expr metric.inductive_limit I],
-  let [ident Z] [] [":=", expr uniform_space.completion Z0],
-  let [ident Φ] [] [":=", expr to_inductive_limit I],
-  let [ident coeZ] [] [":=", expr (coe : Z0 → Z)],
-  let [ident X2] [] [":=", expr λ n, range «expr ∘ »(coeZ, «expr ∘ »(Φ n, (Y n).embed))],
-  have [ident isom] [":", expr ∀ n, isometry «expr ∘ »(coeZ, «expr ∘ »(Φ n, (Y n).embed))] [],
-  { assume [binders (n)],
-    apply [expr isometry.comp completion.coe_isometry _],
-    apply [expr isometry.comp _ (Y n).isom],
-    apply [expr to_inductive_limit_isometry] },
-  have [ident D2] [":", expr ∀ n, «expr < »(Hausdorff_dist (X2 n) (X2 n.succ), «expr ^ »(«expr / »(1, 2), n))] [],
-  { assume [binders (n)],
-    have [ident X2n] [":", expr «expr = »(X2 n, range «expr ∘ »(«expr ∘ »(coeZ, «expr ∘ »(Φ n.succ, «expr ∘ »(c n, to_glue_r (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ))))), optimal_GH_injl (X n) (X n.succ)))] [],
-    { change [expr «expr = »(X2 n, range «expr ∘ »(coeZ, «expr ∘ »(Φ n.succ, «expr ∘ »(c n, «expr ∘ »(to_glue_r (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ)), optimal_GH_injl (X n) (X n.succ))))))] [] [],
-      simp [] [] ["only"] ["[", expr X2, ",", expr Φ, "]"] [] [],
-      rw ["[", "<-", expr to_inductive_limit_commute I, "]"] [],
-      simp [] [] ["only"] ["[", expr f, "]"] [] [],
-      rw ["<-", expr to_glue_commute] [] },
-    rw [expr range_comp] ["at", ident X2n],
-    have [ident X2nsucc] [":", expr «expr = »(X2 n.succ, range «expr ∘ »(«expr ∘ »(coeZ, «expr ∘ »(Φ n.succ, «expr ∘ »(c n, to_glue_r (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ))))), optimal_GH_injr (X n) (X n.succ)))] [],
-    by refl,
-    rw [expr range_comp] ["at", ident X2nsucc],
-    rw ["[", expr X2n, ",", expr X2nsucc, ",", expr Hausdorff_dist_image, ",", expr Hausdorff_dist_optimal, ",", "<-", expr dist_GH_dist, "]"] [],
-    { exact [expr hu n n n.succ (le_refl n) (le_succ n)] },
-    { apply [expr isometry.comp completion.coe_isometry _],
-      apply [expr isometry.comp _ ((ic n).comp (to_glue_r_isometry _ _))],
-      apply [expr to_inductive_limit_isometry] } },
-  let [ident X3] [":", expr exprℕ() → nonempty_compacts Z] [":=", expr λ
-   n, ⟨X2 n, ⟨range_nonempty _, is_compact_range (isom n).continuous⟩⟩],
-  have [] [":", expr cauchy_seq X3] [],
-  { refine [expr cauchy_seq_of_le_geometric «expr / »(1, 2) 1 (by norm_num [] []) (λ n, _)],
-    rw [expr one_mul] [],
-    exact [expr le_of_lt (D2 n)] },
-  rcases [expr cauchy_seq_tendsto_of_complete this, "with", "⟨", ident L, ",", ident hL, "⟩"],
-  have [ident M] [":", expr tendsto (λ
-    n, (X3 n).to_GH_space) at_top (expr𝓝() L.to_GH_space)] [":=", expr tendsto.comp (to_GH_space_continuous.tendsto _) hL],
-  have [] [":", expr ∀ n, «expr = »((X3 n).to_GH_space, u n)] [],
-  { assume [binders (n)],
-    rw ["[", expr nonempty_compacts.to_GH_space, ",", "<-", expr (u n).to_GH_space_rep, ",", expr to_GH_space_eq_to_GH_space_iff_isometric, "]"] [],
-    constructor,
-    convert [] [expr (isom n).isometric_on_range.symm] [] },
-  exact [expr ⟨L.to_GH_space, by simpa [] [] [] ["[", expr this, "]"] [] ["using", expr M]⟩]
-end
+/-- The Gromov-Hausdorff space is complete. -/
+instance : CompleteSpace GH_space :=
+  by 
+    have  : ∀ n : ℕ, 0 < ((1 : ℝ) / 2^n)
+    ·
+      ·
+        apply pow_pos 
+        normNum 
+    refine' Metric.complete_of_convergent_controlled_sequences (fun n => 1 / 2^n) this fun u hu => _ 
+    let X := fun n => (u n).rep 
+    let Y := aux_gluing X 
+    let this' : ∀ n, MetricSpace (Y n).Space := fun n => (Y n).metric 
+    have E : ∀ n : ℕ, glue_space (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ)) = (Y n.succ).Space :=
+      fun n =>
+        by 
+          simp [Y, aux_gluing]
+          rfl 
+    let c := fun n => cast (E n)
+    have ic : ∀ n, Isometry (c n) := fun n x y => rfl 
+    let f : ∀ n, (Y n).Space → (Y n.succ).Space :=
+      fun n => c n ∘ to_glue_l (aux_gluing X n).isom (isometry_optimal_GH_injl (X n) (X n.succ))
+    have I : ∀ n, Isometry (f n)
+    ·
+      intro n 
+      apply Isometry.comp
+      ·
+        intro x y 
+        rfl
+      ·
+        apply to_glue_l_isometry 
+    let Z0 := Metric.InductiveLimit I 
+    let Z := UniformSpace.Completion Z0 
+    let Φ := to_inductive_limit I 
+    let coeZ := (coeₓ : Z0 → Z)
+    let X2 := fun n => range (coeZ ∘ Φ n ∘ (Y n).embed)
+    have isom : ∀ n, Isometry (coeZ ∘ Φ n ∘ (Y n).embed)
+    ·
+      intro n 
+      apply Isometry.comp completion.coe_isometry _ 
+      apply Isometry.comp _ (Y n).isom 
+      apply to_inductive_limit_isometry 
+    have D2 : ∀ n, Hausdorff_dist (X2 n) (X2 n.succ) < (1 / 2^n)
+    ·
+      intro n 
+      have X2n :
+        X2 n =
+          range
+            ((coeZ ∘ Φ n.succ ∘ c n ∘ to_glue_r (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ))) ∘
+              optimal_GH_injl (X n) (X n.succ))
+      ·
+        change
+          X2 n =
+            range
+              (coeZ ∘
+                Φ n.succ ∘
+                  c n ∘
+                    to_glue_r (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ)) ∘ optimal_GH_injl (X n) (X n.succ))
+        simp only [X2, Φ]
+        rw [←to_inductive_limit_commute I]
+        simp only [f]
+        rw [←to_glue_commute]
+      rw [range_comp] at X2n 
+      have X2nsucc :
+        X2 n.succ =
+          range
+            ((coeZ ∘ Φ n.succ ∘ c n ∘ to_glue_r (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ))) ∘
+              optimal_GH_injr (X n) (X n.succ))
+      ·
+        rfl 
+      rw [range_comp] at X2nsucc 
+      rw [X2n, X2nsucc, Hausdorff_dist_image, Hausdorff_dist_optimal, ←dist_GH_dist]
+      ·
+        exact hu n n n.succ (le_reflₓ n) (le_succ n)
+      ·
+        apply Isometry.comp completion.coe_isometry _ 
+        apply Isometry.comp _ ((ic n).comp (to_glue_r_isometry _ _))
+        apply to_inductive_limit_isometry 
+    let X3 : ℕ → nonempty_compacts Z := fun n => ⟨X2 n, ⟨range_nonempty _, is_compact_range (isom n).Continuous⟩⟩
+    have  : CauchySeq X3
+    ·
+      refine'
+        cauchy_seq_of_le_geometric (1 / 2) 1
+          (by 
+            normNum)
+          fun n => _ 
+      rw [one_mulₓ]
+      exact le_of_ltₓ (D2 n)
+    rcases cauchy_seq_tendsto_of_complete this with ⟨L, hL⟩
+    have M : tendsto (fun n => (X3 n).toGHSpace) at_top (𝓝 L.to_GH_space) :=
+      tendsto.comp (to_GH_space_continuous.tendsto _) hL 
+    have  : ∀ n, (X3 n).toGHSpace = u n
+    ·
+      intro n 
+      rw [nonempty_compacts.to_GH_space, ←(u n).to_GH_space_rep, to_GH_space_eq_to_GH_space_iff_isometric]
+      constructor 
+      convert (isom n).isometricOnRange.symm 
+    exact
+      ⟨L.to_GH_space,
+        by 
+          simpa [this] using M⟩
 
 end Complete
 

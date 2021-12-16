@@ -26,9 +26,9 @@ namespace ContinuousFunctions
 
 variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-variable {f g : { f:α → β | Continuous f }}
+variable {f g : { f : α → β | Continuous f }}
 
-instance : CoeFun { f:α → β | Continuous f } fun _ => α → β :=
+instance : CoeFun { f : α → β | Continuous f } fun _ => α → β :=
   ⟨Subtype.val⟩
 
 end ContinuousFunctions
@@ -85,7 +85,7 @@ section Subtype
 @[toAdditive "The `add_submonoid` of continuous maps `α → β`. "]
 def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β]
   [HasContinuousMul β] : Submonoid (α → β) :=
-  { Carrier := { f:α → β | Continuous f }, one_mem' := @continuous_const _ _ _ _ 1,
+  { Carrier := { f : α → β | Continuous f }, one_mem' := @continuous_const _ _ _ _ 1,
     mul_mem' := fun f g fc gc => Continuous.comp HasContinuousMul.continuous_mul (Continuous.prod_mk fc gc : _) }
 
 /-- The subgroup of continuous maps `α → β`. -/
@@ -174,13 +174,12 @@ open_locale BigOperators
 
 @[simp, toAdditive]
 theorem coe_prod {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSpace α] [TopologicalSpace β]
-  [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) :
-  «expr⇑ » (∏i in s, f i) = ∏i in s, (f i : α → β) :=
+  [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) : (⇑∏ i in s, f i) = ∏ i in s, (f i : α → β) :=
   (coe_fn_monoid_hom : C(α, β) →* _).map_prod f s
 
 @[toAdditive]
 theorem prod_apply {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSpace α] [TopologicalSpace β]
-  [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) (a : α) : (∏i in s, f i) a = ∏i in s, f i a :=
+  [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) (a : α) : (∏ i in s, f i) a = ∏ i in s, f i a :=
   by 
     simp 
 
@@ -324,7 +323,7 @@ variable [Module R M] [HasContinuousSmul R M] [TopologicalAddGroup M]
 
 /-- The `R`-submodule of continuous maps `α → M`. -/
 def continuousSubmodule : Submodule R (α → M) :=
-  { continuousAddSubgroup α M with Carrier := { f:α → M | Continuous f },
+  { continuousAddSubgroup α M with Carrier := { f : α → M | Continuous f },
     smul_mem' := fun c f hf => continuous_smul.comp (Continuous.prod_mk (continuous_const : Continuous fun x => c) hf) }
 
 end Subtype
@@ -338,7 +337,7 @@ instance [Module R M] [HasContinuousSmul R M] : HasScalar R C(α, M) :=
   ⟨fun r f => ⟨r • f, f.continuous.const_smul r⟩⟩
 
 @[simp, normCast]
-theorem coe_smul [Module R M] [HasContinuousSmul R M] (c : R) (f : C(α, M)) : «expr⇑ » (c • f) = c • f :=
+theorem coe_smul [Module R M] [HasContinuousSmul R M] (c : R) (f : C(α, M)) : ⇑(c • f) = c • f :=
   rfl
 
 theorem smul_apply [Module R M] [HasContinuousSmul R M] (c : R) (f : C(α, M)) (a : α) : (c • f) a = c • f a :=
@@ -425,7 +424,7 @@ variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiringₓ R] {A
 
 /-- The `R`-subalgebra of continuous maps `α → A`. -/
 def continuousSubalgebra : Subalgebra R (α → A) :=
-  { continuousSubsemiring α A with Carrier := { f:α → A | Continuous f },
+  { continuousSubsemiring α A with Carrier := { f : α → A | Continuous f },
     algebra_map_mem' := fun r => (continuous_const : Continuous$ fun x : α => algebraMap R A r) }
 
 end Subtype
@@ -535,66 +534,65 @@ def Set.SeparatesPointsStrongly (s : Set C(α, 𝕜)) : Prop :=
 
 variable [Field 𝕜] [TopologicalRing 𝕜]
 
--- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
 /--
-Working in continuous functions into a topological field,
-a subalgebra of functions that separates points also separates points strongly.
-
-By the hypothesis, we can find a function `f` so `f x ≠ f y`.
-By an affine transformation in the field we can arrange so that `f x = a` and `f x = b`.
--/
-theorem subalgebra.separates_points.strongly
-{s : subalgebra 𝕜 «exprC( , )»(α, 𝕜)}
-(h : s.separates_points) : (s : set «exprC( , )»(α, 𝕜)).separates_points_strongly :=
-λ v x y, begin
-  by_cases [expr n, ":", expr «expr = »(x, y)],
-  { subst [expr n],
-    use [expr («expr • »(v x, 1) : «exprC( , )»(α, 𝕜))],
-    { apply [expr s.smul_mem],
-      apply [expr s.one_mem] },
-    { simp [] [] [] ["[", expr coe_fn_coe_base', "]"] [] [] } },
-  obtain ["⟨", ident f, ",", "⟨", ident f, ",", "⟨", ident m, ",", ident rfl, "⟩", "⟩", ",", ident w, "⟩", ":=", expr h n],
-  replace [ident w] [":", expr «expr ≠ »(«expr - »(f x, f y), 0)] [":=", expr sub_ne_zero_of_ne w],
-  let [ident a] [] [":=", expr v x],
-  let [ident b] [] [":=", expr v y],
-  let [ident f'] [] [":=", expr «expr + »(«expr • »(«expr * »(«expr - »(b, a), «expr ⁻¹»(«expr - »(f x, f y))), «expr - »(continuous_map.C (f x), f)), continuous_map.C a)],
-  refine [expr ⟨⟨f', _⟩, _, _⟩],
-  { simp [] [] ["only"] ["[", expr f', ",", expr set_like.mem_coe, ",", expr subalgebra.mem_to_submodule, "]"] [] [],
-    solve_by_elim [] [] ["[", expr subalgebra.add_mem, ",", expr subalgebra.smul_mem, ",", expr subalgebra.sub_mem, ",", expr subalgebra.algebra_map_mem, "]"] [] { max_depth := 6 } },
-  { simp [] [] [] ["[", expr f', ",", expr coe_fn_coe_base', "]"] [] [] },
-  { simp [] [] [] ["[", expr f', ",", expr coe_fn_coe_base', ",", expr inv_mul_cancel_right₀ w, "]"] [] [] }
-end
+    Working in continuous functions into a topological field,
+    a subalgebra of functions that separates points also separates points strongly.
+    
+    By the hypothesis, we can find a function `f` so `f x ≠ f y`.
+    By an affine transformation in the field we can arrange so that `f x = a` and `f x = b`.
+    -/
+  theorem
+    Subalgebra.SeparatesPoints.strongly
+    { s : Subalgebra 𝕜 C( α , 𝕜 ) } ( h : s.separates_points ) : ( s : Set C( α , 𝕜 ) ) . SeparatesPointsStrongly
+    :=
+      fun
+        v x y
+          =>
+          by
+            byCases' n : x = y
+              · subst n use ( v x • 1 : C( α , 𝕜 ) ) · apply s.smul_mem apply s.one_mem · simp [ coe_fn_coe_base' ]
+              obtain ⟨ f , ⟨ f , ⟨ m , rfl ⟩ ⟩ , w ⟩ := h n
+              replace w : f x - f y ≠ 0 := sub_ne_zero_of_ne w
+              let a := v x
+              let b := v y
+              let f' := b - a * f x - f y ⁻¹ • ContinuousMap.c f x - f + ContinuousMap.c a
+              refine' ⟨ ⟨ f' , _ ⟩ , _ , _ ⟩
+              ·
+                simp only [ f' , SetLike.mem_coe , Subalgebra.mem_to_submodule ]
+                  solveByElim
+                    ( config := { max_depth := 6 } )
+                    [ Subalgebra.add_mem , Subalgebra.smul_mem , Subalgebra.sub_mem , Subalgebra.algebra_map_mem ]
+              · simp [ f' , coe_fn_coe_base' ]
+              · simp [ f' , coe_fn_coe_base' , inv_mul_cancel_right₀ w ]
 
 end ContinuousMap
 
--- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem continuous_map.subsingleton_subalgebra
-(α : Type*)
-[topological_space α]
-(R : Type*)
-[comm_semiring R]
-[topological_space R]
-[topological_ring R]
-[subsingleton α] : subsingleton (subalgebra R «exprC( , )»(α, R)) :=
-begin
-  fsplit,
-  intros [ident s₁, ident s₂],
-  by_cases [expr n, ":", expr nonempty α],
-  { obtain ["⟨", ident x, "⟩", ":=", expr n],
-    ext [] [ident f] [],
-    have [ident h] [":", expr «expr = »(f, algebra_map R «exprC( , )»(α, R) (f x))] [],
-    { ext [] [ident x'] [],
-      simp [] [] ["only"] ["[", expr mul_one, ",", expr algebra.id.smul_eq_mul, ",", expr algebra_map_apply, "]"] [] [],
-      congr },
-    rw [expr h] [],
-    simp [] [] ["only"] ["[", expr subalgebra.algebra_map_mem, "]"] [] [] },
-  { ext [] [ident f] [],
-    have [ident h] [":", expr «expr = »(f, 0)] [],
-    { ext [] [ident x'] [],
-      exact [expr false.elim (n ⟨x'⟩)] },
-    subst [expr h],
-    simp [] [] ["only"] ["[", expr subalgebra.zero_mem, "]"] [] [] }
-end
+theorem ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace α] (R : Type _) [CommSemiringₓ R]
+  [TopologicalSpace R] [TopologicalRing R] [Subsingleton α] : Subsingleton (Subalgebra R C(α, R)) :=
+  by 
+    fconstructor 
+    intro s₁ s₂ 
+    byCases' n : Nonempty α
+    ·
+      obtain ⟨x⟩ := n 
+      ext f 
+      have h : f = algebraMap R C(α, R) (f x)
+      ·
+        ext x' 
+        simp only [mul_oneₓ, Algebra.id.smul_eq_mul, algebra_map_apply]
+        congr 
+      rw [h]
+      simp only [Subalgebra.algebra_map_mem]
+    ·
+      ext f 
+      have h : f = 0
+      ·
+        ext x' 
+        exact False.elim (n ⟨x'⟩)
+      subst h 
+      simp only [Subalgebra.zero_mem]
 
 end AlgebraStructure
 

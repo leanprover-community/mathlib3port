@@ -29,6 +29,7 @@ namespace Linarith
 
 open Tactic
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 50000
 
 /--

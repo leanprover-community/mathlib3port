@@ -107,12 +107,42 @@ variable [AddCommMonoidₓ N₁] [AddCommMonoidₓ N₂] [AddCommMonoidₓ N₃]
 
 variable [Module R M] [Module R M₂] [Module S M₃]
 
+variable {σ : R →+* S}
+
+instance : AddMonoidHomClass (M →ₛₗ[σ] M₃) M M₃ :=
+  { coe := LinearMap.toFun,
+    coe_injective' :=
+      fun f g h =>
+        by 
+          cases f <;> cases g <;> congr,
+    map_add := LinearMap.map_add',
+    map_zero :=
+      fun f =>
+        show f.to_fun 0 = 0 by 
+          rw [←zero_smul R (0 : M), f.map_smul']
+          simp  }
+
 /-- The `distrib_mul_action_hom` underlying a `linear_map`. -/
 def to_distrib_mul_action_hom (f : M →ₗ[R] M₂) : DistribMulActionHom R M M₂ :=
-  { f with map_zero' := zero_smul R (0 : M) ▸ zero_smul R (f.to_fun 0) ▸ f.map_smul' 0 0 }
+  { f with map_zero' := show f 0 = 0 from map_zero f }
 
-instance {σ : R →+* S} : CoeFun (M →ₛₗ[σ] M₃) fun _ => M → M₃ :=
+/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
+-/
+instance : CoeFun (M →ₛₗ[σ] M₃) fun _ => M → M₃ :=
   ⟨LinearMap.toFun⟩
+
+@[simp]
+theorem to_fun_eq_coe {f : M →ₛₗ[σ] M₃} : f.to_fun = (f : M → M₃) :=
+  rfl
+
+@[ext]
+theorem ext {f g : M →ₛₗ[σ] M₃} (h : ∀ x, f x = g x) : f = g :=
+  FunLike.ext f g h
+
+/-- Copy of a `linear_map` with a new `to_fun` equal to the old one. Useful to fix definitional
+equalities. -/
+protected def copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : M →ₛₗ[σ] M₃ :=
+  { toFun := f', map_add' := h.symm ▸ f.map_add', map_smul' := h.symm ▸ f.map_smul' }
 
 initialize_simps_projections LinearMap (toFun → apply)
 
@@ -147,35 +177,23 @@ variable (σ : R →+* S)
 
 variable (fₗ gₗ : M →ₗ[R] M₂) (f g : M →ₛₗ[σ] M₃)
 
-@[simp]
-theorem to_fun_eq_coe : f.to_fun = «expr⇑ » f :=
-  rfl
-
 theorem is_linear : IsLinearMap R fₗ :=
   ⟨fₗ.map_add', fₗ.map_smul'⟩
 
 variable {fₗ gₗ f g σ}
 
 theorem coe_injective : @injective (M →ₛₗ[σ] M₃) (M → M₃) coeFn :=
-  by 
-    rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
+  FunLike.coe_injective
 
-@[ext]
-theorem ext (H : ∀ x, f x = g x) : f = g :=
-  coe_injective$ funext H
-
-protected theorem congr_argₓ : ∀ {x x' : M}, x = x' → f x = f x'
-| _, _, rfl => rfl
+protected theorem congr_argₓ {x x' : M} : x = x' → f x = f x' :=
+  FunLike.congr_arg f
 
 /-- If two linear maps are equal, they are equal at each point. -/
 protected theorem congr_funₓ (h : f = g) (x : M) : f x = g x :=
-  h ▸ rfl
+  FunLike.congr_fun h x
 
 theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
-  ⟨by 
-      rintro rfl x 
-      rfl,
-    ext⟩
+  FunLike.ext_iff
 
 @[simp]
 theorem mk_coe (f : M →ₛₗ[σ] M₃) h₁ h₂ : (LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) = f :=
@@ -183,9 +201,8 @@ theorem mk_coe (f : M →ₛₗ[σ] M₃) h₁ h₂ : (LinearMap.mk f h₁ h₂ 
 
 variable (fₗ gₗ f g)
 
-@[simp]
-theorem map_add (x y : M) : f (x+y) = f x+f y :=
-  f.map_add' x y
+protected theorem map_add (x y : M) : f (x+y) = f x+f y :=
+  map_add f x y
 
 @[simp]
 theorem map_smulₛₗ (c : R) (x : M) : f (c • x) = σ c • f x :=
@@ -198,11 +215,8 @@ theorem map_smul_inv {σ' : S →+* R} [RingHomInvPair σ σ'] (c : S) (x : M) :
   by 
     simp 
 
-@[simp]
-theorem map_zero : f 0 = 0 :=
-  by 
-    rw [←zero_smul R (0 : M), map_smulₛₗ]
-    simp 
+protected theorem map_zero : f 0 = 0 :=
+  map_zero f
 
 @[simp]
 theorem map_eq_zero_iff (h : Function.Injective f) {x : M} : f x = 0 ↔ x = 0 :=
@@ -244,7 +258,7 @@ def to_add_monoid_hom : M →+ M₃ :=
   { toFun := f, map_zero' := f.map_zero, map_add' := f.map_add }
 
 @[simp]
-theorem to_add_monoid_hom_coe : «expr⇑ » f.to_add_monoid_hom = f :=
+theorem to_add_monoid_hom_coe : ⇑f.to_add_monoid_hom = f :=
   rfl
 
 section RestrictScalars
@@ -272,7 +286,7 @@ end RestrictScalars
 variable {R}
 
 @[simp]
-theorem map_sum {ι} {t : Finset ι} {g : ι → M} : f (∑i in t, g i) = ∑i in t, f (g i) :=
+theorem map_sum {ι} {t : Finset ι} {g : ι → M} : f (∑ i in t, g i) = ∑ i in t, f (g i) :=
   f.to_add_monoid_hom.map_sum _ _
 
 theorem to_add_monoid_hom_injective : Function.Injective (to_add_monoid_hom : (M →ₛₗ[σ] M₃) → M →+ M₃) :=
@@ -382,13 +396,11 @@ variable {module_M : Module R M} {module_M₂ : Module S M₂} {σ : R →+* S}
 
 variable (f : M →ₛₗ[σ] M₂)
 
-@[simp]
-theorem map_neg (x : M) : f (-x) = -f x :=
-  f.to_add_monoid_hom.map_neg x
+protected theorem map_neg (x : M) : f (-x) = -f x :=
+  map_neg f x
 
-@[simp]
-theorem map_sub (x y : M) : f (x - y) = f x - f y :=
-  f.to_add_monoid_hom.map_sub x y
+protected theorem map_sub (x y : M) : f (x - y) = f x - f y :=
+  map_sub f x y
 
 instance compatible_smul.int_module {S : Type _} [Semiringₓ S] [Module S M] [Module S M₂] : compatible_smul M M₂ ℤ S :=
   ⟨fun fₗ c x =>
@@ -411,15 +423,13 @@ end LinearMap
 
 namespace Module
 
--- error in Algebra.Module.LinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `g : R →+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
-@[simps #[]]
-def comp_hom.to_linear_map
-{R S : Type*}
-[semiring R]
-[semiring S]
-(g : «expr →+* »(R, S)) : by haveI [] [] [":=", expr comp_hom S g]; exact [expr «expr →ₗ[ ] »(R, R, S)] :=
-by exact [expr { to_fun := (g : R → S), map_add' := g.map_add, map_smul' := g.map_mul }]
+@[simps]
+def comp_hom.to_linear_map {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R →+* S) :
+  by 
+    have  := comp_hom S g <;> exact R →ₗ[R] S :=
+  by 
+    exact { toFun := (g : R → S), map_add' := g.map_add, map_smul' := g.map_mul }
 
 end Module
 
@@ -435,7 +445,7 @@ instance : Coe (M →+[R] M₂) (M →ₗ[R] M₂) :=
   ⟨to_linear_map⟩
 
 @[simp]
-theorem to_linear_map_eq_coe (f : M →+[R] M₂) : f.to_linear_map = «expr↑ » f :=
+theorem to_linear_map_eq_coe (f : M →+[R] M₂) : f.to_linear_map = ↑f :=
   rfl
 
 @[simp, normCast]
@@ -541,7 +551,7 @@ theorem AddMonoidHom.to_int_linear_map_injective [AddCommGroupₓ M] [AddCommGro
 
 @[simp]
 theorem AddMonoidHom.coe_to_int_linear_map [AddCommGroupₓ M] [AddCommGroupₓ M₂] (f : M →+ M₂) :
-  «expr⇑ » f.to_int_linear_map = f :=
+  ⇑f.to_int_linear_map = f :=
   rfl
 
 /-- Reinterpret an additive homomorphism as a `ℚ`-linear map. -/
@@ -558,7 +568,7 @@ theorem AddMonoidHom.to_rat_linear_map_injective [AddCommGroupₓ M] [Module ℚ
 
 @[simp]
 theorem AddMonoidHom.coe_to_rat_linear_map [AddCommGroupₓ M] [Module ℚ M] [AddCommGroupₓ M₂] [Module ℚ M₂]
-  (f : M →+ M₂) : «expr⇑ » f.to_rat_linear_map = f :=
+  (f : M →+ M₂) : ⇑f.to_rat_linear_map = f :=
   rfl
 
 namespace LinearMap
@@ -774,7 +784,7 @@ instance : HasScalar S (M →ₛₗ[σ₁₂] M₂) :=
 theorem smul_apply (a : S) (f : M →ₛₗ[σ₁₂] M₂) (x : M) : (a • f) x = a • f x :=
   rfl
 
-theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : «expr⇑ » (a • f) = a • f :=
+theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : ⇑(a • f) = a • f :=
   rfl
 
 instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
@@ -782,6 +792,10 @@ instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M�
 
 instance [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) :=
   { smul_assoc := fun _ _ _ => ext$ fun _ => smul_assoc _ _ _ }
+
+instance [DistribMulAction (Sᵐᵒᵖ) M₂] [SmulCommClass R₂ (Sᵐᵒᵖ) M₂] [IsCentralScalar S M₂] :
+  IsCentralScalar S (M →ₛₗ[σ₁₂] M₂) :=
+  { op_smul_eq_smul := fun a b => ext$ fun x => op_smul_eq_smul _ _ }
 
 instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂) :=
   { one_smul := fun f => ext$ fun _ => one_smul _ _, mul_smul := fun c c' f => ext$ fun _ => mul_smul _ _ _,
@@ -845,10 +859,10 @@ theorem one_apply (x : M) : (1 : Module.End R M) x = x :=
 theorem mul_apply (f g : Module.End R M) (x : M) : (f*g) x = f (g x) :=
   rfl
 
-theorem coe_one : «expr⇑ » (1 : Module.End R M) = _root_.id :=
+theorem coe_one : ⇑(1 : Module.End R M) = _root_.id :=
   rfl
 
-theorem coe_mul (f g : Module.End R M) : «expr⇑ » (f*g) = f ∘ g :=
+theorem coe_mul (f g : Module.End R M) : (⇑f*g) = f ∘ g :=
   rfl
 
 instance _root_.module.End.monoid : Monoidₓ (Module.End R M) :=

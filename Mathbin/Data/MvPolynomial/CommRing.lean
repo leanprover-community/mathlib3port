@@ -28,7 +28,7 @@ This will give rise to a monomial in `mv_polynomial σ R` which mathematicians m
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -73,7 +73,10 @@ theorem coeff_sub (m : σ →₀ ℕ) (p q : MvPolynomial σ R) : coeff m (p - q
 
 @[simp]
 theorem support_neg : (-p).support = p.support :=
-  Finsupp.support_neg
+  Finsupp.support_neg p
+
+theorem support_sub (p q : MvPolynomial σ R) : (p - q).support ⊆ p.support ∪ q.support :=
+  Finsupp.support_sub
 
 variable {σ} (p)
 
@@ -154,7 +157,7 @@ theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
 /-- Ring homomorphisms out of integer polynomials on a type `σ` are the same as
 functions out of the type `σ`, -/
 def hom_equiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) :=
-  { toFun := fun f => «expr⇑ » f ∘ X, invFun := fun f => eval₂_hom (Int.castRingHom S) f,
+  { toFun := fun f => ⇑f ∘ X, invFun := fun f => eval₂_hom (Int.castRingHom S) f,
     left_inv := fun f => RingHom.ext$ eval₂_hom_X _ _,
     right_inv :=
       fun f =>
@@ -164,6 +167,26 @@ def hom_equiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) :=
               simp only [coe_eval₂_hom, Function.comp_app, eval₂_X] }
 
 end Eval₂
+
+section DegreeOf
+
+theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
+  (hf : ∀ m : σ →₀ ℕ, m ∈ f.support → k ≤ m x → coeff m f = coeff m g)
+  (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degree_of x (f - g) < k :=
+  by 
+    rw [degree_of_lt_iff h]
+    intro m hm 
+    byContra hc 
+    simp only [not_ltₓ] at hc 
+    have h := support_sub σ f g hm 
+    simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm 
+    cases' Finset.mem_union.1 h with cf cg
+    ·
+      exact hm (hf m cf hc)
+    ·
+      exact hm (hg m cg hc)
+
+end DegreeOf
 
 section TotalDegree
 

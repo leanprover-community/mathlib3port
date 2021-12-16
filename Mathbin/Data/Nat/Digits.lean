@@ -244,6 +244,7 @@ theorem coe_int_of_digits (b : ℕ) (L : List ℕ) : ((of_digits b L : ℕ) : �
       pushCast 
       rw [ih]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » L)
 theorem digits_zero_of_eq_zero {b : ℕ} (h : 1 ≤ b) {L : List ℕ} (w : of_digits b L = 0) : ∀ l _ : l ∈ L, l = 0 :=
   by 
     induction' L with d L ih
@@ -260,6 +261,7 @@ theorem digits_zero_of_eq_zero {b : ℕ} (h : 1 ≤ b) {L : List ℕ} (w : of_di
       ·
         exact ih ((Nat.mul_right_inj h).mp (Nat.eq_zero_of_add_eq_zero_left w)) _ m
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » L)
 theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀ l _ : l ∈ L, l < b)
   (w₂ : ∀ h : L ≠ [], L.last h ≠ 0) : digits b (of_digits b L) = L :=
   by 
@@ -358,19 +360,19 @@ This section contains various lemmas of properties relating to `digits` and `of_
 -/
 
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem digits_eq_nil_iff_eq_zero
-{b n : exprℕ()} : «expr ↔ »(«expr = »(digits b n, «expr[ , ]»([])), «expr = »(n, 0)) :=
-begin
-  split,
-  { intro [ident h],
-    have [] [":", expr «expr = »(of_digits b (digits b n), of_digits b «expr[ , ]»([]))] [],
-    by rw [expr h] [],
-    convert [] [expr this] [],
-    rw [expr of_digits_digits] [] },
-  { rintro [ident rfl],
-    simp [] [] [] [] [] [] }
-end
+theorem digits_eq_nil_iff_eq_zero {b n : ℕ} : digits b n = [] ↔ n = 0 :=
+  by 
+    constructor
+    ·
+      intro h 
+      have  : of_digits b (digits b n) = of_digits b []
+      ·
+        rw [h]
+      convert this 
+      rw [of_digits_digits]
+    ·
+      rintro rfl 
+      simp 
 
 theorem digits_ne_nil_iff_ne_zero {b n : ℕ} : digits b n ≠ [] ↔ n ≠ 0 :=
   not_congr digits_eq_nil_iff_eq_zero
@@ -399,30 +401,44 @@ theorem digits.injective (b : ℕ) : Function.Injective b.digits :=
 theorem digits_inj_iff {b n m : ℕ} : b.digits n = b.digits m ↔ n = m :=
   (digits.injective b).eq_iff
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem last_digit_ne_zero
-(b : exprℕ())
-{m : exprℕ()}
-(hm : «expr ≠ »(m, 0)) : «expr ≠ »((digits b m).last (digits_ne_nil_iff_ne_zero.mpr hm), 0) :=
-begin
-  rcases [expr b, "with", "_", "|", "_", "|", ident b],
-  { cases [expr m] []; finish [] [] },
-  { cases [expr m] [],
-    { finish [] [] },
-    simp_rw ["[", expr digits_one, ",", expr list.last_repeat_succ 1 m, "]"] [],
-    norm_num [] [] },
-  revert [ident hm],
-  apply [expr nat.strong_induction_on m],
-  intros [ident n, ident IH, ident hn],
-  have [ident hnpos] [":", expr «expr < »(0, n)] [":=", expr nat.pos_of_ne_zero hn],
-  by_cases [expr hnb, ":", expr «expr < »(n, «expr + »(b, 2))],
-  { simp_rw ["[", expr digits_of_lt b.succ.succ n hnpos hnb, "]"] [],
-    exact [expr pos_iff_ne_zero.mp hnpos] },
-  { rw [expr digits_last (show «expr ≤ »(2, «expr + »(b, 2)), from exprdec_trivial()) hnpos] [],
-    refine [expr IH _ (nat.div_lt_self hnpos exprdec_trivial()) _],
-    { rw ["<-", expr pos_iff_ne_zero] [],
-      exact [expr nat.div_pos (le_of_not_lt hnb) exprdec_trivial()] } }
-end
+theorem last_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) : (digits b m).last (digits_ne_nil_iff_ne_zero.mpr hm) ≠ 0 :=
+  by 
+    rcases b with (_ | _ | b)
+    ·
+      cases m <;> finish
+    ·
+      cases m
+      ·
+        finish 
+      simpRw [digits_one, List.last_repeat_succ 1 m]
+      normNum 
+    revert hm 
+    apply Nat.strong_induction_onₓ m 
+    intro n IH hn 
+    have hnpos : 0 < n := Nat.pos_of_ne_zeroₓ hn 
+    byCases' hnb : n < b+2
+    ·
+      simpRw [digits_of_lt b.succ.succ n hnpos hnb]
+      exact pos_iff_ne_zero.mp hnpos
+    ·
+      rw
+        [digits_last
+          (show 2 ≤ b+2 from
+            by 
+              decide)
+          hnpos]
+      refine'
+        IH _
+          (Nat.div_lt_selfₓ hnpos
+            (by 
+              decide))
+          _
+      ·
+        rw [←pos_iff_ne_zero]
+        exact
+          Nat.div_pos (le_of_not_ltₓ hnb)
+            (by 
+              decide)
 
 /-- The digits in the base b+2 expansion of n are all less than b+2 -/
 theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b+2) m → d < b+2 :=
@@ -457,25 +473,30 @@ theorem digits_lt_base {b m d : ℕ} (hb : 2 ≤ b) (hd : d ∈ digits b m) : d 
         linarith 
     exact digits_lt_base' hd
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- an n-digit number in base b + 2 is less than (b + 2)^n -/
-theorem of_digits_lt_base_pow_length'
-{b : exprℕ()}
-{l : list exprℕ()}
-(hl : ∀
- x «expr ∈ » l, «expr < »(x, «expr + »(b, 2))) : «expr < »(of_digits «expr + »(b, 2) l, «expr ^ »(«expr + »(b, 2), l.length)) :=
-begin
-  induction [expr l] [] ["with", ident hd, ident tl, ident IH] [],
-  { simp [] [] [] ["[", expr of_digits, "]"] [] [] },
-  { rw ["[", expr of_digits, ",", expr list.length_cons, ",", expr pow_succ, "]"] [],
-    have [] [":", expr «expr ≤ »(«expr * »(«expr + »(of_digits «expr + »(b, 2) tl, 1), «expr + »(b, 2)), «expr * »(«expr ^ »(«expr + »(b, 2), tl.length), «expr + »(b, 2)))] [":=", expr mul_le_mul (IH (λ
-       x hx, hl _ (list.mem_cons_of_mem _ hx))) (by refl) exprdec_trivial() (nat.zero_le _)],
-    suffices [] [":", expr «expr < »(«expr↑ »(hd), «expr + »(b, 2))],
-    { linarith [] [] [] },
-    norm_cast [],
-    exact [expr hl hd (list.mem_cons_self _ _)] }
-end
+theorem of_digits_lt_base_pow_length' {b : ℕ} {l : List ℕ} (hl : ∀ x _ : x ∈ l, x < b+2) :
+  of_digits (b+2) l < (b+2) ^ l.length :=
+  by 
+    induction' l with hd tl IH
+    ·
+      simp [of_digits]
+    ·
+      rw [of_digits, List.length_cons, pow_succₓ]
+      have  : ((of_digits (b+2) tl+1)*b+2) ≤ ((b+2) ^ tl.length)*b+2 :=
+        mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_memₓ _ hx))
+          (by 
+            rfl)
+          (by 
+            decide)
+          (Nat.zero_leₓ _)
+      suffices  : ↑hd < b+2
+      ·
+        linarith 
+      normCast 
+      exact hl hd (List.mem_cons_selfₓ _ _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- an n-digit number in base b is less than b^n if b ≥ 2 -/
 theorem of_digits_lt_base_pow_length {b : ℕ} {l : List ℕ} (hb : 2 ≤ b) (hl : ∀ x _ : x ∈ l, x < b) :
   of_digits b l < b ^ l.length :=
@@ -539,37 +560,30 @@ theorem digits_len_le_digits_len_succ (b n : ℕ) : (digits b n).length ≤ (dig
 theorem le_digits_len_le (b n m : ℕ) (h : n ≤ m) : (digits b n).length ≤ (digits b m).length :=
   monotone_nat_of_le_succ (digits_len_le_digits_len_succ b) h
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pow_length_le_mul_of_digits
-{b : exprℕ()}
-{l : list exprℕ()}
-(hl : «expr ≠ »(l, «expr[ , ]»([])))
-(hl2 : «expr ≠ »(l.last hl, 0)) : «expr ≤ »(«expr ^ »(«expr + »(b, 2), l.length), «expr * »(«expr + »(b, 2), of_digits «expr + »(b, 2) l)) :=
-begin
-  rw ["[", "<-", expr list.init_append_last hl, "]"] [],
-  simp [] [] ["only"] ["[", expr list.length_append, ",", expr list.length, ",", expr zero_add, ",", expr list.length_init, ",", expr of_digits_append, ",", expr list.length_init, ",", expr of_digits_singleton, ",", expr add_comm «expr - »(l.length, 1), ",", expr pow_add, ",", expr pow_one, "]"] [] [],
-  apply [expr nat.mul_le_mul_left],
-  refine [expr le_trans _ (nat.le_add_left _ _)],
-  have [] [":", expr «expr < »(0, l.last hl)] [],
-  { rwa ["[", expr pos_iff_ne_zero, "]"] [] },
-  convert [] [expr nat.mul_le_mul_left _ this] [],
-  rw ["[", expr mul_one, "]"] []
-end
+theorem pow_length_le_mul_of_digits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2 : l.last hl ≠ 0) :
+  (b+2) ^ l.length ≤ (b+2)*of_digits (b+2) l :=
+  by 
+    rw [←List.init_append_last hl]
+    simp only [List.length_append, List.length, zero_addₓ, List.length_init, of_digits_append, List.length_init,
+      of_digits_singleton, add_commₓ (l.length - 1), pow_addₓ, pow_oneₓ]
+    apply Nat.mul_le_mul_leftₓ 
+    refine' le_transₓ _ (Nat.le_add_leftₓ _ _)
+    have  : 0 < l.last hl
+    ·
+      rwa [pos_iff_ne_zero]
+    convert Nat.mul_le_mul_leftₓ _ this 
+    rw [mul_oneₓ]
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Any non-zero natural number `m` is greater than
 (b+2)^((number of digits in the base (b+2) representation of m) - 1)
 -/
-theorem base_pow_length_digits_le'
-(b m : exprℕ())
-(hm : «expr ≠ »(m, 0)) : «expr ≤ »(«expr ^ »(«expr + »(b, 2), (digits «expr + »(b, 2) m).length), «expr * »(«expr + »(b, 2), m)) :=
-begin
-  have [] [":", expr «expr ≠ »(digits «expr + »(b, 2) m, «expr[ , ]»([]))] [],
-  from [expr digits_ne_nil_iff_ne_zero.mpr hm],
-  convert [] [expr pow_length_le_mul_of_digits this (last_digit_ne_zero _ hm)] [],
-  rwa [expr of_digits_digits] []
-end
+theorem base_pow_length_digits_le' (b m : ℕ) (hm : m ≠ 0) : (b+2) ^ (digits (b+2) m).length ≤ (b+2)*m :=
+  by 
+    have  : digits (b+2) m ≠ []
+    exact digits_ne_nil_iff_ne_zero.mpr hm 
+    convert pow_length_le_mul_of_digits this (last_digit_ne_zero _ hm)
+    rwa [of_digits_digits]
 
 /--
 Any non-zero natural number `m` is greater than
@@ -627,7 +641,7 @@ theorem of_digits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Li
       convRHS => rw [Int.add_mod, Int.mul_mod]
 
 theorem of_digits_zmodeq (b : ℤ) (k : ℕ) (L : List ℕ) : of_digits b L ≡ of_digits (b % k) L [ZMOD k] :=
-  of_digits_zmodeq' b (b % k) k (b.mod_modeq («expr↑ » k)).symm L
+  of_digits_zmodeq' b (b % k) k (b.mod_modeq (↑k)).symm L
 
 theorem of_digits_zmod (b : ℤ) (k : ℕ) (L : List ℕ) : of_digits b L % k = of_digits (b % k) L % k :=
   of_digits_zmodeq b k L
@@ -669,13 +683,14 @@ theorem of_digits_neg_one : ∀ L : List ℕ, of_digits (-1 : ℤ) L = (L.map fu
     pushCast 
     ring
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem modeq_eleven_digits_sum
-(n : exprℕ()) : «expr ≡ [ZMOD ]»(n, ((digits 10 n).map (λ n : exprℕ(), (n : exprℤ()))).alternating_sum, 11) :=
-begin
-  have [ident t] [] [":=", expr zmodeq_of_digits_digits 11 10 («expr- »(1) : exprℤ()) (by unfold [ident int.modeq] []; norm_num [] []) n],
-  rwa [expr of_digits_neg_one] ["at", ident t]
-end
+theorem modeq_eleven_digits_sum (n : ℕ) : n ≡ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum [ZMOD 11] :=
+  by 
+    have t :=
+      zmodeq_of_digits_digits 11 10 (-1 : ℤ)
+        (by 
+          unfold Int.Modeq <;> normNum)
+        n 
+    rwa [of_digits_neg_one] at t
 
 /-! ## Divisibility  -/
 
@@ -705,47 +720,49 @@ theorem dvd_iff_dvd_of_digits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : �
     rw [←Int.coe_nat_dvd]
     exact dvd_iff_dvd_of_dvd_sub (zmodeq_of_digits_digits b b' c (Int.modeq_iff_dvd.2 h).symm _).symm.Dvd
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eleven_dvd_iff
-(n : exprℕ()) : «expr ↔ »(«expr ∣ »(11, n), «expr ∣ »((11 : exprℤ()), ((digits 10 n).map (λ
-    n : exprℕ(), (n : exprℤ()))).alternating_sum)) :=
-begin
-  have [ident t] [] [":=", expr dvd_iff_dvd_of_digits 11 10 («expr- »(1) : exprℤ()) (by norm_num [] []) n],
-  rw [expr of_digits_neg_one] ["at", ident t],
-  exact [expr t]
-end
+theorem eleven_dvd_iff (n : ℕ) : 11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum :=
+  by 
+    have t :=
+      dvd_iff_dvd_of_digits 11 10 (-1 : ℤ)
+        (by 
+          normNum)
+        n 
+    rw [of_digits_neg_one] at t 
+    exact t
 
 /-! ### `norm_digits` tactic -/
 
 
 namespace NormDigits
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem digits_succ
-(b n m r l)
-(e : «expr = »(«expr + »(r, «expr * »(b, m)), n))
-(hr : «expr < »(r, b))
-(h : «expr ∧ »(«expr = »(nat.digits b m, l), «expr ∧ »(«expr ≤ »(2, b), «expr < »(0, m)))) : «expr ∧ »(«expr = »(nat.digits b n, [«expr :: »/«expr :: »/«expr :: »](r, l)), «expr ∧ »(«expr ≤ »(2, b), «expr < »(0, n))) :=
-begin
-  rcases [expr h, "with", "⟨", ident h, ",", ident b2, ",", ident m0, "⟩"],
-  have [ident b0] [":", expr «expr < »(0, b)] [":=", expr by linarith [] [] []],
-  have [ident n0] [":", expr «expr < »(0, n)] [":=", expr by linarith [] [] ["[", expr mul_pos b0 m0, "]"]],
-  refine [expr ⟨_, b2, n0⟩],
-  obtain ["⟨", ident rfl, ",", ident rfl, "⟩", ":=", expr (nat.div_mod_unique b0).2 ⟨e, hr⟩],
-  subst [expr h],
-  exact [expr nat.digits_def' b2 n0]
-end
+theorem digits_succ b n m r l (e : (r+b*m) = n) (hr : r < b) (h : Nat.digits b m = l ∧ 2 ≤ b ∧ 0 < m) :
+  Nat.digits b n = r :: l ∧ 2 ≤ b ∧ 0 < n :=
+  by 
+    rcases h with ⟨h, b2, m0⟩
+    have b0 : 0 < b :=
+      by 
+        linarith 
+    have n0 : 0 < n :=
+      by 
+        linarith [mul_pos b0 m0]
+    refine' ⟨_, b2, n0⟩
+    obtain ⟨rfl, rfl⟩ := (Nat.div_mod_unique b0).2 ⟨e, hr⟩
+    subst h 
+    exact Nat.digits_def' b2 n0
 
--- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem digits_one
-(b n)
-(n0 : «expr < »(0, n))
-(nb : «expr < »(n, b)) : «expr ∧ »(«expr = »(nat.digits b n, «expr[ , ]»([n])), «expr ∧ »(«expr ≤ »(2, b), «expr < »(0, n))) :=
-begin
-  have [ident b2] [":", expr «expr ≤ »(2, b)] [":=", expr by linarith [] [] []],
-  refine [expr ⟨_, b2, n0⟩],
-  rw ["[", expr nat.digits_def' b2 n0, ",", expr nat.mod_eq_of_lt nb, ",", expr (nat.div_eq_zero_iff (by linarith [] [] [] : «expr < »(0, b))).2 nb, ",", expr nat.digits_zero, "]"] []
-end
+theorem digits_one b n (n0 : 0 < n) (nb : n < b) : Nat.digits b n = [n] ∧ 2 ≤ b ∧ 0 < n :=
+  by 
+    have b2 : 2 ≤ b :=
+      by 
+        linarith 
+    refine' ⟨_, b2, n0⟩
+    rw [Nat.digits_def' b2 n0, Nat.mod_eq_of_ltₓ nb,
+      (Nat.div_eq_zero_iff
+            (by 
+              linarith :
+            0 < b)).2
+        nb,
+      Nat.digits_zero]
 
 open Tactic
 

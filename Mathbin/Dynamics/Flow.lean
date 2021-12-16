@@ -124,7 +124,7 @@ def from_iter {g : α → α} (h : Continuous g) : Flow ℕ α :=
     map_add' := iterate_add_apply _, map_zero' := fun x => rfl }
 
 /-- Restriction of a flow onto an invariant set. -/
-def restrict {s : Set α} (h : IsInvariant ϕ s) : Flow τ («expr↥ » s) :=
+def restrict {s : Set α} (h : IsInvariant ϕ s) : Flow τ (↥s) :=
   { toFun := fun t => (h t).restrict _ _ _,
     cont' := continuous_subtype_mk _ (ϕ.continuous continuous_fst (continuous_subtype_coe.comp continuous_snd)),
     map_add' := fun _ _ _ => Subtype.ext (map_add _ _ _ _), map_zero' := fun _ => Subtype.ext (map_zero_apply _ _) }

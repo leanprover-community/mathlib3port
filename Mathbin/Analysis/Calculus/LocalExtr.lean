@@ -72,9 +72,9 @@ variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {a : E
 is that we require `c n → ∞` instead of `∥c n∥ → ∞`. One can think about `pos_tangent_cone_at`
 as `tangent_cone_at nnreal` but we have no theory of normed semifields yet. -/
 def PosTangentConeAt (s : Set E) (x : E) : Set E :=
-  { y:E |
+  { y : E |
     ∃ (c : ℕ → ℝ)(d : ℕ → E),
-      (∀ᶠn in at_top, (x+d n) ∈ s) ∧ tendsto c at_top at_top ∧ tendsto (fun n => c n • d n) at_top (𝓝 y) }
+      (∀ᶠ n in at_top, (x+d n) ∈ s) ∧ tendsto c at_top at_top ∧ tendsto (fun n => c n • d n) at_top (𝓝 y) }
 
 theorem pos_tangent_cone_at_mono : Monotone fun s => PosTangentConeAt s a :=
   by 
@@ -108,32 +108,30 @@ theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : Se
 theorem pos_tangent_cone_at_univ : PosTangentConeAt univ a = univ :=
   eq_univ_of_forall$ fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
 
--- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` has a local max on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
 `y` belongs to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
-theorem is_local_max_on.has_fderiv_within_at_nonpos
-{s : set E}
-(h : is_local_max_on f s a)
-(hf : has_fderiv_within_at f f' s a)
-{y}
-(hy : «expr ∈ »(y, pos_tangent_cone_at s a)) : «expr ≤ »(f' y, 0) :=
-begin
-  rcases [expr hy, "with", "⟨", ident c, ",", ident d, ",", ident hd, ",", ident hc, ",", ident hcd, "⟩"],
-  have [ident hc'] [":", expr tendsto (λ n, «expr∥ ∥»(c n)) at_top at_top] [],
-  from [expr tendsto_at_top_mono (λ n, le_abs_self _) hc],
-  refine [expr le_of_tendsto (hf.lim at_top hd hc' hcd) _],
-  replace [ident hd] [":", expr tendsto (λ n, «expr + »(a, d n)) at_top «expr𝓝[ ] »(s, «expr + »(a, 0))] [],
-  from [expr tendsto_inf.2 ⟨tendsto_const_nhds.add (tangent_cone_at.lim_zero _ hc' hcd), by rwa [expr tendsto_principal] []⟩],
-  rw ["[", expr add_zero, "]"] ["at", ident hd],
-  replace [ident h] [":", expr «expr∀ᶠ in , »((n), at_top, «expr ≤ »(f «expr + »(a, d n), f a))] [],
-  from [expr mem_map.1 (hd h)],
-  replace [ident hc] [":", expr «expr∀ᶠ in , »((n), at_top, «expr ≤ »(0, c n))] [],
-  from [expr mem_map.1 (hc (mem_at_top (0 : exprℝ())))],
-  filter_upwards ["[", expr h, ",", expr hc, "]"] [],
-  simp [] [] ["only"] ["[", expr smul_eq_mul, ",", expr mem_preimage, ",", expr subset_def, "]"] [] [],
-  assume [binders (n hnf hn)],
-  exact [expr mul_nonpos_of_nonneg_of_nonpos hn (sub_nonpos.2 hnf)]
-end
+theorem IsLocalMaxOn.has_fderiv_within_at_nonpos {s : Set E} (h : IsLocalMaxOn f s a) (hf : HasFderivWithinAt f f' s a)
+  {y} (hy : y ∈ PosTangentConeAt s a) : f' y ≤ 0 :=
+  by 
+    rcases hy with ⟨c, d, hd, hc, hcd⟩
+    have hc' : tendsto (fun n => ∥c n∥) at_top at_top 
+    exact tendsto_at_top_mono (fun n => le_abs_self _) hc 
+    refine' le_of_tendsto (hf.lim at_top hd hc' hcd) _ 
+    replace hd : tendsto (fun n => a+d n) at_top (𝓝[s] a+0)
+    exact
+      tendsto_inf.2
+        ⟨tendsto_const_nhds.add (TangentConeAt.lim_zero _ hc' hcd),
+          by 
+            rwa [tendsto_principal]⟩
+    rw [add_zeroₓ] at hd 
+    replace h : ∀ᶠ n in at_top, f (a+d n) ≤ f a 
+    exact mem_map.1 (hd h)
+    replace hc : ∀ᶠ n in at_top, 0 ≤ c n 
+    exact mem_map.1 (hc (mem_at_top (0 : ℝ)))
+    filterUpwards [h, hc]
+    simp only [smul_eq_mul, mem_preimage, subset_def]
+    intro n hnf hn 
+    exact mul_nonpos_of_nonneg_of_nonpos hn (sub_nonpos.2 hnf)
 
 /-- If `f` has a local max on `s` at `a` and `y` belongs to the positive tangent cone
 of `s` at `a`, then `f' y ≤ 0`. -/
@@ -259,37 +257,52 @@ section Rolle
 
 variable (f f' : ℝ → ℝ) {a b : ℝ}
 
--- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Icc a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » Icc a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (C «expr ∈ » Icc a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » Icc a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » Icc a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Ioo a b)
 /-- A continuous function on a closed interval with `f a = f b` takes either its maximum
 or its minimum value at a point in the interior of the interval. -/
-theorem exists_Ioo_extr_on_Icc
-(hab : «expr < »(a, b))
-(hfc : continuous_on f (Icc a b))
-(hfI : «expr = »(f a, f b)) : «expr∃ , »((c «expr ∈ » Ioo a b), is_extr_on f (Icc a b) c) :=
-begin
-  have [ident ne] [":", expr (Icc a b).nonempty] [],
-  from [expr nonempty_Icc.2 (le_of_lt hab)],
-  obtain ["⟨", ident c, ",", ident cmem, ",", ident cle, "⟩", ":", expr «expr∃ , »((c «expr ∈ » Icc a b), ∀
-    x «expr ∈ » Icc a b, «expr ≤ »(f c, f x))],
-  from [expr is_compact_Icc.exists_forall_le ne hfc],
-  obtain ["⟨", ident C, ",", ident Cmem, ",", ident Cge, "⟩", ":", expr «expr∃ , »((C «expr ∈ » Icc a b), ∀
-    x «expr ∈ » Icc a b, «expr ≤ »(f x, f C))],
-  from [expr is_compact_Icc.exists_forall_ge ne hfc],
-  by_cases [expr hc, ":", expr «expr = »(f c, f a)],
-  { by_cases [expr hC, ":", expr «expr = »(f C, f a)],
-    { have [] [":", expr ∀ x «expr ∈ » Icc a b, «expr = »(f x, f a)] [],
-      from [expr λ x hx, le_antisymm «expr ▸ »(hC, Cge x hx) «expr ▸ »(hc, cle x hx)],
-      rcases [expr exists_between hab, "with", "⟨", ident c', ",", ident hc', "⟩"],
-      refine [expr ⟨c', hc', or.inl _⟩],
-      assume [binders (x hx)],
-      rw ["[", expr mem_set_of_eq, ",", expr this x hx, ",", "<-", expr hC, "]"] [],
-      exact [expr Cge c' ⟨le_of_lt hc'.1, le_of_lt hc'.2⟩] },
-    { refine [expr ⟨C, ⟨«expr $ »(lt_of_le_of_ne Cmem.1, mt _ hC), «expr $ »(lt_of_le_of_ne Cmem.2, mt _ hC)⟩, or.inr Cge⟩],
-      exacts ["[", expr λ h, by rw [expr h] [], ",", expr λ h, by rw ["[", expr h, ",", expr hfI, "]"] [], "]"] } },
-  { refine [expr ⟨c, ⟨«expr $ »(lt_of_le_of_ne cmem.1, mt _ hc), «expr $ »(lt_of_le_of_ne cmem.2, mt _ hc)⟩, or.inl cle⟩],
-    exacts ["[", expr λ h, by rw [expr h] [], ",", expr λ h, by rw ["[", expr h, ",", expr hfI, "]"] [], "]"] }
-end
+theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
+  ∃ (c : _)(_ : c ∈ Ioo a b), IsExtrOn f (Icc a b) c :=
+  by 
+    have ne : (Icc a b).Nonempty 
+    exact nonempty_Icc.2 (le_of_ltₓ hab)
+    obtain ⟨c, cmem, cle⟩ : ∃ (c : _)(_ : c ∈ Icc a b), ∀ x _ : x ∈ Icc a b, f c ≤ f x 
+    exact is_compact_Icc.exists_forall_le Ne hfc 
+    obtain ⟨C, Cmem, Cge⟩ : ∃ (C : _)(_ : C ∈ Icc a b), ∀ x _ : x ∈ Icc a b, f x ≤ f C 
+    exact is_compact_Icc.exists_forall_ge Ne hfc 
+    byCases' hc : f c = f a
+    ·
+      byCases' hC : f C = f a
+      ·
+        have  : ∀ x _ : x ∈ Icc a b, f x = f a 
+        exact fun x hx => le_antisymmₓ (hC ▸ Cge x hx) (hc ▸ cle x hx)
+        rcases exists_between hab with ⟨c', hc'⟩
+        refine' ⟨c', hc', Or.inl _⟩
+        intro x hx 
+        rw [mem_set_of_eq, this x hx, ←hC]
+        exact Cge c' ⟨le_of_ltₓ hc'.1, le_of_ltₓ hc'.2⟩
+      ·
+        refine' ⟨C, ⟨lt_of_le_of_neₓ Cmem.1$ mt _ hC, lt_of_le_of_neₓ Cmem.2$ mt _ hC⟩, Or.inr Cge⟩
+        exacts[fun h =>
+            by 
+              rw [h],
+          fun h =>
+            by 
+              rw [h, hfI]]
+    ·
+      refine' ⟨c, ⟨lt_of_le_of_neₓ cmem.1$ mt _ hc, lt_of_le_of_neₓ cmem.2$ mt _ hc⟩, Or.inl cle⟩
+      exacts[fun h =>
+          by 
+            rw [h],
+        fun h =>
+          by 
+            rw [h, hfI]]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Ioo a b)
 /-- A continuous function on a closed interval with `f a = f b` has a local extremum at some
 point of the corresponding open interval. -/
 theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
@@ -297,12 +310,15 @@ theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hf
   let ⟨c, cmem, hc⟩ := exists_Ioo_extr_on_Icc f hab hfc hfI
   ⟨c, cmem, hc.is_local_extr$ Icc_mem_nhds cmem.1 cmem.2⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » Ioo a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Ioo a b)
 /-- **Rolle's Theorem** `has_deriv_at` version -/
 theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
   (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ (c : _)(_ : c ∈ Ioo a b), f' c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.has_deriv_at_eq_zero$ hff' c cmem⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Ioo a b)
 /-- **Rolle's Theorem** `deriv` version -/
 theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
   ∃ (c : _)(_ : c ∈ Ioo a b), deriv f c = 0 :=
@@ -311,28 +327,32 @@ theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI
 
 variable {f f'} {l : ℝ}
 
--- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Ioo a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » Ioo a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Ioo a b)
 /-- **Rolle's Theorem**, a version for a function on an open interval: if `f` has derivative `f'`
 on `(a, b)` and has the same limit `l` at `𝓝[Ioi a] a` and `𝓝[Iio b] b`, then `f' c = 0`
 for some `c ∈ (a, b)`.  -/
-theorem exists_has_deriv_at_eq_zero'
-(hab : «expr < »(a, b))
-(hfa : tendsto f «expr𝓝[ ] »(Ioi a, a) (expr𝓝() l))
-(hfb : tendsto f «expr𝓝[ ] »(Iio b, b) (expr𝓝() l))
-(hff' : ∀ x «expr ∈ » Ioo a b, has_deriv_at f (f' x) x) : «expr∃ , »((c «expr ∈ » Ioo a b), «expr = »(f' c, 0)) :=
-begin
-  have [] [":", expr continuous_on f (Ioo a b)] [":=", expr λ x hx, (hff' x hx).continuous_at.continuous_within_at],
-  have [ident hcont] [] [":=", expr continuous_on_Icc_extend_from_Ioo hab this hfa hfb],
-  obtain ["⟨", ident c, ",", ident hc, ",", ident hcextr, "⟩", ":", expr «expr∃ , »((c «expr ∈ » Ioo a b), is_local_extr (extend_from (Ioo a b) f) c)],
-  { apply [expr exists_local_extr_Ioo _ hab hcont],
-    rw [expr eq_lim_at_right_extend_from_Ioo hab hfb] [],
-    exact [expr eq_lim_at_left_extend_from_Ioo hab hfa] },
-  use ["[", expr c, ",", expr hc, "]"],
-  apply [expr (hcextr.congr _).has_deriv_at_eq_zero (hff' c hc)],
-  rw [expr eventually_eq_iff_exists_mem] [],
-  exact [expr ⟨Ioo a b, Ioo_mem_nhds hc.1 hc.2, extend_from_extends this⟩]
-end
+theorem exists_has_deriv_at_eq_zero' (hab : a < b) (hfa : tendsto f (𝓝[Ioi a] a) (𝓝 l))
+  (hfb : tendsto f (𝓝[Iio b] b) (𝓝 l)) (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x) :
+  ∃ (c : _)(_ : c ∈ Ioo a b), f' c = 0 :=
+  by 
+    have  : ContinuousOn f (Ioo a b) := fun x hx => (hff' x hx).ContinuousAt.ContinuousWithinAt 
+    have hcont := continuous_on_Icc_extend_from_Ioo hab this hfa hfb 
+    obtain ⟨c, hc, hcextr⟩ : ∃ (c : _)(_ : c ∈ Ioo a b), IsLocalExtr (extendFrom (Ioo a b) f) c
+    ·
+      apply exists_local_extr_Ioo _ hab hcont 
+      rw [eq_lim_at_right_extend_from_Ioo hab hfb]
+      exact eq_lim_at_left_extend_from_Ioo hab hfa 
+    use c, hc 
+    apply (hcextr.congr _).has_deriv_at_eq_zero (hff' c hc)
+    rw [eventually_eq_iff_exists_mem]
+    exact ⟨Ioo a b, Ioo_mem_nhds hc.1 hc.2, extend_from_extends this⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » Ioo a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Ioo a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » Ioo a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » Ioo a b)
 /-- **Rolle's Theorem**, a version for a function on an open interval: if `f` has the same limit
 `l` at `𝓝[Ioi a] a` and `𝓝[Iio b] b`, then `deriv f c = 0` for some `c ∈ (a, b)`. This version
 does not require differentiability of `f` because we define `deriv f c = 0` whenever `f` is not
@@ -355,28 +375,28 @@ end Rolle
 
 namespace Polynomial
 
--- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_root_set_le_derivative
-{F : Type*}
-[field F]
-[algebra F exprℝ()]
-(p : polynomial F) : «expr ≤ »(fintype.card (p.root_set exprℝ()), «expr + »(fintype.card (p.derivative.root_set exprℝ()), 1)) :=
-begin
-  haveI [] [":", expr char_zero F] [":=", expr (ring_hom.char_zero_iff (algebra_map F exprℝ()).injective).mpr (by apply_instance)],
-  by_cases [expr hp, ":", expr «expr = »(p, 0)],
-  { simp_rw ["[", expr hp, ",", expr derivative_zero, ",", expr root_set_zero, ",", expr set.empty_card', ",", expr zero_le_one, "]"] [] },
-  by_cases [expr hp', ":", expr «expr = »(p.derivative, 0)],
-  { rw [expr eq_C_of_nat_degree_eq_zero (nat_degree_eq_zero_of_derivative_eq_zero hp')] [],
-    simp_rw ["[", expr root_set_C, ",", expr set.empty_card', ",", expr zero_le, "]"] [] },
-  simp_rw ["[", expr root_set_def, ",", expr finset.coe_sort_coe, ",", expr fintype.card_coe, "]"] [],
-  refine [expr finset.card_le_of_interleaved (λ x y hx hy hxy, _)],
-  rw ["[", "<-", expr finset.mem_coe, ",", "<-", expr root_set_def, ",", expr mem_root_set hp, "]"] ["at", ident hx, ident hy],
-  obtain ["⟨", ident z, ",", ident hz1, ",", ident hz2, "⟩", ":=", expr exists_deriv_eq_zero (λ
-    x : exprℝ(), aeval x p) hxy p.continuous_aeval.continuous_on (hx.trans hy.symm)],
-  refine [expr ⟨z, _, hz1⟩],
-  rw ["[", "<-", expr finset.mem_coe, ",", "<-", expr root_set_def, ",", expr mem_root_set hp', ",", "<-", expr hz2, "]"] [],
-  simp_rw ["[", expr aeval_def, ",", "<-", expr eval_map, ",", expr polynomial.deriv, ",", expr derivative_map, "]"] []
-end
+theorem card_root_set_le_derivative {F : Type _} [Field F] [Algebra F ℝ] (p : Polynomial F) :
+  Fintype.card (p.root_set ℝ) ≤ Fintype.card (p.derivative.root_set ℝ)+1 :=
+  by 
+    have  : CharZero F :=
+      (RingHom.char_zero_iff (algebraMap F ℝ).Injective).mpr
+        (by 
+          infer_instance)
+    byCases' hp : p = 0
+    ·
+      simpRw [hp, derivative_zero, root_set_zero, Set.empty_card', zero_le_one]
+    byCases' hp' : p.derivative = 0
+    ·
+      rw [eq_C_of_nat_degree_eq_zero (nat_degree_eq_zero_of_derivative_eq_zero hp')]
+      simpRw [root_set_C, Set.empty_card', zero_le]
+    simpRw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
+    refine' Finset.card_le_of_interleaved fun x y hx hy hxy => _ 
+    rw [←Finset.mem_coe, ←root_set_def, mem_root_set hp] at hx hy 
+    obtain ⟨z, hz1, hz2⟩ :=
+      exists_deriv_eq_zero (fun x : ℝ => aeval x p) hxy p.continuous_aeval.continuous_on (hx.trans hy.symm)
+    refine' ⟨z, _, hz1⟩
+    rw [←Finset.mem_coe, ←root_set_def, mem_root_set hp', ←hz2]
+    simpRw [aeval_def, ←eval_map, Polynomial.deriv, derivative_map]
 
 end Polynomial
 

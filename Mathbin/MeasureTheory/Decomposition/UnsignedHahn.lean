@@ -29,163 +29,204 @@ private theorem aux {m : ℕ} {γ d : ℝ} (h : γ - (1 / 2) ^ m < d) : ((γ - 2
   by 
     linarith
 
--- error in MeasureTheory.Decomposition.UnsignedHahn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- **Hahn decomposition theorem** -/
-theorem hahn_decomposition
-[is_finite_measure μ]
-[is_finite_measure ν] : «expr∃ , »((s), «expr ∧ »(measurable_set s, «expr ∧ »(∀
-   t, measurable_set t → «expr ⊆ »(t, s) → «expr ≤ »(ν t, μ t), ∀
-   t, measurable_set t → «expr ⊆ »(t, «expr ᶜ»(s)) → «expr ≤ »(μ t, ν t)))) :=
-begin
-  let [ident d] [":", expr set α → exprℝ()] [":=", expr λ s, «expr - »(((μ s).to_nnreal : exprℝ()), (ν s).to_nnreal)],
-  let [ident c] [":", expr set exprℝ()] [":=", expr «expr '' »(d, {s | measurable_set s})],
-  let [ident γ] [":", expr exprℝ()] [":=", expr Sup c],
-  have [ident hμ] [":", expr ∀ s, «expr ≠ »(μ s, «expr∞»())] [":=", expr measure_ne_top μ],
-  have [ident hν] [":", expr ∀ s, «expr ≠ »(ν s, «expr∞»())] [":=", expr measure_ne_top ν],
-  have [ident to_nnreal_μ] [":", expr ∀
-   s, «expr = »(((μ s).to_nnreal : «exprℝ≥0∞»()), μ s)] [":=", expr assume s, «expr $ »(ennreal.coe_to_nnreal, hμ _)],
-  have [ident to_nnreal_ν] [":", expr ∀
-   s, «expr = »(((ν s).to_nnreal : «exprℝ≥0∞»()), ν s)] [":=", expr assume s, «expr $ »(ennreal.coe_to_nnreal, hν _)],
-  have [ident d_empty] [":", expr «expr = »(d «expr∅»(), 0)] [],
-  { change [expr «expr = »(«expr - »(_, _), _)] [] [],
-    rw ["[", expr measure_empty, ",", expr measure_empty, ",", expr sub_self, "]"] [] },
-  have [ident d_split] [":", expr ∀
-   s t, measurable_set s → measurable_set t → «expr = »(d s, «expr + »(d «expr \ »(s, t), d «expr ∩ »(s, t)))] [],
-  { assume [binders (s t hs ht)],
-    simp [] [] ["only"] ["[", expr d, "]"] [] [],
-    rw ["[", "<-", expr measure_inter_add_diff s ht, ",", "<-", expr measure_inter_add_diff s ht, ",", expr ennreal.to_nnreal_add (hμ _) (hμ _), ",", expr ennreal.to_nnreal_add (hν _) (hν _), ",", expr nnreal.coe_add, ",", expr nnreal.coe_add, "]"] [],
-    simp [] [] ["only"] ["[", expr sub_eq_add_neg, ",", expr neg_add, "]"] [] [],
-    ac_refl },
-  have [ident d_Union] [":", expr ∀
-   s : exprℕ() → set α, ∀
-   n, measurable_set (s n) → monotone s → tendsto (λ n, d (s n)) at_top (expr𝓝() (d «expr⋃ , »((n), s n)))] [],
-  { assume [binders (s hs hm)],
-    refine [expr tendsto.sub _ _]; refine [expr «expr $ »(nnreal.tendsto_coe.2, «expr $ »((ennreal.tendsto_to_nnreal _).comp, tendsto_measure_Union hs hm))],
-    exact [expr hμ _],
-    exact [expr hν _] },
-  have [ident d_Inter] [":", expr ∀
-   s : exprℕ() → set α, ∀
-   n, measurable_set (s n) → ∀
-   n m, «expr ≤ »(n, m) → «expr ⊆ »(s m, s n) → tendsto (λ n, d (s n)) at_top (expr𝓝() (d «expr⋂ , »((n), s n)))] [],
-  { assume [binders (s hs hm)],
-    refine [expr tendsto.sub _ _]; refine [expr «expr $ »(nnreal.tendsto_coe.2, «expr $ »(«expr $ »(ennreal.tendsto_to_nnreal, _).comp, tendsto_measure_Inter hs hm _))],
-    exacts ["[", expr hμ _, ",", expr ⟨0, hμ _⟩, ",", expr hν _, ",", expr ⟨0, hν _⟩, "]"] },
-  have [ident bdd_c] [":", expr bdd_above c] [],
-  { use [expr (μ univ).to_nnreal],
-    rintros [ident r, "⟨", ident s, ",", ident hs, ",", ident rfl, "⟩"],
-    refine [expr le_trans «expr $ »(sub_le_self _, nnreal.coe_nonneg _) _],
-    rw ["[", expr nnreal.coe_le_coe, ",", "<-", expr ennreal.coe_le_coe, ",", expr to_nnreal_μ, ",", expr to_nnreal_μ, "]"] [],
-    exact [expr measure_mono (subset_univ _)] },
-  have [ident c_nonempty] [":", expr c.nonempty] [":=", expr nonempty.image _ ⟨_, measurable_set.empty⟩],
-  have [ident d_le_γ] [":", expr ∀
-   s, measurable_set s → «expr ≤ »(d s, γ)] [":=", expr assume s hs, le_cSup bdd_c ⟨s, hs, rfl⟩],
-  have [] [":", expr ∀
-   n : exprℕ(), «expr∃ , »((s : set α), «expr ∧ »(measurable_set s, «expr < »(«expr - »(γ, «expr ^ »(«expr / »(1, 2), n)), d s)))] [],
-  { assume [binders (n)],
-    have [] [":", expr «expr < »(«expr - »(γ, «expr ^ »(«expr / »(1, 2), n)), γ)] [":=", expr sub_lt_self γ (pow_pos (half_pos zero_lt_one) n)],
-    rcases [expr exists_lt_of_lt_cSup c_nonempty this, "with", "⟨", ident r, ",", "⟨", ident s, ",", ident hs, ",", ident rfl, "⟩", ",", ident hlt, "⟩"],
-    exact [expr ⟨s, hs, hlt⟩] },
-  rcases [expr classical.axiom_of_choice this, "with", "⟨", ident e, ",", ident he, "⟩"],
-  change [expr exprℕ() → set α] [] ["at", ident e],
-  have [ident he₁] [":", expr ∀ n, measurable_set (e n)] [":=", expr assume n, (he n).1],
-  have [ident he₂] [":", expr ∀
-   n, «expr < »(«expr - »(γ, «expr ^ »(«expr / »(1, 2), n)), d (e n))] [":=", expr assume n, (he n).2],
-  let [ident f] [":", expr exprℕ() → exprℕ() → set α] [":=", expr λ n m, (finset.Ico n «expr + »(m, 1)).inf e],
-  have [ident hf] [":", expr ∀ n m, measurable_set (f n m)] [],
-  { assume [binders (n m)],
-    simp [] [] ["only"] ["[", expr f, ",", expr finset.inf_eq_infi, "]"] [] [],
-    exact [expr measurable_set.bInter (countable_encodable _) (assume i _, he₁ _)] },
-  have [ident f_subset_f] [":", expr ∀ {a b c d}, «expr ≤ »(a, b) → «expr ≤ »(c, d) → «expr ⊆ »(f a d, f b c)] [],
-  { assume [binders (a b c d hab hcd)],
-    dsimp ["only"] ["[", expr f, "]"] [] [],
-    rw ["[", expr finset.inf_eq_infi, ",", expr finset.inf_eq_infi, "]"] [],
-    exact [expr bInter_subset_bInter_left «expr $ »(finset.Ico_subset_Ico hab, nat.succ_le_succ hcd)] },
-  have [ident f_succ] [":", expr ∀
-   n m, «expr ≤ »(n, m) → «expr = »(f n «expr + »(m, 1), «expr ∩ »(f n m, e «expr + »(m, 1)))] [],
-  { assume [binders (n m hnm)],
-    have [] [":", expr «expr ≤ »(n, «expr + »(m, 1))] [":=", expr le_of_lt (nat.succ_le_succ hnm)],
-    simp [] [] ["only"] ["[", expr f, "]"] [] [],
-    rw ["[", expr nat.Ico_succ_right_eq_insert_Ico this, ",", expr finset.inf_insert, ",", expr set.inter_comm, "]"] [],
-    refl },
-  have [ident le_d_f] [":", expr ∀
-   n
-   m, «expr ≤ »(m, n) → «expr ≤ »(«expr + »(«expr - »(γ, «expr * »(2, «expr ^ »(«expr / »(1, 2), m))), «expr ^ »(«expr / »(1, 2), n)), d (f m n))] [],
-  { assume [binders (n m h)],
-    refine [expr nat.le_induction _ _ n h],
-    { have [] [] [":=", expr he₂ m],
-      simp [] [] ["only"] ["[", expr f, "]"] [] [],
-      rw ["[", expr nat.Ico_succ_singleton, ",", expr finset.inf_singleton, "]"] [],
-      exact [expr aux this] },
-    { assume [binders (n) (hmn : «expr ≤ »(m, n)) (ih)],
-      have [] [":", expr «expr ≤ »(«expr + »(γ, «expr + »(«expr - »(γ, «expr * »(2, «expr ^ »(«expr / »(1, 2), m))), «expr ^ »(«expr / »(1, 2), «expr + »(n, 1)))), «expr + »(γ, d (f m «expr + »(n, 1))))] [],
-      { calc
-          «expr ≤ »(«expr + »(γ, «expr + »(«expr - »(γ, «expr * »(2, «expr ^ »(«expr / »(1, 2), m))), «expr ^ »(«expr / »(1, 2), «expr + »(n, 1)))), «expr + »(γ, «expr + »(«expr - »(γ, «expr * »(2, «expr ^ »(«expr / »(1, 2), m))), «expr - »(«expr ^ »(«expr / »(1, 2), n), «expr ^ »(«expr / »(1, 2), «expr + »(n, 1)))))) : begin
-            refine [expr add_le_add_left (add_le_add_left _ _) γ],
-            simp [] [] ["only"] ["[", expr pow_add, ",", expr pow_one, ",", expr le_sub_iff_add_le, "]"] [] [],
-            linarith [] [] []
-          end
-          «expr = »(..., «expr + »(«expr - »(γ, «expr ^ »(«expr / »(1, 2), «expr + »(n, 1))), «expr + »(«expr - »(γ, «expr * »(2, «expr ^ »(«expr / »(1, 2), m))), «expr ^ »(«expr / »(1, 2), n)))) : by simp [] [] ["only"] ["[", expr sub_eq_add_neg, "]"] [] []; ac_refl
-          «expr ≤ »(..., «expr + »(d (e «expr + »(n, 1)), d (f m n))) : add_le_add «expr $ »(le_of_lt, he₂ _) ih
-          «expr ≤ »(..., «expr + »(«expr + »(d (e «expr + »(n, 1)), d «expr \ »(f m n, e «expr + »(n, 1))), d (f m «expr + »(n, 1)))) : by rw ["[", expr f_succ _ _ hmn, ",", expr d_split (f m n) (e «expr + »(n, 1)) (hf _ _) (he₁ _), ",", expr add_assoc, "]"] []
-          «expr = »(..., «expr + »(d «expr ∪ »(e «expr + »(n, 1), f m n), d (f m «expr + »(n, 1)))) : begin
-            rw ["[", expr d_split «expr ∪ »(e «expr + »(n, 1), f m n) (e «expr + »(n, 1)), ",", expr union_diff_left, ",", expr union_inter_cancel_left, "]"] [],
-            ac_refl,
-            exact [expr (he₁ _).union (hf _ _)],
-            exact [expr he₁ _]
-          end
-          «expr ≤ »(..., «expr + »(γ, d (f m «expr + »(n, 1)))) : add_le_add_right «expr $ »(d_le_γ _, (he₁ _).union (hf _ _)) _ },
-      exact [expr (add_le_add_iff_left γ).1 this] } },
-  let [ident s] [] [":=", expr «expr⋃ , »((m), «expr⋂ , »((n), f m n))],
-  have [ident γ_le_d_s] [":", expr «expr ≤ »(γ, d s)] [],
-  { have [ident hγ] [":", expr tendsto (λ
-      m : exprℕ(), «expr - »(γ, «expr * »(2, «expr ^ »(«expr / »(1, 2), m)))) at_top (expr𝓝() γ)] [],
-    { suffices [] [":", expr tendsto (λ
-        m : exprℕ(), «expr - »(γ, «expr * »(2, «expr ^ »(«expr / »(1, 2), m)))) at_top (expr𝓝() «expr - »(γ, «expr * »(2, 0)))],
-      { simpa [] [] [] [] [] [] },
-      exact [expr «expr $ »(tendsto_const_nhds.sub, «expr $ »(tendsto_const_nhds.mul, tendsto_pow_at_top_nhds_0_of_lt_1 «expr $ »(le_of_lt, «expr $ »(half_pos, zero_lt_one)) (half_lt_self zero_lt_one)))] },
-    have [ident hd] [":", expr tendsto (λ
-      m, d «expr⋂ , »((n), f m n)) at_top (expr𝓝() (d «expr⋃ , »((m), «expr⋂ , »((n), f m n))))] [],
-    { refine [expr d_Union _ _ _],
-      { assume [binders (n)],
-        exact [expr measurable_set.Inter (assume m, hf _ _)] },
-      { exact [expr assume
-         n
-         m
-         hnm, subset_Inter (assume
-          i, «expr $ »(subset.trans (Inter_subset (f n) i), «expr $ »(f_subset_f hnm, le_refl _)))] } },
-    refine [expr le_of_tendsto_of_tendsto' hγ hd (assume m, _)],
-    have [] [":", expr tendsto (λ n, d (f m n)) at_top (expr𝓝() (d «expr⋂ , »((n), f m n)))] [],
-    { refine [expr d_Inter _ _ _],
-      { assume [binders (n)],
-        exact [expr hf _ _] },
-      { assume [binders (n m hnm)],
-        exact [expr f_subset_f (le_refl _) hnm] } },
-    refine [expr ge_of_tendsto this (eventually_at_top.2 ⟨m, assume n hmn, _⟩)],
-    change [expr «expr ≤ »(«expr - »(γ, «expr * »(2, «expr ^ »(«expr / »(1, 2), m))), d (f m n))] [] [],
-    refine [expr le_trans _ (le_d_f _ _ hmn)],
-    exact [expr le_add_of_le_of_nonneg (le_refl _) (pow_nonneg «expr $ »(le_of_lt, «expr $ »(half_pos, zero_lt_one)) _)] },
-  have [ident hs] [":", expr measurable_set s] [":=", expr measurable_set.Union (assume
-    n, measurable_set.Inter (assume m, hf _ _))],
-  refine [expr ⟨s, hs, _, _⟩],
-  { assume [binders (t ht hts)],
-    have [] [":", expr «expr ≤ »(0, d t)] [":=", expr «expr $ »((add_le_add_iff_left γ).1, calc
-        «expr ≤ »(«expr + »(γ, 0), d s) : by rw ["[", expr add_zero, "]"] []; exact [expr γ_le_d_s]
-        «expr = »(..., «expr + »(d «expr \ »(s, t), d t)) : by rw ["[", expr d_split _ _ hs ht, ",", expr inter_eq_self_of_subset_right hts, "]"] []
-        «expr ≤ »(..., «expr + »(γ, d t)) : add_le_add (d_le_γ _ (hs.diff ht)) (le_refl _))],
-    rw ["[", "<-", expr to_nnreal_μ, ",", "<-", expr to_nnreal_ν, ",", expr ennreal.coe_le_coe, ",", "<-", expr nnreal.coe_le_coe, "]"] [],
-    simpa [] [] ["only"] ["[", expr d, ",", expr le_sub_iff_add_le, ",", expr zero_add, "]"] [] ["using", expr this] },
-  { assume [binders (t ht hts)],
-    have [] [":", expr «expr ≤ »(d t, 0)] [],
-    exact [expr «expr $ »((add_le_add_iff_left γ).1, calc
-        «expr ≤ »(«expr + »(γ, d t), «expr + »(d s, d t)) : add_le_add γ_le_d_s (le_refl _)
-        «expr = »(..., d «expr ∪ »(s, t)) : begin
-          rw ["[", expr d_split _ _ (hs.union ht) ht, ",", expr union_diff_right, ",", expr union_inter_cancel_right, ",", expr diff_eq_self.2, "]"] [],
-          exact [expr assume (a) ⟨hat, has⟩, hts hat has]
-        end
-        «expr ≤ »(..., «expr + »(γ, 0)) : by rw ["[", expr add_zero, "]"] []; exact [expr d_le_γ _ (hs.union ht)])],
-    rw ["[", "<-", expr to_nnreal_μ, ",", "<-", expr to_nnreal_ν, ",", expr ennreal.coe_le_coe, ",", "<-", expr nnreal.coe_le_coe, "]"] [],
-    simpa [] [] ["only"] ["[", expr d, ",", expr sub_le_iff_le_add, ",", expr zero_add, "]"] [] ["using", expr this] }
-end
+  theorem
+    hahn_decomposition
+    [ is_finite_measure μ ] [ is_finite_measure ν ]
+      : ∃ s , MeasurableSet s ∧ ∀ t , MeasurableSet t → t ⊆ s → ν t ≤ μ t ∧ ∀ t , MeasurableSet t → t ⊆ s ᶜ → μ t ≤ ν t
+    :=
+      by
+        let d : Set α → ℝ := fun s => ( μ s . toNnreal : ℝ ) - ν s . toNnreal
+          let c : Set ℝ := d '' { s | MeasurableSet s }
+          let γ : ℝ := Sup c
+          have hμ : ∀ s , μ s ≠ ∞ := measure_ne_top μ
+          have hν : ∀ s , ν s ≠ ∞ := measure_ne_top ν
+          have to_nnreal_μ : ∀ s , ( μ s . toNnreal : ℝ≥0∞ ) = μ s := fun s => Ennreal.coe_to_nnreal $ hμ _
+          have to_nnreal_ν : ∀ s , ( ν s . toNnreal : ℝ≥0∞ ) = ν s := fun s => Ennreal.coe_to_nnreal $ hν _
+          have d_empty : d ∅ = 0
+          · change _ - _ = _ rw [ measure_empty , measure_empty , sub_self ]
+          have d_split : ∀ s t , MeasurableSet s → MeasurableSet t → d s = d s \ t + d s ∩ t
+          ·
+            intro s t hs ht
+              simp only [ d ]
+              rw
+                [
+                  ← measure_inter_add_diff s ht
+                    ,
+                    ← measure_inter_add_diff s ht
+                    ,
+                    Ennreal.to_nnreal_add hμ _ hμ _
+                    ,
+                    Ennreal.to_nnreal_add hν _ hν _
+                    ,
+                    Nnreal.coe_add
+                    ,
+                    Nnreal.coe_add
+                  ]
+              simp only [ sub_eq_add_neg , neg_add ]
+              acRfl
+          have
+            d_Union
+            : ∀ s : ℕ → Set α , ∀ n , MeasurableSet s n → Monotone s → tendsto fun n => d s n at_top 𝓝 d ⋃ n , s n
+          ·
+            intro s hs hm
+              refine' tendsto.sub _ _
+                <;>
+                refine' Nnreal.tendsto_coe . 2 $ Ennreal.tendsto_to_nnreal _ . comp $ tendsto_measure_Union hs hm
+              exact hμ _
+              exact hν _
+          have
+            d_Inter
+            :
+              ∀
+                s : ℕ → Set α
+                ,
+                ∀ n , MeasurableSet s n → ∀ n m , n ≤ m → s m ⊆ s n → tendsto fun n => d s n at_top 𝓝 d ⋂ n , s n
+          ·
+            intro s hs hm
+              refine' tendsto.sub _ _
+                <;>
+                refine' Nnreal.tendsto_coe . 2 $ Ennreal.tendsto_to_nnreal $ _ . comp $ tendsto_measure_Inter hs hm _
+              exacts [ hμ _ , ⟨ 0 , hμ _ ⟩ , hν _ , ⟨ 0 , hν _ ⟩ ]
+          have bdd_c : BddAbove c
+          ·
+            use μ univ . toNnreal
+              rintro r ⟨ s , hs , rfl ⟩
+              refine' le_transₓ sub_le_self _ $ Nnreal.coe_nonneg _ _
+              rw [ Nnreal.coe_le_coe , ← Ennreal.coe_le_coe , to_nnreal_μ , to_nnreal_μ ]
+              exact measure_mono subset_univ _
+          have c_nonempty : c.nonempty := nonempty.image _ ⟨ _ , MeasurableSet.empty ⟩
+          have d_le_γ : ∀ s , MeasurableSet s → d s ≤ γ := fun s hs => le_cSup bdd_c ⟨ s , hs , rfl ⟩
+          have : ∀ n : ℕ , ∃ s : Set α , MeasurableSet s ∧ γ - 1 / 2 ^ n < d s
+          ·
+            intro n
+              have : γ - 1 / 2 ^ n < γ := sub_lt_self γ pow_pos half_pos zero_lt_one n
+              rcases exists_lt_of_lt_cSup c_nonempty this with ⟨ r , ⟨ s , hs , rfl ⟩ , hlt ⟩
+              exact ⟨ s , hs , hlt ⟩
+          rcases Classical.axiom_of_choice this with ⟨ e , he ⟩
+          change ℕ → Set α at e
+          have he₁ : ∀ n , MeasurableSet e n := fun n => he n . 1
+          have he₂ : ∀ n , γ - 1 / 2 ^ n < d e n := fun n => he n . 2
+          let f : ℕ → ℕ → Set α := fun n m => Finset.ico n m + 1 . inf e
+          have hf : ∀ n m , MeasurableSet f n m
+          ·
+            intro n m
+              simp only [ f , Finset.inf_eq_infi ]
+              exact MeasurableSet.bInter countable_encodable _ fun i _ => he₁ _
+          have f_subset_f : ∀ { a b c d } , a ≤ b → c ≤ d → f a d ⊆ f b c
+          ·
+            intro a b c d hab hcd
+              dsimp only [ f ]
+              rw [ Finset.inf_eq_infi , Finset.inf_eq_infi ]
+              exact bInter_subset_bInter_left Finset.Ico_subset_Ico hab $ Nat.succ_le_succₓ hcd
+          have f_succ : ∀ n m , n ≤ m → f n m + 1 = f n m ∩ e m + 1
+          ·
+            intro n m hnm
+              have : n ≤ m + 1 := le_of_ltₓ Nat.succ_le_succₓ hnm
+              simp only [ f ]
+              rw [ Nat.Ico_succ_right_eq_insert_Ico this , Finset.inf_insert , Set.inter_comm ]
+              rfl
+          have le_d_f : ∀ n m , m ≤ n → γ - 2 * 1 / 2 ^ m + 1 / 2 ^ n ≤ d f m n
+          ·
+            intro n m h
+              refine' Nat.le_induction _ _ n h
+              · have := he₂ m simp only [ f ] rw [ Nat.Ico_succ_singleton , Finset.inf_singleton ] exact aux this
+              ·
+                intro n ( hmn : m ≤ n ) ih
+                  have : γ + γ - 2 * 1 / 2 ^ m + 1 / 2 ^ n + 1 ≤ γ + d f m n + 1
+                  ·
+                    calc
+                      γ + γ - 2 * 1 / 2 ^ m + 1 / 2 ^ n + 1 ≤ γ + γ - 2 * 1 / 2 ^ m + 1 / 2 ^ n - 1 / 2 ^ n + 1
+                          :=
+                          by
+                            refine' add_le_add_left add_le_add_left _ _ γ
+                              simp only [ pow_addₓ , pow_oneₓ , le_sub_iff_add_le ]
+                              linarith
+                        _ = γ - 1 / 2 ^ n + 1 + γ - 2 * 1 / 2 ^ m + 1 / 2 ^ n
+                          :=
+                          by simp only [ sub_eq_add_neg ] <;> acRfl
+                        _ ≤ d e n + 1 + d f m n := add_le_add le_of_ltₓ $ he₂ _ ih
+                        _ ≤ d e n + 1 + d f m n \ e n + 1 + d f m n + 1
+                          :=
+                          by rw [ f_succ _ _ hmn , d_split f m n e n + 1 hf _ _ he₁ _ , add_assocₓ ]
+                        _ = d e n + 1 ∪ f m n + d f m n + 1
+                          :=
+                          by
+                            rw [ d_split e n + 1 ∪ f m n e n + 1 , union_diff_left , union_inter_cancel_left ]
+                              acRfl
+                              exact he₁ _ . union hf _ _
+                              exact he₁ _
+                        _ ≤ γ + d f m n + 1 := add_le_add_right d_le_γ _ $ he₁ _ . union hf _ _ _
+                  exact add_le_add_iff_left γ . 1 this
+          let s := ⋃ m , ⋂ n , f m n
+          have γ_le_d_s : γ ≤ d s
+          ·
+            have hγ : tendsto fun m : ℕ => γ - 2 * 1 / 2 ^ m at_top 𝓝 γ
+              ·
+                suffices : tendsto fun m : ℕ => γ - 2 * 1 / 2 ^ m at_top 𝓝 γ - 2 * 0
+                  · simpa
+                  exact
+                    tendsto_const_nhds.sub
+                      $
+                      tendsto_const_nhds.mul
+                        $
+                        tendsto_pow_at_top_nhds_0_of_lt_1 le_of_ltₓ $ half_pos $ zero_lt_one half_lt_self zero_lt_one
+              have hd : tendsto fun m => d ⋂ n , f m n at_top 𝓝 d ⋃ m , ⋂ n , f m n
+              ·
+                refine' d_Union _ _ _
+                  · intro n exact MeasurableSet.Inter fun m => hf _ _
+                  ·
+                    exact
+                      fun n m hnm => subset_Inter fun i => subset.trans Inter_subset f n i $ f_subset_f hnm $ le_reflₓ _
+              refine' le_of_tendsto_of_tendsto' hγ hd fun m => _
+              have : tendsto fun n => d f m n at_top 𝓝 d ⋂ n , f m n
+              · refine' d_Inter _ _ _ · intro n exact hf _ _ · intro n m hnm exact f_subset_f le_reflₓ _ hnm
+              refine' ge_of_tendsto this eventually_at_top . 2 ⟨ m , fun n hmn => _ ⟩
+              change γ - 2 * 1 / 2 ^ m ≤ d f m n
+              refine' le_transₓ _ le_d_f _ _ hmn
+              exact le_add_of_le_of_nonneg le_reflₓ _ pow_nonneg le_of_ltₓ $ half_pos $ zero_lt_one _
+          have hs : MeasurableSet s := MeasurableSet.Union fun n => MeasurableSet.Inter fun m => hf _ _
+          refine' ⟨ s , hs , _ , _ ⟩
+          ·
+            intro t ht hts
+              have
+                : 0 ≤ d t
+                  :=
+                  add_le_add_iff_left γ . 1
+                    $
+                    calc
+                      γ + 0 ≤ d s := by rw [ add_zeroₓ ] <;> exact γ_le_d_s
+                        _ = d s \ t + d t := by rw [ d_split _ _ hs ht , inter_eq_self_of_subset_right hts ]
+                        _ ≤ γ + d t := add_le_add d_le_γ _ hs.diff ht le_reflₓ _
+              rw [ ← to_nnreal_μ , ← to_nnreal_ν , Ennreal.coe_le_coe , ← Nnreal.coe_le_coe ]
+              simpa only [ d , le_sub_iff_add_le , zero_addₓ ] using this
+          ·
+            intro t ht hts
+              have : d t ≤ 0
+              exact
+                add_le_add_iff_left γ . 1
+                  $
+                  calc
+                    γ + d t ≤ d s + d t := add_le_add γ_le_d_s le_reflₓ _
+                      _ = d s ∪ t
+                        :=
+                        by
+                          rw
+                              [
+                                d_split _ _ hs.union ht ht
+                                  ,
+                                  union_diff_right
+                                  ,
+                                  union_inter_cancel_right
+                                  ,
+                                  diff_eq_self . 2
+                                ]
+                            exact fun a ⟨ hat , has ⟩ => hts hat has
+                      _ ≤ γ + 0 := by rw [ add_zeroₓ ] <;> exact d_le_γ _ hs.union ht
+              rw [ ← to_nnreal_μ , ← to_nnreal_ν , Ennreal.coe_le_coe , ← Nnreal.coe_le_coe ]
+              simpa only [ d , sub_le_iff_le_add , zero_addₓ ] using this
 
 end MeasureTheory
 

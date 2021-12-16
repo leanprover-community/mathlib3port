@@ -46,8 +46,23 @@ variable [IsScalarTower R A M]
 
 variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 
+instance : AddMonoidHomClass (Derivation R A M) A M :=
+  { coe := fun D => D.to_fun,
+    coe_injective' :=
+      fun D1 D2 h =>
+        by 
+          cases D1 
+          cases D2 
+          congr 
+          exact FunLike.coe_injective h,
+    map_add := fun D => D.to_linear_map.map_add', map_zero := fun D => D.to_linear_map.map_zero }
+
+/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly. -/
 instance : CoeFun (Derivation R A M) fun _ => A → M :=
   ⟨fun D => D.to_linear_map.to_fun⟩
+
+theorem to_fun_eq_coe : D.to_fun = ⇑D :=
+  rfl
 
 instance has_coe_to_linear_map : Coe (Derivation R A M) (A →ₗ[R] M) :=
   ⟨fun D => D.to_linear_map⟩
@@ -61,64 +76,62 @@ theorem mk_coe (f : A →ₗ[R] M) h : ((⟨f, h⟩ : Derivation R A M) : A → 
   rfl
 
 @[simp, normCast]
-theorem coe_fn_coe (f : Derivation R A M) : «expr⇑ » (f : A →ₗ[R] M) = f :=
+theorem coe_fn_coe (f : Derivation R A M) : ⇑(f : A →ₗ[R] M) = f :=
   rfl
 
 theorem coe_injective : @Function.Injective (Derivation R A M) (A → M) coeFn :=
-  fun D1 D2 h =>
-    by 
-      rcases D1 with ⟨⟨⟩⟩
-      rcases D2 with ⟨⟨⟩⟩
-      congr
+  FunLike.coe_injective
 
 @[ext]
 theorem ext (H : ∀ a, D1 a = D2 a) : D1 = D2 :=
-  coe_injective$ funext H
+  FunLike.ext _ _ H
 
 theorem congr_funₓ (h : D1 = D2) (a : A) : D1 a = D2 a :=
-  congr_funₓ (congr_argₓ coeFn h) a
+  FunLike.congr_fun h a
 
-@[simp]
-theorem map_add : D (a+b) = D a+D b :=
-  LinearMap.map_add D a b
+protected theorem map_add : D (a+b) = D a+D b :=
+  map_add D a b
 
-@[simp]
-theorem map_zero : D 0 = 0 :=
-  LinearMap.map_zero D
+protected theorem map_zero : D 0 = 0 :=
+  map_zero D
 
 @[simp]
 theorem map_smul : D (r • a) = r • D a :=
-  LinearMap.map_smul D r a
+  D.to_linear_map.map_smul r a
 
 @[simp]
 theorem leibniz : D (a*b) = (a • D b)+b • D a :=
   D.leibniz' _ _
 
--- error in RingTheory.Derivation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem map_one_eq_zero : «expr = »(D 1, 0) :=
-begin
-  have [ident h] [":", expr «expr = »(D 1, D «expr * »(1, 1))] [":=", expr by rw [expr mul_one] []],
-  rwa ["[", expr leibniz D 1 1, ",", expr one_smul, ",", expr self_eq_add_right, "]"] ["at", ident h]
-end
+@[simp]
+theorem map_one_eq_zero : D 1 = 0 :=
+  by 
+    have h : D 1 = D (1*1) :=
+      by 
+        rw [mul_oneₓ]
+    rwa [leibniz D 1 1, one_smul, self_eq_add_rightₓ] at h
 
 @[simp]
 theorem map_algebra_map : D (algebraMap R A r) = 0 :=
   by 
     rw [←mul_oneₓ r, RingHom.map_mul, RingHom.map_one, ←smul_def, map_smul, map_one_eq_zero, smul_zero]
 
--- error in RingTheory.Derivation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem leibniz_pow
-(n : exprℕ()) : «expr = »(D «expr ^ »(a, n), «expr • »(n, «expr • »(«expr ^ »(a, «expr - »(n, 1)), D a))) :=
-begin
-  induction [expr n] [] ["with", ident n, ident ihn] [],
-  { rw ["[", expr pow_zero, ",", expr map_one_eq_zero, ",", expr zero_smul, "]"] [] },
-  { rcases [expr (zero_le n).eq_or_lt, "with", "(", ident rfl, "|", ident hpos, ")"],
-    { rw ["[", expr pow_one, ",", expr one_smul, ",", expr pow_zero, ",", expr one_smul, "]"] [] },
-    { have [] [":", expr «expr = »(«expr * »(a, «expr ^ »(a, «expr - »(n, 1))), «expr ^ »(a, n))] [],
-      by rw ["[", "<-", expr pow_succ, ",", expr nat.sub_add_cancel hpos, "]"] [],
-      simp [] [] ["only"] ["[", expr pow_succ, ",", expr leibniz, ",", expr ihn, ",", expr smul_comm a n, ",", expr smul_smul a, ",", expr add_smul, ",", expr this, ",", expr nat.succ_eq_add_one, ",", expr nat.add_succ_sub_one, ",", expr add_zero, ",", expr one_nsmul, "]"] [] [] } }
-end
+theorem leibniz_pow (n : ℕ) : D (a^n) = n • (a^n - 1) • D a :=
+  by 
+    induction' n with n ihn
+    ·
+      rw [pow_zeroₓ, map_one_eq_zero, zero_smul]
+    ·
+      rcases(zero_le n).eq_or_lt with (rfl | hpos)
+      ·
+        rw [pow_oneₓ, one_smul, pow_zeroₓ, one_smul]
+      ·
+        have  : (a*a^n - 1) = (a^n)
+        ·
+          rw [←pow_succₓ, Nat.sub_add_cancelₓ hpos]
+        simp only [pow_succₓ, leibniz, ihn, smul_comm a n, smul_smul a, add_smul, this, Nat.succ_eq_add_one,
+          Nat.add_succ_sub_one, add_zeroₓ, one_nsmul]
 
 theorem eq_on_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin R s) :=
   fun x hx =>
@@ -143,11 +156,11 @@ instance : HasZero (Derivation R A M) :=
             simp only [add_zeroₓ, LinearMap.zero_apply, LinearMap.to_fun_eq_coe, smul_zero] }⟩
 
 @[simp]
-theorem coe_zero : «expr⇑ » (0 : Derivation R A M) = 0 :=
+theorem coe_zero : ⇑(0 : Derivation R A M) = 0 :=
   rfl
 
 @[simp]
-theorem coe_zero_linear_map : «expr↑ » (0 : Derivation R A M) = (0 : A →ₗ[R] M) :=
+theorem coe_zero_linear_map : ↑(0 : Derivation R A M) = (0 : A →ₗ[R] M) :=
   rfl
 
 theorem zero_apply (a : A) : (0 : Derivation R A M) a = 0 :=
@@ -163,11 +176,11 @@ instance : Add (Derivation R A M) :=
                 add_add_add_commₓ] }⟩
 
 @[simp]
-theorem coe_add (D1 D2 : Derivation R A M) : «expr⇑ » (D1+D2) = D1+D2 :=
+theorem coe_add (D1 D2 : Derivation R A M) : (⇑D1+D2) = D1+D2 :=
   rfl
 
 @[simp]
-theorem coe_add_linear_map (D1 D2 : Derivation R A M) : «expr↑ » (D1+D2) = (D1+D2 : A →ₗ[R] M) :=
+theorem coe_add_linear_map (D1 D2 : Derivation R A M) : (↑D1+D2) = (D1+D2 : A →ₗ[R] M) :=
   rfl
 
 theorem add_apply : (D1+D2) a = D1 a+D2 a :=
@@ -183,11 +196,11 @@ instance Rscalar : HasScalar R (Derivation R A M) :=
                 smul_add, add_commₓ] }⟩
 
 @[simp]
-theorem coe_Rsmul (r : R) (D : Derivation R A M) : «expr⇑ » (r • D) = r • D :=
+theorem coe_Rsmul (r : R) (D : Derivation R A M) : ⇑(r • D) = r • D :=
   rfl
 
 @[simp]
-theorem coe_Rsmul_linear_map (r : R) (D : Derivation R A M) : «expr↑ » (r • D) = (r • D : A →ₗ[R] M) :=
+theorem coe_Rsmul_linear_map (r : R) (D : Derivation R A M) : ↑(r • D) = (r • D : A →ₗ[R] M) :=
   rfl
 
 theorem Rsmul_apply (r : R) (D : Derivation R A M) : (r • D) a = r • D a :=
@@ -203,11 +216,11 @@ instance HasScalar : HasScalar A (Derivation R A M) :=
               simp only [smul_add, leibniz, smul_comm a, add_commₓ] }⟩
 
 @[simp]
-theorem coe_smul (a : A) (D : Derivation R A M) : «expr⇑ » (a • D) = a • D :=
+theorem coe_smul (a : A) (D : Derivation R A M) : ⇑(a • D) = a • D :=
   rfl
 
 @[simp]
-theorem coe_smul_linear_map (a : A) (D : Derivation R A M) : «expr↑ » (a • D) = (a • D : A →ₗ[R] M) :=
+theorem coe_smul_linear_map (a : A) (D : Derivation R A M) : ↑(a • D) = (a • D : A →ₗ[R] M) :=
   rfl
 
 theorem smul_apply (a : A) (D : Derivation R A M) (b : A) : (a • D) b = a • D b :=
@@ -284,13 +297,11 @@ variable {M : Type _} [AddCommGroupₓ M] [Module A M] [Module R M] [IsScalarTow
 
 variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 
-@[simp]
-theorem map_neg : D (-a) = -D a :=
-  LinearMap.map_neg D a
+protected theorem map_neg : D (-a) = -D a :=
+  map_neg D a
 
-@[simp]
-theorem map_sub : D (a - b) = D a - D b :=
-  LinearMap.map_sub D a b
+protected theorem map_sub : D (a - b) = D a - D b :=
+  map_sub D a b
 
 theorem leibniz_of_mul_eq_one {a b : A} (h : (a*b) = 1) : D a = -(a^2) • D b :=
   by 
@@ -326,11 +337,11 @@ instance : Neg (Derivation R A M) :=
                 add_commₓ] }⟩
 
 @[simp]
-theorem coe_neg (D : Derivation R A M) : «expr⇑ » (-D) = -D :=
+theorem coe_neg (D : Derivation R A M) : ⇑(-D) = -D :=
   rfl
 
 @[simp]
-theorem coe_neg_linear_map (D : Derivation R A M) : «expr↑ » (-D) = (-D : A →ₗ[R] M) :=
+theorem coe_neg_linear_map (D : Derivation R A M) : ↑(-D) = (-D : A →ₗ[R] M) :=
   rfl
 
 theorem neg_apply : (-D) a = -D a :=
@@ -346,11 +357,11 @@ instance : Sub (Derivation R A M) :=
               abel }⟩
 
 @[simp]
-theorem coe_sub (D1 D2 : Derivation R A M) : «expr⇑ » (D1 - D2) = D1 - D2 :=
+theorem coe_sub (D1 D2 : Derivation R A M) : ⇑(D1 - D2) = D1 - D2 :=
   rfl
 
 @[simp]
-theorem coe_sub_linear_map (D1 D2 : Derivation R A M) : «expr↑ » (D1 - D2) = (D1 - D2 : A →ₗ[R] M) :=
+theorem coe_sub_linear_map (D1 D2 : Derivation R A M) : ↑(D1 - D2) = (D1 - D2 : A →ₗ[R] M) :=
   rfl
 
 theorem sub_apply : (D1 - D2) a = D1 a - D2 a :=
@@ -380,7 +391,7 @@ instance : HasBracket (Derivation R A A) (Derivation R A A) :=
         toLinearMap := ⁅(D1 : Module.End R A),(D2 : Module.End R A)⁆ }⟩
 
 @[simp]
-theorem commutator_coe_linear_map : «expr↑ » ⁅D1,D2⁆ = ⁅(D1 : Module.End R A),(D2 : Module.End R A)⁆ :=
+theorem commutator_coe_linear_map : ↑⁅D1,D2⁆ = ⁅(D1 : Module.End R A),(D2 : Module.End R A)⁆ :=
   rfl
 
 theorem commutator_apply : ⁅D1,D2⁆ a = D1 (D2 a) - D2 (D1 a) :=

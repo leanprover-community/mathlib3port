@@ -78,9 +78,10 @@ theorem traverse_map (f : β → F γ) (g : α → β) (x : t α) : traverse f (
     congr 
     apply comp.applicative_id_comp
 
--- error in Control.Traversable.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pure_traverse (x : t α) : «expr = »(traverse pure x, (pure x : F (t α))) :=
-by have [] [":", expr «expr = »(traverse pure x, pure (traverse id.mk x))] [":=", expr (naturality (pure_transformation F) id.mk x).symm]; rwa [expr id_traverse] ["at", ident this]
+theorem pure_traverse (x : t α) : traverse pure x = (pure x : F (t α)) :=
+  by 
+    have  : traverse pure x = pure (traverse id.mk x) := (naturality (pure_transformation F) id.mk x).symm <;>
+      rwa [id_traverse] at this
 
 theorem id_sequence (x : t α) : sequence (id.mk <$> x) = id.mk x :=
   by 

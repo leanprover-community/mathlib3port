@@ -1,6 +1,7 @@
 import Mathbin.Data.Real.Sqrt 
 import Mathbin.FieldTheory.Tower 
-import Mathbin.Analysis.NormedSpace.FiniteDimension
+import Mathbin.Analysis.NormedSpace.FiniteDimension 
+import Mathbin.Analysis.NormedSpace.Star
 
 /-!
 # `is_R_or_C`: a typeclass for ℝ or ℂ
@@ -75,7 +76,7 @@ noncomputable instance (priority := 900) algebra_map_coe : CoeTₓ ℝ K :=
 theorem of_real_alg (x : ℝ) : (x : K) = x • (1 : K) :=
   Algebra.algebra_map_eq_smul_one x
 
-theorem algebra_map_eq_of_real : «expr⇑ » (algebraMap ℝ K) = coeₓ :=
+theorem algebra_map_eq_of_real : ⇑algebraMap ℝ K = coeₓ :=
   rfl
 
 @[simp]
@@ -222,11 +223,11 @@ theorem of_real_smul (r x : ℝ) : r • (x : K) = (r : K)*(x : K) :=
     simpRw [←smul_eq_mul, of_real_alg r]
     simp 
 
-theorem of_real_mul_re (r : ℝ) (z : K) : re («expr↑ » r*z) = r*re z :=
+theorem of_real_mul_re (r : ℝ) (z : K) : re ((↑r)*z) = r*re z :=
   by 
     simp only [mul_re, of_real_im, zero_mul, of_real_re, sub_zero]
 
-theorem of_real_mul_im (r : ℝ) (z : K) : im («expr↑ » r*z) = r*im z :=
+theorem of_real_mul_im (r : ℝ) (z : K) : im ((↑r)*z) = r*im z :=
   by 
     simp only [add_zeroₓ, of_real_im, zero_mul, of_real_re, mul_im]
 
@@ -314,7 +315,7 @@ theorem conj_smul (r : ℝ) (z : K) : conj (r • z) = r • conj z :=
 
 theorem eq_conj_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) :=
   by 
-    split 
+    constructor
     ·
       intro h 
       suffices  : im z = 0
@@ -336,7 +337,7 @@ variable (K)
 
 /-- Conjugation as a ring equivalence. This is used to convert the inner product into a
 sesquilinear product. -/
-abbrev conj_to_ring_equiv : K ≃+* «expr ᵐᵒᵖ» K :=
+abbrev conj_to_ring_equiv : K ≃+* Kᵐᵒᵖ :=
   starRingEquiv
 
 variable {K}
@@ -454,13 +455,11 @@ theorem norm_sq_sub (z w : K) : norm_sq (z - w) = (norm_sq z+norm_sq w) - 2*re (
   by 
     simp [-mul_re, norm_sq_add, add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
--- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sqrt_norm_sq_eq_norm {z : K} : «expr = »(real.sqrt (norm_sq z), «expr∥ ∥»(z)) :=
-begin
-  have [ident h₂] [":", expr «expr = »(«expr∥ ∥»(z), real.sqrt «expr ^ »(«expr∥ ∥»(z), 2))] [":=", expr (real.sqrt_sq (norm_nonneg z)).symm],
-  rw ["[", expr h₂, "]"] [],
-  exact [expr congr_arg real.sqrt (norm_sq_eq_def' z)]
-end
+theorem sqrt_norm_sq_eq_norm {z : K} : Real.sqrt (norm_sq z) = ∥z∥ :=
+  by 
+    have h₂ : ∥z∥ = Real.sqrt (∥z∥^2) := (Real.sqrt_sq (norm_nonneg z)).symm 
+    rw [h₂]
+    exact congr_argₓ Real.sqrt (norm_sq_eq_def' z)
 
 /-! ### Inversion -/
 
@@ -520,10 +519,10 @@ theorem div_re_of_real {z : K} {r : ℝ} : re (z / r) = re z / r :=
 theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r^n : ℝ) : K) = (r^n) :=
   (@IsROrC.coeHom K _).map_zpow r n
 
--- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem I_mul_I_of_nonzero : «expr ≠ »((I : K), 0) → «expr = »(«expr * »((I : K), I), «expr- »(1)) :=
-by { have [] [] [":=", expr I_mul_I_ax],
-  tauto [] }
+theorem I_mul_I_of_nonzero : (I : K) ≠ 0 → ((I : K)*I) = -1 :=
+  by 
+    have  := I_mul_I_ax 
+    tauto
 
 @[simp]
 theorem div_I (z : K) : z / I = -z*I :=
@@ -537,7 +536,7 @@ theorem div_I (z : K) : z / I = -z*I :=
 @[simp]
 theorem inv_I : (I : K)⁻¹ = -I :=
   by 
-    byCases' h : (I : K) = 0 <;> fieldSimp [h]
+    fieldSimp
 
 @[simp]
 theorem norm_sq_inv (z : K) : norm_sq (z⁻¹) = norm_sq z⁻¹ :=
@@ -550,6 +549,9 @@ theorem norm_sq_div (z w : K) : norm_sq (z / w) = norm_sq z / norm_sq w :=
 theorem norm_conj {z : K} : ∥conj z∥ = ∥z∥ :=
   by 
     simp only [←sqrt_norm_sq_eq_norm, norm_sq_conj]
+
+instance (priority := 100) : CstarRing K :=
+  { norm_star_mul_self := fun x => (NormedField.norm_mul _ _).trans$ congr_argₓ (·*∥x∥) norm_conj }
 
 /-! ### Cast lemmas -/
 
@@ -610,14 +612,12 @@ theorem char_zero_R_or_C : CharZero K :=
       by 
         rwa [←of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
 
--- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem re_eq_add_conj (z : K) : «expr = »(«expr↑ »(re z), «expr / »(«expr + »(z, exprconj() z), 2)) :=
-begin
-  haveI [] [":", expr char_zero K] [":=", expr char_zero_R_or_C],
-  rw ["[", expr add_conj, ",", expr mul_div_cancel_left (re z : K) two_ne_zero', "]"] []
-end
+theorem re_eq_add_conj (z : K) : ↑re z = (z+conj z) / 2 :=
+  by 
+    have  : CharZero K := char_zero_R_or_C 
+    rw [add_conj, mul_div_cancel_left (re z : K) two_ne_zero']
 
-theorem im_eq_conj_sub (z : K) : «expr↑ » (im z) = (I*conj z - z) / 2 :=
+theorem im_eq_conj_sub (z : K) : ↑im z = (I*conj z - z) / 2 :=
   by 
     rw [←neg_inj, ←of_real_neg, ←I_mul_re, re_eq_add_conj]
     simp [mul_addₓ, sub_eq_add_neg, neg_div']
@@ -731,14 +731,13 @@ theorem re_le_abs (z : K) : re z ≤ abs z :=
 theorem im_le_abs (z : K) : im z ≤ abs z :=
   (abs_le.1 (abs_im_le_abs _)).2
 
--- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem im_eq_zero_of_le {a : K} (h : «expr ≤ »(abs a, re a)) : «expr = »(im a, 0) :=
-begin
-  rw ["<-", expr zero_eq_mul_self] [],
-  have [] [":", expr «expr = »(«expr * »(re a, re a), «expr + »(«expr * »(re a, re a), «expr * »(im a, im a)))] [],
-  { convert [] [expr is_R_or_C.mul_self_abs a] []; linarith [] [] ["[", expr re_le_abs a, "]"] },
-  linarith [] [] []
-end
+theorem im_eq_zero_of_le {a : K} (h : abs a ≤ re a) : im a = 0 :=
+  by 
+    rw [←zero_eq_mul_self]
+    have  : (re a*re a) = (re a*re a)+im a*im a
+    ·
+      convert IsROrC.mul_self_abs a <;> linarith [re_le_abs a]
+    linarith
 
 theorem re_eq_self_of_le {a : K} (h : abs a ≤ re a) : (re a : K) = a :=
   by 
@@ -867,11 +866,11 @@ theorem is_cau_seq_abs {f : ℕ → K} (hf : IsCauSeq abs f) : IsCauSeq abs' (ab
     ⟨i, fun j hj => lt_of_le_of_ltₓ (abs_abs_sub_le_abs_sub _ _) (hi j hj)⟩
 
 @[simp, normCast]
-theorem of_real_prod {α : Type _} (s : Finset α) (f : α → ℝ) : ((∏i in s, f i : ℝ) : K) = ∏i in s, (f i : K) :=
+theorem of_real_prod {α : Type _} (s : Finset α) (f : α → ℝ) : ((∏ i in s, f i : ℝ) : K) = ∏ i in s, (f i : K) :=
   RingHom.map_prod _ _ _
 
 @[simp, normCast]
-theorem of_real_sum {α : Type _} (s : Finset α) (f : α → ℝ) : ((∑i in s, f i : ℝ) : K) = ∑i in s, (f i : K) :=
+theorem of_real_sum {α : Type _} (s : Finset α) (f : α → ℝ) : ((∑ i in s, f i : ℝ) : K) = ∑ i in s, (f i : K) :=
   RingHom.map_sum _ _ _
 
 @[simp, normCast]
@@ -912,17 +911,22 @@ instance is_R_or_C_to_real : FiniteDimensional ℝ K :=
           use im a 
         simp [re_add_im a, Algebra.smul_def, algebra_map_eq_of_real]⟩⟩
 
--- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Over an `is_R_or_C` field, we can register the properness of finite-dimensional normed spaces as
-an instance. -/
-@[priority 900, nolint #[ident dangerous_instance]]
-instance proper_is_R_or_C {E : Type*} [normed_group E] [normed_space K E] [finite_dimensional K E] : proper_space E :=
-begin
-  letI [] [":", expr normed_space exprℝ() E] [":=", expr restrict_scalars.normed_space exprℝ() K E],
-  letI [] [":", expr is_scalar_tower exprℝ() K E] [":=", expr restrict_scalars.is_scalar_tower _ _ _],
-  letI [] [":", expr finite_dimensional exprℝ() E] [":=", expr finite_dimensional.trans exprℝ() K E],
-  apply_instance
-end
+variable (K) (E : Type _) [NormedGroup E] [NormedSpace K E]
+
+/-- A finite dimensional vector space Over an `is_R_or_C` is a proper metric space.
+
+This is not an instance because it would cause a search for `finite_dimensional ?x E` before
+`is_R_or_C ?x`. -/
+theorem proper_is_R_or_C [FiniteDimensional K E] : ProperSpace E :=
+  by 
+    let this' : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ K E 
+    let this' : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E 
+    infer_instance
+
+variable {E}
+
+instance is_R_or_C.proper_space_span_singleton (x : E) : ProperSpace (K∙x) :=
+  proper_is_R_or_C K (K∙x)
 
 end FiniteDimensional
 
@@ -937,7 +941,7 @@ noncomputable instance Real.isROrC : IsROrC ℝ :=
     re_add_im_ax :=
       fun z =>
         by 
-          unfoldCoes <;> simp [add_zeroₓ, id.def, mul_zero],
+          simp [add_zeroₓ, id.def, mul_zero],
     of_real_re_ax :=
       fun r =>
         by 
@@ -1058,7 +1062,10 @@ theorem re_clm_norm : ∥(re_clm : K →L[ℝ] ℝ)∥ = 1 :=
   by 
     apply le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _)
     convert ContinuousLinearMap.ratio_le_op_norm _ (1 : K)
-    simp 
+    ·
+      simp 
+    ·
+      infer_instance
 
 @[simp, normCast]
 theorem re_clm_coe : ((re_clm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = re_lm :=
@@ -1180,28 +1187,4 @@ theorem continuous_of_real : Continuous (coeₓ : ℝ → K) :=
 end LinearMaps
 
 end IsROrC
-
-section Normalization
-
-variable {K : Type _} [IsROrC K]
-
-variable {E : Type _} [NormedGroup E] [NormedSpace K E]
-
-open IsROrC
-
--- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
-@[simp]
-theorem norm_smul_inv_norm
-{x : E}
-(hx : «expr ≠ »(x, 0)) : «expr = »(«expr∥ ∥»(«expr • »((«expr ⁻¹»(«expr∥ ∥»(x)) : K), x)), 1) :=
-begin
-  have [ident h] [":", expr «expr = »(«expr∥ ∥»((«expr∥ ∥»(x) : K)), «expr∥ ∥»(x))] [],
-  { rw [expr norm_eq_abs] [],
-    exact [expr abs_of_nonneg (norm_nonneg _)] },
-  have [] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr by simp [] [] [] ["[", expr hx, "]"] [] []],
-  field_simp [] ["[", expr norm_smul, ",", expr h, "]"] [] []
-end
-
-end Normalization
 

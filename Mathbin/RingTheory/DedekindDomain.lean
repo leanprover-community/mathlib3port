@@ -49,6 +49,7 @@ variable (R A K : Type _) [CommRingₓ R] [CommRingₓ A] [Field K]
 
 open_locale nonZeroDivisors
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal R))
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
 def Ringₓ.DimensionLeOne : Prop :=
   ∀ p _ : p ≠ (⊥ : Ideal R), p.is_prime → p.is_maximal
@@ -57,10 +58,11 @@ open Ideal Ringₓ
 
 namespace Ringₓ
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dimension_le_one.principal_ideal_ring [is_domain A] [is_principal_ideal_ring A] : dimension_le_one A :=
-λ p nonzero prime, by { haveI [] [] [":=", expr prime],
-  exact [expr is_prime.to_maximal_ideal nonzero] }
+theorem dimension_le_one.principal_ideal_ring [IsDomain A] [IsPrincipalIdealRing A] : dimension_le_one A :=
+  fun p nonzero prime =>
+    by 
+      have  := Prime 
+      exact IsPrime.to_maximal_ideal nonzero
 
 theorem dimension_le_one.is_integral_closure (B : Type _) [CommRingₓ B] [IsDomain B] [Nontrivial R] [Algebra R A]
   [Algebra R B] [Algebra B A] [IsScalarTower R B A] [IsIntegralClosure B R A] (h : dimension_le_one R) :
@@ -112,6 +114,7 @@ instance (priority := 100) IsPrincipalIdealRing.is_dedekind_domain [IsPrincipalI
   ⟨PrincipalIdealRing.is_noetherian_ring, Ringₓ.DimensionLeOne.principal_ideal_ring A,
     UniqueFactorizationMonoid.is_integrally_closed⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal A))
 /--
 A Dedekind domain is an integral domain that is Noetherian, and the
 localization at every nonzero prime is a discrete valuation ring.
@@ -124,6 +127,8 @@ structure IsDedekindDomainDvr : Prop where
   is_dvr_at_nonzero_prime : ∀ P _ : P ≠ (⊥ : Ideal A), P.is_prime → DiscreteValuationRing (Localization.AtPrime P)
 
 section Inverse
+
+namespace FractionalIdeal
 
 variable {R₁ : Type _} [CommRingₓ R₁] [IsDomain R₁] [Algebra R₁ K] [IsFractionRing R₁ K]
 
@@ -143,7 +148,7 @@ theorem inv_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
   FractionalIdeal.div_nonzero _
 
 theorem coe_inv_of_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
-  («expr↑ » (J⁻¹) : Submodule R₁ K) = IsLocalization.coeSubmodule K ⊤ / J :=
+  (↑J⁻¹ : Submodule R₁ K) = IsLocalization.coeSubmodule K ⊤ / J :=
   by 
     rwa [inv_nonzero _]
     rfl 
@@ -151,6 +156,7 @@ theorem coe_inv_of_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
 
 variable {K}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » I)
 theorem mem_inv_iff (hI : I ≠ 0) {x : K} : x ∈ I⁻¹ ↔ ∀ y _ : y ∈ I, (x*y) ∈ (1 : FractionalIdeal R₁⁰ K) :=
   FractionalIdeal.mem_div_iff_of_nonzero hI
 
@@ -168,27 +174,25 @@ variable (K)
 theorem coe_ideal_le_self_mul_inv (I : Ideal R₁) : (I : FractionalIdeal R₁⁰ K) ≤ I*I⁻¹ :=
   le_self_mul_inv FractionalIdeal.coe_ideal_le_one
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `I⁻¹` is the inverse of `I` if `I` has an inverse. -/
-theorem right_inverse_eq
-(I J : fractional_ideal «expr ⁰»(R₁) K)
-(h : «expr = »(«expr * »(I, J), 1)) : «expr = »(J, «expr ⁻¹»(I)) :=
-begin
-  have [ident hI] [":", expr «expr ≠ »(I, 0)] [":=", expr fractional_ideal.ne_zero_of_mul_eq_one I J h],
-  suffices [ident h'] [":", expr «expr = »(«expr * »(I, «expr / »(1, I)), 1)],
-  { exact [expr «expr $ »(congr_arg units.inv, @units.ext _ _ (units.mk_of_mul_eq_one _ _ h) (units.mk_of_mul_eq_one _ _ h') rfl)] },
-  apply [expr le_antisymm],
-  { apply [expr fractional_ideal.mul_le.mpr _],
-    intros [ident x, ident hx, ident y, ident hy],
-    rw [expr mul_comm] [],
-    exact [expr (fractional_ideal.mem_div_iff_of_nonzero hI).mp hy x hx] },
-  rw ["<-", expr h] [],
-  apply [expr fractional_ideal.mul_left_mono I],
-  apply [expr (fractional_ideal.le_div_iff_of_nonzero hI).mpr _],
-  intros [ident y, ident hy, ident x, ident hx],
-  rw [expr mul_comm] [],
-  exact [expr fractional_ideal.mul_mem_mul hx hy]
-end
+theorem right_inverse_eq (I J : FractionalIdeal R₁⁰ K) (h : (I*J) = 1) : J = I⁻¹ :=
+  by 
+    have hI : I ≠ 0 := FractionalIdeal.ne_zero_of_mul_eq_one I J h 
+    suffices h' : (I*1 / I) = 1
+    ·
+      exact congr_argₓ Units.inv$ @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl 
+    apply le_antisymmₓ
+    ·
+      apply fractional_ideal.mul_le.mpr _ 
+      intro x hx y hy 
+      rw [mul_commₓ]
+      exact (FractionalIdeal.mem_div_iff_of_nonzero hI).mp hy x hx 
+    rw [←h]
+    apply FractionalIdeal.mul_left_mono I 
+    apply (FractionalIdeal.le_div_iff_of_nonzero hI).mpr _ 
+    intro y hy x hx 
+    rw [mul_commₓ]
+    exact FractionalIdeal.mul_mem_mul hx hy
 
 theorem mul_inv_cancel_iff {I : FractionalIdeal R₁⁰ K} : (I*I⁻¹) = 1 ↔ ∃ J, (I*J) = 1 :=
   ⟨fun h => ⟨I⁻¹, h⟩,
@@ -227,48 +231,46 @@ theorem invertible_of_principal (I : FractionalIdeal R₁⁰ K) [Submodule.IsPri
   FractionalIdeal.mul_div_self_cancel_iff.mpr
     ⟨FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K)⁻¹), mul_generator_self_inv _ I h⟩
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem invertible_iff_generator_nonzero
-(I : fractional_ideal «expr ⁰»(R₁) K)
-[submodule.is_principal (I : submodule R₁ K)] : «expr ↔ »(«expr = »(«expr * »(I, «expr ⁻¹»(I)), 1), «expr ≠ »(generator (I : submodule R₁ K), 0)) :=
-begin
-  split,
-  { intros [ident hI, ident hg],
-    apply [expr fractional_ideal.ne_zero_of_mul_eq_one _ _ hI],
-    rw ["[", expr fractional_ideal.eq_span_singleton_of_principal I, ",", expr hg, ",", expr fractional_ideal.span_singleton_zero, "]"] [] },
-  { intro [ident hg],
-    apply [expr invertible_of_principal],
-    rw ["[", expr fractional_ideal.eq_span_singleton_of_principal I, "]"] [],
-    intro [ident hI],
-    have [] [] [":=", expr fractional_ideal.mem_span_singleton_self _ (generator (I : submodule R₁ K))],
-    rw ["[", expr hI, ",", expr fractional_ideal.mem_zero_iff, "]"] ["at", ident this],
-    contradiction }
-end
+theorem invertible_iff_generator_nonzero (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] :
+  (I*I⁻¹) = 1 ↔ generator (I : Submodule R₁ K) ≠ 0 :=
+  by 
+    constructor
+    ·
+      intro hI hg 
+      apply FractionalIdeal.ne_zero_of_mul_eq_one _ _ hI 
+      rw [FractionalIdeal.eq_span_singleton_of_principal I, hg, FractionalIdeal.span_singleton_zero]
+    ·
+      intro hg 
+      apply invertible_of_principal 
+      rw [FractionalIdeal.eq_span_singleton_of_principal I]
+      intro hI 
+      have  := FractionalIdeal.mem_span_singleton_self _ (generator (I : Submodule R₁ K))
+      rw [hI, FractionalIdeal.mem_zero_iff] at this 
+      contradiction
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_principal_inv
-(I : fractional_ideal «expr ⁰»(R₁) K)
-[submodule.is_principal (I : submodule R₁ K)]
-(h : «expr ≠ »(I, 0)) : submodule.is_principal «expr ⁻¹»(I).1 :=
-begin
-  rw ["[", expr fractional_ideal.val_eq_coe, ",", expr fractional_ideal.is_principal_iff, "]"] [],
-  use [expr «expr ⁻¹»(generator (I : submodule R₁ K))],
-  have [ident hI] [":", expr «expr = »(«expr * »(I, fractional_ideal.span_singleton _ «expr ⁻¹»(generator (I : submodule R₁ K))), 1)] [],
-  apply [expr mul_generator_self_inv _ I h],
-  exact [expr (right_inverse_eq _ I (fractional_ideal.span_singleton _ «expr ⁻¹»(generator (I : submodule R₁ K))) hI).symm]
-end
+theorem is_principal_inv (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] (h : I ≠ 0) :
+  Submodule.IsPrincipal I⁻¹.1 :=
+  by 
+    rw [FractionalIdeal.val_eq_coe, FractionalIdeal.is_principal_iff]
+    use generator (I : Submodule R₁ K)⁻¹
+    have hI : (I*FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K)⁻¹)) = 1
+    apply mul_generator_self_inv _ I h 
+    exact (right_inverse_eq _ I (FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K)⁻¹)) hI).symm
 
 @[simp]
-theorem FractionalIdeal.one_inv : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
+theorem one_inv : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
   FractionalIdeal.div_one
 
+end FractionalIdeal
+
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) (fraction_ring A)))
 /--
 A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
 This is equivalent to `is_dedekind_domain`.
 In particular we provide a `fractional_ideal.comm_group_with_zero` instance,
 assuming `is_dedekind_domain A`, which implies `is_dedekind_domain_inv`. For **integral** ideals,
-`is_dedekind_domain`(`_inv`) implies only `ideal.comm_cancel_monoid_with_zero`.
+`is_dedekind_domain`(`_inv`) implies only `ideal.cancel_comm_monoid_with_zero`.
 -/
 def IsDedekindDomainInv : Prop :=
   ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ (FractionRing A)), (I*I⁻¹) = 1
@@ -277,11 +279,12 @@ open FractionalIdeal
 
 variable {R A K}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) K))
 theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
   IsDedekindDomainInv A ↔ ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ K), (I*I⁻¹) = 1 :=
   by 
     set h := FractionRing.algEquiv A K 
-    split  <;> rintro hi I hI
+    constructor <;> rintro hi I hI
     ·
       refine' FractionalIdeal.map_injective h.symm.to_alg_hom h.symm.injective _ 
       rw [AlgEquiv.to_alg_hom_eq_coe, inv_eq, FractionalIdeal.map_mul, FractionalIdeal.map_one_div,
@@ -293,20 +296,15 @@ theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
         FractionalIdeal.map_one, ←inv_eq, hi]
       exact FractionalIdeal.map_ne_zero _ hI
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fractional_ideal.adjoin_integral_eq_one_of_is_unit
-[algebra A K]
-[is_fraction_ring A K]
-(x : K)
-(hx : is_integral A x)
-(hI : is_unit (adjoin_integral «expr ⁰»(A) x hx)) : «expr = »(adjoin_integral «expr ⁰»(A) x hx, 1) :=
-begin
-  set [] [ident I] [] [":="] [expr adjoin_integral «expr ⁰»(A) x hx] [],
-  have [ident mul_self] [":", expr «expr = »(«expr * »(I, I), I)] [],
-  { apply [expr fractional_ideal.coe_to_submodule_injective],
-    simp [] [] [] [] [] [] },
-  convert [] [expr congr_arg ((«expr * » «expr ⁻¹»(I))) mul_self] []; simp [] [] ["only"] ["[", expr (mul_inv_cancel_iff_is_unit K).mpr hI, ",", expr mul_assoc, ",", expr mul_one, "]"] [] []
-end
+theorem FractionalIdeal.adjoin_integral_eq_one_of_is_unit [Algebra A K] [IsFractionRing A K] (x : K)
+  (hx : IsIntegral A x) (hI : IsUnit (adjoin_integral A⁰ x hx)) : adjoin_integral A⁰ x hx = 1 :=
+  by 
+    set I := adjoin_integral A⁰ x hx 
+    have mul_self : (I*I) = I
+    ·
+      apply FractionalIdeal.coe_to_submodule_injective 
+      simp 
+    convert congr_argₓ (·*I⁻¹) mul_self <;> simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assocₓ, mul_oneₓ]
 
 namespace IsDedekindDomainInv
 
@@ -323,16 +321,16 @@ theorem inv_mul_eq_one {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : (I⁻¹*I) 
 protected theorem IsUnit {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : IsUnit I :=
   is_unit_of_mul_eq_one _ _ (h.mul_inv_eq_one hI)
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_noetherian_ring : is_noetherian_ring A :=
-begin
-  refine [expr is_noetherian_ring_iff.mpr ⟨λ I : ideal A, _⟩],
-  by_cases [expr hI, ":", expr «expr = »(I, «expr⊥»())],
-  { rw [expr hI] [],
-    apply [expr submodule.fg_bot] },
-  have [ident hI] [":", expr «expr ≠ »((I : fractional_ideal «expr ⁰»(A) (fraction_ring A)), 0)] [":=", expr (coe_to_fractional_ideal_ne_zero (le_refl (non_zero_divisors A))).mpr hI],
-  exact [expr I.fg_of_is_unit (is_fraction_ring.injective A (fraction_ring A)) (h.is_unit hI)]
-end
+theorem IsNoetherianRing : IsNoetherianRing A :=
+  by 
+    refine' is_noetherian_ring_iff.mpr ⟨fun I : Ideal A => _⟩
+    byCases' hI : I = ⊥
+    ·
+      rw [hI]
+      apply Submodule.fg_bot 
+    have hI : (I : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 :=
+      (coe_to_fractional_ideal_ne_zero (le_reflₓ (nonZeroDivisors A))).mpr hI 
+    exact I.fg_of_is_unit (IsFractionRing.injective A (FractionRing A)) (h.is_unit hI)
 
 theorem integrally_closed : IsIntegrallyClosed A :=
   by 
@@ -345,34 +343,37 @@ theorem integrally_closed : IsIntegrallyClosed A :=
     ·
       exact fun h => one_ne_zero (eq_zero_iff.mp h 1 (Subalgebra.one_mem _))
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem dimension_le_one : dimension_le_one A :=
-begin
-  rintros [ident P, ident P_ne, ident hP],
-  refine [expr ideal.is_maximal_def.mpr ⟨hP.ne_top, λ M hM, _⟩],
-  have [ident P'_ne] [":", expr «expr ≠ »((P : fractional_ideal «expr ⁰»(A) (fraction_ring A)), 0)] [":=", expr (coe_to_fractional_ideal_ne_zero (le_refl (non_zero_divisors A))).mpr P_ne],
-  have [ident M'_ne] [":", expr «expr ≠ »((M : fractional_ideal «expr ⁰»(A) (fraction_ring A)), 0)] [":=", expr (coe_to_fractional_ideal_ne_zero (le_refl (non_zero_divisors A))).mpr (lt_of_le_of_lt bot_le hM).ne'],
-  suffices [] [":", expr «expr ≤ »((«expr * »(«expr ⁻¹»(M), P) : fractional_ideal «expr ⁰»(A) (fraction_ring A)), P)],
-  { rw ["[", expr eq_top_iff, ",", "<-", expr coe_ideal_le_coe_ideal (fraction_ring A), ",", expr fractional_ideal.coe_ideal_top, "]"] [],
-    calc
-      «expr = »((1 : fractional_ideal «expr ⁰»(A) (fraction_ring A)), «expr * »(«expr * »(_, _), _)) : _
-      «expr ≤ »(..., «expr * »(_, _)) : mul_right_mono («expr * »(«expr ⁻¹»(P), M) : fractional_ideal «expr ⁰»(A) (fraction_ring A)) this
-      «expr = »(..., M) : _,
-    { rw ["[", expr mul_assoc, ",", "<-", expr mul_assoc «expr↑ »(P), ",", expr h.mul_inv_eq_one P'_ne, ",", expr one_mul, ",", expr h.inv_mul_eq_one M'_ne, "]"] [] },
-    { rw ["[", "<-", expr mul_assoc «expr↑ »(P), ",", expr h.mul_inv_eq_one P'_ne, ",", expr one_mul, "]"] [] },
-    { apply_instance } },
-  intros [ident x, ident hx],
-  have [ident le_one] [":", expr «expr ≤ »((«expr * »(«expr ⁻¹»(M), P) : fractional_ideal «expr ⁰»(A) (fraction_ring A)), 1)] [],
-  { rw ["[", "<-", expr h.inv_mul_eq_one M'_ne, "]"] [],
-    exact [expr fractional_ideal.mul_left_mono _ ((coe_ideal_le_coe_ideal (fraction_ring A)).mpr hM.le)] },
-  obtain ["⟨", ident y, ",", ident hy, ",", ident rfl, "⟩", ":=", expr (mem_coe_ideal _).mp (le_one hx)],
-  obtain ["⟨", ident z, ",", ident hzM, ",", ident hzp, "⟩", ":=", expr set_like.exists_of_lt hM],
-  have [ident zy_mem] [] [":=", expr fractional_ideal.mul_mem_mul (mem_coe_ideal_of_mem «expr ⁰»(A) hzM) hx],
-  rw ["[", "<-", expr ring_hom.map_mul, ",", "<-", expr mul_assoc, ",", expr h.mul_inv_eq_one M'_ne, ",", expr one_mul, "]"] ["at", ident zy_mem],
-  obtain ["⟨", ident zy, ",", ident hzy, ",", ident zy_eq, "⟩", ":=", expr (mem_coe_ideal «expr ⁰»(A)).mp zy_mem],
-  rw [expr is_fraction_ring.injective A (fraction_ring A) zy_eq] ["at", ident hzy],
-  exact [expr mem_coe_ideal_of_mem «expr ⁰»(A) (or.resolve_left (hP.mem_or_mem hzy) hzp)]
-end
+  by 
+    rintro P P_ne hP 
+    refine' ideal.is_maximal_def.mpr ⟨hP.ne_top, fun M hM => _⟩
+    have P'_ne : (P : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 :=
+      (coe_to_fractional_ideal_ne_zero (le_reflₓ (nonZeroDivisors A))).mpr P_ne 
+    have M'_ne : (M : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 :=
+      (coe_to_fractional_ideal_ne_zero (le_reflₓ (nonZeroDivisors A))).mpr (lt_of_le_of_ltₓ bot_le hM).ne' 
+    suffices  : (M⁻¹*P : FractionalIdeal A⁰ (FractionRing A)) ≤ P
+    ·
+      rw [eq_top_iff, ←coe_ideal_le_coe_ideal (FractionRing A), FractionalIdeal.coe_ideal_top]
+      calc (1 : FractionalIdeal A⁰ (FractionRing A)) = (_*_)*_ := _ _ ≤ _*_ :=
+        mul_right_mono (P⁻¹*M : FractionalIdeal A⁰ (FractionRing A)) this _ = M := _
+      ·
+        rw [mul_assocₓ, ←mul_assocₓ (↑P), h.mul_inv_eq_one P'_ne, one_mulₓ, h.inv_mul_eq_one M'_ne]
+      ·
+        rw [←mul_assocₓ (↑P), h.mul_inv_eq_one P'_ne, one_mulₓ]
+      ·
+        infer_instance 
+    intro x hx 
+    have le_one : (M⁻¹*P : FractionalIdeal A⁰ (FractionRing A)) ≤ 1
+    ·
+      rw [←h.inv_mul_eq_one M'_ne]
+      exact FractionalIdeal.mul_left_mono _ ((coe_ideal_le_coe_ideal (FractionRing A)).mpr hM.le)
+    obtain ⟨y, hy, rfl⟩ := (mem_coe_ideal _).mp (le_one hx)
+    obtain ⟨z, hzM, hzp⟩ := SetLike.exists_of_lt hM 
+    have zy_mem := FractionalIdeal.mul_mem_mul (mem_coe_ideal_of_mem A⁰ hzM) hx 
+    rw [←RingHom.map_mul, ←mul_assocₓ, h.mul_inv_eq_one M'_ne, one_mulₓ] at zy_mem 
+    obtain ⟨zy, hzy, zy_eq⟩ := (mem_coe_ideal A⁰).mp zy_mem 
+    rw [IsFractionRing.injective A (FractionRing A) zy_eq] at hzy 
+    exact mem_coe_ideal_of_mem A⁰ (Or.resolve_left (hP.mem_or_mem hzy) hzp)
 
 /-- Showing one side of the equivalence between the definitions
 `is_dedekind_domain_inv` and `is_dedekind_domain` of Dedekind domains. -/
@@ -383,94 +384,94 @@ end IsDedekindDomainInv
 
 variable [Algebra A K] [IsFractionRing A K]
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Specialization of `exists_prime_spectrum_prod_le_and_ne_bot_of_domain` to Dedekind domains:
 Let `I : ideal A` be a nonzero ideal, where `A` is a Dedekind domain that is not a field.
 Then `exists_prime_spectrum_prod_le_and_ne_bot_of_domain` states we can find a product of prime
 ideals that is contained within `I`. This lemma extends that result by making the product minimal:
 let `M` be a maximal ideal that contains `I`, then the product including `M` is contained within `I`
 and the product excluding `M` is not contained within `I`. -/
-theorem exists_multiset_prod_cons_le_and_prod_not_le
-[is_dedekind_domain A]
-(hNF : «expr¬ »(is_field A))
-{I M : ideal A}
-(hI0 : «expr ≠ »(I, «expr⊥»()))
-(hIM : «expr ≤ »(I, M))
-[hM : M.is_maximal] : «expr∃ , »((Z : multiset (prime_spectrum A)), «expr ∧ »(«expr ≤ »(«expr ::ₘ »(M, Z.map prime_spectrum.as_ideal).prod, I), «expr¬ »(«expr ≤ »(multiset.prod (Z.map prime_spectrum.as_ideal), I)))) :=
-begin
-  obtain ["⟨", ident Z₀, ",", ident hZ₀, "⟩", ":=", expr prime_spectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain hNF hI0],
-  obtain ["⟨", ident Z, ",", "⟨", ident hZI, ",", ident hprodZ, "⟩", ",", ident h_eraseZ, "⟩", ":=", expr multiset.well_founded_lt.has_min (λ
-    Z, «expr ∧ »(«expr ≤ »((Z.map prime_spectrum.as_ideal).prod, I), «expr ≠ »((Z.map prime_spectrum.as_ideal).prod, «expr⊥»()))) ⟨Z₀, hZ₀⟩],
-  have [ident hZM] [":", expr «expr ≤ »(multiset.prod (Z.map prime_spectrum.as_ideal), M)] [":=", expr le_trans hZI hIM],
-  have [ident hZ0] [":", expr «expr ≠ »(Z, 0)] [],
-  { rintro [ident rfl],
-    simpa [] [] [] ["[", expr hM.ne_top, "]"] [] ["using", expr hZM] },
-  obtain ["⟨", "_", ",", ident hPZ', ",", ident hPM, "⟩", ":=", expr (hM.is_prime.multiset_prod_le (mt multiset.map_eq_zero.mp hZ0)).mp hZM],
-  obtain ["⟨", ident P, ",", ident hPZ, ",", ident rfl, "⟩", ":=", expr multiset.mem_map.mp hPZ'],
-  letI [] [] [":=", expr classical.dec_eq (ideal A)],
-  have [] [] [":=", expr multiset.map_erase prime_spectrum.as_ideal subtype.coe_injective P Z],
-  obtain ["⟨", ident hP0, ",", ident hZP0, "⟩", ":", expr «expr ∧ »(«expr ≠ »(P.as_ideal, «expr⊥»()), «expr ≠ »(((Z.erase P).map prime_spectrum.as_ideal).prod, «expr⊥»()))],
-  { rwa ["[", expr ne.def, ",", "<-", expr multiset.cons_erase hPZ', ",", expr multiset.prod_cons, ",", expr ideal.mul_eq_bot, ",", expr not_or_distrib, ",", "<-", expr this, "]"] ["at", ident hprodZ] },
-  have [ident hPM'] [] [":=", expr (is_dedekind_domain.dimension_le_one _ hP0 P.is_prime).eq_of_le hM.ne_top hPM],
-  tactic.unfreeze_local_instances,
-  subst [expr hPM'],
-  refine [expr ⟨Z.erase P, _, _⟩],
-  { convert [] [expr hZI] [],
-    rw ["[", expr this, ",", expr multiset.cons_erase hPZ', "]"] [] },
-  { refine [expr λ h, h_eraseZ (Z.erase P) ⟨h, _⟩ (multiset.erase_lt.mpr hPZ)],
-    exact [expr hZP0] }
-end
+theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF : ¬IsField A) {I M : Ideal A}
+  (hI0 : I ≠ ⊥) (hIM : I ≤ M) [hM : M.is_maximal] :
+  ∃ Z : Multiset (PrimeSpectrum A),
+    (M ::ₘ Z.map PrimeSpectrum.asIdeal).Prod ≤ I ∧ ¬Multiset.prod (Z.map PrimeSpectrum.asIdeal) ≤ I :=
+  by 
+    obtain ⟨Z₀, hZ₀⟩ := PrimeSpectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain hNF hI0 
+    obtain ⟨Z, ⟨hZI, hprodZ⟩, h_eraseZ⟩ :=
+      multiset.well_founded_lt.has_min
+        (fun Z => (Z.map PrimeSpectrum.asIdeal).Prod ≤ I ∧ (Z.map PrimeSpectrum.asIdeal).Prod ≠ ⊥) ⟨Z₀, hZ₀⟩
+    have hZM : Multiset.prod (Z.map PrimeSpectrum.asIdeal) ≤ M := le_transₓ hZI hIM 
+    have hZ0 : Z ≠ 0
+    ·
+      rintro rfl 
+      simpa [hM.ne_top] using hZM 
+    obtain ⟨_, hPZ', hPM⟩ := (hM.is_prime.multiset_prod_le (mt multiset.map_eq_zero.mp hZ0)).mp hZM 
+    obtain ⟨P, hPZ, rfl⟩ := multiset.mem_map.mp hPZ' 
+    let this' := Classical.decEq (Ideal A)
+    have  := Multiset.map_erase PrimeSpectrum.asIdeal Subtype.coe_injective P Z 
+    obtain ⟨hP0, hZP0⟩ : P.as_ideal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).Prod ≠ ⊥
+    ·
+      rwa [Ne.def, ←Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or_distrib, ←this] at hprodZ 
+    have hPM' := (IsDedekindDomain.dimension_le_one _ hP0 P.is_prime).eq_of_le hM.ne_top hPM 
+    runTac 
+      tactic.unfreeze_local_instances 
+    subst hPM' 
+    refine' ⟨Z.erase P, _, _⟩
+    ·
+      convert hZI 
+      rw [this, Multiset.cons_erase hPZ']
+    ·
+      refine' fun h => h_eraseZ (Z.erase P) ⟨h, _⟩ (multiset.erase_lt.mpr hPZ)
+      exact hZP0
 
 namespace FractionalIdeal
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_not_mem_one_of_ne_bot
-[is_dedekind_domain A]
-(hNF : «expr¬ »(is_field A))
-{I : ideal A}
-(hI0 : «expr ≠ »(I, «expr⊥»()))
-(hI1 : «expr ≠ »(I, «expr⊤»())) : «expr∃ , »((x : K), «expr ∧ »(«expr ∈ »(x, («expr ⁻¹»(I) : fractional_ideal «expr ⁰»(A) K)), «expr ∉ »(x, (1 : fractional_ideal «expr ⁰»(A) K)))) :=
-begin
-  suffices [] [":", expr ∀
-   {M : ideal A}
-   (hM : M.is_maximal), «expr∃ , »((x : K), «expr ∧ »(«expr ∈ »(x, («expr ⁻¹»(M) : fractional_ideal «expr ⁰»(A) K)), «expr ∉ »(x, (1 : fractional_ideal «expr ⁰»(A) K))))],
-  { obtain ["⟨", ident M, ",", ident hM, ",", ident hIM, "⟩", ":", expr «expr∃ , »((M : ideal A), «expr ∧ »(is_maximal M, «expr ≤ »(I, M))), ":=", expr ideal.exists_le_maximal I hI1],
-    resetI,
-    have [ident hM0] [] [":=", expr (M.bot_lt_of_maximal hNF).ne'],
-    obtain ["⟨", ident x, ",", ident hxM, ",", ident hx1, "⟩", ":=", expr this hM],
-    refine [expr ⟨x, inv_anti_mono _ _ ((coe_ideal_le_coe_ideal _).mpr hIM) hxM, hx1⟩]; apply [expr fractional_ideal.coe_ideal_ne_zero]; assumption },
-  intros [ident M, ident hM],
-  resetI,
-  obtain ["⟨", "⟨", ident a, ",", ident haM, "⟩", ",", ident ha0, "⟩", ":=", expr submodule.nonzero_mem_of_bot_lt (M.bot_lt_of_maximal hNF)],
-  replace [ident ha0] [":", expr «expr ≠ »(a, 0)] [":=", expr subtype.coe_injective.ne ha0],
-  let [ident J] [":", expr ideal A] [":=", expr ideal.span {a}],
-  have [ident hJ0] [":", expr «expr ≠ »(J, «expr⊥»())] [":=", expr mt ideal.span_singleton_eq_bot.mp ha0],
-  have [ident hJM] [":", expr «expr ≤ »(J, M)] [":=", expr ideal.span_le.mpr (set.singleton_subset_iff.mpr haM)],
-  have [ident hM0] [":", expr «expr < »(«expr⊥»(), M)] [":=", expr M.bot_lt_of_maximal hNF],
-  obtain ["⟨", ident Z, ",", ident hle, ",", ident hnle, "⟩", ":=", expr exists_multiset_prod_cons_le_and_prod_not_le hNF hJ0 hJM],
-  obtain ["⟨", ident b, ",", ident hbZ, ",", ident hbJ, "⟩", ":=", expr set_like.not_le_iff_exists.mp hnle],
-  have [ident hnz_fa] [":", expr «expr ≠ »(algebra_map A K a, 0)] [":=", expr mt ((ring_hom.injective_iff _).mp (is_fraction_ring.injective A K) a) ha0],
-  have [ident hb0] [":", expr «expr ≠ »(algebra_map A K b, 0)] [":=", expr mt ((ring_hom.injective_iff _).mp (is_fraction_ring.injective A K) b) (λ
-    h, «expr $ »(hbJ, «expr ▸ »(h.symm, J.zero_mem)))],
-  refine [expr ⟨«expr * »(algebra_map A K b, «expr ⁻¹»(algebra_map A K a)), (mem_inv_iff _).mpr _, _⟩],
-  { exact [expr (fractional_ideal.coe_to_fractional_ideal_ne_zero (le_refl _)).mpr hM0.ne'] },
-  { rintro [ident y₀, ident hy₀],
-    obtain ["⟨", ident y, ",", ident h_Iy, ",", ident rfl, "⟩", ":=", expr (fractional_ideal.mem_coe_ideal _).mp hy₀],
-    rw ["[", expr mul_comm, ",", "<-", expr mul_assoc, ",", "<-", expr ring_hom.map_mul, "]"] [],
-    have [ident h_yb] [":", expr «expr ∈ »(«expr * »(y, b), J)] [],
-    { apply [expr hle],
-      rw [expr multiset.prod_cons] [],
-      exact [expr submodule.smul_mem_smul h_Iy hbZ] },
-    rw [expr ideal.mem_span_singleton'] ["at", ident h_yb],
-    rcases [expr h_yb, "with", "⟨", ident c, ",", ident hc, "⟩"],
-    rw ["[", "<-", expr hc, ",", expr ring_hom.map_mul, ",", expr mul_assoc, ",", expr mul_inv_cancel hnz_fa, ",", expr mul_one, "]"] [],
-    apply [expr fractional_ideal.coe_mem_one] },
-  { refine [expr mt (fractional_ideal.mem_one_iff _).mp _],
-    rintros ["⟨", ident x', ",", ident h₂_abs, "⟩"],
-    rw ["[", "<-", expr div_eq_mul_inv, ",", expr eq_div_iff_mul_eq hnz_fa, ",", "<-", expr ring_hom.map_mul, "]"] ["at", ident h₂_abs],
-    have [] [] [":=", expr ideal.mem_span_singleton'.mpr ⟨x', is_fraction_ring.injective A K h₂_abs⟩],
-    contradiction }
-end
+theorem exists_not_mem_one_of_ne_bot [IsDedekindDomain A] (hNF : ¬IsField A) {I : Ideal A} (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) :
+  ∃ x : K, x ∈ (I⁻¹ : FractionalIdeal A⁰ K) ∧ x ∉ (1 : FractionalIdeal A⁰ K) :=
+  by 
+    suffices  :
+      ∀ {M : Ideal A} hM : M.is_maximal, ∃ x : K, x ∈ (M⁻¹ : FractionalIdeal A⁰ K) ∧ x ∉ (1 : FractionalIdeal A⁰ K)
+    ·
+      obtain ⟨M, hM, hIM⟩ : ∃ M : Ideal A, is_maximal M ∧ I ≤ M := Ideal.exists_le_maximal I hI1 
+      skip 
+      have hM0 := (M.bot_lt_of_maximal hNF).ne' 
+      obtain ⟨x, hxM, hx1⟩ := this hM 
+      refine' ⟨x, inv_anti_mono _ _ ((coe_ideal_le_coe_ideal _).mpr hIM) hxM, hx1⟩ <;>
+        apply FractionalIdeal.coe_ideal_ne_zero <;> assumption 
+    intro M hM 
+    skip 
+    obtain ⟨⟨a, haM⟩, ha0⟩ := Submodule.nonzero_mem_of_bot_lt (M.bot_lt_of_maximal hNF)
+    replace ha0 : a ≠ 0 := subtype.coe_injective.ne ha0 
+    let J : Ideal A := Ideal.span {a}
+    have hJ0 : J ≠ ⊥ := mt ideal.span_singleton_eq_bot.mp ha0 
+    have hJM : J ≤ M := ideal.span_le.mpr (set.singleton_subset_iff.mpr haM)
+    have hM0 : ⊥ < M := M.bot_lt_of_maximal hNF 
+    obtain ⟨Z, hle, hnle⟩ := exists_multiset_prod_cons_le_and_prod_not_le hNF hJ0 hJM 
+    obtain ⟨b, hbZ, hbJ⟩ := set_like.not_le_iff_exists.mp hnle 
+    have hnz_fa : algebraMap A K a ≠ 0 := mt ((RingHom.injective_iff _).mp (IsFractionRing.injective A K) a) ha0 
+    have hb0 : algebraMap A K b ≠ 0 :=
+      mt ((RingHom.injective_iff _).mp (IsFractionRing.injective A K) b) fun h => hbJ$ h.symm ▸ J.zero_mem 
+    refine' ⟨algebraMap A K b*algebraMap A K a⁻¹, (mem_inv_iff _).mpr _, _⟩
+    ·
+      exact (FractionalIdeal.coe_to_fractional_ideal_ne_zero (le_reflₓ _)).mpr hM0.ne'
+    ·
+      rintro y₀ hy₀ 
+      obtain ⟨y, h_Iy, rfl⟩ := (FractionalIdeal.mem_coe_ideal _).mp hy₀ 
+      rw [mul_commₓ, ←mul_assocₓ, ←RingHom.map_mul]
+      have h_yb : (y*b) ∈ J
+      ·
+        apply hle 
+        rw [Multiset.prod_cons]
+        exact Submodule.smul_mem_smul h_Iy hbZ 
+      rw [Ideal.mem_span_singleton'] at h_yb 
+      rcases h_yb with ⟨c, hc⟩
+      rw [←hc, RingHom.map_mul, mul_assocₓ, mul_inv_cancel hnz_fa, mul_oneₓ]
+      apply FractionalIdeal.coe_mem_one
+    ·
+      refine' mt (FractionalIdeal.mem_one_iff _).mp _ 
+      rintro ⟨x', h₂_abs⟩
+      rw [←div_eq_mul_inv, eq_div_iff_mul_eq hnz_fa, ←RingHom.map_mul] at h₂_abs 
+      have  := ideal.mem_span_singleton'.mpr ⟨x', IsFractionRing.injective A K h₂_abs⟩
+      contradiction
 
 theorem one_mem_inv_coe_ideal {I : Ideal A} (hI : I ≠ ⊥) : (1 : K) ∈ (I : FractionalIdeal A⁰ K)⁻¹ :=
   by 
@@ -480,76 +481,83 @@ theorem one_mem_inv_coe_ideal {I : Ideal A} (hI : I ≠ ⊥) : (1 : K) ∈ (I : 
     exact coe_ideal_le_one hy 
     assumption
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_inv_cancel_of_le_one
-[h : is_dedekind_domain A]
-{I : ideal A}
-(hI0 : «expr ≠ »(I, «expr⊥»()))
-(hI : «expr ≤ »((«expr ⁻¹»(«expr * »(I, «expr ⁻¹»(I))) : fractional_ideal «expr ⁰»(A) K), 1)) : «expr = »((«expr * »(I, «expr ⁻¹»(I)) : fractional_ideal «expr ⁰»(A) K), 1) :=
-begin
-  by_cases [expr hI1, ":", expr «expr = »(I, «expr⊤»())],
-  { rw ["[", expr hI1, ",", expr coe_ideal_top, ",", expr one_mul, ",", expr fractional_ideal.one_inv, "]"] [] },
-  by_cases [expr hNF, ":", expr is_field A],
-  { letI [] [] [":=", expr hNF.to_field A],
-    rcases [expr hI1 (I.eq_bot_or_top.resolve_left hI0)] },
-  obtain ["⟨", ident J, ",", ident hJ, "⟩", ":", expr «expr∃ , »((J : ideal A), «expr = »((J : fractional_ideal «expr ⁰»(A) K), «expr * »(I, «expr ⁻¹»(I)))), ":=", expr le_one_iff_exists_coe_ideal.mp mul_one_div_le_one],
-  by_cases [expr hJ0, ":", expr «expr = »(J, «expr⊥»())],
-  { subst [expr hJ0],
-    refine [expr absurd _ hI0],
-    rw ["[", expr eq_bot_iff, ",", "<-", expr coe_ideal_le_coe_ideal K, ",", expr hJ, "]"] [],
-    exact [expr coe_ideal_le_self_mul_inv K I],
-    apply_instance },
-  by_cases [expr hJ1, ":", expr «expr = »(J, «expr⊤»())],
-  { rw ["[", "<-", expr hJ, ",", expr hJ1, ",", expr coe_ideal_top, "]"] [] },
-  obtain ["⟨", ident x, ",", ident hx, ",", ident hx1, "⟩", ":", expr «expr∃ , »((x : K), «expr ∧ »(«expr ∈ »(x, «expr ⁻¹»((J : fractional_ideal «expr ⁰»(A) K))), «expr ∉ »(x, (1 : fractional_ideal «expr ⁰»(A) K)))), ":=", expr exists_not_mem_one_of_ne_bot hNF hJ0 hJ1],
-  contrapose ["!"] [ident hx1, "with", ident h_abs],
-  rw [expr hJ] ["at", ident hx],
-  exact [expr hI hx]
-end
+theorem mul_inv_cancel_of_le_one [h : IsDedekindDomain A] {I : Ideal A} (hI0 : I ≠ ⊥)
+  (hI : ((I*I⁻¹)⁻¹ : FractionalIdeal A⁰ K) ≤ 1) : (I*I⁻¹ : FractionalIdeal A⁰ K) = 1 :=
+  by 
+    byCases' hI1 : I = ⊤
+    ·
+      rw [hI1, coe_ideal_top, one_mulₓ, FractionalIdeal.one_inv]
+    byCases' hNF : IsField A
+    ·
+      let this' := hNF.to_field A 
+      rcases hI1 (I.eq_bot_or_top.resolve_left hI0) with ⟨⟩
+    obtain ⟨J, hJ⟩ : ∃ J : Ideal A, (J : FractionalIdeal A⁰ K) = I*I⁻¹ :=
+      le_one_iff_exists_coe_ideal.mp mul_one_div_le_one 
+    byCases' hJ0 : J = ⊥
+    ·
+      subst hJ0 
+      refine' absurd _ hI0 
+      rw [eq_bot_iff, ←coe_ideal_le_coe_ideal K, hJ]
+      exact coe_ideal_le_self_mul_inv K I 
+      infer_instance 
+    byCases' hJ1 : J = ⊤
+    ·
+      rw [←hJ, hJ1, coe_ideal_top]
+    obtain ⟨x, hx, hx1⟩ : ∃ x : K, x ∈ (J : FractionalIdeal A⁰ K)⁻¹ ∧ x ∉ (1 : FractionalIdeal A⁰ K) :=
+      exists_not_mem_one_of_ne_bot hNF hJ0 hJ1 
+    contrapose! hx1 with h_abs 
+    rw [hJ] at hx 
+    exact hI hx
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » («expr ⁻¹»(I) : fractional_ideal «expr ⁰»(A) K))
 /-- Nonzero integral ideals in a Dedekind domain are invertible.
 
 We will use this to show that nonzero fractional ideals are invertible,
 and finally conclude that fractional ideals in a Dedekind domain form a group with zero.
 -/
-theorem coe_ideal_mul_inv
-[h : is_dedekind_domain A]
-(I : ideal A)
-(hI0 : «expr ≠ »(I, «expr⊥»())) : «expr = »((«expr * »(I, «expr ⁻¹»(I)) : fractional_ideal «expr ⁰»(A) K), 1) :=
-begin
-  apply [expr mul_inv_cancel_of_le_one hI0],
-  by_cases [expr hJ0, ":", expr «expr = »((«expr * »(I, «expr ⁻¹»(I)) : fractional_ideal «expr ⁰»(A) K), 0)],
-  { rw ["[", expr hJ0, ",", expr inv_zero', "]"] [],
-    exact [expr fractional_ideal.zero_le _] },
-  intros [ident x, ident hx],
-  suffices [] [":", expr «expr ∈ »(x, integral_closure A K)],
-  { rwa ["[", expr is_integrally_closed.integral_closure_eq_bot, ",", expr algebra.mem_bot, ",", expr set.mem_range, ",", "<-", expr fractional_ideal.mem_one_iff, "]"] ["at", ident this]; assumption },
-  rw [expr mem_integral_closure_iff_mem_fg] [],
-  have [ident x_mul_mem] [":", expr ∀
-   b «expr ∈ » («expr ⁻¹»(I) : fractional_ideal «expr ⁰»(A) K), «expr ∈ »(«expr * »(x, b), («expr ⁻¹»(I) : fractional_ideal «expr ⁰»(A) K))] [],
-  { intros [ident b, ident hb],
-    rw [expr mem_inv_iff] ["at", "⊢", ident hx],
-    swap,
-    { exact [expr fractional_ideal.coe_ideal_ne_zero hI0] },
-    swap,
-    { exact [expr hJ0] },
-    simp [] [] ["only"] ["[", expr mul_assoc, ",", expr mul_comm b, "]"] [] ["at", "⊢", ident hx],
-    intros [ident y, ident hy],
-    exact [expr hx _ (fractional_ideal.mul_mem_mul hy hb)] },
-  refine [expr ⟨alg_hom.range (polynomial.aeval x : «expr →ₐ[ ] »(polynomial A, A, K)), is_noetherian_submodule.mp (fractional_ideal.is_noetherian «expr ⁻¹»(I)) _ (λ
-     y hy, _), ⟨polynomial.X, polynomial.aeval_X x⟩⟩],
-  obtain ["⟨", ident p, ",", ident rfl, "⟩", ":=", expr (alg_hom.mem_range _).mp hy],
-  rw [expr polynomial.aeval_eq_sum_range] [],
-  refine [expr submodule.sum_mem _ (λ i hi, submodule.smul_mem _ _ _)],
-  clear [ident hi],
-  induction [expr i] [] ["with", ident i, ident ih] [],
-  { rw [expr pow_zero] [],
-    exact [expr one_mem_inv_coe_ideal hI0] },
-  { show [expr «expr ∈ »(«expr ^ »(x, i.succ), («expr ⁻¹»(I) : fractional_ideal «expr ⁰»(A) K))],
-    rw [expr pow_succ] [],
-    exact [expr x_mul_mem _ ih] }
-end
+theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ ⊥) : (I*I⁻¹ : FractionalIdeal A⁰ K) = 1 :=
+  by 
+    apply mul_inv_cancel_of_le_one hI0 
+    byCases' hJ0 : (I*I⁻¹ : FractionalIdeal A⁰ K) = 0
+    ·
+      rw [hJ0, inv_zero']
+      exact FractionalIdeal.zero_le _ 
+    intro x hx 
+    suffices  : x ∈ integralClosure A K
+    ·
+      rwa [IsIntegrallyClosed.integral_closure_eq_bot, Algebra.mem_bot, Set.mem_range, ←FractionalIdeal.mem_one_iff] at
+          this <;>
+        assumption 
+    rw [mem_integral_closure_iff_mem_fg]
+    have x_mul_mem : ∀ b _ : b ∈ (I⁻¹ : FractionalIdeal A⁰ K), (x*b) ∈ (I⁻¹ : FractionalIdeal A⁰ K)
+    ·
+      intro b hb 
+      rw [mem_inv_iff] at hx⊢
+      swap
+      ·
+        exact FractionalIdeal.coe_ideal_ne_zero hI0 
+      swap
+      ·
+        exact hJ0 
+      simp only [mul_assocₓ, mul_commₓ b] at hx⊢
+      intro y hy 
+      exact hx _ (FractionalIdeal.mul_mem_mul hy hb)
+    refine'
+      ⟨AlgHom.range (Polynomial.aeval x : Polynomial A →ₐ[A] K),
+        is_noetherian_submodule.mp (FractionalIdeal.is_noetherian (I⁻¹)) _ fun y hy => _,
+        ⟨Polynomial.x, Polynomial.aeval_X x⟩⟩
+    obtain ⟨p, rfl⟩ := (AlgHom.mem_range _).mp hy 
+    rw [Polynomial.aeval_eq_sum_range]
+    refine' Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _ _ 
+    clear hi 
+    induction' i with i ih
+    ·
+      rw [pow_zeroₓ]
+      exact one_mem_inv_coe_ideal hI0
+    ·
+      show (x^i.succ) ∈ (I⁻¹ : FractionalIdeal A⁰ K)
+      rw [pow_succₓ]
+      exact x_mul_mem _ ih
 
 /-- Nonzero fractional ideals in a Dedekind domain are units.
 
@@ -576,7 +584,7 @@ theorem mul_right_le_iff [IsDedekindDomain A] {J : FractionalIdeal A⁰ K} (hJ :
   ∀ {I I'}, ((I*J) ≤ I'*J) ↔ I ≤ I' :=
   by 
     intro I I' 
-    split 
+    constructor
     ·
       intro h 
       convert mul_right_mono (J⁻¹) h <;> rw [mul_assocₓ, FractionalIdeal.mul_inv_cancel hJ, mul_oneₓ]
@@ -639,25 +647,32 @@ noncomputable instance FractionalIdeal.commGroupWithZero : CommGroupWithZero (Fr
             simpa using @zero_ne_one (Ideal A) _ _)⟩,
     mul_inv_cancel := fun I => FractionalIdeal.mul_inv_cancel }
 
-noncomputable instance Ideal.commCancelMonoidWithZero : CommCancelMonoidWithZero (Ideal A) :=
-  Function.Injective.commCancelMonoidWithZero (coe_ideal_hom A⁰ (FractionRing A)) coe_ideal_injective
+noncomputable instance Ideal.cancelCommMonoidWithZero : CancelCommMonoidWithZero (Ideal A) :=
+  Function.Injective.cancelCommMonoidWithZero (coe_ideal_hom A⁰ (FractionRing A)) coe_ideal_injective
     (RingHom.map_zero _) (RingHom.map_one _) (RingHom.map_mul _)
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For ideals in a Dedekind domain, to divide is to contain. -/
-theorem ideal.dvd_iff_le {I J : ideal A} : «expr ↔ »(«expr ∣ »(I, J), «expr ≤ »(J, I)) :=
-⟨ideal.le_of_dvd, λ h, begin
-   by_cases [expr hI, ":", expr «expr = »(I, «expr⊥»())],
-   { have [ident hJ] [":", expr «expr = »(J, «expr⊥»())] [],
-     { rwa ["[", expr hI, ",", "<-", expr eq_bot_iff, "]"] ["at", ident h] },
-     rw ["[", expr hI, ",", expr hJ, "]"] [] },
-   have [ident hI'] [":", expr «expr ≠ »((I : fractional_ideal «expr ⁰»(A) (fraction_ring A)), 0)] [":=", expr (fractional_ideal.coe_to_fractional_ideal_ne_zero (le_refl (non_zero_divisors A))).mpr hI],
-   have [] [":", expr «expr ≤ »(«expr * »(«expr ⁻¹»((I : fractional_ideal «expr ⁰»(A) (fraction_ring A))), J), 1)] [":=", expr le_trans (fractional_ideal.mul_left_mono «expr ⁻¹»(«expr↑ »(I)) ((coe_ideal_le_coe_ideal _).mpr h)) (le_of_eq (inv_mul_cancel hI'))],
-   obtain ["⟨", ident H, ",", ident hH, "⟩", ":=", expr fractional_ideal.le_one_iff_exists_coe_ideal.mp this],
-   use [expr H],
-   refine [expr coe_to_fractional_ideal_injective (le_refl (non_zero_divisors A)) (show «expr = »((J : fractional_ideal «expr ⁰»(A) (fraction_ring A)), _), from _)],
-   rw ["[", expr fractional_ideal.coe_ideal_mul, ",", expr hH, ",", "<-", expr mul_assoc, ",", expr mul_inv_cancel hI', ",", expr one_mul, "]"] []
- end⟩
+theorem Ideal.dvd_iff_le {I J : Ideal A} : I ∣ J ↔ J ≤ I :=
+  ⟨Ideal.le_of_dvd,
+    fun h =>
+      by 
+        byCases' hI : I = ⊥
+        ·
+          have hJ : J = ⊥
+          ·
+            rwa [hI, ←eq_bot_iff] at h 
+          rw [hI, hJ]
+        have hI' : (I : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 :=
+          (FractionalIdeal.coe_to_fractional_ideal_ne_zero (le_reflₓ (nonZeroDivisors A))).mpr hI 
+        have  : ((I : FractionalIdeal A⁰ (FractionRing A))⁻¹*J) ≤ 1 :=
+          le_transₓ (FractionalIdeal.mul_left_mono ((↑I)⁻¹) ((coe_ideal_le_coe_ideal _).mpr h))
+            (le_of_eqₓ (inv_mul_cancel hI'))
+        obtain ⟨H, hH⟩ := fractional_ideal.le_one_iff_exists_coe_ideal.mp this 
+        use H 
+        refine'
+          coe_to_fractional_ideal_injective (le_reflₓ (nonZeroDivisors A))
+            (show (J : FractionalIdeal A⁰ (FractionRing A)) = _ from _)
+        rw [FractionalIdeal.coe_ideal_mul, hH, ←mul_assocₓ, mul_inv_cancel hI', one_mulₓ]⟩
 
 theorem Ideal.dvd_not_unit_iff_lt {I J : Ideal A} : DvdNotUnit I J ↔ J < I :=
   ⟨fun ⟨hI, H, hunit, hmul⟩ =>
@@ -682,22 +697,27 @@ instance : WfDvdMonoid (Ideal A) :=
         ext 
         rw [Ideal.dvd_not_unit_iff_lt] }
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance ideal.unique_factorization_monoid : unique_factorization_monoid (ideal A) :=
-{ irreducible_iff_prime := λ
-  P, ⟨λ
-   hirr, ⟨hirr.ne_zero, hirr.not_unit, λ I J, begin
-      have [] [":", expr P.is_maximal] [],
-      { refine [expr ⟨⟨mt ideal.is_unit_iff.mpr hirr.not_unit, _⟩⟩],
-        intros [ident J, ident hJ],
-        obtain ["⟨", ident J_ne, ",", ident H, ",", ident hunit, ",", ident P_eq, "⟩", ":=", expr ideal.dvd_not_unit_iff_lt.mpr hJ],
-        exact [expr ideal.is_unit_iff.mp ((hirr.is_unit_or_is_unit P_eq).resolve_right hunit)] },
-      rw ["[", expr ideal.dvd_iff_le, ",", expr ideal.dvd_iff_le, ",", expr ideal.dvd_iff_le, ",", expr set_like.le_def, ",", expr set_like.le_def, ",", expr set_like.le_def, "]"] [],
-      contrapose ["!"] [],
-      rintros ["⟨", "⟨", ident x, ",", ident x_mem, ",", ident x_not_mem, "⟩", ",", "⟨", ident y, ",", ident y_mem, ",", ident y_not_mem, "⟩", "⟩"],
-      exact [expr ⟨«expr * »(x, y), ideal.mul_mem_mul x_mem y_mem, mt this.is_prime.mem_or_mem (not_or x_not_mem y_not_mem)⟩]
-    end⟩, prime.irreducible⟩,
-  ..ideal.wf_dvd_monoid }
+instance Ideal.unique_factorization_monoid : UniqueFactorizationMonoid (Ideal A) :=
+  { Ideal.wf_dvd_monoid with
+    irreducible_iff_prime :=
+      fun P =>
+        ⟨fun hirr =>
+            ⟨hirr.ne_zero, hirr.not_unit,
+              fun I J =>
+                by 
+                  have  : P.is_maximal
+                  ·
+                    refine' ⟨⟨mt ideal.is_unit_iff.mpr hirr.not_unit, _⟩⟩
+                    intro J hJ 
+                    obtain ⟨J_ne, H, hunit, P_eq⟩ := ideal.dvd_not_unit_iff_lt.mpr hJ 
+                    exact ideal.is_unit_iff.mp ((hirr.is_unit_or_is_unit P_eq).resolve_right hunit)
+                  rw [Ideal.dvd_iff_le, Ideal.dvd_iff_le, Ideal.dvd_iff_le, SetLike.le_def, SetLike.le_def,
+                    SetLike.le_def]
+                  contrapose! 
+                  rintro ⟨⟨x, x_mem, x_not_mem⟩, ⟨y, y_mem, y_not_mem⟩⟩
+                  exact
+                    ⟨x*y, Ideal.mul_mem_mul x_mem y_mem, mt this.is_prime.mem_or_mem (not_orₓ x_not_mem y_not_mem)⟩⟩,
+          Prime.irreducible⟩ }
 
 noncomputable instance Ideal.normalizationMonoid : NormalizationMonoid (Ideal A) :=
   normalizationMonoidOfUniqueUnits
@@ -751,39 +771,33 @@ variable [Algebra K L] [FiniteDimensional K L] [Algebra A L] [IsScalarTower A K 
 
 variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A C L]
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_integral_closure.range_le_span_dual_basis
-[is_separable K L]
-{ι : Type*}
-[fintype ι]
-[decidable_eq ι]
-(b : basis ι K L)
-(hb_int : ∀ i, is_integral A (b i))
-[is_integrally_closed A] : «expr ≤ »(((algebra.linear_map C L).restrict_scalars A).range, submodule.span A «expr $ »(set.range, (trace_form K L).dual_basis (trace_form_nondegenerate K L) b)) :=
-begin
-  let [ident db] [] [":=", expr (trace_form K L).dual_basis (trace_form_nondegenerate K L) b],
-  rintros ["_", "⟨", ident x, ",", ident rfl, "⟩"],
-  simp [] [] ["only"] ["[", expr linear_map.coe_restrict_scalars_eq_coe, ",", expr algebra.linear_map_apply, "]"] [] [],
-  have [ident hx] [":", expr is_integral A (algebra_map C L x)] [":=", expr (is_integral_closure.is_integral A L x).algebra_map],
-  suffices [] [":", expr «expr∃ , »((c : ι → A), «expr = »(algebra_map C L x, «expr∑ , »((i), «expr • »(c i, db i))))],
-  { obtain ["⟨", ident c, ",", ident x_eq, "⟩", ":=", expr this],
-    rw [expr x_eq] [],
-    refine [expr submodule.sum_mem _ (λ i _, submodule.smul_mem _ _ (submodule.subset_span _))],
-    rw [expr set.mem_range] [],
-    exact [expr ⟨i, rfl⟩] },
-  suffices [] [":", expr «expr∃ , »((c : ι → K), «expr ∧ »(∀
-     i, is_integral A (c i), «expr = »(algebra_map C L x, «expr∑ , »((i), «expr • »(c i, db i)))))],
-  { obtain ["⟨", ident c, ",", ident hc, ",", ident hx, "⟩", ":=", expr this],
-    have [ident hc'] [":", expr ∀
-     i, is_localization.is_integer A (c i)] [":=", expr λ i, is_integrally_closed.is_integral_iff.mp (hc i)],
-    use [expr λ i, classical.some (hc' i)],
-    refine [expr hx.trans (finset.sum_congr rfl (λ i _, _))],
-    conv_lhs [] [] { rw ["[", "<-", expr classical.some_spec (hc' i), "]"] },
-    rw ["[", "<-", expr is_scalar_tower.algebra_map_smul K (classical.some (hc' i)) (db i), "]"] [] },
-  refine [expr ⟨λ i, db.repr (algebra_map C L x) i, λ i, _, (db.sum_repr _).symm⟩],
-  rw [expr bilin_form.dual_basis_repr_apply] [],
-  exact [expr is_integral_trace (is_integral_mul hx (hb_int i))]
-end
+theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
+  (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
+  ((Algebra.linearMap C L).restrictScalars A).range ≤
+    Submodule.span A (Set.Range$ (trace_form K L).dualBasis (trace_form_nondegenerate K L) b) :=
+  by 
+    let db := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b 
+    rintro _ ⟨x, rfl⟩
+    simp only [LinearMap.coe_restrict_scalars_eq_coe, Algebra.linear_map_apply]
+    have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.is_integral A L x).algebraMap 
+    suffices  : ∃ c : ι → A, algebraMap C L x = ∑ i, c i • db i
+    ·
+      obtain ⟨c, x_eq⟩ := this 
+      rw [x_eq]
+      refine' Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span _)
+      rw [Set.mem_range]
+      exact ⟨i, rfl⟩
+    suffices  : ∃ c : ι → K, (∀ i, IsIntegral A (c i)) ∧ algebraMap C L x = ∑ i, c i • db i
+    ·
+      obtain ⟨c, hc, hx⟩ := this 
+      have hc' : ∀ i, IsLocalization.IsInteger A (c i) := fun i => is_integrally_closed.is_integral_iff.mp (hc i)
+      use fun i => Classical.some (hc' i)
+      refine' hx.trans (Finset.sum_congr rfl fun i _ => _)
+      convLHS => rw [←Classical.some_spec (hc' i)]
+      rw [←IsScalarTower.algebra_map_smul K (Classical.some (hc' i)) (db i)]
+    refine' ⟨fun i => db.repr (algebraMap C L x) i, fun i => _, (db.sum_repr _).symm⟩
+    rw [BilinForm.dual_basis_repr_apply]
+    exact is_integral_trace (is_integral_mul hx (hb_int i))
 
 theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι K L)
   (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
@@ -798,78 +812,86 @@ variable (A) (K)
 
 include K
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
-theorem exists_integral_multiples
-(s : finset L) : «expr∃ , »((y «expr ≠ » (0 : A)), ∀ x «expr ∈ » s, is_integral A «expr • »(y, x)) :=
-begin
-  haveI [] [] [":=", expr classical.dec_eq L],
-  refine [expr s.induction _ _],
-  { use ["[", expr 1, ",", expr one_ne_zero, "]"],
-    rintros [ident x, "⟨", "⟩"] },
-  { rintros [ident x, ident s, ident hx, "⟨", ident y, ",", ident hy, ",", ident hs, "⟩"],
-    obtain ["⟨", ident x', ",", ident y', ",", ident hy', ",", ident hx', "⟩", ":=", expr exists_integral_multiple ((is_fraction_ring.is_algebraic_iff A K).mpr (algebra.is_algebraic_of_finite x)) ((algebra_map A L).injective_iff.mp _)],
-    refine [expr ⟨«expr * »(y, y'), mul_ne_zero hy hy', λ x'' hx'', _⟩],
-    rcases [expr finset.mem_insert.mp hx'', "with", "(", ident rfl, "|", ident hx'', ")"],
-    { rw ["[", expr mul_smul, ",", expr algebra.smul_def, ",", expr algebra.smul_def, ",", expr mul_comm _ x'', ",", expr hx', "]"] [],
-      exact [expr is_integral_mul is_integral_algebra_map x'.2] },
-    { rw ["[", expr mul_comm, ",", expr mul_smul, ",", expr algebra.smul_def, "]"] [],
-      exact [expr is_integral_mul is_integral_algebra_map (hs _ hx'')] },
-    { rw [expr is_scalar_tower.algebra_map_eq A K L] [],
-      apply [expr (algebra_map K L).injective.comp],
-      exact [expr is_fraction_ring.injective _ _] } }
-end
+theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀ x _ : x ∈ s, IsIntegral A (y • x) :=
+  by 
+    have  := Classical.decEq L 
+    refine' s.induction _ _
+    ·
+      use 1, one_ne_zero 
+      rintro x ⟨⟩
+    ·
+      rintro x s hx ⟨y, hy, hs⟩
+      obtain ⟨x', y', hy', hx'⟩ :=
+        exists_integral_multiple ((IsFractionRing.is_algebraic_iff A K).mpr (Algebra.is_algebraic_of_finite x))
+          ((algebraMap A L).injective_iff.mp _)
+      refine' ⟨y*y', mul_ne_zero hy hy', fun x'' hx'' => _⟩
+      rcases finset.mem_insert.mp hx'' with (rfl | hx'')
+      ·
+        rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_commₓ _ x'', hx']
+        exact is_integral_mul is_integral_algebra_map x'.2
+      ·
+        rw [mul_commₓ, mul_smul, Algebra.smul_def]
+        exact is_integral_mul is_integral_algebra_map (hs _ hx'')
+      ·
+        rw [IsScalarTower.algebra_map_eq A K L]
+        apply (algebraMap K L).Injective.comp 
+        exact IsFractionRing.injective _ _
 
 variable (L)
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `L` is a finite extension of `K = Frac(A)`,
 then `L` has a basis over `A` consisting of integral elements. -/
-theorem finite_dimensional.exists_is_basis_integral : «expr∃ , »((s : finset L)
- (b : basis s K L), ∀ x, is_integral A (b x)) :=
-begin
-  letI [] [] [":=", expr classical.dec_eq L],
-  letI [] [":", expr is_noetherian K L] [":=", expr is_noetherian.iff_fg.2 infer_instance],
-  let [ident s'] [] [":=", expr is_noetherian.finset_basis_index K L],
-  let [ident bs'] [] [":=", expr is_noetherian.finset_basis K L],
-  obtain ["⟨", ident y, ",", ident hy, ",", ident his', "⟩", ":=", expr exists_integral_multiples A K (finset.univ.image bs')],
-  have [ident hy'] [":", expr «expr ≠ »(algebra_map A L y, 0)] [],
-  { refine [expr mt ((algebra_map A L).injective_iff.mp _ _) hy],
-    rw [expr is_scalar_tower.algebra_map_eq A K L] [],
-    exact [expr (algebra_map K L).injective.comp (is_fraction_ring.injective A K)] },
-  refine [expr ⟨s', bs'.map { to_fun := λ x, «expr * »(algebra_map A L y, x),
-      inv_fun := λ x, «expr * »(«expr ⁻¹»(algebra_map A L y), x),
-      left_inv := _,
-      right_inv := _,
-      ..algebra.lmul _ _ (algebra_map A L y) }, _⟩],
-  { intros [ident x],
-    simp [] [] ["only"] ["[", expr inv_mul_cancel_left₀ hy', "]"] [] [] },
-  { intros [ident x],
-    simp [] [] ["only"] ["[", expr mul_inv_cancel_left₀ hy', "]"] [] [] },
-  { rintros ["⟨", ident x', ",", ident hx', "⟩"],
-    simp [] [] ["only"] ["[", expr algebra.smul_def, ",", expr finset.mem_image, ",", expr exists_prop, ",", expr finset.mem_univ, ",", expr true_and, "]"] [] ["at", ident his'],
-    simp [] [] ["only"] ["[", expr basis.map_apply, ",", expr linear_equiv.coe_mk, "]"] [] [],
-    exact [expr his' _ ⟨_, rfl⟩] }
-end
+theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basis s K L), ∀ x, IsIntegral A (b x) :=
+  by 
+    let this' := Classical.decEq L 
+    let this' : IsNoetherian K L := IsNoetherian.iff_fg.2 inferInstance 
+    let s' := IsNoetherian.finsetBasisIndex K L 
+    let bs' := IsNoetherian.finsetBasis K L 
+    obtain ⟨y, hy, his'⟩ := exists_integral_multiples A K (finset.univ.image bs')
+    have hy' : algebraMap A L y ≠ 0
+    ·
+      refine' mt ((algebraMap A L).injective_iff.mp _ _) hy 
+      rw [IsScalarTower.algebra_map_eq A K L]
+      exact (algebraMap K L).Injective.comp (IsFractionRing.injective A K)
+    refine'
+      ⟨s',
+        bs'.map
+          { Algebra.lmul _ _ (algebraMap A L y) with toFun := fun x => algebraMap A L y*x,
+            invFun := fun x => algebraMap A L y⁻¹*x, left_inv := _, right_inv := _ },
+        _⟩
+    ·
+      intro x 
+      simp only [inv_mul_cancel_left₀ hy']
+    ·
+      intro x 
+      simp only [mul_inv_cancel_left₀ hy']
+    ·
+      rintro ⟨x', hx'⟩
+      simp only [Algebra.smul_def, Finset.mem_image, exists_prop, Finset.mem_univ, true_andₓ] at his' 
+      simp only [Basis.map_apply, LinearEquiv.coe_mk]
+      exact his' _ ⟨_, rfl⟩
 
 variable (A K L) [IsSeparable K L]
 
 include L
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_integral_closure.is_noetherian_ring [is_integrally_closed A] [is_noetherian_ring A] : is_noetherian_ring C :=
-begin
-  haveI [] [] [":=", expr classical.dec_eq L],
-  obtain ["⟨", ident s, ",", ident b, ",", ident hb_int, "⟩", ":=", expr finite_dimensional.exists_is_basis_integral A K L],
-  rw [expr is_noetherian_ring_iff] [],
-  let [ident b'] [] [":=", expr (trace_form K L).dual_basis (trace_form_nondegenerate K L) b],
-  letI [] [] [":=", expr is_noetherian_span_of_finite A (set.finite_range b')],
-  let [ident f] [":", expr «expr →ₗ[ ] »(C, A, submodule.span A (set.range b'))] [":=", expr (submodule.of_le (is_integral_closure.range_le_span_dual_basis C b hb_int)).comp ((algebra.linear_map C L).restrict_scalars A).range_restrict],
-  refine [expr is_noetherian_of_tower A (is_noetherian_of_ker_bot f _)],
-  rw ["[", expr linear_map.ker_comp, ",", expr submodule.ker_of_le, ",", expr submodule.comap_bot, ",", expr linear_map.ker_cod_restrict, "]"] [],
-  exact [expr linear_map.ker_eq_bot_of_injective (is_integral_closure.algebra_map_injective C A L)]
-end
+theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] : IsNoetherianRing C :=
+  by 
+    have  := Classical.decEq L 
+    obtain ⟨s, b, hb_int⟩ := FiniteDimensional.exists_is_basis_integral A K L 
+    rw [is_noetherian_ring_iff]
+    let b' := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b 
+    let this' := is_noetherian_span_of_finite A (Set.finite_range b')
+    let f : C →ₗ[A] Submodule.span A (Set.Range b') :=
+      (Submodule.ofLe (IsIntegralClosure.range_le_span_dual_basis C b hb_int)).comp
+        ((Algebra.linearMap C L).restrictScalars A).range_restrict 
+    refine' is_noetherian_of_tower A (is_noetherian_of_ker_bot f _)
+    rw [LinearMap.ker_comp, Submodule.ker_of_le, Submodule.comap_bot, LinearMap.ker_cod_restrict]
+    exact LinearMap.ker_eq_bot_of_injective (IsIntegralClosure.algebra_map_injective C A L)
 
 variable {A K}
 
@@ -879,14 +901,15 @@ theorem integralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianR
 
 variable (A K) [IsDomain C]
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_integral_closure.is_dedekind_domain [h : is_dedekind_domain A] : is_dedekind_domain C :=
-begin
-  haveI [] [":", expr is_fraction_ring C L] [":=", expr is_integral_closure.is_fraction_ring_of_finite_extension A K L C],
-  exact [expr ⟨is_integral_closure.is_noetherian_ring A K L C, h.dimension_le_one.is_integral_closure _ L _, (is_integrally_closed_iff L).mpr (λ
-     x
-     hx, ⟨is_integral_closure.mk' C x (is_integral_trans (is_integral_closure.is_integral_algebra A L) _ hx), is_integral_closure.algebra_map_mk' _ _ _⟩)⟩]
-end
+theorem IsIntegralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedekindDomain C :=
+  by 
+    have  : IsFractionRing C L := IsIntegralClosure.is_fraction_ring_of_finite_extension A K L C 
+    exact
+      ⟨IsIntegralClosure.is_noetherian_ring A K L C, h.dimension_le_one.is_integral_closure _ L _,
+        (is_integrally_closed_iff L).mpr
+          fun x hx =>
+            ⟨IsIntegralClosure.mk' C x (is_integral_trans (IsIntegralClosure.is_integral_algebra A L) _ hx),
+              IsIntegralClosure.algebra_map_mk' _ _ _⟩⟩
 
 theorem integralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedekindDomain (integralClosure A L) :=
   IsIntegralClosure.is_dedekind_domain A K L (integralClosure A L)
@@ -914,6 +937,7 @@ open Multiset UniqueFactorizationMonoid Ideal
 theorem prod_normalized_factors_eq_self {I : Ideal T} (hI : I ≠ ⊥) : (normalized_factors I).Prod = I :=
   associated_iff_eq.1 (normalized_factors_prod hI)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » α)
 theorem normalized_factors_prod {α : Multiset (Ideal T)} (h : ∀ p _ : p ∈ α, Prime p) : normalized_factors α.prod = α :=
   by 
     simpRw [←Multiset.rel_eq, ←associated_eq_eq]
@@ -923,35 +947,43 @@ theorem count_le_of_ideal_ge {I J : Ideal T} (h : I ≤ J) (hI : I ≠ ⊥) (K :
   count K (normalized_factors J) ≤ count K (normalized_factors I) :=
   le_iff_count.1 ((dvd_iff_normalized_factors_le_normalized_factors (ne_bot_of_le_ne_bot hI h) hI).1 (dvd_iff_le.2 h)) _
 
--- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sup_eq_prod_inf_factors
-(hI : «expr ≠ »(I, «expr⊥»()))
-(hJ : «expr ≠ »(J, «expr⊥»())) : «expr = »(«expr ⊔ »(I, J), «expr ∩ »(normalized_factors I, normalized_factors J).prod) :=
-begin
-  have [ident H] [":", expr «expr = »(normalized_factors «expr ∩ »(normalized_factors I, normalized_factors J).prod, «expr ∩ »(normalized_factors I, normalized_factors J))] [],
-  { apply [expr _root_.normalized_factors_prod],
-    intros [ident p, ident hp],
-    rw [expr mem_inter] ["at", ident hp],
-    exact [expr prime_of_normalized_factor p hp.left] },
-  have [] [] [":=", expr multiset.prod_ne_zero_of_prime «expr ∩ »(normalized_factors I, normalized_factors J) (λ
-    _ h, prime_of_normalized_factor _ (multiset.mem_inter.1 h).1)],
-  apply [expr le_antisymm],
-  { rw ["[", expr sup_le_iff, ",", "<-", expr dvd_iff_le, ",", "<-", expr dvd_iff_le, "]"] [],
-    split,
-    { rw ["[", expr dvd_iff_normalized_factors_le_normalized_factors this hI, ",", expr H, "]"] [],
-      exact [expr inf_le_left] },
-    { rw ["[", expr dvd_iff_normalized_factors_le_normalized_factors this hJ, ",", expr H, "]"] [],
-      exact [expr inf_le_right] } },
-  { rw ["[", "<-", expr dvd_iff_le, ",", expr dvd_iff_normalized_factors_le_normalized_factors, ",", expr _root_.normalized_factors_prod, ",", expr le_iff_count, "]"] [],
-    { intro [ident a],
-      rw [expr multiset.count_inter] [],
-      exact [expr le_min (count_le_of_ideal_ge le_sup_left hI a) (count_le_of_ideal_ge le_sup_right hJ a)] },
-    { intros [ident p, ident hp],
-      rw [expr mem_inter] ["at", ident hp],
-      exact [expr prime_of_normalized_factor p hp.left] },
-    { exact [expr ne_bot_of_le_ne_bot hI le_sup_left] },
-    { exact [expr this] } }
-end
+theorem sup_eq_prod_inf_factors (hI : I ≠ ⊥) (hJ : J ≠ ⊥) : I⊔J = (normalized_factors I ∩ normalized_factors J).Prod :=
+  by 
+    have H :
+      normalized_factors (normalized_factors I ∩ normalized_factors J).Prod =
+        normalized_factors I ∩ normalized_factors J
+    ·
+      apply _root_.normalized_factors_prod 
+      intro p hp 
+      rw [mem_inter] at hp 
+      exact prime_of_normalized_factor p hp.left 
+    have  :=
+      Multiset.prod_ne_zero_of_prime (normalized_factors I ∩ normalized_factors J)
+        fun _ h => prime_of_normalized_factor _ (Multiset.mem_inter.1 h).1
+    apply le_antisymmₓ
+    ·
+      rw [sup_le_iff, ←dvd_iff_le, ←dvd_iff_le]
+      constructor
+      ·
+        rw [dvd_iff_normalized_factors_le_normalized_factors this hI, H]
+        exact inf_le_left
+      ·
+        rw [dvd_iff_normalized_factors_le_normalized_factors this hJ, H]
+        exact inf_le_right
+    ·
+      rw [←dvd_iff_le, dvd_iff_normalized_factors_le_normalized_factors, _root_.normalized_factors_prod, le_iff_count]
+      ·
+        intro a 
+        rw [Multiset.count_inter]
+        exact le_minₓ (count_le_of_ideal_ge le_sup_left hI a) (count_le_of_ideal_ge le_sup_right hJ a)
+      ·
+        intro p hp 
+        rw [mem_inter] at hp 
+        exact prime_of_normalized_factor p hp.left
+      ·
+        exact ne_bot_of_le_ne_bot hI le_sup_left
+      ·
+        exact this
 
 end IsDedekindDomain
 

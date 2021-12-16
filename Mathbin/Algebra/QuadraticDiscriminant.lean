@@ -37,30 +37,33 @@ def discrim [Ringₓ R] (a b c : R) : R :=
 
 variable [CommRingₓ R] [IsDomain R] {a b c : R}
 
--- error in Algebra.QuadraticDiscriminant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A quadratic has roots if and only if its discriminant equals some square.
 -/
-theorem quadratic_eq_zero_iff_discrim_eq_sq
-(h2 : «expr ≠ »((2 : R), 0))
-(ha : «expr ≠ »(a, 0))
-(x : R) : «expr ↔ »(«expr = »(«expr + »(«expr + »(«expr * »(«expr * »(a, x), x), «expr * »(b, x)), c), 0), «expr = »(discrim a b c, «expr ^ »(«expr + »(«expr * »(«expr * »(2, a), x), b), 2))) :=
-begin
-  split,
-  { assume [binders (h)],
-    calc
-      «expr = »(discrim a b c, «expr - »(«expr + »(«expr * »(«expr * »(4, a), «expr + »(«expr + »(«expr * »(«expr * »(a, x), x), «expr * »(b, x)), c)), «expr * »(b, b)), «expr * »(«expr * »(4, a), c))) : by { rw ["[", expr h, ",", expr discrim, "]"] [],
-        ring [] }
-      «expr = »(..., «expr ^ »(«expr + »(«expr * »(«expr * »(2, a), x), b), 2)) : by ring [] },
-  { assume [binders (h)],
-    have [ident ha] [":", expr «expr ≠ »(«expr * »(«expr * »(2, 2), a), 0)] [":=", expr mul_ne_zero (mul_ne_zero h2 h2) ha],
-    apply [expr mul_left_cancel₀ ha],
-    calc
-      «expr = »(«expr * »(«expr * »(«expr * »(2, 2), a), «expr + »(«expr + »(«expr * »(«expr * »(a, x), x), «expr * »(b, x)), c)), «expr - »(«expr ^ »(«expr + »(«expr * »(«expr * »(2, a), x), b), 2), «expr - »(«expr ^ »(b, 2), «expr * »(«expr * »(4, a), c)))) : by ring []
-      «expr = »(..., 0) : by { rw ["[", "<-", expr h, ",", expr discrim, "]"] [],
-        ring [] }
-      «expr = »(..., «expr * »(«expr * »(«expr * »(2, 2), a), 0)) : by ring [] }
-end
+theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (x : R) :
+  ((((a*x)*x)+b*x)+c) = 0 ↔ discrim a b c = (((2*a)*x)+b) ^ 2 :=
+  by 
+    constructor
+    ·
+      intro h 
+      calc discrim a b c = (((4*a)*(((a*x)*x)+b*x)+c)+b*b) - (4*a)*c :=
+        by 
+          rw [h, discrim]
+          ring _ = (((2*a)*x)+b) ^ 2 :=
+        by 
+          ring
+    ·
+      intro h 
+      have ha : ((2*2)*a) ≠ 0 := mul_ne_zero (mul_ne_zero h2 h2) ha 
+      apply mul_left_cancel₀ ha 
+      calc (((2*2)*a)*(((a*x)*x)+b*x)+c) = (((2*a)*x)+b) ^ 2 - (b ^ 2 - (4*a)*c) :=
+        by 
+          ring _ = 0 :=
+        by 
+          rw [←h, discrim]
+          ring _ = ((2*2)*a)*0 :=
+        by 
+          ring
 
 /-- A quadratic has no root if its discriminant has no square root. -/
 theorem quadratic_ne_zero_of_discrim_ne_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (h : ∀ s : R, discrim a b c ≠ s*s) (x : R) :
@@ -76,38 +79,39 @@ section Field
 
 variable {K : Type _} [Field K] [Invertible (2 : K)] {a b c x : K}
 
--- error in Algebra.QuadraticDiscriminant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Roots of a quadratic -/
-theorem quadratic_eq_zero_iff
-(ha : «expr ≠ »(a, 0))
-{s : K}
-(h : «expr = »(discrim a b c, «expr * »(s, s)))
-(x : K) : «expr ↔ »(«expr = »(«expr + »(«expr + »(«expr * »(«expr * »(a, x), x), «expr * »(b, x)), c), 0), «expr ∨ »(«expr = »(x, «expr / »(«expr + »(«expr- »(b), s), «expr * »(2, a))), «expr = »(x, «expr / »(«expr - »(«expr- »(b), s), «expr * »(2, a))))) :=
-begin
-  have [ident h2] [":", expr «expr ≠ »((2 : K), 0)] [":=", expr nonzero_of_invertible 2],
-  rw ["[", expr quadratic_eq_zero_iff_discrim_eq_sq h2 ha, ",", expr h, ",", expr sq, ",", expr mul_self_eq_mul_self_iff, "]"] [],
-  have [ident ne] [":", expr «expr ≠ »(«expr * »(2, a), 0)] [":=", expr mul_ne_zero h2 ha],
-  have [] [":", expr «expr = »(x, «expr / »(«expr * »(«expr * »(2, a), x), «expr * »(2, a)))] [":=", expr (mul_div_cancel_left x ne).symm],
-  have [ident h₁] [":", expr «expr = »(«expr * »(«expr * »(2, a), «expr / »(«expr + »(«expr- »(b), s), «expr * »(2, a))), «expr + »(«expr- »(b), s))] [":=", expr mul_div_cancel' _ ne],
-  have [ident h₂] [":", expr «expr = »(«expr * »(«expr * »(2, a), «expr / »(«expr - »(«expr- »(b), s), «expr * »(2, a))), «expr - »(«expr- »(b), s))] [":=", expr mul_div_cancel' _ ne],
-  split,
-  { intro [ident h'],
-    rcases [expr h'],
-    { left,
-      rw [expr h'] [],
-      simpa [] [] [] ["[", expr add_comm, "]"] [] [] },
-    { right,
-      rw [expr h'] [],
-      simpa [] [] [] ["[", expr add_comm, ",", expr sub_eq_add_neg, "]"] [] [] } },
-  { intro [ident h'],
-    rcases [expr h'],
-    { left,
-      rw ["[", expr h', ",", expr h₁, "]"] [],
-      ring [] },
-    { right,
-      rw ["[", expr h', ",", expr h₂, "]"] [],
-      ring [] } }
-end
+theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s*s) (x : K) :
+  ((((a*x)*x)+b*x)+c) = 0 ↔ (x = ((-b)+s) / 2*a) ∨ x = (-b - s) / 2*a :=
+  by 
+    have h2 : (2 : K) ≠ 0 := nonzero_of_invertible 2
+    rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, h, sq, mul_self_eq_mul_self_iff]
+    have ne : (2*a) ≠ 0 := mul_ne_zero h2 ha 
+    have  : x = ((2*a)*x) / 2*a := (mul_div_cancel_left x Ne).symm 
+    have h₁ : ((2*a)*((-b)+s) / 2*a) = (-b)+s := mul_div_cancel' _ Ne 
+    have h₂ : ((2*a)*(-b - s) / 2*a) = -b - s := mul_div_cancel' _ Ne 
+    constructor
+    ·
+      intro h' 
+      rcases h' with ⟨⟩
+      ·
+        left 
+        rw [h']
+        simpa [add_commₓ]
+      ·
+        right 
+        rw [h']
+        simpa [add_commₓ, sub_eq_add_neg]
+    ·
+      intro h' 
+      rcases h' with ⟨⟩
+      ·
+        left 
+        rw [h', h₁]
+        ring
+      ·
+        right 
+        rw [h', h₂]
+        ring
 
 /-- A quadratic has roots if its discriminant has square roots -/
 theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s*s) : ∃ x, ((((a*x)*x)+b*x)+c) = 0 :=
@@ -117,17 +121,14 @@ theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s*s)
     rw [quadratic_eq_zero_iff ha hs]
     simp 
 
--- error in Algebra.QuadraticDiscriminant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Root of a quadratic when its discriminant equals zero -/
-theorem quadratic_eq_zero_iff_of_discrim_eq_zero
-(ha : «expr ≠ »(a, 0))
-(h : «expr = »(discrim a b c, 0))
-(x : K) : «expr ↔ »(«expr = »(«expr + »(«expr + »(«expr * »(«expr * »(a, x), x), «expr * »(b, x)), c), 0), «expr = »(x, «expr / »(«expr- »(b), «expr * »(2, a)))) :=
-begin
-  have [] [":", expr «expr = »(discrim a b c, «expr * »(0, 0))] [],
-  by rw ["[", expr h, ",", expr mul_zero, "]"] [],
-  rw ["[", expr quadratic_eq_zero_iff ha this, ",", expr add_zero, ",", expr sub_zero, ",", expr or_self, "]"] []
-end
+theorem quadratic_eq_zero_iff_of_discrim_eq_zero (ha : a ≠ 0) (h : discrim a b c = 0) (x : K) :
+  ((((a*x)*x)+b*x)+c) = 0 ↔ x = -b / 2*a :=
+  by 
+    have  : discrim a b c = 0*0
+    ·
+      rw [h, mul_zero]
+    rw [quadratic_eq_zero_iff ha this, add_zeroₓ, sub_zero, or_selfₓ]
 
 end Field
 
@@ -135,54 +136,62 @@ section LinearOrderedField
 
 variable {K : Type _} [LinearOrderedField K] {a b c : K}
 
--- error in Algebra.QuadraticDiscriminant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a polynomial of degree 2 is always nonnegative, then its discriminant is nonpositive -/
-theorem discrim_le_zero
-(h : ∀
- x : K, «expr ≤ »(0, «expr + »(«expr + »(«expr * »(«expr * »(a, x), x), «expr * »(b, x)), c))) : «expr ≤ »(discrim a b c, 0) :=
-begin
-  rw ["[", expr discrim, ",", expr sq, "]"] [],
-  obtain [ident ha, "|", ident rfl, "|", ident ha, ":", expr «expr ∨ »(«expr < »(a, 0), «expr ∨ »(«expr = »(a, 0), «expr < »(0, a))), ":=", expr lt_trichotomy a 0],
-  { have [] [":", expr tendsto (λ
-      x, «expr + »(«expr * »(«expr + »(«expr * »(a, x), b), x), c)) at_top at_bot] [":=", expr tendsto_at_bot_add_const_right _ c ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top tendsto_id)],
-    rcases [expr (this.eventually (eventually_lt_at_bot 0)).exists, "with", "⟨", ident x, ",", ident hx, "⟩"],
-    exact [expr false.elim «expr $ »((h x).not_lt, by rwa ["<-", expr add_mul] [])] },
-  { rcases [expr em «expr = »(b, 0), "with", "(", ident rfl, "|", ident hb, ")"],
-    { simp [] [] [] [] [] [] },
-    { have [] [] [":=", expr h «expr / »(«expr - »(«expr- »(c), 1), b)],
-      rw ["[", expr mul_div_cancel' _ hb, "]"] ["at", ident this],
-      linarith [] [] [] } },
-  { have [] [] [":=", expr calc
-       «expr = »(«expr * »(«expr * »(4, a), «expr + »(«expr + »(«expr * »(«expr * »(a, «expr * »(«expr- »(«expr / »(b, a)), «expr / »(1, 2))), «expr * »(«expr- »(«expr / »(b, a)), «expr / »(1, 2))), «expr * »(b, «expr * »(«expr- »(«expr / »(b, a)), «expr / »(1, 2)))), c)), «expr + »(«expr - »(«expr * »(«expr * »(a, «expr / »(b, a)), «expr * »(a, «expr / »(b, a))), «expr * »(«expr * »(2, «expr * »(a, «expr / »(b, a))), b)), «expr * »(«expr * »(4, a), c))) : by ring []
-       «expr = »(..., «expr- »(«expr - »(«expr * »(b, b), «expr * »(«expr * »(4, a), c)))) : by { simp [] [] ["only"] ["[", expr mul_div_cancel' b (ne_of_gt ha), "]"] [] [],
-         ring [] }],
-    have [ident ha'] [":", expr «expr ≤ »(0, «expr * »(4, a))] [],
-    by linarith [] [] [],
-    have [ident h] [] [":=", expr mul_nonneg ha' (h «expr * »(«expr- »(«expr / »(b, a)), «expr / »(1, 2)))],
-    rw [expr this] ["at", ident h],
-    rwa ["<-", expr neg_nonneg] [] }
-end
+theorem discrim_le_zero (h : ∀ x : K, 0 ≤ (((a*x)*x)+b*x)+c) : discrim a b c ≤ 0 :=
+  by 
+    rw [discrim, sq]
+    obtain ha | rfl | ha : a < 0 ∨ a = 0 ∨ 0 < a := lt_trichotomyₓ a 0
+    ·
+      have  : tendsto (fun x => (((a*x)+b)*x)+c) at_top at_bot :=
+        tendsto_at_bot_add_const_right _ c
+          ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top tendsto_id)
+      rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
+      exact
+        False.elim
+          ((h x).not_lt$
+            by 
+              rwa [←add_mulₓ])
+    ·
+      rcases em (b = 0) with (rfl | hb)
+      ·
+        simp 
+      ·
+        have  := h ((-c - 1) / b)
+        rw [mul_div_cancel' _ hb] at this 
+        linarith
+    ·
+      have  :=
+        calc
+          ((4*a)*(((a*(-(b / a))*1 / 2)*(-(b / a))*1 / 2)+b*(-(b / a))*1 / 2)+c) =
+            (((a*b / a)*a*b / a) - (2*a*b / a)*b)+(4*a)*c :=
+          by 
+            ring 
+          _ = -((b*b) - (4*a)*c) :=
+          by 
+            simp only [mul_div_cancel' b (ne_of_gtₓ ha)]
+            ring 
+          
+      have ha' : 0 ≤ 4*a
+      ·
+        linarith 
+      have h := mul_nonneg ha' (h ((-(b / a))*1 / 2))
+      rw [this] at h 
+      rwa [←neg_nonneg]
 
--- error in Algebra.QuadraticDiscriminant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a polynomial of degree 2 is always positive, then its discriminant is negative,
 at least when the coefficient of the quadratic term is nonzero.
 -/
-theorem discrim_lt_zero
-(ha : «expr ≠ »(a, 0))
-(h : ∀
- x : K, «expr < »(0, «expr + »(«expr + »(«expr * »(«expr * »(a, x), x), «expr * »(b, x)), c))) : «expr < »(discrim a b c, 0) :=
-begin
-  have [] [":", expr ∀
-   x : K, «expr ≤ »(0, «expr + »(«expr + »(«expr * »(«expr * »(a, x), x), «expr * »(b, x)), c))] [":=", expr assume
-   x, le_of_lt (h x)],
-  refine [expr lt_of_le_of_ne (discrim_le_zero this) _],
-  assume [binders (h')],
-  have [] [] [":=", expr h «expr / »(«expr- »(b), «expr * »(2, a))],
-  have [] [":", expr «expr = »(«expr + »(«expr + »(«expr * »(«expr * »(a, «expr / »(«expr- »(b), «expr * »(2, a))), «expr / »(«expr- »(b), «expr * »(2, a))), «expr * »(b, «expr / »(«expr- »(b), «expr * »(2, a)))), c), 0)] [],
-  { rw ["[", expr quadratic_eq_zero_iff_of_discrim_eq_zero ha h' «expr / »(«expr- »(b), «expr * »(2, a)), "]"] [] },
-  linarith [] [] []
-end
+theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < (((a*x)*x)+b*x)+c) : discrim a b c < 0 :=
+  by 
+    have  : ∀ x : K, 0 ≤ (((a*x)*x)+b*x)+c := fun x => le_of_ltₓ (h x)
+    refine' lt_of_le_of_neₓ (discrim_le_zero this) _ 
+    intro h' 
+    have  := h (-b / 2*a)
+    have  : ((((a*-b / 2*a)*-b / 2*a)+b*-b / 2*a)+c) = 0
+    ·
+      rw [quadratic_eq_zero_iff_of_discrim_eq_zero ha h' (-b / 2*a)]
+    linarith
 
 end LinearOrderedField
 

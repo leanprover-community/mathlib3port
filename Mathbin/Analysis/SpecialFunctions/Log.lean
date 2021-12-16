@@ -19,7 +19,7 @@ open Set Filter Function
 
 open_locale TopologicalSpace
 
-noncomputable theory
+noncomputable section 
 
 namespace Real
 
@@ -206,7 +206,7 @@ theorem log_ne_zero_of_pos_of_ne_one {x : ℝ} (hx_pos : 0 < x) (hx : x ≠ 1) :
 @[simp]
 theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 :=
   by 
-    split 
+    constructor
     ·
       intro h 
       rcases lt_trichotomyₓ x 0 with (x_lt_zero | rfl | x_gt_zero)
@@ -227,13 +227,13 @@ theorem tendsto_log_at_top : tendsto log at_top at_top :=
     by 
       simpa only [log_exp] using tendsto_id
 
-theorem tendsto_log_nhds_within_zero : tendsto log (𝓝[«expr ᶜ» {0}] 0) at_bot :=
+theorem tendsto_log_nhds_within_zero : tendsto log (𝓝[{0}ᶜ] 0) at_bot :=
   by 
     rw [←show _ = log from funext log_abs]
     refine' tendsto.comp _ tendsto_abs_nhds_within_zero 
     simpa [←tendsto_comp_exp_at_bot] using tendsto_id
 
-theorem continuous_on_log : ContinuousOn log («expr ᶜ» {0}) :=
+theorem continuous_on_log : ContinuousOn log ({0}ᶜ) :=
   by 
     rw [continuous_on_iff_continuous_restrict, restrict]
     conv  in log _ => rw [log_of_ne_zero (show (x : ℝ) ≠ 0 from x.2)]
@@ -281,6 +281,7 @@ theorem ContinuousWithinAt.log (hf : ContinuousWithinAt f s a) (h₀ : f a ≠ 0
   ContinuousWithinAt (fun x => log (f x)) s a :=
   hf.log h₀
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem ContinuousOn.log (hf : ContinuousOn f s) (h₀ : ∀ x _ : x ∈ s, f x ≠ 0) : ContinuousOn (fun x => log (f x)) s :=
   fun x hx => (hf x hx).log (h₀ x hx)
 

@@ -42,99 +42,126 @@ variable {𝕜 : Type _} {E : Type u} [LinearOrderedField 𝕜] [AddCommGroupₓ
 
 namespace Caratheodory
 
--- error in Analysis.Convex.Caratheodory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i₀ «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » t)
 /-- If `x` is in the convex hull of some finset `t` whose elements are not affine-independent,
 then it is in the convex hull of a strict subset of `t`. -/
-theorem mem_convex_hull_erase
-[decidable_eq E]
-{t : finset E}
-(h : «expr¬ »(affine_independent 𝕜 (coe : t → E)))
-{x : E}
-(m : «expr ∈ »(x, convex_hull 𝕜 («expr↑ »(t) : set E))) : «expr∃ , »((y : («expr↑ »(t) : set E)), «expr ∈ »(x, convex_hull 𝕜 («expr↑ »(t.erase y) : set E))) :=
-begin
-  simp [] [] ["only"] ["[", expr finset.convex_hull_eq, ",", expr mem_set_of_eq, "]"] [] ["at", ident m, "⊢"],
-  obtain ["⟨", ident f, ",", ident fpos, ",", ident fsum, ",", ident rfl, "⟩", ":=", expr m],
-  obtain ["⟨", ident g, ",", ident gcombo, ",", ident gsum, ",", ident gpos, "⟩", ":=", expr exists_nontrivial_relation_sum_zero_of_not_affine_ind h],
-  replace [ident gpos] [] [":=", expr exists_pos_of_sum_zero_of_exists_nonzero g gsum gpos],
-  clear [ident h],
-  let [ident s] [] [":=", expr t.filter (λ z : E, «expr < »(0, g z))],
-  obtain ["⟨", ident i₀, ",", ident mem, ",", ident w, "⟩", ":", expr «expr∃ , »((i₀ «expr ∈ » s), ∀
-    i «expr ∈ » s, «expr ≤ »(«expr / »(f i₀, g i₀), «expr / »(f i, g i)))],
-  { apply [expr s.exists_min_image (λ z, «expr / »(f z, g z))],
-    obtain ["⟨", ident x, ",", ident hx, ",", ident hgx, "⟩", ":", expr «expr∃ , »((x «expr ∈ » t), «expr < »(0, g x)), ":=", expr gpos],
-    exact [expr ⟨x, mem_filter.mpr ⟨hx, hgx⟩⟩] },
-  have [ident hg] [":", expr «expr < »(0, g i₀)] [":=", expr by { rw [expr mem_filter] ["at", ident mem],
-     exact [expr mem.2] }],
-  have [ident hi₀] [":", expr «expr ∈ »(i₀, t)] [":=", expr filter_subset _ _ mem],
-  let [ident k] [":", expr E → 𝕜] [":=", expr λ z, «expr - »(f z, «expr * »(«expr / »(f i₀, g i₀), g z))],
-  have [ident hk] [":", expr «expr = »(k i₀, 0)] [":=", expr by field_simp [] ["[", expr k, ",", expr ne_of_gt hg, "]"] [] []],
-  have [ident ksum] [":", expr «expr = »(«expr∑ in , »((e), t.erase i₀, k e), 1)] [],
-  { calc
-      «expr = »(«expr∑ in , »((e), t.erase i₀, k e), «expr∑ in , »((e), t, k e)) : by conv_rhs [] [] { rw ["[", "<-", expr insert_erase hi₀, ",", expr sum_insert (not_mem_erase i₀ t), ",", expr hk, ",", expr zero_add, "]"] }
-      «expr = »(..., «expr∑ in , »((e), t, «expr - »(f e, «expr * »(«expr / »(f i₀, g i₀), g e)))) : rfl
-      «expr = »(..., 1) : by rw ["[", expr sum_sub_distrib, ",", expr fsum, ",", "<-", expr mul_sum, ",", expr gsum, ",", expr mul_zero, ",", expr sub_zero, "]"] [] },
-  refine [expr ⟨⟨i₀, hi₀⟩, k, _, ksum, _⟩],
-  { simp [] [] ["only"] ["[", expr and_imp, ",", expr sub_nonneg, ",", expr mem_erase, ",", expr ne.def, ",", expr subtype.coe_mk, "]"] [] [],
-    intros [ident e, ident hei₀, ident het],
-    by_cases [expr hes, ":", expr «expr ∈ »(e, s)],
-    { have [ident hge] [":", expr «expr < »(0, g e)] [":=", expr by { rw [expr mem_filter] ["at", ident hes],
-         exact [expr hes.2] }],
-      rw ["<-", expr le_div_iff hge] [],
-      exact [expr w _ hes] },
-    { calc
-        «expr ≤ »(_, 0) : mul_nonpos_of_nonneg_of_nonpos _ _
-        «expr ≤ »(..., f e) : fpos e het,
-      { apply [expr div_nonneg (fpos i₀ (mem_of_subset (filter_subset _ t) mem)) (le_of_lt hg)] },
-      { simpa [] [] ["only"] ["[", expr mem_filter, ",", expr het, ",", expr true_and, ",", expr not_lt, "]"] [] ["using", expr hes] } } },
-  { simp [] [] ["only"] ["[", expr subtype.coe_mk, ",", expr center_mass_eq_of_sum_1 _ id ksum, ",", expr id, "]"] [] [],
-    calc
-      «expr = »(«expr∑ in , »((e), t.erase i₀, «expr • »(k e, e)), «expr∑ in , »((e), t, «expr • »(k e, e))) : sum_erase _ (by rw ["[", expr hk, ",", expr zero_smul, "]"] [])
-      «expr = »(..., «expr∑ in , »((e), t, «expr • »(«expr - »(f e, «expr * »(«expr / »(f i₀, g i₀), g e)), e))) : rfl
-      «expr = »(..., t.center_mass f id) : _,
-    simp [] [] ["only"] ["[", expr sub_smul, ",", expr mul_smul, ",", expr sum_sub_distrib, ",", "<-", expr smul_sum, ",", expr gcombo, ",", expr smul_zero, ",", expr sub_zero, ",", expr center_mass, ",", expr fsum, ",", expr inv_one, ",", expr one_smul, ",", expr id.def, "]"] [] [] }
-end
+theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndependent 𝕜 (coeₓ : t → E)) {x : E}
+  (m : x ∈ convexHull 𝕜 (↑t : Set E)) : ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑t.erase y : Set E) :=
+  by 
+    simp only [Finset.convex_hull_eq, mem_set_of_eq] at m⊢
+    obtain ⟨f, fpos, fsum, rfl⟩ := m 
+    obtain ⟨g, gcombo, gsum, gpos⟩ := exists_nontrivial_relation_sum_zero_of_not_affine_ind h 
+    replace gpos := exists_pos_of_sum_zero_of_exists_nonzero g gsum gpos 
+    clear h 
+    let s := t.filter fun z : E => 0 < g z 
+    obtain ⟨i₀, mem, w⟩ : ∃ (i₀ : _)(_ : i₀ ∈ s), ∀ i _ : i ∈ s, f i₀ / g i₀ ≤ f i / g i
+    ·
+      apply s.exists_min_image fun z => f z / g z 
+      obtain ⟨x, hx, hgx⟩ : ∃ (x : _)(_ : x ∈ t), 0 < g x := gpos 
+      exact ⟨x, mem_filter.mpr ⟨hx, hgx⟩⟩
+    have hg : 0 < g i₀ :=
+      by 
+        rw [mem_filter] at mem 
+        exact mem.2
+    have hi₀ : i₀ ∈ t := filter_subset _ _ mem 
+    let k : E → 𝕜 := fun z => f z - (f i₀ / g i₀)*g z 
+    have hk : k i₀ = 0 :=
+      by 
+        fieldSimp [k, ne_of_gtₓ hg]
+    have ksum : (∑ e in t.erase i₀, k e) = 1
+    ·
+      calc (∑ e in t.erase i₀, k e) = ∑ e in t, k e :=
+        by 
+          convRHS =>
+            rw [←insert_erase hi₀, sum_insert (not_mem_erase i₀ t), hk,
+              zero_addₓ]_ = ∑ e in t, f e - (f i₀ / g i₀)*g e :=
+        rfl _ = 1 :=
+        by 
+          rw [sum_sub_distrib, fsum, ←mul_sum, gsum, mul_zero, sub_zero]
+    refine' ⟨⟨i₀, hi₀⟩, k, _, ksum, _⟩
+    ·
+      simp only [and_imp, sub_nonneg, mem_erase, Ne.def, Subtype.coe_mk]
+      intro e hei₀ het 
+      byCases' hes : e ∈ s
+      ·
+        have hge : 0 < g e :=
+          by 
+            rw [mem_filter] at hes 
+            exact hes.2
+        rw [←le_div_iff hge]
+        exact w _ hes
+      ·
+        calc _ ≤ 0 := mul_nonpos_of_nonneg_of_nonpos _ _ _ ≤ f e := fpos e het
+        ·
+          apply div_nonneg (fpos i₀ (mem_of_subset (filter_subset _ t) mem)) (le_of_ltₓ hg)
+        ·
+          simpa only [mem_filter, het, true_andₓ, not_ltₓ] using hes
+    ·
+      simp only [Subtype.coe_mk, center_mass_eq_of_sum_1 _ id ksum, id]
+      calc (∑ e in t.erase i₀, k e • e) = ∑ e in t, k e • e :=
+        sum_erase _
+          (by 
+            rw [hk, zero_smul])_ = ∑ e in t, (f e - (f i₀ / g i₀)*g e) • e :=
+        rfl _ = t.center_mass f id := _ 
+      simp only [sub_smul, mul_smul, sum_sub_distrib, ←smul_sum, gcombo, smul_zero, sub_zero, center_mass, fsum,
+        inv_one, one_smul, id.def]
 
 variable {s : Set E} {x : E} (hx : x ∈ convexHull 𝕜 s)
 
 include hx
 
-/-- Given a point `x` in the convex hull of a set `s`, this is a finite subset of `s` of minimum
-cardinality, whose convex hull contains `x`. -/
-noncomputable def min_card_finset_of_mem_convex_hull : Finset E :=
-  Function.argminOn Finset.card Nat.lt_wf { t | «expr↑ » t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
-    (by 
-      simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using hx)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      Given a point `x` in the convex hull of a set `s`, this is a finite subset of `s` of minimum
+      cardinality, whose convex hull contains `x`. -/
+    noncomputable
+  def
+    min_card_finset_of_mem_convex_hull
+    : Finset E
+    :=
+      Function.argminOn
+        Finset.card
+          Nat.lt_wf
+          { t | ↑ t ⊆ s ∧ x ∈ convexHull 𝕜 ( t : Set E ) }
+          by simpa only [ convex_hull_eq_union_convex_hull_finite_subsets s , exists_prop , mem_Union ] using hx
 
-theorem min_card_finset_of_mem_convex_hull_subseteq : «expr↑ » (min_card_finset_of_mem_convex_hull hx) ⊆ s :=
-  (Function.argmin_on_mem _ _ { t:Finset E | «expr↑ » t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
+theorem min_card_finset_of_mem_convex_hull_subseteq : ↑min_card_finset_of_mem_convex_hull hx ⊆ s :=
+  (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
 
 theorem mem_min_card_finset_of_mem_convex_hull : x ∈ convexHull 𝕜 (min_card_finset_of_mem_convex_hull hx : Set E) :=
-  (Function.argmin_on_mem _ _ { t:Finset E | «expr↑ » t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).2
+  (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).2
 
 theorem min_card_finset_of_mem_convex_hull_nonempty : (min_card_finset_of_mem_convex_hull hx).Nonempty :=
   by 
     rw [←Finset.coe_nonempty, ←@convex_hull_nonempty_iff 𝕜]
     exact ⟨x, mem_min_card_finset_of_mem_convex_hull hx⟩
 
-theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : «expr↑ » t ⊆ s)
+theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : ↑t ⊆ s)
   (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (min_card_finset_of_mem_convex_hull hx).card ≤ t.card :=
   Function.argmin_on_le _ _ _ ⟨ht₁, ht₂⟩
 
--- error in Analysis.Convex.Caratheodory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem affine_independent_min_card_finset_of_mem_convex_hull : affine_independent 𝕜 (coe : min_card_finset_of_mem_convex_hull hx → E) :=
-begin
-  let [ident k] [] [":=", expr «expr - »((min_card_finset_of_mem_convex_hull hx).card, 1)],
-  have [ident hk] [":", expr «expr = »((min_card_finset_of_mem_convex_hull hx).card, «expr + »(k, 1))] [],
-  { exact [expr (nat.succ_pred_eq_of_pos (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm] },
-  classical,
-  by_contra [],
-  obtain ["⟨", ident p, ",", ident hp, "⟩", ":=", expr mem_convex_hull_erase h (mem_min_card_finset_of_mem_convex_hull hx)],
-  have [ident contra] [] [":=", expr min_card_finset_of_mem_convex_hull_card_le_card hx (set.subset.trans (finset.erase_subset «expr↑ »(p) (min_card_finset_of_mem_convex_hull hx)) (min_card_finset_of_mem_convex_hull_subseteq hx)) hp],
-  rw ["[", "<-", expr not_lt, "]"] ["at", ident contra],
-  apply [expr contra],
-  erw ["[", expr card_erase_of_mem p.2, ",", expr hk, "]"] [],
-  exact [expr lt_add_one _]
-end
+theorem affine_independent_min_card_finset_of_mem_convex_hull :
+  AffineIndependent 𝕜 (coeₓ : min_card_finset_of_mem_convex_hull hx → E) :=
+  by 
+    let k := (min_card_finset_of_mem_convex_hull hx).card - 1
+    have hk : (min_card_finset_of_mem_convex_hull hx).card = k+1
+    ·
+      exact (Nat.succ_pred_eq_of_posₓ (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm 
+    classical 
+    byContra 
+    obtain ⟨p, hp⟩ := mem_convex_hull_erase h (mem_min_card_finset_of_mem_convex_hull hx)
+    have contra :=
+      min_card_finset_of_mem_convex_hull_card_le_card hx
+        (Set.Subset.trans (Finset.erase_subset (↑p) (min_card_finset_of_mem_convex_hull hx))
+          (min_card_finset_of_mem_convex_hull_subseteq hx))
+        hp 
+    rw [←not_ltₓ] at contra 
+    apply contra 
+    erw [card_erase_of_mem p.2, hk]
+    exact lt_add_one _
 
 end Caratheodory
 
@@ -142,8 +169,7 @@ variable {s : Set E}
 
 /-- **Carathéodory's convexity theorem** -/
 theorem convex_hull_eq_union :
-  convexHull 𝕜 s =
-    ⋃(t : Finset E)(hss : «expr↑ » t ⊆ s)(hai : AffineIndependent 𝕜 (coeₓ : t → E)), convexHull 𝕜 («expr↑ » t) :=
+  convexHull 𝕜 s = ⋃ (t : Finset E)(hss : ↑t ⊆ s)(hai : AffineIndependent 𝕜 (coeₓ : t → E)), convexHull 𝕜 (↑t) :=
   by 
     apply Set.Subset.antisymm
     ·
@@ -165,7 +191,7 @@ theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull �
     by 
       exact
         ∃ (z : ι → E)(w : ι → 𝕜)(hss : Set.Range z ⊆ s)(hai : AffineIndependent 𝕜 z)(hw : ∀ i, 0 < w i),
-          (∑i, w i) = 1 ∧ (∑i, w i • z i) = x :=
+          (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
   by 
     rw [convex_hull_eq_union] at hx 
     simp only [exists_prop, Set.mem_Union] at hx 
@@ -184,7 +210,7 @@ theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull �
     ·
       erw [Finset.sum_attach, Finset.sum_filter_ne_zero, hw₂]
     ·
-      change (∑i : t' in t'.attach, (fun e => w e • e) («expr↑ » i)) = x 
+      change (∑ i : t' in t'.attach, (fun e => w e • e) (↑i)) = x 
       erw [Finset.sum_attach, Finset.sum_filter_of_ne]
       ·
         rw [t.center_mass_eq_of_sum_1 id hw₂] at hw₃ 

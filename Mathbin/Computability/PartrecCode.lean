@@ -6,21 +6,23 @@ namespace Nat.Partrec
 
 open nat(mkpair)
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rfind'
-{f}
-(hf : nat.partrec f) : nat.partrec (nat.unpaired (λ
-  a m, (nat.rfind (λ n, «expr <$> »(λ m, «expr = »(m, 0), f (mkpair a «expr + »(n, m))))).map ((«expr + » m)))) :=
-«expr $ »(partrec₂.unpaired'.2, begin
-   refine [expr partrec.map ((@partrec₂.unpaired' (λ
-       a
-       b : exprℕ(), nat.rfind (λ
-        n, «expr <$> »(λ
-         m, «expr = »(m, 0), f (mkpair a «expr + »(n, b)))))).1 _) «expr $ »(primrec.nat_add.comp primrec.snd, primrec.snd.comp primrec.fst).to_comp.to₂],
-   have [] [] [":=", expr rfind (partrec₂.unpaired'.2 ((partrec.nat_iff.2 hf).comp (primrec₂.mkpair.comp «expr $ »(primrec.fst.comp, primrec.unpair.comp primrec.fst) (primrec.nat_add.comp primrec.snd «expr $ »(primrec.snd.comp, primrec.unpair.comp primrec.fst))).to_comp).to₂)],
-   simp [] [] [] [] [] ["at", ident this],
-   exact [expr this]
- end)
+theorem rfind' {f} (hf : Nat.Partrec f) :
+  Nat.Partrec (Nat.unpaired fun a m => (Nat.rfind fun n => (fun m => m = 0) <$> f (mkpair a (n+m))).map (·+m)) :=
+  Partrec₂.unpaired'.2$
+    by 
+      refine'
+        Partrec.map
+          ((@Partrec₂.unpaired' fun a b : ℕ => Nat.rfind fun n => (fun m => m = 0) <$> f (mkpair a (n+b))).1 _)
+          (primrec.nat_add.comp Primrec.snd$ primrec.snd.comp Primrec.fst).to_comp.to₂ 
+      have  :=
+        rfind
+          (Partrec₂.unpaired'.2
+            ((Partrec.nat_iff.2 hf).comp
+                (primrec₂.mkpair.comp (primrec.fst.comp$ primrec.unpair.comp Primrec.fst)
+                    (primrec.nat_add.comp Primrec.snd
+                      (primrec.snd.comp$ primrec.unpair.comp Primrec.fst))).to_comp).to₂)
+      simp  at this 
+      exact this
 
 inductive code : Type
   | zero : code
@@ -144,16 +146,22 @@ theorem encode_code_eq : encode = encode_code :=
 theorem of_nat_code_eq : of_nat code = of_nat_code :=
   rfl
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem encode_lt_pair
-(cf cg) : «expr ∧ »(«expr < »(encode cf, encode (pair cf cg)), «expr < »(encode cg, encode (pair cf cg))) :=
-begin
-  simp [] [] [] ["[", expr encode_code_eq, ",", expr encode_code, ",", "-", ident add_comm, "]"] [] [],
-  have [] [] [":=", expr nat.mul_le_mul_right _ (exprdec_trivial() : «expr ≤ »(1, «expr * »(2, 2)))],
-  rw ["[", expr one_mul, ",", expr mul_assoc, ",", "<-", expr bit0_eq_two_mul, ",", "<-", expr bit0_eq_two_mul, "]"] ["at", ident this],
-  have [] [] [":=", expr lt_of_le_of_lt this (lt_add_of_pos_right _ (exprdec_trivial() : «expr < »(0, 4)))],
-  exact [expr ⟨lt_of_le_of_lt (nat.left_le_mkpair _ _) this, lt_of_le_of_lt (nat.right_le_mkpair _ _) this⟩]
-end
+theorem encode_lt_pair cf cg : encode cf < encode (pair cf cg) ∧ encode cg < encode (pair cf cg) :=
+  by 
+    simp [encode_code_eq, encode_code, -add_commₓ]
+    have  :=
+      Nat.mul_le_mul_rightₓ _
+        (by 
+          decide :
+        1 ≤ 2*2)
+    rw [one_mulₓ, mul_assocₓ, ←bit0_eq_two_mul, ←bit0_eq_two_mul] at this 
+    have  :=
+      lt_of_le_of_ltₓ this
+        (lt_add_of_pos_right _
+          (by 
+            decide :
+          0 < 4))
+    exact ⟨lt_of_le_of_ltₓ (Nat.left_le_mkpair _ _) this, lt_of_le_of_ltₓ (Nat.right_le_mkpair _ _) this⟩
 
 theorem encode_lt_comp cf cg : encode cf < encode (comp cf cg) ∧ encode cg < encode (comp cf cg) :=
   by 
@@ -169,15 +177,22 @@ theorem encode_lt_prec cf cg : encode cf < encode (prec cf cg) ∧ encode cg < e
     change _ 
     simp [encode_code_eq, encode_code]
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem encode_lt_rfind' (cf) : «expr < »(encode cf, encode (rfind' cf)) :=
-begin
-  simp [] [] [] ["[", expr encode_code_eq, ",", expr encode_code, ",", "-", ident add_comm, "]"] [] [],
-  have [] [] [":=", expr nat.mul_le_mul_right _ (exprdec_trivial() : «expr ≤ »(1, «expr * »(2, 2)))],
-  rw ["[", expr one_mul, ",", expr mul_assoc, ",", "<-", expr bit0_eq_two_mul, ",", "<-", expr bit0_eq_two_mul, "]"] ["at", ident this],
-  refine [expr lt_of_le_of_lt (le_trans this _) (lt_add_of_pos_right _ (exprdec_trivial() : «expr < »(0, 4)))],
-  exact [expr le_of_lt «expr $ »(nat.bit0_lt_bit1, «expr $ »(le_of_lt, «expr $ »(nat.bit0_lt_bit1, le_refl _)))]
-end
+theorem encode_lt_rfind' cf : encode cf < encode (rfind' cf) :=
+  by 
+    simp [encode_code_eq, encode_code, -add_commₓ]
+    have  :=
+      Nat.mul_le_mul_rightₓ _
+        (by 
+          decide :
+        1 ≤ 2*2)
+    rw [one_mulₓ, mul_assocₓ, ←bit0_eq_two_mul, ←bit0_eq_two_mul] at this 
+    refine'
+      lt_of_le_of_ltₓ (le_transₓ this _)
+        (lt_add_of_pos_right _
+          (by 
+            decide :
+          0 < 4))
+    exact le_of_ltₓ (Nat.bit0_lt_bit1$ le_of_ltₓ$ Nat.bit0_lt_bit1$ le_reflₓ _)
 
 section 
 
@@ -216,167 +231,194 @@ theorem prec_prim : Primrec₂ prec :=
 theorem rfind_prim : Primrec rfind' :=
   of_nat_iff.2$ encode_iff.1$ nat_add.comp (nat_bit1.comp$ nat_bit1.comp$ encode_iff.2$ Primrec.of_nat code) (const 4)
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rec_prim'
-{α σ}
-[primcodable α]
-[primcodable σ]
-{c : α → code}
-(hc : primrec c)
-{z : α → σ}
-(hz : primrec z)
-{s : α → σ}
-(hs : primrec s)
-{l : α → σ}
-(hl : primrec l)
-{r : α → σ}
-(hr : primrec r)
-{pr : α → «expr × »(code, «expr × »(code, «expr × »(σ, σ))) → σ}
-(hpr : primrec₂ pr)
-{co : α → «expr × »(code, «expr × »(code, «expr × »(σ, σ))) → σ}
-(hco : primrec₂ co)
-{pc : α → «expr × »(code, «expr × »(code, «expr × »(σ, σ))) → σ}
-(hpc : primrec₂ pc)
-{rf : α → «expr × »(code, σ) → σ}
-(hrf : primrec₂ rf) : let PR (a) := λ cf cg hf hg, pr a (cf, cg, hf, hg),
-    CO (a) := λ cf cg hf hg, co a (cf, cg, hf, hg),
-    PC (a) := λ cf cg hf hg, pc a (cf, cg, hf, hg),
-    RF (a) := λ cf hf, rf a (cf, hf),
-    F (a : α) (c : code) : σ := nat.partrec.code.rec_on c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a) in
-primrec (λ a, F a (c a) : α → σ) :=
-begin
-  intros [],
-  let [ident G₁] [":", expr «expr × »(«expr × »(α, list σ), «expr × »(exprℕ(), exprℕ())) → option σ] [":=", expr λ
-   p, let a := p.1.1, IH := p.1.2, n := p.2.1, m := p.2.2 in
-   «expr $ »((IH.nth m).bind, λ
-    s, «expr $ »((IH.nth m.unpair.1).bind, λ
-     s₁, «expr $ »((IH.nth m.unpair.2).map, λ
-      s₂, cond n.bodd (cond n.div2.bodd (rf a (of_nat code m, s)) (pc a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂))) (cond n.div2.bodd (co a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂)) (pr a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂))))))],
-  have [] [":", expr primrec G₁] [],
-  { refine [expr option_bind (list_nth.comp (snd.comp fst) (snd.comp snd)) _],
-    refine [expr option_bind ((list_nth.comp (snd.comp fst) «expr $ »(fst.comp, primrec.unpair.comp (snd.comp snd))).comp fst) _],
-    refine [expr option_map «expr $ »((list_nth.comp (snd.comp fst) «expr $ »(snd.comp, primrec.unpair.comp (snd.comp snd))).comp, fst.comp fst) _],
-    have [ident a] [] [":=", expr fst.comp «expr $ »(fst.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident n] [] [":=", expr fst.comp «expr $ »(snd.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident m] [] [":=", expr snd.comp «expr $ »(snd.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident m₁] [] [":=", expr fst.comp (primrec.unpair.comp m)],
-    have [ident m₂] [] [":=", expr snd.comp (primrec.unpair.comp m)],
-    have [ident s] [] [":=", expr snd.comp (fst.comp fst)],
-    have [ident s₁] [] [":=", expr snd.comp fst],
-    have [ident s₂] [] [":=", expr snd],
-    exact [expr (nat_bodd.comp n).cond («expr $ »(nat_bodd.comp, nat_div2.comp n).cond (hrf.comp a (((primrec.of_nat code).comp m).pair s)) (hpc.comp a «expr $ »(((primrec.of_nat code).comp m₁).pair, «expr $ »(((primrec.of_nat code).comp m₂).pair, s₁.pair s₂)))) (primrec.cond «expr $ »(nat_bodd.comp, nat_div2.comp n) (hco.comp a «expr $ »(((primrec.of_nat code).comp m₁).pair, «expr $ »(((primrec.of_nat code).comp m₂).pair, s₁.pair s₂))) (hpr.comp a «expr $ »(((primrec.of_nat code).comp m₁).pair, «expr $ »(((primrec.of_nat code).comp m₂).pair, s₁.pair s₂))))] },
-  let [ident G] [":", expr α → list σ → option σ] [":=", expr λ
-   a
-   IH, «expr $ »(IH.length.cases (some (z a)), λ
-    n, «expr $ »(n.cases (some (s a)), λ
-     n, «expr $ »(n.cases (some (l a)), λ n, «expr $ »(n.cases (some (r a)), λ n, G₁ ((a, IH), n, n.div2.div2)))))],
-  have [] [":", expr primrec₂ G] [":=", expr «expr $ »(nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst)), «expr $ »(nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst))), «expr $ »(nat_cases snd (option_some_iff.2 (hl.comp «expr $ »(fst.comp, fst.comp fst))), nat_cases snd (option_some_iff.2 (hr.comp «expr $ »(fst.comp, «expr $ »(fst.comp, fst.comp fst)))) «expr $ »(this.comp, «expr $ »(«expr $ »((fst.pair snd).comp, «expr $ »(fst.comp, «expr $ »(fst.comp, «expr $ »(fst.comp, fst)))).pair, «expr $ »(snd.pair, «expr $ »(nat_div2.comp, nat_div2.comp snd)))))))],
-  refine [expr «expr $ »(«expr $ »(nat_strong_rec (λ
-      a
-      n, F a (of_nat code n)) this.to₂, λ
-     a n, _).comp primrec.id, encode_iff.2 hc).of_eq (λ a, by simp [] [] [] [] [] [])],
-  simp [] [] [] [] [] [],
-  iterate [4] { cases [expr n] ["with", ident n],
-    { simp [] [] [] ["[", expr of_nat_code_eq, ",", expr of_nat_code, "]"] [] []; refl } },
-  simp [] [] [] ["[", expr G, "]"] [] [],
-  rw ["[", expr list.length_map, ",", expr list.length_range, "]"] [],
-  let [ident m] [] [":=", expr n.div2.div2],
-  show [expr «expr = »(G₁ ((a, (list.range «expr + »(n, 4)).map (λ
-       n, F a (of_nat code n))), n, m), some (F a (of_nat code «expr + »(n, 4))))],
-  have [ident hm] [":", expr «expr < »(m, «expr + »(n, 4))] [],
-  by simp [] [] [] ["[", expr nat.div2_val, ",", expr m, "]"] [] []; from [expr lt_of_le_of_lt (le_trans (nat.div_le_self _ _) (nat.div_le_self _ _)) (nat.succ_le_succ (nat.le_add_right _ _))],
-  have [ident m1] [":", expr «expr < »(m.unpair.1, «expr + »(n, 4))] [],
-  from [expr lt_of_le_of_lt m.unpair_left_le hm],
-  have [ident m2] [":", expr «expr < »(m.unpair.2, «expr + »(n, 4))] [],
-  from [expr lt_of_le_of_lt m.unpair_right_le hm],
-  simp [] [] [] ["[", expr G₁, "]"] [] [],
-  simp [] [] [] ["[", expr list.nth_map, ",", expr list.nth_range, ",", expr hm, ",", expr m1, ",", expr m2, "]"] [] [],
-  change [expr of_nat code «expr + »(n, 4)] ["with", expr of_nat_code «expr + »(n, 4)] [],
-  simp [] [] [] ["[", expr of_nat_code, "]"] [] [],
-  cases [expr n.bodd] []; cases [expr n.div2.bodd] []; refl
-end
+theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → code} (hc : Primrec c) {z : α → σ} (hz : Primrec z)
+  {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ} (hr : Primrec r)
+  {pr : α → code × code × σ × σ → σ} (hpr : Primrec₂ pr) {co : α → code × code × σ × σ → σ} (hco : Primrec₂ co)
+  {pc : α → code × code × σ × σ → σ} (hpc : Primrec₂ pc) {rf : α → code × σ → σ} (hrf : Primrec₂ rf) :
+  let PR a := fun cf cg hf hg => pr a (cf, cg, hf, hg)
+  let CO a := fun cf cg hf hg => co a (cf, cg, hf, hg)
+  let PC a := fun cf cg hf hg => pc a (cf, cg, hf, hg)
+  let RF a := fun cf hf => rf a (cf, hf)
+  let F (a : α) (c : code) : σ := Nat.Partrec.Code.recOn c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a)
+  Primrec (fun a => F a (c a) : α → σ) :=
+  by 
+    intros 
+    let G₁ : (α × List σ) × ℕ × ℕ → Option σ :=
+      fun p =>
+        let a := p.1.1
+        let IH := p.1.2
+        let n := p.2.1
+        let m := p.2.2
+        (IH.nth m).bind$
+          fun s =>
+            (IH.nth m.unpair.1).bind$
+              fun s₁ =>
+                (IH.nth m.unpair.2).map$
+                  fun s₂ =>
+                    cond n.bodd
+                      (cond n.div2.bodd (rf a (of_nat code m, s))
+                        (pc a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂)))
+                      (cond n.div2.bodd (co a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂))
+                        (pr a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂)))
+    have  : Primrec G₁
+    ·
+      refine' option_bind (list_nth.comp (snd.comp fst) (snd.comp snd)) _ 
+      refine' option_bind ((list_nth.comp (snd.comp fst) (fst.comp$ primrec.unpair.comp (snd.comp snd))).comp fst) _ 
+      refine'
+        option_map ((list_nth.comp (snd.comp fst) (snd.comp$ primrec.unpair.comp (snd.comp snd))).comp$ fst.comp fst) _ 
+      have a := fst.comp (fst.comp$ fst.comp$ fst.comp fst)
+      have n := fst.comp (snd.comp$ fst.comp$ fst.comp fst)
+      have m := snd.comp (snd.comp$ fst.comp$ fst.comp fst)
+      have m₁ := fst.comp (primrec.unpair.comp m)
+      have m₂ := snd.comp (primrec.unpair.comp m)
+      have s := snd.comp (fst.comp fst)
+      have s₁ := snd.comp fst 
+      have s₂ := snd 
+      exact
+        (nat_bodd.comp n).cond
+          ((nat_bodd.comp$ nat_div2.comp n).cond (hrf.comp a (((Primrec.of_nat code).comp m).pair s))
+            (hpc.comp a (((Primrec.of_nat code).comp m₁).pair$ ((Primrec.of_nat code).comp m₂).pair$ s₁.pair s₂)))
+          (Primrec.cond (nat_bodd.comp$ nat_div2.comp n)
+            (hco.comp a (((Primrec.of_nat code).comp m₁).pair$ ((Primrec.of_nat code).comp m₂).pair$ s₁.pair s₂))
+            (hpr.comp a (((Primrec.of_nat code).comp m₁).pair$ ((Primrec.of_nat code).comp m₂).pair$ s₁.pair s₂)))
+    let G : α → List σ → Option σ :=
+      fun a IH =>
+        IH.length.cases (some (z a))$
+          fun n =>
+            n.cases (some (s a))$
+              fun n => n.cases (some (l a))$ fun n => n.cases (some (r a))$ fun n => G₁ ((a, IH), n, n.div2.div2)
+    have  : Primrec₂ G :=
+      nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst))$
+        nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst)))$
+          nat_cases snd (option_some_iff.2 (hl.comp (fst.comp$ fst.comp fst)))$
+            nat_cases snd (option_some_iff.2 (hr.comp (fst.comp$ fst.comp$ fst.comp fst)))
+              (this.comp$
+                ((fst.pair snd).comp$ fst.comp$ fst.comp$ fst.comp$ fst).pair$
+                  snd.pair$ nat_div2.comp$ nat_div2.comp snd)
+    refine'
+      ((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂$ fun a n => _).comp Primrec.id$ encode_iff.2 hc).of_eq
+        fun a =>
+          by 
+            simp 
+    simp 
+    iterate 4 
+      cases' n with n
+      ·
+        simp [of_nat_code_eq, of_nat_code] <;> rfl 
+    simp [G]
+    rw [List.length_map, List.length_range]
+    let m := n.div2.div2 
+    show G₁ ((a, (List.range (n+4)).map fun n => F a (of_nat code n)), n, m) = some (F a (of_nat code (n+4)))
+    have hm : m < n+4
+    ·
+      simp [Nat.div2_val, m] <;>
+        exact
+          lt_of_le_of_ltₓ (le_transₓ (Nat.div_le_selfₓ _ _) (Nat.div_le_selfₓ _ _))
+            (Nat.succ_le_succₓ (Nat.le_add_rightₓ _ _))
+    have m1 : m.unpair.1 < n+4 
+    exact lt_of_le_of_ltₓ m.unpair_left_le hm 
+    have m2 : m.unpair.2 < n+4 
+    exact lt_of_le_of_ltₓ m.unpair_right_le hm 
+    simp [G₁]
+    simp [List.nth_map, List.nth_range, hm, m1, m2]
+    change of_nat code (n+4) with of_nat_code (n+4)
+    simp [of_nat_code]
+    cases n.bodd <;> cases n.div2.bodd <;> rfl
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rec_prim
-{α σ}
-[primcodable α]
-[primcodable σ]
-{c : α → code}
-(hc : primrec c)
-{z : α → σ}
-(hz : primrec z)
-{s : α → σ}
-(hs : primrec s)
-{l : α → σ}
-(hl : primrec l)
-{r : α → σ}
-(hr : primrec r)
-{pr : α → code → code → σ → σ → σ}
-(hpr : primrec (λ
-  a : «expr × »(α, «expr × »(code, «expr × »(code, «expr × »(σ, σ)))), pr a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2))
-{co : α → code → code → σ → σ → σ}
-(hco : primrec (λ
-  a : «expr × »(α, «expr × »(code, «expr × »(code, «expr × »(σ, σ)))), co a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2))
-{pc : α → code → code → σ → σ → σ}
-(hpc : primrec (λ
-  a : «expr × »(α, «expr × »(code, «expr × »(code, «expr × »(σ, σ)))), pc a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2))
-{rf : α → code → σ → σ}
-(hrf : primrec (λ
-  a : «expr × »(α, «expr × »(code, σ)), rf a.1 a.2.1 a.2.2)) : let F
-    (a : α)
-    (c : code) : σ := nat.partrec.code.rec_on c (z a) (s a) (l a) (r a) (pr a) (co a) (pc a) (rf a) in
-primrec (λ a, F a (c a)) :=
-begin
-  intros [],
-  let [ident G₁] [":", expr «expr × »(«expr × »(α, list σ), «expr × »(exprℕ(), exprℕ())) → option σ] [":=", expr λ
-   p, let a := p.1.1, IH := p.1.2, n := p.2.1, m := p.2.2 in
-   «expr $ »((IH.nth m).bind, λ
-    s, «expr $ »((IH.nth m.unpair.1).bind, λ
-     s₁, «expr $ »((IH.nth m.unpair.2).map, λ
-      s₂, cond n.bodd (cond n.div2.bodd (rf a (of_nat code m) s) (pc a (of_nat code m.unpair.1) (of_nat code m.unpair.2) s₁ s₂)) (cond n.div2.bodd (co a (of_nat code m.unpair.1) (of_nat code m.unpair.2) s₁ s₂) (pr a (of_nat code m.unpair.1) (of_nat code m.unpair.2) s₁ s₂)))))],
-  have [] [":", expr primrec G₁] [],
-  { refine [expr option_bind (list_nth.comp (snd.comp fst) (snd.comp snd)) _],
-    refine [expr option_bind ((list_nth.comp (snd.comp fst) «expr $ »(fst.comp, primrec.unpair.comp (snd.comp snd))).comp fst) _],
-    refine [expr option_map «expr $ »((list_nth.comp (snd.comp fst) «expr $ »(snd.comp, primrec.unpair.comp (snd.comp snd))).comp, fst.comp fst) _],
-    have [ident a] [] [":=", expr fst.comp «expr $ »(fst.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident n] [] [":=", expr fst.comp «expr $ »(snd.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident m] [] [":=", expr snd.comp «expr $ »(snd.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident m₁] [] [":=", expr fst.comp (primrec.unpair.comp m)],
-    have [ident m₂] [] [":=", expr snd.comp (primrec.unpair.comp m)],
-    have [ident s] [] [":=", expr snd.comp (fst.comp fst)],
-    have [ident s₁] [] [":=", expr snd.comp fst],
-    have [ident s₂] [] [":=", expr snd],
-    exact [expr (nat_bodd.comp n).cond («expr $ »(nat_bodd.comp, nat_div2.comp n).cond «expr $ »(hrf.comp, a.pair (((primrec.of_nat code).comp m).pair s)) «expr $ »(hpc.comp, a.pair «expr $ »(((primrec.of_nat code).comp m₁).pair, «expr $ »(((primrec.of_nat code).comp m₂).pair, s₁.pair s₂)))) (primrec.cond «expr $ »(nat_bodd.comp, nat_div2.comp n) «expr $ »(hco.comp, a.pair «expr $ »(((primrec.of_nat code).comp m₁).pair, «expr $ »(((primrec.of_nat code).comp m₂).pair, s₁.pair s₂))) «expr $ »(hpr.comp, a.pair «expr $ »(((primrec.of_nat code).comp m₁).pair, «expr $ »(((primrec.of_nat code).comp m₂).pair, s₁.pair s₂))))] },
-  let [ident G] [":", expr α → list σ → option σ] [":=", expr λ
-   a
-   IH, «expr $ »(IH.length.cases (some (z a)), λ
-    n, «expr $ »(n.cases (some (s a)), λ
-     n, «expr $ »(n.cases (some (l a)), λ n, «expr $ »(n.cases (some (r a)), λ n, G₁ ((a, IH), n, n.div2.div2)))))],
-  have [] [":", expr primrec₂ G] [":=", expr «expr $ »(nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst)), «expr $ »(nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst))), «expr $ »(nat_cases snd (option_some_iff.2 (hl.comp «expr $ »(fst.comp, fst.comp fst))), nat_cases snd (option_some_iff.2 (hr.comp «expr $ »(fst.comp, «expr $ »(fst.comp, fst.comp fst)))) «expr $ »(this.comp, «expr $ »(«expr $ »((fst.pair snd).comp, «expr $ »(fst.comp, «expr $ »(fst.comp, «expr $ »(fst.comp, fst)))).pair, «expr $ »(snd.pair, «expr $ »(nat_div2.comp, nat_div2.comp snd)))))))],
-  refine [expr «expr $ »(«expr $ »(nat_strong_rec (λ
-      a
-      n, F a (of_nat code n)) this.to₂, λ
-     a n, _).comp primrec.id, encode_iff.2 hc).of_eq (λ a, by simp [] [] [] [] [] [])],
-  simp [] [] [] [] [] [],
-  iterate [4] { cases [expr n] ["with", ident n],
-    { simp [] [] [] ["[", expr of_nat_code_eq, ",", expr of_nat_code, "]"] [] []; refl } },
-  simp [] [] [] ["[", expr G, "]"] [] [],
-  rw ["[", expr list.length_map, ",", expr list.length_range, "]"] [],
-  let [ident m] [] [":=", expr n.div2.div2],
-  show [expr «expr = »(G₁ ((a, (list.range «expr + »(n, 4)).map (λ
-       n, F a (of_nat code n))), n, m), some (F a (of_nat code «expr + »(n, 4))))],
-  have [ident hm] [":", expr «expr < »(m, «expr + »(n, 4))] [],
-  by simp [] [] [] ["[", expr nat.div2_val, ",", expr m, "]"] [] []; from [expr lt_of_le_of_lt (le_trans (nat.div_le_self _ _) (nat.div_le_self _ _)) (nat.succ_le_succ (nat.le_add_right _ _))],
-  have [ident m1] [":", expr «expr < »(m.unpair.1, «expr + »(n, 4))] [],
-  from [expr lt_of_le_of_lt m.unpair_left_le hm],
-  have [ident m2] [":", expr «expr < »(m.unpair.2, «expr + »(n, 4))] [],
-  from [expr lt_of_le_of_lt m.unpair_right_le hm],
-  simp [] [] [] ["[", expr G₁, "]"] [] [],
-  simp [] [] [] ["[", expr list.nth_map, ",", expr list.nth_range, ",", expr hm, ",", expr m1, ",", expr m2, "]"] [] [],
-  change [expr of_nat code «expr + »(n, 4)] ["with", expr of_nat_code «expr + »(n, 4)] [],
-  simp [] [] [] ["[", expr of_nat_code, "]"] [] [],
-  cases [expr n.bodd] []; cases [expr n.div2.bodd] []; refl
-end
+theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → code} (hc : Primrec c) {z : α → σ} (hz : Primrec z)
+  {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ} (hr : Primrec r)
+  {pr : α → code → code → σ → σ → σ}
+  (hpr : Primrec fun a : α × code × code × σ × σ => pr a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2)
+  {co : α → code → code → σ → σ → σ}
+  (hco : Primrec fun a : α × code × code × σ × σ => co a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2)
+  {pc : α → code → code → σ → σ → σ}
+  (hpc : Primrec fun a : α × code × code × σ × σ => pc a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2) {rf : α → code → σ → σ}
+  (hrf : Primrec fun a : α × code × σ => rf a.1 a.2.1 a.2.2) :
+  let F (a : α) (c : code) : σ := Nat.Partrec.Code.recOn c (z a) (s a) (l a) (r a) (pr a) (co a) (pc a) (rf a)
+  Primrec fun a => F a (c a) :=
+  by 
+    intros 
+    let G₁ : (α × List σ) × ℕ × ℕ → Option σ :=
+      fun p =>
+        let a := p.1.1
+        let IH := p.1.2
+        let n := p.2.1
+        let m := p.2.2
+        (IH.nth m).bind$
+          fun s =>
+            (IH.nth m.unpair.1).bind$
+              fun s₁ =>
+                (IH.nth m.unpair.2).map$
+                  fun s₂ =>
+                    cond n.bodd
+                      (cond n.div2.bodd (rf a (of_nat code m) s)
+                        (pc a (of_nat code m.unpair.1) (of_nat code m.unpair.2) s₁ s₂))
+                      (cond n.div2.bodd (co a (of_nat code m.unpair.1) (of_nat code m.unpair.2) s₁ s₂)
+                        (pr a (of_nat code m.unpair.1) (of_nat code m.unpair.2) s₁ s₂))
+    have  : Primrec G₁
+    ·
+      refine' option_bind (list_nth.comp (snd.comp fst) (snd.comp snd)) _ 
+      refine' option_bind ((list_nth.comp (snd.comp fst) (fst.comp$ primrec.unpair.comp (snd.comp snd))).comp fst) _ 
+      refine'
+        option_map ((list_nth.comp (snd.comp fst) (snd.comp$ primrec.unpair.comp (snd.comp snd))).comp$ fst.comp fst) _ 
+      have a := fst.comp (fst.comp$ fst.comp$ fst.comp fst)
+      have n := fst.comp (snd.comp$ fst.comp$ fst.comp fst)
+      have m := snd.comp (snd.comp$ fst.comp$ fst.comp fst)
+      have m₁ := fst.comp (primrec.unpair.comp m)
+      have m₂ := snd.comp (primrec.unpair.comp m)
+      have s := snd.comp (fst.comp fst)
+      have s₁ := snd.comp fst 
+      have s₂ := snd 
+      exact
+        (nat_bodd.comp n).cond
+          ((nat_bodd.comp$ nat_div2.comp n).cond (hrf.comp$ a.pair (((Primrec.of_nat code).comp m).pair s))
+            (hpc.comp$ a.pair (((Primrec.of_nat code).comp m₁).pair$ ((Primrec.of_nat code).comp m₂).pair$ s₁.pair s₂)))
+          (Primrec.cond (nat_bodd.comp$ nat_div2.comp n)
+            (hco.comp$ a.pair (((Primrec.of_nat code).comp m₁).pair$ ((Primrec.of_nat code).comp m₂).pair$ s₁.pair s₂))
+            (hpr.comp$ a.pair (((Primrec.of_nat code).comp m₁).pair$ ((Primrec.of_nat code).comp m₂).pair$ s₁.pair s₂)))
+    let G : α → List σ → Option σ :=
+      fun a IH =>
+        IH.length.cases (some (z a))$
+          fun n =>
+            n.cases (some (s a))$
+              fun n => n.cases (some (l a))$ fun n => n.cases (some (r a))$ fun n => G₁ ((a, IH), n, n.div2.div2)
+    have  : Primrec₂ G :=
+      nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst))$
+        nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst)))$
+          nat_cases snd (option_some_iff.2 (hl.comp (fst.comp$ fst.comp fst)))$
+            nat_cases snd (option_some_iff.2 (hr.comp (fst.comp$ fst.comp$ fst.comp fst)))
+              (this.comp$
+                ((fst.pair snd).comp$ fst.comp$ fst.comp$ fst.comp$ fst).pair$
+                  snd.pair$ nat_div2.comp$ nat_div2.comp snd)
+    refine'
+      ((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂$ fun a n => _).comp Primrec.id$ encode_iff.2 hc).of_eq
+        fun a =>
+          by 
+            simp 
+    simp 
+    iterate 4 
+      cases' n with n
+      ·
+        simp [of_nat_code_eq, of_nat_code] <;> rfl 
+    simp [G]
+    rw [List.length_map, List.length_range]
+    let m := n.div2.div2 
+    show G₁ ((a, (List.range (n+4)).map fun n => F a (of_nat code n)), n, m) = some (F a (of_nat code (n+4)))
+    have hm : m < n+4
+    ·
+      simp [Nat.div2_val, m] <;>
+        exact
+          lt_of_le_of_ltₓ (le_transₓ (Nat.div_le_selfₓ _ _) (Nat.div_le_selfₓ _ _))
+            (Nat.succ_le_succₓ (Nat.le_add_rightₓ _ _))
+    have m1 : m.unpair.1 < n+4 
+    exact lt_of_le_of_ltₓ m.unpair_left_le hm 
+    have m2 : m.unpair.2 < n+4 
+    exact lt_of_le_of_ltₓ m.unpair_right_le hm 
+    simp [G₁]
+    simp [List.nth_map, List.nth_range, hm, m1, m2]
+    change of_nat code (n+4) with of_nat_code (n+4)
+    simp [of_nat_code]
+    cases n.bodd <;> cases n.div2.bodd <;> rfl
 
 end 
 
@@ -384,93 +426,109 @@ section
 
 open Computable
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rec_computable
-{α σ}
-[primcodable α]
-[primcodable σ]
-{c : α → code}
-(hc : computable c)
-{z : α → σ}
-(hz : computable z)
-{s : α → σ}
-(hs : computable s)
-{l : α → σ}
-(hl : computable l)
-{r : α → σ}
-(hr : computable r)
-{pr : α → «expr × »(code, «expr × »(code, «expr × »(σ, σ))) → σ}
-(hpr : computable₂ pr)
-{co : α → «expr × »(code, «expr × »(code, «expr × »(σ, σ))) → σ}
-(hco : computable₂ co)
-{pc : α → «expr × »(code, «expr × »(code, «expr × »(σ, σ))) → σ}
-(hpc : computable₂ pc)
-{rf : α → «expr × »(code, σ) → σ}
-(hrf : computable₂ rf) : let PR (a) := λ cf cg hf hg, pr a (cf, cg, hf, hg),
-    CO (a) := λ cf cg hf hg, co a (cf, cg, hf, hg),
-    PC (a) := λ cf cg hf hg, pc a (cf, cg, hf, hg),
-    RF (a) := λ cf hf, rf a (cf, hf),
-    F (a : α) (c : code) : σ := nat.partrec.code.rec_on c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a) in
-computable (λ a, F a (c a)) :=
-begin
-  intros [],
-  let [ident G₁] [":", expr «expr × »(«expr × »(α, list σ), «expr × »(exprℕ(), exprℕ())) → option σ] [":=", expr λ
-   p, let a := p.1.1, IH := p.1.2, n := p.2.1, m := p.2.2 in
-   «expr $ »((IH.nth m).bind, λ
-    s, «expr $ »((IH.nth m.unpair.1).bind, λ
-     s₁, «expr $ »((IH.nth m.unpair.2).map, λ
-      s₂, cond n.bodd (cond n.div2.bodd (rf a (of_nat code m, s)) (pc a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂))) (cond n.div2.bodd (co a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂)) (pr a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂))))))],
-  have [] [":", expr computable G₁] [],
-  { refine [expr option_bind (list_nth.comp (snd.comp fst) (snd.comp snd)) _],
-    refine [expr option_bind ((list_nth.comp (snd.comp fst) «expr $ »(fst.comp, computable.unpair.comp (snd.comp snd))).comp fst) _],
-    refine [expr option_map «expr $ »((list_nth.comp (snd.comp fst) «expr $ »(snd.comp, computable.unpair.comp (snd.comp snd))).comp, fst.comp fst) _],
-    have [ident a] [] [":=", expr fst.comp «expr $ »(fst.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident n] [] [":=", expr fst.comp «expr $ »(snd.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident m] [] [":=", expr snd.comp «expr $ »(snd.comp, «expr $ »(fst.comp, fst.comp fst))],
-    have [ident m₁] [] [":=", expr fst.comp (computable.unpair.comp m)],
-    have [ident m₂] [] [":=", expr snd.comp (computable.unpair.comp m)],
-    have [ident s] [] [":=", expr snd.comp (fst.comp fst)],
-    have [ident s₁] [] [":=", expr snd.comp fst],
-    have [ident s₂] [] [":=", expr snd],
-    exact [expr (nat_bodd.comp n).cond («expr $ »(nat_bodd.comp, nat_div2.comp n).cond (hrf.comp a (((computable.of_nat code).comp m).pair s)) (hpc.comp a «expr $ »(((computable.of_nat code).comp m₁).pair, «expr $ »(((computable.of_nat code).comp m₂).pair, s₁.pair s₂)))) (computable.cond «expr $ »(nat_bodd.comp, nat_div2.comp n) (hco.comp a «expr $ »(((computable.of_nat code).comp m₁).pair, «expr $ »(((computable.of_nat code).comp m₂).pair, s₁.pair s₂))) (hpr.comp a «expr $ »(((computable.of_nat code).comp m₁).pair, «expr $ »(((computable.of_nat code).comp m₂).pair, s₁.pair s₂))))] },
-  let [ident G] [":", expr α → list σ → option σ] [":=", expr λ
-   a
-   IH, «expr $ »(IH.length.cases (some (z a)), λ
-    n, «expr $ »(n.cases (some (s a)), λ
-     n, «expr $ »(n.cases (some (l a)), λ n, «expr $ »(n.cases (some (r a)), λ n, G₁ ((a, IH), n, n.div2.div2)))))],
-  have [] [":", expr computable₂ G] [":=", expr «expr $ »(nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst)), «expr $ »(nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst))), «expr $ »(nat_cases snd (option_some_iff.2 (hl.comp «expr $ »(fst.comp, fst.comp fst))), nat_cases snd (option_some_iff.2 (hr.comp «expr $ »(fst.comp, «expr $ »(fst.comp, fst.comp fst)))) «expr $ »(this.comp, «expr $ »(«expr $ »((fst.pair snd).comp, «expr $ »(fst.comp, «expr $ »(fst.comp, «expr $ »(fst.comp, fst)))).pair, «expr $ »(snd.pair, «expr $ »(nat_div2.comp, nat_div2.comp snd)))))))],
-  refine [expr «expr $ »(«expr $ »(nat_strong_rec (λ
-      a
-      n, F a (of_nat code n)) this.to₂, λ
-     a n, _).comp computable.id, encode_iff.2 hc).of_eq (λ a, by simp [] [] [] [] [] [])],
-  simp [] [] [] [] [] [],
-  iterate [4] { cases [expr n] ["with", ident n],
-    { simp [] [] [] ["[", expr of_nat_code_eq, ",", expr of_nat_code, "]"] [] []; refl } },
-  simp [] [] [] ["[", expr G, "]"] [] [],
-  rw ["[", expr list.length_map, ",", expr list.length_range, "]"] [],
-  let [ident m] [] [":=", expr n.div2.div2],
-  show [expr «expr = »(G₁ ((a, (list.range «expr + »(n, 4)).map (λ
-       n, F a (of_nat code n))), n, m), some (F a (of_nat code «expr + »(n, 4))))],
-  have [ident hm] [":", expr «expr < »(m, «expr + »(n, 4))] [],
-  by simp [] [] [] ["[", expr nat.div2_val, ",", expr m, "]"] [] []; from [expr lt_of_le_of_lt (le_trans (nat.div_le_self _ _) (nat.div_le_self _ _)) (nat.succ_le_succ (nat.le_add_right _ _))],
-  have [ident m1] [":", expr «expr < »(m.unpair.1, «expr + »(n, 4))] [],
-  from [expr lt_of_le_of_lt m.unpair_left_le hm],
-  have [ident m2] [":", expr «expr < »(m.unpair.2, «expr + »(n, 4))] [],
-  from [expr lt_of_le_of_lt m.unpair_right_le hm],
-  simp [] [] [] ["[", expr G₁, "]"] [] [],
-  simp [] [] [] ["[", expr list.nth_map, ",", expr list.nth_range, ",", expr hm, ",", expr m1, ",", expr m2, "]"] [] [],
-  change [expr of_nat code «expr + »(n, 4)] ["with", expr of_nat_code «expr + »(n, 4)] [],
-  simp [] [] [] ["[", expr of_nat_code, "]"] [] [],
-  cases [expr n.bodd] []; cases [expr n.div2.bodd] []; refl
-end
+theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → code} (hc : Computable c) {z : α → σ}
+  (hz : Computable z) {s : α → σ} (hs : Computable s) {l : α → σ} (hl : Computable l) {r : α → σ} (hr : Computable r)
+  {pr : α → code × code × σ × σ → σ} (hpr : Computable₂ pr) {co : α → code × code × σ × σ → σ} (hco : Computable₂ co)
+  {pc : α → code × code × σ × σ → σ} (hpc : Computable₂ pc) {rf : α → code × σ → σ} (hrf : Computable₂ rf) :
+  let PR a := fun cf cg hf hg => pr a (cf, cg, hf, hg)
+  let CO a := fun cf cg hf hg => co a (cf, cg, hf, hg)
+  let PC a := fun cf cg hf hg => pc a (cf, cg, hf, hg)
+  let RF a := fun cf hf => rf a (cf, hf)
+  let F (a : α) (c : code) : σ := Nat.Partrec.Code.recOn c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a)
+  Computable fun a => F a (c a) :=
+  by 
+    intros 
+    let G₁ : (α × List σ) × ℕ × ℕ → Option σ :=
+      fun p =>
+        let a := p.1.1
+        let IH := p.1.2
+        let n := p.2.1
+        let m := p.2.2
+        (IH.nth m).bind$
+          fun s =>
+            (IH.nth m.unpair.1).bind$
+              fun s₁ =>
+                (IH.nth m.unpair.2).map$
+                  fun s₂ =>
+                    cond n.bodd
+                      (cond n.div2.bodd (rf a (of_nat code m, s))
+                        (pc a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂)))
+                      (cond n.div2.bodd (co a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂))
+                        (pr a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂)))
+    have  : Computable G₁
+    ·
+      refine' option_bind (list_nth.comp (snd.comp fst) (snd.comp snd)) _ 
+      refine' option_bind ((list_nth.comp (snd.comp fst) (fst.comp$ computable.unpair.comp (snd.comp snd))).comp fst) _ 
+      refine'
+        option_map ((list_nth.comp (snd.comp fst) (snd.comp$ computable.unpair.comp (snd.comp snd))).comp$ fst.comp fst)
+          _ 
+      have a := fst.comp (fst.comp$ fst.comp$ fst.comp fst)
+      have n := fst.comp (snd.comp$ fst.comp$ fst.comp fst)
+      have m := snd.comp (snd.comp$ fst.comp$ fst.comp fst)
+      have m₁ := fst.comp (computable.unpair.comp m)
+      have m₂ := snd.comp (computable.unpair.comp m)
+      have s := snd.comp (fst.comp fst)
+      have s₁ := snd.comp fst 
+      have s₂ := snd 
+      exact
+        (nat_bodd.comp n).cond
+          ((nat_bodd.comp$ nat_div2.comp n).cond (hrf.comp a (((Computable.of_nat code).comp m).pair s))
+            (hpc.comp a (((Computable.of_nat code).comp m₁).pair$ ((Computable.of_nat code).comp m₂).pair$ s₁.pair s₂)))
+          (Computable.cond (nat_bodd.comp$ nat_div2.comp n)
+            (hco.comp a (((Computable.of_nat code).comp m₁).pair$ ((Computable.of_nat code).comp m₂).pair$ s₁.pair s₂))
+            (hpr.comp a (((Computable.of_nat code).comp m₁).pair$ ((Computable.of_nat code).comp m₂).pair$ s₁.pair s₂)))
+    let G : α → List σ → Option σ :=
+      fun a IH =>
+        IH.length.cases (some (z a))$
+          fun n =>
+            n.cases (some (s a))$
+              fun n => n.cases (some (l a))$ fun n => n.cases (some (r a))$ fun n => G₁ ((a, IH), n, n.div2.div2)
+    have  : Computable₂ G :=
+      nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst))$
+        nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst)))$
+          nat_cases snd (option_some_iff.2 (hl.comp (fst.comp$ fst.comp fst)))$
+            nat_cases snd (option_some_iff.2 (hr.comp (fst.comp$ fst.comp$ fst.comp fst)))
+              (this.comp$
+                ((fst.pair snd).comp$ fst.comp$ fst.comp$ fst.comp$ fst).pair$
+                  snd.pair$ nat_div2.comp$ nat_div2.comp snd)
+    refine'
+      ((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂$ fun a n => _).comp Computable.id$
+            encode_iff.2 hc).of_eq
+        fun a =>
+          by 
+            simp 
+    simp 
+    iterate 4 
+      cases' n with n
+      ·
+        simp [of_nat_code_eq, of_nat_code] <;> rfl 
+    simp [G]
+    rw [List.length_map, List.length_range]
+    let m := n.div2.div2 
+    show G₁ ((a, (List.range (n+4)).map fun n => F a (of_nat code n)), n, m) = some (F a (of_nat code (n+4)))
+    have hm : m < n+4
+    ·
+      simp [Nat.div2_val, m] <;>
+        exact
+          lt_of_le_of_ltₓ (le_transₓ (Nat.div_le_selfₓ _ _) (Nat.div_le_selfₓ _ _))
+            (Nat.succ_le_succₓ (Nat.le_add_rightₓ _ _))
+    have m1 : m.unpair.1 < n+4 
+    exact lt_of_le_of_ltₓ m.unpair_left_le hm 
+    have m2 : m.unpair.2 < n+4 
+    exact lt_of_le_of_ltₓ m.unpair_right_le hm 
+    simp [G₁]
+    simp [List.nth_map, List.nth_range, hm, m1, m2]
+    change of_nat code (n+4) with of_nat_code (n+4)
+    simp [of_nat_code]
+    cases n.bodd <;> cases n.div2.bodd <;> rfl
 
 end 
 
 def eval : code → ℕ →. ℕ
 | zero => pure 0
 | succ => Nat.succ
-| left => «expr↑ » fun n : ℕ => n.unpair.1
-| right => «expr↑ » fun n : ℕ => n.unpair.2
+| left => ↑fun n : ℕ => n.unpair.1
+| right => ↑fun n : ℕ => n.unpair.2
 | pair cf cg => fun n => (mkpair <$> eval cf n)<*>eval cg n
 | comp cf cg => fun n => eval cg n >>= eval cf
 | prec cf cg =>
@@ -486,6 +544,7 @@ def eval : code → ℕ →. ℕ
 instance : HasMem (ℕ →. ℕ) code :=
   ⟨fun f c => eval c = f⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_const : ∀ n m, eval (code.const n) m = Part.some n
 | 0, m => rfl
@@ -493,11 +552,13 @@ theorem eval_const : ∀ n m, eval (code.const n) m = Part.some n
   by 
     simp 
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_id n : eval code.id n = Part.some n :=
   by 
     simp [·<*>·]
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_curry c n x : eval (curry c n) x = eval c (mkpair n x) :=
   by 
@@ -616,69 +677,109 @@ theorem evaln_bound : ∀ {k c n x}, x ∈ evaln k c n → n < k
       cases c <;> rw [evaln] at h <;> exact this h 
     simpa [· >> ·] using Nat.lt_succ_of_leₓ
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem evaln_mono : ∀ {k₁ k₂ c n x}, «expr ≤ »(k₁, k₂) → «expr ∈ »(x, evaln k₁ c n) → «expr ∈ »(x, evaln k₂ c n)
-| 0, k₂, c, n, x, hl, h := by simp [] [] [] ["[", expr evaln, "]"] [] ["at", ident h]; cases [expr h] []
-| «expr + »(k, 1), «expr + »(k₂, 1), c, n, x, hl, h := begin
-  have [ident hl'] [] [":=", expr nat.le_of_succ_le_succ hl],
-  have [] [":", expr ∀
-   {k k₂ n x : exprℕ()}
-   {o₁
-    o₂ : option exprℕ()}, «expr ≤ »(k, k₂) → («expr ∈ »(x, o₁) → «expr ∈ »(x, o₂)) → «expr ∈ »(x, «expr >> »(guard «expr ≤ »(n, k), o₁)) → «expr ∈ »(x, «expr >> »(guard «expr ≤ »(n, k₂), o₂))] [],
-  { simp [] [] [] ["[", expr («expr >> »), "]"] [] [],
-    introv [ident h, ident h₁, ident h₂, ident h₃],
-    exact [expr ⟨le_trans h₂ h, h₁ h₃⟩] },
-  simp [] [] [] [] [] ["at", ident h, "⊢"],
-  induction [expr c] [] ["with", ident cf, ident cg, ident hf, ident hg, ident cf, ident cg, ident hf, ident hg, ident cf, ident cg, ident hf, ident hg, ident cf, ident hf] ["generalizing", ident x, ident n]; rw ["[", expr evaln, "]"] ["at", ident h, "⊢"]; refine [expr this hl' (λ
-    h, _) h],
-  iterate [4] { exact [expr h] },
-  { simp [] [] [] ["[", expr («expr <*> »), "]"] [] ["at", ident h, "⊢"],
-    exact [expr h.imp (λ a, «expr $ »(and.imp (hf _ _), «expr $ »(Exists.imp, λ b, and.imp_left (hg _ _))))] },
-  { simp [] [] [] [] [] ["at", ident h, "⊢"],
-    exact [expr h.imp (λ a, and.imp (hg _ _) (hf _ _))] },
-  { revert [ident h],
-    simp [] [] [] [] [] [],
-    induction [expr n.unpair.2] [] [] []; simp [] [] [] [] [] [],
-    { apply [expr hf] },
-    { exact [expr λ y h₁ h₂, ⟨y, evaln_mono hl' h₁, hg _ _ h₂⟩] } },
-  { simp [] [] [] [] [] ["at", ident h, "⊢"],
-    refine [expr h.imp (λ x, and.imp (hf _ _) _)],
-    by_cases [expr x0, ":", expr «expr = »(x, 0)]; simp [] [] [] ["[", expr x0, "]"] [] [],
-    exact [expr evaln_mono hl'] }
-end
+-- failed to format: format: uncaught backtrack exception
+theorem
+  evaln_mono
+  : ∀ { k₁ k₂ c n x } , k₁ ≤ k₂ → x ∈ evaln k₁ c n → x ∈ evaln k₂ c n
+  | 0 , k₂ , c , n , x , hl , h => by simp [ evaln ] at h <;> cases h
+    |
+      k + 1 , k₂ + 1 , c , n , x , hl , h
+      =>
+      by
+        have hl' := Nat.le_of_succ_le_succₓ hl
+          have
+            :
+              ∀
+                { k k₂ n x : ℕ } { o₁ o₂ : Option ℕ }
+                ,
+                k ≤ k₂ → ( x ∈ o₁ → x ∈ o₂ ) → x ∈ guardₓ ( n ≤ k ) >> o₁ → x ∈ guardₓ ( n ≤ k₂ ) >> o₂
+          · simp [ · >> · ] introv h h₁ h₂ h₃ exact ⟨ le_transₓ h₂ h , h₁ h₃ ⟩
+          simp at h ⊢
+          induction' c with cf cg hf hg cf cg hf hg cf cg hf hg cf hf generalizing x n
+            <;>
+            rw [ evaln ] at h ⊢ <;> refine' this hl' ( fun h => _ ) h
+          iterate 4 exact h
+          ·
+            simp [ · <*> · ] at h ⊢
+              exact h.imp fun a => And.imp ( hf _ _ ) $ Exists.impₓ $ fun b => And.imp_left ( hg _ _ )
+          · simp at h ⊢ exact h.imp fun a => And.imp ( hg _ _ ) ( hf _ _ )
+          ·
+            revert h
+              simp
+              induction n.unpair . 2 <;> simp
+              · apply hf
+              · exact fun y h₁ h₂ => ⟨ y , evaln_mono hl' h₁ , hg _ _ h₂ ⟩
+          ·
+            simp at h ⊢
+              refine' h.imp fun x => And.imp ( hf _ _ ) _
+              byCases' x0 : x = 0 <;> simp [ x0 ]
+              exact evaln_mono hl'
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem evaln_sound : ∀ {k c n x}, «expr ∈ »(x, evaln k c n) → «expr ∈ »(x, eval c n)
-| 0, _, n, x, h := by simp [] [] [] ["[", expr evaln, "]"] [] ["at", ident h]; cases [expr h] []
-| «expr + »(k, 1), c, n, x, h := begin
-  induction [expr c] [] ["with", ident cf, ident cg, ident hf, ident hg, ident cf, ident cg, ident hf, ident hg, ident cf, ident cg, ident hf, ident hg, ident cf, ident hf] ["generalizing", ident x, ident n]; simp [] [] [] ["[", expr eval, ",", expr evaln, ",", expr («expr >> »), ",", expr («expr <*> »), "]"] [] ["at", ident h, "⊢"]; cases [expr h] ["with", "_", ident h],
-  iterate [4] { simpa [] [] [] ["[", expr pure, ",", expr pfun.pure, ",", expr eq_comm, "]"] [] ["using", expr h] },
-  { rcases [expr h, "with", "⟨", ident y, ",", ident ef, ",", ident z, ",", ident eg, ",", ident rfl, "⟩"],
-    exact [expr ⟨_, hf _ _ ef, _, hg _ _ eg, rfl⟩] },
-  { rcases [expr h, "with", "⟨", ident y, ",", ident eg, ",", ident ef, "⟩"],
-    exact [expr ⟨_, hg _ _ eg, hf _ _ ef⟩] },
-  { revert [ident h],
-    induction [expr n.unpair.2] [] ["with", ident m, ident IH] ["generalizing", ident x]; simp [] [] [] [] [] [],
-    { apply [expr hf] },
-    { refine [expr λ y h₁ h₂, ⟨y, IH _ _, _⟩],
-      { have [] [] [":=", expr evaln_mono k.le_succ h₁],
-        simp [] [] [] ["[", expr evaln, ",", expr («expr >> »), "]"] [] ["at", ident this],
-        exact [expr this.2] },
-      { exact [expr hg _ _ h₂] } } },
-  { rcases [expr h, "with", "⟨", ident m, ",", ident h₁, ",", ident h₂, "⟩"],
-    by_cases [expr m0, ":", expr «expr = »(m, 0)]; simp [] [] [] ["[", expr m0, "]"] [] ["at", ident h₂],
-    { exact [expr ⟨0, ⟨by simpa [] [] [] ["[", expr m0, "]"] [] ["using", expr hf _ _ h₁], λ
-         m, (nat.not_lt_zero _).elim⟩, by injection [expr h₂] ["with", ident h₂]; simp [] [] [] ["[", expr h₂, "]"] [] []⟩] },
-    { have [] [] [":=", expr evaln_sound h₂],
-      simp [] [] [] ["[", expr eval, "]"] [] ["at", ident this],
-      rcases [expr this, "with", "⟨", ident y, ",", "⟨", ident hy₁, ",", ident hy₂, "⟩", ",", ident rfl, "⟩"],
-      refine [expr ⟨«expr + »(y, 1), ⟨by simpa [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] ["using", expr hy₁], λ
-         i im, _⟩, by simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] []⟩],
-      cases [expr i] ["with", ident i],
-      { exact [expr ⟨m, by simpa [] [] [] [] [] ["using", expr hf _ _ h₁], m0⟩] },
-      { rcases [expr hy₂ (nat.lt_of_succ_lt_succ im), "with", "⟨", ident z, ",", ident hz, ",", ident z0, "⟩"],
-        exact [expr ⟨z, by simpa [] [] [] ["[", expr nat.succ_eq_add_one, ",", expr add_comm, ",", expr add_left_comm, "]"] [] ["using", expr hz], z0⟩] } } }
-end
+theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
+| 0, _, n, x, h =>
+  by 
+    simp [evaln] at h <;> cases h
+| k+1, c, n, x, h =>
+  by 
+    induction' c with cf cg hf hg cf cg hf hg cf cg hf hg cf hf generalizing x n <;>
+      simp [eval, evaln, · >> ·, ·<*>·] at h⊢ <;> cases' h with _ h 
+    iterate 4 
+      simpa [pure, Pfun.pure, eq_comm] using h
+    ·
+      rcases h with ⟨y, ef, z, eg, rfl⟩
+      exact ⟨_, hf _ _ ef, _, hg _ _ eg, rfl⟩
+    ·
+      rcases h with ⟨y, eg, ef⟩
+      exact ⟨_, hg _ _ eg, hf _ _ ef⟩
+    ·
+      revert h 
+      induction' n.unpair.2 with m IH generalizing x <;> simp 
+      ·
+        apply hf
+      ·
+        refine' fun y h₁ h₂ => ⟨y, IH _ _, _⟩
+        ·
+          have  := evaln_mono k.le_succ h₁ 
+          simp [evaln, · >> ·] at this 
+          exact this.2
+        ·
+          exact hg _ _ h₂
+    ·
+      rcases h with ⟨m, h₁, h₂⟩
+      byCases' m0 : m = 0 <;> simp [m0] at h₂
+      ·
+        exact
+          ⟨0,
+            ⟨by 
+                simpa [m0] using hf _ _ h₁,
+              fun m => (Nat.not_lt_zeroₓ _).elim⟩,
+            by 
+              injection h₂ with h₂ <;> simp [h₂]⟩
+      ·
+        have  := evaln_sound h₂ 
+        simp [eval] at this 
+        rcases this with ⟨y, ⟨hy₁, hy₂⟩, rfl⟩
+        refine'
+          ⟨y+1,
+            ⟨by 
+                simpa [add_commₓ, add_left_commₓ] using hy₁,
+              fun i im => _⟩,
+            by 
+              simp [add_commₓ, add_left_commₓ]⟩
+        cases' i with i
+        ·
+          exact
+            ⟨m,
+              by 
+                simpa using hf _ _ h₁,
+              m0⟩
+        ·
+          rcases hy₂ (Nat.lt_of_succ_lt_succₓ im) with ⟨z, hz, z0⟩
+          exact
+            ⟨z,
+              by 
+                simpa [Nat.succ_eq_add_one, add_commₓ, add_left_commₓ] using hz,
+              z0⟩
 
 theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n :=
   ⟨fun h =>
@@ -811,57 +912,74 @@ private def G (L : List (List (Option ℕ))) : Option (List (Option ℕ)) :=
                   let x ← lup L (k, cf) (mkpair z m)
                   x.cases (some m) fun _ => lup L (k', c) (mkpair z (m+1))
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private theorem hG : primrec G :=
-begin
-  have [ident a] [] [":=", expr (primrec.of_nat «expr × »(exprℕ(), code)).comp list_length],
-  have [ident k] [] [":=", expr fst.comp a],
-  refine [expr option_some.comp (list_map (list_range.comp k) (_ : primrec _))],
-  replace [ident k] [] [":=", expr k.comp fst],
-  have [ident n] [] [":=", expr snd],
-  refine [expr nat_cases k (const none) (_ : primrec _)],
-  have [ident k] [] [":=", expr k.comp fst],
-  have [ident n] [] [":=", expr n.comp fst],
-  have [ident k'] [] [":=", expr snd],
-  have [ident c] [] [":=", expr snd.comp «expr $ »(a.comp, fst.comp fst)],
-  apply [expr rec_prim c (const (some 0)) (option_some.comp (primrec.succ.comp n)) (option_some.comp «expr $ »(fst.comp, primrec.unpair.comp n)) (option_some.comp «expr $ »(snd.comp, primrec.unpair.comp n))],
-  { have [ident L] [] [":=", expr (fst.comp fst).comp fst],
-    have [ident k] [] [":=", expr k.comp fst],
-    have [ident n] [] [":=", expr n.comp fst],
-    have [ident cf] [] [":=", expr fst.comp snd],
-    have [ident cg] [] [":=", expr (fst.comp snd).comp snd],
-    exact [expr option_bind «expr $ »(hlup.comp, «expr $ »(L.pair, (k.pair cf).pair n)) (option_map («expr $ »(hlup.comp, «expr $ »(L.pair, (k.pair cg).pair n)).comp fst) (primrec₂.mkpair.comp (snd.comp fst) snd))] },
-  { have [ident L] [] [":=", expr (fst.comp fst).comp fst],
-    have [ident k] [] [":=", expr k.comp fst],
-    have [ident n] [] [":=", expr n.comp fst],
-    have [ident cf] [] [":=", expr fst.comp snd],
-    have [ident cg] [] [":=", expr (fst.comp snd).comp snd],
-    exact [expr option_bind «expr $ »(hlup.comp, «expr $ »(L.pair, (k.pair cg).pair n)) (hlup.comp «expr $ »((L.comp fst).pair, ((k.pair cf).comp fst).pair snd))] },
-  { have [ident L] [] [":=", expr (fst.comp fst).comp fst],
-    have [ident k] [] [":=", expr k.comp fst],
-    have [ident n] [] [":=", expr n.comp fst],
-    have [ident cf] [] [":=", expr fst.comp snd],
-    have [ident cg] [] [":=", expr (fst.comp snd).comp snd],
-    have [ident z] [] [":=", expr fst.comp (primrec.unpair.comp n)],
-    refine [expr nat_cases (snd.comp (primrec.unpair.comp n)) «expr $ »(hlup.comp, «expr $ »(L.pair, (k.pair cf).pair z)) (_ : primrec _)],
-    have [ident L] [] [":=", expr L.comp fst],
-    have [ident z] [] [":=", expr z.comp fst],
-    have [ident y] [] [":=", expr snd],
-    refine [expr option_bind «expr $ »(hlup.comp, «expr $ »(L.pair, (((k'.pair c).comp fst).comp fst).pair (primrec₂.mkpair.comp z y))) (_ : primrec _)],
-    have [ident z] [] [":=", expr z.comp fst],
-    have [ident y] [] [":=", expr y.comp fst],
-    have [ident i] [] [":=", expr snd],
-    exact [expr hlup.comp «expr $ »((L.comp fst).pair, «expr $ »(«expr $ »((k.pair cg).comp, fst.comp fst).pair, «expr $ »(primrec₂.mkpair.comp z, primrec₂.mkpair.comp y i)))] },
-  { have [ident L] [] [":=", expr (fst.comp fst).comp fst],
-    have [ident k] [] [":=", expr k.comp fst],
-    have [ident n] [] [":=", expr n.comp fst],
-    have [ident cf] [] [":=", expr fst.comp snd],
-    have [ident z] [] [":=", expr fst.comp (primrec.unpair.comp n)],
-    have [ident m] [] [":=", expr snd.comp (primrec.unpair.comp n)],
-    refine [expr option_bind «expr $ »(hlup.comp, «expr $ »(L.pair, (k.pair cf).pair (primrec₂.mkpair.comp z m))) (_ : primrec _)],
-    have [ident m] [] [":=", expr m.comp fst],
-    exact [expr nat_cases snd (option_some.comp m) ((hlup.comp «expr $ »((L.comp fst).pair, «expr $ »((k'.pair c).comp, fst.comp fst).pair (primrec₂.mkpair.comp (z.comp fst) (primrec.succ.comp m)))).comp fst)] }
-end
+private theorem hG : Primrec G :=
+  by 
+    have a := (Primrec.of_nat (ℕ × code)).comp list_length 
+    have k := fst.comp a 
+    refine' option_some.comp (list_map (list_range.comp k) (_ : Primrec _))
+    replace k := k.comp fst 
+    have n := snd 
+    refine' nat_cases k (const none) (_ : Primrec _)
+    have k := k.comp fst 
+    have n := n.comp fst 
+    have k' := snd 
+    have c := snd.comp (a.comp$ fst.comp fst)
+    apply
+      rec_prim c (const (some 0)) (option_some.comp (primrec.succ.comp n))
+        (option_some.comp (fst.comp$ primrec.unpair.comp n)) (option_some.comp (snd.comp$ primrec.unpair.comp n))
+    ·
+      have L := (fst.comp fst).comp fst 
+      have k := k.comp fst 
+      have n := n.comp fst 
+      have cf := fst.comp snd 
+      have cg := (fst.comp snd).comp snd 
+      exact
+        option_bind (hlup.comp$ L.pair$ (k.pair cf).pair n)
+          (option_map ((hlup.comp$ L.pair$ (k.pair cg).pair n).comp fst) (primrec₂.mkpair.comp (snd.comp fst) snd))
+    ·
+      have L := (fst.comp fst).comp fst 
+      have k := k.comp fst 
+      have n := n.comp fst 
+      have cf := fst.comp snd 
+      have cg := (fst.comp snd).comp snd 
+      exact
+        option_bind (hlup.comp$ L.pair$ (k.pair cg).pair n)
+          (hlup.comp ((L.comp fst).pair$ ((k.pair cf).comp fst).pair snd))
+    ·
+      have L := (fst.comp fst).comp fst 
+      have k := k.comp fst 
+      have n := n.comp fst 
+      have cf := fst.comp snd 
+      have cg := (fst.comp snd).comp snd 
+      have z := fst.comp (primrec.unpair.comp n)
+      refine' nat_cases (snd.comp (primrec.unpair.comp n)) (hlup.comp$ L.pair$ (k.pair cf).pair z) (_ : Primrec _)
+      have L := L.comp fst 
+      have z := z.comp fst 
+      have y := snd 
+      refine'
+        option_bind (hlup.comp$ L.pair$ (((k'.pair c).comp fst).comp fst).pair (primrec₂.mkpair.comp z y))
+          (_ : Primrec _)
+      have z := z.comp fst 
+      have y := y.comp fst 
+      have i := snd 
+      exact
+        hlup.comp
+          ((L.comp fst).pair$ ((k.pair cg).comp$ fst.comp fst).pair$ primrec₂.mkpair.comp z$ primrec₂.mkpair.comp y i)
+    ·
+      have L := (fst.comp fst).comp fst 
+      have k := k.comp fst 
+      have n := n.comp fst 
+      have cf := fst.comp snd 
+      have z := fst.comp (primrec.unpair.comp n)
+      have m := snd.comp (primrec.unpair.comp n)
+      refine' option_bind (hlup.comp$ L.pair$ (k.pair cf).pair (primrec₂.mkpair.comp z m)) (_ : Primrec _)
+      have m := m.comp fst 
+      exact
+        nat_cases snd (option_some.comp m)
+          ((hlup.comp
+                ((L.comp fst).pair$
+                  ((k'.pair c).comp$ fst.comp fst).pair (primrec₂.mkpair.comp (z.comp fst) (primrec.succ.comp m)))).comp
+            fst)
 
 private theorem evaln_map k c n : ((((List.range k).nth n).map (evaln k c)).bind fun b => b) = evaln k c n :=
   by 
@@ -877,61 +995,85 @@ private theorem evaln_map k c n : ((((List.range k).nth n).map (evaln k c)).bind
         exact kn.elim (evaln_bound e)
       simpa using kn
 
--- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem evaln_prim : primrec (λ a : «expr × »(«expr × »(exprℕ(), code), exprℕ()), evaln a.1.1 a.1.2 a.2) :=
-have primrec₂ (λ (_ : unit) (n : exprℕ()), let a := of_nat «expr × »(exprℕ(), code) n in
- (list.range a.1).map (evaln a.1 a.2)), from «expr $ »(primrec.nat_strong_rec _ (hG.comp snd).to₂, λ _ p, begin
-   simp [] [] [] ["[", expr G, "]"] [] [],
-   rw [expr (_ : «expr = »((of_nat «expr × »(exprℕ(), code) _).snd, of_nat code p.unpair.2))] [],
-   swap,
-   { simp [] [] [] [] [] [] },
-   apply [expr list.map_congr (λ n, _)],
-   rw [expr (by simp [] [] [] [] [] [] : «expr = »(list.range p, list.range (mkpair p.unpair.1 (encode (of_nat code p.unpair.2)))))] [],
-   generalize [] [":"] [expr «expr = »(p.unpair.1, k)],
-   generalize [] [":"] [expr «expr = »(of_nat code p.unpair.2, c)],
-   intro [ident nk],
-   cases [expr k] ["with", ident k'],
-   { simp [] [] [] ["[", expr evaln, "]"] [] [] },
-   let [ident k] [] [":=", expr «expr + »(k', 1)],
-   change [expr k'.succ] ["with", expr k] [],
-   simp [] [] [] ["[", expr nat.lt_succ_iff, "]"] [] ["at", ident nk],
-   have [ident hg] [":", expr ∀
-    {k'
-     c'
-     n}, «expr < »(mkpair k' (encode c'), mkpair k (encode c)) → «expr = »(lup ((list.range (mkpair k (encode c))).map (λ
-       n, (list.range n.unpair.1).map (evaln n.unpair.1 (of_nat code n.unpair.2)))) (k', c') n, evaln k' c' n)] [],
-   { intros [ident k₁, ident c₁, ident n₁, ident hl],
-     simp [] [] [] ["[", expr lup, ",", expr list.nth_range hl, ",", expr evaln_map, ",", expr («expr >>= »), "]"] [] [] },
-   cases [expr c] ["with", ident cf, ident cg, ident cf, ident cg, ident cf, ident cg, ident cf]; simp [] [] [] ["[", expr evaln, ",", expr nk, ",", expr («expr >> »), ",", expr («expr >>= »), ",", expr («expr <$> »), ",", expr («expr <*> »), ",", expr pure, "]"] [] [],
-   { cases [expr encode_lt_pair cf cg] ["with", ident lf, ident lg],
-     rw ["[", expr hg (nat.mkpair_lt_mkpair_right _ lf), ",", expr hg (nat.mkpair_lt_mkpair_right _ lg), "]"] [],
-     cases [expr evaln k cf n] [],
-     { refl },
-     cases [expr evaln k cg n] []; refl },
-   { cases [expr encode_lt_comp cf cg] ["with", ident lf, ident lg],
-     rw [expr hg (nat.mkpair_lt_mkpair_right _ lg)] [],
-     cases [expr evaln k cg n] [],
-     { refl },
-     simp [] [] [] ["[", expr hg (nat.mkpair_lt_mkpair_right _ lf), "]"] [] [] },
-   { cases [expr encode_lt_prec cf cg] ["with", ident lf, ident lg],
-     rw [expr hg (nat.mkpair_lt_mkpair_right _ lf)] [],
-     cases [expr n.unpair.2] [],
-     { refl },
-     simp [] [] [] [] [] [],
-     rw [expr hg (nat.mkpair_lt_mkpair_left _ k'.lt_succ_self)] [],
-     cases [expr evaln k' _ _] [],
-     { refl },
-     simp [] [] [] ["[", expr hg (nat.mkpair_lt_mkpair_right _ lg), "]"] [] [] },
-   { have [ident lf] [] [":=", expr encode_lt_rfind' cf],
-     rw [expr hg (nat.mkpair_lt_mkpair_right _ lf)] [],
-     cases [expr evaln k cf n] ["with", ident x],
-     { refl },
-     simp [] [] [] [] [] [],
-     cases [expr x] []; simp [] [] [] ["[", expr nat.succ_ne_zero, "]"] [] [],
-     rw [expr hg (nat.mkpair_lt_mkpair_left _ k'.lt_succ_self)] [] }
- end),
-«expr $ »((option_bind (list_nth.comp (this.comp (const ()) (encode_iff.2 fst)) snd) snd.to₂).of_eq, λ
- ⟨⟨k, c⟩, n⟩, by simp [] [] [] ["[", expr evaln_map, "]"] [] [])
+theorem evaln_prim : Primrec fun a : (ℕ × code) × ℕ => evaln a.1.1 a.1.2 a.2 :=
+  have  :
+    Primrec₂
+      fun _ : Unit n : ℕ =>
+        let a := of_nat (ℕ × code) n
+        (List.range a.1).map (evaln a.1 a.2) :=
+    Primrec.nat_strong_rec _ (hG.comp snd).to₂$
+      fun _ p =>
+        by 
+          simp [G]
+          rw [(_ : (of_nat (ℕ × code) _).snd = of_nat code p.unpair.2)]
+          swap
+          ·
+            simp 
+          apply List.map_congr fun n => _ 
+          rw
+            [(by 
+              simp  :
+            List.range p = List.range (mkpair p.unpair.1 (encode (of_nat code p.unpair.2))))]
+          generalize p.unpair.1 = k 
+          generalize of_nat code p.unpair.2 = c 
+          intro nk 
+          cases' k with k'
+          ·
+            simp [evaln]
+          let k := k'+1
+          change k'.succ with k 
+          simp [Nat.lt_succ_iff] at nk 
+          have hg :
+            ∀ {k' c' n},
+              mkpair k' (encode c') < mkpair k (encode c) →
+                lup
+                    ((List.range (mkpair k (encode c))).map
+                      fun n => (List.range n.unpair.1).map (evaln n.unpair.1 (of_nat code n.unpair.2)))
+                    (k', c') n =
+                  evaln k' c' n
+          ·
+            intro k₁ c₁ n₁ hl 
+            simp [lup, List.nth_range hl, evaln_map, · >>= ·]
+          cases' c with cf cg cf cg cf cg cf <;> simp [evaln, nk, · >> ·, · >>= ·, · <$> ·, ·<*>·, pure]
+          ·
+            cases' encode_lt_pair cf cg with lf lg 
+            rw [hg (Nat.mkpair_lt_mkpair_right _ lf), hg (Nat.mkpair_lt_mkpair_right _ lg)]
+            cases evaln k cf n
+            ·
+              rfl 
+            cases evaln k cg n <;> rfl
+          ·
+            cases' encode_lt_comp cf cg with lf lg 
+            rw [hg (Nat.mkpair_lt_mkpair_right _ lg)]
+            cases evaln k cg n
+            ·
+              rfl 
+            simp [hg (Nat.mkpair_lt_mkpair_right _ lf)]
+          ·
+            cases' encode_lt_prec cf cg with lf lg 
+            rw [hg (Nat.mkpair_lt_mkpair_right _ lf)]
+            cases n.unpair.2
+            ·
+              rfl 
+            simp 
+            rw [hg (Nat.mkpair_lt_mkpair_left _ k'.lt_succ_self)]
+            cases evaln k' _ _
+            ·
+              rfl 
+            simp [hg (Nat.mkpair_lt_mkpair_right _ lg)]
+          ·
+            have lf := encode_lt_rfind' cf 
+            rw [hg (Nat.mkpair_lt_mkpair_right _ lf)]
+            cases' evaln k cf n with x
+            ·
+              rfl 
+            simp 
+            cases x <;> simp [Nat.succ_ne_zero]
+            rw [hg (Nat.mkpair_lt_mkpair_left _ k'.lt_succ_self)]
+  (option_bind (list_nth.comp (this.comp (const ()) (encode_iff.2 fst)) snd) snd.to₂).of_eq$
+    fun ⟨⟨k, c⟩, n⟩ =>
+      by 
+        simp [evaln_map]
 
 end 
 

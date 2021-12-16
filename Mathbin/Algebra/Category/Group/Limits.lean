@@ -20,7 +20,7 @@ open CategoryTheory.Limits
 
 universe u
 
-noncomputable theory
+noncomputable section 
 
 variable {J : Type u} [small_category J]
 

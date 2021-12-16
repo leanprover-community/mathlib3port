@@ -65,7 +65,7 @@ instance : CoeFun (NonUnitalAlgHom R A B) fun _ => A → B :=
   ⟨to_fun⟩
 
 @[simp]
-theorem to_fun_eq_coe (f : NonUnitalAlgHom R A B) : f.to_fun = «expr⇑ » f :=
+theorem to_fun_eq_coe (f : NonUnitalAlgHom R A B) : f.to_fun = ⇑f :=
   rfl
 
 initialize_simps_projections NonUnitalAlgHom (toFun → apply)
@@ -104,11 +104,11 @@ instance : Coe (NonUnitalAlgHom R A B) (MulHom A B) :=
   ⟨to_mul_hom⟩
 
 @[simp]
-theorem to_distrib_mul_action_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.to_distrib_mul_action_hom = «expr↑ » f :=
+theorem to_distrib_mul_action_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.to_distrib_mul_action_hom = ↑f :=
   rfl
 
 @[simp]
-theorem to_mul_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.to_mul_hom = «expr↑ » f :=
+theorem to_mul_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.to_mul_hom = ↑f :=
   rfl
 
 @[simp, normCast]

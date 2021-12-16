@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Comma 
 import Mathbin.CategoryTheory.Punit 
+import Mathbin.CategoryTheory.Comma 
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 
 /-!
@@ -20,15 +20,15 @@ universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
--- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /--
 The category of `T`-structured arrows with domain `S : D` (here `T : C ⥤ D`),
 has as its objects `D`-morphisms of the form `S ⟶ T Y`, for some `Y : C`,
 and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
-@[derive #[expr category], nolint #[ident has_inhabited_instance]]
-def structured_arrow (S : D) (T : «expr ⥤ »(C, D)) :=
-comma (functor.from_punit S) T
+@[nolint has_inhabited_instance]
+def structured_arrow (S : D) (T : C ⥤ D) :=
+  comma (functor.from_punit S) T deriving [anonymous]
 
 namespace StructuredArrow
 
@@ -55,10 +55,10 @@ theorem mk_right (f : S ⟶ T.obj Y) : (mk f).right = Y :=
 theorem mk_hom_eq_self (f : S ⟶ T.obj Y) : (mk f).Hom = f :=
   rfl
 
--- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, reassoc #[]]
-theorem w {A B : structured_arrow S T} (f : «expr ⟶ »(A, B)) : «expr = »(«expr ≫ »(A.hom, T.map f.right), B.hom) :=
-by { have [] [] [":=", expr f.w]; tidy [] }
+@[simp, reassoc]
+theorem w {A B : structured_arrow S T} (f : A ⟶ B) : A.hom ≫ T.map f.right = B.hom :=
+  by 
+    have  := f.w <;> tidy
 
 theorem eq_mk (f : structured_arrow S T) : f = mk f.hom :=
   by 
@@ -183,15 +183,15 @@ def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : structured_arrow S F ⥤ structur
 
 end StructuredArrow
 
--- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /--
 The category of `S`-costructured arrows with target `T : D` (here `S : C ⥤ D`),
 has as its objects `D`-morphisms of the form `S Y ⟶ T`, for some `Y : C`,
 and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
-@[derive #[expr category], nolint #[ident has_inhabited_instance]]
-def costructured_arrow (S : «expr ⥤ »(C, D)) (T : D) :=
-comma S (functor.from_punit T)
+@[nolint has_inhabited_instance]
+def costructured_arrow (S : C ⥤ D) (T : D) :=
+  comma S (functor.from_punit T)deriving [anonymous]
 
 namespace CostructuredArrow
 
@@ -347,7 +347,7 @@ category of structured arrows `d ⟶ F.obj c` to the category of costructured ar
 `F.op.obj c ⟶ (op d)`.
 -/
 @[simps]
-def to_costructured_arrow (F : C ⥤ D) (d : D) : «expr ᵒᵖ» (structured_arrow d F) ⥤ costructured_arrow F.op (op d) :=
+def to_costructured_arrow (F : C ⥤ D) (d : D) : structured_arrow d Fᵒᵖ ⥤ costructured_arrow F.op (op d) :=
   { obj := fun X => @costructured_arrow.mk _ _ _ _ _ (op X.unop.right) F.op X.unop.hom.op,
     map :=
       fun X Y f =>
@@ -363,7 +363,7 @@ category of structured arrows `op d ⟶ F.op.obj c` to the category of costructu
 `F.obj c ⟶ d`.
 -/
 @[simps]
-def to_costructured_arrow' (F : C ⥤ D) (d : D) : «expr ᵒᵖ» (structured_arrow (op d) F.op) ⥤ costructured_arrow F d :=
+def to_costructured_arrow' (F : C ⥤ D) (d : D) : structured_arrow (op d) F.opᵒᵖ ⥤ costructured_arrow F d :=
   { obj := fun X => @costructured_arrow.mk _ _ _ _ _ (unop X.unop.right) F X.unop.hom.unop,
     map :=
       fun X Y f =>
@@ -384,7 +384,7 @@ category of costructured arrows `F.obj c ⟶ d` to the category of structured ar
 `op d ⟶ F.op.obj c`.
 -/
 @[simps]
-def to_structured_arrow (F : C ⥤ D) (d : D) : «expr ᵒᵖ» (costructured_arrow F d) ⥤ structured_arrow (op d) F.op :=
+def to_structured_arrow (F : C ⥤ D) (d : D) : costructured_arrow F dᵒᵖ ⥤ structured_arrow (op d) F.op :=
   { obj := fun X => @structured_arrow.mk _ _ _ _ _ (op X.unop.left) F.op X.unop.hom.op,
     map :=
       fun X Y f =>
@@ -400,7 +400,7 @@ category of costructured arrows `F.op.obj c ⟶ op d` to the category of structu
 `d ⟶ F.obj c`.
 -/
 @[simps]
-def to_structured_arrow' (F : C ⥤ D) (d : D) : «expr ᵒᵖ» (costructured_arrow F.op (op d)) ⥤ structured_arrow d F :=
+def to_structured_arrow' (F : C ⥤ D) (d : D) : costructured_arrow F.op (op d)ᵒᵖ ⥤ structured_arrow d F :=
   { obj := fun X => @structured_arrow.mk _ _ _ _ _ (unop X.unop.left) F X.unop.hom.unop,
     map :=
       fun X Y f =>
@@ -416,8 +416,7 @@ end CostructuredArrow
 For a functor `F : C ⥤ D` and an object `d : D`, the category of structured arrows `d ⟶ F.obj c`
 is contravariantly equivalent to the category of costructured arrows `F.op.obj c ⟶ op d`.
 -/
-def structured_arrow_op_equivalence (F : C ⥤ D) (d : D) :
-  «expr ᵒᵖ» (structured_arrow d F) ≌ costructured_arrow F.op (op d) :=
+def structured_arrow_op_equivalence (F : C ⥤ D) (d : D) : structured_arrow d Fᵒᵖ ≌ costructured_arrow F.op (op d) :=
   equivalence.mk (structured_arrow.to_costructured_arrow F d) (costructured_arrow.to_structured_arrow' F d).rightOp
     (nat_iso.of_components
       (fun X =>
@@ -446,8 +445,7 @@ For a functor `F : C ⥤ D` and an object `d : D`, the category of costructured 
 `F.obj c ⟶ d` is contravariantly equivalent to the category of structured arrows
 `op d ⟶ F.op.obj c`.
 -/
-def costructured_arrow_op_equivalence (F : C ⥤ D) (d : D) :
-  «expr ᵒᵖ» (costructured_arrow F d) ≌ structured_arrow (op d) F.op :=
+def costructured_arrow_op_equivalence (F : C ⥤ D) (d : D) : costructured_arrow F dᵒᵖ ≌ structured_arrow (op d) F.op :=
   equivalence.mk (costructured_arrow.to_structured_arrow F d) (structured_arrow.to_costructured_arrow' F d).rightOp
     (nat_iso.of_components
       (fun X =>

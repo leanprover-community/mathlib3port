@@ -63,18 +63,18 @@ evaluator for this basis, which we take up in the next section.
 
 namespace ToPartrec
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The type of codes for primitive recursive functions. Unlike `nat.partrec.code`, this uses a set
 of operations on `list ℕ`. See `code.eval` for a description of the behavior of the primitives. -/
-@[derive #["[", expr decidable_eq, ",", expr inhabited, "]"]]
 inductive code
-| zero'
-| succ
-| tail
-| cons : code → code → code
-| comp : code → code → code
-| case : code → code → code
-| fix : code → code
+  | zero'
+  | succ
+  | tail
+  | cons : code → code → code
+  | comp : code → code → code
+  | case : code → code → code
+  | fix : code → code deriving [anonymous], [anonymous]
 
 /-- The semantics of the `code` primitives, as partial functions `list ℕ →. list ℕ`. By convention
 we functions that return a single result return a singleton `[n]`, or in some cases `n :: v` where
@@ -242,101 +242,161 @@ theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vec
               simp [Vector.mOfFnₓ, hg₁, map_bind, seq_bind_eq, bind_assoc, · ∘ ·, hl, -Subtype.val_eq_coe]
               rfl⟩
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_code
-{n}
-{f : «expr →. »(vector exprℕ() n, exprℕ())}
-(hf : nat.partrec' f) : «expr∃ , »((c : code), ∀ v : vector exprℕ() n, «expr = »(c.eval v.1, «expr <$> »(pure, f v))) :=
-begin
-  induction [expr hf] [] ["with", ident n, ident f, ident hf] [],
-  induction [expr hf] [] [] [],
-  case [ident prim, ident zero] { exact [expr ⟨zero', λ ⟨«expr[ , ]»([]), _⟩, rfl⟩] },
-  case [ident prim, ident succ] { exact [expr ⟨succ, λ ⟨«expr[ , ]»([v]), _⟩, rfl⟩] },
-  case [ident prim, ident nth, ":", ident n, ident i] { refine [expr fin.succ_rec (λ n, _) (λ n i IH, _) i],
-    { exact [expr ⟨head, λ ⟨list.cons a as, _⟩, by simp [] [] [] [] [] []; refl⟩] },
-    { obtain ["⟨", ident c, ",", ident h, "⟩", ":=", expr IH],
-      exact [expr ⟨c.comp tail, λ
-        v, by simpa [] [] [] ["[", "<-", expr vector.nth_tail, "]"] [] ["using", expr h v.tail]⟩] } },
-  case [ident prim, ident comp, ":", ident m, ident n, ident f, ident g, ident hf, ident hg, ident IHf, ident IHg] { simpa [] [] [] ["[", expr part.bind_eq_bind, "]"] [] ["using", expr exists_code.comp IHf IHg] },
-  case [ident prim, ident prec, ":", ident n, ident f, ident g, ident hf, ident hg, ident IHf, ident IHg] { obtain ["⟨", ident cf, ",", ident hf, "⟩", ":=", expr IHf],
-    obtain ["⟨", ident cg, ",", ident hg, "⟩", ":=", expr IHg],
-    simp [] [] ["only"] ["[", expr part.map_eq_map, ",", expr part.map_some, ",", expr pfun.coe_val, "]"] [] ["at", ident hf, ident hg],
-    refine [expr ⟨prec cf cg, λ v, _⟩],
-    rw ["<-", expr v.cons_head_tail] [],
-    specialize [expr hf v.tail],
-    replace [ident hg] [] [":=", expr λ a b, hg «expr ::ᵥ »(a, «expr ::ᵥ »(b, v.tail))],
-    simp [] [] ["only"] ["[", expr vector.cons_val, ",", expr vector.tail_val, "]"] [] ["at", ident hf, ident hg],
-    simp [] [] ["only"] ["[", expr part.map_eq_map, ",", expr part.map_some, ",", expr vector.cons_val, ",", expr vector.cons_tail, ",", expr vector.cons_head, ",", expr pfun.coe_val, ",", expr vector.tail_val, "]"] [] [],
-    simp [] [] ["only"] ["[", "<-", expr part.pure_eq_some, "]"] [] ["at", ident hf, ident hg, "⊢"],
-    induction [expr v.head] [] ["with", ident n, ident IH] []; simp [] [] [] ["[", expr prec, ",", expr hf, ",", expr bind_assoc, ",", "<-", expr part.map_eq_map, ",", "<-", expr bind_pure_comp_eq_map, ",", expr show ∀
-     x, «expr = »(pure x, «expr[ , ]»([x])), from λ _, rfl, ",", "-", ident subtype.val_eq_coe, "]"] [] [],
-    suffices [] [":", expr ∀
-     a
-     b, «expr = »(«expr + »(a, b), n) → «expr ∈ »(([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](n.succ, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](0, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](g «expr ::ᵥ »(n, «expr ::ᵥ »(nat.elim (f v.tail) (λ
-            y
-            IH, g «expr ::ᵥ »(y, «expr ::ᵥ »(IH, v.tail))) n, v.tail)), v.val.tail))) : list exprℕ()), pfun.fix (λ
-       v : list exprℕ(), do {
-       x ← cg.eval [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.head, v.tail.tail),
-         «expr $ »(pure, if «expr = »(v.tail.head, 0) then sum.inl ([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.head.succ, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.tail.head.pred, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](x.head, v.tail.tail.tail))) : list exprℕ()) else sum.inr [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.head.succ, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.tail.head.pred, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](x.head, v.tail.tail.tail)))) }) [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](a, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](b, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](nat.elim (f v.tail) (λ
-          y IH, g «expr ::ᵥ »(y, «expr ::ᵥ »(IH, v.tail))) a, v.val.tail))))],
-    { rw [expr (_ : «expr = »(pfun.fix _ _, pure _))] [],
-      swap,
-      exact [expr part.eq_some_iff.2 (this 0 n (zero_add n))],
-      simp [] [] ["only"] ["[", expr list.head, ",", expr pure_bind, ",", expr list.tail_cons, "]"] [] [] },
-    intros [ident a, ident b, ident e],
-    induction [expr b] [] ["with", ident b, ident IH] ["generalizing", ident a, ident e],
-    { refine [expr pfun.mem_fix_iff.2 «expr $ »(or.inl, part.eq_some_iff.1 _)],
-      simp [] [] ["only"] ["[", expr hg, ",", "<-", expr e, ",", expr pure_bind, ",", expr list.tail_cons, "]"] [] [],
-      refl },
-    { refine [expr pfun.mem_fix_iff.2 (or.inr ⟨_, _, IH «expr + »(a, 1) (by rwa [expr add_right_comm] [])⟩)],
-      simp [] [] ["only"] ["[", expr hg, ",", expr eval, ",", expr pure_bind, ",", expr nat.elim_succ, ",", expr list.tail, "]"] [] [],
-      exact [expr part.mem_some_iff.2 rfl] } },
-  case [ident comp, ":", ident m, ident n, ident f, ident g, ident hf, ident hg, ident IHf, ident IHg] { exact [expr exists_code.comp IHf IHg] },
-  case [ident rfind, ":", ident n, ident f, ident hf, ident IHf] { obtain ["⟨", ident cf, ",", ident hf, "⟩", ":=", expr IHf],
-    refine [expr ⟨rfind cf, λ v, _⟩],
-    replace [ident hf] [] [":=", expr λ a, hf «expr ::ᵥ »(a, v)],
-    simp [] [] ["only"] ["[", expr part.map_eq_map, ",", expr part.map_some, ",", expr vector.cons_val, ",", expr pfun.coe_val, ",", expr show ∀
-     x, «expr = »(pure x, «expr[ , ]»([x])), from λ _, rfl, "]"] [] ["at", ident hf, "⊢"],
-    refine [expr part.ext (λ x, _)],
-    simp [] [] ["only"] ["[", expr rfind, ",", expr part.bind_eq_bind, ",", expr part.pure_eq_some, ",", expr part.map_eq_map, ",", expr part.bind_some, ",", expr exists_prop, ",", expr eval, ",", expr list.head, ",", expr pred_eval, ",", expr part.map_some, ",", expr bool.ff_eq_to_bool_iff, ",", expr part.mem_bind_iff, ",", expr list.length, ",", expr part.mem_map_iff, ",", expr nat.mem_rfind, ",", expr list.tail, ",", expr bool.tt_eq_to_bool_iff, ",", expr part.mem_some_iff, ",", expr part.map_bind, "]"] [] [],
-    split,
-    { rintro ["⟨", ident v', ",", ident h1, ",", ident rfl, "⟩"],
-      suffices [] [":", expr ∀
-       v₁ : list exprℕ(), «expr ∈ »(v', pfun.fix (λ
-         v, «expr $ »((cf.eval v).bind, λ
-          y, «expr $ »(part.some, if «expr = »(y.head, 0) then sum.inl [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.head.succ, v.tail) else sum.inr [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.head.succ, v.tail)))) v₁) → ∀
-       n, «expr = »(v₁, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](n, v.val)) → ∀
-       m «expr < » n, «expr¬ »(«expr = »(f «expr ::ᵥ »(m, v), 0)) → «expr∃ , »((a : exprℕ()), «expr ∧ »(«expr ∧ »(«expr = »(f «expr ::ᵥ »(a, v), 0), ∀
-          {m : exprℕ()}, «expr < »(m, a) → «expr¬ »(«expr = »(f «expr ::ᵥ »(m, v), 0))), «expr = »(«expr[ , ]»([a]), «expr[ , ]»([v'.head.pred]))))],
-      { exact [expr this _ h1 0 rfl (by rintro ["_", "⟨", "⟩"])] },
-      clear [ident h1],
-      intros [ident v₀, ident h1],
-      refine [expr pfun.fix_induction h1 (λ v₁ h2 IH, _)],
-      clear [ident h1],
-      rintro [ident n, ident rfl, ident hm],
-      have [] [] [":=", expr pfun.mem_fix_iff.1 h2],
-      simp [] [] ["only"] ["[", expr hf, ",", expr part.bind_some, "]"] [] ["at", ident this],
-      split_ifs ["at", ident this] [],
-      { simp [] [] ["only"] ["[", expr list.head, ",", expr exists_false, ",", expr or_false, ",", expr part.mem_some_iff, ",", expr list.tail_cons, ",", expr false_and, "]"] [] ["at", ident this],
-        subst [expr this],
-        exact [expr ⟨_, ⟨h, hm⟩, rfl⟩] },
-      { simp [] [] ["only"] ["[", expr list.head, ",", expr exists_eq_left, ",", expr part.mem_some_iff, ",", expr list.tail_cons, ",", expr false_or, "]"] [] ["at", ident this],
-        refine [expr IH _ this (by simp [] [] [] ["[", expr hf, ",", expr h, ",", "-", ident subtype.val_eq_coe, "]"] [] []) _ rfl (λ
-          m h', _)],
-        obtain [ident h, "|", ident rfl, ":=", expr nat.lt_succ_iff_lt_or_eq.1 h'],
-        exacts ["[", expr hm _ h, ",", expr h, "]"] } },
-    { rintro ["⟨", ident n, ",", "⟨", ident hn, ",", ident hm, "⟩", ",", ident rfl, "⟩"],
-      refine [expr ⟨[«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](n.succ, v.1), _, rfl⟩],
-      have [] [":", expr «expr ∈ »(([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](n.succ, v.1) : list exprℕ()), pfun.fix (λ
-         v, «expr $ »((cf.eval v).bind, λ
-          y, «expr $ »(part.some, if «expr = »(y.head, 0) then sum.inl [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.head.succ, v.tail) else sum.inr [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](v.head.succ, v.tail)))) [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](n, v.val))] [":=", expr pfun.mem_fix_iff.2 (or.inl (by simp [] [] [] ["[", expr hf, ",", expr hn, ",", "-", ident subtype.val_eq_coe, "]"] [] []))],
-      generalize_hyp [] [":"] [expr «expr = »(([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](n.succ, v.1) : list exprℕ()), w)] ["at", ident this, "⊢"],
-      clear [ident hn],
-      induction [expr n] [] ["with", ident n, ident IH] [],
-      { exact [expr this] },
-      refine [expr IH (λ m h', hm (nat.lt_succ_of_lt h')) (pfun.mem_fix_iff.2 (or.inr ⟨_, _, this⟩))],
-      simp [] [] ["only"] ["[", expr hf, ",", expr hm n.lt_succ_self, ",", expr part.bind_some, ",", expr list.head, ",", expr eq_self_iff_true, ",", expr if_false, ",", expr part.mem_some_iff, ",", expr and_self, ",", expr list.tail_cons, "]"] [] [] } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr < » n)
+theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
+  ∃ c : code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v :=
+  by 
+    induction' hf with n f hf 
+    induction hf 
+    case' prim, zero => 
+      exact ⟨zero', fun ⟨[], _⟩ => rfl⟩
+    case' prim, succ => 
+      exact ⟨succ, fun ⟨[v], _⟩ => rfl⟩
+    case' prim, nth : n i => 
+      refine' Finₓ.succRec (fun n => _) (fun n i IH => _) i
+      ·
+        exact
+          ⟨head,
+            fun ⟨List.cons a as, _⟩ =>
+              by 
+                simp  <;> rfl⟩
+      ·
+        obtain ⟨c, h⟩ := IH 
+        exact
+          ⟨c.comp tail,
+            fun v =>
+              by 
+                simpa [←Vector.nth_tail] using h v.tail⟩
+    case' prim, comp : m n f g hf hg IHf IHg => 
+      simpa [Part.bind_eq_bind] using exists_code.comp IHf IHg 
+    case' prim, prec : n f g hf hg IHf IHg => 
+      obtain ⟨cf, hf⟩ := IHf 
+      obtain ⟨cg, hg⟩ := IHg 
+      simp only [Part.map_eq_map, Part.map_some, Pfun.coe_val] at hf hg 
+      refine' ⟨prec cf cg, fun v => _⟩
+      rw [←v.cons_head_tail]
+      specialize hf v.tail 
+      replace hg := fun a b => hg (a::ᵥb::ᵥv.tail)
+      simp only [Vector.cons_val, Vector.tail_val] at hf hg 
+      simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Vector.cons_tail, Vector.cons_head, Pfun.coe_val,
+        Vector.tail_val]
+      simp only [←Part.pure_eq_some] at hf hg⊢
+      induction' v.head with n IH <;>
+        simp [prec, hf, bind_assoc, ←Part.map_eq_map, ←bind_pure_comp_eq_map, show ∀ x, pure x = [x] from fun _ => rfl,
+          -Subtype.val_eq_coe]
+      suffices  :
+        ∀ a b,
+          (a+b) = n →
+            (n.succ :: 0 :: g (n::ᵥNat.elim (f v.tail) (fun y IH => g (y::ᵥIH::ᵥv.tail)) n::ᵥv.tail) :: v.val.tail :
+              List ℕ) ∈
+              Pfun.fix
+                (fun v : List ℕ =>
+                  do 
+                    let x ← cg.eval (v.head :: v.tail.tail)
+                    pure$
+                        if v.tail.head = 0 then
+                          Sum.inl (v.head.succ :: v.tail.head.pred :: x.head :: v.tail.tail.tail : List ℕ) else
+                          Sum.inr (v.head.succ :: v.tail.head.pred :: x.head :: v.tail.tail.tail))
+                (a :: b :: Nat.elim (f v.tail) (fun y IH => g (y::ᵥIH::ᵥv.tail)) a :: v.val.tail)
+      ·
+        rw [(_ : Pfun.fix _ _ = pure _)]
+        swap 
+        exact Part.eq_some_iff.2 (this 0 n (zero_addₓ n))
+        simp only [List.headₓ, pure_bind, List.tail_cons]
+      intro a b e 
+      induction' b with b IH generalizing a e
+      ·
+        refine' Pfun.mem_fix_iff.2 (Or.inl$ Part.eq_some_iff.1 _)
+        simp only [hg, ←e, pure_bind, List.tail_cons]
+        rfl
+      ·
+        refine'
+          Pfun.mem_fix_iff.2
+            (Or.inr
+              ⟨_, _,
+                IH (a+1)
+                  (by 
+                    rwa [add_right_commₓ])⟩)
+        simp only [hg, eval, pure_bind, Nat.elim_succ, List.tail]
+        exact Part.mem_some_iff.2 rfl 
+    case comp m n f g hf hg IHf IHg => 
+      exact exists_code.comp IHf IHg 
+    case rfind n f hf IHf => 
+      obtain ⟨cf, hf⟩ := IHf 
+      refine' ⟨rfind cf, fun v => _⟩
+      replace hf := fun a => hf (a::ᵥv)
+      simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Pfun.coe_val,
+        show ∀ x, pure x = [x] from fun _ => rfl] at hf⊢
+      refine' Part.ext fun x => _ 
+      simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some, exists_prop, eval,
+        List.headₓ, pred_eval, Part.map_some, Bool.ff_eq_to_bool_iff, Part.mem_bind_iff, List.length, Part.mem_map_iff,
+        Nat.mem_rfind, List.tail, Bool.tt_eq_to_bool_iff, Part.mem_some_iff, Part.map_bind]
+      constructor
+      ·
+        rintro ⟨v', h1, rfl⟩
+        suffices  :
+          ∀ v₁ : List ℕ,
+            v' ∈
+                Pfun.fix
+                  (fun v =>
+                    (cf.eval v).bind$
+                      fun y =>
+                        Part.some$
+                          if y.head = 0 then Sum.inl (v.head.succ :: v.tail) else Sum.inr (v.head.succ :: v.tail))
+                  v₁ →
+              ∀ n,
+                v₁ = n :: v.val →
+                  (∀ m _ : m < n, ¬f (m::ᵥv) = 0) →
+                    ∃ a : ℕ, (f (a::ᵥv) = 0 ∧ ∀ {m : ℕ}, m < a → ¬f (m::ᵥv) = 0) ∧ [a] = [v'.head.pred]
+        ·
+          exact
+            this _ h1 0 rfl
+              (by 
+                rintro _ ⟨⟩)
+        clear h1 
+        intro v₀ h1 
+        refine' Pfun.fixInduction h1 fun v₁ h2 IH => _ 
+        clear h1 
+        rintro n rfl hm 
+        have  := Pfun.mem_fix_iff.1 h2 
+        simp only [hf, Part.bind_some] at this 
+        splitIfs  at this
+        ·
+          simp only [List.headₓ, exists_false, or_falseₓ, Part.mem_some_iff, List.tail_cons, false_andₓ] at this 
+          subst this 
+          exact ⟨_, ⟨h, hm⟩, rfl⟩
+        ·
+          simp only [List.headₓ, exists_eq_left, Part.mem_some_iff, List.tail_cons, false_orₓ] at this 
+          refine'
+            IH _ this
+              (by 
+                simp [hf, h, -Subtype.val_eq_coe])
+              _ rfl fun m h' => _ 
+          obtain h | rfl := Nat.lt_succ_iff_lt_or_eq.1 h' 
+          exacts[hm _ h, h]
+      ·
+        rintro ⟨n, ⟨hn, hm⟩, rfl⟩
+        refine' ⟨n.succ :: v.1, _, rfl⟩
+        have  :
+          (n.succ :: v.1 : List ℕ) ∈
+            Pfun.fix
+              (fun v =>
+                (cf.eval v).bind$
+                  fun y =>
+                    Part.some$ if y.head = 0 then Sum.inl (v.head.succ :: v.tail) else Sum.inr (v.head.succ :: v.tail))
+              (n :: v.val) :=
+          Pfun.mem_fix_iff.2
+            (Or.inl
+              (by 
+                simp [hf, hn, -Subtype.val_eq_coe]))
+        generalize (n.succ :: v.1 : List ℕ) = w  at this⊢
+        clear hn 
+        induction' n with n IH
+        ·
+          exact this 
+        refine' IH (fun m h' => hm (Nat.lt_succ_of_ltₓ h')) (Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, this⟩))
+        simp only [hf, hm n.lt_succ_self, Part.bind_some, List.headₓ, eq_self_iff_true, if_false, Part.mem_some_iff,
+          and_selfₓ, List.tail_cons]
 
 end Code
 
@@ -377,15 +437,14 @@ to `v'` in finitely many steps if and only if `code.eval c v = some v'`.
 -/
 
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The type of continuations, built up during evaluation of a `code` expression. -/
-@[derive #[expr inhabited]]
 inductive cont
-| halt
-| cons₁ : code → list exprℕ() → cont → cont
-| cons₂ : list exprℕ() → cont → cont
-| comp : code → cont → cont
-| fix : code → cont → cont
+  | halt
+  | cons₁ : code → List ℕ → cont → cont
+  | cons₂ : List ℕ → cont → cont
+  | comp : code → cont → cont
+  | fix : code → cont → cont deriving [anonymous]
 
 /-- The semantics of a continuation. -/
 def cont.eval : cont → List ℕ →. List ℕ
@@ -399,16 +458,17 @@ def cont.eval : cont → List ℕ →. List ℕ
 | cont.comp f k => fun v => code.eval f v >>= cont.eval k
 | cont.fix f k => fun v => if v.head = 0 then k.eval v.tail else f.fix.eval v.tail >>= k.eval
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The set of configurations of the machine:
 
 * `halt v`: The machine is about to stop and `v : list ℕ` is the result.
 * `ret k v`: The machine is about to pass `v : list ℕ` to continuation `k : cont`.
 
 We don't have a state corresponding to normal evaluation because these are evaluated immediately
-to a `ret` "in zero steps" using the `step_normal` function. -/ @[derive #[expr inhabited]] inductive cfg
-| halt : list exprℕ() → cfg
-| ret : cont → list exprℕ() → cfg
+to a `ret` "in zero steps" using the `step_normal` function. -/
+inductive cfg
+  | halt : List ℕ → cfg
+  | ret : cont → List ℕ → cfg deriving [anonymous]
 
 /-- Evaluating `c : code` in a continuation `k : cont` and input `v : list ℕ`. This goes by
 recursion on `c`, building an augmented continuation and a value to pass to it.
@@ -562,87 +622,105 @@ theorem step_normal.is_ret c k v : ∃ k' v', step_normal c k v = cfg.ret k' v' 
     case fix f IHf => 
       apply IHf
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cont_eval_fix
-{f k v}
-(fok : code.ok f) : «expr = »(eval step (step_normal f (cont.fix f k) v), «expr >>= »(f.fix.eval v, λ
-  v, eval step (cfg.ret k v))) :=
-begin
-  refine [expr part.ext (λ x, _)],
-  simp [] [] ["only"] ["[", expr part.bind_eq_bind, ",", expr part.mem_bind_iff, "]"] [] [],
-  split,
-  { suffices [] [":", expr ∀
-     c, «expr ∈ »(x, eval step c) → ∀
-     v
-     c', «expr = »(c, cfg.then c' (cont.fix f k)) → reaches step (step_normal f cont.halt v) c' → «expr∃ , »((v₁ «expr ∈ » f.eval v), «expr∃ , »((v₂ «expr ∈ » if «expr = »(list.head v₁, 0) then pure v₁.tail else f.fix.eval v₁.tail), «expr ∈ »(x, eval step (cfg.ret k v₂))))],
-    { intro [ident h],
-      obtain ["⟨", ident v₁, ",", ident hv₁, ",", ident v₂, ",", ident hv₂, ",", ident h₃, "⟩", ":=", expr this _ h _ _ (step_normal_then _ cont.halt _ _) refl_trans_gen.refl],
-      refine [expr ⟨v₂, pfun.mem_fix_iff.2 _, h₃⟩],
-      simp [] [] ["only"] ["[", expr part.eq_some_iff.2 hv₁, ",", expr part.map_some, "]"] [] [],
-      split_ifs ["at", ident hv₂, "⊢"] [],
-      { rw [expr part.mem_some_iff.1 hv₂] [],
-        exact [expr or.inl (part.mem_some _)] },
-      { exact [expr or.inr ⟨_, part.mem_some _, hv₂⟩] } },
-    refine [expr λ c he, eval_induction he (λ y h IH, _)],
-    rintro [ident v, "(", "⟨", ident v', "⟩", "|", "⟨", ident k', ",", ident v', "⟩", ")", ident rfl, ident hr]; rw [expr cfg.then] ["at", ident h, ident IH],
-    { have [] [] [":=", expr mem_eval.2 ⟨hr, rfl⟩],
-      rw ["[", expr fok, ",", expr part.bind_eq_bind, ",", expr part.mem_bind_iff, "]"] ["at", ident this],
-      obtain ["⟨", ident v'', ",", ident h₁, ",", ident h₂, "⟩", ":=", expr this],
-      rw [expr reaches_eval] ["at", ident h₂],
-      swap,
-      exact [expr refl_trans_gen.single rfl],
-      cases [expr part.mem_unique h₂ (mem_eval.2 ⟨refl_trans_gen.refl, rfl⟩)] [],
-      refine [expr ⟨v', h₁, _⟩],
-      rw ["[", expr step_ret, "]"] ["at", ident h],
-      revert [ident h],
-      by_cases [expr he, ":", expr «expr = »(v'.head, 0)]; simp [] [] ["only"] ["[", expr exists_prop, ",", expr if_pos, ",", expr if_false, ",", expr he, "]"] [] []; intro [ident h],
-      { refine [expr ⟨_, part.mem_some _, _⟩],
-        rw [expr reaches_eval] [],
-        exact [expr h],
-        exact [expr refl_trans_gen.single rfl] },
-      { obtain ["⟨", ident k₀, ",", ident v₀, ",", ident e₀, "⟩", ":=", expr step_normal.is_ret f cont.halt v'.tail],
-        have [ident e₁] [] [":=", expr step_normal_then f cont.halt (cont.fix f k) v'.tail],
-        rw ["[", expr e₀, ",", expr cont.then, ",", expr cfg.then, "]"] ["at", ident e₁],
-        obtain ["⟨", ident v₁, ",", ident hv₁, ",", ident v₂, ",", ident hv₂, ",", ident h₃, "⟩", ":=", expr IH (step_ret (k₀.then (cont.fix f k)) v₀) _ _ v'.tail _ step_ret_then _],
-        { refine [expr ⟨_, pfun.mem_fix_iff.2 _, h₃⟩],
-          simp [] [] ["only"] ["[", expr part.eq_some_iff.2 hv₁, ",", expr part.map_some, ",", expr part.mem_some_iff, "]"] [] [],
-          split_ifs ["at", ident hv₂, "⊢"] []; [exact [expr or.inl (part.mem_some_iff.1 hv₂)], exact [expr or.inr ⟨_, rfl, hv₂⟩]] },
-        { rwa ["[", "<-", expr @reaches_eval _ _ (cfg.ret (k₀.then (cont.fix f k)) v₀), ",", "<-", expr e₁, "]"] [],
-          exact [expr refl_trans_gen.single rfl] },
-        { rw ["[", expr step_ret, ",", expr if_neg he, ",", expr e₁, "]"] [],
-          refl },
-        { apply [expr refl_trans_gen.single],
-          rw [expr e₀] [],
-          exact [expr rfl] } } },
-    { rw [expr reaches_eval] ["at", ident h],
-      swap,
-      exact [expr refl_trans_gen.single rfl],
-      exact [expr IH _ h rfl _ _ step_ret_then (refl_trans_gen.tail hr rfl)] } },
-  { rintro ["⟨", ident v', ",", ident he, ",", ident hr, "⟩"],
-    rw [expr reaches_eval] ["at", ident hr],
-    swap,
-    exact [expr refl_trans_gen.single rfl],
-    refine [expr pfun.fix_induction he (λ (v) (he : «expr ∈ »(v', f.fix.eval v)) (IH), _)],
-    rw ["[", expr fok, ",", expr part.bind_eq_bind, ",", expr part.mem_bind_iff, "]"] [],
-    obtain [ident he, "|", "⟨", ident v'', ",", ident he₁', ",", ident he₂', "⟩", ":=", expr pfun.mem_fix_iff.1 he],
-    { obtain ["⟨", ident v', ",", ident he₁, ",", ident he₂, "⟩", ":=", expr (part.mem_map_iff _).1 he],
-      split_ifs ["at", ident he₂] []; cases [expr he₂] [],
-      refine [expr ⟨_, he₁, _⟩],
-      rw [expr reaches_eval] [],
-      swap,
-      exact [expr refl_trans_gen.single rfl],
-      rwa ["[", expr step_ret, ",", expr if_pos h, "]"] [] },
-    { obtain ["⟨", ident v₁, ",", ident he₁, ",", ident he₂, "⟩", ":=", expr (part.mem_map_iff _).1 he₁'],
-      split_ifs ["at", ident he₂] []; cases [expr he₂] [],
-      clear [ident he₂, ident he₁'],
-      change [expr «expr ∈ »(_, f.fix.eval _)] [] ["at", ident he₂'],
-      refine [expr ⟨_, he₁, _⟩],
-      rw [expr reaches_eval] [],
-      swap,
-      exact [expr refl_trans_gen.single rfl],
-      rwa ["[", expr step_ret, ",", expr if_neg h, "]"] [],
-      exact [expr IH v₁.tail he₂' ((part.mem_map_iff _).2 ⟨_, he₁, if_neg h⟩)] } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v₁ «expr ∈ » f.eval v)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v₂ «expr ∈ » if «expr = »(list.head v₁, 0) then pure v₁.tail else f.fix.eval v₁.tail)
+theorem cont_eval_fix {f k v} (fok : code.ok f) :
+  eval step (step_normal f (cont.fix f k) v) = f.fix.eval v >>= fun v => eval step (cfg.ret k v) :=
+  by 
+    refine' Part.ext fun x => _ 
+    simp only [Part.bind_eq_bind, Part.mem_bind_iff]
+    constructor
+    ·
+      suffices  :
+        ∀ c,
+          x ∈ eval step c →
+            ∀ v c',
+              c = cfg.then c' (cont.fix f k) →
+                reaches step (step_normal f cont.halt v) c' →
+                  ∃ (v₁ : _)(_ : v₁ ∈ f.eval v),
+                    ∃ (v₂ : _)(_ : v₂ ∈ if List.headₓ v₁ = 0 then pure v₁.tail else f.fix.eval v₁.tail),
+                      x ∈ eval step (cfg.ret k v₂)
+      ·
+        intro h 
+        obtain ⟨v₁, hv₁, v₂, hv₂, h₃⟩ := this _ h _ _ (step_normal_then _ cont.halt _ _) refl_trans_gen.refl 
+        refine' ⟨v₂, Pfun.mem_fix_iff.2 _, h₃⟩
+        simp only [Part.eq_some_iff.2 hv₁, Part.map_some]
+        splitIfs  at hv₂⊢
+        ·
+          rw [Part.mem_some_iff.1 hv₂]
+          exact Or.inl (Part.mem_some _)
+        ·
+          exact Or.inr ⟨_, Part.mem_some _, hv₂⟩
+      refine' fun c he => eval_induction he fun y h IH => _ 
+      rintro v (⟨v'⟩ | ⟨k', v'⟩) rfl hr <;> rw [cfg.then] at h IH
+      ·
+        have  := mem_eval.2 ⟨hr, rfl⟩
+        rw [fok, Part.bind_eq_bind, Part.mem_bind_iff] at this 
+        obtain ⟨v'', h₁, h₂⟩ := this 
+        rw [reaches_eval] at h₂ 
+        swap 
+        exact refl_trans_gen.single rfl 
+        cases Part.mem_unique h₂ (mem_eval.2 ⟨refl_trans_gen.refl, rfl⟩)
+        refine' ⟨v', h₁, _⟩
+        rw [step_ret] at h 
+        revert h 
+        byCases' he : v'.head = 0 <;> simp only [exists_prop, if_pos, if_false, he] <;> intro h
+        ·
+          refine' ⟨_, Part.mem_some _, _⟩
+          rw [reaches_eval]
+          exact h 
+          exact refl_trans_gen.single rfl
+        ·
+          obtain ⟨k₀, v₀, e₀⟩ := step_normal.is_ret f cont.halt v'.tail 
+          have e₁ := step_normal_then f cont.halt (cont.fix f k) v'.tail 
+          rw [e₀, cont.then, cfg.then] at e₁ 
+          obtain ⟨v₁, hv₁, v₂, hv₂, h₃⟩ := IH (step_ret (k₀.then (cont.fix f k)) v₀) _ _ v'.tail _ step_ret_then _
+          ·
+            refine' ⟨_, Pfun.mem_fix_iff.2 _, h₃⟩
+            simp only [Part.eq_some_iff.2 hv₁, Part.map_some, Part.mem_some_iff]
+            splitIfs  at hv₂⊢ <;> [exact Or.inl (Part.mem_some_iff.1 hv₂), exact Or.inr ⟨_, rfl, hv₂⟩]
+          ·
+            rwa [←@reaches_eval _ _ (cfg.ret (k₀.then (cont.fix f k)) v₀), ←e₁]
+            exact refl_trans_gen.single rfl
+          ·
+            rw [step_ret, if_neg he, e₁]
+            rfl
+          ·
+            apply refl_trans_gen.single 
+            rw [e₀]
+            exact rfl
+      ·
+        rw [reaches_eval] at h 
+        swap 
+        exact refl_trans_gen.single rfl 
+        exact IH _ h rfl _ _ step_ret_then (refl_trans_gen.tail hr rfl)
+    ·
+      rintro ⟨v', he, hr⟩
+      rw [reaches_eval] at hr 
+      swap 
+      exact refl_trans_gen.single rfl 
+      refine' Pfun.fixInduction he fun v he : v' ∈ f.fix.eval v IH => _ 
+      rw [fok, Part.bind_eq_bind, Part.mem_bind_iff]
+      obtain he | ⟨v'', he₁', he₂'⟩ := Pfun.mem_fix_iff.1 he
+      ·
+        obtain ⟨v', he₁, he₂⟩ := (Part.mem_map_iff _).1 he 
+        splitIfs  at he₂ <;> cases he₂ 
+        refine' ⟨_, he₁, _⟩
+        rw [reaches_eval]
+        swap 
+        exact refl_trans_gen.single rfl 
+        rwa [step_ret, if_pos h]
+      ·
+        obtain ⟨v₁, he₁, he₂⟩ := (Part.mem_map_iff _).1 he₁' 
+        splitIfs  at he₂ <;> cases he₂ 
+        clear he₂ he₁' 
+        change _ ∈ f.fix.eval _ at he₂' 
+        refine' ⟨_, he₁, _⟩
+        rw [reaches_eval]
+        swap 
+        exact refl_trans_gen.single rfl 
+        rwa [step_ret, if_neg h]
+        exact IH v₁.tail he₂' ((Part.mem_map_iff _).2 ⟨_, he₁, if_neg h⟩)
 
 theorem code_is_ok c : code.ok c :=
   by 
@@ -836,41 +914,44 @@ section
 
 open ToPartrec
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler fintype
 /-- The alphabet for the stacks in the program. `bit0` and `bit1` are used to represent `ℕ` values
 as lists of binary digits, `cons` is used to separate `list ℕ` values, and `Cons` is used to
 separate `list (list ℕ)` values. See the section documentation. -/
-@[derive #["[", expr decidable_eq, ",", expr inhabited, ",", expr fintype, "]"]]
 inductive Γ'
-| Cons
-| cons
-| bit0
-| bit1
+  | Cons
+  | cons
+  | bit0
+  | bit1 deriving [anonymous], [anonymous], [anonymous]
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The four stacks used by the program. `main` is used to store the input value in `tr_normal`
 mode and the output value in `Λ'.ret` mode, while `stack` is used to keep all the data for the
 continuations. `rev` is used to store reversed lists when transferring values between stacks, and
 `aux` is only used once in `cons₁`. See the section documentation. -/
-@[derive #["[", expr decidable_eq, ",", expr inhabited, "]"]]
 inductive K'
-| main
-| rev
-| aux
-| stack
+  | main
+  | rev
+  | aux
+  | stack deriving [anonymous], [anonymous]
 
 open K'
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Continuations as in `to_partrec.cont` but with the data removed. This is done because we want
 the set of all continuations in the program to be finite (so that it can ultimately be encoded into
 the finite state machine of a Turing machine), but a continuation can handle a potentially infinite
-number of data values during execution. -/ @[derive #["[", expr decidable_eq, ",", expr inhabited, "]"]] inductive cont'
-| halt
-| cons₁ : code → cont' → cont'
-| cons₂ : cont' → cont'
-| comp : code → cont' → cont'
-| fix : code → cont' → cont'
+number of data values during execution. -/
+inductive cont'
+  | halt
+  | cons₁ : code → cont' → cont'
+  | cons₂ : cont' → cont'
+  | comp : code → cont' → cont'
+  | fix : code → cont' → cont' deriving [anonymous], [anonymous]
 
 /-- The set of program positions. We make extensive use of inductive types here to let us describe
 "subroutines"; for example `clear p k q` is a program that clears stack `k`, then does `q` where
@@ -905,13 +986,15 @@ instance : DecidableEq Λ' :=
             (by 
               simp [Function.funext_iffₓ])
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-/-- The type of TM2 statements used by this machine. -/ @[derive #[expr inhabited]] def stmt' :=
-TM2.stmt (λ _ : K', Γ') Λ' (option Γ')
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+/-- The type of TM2 statements used by this machine. -/
+def stmt' :=
+  TM2.stmt (fun _ : K' => Γ') Λ' (Option Γ')deriving [anonymous]
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-/-- The type of TM2 configurations used by this machine. -/ @[derive #[expr inhabited]] def cfg' :=
-TM2.cfg (λ _ : K', Γ') Λ' (option Γ')
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+/-- The type of TM2 configurations used by this machine. -/
+def cfg' :=
+  TM2.cfg (fun _ : K' => Γ') Λ' (Option Γ')deriving [anonymous]
 
 open TM2.Stmt
 
@@ -1147,31 +1230,33 @@ def split_at_pred {α} (p : α → Bool) : List α → List α × Option α × L
     let ⟨l₁, o, l₂⟩ := split_at_pred as
     ⟨a :: l₁, o, l₂⟩
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem split_at_pred_eq
-{α}
-(p : α → bool) : ∀
-L
-l₁
-o
-l₂, ∀
-x «expr ∈ » l₁, «expr = »(p x, ff) → option.elim o «expr ∧ »(«expr = »(L, l₁), «expr = »(l₂, «expr[ , ]»([]))) (λ
- a, «expr ∧ »(«expr = »(p a, tt), «expr = »(L, «expr ++ »(l₁, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](a, l₂))))) → «expr = »(split_at_pred p L, (l₁, o, l₂))
-| «expr[ , ]»([]), _, none, _, _, ⟨rfl, rfl⟩ := rfl
-| «expr[ , ]»([]), l₁, some o, l₂, h₁, ⟨h₂, h₃⟩ := by simp [] [] [] [] [] ["at", ident h₃]; contradiction
-| [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](a, L), l₁, o, l₂, h₁, h₂ := begin
-  rw ["[", expr split_at_pred, "]"] [],
-  have [ident IH] [] [":=", expr split_at_pred_eq L],
-  cases [expr o] [],
-  { cases [expr l₁] ["with", ident a', ident l₁]; rcases [expr h₂, "with", "⟨", "⟨", "⟩", ",", ident rfl, "⟩"],
-    rw ["[", expr h₁ a (or.inl rfl), ",", expr cond, ",", expr IH L none «expr[ , ]»([]) _ ⟨rfl, rfl⟩, "]"] [],
-    refl,
-    exact [expr λ x h, h₁ x (or.inr h)] },
-  { cases [expr l₁] ["with", ident a', ident l₁]; rcases [expr h₂, "with", "⟨", ident h₂, ",", "⟨", "⟩", "⟩"],
-    { rw ["[", expr h₂, ",", expr cond, "]"] [] },
-    rw ["[", expr h₁ a (or.inl rfl), ",", expr cond, ",", expr IH l₁ (some o) l₂ _ ⟨h₂, _⟩, "]"] []; try { refl },
-    exact [expr λ x h, h₁ x (or.inr h)] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
+theorem split_at_pred_eq {α} (p : α → Bool) :
+  ∀ L l₁ o l₂,
+    (∀ x _ : x ∈ l₁, p x = ff) →
+      (Option.elim o (L = l₁ ∧ l₂ = []) fun a => p a = tt ∧ L = l₁ ++ a :: l₂) → split_at_pred p L = (l₁, o, l₂)
+| [], _, none, _, _, ⟨rfl, rfl⟩ => rfl
+| [], l₁, some o, l₂, h₁, ⟨h₂, h₃⟩ =>
+  by 
+    simp  at h₃ <;> contradiction
+| a :: L, l₁, o, l₂, h₁, h₂ =>
+  by 
+    rw [split_at_pred]
+    have IH := split_at_pred_eq L 
+    cases o
+    ·
+      cases' l₁ with a' l₁ <;> rcases h₂ with ⟨⟨⟩, rfl⟩
+      rw [h₁ a (Or.inl rfl), cond, IH L none [] _ ⟨rfl, rfl⟩]
+      rfl 
+      exact fun x h => h₁ x (Or.inr h)
+    ·
+      cases' l₁ with a' l₁ <;> rcases h₂ with ⟨h₂, ⟨⟩⟩
+      ·
+        rw [h₂, cond]
+      rw [h₁ a (Or.inl rfl), cond, IH l₁ (some o) l₂ _ ⟨h₂, _⟩] <;>
+        try 
+          rfl 
+      exact fun x h => h₁ x (Or.inr h)
 
 theorem split_at_pred_ff {α} (L : List α) : split_at_pred (fun _ => ff) L = (L, none, []) :=
   split_at_pred_eq _ _ _ _ _ (fun _ _ => rfl) ⟨rfl, rfl⟩
@@ -1300,6 +1385,7 @@ theorem copy_ok q s a b c d :
     simp 
     exact IH _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » tr_pos_num n)
 theorem tr_pos_num_nat_end : ∀ n x _ : x ∈ tr_pos_num n, nat_end x = ff
 | PosNum.one, _, Or.inl rfl => rfl
 | PosNum.bit0 n, _, Or.inl rfl => rfl
@@ -1307,12 +1393,15 @@ theorem tr_pos_num_nat_end : ∀ n x _ : x ∈ tr_pos_num n, nat_end x = ff
 | PosNum.bit1 n, _, Or.inl rfl => rfl
 | PosNum.bit1 n, _, Or.inr h => tr_pos_num_nat_end n _ h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » tr_num n)
 theorem tr_num_nat_end : ∀ n x _ : x ∈ tr_num n, nat_end x = ff
 | Num.pos n, x, h => tr_pos_num_nat_end n x h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » tr_nat n)
 theorem tr_nat_nat_end n : ∀ x _ : x ∈ tr_nat n, nat_end x = ff :=
   tr_num_nat_end _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » tr_list l)
 theorem tr_list_ne_Cons : ∀ l x _ : x ∈ tr_list l, x ≠ Γ'.Cons
 | a :: l, x, h =>
   by 
@@ -1540,55 +1629,87 @@ theorem tr_normal_respects c k v s :
     case fix f IH => 
       apply IH
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_ret_respects
-(k
- v
- s) : «expr∃ , »((b₂), «expr ∧ »(tr_cfg (step_ret k v) b₂, reaches₁ (TM2.step tr) ⟨some (Λ'.ret (tr_cont k)), s, K'.elim (tr_list v) «expr[ , ]»([]) «expr[ , ]»([]) (tr_cont_stack k)⟩ b₂)) :=
-begin
-  induction [expr k] [] [] ["generalizing", ident v, ident s],
-  case [ident halt] { exact [expr ⟨_, rfl, trans_gen.single rfl⟩] },
-  case [ident cons₁, ":", ident fs, ident as, ident k, ident IH] { obtain ["⟨", ident s', ",", ident h₁, ",", ident h₂, "⟩", ":=", expr tr_normal_respects fs (cont.cons₂ v k) as none],
-    refine [expr ⟨s', h₁, trans_gen.head rfl _⟩],
-    simp [] [] [] [] [] [],
-    refine [expr (move₂_ok exprdec_trivial() _ (split_at_pred_ff _)).trans _],
-    { refl },
-    simp [] [] [] [] [] [],
-    refine [expr (move₂_ok exprdec_trivial() _ _).trans _],
-    swap 4,
-    { refl },
-    swap 4,
-    { exact [expr split_at_pred_eq _ _ _ (some Γ'.Cons) _ (λ x h, to_bool_ff (tr_list_ne_Cons _ _ h)) ⟨rfl, rfl⟩] },
-    refine [expr (move₂_ok exprdec_trivial() _ (split_at_pred_ff _)).trans _],
-    { refl },
-    simp [] [] [] [] [] [],
-    exact [expr h₂] },
-  case [ident cons₂, ":", ident ns, ident k, ident IH] { obtain ["⟨", ident c, ",", ident h₁, ",", ident h₂, "⟩", ":=", expr IH [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](ns.head, v) none],
-    exact [expr ⟨c, h₁, «expr $ »(trans_gen.head rfl, head_stack_ok.trans h₂)⟩] },
-  case [ident comp, ":", ident f, ident k, ident IH] { obtain ["⟨", ident s', ",", ident h₁, ",", ident h₂, "⟩", ":=", expr tr_normal_respects f k v s],
-    exact [expr ⟨_, h₁, trans_gen.head rfl h₂⟩] },
-  case [ident fix, ":", ident f, ident k, ident IH] { rw ["[", expr step_ret, "]"] [],
-    have [] [":", expr if «expr = »(v.head, 0) then «expr ∧ »(«expr = »(nat_end (tr_list v).head'.iget, tt), «expr = »((tr_list v).tail, tr_list v.tail)) else «expr ∧ »(«expr = »(nat_end (tr_list v).head'.iget, ff), «expr = »((tr_list v).tail, «expr ++ »((tr_nat v.head).tail, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](Γ'.cons, tr_list v.tail))))] [],
-    { cases [expr v] ["with", ident n],
-      { exact [expr ⟨rfl, rfl⟩] },
-      cases [expr n] [],
-      { exact [expr ⟨rfl, rfl⟩] },
-      rw ["[", expr tr_list, ",", expr list.head, ",", expr tr_nat, ",", expr nat.cast_succ, ",", expr num.add_one, ",", expr num.succ, ",", expr list.tail, "]"] [],
-      cases [expr (n : num).succ'] []; exact [expr ⟨rfl, rfl⟩] },
-    by_cases [expr «expr = »(v.head, 0)]; simp [] [] [] ["[", expr h, "]"] [] ["at", ident this, "⊢"],
-    { obtain ["⟨", ident c, ",", ident h₁, ",", ident h₂, "⟩", ":=", expr IH v.tail (tr_list v).head'],
-      refine [expr ⟨c, h₁, trans_gen.head rfl _⟩],
-      simp [] [] [] ["[", expr tr_cont, ",", expr tr_cont_stack, ",", expr this, "]"] [] [],
-      exact [expr h₂] },
-    { obtain ["⟨", ident s', ",", ident h₁, ",", ident h₂, "⟩", ":=", expr tr_normal_respects f (cont.fix f k) v.tail (some Γ'.cons)],
-      refine [expr ⟨_, h₁, «expr $ »(trans_gen.head rfl, trans_gen.trans _ h₂)⟩],
-      swap 3,
-      simp [] [] [] ["[", expr tr_cont, ",", expr this.1, "]"] [] [],
-      convert [] [expr clear_ok (split_at_pred_eq _ _ (tr_nat v.head).tail (some Γ'.cons) _ _ _)] ["using", 2],
-      { simp [] [] [] [] [] [] },
-      { exact [expr λ x h, tr_nat_nat_end _ _ (list.tail_subset _ h)] },
-      { exact [expr ⟨rfl, this.2⟩] } } }
-end
+theorem tr_ret_respects k v s :
+  ∃ b₂,
+    tr_cfg (step_ret k v) b₂ ∧
+      reaches₁ (TM2.step tr) ⟨some (Λ'.ret (tr_cont k)), s, K'.elim (tr_list v) [] [] (tr_cont_stack k)⟩ b₂ :=
+  by 
+    induction k generalizing v s 
+    case halt => 
+      exact ⟨_, rfl, trans_gen.single rfl⟩
+    case cons₁ fs as k IH => 
+      obtain ⟨s', h₁, h₂⟩ := tr_normal_respects fs (cont.cons₂ v k) as none 
+      refine' ⟨s', h₁, trans_gen.head rfl _⟩
+      simp 
+      refine'
+        (move₂_ok
+              (by 
+                decide)
+              _ (split_at_pred_ff _)).trans
+          _
+      ·
+        rfl 
+      simp 
+      refine'
+        (move₂_ok
+              (by 
+                decide)
+              _ _).trans
+          _ 
+      swap 4
+      ·
+        rfl 
+      swap 4
+      ·
+        exact split_at_pred_eq _ _ _ (some Γ'.Cons) _ (fun x h => to_bool_ff (tr_list_ne_Cons _ _ h)) ⟨rfl, rfl⟩
+      refine'
+        (move₂_ok
+              (by 
+                decide)
+              _ (split_at_pred_ff _)).trans
+          _
+      ·
+        rfl 
+      simp 
+      exact h₂ 
+    case cons₂ ns k IH => 
+      obtain ⟨c, h₁, h₂⟩ := IH (ns.head :: v) none 
+      exact ⟨c, h₁, trans_gen.head rfl$ head_stack_ok.trans h₂⟩
+    case comp f k IH => 
+      obtain ⟨s', h₁, h₂⟩ := tr_normal_respects f k v s 
+      exact ⟨_, h₁, trans_gen.head rfl h₂⟩
+    case fix f k IH => 
+      rw [step_ret]
+      have  :
+        if v.head = 0 then nat_end (tr_list v).head'.iget = tt ∧ (tr_list v).tail = tr_list v.tail else
+          nat_end (tr_list v).head'.iget = ff ∧ (tr_list v).tail = (tr_nat v.head).tail ++ Γ'.cons :: tr_list v.tail
+      ·
+        cases' v with n
+        ·
+          exact ⟨rfl, rfl⟩
+        cases n
+        ·
+          exact ⟨rfl, rfl⟩
+        rw [tr_list, List.headₓ, tr_nat, Nat.cast_succ, Num.add_one, Num.succ, List.tail]
+        cases (n : Num).succ' <;> exact ⟨rfl, rfl⟩
+      byCases' v.head = 0 <;> simp [h] at this⊢
+      ·
+        obtain ⟨c, h₁, h₂⟩ := IH v.tail (tr_list v).head' 
+        refine' ⟨c, h₁, trans_gen.head rfl _⟩
+        simp [tr_cont, tr_cont_stack, this]
+        exact h₂
+      ·
+        obtain ⟨s', h₁, h₂⟩ := tr_normal_respects f (cont.fix f k) v.tail (some Γ'.cons)
+        refine' ⟨_, h₁, trans_gen.head rfl$ trans_gen.trans _ h₂⟩
+        swap 3
+        simp [tr_cont, this.1]
+        convert clear_ok (split_at_pred_eq _ _ (tr_nat v.head).tail (some Γ'.cons) _ _ _) using 2
+        ·
+          simp 
+        ·
+          exact fun x h => tr_nat_nat_end _ _ (List.tail_subset _ h)
+        ·
+          exact ⟨rfl, this.2⟩
 
 theorem tr_respects : respects step (TM2.step tr) tr_cfg
 | cfg.ret k v, _, ⟨s, rfl⟩ => tr_ret_respects _ _ _
@@ -1601,24 +1722,24 @@ def init (c : code) (v : List ℕ) : cfg' :=
 theorem tr_init c v : ∃ b, tr_cfg (step_normal c cont.halt v) b ∧ reaches₁ (TM2.step tr) (init c v) b :=
   tr_normal_respects _ _ _ _
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_eval (c v) : «expr = »(eval (TM2.step tr) (init c v), «expr <$> »(halt, code.eval c v)) :=
-begin
-  obtain ["⟨", ident i, ",", ident h₁, ",", ident h₂, "⟩", ":=", expr tr_init c v],
-  refine [expr part.ext (λ x, _)],
-  rw ["[", expr reaches_eval h₂.to_refl, "]"] [],
-  simp [] [] [] [] [] [],
-  refine [expr ⟨λ h, _, _⟩],
-  { obtain ["⟨", ident c, ",", ident hc₁, ",", ident hc₂, "⟩", ":=", expr tr_eval_rev tr_respects h₁ h],
-    simp [] [] [] ["[", expr step_normal_eval, "]"] [] ["at", ident hc₂],
-    obtain ["⟨", ident v', ",", ident hv, ",", ident rfl, "⟩", ":=", expr hc₂],
-    exact [expr ⟨_, hv, hc₁.symm⟩] },
-  { rintro ["⟨", ident v', ",", ident hv, ",", ident rfl, "⟩"],
-    have [] [] [":=", expr tr_eval tr_respects h₁],
-    simp [] [] [] ["[", expr step_normal_eval, "]"] [] ["at", ident this],
-    obtain ["⟨", "_", ",", "⟨", "⟩", ",", ident h, "⟩", ":=", expr this _ hv rfl],
-    exact [expr h] }
-end
+theorem tr_eval c v : eval (TM2.step tr) (init c v) = halt <$> code.eval c v :=
+  by 
+    obtain ⟨i, h₁, h₂⟩ := tr_init c v 
+    refine' Part.ext fun x => _ 
+    rw [reaches_eval h₂.to_refl]
+    simp 
+    refine' ⟨fun h => _, _⟩
+    ·
+      obtain ⟨c, hc₁, hc₂⟩ := tr_eval_rev tr_respects h₁ h 
+      simp [step_normal_eval] at hc₂ 
+      obtain ⟨v', hv, rfl⟩ := hc₂ 
+      exact ⟨_, hv, hc₁.symm⟩
+    ·
+      rintro ⟨v', hv, rfl⟩
+      have  := tr_eval tr_respects h₁ 
+      simp [step_normal_eval] at this 
+      obtain ⟨_, ⟨⟩, h⟩ := this _ hv rfl 
+      exact h
 
 /-- The set of machine states reachable via downward label jumps, discounting jumps via `ret`. -/
 def tr_stmts₁ : Λ' → Finset Λ'
@@ -1631,26 +1752,43 @@ def tr_stmts₁ : Λ' → Finset Λ'
 | Q@(Λ'.pred q₁ q₂) => insert Q$ tr_stmts₁ q₁ ∪ insert (unrev q₂) (tr_stmts₁ q₂)
 | Q@(Λ'.ret k) => {Q}
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_stmts₁_trans {q q'} : «expr ∈ »(q', tr_stmts₁ q) → «expr ⊆ »(tr_stmts₁ q', tr_stmts₁ q) :=
-begin
-  induction [expr q] [] [] []; simp [] [] ["only"] ["[", expr tr_stmts₁, ",", expr finset.mem_insert, ",", expr finset.mem_union, ",", expr or_imp_distrib, ",", expr finset.mem_singleton, ",", expr finset.subset.refl, ",", expr imp_true_iff, ",", expr true_and, "]"] [] [] { contextual := tt },
-  iterate [4] { exact [expr λ h, finset.subset.trans (q_ih h) (finset.subset_insert _ _)] },
-  { simp [] [] [] [] [] [],
-    intros [ident s, ident h, ident x, ident h'],
-    simp [] [] [] [] [] [],
-    exact [expr or.inr ⟨_, q_ih s h h'⟩] },
-  { split,
-    { rintro [ident rfl],
-      apply [expr finset.subset_insert] },
-    { intros [ident h, ident x, ident h'],
-      simp [] [] [] [] [] [],
-      exact [expr or.inr «expr $ »(or.inr, q_ih h h')] } },
-  { refine [expr ⟨λ h x h', _, λ h x h', _, λ h x h', _⟩]; simp [] [] [] [] [] [],
-    { exact [expr or.inr «expr $ »(or.inr, «expr $ »(or.inl, q_ih_q₁ h h'))] },
-    { cases [expr finset.mem_insert.1 h'] ["with", ident h', ident h']; simp [] [] [] ["[", expr h', ",", expr unrev, "]"] [] [] },
-    { exact [expr or.inr «expr $ »(or.inr, «expr $ »(or.inr, q_ih_q₂ h h'))] } }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  tr_stmts₁_trans
+  { q q' } : q' ∈ tr_stmts₁ q → tr_stmts₁ q' ⊆ tr_stmts₁ q
+  :=
+    by
+      induction q
+          <;>
+          simp
+            ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+            only
+            [
+              tr_stmts₁
+                ,
+                Finset.mem_insert
+                ,
+                Finset.mem_union
+                ,
+                or_imp_distrib
+                ,
+                Finset.mem_singleton
+                ,
+                Finset.Subset.refl
+                ,
+                imp_true_iff
+                ,
+                true_andₓ
+              ]
+        iterate 4 exact fun h => Finset.Subset.trans q_ih h Finset.subset_insert _ _
+        · simp intro s h x h' simp exact Or.inr ⟨ _ , q_ih s h h' ⟩
+        · constructor · rintro rfl apply Finset.subset_insert · intro h x h' simp exact Or.inr Or.inr $ q_ih h h'
+        ·
+          refine' ⟨ fun h x h' => _ , fun h x h' => _ , fun h x h' => _ ⟩ <;> simp
+            · exact Or.inr Or.inr $ Or.inl $ q_ih_q₁ h h'
+            · cases' Finset.mem_insert . 1 h' with h' h' <;> simp [ h' , unrev ]
+            · exact Or.inr Or.inr $ Or.inr $ q_ih_q₂ h h'
 
 theorem tr_stmts₁_self q : q ∈ tr_stmts₁ q :=
   by 
@@ -1768,9 +1906,16 @@ theorem cont_supp_cons₂ k : cont_supp (cont'.cons₂ k) = tr_stmts₁ (head st
 theorem cont_supp_comp f k : cont_supp (cont'.comp f k) = code_supp f k :=
   rfl
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cont_supp_fix (f k) : «expr = »(cont_supp (cont'.fix f k), code_supp f (cont'.fix f k)) :=
-by simp [] [] [] ["[", expr code_supp, ",", expr code_supp', ",", expr cont_supp, ",", expr finset.union_assoc, ",", expr finset.subset_iff, "]"] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  cont_supp_fix
+  f k : cont_supp cont'.fix f k = code_supp f cont'.fix f k
+  :=
+    by
+      simp
+        ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+        [ code_supp , code_supp' , cont_supp , Finset.union_assoc , Finset.subset_iff ]
 
 @[simp]
 theorem cont_supp_halt : cont_supp cont'.halt = ∅ :=
@@ -1789,6 +1934,7 @@ def Λ'.supports (S : Finset Λ') : Λ' → Prop
 | Q@(Λ'.pred q₁ q₂) => Λ'.supports q₁ ∧ Λ'.supports q₂
 | Q@(Λ'.ret k) => cont_supp k ⊆ S
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » K)
 /-- A shorthand for the predicate that we are proving in the main theorems `tr_stmts₁_supports`,
 `code_supp'_supports`, `cont_supp_supports`, `code_supp_supports`. The set `S` is fixed throughout
 the proof, and denotes the full set of states in the machine, while `K` is a subset that we are
@@ -1819,53 +1965,67 @@ theorem head_supports {S k q} (H : (q : Λ').Supports S) : (head k q).Supports S
     by 
       dsimp only <;> splitIfs <;> exact H
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ret_supports {S k} (H₁ : «expr ⊆ »(cont_supp k, S)) : TM2.supports_stmt S (tr (Λ'.ret k)) :=
-begin
-  have [ident W] [] [":=", expr λ {q}, tr_stmts₁_self q],
-  cases [expr k] [],
-  case [ident halt] { trivial },
-  case [ident cons₁] { rw ["[", expr cont_supp_cons₁, ",", expr finset.union_subset_iff, "]"] ["at", ident H₁],
-    exact [expr λ _, H₁.1 W] },
-  case [ident cons₂] { rw ["[", expr cont_supp_cons₂, ",", expr finset.union_subset_iff, "]"] ["at", ident H₁],
-    exact [expr λ _, H₁.1 W] },
-  case [ident comp] { rw ["[", expr cont_supp_comp, "]"] ["at", ident H₁],
-    exact [expr λ _, H₁ (code_supp_self _ _ W)] },
-  case [ident fix] { rw ["[", expr cont_supp_fix, "]"] ["at", ident H₁],
-    have [ident L] [] [":=", expr @finset.mem_union_left],
-    have [ident R] [] [":=", expr @finset.mem_union_right],
-    intro [ident s],
-    dsimp ["only"] [] [] [],
-    cases [expr nat_end s.iget] [],
-    { refine [expr H₁ «expr $ »(R _, «expr $ »(L _, «expr $ »(R _, «expr $ »(R _, L _ W))))] },
-    { exact [expr H₁ «expr $ »(R _, «expr $ »(L _, «expr $ »(R _, «expr $ »(R _, «expr $ »(R _, finset.mem_singleton_self _)))))] } }
-end
+theorem ret_supports {S k} (H₁ : cont_supp k ⊆ S) : TM2.supports_stmt S (tr (Λ'.ret k)) :=
+  by 
+    have W := fun {q} => tr_stmts₁_self q 
+    cases k 
+    case halt => 
+      trivial 
+    case cons₁ => 
+      rw [cont_supp_cons₁, Finset.union_subset_iff] at H₁ 
+      exact fun _ => H₁.1 W 
+    case cons₂ => 
+      rw [cont_supp_cons₂, Finset.union_subset_iff] at H₁ 
+      exact fun _ => H₁.1 W 
+    case comp => 
+      rw [cont_supp_comp] at H₁ 
+      exact fun _ => H₁ (code_supp_self _ _ W)
+    case fix => 
+      rw [cont_supp_fix] at H₁ 
+      have L := @Finset.mem_union_left 
+      have R := @Finset.mem_union_right 
+      intro s 
+      dsimp only 
+      cases nat_end s.iget
+      ·
+        refine' H₁ (R _$ L _$ R _$ R _$ L _ W)
+      ·
+        exact H₁ (R _$ L _$ R _$ R _$ R _$ Finset.mem_singleton_self _)
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tr_stmts₁_supports
-{S q}
-(H₁ : (q : Λ').supports S)
-(HS₁ : «expr ⊆ »(tr_stmts₁ q, S)) : supports (tr_stmts₁ q) S :=
-begin
-  have [ident W] [] [":=", expr λ {q}, tr_stmts₁_self q],
-  induction [expr q] [] [] []; simp [] [] [] ["[", expr tr_stmts₁, "]"] [] ["at", ident HS₁, "⊢"],
-  any_goals { cases [expr finset.insert_subset.1 HS₁] ["with", ident h₁, ident h₂],
-    id { have [ident h₃] [] [":=", expr h₂ W] } <|> try { simp [] [] [] ["[", expr finset.subset_iff, "]"] [] ["at", ident h₂] } },
-  { exact [expr supports_insert.2 ⟨⟨λ _, h₃, λ _, h₁⟩, q_ih H₁ h₂⟩] },
-  { exact [expr supports_insert.2 ⟨⟨λ _, h₃, λ _, h₁⟩, q_ih H₁ h₂⟩] },
-  { exact [expr supports_insert.2 ⟨⟨λ _, h₁, λ _, h₃⟩, q_ih H₁ h₂⟩] },
-  { exact [expr supports_insert.2 ⟨⟨λ _, h₃, λ _, h₃⟩, q_ih H₁ h₂⟩] },
-  { refine [expr supports_insert.2 ⟨λ _, h₂ _ W, _⟩],
-    exact [expr supports_bUnion.2 (λ _, q_ih _ (H₁ _) (λ _ h, h₂ _ h))] },
-  { refine [expr supports_insert.2 ⟨⟨λ _, h₁, λ _, h₂.1, λ _, h₂.1⟩, _⟩],
-    exact [expr supports_insert.2 ⟨⟨λ _, h₂.2 _ W, λ _, h₂.1⟩, q_ih H₁ h₂.2⟩] },
-  { refine [expr supports_insert.2 ⟨⟨λ _, h₁, λ _, h₂.2 _ (or.inl W), λ _, h₂.1, λ _, h₂.1⟩, _⟩],
-    refine [expr supports_insert.2 ⟨⟨λ _, h₂.2 _ (or.inr W), λ _, h₂.1⟩, _⟩],
-    refine [expr supports_union.2 ⟨_, _⟩],
-    { exact [expr q_ih_q₁ H₁.1 (λ _ h, h₂.2 _ (or.inl h))] },
-    { exact [expr q_ih_q₂ H₁.2 (λ _ h, h₂.2 _ (or.inr h))] } },
-  { exact [expr supports_singleton.2 (ret_supports H₁)] }
-end
+theorem tr_stmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : tr_stmts₁ q ⊆ S) : supports (tr_stmts₁ q) S :=
+  by 
+    have W := fun {q} => tr_stmts₁_self q 
+    induction q <;> simp [tr_stmts₁] at HS₁⊢
+    any_goals 
+      cases' Finset.insert_subset.1 HS₁ with h₁ h₂ 
+      first |
+        have h₃ := h₂ W|
+        try 
+          simp [Finset.subset_iff] at h₂
+    ·
+      exact supports_insert.2 ⟨⟨fun _ => h₃, fun _ => h₁⟩, q_ih H₁ h₂⟩
+    ·
+      exact supports_insert.2 ⟨⟨fun _ => h₃, fun _ => h₁⟩, q_ih H₁ h₂⟩
+    ·
+      exact supports_insert.2 ⟨⟨fun _ => h₁, fun _ => h₃⟩, q_ih H₁ h₂⟩
+    ·
+      exact supports_insert.2 ⟨⟨fun _ => h₃, fun _ => h₃⟩, q_ih H₁ h₂⟩
+    ·
+      refine' supports_insert.2 ⟨fun _ => h₂ _ W, _⟩
+      exact supports_bUnion.2 fun _ => q_ih _ (H₁ _) fun _ h => h₂ _ h
+    ·
+      refine' supports_insert.2 ⟨⟨fun _ => h₁, fun _ => h₂.1, fun _ => h₂.1⟩, _⟩
+      exact supports_insert.2 ⟨⟨fun _ => h₂.2 _ W, fun _ => h₂.1⟩, q_ih H₁ h₂.2⟩
+    ·
+      refine' supports_insert.2 ⟨⟨fun _ => h₁, fun _ => h₂.2 _ (Or.inl W), fun _ => h₂.1, fun _ => h₂.1⟩, _⟩
+      refine' supports_insert.2 ⟨⟨fun _ => h₂.2 _ (Or.inr W), fun _ => h₂.1⟩, _⟩
+      refine' supports_union.2 ⟨_, _⟩
+      ·
+        exact q_ih_q₁ H₁.1 fun _ h => h₂.2 _ (Or.inl h)
+      ·
+        exact q_ih_q₂ H₁.2 fun _ h => h₂.2 _ (Or.inr h)
+    ·
+      exact supports_singleton.2 (ret_supports H₁)
 
 theorem tr_stmts₁_supports' {S q K} (H₁ : (q : Λ').Supports S) (H₂ : tr_stmts₁ q ∪ K ⊆ S) (H₃ : K ⊆ S → supports K S) :
   supports (tr_stmts₁ q ∪ K) S :=
@@ -1899,67 +2059,77 @@ theorem tr_normal_supports {S c k} (Hk : code_supp c k ⊆ S) : (tr_normal c k).
       rw [code_supp_fix] at Hk 
       exact Finset.union_subset_right Hk
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem code_supp'_supports {S c k} (H : «expr ⊆ »(code_supp c k, S)) : supports (code_supp' c k) S :=
-begin
-  induction [expr c] [] [] ["generalizing", ident k],
-  iterate [3] { exact [expr tr_stmts₁_supports (tr_normal_supports H) (finset.subset.trans (code_supp_self _ _) H)] },
-  case [ident cons, ":", ident f, ident fs, ident IHf, ident IHfs] { have [ident H'] [] [":=", expr H],
-    simp [] [] ["only"] ["[", expr code_supp_cons, ",", expr finset.union_subset_iff, "]"] [] ["at", ident H'],
-    refine [expr tr_stmts₁_supports' (tr_normal_supports H) (finset.union_subset_left H) (λ h, _)],
-    refine [expr supports_union.2 ⟨IHf H'.2, _⟩],
-    refine [expr tr_stmts₁_supports' (tr_normal_supports _) (finset.union_subset_right h) (λ h, _)],
-    { simp [] [] ["only"] ["[", expr code_supp, ",", expr finset.union_subset_iff, ",", expr cont_supp, "]"] [] ["at", ident h, ident H, "⊢"],
-      exact [expr ⟨h.2.2.1, h.2.2.2, H.2⟩] },
-    refine [expr supports_union.2 ⟨IHfs _, _⟩],
-    { rw ["[", expr code_supp, ",", expr cont_supp_cons₁, "]"] ["at", ident H'],
-      exact [expr finset.union_subset_right (finset.union_subset_right H'.2)] },
-    exact [expr tr_stmts₁_supports «expr $ »(head_supports, finset.union_subset_right H) (finset.union_subset_right h)] },
-  case [ident comp, ":", ident f, ident g, ident IHf, ident IHg] { have [ident H'] [] [":=", expr H],
-    rw ["[", expr code_supp_comp, "]"] ["at", ident H'],
-    have [ident H'] [] [":=", expr finset.union_subset_right H'],
-    refine [expr tr_stmts₁_supports' (tr_normal_supports H) (finset.union_subset_left H) (λ h, _)],
-    refine [expr supports_union.2 ⟨IHg H', _⟩],
-    refine [expr tr_stmts₁_supports' (tr_normal_supports _) (finset.union_subset_right h) (λ h, _)],
-    { simp [] [] ["only"] ["[", expr code_supp', ",", expr code_supp, ",", expr finset.union_subset_iff, ",", expr cont_supp, "]"] [] ["at", ident h, ident H, "⊢"],
-      exact [expr ⟨h.2.2, H.2⟩] },
-    exact [expr IHf (finset.union_subset_right H')] },
-  case [ident case, ":", ident f, ident g, ident IHf, ident IHg] { have [ident H'] [] [":=", expr H],
-    simp [] [] ["only"] ["[", expr code_supp_case, ",", expr finset.union_subset_iff, "]"] [] ["at", ident H'],
-    refine [expr tr_stmts₁_supports' (tr_normal_supports H) (finset.union_subset_left H) (λ h, _)],
-    exact [expr supports_union.2 ⟨IHf H'.2.1, IHg H'.2.2⟩] },
-  case [ident fix, ":", ident f, ident IHf] { have [ident H'] [] [":=", expr H],
-    simp [] [] ["only"] ["[", expr code_supp_fix, ",", expr finset.union_subset_iff, "]"] [] ["at", ident H'],
-    refine [expr tr_stmts₁_supports' (tr_normal_supports H) (finset.union_subset_left H) (λ h, _)],
-    refine [expr supports_union.2 ⟨IHf H'.2, _⟩],
-    refine [expr tr_stmts₁_supports' (tr_normal_supports _) (finset.union_subset_right h) (λ h, _)],
-    { simp [] [] ["only"] ["[", expr code_supp', ",", expr code_supp, ",", expr finset.union_subset_iff, ",", expr cont_supp, ",", expr tr_stmts₁, ",", expr finset.insert_subset, "]"] [] ["at", ident h, ident H, "⊢"],
-      exact [expr ⟨h.1, ⟨H.1.1, h⟩, H.2⟩] },
-    exact [expr supports_singleton.2 «expr $ »(ret_supports, finset.union_subset_right H)] }
-end
+theorem code_supp'_supports {S c k} (H : code_supp c k ⊆ S) : supports (code_supp' c k) S :=
+  by 
+    induction c generalizing k 
+    iterate 3 
+      exact tr_stmts₁_supports (tr_normal_supports H) (Finset.Subset.trans (code_supp_self _ _) H)
+    case cons f fs IHf IHfs => 
+      have H' := H 
+      simp only [code_supp_cons, Finset.union_subset_iff] at H' 
+      refine' tr_stmts₁_supports' (tr_normal_supports H) (Finset.union_subset_left H) fun h => _ 
+      refine' supports_union.2 ⟨IHf H'.2, _⟩
+      refine' tr_stmts₁_supports' (tr_normal_supports _) (Finset.union_subset_right h) fun h => _
+      ·
+        simp only [code_supp, Finset.union_subset_iff, cont_supp] at h H⊢
+        exact ⟨h.2.2.1, h.2.2.2, H.2⟩
+      refine' supports_union.2 ⟨IHfs _, _⟩
+      ·
+        rw [code_supp, cont_supp_cons₁] at H' 
+        exact Finset.union_subset_right (Finset.union_subset_right H'.2)
+      exact tr_stmts₁_supports (head_supports$ Finset.union_subset_right H) (Finset.union_subset_right h)
+    case comp f g IHf IHg => 
+      have H' := H 
+      rw [code_supp_comp] at H' 
+      have H' := Finset.union_subset_right H' 
+      refine' tr_stmts₁_supports' (tr_normal_supports H) (Finset.union_subset_left H) fun h => _ 
+      refine' supports_union.2 ⟨IHg H', _⟩
+      refine' tr_stmts₁_supports' (tr_normal_supports _) (Finset.union_subset_right h) fun h => _
+      ·
+        simp only [code_supp', code_supp, Finset.union_subset_iff, cont_supp] at h H⊢
+        exact ⟨h.2.2, H.2⟩
+      exact IHf (Finset.union_subset_right H')
+    case case f g IHf IHg => 
+      have H' := H 
+      simp only [code_supp_case, Finset.union_subset_iff] at H' 
+      refine' tr_stmts₁_supports' (tr_normal_supports H) (Finset.union_subset_left H) fun h => _ 
+      exact supports_union.2 ⟨IHf H'.2.1, IHg H'.2.2⟩
+    case fix f IHf => 
+      have H' := H 
+      simp only [code_supp_fix, Finset.union_subset_iff] at H' 
+      refine' tr_stmts₁_supports' (tr_normal_supports H) (Finset.union_subset_left H) fun h => _ 
+      refine' supports_union.2 ⟨IHf H'.2, _⟩
+      refine' tr_stmts₁_supports' (tr_normal_supports _) (Finset.union_subset_right h) fun h => _
+      ·
+        simp only [code_supp', code_supp, Finset.union_subset_iff, cont_supp, tr_stmts₁, Finset.insert_subset] at h H⊢
+        exact ⟨h.1, ⟨H.1.1, h⟩, H.2⟩
+      exact supports_singleton.2 (ret_supports$ Finset.union_subset_right H)
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cont_supp_supports {S k} (H : «expr ⊆ »(cont_supp k, S)) : supports (cont_supp k) S :=
-begin
-  induction [expr k] [] [] [],
-  { simp [] [] [] ["[", expr cont_supp_halt, ",", expr supports, "]"] [] [] },
-  case [ident cons₁, ":", ident f, ident k, ident IH] { have [ident H₁] [] [":=", expr H],
-    rw ["[", expr cont_supp_cons₁, "]"] ["at", ident H₁],
-    have [ident H₂] [] [":=", expr finset.union_subset_right H₁],
-    refine [expr tr_stmts₁_supports' (tr_normal_supports H₂) H₁ (λ h, _)],
-    refine [expr supports_union.2 ⟨code_supp'_supports H₂, _⟩],
-    simp [] [] ["only"] ["[", expr code_supp, ",", expr cont_supp_cons₂, ",", expr finset.union_subset_iff, "]"] [] ["at", ident H₂],
-    exact [expr tr_stmts₁_supports' (head_supports H₂.2.2) (finset.union_subset_right h) IH] },
-  case [ident cons₂, ":", ident k, ident IH] { have [ident H'] [] [":=", expr H],
-    rw ["[", expr cont_supp_cons₂, "]"] ["at", ident H'],
-    exact [expr tr_stmts₁_supports' «expr $ »(head_supports, finset.union_subset_right H') H' IH] },
-  case [ident comp, ":", ident f, ident k, ident IH] { have [ident H'] [] [":=", expr H],
-    rw ["[", expr cont_supp_comp, "]"] ["at", ident H'],
-    have [ident H₂] [] [":=", expr finset.union_subset_right H'],
-    exact [expr supports_union.2 ⟨code_supp'_supports H', IH H₂⟩] },
-  case [ident fix, ":", ident f, ident k, ident IH] { rw [expr cont_supp] ["at", ident H],
-    exact [expr supports_union.2 ⟨code_supp'_supports H, IH (finset.union_subset_right H)⟩] }
-end
+theorem cont_supp_supports {S k} (H : cont_supp k ⊆ S) : supports (cont_supp k) S :=
+  by 
+    induction k
+    ·
+      simp [cont_supp_halt, supports]
+    case cons₁ f k IH => 
+      have H₁ := H 
+      rw [cont_supp_cons₁] at H₁ 
+      have H₂ := Finset.union_subset_right H₁ 
+      refine' tr_stmts₁_supports' (tr_normal_supports H₂) H₁ fun h => _ 
+      refine' supports_union.2 ⟨code_supp'_supports H₂, _⟩
+      simp only [code_supp, cont_supp_cons₂, Finset.union_subset_iff] at H₂ 
+      exact tr_stmts₁_supports' (head_supports H₂.2.2) (Finset.union_subset_right h) IH 
+    case cons₂ k IH => 
+      have H' := H 
+      rw [cont_supp_cons₂] at H' 
+      exact tr_stmts₁_supports' (head_supports$ Finset.union_subset_right H') H' IH 
+    case comp f k IH => 
+      have H' := H 
+      rw [cont_supp_comp] at H' 
+      have H₂ := Finset.union_subset_right H' 
+      exact supports_union.2 ⟨code_supp'_supports H', IH H₂⟩
+    case fix f k IH => 
+      rw [cont_supp] at H 
+      exact supports_union.2 ⟨code_supp'_supports H, IH (Finset.union_subset_right H)⟩
 
 theorem code_supp_supports {S c k} (H : code_supp c k ⊆ S) : supports (code_supp c k) S :=
   supports_union.2 ⟨code_supp'_supports H, cont_supp_supports (Finset.union_subset_right H)⟩

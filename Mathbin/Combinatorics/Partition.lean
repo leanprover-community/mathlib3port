@@ -42,14 +42,13 @@ open_locale BigOperators
 
 namespace Nat
 
--- error in Combinatorics.Partition: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- A partition of `n` is a multiset of positive integers summing to `n`. -/
-@[ext #[], derive #[expr decidable_eq]]
-structure partition
-(n : exprℕ()) :=
-  (parts : multiset exprℕ())
-  (parts_pos : ∀ {i}, «expr ∈ »(i, parts) → «expr < »(0, i))
-  (parts_sum : «expr = »(parts.sum, n))
+@[ext]
+structure partition (n : ℕ) where 
+  parts : Multiset ℕ 
+  parts_pos : ∀ {i}, i ∈ parts → 0 < i 
+  parts_sum : parts.sum = n deriving [anonymous]
 
 namespace Partition
 
@@ -67,21 +66,26 @@ theorem of_composition_surj {n : ℕ} : Function.Surjective (of_composition n) :
     refine' ⟨⟨b, fun i hi => hb₁ hi, _⟩, partition.ext _ _ rfl⟩
     simpa using hb₂
 
--- error in Combinatorics.Partition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a multiset which sums to `n`, construct a partition of `n` with the same multiset, but
 without the zeros.
--/ def of_sums (n : exprℕ()) (l : multiset exprℕ()) (hl : «expr = »(l.sum, n)) : partition n :=
-{ parts := l.filter ((«expr ≠ » 0)),
-  parts_pos := λ i hi, «expr $ »(nat.pos_of_ne_zero, by apply [expr of_mem_filter hi]),
-  parts_sum := begin
-    have [ident lt] [":", expr «expr = »(«expr + »(l.filter ((«expr = » 0)), l.filter ((«expr ≠ » 0))), l)] [":=", expr filter_add_not _ l],
-    apply_fun [expr multiset.sum] ["at", ident lt] [],
-    have [ident lz] [":", expr «expr = »((l.filter ((«expr = » 0))).sum, 0)] [],
-    { rw [expr multiset.sum_eq_zero_iff] [],
-      simp [] [] [] [] [] [] },
-    simpa [] [] [] ["[", expr lz, ",", expr hl, "]"] [] ["using", expr lt]
-  end }
+-/
+def of_sums (n : ℕ) (l : Multiset ℕ) (hl : l.sum = n) : partition n :=
+  { parts := l.filter (· ≠ 0),
+    parts_pos :=
+      fun i hi =>
+        Nat.pos_of_ne_zeroₓ$
+          by 
+            apply of_mem_filter hi,
+    parts_sum :=
+      by 
+        have lt : (l.filter (· = 0)+l.filter (· ≠ 0)) = l := filter_add_not _ l 
+        applyFun Multiset.sum  at lt 
+        have lz : (l.filter (· = 0)).Sum = 0
+        ·
+          rw [Multiset.sum_eq_zero_iff]
+          simp 
+        simpa [lz, hl] using lt }
 
 /-- A `multiset ℕ` induces a partition on its sum. -/
 def of_multiset (l : Multiset ℕ) : partition l.sum :=
@@ -114,6 +118,7 @@ partitions.
 instance (n : ℕ) : Fintype (partition n) :=
   Fintype.ofSurjective (of_composition n) of_composition_surj
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » c.parts)
 /-- The finset of those partitions in which every part is odd. -/
 def odds (n : ℕ) : Finset (partition n) :=
   Finset.univ.filter fun c => ∀ i _ : i ∈ c.parts, ¬Even i

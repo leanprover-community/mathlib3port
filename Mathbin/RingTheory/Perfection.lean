@@ -25,12 +25,21 @@ universe u₁ u₂ u₃ u₄
 
 open_locale Nnreal
 
-/-- The perfection of a monoid `M`, defined to be the projective limit of `M`
-using the `p`-th power maps `M → M` indexed by the natural numbers, implemented as
-`{ f : ℕ → M | ∀ n, f (n + 1) ^ p = f n }`. -/
-def Monoidₓ.perfection (M : Type u₁) [CommMonoidₓ M] (p : ℕ) : Submonoid (ℕ → M) :=
-  { Carrier := { f | ∀ n, (f (n+1)^p) = f n }, one_mem' := fun n => one_pow _,
-    mul_mem' := fun f g hf hg n => (mul_powₓ _ _ _).trans$ congr_arg2 _ (hf n) (hg n) }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The perfection of a monoid `M`, defined to be the projective limit of `M`
+    using the `p`-th power maps `M → M` indexed by the natural numbers, implemented as
+    `{ f : ℕ → M | ∀ n, f (n + 1) ^ p = f n }`. -/
+  def
+    Monoidₓ.perfection
+    ( M : Type u₁ ) [ CommMonoidₓ M ] ( p : ℕ ) : Submonoid ℕ → M
+    :=
+      {
+        Carrier := { f | ∀ n , f n + 1 ^ p = f n } ,
+          one_mem' := fun n => one_pow _ ,
+          mul_mem' := fun f g hf hg n => mul_powₓ _ _ _ . trans $ congr_arg2ₓ _ hf n hg n
+        }
 
 /-- The perfection of a ring `R` with characteristic `p`, as a subsemiring,
 defined to be the projective limit of `R` using the Frobenius maps `R → R`
@@ -38,7 +47,7 @@ indexed by the natural numbers, implemented as `{ f : ℕ → R | ∀ n, f (n + 
 def Ringₓ.perfectionSubsemiring (R : Type u₁) [CommSemiringₓ R] (p : ℕ) [hp : Fact p.prime] [CharP R p] :
   Subsemiring (ℕ → R) :=
   { Monoidₓ.perfection R p with zero_mem' := fun n => zero_pow$ hp.1.Pos,
-    add_mem' := fun f g hf hg n => (frobenius_add R p _ _).trans$ congr_arg2 _ (hf n) (hg n) }
+    add_mem' := fun f g hf hg n => (frobenius_add R p _ _).trans$ congr_arg2ₓ _ (hf n) (hg n) }
 
 /-- The perfection of a ring `R` with characteristic `p`, as a subring,
 defined to be the projective limit of `R` using the Frobenius maps `R → R`
@@ -250,7 +259,7 @@ variable (p R P)
 
 /-- The canonical perfection map from the perfection of a ring. -/
 theorem of : PerfectionMap p (Perfection.coeff R p 0) :=
-  mk' (RingEquiv.refl _)$ (Equiv.apply_eq_iff_eq_symm_apply _).2 rfl
+  mk' (RingEquiv.refl _)$ (Equivₓ.apply_eq_iff_eq_symm_apply _).2 rfl
 
 /-- For a perfect ring, it itself is the perfection. -/
 theorem id [PerfectRing R p] : PerfectionMap p (RingHom.id R) :=
@@ -269,7 +278,7 @@ theorem id [PerfectRing R p] : PerfectionMap p (RingHom.id R) :=
 variable {p R P}
 
 /-- A perfection map induces an isomorphism to the prefection. -/
-noncomputable def Equiv {π : P →+* R} (m : PerfectionMap p π) : P ≃+* Ringₓ.Perfection R p :=
+noncomputable def Equivₓ {π : P →+* R} (m : PerfectionMap p π) : P ≃+* Ringₓ.Perfection R p :=
   RingEquiv.ofBijective (Perfection.lift p P R π)
     ⟨fun x y hxy => m.injective$ fun n => (congr_argₓ (Perfection.coeff R p n) hxy : _),
       fun f =>
@@ -282,15 +291,14 @@ theorem equiv_apply {π : P →+* R} (m : PerfectionMap p π) (x : P) : m.equiv 
 theorem comp_equiv {π : P →+* R} (m : PerfectionMap p π) (x : P) : Perfection.coeff R p 0 (m.equiv x) = π x :=
   rfl
 
-theorem comp_equiv' {π : P →+* R} (m : PerfectionMap p π) : (Perfection.coeff R p 0).comp («expr↑ » m.equiv) = π :=
+theorem comp_equiv' {π : P →+* R} (m : PerfectionMap p π) : (Perfection.coeff R p 0).comp (↑m.equiv) = π :=
   RingHom.ext$ fun x => rfl
 
 theorem comp_symm_equiv {π : P →+* R} (m : PerfectionMap p π) (f : Ringₓ.Perfection R p) :
   π (m.equiv.symm f) = Perfection.coeff R p 0 f :=
   (m.comp_equiv _).symm.trans$ congr_argₓ _$ m.equiv.apply_symm_apply f
 
-theorem comp_symm_equiv' {π : P →+* R} (m : PerfectionMap p π) :
-  π.comp («expr↑ » m.equiv.symm) = Perfection.coeff R p 0 :=
+theorem comp_symm_equiv' {π : P →+* R} (m : PerfectionMap p π) : π.comp (↑m.equiv.symm) = Perfection.coeff R p 0 :=
   RingHom.ext m.comp_symm_equiv
 
 variable (p R P)
@@ -301,7 +309,7 @@ where `P` is any perfection of `S`. -/
 @[simps]
 noncomputable def lift [PerfectRing R p] (S : Type u₂) [CommSemiringₓ S] [CharP S p] (P : Type u₃) [CommSemiringₓ P]
   [CharP P p] [PerfectRing P p] (π : P →+* S) (m : PerfectionMap p π) : (R →+* S) ≃ (R →+* P) :=
-  { toFun := fun f => RingHom.comp («expr↑ » m.equiv.symm)$ Perfection.lift p R S f, invFun := fun f => π.comp f,
+  { toFun := fun f => RingHom.comp (↑m.equiv.symm)$ Perfection.lift p R S f, invFun := fun f => π.comp f,
     left_inv :=
       fun f =>
         by 
@@ -313,7 +321,7 @@ noncomputable def lift [PerfectRing R p] (S : Type u₂) [CommSemiringₓ S] [Ch
           fun x =>
             m.equiv.injective$
               (m.equiv.apply_symm_apply _).trans$
-                show Perfection.lift p R S (π.comp f) x = RingHom.comp («expr↑ » m.equiv) f x from
+                show Perfection.lift p R S (π.comp f) x = RingHom.comp (↑m.equiv) f x from
                   RingHom.ext_iff.1 ((Perfection.lift p R S).apply_eq_iff_eq_symm_apply.2 rfl) _ }
 
 variable {R p}
@@ -362,7 +370,7 @@ include hv
 /-- `O/(p)` for `O`, ring of integers of `K`. -/
 @[nolint unused_arguments has_inhabited_instance]
 def ModP :=
-  (Ideal.span {p} : Ideal O).Quotient
+  O ⧸ (Ideal.span {p} : Ideal O)
 
 variable [hp : Fact p.prime] [hvp : Fact (v p ≠ 1)]
 
@@ -405,18 +413,25 @@ theorem pre_val_mk {x : O} (hx : (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0
 theorem pre_val_zero : pre_val K v O hv p 0 = 0 :=
   if_pos rfl
 
--- error in RingTheory.Perfection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pre_val_mul
-{x y : mod_p K v O hv p}
-(hxy0 : «expr ≠ »(«expr * »(x, y), 0)) : «expr = »(pre_val K v O hv p «expr * »(x, y), «expr * »(pre_val K v O hv p x, pre_val K v O hv p y)) :=
-begin
-  have [ident hx0] [":", expr «expr ≠ »(x, 0)] [":=", expr mt (by { rintro [ident rfl], rw [expr zero_mul] [] }) hxy0],
-  have [ident hy0] [":", expr «expr ≠ »(y, 0)] [":=", expr mt (by { rintro [ident rfl], rw [expr mul_zero] [] }) hxy0],
-  obtain ["⟨", ident r, ",", ident rfl, "⟩", ":=", expr ideal.quotient.mk_surjective x],
-  obtain ["⟨", ident s, ",", ident rfl, "⟩", ":=", expr ideal.quotient.mk_surjective y],
-  rw ["<-", expr ring_hom.map_mul] ["at", ident hxy0, "⊢"],
-  rw ["[", expr pre_val_mk hx0, ",", expr pre_val_mk hy0, ",", expr pre_val_mk hxy0, ",", expr ring_hom.map_mul, ",", expr v.map_mul, "]"] []
-end
+theorem pre_val_mul {x y : ModP K v O hv p} (hxy0 : (x*y) ≠ 0) :
+  pre_val K v O hv p (x*y) = pre_val K v O hv p x*pre_val K v O hv p y :=
+  by 
+    have hx0 : x ≠ 0 :=
+      mt
+        (by 
+          rintro rfl 
+          rw [zero_mul])
+        hxy0 
+    have hy0 : y ≠ 0 :=
+      mt
+        (by 
+          rintro rfl 
+          rw [mul_zero])
+        hxy0 
+    obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x 
+    obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective y 
+    rw [←RingHom.map_mul] at hxy0⊢
+    rw [pre_val_mk hx0, pre_val_mk hy0, pre_val_mk hxy0, RingHom.map_mul, v.map_mul]
 
 theorem pre_val_add (x y : ModP K v O hv p) :
   pre_val K v O hv p (x+y) ≤ max (pre_val K v O hv p x) (pre_val K v O hv p y) :=
@@ -474,31 +489,28 @@ variable {hv} (hvp)
 
 include hp
 
--- error in RingTheory.Perfection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_ne_zero_of_pow_p_ne_zero
-{x y : mod_p K v O hv p}
-(hx : «expr ≠ »(«expr ^ »(x, p), 0))
-(hy : «expr ≠ »(«expr ^ »(y, p), 0)) : «expr ≠ »(«expr * »(x, y), 0) :=
-begin
-  obtain ["⟨", ident r, ",", ident rfl, "⟩", ":=", expr ideal.quotient.mk_surjective x],
-  obtain ["⟨", ident s, ",", ident rfl, "⟩", ":=", expr ideal.quotient.mk_surjective y],
-  have [ident h1p] [":", expr «expr < »((0 : exprℝ()), «expr / »(1, p))] [":=", expr one_div_pos.2 (nat.cast_pos.2 hp.1.pos)],
-  rw ["<-", expr ring_hom.map_mul] [],
-  rw ["<-", expr ring_hom.map_pow] ["at", ident hx, ident hy],
-  rw ["<-", expr v_p_lt_val hv] ["at", ident hx, ident hy, "⊢"],
-  rw ["[", expr ring_hom.map_pow, ",", expr v.map_pow, ",", "<-", expr rpow_lt_rpow_iff h1p, ",", "<-", expr rpow_nat_cast, ",", "<-", expr rpow_mul, ",", expr mul_one_div_cancel (nat.cast_ne_zero.2 hp.1.ne_zero : «expr ≠ »((p : exprℝ()), 0)), ",", expr rpow_one, "]"] ["at", ident hx, ident hy],
-  rw ["[", expr ring_hom.map_mul, ",", expr v.map_mul, "]"] [],
-  refine [expr lt_of_le_of_lt _ (mul_lt_mul₀ hx hy)],
-  by_cases [expr hvp, ":", expr «expr = »(v p, 0)],
-  { rw [expr hvp] [],
-    exact [expr zero_le _] },
-  replace [ident hvp] [] [":=", expr zero_lt_iff.2 hvp],
-  conv_lhs [] [] { rw ["<-", expr rpow_one (v p)] },
-  rw ["<-", expr rpow_add (ne_of_gt hvp)] [],
-  refine [expr rpow_le_rpow_of_exponent_ge hvp «expr ▸ »((algebra_map O K).map_nat_cast p, hv.2 _) _],
-  rw ["[", "<-", expr add_div, ",", expr div_le_one (nat.cast_pos.2 hp.1.pos : «expr < »(0, (p : exprℝ()))), "]"] [],
-  exact_mod_cast [expr hp.1.two_le]
-end
+theorem mul_ne_zero_of_pow_p_ne_zero {x y : ModP K v O hv p} (hx : (x^p) ≠ 0) (hy : (y^p) ≠ 0) : (x*y) ≠ 0 :=
+  by 
+    obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x 
+    obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective y 
+    have h1p : (0 : ℝ) < 1 / p := one_div_pos.2 (Nat.cast_pos.2 hp.1.Pos)
+    rw [←RingHom.map_mul]
+    rw [←RingHom.map_pow] at hx hy 
+    rw [←v_p_lt_val hv] at hx hy⊢
+    rw [RingHom.map_pow, v.map_pow, ←rpow_lt_rpow_iff h1p, ←rpow_nat_cast, ←rpow_mul,
+      mul_one_div_cancel (Nat.cast_ne_zero.2 hp.1.ne_zero : (p : ℝ) ≠ 0), rpow_one] at hx hy 
+    rw [RingHom.map_mul, v.map_mul]
+    refine' lt_of_le_of_ltₓ _ (mul_lt_mul₀ hx hy)
+    byCases' hvp : v p = 0
+    ·
+      rw [hvp]
+      exact zero_le _ 
+    replace hvp := zero_lt_iff.2 hvp 
+    convLHS => rw [←rpow_one (v p)]
+    rw [←rpow_add (ne_of_gtₓ hvp)]
+    refine' rpow_le_rpow_of_exponent_ge hvp ((algebraMap O K).map_nat_cast p ▸ hv.2 _) _ 
+    rw [←add_div, div_le_one (Nat.cast_pos.2 hp.1.Pos : 0 < (p : ℝ))]
+    exactModCast hp.1.two_le
 
 end Classical
 
@@ -537,25 +549,25 @@ theorem coeff_nat_find_add_ne_zero {f : PreTilt K v O hv p} {h : ∃ n, coeff _ 
   coeff _ _ (Nat.findₓ h+k) f ≠ 0 :=
   coeff_add_ne_zero (Nat.find_specₓ h) k
 
--- error in RingTheory.Perfection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem val_aux_eq
-{f : pre_tilt K v O hv p}
-{n : exprℕ()}
-(hfn : «expr ≠ »(coeff _ _ n f, 0)) : «expr = »(val_aux K v O hv p f, «expr ^ »(mod_p.pre_val K v O hv p (coeff _ _ n f), «expr ^ »(p, n))) :=
-begin
-  have [ident h] [":", expr «expr∃ , »((n), «expr ≠ »(coeff _ _ n f, 0))] [":=", expr ⟨n, hfn⟩],
-  rw ["[", expr val_aux, ",", expr dif_pos h, "]"] [],
-  obtain ["⟨", ident k, ",", ident rfl, "⟩", ":=", expr nat.exists_eq_add_of_le (nat.find_min' h hfn)],
-  induction [expr k] [] ["with", ident k, ident ih] [],
-  { refl },
-  obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr ideal.quotient.mk_surjective (coeff _ _ «expr + »(«expr + »(nat.find h, k), 1) f)],
-  have [ident h1] [":", expr «expr ≠ »((ideal.quotient.mk _ x : mod_p K v O hv p), 0)] [":=", expr «expr ▸ »(hx.symm, hfn)],
-  have [ident h2] [":", expr «expr ≠ »((ideal.quotient.mk _ «expr ^ »(x, p) : mod_p K v O hv p), 0)] [],
-  by { erw ["[", expr ring_hom.map_pow, ",", expr hx, ",", "<-", expr ring_hom.map_pow, ",", expr coeff_pow_p, "]"] [],
-    exact [expr coeff_nat_find_add_ne_zero k] },
-  erw ["[", expr ih (coeff_nat_find_add_ne_zero k), ",", "<-", expr hx, ",", "<-", expr coeff_pow_p, ",", expr ring_hom.map_pow, ",", "<-", expr hx, ",", "<-", expr ring_hom.map_pow, ",", expr mod_p.pre_val_mk h1, ",", expr mod_p.pre_val_mk h2, ",", expr ring_hom.map_pow, ",", expr v.map_pow, ",", "<-", expr pow_mul, ",", expr pow_succ, "]"] [],
-  refl
-end
+theorem val_aux_eq {f : PreTilt K v O hv p} {n : ℕ} (hfn : coeff _ _ n f ≠ 0) :
+  val_aux K v O hv p f = (ModP.preVal K v O hv p (coeff _ _ n f)^p^n) :=
+  by 
+    have h : ∃ n, coeff _ _ n f ≠ 0 := ⟨n, hfn⟩
+    rw [val_aux, dif_pos h]
+    obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le (Nat.find_min'ₓ h hfn)
+    induction' k with k ih
+    ·
+      rfl 
+    obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (coeff _ _ ((Nat.findₓ h+k)+1) f)
+    have h1 : (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0 := hx.symm ▸ hfn 
+    have h2 : (Ideal.Quotient.mk _ (x^p) : ModP K v O hv p) ≠ 0
+    ·
+      ·
+        erw [RingHom.map_pow, hx, ←RingHom.map_pow, coeff_pow_p]
+        exact coeff_nat_find_add_ne_zero k 
+    erw [ih (coeff_nat_find_add_ne_zero k), ←hx, ←coeff_pow_p, RingHom.map_pow, ←hx, ←RingHom.map_pow,
+      ModP.pre_val_mk h1, ModP.pre_val_mk h2, RingHom.map_pow, v.map_pow, ←pow_mulₓ, pow_succₓ]
+    rfl
 
 theorem val_aux_zero : val_aux K v O hv p 0 = 0 :=
   dif_neg$ fun ⟨n, hn⟩ => hn rfl
@@ -567,32 +579,31 @@ theorem val_aux_one : val_aux K v O hv p 1 = 1 :=
         v.map_one]
       exact @one_ne_zero (ModP K v O hv p) _ _
 
--- error in RingTheory.Perfection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem val_aux_mul
-(f
- g : pre_tilt K v O hv p) : «expr = »(val_aux K v O hv p «expr * »(f, g), «expr * »(val_aux K v O hv p f, val_aux K v O hv p g)) :=
-begin
-  by_cases [expr hf, ":", expr «expr = »(f, 0)],
-  { rw ["[", expr hf, ",", expr zero_mul, ",", expr val_aux_zero, ",", expr zero_mul, "]"] [] },
-  by_cases [expr hg, ":", expr «expr = »(g, 0)],
-  { rw ["[", expr hg, ",", expr mul_zero, ",", expr val_aux_zero, ",", expr mul_zero, "]"] [] },
-  obtain ["⟨", ident m, ",", ident hm, "⟩", ":", expr «expr∃ , »((n), «expr ≠ »(coeff _ _ n f, 0)), ":=", expr not_forall.1 (λ
-    h, «expr $ »(hf, perfection.ext h))],
-  obtain ["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n), «expr ≠ »(coeff _ _ n g, 0)), ":=", expr not_forall.1 (λ
-    h, «expr $ »(hg, perfection.ext h))],
-  replace [ident hm] [] [":=", expr coeff_ne_zero_of_le hm (le_max_left m n)],
-  replace [ident hn] [] [":=", expr coeff_ne_zero_of_le hn (le_max_right m n)],
-  have [ident hfg] [":", expr «expr ≠ »(coeff _ _ «expr + »(max m n, 1) «expr * »(f, g), 0)] [],
-  { rw [expr ring_hom.map_mul] [],
-    refine [expr mod_p.mul_ne_zero_of_pow_p_ne_zero _ _],
-    { rw ["[", "<-", expr ring_hom.map_pow, ",", expr coeff_pow_p f, "]"] [],
-      assumption },
-    { rw ["[", "<-", expr ring_hom.map_pow, ",", expr coeff_pow_p g, "]"] [],
-      assumption } },
-  rw ["[", expr val_aux_eq (coeff_add_ne_zero hm 1), ",", expr val_aux_eq (coeff_add_ne_zero hn 1), ",", expr val_aux_eq hfg, "]"] [],
-  rw [expr ring_hom.map_mul] ["at", ident hfg, "⊢"],
-  rw ["[", expr mod_p.pre_val_mul hfg, ",", expr mul_pow, "]"] []
-end
+theorem val_aux_mul (f g : PreTilt K v O hv p) : val_aux K v O hv p (f*g) = val_aux K v O hv p f*val_aux K v O hv p g :=
+  by 
+    byCases' hf : f = 0
+    ·
+      rw [hf, zero_mul, val_aux_zero, zero_mul]
+    byCases' hg : g = 0
+    ·
+      rw [hg, mul_zero, val_aux_zero, mul_zero]
+    obtain ⟨m, hm⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf$ Perfection.ext h 
+    obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg$ Perfection.ext h 
+    replace hm := coeff_ne_zero_of_le hm (le_max_leftₓ m n)
+    replace hn := coeff_ne_zero_of_le hn (le_max_rightₓ m n)
+    have hfg : coeff _ _ (max m n+1) (f*g) ≠ 0
+    ·
+      rw [RingHom.map_mul]
+      refine' ModP.mul_ne_zero_of_pow_p_ne_zero _ _
+      ·
+        rw [←RingHom.map_pow, coeff_pow_p f]
+        assumption
+      ·
+        rw [←RingHom.map_pow, coeff_pow_p g]
+        assumption 
+    rw [val_aux_eq (coeff_add_ne_zero hm 1), val_aux_eq (coeff_add_ne_zero hn 1), val_aux_eq hfg]
+    rw [RingHom.map_mul] at hfg⊢
+    rw [ModP.pre_val_mul hfg, mul_powₓ]
 
 theorem val_aux_add (f g : PreTilt K v O hv p) :
   val_aux K v O hv p (f+g) ≤ max (val_aux K v O hv p f) (val_aux K v O hv p g) :=

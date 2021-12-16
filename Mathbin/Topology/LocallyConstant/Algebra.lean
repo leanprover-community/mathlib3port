@@ -19,7 +19,7 @@ instance [HasOne Y] : HasOne (LocallyConstant X Y) :=
   { one := const X 1 }
 
 @[simp, toAdditive]
-theorem coe_one [HasOne Y] : «expr⇑ » (1 : LocallyConstant X Y) = (1 : X → Y) :=
+theorem coe_one [HasOne Y] : ⇑(1 : LocallyConstant X Y) = (1 : X → Y) :=
   rfl
 
 @[toAdditive]
@@ -31,7 +31,7 @@ instance [HasInv Y] : HasInv (LocallyConstant X Y) :=
   { inv := fun f => ⟨f⁻¹, f.is_locally_constant.inv⟩ }
 
 @[simp, toAdditive]
-theorem coe_inv [HasInv Y] (f : LocallyConstant X Y) : «expr⇑ » (f⁻¹) = f⁻¹ :=
+theorem coe_inv [HasInv Y] (f : LocallyConstant X Y) : ⇑f⁻¹ = f⁻¹ :=
   rfl
 
 @[toAdditive]
@@ -43,7 +43,7 @@ instance [Mul Y] : Mul (LocallyConstant X Y) :=
   { mul := fun f g => ⟨f*g, f.is_locally_constant.mul g.is_locally_constant⟩ }
 
 @[simp, toAdditive]
-theorem coe_mul [Mul Y] (f g : LocallyConstant X Y) : «expr⇑ » (f*g) = f*g :=
+theorem coe_mul [Mul Y] (f g : LocallyConstant X Y) : (⇑f*g) = f*g :=
   rfl
 
 @[toAdditive]
@@ -95,7 +95,7 @@ instance [Div Y] : Div (LocallyConstant X Y) :=
   { div := fun f g => ⟨f / g, f.is_locally_constant.div g.is_locally_constant⟩ }
 
 @[toAdditive]
-theorem coe_div [Div Y] (f g : LocallyConstant X Y) : «expr⇑ » (f / g) = f / g :=
+theorem coe_div [Div Y] (f g : LocallyConstant X Y) : ⇑(f / g) = f / g :=
   rfl
 
 @[toAdditive]
@@ -194,7 +194,7 @@ instance [HasScalar R Y] : HasScalar R (LocallyConstant X Y) :=
   { smul := fun r f => { toFun := r • f, IsLocallyConstant := ((IsLocallyConstant f).comp ((· • ·) r) : _) } }
 
 @[simp]
-theorem coe_smul [HasScalar R Y] (r : R) (f : LocallyConstant X Y) : «expr⇑ » (r • f) = r • f :=
+theorem coe_smul [HasScalar R Y] (r : R) (f : LocallyConstant X Y) : ⇑(r • f) = r • f :=
   rfl
 
 theorem smul_apply [HasScalar R Y] (r : R) (f : LocallyConstant X Y) (x : X) : (r • f) x = r • f x :=
@@ -227,7 +227,7 @@ instance : Algebra R (LocallyConstant X Y) :=
         exact Algebra.smul_def' _ _ }
 
 @[simp]
-theorem coe_algebra_map (r : R) : «expr⇑ » (algebraMap R (LocallyConstant X Y) r) = algebraMap R (X → Y) r :=
+theorem coe_algebra_map (r : R) : ⇑algebraMap R (LocallyConstant X Y) r = algebraMap R (X → Y) r :=
   rfl
 
 end Algebra

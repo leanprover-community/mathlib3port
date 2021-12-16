@@ -60,22 +60,23 @@ theorem functor_skeletal [∀ X Y : C, Subsingleton (X ⟶ Y)] (hC : skeletal C)
 
 variable (C D)
 
--- error in CategoryTheory.Skeletal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /--
 Construct the skeleton category as the induced category on the isomorphism classes, and derive
 its category structure.
--/ @[derive #[expr category]] def skeleton : Type u₁ :=
-induced_category C quotient.out
+-/
+def skeleton : Type u₁ :=
+  induced_category C Quotientₓ.out deriving [anonymous]
 
 instance [Inhabited C] : Inhabited (skeleton C) :=
-  ⟨«expr⟦ ⟧» (default C)⟩
+  ⟨⟦default C⟧⟩
 
--- error in CategoryTheory.Skeletal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- The functor from the skeleton of `C` to `C`. -/
-@[simps #[], derive #["[", expr full, ",", expr faithful, "]"]]
-noncomputable
-def from_skeleton : «expr ⥤ »(skeleton C, C) :=
-induced_functor _
+@[simps]
+noncomputable def from_skeleton : skeleton C ⥤ C :=
+  induced_functor _ deriving [anonymous], [anonymous]
 
 instance : ess_surj (from_skeleton C) :=
   { mem_ess_image := fun X => ⟨Quotientₓ.mk X, Quotientₓ.mk_out X⟩ }
@@ -87,13 +88,11 @@ noncomputable instance : is_equivalence (from_skeleton C) :=
 noncomputable def skeleton_equivalence : skeleton C ≌ C :=
   (from_skeleton C).asEquivalence
 
--- error in CategoryTheory.Skeletal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem skeleton_skeletal : skeletal (skeleton C) :=
-begin
-  rintro [ident X, ident Y, "⟨", ident h, "⟩"],
-  have [] [":", expr «expr ≈ »(X.out, Y.out)] [":=", expr ⟨(from_skeleton C).map_iso h⟩],
-  simpa [] [] [] [] [] ["using", expr quotient.sound this]
-end
+  by 
+    rintro X Y ⟨h⟩
+    have  : X.out ≈ Y.out := ⟨(from_skeleton C).mapIso h⟩
+    simpa using Quotientₓ.sound this
 
 /-- The `skeleton` of `C` given by choice is a skeleton of `C`. -/
 noncomputable def skeleton_is_skeleton : is_skeleton_of C (skeleton C) (from_skeleton C) :=
@@ -272,20 +271,21 @@ end
 
 variable {C}
 
--- error in CategoryTheory.Skeletal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An adjunction between thin categories gives an adjunction between their thin skeletons. -/
-def lower_adjunction
-(R : «expr ⥤ »(D, C))
-(L : «expr ⥤ »(C, D))
-(h : «expr ⊣ »(L, R)) : «expr ⊣ »(thin_skeleton.map L, thin_skeleton.map R) :=
-adjunction.mk_of_unit_counit { unit := { app := λ X, begin
-      letI [] [] [":=", expr is_isomorphic_setoid C],
-      refine [expr quotient.rec_on_subsingleton X (λ x, hom_of_le ⟨h.unit.app x⟩)]
-    end },
-  counit := { app := λ X, begin
-      letI [] [] [":=", expr is_isomorphic_setoid D],
-      refine [expr quotient.rec_on_subsingleton X (λ x, hom_of_le ⟨h.counit.app x⟩)]
-    end } }
+def lower_adjunction (R : D ⥤ C) (L : C ⥤ D) (h : L ⊣ R) : thin_skeleton.map L ⊣ thin_skeleton.map R :=
+  adjunction.mk_of_unit_counit
+    { Unit :=
+        { app :=
+            fun X =>
+              by 
+                let this' := is_isomorphic_setoid C 
+                refine' Quotientₓ.recOnSubsingleton X fun x => hom_of_le ⟨h.unit.app x⟩ },
+      counit :=
+        { app :=
+            fun X =>
+              by 
+                let this' := is_isomorphic_setoid D 
+                refine' Quotientₓ.recOnSubsingleton X fun x => hom_of_le ⟨h.counit.app x⟩ } }
 
 end ThinSkeleton
 

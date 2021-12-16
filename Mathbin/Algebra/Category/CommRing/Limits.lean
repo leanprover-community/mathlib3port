@@ -25,7 +25,7 @@ open CategoryTheory.Limits
 
 universe u
 
-noncomputable theory
+noncomputable section 
 
 namespace SemiRing
 
@@ -78,9 +78,9 @@ end HasLimits
 
 open HasLimits
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
-@[irreducible]
-instance has_limits : has_limits SemiRing :=
+irreducible_def has_limits : has_limits SemiRing :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
@@ -194,9 +194,9 @@ The chosen cone is a limit cone.
 def limit_cone_is_limit (F : J ⥤ CommSemiRing) : is_limit (limit_cone F) :=
   lifted_limit_is_limit _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
-@[irreducible]
-instance has_limits : has_limits CommSemiRing.{u} :=
+irreducible_def has_limits : has_limits CommSemiRing.{u} :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
@@ -285,9 +285,9 @@ The chosen cone is a limit cone.
 def limit_cone_is_limit (F : J ⥤ Ringₓₓ) : is_limit (limit_cone F) :=
   lifted_limit_is_limit _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
-@[irreducible]
-instance has_limits : has_limits Ringₓₓ :=
+irreducible_def has_limits : has_limits Ringₓₓ :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
@@ -389,9 +389,9 @@ The chosen cone is a limit cone.
 def limit_cone_is_limit (F : J ⥤ CommRingₓₓ) : is_limit (limit_cone F) :=
   lifted_limit_is_limit _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The category of commutative rings has all limits. -/
-@[irreducible]
-instance has_limits : has_limits CommRingₓₓ.{u} :=
+irreducible_def has_limits : has_limits CommRingₓₓ.{u} :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 

@@ -26,7 +26,7 @@ objects and morphisms).
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u
 

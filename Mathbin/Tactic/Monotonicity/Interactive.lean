@@ -49,10 +49,11 @@ unsafe def mono_function.to_tactic_format : mono_function → tactic format
 unsafe instance has_to_tactic_format_mono_function : has_to_tactic_format mono_function :=
   { to_tactic_format := mono_function.to_tactic_format }
 
--- error in Tactic.Monotonicity.Interactive: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler traversable
-@[derive #[expr traversable]]
-meta
-structure ac_mono_ctx' (rel : Type) := (to_rel : rel) (function : mono_function) (left right rel_def : expr)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler traversable
+unsafe structure ac_mono_ctx' (rel : Type) where 
+  to_rel : rel 
+  function : mono_function
+  (left right rel_def : expr)deriving [anonymous]
 
 @[reducible]
 unsafe def ac_mono_ctx :=
@@ -552,6 +553,9 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
 add_tactic_doc
   { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono], tags := ["monotonicity"] }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
@@ -596,11 +600,12 @@ unsafe def repeat_until_or_at_most : Nat → tactic Unit → tactic Unit → tac
 unsafe def repeat_until : tactic Unit → tactic Unit → tactic Unit :=
   repeat_until_or_at_most 100000
 
--- error in Tactic.Monotonicity.Interactive: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler _root_.has_reflect
-@[derive #[expr _root_.has_reflect], derive #[expr _root_.inhabited]] inductive rep_arity : Type
-| one
-| exactly (n : exprℕ())
-| many
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler _root_.has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler _root_.inhabited
+inductive rep_arity : Type
+  | one
+  | exactly (n : ℕ)
+  | many deriving [anonymous], [anonymous]
 
 unsafe def repeat_or_not : rep_arity → tactic Unit → Option (tactic Unit) → tactic Unit
 | rep_arity.one, tac, none => tac

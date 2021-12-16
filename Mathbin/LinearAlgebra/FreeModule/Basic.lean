@@ -30,7 +30,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where 
-  exists_basis{} : Nonempty (ΣI : Type v, Basis I R M)
+  exists_basis{} : Nonempty (Σ I : Type v, Basis I R M)
 
 theorem Module.free_def [Small.{w} M] : Module.Free R M ↔ ∃ I : Type w, Nonempty (Basis I R M) :=
   ⟨fun h =>
@@ -125,11 +125,11 @@ instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
   of_basis (Basis.empty N : Basis Pempty R N)
 
 instance Dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
-  [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀i, M i) :=
+  [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
   of_basis$ Dfinsupp.basis$ fun i => choose_basis R (M i)
 
 instance DirectSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
-  [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁i, M i) :=
+  [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁ i, M i) :=
   Module.Free.dfinsupp R M
 
 end Semiringₓ

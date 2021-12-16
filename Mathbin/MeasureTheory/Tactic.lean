@@ -37,6 +37,7 @@ attribute [measurability] measurable_id measurable_id' ae_measurable_id ae_measu
 
 namespace Tactic
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Tactic to apply `measurable.comp` when appropriate.
 
@@ -57,6 +58,7 @@ extra logic here to try to avoid bad cases.
 unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
@@ -90,6 +92,7 @@ unsafe def goal_is_not_measurable : tactic Unit :=
       | quote.1 (MeasurableSet (%%ₓl)) => failed
       | _ => skip
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- List of tactics used by `measurability` internally. -/
 unsafe def measurability_tactics (md : transparency := semireducible) : List (tactic Stringₓ) :=
   [propositional_goal >> apply_assumption >> pure "apply_assumption",

@@ -39,6 +39,7 @@ unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
 | quote.1 [] => return []
 | _ => failed
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic Unit
 | with_list, e =>
   do 

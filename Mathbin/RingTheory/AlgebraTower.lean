@@ -47,12 +47,12 @@ def invertible.algebra_tower (r : R) [Invertible (algebraMap R S r)] : Invertibl
     (by 
       rw [RingHom.coe_monoid_hom, IsScalarTower.algebra_map_apply R S A])
 
--- error in RingTheory.AlgebraTower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A natural number that is invertible when coerced to `R` is also invertible
 when coerced to any `R`-algebra. -/
-def invertible_algebra_coe_nat (n : exprℕ()) [inv : invertible (n : R)] : invertible (n : A) :=
-by { haveI [] [":", expr invertible (algebra_map exprℕ() R n)] [":=", expr inv],
-  exact [expr invertible.algebra_tower exprℕ() R A n] }
+def invertible_algebra_coe_nat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) :=
+  by 
+    have  : Invertible (algebraMap ℕ R n) := inv 
+    exact invertible.algebra_tower ℕ R A n
 
 end Semiringₓ
 
@@ -93,7 +93,7 @@ theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiringₓ C] [CommSemiri
       change x ∈ Subsemiring.closure (_ ∪ S) ↔ x ∈ Subsemiring.closure (_ ∪ S)
       rw [this]
     ext x 
-    split 
+    constructor
     ·
       rintro ⟨y, hy⟩
       exact ⟨⟨algebraMap D E y, ⟨y, ⟨Algebra.mem_top, rfl⟩⟩⟩, hy⟩
@@ -169,38 +169,35 @@ variable [CommSemiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A]
 
 variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
--- error in RingTheory.AlgebraTower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem linear_independent_smul
-{ι : Type v₁}
-{b : ι → S}
-{ι' : Type w₁}
-{c : ι' → A}
-(hb : linear_independent R b)
-(hc : linear_independent S c) : linear_independent R (λ p : «expr × »(ι, ι'), «expr • »(b p.1, c p.2)) :=
-begin
-  rw [expr linear_independent_iff'] ["at", ident hb, ident hc],
-  rw [expr linear_independent_iff''] [],
-  rintros [ident s, ident g, ident hg, ident hsg, "⟨", ident i, ",", ident k, "⟩"],
-  by_cases [expr hik, ":", expr «expr ∈ »((i, k), s)],
-  { have [ident h1] [":", expr «expr = »(«expr∑ in , »((i), (s.image prod.fst).product (s.image prod.snd), «expr • »(g i, «expr • »(b i.1, c i.2))), 0)] [],
-    { rw ["<-", expr hsg] [],
-      exact [expr «expr $ »(finset.sum_subset finset.subset_product, λ
-        p
-        _
-        hp, show «expr = »(«expr • »(g p, «expr • »(b p.1, c p.2)), 0), by rw ["[", expr hg p hp, ",", expr zero_smul, "]"] []).symm] },
-    rw [expr finset.sum_product_right] ["at", ident h1],
-    simp_rw ["[", "<-", expr smul_assoc, ",", "<-", expr finset.sum_smul, "]"] ["at", ident h1],
-    exact [expr hb _ _ (hc _ _ h1 k (finset.mem_image_of_mem _ hik)) i (finset.mem_image_of_mem _ hik)] },
-  exact [expr hg _ hik]
-end
+theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A} (hb : LinearIndependent R b)
+  (hc : LinearIndependent S c) : LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 :=
+  by 
+    rw [linear_independent_iff'] at hb hc 
+    rw [linear_independent_iff'']
+    rintro s g hg hsg ⟨i, k⟩
+    byCases' hik : (i, k) ∈ s
+    ·
+      have h1 : (∑ i in (s.image Prod.fst).product (s.image Prod.snd), g i • b i.1 • c i.2) = 0
+      ·
+        rw [←hsg]
+        exact
+          (Finset.sum_subset Finset.subset_product$
+              fun p _ hp =>
+                show g p • b p.1 • c p.2 = 0 by 
+                  rw [hg p hp, zero_smul]).symm
+            
+      rw [Finset.sum_product_right] at h1 
+      simpRw [←smul_assoc, ←Finset.sum_smul]  at h1 
+      exact hb _ _ (hc _ _ h1 k (Finset.mem_image_of_mem _ hik)) i (Finset.mem_image_of_mem _ hik)
+    exact hg _ hik
 
 /-- `basis.smul (b : basis ι R S) (c : basis ι S A)` is the `R`-basis on `A`
 where the `(i, j)`th basis vector is `b i • c j`. -/
 noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) : Basis (ι × ι') R A :=
   Basis.of_repr
     (c.repr.restrict_scalars R ≪≫ₗ
-      (Finsupp.lcongr (Equiv.refl _) b.repr ≪≫ₗ
-        ((finsupp_prod_lequiv R).symm ≪≫ₗ Finsupp.lcongr (Equiv.prodComm ι' ι) (LinearEquiv.refl _ _))))
+      (Finsupp.lcongr (Equivₓ.refl _) b.repr ≪≫ₗ
+        ((finsupp_prod_lequiv R).symm ≪≫ₗ Finsupp.lcongr (Equivₓ.prodComm ι' ι) (LinearEquiv.refl _ _))))
 
 @[simp]
 theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) x ij :
@@ -257,63 +254,66 @@ open Finset Submodule
 
 open_locale Classical
 
--- error in RingTheory.AlgebraTower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_subalgebra_of_fg
-(hAC : («expr⊤»() : subalgebra A C).fg)
-(hBC : («expr⊤»() : submodule B C).fg) : «expr∃ , »((B₀ : subalgebra A B), «expr ∧ »(B₀.fg, («expr⊤»() : submodule B₀ C).fg)) :=
-begin
-  cases [expr hAC] ["with", ident x, ident hx],
-  cases [expr hBC] ["with", ident y, ident hy],
-  have [] [] [":=", expr hy],
-  simp_rw ["[", expr eq_top_iff', ",", expr mem_span_finset, "]"] ["at", ident this],
-  choose [] [ident f] [ident hf] [],
-  let [ident s] [":", expr finset B] [":=", expr (finset.product «expr ∪ »(x, «expr * »(y, y)) y).image (function.uncurry f)],
-  have [ident hsx] [":", expr ∀
-   (xi «expr ∈ » x)
-   (yj «expr ∈ » y), «expr ∈ »(f xi yj, s)] [":=", expr λ
-   xi
-   hxi
-   yj
-   hyj, show «expr ∈ »(function.uncurry f (xi, yj), s), from «expr $ »(mem_image_of_mem _, mem_product.2 ⟨mem_union_left _ hxi, hyj⟩)],
-  have [ident hsy] [":", expr ∀
-   yi
-   yj
-   yk «expr ∈ » y, «expr ∈ »(f «expr * »(yi, yj) yk, s)] [":=", expr λ
-   yi
-   yj
-   yk
-   hyi
-   hyj
-   hyk, show «expr ∈ »(function.uncurry f («expr * »(yi, yj), yk), s), from «expr $ »(mem_image_of_mem _, mem_product.2 ⟨«expr $ »(mem_union_right _, finset.mul_mem_mul hyi hyj), hyk⟩)],
-  have [ident hxy] [":", expr ∀
-   xi «expr ∈ » x, «expr ∈ »(xi, span (algebra.adjoin A («expr↑ »(s) : set B)) («expr↑ »((insert 1 y : finset C)) : set C))] [":=", expr λ
-   xi
-   hxi, «expr ▸ »(hf xi, sum_mem _ (λ
-     yj
-     hyj, smul_mem (span (algebra.adjoin A («expr↑ »(s) : set B)) («expr↑ »((insert 1 y : finset C)) : set C)) ⟨f xi yj, «expr $ »(algebra.subset_adjoin, hsx xi hxi yj hyj)⟩ «expr $ »(subset_span, mem_insert_of_mem hyj)))],
-  have [ident hyy] [":", expr «expr ≤ »(«expr * »(span (algebra.adjoin A («expr↑ »(s) : set B)) («expr↑ »((insert 1 y : finset C)) : set C), span (algebra.adjoin A («expr↑ »(s) : set B)) («expr↑ »((insert 1 y : finset C)) : set C)), span (algebra.adjoin A («expr↑ »(s) : set B)) («expr↑ »((insert 1 y : finset C)) : set C))] [],
-  { rw ["[", expr span_mul_span, ",", expr span_le, ",", expr coe_insert, "]"] [],
-    rintros ["_", "⟨", ident yi, ",", ident yj, ",", ident rfl, "|", ident hyi, ",", ident rfl, "|", ident hyj, ",", ident rfl, "⟩"],
-    { rw [expr mul_one] [],
-      exact [expr subset_span (set.mem_insert _ _)] },
-    { rw [expr one_mul] [],
-      exact [expr subset_span (set.mem_insert_of_mem _ hyj)] },
-    { rw [expr mul_one] [],
-      exact [expr subset_span (set.mem_insert_of_mem _ hyi)] },
-    { rw ["<-", expr hf «expr * »(yi, yj)] [],
-      exact [expr set_like.mem_coe.2 «expr $ »(sum_mem _, λ
-        yk
-        hyk, smul_mem (span (algebra.adjoin A («expr↑ »(s) : set B)) (insert 1 «expr↑ »(y) : set C)) ⟨f «expr * »(yi, yj) yk, «expr $ »(algebra.subset_adjoin, hsy yi yj yk hyi hyj hyk)⟩ («expr $ »(subset_span, set.mem_insert_of_mem _ hyk) : «expr ∈ »(yk, _)))] } },
-  refine [expr ⟨algebra.adjoin A («expr↑ »(s) : set B), subalgebra.fg_adjoin_finset _, insert 1 y, _⟩],
-  refine [expr restrict_scalars_injective A _ _ _],
-  rw ["[", expr restrict_scalars_top, ",", expr eq_top_iff, ",", "<-", expr algebra.top_to_submodule, ",", "<-", expr hx, ",", expr algebra.adjoin_eq_span, ",", expr span_le, "]"] [],
-  refine [expr λ
-   r
-   hr, submonoid.closure_induction hr (λ
-    c
-    hc, hxy c hc) «expr $ »(subset_span, mem_insert_self _ _) (λ
-    p q hp hq, «expr $ »(hyy, submodule.mul_mem_mul hp hq))]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (xi «expr ∈ » x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (yj «expr ∈ » y)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (xi «expr ∈ » x)
+theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg) :
+  ∃ B₀ : Subalgebra A B, B₀.fg ∧ (⊤ : Submodule B₀ C).Fg :=
+  by 
+    cases' hAC with x hx 
+    cases' hBC with y hy 
+    have  := hy 
+    simpRw [eq_top_iff', mem_span_finset]  at this 
+    choose f hf 
+    let s : Finset B := (Finset.product (x ∪ y*y) y).Image (Function.uncurry f)
+    have hsx : ∀ xi _ : xi ∈ x yj _ : yj ∈ y, f xi yj ∈ s :=
+      fun xi hxi yj hyj =>
+        show Function.uncurry f (xi, yj) ∈ s from mem_image_of_mem _$ mem_product.2 ⟨mem_union_left _ hxi, hyj⟩
+    have hsy : ∀ yi yj yk _ : yi ∈ y _ : yj ∈ y _ : yk ∈ y, f (yi*yj) yk ∈ s :=
+      fun yi yj yk hyi hyj hyk =>
+        show Function.uncurry f (yi*yj, yk) ∈ s from
+          mem_image_of_mem _$ mem_product.2 ⟨mem_union_right _$ Finset.mul_mem_mul hyi hyj, hyk⟩
+    have hxy : ∀ xi _ : xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
+      fun xi hxi =>
+        hf xi ▸
+          sum_mem _
+            fun yj hyj =>
+              smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C))
+                ⟨f xi yj, Algebra.subset_adjoin$ hsx xi hxi yj hyj⟩ (subset_span$ mem_insert_of_mem hyj)
+    have hyy :
+      (span (Algebra.adjoin A (↑s : Set B))
+            (↑(insert 1 y : Finset C) :
+            Set C)*span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C)) ≤
+        span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C)
+    ·
+      rw [span_mul_span, span_le, coe_insert]
+      rintro _ ⟨yi, yj, rfl | hyi, rfl | hyj, rfl⟩
+      ·
+        rw [mul_oneₓ]
+        exact subset_span (Set.mem_insert _ _)
+      ·
+        rw [one_mulₓ]
+        exact subset_span (Set.mem_insert_of_mem _ hyj)
+      ·
+        rw [mul_oneₓ]
+        exact subset_span (Set.mem_insert_of_mem _ hyi)
+      ·
+        rw [←hf (yi*yj)]
+        exact
+          SetLike.mem_coe.2
+            (sum_mem _$
+              fun yk hyk =>
+                smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 (↑y) : Set C))
+                  ⟨f (yi*yj) yk, Algebra.subset_adjoin$ hsy yi yj yk hyi hyj hyk⟩
+                  (subset_span$ Set.mem_insert_of_mem _ hyk : yk ∈ _))
+    refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩
+    refine' restrict_scalars_injective A _ _ _ 
+    rw [restrict_scalars_top, eq_top_iff, ←Algebra.top_to_submodule, ←hx, Algebra.adjoin_eq_span, span_le]
+    refine'
+      fun r hr =>
+        Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span$ mem_insert_self _ _)
+          fun p q hp hq => hyy$ Submodule.mul_mem_mul hp hq
 
 end Semiringₓ
 
@@ -360,22 +360,29 @@ def AlgHom.extendScalars : @AlgHom B C D _ _ _ _ (f.restrict_domain B).toRingHom
 
 variable {B}
 
--- error in RingTheory.AlgebraTower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/
-def alg_hom_equiv_sigma : «expr ≃ »(«expr →ₐ[ ] »(C, A, D), «exprΣ , »((f : «expr →ₐ[ ] »(B, A, D)), @alg_hom B C D _ _ _ _ f.to_ring_hom.to_algebra)) :=
-{ to_fun := λ f, ⟨f.restrict_domain B, f.extend_scalars B⟩,
-  inv_fun := λ fg, let alg := fg.1.to_ring_hom.to_algebra in
-  by exactI [expr fg.2.restrict_scalars A],
-  left_inv := λ f, by { dsimp ["only"] [] [] [],
-    ext [] [] [],
-    refl },
-  right_inv := begin
-    rintros ["⟨", "⟨", ident f, ",", "_", ",", "_", ",", "_", ",", "_", ",", "_", "⟩", ",", ident g, ",", "_", ",", "_", ",", "_", ",", "_", ",", ident hg, "⟩"],
-    have [] [":", expr «expr = »(f, λ
-      x, g (algebra_map B C x))] [":=", expr by { ext [] [] [], exact [expr (hg x).symm] }],
-    subst [expr this],
-    refl
-  end }
+def algHomEquivSigma : (C →ₐ[A] D) ≃ Σ f : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.to_ring_hom.to_algebra :=
+  { toFun := fun f => ⟨f.restrict_domain B, f.extend_scalars B⟩,
+    invFun :=
+      fun fg =>
+        let alg := fg.1.toRingHom.toAlgebra 
+        by 
+          exact fg.2.restrictScalars A,
+    left_inv :=
+      fun f =>
+        by 
+          dsimp only 
+          ext 
+          rfl,
+    right_inv :=
+      by 
+        rintro ⟨⟨f, _, _, _, _, _⟩, g, _, _, _, _, hg⟩
+        have  : f = fun x => g (algebraMap B C x) :=
+          by 
+            ext 
+            exact (hg x).symm 
+        subst this 
+        rfl }
 
 end AlgHomTower
 

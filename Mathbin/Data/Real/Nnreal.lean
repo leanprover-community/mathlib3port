@@ -45,15 +45,25 @@ This file defines `ℝ≥0` as a localized notation for `nnreal`.
 
 open_locale Classical BigOperators
 
--- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler ordered_semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler ordered_semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler comm_monoid_with_zero
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler semilattice_inf
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler densely_ordered
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler order_bot
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler canonically_linear_ordered_add_monoid
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler linear_ordered_comm_group_with_zero
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler archimedean
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler linear_ordered_semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler ordered_comm_semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler canonically_ordered_comm_semiring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_sub
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_ordered_sub
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_div
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Nonnegative real numbers. -/
-@[derive #["[", expr ordered_semiring, ",", expr comm_monoid_with_zero, ",", expr semilattice_inf, ",",
-   expr densely_ordered, ",", expr order_bot, ",", expr canonically_linear_ordered_add_monoid, ",",
-   expr linear_ordered_comm_group_with_zero, ",", expr archimedean, ",", expr linear_ordered_semiring, ",",
-   expr ordered_comm_semiring, ",", expr canonically_ordered_comm_semiring, ",", expr has_sub, ",",
-   expr has_ordered_sub, ",", expr has_div, ",", expr inhabited, "]"]]
-def nnreal :=
-{r : exprℝ() // «expr ≤ »(0, r)}
+def Nnreal :=
+  { r : ℝ // 0 ≤ r }deriving [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous],
+  [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous]
 
 localized [Nnreal] notation " ℝ≥0 " => Nnreal
 
@@ -180,12 +190,12 @@ protected theorem coe_sub {r₁ r₂ :  ℝ≥0 } (h : r₂ ≤ r₁) : ((r₁ -
         simp [show (r₂ : ℝ) ≤ r₁ from h]
 
 @[simp, normCast]
-protected theorem coe_eq_zero (r :  ℝ≥0 ) : «expr↑ » r = (0 : ℝ) ↔ r = 0 :=
+protected theorem coe_eq_zero (r :  ℝ≥0 ) : ↑r = (0 : ℝ) ↔ r = 0 :=
   by 
     rw [←Nnreal.coe_zero, Nnreal.coe_eq]
 
 @[simp, normCast]
-protected theorem coe_eq_one (r :  ℝ≥0 ) : «expr↑ » r = (1 : ℝ) ↔ r = 1 :=
+protected theorem coe_eq_one (r :  ℝ≥0 ) : ↑r = (1 : ℝ) ↔ r = 1 :=
   by 
     rw [←Nnreal.coe_one, Nnreal.coe_eq]
 
@@ -202,7 +212,7 @@ def to_real_hom :  ℝ≥0  →+* ℝ :=
   ⟨coeₓ, Nnreal.coe_one, Nnreal.coe_mul, Nnreal.coe_zero, Nnreal.coe_add⟩
 
 @[simp]
-theorem coe_to_real_hom : «expr⇑ » to_real_hom = coeₓ :=
+theorem coe_to_real_hom : ⇑to_real_hom = coeₓ :=
   rfl
 
 section Actions
@@ -300,11 +310,11 @@ theorem coe_multiset_prod (s : Multiset ℝ≥0 ) : ((s.prod :  ℝ≥0 ) : ℝ)
   to_real_hom.map_multiset_prod s
 
 @[normCast]
-theorem coe_sum {α} {s : Finset α} {f : α →  ℝ≥0 } : «expr↑ » (∑a in s, f a) = ∑a in s, (f a : ℝ) :=
+theorem coe_sum {α} {s : Finset α} {f : α →  ℝ≥0 } : (↑∑ a in s, f a) = ∑ a in s, (f a : ℝ) :=
   to_real_hom.map_sum _ _
 
 theorem _root_.real.to_nnreal_sum_of_nonneg {α} {s : Finset α} {f : α → ℝ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
-  Real.toNnreal (∑a in s, f a) = ∑a in s, Real.toNnreal (f a) :=
+  Real.toNnreal (∑ a in s, f a) = ∑ a in s, Real.toNnreal (f a) :=
   by 
     rw [←Nnreal.coe_eq, Nnreal.coe_sum, Real.coe_to_nnreal _ (Finset.sum_nonneg hf)]
     exact
@@ -314,11 +324,11 @@ theorem _root_.real.to_nnreal_sum_of_nonneg {α} {s : Finset α} {f : α → ℝ
             rw [Real.coe_to_nnreal _ (hf x hxs)]
 
 @[normCast]
-theorem coe_prod {α} {s : Finset α} {f : α →  ℝ≥0 } : «expr↑ » (∏a in s, f a) = ∏a in s, (f a : ℝ) :=
+theorem coe_prod {α} {s : Finset α} {f : α →  ℝ≥0 } : (↑∏ a in s, f a) = ∏ a in s, (f a : ℝ) :=
   to_real_hom.map_prod _ _
 
 theorem _root_.real.to_nnreal_prod_of_nonneg {α} {s : Finset α} {f : α → ℝ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
-  Real.toNnreal (∏a in s, f a) = ∏a in s, Real.toNnreal (f a) :=
+  Real.toNnreal (∏ a in s, f a) = ∏ a in s, Real.toNnreal (f a) :=
   by 
     rw [←Nnreal.coe_eq, Nnreal.coe_prod, Real.coe_to_nnreal _ (Finset.prod_nonneg hf)]
     exact
@@ -327,12 +337,12 @@ theorem _root_.real.to_nnreal_prod_of_nonneg {α} {s : Finset α} {f : α → �
           by 
             rw [Real.coe_to_nnreal _ (hf x hxs)]
 
-theorem nsmul_coe (r :  ℝ≥0 ) (n : ℕ) : «expr↑ » (n • r) = n • (r : ℝ) :=
+theorem nsmul_coe (r :  ℝ≥0 ) (n : ℕ) : ↑(n • r) = n • (r : ℝ) :=
   by 
     normCast
 
 @[simp, normCast]
-protected theorem coe_nat_cast (n : ℕ) : («expr↑ » («expr↑ » n :  ℝ≥0 ) : ℝ) = n :=
+protected theorem coe_nat_cast (n : ℕ) : (↑(↑n :  ℝ≥0 ) : ℝ) = n :=
   to_real_hom.map_nat_cast n
 
 noncomputable example : LinearOrderₓ ℝ≥0  :=
@@ -447,10 +457,10 @@ theorem bdd_below_coe (s : Set ℝ≥0 ) : BddBelow ((coeₓ :  ℝ≥0  → ℝ
 noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0  :=
   Nonneg.conditionallyCompleteLinearOrderBot Real.Sup_empty.le
 
-theorem coe_Sup (s : Set ℝ≥0 ) : («expr↑ » (Sup s) : ℝ) = Sup ((coeₓ :  ℝ≥0  → ℝ) '' s) :=
+theorem coe_Sup (s : Set ℝ≥0 ) : (↑Sup s : ℝ) = Sup ((coeₓ :  ℝ≥0  → ℝ) '' s) :=
   Eq.symm$ @subset_Sup_of_within ℝ (Set.Ici 0) _ ⟨(0 :  ℝ≥0 )⟩ s$ Real.Sup_nonneg _$ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
-theorem coe_Inf (s : Set ℝ≥0 ) : («expr↑ » (Inf s) : ℝ) = Inf ((coeₓ :  ℝ≥0  → ℝ) '' s) :=
+theorem coe_Inf (s : Set ℝ≥0 ) : (↑Inf s : ℝ) = Inf ((coeₓ :  ℝ≥0  → ℝ) '' s) :=
   Eq.symm$ @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 :  ℝ≥0 )⟩ s$ Real.Inf_nonneg _$ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
 example : Archimedean ℝ≥0  :=
@@ -485,7 +495,7 @@ theorem le_of_add_le_right {a b c :  ℝ≥0 } (h : (a+b) ≤ c) : b ≤ c :=
 
 theorem lt_iff_exists_rat_btwn (a b :  ℝ≥0 ) : a < b ↔ ∃ q : ℚ, 0 ≤ q ∧ a < Real.toNnreal q ∧ Real.toNnreal q < b :=
   Iff.intro
-    (fun h : («expr↑ » a : ℝ) < («expr↑ » b : ℝ) =>
+    (fun h : (↑a : ℝ) < (↑b : ℝ) =>
       let ⟨q, haq, hqb⟩ := exists_rat_btwn h 
       have  : 0 ≤ (q : ℝ) := le_transₓ a.2$ le_of_ltₓ haq
       ⟨q, Rat.cast_nonneg.1 this,
@@ -594,39 +604,39 @@ theorem to_nnreal_le_to_nnreal {r p : ℝ} (h : r ≤ p) : Real.toNnreal r ≤ R
 theorem to_nnreal_add_le {r p : ℝ} : Real.toNnreal (r+p) ≤ Real.toNnreal r+Real.toNnreal p :=
   Nnreal.coe_le_coe.1$ max_leₓ (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)) Nnreal.zero_le_coe
 
-theorem to_nnreal_le_iff_le_coe {r : ℝ} {p :  ℝ≥0 } : Real.toNnreal r ≤ p ↔ r ≤ «expr↑ » p :=
+theorem to_nnreal_le_iff_le_coe {r : ℝ} {p :  ℝ≥0 } : Real.toNnreal r ≤ p ↔ r ≤ ↑p :=
   Nnreal.gi.gc r p
 
-theorem le_to_nnreal_iff_coe_le {r :  ℝ≥0 } {p : ℝ} (hp : 0 ≤ p) : r ≤ Real.toNnreal p ↔ «expr↑ » r ≤ p :=
+theorem le_to_nnreal_iff_coe_le {r :  ℝ≥0 } {p : ℝ} (hp : 0 ≤ p) : r ≤ Real.toNnreal p ↔ ↑r ≤ p :=
   by 
     rw [←Nnreal.coe_le_coe, Real.coe_to_nnreal p hp]
 
-theorem le_to_nnreal_iff_coe_le' {r :  ℝ≥0 } {p : ℝ} (hr : 0 < r) : r ≤ Real.toNnreal p ↔ «expr↑ » r ≤ p :=
+theorem le_to_nnreal_iff_coe_le' {r :  ℝ≥0 } {p : ℝ} (hr : 0 < r) : r ≤ Real.toNnreal p ↔ ↑r ≤ p :=
   (le_or_ltₓ 0 p).elim le_to_nnreal_iff_coe_le$
     fun hp =>
       by 
         simp only [(hp.trans_le r.coe_nonneg).not_le, to_nnreal_eq_zero.2 hp.le, hr.not_le]
 
-theorem to_nnreal_lt_iff_lt_coe {r : ℝ} {p :  ℝ≥0 } (ha : 0 ≤ r) : Real.toNnreal r < p ↔ r < «expr↑ » p :=
+theorem to_nnreal_lt_iff_lt_coe {r : ℝ} {p :  ℝ≥0 } (ha : 0 ≤ r) : Real.toNnreal r < p ↔ r < ↑p :=
   by 
     rw [←Nnreal.coe_lt_coe, Real.coe_to_nnreal r ha]
 
--- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_to_nnreal_iff_coe_lt
-{r : «exprℝ≥0»()}
-{p : exprℝ()} : «expr ↔ »(«expr < »(r, real.to_nnreal p), «expr < »(«expr↑ »(r), p)) :=
-begin
-  cases [expr le_total 0 p] [],
-  { rw ["[", "<-", expr nnreal.coe_lt_coe, ",", expr real.coe_to_nnreal p h, "]"] [] },
-  { rw ["[", expr to_nnreal_eq_zero.2 h, "]"] [],
-    split,
-    { intro [],
-      have [] [] [":=", expr not_lt_of_le (zero_le r)],
-      contradiction },
-    { intro [ident rp],
-      have [] [":", expr «expr¬ »(«expr ≤ »(p, 0))] [":=", expr not_le_of_lt (lt_of_le_of_lt (nnreal.coe_nonneg _) rp)],
-      contradiction } }
-end
+theorem lt_to_nnreal_iff_coe_lt {r :  ℝ≥0 } {p : ℝ} : r < Real.toNnreal p ↔ ↑r < p :=
+  by 
+    cases le_totalₓ 0 p
+    ·
+      rw [←Nnreal.coe_lt_coe, Real.coe_to_nnreal p h]
+    ·
+      rw [to_nnreal_eq_zero.2 h]
+      constructor
+      ·
+        intro 
+        have  := not_lt_of_le (zero_le r)
+        contradiction
+      ·
+        intro rp 
+        have  : ¬p ≤ 0 := not_le_of_lt (lt_of_le_of_ltₓ (Nnreal.coe_nonneg _) rp)
+        contradiction
 
 @[simp]
 theorem to_nnreal_bit0 {r : ℝ} (hr : 0 ≤ r) : Real.toNnreal (bit0 r) = bit0 (Real.toNnreal r) :=
@@ -654,34 +664,34 @@ section Mul
 theorem mul_eq_mul_left {a b c :  ℝ≥0 } (h : a ≠ 0) : ((a*b) = a*c) ↔ b = c :=
   by 
     rw [←Nnreal.eq_iff, ←Nnreal.eq_iff, Nnreal.coe_mul, Nnreal.coe_mul]
-    split 
+    constructor
     ·
       exact mul_left_cancel₀ (mt (@Nnreal.eq_iff a 0).1 h)
     ·
       intro h 
       rw [h]
 
--- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem _root_.real.to_nnreal_mul
-{p q : exprℝ()}
-(hp : «expr ≤ »(0, p)) : «expr = »(real.to_nnreal «expr * »(p, q), «expr * »(real.to_nnreal p, real.to_nnreal q)) :=
-begin
-  cases [expr le_total 0 q] ["with", ident hq, ident hq],
-  { apply [expr nnreal.eq],
-    simp [] [] [] ["[", expr real.to_nnreal, ",", expr hp, ",", expr hq, ",", expr max_eq_left, ",", expr mul_nonneg, "]"] [] [] },
-  { have [ident hpq] [] [":=", expr mul_nonpos_of_nonneg_of_nonpos hp hq],
-    rw ["[", expr to_nnreal_eq_zero.2 hq, ",", expr to_nnreal_eq_zero.2 hpq, ",", expr mul_zero, "]"] [] }
-end
+theorem _root_.real.to_nnreal_mul {p q : ℝ} (hp : 0 ≤ p) : Real.toNnreal (p*q) = Real.toNnreal p*Real.toNnreal q :=
+  by 
+    cases' le_totalₓ 0 q with hq hq
+    ·
+      apply Nnreal.eq 
+      simp [Real.toNnreal, hp, hq, max_eq_leftₓ, mul_nonneg]
+    ·
+      have hpq := mul_nonpos_of_nonneg_of_nonpos hp hq 
+      rw [to_nnreal_eq_zero.2 hq, to_nnreal_eq_zero.2 hpq, mul_zero]
 
 end Mul
 
 section Pow
 
 theorem pow_antitone_exp {a :  ℝ≥0 } (m n : ℕ) (mn : m ≤ n) (a1 : a ≤ 1) : a ^ n ≤ a ^ m :=
+  pow_le_pow_of_le_one (zero_le a) a1 mn
+
+theorem exists_pow_lt_of_lt_one {a b :  ℝ≥0 } (ha : 0 < a) (hb : b < 1) : ∃ n : ℕ, b ^ n < a :=
   by 
-    rcases le_iff_exists_add.mp mn with ⟨k, rfl⟩
-    rw [←mul_oneₓ (a ^ m), pow_addₓ]
-    refine' mul_le_mul rfl.le (pow_le_one _ (zero_le a) a1) _ _ <;> exact pow_nonneg (zero_le _) _
+    simpa only [←coe_pow, Nnreal.coe_lt_coe] using
+      exists_pow_lt_of_lt_one (Nnreal.coe_pos.2 ha) (Nnreal.coe_lt_coe.2 hb)
 
 theorem exists_mem_Ico_zpow {x :  ℝ≥0 } {y :  ℝ≥0 } (hx : x ≠ 0) (hy : 1 < y) :
   ∃ n : ℤ, x ∈ Set.Ico (y ^ n) (y ^ n+1) :=
@@ -714,7 +724,7 @@ about `has_ordered_sub` in the file `algebra.order.sub`. See also `mul_tsub` and
 theorem sub_def {r p :  ℝ≥0 } : r - p = Real.toNnreal (r - p) :=
   rfl
 
-theorem coe_sub_def {r p :  ℝ≥0 } : «expr↑ » (r - p) = max (r - p : ℝ) 0 :=
+theorem coe_sub_def {r p :  ℝ≥0 } : ↑(r - p) = max (r - p : ℝ) 0 :=
   rfl
 
 noncomputable example : HasOrderedSub ℝ≥0  :=
@@ -729,7 +739,7 @@ end Sub
 
 section Inv
 
-theorem sum_div {ι} (s : Finset ι) (f : ι →  ℝ≥0 ) (b :  ℝ≥0 ) : (∑i in s, f i) / b = ∑i in s, f i / b :=
+theorem sum_div {ι} (s : Finset ι) (f : ι →  ℝ≥0 ) (b :  ℝ≥0 ) : (∑ i in s, f i) / b = ∑ i in s, f i / b :=
   by 
     simp only [div_eq_mul_inv, Finset.sum_mul]
 
@@ -834,6 +844,7 @@ theorem div_le_div_left {a b c :  ℝ≥0 } (a0 : 0 < a) (b0 : 0 < b) (c0 : 0 < 
   by 
     rw [Nnreal.div_le_iff b0.ne.symm, div_mul_eq_mul_div, Nnreal.le_div_iff_mul_le c0.ne.symm, mul_le_mul_left a0]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr < » 1)
 theorem le_of_forall_lt_one_mul_le {x y :  ℝ≥0 } (h : ∀ a _ : a < 1, (a*x) ≤ y) : x ≤ y :=
   le_of_forall_ge_of_dense$
     fun a ha =>
@@ -888,15 +899,15 @@ theorem div_add' (a b c :  ℝ≥0 ) (hc : c ≠ 0) : ((a / c)+b) = (a+b*c) / c 
   by 
     rwa [add_commₓ, add_div', add_commₓ]
 
--- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem _root_.real.to_nnreal_inv {x : exprℝ()} : «expr = »(real.to_nnreal «expr ⁻¹»(x), «expr ⁻¹»(real.to_nnreal x)) :=
-begin
-  by_cases [expr hx, ":", expr «expr ≤ »(0, x)],
-  { nth_rewrite [0] ["<-", expr real.coe_to_nnreal x hx] [],
-    rw ["[", "<-", expr nnreal.coe_inv, ",", expr real.to_nnreal_coe, "]"] [] },
-  { have [ident hx'] [] [":=", expr le_of_not_ge hx],
-    rw ["[", expr to_nnreal_eq_zero.mpr hx', ",", expr inv_zero, ",", expr to_nnreal_eq_zero.mpr (inv_nonpos.mpr hx'), "]"] [] }
-end
+theorem _root_.real.to_nnreal_inv {x : ℝ} : Real.toNnreal (x⁻¹) = Real.toNnreal x⁻¹ :=
+  by 
+    byCases' hx : 0 ≤ x
+    ·
+      nthRw 0[←Real.coe_to_nnreal x hx]
+      rw [←Nnreal.coe_inv, Real.to_nnreal_coe]
+    ·
+      have hx' := le_of_not_geₓ hx 
+      rw [to_nnreal_eq_zero.mpr hx', inv_zero, to_nnreal_eq_zero.mpr (inv_nonpos.mpr hx')]
 
 theorem _root_.real.to_nnreal_div {x y : ℝ} (hx : 0 ≤ x) : Real.toNnreal (x / y) = Real.toNnreal x / Real.toNnreal y :=
   by 

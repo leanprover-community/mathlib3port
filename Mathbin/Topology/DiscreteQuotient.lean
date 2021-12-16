@@ -425,27 +425,31 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
       rw [←hx, fiber_eq]
       apply i.refl
 
--- error in Topology.DiscreteQuotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-noncomputable instance [compact_space X] : fintype S :=
-begin
-  have [ident cond] [":", expr is_compact («expr⊤»() : set X)] [":=", expr compact_univ],
-  rw [expr is_compact_iff_finite_subcover] ["at", ident cond],
-  have [ident h] [] [":=", expr @cond S (λ
-    s, «expr ⁻¹' »(S.proj, {s})) (λ
-    s, fiber_open _ _) (λ x hx, ⟨«expr ⁻¹' »(S.proj, {S.proj x}), ⟨S.proj x, rfl⟩, rfl⟩)],
-  let [ident T] [] [":=", expr classical.some h],
-  have [ident hT] [] [":=", expr classical.some_spec h],
-  refine [expr ⟨T, λ s, _⟩],
-  rcases [expr S.proj_surjective s, "with", "⟨", ident x, ",", ident rfl, "⟩"],
-  rcases [expr hT (by tauto [] : «expr ∈ »(x, «expr⊤»())), "with", "⟨", ident j, ",", "⟨", ident j, ",", ident rfl, "⟩", ",", ident h1, ",", "⟨", ident hj, ",", ident rfl, "⟩", ",", ident h2, "⟩"],
-  dsimp ["only"] [] [] ["at", ident h2],
-  suffices [] [":", expr «expr = »(S.proj x, j)],
-  by rwa [expr this] [],
-  rcases [expr j, "with", "⟨", ident j, "⟩"],
-  apply [expr quotient.sound'],
-  erw [expr fiber_eq] ["at", ident h2],
-  exact [expr S.symm _ _ h2]
-end
+noncomputable instance [CompactSpace X] : Fintype S :=
+  by 
+    have cond : IsCompact (⊤ : Set X) := compact_univ 
+    rw [is_compact_iff_finite_subcover] at cond 
+    have h :=
+      @cond S (fun s => S.proj ⁻¹' {s}) (fun s => fiber_open _ _)
+        fun x hx => ⟨S.proj ⁻¹' {S.proj x}, ⟨S.proj x, rfl⟩, rfl⟩
+    let T := Classical.some h 
+    have hT := Classical.some_spec h 
+    refine' ⟨T, fun s => _⟩
+    rcases S.proj_surjective s with ⟨x, rfl⟩
+    rcases
+      hT
+        (by 
+          tauto :
+        x ∈ ⊤) with
+      ⟨j, ⟨j, rfl⟩, h1, ⟨hj, rfl⟩, h2⟩
+    dsimp only  at h2 
+    suffices  : S.proj x = j
+    ·
+      rwa [this]
+    rcases j with ⟨j⟩
+    apply Quotientₓ.sound' 
+    erw [fiber_eq] at h2 
+    exact S.symm _ _ h2
 
 end DiscreteQuotient
 

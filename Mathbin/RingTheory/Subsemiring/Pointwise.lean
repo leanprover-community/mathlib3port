@@ -52,7 +52,7 @@ theorem pointwise_smul_def {a : M} (S : Subsemiring R) : a • S = S.map (MulSem
   rfl
 
 @[simp]
-theorem coe_pointwise_smul (m : M) (S : Subsemiring R) : «expr↑ » (m • S) = m • (S : Set R) :=
+theorem coe_pointwise_smul (m : M) (S : Subsemiring R) : ↑(m • S) = m • (S : Set R) :=
   rfl
 
 @[simp]
@@ -61,6 +61,14 @@ theorem pointwise_smul_to_add_submonoid (m : M) (S : Subsemiring R) : (m • S).
 
 theorem smul_mem_pointwise_smul (m : M) (r : R) (S : Subsemiring R) : r ∈ S → m • r ∈ m • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ m • (S : Set R))
+
+instance pointwise_central_scalar [MulSemiringAction (Mᵐᵒᵖ) R] [IsCentralScalar M R] :
+  IsCentralScalar M (Subsemiring R) :=
+  ⟨fun a S =>
+      (congr_argₓ fun f => S.map f)$
+        RingHom.ext$
+          by 
+            exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 

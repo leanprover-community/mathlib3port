@@ -27,7 +27,7 @@ general limits can be used.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe w v u u₂
 

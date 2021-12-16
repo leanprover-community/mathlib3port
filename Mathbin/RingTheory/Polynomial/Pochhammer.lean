@@ -93,7 +93,7 @@ theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n+1) = pochhammer S n*X+
     suffices h : pochhammer ℕ (n+1) = pochhammer ℕ n*X+n
     ·
       applyFun Polynomial.map (algebraMap ℕ S)  at h 
-      simpa only [pochhammer_map, map_mul, map_add, map_X, map_nat_cast] using h 
+      simpa only [pochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X, map_nat_cast] using h 
     induction' n with n ih
     ·
       simp 
@@ -146,7 +146,7 @@ section CommSemiringₓ
 
 variable {S : Type _} [CommSemiringₓ S]
 
-theorem pochhammer_succ_eval (n : ℕ) (k : S) : (pochhammer S n.succ).eval k = (pochhammer S n).eval k*k+«expr↑ » n :=
+theorem pochhammer_succ_eval (n : ℕ) (k : S) : (pochhammer S n.succ).eval k = (pochhammer S n).eval k*k+↑n :=
   by 
     rw [pochhammer_succ_right, Polynomial.eval_mul, Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_nat_cast]
 

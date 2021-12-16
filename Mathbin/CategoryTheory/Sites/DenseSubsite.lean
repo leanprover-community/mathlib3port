@@ -117,7 +117,7 @@ theorem functor_pullback_pushforward_covering [full G] (H : cover_dense K G) {X 
     use W 
     use G.preimage (f' ≫ f)
     use g 
-    split 
+    constructor
     ·
       simpa using T.val.downward_closed hf f'
     ·
@@ -128,7 +128,7 @@ theorem functor_pullback_pushforward_covering [full G] (H : cover_dense K G) {X 
 `coyoneda` to obtain an hom between the pullbacks of the sheaves of maps from `X`.
 -/
 @[simps]
-def hom_over {ℱ : «expr ᵒᵖ» D ⥤ A} {ℱ' : Sheaf K A} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) (X : A) :
+def hom_over {ℱ : Dᵒᵖ ⥤ A} {ℱ' : Sheaf K A} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) (X : A) :
   G.op ⋙ ℱ ⋙ coyoneda.obj (op X) ⟶ G.op ⋙ (sheaf_over ℱ' X).val :=
   whisker_right α (coyoneda.obj (op X))
 
@@ -151,7 +151,7 @@ variable [full G]
 
 namespace Types
 
-variable {ℱ : «expr ᵒᵖ» D ⥤ Type v} {ℱ' : SheafOfTypes.{v} K} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val)
+variable {ℱ : Dᵒᵖ ⥤ Type v} {ℱ' : SheafOfTypes.{v} K} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val)
 
 /--
 (Implementation). Given a section of `ℱ` on `X`, we can obtain a family of elements valued in `ℱ'`
@@ -268,13 +268,12 @@ end Types
 
 open Types
 
-variable {ℱ : «expr ᵒᵖ» D ⥤ A} {ℱ' : Sheaf K A}
+variable {ℱ : Dᵒᵖ ⥤ A} {ℱ' : Sheaf K A}
 
 /-- (Implementation). The sheaf map given in `types.sheaf_hom` is natural in terms of `X`. -/
 @[simps]
 noncomputable def sheaf_coyoneda_hom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
-  coyoneda ⋙ (whiskering_left («expr ᵒᵖ» D) A (Type _)).obj ℱ ⟶
-    coyoneda ⋙ (whiskering_left («expr ᵒᵖ» D) A (Type _)).obj ℱ'.val :=
+  coyoneda ⋙ (whiskering_left (Dᵒᵖ) A (Type _)).obj ℱ ⟶ coyoneda ⋙ (whiskering_left (Dᵒᵖ) A (Type _)).obj ℱ'.val :=
   { app := fun X => presheaf_hom H (hom_over α (unop X)),
     naturality' :=
       fun X Y f =>
@@ -329,29 +328,27 @@ noncomputable def sheaf_hom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ 
           (by 
             simpa using α'.naturality f) }
 
--- error in CategoryTheory.Sites.DenseSubsite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
 we may obtain a natural isomorphism between presheaves.
 -/
-@[simps #[]]
-noncomputable
-def presheaf_iso
-{ℱ ℱ' : Sheaf K A}
-(i : «expr ≅ »(«expr ⋙ »(G.op, ℱ.val), «expr ⋙ »(G.op, ℱ'.val))) : «expr ≅ »(ℱ.val, ℱ'.val) :=
-begin
-  haveI [] [":", expr ∀ X : «expr ᵒᵖ»(D), is_iso ((sheaf_hom H i.hom).app X)] [],
-  { intro [ident X],
-    apply [expr is_iso_of_reflects_iso _ yoneda],
-    use [expr (sheaf_yoneda_hom H i.inv).app X],
-    split; ext [] [ident x] [":", 2]; simp [] [] ["only"] ["[", expr sheaf_hom, ",", expr nat_trans.comp_app, ",", expr nat_trans.id_app, ",", expr functor.image_preimage, "]"] [] [],
-    exact [expr ((presheaf_iso H (iso_over i (unop x))).app X).hom_inv_id],
-    exact [expr ((presheaf_iso H (iso_over i (unop x))).app X).inv_hom_id],
-    apply_instance },
-  haveI [] [":", expr is_iso (sheaf_hom H i.hom)] [":=", expr by apply [expr nat_iso.is_iso_of_is_iso_app]],
-  apply [expr as_iso (sheaf_hom H i.hom)]
-end
+@[simps]
+noncomputable def presheaf_iso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ.val ≅ ℱ'.val :=
+  by 
+    have  : ∀ X : Dᵒᵖ, is_iso ((sheaf_hom H i.hom).app X)
+    ·
+      intro X 
+      apply is_iso_of_reflects_iso _ yoneda 
+      use (sheaf_yoneda_hom H i.inv).app X 
+      constructor <;> ext x : 2 <;> simp only [sheaf_hom, nat_trans.comp_app, nat_trans.id_app, functor.image_preimage]
+      exact ((presheaf_iso H (iso_over i (unop x))).app X).hom_inv_id 
+      exact ((presheaf_iso H (iso_over i (unop x))).app X).inv_hom_id 
+      infer_instance 
+    have  : is_iso (sheaf_hom H i.hom) :=
+      by 
+        apply nat_iso.is_iso_of_is_iso_app 
+    apply as_iso (sheaf_hom H i.hom)
 
 /--
 Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
@@ -470,28 +467,28 @@ variable (Hd : cover_dense K G) (Hp : cover_preserving J K G) (Hl : cover_liftin
 
 include Hd Hp Hl
 
--- error in CategoryTheory.Sites.DenseSubsite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a functor between small sites that is cover-dense, cover-preserving, and cover-lifting,
 it induces an equivalence of category of sheaves valued in a complete category.
 -/
-@[simps #[ident functor, ident inverse]]
-noncomputable
-def Sheaf_equiv_of_cover_preserving_cover_lifting : «expr ≌ »(Sheaf J A, Sheaf K A) :=
-begin
-  symmetry,
-  let [ident α] [] [":=", expr sites.pullback_copullback_adjunction A Hp Hl Hd.compatible_preserving],
-  haveI [] [":", expr ∀ X : Sheaf J A, is_iso (α.counit.app X)] [],
-  { intro [ident ℱ],
-    apply_with [expr reflects_isomorphisms.reflects (Sheaf_to_presheaf J A)] { instances := ff },
-    exact [expr is_iso.of_iso ((@as_iso _ _ _ _ _ (Ran.reflective A G.op)).app ℱ.val)] },
-  haveI [] [":", expr is_iso α.counit] [":=", expr nat_iso.is_iso_of_is_iso_app _],
-  exact [expr { functor := sites.pullback A Hd.compatible_preserving Hp,
-     inverse := sites.copullback A Hl,
-     unit_iso := as_iso α.unit,
-     counit_iso := as_iso α.counit,
-     functor_unit_iso_comp' := λ ℱ, by convert [] [expr α.left_triangle_components] [] }]
-end
+@[simps Functor inverse]
+noncomputable def Sheaf_equiv_of_cover_preserving_cover_lifting : Sheaf J A ≌ Sheaf K A :=
+  by 
+    symm 
+    let α := sites.pullback_copullback_adjunction A Hp Hl Hd.compatible_preserving 
+    have  : ∀ X : Sheaf J A, is_iso (α.counit.app X)
+    ·
+      intro ℱ 
+      apply reflects_isomorphisms.reflects (Sheaf_to_presheaf J A) with { instances := ff }
+      exact is_iso.of_iso ((@as_iso _ _ _ _ _ (Ran.reflective A G.op)).app ℱ.val)
+    have  : is_iso α.counit := nat_iso.is_iso_of_is_iso_app _ 
+    exact
+      { Functor := sites.pullback A Hd.compatible_preserving Hp, inverse := sites.copullback A Hl,
+        unitIso := as_iso α.unit, counitIso := as_iso α.counit,
+        functor_unit_iso_comp' :=
+          fun ℱ =>
+            by 
+              convert α.left_triangle_components }
 
 end CategoryTheory.CoverDense
 

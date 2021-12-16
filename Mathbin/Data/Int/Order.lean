@@ -12,43 +12,44 @@ open Int
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
--- error in Data.Int.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : conditionally_complete_linear_order exprℤ() :=
-{ Sup := λ
-  s, if h : «expr ∧ »(s.nonempty, bdd_above s) then greatest_of_bdd (classical.some h.2) (classical.some_spec h.2) h.1 else 0,
-  Inf := λ
-  s, if h : «expr ∧ »(s.nonempty, bdd_below s) then least_of_bdd (classical.some h.2) (classical.some_spec h.2) h.1 else 0,
-  le_cSup := begin
-    intros [ident s, ident n, ident hs, ident hns],
-    have [] [":", expr «expr ∧ »(s.nonempty, bdd_above s)] [":=", expr ⟨⟨n, hns⟩, hs⟩],
-    rw ["[", expr dif_pos this, "]"] [],
-    exact [expr (greatest_of_bdd _ _ _).2.2 n hns]
-  end,
-  cSup_le := begin
-    intros [ident s, ident n, ident hs, ident hns],
-    have [] [":", expr «expr ∧ »(s.nonempty, bdd_above s)] [":=", expr ⟨hs, ⟨n, hns⟩⟩],
-    rw ["[", expr dif_pos this, "]"] [],
-    exact [expr hns (greatest_of_bdd _ (classical.some_spec this.2) _).2.1]
-  end,
-  cInf_le := begin
-    intros [ident s, ident n, ident hs, ident hns],
-    have [] [":", expr «expr ∧ »(s.nonempty, bdd_below s)] [":=", expr ⟨⟨n, hns⟩, hs⟩],
-    rw ["[", expr dif_pos this, "]"] [],
-    exact [expr (least_of_bdd _ _ _).2.2 n hns]
-  end,
-  le_cInf := begin
-    intros [ident s, ident n, ident hs, ident hns],
-    have [] [":", expr «expr ∧ »(s.nonempty, bdd_below s)] [":=", expr ⟨hs, ⟨n, hns⟩⟩],
-    rw ["[", expr dif_pos this, "]"] [],
-    exact [expr hns (least_of_bdd _ (classical.some_spec this.2) _).2.1]
-  end,
-  ..int.linear_order,
-  ..lattice_of_linear_order }
+instance : ConditionallyCompleteLinearOrder ℤ :=
+  { Int.linearOrder, latticeOfLinearOrder with
+    sup :=
+      fun s =>
+        if h : s.nonempty ∧ BddAbove s then greatest_of_bdd (Classical.some h.2) (Classical.some_spec h.2) h.1 else 0,
+    inf :=
+      fun s =>
+        if h : s.nonempty ∧ BddBelow s then least_of_bdd (Classical.some h.2) (Classical.some_spec h.2) h.1 else 0,
+    le_cSup :=
+      by 
+        intro s n hs hns 
+        have  : s.nonempty ∧ BddAbove s := ⟨⟨n, hns⟩, hs⟩
+        rw [dif_pos this]
+        exact (greatest_of_bdd _ _ _).2.2 n hns,
+    cSup_le :=
+      by 
+        intro s n hs hns 
+        have  : s.nonempty ∧ BddAbove s := ⟨hs, ⟨n, hns⟩⟩
+        rw [dif_pos this]
+        exact hns (greatest_of_bdd _ (Classical.some_spec this.2) _).2.1,
+    cInf_le :=
+      by 
+        intro s n hs hns 
+        have  : s.nonempty ∧ BddBelow s := ⟨⟨n, hns⟩, hs⟩
+        rw [dif_pos this]
+        exact (least_of_bdd _ _ _).2.2 n hns,
+    le_cInf :=
+      by 
+        intro s n hs hns 
+        have  : s.nonempty ∧ BddBelow s := ⟨hs, ⟨n, hns⟩⟩
+        rw [dif_pos this]
+        exact hns (least_of_bdd _ (Classical.some_spec this.2) _).2.1 }
 
 namespace Int
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » s)
 theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z _ : z ∈ s, z ≤ b)
   (Hinh : ∃ z : ℤ, z ∈ s) : Sup s = greatest_of_bdd b Hb Hinh :=
   by 
@@ -69,6 +70,7 @@ theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : Sup s = 0 :=
     (by 
       simp [h])
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » s)
 theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z _ : z ∈ s, b ≤ z)
   (Hinh : ∃ z : ℤ, z ∈ s) : Inf s = least_of_bdd b Hb Hinh :=
   by 

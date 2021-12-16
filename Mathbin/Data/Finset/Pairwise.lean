@@ -32,11 +32,13 @@ theorem pairwise_disjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInf α
 
 variable [Lattice α] [OrderBot α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 /-- Bind operation for `set.pairwise_disjoint`. In a complete lattice, you can use
 `set.pairwise_disjoint.bUnion`. -/
 theorem pairwise_disjoint.bUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f : ι → α}
   (hs : s.pairwise_disjoint fun i' : ι' => (g i').sup f) (hg : ∀ i _ : i ∈ s, (g i : Set ι).PairwiseDisjoint f) :
-  (⋃(i : _)(_ : i ∈ s), «expr↑ » (g i)).PairwiseDisjoint f :=
+  (⋃ (i : _)(_ : i ∈ s), ↑g i).PairwiseDisjoint f :=
   by 
     rintro a ha b hb hab 
     simpRw [Set.mem_Union]  at ha hb 
@@ -44,9 +46,13 @@ theorem pairwise_disjoint.bUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f
     obtain ⟨d, hd, hb⟩ := hb 
     obtain hcd | hcd := eq_or_ne (g c) (g d)
     ·
-      exact hg d hd a (hcd ▸ ha) b hb hab
+      exact
+        hg d hd
+          (by 
+            rwa [hcd] at ha)
+          hb hab
     ·
-      exact (hs _ hc _ hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
+      exact (hs hc hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
 
 end Set
 

@@ -16,7 +16,7 @@ open_locale Classical TopologicalSpace
 
 open Set Valuation
 
-noncomputable theory
+noncomputable section 
 
 universe u
 
@@ -61,7 +61,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Units (Γ₀ R) => Valued.
         ·
           simp only [image_subset_iff, set_of_subset_set_of, preimage_set_of_eq, Valuation.map_mul]
           use γx⁻¹*γ 
-          rintro y (vy_lt : v y < «expr↑ » (γx⁻¹*γ))
+          rintro y (vy_lt : v y < ↑γx⁻¹*γ)
           change v (x*y) < γ 
           rw [Valuation.map_mul, Hx, mul_commₓ]
           rw [Units.coe_mul, mul_commₓ] at vy_lt 
@@ -78,7 +78,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Units (Γ₀ R) => Valued.
           exact Units.zero_lt γ
         ·
           use γx⁻¹*γ 
-          rintro y (vy_lt : v y < «expr↑ » (γx⁻¹*γ))
+          rintro y (vy_lt : v y < ↑γx⁻¹*γ)
           change v (y*x) < γ 
           rw [Valuation.map_mul, Hx]
           rw [Units.coe_mul, mul_commₓ] at vy_lt 
@@ -87,15 +87,21 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Units (Γ₀ R) => Valued.
 instance (priority := 100) : TopologicalSpace R :=
   subgroups_basis.topology
 
-theorem mem_nhds {s : Set R} {x : R} : s ∈ 𝓝 x ↔ ∃ γ : Units (Valued.Γ₀ R), { y | v (y - x) < γ } ⊆ s :=
-  by 
-    simpa [(subgroups_basis.has_basis_nhds x).mem_iff]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_nhds
+  { s : Set R } { x : R } : s ∈ 𝓝 x ↔ ∃ γ : Units Valued.Γ₀ R , { y | v y - x < γ } ⊆ s
+  := by simpa [ subgroups_basis.has_basis_nhds x . mem_iff ]
 
-theorem mem_nhds_zero {s : Set R} : s ∈ 𝓝 (0 : R) ↔ ∃ γ : Units (Γ₀ R), { x | v x < (γ : Γ₀ R) } ⊆ s :=
-  by 
-    simp [Valued.mem_nhds, sub_zero]
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_nhds_zero
+  { s : Set R } : s ∈ 𝓝 ( 0 : R ) ↔ ∃ γ : Units Γ₀ R , { x | v x < ( γ : Γ₀ R ) } ⊆ s
+  := by simp [ Valued.mem_nhds , sub_zero ]
 
-theorem loc_const {x : R} (h : v x ≠ 0) : { y:R | v y = v x } ∈ 𝓝 x :=
+theorem loc_const {x : R} (h : v x ≠ 0) : { y : R | v y = v x } ∈ 𝓝 x :=
   by 
     rw [Valued.mem_nhds]
     rcases units.exists_iff_ne_zero.mpr h with ⟨γ, hx⟩
@@ -112,13 +118,14 @@ instance (priority := 100) UniformSpace : UniformSpace R :=
 instance (priority := 100) UniformAddGroup : UniformAddGroup R :=
   topological_add_group_is_uniform
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (M «expr ∈ » F)
 theorem cauchy_iff {F : Filter R} :
   Cauchy F ↔ F.ne_bot ∧ ∀ γ : Units (Γ₀ R), ∃ (M : _)(_ : M ∈ F), ∀ x y, x ∈ M → y ∈ M → v (y - x) < γ :=
   by 
     rw [AddGroupFilterBasis.cauchy_iff]
     apply and_congr Iff.rfl 
     simpRw [subgroups_basis.mem_add_group_filter_basis_iff]
-    split 
+    constructor
     ·
       intro h γ 
       exact h _ (subgroups_basis.mem_add_group_filter_basis _)

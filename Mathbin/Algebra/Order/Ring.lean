@@ -513,21 +513,23 @@ variable [LinearOrderedSemiring α] {a b c d : α}
 theorem zero_lt_one' : 0 < (1 : α) :=
   zero_lt_one
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_of_mul_lt_mul_left
-(h : «expr < »(«expr * »(c, a), «expr * »(c, b)))
-(hc : «expr ≤ »(0, c)) : «expr < »(a, b) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (assume
-  h1 : «expr ≤ »(b, a), have h2 : «expr ≤ »(«expr * »(c, b), «expr * »(c, a)), from decidable.mul_le_mul_of_nonneg_left h1 hc,
-  h2.not_lt h)]
+theorem lt_of_mul_lt_mul_left (h : (c*a) < c*b) (hc : 0 ≤ c) : a < b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        lt_of_not_geₓ
+          fun h1 : b ≤ a =>
+            have h2 : (c*b) ≤ c*a := Decidable.mul_le_mul_of_nonneg_left h1 hc 
+            h2.not_lt h
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lt_of_mul_lt_mul_right
-(h : «expr < »(«expr * »(a, c), «expr * »(b, c)))
-(hc : «expr ≤ »(0, c)) : «expr < »(a, b) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (assume
-  h1 : «expr ≤ »(b, a), have h2 : «expr ≤ »(«expr * »(b, c), «expr * »(a, c)), from decidable.mul_le_mul_of_nonneg_right h1 hc,
-  h2.not_lt h)]
+theorem lt_of_mul_lt_mul_right (h : (a*c) < b*c) (hc : 0 ≤ c) : a < b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        lt_of_not_geₓ
+          fun h1 : b ≤ a =>
+            have h2 : (b*c) ≤ a*c := Decidable.mul_le_mul_of_nonneg_right h1 hc 
+            h2.not_lt h
 
 theorem le_of_mul_le_mul_left (h : (c*a) ≤ c*b) (hc : 0 < c) : a ≤ b :=
   le_of_not_gtₓ
@@ -541,32 +543,30 @@ theorem le_of_mul_le_mul_right (h : (a*c) ≤ b*c) (hc : 0 < c) : a ≤ b :=
       have h2 : (b*c) < a*c := mul_lt_mul_of_pos_right h1 hc 
       h2.not_le h
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pos_and_pos_or_neg_and_neg_of_mul_pos
-(hab : «expr < »(0, «expr * »(a, b))) : «expr ∨ »(«expr ∧ »(«expr < »(0, a), «expr < »(0, b)), «expr ∧ »(«expr < »(a, 0), «expr < »(b, 0))) :=
-begin
-  haveI [] [] [":=", expr @linear_order.decidable_le α _],
-  rcases [expr lt_trichotomy 0 a, "with", "(", ident ha, "|", ident rfl, "|", ident ha, ")"],
-  { refine [expr or.inl ⟨ha, lt_imp_lt_of_le_imp_le (λ hb, _) hab⟩],
-    exact [expr decidable.mul_nonpos_of_nonneg_of_nonpos ha.le hb] },
-  { rw ["[", expr zero_mul, "]"] ["at", ident hab],
-    exact [expr hab.false.elim] },
-  { refine [expr or.inr ⟨ha, lt_imp_lt_of_le_imp_le (λ hb, _) hab⟩],
-    exact [expr decidable.mul_nonpos_of_nonpos_of_nonneg ha.le hb] }
-end
+theorem pos_and_pos_or_neg_and_neg_of_mul_pos (hab : 0 < a*b) : 0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ 
+    rcases lt_trichotomyₓ 0 a with (ha | rfl | ha)
+    ·
+      refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
+      exact Decidable.mul_nonpos_of_nonneg_of_nonpos ha.le hb
+    ·
+      rw [zero_mul] at hab 
+      exact hab.false.elim
+    ·
+      refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
+      exact Decidable.mul_nonpos_of_nonpos_of_nonneg ha.le hb
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg
-(hab : «expr ≤ »(0, «expr * »(a, b))) : «expr ∨ »(«expr ∧ »(«expr ≤ »(0, a), «expr ≤ »(0, b)), «expr ∧ »(«expr ≤ »(a, 0), «expr ≤ »(b, 0))) :=
-begin
-  haveI [] [] [":=", expr @linear_order.decidable_le α _],
-  refine [expr decidable.or_iff_not_and_not.2 _],
-  simp [] [] ["only"] ["[", expr not_and, ",", expr not_le, "]"] [] [],
-  intros [ident ab, ident nab],
-  apply [expr not_lt_of_le hab _],
-  rcases [expr lt_trichotomy 0 a, "with", "(", ident ha, "|", ident rfl, "|", ident ha, ")"],
-  exacts ["[", expr mul_neg_of_pos_of_neg ha (ab ha.le), ",", expr ((ab le_rfl).asymm (nab le_rfl)).elim, ",", expr mul_neg_of_neg_of_pos ha (nab ha.le), "]"]
-end
+theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a*b) : 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ 
+    refine' Decidable.or_iff_not_and_not.2 _ 
+    simp only [not_and, not_leₓ]
+    intro ab nab 
+    apply not_lt_of_le hab _ 
+    rcases lt_trichotomyₓ 0 a with (ha | rfl | ha)
+    exacts[mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rfl).asymm (nab le_rfl)).elim,
+      mul_neg_of_neg_of_pos ha (nab ha.le)]
 
 theorem pos_of_mul_pos_left (h : 0 < a*b) (ha : 0 ≤ a) : 0 < b :=
   ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_right$ fun h => h.1.not_le ha).2
@@ -574,13 +574,25 @@ theorem pos_of_mul_pos_left (h : 0 < a*b) (ha : 0 ≤ a) : 0 < b :=
 theorem pos_of_mul_pos_right (h : 0 < a*b) (hb : 0 ≤ b) : 0 < a :=
   ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_right$ fun h => h.2.not_le hb).1
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem inv_of_pos [invertible a] : «expr ↔ »(«expr < »(0, «expr⅟»() a), «expr < »(0, a)) :=
-begin
-  have [] [":", expr «expr < »(0, «expr * »(a, «expr⅟»() a))] [],
-  by simp [] [] ["only"] ["[", expr mul_inv_of_self, ",", expr zero_lt_one, "]"] [] [],
-  exact [expr ⟨λ h, pos_of_mul_pos_right this h.le, λ h, pos_of_mul_pos_left this h.le⟩]
-end
+theorem pos_iff_pos_of_mul_pos (hab : 0 < a*b) : 0 < a ↔ 0 < b :=
+  ⟨pos_of_mul_pos_left hab ∘ le_of_ltₓ, pos_of_mul_pos_right hab ∘ le_of_ltₓ⟩
+
+theorem neg_of_mul_pos_left (h : 0 < a*b) (ha : a ≤ 0) : b < 0 :=
+  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left$ fun h => h.1.not_le ha).2
+
+theorem neg_of_mul_pos_right (h : 0 < a*b) (ha : b ≤ 0) : a < 0 :=
+  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left$ fun h => h.2.not_le ha).1
+
+theorem neg_iff_neg_of_mul_pos (hab : 0 < a*b) : a < 0 ↔ b < 0 :=
+  ⟨neg_of_mul_pos_left hab ∘ le_of_ltₓ, neg_of_mul_pos_right hab ∘ le_of_ltₓ⟩
+
+@[simp]
+theorem inv_of_pos [Invertible a] : 0 < ⅟ a ↔ 0 < a :=
+  by 
+    have  : 0 < a*⅟ a
+    ·
+      simp only [mul_inv_of_self, zero_lt_one]
+    exact ⟨fun h => pos_of_mul_pos_right this h.le, fun h => pos_of_mul_pos_left this h.le⟩
 
 @[simp]
 theorem inv_of_nonpos [Invertible a] : ⅟ a ≤ 0 ↔ a ≤ 0 :=
@@ -593,32 +605,34 @@ theorem nonneg_of_mul_nonneg_left (h : 0 ≤ a*b) (h1 : 0 < a) : 0 ≤ b :=
 theorem nonneg_of_mul_nonneg_right (h : 0 ≤ a*b) (h1 : 0 < b) : 0 ≤ a :=
   le_of_not_gtₓ fun h2 : a < 0 => (mul_neg_of_neg_of_pos h2 h1).not_le h
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem inv_of_nonneg [invertible a] : «expr ↔ »(«expr ≤ »(0, «expr⅟»() a), «expr ≤ »(0, a)) :=
-begin
-  have [] [":", expr «expr < »(0, «expr * »(a, «expr⅟»() a))] [],
-  by simp [] [] ["only"] ["[", expr mul_inv_of_self, ",", expr zero_lt_one, "]"] [] [],
-  exact [expr ⟨λ h, (pos_of_mul_pos_right this h).le, λ h, (pos_of_mul_pos_left this h).le⟩]
-end
+@[simp]
+theorem inv_of_nonneg [Invertible a] : 0 ≤ ⅟ a ↔ 0 ≤ a :=
+  by 
+    have  : 0 < a*⅟ a
+    ·
+      simp only [mul_inv_of_self, zero_lt_one]
+    exact ⟨fun h => (pos_of_mul_pos_right this h).le, fun h => (pos_of_mul_pos_left this h).le⟩
 
 @[simp]
 theorem inv_of_lt_zero [Invertible a] : ⅟ a < 0 ↔ a < 0 :=
   by 
     simp only [←not_leₓ, inv_of_nonneg]
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem inv_of_le_one [invertible a] (h : «expr ≤ »(1, a)) : «expr ≤ »(«expr⅟»() a, 1) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr «expr ▸ »(mul_inv_of_self a, decidable.le_mul_of_one_le_left «expr $ »(inv_of_nonneg.2, zero_le_one.trans h) h)]
+@[simp]
+theorem inv_of_le_one [Invertible a] (h : 1 ≤ a) : ⅟ a ≤ 1 :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact mul_inv_of_self a ▸ Decidable.le_mul_of_one_le_left (inv_of_nonneg.2$ zero_le_one.trans h) h
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem neg_of_mul_neg_left (h : «expr < »(«expr * »(a, b), 0)) (h1 : «expr ≤ »(0, a)) : «expr < »(b, 0) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (assume
-  h2 : «expr ≥ »(b, 0), (decidable.mul_nonneg h1 h2).not_lt h)]
+theorem neg_of_mul_neg_left (h : (a*b) < 0) (h1 : 0 ≤ a) : b < 0 :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact lt_of_not_geₓ fun h2 : b ≥ 0 => (Decidable.mul_nonneg h1 h2).not_lt h
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem neg_of_mul_neg_right (h : «expr < »(«expr * »(a, b), 0)) (h1 : «expr ≤ »(0, b)) : «expr < »(a, 0) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (assume
-  h2 : «expr ≥ »(a, 0), (decidable.mul_nonneg h2 h1).not_lt h)]
+theorem neg_of_mul_neg_right (h : (a*b) < 0) (h1 : 0 ≤ b) : a < 0 :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact lt_of_not_geₓ fun h2 : a ≥ 0 => (Decidable.mul_nonneg h2 h1).not_lt h
 
 theorem nonpos_of_mul_nonpos_left (h : (a*b) ≤ 0) (h1 : 0 < a) : b ≤ 0 :=
   le_of_not_gtₓ fun h2 : b > 0 => (mul_pos h1 h2).not_le h
@@ -626,33 +640,33 @@ theorem nonpos_of_mul_nonpos_left (h : (a*b) ≤ 0) (h1 : 0 < a) : b ≤ 0 :=
 theorem nonpos_of_mul_nonpos_right (h : (a*b) ≤ 0) (h1 : 0 < b) : a ≤ 0 :=
   le_of_not_gtₓ fun h2 : a > 0 => (mul_pos h2 h1).not_le h
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mul_le_mul_left
-(h : «expr < »(0, c)) : «expr ↔ »(«expr ≤ »(«expr * »(c, a), «expr * »(c, b)), «expr ≤ »(a, b)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨λ
-  h', le_of_mul_le_mul_left h' h, λ h', decidable.mul_le_mul_of_nonneg_left h' h.le⟩]
+theorem mul_le_mul_left (h : 0 < c) : ((c*a) ≤ c*b) ↔ a ≤ b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact ⟨fun h' => le_of_mul_le_mul_left h' h, fun h' => Decidable.mul_le_mul_of_nonneg_left h' h.le⟩
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mul_le_mul_right
-(h : «expr < »(0, c)) : «expr ↔ »(«expr ≤ »(«expr * »(a, c), «expr * »(b, c)), «expr ≤ »(a, b)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨λ
-  h', le_of_mul_le_mul_right h' h, λ h', decidable.mul_le_mul_of_nonneg_right h' h.le⟩]
+theorem mul_le_mul_right (h : 0 < c) : ((a*c) ≤ b*c) ↔ a ≤ b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact ⟨fun h' => le_of_mul_le_mul_right h' h, fun h' => Decidable.mul_le_mul_of_nonneg_right h' h.le⟩
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mul_lt_mul_left
-(h : «expr < »(0, c)) : «expr ↔ »(«expr < »(«expr * »(c, a), «expr * »(c, b)), «expr < »(a, b)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨«expr $ »(lt_imp_lt_of_le_imp_le, λ
-   h', decidable.mul_le_mul_of_nonneg_left h' h.le), λ h', mul_lt_mul_of_pos_left h' h⟩]
+theorem mul_lt_mul_left (h : 0 < c) : ((c*a) < c*b) ↔ a < b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        ⟨lt_imp_lt_of_le_imp_le$ fun h' => Decidable.mul_le_mul_of_nonneg_left h' h.le,
+          fun h' => mul_lt_mul_of_pos_left h' h⟩
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mul_lt_mul_right
-(h : «expr < »(0, c)) : «expr ↔ »(«expr < »(«expr * »(a, c), «expr * »(b, c)), «expr < »(a, b)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨«expr $ »(lt_imp_lt_of_le_imp_le, λ
-   h', decidable.mul_le_mul_of_nonneg_right h' h.le), λ h', mul_lt_mul_of_pos_right h' h⟩]
+theorem mul_lt_mul_right (h : 0 < c) : ((a*c) < b*c) ↔ a < b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        ⟨lt_imp_lt_of_le_imp_le$ fun h' => Decidable.mul_le_mul_of_nonneg_right h' h.le,
+          fun h' => mul_lt_mul_of_pos_right h' h⟩
 
 @[simp]
 theorem zero_le_mul_left (h : 0 < c) : (0 ≤ c*b) ↔ 0 ≤ b :=
@@ -770,49 +784,35 @@ theorem lt_mul_iff_one_lt_right (hb : 0 < b) : (b < b*a) ↔ 1 < a :=
     rwa [mul_oneₓ] at this 
   mul_lt_mul_left hb
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_nonneg_iff_right_nonneg_of_pos
-(ha : «expr < »(0, a)) : «expr ↔ »(«expr ≤ »(0, «expr * »(a, b)), «expr ≤ »(0, b)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨λ
-  h, nonneg_of_mul_nonneg_left h ha, λ h, decidable.mul_nonneg ha.le h⟩]
+theorem mul_nonneg_iff_right_nonneg_of_pos (ha : 0 < a) : (0 ≤ a*b) ↔ 0 ≤ b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact ⟨fun h => nonneg_of_mul_nonneg_left h ha, fun h => Decidable.mul_nonneg ha.le h⟩
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_nonneg_iff_left_nonneg_of_pos
-(hb : «expr < »(0, b)) : «expr ↔ »(«expr ≤ »(0, «expr * »(a, b)), «expr ≤ »(0, a)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨λ
-  h, nonneg_of_mul_nonneg_right h hb, λ h, decidable.mul_nonneg h hb.le⟩]
+theorem mul_nonneg_iff_left_nonneg_of_pos (hb : 0 < b) : (0 ≤ a*b) ↔ 0 ≤ a :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact ⟨fun h => nonneg_of_mul_nonneg_right h hb, fun h => Decidable.mul_nonneg h hb.le⟩
 
 theorem mul_le_iff_le_one_left (hb : 0 < b) : (a*b) ≤ b ↔ a ≤ 1 :=
   ⟨fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_left hb).2 h.not_lt),
     fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_left hb).1 h.not_lt)⟩
 
 theorem mul_lt_iff_lt_one_left (hb : 0 < b) : (a*b) < b ↔ a < 1 :=
-  ⟨fun h => lt_of_not_geₓ (mt (le_mul_iff_one_le_left hb).2 h.not_le),
-    fun h => lt_of_not_geₓ (mt (le_mul_iff_one_le_left hb).1 h.not_le)⟩
+  lt_iff_lt_of_le_iff_le$ le_mul_iff_one_le_left hb
 
 theorem mul_le_iff_le_one_right (hb : 0 < b) : (b*a) ≤ b ↔ a ≤ 1 :=
   ⟨fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).2 h.not_lt),
     fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).1 h.not_lt)⟩
 
 theorem mul_lt_iff_lt_one_right (hb : 0 < b) : (b*a) < b ↔ a < 1 :=
-  ⟨fun h => lt_of_not_geₓ (mt (le_mul_iff_one_le_right hb).2 h.not_le),
-    fun h => lt_of_not_geₓ (mt (le_mul_iff_one_le_right hb).1 h.not_le)⟩
+  lt_iff_lt_of_le_iff_le$ le_mul_iff_one_le_right hb
 
 theorem nonpos_of_mul_nonneg_left (h : 0 ≤ a*b) (hb : b < 0) : a ≤ 0 :=
   le_of_not_gtₓ fun ha => absurd h (mul_neg_of_pos_of_neg ha hb).not_le
 
 theorem nonpos_of_mul_nonneg_right (h : 0 ≤ a*b) (ha : a < 0) : b ≤ 0 :=
   le_of_not_gtₓ fun hb => absurd h (mul_neg_of_neg_of_pos ha hb).not_le
-
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem neg_of_mul_pos_left (h : «expr < »(0, «expr * »(a, b))) (hb : «expr ≤ »(b, 0)) : «expr < »(a, 0) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (λ
-  ha, absurd h (decidable.mul_nonpos_of_nonneg_of_nonpos ha hb).not_lt)]
-
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem neg_of_mul_pos_right (h : «expr < »(0, «expr * »(a, b))) (ha : «expr ≤ »(a, 0)) : «expr < »(b, 0) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (λ
-  hb, absurd h (decidable.mul_nonpos_of_nonpos_of_nonneg ha hb).not_lt)]
 
 instance (priority := 100) LinearOrderedSemiring.to_no_top_order {α : Type _} [LinearOrderedSemiring α] :
   NoTopOrder α :=
@@ -821,10 +821,10 @@ instance (priority := 100) LinearOrderedSemiring.to_no_top_order {α : Type _} [
 /-- Pullback a `linear_ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedSemiring {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Nontrivial β]
-  (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x+y) = f x+f y)
+def Function.Injective.linearOrderedSemiring {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] (f : β → α)
+  (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x+y) = f x+f y)
   (mul : ∀ x y, f (x*y) = f x*f y) : LinearOrderedSemiring β :=
-  { LinearOrderₓ.lift f hf, ‹Nontrivial β›, hf.ordered_semiring f zero one add mul with  }
+  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.ordered_semiring f zero one add mul with  }
 
 end LinearOrderedSemiring
 
@@ -832,15 +832,13 @@ section Mono
 
 variable {β : Type _} [LinearOrderedSemiring α] [Preorderₓ β] {f g : β → α} {a : α}
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem monotone_mul_left_of_nonneg (ha : «expr ≤ »(0, a)) : monotone (λ x, «expr * »(a, x)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr assume
- b c b_le_c, decidable.mul_le_mul_of_nonneg_left b_le_c ha]
+theorem monotone_mul_left_of_nonneg (ha : 0 ≤ a) : Monotone fun x => a*x :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;> exact fun b c b_le_c => Decidable.mul_le_mul_of_nonneg_left b_le_c ha
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem monotone_mul_right_of_nonneg (ha : «expr ≤ »(0, a)) : monotone (λ x, «expr * »(x, a)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr assume
- b c b_le_c, decidable.mul_le_mul_of_nonneg_right b_le_c ha]
+theorem monotone_mul_right_of_nonneg (ha : 0 ≤ a) : Monotone fun x => x*a :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;> exact fun b c b_le_c => Decidable.mul_le_mul_of_nonneg_right b_le_c ha
 
 theorem Monotone.mul_const (hf : Monotone f) (ha : 0 ≤ a) : Monotone fun x => f x*a :=
   (monotone_mul_right_of_nonneg ha).comp hf
@@ -848,14 +846,10 @@ theorem Monotone.mul_const (hf : Monotone f) (ha : 0 ≤ a) : Monotone fun x => 
 theorem Monotone.const_mul (hf : Monotone f) (ha : 0 ≤ a) : Monotone fun x => a*f x :=
   (monotone_mul_left_of_nonneg ha).comp hf
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem monotone.mul
-(hf : monotone f)
-(hg : monotone g)
-(hf0 : ∀ x, «expr ≤ »(0, f x))
-(hg0 : ∀ x, «expr ≤ »(0, g x)) : monotone (λ x, «expr * »(f x, g x)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr λ
- x y h, decidable.mul_le_mul (hf h) (hg h) (hg0 x) (hf0 y)]
+theorem Monotone.mul (hf : Monotone f) (hg : Monotone g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 ≤ g x) :
+  Monotone fun x => f x*g x :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;> exact fun x y h => Decidable.mul_le_mul (hf h) (hg h) (hg0 x) (hf0 y)
 
 theorem strict_mono_mul_left_of_pos (ha : 0 < a) : StrictMono fun x => a*x :=
   fun b c b_lt_c => (mul_lt_mul_left ha).2 b_lt_c
@@ -869,32 +863,20 @@ theorem StrictMono.mul_const (hf : StrictMono f) (ha : 0 < a) : StrictMono fun x
 theorem StrictMono.const_mul (hf : StrictMono f) (ha : 0 < a) : StrictMono fun x => a*f x :=
   (strict_mono_mul_left_of_pos ha).comp hf
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem strict_mono.mul_monotone
-(hf : strict_mono f)
-(hg : monotone g)
-(hf0 : ∀ x, «expr ≤ »(0, f x))
-(hg0 : ∀ x, «expr < »(0, g x)) : strict_mono (λ x, «expr * »(f x, g x)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr λ
- x y h, decidable.mul_lt_mul (hf h) (hg h.le) (hg0 x) (hf0 y)]
+theorem StrictMono.mul_monotone (hf : StrictMono f) (hg : Monotone g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 < g x) :
+  StrictMono fun x => f x*g x :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;> exact fun x y h => Decidable.mul_lt_mul (hf h) (hg h.le) (hg0 x) (hf0 y)
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem monotone.mul_strict_mono
-(hf : monotone f)
-(hg : strict_mono g)
-(hf0 : ∀ x, «expr < »(0, f x))
-(hg0 : ∀ x, «expr ≤ »(0, g x)) : strict_mono (λ x, «expr * »(f x, g x)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr λ
- x y h, decidable.mul_lt_mul' (hf h.le) (hg h) (hg0 x) (hf0 y)]
+theorem Monotone.mul_strict_mono (hf : Monotone f) (hg : StrictMono g) (hf0 : ∀ x, 0 < f x) (hg0 : ∀ x, 0 ≤ g x) :
+  StrictMono fun x => f x*g x :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;> exact fun x y h => Decidable.mul_lt_mul' (hf h.le) (hg h) (hg0 x) (hf0 y)
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem strict_mono.mul
-(hf : strict_mono f)
-(hg : strict_mono g)
-(hf0 : ∀ x, «expr ≤ »(0, f x))
-(hg0 : ∀ x, «expr ≤ »(0, g x)) : strict_mono (λ x, «expr * »(f x, g x)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr λ
- x y h, decidable.mul_lt_mul'' (hf h) (hg h) (hf0 x) (hg0 x)]
+theorem StrictMono.mul (hf : StrictMono f) (hg : StrictMono g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 ≤ g x) :
+  StrictMono fun x => f x*g x :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;> exact fun x y h => Decidable.mul_lt_mul'' (hf h) (hg h) (hf0 x) (hg0 x)
 
 end Mono
 
@@ -1048,6 +1030,7 @@ def Function.Injective.orderedRing {β : Type _} [HasZero β] [HasOne β] [Add �
           rw [zero, mul]
           apply mul_pos <;> rwa [←zero] }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ≥ » 0)
 theorem le_iff_exists_nonneg_add (a b : α) : a ≤ b ↔ ∃ (c : _)(_ : c ≥ 0), b = a+c :=
   ⟨fun h =>
       ⟨b - a, sub_nonneg.mpr h,
@@ -1122,13 +1105,14 @@ theorem abs_one : |(1 : α)| = 1 :=
 theorem abs_two : |(2 : α)| = 2 :=
   abs_of_pos zero_lt_two
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem abs_mul (a b : α) : «expr = »(«expr| |»(«expr * »(a, b)), «expr * »(«expr| |»(a), «expr| |»(b))) :=
-begin
-  haveI [] [] [":=", expr @linear_order.decidable_le α _],
-  rw ["[", expr abs_eq (decidable.mul_nonneg (abs_nonneg a) (abs_nonneg b)), "]"] [],
-  cases [expr le_total a 0] ["with", ident ha, ident ha]; cases [expr le_total b 0] ["with", ident hb, ident hb]; simp [] [] ["only"] ["[", expr abs_of_nonpos, ",", expr abs_of_nonneg, ",", expr true_or, ",", expr or_true, ",", expr eq_self_iff_true, ",", expr neg_mul_eq_neg_mul_symm, ",", expr mul_neg_eq_neg_mul_symm, ",", expr neg_neg, ",", "*", "]"] [] []
-end
+theorem abs_mul (a b : α) : |a*b| = |a|*|b| :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ 
+    rw [abs_eq (Decidable.mul_nonneg (abs_nonneg a) (abs_nonneg b))]
+    cases' le_totalₓ a 0 with ha ha <;>
+      cases' le_totalₓ b 0 with hb hb <;>
+        simp only [abs_of_nonpos, abs_of_nonneg, true_orₓ, or_trueₓ, eq_self_iff_true, neg_mul_eq_neg_mul_symm,
+          mul_neg_eq_neg_mul_symm, neg_negₓ]
 
 /-- `abs` as a `monoid_with_zero_hom`. -/
 def absHom : MonoidWithZeroHom α α :=
@@ -1150,18 +1134,19 @@ theorem mul_neg_iff : (a*b) < 0 ↔ 0 < a ∧ b < 0 ∨ a < 0 ∧ 0 < b :=
   by 
     rw [←neg_pos, neg_mul_eq_mul_neg, mul_pos_iff, neg_pos, neg_lt_zero]
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_nonneg_iff : «expr ↔ »(«expr ≤ »(0, «expr * »(a, b)), «expr ∨ »(«expr ∧ »(«expr ≤ »(0, a), «expr ≤ »(0, b)), «expr ∧ »(«expr ≤ »(a, 0), «expr ≤ »(b, 0)))) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg, λ
-  h, h.elim (and_imp.2 decidable.mul_nonneg) (and_imp.2 decidable.mul_nonneg_of_nonpos_of_nonpos)⟩]
+theorem mul_nonneg_iff : (0 ≤ a*b) ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        ⟨nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg,
+          fun h => h.elim (and_imp.2 Decidable.mul_nonneg) (and_imp.2 Decidable.mul_nonneg_of_nonpos_of_nonpos)⟩
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Out of three elements of a `linear_ordered_ring`, two must have the same sign. -/
-theorem mul_nonneg_of_three
-(a
- b
- c : α) : «expr ∨ »(«expr ≤ »(0, «expr * »(a, b)), «expr ∨ »(«expr ≤ »(0, «expr * »(b, c)), «expr ≤ »(0, «expr * »(c, a)))) :=
-by iterate [3] { rw [expr mul_nonneg_iff] [] }; have [] [] [":=", expr le_total 0 a]; have [] [] [":=", expr le_total 0 b]; have [] [] [":=", expr le_total 0 c]; itauto
+theorem mul_nonneg_of_three (a b c : α) : (0 ≤ a*b) ∨ (0 ≤ b*c) ∨ 0 ≤ c*a :=
+  by 
+    iterate 3 
+        rw [mul_nonneg_iff] <;>
+      have  := le_totalₓ 0 a <;> have  := le_totalₓ 0 b <;> have  := le_totalₓ 0 c <;> itauto
 
 theorem mul_nonpos_iff : (a*b) ≤ 0 ↔ 0 ≤ a ∧ b ≤ 0 ∨ a ≤ 0 ∧ 0 ≤ b :=
   by 
@@ -1239,62 +1224,52 @@ theorem gt_of_mul_lt_mul_neg_left (h : (c*a) < c*b) (hc : c ≤ 0) : b < a :=
 theorem neg_one_lt_zero : -1 < (0 : α) :=
   neg_lt_zero.2 zero_lt_one
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_of_mul_le_of_one_le
-{a b c : α}
-(h : «expr ≤ »(«expr * »(a, c), b))
-(hb : «expr ≤ »(0, b))
-(hc : «expr ≤ »(1, c)) : «expr ≤ »(a, b) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr have h' : «expr ≤ »(«expr * »(a, c), «expr * »(b, c)), from calc
-   «expr ≤ »(«expr * »(a, c), b) : h
-   «expr = »(..., «expr * »(b, 1)) : by rewrite [expr mul_one] []
-   «expr ≤ »(..., «expr * »(b, c)) : decidable.mul_le_mul_of_nonneg_left hc hb,
- le_of_mul_le_mul_right h' (zero_lt_one.trans_le hc)]
+theorem le_of_mul_le_of_one_le {a b c : α} (h : (a*c) ≤ b) (hb : 0 ≤ b) (hc : 1 ≤ c) : a ≤ b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        have h' : (a*c) ≤ b*c :=
+          calc (a*c) ≤ b := h 
+            _ = b*1 :=
+            by 
+              rw [mul_oneₓ]
+            _ ≤ b*c := Decidable.mul_le_mul_of_nonneg_left hc hb 
+            
+        le_of_mul_le_mul_right h' (zero_lt_one.trans_le hc)
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nonneg_le_nonneg_of_sq_le_sq
-{a b : α}
-(hb : «expr ≤ »(0, b))
-(h : «expr ≤ »(«expr * »(a, a), «expr * »(b, b))) : «expr ≤ »(a, b) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr le_of_not_gt (λ
-  hab, (decidable.mul_self_lt_mul_self hb hab).not_le h)]
+theorem nonneg_le_nonneg_of_sq_le_sq {a b : α} (hb : 0 ≤ b) (h : (a*a) ≤ b*b) : a ≤ b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact le_of_not_gtₓ fun hab => (Decidable.mul_self_lt_mul_self hb hab).not_le h
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_self_le_mul_self_iff
-{a b : α}
-(h1 : «expr ≤ »(0, a))
-(h2 : «expr ≤ »(0, b)) : «expr ↔ »(«expr ≤ »(a, b), «expr ≤ »(«expr * »(a, a), «expr * »(b, b))) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨decidable.mul_self_le_mul_self h1, nonneg_le_nonneg_of_sq_le_sq h2⟩]
+theorem mul_self_le_mul_self_iff {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a ≤ b ↔ (a*a) ≤ b*b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact ⟨Decidable.mul_self_le_mul_self h1, nonneg_le_nonneg_of_sq_le_sq h2⟩
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_self_lt_mul_self_iff
-{a b : α}
-(h1 : «expr ≤ »(0, a))
-(h2 : «expr ≤ »(0, b)) : «expr ↔ »(«expr < »(a, b), «expr < »(«expr * »(a, a), «expr * »(b, b))) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ((@decidable.strict_mono_on_mul_self α _ _).lt_iff_lt h1 h2).symm]
+theorem mul_self_lt_mul_self_iff {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a < b ↔ (a*a) < b*b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;> exact ((@Decidable.strict_mono_on_mul_self α _ _).lt_iff_lt h1 h2).symm
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_self_inj
-{a b : α}
-(h1 : «expr ≤ »(0, a))
-(h2 : «expr ≤ »(0, b)) : «expr ↔ »(«expr = »(«expr * »(a, a), «expr * »(b, b)), «expr = »(a, b)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr (@decidable.strict_mono_on_mul_self α _ _).inj_on.eq_iff h1 h2]
+theorem mul_self_inj {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : ((a*a) = b*b) ↔ a = b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;> exact (@Decidable.strict_mono_on_mul_self α _ _).InjOn.eq_iff h1 h2
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mul_le_mul_left_of_neg
-{a b c : α}
-(h : «expr < »(c, 0)) : «expr ↔ »(«expr ≤ »(«expr * »(c, a), «expr * »(c, b)), «expr ≤ »(b, a)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨«expr $ »(le_imp_le_of_lt_imp_lt, λ
-   h', mul_lt_mul_of_neg_left h' h), λ h', decidable.mul_le_mul_of_nonpos_left h' h.le⟩]
+theorem mul_le_mul_left_of_neg {a b c : α} (h : c < 0) : ((c*a) ≤ c*b) ↔ b ≤ a :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        ⟨le_imp_le_of_lt_imp_ltₓ$ fun h' => mul_lt_mul_of_neg_left h' h,
+          fun h' => Decidable.mul_le_mul_of_nonpos_left h' h.le⟩
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mul_le_mul_right_of_neg
-{a b c : α}
-(h : «expr < »(c, 0)) : «expr ↔ »(«expr ≤ »(«expr * »(a, c), «expr * »(b, c)), «expr ≤ »(b, a)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr ⟨«expr $ »(le_imp_le_of_lt_imp_lt, λ
-   h', mul_lt_mul_of_neg_right h' h), λ h', decidable.mul_le_mul_of_nonpos_right h' h.le⟩]
+theorem mul_le_mul_right_of_neg {a b c : α} (h : c < 0) : ((a*c) ≤ b*c) ↔ b ≤ a :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        ⟨le_imp_le_of_lt_imp_ltₓ$ fun h' => mul_lt_mul_of_neg_right h' h,
+          fun h' => Decidable.mul_le_mul_of_nonpos_right h' h.le⟩
 
 @[simp]
 theorem mul_lt_mul_left_of_neg {a b c : α} (h : c < 0) : ((c*a) < c*b) ↔ b < a :=
@@ -1312,16 +1287,11 @@ theorem mul_self_pos {a : α} (ha : a ≠ 0) : 0 < a*a :=
     rcases lt_trichotomyₓ a 0 with (h | h | h) <;> [exact mul_pos_of_neg_of_neg h h, exact (ha h).elim,
       exact mul_pos h h]
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_self_le_mul_self_of_le_of_neg_le
-{x y : α}
-(h₁ : «expr ≤ »(x, y))
-(h₂ : «expr ≤ »(«expr- »(x), y)) : «expr ≤ »(«expr * »(x, x), «expr * »(y, y)) :=
-begin
-  haveI [] [] [":=", expr @linear_order.decidable_le α _],
-  rw ["[", "<-", expr abs_mul_abs_self x, "]"] [],
-  exact [expr decidable.mul_self_le_mul_self (abs_nonneg x) (abs_le.2 ⟨neg_le.2 h₂, h₁⟩)]
-end
+theorem mul_self_le_mul_self_of_le_of_neg_le {x y : α} (h₁ : x ≤ y) (h₂ : -x ≤ y) : (x*x) ≤ y*y :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ 
+    rw [←abs_mul_abs_self x]
+    exact Decidable.mul_self_le_mul_self (abs_nonneg x) (abs_le.2 ⟨neg_le.2 h₂, h₁⟩)
 
 theorem nonneg_of_mul_nonpos_left {a b : α} (h : (a*b) ≤ 0) (hb : b < 0) : 0 ≤ a :=
   le_of_not_gtₓ fun ha => absurd h (mul_pos_of_neg_of_neg ha hb).not_le
@@ -1329,15 +1299,21 @@ theorem nonneg_of_mul_nonpos_left {a b : α} (h : (a*b) ≤ 0) (hb : b < 0) : 0 
 theorem nonneg_of_mul_nonpos_right {a b : α} (h : (a*b) ≤ 0) (ha : a < 0) : 0 ≤ b :=
   le_of_not_gtₓ fun hb => absurd h (mul_pos_of_neg_of_neg ha hb).not_le
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pos_of_mul_neg_left {a b : α} (h : «expr < »(«expr * »(a, b), 0)) (hb : «expr ≤ »(b, 0)) : «expr < »(0, a) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (λ
-  ha, absurd h (decidable.mul_nonneg_of_nonpos_of_nonpos ha hb).not_lt)]
+theorem pos_of_mul_neg_left {a b : α} (h : (a*b) < 0) (hb : b ≤ 0) : 0 < a :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact lt_of_not_geₓ fun ha => absurd h (Decidable.mul_nonneg_of_nonpos_of_nonpos ha hb).not_lt
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pos_of_mul_neg_right {a b : α} (h : «expr < »(«expr * »(a, b), 0)) (ha : «expr ≤ »(a, 0)) : «expr < »(0, b) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (λ
-  hb, absurd h (decidable.mul_nonneg_of_nonpos_of_nonpos ha hb).not_lt)]
+theorem pos_of_mul_neg_right {a b : α} (h : (a*b) < 0) (ha : a ≤ 0) : 0 < b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact lt_of_not_geₓ fun hb => absurd h (Decidable.mul_nonneg_of_nonpos_of_nonpos ha hb).not_lt
+
+theorem neg_iff_pos_of_mul_neg (hab : (a*b) < 0) : a < 0 ↔ 0 < b :=
+  ⟨pos_of_mul_neg_right hab ∘ le_of_ltₓ, neg_of_mul_neg_right hab ∘ le_of_ltₓ⟩
+
+theorem pos_iff_neg_of_mul_neg (hab : (a*b) < 0) : 0 < a ↔ b < 0 :=
+  ⟨neg_of_mul_neg_left hab ∘ le_of_ltₓ, pos_of_mul_neg_left hab ∘ le_of_ltₓ⟩
 
 /-- The sum of two squares is zero iff both elements are zero. -/
 theorem mul_self_add_mul_self_eq_zero {x y : α} : ((x*x)+y*y) = 0 ↔ x = 0 ∧ y = 0 :=
@@ -1369,11 +1345,11 @@ theorem abs_le_one_iff_mul_self_le_one : |a| ≤ 1 ↔ (a*a) ≤ 1 :=
 /-- Pullback a `linear_ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedRing {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β]
-  [Nontrivial β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-  (add : ∀ x y, f (x+y) = f x+f y) (mul : ∀ x y, f (x*y) = f x*f y) (neg : ∀ x, f (-x) = -f x)
-  (sub : ∀ x y, f (x - y) = f x - f y) : LinearOrderedRing β :=
-  { LinearOrderₓ.lift f hf, ‹Nontrivial β›, hf.ordered_ring f zero one add mul neg sub with  }
+def Function.Injective.linearOrderedRing {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
+  (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x+y) = f x+f y)
+  (mul : ∀ x y, f (x*y) = f x*f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
+  LinearOrderedRing β :=
+  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.ordered_ring f zero one add mul neg sub with  }
 
 end LinearOrderedRing
 
@@ -1393,14 +1369,19 @@ section LinearOrderedCommRing
 
 variable [LinearOrderedCommRing α] {a b c d : α}
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem max_mul_mul_le_max_mul_max
-(b c : α)
-(ha : «expr ≤ »(0, a))
-(hd : «expr ≤ »(0, d)) : «expr ≤ »(max «expr * »(a, b) «expr * »(d, c), «expr * »(max a c, max d b)) :=
-by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr have ba : «expr ≤ »(«expr * »(b, a), «expr * »(max d b, max c a)), from decidable.mul_le_mul (le_max_right d b) (le_max_right c a) ha (le_trans hd (le_max_left d b)),
- have cd : «expr ≤ »(«expr * »(c, d), «expr * »(max a c, max b d)), from decidable.mul_le_mul (le_max_right a c) (le_max_right b d) hd (le_trans ha (le_max_left a c)),
- max_le (by simpa [] [] [] ["[", expr mul_comm, ",", expr max_comm, "]"] [] ["using", expr ba]) (by simpa [] [] [] ["[", expr mul_comm, ",", expr max_comm, "]"] [] ["using", expr cd])]
+theorem max_mul_mul_le_max_mul_max (b c : α) (ha : 0 ≤ a) (hd : 0 ≤ d) : max (a*b) (d*c) ≤ max a c*max d b :=
+  by 
+    have  := @LinearOrderₓ.decidableLe α _ <;>
+      exact
+        have ba : (b*a) ≤ max d b*max c a :=
+          Decidable.mul_le_mul (le_max_rightₓ d b) (le_max_rightₓ c a) ha (le_transₓ hd (le_max_leftₓ d b))
+        have cd : (c*d) ≤ max a c*max b d :=
+          Decidable.mul_le_mul (le_max_rightₓ a c) (le_max_rightₓ b d) hd (le_transₓ ha (le_max_leftₓ a c))
+        max_leₓ
+          (by 
+            simpa [mul_commₓ, max_commₓ] using ba)
+          (by 
+            simpa [mul_commₓ, max_commₓ] using cd)
 
 theorem abs_sub_sq (a b : α) : (|a - b|*|a - b|) = ((a*a)+b*b) - ((1+1)*a)*b :=
   by 
@@ -1450,10 +1431,10 @@ variable [LinearOrderedCommRing α]
 See note [reducible non-instances]. -/
 @[reducible]
 def Function.Injective.linearOrderedCommRing {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β]
-  [Nontrivial β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-  (add : ∀ x y, f (x+y) = f x+f y) (mul : ∀ x y, f (x*y) = f x*f y) (neg : ∀ x, f (-x) = -f x)
-  (sub : ∀ x y, f (x - y) = f x - f y) : LinearOrderedCommRing β :=
-  { LinearOrderₓ.lift f hf, ‹Nontrivial β›, hf.ordered_comm_ring f zero one add mul neg sub with  }
+  (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x+y) = f x+f y)
+  (mul : ∀ x y, f (x*y) = f x*f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
+  LinearOrderedCommRing β :=
+  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.ordered_comm_ring f zero one add mul neg sub with  }
 
 end LinearOrderedCommRing
 
@@ -1515,18 +1496,18 @@ namespace LinearOrderedRing
 
 open Ringₓ
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a `linear_ordered_ring` by
 designating a positive cone in an existing `ring`. -/
-def mk_of_positive_cone {α : Type*} [ring α] (C : total_positive_cone α) : linear_ordered_ring α :=
-{ exists_pair_ne := ⟨0, 1, begin
-     intro [ident h],
-     have [ident one_pos] [] [":=", expr C.one_pos],
-     rw ["[", "<-", expr h, ",", expr C.pos_iff, "]"] ["at", ident one_pos],
-     simpa [] [] [] [] [] ["using", expr one_pos]
-   end⟩,
-  ..ordered_ring.mk_of_positive_cone C.to_positive_cone,
-  ..linear_ordered_add_comm_group.mk_of_positive_cone C.to_total_positive_cone }
+def mk_of_positive_cone {α : Type _} [Ringₓ α] (C : total_positive_cone α) : LinearOrderedRing α :=
+  { OrderedRing.mkOfPositiveCone C.to_positive_cone,
+    LinearOrderedAddCommGroup.mkOfPositiveCone C.to_total_positive_cone with
+    exists_pair_ne :=
+      ⟨0, 1,
+        by 
+          intro h 
+          have one_pos := C.one_pos 
+          rw [←h, C.pos_iff] at one_pos 
+          simpa using one_pos⟩ }
 
 end LinearOrderedRing
 
@@ -1617,11 +1598,10 @@ section Mul
 variable [HasZero α] [Mul α]
 
 instance : MulZeroClass (WithTop α) :=
-  { zero := 0, mul := fun m n => if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind$ fun b => «expr↑ » (a*b),
+  { zero := 0, mul := fun m n => if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind$ fun b => ↑a*b,
     zero_mul := fun a => if_pos$ Or.inl rfl, mul_zero := fun a => if_pos$ Or.inr rfl }
 
-theorem mul_def {a b : WithTop α} :
-  (a*b) = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind$ fun b => «expr↑ » (a*b) :=
+theorem mul_def {a b : WithTop α} : (a*b) = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind$ fun b => ↑a*b :=
   rfl
 
 @[simp]
@@ -1645,7 +1625,7 @@ section MulZeroClass
 variable [MulZeroClass α]
 
 @[normCast]
-theorem coe_mul {a b : α} : («expr↑ » (a*b) : WithTop α) = a*b :=
+theorem coe_mul {a b : α} : (↑a*b : WithTop α) = a*b :=
   (Decidable.byCases
       fun this : a = 0 =>
         by 
@@ -1660,11 +1640,11 @@ theorem coe_mul {a b : α} : («expr↑ » (a*b) : WithTop α) = a*b :=
             simp [mul_def]
             rfl
 
-theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, (a*b) = a.bind fun a : α => «expr↑ » (a*b)
+theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, (a*b) = a.bind fun a : α => ↑a*b
 | none =>
   show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤by 
     simp [hb]
-| some a => show («expr↑ » a*«expr↑ » b) = «expr↑ » (a*b) from coe_mul.symm
+| some a => show ((↑a)*↑b) = ↑a*b from coe_mul.symm
 
 @[simp]
 theorem mul_eq_top_iff {a b : WithTop α} : (a*b) = ⊤ ↔ a ≠ 0 ∧ b = ⊤ ∨ a = ⊤ ∧ b ≠ 0 :=
@@ -1712,7 +1692,7 @@ instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
           show (⊤*((1 : α) : WithTop α)) = ⊤by 
             simp [-WithTop.coe_one]
         | some a =>
-          show («expr↑ » a*((1 : α) : WithTop α)) = a by 
+          show ((↑a)*((1 : α) : WithTop α)) = a by 
             simp [coe_mul.symm, -WithTop.coe_one] }
 
 instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
@@ -1801,8 +1781,7 @@ variable [HasZero α] [Mul α]
 instance : MulZeroClass (WithBot α) :=
   WithTop.mulZeroClass
 
-theorem mul_def {a b : WithBot α} :
-  (a*b) = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind$ fun b => «expr↑ » (a*b) :=
+theorem mul_def {a b : WithBot α} : (a*b) = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind$ fun b => ↑a*b :=
   rfl
 
 @[simp]
@@ -1824,7 +1803,7 @@ section MulZeroClass
 variable [MulZeroClass α]
 
 @[normCast]
-theorem coe_mul {a b : α} : («expr↑ » (a*b) : WithBot α) = a*b :=
+theorem coe_mul {a b : α} : (↑a*b : WithBot α) = a*b :=
   (Decidable.byCases
       fun this : a = 0 =>
         by 
@@ -1839,7 +1818,7 @@ theorem coe_mul {a b : α} : («expr↑ » (a*b) : WithBot α) = a*b :=
             simp [mul_def]
             rfl
 
-theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : (a*b) = a.bind fun a : α => «expr↑ » (a*b) :=
+theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : (a*b) = a.bind fun a : α => ↑a*b :=
   WithTop.mul_coe hb
 
 @[simp]

@@ -26,8 +26,9 @@ namespace Top
 instance bundled_hom : bundled_hom @ContinuousMap :=
   ⟨@ContinuousMap.toFun, @ContinuousMap.id, @ContinuousMap.comp, @ContinuousMap.coe_inj⟩
 
--- error in Topology.Category.Top.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Top
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for Top
 
 instance : CoeSort Top (Type _) :=
   bundled.has_coe_to_sort
@@ -95,6 +96,23 @@ theorem of_homeo_of_iso {X Y : Top.{u}} (f : X ≅ Y) : iso_of_homeo (homeo_of_i
   by 
     ext 
     rfl
+
+@[simp]
+theorem open_embedding_iff_comp_is_iso {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [is_iso g] :
+  OpenEmbedding (f ≫ g) ↔ OpenEmbedding f :=
+  open_embedding_iff_open_embedding_compose f (Top.homeoOfIso (as_iso g)).OpenEmbedding
+
+@[simp]
+theorem open_embedding_iff_is_iso_comp {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [is_iso f] :
+  OpenEmbedding (f ≫ g) ↔ OpenEmbedding g :=
+  by 
+    constructor
+    ·
+      intro h 
+      convert h.comp (Top.homeoOfIso (as_iso f).symm).OpenEmbedding 
+      exact congr_argₓ _ (is_iso.inv_hom_id_assoc f g).symm
+    ·
+      exact fun h => h.comp (Top.homeoOfIso (as_iso f)).OpenEmbedding
 
 end Top
 

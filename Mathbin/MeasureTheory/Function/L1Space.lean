@@ -40,7 +40,7 @@ integrable, function space, l1
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical TopologicalSpace BigOperators Ennreal MeasureTheory Nnreal
 
@@ -57,32 +57,32 @@ namespace MeasureTheory
 /-! ### Some results about the Lebesgue integral involving a normed group -/
 
 
-theorem lintegral_nnnorm_eq_lintegral_edist (f : α → β) : (∫⁻a, nnnorm (f a) ∂μ) = ∫⁻a, edist (f a) 0 ∂μ :=
+theorem lintegral_nnnorm_eq_lintegral_edist (f : α → β) : (∫⁻ a, nnnorm (f a) ∂μ) = ∫⁻ a, edist (f a) 0 ∂μ :=
   by 
     simp only [edist_eq_coe_nnnorm]
 
-theorem lintegral_norm_eq_lintegral_edist (f : α → β) : (∫⁻a, Ennreal.ofReal ∥f a∥ ∂μ) = ∫⁻a, edist (f a) 0 ∂μ :=
+theorem lintegral_norm_eq_lintegral_edist (f : α → β) : (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) = ∫⁻ a, edist (f a) 0 ∂μ :=
   by 
     simp only [of_real_norm_eq_coe_nnnorm, edist_eq_coe_nnnorm]
 
 theorem lintegral_edist_triangle [second_countable_topology β] [MeasurableSpace β] [OpensMeasurableSpace β]
   {f g h : α → β} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) (hh : AeMeasurable h μ) :
-  (∫⁻a, edist (f a) (g a) ∂μ) ≤ (∫⁻a, edist (f a) (h a) ∂μ)+∫⁻a, edist (g a) (h a) ∂μ :=
+  (∫⁻ a, edist (f a) (g a) ∂μ) ≤ (∫⁻ a, edist (f a) (h a) ∂μ)+∫⁻ a, edist (g a) (h a) ∂μ :=
   by 
     rw [←lintegral_add' (hf.edist hh) (hg.edist hh)]
     refine' lintegral_mono fun a => _ 
     apply edist_triangle_right
 
-theorem lintegral_nnnorm_zero : (∫⁻a : α, nnnorm (0 : β) ∂μ) = 0 :=
+theorem lintegral_nnnorm_zero : (∫⁻ a : α, nnnorm (0 : β) ∂μ) = 0 :=
   by 
     simp 
 
 theorem lintegral_nnnorm_add [MeasurableSpace β] [OpensMeasurableSpace β] [MeasurableSpace γ] [OpensMeasurableSpace γ]
   {f : α → β} {g : α → γ} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
-  (∫⁻a, nnnorm (f a)+nnnorm (g a) ∂μ) = (∫⁻a, nnnorm (f a) ∂μ)+∫⁻a, nnnorm (g a) ∂μ :=
+  (∫⁻ a, nnnorm (f a)+nnnorm (g a) ∂μ) = (∫⁻ a, nnnorm (f a) ∂μ)+∫⁻ a, nnnorm (g a) ∂μ :=
   lintegral_add' hf.ennnorm hg.ennnorm
 
-theorem lintegral_nnnorm_neg {f : α → β} : (∫⁻a, nnnorm ((-f) a) ∂μ) = ∫⁻a, nnnorm (f a) ∂μ :=
+theorem lintegral_nnnorm_neg {f : α → β} : (∫⁻ a, nnnorm ((-f) a) ∂μ) = ∫⁻ a, nnnorm (f a) ∂μ :=
   by 
     simp only [Pi.neg_apply, nnnorm_neg]
 
@@ -96,19 +96,19 @@ def has_finite_integral {m : MeasurableSpace α} (f : α → β)
     runTac 
       volume_tac) :
   Prop :=
-  (∫⁻a, nnnorm (f a) ∂μ) < ∞
+  (∫⁻ a, nnnorm (f a) ∂μ) < ∞
 
-theorem has_finite_integral_iff_norm (f : α → β) : has_finite_integral f μ ↔ (∫⁻a, Ennreal.ofReal ∥f a∥ ∂μ) < ∞ :=
+theorem has_finite_integral_iff_norm (f : α → β) : has_finite_integral f μ ↔ (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) < ∞ :=
   by 
     simp only [has_finite_integral, of_real_norm_eq_coe_nnnorm]
 
-theorem has_finite_integral_iff_edist (f : α → β) : has_finite_integral f μ ↔ (∫⁻a, edist (f a) 0 ∂μ) < ∞ :=
+theorem has_finite_integral_iff_edist (f : α → β) : has_finite_integral f μ ↔ (∫⁻ a, edist (f a) 0 ∂μ) < ∞ :=
   by 
     simp only [has_finite_integral_iff_norm, edist_dist, dist_zero_right]
 
 theorem has_finite_integral_iff_of_real {f : α → ℝ} (h : 0 ≤ᵐ[μ] f) :
-  has_finite_integral f μ ↔ (∫⁻a, Ennreal.ofReal (f a) ∂μ) < ∞ :=
-  have lintegral_eq : (∫⁻a, Ennreal.ofReal ∥f a∥ ∂μ) = ∫⁻a, Ennreal.ofReal (f a) ∂μ :=
+  has_finite_integral f μ ↔ (∫⁻ a, Ennreal.ofReal (f a) ∂μ) < ∞ :=
+  have lintegral_eq : (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) = ∫⁻ a, Ennreal.ofReal (f a) ∂μ :=
     by 
       refine' lintegral_congr_ae (h.mono$ fun a h => _)
       rwa [Real.norm_eq_abs, abs_of_nonneg]
@@ -116,26 +116,26 @@ theorem has_finite_integral_iff_of_real {f : α → ℝ} (h : 0 ≤ᵐ[μ] f) :
     rw [has_finite_integral_iff_norm, lintegral_eq]
 
 theorem has_finite_integral_iff_of_nnreal {f : α →  ℝ≥0 } :
-  has_finite_integral (fun x => (f x : ℝ)) μ ↔ (∫⁻a, f a ∂μ) < ∞ :=
+  has_finite_integral (fun x => (f x : ℝ)) μ ↔ (∫⁻ a, f a ∂μ) < ∞ :=
   by 
     simp [has_finite_integral_iff_norm]
 
-theorem has_finite_integral.mono {f : α → β} {g : α → γ} (hg : has_finite_integral g μ) (h : ∀ᵐa ∂μ, ∥f a∥ ≤ ∥g a∥) :
+theorem has_finite_integral.mono {f : α → β} {g : α → γ} (hg : has_finite_integral g μ) (h : ∀ᵐ a ∂μ, ∥f a∥ ≤ ∥g a∥) :
   has_finite_integral f μ :=
   by 
     simp only [has_finite_integral_iff_norm] at *
-    calc (∫⁻a, Ennreal.ofReal ∥f a∥ ∂μ) ≤ ∫⁻a : α, Ennreal.ofReal ∥g a∥ ∂μ :=
+    calc (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) ≤ ∫⁻ a : α, Ennreal.ofReal ∥g a∥ ∂μ :=
       lintegral_mono_ae (h.mono$ fun a h => of_real_le_of_real h)_ < ∞ := hg
 
-theorem has_finite_integral.mono' {f : α → β} {g : α → ℝ} (hg : has_finite_integral g μ) (h : ∀ᵐa ∂μ, ∥f a∥ ≤ g a) :
+theorem has_finite_integral.mono' {f : α → β} {g : α → ℝ} (hg : has_finite_integral g μ) (h : ∀ᵐ a ∂μ, ∥f a∥ ≤ g a) :
   has_finite_integral f μ :=
   hg.mono$ h.mono$ fun x hx => le_transₓ hx (le_abs_self _)
 
-theorem has_finite_integral.congr' {f : α → β} {g : α → γ} (hf : has_finite_integral f μ) (h : ∀ᵐa ∂μ, ∥f a∥ = ∥g a∥) :
+theorem has_finite_integral.congr' {f : α → β} {g : α → γ} (hf : has_finite_integral f μ) (h : ∀ᵐ a ∂μ, ∥f a∥ = ∥g a∥) :
   has_finite_integral g μ :=
   hf.mono$ eventually_eq.le$ eventually_eq.symm h
 
-theorem has_finite_integral_congr' {f : α → β} {g : α → γ} (h : ∀ᵐa ∂μ, ∥f a∥ = ∥g a∥) :
+theorem has_finite_integral_congr' {f : α → β} {g : α → γ} (h : ∀ᵐ a ∂μ, ∥f a∥ = ∥g a∥) :
   has_finite_integral f μ ↔ has_finite_integral g μ :=
   ⟨fun hf => hf.congr' h, fun hg => hg.congr'$ eventually_eq.symm h⟩
 
@@ -153,7 +153,7 @@ theorem has_finite_integral_const_iff {c : β} : has_finite_integral (fun x : α
 theorem has_finite_integral_const [is_finite_measure μ] (c : β) : has_finite_integral (fun x : α => c) μ :=
   has_finite_integral_const_iff.2 (Or.inr$ measure_lt_top _ _)
 
-theorem has_finite_integral_of_bounded [is_finite_measure μ] {f : α → β} {C : ℝ} (hC : ∀ᵐa ∂μ, ∥f a∥ ≤ C) :
+theorem has_finite_integral_of_bounded [is_finite_measure μ] {f : α → β} {C : ℝ} (hC : ∀ᵐ a ∂μ, ∥f a∥ ≤ C) :
   has_finite_integral f μ :=
   (has_finite_integral_const C).mono' hC
 
@@ -219,22 +219,21 @@ theorem has_finite_integral.norm {f : α → β} (hfi : has_finite_integral f μ
 theorem has_finite_integral_norm_iff (f : α → β) : has_finite_integral (fun a => ∥f a∥) μ ↔ has_finite_integral f μ :=
   has_finite_integral_congr'$ eventually_of_forall$ fun x => norm_norm (f x)
 
--- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_finite_integral_to_real_of_lintegral_ne_top
-{f : α → «exprℝ≥0∞»()}
-(hf : «expr ≠ »(«expr∫⁻ , ∂ »((x), f x, μ), «expr∞»())) : has_finite_integral (λ x, (f x).to_real) μ :=
-begin
-  have [] [":", expr ∀
-   x, «expr = »((«expr∥ ∥₊»((f x).to_real) : «exprℝ≥0∞»()), @coe «exprℝ≥0»() «exprℝ≥0∞»() _ (⟨(f x).to_real, ennreal.to_real_nonneg⟩ : «exprℝ≥0»()))] [],
-  { intro [ident x],
-    rw [expr real.nnnorm_of_nonneg] [] },
-  simp_rw ["[", expr has_finite_integral, ",", expr this, "]"] [],
-  refine [expr lt_of_le_of_lt (lintegral_mono (λ x, _)) (lt_top_iff_ne_top.2 hf)],
-  by_cases [expr hfx, ":", expr «expr = »(f x, «expr∞»())],
-  { simp [] [] [] ["[", expr hfx, "]"] [] [] },
-  { lift [expr f x] ["to", expr «exprℝ≥0»()] ["using", expr hfx] ["with", ident fx],
-    simp [] [] [] ["[", "<-", expr h, "]"] [] [] }
-end
+theorem has_finite_integral_to_real_of_lintegral_ne_top {f : α → ℝ≥0∞} (hf : (∫⁻ x, f x ∂μ) ≠ ∞) :
+  has_finite_integral (fun x => (f x).toReal) μ :=
+  by 
+    have  : ∀ x, (∥(f x).toReal∥₊ : ℝ≥0∞) = @coeₓ ℝ≥0  ℝ≥0∞ _ (⟨(f x).toReal, Ennreal.to_real_nonneg⟩ :  ℝ≥0 )
+    ·
+      intro x 
+      rw [Real.nnnorm_of_nonneg]
+    simpRw [has_finite_integral, this]
+    refine' lt_of_le_of_ltₓ (lintegral_mono fun x => _) (lt_top_iff_ne_top.2 hf)
+    byCases' hfx : f x = ∞
+    ·
+      simp [hfx]
+    ·
+      lift f x to  ℝ≥0  using hfx with fx 
+      simp [←h]
 
 theorem is_finite_measure_with_density_of_real {f : α → ℝ} (hfi : has_finite_integral f μ) :
   is_finite_measure (μ.with_density fun x => Ennreal.ofReal$ f x) :=
@@ -246,33 +245,30 @@ section DominatedConvergence
 
 variable {F : ℕ → α → β} {f : α → β} {bound : α → ℝ}
 
-theorem all_ae_of_real_F_le_bound (h : ∀ n, ∀ᵐa ∂μ, ∥F n a∥ ≤ bound a) :
-  ∀ n, ∀ᵐa ∂μ, Ennreal.ofReal ∥F n a∥ ≤ Ennreal.ofReal (bound a) :=
+theorem all_ae_of_real_F_le_bound (h : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound a) :
+  ∀ n, ∀ᵐ a ∂μ, Ennreal.ofReal ∥F n a∥ ≤ Ennreal.ofReal (bound a) :=
   fun n => (h n).mono$ fun a h => Ennreal.of_real_le_of_real h
 
-theorem all_ae_tendsto_of_real_norm (h : ∀ᵐa ∂μ, tendsto (fun n => F n a) at_top$ 𝓝$ f a) :
-  ∀ᵐa ∂μ, tendsto (fun n => Ennreal.ofReal ∥F n a∥) at_top$ 𝓝$ Ennreal.ofReal ∥f a∥ :=
+theorem all_ae_tendsto_of_real_norm (h : ∀ᵐ a ∂μ, tendsto (fun n => F n a) at_top$ 𝓝$ f a) :
+  ∀ᵐ a ∂μ, tendsto (fun n => Ennreal.ofReal ∥F n a∥) at_top$ 𝓝$ Ennreal.ofReal ∥f a∥ :=
   h.mono$ fun a h => tendsto_of_real$ tendsto.comp (Continuous.tendsto continuous_norm _) h
 
--- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem all_ae_of_real_f_le_bound
-(h_bound : ∀ n, «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(«expr∥ ∥»(F n a), bound a)))
-(h_lim : «expr∀ᵐ ∂ , »((a), μ, tendsto (λ
-   n, F n a) at_top (expr𝓝() (f a)))) : «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(ennreal.of_real «expr∥ ∥»(f a), ennreal.of_real (bound a))) :=
-begin
-  have [ident F_le_bound] [] [":=", expr all_ae_of_real_F_le_bound h_bound],
-  rw ["<-", expr ae_all_iff] ["at", ident F_le_bound],
-  apply [expr F_le_bound.mp ((all_ae_tendsto_of_real_norm h_lim).mono _)],
-  assume [binders (a tendsto_norm F_le_bound)],
-  exact [expr le_of_tendsto' tendsto_norm F_le_bound]
-end
+theorem all_ae_of_real_f_le_bound (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound a)
+  (h_lim : ∀ᵐ a ∂μ, tendsto (fun n => F n a) at_top (𝓝 (f a))) :
+  ∀ᵐ a ∂μ, Ennreal.ofReal ∥f a∥ ≤ Ennreal.ofReal (bound a) :=
+  by 
+    have F_le_bound := all_ae_of_real_F_le_bound h_bound 
+    rw [←ae_all_iff] at F_le_bound 
+    apply F_le_bound.mp ((all_ae_tendsto_of_real_norm h_lim).mono _)
+    intro a tendsto_norm F_le_bound 
+    exact le_of_tendsto' tendsto_norm F_le_bound
 
 theorem has_finite_integral_of_dominated_convergence {F : ℕ → α → β} {f : α → β} {bound : α → ℝ}
-  (bound_has_finite_integral : has_finite_integral bound μ) (h_bound : ∀ n, ∀ᵐa ∂μ, ∥F n a∥ ≤ bound a)
-  (h_lim : ∀ᵐa ∂μ, tendsto (fun n => F n a) at_top (𝓝 (f a))) : has_finite_integral f μ :=
+  (bound_has_finite_integral : has_finite_integral bound μ) (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound a)
+  (h_lim : ∀ᵐ a ∂μ, tendsto (fun n => F n a) at_top (𝓝 (f a))) : has_finite_integral f μ :=
   by 
     rw [has_finite_integral_iff_norm]
-    calc (∫⁻a, Ennreal.ofReal ∥f a∥ ∂μ) ≤ ∫⁻a, Ennreal.ofReal (bound a) ∂μ :=
+    calc (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) ≤ ∫⁻ a, Ennreal.ofReal (bound a) ∂μ :=
       lintegral_mono_ae$ all_ae_of_real_f_le_bound h_bound h_lim _ < ∞ :=
       by 
         rw [←has_finite_integral_iff_of_real]
@@ -282,12 +278,12 @@ theorem has_finite_integral_of_dominated_convergence {F : ℕ → α → β} {f 
 
 theorem tendsto_lintegral_norm_of_dominated_convergence [MeasurableSpace β] [BorelSpace β] [second_countable_topology β]
   {F : ℕ → α → β} {f : α → β} {bound : α → ℝ} (F_measurable : ∀ n, AeMeasurable (F n) μ)
-  (bound_has_finite_integral : has_finite_integral bound μ) (h_bound : ∀ n, ∀ᵐa ∂μ, ∥F n a∥ ≤ bound a)
-  (h_lim : ∀ᵐa ∂μ, tendsto (fun n => F n a) at_top (𝓝 (f a))) :
-  tendsto (fun n => ∫⁻a, Ennreal.ofReal ∥F n a - f a∥ ∂μ) at_top (𝓝 0) :=
+  (bound_has_finite_integral : has_finite_integral bound μ) (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound a)
+  (h_lim : ∀ᵐ a ∂μ, tendsto (fun n => F n a) at_top (𝓝 (f a))) :
+  tendsto (fun n => ∫⁻ a, Ennreal.ofReal ∥F n a - f a∥ ∂μ) at_top (𝓝 0) :=
   have f_measurable : AeMeasurable f μ := ae_measurable_of_tendsto_metric_ae F_measurable h_lim 
   let b := fun a => 2*Ennreal.ofReal (bound a)
-  have hb : ∀ n, ∀ᵐa ∂μ, Ennreal.ofReal ∥F n a - f a∥ ≤ b a :=
+  have hb : ∀ n, ∀ᵐ a ∂μ, Ennreal.ofReal ∥F n a - f a∥ ≤ b a :=
     by 
       intro n 
       filterUpwards [all_ae_of_real_F_le_bound h_bound n, all_ae_of_real_f_le_bound h_bound h_lim]
@@ -305,13 +301,13 @@ theorem tendsto_lintegral_norm_of_dominated_convergence [MeasurableSpace β] [Bo
         add_le_add h₁ h₂ _ = b a :=
         by 
           rw [←two_mul]
-  have h : ∀ᵐa ∂μ, tendsto (fun n => Ennreal.ofReal ∥F n a - f a∥) at_top (𝓝 0) :=
+  have h : ∀ᵐ a ∂μ, tendsto (fun n => Ennreal.ofReal ∥F n a - f a∥) at_top (𝓝 0) :=
     by 
       rw [←Ennreal.of_real_zero]
       refine' h_lim.mono fun a h => (continuous_of_real.tendsto _).comp _ 
       rwa [←tendsto_iff_norm_tendsto_zero]
   by 
-    suffices h : tendsto (fun n => ∫⁻a, Ennreal.ofReal ∥F n a - f a∥ ∂μ) at_top (𝓝 (∫⁻a : α, 0 ∂μ))
+    suffices h : tendsto (fun n => ∫⁻ a, Ennreal.ofReal ∥F n a - f a∥ ∂μ) at_top (𝓝 (∫⁻ a : α, 0 ∂μ))
     ·
       rwa [lintegral_zero] at h 
     refine' tendsto_lintegral_of_dominated_convergence' _ _ hb _ _
@@ -320,7 +316,7 @@ theorem tendsto_lintegral_norm_of_dominated_convergence [MeasurableSpace β] [Bo
     ·
       rw [has_finite_integral_iff_of_real] at bound_has_finite_integral
       ·
-        calc (∫⁻a, b a ∂μ) = 2*∫⁻a, Ennreal.ofReal (bound a) ∂μ :=
+        calc (∫⁻ a, b a ∂μ) = 2*∫⁻ a, Ennreal.ofReal (bound a) ∂μ :=
           by 
             rw [lintegral_const_mul']
             exact coe_ne_top _ ≠ ∞ :=
@@ -362,7 +358,7 @@ theorem has_finite_integral.smul (c : 𝕜) {f : α → β} : has_finite_integra
   by 
     simp only [has_finite_integral]
     intro hfi 
-    calc (∫⁻a : α, nnnorm (c • f a) ∂μ) = ∫⁻a : α, nnnorm c*nnnorm (f a) ∂μ :=
+    calc (∫⁻ a : α, nnnorm (c • f a) ∂μ) = ∫⁻ a : α, nnnorm c*nnnorm (f a) ∂μ :=
       by 
         simp only [nnnorm_smul, Ennreal.coe_mul]_ < ∞ :=
       by 
@@ -372,7 +368,7 @@ theorem has_finite_integral.smul (c : 𝕜) {f : α → β} : has_finite_integra
 theorem has_finite_integral_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) :
   has_finite_integral (c • f) μ ↔ has_finite_integral f μ :=
   by 
-    split 
+    constructor
     ·
       intro h 
       simpa only [smul_smul, inv_mul_cancel hc, one_smul] using h.smul (c⁻¹)
@@ -403,6 +399,10 @@ def integrable {α} {m : MeasurableSpace α} (f : α → β)
   Prop :=
   AeMeasurable f μ ∧ has_finite_integral f μ
 
+theorem mem_ℒp_one_iff_integrable {f : α → β} : mem_ℒp f 1 μ ↔ integrable f μ :=
+  by 
+    simpRw [integrable, has_finite_integral, mem_ℒp, snorm_one_eq_lintegral_nnnorm]
+
 theorem integrable.ae_measurable {f : α → β} (hf : integrable f μ) : AeMeasurable f μ :=
   hf.1
 
@@ -410,19 +410,19 @@ theorem integrable.has_finite_integral {f : α → β} (hf : integrable f μ) : 
   hf.2
 
 theorem integrable.mono {f : α → β} {g : α → γ} (hg : integrable g μ) (hf : AeMeasurable f μ)
-  (h : ∀ᵐa ∂μ, ∥f a∥ ≤ ∥g a∥) : integrable f μ :=
+  (h : ∀ᵐ a ∂μ, ∥f a∥ ≤ ∥g a∥) : integrable f μ :=
   ⟨hf, hg.has_finite_integral.mono h⟩
 
 theorem integrable.mono' {f : α → β} {g : α → ℝ} (hg : integrable g μ) (hf : AeMeasurable f μ)
-  (h : ∀ᵐa ∂μ, ∥f a∥ ≤ g a) : integrable f μ :=
+  (h : ∀ᵐ a ∂μ, ∥f a∥ ≤ g a) : integrable f μ :=
   ⟨hf, hg.has_finite_integral.mono' h⟩
 
 theorem integrable.congr' {f : α → β} {g : α → γ} (hf : integrable f μ) (hg : AeMeasurable g μ)
-  (h : ∀ᵐa ∂μ, ∥f a∥ = ∥g a∥) : integrable g μ :=
+  (h : ∀ᵐ a ∂μ, ∥f a∥ = ∥g a∥) : integrable g μ :=
   ⟨hg, hf.has_finite_integral.congr' h⟩
 
 theorem integrable_congr' {f : α → β} {g : α → γ} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ)
-  (h : ∀ᵐa ∂μ, ∥f a∥ = ∥g a∥) : integrable f μ ↔ integrable g μ :=
+  (h : ∀ᵐ a ∂μ, ∥f a∥ = ∥g a∥) : integrable f μ ↔ integrable g μ :=
   ⟨fun h2f => h2f.congr' hg h, fun h2g => h2g.congr' hf$ eventually_eq.symm h⟩
 
 theorem integrable.congr {f g : α → β} (hf : integrable f μ) (h : f =ᵐ[μ] g) : integrable g μ :=
@@ -431,19 +431,22 @@ theorem integrable.congr {f g : α → β} (hf : integrable f μ) (h : f =ᵐ[μ
 theorem integrable_congr {f g : α → β} (h : f =ᵐ[μ] g) : integrable f μ ↔ integrable g μ :=
   ⟨fun hf => hf.congr h, fun hg => hg.congr h.symm⟩
 
--- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem integrable_const_iff
-{c : β} : «expr ↔ »(integrable (λ x : α, c) μ, «expr ∨ »(«expr = »(c, 0), «expr < »(μ univ, «expr∞»()))) :=
-begin
-  have [] [":", expr ae_measurable (λ x : α, c) μ] [":=", expr measurable_const.ae_measurable],
-  rw ["[", expr integrable, ",", expr and_iff_right this, ",", expr has_finite_integral_const_iff, "]"] []
-end
+theorem integrable_const_iff {c : β} : integrable (fun x : α => c) μ ↔ c = 0 ∨ μ univ < ∞ :=
+  by 
+    have  : AeMeasurable (fun x : α => c) μ := measurable_const.ae_measurable 
+    rw [integrable, and_iff_right this, has_finite_integral_const_iff]
 
 theorem integrable_const [is_finite_measure μ] (c : β) : integrable (fun x : α => c) μ :=
   integrable_const_iff.2$ Or.inr$ measure_lt_top _ _
 
 theorem integrable.mono_measure {f : α → β} (h : integrable f ν) (hμ : μ ≤ ν) : integrable f μ :=
   ⟨h.ae_measurable.mono_measure hμ, h.has_finite_integral.mono_measure hμ⟩
+
+theorem integrable.of_measure_le_smul {μ' : Measureₓ α} (c : ℝ≥0∞) (hc : c ≠ ∞) (hμ'_le : μ' ≤ c • μ) {f : α → β}
+  (hf : integrable f μ) : integrable f μ' :=
+  by 
+    rw [←mem_ℒp_one_iff_integrable] at hf⊢
+    exact hf.of_measure_le_smul c hc hμ'_le
 
 theorem integrable.add_measure {f : α → β} (hμ : integrable f μ) (hν : integrable f ν) : integrable f (μ+ν) :=
   ⟨hμ.ae_measurable.add_measure hν.ae_measurable, hμ.has_finite_integral.add_measure hν.has_finite_integral⟩
@@ -485,7 +488,7 @@ theorem measure_preserving.integrable_comp_emb {f : α → δ} {ν} (h₁ : meas
   h₁.map_eq ▸ Iff.symm h₂.integrable_map_iff
 
 theorem lintegral_edist_lt_top [second_countable_topology β] [OpensMeasurableSpace β] {f g : α → β}
-  (hf : integrable f μ) (hg : integrable g μ) : (∫⁻a, edist (f a) (g a) ∂μ) < ∞ :=
+  (hf : integrable f μ) (hg : integrable g μ) : (∫⁻ a, edist (f a) (g a) ∂μ) < ∞ :=
   lt_of_le_of_ltₓ
     (lintegral_edist_triangle hf.ae_measurable hg.ae_measurable
       (measurable_const.AeMeasurable : AeMeasurable (fun a => (0 : β)) μ))
@@ -505,7 +508,7 @@ variable {α β μ}
 
 theorem integrable.add' [OpensMeasurableSpace β] {f g : α → β} (hf : integrable f μ) (hg : integrable g μ) :
   has_finite_integral (f+g) μ :=
-  calc (∫⁻a, nnnorm (f a+g a) ∂μ) ≤ ∫⁻a, nnnorm (f a)+nnnorm (g a) ∂μ :=
+  calc (∫⁻ a, nnnorm (f a+g a) ∂μ) ≤ ∫⁻ a, nnnorm (f a)+nnnorm (g a) ∂μ :=
     lintegral_mono
       fun a =>
         by 
@@ -518,8 +521,9 @@ theorem integrable.add [BorelSpace β] [second_countable_topology β] {f g : α 
   (hg : integrable g μ) : integrable (f+g) μ :=
   ⟨hf.ae_measurable.add hg.ae_measurable, hf.add' hg⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem integrable_finset_sum {ι} [BorelSpace β] [second_countable_topology β] (s : Finset ι) {f : ι → α → β}
-  (hf : ∀ i _ : i ∈ s, integrable (f i) μ) : integrable (fun a => ∑i in s, f i a) μ :=
+  (hf : ∀ i _ : i ∈ s, integrable (f i) μ) : integrable (fun a => ∑ i in s, f i a) μ :=
   by 
     simp only [←Finset.sum_apply]
     exact Finset.sum_induction f (fun g => integrable g μ) (fun _ _ => integrable.add) (integrable_zero _ _ _) hf
@@ -533,7 +537,7 @@ theorem integrable_neg_iff [BorelSpace β] {f : α → β} : integrable (-f) μ 
 
 theorem integrable.sub' [OpensMeasurableSpace β] {f g : α → β} (hf : integrable f μ) (hg : integrable g μ) :
   has_finite_integral (f - g) μ :=
-  calc (∫⁻a, nnnorm (f a - g a) ∂μ) ≤ ∫⁻a, nnnorm (f a)+nnnorm (-g a) ∂μ :=
+  calc (∫⁻ a, nnnorm (f a - g a) ∂μ) ≤ ∫⁻ a, nnnorm (f a)+nnnorm (-g a) ∂μ :=
     lintegral_mono
       fun a =>
         by 
@@ -559,24 +563,15 @@ theorem integrable_norm_iff [OpensMeasurableSpace β] {f : α → β} (hf : AeMe
   by 
     simpRw [integrable, and_iff_right hf, and_iff_right hf.norm, has_finite_integral_norm_iff]
 
--- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem integrable_of_norm_sub_le
-[opens_measurable_space β]
-{f₀ f₁ : α → β}
-{g : α → exprℝ()}
-(hf₁_m : ae_measurable f₁ μ)
-(hf₀_i : integrable f₀ μ)
-(hg_i : integrable g μ)
-(h : «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(«expr∥ ∥»(«expr - »(f₀ a, f₁ a)), g a))) : integrable f₁ μ :=
-begin
-  have [] [":", expr «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(«expr∥ ∥»(f₁ a), «expr + »(«expr∥ ∥»(f₀ a), g a)))] [],
-  { apply [expr h.mono],
-    intros [ident a, ident ha],
-    calc
-      «expr ≤ »(«expr∥ ∥»(f₁ a), «expr + »(«expr∥ ∥»(f₀ a), «expr∥ ∥»(«expr - »(f₀ a, f₁ a)))) : norm_le_insert _ _
-      «expr ≤ »(..., «expr + »(«expr∥ ∥»(f₀ a), g a)) : add_le_add_left ha _ },
-  exact [expr integrable.mono' (hf₀_i.norm.add hg_i) hf₁_m this]
-end
+theorem integrable_of_norm_sub_le [OpensMeasurableSpace β] {f₀ f₁ : α → β} {g : α → ℝ} (hf₁_m : AeMeasurable f₁ μ)
+  (hf₀_i : integrable f₀ μ) (hg_i : integrable g μ) (h : ∀ᵐ a ∂μ, ∥f₀ a - f₁ a∥ ≤ g a) : integrable f₁ μ :=
+  by 
+    have  : ∀ᵐ a ∂μ, ∥f₁ a∥ ≤ ∥f₀ a∥+g a
+    ·
+      apply h.mono 
+      intro a ha 
+      calc ∥f₁ a∥ ≤ ∥f₀ a∥+∥f₀ a - f₁ a∥ := norm_le_insert _ _ _ ≤ ∥f₀ a∥+g a := add_le_add_left ha _ 
+    exact integrable.mono' (hf₀_i.norm.add hg_i) hf₁_m this
 
 theorem integrable.prod_mk [OpensMeasurableSpace β] [OpensMeasurableSpace γ] {f : α → β} {g : α → γ}
   (hf : integrable f μ) (hg : integrable g μ) : integrable (fun x => (f x, g x)) μ :=
@@ -587,10 +582,6 @@ theorem integrable.prod_mk [OpensMeasurableSpace β] [OpensMeasurableSpace γ] {
           calc max ∥f x∥ ∥g x∥ ≤ ∥f x∥+∥g x∥ := max_le_add_of_nonneg (norm_nonneg _) (norm_nonneg _)
             _ ≤ ∥∥f x∥+∥g x∥∥ := le_abs_self _
             ⟩
-
-theorem mem_ℒp_one_iff_integrable {f : α → β} : mem_ℒp f 1 μ ↔ integrable f μ :=
-  by 
-    simpRw [integrable, has_finite_integral, mem_ℒp, snorm_one_eq_lintegral_nnnorm]
 
 theorem mem_ℒp.integrable [BorelSpace β] {q : ℝ≥0∞} (hq1 : 1 ≤ q) {f : α → β} [is_finite_measure μ]
   (hfq : mem_ℒp f q μ) : integrable f μ :=
@@ -611,31 +602,31 @@ theorem integrable.real_to_nnreal {f : α → ℝ} (hf : integrable f μ) : inte
     intro x 
     simp [Real.norm_eq_abs, Ennreal.of_real_le_of_real, abs_le, abs_nonneg, le_abs_self]
 
--- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_real_to_real_ae_eq
-{f : α → «exprℝ≥0∞»()}
-(hf : «expr∀ᵐ ∂ , »((x), μ, «expr < »(f x, «expr∞»()))) : «expr =ᵐ[ ] »(λ x, ennreal.of_real (f x).to_real, μ, f) :=
-begin
-  rw [expr ae_iff] ["at", ident hf],
-  rw ["[", expr filter.eventually_eq, ",", expr ae_iff, "]"] [],
-  have [] [":", expr «expr = »({x | «expr¬ »(«expr = »(ennreal.of_real (f x).to_real, f x))}, {x | «expr = »(f x, «expr∞»())})] [],
-  { ext [] [ident x] [],
-    simp [] [] ["only"] ["[", expr ne.def, ",", expr set.mem_set_of_eq, "]"] [] [],
-    split; intro [ident hx],
-    { by_contra [ident hntop],
-      exact [expr hx (ennreal.of_real_to_real hntop)] },
-    { rw [expr hx] [],
-      simp [] [] [] [] [] [] } },
-  rw [expr this] [],
-  simpa [] [] [] [] [] ["using", expr hf]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  of_real_to_real_ae_eq
+  { f : α → ℝ≥0∞ } ( hf : ∀ᵐ x ∂ μ , f x < ∞ ) : fun x => Ennreal.ofReal f x . toReal =ᵐ[ μ ] f
+  :=
+    by
+      rw [ ae_iff ] at hf
+        rw [ Filter.EventuallyEq , ae_iff ]
+        have : { x | ¬ Ennreal.ofReal f x . toReal = f x } = { x | f x = ∞ }
+        ·
+          ext x
+            simp only [ Ne.def , Set.mem_set_of_eq ]
+            constructor <;> intro hx
+            · byContra hntop exact hx Ennreal.of_real_to_real hntop
+            · rw [ hx ] simp
+        rw [ this ]
+        simpa using hf
 
-theorem integrable_with_density_iff {f : α → ℝ≥0∞} (hf : Measurable f) (hflt : ∀ᵐx ∂μ, f x < ∞) {g : α → ℝ}
+theorem integrable_with_density_iff {f : α → ℝ≥0∞} (hf : Measurable f) (hflt : ∀ᵐ x ∂μ, f x < ∞) {g : α → ℝ}
   (hg : Measurable g) : integrable g (μ.with_density f) ↔ integrable (fun x => g x*(f x).toReal) μ :=
   by 
     simp only [integrable, has_finite_integral, hg.ae_measurable.mul hf.ae_measurable.ennreal_to_real, hg.ae_measurable,
       true_andₓ, coe_mul, NormedField.nnnorm_mul]
-    suffices h_int_eq : (∫⁻a, ∥g a∥₊ ∂μ.with_density f) = ∫⁻a, ∥g a∥₊*∥(f a).toReal∥₊ ∂μ
+    suffices h_int_eq : (∫⁻ a, ∥g a∥₊ ∂μ.with_density f) = ∫⁻ a, ∥g a∥₊*∥(f a).toReal∥₊ ∂μ
     ·
       rw [h_int_eq]
     rw [lintegral_with_density_eq_lintegral_mul _ hf hg.nnnorm.coe_nnreal_ennreal]
@@ -646,13 +637,13 @@ theorem integrable_with_density_iff {f : α → ℝ≥0∞} (hf : Measurable f) 
     ext1 x 
     exact Real.ennnorm_eq_of_real Ennreal.to_real_nonneg
 
-theorem mem_ℒ1_to_real_of_lintegral_ne_top {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hfi : (∫⁻x, f x ∂μ) ≠ ∞) :
+theorem mem_ℒ1_to_real_of_lintegral_ne_top {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hfi : (∫⁻ x, f x ∂μ) ≠ ∞) :
   mem_ℒp (fun x => (f x).toReal) 1 μ :=
   by 
     rw [mem_ℒp, snorm_one_eq_lintegral_nnnorm]
     exact ⟨AeMeasurable.ennreal_to_real hfm, has_finite_integral_to_real_of_lintegral_ne_top hfi⟩
 
-theorem integrable_to_real_of_lintegral_ne_top {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hfi : (∫⁻x, f x ∂μ) ≠ ∞) :
+theorem integrable_to_real_of_lintegral_ne_top {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hfi : (∫⁻ x, f x ∂μ) ≠ ∞) :
   integrable (fun x => (f x).toReal) μ :=
   mem_ℒp_one_iff_integrable.1$ mem_ℒ1_to_real_of_lintegral_ne_top hfm hfi
 
@@ -696,19 +687,16 @@ variable [BorelSpace 𝕜]
 
 variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [MeasurableSpace E] [BorelSpace E]
 
--- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem integrable_smul_const
-{f : α → 𝕜}
-{c : E}
-(hc : «expr ≠ »(c, 0)) : «expr ↔ »(integrable (λ x, «expr • »(f x, c)) μ, integrable f μ) :=
-begin
-  simp_rw ["[", expr integrable, ",", expr ae_measurable_smul_const hc, ",", expr and.congr_right_iff, ",", expr has_finite_integral, ",", expr nnnorm_smul, ",", expr ennreal.coe_mul, "]"] [],
-  intro [ident hf],
-  rw ["[", expr lintegral_mul_const' _ _ ennreal.coe_ne_top, ",", expr ennreal.mul_lt_top_iff, "]"] [],
-  have [] [":", expr ∀
-   x : «exprℝ≥0∞»(), «expr = »(x, 0) → «expr < »(x, «expr∞»())] [":=", expr by simp [] [] [] [] [] []],
-  simp [] [] [] ["[", expr hc, ",", expr or_iff_left_of_imp (this _), "]"] [] []
-end
+theorem integrable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) : integrable (fun x => f x • c) μ ↔ integrable f μ :=
+  by 
+    simpRw [integrable, ae_measurable_smul_const hc, And.congr_right_iff, has_finite_integral, nnnorm_smul,
+      Ennreal.coe_mul]
+    intro hf 
+    rw [lintegral_mul_const' _ _ Ennreal.coe_ne_top, Ennreal.mul_lt_top_iff]
+    have  : ∀ x : ℝ≥0∞, x = 0 → x < ∞ :=
+      by 
+        simp 
+    simp [hc, or_iff_left_of_imp (this _)]
 
 end NormedSpaceOverCompleteField
 
@@ -789,11 +777,11 @@ variable {E : Type _} {m0 : MeasurableSpace α} [NormedGroup E] [MeasurableSpace
 
 theorem integrable_of_forall_fin_meas_le' {μ : Measureₓ α} (hm : m ≤ m0) [sigma_finite (μ.trim hm)] (C : ℝ≥0∞)
   (hC : C < ∞) {f : α → E} (hf_meas : AeMeasurable f μ)
-  (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → (∫⁻x in s, nnnorm (f x) ∂μ) ≤ C) : integrable f μ :=
+  (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → (∫⁻ x in s, nnnorm (f x) ∂μ) ≤ C) : integrable f μ :=
   ⟨hf_meas, (lintegral_le_of_forall_fin_meas_le' hm C hf_meas.nnnorm.coe_nnreal_ennreal hf).trans_lt hC⟩
 
 theorem integrable_of_forall_fin_meas_le [sigma_finite μ] (C : ℝ≥0∞) (hC : C < ∞) {f : α → E}
-  (hf_meas : AeMeasurable f μ) (hf : ∀ s : Set α, MeasurableSet s → μ s ≠ ∞ → (∫⁻x in s, nnnorm (f x) ∂μ) ≤ C) :
+  (hf_meas : AeMeasurable f μ) (hf : ∀ s : Set α, MeasurableSet s → μ s ≠ ∞ → (∫⁻ x in s, nnnorm (f x) ∂μ) ≤ C) :
   integrable f μ :=
   @integrable_of_forall_fin_meas_le' _ _ _ _ _ _ _ _ _
     (by 
@@ -887,24 +875,24 @@ theorem measurable_coe_fn (f : α →₁[μ] β) : Measurable f :=
 theorem ae_measurable_coe_fn (f : α →₁[μ] β) : AeMeasurable f μ :=
   Lp.ae_measurable f
 
-theorem edist_def (f g : α →₁[μ] β) : edist f g = ∫⁻a, edist (f a) (g a) ∂μ :=
+theorem edist_def (f g : α →₁[μ] β) : edist f g = ∫⁻ a, edist (f a) (g a) ∂μ :=
   by 
     simp [Lp.edist_def, snorm, snorm']
     simp [edist_eq_coe_nnnorm_sub]
 
-theorem dist_def (f g : α →₁[μ] β) : dist f g = (∫⁻a, edist (f a) (g a) ∂μ).toReal :=
+theorem dist_def (f g : α →₁[μ] β) : dist f g = (∫⁻ a, edist (f a) (g a) ∂μ).toReal :=
   by 
     simp [Lp.dist_def, snorm, snorm']
     simp [edist_eq_coe_nnnorm_sub]
 
-theorem norm_def (f : α →₁[μ] β) : ∥f∥ = (∫⁻a, nnnorm (f a) ∂μ).toReal :=
+theorem norm_def (f : α →₁[μ] β) : ∥f∥ = (∫⁻ a, nnnorm (f a) ∂μ).toReal :=
   by 
     simp [Lp.norm_def, snorm, snorm']
 
 /-- Computing the norm of a difference between two L¹-functions. Note that this is not a
   special case of `norm_def` since `(f - g) x` and `f x - g x` are not equal
   (but only a.e.-equal). -/
-theorem norm_sub_eq_lintegral (f g : α →₁[μ] β) : ∥f - g∥ = (∫⁻x, (nnnorm (f x - g x) : ℝ≥0∞) ∂μ).toReal :=
+theorem norm_sub_eq_lintegral (f g : α →₁[μ] β) : ∥f - g∥ = (∫⁻ x, (nnnorm (f x - g x) : ℝ≥0∞) ∂μ).toReal :=
   by 
     rw [norm_def]
     congr 1
@@ -913,7 +901,7 @@ theorem norm_sub_eq_lintegral (f g : α →₁[μ] β) : ∥f - g∥ = (∫⁻x,
     intro a ha 
     simp only [ha, Pi.sub_apply]
 
-theorem of_real_norm_eq_lintegral (f : α →₁[μ] β) : Ennreal.ofReal ∥f∥ = ∫⁻x, (nnnorm (f x) : ℝ≥0∞) ∂μ :=
+theorem of_real_norm_eq_lintegral (f : α →₁[μ] β) : Ennreal.ofReal ∥f∥ = ∫⁻ x, (nnnorm (f x) : ℝ≥0∞) ∂μ :=
   by 
     rw [norm_def, Ennreal.of_real_to_real]
     exact ne_of_ltₓ (has_finite_integral_coe_fn f)
@@ -922,7 +910,7 @@ theorem of_real_norm_eq_lintegral (f : α →₁[μ] β) : Ennreal.ofReal ∥f�
   special case of `of_real_norm_eq_lintegral` since `(f - g) x` and `f x - g x` are not equal
   (but only a.e.-equal). -/
 theorem of_real_norm_sub_eq_lintegral (f g : α →₁[μ] β) :
-  Ennreal.ofReal ∥f - g∥ = ∫⁻x, (nnnorm (f x - g x) : ℝ≥0∞) ∂μ :=
+  Ennreal.ofReal ∥f - g∥ = ∫⁻ x, (nnnorm (f x - g x) : ℝ≥0∞) ∂μ :=
   by 
     simpRw [of_real_norm_eq_lintegral, ←edist_eq_coe_nnnorm]
     apply lintegral_congr_ae 
@@ -973,25 +961,25 @@ theorem to_L1_sub (f g : α → β) (hf : integrable f μ) (hg : integrable g μ
   to_L1 (f - g) (hf.sub hg) = to_L1 f hf - to_L1 g hg :=
   rfl
 
-theorem norm_to_L1 (f : α → β) (hf : integrable f μ) : ∥hf.to_L1 f∥ = Ennreal.toReal (∫⁻a, edist (f a) 0 ∂μ) :=
+theorem norm_to_L1 (f : α → β) (hf : integrable f μ) : ∥hf.to_L1 f∥ = Ennreal.toReal (∫⁻ a, edist (f a) 0 ∂μ) :=
   by 
     simp [to_L1, snorm, snorm']
     simp [edist_eq_coe_nnnorm]
 
 theorem norm_to_L1_eq_lintegral_norm (f : α → β) (hf : integrable f μ) :
-  ∥hf.to_L1 f∥ = Ennreal.toReal (∫⁻a, Ennreal.ofReal ∥f a∥ ∂μ) :=
+  ∥hf.to_L1 f∥ = Ennreal.toReal (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) :=
   by 
     rw [norm_to_L1, lintegral_norm_eq_lintegral_edist]
 
 @[simp]
 theorem edist_to_L1_to_L1 (f g : α → β) (hf : integrable f μ) (hg : integrable g μ) :
-  edist (hf.to_L1 f) (hg.to_L1 g) = ∫⁻a, edist (f a) (g a) ∂μ :=
+  edist (hf.to_L1 f) (hg.to_L1 g) = ∫⁻ a, edist (f a) (g a) ∂μ :=
   by 
     simp [integrable.to_L1, snorm, snorm']
     simp [edist_eq_coe_nnnorm_sub]
 
 @[simp]
-theorem edist_to_L1_zero (f : α → β) (hf : integrable f μ) : edist (hf.to_L1 f) 0 = ∫⁻a, edist (f a) 0 ∂μ :=
+theorem edist_to_L1_zero (f : α → β) (hf : integrable f μ) : edist (hf.to_L1 f) 0 = ∫⁻ a, edist (f a) 0 ∂μ :=
   by 
     simp [integrable.to_L1, snorm, snorm']
     simp [edist_eq_coe_nnnorm]
@@ -1010,12 +998,12 @@ end MeasureTheory
 
 open MeasureTheory
 
-theorem integrable_zero_measure {m : MeasurableSpace α} [MeasurableSpace β] {f : α → β} :
-  integrable f (0 : Measureₓ α) :=
-  by 
-    apply (integrable_zero _ _ _).congr 
-    change (0 : Measureₓ α) { x | 0 ≠ f x } = 0
-    rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  integrable_zero_measure
+  { m : MeasurableSpace α } [ MeasurableSpace β ] { f : α → β } : integrable f ( 0 : Measureₓ α )
+  := by apply integrable_zero _ _ _ . congr change ( 0 : Measureₓ α ) { x | 0 ≠ f x } = 0 rfl
 
 variable {E : Type _} [NormedGroup E] [MeasurableSpace E] [BorelSpace E] {𝕜 : Type _} [NondiscreteNormedField 𝕜]
   [NormedSpace 𝕜 E] {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H]

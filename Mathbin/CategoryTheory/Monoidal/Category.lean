@@ -53,7 +53,57 @@ open CategoryTheory.Iso
 
 namespace CategoryTheory
 
--- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:990:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1042:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:1042:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:1042:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:1042:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:1042:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:1042:29: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗ »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr𝟙_»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr ⊗' »
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `exprρ_
 /--
 In a monoidal category, we can take the tensor product of objects, `X ⊗ Y` and of morphisms `f ⊗ g`.
 Tensor product does not need to be strictly associative on objects, but there is a
@@ -63,48 +113,23 @@ These associators and unitors satisfy the pentagon and triangle equations.
 
 See https://stacks.math.columbia.edu/tag/0FFK.
 -/
-class monoidal_category
-(C : Type u)
-[𝒞 : category.{v} C] :=
-  (tensor_obj : C → C → C)
-  (infixr ` ⊗ `:70 := tensor_obj)
-  (tensor_hom : ∀
-   {X₁ Y₁ X₂ Y₂ : C}, «expr ⟶ »(X₁, Y₁) → «expr ⟶ »(X₂, Y₂) → «expr ⟶ »(«expr ⊗ »(X₁, X₂), «expr ⊗ »(Y₁, Y₂)))
-  (infixr ` ⊗' `:69 := tensor_hom)
-  (tensor_id' : ∀ X₁ X₂ : C, «expr = »(«expr ⊗' »(«expr𝟙»() X₁, «expr𝟙»() X₂), «expr𝟙»() «expr ⊗ »(X₁, X₂)) . obviously)
-  (tensor_comp' : ∀
-   {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C}
-   (f₁ : «expr ⟶ »(X₁, Y₁))
-   (f₂ : «expr ⟶ »(X₂, Y₂))
-   (g₁ : «expr ⟶ »(Y₁, Z₁))
-   (g₂ : «expr ⟶ »(Y₂, Z₂)), «expr = »(«expr ⊗' »(«expr ≫ »(f₁, g₁), «expr ≫ »(f₂, g₂)), «expr ≫ »(«expr ⊗' »(f₁, f₂), «expr ⊗' »(g₁, g₂))) . obviously)
-  (tensor_unit [] : C)
-  (notation `𝟙_` := tensor_unit)
-  (associator : ∀ X Y Z : C, «expr ≅ »(«expr ⊗ »(«expr ⊗ »(X, Y), Z), «expr ⊗ »(X, «expr ⊗ »(Y, Z))))
-  (notation `α_` := associator)
-  (associator_naturality' : ∀
-   {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C}
-   (f₁ : «expr ⟶ »(X₁, Y₁))
-   (f₂ : «expr ⟶ »(X₂, Y₂))
-   (f₃ : «expr ⟶ »(X₃, Y₃)), «expr = »(«expr ≫ »(«expr ⊗' »(«expr ⊗' »(f₁, f₂), f₃), (exprα_() Y₁ Y₂ Y₃).hom), «expr ≫ »((exprα_() X₁ X₂ X₃).hom, «expr ⊗' »(f₁, «expr ⊗' »(f₂, f₃)))) . obviously)
-  (left_unitor : ∀ X : C, «expr ≅ »(«expr ⊗ »(«expr𝟙_»(), X), X))
-  (notation `λ_` := left_unitor)
-  (left_unitor_naturality' : ∀
-   {X Y : C}
-   (f : «expr ⟶ »(X, Y)), «expr = »(«expr ≫ »(«expr ⊗' »(«expr𝟙»() «expr𝟙_»(), f), («exprλ_»() Y).hom), «expr ≫ »((«exprλ_»() X).hom, f)) . obviously)
-  (right_unitor : ∀ X : C, «expr ≅ »(«expr ⊗ »(X, «expr𝟙_»()), X))
-  (notation `ρ_` := right_unitor)
-  (right_unitor_naturality' : ∀
-   {X Y : C}
-   (f : «expr ⟶ »(X, Y)), «expr = »(«expr ≫ »(«expr ⊗' »(f, «expr𝟙»() «expr𝟙_»()), (exprρ_() Y).hom), «expr ≫ »((exprρ_() X).hom, f)) . obviously)
-  (pentagon' : ∀
-   W
-   X
-   Y
-   Z : C, «expr = »(«expr ≫ »(«expr ⊗' »((exprα_() W X Y).hom, «expr𝟙»() Z), «expr ≫ »((exprα_() W «expr ⊗ »(X, Y) Z).hom, «expr ⊗' »(«expr𝟙»() W, (exprα_() X Y Z).hom))), «expr ≫ »((exprα_() «expr ⊗ »(W, X) Y Z).hom, (exprα_() W X «expr ⊗ »(Y, Z)).hom)) . obviously)
-  (triangle' : ∀
-   X
-   Y : C, «expr = »(«expr ≫ »((exprα_() X «expr𝟙_»() Y).hom, «expr ⊗' »(«expr𝟙»() X, («exprλ_»() Y).hom)), «expr ⊗' »((exprρ_() X).hom, «expr𝟙»() Y)) . obviously)
+class monoidal_category (C : Type u) [𝒞 : category.{v} C] where 
+  right_unitor_naturality' :
+  ∀ {X Y : C} f : X ⟶ Y, «expr ⊗' » f (𝟙 («expr𝟙_»)) ≫ ((exprρ_) Y).Hom = ((exprρ_) X).Hom ≫ f :=  by 
+  runTac 
+    obviously 
+  pentagon' :
+  ∀ W X Y Z : C,
+    «expr ⊗' » ((exprα_) W X Y).Hom (𝟙 Z) ≫ ((exprα_) W («expr ⊗ » X Y) Z).Hom ≫ «expr ⊗' » (𝟙 W) ((exprα_) X Y Z).Hom =
+      ((exprα_) («expr ⊗ » W X) Y Z).Hom ≫ ((exprα_) W X («expr ⊗ » Y Z)).Hom :=
+   by 
+  runTac 
+    obviously 
+  triangle' :
+  ∀ X Y : C, ((exprα_) X («expr𝟙_») Y).Hom ≫ «expr ⊗' » (𝟙 X) ((«exprλ_») Y).Hom = «expr ⊗' » ((exprρ_) X).Hom (𝟙 Y) :=
+   by 
+  runTac 
+    obviously
 
 restate_axiom monoidal_category.tensor_id'
 
@@ -403,33 +428,25 @@ theorem tensor_inv_hom_id {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶
   by 
     rw [←tensor_comp, f.inv_hom_id]
 
--- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[reassoc #[]]
-theorem pentagon_hom_inv
-{W
- X
- Y
- Z : C} : «expr = »(«expr ≫ »((exprα_() W X [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](Y, Z)).hom, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr𝟙»() W, (exprα_() X Y Z).inv)), «expr ≫ »((exprα_() [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](W, X) Y Z).inv, «expr ≫ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »]((exprα_() W X Y).hom, «expr𝟙»() Z), (exprα_() W [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X, Y) Z).hom))) :=
-begin
-  have [ident pent] [] [":=", expr pentagon W X Y Z],
-  rw ["<-", expr iso.comp_inv_eq] ["at", ident pent],
-  rw ["[", expr iso.eq_inv_comp, ",", "<-", expr pent, "]"] [],
-  simp [] [] ["only"] ["[", expr tensor_hom_inv_id, ",", expr iso.inv_hom_id_assoc, ",", expr tensor_id, ",", expr category.comp_id, ",", expr category.assoc, "]"] [] []
-end
+@[reassoc]
+theorem pentagon_hom_inv {W X Y Z : C} :
+  (α_ W X (Y ⊗ Z)).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).inv) =
+    (α_ (W ⊗ X) Y Z).inv ≫ ((α_ W X Y).Hom ⊗ 𝟙 Z) ≫ (α_ W (X ⊗ Y) Z).Hom :=
+  by 
+    have pent := pentagon W X Y Z 
+    rw [←iso.comp_inv_eq] at pent 
+    rw [iso.eq_inv_comp, ←pent]
+    simp only [tensor_hom_inv_id, iso.inv_hom_id_assoc, tensor_id, category.comp_id, category.assoc]
 
--- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[reassoc #[]]
-theorem pentagon_inv_hom
-(W
- X
- Y
- Z : C) : «expr = »(«expr ≫ »((exprα_() [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](W, X) Y Z).inv, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »]((exprα_() W X Y).hom, «expr𝟙»() Z)), «expr ≫ »((exprα_() W X [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](Y, Z)).hom, «expr ≫ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr𝟙»() W, (exprα_() X Y Z).inv), (exprα_() W [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X, Y) Z).inv))) :=
-begin
-  have [ident pent] [] [":=", expr pentagon W X Y Z],
-  rw ["<-", expr iso.inv_comp_eq] ["at", ident pent],
-  rw ["[", "<-", expr pent, "]"] [],
-  simp [] [] ["only"] ["[", expr tensor_id, ",", expr assoc, ",", expr id_comp, ",", expr comp_id, ",", expr hom_inv_id, ",", expr tensor_hom_inv_id_assoc, "]"] [] []
-end
+@[reassoc]
+theorem pentagon_inv_hom (W X Y Z : C) :
+  (α_ (W ⊗ X) Y Z).inv ≫ ((α_ W X Y).Hom ⊗ 𝟙 Z) =
+    (α_ W X (Y ⊗ Z)).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).inv) ≫ (α_ W (X ⊗ Y) Z).inv :=
+  by 
+    have pent := pentagon W X Y Z 
+    rw [←iso.inv_comp_eq] at pent 
+    rw [←pent]
+    simp only [tensor_id, assoc, id_comp, comp_id, hom_inv_id, tensor_hom_inv_id_assoc]
 
 @[reassoc]
 theorem pentagon_comp_id_tensor {W X Y Z : C} :

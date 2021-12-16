@@ -54,7 +54,7 @@ variable (R)
 def map_linear_map {X Y : C} : (X ⟶ Y) →ₗ[R] F.obj X ⟶ F.obj Y :=
   { F.map_add_hom with map_smul' := fun r f => F.map_smul r f }
 
-theorem coe_map_linear_map {X Y : C} : «expr⇑ » (F.map_linear_map R : (X ⟶ Y) →ₗ[R] _) = @map C _ D _ F X Y :=
+theorem coe_map_linear_map {X Y : C} : ⇑(F.map_linear_map R : (X ⟶ Y) →ₗ[R] _) = @map C _ D _ F X Y :=
   rfl
 
 end 

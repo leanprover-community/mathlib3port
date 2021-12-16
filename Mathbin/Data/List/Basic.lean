@@ -119,14 +119,14 @@ theorem mem_map {f : α → β} {b : β} {l : List α} : b ∈ map f l ↔ ∃ a
   by 
     induction' l with a l ihl
     ·
-      split 
+      constructor
       ·
         rintro ⟨_⟩
       ·
         rintro ⟨a, ⟨_⟩, _⟩
     ·
       refine' (or_congr eq_comm ihl).trans _ 
-      split 
+      constructor
       ·
         rintro (h | ⟨c, hcl, h⟩)
         exacts[⟨a, Or.inl rfl, h⟩, ⟨c, Or.inr hcl, h⟩]
@@ -145,10 +145,12 @@ theorem mem_map_of_injective {f : α → β} (H : injective f) {a : α} {l : Lis
       H e ▸ m',
     mem_map_of_mem _⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » l.map f)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ∈ » l)
 theorem forall_mem_map_iff {f : α → β} {l : List α} {P : β → Prop} :
   (∀ i _ : i ∈ l.map f, P i) ↔ ∀ j _ : j ∈ l, P (f j) :=
   by 
-    split 
+    constructor
     ·
       intro H j hj 
       exact H (f j) (mem_map_of_mem f hj)
@@ -177,6 +179,7 @@ theorem exists_of_mem_join {a : α} {L : List (List α)} : a ∈ join L → ∃ 
 theorem mem_join_of_mem {a : α} {L : List (List α)} {l} (lL : l ∈ L) (al : a ∈ l) : a ∈ join L :=
   mem_join.2 ⟨l, lL, al⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 @[simp]
 theorem mem_bind {b : β} {l : List α} {f : α → List β} : b ∈ List.bind l f ↔ ∃ (a : _)(_ : a ∈ l), b ∈ f a :=
   Iff.trans mem_join
@@ -185,6 +188,7 @@ theorem mem_bind {b : β} {l : List α} {f : α → List β} : b ∈ List.bind l
         ⟨a, al, fa.symm ▸ h2⟩,
       fun ⟨a, al, bfa⟩ => ⟨f a, mem_map_of_mem _ al, bfa⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem exists_of_mem_bind {b : β} {l : List α} {f : α → List β} : b ∈ List.bind l f → ∃ (a : _)(_ : a ∈ l), b ∈ f a :=
   mem_bind.1
 
@@ -203,6 +207,7 @@ theorem map_bind (g : β → List γ) (f : α → β) : ∀ l : List α, (List.m
   by 
     simp only [cons_bind, map_cons, map_bind l]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 /-- If each element of a list can be lifted to some type, then the whole list can be lifted to this
 type. -/
 instance [h : CanLift α β] : CanLift (List α) (List β) :=
@@ -260,7 +265,7 @@ theorem exists_of_length_succ {n} : ∀ l : List α, (l.length = n+1) → ∃ h 
 @[simp]
 theorem length_injective_iff : injective (List.length : List α → ℕ) ↔ Subsingleton α :=
   by 
-    split 
+    constructor
     ·
       intro h 
       refine' ⟨fun x y => _⟩
@@ -323,35 +328,50 @@ theorem doubleton_eq [DecidableEq α] {x y : α} (h : x ≠ y) : ({x, y} : List 
 /-! ### bounded quantifiers over lists -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » @nil α)
 theorem forall_mem_nil (p : α → Prop) : ∀ x _ : x ∈ @nil α, p x :=
   fun.
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr :: »(a, l))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem forall_mem_cons : ∀ {p : α → Prop} {a : α} {l : List α}, (∀ x _ : x ∈ a :: l, p x) ↔ p a ∧ ∀ x _ : x ∈ l, p x :=
   ball_cons
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr :: »(a, l))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem forall_mem_of_forall_mem_cons {p : α → Prop} {a : α} {l : List α} (h : ∀ x _ : x ∈ a :: l, p x) :
   ∀ x _ : x ∈ l, p x :=
   (forall_mem_cons.1 h).2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr[ , ]»([a]))
 theorem forall_mem_singleton {p : α → Prop} {a : α} : (∀ x _ : x ∈ [a], p x) ↔ p a :=
   by 
     simp only [mem_singleton, forall_eq]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ++ »(l₁, l₂))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₂)
 theorem forall_mem_append {p : α → Prop} {l₁ l₂ : List α} :
   (∀ x _ : x ∈ l₁ ++ l₂, p x) ↔ (∀ x _ : x ∈ l₁, p x) ∧ ∀ x _ : x ∈ l₂, p x :=
   by 
     simp only [mem_append, or_imp_distrib, forall_and_distrib]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » @nil α)
 theorem not_exists_mem_nil (p : α → Prop) : ¬∃ (x : _)(_ : x ∈ @nil α), p x :=
   fun.
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr :: »(a, l))
 theorem exists_mem_cons_of {p : α → Prop} {a : α} (l : List α) (h : p a) : ∃ (x : _)(_ : x ∈ a :: l), p x :=
   Bex.intro a (mem_cons_self _ _) h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr :: »(a, l))
 theorem exists_mem_cons_of_exists {p : α → Prop} {a : α} {l : List α} (h : ∃ (x : _)(_ : x ∈ l), p x) :
   ∃ (x : _)(_ : x ∈ a :: l), p x :=
   Bex.elim h fun x xl px => Bex.intro x (mem_cons_of_mem _ xl) px
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr :: »(a, l))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem or_exists_of_exists_mem_cons {p : α → Prop} {a : α} {l : List α} (h : ∃ (x : _)(_ : x ∈ a :: l), p x) :
   p a ∨ ∃ (x : _)(_ : x ∈ l), p x :=
   Bex.elim h
@@ -364,6 +384,8 @@ theorem or_exists_of_exists_mem_cons {p : α → Prop} {a : α} {l : List α} (h
             exact px)
         fun this : x ∈ l => Or.inr (Bex.intro x this px)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr :: »(a, l))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem exists_mem_cons_iff (p : α → Prop) (a : α) (l : List α) :
   (∃ (x : _)(_ : x ∈ a :: l), p x) ↔ p a ∨ ∃ (x : _)(_ : x ∈ l), p x :=
   Iff.intro or_exists_of_exists_mem_cons fun h => Or.elim h (exists_mem_cons_of l) exists_mem_cons_of_exists
@@ -394,11 +416,11 @@ theorem append_subset_of_subset_of_subset {l₁ l₂ l : List α} (l₁subl : l�
 @[simp]
 theorem append_subset_iff {l₁ l₂ l : List α} : l₁ ++ l₂ ⊆ l ↔ l₁ ⊆ l ∧ l₂ ⊆ l :=
   by 
-    split 
+    constructor
     ·
       intro h 
       simp only [subset_def] at *
-      split  <;> intros  <;> simp 
+      constructor <;> intros  <;> simp 
     ·
       rintro ⟨h1, h2⟩
       apply append_subset_of_subset_of_subset h1 h2
@@ -469,7 +491,7 @@ theorem append_eq_append_iff {a b c d : List α} :
     induction a generalizing c 
     case nil => 
       rw [nil_append]
-      split 
+      constructor
       ·
         rintro rfl 
         left 
@@ -543,22 +565,16 @@ theorem append_left_injective (t : List α) : Function.Injective fun s => s ++ t
 theorem append_left_inj {s₁ s₂ : List α} t : s₁ ++ t = s₂ ++ t ↔ s₁ = s₂ :=
   (append_left_injective t).eq_iff
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_eq_append_split
-{f : α → β}
-{l : list α}
-{s₁ s₂ : list β}
-(h : «expr = »(map f l, «expr ++ »(s₁, s₂))) : «expr∃ , »((l₁
-  l₂), «expr ∧ »(«expr = »(l, «expr ++ »(l₁, l₂)), «expr ∧ »(«expr = »(map f l₁, s₁), «expr = »(map f l₂, s₂)))) :=
-begin
-  have [] [] [":=", expr h],
-  rw ["[", "<-", expr take_append_drop (length s₁) l, "]"] ["at", ident this, "⊢"],
-  rw [expr map_append] ["at", ident this],
-  refine [expr ⟨_, _, rfl, append_inj this _⟩],
-  rw ["[", expr length_map, ",", expr length_take, ",", expr min_eq_left, "]"] [],
-  rw ["[", "<-", expr length_map f l, ",", expr h, ",", expr length_append, "]"] [],
-  apply [expr nat.le_add_right]
-end
+theorem map_eq_append_split {f : α → β} {l : List α} {s₁ s₂ : List β} (h : map f l = s₁ ++ s₂) :
+  ∃ l₁ l₂, l = l₁ ++ l₂ ∧ map f l₁ = s₁ ∧ map f l₂ = s₂ :=
+  by 
+    have  := h 
+    rw [←take_append_drop (length s₁) l] at this⊢
+    rw [map_append] at this 
+    refine' ⟨_, _, rfl, append_inj this _⟩
+    rw [length_map, length_take, min_eq_leftₓ]
+    rw [←length_map f l, h, length_append]
+    apply Nat.le_add_rightₓ
 
 /-! ### repeat -/
 
@@ -578,21 +594,24 @@ theorem mem_repeat {a b : α} : ∀ {n}, b ∈ repeat a n ↔ n ≠ 0 ∧ b = a
 theorem eq_of_mem_repeat {a b : α} {n} (h : b ∈ repeat a n) : b = a :=
   (mem_repeat.1 h).2
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem eq_repeat_of_mem {a : α} : ∀ {l : List α}, (∀ b _ : b ∈ l, b = a) → l = repeat a l.length
 | [], H => rfl
 | b :: l, H =>
   by 
     cases' forall_mem_cons.1 H with H₁ H₂ <;> unfold length repeat <;> congr <;> [exact H₁, exact eq_repeat_of_mem H₂]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem eq_repeat' {a : α} {l : List α} : l = repeat a l.length ↔ ∀ b _ : b ∈ l, b = a :=
   ⟨fun h => h.symm ▸ fun b => eq_of_mem_repeat, eq_repeat_of_mem⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem eq_repeat {a : α} {n} {l : List α} : l = repeat a n ↔ length l = n ∧ ∀ b _ : b ∈ l, b = a :=
   ⟨fun h => h.symm ▸ ⟨length_repeat _ _, fun b => eq_of_mem_repeat⟩, fun ⟨e, al⟩ => e ▸ eq_repeat_of_mem al⟩
 
 theorem repeat_add (a : α) m n : repeat a (m+n) = repeat a m ++ repeat a n :=
   by 
-    induction m <;> simp only [zero_addₓ, succ_add, repeat] <;> split  <;> rfl
+    induction m <;> simp only [zero_addₓ, succ_add, repeat] <;> constructor <;> rfl
 
 theorem repeat_subset_singleton (a : α) n : repeat a n ⊆ [a] :=
   fun b h => mem_singleton.2 (eq_of_mem_repeat h)
@@ -600,7 +619,7 @@ theorem repeat_subset_singleton (a : α) n : repeat a n ⊆ [a] :=
 @[simp]
 theorem map_const (l : List α) (b : β) : map (Function.const α b) l = repeat b l.length :=
   by 
-    induction l <;> [rfl, simp only [map]] <;> split  <;> rfl
+    induction l <;> [rfl, simp only [map]] <;> constructor <;> rfl
 
 theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Function.const α b₂) l) : b₁ = b₂ :=
   by 
@@ -609,7 +628,7 @@ theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Fu
 @[simp]
 theorem map_repeat (f : α → β) (a : α) n : map f (repeat a n) = repeat (f a) n :=
   by 
-    induction n <;> [rfl, simp only [repeat, map]] <;> split  <;> rfl
+    induction n <;> [rfl, simp only [repeat, map]] <;> constructor <;> rfl
 
 @[simp]
 theorem tail_repeat (a : α) n : tail (repeat a n) = repeat a n.pred :=
@@ -647,6 +666,7 @@ theorem repeat_right_inj {a : α} {n m : ℕ} : repeat a n = repeat a m ↔ n = 
 /-! ### pure -/
 
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem mem_pure {α} (x y : α) : x ∈ (pure y : List α) ↔ x = y :=
   by 
@@ -693,7 +713,7 @@ theorem concat_cons (a b : α) (l : List α) : concat (a :: l) b = a :: concat l
 @[simp]
 theorem concat_eq_append (a : α) (l : List α) : concat l a = l ++ [a] :=
   by 
-    induction l <;> simp only [concat] <;> split  <;> rfl
+    induction l <;> simp only [concat] <;> constructor <;> rfl
 
 theorem init_eq_of_concat_eq {a : α} {l₁ l₂ : List α} : concat l₁ a = concat l₂ a → l₁ = l₂ :=
   by 
@@ -966,6 +986,7 @@ theorem mem_of_mem_last' {l : List α} {a : α} (ha : a ∈ l.last') : a ∈ l :
   let ⟨h₁, h₂⟩ := mem_last'_eq_last ha 
   h₂.symm ▸ last_mem _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l.last')
 theorem init_append_last' : ∀ {l : List α} a _ : a ∈ l.last', init l ++ [a] = l
 | [], a, ha => (Option.not_mem_none a ha).elim
 | [a], _, rfl => rfl
@@ -1066,12 +1087,10 @@ theorem head_mem_head' [Inhabited α] : ∀ {l : List α} h : l ≠ [], head l �
 theorem cons_head_tail [Inhabited α] {l : List α} (h : l ≠ []) : head l :: tail l = l :=
   cons_head'_tail (head_mem_head' h)
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem head_mem_self [inhabited α] {l : list α} (h : «expr ≠ »(l, nil)) : «expr ∈ »(l.head, l) :=
-begin
-  have [ident h'] [] [":=", expr mem_cons_self l.head l.tail],
-  rwa [expr cons_head_tail h] ["at", ident h']
-end
+theorem head_mem_self [Inhabited α] {l : List α} (h : l ≠ nil) : l.head ∈ l :=
+  by 
+    have h' := mem_cons_self l.head l.tail 
+    rwa [cons_head_tail h] at h'
 
 @[simp]
 theorem head'_map (f : α → β) l : head' (map f l) = (head' l).map f :=
@@ -1116,27 +1135,26 @@ def reverse_rec_on {C : List α → Sort _} (l : List α) (H0 : C []) (H1 : ∀ 
       rw [reverse_cons]
       exact H1 _ _ ih
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bidirectional induction principle for lists: if a property holds for the empty list, the
 singleton list, and `a :: (l ++ [b])` from `l`, then it holds for all lists. This can be used to
 prove statements about palindromes. The principle is given for a `Sort`-valued predicate, i.e., it
 can also be used to construct data. -/
-def bidirectional_rec
-{C : list α → Sort*}
-(H0 : C «expr[ , ]»([]))
-(H1 : ∀ a : α, C «expr[ , ]»([a]))
-(Hn : ∀ (a : α) (l : list α) (b : α), C l → C «expr :: »(a, «expr ++ »(l, «expr[ , ]»([b])))) : ∀ l, C l
-| «expr[ , ]»([]) := H0
-| «expr[ , ]»([a]) := H1 a
-| «expr :: »(a, «expr :: »(b, l)) := let l' := init «expr :: »(b, l), b' := last «expr :: »(b, l) (cons_ne_nil _ _) in
-have «expr < »(length l', length «expr :: »(a, «expr :: »(b, l))), by { change [expr «expr < »(_, «expr + »(length l, 2))] [] [],
-  simp [] [] [] [] [] [] },
-begin
-  rw ["<-", expr init_append_last (cons_ne_nil b l)] [],
-  have [] [":", expr C l'] [],
-  from [expr bidirectional_rec l'],
-  exact [expr Hn a l' b' «expr‹ ›»(C l')]
-end
+def bidirectional_rec {C : List α → Sort _} (H0 : C []) (H1 : ∀ a : α, C [a])
+  (Hn : ∀ a : α l : List α b : α, C l → C (a :: (l ++ [b]))) : ∀ l, C l
+| [] => H0
+| [a] => H1 a
+| a :: b :: l =>
+  let l' := init (b :: l)
+  let b' := last (b :: l) (cons_ne_nil _ _)
+  have  : length l' < length (a :: b :: l) :=
+    by 
+      change _ < length l+2
+      simp 
+  by 
+    rw [←init_append_last (cons_ne_nil b l)]
+    have  : C l' 
+    exact bidirectional_rec l' 
+    exact Hn a l' b' ‹C l'›
 
 /-- Like `bidirectional_rec`, but with the list parameter placed first. -/
 @[elab_as_eliminator]
@@ -1425,18 +1443,23 @@ theorem nth_eq_some {l : List α} {n a} : nth l n = some a ↔ ∃ h, nth_le l n
           rw [nth_le_nth h] at e <;> injection e with e <;> apply nth_le_mem⟩,
     fun ⟨h, e⟩ => e ▸ nth_le_nth _⟩
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-@[simp] theorem nth_eq_none_iff : ∀ {l : list α} {n}, «expr ↔ »(«expr = »(nth l n, none), «expr ≤ »(length l, n)) :=
-begin
-  intros [],
-  split,
-  { intro [ident h],
-    by_contradiction [ident h'],
-    have [ident h₂] [":", expr «expr∃ , »((h), «expr = »(l.nth_le n h, l.nth_le n (lt_of_not_ge h')))] [":=", expr ⟨lt_of_not_ge h', rfl⟩],
-    rw ["[", "<-", expr nth_eq_some, ",", expr h, "]"] ["at", ident h₂],
-    cases [expr h₂] [] },
-  { solve_by_elim [] [] ["[", expr nth_len_le, "]"] [] }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+@[ simp ]
+  theorem
+    nth_eq_none_iff
+    : ∀ { l : List α } { n } , nth l n = none ↔ length l ≤ n
+    :=
+      by
+        intros
+          constructor
+          ·
+            intro h
+              byContra h'
+              have h₂ : ∃ h , l.nth_le n h = l.nth_le n lt_of_not_geₓ h' := ⟨ lt_of_not_geₓ h' , rfl ⟩
+              rw [ ← nth_eq_some , h ] at h₂
+              cases h₂
+          · solveByElim [ nth_len_le ]
 
 theorem nth_of_mem {a} {l : List α} (h : a ∈ l) : ∃ n, nth l n = some a :=
   let ⟨n, h, e⟩ := nth_le_of_mem h
@@ -1462,28 +1485,27 @@ theorem nth_zero (l : List α) : l.nth 0 = l.head' :=
   by 
     cases l <;> rfl
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem nth_injective
-{α : Type u}
-{xs : list α}
-{i j : exprℕ()}
-(h₀ : «expr < »(i, xs.length))
-(h₁ : nodup xs)
-(h₂ : «expr = »(xs.nth i, xs.nth j)) : «expr = »(i, j) :=
-begin
-  induction [expr xs] [] ["with", ident x, ident xs] ["generalizing", ident i, ident j],
-  { cases [expr h₀] [] },
-  { cases [expr i] []; cases [expr j] [],
-    case [ident nat.zero, ident nat.zero] { refl },
-    case [ident nat.succ, ident nat.succ] { congr,
-      cases [expr h₁] [],
-      apply [expr xs_ih]; solve_by_elim [] [] ["[", expr lt_of_succ_lt_succ, "]"] [] },
-    iterate [2] { dsimp [] [] [] ["at", ident h₂],
-      cases [expr h₁] ["with", "_", "_", ident h, ident h'],
-      cases [expr h x _ rfl] [],
-      rw [expr mem_iff_nth] [],
-      exact [expr ⟨_, h₂.symm⟩] <|> exact [expr ⟨_, h₂⟩] } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  nth_injective
+  { α : Type u } { xs : List α } { i j : ℕ } ( h₀ : i < xs.length ) ( h₁ : nodup xs ) ( h₂ : xs.nth i = xs.nth j )
+    : i = j
+  :=
+    by
+      induction' xs with x xs generalizing i j
+        · cases h₀
+        ·
+          cases i <;> cases j
+            case' Nat.zero , Nat.zero => rfl
+            case' Nat.succ , Nat.succ => congr cases h₁ apply xs_ih <;> solveByElim [ lt_of_succ_lt_succ ]
+            iterate
+              2
+              dsimp at h₂
+                cases' h₁ with _ _ h h'
+                cases h x _ rfl
+                rw [ mem_iff_nth ]
+                first | exact ⟨ _ , h₂.symm ⟩ | exact ⟨ _ , h₂ ⟩
 
 @[simp]
 theorem nth_map (f : α → β) : ∀ l n, nth (map f l) n = (nth l n).map f
@@ -1545,7 +1567,7 @@ theorem nth_le_append_right :
 | a :: l, _, n+1, h₁, h₂ =>
   by 
     dsimp 
-    conv  => toRHS congr skip rw [tsub_add_eq_tsub_tsub, tsub_right_comm, add_tsub_cancel_right]
+    conv  => rhs congr skip rw [tsub_add_eq_tsub_tsub, tsub_right_comm, add_tsub_cancel_right]
     rw [nth_le_append_right (nat.lt_succ_iff.mp h₁)]
 
 @[simp]
@@ -1599,13 +1621,19 @@ theorem nth_le_cons_length (x : α) (xs : List α) (n : ℕ) (h : n = xs.length)
     congr 
     simp [h]
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[ext #[]] theorem ext : ∀ {l₁ l₂ : list α}, ∀ n, «expr = »(nth l₁ n, nth l₂ n) → «expr = »(l₁, l₂)
-| «expr[ , ]»([]), «expr[ , ]»([]), h := rfl
-| «expr :: »(a, l₁), «expr[ , ]»([]), h := by have [ident h0] [] [":=", expr h 0]; contradiction
-| «expr[ , ]»([]), «expr :: »(a', l₂), h := by have [ident h0] [] [":=", expr h 0]; contradiction
-| «expr :: »(a, l₁), «expr :: »(a', l₂), h := by have [ident h0] [":", expr «expr = »(some a, some a')] [":=", expr h 0]; injection [expr h0] ["with", ident aa]; simp [] [] ["only"] ["[", expr aa, ",", expr ext (λ
-  n, h «expr + »(n, 1)), "]"] [] []; split; refl
+@[ext]
+theorem ext : ∀ {l₁ l₂ : List α}, (∀ n, nth l₁ n = nth l₂ n) → l₁ = l₂
+| [], [], h => rfl
+| a :: l₁, [], h =>
+  by 
+    have h0 := h 0 <;> contradiction
+| [], a' :: l₂, h =>
+  by 
+    have h0 := h 0 <;> contradiction
+| a :: l₁, a' :: l₂, h =>
+  by 
+    have h0 : some a = some a' := h 0 <;>
+      injection h0 with aa <;> simp only [aa, ext fun n => h (n+1)] <;> constructor <;> rfl
 
 theorem ext_le {l₁ l₂ : List α} (hl : length l₁ = length l₂) (h : ∀ n h₁ h₂, nth_le l₁ n h₁ = nth_le l₂ n h₂) :
   l₁ = l₂ :=
@@ -1653,26 +1681,27 @@ theorem index_of_inj [DecidableEq α] {l : List α} {x y : α} (hx : x ∈ l) (h
       by 
         subst h⟩
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nth_le_reverse_aux2 : ∀
-(l r : list α)
-(i : nat)
-(h1)
-(h2), «expr = »(nth_le (reverse_core l r) «expr - »(«expr - »(length l, 1), i) h1, nth_le l i h2)
-| «expr[ , ]»([]), r, i, h1, h2 := absurd h2 (nat.not_lt_zero _)
-| «expr :: »(a, l), r, 0, h1, h2 := begin
-  have [ident aux] [] [":=", expr nth_le_reverse_aux1 l «expr :: »(a, r) 0],
-  rw [expr zero_add] ["at", ident aux],
-  exact [expr aux _ (zero_lt_succ _)]
-end
-| «expr :: »(a, l), r, «expr + »(i, 1), h1, h2 := begin
-  have [ident aux] [] [":=", expr nth_le_reverse_aux2 l «expr :: »(a, r) i],
-  have [ident heq] [] [":=", expr calc
-     «expr = »(«expr - »(«expr - »(length «expr :: »(a, l), 1), «expr + »(i, 1)), «expr - »(length l, «expr + »(1, i))) : by rw [expr add_comm] []; refl
-     «expr = »(..., «expr - »(«expr - »(length l, 1), i)) : by rw ["<-", expr tsub_add_eq_tsub_tsub] []],
-  rw ["[", "<-", expr heq, "]"] ["at", ident aux],
-  apply [expr aux]
-end
+theorem nth_le_reverse_aux2 :
+  ∀ l r : List α i : Nat h1 h2, nth_le (reverse_core l r) (length l - 1 - i) h1 = nth_le l i h2
+| [], r, i, h1, h2 => absurd h2 (Nat.not_lt_zeroₓ _)
+| a :: l, r, 0, h1, h2 =>
+  by 
+    have aux := nth_le_reverse_aux1 l (a :: r) 0
+    rw [zero_addₓ] at aux 
+    exact aux _ (zero_lt_succ _)
+| a :: l, r, i+1, h1, h2 =>
+  by 
+    have aux := nth_le_reverse_aux2 l (a :: r) i 
+    have heq :=
+      calc (length (a :: l) - 1 - i+1) = length l - 1+i :=
+        by 
+          rw [add_commₓ] <;> rfl 
+        _ = length l - 1 - i :=
+        by 
+          rw [←tsub_add_eq_tsub_tsub]
+        
+    rw [←HEq] at aux 
+    apply aux
 
 @[simp]
 theorem nth_le_reverse (l : List α) (i : Nat) h1 h2 : nth_le (reverse l) (length l - 1 - i) h1 = nth_le l i h2 :=
@@ -1916,33 +1945,32 @@ theorem mem_insert_nth {a b : α} : ∀ {n : ℕ} {l : List α} hi : n ≤ l.len
     erw [List.mem_cons_iffₓ, mem_insert_nth (Nat.le_of_succ_le_succₓ h), List.mem_cons_iffₓ, ←Or.assoc,
       or_comm (a = a'), Or.assoc]
 
-theorem inj_on_insert_nth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
-  Set.InjOn (fun k => insert_nth k x l) { n | n ≤ l.length } :=
-  by 
-    induction' l with hd tl IH
-    ·
-      intro n hn m hm h 
-      simp only [Set.mem_singleton_iff, Set.set_of_eq_eq_singleton, length, nonpos_iff_eq_zero] at hn hm 
-      simp [hn, hm]
-    ·
-      intro n hn m hm h 
-      simp only [length, Set.mem_set_of_eq] at hn hm 
-      simp only [mem_cons_iff, not_or_distrib] at hx 
-      cases n <;> cases m
-      ·
-        rfl
-      ·
-        simpa [hx.left] using h
-      ·
-        simpa [Ne.symm hx.left] using h
-      ·
-        simp only [true_andₓ, eq_self_iff_true, insert_nth_succ_cons] at h 
-        rw [Nat.succ_inj']
-        refine' IH hx.right _ _ h
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  inj_on_insert_nth_index_of_not_mem
+  ( l : List α ) ( x : α ) ( hx : x ∉ l ) : Set.InjOn fun k => insert_nth k x l { n | n ≤ l.length }
+  :=
+    by
+      induction' l with hd tl IH
         ·
-          simpa [Nat.succ_le_succ_iff] using hn
+          intro n hn m hm h
+            simp only [ Set.mem_singleton_iff , Set.set_of_eq_eq_singleton , length , nonpos_iff_eq_zero ] at hn hm
+            simp [ hn , hm ]
         ·
-          simpa [Nat.succ_le_succ_iff] using hm
+          intro n hn m hm h
+            simp only [ length , Set.mem_set_of_eq ] at hn hm
+            simp only [ mem_cons_iff , not_or_distrib ] at hx
+            cases n <;> cases m
+            · rfl
+            · simpa [ hx.left ] using h
+            · simpa [ Ne.symm hx.left ] using h
+            ·
+              simp only [ true_andₓ , eq_self_iff_true , insert_nth_succ_cons ] at h
+                rw [ Nat.succ_inj' ]
+                refine' IH hx.right _ _ h
+                · simpa [ Nat.succ_le_succ_iff ] using hn
+                · simpa [ Nat.succ_le_succ_iff ] using hm
 
 theorem insert_nth_of_length_lt (l : List α) (x : α) (n : ℕ) (h : l.length < n) : insert_nth n x l = l :=
   by 
@@ -2042,14 +2070,17 @@ theorem nth_le_insert_nth_add_succ (l : List α) (x : α) (n k : ℕ) (hk' : (n+
       ·
         simpa [succ_add] using IH _ _ _
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem insert_nth_injective (n : exprℕ()) (x : α) : function.injective (insert_nth n x) :=
-begin
-  induction [expr n] [] ["with", ident n, ident IH] [],
-  { have [] [":", expr «expr = »(insert_nth 0 x, cons x)] [":=", expr funext (λ _, rfl)],
-    simp [] [] [] ["[", expr this, "]"] [] [] },
-  { rintros ["(", "_", "|", "⟨", ident a, ",", ident as, "⟩", ")", "(", "_", "|", "⟨", ident b, ",", ident bs, "⟩", ")", ident h]; simpa [] [] [] ["[", expr IH.eq_iff, "]"] [] ["using", expr h] <|> refl }
-end
+theorem insert_nth_injective (n : ℕ) (x : α) : Function.Injective (insert_nth n x) :=
+  by 
+    induction' n with n IH
+    ·
+      have  : insert_nth 0 x = cons x := funext fun _ => rfl 
+      simp [this]
+    ·
+      rintro (_ | ⟨a, as⟩) (_ | ⟨b, bs⟩) h <;>
+        first |
+          simpa [IH.eq_iff] using h|
+          rfl
 
 end InsertNth
 
@@ -2064,6 +2095,7 @@ theorem map_eq_foldr (f : α → β) (l : List α) : map f l = foldr (fun a bs =
   by 
     induction l <;> simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem map_congr {f g : α → β} : ∀ {l : List α}, (∀ x _ : x ∈ l, f x = g x) → map f l = map g l
 | [], _ => rfl
 | a :: l, h =>
@@ -2071,6 +2103,7 @@ theorem map_congr {f g : α → β} : ∀ {l : List α}, (∀ x _ : x ∈ l, f x
   by 
     rw [map, map, h₁, map_congr h₂]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem map_eq_map_iff {f g : α → β} {l : List α} : map f l = map g l ↔ ∀ x _ : x ∈ l, f x = g x :=
   by 
     refine' ⟨_, map_congr⟩
@@ -2083,11 +2116,11 @@ theorem map_eq_map_iff {f g : α → β} {l : List α} : map f l = map g l ↔ �
 
 theorem map_concat (f : α → β) (a : α) (l : List α) : map f (concat l a) = concat (map f l) (f a) :=
   by 
-    induction l <;> [rfl, simp only [concat_eq_append, cons_append, map, map_append]] <;> split  <;> rfl
+    induction l <;> [rfl, simp only [concat_eq_append, cons_append, map, map_append]] <;> constructor <;> rfl
 
 theorem map_id' {f : α → α} (h : ∀ x, f x = x) (l : List α) : map f l = l :=
   by 
-    induction l <;> [rfl, simp only [map]] <;> split  <;> rfl
+    induction l <;> [rfl, simp only [map]] <;> constructor <;> rfl
 
 theorem eq_nil_of_map_eq_nil {f : α → β} {l : List α} (h : map f l = nil) : l = nil :=
   eq_nil_of_length_eq_zero$
@@ -2101,7 +2134,8 @@ theorem map_join (f : α → β) (L : List (List α)) : map f (join L) = join (m
 
 theorem bind_ret_eq_map (f : α → β) (l : List α) : l.bind (List.ret ∘ f) = map f l :=
   by 
-    unfold List.bind <;> induction l <;> simp only [map, join, List.ret, cons_append, nil_append] <;> split  <;> rfl
+    unfold List.bind <;>
+      induction l <;> simp only [map, join, List.ret, cons_append, nil_append] <;> constructor <;> rfl
 
 @[simp]
 theorem map_eq_map {α β} (f : α → β) (l : List α) : f <$> l = map f l :=
@@ -2115,7 +2149,7 @@ theorem map_tail (f : α → β) l : map f (tail l) = tail (map f l) :=
 @[simp]
 theorem map_injective_iff {f : α → β} : injective (map f) ↔ injective f :=
   by 
-    split  <;> intro h x y hxy
+    constructor <;> intro h x y hxy
     ·
       suffices  : [x] = [y]
       ·
@@ -2148,6 +2182,7 @@ theorem map_comp_map (g : β → γ) (f : α → β) : map g ∘ map f = map (g 
     ext l 
     rw [comp_map]
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem map_filter_eq_foldr (f : α → β) (p : α → Prop) [DecidablePred p] (as : List α) :
   map f (filter p as) = foldr (fun a bs => if p a then f a :: bs else bs) [] as :=
   by 
@@ -2180,6 +2215,7 @@ theorem map₂_nil (f : α → β → γ) (l : List α) : map₂ f l [] = [] :=
   by 
     cases l <;> rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem map₂_flip (f : α → β → γ) : ∀ as bs, map₂ (flip f) bs as = map₂ f as bs
 | [], [] => rfl
@@ -2243,7 +2279,7 @@ theorem take_take : ∀ n m l : List α, take n (take m l) = take (min n m) l
     simp only [take_nil]
 | succ n, succ m, a :: l =>
   by 
-    simp only [take, min_succ_succ, take_take n m l] <;> split  <;> rfl
+    simp only [take, min_succ_succ, take_take n m l] <;> constructor <;> rfl
 
 theorem take_repeat (a : α) : ∀ n m : ℕ, take n (repeat a m) = repeat a (min n m)
 | n, 0 =>
@@ -2491,22 +2527,20 @@ theorem drop_append {l₁ l₂ : List α} (i : ℕ) : drop (l₁.length+i) (l₁
   by 
     simp [drop_append_eq_append_drop, take_all_of_le le_self_add]
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the big list to the small list. -/
-theorem nth_le_drop
-(L : list α)
-{i j : exprℕ()}
-(h : «expr < »(«expr + »(i, j), L.length)) : «expr = »(nth_le L «expr + »(i, j) h, nth_le (L.drop i) j (begin
-    have [ident A] [":", expr «expr < »(i, L.length)] [":=", expr lt_of_le_of_lt (nat.le.intro rfl) h],
-    rw [expr (take_append_drop i L).symm] ["at", ident h],
-    simpa [] [] ["only"] ["[", expr le_of_lt A, ",", expr min_eq_left, ",", expr add_lt_add_iff_left, ",", expr length_take, ",", expr length_append, "]"] [] ["using", expr h]
-  end)) :=
-begin
-  have [ident A] [":", expr «expr = »(length (take i L), i)] [],
-  by simp [] [] [] ["[", expr le_of_lt (lt_of_le_of_lt (nat.le.intro rfl) h), "]"] [] [],
-  rw ["[", expr nth_le_of_eq (take_append_drop i L).symm h, ",", expr nth_le_append_right, "]"] []; simp [] [] [] ["[", expr A, "]"] [] []
-end
+theorem nth_le_drop (L : List α) {i j : ℕ} (h : (i+j) < L.length) :
+  nth_le L (i+j) h =
+    nth_le (L.drop i) j
+      (by 
+        have A : i < L.length := lt_of_le_of_ltₓ (Nat.Le.intro rfl) h 
+        rw [(take_append_drop i L).symm] at h 
+        simpa only [le_of_ltₓ A, min_eq_leftₓ, add_lt_add_iff_left, length_take, length_append] using h) :=
+  by 
+    have A : length (take i L) = i
+    ·
+      simp [le_of_ltₓ (lt_of_le_of_ltₓ (Nat.Le.intro rfl) h)]
+    rw [nth_le_of_eq (take_append_drop i L).symm h, nth_le_append_right] <;> simp [A]
 
 /--  The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the small list to the big list. -/
@@ -2519,7 +2553,7 @@ theorem nth_drop (L : List α) (i j : ℕ) : nth (L.drop i) j = nth L (i+j) :=
   by 
     ext 
     simp only [nth_eq_some, nth_le_drop', Option.mem_def]
-    split  <;>
+    constructor <;>
       exact
         fun ⟨h, ha⟩ =>
           ⟨by 
@@ -2646,6 +2680,7 @@ end Take'
 /-! ### foldl, foldr -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem foldl_ext (f g : α → β → α) (a : α) {l : List β} (H : ∀ a : α, ∀ b _ : b ∈ l, f a b = g a b) :
   foldl f a l = foldl g a l :=
   by 
@@ -2655,6 +2690,7 @@ theorem foldl_ext (f g : α → β → α) (a : α) {l : List β} (H : ∀ a : �
     unfold foldl 
     rw [ih fun a b bin => H a b$ mem_cons_of_mem _ bin, H a hd (mem_cons_self _ _)]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem foldr_ext (f g : α → β → β) (b : β) {l : List α} (H : ∀ a _ : a ∈ l, ∀ b : β, f a b = g a b) :
   foldr f b l = foldr g b l :=
   by 
@@ -2722,7 +2758,7 @@ theorem foldr_eta : ∀ l : List α, foldr cons [] l = l
 | [] => rfl
 | x :: l =>
   by 
-    simp only [foldr_cons, foldr_eta l] <;> split  <;> rfl
+    simp only [foldr_cons, foldr_eta l] <;> constructor <;> rfl
 
 @[simp]
 theorem reverse_foldl {l : List α} : reverse (foldl (fun t h => h :: t) [] l) = l :=
@@ -2771,6 +2807,7 @@ theorem foldr_hom (l : List γ) (f : α → β) (op : γ → α → α) (op' : �
     revert a 
     induction l <;> intros  <;> [rfl, simp only [foldr]]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » l)
 theorem injective_foldl_comp {α : Type _} {l : List (α → α)} {f : α → α} (hl : ∀ f _ : f ∈ l, Function.Injective f)
   (hf : Function.Injective f) : Function.Injective (@List.foldlₓ (α → α) (α → α) Function.comp f l) :=
   by 
@@ -2929,7 +2966,7 @@ theorem scanr_aux_cons (f : α → β → β) (b : β) :
 theorem scanr_cons (f : α → β → β) (b : β) (a : α) (l : List α) :
   scanr f b (a :: l) = foldr f b (a :: l) :: scanr f b l :=
   by 
-    simp only [scanr, scanr_aux_cons, foldr_cons] <;> split  <;> rfl
+    simp only [scanr, scanr_aux_cons, foldr_cons] <;> constructor <;> rfl
 
 section FoldlEqFoldr
 
@@ -3134,6 +3171,7 @@ def split_on_p_aux' {α : Type u} (P : α → Prop) [DecidablePred P] : List α 
 | [], xs => [xs]
 | h :: t, xs => if P h then xs :: split_on_p_aux' t [] else split_on_p_aux' t (xs ++ [h])
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem split_on_p_aux_eq {α : Type u} (P : α → Prop) [DecidablePred P] (xs ys : List α) :
   split_on_p_aux' P xs ys = split_on_p_aux P xs ((· ++ ·) ys) :=
   by 
@@ -3152,6 +3190,7 @@ theorem split_on_p_aux_nil {α : Type u} (P : α → Prop) [DecidablePred P] (xs
     rw [split_on_p_aux_eq]
     rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 /-- The original list `L` can be recovered by joining the lists produced by `split_on_p p L`,
 interspersed with the elements `L.filter p`. -/
 theorem split_on_p_spec {α : Type u} (p : α → Prop) [DecidablePred p] (as : List α) :
@@ -3166,61 +3205,10 @@ theorem split_on_p_spec {α : Type u} (p : α → Prop) [DecidablePred p] (as : 
     induction as <;> intro  <;> simp only [split_on_p_aux', append_nil]
     splitIfs <;> simp [zip_with, join]
 
-/-! ### all & any -/
-
-
-@[simp]
-theorem all_nil (p : α → Bool) : all [] p = tt :=
-  rfl
-
-@[simp]
-theorem all_cons (p : α → Bool) (a : α) (l : List α) : all (a :: l) p = (p a && all l p) :=
-  rfl
-
-theorem all_iff_forall {p : α → Bool} {l : List α} : all l p ↔ ∀ a _ : a ∈ l, p a :=
-  by 
-    induction' l with a l ih
-    ·
-      exact iff_of_true rfl (forall_mem_nil _)
-    simp only [all_cons, band_coe_iff, ih, forall_mem_cons]
-
-theorem all_iff_forall_prop {p : α → Prop} [DecidablePred p] {l : List α} : (all l fun a => p a) ↔ ∀ a _ : a ∈ l, p a :=
-  by 
-    simp only [all_iff_forall, Bool.of_to_bool_iff]
-
-@[simp]
-theorem any_nil (p : α → Bool) : any [] p = ff :=
-  rfl
-
-@[simp]
-theorem any_cons (p : α → Bool) (a : α) (l : List α) : any (a :: l) p = (p a || any l p) :=
-  rfl
-
-theorem any_iff_exists {p : α → Bool} {l : List α} : any l p ↔ ∃ (a : _)(_ : a ∈ l), p a :=
-  by 
-    induction' l with a l ih
-    ·
-      exact iff_of_false Bool.not_ff (not_exists_mem_nil _)
-    simp only [any_cons, bor_coe_iff, ih, exists_mem_cons_iff]
-
-theorem any_iff_exists_prop {p : α → Prop} [DecidablePred p] {l : List α} :
-  (any l fun a => p a) ↔ ∃ (a : _)(_ : a ∈ l), p a :=
-  by 
-    simp [any_iff_exists]
-
-theorem any_of_mem {p : α → Bool} {a : α} {l : List α} (h₁ : a ∈ l) (h₂ : p a) : any l p :=
-  any_iff_exists.2 ⟨_, h₁, h₂⟩
-
-instance (priority := 500) decidable_forall_mem {p : α → Prop} [DecidablePred p] (l : List α) :
-  Decidable (∀ x _ : x ∈ l, p x) :=
-  decidableOfIff _ all_iff_forall_prop
-
-instance decidable_exists_mem {p : α → Prop} [DecidablePred p] (l : List α) : Decidable (∃ (x : _)(_ : x ∈ l), p x) :=
-  decidableOfIff _ any_iff_exists_prop
-
 /-! ### map for partial functions -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 /-- Partial map. If `f : Π a, p a → β` is a partial function defined on
   `a : α` satisfying `p`, then `pmap f l h` is essentially the same as `map f l`
   but is defined only when all members of `l` satisfy `p`, using the proof
@@ -3247,7 +3235,7 @@ theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {l : List α} (hx : x ∈ l
 @[simp]
 theorem pmap_eq_map (p : α → Prop) (f : α → β) (l : List α) H : @pmap _ _ p (fun a _ => f a) l H = map f l :=
   by 
-    induction l <;> [rfl, simp only [pmap, map]] <;> split  <;> rfl
+    induction l <;> [rfl, simp only [pmap, map]] <;> constructor <;> rfl
 
 theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a → β} (l : List α) {H₁ H₂}
   (h : ∀ a h₁ h₂, f a h₁ = g a h₂) : pmap f l H₁ = pmap g l H₂ :=
@@ -3257,12 +3245,12 @@ theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a �
 theorem map_pmap {p : α → Prop} (g : β → γ) (f : ∀ a, p a → β) l H :
   map g (pmap f l H) = pmap (fun a h => g (f a h)) l H :=
   by 
-    induction l <;> [rfl, simp only [pmap, map]] <;> split  <;> rfl
+    induction l <;> [rfl, simp only [pmap, map]] <;> constructor <;> rfl
 
 theorem pmap_map {p : β → Prop} (g : ∀ b, p b → γ) (f : α → β) l H :
   pmap g (map f l) H = pmap (fun a h => g (f a) h) l fun a h => H _ (mem_map_of_mem _ h) :=
   by 
-    induction l <;> [rfl, simp only [pmap, map]] <;> split  <;> rfl
+    induction l <;> [rfl, simp only [pmap, map]] <;> constructor <;> rfl
 
 theorem pmap_eq_map_attach {p : α → Prop} (f : ∀ a, p a → β) l H : pmap f l H = l.attach.map fun x => f x.1 (H _ x.2) :=
   by 
@@ -3272,10 +3260,17 @@ theorem attach_map_val (l : List α) : l.attach.map Subtype.val = l :=
   by 
     rw [attach, map_pmap] <;> exact (pmap_eq_map _ _ _ _).trans (map_id l)
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem mem_attach (l : list α) : ∀ x, «expr ∈ »(x, l.attach)
-| ⟨a, h⟩ := by have [] [] [":=", expr mem_map.1 (by rw ["[", expr attach_map_val, "]"] []; exact [expr h])]; { rcases [expr this, "with", "⟨", "⟨", "_", ",", "_", "⟩", ",", ident m, ",", ident rfl, "⟩"],
-  exact [expr m] }
+@[simp]
+theorem mem_attach (l : List α) : ∀ x, x ∈ l.attach
+| ⟨a, h⟩ =>
+  by 
+    have  :=
+        mem_map.1
+          (by 
+            rw [attach_map_val] <;> exact h) <;>
+      ·
+        rcases this with ⟨⟨_, _⟩, m, rfl⟩
+        exact m
 
 @[simp]
 theorem mem_pmap {p : α → Prop} {f : ∀ a, p a → β} {l H b} : b ∈ pmap f l H ↔ ∃ (a : _)(h : a ∈ l), f a (H a h) = b :=
@@ -3300,6 +3295,7 @@ theorem pmap_eq_nil {p : α → Prop} {f : ∀ a, p a → β} {l H} : pmap f l H
 theorem attach_eq_nil (l : List α) : l.attach = [] ↔ l = [] :=
   pmap_eq_nil
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem last_pmap {α β : Type _} (p : α → Prop) (f : ∀ a, p a → β) (l : List α) (hl₁ : ∀ a _ : a ∈ l, p a)
   (hl₂ : l ≠ []) : (l.pmap f hl₁).last (mt List.pmap_eq_nil.1 hl₂) = f (l.last hl₂) (hl₁ _ (List.last_mem hl₂)) :=
   by 
@@ -3313,6 +3309,7 @@ theorem last_pmap {α β : Type _} (p : α → Prop) (f : ∀ a, p a → β) (l 
       ·
         apply l_ih
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem nth_pmap {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (h : ∀ a _ : a ∈ l, p a) (n : ℕ) :
   nth (pmap f l h) n = Option.pmap f (nth l n) fun x H => h x (nth_mem H) :=
   by 
@@ -3322,6 +3319,7 @@ theorem nth_pmap {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (h : �
     ·
       cases n <;> simp [hl]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem nth_le_pmap {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (h : ∀ a _ : a ∈ l, p a) {n : ℕ}
   (hn : n < (pmap f l h).length) :
   nth_le (pmap f l h) n hn =
@@ -3357,6 +3355,7 @@ theorem find_cons_of_pos l (h : p a) : find p (a :: l) = some a :=
 theorem find_cons_of_neg l (h : ¬p a) : find p (a :: l) = find p l :=
   if_neg h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 @[simp]
 theorem find_eq_none : find p l = none ↔ ∀ x _ : x ∈ l, ¬p x :=
   by 
@@ -3430,6 +3429,7 @@ theorem lookmap_none : ∀ l : List α, (l.lookmap fun _ => none) = l
 | [] => rfl
 | a :: l => congr_argₓ (cons a) (lookmap_none l)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem lookmap_congr {f g : α → Option α} : ∀ {l : List α}, (∀ a _ : a ∈ l, f a = g a) → l.lookmap f = l.lookmap g
 | [], H => rfl
 | a :: l, H =>
@@ -3441,9 +3441,11 @@ theorem lookmap_congr {f g : α → Option α} : ∀ {l : List α}, (∀ a _ : a
     ·
       simp [lookmap_cons_some _ _ h, lookmap_cons_some _ _ (H₁.trans h)]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem lookmap_of_forall_not {l : List α} (H : ∀ a _ : a ∈ l, f a = none) : l.lookmap f = l :=
   (lookmap_congr H).trans (lookmap_none l)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » f a)
 theorem lookmap_map_eq (g : α → β) (h : ∀ a b _ : b ∈ f a, g a = g b) : ∀ l : List α, map g (l.lookmap f) = map g l
 | [] => rfl
 | a :: l =>
@@ -3454,6 +3456,7 @@ theorem lookmap_map_eq (g : α → β) (h : ∀ a b _ : b ∈ f a, g a = g b) : 
     ·
       simp [lookmap_cons_some _ _ h', h _ _ h']
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » f a)
 theorem lookmap_id' (h : ∀ a b _ : b ∈ f a, a = b) (l : List α) : l.lookmap f = l :=
   by 
     rw [←map_id (l.lookmap f), lookmap_map_eq, map_id] <;> exact h
@@ -3481,7 +3484,7 @@ theorem filter_map_cons_none {f : α → Option β} (a : α) (l : List α) (h : 
 theorem filter_map_cons_some (f : α → Option β) (a : α) (l : List α) {b : β} (h : f a = some b) :
   filter_map f (a :: l) = b :: filter_map f l :=
   by 
-    simp only [filter_map, h] <;> split  <;> rfl
+    simp only [filter_map, h] <;> constructor <;> rfl
 
 theorem filter_map_cons (f : α → Option β) (a : α) (l : List α) :
   filter_map f (a :: l) = Option.casesOn (f a) (filter_map f l) fun b => b :: filter_map f l :=
@@ -3510,7 +3513,7 @@ theorem filter_map_eq_map (f : α → β) : filter_map (some ∘ f) = map f :=
     ·
       rfl 
     simp only [filter_map_cons_some (some ∘ f) _ _ rfl, IH, map_cons]
-    split  <;> rfl
+    constructor <;> rfl
 
 theorem filter_map_eq_filter (p : α → Prop) [DecidablePred p] : filter_map (Option.guard p) = filter p :=
   by 
@@ -3521,7 +3524,7 @@ theorem filter_map_eq_filter (p : α → Prop) [DecidablePred p] : filter_map (O
     byCases' pa : p a
     ·
       simp only [filter_map, Option.guard, IH, if_pos pa, filter_cons_of_pos _ pa]
-      split  <;> rfl
+      constructor <;> rfl
     ·
       simp only [filter_map, Option.guard, IH, if_neg pa, filter_cons_of_neg _ pa]
 
@@ -3572,31 +3575,37 @@ theorem filter_map_some (l : List α) : filter_map some l = l :=
   by 
     rw [filter_map_eq_map] <;> apply map_id
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mem_filter_map
-(f : α → option β)
-(l : list α)
-{b : β} : «expr ↔ »(«expr ∈ »(b, filter_map f l), «expr∃ , »((a), «expr ∧ »(«expr ∈ »(a, l), «expr = »(f a, some b)))) :=
-begin
-  induction [expr l] [] ["with", ident a, ident l, ident IH] [],
-  { split,
-    { intro [ident H],
-      cases [expr H] [] },
-    { rintro ["⟨", "_", ",", ident H, ",", "_", "⟩"],
-      cases [expr H] [] } },
-  cases [expr h, ":", expr f a] ["with", ident b'],
-  { have [] [":", expr «expr ≠ »(f a, some b)] [],
-    { rw [expr h] [],
-      intro [],
-      contradiction },
-    simp [] [] ["only"] ["[", expr filter_map_cons_none _ _ h, ",", expr IH, ",", expr mem_cons_iff, ",", expr or_and_distrib_right, ",", expr exists_or_distrib, ",", expr exists_eq_left, ",", expr this, ",", expr false_or, "]"] [] [] },
-  { have [] [":", expr «expr ↔ »(«expr = »(f a, some b), «expr = »(b, b'))] [],
-    { split; intro [ident t],
-      { rw [expr t] ["at", ident h]; injection [expr h] [] },
-      { exact [expr «expr ▸ »(t.symm, h)] } },
-    simp [] [] ["only"] ["[", expr filter_map_cons_some _ _ _ h, ",", expr IH, ",", expr mem_cons_iff, ",", expr or_and_distrib_right, ",", expr exists_or_distrib, ",", expr this, ",", expr exists_eq_left, "]"] [] [] }
-end
+theorem mem_filter_map (f : α → Option β) (l : List α) {b : β} : b ∈ filter_map f l ↔ ∃ a, a ∈ l ∧ f a = some b :=
+  by 
+    induction' l with a l IH
+    ·
+      constructor
+      ·
+        intro H 
+        cases H
+      ·
+        rintro ⟨_, H, _⟩
+        cases H 
+    cases' h : f a with b'
+    ·
+      have  : f a ≠ some b
+      ·
+        rw [h]
+        intro 
+        contradiction 
+      simp only [filter_map_cons_none _ _ h, IH, mem_cons_iff, or_and_distrib_right, exists_or_distrib, exists_eq_left,
+        this, false_orₓ]
+    ·
+      have  : f a = some b ↔ b = b'
+      ·
+        constructor <;> intro t
+        ·
+          rw [t] at h <;> injection h
+        ·
+          exact t.symm ▸ h 
+      simp only [filter_map_cons_some _ _ _ h, IH, mem_cons_iff, or_and_distrib_right, exists_or_distrib, this,
+        exists_eq_left]
 
 theorem map_filter_map_of_inv (f : α → Option β) (g : β → α) (H : ∀ x : α, (f x).map g = some x) (l : List α) :
   map g (filter_map f l) = l :=
@@ -3653,20 +3662,26 @@ theorem reduce_option_length_le (l : List (Option α)) : l.reduce_option.length 
       ·
         simpa only [length, add_le_add_iff_right, reduce_option_cons_of_some] using hl
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem reduce_option_length_eq_iff
-{l : list (option α)} : «expr ↔ »(«expr = »(l.reduce_option.length, l.length), ∀ x «expr ∈ » l, option.is_some x) :=
-begin
-  induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
-  { simp [] [] ["only"] ["[", expr forall_const, ",", expr reduce_option_nil, ",", expr not_mem_nil, ",", expr forall_prop_of_false, ",", expr eq_self_iff_true, ",", expr length, ",", expr not_false_iff, "]"] [] [] },
-  { cases [expr hd] [],
-    { simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr forall_eq_or_imp, ",", expr bool.coe_sort_ff, ",", expr false_and, ",", expr reduce_option_cons_of_none, ",", expr length, ",", expr option.is_some_none, ",", expr iff_false, "]"] [] [],
-      intro [ident H],
-      have [] [] [":=", expr reduce_option_length_le tl],
-      rw [expr H] ["at", ident this],
-      exact [expr absurd (nat.lt_succ_self _) (not_lt_of_le this)] },
-    { simp [] [] ["only"] ["[", expr hl, ",", expr true_and, ",", expr mem_cons_iff, ",", expr forall_eq_or_imp, ",", expr add_left_inj, ",", expr bool.coe_sort_tt, ",", expr length, ",", expr option.is_some_some, ",", expr reduce_option_cons_of_some, "]"] [] [] } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
+theorem reduce_option_length_eq_iff {l : List (Option α)} :
+  l.reduce_option.length = l.length ↔ ∀ x _ : x ∈ l, Option.isSome x :=
+  by 
+    induction' l with hd tl hl
+    ·
+      simp only [forall_const, reduce_option_nil, not_mem_nil, forall_prop_of_false, eq_self_iff_true, length,
+        not_false_iff]
+    ·
+      cases hd
+      ·
+        simp only [mem_cons_iff, forall_eq_or_imp, Bool.coe_sort_ff, false_andₓ, reduce_option_cons_of_none, length,
+          Option.is_some_none, iff_falseₓ]
+        intro H 
+        have  := reduce_option_length_le tl 
+        rw [H] at this 
+        exact absurd (Nat.lt_succ_selfₓ _) (not_lt_of_le this)
+      ·
+        simp only [hl, true_andₓ, mem_cons_iff, forall_eq_or_imp, add_left_injₓ, Bool.coe_sort_tt, length,
+          Option.is_some_some, reduce_option_cons_of_some]
 
 theorem reduce_option_length_lt_iff {l : List (Option α)} : l.reduce_option.length < l.length ↔ none ∈ l :=
   by 
@@ -3714,6 +3729,7 @@ theorem filter_eq_foldr (p : α → Prop) [DecidablePred p] (l : List α) :
   by 
     induction l <;> simp [filter]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
 theorem filter_congr {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
   ∀ {l : List α}, (∀ x _ : x ∈ l, p x ↔ q x) → filter p l = filter q l
 | [], _ => rfl
@@ -3722,7 +3738,7 @@ theorem filter_congr {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
     rw [forall_mem_cons] at h <;>
       byCases' pa : p a <;> [simp only [filter_cons_of_pos _ pa, filter_cons_of_pos _ (h.1.1 pa), filter_congr h.2],
           simp only [filter_cons_of_neg _ pa, filter_cons_of_neg _ (mt h.1.2 pa), filter_congr h.2]] <;>
-        split  <;> rfl
+        constructor <;> rfl
 
 @[simp]
 theorem filter_subset (l : List α) : filter p l ⊆ l :=
@@ -3770,22 +3786,25 @@ theorem monotone_filter_left (p : α → Prop) [DecidablePred p] ⦃l l' : List 
     rw [mem_filter] at hx⊢
     exact ⟨h hx.left, hx.right⟩
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem filter_eq_self {l} : «expr ↔ »(«expr = »(filter p l, l), ∀ a «expr ∈ » l, p a) :=
-begin
-  induction [expr l] [] ["with", ident a, ident l, ident ih] [],
-  { exact [expr iff_of_true rfl (forall_mem_nil _)] },
-  rw [expr forall_mem_cons] [],
-  by_cases [expr p a],
-  { rw ["[", expr filter_cons_of_pos _ h, ",", expr cons_inj, ",", expr ih, ",", expr and_iff_right h, "]"] [] },
-  { rw ["[", expr filter_cons_of_neg _ h, "]"] [],
-    refine [expr iff_of_false _ (mt and.left h)],
-    intro [ident e],
-    have [] [] [":=", expr filter_sublist l],
-    rw [expr e] ["at", ident this],
-    exact [expr not_lt_of_ge (length_le_of_sublist this) (lt_succ_self _)] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
+theorem filter_eq_self {l} : filter p l = l ↔ ∀ a _ : a ∈ l, p a :=
+  by 
+    induction' l with a l ih
+    ·
+      exact iff_of_true rfl (forall_mem_nil _)
+    rw [forall_mem_cons]
+    byCases' p a
+    ·
+      rw [filter_cons_of_pos _ h, cons_inj, ih, and_iff_right h]
+    ·
+      rw [filter_cons_of_neg _ h]
+      refine' iff_of_false _ (mt And.left h)
+      intro e 
+      have  := filter_sublist l 
+      rw [e] at this 
+      exact not_lt_of_geₓ (length_le_of_sublist this) (lt_succ_self _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem filter_eq_nil {l} : filter p l = [] ↔ ∀ a _ : a ∈ l, ¬p a :=
   by 
     simp only [eq_nil_iff_forall_not_mem, mem_filter, not_and]
@@ -4032,7 +4051,7 @@ theorem suffix_or_suffix_of_suffix {l₁ l₂ l₃ : List α} (h₁ : l₁ <:+ l
 
 theorem suffix_cons_iff {x : α} {l₁ l₂ : List α} : l₁ <:+ x :: l₂ ↔ l₁ = x :: l₂ ∨ l₁ <:+ l₂ :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨⟨hd, tl⟩, hl₃⟩
       ·
@@ -4160,6 +4179,7 @@ instance decidable_suffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable 
   if hl : len1 ≤ len2 then decidableOfIff' (l₁ = drop (len2 - len1) l₂) suffix_iff_eq_drop else
     is_false$ fun h => hl$ length_le_of_sublist$ h.sublist
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:514:6: unsupported: specialize @hyp
 theorem prefix_take_le_iff {L : List (List (Option α))} {m n : ℕ} (hm : m < L.length) : take m L <+: take n L ↔ m ≤ n :=
   by 
     simp only [prefix_iff_eq_take, length_take]
@@ -4170,7 +4190,7 @@ theorem prefix_take_le_iff {L : List (List (Option α))} {m n : ℕ} (hm : m < L
       cases n
       ·
         simp only [Nat.nat_zero_eq_zero, nonpos_iff_eq_zero, take, take_nil]
-        split 
+        constructor
         ·
           cases L
           ·
@@ -4193,7 +4213,7 @@ theorem prefix_take_le_iff {L : List (List (Option α))} {m n : ℕ} (hm : m < L
 
 theorem cons_prefix_iff {l l' : List α} {x y : α} : x :: l <+: y :: l' ↔ x = y ∧ l <+: l' :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨L, hL⟩
       simp only [cons_append] at hL 
@@ -4252,6 +4272,7 @@ theorem is_infix.filter (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄
     rw [filter_append, filter_append]
     exact infix_append _ _ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » inits t)
 @[simp]
 theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
 | s, [] =>
@@ -4444,7 +4465,7 @@ theorem insert_of_mem {a : α} {l : List α} (h : a ∈ l) : insert a l = l :=
 @[simp]
 theorem insert_of_not_mem {a : α} {l : List α} (h : a ∉ l) : insert a l = a :: l :=
   by 
-    simp only [insert.def, if_neg h] <;> split  <;> rfl
+    simp only [insert.def, if_neg h] <;> constructor <;> rfl
 
 @[simp]
 theorem mem_insert_iff {a b : α} {l : List α} : a ∈ insert b l ↔ a = b ∨ a ∈ l :=
@@ -4516,10 +4537,12 @@ theorem erasep_cons_of_neg {a : α} {l : List α} (h : ¬p a) : (a :: l).erasep 
   by 
     simp [erasep_cons, h]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 theorem erasep_of_forall_not {l : List α} (h : ∀ a _ : a ∈ l, ¬p a) : l.erasep p = l :=
   by 
     induction' l with _ _ ih <;> [rfl, simp [h _ (Or.inl rfl), ih (forall_mem_of_forall_mem_cons h)]]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l₁)
 theorem exists_of_erasep {l : List α} {a} (al : a ∈ l) (pa : p a) :
   ∃ a l₁ l₂, (∀ b _ : b ∈ l₁, ¬p b) ∧ p a ∧ l = l₁ ++ a :: l₂ ∧ l.erasep p = l₁ ++ l₂ :=
   by 
@@ -4544,6 +4567,8 @@ theorem exists_of_erasep {l : List α} {a} (al : a ∈ l) (pa : p a) :
           by 
             simp [pb, h₄]⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l₁)
 theorem exists_or_eq_self_of_erasep (p : α → Prop) [DecidablePred p] (l : List α) :
   l.erasep p = l ∨ ∃ a l₁ l₂, (∀ b _ : b ∈ l₁, ¬p b) ∧ p a ∧ l = l₁ ++ a :: l₂ ∧ l.erasep p = l₁ ++ l₂ :=
   by 
@@ -4568,6 +4593,7 @@ theorem erasep_append_left {a : α} (pa : p a) : ∀ {l₁ : List α} l₂, a �
     rintro rfl 
     exact pa
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l₁)
 theorem erasep_append_right : ∀ {l₁ : List α} l₂, (∀ b _ : b ∈ l₁, ¬p b) → (l₁ ++ l₂).erasep p = l₁ ++ l₂.erasep p
 | [], l₂, h => rfl
 | x :: xs, l₂, h =>
@@ -4599,22 +4625,22 @@ theorem sublist.erasep {l₁ l₂ : List α} (s : l₁ <+ l₂) : l₁.erasep p 
 theorem mem_of_mem_erasep {a : α} {l : List α} : a ∈ l.erasep p → a ∈ l :=
   @erasep_subset _ _ _ _ _
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mem_erasep_of_neg
-{a : α}
-{l : list α}
-(pa : «expr¬ »(p a)) : «expr ↔ »(«expr ∈ »(a, l.erasep p), «expr ∈ »(a, l)) :=
-⟨mem_of_mem_erasep, λ al, begin
-   rcases [expr exists_or_eq_self_of_erasep p l, "with", ident h, "|", "⟨", ident c, ",", ident l₁, ",", ident l₂, ",", ident h₁, ",", ident h₂, ",", ident h₃, ",", ident h₄, "⟩"],
-   { rwa [expr h] [] },
-   { rw [expr h₄] [],
-     rw [expr h₃] ["at", ident al],
-     have [] [":", expr «expr ≠ »(a, c)] [],
-     { rintro [ident rfl],
-       exact [expr pa.elim h₂] },
-     simpa [] [] [] ["[", expr this, "]"] [] ["using", expr al] }
- end⟩
+theorem mem_erasep_of_neg {a : α} {l : List α} (pa : ¬p a) : a ∈ l.erasep p ↔ a ∈ l :=
+  ⟨mem_of_mem_erasep,
+    fun al =>
+      by 
+        rcases exists_or_eq_self_of_erasep p l with (h | ⟨c, l₁, l₂, h₁, h₂, h₃, h₄⟩)
+        ·
+          rwa [h]
+        ·
+          rw [h₄]
+          rw [h₃] at al 
+          have  : a ≠ c
+          ·
+            rintro rfl 
+            exact pa.elim h₂ 
+          simpa [this] using al⟩
 
 theorem erasep_map (f : β → α) : ∀ l : List β, (map f l).erasep p = map f (l.erasep (p ∘ f))
 | [] => rfl
@@ -4653,7 +4679,7 @@ theorem erase_cons_head (a : α) (l : List α) : (a :: l).erase a = l :=
 @[simp]
 theorem erase_cons_tail {a b : α} (l : List α) (h : b ≠ a) : (b :: l).erase a = b :: l.erase a :=
   by 
-    simp only [erase_cons, if_neg h] <;> split  <;> rfl
+    simp only [erase_cons, if_neg h] <;> constructor <;> rfl
 
 theorem erase_eq_erasep (a : α) (l : List α) : l.erase a = l.erasep (Eq a) :=
   by 
@@ -5018,6 +5044,9 @@ theorem map₂_left_nil_right : map₂_left f as [] = as.map fun a => f a none :
   by 
     cases as <;> rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem map₂_left_eq_map₂_left' : ∀ as bs, map₂_left f as bs = (map₂_left' f as bs).fst
 | [], bs =>
   by 
@@ -5029,6 +5058,9 @@ theorem map₂_left_eq_map₂_left' : ∀ as bs, map₂_left f as bs = (map₂_l
   by 
     simp 
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem map₂_left_eq_map₂ : ∀ as bs, length as ≤ length bs → map₂_left f as bs = map₂ (fun a b => f a (some b)) as bs
 | [], [], h =>
   by 
@@ -5075,13 +5107,10 @@ theorem map₂_right_eq_map₂_right' : map₂_right f as bs = (map₂_right' f 
   by 
     simp only [map₂_right, map₂_right', map₂_left_eq_map₂_left']
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map₂_right_eq_map₂
-(h : «expr ≤ »(length bs, length as)) : «expr = »(map₂_right f as bs, map₂ (λ a b, f (some a) b) as bs) :=
-begin
-  have [] [":", expr «expr = »(λ a b, flip f a (some b), flip (λ a b, f (some a) b))] [":=", expr rfl],
-  simp [] [] ["only"] ["[", expr map₂_right, ",", expr map₂_left_eq_map₂, ",", expr map₂_flip, ",", "*", "]"] [] []
-end
+theorem map₂_right_eq_map₂ (h : length bs ≤ length as) : map₂_right f as bs = map₂ (fun a b => f (some a) b) as bs :=
+  by 
+    have  : (fun a b => flip f a (some b)) = flip fun a b => f (some a) b := rfl 
+    simp only [map₂_right, map₂_left_eq_map₂, map₂_flip]
 
 end Map₂Right
 

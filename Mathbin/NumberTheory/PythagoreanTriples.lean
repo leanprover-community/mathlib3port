@@ -33,7 +33,7 @@ theorem Int.sq_ne_two_mod_four (z : ℤ) : (z*z) % 4 ≠ 2 :=
     rw [←Zmod.int_coe_eq_int_coe_iff']
     simpa using sq_ne_two_fin_zmod_four _
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -70,18 +70,16 @@ theorem symm : PythagoreanTriple y x z :=
 /-- A triple is still a triple if you multiply `x`, `y` and `z`
 by a constant `k`. -/
 theorem mul (k : ℤ) : PythagoreanTriple (k*x) (k*y) (k*z) :=
-  by 
-    byCases' hk : k = 0
-    ·
-      simp only [PythagoreanTriple, hk, zero_mul, zero_addₓ]
-    ·
-      calc (((k*x)*k*x)+(k*y)*k*y) = (k^2)*(x*x)+y*y :=
-        by 
-          ring _ = (k^2)*z*z :=
-        by 
-          rw [h.eq]_ = (k*z)*k*z :=
-        by 
-          ring
+  calc (((k*x)*k*x)+(k*y)*k*y) = (k^2)*(x*x)+y*y :=
+    by 
+      ring 
+    _ = (k^2)*z*z :=
+    by 
+      rw [h.eq]
+    _ = (k*z)*k*z :=
+    by 
+      ring
+    
 
 omit h
 
@@ -123,12 +121,12 @@ theorem mul_is_classified (k : ℤ) (hc : h.is_classified) : (h.mul k).IsClassif
       use k*l, m, n 
       apply And.intro _ co 
       left 
-      split  <;> ring
+      constructor <;> ring
     ·
       use k*l, m, n 
       apply And.intro _ co 
       right 
-      split  <;> ring
+      constructor <;> ring
 
 theorem even_odd_of_coprime (hc : Int.gcdₓ x y = 1) : x % 2 = 0 ∧ y % 2 = 1 ∨ x % 2 = 1 ∧ y % 2 = 0 :=
   by 
@@ -168,64 +166,72 @@ theorem even_odd_of_coprime (hc : Int.gcdₓ x y = 1) : x % 2 = 0 ∧ y % 2 = 1 
           ring]
       normNum [Int.add_mod]
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem gcd_dvd : «expr ∣ »((int.gcd x y : exprℤ()), z) :=
-begin
-  by_cases [expr h0, ":", expr «expr = »(int.gcd x y, 0)],
-  { have [ident hx] [":", expr «expr = »(x, 0)] [],
-    { apply [expr int.nat_abs_eq_zero.mp],
-      apply [expr nat.eq_zero_of_gcd_eq_zero_left h0] },
-    have [ident hy] [":", expr «expr = »(y, 0)] [],
-    { apply [expr int.nat_abs_eq_zero.mp],
-      apply [expr nat.eq_zero_of_gcd_eq_zero_right h0] },
-    have [ident hz] [":", expr «expr = »(z, 0)] [],
-    { simpa [] [] ["only"] ["[", expr pythagorean_triple, ",", expr hx, ",", expr hy, ",", expr add_zero, ",", expr zero_eq_mul, ",", expr mul_zero, ",", expr or_self, "]"] [] ["using", expr h] },
-    simp [] [] ["only"] ["[", expr hz, ",", expr dvd_zero, "]"] [] [] },
-  obtain ["⟨", ident k, ",", ident x0, ",", ident y0, ",", ident k0, ",", ident h2, ",", ident rfl, ",", ident rfl, "⟩", ":", expr «expr∃ , »((k : exprℕ())
-    (x0
-     y0), «expr ∧ »(«expr < »(0, k), «expr ∧ »(«expr = »(int.gcd x0 y0, 1), «expr ∧ »(«expr = »(x, «expr * »(x0, k)), «expr = »(y, «expr * »(y0, k)))))), ":=", expr int.exists_gcd_one' (nat.pos_of_ne_zero h0)],
-  rw ["[", expr int.gcd_mul_right, ",", expr h2, ",", expr int.nat_abs_of_nat, ",", expr one_mul, "]"] [],
-  rw ["[", "<-", expr int.pow_dvd_pow_iff (exprdec_trivial() : «expr < »(0, 2)), ",", expr sq z, ",", "<-", expr h.eq, "]"] [],
-  rw [expr (by ring [] : «expr = »(«expr + »(«expr * »(«expr * »(x0, k), «expr * »(x0, k)), «expr * »(«expr * »(y0, k), «expr * »(y0, k))), «expr * »(«expr ^ »(k, 2), «expr + »(«expr * »(x0, x0), «expr * »(y0, y0)))))] [],
-  exact [expr dvd_mul_right _ _]
-end
+theorem gcd_dvd : (Int.gcdₓ x y : ℤ) ∣ z :=
+  by 
+    byCases' h0 : Int.gcdₓ x y = 0
+    ·
+      have hx : x = 0
+      ·
+        apply int.nat_abs_eq_zero.mp 
+        apply Nat.eq_zero_of_gcd_eq_zero_leftₓ h0 
+      have hy : y = 0
+      ·
+        apply int.nat_abs_eq_zero.mp 
+        apply Nat.eq_zero_of_gcd_eq_zero_rightₓ h0 
+      have hz : z = 0
+      ·
+        simpa only [PythagoreanTriple, hx, hy, add_zeroₓ, zero_eq_mul, mul_zero, or_selfₓ] using h 
+      simp only [hz, dvd_zero]
+    obtain ⟨k, x0, y0, k0, h2, rfl, rfl⟩ : ∃ (k : ℕ)(x0 y0 : _), 0 < k ∧ Int.gcdₓ x0 y0 = 1 ∧ (x = x0*k) ∧ y = y0*k :=
+      Int.exists_gcd_one' (Nat.pos_of_ne_zeroₓ h0)
+    rw [Int.gcd_mul_right, h2, Int.nat_abs_of_nat, one_mulₓ]
+    rw
+      [←Int.pow_dvd_pow_iff
+        (by 
+          decide :
+        0 < 2),
+      sq z, ←h.eq]
+    rw
+      [(by 
+        ring :
+      (((x0*k)*x0*k)+(y0*k)*y0*k) = (k^2)*(x0*x0)+y0*y0)]
+    exact dvd_mul_right _ _
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem normalize : pythagorean_triple «expr / »(x, int.gcd x y) «expr / »(y, int.gcd x y) «expr / »(z, int.gcd x y) :=
-begin
-  by_cases [expr h0, ":", expr «expr = »(int.gcd x y, 0)],
-  { have [ident hx] [":", expr «expr = »(x, 0)] [],
-    { apply [expr int.nat_abs_eq_zero.mp],
-      apply [expr nat.eq_zero_of_gcd_eq_zero_left h0] },
-    have [ident hy] [":", expr «expr = »(y, 0)] [],
-    { apply [expr int.nat_abs_eq_zero.mp],
-      apply [expr nat.eq_zero_of_gcd_eq_zero_right h0] },
-    have [ident hz] [":", expr «expr = »(z, 0)] [],
-    { simpa [] [] ["only"] ["[", expr pythagorean_triple, ",", expr hx, ",", expr hy, ",", expr add_zero, ",", expr zero_eq_mul, ",", expr mul_zero, ",", expr or_self, "]"] [] ["using", expr h] },
-    simp [] [] ["only"] ["[", expr hx, ",", expr hy, ",", expr hz, ",", expr int.zero_div, "]"] [] [],
-    exact [expr zero] },
-  rcases [expr h.gcd_dvd, "with", "⟨", ident z0, ",", ident rfl, "⟩"],
-  obtain ["⟨", ident k, ",", ident x0, ",", ident y0, ",", ident k0, ",", ident h2, ",", ident rfl, ",", ident rfl, "⟩", ":", expr «expr∃ , »((k : exprℕ())
-    (x0
-     y0), «expr ∧ »(«expr < »(0, k), «expr ∧ »(«expr = »(int.gcd x0 y0, 1), «expr ∧ »(«expr = »(x, «expr * »(x0, k)), «expr = »(y, «expr * »(y0, k)))))), ":=", expr int.exists_gcd_one' (nat.pos_of_ne_zero h0)],
-  have [ident hk] [":", expr «expr ≠ »((k : exprℤ()), 0)] [],
-  { norm_cast [],
-    rwa [expr pos_iff_ne_zero] ["at", ident k0] },
-  rw ["[", expr int.gcd_mul_right, ",", expr h2, ",", expr int.nat_abs_of_nat, ",", expr one_mul, "]"] ["at", ident h, "⊢"],
-  rw ["[", expr mul_comm x0, ",", expr mul_comm y0, ",", expr mul_iff k hk, "]"] ["at", ident h],
-  rwa ["[", expr int.mul_div_cancel _ hk, ",", expr int.mul_div_cancel _ hk, ",", expr int.mul_div_cancel_left _ hk, "]"] []
-end
+theorem normalize : PythagoreanTriple (x / Int.gcdₓ x y) (y / Int.gcdₓ x y) (z / Int.gcdₓ x y) :=
+  by 
+    byCases' h0 : Int.gcdₓ x y = 0
+    ·
+      have hx : x = 0
+      ·
+        apply int.nat_abs_eq_zero.mp 
+        apply Nat.eq_zero_of_gcd_eq_zero_leftₓ h0 
+      have hy : y = 0
+      ·
+        apply int.nat_abs_eq_zero.mp 
+        apply Nat.eq_zero_of_gcd_eq_zero_rightₓ h0 
+      have hz : z = 0
+      ·
+        simpa only [PythagoreanTriple, hx, hy, add_zeroₓ, zero_eq_mul, mul_zero, or_selfₓ] using h 
+      simp only [hx, hy, hz, Int.zero_div]
+      exact zero 
+    rcases h.gcd_dvd with ⟨z0, rfl⟩
+    obtain ⟨k, x0, y0, k0, h2, rfl, rfl⟩ : ∃ (k : ℕ)(x0 y0 : _), 0 < k ∧ Int.gcdₓ x0 y0 = 1 ∧ (x = x0*k) ∧ y = y0*k :=
+      Int.exists_gcd_one' (Nat.pos_of_ne_zeroₓ h0)
+    have hk : (k : ℤ) ≠ 0
+    ·
+      normCast 
+      rwa [pos_iff_ne_zero] at k0 
+    rw [Int.gcd_mul_right, h2, Int.nat_abs_of_nat, one_mulₓ] at h⊢
+    rw [mul_commₓ x0, mul_commₓ y0, mul_iff k hk] at h 
+    rwa [Int.mul_div_cancel _ hk, Int.mul_div_cancel _ hk, Int.mul_div_cancel_left _ hk]
 
 theorem is_classified_of_is_primitive_classified (hp : h.is_primitive_classified) : h.is_classified :=
   by 
     obtain ⟨m, n, H⟩ := hp 
     use 1, m, n 
-    rcases H with ⟨⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, co, pp⟩ <;>
-      ·
-        apply And.intro _ co 
-        rw [one_mulₓ]
-        rw [one_mulₓ]
-        tauto
+    rcases H with ⟨t, co, pp⟩
+    rw [one_mulₓ, one_mulₓ]
+    exact ⟨t, co⟩
 
 theorem is_classified_of_normalize_is_primitive_classified (hc : h.normalize.is_primitive_classified) :
   h.is_classified :=
@@ -239,20 +245,22 @@ theorem is_classified_of_normalize_is_primitive_classified (hc : h.normalize.is_
     ·
       exact h.gcd_dvd
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ne_zero_of_coprime (hc : «expr = »(int.gcd x y, 1)) : «expr ≠ »(z, 0) :=
-begin
-  suffices [] [":", expr «expr < »(0, «expr * »(z, z))],
-  { rintro [ident rfl],
-    norm_num [] ["at", ident this] },
-  rw ["[", "<-", expr h.eq, ",", "<-", expr sq, ",", "<-", expr sq, "]"] [],
-  have [ident hc'] [":", expr «expr ≠ »(int.gcd x y, 0)] [],
-  { rw [expr hc] [],
-    exact [expr one_ne_zero] },
-  cases [expr int.ne_zero_of_gcd hc'] ["with", ident hxz, ident hyz],
-  { apply [expr lt_add_of_pos_of_le (sq_pos_of_ne_zero x hxz) (sq_nonneg y)] },
-  { apply [expr lt_add_of_le_of_pos (sq_nonneg x) (sq_pos_of_ne_zero y hyz)] }
-end
+theorem ne_zero_of_coprime (hc : Int.gcdₓ x y = 1) : z ≠ 0 :=
+  by 
+    suffices  : 0 < z*z
+    ·
+      rintro rfl 
+      normNum  at this 
+    rw [←h.eq, ←sq, ←sq]
+    have hc' : Int.gcdₓ x y ≠ 0
+    ·
+      rw [hc]
+      exact one_ne_zero 
+    cases' Int.ne_zero_of_gcd hc' with hxz hyz
+    ·
+      apply lt_add_of_pos_of_le (sq_pos_of_ne_zero x hxz) (sq_nonneg y)
+    ·
+      apply lt_add_of_le_of_pos (sq_nonneg x) (sq_pos_of_ne_zero y hyz)
 
 theorem is_primitive_classified_of_coprime_of_zero_left (hc : Int.gcdₓ x y = 1) (hx : x = 0) :
   h.is_primitive_classified :=
@@ -294,46 +302,54 @@ For the classification of pythogorean triples, we will use a parametrization of 
 
 variable {K : Type _} [Field K]
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--  A parameterization of the unit circle that is useful for classifying Pythagorean triples.
  (To be applied in the case where `K = ℚ`.) -/
-def circle_equiv_gen
-(hk : ∀
- x : K, «expr ≠ »(«expr + »(1, «expr ^ »(x, 2)), 0)) : «expr ≃ »(K, {p : «expr × »(K, K) // «expr ∧ »(«expr = »(«expr + »(«expr ^ »(p.1, 2), «expr ^ »(p.2, 2)), 1), «expr ≠ »(p.2, «expr- »(1)))}) :=
-{ to_fun := λ
-  x, ⟨⟨«expr / »(«expr * »(2, x), «expr + »(1, «expr ^ »(x, 2))), «expr / »(«expr - »(1, «expr ^ »(x, 2)), «expr + »(1, «expr ^ »(x, 2)))⟩, by { field_simp [] ["[", expr hk x, ",", expr div_pow, "]"] [] [],
-     ring [] }, begin
-     simp [] [] ["only"] ["[", expr ne.def, ",", expr div_eq_iff (hk x), ",", "<-", expr neg_mul_eq_neg_mul, ",", expr one_mul, ",", expr neg_add, ",", expr sub_eq_add_neg, ",", expr add_left_inj, "]"] [] [],
-     simpa [] [] ["only"] ["[", expr eq_neg_iff_add_eq_zero, ",", expr one_pow, "]"] [] ["using", expr hk 1]
-   end⟩,
-  inv_fun := λ p, «expr / »((p : «expr × »(K, K)).1, «expr + »((p : «expr × »(K, K)).2, 1)),
-  left_inv := λ x, begin
-    have [ident h2] [":", expr «expr = »((«expr + »(1, 1) : K), 2)] [":=", expr rfl],
-    have [ident h3] [":", expr «expr ≠ »((2 : K), 0)] [],
-    { convert [] [expr hk 1] [],
-      rw ["[", expr one_pow 2, ",", expr h2, "]"] [] },
-    field_simp [] ["[", expr hk x, ",", expr h2, ",", expr add_assoc, ",", expr add_comm, ",", expr add_sub_cancel'_right, ",", expr mul_comm, "]"] [] []
-  end,
-  right_inv := λ ⟨⟨x, y⟩, hxy, hy⟩, begin
-    change [expr «expr = »(«expr + »(«expr ^ »(x, 2), «expr ^ »(y, 2)), 1)] [] ["at", ident hxy],
-    have [ident h2] [":", expr «expr ≠ »(«expr + »(y, 1), 0)] [],
-    { apply [expr mt eq_neg_of_add_eq_zero],
-      exact [expr hy] },
-    have [ident h3] [":", expr «expr = »(«expr + »(«expr ^ »(«expr + »(y, 1), 2), «expr ^ »(x, 2)), «expr * »(2, «expr + »(y, 1)))] [],
-    { rw ["[", expr (add_neg_eq_iff_eq_add.mpr hxy.symm).symm, "]"] [],
-      ring [] },
-    have [ident h4] [":", expr «expr ≠ »((2 : K), 0)] [],
-    { convert [] [expr hk 1] [],
-      rw [expr one_pow 2] [],
-      refl },
-    simp [] [] ["only"] ["[", expr prod.mk.inj_iff, ",", expr subtype.mk_eq_mk, "]"] [] [],
-    split,
-    { field_simp [] ["[", expr h3, "]"] [] [],
-      ring [] },
-    { field_simp [] ["[", expr h3, "]"] [] [],
-      rw ["[", "<-", expr add_neg_eq_iff_eq_add.mpr hxy.symm, "]"] [],
-      ring [] }
-  end }
+def circleEquivGen (hk : ∀ x : K, (1+x^2) ≠ 0) : K ≃ { p : K × K // ((p.1^2)+p.2^2) = 1 ∧ p.2 ≠ -1 } :=
+  { toFun :=
+      fun x =>
+        ⟨⟨(2*x) / 1+x^2, (1 - (x^2)) / 1+x^2⟩,
+          by 
+            fieldSimp [hk x, div_pow]
+            ring,
+          by 
+            simp only [Ne.def, div_eq_iff (hk x), ←neg_mul_eq_neg_mul, one_mulₓ, neg_add, sub_eq_add_neg, add_left_injₓ]
+            simpa only [eq_neg_iff_add_eq_zero, one_pow] using hk 1⟩,
+    invFun := fun p => (p : K × K).1 / (p : K × K).2+1,
+    left_inv :=
+      fun x =>
+        by 
+          have h2 : (1+1 : K) = 2 := rfl 
+          have h3 : (2 : K) ≠ 0
+          ·
+            convert hk 1
+            rw [one_pow 2, h2]
+          fieldSimp [hk x, h2, add_assocₓ, add_commₓ, add_sub_cancel'_right, mul_commₓ],
+    right_inv :=
+      fun ⟨⟨x, y⟩, hxy, hy⟩ =>
+        by 
+          change ((x^2)+y^2) = 1 at hxy 
+          have h2 : (y+1) ≠ 0
+          ·
+            apply mt eq_neg_of_add_eq_zero 
+            exact hy 
+          have h3 : (((y+1)^2)+x^2) = 2*y+1
+          ·
+            rw [(add_neg_eq_iff_eq_add.mpr hxy.symm).symm]
+            ring 
+          have h4 : (2 : K) ≠ 0
+          ·
+            convert hk 1
+            rw [one_pow 2]
+            rfl 
+          simp only [Prod.mk.inj_iffₓ, Subtype.mk_eq_mk]
+          constructor
+          ·
+            fieldSimp [h3]
+            ring
+          ·
+            fieldSimp [h3]
+            rw [←add_neg_eq_iff_eq_add.mpr hxy.symm]
+            ring }
 
 @[simp]
 theorem circle_equiv_apply (hk : ∀ x : K, (1+x^2) ≠ 0) (x : K) :
@@ -347,37 +363,37 @@ theorem circle_equiv_symm_apply (hk : ∀ x : K, (1+x^2) ≠ 0) (v : { p : K × 
 
 end circleEquivGen
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem coprime_sq_sub_sq_add_of_even_odd
-{m n : exprℤ()}
-(h : «expr = »(int.gcd m n, 1))
-(hm : «expr = »(«expr % »(m, 2), 0))
-(hn : «expr = »(«expr % »(n, 2), 1)) : «expr = »(int.gcd «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)) «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 1) :=
-begin
-  by_contradiction [ident H],
-  obtain ["⟨", ident p, ",", ident hp, ",", ident hp1, ",", ident hp2, "⟩", ":=", expr nat.prime.not_coprime_iff_dvd.mp H],
-  rw ["<-", expr int.coe_nat_dvd_left] ["at", ident hp1, ident hp2],
-  have [ident h2m] [":", expr «expr ∣ »((p : exprℤ()), «expr * »(2, «expr ^ »(m, 2)))] [],
-  { convert [] [expr dvd_add hp2 hp1] [],
-    ring [] },
-  have [ident h2n] [":", expr «expr ∣ »((p : exprℤ()), «expr * »(2, «expr ^ »(n, 2)))] [],
-  { convert [] [expr dvd_sub hp2 hp1] [],
-    ring [] },
-  have [ident hmc] [":", expr «expr ∨ »(«expr = »(p, 2), «expr ∣ »(p, int.nat_abs m))] [":=", expr prime_two_or_dvd_of_dvd_two_mul_pow_self_two hp h2m],
-  have [ident hnc] [":", expr «expr ∨ »(«expr = »(p, 2), «expr ∣ »(p, int.nat_abs n))] [":=", expr prime_two_or_dvd_of_dvd_two_mul_pow_self_two hp h2n],
-  by_cases [expr h2, ":", expr «expr = »(p, 2)],
-  { have [ident h3] [":", expr «expr = »(«expr % »(«expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2), 1)] [],
-    { norm_num ["[", expr sq, ",", expr int.add_mod, ",", expr int.mul_mod, ",", expr hm, ",", expr hn, "]"] [] },
-    have [ident h4] [":", expr «expr = »(«expr % »(«expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2), 0)] [],
-    { apply [expr int.mod_eq_zero_of_dvd],
-      rwa [expr h2] ["at", ident hp2] },
-    rw [expr h4] ["at", ident h3],
-    exact [expr zero_ne_one h3] },
-  { apply [expr hp.not_dvd_one],
-    rw ["<-", expr h] [],
-    exact [expr nat.dvd_gcd (or.resolve_left hmc h2) (or.resolve_left hnc h2)] }
-end
+private theorem coprime_sq_sub_sq_add_of_even_odd {m n : ℤ} (h : Int.gcdₓ m n = 1) (hm : m % 2 = 0) (hn : n % 2 = 1) :
+  Int.gcdₓ ((m^2) - (n^2)) ((m^2)+n^2) = 1 :=
+  by 
+    byContra H 
+    obtain ⟨p, hp, hp1, hp2⟩ := nat.prime.not_coprime_iff_dvd.mp H 
+    rw [←Int.coe_nat_dvd_left] at hp1 hp2 
+    have h2m : (p : ℤ) ∣ 2*m^2
+    ·
+      convert dvd_add hp2 hp1 
+      ring 
+    have h2n : (p : ℤ) ∣ 2*n^2
+    ·
+      convert dvd_sub hp2 hp1 
+      ring 
+    have hmc : p = 2 ∨ p ∣ Int.natAbs m := prime_two_or_dvd_of_dvd_two_mul_pow_self_two hp h2m 
+    have hnc : p = 2 ∨ p ∣ Int.natAbs n := prime_two_or_dvd_of_dvd_two_mul_pow_self_two hp h2n 
+    byCases' h2 : p = 2
+    ·
+      have h3 : ((m^2)+n^2) % 2 = 1
+      ·
+        normNum [sq, Int.add_mod, Int.mul_mod, hm, hn]
+      have h4 : ((m^2)+n^2) % 2 = 0
+      ·
+        apply Int.mod_eq_zero_of_dvd 
+        rwa [h2] at hp2 
+      rw [h4] at h3 
+      exact zero_ne_one h3
+    ·
+      apply hp.not_dvd_one 
+      rw [←h]
+      exact Nat.dvd_gcdₓ (Or.resolve_left hmc h2) (Or.resolve_left hnc h2)
 
 private theorem coprime_sq_sub_sq_add_of_odd_even {m n : ℤ} (h : Int.gcdₓ m n = 1) (hm : m % 2 = 1) (hn : n % 2 = 0) :
   Int.gcdₓ ((m^2) - (n^2)) ((m^2)+n^2) = 1 :=
@@ -391,43 +407,46 @@ private theorem coprime_sq_sub_sq_add_of_odd_even {m n : ℤ} (h : Int.gcdₓ m 
     apply coprime_sq_sub_sq_add_of_even_odd _ hn hm 
     rwa [Int.gcd_comm]
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem coprime_sq_sub_mul_of_even_odd
-{m n : exprℤ()}
-(h : «expr = »(int.gcd m n, 1))
-(hm : «expr = »(«expr % »(m, 2), 0))
-(hn : «expr = »(«expr % »(n, 2), 1)) : «expr = »(int.gcd «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)) «expr * »(«expr * »(2, m), n), 1) :=
-begin
-  by_contradiction [ident H],
-  obtain ["⟨", ident p, ",", ident hp, ",", ident hp1, ",", ident hp2, "⟩", ":=", expr nat.prime.not_coprime_iff_dvd.mp H],
-  rw ["<-", expr int.coe_nat_dvd_left] ["at", ident hp1, ident hp2],
-  have [ident hnp] [":", expr «expr¬ »(«expr ∣ »((p : exprℤ()), int.gcd m n))] [],
-  { rw [expr h] [],
-    norm_cast [],
-    exact [expr mt nat.dvd_one.mp (nat.prime.ne_one hp)] },
-  cases [expr int.prime.dvd_mul hp hp2] ["with", ident hp2m, ident hpn],
-  { rw [expr int.nat_abs_mul] ["at", ident hp2m],
-    cases [expr (nat.prime.dvd_mul hp).mp hp2m] ["with", ident hp2, ident hpm],
-    { have [ident hp2'] [":", expr «expr = »(p, 2)] [":=", expr (nat.le_of_dvd zero_lt_two hp2).antisymm hp.two_le],
-      revert [ident hp1],
-      rw [expr hp2'] [],
-      apply [expr mt int.mod_eq_zero_of_dvd],
-      norm_num ["[", expr sq, ",", expr int.sub_mod, ",", expr int.mul_mod, ",", expr hm, ",", expr hn, "]"] [] },
-    apply [expr mt (int.dvd_gcd (int.coe_nat_dvd_left.mpr hpm)) hnp],
-    apply [expr (or_self _).mp],
-    apply [expr int.prime.dvd_mul' hp],
-    rw [expr (by ring [] : «expr = »(«expr * »(n, n), «expr + »(«expr- »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2))), «expr * »(m, m))))] [],
-    apply [expr dvd_add (dvd_neg_of_dvd hp1)],
-    exact [expr dvd_mul_of_dvd_left (int.coe_nat_dvd_left.mpr hpm) m] },
-  rw [expr int.gcd_comm] ["at", ident hnp],
-  apply [expr mt (int.dvd_gcd (int.coe_nat_dvd_left.mpr hpn)) hnp],
-  apply [expr (or_self _).mp],
-  apply [expr int.prime.dvd_mul' hp],
-  rw [expr (by ring [] : «expr = »(«expr * »(m, m), «expr + »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)), «expr * »(n, n))))] [],
-  apply [expr dvd_add hp1],
-  exact [expr (int.coe_nat_dvd_left.mpr hpn).mul_right n]
-end
+private theorem coprime_sq_sub_mul_of_even_odd {m n : ℤ} (h : Int.gcdₓ m n = 1) (hm : m % 2 = 0) (hn : n % 2 = 1) :
+  Int.gcdₓ ((m^2) - (n^2)) ((2*m)*n) = 1 :=
+  by 
+    byContra H 
+    obtain ⟨p, hp, hp1, hp2⟩ := nat.prime.not_coprime_iff_dvd.mp H 
+    rw [←Int.coe_nat_dvd_left] at hp1 hp2 
+    have hnp : ¬(p : ℤ) ∣ Int.gcdₓ m n
+    ·
+      rw [h]
+      normCast 
+      exact mt nat.dvd_one.mp (Nat.Prime.ne_one hp)
+    cases' Int.Prime.dvd_mul hp hp2 with hp2m hpn
+    ·
+      rw [Int.nat_abs_mul] at hp2m 
+      cases' (Nat.Prime.dvd_mul hp).mp hp2m with hp2 hpm
+      ·
+        have hp2' : p = 2 := (Nat.le_of_dvdₓ zero_lt_two hp2).antisymm hp.two_le 
+        revert hp1 
+        rw [hp2']
+        apply mt Int.mod_eq_zero_of_dvd 
+        normNum [sq, Int.sub_mod, Int.mul_mod, hm, hn]
+      apply mt (Int.dvd_gcd (int.coe_nat_dvd_left.mpr hpm)) hnp 
+      apply (or_selfₓ _).mp 
+      apply Int.Prime.dvd_mul' hp 
+      rw
+        [(by 
+          ring :
+        (n*n) = (-((m^2) - (n^2)))+m*m)]
+      apply dvd_add (dvd_neg_of_dvd hp1)
+      exact dvd_mul_of_dvd_left (int.coe_nat_dvd_left.mpr hpm) m 
+    rw [Int.gcd_comm] at hnp 
+    apply mt (Int.dvd_gcd (int.coe_nat_dvd_left.mpr hpn)) hnp 
+    apply (or_selfₓ _).mp 
+    apply Int.Prime.dvd_mul' hp 
+    rw
+      [(by 
+        ring :
+      (m*m) = ((m^2) - (n^2))+n*n)]
+    apply dvd_add hp1 
+    exact (int.coe_nat_dvd_left.mpr hpn).mul_right n
 
 private theorem coprime_sq_sub_mul_of_odd_even {m n : ℤ} (h : Int.gcdₓ m n = 1) (hm : m % 2 = 1) (hn : n % 2 = 0) :
   Int.gcdₓ ((m^2) - (n^2)) ((2*m)*n) = 1 :=
@@ -452,42 +471,46 @@ private theorem coprime_sq_sub_mul {m n : ℤ} (h : Int.gcdₓ m n = 1)
     ·
       exact coprime_sq_sub_mul_of_odd_even h h2.left h2.right
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem coprime_sq_sub_sq_sum_of_odd_odd
-{m n : exprℤ()}
-(h : «expr = »(int.gcd m n, 1))
-(hm : «expr = »(«expr % »(m, 2), 1))
-(hn : «expr = »(«expr % »(n, 2), 1)) : «expr ∧ »(«expr ∣ »(2, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))), «expr ∧ »(«expr ∣ »(2, «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2))), «expr ∧ »(«expr = »(«expr % »(«expr / »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2), 2), 0), «expr = »(int.gcd «expr / »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2) «expr / »(«expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2), 1)))) :=
-begin
-  cases [expr exists_eq_mul_left_of_dvd (int.dvd_sub_of_mod_eq hm)] ["with", ident m0, ident hm2],
-  cases [expr exists_eq_mul_left_of_dvd (int.dvd_sub_of_mod_eq hn)] ["with", ident n0, ident hn2],
-  rw [expr sub_eq_iff_eq_add] ["at", ident hm2, ident hn2],
-  subst [expr m],
-  subst [expr n],
-  have [ident h1] [":", expr «expr = »(«expr + »(«expr ^ »(«expr + »(«expr * »(m0, 2), 1), 2), «expr ^ »(«expr + »(«expr * »(n0, 2), 1), 2)), «expr * »(2, «expr + »(«expr * »(2, «expr + »(«expr + »(«expr + »(«expr ^ »(m0, 2), «expr ^ »(n0, 2)), m0), n0)), 1)))] [],
-  by ring_exp [] [],
-  have [ident h2] [":", expr «expr = »(«expr - »(«expr ^ »(«expr + »(«expr * »(m0, 2), 1), 2), «expr ^ »(«expr + »(«expr * »(n0, 2), 1), 2)), «expr * »(2, «expr * »(2, «expr - »(«expr + »(«expr - »(«expr ^ »(m0, 2), «expr ^ »(n0, 2)), m0), n0))))] [],
-  by ring_exp [] [],
-  have [ident h3] [":", expr «expr = »(«expr % »(«expr / »(«expr - »(«expr ^ »(«expr + »(«expr * »(m0, 2), 1), 2), «expr ^ »(«expr + »(«expr * »(n0, 2), 1), 2)), 2), 2), 0)] [],
-  { rw ["[", expr h2, ",", expr int.mul_div_cancel_left, ",", expr int.mul_mod_right, "]"] [],
-    exact [expr exprdec_trivial()] },
-  refine [expr ⟨⟨_, h1⟩, ⟨_, h2⟩, h3, _⟩],
-  have [ident h20] [":", expr «expr ≠ »((2 : exprℤ()), 0)] [":=", expr exprdec_trivial()],
-  rw ["[", expr h1, ",", expr h2, ",", expr int.mul_div_cancel_left _ h20, ",", expr int.mul_div_cancel_left _ h20, "]"] [],
-  by_contra [ident h4],
-  obtain ["⟨", ident p, ",", ident hp, ",", ident hp1, ",", ident hp2, "⟩", ":=", expr nat.prime.not_coprime_iff_dvd.mp h4],
-  apply [expr hp.not_dvd_one],
-  rw ["<-", expr h] [],
-  rw ["<-", expr int.coe_nat_dvd_left] ["at", ident hp1, ident hp2],
-  apply [expr nat.dvd_gcd],
-  { apply [expr int.prime.dvd_nat_abs_of_coe_dvd_sq hp],
-    convert [] [expr dvd_add hp1 hp2] [],
-    ring_exp [] [] },
-  { apply [expr int.prime.dvd_nat_abs_of_coe_dvd_sq hp],
-    convert [] [expr dvd_sub hp2 hp1] [],
-    ring_exp [] [] }
-end
+private theorem coprime_sq_sub_sq_sum_of_odd_odd {m n : ℤ} (h : Int.gcdₓ m n = 1) (hm : m % 2 = 1) (hn : n % 2 = 1) :
+  (2 ∣ (m^2)+n^2) ∧
+    2 ∣ (m^2) - (n^2) ∧ ((m^2) - (n^2)) / 2 % 2 = 0 ∧ Int.gcdₓ (((m^2) - (n^2)) / 2) (((m^2)+n^2) / 2) = 1 :=
+  by 
+    cases' exists_eq_mul_left_of_dvd (Int.dvd_sub_of_mod_eq hm) with m0 hm2 
+    cases' exists_eq_mul_left_of_dvd (Int.dvd_sub_of_mod_eq hn) with n0 hn2 
+    rw [sub_eq_iff_eq_add] at hm2 hn2 
+    subst m 
+    subst n 
+    have h1 : ((((m0*2)+1)^2)+((n0*2)+1)^2) = 2*(2*(((m0^2)+n0^2)+m0)+n0)+1
+    ·
+      ringExp 
+    have h2 : (((m0*2)+1)^2) - (((n0*2)+1)^2) = 2*2*(((m0^2) - (n0^2))+m0) - n0
+    ·
+      ringExp 
+    have h3 : ((((m0*2)+1)^2) - (((n0*2)+1)^2)) / 2 % 2 = 0
+    ·
+      rw [h2, Int.mul_div_cancel_left, Int.mul_mod_right]
+      exact
+        by 
+          decide 
+    refine' ⟨⟨_, h1⟩, ⟨_, h2⟩, h3, _⟩
+    have h20 : (2 : ℤ) ≠ 0 :=
+      by 
+        decide 
+    rw [h1, h2, Int.mul_div_cancel_left _ h20, Int.mul_div_cancel_left _ h20]
+    byContra h4 
+    obtain ⟨p, hp, hp1, hp2⟩ := nat.prime.not_coprime_iff_dvd.mp h4 
+    apply hp.not_dvd_one 
+    rw [←h]
+    rw [←Int.coe_nat_dvd_left] at hp1 hp2 
+    apply Nat.dvd_gcdₓ
+    ·
+      apply Int.Prime.dvd_nat_abs_of_coe_dvd_sq hp 
+      convert dvd_add hp1 hp2 
+      ringExp
+    ·
+      apply Int.Prime.dvd_nat_abs_of_coe_dvd_sq hp 
+      convert dvd_sub hp2 hp1 
+      ringExp
 
 namespace PythagoreanTriple
 
@@ -495,123 +518,148 @@ variable {x y z : ℤ} (h : PythagoreanTriple x y z)
 
 include h
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_primitive_classified_aux
-(hc : «expr = »(x.gcd y, 1))
-(hzpos : «expr < »(0, z))
-{m n : exprℤ()}
-(hm2n2 : «expr < »(0, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))))
-(hv2 : «expr = »(«expr / »((x : exprℚ()), z), «expr / »(«expr * »(«expr * »(2, m), n), «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)))))
-(hw2 : «expr = »(«expr / »((y : exprℚ()), z), «expr / »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)), «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)))))
-(H : «expr = »(int.gcd «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)) «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 1))
-(co : «expr = »(int.gcd m n, 1))
-(pp : «expr ∨ »(«expr ∧ »(«expr = »(«expr % »(m, 2), 0), «expr = »(«expr % »(n, 2), 1)), «expr ∧ »(«expr = »(«expr % »(m, 2), 1), «expr = »(«expr % »(n, 2), 0)))) : h.is_primitive_classified :=
-begin
-  have [ident hz] [":", expr «expr ≠ »(z, 0)] [],
-  apply [expr ne_of_gt hzpos],
-  have [ident h2] [":", expr «expr ∧ »(«expr = »(y, «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2))), «expr = »(z, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))))] [],
-  { apply [expr rat.div_int_inj hzpos hm2n2 (h.coprime_of_coprime hc) H],
-    rw ["[", expr hw2, "]"] [],
-    norm_cast [] },
-  use ["[", expr m, ",", expr n, "]"],
-  apply [expr and.intro _ (and.intro co pp)],
-  right,
-  refine [expr ⟨_, h2.left⟩],
-  rw ["[", "<-", expr rat.coe_int_inj _ _, ",", "<-", expr div_left_inj' (mt (rat.coe_int_inj z 0).mp hz), ",", expr hv2, ",", expr h2.right, "]"] [],
-  norm_cast []
-end
+theorem is_primitive_classified_aux (hc : x.gcd y = 1) (hzpos : 0 < z) {m n : ℤ} (hm2n2 : 0 < (m^2)+n^2)
+  (hv2 : (x : ℚ) / z = ((2*m)*n) / (m^2)+n^2) (hw2 : (y : ℚ) / z = ((m^2) - (n^2)) / (m^2)+n^2)
+  (H : Int.gcdₓ ((m^2) - (n^2)) ((m^2)+n^2) = 1) (co : Int.gcdₓ m n = 1)
+  (pp : m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0) : h.is_primitive_classified :=
+  by 
+    have hz : z ≠ 0
+    apply ne_of_gtₓ hzpos 
+    have h2 : y = (m^2) - (n^2) ∧ z = (m^2)+n^2
+    ·
+      apply Rat.div_int_inj hzpos hm2n2 (h.coprime_of_coprime hc) H 
+      rw [hw2]
+      normCast 
+    use m, n 
+    apply And.intro _ (And.intro co pp)
+    right 
+    refine' ⟨_, h2.left⟩
+    rw [←Rat.coe_int_inj _ _, ←div_left_inj' ((mt (Rat.coe_int_inj z 0).mp) hz), hv2, h2.right]
+    normCast
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_primitive_classified_of_coprime_of_odd_of_pos
-(hc : «expr = »(int.gcd x y, 1))
-(hyo : «expr = »(«expr % »(y, 2), 1))
-(hzpos : «expr < »(0, z)) : h.is_primitive_classified :=
-begin
-  by_cases [expr h0, ":", expr «expr = »(x, 0)],
-  { exact [expr h.is_primitive_classified_of_coprime_of_zero_left hc h0] },
-  let [ident v] [] [":=", expr «expr / »((x : exprℚ()), z)],
-  let [ident w] [] [":=", expr «expr / »((y : exprℚ()), z)],
-  have [ident hz] [":", expr «expr ≠ »(z, 0)] [],
-  apply [expr ne_of_gt hzpos],
-  have [ident hq] [":", expr «expr = »(«expr + »(«expr ^ »(v, 2), «expr ^ »(w, 2)), 1)] [],
-  { field_simp [] ["[", expr hz, ",", expr sq, "]"] [] [],
-    norm_cast [],
-    exact [expr h] },
-  have [ident hvz] [":", expr «expr ≠ »(v, 0)] [],
-  { field_simp [] ["[", expr hz, "]"] [] [],
-    exact [expr h0] },
-  have [ident hw1] [":", expr «expr ≠ »(w, «expr- »(1))] [],
-  { contrapose ["!"] [ident hvz, "with", ident hw1],
-    rw ["[", expr hw1, ",", expr neg_sq, ",", expr one_pow, ",", expr add_left_eq_self, "]"] ["at", ident hq],
-    exact [expr pow_eq_zero hq] },
-  have [ident hQ] [":", expr ∀ x : exprℚ(), «expr ≠ »(«expr + »(1, «expr ^ »(x, 2)), 0)] [],
-  { intro [ident q],
-    apply [expr ne_of_gt],
-    exact [expr lt_add_of_pos_of_le zero_lt_one (sq_nonneg q)] },
-  have [ident hp] [":", expr «expr ∈ »((⟨v, w⟩ : «expr × »(exprℚ(), exprℚ())), {p : «expr × »(exprℚ(), exprℚ()) | «expr ∧ »(«expr = »(«expr + »(«expr ^ »(p.1, 2), «expr ^ »(p.2, 2)), 1), «expr ≠ »(p.2, «expr- »(1)))})] [":=", expr ⟨hq, hw1⟩],
-  let [ident q] [] [":=", expr (circle_equiv_gen hQ).symm ⟨⟨v, w⟩, hp⟩],
-  have [ident ht4] [":", expr «expr ∧ »(«expr = »(v, «expr / »(«expr * »(2, q), «expr + »(1, «expr ^ »(q, 2)))), «expr = »(w, «expr / »(«expr - »(1, «expr ^ »(q, 2)), «expr + »(1, «expr ^ »(q, 2)))))] [],
-  { apply [expr prod.mk.inj],
-    have [] [] [":=", expr ((circle_equiv_gen hQ).apply_symm_apply ⟨⟨v, w⟩, hp⟩).symm],
-    exact [expr congr_arg subtype.val this] },
-  let [ident m] [] [":=", expr (q.denom : exprℤ())],
-  let [ident n] [] [":=", expr q.num],
-  have [ident hm0] [":", expr «expr ≠ »(m, 0)] [],
-  { norm_cast [],
-    apply [expr rat.denom_ne_zero q] },
-  have [ident hq2] [":", expr «expr = »(q, «expr / »(n, m))] [":=", expr (rat.num_div_denom q).symm],
-  have [ident hm2n2] [":", expr «expr < »(0, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)))] [],
-  { apply [expr lt_add_of_pos_of_le _ (sq_nonneg n)],
-    exact [expr lt_of_le_of_ne (sq_nonneg m) (ne.symm (pow_ne_zero 2 hm0))] },
-  have [ident hw2] [":", expr «expr = »(w, «expr / »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)), «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))))] [],
-  { rw ["[", expr ht4.2, ",", expr hq2, "]"] [],
-    field_simp [] ["[", expr hm2n2, ",", expr rat.denom_ne_zero q, ",", "-", ident rat.num_div_denom, "]"] [] [] },
-  have [ident hm2n20] [":", expr «expr ≠ »(«expr + »(«expr ^ »((m : exprℚ()), 2), «expr ^ »((n : exprℚ()), 2)), 0)] [],
-  { norm_cast [],
-    simpa [] [] ["only"] ["[", expr int.coe_nat_pow, "]"] [] ["using", expr ne_of_gt hm2n2] },
-  have [ident hv2] [":", expr «expr = »(v, «expr / »(«expr * »(«expr * »(2, m), n), «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))))] [],
-  { apply [expr eq.symm],
-    apply [expr (div_eq_iff hm2n20).mpr],
-    rw ["[", expr ht4.1, "]"] [],
-    field_simp [] ["[", expr hQ q, "]"] [] [],
-    rw ["[", expr hq2, "]"] [] { occs := occurrences.pos «expr[ , ]»([2, 3]) },
-    field_simp [] ["[", expr rat.denom_ne_zero q, ",", "-", ident rat.num_div_denom, "]"] [] [],
-    ring [] },
-  have [ident hnmcp] [":", expr «expr = »(int.gcd n m, 1)] [":=", expr q.cop],
-  have [ident hmncp] [":", expr «expr = »(int.gcd m n, 1)] [],
-  { rw [expr int.gcd_comm] [],
-    exact [expr hnmcp] },
-  cases [expr int.mod_two_eq_zero_or_one m] ["with", ident hm2, ident hm2]; cases [expr int.mod_two_eq_zero_or_one n] ["with", ident hn2, ident hn2],
-  { exfalso,
-    have [ident h1] [":", expr «expr ∣ »(2, (int.gcd n m : exprℤ()))] [],
-    { exact [expr int.dvd_gcd (int.dvd_of_mod_eq_zero hn2) (int.dvd_of_mod_eq_zero hm2)] },
-    rw [expr hnmcp] ["at", ident h1],
-    revert [ident h1],
-    norm_num [] [] },
-  { apply [expr h.is_primitive_classified_aux hc hzpos hm2n2 hv2 hw2 _ hmncp],
-    { apply [expr or.intro_left],
-      exact [expr and.intro hm2 hn2] },
-    { apply [expr coprime_sq_sub_sq_add_of_even_odd hmncp hm2 hn2] } },
-  { apply [expr h.is_primitive_classified_aux hc hzpos hm2n2 hv2 hw2 _ hmncp],
-    { apply [expr or.intro_right],
-      exact [expr and.intro hm2 hn2] },
-    apply [expr coprime_sq_sub_sq_add_of_odd_even hmncp hm2 hn2] },
-  { exfalso,
-    have [ident h1] [":", expr «expr ∧ »(«expr ∣ »(2, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))), «expr ∧ »(«expr ∣ »(2, «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2))), «expr ∧ »(«expr = »(«expr % »(«expr / »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2), 2), 0), «expr = »(int.gcd «expr / »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2) «expr / »(«expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2), 1))))] [],
-    { exact [expr coprime_sq_sub_sq_sum_of_odd_odd hmncp hm2 hn2] },
-    have [ident h2] [":", expr «expr ∧ »(«expr = »(y, «expr / »(«expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2)), «expr = »(z, «expr / »(«expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2)))] [],
-    { apply [expr rat.div_int_inj hzpos _ (h.coprime_of_coprime hc) h1.2.2.2],
-      { show [expr «expr = »(w, _)],
-        rw ["[", "<-", expr rat.mk_eq_div, ",", "<-", expr rat.div_mk_div_cancel_left (by norm_num [] [] : «expr ≠ »((2 : exprℤ()), 0)), "]"] [],
-        rw ["[", expr int.div_mul_cancel h1.1, ",", expr int.div_mul_cancel h1.2.1, ",", expr hw2, "]"] [],
-        norm_cast [] },
-      { apply [expr (mul_lt_mul_right (by norm_num [] [] : «expr < »(0, (2 : exprℤ())))).mp],
-        rw ["[", expr int.div_mul_cancel h1.1, ",", expr zero_mul, "]"] [],
-        exact [expr hm2n2] } },
-    rw ["[", expr h2.1, ",", expr h1.2.2.1, "]"] ["at", ident hyo],
-    revert [ident hyo],
-    norm_num [] [] }
-end
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2, 3]) }
+theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 1) (hyo : y % 2 = 1) (hzpos : 0 < z) :
+  h.is_primitive_classified :=
+  by 
+    byCases' h0 : x = 0
+    ·
+      exact h.is_primitive_classified_of_coprime_of_zero_left hc h0 
+    let v := (x : ℚ) / z 
+    let w := (y : ℚ) / z 
+    have hz : z ≠ 0
+    apply ne_of_gtₓ hzpos 
+    have hq : ((v^2)+w^2) = 1
+    ·
+      fieldSimp [hz, sq]
+      normCast 
+      exact h 
+    have hvz : v ≠ 0
+    ·
+      fieldSimp [hz]
+      exact h0 
+    have hw1 : w ≠ -1
+    ·
+      contrapose! hvz with hw1 
+      rw [hw1, neg_sq, one_pow, add_left_eq_self] at hq 
+      exact pow_eq_zero hq 
+    have hQ : ∀ x : ℚ, (1+x^2) ≠ 0
+    ·
+      intro q 
+      apply ne_of_gtₓ 
+      exact lt_add_of_pos_of_le zero_lt_one (sq_nonneg q)
+    have hp : (⟨v, w⟩ : ℚ × ℚ) ∈ { p : ℚ × ℚ | ((p.1^2)+p.2^2) = 1 ∧ p.2 ≠ -1 } := ⟨hq, hw1⟩
+    let q := (circleEquivGen hQ).symm ⟨⟨v, w⟩, hp⟩
+    have ht4 : (v = (2*q) / 1+q^2) ∧ w = (1 - (q^2)) / 1+q^2
+    ·
+      apply Prod.mk.inj 
+      have  := ((circleEquivGen hQ).apply_symm_apply ⟨⟨v, w⟩, hp⟩).symm 
+      exact congr_argₓ Subtype.val this 
+    let m := (q.denom : ℤ)
+    let n := q.num 
+    have hm0 : m ≠ 0
+    ·
+      normCast 
+      apply Rat.denom_ne_zero q 
+    have hq2 : q = n / m := (Rat.num_div_denom q).symm 
+    have hm2n2 : 0 < (m^2)+n^2
+    ·
+      apply lt_add_of_pos_of_le _ (sq_nonneg n)
+      exact lt_of_le_of_neₓ (sq_nonneg m) (Ne.symm (pow_ne_zero 2 hm0))
+    have hw2 : w = ((m^2) - (n^2)) / (m^2)+n^2
+    ·
+      rw [ht4.2, hq2]
+      fieldSimp [hm2n2, Rat.denom_ne_zero q, -Rat.num_div_denom]
+    have hm2n20 : (((m : ℚ)^2)+(n : ℚ)^2) ≠ 0
+    ·
+      normCast 
+      simpa only [Int.coe_nat_pow] using ne_of_gtₓ hm2n2 
+    have hv2 : v = ((2*m)*n) / (m^2)+n^2
+    ·
+      apply Eq.symm 
+      apply (div_eq_iff hm2n20).mpr 
+      rw [ht4.1]
+      fieldSimp [hQ q]
+      rw [hq2]
+      fieldSimp [Rat.denom_ne_zero q, -Rat.num_div_denom]
+      ring 
+    have hnmcp : Int.gcdₓ n m = 1 := q.cop 
+    have hmncp : Int.gcdₓ m n = 1
+    ·
+      rw [Int.gcd_comm]
+      exact hnmcp 
+    cases' Int.mod_two_eq_zero_or_one m with hm2 hm2 <;> cases' Int.mod_two_eq_zero_or_one n with hn2 hn2
+    ·
+      exfalso 
+      have h1 : 2 ∣ (Int.gcdₓ n m : ℤ)
+      ·
+        exact Int.dvd_gcd (Int.dvd_of_mod_eq_zero hn2) (Int.dvd_of_mod_eq_zero hm2)
+      rw [hnmcp] at h1 
+      revert h1 
+      normNum
+    ·
+      apply h.is_primitive_classified_aux hc hzpos hm2n2 hv2 hw2 _ hmncp
+      ·
+        apply Or.intro_left 
+        exact And.intro hm2 hn2
+      ·
+        apply coprime_sq_sub_sq_add_of_even_odd hmncp hm2 hn2
+    ·
+      apply h.is_primitive_classified_aux hc hzpos hm2n2 hv2 hw2 _ hmncp
+      ·
+        apply Or.intro_rightₓ 
+        exact And.intro hm2 hn2 
+      apply coprime_sq_sub_sq_add_of_odd_even hmncp hm2 hn2
+    ·
+      exfalso 
+      have h1 :
+        (2 ∣ (m^2)+n^2) ∧
+          2 ∣ (m^2) - (n^2) ∧ ((m^2) - (n^2)) / 2 % 2 = 0 ∧ Int.gcdₓ (((m^2) - (n^2)) / 2) (((m^2)+n^2) / 2) = 1
+      ·
+        exact coprime_sq_sub_sq_sum_of_odd_odd hmncp hm2 hn2 
+      have h2 : y = ((m^2) - (n^2)) / 2 ∧ z = ((m^2)+n^2) / 2
+      ·
+        apply Rat.div_int_inj hzpos _ (h.coprime_of_coprime hc) h1.2.2.2
+        ·
+          show w = _ 
+          rw [←Rat.mk_eq_div,
+            ←Rat.div_mk_div_cancel_left
+              (by 
+                normNum :
+              (2 : ℤ) ≠ 0)]
+          rw [Int.div_mul_cancel h1.1, Int.div_mul_cancel h1.2.1, hw2]
+          normCast
+        ·
+          apply
+            (mul_lt_mul_right
+                (by 
+                  normNum :
+                0 < (2 : ℤ))).mp
+              
+          rw [Int.div_mul_cancel h1.1, zero_mul]
+          exact hm2n2 
+      rw [h2.1, h1.2.2.1] at hyo 
+      revert hyo 
+      normNum
 
 theorem is_primitive_classified_of_coprime_of_pos (hc : Int.gcdₓ x y = 1) (hzpos : 0 < z) : h.is_primitive_classified :=
   by 
@@ -623,64 +671,77 @@ theorem is_primitive_classified_of_coprime_of_pos (hc : Int.gcdₓ x y = 1) (hzp
     use m, n 
     tauto
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_primitive_classified_of_coprime (hc : «expr = »(int.gcd x y, 1)) : h.is_primitive_classified :=
-begin
-  by_cases [expr hz, ":", expr «expr < »(0, z)],
-  { exact [expr h.is_primitive_classified_of_coprime_of_pos hc hz] },
-  have [ident h'] [":", expr pythagorean_triple x y «expr- »(z)] [],
-  { simpa [] [] [] ["[", expr pythagorean_triple, ",", expr neg_mul_neg, "]"] [] ["using", expr h.eq] },
-  apply [expr h'.is_primitive_classified_of_coprime_of_pos hc],
-  apply [expr lt_of_le_of_ne _ (h'.ne_zero_of_coprime hc).symm],
-  exact [expr le_neg.mp (not_lt.mp hz)]
-end
+theorem is_primitive_classified_of_coprime (hc : Int.gcdₓ x y = 1) : h.is_primitive_classified :=
+  by 
+    byCases' hz : 0 < z
+    ·
+      exact h.is_primitive_classified_of_coprime_of_pos hc hz 
+    have h' : PythagoreanTriple x y (-z)
+    ·
+      simpa [PythagoreanTriple, neg_mul_neg] using h.eq 
+    apply h'.is_primitive_classified_of_coprime_of_pos hc 
+    apply lt_of_le_of_neₓ _ (h'.ne_zero_of_coprime hc).symm 
+    exact le_neg.mp (not_lt.mp hz)
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem classified : h.is_classified :=
-begin
-  by_cases [expr h0, ":", expr «expr = »(int.gcd x y, 0)],
-  { have [ident hx] [":", expr «expr = »(x, 0)] [],
-    { apply [expr int.nat_abs_eq_zero.mp],
-      apply [expr nat.eq_zero_of_gcd_eq_zero_left h0] },
-    have [ident hy] [":", expr «expr = »(y, 0)] [],
-    { apply [expr int.nat_abs_eq_zero.mp],
-      apply [expr nat.eq_zero_of_gcd_eq_zero_right h0] },
-    use ["[", expr 0, ",", expr 1, ",", expr 0, "]"],
-    norm_num ["[", expr hx, ",", expr hy, "]"] [] },
-  apply [expr h.is_classified_of_normalize_is_primitive_classified],
-  apply [expr h.normalize.is_primitive_classified_of_coprime],
-  apply [expr int.gcd_div_gcd_div_gcd (nat.pos_of_ne_zero h0)]
-end
+  by 
+    byCases' h0 : Int.gcdₓ x y = 0
+    ·
+      have hx : x = 0
+      ·
+        apply int.nat_abs_eq_zero.mp 
+        apply Nat.eq_zero_of_gcd_eq_zero_leftₓ h0 
+      have hy : y = 0
+      ·
+        apply int.nat_abs_eq_zero.mp 
+        apply Nat.eq_zero_of_gcd_eq_zero_rightₓ h0 
+      use 0, 1, 0
+      normNum [hx, hy]
+    apply h.is_classified_of_normalize_is_primitive_classified 
+    apply h.normalize.is_primitive_classified_of_coprime 
+    apply Int.gcd_div_gcd_div_gcd (Nat.pos_of_ne_zeroₓ h0)
 
 omit h
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coprime_classification : «expr ↔ »(«expr ∧ »(pythagorean_triple x y z, «expr = »(int.gcd x y, 1)), «expr∃ , »((m
-   n), «expr ∧ »(«expr ∨ »(«expr ∧ »(«expr = »(x, «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2))), «expr = »(y, «expr * »(«expr * »(2, m), n))), «expr ∧ »(«expr = »(x, «expr * »(«expr * »(2, m), n)), «expr = »(y, «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2))))), «expr ∧ »(«expr ∨ »(«expr = »(z, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))), «expr = »(z, «expr- »(«expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))))), «expr ∧ »(«expr = »(int.gcd m n, 1), «expr ∨ »(«expr ∧ »(«expr = »(«expr % »(m, 2), 0), «expr = »(«expr % »(n, 2), 1)), «expr ∧ »(«expr = »(«expr % »(m, 2), 1), «expr = »(«expr % »(n, 2), 0)))))))) :=
-begin
-  split,
-  { intro [ident h],
-    obtain ["⟨", ident m, ",", ident n, ",", ident H, "⟩", ":=", expr h.left.is_primitive_classified_of_coprime h.right],
-    use ["[", expr m, ",", expr n, "]"],
-    rcases [expr H, "with", "⟨", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩", ",", ident co, ",", ident pp, "⟩"],
-    { refine [expr ⟨or.inl ⟨rfl, rfl⟩, _, co, pp⟩],
-      have [] [":", expr «expr = »(«expr ^ »(z, 2), «expr ^ »(«expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2))] [],
-      { rw ["[", expr sq, ",", "<-", expr h.left.eq, "]"] [],
-        ring [] },
-      simpa [] [] [] [] [] ["using", expr eq_or_eq_neg_of_sq_eq_sq _ _ this] },
-    { refine [expr ⟨or.inr ⟨rfl, rfl⟩, _, co, pp⟩],
-      have [] [":", expr «expr = »(«expr ^ »(z, 2), «expr ^ »(«expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)), 2))] [],
-      { rw ["[", expr sq, ",", "<-", expr h.left.eq, "]"] [],
-        ring [] },
-      simpa [] [] [] [] [] ["using", expr eq_or_eq_neg_of_sq_eq_sq _ _ this] } },
-  { delta [ident pythagorean_triple] [],
-    rintro ["⟨", ident m, ",", ident n, ",", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩", ",", ident rfl, "|", ident rfl, ",", ident co, ",", ident pp, "⟩"]; { split,
-      { ring [] },
-      exact [expr coprime_sq_sub_mul co pp] } <|> { split,
-      { ring [] },
-      rw [expr int.gcd_comm] [],
-      exact [expr coprime_sq_sub_mul co pp] } }
-end
+theorem coprime_classification :
+  PythagoreanTriple x y z ∧ Int.gcdₓ x y = 1 ↔
+    ∃ m n,
+      ((x = (m^2) - (n^2) ∧ y = (2*m)*n) ∨ (x = (2*m)*n) ∧ y = (m^2) - (n^2)) ∧
+        ((z = (m^2)+n^2) ∨ z = -(m^2)+n^2) ∧ Int.gcdₓ m n = 1 ∧ (m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0) :=
+  by 
+    constructor
+    ·
+      intro h 
+      obtain ⟨m, n, H⟩ := h.left.is_primitive_classified_of_coprime h.right 
+      use m, n 
+      rcases H with ⟨⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, co, pp⟩
+      ·
+        refine' ⟨Or.inl ⟨rfl, rfl⟩, _, co, pp⟩
+        have  : (z^2) = (((m^2)+n^2)^2)
+        ·
+          rw [sq, ←h.left.eq]
+          ring 
+        simpa using eq_or_eq_neg_of_sq_eq_sq _ _ this
+      ·
+        refine' ⟨Or.inr ⟨rfl, rfl⟩, _, co, pp⟩
+        have  : (z^2) = (((m^2)+n^2)^2)
+        ·
+          rw [sq, ←h.left.eq]
+          ring 
+        simpa using eq_or_eq_neg_of_sq_eq_sq _ _ this
+    ·
+      delta' PythagoreanTriple 
+      rintro ⟨m, n, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl | rfl, co, pp⟩ <;>
+        first |
+          constructor
+          ·
+            ring 
+          exact coprime_sq_sub_mul co pp|
+          constructor
+          ·
+            ring 
+          rw [Int.gcd_comm]
+          exact coprime_sq_sub_mul co pp
 
 /-- by assuming `x` is odd and `z` is positive we get a slightly more precise classification of
 the pythagorean triple `x ^ 2 + y ^ 2 = z ^ 2`-/
@@ -717,14 +778,14 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
         rw [neg_sq m]
         rw [neg_sq n]
         apply And.intro h_odd.1
-        split 
+        constructor
         ·
           rw [h_odd.2]
           ring 
         cases' ht2 with h_pos h_neg
         ·
           apply And.intro h_pos 
-          split 
+          constructor
           ·
             delta' Int.gcdₓ 
             rw [Int.nat_abs_neg, Int.nat_abs_neg]
@@ -743,29 +804,35 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
       rw [mul_assocₓ, Int.mul_mod_right] at h_parity 
       exact zero_ne_one h_parity
 
--- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Formula for Pythagorean Triples** -/
-theorem classification : «expr ↔ »(pythagorean_triple x y z, «expr∃ , »((k
-   m
-   n), «expr ∧ »(«expr ∨ »(«expr ∧ »(«expr = »(x, «expr * »(k, «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)))), «expr = »(y, «expr * »(k, «expr * »(«expr * »(2, m), n)))), «expr ∧ »(«expr = »(x, «expr * »(k, «expr * »(«expr * »(2, m), n))), «expr = »(y, «expr * »(k, «expr - »(«expr ^ »(m, 2), «expr ^ »(n, 2)))))), «expr ∨ »(«expr = »(z, «expr * »(k, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)))), «expr = »(z, «expr * »(«expr- »(k), «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2)))))))) :=
-begin
-  split,
-  { intro [ident h],
-    obtain ["⟨", ident k, ",", ident m, ",", ident n, ",", ident H, "⟩", ":=", expr h.classified],
-    use ["[", expr k, ",", expr m, ",", expr n, "]"],
-    rcases [expr H, "with", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩"],
-    { refine [expr ⟨or.inl ⟨rfl, rfl⟩, _⟩],
-      have [] [":", expr «expr = »(«expr ^ »(z, 2), «expr ^ »(«expr * »(k, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))), 2))] [],
-      { rw ["[", expr sq, ",", "<-", expr h.eq, "]"] [],
-        ring [] },
-      simpa [] [] [] [] [] ["using", expr eq_or_eq_neg_of_sq_eq_sq _ _ this] },
-    { refine [expr ⟨or.inr ⟨rfl, rfl⟩, _⟩],
-      have [] [":", expr «expr = »(«expr ^ »(z, 2), «expr ^ »(«expr * »(k, «expr + »(«expr ^ »(m, 2), «expr ^ »(n, 2))), 2))] [],
-      { rw ["[", expr sq, ",", "<-", expr h.eq, "]"] [],
-        ring [] },
-      simpa [] [] [] [] [] ["using", expr eq_or_eq_neg_of_sq_eq_sq _ _ this] } },
-  { rintro ["⟨", ident k, ",", ident m, ",", ident n, ",", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩", ",", ident rfl, "|", ident rfl, "⟩"]; delta [ident pythagorean_triple] []; ring [] }
-end
+theorem classification :
+  PythagoreanTriple x y z ↔
+    ∃ k m n,
+      (((x = k*(m^2) - (n^2)) ∧ y = k*(2*m)*n) ∨ (x = k*(2*m)*n) ∧ y = k*(m^2) - (n^2)) ∧
+        ((z = k*(m^2)+n^2) ∨ z = (-k)*(m^2)+n^2) :=
+  by 
+    constructor
+    ·
+      intro h 
+      obtain ⟨k, m, n, H⟩ := h.classified 
+      use k, m, n 
+      rcases H with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
+      ·
+        refine' ⟨Or.inl ⟨rfl, rfl⟩, _⟩
+        have  : (z^2) = ((k*(m^2)+n^2)^2)
+        ·
+          rw [sq, ←h.eq]
+          ring 
+        simpa using eq_or_eq_neg_of_sq_eq_sq _ _ this
+      ·
+        refine' ⟨Or.inr ⟨rfl, rfl⟩, _⟩
+        have  : (z^2) = ((k*(m^2)+n^2)^2)
+        ·
+          rw [sq, ←h.eq]
+          ring 
+        simpa using eq_or_eq_neg_of_sq_eq_sq _ _ this
+    ·
+      rintro ⟨k, m, n, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl | rfl⟩ <;> delta' PythagoreanTriple <;> ring
 
 end PythagoreanTriple
 

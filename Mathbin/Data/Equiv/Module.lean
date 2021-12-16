@@ -88,7 +88,7 @@ instance : CoeFun (M ≃ₛₗ[σ] M₂) fun _ => M → M₂ :=
 
 @[simp]
 theorem coe_mk {to_fun inv_fun map_add map_smul left_inv right_inv} :
-  «expr⇑ » (⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₛₗ[σ] M₂) = to_fun :=
+  ⇑(⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₛₗ[σ] M₂) = to_fun :=
   rfl
 
 @[nolint doc_blame]
@@ -96,21 +96,25 @@ def to_equiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂ :=
   fun f => f.to_add_equiv.to_equiv
 
 theorem to_equiv_injective : Function.Injective (to_equiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂) :=
-  fun ⟨_, _, _, _, _, _⟩ ⟨_, _, _, _, _, _⟩ h => LinearEquiv.mk.inj_eq.mpr (Equiv.mk.inj h)
+  fun ⟨_, _, _, _, _, _⟩ ⟨_, _, _, _, _, _⟩ h => LinearEquiv.mk.inj_eq.mpr (Equivₓ.mk.inj h)
 
 @[simp]
 theorem to_equiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.to_equiv = e₂.to_equiv ↔ e₁ = e₂ :=
   to_equiv_injective.eq_iff
 
 theorem to_linear_map_injective : injective (coeₓ : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) :=
-  fun e₁ e₂ H => to_equiv_injective$ Equiv.ext$ LinearMap.congr_fun H
+  fun e₁ e₂ H => to_equiv_injective$ Equivₓ.ext$ LinearMap.congr_fun H
 
 @[simp, normCast]
 theorem to_linear_map_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : (e₁ : M →ₛₗ[σ] M₂) = e₂ ↔ e₁ = e₂ :=
   to_linear_map_injective.eq_iff
 
+instance : AddMonoidHomClass (M ≃ₛₗ[σ] M₂) M M₂ :=
+  { coe := LinearEquiv.toFun, coe_injective' := fun f g h => to_linear_map_injective (FunLike.coe_injective h),
+    map_add := LinearEquiv.map_add', map_zero := fun f => f.to_linear_map.map_zero }
+
 theorem coe_injective : @injective (M ≃ₛₗ[σ] M₂) (M → M₂) coeFn :=
-  LinearMap.coe_injective.comp to_linear_map_injective
+  FunLike.coe_injective
 
 end 
 
@@ -134,15 +138,15 @@ theorem to_linear_map_eq_coe : e.to_linear_map = (e : M →ₛₗ[σ] M₂) :=
   rfl
 
 @[simp, normCast]
-theorem coe_coe : «expr⇑ » (e : M →ₛₗ[σ] M₂) = e :=
+theorem coe_coe : ⇑(e : M →ₛₗ[σ] M₂) = e :=
   rfl
 
 @[simp]
-theorem coe_to_equiv : «expr⇑ » e.to_equiv = e :=
+theorem coe_to_equiv : ⇑e.to_equiv = e :=
   rfl
 
 @[simp]
-theorem coe_to_linear_map : «expr⇑ » e.to_linear_map = e :=
+theorem coe_to_linear_map : ⇑e.to_linear_map = e :=
   rfl
 
 @[simp]
@@ -155,16 +159,16 @@ variable {e e'}
 
 @[ext]
 theorem ext (h : ∀ x, e x = e' x) : e = e' :=
-  coe_injective$ funext h
-
-protected theorem congr_argₓ : ∀ {x x' : M}, x = x' → e x = e x'
-| _, _, rfl => rfl
-
-protected theorem congr_funₓ (h : e = e') (x : M) : e x = e' x :=
-  h ▸ rfl
+  FunLike.ext _ _ h
 
 theorem ext_iff : e = e' ↔ ∀ x, e x = e' x :=
-  ⟨fun h x => h ▸ rfl, ext⟩
+  FunLike.ext_iff
+
+protected theorem congr_argₓ {x x'} : x = x' → e x = e x' :=
+  FunLike.congr_arg e
+
+protected theorem congr_funₓ (h : e = e') (x : M) : e x = e' x :=
+  FunLike.congr_fun h x
 
 end 
 
@@ -175,7 +179,7 @@ variable (M R)
 /-- The identity map is a linear equivalence. -/
 @[refl]
 def refl [Module R M] : M ≃ₗ[R] M :=
-  { LinearMap.id, Equiv.refl M with  }
+  { LinearMap.id, Equivₓ.refl M with  }
 
 end 
 
@@ -250,7 +254,7 @@ infixl:80 " ≪≫ₗ " =>
 variable {e₁₂} {e₂₃}
 
 @[simp]
-theorem coe_to_add_equiv : «expr⇑ » e.to_add_equiv = e :=
+theorem coe_to_add_equiv : ⇑e.to_add_equiv = e :=
   rfl
 
 /-- The two paths coercion can take to an `add_monoid_hom` are equivalent -/
@@ -332,13 +336,11 @@ theorem comp_coe [Module R M] [Module R M₂] [Module R M₃] (f : M ≃ₗ[R] M
 theorem mk_coe h₁ h₂ f h₃ h₄ : (LinearEquiv.mk e h₁ h₂ f h₃ h₄ : M ≃ₛₗ[σ] M₂) = e :=
   ext$ fun _ => rfl
 
-@[simp]
-theorem map_add (a b : M) : e (a+b) = e a+e b :=
-  e.map_add' a b
+protected theorem map_add (a b : M) : e (a+b) = e a+e b :=
+  map_add e a b
 
-@[simp]
-theorem map_zero : e 0 = 0 :=
-  e.to_linear_map.map_zero
+protected theorem map_zero : e 0 = 0 :=
+  map_zero e
 
 @[simp]
 theorem map_smulₛₗ (c : R) (x : M) : e (c • x) = σ c • e x :=
@@ -352,7 +354,7 @@ theorem map_smul (e : N₁ ≃ₗ[R₁] N₂) (c : R₁) (x : N₁) : e (c • x
 omit module_N₁ module_N₂
 
 @[simp]
-theorem map_sum {s : Finset ι} (u : ι → M) : e (∑i in s, u i) = ∑i in s, e (u i) :=
+theorem map_sum {s : Finset ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
   e.to_linear_map.map_sum
 
 @[simp]
@@ -374,10 +376,10 @@ omit module_M module_S_M₂ re₁ re₂
 
 theorem symm_bijective [Module R M] [Module S M₂] [RingHomInvPair σ' σ] [RingHomInvPair σ σ'] :
   Function.Bijective (symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M) :=
-  Equiv.bijective ⟨(symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M), (symm : (M₂ ≃ₛₗ[σ'] M) → M ≃ₛₗ[σ] M₂), symm_symm, symm_symm⟩
+  Equivₓ.bijective ⟨(symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M), (symm : (M₂ ≃ₛₗ[σ'] M) → M ≃ₛₗ[σ] M₂), symm_symm, symm_symm⟩
 
 @[simp]
-theorem mk_coe' f h₁ h₂ h₃ h₄ : (LinearEquiv.mk f h₁ h₂ («expr⇑ » e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
+theorem mk_coe' f h₁ h₂ h₃ h₄ : (LinearEquiv.mk f h₁ h₂ (⇑e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
   symm_bijective.Injective$ ext$ fun x => rfl
 
 include σ'
@@ -392,7 +394,7 @@ omit σ'
 
 @[simp]
 theorem coe_symm_mk [Module R M] [Module R M₂] {to_fun inv_fun map_add map_smul left_inv right_inv} :
-  «expr⇑ » (⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₗ[R] M₂).symm = inv_fun :=
+  ⇑(⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₗ[R] M₂).symm = inv_fun :=
   rfl
 
 protected theorem bijective : Function.Bijective e :=
@@ -413,12 +415,14 @@ omit σ'
 
 end 
 
--- error in Data.Equiv.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Interpret a `ring_equiv` `f` as an `f`-semilinear equiv. -/
-@[simps #[]]
-def _root_.ring_equiv.to_semilinear_equiv
-(f : «expr ≃+* »(R, S)) : by haveI [] [] [":=", expr ring_hom_inv_pair.of_ring_equiv f]; haveI [] [] [":=", expr ring_hom_inv_pair.symm («expr↑ »(f) : «expr →+* »(R, S)) (f.symm : «expr →+* »(S, R))]; exact [expr «expr ≃ₛₗ[ ] »(R, («expr↑ »(f) : «expr →+* »(R, S)), S)] :=
-by exact [expr { to_fun := f, map_smul' := f.map_mul, ..f }]
+@[simps]
+def _root_.ring_equiv.to_semilinear_equiv (f : R ≃+* S) :
+  by 
+    have  := RingHomInvPair.of_ring_equiv f <;>
+      have  := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;> exact R ≃ₛₗ[(↑f : R →+* S)] S :=
+  by 
+    exact { f with toFun := f, map_smul' := f.map_mul }
 
 variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
 
@@ -431,7 +435,7 @@ def of_involutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair �
 
 @[simp]
 theorem coe_of_involutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {module_M : Module R M}
-  (f : M →ₛₗ[σ] M) (hf : involutive f) : «expr⇑ » (of_involutive f hf) = f :=
+  (f : M →ₛₗ[σ] M) (hf : involutive f) : ⇑of_involutive f hf = f :=
   rfl
 
 section RestrictScalars
@@ -501,15 +505,13 @@ end LinearEquiv
 
 namespace Module
 
--- error in Data.Equiv.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `g : R ≃+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
-@[simps #[]]
-def comp_hom.to_linear_equiv
-{R S : Type*}
-[semiring R]
-[semiring S]
-(g : «expr ≃+* »(R, S)) : by haveI [] [] [":=", expr comp_hom S («expr↑ »(g) : «expr →+* »(R, S))]; exact [expr «expr ≃ₗ[ ] »(R, R, S)] :=
-by exact [expr { to_fun := (g : R → S), inv_fun := (g.symm : S → R), map_smul' := g.map_mul, ..g }]
+@[simps]
+def comp_hom.to_linear_equiv {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R ≃+* S) :
+  by 
+    have  := comp_hom S (↑g : R →+* S) <;> exact R ≃ₗ[R] S :=
+  by 
+    exact { g with toFun := (g : R → S), invFun := (g.symm : S → R), map_smul' := g.map_mul }
 
 end Module
 

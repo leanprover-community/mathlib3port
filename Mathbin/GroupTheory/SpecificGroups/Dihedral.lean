@@ -13,14 +13,15 @@ represents the rotations of the `n`-gon by `2πi/n`, and `sr i` represents the r
 -/
 
 
--- error in GroupTheory.SpecificGroups.Dihedral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /--
 For `n ≠ 0`, `dihedral_group n` represents the symmetry group of the regular `n`-gon.
 `r i` represents the rotations of the `n`-gon by `2πi/n`, and `sr i` represents the reflections of
 the `n`-gon. `dihedral_group 0` corresponds to the infinite dihedral group.
--/ @[derive #[expr decidable_eq]] inductive dihedral_group (n : exprℕ()) : Type
-| r : zmod n → dihedral_group
-| sr : zmod n → dihedral_group
+-/
+inductive DihedralGroup (n : ℕ) : Type
+  | r : Zmod n → DihedralGroup
+  | sr : Zmod n → DihedralGroup deriving [anonymous]
 
 namespace DihedralGroup
 
@@ -172,40 +173,47 @@ theorem order_of_sr (i : Zmod n) : orderOf (sr i) = 2 :=
     rw [sq, sr_mul_self]
     decide
 
--- error in GroupTheory.SpecificGroups.Dihedral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `0 < n`, then `r 1` has order `n`.
--/ @[simp] theorem order_of_r_one : «expr = »(order_of (r 1 : dihedral_group n), n) :=
-begin
-  by_cases [expr hnpos, ":", expr «expr < »(0, n)],
-  { haveI [] [":", expr fact «expr < »(0, n)] [":=", expr ⟨hnpos⟩],
-    cases [expr lt_or_eq_of_le (nat.le_of_dvd hnpos (order_of_dvd_of_pow_eq_one (@r_one_pow_n n)))] ["with", ident h, ident h],
-    { have [ident h1] [":", expr «expr = »(«expr ^ »((r 1 : dihedral_group n), order_of (r 1)), 1)] [],
-      { exact [expr pow_order_of_eq_one _] },
-      rw [expr r_one_pow] ["at", ident h1],
-      injection [expr h1] ["with", ident h2],
-      rw ["[", "<-", expr zmod.val_eq_zero, ",", expr zmod.val_nat_cast, ",", expr nat.mod_eq_of_lt h, "]"] ["at", ident h2],
-      apply [expr absurd h2.symm],
-      apply [expr ne_of_lt],
-      exact [expr absurd h2.symm (ne_of_lt (order_of_pos _))] },
-    { exact [expr h] } },
-  { simp [] [] ["only"] ["[", expr not_lt, ",", expr nonpos_iff_eq_zero, "]"] [] ["at", ident hnpos],
-    rw [expr hnpos] [],
-    apply [expr order_of_eq_zero],
-    rw [expr is_of_fin_order_iff_pow_eq_one] [],
-    push_neg [],
-    intros [ident m, ident hm],
-    rw ["[", expr r_one_pow, ",", expr one_def, "]"] [],
-    by_contradiction [ident h],
-    have [ident h'] [":", expr «expr = »((m : zmod 0), 0)] [],
-    { exact [expr r.inj h] },
-    have [ident h''] [":", expr «expr = »(m, 0)] [],
-    { simp [] [] ["only"] ["[", expr int.coe_nat_eq_zero, ",", expr int.nat_cast_eq_coe_nat, "]"] [] ["at", ident h'],
-      exact [expr h'] },
-    rw [expr h''] ["at", ident hm],
-    apply [expr nat.lt_irrefl],
-    exact [expr hm] }
-end
+-/
+@[simp]
+theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n :=
+  by 
+    byCases' hnpos : 0 < n
+    ·
+      have  : Fact (0 < n) := ⟨hnpos⟩
+      cases' lt_or_eq_of_leₓ (Nat.le_of_dvdₓ hnpos (order_of_dvd_of_pow_eq_one (@r_one_pow_n n))) with h h
+      ·
+        have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1
+        ·
+          exact pow_order_of_eq_one _ 
+        rw [r_one_pow] at h1 
+        injection h1 with h2 
+        rw [←Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_ltₓ h] at h2 
+        apply absurd h2.symm 
+        apply ne_of_ltₓ 
+        exact absurd h2.symm (ne_of_ltₓ (order_of_pos _))
+      ·
+        exact h
+    ·
+      simp only [not_ltₓ, nonpos_iff_eq_zero] at hnpos 
+      rw [hnpos]
+      apply order_of_eq_zero 
+      rw [is_of_fin_order_iff_pow_eq_one]
+      pushNeg 
+      intro m hm 
+      rw [r_one_pow, one_def]
+      byContra h 
+      have h' : (m : Zmod 0) = 0
+      ·
+        exact r.inj h 
+      have h'' : m = 0
+      ·
+        simp only [Int.coe_nat_eq_zero, Int.nat_cast_eq_coe_nat] at h' 
+        exact h' 
+      rw [h''] at hm 
+      apply Nat.lt_irreflₓ 
+      exact hm
 
 /--
 If `0 < n`, then `i : zmod n` has order `n / gcd n i`.

@@ -55,7 +55,7 @@ include Hld
 theorem pushforward_cover_iff_cover_pullback {X : C} (S : sieve X) :
   K _ (S.functor_pushforward G) ↔ ∃ T : K (G.obj X), T.val.functor_pullback G = S :=
   by 
-    split 
+    constructor
     ·
       intro hS 
       exact ⟨⟨_, hS⟩, (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S⟩
@@ -63,34 +63,44 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : sieve X) :
       rintro ⟨T, rfl⟩
       exact Hld T
 
--- error in CategoryTheory.Sites.InducedTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a functor `G : C ⥤ (D, K)` is fully faithful and locally dense,
 then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
--/ @[simps #[]] def induced_topology : grothendieck_topology C :=
-{ sieves := λ X S, K _ (S.functor_pushforward G),
-  top_mem' := λ X, by { change [expr K _ _] [] [],
-    rw [expr sieve.functor_pushforward_top] [],
-    exact [expr K.top_mem _] },
-  pullback_stable' := λ X Y S f hS, begin
-    have [] [":", expr «expr = »(S.pullback f, ((S.functor_pushforward G).pullback (G.map f)).functor_pullback G)] [],
-    { conv_lhs [] [] { rw ["<-", expr (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S] },
-      ext [] [] [],
-      change [expr «expr ↔ »(S.functor_pushforward G _, S.functor_pushforward G _)] [] [],
-      rw [expr G.map_comp] [] },
-    rw [expr this] [],
-    change [expr K _ _] [] [],
-    apply [expr Hld ⟨_, K.pullback_stable (G.map f) hS⟩]
-  end,
-  transitive' := λ X S hS S' H', begin
-    apply [expr K.transitive hS],
-    rintros [ident Y, "_", "⟨", ident Z, ",", ident g, ",", ident i, ",", ident hg, ",", ident rfl, "⟩"],
-    rw [expr sieve.pullback_comp] [],
-    apply [expr K.pullback_stable i],
-    refine [expr K.superset_covering _ (H' hg)],
-    rintros [ident W, "_", "⟨", ident Z', ",", ident g', ",", ident i', ",", ident hg, ",", ident rfl, "⟩"],
-    use [expr ⟨Z', «expr ≫ »(g', g), i', hg, by simp [] [] [] [] [] []⟩]
-  end }
+-/
+@[simps]
+def induced_topology : grothendieck_topology C :=
+  { Sieves := fun X S => K _ (S.functor_pushforward G),
+    top_mem' :=
+      fun X =>
+        by 
+          change K _ _ 
+          rw [sieve.functor_pushforward_top]
+          exact K.top_mem _,
+    pullback_stable' :=
+      fun X Y S f hS =>
+        by 
+          have  : S.pullback f = ((S.functor_pushforward G).pullback (G.map f)).FunctorPullback G
+          ·
+            convLHS => rw [←(sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S]
+            ext 
+            change (S.functor_pushforward G) _ ↔ (S.functor_pushforward G) _ 
+            rw [G.map_comp]
+          rw [this]
+          change K _ _ 
+          apply Hld ⟨_, K.pullback_stable (G.map f) hS⟩,
+    transitive' :=
+      fun X S hS S' H' =>
+        by 
+          apply K.transitive hS 
+          rintro Y _ ⟨Z, g, i, hg, rfl⟩
+          rw [sieve.pullback_comp]
+          apply K.pullback_stable i 
+          refine' K.superset_covering _ (H' hg)
+          rintro W _ ⟨Z', g', i', hg, rfl⟩
+          use
+            ⟨Z', g' ≫ g, i', hg,
+              by 
+                simp ⟩ }
 
 /-- `G` is cover-lifting wrt the induced topology. -/
 theorem induced_topology_cover_lifting : cover_lifting Hld.induced_topology K G :=
@@ -110,7 +120,7 @@ theorem cover_dense.locally_cover_dense [full G] (H : cover_dense K G) : locally
     use W 
     use G.preimage (f' ≫ f)
     use g 
-    split 
+    constructor 
     simpa using T.val.downward_closed hf f' 
     simp 
 
@@ -127,7 +137,7 @@ theorem over_forget_locally_cover_dense (X : C) : locally_cover_dense J (over.fo
     intro Y T 
     convert T.property 
     ext Z f 
-    split 
+    constructor
     ·
       rintro ⟨_, _, g', hg, rfl⟩
       exact T.val.downward_closed hg g'

@@ -16,7 +16,7 @@ is a monadic right adjoint.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 

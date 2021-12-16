@@ -56,23 +56,24 @@ variable {ι : Type _} (M : ∀ i : ι, Type _) [∀ i, Monoidₓ (M i)]
 
 /-- A relation on the free monoid on alphabet `Σ i, M i`, relating `⟨i, 1⟩` with `1` and
 `⟨i, x⟩ * ⟨i, y⟩` with `⟨i, x * y⟩`. -/
-inductive FreeProduct.Rel : FreeMonoid (Σi, M i) → FreeMonoid (Σi, M i) → Prop
+inductive FreeProduct.Rel : FreeMonoid (Σ i, M i) → FreeMonoid (Σ i, M i) → Prop
   | of_one (i : ι) : FreeProduct.Rel (FreeMonoid.of ⟨i, 1⟩) 1
   | of_mul {i : ι} (x y : M i) : FreeProduct.Rel (FreeMonoid.of ⟨i, x⟩*FreeMonoid.of ⟨i, y⟩) (FreeMonoid.of ⟨i, x*y⟩)
 
--- error in GroupTheory.FreeProduct: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monoid
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler monoid
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The free product (categorical coproduct) of an indexed family of monoids. -/
-@[derive #["[", expr monoid, ",", expr inhabited, "]"]]
-def free_product : Type* :=
-(con_gen (free_product.rel M)).quotient
+def FreeProduct : Type _ :=
+  (conGen (FreeProduct.Rel M)).Quotient deriving [anonymous], [anonymous]
 
 namespace FreeProduct
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » to_list)
 /-- The type of reduced words. A reduced word cannot contain a letter `1`, and no two adjacent
 letters can come from the same summand. -/
 @[ext]
 structure word where 
-  toList : List (Σi, M i)
+  toList : List (Σ i, M i)
   ne_one : ∀ l _ : l ∈ to_list, Sigma.snd l ≠ 1
   chain_ne : to_list.chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
 
@@ -104,7 +105,7 @@ universal property of the free product, charaterizing it as a categorical coprod
 def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N) :=
   { toFun :=
       fun fi =>
-        Con.lift _ (FreeMonoid.lift$ fun p : Σi, M i => fi p.fst p.snd)$
+        Con.lift _ (FreeMonoid.lift$ fun p : Σ i, M i => fi p.fst p.snd)$
           Con.con_gen_le
             (by 
               simpRw [Con.rel_eq_coe, Con.ker_rel]
@@ -149,7 +150,7 @@ theorem of_left_inverse [DecidableEq ι] (i : ι) :
     by 
       simp only [lift_of, Function.update_same, MonoidHom.id_apply]
 
-theorem of_injective (i : ι) : Function.Injective («expr⇑ » (of : M i →* _)) :=
+theorem of_injective (i : ι) : Function.Injective (⇑(of : M i →* _)) :=
   by 
     classical 
     exact (of_left_inverse i).Injective
@@ -206,6 +207,7 @@ then it's `none`. -/
 def fst_idx (w : word M) : Option ι :=
   w.to_list.head'.map Sigma.fst
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » w.to_list.head')
 theorem fst_idx_ne_iff {w : word M} {i} : fst_idx w ≠ some i ↔ ∀ l _ : l ∈ w.to_list.head', i ≠ Sigma.fst l :=
   not_iff_not.mp$
     by 
@@ -244,9 +246,10 @@ def rcons {i} (p : pair M i) : word M :=
           exact p.tail.ne_one l hl,
       chain_ne := p.tail.chain_ne.cons' (fst_idx_ne_iff.mp p.fst_idx_ne) }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l' «expr ∈ » [«expr :: »/«expr :: »/«expr :: »](l, ls))
 /-- Given a word of the form `⟨l :: ls, h1, h2⟩`, we can form a word of the form `⟨ls, _, _⟩`,
 dropping the first letter. -/
-private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀ l' _ : l' ∈ l :: ls, Sigma.snd l' ≠ 1) (h2 : (l :: ls).Chain' _) :
+private def mk_aux {l} (ls : List (Σ i, M i)) (h1 : ∀ l' _ : l' ∈ l :: ls, Sigma.snd l' ≠ 1) (h2 : (l :: ls).Chain' _) :
   word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_memₓ _ hl), h2.tail⟩
 
@@ -266,27 +269,31 @@ theorem prod_rcons {i} (p : pair M i) : Prod (rcons p) = of p.head*Prod p.tail :
     by 
       rw [rcons, dif_neg hm, Prod, List.map_consₓ, List.prod_cons, Prod]
 
--- error in GroupTheory.FreeProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rcons_inj {i} : function.injective (rcons : pair M i → word M) :=
-begin
-  rintros ["⟨", ident m, ",", ident w, ",", ident h, "⟩", "⟨", ident m', ",", ident w', ",", ident h', "⟩", ident he],
-  by_cases [expr hm, ":", expr «expr = »(m, 1)]; by_cases [expr hm', ":", expr «expr = »(m', 1)],
-  { simp [] [] ["only"] ["[", expr rcons, ",", expr dif_pos hm, ",", expr dif_pos hm', "]"] [] ["at", ident he],
-    cc },
-  { exfalso,
-    simp [] [] ["only"] ["[", expr rcons, ",", expr dif_pos hm, ",", expr dif_neg hm', "]"] [] ["at", ident he],
-    rw [expr he] ["at", ident h],
-    exact [expr h rfl] },
-  { exfalso,
-    simp [] [] ["only"] ["[", expr rcons, ",", expr dif_pos hm', ",", expr dif_neg hm, "]"] [] ["at", ident he],
-    rw ["<-", expr he] ["at", ident h'],
-    exact [expr h' rfl] },
-  { have [] [":", expr «expr ∧ »(«expr = »(m, m'), «expr = »(w.to_list, w'.to_list))] [],
-    { simpa [] [] ["only"] ["[", expr rcons, ",", expr dif_neg hm, ",", expr dif_neg hm', ",", expr true_and, ",", expr eq_self_iff_true, ",", expr subtype.mk_eq_mk, ",", expr heq_iff_eq, ",", "<-", expr subtype.ext_iff_val, "]"] [] ["using", expr he] },
-    rcases [expr this, "with", "⟨", ident rfl, ",", ident h, "⟩"],
-    congr,
-    exact [expr word.ext _ _ h] }
-end
+theorem rcons_inj {i} : Function.Injective (rcons : pair M i → word M) :=
+  by 
+    rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he 
+    byCases' hm : m = 1 <;> byCases' hm' : m' = 1
+    ·
+      simp only [rcons, dif_pos hm, dif_pos hm'] at he 
+      cc
+    ·
+      exfalso 
+      simp only [rcons, dif_pos hm, dif_neg hm'] at he 
+      rw [he] at h 
+      exact h rfl
+    ·
+      exfalso 
+      simp only [rcons, dif_pos hm', dif_neg hm] at he 
+      rw [←he] at h' 
+      exact h' rfl
+    ·
+      have  : m = m' ∧ w.to_list = w'.to_list
+      ·
+        simpa only [rcons, dif_neg hm, dif_neg hm', true_andₓ, eq_self_iff_true, Subtype.mk_eq_mk, heq_iff_eq,
+          ←Subtype.ext_iff_val] using he 
+      rcases this with ⟨rfl, h⟩
+      congr 
+      exact word.ext _ _ h
 
 variable [DecidableEq ι]
 
@@ -332,7 +339,7 @@ instance summand_action i : MulAction (M i) (word M) :=
     mul_smul :=
       fun m m' w =>
         by 
-          simp only [mul_assocₓ, ←equiv_pair_symm, Equiv.apply_symm_apply] }
+          simp only [mul_assocₓ, ←equiv_pair_symm, Equivₓ.apply_symm_apply] }
 
 instance : MulAction (FreeProduct M) (word M) :=
   MulAction.ofEndHom (lift fun i => MulAction.toEndHom)
@@ -365,13 +372,13 @@ theorem prod_smul m : ∀ w : word M, Prod (m • w) = m*Prod w :=
       rw [one_smul, one_mulₓ]
     ·
       intros 
-      rw [of_smul_def, prod_rcons, of.map_mul, mul_assocₓ, ←prod_rcons, ←equiv_pair_symm, Equiv.symm_apply_apply]
+      rw [of_smul_def, prod_rcons, of.map_mul, mul_assocₓ, ←prod_rcons, ←equiv_pair_symm, Equivₓ.symm_apply_apply]
     ·
       intro x y hx hy w 
       rw [mul_smul, hx, hy, mul_assocₓ]
 
 /-- Each element of the free product corresponds to a unique reduced word. -/
-def Equiv : FreeProduct M ≃ word M :=
+def Equivₓ : FreeProduct M ≃ word M :=
   { toFun := fun m => m • Empty, invFun := fun w => Prod w,
     left_inv :=
       fun m =>

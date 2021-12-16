@@ -30,27 +30,41 @@ variable {F : Type u → Type u} [Applicativeₓ F] [IsCommApplicative F]
 
 variable {α' β' : Type u} (f : α' → F β')
 
--- error in Data.Multiset.Functor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-def traverse : multiset α' → F (multiset β') :=
-quotient.lift «expr ∘ »(functor.map coe, traversable.traverse f) (begin
-   introv [ident p],
-   unfold [ident function.comp] [],
-   induction [expr p] [] [] [],
-   case [ident perm.nil] { refl },
-   case [ident perm.cons] { have [] [":", expr «expr = »(«expr <*> »(«expr <$> »(multiset.cons, f p_x), «expr <$> »(coe, traverse f p_l₁)), «expr <*> »(«expr <$> »(multiset.cons, f p_x), «expr <$> »(coe, traverse f p_l₂)))] [],
-     { rw ["[", expr p_ih, "]"] [] },
-     simpa [] [] [] [] ["with", ident functor_norm] [] },
-   case [ident perm.swap] { have [] [":", expr «expr = »(«expr <*> »(«expr <$> »(λ
-         (a b)
-         (l : list β'), («expr↑ »(«expr :: »(a, «expr :: »(b, l))) : multiset β'), f p_y), f p_x), «expr <*> »(«expr <$> »(λ
-         a b l, «expr↑ »(«expr :: »(a, «expr :: »(b, l))), f p_x), f p_y))] [],
-     { rw ["[", expr is_comm_applicative.commutative_map, "]"] [],
-       congr,
-       funext [ident a, ident b, ident l],
-       simpa [] [] [] ["[", expr flip, "]"] [] ["using", expr perm.swap b a l] },
-     simp [] [] [] ["[", expr («expr ∘ »), ",", expr this, "]"] ["with", ident functor_norm] [] },
-   case [ident perm.trans] { simp [] [] [] ["[", "*", "]"] [] [] }
- end)
+-- failed to format: format: uncaught backtrack exception
+def
+  traverse
+  : Multiset α' → F ( Multiset β' )
+  :=
+    Quotientₓ.lift
+      ( Functor.map coeₓ ∘ Traversable.traverse f )
+        (
+          by
+            introv p
+              unfold Function.comp
+              induction p
+              case perm.nil => rfl
+              case
+                perm.cons
+                =>
+                have
+                    :
+                      ( ( Multiset.cons <$> f p_x ) <*> coeₓ <$> traverse f p_l₁ )
+                        =
+                        ( Multiset.cons <$> f p_x ) <*> coeₓ <$> traverse f p_l₂
+                  · rw [ p_ih ]
+                  simpa with functor_norm
+              case
+                perm.swap
+                =>
+                have
+                    :
+                      ( ( ( fun a b l : List β' => ( ↑ ( a :: b :: l ) : Multiset β' ) ) <$> f p_y ) <*> f p_x )
+                        =
+                        ( ( fun a b l => ↑ ( a :: b :: l ) ) <$> f p_x ) <*> f p_y
+                  · rw [ IsCommApplicative.commutative_map ] congr funext a b l simpa [ flip ] using perm.swap b a l
+                  simp' [ · ∘ · , this ] with functor_norm
+              case perm.trans => simp
+          )
 
 instance : Monadₓ Multiset :=
   { Multiset.functor with pure := fun α x => {x}, bind := @bind }

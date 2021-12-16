@@ -6,15 +6,17 @@ open Tactic
 
 namespace Omega
 
--- error in Tactic.Omega.FindEes: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The state of equality elimination proof search. `eqs` is the list of
     equality constraints, and each `t ∈ eqs` represents the constraint `0 = t`.
     Similarly, `les` is the list of inequality constraints, and each `t ∈ eqs`
     represents the constraint `0 < t`. `ees` is the sequence of equality
     elimination steps that have been used so far to obtain the current set of
     constraints. The list `ees` grows over time until `eqs` becomes empty. -/
-@[derive #[expr inhabited]]
-structure ee_state := (eqs : list term) (les : list term) (ees : list ee)
+structure ee_state where 
+  eqs : List term 
+  les : List term 
+  ees : List ee deriving [anonymous]
 
 @[reducible]
 unsafe def eqelim :=
@@ -91,7 +93,7 @@ def gcd : List Int → Nat
 
 /-- GCD of all coefficients in a term. -/
 unsafe def get_gcd (t : term) : eqelim Int :=
-  pure («expr↑ » (gcd t.snd))
+  pure (↑gcd t.snd)
 
 /-- Divide a term by an integer if the integer divides
     the constant component of the term. It is assumed that

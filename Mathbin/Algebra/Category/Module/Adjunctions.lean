@@ -11,7 +11,7 @@ the forgetful functor from `R`-modules to types.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 

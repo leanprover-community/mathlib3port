@@ -1,4 +1,4 @@
-import Mathbin.Data.Bool 
+import Mathbin.Data.Bool.Basic 
 import Mathbin.Meta.RbMap 
 import Mathbin.Tactic.Lint.Basic
 
@@ -250,7 +250,7 @@ https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/odd.20repea
 -/
 @[linter]
 unsafe def linter.fails_quickly : linter :=
-  { test := fails_quickly 10000, auto_decls := tt, no_errors_found := "No type-class searches timed out.",
+  { test := fails_quickly 15000, auto_decls := tt, no_errors_found := "No type-class searches timed out.",
     errors_found :=
       "TYPE CLASS SEARCHES TIMED OUT.\nThe following instances are part of a loop, or an excessively long search.\nIt is common that the loop occurs in a different class than the one flagged below,\nbut usually an instance that is part of the loop is also flagged.\nTo debug:\n(1) run `scripts/mk_all.sh` and create a file with `import all` and\n`set_option trace.class_instances true`\n(2) Recreate the state shown in the error message. You can do this easily by copying the type of\nthe instance (the output of `#check @my_instance`), turning this into an example and removing the\nlast argument in square brackets. Prove the example using `by apply_instance`.\nFor example, if `additive.topological_add_group` raises an error, run\n```\nexample {G : Type*} [topological_space G] [group G] : topological_add_group (additive G) :=\nby apply_instance\n```\n(3) What error do you get?\n(3a) If the error is \"tactic.mk_instance failed to generate instance\",\nthere might be nothing wrong. But it might take unreasonably long for the type-class inference to\nfail. Check the trace to see if type-class inference takes any unnecessary long unexpected turns.\nIf not, feel free to increase the value in the definition of the linter `fails_quickly`.\n(3b) If the error is \"maximum class-instance resolution depth has been reached\" there is almost\ncertainly a loop in the type-class inference. Find which instance causes the type-class inference to\ngo astray, and fix that instance.",
     is_fast := ff }

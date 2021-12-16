@@ -39,8 +39,9 @@ namespace Magma
 instance bundled_hom : bundled_hom @MulHom :=
   ⟨@MulHom.toFun, @MulHom.id, @MulHom.comp, @MulHom.coe_inj⟩
 
--- error in Algebra.Category.Semigroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Magma
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for Magma
 
 attribute [toAdditive] Magma.largeCategory Magma.concreteCategory
 
@@ -92,8 +93,9 @@ namespace Semigroupₓₓ
 instance : bundled_hom.parent_projection Semigroupₓ.toHasMul :=
   ⟨⟩
 
--- error in Algebra.Category.Semigroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Semigroup
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for Semigroupₓₓ
 
 attribute [toAdditive] Semigroupₓₓ.largeCategory Semigroupₓₓ.concreteCategory
 

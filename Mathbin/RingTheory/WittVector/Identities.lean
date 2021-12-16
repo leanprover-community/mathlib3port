@@ -26,7 +26,7 @@ variable {p : ℕ} {R : Type _} [Fact p.prime] [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 
-noncomputable theory
+noncomputable section 
 
 /-- The composition of Frobenius and Verschiebung is multiplication by `p`. -/
 theorem frobenius_verschiebung (x : 𝕎 R) : frobenius (verschiebung x) = x*p :=

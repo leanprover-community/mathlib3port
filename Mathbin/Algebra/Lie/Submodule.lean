@@ -120,15 +120,15 @@ theorem coe_to_submodule_eq_iff : (N : Submodule R M) = (N' : Submodule R M) ↔
 
 /-- Copy of a lie_submodule with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (s : Set M) (hs : s = «expr↑ » N) : LieSubmodule R L M :=
+protected def copy (s : Set M) (hs : s = ↑N) : LieSubmodule R L M :=
   { Carrier := s, zero_mem' := hs.symm ▸ N.zero_mem', add_mem' := hs.symm ▸ N.add_mem',
     smul_mem' := hs.symm ▸ N.smul_mem', lie_mem := hs.symm ▸ N.lie_mem }
 
 @[simp]
-theorem coe_copy (S : LieSubmodule R L M) (s : Set M) (hs : s = «expr↑ » S) : (S.copy s hs : Set M) = s :=
+theorem coe_copy (S : LieSubmodule R L M) (s : Set M) (hs : s = ↑S) : (S.copy s hs : Set M) = s :=
   rfl
 
-theorem copy_eq (S : LieSubmodule R L M) (s : Set M) (hs : s = «expr↑ » S) : S.copy s hs = S :=
+theorem copy_eq (S : LieSubmodule R L M) (s : Set M) (hs : s = ↑S) : S.copy s hs = S :=
   coe_submodule_injective (SetLike.coe_injective hs)
 
 instance : LieRingModule L N :=
@@ -166,23 +166,23 @@ theorem coe_zero : ((0 : N) : M) = (0 : M) :=
   rfl
 
 @[simp, normCast]
-theorem coe_add (m m' : N) : («expr↑ » (m+m') : M) = (m : M)+(m' : M) :=
+theorem coe_add (m m' : N) : (↑m+m' : M) = (m : M)+(m' : M) :=
   rfl
 
 @[simp, normCast]
-theorem coe_neg (m : N) : («expr↑ » (-m) : M) = -(m : M) :=
+theorem coe_neg (m : N) : (↑(-m) : M) = -(m : M) :=
   rfl
 
 @[simp, normCast]
-theorem coe_sub (m m' : N) : («expr↑ » (m - m') : M) = (m : M) - (m' : M) :=
+theorem coe_sub (m m' : N) : (↑(m - m') : M) = (m : M) - (m' : M) :=
   rfl
 
 @[simp, normCast]
-theorem coe_smul (t : R) (m : N) : («expr↑ » (t • m) : M) = t • (m : M) :=
+theorem coe_smul (t : R) (m : N) : (↑(t • m) : M) = t • (m : M) :=
   rfl
 
 @[simp, normCast]
-theorem coe_bracket (x : L) (m : N) : («expr↑ » ⁅x,m⁆ : M) = ⁅x,«expr↑ » m⁆ :=
+theorem coe_bracket (x : L) (m : N) : (↑⁅x,m⁆ : M) = ⁅x,↑m⁆ :=
   rfl
 
 end LieSubmodule
@@ -230,9 +230,9 @@ end LieIdeal
 variable {R M}
 
 theorem Submodule.exists_lie_submodule_coe_eq_iff (p : Submodule R M) :
-  (∃ N : LieSubmodule R L M, «expr↑ » N = p) ↔ ∀ x : L m : M, m ∈ p → ⁅x,m⁆ ∈ p :=
+  (∃ N : LieSubmodule R L M, ↑N = p) ↔ ∀ x : L m : M, m ∈ p → ⁅x,m⁆ ∈ p :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨N, rfl⟩
       exact N.lie_mem
@@ -261,17 +261,17 @@ theorem mem_to_lie_submodule {K : LieSubalgebra R L} (x : L) : x ∈ K.to_lie_su
   Iff.rfl
 
 theorem exists_lie_ideal_coe_eq_iff (K : LieSubalgebra R L) :
-  (∃ I : LieIdeal R L, «expr↑ » I = K) ↔ ∀ x y : L, y ∈ K → ⁅x,y⁆ ∈ K :=
+  (∃ I : LieIdeal R L, ↑I = K) ↔ ∀ x y : L, y ∈ K → ⁅x,y⁆ ∈ K :=
   by 
     simp only [←coe_to_submodule_eq_iff, LieIdeal.coe_to_lie_subalgebra_to_submodule,
       Submodule.exists_lie_submodule_coe_eq_iff L]
     exact Iff.rfl
 
 theorem exists_nested_lie_ideal_coe_eq_iff {K K' : LieSubalgebra R L} (h : K ≤ K') :
-  (∃ I : LieIdeal R K', «expr↑ » I = of_le h) ↔ ∀ x y : L, x ∈ K' → y ∈ K → ⁅x,y⁆ ∈ K :=
+  (∃ I : LieIdeal R K', ↑I = of_le h) ↔ ∀ x y : L, x ∈ K' → y ∈ K → ⁅x,y⁆ ∈ K :=
   by 
     simp only [exists_lie_ideal_coe_eq_iff, coe_bracket, mem_of_le]
-    split 
+    constructor
     ·
       intro h' x y hx hy 
       exact h' ⟨x, hx⟩ ⟨y, h hy⟩ hy
@@ -337,9 +337,11 @@ theorem mem_top (x : M) : x ∈ (⊤ : LieSubmodule R L M) :=
 instance : HasInf (LieSubmodule R L M) :=
   ⟨fun N N' => { (N⊓N' : Submodule R M) with lie_mem := fun x m h => mem_inter (N.lie_mem h.1) (N'.lie_mem h.2) }⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:717:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubmodule R L M) :=
   ⟨fun S =>
-      { Inf {(s : Submodule R M) | (s)(_ : s ∈ S) } with
+      { Inf
+          "././Mathport/Syntax/Translate/Basic.lean:717:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
         lie_mem :=
           fun x m h =>
             by 
@@ -349,31 +351,34 @@ instance : HasInfₓ (LieSubmodule R L M) :=
               apply N.lie_mem (h N hN) }⟩
 
 @[simp]
-theorem inf_coe : («expr↑ » (N⊓N') : Set M) = N ∩ N' :=
+theorem inf_coe : (↑(N⊓N') : Set M) = N ∩ N' :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:717:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubmodule R L M)) :
-  («expr↑ » (Inf S) : Submodule R M) = Inf {(s : Submodule R M) | (s)(_ : s ∈ S) } :=
+  (↑Inf S : Submodule R M) =
+    Inf
+      "././Mathport/Syntax/Translate/Basic.lean:717:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 @[simp]
-theorem Inf_coe (S : Set (LieSubmodule R L M)) : («expr↑ » (Inf S) : Set M) = ⋂(s : _)(_ : s ∈ S), (s : Set M) :=
+theorem Inf_coe (S : Set (LieSubmodule R L M)) : (↑Inf S : Set M) = ⋂ (s : _)(_ : s ∈ S), (s : Set M) :=
   by 
     rw [←LieSubmodule.coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
     ext m 
     simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
 
--- error in Algebra.Lie.Submodule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Inf_glb (S : set (lie_submodule R L M)) : is_glb S (Inf S) :=
-begin
-  have [ident h] [":", expr ∀ N N' : lie_submodule R L M, «expr ↔ »(«expr ≤ »((N : set M), N'), «expr ≤ »(N, N'))] [],
-  { intros [],
-    refl },
-  apply [expr is_glb.of_image h],
-  simp [] [] ["only"] ["[", expr Inf_coe, "]"] [] [],
-  exact [expr is_glb_binfi]
-end
+theorem Inf_glb (S : Set (LieSubmodule R L M)) : IsGlb S (Inf S) :=
+  by 
+    have h : ∀ N N' : LieSubmodule R L M, (N : Set M) ≤ N' ↔ N ≤ N'
+    ·
+      intros 
+      rfl 
+    apply IsGlb.of_image h 
+    simp only [Inf_coe]
+    exact is_glb_binfi
 
 /-- The set of Lie submodules of a Lie module form a complete lattice.
 
@@ -398,23 +403,23 @@ instance : AddCommMonoidₓ (LieSubmodule R L M) :=
 theorem add_eq_sup : (N+N') = N⊔N' :=
   rfl
 
--- error in Algebra.Lie.Submodule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[norm_cast #[], simp]
-theorem sup_coe_to_submodule : «expr = »((«expr↑ »(«expr ⊔ »(N, N')) : submodule R M), «expr ⊔ »((N : submodule R M), (N' : submodule R M))) :=
-begin
-  have [ident aux] [":", expr ∀
-   (x : L)
-   (m), «expr ∈ »(m, («expr ⊔ »(N, N') : submodule R M)) → «expr ∈ »(«expr⁅ , ⁆»(x, m), («expr ⊔ »(N, N') : submodule R M))] [],
-  { simp [] [] ["only"] ["[", expr submodule.mem_sup, "]"] [] [],
-    rintro [ident x, ident m, "⟨", ident y, ",", ident hy, ",", ident z, ",", ident hz, ",", ident rfl, "⟩"],
-    refine [expr ⟨«expr⁅ , ⁆»(x, y), N.lie_mem hy, «expr⁅ , ⁆»(x, z), N'.lie_mem hz, (lie_add _ _ _).symm⟩] },
-  refine [expr le_antisymm (Inf_le ⟨{ lie_mem := aux, ..(«expr ⊔ »(N, N') : submodule R M) }, _⟩) _],
-  { simp [] [] ["only"] ["[", expr exists_prop, ",", expr and_true, ",", expr mem_set_of_eq, ",", expr eq_self_iff_true, ",", expr coe_to_submodule_mk, ",", "<-", expr coe_submodule_le_coe_submodule, ",", expr and_self, ",", expr le_sup_left, ",", expr le_sup_right, "]"] [] [] },
-  { simp [] [] [] [] [] [] }
-end
+@[normCast, simp]
+theorem sup_coe_to_submodule : (↑(N⊔N') : Submodule R M) = (N : Submodule R M)⊔(N' : Submodule R M) :=
+  by 
+    have aux : ∀ x : L m, m ∈ (N⊔N' : Submodule R M) → ⁅x,m⁆ ∈ (N⊔N' : Submodule R M)
+    ·
+      simp only [Submodule.mem_sup]
+      rintro x m ⟨y, hy, z, hz, rfl⟩
+      refine' ⟨⁅x,y⁆, N.lie_mem hy, ⁅x,z⁆, N'.lie_mem hz, (lie_add _ _ _).symm⟩
+    refine' le_antisymmₓ (Inf_le ⟨{ (N⊔N' : Submodule R M) with lie_mem := aux }, _⟩) _
+    ·
+      simp only [exists_prop, and_trueₓ, mem_set_of_eq, eq_self_iff_true, coe_to_submodule_mk,
+        ←coe_submodule_le_coe_submodule, and_selfₓ, le_sup_left, le_sup_right]
+    ·
+      simp 
 
 @[normCast, simp]
-theorem inf_coe_to_submodule : («expr↑ » (N⊓N') : Submodule R M) = (N : Submodule R M)⊓(N' : Submodule R M) :=
+theorem inf_coe_to_submodule : (↑(N⊓N') : Submodule R M) = (N : Submodule R M)⊓(N' : Submodule R M) :=
   rfl
 
 @[simp]
@@ -422,6 +427,8 @@ theorem mem_inf (x : M) : x ∈ N⊓N' ↔ x ∈ N ∧ x ∈ N' :=
   by 
     rw [←mem_coe_submodule, ←mem_coe_submodule, ←mem_coe_submodule, inf_coe_to_submodule, Submodule.mem_inf]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » N')
 theorem mem_sup (x : M) : x ∈ N⊔N' ↔ ∃ (y : _)(_ : y ∈ N)(z : _)(_ : z ∈ N'), (y+z) = x :=
   by 
     rw [←mem_coe_submodule, sup_coe_to_submodule, Submodule.mem_sup]
@@ -432,7 +439,7 @@ theorem eq_bot_iff : N = ⊥ ↔ ∀ m : M, m ∈ N → m = 0 :=
     rw [eq_bot_iff]
     exact Iff.rfl
 
-theorem subsingleton_of_bot : Subsingleton (LieSubmodule R L («expr↥ » (⊥ : LieSubmodule R L M))) :=
+theorem subsingleton_of_bot : Subsingleton (LieSubmodule R L (↥(⊥ : LieSubmodule R L M))) :=
   by 
     apply subsingleton_of_bot_eq_top 
     ext ⟨x, hx⟩
@@ -446,7 +453,7 @@ instance : IsModularLattice (LieSubmodule R L M) :=
       fun N₁ N₂ N₃ =>
         by 
           simp only [←coe_submodule_le_coe_submodule, sup_coe_to_submodule, inf_coe_to_submodule]
-          exact IsModularLattice.sup_inf_le_assoc_of_le («expr↑ » N₂) }
+          exact IsModularLattice.sup_inf_le_assoc_of_le (↑N₂) }
 
 variable (R L M)
 
@@ -515,9 +522,10 @@ section LieSpan
 
 variable (R L) (s : Set M)
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The `lie_span` of a set `s ⊆ M` is the smallest Lie submodule of `M` that contains `s`. -/
-def lie_span : LieSubmodule R L M :=
-  Inf { N | s ⊆ N }
+  def lie_span : LieSubmodule R L M := Inf { N | s ⊆ N }
 
 variable {R L s}
 
@@ -541,7 +549,7 @@ theorem submodule_span_le_lie_span : Submodule.span R s ≤ lie_span R L s :=
 
 theorem lie_span_le {N} : lie_span R L s ≤ N ↔ s ⊆ N :=
   by 
-    split 
+    constructor
     ·
       exact subset.trans subset_lie_span
     ·
@@ -558,10 +566,10 @@ theorem lie_span_eq : lie_span R L (N : Set M) = N :=
   le_antisymmₓ (lie_span_le.mpr rfl.Subset) subset_lie_span
 
 theorem coe_lie_span_submodule_eq_iff {p : Submodule R M} :
-  (lie_span R L (p : Set M) : Submodule R M) = p ↔ ∃ N : LieSubmodule R L M, «expr↑ » N = p :=
+  (lie_span R L (p : Set M) : Submodule R M) = p ↔ ∃ N : LieSubmodule R L M, ↑N = p :=
   by 
     rw [p.exists_lie_submodule_coe_eq_iff L]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       intro x m hm 
       rw [←h, mem_coe_submodule]
@@ -589,7 +597,7 @@ variable {M}
 theorem span_union (s t : Set M) : lie_span R L (s ∪ t) = lie_span R L s⊔lie_span R L t :=
   (LieSubmodule.gi R L M).gc.l_sup
 
-theorem span_Union {ι} (s : ι → Set M) : lie_span R L (⋃i, s i) = ⨆i, lie_span R L (s i) :=
+theorem span_Union {ι} (s : ι → Set M) : lie_span R L (⋃ i, s i) = ⨆ i, lie_span R L (s i) :=
   (LieSubmodule.gi R L M).gc.l_supr
 
 end LieSpan
@@ -621,7 +629,7 @@ def map : LieSubmodule R L M' :=
         by 
           rcases h with ⟨m, hm, hfm⟩
           use ⁅x,m⁆
-          split 
+          constructor
           ·
             apply N.lie_mem hm
           ·
@@ -696,7 +704,7 @@ def comap : LieIdeal R L :=
           apply J.lie_mem h }
 
 @[simp]
-theorem map_coe_submodule (h : «expr↑ » (map f I) = f '' I) :
+theorem map_coe_submodule (h : ↑map f I = f '' I) :
   (map f I : Submodule R L') = (I : Submodule R L).map (f : L →ₗ[R] L') :=
   by 
     rw [SetLike.ext'_iff, LieSubmodule.coe_to_submodule, h, Submodule.map_coe]
@@ -753,7 +761,7 @@ theorem map_mono : Monotone (map f) :=
   fun I₁ I₂ h =>
     by 
       rw [SetLike.le_def] at h 
-      apply LieSubmodule.lie_span_mono (Set.image_subset («expr⇑ » f) h)
+      apply LieSubmodule.lie_span_mono (Set.image_subset (⇑f) h)
 
 @[mono]
 theorem comap_mono : Monotone (comap f) :=
@@ -777,7 +785,7 @@ different (though the latter does naturally inject into the former).
 
 In other words, in general, ideals of `I`, regarded as a Lie algebra in its own right, are not the
 same as ideals of `L` contained in `I`. -/
-theorem subsingleton_of_bot : Subsingleton (LieIdeal R («expr↥ » (⊥ : LieIdeal R L))) :=
+theorem subsingleton_of_bot : Subsingleton (LieIdeal R (↥(⊥ : LieIdeal R L))) :=
   by 
     apply subsingleton_of_bot_eq_top 
     ext ⟨x, hx⟩
@@ -823,7 +831,7 @@ theorem is_ideal_morphism_iff : f.is_ideal_morphism ↔ ∀ x : L' y : L, ∃ z 
       ←f.range.coe_to_submodule, LieIdeal.coe_to_lie_subalgebra_to_submodule,
       LieSubmodule.coe_lie_span_submodule_eq_iff, LieSubalgebra.mem_coe_submodule, mem_range, exists_imp_distrib,
       Submodule.exists_lie_submodule_coe_eq_iff]
-    split 
+    constructor
     ·
       intro h x y 
       obtain ⟨z, hz⟩ := h x (f y) y rfl 
@@ -868,7 +876,7 @@ theorem mem_ideal_range_iff (h : is_ideal_morphism f) {y : L'} : y ∈ ideal_ran
 
 theorem le_ker_iff : I ≤ f.ker ↔ ∀ x, x ∈ I → f x = 0 :=
   by 
-    split  <;> intro h x hx
+    constructor <;> intro h x hx
     ·
       specialize h hx 
       rw [mem_ker] at h 
@@ -917,24 +925,26 @@ theorem map_eq_bot_iff : I.map f = ⊥ ↔ I ≤ f.ker :=
     rw [←le_bot_iff]
     exact LieIdeal.map_le_iff_le_comap
 
--- error in Algebra.Lie.Submodule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coe_map_of_surjective
-(h : function.surjective f) : «expr = »((I.map f : submodule R L'), (I : submodule R L).map (f : «expr →ₗ[ ] »(L, R, L'))) :=
-begin
-  let [ident J] [":", expr lie_ideal R L'] [":=", expr { lie_mem := λ x y hy, begin
-       have [ident hy'] [":", expr «expr∃ , »((x : L), «expr ∧ »(«expr ∈ »(x, I), «expr = »(f x, y)))] [],
-       { simpa [] [] [] ["[", expr hy, "]"] [] [] },
-       obtain ["⟨", ident z₂, ",", ident hz₂, ",", ident rfl, "⟩", ":=", expr hy'],
-       obtain ["⟨", ident z₁, ",", ident rfl, "⟩", ":=", expr h x],
-       simp [] [] ["only"] ["[", expr lie_hom.coe_to_linear_map, ",", expr set_like.mem_coe, ",", expr set.mem_image, ",", expr lie_submodule.mem_coe_submodule, ",", expr submodule.mem_carrier, ",", expr submodule.map_coe, "]"] [] [],
-       use [expr «expr⁅ , ⁆»(z₁, z₂)],
-       exact [expr ⟨I.lie_mem hz₂, f.map_lie z₁ z₂⟩]
-     end,
-     ..(I : submodule R L).map (f : «expr →ₗ[ ] »(L, R, L')) }],
-  erw [expr lie_submodule.coe_lie_span_submodule_eq_iff] [],
-  use [expr J],
-  apply [expr lie_submodule.coe_to_submodule_mk]
-end
+theorem coe_map_of_surjective (h : Function.Surjective f) :
+  (I.map f : Submodule R L') = (I : Submodule R L).map (f : L →ₗ[R] L') :=
+  by 
+    let J : LieIdeal R L' :=
+      { (I : Submodule R L).map (f : L →ₗ[R] L') with
+        lie_mem :=
+          fun x y hy =>
+            by 
+              have hy' : ∃ x : L, x ∈ I ∧ f x = y
+              ·
+                simpa [hy]
+              obtain ⟨z₂, hz₂, rfl⟩ := hy' 
+              obtain ⟨z₁, rfl⟩ := h x 
+              simp only [LieHom.coe_to_linear_map, SetLike.mem_coe, Set.mem_image, LieSubmodule.mem_coe_submodule,
+                Submodule.mem_carrier, Submodule.map_coe]
+              use ⁅z₁,z₂⁆
+              exact ⟨I.lie_mem hz₂, f.map_lie z₁ z₂⟩ }
+    erw [LieSubmodule.coe_lie_span_submodule_eq_iff]
+    use J 
+    apply LieSubmodule.coe_to_submodule_mk
 
 theorem mem_map_of_surjective {y : L'} (h₁ : Function.Surjective f) (h₂ : y ∈ I.map f) : ∃ x : I, f x = y :=
   by 
@@ -997,7 +1007,7 @@ theorem map_comap_eq (h : f.is_ideal_morphism) : map f (comap f J) = f.ideal_ran
       exact mem_map h₂
 
 @[simp]
-theorem comap_map_eq (h : «expr↑ » (map f I) = f '' I) : comap f (map f I) = I⊔f.ker :=
+theorem comap_map_eq (h : ↑map f I = f '' I) : comap f (map f I) = I⊔f.ker :=
   by 
     rw [←LieSubmodule.coe_to_submodule_eq_iff, comap_coe_submodule, I.map_coe_submodule f h,
       LieSubmodule.sup_coe_to_submodule, f.ker_coe_submodule, Submodule.comap_map_eq]

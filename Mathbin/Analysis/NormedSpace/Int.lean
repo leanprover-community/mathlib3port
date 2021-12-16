@@ -33,12 +33,12 @@ theorem norm_coe_nat (n : ℕ) : ∥(n : ℤ)∥ = n :=
   Real.norm_coe_nat _
 
 @[simp]
-theorem to_nat_add_to_nat_neg_eq_nnnorm (n : ℤ) : («expr↑ » n.to_nat+«expr↑ » (-n).toNat) = ∥n∥₊ :=
+theorem to_nat_add_to_nat_neg_eq_nnnorm (n : ℤ) : ((↑n.to_nat)+↑(-n).toNat) = ∥n∥₊ :=
   by 
     rw [←Nat.cast_add, to_nat_add_to_nat_neg_eq_nat_abs, Nnreal.coe_nat_abs]
 
 @[simp]
-theorem to_nat_add_to_nat_neg_eq_norm (n : ℤ) : («expr↑ » n.to_nat+«expr↑ » (-n).toNat) = ∥n∥ :=
+theorem to_nat_add_to_nat_neg_eq_norm (n : ℤ) : ((↑n.to_nat)+↑(-n).toNat) = ∥n∥ :=
   by 
     simpa only [Nnreal.coe_nat_cast, Nnreal.coe_add] using congr_argₓ (coeₓ : _ → ℝ) (to_nat_add_to_nat_neg_eq_nnnorm n)
 

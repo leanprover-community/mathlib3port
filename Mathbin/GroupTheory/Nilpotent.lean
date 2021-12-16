@@ -65,7 +65,7 @@ is a subgroup of `G` (because it is the preimage in `G` of the centre of the
 quotient group `G/H`.)
 -/
 def upperCentralSeriesStep : Subgroup G :=
-  { Carrier := { x:G | ∀ y : G, (((x*y)*x⁻¹)*y⁻¹) ∈ H },
+  { Carrier := { x : G | ∀ y : G, (((x*y)*x⁻¹)*y⁻¹) ∈ H },
     one_mem' :=
       fun y =>
         by 
@@ -90,13 +90,13 @@ open QuotientGroup
 /-- The proof that `upper_central_series_step H` is the preimage of the centre of `G/H` under
 the canonical surjection. -/
 theorem upper_central_series_step_eq_comap_center :
-  upperCentralSeriesStep H = Subgroup.comap (mk' H) (center (Quotientₓ H)) :=
+  upperCentralSeriesStep H = Subgroup.comap (mk' H) (center (G ⧸ H)) :=
   by 
     ext 
     rw [mem_comap, mem_center_iff, forall_coe]
     apply forall_congrₓ 
     intro y 
-    change (((x*y)*x⁻¹)*y⁻¹) ∈ H ↔ ((y*x : G) : Quotientₓ H) = (x*y : G)
+    change (((x*y)*x⁻¹)*y⁻¹) ∈ H ↔ ((y*x : G) : G ⧸ H) = (x*y : G)
     rw [eq_comm, eq_iff_div_mem, div_eq_mul_inv]
     congr 2
     group
@@ -110,7 +110,7 @@ variable (G)
 
 /-- An auxiliary type-theoretic definition defining both the upper central series of
 a group, and a proof that it is normal, all in one go. -/
-def upperCentralSeriesAux : ℕ → Σ'H : Subgroup G, normal H
+def upperCentralSeriesAux : ℕ → Σ' H : Subgroup G, normal H
 | 0 => ⟨⊥, inferInstance⟩
 | n+1 =>
   let un := upperCentralSeriesAux n 
@@ -164,21 +164,19 @@ def IsAscendingCentralSeries (H : ℕ → Subgroup G) : Prop :=
 def IsDescendingCentralSeries (H : ℕ → Subgroup G) :=
   H 0 = ⊤ ∧ ∀ x : G n : ℕ, x ∈ H n → ∀ g, (((x*g)*x⁻¹)*g⁻¹) ∈ H (n+1)
 
--- error in GroupTheory.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any ascending central series for a group is bounded above by the upper central series. -/
-theorem ascending_central_series_le_upper
-(H : exprℕ() → subgroup G)
-(hH : is_ascending_central_series H) : ∀ n : exprℕ(), «expr ≤ »(H n, upper_central_series G n)
-| 0 := «expr ▸ »(hH.1.symm, le_refl «expr⊥»())
-| «expr + »(n, 1) := begin
-  specialize [expr ascending_central_series_le_upper n],
-  intros [ident x, ident hx],
-  have [] [] [":=", expr hH.2 x n hx],
-  rw [expr mem_upper_central_series_succ_iff] [],
-  intro [ident y],
-  apply [expr ascending_central_series_le_upper],
-  apply [expr this]
-end
+theorem ascending_central_series_le_upper (H : ℕ → Subgroup G) (hH : IsAscendingCentralSeries H) :
+  ∀ n : ℕ, H n ≤ upperCentralSeries G n
+| 0 => hH.1.symm ▸ le_reflₓ ⊥
+| n+1 =>
+  by 
+    specialize ascending_central_series_le_upper n 
+    intro x hx 
+    have  := hH.2 x n hx 
+    rw [mem_upper_central_series_succ_iff]
+    intro y 
+    apply ascending_central_series_le_upper 
+    apply this
 
 variable (G)
 
@@ -195,65 +193,75 @@ theorem upper_central_series_mono : Monotone (upperCentralSeries G) :=
       mul_mem (upperCentralSeries G n) hx
         (normal.conj_mem (upperCentralSeries.Subgroup.normal G n) (x⁻¹) (inv_mem _ hx) y)
 
--- error in GroupTheory.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A group `G` is nilpotent iff there exists an ascending central series which reaches `G` in
   finitely many steps. -/
-theorem nilpotent_iff_finite_ascending_central_series : «expr ↔ »(is_nilpotent G, «expr∃ , »((H : exprℕ() → subgroup G), «expr ∧ »(is_ascending_central_series H, «expr∃ , »((n : exprℕ()), «expr = »(H n, «expr⊤»()))))) :=
-begin
-  split,
-  { intro [ident h],
-    use [expr upper_central_series G],
-    refine [expr ⟨upper_central_series_is_ascending_central_series G, h.1⟩] },
-  { rintro ["⟨", ident H, ",", ident hH, ",", ident n, ",", ident hn, "⟩"],
-    use [expr n],
-    have [] [] [":=", expr ascending_central_series_le_upper H hH n],
-    rw [expr hn] ["at", ident this],
-    exact [expr eq_top_iff.mpr this] }
-end
+theorem nilpotent_iff_finite_ascending_central_series :
+  is_nilpotent G ↔ ∃ H : ℕ → Subgroup G, IsAscendingCentralSeries H ∧ ∃ n : ℕ, H n = ⊤ :=
+  by 
+    constructor
+    ·
+      intro h 
+      use upperCentralSeries G 
+      refine' ⟨upper_central_series_is_ascending_central_series G, h.1⟩
+    ·
+      rintro ⟨H, hH, n, hn⟩
+      use n 
+      have  := ascending_central_series_le_upper H hH n 
+      rw [hn] at this 
+      exact eq_top_iff.mpr this
 
--- error in GroupTheory.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A group `G` is nilpotent iff there exists a descending central series which reaches the
   trivial group in a finite time. -/
-theorem nilpotent_iff_finite_descending_central_series : «expr ↔ »(is_nilpotent G, «expr∃ , »((H : exprℕ() → subgroup G), «expr ∧ »(is_descending_central_series H, «expr∃ , »((n : exprℕ()), «expr = »(H n, «expr⊥»()))))) :=
-begin
-  rw [expr nilpotent_iff_finite_ascending_central_series] [],
-  split,
-  { rintro ["⟨", ident H, ",", "⟨", ident h0, ",", ident hH, "⟩", ",", ident n, ",", ident hn, "⟩"],
-    use [expr λ m, H «expr - »(n, m)],
-    split,
-    { refine [expr ⟨hn, λ x m hx g, _⟩],
-      dsimp [] [] [] ["at", ident hx],
-      by_cases [expr hm, ":", expr «expr ≤ »(n, m)],
-      { have [ident hnm] [":", expr «expr = »(«expr - »(n, m), 0)] [":=", expr tsub_eq_zero_iff_le.mpr hm],
-        rw ["[", expr hnm, ",", expr h0, ",", expr subgroup.mem_bot, "]"] ["at", ident hx],
-        subst [expr hx],
-        convert [] [expr subgroup.one_mem _] [],
-        group [] },
-      { push_neg ["at", ident hm],
-        apply [expr hH],
-        convert [] [expr hx] [],
-        rw [expr nat.sub_succ] [],
-        exact [expr nat.succ_pred_eq_of_pos (tsub_pos_of_lt hm)] } },
-    { use [expr n],
-      rwa [expr tsub_self] [] } },
-  { rintro ["⟨", ident H, ",", "⟨", ident h0, ",", ident hH, "⟩", ",", ident n, ",", ident hn, "⟩"],
-    use [expr λ m, H «expr - »(n, m)],
-    split,
-    { refine [expr ⟨hn, λ x m hx g, _⟩],
-      dsimp ["only"] [] [] ["at", ident hx],
-      by_cases [expr hm, ":", expr «expr ≤ »(n, m)],
-      { have [ident hnm] [":", expr «expr = »(«expr - »(n, m), 0)] [":=", expr tsub_eq_zero_iff_le.mpr hm],
-        dsimp ["only"] [] [] [],
-        rw ["[", expr hnm, ",", expr h0, "]"] [],
-        exact [expr mem_top _] },
-      { push_neg ["at", ident hm],
-        dsimp ["only"] [] [] [],
-        convert [] [expr hH x _ hx g] [],
-        rw [expr nat.sub_succ] [],
-        exact [expr (nat.succ_pred_eq_of_pos (tsub_pos_of_lt hm)).symm] } },
-    { use [expr n],
-      rwa [expr tsub_self] [] } }
-end
+theorem nilpotent_iff_finite_descending_central_series :
+  is_nilpotent G ↔ ∃ H : ℕ → Subgroup G, IsDescendingCentralSeries H ∧ ∃ n : ℕ, H n = ⊥ :=
+  by 
+    rw [nilpotent_iff_finite_ascending_central_series]
+    constructor
+    ·
+      rintro ⟨H, ⟨h0, hH⟩, n, hn⟩
+      use fun m => H (n - m)
+      constructor
+      ·
+        refine' ⟨hn, fun x m hx g => _⟩
+        dsimp  at hx 
+        byCases' hm : n ≤ m
+        ·
+          have hnm : n - m = 0 := tsub_eq_zero_iff_le.mpr hm 
+          rw [hnm, h0, Subgroup.mem_bot] at hx 
+          subst hx 
+          convert Subgroup.one_mem _ 
+          group
+        ·
+          pushNeg  at hm 
+          apply hH 
+          convert hx 
+          rw [Nat.sub_succ]
+          exact Nat.succ_pred_eq_of_posₓ (tsub_pos_of_lt hm)
+      ·
+        use n 
+        rwa [tsub_self]
+    ·
+      rintro ⟨H, ⟨h0, hH⟩, n, hn⟩
+      use fun m => H (n - m)
+      constructor
+      ·
+        refine' ⟨hn, fun x m hx g => _⟩
+        dsimp only  at hx 
+        byCases' hm : n ≤ m
+        ·
+          have hnm : n - m = 0 := tsub_eq_zero_iff_le.mpr hm 
+          dsimp only 
+          rw [hnm, h0]
+          exact mem_top _
+        ·
+          pushNeg  at hm 
+          dsimp only 
+          convert hH x _ hx g 
+          rw [Nat.sub_succ]
+          exact (Nat.succ_pred_eq_of_posₓ (tsub_pos_of_lt hm)).symm
+      ·
+        use n 
+        rwa [tsub_self]
 
 /-- The lower central series of a group `G` is a sequence `H n` of subgroups of `G`, defined
   by `H 0` is all of `G` and for `n≥1`, `H (n + 1) = ⁅H n, G⁆` -/
@@ -267,17 +275,49 @@ variable {G}
 theorem lower_central_series_zero : lowerCentralSeries G 0 = ⊤ :=
   rfl
 
-theorem mem_lower_central_series_succ_iff (n : ℕ) (q : G) :
-  q ∈ lowerCentralSeries G (n+1) ↔
-    q ∈
-      closure
-        { x | ∃ (p : _)(_ : p ∈ lowerCentralSeries G n)(q : _)(_ : q ∈ (⊤ : Subgroup G)), (((p*q)*p⁻¹)*q⁻¹) = x } :=
-  Iff.rfl
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » lower_central_series G n)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » («expr⊤»() : subgroup G))
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mem_lower_central_series_succ_iff
+  ( n : ℕ ) ( q : G )
+    :
+      q ∈ lowerCentralSeries G n + 1
+        ↔
+        q
+          ∈
+          closure
+            {
+              x
+              |
+              ∃
+                ( p : _ ) ( _ : p ∈ lowerCentralSeries G n ) ( q : _ ) ( _ : q ∈ ( ⊤ : Subgroup G ) )
+                ,
+                p * q * p ⁻¹ * q ⁻¹ = x
+              }
+  := Iff.rfl
 
-theorem lower_central_series_succ (n : ℕ) :
-  lowerCentralSeries G (n+1) =
-    closure { x | ∃ (p : _)(_ : p ∈ lowerCentralSeries G n)(q : _)(_ : q ∈ (⊤ : Subgroup G)), (((p*q)*p⁻¹)*q⁻¹) = x } :=
-  rfl
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » lower_central_series G n)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » («expr⊤»() : subgroup G))
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lower_central_series_succ
+  ( n : ℕ )
+    :
+      lowerCentralSeries G n + 1
+        =
+        closure
+          {
+            x
+            |
+            ∃
+              ( p : _ ) ( _ : p ∈ lowerCentralSeries G n ) ( q : _ ) ( _ : q ∈ ( ⊤ : Subgroup G ) )
+              ,
+              p * q * p ⁻¹ * q ⁻¹ = x
+            }
+  := rfl
 
 instance (n : ℕ) : normal (lowerCentralSeries G n) :=
   by 
@@ -301,7 +341,7 @@ theorem lower_central_series_antitone : Antitone (lowerCentralSeries G) :=
 /-- The lower central series of a group is a descending central series. -/
 theorem lower_central_series_is_descending_central_series : IsDescendingCentralSeries (lowerCentralSeries G) :=
   by 
-    split 
+    constructor 
     rfl 
     intro x n hxn g 
     exact general_commutator_containment _ _ hxn (Subgroup.mem_top g)
@@ -317,21 +357,21 @@ theorem descending_central_series_ge_lower (H : ℕ → Subgroup G) (hH : IsDesc
     intro x hx q _ 
     exact hH.2 x n (descending_central_series_ge_lower hx) q
 
--- error in GroupTheory.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A group is nilpotent if and only if its lower central series eventually reaches
   the trivial subgroup. -/
-theorem nilpotent_iff_lower_central_series : «expr ↔ »(is_nilpotent G, «expr∃ , »((n), «expr = »(lower_central_series G n, «expr⊥»()))) :=
-begin
-  rw [expr nilpotent_iff_finite_descending_central_series] [],
-  split,
-  { rintro ["⟨", ident H, ",", "⟨", ident h0, ",", ident hs, "⟩", ",", ident n, ",", ident hn, "⟩"],
-    use [expr n],
-    have [] [] [":=", expr descending_central_series_ge_lower H ⟨h0, hs⟩ n],
-    rw [expr hn] ["at", ident this],
-    exact [expr eq_bot_iff.mpr this] },
-  { intro [ident h],
-    use ["[", expr lower_central_series G, ",", expr lower_central_series_is_descending_central_series, ",", expr h, "]"] }
-end
+theorem nilpotent_iff_lower_central_series : is_nilpotent G ↔ ∃ n, lowerCentralSeries G n = ⊥ :=
+  by 
+    rw [nilpotent_iff_finite_descending_central_series]
+    constructor
+    ·
+      rintro ⟨H, ⟨h0, hs⟩, n, hn⟩
+      use n 
+      have  := descending_central_series_ge_lower H ⟨h0, hs⟩ n 
+      rw [hn] at this 
+      exact eq_bot_iff.mpr this
+    ·
+      intro h 
+      use lowerCentralSeries G, lower_central_series_is_descending_central_series, h
 
 theorem lower_central_series_map_subtype_le (H : Subgroup G) (n : ℕ) :
   (lowerCentralSeries H n).map H.subtype ≤ lowerCentralSeries G n :=
@@ -348,16 +388,14 @@ theorem lower_central_series_map_subtype_le (H : Subgroup G) (n : ℕ) :
           by 
             simp ⟩
 
--- error in GroupTheory.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance subgroup.is_nilpotent (H : subgroup G) [hG : is_nilpotent G] : is_nilpotent H :=
-begin
-  rw [expr nilpotent_iff_lower_central_series] ["at", "*"],
-  rcases [expr hG, "with", "⟨", ident n, ",", ident hG, "⟩"],
-  use [expr n],
-  have [] [] [":=", expr lower_central_series_map_subtype_le H n],
-  simp [] [] ["only"] ["[", expr hG, ",", expr set_like.le_def, ",", expr mem_map, ",", expr forall_apply_eq_imp_iff₂, ",", expr exists_imp_distrib, "]"] [] ["at", ident this],
-  exact [expr eq_bot_iff.mpr (λ x hx, subtype.ext (this x hx))]
-end
+instance Subgroup.is_nilpotent (H : Subgroup G) [hG : is_nilpotent G] : is_nilpotent H :=
+  by 
+    rw [nilpotent_iff_lower_central_series] at *
+    rcases hG with ⟨n, hG⟩
+    use n 
+    have  := lower_central_series_map_subtype_le H n 
+    simp only [hG, SetLike.le_def, mem_map, forall_apply_eq_imp_iff₂, exists_imp_distrib] at this 
+    exact eq_bot_iff.mpr fun x hx => Subtype.ext (this x hx)
 
 instance (priority := 100) is_nilpotent_of_subsingleton [Subsingleton G] : is_nilpotent G :=
   nilpotent_iff_lower_central_series.2 ⟨0, Subsingleton.elimₓ ⊤ ⊥⟩

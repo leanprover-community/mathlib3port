@@ -47,17 +47,17 @@ instance : Groupₓ (MulAut M) :=
         ext <;>
           try 
               rfl <;>
-            apply Equiv.left_inv
+            apply Equivₓ.left_inv
 
 instance : Inhabited (MulAut M) :=
   ⟨1⟩
 
 @[simp]
-theorem coe_mul (e₁ e₂ : MulAut M) : «expr⇑ » (e₁*e₂) = e₁ ∘ e₂ :=
+theorem coe_mul (e₁ e₂ : MulAut M) : (⇑e₁*e₂) = e₁ ∘ e₂ :=
   rfl
 
 @[simp]
-theorem coe_one : «expr⇑ » (1 : MulAut M) = id :=
+theorem coe_one : ⇑(1 : MulAut M) = id :=
   rfl
 
 theorem mul_def (e₁ e₂ : MulAut M) : (e₁*e₂) = e₂.trans e₁ :=
@@ -86,7 +86,7 @@ theorem inv_apply_self (e : MulAut M) (m : M) : (e⁻¹) (e m) = m :=
   MulEquiv.apply_symm_apply _ _
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def to_perm : MulAut M →* Equiv.Perm M :=
+def to_perm : MulAut M →* Equivₓ.Perm M :=
   by 
     refineStruct { toFun := MulEquiv.toEquiv } <;> intros  <;> rfl
 
@@ -165,17 +165,17 @@ instance Groupₓ : Groupₓ (AddAut A) :=
         ext <;>
           try 
               rfl <;>
-            apply Equiv.left_inv
+            apply Equivₓ.left_inv
 
 instance : Inhabited (AddAut A) :=
   ⟨1⟩
 
 @[simp]
-theorem coe_mul (e₁ e₂ : AddAut A) : «expr⇑ » (e₁*e₂) = e₁ ∘ e₂ :=
+theorem coe_mul (e₁ e₂ : AddAut A) : (⇑e₁*e₂) = e₁ ∘ e₂ :=
   rfl
 
 @[simp]
-theorem coe_one : «expr⇑ » (1 : AddAut A) = id :=
+theorem coe_one : ⇑(1 : AddAut A) = id :=
   rfl
 
 theorem mul_def (e₁ e₂ : AddAut A) : (e₁*e₂) = e₂.trans e₁ :=
@@ -204,7 +204,7 @@ theorem inv_apply_self (e : AddAut A) (a : A) : e ((e⁻¹) a) = a :=
   AddEquiv.apply_symm_apply _ _
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def to_perm : AddAut A →* Equiv.Perm A :=
+def to_perm : AddAut A →* Equivₓ.Perm A :=
   by 
     refineStruct { toFun := AddEquiv.toEquiv } <;> intros  <;> rfl
 

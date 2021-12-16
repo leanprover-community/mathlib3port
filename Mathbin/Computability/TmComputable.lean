@@ -60,9 +60,10 @@ instance : DecidableEq tm.K :=
 instance : Inhabited tm.σ :=
   ⟨tm.initial_state⟩
 
--- error in Computability.TmComputable: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-/-- The type of statements (functions) corresponding to this TM. -/ @[derive #[expr inhabited]] def stmt : Type :=
-turing.TM2.stmt tm.Γ tm.Λ tm.σ
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+/-- The type of statements (functions) corresponding to this TM. -/
+def stmt : Type :=
+  Turing.TM2.Stmt tm.Γ tm.Λ tm.σ deriving [anonymous]
 
 /-- The type of configurations (functions) corresponding to this TM. -/
 def cfg : Type :=
@@ -205,11 +206,11 @@ def id_computer {α : Type} (ea : fin_encoding α) : fin_tm2 :=
 instance inhabited_fin_tm2 : Inhabited fin_tm2 :=
   ⟨id_computer Computability.inhabitedFinEncoding.default⟩
 
-noncomputable theory
+noncomputable section 
 
 /-- A proof that the identity map on α is computable in polytime. -/
 def id_computable_in_poly_time {α : Type} (ea : fin_encoding α) : @tm2_computable_in_poly_time α α ea ea id :=
-  { tm := id_computer ea, inputAlphabet := Equiv.cast rfl, outputAlphabet := Equiv.cast rfl, time := 1,
+  { tm := id_computer ea, inputAlphabet := Equivₓ.cast rfl, outputAlphabet := Equivₓ.cast rfl, time := 1,
     outputsFun :=
       fun _ =>
         { steps := 1, evals_in_steps := rfl,
@@ -223,14 +224,14 @@ instance inhabited_tm2_computable_in_poly_time :
 
 instance inhabited_tm2_outputs_in_time :
   Inhabited
-    (tm2_outputs_in_time (id_computer fin_encoding_bool_bool) (List.map (Equiv.cast rfl).invFun [ff])
-      (some (List.map (Equiv.cast rfl).invFun [ff])) _) :=
+    (tm2_outputs_in_time (id_computer fin_encoding_bool_bool) (List.map (Equivₓ.cast rfl).invFun [ff])
+      (some (List.map (Equivₓ.cast rfl).invFun [ff])) _) :=
   ⟨(id_computable_in_poly_time fin_encoding_bool_bool).outputsFun ff⟩
 
 instance inhabited_tm2_outputs :
   Inhabited
-    (tm2_outputs (id_computer fin_encoding_bool_bool) (List.map (Equiv.cast rfl).invFun [ff])
-      (some (List.map (Equiv.cast rfl).invFun [ff]))) :=
+    (tm2_outputs (id_computer fin_encoding_bool_bool) (List.map (Equivₓ.cast rfl).invFun [ff])
+      (some (List.map (Equivₓ.cast rfl).invFun [ff]))) :=
   ⟨tm2_outputs_in_time.to_tm2_outputs Turing.inhabitedTm2OutputsInTime.default⟩
 
 instance inhabited_evals_to_in_time : Inhabited (evals_to_in_time (fun _ : Unit => some ⟨⟩) ⟨⟩ (some ⟨⟩) 0) :=

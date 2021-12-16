@@ -31,15 +31,15 @@ structure encoding (α : Type) where
 structure fin_encoding (α : Type) extends encoding α where 
   ΓFin : Fintype Γ
 
--- error in Computability.Encoding: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler fintype
 /-- A standard Turing machine alphabet, consisting of blank,bit0,bit1,bra,ket,comma. -/
-@[derive #["[", expr decidable_eq, ",", expr fintype, "]"]]
 inductive Γ'
-| blank
-| bit (b : bool)
-| bra
-| ket
-| comma
+  | blank
+  | bit (b : Bool)
+  | bra
+  | ket
+  | comma deriving [anonymous], [anonymous]
 
 instance inhabited_Γ' : Inhabited Γ' :=
   ⟨Γ'.blank⟩
@@ -117,7 +117,7 @@ theorem decode_encode_nat : ∀ n, decode_nat (encode_nat n) = n :=
   by 
     intro n 
     convRHS => rw [←Num.to_of_nat n]
-    exact congr_argₓ coeₓ (decode_encode_num («expr↑ » n))
+    exact congr_argₓ coeₓ (decode_encode_num (↑n))
 
 /-- A binary encoding of ℕ in bool. -/
 def encoding_nat_bool : encoding ℕ :=

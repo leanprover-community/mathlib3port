@@ -269,6 +269,7 @@ theorem zpow_neg (a : G) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
     rw [zpow_neg_succ_of_nat, inv_invₓ, ←zpow_coe_nat]
     rfl
 
+@[toAdditive neg_one_zsmul_add]
 theorem mul_zpow_neg_one (a b : G) : (a*b) ^ -(1 : ℤ) = (b ^ -(1 : ℤ))*a ^ -(1 : ℤ) :=
   by 
     simp only [mul_inv_rev, zpow_one, zpow_neg]
@@ -343,9 +344,8 @@ namespace RingHom
 
 variable [Semiringₓ R] [Semiringₓ S]
 
-@[simp]
-theorem map_pow (f : R →+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
-  f.to_monoid_hom.map_pow a
+protected theorem map_pow (f : R →+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
+  map_pow f a
 
 end RingHom
 

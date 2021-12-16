@@ -19,35 +19,36 @@ open PowerBasis
 
 open_locale BigOperators
 
--- error in RingTheory.Adjoin.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The elements `1, x, ..., x ^ (d - 1)` for a basis for the `K`-module `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. -/
-noncomputable
-def adjoin.power_basis_aux
-{x : S}
-(hx : _root_.is_integral K x) : basis (fin (minpoly K x).nat_degree) K (adjoin K ({x} : set S)) :=
-begin
-  have [ident hST] [":", expr function.injective (algebra_map (adjoin K ({x} : set S)) S)] [":=", expr subtype.coe_injective],
-  have [ident hx'] [":", expr _root_.is_integral K (show adjoin K ({x} : set S), from ⟨x, subset_adjoin (set.mem_singleton x)⟩)] [],
-  { apply [expr (is_integral_algebra_map_iff hST).mp],
-    convert [] [expr hx] [],
-    apply_instance },
-  have [ident minpoly_eq] [] [":=", expr minpoly.eq_of_algebra_map_eq hST hx' rfl],
-  apply [expr @basis.mk (fin (minpoly K x).nat_degree) _ (adjoin K {x}) (λ
-    i, «expr ^ »(⟨x, subset_adjoin (set.mem_singleton x)⟩, (i : exprℕ())))],
-  { have [] [] [":=", expr hx'.linear_independent_pow],
-    rwa [expr minpoly_eq] ["at", ident this] },
-  { rw [expr _root_.eq_top_iff] [],
-    rintros ["⟨", ident y, ",", ident hy, "⟩", "_"],
-    have [] [] [":=", expr hx'.mem_span_pow],
-    rw [expr minpoly_eq] ["at", ident this],
-    apply [expr this],
-    { rw ["[", expr adjoin_singleton_eq_range_aeval, "]"] ["at", ident hy],
-      obtain ["⟨", ident f, ",", ident rfl, "⟩", ":=", expr (aeval x).mem_range.mp hy],
-      use [expr f],
-      ext [] [] [],
-      exact [expr (is_scalar_tower.algebra_map_aeval K (adjoin K {x}) S ⟨x, _⟩ _).symm] } }
-end
+noncomputable def adjoin.power_basis_aux {x : S} (hx : _root_.is_integral K x) :
+  Basis (Finₓ (minpoly K x).natDegree) K (adjoin K ({x} : Set S)) :=
+  by 
+    have hST : Function.Injective (algebraMap (adjoin K ({x} : Set S)) S) := Subtype.coe_injective 
+    have hx' : _root_.is_integral K (show adjoin K ({x} : Set S) from ⟨x, subset_adjoin (Set.mem_singleton x)⟩)
+    ·
+      apply (is_integral_algebra_map_iff hST).mp 
+      convert hx 
+      infer_instance 
+    have minpoly_eq := minpoly.eq_of_algebra_map_eq hST hx' rfl 
+    apply
+      @Basis.mk (Finₓ (minpoly K x).natDegree) _ (adjoin K {x})
+        fun i => ⟨x, subset_adjoin (Set.mem_singleton x)⟩^(i : ℕ)
+    ·
+      have  := hx'.linear_independent_pow 
+      rwa [minpoly_eq] at this
+    ·
+      rw [_root_.eq_top_iff]
+      rintro ⟨y, hy⟩ _ 
+      have  := hx'.mem_span_pow 
+      rw [minpoly_eq] at this 
+      apply this
+      ·
+        rw [adjoin_singleton_eq_range_aeval] at hy 
+        obtain ⟨f, rfl⟩ := (aeval x).mem_range.mp hy 
+        use f 
+        ext 
+        exact (IsScalarTower.algebra_map_aeval K (adjoin K {x}) S ⟨x, _⟩ _).symm
 
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. -/

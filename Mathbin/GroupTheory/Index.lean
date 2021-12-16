@@ -5,6 +5,7 @@ import Mathbin.SetTheory.Fincard
 # Index of a Subgroup
 
 In this file we define the index of a subgroup, and prove several divisibility properties.
+Several theorems proved in this file are known as Lagrange's theorem.
 
 ## Main definitions
 
@@ -15,6 +16,7 @@ In this file we define the index of a subgroup, and prove several divisibility p
 
 # Main results
 
+- `card_mul_index` : `nat.card H * H.index = nat.card G`
 - `index_mul_card` : `H.index * fintype.card H = fintype.card G`
 - `index_dvd_card` : `H.index ∣ fintype.card G`
 - `index_eq_mul_of_le` : If `H ≤ K`, then `H.index = K.index * (H.subgroup_of K).index`
@@ -33,7 +35,7 @@ variable {G : Type _} [Groupₓ G] (H K L : Subgroup G)
 /-- The index of a subgroup as a natural number, and returns 0 if the index is infinite. -/
 @[toAdditive "The index of a subgroup as a natural number,\nand returns 0 if the index is infinite."]
 noncomputable def index : ℕ :=
-  Nat.card (QuotientGroup.Quotient H)
+  Nat.card (G ⧸ H)
 
 /-- The relative index of a subgroup as a natural number,
   and returns 0 if the relative index is infinite. -/
@@ -42,29 +44,28 @@ noncomputable def index : ℕ :=
 noncomputable def relindex : ℕ :=
   (H.subgroup_of K).index
 
--- error in GroupTheory.Index: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem index_comap_of_surjective
-{G' : Type*}
-[group G']
-{f : «expr →* »(G', G)}
-(hf : function.surjective f) : «expr = »((H.comap f).index, H.index) :=
-begin
-  letI [] [] [":=", expr quotient_group.left_rel H],
-  letI [] [] [":=", expr quotient_group.left_rel (H.comap f)],
-  have [ident key] [":", expr ∀
-   x
-   y : G', «expr ↔ »(setoid.r x y, setoid.r (f x) (f y))] [":=", expr λ
-   x y, iff_of_eq (congr_arg ((«expr ∈ » H)) (by rw ["[", expr f.map_mul, ",", expr f.map_inv, "]"] []))],
-  refine [expr cardinal.to_nat_congr (equiv.of_bijective (quotient.map' f (λ x y, (key x y).mp)) ⟨_, _⟩)],
-  { simp_rw ["[", "<-", expr quotient.eq', "]"] ["at", ident key],
-    refine [expr quotient.ind' (λ x, _)],
-    refine [expr quotient.ind' (λ y, _)],
-    exact [expr (key x y).mpr] },
-  { refine [expr quotient.ind' (λ x, _)],
-    obtain ["⟨", ident y, ",", ident hy, "⟩", ":=", expr hf x],
-    exact [expr ⟨y, (quotient.map'_mk' f _ y).trans (congr_arg quotient.mk' hy)⟩] }
-end
+@[toAdditive]
+theorem index_comap_of_surjective {G' : Type _} [Groupₓ G'] {f : G' →* G} (hf : Function.Surjective f) :
+  (H.comap f).index = H.index :=
+  by 
+    let this' := QuotientGroup.leftRel H 
+    let this' := QuotientGroup.leftRel (H.comap f)
+    have key : ∀ x y : G', Setoidₓ.R x y ↔ Setoidₓ.R (f x) (f y) :=
+      fun x y =>
+        iff_of_eq
+          (congr_argₓ (· ∈ H)
+            (by 
+              rw [f.map_mul, f.map_inv]))
+    refine' Cardinal.to_nat_congr (Equivₓ.ofBijective (Quotientₓ.map' f fun x y => (key x y).mp) ⟨_, _⟩)
+    ·
+      simpRw [←Quotientₓ.eq']  at key 
+      refine' Quotientₓ.ind' fun x => _ 
+      refine' Quotientₓ.ind' fun y => _ 
+      exact (key x y).mpr
+    ·
+      refine' Quotientₓ.ind' fun x => _ 
+      obtain ⟨y, hy⟩ := hf x 
+      exact ⟨y, (Quotientₓ.map'_mk' f _ y).trans (congr_argₓ Quotientₓ.mk' hy)⟩
 
 @[toAdditive]
 theorem index_comap {G' : Type _} [Groupₓ G'] (f : G' →* G) : (H.comap f).index = H.relindex f.range :=
@@ -79,7 +80,7 @@ variable {H K L}
 @[toAdditive]
 theorem relindex_mul_index (h : H ≤ K) : (H.relindex K*K.index) = H.index :=
   ((mul_commₓ _ _).trans (Cardinal.to_nat_mul _ _).symm).trans
-    (congr_argₓ Cardinal.toNat (Equiv.cardinal_eq (quotient_equiv_prod_of_le h))).symm
+    (congr_argₓ Cardinal.toNat (Equivₓ.cardinal_eq (quotient_equiv_prod_of_le h))).symm
 
 @[toAdditive]
 theorem index_dvd_of_le (h : H ≤ K) : K.index ∣ H.index :=
@@ -193,10 +194,10 @@ theorem index_map_eq {G' : Type _} [Groupₓ G'] {f : G →* G'} (hf1 : Function
   Nat.dvd_antisymm (H.index_map_dvd hf1) (H.dvd_index_map hf2)
 
 @[toAdditive]
-theorem index_eq_card [Fintype (QuotientGroup.Quotient H)] : H.index = Fintype.card (QuotientGroup.Quotient H) :=
+theorem index_eq_card [Fintype (G ⧸ H)] : H.index = Fintype.card (G ⧸ H) :=
   Nat.card_eq_fintype_card
 
-@[toAdditive]
+@[toAdditive index_mul_card]
 theorem index_mul_card [Fintype G] [hH : Fintype H] : (H.index*Fintype.card H) = Fintype.card G :=
   by 
     rw [←relindex_bot_left_eq_card, ←index_bot_eq_card, mul_commₓ] <;> exact relindex_mul_index bot_le
@@ -214,12 +215,12 @@ theorem index_eq_one : H.index = 1 ↔ H = ⊤ :=
   ⟨fun h => QuotientGroup.subgroup_eq_top_of_subsingleton H (Cardinal.to_nat_eq_one_iff_unique.mp h).1,
     fun h => (congr_argₓ index h).trans index_top⟩
 
-theorem index_ne_zero_of_fintype [hH : Fintype (QuotientGroup.Quotient H)] : H.index ≠ 0 :=
+theorem index_ne_zero_of_fintype [hH : Fintype (G ⧸ H)] : H.index ≠ 0 :=
   by 
     rw [index_eq_card]
     exact Fintype.card_ne_zero
 
-theorem one_lt_index_of_ne_top [Fintype (QuotientGroup.Quotient H)] (hH : H ≠ ⊤) : 1 < H.index :=
+theorem one_lt_index_of_ne_top [Fintype (G ⧸ H)] (hH : H ≠ ⊤) : 1 < H.index :=
   Nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨index_ne_zero_of_fintype, mt index_eq_one.mp hH⟩
 
 end Subgroup

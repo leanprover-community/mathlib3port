@@ -35,7 +35,8 @@ theorem expand_X (p : ℕ) (i : σ) : expand p (X i : MvPolynomial σ R) = X i ^
   eval₂_hom_X' _ _ _
 
 @[simp]
-theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) : expand p (monomial d r) = C r*∏i in d.support, (X i ^ p) ^ d i :=
+theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
+  expand p (monomial d r) = C r*∏ i in d.support, (X i ^ p) ^ d i :=
   bind₁_monomial _ _ _
 
 theorem expand_one_apply (f : MvPolynomial σ R) : expand 1 f = f :=

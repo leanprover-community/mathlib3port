@@ -32,15 +32,17 @@ unsafe inductive expr_lens
 
 namespace ExprLens
 
--- error in Meta.ExprLens: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Inductive type with two constructors `F` and `A`,
 that represent the function-part `f` and arg-part `a` of an application `f a`. They specify the
 directions in which an `expr_lens` should zoom into an `expr`.
 
 This type is used in the development of rewriting tactics such as `nth_rewrite` and
-`rewrite_search`. -/ @[derive #["[", expr decidable_eq, ",", expr inhabited, "]"]] inductive dir
-| F
-| A
+`rewrite_search`. -/
+inductive dir
+  | F
+  | A deriving [anonymous], [anonymous]
 
 /-- String representation of `dir`. -/
 def dir.to_string : dir → Stringₓ

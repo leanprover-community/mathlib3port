@@ -36,6 +36,9 @@ open_locale TopologicalSpace Filter Pointwise
 
 universe u
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
 /-- A `group_filter_basis` on a group is a `filter_basis` satisfying some additional axioms.
   Example : if `G` is a topological group then the neighbourhoods of the identity are a
   `group_filter_basis`. Conversely given a `group_filter_basis` one can define a topology
@@ -46,6 +49,9 @@ class GroupFilterBasis (G : Type u) [Groupₓ G] extends FilterBasis G where
   inv' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x⁻¹) ⁻¹' U 
   conj' : ∀ x₀, ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => (x₀*x)*x₀⁻¹) ⁻¹' U
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
 /-- A `add_group_filter_basis` on an additive group is a `filter_basis` satisfying some additional
   axioms. Example : if `G` is a topological group then the neighbourhoods of the identity are a
   `add_group_filter_basis`. Conversely given a `add_group_filter_basis` one can define a topology
@@ -68,6 +74,12 @@ attribute [toAdditive] GroupFilterBasis.conj'
 
 attribute [toAdditive] GroupFilterBasis.toFilterBasis
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
 /-- `group_filter_basis` constructor in the commutative group case. -/
 @[toAdditive "`add_group_filter_basis` constructor in the commutative group case."]
 def groupFilterBasisOfComm {G : Type _} [CommGroupₓ G] (sets : Set (Set G)) (nonempty : sets.nonempty)
@@ -93,14 +105,17 @@ instance : HasMem (Set G) (GroupFilterBasis G) :=
 theorem one {U : Set G} : U ∈ B → (1 : G) ∈ U :=
   GroupFilterBasis.one'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
 @[toAdditive]
 theorem mul {U : Set G} : U ∈ B → ∃ (V : _)(_ : V ∈ B), (V*V) ⊆ U :=
   GroupFilterBasis.mul'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
 @[toAdditive]
 theorem inv {U : Set G} : U ∈ B → ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => x⁻¹) ⁻¹' U :=
   GroupFilterBasis.inv'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
 @[toAdditive]
 theorem conj : ∀ x₀, ∀ {U}, U ∈ B → ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => (x₀*x)*x₀⁻¹) ⁻¹' U :=
   GroupFilterBasis.conj'
@@ -171,7 +186,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
       rcases U_in with ⟨V, V_in, H⟩
       rcases GroupFilterBasis.mul V_in with ⟨W, W_in, hW⟩
       use (fun y => x*y) '' W, image_mem_map (FilterBasis.mem_filter_of_mem _ W_in)
-      split 
+      constructor
       ·
         rw [image_subset_iff] at H⊢
         exact ((B.prod_subset_self W_in).trans hW).trans H
@@ -213,41 +228,45 @@ theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈
     rw [B.nhds_one_has_basis.mem_iff]
     exact ⟨U, hU, rfl.subset⟩
 
--- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » B)
 /-- If a group is endowed with a topological structure coming from
 a group filter basis then it's a topological group. -/
-@[to_additive #[], priority 100]
-instance is_topological_group (B : group_filter_basis G) : @topological_group G B.topology _ :=
-begin
-  letI [] [] [":=", expr B.topology],
-  have [ident basis] [] [":=", expr B.nhds_one_has_basis],
-  have [ident basis'] [] [":=", expr basis.prod basis],
-  refine [expr topological_group.of_nhds_one _ _ _ _],
-  { rw [expr basis'.tendsto_iff basis] [],
-    suffices [] [":", expr ∀
-     U «expr ∈ » B, «expr∃ , »((V
-       W), «expr ∧ »(«expr ∧ »(«expr ∈ »(V, B), «expr ∈ »(W, B)), ∀
-       a b, «expr ∈ »(a, V) → «expr ∈ »(b, W) → «expr ∈ »(«expr * »(a, b), U)))],
-    by simpa [] [] [] [] [] [],
-    intros [ident U, ident U_in],
-    rcases [expr mul U_in, "with", "⟨", ident V, ",", ident V_in, ",", ident hV, "⟩"],
-    use ["[", expr V, ",", expr V, ",", expr V_in, ",", expr V_in, "]"],
-    intros [ident a, ident b, ident a_in, ident b_in],
-    exact [expr hV ⟨a, b, a_in, b_in, rfl⟩] },
-  { rw [expr basis.tendsto_iff basis] [],
-    intros [ident U, ident U_in],
-    simpa [] [] [] [] [] ["using", expr inv U_in] },
-  { intro [ident x₀],
-    rw ["[", expr nhds_eq, ",", expr nhds_one_eq, "]"] [],
-    refl },
-  { intro [ident x₀],
-    rw [expr basis.tendsto_iff basis] [],
-    intros [ident U, ident U_in],
-    exact [expr conj x₀ U_in] }
-end
+@[toAdditive]
+instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ :=
+  by 
+    let this' := B.topology 
+    have basis := B.nhds_one_has_basis 
+    have basis' := basis.prod basis 
+    refine' TopologicalGroup.of_nhds_one _ _ _ _
+    ·
+      rw [basis'.tendsto_iff basis]
+      suffices  : ∀ U _ : U ∈ B, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → (a*b) ∈ U
+      ·
+        simpa 
+      intro U U_in 
+      rcases mul U_in with ⟨V, V_in, hV⟩
+      use V, V, V_in, V_in 
+      intro a b a_in b_in 
+      exact hV ⟨a, b, a_in, b_in, rfl⟩
+    ·
+      rw [basis.tendsto_iff basis]
+      intro U U_in 
+      simpa using inv U_in
+    ·
+      intro x₀ 
+      rw [nhds_eq, nhds_one_eq]
+      rfl
+    ·
+      intro x₀ 
+      rw [basis.tendsto_iff basis]
+      intro U U_in 
+      exact conj x₀ U_in
 
 end GroupFilterBasis
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
 /-- A `ring_filter_basis` on a ring is a `filter_basis` satisfying some additional axioms.
   Example : if `R` is a topological ring then the neighbourhoods of the identity are a
   `ring_filter_basis`. Conversely given a `ring_filter_basis` on a ring `R`, one can define a
@@ -264,12 +283,15 @@ variable {R : Type u} [Ringₓ R] (B : RingFilterBasis R)
 instance : HasMem (Set R) (RingFilterBasis R) :=
   ⟨fun s B => s ∈ B.sets⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
 theorem mul {U : Set R} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ B), (V*V) ⊆ U :=
   mul' hU
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
 theorem mul_left (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => x₀*x) ⁻¹' U :=
   mul_left' x₀ hU
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
 theorem mul_right (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => x*x₀) ⁻¹' U :=
   mul_right' x₀ hU
 
@@ -278,41 +300,44 @@ It has the given basis as a basis of neighborhoods of zero. -/
 def topology : TopologicalSpace R :=
   B.to_add_group_filter_basis.topology
 
--- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » B')
 /-- If a ring is endowed with a topological structure coming from
 a ring filter basis then it's a topological ring. -/
-@[priority 100]
-instance is_topological_ring {R : Type u} [ring R] (B : ring_filter_basis R) : @topological_ring R B.topology _ :=
-begin
-  let [ident B'] [] [":=", expr B.to_add_group_filter_basis],
-  letI [] [] [":=", expr B'.topology],
-  have [ident basis] [] [":=", expr B'.nhds_zero_has_basis],
-  have [ident basis'] [] [":=", expr basis.prod basis],
-  haveI [] [] [":=", expr B'.is_topological_add_group],
-  apply [expr topological_ring.of_add_group_of_nhds_zero],
-  { rw [expr basis'.tendsto_iff basis] [],
-    suffices [] [":", expr ∀
-     U «expr ∈ » B', «expr∃ , »((V
-       W), «expr ∧ »(«expr ∧ »(«expr ∈ »(V, B'), «expr ∈ »(W, B')), ∀
-       a b, «expr ∈ »(a, V) → «expr ∈ »(b, W) → «expr ∈ »(«expr * »(a, b), U)))],
-    by simpa [] [] [] [] [] [],
-    intros [ident U, ident U_in],
-    rcases [expr B.mul U_in, "with", "⟨", ident V, ",", ident V_in, ",", ident hV, "⟩"],
-    use ["[", expr V, ",", expr V, ",", expr V_in, ",", expr V_in, "]"],
-    intros [ident a, ident b, ident a_in, ident b_in],
-    exact [expr hV ⟨a, b, a_in, b_in, rfl⟩] },
-  { intro [ident x₀],
-    rw [expr basis.tendsto_iff basis] [],
-    intros [ident U],
-    simpa [] [] [] [] [] ["using", expr B.mul_left x₀] },
-  { intro [ident x₀],
-    rw [expr basis.tendsto_iff basis] [],
-    intros [ident U],
-    simpa [] [] [] [] [] ["using", expr B.mul_right x₀] }
-end
+instance (priority := 100) is_topological_ring {R : Type u} [Ringₓ R] (B : RingFilterBasis R) :
+  @TopologicalRing R B.topology _ :=
+  by 
+    let B' := B.to_add_group_filter_basis 
+    let this' := B'.topology 
+    have basis := B'.nhds_zero_has_basis 
+    have basis' := basis.prod basis 
+    have  := B'.is_topological_add_group 
+    apply TopologicalRing.of_add_group_of_nhds_zero
+    ·
+      rw [basis'.tendsto_iff basis]
+      suffices  : ∀ U _ : U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → (a*b) ∈ U
+      ·
+        simpa 
+      intro U U_in 
+      rcases B.mul U_in with ⟨V, V_in, hV⟩
+      use V, V, V_in, V_in 
+      intro a b a_in b_in 
+      exact hV ⟨a, b, a_in, b_in, rfl⟩
+    ·
+      intro x₀ 
+      rw [basis.tendsto_iff basis]
+      intro U 
+      simpa using B.mul_left x₀
+    ·
+      intro x₀ 
+      rw [basis.tendsto_iff basis]
+      intro U 
+      simpa using B.mul_right x₀
 
 end RingFilterBasis
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » expr𝓝() (0 : R))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (W «expr ∈ » sets)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
 /-- A `module_filter_basis` on a module is a `filter_basis` satisfying some additional axioms.
   Example : if `M` is a topological module then the neighbourhoods of zero are a
   `module_filter_basis`. Conversely given a `module_filter_basis` one can define a topology
@@ -321,7 +346,7 @@ structure ModuleFilterBasis (R M : Type _) [CommRingₓ R] [TopologicalSpace R] 
   AddGroupFilterBasis M where 
   smul' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ 𝓝 (0 : R))(W : _)(_ : W ∈ sets), V • W ⊆ U 
   smul_left' : ∀ x₀ : R {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x₀ • x) ⁻¹' U 
-  smul_right' : ∀ m₀ : M {U}, U ∈ sets → ∀ᶠx in 𝓝 (0 : R), x • m₀ ∈ U
+  smul_right' : ∀ m₀ : M {U}, U ∈ sets → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U
 
 namespace ModuleFilterBasis
 
@@ -330,13 +355,16 @@ variable {R M : Type _} [CommRingₓ R] [TopologicalSpace R] [AddCommGroupₓ M]
 instance GroupFilterBasis.hasMem : HasMem (Set M) (ModuleFilterBasis R M) :=
   ⟨fun s B => s ∈ B.sets⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » expr𝓝() (0 : R))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (W «expr ∈ » B)
 theorem smul {U : Set M} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ 𝓝 (0 : R))(W : _)(_ : W ∈ B), V • W ⊆ U :=
   B.smul' hU
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
 theorem smul_left (x₀ : R) {U : Set M} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => x₀ • x) ⁻¹' U :=
   B.smul_left' x₀ hU
 
-theorem smul_right (m₀ : M) {U : Set M} (hU : U ∈ B) : ∀ᶠx in 𝓝 (0 : R), x • m₀ ∈ U :=
+theorem smul_right (m₀ : M) {U : Set M} (hU : U ∈ B) : ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U :=
   B.smul_right' m₀ hU
 
 /-- If `R` is discrete then the trivial additive group filter basis on any `R`-module is a
@@ -374,34 +402,38 @@ def topology' {R M : Type _} [CommRingₓ R] {tR : TopologicalSpace R} [AddCommG
   (B : ModuleFilterBasis R M) : TopologicalSpace M :=
   B.to_add_group_filter_basis.topology
 
--- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
-@[priority 100]
-instance has_continuous_smul [topological_ring R] : @has_continuous_smul R M _ _ B.topology :=
-begin
-  let [ident B'] [] [":=", expr B.to_add_group_filter_basis],
-  letI [] [] [":=", expr B'.topology],
-  have [ident basis] [] [":=", expr B'.nhds_zero_has_basis],
-  haveI [] [] [":=", expr B'.is_topological_add_group],
-  apply [expr has_continuous_smul.of_nhds_zero],
-  { rw [expr basis.tendsto_right_iff] [],
-    intros [ident U, ident U_in],
-    rcases [expr B.smul U_in, "with", "⟨", ident V, ",", ident V_in, ",", ident W, ",", ident W_in, ",", ident H, "⟩"],
-    apply [expr mem_of_superset «expr $ »(prod_mem_prod V_in, B'.mem_nhds_zero W_in)],
-    rintros ["⟨", ident v, ",", ident w, "⟩", "⟨", ident v_in, ":", expr «expr ∈ »(v, V), ",", ident w_in, ":", expr «expr ∈ »(w, W), "⟩"],
-    exact [expr H (set.mem_smul_of_mem v_in w_in)] },
-  { intro [ident m₀],
-    rw [expr basis.tendsto_right_iff] [],
-    intros [ident U, ident U_in],
-    exact [expr B.smul_right m₀ U_in] },
-  { intro [ident x₀],
-    rw [expr basis.tendsto_right_iff] [],
-    intros [ident U, ident U_in],
-    rcases [expr B.smul_left x₀ U_in, "with", "⟨", ident V, ",", ident V_in, ",", ident hV, "⟩"],
-    exact [expr mem_of_superset (B'.mem_nhds_zero V_in) hV] }
-end
+instance (priority := 100) HasContinuousSmul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology :=
+  by 
+    let B' := B.to_add_group_filter_basis 
+    let this' := B'.topology 
+    have basis := B'.nhds_zero_has_basis 
+    have  := B'.is_topological_add_group 
+    apply HasContinuousSmul.of_nhds_zero
+    ·
+      rw [basis.tendsto_right_iff]
+      intro U U_in 
+      rcases B.smul U_in with ⟨V, V_in, W, W_in, H⟩
+      apply mem_of_superset (prod_mem_prod V_in$ B'.mem_nhds_zero W_in)
+      rintro ⟨v, w⟩ ⟨v_in : v ∈ V, w_in : w ∈ W⟩
+      exact H (Set.mem_smul_of_mem v_in w_in)
+    ·
+      intro m₀ 
+      rw [basis.tendsto_right_iff]
+      intro U U_in 
+      exact B.smul_right m₀ U_in
+    ·
+      intro x₀ 
+      rw [basis.tendsto_right_iff]
+      intro U U_in 
+      rcases B.smul_left x₀ U_in with ⟨V, V_in, hV⟩
+      exact mem_of_superset (B'.mem_nhds_zero V_in) hV
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » BR)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (W «expr ∈ » BM)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » BM)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » BR)
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def of_bases {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (BR : RingFilterBasis R)
   (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BR)(W : _)(_ : W ∈ BM), V • W ⊆ U)

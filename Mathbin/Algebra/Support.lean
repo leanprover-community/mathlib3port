@@ -24,26 +24,28 @@ section HasOne
 
 variable [HasOne M] [HasOne N] [HasOne P]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- `support` of a function is the set of points `x` such that `f x ≠ 0`. -/
-def support [HasZero A] (f : α → A) : Set α :=
-  { x | f x ≠ 0 }
+  def support [ HasZero A ] ( f : α → A ) : Set α := { x | f x ≠ 0 }
 
-/-- `mul_support` of a function is the set of points `x` such that `f x ≠ 1`. -/
-@[toAdditive]
-def mul_support (f : α → M) : Set α :=
-  { x | f x ≠ 1 }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- `mul_support` of a function is the set of points `x` such that `f x ≠ 1`. -/ @[ toAdditive ]
+  def mul_support ( f : α → M ) : Set α := { x | f x ≠ 1 }
 
 @[toAdditive]
-theorem mul_support_eq_preimage (f : α → M) : mul_support f = f ⁻¹' «expr ᶜ» {1} :=
+theorem mul_support_eq_preimage (f : α → M) : mul_support f = f ⁻¹' {1}ᶜ :=
   rfl
 
 @[toAdditive]
 theorem nmem_mul_support {f : α → M} {x : α} : x ∉ mul_support f ↔ f x = 1 :=
   not_not
 
-@[toAdditive]
-theorem compl_mul_support {f : α → M} : «expr ᶜ» (mul_support f) = { x | f x = 1 } :=
-  ext$ fun x => nmem_mul_support
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ toAdditive ]
+  theorem compl_mul_support { f : α → M } : mul_support f ᶜ = { x | f x = 1 } := ext $ fun x => nmem_mul_support
 
 @[simp, toAdditive]
 theorem mem_mul_support {f : α → M} {x : α} : x ∈ mul_support f ↔ f x ≠ 1 :=
@@ -53,6 +55,7 @@ theorem mem_mul_support {f : α → M} {x : α} : x ∈ mul_support f ↔ f x �
 theorem mul_support_subset_iff {f : α → M} {s : Set α} : mul_support f ⊆ s ↔ ∀ x, f x ≠ 1 → x ∈ s :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∉ » s)
 @[toAdditive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} : mul_support f ⊆ s ↔ ∀ x _ : x ∉ s, f x = 1 :=
   forall_congrₓ$ fun x => not_imp_comm
@@ -112,7 +115,7 @@ theorem mul_support_min [LinearOrderₓ M] (f g : α → M) :
 
 @[toAdditive]
 theorem mul_support_supr [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
-  (mul_support fun x => ⨆i, f i x) ⊆ ⋃i, mul_support (f i) :=
+  (mul_support fun x => ⨆ i, f i x) ⊆ ⋃ i, mul_support (f i) :=
   by 
     rw [mul_support_subset_iff']
     simp only [mem_Union, not_exists, nmem_mul_support]
@@ -121,7 +124,7 @@ theorem mul_support_supr [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι 
 
 @[toAdditive]
 theorem mul_support_infi [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
-  (mul_support fun x => ⨅i, f i x) ⊆ ⋃i, mul_support (f i) :=
+  (mul_support fun x => ⨅ i, f i x) ⊆ ⋃ i, mul_support (f i) :=
   @mul_support_supr _ (OrderDual M) ι ⟨(1 : M)⟩ _ _ f
 
 @[toAdditive]
@@ -247,20 +250,23 @@ theorem support_div [GroupWithZeroₓ G₀] (f g : α → G₀) : (support fun x
   by 
     simp [div_eq_mul_inv]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[toAdditive]
 theorem mul_support_prod [CommMonoidₓ M] (s : Finset α) (f : α → β → M) :
-  (mul_support fun x => ∏i in s, f i x) ⊆ ⋃(i : _)(_ : i ∈ s), mul_support (f i) :=
+  (mul_support fun x => ∏ i in s, f i x) ⊆ ⋃ (i : _)(_ : i ∈ s), mul_support (f i) :=
   by 
     rw [mul_support_subset_iff']
     simp only [mem_Union, not_exists, nmem_mul_support]
     exact fun x => Finset.prod_eq_one
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem support_prod_subset [CommMonoidWithZero A] (s : Finset α) (f : α → β → A) :
-  (support fun x => ∏i in s, f i x) ⊆ ⋂(i : _)(_ : i ∈ s), support (f i) :=
+  (support fun x => ∏ i in s, f i x) ⊆ ⋂ (i : _)(_ : i ∈ s), support (f i) :=
   fun x hx => mem_bInter_iff.2$ fun i hi H => hx$ Finset.prod_eq_zero hi H
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem support_prod [CommMonoidWithZero A] [NoZeroDivisors A] [Nontrivial A] (s : Finset α) (f : α → β → A) :
-  (support fun x => ∏i in s, f i x) = ⋂(i : _)(_ : i ∈ s), support (f i) :=
+  (support fun x => ∏ i in s, f i x) = ⋂ (i : _)(_ : i ∈ s), support (f i) :=
   Set.ext$
     fun x =>
       by 
@@ -314,7 +320,7 @@ theorem support_single_of_ne (h : b ≠ 0) : Function.Support (Pi.single a b) = 
   by 
     ext 
     simp only [mem_singleton_iff, Ne.def, Function.mem_support]
-    split 
+    constructor
     ·
       contrapose! 
       exact fun h' => single_eq_of_ne h' b

@@ -33,34 +33,34 @@ Extend these results to any `normalization_monoid` with unique factorization.
 
 namespace Nat
 
--- error in Data.Nat.MulInd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given `P 0, P 1` and a way to extend `P a` to `P (p ^ k * a)`,
 you can define `P` for all natural numbers. -/
 @[elab_as_eliminator]
-def rec_on_prime_pow
-{P : exprℕ() → Sort*}
-(h0 : P 0)
-(h1 : P 1)
-(h : ∀
- a p n : exprℕ(), p.prime → «expr¬ »(«expr ∣ »(p, a)) → P a → P «expr * »(«expr ^ »(p, n), a)) : ∀ a : exprℕ(), P a :=
-λ a, «expr $ »(nat.strong_rec_on a, λ n, match n with
- | 0 := λ _, h0
- | 1 := λ _, h1
- | «expr + »(k, 2) := λ hk, begin
-   let [ident p] [] [":=", expr «expr + »(k, 2).min_fac],
-   haveI [] [":", expr fact (prime p)] [":=", expr ⟨min_fac_prime (succ_succ_ne_one k)⟩],
-   let [ident t] [] [":=", expr padic_val_nat p «expr + »(k, 2)],
-   have [ident hpt] [":", expr «expr ∣ »(«expr ^ »(p, t), «expr + »(k, 2))] [":=", expr pow_padic_val_nat_dvd],
-   have [ident ht] [":", expr «expr < »(0, t)] [":=", expr one_le_padic_val_nat_of_dvd (nat.succ_ne_zero «expr + »(k, 1)) (min_fac_dvd _)],
-   convert [] [expr h «expr / »(«expr + »(k, 2), «expr ^ »(p, t)) p t (fact.out _) _ _] [],
-   { rw [expr nat.mul_div_cancel' hpt] [] },
-   { rw ["[", expr nat.dvd_div_iff hpt, ",", "<-", expr pow_succ', "]"] [],
-     exact [expr pow_succ_padic_val_nat_not_dvd nat.succ_pos'] },
-   apply [expr hk _ (nat.div_lt_of_lt_mul _)],
-   rw ["[", expr lt_mul_iff_one_lt_left nat.succ_pos', ",", expr one_lt_pow_iff ht.ne, "]"] [],
-   exact [expr (prime.one_lt' p).out]
- end
- end)
+def rec_on_prime_pow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1) (h : ∀ a p n : ℕ, p.prime → ¬p ∣ a → P a → P ((p^n)*a)) :
+  ∀ a : ℕ, P a :=
+  fun a =>
+    Nat.strongRecOn a$
+      fun n =>
+        match n with 
+        | 0 => fun _ => h0
+        | 1 => fun _ => h1
+        | k+2 =>
+          fun hk =>
+            by 
+              let p := (k+2).minFac 
+              have  : Fact (Prime p) := ⟨min_fac_prime (succ_succ_ne_one k)⟩
+              let t := padicValNat p (k+2)
+              have hpt : (p^t) ∣ k+2 := pow_padic_val_nat_dvd 
+              have ht : 0 < t := one_le_padic_val_nat_of_dvd (Nat.succ_ne_zero (k+1)) (min_fac_dvd _)
+              convert h ((k+2) / (p^t)) p t (Fact.out _) _ _
+              ·
+                rw [Nat.mul_div_cancel'ₓ hpt]
+              ·
+                rw [Nat.dvd_div_iff hpt, ←pow_succ'ₓ]
+                exact pow_succ_padic_val_nat_not_dvd Nat.succ_pos' 
+              apply hk _ (Nat.div_lt_of_lt_mul _)
+              rw [lt_mul_iff_one_lt_left Nat.succ_pos', one_lt_pow_iff ht.ne]
+              exact (prime.one_lt' p).out
 
 /-- Given `P 0`, `P 1`, and `P (p ^ k)` for positive prime powers, and a way to extend `P a` and
 `P b` to `P (a * b)` when `a, b` are coprime, you can define `P` for all natural numbers. -/

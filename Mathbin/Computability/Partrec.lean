@@ -26,9 +26,11 @@ section Rfind
 
 parameter (p : ℕ →. Bool)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr ≤ » n)
 private def lbp (m n : ℕ) : Prop :=
   (m = n+1) ∧ ∀ k _ : k ≤ n, ff ∈ p k
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
 parameter (H : ∃ n, tt ∈ p n ∧ ∀ k _ : k < n, (p k).Dom)
 
 private def wf_lbp : WellFounded lbp :=
@@ -47,31 +49,39 @@ private def wf_lbp : WellFounded lbp :=
             (by 
               rw [Nat.add_right_comm] <;> exact kn)⟩
 
--- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-def rfind_x : {n // «expr ∧ »(«expr ∈ »(tt, p n), ∀ m «expr < » n, «expr ∈ »(ff, p m))} :=
-suffices ∀
-k, ∀
-n «expr < » k, «expr ∈ »(ff, p n) → {n // «expr ∧ »(«expr ∈ »(tt, p n), ∀
- m «expr < » n, «expr ∈ »(ff, p m))}, from this 0 (λ n, (nat.not_lt_zero _).elim),
-@well_founded.fix _ _ lbp wf_lbp (begin
-   intros [ident m, ident IH, ident al],
-   have [ident pm] [":", expr (p m).dom] [],
-   { rcases [expr H, "with", "⟨", ident n, ",", ident h₁, ",", ident h₂, "⟩"],
-     rcases [expr lt_trichotomy m n, "with", ident h₃, "|", ident h₃, "|", ident h₃],
-     { exact [expr h₂ _ h₃] },
-     { rw [expr h₃] [],
-       exact [expr h₁.fst] },
-     { injection [expr mem_unique h₁ (al _ h₃)] [] } },
-   cases [expr e, ":", expr (p m).get pm] [],
-   { suffices [] [],
-     exact [expr IH _ ⟨rfl, this⟩ (λ n h, this _ (le_of_lt_succ h))],
-     intros [ident n, ident h],
-     cases [expr h.lt_or_eq_dec] ["with", ident h, ident h],
-     { exact [expr al _ h] },
-     { rw [expr h] [],
-       exact [expr ⟨_, e⟩] } },
-   { exact [expr ⟨m, ⟨_, e⟩, al⟩] }
- end)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr < » k)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr < » n)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr < » n)
+def rfind_x : { n // tt ∈ p n ∧ ∀ m _ : m < n, ff ∈ p m } :=
+  suffices ∀ k, (∀ n _ : n < k, ff ∈ p n) → { n // tt ∈ p n ∧ ∀ m _ : m < n, ff ∈ p m } from
+    this 0 fun n => (Nat.not_lt_zeroₓ _).elim
+  @WellFounded.fix _ _ lbp wf_lbp
+    (by 
+      intro m IH al 
+      have pm : (p m).Dom
+      ·
+        rcases H with ⟨n, h₁, h₂⟩
+        rcases lt_trichotomyₓ m n with (h₃ | h₃ | h₃)
+        ·
+          exact h₂ _ h₃
+        ·
+          rw [h₃]
+          exact h₁.fst
+        ·
+          injection mem_unique h₁ (al _ h₃)
+      cases e : (p m).get pm
+      ·
+        suffices 
+        exact IH _ ⟨rfl, this⟩ fun n h => this _ (le_of_lt_succ h)
+        intro n h 
+        cases' h.lt_or_eq_dec with h h
+        ·
+          exact al _ h
+        ·
+          rw [h]
+          exact ⟨_, e⟩
+      ·
+        exact ⟨m, ⟨_, e⟩, al⟩)
 
 end Rfind
 
@@ -110,6 +120,7 @@ theorem mem_rfind {p : ℕ →. Bool} {n : ℕ} : n ∈ rfind p ↔ tt ∈ p n �
         ·
           injection mem_unique h₁ (rfind_min hm h)⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ∈ » rfind p)
 theorem rfind_min' {p : ℕ → Bool} {m : ℕ} (pm : p m) : ∃ (n : _)(_ : n ∈ rfind p), n ≤ m :=
   have  : tt ∈ (p : ℕ →. Bool) m := ⟨trivialₓ, pm⟩
   let ⟨n, hn⟩ := dom_iff_mem.1$ (@rfind_dom p).2 ⟨m, this, fun k h => ⟨⟩⟩
@@ -132,43 +143,40 @@ theorem rfind_opt_spec {α} {f : ℕ → Option α} {a} (h : a ∈ rfind_opt f) 
   let ⟨n, h₁, h₂⟩ := mem_bind_iff.1 h
   ⟨n, mem_coe.1 h₂⟩
 
--- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rfind_opt_dom
-{α}
-{f : exprℕ() → option α} : «expr ↔ »((rfind_opt f).dom, «expr∃ , »((n a), «expr ∈ »(a, f n))) :=
-⟨λ h, (rfind_opt_spec ⟨h, rfl⟩).imp (λ n h, ⟨_, h⟩), λ h, begin
-   have [ident h'] [":", expr «expr∃ , »((n), (f n).is_some)] [":=", expr h.imp (λ n, option.is_some_iff_exists.2)],
-   have [ident s] [] [":=", expr nat.find_spec h'],
-   have [ident fd] [":", expr (rfind (λ
-      n, (f n).is_some)).dom] [":=", expr ⟨nat.find h', by simpa [] [] [] [] [] ["using", expr s.symm], λ
-     _ _, trivial⟩],
-   refine [expr ⟨fd, _⟩],
-   have [] [] [":=", expr rfind_spec (get_mem fd)],
-   simp [] [] [] [] [] ["at", ident this, "⊢"],
-   cases [expr option.is_some_iff_exists.1 this.symm] ["with", ident a, ident e],
-   rw [expr e] [],
-   trivial
- end⟩
+theorem rfind_opt_dom {α} {f : ℕ → Option α} : (rfind_opt f).Dom ↔ ∃ n a, a ∈ f n :=
+  ⟨fun h => (rfind_opt_spec ⟨h, rfl⟩).imp fun n h => ⟨_, h⟩,
+    fun h =>
+      by 
+        have h' : ∃ n, (f n).isSome := h.imp fun n => Option.is_some_iff_exists.2
+        have s := Nat.find_specₓ h' 
+        have fd : (rfind fun n => (f n).isSome).Dom :=
+          ⟨Nat.findₓ h',
+            by 
+              simpa using s.symm,
+            fun _ _ => trivialₓ⟩
+        refine' ⟨fd, _⟩
+        have  := rfind_spec (get_mem fd)
+        simp  at this⊢
+        cases' Option.is_some_iff_exists.1 this.symm with a e 
+        rw [e]
+        trivial⟩
 
--- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem rfind_opt_mono
-{α}
-{f : exprℕ() → option α}
-(H : ∀ {a m n}, «expr ≤ »(m, n) → «expr ∈ »(a, f m) → «expr ∈ »(a, f n))
-{a} : «expr ↔ »(«expr ∈ »(a, rfind_opt f), «expr∃ , »((n), «expr ∈ »(a, f n))) :=
-⟨rfind_opt_spec, λ ⟨n, h⟩, begin
-   have [ident h'] [] [":=", expr rfind_opt_dom.2 ⟨_, _, h⟩],
-   cases [expr rfind_opt_spec ⟨h', rfl⟩] ["with", ident k, ident hk],
-   have [] [] [":=", expr (H (le_max_left _ _) h).symm.trans (H (le_max_right _ _) hk)],
-   simp [] [] [] [] [] ["at", ident this],
-   simp [] [] [] ["[", expr this, ",", expr get_mem, "]"] [] []
- end⟩
+theorem rfind_opt_mono {α} {f : ℕ → Option α} (H : ∀ {a m n}, m ≤ n → a ∈ f m → a ∈ f n) {a} :
+  a ∈ rfind_opt f ↔ ∃ n, a ∈ f n :=
+  ⟨rfind_opt_spec,
+    fun ⟨n, h⟩ =>
+      by 
+        have h' := rfind_opt_dom.2 ⟨_, _, h⟩
+        cases' rfind_opt_spec ⟨h', rfl⟩ with k hk 
+        have  := (H (le_max_leftₓ _ _) h).symm.trans (H (le_max_rightₓ _ _) hk)
+        simp  at this 
+        simp [this, get_mem]⟩
 
 inductive Partrec : (ℕ →. ℕ) → Prop
   | zero : Partrec (pure 0)
   | succ : Partrec succ
-  | left : Partrec («expr↑ » fun n : ℕ => n.unpair.1)
-  | right : Partrec («expr↑ » fun n : ℕ => n.unpair.2)
+  | left : Partrec (↑fun n : ℕ => n.unpair.1)
+  | right : Partrec (↑fun n : ℕ => n.unpair.2)
   | pair {f g} : Partrec f → Partrec g → Partrec fun n => (mkpair <$> f n)<*>g n
   | comp {f g} : Partrec f → Partrec g → Partrec fun n => g n >>= f
   | prec {f g} :
@@ -457,9 +465,9 @@ protected theorem some : Partrec (@Part.some α) :=
 theorem _root_.decidable.partrec.const' (s : Part σ) [Decidable s.dom] : Partrec fun a : α => s :=
   (of_option (const (to_option s))).of_eq fun a => of_to_option s
 
--- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem const' (s : part σ) : partrec (λ a : α, s) :=
-by haveI [] [] [":=", expr classical.dec s.dom]; exact [expr decidable.partrec.const' s]
+theorem const' (s : Part σ) : Partrec fun a : α => s :=
+  by 
+    have  := Classical.dec s.dom <;> exact Decidable.Partrec.const' s
 
 protected theorem bind {f : α →. β} {g : α → β →. σ} (hf : Partrec f) (hg : Partrec₂ g) :
   Partrec fun a => (f a).bind (g a) :=
@@ -579,25 +587,23 @@ theorem rfind {p : α → ℕ →. Bool} (hp : Partrec₂ p) : Partrec fun a => 
 theorem rfind_opt {f : α → ℕ → Option σ} (hf : Computable₂ f) : Partrec fun a => Nat.rfindOpt (f a) :=
   (rfind (Primrec.option_is_some.to_comp.comp hf).Partrec.to₂).bind (of_option hf)
 
--- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nat_cases_right
-{f : α → exprℕ()}
-{g : α → σ}
-{h : α → «expr →. »(exprℕ(), σ)}
-(hf : computable f)
-(hg : computable g)
-(hh : partrec₂ h) : partrec (λ a, (f a).cases (some (g a)) (h a)) :=
-«expr $ »((nat_elim hf hg (hh.comp fst «expr $ »(pred.comp, hf.comp fst)).to₂).of_eq, λ a, begin
-   simp [] [] [] [] [] [],
-   cases [expr f a] []; simp [] [] [] [] [] [],
-   refine [expr ext (λ b, ⟨λ H, _, λ H, _⟩)],
-   { rcases [expr mem_bind_iff.1 H, "with", "⟨", ident c, ",", ident h₁, ",", ident h₂, "⟩"],
-     exact [expr h₂] },
-   { have [] [":", expr ∀ m, (nat.elim (part.some (g a)) (λ y IH, IH.bind (λ _, h a n)) m).dom] [],
-     { intro [],
-       induction [expr m] [] [] []; simp [] [] [] ["[", "*", ",", expr H.fst, "]"] [] [] },
-     exact [expr ⟨⟨this n, H.fst⟩, H.snd⟩] }
- end)
+theorem nat_cases_right {f : α → ℕ} {g : α → σ} {h : α → ℕ →. σ} (hf : Computable f) (hg : Computable g)
+  (hh : Partrec₂ h) : Partrec fun a => (f a).cases (some (g a)) (h a) :=
+  (nat_elim hf hg (hh.comp fst (pred.comp$ hf.comp fst)).to₂).of_eq$
+    fun a =>
+      by 
+        simp 
+        cases f a <;> simp 
+        refine' ext fun b => ⟨fun H => _, fun H => _⟩
+        ·
+          rcases mem_bind_iff.1 H with ⟨c, h₁, h₂⟩
+          exact h₂
+        ·
+          have  : ∀ m, (Nat.elim (Part.some (g a)) (fun y IH => IH.bind fun _ => h a n) m).Dom
+          ·
+            intro 
+            induction m <;> simp [H.fst]
+          exact ⟨⟨this n, H.fst⟩, H.snd⟩
 
 theorem bind_decode₂_iff {f : α →. σ} :
   Partrec f ↔ Nat.Partrec fun n => Part.bind (decode₂ α n) fun a => (f a).map encode :=
@@ -634,20 +640,24 @@ variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 theorem option_some_iff {f : α → σ} : (Computable fun a => some (f a)) ↔ Computable f :=
   ⟨fun h => encode_iff.1$ Primrec.pred.to_comp.comp$ encode_iff.2 h, option_some.comp⟩
 
--- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem bind_decode_iff
-{f : α → β → option σ} : «expr ↔ »(computable₂ (λ a n, (decode β n).bind (f a)), computable₂ f) :=
-⟨λ
- hf, «expr $ »(nat.partrec.of_eq (((partrec.nat_iff.2 «expr $ »(nat.partrec.ppred.comp, «expr $ »(nat.partrec.of_primrec, primcodable.prim β))).comp snd).bind (computable.comp hf fst).to₂.partrec₂), λ
-  n, by simp [] [] [] [] [] []; cases [expr decode α n.unpair.1] []; simp [] [] [] [] [] []; cases [expr decode β n.unpair.2] []; simp [] [] [] [] [] []), λ
- hf, begin
-   have [] [":", expr partrec (λ
-     a : «expr × »(α, exprℕ()), (encode (decode β a.2)).cases (some option.none) (λ
-      n, part.map (f a.1) (decode β n)))] [":=", expr partrec.nat_cases_right (primrec.encdec.to_comp.comp snd) (const none) ((of_option (computable.decode.comp snd)).map (hf.comp «expr $ »(fst.comp, fst.comp fst) snd).to₂)],
-   refine [expr this.of_eq (λ a, _)],
-   simp [] [] [] [] [] [],
-   cases [expr decode β a.2] []; simp [] [] [] ["[", expr encodek, "]"] [] []
- end⟩
+theorem bind_decode_iff {f : α → β → Option σ} : (Computable₂ fun a n => (decode β n).bind (f a)) ↔ Computable₂ f :=
+  ⟨fun hf =>
+      Nat.Partrec.of_eq
+          (((Partrec.nat_iff.2 (Nat.Partrec.ppred.comp$ Nat.Partrec.of_primrec$ Primcodable.prim β)).comp snd).bind
+            (Computable.comp hf fst).to₂.Partrec₂)$
+        fun n =>
+          by 
+            simp  <;> cases decode α n.unpair.1 <;> simp  <;> cases decode β n.unpair.2 <;> simp ,
+    fun hf =>
+      by 
+        have  :
+          Partrec
+            fun a : α × ℕ => (encode (decode β a.2)).cases (some Option.none) fun n => Part.map (f a.1) (decode β n) :=
+          Partrec.nat_cases_right (primrec.encdec.to_comp.comp snd) (const none)
+            ((of_option (computable.decode.comp snd)).map (hf.comp (fst.comp$ fst.comp fst) snd).to₂)
+        refine' this.of_eq fun a => _ 
+        simp 
+        cases decode β a.2 <;> simp [encodek]⟩
 
 theorem map_decode_iff {f : α → β → σ} : (Computable₂ fun a n => (decode β n).map (f a)) ↔ Computable₂ f :=
   bind_decode_iff.trans option_some_iff
@@ -794,59 +804,68 @@ theorem sum_cases_left {f : α → Sum β γ} {g : α → β →. σ} {h : α �
       by 
         cases f a <;> simp 
 
--- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fix_aux
-{α σ}
-(f : «expr →. »(α, «expr ⊕ »(σ, α)))
-(a : α)
-(b : σ) : let F : α → «expr →. »(exprℕ(), «expr ⊕ »(σ, α)) := λ
-    a n, «expr $ »(n.elim (some (sum.inr a)), λ y IH, «expr $ »(IH.bind, λ s, sum.cases_on s (λ _, part.some s) f)) in
-«expr ↔ »(«expr∃ , »((n : exprℕ()), «expr ∧ »(«expr ∧ »(«expr∃ , »((b' : σ), «expr ∈ »(sum.inl b', F a n)), ∀
-    {m : exprℕ()}, «expr < »(m, n) → «expr∃ , »((b : α), «expr ∈ »(sum.inr b, F a m))), «expr ∈ »(sum.inl b, F a n))), «expr ∈ »(b, pfun.fix f a)) :=
-begin
-  intro [],
-  refine [expr ⟨λ h, _, λ h, _⟩],
-  { rcases [expr h, "with", "⟨", ident n, ",", "⟨", ident _x, ",", ident h₁, "⟩", ",", ident h₂, "⟩"],
-    have [] [":", expr ∀
-     (m a')
-     (_ : «expr ∈ »(sum.inr a', F a m))
-     (_ : «expr ∈ »(b, pfun.fix f a')), «expr ∈ »(b, pfun.fix f a)] [],
-    { intros [ident m, ident a', ident am, ident ba],
-      induction [expr m] [] ["with", ident m, ident IH] ["generalizing", ident a']; simp [] [] [] ["[", expr F, "]"] [] ["at", ident am],
-      { rwa ["<-", expr am] [] },
-      rcases [expr am, "with", "⟨", ident a₂, ",", ident am₂, ",", ident fa₂, "⟩"],
-      exact [expr IH _ am₂ (pfun.mem_fix_iff.2 (or.inr ⟨_, fa₂, ba⟩))] },
-    cases [expr n] []; simp [] [] [] ["[", expr F, "]"] [] ["at", ident h₂],
-    { cases [expr h₂] [] },
-    rcases [expr h₂, "with", ident h₂, "|", "⟨", ident a', ",", ident am', ",", ident fa', "⟩"],
-    { cases [expr h₁ (nat.lt_succ_self _)] ["with", ident a', ident h],
-      injection [expr mem_unique h h₂] [] },
-    { exact [expr this _ _ am' (pfun.mem_fix_iff.2 (or.inl fa'))] } },
-  { suffices [] [":", expr ∀
-     (a')
-     (_ : «expr ∈ »(b, pfun.fix f a'))
-     (k)
-     (_ : «expr ∈ »(sum.inr a', F a k)), «expr∃ , »((n), «expr ∧ »(«expr ∈ »(sum.inl b, F a n), ∀
-       (m «expr < » n)
-       (_ : «expr ≤ »(k, m)), «expr∃ , »((a₂), «expr ∈ »(sum.inr a₂, F a m))))],
-    { rcases [expr this _ h 0 (by simp [] [] [] ["[", expr F, "]"] [] []), "with", "⟨", ident n, ",", ident hn₁, ",", ident hn₂, "⟩"],
-      exact [expr ⟨_, ⟨⟨_, hn₁⟩, λ m mn, hn₂ m mn (nat.zero_le _)⟩, hn₁⟩] },
-    intros [ident a₁, ident h₁],
-    apply [expr pfun.fix_induction h₁],
-    intros [ident a₂, ident h₂, ident IH, ident k, ident hk],
-    rcases [expr pfun.mem_fix_iff.1 h₂, "with", ident h₂, "|", "⟨", ident a₃, ",", ident am₃, ",", ident fa₃, "⟩"],
-    { refine [expr ⟨k.succ, _, λ m mk km, ⟨a₂, _⟩⟩],
-      { simp [] [] [] ["[", expr F, "]"] [] [],
-        exact [expr or.inr ⟨_, hk, h₂⟩] },
-      { rwa [expr le_antisymm (nat.le_of_lt_succ mk) km] [] } },
-    { rcases [expr IH _ fa₃ am₃ k.succ _, "with", "⟨", ident n, ",", ident hn₁, ",", ident hn₂, "⟩"],
-      { refine [expr ⟨n, hn₁, λ m mn km, _⟩],
-        cases [expr km.lt_or_eq_dec] ["with", ident km, ident km],
-        { exact [expr hn₂ _ mn km] },
-        { exact [expr «expr ▸ »(km, ⟨_, hk⟩)] } },
-      { simp [] [] [] ["[", expr F, "]"] [] [],
-        exact [expr ⟨_, hk, am₃⟩] } } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr < » n)
+theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
+  let F : α → ℕ →. Sum σ α :=
+    fun a n => n.elim (some (Sum.inr a))$ fun y IH => IH.bind$ fun s => Sum.casesOn s (fun _ => Part.some s) f
+  (∃ n : ℕ, ((∃ b' : σ, Sum.inl b' ∈ F a n) ∧ ∀ {m : ℕ}, m < n → ∃ b : α, Sum.inr b ∈ F a m) ∧ Sum.inl b ∈ F a n) ↔
+    b ∈ Pfun.fix f a :=
+  by 
+    intro 
+    refine' ⟨fun h => _, fun h => _⟩
+    ·
+      rcases h with ⟨n, ⟨_x, h₁⟩, h₂⟩
+      have  : ∀ m a' _ : Sum.inr a' ∈ F a m _ : b ∈ Pfun.fix f a', b ∈ Pfun.fix f a
+      ·
+        intro m a' am ba 
+        induction' m with m IH generalizing a' <;> simp [F] at am
+        ·
+          rwa [←am]
+        rcases am with ⟨a₂, am₂, fa₂⟩
+        exact IH _ am₂ (Pfun.mem_fix_iff.2 (Or.inr ⟨_, fa₂, ba⟩))
+      cases n <;> simp [F] at h₂
+      ·
+        cases h₂ 
+      rcases h₂ with (h₂ | ⟨a', am', fa'⟩)
+      ·
+        cases' h₁ (Nat.lt_succ_selfₓ _) with a' h 
+        injection mem_unique h h₂
+      ·
+        exact this _ _ am' (Pfun.mem_fix_iff.2 (Or.inl fa'))
+    ·
+      suffices  :
+        ∀ a' _ : b ∈ Pfun.fix f a' k _ : Sum.inr a' ∈ F a k,
+          ∃ n, Sum.inl b ∈ F a n ∧ ∀ m _ : m < n _ : k ≤ m, ∃ a₂, Sum.inr a₂ ∈ F a m
+      ·
+        rcases
+          this _ h 0
+            (by 
+              simp [F]) with
+          ⟨n, hn₁, hn₂⟩
+        exact ⟨_, ⟨⟨_, hn₁⟩, fun m mn => hn₂ m mn (Nat.zero_leₓ _)⟩, hn₁⟩
+      intro a₁ h₁ 
+      apply Pfun.fixInduction h₁ 
+      intro a₂ h₂ IH k hk 
+      rcases Pfun.mem_fix_iff.1 h₂ with (h₂ | ⟨a₃, am₃, fa₃⟩)
+      ·
+        refine' ⟨k.succ, _, fun m mk km => ⟨a₂, _⟩⟩
+        ·
+          simp [F]
+          exact Or.inr ⟨_, hk, h₂⟩
+        ·
+          rwa [le_antisymmₓ (Nat.le_of_lt_succₓ mk) km]
+      ·
+        rcases IH _ fa₃ am₃ k.succ _ with ⟨n, hn₁, hn₂⟩
+        ·
+          refine' ⟨n, hn₁, fun m mn km => _⟩
+          cases' km.lt_or_eq_dec with km km
+          ·
+            exact hn₂ _ mn km
+          ·
+            exact km ▸ ⟨_, hk⟩
+        ·
+          simp [F]
+          exact ⟨_, hk, am₃⟩
 
 theorem fix {f : α →. Sum σ α} (hf : Partrec f) : Partrec (Pfun.fix f) :=
   let F : α → ℕ →. Sum σ α :=

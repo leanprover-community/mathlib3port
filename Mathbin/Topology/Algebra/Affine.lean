@@ -26,26 +26,26 @@ section Ringₓ
 
 variable [Ringₓ R] [Module R E] [Module R F]
 
--- error in Topology.Algebra.Affine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An affine map is continuous iff its underlying linear map is continuous. See also
 `affine_map.continuous_linear_iff`. -/
-theorem continuous_iff {f : «expr →ᵃ[ ] »(E, R, F)} : «expr ↔ »(continuous f, continuous f.linear) :=
-begin
-  split,
-  { intro [ident hc],
-    rw [expr decomp' f] [],
-    have [] [] [":=", expr hc.sub continuous_const],
-    exact [expr this] },
-  { intro [ident hc],
-    rw [expr decomp f] [],
-    have [] [] [":=", expr hc.add continuous_const],
-    exact [expr this] }
-end
+theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linear :=
+  by 
+    constructor
+    ·
+      intro hc 
+      rw [decomp' f]
+      have  := hc.sub continuous_const 
+      exact this
+    ·
+      intro hc 
+      rw [decomp f]
+      have  := hc.add continuous_const 
+      exact this
 
 /-- The line map is continuous. -/
 @[continuity]
 theorem line_map_continuous [TopologicalSpace R] [HasContinuousSmul R F] {p v : F} :
-  Continuous («expr⇑ » (line_map p v : R →ᵃ[R] F)) :=
+  Continuous (⇑(line_map p v : R →ᵃ[R] F)) :=
   continuous_iff.mpr$ (continuous_id.smul continuous_const).add$ @continuous_const _ _ _ _ (0 : F)
 
 end Ringₓ
@@ -57,7 +57,7 @@ variable [CommRingₓ R] [Module R F] [TopologicalSpace R] [HasContinuousSmul R 
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous$ homothety x t :=
   by 
-    suffices  : «expr⇑ » (homothety x t) = fun y => (t • (y - x))+x
+    suffices  : ⇑homothety x t = fun y => (t • (y - x))+x
     ·
       rw [this]
       continuity 

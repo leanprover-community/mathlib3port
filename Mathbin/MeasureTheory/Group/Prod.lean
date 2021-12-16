@@ -29,7 +29,7 @@ https://math.stackexchange.com/questions/3974485/does-right-translation-preserve
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open TopologicalSpace
 
@@ -105,21 +105,20 @@ theorem map_prod_mul_inv_eq (hμ : is_mul_left_invariant μ) (hν : is_mul_left_
         (measurable_snd.prod_mk (measurable_snd.mul measurable_fst)),
       map_prod_mul_eq_swap hμ, map_prod_inv_mul_eq_swap hν]
 
--- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem quasi_measure_preserving_inv
-(hμ : is_mul_left_invariant μ) : quasi_measure_preserving (has_inv.inv : G → G) μ μ :=
-begin
-  refine [expr ⟨measurable_inv, «expr $ »(absolutely_continuous.mk, λ s hsm hμs, _)⟩],
-  rw ["[", expr map_apply measurable_inv hsm, ",", expr inv_preimage, "]"] [],
-  have [ident hf] [":", expr measurable (λ
-    z : «expr × »(G, G), («expr * »(z.2, z.1), «expr ⁻¹»(z.1)))] [":=", expr (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv],
-  suffices [] [":", expr «expr = »(map (λ
-     z : «expr × »(G, G), («expr * »(z.2, z.1), «expr ⁻¹»(z.1))) (μ.prod μ) («expr ⁻¹»(s).prod «expr ⁻¹»(s)), 0)],
-  { simpa [] [] ["only"] ["[", expr map_prod_mul_inv_eq hμ hμ, ",", expr prod_prod, ",", expr mul_eq_zero, ",", expr or_self, "]"] [] ["using", expr this] },
-  have [ident hsm'] [":", expr measurable_set («expr ⁻¹»(s).prod «expr ⁻¹»(s))] [":=", expr hsm.inv.prod hsm.inv],
-  simp_rw ["[", expr map_apply hf hsm', ",", expr prod_apply_symm (hf hsm'), ",", expr preimage_preimage, ",", expr mk_preimage_prod, ",", expr inv_preimage, ",", expr set.inv_inv, ",", expr measure_mono_null (inter_subset_right _ _) hμs, ",", expr lintegral_zero, "]"] []
-end
+@[toAdditive]
+theorem quasi_measure_preserving_inv (hμ : is_mul_left_invariant μ) :
+  quasi_measure_preserving (HasInv.inv : G → G) μ μ :=
+  by 
+    refine' ⟨measurable_inv, absolutely_continuous.mk$ fun s hsm hμs => _⟩
+    rw [map_apply measurable_inv hsm, inv_preimage]
+    have hf : Measurable fun z : G × G => (z.2*z.1, z.1⁻¹) :=
+      (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv 
+    suffices  : map (fun z : G × G => (z.2*z.1, z.1⁻¹)) (μ.prod μ) (s⁻¹.Prod (s⁻¹)) = 0
+    ·
+      simpa only [map_prod_mul_inv_eq hμ hμ, prod_prod, mul_eq_zero, or_selfₓ] using this 
+    have hsm' : MeasurableSet (s⁻¹.Prod (s⁻¹)) := hsm.inv.prod hsm.inv 
+    simpRw [map_apply hf hsm', prod_apply_symm (hf hsm'), preimage_preimage, mk_preimage_prod, inv_preimage,
+      Set.inv_inv, measure_mono_null (inter_subset_right _ _) hμs, lintegral_zero]
 
 @[toAdditive]
 theorem measure_inv_null (hμ : is_mul_left_invariant μ) {E : Set G} : μ ((fun x => x⁻¹) ⁻¹' E) = 0 ↔ μ E = 0 :=
@@ -141,23 +140,19 @@ theorem measurable_measure_mul_right {E : Set G} (hE : MeasurableSet E) :
     apply measurable_measure_prod_mk_right 
     exact measurable_const.prod_mk (measurable_fst.mul measurable_snd) (measurable_set.univ.prod hE)
 
--- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem lintegral_lintegral_mul_inv
-(hμ : is_mul_left_invariant μ)
-(hν : is_mul_left_invariant ν)
-(f : G → G → «exprℝ≥0∞»())
-(hf : ae_measurable (uncurry f) (μ.prod ν)) : «expr = »(«expr∫⁻ , ∂ »((x), «expr∫⁻ , ∂ »((y), f «expr * »(y, x) «expr ⁻¹»(x), ν), μ), «expr∫⁻ , ∂ »((x), «expr∫⁻ , ∂ »((y), f x y, ν), μ)) :=
-begin
-  have [ident h] [":", expr measurable (λ
-    z : «expr × »(G, G), («expr * »(z.2, z.1), «expr ⁻¹»(z.1)))] [":=", expr (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv],
-  have [ident h2f] [":", expr ae_measurable «expr $ »(uncurry, λ x y, f «expr * »(y, x) «expr ⁻¹»(x)) (μ.prod ν)] [],
-  { apply [expr hf.comp_measurable' h (map_prod_mul_inv_eq hμ hν).absolutely_continuous] },
-  simp_rw ["[", expr lintegral_lintegral h2f, ",", expr lintegral_lintegral hf, "]"] [],
-  conv_rhs [] [] { rw ["[", "<-", expr map_prod_mul_inv_eq hμ hν, "]"] },
-  symmetry,
-  exact [expr lintegral_map' (hf.mono' (map_prod_mul_inv_eq hμ hν).absolutely_continuous) h]
-end
+@[toAdditive]
+theorem lintegral_lintegral_mul_inv (hμ : is_mul_left_invariant μ) (hν : is_mul_left_invariant ν) (f : G → G → ℝ≥0∞)
+  (hf : AeMeasurable (uncurry f) (μ.prod ν)) : (∫⁻ x, ∫⁻ y, f (y*x) (x⁻¹) ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, f x y ∂ν ∂μ :=
+  by 
+    have h : Measurable fun z : G × G => (z.2*z.1, z.1⁻¹) :=
+      (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv 
+    have h2f : AeMeasurable (uncurry$ fun x y => f (y*x) (x⁻¹)) (μ.prod ν)
+    ·
+      apply hf.comp_measurable' h (map_prod_mul_inv_eq hμ hν).AbsolutelyContinuous 
+    simpRw [lintegral_lintegral h2f, lintegral_lintegral hf]
+    convRHS => rw [←map_prod_mul_inv_eq hμ hν]
+    symm 
+    exact lintegral_map' (hf.mono' (map_prod_mul_inv_eq hμ hν).AbsolutelyContinuous) h
 
 @[toAdditive]
 theorem measure_mul_right_null (hμ : is_mul_left_invariant μ) {E : Set G} (y : G) :
@@ -175,7 +170,6 @@ theorem measure_mul_right_ne_zero (hμ : is_mul_left_invariant μ) {E : Set G} (
   μ ((fun x => x*y) ⁻¹' E) ≠ 0 :=
   (not_iff_not_of_iff (measure_mul_right_null hμ y)).mpr h2E
 
--- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A technical lemma relating two different measures. This is basically [Halmos, §60 Th. A].
   Note that if `f` is the characteristic function of a measurable set `F` this states that
   `μ F = c * μ E` for a constant `c` that does not depend on `μ`.
@@ -185,70 +179,46 @@ theorem measure_mul_right_ne_zero (hμ : is_mul_left_invariant μ) {E : Set G} (
   inequality. For this reason, we use a compact `E` instead of a measurable `E` as in [Halmos], and
   additionally assume that `ν` is a regular measure (we only need that it is finite on compact
   sets). -/
-@[to_additive #[]]
-theorem measure_lintegral_div_measure
-[t2_space G]
-(hμ : is_mul_left_invariant μ)
-(hν : is_mul_left_invariant ν)
-[regular ν]
-{E : set G}
-(hE : is_compact E)
-(h2E : «expr ≠ »(ν E, 0))
-(f : G → «exprℝ≥0∞»())
-(hf : measurable f) : «expr = »(«expr * »(μ E, «expr∫⁻ , ∂ »((y), «expr / »(f «expr ⁻¹»(y), ν «expr ⁻¹' »(λ
-     h, «expr * »(h, «expr ⁻¹»(y)), E)), ν)), «expr∫⁻ , ∂ »((x), f x, μ)) :=
-begin
-  have [ident Em] [] [":=", expr hE.measurable_set],
-  symmetry,
-  set [] [ident g] [] [":="] [expr λ
-   y, «expr / »(f «expr ⁻¹»(y), ν «expr ⁻¹' »(λ h, «expr * »(h, «expr ⁻¹»(y)), E))] [],
-  have [ident hg] [":", expr measurable g] [":=", expr (hf.comp measurable_inv).div ((measurable_measure_mul_right Em).comp measurable_inv)],
-  rw ["[", "<-", expr set_lintegral_one, ",", "<-", expr lintegral_indicator _ Em, ",", "<-", expr lintegral_lintegral_mul (measurable_const.indicator Em).ae_measurable hg.ae_measurable, ",", "<-", expr lintegral_lintegral_mul_inv hμ hν, "]"] [],
-  swap,
-  { exact [expr (((measurable_const.indicator Em).comp measurable_fst).mul (hg.comp measurable_snd)).ae_measurable] },
-  have [ident mE] [":", expr ∀
-   x : G, measurable (λ
-    y, «expr ⁻¹' »(λ
-     z, «expr * »(z, x), E).indicator (λ
-     z, (1 : «exprℝ≥0∞»())) y)] [":=", expr λ x, measurable_const.indicator (measurable_mul_const _ Em)],
-  have [] [":", expr ∀
-   x
-   y, «expr = »(E.indicator (λ
-     z : G, (1 : «exprℝ≥0∞»())) «expr * »(y, x), «expr ⁻¹' »(λ z, «expr * »(z, x), E).indicator (λ b : G, 1) y)] [],
-  { intros [ident x, ident y],
-    symmetry,
-    convert [] [expr indicator_comp_right (λ y, «expr * »(y, x))] [],
-    ext1 [] [ident z],
-    refl },
-  have [ident h3E] [":", expr ∀
-   y, «expr ≠ »(ν «expr ⁻¹' »(λ
-     x, «expr * »(x, y), E), «expr∞»())] [":=", expr λ
-   y, «expr $ »(regular.lt_top_of_is_compact, (homeomorph.mul_right _).compact_preimage.mpr hE).ne],
-  simp_rw ["[", expr this, ",", expr lintegral_mul_const _ (mE _), ",", expr lintegral_indicator _ (measurable_mul_const _ Em), ",", expr set_lintegral_one, ",", expr g, ",", expr inv_inv, ",", expr ennreal.mul_div_cancel' (measure_mul_right_ne_zero hν h2E _) (h3E _), "]"] []
-end
+@[toAdditive]
+theorem measure_lintegral_div_measure [T2Space G] (hμ : is_mul_left_invariant μ) (hν : is_mul_left_invariant ν)
+  [regular ν] {E : Set G} (hE : IsCompact E) (h2E : ν E ≠ 0) (f : G → ℝ≥0∞) (hf : Measurable f) :
+  (μ E*∫⁻ y, f (y⁻¹) / ν ((fun h => h*y⁻¹) ⁻¹' E) ∂ν) = ∫⁻ x, f x ∂μ :=
+  by 
+    have Em := hE.measurable_set 
+    symm 
+    set g := fun y => f (y⁻¹) / ν ((fun h => h*y⁻¹) ⁻¹' E)
+    have hg : Measurable g := (hf.comp measurable_inv).div ((measurable_measure_mul_right Em).comp measurable_inv)
+    rw [←set_lintegral_one, ←lintegral_indicator _ Em,
+      ←lintegral_lintegral_mul (measurable_const.indicator Em).AeMeasurable hg.ae_measurable,
+      ←lintegral_lintegral_mul_inv hμ hν]
+    swap
+    ·
+      exact (((measurable_const.indicator Em).comp measurable_fst).mul (hg.comp measurable_snd)).AeMeasurable 
+    have mE : ∀ x : G, Measurable fun y => ((fun z => z*x) ⁻¹' E).indicator (fun z => (1 : ℝ≥0∞)) y :=
+      fun x => measurable_const.indicator (measurable_mul_const _ Em)
+    have  : ∀ x y, E.indicator (fun z : G => (1 : ℝ≥0∞)) (y*x) = ((fun z => z*x) ⁻¹' E).indicator (fun b : G => 1) y
+    ·
+      intro x y 
+      symm 
+      convert indicator_comp_right fun y => y*x 
+      ext1 z 
+      rfl 
+    have h3E : ∀ y, ν ((fun x => x*y) ⁻¹' E) ≠ ∞ :=
+      fun y => (regular.lt_top_of_is_compact$ (Homeomorph.mulRight _).compact_preimage.mpr hE).Ne 
+    simpRw [this, lintegral_mul_const _ (mE _), lintegral_indicator _ (measurable_mul_const _ Em), set_lintegral_one, g,
+      inv_invₓ, Ennreal.mul_div_cancel' (measure_mul_right_ne_zero hν h2E _) (h3E _)]
 
--- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This is roughly the uniqueness (up to a scalar) of left invariant Borel measures on a second
   countable locally compact group. The uniqueness of Haar measure is proven from this in
   `measure_theory.measure.haar_measure_unique` -/
-@[to_additive #[]]
-theorem measure_mul_measure_eq
-[t2_space G]
-(hμ : is_mul_left_invariant μ)
-(hν : is_mul_left_invariant ν)
-[regular ν]
-{E F : set G}
-(hE : is_compact E)
-(hF : measurable_set F)
-(h2E : «expr ≠ »(ν E, 0)) : «expr = »(«expr * »(μ E, ν F), «expr * »(ν E, μ F)) :=
-begin
-  have [ident h1] [] [":=", expr measure_lintegral_div_measure hν hν hE h2E (F.indicator (λ
-     x, 1)) (measurable_const.indicator hF)],
-  have [ident h2] [] [":=", expr measure_lintegral_div_measure hμ hν hE h2E (F.indicator (λ
-     x, 1)) (measurable_const.indicator hF)],
-  rw ["[", expr lintegral_indicator _ hF, ",", expr set_lintegral_one, "]"] ["at", ident h1, ident h2],
-  rw ["[", "<-", expr h1, ",", expr mul_left_comm, ",", expr h2, "]"] []
-end
+@[toAdditive]
+theorem measure_mul_measure_eq [T2Space G] (hμ : is_mul_left_invariant μ) (hν : is_mul_left_invariant ν) [regular ν]
+  {E F : Set G} (hE : IsCompact E) (hF : MeasurableSet F) (h2E : ν E ≠ 0) : (μ E*ν F) = ν E*μ F :=
+  by 
+    have h1 := measure_lintegral_div_measure hν hν hE h2E (F.indicator fun x => 1) (measurable_const.indicator hF)
+    have h2 := measure_lintegral_div_measure hμ hν hE h2E (F.indicator fun x => 1) (measurable_const.indicator hF)
+    rw [lintegral_indicator _ hF, set_lintegral_one] at h1 h2 
+    rw [←h1, mul_left_commₓ, h2]
 
 end MeasureTheory
 

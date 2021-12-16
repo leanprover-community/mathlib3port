@@ -70,11 +70,11 @@ def snd : R × S →+* S :=
 variable {R S}
 
 @[simp]
-theorem coe_fst : «expr⇑ » (fst R S) = Prod.fst :=
+theorem coe_fst : ⇑fst R S = Prod.fst :=
   rfl
 
 @[simp]
-theorem coe_snd : «expr⇑ » (snd R S) = Prod.snd :=
+theorem coe_snd : ⇑snd R S = Prod.snd :=
   rfl
 
 section Prod
@@ -121,7 +121,7 @@ theorem prod_map_def : prod_mapₓ f g = (f.comp (fst R S)).Prod (g.comp (snd R 
   rfl
 
 @[simp]
-theorem coe_prod_map : «expr⇑ » (prod_mapₓ f g) = Prod.map f g :=
+theorem coe_prod_map : ⇑prod_mapₓ f g = Prod.map f g :=
   rfl
 
 theorem prod_comp_prod_map (f : T →* R) (g : T →* S) (f' : R →* R') (g' : S →* S') :
@@ -141,19 +141,19 @@ def prod_comm : R × S ≃+* S × R :=
   { AddEquiv.prodComm, MulEquiv.prodComm with  }
 
 @[simp]
-theorem coe_prod_comm : «expr⇑ » (prod_comm : R × S ≃+* S × R) = Prod.swap :=
+theorem coe_prod_comm : ⇑(prod_comm : R × S ≃+* S × R) = Prod.swap :=
   rfl
 
 @[simp]
-theorem coe_prod_comm_symm : «expr⇑ » (prod_comm : R × S ≃+* S × R).symm = Prod.swap :=
+theorem coe_prod_comm_symm : ⇑(prod_comm : R × S ≃+* S × R).symm = Prod.swap :=
   rfl
 
 @[simp]
-theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp («expr↑ » (prod_comm : R × S ≃+* S × R)) = RingHom.snd R S :=
+theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp (↑(prod_comm : R × S ≃+* S × R)) = RingHom.snd R S :=
   RingHom.ext$ fun _ => rfl
 
 @[simp]
-theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp («expr↑ » (prod_comm : R × S ≃+* S × R)) = RingHom.fst R S :=
+theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp (↑(prod_comm : R × S ≃+* S × R)) = RingHom.fst R S :=
   RingHom.ext$ fun _ => rfl
 
 variable (R S) [Subsingleton S]
@@ -191,4 +191,19 @@ def zero_ring_prod : R ≃+* S × R :=
           cases x <;> simp  }
 
 end RingEquiv
+
+/-- The product of two nontrivial rings is not a domain -/
+theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ringₓ R] [Ringₓ S] [IsDomain (R × S)] [Nontrivial R]
+  [Nontrivial S] : False :=
+  by 
+    have  :=
+      IsDomain.eq_zero_or_eq_zero_of_mul_eq_zero
+        (show (((0 : R), (1 : S))*(1, 0)) = 0 by 
+          simp )
+    rw [Prod.mk_eq_zero, Prod.mk_eq_zero] at this 
+    rcases this with (⟨_, h⟩ | ⟨h, _⟩)
+    ·
+      exact zero_ne_one h.symm
+    ·
+      exact zero_ne_one h.symm
 

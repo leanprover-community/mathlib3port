@@ -8,7 +8,11 @@ The lexicographic order on `list α` is defined by `L < M` iff
 * `(a :: L) < (b :: M)` where `a < b`, or
 * `(a :: L) < (a :: M)` where `L < M`.
 
-See also `order.lexicographic` for the lexicographic order on pairs.
+## See also
+
+The lexicographic order on a product type can be found in `order.lexicographic`.
+
+The lexicographic order on a sigma type can be found in `data.sigma.lex`.
 -/
 
 
@@ -91,20 +95,29 @@ instance IsAsymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (le
 instance IsStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder' α r] : IsStrictTotalOrder' (List α) (lex r) :=
   { is_strict_weak_order_of_is_order_connected with  }
 
--- error in Data.List.Lex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance decidable_rel [decidable_eq α] (r : α → α → exprProp()) [decidable_rel r] : decidable_rel (lex r)
-| l₁, «expr[ , ]»([]) := «expr $ »(is_false, λ h, by cases [expr h] [])
-| «expr[ , ]»([]), «expr :: »(b, l₂) := is_true lex.nil
-| «expr :: »(a, l₁), «expr :: »(b, l₂) := begin
-  haveI [] [] [":=", expr decidable_rel l₁ l₂],
-  refine [expr decidable_of_iff «expr ∨ »(r a b, «expr ∧ »(«expr = »(a, b), lex r l₁ l₂)) ⟨λ h, _, λ h, _⟩],
-  { rcases [expr h, "with", ident h, "|", "⟨", ident rfl, ",", ident h, "⟩"],
-    { exact [expr lex.rel h] },
-    { exact [expr lex.cons h] } },
-  { rcases [expr h, "with", "_", "|", "⟨", "_", ",", "_", ",", "_", ",", ident h, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident h, "⟩"],
-    { exact [expr or.inr ⟨rfl, h⟩] },
-    { exact [expr or.inl h] } }
-end
+instance DecidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (lex r)
+| l₁, [] =>
+  is_false$
+    fun h =>
+      by 
+        cases h
+| [], b :: l₂ => is_true lex.nil
+| a :: l₁, b :: l₂ =>
+  by 
+    have  := DecidableRel l₁ l₂ 
+    refine' decidableOfIff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
+    ·
+      rcases h with (h | ⟨rfl, h⟩)
+      ·
+        exact lex.rel h
+      ·
+        exact lex.cons h
+    ·
+      rcases h with (_ | ⟨_, _, _, h⟩ | ⟨_, _, _, _, h⟩)
+      ·
+        exact Or.inr ⟨rfl, h⟩
+      ·
+        exact Or.inl h
 
 theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} t, lex r s₁ s₂ → lex r s₁ (s₂ ++ t)
 | _, _, t, nil => nil

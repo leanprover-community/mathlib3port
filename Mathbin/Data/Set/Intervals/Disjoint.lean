@@ -72,27 +72,29 @@ theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x�
     apply le_antisymmₓ h2.1 
     exact h.elim (fun h => absurd hx (not_lt_of_le h)) id
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » a)
 @[simp]
 theorem Union_Ico_eq_Iio_self_iff {ι : Sort _} {f : ι → α} {a : α} :
-  (⋃i, Ico (f i) a) = Iio a ↔ ∀ x _ : x < a, ∃ i, f i ≤ x :=
+  (⋃ i, Ico (f i) a) = Iio a ↔ ∀ x _ : x < a, ∃ i, f i ≤ x :=
   by 
     simp [←Ici_inter_Iio, ←Union_inter, subset_def]
 
 @[simp]
 theorem Union_Ioc_eq_Ioi_self_iff {ι : Sort _} {f : ι → α} {a : α} :
-  (⋃i, Ioc a (f i)) = Ioi a ↔ ∀ x, a < x → ∃ i, x ≤ f i :=
+  (⋃ i, Ioc a (f i)) = Ioi a ↔ ∀ x, a < x → ∃ i, x ≤ f i :=
   by 
     simp [←Ioi_inter_Iic, ←inter_Union, subset_def]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » a)
 @[simp]
 theorem bUnion_Ico_eq_Iio_self_iff {ι : Sort _} {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
-  (⋃(i : _)(hi : p i), Ico (f i hi) a) = Iio a ↔ ∀ x _ : x < a, ∃ i hi, f i hi ≤ x :=
+  (⋃ (i : _)(hi : p i), Ico (f i hi) a) = Iio a ↔ ∀ x _ : x < a, ∃ i hi, f i hi ≤ x :=
   by 
     simp [←Ici_inter_Iio, ←Union_inter, subset_def]
 
 @[simp]
 theorem bUnion_Ioc_eq_Ioi_self_iff {ι : Sort _} {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
-  (⋃(i : _)(hi : p i), Ioc a (f i hi)) = Ioi a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi :=
+  (⋃ (i : _)(hi : p i), Ioc a (f i hi)) = Ioi a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi :=
   by 
     simp [←Ioi_inter_Iic, ←inter_Union, subset_def]
 

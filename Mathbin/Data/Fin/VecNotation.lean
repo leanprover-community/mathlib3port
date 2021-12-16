@@ -53,8 +53,8 @@ The notation `![a, b, ...]` expands to `vec_cons a (vec_cons b ...)`.
 def vec_cons {n : ℕ} (h : α) (t : Finₓ n → α) : Finₓ n.succ → α :=
   Finₓ.cons h t
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:1096:9: unsupported: advanced notation (l:(foldr `, ` (h t, vec_cons h t) vec_empty `]`))
-notation `![` l:(foldr `, ` (h t, vec_cons h t) vec_empty `]`) := l
+-- ././Mathport/Syntax/Translate/Basic.lean:1148:9: unsupported: advanced notation (l:(foldr `, ` (h t, vec_cons h t) vec_empty `]`))
+notation3 "!["  => l
 
 /-- `vec_head v` gives the first entry of the vector `v` -/
 def vec_head {n : ℕ} (v : Finₓ n.succ → α) : α :=
@@ -79,8 +79,11 @@ end MatrixNotation
 
 variable {m n o : ℕ} {m' n' o' : Type _}
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-theorem empty_eq (v : fin 0 → α) : «expr = »(v, «expr![ , ]»([])) := subsingleton.elim _ _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+theorem empty_eq (v : Finₓ 0 → α) :
+  v = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  Subsingleton.elimₓ _ _
 
 section Val
 
@@ -116,10 +119,18 @@ theorem tail_cons (x : α) (u : Finₓ m → α) : vec_tail (vec_cons x u) = u :
     ext 
     simp [vec_tail]
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
 @[simp]
-theorem empty_val' {n' : Type*} (j : n') : «expr = »(λ i, («expr![ , ]»([]) : fin 0 → n' → α) i j, «expr![ , ]»([])) :=
-empty_eq _
+theorem empty_val' {n' : Type _} (j : n') :
+  (fun i =>
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :
+        Finₓ 0 → n' → α)
+        i j) =
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem cons_head_tail (u : Finₓ m.succ → α) : vec_cons (vec_head u) (vec_tail u) = u :=
@@ -140,8 +151,11 @@ theorem range_empty (u : Finₓ 0 → α) : Set.Range u = ∅ :=
 theorem vec_cons_const (a : α) : (vec_cons a fun k : Finₓ n => a) = fun _ => a :=
   funext$ Finₓ.forall_fin_succ.2 ⟨rfl, cons_val_succ _ _⟩
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-theorem vec_single_eq_const (a : α) : «expr = »(«expr![ , ]»([a]), λ _, a) := «expr $ »(funext, unique.forall_iff.2 rfl)
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+theorem vec_single_eq_const (a : α) :
+  «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" = fun _ => a :=
+  funext$ Unique.forall_iff.2 rfl
 
 /-- `![a, b, ...] 1` is equal to `b`.
 
@@ -173,10 +187,16 @@ addition on `fin n`).
 -/
 
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem empty_append (v : fin n → α) : «expr = »(fin.append (zero_add _).symm «expr![ , ]»([]) v, v) :=
-by { ext [] [] [],
-  simp [] [] [] ["[", expr fin.append, "]"] [] [] }
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem empty_append (v : Finₓ n → α) :
+  Finₓ.append (zero_addₓ _).symm
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»") v =
+    v :=
+  by 
+    ext 
+    simp [Finₓ.append]
 
 @[simp]
 theorem cons_append (ho : (o+1) = (m+1)+n) (x : α) (u : Finₓ m → α) (v : Finₓ n → α) :
@@ -292,9 +312,18 @@ theorem cons_vec_alt0 (h : ((m+1)+1) = (n+1)+n+1) (x y : α) (u : Finₓ m → �
     ·
       simp [vec_alt0, Nat.add_succ, Nat.succ_add]
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem empty_vec_alt0 (α) {h} : «expr = »(vec_alt0 h («expr![ , ]»([]) : fin 0 → α), «expr![ , ]»([])) :=
-by simp [] [] [] [] [] []
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem empty_vec_alt0 α {h} :
+  vec_alt0 h
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :
+      Finₓ 0 → α) =
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  by 
+    simp 
 
 @[simp]
 theorem cons_vec_alt1 (h : ((m+1)+1) = (n+1)+n+1) (x y : α) (u : Finₓ m → α) :
@@ -313,9 +342,18 @@ theorem cons_vec_alt1 (h : ((m+1)+1) = (n+1)+n+1) (x y : α) (u : Finₓ m → �
     ·
       simp [vec_alt1, Nat.add_succ, Nat.succ_add]
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem empty_vec_alt1 (α) {h} : «expr = »(vec_alt1 h («expr![ , ]»([]) : fin 0 → α), «expr![ , ]»([])) :=
-by simp [] [] [] [] [] []
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem empty_vec_alt1 α {h} :
+  vec_alt1 h
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :
+      Finₓ 0 → α) =
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  by 
+    simp 
 
 end Val
 
@@ -323,8 +361,12 @@ section Smul
 
 variable [Semiringₓ α]
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem smul_empty (x : α) (v : fin 0 → α) : «expr = »(«expr • »(x, v), «expr![ , ]»([])) := empty_eq _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem smul_empty (x : α) (v : Finₓ 0 → α) :
+  x • v = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem smul_cons (x y : α) (v : Finₓ n → α) : x • vec_cons y v = vec_cons (x*y) (x • v) :=
@@ -338,8 +380,12 @@ section Add
 
 variable [Add α]
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem empty_add_empty (v w : fin 0 → α) : «expr = »(«expr + »(v, w), «expr![ , ]»([])) := empty_eq _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem empty_add_empty (v w : Finₓ 0 → α) :
+  (v+w) = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem cons_add (x : α) (v : Finₓ n → α) (w : Finₓ n.succ → α) :
@@ -369,8 +415,12 @@ section Sub
 
 variable [Sub α]
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem empty_sub_empty (v w : fin 0 → α) : «expr = »(«expr - »(v, w), «expr![ , ]»([])) := empty_eq _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem empty_sub_empty (v w : Finₓ 0 → α) :
+  v - w = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem cons_sub (x : α) (v : Finₓ n → α) (w : Finₓ n.succ → α) :
@@ -400,8 +450,13 @@ section Zero
 
 variable [HasZero α]
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem zero_empty : «expr = »((0 : fin 0 → α), «expr![ , ]»([])) := empty_eq _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem zero_empty :
+  (0 : Finₓ 0 → α) =
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem cons_zero_zero : vec_cons (0 : α) (0 : Finₓ n → α) = 0 :=
@@ -442,8 +497,12 @@ section Neg
 
 variable [Neg α]
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
-@[simp] theorem neg_empty (v : fin 0 → α) : «expr = »(«expr- »(v), «expr![ , ]»([])) := empty_eq _
+-- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+@[simp]
+theorem neg_empty (v : Finₓ 0 → α) :
+  -v = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+  empty_eq _
 
 @[simp]
 theorem neg_cons (x : α) (v : Finₓ n → α) : -vec_cons x v = vec_cons (-x) (-v) :=

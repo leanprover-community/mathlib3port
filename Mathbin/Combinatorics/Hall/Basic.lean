@@ -66,7 +66,7 @@ attribute [local instance] hallFinsetDirectedOrder
 
 /-- The set of matchings for `t` when restricted to a `finset` of `ι`. -/
 def HallMatchingsOn {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :=
-  { f:ι' → α | Function.Injective f ∧ ∀ x, f x ∈ t x }
+  { f : ι' → α | Function.Injective f ∧ ∀ x, f x ∈ t x }
 
 /-- Given a matching on a finset, construct the restriction of that matching to a subset. -/
 def HallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) {ι' ι'' : Finset ι} (h : ι' ⊆ ι'')
@@ -95,7 +95,7 @@ theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
 /--
 This is the `hall_matchings_on` sets assembled into a directed system.
 -/
-def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : «expr ᵒᵖ» (Finset ι) ⥤ Type max u v :=
+def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : Finset ιᵒᵖ ⥤ Type max u v :=
   { obj := fun ι' => HallMatchingsOn t ι'.unop,
     map := fun ι' ι'' g f => HallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f }
 
@@ -116,7 +116,6 @@ noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : 
     ext a 
     exact h a
 
--- error in Combinatorics.Hall.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → finset α`.  It states that there is a
@@ -128,67 +127,66 @@ Recall that `s.bUnion t` is the union of all the sets `t i` for `i ∈ s`.
 This theorem is bootstrapped from `finset.all_card_le_bUnion_card_iff_exists_injective'`,
 which has the additional constraint that `ι` is a `fintype`.
 -/
-theorem finset.all_card_le_bUnion_card_iff_exists_injective
-{ι : Type u}
-{α : Type v}
-[decidable_eq α]
-(t : ι → finset α) : «expr ↔ »(∀
- s : finset ι, «expr ≤ »(s.card, (s.bUnion t).card), «expr∃ , »((f : ι → α), «expr ∧ »(function.injective f, ∀
-   x, «expr ∈ »(f x, t x)))) :=
-begin
-  split,
-  { intro [ident h],
-    haveI [] [":", expr ∀
-     ι' : «expr ᵒᵖ»(finset ι), nonempty ((hall_matchings_functor t).obj ι')] [":=", expr λ
-     ι', hall_matchings_on.nonempty t h ι'.unop],
-    classical,
-    haveI [] [":", expr ∀
-     ι' : «expr ᵒᵖ»(finset ι), fintype ((hall_matchings_functor t).obj ι')] [":=", expr begin
-       intro [ident ι'],
-       rw ["[", expr hall_matchings_functor, "]"] [],
-       apply_instance
-     end],
-    obtain ["⟨", ident u, ",", ident hu, "⟩", ":=", expr nonempty_sections_of_fintype_inverse_system (hall_matchings_functor t)],
-    refine [expr ⟨_, _, _⟩],
-    { exact [expr λ
-       i, (u (opposite.op ({i} : finset ι))).val ⟨i, by simp [] [] ["only"] ["[", expr opposite.unop_op, ",", expr mem_singleton, "]"] [] []⟩] },
-    { intros [ident i, ident i'],
-      have [ident subi] [":", expr «expr ⊆ »(({i} : finset ι), {i, i'})] [":=", expr by simp [] [] [] [] [] []],
-      have [ident subi'] [":", expr «expr ⊆ »(({i'} : finset ι), {i, i'})] [":=", expr by simp [] [] [] [] [] []],
-      have [ident le] [":", expr ∀ {s t : finset ι}, «expr ⊆ »(s, t) → «expr ≤ »(s, t)] [":=", expr λ _ _ h, h],
-      rw ["[", "<-", expr hu (category_theory.hom_of_le (le subi)).op, ",", "<-", expr hu (category_theory.hom_of_le (le subi')).op, "]"] [],
-      let [ident uii'] [] [":=", expr u (opposite.op ({i, i'} : finset ι))],
-      exact [expr λ h, subtype.mk_eq_mk.mp (uii'.property.1 h)] },
-    { intro [ident i],
-      apply [expr (u (opposite.op ({i} : finset ι))).property.2] } },
-  { rintro ["⟨", ident f, ",", ident hf₁, ",", ident hf₂, "⟩", ident s],
-    rw ["<-", expr finset.card_image_of_injective s hf₁] [],
-    apply [expr finset.card_le_of_subset],
-    intro ["_"],
-    rw ["[", expr finset.mem_image, ",", expr finset.mem_bUnion, "]"] [],
-    rintros ["⟨", ident x, ",", ident hx, ",", ident rfl, "⟩"],
-    exact [expr ⟨x, hx, hf₂ x⟩] }
-end
+theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : Type v} [DecidableEq α]
+  (t : ι → Finset α) :
+  (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔ ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
+  by 
+    constructor
+    ·
+      intro h 
+      have  : ∀ ι' : Finset ιᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') :=
+        fun ι' => HallMatchingsOn.nonempty t h ι'.unop 
+      classical 
+      have  : ∀ ι' : Finset ιᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') :=
+        by 
+          intro ι' 
+          rw [hallMatchingsFunctor]
+          infer_instance 
+      obtain ⟨u, hu⟩ := nonempty_sections_of_fintype_inverse_system (hallMatchingsFunctor t)
+      refine' ⟨_, _, _⟩
+      ·
+        exact
+          fun i =>
+            (u (Opposite.op ({i} : Finset ι))).val
+              ⟨i,
+                by 
+                  simp only [Opposite.unop_op, mem_singleton]⟩
+      ·
+        intro i i' 
+        have subi : ({i} : Finset ι) ⊆ {i, i'} :=
+          by 
+            simp 
+        have subi' : ({i'} : Finset ι) ⊆ {i, i'} :=
+          by 
+            simp 
+        have le : ∀ {s t : Finset ι}, s ⊆ t → s ≤ t := fun _ _ h => h 
+        rw [←hu (CategoryTheory.homOfLe (le subi)).op, ←hu (CategoryTheory.homOfLe (le subi')).op]
+        let uii' := u (Opposite.op ({i, i'} : Finset ι))
+        exact fun h => subtype.mk_eq_mk.mp (uii'.property.1 h)
+      ·
+        intro i 
+        apply (u (Opposite.op ({i} : Finset ι))).property.2
+    ·
+      rintro ⟨f, hf₁, hf₂⟩ s 
+      rw [←Finset.card_image_of_injective s hf₁]
+      apply Finset.card_le_of_subset 
+      intro 
+      rw [Finset.mem_image, Finset.mem_bUnion]
+      rintro ⟨x, hx, rfl⟩
+      exact ⟨x, hx, hf₂ x⟩
 
--- error in Combinatorics.Hall.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a relation such that the image of every singleton set is finite, then the image of every
 finite set is finite. -/
-instance
-{α : Type u}
-{β : Type v}
-[decidable_eq β]
-(r : α → β → exprProp())
-[∀ a : α, fintype (rel.image r {a})]
-(A : finset α) : fintype (rel.image r A) :=
-begin
-  have [ident h] [":", expr «expr = »(rel.image r A, (A.bUnion (λ a, (rel.image r {a}).to_finset) : set β))] [],
-  { ext [] [] [],
-    simp [] [] [] ["[", expr rel.image, "]"] [] [] },
-  rw ["[", expr h, "]"] [],
-  apply [expr finset_coe.fintype]
-end
+instance {α : Type u} {β : Type v} [DecidableEq β] (r : α → β → Prop) [∀ a : α, Fintype (Rel.Image r {a})]
+  (A : Finset α) : Fintype (Rel.Image r A) :=
+  by 
+    have h : Rel.Image r A = (A.bUnion fun a => (Rel.Image r {a}).toFinset : Set β)
+    ·
+      ext 
+      simp [Rel.Image]
+    rw [h]
+    apply FinsetCoe.fintype
 
--- error in Combinatorics.Hall.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 This is a version of **Hall's Marriage Theorem** in terms of a relation
 between types `α` and `β` such that `α` is finite and the image of
@@ -200,30 +198,26 @@ a subrelation of the relation) iff every subset of
 
 Note: if `[fintype β]`, then there exist instances for `[∀ (a : α), fintype (rel.image r {a})]`.
 -/
-theorem fintype.all_card_le_rel_image_card_iff_exists_injective
-{α : Type u}
-{β : Type v}
-[decidable_eq β]
-(r : α → β → exprProp())
-[∀
- a : α, fintype (rel.image r {a})] : «expr ↔ »(∀
- A : finset α, «expr ≤ »(A.card, fintype.card (rel.image r A)), «expr∃ , »((f : α → β), «expr ∧ »(function.injective f, ∀
-   x, r x (f x)))) :=
-begin
-  let [ident r'] [] [":=", expr λ a, (rel.image r {a}).to_finset],
-  have [ident h] [":", expr ∀ A : finset α, «expr = »(fintype.card (rel.image r A), (A.bUnion r').card)] [],
-  { intro [ident A],
-    rw ["<-", expr set.to_finset_card] [],
-    apply [expr congr_arg],
-    ext [] [ident b] [],
-    simp [] [] [] ["[", expr rel.image, "]"] [] [] },
-  have [ident h'] [":", expr ∀ (f : α → β) (x), «expr ↔ »(r x (f x), «expr ∈ »(f x, r' x))] [],
-  { simp [] [] [] ["[", expr rel.image, "]"] [] [] },
-  simp [] [] ["only"] ["[", expr h, ",", expr h', "]"] [] [],
-  apply [expr finset.all_card_le_bUnion_card_iff_exists_injective]
-end
+theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {β : Type v} [DecidableEq β]
+  (r : α → β → Prop) [∀ a : α, Fintype (Rel.Image r {a})] :
+  (∀ A : Finset α, A.card ≤ Fintype.card (Rel.Image r A)) ↔ ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) :=
+  by 
+    let r' := fun a => (Rel.Image r {a}).toFinset 
+    have h : ∀ A : Finset α, Fintype.card (Rel.Image r A) = (A.bUnion r').card
+    ·
+      intro A 
+      rw [←Set.to_finset_card]
+      apply congr_argₓ 
+      ext b 
+      simp [Rel.Image]
+    have h' : ∀ f : α → β x, r x (f x) ↔ f x ∈ r' x
+    ·
+      simp [Rel.Image]
+    simp only [h, h']
+    apply Finset.all_card_le_bUnion_card_iff_exists_injective
 
--- error in Combinatorics.Hall.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » A)
 /--
 This is a version of **Hall's Marriage Theorem** in terms of a relation to a finite type.
 There is a transversal of the relation (an injective function `α → β` whose graph is a subrelation
@@ -232,27 +226,21 @@ of the relation) iff every subset of `k` terms of `α` is related to at least `k
 It is like `fintype.all_card_le_rel_image_card_iff_exists_injective` but uses `finset.filter`
 rather than `rel.image`.
 -/
-theorem fintype.all_card_le_filter_rel_iff_exists_injective
-{α : Type u}
-{β : Type v}
-[fintype β]
-(r : α → β → exprProp())
-[∀
- a, decidable_pred (r a)] : «expr ↔ »(∀
- A : finset α, «expr ≤ »(A.card, (univ.filter (λ
-    b : β, «expr∃ , »((a «expr ∈ » A), r a b))).card), «expr∃ , »((f : α → β), «expr ∧ »(function.injective f, ∀
-   x, r x (f x)))) :=
-begin
-  haveI [] [] [":=", expr classical.dec_eq β],
-  let [ident r'] [] [":=", expr λ a, univ.filter (λ b, r a b)],
-  have [ident h] [":", expr ∀
-   A : finset α, «expr = »(univ.filter (λ b : β, «expr∃ , »((a «expr ∈ » A), r a b)), A.bUnion r')] [],
-  { intro [ident A],
-    ext [] [ident b] [],
-    simp [] [] [] [] [] [] },
-  have [ident h'] [":", expr ∀ (f : α → β) (x), «expr ↔ »(r x (f x), «expr ∈ »(f x, r' x))] [],
-  { simp [] [] [] [] [] [] },
-  simp_rw ["[", expr h, ",", expr h', "]"] [],
-  apply [expr finset.all_card_le_bUnion_card_iff_exists_injective]
-end
+theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : Type v} [Fintype β] (r : α → β → Prop)
+  [∀ a, DecidablePred (r a)] :
+  (∀ A : Finset α, A.card ≤ (univ.filter fun b : β => ∃ (a : _)(_ : a ∈ A), r a b).card) ↔
+    ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) :=
+  by 
+    have  := Classical.decEq β 
+    let r' := fun a => univ.filter fun b => r a b 
+    have h : ∀ A : Finset α, (univ.filter fun b : β => ∃ (a : _)(_ : a ∈ A), r a b) = A.bUnion r'
+    ·
+      intro A 
+      ext b 
+      simp 
+    have h' : ∀ f : α → β x, r x (f x) ↔ f x ∈ r' x
+    ·
+      simp 
+    simpRw [h, h']
+    apply Finset.all_card_le_bUnion_card_iff_exists_injective
 

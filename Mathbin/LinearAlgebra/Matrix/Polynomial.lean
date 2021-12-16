@@ -25,7 +25,7 @@ open_locale Matrix BigOperators
 
 variable {n α : Type _} [DecidableEq n] [Fintype n] [CommRingₓ α]
 
-open Polynomial Matrix Equiv.Perm
+open Polynomial Matrix Equivₓ.Perm
 
 namespace Polynomial
 
@@ -39,15 +39,15 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
       exists_imp_distrib, Finset.mem_univ_val]
     intro g 
     calc
-      nat_degree (sign g • ∏i : n, ((X • A.map C)+B.map C) (g i) i) ≤
-        nat_degree (∏i : n, ((X • A.map C)+B.map C) (g i) i) :=
+      nat_degree (sign g • ∏ i : n, ((X • A.map C)+B.map C) (g i) i) ≤
+        nat_degree (∏ i : n, ((X • A.map C)+B.map C) (g i) i) :=
       by 
         cases' Int.units_eq_one_or (sign g) with sg sg
         ·
           rw [sg, one_smul]
         ·
           rw [sg, Units.neg_smul, one_smul,
-            nat_degree_neg]_ ≤ ∑i : n, nat_degree ((((X : Polynomial α) • A.map C)+B.map C) (g i) i) :=
+            nat_degree_neg]_ ≤ ∑ i : n, nat_degree ((((X : Polynomial α) • A.map C)+B.map C) (g i) i) :=
       nat_degree_prod_le (Finset.univ : Finset n)
         fun i : n => ((X • A.map C)+B.map C) (g i) i _ ≤ finset.univ.card • 1 :=
       Finset.sum_le_of_forall_le _ _ 1 fun i : n _ => _ _ ≤ Fintype.card n :=
@@ -91,21 +91,22 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
       refine' (nat_degree_add_le _ _).trans _ 
       simpa using (nat_degree_mul_C_le _ _).trans nat_degree_X_le
 
--- error in LinearAlgebra.Matrix.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem leading_coeff_det_X_one_add_C
-(A : matrix n n α) : «expr = »(leading_coeff (det «expr + »(«expr • »((X : polynomial α), (1 : matrix n n (polynomial α))), A.map C)), 1) :=
-begin
-  casesI [expr subsingleton_or_nontrivial α] [],
-  { simp [] [] [] [] [] [] },
-  rw ["[", "<-", expr @det_one n, ",", "<-", expr coeff_det_X_add_C_card _ A, ",", expr leading_coeff, "]"] [],
-  simp [] [] ["only"] ["[", expr matrix.map_one, ",", expr C_eq_zero, ",", expr ring_hom.map_one, "]"] [] [],
-  cases [expr (nat_degree_det_X_add_C_le 1 A).eq_or_lt] ["with", ident h, ident h],
-  { simp [] [] ["only"] ["[", expr ring_hom.map_one, ",", expr matrix.map_one, ",", expr C_eq_zero, "]"] [] ["at", ident h],
-    rw [expr h] [] },
-  { have [ident H] [] [":=", expr coeff_eq_zero_of_nat_degree_lt h],
-    rw [expr coeff_det_X_add_C_card] ["at", ident H],
-    simpa [] [] [] [] [] ["using", expr H] }
-end
+theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
+  leading_coeff (det (((X : Polynomial α) • (1 : Matrix n n (Polynomial α)))+A.map C)) = 1 :=
+  by 
+    cases' subsingleton_or_nontrivial α
+    ·
+      simp 
+    rw [←@det_one n, ←coeff_det_X_add_C_card _ A, leading_coeff]
+    simp only [Matrix.map_one, C_eq_zero, RingHom.map_one]
+    cases' (nat_degree_det_X_add_C_le 1 A).eq_or_lt with h h
+    ·
+      simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h 
+      rw [h]
+    ·
+      have H := coeff_eq_zero_of_nat_degree_lt h 
+      rw [coeff_det_X_add_C_card] at H 
+      simpa using H
 
 end Polynomial
 

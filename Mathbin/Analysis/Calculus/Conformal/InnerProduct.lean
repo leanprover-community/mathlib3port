@@ -9,7 +9,7 @@ is conformal at `x` iff the derivative preserves inner products up to a scalar m
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 variable {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
 

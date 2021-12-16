@@ -32,7 +32,7 @@ which removes some boilerplate code.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -82,63 +82,52 @@ theorem mod_part_nonneg : 0 ≤ mod_part p r :=
     by 
       exactModCast hp_prime.1.ne_zero
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_unit_denom
-(r : exprℚ())
-(h : «expr ≤ »(«expr∥ ∥»((r : «exprℚ_[ ]»(p))), 1)) : is_unit (r.denom : «exprℤ_[ ]»(p)) :=
-begin
-  rw [expr is_unit_iff] [],
-  apply [expr le_antisymm (r.denom : «exprℤ_[ ]»(p)).2],
-  rw ["[", "<-", expr not_lt, ",", expr val_eq_coe, ",", expr coe_coe, "]"] [],
-  intro [ident norm_denom_lt],
-  have [ident hr] [":", expr «expr = »(«expr∥ ∥»((«expr * »(r, r.denom) : «exprℚ_[ ]»(p))), «expr∥ ∥»((r.num : «exprℚ_[ ]»(p))))] [],
-  { rw_mod_cast [expr @rat.mul_denom_eq_num r] [],
-    refl },
-  rw [expr padic_norm_e.mul] ["at", ident hr],
-  have [ident key] [":", expr «expr < »(«expr∥ ∥»((r.num : «exprℚ_[ ]»(p))), 1)] [],
-  { calc
-      «expr = »(_, _) : hr.symm
-      «expr < »(..., «expr * »(1, 1)) : mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one
-      «expr = »(..., 1) : mul_one 1 },
-  have [] [":", expr «expr ∧ »(«expr ∣ »(«expr↑ »(p), r.num), «expr ∣ »((p : exprℤ()), r.denom))] [],
-  { simp [] [] ["only"] ["[", "<-", expr norm_int_lt_one_iff_dvd, ",", "<-", expr padic_norm_e_of_padic_int, "]"] [] [],
-    norm_cast [],
-    exact [expr ⟨key, norm_denom_lt⟩] },
-  apply [expr hp_prime.1.not_dvd_one],
-  rwa ["[", "<-", expr r.cop.gcd_eq_one, ",", expr nat.dvd_gcd_iff, ",", "<-", expr int.coe_nat_dvd_left, ",", "<-", expr int.coe_nat_dvd, "]"] []
-end
+theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.denom : ℤ_[p]) :=
+  by 
+    rw [is_unit_iff]
+    apply le_antisymmₓ (r.denom : ℤ_[p]).2
+    rw [←not_ltₓ, val_eq_coe, coe_coe]
+    intro norm_denom_lt 
+    have hr : ∥(r*r.denom : ℚ_[p])∥ = ∥(r.num : ℚ_[p])∥
+    ·
+      rwModCast [@Rat.mul_denom_eq_num r]
+      rfl 
+    rw [padicNormE.mul] at hr 
+    have key : ∥(r.num : ℚ_[p])∥ < 1
+    ·
+      calc _ = _ := hr.symm _ < 1*1 := mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one _ = 1 := mul_oneₓ 1
+    have  : ↑p ∣ r.num ∧ (p : ℤ) ∣ r.denom
+    ·
+      simp only [←norm_int_lt_one_iff_dvd, ←padic_norm_e_of_padic_int]
+      normCast 
+      exact ⟨key, norm_denom_lt⟩
+    apply hp_prime.1.not_dvd_one 
+    rwa [←r.cop.gcd_eq_one, Nat.dvd_gcd_iffₓ, ←Int.coe_nat_dvd_left, ←Int.coe_nat_dvd]
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_sub_mod_part_aux
-(r : exprℚ())
-(h : «expr ≤ »(«expr∥ ∥»((r : «exprℚ_[ ]»(p))), 1)) : «expr ∣ »(«expr↑ »(p), «expr - »(r.num, «expr * »(«expr % »(«expr * »(r.num, r.denom.gcd_a p), p), «expr↑ »(r.denom)))) :=
-begin
-  rw ["<-", expr zmod.int_coe_zmod_eq_zero_iff_dvd] [],
-  simp [] [] ["only"] ["[", expr int.cast_coe_nat, ",", expr zmod.nat_cast_mod p, ",", expr int.cast_mul, ",", expr int.cast_sub, "]"] [] [],
-  have [] [] [":=", expr congr_arg (coe : exprℤ() → zmod p) (gcd_eq_gcd_ab r.denom p)],
-  simp [] [] ["only"] ["[", expr int.cast_coe_nat, ",", expr add_zero, ",", expr int.cast_add, ",", expr zmod.nat_cast_self, ",", expr int.cast_mul, ",", expr zero_mul, "]"] [] ["at", ident this],
-  push_cast [] [],
-  rw ["[", expr mul_right_comm, ",", expr mul_assoc, ",", "<-", expr this, "]"] [],
-  suffices [ident rdcp] [":", expr r.denom.coprime p],
-  { rw [expr rdcp.gcd_eq_one] [],
-    simp [] [] ["only"] ["[", expr mul_one, ",", expr cast_one, ",", expr sub_self, "]"] [] [] },
-  apply [expr coprime.symm],
-  apply [expr (coprime_or_dvd_of_prime hp_prime.1 _).resolve_right],
-  rw ["[", "<-", expr int.coe_nat_dvd, ",", "<-", expr norm_int_lt_one_iff_dvd, ",", expr not_lt, "]"] [],
-  apply [expr ge_of_eq],
-  rw ["<-", expr is_unit_iff] [],
-  exact [expr is_unit_denom r h]
-end
+theorem norm_sub_mod_part_aux (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : ↑p ∣ r.num - ((r.num*r.denom.gcd_a p) % p)*↑r.denom :=
+  by 
+    rw [←Zmod.int_coe_zmod_eq_zero_iff_dvd]
+    simp only [Int.cast_coe_nat, Zmod.nat_cast_mod p, Int.cast_mul, Int.cast_sub]
+    have  := congr_argₓ (coeₓ : ℤ → Zmod p) (gcd_eq_gcd_ab r.denom p)
+    simp only [Int.cast_coe_nat, add_zeroₓ, Int.cast_add, Zmod.nat_cast_self, Int.cast_mul, zero_mul] at this 
+    pushCast 
+    rw [mul_right_commₓ, mul_assocₓ, ←this]
+    suffices rdcp : r.denom.coprime p
+    ·
+      rw [rdcp.gcd_eq_one]
+      simp only [mul_oneₓ, cast_one, sub_self]
+    apply coprime.symm 
+    apply (coprime_or_dvd_of_prime hp_prime.1 _).resolve_right 
+    rw [←Int.coe_nat_dvd, ←norm_int_lt_one_iff_dvd, not_ltₓ]
+    apply ge_of_eq 
+    rw [←is_unit_iff]
+    exact is_unit_denom r h
 
 theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - mod_part p r : ℤ_[p])∥ < 1 :=
   by 
     let n := mod_part p r 
-    byCases' aux : (⟨r, h⟩ - n : ℤ_[p]) = 0
-    ·
-      rw [aux, norm_zero]
-      exact zero_lt_one 
     rw [norm_lt_one_iff_dvd, ←(is_unit_denom r h).dvd_mul_right]
-    suffices  : «expr↑ » p ∣ r.num - n*r.denom
+    suffices  : ↑p ∣ r.num - n*r.denom
     ·
       convert (Int.castRingHom ℤ_[p]).map_dvd this 
       simp only [sub_mul, Int.cast_coe_nat, RingHom.eq_int_cast, Int.cast_mul, sub_left_inj, Int.cast_sub]
@@ -152,64 +141,61 @@ theorem exists_mem_range_of_norm_rat_le_one (h : ∥(r : ℚ_[p])∥ ≤ 1) :
   ∃ n : ℤ, 0 ≤ n ∧ n < p ∧ ∥(⟨r, h⟩ - n : ℤ_[p])∥ < 1 :=
   ⟨mod_part p r, mod_part_nonneg _, mod_part_lt_p _, norm_sub_mod_part _ h⟩
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zmod_congr_of_sub_mem_span_aux
-(n : exprℕ())
-(x : «exprℤ_[ ]»(p))
-(a b : exprℤ())
-(ha : «expr ∈ »(«expr - »(x, a), (ideal.span {«expr ^ »(p, n)} : ideal «exprℤ_[ ]»(p))))
-(hb : «expr ∈ »(«expr - »(x, b), (ideal.span {«expr ^ »(p, n)} : ideal «exprℤ_[ ]»(p)))) : «expr = »((a : zmod «expr ^ »(p, n)), b) :=
-begin
-  rw ["[", expr ideal.mem_span_singleton, "]"] ["at", ident ha, ident hb],
-  rw ["[", "<-", expr sub_eq_zero, ",", "<-", expr int.cast_sub, ",", expr zmod.int_coe_zmod_eq_zero_iff_dvd, ",", expr int.coe_nat_pow, "]"] [],
-  rw ["[", "<-", expr dvd_neg, ",", expr neg_sub, "]"] ["at", ident ha],
-  have [] [] [":=", expr dvd_add ha hb],
-  rwa ["[", expr sub_eq_add_neg, ",", expr sub_eq_add_neg, ",", expr add_assoc, ",", expr neg_add_cancel_left, ",", "<-", expr sub_eq_add_neg, ",", "<-", expr int.cast_sub, ",", expr pow_p_dvd_int_iff, "]"] ["at", ident this]
-end
+theorem zmod_congr_of_sub_mem_span_aux (n : ℕ) (x : ℤ_[p]) (a b : ℤ) (ha : x - a ∈ (Ideal.span {p^n} : Ideal ℤ_[p]))
+  (hb : x - b ∈ (Ideal.span {p^n} : Ideal ℤ_[p])) : (a : Zmod (p^n)) = b :=
+  by 
+    rw [Ideal.mem_span_singleton] at ha hb 
+    rw [←sub_eq_zero, ←Int.cast_sub, Zmod.int_coe_zmod_eq_zero_iff_dvd, Int.coe_nat_pow]
+    rw [←dvd_neg, neg_sub] at ha 
+    have  := dvd_add ha hb 
+    rwa [sub_eq_add_neg, sub_eq_add_neg, add_assocₓ, neg_add_cancel_leftₓ, ←sub_eq_add_neg, ←Int.cast_sub,
+      pow_p_dvd_int_iff] at this
 
 theorem zmod_congr_of_sub_mem_span (n : ℕ) (x : ℤ_[p]) (a b : ℕ) (ha : x - a ∈ (Ideal.span {p^n} : Ideal ℤ_[p]))
   (hb : x - b ∈ (Ideal.span {p^n} : Ideal ℤ_[p])) : (a : Zmod (p^n)) = b :=
   zmod_congr_of_sub_mem_span_aux n x a b ha hb
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zmod_congr_of_sub_mem_max_ideal
-(x : «exprℤ_[ ]»(p))
-(m n : exprℕ())
-(hm : «expr ∈ »(«expr - »(x, m), maximal_ideal «exprℤ_[ ]»(p)))
-(hn : «expr ∈ »(«expr - »(x, n), maximal_ideal «exprℤ_[ ]»(p))) : «expr = »((m : zmod p), n) :=
-begin
-  rw [expr maximal_ideal_eq_span_p] ["at", ident hm, ident hn],
-  have [] [] [":=", expr zmod_congr_of_sub_mem_span_aux 1 x m n],
-  simp [] [] ["only"] ["[", expr pow_one, "]"] [] ["at", ident this],
-  specialize [expr this hm hn],
-  apply_fun [expr zmod.cast_hom (show «expr ∣ »(p, «expr ^ »(p, 1)), by rw [expr pow_one] []) (zmod p)] ["at", ident this] [],
-  simpa [] [] ["only"] ["[", expr ring_hom.map_int_cast, "]"] [] []
-end
+theorem zmod_congr_of_sub_mem_max_ideal (x : ℤ_[p]) (m n : ℕ) (hm : x - m ∈ maximal_ideal ℤ_[p])
+  (hn : x - n ∈ maximal_ideal ℤ_[p]) : (m : Zmod p) = n :=
+  by 
+    rw [maximal_ideal_eq_span_p] at hm hn 
+    have  := zmod_congr_of_sub_mem_span_aux 1 x m n 
+    simp only [pow_oneₓ] at this 
+    specialize this hm hn 
+    applyFun
+      Zmod.castHom
+        (show p ∣ (p^1)by 
+          rw [pow_oneₓ])
+        (Zmod p)
+       at this 
+    simpa only [RingHom.map_int_cast]
 
 variable (x : ℤ_[p])
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_mem_range : «expr∃ , »((n : exprℕ()), «expr ∧ »(«expr < »(n, p), «expr ∈ »(«expr - »(x, n), maximal_ideal «exprℤ_[ ]»(p)))) :=
-begin
-  simp [] [] ["only"] ["[", expr maximal_ideal_eq_span_p, ",", expr ideal.mem_span_singleton, ",", "<-", expr norm_lt_one_iff_dvd, "]"] [] [],
-  obtain ["⟨", ident r, ",", ident hr, "⟩", ":=", expr rat_dense (x : «exprℚ_[ ]»(p)) zero_lt_one],
-  have [ident H] [":", expr «expr ≤ »(«expr∥ ∥»((r : «exprℚ_[ ]»(p))), 1)] [],
-  { rw [expr norm_sub_rev] ["at", ident hr],
-    calc
-      «expr = »(_, «expr∥ ∥»(«expr + »(«expr - »((r : «exprℚ_[ ]»(p)), x), x))) : by ring_nf [] [] []
-      «expr ≤ »(..., _) : padic_norm_e.nonarchimedean _ _
-      «expr ≤ »(..., _) : max_le (le_of_lt hr) x.2 },
-  obtain ["⟨", ident n, ",", ident hzn, ",", ident hnp, ",", ident hn, "⟩", ":=", expr exists_mem_range_of_norm_rat_le_one r H],
-  lift [expr n] ["to", expr exprℕ()] ["using", expr hzn] [],
-  use [expr n],
-  split,
-  { exact_mod_cast [expr hnp] },
-  simp [] [] ["only"] ["[", expr norm_def, ",", expr coe_sub, ",", expr subtype.coe_mk, ",", expr coe_coe, "]"] [] ["at", ident hn, "⊢"],
-  rw [expr show «expr = »((«expr - »(x, n) : «exprℚ_[ ]»(p)), «expr + »(«expr - »(x, r), «expr - »(r, n))), by ring []] [],
-  apply [expr lt_of_le_of_lt (padic_norm_e.nonarchimedean _ _)],
-  apply [expr max_lt hr],
-  simpa [] [] [] [] [] ["using", expr hn]
-end
+theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximal_ideal ℤ_[p] :=
+  by 
+    simp only [maximal_ideal_eq_span_p, Ideal.mem_span_singleton, ←norm_lt_one_iff_dvd]
+    obtain ⟨r, hr⟩ := rat_dense (x : ℚ_[p]) zero_lt_one 
+    have H : ∥(r : ℚ_[p])∥ ≤ 1
+    ·
+      rw [norm_sub_rev] at hr 
+      calc _ = ∥((r : ℚ_[p]) - x)+x∥ :=
+        by 
+          ringNF _ ≤ _ :=
+        padicNormE.nonarchimedean _ _ _ ≤ _ := max_leₓ (le_of_ltₓ hr) x.2
+    obtain ⟨n, hzn, hnp, hn⟩ := exists_mem_range_of_norm_rat_le_one r H 
+    lift n to ℕ using hzn 
+    use n 
+    constructor
+    ·
+      exactModCast hnp 
+    simp only [norm_def, coe_sub, Subtype.coe_mk, coe_coe] at hn⊢
+    rw
+      [show (x - n : ℚ_[p]) = (x - r)+r - n by 
+        ring]
+    apply lt_of_le_of_ltₓ (padicNormE.nonarchimedean _ _)
+    apply max_ltₓ hr 
+    simpa using hn
 
 /--
 `zmod_repr x` is the unique natural number smaller than `p`
@@ -301,7 +287,7 @@ theorem to_zmod_spec (z : ℤ_[p]) : z - (to_zmod z : ℤ_[p]) ∈ maximal_ideal
     dsimp [to_zmod, to_zmod_hom]
     (
       rcases exists_eq_add_of_lt hp_prime.1.Pos with ⟨p', rfl⟩)
-    change «expr↑ » (Zmod.val _) = _ 
+    change ↑Zmod.val _ = _ 
     simp only [Zmod.val_nat_cast, add_zeroₓ, add_def, Nat.cast_inj, zero_addₓ]
     apply mod_eq_of_lt 
     simpa only [zero_addₓ] using zmod_repr_lt_p z
@@ -310,7 +296,7 @@ theorem ker_to_zmod : (to_zmod : ℤ_[p] →+* Zmod p).ker = maximal_ideal ℤ_[
   by 
     ext x 
     rw [RingHom.mem_ker]
-    split 
+    constructor
     ·
       intro h 
       simpa only [h, Zmod.cast_zero, sub_zero] using to_zmod_spec x
@@ -331,26 +317,28 @@ noncomputable def appr : ℤ_[p] → ℕ → ℕ
     let u := unit_coeff hy 
     appr x n+(p^n)*(to_zmod ((u : ℤ_[p])*p^(y.valuation - n).natAbs)).val
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem appr_lt (x : «exprℤ_[ ]»(p)) (n : exprℕ()) : «expr < »(x.appr n, «expr ^ »(p, n)) :=
-begin
-  induction [expr n] [] ["with", ident n, ident ih] ["generalizing", ident x],
-  { simp [] [] ["only"] ["[", expr appr, ",", expr succ_pos', ",", expr pow_zero, "]"] [] [] },
-  simp [] [] ["only"] ["[", expr appr, ",", expr ring_hom.map_nat_cast, ",", expr zmod.nat_cast_self, ",", expr ring_hom.map_pow, ",", expr int.nat_abs, ",", expr ring_hom.map_mul, "]"] [] [],
-  have [ident hp] [":", expr «expr < »(«expr ^ »(p, n), «expr ^ »(p, «expr + »(n, 1)))] [],
-  { apply [expr pow_lt_pow hp_prime.1.one_lt (lt_add_one n)] },
-  split_ifs [] ["with", ident h],
-  { apply [expr lt_trans (ih _) hp] },
-  { calc
-      «expr < »(_, «expr + »(«expr ^ »(p, n), «expr * »(«expr ^ »(p, n), «expr - »(p, 1)))) : _
-      «expr = »(..., «expr ^ »(p, «expr + »(n, 1))) : _,
-    { apply [expr add_lt_add_of_lt_of_le (ih _)],
-      apply [expr nat.mul_le_mul_left],
-      apply [expr le_pred_of_lt],
-      apply [expr zmod.val_lt] },
-    { rw ["[", expr mul_tsub, ",", expr mul_one, ",", "<-", expr pow_succ', "]"] [],
-      apply [expr add_tsub_cancel_of_le (le_of_lt hp)] } }
-end
+theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < (p^n) :=
+  by 
+    induction' n with n ih generalizing x
+    ·
+      simp only [appr, succ_pos', pow_zeroₓ]
+    simp only [appr, RingHom.map_nat_cast, Zmod.nat_cast_self, RingHom.map_pow, Int.natAbs, RingHom.map_mul]
+    have hp : (p^n) < (p^n+1)
+    ·
+      apply pow_lt_pow hp_prime.1.one_lt (lt_add_one n)
+    splitIfs with h
+    ·
+      apply lt_transₓ (ih _) hp
+    ·
+      calc _ < (p^n)+(p^n)*p - 1 := _ _ = (p^n+1) := _
+      ·
+        apply add_lt_add_of_lt_of_le (ih _)
+        apply Nat.mul_le_mul_leftₓ 
+        apply le_pred_of_lt 
+        apply Zmod.val_lt
+      ·
+        rw [mul_tsub, mul_oneₓ, ←pow_succ'ₓ]
+        apply add_tsub_cancel_of_le (le_of_ltₓ hp)
 
 theorem appr_mono (x : ℤ_[p]) : Monotone x.appr :=
   by 
@@ -379,50 +367,45 @@ theorem dvd_appr_sub_appr (x : ℤ_[p]) (m n : ℕ) (h : m ≤ n) : (p^m) ∣ x.
     apply dvd_mul_of_dvd_left 
     apply pow_dvd_pow _ (Nat.le_add_rightₓ m k)
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem appr_spec
-(n : exprℕ()) : ∀
-x : «exprℤ_[ ]»(p), «expr ∈ »(«expr - »(x, appr x n), (ideal.span {«expr ^ »(p, n)} : ideal «exprℤ_[ ]»(p))) :=
-begin
-  simp [] [] ["only"] ["[", expr ideal.mem_span_singleton, "]"] [] [],
-  induction [expr n] [] ["with", ident n, ident ih] [],
-  { simp [] [] ["only"] ["[", expr is_unit_one, ",", expr is_unit.dvd, ",", expr pow_zero, ",", expr forall_true_iff, "]"] [] [] },
-  intro [ident x],
-  dsimp ["only"] ["[", expr appr, "]"] [] [],
-  split_ifs [] ["with", ident h],
-  { rw [expr h] [],
-    apply [expr dvd_zero] },
-  push_cast [] [],
-  rw [expr sub_add_eq_sub_sub] [],
-  obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr ih x],
-  simp [] [] ["only"] ["[", expr ring_hom.map_nat_cast, ",", expr zmod.nat_cast_self, ",", expr ring_hom.map_pow, ",", expr ring_hom.map_mul, ",", expr zmod.nat_cast_val, "]"] [] [],
-  have [ident hc'] [":", expr «expr ≠ »(c, 0)] [],
-  { rintro [ident rfl],
-    simp [] [] ["only"] ["[", expr mul_zero, "]"] [] ["at", ident hc],
-    contradiction },
-  conv_rhs [] [] { congr,
-    simp ["only"] ["[", expr hc, "]"] [] },
-  rw [expr show «expr = »(«expr - »(x, «expr↑ »(appr x n)).valuation, «expr * »(«expr ^ »(«expr↑ »(p), n), c).valuation), { rw [expr hc] [] }] [],
-  rw ["[", expr valuation_p_pow_mul _ _ hc', ",", expr add_sub_cancel', ",", expr pow_succ', ",", "<-", expr mul_sub, "]"] [],
-  apply [expr mul_dvd_mul_left],
-  obtain [ident hc0, "|", ident hc0, ":=", expr c.valuation.nat_abs.eq_zero_or_pos],
-  { simp [] [] ["only"] ["[", expr hc0, ",", expr mul_one, ",", expr pow_zero, "]"] [] [],
-    rw ["[", expr mul_comm, ",", expr unit_coeff_spec h, "]"] ["at", ident hc],
-    suffices [] [":", expr «expr = »(c, unit_coeff h)],
-    { rw ["[", "<-", expr this, ",", "<-", expr ideal.mem_span_singleton, ",", "<-", expr maximal_ideal_eq_span_p, "]"] [],
-      apply [expr to_zmod_spec] },
-    obtain ["⟨", ident c, ",", ident rfl, "⟩", ":", expr is_unit c],
-    { rw [expr int.nat_abs_eq_zero] ["at", ident hc0],
-      rw ["[", expr is_unit_iff, ",", expr norm_eq_pow_val hc', ",", expr hc0, ",", expr neg_zero, ",", expr zpow_zero, "]"] [] },
-    rw [expr discrete_valuation_ring.unit_mul_pow_congr_unit _ _ _ _ _ hc] [],
-    exact [expr irreducible_p] },
-  { rw [expr zero_pow hc0] [],
-    simp [] [] ["only"] ["[", expr sub_zero, ",", expr zmod.cast_zero, ",", expr mul_zero, "]"] [] [],
-    rw [expr unit_coeff_spec hc'] [],
-    exact [expr (dvd_pow_self _ hc0.ne').mul_left _] }
-end
-
-attribute [irreducible] appr
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  appr_spec
+  ( n : ℕ ) : ∀ x : ℤ_[ p ] , x - appr x n ∈ ( Ideal.span { p ^ n } : Ideal ℤ_[ p ] )
+  :=
+    by
+      simp only [ Ideal.mem_span_singleton ]
+        induction' n with n ih
+        · simp only [ is_unit_one , IsUnit.dvd , pow_zeroₓ , forall_true_iff ]
+        intro x
+        dsimp only [ appr ]
+        splitIfs with h
+        · rw [ h ] apply dvd_zero
+        pushCast
+        rw [ sub_add_eq_sub_sub ]
+        obtain ⟨ c , hc ⟩ := ih x
+        simp only [ RingHom.map_nat_cast , Zmod.nat_cast_self , RingHom.map_pow , RingHom.map_mul , Zmod.nat_cast_val ]
+        have hc' : c ≠ 0
+        · rintro rfl simp only [ mul_zero ] at hc contradiction
+        convRHS => congr simp only [ hc ]
+        rw [ show x - ↑ appr x n . Valuation = ↑ p ^ n * c . Valuation by rw [ hc ] ]
+        rw [ valuation_p_pow_mul _ _ hc' , add_sub_cancel' , pow_succ'ₓ , ← mul_sub ]
+        apply mul_dvd_mul_left
+        obtain hc0 | hc0 := c.valuation.nat_abs.eq_zero_or_pos
+        ·
+          simp only [ hc0 , mul_oneₓ , pow_zeroₓ ]
+            rw [ mul_commₓ , unit_coeff_spec h ] at hc
+            suffices : c = unit_coeff h
+            · rw [ ← this , ← Ideal.mem_span_singleton , ← maximal_ideal_eq_span_p ] apply to_zmod_spec
+            obtain ⟨ c , rfl ⟩ : IsUnit c
+            · rw [ Int.nat_abs_eq_zero ] at hc0 rw [ is_unit_iff , norm_eq_pow_val hc' , hc0 , neg_zero , zpow_zero ]
+            rw [ DiscreteValuationRing.unit_mul_pow_congr_unit _ _ _ _ _ hc ]
+            exact irreducible_p
+        ·
+          rw [ zero_pow hc0 ]
+            simp only [ sub_zero , Zmod.cast_zero , mul_zero ]
+            rw [ unit_coeff_spec hc' ]
+            exact dvd_pow_self _ hc0.ne' . mul_left _
 
 /-- A ring hom from `ℤ_[p]` to `zmod (p^n)`, with underlying function `padic_int.appr n`. -/
 def to_zmod_pow (n : ℕ) : ℤ_[p] →+* Zmod (p^n) :=
@@ -443,7 +426,7 @@ theorem ker_to_zmod_pow (n : ℕ) : (to_zmod_pow n : ℤ_[p] →+* Zmod (p^n)).k
   by 
     ext x 
     rw [RingHom.mem_ker]
-    split 
+    constructor
     ·
       intro h 
       suffices  : x.appr n = 0
@@ -482,7 +465,7 @@ theorem zmod_cast_comp_to_zmod_pow (m n : ℕ) (h : m ≤ n) :
       infer_instance
 
 @[simp]
-theorem cast_to_zmod_pow (m n : ℕ) (h : m ≤ n) (x : ℤ_[p]) : «expr↑ » (to_zmod_pow n x) = to_zmod_pow m x :=
+theorem cast_to_zmod_pow (m n : ℕ) (h : m ≤ n) (x : ℤ_[p]) : ↑to_zmod_pow n x = to_zmod_pow m x :=
   by 
     rw [←zmod_cast_comp_to_zmod_pow _ _ h]
     rfl
@@ -545,25 +528,21 @@ include hp_prime
 
 include f_compat
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pow_dvd_nth_hom_sub
-(r : R)
-(i j : exprℕ())
-(h : «expr ≤ »(i, j)) : «expr ∣ »(«expr ^ »(«expr↑ »(p), i), «expr - »(nth_hom f r j, nth_hom f r i)) :=
-begin
-  specialize [expr f_compat i j h],
-  rw ["[", "<-", expr int.coe_nat_pow, ",", "<-", expr zmod.int_coe_zmod_eq_zero_iff_dvd, ",", expr int.cast_sub, "]"] [],
-  dsimp [] ["[", expr nth_hom, "]"] [] [],
-  rw ["[", "<-", expr f_compat, ",", expr ring_hom.comp_apply, "]"] [],
-  have [] [":", expr fact «expr > »(«expr ^ »(p, i), 0)] [":=", expr ⟨pow_pos hp_prime.1.pos _⟩],
-  have [] [":", expr fact «expr > »(«expr ^ »(p, j), 0)] [":=", expr ⟨pow_pos hp_prime.1.pos _⟩],
-  unfreezingI { simp [] [] ["only"] ["[", expr zmod.cast_id, ",", expr zmod.cast_hom_apply, ",", expr sub_self, ",", expr zmod.nat_cast_val, "]"] [] [] }
-end
+theorem pow_dvd_nth_hom_sub (r : R) (i j : ℕ) (h : i ≤ j) : (↑p^i) ∣ nth_hom f r j - nth_hom f r i :=
+  by 
+    specialize f_compat i j h 
+    rw [←Int.coe_nat_pow, ←Zmod.int_coe_zmod_eq_zero_iff_dvd, Int.cast_sub]
+    dsimp [nth_hom]
+    rw [←f_compat, RingHom.comp_apply]
+    have  : Fact ((p^i) > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+    have  : Fact ((p^j) > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+    (
+      simp only [Zmod.cast_id, Zmod.cast_hom_apply, sub_self, Zmod.nat_cast_val])
 
 theorem is_cau_seq_nth_hom (r : R) : IsCauSeq (padicNorm p) fun n => nth_hom f r n :=
   by 
     intro ε hε 
-    obtain ⟨k, hk⟩ : ∃ k : ℕ, (p^-(«expr↑ » (k : ℕ) : ℤ) : ℚ) < ε := exists_pow_neg_lt_rat p hε 
+    obtain ⟨k, hk⟩ : ∃ k : ℕ, (p^-(↑(k : ℕ) : ℤ) : ℚ) < ε := exists_pow_neg_lt_rat p hε 
     use k 
     intro j hj 
     refine' lt_of_le_of_ltₓ _ hk 
@@ -579,60 +558,60 @@ The `n`th value of the sequence is `((f n r).val : ℚ)`.
 def nth_hom_seq (r : R) : PadicSeq p :=
   ⟨fun n => nth_hom f r n, is_cau_seq_nth_hom f_compat r⟩
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nth_hom_seq_one : «expr ≈ »(nth_hom_seq f_compat 1, 1) :=
-begin
-  intros [ident ε, ident hε],
-  change [expr «expr < »(_, _)] [] ["at", ident hε],
-  use [expr 1],
-  intros [ident j, ident hj],
-  haveI [] [":", expr fact «expr < »(1, «expr ^ »(p, j))] [":=", expr ⟨nat.one_lt_pow _ _ (by linarith [] [] []) hp_prime.1.one_lt⟩],
-  simp [] [] [] ["[", expr nth_hom_seq, ",", expr nth_hom, ",", expr zmod.val_one, ",", expr hε, "]"] [] []
-end
+theorem nth_hom_seq_one : nth_hom_seq f_compat 1 ≈ 1 :=
+  by 
+    intro ε hε 
+    change _ < _ at hε 
+    use 1
+    intro j hj 
+    have  : Fact (1 < (p^j)) :=
+      ⟨Nat.one_lt_pow _ _
+          (by 
+            linarith)
+          hp_prime.1.one_lt⟩
+    simp [nth_hom_seq, nth_hom, Zmod.val_one, hε]
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nth_hom_seq_add
-(r
- s : R) : «expr ≈ »(nth_hom_seq f_compat «expr + »(r, s), «expr + »(nth_hom_seq f_compat r, nth_hom_seq f_compat s)) :=
-begin
-  intros [ident ε, ident hε],
-  obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr exists_pow_neg_lt_rat p hε],
-  use [expr n],
-  intros [ident j, ident hj],
-  dsimp [] ["[", expr nth_hom_seq, "]"] [] [],
-  apply [expr lt_of_le_of_lt _ hn],
-  rw ["[", "<-", expr int.cast_add, ",", "<-", expr int.cast_sub, ",", "<-", expr padic_norm.dvd_iff_norm_le, ",", "<-", expr zmod.int_coe_zmod_eq_zero_iff_dvd, "]"] [],
-  dsimp [] ["[", expr nth_hom, "]"] [] [],
-  have [] [":", expr fact «expr > »(«expr ^ »(p, n), 0)] [":=", expr ⟨pow_pos hp_prime.1.pos _⟩],
-  have [] [":", expr fact «expr > »(«expr ^ »(p, j), 0)] [":=", expr ⟨pow_pos hp_prime.1.pos _⟩],
-  unfreezingI { simp [] [] ["only"] ["[", expr int.cast_coe_nat, ",", expr int.cast_add, ",", expr ring_hom.map_add, ",", expr int.cast_sub, ",", expr zmod.nat_cast_val, "]"] [] [] },
-  rw ["[", expr zmod.cast_add (show «expr ∣ »(«expr ^ »(p, n), «expr ^ »(p, j)), from _), ",", expr sub_self, "]"] [],
-  { apply_instance },
-  { apply [expr pow_dvd_pow],
-    linarith [] ["only"] ["[", expr hj, "]"] }
-end
+theorem nth_hom_seq_add (r s : R) : nth_hom_seq f_compat (r+s) ≈ nth_hom_seq f_compat r+nth_hom_seq f_compat s :=
+  by 
+    intro ε hε 
+    obtain ⟨n, hn⟩ := exists_pow_neg_lt_rat p hε 
+    use n 
+    intro j hj 
+    dsimp [nth_hom_seq]
+    apply lt_of_le_of_ltₓ _ hn 
+    rw [←Int.cast_add, ←Int.cast_sub, ←padicNorm.dvd_iff_norm_le, ←Zmod.int_coe_zmod_eq_zero_iff_dvd]
+    dsimp [nth_hom]
+    have  : Fact ((p^n) > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+    have  : Fact ((p^j) > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+    (
+      simp only [Int.cast_coe_nat, Int.cast_add, RingHom.map_add, Int.cast_sub, Zmod.nat_cast_val])
+    rw [Zmod.cast_add (show (p^n) ∣ (p^j) from _), sub_self]
+    ·
+      infer_instance
+    ·
+      apply pow_dvd_pow 
+      linarith only [hj]
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nth_hom_seq_mul
-(r
- s : R) : «expr ≈ »(nth_hom_seq f_compat «expr * »(r, s), «expr * »(nth_hom_seq f_compat r, nth_hom_seq f_compat s)) :=
-begin
-  intros [ident ε, ident hε],
-  obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr exists_pow_neg_lt_rat p hε],
-  use [expr n],
-  intros [ident j, ident hj],
-  dsimp [] ["[", expr nth_hom_seq, "]"] [] [],
-  apply [expr lt_of_le_of_lt _ hn],
-  rw ["[", "<-", expr int.cast_mul, ",", "<-", expr int.cast_sub, ",", "<-", expr padic_norm.dvd_iff_norm_le, ",", "<-", expr zmod.int_coe_zmod_eq_zero_iff_dvd, "]"] [],
-  dsimp [] ["[", expr nth_hom, "]"] [] [],
-  have [] [":", expr fact «expr > »(«expr ^ »(p, n), 0)] [":=", expr ⟨pow_pos hp_prime.1.pos _⟩],
-  have [] [":", expr fact «expr > »(«expr ^ »(p, j), 0)] [":=", expr ⟨pow_pos hp_prime.1.pos _⟩],
-  unfreezingI { simp [] [] ["only"] ["[", expr int.cast_coe_nat, ",", expr int.cast_mul, ",", expr int.cast_sub, ",", expr ring_hom.map_mul, ",", expr zmod.nat_cast_val, "]"] [] [] },
-  rw ["[", expr zmod.cast_mul (show «expr ∣ »(«expr ^ »(p, n), «expr ^ »(p, j)), from _), ",", expr sub_self, "]"] [],
-  { apply_instance },
-  { apply [expr pow_dvd_pow],
-    linarith [] ["only"] ["[", expr hj, "]"] }
-end
+theorem nth_hom_seq_mul (r s : R) : nth_hom_seq f_compat (r*s) ≈ nth_hom_seq f_compat r*nth_hom_seq f_compat s :=
+  by 
+    intro ε hε 
+    obtain ⟨n, hn⟩ := exists_pow_neg_lt_rat p hε 
+    use n 
+    intro j hj 
+    dsimp [nth_hom_seq]
+    apply lt_of_le_of_ltₓ _ hn 
+    rw [←Int.cast_mul, ←Int.cast_sub, ←padicNorm.dvd_iff_norm_le, ←Zmod.int_coe_zmod_eq_zero_iff_dvd]
+    dsimp [nth_hom]
+    have  : Fact ((p^n) > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+    have  : Fact ((p^j) > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+    (
+      simp only [Int.cast_coe_nat, Int.cast_mul, Int.cast_sub, RingHom.map_mul, Zmod.nat_cast_val])
+    rw [Zmod.cast_mul (show (p^n) ∣ (p^j) from _), sub_self]
+    ·
+      infer_instance
+    ·
+      apply pow_dvd_pow 
+      linarith only [hj]
 
 /--
 `lim_nth_hom f_compat r` is the limit of a sequence `f` of compatible ring homs `R →+* zmod (p^k)`.
@@ -641,17 +620,18 @@ This is itself a ring hom: see `padic_int.lift`.
 def lim_nth_hom (r : R) : ℤ_[p] :=
   of_int_seq (nth_hom f r) (is_cau_seq_nth_hom f_compat r)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ≥ » N)
 theorem lim_nth_hom_spec (r : R) :
   ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀ n _ : n ≥ N, ∥lim_nth_hom f_compat r - nth_hom f r n∥ < ε :=
   by 
     intro ε hε 
-    obtain ⟨ε', hε'0, hε'⟩ : ∃ v : ℚ, (0 : ℝ) < v ∧ «expr↑ » v < ε := exists_rat_btwn hε 
+    obtain ⟨ε', hε'0, hε'⟩ : ∃ v : ℚ, (0 : ℝ) < v ∧ ↑v < ε := exists_rat_btwn hε 
     normCast  at hε'0 
     obtain ⟨N, hN⟩ := padicNormE.defn (nth_hom_seq f_compat r) hε'0 
     use N 
     intro n hn 
     apply lt_transₓ _ hε' 
-    change «expr↑ » (padicNormE _) < _ 
+    change ↑padicNormE _ < _ 
     normCast 
     convert hN _ hn 
     simp [nth_hom, lim_nth_hom, nth_hom_seq, of_int_seq]
@@ -679,32 +659,30 @@ def lift : R →+* ℤ_[p] :=
 
 omit f_compat
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lift_sub_val_mem_span
-(r : R)
-(n : exprℕ()) : «expr ∈ »(«expr - »(lift f_compat r, (f n r).val), (ideal.span {«expr ^ »(«expr↑ »(p), n)} : ideal «exprℤ_[ ]»(p))) :=
-begin
-  obtain ["⟨", ident k, ",", ident hk, "⟩", ":=", expr lim_nth_hom_spec f_compat r _ (show «expr < »((0 : exprℝ()), «expr ^ »(p, («expr- »(n) : exprℤ()))), from nat.zpow_pos_of_pos hp_prime.1.pos _)],
-  have [] [] [":=", expr le_of_lt (hk (max n k) (le_max_right _ _))],
-  rw [expr norm_le_pow_iff_mem_span_pow] ["at", ident this],
-  dsimp [] ["[", expr lift, "]"] [] [],
-  rw [expr sub_eq_sub_add_sub (lim_nth_hom f_compat r) _ «expr↑ »(nth_hom f r (max n k))] [],
-  apply [expr ideal.add_mem _ _ this],
-  rw ["[", expr ideal.mem_span_singleton, "]"] [],
-  simpa [] [] ["only"] ["[", expr ring_hom.eq_int_cast, ",", expr ring_hom.map_pow, ",", expr int.cast_sub, "]"] [] ["using", expr (int.cast_ring_hom «exprℤ_[ ]»(p)).map_dvd (pow_dvd_nth_hom_sub f_compat r n (max n k) (le_max_left _ _))]
-end
+theorem lift_sub_val_mem_span (r : R) (n : ℕ) : lift f_compat r - (f n r).val ∈ (Ideal.span {↑p^n} : Ideal ℤ_[p]) :=
+  by 
+    obtain ⟨k, hk⟩ :=
+      lim_nth_hom_spec f_compat r _ (show (0 : ℝ) < (p^(-n : ℤ)) from Nat.zpow_pos_of_pos hp_prime.1.Pos _)
+    have  := le_of_ltₓ (hk (max n k) (le_max_rightₓ _ _))
+    rw [norm_le_pow_iff_mem_span_pow] at this 
+    dsimp [lift]
+    rw [sub_eq_sub_add_sub (lim_nth_hom f_compat r) _ (↑nth_hom f r (max n k))]
+    apply Ideal.add_mem _ _ this 
+    rw [Ideal.mem_span_singleton]
+    simpa only [RingHom.eq_int_cast, RingHom.map_pow, Int.cast_sub] using
+      (Int.castRingHom ℤ_[p]).map_dvd (pow_dvd_nth_hom_sub f_compat r n (max n k) (le_max_leftₓ _ _))
 
--- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 One part of the universal property of `ℤ_[p]` as a projective limit.
 See also `padic_int.lift_unique`.
--/ theorem lift_spec (n : exprℕ()) : «expr = »((to_zmod_pow n).comp (lift f_compat), f n) :=
-begin
-  ext [] [ident r] [],
-  haveI [] [":", expr fact «expr < »(0, «expr ^ »(p, n))] [":=", expr ⟨pow_pos hp_prime.1.pos n⟩],
-  rw ["[", expr ring_hom.comp_apply, ",", "<-", expr zmod.nat_cast_zmod_val (f n r), ",", "<-", expr (to_zmod_pow n).map_nat_cast, ",", "<-", expr sub_eq_zero, ",", "<-", expr ring_hom.map_sub, ",", "<-", expr ring_hom.mem_ker, ",", expr ker_to_zmod_pow, "]"] [],
-  apply [expr lift_sub_val_mem_span]
-end
+-/
+theorem lift_spec (n : ℕ) : (to_zmod_pow n).comp (lift f_compat) = f n :=
+  by 
+    ext r 
+    have  : Fact (0 < (p^n)) := ⟨pow_pos hp_prime.1.Pos n⟩
+    rw [RingHom.comp_apply, ←Zmod.nat_cast_zmod_val (f n r), ←(to_zmod_pow n).map_nat_cast, ←sub_eq_zero,
+      ←RingHom.map_sub, ←RingHom.mem_ker, ker_to_zmod_pow]
+    apply lift_sub_val_mem_span
 
 /--
 One part of the universal property of `ℤ_[p]` as a projective limit.
@@ -732,7 +710,7 @@ end lift
 
 theorem ext_of_to_zmod_pow {x y : ℤ_[p]} : (∀ n, to_zmod_pow n x = to_zmod_pow n y) ↔ x = y :=
   by 
-    split 
+    constructor
     ·
       intro h 
       rw [←lift_self x, ←lift_self y]
@@ -744,7 +722,7 @@ theorem ext_of_to_zmod_pow {x y : ℤ_[p]} : (∀ n, to_zmod_pow n x = to_zmod_p
 theorem to_zmod_pow_eq_iff_ext {R : Type _} [CommRingₓ R] {g g' : R →+* ℤ_[p]} :
   (∀ n, (to_zmod_pow n).comp g = (to_zmod_pow n).comp g') ↔ g = g' :=
   by 
-    split 
+    constructor
     ·
       intro hg 
       ext x : 1

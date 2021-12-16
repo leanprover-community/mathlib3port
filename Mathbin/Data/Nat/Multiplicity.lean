@@ -46,11 +46,11 @@ namespace Nat
 divides `n`. This set is expressed by filtering `Ico 1 b` where `b` is any bound greater than
 `log m n`. -/
 theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (hb : log m n < b) :
-  multiplicity m n = «expr↑ » ((Finset.ico 1 b).filter fun i => (m^i) ∣ n).card :=
-  calc multiplicity m n = «expr↑ » (Ico 1$ (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩)+1).card :=
+  multiplicity m n = ↑((Finset.ico 1 b).filter fun i => (m^i) ∣ n).card :=
+  calc multiplicity m n = ↑(Ico 1$ (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩)+1).card :=
     by 
       simp 
-    _ = «expr↑ » ((Finset.ico 1 b).filter fun i => (m^i) ∣ n).card :=
+    _ = ↑((Finset.ico 1 b).filter fun i => (m^i) ∣ n).card :=
     congr_argₓ coeₓ$
       congr_argₓ card$
         Finset.ext$
@@ -93,7 +93,7 @@ theorem multiplicity_pow_self {p n : ℕ} (hp : p.prime) : multiplicity p (p^n) 
 The multiplicity of a prime in `n!` is the sum of the quotients `n / p ^ i`. This sum is expressed
 over the finset `Ico 1 b` where `b` is any bound greater than `log p n`. -/
 theorem multiplicity_factorial {p : ℕ} (hp : p.prime) :
-  ∀ {n b : ℕ}, log p n < b → multiplicity p n ! = (∑i in Ico 1 b, n / (p^i) : ℕ)
+  ∀ {n b : ℕ}, log p n < b → multiplicity p n ! = (∑ i in Ico 1 b, n / (p^i) : ℕ)
 | 0, b, hb =>
   by 
     simp [Ico, hp.multiplicity_one]
@@ -101,46 +101,46 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.prime) :
   calc multiplicity p (n+1)! = multiplicity p n !+multiplicity p (n+1) :=
     by 
       rw [factorial_succ, hp.multiplicity_mul, add_commₓ]
-    _ = (∑i in Ico 1 b, n / (p^i) : ℕ)+((Finset.ico 1 b).filter fun i => (p^i) ∣ n+1).card :=
+    _ = (∑ i in Ico 1 b, n / (p^i) : ℕ)+((Finset.ico 1 b).filter fun i => (p^i) ∣ n+1).card :=
     by 
       rw [multiplicity_factorial ((log_le_log_of_le$ le_succ _).trans_lt hb),
         ←multiplicity_eq_card_pow_dvd hp.ne_one (succ_pos _) hb]
-    _ = (∑i in Ico 1 b, (n / (p^i))+if (p^i) ∣ n+1 then 1 else 0 : ℕ) :=
+    _ = (∑ i in Ico 1 b, (n / (p^i))+if (p^i) ∣ n+1 then 1 else 0 : ℕ) :=
     by 
       rw [sum_add_distrib, sum_boole]
       simp 
-    _ = (∑i in Ico 1 b, (n+1) / (p^i) : ℕ) := congr_argₓ coeₓ$ Finset.sum_congr rfl$ fun _ _ => (succ_div _ _).symm
+    _ = (∑ i in Ico 1 b, (n+1) / (p^i) : ℕ) := congr_argₓ coeₓ$ Finset.sum_congr rfl$ fun _ _ => (succ_div _ _).symm
     
 
--- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » Ico «expr + »(«expr * »(p, n), 1) «expr * »(p, «expr + »(n, 1)))
 /-- The multiplicity of `p` in `(p * (n + 1))!` is one more than the sum
   of the multiplicities of `p` in `(p * n)!` and `n + 1`. -/
-theorem multiplicity_factorial_mul_succ
-{n p : exprℕ()}
-(hp : p.prime) : «expr = »(multiplicity p «expr !»(«expr * »(p, «expr + »(n, 1))), «expr + »(«expr + »(multiplicity p «expr !»(«expr * »(p, n)), multiplicity p «expr + »(n, 1)), 1)) :=
-begin
-  have [ident hp'] [] [":=", expr prime_iff.mp hp],
-  have [ident h0] [":", expr «expr ≤ »(2, p)] [":=", expr hp.two_le],
-  have [ident h1] [":", expr «expr ≤ »(1, «expr + »(«expr * »(p, n), 1))] [":=", expr nat.le_add_left _ _],
-  have [ident h2] [":", expr «expr ≤ »(«expr + »(«expr * »(p, n), 1), «expr * »(p, «expr + »(n, 1)))] [],
-  linarith [] [] [],
-  have [ident h3] [":", expr «expr ≤ »(«expr + »(«expr * »(p, n), 1), «expr + »(«expr * »(p, «expr + »(n, 1)), 1))] [],
-  linarith [] [] [],
-  have [ident hm] [":", expr «expr ≠ »(multiplicity p «expr !»(«expr * »(p, n)), «expr⊤»())] [],
-  { rw ["[", expr ne.def, ",", expr eq_top_iff_not_finite, ",", expr not_not, ",", expr finite_nat_iff, "]"] [],
-    exact [expr ⟨hp.ne_one, factorial_pos _⟩] },
-  revert [ident hm],
-  have [ident h4] [":", expr ∀
-   m «expr ∈ » Ico «expr + »(«expr * »(p, n), 1) «expr * »(p, «expr + »(n, 1)), «expr = »(multiplicity p m, 0)] [],
-  { intros [ident m, ident hm],
-    apply [expr multiplicity_eq_zero_of_not_dvd],
-    rw ["[", "<-", expr exists_lt_and_lt_iff_not_dvd _ (pos_iff_ne_zero.mpr hp.ne_zero), "]"] [],
-    rw ["[", expr mem_Ico, "]"] ["at", ident hm],
-    exact [expr ⟨n, lt_of_succ_le hm.1, hm.2⟩] },
-  simp_rw ["[", "<-", expr prod_Ico_id_eq_factorial, ",", expr multiplicity.finset.prod hp', ",", "<-", expr sum_Ico_consecutive _ h1 h3, ",", expr add_assoc, "]"] [],
-  intro [ident h],
-  rw ["[", expr enat.add_left_cancel_iff h, ",", expr sum_Ico_succ_top h2, ",", expr multiplicity.mul hp', ",", expr hp.multiplicity_self, ",", expr sum_congr rfl h4, ",", expr sum_const_zero, ",", expr zero_add, ",", expr add_comm (1 : enat), "]"] []
-end
+theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.prime) :
+  multiplicity p (p*n+1)! = (multiplicity p (p*n)!+multiplicity p (n+1))+1 :=
+  by 
+    have hp' := prime_iff.mp hp 
+    have h0 : 2 ≤ p := hp.two_le 
+    have h1 : 1 ≤ (p*n)+1 := Nat.le_add_leftₓ _ _ 
+    have h2 : ((p*n)+1) ≤ p*n+1
+    linarith 
+    have h3 : ((p*n)+1) ≤ (p*n+1)+1
+    linarith 
+    have hm : multiplicity p (p*n)! ≠ ⊤
+    ·
+      rw [Ne.def, eq_top_iff_not_finite, not_not, finite_nat_iff]
+      exact ⟨hp.ne_one, factorial_pos _⟩
+    revert hm 
+    have h4 : ∀ m _ : m ∈ Ico ((p*n)+1) (p*n+1), multiplicity p m = 0
+    ·
+      intro m hm 
+      apply multiplicity_eq_zero_of_not_dvd 
+      rw [←exists_lt_and_lt_iff_not_dvd _ (pos_iff_ne_zero.mpr hp.ne_zero)]
+      rw [mem_Ico] at hm 
+      exact ⟨n, lt_of_succ_le hm.1, hm.2⟩
+    simpRw [←prod_Ico_id_eq_factorial, multiplicity.Finset.prod hp', ←sum_Ico_consecutive _ h1 h3, add_assocₓ]
+    intro h 
+    rw [Enat.add_left_cancel_iff h, sum_Ico_succ_top h2, multiplicity.mul hp', hp.multiplicity_self, sum_congr rfl h4,
+      sum_const_zero, zero_addₓ, add_commₓ (1 : Enat)]
 
 /-- The multiplicity of `p` in `(p * n)!` is `n` more than that of `n!`. -/
 theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.prime) : multiplicity p (p*n)! = multiplicity p n !+n :=
@@ -157,7 +157,7 @@ theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.prime) : multiplicity p (
 /-- A prime power divides `n!` iff it is at most the sum of the quotients `n / p ^ i`.
   This sum is expressed over the set `Ico 1 b` where `b` is any bound greater than `log p n` -/
 theorem pow_dvd_factorial_iff {p : ℕ} {n r b : ℕ} (hp : p.prime) (hbn : log p n < b) :
-  (p^r) ∣ n ! ↔ r ≤ ∑i in Ico 1 b, n / (p^i) :=
+  (p^r) ∣ n ! ↔ r ≤ ∑ i in Ico 1 b, n / (p^i) :=
   by 
     rw [←Enat.coe_le_coe, ←hp.multiplicity_factorial hbn, ←pow_dvd_iff_le_multiplicity]
 
@@ -167,15 +167,15 @@ theorem multiplicity_factorial_le_div_pred {p : ℕ} (hp : p.prime) (n : ℕ) : 
     exact Nat.geom_sum_Ico_le hp.two_le _ _
 
 theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.prime) (hkn : k ≤ n) :
-  (∑i in Finset.ico 1 b, n / (p^i)) =
-    ((∑i in Finset.ico 1 b,
+  (∑ i in Finset.ico 1 b, n / (p^i)) =
+    ((∑ i in Finset.ico 1 b,
           k /
-            (p^i))+∑i in Finset.ico 1 b,
+            (p^i))+∑ i in Finset.ico 1 b,
           (n - k) / (p^i))+((Finset.ico 1 b).filter fun i => (p^i) ≤ (k % (p^i))+(n - k) % (p^i)).card :=
-  calc (∑i in Finset.ico 1 b, n / (p^i)) = ∑i in Finset.ico 1 b, (k+n - k) / (p^i) :=
+  calc (∑ i in Finset.ico 1 b, n / (p^i)) = ∑ i in Finset.ico 1 b, (k+n - k) / (p^i) :=
     by 
       simp only [add_tsub_cancel_of_le hkn]
-    _ = ∑i in Finset.ico 1 b, ((k / (p^i))+(n - k) / (p^i))+if (p^i) ≤ (k % (p^i))+(n - k) % (p^i) then 1 else 0 :=
+    _ = ∑ i in Finset.ico 1 b, ((k / (p^i))+(n - k) / (p^i))+if (p^i) ≤ (k % (p^i))+(n - k) % (p^i) then 1 else 0 :=
     by 
       simp only [Nat.add_div (pow_pos hp.pos _)]
     _ = _ :=
@@ -202,71 +202,148 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.prime) (hkn : k ≤ n) (hnb 
             exact finite_nat_iff.2 ⟨ne_of_gtₓ hp.one_lt, mul_pos (factorial_pos k) (factorial_pos (n - k))⟩)).1
     h₁
 
--- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- A lower bound on the multiplicity of `p` in `choose n k`. -/
-theorem multiplicity_le_multiplicity_choose_add
-{p : exprℕ()}
-(hp : p.prime)
-(n k : exprℕ()) : «expr ≤ »(multiplicity p n, «expr + »(multiplicity p (choose n k), multiplicity p k)) :=
-if hkn : «expr < »(n, k) then by simp [] [] [] ["[", expr choose_eq_zero_of_lt hkn, "]"] [] [] else if hk0 : «expr = »(k, 0) then by simp [] [] [] ["[", expr hk0, "]"] [] [] else if hn0 : «expr = »(n, 0) then by cases [expr k] []; simp [] [] [] ["[", expr hn0, ",", "*", "]"] [] ["at", "*"] else begin
-  rw ["[", expr multiplicity_choose hp (le_of_not_gt hkn) (lt_succ_self _), ",", expr multiplicity_eq_card_pow_dvd (ne_of_gt hp.one_lt) (nat.pos_of_ne_zero hk0) (lt_succ_of_le (log_le_log_of_le (le_of_not_gt hkn))), ",", expr multiplicity_eq_card_pow_dvd (ne_of_gt hp.one_lt) (nat.pos_of_ne_zero hn0) (lt_succ_self _), ",", "<-", expr nat.cast_add, ",", expr enat.coe_le_coe, "]"] [],
-  calc
-    «expr ≤ »(((Ico 1 (log p n).succ).filter (λ
-       i, «expr ∣ »(«expr ^ »(p, i), n))).card, «expr ∪ »((Ico 1 (log p n).succ).filter (λ
-       i, «expr ≤ »(«expr ^ »(p, i), «expr + »(«expr % »(k, «expr ^ »(p, i)), «expr % »(«expr - »(n, k), «expr ^ »(p, i))))), (Ico 1 (log p n).succ).filter (λ
-       i, «expr ∣ »(«expr ^ »(p, i), k))).card) : «expr $ »(card_le_of_subset, λ i, begin
-       have [] [] [":=", expr @le_mod_add_mod_of_dvd_add_of_not_dvd k «expr - »(n, k) «expr ^ »(p, i)],
-       simp [] [] [] ["[", expr add_tsub_cancel_of_le (le_of_not_gt hkn), "]"] [] ["at", "*"] { contextual := tt },
-       tauto []
-     end)
-    «expr ≤ »(..., «expr + »(((Ico 1 (log p n).succ).filter (λ
-        i, «expr ≤ »(«expr ^ »(p, i), «expr + »(«expr % »(k, «expr ^ »(p, i)), «expr % »(«expr - »(n, k), «expr ^ »(p, i)))))).card, ((Ico 1 (log p n).succ).filter (λ
-        i, «expr ∣ »(«expr ^ »(p, i), k))).card)) : card_union_le _ _
-end
+  theorem
+    multiplicity_le_multiplicity_choose_add
+    { p : ℕ } ( hp : p.prime ) ( n k : ℕ ) : multiplicity p n ≤ multiplicity p choose n k + multiplicity p k
+    :=
+      if
+        hkn
+        :
+        n < k
+        then
+        by simp [ choose_eq_zero_of_lt hkn ]
+        else
+        if
+          hk0
+          :
+          k = 0
+          then
+          by simp [ hk0 ]
+          else
+          if
+            hn0
+            :
+            n = 0
+            then
+            by cases k <;> simp_all [ hn0 ]
+            else
+            by
+              rw
+                  [
+                    multiplicity_choose hp le_of_not_gtₓ hkn lt_succ_self _
+                      ,
+                      multiplicity_eq_card_pow_dvd
+                        ne_of_gtₓ hp.one_lt Nat.pos_of_ne_zeroₓ hk0 lt_succ_of_le log_le_log_of_le le_of_not_gtₓ hkn
+                      ,
+                      multiplicity_eq_card_pow_dvd ne_of_gtₓ hp.one_lt Nat.pos_of_ne_zeroₓ hn0 lt_succ_self _
+                      ,
+                      ← Nat.cast_add
+                      ,
+                      Enat.coe_le_coe
+                    ]
+                calc
+                  Ico 1 log p n . succ . filter fun i => p ^ i ∣ n . card
+                        ≤
+                        Ico 1 log p n . succ . filter fun i => p ^ i ≤ k % p ^ i + n - k % p ^ i
+                            ∪
+                            Ico 1 log p n . succ . filter fun i => p ^ i ∣ k
+                          .
+                          card
+                      :=
+                      card_le_of_subset
+                        $
+                        fun
+                          i
+                            =>
+                            by
+                              have := @ le_mod_add_mod_of_dvd_add_of_not_dvd k n - k p ^ i
+                                simp
+                                  ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                                  [ add_tsub_cancel_of_le le_of_not_gtₓ hkn ]
+                                  at *
+                                tauto
+                    _
+                        ≤
+                        Ico 1 log p n . succ . filter fun i => p ^ i ≤ k % p ^ i + n - k % p ^ i . card
+                          +
+                          Ico 1 log p n . succ . filter fun i => p ^ i ∣ k . card
+                      :=
+                      card_union_le _ _
 
--- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem multiplicity_choose_prime_pow
-{p n k : exprℕ()}
-(hp : p.prime)
-(hkn : «expr ≤ »(k, «expr ^ »(p, n)))
-(hk0 : «expr < »(0, k)) : «expr = »(«expr + »(multiplicity p (choose «expr ^ »(p, n) k), multiplicity p k), n) :=
-le_antisymm (have hdisj : disjoint ((Ico 1 n.succ).filter (λ
-   i, «expr ≤ »(«expr ^ »(p, i), «expr + »(«expr % »(k, «expr ^ »(p, i)), «expr % »(«expr - »(«expr ^ »(p, n), k), «expr ^ »(p, i)))))) ((Ico 1 n.succ).filter (λ
-   i, «expr ∣ »(«expr ^ »(p, i), k))), by simp [] [] [] ["[", expr disjoint_right, ",", "*", ",", expr dvd_iff_mod_eq_zero, ",", expr nat.mod_lt _ (pow_pos hp.pos _), "]"] [] [] { contextual := tt },
- begin
-   rw ["[", expr multiplicity_choose hp hkn (lt_succ_self _), ",", expr multiplicity_eq_card_pow_dvd (ne_of_gt hp.one_lt) hk0 (lt_succ_of_le (log_le_log_of_le hkn)), ",", "<-", expr nat.cast_add, ",", expr enat.coe_le_coe, ",", expr log_pow hp.one_lt, ",", "<-", expr card_disjoint_union hdisj, ",", expr filter_union_right, "]"] [],
-   have [ident filter_le_Ico] [] [":=", expr (Ico 1 n.succ).card_filter_le _],
-   rwa [expr card_Ico 1 n.succ] ["at", ident filter_le_Ico]
- end) (by rw ["[", "<-", expr hp.multiplicity_pow_self, "]"] []; exact [expr multiplicity_le_multiplicity_choose_add hp _ _])
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  multiplicity_choose_prime_pow
+  { p n k : ℕ } ( hp : p.prime ) ( hkn : k ≤ p ^ n ) ( hk0 : 0 < k )
+    : multiplicity p choose p ^ n k + multiplicity p k = n
+  :=
+    le_antisymmₓ
+      have
+          hdisj
+            :
+              Disjoint
+                Ico 1 n.succ . filter fun i => p ^ i ≤ k % p ^ i + p ^ n - k % p ^ i
+                  Ico 1 n.succ . filter fun i => p ^ i ∣ k
+            :=
+            by
+              simp
+                ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                [ disjoint_right , dvd_iff_mod_eq_zero , Nat.mod_ltₓ _ pow_pos hp.pos _ ]
+          by
+            rw
+                [
+                  multiplicity_choose hp hkn lt_succ_self _
+                    ,
+                    multiplicity_eq_card_pow_dvd ne_of_gtₓ hp.one_lt hk0 lt_succ_of_le log_le_log_of_le hkn
+                    ,
+                    ← Nat.cast_add
+                    ,
+                    Enat.coe_le_coe
+                    ,
+                    log_pow hp.one_lt
+                    ,
+                    ← card_disjoint_union hdisj
+                    ,
+                    filter_union_right
+                  ]
+              have filter_le_Ico := Ico 1 n.succ . card_filter_le _
+              rwa [ card_Ico 1 n.succ ] at filter_le_Ico
+        by rw [ ← hp.multiplicity_pow_self ] <;> exact multiplicity_le_multiplicity_choose_add hp _ _
 
 end Prime
 
--- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem multiplicity_two_factorial_lt : ∀
-{n : exprℕ()}
-(h : «expr ≠ »(n, 0)), «expr < »(multiplicity 2 «expr !»(n), n) :=
-begin
-  have [ident h2] [] [":=", expr prime_iff.mp prime_two],
-  refine [expr binary_rec _ _],
-  { contradiction },
-  { intros [ident b, ident n, ident ih, ident h],
-    by_cases [expr hn, ":", expr «expr = »(n, 0)],
-    { subst [expr hn],
-      simp [] [] [] [] [] ["at", ident h],
-      simp [] [] [] ["[", expr h, ",", expr one_right h2.not_unit, ",", expr enat.zero_lt_one, "]"] [] [] },
-    have [] [":", expr «expr < »(multiplicity 2 «expr !»(«expr * »(2, n)), («expr * »(2, n) : exprℕ()))] [],
-    { rw ["[", expr prime_two.multiplicity_factorial_mul, "]"] [],
-      refine [expr (enat.add_lt_add_right (ih hn) (enat.coe_ne_top _)).trans_le _],
-      rw ["[", expr two_mul, "]"] [],
-      norm_cast [] },
-    cases [expr b] [],
-    { simpa [] [] [] ["[", expr bit0_eq_two_mul n, "]"] [] [] },
-    { suffices [] [":", expr «expr < »(«expr + »(multiplicity 2 «expr + »(«expr * »(2, n), 1), multiplicity 2 «expr !»(«expr * »(2, n))), «expr + »(«expr↑ »(«expr * »(2, n)), 1))],
-      { simpa [] [] [] ["[", expr succ_eq_add_one, ",", expr multiplicity.mul, ",", expr h2, ",", expr prime_two, ",", expr nat.bit1_eq_succ_bit0, ",", expr bit0_eq_two_mul n, "]"] [] [] },
-      rw ["[", expr multiplicity_eq_zero_of_not_dvd (two_not_dvd_two_mul_add_one n), ",", expr zero_add, "]"] [],
-      refine [expr this.trans _],
-      exact_mod_cast [expr lt_succ_self _] } }
-end
+theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} h : n ≠ 0, multiplicity 2 n ! < n :=
+  by 
+    have h2 := prime_iff.mp prime_two 
+    refine' binary_rec _ _
+    ·
+      contradiction
+    ·
+      intro b n ih h 
+      byCases' hn : n = 0
+      ·
+        subst hn 
+        simp  at h 
+        simp [h, one_right h2.not_unit, Enat.zero_lt_one]
+      have  : multiplicity 2 (2*n)! < (2*n : ℕ)
+      ·
+        rw [prime_two.multiplicity_factorial_mul]
+        refine' (Enat.add_lt_add_right (ih hn) (Enat.coe_ne_top _)).trans_le _ 
+        rw [two_mul]
+        normCast 
+      cases b
+      ·
+        simpa [bit0_eq_two_mul n]
+      ·
+        suffices  : (multiplicity 2 ((2*n)+1)+multiplicity 2 (2*n)!) < (↑2*n)+1
+        ·
+          simpa [succ_eq_add_one, multiplicity.mul, h2, prime_two, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul n]
+        rw [multiplicity_eq_zero_of_not_dvd (two_not_dvd_two_mul_add_one n), zero_addₓ]
+        refine' this.trans _ 
+        exactModCast lt_succ_self _
 
 end Nat
 

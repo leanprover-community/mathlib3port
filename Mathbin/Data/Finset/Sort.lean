@@ -30,7 +30,7 @@ theorem sort_sorted (s : Finset α) : List.Sorted r (sort r s) :=
   sort_sorted _ _
 
 @[simp]
-theorem sort_eq (s : Finset α) : «expr↑ » (sort r s) = s.1 :=
+theorem sort_eq (s : Finset α) : ↑sort r s = s.1 :=
   sort_eq _ _
 
 @[simp]
@@ -65,22 +65,19 @@ variable [LinearOrderₓ α]
 theorem sort_sorted_lt (s : Finset α) : List.Sorted (· < ·) (sort (· ≤ ·) s) :=
   (sort_sorted _ _).imp₂ (@lt_of_le_of_neₓ _ _) (sort_nodup _ _)
 
--- error in Data.Finset.Sort: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sorted_zero_eq_min'_aux
-(s : finset α)
-(h : «expr < »(0, (s.sort ((«expr ≤ »))).length))
-(H : s.nonempty) : «expr = »((s.sort ((«expr ≤ »))).nth_le 0 h, s.min' H) :=
-begin
-  let [ident l] [] [":=", expr s.sort ((«expr ≤ »))],
-  apply [expr le_antisymm],
-  { have [] [":", expr «expr ∈ »(s.min' H, l)] [":=", expr (finset.mem_sort ((«expr ≤ »))).mpr (s.min'_mem H)],
-    obtain ["⟨", ident i, ",", ident i_lt, ",", ident hi, "⟩", ":", expr «expr∃ , »((i)
-      (hi : «expr < »(i, l.length)), «expr = »(l.nth_le i hi, s.min' H)), ":=", expr list.mem_iff_nth_le.1 this],
-    rw ["<-", expr hi] [],
-    exact [expr (s.sort_sorted ((«expr ≤ »))).rel_nth_le_of_le _ _ (nat.zero_le i)] },
-  { have [] [":", expr «expr ∈ »(l.nth_le 0 h, s)] [":=", expr (finset.mem_sort ((«expr ≤ »))).1 (list.nth_le_mem l 0 h)],
-    exact [expr s.min'_le _ this] }
-end
+theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).length) (H : s.nonempty) :
+  (s.sort (· ≤ ·)).nthLe 0 h = s.min' H :=
+  by 
+    let l := s.sort (· ≤ ·)
+    apply le_antisymmₓ
+    ·
+      have  : s.min' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.min'_mem H)
+      obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.min' H := List.mem_iff_nth_le.1 this 
+      rw [←hi]
+      exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.zero_leₓ i)
+    ·
+      have  : l.nth_le 0 h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l 0 h)
+      exact s.min'_le _ this
 
 theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length} :
   (s.sort (· ≤ ·)).nthLe 0 h =
@@ -98,23 +95,20 @@ theorem min'_eq_sorted_zero {s : Finset α} {h : s.nonempty} :
         exact card_pos.2 h) :=
   (sorted_zero_eq_min'_aux _ _ _).symm
 
--- error in Data.Finset.Sort: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sorted_last_eq_max'_aux
-(s : finset α)
-(h : «expr < »(«expr - »((s.sort ((«expr ≤ »))).length, 1), (s.sort ((«expr ≤ »))).length))
-(H : s.nonempty) : «expr = »((s.sort ((«expr ≤ »))).nth_le «expr - »((s.sort ((«expr ≤ »))).length, 1) h, s.max' H) :=
-begin
-  let [ident l] [] [":=", expr s.sort ((«expr ≤ »))],
-  apply [expr le_antisymm],
-  { have [] [":", expr «expr ∈ »(l.nth_le «expr - »((s.sort ((«expr ≤ »))).length, 1) h, s)] [":=", expr (finset.mem_sort ((«expr ≤ »))).1 (list.nth_le_mem l _ h)],
-    exact [expr s.le_max' _ this] },
-  { have [] [":", expr «expr ∈ »(s.max' H, l)] [":=", expr (finset.mem_sort ((«expr ≤ »))).mpr (s.max'_mem H)],
-    obtain ["⟨", ident i, ",", ident i_lt, ",", ident hi, "⟩", ":", expr «expr∃ , »((i)
-      (hi : «expr < »(i, l.length)), «expr = »(l.nth_le i hi, s.max' H)), ":=", expr list.mem_iff_nth_le.1 this],
-    rw ["<-", expr hi] [],
-    have [] [":", expr «expr ≤ »(i, «expr - »(l.length, 1))] [":=", expr nat.le_pred_of_lt i_lt],
-    exact [expr (s.sort_sorted ((«expr ≤ »))).rel_nth_le_of_le _ _ (nat.le_pred_of_lt i_lt)] }
-end
+theorem sorted_last_eq_max'_aux (s : Finset α) (h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length)
+  (H : s.nonempty) : (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h = s.max' H :=
+  by 
+    let l := s.sort (· ≤ ·)
+    apply le_antisymmₓ
+    ·
+      have  : l.nth_le ((s.sort (· ≤ ·)).length - 1) h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l _ h)
+      exact s.le_max' _ this
+    ·
+      have  : s.max' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.max'_mem H)
+      obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.max' H := List.mem_iff_nth_le.1 this 
+      rw [←hi]
+      have  : i ≤ l.length - 1 := Nat.le_pred_of_lt i_lt 
+      exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.le_pred_of_lt i_lt)
 
 theorem sorted_last_eq_max' {s : Finset α} {h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length} :
   (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h =
@@ -148,11 +142,11 @@ def order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ↪o 
 
 @[simp]
 theorem coe_order_iso_of_fin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Finₓ k) :
-  «expr↑ » (order_iso_of_fin s h i) = order_emb_of_fin s h i :=
+  ↑order_iso_of_fin s h i = order_emb_of_fin s h i :=
   rfl
 
 theorem order_iso_of_fin_symm_apply (s : Finset α) {k : ℕ} (h : s.card = k) (x : s) :
-  «expr↑ » ((s.order_iso_of_fin h).symm x) = (s.sort (· ≤ ·)).indexOf x :=
+  ↑(s.order_iso_of_fin h).symm x = (s.sort (· ≤ ·)).indexOf x :=
   rfl
 
 theorem order_emb_of_fin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Finₓ k) :
@@ -220,37 +214,37 @@ theorem order_emb_of_fin_eq_order_emb_of_fin_iff {k l : ℕ} {s : Finset α} {i 
     substs k l 
     exact (s.order_emb_of_fin rfl).eq_iff_eq.trans (Finₓ.ext_iff _ _)
 
--- error in Data.Finset.Sort: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_le_of_interleaved
-{s t : finset α}
-(h : ∀
- x
- y «expr ∈ » s, «expr < »(x, y) → «expr∃ , »((z «expr ∈ » t), «expr ∧ »(«expr < »(x, z), «expr < »(z, y)))) : «expr ≤ »(s.card, «expr + »(t.card, 1)) :=
-begin
-  have [ident h1] [":", expr ∀
-   i : fin «expr - »(s.card, 1), «expr < »(«expr + »(«expr↑ »(i), 1), (s.sort ((«expr ≤ »))).length)] [],
-  { intro [ident i],
-    rw ["[", expr finset.length_sort, ",", "<-", expr lt_tsub_iff_right, "]"] [],
-    exact [expr i.2] },
-  have [ident h0] [":", expr ∀
-   i : fin «expr - »(s.card, 1), «expr < »(«expr↑ »(i), (s.sort ((«expr ≤ »))).length)] [":=", expr λ
-   i, lt_of_le_of_lt (nat.le_succ i) (h1 i)],
-  have [ident p] [] [":=", expr λ
-   i : fin «expr - »(s.card, 1), h ((s.sort ((«expr ≤ »))).nth_le i (h0 i)) ((s.sort ((«expr ≤ »))).nth_le «expr + »(i, 1) (h1 i)) ((finset.mem_sort ((«expr ≤ »))).mp (list.nth_le_mem _ _ (h0 i))) ((finset.mem_sort ((«expr ≤ »))).mp (list.nth_le_mem _ _ (h1 i))) (s.sort_sorted_lt.rel_nth_le_of_lt (h0 i) (h1 i) (nat.lt_succ_self i))],
-  let [ident f] [":", expr fin «expr - »(s.card, 1) → t] [":=", expr λ
-   i, ⟨classical.some (p i), (exists_prop.mp (classical.some_spec (p i))).1⟩],
-  have [ident hf] [":", expr ∀
-   i
-   j : fin «expr - »(s.card, 1), «expr < »(i, j) → «expr < »(f i, f j)] [":=", expr λ
-   i
-   j
-   hij, subtype.coe_lt_coe.mp ((exists_prop.mp (classical.some_spec (p i))).2.2.trans (lt_of_le_of_lt ((s.sort_sorted ((«expr ≤ »))).rel_nth_le_of_le (h1 i) (h0 j) (nat.succ_le_iff.mpr hij)) (exists_prop.mp (classical.some_spec (p j))).2.1))],
-  have [ident key] [] [":=", expr fintype.card_le_of_embedding (function.embedding.mk f (λ
-     i
-     j
-     hij, le_antisymm (not_lt.mp (mt (hf j i) (not_lt.mpr (le_of_eq hij)))) (not_lt.mp (mt (hf i j) (not_lt.mpr (ge_of_eq hij))))))],
-  rwa ["[", expr fintype.card_fin, ",", expr fintype.card_coe, ",", expr tsub_le_iff_right, "]"] ["at", ident key]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » t)
+theorem card_le_of_interleaved {s t : Finset α}
+  (h : ∀ x y _ : x ∈ s _ : y ∈ s, x < y → ∃ (z : _)(_ : z ∈ t), x < z ∧ z < y) : s.card ≤ t.card+1 :=
+  by 
+    have h1 : ∀ i : Finₓ (s.card - 1), ((↑i)+1) < (s.sort (· ≤ ·)).length
+    ·
+      intro i 
+      rw [Finset.length_sort, ←lt_tsub_iff_right]
+      exact i.2
+    have h0 : ∀ i : Finₓ (s.card - 1), ↑i < (s.sort (· ≤ ·)).length := fun i => lt_of_le_of_ltₓ (Nat.le_succₓ i) (h1 i)
+    have p :=
+      fun i : Finₓ (s.card - 1) =>
+        h ((s.sort (· ≤ ·)).nthLe i (h0 i)) ((s.sort (· ≤ ·)).nthLe (i+1) (h1 i))
+          ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h0 i)))
+          ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h1 i)))
+          (s.sort_sorted_lt.rel_nth_le_of_lt (h0 i) (h1 i) (Nat.lt_succ_selfₓ i))
+    let f : Finₓ (s.card - 1) → t := fun i => ⟨Classical.some (p i), (exists_prop.mp (Classical.some_spec (p i))).1⟩
+    have hf : ∀ i j : Finₓ (s.card - 1), i < j → f i < f j :=
+      fun i j hij =>
+        subtype.coe_lt_coe.mp
+          ((exists_prop.mp (Classical.some_spec (p i))).2.2.trans
+            (lt_of_le_of_ltₓ ((s.sort_sorted (· ≤ ·)).rel_nth_le_of_le (h1 i) (h0 j) (nat.succ_le_iff.mpr hij))
+              (exists_prop.mp (Classical.some_spec (p j))).2.1))
+    have key :=
+      Fintype.card_le_of_embedding
+        (Function.Embedding.mk f
+          fun i j hij =>
+            le_antisymmₓ (not_lt.mp (mt (hf j i) (not_lt.mpr (le_of_eqₓ hij))))
+              (not_lt.mp (mt (hf i j) (not_lt.mpr (ge_of_eq hij)))))
+    rwa [Fintype.card_fin, Fintype.card_coe, tsub_le_iff_right] at key
 
 end SortLinearOrder
 

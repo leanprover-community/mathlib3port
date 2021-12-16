@@ -304,14 +304,14 @@ noncomputable def monoidal_adjoint (F : monoidal_functor C D) {G : D ⥤ C} (h :
     μ_natural' :=
       fun X Y X' Y' f g =>
         by 
-          rw [←h.hom_equiv_naturality_left, ←h.hom_equiv_naturality_right, Equiv.apply_eq_iff_eq, assoc,
+          rw [←h.hom_equiv_naturality_left, ←h.hom_equiv_naturality_right, Equivₓ.apply_eq_iff_eq, assoc,
             is_iso.eq_inv_comp, ←F.to_lax_monoidal_functor.μ_natural_assoc, is_iso.hom_inv_id_assoc, ←tensor_comp,
             adjunction.counit_naturality, adjunction.counit_naturality, tensor_comp],
     associativity' :=
       fun X Y Z =>
         by 
           rw [←h.hom_equiv_naturality_right, ←h.hom_equiv_naturality_left, ←h.hom_equiv_naturality_left,
-            ←h.hom_equiv_naturality_left, Equiv.apply_eq_iff_eq,
+            ←h.hom_equiv_naturality_left, Equivₓ.apply_eq_iff_eq,
             ←cancel_epi (F.to_lax_monoidal_functor.μ (G.obj X ⊗ G.obj Y) (G.obj Z)),
             ←cancel_epi (F.to_lax_monoidal_functor.μ (G.obj X) (G.obj Y) ⊗ 𝟙 (F.obj (G.obj Z))),
             F.to_lax_monoidal_functor.associativity_assoc (G.obj X) (G.obj Y) (G.obj Z),
@@ -325,7 +325,7 @@ noncomputable def monoidal_adjoint (F : monoidal_functor C D) {G : D ⥤ C} (h :
     left_unitality' :=
       fun X =>
         by 
-          rw [←h.hom_equiv_naturality_right, ←h.hom_equiv_naturality_left, ←Equiv.symm_apply_eq, h.hom_equiv_counit,
+          rw [←h.hom_equiv_naturality_right, ←h.hom_equiv_naturality_left, ←Equivₓ.symm_apply_eq, h.hom_equiv_counit,
             F.map_left_unitor, h.hom_equiv_unit, assoc, assoc, assoc, F.map_tensor, assoc, assoc,
             is_iso.hom_inv_id_assoc, ←tensor_comp_assoc, Functor.map_id, id_comp, functor.map_comp, assoc,
             h.counit_naturality, h.left_triangle_components_assoc, ←left_unitor_naturality, ←tensor_comp_assoc, id_comp,
@@ -333,7 +333,7 @@ noncomputable def monoidal_adjoint (F : monoidal_functor C D) {G : D ⥤ C} (h :
     right_unitality' :=
       fun X =>
         by 
-          rw [←h.hom_equiv_naturality_right, ←h.hom_equiv_naturality_left, ←Equiv.symm_apply_eq, h.hom_equiv_counit,
+          rw [←h.hom_equiv_naturality_right, ←h.hom_equiv_naturality_left, ←Equivₓ.symm_apply_eq, h.hom_equiv_counit,
             F.map_right_unitor, assoc, assoc, ←right_unitor_naturality, ←tensor_comp_assoc, comp_id, id_comp,
             h.hom_equiv_unit, F.map_tensor, assoc, assoc, assoc, is_iso.hom_inv_id_assoc, functor.map_comp,
             Functor.map_id, ←tensor_comp_assoc, assoc, h.counit_naturality, h.left_triangle_components_assoc, id_comp] }

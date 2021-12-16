@@ -30,7 +30,7 @@ namespace LieSubalgebra
 with any element of `H` lies in `H`. It is the Lie algebra equivalent of the group-theoretic
 normalizer (see `subgroup.normalizer`) and is an idealizer in the sense of abstract algebra. -/
 def normalizer : LieSubalgebra R L :=
-  { Carrier := { x:L | ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H },
+  { Carrier := { x : L | ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H },
     zero_mem' :=
       fun y hy =>
         by 

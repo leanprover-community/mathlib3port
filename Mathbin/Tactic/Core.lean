@@ -9,8 +9,9 @@ import Mathbin.Tactic.ProjectDir
 
 universe u
 
--- error in Tactic.Core: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
-attribute [derive #["[", expr has_reflect, ",", expr decidable_eq, "]"]] tactic.transparency
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+deriving instance [anonymous], [anonymous] for Tactic.Transparency
 
 instance : LT Pos :=
   { lt := fun x y => x.line < y.line ∨ x.line = y.line ∧ x.column < y.column }
@@ -44,9 +45,9 @@ unsafe def trans_conv (t₁ t₂ : expr → tactic (expr × expr)) (e : expr) : 
 
 end Tactic
 
-namespace Expr
-
 open Tactic
+
+namespace Expr
 
 /-- Given an expr `α` representing a type with numeral structure,
 `of_nat α n` creates the `α`-valued numeral expression corresponding to `n`. -/
@@ -110,6 +111,28 @@ unsafe def kreplace (e old new : expr) (md := semireducible) (unify := tt) : tac
     pure$ e.instantiate_var new
 
 end Expr
+
+namespace Name
+
+/--
+`pre.contains_sorry_aux nm` checks whether `sorry` occurs in the value of the declaration `nm`
+or (recusively) in any declarations occurring in the value of `nm` with namespace `pre`.
+Auxiliary function for `name.contains_sorry`. -/
+unsafe def contains_sorry_aux (pre : Name) : Name → tactic Bool
+| nm =>
+  do 
+    let env ← get_env 
+    let decl ← get_decl nm 
+    let ff ← return decl.value.contains_sorry | return tt
+    (decl.value.list_names_with_prefix pre).mfold ff$ fun n b => if b then return tt else n.contains_sorry_aux
+
+/-- `nm.contains_sorry` checks whether `sorry` occurs in the value of the declaration `nm` or
+  in any declarations `nm._proof_i` (or to be more precise: any declaration in namespace `nm`).
+  See also `expr.contains_sorry`. -/
+unsafe def contains_sorry (nm : Name) : tactic Bool :=
+  nm.contains_sorry_aux nm
+
+end Name
 
 namespace InteractionMonad
 
@@ -530,6 +553,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
     add_decl$ declaration.defn n univ t' d' (ReducibilityHints.regular 1 tt) trusted 
     applyc n
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry
@@ -894,7 +918,7 @@ unsafe def subobject_names (struct_n : Name) : tactic (List Name × List Name) :
         | _ => fail "too many constructors"
     let vs ← var_names <$> (mk_const c >>= infer_type)
     let fields ← env.structure_fields struct_n 
-    return$ fields.partition fun fn => «expr↑ » ("_" ++ fn.to_string) ∈ vs
+    return$ fields.partition fun fn => ↑("_" ++ fn.to_string) ∈ vs
 
 private unsafe def expanded_field_list' : Name → tactic (Dlist$ Name × Name)
 | struct_n =>
@@ -1176,7 +1200,7 @@ and fail otherwise.
 unsafe def sorry_if_contains_sorry : tactic Unit :=
   do 
     let g ← target 
-    guardₓ g.contains_sorry <|> fail "goal does not contain `sorrry`"
+    guardₓ g.contains_sorry <|> fail "goal does not contain `sorry`"
     tactic.admit
 
 /-- Fail if the target contains a metavariable. -/

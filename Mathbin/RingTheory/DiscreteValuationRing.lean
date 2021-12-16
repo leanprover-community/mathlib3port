@@ -60,32 +60,36 @@ variable {R}
 
 open PrincipalIdealRing
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An element of a DVR is irreducible iff it is a uniformizer, that is, generates the
   maximal ideal of R -/
-theorem irreducible_iff_uniformizer (ϖ : R) : «expr ↔ »(irreducible ϖ, «expr = »(maximal_ideal R, ideal.span {ϖ})) :=
-⟨λ hϖ, (eq_maximal_ideal (is_maximal_of_irreducible hϖ)).symm, begin
-   intro [ident h],
-   have [ident h2] [":", expr «expr¬ »(is_unit ϖ)] [":=", expr show «expr ∈ »(ϖ, maximal_ideal R), from «expr ▸ »(h.symm, submodule.mem_span_singleton_self ϖ)],
-   refine [expr ⟨h2, _⟩],
-   intros [ident a, ident b, ident hab],
-   by_contra [ident h],
-   push_neg ["at", ident h],
-   obtain ["⟨", ident ha, ":", expr «expr ∈ »(a, maximal_ideal R), ",", ident hb, ":", expr «expr ∈ »(b, maximal_ideal R), "⟩", ":=", expr h],
-   rw [expr h] ["at", ident ha, ident hb],
-   rw [expr mem_span_singleton'] ["at", ident ha, ident hb],
-   rcases [expr ha, "with", "⟨", ident a, ",", ident rfl, "⟩"],
-   rcases [expr hb, "with", "⟨", ident b, ",", ident rfl, "⟩"],
-   rw [expr show «expr = »(«expr * »(«expr * »(a, ϖ), «expr * »(b, ϖ)), «expr * »(ϖ, «expr * »(ϖ, «expr * »(a, b)))), by ring []] ["at", ident hab],
-   have [ident h3] [] [":=", expr eq_zero_of_mul_eq_self_right _ hab.symm],
-   { apply [expr not_a_field R],
-     simp [] [] [] ["[", expr h, ",", expr h3, "]"] [] [] },
-   { intro [ident hh],
-     apply [expr h2],
-     refine [expr is_unit_of_dvd_one ϖ _],
-     use [expr «expr * »(a, b)],
-     exact [expr hh.symm] }
- end⟩
+theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximal_ideal R = Ideal.span {ϖ} :=
+  ⟨fun hϖ => (eq_maximal_ideal (is_maximal_of_irreducible hϖ)).symm,
+    by 
+      intro h 
+      have h2 : ¬IsUnit ϖ := show ϖ ∈ maximal_ideal R from h.symm ▸ Submodule.mem_span_singleton_self ϖ 
+      refine' ⟨h2, _⟩
+      intro a b hab 
+      byContra h 
+      pushNeg  at h 
+      obtain ⟨ha : a ∈ maximal_ideal R, hb : b ∈ maximal_ideal R⟩ := h 
+      rw [h] at ha hb 
+      rw [mem_span_singleton'] at ha hb 
+      rcases ha with ⟨a, rfl⟩
+      rcases hb with ⟨b, rfl⟩
+      rw
+        [show ((a*ϖ)*b*ϖ) = ϖ*ϖ*a*b by 
+          ring] at
+        hab 
+      have h3 := eq_zero_of_mul_eq_self_right _ hab.symm
+      ·
+        apply not_a_field R 
+        simp [h, h3]
+      ·
+        intro hh 
+        apply h2 
+        refine' is_unit_of_dvd_one ϖ _ 
+        use a*b 
+        exact hh.symm⟩
 
 theorem _root_.irreducible.maximal_ideal_eq {ϖ : R} (h : Irreducible ϖ) : maximal_ideal R = Ideal.span {ϖ} :=
   (irreducible_iff_uniformizer _).mp h
@@ -102,43 +106,45 @@ theorem exists_irreducible : ∃ ϖ : R, Irreducible ϖ :=
 theorem exists_prime : ∃ ϖ : R, Prime ϖ :=
   (exists_irreducible R).imp fun _ => PrincipalIdealRing.irreducible_iff_prime.1
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- an integral domain is a DVR iff it's a PID with a unique non-zero prime ideal -/
-theorem iff_pid_with_one_nonzero_prime
-(R : Type u)
-[comm_ring R]
-[is_domain R] : «expr ↔ »(discrete_valuation_ring R, «expr ∧ »(is_principal_ideal_ring R, «expr∃! , »((P : ideal R), «expr ∧ »(«expr ≠ »(P, «expr⊥»()), is_prime P)))) :=
-begin
-  split,
-  { intro [ident RDVR],
-    rcases [expr id RDVR, "with", "⟨", ident RPID, ",", ident Rlocal, ",", ident Rnotafield, "⟩"],
-    split,
-    assumption,
-    resetI,
-    use [expr local_ring.maximal_ideal R],
-    split,
-    split,
-    { assumption },
-    { apply_instance },
-    { rintro [ident Q, "⟨", ident hQ1, ",", ident hQ2, "⟩"],
-      obtain ["⟨", ident q, ",", ident rfl, "⟩", ":=", expr (is_principal_ideal_ring.principal Q).1],
-      have [ident hq] [":", expr «expr ≠ »(q, 0)] [],
-      { rintro [ident rfl],
-        apply [expr hQ1],
-        simp [] [] [] [] [] [] },
-      erw [expr span_singleton_prime hq] ["at", ident hQ2],
-      replace [ident hQ2] [] [":=", expr hQ2.irreducible],
-      rw [expr irreducible_iff_uniformizer] ["at", ident hQ2],
-      exact [expr hQ2.symm] } },
-  { rintro ["⟨", ident RPID, ",", ident Punique, "⟩"],
-    haveI [] [":", expr local_ring R] [":=", expr local_of_unique_nonzero_prime R Punique],
-    refine [expr { not_a_field' := _ }],
-    rcases [expr Punique, "with", "⟨", ident P, ",", "⟨", ident hP1, ",", ident hP2, "⟩", ",", ident hP3, "⟩"],
-    have [ident hPM] [":", expr «expr ≤ »(P, maximal_ideal R)] [":=", expr le_maximal_ideal hP2.1],
-    intro [ident h],
-    rw ["[", expr h, ",", expr le_bot_iff, "]"] ["at", ident hPM],
-    exact [expr hP1 hPM] }
-end
+theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRingₓ R] [IsDomain R] :
+  DiscreteValuationRing R ↔ IsPrincipalIdealRing R ∧ ∃! P : Ideal R, P ≠ ⊥ ∧ is_prime P :=
+  by 
+    constructor
+    ·
+      intro RDVR 
+      rcases id RDVR with ⟨RPID, Rlocal, Rnotafield⟩
+      constructor 
+      assumption 
+      skip 
+      use LocalRing.maximalIdeal R 
+      constructor 
+      constructor
+      ·
+        assumption
+      ·
+        infer_instance
+      ·
+        rintro Q ⟨hQ1, hQ2⟩
+        obtain ⟨q, rfl⟩ := (IsPrincipalIdealRing.principal Q).1
+        have hq : q ≠ 0
+        ·
+          rintro rfl 
+          apply hQ1 
+          simp 
+        erw [span_singleton_prime hq] at hQ2 
+        replace hQ2 := hQ2.irreducible 
+        rw [irreducible_iff_uniformizer] at hQ2 
+        exact hQ2.symm
+    ·
+      rintro ⟨RPID, Punique⟩
+      have  : LocalRing R := local_of_unique_nonzero_prime R Punique 
+      refine' { not_a_field' := _ }
+      rcases Punique with ⟨P, ⟨hP1, hP2⟩, hP3⟩
+      have hPM : P ≤ maximal_ideal R := le_maximal_ideal hP2.1
+      intro h 
+      rw [h, le_bot_iff] at hPM 
+      exact hP1 hPM
 
 theorem associated_of_irreducible {a b : R} (ha : Irreducible a) (hb : Irreducible b) : Associated a b :=
   by 
@@ -161,181 +167,178 @@ variable {R} [CommRingₓ R] (hR : has_unit_mul_pow_irreducible_factorization R)
 
 include hR
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem unique_irreducible {{p q : R}} (hp : irreducible p) (hq : irreducible q) : associated p q :=
-begin
-  rcases [expr hR, "with", "⟨", ident ϖ, ",", ident hϖ, ",", ident hR, "⟩"],
-  suffices [] [":", expr ∀ {p : R} (hp : irreducible p), associated p ϖ],
-  { apply [expr associated.trans (this hp) (this hq).symm] },
-  clear [ident hp, ident hq, ident p, ident q],
-  intros [ident p, ident hp],
-  obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr hR hp.ne_zero],
-  have [] [":", expr irreducible «expr ^ »(ϖ, n)] [":=", expr hn.symm.irreducible hp],
-  rcases [expr lt_trichotomy n 1, "with", "(", ident H, "|", ident rfl, "|", ident H, ")"],
-  { obtain [ident rfl, ":", expr «expr = »(n, 0)],
-    { clear [ident hn, ident this],
-      revert [ident H, ident n],
-      exact [expr exprdec_trivial()] },
-    simpa [] [] ["only"] ["[", expr not_irreducible_one, ",", expr pow_zero, "]"] [] ["using", expr this] },
-  { simpa [] [] ["only"] ["[", expr pow_one, "]"] [] ["using", expr hn.symm] },
-  { obtain ["⟨", ident n, ",", ident rfl, "⟩", ":", expr «expr∃ , »((k), «expr = »(n, «expr + »(«expr + »(1, k), 1))), ":=", expr nat.exists_eq_add_of_lt H],
-    rw [expr pow_succ] ["at", ident this],
-    rcases [expr this.is_unit_or_is_unit rfl, "with", ident H0, "|", ident H0],
-    { exact [expr (hϖ.not_unit H0).elim] },
-    { rw ["[", expr add_comm, ",", expr pow_succ, "]"] ["at", ident H0],
-      exact [expr (hϖ.not_unit (is_unit_of_mul_is_unit_left H0)).elim] } }
-end
+theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible q) : Associated p q :=
+  by 
+    rcases hR with ⟨ϖ, hϖ, hR⟩
+    suffices  : ∀ {p : R} hp : Irreducible p, Associated p ϖ
+    ·
+      apply Associated.trans (this hp) (this hq).symm 
+    clear hp hq p q 
+    intro p hp 
+    obtain ⟨n, hn⟩ := hR hp.ne_zero 
+    have  : Irreducible (ϖ^n) := hn.symm.irreducible hp 
+    rcases lt_trichotomyₓ n 1 with (H | rfl | H)
+    ·
+      obtain rfl : n = 0
+      ·
+        clear hn this 
+        revert H n 
+        exact
+          by 
+            decide 
+      simpa only [not_irreducible_one, pow_zeroₓ] using this
+    ·
+      simpa only [pow_oneₓ] using hn.symm
+    ·
+      obtain ⟨n, rfl⟩ : ∃ k, n = (1+k)+1 := Nat.exists_eq_add_of_lt H 
+      rw [pow_succₓ] at this 
+      rcases this.is_unit_or_is_unit rfl with (H0 | H0)
+      ·
+        exact (hϖ.not_unit H0).elim
+      ·
+        rw [add_commₓ, pow_succₓ] at H0 
+        exact (hϖ.not_unit (is_unit_of_mul_is_unit_left H0)).elim
 
 variable [IsDomain R]
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An integral domain in which there is an irreducible element `p`
 such that every nonzero element is associated to a power of `p` is a unique factorization domain.
 See `discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization`. -/
-theorem to_unique_factorization_monoid : unique_factorization_monoid R :=
-let p := classical.some hR in
-let spec := classical.some_spec hR in
-«expr $ »(unique_factorization_monoid.of_exists_prime_factors, λ x hx, begin
-   use [expr multiset.repeat p (classical.some (spec.2 hx))],
-   split,
-   { intros [ident q, ident hq],
-     have [ident hpq] [] [":=", expr multiset.eq_of_mem_repeat hq],
-     rw [expr hpq] [],
-     refine [expr ⟨spec.1.ne_zero, spec.1.not_unit, _⟩],
-     intros [ident a, ident b, ident h],
-     by_cases [expr ha, ":", expr «expr = »(a, 0)],
-     { rw [expr ha] [],
-       simp [] [] ["only"] ["[", expr true_or, ",", expr dvd_zero, "]"] [] [] },
-     by_cases [expr hb, ":", expr «expr = »(b, 0)],
-     { rw [expr hb] [],
-       simp [] [] ["only"] ["[", expr or_true, ",", expr dvd_zero, "]"] [] [] },
-     obtain ["⟨", ident m, ",", ident u, ",", ident rfl, "⟩", ":=", expr spec.2 ha],
-     rw ["[", expr mul_assoc, ",", expr mul_left_comm, ",", expr is_unit.dvd_mul_left _ _ _ (units.is_unit _), "]"] ["at", ident h],
-     rw [expr is_unit.dvd_mul_right (units.is_unit _)] [],
-     by_cases [expr hm, ":", expr «expr = »(m, 0)],
-     { simp [] [] ["only"] ["[", expr hm, ",", expr one_mul, ",", expr pow_zero, "]"] [] ["at", ident h, "⊢"],
-       right,
-       exact [expr h] },
-     left,
-     obtain ["⟨", ident m, ",", ident rfl, "⟩", ":=", expr nat.exists_eq_succ_of_ne_zero hm],
-     rw [expr pow_succ] [],
-     apply [expr dvd_mul_of_dvd_left dvd_rfl _] },
-   { rw ["[", expr multiset.prod_repeat, "]"] [],
-     exact [expr classical.some_spec (spec.2 hx)] }
- end)
+theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
+  let p := Classical.some hR 
+  let spec := Classical.some_spec hR 
+  UniqueFactorizationMonoid.of_exists_prime_factors$
+    fun x hx =>
+      by 
+        use Multiset.repeat p (Classical.some (spec.2 hx))
+        constructor
+        ·
+          intro q hq 
+          have hpq := Multiset.eq_of_mem_repeat hq 
+          rw [hpq]
+          refine' ⟨spec.1.ne_zero, spec.1.not_unit, _⟩
+          intro a b h 
+          byCases' ha : a = 0
+          ·
+            rw [ha]
+            simp only [true_orₓ, dvd_zero]
+          obtain ⟨m, u, rfl⟩ := spec.2 ha 
+          rw [mul_assocₓ, mul_left_commₓ, IsUnit.dvd_mul_left _ _ _ (Units.is_unit _)] at h 
+          rw [IsUnit.dvd_mul_right (Units.is_unit _)]
+          byCases' hm : m = 0
+          ·
+            simp only [hm, one_mulₓ, pow_zeroₓ] at h⊢
+            right 
+            exact h 
+          left 
+          obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hm 
+          rw [pow_succₓ]
+          apply dvd_mul_of_dvd_left dvd_rfl _
+        ·
+          rw [Multiset.prod_repeat]
+          exact Classical.some_spec (spec.2 hx)
 
 omit hR
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem of_ufd_of_unique_irreducible
-[unique_factorization_monoid R]
-(h₁ : «expr∃ , »((p : R), irreducible p))
-(h₂ : ∀ {{p q : R}}, irreducible p → irreducible q → associated p q) : has_unit_mul_pow_irreducible_factorization R :=
-begin
-  obtain ["⟨", ident p, ",", ident hp, "⟩", ":=", expr h₁],
-  refine [expr ⟨p, hp, _⟩],
-  intros [ident x, ident hx],
-  cases [expr wf_dvd_monoid.exists_factors x hx] ["with", ident fx, ident hfx],
-  refine [expr ⟨fx.card, _⟩],
-  have [ident H] [] [":=", expr hfx.2],
-  rw ["<-", expr associates.mk_eq_mk_iff_associated] ["at", ident H, "⊢"],
-  rw ["[", "<-", expr H, ",", "<-", expr associates.prod_mk, ",", expr associates.mk_pow, ",", "<-", expr multiset.prod_repeat, "]"] [],
-  congr' [1] [],
-  symmetry,
-  rw [expr multiset.eq_repeat] [],
-  simp [] [] ["only"] ["[", expr true_and, ",", expr and_imp, ",", expr multiset.card_map, ",", expr eq_self_iff_true, ",", expr multiset.mem_map, ",", expr exists_imp_distrib, "]"] [] [],
-  rintros ["_", ident q, ident hq, ident rfl],
-  rw [expr associates.mk_eq_mk_iff_associated] [],
-  apply [expr h₂ (hfx.1 _ hq) hp]
-end
+theorem of_ufd_of_unique_irreducible [UniqueFactorizationMonoid R] (h₁ : ∃ p : R, Irreducible p)
+  (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) : has_unit_mul_pow_irreducible_factorization R :=
+  by 
+    obtain ⟨p, hp⟩ := h₁ 
+    refine' ⟨p, hp, _⟩
+    intro x hx 
+    cases' WfDvdMonoid.exists_factors x hx with fx hfx 
+    refine' ⟨fx.card, _⟩
+    have H := hfx.2
+    rw [←Associates.mk_eq_mk_iff_associated] at H⊢
+    rw [←H, ←Associates.prod_mk, Associates.mk_pow, ←Multiset.prod_repeat]
+    congr 1
+    symm 
+    rw [Multiset.eq_repeat]
+    simp only [true_andₓ, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map, exists_imp_distrib]
+    rintro _ q hq rfl 
+    rw [Associates.mk_eq_mk_iff_associated]
+    apply h₂ (hfx.1 _ hq) hp
 
 end HasUnitMulPowIrreducibleFactorization
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem aux_pid_of_ufd_of_unique_irreducible
-(R : Type u)
-[comm_ring R]
-[is_domain R]
-[unique_factorization_monoid R]
-(h₁ : «expr∃ , »((p : R), irreducible p))
-(h₂ : ∀ {{p q : R}}, irreducible p → irreducible q → associated p q) : is_principal_ideal_ring R :=
-begin
-  constructor,
-  intro [ident I],
-  by_cases [expr I0, ":", expr «expr = »(I, «expr⊥»())],
-  { rw [expr I0] [],
-    use [expr 0],
-    simp [] [] ["only"] ["[", expr set.singleton_zero, ",", expr submodule.span_zero, "]"] [] [] },
-  obtain ["⟨", ident x, ",", ident hxI, ",", ident hx0, "⟩", ":", expr «expr∃ , »((x «expr ∈ » I), «expr ≠ »(x, (0 : R))), ":=", expr I.ne_bot_iff.mp I0],
-  obtain ["⟨", ident p, ",", ident hp, ",", ident H, "⟩", ":=", expr has_unit_mul_pow_irreducible_factorization.of_ufd_of_unique_irreducible h₁ h₂],
-  have [ident ex] [":", expr «expr∃ , »((n : exprℕ()), «expr ∈ »(«expr ^ »(p, n), I))] [],
-  { obtain ["⟨", ident n, ",", ident u, ",", ident rfl, "⟩", ":=", expr H hx0],
-    refine [expr ⟨n, _⟩],
-    simpa [] [] ["only"] ["[", expr units.mul_inv_cancel_right, "]"] [] ["using", expr I.mul_mem_right «expr↑ »(«expr ⁻¹»(u)) hxI] },
-  constructor,
-  use [expr «expr ^ »(p, nat.find ex)],
-  show [expr «expr = »(I, ideal.span _)],
-  apply [expr le_antisymm],
-  { intros [ident r, ident hr],
-    by_cases [expr hr0, ":", expr «expr = »(r, 0)],
-    { simp [] [] ["only"] ["[", expr hr0, ",", expr submodule.zero_mem, "]"] [] [] },
-    obtain ["⟨", ident n, ",", ident u, ",", ident rfl, "⟩", ":=", expr H hr0],
-    simp [] [] ["only"] ["[", expr mem_span_singleton, ",", expr units.is_unit, ",", expr is_unit.dvd_mul_right, "]"] [] [],
-    apply [expr pow_dvd_pow],
-    apply [expr nat.find_min'],
-    simpa [] [] ["only"] ["[", expr units.mul_inv_cancel_right, "]"] [] ["using", expr I.mul_mem_right «expr↑ »(«expr ⁻¹»(u)) hr] },
-  { erw [expr submodule.span_singleton_le_iff_mem] [],
-    exact [expr nat.find_spec ex] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » I)
+theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRingₓ R] [IsDomain R] [UniqueFactorizationMonoid R]
+  (h₁ : ∃ p : R, Irreducible p) (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) :
+  IsPrincipalIdealRing R :=
+  by 
+    constructor 
+    intro I 
+    byCases' I0 : I = ⊥
+    ·
+      rw [I0]
+      use 0
+      simp only [Set.singleton_zero, Submodule.span_zero]
+    obtain ⟨x, hxI, hx0⟩ : ∃ (x : _)(_ : x ∈ I), x ≠ (0 : R) := I.ne_bot_iff.mp I0 
+    obtain ⟨p, hp, H⟩ := has_unit_mul_pow_irreducible_factorization.of_ufd_of_unique_irreducible h₁ h₂ 
+    have ex : ∃ n : ℕ, (p^n) ∈ I
+    ·
+      obtain ⟨n, u, rfl⟩ := H hx0 
+      refine' ⟨n, _⟩
+      simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hxI 
+    constructor 
+    use p^Nat.findₓ ex 
+    show I = Ideal.span _ 
+    apply le_antisymmₓ
+    ·
+      intro r hr 
+      byCases' hr0 : r = 0
+      ·
+        simp only [hr0, Submodule.zero_mem]
+      obtain ⟨n, u, rfl⟩ := H hr0 
+      simp only [mem_span_singleton, Units.is_unit, IsUnit.dvd_mul_right]
+      apply pow_dvd_pow 
+      apply Nat.find_min'ₓ 
+      simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hr
+    ·
+      erw [Submodule.span_singleton_le_iff_mem]
+      exact Nat.find_specₓ ex
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A unique factorization domain with at least one irreducible element
 in which all irreducible elements are associated
 is a discrete valuation ring.
 -/
-theorem of_ufd_of_unique_irreducible
-{R : Type u}
-[comm_ring R]
-[is_domain R]
-[unique_factorization_monoid R]
-(h₁ : «expr∃ , »((p : R), irreducible p))
-(h₂ : ∀ {{p q : R}}, irreducible p → irreducible q → associated p q) : discrete_valuation_ring R :=
-begin
-  rw [expr iff_pid_with_one_nonzero_prime] [],
-  haveI [ident PID] [":", expr is_principal_ideal_ring R] [":=", expr aux_pid_of_ufd_of_unique_irreducible R h₁ h₂],
-  obtain ["⟨", ident p, ",", ident hp, "⟩", ":=", expr h₁],
-  refine [expr ⟨PID, ⟨ideal.span {p}, ⟨_, _⟩, _⟩⟩],
-  { rw [expr submodule.ne_bot_iff] [],
-    refine [expr ⟨p, ideal.mem_span_singleton.mpr (dvd_refl p), hp.ne_zero⟩] },
-  { rwa ["[", expr ideal.span_singleton_prime hp.ne_zero, ",", "<-", expr unique_factorization_monoid.irreducible_iff_prime, "]"] [] },
-  { intro [ident I],
-    rw ["<-", expr submodule.is_principal.span_singleton_generator I] [],
-    rintro ["⟨", ident I0, ",", ident hI, "⟩"],
-    apply [expr span_singleton_eq_span_singleton.mpr],
-    apply [expr h₂ _ hp],
-    erw ["[", expr ne.def, ",", expr span_singleton_eq_bot, "]"] ["at", ident I0],
-    rwa ["[", expr unique_factorization_monoid.irreducible_iff_prime, ",", "<-", expr ideal.span_singleton_prime I0, "]"] [],
-    apply_instance }
-end
+theorem of_ufd_of_unique_irreducible {R : Type u} [CommRingₓ R] [IsDomain R] [UniqueFactorizationMonoid R]
+  (h₁ : ∃ p : R, Irreducible p) (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) :
+  DiscreteValuationRing R :=
+  by 
+    rw [iff_pid_with_one_nonzero_prime]
+    have PID : IsPrincipalIdealRing R := aux_pid_of_ufd_of_unique_irreducible R h₁ h₂ 
+    obtain ⟨p, hp⟩ := h₁ 
+    refine' ⟨PID, ⟨Ideal.span {p}, ⟨_, _⟩, _⟩⟩
+    ·
+      rw [Submodule.ne_bot_iff]
+      refine' ⟨p, ideal.mem_span_singleton.mpr (dvd_refl p), hp.ne_zero⟩
+    ·
+      rwa [Ideal.span_singleton_prime hp.ne_zero, ←UniqueFactorizationMonoid.irreducible_iff_prime]
+    ·
+      intro I 
+      rw [←Submodule.IsPrincipal.span_singleton_generator I]
+      rintro ⟨I0, hI⟩
+      apply span_singleton_eq_span_singleton.mpr 
+      apply h₂ _ hp 
+      erw [Ne.def, span_singleton_eq_bot] at I0 
+      rwa [UniqueFactorizationMonoid.irreducible_iff_prime, ←Ideal.span_singleton_prime I0]
+      infer_instance
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An integral domain in which there is an irreducible element `p`
 such that every nonzero element is associated to a power of `p`
 is a discrete valuation ring.
 -/
-theorem of_has_unit_mul_pow_irreducible_factorization
-{R : Type u}
-[comm_ring R]
-[is_domain R]
-(hR : has_unit_mul_pow_irreducible_factorization R) : discrete_valuation_ring R :=
-begin
-  letI [] [":", expr unique_factorization_monoid R] [":=", expr hR.to_unique_factorization_monoid],
-  apply [expr of_ufd_of_unique_irreducible _ hR.unique_irreducible],
-  unfreezingI { obtain ["⟨", ident p, ",", ident hp, ",", ident H, "⟩", ":=", expr hR],
-    exact [expr ⟨p, hp⟩] }
-end
+theorem of_has_unit_mul_pow_irreducible_factorization {R : Type u} [CommRingₓ R] [IsDomain R]
+  (hR : has_unit_mul_pow_irreducible_factorization R) : DiscreteValuationRing R :=
+  by 
+    let this' : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid 
+    apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
+    (
+      obtain ⟨p, hp, H⟩ := hR 
+      exact ⟨p, hp⟩)
 
 section 
 
@@ -343,28 +346,23 @@ variable [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R]
 
 variable {R}
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem associated_pow_irreducible
-{x : R}
-(hx : «expr ≠ »(x, 0))
-{ϖ : R}
-(hirr : irreducible ϖ) : «expr∃ , »((n : exprℕ()), associated x «expr ^ »(ϖ, n)) :=
-begin
-  have [] [":", expr wf_dvd_monoid R] [":=", expr is_noetherian_ring.wf_dvd_monoid],
-  cases [expr wf_dvd_monoid.exists_factors x hx] ["with", ident fx, ident hfx],
-  unfreezingI { use [expr fx.card] },
-  have [ident H] [] [":=", expr hfx.2],
-  rw ["<-", expr associates.mk_eq_mk_iff_associated] ["at", ident H, "⊢"],
-  rw ["[", "<-", expr H, ",", "<-", expr associates.prod_mk, ",", expr associates.mk_pow, ",", "<-", expr multiset.prod_repeat, "]"] [],
-  congr' [1] [],
-  rw [expr multiset.eq_repeat] [],
-  simp [] [] ["only"] ["[", expr true_and, ",", expr and_imp, ",", expr multiset.card_map, ",", expr eq_self_iff_true, ",", expr multiset.mem_map, ",", expr exists_imp_distrib, "]"] [] [],
-  rintros ["_", "_", "_", ident rfl],
-  rw [expr associates.mk_eq_mk_iff_associated] [],
-  refine [expr associated_of_irreducible _ _ hirr],
-  apply [expr hfx.1],
-  assumption
-end
+theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irreducible ϖ) : ∃ n : ℕ, Associated x (ϖ^n) :=
+  by 
+    have  : WfDvdMonoid R := IsNoetherianRing.wf_dvd_monoid 
+    cases' WfDvdMonoid.exists_factors x hx with fx hfx
+    (
+      use fx.card)
+    have H := hfx.2
+    rw [←Associates.mk_eq_mk_iff_associated] at H⊢
+    rw [←H, ←Associates.prod_mk, Associates.mk_pow, ←Multiset.prod_repeat]
+    congr 1
+    rw [Multiset.eq_repeat]
+    simp only [true_andₓ, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map, exists_imp_distrib]
+    rintro _ _ _ rfl 
+    rw [Associates.mk_eq_mk_iff_associated]
+    refine' associated_of_irreducible _ _ hirr 
+    apply hfx.1
+    assumption
 
 theorem eq_unit_mul_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irreducible ϖ) :
   ∃ (n : ℕ)(u : Units R), x = u*ϖ^n :=
@@ -376,47 +374,40 @@ theorem eq_unit_mul_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irre
 
 open Submodule.IsPrincipal
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ideal_eq_span_pow_irreducible
-{s : ideal R}
-(hs : «expr ≠ »(s, «expr⊥»()))
-{ϖ : R}
-(hirr : irreducible ϖ) : «expr∃ , »((n : exprℕ()), «expr = »(s, ideal.span {«expr ^ »(ϖ, n)})) :=
-begin
-  have [ident gen_ne_zero] [":", expr «expr ≠ »(generator s, 0)] [],
-  { rw ["[", expr ne.def, ",", "<-", expr eq_bot_iff_generator_eq_zero, "]"] [],
-    assumption },
-  rcases [expr associated_pow_irreducible gen_ne_zero hirr, "with", "⟨", ident n, ",", ident u, ",", ident hnu, "⟩"],
-  use [expr n],
-  have [] [":", expr «expr = »(span _, _)] [":=", expr span_singleton_generator s],
-  rw ["[", "<-", expr this, ",", "<-", expr hnu, ",", expr span_singleton_eq_span_singleton, "]"] [],
-  use [expr u]
-end
+theorem ideal_eq_span_pow_irreducible {s : Ideal R} (hs : s ≠ ⊥) {ϖ : R} (hirr : Irreducible ϖ) :
+  ∃ n : ℕ, s = Ideal.span {ϖ^n} :=
+  by 
+    have gen_ne_zero : generator s ≠ 0
+    ·
+      rw [Ne.def, ←eq_bot_iff_generator_eq_zero]
+      assumption 
+    rcases associated_pow_irreducible gen_ne_zero hirr with ⟨n, u, hnu⟩
+    use n 
+    have  : span _ = _ := span_singleton_generator s 
+    rw [←this, ←hnu, span_singleton_eq_span_singleton]
+    use u
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem unit_mul_pow_congr_pow
-{p q : R}
-(hp : irreducible p)
-(hq : irreducible q)
-(u v : units R)
-(m n : exprℕ())
-(h : «expr = »(«expr * »(«expr↑ »(u), «expr ^ »(p, m)), «expr * »(v, «expr ^ »(q, n)))) : «expr = »(m, n) :=
-begin
-  have [ident key] [":", expr associated (multiset.repeat p m).prod (multiset.repeat q n).prod] [],
-  { rw ["[", expr multiset.prod_repeat, ",", expr multiset.prod_repeat, ",", expr associated, "]"] [],
-    refine [expr ⟨«expr * »(u, «expr ⁻¹»(v)), _⟩],
-    simp [] [] ["only"] ["[", expr units.coe_mul, "]"] [] [],
-    rw ["[", expr mul_left_comm, ",", "<-", expr mul_assoc, ",", expr h, ",", expr mul_right_comm, ",", expr units.mul_inv, ",", expr one_mul, "]"] [] },
-  have [] [] [":=", expr multiset.card_eq_card_of_rel (unique_factorization_monoid.factors_unique _ _ key)],
-  { simpa [] [] ["only"] ["[", expr multiset.card_repeat, "]"] [] [] },
-  all_goals { intros [ident x, ident hx],
-    replace [ident hx] [] [":=", expr multiset.eq_of_mem_repeat hx],
-    unfreezingI { subst [expr hx],
-      assumption } }
-end
+theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible q) (u v : Units R) (m n : ℕ)
+  (h : ((↑u)*p^m) = v*q^n) : m = n :=
+  by 
+    have key : Associated (Multiset.repeat p m).Prod (Multiset.repeat q n).Prod
+    ·
+      rw [Multiset.prod_repeat, Multiset.prod_repeat, Associated]
+      refine' ⟨u*v⁻¹, _⟩
+      simp only [Units.coe_mul]
+      rw [mul_left_commₓ, ←mul_assocₓ, h, mul_right_commₓ, Units.mul_inv, one_mulₓ]
+    have  := Multiset.card_eq_card_of_rel (UniqueFactorizationMonoid.factors_unique _ _ key)
+    ·
+      simpa only [Multiset.card_repeat]
+    all_goals 
+      intro x hx 
+      replace hx := Multiset.eq_of_mem_repeat hx
+      (
+        subst hx 
+        assumption)
 
-theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : Units R) (m n : ℕ)
-  (h : («expr↑ » u*ϖ^m) = v*ϖ^n) : u = v :=
+theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : Units R) (m n : ℕ) (h : ((↑u)*ϖ^m) = v*ϖ^n) :
+  u = v :=
   by 
     obtain rfl : m = n := unit_mul_pow_congr_pow hirr hirr u v m n h 
     rw [←sub_eq_zero] at h 
@@ -474,36 +465,37 @@ theorem _root_.irreducible.add_val_pow {ϖ : R} (h : Irreducible ϖ) (n : ℕ) :
   by 
     rw [add_val_pow, add_val_uniformizer h, nsmul_one]
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_val_eq_top_iff {a : R} : «expr ↔ »(«expr = »(add_val R a, «expr⊤»()), «expr = »(a, 0)) :=
-begin
-  have [ident hi] [] [":=", expr (classical.some_spec (exists_prime R)).irreducible],
-  split,
-  { contrapose [] [],
-    intro [ident h],
-    obtain ["⟨", ident n, ",", ident ha, "⟩", ":=", expr associated_pow_irreducible h hi],
-    obtain ["⟨", ident u, ",", ident rfl, "⟩", ":=", expr ha.symm],
-    rw ["[", expr mul_comm, ",", expr add_val_def' u hi n, "]"] [],
-    exact [expr enat.coe_ne_top _] },
-  { rintro [ident rfl],
-    exact [expr add_val_zero] }
-end
+theorem add_val_eq_top_iff {a : R} : add_val R a = ⊤ ↔ a = 0 :=
+  by 
+    have hi := (Classical.some_spec (exists_prime R)).Irreducible 
+    constructor
+    ·
+      contrapose 
+      intro h 
+      obtain ⟨n, ha⟩ := associated_pow_irreducible h hi 
+      obtain ⟨u, rfl⟩ := ha.symm 
+      rw [mul_commₓ, add_val_def' u hi n]
+      exact Enat.coe_ne_top _
+    ·
+      rintro rfl 
+      exact add_val_zero
 
--- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_val_le_iff_dvd {a b : R} : «expr ↔ »(«expr ≤ »(add_val R a, add_val R b), «expr ∣ »(a, b)) :=
-begin
-  have [ident hp] [] [":=", expr classical.some_spec (exists_prime R)],
-  split; intro [ident h],
-  { by_cases [expr ha0, ":", expr «expr = »(a, 0)],
-    { rw ["[", expr ha0, ",", expr add_val_zero, ",", expr top_le_iff, ",", expr add_val_eq_top_iff, "]"] ["at", ident h],
-      rw [expr h] [],
-      apply [expr dvd_zero] },
-    obtain ["⟨", ident n, ",", ident ha, "⟩", ":=", expr associated_pow_irreducible ha0 hp.irreducible],
-    rw ["[", expr add_val, ",", expr add_valuation_apply, ",", expr add_valuation_apply, ",", expr multiplicity_le_multiplicity_iff, "]"] ["at", ident h],
-    exact [expr ha.dvd.trans (h n ha.symm.dvd)] },
-  { rw ["[", expr add_val, ",", expr add_valuation_apply, ",", expr add_valuation_apply, "]"] [],
-    exact [expr multiplicity_le_multiplicity_of_dvd_right h] }
-end
+theorem add_val_le_iff_dvd {a b : R} : add_val R a ≤ add_val R b ↔ a ∣ b :=
+  by 
+    have hp := Classical.some_spec (exists_prime R)
+    constructor <;> intro h
+    ·
+      byCases' ha0 : a = 0
+      ·
+        rw [ha0, add_val_zero, top_le_iff, add_val_eq_top_iff] at h 
+        rw [h]
+        apply dvd_zero 
+      obtain ⟨n, ha⟩ := associated_pow_irreducible ha0 hp.irreducible 
+      rw [add_val, add_valuation_apply, add_valuation_apply, multiplicity_le_multiplicity_iff] at h 
+      exact ha.dvd.trans (h n ha.symm.dvd)
+    ·
+      rw [add_val, add_valuation_apply, add_valuation_apply]
+      exact multiplicity_le_multiplicity_of_dvd_right h
 
 theorem add_val_add {a b : R} : min (add_val R a) (add_val R b) ≤ add_val R (a+b) :=
   (add_val R).map_add _ _

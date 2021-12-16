@@ -105,6 +105,24 @@ protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasScalar R M�
           rcases hf x with ⟨x, rfl⟩
           simp only [←f.map_zero, ←smul, zero_smul] }
 
+/-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →+* S`.
+
+See also `function.surjective.mul_action_left` and `function.surjective.distrib_mul_action_left`.
+-/
+@[reducible]
+def Function.Surjective.moduleLeft {R S M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [Semiringₓ S]
+  [HasScalar S M] (f : R →+* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) : Module S M :=
+  { hf.distrib_mul_action_left f.to_monoid_hom hsmul with smul := · • ·,
+    zero_smul :=
+      fun x =>
+        by 
+          rw [←f.map_zero, hsmul, zero_smul],
+    add_smul :=
+      hf.forall₂.mpr
+        fun a b x =>
+          by 
+            simp only [←f.map_add, hsmul, add_smul] }
+
 variable {R} (M)
 
 /-- Compose a `module` with a `ring_hom`, with action `f s • m`.
@@ -160,7 +178,7 @@ theorem List.sum_smul {l : List R} {x : M} : l.sum • x = (l.map fun r => r •
 theorem Multiset.sum_smul {l : Multiset R} {x : M} : l.sum • x = (l.map fun r => r • x).Sum :=
   ((smulAddHom R M).flip x).map_multiset_sum l
 
-theorem Finset.sum_smul {f : ι → R} {s : Finset ι} {x : M} : (∑i in s, f i) • x = ∑i in s, f i • x :=
+theorem Finset.sum_smul {f : ι → R} {s : Finset ι} {x : M} : (∑ i in s, f i) • x = ∑ i in s, f i • x :=
   ((smulAddHom R M).flip x).map_sum f s
 
 end AddCommMonoidₓ
@@ -202,42 +220,42 @@ structure Module.Core extends HasScalar R M where
 
 variable {R M}
 
--- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
 structure `module.core`, when the underlying space is an `add_comm_group`. -/
-def module.of_core (H : module.core R M) : module R M :=
-by letI [] [] [":=", expr H.to_has_scalar]; exact [expr { zero_smul := λ
-   x, (add_monoid_hom.mk' (λ r : R, «expr • »(r, x)) (λ r s, H.add_smul r s x)).map_zero,
-   smul_zero := λ r, (add_monoid_hom.mk' (((«expr • »)) r) (H.smul_add r)).map_zero,
-   ..H }]
+def Module.ofCore (H : Module.Core R M) : Module R M :=
+  by 
+    let this' := H.to_has_scalar <;>
+      exact
+        { H with zero_smul := fun x => (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero,
+          smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
 
 end AddCommGroupₓ
 
--- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 To prove two module structures on a fixed `add_comm_monoid` agree,
 it suffices to check the scalar multiplications agree.
 -/
-@[ext #[]]
-theorem module_ext
-{R : Type*}
-[semiring R]
-{M : Type*}
-[add_comm_monoid M]
-(P Q : module R M)
-(w : ∀
- (r : R)
- (m : M), «expr = »(by { haveI [] [] [":=", expr P],
-    exact [expr «expr • »(r, m)] }, by { haveI [] [] [":=", expr Q],
-    exact [expr «expr • »(r, m)] })) : «expr = »(P, Q) :=
-begin
-  unfreezingI { rcases [expr P, "with", "⟨", "⟨", "⟨", "⟨", ident P, "⟩", "⟩", "⟩", "⟩"],
-    rcases [expr Q, "with", "⟨", "⟨", "⟨", "⟨", ident Q, "⟩", "⟩", "⟩", "⟩"] },
-  obtain [ident rfl, ":", expr «expr = »(P, Q)],
-  by { funext [ident r, ident m],
-    exact [expr w r m] },
-  congr
-end
+@[ext]
+theorem module_ext {R : Type _} [Semiringₓ R] {M : Type _} [AddCommMonoidₓ M] (P Q : Module R M)
+  (w :
+    ∀ r : R m : M,
+      by 
+          have  := P 
+          exact r • m =
+        by 
+          have  := Q 
+          exact r • m) :
+  P = Q :=
+  by 
+    (
+      rcases P with ⟨⟨⟨⟨P⟩⟩⟩⟩
+      rcases Q with ⟨⟨⟨⟨Q⟩⟩⟩⟩)
+    obtain rfl : P = Q
+    ·
+      ·
+        funext r m 
+        exact w r m 
+    congr
 
 section Module
 
@@ -285,7 +303,7 @@ instance (priority := 910) Semiringₓ.toModule [Semiringₓ R] : Module R R :=
   { smul_add := mul_addₓ, add_smul := add_mulₓ, zero_smul := zero_mul, smul_zero := mul_zero }
 
 /-- Like `semiring.to_module`, but multiplies on the right. -/
-instance (priority := 910) Semiringₓ.toOppositeModule [Semiringₓ R] : Module («expr ᵐᵒᵖ» R) R :=
+instance (priority := 910) Semiringₓ.toOppositeModule [Semiringₓ R] : Module (Rᵐᵒᵖ) R :=
   { MonoidWithZeroₓ.toOppositeMulActionWithZero R with smul_add := fun r x y => add_mulₓ _ _ _,
     add_smul := fun r x y => mul_addₓ _ _ _ }
 
@@ -570,11 +588,24 @@ theorem Nat.no_zero_smul_divisors : NoZeroSmulDivisors ℕ M :=
 
 variable {M}
 
--- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_zero_of_smul_two_eq_zero {v : M} (hv : «expr = »(«expr • »(2, v), 0)) : «expr = »(v, 0) :=
-by haveI [] [] [":=", expr nat.no_zero_smul_divisors R M]; exact [expr (smul_eq_zero.mp hv).resolve_left (by norm_num [] [])]
+theorem eq_zero_of_two_nsmul_eq_zero {v : M} (hv : 2 • v = 0) : v = 0 :=
+  by 
+    have  := Nat.no_zero_smul_divisors R M <;>
+      exact
+        (smul_eq_zero.mp hv).resolve_left
+          (by 
+            normNum)
 
 end Nat
+
+variable (R M)
+
+/-- If `M` is an `R`-module with one and `M` has characteristic zero, then `R` has characteristic
+zero as well. Usually `M` is an `R`-algebra. -/
+theorem CharZero.of_module [HasOne M] [CharZero M] : CharZero R :=
+  by 
+    refine' ⟨fun m n h => @Nat.cast_injective M _ _ _ _ _ _⟩
+    rw [←nsmul_one, ←nsmul_one, nsmul_eq_smul_cast R m (1 : M), nsmul_eq_smul_cast R n (1 : M), h]
 
 end Module
 
@@ -603,14 +634,11 @@ variable (R) [NoZeroSmulDivisors R M] [CharZero R]
 
 include R
 
--- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_zero_of_eq_neg {v : M} (hv : «expr = »(v, «expr- »(v))) : «expr = »(v, 0) :=
-begin
-  haveI [] [] [":=", expr nat.no_zero_smul_divisors R M],
-  refine [expr eq_zero_of_smul_two_eq_zero R _],
-  rw [expr two_smul] [],
-  exact [expr add_eq_zero_iff_eq_neg.mpr hv]
-end
+theorem eq_zero_of_eq_neg {v : M} (hv : v = -v) : v = 0 :=
+  by 
+    refine' eq_zero_of_two_nsmul_eq_zero R _ 
+    rw [two_smul]
+    exact add_eq_zero_iff_eq_neg.mpr hv
 
 end Nat
 
@@ -658,12 +686,12 @@ end DivisionRing
 end NoZeroSmulDivisors
 
 @[simp]
-theorem Nat.smul_one_eq_coe {R : Type _} [Semiringₓ R] (m : ℕ) : m • (1 : R) = «expr↑ » m :=
+theorem Nat.smul_one_eq_coe {R : Type _} [Semiringₓ R] (m : ℕ) : m • (1 : R) = ↑m :=
   by 
     rw [nsmul_eq_mul, mul_oneₓ]
 
 @[simp]
-theorem Int.smul_one_eq_coe {R : Type _} [Ringₓ R] (m : ℤ) : m • (1 : R) = «expr↑ » m :=
+theorem Int.smul_one_eq_coe {R : Type _} [Ringₓ R] (m : ℤ) : m • (1 : R) = ↑m :=
   by 
     rw [zsmul_eq_mul, mul_oneₓ]
 

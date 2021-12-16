@@ -197,7 +197,7 @@ unsafe def compact_relation : List expr → List (expr × expr) → List expr ×
     compact_relation (bs.map i) ((ps₁ ++ ps₂).map fun ⟨a, p⟩ => (a, i p))
 
 unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) (preds : List$ expr × List expr) :
-  exprcommand :=
+  command :=
   do 
     let params_names := params.map local_pp_name 
     let u_params := u_names.map param 

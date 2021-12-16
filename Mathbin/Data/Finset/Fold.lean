@@ -54,12 +54,15 @@ theorem fold_map {g : γ ↪ α} {s : Finset γ} : (s.map g).fold op b f = s.fol
   by 
     simp only [fold, map, Multiset.map_map]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 @[simp]
 theorem fold_image [DecidableEq α] {g : γ → α} {s : Finset γ} (H : ∀ x _ : x ∈ s y _ : y ∈ s, g x = g y → x = y) :
   (s.image g).fold op b f = s.fold op b (f ∘ g) :=
   by 
     simp only [fold, image_val_of_inj_on H, Multiset.map_map]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[congr]
 theorem fold_congr {g : α → β} (H : ∀ x _ : x ∈ s, f x = g x) : s.fold op b f = s.fold op b g :=
   by 
@@ -78,7 +81,8 @@ theorem fold_hom {op' : γ → γ → γ} [IsCommutative γ op'] [IsAssociative 
 theorem fold_union_inter [DecidableEq α] {s₁ s₂ : Finset α} {b₁ b₂ : β} :
   ((s₁ ∪ s₂).fold op b₁ f*(s₁ ∩ s₂).fold op b₂ f) = s₁.fold op b₂ f*s₂.fold op b₁ f :=
   by 
-    unfold fold <;> rw [←fold_add op, ←map_add, union_val, inter_val, union_add_inter, map_add, hc.comm, fold_add]
+    unfold fold <;>
+      rw [←fold_add op, ←Multiset.map_add, union_val, inter_val, union_add_inter, Multiset.map_add, hc.comm, fold_add]
 
 @[simp]
 theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] : (insert a s).fold op b f = f a*s.fold op b f :=
@@ -90,47 +94,41 @@ theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] : (insert a 
     ·
       apply fold_insert h
 
--- error in Data.Finset.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fold_image_idem
-[decidable_eq α]
-{g : γ → α}
-{s : finset γ}
-[hi : is_idempotent β op] : «expr = »((image g s).fold op b f, s.fold op b «expr ∘ »(f, g)) :=
-begin
-  induction [expr s] ["using", ident finset.cons_induction] ["with", ident x, ident xs, ident hx, ident ih] [],
-  { rw ["[", expr fold_empty, ",", expr image_empty, ",", expr fold_empty, "]"] [] },
-  { haveI [] [] [":=", expr classical.dec_eq γ],
-    rw ["[", expr fold_cons, ",", expr cons_eq_insert, ",", expr image_insert, ",", expr fold_insert_idem, ",", expr ih, "]"] [] }
-end
+theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : IsIdempotent β op] :
+  (image g s).fold op b f = s.fold op b (f ∘ g) :=
+  by 
+    induction' s using Finset.cons_induction with x xs hx ih
+    ·
+      rw [fold_empty, image_empty, fold_empty]
+    ·
+      have  := Classical.decEq γ 
+      rw [fold_cons, cons_eq_insert, image_insert, fold_insert_idem, ih]
 
--- error in Data.Finset.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem fold_op_rel_iff_and
-{r : β → β → exprProp()}
-(hr : ∀ {x y z}, «expr ↔ »(r x (op y z), «expr ∧ »(r x y, r x z)))
-{c : β} : «expr ↔ »(r c (s.fold op b f), «expr ∧ »(r c b, ∀ x «expr ∈ » s, r c (f x))) :=
-begin
-  classical,
-  apply [expr finset.induction_on s],
-  { simp [] [] [] [] [] [] },
-  clear [ident s],
-  intros [ident a, ident s, ident ha, ident IH],
-  rw ["[", expr finset.fold_insert ha, ",", expr hr, ",", expr IH, ",", "<-", expr and_assoc, ",", expr and_comm (r c (f a)), ",", expr and_assoc, "]"] [],
-  apply [expr and_congr iff.rfl],
-  split,
-  { rintro ["⟨", ident h₁, ",", ident h₂, "⟩"],
-    intros [ident b, ident hb],
-    rw [expr finset.mem_insert] ["at", ident hb],
-    rcases [expr hb, "with", ident rfl, "|", ident hb]; solve_by_elim [] [] [] [] },
-  { intro [ident h],
-    split,
-    { exact [expr h a (finset.mem_insert_self _ _)] },
-    { intros [ident b, ident hb],
-      apply [expr h b],
-      rw [expr finset.mem_insert] [],
-      right,
-      exact [expr hb] } }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  fold_op_rel_iff_and
+  { r : β → β → Prop } ( hr : ∀ { x y z } , r x op y z ↔ r x y ∧ r x z ) { c : β }
+    : r c s.fold op b f ↔ r c b ∧ ∀ x _ : x ∈ s , r c f x
+  :=
+    by
+      classical
+        apply Finset.induction_on s
+        · simp
+        clear s
+        intro a s ha IH
+        rw [ Finset.fold_insert ha , hr , IH , ← and_assoc , and_comm r c f a , and_assoc ]
+        apply and_congr Iff.rfl
+        constructor
+        · rintro ⟨ h₁ , h₂ ⟩ intro b hb rw [ Finset.mem_insert ] at hb rcases hb with ( rfl | hb ) <;> solveByElim
+        ·
+          intro h
+            constructor
+            · exact h a Finset.mem_insert_self _ _
+            · intro b hb apply h b rw [ Finset.mem_insert ] right exact hb
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∨ r x z) {c : β} :
   r c (s.fold op b f) ↔ r c b ∨ ∃ (x : _)(_ : x ∈ s), r c (f x) :=
   by 
@@ -142,7 +140,7 @@ theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y
     intro a s ha IH 
     rw [Finset.fold_insert ha, hr, IH, ←or_assoc, or_comm (r c (f a)), or_assoc]
     apply or_congr Iff.rfl 
-    split 
+    constructor
     ·
       rintro (h₁ | ⟨x, hx, h₂⟩)
       ·
@@ -184,9 +182,11 @@ section Order
 
 variable [LinearOrderₓ β] (c : β)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem le_fold_min : c ≤ s.fold min b f ↔ c ≤ b ∧ ∀ x _ : x ∈ s, c ≤ f x :=
   fold_op_rel_iff_and$ fun x y z => le_min_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem fold_min_le : s.fold min b f ≤ c ↔ b ≤ c ∨ ∃ (x : _)(_ : x ∈ s), f x ≤ c :=
   by 
     show _ ≥ _ ↔ _ 
@@ -195,9 +195,11 @@ theorem fold_min_le : s.fold min b f ≤ c ↔ b ≤ c ∨ ∃ (x : _)(_ : x ∈
     show _ ≤ _ ↔ _ 
     exact min_le_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem lt_fold_min : c < s.fold min b f ↔ c < b ∧ ∀ x _ : x ∈ s, c < f x :=
   fold_op_rel_iff_and$ fun x y z => lt_min_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem fold_min_lt : s.fold min b f < c ↔ b < c ∨ ∃ (x : _)(_ : x ∈ s), f x < c :=
   by 
     show _ > _ ↔ _ 
@@ -206,6 +208,7 @@ theorem fold_min_lt : s.fold min b f < c ↔ b < c ∨ ∃ (x : _)(_ : x ∈ s),
     show _ < _ ↔ _ 
     exact min_lt_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem fold_max_le : s.fold max b f ≤ c ↔ b ≤ c ∧ ∀ x _ : x ∈ s, f x ≤ c :=
   by 
     show _ ≥ _ ↔ _ 
@@ -214,9 +217,11 @@ theorem fold_max_le : s.fold max b f ≤ c ↔ b ≤ c ∧ ∀ x _ : x ∈ s, f 
     show _ ≤ _ ↔ _ 
     exact max_le_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem le_fold_max : c ≤ s.fold max b f ↔ c ≤ b ∨ ∃ (x : _)(_ : x ∈ s), c ≤ f x :=
   fold_op_rel_iff_or$ fun x y z => le_max_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀ x _ : x ∈ s, f x < c :=
   by 
     show _ > _ ↔ _ 
@@ -225,6 +230,7 @@ theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀ x _ : x ∈ s, f x < 
     show _ < _ ↔ _ 
     exact max_lt_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem lt_fold_max : c < s.fold max b f ↔ c < b ∨ ∃ (x : _)(_ : x ∈ s), c < f x :=
   fold_op_rel_iff_or$ fun x y z => lt_max_iff
 

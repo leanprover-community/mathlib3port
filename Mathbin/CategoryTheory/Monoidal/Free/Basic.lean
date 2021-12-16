@@ -30,15 +30,16 @@ section
 
 variable (C)
 
--- error in CategoryTheory.Monoidal.Free.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 Given a type `C`, the free monoidal category over `C` has as objects formal expressions built from
 (formal) tensor products of terms of `C` and a formal unit. Its morphisms are compositions and
 tensor products of identities, unitors and associators.
--/ @[derive #[expr inhabited]] inductive free_monoidal_category : Type u
-| of : C → free_monoidal_category
-| unit : free_monoidal_category
-| tensor : free_monoidal_category → free_monoidal_category → free_monoidal_category
+-/
+inductive free_monoidal_category : Type u
+  | of : C → free_monoidal_category
+  | Unit : free_monoidal_category
+  | tensor : free_monoidal_category → free_monoidal_category → free_monoidal_category deriving [anonymous]
 
 end 
 
@@ -111,7 +112,7 @@ open FreeMonoidalCategory.HomEquiv
 
 instance category_free_monoidal_category : category.{u} (F C) :=
   { Hom := fun X Y => Quotientₓ (free_monoidal_category.setoid_hom X Y),
-    id := fun X => «expr⟦ ⟧» (free_monoidal_category.hom.id _),
+    id := fun X => ⟦free_monoidal_category.hom.id _⟧,
     comp :=
       fun X Y Z f g =>
         Quotientₓ.map₂ hom.comp
@@ -148,23 +149,19 @@ instance : monoidal_category (F C) :=
           exact Quotientₓ.sound (tensor_comp _ _ _ _),
     tensorUnit := free_monoidal_category.unit,
     associator :=
-      fun X Y Z =>
-        ⟨«expr⟦ ⟧» (hom.α_hom X Y Z), «expr⟦ ⟧» (hom.α_inv X Y Z), Quotientₓ.sound α_hom_inv,
-          Quotientₓ.sound α_inv_hom⟩,
+      fun X Y Z => ⟨⟦hom.α_hom X Y Z⟧, ⟦hom.α_inv X Y Z⟧, Quotientₓ.sound α_hom_inv, Quotientₓ.sound α_inv_hom⟩,
     associator_naturality' :=
       fun X₁ X₂ X₃ Y₁ Y₂ Y₃ =>
         by 
           rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩
           exact Quotientₓ.sound (associator_naturality _ _ _),
-    leftUnitor :=
-      fun X => ⟨«expr⟦ ⟧» (hom.l_hom X), «expr⟦ ⟧» (hom.l_inv X), Quotientₓ.sound l_hom_inv, Quotientₓ.sound l_inv_hom⟩,
+    leftUnitor := fun X => ⟨⟦hom.l_hom X⟧, ⟦hom.l_inv X⟧, Quotientₓ.sound l_hom_inv, Quotientₓ.sound l_inv_hom⟩,
     left_unitor_naturality' :=
       fun X Y =>
         by 
           rintro ⟨f⟩
           exact Quotientₓ.sound (l_naturality _),
-    rightUnitor :=
-      fun X => ⟨«expr⟦ ⟧» (hom.ρ_hom X), «expr⟦ ⟧» (hom.ρ_inv X), Quotientₓ.sound ρ_hom_inv, Quotientₓ.sound ρ_inv_hom⟩,
+    rightUnitor := fun X => ⟨⟦hom.ρ_hom X⟧, ⟦hom.ρ_inv X⟧, Quotientₓ.sound ρ_hom_inv, Quotientₓ.sound ρ_inv_hom⟩,
     right_unitor_naturality' :=
       fun X Y =>
         by 
@@ -174,40 +171,40 @@ instance : monoidal_category (F C) :=
 
 @[simp]
 theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) :
-  «expr⟦ ⟧» (f.comp g) = @category_struct.comp (F C) _ _ _ _ («expr⟦ ⟧» f) («expr⟦ ⟧» g) :=
+  ⟦f.comp g⟧ = @category_struct.comp (F C) _ _ _ _ (⟦f⟧) (⟦g⟧) :=
   rfl
 
 @[simp]
 theorem mk_tensor {X₁ Y₁ X₂ Y₂ : F C} (f : X₁ ⟶ᵐ Y₁) (g : X₂ ⟶ᵐ Y₂) :
-  «expr⟦ ⟧» (f.tensor g) = @monoidal_category.tensor_hom (F C) _ _ _ _ _ _ («expr⟦ ⟧» f) («expr⟦ ⟧» g) :=
+  ⟦f.tensor g⟧ = @monoidal_category.tensor_hom (F C) _ _ _ _ _ _ (⟦f⟧) (⟦g⟧) :=
   rfl
 
 @[simp]
-theorem mk_id {X : F C} : «expr⟦ ⟧» (hom.id X) = 𝟙 X :=
+theorem mk_id {X : F C} : ⟦hom.id X⟧ = 𝟙 X :=
   rfl
 
 @[simp]
-theorem mk_α_hom {X Y Z : F C} : «expr⟦ ⟧» (hom.α_hom X Y Z) = (α_ X Y Z).Hom :=
+theorem mk_α_hom {X Y Z : F C} : ⟦hom.α_hom X Y Z⟧ = (α_ X Y Z).Hom :=
   rfl
 
 @[simp]
-theorem mk_α_inv {X Y Z : F C} : «expr⟦ ⟧» (hom.α_inv X Y Z) = (α_ X Y Z).inv :=
+theorem mk_α_inv {X Y Z : F C} : ⟦hom.α_inv X Y Z⟧ = (α_ X Y Z).inv :=
   rfl
 
 @[simp]
-theorem mk_ρ_hom {X : F C} : «expr⟦ ⟧» (hom.ρ_hom X) = (ρ_ X).Hom :=
+theorem mk_ρ_hom {X : F C} : ⟦hom.ρ_hom X⟧ = (ρ_ X).Hom :=
   rfl
 
 @[simp]
-theorem mk_ρ_inv {X : F C} : «expr⟦ ⟧» (hom.ρ_inv X) = (ρ_ X).inv :=
+theorem mk_ρ_inv {X : F C} : ⟦hom.ρ_inv X⟧ = (ρ_ X).inv :=
   rfl
 
 @[simp]
-theorem mk_l_hom {X : F C} : «expr⟦ ⟧» (hom.l_hom X) = (λ_ X).Hom :=
+theorem mk_l_hom {X : F C} : ⟦hom.l_hom X⟧ = (λ_ X).Hom :=
   rfl
 
 @[simp]
-theorem mk_l_inv {X : F C} : «expr⟦ ⟧» (hom.l_inv X) = (λ_ X).inv :=
+theorem mk_l_inv {X : F C} : ⟦hom.l_inv X⟧ = (λ_ X).inv :=
   rfl
 
 @[simp]

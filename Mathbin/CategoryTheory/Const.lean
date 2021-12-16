@@ -50,15 +50,15 @@ theorem map_app {X Y : C} (f : X ⟶ Y) (j : J) : ((const J).map f).app j = f :=
 The contant functor `Jᵒᵖ ⥤ Cᵒᵖ` sending everything to `op X`
 is (naturally isomorphic to) the opposite of the constant functor `J ⥤ C` sending everything to `X`.
 -/
-def op_obj_op (X : C) : (const («expr ᵒᵖ» J)).obj (op X) ≅ ((const J).obj X).op :=
+def op_obj_op (X : C) : (const (Jᵒᵖ)).obj (op X) ≅ ((const J).obj X).op :=
   { Hom := { app := fun j => 𝟙 _ }, inv := { app := fun j => 𝟙 _ } }
 
 @[simp]
-theorem op_obj_op_hom_app (X : C) (j : «expr ᵒᵖ» J) : (op_obj_op X).Hom.app j = 𝟙 _ :=
+theorem op_obj_op_hom_app (X : C) (j : Jᵒᵖ) : (op_obj_op X).Hom.app j = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem op_obj_op_inv_app (X : C) (j : «expr ᵒᵖ» J) : (op_obj_op X).inv.app j = 𝟙 _ :=
+theorem op_obj_op_inv_app (X : C) (j : Jᵒᵖ) : (op_obj_op X).inv.app j = 𝟙 _ :=
   rfl
 
 /--
@@ -66,19 +66,19 @@ The contant functor `Jᵒᵖ ⥤ C` sending everything to `unop X`
 is (naturally isomorphic to) the opposite of
 the constant functor `J ⥤ Cᵒᵖ` sending everything to `X`.
 -/
-def op_obj_unop (X : «expr ᵒᵖ» C) : (const («expr ᵒᵖ» J)).obj (unop X) ≅ ((const J).obj X).leftOp :=
+def op_obj_unop (X : Cᵒᵖ) : (const (Jᵒᵖ)).obj (unop X) ≅ ((const J).obj X).leftOp :=
   { Hom := { app := fun j => 𝟙 _ }, inv := { app := fun j => 𝟙 _ } }
 
 @[simp]
-theorem op_obj_unop_hom_app (X : «expr ᵒᵖ» C) (j : «expr ᵒᵖ» J) : (op_obj_unop.{v₁, v₂} X).Hom.app j = 𝟙 _ :=
+theorem op_obj_unop_hom_app (X : Cᵒᵖ) (j : Jᵒᵖ) : (op_obj_unop.{v₁, v₂} X).Hom.app j = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem op_obj_unop_inv_app (X : «expr ᵒᵖ» C) (j : «expr ᵒᵖ» J) : (op_obj_unop.{v₁, v₂} X).inv.app j = 𝟙 _ :=
+theorem op_obj_unop_inv_app (X : Cᵒᵖ) (j : Jᵒᵖ) : (op_obj_unop.{v₁, v₂} X).inv.app j = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem unop_functor_op_obj_map (X : «expr ᵒᵖ» C) {j₁ j₂ : J} (f : j₁ ⟶ j₂) :
+theorem unop_functor_op_obj_map (X : Cᵒᵖ) {j₁ j₂ : J} (f : j₁ ⟶ j₂) :
   (unop ((functor.op (const J)).obj X)).map f = 𝟙 (unop X) :=
   rfl
 

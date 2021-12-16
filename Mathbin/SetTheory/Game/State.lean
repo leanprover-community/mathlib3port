@@ -40,23 +40,19 @@ open State
 
 variable {S : Type u} [State S]
 
--- error in SetTheory.Game.State: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem turn_bound_ne_zero_of_left_move {s t : S} (m : «expr ∈ »(t, L s)) : «expr ≠ »(turn_bound s, 0) :=
-begin
-  intro [ident h],
-  have [ident t] [] [":=", expr state.left_bound m],
-  rw [expr h] ["at", ident t],
-  exact [expr nat.not_succ_le_zero _ t]
-end
+theorem turn_bound_ne_zero_of_left_move {s t : S} (m : t ∈ L s) : turn_bound s ≠ 0 :=
+  by 
+    intro h 
+    have t := state.left_bound m 
+    rw [h] at t 
+    exact Nat.not_succ_le_zeroₓ _ t
 
--- error in SetTheory.Game.State: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem turn_bound_ne_zero_of_right_move {s t : S} (m : «expr ∈ »(t, R s)) : «expr ≠ »(turn_bound s, 0) :=
-begin
-  intro [ident h],
-  have [ident t] [] [":=", expr state.right_bound m],
-  rw [expr h] ["at", ident t],
-  exact [expr nat.not_succ_le_zero _ t]
-end
+theorem turn_bound_ne_zero_of_right_move {s t : S} (m : t ∈ R s) : turn_bound s ≠ 0 :=
+  by 
+    intro h 
+    have t := state.right_bound m 
+    rw [h] at t 
+    exact Nat.not_succ_le_zeroₓ _ t
 
 theorem turn_bound_of_left {s t : S} (m : t ∈ L s) (n : ℕ) (h : turn_bound s ≤ n+1) : turn_bound t ≤ n :=
   Nat.le_of_lt_succₓ (Nat.lt_of_lt_of_leₓ (left_bound m) h)
@@ -89,7 +85,7 @@ def of_aux_relabelling :
 | s, 0, 0, hn, hm =>
   by 
     dsimp [Pgame.ofAux]
-    fsplit 
+    fconstructor 
     rfl 
     rfl
     ·
@@ -105,7 +101,7 @@ def of_aux_relabelling :
 | s, 0, m+1, hn, hm =>
   by 
     dsimp [Pgame.ofAux]
-    fsplit 
+    fconstructor 
     rfl 
     rfl
     ·
@@ -121,7 +117,7 @@ def of_aux_relabelling :
 | s, n+1, 0, hn, hm =>
   by 
     dsimp [Pgame.ofAux]
-    fsplit 
+    fconstructor 
     rfl 
     rfl
     ·
@@ -137,7 +133,7 @@ def of_aux_relabelling :
 | s, n+1, m+1, hn, hm =>
   by 
     dsimp [Pgame.ofAux]
-    fsplit 
+    fconstructor 
     rfl 
     rfl
     ·
@@ -175,23 +171,22 @@ def right_moves_of_aux (n : ℕ) {s : S} (h : turn_bound s ≤ n) : right_moves 
 def right_moves_of (s : S) : right_moves (of s) ≃ { t // t ∈ R s } :=
   right_moves_of_aux _ _
 
--- error in SetTheory.Game.State: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The relabelling showing `move_left` applied to a game constructed using `of_aux`
 has itself been constructed using `of_aux`.
 -/
-def relabelling_move_left_aux
-(n : exprℕ())
-{s : S}
-(h : «expr ≤ »(turn_bound s, n))
-(t : left_moves (of_aux n s h)) : relabelling (move_left (of_aux n s h) t) (of_aux «expr - »(n, 1) (left_moves_of_aux n h t : S) (turn_bound_of_left (left_moves_of_aux n h t).2 «expr - »(n, 1) (nat.le_trans h le_tsub_add))) :=
-begin
-  induction [expr n] [] [] [],
-  { have [ident t'] [] [":=", expr left_moves_of_aux 0 h t],
-    exfalso,
-    exact [expr turn_bound_ne_zero_of_left_move t'.2 (nonpos_iff_eq_zero.mp h)] },
-  { refl }
-end
+def relabelling_move_left_aux (n : ℕ) {s : S} (h : turn_bound s ≤ n) (t : left_moves (of_aux n s h)) :
+  relabelling (move_left (of_aux n s h) t)
+    (of_aux (n - 1) ((left_moves_of_aux n h) t : S)
+      (turn_bound_of_left ((left_moves_of_aux n h) t).2 (n - 1) (Nat.le_transₓ h le_tsub_add))) :=
+  by 
+    induction n
+    ·
+      have t' := (left_moves_of_aux 0 h) t 
+      exfalso 
+      exact turn_bound_ne_zero_of_left_move t'.2 (nonpos_iff_eq_zero.mp h)
+    ·
+      rfl
 
 /--
 The relabelling showing `move_left` applied to a game constructed using `of`
@@ -204,23 +199,22 @@ def relabelling_move_left (s : S) (t : left_moves (of s)) :
     apply relabelling_move_left_aux 
     apply of_aux_relabelling
 
--- error in SetTheory.Game.State: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The relabelling showing `move_right` applied to a game constructed using `of_aux`
 has itself been constructed using `of_aux`.
 -/
-def relabelling_move_right_aux
-(n : exprℕ())
-{s : S}
-(h : «expr ≤ »(turn_bound s, n))
-(t : right_moves (of_aux n s h)) : relabelling (move_right (of_aux n s h) t) (of_aux «expr - »(n, 1) (right_moves_of_aux n h t : S) (turn_bound_of_right (right_moves_of_aux n h t).2 «expr - »(n, 1) (nat.le_trans h le_tsub_add))) :=
-begin
-  induction [expr n] [] [] [],
-  { have [ident t'] [] [":=", expr right_moves_of_aux 0 h t],
-    exfalso,
-    exact [expr turn_bound_ne_zero_of_right_move t'.2 (nonpos_iff_eq_zero.mp h)] },
-  { refl }
-end
+def relabelling_move_right_aux (n : ℕ) {s : S} (h : turn_bound s ≤ n) (t : right_moves (of_aux n s h)) :
+  relabelling (move_right (of_aux n s h) t)
+    (of_aux (n - 1) ((right_moves_of_aux n h) t : S)
+      (turn_bound_of_right ((right_moves_of_aux n h) t).2 (n - 1) (Nat.le_transₓ h le_tsub_add))) :=
+  by 
+    induction n
+    ·
+      have t' := (right_moves_of_aux 0 h) t 
+      exfalso 
+      exact turn_bound_ne_zero_of_right_move t'.2 (nonpos_iff_eq_zero.mp h)
+    ·
+      rfl
 
 /--
 The relabelling showing `move_right` applied to a game constructed using `of`
@@ -243,20 +237,22 @@ instance fintype_right_moves_of_aux (n : ℕ) (s : S) (h : turn_bound s ≤ n) :
     apply Fintype.ofEquiv _ (right_moves_of_aux _ _).symm 
     infer_instance
 
--- error in SetTheory.Game.State: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance short_of_aux : ∀ (n : exprℕ()) {s : S} (h : «expr ≤ »(turn_bound s, n)), short (of_aux n s h)
-| 0, s, h := short.mk' (λ i, begin
-   have [ident i] [] [":=", expr (left_moves_of_aux _ _).to_fun i],
-   exfalso,
-   exact [expr turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp h)]
- end) (λ j, begin
-   have [ident j] [] [":=", expr (right_moves_of_aux _ _).to_fun j],
-   exfalso,
-   exact [expr turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp h)]
- end)
-| «expr + »(n, 1), s, h := short.mk' (λ
- i, short_of_relabelling (relabelling_move_left_aux «expr + »(n, 1) h i).symm (short_of_aux n _)) (λ
- j, short_of_relabelling (relabelling_move_right_aux «expr + »(n, 1) h j).symm (short_of_aux n _))
+instance short_of_aux : ∀ n : ℕ {s : S} h : turn_bound s ≤ n, short (of_aux n s h)
+| 0, s, h =>
+  short.mk'
+    (fun i =>
+      by 
+        have i := (left_moves_of_aux _ _).toFun i 
+        exfalso 
+        exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp h))
+    fun j =>
+      by 
+        have j := (right_moves_of_aux _ _).toFun j 
+        exfalso 
+        exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp h)
+| n+1, s, h =>
+  short.mk' (fun i => short_of_relabelling (relabelling_move_left_aux (n+1) h i).symm (short_of_aux n _))
+    fun j => short_of_relabelling (relabelling_move_right_aux (n+1) h j).symm (short_of_aux n _)
 
 instance short_of (s : S) : short (of s) :=
   by 
@@ -269,7 +265,7 @@ namespace Game
 
 /-- Construct a combinatorial `game` from a state. -/
 def of {S : Type u} [Pgame.State S] (s : S) : Game :=
-  «expr⟦ ⟧» (Pgame.of s)
+  ⟦Pgame.of s⟧
 
 end Game
 

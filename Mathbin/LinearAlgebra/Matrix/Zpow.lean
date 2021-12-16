@@ -212,38 +212,34 @@ theorem zpow_add_of_nonpos {A : M} {m n : ℤ} (hm : m ≤ 0) (hn : n ≤ 0) : (
 
 theorem zpow_add_of_nonneg {A : M} {m n : ℤ} (hm : 0 ≤ m) (hn : 0 ≤ n) : (A^m+n) = (A^m)*A^n :=
   by 
-    rcases nonsing_inv_cancel_or_zero A with (⟨h, h'⟩ | h)
-    ·
-      exact zpow_add (is_unit_det_of_left_inverse h) m n
-    ·
-      obtain ⟨k, rfl⟩ := eq_coe_of_zero_le hm 
-      obtain ⟨l, rfl⟩ := eq_coe_of_zero_le hn 
-      rw [←Int.coe_nat_add, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, pow_addₓ]
+    obtain ⟨k, rfl⟩ := eq_coe_of_zero_le hm 
+    obtain ⟨l, rfl⟩ := eq_coe_of_zero_le hn 
+    rw [←Int.coe_nat_add, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, pow_addₓ]
 
 theorem zpow_one_add {A : M} (h : IsUnit A.det) (i : ℤ) : (A^1+i) = A*A^i :=
   by 
     rw [zpow_add h, zpow_one]
 
--- error in LinearAlgebra.Matrix.Zpow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem semiconj_by.zpow_right
-{A X Y : exprM()}
-(hx : is_unit X.det)
-(hy : is_unit Y.det)
-(h : semiconj_by A X Y) : ∀ m : exprℤ(), semiconj_by A «expr ^ »(X, m) «expr ^ »(Y, m)
-| (n : exprℕ()) := by simp [] [] [] ["[", expr h.pow_right n, "]"] [] []
-| «expr-[1+ ]»(n) := begin
-  by_cases [expr ha, ":", expr «expr = »(A, 0)],
-  { simp [] [] ["only"] ["[", expr ha, ",", expr semiconj_by.zero_left, "]"] [] [] },
-  have [ident hx'] [":", expr is_unit «expr ^ »(X, n.succ).det] [],
-  { rw [expr det_pow] [],
-    exact [expr hx.pow n.succ] },
-  have [ident hy'] [":", expr is_unit «expr ^ »(Y, n.succ).det] [],
-  { rw [expr det_pow] [],
-    exact [expr hy.pow n.succ] },
-  rw ["[", expr zpow_neg_succ_of_nat, ",", expr zpow_neg_succ_of_nat, ",", expr nonsing_inv_apply _ hx', ",", expr nonsing_inv_apply _ hy', ",", expr semiconj_by, "]"] [],
-  refine [expr (is_regular_of_is_left_regular_det hy'.is_regular.left).left _],
-  rw ["[", "<-", expr mul_assoc, ",", "<-", expr (h.pow_right n.succ).eq, ",", expr mul_assoc, ",", expr mul_eq_mul «expr ^ »(X, _), ",", expr mul_smul, ",", expr mul_adjugate, ",", expr mul_eq_mul, ",", expr mul_eq_mul, ",", expr mul_eq_mul, ",", "<-", expr matrix.mul_assoc, ",", expr mul_smul «expr ^ »(Y, _) («expr↑ »(«expr ⁻¹»(hy'.unit)) : R), ",", expr mul_adjugate, ",", expr smul_smul, ",", expr smul_smul, ",", expr hx'.coe_inv_mul, ",", expr hy'.coe_inv_mul, ",", expr one_smul, ",", expr matrix.mul_one, ",", expr matrix.one_mul, "]"] []
-end
+theorem SemiconjBy.zpow_right {A X Y : M} (hx : IsUnit X.det) (hy : IsUnit Y.det) (h : SemiconjBy A X Y) :
+  ∀ m : ℤ, SemiconjBy A (X^m) (Y^m)
+| (n : ℕ) =>
+  by 
+    simp [h.pow_right n]
+| -[1+ n] =>
+  by 
+    have hx' : IsUnit (X^n.succ).det
+    ·
+      rw [det_pow]
+      exact hx.pow n.succ 
+    have hy' : IsUnit (Y^n.succ).det
+    ·
+      rw [det_pow]
+      exact hy.pow n.succ 
+    rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, nonsing_inv_apply _ hx', nonsing_inv_apply _ hy', SemiconjBy]
+    refine' (is_regular_of_is_left_regular_det hy'.is_regular.left).left _ 
+    rw [←mul_assocₓ, ←(h.pow_right n.succ).Eq, mul_assocₓ, mul_eq_mul (X^_), mul_smul, mul_adjugate, mul_eq_mul,
+      mul_eq_mul, mul_eq_mul, ←Matrix.mul_assoc, mul_smul (Y^_) (↑hy'.unit⁻¹ : R), mul_adjugate, smul_smul, smul_smul,
+      hx'.coe_inv_mul, hy'.coe_inv_mul, one_smul, Matrix.mul_one, Matrix.one_mul]
 
 theorem Commute.zpow_right {A B : M} (h : Commute A B) (m : ℤ) : Commute A (B^m) :=
   by 
@@ -337,19 +333,12 @@ theorem Units.coe_zpow (u : Units M) : ∀ n : ℤ, ((u^n : Units M) : M) = (u^n
   by 
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, ←inv_pow, u⁻¹.coe_pow, ←inv_pow', units.coe_inv'']
 
--- error in LinearAlgebra.Matrix.Zpow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zpow_ne_zero_of_is_unit_det
-[nonempty n']
-[nontrivial R]
-{A : exprM()}
-(ha : is_unit A.det)
-(z : exprℤ()) : «expr ≠ »(«expr ^ »(A, z), 0) :=
-begin
-  have [] [] [":=", expr ha.det_zpow z],
-  contrapose ["!"] [ident this],
-  rw ["[", expr this, ",", expr det_zero «expr‹ ›»(_), "]"] [],
-  exact [expr not_is_unit_zero]
-end
+theorem zpow_ne_zero_of_is_unit_det [Nonempty n'] [Nontrivial R] {A : M} (ha : IsUnit A.det) (z : ℤ) : (A^z) ≠ 0 :=
+  by 
+    have  := ha.det_zpow z 
+    contrapose! this 
+    rw [this, det_zero ‹_›]
+    exact not_is_unit_zero
 
 theorem zpow_sub {A : M} (ha : IsUnit A.det) (z1 z2 : ℤ) : (A^z1 - z2) = (A^z1) / (A^z2) :=
   by 

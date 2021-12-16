@@ -139,26 +139,22 @@ namespace IsPrime
 
 open Submodule.IsPrincipal Ideal
 
--- error in RingTheory.PrincipalIdealDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_maximal_ideal
-[comm_ring R]
-[is_domain R]
-[is_principal_ideal_ring R]
-{S : ideal R}
-[hpi : is_prime S]
-(hS : «expr ≠ »(S, «expr⊥»())) : is_maximal S :=
-is_maximal_iff.2 ⟨(ne_top_iff_one S).1 hpi.1, begin
-   assume [binders (T x hST hxS hxT)],
-   cases [expr (mem_iff_generator_dvd _).1 «expr $ »(hST, generator_mem S)] ["with", ident z, ident hz],
-   cases [expr hpi.mem_or_mem (show «expr ∈ »(«expr * »(generator T, z), S), from «expr ▸ »(hz, generator_mem S))] [],
-   { have [ident hTS] [":", expr «expr ≤ »(T, S)] [],
-     rwa ["[", "<-", expr T.span_singleton_generator, ",", expr ideal.span_le, ",", expr singleton_subset_iff, "]"] [],
-     exact [expr «expr $ »(hxS, hTS hxT).elim] },
-   cases [expr (mem_iff_generator_dvd _).1 h] ["with", ident y, ident hy],
-   have [] [":", expr «expr ≠ »(generator S, 0)] [":=", expr mt (eq_bot_iff_generator_eq_zero _).2 hS],
-   rw ["[", "<-", expr mul_one (generator S), ",", expr hy, ",", expr mul_left_comm, ",", expr mul_right_inj' this, "]"] ["at", ident hz],
-   exact [expr «expr ▸ »(hz.symm, T.mul_mem_right _ (generator_mem T))]
- end⟩
+theorem to_maximal_ideal [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R} [hpi : is_prime S]
+  (hS : S ≠ ⊥) : is_maximal S :=
+  is_maximal_iff.2
+    ⟨(ne_top_iff_one S).1 hpi.1,
+      by 
+        intro T x hST hxS hxT 
+        cases' (mem_iff_generator_dvd _).1 (hST$ generator_mem S) with z hz 
+        cases hpi.mem_or_mem (show (generator T*z) ∈ S from hz ▸ generator_mem S)
+        ·
+          have hTS : T ≤ S 
+          rwa [←T.span_singleton_generator, Ideal.span_le, singleton_subset_iff]
+          exact (hxS$ hTS hxT).elim 
+        cases' (mem_iff_generator_dvd _).1 h with y hy 
+        have  : generator S ≠ 0 := mt (eq_bot_iff_generator_eq_zero _).2 hS 
+        rw [←mul_oneₓ (generator S), hy, mul_left_commₓ, mul_right_inj' this] at hz 
+        exact hz.symm ▸ T.mul_mem_right _ (generator_mem T)⟩
 
 end IsPrime
 
@@ -177,21 +173,23 @@ instance (priority := 100) EuclideanDomain.to_principal_ideal_domain : IsPrincip
       fun S =>
         by 
           exact
-            ⟨if h : { x:R | x ∈ S ∧ x ≠ 0 }.Nonempty then
+            ⟨if h : { x : R | x ∈ S ∧ x ≠ 0 }.Nonempty then
                 have wf : WellFounded (EuclideanDomain.R : R → R → Prop) := EuclideanDomain.r_well_founded 
                 have hmin :
-                  WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h ∈ S ∧ WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h ≠ 0 :=
-                  WellFounded.min_mem wf { x:R | x ∈ S ∧ x ≠ 0 } h
-                ⟨WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h,
+                  WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ∈ S ∧
+                    WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ≠ 0 :=
+                  WellFounded.min_mem wf { x : R | x ∈ S ∧ x ≠ 0 } h
+                ⟨WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h,
                   Submodule.ext$
                     fun x =>
                       ⟨fun hx =>
-                          div_add_mod x (WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h) ▸
+                          div_add_mod x (WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h) ▸
                             (Ideal.mem_span_singleton.2$
                               dvd_add (dvd_mul_right _ _)$
-                                have  : x % WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h ∉ { x:R | x ∈ S ∧ x ≠ 0 } :=
+                                have  :
+                                  x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ∉ { x : R | x ∈ S ∧ x ≠ 0 } :=
                                   fun h₁ => WellFounded.not_lt_min wf _ h h₁ (mod_lt x hmin.2)
-                                have  : x % WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h = 0 :=
+                                have  : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h = 0 :=
                                   by 
                                     finish [(mod_mem_iff hmin.1).2 hx]
                                 by 
@@ -254,6 +252,7 @@ open_locale Classical
 noncomputable def factors (a : R) : Multiset R :=
   if h : a = 0 then ∅ else Classical.some (WfDvdMonoid.exists_factors a h)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » factors a)
 theorem factors_spec (a : R) (h : a ≠ 0) : (∀ b _ : b ∈ factors a, Irreducible b) ∧ Associated (factors a).Prod a :=
   by 
     unfold factors 
@@ -264,6 +263,7 @@ theorem ne_zero_of_mem_factors {R : Type v} [CommRingₓ R] [IsDomain R] [IsPrin
   (hb : b ∈ factors a) : b ≠ 0 :=
   Irreducible.ne_zero ((factors_spec a ha).1 b hb)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » factors a)
 theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R} (ha : a ≠ 0)
   (hfac : ∀ b _ : b ∈ factors a, b ∈ s) (hunit : ∀ c : Units R, (c : R) ∈ s) : a ∈ s :=
   by 
@@ -271,6 +271,7 @@ theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R
     rw [←hc]
     exact Submonoid.mul_mem _ (Submonoid.multiset_prod_mem _ _ hfac) (hunit _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » factors a)
 /-- If a `ring_hom` maps all units and all factors of an element `a` into a submonoid `s`, then it
 also maps `a` into that submonoid. -/
 theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} [CommRingₓ R] [IsDomain R]
@@ -335,7 +336,7 @@ theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) :=
     apply associated_of_dvd_dvd
     ·
       rw [dvd_gcd_iff]
-      split  <;> rw [←Ideal.mem_span_singleton, ←hd, mem_span_pair]
+      constructor <;> rw [←Ideal.mem_span_singleton, ←hd, mem_span_pair]
       ·
         use 1, 0
         rw [one_mulₓ, zero_mul, add_zeroₓ]
@@ -353,7 +354,8 @@ theorem gcd_is_unit_iff (x y : R) : IsUnit (gcd x y) ↔ IsCoprime x y :=
   by 
     rw [IsCoprime, ←mem_span_pair, ←span_gcd, ←span_singleton_eq_top, eq_top_iff_one]
 
-theorem is_coprime_of_dvd (x y : R) (z : ¬(x = 0 ∧ y = 0)) (H : ∀ z _ : z ∈ Nonunits R, z ≠ 0 → z ∣ x → ¬z ∣ y) :
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » nonunits R)
+theorem is_coprime_of_dvd (x y : R) (nonzero : ¬(x = 0 ∧ y = 0)) (H : ∀ z _ : z ∈ Nonunits R, z ≠ 0 → z ∣ x → ¬z ∣ y) :
   IsCoprime x y :=
   by 
     rw [←gcd_is_unit_iff]
@@ -374,6 +376,47 @@ theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y
         rintro z nu nz ⟨w, rfl⟩ dy)
       refine' h' (dvd_trans _ dy)
       simpa using mul_dvd_mul_left z (is_unit_iff_dvd_one.1$ (of_irreducible_mul h).resolve_left nu)
+
+theorem is_coprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
+  (H : ∀ z : R, Irreducible z → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
+  by 
+    apply is_coprime_of_dvd x y nonzero 
+    intro z znu znz zx zy 
+    obtain ⟨i, h1, h2⟩ := WfDvdMonoid.exists_irreducible_factor znu znz 
+    apply H i h1 <;>
+      ·
+        apply dvd_trans h2 
+        assumption
+
+theorem is_coprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0)) (H : ∀ z : R, Prime z → z ∣ x → ¬z ∣ y) :
+  IsCoprime x y :=
+  is_coprime_of_irreducible_dvd nonzero$ fun z zi => H z$ GcdMonoid.prime_of_irreducible zi
+
+theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCoprime p n ↔ ¬p ∣ n :=
+  by 
+    constructor
+    ·
+      intro co H 
+      apply pp.not_unit 
+      rw [is_unit_iff_dvd_one]
+      apply IsCoprime.dvd_of_dvd_mul_left co 
+      rw [mul_oneₓ n]
+      exact H
+    ·
+      intro nd 
+      apply is_coprime_of_irreducible_dvd
+      ·
+        rintro ⟨hp, -⟩
+        exact pp.ne_zero hp 
+      rintro z zi zp zn 
+      exact nd ((zi.associated_of_dvd pp zp).symm.Dvd.trans zn)
+
+theorem Prime.coprime_iff_not_dvd {p n : R} (pp : Prime p) : IsCoprime p n ↔ ¬p ∣ n :=
+  pp.irreducible.coprime_iff_not_dvd
+
+theorem exists_associated_pow_of_mul_eq_pow' {a b c : R} (hab : IsCoprime a b) {k : ℕ} (h : (a*b) = (c^k)) :
+  ∃ d, Associated (d^k) a :=
+  exists_associated_pow_of_mul_eq_pow ((gcd_is_unit_iff _ _).mpr hab) h
 
 end 
 

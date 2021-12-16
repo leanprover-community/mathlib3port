@@ -41,7 +41,7 @@ a binary biproduct. We introduce `⨁ f` for the indexed biproduct.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 
@@ -872,11 +872,12 @@ any bicone `b` for `f` satisfying `total : ∑ j : J, b.π j ≫ b.ι j = 𝟙 b
 
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
-theorem has_biproduct_of_total {f : J → C} (b : bicone f) (total : (∑j : J, b.π j ≫ b.ι j) = 𝟙 b.X) : has_biproduct f :=
+theorem has_biproduct_of_total {f : J → C} (b : bicone f) (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.X) :
+  has_biproduct f :=
   has_biproduct.mk
     { Bicone := b,
       IsLimit :=
-        { lift := fun s => ∑j, s.π.app j ≫ b.ι j,
+        { lift := fun s => ∑ j, s.π.app j ≫ b.ι j,
           uniq' :=
             fun s m h =>
               by 
@@ -891,7 +892,7 @@ theorem has_biproduct_of_total {f : J → C} (b : bicone f) (total : (∑j : J, 
                 dsimp 
                 simp  },
       IsColimit :=
-        { desc := fun s => ∑j, b.π j ≫ s.ι.app j,
+        { desc := fun s => ∑ j, b.π j ≫ s.ι.app j,
           uniq' :=
             fun s m h =>
               by 
@@ -961,29 +962,29 @@ In any preadditive category, any biproduct satsifies
 `∑ j : J, biproduct.π f j ≫ biproduct.ι f j = 𝟙 (⨁ f)`
 -/
 @[simp]
-theorem biproduct.total : (∑j : J, biproduct.π f j ≫ biproduct.ι f j) = 𝟙 (⨁ f) :=
+theorem biproduct.total : (∑ j : J, biproduct.π f j ≫ biproduct.ι f j) = 𝟙 (⨁ f) :=
   by 
     ext j j' 
     simp [comp_sum, sum_comp, biproduct.ι_π, comp_dite, dite_comp]
 
-theorem biproduct.lift_eq {T : C} {g : ∀ j, T ⟶ f j} : biproduct.lift g = ∑j, g j ≫ biproduct.ι f j :=
+theorem biproduct.lift_eq {T : C} {g : ∀ j, T ⟶ f j} : biproduct.lift g = ∑ j, g j ≫ biproduct.ι f j :=
   by 
     ext j 
     simp [sum_comp, biproduct.ι_π, comp_dite]
 
-theorem biproduct.desc_eq {T : C} {g : ∀ j, f j ⟶ T} : biproduct.desc g = ∑j, biproduct.π f j ≫ g j :=
+theorem biproduct.desc_eq {T : C} {g : ∀ j, f j ⟶ T} : biproduct.desc g = ∑ j, biproduct.π f j ≫ g j :=
   by 
     ext j 
     simp [comp_sum, biproduct.ι_π_assoc, dite_comp]
 
 @[simp, reassoc]
 theorem biproduct.lift_desc {T U : C} {g : ∀ j, T ⟶ f j} {h : ∀ j, f j ⟶ U} :
-  biproduct.lift g ≫ biproduct.desc h = ∑j : J, g j ≫ h j :=
+  biproduct.lift g ≫ biproduct.desc h = ∑ j : J, g j ≫ h j :=
   by 
     simp [biproduct.lift_eq, biproduct.desc_eq, comp_sum, sum_comp, biproduct.ι_π_assoc, comp_dite, dite_comp]
 
 theorem biproduct.map_eq [has_finite_biproducts C] {f g : J → C} {h : ∀ j, f j ⟶ g j} :
-  biproduct.map h = ∑j : J, biproduct.π f j ≫ h j ≫ biproduct.ι g j :=
+  biproduct.map h = ∑ j : J, biproduct.π f j ≫ h j ≫ biproduct.ι g j :=
   by 
     ext 
     simp [biproduct.ι_π, biproduct.ι_π_assoc, comp_sum, sum_comp, comp_dite, dite_comp]
@@ -991,7 +992,7 @@ theorem biproduct.map_eq [has_finite_biproducts C] {f g : J → C} {h : ∀ j, f
 @[simp, reassoc]
 theorem biproduct.matrix_desc {K : Type v} [Fintype K] [DecidableEq K] [has_finite_biproducts C] {f : J → C} {g : K → C}
   (m : ∀ j k, f j ⟶ g k) {P} (x : ∀ k, g k ⟶ P) :
-  biproduct.matrix m ≫ biproduct.desc x = biproduct.desc fun j => ∑k, m j k ≫ x k :=
+  biproduct.matrix m ≫ biproduct.desc x = biproduct.desc fun j => ∑ k, m j k ≫ x k :=
   by 
     ext 
     simp 
@@ -999,7 +1000,7 @@ theorem biproduct.matrix_desc {K : Type v} [Fintype K] [DecidableEq K] [has_fini
 @[simp, reassoc]
 theorem biproduct.lift_matrix {K : Type v} [Fintype K] [DecidableEq K] [has_finite_biproducts C] {f : J → C} {g : K → C}
   {P} (x : ∀ j, P ⟶ f j) (m : ∀ j k, f j ⟶ g k) :
-  biproduct.lift x ≫ biproduct.matrix m = biproduct.lift fun k => ∑j, x j ≫ m j k :=
+  biproduct.lift x ≫ biproduct.matrix m = biproduct.lift fun k => ∑ j, x j ≫ m j k :=
   by 
     ext 
     simp 

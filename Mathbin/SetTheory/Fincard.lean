@@ -15,7 +15,7 @@ import Mathbin.SetTheory.Cardinal
 
 open Cardinal
 
-noncomputable theory
+noncomputable section 
 
 variable {α : Type _}
 

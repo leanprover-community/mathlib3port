@@ -17,18 +17,22 @@ group_theory
 -/
 
 
+@[toAdditive]
 theorem Tactic.Group.zpow_trick {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) : ((a*b ^ n)*b ^ m) = a*b ^ n+m :=
   by 
     rw [mul_assocₓ, ←zpow_add]
 
+@[toAdditive]
 theorem Tactic.Group.zpow_trick_one {G : Type _} [Groupₓ G] (a b : G) (m : ℤ) : ((a*b)*b ^ m) = a*b ^ m+1 :=
   by 
     rw [mul_assocₓ, mul_self_zpow]
 
+@[toAdditive]
 theorem Tactic.Group.zpow_trick_one' {G : Type _} [Groupₓ G] (a b : G) (n : ℤ) : ((a*b ^ n)*b) = a*b ^ n+1 :=
   by 
     rw [mul_assocₓ, mul_zpow_self]
 
+@[toAdditive]
 theorem Tactic.Group.zpow_trick_sub {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) : ((a*b ^ n)*b ^ -m) = a*b ^ (n - m) :=
   by 
     rw [mul_assocₓ, ←zpow_add] <;> rfl
@@ -68,6 +72,7 @@ setup_tactic_parser
 
 open Tactic
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Tactic for normalizing expressions in multiplicative groups, without assuming
 commutativity, using only the group axioms without any information about which group

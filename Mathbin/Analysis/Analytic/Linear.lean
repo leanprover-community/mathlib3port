@@ -15,7 +15,7 @@ open_locale TopologicalSpace Classical BigOperators Nnreal Ennreal
 
 open Set Filter Asymptotics
 
-noncomputable theory
+noncomputable section 
 
 namespace ContinuousLinearMap
 
@@ -58,7 +58,7 @@ multilinear series expansion of `uncurry f`. It is given by
 `f.uncurry_bilinear ![(x, y), (x', y')] = f x y'`. -/
 def uncurry_bilinear (f : E →L[𝕜] F →L[𝕜] G) : E × F[×2]→L[𝕜] G :=
   @ContinuousLinearMap.uncurryLeft 𝕜 1 (fun _ => E × F) G _ _ _ _ _$
-    («expr↑ » (continuousMultilinearCurryFin1 𝕜 (E × F) G).symm : (E × F →L[𝕜] G) →L[𝕜] _).comp$
+    (↑(continuousMultilinearCurryFin1 𝕜 (E × F) G).symm : (E × F →L[𝕜] G) →L[𝕜] _).comp$
       f.bilinear_comp (fst _ _ _) (snd _ _ _)
 
 @[simp]

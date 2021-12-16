@@ -1,6 +1,6 @@
 import Mathbin.Topology.StoneCech 
 import Mathbin.Topology.Algebra.Semigroup 
-import Mathbin.Data.Stream.Basic
+import Mathbin.Data.Stream.Init
 
 /-!
 # Hindman's theorem on finite sums
@@ -47,7 +47,7 @@ attribute [local instance] Ultrafilter.hasMul Ultrafilter.hasAdd
 
 @[toAdditive]
 theorem Ultrafilter.eventually_mul {M} [Mul M] (U V : Ultrafilter M) (p : M → Prop) :
-  (∀ᶠm in «expr↑ » (U*V), p m) ↔ ∀ᶠm in U, ∀ᶠm' in V, p (m*m') :=
+  (∀ᶠ m in ↑U*V, p m) ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m*m') :=
   Iff.rfl
 
 /-- Semigroup structure on `ultrafilter M` induced by a semigroup structure on `M`. -/
@@ -67,7 +67,7 @@ attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 @[toAdditive]
 theorem Ultrafilter.continuous_mul_left {M} [Semigroupₓ M] (V : Ultrafilter M) : Continuous (·*V) :=
   TopologicalSpace.IsTopologicalBasis.continuous ultrafilter_basis_is_basis _$
-    Set.forall_range_iff.mpr$ fun s => ultrafilter_is_open_basic { m:M | ∀ᶠm' in V, (m*m') ∈ s }
+    Set.forall_range_iff.mpr$ fun s => ultrafilter_is_open_basic { m : M | ∀ᶠ m' in V, (m*m') ∈ s }
 
 namespace Hindman
 
@@ -86,6 +86,7 @@ inductive FP {M} [Semigroupₓ M] : Streamₓ M → Set M
   | tail (a : Streamₓ M) (m : M) (h : FP a.tail m) : FP a m
   | cons (a : Streamₓ M) (m : M) (h : FP a.tail m) : FP a (a.head*m)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m' «expr ∈ » FP (a.drop n))
 /-- If `m` and `m'` are finite products in `M`, then so is `m * m'`, provided that `m'` is obtained
 from a subsequence of `M` starting sufficiently late. -/
 @[toAdditive]
@@ -107,87 +108,87 @@ theorem FP.mul {M} [Semigroupₓ M] {a : Streamₓ M} {m : M} (hm : m ∈ FP a) 
       rw [mul_assocₓ]
       exact FP.cons _ _ (hn _ hm')
 
-@[toAdditive exists_idempotent_ultrafilter_le_FS]
-theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroupₓ M] (a : Streamₓ M) :
-  ∃ U : Ultrafilter M, (U*U) = U ∧ ∀ᶠm in U, m ∈ FP a :=
-  by 
-    let S : Set (Ultrafilter M) := ⋂n, { U | ∀ᶠm in U, m ∈ FP (a.drop n) }
-    obtain ⟨U, hU, U_idem⟩ := exists_idempotent_in_compact_subsemigroup _ S _ _ _
-    ·
-      refine' ⟨U, U_idem, _⟩
-      convert set.mem_Inter.mp hU 0
-    ·
-      exact Ultrafilter.continuous_mul_left
-    ·
-      apply IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed
-      ·
-        intro n U hU 
-        apply eventually.mono hU 
-        rw [add_commₓ, ←Streamₓ.drop_drop, ←Streamₓ.tail_eq_drop]
-        exact FP.tail _
-      ·
-        intro n 
-        exact ⟨pure _, mem_pure.mpr$ FP.head _⟩
-      ·
-        exact (ultrafilter_is_closed_basic _).IsCompact
-      ·
-        intro n 
-        apply ultrafilter_is_closed_basic
-    ·
-      exact IsClosed.is_compact (is_closed_Inter$ fun i => ultrafilter_is_closed_basic _)
-    ·
-      intro U V hU hV 
-      rw [Set.mem_Inter] at *
-      intro n 
-      rw [Set.mem_set_of_eq, Ultrafilter.eventually_mul]
-      apply eventually.mono (hU n)
-      intro m hm 
-      obtain ⟨n', hn⟩ := FP.mul hm 
-      apply eventually.mono (hV (n'+n))
-      intro m' hm' 
-      apply hn 
-      simpa only [Streamₓ.drop_drop] using hm'
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ toAdditive exists_idempotent_ultrafilter_le_FS ]
+  theorem
+    exists_idempotent_ultrafilter_le_FP
+    { M } [ Semigroupₓ M ] ( a : Streamₓ M ) : ∃ U : Ultrafilter M , U * U = U ∧ ∀ᶠ m in U , m ∈ FP a
+    :=
+      by
+        let S : Set Ultrafilter M := ⋂ n , { U | ∀ᶠ m in U , m ∈ FP a.drop n }
+          obtain ⟨ U , hU , U_idem ⟩ := exists_idempotent_in_compact_subsemigroup _ S _ _ _
+          · refine' ⟨ U , U_idem , _ ⟩ convert set.mem_Inter.mp hU 0
+          · exact Ultrafilter.continuous_mul_left
+          ·
+            apply IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed
+              ·
+                intro n U hU
+                  apply eventually.mono hU
+                  rw [ add_commₓ , ← Streamₓ.drop_drop , ← Streamₓ.tail_eq_drop ]
+                  exact FP.tail _
+              · intro n exact ⟨ pure _ , mem_pure.mpr $ FP.head _ ⟩
+              · exact ultrafilter_is_closed_basic _ . IsCompact
+              · intro n apply ultrafilter_is_closed_basic
+          · exact IsClosed.is_compact is_closed_Inter $ fun i => ultrafilter_is_closed_basic _
+          ·
+            intro U V hU hV
+              rw [ Set.mem_Inter ] at *
+              intro n
+              rw [ Set.mem_set_of_eq , Ultrafilter.eventually_mul ]
+              apply eventually.mono hU n
+              intro m hm
+              obtain ⟨ n' , hn ⟩ := FP.mul hm
+              apply eventually.mono hV n' + n
+              intro m' hm'
+              apply hn
+              simpa only [ Streamₓ.drop_drop ] using hm'
 
--- error in Combinatorics.Hindman: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[ident exists_FS_of_large]]
-theorem exists_FP_of_large
-{M}
-[semigroup M]
-(U : ultrafilter M)
-(U_idem : «expr = »(«expr * »(U, U), U))
-(s₀ : set M)
-(sU : «expr ∈ »(s₀, U)) : «expr∃ , »((a), «expr ⊆ »(FP a, s₀)) :=
-begin
-  have [ident exists_elem] [":", expr ∀
-   {s : set M}
-   (hs : «expr ∈ »(s, U)), «expr ∩ »(s, {m | «expr∀ᶠ in , »((m'), U, «expr ∈ »(«expr * »(m, m'), s))}).nonempty] [":=", expr λ
-   s
-   hs, ultrafilter.nonempty_of_mem «expr $ »(inter_mem hs, by { rw ["<-", expr U_idem] ["at", ident hs],
-      exact [expr hs] })],
-  let [ident elem] [":", expr {s // «expr ∈ »(s, U)} → M] [":=", expr λ p, (exists_elem p.property).some],
-  let [ident succ] [":", expr {s // «expr ∈ »(s, U)} → {s // «expr ∈ »(s, U)}] [":=", expr λ
-   p, ⟨«expr ∩ »(p.val, {m | «expr ∈ »(«expr * »(elem p, m), p.val)}), «expr $ »(inter_mem p.2, show _, from set.inter_subset_right _ _ (exists_elem p.2).some_mem)⟩],
-  use [expr stream.corec elem succ (subtype.mk s₀ sU)],
-  suffices [] [":", expr ∀
-   (a : stream M)
-   (m «expr ∈ » FP a), ∀ p, «expr = »(a, stream.corec elem succ p) → «expr ∈ »(m, p.val)],
-  { intros [ident m, ident hm],
-    exact [expr this _ m hm ⟨s₀, sU⟩ rfl] },
-  clear [ident sU, ident s₀],
-  intros [ident a, ident m, ident h],
-  induction [expr h] [] ["with", ident b, ident b, ident n, ident h, ident ih, ident b, ident n, ident h, ident ih] [],
-  { rintros [ident p, ident rfl],
-    rw ["[", expr stream.corec_eq, ",", expr stream.head_cons, "]"] [],
-    exact [expr set.inter_subset_left _ _ (set.nonempty.some_mem _)] },
-  { rintros [ident p, ident rfl],
-    refine [expr set.inter_subset_left _ _ (ih (succ p) _)],
-    rw ["[", expr stream.corec_eq, ",", expr stream.tail_cons, "]"] [] },
-  { rintros [ident p, ident rfl],
-    have [] [] [":=", expr set.inter_subset_right _ _ (ih (succ p) _)],
-    { simpa [] [] ["only"] [] [] ["using", expr this] },
-    rw ["[", expr stream.corec_eq, ",", expr stream.tail_cons, "]"] [] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » FP a)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ toAdditive exists_FS_of_large ]
+  theorem
+    exists_FP_of_large
+    { M } [ Semigroupₓ M ] ( U : Ultrafilter M ) ( U_idem : U * U = U ) ( s₀ : Set M ) ( sU : s₀ ∈ U ) : ∃ a , FP a ⊆ s₀
+    :=
+      by
+        have
+            exists_elem
+              : ∀ { s : Set M } hs : s ∈ U , s ∩ { m | ∀ᶠ m' in U , m * m' ∈ s } . Nonempty
+              :=
+              fun s hs => Ultrafilter.nonempty_of_mem inter_mem hs $ by rw [ ← U_idem ] at hs exact hs
+          let elem : { s // s ∈ U } → M := fun p => exists_elem p.property . some
+          let
+            succ
+              : { s // s ∈ U } → { s // s ∈ U }
+              :=
+              fun
+                p
+                  =>
+                  ⟨
+                    p.val ∩ { m | elem p * m ∈ p.val }
+                      ,
+                      inter_mem p . 2 $ show _ from Set.inter_subset_right _ _ exists_elem p . 2 . some_mem
+                    ⟩
+          use Streamₓ.corec elem succ Subtype.mk s₀ sU
+          suffices : ∀ a : Streamₓ M m _ : m ∈ FP a , ∀ p , a = Streamₓ.corec elem succ p → m ∈ p.val
+          · intro m hm exact this _ m hm ⟨ s₀ , sU ⟩ rfl
+          clear sU s₀
+          intro a m h
+          induction' h with b b n h ih b n h ih
+          ·
+            rintro p rfl
+              rw [ Streamₓ.corec_eq , Streamₓ.head_cons ]
+              exact Set.inter_subset_left _ _ Set.Nonempty.some_mem _
+          · rintro p rfl refine' Set.inter_subset_left _ _ ih succ p _ rw [ Streamₓ.corec_eq , Streamₓ.tail_cons ]
+          ·
+            rintro p rfl
+              have := Set.inter_subset_right _ _ ih succ p _
+              · simpa only using this
+              rw [ Streamₓ.corec_eq , Streamₓ.tail_cons ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 /-- The strong form of **Hindman's theorem**: in any finite cover of an FP-set, one the parts
 contains an FP-set. -/
 @[toAdditive FS_partition_regular]
@@ -197,6 +198,7 @@ theorem FP_partition_regular {M} [Semigroupₓ M] (a : Streamₓ M) (s : Set (Se
   let ⟨c, cs, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset aU scov)
   ⟨c, cs, exists_FP_of_large U idem c hc⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » s)
 /-- The weak form of **Hindman's theorem**: in any finite cover of a nonempty semigroup, one of the
 parts contains an FP-set. -/
 @[toAdditive exists_FS_of_finite_cover]
@@ -225,48 +227,38 @@ theorem FP.singleton {M} [Semigroupₓ M] (a : Streamₓ M) (i : ℕ) : a.nth i 
       apply FP.tail 
       apply ih
 
--- error in Combinatorics.Hindman: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem FP.mul_two
-{M}
-[semigroup M]
-(a : stream M)
-(i j : exprℕ())
-(ij : «expr < »(i, j)) : «expr ∈ »(«expr * »(a.nth i, a.nth j), FP a) :=
-begin
-  refine [expr FP_drop_subset_FP _ i _],
-  rw ["<-", expr stream.head_drop] [],
-  apply [expr FP.cons],
-  rcases [expr le_iff_exists_add.mp (nat.succ_le_of_lt ij), "with", "⟨", ident d, ",", ident hd, "⟩"],
-  have [] [] [":=", expr FP.singleton (a.drop i).tail d],
-  rw ["[", expr stream.tail_eq_drop, ",", expr stream.nth_drop, ",", expr stream.nth_drop, "]"] ["at", ident this],
-  convert [] [expr this] [],
-  rw ["[", expr hd, ",", expr add_comm, ",", expr nat.succ_add, ",", expr nat.add_succ, "]"] []
-end
+@[toAdditive]
+theorem FP.mul_two {M} [Semigroupₓ M] (a : Streamₓ M) (i j : ℕ) (ij : i < j) : (a.nth i*a.nth j) ∈ FP a :=
+  by 
+    refine' FP_drop_subset_FP _ i _ 
+    rw [←Streamₓ.head_drop]
+    apply FP.cons 
+    rcases le_iff_exists_add.mp (Nat.succ_le_of_ltₓ ij) with ⟨d, hd⟩
+    have  := FP.singleton (a.drop i).tail d 
+    rw [Streamₓ.tail_eq_drop, Streamₓ.nth_drop, Streamₓ.nth_drop] at this 
+    convert this 
+    rw [hd, add_commₓ, Nat.succ_add, Nat.add_succ]
 
--- error in Combinatorics.Hindman: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem FP.finset_prod
-{M}
-[comm_monoid M]
-(a : stream M)
-(s : finset exprℕ())
-(hs : s.nonempty) : «expr ∈ »(s.prod (λ i, a.nth i), FP a) :=
-begin
-  refine [expr FP_drop_subset_FP _ (s.min' hs) _],
-  induction [expr s] ["using", ident finset.strong_induction] ["with", ident s, ident ih] [],
-  rw ["[", "<-", expr finset.mul_prod_erase _ _ (s.min'_mem hs), ",", "<-", expr stream.head_drop, "]"] [],
-  cases [expr (s.erase (s.min' hs)).eq_empty_or_nonempty] ["with", ident h, ident h],
-  { rw ["[", expr h, ",", expr finset.prod_empty, ",", expr mul_one, "]"] [],
-    exact [expr FP.head _] },
-  { apply [expr FP.cons],
-    rw ["[", expr stream.tail_eq_drop, ",", expr stream.drop_drop, ",", expr add_comm, "]"] [],
-    refine [expr set.mem_of_subset_of_mem _ (ih _ «expr $ »(finset.erase_ssubset, s.min'_mem hs) h)],
-    have [] [":", expr «expr ≤ »(«expr + »(s.min' hs, 1), (s.erase (s.min' hs)).min' h)] [":=", expr nat.succ_le_of_lt «expr $ »(finset.min'_lt_of_mem_erase_min' _ _, finset.min'_mem _ _)],
-    cases [expr le_iff_exists_add.mp this] ["with", ident d, ident hd],
-    rw ["[", expr hd, ",", expr add_comm, ",", "<-", expr stream.drop_drop, "]"] [],
-    apply [expr FP_drop_subset_FP] }
-end
+@[toAdditive]
+theorem FP.finset_prod {M} [CommMonoidₓ M] (a : Streamₓ M) (s : Finset ℕ) (hs : s.nonempty) :
+  (s.prod fun i => a.nth i) ∈ FP a :=
+  by 
+    refine' FP_drop_subset_FP _ (s.min' hs) _ 
+    induction' s using Finset.strongInductionₓ with s ih 
+    rw [←Finset.mul_prod_erase _ _ (s.min'_mem hs), ←Streamₓ.head_drop]
+    cases' (s.erase (s.min' hs)).eq_empty_or_nonempty with h h
+    ·
+      rw [h, Finset.prod_empty, mul_oneₓ]
+      exact FP.head _
+    ·
+      apply FP.cons 
+      rw [Streamₓ.tail_eq_drop, Streamₓ.drop_drop, add_commₓ]
+      refine' Set.mem_of_subset_of_mem _ (ih _ (Finset.erase_ssubset$ s.min'_mem hs) h)
+      have  : (s.min' hs+1) ≤ (s.erase (s.min' hs)).min' h :=
+        Nat.succ_le_of_ltₓ (Finset.min'_lt_of_mem_erase_min' _ _$ Finset.min'_mem _ _)
+      cases' le_iff_exists_add.mp this with d hd 
+      rw [hd, add_commₓ, ←Streamₓ.drop_drop]
+      apply FP_drop_subset_FP
 
 end Hindman
 

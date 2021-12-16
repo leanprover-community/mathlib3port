@@ -105,8 +105,8 @@ def of_nat' : ∀ {n} m [is_lt m n], Fin2 n
 | succ n, 0, ⟨h⟩ => fz
 | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succ h⟩)
 
--- error in Data.Fin.Fin2: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
-local prefix `&`:max := of_nat'
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+local prefix:999 "&" => of_nat'
 
 instance : Inhabited (Fin2 1) :=
   ⟨fz⟩

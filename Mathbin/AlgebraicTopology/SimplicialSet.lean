@@ -32,13 +32,14 @@ open CategoryTheory
 
 open_locale Simplicial
 
--- error in AlgebraicTopology.SimplicialSet: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler limits.has_limits
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler limits.has_colimits
 /-- The category of simplicial sets.
 This is the category of contravariant functors from
 `simplex_category` to `Type u`. -/
-@[derive #["[", expr large_category, ",", expr limits.has_limits, ",", expr limits.has_colimits, "]"]]
-def sSet : Type u+1 :=
-simplicial_object (Type u)
+def SSet : Type (u + 1) :=
+  simplicial_object (Type u)deriving [anonymous], [anonymous], [anonymous]
 
 namespace SSet
 
@@ -56,8 +57,8 @@ section
 
 /-- The `m`-simplices of the `n`-th standard simplex are
 the monotone maps from `fin (m+1)` to `fin (n+1)`. -/
-def as_preorder_hom {n} {m} (α : Δ[n].obj m) : PreorderHom (Finₓ (m.unop.len+1)) (Finₓ (n+1)) :=
-  α.to_preorder_hom
+def as_order_hom {n} {m} (α : Δ[n].obj m) : OrderHom (Finₓ (m.unop.len+1)) (Finₓ (n+1)) :=
+  α.to_order_hom
 
 end 
 
@@ -65,7 +66,7 @@ end
 all `m`-simplices of `standard_simplex n` that are not surjective
 (when viewed as monotone function `m → n`). -/
 def boundary (n : ℕ) : SSet :=
-  { obj := fun m => { α : Δ[n].obj m // ¬Function.Surjective (as_preorder_hom α) },
+  { obj := fun m => { α : Δ[n].obj m // ¬Function.Surjective (as_order_hom α) },
     map :=
       fun m₁ m₂ f α =>
         ⟨f.unop ≫ (α : Δ[n].obj m₁),
@@ -85,7 +86,7 @@ It consists of all `m`-simplices `α` of `Δ[n]`
 for which the union of `{i}` and the range of `α` is not all of `n`
 (when viewing `α` as monotone function `m → n`). -/
 def horn (n : ℕ) (i : Finₓ (n+1)) : SSet :=
-  { obj := fun m => { α : Δ[n].obj m // Set.Range (as_preorder_hom α) ∪ {i} ≠ Set.Univ },
+  { obj := fun m => { α : Δ[n].obj m // Set.Range (as_order_hom α) ∪ {i} ≠ Set.Univ },
     map :=
       fun m₁ m₂ f α =>
         ⟨f.unop ≫ (α : Δ[n].obj m₁),
@@ -116,11 +117,12 @@ noncomputable def S1 : SSet :=
 
 end Examples
 
--- error in AlgebraicTopology.SimplicialSet: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler limits.has_limits
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler limits.has_colimits
 /-- Truncated simplicial sets. -/
-@[derive #["[", expr large_category, ",", expr limits.has_limits, ",", expr limits.has_colimits, "]"]]
-def truncated (n : exprℕ()) :=
-simplicial_object.truncated (Type u) n
+def truncated (n : ℕ) :=
+  simplicial_object.truncated (Type u) n deriving [anonymous], [anonymous], [anonymous]
 
 /-- The skeleton functor on simplicial sets. -/
 def sk (n : ℕ) : SSet ⥤ SSet.Truncated n :=

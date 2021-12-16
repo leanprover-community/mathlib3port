@@ -18,7 +18,7 @@ Similarly for `CommSemiRing`, `Ring` and `CommRing`.
 
 universe v
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 

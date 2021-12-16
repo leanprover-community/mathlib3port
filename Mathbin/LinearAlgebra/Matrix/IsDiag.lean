@@ -156,7 +156,7 @@ theorem is_diag.from_blocks [HasZero α] {A : Matrix m m α} {D : Matrix n n α}
 theorem is_diag_from_blocks_iff [HasZero α] {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α}
   {D : Matrix n n α} : (A.from_blocks B C D).IsDiag ↔ A.is_diag ∧ B = 0 ∧ C = 0 ∧ D.is_diag :=
   by 
-    split 
+    constructor
     ·
       intro h 
       refine' ⟨fun i j hij => _, ext$ fun i j => _, ext$ fun i j => _, fun i j hij => _⟩

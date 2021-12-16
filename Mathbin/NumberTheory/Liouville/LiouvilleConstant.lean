@@ -26,7 +26,7 @@ lemmas for $m \in \mathbb{R}$.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Nat BigOperators
 
@@ -43,7 +43,7 @@ The series converges only for `1 < m`.  However, there is no restriction on `m`,
 if the series does not converge, then the sum of the series is defined to be zero.
 -/
 def liouville_number (m : ℝ) : ℝ :=
-  ∑'i : ℕ, 1 / (m^i !)
+  ∑' i : ℕ, 1 / (m^i !)
 
 /--
 `liouville_number_initial_terms` is the sum of the first `k + 1` terms of Liouville's constant,
@@ -53,7 +53,7 @@ $$
 $$
 -/
 def liouville_number_initial_terms (m : ℝ) (k : ℕ) : ℝ :=
-  ∑i in range (k+1), 1 / (m^i !)
+  ∑ i in range (k+1), 1 / (m^i !)
 
 /--
 `liouville_number_tail` is the sum of the series of the terms in `liouville_number m`
@@ -63,10 +63,10 @@ $$
 $$
 -/
 def liouville_number_tail (m : ℝ) (k : ℕ) : ℝ :=
-  ∑'i, 1 / (m^(i+k+1)!)
+  ∑' i, 1 / (m^(i+k+1)!)
 
 theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouville_number_tail m k :=
-  calc (0 : ℝ) = ∑'i : ℕ, 0 := tsum_zero.symm 
+  calc (0 : ℝ) = ∑' i : ℕ, 0 := tsum_zero.symm 
     _ < liouville_number_tail m k :=
     tsum_lt_tsum_of_nonneg (fun _ => rfl.le) (fun i => one_div_nonneg.mpr (pow_nonneg (zero_le_one.trans hm.le) _))
         (one_div_pos.mpr (pow_pos (zero_lt_one.trans hm) (0+k+1)!))$
@@ -83,20 +83,20 @@ theorem liouville_number_eq_initial_terms_add_tail {m : ℝ} (hm : 1 < m) (k : �
 
 /--  Partial inequality, works with `m ∈ ℝ` satisfying `1 < m`. -/
 theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
-  (∑'i : ℕ, 1 / (m^(i+n+1)!)) < (1 - 1 / m)⁻¹*1 / (m^(n+1)!) :=
+  (∑' i : ℕ, 1 / (m^(i+n+1)!)) < (1 - 1 / m)⁻¹*1 / (m^(n+1)!) :=
   have m0 : 0 < m := zero_lt_one.trans m1 
   have mi : |1 / m| < 1 := (le_of_eqₓ (abs_of_pos (one_div_pos.mpr m0))).trans_lt ((div_lt_one m0).mpr m1)
-  calc (∑'i, 1 / (m^(i+n+1)!)) < ∑'i, 1 / (m^i+(n+1)!) :=
+  calc (∑' i, 1 / (m^(i+n+1)!)) < ∑' i, 1 / (m^i+(n+1)!) :=
     tsum_lt_tsum_of_nonneg (fun b => one_div_nonneg.mpr (pow_nonneg m0.le _))
       (fun b => one_div_pow_le_one_div_pow_of_le m1.le (b.add_factorial_succ_le_factorial_add_succ n))
       (one_div_pow_strict_mono m1 (n.add_factorial_succ_lt_factorial_add_succ rfl.le))
       (summable_one_div_pow_of_le m1 fun j => Nat.Le.intro rfl)
-    _ = ∑'i, (1 / m^i)*1 / (m^(n+1)!) :=
+    _ = ∑' i, (1 / m^i)*1 / (m^(n+1)!) :=
     by 
       congr 
       ext i 
       rw [pow_addₓ, ←div_div_eq_div_mul, div_eq_mul_one_div, ←one_div_pow i]
-    _ = (∑'i, 1 / m^i)*1 / (m^(n+1)!) := tsum_mul_right 
+    _ = (∑' i, 1 / m^i)*1 / (m^(n+1)!) := tsum_mul_right 
     _ = (1 - 1 / m)⁻¹*1 / (m^(n+1)!) := mul_eq_mul_right_iff.mpr (Or.inl (tsum_geometric_of_abs_lt_1 mi))
     
 
@@ -146,22 +146,25 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
       all_goals 
         exact pow_ne_zero _ (nat.cast_ne_zero.mpr hm.ne.symm)
 
--- error in NumberTheory.Liouville.LiouvilleConstant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_liouville {m : exprℕ()} (hm : «expr ≤ »(2, m)) : liouville (liouville_number m) :=
-begin
-  have [ident mZ1] [":", expr «expr < »(1, (m : exprℤ()))] [],
-  { norm_cast [],
-    exact [expr one_lt_two.trans_le hm] },
-  have [ident m1] [":", expr «expr < »(1, (m : exprℝ()))] [],
-  { norm_cast [],
-    exact [expr one_lt_two.trans_le hm] },
-  intro [ident n],
-  rcases [expr liouville_number_rat_initial_terms (zero_lt_two.trans_le hm) n, "with", "⟨", ident p, ",", ident hp, "⟩"],
-  refine [expr ⟨p, «expr ^ »(m, «expr !»(n)), one_lt_pow mZ1 n.factorial_ne_zero, _⟩],
-  push_cast [] [],
-  rw ["[", expr liouville_number_eq_initial_terms_add_tail m1 n, ",", "<-", expr hp, ",", expr add_sub_cancel', ",", expr abs_of_nonneg (liouville_number_tail_pos m1 _).le, "]"] [],
-  exact [expr ⟨((lt_add_iff_pos_right _).mpr (liouville_number_tail_pos m1 n)).ne.symm, (tsum_one_div_pow_factorial_lt n m1).trans_le (aux_calc _ (nat.cast_two.symm.le.trans (nat.cast_le.mpr hm)))⟩]
-end
+theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouville_number m) :=
+  by 
+    have mZ1 : 1 < (m : ℤ)
+    ·
+      normCast 
+      exact one_lt_two.trans_le hm 
+    have m1 : 1 < (m : ℝ)
+    ·
+      normCast 
+      exact one_lt_two.trans_le hm 
+    intro n 
+    rcases liouville_number_rat_initial_terms (zero_lt_two.trans_le hm) n with ⟨p, hp⟩
+    refine' ⟨p, m^n !, one_lt_pow mZ1 n.factorial_ne_zero, _⟩
+    pushCast 
+    rw [liouville_number_eq_initial_terms_add_tail m1 n, ←hp, add_sub_cancel',
+      abs_of_nonneg (liouville_number_tail_pos m1 _).le]
+    exact
+      ⟨((lt_add_iff_pos_right _).mpr (liouville_number_tail_pos m1 n)).Ne.symm,
+        (tsum_one_div_pow_factorial_lt n m1).trans_le (aux_calc _ (nat.cast_two.symm.le.trans (nat.cast_le.mpr hm)))⟩
 
 theorem is_transcendental {m : ℕ} (hm : 2 ≤ m) : _root_.transcendental ℤ (liouville_number m) :=
   Transcendental (is_liouville hm)

@@ -23,7 +23,7 @@ variable {B : Type _} (E : B → Type _)
 conflicts with general sigma types.
 -/
 def total_space :=
-  Σx, E x
+  Σ x, E x
 
 instance [Inhabited B] [Inhabited (E (default B))] : Inhabited (total_space E) :=
   ⟨⟨default B, default (E (default B))⟩⟩
@@ -65,14 +65,13 @@ variable [∀ x, AddCommMonoidₓ (E x)]
 
 @[simp]
 theorem coe_snd_map_apply (x : B) (v w : E x) :
-  («expr↑ » (v+w) : total_space E).snd = (v : total_space E).snd+(w : total_space E).snd :=
+  (↑v+w : total_space E).snd = (v : total_space E).snd+(w : total_space E).snd :=
   rfl
 
 variable (R : Type _) [Semiringₓ R] [∀ x, Module R (E x)]
 
 @[simp]
-theorem coe_snd_map_smul (x : B) (r : R) (v : E x) :
-  («expr↑ » (r • v) : total_space E).snd = r • (v : total_space E).snd :=
+theorem coe_snd_map_smul (x : B) (r : R) (v : E x) : (↑(r • v) : total_space E).snd = r • (v : total_space E).snd :=
   rfl
 
 end FiberStructures

@@ -11,15 +11,18 @@ variable {α β γ : Type _} {s : α → Set β} {t : α → Set γ}
 
 namespace Set
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ≤ » x)
 /-- `accumulate s` is the union of `s y` for `y ≤ x`. -/
 def accumulate [LE α] (s : α → Set β) (x : α) : Set β :=
-  ⋃(y : _)(_ : y ≤ x), s y
+  ⋃ (y : _)(_ : y ≤ x), s y
 
 variable {s}
 
-theorem accumulate_def [LE α] {x : α} : accumulate s x = ⋃(y : _)(_ : y ≤ x), s y :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ≤ » x)
+theorem accumulate_def [LE α] {x : α} : accumulate s x = ⋃ (y : _)(_ : y ≤ x), s y :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ≤ » x)
 @[simp]
 theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ accumulate s x ↔ ∃ (y : _)(_ : y ≤ x), z ∈ s y :=
   mem_bUnion_iff
@@ -30,7 +33,9 @@ theorem subset_accumulate [Preorderₓ α] {x : α} : s x ⊆ accumulate s x :=
 theorem monotone_accumulate [Preorderₓ α] : Monotone (accumulate s) :=
   fun x y hxy => bUnion_subset_bUnion_left$ fun z hz => le_transₓ hz hxy
 
-theorem bUnion_accumulate [Preorderₓ α] (x : α) : (⋃(y : _)(_ : y ≤ x), accumulate s y) = ⋃(y : _)(_ : y ≤ x), s y :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ≤ » x)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ≤ » x)
+theorem bUnion_accumulate [Preorderₓ α] (x : α) : (⋃ (y : _)(_ : y ≤ x), accumulate s y) = ⋃ (y : _)(_ : y ≤ x), s y :=
   by 
     apply subset.antisymm
     ·
@@ -38,7 +43,7 @@ theorem bUnion_accumulate [Preorderₓ α] (x : α) : (⋃(y : _)(_ : y ≤ x), 
     ·
       exact bUnion_mono fun x hx => subset_accumulate
 
-theorem Union_accumulate [Preorderₓ α] : (⋃x, accumulate s x) = ⋃x, s x :=
+theorem Union_accumulate [Preorderₓ α] : (⋃ x, accumulate s x) = ⋃ x, s x :=
   by 
     apply subset.antisymm
     ·

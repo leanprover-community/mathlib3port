@@ -8,7 +8,7 @@ import Mathbin.CategoryTheory.Limits.FunctorCategory
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 

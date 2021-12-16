@@ -48,7 +48,7 @@ e.g. a `@[dualize]` attribute that behaves similarly to `@[to_additive]`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Functor Opposite
 
@@ -420,14 +420,13 @@ instance has_limit_equivalence_comp (e : K ≌ J) [has_limit F] : has_limit (e.f
 
 attribute [local elabWithoutExpectedType] inv_fun_id_assoc
 
--- error in CategoryTheory.Limits.HasLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a `E ⋙ F` has a limit, and `E` is an equivalence, we can construct a limit of `F`.
--/ theorem has_limit_of_equivalence_comp (e : «expr ≌ »(K, J)) [has_limit «expr ⋙ »(e.functor, F)] : has_limit F :=
-begin
-  haveI [] [":", expr has_limit «expr ⋙ »(e.inverse, «expr ⋙ »(e.functor, F))] [":=", expr limits.has_limit_equivalence_comp e.symm],
-  apply [expr has_limit_of_iso (e.inv_fun_id_assoc F)]
-end
+-/
+theorem has_limit_of_equivalence_comp (e : K ≌ J) [has_limit (e.functor ⋙ F)] : has_limit F :=
+  by 
+    have  : has_limit (e.inverse ⋙ e.functor ⋙ F) := limits.has_limit_equivalence_comp e.symm 
+    apply has_limit_of_iso (e.inv_fun_id_assoc F)
 
 section LimFunctor
 
@@ -816,7 +815,7 @@ theorem colimit.ι_pre (k : K) : colimit.ι (E ⋙ F) k ≫ colimit.pre F E = co
     erw [is_colimit.fac]
     rfl
 
-@[simp]
+@[simp, reassoc]
 theorem colimit.pre_desc (c : cocone F) : colimit.pre F E ≫ colimit.desc F c = colimit.desc (E ⋙ F) (c.whisker E) :=
   by 
     ext <;> rw [←assoc, colimit.ι_pre] <;> simp 
@@ -825,15 +824,15 @@ variable {L : Type u₃} [category.{v₃} L]
 
 variable (D : L ⥤ K) [has_colimit (D ⋙ E ⋙ F)]
 
--- error in CategoryTheory.Limits.HasLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem colimit.pre_pre : «expr = »(«expr ≫ »(colimit.pre «expr ⋙ »(E, F) D, colimit.pre F E), colimit.pre F «expr ⋙ »(D, E)) :=
-begin
-  ext [] [ident j] [],
-  rw ["[", "<-", expr assoc, ",", expr colimit.ι_pre, ",", expr colimit.ι_pre, "]"] [],
-  letI [] [":", expr has_colimit «expr ⋙ »(«expr ⋙ »(D, E), F)] [":=", expr show has_colimit «expr ⋙ »(D, «expr ⋙ »(E, F)), by apply_instance],
-  exact [expr (colimit.ι_pre F «expr ⋙ »(D, E) j).symm]
-end
+theorem colimit.pre_pre : colimit.pre (E ⋙ F) D ≫ colimit.pre F E = colimit.pre F (D ⋙ E) :=
+  by 
+    ext j 
+    rw [←assoc, colimit.ι_pre, colimit.ι_pre]
+    let this' : has_colimit ((D ⋙ E) ⋙ F) :=
+      show has_colimit (D ⋙ E ⋙ F)by 
+        infer_instance 
+    exact (colimit.ι_pre F (D ⋙ E) j).symm
 
 variable {E F}
 
@@ -886,23 +885,16 @@ theorem colimit.post_post {E : Type u''} [category.{v''} E] (H : D ⥤ E) [has_c
 
 end Post
 
--- error in CategoryTheory.Limits.HasLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem colimit.pre_post
-{D : Type u'}
-[category.{v'} D]
-(E : «expr ⥤ »(K, J))
-(F : «expr ⥤ »(J, C))
-(G : «expr ⥤ »(C, D))
-[has_colimit F]
-[has_colimit «expr ⋙ »(E, F)]
-[has_colimit «expr ⋙ »(F, G)]
-[H : has_colimit «expr ⋙ »(«expr ⋙ »(E, F), G)] : «expr = »(«expr ≫ »(colimit.post «expr ⋙ »(E, F) G, G.map (colimit.pre F E)), («expr ≫ »(@@colimit.pre _ _ _ «expr ⋙ »(F, G) _ E H, colimit.post F G) : _)) :=
-begin
-  ext [] [] [],
-  rw ["[", "<-", expr assoc, ",", expr colimit.ι_post, ",", "<-", expr G.map_comp, ",", expr colimit.ι_pre, ",", "<-", expr assoc, "]"] [],
-  letI [] [":", expr has_colimit «expr ⋙ »(E, «expr ⋙ »(F, G))] [":=", expr show has_colimit «expr ⋙ »(«expr ⋙ »(E, F), G), by apply_instance],
-  erw ["[", expr colimit.ι_pre «expr ⋙ »(F, G) E j, ",", expr colimit.ι_post, "]"] []
-end
+theorem colimit.pre_post {D : Type u'} [category.{v'} D] (E : K ⥤ J) (F : J ⥤ C) (G : C ⥤ D) [has_colimit F]
+  [has_colimit (E ⋙ F)] [has_colimit (F ⋙ G)] [H : has_colimit ((E ⋙ F) ⋙ G)] :
+  colimit.post (E ⋙ F) G ≫ G.map (colimit.pre F E) = (@colimit.pre _ _ _ (F ⋙ G) _ E H ≫ colimit.post F G : _) :=
+  by 
+    ext 
+    rw [←assoc, colimit.ι_post, ←G.map_comp, colimit.ι_pre, ←assoc]
+    let this' : has_colimit (E ⋙ F ⋙ G) :=
+      show has_colimit ((E ⋙ F) ⋙ G)by 
+        infer_instance 
+    erw [colimit.ι_pre (F ⋙ G) E j, colimit.ι_post]
 
 open CategoryTheory.Equivalence
 
@@ -911,15 +903,13 @@ instance has_colimit_equivalence_comp (e : K ≌ J) [has_colimit F] : has_colimi
     { Cocone := cocone.whisker e.functor (colimit.cocone F),
       IsColimit := is_colimit.whisker_equivalence (colimit.is_colimit F) e }
 
--- error in CategoryTheory.Limits.HasLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a `E ⋙ F` has a colimit, and `E` is an equivalence, we can construct a colimit of `F`.
 -/
-theorem has_colimit_of_equivalence_comp (e : «expr ≌ »(K, J)) [has_colimit «expr ⋙ »(e.functor, F)] : has_colimit F :=
-begin
-  haveI [] [":", expr has_colimit «expr ⋙ »(e.inverse, «expr ⋙ »(e.functor, F))] [":=", expr limits.has_colimit_equivalence_comp e.symm],
-  apply [expr has_colimit_of_iso (e.inv_fun_id_assoc F).symm]
-end
+theorem has_colimit_of_equivalence_comp (e : K ≌ J) [has_colimit (e.functor ⋙ F)] : has_colimit F :=
+  by 
+    have  : has_colimit (e.inverse ⋙ e.functor ⋙ F) := limits.has_colimit_equivalence_comp e.symm 
+    apply has_colimit_of_iso (e.inv_fun_id_assoc F).symm
 
 section ColimFunctor
 

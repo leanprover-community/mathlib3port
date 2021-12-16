@@ -69,7 +69,7 @@ instance mul_action' [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G
   MulAction G (Units M) :=
   { smul :=
       fun g m =>
-        ⟨g • (m : M), g⁻¹ • «expr↑ » (m⁻¹),
+        ⟨g • (m : M), g⁻¹ • ↑m⁻¹,
           by 
             rw [smul_mul_smul, Units.mul_inv, mul_right_invₓ, one_smul],
           by 
@@ -78,7 +78,7 @@ instance mul_action' [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G
 
 @[simp]
 theorem coe_smul [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] (g : G)
-  (m : Units M) : «expr↑ » (g • m) = g • (m : M) :=
+  (m : Units M) : ↑(g • m) = g • (m : M) :=
   rfl
 
 /-- Note that this lemma exists more generally as the global `smul_inv` -/

@@ -14,7 +14,7 @@ Note this implies that the category of presheaves on a small category `C` is car
 
 namespace CategoryTheory
 
-noncomputable theory
+noncomputable section 
 
 open Category Limits
 
@@ -39,13 +39,13 @@ instance : cartesian_closed (Type v₁) :=
 instance {C : Type u₁} [category.{v₁} C] : has_finite_products (C ⥤ Type u₁) :=
   has_finite_products_of_has_products _
 
--- error in CategoryTheory.Closed.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance {C : Type v₁} [small_category C] : cartesian_closed «expr ⥤ »(C, Type v₁) :=
-{ closed := λ
-  F, { is_adj := begin
-      letI [] [] [":=", expr functor_category.prod_preserves_colimits F],
-      apply [expr is_left_adjoint_of_preserves_colimits (prod.functor.obj F)]
-    end } }
+instance {C : Type v₁} [small_category C] : cartesian_closed (C ⥤ Type v₁) :=
+  { closed :=
+      fun F =>
+        { isAdj :=
+            by 
+              let this' := functor_category.prod_preserves_colimits F 
+              apply is_left_adjoint_of_preserves_colimits (prod.functor.obj F) } }
 
 end CartesianClosed
 

@@ -38,6 +38,7 @@ theorem holds_append {v : Nat → Int} {c1 c2 : clause} : holds v c1 → holds v
 
 end Clause
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » cs)
 /-- There exists a satisfiable clause c in argument -/
 def clauses.sat (cs : List clause) : Prop :=
   ∃ (c : _)(_ : c ∈ cs), clause.sat c

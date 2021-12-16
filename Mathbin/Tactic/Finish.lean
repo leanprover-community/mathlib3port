@@ -58,14 +58,16 @@ unsafe def add_simps : simp_lemmas → List Name → tactic simp_lemmas
     let s' ← s.add_simp n 
     add_simps s' ns
 
--- error in Tactic.Finish: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 Configuration information for the auto tactics.
 * `(use_simp := tt)`: call the simplifier
 * `(max_ematch_rounds := 20)`: for the "done" tactic
 -/
-@[derive #[expr decidable_eq], derive #[expr inhabited]]
-structure auto_config : Type := (use_simp := tt) (max_ematch_rounds := 20)
+structure auto_config : Type where 
+  useSimp := tt 
+  maxEmatchRounds := 20deriving [anonymous], [anonymous]
 
 /-!
 ### Preprocess goal.
@@ -426,11 +428,12 @@ unsafe def done (ps : List pexpr) (cfg : auto_config := {  }) : tactic Unit :=
 -/
 
 
--- error in Tactic.Finish: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
-@[derive #[expr decidable_eq], derive #[expr inhabited]] inductive case_option
-| force
-| at_most_one
-| accept
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+inductive case_option
+  | force
+  | at_most_one
+  | accept deriving [anonymous], [anonymous]
 
 private unsafe def case_cont (s : case_option) (cont : case_option → tactic Unit) : tactic Unit :=
   do 

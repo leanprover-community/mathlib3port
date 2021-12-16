@@ -49,7 +49,7 @@ Vector bundle
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Bundle Set
 
@@ -59,11 +59,13 @@ variable (R : Type _) {B : Type _} (F : Type _) (E : B → Type _) [Semiringₓ 
 
 section 
 
--- error in Topology.VectorBundle: ././Mathport/Syntax/Translate/Basic.lean:1004:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1056:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » base_set)
 /-- Local trivialization for vector bundles. -/
-@[nolint #[ident has_inhabited_instance]]
-structure topological_vector_bundle.trivializationextends to_fiber_bundle_trivialization : topological_fiber_bundle.trivialization F (proj E) :=
-  (linear : ∀ x «expr ∈ » base_set, is_linear_map R (λ y : E x, (to_fun y).2))
+@[nolint has_inhabited_instance]
+structure TopologicalVectorBundle.Trivialization extends
+  "././Mathport/Syntax/Translate/Basic.lean:1056:11: unsupported: advanced extends in structure" where 
+  linear : ∀ x _ : x ∈ base_set, IsLinearMap R fun y : E x => (to_fun y).2
 
 open TopologicalVectorBundle
 
@@ -82,7 +84,7 @@ theorem trivialization.mem_source (e : trivialization R F E) {x : total_space E}
   TopologicalFiberBundle.Trivialization.mem_source e
 
 @[simp, mfld_simps]
-theorem trivialization.coe_coe (e : trivialization R F E) : «expr⇑ » e.to_local_homeomorph = e :=
+theorem trivialization.coe_coe (e : trivialization R F E) : ⇑e.to_local_homeomorph = e :=
   rfl
 
 @[simp, mfld_simps]
@@ -127,70 +129,83 @@ variable {R F E}
 
 namespace Trivialization
 
--- error in Topology.VectorBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a topological vector bundle, a trivialization in the fiber (which is a priori only linear)
 is in fact a continuous linear equiv between the fibers and the model fiber. -/
-def continuous_linear_equiv_at
-(e : trivialization R F E)
-(b : B)
-(hb : «expr ∈ »(b, e.base_set)) : «expr ≃L[ ] »(E b, R, F) :=
-{ to_fun := λ y, (e ⟨b, y⟩).2,
-  inv_fun := λ z, begin
-    have [] [":", expr «expr = »((e.to_local_homeomorph.symm (b, z)).fst, b)] [":=", expr topological_fiber_bundle.trivialization.proj_symm_apply' _ hb],
-    have [ident C] [":", expr «expr = »(E (e.to_local_homeomorph.symm (b, z)).fst, E b)] [],
-    by rw [expr this] [],
-    exact [expr cast C (e.to_local_homeomorph.symm (b, z)).2]
-  end,
-  left_inv := begin
-    assume [binders (v)],
-    rw ["[", "<-", expr heq_iff_eq, "]"] [],
-    apply [expr (cast_heq _ _).trans],
-    have [ident A] [":", expr «expr = »((b, (e ⟨b, v⟩).snd), e ⟨b, v⟩)] [],
-    { refine [expr prod.ext _ rfl],
-      symmetry,
-      exact [expr topological_fiber_bundle.trivialization.coe_fst' _ hb] },
-    have [ident B] [":", expr «expr = »(e.to_local_homeomorph.symm (e ⟨b, v⟩), ⟨b, v⟩)] [],
-    { apply [expr local_homeomorph.left_inv_on],
-      rw [expr topological_fiber_bundle.trivialization.mem_source] [],
-      exact [expr hb] },
-    rw ["[", expr A, ",", expr B, "]"] []
-  end,
-  right_inv := begin
-    assume [binders (v)],
-    have [ident B] [":", expr «expr = »(e (e.to_local_homeomorph.symm (b, v)), (b, v))] [],
-    { apply [expr local_homeomorph.right_inv_on],
-      rw [expr topological_fiber_bundle.trivialization.mem_target] [],
-      exact [expr hb] },
-    have [ident C] [":", expr «expr = »((e (e.to_local_homeomorph.symm (b, v))).2, v)] [],
-    by rw ["[", expr B, "]"] [],
-    conv_rhs [] [] { rw ["<-", expr C] },
-    dsimp [] [] [] [],
-    congr,
-    ext [] [] [],
-    { exact [expr (topological_fiber_bundle.trivialization.proj_symm_apply' _ hb).symm] },
-    { exact [expr (cast_heq _ _).trans (by refl)] }
-  end,
-  map_add' := λ v w, (e.linear _ hb).map_add v w,
-  map_smul' := λ c v, (e.linear _ hb).map_smul c v,
-  continuous_to_fun := begin
-    refine [expr continuous_snd.comp _],
-    apply [expr continuous_on.comp_continuous e.to_local_homeomorph.continuous_on (topological_vector_bundle.inducing R F E b).continuous (λ
-      x, _)],
-    rw [expr topological_fiber_bundle.trivialization.mem_source] [],
-    exact [expr hb]
-  end,
-  continuous_inv_fun := begin
-    rw [expr (topological_vector_bundle.inducing R F E b).continuous_iff] [],
-    dsimp [] [] [] [],
-    have [] [":", expr continuous (λ z : F, e.to_fiber_bundle_trivialization.to_local_homeomorph.symm (b, z))] [],
-    { apply [expr e.to_local_homeomorph.symm.continuous_on.comp_continuous (continuous_const.prod_mk continuous_id') (λ
-        z, _)],
-      simp [] [] ["only"] ["[", expr topological_fiber_bundle.trivialization.mem_target, ",", expr hb, ",", expr local_equiv.symm_source, ",", expr local_homeomorph.symm_to_local_equiv, "]"] [] [] },
-    convert [] [expr this] [],
-    ext [] [ident z] [],
-    { exact [expr (topological_fiber_bundle.trivialization.proj_symm_apply' _ hb).symm] },
-    { exact [expr cast_heq _ _] }
-  end }
+def continuous_linear_equiv_at (e : trivialization R F E) (b : B) (hb : b ∈ e.base_set) : E b ≃L[R] F :=
+  { toFun := fun y => (e ⟨b, y⟩).2,
+    invFun :=
+      fun z =>
+        by 
+          have  : (e.to_local_homeomorph.symm (b, z)).fst = b :=
+            TopologicalFiberBundle.Trivialization.proj_symm_apply' _ hb 
+          have C : E (e.to_local_homeomorph.symm (b, z)).fst = E b
+          ·
+            rw [this]
+          exact cast C (e.to_local_homeomorph.symm (b, z)).2,
+    left_inv :=
+      by 
+        intro v 
+        rw [←heq_iff_eq]
+        apply (cast_heq _ _).trans 
+        have A : (b, (e ⟨b, v⟩).snd) = e ⟨b, v⟩
+        ·
+          refine' Prod.extₓ _ rfl 
+          symm 
+          exact TopologicalFiberBundle.Trivialization.coe_fst' _ hb 
+        have B : e.to_local_homeomorph.symm (e ⟨b, v⟩) = ⟨b, v⟩
+        ·
+          apply LocalHomeomorph.left_inv_on 
+          rw [TopologicalFiberBundle.Trivialization.mem_source]
+          exact hb 
+        rw [A, B],
+    right_inv :=
+      by 
+        intro v 
+        have B : e (e.to_local_homeomorph.symm (b, v)) = (b, v)
+        ·
+          apply LocalHomeomorph.right_inv_on 
+          rw [TopologicalFiberBundle.Trivialization.mem_target]
+          exact hb 
+        have C : (e (e.to_local_homeomorph.symm (b, v))).2 = v
+        ·
+          rw [B]
+        convRHS => rw [←C]
+        dsimp 
+        congr 
+        ext
+        ·
+          exact (TopologicalFiberBundle.Trivialization.proj_symm_apply' _ hb).symm
+        ·
+          exact
+            (cast_heq _ _).trans
+              (by 
+                rfl),
+    map_add' := fun v w => (e.linear _ hb).map_add v w, map_smul' := fun c v => (e.linear _ hb).map_smul c v,
+    continuous_to_fun :=
+      by 
+        refine' continuous_snd.comp _ 
+        apply
+          ContinuousOn.comp_continuous e.to_local_homeomorph.continuous_on
+            (TopologicalVectorBundle.inducing R F E b).Continuous fun x => _ 
+        rw [TopologicalFiberBundle.Trivialization.mem_source]
+        exact hb,
+    continuous_inv_fun :=
+      by 
+        rw [(TopologicalVectorBundle.inducing R F E b).continuous_iff]
+        dsimp 
+        have  : Continuous fun z : F => e.to_fiber_bundle_trivialization.to_local_homeomorph.symm (b, z)
+        ·
+          apply
+            e.to_local_homeomorph.symm.continuous_on.comp_continuous (continuous_const.prod_mk continuous_id')
+              fun z => _ 
+          simp only [TopologicalFiberBundle.Trivialization.mem_target, hb, LocalEquiv.symm_source,
+            LocalHomeomorph.symm_to_local_equiv]
+        convert this 
+        ext z
+        ·
+          exact (TopologicalFiberBundle.Trivialization.proj_symm_apply' _ hb).symm
+        ·
+          exact cast_heq _ _ }
 
 @[simp]
 theorem continuous_linear_equiv_at_apply (e : trivialization R F E) (b : B) (hb : b ∈ e.base_set) (y : E b) :
@@ -245,16 +260,18 @@ def trivial_topological_vector_bundle.trivialization : trivialization R F (Bundl
         simp only [univ_prod_univ],
     proj_to_fun := fun y hy => rfl, linear := fun x hx => ⟨fun y z => rfl, fun c y => rfl⟩ }
 
--- error in Topology.VectorBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance trivial_bundle.topological_vector_bundle : topological_vector_bundle R F (bundle.trivial B F) :=
-{ locally_trivial := λ x, ⟨trivial_topological_vector_bundle.trivialization R B F, mem_univ x⟩,
-  inducing := λ
-  b, ⟨begin
-     have [] [":", expr «expr = »(λ x : trivial B F b, x, @id F)] [],
-     by { ext [] [ident x] [],
-       refl },
-     simp [] [] ["only"] ["[", expr total_space.topological_space, ",", expr induced_inf, ",", expr induced_compose, ",", expr function.comp, ",", expr proj, ",", expr induced_const, ",", expr top_inf_eq, ",", expr trivial.proj_snd, ",", expr id.def, ",", expr trivial.topological_space, ",", expr this, ",", expr induced_id, "]"] [] []
-   end⟩ }
+instance trivial_bundle.topological_vector_bundle : TopologicalVectorBundle R F (Bundle.Trivial B F) :=
+  { locally_trivial := fun x => ⟨trivial_topological_vector_bundle.trivialization R B F, mem_univ x⟩,
+    Inducing :=
+      fun b =>
+        ⟨by 
+            have  : (fun x : trivialₓ B F b => x) = @id F
+            ·
+              ·
+                ext x 
+                rfl 
+            simp only [total_space.topological_space, induced_inf, induced_compose, Function.comp, proj, induced_const,
+              top_inf_eq, trivial.proj_snd, id.def, trivial.topological_space, this, induced_id]⟩ }
 
 variable {R B F}
 
@@ -268,6 +285,8 @@ end TopologicalVectorBundle
 
 variable (B)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » base_set i)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(«expr ∩ »(base_set i, base_set j), base_set k))
 /-- Analogous construction of `topological_fiber_bundle_core` for vector bundles. This
 construction gives a way to construct vector bundles from a structure registering how
 trivialization changes act on fibers.-/
@@ -302,6 +321,7 @@ instance to_topological_vector_bundle_core_coe :
 
 include Z
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » «expr ∩ »(«expr ∩ »(Z.base_set i, Z.base_set j), Z.base_set k))
 theorem coord_change_linear_comp (i j k : ι) :
   ∀ x _ : x ∈ Z.base_set i ∩ Z.base_set j ∩ Z.base_set k,
     (Z.coord_change j k x).comp (Z.coord_change i j x) = Z.coord_change i k x :=
@@ -353,30 +373,30 @@ def proj : total_space Z.fiber → B :=
 
 /-- Local homeomorphism version of the trivialization change. -/
 def triv_change (i j : ι) : LocalHomeomorph (B × F) (B × F) :=
-  TopologicalFiberBundleCore.trivChange («expr↑ » Z) i j
+  TopologicalFiberBundleCore.trivChange (↑Z) i j
 
 @[simp, mfld_simps]
 theorem mem_triv_change_source (i j : ι) (p : B × F) :
   p ∈ (Z.triv_change i j).Source ↔ p.1 ∈ Z.base_set i ∩ Z.base_set j :=
-  TopologicalFiberBundleCore.mem_triv_change_source («expr↑ » Z) i j p
+  TopologicalFiberBundleCore.mem_triv_change_source (↑Z) i j p
 
 variable (ι)
 
 /-- Topological structure on the total space of a topological bundle created from core, designed so
 that all the local trivialization are continuous. -/
 instance to_topological_space : TopologicalSpace (total_space Z.fiber) :=
-  TopologicalFiberBundleCore.toTopologicalSpace ι («expr↑ » Z)
+  TopologicalFiberBundleCore.toTopologicalSpace ι (↑Z)
 
 variable {ι} (b : B) (a : F)
 
 @[simp, mfld_simps]
-theorem coe_cord_change (i j : ι) : TopologicalFiberBundleCore.coordChange («expr↑ » Z) i j b = Z.coord_change i j b :=
+theorem coe_cord_change (i j : ι) : TopologicalFiberBundleCore.coordChange (↑Z) i j b = Z.coord_change i j b :=
   rfl
 
 /-- Extended version of the local trivialization of a fiber bundle constructed from core,
 registering additionally in its type that it is a local bundle trivialization. -/
 def local_triv (i : ι) : TopologicalVectorBundle.Trivialization R F Z.fiber :=
-  { TopologicalFiberBundleCore.localTriv («expr↑ » Z) i with
+  { TopologicalFiberBundleCore.localTriv (↑Z) i with
     linear :=
       fun x hx =>
         { map_add :=
@@ -413,7 +433,7 @@ instance : TopologicalVectorBundle R F Z.fiber :=
             refine' le_antisymmₓ _ fun s h => _
             ·
               rw [←continuous_iff_le_induced]
-              exact TopologicalFiberBundleCore.continuous_total_space_mk («expr↑ » Z) b
+              exact TopologicalFiberBundleCore.continuous_total_space_mk (↑Z) b
             ·
               refine'
                 is_open_induced_iff.mpr

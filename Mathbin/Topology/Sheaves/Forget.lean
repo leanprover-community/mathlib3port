@@ -20,7 +20,7 @@ to check it on the underlying sheaf of types.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -130,7 +130,6 @@ variable [has_limits C] [has_limits D] [preserves_limits G]
 
 variable {X : Top.{v}} (F : presheaf C X)
 
--- error in Topology.Sheaves.Forget: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `G : C ⥤ D` is a functor which reflects isomorphisms and preserves limits
 (we assume all limits exist in both `C` and `D`),
@@ -146,45 +145,52 @@ Another useful example is the forgetful functor `TopCommRing ⥤ Top`.
 
 See https://stacks.math.columbia.edu/tag/0073.
 In fact we prove a stronger version with arbitrary complete target category.
--/ theorem is_sheaf_iff_is_sheaf_comp : «expr ↔ »(presheaf.is_sheaf F, presheaf.is_sheaf «expr ⋙ »(F, G)) :=
-begin
-  split,
-  { intros [ident S, ident ι, ident U],
-    obtain ["⟨", ident t₁, "⟩", ":=", expr S U],
-    have [ident t₂] [] [":=", expr @preserves_limit.preserves _ _ _ _ _ _ _ G _ _ t₁],
-    have [ident t₃] [] [":=", expr is_limit.of_iso_limit t₂ (map_cone_fork G F U)],
-    have [ident t₄] [] [":=", expr is_limit.postcompose_inv_equiv _ _ t₃],
-    exact [expr ⟨t₄⟩] },
-  { intros [ident S, ident ι, ident U],
-    refine [expr ⟨_⟩],
-    let [ident f] [] [":=", expr equalizer.lift _ (w F U)],
-    suffices [] [":", expr is_iso (G.map f)],
-    { resetI,
-      haveI [] [":", expr is_iso f] [":=", expr is_iso_of_reflects_iso f G],
-      apply [expr is_limit.of_iso_limit (limit.is_limit _)],
-      apply [expr iso.symm],
-      fapply [expr cones.ext],
-      exact [expr as_iso f],
-      rintro ["⟨", "_", "|", "_", "⟩"]; { dsimp [] ["[", expr f, "]"] [] [],
-        simp [] [] [] [] [] [] } },
-    { let [ident c] [] [":=", expr fork «expr ⋙ »(F, G) U],
-      obtain ["⟨", ident hc, "⟩", ":=", expr S U],
-      let [ident d] [] [":=", expr G.map_cone (equalizer.fork (left_res F U) (right_res F U))],
-      have [ident hd] [":", expr is_limit d] [":=", expr preserves_limit.preserves (limit.is_limit _)],
-      let [ident d'] [] [":=", expr (cones.postcompose (diagram_comp_preserves_limits G F U).hom).obj d],
-      have [ident hd'] [":", expr is_limit d'] [":=", expr (is_limit.postcompose_hom_equiv (diagram_comp_preserves_limits G F U : _) d).symm hd],
-      let [ident f'] [":", expr «expr ⟶ »(c, d')] [":=", expr fork.mk_hom (G.map f) (begin
-          dsimp ["only"] ["[", expr c, ",", expr d, ",", expr d', ",", expr f, ",", expr diagram_comp_preserves_limits, ",", expr res, "]"] [] [],
-          dunfold [ident fork.ι] [],
-          ext1 [] [ident j],
-          dsimp [] [] [] [],
-          simp [] [] ["only"] ["[", expr category.assoc, ",", "<-", expr functor.map_comp_assoc, ",", expr equalizer.lift_ι, ",", expr map_lift_pi_comparison_assoc, "]"] [] [],
-          dsimp [] ["[", expr res, "]"] [] [],
-          simp [] [] [] [] [] []
-        end)],
-      haveI [] [":", expr is_iso f'] [":=", expr is_limit.hom_is_iso hc hd' f'],
-      exact [expr is_iso.of_iso ((cones.forget _).map_iso (as_iso f'))] } }
-end
+-/
+theorem is_sheaf_iff_is_sheaf_comp : presheaf.is_sheaf F ↔ presheaf.is_sheaf (F ⋙ G) :=
+  by 
+    constructor
+    ·
+      intro S ι U 
+      obtain ⟨t₁⟩ := S U 
+      have t₂ := @preserves_limit.preserves _ _ _ _ _ _ _ G _ _ t₁ 
+      have t₃ := is_limit.of_iso_limit t₂ (map_cone_fork G F U)
+      have t₄ := is_limit.postcompose_inv_equiv _ _ t₃ 
+      exact ⟨t₄⟩
+    ·
+      intro S ι U 
+      refine' ⟨_⟩
+      let f := equalizer.lift _ (w F U)
+      suffices  : is_iso (G.map f)
+      ·
+        skip 
+        have  : is_iso f := is_iso_of_reflects_iso f G 
+        apply is_limit.of_iso_limit (limit.is_limit _)
+        apply iso.symm 
+        fapply cones.ext 
+        exact as_iso f 
+        rintro ⟨_ | _⟩ <;>
+          ·
+            dsimp [f]
+            simp 
+      ·
+        let c := fork (F ⋙ G) U 
+        obtain ⟨hc⟩ := S U 
+        let d := G.map_cone (equalizer.fork (left_res F U) (right_res F U))
+        have hd : is_limit d := preserves_limit.preserves (limit.is_limit _)
+        let d' := (cones.postcompose (diagram_comp_preserves_limits G F U).Hom).obj d 
+        have hd' : is_limit d' := (is_limit.postcompose_hom_equiv (diagram_comp_preserves_limits G F U : _) d).symm hd 
+        let f' : c ⟶ d' :=
+          fork.mk_hom (G.map f)
+            (by 
+              dsimp only [c, d, d', f, diagram_comp_preserves_limits, res]
+              dunfold fork.ι 
+              ext1 j 
+              dsimp 
+              simp only [category.assoc, ←functor.map_comp_assoc, equalizer.lift_ι, map_lift_pi_comparison_assoc]
+              dsimp [res]
+              simp )
+        have  : is_iso f' := is_limit.hom_is_iso hc hd' f' 
+        exact is_iso.of_iso ((cones.forget _).mapIso (as_iso f'))
 
 /-!
 As an example, we now have everything we need to check the sheaf condition

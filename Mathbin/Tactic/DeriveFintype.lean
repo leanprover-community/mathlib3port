@@ -103,6 +103,7 @@ The tactics perform the following parts of this proof scheme:
 
 namespace DeriveFintype
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A step in the construction of `finset.univ` for a finite inductive type.
 We will set `enum` to the discriminant of the inductive type, so a `finset_above`
 represents a finset that enumerates all elements in a tail of the constructor list. -/
@@ -113,26 +114,23 @@ def finset_above α (enum : α → ℕ) (n : ℕ) :=
 def mk_fintype {α} (enum : α → ℕ) (s : finset_above α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
   ⟨s.1, H⟩
 
--- error in Tactic.DeriveFintype: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
-def finset_above.cons
-{α}
-{enum : α → exprℕ()}
-(n)
-(a : α)
-(h : «expr = »(enum a, n))
-(s : finset_above α enum «expr + »(n, 1)) : finset_above α enum n :=
-begin
-  refine [expr ⟨finset.cons a s.1 _, _⟩],
-  { intro [ident h'],
-    have [] [] [":=", expr s.2 _ h'],
-    rw [expr h] ["at", ident this],
-    exact [expr nat.not_succ_le_self n this] },
-  { intros [ident x, ident h'],
-    rcases [expr finset.mem_cons.1 h', "with", ident rfl, "|", ident h'],
-    { exact [expr ge_of_eq h] },
-    { exact [expr nat.le_of_succ_le (s.2 _ h')] } }
-end
+def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : finset_above α enum (n+1)) :
+  finset_above α enum n :=
+  by 
+    refine' ⟨Finset.cons a s.1 _, _⟩
+    ·
+      intro h' 
+      have  := s.2 _ h' 
+      rw [h] at this 
+      exact Nat.not_succ_le_selfₓ n this
+    ·
+      intro x h' 
+      rcases Finset.mem_cons.1 h' with (rfl | h')
+      ·
+        exact ge_of_eq h
+      ·
+        exact Nat.le_of_succ_leₓ (s.2 _ h')
 
 theorem finset_above.mem_cons_self {α} {enum : α → ℕ} {n a h s} : a ∈ (@finset_above.cons α enum n a h s).1 :=
   Multiset.mem_cons_self _ _
@@ -150,6 +148,7 @@ def finset_above.nil {α} {enum : α → ℕ} n : finset_above α enum n :=
 instance α enum n : Inhabited (finset_above α enum n) :=
   ⟨finset_above.nil _⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- This is a finset covering a nontrivial variant (with one or more constructor arguments).
 The property `P` here is `λ a, enum a = n` where `n` is the discriminant for the current
 variant. -/
@@ -173,26 +172,24 @@ theorem finset_in.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ �
   a ∈ (@finset_in.mk α P Γ s f inj mem).1 :=
   Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
 
--- error in Tactic.DeriveFintype: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
-def finset_above.union
-{α}
-{enum : α → exprℕ()}
-(n)
-(s : finset_in (λ a, «expr = »(enum a, n)))
-(t : finset_above α enum «expr + »(n, 1)) : finset_above α enum n :=
-begin
-  refine [expr ⟨finset.disj_union s.1 t.1 _, _⟩],
-  { intros [ident a, ident hs, ident ht],
-    have [] [] [":=", expr t.2 _ ht],
-    rw [expr s.2 _ hs] ["at", ident this],
-    exact [expr nat.not_succ_le_self n this] },
-  { intros [ident x, ident h'],
-    rcases [expr finset.mem_disj_union.1 h', "with", ident h', "|", ident h'],
-    { exact [expr ge_of_eq (s.2 _ h')] },
-    { exact [expr nat.le_of_succ_le (t.2 _ h')] } }
-end
+def finset_above.union {α} {enum : α → ℕ} n (s : finset_in fun a => enum a = n) (t : finset_above α enum (n+1)) :
+  finset_above α enum n :=
+  by 
+    refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
+    ·
+      intro a hs ht 
+      have  := t.2 _ ht 
+      rw [s.2 _ hs] at this 
+      exact Nat.not_succ_le_selfₓ n this
+    ·
+      intro x h' 
+      rcases Finset.mem_disj_union.1 h' with (h' | h')
+      ·
+        exact ge_of_eq (s.2 _ h')
+      ·
+        exact Nat.le_of_succ_leₓ (t.2 _ h')
 
 theorem finset_above.mem_union_left {α} {enum : α → ℕ} {n s t a} (H : a ∈ (s : finset_in _).1) :
   a ∈ (@finset_above.union α enum n s t).1 :=

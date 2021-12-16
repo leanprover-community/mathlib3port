@@ -9,7 +9,7 @@ finitely supported functions from the indexing set to `ℕ`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -25,17 +25,14 @@ variable {σ : Type u} {K : Type v}
 
 variable (σ K) [Field K]
 
--- error in FieldTheory.MvPolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem quotient_mk_comp_C_injective
-(I : ideal (mv_polynomial σ K))
-(hI : «expr ≠ »(I, «expr⊤»())) : function.injective ((ideal.quotient.mk I).comp mv_polynomial.C) :=
-begin
-  refine [expr (ring_hom.injective_iff _).2 (λ x hx, _)],
-  rw ["[", expr ring_hom.comp_apply, ",", expr ideal.quotient.eq_zero_iff_mem, "]"] ["at", ident hx],
-  refine [expr classical.by_contradiction (λ hx0, absurd (I.eq_top_iff_one.2 _) hI)],
-  have [] [] [":=", expr I.mul_mem_left (mv_polynomial.C «expr ⁻¹»(x)) hx],
-  rwa ["[", "<-", expr mv_polynomial.C.map_mul, ",", expr inv_mul_cancel hx0, ",", expr mv_polynomial.C_1, "]"] ["at", ident this]
-end
+theorem quotient_mk_comp_C_injective (I : Ideal (MvPolynomial σ K)) (hI : I ≠ ⊤) :
+  Function.Injective ((Ideal.Quotient.mk I).comp MvPolynomial.c) :=
+  by 
+    refine' (RingHom.injective_iff _).2 fun x hx => _ 
+    rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem] at hx 
+    refine' Classical.by_contradiction fun hx0 => absurd (I.eq_top_iff_one.2 _) hI 
+    have  := I.mul_mem_left (MvPolynomial.c (x⁻¹)) hx 
+    rwa [←mv_polynomial.C.map_mul, inv_mul_cancel hx0, MvPolynomial.C_1] at this
 
 end MvPolynomial
 

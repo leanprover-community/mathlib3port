@@ -40,30 +40,29 @@ instance : MulAction G (left_transversals (H : Set G)) :=
                 rintro ⟨_, t', ht', rfl⟩ h 
                 exact Subtype.ext ((mul_right_injₓ g).mpr (subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)))⟩,
     one_smul := fun T => Subtype.ext (one_left_coset T),
-    mul_smul := fun g g' T => Subtype.ext (left_coset_assoc («expr↑ » T) g g').symm }
+    mul_smul := fun g g' T => Subtype.ext (left_coset_assoc (↑T) g g').symm }
 
-theorem smul_symm_apply_eq_mul_symm_apply_inv_smul (g : G) (α : left_transversals (H : Set G))
-  (q : QuotientGroup.Quotient H) :
-  «expr↑ » ((Equiv.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)).symm q) =
-    g*(Equiv.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm (g⁻¹ • q : QuotientGroup.Quotient H) :=
+theorem smul_symm_apply_eq_mul_symm_apply_inv_smul (g : G) (α : left_transversals (H : Set G)) (q : G ⧸ H) :
+  ↑(Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)).symm q =
+    g*(Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm (g⁻¹ • q : G ⧸ H) :=
   by 
-    let w := Equiv.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)
-    let y := Equiv.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)
-    change «expr↑ » (y.symm q) = «expr↑ » (⟨_, mem_left_coset g (Subtype.mem _)⟩ : (g • α).1)
+    let w := Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)
+    let y := Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)
+    change ↑y.symm q = ↑(⟨_, mem_left_coset g (Subtype.mem _)⟩ : (g • α).1)
     refine' subtype.ext_iff.mp (y.symm_apply_eq.mpr _)
-    change q = g • w (w.symm (g⁻¹ • q : QuotientGroup.Quotient H))
-    rw [Equiv.apply_symm_apply, ←mul_smul, mul_inv_selfₓ, one_smul]
+    change q = g • w (w.symm (g⁻¹ • q : G ⧸ H))
+    rw [Equivₓ.apply_symm_apply, ←mul_smul, mul_inv_selfₓ, one_smul]
 
-variable [IsCommutative H] [Fintype (QuotientGroup.Quotient H)]
+variable [IsCommutative H] [Fintype (G ⧸ H)]
 
 variable (α β γ : left_transversals (H : Set G))
 
 /-- The difference of two left transversals -/
 @[toAdditive "The difference of two left transversals"]
 noncomputable def diff [hH : normal H] : H :=
-  let α' := (Equiv.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm 
-  let β' := (Equiv.ofBijective _ (mem_left_transversals_iff_bijective.mp β.2)).symm
-  ∏q : QuotientGroup.Quotient H,
+  let α' := (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm 
+  let β' := (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp β.2)).symm
+  ∏ q : G ⧸ H,
     ⟨α' q*β' q⁻¹, hH.mem_comm (Quotientₓ.exact' ((β'.symm_apply_apply q).trans (α'.symm_apply_apply q).symm))⟩
 
 @[toAdditive]
@@ -100,8 +99,8 @@ theorem smul_diff_smul [hH : normal H] (g : G) :
                   mul_assocₓ, inv_mul_cancel_leftₓ]) }
     refine'
       Eq.trans
-        (Finset.prod_bij' (fun q _ => «expr↑ » g⁻¹*q) (fun _ _ => Finset.mem_univ _) (fun q _ => Subtype.ext _)
-          (fun q _ => «expr↑ » g*q) (fun _ _ => Finset.mem_univ _) (fun q _ => mul_inv_cancel_left g q)
+        (Finset.prod_bij' (fun q _ => (↑g)⁻¹*q) (fun _ _ => Finset.mem_univ _) (fun q _ => Subtype.ext _)
+          (fun q _ => (↑g)*q) (fun _ _ => Finset.mem_univ _) (fun q _ => mul_inv_cancel_left g q)
           fun q _ => inv_mul_cancel_leftₓ g q)
         (ϕ.map_prod _ _).symm 
     change (_*_) = (g*_*_)*g⁻¹
@@ -114,7 +113,7 @@ theorem smul_diff [H.normal] (h : H) : diff (h • α) β = (h^H.index)*diff α 
     refine' Finset.prod_congr rfl fun q _ => _ 
     rw [Subtype.ext_iff, coe_mul, coe_mk, coe_mk, ←mul_assocₓ, mul_right_cancel_iffₓ]
     rw [show h • α = (h : G) • α from rfl, smul_symm_apply_eq_mul_symm_apply_inv_smul]
-    rw [mul_left_cancel_iffₓ, ←Subtype.ext_iff, Equiv.apply_eq_iff_eq, inv_smul_eq_iff]
+    rw [mul_left_cancel_iffₓ, ←Subtype.ext_iff, Equivₓ.apply_eq_iff_eq, inv_smul_eq_iff]
     exact self_eq_mul_left.mpr ((QuotientGroup.eq_one_iff _).mpr h.2)
 
 variable (H)
@@ -161,7 +160,7 @@ theorem exists_smul_eq [H.normal] (α β : H.quotient_diff) (hH : Nat.Coprime (F
               change diff ((_ : H) • _) _ = 1
               rw [smul_diff]
               change (powCoprime hH ((powCoprime hH).symm (diff α β⁻¹))*diff α β) = 1
-              rw [Equiv.apply_symm_apply, inv_mul_selfₓ]⟩)
+              rw [Equivₓ.apply_symm_apply, inv_mul_selfₓ]⟩)
 
 theorem smul_left_injective [H.normal] (α : H.quotient_diff) (hH : Nat.Coprime (Fintype.card H) H.index) :
   Function.Injective fun h : H => h • α :=
@@ -172,28 +171,23 @@ theorem smul_left_injective [H.normal] (α : H.quotient_diff) (hH : Nat.Coprime 
       rw [smul_diff, ←diff_inv, smul_diff, diff_self, mul_oneₓ, mul_inv_eq_one] at hα 
       exact (powCoprime hH).Injective hα
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_complement'_stabilizer_of_coprime
-[fintype G]
-[H.normal]
-{α : H.quotient_diff}
-(hH : nat.coprime (fintype.card H) H.index) : is_complement' H (mul_action.stabilizer G α) :=
-begin
-  classical,
-  let [ident ϕ] [":", expr «expr ≃ »(H, mul_action.orbit G α)] [":=", expr equiv.of_bijective (λ
-    h, ⟨«expr • »(h, α), h, rfl⟩) ⟨λ
-    h₁
-    h₂
-    hh, smul_left_injective α hH (subtype.ext_iff.mp hh), λ
-    β, exists_imp_exists (λ h hh, subtype.ext hh) (exists_smul_eq α β hH)⟩],
-  have [ident key] [] [":=", expr card_eq_card_quotient_mul_card_subgroup (mul_action.stabilizer G α)],
-  rw ["<-", expr fintype.card_congr (ϕ.trans (mul_action.orbit_equiv_quotient_stabilizer G α))] ["at", ident key],
-  apply [expr is_complement'_of_coprime key.symm],
-  rw ["[", expr card_eq_card_quotient_mul_card_subgroup H, ",", expr mul_comm, ",", expr mul_right_inj', "]"] ["at", ident key],
-  { rwa ["[", "<-", expr key, ",", "<-", expr index_eq_card, "]"] [] },
-  { rw ["[", "<-", expr pos_iff_ne_zero, ",", expr fintype.card_pos_iff, "]"] [],
-    apply_instance }
-end
+theorem is_complement'_stabilizer_of_coprime [Fintype G] [H.normal] {α : H.quotient_diff}
+  (hH : Nat.Coprime (Fintype.card H) H.index) : is_complement' H (MulAction.stabilizer G α) :=
+  by 
+    classical 
+    let ϕ : H ≃ MulAction.Orbit G α :=
+      Equivₓ.ofBijective (fun h => ⟨h • α, h, rfl⟩)
+        ⟨fun h₁ h₂ hh => smul_left_injective α hH (subtype.ext_iff.mp hh),
+          fun β => exists_imp_exists (fun h hh => Subtype.ext hh) (exists_smul_eq α β hH)⟩
+    have key := card_eq_card_quotient_mul_card_subgroup (MulAction.stabilizer G α)
+    rw [←Fintype.card_congr (ϕ.trans (MulAction.orbitEquivQuotientStabilizer G α))] at key 
+    apply is_complement'_of_coprime key.symm 
+    rw [card_eq_card_quotient_mul_card_subgroup H, mul_commₓ, mul_right_inj'] at key
+    ·
+      rwa [←key, ←index_eq_card]
+    ·
+      rw [←pos_iff_ne_zero, Fintype.card_pos_iff]
+      infer_instance
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem exists_right_complement'_of_coprime_aux [Fintype G] [H.normal]
@@ -247,137 +241,133 @@ private theorem step0 : N ≠ ⊥ :=
       rintro rfl)
     exact h3 ⊤ is_complement'_bot_top
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private
-theorem step1 (K : subgroup G) (hK : «expr = »(«expr ⊔ »(K, N), «expr⊤»())) : «expr = »(K, «expr⊤»()) :=
-begin
-  contrapose ["!"] [ident h3],
-  have [ident h4] [":", expr «expr = »((N.comap K.subtype).index, N.index)] [],
-  { rw ["[", "<-", expr N.relindex_top_right, ",", "<-", expr hK, "]"] [],
-    exact [expr relindex_eq_relindex_sup K N] },
-  have [ident h5] [":", expr «expr < »(fintype.card K, fintype.card G)] [],
-  { rw ["<-", expr K.index_mul_card] [],
-    exact [expr lt_mul_of_one_lt_left fintype.card_pos (one_lt_index_of_ne_top h3)] },
-  have [ident h6] [":", expr nat.coprime (fintype.card (N.comap K.subtype)) (N.comap K.subtype).index] [],
-  { rw [expr h4] [],
-    exact [expr h1.coprime_dvd_left (card_comap_dvd_of_injective N K.subtype subtype.coe_injective)] },
-  obtain ["⟨", ident H, ",", ident hH, "⟩", ":=", expr h2 K h5 h6],
-  replace [ident hH] [":", expr «expr = »(fintype.card (H.map K.subtype), N.index)] [":=", expr ((set.card_image_of_injective _ subtype.coe_injective).trans (nat.mul_left_injective fintype.card_pos (hH.symm.card_mul.trans (N.comap K.subtype).index_mul_card.symm))).trans h4],
-  have [ident h7] [":", expr «expr = »(«expr * »(fintype.card N, fintype.card (H.map K.subtype)), fintype.card G)] [],
-  { rw ["[", expr hH, ",", "<-", expr N.index_mul_card, ",", expr mul_comm, "]"] [] },
-  have [ident h8] [":", expr (fintype.card N).coprime (fintype.card (H.map K.subtype))] [],
-  { rwa [expr hH] [] },
-  exact [expr ⟨H.map K.subtype, is_complement'_of_coprime h7 h8⟩]
-end
+private theorem step1 (K : Subgroup G) (hK : K⊔N = ⊤) : K = ⊤ :=
+  by 
+    contrapose! h3 
+    have h4 : (N.comap K.subtype).index = N.index
+    ·
+      rw [←N.relindex_top_right, ←hK]
+      exact relindex_eq_relindex_sup K N 
+    have h5 : Fintype.card K < Fintype.card G
+    ·
+      rw [←K.index_mul_card]
+      exact lt_mul_of_one_lt_left Fintype.card_pos (one_lt_index_of_ne_top h3)
+    have h6 : Nat.Coprime (Fintype.card (N.comap K.subtype)) (N.comap K.subtype).index
+    ·
+      rw [h4]
+      exact h1.coprime_dvd_left (card_comap_dvd_of_injective N K.subtype Subtype.coe_injective)
+    obtain ⟨H, hH⟩ := h2 K h5 h6 
+    replace hH : Fintype.card (H.map K.subtype) = N.index :=
+      ((Set.card_image_of_injective _ Subtype.coe_injective).trans
+            (Nat.mul_left_injective Fintype.card_pos
+              (hH.symm.card_mul.trans (N.comap K.subtype).index_mul_card.symm))).trans
+        h4 
+    have h7 : (Fintype.card N*Fintype.card (H.map K.subtype)) = Fintype.card G
+    ·
+      rw [hH, ←N.index_mul_card, mul_commₓ]
+    have h8 : (Fintype.card N).Coprime (Fintype.card (H.map K.subtype))
+    ·
+      rwa [hH]
+    exact ⟨H.map K.subtype, is_complement'_of_coprime h7 h8⟩
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private
-theorem step2
-(K : subgroup G)
-[K.normal]
-(hK : «expr ≤ »(K, N)) : «expr ∨ »(«expr = »(K, «expr⊥»()), «expr = »(K, N)) :=
-begin
-  have [] [":", expr function.surjective (quotient_group.mk' K)] [":=", expr quotient.surjective_quotient_mk'],
-  have [ident h4] [] [":=", expr step1 h1 h2 h3],
-  contrapose ["!"] [ident h4],
-  have [ident h5] [":", expr «expr < »(fintype.card (quotient_group.quotient K), fintype.card G)] [],
-  { rw ["[", "<-", expr index_eq_card, ",", "<-", expr K.index_mul_card, "]"] [],
-    refine [expr lt_mul_of_one_lt_right (nat.pos_of_ne_zero index_ne_zero_of_fintype) (K.one_lt_card_iff_ne_bot.mpr h4.1)] },
-  have [ident h6] [":", expr nat.coprime (fintype.card (N.map (quotient_group.mk' K))) (N.map (quotient_group.mk' K)).index] [],
-  { have [ident index_map] [] [":=", expr N.index_map_eq this (by rwa [expr quotient_group.ker_mk] [])],
-    have [ident index_pos] [":", expr «expr < »(0, N.index)] [":=", expr nat.pos_of_ne_zero index_ne_zero_of_fintype],
-    rw [expr index_map] [],
-    refine [expr h1.coprime_dvd_left _],
-    rw ["[", "<-", expr nat.mul_dvd_mul_iff_left index_pos, ",", expr index_mul_card, ",", "<-", expr index_map, ",", expr index_mul_card, "]"] [],
-    exact [expr K.card_quotient_dvd_card] },
-  obtain ["⟨", ident H, ",", ident hH, "⟩", ":=", expr h2 (quotient_group.quotient K) h5 h6],
-  refine [expr ⟨H.comap (quotient_group.mk' K), _, _⟩],
-  { have [ident key] [":", expr «expr = »((N.map (quotient_group.mk' K)).comap (quotient_group.mk' K), N)] [],
-    { refine [expr comap_map_eq_self _],
-      rwa [expr quotient_group.ker_mk] [] },
-    rwa ["[", "<-", expr key, ",", expr comap_sup_eq, ",", expr hH.symm.sup_eq_top, ",", expr comap_top, "]"] [] },
-  { rw ["<-", expr comap_top (quotient_group.mk' K)] [],
-    intro [ident hH'],
-    rw ["[", expr comap_injective this hH', ",", expr is_complement'_top_right, ",", expr map_eq_bot_iff, ",", expr quotient_group.ker_mk, "]"] ["at", ident hH],
-    { exact [expr h4.2 (le_antisymm hK hH)] } }
-end
+private theorem step2 (K : Subgroup G) [K.normal] (hK : K ≤ N) : K = ⊥ ∨ K = N :=
+  by 
+    have  : Function.Surjective (QuotientGroup.mk' K) := Quotientₓ.surjective_quotient_mk' 
+    have h4 := step1 h1 h2 h3 
+    contrapose! h4 
+    have h5 : Fintype.card (G ⧸ K) < Fintype.card G
+    ·
+      rw [←index_eq_card, ←K.index_mul_card]
+      refine' lt_mul_of_one_lt_right (Nat.pos_of_ne_zeroₓ index_ne_zero_of_fintype) (K.one_lt_card_iff_ne_bot.mpr h4.1)
+    have h6 : Nat.Coprime (Fintype.card (N.map (QuotientGroup.mk' K))) (N.map (QuotientGroup.mk' K)).index
+    ·
+      have index_map :=
+        N.index_map_eq this
+          (by 
+            rwa [QuotientGroup.ker_mk])
+      have index_pos : 0 < N.index := Nat.pos_of_ne_zeroₓ index_ne_zero_of_fintype 
+      rw [index_map]
+      refine' h1.coprime_dvd_left _ 
+      rw [←Nat.mul_dvd_mul_iff_left index_pos, index_mul_card, ←index_map, index_mul_card]
+      exact K.card_quotient_dvd_card 
+    obtain ⟨H, hH⟩ := h2 (G ⧸ K) h5 h6 
+    refine' ⟨H.comap (QuotientGroup.mk' K), _, _⟩
+    ·
+      have key : (N.map (QuotientGroup.mk' K)).comap (QuotientGroup.mk' K) = N
+      ·
+        refine' comap_map_eq_self _ 
+        rwa [QuotientGroup.ker_mk]
+      rwa [←key, comap_sup_eq, hH.symm.sup_eq_top, comap_top]
+    ·
+      rw [←comap_top (QuotientGroup.mk' K)]
+      intro hH' 
+      rw [comap_injective this hH', is_complement'_top_right, map_eq_bot_iff, QuotientGroup.ker_mk] at hH
+      ·
+        exact h4.2 (le_antisymmₓ hK hH)
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private
-theorem step3
-(K : subgroup N)
-[(K.map N.subtype).normal] : «expr ∨ »(«expr = »(K, «expr⊥»()), «expr = »(K, «expr⊤»())) :=
-begin
-  have [ident key] [] [":=", expr step2 h1 h2 h3 (K.map N.subtype) K.map_subtype_le],
-  rw ["<-", expr map_bot N.subtype] ["at", ident key],
-  conv ["at", ident key] [] { congr,
-    skip,
-    to_rhs,
-    rw ["[", "<-", expr N.subtype_range, ",", expr N.subtype.range_eq_map, "]"] },
-  have [ident inj] [] [":=", expr map_injective (show function.injective N.subtype, from subtype.coe_injective)],
-  rwa ["[", expr inj.eq_iff, ",", expr inj.eq_iff, "]"] ["at", ident key]
-end
+private theorem step3 (K : Subgroup N) [(K.map N.subtype).Normal] : K = ⊥ ∨ K = ⊤ :=
+  by 
+    have key := step2 h1 h2 h3 (K.map N.subtype) K.map_subtype_le 
+    rw [←map_bot N.subtype] at key 
+    conv  at key => congr skip rhs rw [←N.subtype_range, N.subtype.range_eq_map]
+    have inj := map_injective (show Function.Injective N.subtype from Subtype.coe_injective)
+    rwa [inj.eq_iff, inj.eq_iff] at key
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step4 : (Fintype.card N).minFac.Prime :=
   Nat.min_fac_prime (N.one_lt_card_iff_ne_bot.mpr (step0 h1 h2 h3)).ne'
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private
-theorem step5 {P : sylow (fintype.card N).min_fac N} : «expr ≠ »(P.1, «expr⊥»()) :=
-begin
-  haveI [] [":", expr fact (fintype.card N).min_fac.prime] [":=", expr ⟨step4 h1 h2 h3⟩],
-  exact [expr P.ne_bot_of_dvd_card (fintype.card N).min_fac_dvd]
-end
+private theorem step5 {P : Sylow (Fintype.card N).minFac N} : P.1 ≠ ⊥ :=
+  by 
+    have  : Fact (Fintype.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
+    exact P.ne_bot_of_dvd_card (Fintype.card N).min_fac_dvd
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private
-theorem step6 : is_p_group (fintype.card N).min_fac N :=
-begin
-  haveI [] [":", expr fact (fintype.card N).min_fac.prime] [":=", expr ⟨step4 h1 h2 h3⟩],
-  refine [expr sylow.nonempty.elim (λ P, P.2.of_surjective P.1.subtype _)],
-  rw ["[", "<-", expr monoid_hom.range_top_iff_surjective, ",", expr subtype_range, "]"] [],
-  haveI [] [":", expr (P.1.map N.subtype).normal] [":=", expr normalizer_eq_top.mp (step1 h1 h2 h3 (P.1.map N.subtype).normalizer P.normalizer_sup_eq_top)],
-  exact [expr (step3 h1 h2 h3 P.1).resolve_left (step5 h1 h2 h3)]
-end
+private theorem step6 : IsPGroup (Fintype.card N).minFac N :=
+  by 
+    have  : Fact (Fintype.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
+    refine' sylow.nonempty.elim fun P => P.2.ofSurjective P.1.Subtype _ 
+    rw [←MonoidHom.range_top_iff_surjective, subtype_range]
+    have  : (P.1.map N.subtype).Normal :=
+      normalizer_eq_top.mp (step1 h1 h2 h3 (P.1.map N.subtype).normalizer P.normalizer_sup_eq_top)
+    exact (step3 h1 h2 h3 P.1).resolve_left (step5 h1 h2 h3)
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-theorem step7 : is_commutative N :=
-begin
-  haveI [] [] [":=", expr N.bot_or_nontrivial.resolve_left (step0 h1 h2 h3)],
-  haveI [] [":", expr fact (fintype.card N).min_fac.prime] [":=", expr ⟨step4 h1 h2 h3⟩],
-  exact [expr ⟨⟨λ
-     g h, eq_top_iff.mp ((step3 h1 h2 h3 N.center).resolve_left (step6 h1 h2 h3).bot_lt_center.ne') (mem_top h) g⟩⟩]
-end
+theorem step7 : IsCommutative N :=
+  by 
+    have  := N.bot_or_nontrivial.resolve_left (step0 h1 h2 h3)
+    have  : Fact (Fintype.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
+    exact
+      ⟨⟨fun g h =>
+            eq_top_iff.mp ((step3 h1 h2 h3 N.center).resolve_left (step6 h1 h2 h3).bot_lt_center.ne') (mem_top h) g⟩⟩
 
 end SchurZassenhausInduction
 
 variable {n : ℕ} {G : Type u} [Groupₓ G]
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private
-theorem exists_right_complement'_of_coprime_aux'
-[fintype G]
-(hG : «expr = »(fintype.card G, n))
-{N : subgroup G}
-[N.normal]
-(hN : nat.coprime (fintype.card N) N.index) : «expr∃ , »((H : subgroup G), is_complement' N H) :=
-begin
-  unfreezingI { revert [ident G] },
-  apply [expr nat.strong_induction_on n],
-  rintros [ident n, ident ih, ident G, "_", "_", ident rfl, ident N, "_", ident hN],
-  refine [expr not_forall_not.mp (λ h3, _)],
-  haveI [] [] [":=", expr by exactI [expr schur_zassenhaus_induction.step7 hN (λ G' _ _ hG', by { apply [expr ih _ hG'],
-       refl }) h3]],
-  exact [expr not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)]
-end
+private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Fintype.card G = n) {N : Subgroup G}
+  [N.normal] (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, is_complement' N H :=
+  by 
+    (
+      revert G)
+    apply Nat.strong_induction_onₓ n 
+    rintro n ih G _ _ rfl N _ hN 
+    refine' not_forall_not.mp fun h3 => _ 
+    have  :=
+      by 
+        exact
+          schur_zassenhaus_induction.step7 hN
+            (fun G' _ _ hG' =>
+              by 
+                apply ih _ hG' 
+                rfl)
+            h3 
+    exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
@@ -386,31 +376,30 @@ theorem exists_right_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup
   (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, is_complement' N H :=
   exists_right_complement'_of_coprime_aux' rfl hN
 
--- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
   subgroup `K` which is a (right) complement of `H`. -/
-theorem exists_right_complement'_of_coprime
-{N : subgroup G}
-[N.normal]
-(hN : nat.coprime (nat.card N) N.index) : «expr∃ , »((H : subgroup G), is_complement' N H) :=
-begin
-  by_cases [expr hN1, ":", expr «expr = »(nat.card N, 0)],
-  { rw ["[", expr hN1, ",", expr nat.coprime_zero_left, ",", expr index_eq_one, "]"] ["at", ident hN],
-    rw [expr hN] [],
-    exact [expr ⟨«expr⊥»(), is_complement'_top_bot⟩] },
-  by_cases [expr hN2, ":", expr «expr = »(N.index, 0)],
-  { rw ["[", expr hN2, ",", expr nat.coprime_zero_right, "]"] ["at", ident hN],
-    haveI [] [] [":=", expr (cardinal.to_nat_eq_one_iff_unique.mp hN).1],
-    rw [expr N.eq_bot_of_subsingleton] [],
-    exact [expr ⟨«expr⊤»(), is_complement'_bot_top⟩] },
-  have [ident hN3] [":", expr «expr ≠ »(nat.card G, 0)] [],
-  { rw ["<-", expr N.card_mul_index] [],
-    exact [expr mul_ne_zero hN1 hN2] },
-  haveI [] [] [":=", expr (cardinal.lt_omega_iff_fintype.mp (lt_of_not_ge (mt cardinal.to_nat_apply_of_omega_le hN3))).some],
-  rw [expr nat.card_eq_fintype_card] ["at", ident hN],
-  exact [expr exists_right_complement'_of_coprime_of_fintype hN]
-end
+theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.normal] (hN : Nat.Coprime (Nat.card N) N.index) :
+  ∃ H : Subgroup G, is_complement' N H :=
+  by 
+    byCases' hN1 : Nat.card N = 0
+    ·
+      rw [hN1, Nat.coprime_zero_leftₓ, index_eq_one] at hN 
+      rw [hN]
+      exact ⟨⊥, is_complement'_top_bot⟩
+    byCases' hN2 : N.index = 0
+    ·
+      rw [hN2, Nat.coprime_zero_rightₓ] at hN 
+      have  := (cardinal.to_nat_eq_one_iff_unique.mp hN).1
+      rw [N.eq_bot_of_subsingleton]
+      exact ⟨⊤, is_complement'_bot_top⟩
+    have hN3 : Nat.card G ≠ 0
+    ·
+      rw [←N.card_mul_index]
+      exact mul_ne_zero hN1 hN2 
+    have  := (cardinal.lt_omega_iff_fintype.mp (lt_of_not_geₓ (mt Cardinal.to_nat_apply_of_omega_le hN3))).some 
+    rw [Nat.card_eq_fintype_card] at hN 
+    exact exists_right_complement'_of_coprime_of_fintype hN
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a

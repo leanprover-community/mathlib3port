@@ -14,12 +14,12 @@ to be defined and is better suited for in-kernel computation.
 -/
 
 
--- error in Data.Tree: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- A binary tree with values stored in non-leaf nodes. -/
-@[derive #[expr has_reflect], derive #[expr decidable_eq]]
-inductive tree.{u} (α : Type u) : Type u
-| nil : tree
-| node : α → tree → tree → tree
+inductive Tree.{u} (α : Type u) : Type u
+  | nil : Tree
+  | node : α → Tree → Tree → Tree deriving [anonymous], [anonymous]
 
 namespace Tree
 

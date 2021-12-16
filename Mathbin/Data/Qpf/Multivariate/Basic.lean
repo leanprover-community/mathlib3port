@@ -117,12 +117,12 @@ instance (priority := 100) IsLawfulMvfunctor : IsLawfulMvfunctor F :=
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
   liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i j, p (f i j) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨y, hy⟩
       cases' h : reprₓ y with a f 
       use a, fun i j => (f i j).val 
-      split 
+      constructor
       ·
         rw [←hy, ←abs_repr y, h, ←abs_map]
         rfl 
@@ -137,16 +137,16 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
 theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : F α) :
   liftr r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨u, xeq, yeq⟩
       cases' h : reprₓ u with a f 
       use a, fun i j => (f i j).val.fst, fun i j => (f i j).val.snd 
-      split 
+      constructor
       ·
         rw [←xeq, ←abs_repr u, h, ←abs_map]
         rfl 
-      split 
+      constructor
       ·
         rw [←yeq, ←abs_repr u, h, ←abs_map]
         rfl 
@@ -155,7 +155,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
     use abs ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
     dsimp 
-    split 
+    constructor
     ·
       rw [xeq, ←abs_map]
       rfl 
@@ -166,75 +166,73 @@ open Set
 
 open Mvfunctor
 
--- error in Data.Qpf.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_supp
-{α : typevec n}
-(x : F α)
-(i)
-(u : α i) : «expr ↔ »(«expr ∈ »(u, supp x i), ∀ a f, «expr = »(abs ⟨a, f⟩, x) → «expr ∈ »(u, «expr '' »(f i, univ))) :=
-begin
-  rw ["[", expr supp, "]"] [],
-  dsimp [] [] [] [],
-  split,
-  { intros [ident h, ident a, ident f, ident haf],
-    have [] [":", expr liftp (λ i u, «expr ∈ »(u, «expr '' »(f i, univ))) x] [],
-    { rw [expr liftp_iff] [],
-      refine [expr ⟨a, f, haf.symm, _⟩],
-      intros [ident i, ident u],
-      exact [expr mem_image_of_mem _ (mem_univ _)] },
-    exact [expr h this] },
-  intros [ident h, ident p],
-  rw [expr liftp_iff] [],
-  rintros ["⟨", ident a, ",", ident f, ",", ident xeq, ",", ident h', "⟩"],
-  rcases [expr h a f xeq.symm, "with", "⟨", ident i, ",", "_", ",", ident hi, "⟩"],
-  rw ["<-", expr hi] [],
-  apply [expr h']
-end
-
-theorem supp_eq {α : Typevec n} {i} (x : F α) : supp x i = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ } :=
+theorem mem_supp {α : Typevec n} (x : F α) i (u : α i) : u ∈ supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ :=
   by 
-    ext <;> apply mem_supp
+    rw [supp]
+    dsimp 
+    constructor
+    ·
+      intro h a f haf 
+      have  : liftp (fun i u => u ∈ f i '' univ) x
+      ·
+        rw [liftp_iff]
+        refine' ⟨a, f, haf.symm, _⟩
+        intro i u 
+        exact mem_image_of_mem _ (mem_univ _)
+      exact h this 
+    intro h p 
+    rw [liftp_iff]
+    rintro ⟨a, f, xeq, h'⟩
+    rcases h a f xeq.symm with ⟨i, _, hi⟩
+    rw [←hi]
+    apply h'
 
--- error in Data.Qpf.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_good_supp_iff
-{α : typevec n}
-(x : F α) : «expr ↔ »(∀
- p, «expr ↔ »(liftp p x, ∀
-  (i)
-  (u «expr ∈ » supp x i), p i u), «expr∃ , »((a
-   f), «expr ∧ »(«expr = »(abs ⟨a, f⟩, x), ∀
-   i a' f', «expr = »(abs ⟨a', f'⟩, x) → «expr ⊆ »(«expr '' »(f i, univ), «expr '' »(f' i, univ))))) :=
-begin
-  split,
-  { intros [ident h],
-    have [] [":", expr liftp (supp x) x] [],
-    by { rw [expr h] [],
-      introv [],
-      exact [expr id] },
-    rw [expr liftp_iff] ["at", ident this],
-    rcases [expr this, "with", "⟨", ident a, ",", ident f, ",", ident xeq, ",", ident h', "⟩"],
-    refine [expr ⟨a, f, xeq.symm, _⟩],
-    intros [ident a', ident f', ident h''],
-    rintros [ident hu, ident u, "⟨", ident j, ",", ident h₂, ",", ident hfi, "⟩"],
-    have [ident hh] [":", expr «expr ∈ »(u, supp x a')] [],
-    by rw ["<-", expr hfi] []; apply [expr h'],
-    refine [expr (mem_supp x _ u).mp hh _ _ hu] },
-  rintros ["⟨", ident a, ",", ident f, ",", ident xeq, ",", ident h, "⟩", ident p],
-  rw [expr liftp_iff] [],
-  split,
-  { rintros ["⟨", ident a', ",", ident f', ",", ident xeq', ",", ident h', "⟩", ident i, ident u, ident usuppx],
-    rcases [expr (mem_supp x _ u).mp @usuppx a' f' xeq'.symm, "with", "⟨", ident i, ",", "_", ",", ident f'ieq, "⟩"],
-    rw ["<-", expr f'ieq] [],
-    apply [expr h'] },
-  intro [ident h'],
-  refine [expr ⟨a, f, xeq.symm, _⟩],
-  intros [ident j, ident y],
-  apply [expr h'],
-  rw [expr mem_supp] [],
-  intros [ident a', ident f', ident xeq'],
-  apply [expr h _ a' f' xeq'],
-  apply [expr mem_image_of_mem _ (mem_univ _)]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  supp_eq
+  { α : Typevec n } { i } ( x : F α ) : supp x i = { u | ∀ a f , abs ⟨ a , f ⟩ = x → u ∈ f i '' univ }
+  := by ext <;> apply mem_supp
+
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » supp x i)
+theorem has_good_supp_iff {α : Typevec n} (x : F α) :
+  (∀ p, liftp p x ↔ ∀ i u _ : u ∈ supp x i, p i u) ↔
+    ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ i a' f', abs ⟨a', f'⟩ = x → f i '' univ ⊆ f' i '' univ :=
+  by 
+    constructor
+    ·
+      intro h 
+      have  : liftp (supp x) x
+      ·
+        ·
+          rw [h]
+          introv 
+          exact id 
+      rw [liftp_iff] at this 
+      rcases this with ⟨a, f, xeq, h'⟩
+      refine' ⟨a, f, xeq.symm, _⟩
+      intro a' f' h'' 
+      rintro hu u ⟨j, h₂, hfi⟩
+      have hh : u ∈ supp x a'
+      ·
+        rw [←hfi] <;> apply h' 
+      refine' (mem_supp x _ u).mp hh _ _ hu 
+    rintro ⟨a, f, xeq, h⟩ p 
+    rw [liftp_iff]
+    constructor
+    ·
+      rintro ⟨a', f', xeq', h'⟩ i u usuppx 
+      rcases(mem_supp x _ u).mp (@usuppx) a' f' xeq'.symm with ⟨i, _, f'ieq⟩
+      rw [←f'ieq]
+      apply h' 
+    intro h' 
+    refine' ⟨a, f, xeq.symm, _⟩
+    intro j y 
+    apply h' 
+    rw [mem_supp]
+    intro a' f' xeq' 
+    apply h _ a' f' xeq' 
+    apply mem_image_of_mem _ (mem_univ _)
 
 variable (q)
 
@@ -260,7 +258,7 @@ theorem supp_eq_of_is_uniform (h : q.is_uniform) {α : Typevec n} (a : q.P.A) (f
     intro 
     ext u 
     rw [mem_supp]
-    split 
+    constructor
     ·
       intro h' 
       apply h' _ _ rfl 
@@ -268,12 +266,13 @@ theorem supp_eq_of_is_uniform (h : q.is_uniform) {α : Typevec n} (a : q.P.A) (f
     rw [←h _ _ _ _ e.symm]
     apply h'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » supp x i)
 theorem liftp_iff_of_is_uniform (h : q.is_uniform) {α : Typevec n} (x : F α) (p : ∀ i, α i → Prop) :
   liftp p x ↔ ∀ i u _ : u ∈ supp x i, p i u :=
   by 
     rw [liftp_iff, ←abs_repr x]
     cases' reprₓ x with a f 
-    split 
+    constructor
     ·
       rintro ⟨a', f', abseq, hf⟩ u 
       rw [supp_eq_of_is_uniform h, h _ _ _ _ abseq]
@@ -295,7 +294,7 @@ theorem supp_map (h : q.is_uniform) {α β : Typevec n} (g : α ⟹ β) (x : F �
 
 theorem supp_preservation_iff_uniform : q.supp_preservation ↔ q.is_uniform :=
   by 
-    split 
+    constructor
     ·
       intro h α a a' f f' h' i 
       rw [←Mvpfunctor.supp_eq, ←Mvpfunctor.supp_eq, ←h, h', h]
@@ -304,21 +303,38 @@ theorem supp_preservation_iff_uniform : q.supp_preservation ↔ q.is_uniform :=
       ext 
       rwa [supp_eq_of_is_uniform, Mvpfunctor.supp_eq]
 
--- error in Data.Qpf.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem supp_preservation_iff_liftp_preservation : «expr ↔ »(q.supp_preservation, q.liftp_preservation) :=
-begin
-  split; intro [ident h],
-  { rintros [ident α, ident p, "⟨", ident a, ",", ident f, "⟩"],
-    have [ident h'] [] [":=", expr h],
-    rw [expr supp_preservation_iff_uniform] ["at", ident h'],
-    dsimp ["only"] ["[", expr supp_preservation, ",", expr supp, "]"] [] ["at", ident h],
-    simp [] [] ["only"] ["[", expr liftp_iff_of_is_uniform, ",", expr supp_eq_of_is_uniform, ",", expr mvpfunctor.liftp_iff', ",", expr h', ",", expr image_univ, ",", expr mem_range, ",", expr exists_imp_distrib, "]"] [] [],
-    split; intros []; subst_vars; solve_by_elim [] [] [] [] },
-  { rintros [ident α, "⟨", ident a, ",", ident f, "⟩"],
-    simp [] [] ["only"] ["[", expr liftp_preservation, "]"] [] ["at", ident h],
-    ext [] [] [],
-    simp [] [] [] ["[", expr supp, ",", expr h, "]"] [] [] }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  supp_preservation_iff_liftp_preservation
+  : q.supp_preservation ↔ q.liftp_preservation
+  :=
+    by
+      constructor <;> intro h
+        ·
+          rintro α p ⟨ a , f ⟩
+            have h' := h
+            rw [ supp_preservation_iff_uniform ] at h'
+            dsimp only [ supp_preservation , supp ] at h
+            simp
+              only
+              [
+                liftp_iff_of_is_uniform
+                  ,
+                  supp_eq_of_is_uniform
+                  ,
+                  Mvpfunctor.liftp_iff'
+                  ,
+                  h'
+                  ,
+                  image_univ
+                  ,
+                  mem_range
+                  ,
+                  exists_imp_distrib
+                ]
+            constructor <;> intros <;> substVars <;> solveByElim
+        · rintro α ⟨ a , f ⟩ simp only [ liftp_preservation ] at h ext simp [ supp , h ]
 
 theorem liftp_preservation_iff_uniform : q.liftp_preservation ↔ q.is_uniform :=
   by 

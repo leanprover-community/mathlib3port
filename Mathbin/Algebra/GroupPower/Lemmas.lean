@@ -68,16 +68,10 @@ def invertibleOfPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : 0 < n) : Inver
     convert hx 
     exact tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ hn)
 
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_unit_of_pow_eq_one
-(x : M)
-(n : exprℕ())
-(hx : «expr = »(«expr ^ »(x, n), 1))
-(hn : «expr < »(0, n)) : is_unit x :=
-begin
-  haveI [] [] [":=", expr invertible_of_pow_eq_one x n hx hn],
-  exact [expr is_unit_of_invertible x]
-end
+theorem is_unit_of_pow_eq_one (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : 0 < n) : IsUnit x :=
+  by 
+    have  := invertibleOfPowEqOne x n hx hn 
+    exact is_unit_of_invertible x
 
 theorem smul_pow [MulAction M N] [IsScalarTower M N N] [SmulCommClass M N N] (k : M) (x : N) (p : ℕ) :
   (k • x) ^ p = k ^ p • x ^ p :=
@@ -300,30 +294,34 @@ theorem abs_zsmul {α : Type _} [LinearOrderedAddCommGroup α] (n : ℤ) (a : α
       rw [←abs_neg (n • a), ←neg_zsmul, ←abs_neg n, ←h, coe_nat_zsmul, coe_nat_abs, coe_nat_zsmul]
       exact abs_nsmul m _
 
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem abs_add_eq_add_abs_le
-{α : Type*}
-[linear_ordered_add_comm_group α]
-{a b : α}
-(hle : «expr ≤ »(a, b)) : «expr ↔ »(«expr = »(«expr| |»(«expr + »(a, b)), «expr + »(«expr| |»(a), «expr| |»(b))), «expr ∨ »(«expr ∧ »(«expr ≤ »(0, a), «expr ≤ »(0, b)), «expr ∧ »(«expr ≤ »(a, 0), «expr ≤ »(b, 0)))) :=
-begin
-  by_cases [expr a0, ":", expr «expr ≤ »(0, a)]; by_cases [expr b0, ":", expr «expr ≤ »(0, b)],
-  { simp [] [] [] ["[", expr a0, ",", expr b0, ",", expr abs_of_nonneg, ",", expr add_nonneg a0 b0, "]"] [] [] },
-  { exact [expr (lt_irrefl (0 : α) (a0.trans_lt (hle.trans_lt (not_le.mp b0)))).elim] },
-  any_goals { simp [] [] [] ["[", expr (not_le.mp a0).le, ",", expr (not_le.mp b0).le, ",", expr abs_of_nonpos, ",", expr add_nonpos, ",", expr add_comm, "]"] [] [] },
-  obtain [ident F, ":=", expr not_le.mp a0],
-  have [] [":", expr «expr ↔ »(«expr ↔ »(«expr = »(«expr| |»(«expr + »(a, b)), «expr + »(«expr- »(a), b)), «expr ≤ »(b, 0)), «expr ↔ »(«expr = »(«expr| |»(«expr + »(a, b)), «expr + »(«expr| |»(a), «expr| |»(b))), «expr ∨ »(«expr ∧ »(«expr ≤ »(0, a), «expr ≤ »(0, b)), «expr ∧ »(«expr ≤ »(a, 0), «expr ≤ »(b, 0)))))] [],
-  { simp [] [] [] ["[", expr a0, ",", expr b0, ",", expr abs_of_neg, ",", expr abs_of_nonneg, ",", expr F, ",", expr F.le, "]"] [] [] },
-  refine [expr this.mp ⟨λ
-    h, _, λ
-    h, by simp [] [] ["only"] ["[", expr le_antisymm h b0, ",", expr abs_of_neg F, ",", expr add_zero, "]"] [] []⟩],
-  by_cases [expr ba, ":", expr «expr ≤ »(«expr + »(a, b), 0)],
-  { refine [expr le_of_eq (eq_zero_of_neg_eq _)],
-    rwa ["[", expr abs_of_nonpos ba, ",", expr neg_add_rev, ",", expr add_comm, ",", expr add_right_inj, "]"] ["at", ident h] },
-  { refine [expr (lt_irrefl (0 : α) _).elim],
-    rw ["[", expr abs_of_pos (not_le.mp ba), ",", expr add_left_inj, "]"] ["at", ident h],
-    rwa [expr eq_zero_of_neg_eq h.symm] ["at", ident F] }
-end
+theorem abs_add_eq_add_abs_le {α : Type _} [LinearOrderedAddCommGroup α] {a b : α} (hle : a ≤ b) :
+  (|a+b| = |a|+|b|) ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
+  by 
+    byCases' a0 : 0 ≤ a <;> byCases' b0 : 0 ≤ b
+    ·
+      simp [a0, b0, abs_of_nonneg, add_nonneg a0 b0]
+    ·
+      exact (lt_irreflₓ (0 : α) (a0.trans_lt (hle.trans_lt (not_le.mp b0)))).elim 
+    any_goals 
+      simp [(not_le.mp a0).le, (not_le.mp b0).le, abs_of_nonpos, add_nonpos, add_commₓ]
+    obtain F := not_le.mp a0 
+    have  : ((|a+b| = (-a)+b) ↔ b ≤ 0) ↔ ((|a+b| = |a|+|b|) ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0)
+    ·
+      simp [a0, b0, abs_of_neg, abs_of_nonneg, F, F.le]
+    refine'
+      this.mp
+        ⟨fun h => _,
+          fun h =>
+            by 
+              simp only [le_antisymmₓ h b0, abs_of_neg F, add_zeroₓ]⟩
+    byCases' ba : (a+b) ≤ 0
+    ·
+      refine' le_of_eqₓ (eq_zero_of_neg_eq _)
+      rwa [abs_of_nonpos ba, neg_add_rev, add_commₓ, add_right_injₓ] at h
+    ·
+      refine' (lt_irreflₓ (0 : α) _).elim 
+      rw [abs_of_pos (not_le.mp ba), add_left_injₓ] at h 
+      rwa [eq_zero_of_neg_eq h.symm] at F
 
 theorem abs_add_eq_add_abs_iff {α : Type _} [LinearOrderedAddCommGroup α] (a b : α) :
   (|a+b| = |a|+|b|) ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
@@ -403,7 +401,7 @@ theorem mul_nsmul_assoc [Semiringₓ R] (a b : R) (n : ℕ) : (n • a*b) = (n �
     rw [nsmul_eq_mul, nsmul_eq_mul, mul_assocₓ]
 
 @[simp, normCast]
-theorem Nat.cast_pow [Semiringₓ R] (n m : ℕ) : («expr↑ » (n ^ m) : R) = «expr↑ » n ^ m :=
+theorem Nat.cast_pow [Semiringₓ R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m :=
   by 
     induction' m with m ih
     ·
@@ -472,7 +470,7 @@ theorem zsmul_int_one (n : ℤ) : n • 1 = n :=
     simp 
 
 @[simp, normCast]
-theorem Int.cast_pow [Ringₓ R] (n : ℤ) (m : ℕ) : («expr↑ » (n ^ m) : R) = «expr↑ » n ^ m :=
+theorem Int.cast_pow [Ringₓ R] (n : ℤ) (m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m :=
   by 
     induction' m with m ih
     ·
@@ -499,7 +497,7 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a*a) (Hsq' : 0 ≤ (1+a)*1+a) (H : 0 �
     simp 
 | n+2 =>
   have  : 0 ≤ ((n : R)*(a*a)*2+a)+a*a := add_nonneg (mul_nonneg n.cast_nonneg (mul_nonneg Hsq H)) Hsq 
-  calc (1+(«expr↑ » (n+2) : R)*a) ≤ (1+«expr↑ » (n+2)*a)+(n*(a*a)*2+a)+a*a := (le_add_iff_nonneg_right _).2 this 
+  calc (1+(↑n+2 : R)*a) ≤ (1+(↑n+2)*a)+(n*(a*a)*2+a)+a*a := (le_add_iff_nonneg_right _).2 this 
     _ = ((1+a)*1+a)*1+n*a :=
     by 
       simp [add_mulₓ, mul_addₓ, bit0, mul_assocₓ, (n.cast_commute (_ : R)).left_comm]
@@ -510,22 +508,6 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a*a) (Hsq' : 0 ≤ (1+a)*1+a) (H : 0 �
       simp only [pow_succₓ, mul_assocₓ]
     
 
-private theorem pow_lt_pow_of_lt_one_aux (h : 0 < a) (ha : a < 1) (i : ℕ) : ∀ k : ℕ, (a ^ (i+k)+1) < a ^ i
-| 0 =>
-  by 
-    rw [←one_mulₓ (a ^ i), add_zeroₓ, pow_succₓ]
-    exact mul_lt_mul ha (le_reflₓ _) (pow_pos h _) zero_le_one
-| k+1 =>
-  by 
-    rw [←one_mulₓ (a ^ i), pow_succₓ]
-    apply mul_lt_mul ha _ _ zero_le_one
-    ·
-      apply le_of_ltₓ 
-      apply pow_lt_pow_of_lt_one_aux
-    ·
-      show 0 < a ^ (i+k+1)+0
-      apply pow_pos h
-
 private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) : ∀ k : ℕ, (a ^ i+k) ≤ a ^ i
 | 0 =>
   by 
@@ -534,22 +516,6 @@ private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) 
   by 
     rw [←add_assocₓ, ←one_mulₓ (a ^ i), pow_succₓ]
     exact mul_le_mul ha (pow_le_pow_of_le_one_aux _) (pow_nonneg h _) zero_le_one
-
-theorem pow_lt_pow_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) : a ^ j < a ^ i :=
-  let ⟨k, hk⟩ := Nat.exists_eq_add_of_lt hij 
-  by 
-    rw [hk] <;> exact pow_lt_pow_of_lt_one_aux h ha _ _
-
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pow_lt_pow_iff_of_lt_one
-{n m : exprℕ()}
-(hpos : «expr < »(0, a))
-(h : «expr < »(a, 1)) : «expr ↔ »(«expr < »(«expr ^ »(a, m), «expr ^ »(a, n)), «expr < »(n, m)) :=
-begin
-  have [] [":", expr strict_mono (λ
-    n : order_dual exprℕ(), «expr ^ »(a, (id n : exprℕ())))] [":=", expr λ m n, pow_lt_pow_of_lt_one hpos h],
-  exact [expr this.lt_iff_lt]
-end
 
 theorem pow_le_pow_of_le_one (h : 0 ≤ a) (ha : a ≤ 1) {i j : ℕ} (hij : i ≤ j) : a ^ j ≤ a ^ i :=
   let ⟨k, hk⟩ := Nat.exists_eq_add_of_le hij 
@@ -568,18 +534,14 @@ section LinearOrderedSemiring
 
 variable [LinearOrderedSemiring R]
 
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sign_cases_of_C_mul_pow_nonneg
-{C r : R}
-(h : ∀
- n : exprℕ(), «expr ≤ »(0, «expr * »(C, «expr ^ »(r, n)))) : «expr ∨ »(«expr = »(C, 0), «expr ∧ »(«expr < »(0, C), «expr ≤ »(0, r))) :=
-begin
-  have [] [":", expr «expr ≤ »(0, C)] [],
-  by simpa [] [] ["only"] ["[", expr pow_zero, ",", expr mul_one, "]"] [] ["using", expr h 0],
-  refine [expr this.eq_or_lt.elim (λ h, or.inl h.symm) (λ hC, or.inr ⟨hC, _⟩)],
-  refine [expr nonneg_of_mul_nonneg_left _ hC],
-  simpa [] [] ["only"] ["[", expr pow_one, "]"] [] ["using", expr h 1]
-end
+theorem sign_cases_of_C_mul_pow_nonneg {C r : R} (h : ∀ n : ℕ, 0 ≤ C*r ^ n) : C = 0 ∨ 0 < C ∧ 0 ≤ r :=
+  by 
+    have  : 0 ≤ C
+    ·
+      simpa only [pow_zeroₓ, mul_oneₓ] using h 0
+    refine' this.eq_or_lt.elim (fun h => Or.inl h.symm) fun hC => Or.inr ⟨hC, _⟩
+    refine' nonneg_of_mul_nonneg_left _ hC 
+    simpa only [pow_oneₓ] using h 1
 
 end LinearOrderedSemiring
 
@@ -705,7 +667,7 @@ alias Int.units_sq ← Int.units_pow_two
 
 theorem units_pow_eq_pow_mod_two (u : Units ℤ) (n : ℕ) : u ^ n = u ^ (n % 2) :=
   by 
-    conv  => toLHS rw [←Nat.mod_add_divₓ n 2] <;> rw [pow_addₓ, pow_mulₓ, units_sq, one_pow, mul_oneₓ]
+    conv  => lhs rw [←Nat.mod_add_divₓ n 2] <;> rw [pow_addₓ, pow_mulₓ, units_sq, one_pow, mul_oneₓ]
 
 @[simp]
 theorem nat_abs_sq (x : ℤ) : (x.nat_abs ^ 2 : ℤ) = x ^ 2 :=
@@ -831,7 +793,7 @@ attribute [toAdditive zmultiples_hom_symm_apply] zpowers_hom_symm_apply
 theorem MonoidHom.apply_mnat [Monoidₓ M] (f : Multiplicative ℕ →* M) (n : Multiplicative ℕ) :
   f n = f (Multiplicative.ofAdd 1) ^ n.to_add :=
   by 
-    rw [←powers_hom_symm_apply, ←powers_hom_apply, Equiv.apply_symm_apply]
+    rw [←powers_hom_symm_apply, ←powers_hom_apply, Equivₓ.apply_symm_apply]
 
 @[ext]
 theorem MonoidHom.ext_mnat [Monoidₓ M] ⦃f g : Multiplicative ℕ →* M⦄
@@ -844,21 +806,21 @@ theorem MonoidHom.ext_mnat [Monoidₓ M] ⦃f g : Multiplicative ℕ →* M⦄
 theorem MonoidHom.apply_mint [Groupₓ M] (f : Multiplicative ℤ →* M) (n : Multiplicative ℤ) :
   f n = f (Multiplicative.ofAdd 1) ^ n.to_add :=
   by 
-    rw [←zpowers_hom_symm_apply, ←zpowers_hom_apply, Equiv.apply_symm_apply]
+    rw [←zpowers_hom_symm_apply, ←zpowers_hom_apply, Equivₓ.apply_symm_apply]
 
 /-! `monoid_hom.ext_mint` is defined in `data.int.cast` -/
 
 
 theorem AddMonoidHom.apply_nat [AddMonoidₓ M] (f : ℕ →+ M) (n : ℕ) : f n = n • f 1 :=
   by 
-    rw [←multiples_hom_symm_apply, ←multiples_hom_apply, Equiv.apply_symm_apply]
+    rw [←multiples_hom_symm_apply, ←multiples_hom_apply, Equivₓ.apply_symm_apply]
 
 /-! `add_monoid_hom.ext_nat` is defined in `data.nat.cast` -/
 
 
 theorem AddMonoidHom.apply_int [AddGroupₓ M] (f : ℤ →+ M) (n : ℤ) : f n = n • f 1 :=
   by 
-    rw [←zmultiples_hom_symm_apply, ←zmultiples_hom_apply, Equiv.apply_symm_apply]
+    rw [←zmultiples_hom_symm_apply, ←zmultiples_hom_apply, Equivₓ.apply_symm_apply]
 
 /-! `add_monoid_hom.ext_int` is defined in `data.int.cast` -/
 
@@ -968,8 +930,7 @@ end
 variable [Monoidₓ M] [Groupₓ G] [Ringₓ R]
 
 @[simp, toAdditive]
-theorem units_zpow_right {a : M} {x y : Units M} (h : SemiconjBy a x y) :
-  ∀ m : ℤ, SemiconjBy a («expr↑ » (x ^ m)) («expr↑ » (y ^ m))
+theorem units_zpow_right {a : M} {x y : Units M} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (↑(x ^ m)) (↑(y ^ m))
 | (n : ℕ) =>
   by 
     simp only [zpow_coe_nat, Units.coe_pow, h, pow_right]
@@ -1028,11 +989,11 @@ end
 variable [Monoidₓ M] [Groupₓ G] [Ringₓ R]
 
 @[simp, toAdditive]
-theorem units_zpow_right {a : M} {u : Units M} (h : Commute a u) (m : ℤ) : Commute a («expr↑ » (u ^ m)) :=
+theorem units_zpow_right {a : M} {u : Units M} (h : Commute a u) (m : ℤ) : Commute a (↑(u ^ m)) :=
   h.units_zpow_right m
 
 @[simp, toAdditive]
-theorem units_zpow_left {u : Units M} {a : M} (h : Commute («expr↑ » u) a) (m : ℤ) : Commute («expr↑ » (u ^ m)) a :=
+theorem units_zpow_left {u : Units M} {a : M} (h : Commute (↑u) a) (m : ℤ) : Commute (↑(u ^ m)) a :=
   (h.symm.units_zpow_right m).symm
 
 variable {a b : R}
@@ -1097,12 +1058,21 @@ theorem Int.to_add_pow (a : Multiplicative ℤ) (b : ℕ) : to_add (a ^ b) = to_
   by 
     induction b <;> simp [mul_addₓ, pow_succₓ, add_commₓ]
 
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp]
-theorem int.to_add_zpow
-(a : multiplicative exprℤ())
-(b : exprℤ()) : «expr = »(to_add «expr ^ »(a, b), «expr * »(to_add a, b)) :=
-int.induction_on b (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr zpow_add, ",", expr mul_add, "]"] [] [] { contextual := tt }) (by simp [] [] [] ["[", expr zpow_add, ",", expr mul_add, ",", expr sub_eq_add_neg, ",", "-", ident int.add_neg_one, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    Int.to_add_zpow
+    ( a : Multiplicative ℤ ) ( b : ℤ ) : to_add a ^ b = to_add a * b
+    :=
+      Int.induction_on
+        b
+          by simp
+          by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ zpow_add , mul_addₓ ]
+          by
+            simp
+              ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+              [ zpow_add , mul_addₓ , sub_eq_add_neg , - Int.add_neg_one ]
 
 @[simp]
 theorem Int.of_add_mul (a b : ℤ) : of_add (a*b) = of_add a ^ b :=
@@ -1114,10 +1084,10 @@ namespace Units
 
 variable [Monoidₓ M]
 
-theorem conj_pow (u : Units M) (x : M) (n : ℕ) : ((«expr↑ » u*x)*«expr↑ » (u⁻¹)) ^ n = (u*x ^ n)*«expr↑ » (u⁻¹) :=
+theorem conj_pow (u : Units M) (x : M) (n : ℕ) : (((↑u)*x)*↑u⁻¹) ^ n = (u*x ^ n)*↑u⁻¹ :=
   (divp_eq_iff_mul_eq.2 ((u.mk_semiconj_by x).pow_right n).Eq.symm).symm
 
-theorem conj_pow' (u : Units M) (x : M) (n : ℕ) : ((«expr↑ » (u⁻¹)*x)*u) ^ n = («expr↑ » (u⁻¹)*x ^ n)*u :=
+theorem conj_pow' (u : Units M) (x : M) (n : ℕ) : (((↑u⁻¹)*x)*u) ^ n = ((↑u⁻¹)*x ^ n)*u :=
   u⁻¹.conj_pow x n
 
 end Units
@@ -1130,7 +1100,7 @@ theorem op_pow [Monoidₓ M] (x : M) (n : ℕ) : op (x ^ n) = op x ^ n :=
   rfl
 
 @[simp]
-theorem unop_pow [Monoidₓ M] (x : «expr ᵐᵒᵖ» M) (n : ℕ) : unop (x ^ n) = unop x ^ n :=
+theorem unop_pow [Monoidₓ M] (x : Mᵐᵒᵖ) (n : ℕ) : unop (x ^ n) = unop x ^ n :=
   rfl
 
 /-- Moving to the opposite group or group_with_zero commutes with taking powers. -/
@@ -1139,7 +1109,7 @@ theorem op_zpow [DivInvMonoidₓ M] (x : M) (z : ℤ) : op (x ^ z) = op x ^ z :=
   rfl
 
 @[simp]
-theorem unop_zpow [DivInvMonoidₓ M] (x : «expr ᵐᵒᵖ» M) (z : ℤ) : unop (x ^ z) = unop x ^ z :=
+theorem unop_zpow [DivInvMonoidₓ M] (x : Mᵐᵒᵖ) (z : ℤ) : unop (x ^ z) = unop x ^ z :=
   rfl
 
 end MulOpposite

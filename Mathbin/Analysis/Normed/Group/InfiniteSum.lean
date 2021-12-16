@@ -29,9 +29,10 @@ open Finset Filter Metric
 
 variable {ι α E F : Type _} [SemiNormedGroup E] [SemiNormedGroup F]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : exprℝ()))
 theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
-  (CauchySeq fun s : Finset ι => ∑i in s, f i) ↔
-    ∀ ε _ : ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑i in t, f i∥ < ε :=
+  (CauchySeq fun s : Finset ι => ∑ i in s, f i) ↔
+    ∀ ε _ : ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑ i in t, f i∥ < ε :=
   by 
     rw [cauchy_seq_finset_iff_vanishing, nhds_basis_ball.forall_iff]
     ·
@@ -40,48 +41,44 @@ theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
       rintro s t hst ⟨s', hs'⟩
       exact ⟨s', fun t' ht' => hst$ hs' _ ht'⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » (0 : exprℝ()))
 theorem summable_iff_vanishing_norm [CompleteSpace E] {f : ι → E} :
-  Summable f ↔ ∀ ε _ : ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑i in t, f i∥ < ε :=
+  Summable f ↔ ∀ ε _ : ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑ i in t, f i∥ < ε :=
   by 
     rw [summable_iff_cauchy_seq_finset, cauchy_seq_finset_iff_vanishing_norm]
 
--- error in Analysis.Normed.Group.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cauchy_seq_finset_of_norm_bounded_eventually
-{f : ι → E}
-{g : ι → exprℝ()}
-(hg : summable g)
-(h : «expr∀ᶠ in , »((i), cofinite, «expr ≤ »(«expr∥ ∥»(f i), g i))) : cauchy_seq (λ s, «expr∑ in , »((i), s, f i)) :=
-begin
-  refine [expr cauchy_seq_finset_iff_vanishing_norm.2 (λ ε hε, _)],
-  rcases [expr summable_iff_vanishing_norm.1 hg ε hε, "with", "⟨", ident s, ",", ident hs, "⟩"],
-  refine [expr ⟨«expr ∪ »(s, h.to_finset), λ t ht, _⟩],
-  have [] [":", expr ∀ i «expr ∈ » t, «expr ≤ »(«expr∥ ∥»(f i), g i)] [],
-  { intros [ident i, ident hi],
-    simp [] [] ["only"] ["[", expr disjoint_left, ",", expr mem_union, ",", expr not_or_distrib, ",", expr h.mem_to_finset, ",", expr set.mem_compl_iff, ",", expr not_not, "]"] [] ["at", ident ht],
-    exact [expr (ht hi).2] },
-  calc
-    «expr ≤ »(«expr∥ ∥»(«expr∑ in , »((i), t, f i)), «expr∑ in , »((i), t, g i)) : norm_sum_le_of_le _ this
-    «expr ≤ »(..., «expr∥ ∥»(«expr∑ in , »((i), t, g i))) : le_abs_self _
-    «expr < »(..., ε) : hs _ (ht.mono_right le_sup_left)
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
+theorem cauchy_seq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → ℝ} (hg : Summable g)
+  (h : ∀ᶠ i in cofinite, ∥f i∥ ≤ g i) : CauchySeq fun s => ∑ i in s, f i :=
+  by 
+    refine' cauchy_seq_finset_iff_vanishing_norm.2 fun ε hε => _ 
+    rcases summable_iff_vanishing_norm.1 hg ε hε with ⟨s, hs⟩
+    refine' ⟨s ∪ h.to_finset, fun t ht => _⟩
+    have  : ∀ i _ : i ∈ t, ∥f i∥ ≤ g i
+    ·
+      intro i hi 
+      simp only [disjoint_left, mem_union, not_or_distrib, h.mem_to_finset, Set.mem_compl_iff, not_not] at ht 
+      exact (ht hi).2
+    calc ∥∑ i in t, f i∥ ≤ ∑ i in t, g i := norm_sum_le_of_le _ this _ ≤ ∥∑ i in t, g i∥ := le_abs_self _ _ < ε :=
+      hs _ (ht.mono_right le_sup_left)
 
 theorem cauchy_seq_finset_of_norm_bounded {f : ι → E} (g : ι → ℝ) (hg : Summable g) (h : ∀ i, ∥f i∥ ≤ g i) :
-  CauchySeq fun s : Finset ι => ∑i in s, f i :=
+  CauchySeq fun s : Finset ι => ∑ i in s, f i :=
   cauchy_seq_finset_of_norm_bounded_eventually hg$ eventually_of_forall h
 
 theorem cauchy_seq_finset_of_summable_norm {f : ι → E} (hf : Summable fun a => ∥f a∥) :
-  CauchySeq fun s : Finset ι => ∑a in s, f a :=
+  CauchySeq fun s : Finset ι => ∑ a in s, f a :=
   cauchy_seq_finset_of_norm_bounded _ hf fun i => le_reflₓ _
 
 /-- If a function `f` is summable in norm, and along some sequence of finsets exhausting the space
 its sum is converging to a limit `a`, then this holds along all finsets, i.e., `f` is summable
 with sum `a`. -/
 theorem has_sum_of_subseq_of_summable {f : ι → E} (hf : Summable fun a => ∥f a∥) {s : α → Finset ι} {p : Filter α}
-  [ne_bot p] (hs : tendsto s p at_top) {a : E} (ha : tendsto (fun b => ∑i in s b, f i) p (𝓝 a)) : HasSum f a :=
+  [ne_bot p] (hs : tendsto s p at_top) {a : E} (ha : tendsto (fun b => ∑ i in s b, f i) p (𝓝 a)) : HasSum f a :=
   tendsto_nhds_of_cauchy_seq_of_subseq (cauchy_seq_finset_of_summable_norm hf) hs ha
 
 theorem has_sum_iff_tendsto_nat_of_summable_norm {f : ℕ → E} {a : E} (hf : Summable fun i => ∥f i∥) :
-  HasSum f a ↔ tendsto (fun n : ℕ => ∑i in range n, f i) at_top (𝓝 a) :=
+  HasSum f a ↔ tendsto (fun n : ℕ => ∑ i in range n, f i) at_top (𝓝 a) :=
   ⟨fun h => h.tendsto_sum_nat, fun h => has_sum_of_subseq_of_summable hf tendsto_finset_range h⟩
 
 /-- The direct comparison test for series:  if the norm of `f` is bounded by a real function `g`
@@ -100,7 +97,7 @@ theorem HasSum.norm_le_of_bounded {f : ι → E} {g : ι → ℝ} {a : E} {b : �
 summable, and for all `i`, `∥f i∥ ≤ g i`, then `∥∑' i, f i∥ ≤ ∑' i, g i`. Note that we do not
 assume that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete space. -/
 theorem tsum_of_norm_bounded {f : ι → E} {g : ι → ℝ} {a : ℝ} (hg : HasSum g a) (h : ∀ i, ∥f i∥ ≤ g i) :
-  ∥∑'i : ι, f i∥ ≤ a :=
+  ∥∑' i : ι, f i∥ ≤ a :=
   by 
     byCases' hf : Summable f
     ·
@@ -111,7 +108,7 @@ theorem tsum_of_norm_bounded {f : ι → E} {g : ι → ℝ} {a : ℝ} (hg : Has
 
 /-- If `∑' i, ∥f i∥` is summable, then `∥∑' i, f i∥ ≤ (∑' i, ∥f i∥)`. Note that we do not assume
 that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete space. -/
-theorem norm_tsum_le_tsum_norm {f : ι → E} (hf : Summable fun i => ∥f i∥) : ∥∑'i, f i∥ ≤ ∑'i, ∥f i∥ :=
+theorem norm_tsum_le_tsum_norm {f : ι → E} (hf : Summable fun i => ∥f i∥) : ∥∑' i, f i∥ ≤ ∑' i, ∥f i∥ :=
   tsum_of_norm_bounded hf.has_sum$ fun i => le_rfl
 
 /-- Quantitative result associated to the direct comparison test for series: If `∑' i, g i` is
@@ -119,7 +116,7 @@ summable, and for all `i`, `∥f i∥₊ ≤ g i`, then `∥∑' i, f i∥₊ �
 do not assume that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete
 space. -/
 theorem tsum_of_nnnorm_bounded {f : ι → E} {g : ι →  ℝ≥0 } {a :  ℝ≥0 } (hg : HasSum g a) (h : ∀ i, ∥f i∥₊ ≤ g i) :
-  ∥∑'i : ι, f i∥₊ ≤ a :=
+  ∥∑' i : ι, f i∥₊ ≤ a :=
   by 
     simp only [←Nnreal.coe_le_coe, ←Nnreal.has_sum_coe, coe_nnnorm] at *
     exact tsum_of_norm_bounded hg h
@@ -127,7 +124,7 @@ theorem tsum_of_nnnorm_bounded {f : ι → E} {g : ι →  ℝ≥0 } {a :  ℝ�
 /-- If `∑' i, ∥f i∥₊` is summable, then `∥∑' i, f i∥₊ ≤ ∑' i, ∥f i∥₊`. Note that
 we do not assume that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete
 space. -/
-theorem nnnorm_tsum_le {f : ι → E} (hf : Summable fun i => ∥f i∥₊) : ∥∑'i, f i∥₊ ≤ ∑'i, ∥f i∥₊ :=
+theorem nnnorm_tsum_le {f : ι → E} (hf : Summable fun i => ∥f i∥₊) : ∥∑' i, f i∥₊ ≤ ∑' i, ∥f i∥₊ :=
   tsum_of_nnnorm_bounded hf.has_sum fun i => le_rfl
 
 variable [CompleteSpace E]
@@ -135,7 +132,7 @@ variable [CompleteSpace E]
 /-- Variant of the direct comparison test for series:  if the norm of `f` is eventually bounded by a
 real function `g` which is summable, then `f` is summable. -/
 theorem summable_of_norm_bounded_eventually {f : ι → E} (g : ι → ℝ) (hg : Summable g)
-  (h : ∀ᶠi in cofinite, ∥f i∥ ≤ g i) : Summable f :=
+  (h : ∀ᶠ i in cofinite, ∥f i∥ ≤ g i) : Summable f :=
   summable_iff_cauchy_seq_finset.2$ cauchy_seq_finset_of_norm_bounded_eventually hg h
 
 theorem summable_of_nnnorm_bounded {f : ι → E} (g : ι →  ℝ≥0 ) (hg : Summable g) (h : ∀ i, ∥f i∥₊ ≤ g i) : Summable f :=

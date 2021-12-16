@@ -156,6 +156,9 @@ instance [HasScalar R α] [HasScalar S α] [SmulCommClass R S α] : SmulCommClas
 instance [HasScalar R S] [HasScalar R α] [HasScalar S α] [IsScalarTower R S α] : IsScalarTower R S (Matrix m n α) :=
   Pi.is_scalar_tower
 
+instance [HasScalar R α] [HasScalar (Rᵐᵒᵖ) α] [IsCentralScalar R α] : IsCentralScalar R (Matrix m n α) :=
+  Pi.is_central_scalar
+
 instance [Monoidₓ R] [MulAction R α] : MulAction R (Matrix m n α) :=
   Pi.mulAction _
 
@@ -372,7 +375,7 @@ variable [Fintype m]
 
 /-- `dot_product v w` is the sum of the entrywise products `v i * w i` -/
 def dot_product [Mul α] [AddCommMonoidₓ α] (v w : m → α) : α :=
-  ∑i, v i*w i
+  ∑ i, v i*w i
 
 theorem dot_product_assoc [Fintype n] [NonUnitalSemiring α] (u : m → α) (w : n → α) (v : Matrix m n α) :
   dot_product (fun j => dot_product u fun i => v i j) w = dot_product u fun i => dot_product (v i) w :=
@@ -426,6 +429,7 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem diagonal_dot_product (i : m) : dot_product (diagonal v i) w = v i*w i :=
   have  : ∀ j _ : j ≠ i, (diagonal v i j*w j) = 0 :=
@@ -435,6 +439,7 @@ theorem diagonal_dot_product (i : m) : dot_product (diagonal v i) w = v i*w i :=
   by 
     convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal (i : m) : dot_product v (diagonal w i) = v i*w i :=
   have  : ∀ j _ : j ≠ i, (v j*diagonal w i j) = 0 :=
@@ -444,6 +449,7 @@ theorem dot_product_diagonal (i : m) : dot_product v (diagonal w i) = v i*w i :=
   by 
     convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal' (i : m) : (dot_product v fun j => diagonal w j i) = v i*w i :=
   have  : ∀ j _ : j ≠ i, (v j*diagonal w j i) = 0 :=
@@ -453,6 +459,7 @@ theorem dot_product_diagonal' (i : m) : (dot_product v fun j => diagonal w j i) 
   by 
     convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem single_dot_product (x : α) (i : m) : dot_product (Pi.single i x) v = x*v i :=
   have  : ∀ j _ : j ≠ i, (Pi.single i x j*v j) = 0 :=
@@ -462,6 +469,7 @@ theorem single_dot_product (x : α) (i : m) : dot_product (Pi.single i x) v = x*
   by 
     convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_single (x : α) (i : m) : dot_product v (Pi.single i x) = v i*x :=
   have  : ∀ j _ : j ≠ i, (v j*Pi.single i x j) = 0 :=
@@ -544,7 +552,7 @@ protected def mul [Fintype m] [Mul α] [AddCommMonoidₓ α] (M : Matrix l m α)
 localized [Matrix] infixl:75 " ⬝ " => Matrix.mul
 
 theorem mul_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α} {N : Matrix m n α} {i k} :
-  (M ⬝ N) i k = ∑j, M i j*N j k :=
+  (M ⬝ N) i k = ∑ j, M i j*N j k :=
   rfl
 
 instance [Fintype n] [Mul α] [AddCommMonoidₓ α] : Mul (Matrix n n α) :=
@@ -563,7 +571,7 @@ theorem diagonal_neg [DecidableEq n] [AddGroupₓ α] (d : n → α) : -diagonal
   ((diagonal_add_monoid_hom n α).map_neg d).symm
 
 theorem sum_apply [AddCommMonoidₓ α] (i : m) (j : n) (s : Finset β) (g : β → Matrix m n α) :
-  (∑c in s, g c) i j = ∑c in s, g c i j :=
+  (∑ c in s, g c) i j = ∑ c in s, g c i j :=
   (congr_funₓ (s.sum_apply i g) j).trans (s.sum_apply j _)
 
 section NonUnitalNonAssocSemiring
@@ -629,11 +637,11 @@ def add_monoid_hom_mul_right [Fintype m] (M : Matrix m n α) : Matrix l m α →
   { toFun := fun x => x ⬝ M, map_zero' := Matrix.zero_mul _, map_add' := fun _ _ => Matrix.add_mul _ _ _ }
 
 protected theorem sum_mul [Fintype m] (s : Finset β) (f : β → Matrix l m α) (M : Matrix m n α) :
-  (∑a in s, f a) ⬝ M = ∑a in s, f a ⬝ M :=
+  (∑ a in s, f a) ⬝ M = ∑ a in s, f a ⬝ M :=
   (add_monoid_hom_mul_right M : Matrix l m α →+ _).map_sum f s
 
 protected theorem mul_sum [Fintype m] (s : Finset β) (f : β → Matrix m n α) (M : Matrix l m α) :
-  (M ⬝ ∑a in s, f a) = ∑a in s, M ⬝ f a :=
+  (M ⬝ ∑ a in s, f a) = ∑ a in s, M ⬝ f a :=
   (add_monoid_hom_mul_left M : Matrix m n α →+ _).map_sum f s
 
 end NonUnitalNonAssocSemiring
@@ -795,7 +803,7 @@ theorem scalar_apply_ne (a : α) (i j : n) (h : i ≠ j) : scalar n a i j = 0 :=
 
 theorem scalar_inj [Nonempty n] {r s : α} : scalar n r = scalar n s ↔ r = s :=
   by 
-    split 
+    constructor
     ·
       intro h 
       inhabit n 
@@ -887,7 +895,7 @@ end Matrix
 -/
 
 
-namespace Equiv
+namespace Equivₓ
 
 /-- The `equiv` between spaces of matrices induced by an `equiv` between their
 coefficients. This is `matrix.map` as an `equiv`. -/
@@ -898,7 +906,7 @@ def map_matrix (f : α ≃ β) : Matrix m n α ≃ Matrix m n β :=
     right_inv := fun M => Matrix.ext$ fun _ _ => f.apply_symm_apply _ }
 
 @[simp]
-theorem map_matrix_refl : (Equiv.refl α).mapMatrix = Equiv.refl (Matrix m n α) :=
+theorem map_matrix_refl : (Equivₓ.refl α).mapMatrix = Equivₓ.refl (Matrix m n α) :=
   rfl
 
 @[simp]
@@ -910,7 +918,7 @@ theorem map_matrix_trans (f : α ≃ β) (g : β ≃ γ) :
   f.map_matrix.trans g.map_matrix = ((f.trans g).mapMatrix : Matrix m n α ≃ _) :=
   rfl
 
-end Equiv
+end Equivₓ
 
 namespace AddMonoidHom
 
@@ -1413,19 +1421,19 @@ theorem transpose_multiset_sum [AddCommMonoidₓ α] (s : Multiset (Matrix m n �
   (transpose_add_equiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_multiset_sum s
 
 theorem transpose_sum [AddCommMonoidₓ α] {ι : Type _} (s : Finset ι) (M : ι → Matrix m n α) :
-  (∑i in s, M i)ᵀ = ∑i in s, (M i)ᵀ :=
+  (∑ i in s, M i)ᵀ = ∑ i in s, (M i)ᵀ :=
   (transpose_add_equiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_sum _ s
 
 /-- `matrix.transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def transpose_ring_equiv [CommSemiringₓ α] [Fintype m] : Matrix m m α ≃+* «expr ᵐᵒᵖ» (Matrix m m α) :=
+def transpose_ring_equiv [CommSemiringₓ α] [Fintype m] : Matrix m m α ≃+* Matrix m m αᵐᵒᵖ :=
   { transpose_add_equiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op (M)ᵀ,
     invFun := fun M => (M.unop)ᵀ,
     map_mul' := fun M N => (congr_argₓ MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 theorem transpose_list_prod [CommSemiringₓ α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
   (l.prod)ᵀ = (l.map transpose).reverse.Prod :=
-  (transpose_ring_equiv : Matrix m m α ≃+* «expr ᵐᵒᵖ» (Matrix m m α)).unop_map_list_prod l
+  (transpose_ring_equiv : Matrix m m α ≃+* Matrix m m αᵐᵒᵖ).unop_map_list_prod l
 
 end Transpose
 
@@ -1503,19 +1511,19 @@ theorem conj_transpose_multiset_sum [AddCommMonoidₓ α] [StarAddMonoid α] (s 
   (conj_transpose_add_equiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_multiset_sum s
 
 theorem conj_transpose_sum [AddCommMonoidₓ α] [StarAddMonoid α] {ι : Type _} (s : Finset ι) (M : ι → Matrix m n α) :
-  (∑i in s, M i)ᴴ = ∑i in s, (M i)ᴴ :=
+  (∑ i in s, M i)ᴴ = ∑ i in s, (M i)ᴴ :=
   (conj_transpose_add_equiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_sum _ s
 
 /-- `matrix.conj_transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def conj_transpose_ring_equiv [CommSemiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* «expr ᵐᵒᵖ» (Matrix m m α) :=
+def conj_transpose_ring_equiv [CommSemiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* Matrix m m αᵐᵒᵖ :=
   { conj_transpose_add_equiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op (M)ᴴ,
     invFun := fun M => (M.unop)ᴴ,
     map_mul' := fun M N => (congr_argₓ MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 theorem conj_transpose_list_prod [CommSemiringₓ α] [StarRing α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
   (l.prod)ᴴ = (l.map conj_transpose).reverse.Prod :=
-  (conj_transpose_ring_equiv : Matrix m m α ≃+* «expr ᵐᵒᵖ» (Matrix m m α)).unop_map_list_prod l
+  (conj_transpose_ring_equiv : Matrix m m α ≃+* Matrix m m αᵐᵒᵖ).unop_map_list_prod l
 
 end ConjTranspose
 
@@ -1650,43 +1658,30 @@ theorem minor_one_equiv [HasZero α] [HasOne α] [DecidableEq m] [DecidableEq l]
   (1 : Matrix m m α).minor e e = 1 :=
   minor_one e e.injective
 
+@[simp]
 theorem minor_mul_equiv [Fintype n] [Fintype o] [Semiringₓ α] {p q : Type _} (M : Matrix m n α) (N : Matrix n p α)
-  (e₁ : l → m) (e₂ : o ≃ n) (e₃ : q → p) : (M ⬝ N).minor e₁ e₃ = M.minor e₁ e₂ ⬝ N.minor e₂ e₃ :=
-  minor_mul M N e₁ e₂ e₃ e₂.bijective
+  (e₁ : l → m) (e₂ : o ≃ n) (e₃ : q → p) : M.minor e₁ e₂ ⬝ N.minor e₂ e₃ = (M ⬝ N).minor e₁ e₃ :=
+  (minor_mul M N e₁ e₂ e₃ e₂.bijective).symm
 
--- error in Data.Matrix.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_minor_one
-[fintype n]
-[fintype o]
-[semiring α]
-[decidable_eq o]
-(e₁ : «expr ≃ »(n, o))
-(e₂ : l → o)
-(M : matrix m n α) : «expr = »(«expr ⬝ »(M, (1 : matrix o o α).minor e₁ e₂), minor M id «expr ∘ »(e₁.symm, e₂)) :=
-begin
-  let [ident A] [] [":=", expr M.minor id e₁.symm],
-  have [] [":", expr «expr = »(M, A.minor id e₁)] [],
-  { simp [] [] ["only"] ["[", expr minor_minor, ",", expr function.comp.right_id, ",", expr minor_id_id, ",", expr equiv.symm_comp_self, "]"] [] [] },
-  rw ["[", expr this, ",", "<-", expr minor_mul_equiv, "]"] [],
-  simp [] [] ["only"] ["[", expr matrix.mul_one, ",", expr minor_minor, ",", expr function.comp.right_id, ",", expr minor_id_id, ",", expr equiv.symm_comp_self, "]"] [] []
-end
+theorem mul_minor_one [Fintype n] [Fintype o] [Semiringₓ α] [DecidableEq o] (e₁ : n ≃ o) (e₂ : l → o)
+  (M : Matrix m n α) : M ⬝ (1 : Matrix o o α).minor e₁ e₂ = minor M id (e₁.symm ∘ e₂) :=
+  by 
+    let A := M.minor id e₁.symm 
+    have  : M = A.minor id e₁
+    ·
+      simp only [minor_minor, Function.comp.right_id, minor_id_id, Equivₓ.symm_comp_self]
+    rw [this, minor_mul_equiv]
+    simp only [Matrix.mul_one, minor_minor, Function.comp.right_id, minor_id_id, Equivₓ.symm_comp_self]
 
--- error in Data.Matrix.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem one_minor_mul
-[fintype m]
-[fintype o]
-[semiring α]
-[decidable_eq o]
-(e₁ : l → o)
-(e₂ : «expr ≃ »(m, o))
-(M : matrix m n α) : «expr = »(((1 : matrix o o α).minor e₁ e₂).mul M, minor M «expr ∘ »(e₂.symm, e₁) id) :=
-begin
-  let [ident A] [] [":=", expr M.minor e₂.symm id],
-  have [] [":", expr «expr = »(M, A.minor e₂ id)] [],
-  { simp [] [] ["only"] ["[", expr minor_minor, ",", expr function.comp.right_id, ",", expr minor_id_id, ",", expr equiv.symm_comp_self, "]"] [] [] },
-  rw ["[", expr this, ",", "<-", expr minor_mul_equiv, "]"] [],
-  simp [] [] ["only"] ["[", expr matrix.one_mul, ",", expr minor_minor, ",", expr function.comp.right_id, ",", expr minor_id_id, ",", expr equiv.symm_comp_self, "]"] [] []
-end
+theorem one_minor_mul [Fintype m] [Fintype o] [Semiringₓ α] [DecidableEq o] (e₁ : l → o) (e₂ : m ≃ o)
+  (M : Matrix m n α) : ((1 : Matrix o o α).minor e₁ e₂).mul M = minor M (e₂.symm ∘ e₁) id :=
+  by 
+    let A := M.minor e₂.symm id 
+    have  : M = A.minor e₂ id
+    ·
+      simp only [minor_minor, Function.comp.right_id, minor_id_id, Equivₓ.symm_comp_self]
+    rw [this, minor_mul_equiv]
+    simp only [Matrix.one_mul, minor_minor, Function.comp.right_id, minor_id_id, Equivₓ.symm_comp_self]
 
 /-- The natural map that reindexes a matrix's rows and columns with equivalent types is an
 equivalence. -/
@@ -1706,7 +1701,7 @@ theorem reindex_apply (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) : re
   rfl
 
 @[simp]
-theorem reindex_refl_refl (A : Matrix m n α) : reindex (Equiv.refl _) (Equiv.refl _) A = A :=
+theorem reindex_refl_refl (A : Matrix m n α) : reindex (Equivₓ.refl _) (Equivₓ.refl _) A = A :=
   A.minor_id_id
 
 @[simp]
@@ -1716,7 +1711,7 @@ theorem reindex_symm (eₘ : m ≃ l) (eₙ : n ≃ o) : (reindex eₘ eₙ).sym
 @[simp]
 theorem reindex_trans {l₂ o₂ : Type _} (eₘ : m ≃ l) (eₙ : n ≃ o) (eₘ₂ : l ≃ l₂) (eₙ₂ : o ≃ o₂) :
   (reindex eₘ eₙ).trans (reindex eₘ₂ eₙ₂) = (reindex (eₘ.trans eₘ₂) (eₙ.trans eₙ₂) : Matrix m n α ≃ _) :=
-  Equiv.ext$ fun A => (A.minor_minor eₘ.symm eₙ.symm eₘ₂.symm eₙ₂.symm : _)
+  Equivₓ.ext$ fun A => (A.minor_minor eₘ.symm eₙ.symm eₘ₂.symm eₙ₂.symm : _)
 
 theorem transpose_reindex (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) : (reindex eₘ eₙ M)ᵀ = reindex eₙ eₘ (M)ᵀ :=
   rfl
@@ -1724,6 +1719,12 @@ theorem transpose_reindex (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) 
 theorem conj_transpose_reindex [HasStar α] (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) :
   (reindex eₘ eₙ M)ᴴ = reindex eₙ eₘ (M)ᴴ :=
   rfl
+
+@[simp]
+theorem minor_mul_transpose_minor [Fintype n] [Fintype m] [Semiringₓ α] (e : n ≃ m) (M : Matrix n m α) :
+  M.minor id e ⬝ (M)ᵀ.minor e id = M ⬝ (M)ᵀ :=
+  by 
+    rw [minor_mul_equiv, minor_id_id]
 
 /-- The left `n × l` part of a `n × (l+r)` matrix. -/
 @[reducible]

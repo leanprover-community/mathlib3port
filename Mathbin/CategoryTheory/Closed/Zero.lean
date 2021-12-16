@@ -18,7 +18,7 @@ object and one morphism.
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -33,7 +33,7 @@ If a cartesian closed category has an initial object which is isomorphic to the 
 then each homset has exactly one element.
 -/
 def unique_homset_of_initial_iso_terminal [has_initial C] (i : ⊥_ C ≅ ⊤_ C) (X Y : C) : Unique (X ⟶ Y) :=
-  Equiv.unique$
+  Equivₓ.unique$
     calc (X ⟶ Y) ≃ (X ⨯ ⊤_ C ⟶ Y) := iso.hom_congr (prod.right_unitor _).symm (iso.refl _)
       _ ≃ (X ⨯ ⊥_ C ⟶ Y) := iso.hom_congr (prod.map_iso (iso.refl _) i.symm) (iso.refl _)
       _ ≃ (⊥_ C ⟶ Y ^^ X) := (exp.adjunction _).homEquiv _ _
@@ -41,14 +41,12 @@ def unique_homset_of_initial_iso_terminal [has_initial C] (i : ⊥_ C ≅ ⊤_ C
 
 open_locale ZeroObject
 
--- error in CategoryTheory.Closed.Zero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a cartesian closed category has a zero object, each homset has exactly one element. -/
-def unique_homset_of_zero [has_zero_object C] (X Y : C) : unique «expr ⟶ »(X, Y) :=
-begin
-  haveI [] [":", expr has_initial C] [":=", expr has_zero_object.has_initial],
-  apply [expr unique_homset_of_initial_iso_terminal _ X Y],
-  refine [expr ⟨default _, «expr ≫ »(default «expr ⟶ »(«expr⊤_ »(C), 0), default _), _, _⟩]; simp [] [] [] [] [] []
-end
+def unique_homset_of_zero [has_zero_object C] (X Y : C) : Unique (X ⟶ Y) :=
+  by 
+    have  : has_initial C := has_zero_object.has_initial 
+    apply unique_homset_of_initial_iso_terminal _ X Y 
+    refine' ⟨default _, default (⊤_ C ⟶ 0) ≫ default _, _, _⟩ <;> simp 
 
 attribute [local instance] unique_homset_of_zero
 

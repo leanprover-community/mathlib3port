@@ -81,7 +81,7 @@ def of_equiv_functor (m : Type u₁ → Type u₂) [EquivFunctor m] : core (Type
       fun α β γ f g =>
         by 
           ext 
-          simp only [EquivFunctor.map_equiv_apply, Equiv.to_iso_hom, Function.comp_app, core.comp_hom, types_comp]
+          simp only [EquivFunctor.map_equiv_apply, Equivₓ.to_iso_hom, Function.comp_app, core.comp_hom, types_comp]
           erw [iso.to_equiv_comp, EquivFunctor.map_trans] }
 
 end CategoryTheory

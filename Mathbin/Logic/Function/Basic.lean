@@ -45,28 +45,22 @@ theorem comp_const {f : β → γ} {b : β} : f ∘ const α b = const α (f b) 
 theorem id_def : @id α = fun x => x :=
   rfl
 
--- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem hfunext
-{α α' : Sort u}
-{β : α → Sort v}
-{β' : α' → Sort v}
-{f : ∀ a, β a}
-{f' : ∀ a, β' a}
-(hα : «expr = »(α, α'))
-(h : ∀ a a', «expr == »(a, a') → «expr == »(f a, f' a')) : «expr == »(f, f') :=
-begin
-  subst [expr hα],
-  have [] [":", expr ∀ a, «expr == »(f a, f' a)] [],
-  { intro [ident a],
-    exact [expr h a a (heq.refl a)] },
-  have [] [":", expr «expr = »(β, β')] [],
-  { funext [ident a],
-    exact [expr type_eq_of_heq (this a)] },
-  subst [expr this],
-  apply [expr heq_of_eq],
-  funext [ident a],
-  exact [expr eq_of_heq (this a)]
-end
+theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f : ∀ a, β a} {f' : ∀ a, β' a} (hα : α = α')
+  (h : ∀ a a', HEq a a' → HEq (f a) (f' a')) : HEq f f' :=
+  by 
+    subst hα 
+    have  : ∀ a, HEq (f a) (f' a)
+    ·
+      intro a 
+      exact h a a (HEq.refl a)
+    have  : β = β'
+    ·
+      funext a 
+      exact type_eq_of_heqₓ (this a)
+    subst this 
+    apply heq_of_eq 
+    funext a 
+    exact eq_of_heq (this a)
 
 theorem funext_iff {β : α → Sort _} {f₁ f₂ : ∀ x : α, β x} : f₁ = f₂ ↔ ∀ a, f₁ a = f₂ a :=
   Iff.intro (fun h a => h ▸ rfl) funext
@@ -146,7 +140,7 @@ theorem surjective.of_comp {g : γ → α} (S : surjective (f ∘ g)) : surjecti
 theorem surjective.of_comp_iff (f : α → β) {g : γ → α} (hg : surjective g) : surjective (f ∘ g) ↔ surjective f :=
   ⟨surjective.of_comp, fun h => h.comp hg⟩
 
-theorem surjective.of_comp_iff' {f : α → β} (hf : bijective f) (g : γ → α) : surjective (f ∘ g) ↔ surjective g :=
+theorem surjective.of_comp_iff' (hf : bijective f) (g : γ → α) : surjective (f ∘ g) ↔ surjective g :=
   ⟨fun h x =>
       let ⟨x', hx'⟩ := h (f x)
       ⟨x', hf.injective hx'⟩,
@@ -156,45 +150,63 @@ instance decidable_eq_pfun (p : Prop) [Decidable p] (α : p → Type _) [∀ hp,
   DecidableEq (∀ hp, α hp)
 | f, g => decidableOfIff (∀ hp, f hp = g hp) funext_iff.symm
 
-protected theorem surjective.forall {f : α → β} (hf : surjective f) {p : β → Prop} : (∀ y, p y) ↔ ∀ x, p (f x) :=
+protected theorem surjective.forall (hf : surjective f) {p : β → Prop} : (∀ y, p y) ↔ ∀ x, p (f x) :=
   ⟨fun h x => h (f x),
     fun h y =>
       let ⟨x, hx⟩ := hf y 
       hx ▸ h x⟩
 
-protected theorem surjective.forall₂ {f : α → β} (hf : surjective f) {p : β → β → Prop} :
+protected theorem surjective.forall₂ (hf : surjective f) {p : β → β → Prop} :
   (∀ y₁ y₂, p y₁ y₂) ↔ ∀ x₁ x₂, p (f x₁) (f x₂) :=
   hf.forall.trans$ forall_congrₓ$ fun x => hf.forall
 
-protected theorem surjective.forall₃ {f : α → β} (hf : surjective f) {p : β → β → β → Prop} :
+protected theorem surjective.forall₃ (hf : surjective f) {p : β → β → β → Prop} :
   (∀ y₁ y₂ y₃, p y₁ y₂ y₃) ↔ ∀ x₁ x₂ x₃, p (f x₁) (f x₂) (f x₃) :=
   hf.forall.trans$ forall_congrₓ$ fun x => hf.forall₂
 
-protected theorem surjective.exists {f : α → β} (hf : surjective f) {p : β → Prop} : (∃ y, p y) ↔ ∃ x, p (f x) :=
+protected theorem surjective.exists (hf : surjective f) {p : β → Prop} : (∃ y, p y) ↔ ∃ x, p (f x) :=
   ⟨fun ⟨y, hy⟩ =>
       let ⟨x, hx⟩ := hf y
       ⟨x, hx.symm ▸ hy⟩,
     fun ⟨x, hx⟩ => ⟨f x, hx⟩⟩
 
-protected theorem surjective.exists₂ {f : α → β} (hf : surjective f) {p : β → β → Prop} :
+protected theorem surjective.exists₂ (hf : surjective f) {p : β → β → Prop} :
   (∃ y₁ y₂, p y₁ y₂) ↔ ∃ x₁ x₂, p (f x₁) (f x₂) :=
   hf.exists.trans$ exists_congr$ fun x => hf.exists
 
-protected theorem surjective.exists₃ {f : α → β} (hf : surjective f) {p : β → β → β → Prop} :
+protected theorem surjective.exists₃ (hf : surjective f) {p : β → β → β → Prop} :
   (∃ y₁ y₂ y₃, p y₁ y₂ y₃) ↔ ∃ x₁ x₂ x₃, p (f x₁) (f x₂) (f x₃) :=
   hf.exists.trans$ exists_congr$ fun x => hf.exists₂
 
-theorem bijective_iff_exists_unique (f : α → β) : bijective f ↔ ∀ b : β, ∃!a : α, f a = b :=
+theorem surjective.injective_comp_right (hf : surjective f) : injective fun g : β → γ => g ∘ f :=
+  fun g₁ g₂ h => funext$ hf.forall.2$ congr_funₓ h
+
+protected theorem surjective.right_cancellable (hf : surjective f) {g₁ g₂ : β → γ} : g₁ ∘ f = g₂ ∘ f ↔ g₁ = g₂ :=
+  hf.injective_comp_right.eq_iff
+
+theorem surjective_of_right_cancellable_Prop (h : ∀ g₁ g₂ : β → Prop, g₁ ∘ f = g₂ ∘ f → g₁ = g₂) : surjective f :=
+  by 
+    specialize h (fun _ => True) (fun y => ∃ x, f x = y) (funext$ fun x => _)
+    ·
+      simp only [· ∘ ·, exists_apply_eq_applyₓ]
+    ·
+      intro y 
+      have  : True = ∃ x, f x = y 
+      exact congr_funₓ h y 
+      rw [←this]
+      exact trivialₓ
+
+theorem bijective_iff_exists_unique (f : α → β) : bijective f ↔ ∀ b : β, ∃! a : α, f a = b :=
   ⟨fun hf b =>
       let ⟨a, ha⟩ := hf.surjective b
       ⟨a, ha, fun a' ha' => hf.injective (ha'.trans ha.symm)⟩,
     fun he => ⟨fun a a' h => unique_of_exists_unique (he (f a')) h rfl, fun b => exists_of_exists_unique (he b)⟩⟩
 
 /-- Shorthand for using projection notation with `function.bijective_iff_exists_unique`. -/
-protected theorem bijective.exists_unique {f : α → β} (hf : bijective f) (b : β) : ∃!a : α, f a = b :=
+protected theorem bijective.exists_unique {f : α → β} (hf : bijective f) (b : β) : ∃! a : α, f a = b :=
   (bijective_iff_exists_unique f).mp hf b
 
-theorem bijective.exists_unique_iff {f : α → β} (hf : bijective f) {p : β → Prop} : (∃!y, p y) ↔ ∃!x, p (f x) :=
+theorem bijective.exists_unique_iff {f : α → β} (hf : bijective f) {p : β → Prop} : (∃! y, p y) ↔ ∃! x, p (f x) :=
   ⟨fun ⟨y, hpy, hy⟩ =>
       let ⟨x, hx⟩ := hf.surjective y
       ⟨x,
@@ -330,7 +342,7 @@ theorem partial_inv_left {α β} {f : α → β} (I : injective f) : ∀ x, part
 
 end 
 
-section InvFun
+section InvFunOn
 
 variable {α : Type u} [n : Nonempty α] {β : Sort v} {f : α → β} {s : Set α} {a : α} {b : β}
 
@@ -343,37 +355,50 @@ on `f '' s`. For a computable version, see `function.injective.inv_of_mem_range`
 noncomputable def inv_fun_on (f : α → β) (s : Set α) (b : β) : α :=
   if h : ∃ a, a ∈ s ∧ f a = b then Classical.some h else Classical.choice n
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem inv_fun_on_pos (h : ∃ (a : _)(_ : a ∈ s), f a = b) : inv_fun_on f s b ∈ s ∧ f (inv_fun_on f s b) = b :=
   by 
     rw [bex_def] at h <;> rw [inv_fun_on, dif_pos h] <;> exact Classical.some_spec h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem inv_fun_on_mem (h : ∃ (a : _)(_ : a ∈ s), f a = b) : inv_fun_on f s b ∈ s :=
   (inv_fun_on_pos h).left
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem inv_fun_on_eq (h : ∃ (a : _)(_ : a ∈ s), f a = b) : f (inv_fun_on f s b) = b :=
   (inv_fun_on_pos h).right
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a' «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem inv_fun_on_eq' (h : ∀ x _ : x ∈ s y _ : y ∈ s, f x = f y → x = y) (ha : a ∈ s) : inv_fun_on f s (f a) = a :=
   have  : ∃ (a' : _)(_ : a' ∈ s), f a' = f a := ⟨a, ha, rfl⟩
   h _ (inv_fun_on_mem this) _ ha (inv_fun_on_eq this)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem inv_fun_on_neg (h : ¬∃ (a : _)(_ : a ∈ s), f a = b) : inv_fun_on f s b = Classical.choice n :=
   by 
     rw [bex_def] at h <;> rw [inv_fun_on, dif_neg h]
 
+end InvFunOn
+
+section InvFun
+
+variable {α β : Sort _} [Nonempty α] {f : α → β} {a : α} {b : β}
+
+attribute [local instance] Classical.propDecidable
+
 /-- The inverse of a function (which is a left inverse if `f` is injective
   and a right inverse if `f` is surjective). -/
 noncomputable def inv_fun (f : α → β) : β → α :=
-  inv_fun_on f Set.Univ
+  fun y => if h : ∃ x, f x = y then h.some else Classical.arbitrary α
 
 theorem inv_fun_eq (h : ∃ a, f a = b) : f (inv_fun f b) = b :=
-  inv_fun_on_eq$
-    let ⟨a, ha⟩ := h
-    ⟨a, trivialₓ, ha⟩
-
-theorem inv_fun_neg (h : ¬∃ a, f a = b) : inv_fun f b = Classical.choice n :=
   by 
-    refine' inv_fun_on_neg (mt _ h) <;> exact fun ⟨a, _, ha⟩ => ⟨a, ha⟩
+    simp only [inv_fun, dif_pos h, h.some_spec]
+
+theorem inv_fun_neg (h : ¬∃ a, f a = b) : inv_fun f b = Classical.choice ‹_› :=
+  dif_neg h
 
 theorem inv_fun_eq_of_injective_of_right_inverse {g : β → α} (hf : injective f) (hg : RightInverse g f) :
   inv_fun f = g :=
@@ -388,21 +413,13 @@ theorem right_inverse_inv_fun (hf : surjective f) : RightInverse (inv_fun f) f :
   fun b => inv_fun_eq$ hf b
 
 theorem left_inverse_inv_fun (hf : injective f) : left_inverse (inv_fun f) f :=
-  fun b =>
-    have  : f (inv_fun f (f b)) = f b := inv_fun_eq ⟨b, rfl⟩
-    hf this
+  fun b => hf$ inv_fun_eq ⟨b, rfl⟩
 
 theorem inv_fun_surjective (hf : injective f) : surjective (inv_fun f) :=
   (left_inverse_inv_fun hf).Surjective
 
 theorem inv_fun_comp (hf : injective f) : inv_fun f ∘ f = id :=
   funext$ left_inverse_inv_fun hf
-
-end InvFun
-
-section InvFun
-
-variable {α : Type u} [Nonempty α] {β : Sort v} {f : α → β}
 
 theorem injective.has_left_inverse (hf : injective f) : has_left_inverse f :=
   ⟨inv_fun f, left_inverse_inv_fun hf⟩
@@ -449,13 +466,11 @@ theorem surjective_to_subsingleton [na : Nonempty α] [Subsingleton β] (f : α 
     ⟨a, Subsingleton.elimₓ _ _⟩
 
 /-- Composition by an surjective function on the left is itself surjective. -/
-theorem surjective.comp_left {g : β → γ} (hg : Function.Surjective g) :
-  Function.Surjective ((· ∘ ·) g : (α → β) → α → γ) :=
+theorem surjective.comp_left {g : β → γ} (hg : surjective g) : surjective ((· ∘ ·) g : (α → β) → α → γ) :=
   fun f => ⟨surj_inv hg ∘ f, funext$ fun x => right_inverse_surj_inv _ _⟩
 
 /-- Composition by an bijective function on the left is itself bijective. -/
-theorem bijective.comp_left {g : β → γ} (hg : Function.Bijective g) :
-  Function.Bijective ((· ∘ ·) g : (α → β) → α → γ) :=
+theorem bijective.comp_left {g : β → γ} (hg : bijective g) : bijective ((· ∘ ·) g : (α → β) → α → γ) :=
   ⟨hg.injective.comp_left, hg.surjective.comp_left⟩
 
 end SurjInv
@@ -494,24 +509,27 @@ theorem update_injective (f : ∀ a, β a) (a' : α) : injective (update f a') :
 theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : update f a' v a = f a :=
   dif_neg h
 
--- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem forall_update_iff
-(f : ∀ a, β a)
-{a : α}
-{b : β a}
-(p : ∀ a, β a → exprProp()) : «expr ↔ »(∀ x, p x (update f a b x), «expr ∧ »(p a b, ∀ x «expr ≠ » a, p x (f x))) :=
-by { rw ["[", "<-", expr and_forall_ne a, ",", expr update_same, "]"] [],
-  simp [] [] [] [] [] [] { contextual := tt } }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ≠ » a)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  forall_update_iff
+  ( f : ∀ a , β a ) { a : α } { b : β a } ( p : ∀ a , β a → Prop )
+    : ∀ x , p x update f a b x ↔ p a b ∧ ∀ x _ : x ≠ a , p x f x
+  := by rw [ ← and_forall_ne a , update_same ] simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
   (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) :=
   by 
     rw [←not_forall_not, forall_update_iff f fun a b => ¬p a b]
     simp [not_and_distrib]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ x _ : x ≠ a, f x = g x :=
   funext_iff.trans$ forall_update_iff _ fun x y => y = g x
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ x _ : x ≠ a, g x = f x :=
   funext_iff.trans$ forall_update_iff _ fun x y => g x = y
 
@@ -584,7 +602,7 @@ end Update
 
 section Extend
 
-noncomputable theory
+noncomputable section 
 
 attribute [local instance] Classical.propDecidable
 
@@ -616,19 +634,30 @@ theorem extend_apply' (g : α → γ) (e' : β → γ) (b : β) (hb : ¬∃ a, f
   by 
     simp [Function.extend_defₓ, hb]
 
--- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem extend_injective (hf : injective f) (e' : β → γ) : injective (λ g, extend f g e') :=
-begin
-  intros [ident g₁, ident g₂, ident hg],
-  refine [expr funext (λ x, _)],
-  have [ident H] [] [":=", expr congr_fun hg (f x)],
-  simp [] [] ["only"] ["[", expr hf, ",", expr extend_apply, "]"] [] ["at", ident H],
-  exact [expr H]
-end
+theorem extend_injective (hf : injective f) (e' : β → γ) : injective fun g => extend f g e' :=
+  by 
+    intro g₁ g₂ hg 
+    refine' funext fun x => _ 
+    have H := congr_funₓ hg (f x)
+    simp only [hf, extend_apply] at H 
+    exact H
 
 @[simp]
 theorem extend_comp (hf : injective f) (g : α → γ) (e' : β → γ) : extend f g e' ∘ f = g :=
   funext$ fun a => extend_apply hf g e' a
+
+theorem injective.surjective_comp_right' (hf : injective f) (g₀ : β → γ) : surjective fun g : β → γ => g ∘ f :=
+  fun g => ⟨extend f g g₀, extend_comp hf _ _⟩
+
+theorem injective.surjective_comp_right [Nonempty γ] (hf : injective f) : surjective fun g : β → γ => g ∘ f :=
+  hf.surjective_comp_right' fun _ => Classical.choice ‹_›
+
+theorem bijective.comp_right (hf : bijective f) : bijective fun g : β → γ => g ∘ f :=
+  ⟨hf.surjective.injective_comp_right,
+    fun g =>
+      ⟨g ∘ surj_inv hf.surjective,
+        by 
+          simp only [comp.assoc g _ f, (left_inverse_surj_inv hf).comp_eq_id, comp.right_id]⟩⟩
 
 end Extend
 
@@ -681,14 +710,15 @@ class has_uncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _)
 for bundled maps.-/
 add_decl_doc has_uncurry.uncurry
 
--- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
-notation `↿`:max x:max := has_uncurry.uncurry x
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+notation:999 "↿" x:999 => has_uncurry.uncurry x
 
 instance has_uncurry_base : has_uncurry (α → β) α β :=
   ⟨id⟩
 
 instance has_uncurry_induction [has_uncurry β γ δ] : has_uncurry (α → β) (α × γ) δ :=
-  ⟨fun f p => («expr↿ » (f p.1)) p.2⟩
+  ⟨fun f p => (↿f p.1) p.2⟩
 
 end Uncurry
 
@@ -753,7 +783,7 @@ protected theorem right (hf : injective2 f) ⦃a₁ a₂ b₁ b₂⦄ (h : f a�
   (hf h).2
 
 theorem eq_iff (hf : injective2 f) ⦃a₁ a₂ b₁ b₂⦄ : f a₁ b₁ = f a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
-  ⟨fun h => hf h, fun ⟨h1, h2⟩ => congr_arg2 f h1 h2⟩
+  ⟨fun h => hf h, fun ⟨h1, h2⟩ => congr_arg2ₓ f h1 h2⟩
 
 end Injective2
 
@@ -811,6 +841,7 @@ theorem eq_rec_inj {α : Sort _} {a a' : α} (h : a = a') {C : α → Type _} (x
 theorem cast_inj {α β : Type _} (h : α = β) {x y : α} : cast h x = cast h y ↔ x = y :=
   (cast_bijective h).Injective.eq_iff
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (f «expr ∈ » A)
 /-- A set of functions "separates points"
 if for each pair of distinct points there is a function taking different values on them. -/
 def Set.SeparatesPoints {α β : Type _} (A : Set (α → β)) : Prop :=

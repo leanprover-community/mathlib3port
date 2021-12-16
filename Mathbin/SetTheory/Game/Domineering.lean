@@ -29,9 +29,10 @@ def shift_up : ℤ × ℤ ↪ ℤ × ℤ :=
 def shift_right : ℤ × ℤ ↪ ℤ × ℤ :=
   embedding.prod_map ⟨fun n => n+1, add_left_injective 1⟩ (embedding.refl ℤ)
 
--- error in SetTheory.Game.Domineering: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-/-- A Domineering board is an arbitrary finite subset of `ℤ × ℤ`. -/ @[derive #[expr inhabited]] def board :=
-finset «expr × »(exprℤ(), exprℤ())
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+/-- A Domineering board is an arbitrary finite subset of `ℤ × ℤ`. -/
+def board :=
+  Finset (ℤ × ℤ)deriving [anonymous]
 
 attribute [local reducible] board
 
@@ -51,101 +52,101 @@ def move_left (b : board) (m : ℤ × ℤ) : board :=
 def move_right (b : board) (m : ℤ × ℤ) : board :=
   (b.erase m).erase (m.1 - 1, m.2)
 
--- error in SetTheory.Game.Domineering: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_of_mem_left
-{b : board}
-{m : «expr × »(exprℤ(), exprℤ())}
-(h : «expr ∈ »(m, left b)) : «expr ≤ »(2, finset.card b) :=
-begin
-  dsimp [] ["[", expr left, "]"] [] ["at", ident h],
-  have [ident w₁] [":", expr «expr ∈ »(m, b)] [],
-  { rw [expr finset.mem_inter] ["at", ident h],
-    exact [expr h.1] },
-  have [ident w₂] [":", expr «expr ∈ »((m.1, «expr - »(m.2, 1)), b.erase m)] [],
-  { simp [] [] ["only"] ["[", expr finset.mem_erase, "]"] [] [],
-    fsplit,
-    { exact [expr λ w, pred_ne_self m.2 (congr_arg prod.snd w)] },
-    { rw [expr finset.mem_inter] ["at", ident h],
-      have [ident h₂] [] [":=", expr h.2],
-      clear [ident h],
-      rw [expr finset.mem_map] ["at", ident h₂],
-      rcases [expr h₂, "with", "⟨", ident m', ",", "⟨", ident h₂, ",", ident rfl, "⟩", "⟩"],
-      dsimp [] ["[", expr shift_up, "]"] [] [],
-      simpa [] [] [] [] [] [] } },
-  have [ident i₁] [] [":=", expr finset.card_erase_lt_of_mem w₁],
-  have [ident i₂] [] [":=", expr nat.lt_of_le_of_lt (nat.zero_le _) (finset.card_erase_lt_of_mem w₂)],
-  exact [expr nat.lt_of_le_of_lt i₂ i₁]
-end
+theorem card_of_mem_left {b : board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ Finset.card b :=
+  by 
+    dsimp [left]  at h 
+    have w₁ : m ∈ b
+    ·
+      rw [Finset.mem_inter] at h 
+      exact h.1
+    have w₂ : (m.1, m.2 - 1) ∈ b.erase m
+    ·
+      simp only [Finset.mem_erase]
+      fconstructor
+      ·
+        exact fun w => pred_ne_self m.2 (congr_argₓ Prod.snd w)
+      ·
+        rw [Finset.mem_inter] at h 
+        have h₂ := h.2
+        clear h 
+        rw [Finset.mem_map] at h₂ 
+        rcases h₂ with ⟨m', ⟨h₂, rfl⟩⟩
+        dsimp [shift_up]
+        simpa 
+    have i₁ := Finset.card_erase_lt_of_mem w₁ 
+    have i₂ := Nat.lt_of_le_of_ltₓ (Nat.zero_leₓ _) (Finset.card_erase_lt_of_mem w₂)
+    exact Nat.lt_of_le_of_ltₓ i₂ i₁
 
--- error in SetTheory.Game.Domineering: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_of_mem_right
-{b : board}
-{m : «expr × »(exprℤ(), exprℤ())}
-(h : «expr ∈ »(m, right b)) : «expr ≤ »(2, finset.card b) :=
-begin
-  dsimp [] ["[", expr right, "]"] [] ["at", ident h],
-  have [ident w₁] [":", expr «expr ∈ »(m, b)] [],
-  { rw [expr finset.mem_inter] ["at", ident h],
-    exact [expr h.1] },
-  have [ident w₂] [":", expr «expr ∈ »((«expr - »(m.1, 1), m.2), b.erase m)] [],
-  { simp [] [] ["only"] ["[", expr finset.mem_erase, "]"] [] [],
-    fsplit,
-    { exact [expr λ w, pred_ne_self m.1 (congr_arg prod.fst w)] },
-    { rw [expr finset.mem_inter] ["at", ident h],
-      have [ident h₂] [] [":=", expr h.2],
-      clear [ident h],
-      rw [expr finset.mem_map] ["at", ident h₂],
-      rcases [expr h₂, "with", "⟨", ident m', ",", "⟨", ident h₂, ",", ident rfl, "⟩", "⟩"],
-      dsimp [] ["[", expr shift_right, "]"] [] [],
-      simpa [] [] [] [] [] [] } },
-  have [ident i₁] [] [":=", expr finset.card_erase_lt_of_mem w₁],
-  have [ident i₂] [] [":=", expr nat.lt_of_le_of_lt (nat.zero_le _) (finset.card_erase_lt_of_mem w₂)],
-  exact [expr nat.lt_of_le_of_lt i₂ i₁]
-end
+theorem card_of_mem_right {b : board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 ≤ Finset.card b :=
+  by 
+    dsimp [right]  at h 
+    have w₁ : m ∈ b
+    ·
+      rw [Finset.mem_inter] at h 
+      exact h.1
+    have w₂ : (m.1 - 1, m.2) ∈ b.erase m
+    ·
+      simp only [Finset.mem_erase]
+      fconstructor
+      ·
+        exact fun w => pred_ne_self m.1 (congr_argₓ Prod.fst w)
+      ·
+        rw [Finset.mem_inter] at h 
+        have h₂ := h.2
+        clear h 
+        rw [Finset.mem_map] at h₂ 
+        rcases h₂ with ⟨m', ⟨h₂, rfl⟩⟩
+        dsimp [shift_right]
+        simpa 
+    have i₁ := Finset.card_erase_lt_of_mem w₁ 
+    have i₂ := Nat.lt_of_le_of_ltₓ (Nat.zero_leₓ _) (Finset.card_erase_lt_of_mem w₂)
+    exact Nat.lt_of_le_of_ltₓ i₂ i₁
 
--- error in SetTheory.Game.Domineering: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem move_left_card
-{b : board}
-{m : «expr × »(exprℤ(), exprℤ())}
-(h : «expr ∈ »(m, left b)) : «expr = »(«expr + »(finset.card (move_left b m), 2), finset.card b) :=
-begin
-  dsimp [] ["[", expr move_left, "]"] [] [],
-  rw [expr finset.card_erase_of_mem] [],
-  { rw [expr finset.card_erase_of_mem] [],
-    { exact [expr tsub_add_cancel_of_le (card_of_mem_left h)] },
-    { exact [expr finset.mem_of_mem_inter_left h] } },
-  { apply [expr finset.mem_erase_of_ne_of_mem],
-    { exact [expr λ w, pred_ne_self m.2 (congr_arg prod.snd w)] },
-    { have [ident t] [] [":=", expr finset.mem_of_mem_inter_right h],
-      dsimp [] ["[", expr shift_up, "]"] [] ["at", ident t],
-      simp [] [] ["only"] ["[", expr finset.mem_map, ",", expr prod.exists, "]"] [] ["at", ident t],
-      rcases [expr t, "with", "⟨", ident x, ",", ident y, ",", ident w, ",", ident h, "⟩"],
-      rw ["<-", expr h] [],
-      convert [] [expr w] [],
-      simp [] [] [] [] [] [] } }
-end
+theorem move_left_card {b : board} {m : ℤ × ℤ} (h : m ∈ left b) : (Finset.card (move_left b m)+2) = Finset.card b :=
+  by 
+    dsimp [move_left]
+    rw [Finset.card_erase_of_mem]
+    ·
+      rw [Finset.card_erase_of_mem]
+      ·
+        exact tsub_add_cancel_of_le (card_of_mem_left h)
+      ·
+        exact Finset.mem_of_mem_inter_left h
+    ·
+      apply Finset.mem_erase_of_ne_of_mem
+      ·
+        exact fun w => pred_ne_self m.2 (congr_argₓ Prod.snd w)
+      ·
+        have t := Finset.mem_of_mem_inter_right h 
+        dsimp [shift_up]  at t 
+        simp only [Finset.mem_map, Prod.exists] at t 
+        rcases t with ⟨x, y, w, h⟩
+        rw [←h]
+        convert w 
+        simp 
 
--- error in SetTheory.Game.Domineering: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem move_right_card
-{b : board}
-{m : «expr × »(exprℤ(), exprℤ())}
-(h : «expr ∈ »(m, right b)) : «expr = »(«expr + »(finset.card (move_right b m), 2), finset.card b) :=
-begin
-  dsimp [] ["[", expr move_right, "]"] [] [],
-  rw [expr finset.card_erase_of_mem] [],
-  { rw [expr finset.card_erase_of_mem] [],
-    { exact [expr tsub_add_cancel_of_le (card_of_mem_right h)] },
-    { exact [expr finset.mem_of_mem_inter_left h] } },
-  { apply [expr finset.mem_erase_of_ne_of_mem],
-    { exact [expr λ w, pred_ne_self m.1 (congr_arg prod.fst w)] },
-    { have [ident t] [] [":=", expr finset.mem_of_mem_inter_right h],
-      dsimp [] ["[", expr shift_right, "]"] [] ["at", ident t],
-      simp [] [] ["only"] ["[", expr finset.mem_map, ",", expr prod.exists, "]"] [] ["at", ident t],
-      rcases [expr t, "with", "⟨", ident x, ",", ident y, ",", ident w, ",", ident h, "⟩"],
-      rw ["<-", expr h] [],
-      convert [] [expr w] [],
-      simp [] [] [] [] [] [] } }
-end
+theorem move_right_card {b : board} {m : ℤ × ℤ} (h : m ∈ right b) : (Finset.card (move_right b m)+2) = Finset.card b :=
+  by 
+    dsimp [move_right]
+    rw [Finset.card_erase_of_mem]
+    ·
+      rw [Finset.card_erase_of_mem]
+      ·
+        exact tsub_add_cancel_of_le (card_of_mem_right h)
+      ·
+        exact Finset.mem_of_mem_inter_left h
+    ·
+      apply Finset.mem_erase_of_ne_of_mem
+      ·
+        exact fun w => pred_ne_self m.1 (congr_argₓ Prod.fst w)
+      ·
+        have t := Finset.mem_of_mem_inter_right h 
+        dsimp [shift_right]  at t 
+        simp only [Finset.mem_map, Prod.exists] at t 
+        rcases t with ⟨x, y, w, h⟩
+        rw [←h]
+        convert w 
+        simp 
 
 theorem move_left_smaller {b : board} {m : ℤ × ℤ} (h : m ∈ left b) :
   Finset.card (move_left b m) / 2 < Finset.card b / 2 :=

@@ -16,7 +16,7 @@ open CategoryTheory.Limits
 
 universe u v
 
-noncomputable theory
+noncomputable section 
 
 namespace ModuleCat
 
@@ -88,15 +88,19 @@ def limit_cone_is_limit (F : J ⥤ ModuleCat R) : is_limit (limit_cone F) :=
   by 
     refine'
         is_limit.of_faithful (forget (ModuleCat R)) (types.limit_cone_is_limit _) (fun s => ⟨_, _, _⟩) fun s => rfl <;>
-      tidy
+      intros  <;>
+        ext j <;>
+          simp only [Subtype.coe_mk, functor.map_cone_π_app, forget_map_eq_coe, LinearMap.map_add,
+              LinearMap.map_smul] <;>
+            rfl
 
 end HasLimits
 
 open HasLimits
 
+-- ././Mathport/Syntax/Translate/Basic.lean:971:38: unsupported irreducible non-definition
 /-- The category of R-modules has all limits. -/
-@[irreducible]
-instance has_limits : has_limits (ModuleCat.{v} R) :=
+irreducible_def has_limits : has_limits (ModuleCat.{v} R) :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
@@ -147,7 +151,7 @@ variable (G : ι → Type v)
 
 variable [∀ i, AddCommGroupₓ (G i)] [∀ i, Module R (G i)]
 
-variable (f : ∀ i j, i ≤ j → G i →ₗ[R] G j) [Module.DirectedSystem G f]
+variable (f : ∀ i j, i ≤ j → G i →ₗ[R] G j) [DirectedSystem G fun i j h => f i j h]
 
 /-- The diagram (in the sense of `category_theory`)
  of an unbundled `direct_limit` of modules. -/
@@ -186,31 +190,36 @@ def direct_limit_cocone : cocone (direct_limit_diagram G f) :=
               intro x 
               exact direct_limit.of_f } }
 
--- error in Algebra.Category.Module.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The unbundled `direct_limit` of modules is a colimit
 in the sense of `category_theory`. -/
-@[simps #[]]
-def direct_limit_is_colimit [nonempty ι] : is_colimit (direct_limit_cocone G f) :=
-{ desc := λ
-  s, «expr $ »(direct_limit.lift R ι G f s.ι.app, λ i j h x, by { rw ["[", "<-", expr s.w (hom_of_le h), "]"] [],
-     refl }),
-  fac' := λ s i, begin
-    apply [expr linear_map.ext],
-    intro [ident x],
-    dsimp [] [] [] [],
-    exact [expr direct_limit.lift_of s.ι.app _ x]
-  end,
-  uniq' := λ s m h, begin
-    have [] [":", expr «expr = »(s.ι.app, λ
-      i, linear_map.comp m (direct_limit.of R ι (λ i, G i) (λ i j H, f i j H) i))] [],
-    { funext [ident i],
-      rw ["<-", expr h] [],
-      refl },
-    apply [expr linear_map.ext],
-    intro [ident x],
-    simp [] [] ["only"] ["[", expr this, "]"] [] [],
-    apply [expr module.direct_limit.lift_unique]
-  end }
+@[simps]
+def direct_limit_is_colimit [Nonempty ι] : is_colimit (direct_limit_cocone G f) :=
+  { desc :=
+      fun s =>
+        direct_limit.lift R ι G f s.ι.app$
+          fun i j h x =>
+            by 
+              rw [←s.w (hom_of_le h)]
+              rfl,
+    fac' :=
+      fun s i =>
+        by 
+          apply LinearMap.ext 
+          intro x 
+          dsimp 
+          exact direct_limit.lift_of s.ι.app _ x,
+    uniq' :=
+      fun s m h =>
+        by 
+          have  : s.ι.app = fun i => LinearMap.comp m (direct_limit.of R ι (fun i => G i) (fun i j H => f i j H) i)
+          ·
+            funext i 
+            rw [←h]
+            rfl 
+          apply LinearMap.ext 
+          intro x 
+          simp only [this]
+          apply Module.DirectLimit.lift_unique }
 
 end DirectLimit
 

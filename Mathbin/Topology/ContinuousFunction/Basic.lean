@@ -76,7 +76,7 @@ theorem coe_inj ⦃f g : C(α, β)⦄ (h : (f : α → β) = g) : f = g :=
     cases f <;> cases g <;> cases h <;> rfl
 
 @[simp]
-theorem coe_mk (f : α → β) (h : Continuous f) : «expr⇑ » (⟨f, h⟩ : ContinuousMap α β) = f :=
+theorem coe_mk (f : α → β) (h : Continuous f) : ⇑(⟨f, h⟩ : ContinuousMap α β) = f :=
   rfl
 
 section 
@@ -276,6 +276,22 @@ end Inf'
 
 end Lattice
 
+section Prod
+
+variable {α₁ α₂ β₁ β₂ : Type _}
+
+/-- Given two continuous maps `f` and `g`, this is the continuous map `x ↦ (f x, g x)`. -/
+def prod_mk {α β₁ β₂ : Type _} [TopologicalSpace α] [TopologicalSpace β₁] [TopologicalSpace β₂] (f : C(α, β₁))
+  (g : C(α, β₂)) : C(α, β₁ × β₂) :=
+  { toFun := fun x => (f x, g x), continuous_to_fun := Continuous.prod_mk f.continuous g.continuous }
+
+/-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
+def prod_mapₓ {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [TopologicalSpace α₂] [TopologicalSpace β₁]
+  [TopologicalSpace β₂] (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂) :=
+  { toFun := Prod.map f g, continuous_to_fun := Continuous.prod_map f.continuous g.continuous }
+
+end Prod
+
 section Restrict
 
 variable (s : Set α)
@@ -285,7 +301,7 @@ def restrict (f : C(α, β)) : C(s, β) :=
   ⟨f ∘ coeₓ⟩
 
 @[simp]
-theorem coe_restrict (f : C(α, β)) : «expr⇑ » (f.restrict s) = (f ∘ coeₓ) :=
+theorem coe_restrict (f : C(α, β)) : ⇑f.restrict s = (f ∘ coeₓ) :=
   rfl
 
 end Restrict
@@ -313,23 +329,23 @@ variable {ι : Type _} (S : ι → Set α) (φ : ∀ i : ι, C(S i, β))
 
 include hφ hS
 
--- error in Topology.ContinuousFunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family `φ i` of continuous maps `C(S i, β)`, where the domains `S i` contain a neighbourhood
 of each point in `α` and the functions `φ i` agree pairwise on intersections, can be glued to
-construct a continuous map in `C(α, β)`. -/ noncomputable def lift_cover : «exprC( , )»(α, β) :=
-begin
-  have [ident H] [":", expr «expr = »(«expr⋃ , »((i), S i), set.univ)] [],
-  { rw [expr set.eq_univ_iff_forall] [],
-    intros [ident x],
-    rw [expr set.mem_Union] [],
-    obtain ["⟨", ident i, ",", ident hi, "⟩", ":=", expr hS x],
-    exact [expr ⟨i, mem_of_mem_nhds hi⟩] },
-  refine [expr ⟨set.lift_cover S (λ i, φ i) hφ H, continuous_subtype_nhds_cover hS _⟩],
-  intros [ident i],
-  convert [] [expr (φ i).continuous] [],
-  ext [] [ident x] [],
-  exact [expr set.lift_cover_coe x]
-end
+construct a continuous map in `C(α, β)`. -/
+noncomputable def lift_cover : C(α, β) :=
+  by 
+    have H : (⋃ i, S i) = Set.Univ
+    ·
+      rw [Set.eq_univ_iff_forall]
+      intro x 
+      rw [Set.mem_Union]
+      obtain ⟨i, hi⟩ := hS x 
+      exact ⟨i, mem_of_mem_nhds hi⟩
+    refine' ⟨Set.liftCover S (fun i => φ i) hφ H, continuous_subtype_nhds_cover hS _⟩
+    intro i 
+    convert (φ i).Continuous 
+    ext x 
+    exact Set.lift_cover_coe x
 
 variable {S φ hφ hS}
 
@@ -343,6 +359,7 @@ theorem lift_cover_restrict {i : ι} : (lift_cover S φ hφ hS).restrict (S i) =
 
 omit hφ hS
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » A)
 variable (A : Set (Set α)) (F : ∀ s : Set α hi : s ∈ A, C(s, β))
   (hF : ∀ s hs : s ∈ A t ht : t ∈ A x : α hxi : x ∈ s hxj : x ∈ t, F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)
   (hA : ∀ x : α, ∃ (i : _)(_ : i ∈ A), i ∈ nhds x)

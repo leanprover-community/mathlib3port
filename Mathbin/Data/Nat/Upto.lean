@@ -18,6 +18,7 @@ well founded relation and would then fulfill the same purpose as this file.
 
 namespace Nat
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr < » i)
 /-- The subtype of natural numbers `i` which have the property that
 no `j` less than `i` satisfies `p`. This is an initial segment of the
 natural numbers, up to and including the first value satisfying `p`.

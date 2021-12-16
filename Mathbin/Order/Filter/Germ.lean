@@ -38,7 +38,7 @@ For each of the following structures we prove that if `β` has this structure, t
 * one-operation algebraic structures up to `comm_group`;
 * `mul_zero_class`, `distrib`, `semiring`, `comm_semiring`, `ring`, `comm_ring`;
 * `mul_action`, `distrib_mul_action`, `module`;
-* `preorder`, `partial_order`, and `lattice` structures up to `bounded_order`;
+* `preorder`, `partial_order`, and `lattice` structures, as well as `bounded_order`;
 * `ordered_cancel_comm_monoid` and `ordered_cancel_add_comm_monoid`.
 
 ## Tags
@@ -51,7 +51,7 @@ namespace Filter
 
 variable {α β γ δ : Type _} {l : Filter α} {f g h : α → β}
 
-theorem const_eventually_eq' [ne_bot l] {a b : β} : (∀ᶠx in l, a = b) ↔ a = b :=
+theorem const_eventually_eq' [ne_bot l] {a b : β} : (∀ᶠ x in l, a = b) ↔ a = b :=
   eventually_const
 
 theorem const_eventually_eq [ne_bot l] {a b : β} : ((fun _ => a) =ᶠ[l] fun _ => b) ↔ a = b :=
@@ -76,7 +76,7 @@ instance : CoeTₓ (α → β) (germ l β) :=
   ⟨Quotientₓ.mk'⟩
 
 instance : HasLiftT β (germ l β) :=
-  ⟨fun c => «expr↑ » fun x : α => c⟩
+  ⟨fun c => ↑fun x : α => c⟩
 
 @[simp]
 theorem quot_mk_eq_coe (l : Filter α) (f : α → β) : Quot.mk _ f = (f : germ l β) :=
@@ -189,64 +189,61 @@ theorem comp_tendsto'_coe (f : germ l β) {lc : Filter γ} {g : γ → α} (hg :
   rfl
 
 @[simp, normCast]
-theorem const_inj [ne_bot l] {a b : β} : («expr↑ » a : germ l β) = «expr↑ » b ↔ a = b :=
+theorem const_inj [ne_bot l] {a b : β} : (↑a : germ l β) = ↑b ↔ a = b :=
   coe_eq.trans$ const_eventually_eq
 
 @[simp]
-theorem map_const (l : Filter α) (a : β) (f : β → γ) : («expr↑ » a : germ l β).map f = «expr↑ » (f a) :=
+theorem map_const (l : Filter α) (a : β) (f : β → γ) : (↑a : germ l β).map f = ↑f a :=
   rfl
 
 @[simp]
-theorem map₂_const (l : Filter α) (b : β) (c : γ) (f : β → γ → δ) :
-  map₂ f («expr↑ » b : germ l β) («expr↑ » c) = «expr↑ » (f b c) :=
+theorem map₂_const (l : Filter α) (b : β) (c : γ) (f : β → γ → δ) : map₂ f (↑b : germ l β) (↑c) = ↑f b c :=
   rfl
 
 @[simp]
 theorem const_comp_tendsto {l : Filter α} (b : β) {lc : Filter γ} {g : γ → α} (hg : tendsto g lc l) :
-  («expr↑ » b : germ l β).comp_tendsto g hg = «expr↑ » b :=
+  (↑b : germ l β).comp_tendsto g hg = ↑b :=
   rfl
 
 @[simp]
 theorem const_comp_tendsto' {l : Filter α} (b : β) {lc : Filter γ} {g : germ lc α} (hg : g.tendsto l) :
-  («expr↑ » b : germ l β).compTendsto' g hg = «expr↑ » b :=
+  (↑b : germ l β).compTendsto' g hg = ↑b :=
   induction_on g (fun _ _ => rfl) hg
 
 /-- Lift a predicate on `β` to `germ l β`. -/
 def lift_pred (p : β → Prop) (f : germ l β) : Prop :=
-  (lift_on f fun f => ∀ᶠx in l, p (f x))$ fun f g H => propext$ eventually_congr$ H.mono$ fun x hx => hx ▸ Iff.rfl
+  (lift_on f fun f => ∀ᶠ x in l, p (f x))$ fun f g H => propext$ eventually_congr$ H.mono$ fun x hx => hx ▸ Iff.rfl
 
 @[simp]
-theorem lift_pred_coe {p : β → Prop} {f : α → β} : lift_pred p (f : germ l β) ↔ ∀ᶠx in l, p (f x) :=
+theorem lift_pred_coe {p : β → Prop} {f : α → β} : lift_pred p (f : germ l β) ↔ ∀ᶠ x in l, p (f x) :=
   Iff.rfl
 
-theorem lift_pred_const {p : β → Prop} {x : β} (hx : p x) : lift_pred p («expr↑ » x : germ l β) :=
+theorem lift_pred_const {p : β → Prop} {x : β} (hx : p x) : lift_pred p (↑x : germ l β) :=
   eventually_of_forall$ fun y => hx
 
 @[simp]
-theorem lift_pred_const_iff [ne_bot l] {p : β → Prop} {x : β} : lift_pred p («expr↑ » x : germ l β) ↔ p x :=
+theorem lift_pred_const_iff [ne_bot l] {p : β → Prop} {x : β} : lift_pred p (↑x : germ l β) ↔ p x :=
   @eventually_const _ _ _ (p x)
 
 /-- Lift a relation `r : β → γ → Prop` to `germ l β → germ l γ → Prop`. -/
 def lift_rel (r : β → γ → Prop) (f : germ l β) (g : germ l γ) : Prop :=
-  (Quotientₓ.liftOn₂' f g fun f g => ∀ᶠx in l, r (f x) (g x))$
+  (Quotientₓ.liftOn₂' f g fun f g => ∀ᶠ x in l, r (f x) (g x))$
     fun f g f' g' Hf Hg => propext$ eventually_congr$ Hg.mp$ Hf.mono$ fun x hf hg => hf ▸ hg ▸ Iff.rfl
 
 @[simp]
 theorem lift_rel_coe {r : β → γ → Prop} {f : α → β} {g : α → γ} :
-  lift_rel r (f : germ l β) g ↔ ∀ᶠx in l, r (f x) (g x) :=
+  lift_rel r (f : germ l β) g ↔ ∀ᶠ x in l, r (f x) (g x) :=
   Iff.rfl
 
-theorem lift_rel_const {r : β → γ → Prop} {x : β} {y : γ} (h : r x y) :
-  lift_rel r («expr↑ » x : germ l β) («expr↑ » y) :=
+theorem lift_rel_const {r : β → γ → Prop} {x : β} {y : γ} (h : r x y) : lift_rel r (↑x : germ l β) (↑y) :=
   eventually_of_forall$ fun _ => h
 
 @[simp]
-theorem lift_rel_const_iff [ne_bot l] {r : β → γ → Prop} {x : β} {y : γ} :
-  lift_rel r («expr↑ » x : germ l β) («expr↑ » y) ↔ r x y :=
+theorem lift_rel_const_iff [ne_bot l] {r : β → γ → Prop} {x : β} {y : γ} : lift_rel r (↑x : germ l β) (↑y) ↔ r x y :=
   @eventually_const _ _ _ (r x y)
 
 instance [Inhabited β] : Inhabited (germ l β) :=
-  ⟨«expr↑ » (default β)⟩
+  ⟨↑default β⟩
 
 section Monoidₓ
 
@@ -257,15 +254,15 @@ instance [Mul M] : Mul (germ l M) :=
   ⟨map₂ (·*·)⟩
 
 @[simp, normCast, toAdditive]
-theorem coe_mul [Mul M] (f g : α → M) : «expr↑ » (f*g) = (f*g : germ l M) :=
+theorem coe_mul [Mul M] (f g : α → M) : (↑f*g) = (f*g : germ l M) :=
   rfl
 
 @[toAdditive]
 instance [HasOne M] : HasOne (germ l M) :=
-  ⟨«expr↑ » (1 : M)⟩
+  ⟨↑(1 : M)⟩
 
 @[simp, normCast, toAdditive]
-theorem coe_one [HasOne M] : «expr↑ » (1 : α → M) = (1 : germ l M) :=
+theorem coe_one [HasOne M] : ↑(1 : α → M) = (1 : germ l M) :=
   rfl
 
 @[toAdditive]
@@ -337,7 +334,7 @@ instance [HasInv G] : HasInv (germ l G) :=
   ⟨map HasInv.inv⟩
 
 @[simp, normCast, toAdditive]
-theorem coe_inv [HasInv G] (f : α → G) : «expr↑ » (f⁻¹) = (f⁻¹ : germ l G) :=
+theorem coe_inv [HasInv G] (f : α → G) : ↑f⁻¹ = (f⁻¹ : germ l G) :=
   rfl
 
 @[toAdditive]
@@ -345,7 +342,7 @@ instance [Div M] : Div (germ l M) :=
   ⟨map₂ (· / ·)⟩
 
 @[simp, normCast, toAdditive]
-theorem coe_div [Div M] (f g : α → M) : «expr↑ » (f / g) = (f / g : germ l M) :=
+theorem coe_div [Div M] (f g : α → M) : ↑(f / g) = (f / g : germ l M) :=
   rfl
 
 @[toAdditive]
@@ -376,7 +373,7 @@ variable {R : Type _}
 
 instance Nontrivial [Nontrivial R] [ne_bot l] : Nontrivial (germ l R) :=
   let ⟨x, y, h⟩ := exists_pair_ne R
-  ⟨⟨«expr↑ » x, «expr↑ » y, mt const_inj.1 h⟩⟩
+  ⟨⟨↑x, ↑y, mt const_inj.1 h⟩⟩
 
 instance [MulZeroClass R] : MulZeroClass (germ l R) :=
   { zero := 0, mul := ·*·,
@@ -445,11 +442,11 @@ instance has_scalar' [HasScalar M β] : HasScalar (germ l M) (germ l β) :=
   ⟨map₂ (· • ·)⟩
 
 @[simp, normCast]
-theorem coe_smul [HasScalar M β] (c : M) (f : α → β) : «expr↑ » (c • f) = (c • f : germ l β) :=
+theorem coe_smul [HasScalar M β] (c : M) (f : α → β) : ↑(c • f) = (c • f : germ l β) :=
   rfl
 
 @[simp, normCast]
-theorem coe_smul' [HasScalar M β] (c : α → M) (f : α → β) : «expr↑ » (c • f) = (c : germ l M) • (f : germ l β) :=
+theorem coe_smul' [HasScalar M β] (c : α → M) (f : α → β) : ↑(c • f) = (c : germ l M) • (f : germ l β) :=
   rfl
 
 instance [Monoidₓ M] [MulAction M β] : MulAction M (germ l β) :=
@@ -555,11 +552,11 @@ theorem coe_le [LE β] : (f : germ l β) ≤ g ↔ f ≤ᶠ[l] g :=
 theorem le_def [LE β] : (· ≤ · : germ l β → germ l β → Prop) = lift_rel (· ≤ ·) :=
   rfl
 
-theorem const_le [LE β] {x y : β} (h : x ≤ y) : («expr↑ » x : germ l β) ≤ «expr↑ » y :=
+theorem const_le [LE β] {x y : β} (h : x ≤ y) : (↑x : germ l β) ≤ ↑y :=
   lift_rel_const h
 
 @[simp, normCast]
-theorem const_le_iff [LE β] [ne_bot l] {x y : β} : («expr↑ » x : germ l β) ≤ «expr↑ » y ↔ x ≤ y :=
+theorem const_le_iff [LE β] [ne_bot l] {x y : β} : (↑x : germ l β) ≤ ↑y ↔ x ≤ y :=
   lift_rel_const_iff
 
 instance [Preorderₓ β] : Preorderₓ (germ l β) :=
@@ -571,20 +568,20 @@ instance [PartialOrderₓ β] : PartialOrderₓ (germ l β) :=
     le_antisymm := fun f g => induction_on₂ f g$ fun f g h₁ h₂ => (eventually_le.antisymm h₁ h₂).germ_eq }
 
 instance [HasBot β] : HasBot (germ l β) :=
-  ⟨«expr↑ » (⊥ : β)⟩
+  ⟨↑(⊥ : β)⟩
 
 @[simp, normCast]
-theorem const_bot [HasBot β] : («expr↑ » (⊥ : β) : germ l β) = ⊥ :=
+theorem const_bot [HasBot β] : (↑(⊥ : β) : germ l β) = ⊥ :=
   rfl
 
 instance [LE β] [OrderBot β] : OrderBot (germ l β) :=
   { bot := ⊥, bot_le := fun f => induction_on f$ fun f => eventually_of_forall$ fun x => bot_le }
 
 instance [HasTop β] : HasTop (germ l β) :=
-  ⟨«expr↑ » (⊤ : β)⟩
+  ⟨↑(⊤ : β)⟩
 
 @[simp, normCast]
-theorem const_top [HasTop β] : («expr↑ » (⊤ : β) : germ l β) = ⊤ :=
+theorem const_top [HasTop β] : (↑(⊤ : β) : germ l β) = ⊤ :=
   rfl
 
 instance [LE β] [OrderTop β] : OrderTop (germ l β) :=
@@ -594,14 +591,14 @@ instance [HasSup β] : HasSup (germ l β) :=
   ⟨map₂ (·⊔·)⟩
 
 @[simp, normCast]
-theorem const_sup [HasSup β] (a b : β) : «expr↑ » (a⊔b) = («expr↑ » a⊔«expr↑ » b : germ l β) :=
+theorem const_sup [HasSup β] (a b : β) : ↑(a⊔b) = (↑a⊔↑b : germ l β) :=
   rfl
 
 instance [HasInf β] : HasInf (germ l β) :=
   ⟨map₂ (·⊓·)⟩
 
 @[simp, normCast]
-theorem const_inf [HasInf β] (a b : β) : «expr↑ » (a⊓b) = («expr↑ » a⊓«expr↑ » b : germ l β) :=
+theorem const_inf [HasInf β] (a b : β) : ↑(a⊓b) = (↑a⊓↑b : germ l β) :=
   rfl
 
 instance [SemilatticeSup β] : SemilatticeSup (germ l β) :=

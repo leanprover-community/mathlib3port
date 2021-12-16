@@ -39,7 +39,7 @@ is a pair `(X : C, x : F.obj X)`.
 -/
 @[nolint has_inhabited_instance]
 def functor.elements (F : C ⥤ Type w) :=
-  Σc : C, F.obj c
+  Σ c : C, F.obj c
 
 /-- The category structure on `F.elements`, for `F : C ⥤ Type`.
     A morphism `(X, x) ⟶ (Y, y)` is a morphism `f : X ⟶ Y` in `C`, so `F.map f` takes `x` to `y`.
@@ -170,7 +170,7 @@ The forward direction of the equivalence `F.elementsᵒᵖ ≅ (yoneda, F)`,
 given by `category_theory.yoneda_sections`.
 -/
 @[simps]
-def to_costructured_arrow (F : «expr ᵒᵖ» C ⥤ Type v) : «expr ᵒᵖ» F.elements ⥤ costructured_arrow yoneda F :=
+def to_costructured_arrow (F : Cᵒᵖ ⥤ Type v) : F.elementsᵒᵖ ⥤ costructured_arrow yoneda F :=
   { obj := fun X => costructured_arrow.mk ((yoneda_sections (unop (unop X).fst) F).inv (Ulift.up (unop X).2)),
     map :=
       fun X Y f =>
@@ -183,52 +183,56 @@ def to_costructured_arrow (F : «expr ᵒᵖ» C ⥤ Type v) : «expr ᵒᵖ» F
           congr 
           exact f.unop.2 }
 
--- error in CategoryTheory.Elements: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The reverse direction of the equivalence `F.elementsᵒᵖ ≅ (yoneda, F)`,
 given by `category_theory.yoneda_equiv`.
 -/
-@[simps #[]]
-def from_costructured_arrow
-(F : «expr ⥤ »(«expr ᵒᵖ»(C), Type v)) : «expr ⥤ »(«expr ᵒᵖ»(costructured_arrow yoneda F), F.elements) :=
-{ obj := λ X, ⟨op (unop X).1, yoneda_equiv.1 (unop X).3⟩,
-  map := λ
-  X
-  Y
-  f, ⟨f.unop.1.op, begin
-     convert [] [expr (congr_fun ((unop X).hom.naturality f.unop.left.op) («expr𝟙»() _)).symm] [],
-     simp [] [] ["only"] ["[", expr equiv.to_fun_as_coe, ",", expr quiver.hom.unop_op, ",", expr yoneda_equiv_apply, ",", expr types_comp_apply, ",", expr category.comp_id, ",", expr yoneda_obj_map, "]"] [] [],
-     have [] [":", expr «expr = »(«expr ≫ »(yoneda.map f.unop.left, (unop X).hom), (unop Y).hom)] [],
-     { convert [] [expr f.unop.3] [],
-       erw [expr category.comp_id] [] },
-     erw ["<-", expr this] [],
-     simp [] [] ["only"] ["[", expr yoneda_map_app, ",", expr functor_to_types.comp, "]"] [] [],
-     erw [expr category.id_comp] []
-   end⟩ }
+@[simps]
+def from_costructured_arrow (F : Cᵒᵖ ⥤ Type v) : costructured_arrow yoneda Fᵒᵖ ⥤ F.elements :=
+  { obj := fun X => ⟨op (unop X).1, yoneda_equiv.1 (unop X).3⟩,
+    map :=
+      fun X Y f =>
+        ⟨f.unop.1.op,
+          by 
+            convert (congr_funₓ ((unop X).Hom.naturality f.unop.left.op) (𝟙 _)).symm 
+            simp only [Equivₓ.to_fun_as_coe, Quiver.Hom.unop_op, yoneda_equiv_apply, types_comp_apply, category.comp_id,
+              yoneda_obj_map]
+            have  : yoneda.map f.unop.left ≫ (unop X).Hom = (unop Y).Hom
+            ·
+              convert f.unop.3 
+              erw [category.comp_id]
+            erw [←this]
+            simp only [yoneda_map_app, functor_to_types.comp]
+            erw [category.id_comp]⟩ }
 
 @[simp]
-theorem from_costructured_arrow_obj_mk (F : «expr ᵒᵖ» C ⥤ Type v) {X : C} (f : yoneda.obj X ⟶ F) :
+theorem from_costructured_arrow_obj_mk (F : Cᵒᵖ ⥤ Type v) {X : C} (f : yoneda.obj X ⟶ F) :
   (from_costructured_arrow F).obj (op (costructured_arrow.mk f)) = ⟨op X, yoneda_equiv.1 f⟩ :=
   rfl
 
--- error in CategoryTheory.Elements: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The unit of the equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` is indeed iso. -/
-theorem from_to_costructured_arrow_eq
-(F : «expr ⥤ »(«expr ᵒᵖ»(C), Type v)) : «expr = »(«expr ⋙ »((to_costructured_arrow F).right_op, from_costructured_arrow F), «expr𝟭»() _) :=
-begin
-  apply [expr functor.ext],
-  intros [ident X, ident Y, ident f],
-  have [] [":", expr ∀
-   {a b : F.elements}
-   (H : «expr = »(a, b)), «expr = »(«expr↑ »(eq_to_hom H), eq_to_hom (show «expr = »(a.fst, b.fst), by { cases [expr H] [],
-       refl }))] [":=", expr λ _ _ H, by { cases [expr H] [], refl }],
-  ext [] [] [],
-  simp [] [] [] ["[", expr this, "]"] [] [],
-  tidy []
-end
+theorem from_to_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
+  (to_costructured_arrow F).rightOp ⋙ from_costructured_arrow F = 𝟭 _ :=
+  by 
+    apply Functor.ext 
+    intro X Y f 
+    have  :
+      ∀ {a b : F.elements} H : a = b,
+        ↑eq_to_hom H =
+          eq_to_hom
+            (show a.fst = b.fst by 
+              cases H 
+              rfl) :=
+      fun _ _ H =>
+        by 
+          cases H 
+          rfl 
+    ext 
+    simp [this]
+    tidy
 
 /-- The counit of the equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` is indeed iso. -/
-theorem to_from_costructured_arrow_eq (F : «expr ᵒᵖ» C ⥤ Type v) :
+theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
   (from_costructured_arrow F).rightOp ⋙ to_costructured_arrow F = 𝟭 _ :=
   by 
     apply functor.hext
@@ -267,34 +271,38 @@ theorem to_from_costructured_arrow_eq (F : «expr ᵒᵖ» C ⥤ Type v) :
 
 /-- The equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` given by yoneda lemma. -/
 @[simps]
-def costructured_arrow_yoneda_equivalence (F : «expr ᵒᵖ» C ⥤ Type v) :
-  «expr ᵒᵖ» F.elements ≌ costructured_arrow yoneda F :=
+def costructured_arrow_yoneda_equivalence (F : Cᵒᵖ ⥤ Type v) : F.elementsᵒᵖ ≌ costructured_arrow yoneda F :=
   equivalence.mk (to_costructured_arrow F) (from_costructured_arrow F).rightOp
     (nat_iso.op (eq_to_iso (from_to_costructured_arrow_eq F))) (eq_to_iso$ to_from_costructured_arrow_eq F)
 
--- error in CategoryTheory.Elements: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The equivalence `(-.elements)ᵒᵖ ≅ (yoneda, -)` of is actually a natural isomorphism of functors.
 -/
-theorem costructured_arrow_yoneda_equivalence_naturality
-{F₁ F₂ : «expr ⥤ »(«expr ᵒᵖ»(C), Type v)}
-(α : «expr ⟶ »(F₁, F₂)) : «expr = »(«expr ⋙ »((map α).op, to_costructured_arrow F₂), «expr ⋙ »(to_costructured_arrow F₁, costructured_arrow.map α)) :=
-begin
-  fapply [expr functor.ext],
-  { intro [ident X],
-    simp [] [] ["only"] ["[", expr costructured_arrow.map_mk, ",", expr to_costructured_arrow_obj, ",", expr functor.op_obj, ",", expr functor.comp_obj, "]"] [] [],
-    congr,
-    ext [] [ident x, ident f] [],
-    simpa [] [] [] [] [] ["using", expr congr_fun (α.naturality f.op).symm (unop X).snd] },
-  { intros [ident X, ident Y, ident f],
-    ext [] [] [],
-    have [] [":", expr ∀
-     {F : «expr ⥤ »(«expr ᵒᵖ»(C), Type v)}
-     {a b : costructured_arrow yoneda F}
-     (H : «expr = »(a, b)), «expr = »(comma_morphism.left (eq_to_hom H), eq_to_hom (show «expr = »(a.left, b.left), by { cases [expr H] [],
-         refl }))] [":=", expr λ _ _ _ H, by { cases [expr H] [], refl }],
-    simp [] [] [] ["[", expr this, "]"] [] [] }
-end
+theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ ⥤ Type v} (α : F₁ ⟶ F₂) :
+  (map α).op ⋙ to_costructured_arrow F₂ = to_costructured_arrow F₁ ⋙ costructured_arrow.map α :=
+  by 
+    fapply Functor.ext
+    ·
+      intro X 
+      simp only [costructured_arrow.map_mk, to_costructured_arrow_obj, functor.op_obj, functor.comp_obj]
+      congr 
+      ext x f 
+      simpa using congr_funₓ (α.naturality f.op).symm (unop X).snd
+    ·
+      intro X Y f 
+      ext 
+      have  :
+        ∀ {F : Cᵒᵖ ⥤ Type v} {a b : costructured_arrow yoneda F} H : a = b,
+          comma_morphism.left (eq_to_hom H) =
+            eq_to_hom
+              (show a.left = b.left by 
+                cases H 
+                rfl) :=
+        fun _ _ _ H =>
+          by 
+            cases H 
+            rfl 
+      simp [this]
 
 end CategoryOfElements
 

@@ -178,14 +178,15 @@ run_cmd to_additive.map_namespace `quotient_group `quotient_add_group
 Later uses of `to_additive` on declarations in the `quotient_group` namespace will be created
 in the `quotient_add_group` namespaces.
 -/
-unsafe def map_namespace (src tgt : Name) : exprcommand :=
+unsafe def map_namespace (src tgt : Name) : command :=
   do 
     let n := src.mk_string "_to_additive"
     let decl := declaration.thm n [] (quote.1 Unit) (pure (reflect ()))
     add_decl decl 
     aux_attr n tgt tt
 
--- error in Algebra.Group.ToAdditive: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- `value_type` is the type of the arguments that can be provided to `to_additive`.
 `to_additive.parser` parses the provided arguments:
 * `replace_all`: replace all multiplicative declarations, do not use the heuristic.
@@ -195,13 +196,12 @@ unsafe def map_namespace (src tgt : Name) : exprcommand :=
 * if `allow_auto_name` is `ff` (default) then `@[to_additive]` will check whether the given name
   can be auto-generated.
 -/
-@[derive #[expr has_reflect], derive #[expr inhabited]]
-structure value_type : Type :=
-  (replace_all : bool)
-  (trace : bool)
-  (tgt : name)
-  (doc : option string)
-  (allow_auto_name : bool)
+structure value_type : Type where 
+  replaceAll : Bool 
+  trace : Bool 
+  tgt : Name 
+  doc : Option Stringₓ 
+  allowAutoName : Bool deriving [anonymous], [anonymous]
 
 /-- `add_comm_prefix x s` returns `"comm_" ++ s` if `x = tt` and `s` otherwise. -/
 unsafe def add_comm_prefix : Bool → Stringₓ → Stringₓ
@@ -277,7 +277,7 @@ unsafe def parser : lean.parser value_type :=
         | none => pure none 
     return ⟨bang, ques, tgt.get_or_else Name.anonymous, doc, ff⟩
 
-private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name → tactic (List Stringₓ)) : exprcommand :=
+private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name → tactic (List Stringₓ)) : command :=
   do 
     let src_fields ← f src 
     let tgt_fields ← f tgt 
@@ -287,7 +287,7 @@ private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name �
 
 /-- Add the `aux_attr` attribute to the structure fields of `src`
 so that future uses of `to_additive` will map them to the corresponding `tgt` fields. -/
-unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : exprcommand :=
+unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : command :=
   let aux := proceed_fields_aux src tgt prio 
   do 
     ((aux fun n => pure$ List.map Name.toString$ (env.structure_fields n).getOrElse []) >>

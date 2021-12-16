@@ -187,13 +187,13 @@ theorem OneOneEquiv.to_many_one {α β} [Primcodable α] [Primcodable β] {p : �
 | ⟨pq, qp⟩ => ⟨pq.to_many_one, qp.to_many_one⟩
 
 /-- a computable bijection -/
-def Equiv.Computable {α β} [Primcodable α] [Primcodable β] (e : α ≃ β) :=
+def Equivₓ.Computable {α β} [Primcodable α] [Primcodable β] (e : α ≃ β) :=
   Computable e ∧ Computable e.symm
 
-theorem Equiv.Computable.symm {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} : e.computable → e.symm.computable :=
+theorem Equivₓ.Computable.symm {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} : e.computable → e.symm.computable :=
   And.swap
 
-theorem Equiv.Computable.trans {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {e₁ : α ≃ β} {e₂ : β ≃ γ} :
+theorem Equivₓ.Computable.trans {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {e₁ : α ≃ β} {e₂ : β ≃ γ} :
   e₁.computable → e₂.computable → (e₁.trans e₂).Computable
 | ⟨l₁, r₁⟩, ⟨l₂, r₂⟩ => ⟨l₂.comp l₁, r₁.comp r₂⟩
 
@@ -281,11 +281,12 @@ variable {β : Type v} [Primcodable β] [Inhabited β]
 
 variable {γ : Type w} [Primcodable γ] [Inhabited γ]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-Computable and injective mapping of predicates to sets of natural numbers.
--/
-def ToNat (p : Set α) : Set ℕ :=
-  { n | p ((Encodable.decode α n).getOrElse (default α)) }
+    Computable and injective mapping of predicates to sets of natural numbers.
+    -/
+  def ToNat ( p : Set α ) : Set ℕ := { n | p Encodable.decode α n . getOrElse default α }
 
 @[simp]
 theorem to_nat_many_one_reducible {p : Set α} : ToNat p ≤₀ p :=

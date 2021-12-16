@@ -27,12 +27,12 @@ namespace CategoryTheory
 
 variable (C : Type u) [category.{v} C]
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- The category of simplicial objects valued in a category `C`.
 This is the category of contravariant functors from `simplex_category` to `C`. -/
-@[derive #[expr category], nolint #[ident has_inhabited_instance]]
+@[nolint has_inhabited_instance]
 def simplicial_object :=
-«expr ⥤ »(«expr ᵒᵖ»(simplex_category.{v}), C)
+  SimplexCategory.{v}ᵒᵖ ⥤ C deriving [anonymous]
 
 namespace SimplicialObject
 
@@ -129,11 +129,11 @@ variable (C)
 def whiskering (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ simplicial_object C ⥤ simplicial_object D :=
   whiskering_right _ _ _
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- Truncated simplicial objects. -/
-@[derive #[expr category], nolint #[ident has_inhabited_instance]]
-def truncated (n : exprℕ()) :=
-«expr ⥤ »(«expr ᵒᵖ»(simplex_category.truncated.{v} n), C)
+@[nolint has_inhabited_instance]
+def truncated (n : ℕ) :=
+  SimplexCategory.Truncated.{v} nᵒᵖ ⥤ C deriving [anonymous]
 
 variable {C}
 
@@ -182,11 +182,11 @@ variable (C)
 abbrev const : C ⥤ simplicial_object C :=
   CategoryTheory.Functor.const _
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- The category of augmented simplicial objects, defined as a comma category. -/
-@[derive #[expr category], nolint #[ident has_inhabited_instance]]
+@[nolint has_inhabited_instance]
 def augmented :=
-comma («expr𝟭»() (simplicial_object C)) (const C)
+  comma (𝟭 (simplicial_object C)) (const C)deriving [anonymous]
 
 variable {C}
 
@@ -269,11 +269,11 @@ theorem augment_hom_zero (X : simplicial_object C) (X₀ : C) (f : X _[0] ⟶ X�
 
 end SimplicialObject
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- Cosimplicial objects. -/
-@[derive #[expr category], nolint #[ident has_inhabited_instance]]
+@[nolint has_inhabited_instance]
 def cosimplicial_object :=
-«expr ⥤ »(simplex_category.{v}, C)
+  SimplexCategory.{v} ⥤ C deriving [anonymous]
 
 namespace CosimplicialObject
 
@@ -371,11 +371,11 @@ variable (C)
 def whiskering (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ cosimplicial_object C ⥤ cosimplicial_object D :=
   whiskering_right _ _ _
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- Truncated cosimplicial objects. -/
-@[derive #[expr category], nolint #[ident has_inhabited_instance]]
-def truncated (n : exprℕ()) :=
-«expr ⥤ »(simplex_category.truncated.{v} n, C)
+@[nolint has_inhabited_instance]
+def truncated (n : ℕ) :=
+  SimplexCategory.Truncated.{v} n ⥤ C deriving [anonymous]
 
 variable {C}
 
@@ -424,11 +424,11 @@ variable (C)
 abbrev const : C ⥤ cosimplicial_object C :=
   CategoryTheory.Functor.const _
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /-- Augmented cosimplicial objects. -/
-@[derive #[expr category], nolint #[ident has_inhabited_instance]]
+@[nolint has_inhabited_instance]
 def augmented :=
-comma (const C) («expr𝟭»() (cosimplicial_object C))
+  comma (const C) (𝟭 (cosimplicial_object C))deriving [anonymous]
 
 variable {C}
 
@@ -512,7 +512,7 @@ end CosimplicialObject
 
 /-- The anti-equivalence between simplicial objects and cosimplicial objects. -/
 @[simps]
-def simplicial_cosimplicial_equiv : «expr ᵒᵖ» (simplicial_object C) ≌ cosimplicial_object («expr ᵒᵖ» C) :=
+def simplicial_cosimplicial_equiv : simplicial_object Cᵒᵖ ≌ cosimplicial_object (Cᵒᵖ) :=
   functor.left_op_right_op_equiv _ _
 
 variable {C}
@@ -520,15 +520,13 @@ variable {C}
 /-- Construct an augmented cosimplicial object in the opposite
 category from an augmented simplicial object. -/
 @[simps]
-def simplicial_object.augmented.right_op (X : simplicial_object.augmented C) :
-  cosimplicial_object.augmented («expr ᵒᵖ» C) :=
+def simplicial_object.augmented.right_op (X : simplicial_object.augmented C) : cosimplicial_object.augmented (Cᵒᵖ) :=
   { left := Opposite.op X.right, right := X.left.right_op, Hom := X.hom.right_op }
 
 /-- Construct an augmented simplicial object from an augmented cosimplicial
 object in the opposite category. -/
 @[simps]
-def cosimplicial_object.augmented.left_op (X : cosimplicial_object.augmented («expr ᵒᵖ» C)) :
-  simplicial_object.augmented C :=
+def cosimplicial_object.augmented.left_op (X : cosimplicial_object.augmented (Cᵒᵖ)) : simplicial_object.augmented C :=
   { left := X.right.left_op, right := X.left.unop, Hom := X.hom.left_op }
 
 /-- Converting an augmented simplicial object to an augmented cosimplicial
@@ -545,7 +543,7 @@ def simplicial_object.augmented.right_op_left_op_iso (X : simplicial_object.augm
 /-- Converting an augmented cosimplicial object to an augmented simplicial
 object and back is isomorphic to the given object. -/
 @[simps]
-def cosimplicial_object.augmented.left_op_right_op_iso (X : cosimplicial_object.augmented («expr ᵒᵖ» C)) :
+def cosimplicial_object.augmented.left_op_right_op_iso (X : cosimplicial_object.augmented (Cᵒᵖ)) :
   X.left_op.right_op ≅ X :=
   comma.iso_mk
     (eq_to_iso$
@@ -559,8 +557,7 @@ variable (C)
 
 /-- A functorial version of `simplicial_object.augmented.right_op`. -/
 @[simps]
-def simplicial_to_cosimplicial_augmented :
-  «expr ᵒᵖ» (simplicial_object.augmented C) ⥤ cosimplicial_object.augmented («expr ᵒᵖ» C) :=
+def simplicial_to_cosimplicial_augmented : simplicial_object.augmented Cᵒᵖ ⥤ cosimplicial_object.augmented (Cᵒᵖ) :=
   { obj := fun X => X.unop.right_op,
     map :=
       fun X Y f =>
@@ -575,8 +572,7 @@ def simplicial_to_cosimplicial_augmented :
 
 /-- A functorial version of `cosimplicial_object.augmented.left_op`. -/
 @[simps]
-def cosimplicial_to_simplicial_augmented :
-  cosimplicial_object.augmented («expr ᵒᵖ» C) ⥤ «expr ᵒᵖ» (simplicial_object.augmented C) :=
+def cosimplicial_to_simplicial_augmented : cosimplicial_object.augmented (Cᵒᵖ) ⥤ simplicial_object.augmented Cᵒᵖ :=
   { obj := fun X => Opposite.op X.left_op,
     map :=
       fun X Y f =>
@@ -593,8 +589,7 @@ def cosimplicial_to_simplicial_augmented :
 /-- The contravariant categorical equivalence between augmented simplicial
 objects and augmented cosimplicial objects in the opposite category. -/
 @[simps]
-def simplicial_cosimplicial_augmented_equiv :
-  «expr ᵒᵖ» (simplicial_object.augmented C) ≌ cosimplicial_object.augmented («expr ᵒᵖ» C) :=
+def simplicial_cosimplicial_augmented_equiv : simplicial_object.augmented Cᵒᵖ ≌ cosimplicial_object.augmented (Cᵒᵖ) :=
   { Functor := simplicial_to_cosimplicial_augmented _, inverse := cosimplicial_to_simplicial_augmented _,
     unitIso :=
       nat_iso.of_components (fun X => X.unop.right_op_left_op_iso.op)

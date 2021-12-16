@@ -117,9 +117,9 @@ open Opposite
 /--
 The opposite of a finite category is finite.
 -/
-def fin_category_opposite {J : Type v} [small_category J] [fin_category J] : fin_category («expr ᵒᵖ» J) :=
-  { decidableEqObj := Equiv.decidableEq equiv_to_opposite.symm, fintypeObj := Fintype.ofEquiv _ equiv_to_opposite,
-    decidableEqHom := fun j j' => Equiv.decidableEq (op_equiv j j'),
+def fin_category_opposite {J : Type v} [small_category J] [fin_category J] : fin_category (Jᵒᵖ) :=
+  { decidableEqObj := Equivₓ.decidableEq equiv_to_opposite.symm, fintypeObj := Fintype.ofEquiv _ equiv_to_opposite,
+    decidableEqHom := fun j j' => Equivₓ.decidableEq (op_equiv j j'),
     fintypeHom := fun j j' => Fintype.ofEquiv _ (op_equiv j j').symm }
 
 end CategoryTheory

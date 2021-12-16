@@ -13,7 +13,7 @@ equivalences (`measurable_equiv`) to both types and prove that both of them are 
 
 open MeasureTheory
 
-noncomputable theory
+noncomputable section 
 
 namespace Complex
 

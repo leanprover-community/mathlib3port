@@ -152,15 +152,16 @@ def one_bits : Num → List Nat
 
 end Num
 
--- error in Data.Num.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- This is a nonzero (and "non minus one") version of `snum`.
     See the documentation of `snum` for more details. -/
-@[derive #[expr has_reflect], derive #[expr decidable_eq]]
-inductive nzsnum : Type
-| msb : bool → nzsnum
-| bit : bool → nzsnum → nzsnum
+inductive Nzsnum : Type
+  | msb : Bool → Nzsnum
+  | bit : Bool → Nzsnum → Nzsnum deriving [anonymous], [anonymous]
 
--- error in Data.Num.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- Alternative representation of integers using a sign bit at the end.
   The convention on sign here is to have the argument to `msb` denote
   the sign of the MSB itself, with all higher bits set to the negation
@@ -175,10 +176,9 @@ inductive nzsnum : Type
 
      0  = ..0000000(base 2) = zero ff
      -1 = ..1111111(base 2) = zero tt -/
-@[derive #[expr has_reflect], derive #[expr decidable_eq]]
-inductive snum : Type
-| zero : bool → snum
-| nz : nzsnum → snum
+inductive Snum : Type
+  | zero : Bool → Snum
+  | nz : Nzsnum → Snum deriving [anonymous], [anonymous]
 
 instance : Coe Nzsnum Snum :=
   ⟨Snum.nz⟩

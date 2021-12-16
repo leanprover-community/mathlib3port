@@ -1,5 +1,5 @@
-import Mathbin.Order.PreorderHom 
-import Mathbin.Dynamics.FixedPoints.Basic
+import Mathbin.Dynamics.FixedPoints.Basic 
+import Mathbin.Order.Hom.Lattice
 
 /-!
 # Fixed point construction on complete lattices
@@ -8,11 +8,11 @@ This file sets up the basic theory of fixed points of a monotone function in a c
 
 ## Main definitions
 
-* `preorder_hom.lfp`: The least fixed point of a bundled monotone function.
-* `preorder_hom.gfp`: The greatest fixed point of a bundled monotone function.
-* `preorder_hom.prev_fixed`: The greatest fixed point of a bundled monotone function smaller than or
+* `order_hom.lfp`: The least fixed point of a bundled monotone function.
+* `order_hom.gfp`: The greatest fixed point of a bundled monotone function.
+* `order_hom.prev_fixed`: The greatest fixed point of a bundled monotone function smaller than or
   equal to a given element.
-* `preorder_hom.next_fixed`: The least fixed point of a bundled monotone function greater than or
+* `order_hom.next_fixed`: The least fixed point of a bundled monotone function greater than or
   equal to a given element.
 * `fixed_points.complete_lattice`: The Knaster-Tarski theorem: fixed points of a monotone
   self-map of a complete lattice form themselves a complete lattice.
@@ -29,19 +29,30 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 
 open function(FixedPoints IsFixedPt)
 
-namespace PreorderHom
+namespace OrderHom
 
 section Basic
 
 variable [CompleteLattice α] (f : α →ₘ α)
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Least fixed point of a monotone function -/
-def lfp : (α →ₘ α) →ₘ α :=
-  { toFun := fun f => Inf { a | f a ≤ a }, monotone' := fun f g hle => Inf_le_Inf$ fun a ha => (hle a).trans ha }
+  def
+    lfp
+    : α →ₘ α →ₘ α
+    := { toFun := fun f => Inf { a | f a ≤ a } , monotone' := fun f g hle => Inf_le_Inf $ fun a ha => hle a . trans ha }
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Greatest fixed point of a monotone function -/
-def gfp : (α →ₘ α) →ₘ α :=
-  { toFun := fun f => Sup { a | a ≤ f a }, monotone' := fun f g hle => Sup_le_Sup$ fun a ha => le_transₓ ha (hle a) }
+  def
+    gfp
+    : α →ₘ α →ₘ α
+    :=
+      {
+        toFun := fun f => Sup { a | a ≤ f a } , monotone' := fun f g hle => Sup_le_Sup $ fun a ha => le_transₓ ha hle a
+        }
 
 theorem lfp_le {a : α} (h : f a ≤ a) : lfp f ≤ a :=
   Inf_le h
@@ -68,27 +79,29 @@ theorem lfp_le_map {a : α} (ha : lfp f ≤ a) : lfp f ≤ f a :=
     _ ≤ f a := f.mono ha
     
 
-theorem is_least_lfp_le : IsLeast { a | f a ≤ a } (lfp f) :=
-  ⟨f.map_lfp.le, fun a => f.lfp_le⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_least_lfp_le : IsLeast { a | f a ≤ a } lfp f := ⟨ f.map_lfp.le , fun a => f.lfp_le ⟩
 
 theorem is_least_lfp : IsLeast (fixed_points f) (lfp f) :=
   ⟨f.is_fixed_pt_lfp, fun a => f.lfp_le_fixed⟩
 
--- error in Order.FixedPoints: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lfp_induction
-{p : α → exprProp()}
-(step : ∀ a, p a → «expr ≤ »(a, lfp f) → p (f a))
-(hSup : ∀ s, ∀ a «expr ∈ » s, p a → p (Sup s)) : p (lfp f) :=
-begin
-  set [] [ident s] [] [":="] [expr {a | «expr ∧ »(«expr ≤ »(a, lfp f), p a)}] [],
-  specialize [expr hSup s (λ a, and.right)],
-  suffices [] [":", expr «expr = »(Sup s, lfp f)],
-  from [expr «expr ▸ »(this, hSup)],
-  have [ident h] [":", expr «expr ≤ »(Sup s, lfp f)] [":=", expr Sup_le (λ b, and.left)],
-  have [ident hmem] [":", expr «expr ∈ »(f (Sup s), s)] [],
-  from [expr ⟨f.map_le_lfp h, step _ hSup h⟩],
-  exact [expr h.antisymm «expr $ »(f.lfp_le, le_Sup hmem)]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  lfp_induction
+  { p : α → Prop } ( step : ∀ a , p a → a ≤ lfp f → p f a ) ( hSup : ∀ s , ∀ a _ : a ∈ s , p a → p Sup s ) : p lfp f
+  :=
+    by
+      set s := { a | a ≤ lfp f ∧ p a }
+        specialize hSup s fun a => And.right
+        suffices : Sup s = lfp f
+        exact this ▸ hSup
+        have h : Sup s ≤ lfp f := Sup_le fun b => And.left
+        have hmem : f Sup s ∈ s
+        exact ⟨ f.map_le_lfp h , step _ hSup h ⟩
+        exact h.antisymm f.lfp_le $ le_Sup hmem
 
 theorem le_gfp {a : α} (h : a ≤ f a) : a ≤ gfp f :=
   le_Sup h
@@ -109,12 +122,14 @@ theorem map_le_gfp {a : α} (ha : a ≤ gfp f) : f a ≤ gfp f :=
 theorem gfp_le_map {a : α} (ha : gfp f ≤ a) : gfp f ≤ f a :=
   f.dual.map_le_lfp ha
 
-theorem is_greatest_gfp_le : IsGreatest { a | a ≤ f a } (gfp f) :=
-  f.dual.is_least_lfp_le
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem is_greatest_gfp_le : IsGreatest { a | a ≤ f a } gfp f := f.dual.is_least_lfp_le
 
 theorem is_greatest_gfp : IsGreatest (fixed_points f) (gfp f) :=
   f.dual.is_least_lfp
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem gfp_induction {p : α → Prop} (step : ∀ a, p a → gfp f ≤ a → p (f a))
   (hInf : ∀ s, (∀ a _ : a ∈ s, p a) → p (Inf s)) : p (gfp f) :=
   f.dual.lfp_induction step hInf
@@ -132,22 +147,17 @@ theorem map_lfp_comp : f (lfp (g.comp f)) = lfp (f.comp g) :=
 theorem map_gfp_comp : f (g.comp f).gfp = (f.comp g).gfp :=
   f.dual.map_lfp_comp g.dual
 
--- error in Order.FixedPoints: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lfp_lfp (h : «expr →ₘ »(α, «expr →ₘ »(α, α))) : «expr = »(lfp (lfp.comp h), lfp h.on_diag) :=
-begin
-  let [ident a] [] [":=", expr lfp (lfp.comp h)],
-  refine [expr (lfp_le _ _).antisymm (lfp_le _ (eq.le _))],
-  { exact [expr lfp_le _ h.on_diag.map_lfp.le] },
-  have [ident ha] [":", expr «expr = »(«expr ∘ »(lfp, h) a, a)] [":=", expr (lfp.comp h).map_lfp],
-  calc
-    «expr = »(h a a, h a (lfp (h a))) : congr_arg (h a) ha.symm
-    «expr = »(..., lfp (h a)) : (h a).map_lfp
-    «expr = »(..., a) : ha
-end
+theorem lfp_lfp (h : α →ₘ α →ₘ α) : lfp (lfp.comp h) = lfp h.on_diag :=
+  by 
+    let a := lfp (lfp.comp h)
+    refine' (lfp_le _ _).antisymm (lfp_le _ (Eq.le _))
+    ·
+      exact lfp_le _ h.on_diag.map_lfp.le 
+    have ha : (lfp ∘ h) a = a := (lfp.comp h).map_lfp 
+    calc h a a = h a (lfp (h a)) := congr_argₓ (h a) ha.symm _ = lfp (h a) := (h a).map_lfp _ = a := ha
 
 theorem gfp_gfp (h : α →ₘ α →ₘ α) : gfp (gfp.comp h) = gfp h.on_diag :=
-  @lfp_lfp (OrderDual α) _$
-    (PreorderHom.dualIso (OrderDual α) (OrderDual α)).symm.toOrderEmbedding.toPreorderHom.comp h.dual
+  @lfp_lfp (OrderDual α) _$ (OrderHom.dualIso (OrderDual α) (OrderDual α)).symm.toOrderEmbedding.toOrderHom.comp h.dual
 
 end Eqn
 
@@ -174,7 +184,7 @@ that is greater than or equal to `x`. -/
 def next_fixed (x : α) (hx : x ≤ f x) : fixed_points f :=
   { f.dual.prev_fixed x hx with val := (const α x⊔f).lfp }
 
-theorem prev_fixed_le {x : α} (hx : f x ≤ x) : «expr↑ » (f.prev_fixed x hx) ≤ x :=
+theorem prev_fixed_le {x : α} (hx : f x ≤ x) : ↑f.prev_fixed x hx ≤ x :=
   f.gfp_const_inf_le x
 
 theorem le_next_fixed {x : α} (hx : x ≤ f x) : x ≤ f.next_fixed x hx :=
@@ -188,14 +198,14 @@ theorem next_fixed_le_iff {x : α} (hx : x ≤ f x) {y : fixed_points f} : f.nex
   ⟨fun h => (f.le_next_fixed hx).trans h, f.next_fixed_le hx⟩
 
 @[simp]
-theorem le_prev_fixed_iff {x : α} (hx : f x ≤ x) {y : fixed_points f} : y ≤ f.prev_fixed x hx ↔ «expr↑ » y ≤ x :=
+theorem le_prev_fixed_iff {x : α} (hx : f x ≤ x) {y : fixed_points f} : y ≤ f.prev_fixed x hx ↔ ↑y ≤ x :=
   f.dual.next_fixed_le_iff hx
 
-theorem le_prev_fixed {x : α} (hx : f x ≤ x) {y : fixed_points f} (h : «expr↑ » y ≤ x) : y ≤ f.prev_fixed x hx :=
+theorem le_prev_fixed {x : α} (hx : f x ≤ x) {y : fixed_points f} (h : ↑y ≤ x) : y ≤ f.prev_fixed x hx :=
   (f.le_prev_fixed_iff hx).2 h
 
 theorem le_map_sup_fixed_points (x y : fixed_points f) : (x⊔y : α) ≤ f (x⊔y) :=
-  calc (x⊔y : α) = f x⊔f y := congr_arg2 (·⊔·) x.2.symm y.2.symm 
+  calc (x⊔y : α) = f x⊔f y := congr_arg2ₓ (·⊔·) x.2.symm y.2.symm 
     _ ≤ f (x⊔y) := f.mono.le_map_sup x y
     
 
@@ -210,11 +220,11 @@ theorem map_Inf_subset_fixed_points_le (A : Set α) (hA : A ⊆ fixed_points f) 
 
 end PrevNext
 
-end PreorderHom
+end OrderHom
 
 namespace FixedPoints
 
-open PreorderHom
+open OrderHom
 
 variable [CompleteLattice α] (f : α →ₘ α)
 

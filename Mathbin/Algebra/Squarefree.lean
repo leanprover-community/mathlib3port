@@ -59,7 +59,7 @@ theorem Irreducible.squarefree [CommMonoidₓ R] {x : R} (h : Irreducible x) : S
       apply is_unit_of_mul_is_unit_left hu
 
 @[simp]
-theorem Prime.squarefree [CommCancelMonoidWithZero R] {x : R} (h : Prime x) : Squarefree x :=
+theorem Prime.squarefree [CancelCommMonoidWithZero R] {x : R} (h : Prime x) : Squarefree x :=
   h.irreducible.squarefree
 
 theorem squarefree_of_dvd_of_squarefree [CommMonoidₓ R] {x y : R} (hdvd : x ∣ y) (hsq : Squarefree y) : Squarefree x :=
@@ -83,41 +83,45 @@ end multiplicity
 
 namespace UniqueFactorizationMonoid
 
-variable [CommCancelMonoidWithZero R] [Nontrivial R] [UniqueFactorizationMonoid R]
+variable [CancelCommMonoidWithZero R] [Nontrivial R] [UniqueFactorizationMonoid R]
 
 variable [NormalizationMonoid R]
 
--- error in Algebra.Squarefree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem squarefree_iff_nodup_normalized_factors
-[decidable_eq R]
-{x : R}
-(x0 : «expr ≠ »(x, 0)) : «expr ↔ »(squarefree x, multiset.nodup (normalized_factors x)) :=
-begin
-  have [ident drel] [":", expr decidable_rel (has_dvd.dvd : R → R → exprProp())] [],
-  { classical,
-    apply_instance },
-  haveI [] [] [":=", expr drel],
-  rw ["[", expr multiplicity.squarefree_iff_multiplicity_le_one, ",", expr multiset.nodup_iff_count_le_one, "]"] [],
-  split; intros [ident h, ident a],
-  { by_cases [expr hmem, ":", expr «expr ∈ »(a, normalized_factors x)],
-    { have [ident ha] [] [":=", expr irreducible_of_normalized_factor _ hmem],
-      rcases [expr h a, "with", ident h, "|", ident h],
-      { rw ["<-", expr normalize_normalized_factor _ hmem] [],
-        rw ["[", expr multiplicity_eq_count_normalized_factors ha x0, "]"] ["at", ident h],
-        assumption_mod_cast },
-      { have [] [] [":=", expr ha.1],
-        contradiction } },
-    { simp [] [] [] ["[", expr multiset.count_eq_zero_of_not_mem hmem, "]"] [] [] } },
-  { rw [expr or_iff_not_imp_right] [],
-    intro [ident hu],
-    by_cases [expr h0, ":", expr «expr = »(a, 0)],
-    { simp [] [] [] ["[", expr h0, ",", expr x0, "]"] [] [] },
-    rcases [expr wf_dvd_monoid.exists_irreducible_factor hu h0, "with", "⟨", ident b, ",", ident hib, ",", ident hdvd, "⟩"],
-    apply [expr le_trans (multiplicity.multiplicity_le_multiplicity_of_dvd_left hdvd)],
-    rw ["[", expr multiplicity_eq_count_normalized_factors hib x0, "]"] [],
-    specialize [expr h (normalize b)],
-    assumption_mod_cast }
-end
+theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x ≠ 0) :
+  Squarefree x ↔ Multiset.Nodup (normalized_factors x) :=
+  by 
+    have drel : DecidableRel (HasDvd.Dvd : R → R → Prop)
+    ·
+      classical 
+      infer_instance 
+    have  := drel 
+    rw [multiplicity.squarefree_iff_multiplicity_le_one, Multiset.nodup_iff_count_le_one]
+    constructor <;> intro h a
+    ·
+      byCases' hmem : a ∈ normalized_factors x
+      ·
+        have ha := irreducible_of_normalized_factor _ hmem 
+        rcases h a with (h | h)
+        ·
+          rw [←normalize_normalized_factor _ hmem]
+          rw [multiplicity_eq_count_normalized_factors ha x0] at h 
+          assumptionModCast
+        ·
+          have  := ha.1
+          contradiction
+      ·
+        simp [Multiset.count_eq_zero_of_not_mem hmem]
+    ·
+      rw [or_iff_not_imp_right]
+      intro hu 
+      byCases' h0 : a = 0
+      ·
+        simp [h0, x0]
+      rcases WfDvdMonoid.exists_irreducible_factor hu h0 with ⟨b, hib, hdvd⟩
+      apply le_transₓ (multiplicity.multiplicity_le_multiplicity_of_dvd_left hdvd)
+      rw [multiplicity_eq_count_normalized_factors hib x0]
+      specialize h (normalize b)
+      assumptionModCast
 
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) : x ∣ (y^n) ↔ x ∣ y :=
   by 
@@ -148,90 +152,100 @@ instance : DecidablePred (Squarefree : ℕ → Prop)
 
 open UniqueFactorizationMonoid
 
--- error in Algebra.Squarefree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem divisors_filter_squarefree
-{n : exprℕ()}
-(h0 : «expr ≠ »(n, 0)) : «expr = »((n.divisors.filter squarefree).val, (unique_factorization_monoid.normalized_factors n).to_finset.powerset.val.map (λ
-  x, x.val.prod)) :=
-begin
-  rw [expr multiset.nodup_ext (finset.nodup _) (multiset.nodup_map_on _ (finset.nodup _))] [],
-  { intro [ident a],
-    simp [] [] ["only"] ["[", expr multiset.mem_filter, ",", expr id.def, ",", expr multiset.mem_map, ",", expr finset.filter_val, ",", "<-", expr finset.mem_def, ",", expr mem_divisors, "]"] [] [],
-    split,
-    { rintro ["⟨", "⟨", ident an, ",", ident h0, "⟩", ",", ident hsq, "⟩"],
-      use [expr (unique_factorization_monoid.normalized_factors a).to_finset],
-      simp [] [] ["only"] ["[", expr id.def, ",", expr finset.mem_powerset, "]"] [] [],
-      rcases [expr an, "with", "⟨", ident b, ",", ident rfl, "⟩"],
-      rw [expr mul_ne_zero_iff] ["at", ident h0],
-      rw [expr unique_factorization_monoid.squarefree_iff_nodup_normalized_factors h0.1] ["at", ident hsq],
-      rw ["[", expr multiset.to_finset_subset, ",", expr multiset.to_finset_val, ",", expr hsq.erase_dup, ",", "<-", expr associated_iff_eq, ",", expr normalized_factors_mul h0.1 h0.2, "]"] [],
-      exact [expr ⟨multiset.subset_of_le (multiset.le_add_right _ _), normalized_factors_prod h0.1⟩] },
-    { rintro ["⟨", ident s, ",", ident hs, ",", ident rfl, "⟩"],
-      rw ["[", expr finset.mem_powerset, ",", "<-", expr finset.val_le_iff, ",", expr multiset.to_finset_val, "]"] ["at", ident hs],
-      have [ident hs0] [":", expr «expr ≠ »(s.val.prod, 0)] [],
-      { rw ["[", expr ne.def, ",", expr multiset.prod_eq_zero_iff, "]"] [],
-        simp [] [] ["only"] ["[", expr exists_prop, ",", expr id.def, ",", expr exists_eq_right, "]"] [] [],
-        intro [ident con],
-        apply [expr not_irreducible_zero (irreducible_of_normalized_factor 0 (multiset.mem_erase_dup.1 (multiset.mem_of_le hs con)))] },
-      rw [expr (normalized_factors_prod h0).symm.dvd_iff_dvd_right] [],
-      refine [expr ⟨⟨multiset.prod_dvd_prod (le_trans hs (multiset.erase_dup_le _)), h0⟩, _⟩],
-      have [ident h] [] [":=", expr unique_factorization_monoid.factors_unique irreducible_of_normalized_factor (λ
-        x
-        hx, irreducible_of_normalized_factor x (multiset.mem_of_le (le_trans hs (multiset.erase_dup_le _)) hx)) (normalized_factors_prod hs0)],
-      rw ["[", expr associated_eq_eq, ",", expr multiset.rel_eq, "]"] ["at", ident h],
-      rw ["[", expr unique_factorization_monoid.squarefree_iff_nodup_normalized_factors hs0, ",", expr h, "]"] [],
-      apply [expr s.nodup] } },
-  { intros [ident x, ident hx, ident y, ident hy, ident h],
-    rw ["[", "<-", expr finset.val_inj, ",", "<-", expr multiset.rel_eq, ",", "<-", expr associated_eq_eq, "]"] [],
-    rw ["[", "<-", expr finset.mem_def, ",", expr finset.mem_powerset, "]"] ["at", ident hx, ident hy],
-    apply [expr unique_factorization_monoid.factors_unique _ _ (associated_iff_eq.2 h)],
-    { intros [ident z, ident hz],
-      apply [expr irreducible_of_normalized_factor z],
-      rw ["<-", expr multiset.mem_to_finset] [],
-      apply [expr hx hz] },
-    { intros [ident z, ident hz],
-      apply [expr irreducible_of_normalized_factor z],
-      rw ["<-", expr multiset.mem_to_finset] [],
-      apply [expr hy hz] } }
-end
+theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
+  (n.divisors.filter Squarefree).val =
+    (UniqueFactorizationMonoid.normalizedFactors n).toFinset.Powerset.val.map fun x => x.val.prod :=
+  by 
+    rw [Multiset.nodup_ext (Finset.nodup _) (Multiset.nodup_map_on _ (Finset.nodup _))]
+    ·
+      intro a 
+      simp only [Multiset.mem_filter, id.def, Multiset.mem_map, Finset.filter_val, ←Finset.mem_def, mem_divisors]
+      constructor
+      ·
+        rintro ⟨⟨an, h0⟩, hsq⟩
+        use (UniqueFactorizationMonoid.normalizedFactors a).toFinset 
+        simp only [id.def, Finset.mem_powerset]
+        rcases an with ⟨b, rfl⟩
+        rw [mul_ne_zero_iff] at h0 
+        rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors h0.1] at hsq 
+        rw [Multiset.to_finset_subset, Multiset.to_finset_val, hsq.erase_dup, ←associated_iff_eq,
+          normalized_factors_mul h0.1 h0.2]
+        exact ⟨Multiset.subset_of_le (Multiset.le_add_right _ _), normalized_factors_prod h0.1⟩
+      ·
+        rintro ⟨s, hs, rfl⟩
+        rw [Finset.mem_powerset, ←Finset.val_le_iff, Multiset.to_finset_val] at hs 
+        have hs0 : s.val.prod ≠ 0
+        ·
+          rw [Ne.def, Multiset.prod_eq_zero_iff]
+          simp only [exists_prop, id.def, exists_eq_right]
+          intro con 
+          apply
+            not_irreducible_zero
+              (irreducible_of_normalized_factor 0 (Multiset.mem_erase_dup.1 (Multiset.mem_of_le hs Con)))
+        rw [(normalized_factors_prod h0).symm.dvd_iff_dvd_right]
+        refine' ⟨⟨Multiset.prod_dvd_prod (le_transₓ hs (Multiset.erase_dup_le _)), h0⟩, _⟩
+        have h :=
+          UniqueFactorizationMonoid.factors_unique irreducible_of_normalized_factor
+            (fun x hx =>
+              irreducible_of_normalized_factor x (Multiset.mem_of_le (le_transₓ hs (Multiset.erase_dup_le _)) hx))
+            (normalized_factors_prod hs0)
+        rw [associated_eq_eq, Multiset.rel_eq] at h 
+        rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors hs0, h]
+        apply s.nodup
+    ·
+      intro x hx y hy h 
+      rw [←Finset.val_inj, ←Multiset.rel_eq, ←associated_eq_eq]
+      rw [←Finset.mem_def, Finset.mem_powerset] at hx hy 
+      apply UniqueFactorizationMonoid.factors_unique _ _ (associated_iff_eq.2 h)
+      ·
+        intro z hz 
+        apply irreducible_of_normalized_factor z 
+        rw [←Multiset.mem_to_finset]
+        apply hx hz
+      ·
+        intro z hz 
+        apply irreducible_of_normalized_factor z 
+        rw [←Multiset.mem_to_finset]
+        apply hy hz
 
 open_locale BigOperators
 
 theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type _} [AddCommMonoidₓ α] {f : ℕ → α} :
-  (∑i in n.divisors.filter Squarefree, f i) =
-    ∑i in (UniqueFactorizationMonoid.normalizedFactors n).toFinset.Powerset, f i.val.prod :=
+  (∑ i in n.divisors.filter Squarefree, f i) =
+    ∑ i in (UniqueFactorizationMonoid.normalizedFactors n).toFinset.Powerset, f i.val.prod :=
   by 
     rw [Finset.sum_eq_multiset_sum, divisors_filter_squarefree h0, Multiset.map_map, Finset.sum_eq_multiset_sum]
 
--- error in Algebra.Squarefree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sq_mul_squarefree_of_pos
-{n : exprℕ()}
-(hn : «expr < »(0, n)) : «expr∃ , »((a
-  b : exprℕ()), «expr ∧ »(«expr < »(0, a), «expr ∧ »(«expr < »(0, b), «expr ∧ »(«expr = »(«expr * »(«expr ^ »(b, 2), a), n), squarefree a)))) :=
-begin
-  let [ident S] [] [":=", expr {s ∈ finset.range «expr + »(n, 1) | «expr ∧ »(«expr ∣ »(s, n), «expr∃ , »((x), «expr = »(s, «expr ^ »(x, 2))))}],
-  have [ident hSne] [":", expr S.nonempty] [],
-  { use [expr 1],
-    have [ident h1] [":", expr «expr ∧ »(«expr < »(0, n), «expr∃ , »((x : exprℕ()), «expr = »(1, «expr ^ »(x, 2))))] [":=", expr ⟨hn, ⟨1, (one_pow 2).symm⟩⟩],
-    simpa [] [] [] ["[", expr S, "]"] [] [] },
-  let [ident s] [] [":=", expr finset.max' S hSne],
-  have [ident hs] [":", expr «expr ∈ »(s, S)] [":=", expr finset.max'_mem S hSne],
-  simp [] [] ["only"] ["[", expr finset.sep_def, ",", expr S, ",", expr finset.mem_filter, ",", expr finset.mem_range, "]"] [] ["at", ident hs],
-  obtain ["⟨", ident hsn1, ",", "⟨", ident a, ",", ident hsa, "⟩", ",", "⟨", ident b, ",", ident hsb, "⟩", "⟩", ":=", expr hs],
-  rw [expr hsa] ["at", ident hn],
-  obtain ["⟨", ident hlts, ",", ident hlta, "⟩", ":=", expr canonically_ordered_comm_semiring.mul_pos.mp hn],
-  rw [expr hsb] ["at", ident hsa, ident hn, ident hlts],
-  refine [expr ⟨a, b, hlta, (pow_pos_iff zero_lt_two).mp hlts, hsa.symm, _⟩],
-  rintro [ident x, "⟨", ident y, ",", ident hy, "⟩"],
-  rw [expr nat.is_unit_iff] [],
-  by_contra [ident hx],
-  refine [expr lt_le_antisymm _ (finset.le_max' S «expr ^ »(«expr * »(b, x), 2) _)],
-  { simp_rw ["[", expr S, ",", expr hsa, ",", expr finset.sep_def, ",", expr finset.mem_filter, ",", expr finset.mem_range, "]"] [],
-    refine [expr ⟨lt_succ_iff.mpr (le_of_dvd hn _), _, ⟨«expr * »(b, x), rfl⟩⟩]; use [expr y]; rw [expr hy] []; ring [] },
-  { convert [] [expr lt_mul_of_one_lt_right hlts (one_lt_pow 2 x zero_lt_two (one_lt_iff_ne_zero_and_ne_one.mpr ⟨λ
-        h, by simp [] [] [] ["*"] [] ["at", "*"], hx⟩))] [],
-    rw [expr mul_pow] [] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  sq_mul_squarefree_of_pos
+  { n : ℕ } ( hn : 0 < n ) : ∃ a b : ℕ , 0 < a ∧ 0 < b ∧ b ^ 2 * a = n ∧ Squarefree a
+  :=
+    by
+      let S := { s ∈ Finset.range n + 1 | s ∣ n ∧ ∃ x , s = x ^ 2 }
+        have hSne : S.nonempty
+        · use 1 have h1 : 0 < n ∧ ∃ x : ℕ , 1 = x ^ 2 := ⟨ hn , ⟨ 1 , one_pow 2 . symm ⟩ ⟩ simpa [ S ]
+        let s := Finset.max' S hSne
+        have hs : s ∈ S := Finset.max'_mem S hSne
+        simp only [ Finset.sep_def , S , Finset.mem_filter , Finset.mem_range ] at hs
+        obtain ⟨ hsn1 , ⟨ a , hsa ⟩ , ⟨ b , hsb ⟩ ⟩ := hs
+        rw [ hsa ] at hn
+        obtain ⟨ hlts , hlta ⟩ := canonically_ordered_comm_semiring.mul_pos.mp hn
+        rw [ hsb ] at hsa hn hlts
+        refine' ⟨ a , b , hlta , pow_pos_iff zero_lt_two . mp hlts , hsa.symm , _ ⟩
+        rintro x ⟨ y , hy ⟩
+        rw [ Nat.is_unit_iff ]
+        byContra hx
+        refine' lt_le_antisymm _ Finset.le_max' S b * x ^ 2 _
+        ·
+          simpRw [ S , hsa , Finset.sep_def , Finset.mem_filter , Finset.mem_range ]
+            refine' ⟨ lt_succ_iff.mpr le_of_dvd hn _ , _ , ⟨ b * x , rfl ⟩ ⟩ <;> use y <;> rw [ hy ] <;> ring
+        ·
+          convert
+              lt_mul_of_one_lt_right
+                hlts one_lt_pow 2 x zero_lt_two one_lt_iff_ne_zero_and_ne_one.mpr ⟨ fun h => by simp_all , hx ⟩
+            rw [ mul_powₓ ]
 
 theorem sq_mul_squarefree_of_pos' {n : ℕ} (h : 0 < n) : ∃ a b : ℕ, (((b+1)^2)*a+1) = n ∧ Squarefree (a+1) :=
   by 

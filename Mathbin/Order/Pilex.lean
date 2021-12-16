@@ -41,25 +41,26 @@ instance Pilex.is_strict_order [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a
 instance [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)] : PartialOrderₓ (Pilex ι β) :=
   partialOrderOfSO (· < ·)
 
--- error in Order.Pilex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem pilex.is_strict_total_order'
-[linear_order ι]
-(wf : well_founded ((«expr < ») : ι → ι → exprProp()))
-[∀ a, linear_order (β a)] : is_strict_total_order' (pilex ι β) ((«expr < »)) :=
-{ trichotomous := λ a b, begin
-    by_cases [expr h, ":", expr «expr∃ , »((i), «expr ≠ »(a i, b i))],
-    { let [ident i] [] [":=", expr wf.min _ h],
-      have [ident hlt_i] [":", expr ∀ j «expr < » i, «expr = »(a j, b j)] [],
-      { intro [ident j],
-        rw ["<-", expr not_imp_not] [],
-        exact [expr λ h', wf.not_lt_min _ _ h'] },
-      have [] [":", expr «expr ≠ »(a i, b i)] [],
-      from [expr wf.min_mem _ h],
-      exact [expr this.lt_or_lt.imp (λ h, ⟨i, hlt_i, h⟩) (λ h, or.inr ⟨i, λ j hj, (hlt_i j hj).symm, h⟩)] },
-    { push_neg ["at", ident h],
-      exact [expr or.inr (or.inl (funext h))] }
-  end }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr < » i)
+protected theorem Pilex.is_strict_total_order' [LinearOrderₓ ι] (wf : WellFounded (· < · : ι → ι → Prop))
+  [∀ a, LinearOrderₓ (β a)] : IsStrictTotalOrder' (Pilex ι β) (· < ·) :=
+  { trichotomous :=
+      fun a b =>
+        by 
+          byCases' h : ∃ i, a i ≠ b i
+          ·
+            let i := wf.min _ h 
+            have hlt_i : ∀ j _ : j < i, a j = b j
+            ·
+              intro j 
+              rw [←not_imp_not]
+              exact fun h' => wf.not_lt_min _ _ h' 
+            have  : a i ≠ b i 
+            exact wf.min_mem _ h 
+            exact this.lt_or_lt.imp (fun h => ⟨i, hlt_i, h⟩) fun h => Or.inr ⟨i, fun j hj => (hlt_i j hj).symm, h⟩
+          ·
+            pushNeg  at h 
+            exact Or.inr (Or.inl (funext h)) }
 
 /-- `pilex` is a linear order if the original order is well-founded.
 This cannot be an instance, since it depends on the well-foundedness of `<`. -/
@@ -67,17 +68,11 @@ protected noncomputable def Pilex.linearOrder [LinearOrderₓ ι] (wf : WellFoun
   [∀ a, LinearOrderₓ (β a)] : LinearOrderₓ (Pilex ι β) :=
   @linearOrderOfSTO' (Pilex ι β) (· < ·) (Pilex.is_strict_total_order' wf) (Classical.decRel _)
 
--- error in Order.Pilex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pilex.le_of_forall_le
-[linear_order ι]
-(wf : well_founded ((«expr < ») : ι → ι → exprProp()))
-[∀ a, linear_order (β a)]
-{a b : pilex ι β}
-(h : ∀ i, «expr ≤ »(a i, b i)) : «expr ≤ »(a, b) :=
-begin
-  letI [] [":", expr linear_order (pilex ι β)] [":=", expr pilex.linear_order wf],
-  exact [expr le_of_not_lt (λ ⟨i, hi⟩, (h i).not_lt hi.2)]
-end
+theorem Pilex.le_of_forall_le [LinearOrderₓ ι] (wf : WellFounded (· < · : ι → ι → Prop)) [∀ a, LinearOrderₓ (β a)]
+  {a b : Pilex ι β} (h : ∀ i, a i ≤ b i) : a ≤ b :=
+  by 
+    let this' : LinearOrderₓ (Pilex ι β) := Pilex.linearOrder wf 
+    exact le_of_not_ltₓ fun ⟨i, hi⟩ => (h i).not_lt hi.2
 
 @[toAdditive]
 instance [LinearOrderₓ ι] [∀ a, OrderedCommGroup (β a)] : OrderedCommGroup (Pilex ι β) :=

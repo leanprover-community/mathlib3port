@@ -12,7 +12,7 @@ Show `star X` itself has a left adjoint provided `C` is locally cartesian closed
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 

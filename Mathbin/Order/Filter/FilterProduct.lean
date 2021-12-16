@@ -22,7 +22,7 @@ open_locale Classical
 
 namespace Filter
 
-local notation3  "∀*" (...) ", " r:(scoped p => Filter.Eventually p φ) => r
+local notation3 "∀* " (...) ", " r:(scoped p => Filter.Eventually p φ) => r
 
 namespace Germ
 
@@ -57,17 +57,17 @@ noncomputable instance [LinearOrderₓ β] : LinearOrderₓ β* :=
         infer_instance }
 
 @[simp, normCast]
-theorem const_div [DivisionRing β] (x y : β) : («expr↑ » (x / y) : β*) = «expr↑ » x / «expr↑ » y :=
+theorem const_div [DivisionRing β] (x y : β) : (↑(x / y) : β*) = ↑x / ↑y :=
   rfl
 
-theorem coe_lt [Preorderₓ β] {f g : α → β} : (f : β*) < g ↔ ∀*x, f x < g x :=
+theorem coe_lt [Preorderₓ β] {f g : α → β} : (f : β*) < g ↔ ∀* x, f x < g x :=
   by 
     simp only [lt_iff_le_not_leₓ, eventually_and, coe_le, eventually_not, eventually_le]
 
-theorem coe_pos [Preorderₓ β] [HasZero β] {f : α → β} : 0 < (f : β*) ↔ ∀*x, 0 < f x :=
+theorem coe_pos [Preorderₓ β] [HasZero β] {f : α → β} : 0 < (f : β*) ↔ ∀* x, 0 < f x :=
   coe_lt
 
-theorem const_lt [Preorderₓ β] {x y : β} : («expr↑ » x : β*) < «expr↑ » y ↔ x < y :=
+theorem const_lt [Preorderₓ β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
   coe_lt.trans lift_rel_const_iff
 
 theorem lt_def [Preorderₓ β] : (· < · : β* → β* → Prop) = lift_rel (· < ·) :=
@@ -130,22 +130,22 @@ theorem abs_def [LinearOrderedAddCommGroup β] (x : β*) : |x| = map abs x :=
         exact rfl
 
 @[simp]
-theorem const_max [LinearOrderₓ β] (x y : β) : («expr↑ » (max x y : β) : β*) = max («expr↑ » x) («expr↑ » y) :=
+theorem const_max [LinearOrderₓ β] (x y : β) : (↑(max x y : β) : β*) = max (↑x) (↑y) :=
   by 
     rw [max_def, map₂_const]
 
 @[simp]
-theorem const_min [LinearOrderₓ β] (x y : β) : («expr↑ » (min x y : β) : β*) = min («expr↑ » x) («expr↑ » y) :=
+theorem const_min [LinearOrderₓ β] (x y : β) : (↑(min x y : β) : β*) = min (↑x) (↑y) :=
   by 
     rw [min_def, map₂_const]
 
 @[simp]
-theorem const_abs [LinearOrderedAddCommGroup β] (x : β) : («expr↑ » |x| : β*) = |«expr↑ » x| :=
+theorem const_abs [LinearOrderedAddCommGroup β] (x : β) : (↑|x| : β*) = |↑x| :=
   by 
     rw [abs_def, map_const]
 
 theorem lattice_of_linear_order_eq_filter_germ_lattice [LinearOrderₓ β] :
-  @latticeOfLinearOrder (Filter.Germ («expr↑ » φ) β) Filter.Germ.linearOrder = Filter.Germ.lattice :=
+  @latticeOfLinearOrder (Filter.Germ (↑φ) β) Filter.Germ.linearOrder = Filter.Germ.lattice :=
   Lattice.ext fun x y => Iff.rfl
 
 end Germ

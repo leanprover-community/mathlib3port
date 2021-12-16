@@ -27,7 +27,7 @@ Generalise to noncommutative (semi)rings
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -65,14 +65,17 @@ end Homomorphism
 
 section Degree
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The submodule of polynomials of total degree less than or equal to `m`.-/
-def restrict_total_degree : Submodule R (MvPolynomial σ R) :=
-  Finsupp.supported _ _ { n | (n.sum fun n e => e) ≤ m }
+  def restrict_total_degree : Submodule R MvPolynomial σ R := Finsupp.supported _ _ { n | n.sum fun n e => e ≤ m }
 
-/-- The submodule of polynomials such that the degree with respect to each individual variable is
-less than or equal to `m`.-/
-def restrict_degree (m : ℕ) : Submodule R (MvPolynomial σ R) :=
-  Finsupp.supported _ _ { n | ∀ i, n i ≤ m }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The submodule of polynomials such that the degree with respect to each individual variable is
+    less than or equal to `m`.-/
+  def restrict_degree ( m : ℕ ) : Submodule R MvPolynomial σ R := Finsupp.supported _ _ { n | ∀ i , n i ≤ m }
 
 variable {R}
 
@@ -81,6 +84,7 @@ theorem mem_restrict_total_degree (p : MvPolynomial σ R) : p ∈ restrict_total
     rw [total_degree, Finset.sup_le_iff]
     rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » p.support)
 theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
   p ∈ restrict_degree σ R n ↔ ∀ s _ : s ∈ p.support, ∀ i, (s : σ →₀ ℕ) i ≤ n :=
   by 
@@ -90,7 +94,7 @@ theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
 theorem mem_restrict_degree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
   p ∈ restrict_degree σ R n ↔ ∀ i, p.degrees.count i ≤ n :=
   by 
-    simp only [mem_restrict_degree, degrees, Multiset.count_sup, Finsupp.count_to_multiset, Finset.sup_le_iff]
+    simp only [mem_restrict_degree, degrees, Multiset.count_finset_sup, Finsupp.count_to_multiset, Finset.sup_le_iff]
     exact ⟨fun h n s hs => h s hs n, fun h s hs n => h n s hs⟩
 
 variable (σ R)

@@ -32,12 +32,12 @@ section
 /-- `equiv.mul_left₀` as an order_iso. -/
 @[simps (config := { simpRhs := tt })]
 def OrderIso.mulLeft₀ (a : α) (ha : 0 < a) : α ≃o α :=
-  { Equiv.mulLeft₀ a ha.ne' with map_rel_iff' := fun _ _ => mul_le_mul_left ha }
+  { Equivₓ.mulLeft₀ a ha.ne' with map_rel_iff' := fun _ _ => mul_le_mul_left ha }
 
 /-- `equiv.mul_right₀` as an order_iso. -/
 @[simps (config := { simpRhs := tt })]
 def OrderIso.mulRight₀ (a : α) (ha : 0 < a) : α ≃o α :=
-  { Equiv.mulRight₀ a ha.ne' with map_rel_iff' := fun _ _ => mul_le_mul_right ha }
+  { Equivₓ.mulRight₀ a ha.ne' with map_rel_iff' := fun _ _ => mul_le_mul_right ha }
 
 end 
 
@@ -716,10 +716,9 @@ theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 :=
 See note [reducible non-instances]. -/
 @[reducible]
 def Function.Injective.linearOrderedField {β : Type _} [HasZero β] [HasOne β] [Add β] [Mul β] [Neg β] [Sub β] [HasInv β]
-  [Div β] [Nontrivial β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-  (add : ∀ x y, f (x+y) = f x+f y) (mul : ∀ x y, f (x*y) = f x*f y) (neg : ∀ x, f (-x) = -f x)
-  (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
-  LinearOrderedField β :=
+  [Div β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x+y) = f x+f y)
+  (mul : ∀ x y, f (x*y) = f x*f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
+  (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : LinearOrderedField β :=
   { hf.linear_ordered_ring f zero one add mul neg sub, hf.field f zero one add mul neg sub inv div with  }
 
 theorem mul_sub_mul_div_mul_neg_iff (hc : c ≠ 0) (hd : d ≠ 0) : (((a*d) - b*c) / c*d) < 0 ↔ a / c < b / d :=
@@ -747,19 +746,15 @@ theorem div_mul_le_div_mul_of_div_le_div (h : a / b ≤ c / d) (he : 0 ≤ e) : 
 theorem exists_add_lt_and_pos_of_lt (h : b < a) : ∃ c : α, (b+c) < a ∧ 0 < c :=
   ⟨(a - b) / 2, add_sub_div_two_lt h, div_pos (sub_pos_of_lt h) zero_lt_two⟩
 
--- error in Algebra.Order.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_pos_mul_lt
-{a : α}
-(h : «expr < »(0, a))
-(b : α) : «expr∃ , »((c : α), «expr ∧ »(«expr < »(0, c), «expr < »(«expr * »(b, c), a))) :=
-begin
-  have [] [":", expr «expr < »(0, «expr / »(a, max «expr + »(b, 1) 1))] [],
-  from [expr div_pos h (lt_max_iff.2 (or.inr zero_lt_one))],
-  refine [expr ⟨«expr / »(a, max «expr + »(b, 1) 1), this, _⟩],
-  rw ["[", "<-", expr lt_div_iff this, ",", expr div_div_cancel' h.ne', "]"] [],
-  exact [expr lt_max_iff.2 «expr $ »(or.inl, lt_add_one _)]
-end
+theorem exists_pos_mul_lt {a : α} (h : 0 < a) (b : α) : ∃ c : α, 0 < c ∧ (b*c) < a :=
+  by 
+    have  : 0 < a / max (b+1) 1 
+    exact div_pos h (lt_max_iff.2 (Or.inr zero_lt_one))
+    refine' ⟨a / max (b+1) 1, this, _⟩
+    rw [←lt_div_iff this, div_div_cancel' h.ne']
+    exact lt_max_iff.2 (Or.inl$ lt_add_one _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » 0)
 theorem le_of_forall_sub_le (h : ∀ ε _ : ε > 0, b - ε ≤ a) : b ≤ a :=
   by 
     contrapose! h 
@@ -786,13 +781,14 @@ instance (priority := 100) LinearOrderedField.to_densely_ordered : DenselyOrdere
             _ = a₂ := add_self_div_two a₂
             ⟩ }
 
--- error in Algebra.Order.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_self_inj_of_nonneg
-(a0 : «expr ≤ »(0, a))
-(b0 : «expr ≤ »(0, b)) : «expr ↔ »(«expr = »(«expr * »(a, a), «expr * »(b, b)), «expr = »(a, b)) :=
-«expr $ »(mul_self_eq_mul_self_iff.trans, «expr $ »(or_iff_left_of_imp, λ h, by { subst [expr a],
-    have [] [":", expr «expr = »(b, 0)] [":=", expr le_antisymm (neg_nonneg.1 a0) b0],
-    rw ["[", expr this, ",", expr neg_zero, "]"] [] }))
+theorem mul_self_inj_of_nonneg (a0 : 0 ≤ a) (b0 : 0 ≤ b) : ((a*a) = b*b) ↔ a = b :=
+  mul_self_eq_mul_self_iff.trans$
+    or_iff_left_of_imp$
+      fun h =>
+        by 
+          subst a 
+          have  : b = 0 := le_antisymmₓ (neg_nonneg.1 a0) b0 
+          rw [this, neg_zero]
 
 theorem min_div_div_right {c : α} (hc : 0 ≤ c) (a b : α) : min (a / c) (b / c) = min a b / c :=
   Eq.symm$ Monotone.map_min fun x y => div_le_div_of_le hc

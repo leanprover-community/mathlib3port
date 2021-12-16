@@ -46,10 +46,10 @@ theorem sub_eq_psub (m : ℕ) : ∀ n, m - n = (psub m n).getOrElse 0
 theorem ppred_eq_some {m : ℕ} : ∀ {n}, ppred n = some m ↔ succ m = n
 | 0 =>
   by 
-    split  <;> intro h <;> contradiction
+    constructor <;> intro h <;> contradiction
 | n+1 =>
   by 
-    dsimp <;> split  <;> intro h <;> injection h <;> subst n
+    dsimp <;> constructor <;> intro h <;> injection h <;> subst n
 
 @[simp]
 theorem ppred_eq_none : ∀ {n : ℕ}, ppred n = none ↔ n = 0
@@ -58,7 +58,7 @@ theorem ppred_eq_none : ∀ {n : ℕ}, ppred n = none ↔ n = 0
     simp 
 | n+1 =>
   by 
-    dsimp <;> split  <;> contradiction
+    dsimp <;> constructor <;> contradiction
 
 theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ (k+n) = m
 | 0, k =>

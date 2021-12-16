@@ -81,6 +81,9 @@ instance Module_concrete_category : concrete_category.{v} (ModuleCat.{v} R) :=
 instance has_forget_to_AddCommGroup : has_forget₂ (ModuleCat R) AddCommGroupₓₓ :=
   { forget₂ := { obj := fun M => AddCommGroupₓₓ.of M, map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f } }
 
+instance (M N : ModuleCat R) : AddMonoidHomClass (M ⟶ N) M N :=
+  { LinearMap.addMonoidHomClass with coe := fun f => f }
+
 /-- The object in the category of R-modules associated to an R-module -/
 def of (X : Type v) [AddCommGroupₓ X] [Module R X] : ModuleCat R :=
   ⟨X⟩

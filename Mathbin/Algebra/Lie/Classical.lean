@@ -108,21 +108,18 @@ theorem Eb_val (h : j ≠ i) : (Eb R i j h).val = Matrix.stdBasisMatrix i j 1 :=
 
 end ElementaryBasis
 
--- error in Algebra.Lie.Classical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sl_non_abelian
-[fintype n]
-[nontrivial R]
-(h : «expr < »(1, fintype.card n)) : «expr¬ »(is_lie_abelian «expr↥ »(sl n R)) :=
-begin
-  rcases [expr fintype.exists_pair_of_one_lt_card h, "with", "⟨", ident j, ",", ident i, ",", ident hij, "⟩"],
-  let [ident A] [] [":=", expr Eb R i j hij],
-  let [ident B] [] [":=", expr Eb R j i hij.symm],
-  intros [ident c],
-  have [ident c'] [":", expr «expr = »(«expr ⬝ »(A.val, B.val), «expr ⬝ »(B.val, A.val))] [],
-  by { rw ["[", "<-", expr sub_eq_zero, ",", "<-", expr sl_bracket, ",", expr c.trivial, "]"] [],
-    refl },
-  simpa [] [] [] ["[", expr std_basis_matrix, ",", expr matrix.mul_apply, ",", expr hij, "]"] [] ["using", expr congr_fun (congr_fun c' i) i]
-end
+theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) : ¬IsLieAbelian (↥sl n R) :=
+  by 
+    rcases Fintype.exists_pair_of_one_lt_card h with ⟨j, i, hij⟩
+    let A := Eb R i j hij 
+    let B := Eb R j i hij.symm 
+    intro c 
+    have c' : A.val ⬝ B.val = B.val ⬝ A.val
+    ·
+      ·
+        rw [←sub_eq_zero, ←sl_bracket, c.trivial]
+        rfl 
+    simpa [std_basis_matrix, Matrix.mul_apply, hij] using congr_funₓ (congr_funₓ c' i) i
 
 end SpecialLinear
 
@@ -251,24 +248,21 @@ theorem S_as_blocks : S l R = Matrix.fromBlocks 1 0 0 (-1) :=
     rw [←Matrix.diagonal_one, Matrix.diagonal_neg, Matrix.from_blocks_diagonal]
     rfl
 
--- error in Algebra.Lie.Classical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem JD_transform
-[fintype l] : «expr = »(«expr ⬝ »(«expr ⬝ »(«expr ᵀ»(PD l R), JD l R), PD l R), «expr • »((2 : R), S l R)) :=
-begin
-  have [ident h] [":", expr «expr = »(«expr ⬝ »(«expr ᵀ»(PD l R), JD l R), matrix.from_blocks 1 1 1 «expr- »(1))] [":=", expr by { simp [] [] [] ["[", expr PD, ",", expr JD, ",", expr matrix.from_blocks_transpose, ",", expr matrix.from_blocks_multiply, "]"] [] [] }],
-  erw ["[", expr h, ",", expr S_as_blocks, ",", expr matrix.from_blocks_multiply, ",", expr matrix.from_blocks_smul, "]"] [],
-  congr; simp [] [] [] ["[", expr two_smul, "]"] [] []
-end
+theorem JD_transform [Fintype l] : (PD l R)ᵀ ⬝ JD l R ⬝ PD l R = (2 : R) • S l R :=
+  by 
+    have h : (PD l R)ᵀ ⬝ JD l R = Matrix.fromBlocks 1 1 1 (-1) :=
+      by 
+        simp [PD, JD, Matrix.from_blocks_transpose, Matrix.from_blocks_multiply]
+    erw [h, S_as_blocks, Matrix.from_blocks_multiply, Matrix.from_blocks_smul]
+    congr <;> simp [two_smul]
 
--- error in Algebra.Lie.Classical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem PD_inv
-[fintype l]
-[invertible (2 : R)] : «expr = »(«expr * »(PD l R, «expr • »(«expr⅟»() (2 : R), «expr ᵀ»(PD l R))), 1) :=
-begin
-  have [ident h] [":", expr «expr = »(«expr + »(«expr • »(«expr⅟»() (2 : R), (1 : matrix l l R)), «expr • »(«expr⅟»() (2 : R), 1)), 1)] [":=", expr by rw ["[", "<-", expr smul_add, ",", "<-", expr two_smul R _, ",", expr smul_smul, ",", expr inv_of_mul_self, ",", expr one_smul, "]"] []],
-  erw ["[", expr matrix.from_blocks_transpose, ",", expr matrix.from_blocks_smul, ",", expr matrix.mul_eq_mul, ",", expr matrix.from_blocks_multiply, "]"] [],
-  simp [] [] [] ["[", expr h, "]"] [] []
-end
+theorem PD_inv [Fintype l] [Invertible (2 : R)] : (PD l R*⅟ (2 : R) • (PD l R)ᵀ) = 1 :=
+  by 
+    have h : ((⅟ (2 : R) • (1 : Matrix l l R))+⅟ (2 : R) • 1) = 1 :=
+      by 
+        rw [←smul_add, ←two_smul R _, smul_smul, inv_of_mul_self, one_smul]
+    erw [Matrix.from_blocks_transpose, Matrix.from_blocks_smul, Matrix.mul_eq_mul, Matrix.from_blocks_multiply]
+    simp [h]
 
 instance invertible_PD [Fintype l] [Invertible (2 : R)] : Invertible (PD l R) :=
   invertible_of_right_inverse _ _ (PD_inv l R)
@@ -343,16 +337,16 @@ theorem JB_transform : (PB l R)ᵀ ⬝ JB l R ⬝ PB l R = (2 : R) • Matrix.fr
 
 theorem indefinite_diagonal_assoc :
   indefinite_diagonal (Sum Unit l) l R =
-    Matrix.reindexLieEquiv (Equiv.sumAssoc Unit l l).symm (Matrix.fromBlocks 1 0 0 (indefinite_diagonal l l R)) :=
+    Matrix.reindexLieEquiv (Equivₓ.sumAssoc Unit l l).symm (Matrix.fromBlocks 1 0 0 (indefinite_diagonal l l R)) :=
   by 
     ext i j 
     rcases i with ⟨⟨i₁ | i₂⟩ | i₃⟩ <;>
       rcases j with ⟨⟨j₁ | j₂⟩ | j₃⟩ <;>
-        simp only [indefinite_diagonal, Matrix.diagonalₓ, Equiv.sum_assoc_apply_in1, Matrix.reindex_lie_equiv_apply,
-            Matrix.minor_apply, Equiv.symm_symm, Matrix.reindex_apply, Sum.elim_inl, if_true, eq_self_iff_true,
-            Matrix.one_apply_eq, Matrix.from_blocks_apply₁₁, Dmatrix.zero_apply, Equiv.sum_assoc_apply_in2, if_false,
+        simp only [indefinite_diagonal, Matrix.diagonalₓ, Equivₓ.sum_assoc_apply_in1, Matrix.reindex_lie_equiv_apply,
+            Matrix.minor_apply, Equivₓ.symm_symm, Matrix.reindex_apply, Sum.elim_inl, if_true, eq_self_iff_true,
+            Matrix.one_apply_eq, Matrix.from_blocks_apply₁₁, Dmatrix.zero_apply, Equivₓ.sum_assoc_apply_in2, if_false,
             Matrix.from_blocks_apply₁₂, Matrix.from_blocks_apply₂₁, Matrix.from_blocks_apply₂₂,
-            Equiv.sum_assoc_apply_in3, Sum.elim_inr] <;>
+            Equivₓ.sum_assoc_apply_in3, Sum.elim_inr] <;>
           congr
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type B. -/
@@ -366,7 +360,7 @@ def type_B_equiv_so' [Invertible (2 : R)] : type_B l R ≃ₗ⁅R⁆ so' (Sum Un
     symm 
     apply
       (skewAdjointMatricesLieSubalgebraEquivTranspose (indefinite_diagonal (Sum Unit l) l R)
-          (Matrix.reindexAlgEquiv _ (Equiv.sumAssoc PUnit l l)) (Matrix.transpose_reindex _ _)).trans
+          (Matrix.reindexAlgEquiv _ (Equivₓ.sumAssoc PUnit l l)) (Matrix.transpose_reindex _ _)).trans
         
     apply LieEquiv.ofEq 
     ext A 

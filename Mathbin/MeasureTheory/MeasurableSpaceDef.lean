@@ -36,7 +36,7 @@ measurable space, σ-algebra, measurable function
 -/
 
 
-open Set Encodable Function Equiv
+open Set Encodable Function Equivₓ
 
 open_locale Classical
 
@@ -46,8 +46,8 @@ variable {α β γ δ δ' : Type _} {ι : Sort _} {s t u : Set α}
 structure MeasurableSpace (α : Type _) where 
   MeasurableSet' : Set α → Prop 
   measurable_set_empty : measurable_set' ∅
-  measurable_set_compl : ∀ s, measurable_set' s → measurable_set' («expr ᶜ» s)
-  measurable_set_Union : ∀ f : ℕ → Set α, (∀ i, measurable_set' (f i)) → measurable_set' (⋃i, f i)
+  measurable_set_compl : ∀ s, measurable_set' s → measurable_set' (sᶜ)
+  measurable_set_Union : ∀ f : ℕ → Set α, (∀ i, measurable_set' (f i)) → measurable_set' (⋃ i, f i)
 
 attribute [class] MeasurableSpace
 
@@ -68,14 +68,14 @@ localized [MeasureTheory] notation "measurable_set[" m "]" => @MeasurableSet _ m
 theorem MeasurableSet.empty : MeasurableSet (∅ : Set α) :=
   ‹MeasurableSpace α›.measurable_set_empty
 
-theorem MeasurableSet.compl : MeasurableSet s → MeasurableSet («expr ᶜ» s) :=
+theorem MeasurableSet.compl : MeasurableSet s → MeasurableSet (sᶜ) :=
   ‹MeasurableSpace α›.measurable_set_compl s
 
-theorem MeasurableSet.of_compl (h : MeasurableSet («expr ᶜ» s)) : MeasurableSet s :=
+theorem MeasurableSet.of_compl (h : MeasurableSet (sᶜ)) : MeasurableSet s :=
   compl_compl s ▸ h.compl
 
 @[simp]
-theorem MeasurableSet.compl_iff : MeasurableSet («expr ᶜ» s) ↔ MeasurableSet s :=
+theorem MeasurableSet.compl_iff : MeasurableSet (sᶜ) ↔ MeasurableSet s :=
   ⟨MeasurableSet.of_compl, MeasurableSet.compl⟩
 
 @[simp]
@@ -91,50 +91,58 @@ theorem MeasurableSet.congr {s t : Set α} (hs : MeasurableSet s) (h : s = t) : 
   by 
     rwa [←h]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » decode₂ β n)
 theorem MeasurableSet.bUnion_decode₂ [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b)) (n : ℕ) :
-  MeasurableSet (⋃(b : _)(_ : b ∈ decode₂ β n), f b) :=
+  MeasurableSet (⋃ (b : _)(_ : b ∈ decode₂ β n), f b) :=
   Encodable.Union_decode₂_cases MeasurableSet.empty h
 
-theorem MeasurableSet.Union [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋃b, f b) :=
+theorem MeasurableSet.Union [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋃ b, f b) :=
   by 
     rw [←Encodable.Union_decode₂]
     exact ‹MeasurableSpace α›.measurable_set_Union _ (MeasurableSet.bUnion_decode₂ h)
 
--- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem measurable_set.bUnion
-{f : β → set α}
-{s : set β}
-(hs : countable s)
-(h : ∀ b «expr ∈ » s, measurable_set (f b)) : measurable_set «expr⋃ , »((b «expr ∈ » s), f b) :=
-begin
-  rw [expr bUnion_eq_Union] [],
-  haveI [] [] [":=", expr hs.to_encodable],
-  exact [expr measurable_set.Union (by simpa [] [] [] [] [] ["using", expr h])]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : countable s) (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) :
+  MeasurableSet (⋃ (b : _)(_ : b ∈ s), f b) :=
+  by 
+    rw [bUnion_eq_Union]
+    have  := hs.to_encodable 
+    exact
+      MeasurableSet.Union
+        (by 
+          simpa using h)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem Set.Finite.measurable_set_bUnion {f : β → Set α} {s : Set β} (hs : finite s)
-  (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃(b : _)(_ : b ∈ s), f b) :=
+  (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ (b : _)(_ : b ∈ s), f b) :=
   MeasurableSet.bUnion hs.countable h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem Finset.measurable_set_bUnion {f : β → Set α} (s : Finset β) (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) :
-  MeasurableSet (⋃(b : _)(_ : b ∈ s), f b) :=
+  MeasurableSet (⋃ (b : _)(_ : b ∈ s), f b) :=
   s.finite_to_set.measurable_set_bUnion h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t ∈ s, MeasurableSet t) :
   MeasurableSet (⋃₀s) :=
   by 
     rw [sUnion_eq_bUnion]
     exact MeasurableSet.bUnion hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : finite s) (h : ∀ t _ : t ∈ s, MeasurableSet t) :
   MeasurableSet (⋃₀s) :=
   MeasurableSet.sUnion hs.countable h
 
-theorem MeasurableSet.Union_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋃b, f b) :=
+theorem MeasurableSet.Union_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, MeasurableSet (f b)) :
+  MeasurableSet (⋃ b, f b) :=
   by 
     byCases' p <;> simp [h, hf, MeasurableSet.empty]
 
-theorem MeasurableSet.Inter [Encodable β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋂b, f b) :=
+theorem MeasurableSet.Inter [Encodable β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋂ b, f b) :=
   MeasurableSet.compl_iff.1$
     by 
       rw [compl_Inter]
@@ -145,41 +153,50 @@ section Fintype
 attribute [local instance] Fintype.encodable
 
 theorem MeasurableSet.Union_fintype [Fintype β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) :
-  MeasurableSet (⋃b, f b) :=
+  MeasurableSet (⋃ b, f b) :=
   MeasurableSet.Union h
 
 theorem MeasurableSet.Inter_fintype [Fintype β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) :
-  MeasurableSet (⋂b, f b) :=
+  MeasurableSet (⋂ b, f b) :=
   MeasurableSet.Inter h
 
 end Fintype
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : countable s) (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) :
-  MeasurableSet (⋂(b : _)(_ : b ∈ s), f b) :=
+  MeasurableSet (⋂ (b : _)(_ : b ∈ s), f b) :=
   MeasurableSet.compl_iff.1$
     by 
       rw [compl_bInter]
       exact MeasurableSet.bUnion hs fun b hb => (h b hb).Compl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem Set.Finite.measurable_set_bInter {f : β → Set α} {s : Set β} (hs : finite s)
-  (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂(b : _)(_ : b ∈ s), f b) :=
+  (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ (b : _)(_ : b ∈ s), f b) :=
   MeasurableSet.bInter hs.countable h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » s)
 theorem Finset.measurable_set_bInter {f : β → Set α} (s : Finset β) (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) :
-  MeasurableSet (⋂(b : _)(_ : b ∈ s), f b) :=
+  MeasurableSet (⋂ (b : _)(_ : b ∈ s), f b) :=
   s.finite_to_set.measurable_set_bInter h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem MeasurableSet.sInter {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t ∈ s, MeasurableSet t) :
   MeasurableSet (⋂₀s) :=
   by 
     rw [sInter_eq_bInter]
     exact MeasurableSet.bInter hs h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem Set.Finite.measurable_set_sInter {s : Set (Set α)} (hs : finite s) (h : ∀ t _ : t ∈ s, MeasurableSet t) :
   MeasurableSet (⋂₀s) :=
   MeasurableSet.sInter hs.countable h
 
-theorem MeasurableSet.Inter_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋂b, f b) :=
+theorem MeasurableSet.Inter_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, MeasurableSet (f b)) :
+  MeasurableSet (⋂ b, f b) :=
   by 
     byCases' p <;> simp [h, hf, MeasurableSet.univ]
 
@@ -221,7 +238,7 @@ theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet 
   disjointedRecₓ (fun t i ht => MeasurableSet.diff ht$ h _) (h n)
 
 @[simp]
-theorem MeasurableSet.const (p : Prop) : MeasurableSet { a:α | p } :=
+theorem MeasurableSet.const (p : Prop) : MeasurableSet { a : α | p } :=
   by 
     byCases' p <;> simp [h, MeasurableSet.empty] <;> apply MeasurableSet.univ
 
@@ -261,8 +278,9 @@ section MeasurableSingletonClass
 
 variable [MeasurableSpace α] [MeasurableSingletonClass α]
 
-theorem measurable_set_eq {a : α} : MeasurableSet { x | x = a } :=
-  measurable_set_singleton a
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem measurable_set_eq { a : α } : MeasurableSet { x | x = a } := measurable_set_singleton a
 
 theorem MeasurableSet.insert {s : Set α} (hs : MeasurableSet s) (a : α) : MeasurableSet (insert a s) :=
   (measurable_set_singleton a).union hs
@@ -282,7 +300,7 @@ theorem Set.Subsingleton.measurable_set {s : Set α} (hs : s.subsingleton) : Mea
 theorem Set.Finite.measurable_set {s : Set α} (hs : finite s) : MeasurableSet s :=
   finite.induction_on hs MeasurableSet.empty$ fun a s ha hsf hsm => hsm.insert _
 
-protected theorem Finset.measurable_set (s : Finset α) : MeasurableSet («expr↑ » s : Set α) :=
+protected theorem Finset.measurable_set (s : Finset α) : MeasurableSet (↑s : Set α) :=
   s.finite_to_set.measurable_set
 
 theorem Set.Countable.measurable_set {s : Set α} (hs : countable s) : MeasurableSet s :=
@@ -307,12 +325,13 @@ instance : PartialOrderₓ (MeasurableSpace α) :=
     le_trans := fun a b c hab hbc => le_def.mpr (le_transₓ hab hbc),
     le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext$ fun s => ⟨h₁ s, h₂ s⟩ }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » s)
 /-- The smallest σ-algebra containing a collection `s` of basic sets -/
 inductive generate_measurable (s : Set (Set α)) : Set α → Prop
   | basic : ∀ u _ : u ∈ s, generate_measurable u
   | Empty : generate_measurable ∅
-  | compl : ∀ s, generate_measurable s → generate_measurable («expr ᶜ» s)
-  | union : ∀ f : ℕ → Set α, (∀ n, generate_measurable (f n)) → generate_measurable (⋃i, f i)
+  | compl : ∀ s, generate_measurable s → generate_measurable (sᶜ)
+  | union : ∀ f : ℕ → Set α, (∀ n, generate_measurable (f n)) → generate_measurable (⋃ i, f i)
 
 /-- Construct the smallest measure space containing a collection of basic sets -/
 def generate_from (s : Set (Set α)) : MeasurableSpace α :=
@@ -322,41 +341,64 @@ def generate_from (s : Set (Set α)) : MeasurableSpace α :=
 theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈ s) : (generate_from s).MeasurableSet' t :=
   generate_measurable.basic t ht
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » s)
 theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀ t _ : t ∈ s, m.measurable_set' t) :
   generate_from s ≤ m :=
   fun t ht : generate_measurable s t =>
     ht.rec_on h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs)
       fun f _ hf => measurable_set_Union m f hf
 
-theorem generate_from_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
-  generate_from s ≤ m ↔ s ⊆ { t | m.measurable_set' t } :=
-  Iff.intro (fun h u hu => h _$ measurable_set_generate_from hu) fun h => generate_from_le h
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  generate_from_le_iff
+  { s : Set Set α } ( m : MeasurableSpace α ) : generate_from s ≤ m ↔ s ⊆ { t | m.measurable_set' t }
+  := Iff.intro fun h u hu => h _ $ measurable_set_generate_from hu fun h => generate_from_le h
 
 @[simp]
-theorem generate_from_measurable_set [MeasurableSpace α] : generate_from { s:Set α | MeasurableSet s } = ‹_› :=
+theorem generate_from_measurable_set [MeasurableSpace α] : generate_from { s : Set α | MeasurableSet s } = ‹_› :=
   le_antisymmₓ (generate_from_le$ fun _ => id)$ fun s => measurable_set_generate_from
 
-/-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
-the same sets as `g`, then `g` was already a `σ`-algebra. -/
-protected def mk_of_closure (g : Set (Set α)) (hg : { t | (generate_from g).MeasurableSet' t } = g) :
-  MeasurableSpace α :=
-  { MeasurableSet' := fun s => s ∈ g, measurable_set_empty := hg ▸ measurable_set_empty _,
-    measurable_set_compl := hg ▸ measurable_set_compl _, measurable_set_Union := hg ▸ measurable_set_Union _ }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
+      the same sets as `g`, then `g` was already a `σ`-algebra. -/
+    protected
+  def
+    mk_of_closure
+    ( g : Set Set α ) ( hg : { t | generate_from g . MeasurableSet' t } = g ) : MeasurableSpace α
+    :=
+      {
+        MeasurableSet' := fun s => s ∈ g ,
+          measurable_set_empty := hg ▸ measurable_set_empty _ ,
+          measurable_set_compl := hg ▸ measurable_set_compl _ ,
+          measurable_set_Union := hg ▸ measurable_set_Union _
+        }
 
-theorem mk_of_closure_sets {s : Set (Set α)} {hs : { t | (generate_from s).MeasurableSet' t } = s} :
-  MeasurableSpace.mkOfClosure s hs = generate_from s :=
-  MeasurableSpace.ext$
-    fun t =>
-      show t ∈ s ↔ _ by 
-        convLHS => rw [←hs]
-        rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mk_of_closure_sets
+  { s : Set Set α } { hs : { t | generate_from s . MeasurableSet' t } = s }
+    : MeasurableSpace.mkOfClosure s hs = generate_from s
+  := MeasurableSpace.ext $ fun t => show t ∈ s ↔ _ by convLHS => rw [ ← hs ] rfl
 
-/-- We get a Galois insertion between `σ`-algebras on `α` and `set (set α)` by using `generate_from`
-  on one side and the collection of measurable sets on the other side. -/
-def gi_generate_from : GaloisInsertion (@generate_from α) fun m => { t | @MeasurableSet α m t } :=
-  { gc := fun s => generate_from_le_iff, le_l_u := fun m s => measurable_set_generate_from,
-    choice := fun g hg => MeasurableSpace.mkOfClosure g$ le_antisymmₓ hg$ (generate_from_le_iff _).1 le_rfl,
-    choice_eq := fun g hg => mk_of_closure_sets }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    We get a Galois insertion between `σ`-algebras on `α` and `set (set α)` by using `generate_from`
+      on one side and the collection of measurable sets on the other side. -/
+  def
+    gi_generate_from
+    : GaloisInsertion @ generate_from α fun m => { t | @ MeasurableSet α m t }
+    :=
+      {
+        gc := fun s => generate_from_le_iff ,
+          le_l_u := fun m s => measurable_set_generate_from ,
+          choice := fun g hg => MeasurableSpace.mkOfClosure g $ le_antisymmₓ hg $ generate_from_le_iff _ . 1 le_rfl ,
+          choice_eq := fun g hg => mk_of_closure_sets
+        }
 
 instance : CompleteLattice (MeasurableSpace α) :=
   gi_generate_from.liftCompleteLattice
@@ -364,24 +406,53 @@ instance : CompleteLattice (MeasurableSpace α) :=
 instance : Inhabited (MeasurableSpace α) :=
   ⟨⊤⟩
 
--- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem measurable_set_bot_iff
-{s : set α} : «expr ↔ »(@measurable_set α «expr⊥»() s, «expr ∨ »(«expr = »(s, «expr∅»()), «expr = »(s, univ))) :=
-let b : measurable_space α := { measurable_set' := λ s, «expr ∨ »(«expr = »(s, «expr∅»()), «expr = »(s, univ)),
-      measurable_set_empty := or.inl rfl,
-      measurable_set_compl := by simp [] [] [] ["[", expr or_imp_distrib, "]"] [] [] { contextual := tt },
-      measurable_set_Union := assume
-      f
-      hf, classical.by_cases (assume h : «expr∃ , »((i), «expr = »(f i, univ)), let ⟨i, hi⟩ := h in
-       «expr $ »(or.inr, «expr $ »(eq_univ_of_univ_subset, «expr ▸ »(hi, le_supr f i)))) (assume
-       h : «expr¬ »(«expr∃ , »((i), «expr = »(f i, univ))), «expr $ »(or.inl, «expr $ »(eq_empty_of_subset_empty, «expr $ »(Union_subset, assume
-          i, (hf i).elim (by simp [] [] [] [] [] [] { contextual := tt }) (assume
-           hi, «expr $ »(false.elim, h ⟨i, hi⟩)))))) } in
-have «expr = »(b, «expr⊥»()), from «expr $ »(bot_unique, assume
- s
- hs, hs.elim (λ
-  s, «expr ▸ »(s.symm, @measurable_set_empty _ «expr⊥»())) (λ s, «expr ▸ »(s.symm, @measurable_set.univ _ «expr⊥»()))),
-«expr ▸ »(this, iff.rfl)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  measurable_set_bot_iff
+  { s : Set α } : @ MeasurableSet α ⊥ s ↔ s = ∅ ∨ s = univ
+  :=
+    let
+      b
+        : MeasurableSpace α
+        :=
+        {
+          MeasurableSet' := fun s => s = ∅ ∨ s = univ ,
+            measurable_set_empty := Or.inl rfl ,
+            measurable_set_compl
+                :=
+                by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ or_imp_distrib ]
+              ,
+            measurable_set_Union
+              :=
+              fun
+                f hf
+                  =>
+                  Classical.by_cases
+                    fun h : ∃ i , f i = univ => let ⟨ i , hi ⟩ := h Or.inr $ eq_univ_of_univ_subset $ hi ▸ le_supr f i
+                      fun
+                        h : ¬ ∃ i , f i = univ
+                          =>
+                          Or.inl
+                            $
+                            eq_empty_of_subset_empty
+                              $
+                              Union_subset
+                                $
+                                fun
+                                  i
+                                    =>
+                                    hf i . elim
+                                      by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                                        fun hi => False.elim $ h ⟨ i , hi ⟩
+          }
+      have
+        : b = ⊥
+          :=
+          bot_unique
+            $
+            fun s hs => hs.elim fun s => s.symm ▸ @ measurable_set_empty _ ⊥ fun s => s.symm ▸ @ MeasurableSet.univ _ ⊥
+        this ▸ Iff.rfl
 
 @[simp]
 theorem measurable_set_top {s : Set α} : @MeasurableSet _ ⊤ s :=
@@ -392,6 +463,7 @@ theorem measurable_set_inf {m₁ m₂ : MeasurableSpace α} {s : Set α} :
   @MeasurableSet _ (m₁⊓m₂) s ↔ @MeasurableSet _ m₁ s ∧ @MeasurableSet _ m₂ s :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » ms)
 @[simp]
 theorem measurable_set_Inf {ms : Set (MeasurableSpace α)} {s : Set α} :
   @MeasurableSet _ (Inf ms) s ↔ ∀ m _ : m ∈ ms, @MeasurableSet _ m s :=
@@ -408,14 +480,15 @@ theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
   @MeasurableSet _ (m₁⊔m₂) s ↔ generate_measurable (m₁.measurable_set' ∪ m₂.measurable_set') s :=
   Iff.refl _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » ms)
 theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :
-  @MeasurableSet _ (Sup ms) s ↔ generate_measurable { s:Set α | ∃ (m : _)(_ : m ∈ ms), @MeasurableSet _ m s } s :=
+  @MeasurableSet _ (Sup ms) s ↔ generate_measurable { s : Set α | ∃ (m : _)(_ : m ∈ ms), @MeasurableSet _ m s } s :=
   by 
     change @measurable_set' _ (generate_from$ ⋃₀_) _ ↔ _ 
     simp [generate_from, ←set_of_exists]
 
 theorem measurable_set_supr {ι} {m : ι → MeasurableSpace α} {s : Set α} :
-  @MeasurableSet _ (supr m) s ↔ generate_measurable { s:Set α | ∃ i, @MeasurableSet _ (m i) s } s :=
+  @MeasurableSet _ (supr m) s ↔ generate_measurable { s : Set α | ∃ i, @MeasurableSet _ (m i) s } s :=
   by 
     simp only [supr, measurable_set_Sup, exists_range_iff]
 
@@ -448,6 +521,10 @@ theorem Measurable.comp {g : β → γ} {f : α → β} (hg : Measurable g) (hf 
 @[simp]
 theorem measurable_const {a : α} : Measurable fun b : β => a :=
   fun s hs => MeasurableSet.const (a ∈ s)
+
+theorem Measurable.le {α} {m m0 : MeasurableSpace α} (hm : m ≤ m0) {f : α → β} (hf : measurable[m] f) :
+  measurable[m0] f :=
+  fun s hs => hm _ (hf hs)
 
 end MeasurableFunctions
 

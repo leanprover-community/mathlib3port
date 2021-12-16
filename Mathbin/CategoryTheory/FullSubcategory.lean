@@ -52,7 +52,7 @@ def induced_category : Type u₁ :=
 variable {D}
 
 instance induced_category.has_coe_to_sort {α : Sort _} [CoeSort D α] : CoeSort (induced_category D F) α :=
-  ⟨fun c => «expr↥ » (F c)⟩
+  ⟨fun c => ↥F c⟩
 
 instance induced_category.category : category.{v} (induced_category D F) :=
   { Hom := fun X Y => F X ⟶ F Y, id := fun X => 𝟙 (F X), comp := fun _ _ _ f g => f ≫ g }

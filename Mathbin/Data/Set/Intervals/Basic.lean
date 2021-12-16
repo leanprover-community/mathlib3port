@@ -1,5 +1,4 @@
 import Mathbin.Algebra.Order.Group 
-import Mathbin.Data.Set.Basic 
 import Mathbin.Order.RelIso 
 import Mathbin.Order.OrderDual
 
@@ -35,61 +34,69 @@ section Intervals
 
 variable {α : Type u} [Preorderₓ α] {a a₁ a₂ b b₁ b₂ x : α}
 
-/-- Left-open right-open interval -/
-def Ioo (a b : α) :=
-  { x | a < x ∧ x < b }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Left-open right-open interval -/ def Ioo ( a b : α ) := { x | a < x ∧ x < b }
 
-/-- Left-closed right-open interval -/
-def Ico (a b : α) :=
-  { x | a ≤ x ∧ x < b }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Left-closed right-open interval -/ def Ico ( a b : α ) := { x | a ≤ x ∧ x < b }
 
-/-- Left-infinite right-open interval -/
-def Iio (a : α) :=
-  { x | x < a }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Left-infinite right-open interval -/ def Iio ( a : α ) := { x | x < a }
 
-/-- Left-closed right-closed interval -/
-def Icc (a b : α) :=
-  { x | a ≤ x ∧ x ≤ b }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Left-closed right-closed interval -/ def Icc ( a b : α ) := { x | a ≤ x ∧ x ≤ b }
 
-/-- Left-infinite right-closed interval -/
-def Iic (b : α) :=
-  { x | x ≤ b }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Left-infinite right-closed interval -/ def Iic ( b : α ) := { x | x ≤ b }
 
-/-- Left-open right-closed interval -/
-def Ioc (a b : α) :=
-  { x | a < x ∧ x ≤ b }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Left-open right-closed interval -/ def Ioc ( a b : α ) := { x | a < x ∧ x ≤ b }
 
-/-- Left-closed right-infinite interval -/
-def Ici (a : α) :=
-  { x | a ≤ x }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Left-closed right-infinite interval -/ def Ici ( a : α ) := { x | a ≤ x }
 
-/-- Left-open right-infinite interval -/
-def Ioi (a : α) :=
-  { x | a < x }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Left-open right-infinite interval -/ def Ioi ( a : α ) := { x | a < x }
 
-theorem Ioo_def (a b : α) : { x | a < x ∧ x < b } = Ioo a b :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Ioo_def ( a b : α ) : { x | a < x ∧ x < b } = Ioo a b := rfl
 
-theorem Ico_def (a b : α) : { x | a ≤ x ∧ x < b } = Ico a b :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Ico_def ( a b : α ) : { x | a ≤ x ∧ x < b } = Ico a b := rfl
 
-theorem Iio_def (a : α) : { x | x < a } = Iio a :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Iio_def ( a : α ) : { x | x < a } = Iio a := rfl
 
-theorem Icc_def (a b : α) : { x | a ≤ x ∧ x ≤ b } = Icc a b :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Icc_def ( a b : α ) : { x | a ≤ x ∧ x ≤ b } = Icc a b := rfl
 
-theorem Iic_def (b : α) : { x | x ≤ b } = Iic b :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Iic_def ( b : α ) : { x | x ≤ b } = Iic b := rfl
 
-theorem Ioc_def (a b : α) : { x | a < x ∧ x ≤ b } = Ioc a b :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Ioc_def ( a b : α ) : { x | a < x ∧ x ≤ b } = Ioc a b := rfl
 
-theorem Ici_def (a : α) : { x | a ≤ x } = Ici a :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Ici_def ( a : α ) : { x | a ≤ x } = Ici a := rfl
 
-theorem Ioi_def (a : α) : { x | a < x } = Ioi a :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem Ioi_def ( a : α ) : { x | a < x } = Ioi a := rfl
 
 @[simp]
 theorem mem_Ioo : x ∈ Ioo a b ↔ a < x ∧ x < b :=
@@ -697,15 +704,11 @@ theorem mem_Ioo_or_eq_left_of_mem_Ico {x : α} (hmem : x ∈ Ico a b) : x = a �
     ·
       exact Or.inl hxa.symm
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_Ioo_or_eq_right_of_mem_Ioc
-{x : α}
-(hmem : «expr ∈ »(x, Ioc a b)) : «expr ∨ »(«expr = »(x, b), «expr ∈ »(x, Ioo a b)) :=
-begin
-  have [] [] [":=", expr @mem_Ioo_or_eq_left_of_mem_Ico _ _ (to_dual b) (to_dual a) (to_dual x)],
-  rw ["[", expr dual_Ioo, ",", expr dual_Ico, "]"] ["at", ident this],
-  exact [expr this hmem]
-end
+theorem mem_Ioo_or_eq_right_of_mem_Ioc {x : α} (hmem : x ∈ Ioc a b) : x = b ∨ x ∈ Ioo a b :=
+  by 
+    have  := @mem_Ioo_or_eq_left_of_mem_Ico _ _ (to_dual b) (to_dual a) (to_dual x)
+    rw [dual_Ioo, dual_Ico] at this 
+    exact this hmem
 
 theorem Ici_singleton_of_top {a : α} (h_top : ∀ x, x ≤ a) : Ici a = {a} :=
   by 
@@ -809,19 +812,19 @@ theorem not_mem_Ioo_of_ge (hb : b ≤ c) : c ∉ Ioo a b :=
   not_mem_subset Ioo_subset_Iio_self$ not_mem_Iio.mpr hb
 
 @[simp]
-theorem compl_Iic : «expr ᶜ» (Iic a) = Ioi a :=
+theorem compl_Iic : Iic aᶜ = Ioi a :=
   ext$ fun _ => not_leₓ
 
 @[simp]
-theorem compl_Ici : «expr ᶜ» (Ici a) = Iio a :=
+theorem compl_Ici : Ici aᶜ = Iio a :=
   ext$ fun _ => not_leₓ
 
 @[simp]
-theorem compl_Iio : «expr ᶜ» (Iio a) = Ici a :=
+theorem compl_Iio : Iio aᶜ = Ici a :=
   ext$ fun _ => not_ltₓ
 
 @[simp]
-theorem compl_Ioi : «expr ᶜ» (Ioi a) = Iic a :=
+theorem compl_Ioi : Ioi aᶜ = Iic a :=
   ext$ fun _ => not_ltₓ
 
 @[simp]
@@ -874,27 +877,30 @@ theorem Ioc_subset_Ioc_iff (h₁ : a₁ < b₁) : Ioc a₁ b₁ ⊆ Ioc a₂ b�
   by 
     convert @Ico_subset_Ico_iff (OrderDual α) _ b₁ b₂ a₁ a₂ h₁ <;> exact (@dual_Ico α _ _ _).symm
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ioo_subset_Ioo_iff
-[densely_ordered α]
-(h₁ : «expr < »(a₁, b₁)) : «expr ↔ »(«expr ⊆ »(Ioo a₁ b₁, Ioo a₂ b₂), «expr ∧ »(«expr ≤ »(a₂, a₁), «expr ≤ »(b₁, b₂))) :=
-⟨λ h, begin
-   rcases [expr exists_between h₁, "with", "⟨", ident x, ",", ident xa, ",", ident xb, "⟩"],
-   split; refine [expr le_of_not_lt (λ h', _)],
-   { have [ident ab] [] [":=", expr (h ⟨xa, xb⟩).1.trans xb],
-     exact [expr lt_irrefl _ (h ⟨h', ab⟩).1] },
-   { have [ident ab] [] [":=", expr xa.trans (h ⟨xa, xb⟩).2],
-     exact [expr lt_irrefl _ (h ⟨ab, h'⟩).2] }
- end, λ ⟨h₁, h₂⟩, Ioo_subset_Ioo h₁ h₂⟩
+theorem Ioo_subset_Ioo_iff [DenselyOrdered α] (h₁ : a₁ < b₁) : Ioo a₁ b₁ ⊆ Ioo a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ :=
+  ⟨fun h =>
+      by 
+        rcases exists_between h₁ with ⟨x, xa, xb⟩
+        constructor <;> refine' le_of_not_ltₓ fun h' => _
+        ·
+          have ab := (h ⟨xa, xb⟩).1.trans xb 
+          exact lt_irreflₓ _ (h ⟨h', ab⟩).1
+        ·
+          have ab := xa.trans (h ⟨xa, xb⟩).2 
+          exact lt_irreflₓ _ (h ⟨ab, h'⟩).2,
+    fun ⟨h₁, h₂⟩ => Ioo_subset_Ioo h₁ h₂⟩
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ico_eq_Ico_iff
-(h : «expr ∨ »(«expr < »(a₁, b₁), «expr < »(a₂, b₂))) : «expr ↔ »(«expr = »(Ico a₁ b₁, Ico a₂ b₂), «expr ∧ »(«expr = »(a₁, a₂), «expr = »(b₁, b₂))) :=
-⟨λ e, begin
-   simp [] [] [] ["[", expr subset.antisymm_iff, "]"] [] ["at", ident e],
-   simp [] [] [] ["[", expr le_antisymm_iff, "]"] [] [],
-   cases [expr h] []; simp [] [] [] ["[", expr Ico_subset_Ico_iff h, "]"] [] ["at", ident e]; [rcases [expr e, "with", "⟨", "⟨", ident h₁, ",", ident h₂, "⟩", ",", ident e', "⟩"], rcases [expr e, "with", "⟨", ident e', ",", "⟨", ident h₁, ",", ident h₂, "⟩", "⟩"]]; have [] [] [":=", expr «expr $ »(Ico_subset_Ico_iff, «expr $ »(h₁.trans_lt, h.trans_le h₂)).1 e']; tauto []
- end, λ ⟨h₁, h₂⟩, by rw ["[", expr h₁, ",", expr h₂, "]"] []⟩
+theorem Ico_eq_Ico_iff (h : a₁ < b₁ ∨ a₂ < b₂) : Ico a₁ b₁ = Ico a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
+  ⟨fun e =>
+      by 
+        simp [subset.antisymm_iff] at e 
+        simp [le_antisymm_iffₓ]
+        cases h <;>
+          simp [Ico_subset_Ico_iff h] at e <;> [rcases e with ⟨⟨h₁, h₂⟩, e'⟩, rcases e with ⟨e', ⟨h₁, h₂⟩⟩] <;>
+            have  := (Ico_subset_Ico_iff$ h₁.trans_lt$ h.trans_le h₂).1 e' <;> tauto,
+    fun ⟨h₁, h₂⟩ =>
+      by 
+        rw [h₁, h₂]⟩
 
 open_locale Classical
 
@@ -946,16 +952,16 @@ theorem Iic_union_Ioi : Iic a ∪ Ioi a = univ :=
 /-! #### A finite and an infinite interval -/
 
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ioo_union_Ioi' (h₁ : «expr < »(c, b)) : «expr = »(«expr ∪ »(Ioo a b, Ioi c), Ioi (min a c)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Ioo, ",", expr mem_Ioi, ",", expr min_lt_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr < »(c, x)],
-  { tauto [] },
-  { have [ident hxb] [":", expr «expr < »(x, b)] [":=", expr (le_of_not_gt hc).trans_lt h₁],
-    tauto [] }
-end
+theorem Ioo_union_Ioi' (h₁ : c < b) : Ioo a b ∪ Ioi c = Ioi (min a c) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Ioo, mem_Ioi, min_lt_iff]
+    byCases' hc : c < x
+    ·
+      tauto
+    ·
+      have hxb : x < b := (le_of_not_gtₓ hc).trans_lt h₁ 
+      tauto
 
 theorem Ioo_union_Ioi (h : c < max a b) : Ioo a b ∪ Ioi c = Ioi (min a c) :=
   by 
@@ -980,16 +986,16 @@ theorem Ici_subset_Ico_union_Ici : Ici a ⊆ Ico a b ∪ Ici b :=
 theorem Ico_union_Ici_eq_Ici (h : a ≤ b) : Ico a b ∪ Ici b = Ici a :=
   subset.antisymm (fun x hx => hx.elim And.left h.trans) Ici_subset_Ico_union_Ici
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ico_union_Ici' (h₁ : «expr ≤ »(c, b)) : «expr = »(«expr ∪ »(Ico a b, Ici c), Ici (min a c)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Ico, ",", expr mem_Ici, ",", expr min_le_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr ≤ »(c, x)],
-  { tauto [] },
-  { have [ident hxb] [":", expr «expr < »(x, b)] [":=", expr (lt_of_not_ge hc).trans_le h₁],
-    tauto [] }
-end
+theorem Ico_union_Ici' (h₁ : c ≤ b) : Ico a b ∪ Ici c = Ici (min a c) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Ico, mem_Ici, min_le_iff]
+    byCases' hc : c ≤ x
+    ·
+      tauto
+    ·
+      have hxb : x < b := (lt_of_not_geₓ hc).trans_le h₁ 
+      tauto
 
 theorem Ico_union_Ici (h : c ≤ max a b) : Ico a b ∪ Ici c = Ici (min a c) :=
   by 
@@ -1006,16 +1012,16 @@ theorem Ioi_subset_Ioc_union_Ioi : Ioi a ⊆ Ioc a b ∪ Ioi b :=
 theorem Ioc_union_Ioi_eq_Ioi (h : a ≤ b) : Ioc a b ∪ Ioi b = Ioi a :=
   subset.antisymm (fun x hx => hx.elim And.left h.trans_lt) Ioi_subset_Ioc_union_Ioi
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ioc_union_Ioi' (h₁ : «expr ≤ »(c, b)) : «expr = »(«expr ∪ »(Ioc a b, Ioi c), Ioi (min a c)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Ioc, ",", expr mem_Ioi, ",", expr min_lt_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr < »(c, x)],
-  { tauto [] },
-  { have [ident hxb] [":", expr «expr ≤ »(x, b)] [":=", expr (le_of_not_gt hc).trans h₁],
-    tauto [] }
-end
+theorem Ioc_union_Ioi' (h₁ : c ≤ b) : Ioc a b ∪ Ioi c = Ioi (min a c) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Ioc, mem_Ioi, min_lt_iff]
+    byCases' hc : c < x
+    ·
+      tauto
+    ·
+      have hxb : x ≤ b := (le_of_not_gtₓ hc).trans h₁ 
+      tauto
 
 theorem Ioc_union_Ioi (h : c ≤ max a b) : Ioc a b ∪ Ioi c = Ioi (min a c) :=
   by 
@@ -1046,27 +1052,29 @@ theorem Ici_subset_Icc_union_Ici : Ici a ⊆ Icc a b ∪ Ici b :=
 theorem Icc_union_Ici_eq_Ici (h : a ≤ b) : Icc a b ∪ Ici b = Ici a :=
   subset.antisymm (fun x hx => hx.elim And.left h.trans) Ici_subset_Icc_union_Ici
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Icc_union_Ici' (h₁ : «expr ≤ »(c, b)) : «expr = »(«expr ∪ »(Icc a b, Ici c), Ici (min a c)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Icc, ",", expr mem_Ici, ",", expr min_le_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr ≤ »(c, x)],
-  { tauto [] },
-  { have [ident hxb] [":", expr «expr ≤ »(x, b)] [":=", expr (le_of_not_ge hc).trans h₁],
-    tauto [] }
-end
+theorem Icc_union_Ici' (h₁ : c ≤ b) : Icc a b ∪ Ici c = Ici (min a c) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Icc, mem_Ici, min_le_iff]
+    byCases' hc : c ≤ x
+    ·
+      tauto
+    ·
+      have hxb : x ≤ b := (le_of_not_geₓ hc).trans h₁ 
+      tauto
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Icc_union_Ici (h : «expr ≤ »(c, max a b)) : «expr = »(«expr ∪ »(Icc a b, Ici c), Ici (min a c)) :=
-begin
-  cases [expr le_or_lt a b] ["with", ident hab, ident hab]; simp [] [] [] ["[", expr hab, "]"] [] ["at", ident h],
-  { exact [expr Icc_union_Ici' h] },
-  { cases [expr h] [],
-    { simp [] [] [] ["[", "*", "]"] [] [] },
-    { have [ident hca] [":", expr «expr ≤ »(c, a)] [":=", expr h.trans hab.le],
-      simp [] [] [] ["[", "*", "]"] [] [] } }
-end
+theorem Icc_union_Ici (h : c ≤ max a b) : Icc a b ∪ Ici c = Ici (min a c) :=
+  by 
+    cases' le_or_ltₓ a b with hab hab <;> simp [hab] at h
+    ·
+      exact Icc_union_Ici' h
+    ·
+      cases h
+      ·
+        simp 
+      ·
+        have hca : c ≤ a := h.trans hab.le 
+        simp 
 
 /-! #### An infinite and a finite interval -/
 
@@ -1085,16 +1093,16 @@ theorem Iio_subset_Iio_union_Ico : Iio b ⊆ Iio a ∪ Ico a b :=
 theorem Iio_union_Ico_eq_Iio (h : a ≤ b) : Iio a ∪ Ico a b = Iio b :=
   subset.antisymm (fun x hx => hx.elim (fun hx' => lt_of_lt_of_leₓ hx' h) And.right) Iio_subset_Iio_union_Ico
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Iio_union_Ico' (h₁ : «expr ≤ »(c, b)) : «expr = »(«expr ∪ »(Iio b, Ico c d), Iio (max b d)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Iio, ",", expr mem_Ico, ",", expr lt_max_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr ≤ »(c, x)],
-  { tauto [] },
-  { have [ident hxb] [":", expr «expr < »(x, b)] [":=", expr (lt_of_not_ge hc).trans_le h₁],
-    tauto [] }
-end
+theorem Iio_union_Ico' (h₁ : c ≤ b) : Iio b ∪ Ico c d = Iio (max b d) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Iio, mem_Ico, lt_max_iff]
+    byCases' hc : c ≤ x
+    ·
+      tauto
+    ·
+      have hxb : x < b := (lt_of_not_geₓ hc).trans_le h₁ 
+      tauto
 
 theorem Iio_union_Ico (h : min c d ≤ b) : Iio b ∪ Ico c d = Iio (max b d) :=
   by 
@@ -1111,16 +1119,16 @@ theorem Iic_subset_Iic_union_Ioc : Iic b ⊆ Iic a ∪ Ioc a b :=
 theorem Iic_union_Ioc_eq_Iic (h : a ≤ b) : Iic a ∪ Ioc a b = Iic b :=
   subset.antisymm (fun x hx => hx.elim (fun hx' => le_transₓ hx' h) And.right) Iic_subset_Iic_union_Ioc
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Iic_union_Ioc' (h₁ : «expr < »(c, b)) : «expr = »(«expr ∪ »(Iic b, Ioc c d), Iic (max b d)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Iic, ",", expr mem_Ioc, ",", expr le_max_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr < »(c, x)],
-  { tauto [] },
-  { have [ident hxb] [":", expr «expr ≤ »(x, b)] [":=", expr (le_of_not_gt hc).trans h₁.le],
-    tauto [] }
-end
+theorem Iic_union_Ioc' (h₁ : c < b) : Iic b ∪ Ioc c d = Iic (max b d) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Iic, mem_Ioc, le_max_iff]
+    byCases' hc : c < x
+    ·
+      tauto
+    ·
+      have hxb : x ≤ b := (le_of_not_gtₓ hc).trans h₁.le 
+      tauto
 
 theorem Iic_union_Ioc (h : min c d < b) : Iic b ∪ Ioc c d = Iic (max b d) :=
   by 
@@ -1165,27 +1173,29 @@ theorem Iic_subset_Iic_union_Icc : Iic b ⊆ Iic a ∪ Icc a b :=
 theorem Iic_union_Icc_eq_Iic (h : a ≤ b) : Iic a ∪ Icc a b = Iic b :=
   subset.antisymm (fun x hx => hx.elim (fun hx' => le_transₓ hx' h) And.right) Iic_subset_Iic_union_Icc
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Iic_union_Icc' (h₁ : «expr ≤ »(c, b)) : «expr = »(«expr ∪ »(Iic b, Icc c d), Iic (max b d)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Iic, ",", expr mem_Icc, ",", expr le_max_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr ≤ »(c, x)],
-  { tauto [] },
-  { have [ident hxb] [":", expr «expr ≤ »(x, b)] [":=", expr (le_of_not_ge hc).trans h₁],
-    tauto [] }
-end
+theorem Iic_union_Icc' (h₁ : c ≤ b) : Iic b ∪ Icc c d = Iic (max b d) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Iic, mem_Icc, le_max_iff]
+    byCases' hc : c ≤ x
+    ·
+      tauto
+    ·
+      have hxb : x ≤ b := (le_of_not_geₓ hc).trans h₁ 
+      tauto
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Iic_union_Icc (h : «expr ≤ »(min c d, b)) : «expr = »(«expr ∪ »(Iic b, Icc c d), Iic (max b d)) :=
-begin
-  cases [expr le_or_lt c d] ["with", ident hcd, ident hcd]; simp [] [] [] ["[", expr hcd, "]"] [] ["at", ident h],
-  { exact [expr Iic_union_Icc' h] },
-  { cases [expr h] [],
-    { have [ident hdb] [":", expr «expr ≤ »(d, b)] [":=", expr hcd.le.trans h],
-      simp [] [] [] ["[", "*", "]"] [] [] },
-    { simp [] [] [] ["[", "*", "]"] [] [] } }
-end
+theorem Iic_union_Icc (h : min c d ≤ b) : Iic b ∪ Icc c d = Iic (max b d) :=
+  by 
+    cases' le_or_ltₓ c d with hcd hcd <;> simp [hcd] at h
+    ·
+      exact Iic_union_Icc' h
+    ·
+      cases h
+      ·
+        have hdb : d ≤ b := hcd.le.trans h 
+        simp 
+      ·
+        simp 
 
 theorem Iio_subset_Iic_union_Ico : Iio b ⊆ Iic a ∪ Ico a b :=
   subset.trans Iio_subset_Iic_union_Ioo (union_subset_union_right _ Ioo_subset_Ico_self)
@@ -1213,21 +1223,21 @@ theorem Ico_union_Ico_eq_Ico (h₁ : a ≤ b) (h₂ : b ≤ c) : Ico a b ∪ Ico
   subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_le h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
     Ico_subset_Ico_union_Ico
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ico_union_Ico'
-(h₁ : «expr ≤ »(c, b))
-(h₂ : «expr ≤ »(a, d)) : «expr = »(«expr ∪ »(Ico a b, Ico c d), Ico (min a c) (max b d)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Ico, ",", expr min_le_iff, ",", expr lt_max_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr ≤ »(c, x)]; by_cases [expr hd, ":", expr «expr < »(x, d)],
-  { tauto [] },
-  { have [ident hax] [":", expr «expr ≤ »(a, x)] [":=", expr h₂.trans (le_of_not_gt hd)],
-    tauto [] },
-  { have [ident hxb] [":", expr «expr < »(x, b)] [":=", expr (lt_of_not_ge hc).trans_le h₁],
-    tauto [] },
-  { tauto [] }
-end
+theorem Ico_union_Ico' (h₁ : c ≤ b) (h₂ : a ≤ d) : Ico a b ∪ Ico c d = Ico (min a c) (max b d) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Ico, min_le_iff, lt_max_iff]
+    byCases' hc : c ≤ x <;> byCases' hd : x < d
+    ·
+      tauto
+    ·
+      have hax : a ≤ x := h₂.trans (le_of_not_gtₓ hd)
+      tauto
+    ·
+      have hxb : x < b := (lt_of_not_geₓ hc).trans_le h₁ 
+      tauto
+    ·
+      tauto
 
 theorem Ico_union_Ico (h₁ : min a b ≤ max c d) (h₂ : min c d ≤ max a b) : Ico a b ∪ Ico c d = Ico (min a c) (max b d) :=
   by 
@@ -1288,21 +1298,21 @@ theorem Ioc_union_Ioc_eq_Ioc (h₁ : a ≤ b) (h₂ : b ≤ c) : Ioc a b ∪ Ioc
   subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans_lt hx.1, hx.2⟩)
     Ioc_subset_Ioc_union_Ioc
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ioc_union_Ioc'
-(h₁ : «expr ≤ »(c, b))
-(h₂ : «expr ≤ »(a, d)) : «expr = »(«expr ∪ »(Ioc a b, Ioc c d), Ioc (min a c) (max b d)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Ioc, ",", expr min_lt_iff, ",", expr le_max_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr < »(c, x)]; by_cases [expr hd, ":", expr «expr ≤ »(x, d)],
-  { tauto [] },
-  { have [ident hax] [":", expr «expr < »(a, x)] [":=", expr h₂.trans_lt (lt_of_not_ge hd)],
-    tauto [] },
-  { have [ident hxb] [":", expr «expr ≤ »(x, b)] [":=", expr (le_of_not_gt hc).trans h₁],
-    tauto [] },
-  { tauto [] }
-end
+theorem Ioc_union_Ioc' (h₁ : c ≤ b) (h₂ : a ≤ d) : Ioc a b ∪ Ioc c d = Ioc (min a c) (max b d) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Ioc, min_lt_iff, le_max_iff]
+    byCases' hc : c < x <;> byCases' hd : x ≤ d
+    ·
+      tauto
+    ·
+      have hax : a < x := h₂.trans_lt (lt_of_not_geₓ hd)
+      tauto
+    ·
+      have hxb : x ≤ b := (le_of_not_gtₓ hc).trans h₁ 
+      tauto
+    ·
+      tauto
 
 theorem Ioc_union_Ioc (h₁ : min a b ≤ max c d) (h₂ : min c d ≤ max a b) : Ioc a b ∪ Ioc c d = Ioc (min a c) (max b d) :=
   by 
@@ -1339,21 +1349,21 @@ theorem Icc_union_Icc_eq_Icc (h₁ : a ≤ b) (h₂ : b ≤ c) : Icc a b ∪ Icc
   subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
     Icc_subset_Icc_union_Icc
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Icc_union_Icc'
-(h₁ : «expr ≤ »(c, b))
-(h₂ : «expr ≤ »(a, d)) : «expr = »(«expr ∪ »(Icc a b, Icc c d), Icc (min a c) (max b d)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Icc, ",", expr min_le_iff, ",", expr le_max_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr ≤ »(c, x)]; by_cases [expr hd, ":", expr «expr ≤ »(x, d)],
-  { tauto [] },
-  { have [ident hax] [":", expr «expr ≤ »(a, x)] [":=", expr h₂.trans (le_of_not_ge hd)],
-    tauto [] },
-  { have [ident hxb] [":", expr «expr ≤ »(x, b)] [":=", expr (le_of_not_ge hc).trans h₁],
-    tauto [] },
-  { tauto [] }
-end
+theorem Icc_union_Icc' (h₁ : c ≤ b) (h₂ : a ≤ d) : Icc a b ∪ Icc c d = Icc (min a c) (max b d) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Icc, min_le_iff, le_max_iff]
+    byCases' hc : c ≤ x <;> byCases' hd : x ≤ d
+    ·
+      tauto
+    ·
+      have hax : a ≤ x := h₂.trans (le_of_not_geₓ hd)
+      tauto
+    ·
+      have hxb : x ≤ b := (le_of_not_geₓ hc).trans h₁ 
+      tauto
+    ·
+      tauto
 
 /--
 We cannot replace `<` by `≤` in the hypotheses.
@@ -1378,21 +1388,21 @@ theorem Ioc_union_Icc_eq_Ioc (h₁ : a < b) (h₂ : b ≤ c) : Ioc a b ∪ Icc b
   subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans_le hx.1, hx.2⟩)
     Ioc_subset_Ioc_union_Icc
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Ioo_union_Ioo'
-(h₁ : «expr < »(c, b))
-(h₂ : «expr < »(a, d)) : «expr = »(«expr ∪ »(Ioo a b, Ioo c d), Ioo (min a c) (max b d)) :=
-begin
-  ext1 [] [ident x],
-  simp_rw ["[", expr mem_union, ",", expr mem_Ioo, ",", expr min_lt_iff, ",", expr lt_max_iff, "]"] [],
-  by_cases [expr hc, ":", expr «expr < »(c, x)]; by_cases [expr hd, ":", expr «expr < »(x, d)],
-  { tauto [] },
-  { have [ident hax] [":", expr «expr < »(a, x)] [":=", expr h₂.trans_le (le_of_not_lt hd)],
-    tauto [] },
-  { have [ident hxb] [":", expr «expr < »(x, b)] [":=", expr (le_of_not_lt hc).trans_lt h₁],
-    tauto [] },
-  { tauto [] }
-end
+theorem Ioo_union_Ioo' (h₁ : c < b) (h₂ : a < d) : Ioo a b ∪ Ioo c d = Ioo (min a c) (max b d) :=
+  by 
+    ext1 x 
+    simpRw [mem_union, mem_Ioo, min_lt_iff, lt_max_iff]
+    byCases' hc : c < x <;> byCases' hd : x < d
+    ·
+      tauto
+    ·
+      have hax : a < x := h₂.trans_le (le_of_not_ltₓ hd)
+      tauto
+    ·
+      have hxb : x < b := (le_of_not_ltₓ hc).trans_lt h₁ 
+      tauto
+    ·
+      tauto
 
 theorem Ioo_union_Ioo (h₁ : min a b < max c d) (h₂ : min c d < max a b) : Ioo a b ∪ Ioo c d = Ioo (min a c) (max b d) :=
   by 
@@ -1524,13 +1534,21 @@ theorem Ico_diff_Iio : Ico a b \ Iio c = Ico (max a c) b :=
   by 
     rw [diff_eq, compl_Iio, Ico_inter_Ici, sup_eq_max]
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem Ioc_diff_Ioi : «expr = »(«expr \ »(Ioc a b, Ioi c), Ioc a (min b c)) :=
-«expr $ »(ext, by simp [] [] [] ["[", expr iff_def, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    Ioc_diff_Ioi
+    : Ioc a b \ Ioi c = Ioc a min b c
+    := ext $ by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ iff_def ]
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem Ico_inter_Iio : «expr = »(«expr ∩ »(Ico a b, Iio c), Ico a (min b c)) :=
-«expr $ »(ext, by simp [] [] [] ["[", expr iff_def, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    Ico_inter_Iio
+    : Ico a b ∩ Iio c = Ico a min b c
+    := ext $ by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ iff_def ]
 
 @[simp]
 theorem Ioc_diff_Iic : Ioc a b \ Iic c = Ioc (max a c) b :=
@@ -1553,14 +1571,20 @@ theorem Ioc_union_Ioc_symm : Ioc a b ∪ Ioc b a = Ioc (min a b) (max a b) :=
     rw [max_commₓ]
     apply Ioc_union_Ioc <;> rw [max_commₓ] <;> exact min_le_max
 
--- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-@[simp]
-theorem Ioc_union_Ioc_union_Ioc_cycle : «expr = »(«expr ∪ »(«expr ∪ »(Ioc a b, Ioc b c), Ioc c a), Ioc (min a (min b c)) (max a (max b c))) :=
-begin
-  rw ["[", expr Ioc_union_Ioc, ",", expr Ioc_union_Ioc, "]"] [],
-  ac_refl,
-  all_goals { solve_by_elim [] [] ["[", expr min_le_of_left_le, ",", expr min_le_of_right_le, ",", expr le_max_of_le_left, ",", expr le_max_of_le_right, ",", expr le_refl, "]"] [] { max_depth := 5 } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+@[ simp ]
+  theorem
+    Ioc_union_Ioc_union_Ioc_cycle
+    : Ioc a b ∪ Ioc b c ∪ Ioc c a = Ioc min a min b c max a max b c
+    :=
+      by
+        rw [ Ioc_union_Ioc , Ioc_union_Ioc ]
+          acRfl
+          all_goals
+            solveByElim
+              ( config := { max_depth := 5 } )
+              [ min_le_of_left_le , min_le_of_right_le , le_max_of_le_left , le_max_of_le_right , le_reflₓ ]
 
 end LinearOrderₓ
 
@@ -1702,8 +1726,7 @@ section LinearOrderedAddCommGroup
 variable {α : Type u} [LinearOrderedAddCommGroup α]
 
 /-- If we remove a smaller interval from a larger, the result is nonempty -/
-theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) :
-  Nonempty («expr↥ » (Ico x (x+dx) \ Ico y (y+dy))) :=
+theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) : Nonempty (↥(Ico x (x+dx) \ Ico y (y+dy))) :=
   by 
     cases' lt_or_leₓ x y with h' h'
     ·
@@ -1813,7 +1836,7 @@ end Preorderₓ
 
 /-- Order isomorphism between `Iic (⊤ : α)` and `α` when `α` has a top element -/
 def Iic_top [Preorderₓ α] [OrderTop α] : Set.Iic (⊤ : α) ≃o α :=
-  { @Equiv.subtypeUnivEquiv α (Set.Iic (⊤ : α)) fun x => le_top with
+  { @Equivₓ.subtypeUnivEquiv α (Set.Iic (⊤ : α)) fun x => le_top with
     map_rel_iff' :=
       fun x y =>
         by 
@@ -1821,7 +1844,7 @@ def Iic_top [Preorderₓ α] [OrderTop α] : Set.Iic (⊤ : α) ≃o α :=
 
 /-- Order isomorphism between `Ici (⊥ : α)` and `α` when `α` has a bottom element -/
 def Ici_bot [Preorderₓ α] [OrderBot α] : Set.Ici (⊥ : α) ≃o α :=
-  { @Equiv.subtypeUnivEquiv α (Set.Ici (⊥ : α)) fun x => bot_le with
+  { @Equivₓ.subtypeUnivEquiv α (Set.Ici (⊥ : α)) fun x => bot_le with
     map_rel_iff' :=
       fun x y =>
         by 

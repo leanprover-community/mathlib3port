@@ -185,7 +185,7 @@ theorem mul_dvd_mul_iff_left [CancelMonoidWithZero α] {a b c : α} (ha : a ≠ 
 
 /-- Given two elements `a`, `b` of a commutative `cancel_monoid_with_zero` and a nonzero
   element `c`, `a*c` divides `b*c` iff `a` divides `b`. -/
-theorem mul_dvd_mul_iff_right [CommCancelMonoidWithZero α] {a b c : α} (hc : c ≠ 0) : ((a*c) ∣ b*c) ↔ a ∣ b :=
+theorem mul_dvd_mul_iff_right [CancelCommMonoidWithZero α] {a b c : α} (hc : c ≠ 0) : ((a*c) ∣ b*c) ↔ a ∣ b :=
   exists_congr$
     fun d =>
       by 
@@ -204,8 +204,8 @@ variable [Monoidₓ α] {a b : α} {u : Units α}
 
 /-- Elements of the unit group of a monoid represented as elements of the monoid
     divide any element of the monoid. -/
-theorem coe_dvd : «expr↑ » u ∣ a :=
-  ⟨«expr↑ » (u⁻¹)*a,
+theorem coe_dvd : ↑u ∣ a :=
+  ⟨(↑u⁻¹)*a,
     by 
       simp ⟩
 
@@ -214,17 +214,17 @@ theorem coe_dvd : «expr↑ » u ∣ a :=
 theorem dvd_mul_right : (a ∣ b*u) ↔ a ∣ b :=
   Iff.intro
     (fun ⟨c, Eq⟩ =>
-      ⟨c*«expr↑ » (u⁻¹),
+      ⟨c*↑u⁻¹,
         by 
           rw [←mul_assocₓ, ←Eq, Units.mul_inv_cancel_right]⟩)
     fun ⟨c, Eq⟩ => Eq.symm ▸ (dvd_mul_right _ _).mul_right _
 
 /-- In a monoid, an element `a` divides an element `b` iff all associates of `a` divide `b`. -/
 theorem mul_right_dvd : (a*u) ∣ b ↔ a ∣ b :=
-  Iff.intro (fun ⟨c, Eq⟩ => ⟨«expr↑ » u*c, Eq.trans (mul_assocₓ _ _ _)⟩)
+  Iff.intro (fun ⟨c, Eq⟩ => ⟨(↑u)*c, Eq.trans (mul_assocₓ _ _ _)⟩)
     fun h =>
       dvd_trans
-        (Dvd.intro («expr↑ » (u⁻¹))
+        (Dvd.intro (↑u⁻¹)
           (by 
             rw [mul_assocₓ, u.mul_inv, mul_oneₓ]))
         h
@@ -244,7 +244,7 @@ theorem dvd_mul_left : (a ∣ u*b) ↔ a ∣ b :=
 
 /-- In a commutative monoid, an element `a` divides an element `b` iff all
   left associates of `a` divide `b`.-/
-theorem mul_left_dvd : («expr↑ » u*a) ∣ b ↔ a ∣ b :=
+theorem mul_left_dvd : ((↑u)*a) ∣ b ↔ a ∣ b :=
   by 
     rw [mul_commₓ]
     apply mul_right_dvd
@@ -320,7 +320,7 @@ def DvdNotUnit (a b : α) : Prop :=
 
 theorem dvd_not_unit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ a) : DvdNotUnit a b :=
   by 
-    split 
+    constructor
     ·
       rintro rfl 
       exact hnd (dvd_zero _)

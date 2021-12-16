@@ -46,7 +46,7 @@ The subgraph `M` of `G` is a matching if every vertex of `M` is incident to exac
 We say that the vertices in `M.support` are *matched* or *saturated*.
 -/
 def is_matching : Prop :=
-  ∀ ⦃v⦄, v ∈ M.verts → ∃!w, M.adj v w
+  ∀ ⦃v⦄, v ∈ M.verts → ∃! w, M.adj v w
 
 /--
 The subgraph `M` of `G` is a perfect matching on `G` if it's a matching and every vertex `G` is
@@ -61,7 +61,7 @@ theorem is_matching.support_eq_verts {M : subgraph G} (h : M.is_matching) : M.su
     obtain ⟨w, hvw, -⟩ := h hv 
     exact ⟨_, hvw⟩
 
-theorem is_perfect_matching_iff : M.is_perfect_matching ↔ ∀ v, ∃!w, M.adj v w :=
+theorem is_perfect_matching_iff : M.is_perfect_matching ↔ ∀ v, ∃! w, M.adj v w :=
   by 
     refine' ⟨_, fun hm => ⟨fun v hv => hm v, fun v => _⟩⟩
     ·

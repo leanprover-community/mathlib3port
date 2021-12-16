@@ -102,8 +102,7 @@ def to_order_embedding (hf : LeftOrdContinuous f) (h : injective f) : α ↪o β
 variable {f}
 
 @[simp]
-theorem coe_to_order_embedding (hf : LeftOrdContinuous f) (h : injective f) :
-  «expr⇑ » (hf.to_order_embedding f h) = f :=
+theorem coe_to_order_embedding (hf : LeftOrdContinuous f) (h : injective f) : ⇑hf.to_order_embedding f h = f :=
   rfl
 
 end SemilatticeSup
@@ -115,11 +114,12 @@ variable [CompleteLattice α] [CompleteLattice β] {f : α → β}
 theorem map_Sup' (hf : LeftOrdContinuous f) (s : Set α) : f (Sup s) = Sup (f '' s) :=
   (hf$ is_lub_Sup s).Sup_eq.symm
 
-theorem map_Sup (hf : LeftOrdContinuous f) (s : Set α) : f (Sup s) = ⨆(x : _)(_ : x ∈ s), f x :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+theorem map_Sup (hf : LeftOrdContinuous f) (s : Set α) : f (Sup s) = ⨆ (x : _)(_ : x ∈ s), f x :=
   by 
     rw [hf.map_Sup', Sup_image]
 
-theorem map_supr (hf : LeftOrdContinuous f) (g : ι → α) : f (⨆i, g i) = ⨆i, f (g i) :=
+theorem map_supr (hf : LeftOrdContinuous f) (g : ι → α) : f (⨆ i, g i) = ⨆ i, f (g i) :=
   by 
     simp only [supr, hf.map_Sup', ←range_comp]
 
@@ -133,7 +133,7 @@ theorem map_cSup (hf : LeftOrdContinuous f) {s : Set α} (sne : s.nonempty) (sbd
   f (Sup s) = Sup (f '' s) :=
   ((hf$ is_lub_cSup sne sbdd).cSup_eq$ sne.image f).symm
 
-theorem map_csupr (hf : LeftOrdContinuous f) {g : ι → α} (hg : BddAbove (range g)) : f (⨆i, g i) = ⨆i, f (g i) :=
+theorem map_csupr (hf : LeftOrdContinuous f) {g : ι → α} (hg : BddAbove (range g)) : f (⨆ i, g i) = ⨆ i, f (g i) :=
   by 
     simp only [supr, hf.map_cSup (range_nonempty _) hg, ←range_comp]
 
@@ -193,8 +193,7 @@ def to_order_embedding (hf : RightOrdContinuous f) (h : injective f) : α ↪o �
 variable {f}
 
 @[simp]
-theorem coe_to_order_embedding (hf : RightOrdContinuous f) (h : injective f) :
-  «expr⇑ » (hf.to_order_embedding f h) = f :=
+theorem coe_to_order_embedding (hf : RightOrdContinuous f) (h : injective f) : ⇑hf.to_order_embedding f h = f :=
   rfl
 
 end SemilatticeInf
@@ -206,10 +205,11 @@ variable [CompleteLattice α] [CompleteLattice β] {f : α → β}
 theorem map_Inf' (hf : RightOrdContinuous f) (s : Set α) : f (Inf s) = Inf (f '' s) :=
   hf.order_dual.map_Sup' s
 
-theorem map_Inf (hf : RightOrdContinuous f) (s : Set α) : f (Inf s) = ⨅(x : _)(_ : x ∈ s), f x :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+theorem map_Inf (hf : RightOrdContinuous f) (s : Set α) : f (Inf s) = ⨅ (x : _)(_ : x ∈ s), f x :=
   hf.order_dual.map_Sup s
 
-theorem map_infi (hf : RightOrdContinuous f) (g : ι → α) : f (⨅i, g i) = ⨅i, f (g i) :=
+theorem map_infi (hf : RightOrdContinuous f) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) :=
   hf.order_dual.map_supr g
 
 end CompleteLattice
@@ -222,7 +222,7 @@ theorem map_cInf (hf : RightOrdContinuous f) {s : Set α} (sne : s.nonempty) (sb
   f (Inf s) = Inf (f '' s) :=
   hf.order_dual.map_cSup sne sbdd
 
-theorem map_cinfi (hf : RightOrdContinuous f) {g : ι → α} (hg : BddBelow (range g)) : f (⨅i, g i) = ⨅i, f (g i) :=
+theorem map_cinfi (hf : RightOrdContinuous f) {g : ι → α} (hg : BddBelow (range g)) : f (⨅ i, g i) = ⨅ i, f (g i) :=
   hf.order_dual.map_csupr hg
 
 end ConditionallyCompleteLattice

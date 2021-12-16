@@ -92,18 +92,20 @@ theorem coe_comp {X Y Z : Profinite} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g : X 
 
 end Profinite
 
--- error in Topology.Category.Profinite.Default: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- The fully faithful embedding of `Profinite` in `CompHaus`. -/
-@[simps #[], derive #["[", expr full, ",", expr faithful, "]"]]
-def Profinite_to_CompHaus : «expr ⥤ »(Profinite, CompHaus) :=
-induced_functor _
+@[simps]
+def profiniteToCompHaus : Profinite ⥤ CompHaus :=
+  induced_functor _ deriving [anonymous], [anonymous]
 
--- error in Topology.Category.Profinite.Default: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /-- The fully faithful embedding of `Profinite` in `Top`. This is definitionally the same as the
 obvious composite. -/
-@[simps #[], derive #["[", expr full, ",", expr faithful, "]"]]
-def Profinite.to_Top : «expr ⥤ »(Profinite, Top) :=
-forget₂ _ _
+@[simps]
+def Profinite.toTop : Profinite ⥤ Top :=
+  forget₂ _ _ deriving [anonymous], [anonymous]
 
 @[simp]
 theorem Profinite.to_CompHaus_to_Top : profiniteToCompHaus ⋙ compHausToTop = Profinite.toTop :=
@@ -145,7 +147,7 @@ left adjoint to the inclusion functor.
 def CompHaus.toProfinite : CompHaus ⥤ Profinite :=
   adjunction.left_adjoint_of_equiv Profinite.toCompHausEquivalence fun _ _ _ _ _ => rfl
 
-theorem CompHaus.to_Profinite_obj' (X : CompHaus) : «expr↥ » (CompHaus.toProfinite.obj X) = ConnectedComponents X :=
+theorem CompHaus.to_Profinite_obj' (X : CompHaus) : ↥CompHaus.toProfinite.obj X = ConnectedComponents X :=
   rfl
 
 /-- Finite types are given the discrete topology. -/
@@ -175,7 +177,7 @@ def limit_cone {J : Type u} [small_category J] (F : J ⥤ Profinite.{u}) : limit
       { toCompHaus := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).x,
         IsTotallyDisconnected :=
           by 
-            change TotallyDisconnectedSpace («expr↥ » { u:∀ j : J, F.obj j | _ })
+            change TotallyDisconnectedSpace (↥{ u : ∀ j : J, F.obj j | _ })
             exact Subtype.totally_disconnected_space },
     π := { app := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).π.app } }
 
@@ -217,19 +219,16 @@ variable {X Y : Profinite.{u}} (f : X ⟶ Y)
 theorem IsClosedMap : IsClosedMap f :=
   CompHaus.is_closed_map _
 
--- error in Topology.Category.Profinite.Default: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
-theorem is_iso_of_bijective (bij : function.bijective f) : is_iso f :=
-begin
-  haveI [] [] [":=", expr CompHaus.is_iso_of_bijective (Profinite_to_CompHaus.map f) bij],
-  exact [expr is_iso_of_fully_faithful Profinite_to_CompHaus _]
-end
+theorem is_iso_of_bijective (bij : Function.Bijective f) : is_iso f :=
+  by 
+    have  := CompHaus.is_iso_of_bijective (Profinite_to_CompHaus.map f) bij 
+    exact is_iso_of_fully_faithful profiniteToCompHaus _
 
--- error in Topology.Category.Profinite.Default: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
-noncomputable
-def iso_of_bijective (bij : function.bijective f) : «expr ≅ »(X, Y) :=
-by letI [] [] [":=", expr Profinite.is_iso_of_bijective f bij]; exact [expr as_iso f]
+noncomputable def iso_of_bijective (bij : Function.Bijective f) : X ≅ Y :=
+  by 
+    let this' := Profinite.is_iso_of_bijective f bij <;> exact as_iso f
 
 instance forget_reflects_isomorphisms : reflects_isomorphisms (forget Profinite) :=
   ⟨by 
@@ -280,54 +279,57 @@ def iso_equiv_homeo : (X ≅ Y) ≃ (X ≃ₜ Y) :=
           ext 
           rfl }
 
--- error in Topology.Category.Profinite.Default: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem epi_iff_surjective {X Y : Profinite.{u}} (f : «expr ⟶ »(X, Y)) : «expr ↔ »(epi f, function.surjective f) :=
-begin
-  split,
-  { contrapose ["!"] [],
-    rintros ["⟨", ident y, ",", ident hy, "⟩", ident hf],
-    let [ident C] [] [":=", expr set.range f],
-    have [ident hC] [":", expr is_closed C] [":=", expr (is_compact_range f.continuous).is_closed],
-    let [ident U] [] [":=", expr «expr ᶜ»(C)],
-    have [ident hU] [":", expr is_open U] [":=", expr is_open_compl_iff.mpr hC],
-    have [ident hyU] [":", expr «expr ∈ »(y, U)] [],
-    { refine [expr set.mem_compl _],
-      rintro ["⟨", ident y', ",", ident hy', "⟩"],
-      exact [expr hy y' hy'] },
-    have [ident hUy] [":", expr «expr ∈ »(U, nhds y)] [":=", expr hU.mem_nhds hyU],
-    obtain ["⟨", ident V, ",", ident hV, ",", ident hyV, ",", ident hVU, "⟩", ":=", expr is_topological_basis_clopen.mem_nhds_iff.mp hUy],
-    classical,
-    letI [] [":", expr topological_space «expr $ »(ulift.{u}, fin 2)] [":=", expr «expr⊥»()],
-    let [ident Z] [] [":=", expr of «expr $ »(ulift.{u}, fin 2)],
-    let [ident g] [":", expr «expr ⟶ »(Y, Z)] [":=", expr ⟨(locally_constant.of_clopen hV).map ulift.up, locally_constant.continuous _⟩],
-    let [ident h] [":", expr «expr ⟶ »(Y, Z)] [":=", expr ⟨λ _, ⟨1⟩, continuous_const⟩],
-    have [ident H] [":", expr «expr = »(h, g)] [],
-    { rw ["<-", expr cancel_epi f] [],
-      ext [] [ident x] [],
-      dsimp [] ["[", expr locally_constant.of_clopen, "]"] [] [],
-      rw [expr if_neg] [],
-      { refl },
-      refine [expr mt (λ α, hVU α) _],
-      simp [] [] ["only"] ["[", expr set.mem_range_self, ",", expr not_true, ",", expr not_false_iff, ",", expr set.mem_compl_eq, "]"] [] [] },
-    apply_fun [expr λ e, (e y).down] ["at", ident H] [],
-    dsimp [] ["[", expr locally_constant.of_clopen, "]"] [] ["at", ident H],
-    rw [expr if_pos hyV] ["at", ident H],
-    exact [expr top_ne_bot H] },
-  { rw ["<-", expr category_theory.epi_iff_surjective] [],
-    apply [expr faithful_reflects_epi (forget Profinite)] }
-end
+theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : epi f ↔ Function.Surjective f :=
+  by 
+    constructor
+    ·
+      contrapose! 
+      rintro ⟨y, hy⟩ hf 
+      let C := Set.Range f 
+      have hC : IsClosed C := (is_compact_range f.continuous).IsClosed 
+      let U := Cᶜ
+      have hU : IsOpen U := is_open_compl_iff.mpr hC 
+      have hyU : y ∈ U
+      ·
+        refine' Set.mem_compl _ 
+        rintro ⟨y', hy'⟩
+        exact hy y' hy' 
+      have hUy : U ∈ nhds y := hU.mem_nhds hyU 
+      obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy 
+      classical 
+      let this' : TopologicalSpace (Ulift.{u}$ Finₓ 2) := ⊥
+      let Z := of (Ulift.{u}$ Finₓ 2)
+      let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map Ulift.up, LocallyConstant.continuous _⟩
+      let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
+      have H : h = g
+      ·
+        rw [←cancel_epi f]
+        ext x 
+        dsimp [LocallyConstant.ofClopen]
+        rw [if_neg]
+        ·
+          rfl 
+        refine' mt (fun α => hVU α) _ 
+        simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_eq]
+      applyFun fun e => (e y).down  at H 
+      dsimp [LocallyConstant.ofClopen]  at H 
+      rw [if_pos hyV] at H 
+      exact top_ne_bot H
+    ·
+      rw [←CategoryTheory.epi_iff_surjective]
+      apply faithful_reflects_epi (forget Profinite)
 
--- error in Topology.Category.Profinite.Default: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mono_iff_injective {X Y : Profinite.{u}} (f : «expr ⟶ »(X, Y)) : «expr ↔ »(mono f, function.injective f) :=
-begin
-  split,
-  { intro [ident h],
-    haveI [] [":", expr limits.preserves_limits Profinite_to_CompHaus] [":=", expr infer_instance],
-    haveI [] [":", expr mono (Profinite_to_CompHaus.map f)] [":=", expr infer_instance],
-    rwa ["<-", expr CompHaus.mono_iff_injective] [] },
-  { rw ["<-", expr category_theory.mono_iff_injective] [],
-    apply [expr faithful_reflects_mono (forget Profinite)] }
-end
+theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : mono f ↔ Function.Injective f :=
+  by 
+    constructor
+    ·
+      intro h 
+      have  : limits.preserves_limits profiniteToCompHaus := inferInstance 
+      have  : mono (Profinite_to_CompHaus.map f) := inferInstance 
+      rwa [←CompHaus.mono_iff_injective]
+    ·
+      rw [←CategoryTheory.mono_iff_injective]
+      apply faithful_reflects_mono (forget Profinite)
 
 end Profinite
 

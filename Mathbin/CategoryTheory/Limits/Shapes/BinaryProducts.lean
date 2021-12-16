@@ -24,7 +24,7 @@ braiding and associating isomorphisms, and the product comparison morphism.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u u₂
 
@@ -32,12 +32,12 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
--- error in CategoryTheory.Limits.Shapes.BinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The type of objects for the diagram indexing a binary (co)product. -/
-@[derive #[expr decidable_eq], derive #[expr inhabited]]
 inductive walking_pair : Type v
-| left
-| right
+  | left
+  | right deriving [anonymous], [anonymous]
 
 open WalkingPair
 

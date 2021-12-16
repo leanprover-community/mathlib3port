@@ -74,15 +74,15 @@ theorem ext (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
 
 /-- Copy of a submodule with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (p : Submodule R M) (s : Set M) (hs : s = «expr↑ » p) : Submodule R M :=
+protected def copy (p : Submodule R M) (s : Set M) (hs : s = ↑p) : Submodule R M :=
   { Carrier := s, zero_mem' := hs.symm ▸ p.zero_mem', add_mem' := hs.symm ▸ p.add_mem',
     smul_mem' := hs.symm ▸ p.smul_mem' }
 
 @[simp]
-theorem coe_copy (S : Submodule R M) (s : Set M) (hs : s = «expr↑ » S) : (S.copy s hs : Set M) = s :=
+theorem coe_copy (S : Submodule R M) (s : Set M) (hs : s = ↑S) : (S.copy s hs : Set M) = s :=
   rfl
 
-theorem copy_eq (S : Submodule R M) (s : Set M) (hs : s = «expr↑ » S) : S.copy s hs = S :=
+theorem copy_eq (S : Submodule R M) (s : Set M) (hs : s = ↑S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 
 theorem to_add_submonoid_injective : injective (to_add_submonoid : Submodule R M → AddSubmonoid M) :=
@@ -156,10 +156,13 @@ theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
 theorem smul_of_tower_mem [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) : r • x ∈ p :=
   p.to_sub_mul_action.smul_of_tower_mem r h
 
-theorem sum_mem {t : Finset ι} {f : ι → M} : (∀ c _ : c ∈ t, f c ∈ p) → (∑i in t, f i) ∈ p :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
+theorem sum_mem {t : Finset ι} {f : ι → M} : (∀ c _ : c ∈ t, f c ∈ p) → (∑ i in t, f i) ∈ p :=
   p.to_add_submonoid.sum_mem
 
-theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀ c _ : c ∈ t, f c ∈ p) : (∑i in t, r i • f i) ∈ p :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » t)
+theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀ c _ : c ∈ t, f c ∈ p) :
+  (∑ i in t, r i • f i) ∈ p :=
   Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _ (hyp i hi)
 
 @[simp]
@@ -181,6 +184,10 @@ instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : HasScalar S p :
 instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : IsScalarTower S R p :=
   p.to_sub_mul_action.is_scalar_tower
 
+instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] [HasScalar (Sᵐᵒᵖ) R] [HasScalar (Sᵐᵒᵖ) M]
+  [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] : IsCentralScalar S p :=
+  p.to_sub_mul_action.is_central_scalar
+
 protected theorem Nonempty : (p : Set M).Nonempty :=
   ⟨0, p.zero_mem⟩
 
@@ -195,7 +202,7 @@ theorem coe_eq_zero {x : p} : (x : M) = 0 ↔ x = 0 :=
   (SetLike.coe_eq_coe : (x : M) = (0 : p) ↔ x = 0)
 
 @[simp, normCast]
-theorem coe_add (x y : p) : («expr↑ » (x+y) : M) = «expr↑ » x+«expr↑ » y :=
+theorem coe_add (x y : p) : (↑x+y : M) = (↑x)+↑y :=
   rfl
 
 @[simp, normCast]
@@ -203,12 +210,12 @@ theorem coe_zero : ((0 : p) : M) = 0 :=
   rfl
 
 @[normCast]
-theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • «expr↑ » x :=
+theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • ↑x :=
   rfl
 
 @[simp, normCast]
 theorem coe_smul_of_tower [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] (r : S) (x : p) :
-  ((r • x : p) : M) = r • «expr↑ » x :=
+  ((r • x : p) : M) = r • ↑x :=
   rfl
 
 @[simp, normCast]
@@ -254,7 +261,7 @@ theorem subtype_eq_val : (Submodule.subtype p : p → M) = Subtype.val :=
 
 /-- Note the `add_submonoid` version of this lemma is called `add_submonoid.coe_finset_sum`. -/
 @[simp]
-theorem coe_sum (x : ι → p) (s : Finset ι) : «expr↑ » (∑i in s, x i) = ∑i in s, (x i : M) :=
+theorem coe_sum (x : ι → p) (s : Finset ι) : (↑∑ i in s, x i) = ∑ i in s, (x i : M) :=
   p.subtype.map_sum
 
 section RestrictScalars
@@ -387,7 +394,7 @@ instance : AddCommGroupₓ p :=
   { p.to_add_subgroup.to_add_comm_group with add := ·+·, zero := 0, neg := Neg.neg }
 
 @[simp, normCast]
-theorem coe_sub (x y : p) : («expr↑ » (x - y) : M) = «expr↑ » x - «expr↑ » y :=
+theorem coe_sub (x y : p) : (↑(x - y) : M) = ↑x - ↑y :=
   rfl
 
 end AddCommGroupₓ
@@ -398,12 +405,14 @@ variable [Ringₓ R] [IsDomain R]
 
 variable [AddCommGroupₓ M] [Module R M] {b : ι → M}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » N)
 theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ c : R y _ : y ∈ N, ((c • x)+y) = (0 : M) → c = 0) :
   x ∉ N :=
   by 
     intro hx 
     simpa using ortho (-1) x hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » N)
 theorem ne_zero_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ c : R y _ : y ∈ N, ((c • x)+y) = (0 : M) → c = 0) :
   x ≠ 0 :=
   mt (fun h => show x ∈ N from h.symm ▸ N.zero_mem) (not_mem_of_ortho ortho)

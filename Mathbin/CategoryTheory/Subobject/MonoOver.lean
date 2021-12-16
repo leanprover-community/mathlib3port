@@ -30,7 +30,7 @@ and was ported to mathlib by Scott Morrison.
 
 universe v₁ v₂ u₁ u₂
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -40,14 +40,15 @@ variable {C : Type u₁} [category.{v₁} C] {X Y Z : C}
 
 variable {D : Type u₂} [category.{v₂} D]
 
--- error in CategoryTheory.Subobject.MonoOver: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
 /--
 The category of monomorphisms into `X` as a full subcategory of the over category.
 This isn't skeletal, so it's not a partial order.
 
 Later we define `subobject X` as the quotient of this by isomorphisms.
--/ @[derive #["[", expr category, "]"]] def mono_over (X : C) :=
-{f : over X // mono f.hom}
+-/
+def mono_over (X : C) :=
+  { f : over X // mono f.hom }deriving [anonymous]
 
 namespace MonoOver
 

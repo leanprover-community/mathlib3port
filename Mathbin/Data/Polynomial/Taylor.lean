@@ -14,7 +14,7 @@ import Mathbin.Data.Polynomial.HasseDeriv
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Polynomial
 

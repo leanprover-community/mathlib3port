@@ -94,7 +94,7 @@ theorem close_is_closed {X : C} (S : sieve X) : J₁.is_closed (J₁.close S) :=
 /-- The sieve `S` is closed iff its closure is equal to itself. -/
 theorem is_closed_iff_close_eq_self {X : C} (S : sieve X) : J₁.is_closed S ↔ J₁.close S = S :=
   by 
-    split 
+    constructor
     ·
       intro h 
       apply le_antisymmₓ
@@ -139,7 +139,7 @@ operator determines the topology.
 -/
 theorem close_eq_top_iff_mem {X : C} (S : sieve X) : J₁.close S = ⊤ ↔ S ∈ J₁ X :=
   by 
-    split 
+    constructor
     ·
       intro h 
       apply J₁.transitive (J₁.top_mem X)
@@ -170,92 +170,103 @@ The presheaf sending each object to the set of `J`-closed sieves on it. This pre
 (and will turn out to be a subobject classifier for the category of `J`-sheaves).
 -/
 @[simps]
-def functor.closed_sieves : «expr ᵒᵖ» C ⥤ Type max v u :=
+def functor.closed_sieves : Cᵒᵖ ⥤ Type max v u :=
   { obj := fun X => { S : sieve X.unop // J₁.is_closed S },
     map := fun X Y f S => ⟨S.1.pullback f.unop, J₁.is_closed_pullback f.unop _ S.2⟩ }
 
--- error in CategoryTheory.Sites.Closed: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The presheaf of `J`-closed sieves is a `J`-sheaf.
 The proof of this is adapted from [MM92], Chatper III, Section 7, Lemma 1.
--/ theorem classifier_is_sheaf : presieve.is_sheaf J₁ (functor.closed_sieves J₁) :=
-begin
-  intros [ident X, ident S, ident hS],
-  rw ["<-", expr presieve.is_separated_for_and_exists_is_amalgamation_iff_sheaf_for] [],
-  refine [expr ⟨_, _⟩],
-  { rintro [ident x, "⟨", ident M, ",", ident hM, "⟩", "⟨", ident N, ",", ident hN, "⟩", ident hM₂, ident hN₂],
-    ext [] [] [],
-    dsimp ["only"] ["[", expr subtype.coe_mk, "]"] [] [],
-    rw ["[", "<-", expr J₁.covers_iff_mem_of_closed hM, ",", "<-", expr J₁.covers_iff_mem_of_closed hN, "]"] [],
-    have [ident q] [":", expr ∀ {{Z : C}} (g : «expr ⟶ »(Z, X)) (hg : S g), «expr = »(M.pullback g, N.pullback g)] [],
-    { intros [ident Z, ident g, ident hg],
-      apply [expr congr_arg subtype.val ((hM₂ g hg).trans (hN₂ g hg).symm)] },
-    have [ident MSNS] [":", expr «expr = »(«expr ⊓ »(M, S), «expr ⊓ »(N, S))] [],
-    { ext [] [ident Z, ident g] [],
-      rw ["[", expr sieve.inter_apply, ",", expr sieve.inter_apply, ",", expr and_comm (N g), ",", expr and_comm, "]"] [],
-      apply [expr and_congr_right],
-      intro [ident hg],
-      rw ["[", expr sieve.pullback_eq_top_iff_mem, ",", expr sieve.pullback_eq_top_iff_mem, ",", expr q g hg, "]"] [] },
-    split,
-    { intro [ident hf],
-      rw [expr J₁.covers_iff] [],
-      apply [expr J₁.superset_covering (sieve.pullback_monotone f inf_le_left)],
-      rw ["<-", expr MSNS] [],
-      apply [expr J₁.arrow_intersect f M S hf (J₁.pullback_stable _ hS)] },
-    { intro [ident hf],
-      rw [expr J₁.covers_iff] [],
-      apply [expr J₁.superset_covering (sieve.pullback_monotone f inf_le_left)],
-      rw [expr MSNS] [],
-      apply [expr J₁.arrow_intersect f N S hf (J₁.pullback_stable _ hS)] } },
-  { intros [ident x, ident hx],
-    rw [expr presieve.compatible_iff_sieve_compatible] ["at", ident hx],
-    let [ident M] [] [":=", expr sieve.bind S (λ Y f hf, (x f hf).1)],
-    have [] [":", expr ∀ {{Y}} (f : «expr ⟶ »(Y, X)) (hf : S f), «expr = »(M.pullback f, (x f hf).1)] [],
-    { intros [ident Y, ident f, ident hf],
-      apply [expr le_antisymm],
-      { rintro [ident Z, ident u, "⟨", ident W, ",", ident g, ",", ident f', ",", ident hf', ",", "(", ident hg, ":", expr (x f' hf').1 _, ")", ",", ident c, "⟩"],
-        rw ["[", expr sieve.pullback_eq_top_iff_mem, ",", "<-", expr show «expr = »((x «expr ≫ »(u, f) _).1, (x f hf).1.pullback u), from congr_arg subtype.val (hx f u hf), "]"] [],
-        simp_rw ["<-", expr c] [],
-        rw [expr show «expr = »((x «expr ≫ »(g, f') _).1, _), from congr_arg subtype.val (hx f' g hf')] [],
-        apply [expr sieve.pullback_eq_top_of_mem _ hg] },
-      { apply [expr sieve.le_pullback_bind S (λ Y f hf, (x f hf).1)] } },
-    refine [expr ⟨⟨_, J₁.close_is_closed M⟩, _⟩],
-    { intros [ident Y, ident f, ident hf],
-      ext1 [] [],
-      dsimp [] [] [] [],
-      rw ["[", "<-", expr J₁.pullback_close, ",", expr this _ hf, "]"] [],
-      apply [expr le_antisymm (J₁.le_close_of_is_closed (le_refl _) (x f hf).2) (J₁.le_close _)] } }
-end
+-/
+theorem classifier_is_sheaf : presieve.is_sheaf J₁ (functor.closed_sieves J₁) :=
+  by 
+    intro X S hS 
+    rw [←presieve.is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
+    refine' ⟨_, _⟩
+    ·
+      rintro x ⟨M, hM⟩ ⟨N, hN⟩ hM₂ hN₂ 
+      ext 
+      dsimp only [Subtype.coe_mk]
+      rw [←J₁.covers_iff_mem_of_closed hM, ←J₁.covers_iff_mem_of_closed hN]
+      have q : ∀ ⦃Z : C⦄ g : Z ⟶ X hg : S g, M.pullback g = N.pullback g
+      ·
+        intro Z g hg 
+        apply congr_argₓ Subtype.val ((hM₂ g hg).trans (hN₂ g hg).symm)
+      have MSNS : M⊓S = N⊓S
+      ·
+        ext Z g 
+        rw [sieve.inter_apply, sieve.inter_apply, and_comm (N g), and_comm]
+        apply and_congr_right 
+        intro hg 
+        rw [sieve.pullback_eq_top_iff_mem, sieve.pullback_eq_top_iff_mem, q g hg]
+      constructor
+      ·
+        intro hf 
+        rw [J₁.covers_iff]
+        apply J₁.superset_covering (sieve.pullback_monotone f inf_le_left)
+        rw [←MSNS]
+        apply J₁.arrow_intersect f M S hf (J₁.pullback_stable _ hS)
+      ·
+        intro hf 
+        rw [J₁.covers_iff]
+        apply J₁.superset_covering (sieve.pullback_monotone f inf_le_left)
+        rw [MSNS]
+        apply J₁.arrow_intersect f N S hf (J₁.pullback_stable _ hS)
+    ·
+      intro x hx 
+      rw [presieve.compatible_iff_sieve_compatible] at hx 
+      let M := sieve.bind S fun Y f hf => (x f hf).1
+      have  : ∀ ⦃Y⦄ f : Y ⟶ X hf : S f, M.pullback f = (x f hf).1
+      ·
+        intro Y f hf 
+        apply le_antisymmₓ
+        ·
+          rintro Z u ⟨W, g, f', hf', hg : (x f' hf').1 _, c⟩
+          rw [sieve.pullback_eq_top_iff_mem,
+            ←show (x (u ≫ f) _).1 = (x f hf).1.pullback u from congr_argₓ Subtype.val (hx f u hf)]
+          simpRw [←c]
+          rw [show (x (g ≫ f') _).1 = _ from congr_argₓ Subtype.val (hx f' g hf')]
+          apply sieve.pullback_eq_top_of_mem _ hg
+        ·
+          apply sieve.le_pullback_bind S fun Y f hf => (x f hf).1
+      refine' ⟨⟨_, J₁.close_is_closed M⟩, _⟩
+      ·
+        intro Y f hf 
+        ext1 
+        dsimp 
+        rw [←J₁.pullback_close, this _ hf]
+        apply le_antisymmₓ (J₁.le_close_of_is_closed (le_reflₓ _) (x f hf).2) (J₁.le_close _)
 
--- error in CategoryTheory.Sites.Closed: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If presheaf of `J₁`-closed sieves is a `J₂`-sheaf then `J₁ ≤ J₂`. Note the converse is true by
 `classifier_is_sheaf` and `is_sheaf_of_le`.
 -/
-theorem le_topology_of_closed_sieves_is_sheaf
-{J₁ J₂ : grothendieck_topology C}
-(h : presieve.is_sheaf J₁ (functor.closed_sieves J₂)) : «expr ≤ »(J₁, J₂) :=
-λ X S hS, begin
-  rw ["<-", expr J₂.close_eq_top_iff_mem] [],
-  have [] [":", expr J₂.is_closed («expr⊤»() : sieve X)] [],
-  { intros [ident Y, ident f, ident hf],
-    trivial },
-  suffices [] [":", expr «expr = »((⟨J₂.close S, J₂.close_is_closed S⟩ : subtype _), ⟨«expr⊤»(), this⟩)],
-  { rw [expr subtype.ext_iff] ["at", ident this],
-    exact [expr this] },
-  apply [expr (h S hS).is_separated_for.ext],
-  { intros [ident Y, ident f, ident hf],
-    ext1 [] [],
-    dsimp [] [] [] [],
-    rw ["[", expr sieve.pullback_top, ",", "<-", expr J₂.pullback_close, ",", expr S.pullback_eq_top_of_mem hf, ",", expr J₂.close_eq_top_iff_mem, "]"] [],
-    apply [expr J₂.top_mem] }
-end
+theorem le_topology_of_closed_sieves_is_sheaf {J₁ J₂ : grothendieck_topology C}
+  (h : presieve.is_sheaf J₁ (functor.closed_sieves J₂)) : J₁ ≤ J₂ :=
+  fun X S hS =>
+    by 
+      rw [←J₂.close_eq_top_iff_mem]
+      have  : J₂.is_closed (⊤ : sieve X)
+      ·
+        intro Y f hf 
+        trivial 
+      suffices  : (⟨J₂.close S, J₂.close_is_closed S⟩ : Subtype _) = ⟨⊤, this⟩
+      ·
+        rw [Subtype.ext_iff] at this 
+        exact this 
+      apply (h S hS).IsSeparatedFor.ext
+      ·
+        intro Y f hf 
+        ext1 
+        dsimp 
+        rw [sieve.pullback_top, ←J₂.pullback_close, S.pullback_eq_top_of_mem hf, J₂.close_eq_top_iff_mem]
+        apply J₂.top_mem
 
 /-- If being a sheaf for `J₁` is equivalent to being a sheaf for `J₂`, then `J₁ = J₂`. -/
 theorem topology_eq_iff_same_sheaves {J₁ J₂ : grothendieck_topology C} :
-  J₁ = J₂ ↔ ∀ P : «expr ᵒᵖ» C ⥤ Type max v u, presieve.is_sheaf J₁ P ↔ presieve.is_sheaf J₂ P :=
+  J₁ = J₂ ↔ ∀ P : Cᵒᵖ ⥤ Type max v u, presieve.is_sheaf J₁ P ↔ presieve.is_sheaf J₂ P :=
   by 
-    split 
+    constructor
     ·
       rintro rfl 
       intro P 
@@ -272,28 +283,40 @@ theorem topology_eq_iff_same_sheaves {J₁ J₂ : grothendieck_topology C} :
         rw [←h]
         apply classifier_is_sheaf
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-A closure (increasing, inflationary and idempotent) operation on sieves that commutes with pullback
-induces a Grothendieck topology.
-In fact, such operations are in bijection with Grothendieck topologies.
--/
-@[simps]
-def topology_of_closure_operator (c : ∀ X : C, ClosureOperator (sieve X))
-  (hc : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : sieve X, c _ (S.pullback f) = (c _ S).pullback f) : grothendieck_topology C :=
-  { Sieves := fun X => { S | c X S = ⊤ }, top_mem' := fun X => top_unique ((c X).le_closure _),
-    pullback_stable' :=
-      fun X Y S f hS =>
-        by 
-          rw [Set.mem_set_of_eq] at hS 
-          rw [Set.mem_set_of_eq, hc, hS, sieve.pullback_top],
-    transitive' :=
-      fun X S hS R hR =>
-        by 
-          rw [Set.mem_set_of_eq] at hS 
-          rw [Set.mem_set_of_eq, ←(c X).idempotent, eq_top_iff, ←hS]
-          apply (c X).Monotone fun Y f hf => _ 
-          rw [sieve.pullback_eq_top_iff_mem, ←hc]
-          apply hR hf }
+      A closure (increasing, inflationary and idempotent) operation on sieves that commutes with pullback
+      induces a Grothendieck topology.
+      In fact, such operations are in bijection with Grothendieck topologies.
+      -/
+    @[ simps ]
+  def
+    topology_of_closure_operator
+    ( c : ∀ X : C , ClosureOperator sieve X )
+        ( hc : ∀ ⦃ X Y : C ⦄ f : Y ⟶ X S : sieve X , c _ S.pullback f = c _ S . pullback f )
+      : grothendieck_topology C
+    :=
+      {
+        Sieves := fun X => { S | c X S = ⊤ } ,
+          top_mem' := fun X => top_unique c X . le_closure _ ,
+          pullback_stable'
+              :=
+              fun
+                X Y S f hS => by rw [ Set.mem_set_of_eq ] at hS rw [ Set.mem_set_of_eq , hc , hS , sieve.pullback_top ]
+            ,
+          transitive'
+            :=
+            fun
+              X S hS R hR
+                =>
+                by
+                  rw [ Set.mem_set_of_eq ] at hS
+                    rw [ Set.mem_set_of_eq , ← c X . idempotent , eq_top_iff , ← hS ]
+                    apply c X . Monotone fun Y f hf => _
+                    rw [ sieve.pullback_eq_top_iff_mem , ← hc ]
+                    apply hR hf
+        }
 
 /--
 The topology given by the closure operator `J.close` on a Grothendieck topology is the same as `J`.

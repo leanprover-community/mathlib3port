@@ -16,6 +16,8 @@ variable {α : Type _}
 
 namespace WellFounded
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- If `r` is a well-founded relation, then any nonempty set has a minimal element
 with respect to `r`. -/
 theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) :
@@ -36,15 +38,17 @@ theorem not_lt_min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α
   let ⟨_, h'⟩ := Classical.some_spec (H.has_min p h)
   h' _ xp
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
 theorem well_founded_iff_has_min {α} {r : α → α → Prop} :
   WellFounded r ↔ ∀ p : Set α, p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x _ : x ∈ p, ¬r x m :=
   by 
     classical 
-    split 
+    constructor
     ·
       exact has_min
     ·
-      set counterexamples := { x:α | ¬Acc r x }
+      set counterexamples := { x : α | ¬Acc r x }
       intro exists_max 
       fconstructor 
       intro x 
@@ -56,7 +60,7 @@ theorem well_founded_iff_has_min {α} {r : α → α → Prop} :
 
 theorem eq_iff_not_lt_of_le {α} [PartialOrderₓ α] {x y : α} : x ≤ y → y = x ↔ ¬x < y :=
   by 
-    split 
+    constructor
     ·
       intro xle nge 
       cases le_not_le_of_ltₓ nge 
@@ -67,33 +71,55 @@ theorem eq_iff_not_lt_of_le {α} [PartialOrderₓ α] {x y : α} : x ≤ y → y
       contrapose! ngt 
       exact lt_of_le_of_neₓ xle (Ne.symm ngt)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
 theorem well_founded_iff_has_max' [PartialOrderₓ α] :
   WellFounded (· > · : α → α → Prop) ↔ ∀ p : Set α, p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x _ : x ∈ p, m ≤ x → x = m :=
   by 
     simp only [eq_iff_not_lt_of_le, well_founded_iff_has_min]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ∈ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
 theorem well_founded_iff_has_min' [PartialOrderₓ α] :
   WellFounded (LT.lt : α → α → Prop) ↔ ∀ p : Set α, p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x _ : x ∈ p, x ≤ m → x = m :=
   @well_founded_iff_has_max' (OrderDual α) _
 
 open Set
 
-/-- The supremum of a bounded, well-founded order -/
-protected noncomputable def sup {α} {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : Bounded r s) : α :=
-  wf.min { x | ∀ a _ : a ∈ s, r a x } h
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The supremum of a bounded, well-founded order -/ protected noncomputable
+  def
+    sup
+    { α } { r : α → α → Prop } ( wf : WellFounded r ) ( s : Set α ) ( h : Bounded r s ) : α
+    := wf.min { x | ∀ a _ : a ∈ s , r a x } h
 
-protected theorem lt_sup {α} {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x} (hx : x ∈ s) :
-  r x (wf.sup s h) :=
-  min_mem wf { x | ∀ a _ : a ∈ s, r a x } h x hx
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+protected
+  theorem
+    lt_sup
+    { α } { r : α → α → Prop } ( wf : WellFounded r ) { s : Set α } ( h : Bounded r s ) { x } ( hx : x ∈ s )
+      : r x wf.sup s h
+    := min_mem wf { x | ∀ a _ : a ∈ s , r a x } h x hx
 
 section 
 
 open_locale Classical
 
-/-- A successor of an element `x` in a well-founded order is a minimal element `y` such that
-`x < y` if one exists. Otherwise it is `x` itself. -/
-protected noncomputable def succ {α} {r : α → α → Prop} (wf : WellFounded r) (x : α) : α :=
-  if h : ∃ y, r x y then wf.min { y | r x y } h else x
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      A successor of an element `x` in a well-founded order is a minimal element `y` such that
+      `x < y` if one exists. Otherwise it is `x` itself. -/
+    protected
+    noncomputable
+  def
+    succ
+    { α } { r : α → α → Prop } ( wf : WellFounded r ) ( x : α ) : α
+    := if h : ∃ y , r x y then wf.min { y | r x y } h else x
 
 protected theorem lt_succ {α} {r : α → α → Prop} (wf : WellFounded r) {x : α} (h : ∃ y, r x y) : r x (wf.succ x) :=
   by 
@@ -102,33 +128,27 @@ protected theorem lt_succ {α} {r : α → α → Prop} (wf : WellFounded r) {x 
 
 end 
 
--- error in Order.WellFounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem lt_succ_iff
-{α}
-{r : α → α → exprProp()}
-[wo : is_well_order α r]
-{x : α}
-(h : «expr∃ , »((y), r x y))
-(y : α) : «expr ↔ »(r y (wo.wf.succ x), «expr ∨ »(r y x, «expr = »(y, x))) :=
-begin
-  split,
-  { intro [ident h'],
-    have [] [":", expr «expr¬ »(r x y)] [],
-    { intro [ident hy],
-      rw ["[", expr well_founded.succ, ",", expr dif_pos, "]"] ["at", ident h'],
-      exact [expr wo.wf.not_lt_min _ h hy h'] },
-    rcases [expr trichotomous_of r x y, "with", ident hy, "|", ident hy, "|", ident hy],
-    exfalso,
-    exact [expr this hy],
-    right,
-    exact [expr hy.symm],
-    left,
-    exact [expr hy] },
-  rintro ["(", ident hy, "|", ident rfl, ")"],
-  exact [expr trans hy (wo.wf.lt_succ h)],
-  exact [expr wo.wf.lt_succ h]
-end
+protected theorem lt_succ_iff {α} {r : α → α → Prop} [wo : IsWellOrder α r] {x : α} (h : ∃ y, r x y) (y : α) :
+  r y (wo.wf.succ x) ↔ r y x ∨ y = x :=
+  by 
+    constructor
+    ·
+      intro h' 
+      have  : ¬r x y
+      ·
+        intro hy 
+        rw [WellFounded.succ, dif_pos] at h' 
+        exact wo.wf.not_lt_min _ h hy h' 
+      rcases trichotomous_of r x y with (hy | hy | hy)
+      exfalso 
+      exact this hy 
+      right 
+      exact hy.symm 
+      left 
+      exact hy 
+    rintro (hy | rfl)
+    exact trans hy (wo.wf.lt_succ h)
+    exact wo.wf.lt_succ h
 
 end WellFounded
 
@@ -177,6 +197,14 @@ theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=
 theorem argmin_on_le (s : Set α) {a : α} (ha : a ∈ s) (hs : s.nonempty := Set.nonempty_of_mem ha) :
   f (argmin_on f h s hs) ≤ f a :=
   not_ltₓ.mp$ not_lt_argmin_on f h s ha hs
+
+include h
+
+theorem well_founded.self_le_of_strict_mono {φ : β → β} (hφ : StrictMono φ) : ∀ n, n ≤ φ n :=
+  by 
+    byContra h' 
+    pushNeg  at h' 
+    exact h.not_lt_min _ h' (@hφ _ (h.min _ h') (h.min_mem _ h')) (h.min_mem _ h')
 
 end LinearOrderₓ
 

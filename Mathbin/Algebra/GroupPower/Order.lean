@@ -157,25 +157,25 @@ theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
     rw [pow_succₓ]
     exact mul_nonneg H (pow_nonneg _)
 
--- error in Algebra.GroupPower.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pow_add_pow_le
-(hx : «expr ≤ »(0, x))
-(hy : «expr ≤ »(0, y))
-(hn : «expr ≠ »(n, 0)) : «expr ≤ »(«expr + »(«expr ^ »(x, n), «expr ^ »(y, n)), «expr ^ »(«expr + »(x, y), n)) :=
-begin
-  rcases [expr nat.exists_eq_succ_of_ne_zero hn, "with", "⟨", ident k, ",", ident rfl, "⟩"],
-  induction [expr k] [] ["with", ident k, ident ih] [],
-  { simp [] [] ["only"] ["[", expr pow_one, "]"] [] [] },
-  let [ident n] [] [":=", expr k.succ],
-  have [ident h1] [] [":=", expr add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))],
-  have [ident h2] [] [":=", expr add_nonneg hx hy],
-  calc
-    «expr ≤ »(«expr + »(«expr ^ »(x, n.succ), «expr ^ »(y, n.succ)), «expr + »(«expr + »(«expr * »(x, «expr ^ »(x, n)), «expr * »(y, «expr ^ »(y, n))), «expr + »(«expr * »(x, «expr ^ »(y, n)), «expr * »(y, «expr ^ »(x, n))))) : by { rw ["[", expr pow_succ _ n, ",", expr pow_succ _ n, "]"] [],
-      exact [expr le_add_of_nonneg_right h1] }
-    «expr = »(..., «expr * »(«expr + »(x, y), «expr + »(«expr ^ »(x, n), «expr ^ »(y, n)))) : by rw ["[", expr add_mul, ",", expr mul_add, ",", expr mul_add, ",", expr add_comm «expr * »(y, «expr ^ »(x, n)), ",", "<-", expr add_assoc, ",", "<-", expr add_assoc, ",", expr add_assoc «expr * »(x, «expr ^ »(x, n)) «expr * »(x, «expr ^ »(y, n)), ",", expr add_comm «expr * »(x, «expr ^ »(y, n)) «expr * »(y, «expr ^ »(y, n)), ",", "<-", expr add_assoc, "]"] []
-    «expr ≤ »(..., «expr ^ »(«expr + »(x, y), n.succ)) : by { rw ["[", expr pow_succ _ n, "]"] [],
-      exact [expr mul_le_mul_of_nonneg_left (ih (nat.succ_ne_zero k)) h2] }
-end
+theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : ((x ^ n)+y ^ n) ≤ (x+y) ^ n :=
+  by 
+    rcases Nat.exists_eq_succ_of_ne_zero hn with ⟨k, rfl⟩
+    induction' k with k ih
+    ·
+      simp only [pow_oneₓ]
+    let n := k.succ 
+    have h1 := add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))
+    have h2 := add_nonneg hx hy 
+    calc ((x ^ n.succ)+y ^ n.succ) ≤ ((x*x ^ n)+y*y ^ n)+(x*y ^ n)+y*x ^ n :=
+      by 
+        rw [pow_succₓ _ n, pow_succₓ _ n]
+        exact le_add_of_nonneg_right h1 _ = (x+y)*(x ^ n)+y ^ n :=
+      by 
+        rw [add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ (y*x ^ n), ←add_assocₓ, ←add_assocₓ, add_assocₓ (x*x ^ n) (x*y ^ n),
+          add_commₓ (x*y ^ n) (y*y ^ n), ←add_assocₓ]_ ≤ (x+y) ^ n.succ :=
+      by 
+        rw [pow_succₓ _ n]
+        exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
 
 theorem pow_lt_pow_of_lt_left (Hxy : x < y) (Hxpos : 0 ≤ x) (Hnpos : 0 < n) : x ^ n < y ^ n :=
   by 
@@ -233,6 +233,18 @@ theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
 theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
   (strict_mono_pow h).lt_iff_lt
 
+theorem strict_anti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
+  strict_anti_nat_of_succ_lt$
+    fun n =>
+      by 
+        simpa only [pow_succₓ, one_mulₓ] using mul_lt_mul h₁ le_rfl (pow_pos h₀ n) zero_le_one
+
+theorem pow_lt_pow_iff_of_lt_one (h₀ : 0 < a) (h₁ : a < 1) : a ^ m < a ^ n ↔ n < m :=
+  (strict_anti_pow h₀ h₁).lt_iff_lt
+
+theorem pow_lt_pow_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) : a ^ j < a ^ i :=
+  (pow_lt_pow_iff_of_lt_one h ha).2 hij
+
 @[mono]
 theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, a ^ i ≤ b ^ i
 | 0 =>
@@ -243,14 +255,8 @@ theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i :
     rw [pow_succₓ, pow_succₓ]
     exact mul_le_mul hab (pow_le_pow_of_le_left _) (pow_nonneg ha _) (le_transₓ ha hab)
 
-theorem one_lt_pow (ha : 1 < a) : ∀ {n : ℕ}, n ≠ 0 → 1 < a ^ n
-| 0, h => (h rfl).elim
-| 1, h => (pow_oneₓ a).symm.subst ha
-| n+2, h =>
-  by 
-    nontriviality R 
-    rw [←one_mulₓ (1 : R), pow_succₓ]
-    exact mul_lt_mul ha (one_lt_pow (Nat.succ_ne_zero _)).le zero_lt_one (zero_lt_one.trans ha).le
+theorem one_lt_pow (ha : 1 < a) {n : ℕ} (hn : n ≠ 0) : 1 < a ^ n :=
+  pow_zeroₓ a ▸ pow_lt_pow ha (pos_iff_ne_zero.2 hn)
 
 theorem pow_le_one : ∀ n : ℕ h₀ : 0 ≤ a h₁ : a ≤ 1, a ^ n ≤ 1
 | 0, h₀, h₁ => (pow_zeroₓ a).le

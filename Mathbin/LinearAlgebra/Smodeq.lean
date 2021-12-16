@@ -18,13 +18,13 @@ variable {N : Type _} [AddCommGroupₓ N] [Module R N] (V V₁ V₂ : Submodule 
 
 /-- A predicate saying two elements of a module are equivalent modulo a submodule. -/
 def Smodeq (x y : M) : Prop :=
-  (Submodule.Quotient.mk x : U.quotient) = Submodule.Quotient.mk y
+  (Submodule.Quotient.mk x : M ⧸ U) = Submodule.Quotient.mk y
 
 notation:50 x " ≡ " y " [SMOD " N "]" => Smodeq N x y
 
 variable {U U₁ U₂}
 
-protected theorem Smodeq.def : x ≡ y [SMOD U] ↔ (Submodule.Quotient.mk x : U.quotient) = Submodule.Quotient.mk y :=
+protected theorem Smodeq.def : x ≡ y [SMOD U] ↔ (Submodule.Quotient.mk x : M ⧸ U) = Submodule.Quotient.mk y :=
   Iff.rfl
 
 namespace Smodeq

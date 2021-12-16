@@ -105,18 +105,23 @@ theorem is_equivalent_zero_iff_is_O_zero : u ~[l] 0 ↔ is_O u (0 : α → β) l
   by 
     refine' ⟨is_equivalent.is_O, fun h => _⟩
     rw [is_equivalent_zero_iff_eventually_zero, eventually_eq_iff_exists_mem]
-    exact ⟨{ x:α | u x = 0 }, is_O_zero_right_iff.mp h, fun x hx => hx⟩
+    exact ⟨{ x : α | u x = 0 }, is_O_zero_right_iff.mp h, fun x hx => hx⟩
 
--- error in Analysis.Asymptotics.AsymptoticEquivalent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_equivalent_const_iff_tendsto
-{c : β}
-(h : «expr ≠ »(c, 0)) : «expr ↔ »(«expr ~[ ] »(u, l, const _ c), tendsto u l (expr𝓝() c)) :=
-begin
-  rw ["[", expr is_equivalent, ",", expr is_o_const_iff h, "]"] [],
-  split; intro [ident h]; [{ have [] [] [":=", expr h.sub tendsto_const_nhds],
-     rw [expr zero_sub «expr- »(c)] ["at", ident this] }, { have [] [] [":=", expr h.sub tendsto_const_nhds],
-     rw ["<-", expr sub_self c] [] }]; convert [] [expr this] []; try { ext [] [] [] }; simp [] [] [] [] [] []
-end
+theorem is_equivalent_const_iff_tendsto {c : β} (h : c ≠ 0) : u ~[l] const _ c ↔ tendsto u l (𝓝 c) :=
+  by 
+    rw [is_equivalent, is_o_const_iff h]
+    constructor <;>
+      intro h <;>
+          [·
+            have  := h.sub tendsto_const_nhds 
+            rw [zero_sub (-c)] at this,
+          ·
+            have  := h.sub tendsto_const_nhds 
+            rw [←sub_self c]] <;>
+        convert this <;>
+          try 
+              ext <;>
+            simp 
 
 theorem is_equivalent.tendsto_const {c : β} (hu : u ~[l] const _ c) : tendsto u l (𝓝 c) :=
   by 
@@ -168,7 +173,7 @@ variable {α β : Type _} [NormedField β] {t u v w : α → β} {l : Filter α}
 theorem is_equivalent_iff_exists_eq_mul : u ~[l] v ↔ ∃ (φ : α → β)(hφ : tendsto φ l (𝓝 1)), u =ᶠ[l] φ*v :=
   by 
     rw [is_equivalent, is_o_iff_exists_eq_mul]
-    split  <;> rintro ⟨φ, hφ, h⟩ <;> [use φ+1, use φ - 1] <;> split 
+    constructor <;> rintro ⟨φ, hφ, h⟩ <;> [use φ+1, use φ - 1] <;> constructor
     ·
       conv  in 𝓝 _ => rw [←zero_addₓ (1 : β)]
       exact hφ.add tendsto_const_nhds
@@ -183,7 +188,7 @@ theorem is_equivalent_iff_exists_eq_mul : u ~[l] v ↔ ∃ (φ : α → β)(hφ 
 theorem is_equivalent.exists_eq_mul (huv : u ~[l] v) : ∃ (φ : α → β)(hφ : tendsto φ l (𝓝 1)), u =ᶠ[l] φ*v :=
   is_equivalent_iff_exists_eq_mul.mp huv
 
-theorem is_equivalent_of_tendsto_one (hz : ∀ᶠx in l, v x = 0 → u x = 0) (huv : tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
+theorem is_equivalent_of_tendsto_one (hz : ∀ᶠ x in l, v x = 0 → u x = 0) (huv : tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
   by 
     rw [is_equivalent_iff_exists_eq_mul]
     refine' ⟨u / v, huv, hz.mono$ fun x hz' => (div_mul_cancel_of_imp hz').symm⟩
@@ -191,72 +196,79 @@ theorem is_equivalent_of_tendsto_one (hz : ∀ᶠx in l, v x = 0 → u x = 0) (h
 theorem is_equivalent_of_tendsto_one' (hz : ∀ x, v x = 0 → u x = 0) (huv : tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
   is_equivalent_of_tendsto_one (eventually_of_forall hz) huv
 
--- error in Analysis.Asymptotics.AsymptoticEquivalent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_equivalent_iff_tendsto_one
-(hz : «expr∀ᶠ in , »((x), l, «expr ≠ »(v x, 0))) : «expr ↔ »(«expr ~[ ] »(u, l, v), tendsto «expr / »(u, v) l (expr𝓝() 1)) :=
-begin
-  split,
-  { intro [ident hequiv],
-    have [] [] [":=", expr hequiv.is_o.tendsto_0],
-    simp [] [] ["only"] ["[", expr pi.sub_apply, ",", expr sub_div, "]"] [] ["at", ident this],
-    have [ident key] [":", expr tendsto (λ x, «expr / »(v x, v x)) l (expr𝓝() 1)] [],
-    { exact [expr «expr $ »(tendsto_congr', «expr $ »(hz.mono, λ
-         x hnz, @div_self _ _ (v x) hnz)).mpr tendsto_const_nhds] },
-    convert [] [expr this.add key] [],
-    { ext [] [] [],
-      simp [] [] [] [] [] [] },
-    { norm_num [] [] } },
-  { exact [expr is_equivalent_of_tendsto_one «expr $ »(hz.mono, λ x hnvz hz, (hnvz hz).elim)] }
-end
+theorem is_equivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) : u ~[l] v ↔ tendsto (u / v) l (𝓝 1) :=
+  by 
+    constructor
+    ·
+      intro hequiv 
+      have  := hequiv.is_o.tendsto_0 
+      simp only [Pi.sub_apply, sub_div] at this 
+      have key : tendsto (fun x => v x / v x) l (𝓝 1)
+      ·
+        exact (tendsto_congr'$ hz.mono$ fun x hnz => @div_self _ _ (v x) hnz).mpr tendsto_const_nhds 
+      convert this.add key
+      ·
+        ext 
+        simp 
+      ·
+        normNum
+    ·
+      exact is_equivalent_of_tendsto_one (hz.mono$ fun x hnvz hz => (hnvz hz).elim)
 
 end NormedField
 
 section Smul
 
--- error in Analysis.Asymptotics.AsymptoticEquivalent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_equivalent.smul
-{α E 𝕜 : Type*}
-[normed_field 𝕜]
-[normed_group E]
-[normed_space 𝕜 E]
-{a b : α → 𝕜}
-{u v : α → E}
-{l : filter α}
-(hab : «expr ~[ ] »(a, l, b))
-(huv : «expr ~[ ] »(u, l, v)) : «expr ~[ ] »(λ x, «expr • »(a x, u x), l, λ x, «expr • »(b x, v x)) :=
-begin
-  rcases [expr hab.exists_eq_mul, "with", "⟨", ident φ, ",", ident hφ, ",", ident habφ, "⟩"],
-  have [] [":", expr «expr =ᶠ[ ] »(«expr - »(λ
-     x : α, «expr • »(a x, u x), λ
-     x : α, «expr • »(b x, v x)), l, λ x, «expr • »(b x, «expr - »(«expr • »(φ x, u x), v x)))] [],
-  { convert [] [expr «expr $ »(habφ.comp₂ ((«expr • »)), eventually_eq.refl _ u).sub (eventually_eq.refl _ (λ
-       x, «expr • »(b x, v x)))] [],
-    ext [] [] [],
-    rw ["[", expr pi.mul_apply, ",", expr mul_comm, ",", expr mul_smul, ",", "<-", expr smul_sub, "]"] [] },
-  refine [expr «expr $ »(is_o_congr this.symm, eventually_eq.rfl).mp ((is_O_refl b l).smul_is_o _)],
-  rcases [expr huv.is_O.exists_pos, "with", "⟨", ident C, ",", ident hC, ",", ident hCuv, "⟩"],
-  rw [expr is_equivalent] ["at", "*"],
-  rw [expr is_o_iff] ["at", "*"],
-  rw [expr is_O_with] ["at", ident hCuv],
-  simp [] [] ["only"] ["[", expr metric.tendsto_nhds, ",", expr dist_eq_norm, "]"] [] ["at", ident hφ],
-  intros [ident c, ident hc],
-  specialize [expr hφ «expr / »(«expr / »(c, 2), C) (div_pos (by linarith [] [] []) hC)],
-  specialize [expr huv (show «expr < »(0, «expr / »(c, 2)), by linarith [] [] [])],
-  refine [expr hφ.mp «expr $ »(huv.mp, «expr $ »(hCuv.mono, λ x hCuvx huvx hφx, _))],
-  have [ident key] [] [":=", expr calc
-     «expr ≤ »(«expr * »(«expr∥ ∥»(«expr - »(φ x, 1)), «expr∥ ∥»(u x)), «expr * »(«expr / »(«expr / »(c, 2), C), «expr∥ ∥»(u x))) : mul_le_mul_of_nonneg_right hφx.le «expr $ »(norm_nonneg, u x)
-     «expr ≤ »(..., «expr * »(«expr / »(«expr / »(c, 2), C), «expr * »(C, «expr∥ ∥»(v x)))) : mul_le_mul_of_nonneg_left hCuvx (div_pos (by linarith [] [] []) hC).le
-     «expr = »(..., «expr * »(«expr / »(c, 2), «expr∥ ∥»(v x))) : by { field_simp [] ["[", expr hC.ne.symm, "]"] [] [],
-       ring [] }],
-  calc
-    «expr = »(«expr∥ ∥»(«expr - »(λ
-       x : α, «expr • »(φ x, u x), v) x), «expr∥ ∥»(«expr + »(«expr • »(«expr - »(φ x, 1), u x), «expr - »(u x, v x)))) : by simp [] [] [] ["[", expr sub_smul, ",", expr sub_add, "]"] [] []
-    «expr ≤ »(..., «expr + »(«expr∥ ∥»(«expr • »(«expr - »(φ x, 1), u x)), «expr∥ ∥»(«expr - »(u x, v x)))) : norm_add_le _ _
-    «expr = »(..., «expr + »(«expr * »(«expr∥ ∥»(«expr - »(φ x, 1)), «expr∥ ∥»(u x)), «expr∥ ∥»(«expr - »(u x, v x)))) : by rw [expr norm_smul] []
-    «expr ≤ »(..., «expr + »(«expr * »(«expr / »(c, 2), «expr∥ ∥»(v x)), «expr∥ ∥»(«expr - »(u x, v x)))) : add_le_add_right key _
-    «expr ≤ »(..., «expr + »(«expr * »(«expr / »(c, 2), «expr∥ ∥»(v x)), «expr * »(«expr / »(c, 2), «expr∥ ∥»(v x)))) : add_le_add_left huvx _
-    «expr = »(..., «expr * »(c, «expr∥ ∥»(v x))) : by ring []
-end
+theorem is_equivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] {a b : α → 𝕜}
+  {u v : α → E} {l : Filter α} (hab : a ~[l] b) (huv : u ~[l] v) : (fun x => a x • u x) ~[l] fun x => b x • v x :=
+  by 
+    rcases hab.exists_eq_mul with ⟨φ, hφ, habφ⟩
+    have  : ((fun x : α => a x • u x) - fun x : α => b x • v x) =ᶠ[l] fun x => b x • (φ x • u x - v x)
+    ·
+      convert (habφ.comp₂ (· • ·)$ eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
+      ext 
+      rw [Pi.mul_apply, mul_commₓ, mul_smul, ←smul_sub]
+    refine' (is_o_congr this.symm$ eventually_eq.rfl).mp ((is_O_refl b l).smul_is_o _)
+    rcases huv.is_O.exists_pos with ⟨C, hC, hCuv⟩
+    rw [is_equivalent] at *
+    rw [is_o_iff] at *
+    rw [is_O_with] at hCuv 
+    simp only [Metric.tendsto_nhds, dist_eq_norm] at hφ 
+    intro c hc 
+    specialize
+      hφ (c / 2 / C)
+        (div_pos
+          (by 
+            linarith)
+          hC)
+    specialize
+      huv
+        (show 0 < c / 2by 
+          linarith)
+    refine' hφ.mp (huv.mp$ hCuv.mono$ fun x hCuvx huvx hφx => _)
+    have key :=
+      calc (∥φ x - 1∥*∥u x∥) ≤ (c / 2 / C)*∥u x∥ := mul_le_mul_of_nonneg_right hφx.le (norm_nonneg$ u x)
+        _ ≤ (c / 2 / C)*C*∥v x∥ :=
+        mul_le_mul_of_nonneg_left hCuvx
+          (div_pos
+              (by 
+                linarith)
+              hC).le
+            
+        _ = (c / 2)*∥v x∥ :=
+        by 
+          fieldSimp [hC.ne.symm]
+          ring 
+        
+    calc ∥((fun x : α => φ x • u x) - v) x∥ = ∥((φ x - 1) • u x)+u x - v x∥ :=
+      by 
+        simp [sub_smul, sub_add]_ ≤ ∥(φ x - 1) • u x∥+∥u x - v x∥ :=
+      norm_add_le _ _ _ = (∥φ x - 1∥*∥u x∥)+∥u x - v x∥ :=
+      by 
+        rw [norm_smul]_ ≤ ((c / 2)*∥v x∥)+∥u x - v x∥ :=
+      add_le_add_right key _ _ ≤ ((c / 2)*∥v x∥)+(c / 2)*∥v x∥ := add_le_add_left huvx _ _ = c*∥v x∥ :=
+      by 
+        ring
 
 end Smul
 

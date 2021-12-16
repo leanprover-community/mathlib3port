@@ -1,6 +1,6 @@
 import Mathbin.Data.Finset.Lattice 
 import Mathbin.Data.Set.Pairwise 
-import Mathbin.Order.PreorderHom
+import Mathbin.Order.Hom.Basic
 
 /-!
 # The monotone sequence of partial supremums of a sequence
@@ -102,8 +102,8 @@ def partialSups.gi : GaloisInsertion (partialSups : (ℕ → α) → ℕ →ₘ 
         by 
           refine' ⟨(le_partial_sups f).trans, fun h => _⟩
           convert partial_sups_mono h 
-          exact PreorderHom.ext _ _ g.monotone.partial_sups_eq.symm,
-    le_l_u := fun f => le_partial_sups f, choice_eq := fun f h => PreorderHom.ext _ _ ((le_partial_sups f).antisymm h) }
+          exact OrderHom.ext _ _ g.monotone.partial_sups_eq.symm,
+    le_l_u := fun f => le_partial_sups f, choice_eq := fun f h => OrderHom.ext _ _ ((le_partial_sups f).antisymm h) }
 
 theorem partial_sups_eq_sup'_range (f : ℕ → α) (n : ℕ) :
   partialSups f n = (Finset.range (n+1)).sup' ⟨n, Finset.self_mem_range_succ n⟩ f :=
@@ -142,7 +142,8 @@ section CompleteLattice
 
 variable [CompleteLattice α]
 
-theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆(i : _)(_ : i ≤ n), f i :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ≤ » n)
+theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆ (i : _)(_ : i ≤ n), f i :=
   by 
     rw [partial_sups_eq_sup_range, Finset.sup_eq_supr]
     congr 
@@ -154,20 +155,20 @@ theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆
         fun _ => rfl
 
 @[simp]
-theorem supr_partial_sups_eq (f : ℕ → α) : (⨆n, partialSups f n) = ⨆n, f n :=
+theorem supr_partial_sups_eq (f : ℕ → α) : (⨆ n, partialSups f n) = ⨆ n, f n :=
   by 
     refine' (supr_le$ fun n => _).antisymm (supr_le_supr$ le_partial_sups f)
     rw [partial_sups_eq_bsupr]
     exact bsupr_le_supr _ _
 
 theorem supr_le_supr_of_partial_sups_le_partial_sups {f g : ℕ → α} (h : partialSups f ≤ partialSups g) :
-  (⨆n, f n) ≤ ⨆n, g n :=
+  (⨆ n, f n) ≤ ⨆ n, g n :=
   by 
     rw [←supr_partial_sups_eq f, ←supr_partial_sups_eq g]
     exact supr_le_supr h
 
 theorem supr_eq_supr_of_partial_sups_eq_partial_sups {f g : ℕ → α} (h : partialSups f = partialSups g) :
-  (⨆n, f n) = ⨆n, g n :=
+  (⨆ n, f n) = ⨆ n, g n :=
   by 
     simpRw [←supr_partial_sups_eq f, ←supr_partial_sups_eq g, h]
 

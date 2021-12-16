@@ -28,7 +28,7 @@ variable {α : Type u} {β : α → Type v}
 
 /-- transport a `fin_enum` instance across an equivalence -/
 def of_equiv α {β} [FinEnum α] (h : β ≃ α) : FinEnum β :=
-  { card := card α, Equiv := h.trans (Equiv α), decEq := (h.trans (Equiv _)).DecidableEq }
+  { card := card α, Equiv := h.trans (Equivₓ α), decEq := (h.trans (Equivₓ _)).DecidableEq }
 
 /-- create a `fin_enum` instance from an exhaustive list without duplicates -/
 def of_nodup_list [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' : List.Nodup xs) : FinEnum α :=
@@ -55,19 +55,19 @@ def of_list [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) : FinEnum
 
 /-- create an exhaustive list of the values of a given type -/
 def to_list α [FinEnum α] : List α :=
-  (List.finRange (card α)).map (Equiv α).symm
+  (List.finRange (card α)).map (Equivₓ α).symm
 
 open Function
 
 @[simp]
 theorem mem_to_list [FinEnum α] (x : α) : x ∈ to_list α :=
   by 
-    simp [to_list] <;> exists Equiv α x <;> simp 
+    simp [to_list] <;> exists Equivₓ α x <;> simp 
 
 @[simp]
 theorem nodup_to_list [FinEnum α] : List.Nodup (to_list α) :=
   by 
-    simp [to_list] <;> apply List.nodup_map <;> [apply Equiv.injective, apply List.nodup_fin_range]
+    simp [to_list] <;> apply List.nodup_map <;> [apply Equivₓ.injective, apply List.nodup_fin_range]
 
 /-- create a `fin_enum` instance using a surjection -/
 def of_surjective {β} (f : β → α) [DecidableEq α] [FinEnum β] (h : surjective f) : FinEnum α :=
@@ -124,45 +124,49 @@ def finset.enum [DecidableEq α] : List α → List (Finset α)
     let r ← finset.enum xs
     [r, {x} ∪ r]
 
--- error in Data.FinEnum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 @[simp]
-theorem finset.mem_enum
-[decidable_eq α]
-(s : finset α)
-(xs : list α) : «expr ↔ »(«expr ∈ »(s, finset.enum xs), ∀ x «expr ∈ » s, «expr ∈ »(x, xs)) :=
-begin
-  induction [expr xs] [] [] ["generalizing", ident s]; simp [] [] [] ["[", "*", ",", expr finset.enum, "]"] [] [],
-  { simp [] [] [] ["[", expr finset.eq_empty_iff_forall_not_mem, ",", expr («expr ∉ »), "]"] [] [],
-    refl },
-  { split,
-    rintro ["⟨", ident a, ",", ident h, ",", ident h', "⟩", ident x, ident hx],
-    cases [expr h'] [],
-    { right,
-      apply [expr h],
-      subst [expr a],
-      exact [expr hx] },
-    { simp [] [] ["only"] ["[", expr h', ",", expr mem_union, ",", expr mem_singleton, "]"] [] ["at", ident hx, "⊢"],
-      cases [expr hx] [],
-      { exact [expr or.inl hx] },
-      { exact [expr or.inr (h _ hx)] } },
-    intro [ident h],
-    existsi [expr «expr \ »(s, ({xs_hd} : finset α))],
-    simp [] [] ["only"] ["[", expr and_imp, ",", expr union_comm, ",", expr mem_sdiff, ",", expr mem_singleton, "]"] [] [],
-    simp [] [] ["only"] ["[", expr or_iff_not_imp_left, "]"] [] ["at", ident h],
-    existsi [expr h],
-    by_cases [expr «expr ∈ »(xs_hd, s)],
-    { have [] [":", expr «expr ⊆ »({xs_hd}, s)] [],
-      simp [] [] ["only"] ["[", expr has_subset.subset, ",", "*", ",", expr forall_eq, ",", expr mem_singleton, "]"] [] [],
-      simp [] [] ["only"] ["[", expr union_sdiff_of_subset this, ",", expr or_true, ",", expr finset.union_sdiff_of_subset, ",", expr eq_self_iff_true, "]"] [] [] },
-    { left,
-      symmetry,
-      simp [] [] ["only"] ["[", expr sdiff_eq_self, "]"] [] [],
-      intro [ident a],
-      simp [] [] ["only"] ["[", expr and_imp, ",", expr mem_inter, ",", expr mem_singleton, ",", expr not_mem_empty, "]"] [] [],
-      intros [ident h₀, ident h₁],
-      subst [expr a],
-      apply [expr h h₀] } }
-end
+theorem finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) : s ∈ finset.enum xs ↔ ∀ x _ : x ∈ s, x ∈ xs :=
+  by 
+    induction xs generalizing s <;> simp [finset.enum]
+    ·
+      simp [Finset.eq_empty_iff_forall_not_mem, · ∉ ·]
+      rfl
+    ·
+      constructor 
+      rintro ⟨a, h, h'⟩ x hx 
+      cases h'
+      ·
+        right 
+        apply h 
+        subst a 
+        exact hx
+      ·
+        simp only [h', mem_union, mem_singleton] at hx⊢
+        cases hx
+        ·
+          exact Or.inl hx
+        ·
+          exact Or.inr (h _ hx)
+      intro h 
+      exists s \ ({xs_hd} : Finset α)
+      simp only [and_imp, union_comm, mem_sdiff, mem_singleton]
+      simp only [or_iff_not_imp_left] at h 
+      exists h 
+      byCases' xs_hd ∈ s
+      ·
+        have  : {xs_hd} ⊆ s 
+        simp only [HasSubset.Subset, forall_eq, mem_singleton]
+        simp only [union_sdiff_of_subset this, or_trueₓ, Finset.union_sdiff_of_subset, eq_self_iff_true]
+      ·
+        left 
+        symm 
+        simp only [sdiff_eq_self]
+        intro a 
+        simp only [and_imp, mem_inter, mem_singleton, not_mem_empty]
+        intro h₀ h₁ 
+        subst a 
+        apply h h₀
 
 instance finset.fin_enum [FinEnum α] : FinEnum (Finset α) :=
   of_list (finset.enum (to_list α))
@@ -179,11 +183,11 @@ instance (β : α → Type v) [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Si
     (by 
       intro x <;> cases x <;> simp )
 
-instance psigma.fin_enum [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Σ'a, β a) :=
-  FinEnum.ofEquiv _ (Equiv.psigmaEquivSigma _)
+instance psigma.fin_enum [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Σ' a, β a) :=
+  FinEnum.ofEquiv _ (Equivₓ.psigmaEquivSigma _)
 
 instance psigma.fin_enum_prop_left {α : Prop} {β : α → Type v} [∀ a, FinEnum (β a)] [Decidable α] :
-  FinEnum (Σ'a, β a) :=
+  FinEnum (Σ' a, β a) :=
   if h : α then
     of_list ((to_list (β h)).map$ Psigma.mk h)
       fun ⟨a, Ba⟩ =>
@@ -191,11 +195,11 @@ instance psigma.fin_enum_prop_left {α : Prop} {β : α → Type v} [∀ a, FinE
           simp 
   else of_list [] fun ⟨a, Ba⟩ => (h a).elim
 
-instance psigma.fin_enum_prop_right {β : α → Prop} [FinEnum α] [∀ a, Decidable (β a)] : FinEnum (Σ'a, β a) :=
+instance psigma.fin_enum_prop_right {β : α → Prop} [FinEnum α] [∀ a, Decidable (β a)] : FinEnum (Σ' a, β a) :=
   FinEnum.ofEquiv { a // β a } ⟨fun ⟨x, y⟩ => ⟨x, y⟩, fun ⟨x, y⟩ => ⟨x, y⟩, fun ⟨x, y⟩ => rfl, fun ⟨x, y⟩ => rfl⟩
 
 instance psigma.fin_enum_prop_prop {α : Prop} {β : α → Prop} [Decidable α] [∀ a, Decidable (β a)] :
-  FinEnum (Σ'a, β a) :=
+  FinEnum (Σ' a, β a) :=
   if h : ∃ a, β a then
     of_list [⟨h.fst, h.snd⟩]
       (by 
@@ -203,10 +207,10 @@ instance psigma.fin_enum_prop_prop {α : Prop} {β : α → Prop} [Decidable α]
   else of_list [] fun a => (h ⟨a.fst, a.snd⟩).elim
 
 instance (priority := 100) [FinEnum α] : Fintype α :=
-  { elems := univ.map (Equiv α).symm.toEmbedding,
+  { elems := univ.map (Equivₓ α).symm.toEmbedding,
     complete :=
       by 
-        intros  <;> simp  <;> exists Equiv α x <;> simp  }
+        intros  <;> simp  <;> exists Equivₓ α x <;> simp  }
 
 /-- For `pi.cons x xs y f` create a function where every `i ∈ xs` is mapped to `f i` and
 `x` is mapped to `y`  -/
@@ -237,10 +241,10 @@ theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (
       ext a ⟨⟩
     ·
       exists pi.cons xs_hd xs_tl (f _ (List.mem_cons_selfₓ _ _))
-      split 
+      constructor 
       exact ⟨_, rfl⟩
       exists pi.tail f 
-      split 
+      constructor
       ·
         apply xs_ih
       ·

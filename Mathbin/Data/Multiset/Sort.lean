@@ -34,7 +34,7 @@ theorem sort_sorted (s : Multiset α) : sorted r (sort r s) :=
   Quot.induction_on s$ fun l => sorted_merge_sort r _
 
 @[simp]
-theorem sort_eq (s : Multiset α) : «expr↑ » (sort r s) = s :=
+theorem sort_eq (s : Multiset α) : ↑sort r s = s :=
   Quot.induction_on s$ fun l => Quot.sound$ perm_merge_sort _ _
 
 @[simp]

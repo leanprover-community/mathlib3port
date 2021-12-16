@@ -23,7 +23,7 @@ variable {V : Type u} [category.{v} V] [has_zero_morphisms V]
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
 section 
 
@@ -34,14 +34,12 @@ theorem image_le_kernel (w : f ≫ g = 0) : image_subobject f ≤ kernel_subobje
     (by 
       simp )
 
--- error in Algebra.Homology.ImageToKernel: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler mono
 /--
 The canonical morphism `image_subobject f ⟶ kernel_subobject g` when `f ≫ g = 0`.
 -/
-@[derive #[expr mono]]
-def image_to_kernel
-(w : «expr = »(«expr ≫ »(f, g), 0)) : «expr ⟶ »((image_subobject f : V), (kernel_subobject g : V)) :=
-subobject.of_le _ _ (image_le_kernel _ _ w)
+def imageToKernel (w : f ≫ g = 0) : (image_subobject f : V) ⟶ (kernel_subobject g : V) :=
+  subobject.of_le _ _ (image_le_kernel _ _ w)deriving [anonymous]
 
 /-- Prefer `image_to_kernel`. -/
 @[simp]
@@ -154,20 +152,20 @@ instance image_to_kernel_epi_of_zero_of_mono [has_kernels V] [has_zero_object V]
         simp )) :=
   epi_of_target_iso_zero _ (kernel_subobject_iso g ≪≫ kernel.of_mono g)
 
--- error in Algebra.Homology.ImageToKernel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 `image_to_kernel` for `A --f--> B --0--> C`, where `g` is an epi is itself an epi
 (i.e. the sequence is exact at `B`).
 -/
-instance image_to_kernel_epi_of_epi_of_zero
-[has_images V]
-[epi f] : epi (image_to_kernel f (0 : «expr ⟶ »(B, C)) (by simp [] [] [] [] [] [])) :=
-begin
-  simp [] [] ["only"] ["[", expr image_to_kernel_zero_right, "]"] [] [],
-  haveI [] [] [":=", expr epi_image_of_epi f],
-  rw ["<-", expr image_subobject_arrow] [],
-  refine [expr @epi_comp _ _ _ _ _ _ (epi_comp _ _) _ _]
-end
+instance image_to_kernel_epi_of_epi_of_zero [has_images V] [epi f] :
+  epi
+    (imageToKernel f (0 : B ⟶ C)
+      (by 
+        simp )) :=
+  by 
+    simp only [image_to_kernel_zero_right]
+    have  := epi_image_of_epi f 
+    rw [←image_subobject_arrow]
+    refine' @epi_comp _ _ _ _ _ _ (epi_comp _ _) _ _
 
 end 
 
@@ -341,6 +339,7 @@ section
 variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C} (w' : f' ≫ g' = 0)
   [has_kernels V] [has_cokernels V] [has_images V] [has_image_maps V]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Custom tactic to golf and speedup boring proofs in `homology.congr`. -/
 private unsafe def aux_tac : tactic Unit :=
   sorry
@@ -453,19 +452,17 @@ def homologyIsoCokernelImageToKernel' (w : f ≫ g = 0) : homology f g w ≅ cok
 
 variable [has_equalizers V]
 
--- error in Algebra.Homology.ImageToKernel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 `homology f g w` can be computed as the cokernel of `kernel.lift g f w`.
 -/
-def homology_iso_cokernel_lift
-(w : «expr = »(«expr ≫ »(f, g), 0)) : «expr ≅ »(homology f g w, cokernel (kernel.lift g f w)) :=
-begin
-  refine [expr «expr ≪≫ »(homology_iso_cokernel_image_to_kernel' f g w, _)],
-  have [ident p] [":", expr «expr = »(«expr ≫ »(factor_thru_image f, image_to_kernel' f g w), kernel.lift g f w)] [],
-  { ext [] [] [],
-    simp [] [] [] ["[", expr image_to_kernel', "]"] [] [] },
-  exact [expr «expr ≪≫ »((cokernel_epi_comp _ _).symm, cokernel_iso_of_eq p)]
-end
+def homologyIsoCokernelLift (w : f ≫ g = 0) : homology f g w ≅ cokernel (kernel.lift g f w) :=
+  by 
+    refine' homologyIsoCokernelImageToKernel' f g w ≪≫ _ 
+    have p : factor_thru_image f ≫ imageToKernel' f g w = kernel.lift g f w
+    ·
+      ext 
+      simp [imageToKernel']
+    exact (cokernel_epi_comp _ _).symm ≪≫ cokernel_iso_of_eq p
 
 end imageToKernel'
 

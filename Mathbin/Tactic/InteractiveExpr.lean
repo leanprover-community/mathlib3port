@@ -84,6 +84,7 @@ unsafe def sf.flatten : sf → sf
 | sf.block i a => sf.block i a.flatten
 | sf.highlight i a => sf.highlight i a.flatten
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (c «expr ∈ » ea)
 private unsafe def elim_part_apps : sf → Expr.Address → sf
 | sf.tag_expr ea e m, Acc =>
   if ∀ c _ : c ∈ ea, c = Expr.Coord.app_fn then elim_part_apps m (Acc ++ ea) else
@@ -276,13 +277,14 @@ unsafe def type_tooltip : Tc subexpr Empty :=
 
 end InteractiveExpression
 
--- error in Tactic.InteractiveExpr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /--
 Supported tactic state filters.
--/ @[derive #[expr decidable_eq]] meta inductive filter_type
-| none
-| no_instances
-| only_props
+-/
+unsafe inductive filter_type
+  | none
+  | no_instances
+  | only_props deriving [anonymous]
 
 /--
 Filters a local constant using the given filter.
@@ -329,11 +331,13 @@ unsafe def show_type_component : Tc expr Empty :=
         let y_comp ← interactive_expression.mk interactive_expression.type_tooltip$ y 
         pure y_comp
 
--- error in Tactic.InteractiveExpr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- A group of local constants in the context that should be rendered as one line. -/
-@[derive #[expr decidable_eq]]
-meta
-structure local_collection := (key : string) (locals : list expr) (type : expr) (value : option expr)
+unsafe structure local_collection where 
+  key : Stringₓ 
+  locals : List expr 
+  type : expr 
+  value : Option expr deriving [anonymous]
 
 /-- Converts a single local constant into a (singleton) `local_collection` -/
 unsafe def to_local_collection (l : expr) : tactic local_collection :=

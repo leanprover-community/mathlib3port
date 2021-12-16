@@ -47,12 +47,15 @@ See https://isabelle.in.tum.de/dist/library/HOL/HOL-Library/Extended_Real.html
 
 open_locale Ennreal Nnreal
 
--- error in Data.Real.Ereal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_top
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_top
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler comm_monoid_with_zero
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_Sup
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_Inf
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler complete_linear_order
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler linear_ordered_add_comm_monoid_with_top
 /-- ereal : The type `[-∞, ∞]` -/
-@[derive #["[", expr has_top, ",", expr comm_monoid_with_zero, ",", expr has_Sup, ",", expr has_Inf, ",",
-   expr complete_linear_order, ",", expr linear_ordered_add_comm_monoid_with_top, "]"]]
-def ereal :=
-with_top (with_bot exprℝ())
+def Ereal :=
+  WithTop (WithBot ℝ)deriving [anonymous], [anonymous], [anonymous], [anonymous], [anonymous], [anonymous]
 
 /-- The canonical inclusion froms reals to ereals. Do not use directly: as this is registered as
 a coercion, use the coercion instead. -/
@@ -244,7 +247,7 @@ theorem le_coe_to_real {x : Ereal} (h : x ≠ ⊤) : x ≤ x.to_real :=
     ·
       simp only [le_reflₓ, coe_to_real h h']
 
-theorem coe_to_real_le {x : Ereal} (h : x ≠ ⊥) : «expr↑ » x.to_real ≤ x :=
+theorem coe_to_real_le {x : Ereal} (h : x ≠ ⊥) : ↑x.to_real ≤ x :=
   by 
     byCases' h' : x = ⊤
     ·
@@ -254,7 +257,7 @@ theorem coe_to_real_le {x : Ereal} (h : x ≠ ⊥) : «expr↑ » x.to_real ≤ 
 
 theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ y : ℝ, (y : Ereal) < x :=
   by 
-    split 
+    constructor
     ·
       rintro rfl 
       exact Ereal.coe_lt_top
@@ -265,7 +268,7 @@ theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ y : ℝ, (y : Ereal) 
 
 theorem eq_bot_iff_forall_lt (x : Ereal) : x = ⊥ ↔ ∀ y : ℝ, x < (y : Ereal) :=
   by 
-    split 
+    constructor
     ·
       rintro rfl 
       exact bot_lt_coe
@@ -712,25 +715,32 @@ theorem sub_lt_sub_of_lt_of_le {x y z t : Ereal} (h : x < y) (h' : z ≤ t) (hz 
     (by 
       simp [hz])
 
--- error in Data.Real.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal
-(x : exprℝ()) : «expr = »((x : ereal), «expr - »(real.to_nnreal x, real.to_nnreal «expr- »(x))) :=
-begin
-  rcases [expr le_or_lt 0 x, "with", ident h, "|", ident h],
-  { have [] [":", expr «expr = »(real.to_nnreal x, ⟨x, h⟩)] [],
-    by { ext [] [] [],
-      simp [] [] [] ["[", expr h, "]"] [] [] },
-    simp [] [] ["only"] ["[", expr real.to_nnreal_of_nonpos (neg_nonpos.mpr h), ",", expr this, ",", expr sub_zero, ",", expr ennreal.coe_zero, ",", expr coe_ennreal_zero, ",", expr coe_coe, "]"] [] [],
-    refl },
-  { have [] [":", expr «expr = »((x : ereal), «expr- »((«expr- »(x) : exprℝ())))] [],
-    by simp [] [] [] [] [] [],
-    conv_lhs [] [] { rw [expr this] },
-    have [] [":", expr «expr = »(real.to_nnreal «expr- »(x), ⟨«expr- »(x), neg_nonneg.mpr h.le⟩)] [],
-    by { ext [] [] [],
-      simp [] [] [] ["[", expr neg_nonneg.mpr h.le, "]"] [] [] },
-    simp [] [] ["only"] ["[", expr real.to_nnreal_of_nonpos h.le, ",", expr this, ",", expr zero_sub, ",", expr neg_eq_neg_iff, ",", expr coe_neg, ",", expr ennreal.coe_zero, ",", expr coe_ennreal_zero, ",", expr coe_coe, "]"] [] [],
-    refl }
-end
+theorem coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal (x : ℝ) :
+  (x : Ereal) = Real.toNnreal x - Real.toNnreal (-x) :=
+  by 
+    rcases le_or_ltₓ 0 x with (h | h)
+    ·
+      have  : Real.toNnreal x = ⟨x, h⟩
+      ·
+        ·
+          ext 
+          simp [h]
+      simp only [Real.to_nnreal_of_nonpos (neg_nonpos.mpr h), this, sub_zero, Ennreal.coe_zero, coe_ennreal_zero,
+        coe_coe]
+      rfl
+    ·
+      have  : (x : Ereal) = -(-x : ℝ)
+      ·
+        simp 
+      convLHS => rw [this]
+      have  : Real.toNnreal (-x) = ⟨-x, neg_nonneg.mpr h.le⟩
+      ·
+        ·
+          ext 
+          simp [neg_nonneg.mpr h.le]
+      simp only [Real.to_nnreal_of_nonpos h.le, this, zero_sub, neg_eq_neg_iff, coe_neg, Ennreal.coe_zero,
+        coe_ennreal_zero, coe_coe]
+      rfl
 
 theorem to_real_sub {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥) :
   to_real (x - y) = to_real x - to_real y :=

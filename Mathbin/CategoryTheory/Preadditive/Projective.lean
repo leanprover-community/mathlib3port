@@ -18,7 +18,7 @@ and `projective.d f : projective.left f ⟶ X` is the morphism `π (kernel f) �
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -89,7 +89,7 @@ end
 
 theorem of_iso {P Q : C} (i : P ≅ Q) (hP : projective P) : projective Q :=
   by 
-    fsplit 
+    fconstructor 
     intros E X f e e_epi 
     obtain ⟨f', hf'⟩ := projective.factors (i.hom ≫ f) e 
     exact
@@ -178,12 +178,13 @@ section
 
 variable [has_zero_morphisms C] {X Y : C} (f : X ⟶ Y) [has_kernel f]
 
--- error in CategoryTheory.Preadditive.Projective: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler projective
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler projective
 /--
 When `C` has enough projectives, the object `projective.syzygies f` is
 an arbitrarily chosen projective object over `kernel f`.
--/ @[derive #[expr projective]] def syzygies : C :=
-over (kernel f)
+-/
+def syzygies : C :=
+  over (kernel f)deriving [anonymous]
 
 /--
 When `C` has enough projectives,

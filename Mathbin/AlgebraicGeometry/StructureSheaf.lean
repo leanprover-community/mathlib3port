@@ -42,7 +42,7 @@ and the localization of `R` at the submonoid of powers of `f`.
 
 universe u
 
-noncomputable theory
+noncomputable section 
 
 variable (R : Type u) [CommRingₓ R]
 
@@ -64,11 +64,13 @@ def prime_spectrum.Top : Top :=
 
 namespace StructureSheaf
 
--- error in AlgebraicGeometry.StructureSheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler comm_ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler comm_ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler local_ring
 /--
 The type family over `prime_spectrum R` consisting of the localization over each point.
--/ @[derive #["[", expr comm_ring, ",", expr local_ring, "]"]] def localizations (P : prime_spectrum.Top R) : Type u :=
-localization.at_prime P.as_ideal
+-/
+def localizations (P : prime_spectrum.Top R) : Type u :=
+  Localization.AtPrime P.as_ideal deriving [anonymous], [anonymous]
 
 instance (P : prime_spectrum.Top R) : Inhabited (localizations R P) :=
   ⟨1⟩
@@ -142,79 +144,81 @@ theorem is_locally_fraction_pred {U : opens (prime_spectrum.Top R)} (f : ∀ x :
         ∃ r s : R, ∀ y : V, ¬s ∈ y.1.asIdeal ∧ (f (i y : U)*algebraMap _ _ s) = algebraMap _ _ r :=
   rfl
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /--
-The functions satisfying `is_locally_fraction` form a subring.
--/
-def sections_subring (U : «expr ᵒᵖ» (opens (prime_spectrum.Top R))) : Subring (∀ x : unop U, localizations R x) :=
-  { Carrier := { f | (is_locally_fraction R).pred f },
-    zero_mem' :=
-      by 
-        refine' fun x => ⟨unop U, x.2, 𝟙 _, 0, 1, fun y => ⟨_, _⟩⟩
-        ·
-          rw [←Ideal.ne_top_iff_one]
-          exact y.1.IsPrime.1
-        ·
-          simp ,
-    one_mem' :=
-      by 
-        refine' fun x => ⟨unop U, x.2, 𝟙 _, 1, 1, fun y => ⟨_, _⟩⟩
-        ·
-          rw [←Ideal.ne_top_iff_one]
-          exact y.1.IsPrime.1
-        ·
-          simp ,
-    add_mem' :=
-      by 
-        intro a b ha hb x 
-        rcases ha x with ⟨Va, ma, ia, ra, sa, wa⟩
-        rcases hb x with ⟨Vb, mb, ib, rb, sb, wb⟩
-        refine' ⟨Va⊓Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, (ra*sb)+rb*sa, sa*sb, _⟩
-        intro y 
-        rcases wa (opens.inf_le_left _ _ y) with ⟨nma, wa⟩
-        rcases wb (opens.inf_le_right _ _ y) with ⟨nmb, wb⟩
-        fsplit
-        ·
-          intro H 
-          cases y.1.IsPrime.mem_or_mem H <;> contradiction
-        ·
-          simp only [add_mulₓ, RingHom.map_add, Pi.add_apply, RingHom.map_mul]
-          erw [←wa, ←wb]
-          simp only [mul_assocₓ]
-          congr 2
-          rw [mul_commₓ]
-          rfl,
-    neg_mem' :=
-      by 
-        intro a ha x 
-        rcases ha x with ⟨V, m, i, r, s, w⟩
-        refine' ⟨V, m, i, -r, s, _⟩
-        intro y 
-        rcases w y with ⟨nm, w⟩
-        fsplit
-        ·
-          exact nm
-        ·
-          simp only [RingHom.map_neg, Pi.neg_apply]
-          erw [←w]
-          simp only [neg_mul_eq_neg_mul_symm],
-    mul_mem' :=
-      by 
-        intro a b ha hb x 
-        rcases ha x with ⟨Va, ma, ia, ra, sa, wa⟩
-        rcases hb x with ⟨Vb, mb, ib, rb, sb, wb⟩
-        refine' ⟨Va⊓Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ra*rb, sa*sb, _⟩
-        intro y 
-        rcases wa (opens.inf_le_left _ _ y) with ⟨nma, wa⟩
-        rcases wb (opens.inf_le_right _ _ y) with ⟨nmb, wb⟩
-        fsplit
-        ·
-          intro H 
-          cases y.1.IsPrime.mem_or_mem H <;> contradiction
-        ·
-          simp only [Pi.mul_apply, RingHom.map_mul]
-          erw [←wa, ←wb]
-          simp only [mul_left_commₓ, mul_assocₓ, mul_commₓ]
-          rfl }
+    The functions satisfying `is_locally_fraction` form a subring.
+    -/
+  def
+    sections_subring
+    ( U : opens prime_spectrum.Top R ᵒᵖ ) : Subring ∀ x : unop U , localizations R x
+    :=
+      {
+        Carrier := { f | is_locally_fraction R . pred f } ,
+          zero_mem'
+              :=
+              by
+                refine' fun x => ⟨ unop U , x . 2 , 𝟙 _ , 0 , 1 , fun y => ⟨ _ , _ ⟩ ⟩
+                  · rw [ ← Ideal.ne_top_iff_one ] exact y . 1 . IsPrime . 1
+                  · simp
+            ,
+          one_mem'
+              :=
+              by
+                refine' fun x => ⟨ unop U , x . 2 , 𝟙 _ , 1 , 1 , fun y => ⟨ _ , _ ⟩ ⟩
+                  · rw [ ← Ideal.ne_top_iff_one ] exact y . 1 . IsPrime . 1
+                  · simp
+            ,
+          add_mem'
+              :=
+              by
+                intro a b ha hb x
+                  rcases ha x with ⟨ Va , ma , ia , ra , sa , wa ⟩
+                  rcases hb x with ⟨ Vb , mb , ib , rb , sb , wb ⟩
+                  refine' ⟨ Va ⊓ Vb , ⟨ ma , mb ⟩ , opens.inf_le_left _ _ ≫ ia , ra * sb + rb * sa , sa * sb , _ ⟩
+                  intro y
+                  rcases wa opens.inf_le_left _ _ y with ⟨ nma , wa ⟩
+                  rcases wb opens.inf_le_right _ _ y with ⟨ nmb , wb ⟩
+                  fconstructor
+                  · intro H cases y . 1 . IsPrime . mem_or_mem H <;> contradiction
+                  ·
+                    simp only [ add_mulₓ , RingHom.map_add , Pi.add_apply , RingHom.map_mul ]
+                      erw [ ← wa , ← wb ]
+                      simp only [ mul_assocₓ ]
+                      congr 2
+                      rw [ mul_commₓ ]
+                      rfl
+            ,
+          neg_mem'
+              :=
+              by
+                intro a ha x
+                  rcases ha x with ⟨ V , m , i , r , s , w ⟩
+                  refine' ⟨ V , m , i , - r , s , _ ⟩
+                  intro y
+                  rcases w y with ⟨ nm , w ⟩
+                  fconstructor
+                  · exact nm
+                  · simp only [ RingHom.map_neg , Pi.neg_apply ] erw [ ← w ] simp only [ neg_mul_eq_neg_mul_symm ]
+            ,
+          mul_mem'
+            :=
+            by
+              intro a b ha hb x
+                rcases ha x with ⟨ Va , ma , ia , ra , sa , wa ⟩
+                rcases hb x with ⟨ Vb , mb , ib , rb , sb , wb ⟩
+                refine' ⟨ Va ⊓ Vb , ⟨ ma , mb ⟩ , opens.inf_le_left _ _ ≫ ia , ra * rb , sa * sb , _ ⟩
+                intro y
+                rcases wa opens.inf_le_left _ _ y with ⟨ nma , wa ⟩
+                rcases wb opens.inf_le_right _ _ y with ⟨ nmb , wb ⟩
+                fconstructor
+                · intro H cases y . 1 . IsPrime . mem_or_mem H <;> contradiction
+                ·
+                  simp only [ Pi.mul_apply , RingHom.map_mul ]
+                    erw [ ← wa , ← wb ]
+                    simp only [ mul_left_commₓ , mul_assocₓ , mul_commₓ ]
+                    rfl
+        }
 
 end StructureSheaf
 
@@ -227,7 +231,7 @@ functions satisfying `is_locally_fraction`.
 def structure_sheaf_in_Type : sheaf (Type u) (prime_spectrum.Top R) :=
   subsheaf_to_Types (is_locally_fraction R)
 
-instance comm_ring_structure_sheaf_in_Type_obj (U : «expr ᵒᵖ» (opens (prime_spectrum.Top R))) :
+instance comm_ring_structure_sheaf_in_Type_obj (U : opens (prime_spectrum.Top R)ᵒᵖ) :
   CommRingₓ ((structure_sheaf_in_Type R).1.obj U) :=
   (sections_subring R U).toCommRing
 
@@ -274,6 +278,7 @@ theorem res_apply (U V : opens (prime_spectrum.Top R)) (i : V ⟶ U) (s : (struc
   ((structure_sheaf R).1.map i.op s).1 x = (s.1 (i x) : _) :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » U)
 /-- The section of `structure_sheaf R` on an open `U` sending each `x ∈ U` to the element
 `f/g` in the localization of `R` at `x`. -/
 def const (f g : R) (U : opens (prime_spectrum.Top R))
@@ -281,12 +286,14 @@ def const (f g : R) (U : opens (prime_spectrum.Top R))
   ⟨fun x => IsLocalization.mk' _ f ⟨g, hu x x.2⟩,
     fun x => ⟨U, x.2, 𝟙 _, f, g, fun y => ⟨hu y y.2, IsLocalization.mk'_spec _ _ _⟩⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » U)
 @[simp]
 theorem const_apply (f g : R) (U : opens (prime_spectrum.Top R))
   (hu : ∀ x _ : x ∈ U, g ∈ (x : prime_spectrum.Top R).asIdeal.primeCompl) (x : U) :
   (const R f g U hu).1 x = IsLocalization.mk' _ f ⟨g, hu x x.2⟩ :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » U)
 theorem const_apply' (f g : R) (U : opens (prime_spectrum.Top R))
   (hu : ∀ x _ : x ∈ U, g ∈ (x : prime_spectrum.Top R).asIdeal.primeCompl) (x : U)
   (hx : g ∈ (as_ideal (x : prime_spectrum.Top R)).primeCompl) :
@@ -555,194 +562,207 @@ theorem to_basic_open_to_map (s f : R) :
     const R f 1 (basic_open s) fun _ _ => Submonoid.one_mem _ :=
   (IsLocalization.lift_eq _ _).trans$ to_open_eq_const _ _ _
 
--- error in AlgebraicGeometry.StructureSheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_basic_open_injective (f : R) : function.injective (to_basic_open R f) :=
-begin
-  intros [ident s, ident t, ident h_eq],
-  obtain ["⟨", ident a, ",", "⟨", ident b, ",", ident hb, "⟩", ",", ident rfl, "⟩", ":=", expr is_localization.mk'_surjective (submonoid.powers f) s],
-  obtain ["⟨", ident c, ",", "⟨", ident d, ",", ident hd, "⟩", ",", ident rfl, "⟩", ":=", expr is_localization.mk'_surjective (submonoid.powers f) t],
-  simp [] [] ["only"] ["[", expr to_basic_open_mk', "]"] [] ["at", ident h_eq],
-  rw [expr is_localization.eq] [],
-  let [ident I] [":", expr ideal R] [":=", expr { carrier := {r : R | «expr = »(«expr * »(«expr * »(a, d), r), «expr * »(«expr * »(c, b), r))},
-     zero_mem' := by simp [] [] ["only"] ["[", expr set.mem_set_of_eq, ",", expr mul_zero, "]"] [] [],
-     add_mem' := λ r₁ r₂ hr₁ hr₂, by { dsimp [] [] [] ["at", ident hr₁, ident hr₂, "⊢"],
-       simp [] [] ["only"] ["[", expr mul_add, ",", expr hr₁, ",", expr hr₂, "]"] [] [] },
-     smul_mem' := λ r₁ r₂ hr₂, by { dsimp [] [] [] ["at", ident hr₂, "⊢"],
-       simp [] [] ["only"] ["[", expr mul_comm r₁ r₂, ",", "<-", expr mul_assoc, ",", expr hr₂, "]"] [] [] } }],
-  suffices [] [":", expr «expr ∈ »(f, I.radical)],
-  { cases [expr this] ["with", ident n, ident hn],
-    exact [expr ⟨⟨«expr ^ »(f, n), n, rfl⟩, hn⟩] },
-  rw ["[", "<-", expr vanishing_ideal_zero_locus_eq_radical, ",", expr mem_vanishing_ideal, "]"] [],
-  intros [ident p, ident hfp],
-  contrapose [] [ident hfp],
-  rw ["[", expr mem_zero_locus, ",", expr set.not_subset, "]"] [],
-  have [] [] [":=", expr congr_fun (congr_arg subtype.val h_eq) ⟨p, hfp⟩],
-  rw ["[", expr const_apply, ",", expr const_apply, ",", expr is_localization.eq, "]"] ["at", ident this],
-  cases [expr this] ["with", ident r, ident hr],
-  exact [expr ⟨r.1, hr, r.2⟩]
-end
+theorem to_basic_open_injective (f : R) : Function.Injective (to_basic_open R f) :=
+  by 
+    intro s t h_eq 
+    obtain ⟨a, ⟨b, hb⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers f) s 
+    obtain ⟨c, ⟨d, hd⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers f) t 
+    simp only [to_basic_open_mk'] at h_eq 
+    rw [IsLocalization.eq]
+    let I : Ideal R :=
+      { Carrier := { r : R | ((a*d)*r) = (c*b)*r },
+        zero_mem' :=
+          by 
+            simp only [Set.mem_set_of_eq, mul_zero],
+        add_mem' :=
+          fun r₁ r₂ hr₁ hr₂ =>
+            by 
+              dsimp  at hr₁ hr₂⊢
+              simp only [mul_addₓ, hr₁, hr₂],
+        smul_mem' :=
+          fun r₁ r₂ hr₂ =>
+            by 
+              dsimp  at hr₂⊢
+              simp only [mul_commₓ r₁ r₂, ←mul_assocₓ, hr₂] }
+    suffices  : f ∈ I.radical
+    ·
+      cases' this with n hn 
+      exact ⟨⟨f^n, n, rfl⟩, hn⟩
+    rw [←vanishing_ideal_zero_locus_eq_radical, mem_vanishing_ideal]
+    intro p hfp 
+    contrapose hfp 
+    rw [mem_zero_locus, Set.not_subset]
+    have  := congr_funₓ (congr_argₓ Subtype.val h_eq) ⟨p, hfp⟩
+    rw [const_apply, const_apply, IsLocalization.eq] at this 
+    cases' this with r hr 
+    exact ⟨r.1, hr, r.2⟩
 
--- error in AlgebraicGeometry.StructureSheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem locally_const_basic_open
-(U : opens (prime_spectrum.Top R))
-(s : (structure_sheaf R).1.obj (op U))
-(x : U) : «expr∃ , »((f g : R)
- (i : «expr ⟶ »(basic_open g, U)), «expr ∧ »(«expr ∈ »(x.1, basic_open g), «expr = »(const R f g (basic_open g) (λ
-    y hy, hy), (structure_sheaf R).1.map i.op s))) :=
-begin
-  obtain ["⟨", ident V, ",", "(", ident hxV, ":", expr «expr ∈ »(x.1, V.1), ")", ",", ident iVU, ",", ident f, ",", ident g, ",", "(", ident hVDg, ":", expr «expr ⊆ »(V, basic_open g), ")", ",", ident s_eq, "⟩", ":=", expr exists_const R U s x.1 x.2],
-  obtain ["⟨", "_", ",", "⟨", ident h, ",", ident rfl, "⟩", ",", ident hxDh, ",", "(", ident hDhV, ":", expr «expr ⊆ »(basic_open h, V), ")", "⟩", ":=", expr is_topological_basis_basic_opens.exists_subset_of_mem_open hxV V.2],
-  cases [expr (basic_open_le_basic_open_iff h g).mp (set.subset.trans hDhV hVDg)] ["with", ident n, ident hn],
-  replace [ident hn] [] [":=", expr ideal.mul_mem_left (ideal.span {g}) h hn],
-  rw ["[", "<-", expr pow_succ, ",", expr ideal.mem_span_singleton', "]"] ["at", ident hn],
-  cases [expr hn] ["with", ident c, ident hc],
-  have [ident basic_opens_eq] [] [":=", expr basic_open_pow h «expr + »(n, 1) (by linarith [] [] [])],
-  have [ident i_basic_open] [] [":=", expr «expr ≫ »(eq_to_hom basic_opens_eq, hom_of_le hDhV)],
-  use ["[", expr «expr * »(f, c), ",", expr «expr ^ »(h, «expr + »(n, 1)), ",", expr «expr ≫ »(i_basic_open, iVU), ",", expr (basic_opens_eq.symm.le : _) hxDh, "]"],
-  rw ["[", expr op_comp, ",", expr functor.map_comp, ",", expr comp_apply, ",", "<-", expr s_eq, ",", expr res_const, "]"] [],
-  swap,
-  { intros [ident y, ident hy],
-    rw [expr basic_opens_eq] ["at", ident hy],
-    exact [expr (set.subset.trans hDhV hVDg : _) hy] },
-  apply [expr const_ext],
-  rw ["[", expr mul_assoc f c g, ",", expr hc, "]"] []
-end
+theorem locally_const_basic_open (U : opens (prime_spectrum.Top R)) (s : (structure_sheaf R).1.obj (op U)) (x : U) :
+  ∃ (f g : R)(i : basic_open g ⟶ U),
+    x.1 ∈ basic_open g ∧ (const R f g (basic_open g) fun y hy => hy) = (structure_sheaf R).1.map i.op s :=
+  by 
+    obtain ⟨V, hxV : x.1 ∈ V.1, iVU, f, g, hVDg : V ⊆ basic_open g, s_eq⟩ := exists_const R U s x.1 x.2
+    obtain ⟨_, ⟨h, rfl⟩, hxDh, hDhV : basic_open h ⊆ V⟩ :=
+      is_topological_basis_basic_opens.exists_subset_of_mem_open hxV V.2
+    cases' (basic_open_le_basic_open_iff h g).mp (Set.Subset.trans hDhV hVDg) with n hn 
+    replace hn := Ideal.mul_mem_left (Ideal.span {g}) h hn 
+    rw [←pow_succₓ, Ideal.mem_span_singleton'] at hn 
+    cases' hn with c hc 
+    have basic_opens_eq :=
+      basic_open_pow h (n+1)
+        (by 
+          linarith)
+    have i_basic_open := eq_to_hom basic_opens_eq ≫ hom_of_le hDhV 
+    use f*c, h^n+1, i_basic_open ≫ iVU, (basic_opens_eq.symm.le : _) hxDh 
+    rw [op_comp, functor.map_comp, comp_apply, ←s_eq, res_const]
+    swap
+    ·
+      intro y hy 
+      rw [basic_opens_eq] at hy 
+      exact (Set.Subset.trans hDhV hVDg : _) hy 
+    apply const_ext 
+    rw [mul_assocₓ f c g, hc]
 
--- error in AlgebraicGeometry.StructureSheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem normalize_finite_fraction_representation
-(U : opens (prime_spectrum.Top R))
-(s : (structure_sheaf R).1.obj (op U))
-{ι : Type*}
-(t : finset ι)
-(a h : ι → R)
-(iDh : ∀ i : ι, «expr ⟶ »(basic_open (h i), U))
-(h_cover : «expr ⊆ »(U.1, «expr⋃ , »((i «expr ∈ » t), (basic_open (h i)).1)))
-(hs : ∀
- i : ι, «expr = »(const R (a i) (h i) (basic_open (h i)) (λ
-   y
-   hy, hy), (structure_sheaf R).1.map (iDh i).op s)) : «expr∃ , »((a' h' : ι → R)
- (iDh' : ∀
-  i : ι, «expr ⟶ »(basic_open (h' i), U)), «expr ∧ »(«expr ⊆ »(U.1, «expr⋃ , »((i «expr ∈ » t), (basic_open (h' i)).1)), «expr ∧ »(∀
-   i
-   j «expr ∈ » t, «expr = »(«expr * »(a' i, h' j), «expr * »(h' i, a' j)), ∀
-   i «expr ∈ » t, «expr = »((structure_sheaf R).1.map (iDh' i).op s, const R (a' i) (h' i) (basic_open (h' i)) (λ
-     y hy, hy))))) :=
-begin
-  have [ident fractions_eq] [":", expr ∀
-   i
-   j : ι, «expr = »(is_localization.mk' (localization.away _) «expr * »(a i, h j) ⟨«expr * »(h i, h j), submonoid.mem_powers _⟩, is_localization.mk' _ «expr * »(h i, a j) ⟨«expr * »(h i, h j), submonoid.mem_powers _⟩)] [],
-  { intros [ident i, ident j],
-    let [ident D] [] [":=", expr basic_open «expr * »(h i, h j)],
-    let [ident iDi] [":", expr «expr ⟶ »(D, basic_open (h i))] [":=", expr hom_of_le (basic_open_mul_le_left _ _)],
-    let [ident iDj] [":", expr «expr ⟶ »(D, basic_open (h j))] [":=", expr hom_of_le (basic_open_mul_le_right _ _)],
-    apply [expr to_basic_open_injective R «expr * »(h i, h j)],
-    rw ["[", expr to_basic_open_mk', ",", expr to_basic_open_mk', "]"] [],
-    simp [] [] ["only"] ["[", expr set_like.coe_mk, "]"] [] [],
-    transitivity [],
-    convert [] [expr congr_arg ((structure_sheaf R).1.map iDj.op) (hs j).symm] ["using", 1],
-    convert [] [expr congr_arg ((structure_sheaf R).1.map iDi.op) (hs i)] ["using", 1],
-    swap,
-    all_goals { rw [expr res_const] [],
-      apply [expr const_ext],
-      ring [] },
-    exacts ["[", expr basic_open_mul_le_right _ _, ",", expr basic_open_mul_le_left _ _, "]"] },
-  have [ident exists_power] [":", expr ∀
-   i
-   j : ι, «expr∃ , »((n : exprℕ()), «expr = »(«expr * »(«expr * »(a i, h j), «expr ^ »(«expr * »(h i, h j), n)), «expr * »(«expr * »(h i, a j), «expr ^ »(«expr * »(h i, h j), n))))] [],
-  { intros [ident i, ident j],
-    obtain ["⟨", "⟨", ident c, ",", ident n, ",", ident rfl, "⟩", ",", ident hc, "⟩", ":=", expr is_localization.eq.mp (fractions_eq i j)],
-    use [expr «expr + »(n, 1)],
-    rw [expr pow_succ] [],
-    dsimp [] [] [] ["at", ident hc],
-    convert [] [expr hc] ["using", 1]; ring [] },
-  let [ident n] [] [":=", expr λ p : «expr × »(ι, ι), (exists_power p.1 p.2).some],
-  have [ident n_spec] [] [":=", expr λ p : «expr × »(ι, ι), (exists_power p.fst p.snd).some_spec],
-  let [ident N] [] [":=", expr (t.product t).sup n],
-  have [ident basic_opens_eq] [":", expr ∀
-   i : ι, «expr = »(basic_open «expr ^ »(h i, «expr + »(N, 1)), basic_open (h i))] [":=", expr λ
-   i, basic_open_pow _ _ (by linarith [] [] [])],
-  refine [expr ⟨λ
-    i, «expr * »(a i, «expr ^ »(h i, N)), λ
-    i, «expr ^ »(h i, «expr + »(N, 1)), λ i, «expr ≫ »(eq_to_hom (basic_opens_eq i), iDh i), _, _, _⟩],
-  { simpa [] [] ["only"] ["[", expr basic_opens_eq, "]"] [] ["using", expr h_cover] },
-  { intros [ident i, ident j, ident hi, ident hj],
-    have [ident n_le_N] [":", expr «expr ≤ »(n (i, j), N)] [":=", expr finset.le_sup (finset.mem_product.mpr ⟨hi, hj⟩)],
-    cases [expr nat.le.dest n_le_N] ["with", ident k, ident hk],
-    simp [] [] ["only"] ["[", "<-", expr hk, ",", expr pow_add, ",", expr pow_one, "]"] [] [],
-    convert [] [expr congr_arg (λ
-      z, «expr * »(z, «expr ^ »(«expr * »(h i, h j), k))) (n_spec (i, j))] ["using", 1]; { simp [] [] ["only"] ["[", expr n, ",", expr mul_pow, "]"] [] [],
-      ring [] } },
-  intros [ident i, ident hi],
-  rw ["[", expr op_comp, ",", expr functor.map_comp, ",", expr comp_apply, ",", "<-", expr hs, ",", expr res_const, "]"] [],
-  swap,
-  exact [expr (basic_opens_eq i).le],
-  apply [expr const_ext],
-  rw [expr pow_succ] [],
-  ring []
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i j «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
+theorem normalize_finite_fraction_representation (U : opens (prime_spectrum.Top R))
+  (s : (structure_sheaf R).1.obj (op U)) {ι : Type _} (t : Finset ι) (a h : ι → R) (iDh : ∀ i : ι, basic_open (h i) ⟶ U)
+  (h_cover : U.1 ⊆ ⋃ (i : _)(_ : i ∈ t), (basic_open (h i)).1)
+  (hs : ∀ i : ι, (const R (a i) (h i) (basic_open (h i)) fun y hy => hy) = (structure_sheaf R).1.map (iDh i).op s) :
+  ∃ (a' h' : ι → R)(iDh' : ∀ i : ι, basic_open (h' i) ⟶ U),
+    (U.1 ⊆ ⋃ (i : _)(_ : i ∈ t), (basic_open (h' i)).1) ∧
+      (∀ i j _ : i ∈ t _ : j ∈ t, (a' i*h' j) = h' i*a' j) ∧
+        ∀ i _ : i ∈ t,
+          (structure_sheaf R).1.map (iDh' i).op s = const R (a' i) (h' i) (basic_open (h' i)) fun y hy => hy :=
+  by 
+    have fractions_eq :
+      ∀ i j : ι,
+        IsLocalization.mk' (Localization.Away _) (a i*h j) ⟨h i*h j, Submonoid.mem_powers _⟩ =
+          IsLocalization.mk' _ (h i*a j) ⟨h i*h j, Submonoid.mem_powers _⟩
+    ·
+      intro i j 
+      let D := basic_open (h i*h j)
+      let iDi : D ⟶ basic_open (h i) := hom_of_le (basic_open_mul_le_left _ _)
+      let iDj : D ⟶ basic_open (h j) := hom_of_le (basic_open_mul_le_right _ _)
+      apply to_basic_open_injective R (h i*h j)
+      rw [to_basic_open_mk', to_basic_open_mk']
+      simp only [SetLike.coe_mk]
+      trans 
+      convert congr_argₓ ((structure_sheaf R).1.map iDj.op) (hs j).symm using 1
+      convert congr_argₓ ((structure_sheaf R).1.map iDi.op) (hs i) using 1
+      swap 
+      all_goals 
+        rw [res_const]
+        apply const_ext 
+        ring 
+      exacts[basic_open_mul_le_right _ _, basic_open_mul_le_left _ _]
+    have exists_power : ∀ i j : ι, ∃ n : ℕ, ((a i*h j)*(h i*h j)^n) = (h i*a j)*(h i*h j)^n
+    ·
+      intro i j 
+      obtain ⟨⟨c, n, rfl⟩, hc⟩ := is_localization.eq.mp (fractions_eq i j)
+      use n+1
+      rw [pow_succₓ]
+      dsimp  at hc 
+      convert hc using 1 <;> ring 
+    let n := fun p : ι × ι => (exists_power p.1 p.2).some 
+    have n_spec := fun p : ι × ι => (exists_power p.fst p.snd).some_spec 
+    let N := (t.product t).sup n 
+    have basic_opens_eq : ∀ i : ι, basic_open (h i^N+1) = basic_open (h i) :=
+      fun i =>
+        basic_open_pow _ _
+          (by 
+            linarith)
+    refine' ⟨fun i => a i*h i^N, fun i => h i^N+1, fun i => eq_to_hom (basic_opens_eq i) ≫ iDh i, _, _, _⟩
+    ·
+      simpa only [basic_opens_eq] using h_cover
+    ·
+      intro i j hi hj 
+      have n_le_N : n (i, j) ≤ N := Finset.le_sup (finset.mem_product.mpr ⟨hi, hj⟩)
+      cases' Nat.Le.dest n_le_N with k hk 
+      simp only [←hk, pow_addₓ, pow_oneₓ]
+      convert congr_argₓ (fun z => z*(h i*h j)^k) (n_spec (i, j)) using 1 <;>
+        ·
+          simp only [n, mul_powₓ]
+          ring 
+    intro i hi 
+    rw [op_comp, functor.map_comp, comp_apply, ←hs, res_const]
+    swap 
+    exact (basic_opens_eq i).le 
+    apply const_ext 
+    rw [pow_succₓ]
+    ring
 
 open_locale Classical
 
 open_locale BigOperators
 
--- error in AlgebraicGeometry.StructureSheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_basic_open_surjective (f : R) : function.surjective (to_basic_open R f) :=
-begin
-  intro [ident s],
-  let [ident ι] [":", expr Type u] [":=", expr basic_open f],
-  choose [] [ident a'] [ident h', ident iDh', ident hxDh', ident s_eq'] ["using", expr locally_const_basic_open R (basic_open f) s],
-  obtain ["⟨", ident t, ",", ident ht_cover', "⟩", ":=", expr (is_compact_basic_open f).elim_finite_subcover (λ
-    i : ι, (basic_open (h' i)).1) (λ i, is_open_basic_open) (λ x hx, _)],
-  swap,
-  { rw [expr set.mem_Union] [],
-    exact [expr ⟨⟨x, hx⟩, hxDh' ⟨x, hx⟩⟩] },
-  obtain ["⟨", ident a, ",", ident h, ",", ident iDh, ",", ident ht_cover, ",", ident ah_ha, ",", ident s_eq, "⟩", ":=", expr normalize_finite_fraction_representation R (basic_open f) s t a' h' iDh' ht_cover' s_eq'],
-  clear [ident s_eq', ident iDh', ident hxDh', ident ht_cover', ident a', ident h'],
-  obtain ["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr ∈ »(f, (ideal.span «expr '' »(h, «expr↑ »(t))).radical)],
-  { rw ["[", "<-", expr vanishing_ideal_zero_locus_eq_radical, ",", expr zero_locus_span, "]"] [],
-    simp_rw ["[", expr subtype.val_eq_coe, ",", expr basic_open_eq_zero_locus_compl, "]"] ["at", ident ht_cover],
-    rw [expr set.compl_subset_comm] ["at", ident ht_cover],
-    simp_rw ["[", expr set.compl_Union, ",", expr compl_compl, ",", "<-", expr zero_locus_Union, ",", "<-", expr finset.set_bUnion_coe, ",", "<-", expr set.image_eq_Union, "]"] ["at", ident ht_cover],
-    apply [expr vanishing_ideal_anti_mono ht_cover],
-    exact [expr subset_vanishing_ideal_zero_locus {f} (set.mem_singleton f)] },
-  replace [ident hn] [] [":=", expr ideal.mul_mem_left _ f hn],
-  erw ["[", "<-", expr pow_succ, ",", expr finsupp.mem_span_image_iff_total, "]"] ["at", ident hn],
-  rcases [expr hn, "with", "⟨", ident b, ",", ident b_supp, ",", ident hb, "⟩"],
-  rw [expr finsupp.total_apply_of_mem_supported R b_supp] ["at", ident hb],
-  dsimp [] [] [] ["at", ident hb],
-  use [expr is_localization.mk' (localization.away f) «expr∑ in , »((i : ι), t, «expr * »(b i, a i)) (⟨«expr ^ »(f, «expr + »(n, 1)), «expr + »(n, 1), rfl⟩ : submonoid.powers _)],
-  rw [expr to_basic_open_mk'] [],
-  let [ident tt] [] [":=", expr ((t : set (basic_open f)) : Type u)],
-  apply [expr (structure_sheaf R).eq_of_locally_eq' (λ i : tt, basic_open (h i)) (basic_open f) (λ i : tt, iDh i)],
-  { intros [ident x, ident hx],
-    erw [expr topological_space.opens.mem_supr] [],
-    have [] [] [":=", expr ht_cover hx],
-    rw ["[", "<-", expr finset.set_bUnion_coe, ",", expr set.mem_bUnion_iff, "]"] ["at", ident this],
-    rcases [expr this, "with", "⟨", ident i, ",", ident i_mem, ",", ident x_mem, "⟩"],
-    use ["[", expr i, ",", expr i_mem, "]"] },
-  rintro ["⟨", ident i, ",", ident hi, "⟩"],
-  dsimp [] [] [] [],
-  change [expr «expr = »((structure_sheaf R).1.map _ _, (structure_sheaf R).1.map _ _)] [] [],
-  rw ["[", expr s_eq i hi, ",", expr res_const, "]"] [],
-  swap,
-  { intros [ident y, ident hy],
-    change [expr «expr ∈ »(y, basic_open «expr ^ »(f, «expr + »(n, 1)))] [] [],
-    rw [expr basic_open_pow f «expr + »(n, 1) (by linarith [] [] [])] [],
-    exact [expr (le_of_hom (iDh i) : _) hy] },
-  apply [expr const_ext],
-  rw ["[", "<-", expr hb, ",", expr finset.sum_mul, ",", expr finset.mul_sum, "]"] [],
-  apply [expr finset.sum_congr rfl],
-  intros [ident j, ident hj],
-  rw ["[", expr mul_assoc, ",", expr ah_ha j i hj hi, "]"] [],
-  ring []
-end
+theorem to_basic_open_surjective (f : R) : Function.Surjective (to_basic_open R f) :=
+  by 
+    intro s 
+    let ι : Type u := basic_open f 
+    choose a' h' iDh' hxDh' s_eq' using locally_const_basic_open R (basic_open f) s 
+    obtain ⟨t, ht_cover'⟩ :=
+      (is_compact_basic_open f).elim_finite_subcover (fun i : ι => (basic_open (h' i)).1) (fun i => is_open_basic_open)
+        fun x hx => _ 
+    swap
+    ·
+      rw [Set.mem_Union]
+      exact ⟨⟨x, hx⟩, hxDh' ⟨x, hx⟩⟩
+    obtain ⟨a, h, iDh, ht_cover, ah_ha, s_eq⟩ :=
+      normalize_finite_fraction_representation R (basic_open f) s t a' h' iDh' ht_cover' s_eq' 
+    clear s_eq' iDh' hxDh' ht_cover' a' h' 
+    obtain ⟨n, hn⟩ : f ∈ (Ideal.span (h '' ↑t)).radical
+    ·
+      rw [←vanishing_ideal_zero_locus_eq_radical, zero_locus_span]
+      simpRw [Subtype.val_eq_coe, basic_open_eq_zero_locus_compl]  at ht_cover 
+      rw [Set.compl_subset_comm] at ht_cover 
+      simpRw [Set.compl_Union, compl_compl, ←zero_locus_Union, ←Finset.set_bUnion_coe, ←Set.image_eq_Union]  at
+        ht_cover 
+      apply vanishing_ideal_anti_mono ht_cover 
+      exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
+    replace hn := Ideal.mul_mem_left _ f hn 
+    erw [←pow_succₓ, Finsupp.mem_span_image_iff_total] at hn 
+    rcases hn with ⟨b, b_supp, hb⟩
+    rw [Finsupp.total_apply_of_mem_supported R b_supp] at hb 
+    dsimp  at hb 
+    use IsLocalization.mk' (Localization.Away f) (∑ i : ι in t, b i*a i) (⟨f^n+1, n+1, rfl⟩ : Submonoid.powers _)
+    rw [to_basic_open_mk']
+    let tt := ((t : Set (basic_open f)) : Type u)
+    apply (structure_sheaf R).eq_of_locally_eq' (fun i : tt => basic_open (h i)) (basic_open f) fun i : tt => iDh i
+    ·
+      intro x hx 
+      erw [TopologicalSpace.Opens.mem_supr]
+      have  := ht_cover hx 
+      rw [←Finset.set_bUnion_coe, Set.mem_bUnion_iff] at this 
+      rcases this with ⟨i, i_mem, x_mem⟩
+      use i, i_mem 
+    rintro ⟨i, hi⟩
+    dsimp 
+    change (structure_sheaf R).1.map _ _ = (structure_sheaf R).1.map _ _ 
+    rw [s_eq i hi, res_const]
+    swap
+    ·
+      intro y hy 
+      change y ∈ basic_open (f^n+1)
+      rw
+        [basic_open_pow f (n+1)
+          (by 
+            linarith)]
+      exact (le_of_hom (iDh i) : _) hy 
+    apply const_ext 
+    rw [←hb, Finset.sum_mul, Finset.mul_sum]
+    apply Finset.sum_congr rfl 
+    intro j hj 
+    rw [mul_assocₓ, ah_ha j i hj hi]
+    ring
 
--- error in AlgebraicGeometry.StructureSheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance is_iso_to_basic_open (f : R) : is_iso (show «expr ⟶ »(CommRing.of _, _), from to_basic_open R f) :=
-begin
-  haveI [] [":", expr is_iso ((forget CommRing).map (show «expr ⟶ »(CommRing.of _, _), from to_basic_open R f))] [":=", expr (is_iso_iff_bijective _).mpr ⟨to_basic_open_injective R f, to_basic_open_surjective R f⟩],
-  exact [expr is_iso_of_reflects_iso _ (forget CommRing)]
-end
+instance is_iso_to_basic_open (f : R) : is_iso (show CommRingₓₓ.of _ ⟶ _ from to_basic_open R f) :=
+  by 
+    have  : is_iso ((forget CommRingₓₓ).map (show CommRingₓₓ.of _ ⟶ _ from to_basic_open R f)) :=
+      (is_iso_iff_bijective _).mpr ⟨to_basic_open_injective R f, to_basic_open_surjective R f⟩
+    exact is_iso_of_reflects_iso _ (forget CommRingₓₓ)
 
 /-- The ring isomorphism between the structure sheaf on `basic_open f` and the localization of `R`
 at the submonoid of powers of `f`. -/
@@ -759,14 +779,12 @@ theorem to_global_factors :
     unfold CommRingₓₓ.ofHom 
     rw [localization_to_basic_open R, to_open_res]
 
--- error in AlgebraicGeometry.StructureSheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance is_iso_to_global : is_iso (to_open R «expr⊤»()) :=
-begin
-  let [ident hom] [] [":=", expr CommRing.of_hom (algebra_map R (localization.away (1 : R)))],
-  haveI [] [":", expr is_iso hom] [":=", expr is_iso.of_iso (is_localization.at_one R (localization.away (1 : R))).to_ring_equiv.to_CommRing_iso],
-  rw [expr to_global_factors R] [],
-  apply_instance
-end
+instance is_iso_to_global : is_iso (to_open R ⊤) :=
+  by 
+    let hom := CommRingₓₓ.ofHom (algebraMap R (Localization.Away (1 : R)))
+    have  : is_iso hom := is_iso.of_iso (IsLocalization.atOne R (Localization.Away (1 : R))).toRingEquiv.toCommRingIso 
+    rw [to_global_factors R]
+    infer_instance
 
 /-- The ring isomorphism between the ring `R` and the global sections `Γ(X, 𝒪ₓ)`. -/
 @[simps]
@@ -937,6 +955,8 @@ theorem comap_id' (U : opens (prime_spectrum.Top R)) :
     rw [comap_id U U rfl]
     rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » V)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » W)
 theorem comap_comp (f : R →+* S) (g : S →+* P) (U : opens (prime_spectrum.Top R)) (V : opens (prime_spectrum.Top S))
   (W : opens (prime_spectrum.Top P)) (hUV : ∀ p _ : p ∈ V, PrimeSpectrum.comap f p ∈ U)
   (hVW : ∀ p _ : p ∈ W, PrimeSpectrum.comap g p ∈ V) :

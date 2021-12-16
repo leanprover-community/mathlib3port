@@ -82,6 +82,10 @@ Configuration structure for `equiv_rw`.
 unsafe structure equiv_rw_cfg where 
   max_depth : ℕ := 10
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Implementation of `equiv_rw_type`, using `solve_by_elim`.
 Expects a goal of the form `t ≃ _`,
@@ -136,8 +140,9 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
 mk_simp_attribute equiv_rw_simp :=
   "The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to\nsimplify applications of equivalences and their inverses."
 
-attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_apply_apply
+attribute [equiv_rw_simp] Equivₓ.symm_symm Equivₓ.apply_symm_apply Equivₓ.symm_apply_apply
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Attempt to replace the hypothesis with name `x`
 by transporting it along the equivalence in `e : α ≃ β`.
@@ -148,11 +153,11 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
       let x' ← get_local x 
       let x_ty ← infer_type x' 
       let e ← equiv_rw_type e x_ty cfg 
-      let eq ← to_expr (pquote.1 ((%%ₓx') = Equiv.symm (%%ₓe) (Equiv.toFun (%%ₓe) (%%ₓx'))))
-      let prf ← to_expr (pquote.1 (Equiv.symm_apply_apply (%%ₓe) (%%ₓx')).symm)
+      let eq ← to_expr (pquote.1 ((%%ₓx') = Equivₓ.symm (%%ₓe) (Equivₓ.toFun (%%ₓe) (%%ₓx'))))
+      let prf ← to_expr (pquote.1 (Equivₓ.symm_apply_apply (%%ₓe) (%%ₓx')).symm)
       let h ← note_anon Eq prf 
       revert h 
-      let ex ← to_expr (pquote.1 (Equiv.toFun (%%ₓe) (%%ₓx')))
+      let ex ← to_expr (pquote.1 (Equivₓ.toFun (%%ₓe) (%%ₓx')))
       generalize ex
           (by 
             inferOptParam)
@@ -175,7 +180,7 @@ unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit
   do 
     let t ← target 
     let e ← equiv_rw_type e t cfg 
-    let s ← to_expr (pquote.1 (Equiv.invFun (%%ₓe)))
+    let s ← to_expr (pquote.1 (Equivₓ.invFun (%%ₓe)))
     tactic.eapply s 
     skip
 

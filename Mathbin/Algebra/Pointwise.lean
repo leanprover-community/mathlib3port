@@ -1,8 +1,8 @@
-import Mathbin.GroupTheory.Submonoid.Basic 
 import Mathbin.Algebra.BigOperators.Basic 
-import Mathbin.GroupTheory.GroupAction.Group 
+import Mathbin.Algebra.SmulWithZero 
 import Mathbin.Data.Set.Finite 
-import Mathbin.Algebra.SmulWithZero
+import Mathbin.GroupTheory.GroupAction.Group 
+import Mathbin.GroupTheory.Submonoid.Basic
 
 /-!
 # Pointwise addition, multiplication, and scalar multiplication of sets.
@@ -38,11 +38,13 @@ set multiplication, set addition, pointwise addition, pointwise multiplication
 -/
 
 
+variable {α β γ ι κ : Type _}
+
 namespace Set
 
 open Function
 
-variable {α : Type _} {β : Type _} {s s₁ s₂ t t₁ t₂ u : Set α} {a b : α} {x y : β}
+variable {s s₁ s₂ t t₁ t₂ u : Set α} {a b : α} {x y : β}
 
 /-! ### Properties about 1 -/
 
@@ -203,6 +205,7 @@ localized [Pointwise]
   attribute [instance] Set.mulOneClass Set.addZeroClass Set.semigroup Set.addSemigroup Set.monoid Set.addMonoid
     Set.commMonoid Set.addCommMonoid
 
+@[toAdditive nsmul_mem_nsmul]
 theorem pow_mem_pow [Monoidₓ α] (ha : a ∈ s) (n : ℕ) : a ^ n ∈ s ^ n :=
   by 
     induction' n with n ih
@@ -229,6 +232,7 @@ theorem empty_mul [Mul α] : (∅*s) = ∅ :=
 theorem mul_empty [Mul α] : (s*∅) = ∅ :=
   image2_empty_right
 
+@[toAdditive empty_smul]
 theorem empty_pow [Monoidₓ α] (n : ℕ) (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ :=
   by 
     rw [←tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ$ Nat.pos_of_ne_zeroₓ hn), pow_succₓ, empty_mul]
@@ -237,25 +241,29 @@ instance decidable_mem_mul [Monoidₓ α] [Fintype α] [DecidableEq α] [Decidab
   DecidablePred (· ∈ s*t) :=
   fun _ => decidableOfIff _ mem_mul.symm
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance decidable_mem_pow
-[monoid α]
-[fintype α]
-[decidable_eq α]
-[decidable_pred ((«expr ∈ » s))]
-(n : exprℕ()) : decidable_pred ((«expr ∈ » «expr ^ »(s, n))) :=
-begin
-  induction [expr n] [] ["with", ident n, ident ih] [],
-  { simp_rw ["[", expr pow_zero, ",", expr mem_one, "]"] [],
-    apply_instance },
-  { letI [] [] [":=", expr ih],
-    rw [expr pow_succ] [],
-    apply_instance }
-end
+instance decidable_mem_pow [Monoidₓ α] [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
+  DecidablePred (· ∈ s ^ n) :=
+  by 
+    induction' n with n ih
+    ·
+      simpRw [pow_zeroₓ, mem_one]
+      infer_instance
+    ·
+      let this' := ih 
+      rw [pow_succₓ]
+      infer_instance
 
 @[toAdditive]
 theorem mul_subset_mul [Mul α] (h₁ : s₁ ⊆ t₁) (h₂ : s₂ ⊆ t₂) : (s₁*s₂) ⊆ t₁*t₂ :=
   image2_subset h₁ h₂
+
+@[toAdditive]
+theorem mul_subset_mul_left [Mul α] (h : t₁ ⊆ t₂) : (s*t₁) ⊆ s*t₂ :=
+  image2_subset_left h
+
+@[toAdditive]
+theorem mul_subset_mul_right [Mul α] (h : s₁ ⊆ s₂) : (s₁*t) ⊆ s₂*t :=
+  image2_subset_right h
 
 theorem pow_subset_pow [Monoidₓ α] (hst : s ⊆ t) (n : ℕ) : s ^ n ⊆ t ^ n :=
   by 
@@ -275,28 +283,29 @@ theorem union_mul [Mul α] : ((s ∪ t)*u) = (s*u) ∪ t*u :=
 theorem mul_union [Mul α] : (s*t ∪ u) = (s*t) ∪ s*u :=
   image2_union_right
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 @[toAdditive]
-theorem Union_mul_left_image [Mul α] : (⋃(a : _)(_ : a ∈ s), (fun x => a*x) '' t) = s*t :=
+theorem Union_mul_left_image [Mul α] : (⋃ (a : _)(_ : a ∈ s), (fun x => a*x) '' t) = s*t :=
   Union_image_left _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » t)
 @[toAdditive]
-theorem Union_mul_right_image [Mul α] : (⋃(a : _)(_ : a ∈ t), (fun x => x*a) '' s) = s*t :=
+theorem Union_mul_right_image [Mul α] : (⋃ (a : _)(_ : a ∈ t), (fun x => x*a) '' s) = s*t :=
   Union_image_right _
 
 @[toAdditive]
-theorem Union_mul {ι : Sort _} [Mul α] (s : ι → Set α) (t : Set α) : ((⋃i, s i)*t) = ⋃i, s i*t :=
+theorem Union_mul {ι : Sort _} [Mul α] (s : ι → Set α) (t : Set α) : ((⋃ i, s i)*t) = ⋃ i, s i*t :=
   image2_Union_left _ _ _
 
 @[toAdditive]
-theorem mul_Union {ι : Sort _} [Mul α] (t : Set α) (s : ι → Set α) : (t*⋃i, s i) = ⋃i, t*s i :=
+theorem mul_Union {ι : Sort _} [Mul α] (t : Set α) (s : ι → Set α) : (t*⋃ i, s i) = ⋃ i, t*s i :=
   image2_Union_right _ _ _
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, to_additive #[]] theorem univ_mul_univ [monoid α] : «expr = »(«expr * »((univ : set α), univ), univ) :=
-begin
-  have [] [":", expr ∀ x, «expr∃ , »((a b : α), «expr = »(«expr * »(a, b), x))] [":=", expr λ x, ⟨x, ⟨1, mul_one x⟩⟩],
-  simpa [] [] ["only"] ["[", expr mem_mul, ",", expr eq_univ_iff_forall, ",", expr mem_univ, ",", expr true_and, "]"] [] []
-end
+@[simp, toAdditive]
+theorem univ_mul_univ [Monoidₓ α] : ((univ : Set α)*univ) = univ :=
+  by 
+    have  : ∀ x, ∃ a b : α, (a*b) = x := fun x => ⟨x, ⟨1, mul_oneₓ x⟩⟩
+    simpa only [mem_mul, eq_univ_iff_forall, mem_univ, true_andₓ]
 
 /-- `singleton` is a monoid hom. -/
 @[toAdditive singleton_add_hom "singleton is an add monoid hom"]
@@ -328,12 +337,12 @@ section BigOperators
 
 open_locale BigOperators
 
-variable {ι : Type _} [CommMonoidₓ α]
+variable [CommMonoidₓ α]
 
 /-- The n-ary version of `set.mem_mul`. -/
 @[toAdditive " The n-ary version of `set.mem_add`. "]
 theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
-  (a ∈ ∏i in t, f i) ↔ ∃ (g : ι → α)(hg : ∀ {i}, i ∈ t → g i ∈ f i), (∏i in t, g i) = a :=
+  (a ∈ ∏ i in t, f i) ↔ ∃ (g : ι → α)(hg : ∀ {i}, i ∈ t → g i ∈ f i), (∏ i in t, g i) = a :=
   by 
     classical 
     induction' t using Finset.induction_on with i is hi ih generalizing a
@@ -343,7 +352,7 @@ theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
     rw [Finset.prod_insert hi, Set.mem_mul]
     simpRw [Finset.prod_insert hi]
     simpRw [ih]
-    split 
+    constructor
     ·
       rintro ⟨x, y, hx, ⟨g, hg, rfl⟩, rfl⟩
       refine' ⟨Function.update g i x, fun j hj => _, _⟩
@@ -362,15 +371,16 @@ theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
 /-- A version of `set.mem_finset_prod` with a simpler RHS for products over a fintype. -/
 @[toAdditive " A version of `set.mem_finset_sum` with a simpler RHS for sums over a fintype. "]
 theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
-  (a ∈ ∏i, f i) ↔ ∃ (g : ι → α)(hg : ∀ i, g i ∈ f i), (∏i, g i) = a :=
+  (a ∈ ∏ i, f i) ↔ ∃ (g : ι → α)(hg : ∀ i, g i ∈ f i), (∏ i, g i) = a :=
   by 
     rw [mem_finset_prod]
     simp 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » t)
 /-- The n-ary version of `set.mul_mem_mul`. -/
 @[toAdditive " The n-ary version of `set.add_mem_add`. "]
 theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i _ : i ∈ t, g i ∈ f i) :
-  (∏i in t, g i) ∈ ∏i in t, f i :=
+  (∏ i in t, g i) ∈ ∏ i in t, f i :=
   by 
     rw [mem_finset_prod]
     exact ⟨g, hg, rfl⟩
@@ -378,28 +388,25 @@ theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι 
 /-- The n-ary version of `set.mul_subset_mul`. -/
 @[toAdditive " The n-ary version of `set.add_subset_add`. "]
 theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set α) (hf : ∀ {i}, i ∈ t → f₁ i ⊆ f₂ i) :
-  (∏i in t, f₁ i) ⊆ ∏i in t, f₂ i :=
+  (∏ i in t, f₁ i) ⊆ ∏ i in t, f₂ i :=
   by 
     intro a 
     rw [mem_finset_prod, mem_finset_prod]
     rintro ⟨g, hg, rfl⟩
     exact ⟨g, fun i hi => hf hi$ hg hi, rfl⟩
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem finset_prod_singleton
-{M ι : Type*}
-[comm_monoid M]
-(s : finset ι)
-(I : ι → M) : «expr = »(«expr∏ in , »((i : ι), s, ({I i} : set M)), {«expr∏ in , »((i : ι), s, I i)}) :=
-begin
-  letI [] [] [":=", expr classical.dec_eq ι],
-  refine [expr finset.induction_on s _ _],
-  { simpa [] [] [] [] [] [] },
-  { intros ["_", "_", ident H, ident ih],
-    rw ["[", expr finset.prod_insert H, ",", expr finset.prod_insert H, ",", expr ih, "]"] [],
-    simp [] [] [] [] [] [] }
-end
+@[toAdditive]
+theorem finset_prod_singleton {M ι : Type _} [CommMonoidₓ M] (s : Finset ι) (I : ι → M) :
+  (∏ i : ι in s, ({I i} : Set M)) = {∏ i : ι in s, I i} :=
+  by 
+    let this' := Classical.decEq ι 
+    refine' Finset.induction_on s _ _
+    ·
+      simpa
+    ·
+      intro _ _ H ih 
+      rw [Finset.prod_insert H, Finset.prod_insert H, ih]
+      simp 
 
 /-! TODO: define `decidable_mem_finset_prod` and `decidable_mem_finset_sum`. -/
 
@@ -462,7 +469,15 @@ theorem union_inv [HasInv α] : (s ∪ t)⁻¹ = s⁻¹ ∪ t⁻¹ :=
   preimage_union
 
 @[simp, toAdditive]
-theorem compl_inv [HasInv α] : «expr ᶜ» s⁻¹ = «expr ᶜ» (s⁻¹) :=
+theorem Inter_inv {ι : Sort _} [HasInv α] (s : ι → Set α) : (⋂ i, s i)⁻¹ = ⋂ i, s i⁻¹ :=
+  preimage_Inter
+
+@[simp, toAdditive]
+theorem Union_inv {ι : Sort _} [HasInv α] (s : ι → Set α) : (⋃ i, s i)⁻¹ = ⋃ i, s i⁻¹ :=
+  preimage_Union
+
+@[simp, toAdditive]
+theorem compl_inv [HasInv α] : sᶜ⁻¹ = s⁻¹ᶜ :=
   preimage_compl
 
 @[simp, toAdditive]
@@ -476,7 +491,7 @@ protected theorem univ_inv [Groupₓ α] : (univ : Set α)⁻¹ = univ :=
 
 @[simp, toAdditive]
 theorem inv_subset_inv [Groupₓ α] {s t : Set α} : s⁻¹ ⊆ t⁻¹ ↔ s ⊆ t :=
-  (Equiv.inv α).Surjective.preimage_subset_preimage_iff
+  (Equivₓ.inv α).Surjective.preimage_subset_preimage_iff
 
 @[toAdditive]
 theorem inv_subset [Groupₓ α] {s t : Set α} : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ :=
@@ -492,6 +507,12 @@ theorem inv_singleton {β : Type _} [Groupₓ β] (x : β) : ({x} : Set β)⁻¹
   by 
     ext1 y 
     rw [mem_inv, mem_singleton_iff, mem_singleton_iff, inv_eq_iff_inv_eq, eq_comm]
+
+@[toAdditive]
+protected theorem mul_inv_rev [Groupₓ α] (s t : Set α) : (s*t)⁻¹ = t⁻¹*s⁻¹ :=
+  by 
+    simpRw [←image_inv, ←image2_mul, image_image2, image2_image_left, image2_image_right, mul_inv_rev,
+      image2_swap _ s t]
 
 /-! ### Properties about scalar multiplication -/
 
@@ -568,7 +589,7 @@ theorem image_smul_prod [HasScalar α β] {t : Set β} : (fun x : α × β => x.
   image_prod _
 
 @[toAdditive]
-theorem range_smul_range [HasScalar α β] {ι κ : Type _} (b : ι → α) (c : κ → β) :
+theorem range_smul_range [HasScalar α β] (b : ι → α) (c : κ → β) :
   range b • range c = range fun p : ι × κ => b p.1 • c p.2 :=
   ext$
     fun x =>
@@ -578,62 +599,67 @@ theorem range_smul_range [HasScalar α β] {ι κ : Type _} (b : ι → α) (c :
         fun ⟨⟨i, j⟩, h⟩ => Set.mem_smul.2 ⟨b i, c j, ⟨i, rfl⟩, ⟨j, rfl⟩, h⟩⟩
 
 @[simp, toAdditive]
+theorem smul_singleton [HasScalar α β] (a : α) (b : β) : a • ({b} : Set β) = {a • b} :=
+  image_singleton
+
+@[simp, toAdditive]
 theorem singleton_smul [HasScalar α β] {t : Set β} : ({a} : Set α) • t = a • t :=
   image2_singleton_left
 
 @[toAdditive]
-instance smul_comm_class_set {γ : Type _} [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] :
-  SmulCommClass α (Set β) (Set γ) :=
+instance smul_comm_class_set [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] : SmulCommClass α (Set β) (Set γ) :=
   { smul_comm :=
       fun a T T' =>
         by 
           simp only [←image2_smul, ←image_smul, image2_image_right, image_image2, smul_comm] }
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-instance smul_comm_class_set'
-{γ : Type*}
-[has_scalar α γ]
-[has_scalar β γ]
-[smul_comm_class α β γ] : smul_comm_class (set α) β (set γ) :=
-by haveI [] [] [":=", expr smul_comm_class.symm α β γ]; exact [expr smul_comm_class.symm _ _ _]
+@[toAdditive]
+instance smul_comm_class_set' [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] : SmulCommClass (Set α) β (Set γ) :=
+  by 
+    have  := SmulCommClass.symm α β γ <;> exact SmulCommClass.symm _ _ _
 
 @[toAdditive]
-instance SmulCommClass {γ : Type _} [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] :
-  SmulCommClass (Set α) (Set β) (Set γ) :=
+instance SmulCommClass [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] : SmulCommClass (Set α) (Set β) (Set γ) :=
   { smul_comm :=
       fun T T' T'' =>
         by 
           simp only [←image2_smul, image2_swap _ T]
           exact image2_assoc fun b c a => smul_comm a b c }
 
-instance IsScalarTower {γ : Type _} [HasScalar α β] [HasScalar α γ] [HasScalar β γ] [IsScalarTower α β γ] :
+instance IsScalarTower [HasScalar α β] [HasScalar α γ] [HasScalar β γ] [IsScalarTower α β γ] :
   IsScalarTower α β (Set γ) :=
   { smul_assoc :=
       fun a b T =>
         by 
           simp only [←image_smul, image_image, smul_assoc] }
 
-instance is_scalar_tower' {γ : Type _} [HasScalar α β] [HasScalar α γ] [HasScalar β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower' [HasScalar α β] [HasScalar α γ] [HasScalar β γ] [IsScalarTower α β γ] :
   IsScalarTower α (Set β) (Set γ) :=
   { smul_assoc :=
       fun a T T' =>
         by 
           simp only [←image_smul, ←image2_smul, image_image2, image2_image_left, smul_assoc] }
 
-instance is_scalar_tower'' {γ : Type _} [HasScalar α β] [HasScalar α γ] [HasScalar β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower'' [HasScalar α β] [HasScalar α γ] [HasScalar β γ] [IsScalarTower α β γ] :
   IsScalarTower (Set α) (Set β) (Set γ) :=
   { smul_assoc := fun T T' T'' => image2_assoc smul_assoc }
+
+instance IsCentralScalar [HasScalar α β] [HasScalar (αᵐᵒᵖ) β] [IsCentralScalar α β] : IsCentralScalar α (Set β) :=
+  ⟨fun a S =>
+      (congr_argₓ fun f => f '' S)$
+        by 
+          exact funext fun _ => op_smul_eq_smul _ _⟩
 
 section Monoidₓ
 
 /-! ### `set α` as a `(∪,*)`-semiring -/
 
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- An alias for `set α`, which has a semiring structure given by `∪` as "addition" and pointwise
-  multiplication `*` as "multiplication". -/ @[derive #[expr inhabited]] def set_semiring (α : Type*) : Type* :=
-set α
+  multiplication `*` as "multiplication". -/
+def set_semiring (α : Type _) : Type _ :=
+  Set α deriving [anonymous]
 
 /-- The identitiy function `set α → set_semiring α`. -/
 protected def up (s : Set α) : set_semiring α :=
@@ -723,8 +749,6 @@ open_locale Pointwise
 
 section 
 
-variable {α : Type _} {β : Type _}
-
 /-- A nonempty set is scaled by zero to the singleton set containing 0. -/
 theorem zero_smul_set [HasZero α] [HasZero β] [SmulWithZero α β] {s : Set β} (h : s.nonempty) :
   (0 : α) • s = (0 : Set β) :=
@@ -740,10 +764,10 @@ theorem subsingleton_zero_smul_set [HasZero α] [HasZero β] [SmulWithZero α β
 
 section Groupₓ
 
-variable [Groupₓ α] [MulAction α β]
+variable [Groupₓ α] [MulAction α β] {A B : Set β} {a : α} {x : β}
 
 @[simp, toAdditive]
-theorem smul_mem_smul_set_iff {a : α} {A : Set β} {x : β} : a • x ∈ a • A ↔ x ∈ A :=
+theorem smul_mem_smul_set_iff : a • x ∈ a • A ↔ x ∈ A :=
   ⟨fun h =>
       by 
         rw [←inv_smul_smul a x, ←inv_smul_smul a A]
@@ -751,11 +775,11 @@ theorem smul_mem_smul_set_iff {a : α} {A : Set β} {x : β} : a • x ∈ a •
     smul_mem_smul_set⟩
 
 @[toAdditive]
-theorem mem_smul_set_iff_inv_smul_mem {a : α} {A : Set β} {x : β} : x ∈ a • A ↔ a⁻¹ • x ∈ A :=
+theorem mem_smul_set_iff_inv_smul_mem : x ∈ a • A ↔ a⁻¹ • x ∈ A :=
   show x ∈ MulAction.toPerm a '' A ↔ _ from mem_image_equiv
 
 @[toAdditive]
-theorem mem_inv_smul_set_iff {a : α} {A : Set β} {x : β} : x ∈ a⁻¹ • A ↔ a • x ∈ A :=
+theorem mem_inv_smul_set_iff : x ∈ a⁻¹ • A ↔ a • x ∈ A :=
   by 
     simp only [←image_smul, mem_image, inv_smul_eq_iff, exists_eq_right]
 
@@ -768,15 +792,15 @@ theorem preimage_smul_inv (a : α) (t : Set β) : (fun x => a⁻¹ • x) ⁻¹'
   preimage_smul (toUnits a⁻¹) t
 
 @[simp, toAdditive]
-theorem set_smul_subset_set_smul_iff {a : α} {A B : Set β} : a • A ⊆ a • B ↔ A ⊆ B :=
+theorem set_smul_subset_set_smul_iff : a • A ⊆ a • B ↔ A ⊆ B :=
   image_subset_image_iff$ MulAction.injective _
 
 @[toAdditive]
-theorem set_smul_subset_iff {a : α} {A B : Set β} : a • A ⊆ B ↔ A ⊆ a⁻¹ • B :=
+theorem set_smul_subset_iff : a • A ⊆ B ↔ A ⊆ a⁻¹ • B :=
   image_subset_iff.trans$ iff_of_eq$ congr_argₓ _$ preimage_equiv_eq_image_symm _$ MulAction.toPerm _
 
 @[toAdditive]
-theorem subset_set_smul_iff {a : α} {A B : Set β} : A ⊆ a • B ↔ a⁻¹ • A ⊆ B :=
+theorem subset_set_smul_iff : A ⊆ a • B ↔ a⁻¹ • A ⊆ B :=
   Iff.symm$
     image_subset_iff.trans$ Iff.symm$ iff_of_eq$ congr_argₓ _$ image_equiv_eq_preimage_symm _$ MulAction.toPerm _
 
@@ -818,7 +842,25 @@ end
 
 namespace Finset
 
-variable {α : Type _} [DecidableEq α] {s t : Finset α}
+variable {a : α} {s s₁ s₂ t t₁ t₂ : Finset α}
+
+/-- The finset `(1 : finset α)` is defined as `{1}` in locale `pointwise`. -/
+@[toAdditive "The finset `(0 : finset α)` is defined as `{0}` in locale `pointwise`. "]
+protected def HasOne [HasOne α] : HasOne (Finset α) :=
+  ⟨{1}⟩
+
+localized [Pointwise] attribute [instance] Finset.hasOne Finset.hasZero
+
+@[simp, toAdditive]
+theorem mem_one [HasOne α] : a ∈ (1 : Finset α) ↔ a = 1 :=
+  by 
+    simp [HasOne.one]
+
+@[simp, toAdditive]
+theorem one_subset [HasOne α] : (1 : Finset α) ⊆ s ↔ (1 : α) ∈ s :=
+  singleton_subset_iff
+
+variable [DecidableEq α]
 
 /-- The pointwise product of two finite sets `s` and `t`:
 `st = s ⬝ t = s * t = { x * y | x ∈ s, y ∈ t }`. -/
@@ -828,69 +870,108 @@ protected def Mul [Mul α] : Mul (Finset α) :=
 
 localized [Pointwise] attribute [instance] Finset.hasMul Finset.hasAdd
 
+section Mul
+
+variable [Mul α]
+
 @[toAdditive]
-theorem mul_def [Mul α] : (s*t) = (s.product t).Image fun p : α × α => p.1*p.2 :=
+theorem mul_def : (s*t) = (s.product t).Image fun p : α × α => p.1*p.2 :=
   rfl
 
 @[toAdditive]
-theorem mem_mul [Mul α] {x : α} : (x ∈ s*t) ↔ ∃ y z, y ∈ s ∧ z ∈ t ∧ (y*z) = x :=
+theorem mem_mul {x : α} : (x ∈ s*t) ↔ ∃ y z, y ∈ s ∧ z ∈ t ∧ (y*z) = x :=
   by 
     simp only [Finset.mul_def, And.assoc, mem_image, exists_prop, Prod.exists, mem_product]
 
 @[simp, normCast, toAdditive]
-theorem coe_mul [Mul α] : («expr↑ » (s*t) : Set α) = «expr↑ » s*«expr↑ » t :=
+theorem coe_mul : (↑s*t : Set α) = (↑s)*↑t :=
   by 
     ext 
     simp only [mem_mul, Set.mem_mul, mem_coe]
 
 @[toAdditive]
-theorem mul_mem_mul [Mul α] {x y : α} (hx : x ∈ s) (hy : y ∈ t) : (x*y) ∈ s*t :=
+theorem mul_mem_mul {x y : α} (hx : x ∈ s) (hy : y ∈ t) : (x*y) ∈ s*t :=
   by 
     simp only [Finset.mem_mul]
     exact ⟨x, y, hx, hy, rfl⟩
 
 @[toAdditive]
-theorem mul_card_le [Mul α] : (s*t).card ≤ s.card*t.card :=
+theorem mul_card_le : (s*t).card ≤ s.card*t.card :=
   by 
     convert Finset.card_image_le 
     rw [Finset.card_product, mul_commₓ]
 
 @[simp, toAdditive]
-theorem empty_mul [Mul α] (s : Finset α) : (∅*s) = ∅ :=
+theorem empty_mul (s : Finset α) : (∅*s) = ∅ :=
   eq_empty_of_forall_not_mem
     (by 
       simp [mem_mul])
 
 @[simp, toAdditive]
-theorem mul_empty [Mul α] (s : Finset α) : (s*∅) = ∅ :=
+theorem mul_empty (s : Finset α) : (s*∅) = ∅ :=
   eq_empty_of_forall_not_mem
     (by 
       simp [mem_mul])
 
 @[simp, toAdditive]
-theorem mul_nonempty_iff [Mul α] (s t : Finset α) : (s*t).Nonempty ↔ s.nonempty ∧ t.nonempty :=
+theorem mul_nonempty_iff (s t : Finset α) : (s*t).Nonempty ↔ s.nonempty ∧ t.nonempty :=
   by 
     simp [Finset.mul_def]
 
 @[toAdditive, mono]
-theorem mul_subset_mul [Mul α] {s₁ s₂ t₁ t₂ : Finset α} (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : (s₁*t₁) ⊆ s₂*t₂ :=
+theorem mul_subset_mul (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : (s₁*t₁) ⊆ s₂*t₂ :=
   image_subset_image (product_subset_product hs ht)
 
-theorem mul_singleton_zero [MulZeroClass α] (s : Finset α) : (s*{0}) ⊆ {0} :=
+@[simp, toAdditive]
+theorem mul_singleton (a : α) : (s*{a}) = s.image (·*a) :=
+  by 
+    rw [mul_def, product_singleton, map_eq_image, image_image]
+    rfl
+
+@[simp, toAdditive]
+theorem singleton_mul (a : α) : ({a}*s) = s.image ((·*·) a) :=
+  by 
+    rw [mul_def, singleton_product, map_eq_image, image_image]
+    rfl
+
+@[simp, toAdditive]
+theorem singleton_mul_singleton (a b : α) : (({a} : Finset α)*{b}) = {a*b} :=
+  by 
+    rw [mul_def, singleton_product_singleton, image_singleton]
+
+end Mul
+
+section MulZeroClass
+
+variable [MulZeroClass α]
+
+theorem mul_zero_subset (s : Finset α) : (s*0) ⊆ 0 :=
   by 
     simp [subset_iff, mem_mul]
 
-theorem singleton_zero_mul [MulZeroClass α] (s : Finset α) : ({(0 : α)}*s) ⊆ {0} :=
+theorem zero_mul_subset (s : Finset α) : (0*s) ⊆ 0 :=
   by 
     simp [subset_iff, mem_mul]
+
+theorem nonempty.mul_zero (hs : s.nonempty) : (s*0) = 0 :=
+  s.mul_zero_subset.antisymm$
+    by 
+      simpa [Finset.mem_mul] using hs
+
+theorem nonempty.zero_mul (hs : s.nonempty) : (0*s) = 0 :=
+  s.zero_mul_subset.antisymm$
+    by 
+      simpa [Finset.mem_mul] using hs
+
+end MulZeroClass
 
 open_locale Classical
 
 /-- A finite set `U` contained in the product of two sets `S * S'` is also contained in the product
 of two finite sets `T * T' ⊆ S * S'`. -/
 @[toAdditive]
-theorem subset_mul {M : Type _} [Monoidₓ M] {S : Set M} {S' : Set M} {U : Finset M} (f : «expr↑ » U ⊆ S*S') :
-  ∃ T T' : Finset M, «expr↑ » T ⊆ S ∧ «expr↑ » T' ⊆ S' ∧ U ⊆ T*T' :=
+theorem subset_mul {M : Type _} [Monoidₓ M] {S : Set M} {S' : Set M} {U : Finset M} (f : ↑U ⊆ S*S') :
+  ∃ T T' : Finset M, ↑T ⊆ S ∧ ↑T' ⊆ S' ∧ U ⊆ T*T' :=
   by 
     apply Finset.induction_on' U
     ·
@@ -913,7 +994,7 @@ theorem subset_mul {M : Type _} [Monoidₓ M] {S : Set M} {S' : Set M} {U : Fins
       ·
         normCast  at g 
         assumption 
-      trans «expr↑ » (T*T')
+      trans ↑T*T' 
       apply h 
       rw [Finset.coe_mul]
       apply Set.mul_subset_mul (Set.subset_insert x T) (Set.subset_insert y T')
@@ -926,16 +1007,16 @@ end Finset
 
 namespace Submonoid
 
-variable {M : Type _} [Monoidₓ M]
+variable {M : Type _} [Monoidₓ M] {s t u : Set M}
 
 @[toAdditive]
-theorem mul_subset {s t : Set M} {S : Submonoid M} (hs : s ⊆ S) (ht : t ⊆ S) : (s*t) ⊆ S :=
+theorem mul_subset {S : Submonoid M} (hs : s ⊆ S) (ht : t ⊆ S) : (s*t) ⊆ S :=
   by 
     rintro _ ⟨p, q, hp, hq, rfl⟩
     exact Submonoid.mul_mem _ (hs hp) (ht hq)
 
 @[toAdditive]
-theorem mul_subset_closure {s t u : Set M} (hs : s ⊆ u) (ht : t ⊆ u) : (s*t) ⊆ Submonoid.closure u :=
+theorem mul_subset_closure (hs : s ⊆ u) (ht : t ⊆ u) : (s*t) ⊆ Submonoid.closure u :=
   mul_subset (subset.trans hs Submonoid.subset_closure) (subset.trans ht Submonoid.subset_closure)
 
 @[toAdditive]
@@ -962,79 +1043,93 @@ theorem sup_eq_closure (H K : Submonoid M) : H⊔K = closure (H*K) :=
     (by 
       convRHS => rw [←closure_eq H, ←closure_eq K] <;> apply closure_mul_le)
 
+theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoidₓ N] [MulAction M N] [IsScalarTower M N N] (r : M) (s : Set N)
+  {x : N} (hx : x ∈ closure s) : ∃ n : ℕ, r ^ n • x ∈ closure (r • s) :=
+  by 
+    apply @closure_induction N _ s (fun x : N => ∃ n : ℕ, r ^ n • x ∈ closure (r • s)) _ hx
+    ·
+      intro x hx 
+      exact
+        ⟨1,
+          subset_closure
+            ⟨_, hx,
+              by 
+                rw [pow_oneₓ]⟩⟩
+    ·
+      exact
+        ⟨0,
+          by 
+            simpa using one_mem _⟩
+    ·
+      rintro x y ⟨nx, hx⟩ ⟨ny, hy⟩
+      use nx+ny 
+      convert mul_mem _ hx hy 
+      rw [pow_addₓ, smul_mul_assoc, mul_smul, mul_commₓ, ←smul_mul_assoc, mul_commₓ]
+
 end Submonoid
 
 namespace Groupₓ
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_pow_eq_card_pow_card_univ_aux
-{f : exprℕ() → exprℕ()}
-(h1 : monotone f)
-{B : exprℕ()}
-(h2 : ∀ n, «expr ≤ »(f n, B))
-(h3 : ∀
- n, «expr = »(f n, f «expr + »(n, 1)) → «expr = »(f «expr + »(n, 1), f «expr + »(n, 2))) : ∀
-k, «expr ≤ »(B, k) → «expr = »(f k, f B) :=
-begin
-  have [ident key] [":", expr «expr∃ , »((n : exprℕ()), «expr ∧ »(«expr ≤ »(n, B), «expr = »(f n, f «expr + »(n, 1))))] [],
-  { contrapose ["!"] [ident h2],
-    suffices [] [":", expr ∀ n : exprℕ(), «expr ≤ »(n, «expr + »(B, 1)) → «expr ≤ »(n, f n)],
-    { exact [expr ⟨«expr + »(B, 1), this «expr + »(B, 1) (le_refl «expr + »(B, 1))⟩] },
-    exact [expr λ
-     n, nat.rec (λ
-      h, nat.zero_le (f 0)) (λ
-      n
-      ih
-      h, lt_of_le_of_lt (ih (n.le_succ.trans h)) (lt_of_le_of_ne (h1 n.le_succ) (h2 n (nat.succ_le_succ_iff.mp h)))) n] },
-  { obtain ["⟨", ident n, ",", ident hn1, ",", ident hn2, "⟩", ":=", expr key],
-    replace [ident key] [":", expr ∀
-     k : exprℕ(), «expr ∧ »(«expr = »(f «expr + »(n, k), f «expr + »(«expr + »(n, k), 1)), «expr = »(f «expr + »(n, k), f n))] [":=", expr λ
-     k, nat.rec ⟨hn2, rfl⟩ (λ k ih, ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k],
-    replace [ident key] [":", expr ∀
-     k : exprℕ(), «expr ≤ »(n, k) → «expr = »(f k, f n)] [":=", expr λ
-     k hk, (congr_arg f (add_tsub_cancel_of_le hk)).symm.trans (key «expr - »(k, n)).2],
-    exact [expr λ k hk, (key k (hn1.trans hk)).trans (key B hn1).symm] }
-end
+theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {B : ℕ} (h2 : ∀ n, f n ≤ B)
+  (h3 : ∀ n, f n = f (n+1) → f (n+1) = f (n+2)) : ∀ k, B ≤ k → f k = f B :=
+  by 
+    have key : ∃ n : ℕ, n ≤ B ∧ f n = f (n+1)
+    ·
+      contrapose! h2 
+      suffices  : ∀ n : ℕ, (n ≤ B+1) → n ≤ f n
+      ·
+        exact ⟨B+1, this (B+1) (le_reflₓ (B+1))⟩
+      exact
+        fun n =>
+          Nat.rec (fun h => Nat.zero_leₓ (f 0))
+            (fun n ih h =>
+              lt_of_le_of_ltₓ (ih (n.le_succ.trans h))
+                (lt_of_le_of_neₓ (h1 n.le_succ) (h2 n (nat.succ_le_succ_iff.mp h))))
+            n
+    ·
+      obtain ⟨n, hn1, hn2⟩ := key 
+      replace key : ∀ k : ℕ, f (n+k) = f ((n+k)+1) ∧ f (n+k) = f n :=
+        fun k => Nat.rec ⟨hn2, rfl⟩ (fun k ih => ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k 
+      replace key : ∀ k : ℕ, n ≤ k → f k = f n :=
+        fun k hk => (congr_argₓ f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2 
+      exact fun k hk => (key k (hn1.trans hk)).trans (key B hn1).symm
 
 variable {G : Type _} [Groupₓ G] [Fintype G] (S : Set G)
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_pow_eq_card_pow_card_univ
-[∀
- k : exprℕ(), decidable_pred ((«expr ∈ » «expr ^ »(S, k)))] : ∀
-k, «expr ≤ »(fintype.card G, k) → «expr = »(fintype.card «expr↥ »(«expr ^ »(S, k)), fintype.card «expr↥ »(«expr ^ »(S, fintype.card G))) :=
-begin
-  have [ident hG] [":", expr «expr < »(0, fintype.card G)] [":=", expr fintype.card_pos_iff.mpr ⟨1⟩],
-  by_cases [expr hS, ":", expr «expr = »(S, «expr∅»())],
-  { intros [ident k, ident hk],
-    congr' [2] [],
-    rw ["[", expr hS, ",", expr empty_pow _ (ne_of_gt (lt_of_lt_of_le hG hk)), ",", expr empty_pow _ (ne_of_gt hG), "]"] [] },
-  obtain ["⟨", ident a, ",", ident ha, "⟩", ":=", expr set.ne_empty_iff_nonempty.mp hS],
-  classical,
-  have [ident key] [":", expr ∀
-   (a)
-   (s
-    t : set G), ∀
-   b : G, «expr ∈ »(b, s) → «expr ∈ »(«expr * »(a, b), t) → «expr ≤ »(fintype.card s, fintype.card t)] [],
-  { refine [expr λ a s t h, fintype.card_le_of_injective (λ ⟨b, hb⟩, ⟨«expr * »(a, b), h b hb⟩) _],
-    rintros ["⟨", ident b, ",", ident hb, "⟩", "⟨", ident c, ",", ident hc, "⟩", ident hbc],
-    exact [expr subtype.ext (mul_left_cancel (subtype.ext_iff.mp hbc))] },
-  have [ident mono] [":", expr monotone (λ
-   n, fintype.card «expr↥ »(«expr ^ »(S, n)) : exprℕ() → exprℕ())] [":=", expr monotone_nat_of_le_succ (λ
-    n, key a _ _ (λ b hb, set.mul_mem_mul ha hb))],
-  convert [] [expr card_pow_eq_card_pow_card_univ_aux mono (λ
-    n, set_fintype_card_le_univ «expr ^ »(S, n)) (λ
-    n h, le_antisymm (mono «expr + »(n, 1).le_succ) (key «expr ⁻¹»(a) _ _ _))] [],
-  { simp [] [] ["only"] ["[", expr finset.filter_congr_decidable, ",", expr fintype.card_of_finset, "]"] [] [] },
-  replace [ident h] [":", expr «expr = »(«expr * »({a}, «expr ^ »(S, n)), «expr ^ »(S, «expr + »(n, 1)))] [],
-  { refine [expr set.eq_of_subset_of_card_le _ (le_trans (ge_of_eq h) _)],
-    { exact [expr mul_subset_mul (set.singleton_subset_iff.mpr ha) set.subset.rfl] },
-    { convert [] [expr key a «expr ^ »(S, n) «expr * »({a}, «expr ^ »(S, n)) (λ
-        b hb, set.mul_mem_mul (set.mem_singleton a) hb)] [] } },
-  rw ["[", expr pow_succ', ",", "<-", expr h, ",", expr mul_assoc, ",", "<-", expr pow_succ', ",", expr h, "]"] [],
-  rintros ["_", "⟨", ident b, ",", ident c, ",", ident hb, ",", ident hc, ",", ident rfl, "⟩"],
-  rwa ["[", expr set.mem_singleton_iff.mp hb, ",", expr inv_mul_cancel_left, "]"] []
-end
+@[toAdditive]
+theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
+  ∀ k, Fintype.card G ≤ k → Fintype.card (↥(S ^ k)) = Fintype.card (↥(S ^ Fintype.card G)) :=
+  by 
+    have hG : 0 < Fintype.card G := fintype.card_pos_iff.mpr ⟨1⟩
+    byCases' hS : S = ∅
+    ·
+      intro k hk 
+      congr 2
+      rw [hS, empty_pow _ (ne_of_gtₓ (lt_of_lt_of_leₓ hG hk)), empty_pow _ (ne_of_gtₓ hG)]
+    obtain ⟨a, ha⟩ := set.ne_empty_iff_nonempty.mp hS 
+    classical 
+    have key : ∀ a s t : Set G, (∀ b : G, b ∈ s → (a*b) ∈ t) → Fintype.card s ≤ Fintype.card t
+    ·
+      refine' fun a s t h => Fintype.card_le_of_injective (fun ⟨b, hb⟩ => ⟨a*b, h b hb⟩) _ 
+      rintro ⟨b, hb⟩ ⟨c, hc⟩ hbc 
+      exact Subtype.ext (mul_left_cancelₓ (subtype.ext_iff.mp hbc))
+    have mono : Monotone (fun n => Fintype.card (↥(S ^ n)) : ℕ → ℕ) :=
+      monotone_nat_of_le_succ fun n => key a _ _ fun b hb => Set.mul_mem_mul ha hb 
+    convert
+      card_pow_eq_card_pow_card_univ_aux mono (fun n => set_fintype_card_le_univ (S ^ n))
+        fun n h => le_antisymmₓ (mono (n+1).le_succ) (key (a⁻¹) _ _ _)
+    ·
+      simp only [Finset.filter_congr_decidable, Fintype.card_of_finset]
+    replace h : ({a}*S ^ n) = S ^ n+1
+    ·
+      refine' Set.eq_of_subset_of_card_le _ (le_transₓ (ge_of_eq h) _)
+      ·
+        exact mul_subset_mul (set.singleton_subset_iff.mpr ha) Set.Subset.rfl
+      ·
+        convert key a (S ^ n) ({a}*S ^ n) fun b hb => Set.mul_mem_mul (Set.mem_singleton a) hb 
+    rw [pow_succ'ₓ, ←h, mul_assocₓ, ←pow_succ'ₓ, h]
+    rintro _ ⟨b, c, hb, hc, rfl⟩
+    rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_leftₓ]
 
 end Groupₓ
 

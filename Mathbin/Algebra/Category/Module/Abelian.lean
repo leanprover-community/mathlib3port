@@ -14,7 +14,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 
@@ -24,7 +24,7 @@ variable {R : Type u} [Ringₓ R] {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- In the category of modules, every monomorphism is normal. -/
 def normal_mono (hf : mono f) : normal_mono f :=
-  { z := of R f.range.quotient, g := f.range.mkq, w := LinearMap.range_mkq_comp _,
+  { z := of R (N ⧸ f.range), g := f.range.mkq, w := LinearMap.range_mkq_comp _,
     IsLimit :=
       is_kernel.iso_kernel _ _ (kernel_is_limit _)
           (LinearEquiv.toModuleIso'

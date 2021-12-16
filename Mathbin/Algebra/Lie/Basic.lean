@@ -283,7 +283,7 @@ theorem coe_to_linear_map (f : L₁ →ₗ⁅R⁆ L₂) : ((f : L₁ →ₗ[R] L
   rfl
 
 @[simp]
-theorem to_fun_eq_coe (f : L₁ →ₗ⁅R⁆ L₂) : f.to_fun = «expr⇑ » f :=
+theorem to_fun_eq_coe (f : L₁ →ₗ⁅R⁆ L₂) : f.to_fun = ⇑f :=
   rfl
 
 @[simp]
@@ -748,21 +748,21 @@ instance : Neg (M →ₗ⁅R,L⁆ N) :=
               simp  } }
 
 @[normCast, simp]
-theorem coe_add (f g : M →ₗ⁅R,L⁆ N) : «expr⇑ » (f+g) = f+g :=
+theorem coe_add (f g : M →ₗ⁅R,L⁆ N) : (⇑f+g) = f+g :=
   rfl
 
 theorem add_apply (f g : M →ₗ⁅R,L⁆ N) (m : M) : (f+g) m = f m+g m :=
   rfl
 
 @[normCast, simp]
-theorem coe_sub (f g : M →ₗ⁅R,L⁆ N) : «expr⇑ » (f - g) = f - g :=
+theorem coe_sub (f g : M →ₗ⁅R,L⁆ N) : ⇑(f - g) = f - g :=
   rfl
 
 theorem sub_apply (f g : M →ₗ⁅R,L⁆ N) (m : M) : (f - g) m = f m - g m :=
   rfl
 
 @[normCast, simp]
-theorem coe_neg (f : M →ₗ⁅R,L⁆ N) : «expr⇑ » (-f) = -f :=
+theorem coe_neg (f : M →ₗ⁅R,L⁆ N) : ⇑(-f) = -f :=
   rfl
 
 theorem neg_apply (f : M →ₗ⁅R,L⁆ N) (m : M) : (-f) m = -f m :=
@@ -798,7 +798,7 @@ instance : HasScalar R (M →ₗ⁅R,L⁆ N) :=
               simp  } }
 
 @[normCast, simp]
-theorem coe_smul (t : R) (f : M →ₗ⁅R,L⁆ N) : «expr⇑ » (t • f) = t • f :=
+theorem coe_smul (t : R) (f : M →ₗ⁅R,L⁆ N) : ⇑(t • f) = t • f :=
   rfl
 
 theorem smul_apply (t : R) (f : M →ₗ⁅R,L⁆ N) (m : M) : (t • f) m = t • f m :=
@@ -862,24 +862,25 @@ theorem coe_to_lie_module_hom (e : M ≃ₗ⁅R,L⁆ N) : ((e : M →ₗ⁅R,L�
 theorem coe_to_linear_equiv (e : M ≃ₗ⁅R,L⁆ N) : ((e : M ≃ₗ[R] N) : M → N) = e :=
   rfl
 
--- error in Algebra.Lie.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_equiv_injective : function.injective (to_equiv : «expr ≃ₗ⁅ , ⁆ »(M, R, L, N) → «expr ≃ »(M, N)) :=
-λ e₁ e₂ h, begin
-  rcases [expr e₁, "with", "⟨", "⟨", "⟩", "⟩"],
-  rcases [expr e₂, "with", "⟨", "⟨", "⟩", "⟩"],
-  have [ident inj] [] [":=", expr equiv.mk.inj h],
-  dsimp [] [] [] ["at", ident inj],
-  apply [expr lie_module_equiv.mk.inj_eq.mpr],
-  split,
-  { congr,
-    ext [] [] [],
-    rw [expr inj.1] [] },
-  { exact [expr inj.2] }
-end
+theorem to_equiv_injective : Function.Injective (to_equiv : (M ≃ₗ⁅R,L⁆ N) → M ≃ N) :=
+  fun e₁ e₂ h =>
+    by 
+      rcases e₁ with ⟨⟨⟩⟩
+      rcases e₂ with ⟨⟨⟩⟩
+      have inj := Equivₓ.mk.inj h 
+      dsimp  at inj 
+      apply lie_module_equiv.mk.inj_eq.mpr 
+      constructor
+      ·
+        congr 
+        ext 
+        rw [inj.1]
+      ·
+        exact inj.2
 
 @[ext]
 theorem ext (e₁ e₂ : M ≃ₗ⁅R,L⁆ N) (h : ∀ m, e₁ m = e₂ m) : e₁ = e₂ :=
-  to_equiv_injective (Equiv.ext h)
+  to_equiv_injective (Equivₓ.ext h)
 
 instance : HasOne (M ≃ₗ⁅R,L⁆ M) :=
   ⟨{ (1 : M ≃ₗ[R] M) with map_lie' := fun x m => rfl }⟩

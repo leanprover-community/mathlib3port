@@ -35,26 +35,58 @@ theorem mem_one [HasOne α] (s : Set α) : s ∈ (1 : Filter α) ↔ (1 : α) �
       simp 
     
 
--- error in Order.Filter.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]] instance [monoid α] : has_mul (filter α) :=
-⟨λ
- f
- g, { sets := {s | «expr∃ , »((t₁
-     t₂), «expr ∧ »(«expr ∈ »(t₁, f), «expr ∧ »(«expr ∈ »(t₂, g), «expr ⊆ »(«expr * »(t₁, t₂), s))))},
-   univ_sets := begin
-     have [ident h₁] [":", expr «expr∃ , »((x), «expr ∈ »(x, f))] [":=", expr ⟨univ, univ_sets f⟩],
-     have [ident h₂] [":", expr «expr∃ , »((x), «expr ∈ »(x, g))] [":=", expr ⟨univ, univ_sets g⟩],
-     simpa [] [] [] [] [] ["using", expr and.intro h₁ h₂]
-   end,
-   sets_of_superset := λ x y hx hxy, begin
-     rcases [expr hx, "with", "⟨", ident t₁, ",", ident ht₁, ",", ident t₂, ",", ident ht₂, ",", ident t₁t₂, "⟩"],
-     exact [expr ⟨t₁, ht₁, t₂, ht₂, subset.trans t₁t₂ hxy⟩]
-   end,
-   inter_sets := λ x y, begin
-     simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_set_of_eq, ",", expr subset_inter_iff, "]"] [] [],
-     rintros ["⟨", ident s₁, ",", ident s₂, ",", ident hs₁, ",", ident hs₂, ",", ident s₁s₂, "⟩", "⟨", ident t₁, ",", ident t₂, ",", ident ht₁, ",", ident ht₂, ",", ident t₁t₂, "⟩"],
-     exact [expr ⟨«expr ∩ »(s₁, t₁), «expr ∩ »(s₂, t₂), inter_sets f hs₁ ht₁, inter_sets g hs₂ ht₂, subset.trans (mul_subset_mul (inter_subset_left _ _) (inter_subset_left _ _)) s₁s₂, subset.trans (mul_subset_mul (inter_subset_right _ _) (inter_subset_right _ _)) t₁t₂⟩]
-   end }⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ toAdditive ]
+  instance
+    [ Monoidₓ α ] : Mul Filter α
+    :=
+      ⟨
+        fun
+          f g
+            =>
+            {
+              Sets := { s | ∃ t₁ t₂ , t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ * t₂ ⊆ s } ,
+                univ_sets
+                    :=
+                    by
+                      have h₁ : ∃ x , x ∈ f := ⟨ univ , univ_sets f ⟩
+                        have h₂ : ∃ x , x ∈ g := ⟨ univ , univ_sets g ⟩
+                        simpa using And.intro h₁ h₂
+                  ,
+                sets_of_superset
+                    :=
+                    fun
+                      x y hx hxy
+                        =>
+                        by
+                          rcases hx with ⟨ t₁ , ht₁ , t₂ , ht₂ , t₁t₂ ⟩
+                            exact ⟨ t₁ , ht₁ , t₂ , ht₂ , subset.trans t₁t₂ hxy ⟩
+                  ,
+                inter_sets
+                  :=
+                  fun
+                    x y
+                      =>
+                      by
+                        simp only [ exists_prop , mem_set_of_eq , subset_inter_iff ]
+                          rintro ⟨ s₁ , s₂ , hs₁ , hs₂ , s₁s₂ ⟩ ⟨ t₁ , t₂ , ht₁ , ht₂ , t₁t₂ ⟩
+                          exact
+                            ⟨
+                              s₁ ∩ t₁
+                                ,
+                                s₂ ∩ t₂
+                                ,
+                                inter_sets f hs₁ ht₁
+                                ,
+                                inter_sets g hs₂ ht₂
+                                ,
+                                subset.trans mul_subset_mul inter_subset_left _ _ inter_subset_left _ _ s₁s₂
+                                ,
+                                subset.trans mul_subset_mul inter_subset_right _ _ inter_subset_right _ _ t₁t₂
+                              ⟩
+              }
+        ⟩
 
 @[toAdditive]
 theorem mem_mul [Monoidₓ α] {f g : Filter α} {s : Set α} : (s ∈ f*g) ↔ ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ (t₁*t₂) ⊆ s :=
@@ -79,7 +111,7 @@ theorem ne_bot.mul [Monoidₓ α] {f g : Filter α} : ne_bot f → ne_bot g → 
 protected theorem mul_assocₓ [Monoidₓ α] (f g h : Filter α) : ((f*g)*h) = f*g*h :=
   by 
     ext s 
-    split 
+    constructor
     ·
       rintro ⟨a, b, ⟨a₁, a₂, ha₁, ha₂, a₁a₂⟩, hb, ab⟩
       refine' ⟨a₁, a₂*b, ha₁, mul_mem_mul ha₂ hb, _⟩
@@ -95,7 +127,7 @@ protected theorem mul_assocₓ [Monoidₓ α] (f g h : Filter α) : ((f*g)*h) = 
 protected theorem one_mulₓ [Monoidₓ α] (f : Filter α) : (1*f) = f :=
   by 
     ext s 
-    split 
+    constructor
     ·
       rintro ⟨t₁, t₂, ht₁, ht₂, t₁t₂⟩
       refine' mem_of_superset (mem_of_superset ht₂ _) t₁t₂ 
@@ -116,7 +148,7 @@ protected theorem one_mulₓ [Monoidₓ α] (f : Filter α) : (1*f) = f :=
 protected theorem mul_oneₓ [Monoidₓ α] (f : Filter α) : (f*1) = f :=
   by 
     ext s 
-    split 
+    constructor
     ·
       rintro ⟨t₁, t₂, ht₁, ht₂, t₁t₂⟩
       refine' mem_of_superset (mem_of_superset ht₁ _) t₁t₂ 
@@ -142,23 +174,22 @@ section Map
 
 variable [Monoidₓ α] [Monoidₓ β] {f : Filter α} (m : MulHom α β) (φ : α →* β)
 
--- error in Order.Filter.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-protected
-theorem map_mul {f₁ f₂ : filter α} : «expr = »(map m «expr * »(f₁, f₂), «expr * »(map m f₁, map m f₂)) :=
-begin
-  ext [] [ident s] [],
-  simp [] [] ["only"] ["[", expr mem_mul, "]"] [] [],
-  split,
-  { rintro ["⟨", ident t₁, ",", ident t₂, ",", ident ht₁, ",", ident ht₂, ",", ident t₁t₂, "⟩"],
-    have [] [":", expr «expr ⊆ »(«expr '' »(m, «expr * »(t₁, t₂)), s)] [":=", expr subset.trans (image_subset m t₁t₂) (image_preimage_subset _ _)],
-    refine [expr ⟨«expr '' »(m, t₁), «expr '' »(m, t₂), image_mem_map ht₁, image_mem_map ht₂, _⟩],
-    rwa ["<-", expr image_mul m] [] },
-  { rintro ["⟨", ident t₁, ",", ident t₂, ",", ident ht₁, ",", ident ht₂, ",", ident t₁t₂, "⟩"],
-    refine [expr ⟨«expr ⁻¹' »(m, t₁), «expr ⁻¹' »(m, t₂), ht₁, ht₂, image_subset_iff.1 _⟩],
-    rw [expr image_mul m] [],
-    exact [expr subset.trans (mul_subset_mul (image_preimage_subset _ _) (image_preimage_subset _ _)) t₁t₂] }
-end
+@[toAdditive]
+protected theorem map_mul {f₁ f₂ : Filter α} : map m (f₁*f₂) = map m f₁*map m f₂ :=
+  by 
+    ext s 
+    simp only [mem_mul]
+    constructor
+    ·
+      rintro ⟨t₁, t₂, ht₁, ht₂, t₁t₂⟩
+      have  : (m '' t₁*t₂) ⊆ s := subset.trans (image_subset m t₁t₂) (image_preimage_subset _ _)
+      refine' ⟨m '' t₁, m '' t₂, image_mem_map ht₁, image_mem_map ht₂, _⟩
+      rwa [←image_mul m]
+    ·
+      rintro ⟨t₁, t₂, ht₁, ht₂, t₁t₂⟩
+      refine' ⟨m ⁻¹' t₁, m ⁻¹' t₂, ht₁, ht₂, image_subset_iff.1 _⟩
+      rw [image_mul m]
+      exact subset.trans (mul_subset_mul (image_preimage_subset _ _) (image_preimage_subset _ _)) t₁t₂
 
 @[toAdditive]
 protected theorem map_one : map φ (1 : Filter α) = 1 :=
@@ -184,16 +215,13 @@ protected theorem map_one : map φ (1 : Filter α) = 1 :=
 def map_monoid_hom : Filter α →* Filter β :=
   { toFun := map φ, map_one' := Filter.map_one φ, map_mul' := fun _ _ => Filter.map_mul φ.to_mul_hom }
 
--- error in Order.Filter.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem comap_mul_comap_le
-{f₁ f₂ : filter β} : «expr ≤ »(«expr * »(comap m f₁, comap m f₂), comap m «expr * »(f₁, f₂)) :=
-begin
-  rintros [ident s, "⟨", ident t, ",", "⟨", ident t₁, ",", ident t₂, ",", ident ht₁, ",", ident ht₂, ",", ident t₁t₂, "⟩", ",", ident mt, "⟩"],
-  refine [expr ⟨«expr ⁻¹' »(m, t₁), «expr ⁻¹' »(m, t₂), ⟨t₁, ht₁, subset.refl _⟩, ⟨t₂, ht₂, subset.refl _⟩, _⟩],
-  have [] [] [":=", expr subset.trans (preimage_mono t₁t₂) mt],
-  exact [expr subset.trans (preimage_mul_preimage_subset _) this]
-end
+@[toAdditive]
+theorem comap_mul_comap_le {f₁ f₂ : Filter β} : (comap m f₁*comap m f₂) ≤ comap m (f₁*f₂) :=
+  by 
+    rintro s ⟨t, ⟨t₁, t₂, ht₁, ht₂, t₁t₂⟩, mt⟩
+    refine' ⟨m ⁻¹' t₁, m ⁻¹' t₂, ⟨t₁, ht₁, subset.refl _⟩, ⟨t₂, ht₂, subset.refl _⟩, _⟩
+    have  := subset.trans (preimage_mono t₁t₂) mt 
+    exact subset.trans (preimage_mul_preimage_subset _) this
 
 @[toAdditive]
 theorem tendsto.mul_mul {f₁ g₁ : Filter α} {f₂ g₂ : Filter β} :

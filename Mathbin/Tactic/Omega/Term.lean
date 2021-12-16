@@ -2,11 +2,12 @@ import Mathbin.Tactic.Omega.Coeffs
 
 namespace Omega
 
--- error in Tactic.Omega.Term: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Shadow syntax of normalized terms. The first element
     represents the constant term and the list represents
-    the coefficients. -/ @[derive #[expr inhabited]] def term : Type :=
-«expr × »(int, list int)
+    the coefficients. -/
+def term : Type :=
+  Int × List Int deriving [anonymous]
 
 namespace Term
 
@@ -60,6 +61,7 @@ theorem val_mul {v : Nat → Int} {i : Int} {t : term} : val v (mul i t) = i*val
     cases t 
     simp only [mul, mul_addₓ, add_mulₓ, List.length_map, coeffs.val, coeffs.val_between_map_mul, val, List.map]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » as)
 theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
   i ∣ b → (∀ x _ : x ∈ as, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i :=
   by 

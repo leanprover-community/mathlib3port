@@ -37,7 +37,7 @@ theorem prop (x : Subtype p) : p x :=
   x.2
 
 @[simp]
-theorem val_eq_coe {x : Subtype p} : x.1 = «expr↑ » x :=
+theorem val_eq_coe {x : Subtype p} : x.1 = ↑x :=
   rfl
 
 @[simp]
@@ -82,7 +82,7 @@ theorem ext_iff_val {a1 a2 : { x // p x }} : a1 = a2 ↔ a1.1 = a2.1 :=
   ext_iff
 
 @[simp]
-theorem coe_eta (a : { a // p a }) (h : p a) : mk («expr↑ » a) h = a :=
+theorem coe_eta (a : { a // p a }) (h : p a) : mk (↑a) h = a :=
   Subtype.ext rfl
 
 @[simp]
@@ -93,7 +93,7 @@ theorem coe_mk a h : (@mk α p a h : α) = a :=
 theorem mk_eq_mk {a h a' h'} : @mk α p a h = @mk α p a' h' ↔ a = a' :=
   ext_iff
 
-theorem coe_eq_iff {a : { a // p a }} {b : α} : «expr↑ » a = b ↔ ∃ h, a = ⟨b, h⟩ :=
+theorem coe_eq_iff {a : { a // p a }} {b : α} : ↑a = b ↔ ∃ h, a = ⟨b, h⟩ :=
   ⟨fun h => h ▸ ⟨a.2, (coe_eta _ _).symm⟩, fun ⟨hb, ha⟩ => ha.symm ▸ rfl⟩
 
 theorem coe_injective : injective (coeₓ : Subtype p → α) :=
@@ -117,18 +117,13 @@ theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrict f p = 
 theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : injective f) : injective (restrict f p) :=
   h.comp coe_injective
 
--- error in Data.Subtype: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem surjective_restrict
-{α}
-{β : α → Type*}
-[ne : ∀ a, nonempty (β a)]
-(p : α → exprProp()) : surjective (λ f : ∀ x, β x, restrict f p) :=
-begin
-  letI [] [] [":=", expr classical.dec_pred p],
-  refine [expr λ f, ⟨λ x, if h : p x then f ⟨x, h⟩ else nonempty.some (ne x), «expr $ »(funext, _)⟩],
-  rintro ["⟨", ident x, ",", ident hx, "⟩"],
-  exact [expr dif_pos hx]
-end
+theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
+  surjective fun f : ∀ x, β x => restrict f p :=
+  by 
+    let this' := Classical.decPred p 
+    refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext$ _⟩
+    rintro ⟨x, hx⟩
+    exact dif_pos hx
 
 /-- Defining a map into a subtype, this can be seen as an "coinduction principle" of `subtype`-/
 @[simps]
@@ -180,7 +175,7 @@ theorem equiv_iff [HasEquivₓ α] {p : α → Prop} {s t : Subtype p} : s ≈ t
 variable [Setoidₓ α]
 
 protected theorem refl (s : Subtype p) : s ≈ s :=
-  Setoidₓ.refl («expr↑ » s)
+  Setoidₓ.refl (↑s)
 
 protected theorem symm {s t : Subtype p} (h : s ≈ t) : t ≈ s :=
   Setoidₓ.symm h
@@ -204,7 +199,7 @@ namespace Subtype
 variable {α β γ : Type _} {p : α → Prop}
 
 @[simp]
-theorem coe_prop {S : Set α} (a : { a // a ∈ S }) : «expr↑ » a ∈ S :=
+theorem coe_prop {S : Set α} (a : { a // a ∈ S }) : ↑a ∈ S :=
   a.prop
 
 theorem val_prop {S : Set α} (a : { a // a ∈ S }) : a.val ∈ S :=

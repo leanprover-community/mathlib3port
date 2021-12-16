@@ -21,7 +21,7 @@ matrix, reindex
 
 namespace Matrix
 
-open Equiv
+open Equivₓ
 
 open_locale Matrix
 
@@ -50,7 +50,7 @@ theorem reindex_linear_equiv_symm (eₘ : m ≃ m') (eₙ : n ≃ n') :
 
 @[simp]
 theorem reindex_linear_equiv_refl_refl :
-  reindex_linear_equiv R A (Equiv.refl m) (Equiv.refl n) = LinearEquiv.refl R _ :=
+  reindex_linear_equiv R A (Equivₓ.refl m) (Equivₓ.refl n) = LinearEquiv.refl R _ :=
   LinearEquiv.ext$ fun _ => rfl
 
 theorem reindex_linear_equiv_trans (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' ≃ m'') (e₂' : n' ≃ n'') :
@@ -85,12 +85,12 @@ variable [Semiringₓ R] [Semiringₓ A] [Module R A]
 
 theorem reindex_linear_equiv_mul [Fintype n] [Fintype n'] (eₘ : m ≃ m') (eₙ : n ≃ n') (eₒ : o ≃ o') (M : Matrix m n A)
   (N : Matrix n o A) :
-  reindex_linear_equiv R A eₘ eₒ (M ⬝ N) = reindex_linear_equiv R A eₘ eₙ M ⬝ reindex_linear_equiv R A eₙ eₒ N :=
+  reindex_linear_equiv R A eₘ eₙ M ⬝ reindex_linear_equiv R A eₙ eₒ N = reindex_linear_equiv R A eₘ eₒ (M ⬝ N) :=
   minor_mul_equiv M N _ _ _
 
 theorem mul_reindex_linear_equiv_one [Fintype n] [Fintype o] [DecidableEq o] (e₁ : o ≃ n) (e₂ : o ≃ n')
   (M : Matrix m n A) :
-  M.mul (reindex_linear_equiv R A e₁ e₂ 1) = reindex_linear_equiv R A (Equiv.refl m) (e₁.symm.trans e₂) M :=
+  M.mul (reindex_linear_equiv R A e₁ e₂ 1) = reindex_linear_equiv R A (Equivₓ.refl m) (e₁.symm.trans e₂) M :=
   mul_minor_one _ _ _
 
 end Semiringₓ
@@ -104,7 +104,8 @@ For square matrices with coefficients in commutative semirings, the natural map 
 a matrix's rows and columns with equivalent types, `matrix.reindex`, is an equivalence of algebras.
 -/
 def reindex_alg_equiv (e : m ≃ n) : Matrix m m R ≃ₐ[R] Matrix n n R :=
-  { reindex_linear_equiv R R e e with toFun := reindex e e, map_mul' := reindex_linear_equiv_mul R R e e e,
+  { reindex_linear_equiv R R e e with toFun := reindex e e,
+    map_mul' := fun a b => (reindex_linear_equiv_mul R R e e e a b).symm,
     commutes' :=
       fun r =>
         by 
@@ -119,7 +120,7 @@ theorem reindex_alg_equiv_symm (e : m ≃ n) : (reindex_alg_equiv R e).symm = re
   rfl
 
 @[simp]
-theorem reindex_alg_equiv_refl : reindex_alg_equiv R (Equiv.refl m) = AlgEquiv.refl :=
+theorem reindex_alg_equiv_refl : reindex_alg_equiv R (Equivₓ.refl m) = AlgEquiv.refl :=
   AlgEquiv.ext$ fun _ => rfl
 
 theorem reindex_alg_equiv_mul (e : m ≃ n) (M : Matrix m m R) (N : Matrix m m R) :

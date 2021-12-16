@@ -12,6 +12,7 @@ instances for types in the core library.
 
 namespace Tactic
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /--
 Tries to derive an `inhabited` instance for inductives and structures.
 
@@ -44,46 +45,13 @@ unsafe def inhabited_instance : derive_handler :=
 
 end Tactic
 
--- error in Tactic.DeriveInhabited: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-attribute [derive #[expr inhabited]]
-vm_decl_kind
-vm_obj_kind
-tactic.new_goals
-tactic.transparency
-tactic.apply_cfg
-smt_pre_config
-ematch_config
-cc_config
-smt_config
-rsimp.config
-tactic.dunfold_config
-tactic.dsimp_config
-tactic.unfold_proj_config
-tactic.simp_intros_config
-tactic.delta_config
-tactic.simp_config
-tactic.rewrite_cfg
-interactive.loc
-tactic.unfold_config
-param_info
-subsingleton_info
-fun_info
-format.color
-pos
-environment.projection_info
-reducibility_hints
-congr_arg_kind
-ulift
-plift
-string_imp
-string.iterator_imp
-rbnode.color
-ordering
-unification_constraint
-pprod
-unification_hint
-doc_category
-tactic_doc_entry
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+deriving instance [anonymous] for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.Transparency, Tactic.ApplyCfg,
+  SmtPreConfig, EmatchConfig, CcConfig, SmtConfig, Rsimp.Config, Tactic.DunfoldConfig, Tactic.DsimpConfig,
+  Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig, Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg,
+  Interactive.Loc, Tactic.UnfoldConfig, ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos,
+  Environment.ProjectionInfo, ReducibilityHints, CongrArgKind, Ulift, Plift, StringImp, Stringₓ.IteratorImp,
+  Rbnode.Color, Ordering, UnificationConstraint, PProd, UnificationHint, DocCategory, TacticDocEntry
 
 instance {α} : Inhabited (BinTree α) :=
   ⟨BinTree.empty⟩

@@ -14,7 +14,7 @@ import Mathbin.RingTheory.Polynomial.Basic
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale BigOperators Classical
 
@@ -30,7 +30,7 @@ open Polynomial
 
 /-- Lagrange basis polynomials that evaluate to 1 at `x` and 0 at other elements of `s`. -/
 def basis (x : F) : Polynomial F :=
-  ∏y in s.erase x, C ((x - y)⁻¹)*X - C y
+  ∏ y in s.erase x, C ((x - y)⁻¹)*X - C y
 
 @[simp]
 theorem basis_empty (x : F) : basis ∅ x = 1 :=
@@ -60,38 +60,42 @@ theorem eval_basis (x y : F) (h : y ∈ s) : (basis s x).eval y = if y = x then 
     ·
       exact eval_basis_ne s x y h H
 
--- error in LinearAlgebra.Lagrange: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem nat_degree_basis (x : F) (hx : «expr ∈ »(x, s)) : «expr = »((basis s x).nat_degree, «expr - »(s.card, 1)) :=
-begin
-  unfold [ident basis] [],
-  generalize [ident hsx] [":"] [expr «expr = »(s.erase x, sx)],
-  have [] [":", expr «expr ∉ »(x, sx)] [":=", expr «expr ▸ »(hsx, finset.not_mem_erase x s)],
-  rw ["[", "<-", expr finset.insert_erase hx, ",", expr hsx, ",", expr finset.card_insert_of_not_mem this, ",", expr add_tsub_cancel_right, "]"] [],
-  clear [ident hx, ident hsx, ident s],
-  revert [ident this],
-  apply [expr sx.induction_on],
-  { intros [ident hx],
-    rw ["[", expr finset.prod_empty, ",", expr nat_degree_one, "]"] [],
-    refl },
-  { intros [ident y, ident s, ident hys, ident ih, ident hx],
-    rw ["[", expr finset.mem_insert, ",", expr not_or_distrib, "]"] ["at", ident hx],
-    have [ident h1] [":", expr «expr ≠ »(C «expr ⁻¹»(«expr - »(x, y)), C 0)] [":=", expr λ
-     h, hx.1 «expr $ »(eq_of_sub_eq_zero, «expr $ »(inv_eq_zero.1, C_inj.1 h))],
-    have [ident h2] [":", expr «expr ≠ »(«expr - »(«expr ^ »(X, 1), C y), 0)] [":=", expr by convert [] [expr X_pow_sub_C_ne_zero zero_lt_one y] []],
-    rw [expr C_0] ["at", ident h1],
-    rw [expr pow_one] ["at", ident h2],
-    rw ["[", expr finset.prod_insert hys, ",", expr nat_degree_mul (mul_ne_zero h1 h2), ",", expr ih hx.2, ",", expr finset.card_insert_of_not_mem hys, ",", expr nat_degree_mul h1 h2, ",", expr nat_degree_C, ",", expr zero_add, ",", expr nat_degree, ",", expr degree_X_sub_C, ",", expr add_comm, "]"] [],
-    refl,
-    rw ["[", expr ne, ",", expr finset.prod_eq_zero_iff, "]"] [],
-    rintro ["⟨", ident z, ",", ident hzs, ",", ident hz, "⟩"],
-    rw [expr mul_eq_zero] ["at", ident hz],
-    cases [expr hz] ["with", ident hz, ident hz],
-    { rw ["[", "<-", expr C_0, ",", expr C_inj, ",", expr inv_eq_zero, ",", expr sub_eq_zero, "]"] ["at", ident hz],
-      exact [expr hx.2 «expr ▸ »(hz.symm, hzs)] },
-    { rw ["<-", expr pow_one (X : polynomial F)] ["at", ident hz],
-      exact [expr X_pow_sub_C_ne_zero zero_lt_one _ hz] } }
-end
+theorem nat_degree_basis (x : F) (hx : x ∈ s) : (basis s x).natDegree = s.card - 1 :=
+  by 
+    unfold basis 
+    generalize hsx : s.erase x = sx 
+    have  : x ∉ sx := hsx ▸ Finset.not_mem_erase x s 
+    rw [←Finset.insert_erase hx, hsx, Finset.card_insert_of_not_mem this, add_tsub_cancel_right]
+    clear hx hsx s 
+    revert this 
+    apply sx.induction_on
+    ·
+      intro hx 
+      rw [Finset.prod_empty, nat_degree_one]
+      rfl
+    ·
+      intro y s hys ih hx 
+      rw [Finset.mem_insert, not_or_distrib] at hx 
+      have h1 : C ((x - y)⁻¹) ≠ C 0 := fun h => hx.1 (eq_of_sub_eq_zero$ inv_eq_zero.1$ C_inj.1 h)
+      have h2 : (X^1) - C y ≠ 0 :=
+        by 
+          convert X_pow_sub_C_ne_zero zero_lt_one y 
+      rw [C_0] at h1 
+      rw [pow_oneₓ] at h2 
+      rw [Finset.prod_insert hys, nat_degree_mul (mul_ne_zero h1 h2), ih hx.2, Finset.card_insert_of_not_mem hys,
+        nat_degree_mul h1 h2, nat_degree_C, zero_addₓ, nat_degree, degree_X_sub_C, add_commₓ]
+      rfl 
+      rw [Ne, Finset.prod_eq_zero_iff]
+      rintro ⟨z, hzs, hz⟩
+      rw [mul_eq_zero] at hz 
+      cases' hz with hz hz
+      ·
+        rw [←C_0, C_inj, inv_eq_zero, sub_eq_zero] at hz 
+        exact hx.2 (hz.symm ▸ hzs)
+      ·
+        rw [←pow_oneₓ (X : Polynomial F)] at hz 
+        exact X_pow_sub_C_ne_zero zero_lt_one _ hz
 
 variable (f : s → F)
 
@@ -99,7 +103,7 @@ variable (f : s → F)
 `interpolate s f` is the unique polynomial of degree `< s.card`
 that takes value `f x` on all `x` in `s`. -/
 def interpolate : Polynomial F :=
-  ∑x in s.attach, C (f x)*basis s x
+  ∑ x in s.attach, C (f x)*basis s x
 
 @[simp]
 theorem interpolate_empty f : interpolate (∅ : Finset F) f = 0 :=
@@ -176,6 +180,7 @@ theorem interpolate_sub f g : interpolate s (f - g) = interpolate s f - interpol
 theorem interpolate_smul (c : F) f : interpolate s (c • f) = c • interpolate s f :=
   (linterpolate s).map_smul c f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s')
 theorem eq_zero_of_eval_eq_zero {f : Polynomial F'} (hf1 : f.degree < s'.card) (hf2 : ∀ x _ : x ∈ s', f.eval x = 0) :
   f = 0 :=
   by_contradiction$
@@ -188,6 +193,7 @@ theorem eq_zero_of_eval_eq_zero {f : Polynomial F'} (hf1 : f.degree < s'.card) (
           _ ≤ f.degree := card_roots hf3
           
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s')
 theorem eq_of_eval_eq {f g : Polynomial F'} (hf : f.degree < s'.card) (hg : g.degree < s'.card)
   (hfg : ∀ x _ : x ∈ s', f.eval x = g.eval x) : f = g :=
   eq_of_sub_eq_zero$
@@ -208,7 +214,7 @@ def fun_equiv_degree_lt : degree_lt F s.card ≃ₗ[F] s → F :=
         funext$
           fun x =>
             by 
-              change eval («expr↑ » x) (c • f).val = (c • fun x : s => eval («expr↑ » x) f.val) x 
+              change eval (↑x) (c • f).val = (c • fun x : s => eval (↑x) f.val) x 
               rw [Pi.smul_apply, smul_eq_mul, ←@eval_C F c _ x, ←eval_mul, eval_C, C_mul']
               rfl,
     invFun := fun f => ⟨interpolate s f, mem_degree_lt.2$ degree_interpolate_lt s f⟩,

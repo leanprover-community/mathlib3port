@@ -10,7 +10,7 @@ Some of the main results include
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -34,7 +34,7 @@ theorem nat_degree_comp_le : nat_degree (p.comp q) ≤ nat_degree p*nat_degree q
       rw [h0, nat_degree_zero] <;> exact Nat.zero_leₓ _
   else
     WithBot.coe_le_coe.1$
-      calc «expr↑ » (nat_degree (p.comp q)) = degree (p.comp q) := (degree_eq_nat_degree h0).symm 
+      calc ↑nat_degree (p.comp q) = degree (p.comp q) := (degree_eq_nat_degree h0).symm 
         _ = _ := congr_argₓ degree comp_eq_sum_left 
         _ ≤ _ := degree_sum_le _ _ 
         _ ≤ _ :=
@@ -53,14 +53,14 @@ theorem nat_degree_comp_le : nat_degree (p.comp q) ≤ nat_degree p*nat_degree q
               
         
 
--- error in Data.Polynomial.Degree.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem degree_pos_of_root {p : polynomial R} (hp : «expr ≠ »(p, 0)) (h : is_root p a) : «expr < »(0, degree p) :=
-«expr $ »(lt_of_not_ge, λ hlt, begin
-   have [] [] [":=", expr eq_C_of_degree_le_zero hlt],
-   rw ["[", expr is_root, ",", expr this, ",", expr eval_C, "]"] ["at", ident h],
-   simp [] [] ["only"] ["[", expr h, ",", expr ring_hom.map_zero, "]"] [] ["at", ident this],
-   exact [expr hp this]
- end)
+theorem degree_pos_of_root {p : Polynomial R} (hp : p ≠ 0) (h : is_root p a) : 0 < degree p :=
+  lt_of_not_geₓ$
+    fun hlt =>
+      by 
+        have  := eq_C_of_degree_le_zero hlt 
+        rw [is_root, this, eval_C] at h 
+        simp only [h, RingHom.map_zero] at this 
+        exact hp this
 
 theorem nat_degree_le_iff_coeff_eq_zero : p.nat_degree ≤ n ↔ ∀ N : ℕ, n < N → p.coeff N = 0 :=
   by 
@@ -139,20 +139,15 @@ theorem nat_degree_lt_coeff_mul (h : (p.nat_degree+q.nat_degree) < m+n) : (p*q).
 
 variable [Semiringₓ S]
 
--- error in Data.Polynomial.Degree.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nat_degree_pos_of_eval₂_root
-{p : polynomial R}
-(hp : «expr ≠ »(p, 0))
-(f : «expr →+* »(R, S))
-{z : S}
-(hz : «expr = »(eval₂ f z p, 0))
-(inj : ∀ x : R, «expr = »(f x, 0) → «expr = »(x, 0)) : «expr < »(0, nat_degree p) :=
-«expr $ »(lt_of_not_ge, λ hlt, begin
-   have [ident A] [":", expr «expr = »(p, C (p.coeff 0))] [":=", expr eq_C_of_nat_degree_le_zero hlt],
-   rw ["[", expr A, ",", expr eval₂_C, "]"] ["at", ident hz],
-   simp [] [] ["only"] ["[", expr inj (p.coeff 0) hz, ",", expr ring_hom.map_zero, "]"] [] ["at", ident A],
-   exact [expr hp A]
- end)
+theorem nat_degree_pos_of_eval₂_root {p : Polynomial R} (hp : p ≠ 0) (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
+  (inj : ∀ x : R, f x = 0 → x = 0) : 0 < nat_degree p :=
+  lt_of_not_geₓ$
+    fun hlt =>
+      by 
+        have A : p = C (p.coeff 0) := eq_C_of_nat_degree_le_zero hlt 
+        rw [A, eval₂_C] at hz 
+        simp only [inj (p.coeff 0) hz, RingHom.map_zero] at A 
+        exact hp A
 
 theorem degree_pos_of_eval₂_root {p : Polynomial R} (hp : p ≠ 0) (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
   (inj : ∀ x : R, f x = 0 → x = 0) : 0 < degree p :=

@@ -12,7 +12,7 @@ the limit of `f` as well as the dual.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u₁ u₂
 

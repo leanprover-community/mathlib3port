@@ -24,7 +24,7 @@ There are a handful of definitions in this file, given `X : Profinite`:
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 

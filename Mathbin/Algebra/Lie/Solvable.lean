@@ -1,6 +1,6 @@
-import Mathbin.Algebra.Lie.IdealOperations 
 import Mathbin.Algebra.Lie.Abelian 
-import Mathbin.Order.PreorderHom
+import Mathbin.Algebra.Lie.IdealOperations 
+import Mathbin.Order.Hom.Basic
 
 /-!
 # Solvable Lie algebras
@@ -76,27 +76,26 @@ theorem derived_series_of_ideal_add (k l : ℕ) : D (k+l) I = D k (D l I) :=
     ·
       rw [Nat.succ_add k l, derived_series_of_ideal_succ, derived_series_of_ideal_succ, ih]
 
--- error in Algebra.Lie.Solvable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[mono #[]]
-theorem derived_series_of_ideal_le
-{I J : lie_ideal R L}
-{k l : exprℕ()}
-(h₁ : «expr ≤ »(I, J))
-(h₂ : «expr ≤ »(l, k)) : «expr ≤ »(exprD() k I, exprD() l J) :=
-begin
-  revert [ident l],
-  induction [expr k] [] ["with", ident k, ident ih] []; intros [ident l, ident h₂],
-  { rw [expr nat.le_zero_iff] ["at", ident h₂],
-    rw ["[", expr h₂, ",", expr derived_series_of_ideal_zero, "]"] [],
-    exact [expr h₁] },
-  { have [ident h] [":", expr «expr ∨ »(«expr = »(l, k.succ), «expr ≤ »(l, k))] [],
-    by rwa ["[", expr le_iff_eq_or_lt, ",", expr nat.lt_succ_iff, "]"] ["at", ident h₂],
-    cases [expr h] [],
-    { rw ["[", expr h, ",", expr derived_series_of_ideal_succ, ",", expr derived_series_of_ideal_succ, "]"] [],
-      exact [expr lie_submodule.mono_lie _ _ _ _ (ih (le_refl k)) (ih (le_refl k))] },
-    { rw [expr derived_series_of_ideal_succ] [],
-      exact [expr le_trans (lie_submodule.lie_le_left _ _) (ih h)] } }
-end
+@[mono]
+theorem derived_series_of_ideal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I ≤ J) (h₂ : l ≤ k) : D k I ≤ D l J :=
+  by 
+    revert l 
+    induction' k with k ih <;> intro l h₂
+    ·
+      rw [Nat.le_zero_iff] at h₂ 
+      rw [h₂, derived_series_of_ideal_zero]
+      exact h₁
+    ·
+      have h : l = k.succ ∨ l ≤ k
+      ·
+        rwa [le_iff_eq_or_lt, Nat.lt_succ_iff] at h₂ 
+      cases h
+      ·
+        rw [h, derived_series_of_ideal_succ, derived_series_of_ideal_succ]
+        exact LieSubmodule.mono_lie _ _ _ _ (ih (le_reflₓ k)) (ih (le_reflₓ k))
+      ·
+        rw [derived_series_of_ideal_succ]
+        exact le_transₓ (LieSubmodule.lie_le_left _ _) (ih h)
 
 theorem derived_series_of_ideal_succ_le (k : ℕ) : D (k+1) I ≤ D k I :=
   derived_series_of_ideal_le (le_reflₓ I) k.le_succ
@@ -110,18 +109,15 @@ theorem derived_series_of_ideal_mono {I J : LieIdeal R L} (h : I ≤ J) (k : ℕ
 theorem derived_series_of_ideal_antitone {k l : ℕ} (h : l ≤ k) : D k I ≤ D l I :=
   derived_series_of_ideal_le (le_reflₓ I) h
 
--- error in Algebra.Lie.Solvable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem derived_series_of_ideal_add_le_add
-(J : lie_ideal R L)
-(k l : exprℕ()) : «expr ≤ »(exprD() «expr + »(k, l) «expr + »(I, J), «expr + »(exprD() k I, exprD() l J)) :=
-begin
-  let [ident D₁] [":", expr «expr →ₘ »(lie_ideal R L, lie_ideal R L)] [":=", expr { to_fun := λ I, «expr⁅ , ⁆»(I, I),
-     monotone' := λ I J h, lie_submodule.mono_lie I J I J h h }],
-  have [ident h₁] [":", expr ∀ I J : lie_ideal R L, «expr ≤ »(D₁ «expr ⊔ »(I, J), «expr ⊔ »(D₁ I, J))] [],
-  { simp [] [] [] ["[", expr lie_submodule.lie_le_right, ",", expr lie_submodule.lie_le_left, ",", expr le_sup_of_le_right, "]"] [] [] },
-  rw ["<-", expr D₁.iterate_sup_le_sup_iff] ["at", ident h₁],
-  exact [expr h₁ k l I J]
-end
+theorem derived_series_of_ideal_add_le_add (J : LieIdeal R L) (k l : ℕ) : D (k+l) (I+J) ≤ D k I+D l J :=
+  by 
+    let D₁ : LieIdeal R L →ₘ LieIdeal R L :=
+      { toFun := fun I => ⁅I,I⁆, monotone' := fun I J h => LieSubmodule.mono_lie I J I J h h }
+    have h₁ : ∀ I J : LieIdeal R L, D₁ (I⊔J) ≤ D₁ I⊔J
+    ·
+      simp [LieSubmodule.lie_le_right, LieSubmodule.lie_le_left, le_sup_of_le_right]
+    rw [←D₁.iterate_sup_le_sup_iff] at h₁ 
+    exact h₁ k l I J
 
 theorem derived_series_of_bot_eq_bot (k : ℕ) : derived_series_of_ideal R L k ⊥ = ⊥ :=
   by 
@@ -167,7 +163,7 @@ theorem derived_series_eq_bot_iff (k : ℕ) : derived_series R I k = ⊥ ↔ der
     rw [←derived_series_eq_derived_series_of_ideal_map, map_eq_bot_iff, ker_incl, eq_bot_iff]
 
 theorem derived_series_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derived_series R I k = ⊥)
-  (hJ : derived_series R J l = ⊥) : derived_series R («expr↥ » (I+J)) (k+l) = ⊥ :=
+  (hJ : derived_series R J l = ⊥) : derived_series R (↥I+J) (k+l) = ⊥ :=
   by 
     rw [LieIdeal.derived_series_eq_bot_iff] at hI hJ⊢
     rw [←le_bot_iff]
@@ -207,11 +203,10 @@ namespace LieAlgebra
 class is_solvable : Prop where 
   solvable : ∃ k, derived_series R L k = ⊥
 
-instance is_solvable_bot : is_solvable R («expr↥ » (⊥ : LieIdeal R L)) :=
+instance is_solvable_bot : is_solvable R (↥(⊥ : LieIdeal R L)) :=
   ⟨⟨0, @Subsingleton.elimₓ _ LieIdeal.subsingleton_of_bot _ ⊥⟩⟩
 
-instance is_solvable_add {I J : LieIdeal R L} [hI : is_solvable R I] [hJ : is_solvable R J] :
-  is_solvable R («expr↥ » (I+J)) :=
+instance is_solvable_add {I J : LieIdeal R L} [hI : is_solvable R I] [hJ : is_solvable R J] : is_solvable R (↥I+J) :=
   by 
     runTac 
       tactic.unfreeze_local_instances 
@@ -255,7 +250,7 @@ namespace LieAlgebra
 
 theorem solvable_iff_equiv_solvable (e : L' ≃ₗ⁅R⁆ L) : is_solvable R L' ↔ is_solvable R L :=
   by 
-    split  <;> intros h
+    constructor <;> intros h
     ·
       exact e.symm.injective.lie_algebra_is_solvable
     ·
@@ -274,25 +269,25 @@ instance (priority := 100) of_abelian_is_solvable [IsLieAbelian L] : is_solvable
 
 /-- The (solvable) radical of Lie algebra is the `Sup` of all solvable ideals. -/
 def radical :=
-  Sup { I:LieIdeal R L | is_solvable R I }
+  Sup { I : LieIdeal R L | is_solvable R I }
 
--- error in Algebra.Lie.Solvable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The radical of a Noetherian Lie algebra is solvable. -/
-instance radical_is_solvable [is_noetherian R L] : is_solvable R (radical R L) :=
-begin
-  have [ident hwf] [] [":=", expr lie_submodule.well_founded_of_noetherian R L L],
-  rw ["<-", expr complete_lattice.is_sup_closed_compact_iff_well_founded] ["at", ident hwf],
-  refine [expr hwf {I : lie_ideal R L | is_solvable R I} _ _],
-  { use [expr «expr⊥»()],
-    exact [expr lie_algebra.is_solvable_bot R L] },
-  { intros [ident I, ident J, ident hI, ident hJ],
-    apply [expr lie_algebra.is_solvable_add R L]; [exact [expr hI], exact [expr hJ]] }
-end
+instance radical_is_solvable [IsNoetherian R L] : is_solvable R (radical R L) :=
+  by 
+    have hwf := LieSubmodule.well_founded_of_noetherian R L L 
+    rw [←CompleteLattice.is_sup_closed_compact_iff_well_founded] at hwf 
+    refine' hwf { I : LieIdeal R L | is_solvable R I } _ _
+    ·
+      use ⊥
+      exact LieAlgebra.is_solvable_bot R L
+    ·
+      intro I J hI hJ 
+      apply LieAlgebra.is_solvable_add R L <;> [exact hI, exact hJ]
 
 /-- The `→` direction of this lemma is actually true without the `is_noetherian` assumption. -/
 theorem lie_ideal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) : is_solvable R I ↔ I ≤ radical R L :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       exact le_Sup h
     ·
@@ -305,12 +300,15 @@ theorem center_le_radical : center R L ≤ radical R L :=
       infer_instance 
   le_Sup h
 
-/-- Given a solvable Lie ideal `I` with derived series `I = D₀ ≥ D₁ ≥ ⋯ ≥ Dₖ = ⊥`, this is the
-natural number `k` (the number of inclusions).
-
-For a non-solvable ideal, the value is 0. -/
-noncomputable def derived_length_of_ideal (I : LieIdeal R L) : ℕ :=
-  Inf { k | derived_series_of_ideal R L k I = ⊥ }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      Given a solvable Lie ideal `I` with derived series `I = D₀ ≥ D₁ ≥ ⋯ ≥ Dₖ = ⊥`, this is the
+      natural number `k` (the number of inclusions).
+      
+      For a non-solvable ideal, the value is 0. -/
+    noncomputable
+  def derived_length_of_ideal ( I : LieIdeal R L ) : ℕ := Inf { k | derived_series_of_ideal R L k I = ⊥ }
 
 /-- The derived length of a Lie algebra is the derived length of its 'top' Lie ideal.
 
@@ -318,33 +316,43 @@ See also `lie_algebra.derived_length_eq_derived_length_of_ideal`. -/
 noncomputable abbrev derived_length : ℕ :=
   derived_length_of_ideal R L ⊤
 
--- error in Algebra.Lie.Solvable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem derived_series_of_derived_length_succ
-(I : lie_ideal R L)
-(k : exprℕ()) : «expr ↔ »(«expr = »(derived_length_of_ideal R L I, «expr + »(k, 1)), «expr ∧ »(is_lie_abelian (derived_series_of_ideal R L k I), «expr ≠ »(derived_series_of_ideal R L k I, «expr⊥»()))) :=
-begin
-  rw [expr abelian_iff_derived_succ_eq_bot] [],
-  let [ident s] [] [":=", expr {k | «expr = »(derived_series_of_ideal R L k I, «expr⊥»())}],
-  change [expr «expr ↔ »(«expr = »(Inf s, «expr + »(k, 1)), «expr ∧ »(«expr ∈ »(«expr + »(k, 1), s), «expr ∉ »(k, s)))] [] [],
-  have [ident hs] [":", expr ∀ k₁ k₂ : exprℕ(), «expr ≤ »(k₁, k₂) → «expr ∈ »(k₁, s) → «expr ∈ »(k₂, s)] [],
-  { intros [ident k₁, ident k₂, ident h₁₂, ident h₁],
-    suffices [] [":", expr «expr ≤ »(derived_series_of_ideal R L k₂ I, «expr⊥»())],
-    { exact [expr eq_bot_iff.mpr this] },
-    change [expr «expr = »(derived_series_of_ideal R L k₁ I, «expr⊥»())] [] ["at", ident h₁],
-    rw ["<-", expr h₁] [],
-    exact [expr derived_series_of_ideal_antitone I h₁₂] },
-  exact [expr nat.Inf_upward_closed_eq_succ_iff hs k]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  derived_series_of_derived_length_succ
+  ( I : LieIdeal R L ) ( k : ℕ )
+    :
+      derived_length_of_ideal R L I = k + 1
+        ↔
+        IsLieAbelian derived_series_of_ideal R L k I ∧ derived_series_of_ideal R L k I ≠ ⊥
+  :=
+    by
+      rw [ abelian_iff_derived_succ_eq_bot ]
+        let s := { k | derived_series_of_ideal R L k I = ⊥ }
+        change Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
+        have hs : ∀ k₁ k₂ : ℕ , k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s
+        ·
+          intro k₁ k₂ h₁₂ h₁
+            suffices : derived_series_of_ideal R L k₂ I ≤ ⊥
+            · exact eq_bot_iff.mpr this
+            change derived_series_of_ideal R L k₁ I = ⊥ at h₁
+            rw [ ← h₁ ]
+            exact derived_series_of_ideal_antitone I h₁₂
+        exact Nat.Inf_upward_closed_eq_succ_iff hs k
 
-theorem derived_length_eq_derived_length_of_ideal (I : LieIdeal R L) :
-  derived_length R I = derived_length_of_ideal R L I :=
-  by 
-    let s₁ := { k | derived_series R I k = ⊥ }
-    let s₂ := { k | derived_series_of_ideal R L k I = ⊥ }
-    change Inf s₁ = Inf s₂ 
-    congr 
-    ext k 
-    exact I.derived_series_eq_bot_iff k
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  derived_length_eq_derived_length_of_ideal
+  ( I : LieIdeal R L ) : derived_length R I = derived_length_of_ideal R L I
+  :=
+    by
+      let s₁ := { k | derived_series R I k = ⊥ }
+        let s₂ := { k | derived_series_of_ideal R L k I = ⊥ }
+        change Inf s₁ = Inf s₂
+        congr
+        ext k
+        exact I.derived_series_eq_bot_iff k
 
 variable {R L}
 
@@ -367,42 +375,44 @@ theorem abelian_derived_abelian_of_ideal (I : LieIdeal R L) : IsLieAbelian (deri
       rw [derived_series_of_derived_length_succ] at h 
       exact h.1
 
--- error in Algebra.Lie.Solvable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem derived_length_zero
-(I : lie_ideal R L)
-[hI : is_solvable R I] : «expr ↔ »(«expr = »(derived_length_of_ideal R L I, 0), «expr = »(I, «expr⊥»())) :=
-begin
-  let [ident s] [] [":=", expr {k | «expr = »(derived_series_of_ideal R L k I, «expr⊥»())}],
-  change [expr «expr ↔ »(«expr = »(Inf s, 0), _)] [] [],
-  have [ident hne] [":", expr «expr ≠ »(s, «expr∅»())] [],
-  { rw [expr set.ne_empty_iff_nonempty] [],
-    tactic.unfreeze_local_instances,
-    obtain ["⟨", ident k, ",", ident hk, "⟩", ":=", expr hI],
-    use [expr k],
-    rw ["[", expr derived_series_def, ",", expr lie_ideal.derived_series_eq_bot_iff, "]"] ["at", ident hk],
-    exact [expr hk] },
-  simp [] [] [] ["[", expr hne, "]"] [] []
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  derived_length_zero
+  ( I : LieIdeal R L ) [ hI : is_solvable R I ] : derived_length_of_ideal R L I = 0 ↔ I = ⊥
+  :=
+    by
+      let s := { k | derived_series_of_ideal R L k I = ⊥ }
+        change Inf s = 0 ↔ _
+        have hne : s ≠ ∅
+        ·
+          rw [ Set.ne_empty_iff_nonempty ]
+            runTac tactic.unfreeze_local_instances
+            obtain ⟨ k , hk ⟩ := hI
+            use k
+            rw [ derived_series_def , LieIdeal.derived_series_eq_bot_iff ] at hk
+            exact hk
+        simp [ hne ]
 
--- error in Algebra.Lie.Solvable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem abelian_of_solvable_ideal_eq_bot_iff
-(I : lie_ideal R L)
-[h : is_solvable R I] : «expr ↔ »(«expr = »(derived_abelian_of_ideal I, «expr⊥»()), «expr = »(I, «expr⊥»())) :=
-begin
-  dunfold [ident derived_abelian_of_ideal] [],
-  cases [expr h, ":", expr derived_length_of_ideal R L I] ["with", ident k],
-  { rw [expr derived_length_zero] ["at", ident h],
-    rw [expr h] [],
-    refl },
-  { obtain ["⟨", ident h₁, ",", ident h₂, "⟩", ":=", expr (derived_series_of_derived_length_succ R L I k).mp h],
-    have [ident h₃] [":", expr «expr ≠ »(I, «expr⊥»())] [],
-    { intros [ident contra],
-      apply [expr h₂],
-      rw [expr contra] [],
-      apply [expr derived_series_of_bot_eq_bot] },
-    change [expr «expr ↔ »(«expr = »(derived_series_of_ideal R L k I, «expr⊥»()), «expr = »(I, «expr⊥»()))] [] [],
-    split; contradiction }
-end
+theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : is_solvable R I] :
+  derived_abelian_of_ideal I = ⊥ ↔ I = ⊥ :=
+  by 
+    dunfold derived_abelian_of_ideal 
+    cases' h : derived_length_of_ideal R L I with k
+    ·
+      rw [derived_length_zero] at h 
+      rw [h]
+      rfl
+    ·
+      obtain ⟨h₁, h₂⟩ := (derived_series_of_derived_length_succ R L I k).mp h 
+      have h₃ : I ≠ ⊥
+      ·
+        intro contra 
+        apply h₂ 
+        rw [contra]
+        apply derived_series_of_bot_eq_bot 
+      change derived_series_of_ideal R L k I = ⊥ ↔ I = ⊥
+      constructor <;> contradiction
 
 end LieAlgebra
 

@@ -93,7 +93,7 @@ def of {f : M → N} (h : IsMonoidHom f) : M →* N :=
 variable {mM mN}
 
 @[simp, toAdditive]
-theorem coe_of {f : M → N} (hf : IsMonoidHom f) : «expr⇑ » (MonoidHom.of hf) = f :=
+theorem coe_of {f : M → N} (hf : IsMonoidHom f) : ⇑MonoidHom.of hf = f :=
   rfl
 
 @[toAdditive]
@@ -329,7 +329,7 @@ def map' {f : M → N} (hf : IsMonoidHom f) : Units M →* Units N :=
   map (MonoidHom.of hf)
 
 @[simp]
-theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : Units M) : «expr↑ » ((map' hf : Units M → Units N) x) = f x :=
+theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : Units M) : ↑(map' hf : Units M → Units N) x = f x :=
   rfl
 
 theorem coe_is_monoid_hom : IsMonoidHom (coeₓ : Units M → M) :=

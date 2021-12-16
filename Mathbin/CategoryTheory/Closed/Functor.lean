@@ -39,7 +39,7 @@ variable [has_finite_products C] [has_finite_products D]
 
 variable (F : C ⥤ D) {L : D ⥤ C}
 
-noncomputable theory
+noncomputable section 
 
 /--
 The Frobenius morphism for an adjunction `L ⊣ F` at `A` is given by the morphism
@@ -60,7 +60,7 @@ If `F` is full and faithful and has a left adjoint `L` which preserves binary pr
 Frobenius morphism is an isomorphism.
 -/
 instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : C)
-  [preserves_limits_of_shape (discrete walking_pair) L] [full F] [faithful F] : is_iso (frobenius_morphism F h A) :=
+  [preserves_limits_of_shape (discrete.{v} walking_pair) L] [full F] [faithful F] : is_iso (frobenius_morphism F h A) :=
   by 
     apply nat_iso.is_iso_of_is_iso_app _ 
     intro B 
@@ -69,7 +69,7 @@ instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : 
 
 variable [cartesian_closed C] [cartesian_closed D]
 
-variable [preserves_limits_of_shape (discrete walking_pair) F]
+variable [preserves_limits_of_shape (discrete.{v} walking_pair) F]
 
 /--
 The exponential comparison map.
@@ -125,7 +125,7 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
       (frobenius_morphism F h A) =
     exp_comparison F A :=
   by 
-    rw [←Equiv.eq_symm_apply]
+    rw [←Equivₓ.eq_symm_apply]
     ext B : 2
     dsimp [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp]
     simp only [id_comp, comp_id]
@@ -167,7 +167,7 @@ TODO: Show the converse, that if `F` is cartesian closed and its left adjoint pr
 products, then it is full and faithful.
 -/
 def cartesian_closed_functor_of_left_adjoint_preserves_binary_products (h : L ⊣ F) [full F] [faithful F]
-  [preserves_limits_of_shape (discrete walking_pair) L] : cartesian_closed_functor F :=
+  [preserves_limits_of_shape (discrete.{v} walking_pair) L] : cartesian_closed_functor F :=
   { comparison_iso := fun A => exp_comparison_iso_of_frobenius_morphism_iso F h _ }
 
 end CategoryTheory

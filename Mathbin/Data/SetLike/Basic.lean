@@ -105,9 +105,11 @@ theorem coe_sort_coe : ((p : Set B) : Type _) = p :=
 
 variable {p q}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
 protected theorem exists {q : p → Prop} : (∃ x, q x) ↔ ∃ (x : _)(_ : x ∈ p), q ⟨x, ‹_›⟩ :=
   SetCoe.exists
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
 protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀ x _ : x ∈ p, q ⟨x, ‹_›⟩ :=
   SetCoe.forall
 
@@ -174,12 +176,15 @@ theorem coe_ssubset_coe {S T : A} : (S : Set B) ⊂ T ↔ S < T :=
 theorem coe_strict_mono : StrictMono (coeₓ : A → Set B) :=
   fun a b => coe_ssubset_coe.mpr
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
 theorem not_le_iff_exists : ¬p ≤ q ↔ ∃ (x : _)(_ : x ∈ p), x ∉ q :=
   Set.not_subset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » q)
 theorem exists_of_lt : p < q → ∃ (x : _)(_ : x ∈ q), x ∉ p :=
   Set.exists_of_ssubset
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » q)
 theorem lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ (x : _)(_ : x ∈ q), x ∉ p :=
   by 
     rw [lt_iff_le_not_leₓ, not_le_iff_exists]

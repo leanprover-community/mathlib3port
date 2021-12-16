@@ -91,46 +91,46 @@ def Sym2 (α : Type u) :=
 namespace Sym2
 
 @[elab_as_eliminator]
-protected theorem ind {f : Sym2 α → Prop} (h : ∀ x y, f («expr⟦ ⟧» (x, y))) : ∀ i, f i :=
+protected theorem ind {f : Sym2 α → Prop} (h : ∀ x y, f (⟦(x, y)⟧)) : ∀ i, f i :=
   Quotientₓ.ind$
     Prod.rec$
       by 
         exact h
 
 @[elab_as_eliminator]
-protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y, f («expr⟦ ⟧» (x, y))) : f i :=
+protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y, f (⟦(x, y)⟧)) : f i :=
   i.ind hf
 
-protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f («expr⟦ ⟧» (x, y)) :=
+protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f (⟦(x, y)⟧) :=
   (surjective_quotient_mk _).exists.trans Prod.exists
 
-protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ x : Sym2 α, f x) ↔ ∀ x y, f («expr⟦ ⟧» (x, y)) :=
+protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ x : Sym2 α, f x) ↔ ∀ x y, f (⟦(x, y)⟧) :=
   (surjective_quotient_mk _).forall.trans Prod.forall
 
-theorem eq_swap {a b : α} : «expr⟦ ⟧» (a, b) = «expr⟦ ⟧» (b, a) :=
+theorem eq_swap {a b : α} : ⟦(a, b)⟧ = ⟦(b, a)⟧ :=
   by 
     rw [Quotientₓ.eq]
     apply rel.swap
 
-theorem congr_right {a b c : α} : «expr⟦ ⟧» (a, b) = «expr⟦ ⟧» (a, c) ↔ b = c :=
+theorem congr_right {a b c : α} : ⟦(a, b)⟧ = ⟦(a, c)⟧ ↔ b = c :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rw [Quotientₓ.eq] at h 
       cases h <;> rfl 
     rw [h]
 
-theorem congr_left {a b c : α} : «expr⟦ ⟧» (b, a) = «expr⟦ ⟧» (c, a) ↔ b = c :=
+theorem congr_left {a b c : α} : ⟦(b, a)⟧ = ⟦(c, a)⟧ ↔ b = c :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rw [Quotientₓ.eq] at h 
       cases h <;> rfl 
     rw [h]
 
-theorem eq_iff {x y z w : α} : «expr⟦ ⟧» (x, y) = «expr⟦ ⟧» (z, w) ↔ x = z ∧ y = w ∨ x = w ∧ y = z :=
+theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w ∨ x = w ∧ y = z :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rw [Quotientₓ.eq] at h 
       cases h <;> tidy
@@ -144,7 +144,7 @@ functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more c
 def lift {β : Type _} : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } ≃ (Sym2 α → β) :=
   { toFun :=
       fun f =>
-        Quotientₓ.lift (uncurry («expr↑ » f))$
+        Quotientₓ.lift (uncurry (↑f))$
           by 
             rintro _ _ ⟨⟩
             exacts[rfl, f.prop _ _],
@@ -159,12 +159,12 @@ def lift {β : Type _} : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = 
 
 @[simp]
 theorem lift_mk {β : Type _} (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a₁ a₂ : α) :
-  lift f («expr⟦ ⟧» (a₁, a₂)) = (f : α → α → β) a₁ a₂ :=
+  lift f (⟦(a₁, a₂)⟧) = (f : α → α → β) a₁ a₂ :=
   rfl
 
 @[simp]
 theorem coe_lift_symm_apply {β : Type _} (F : Sym2 α → β) (a₁ a₂ : α) :
-  (lift.symm F : α → α → β) a₁ a₂ = F («expr⟦ ⟧» (a₁, a₂)) :=
+  (lift.symm F : α → α → β) a₁ a₂ = F (⟦(a₁, a₂)⟧) :=
   rfl
 
 /--
@@ -193,7 +193,7 @@ theorem map_map {α β γ : Type _} {g : β → γ} {f : α → β} (x : Sym2 α
     tidy
 
 @[simp]
-theorem map_pair_eq {α β : Type _} (f : α → β) (x y : α) : map f («expr⟦ ⟧» (x, y)) = «expr⟦ ⟧» (f x, f y) :=
+theorem map_pair_eq {α β : Type _} (f : α → β) (x y : α) : map f (⟦(x, y)⟧) = ⟦(f x, f y)⟧ :=
   rfl
 
 theorem map.injective {α β : Type _} {f : α → β} (hinj : injective f) : injective (map f) :=
@@ -217,15 +217,15 @@ symmetric square.  From this point of view, the symmetric square is the subtype 
 cardinality-two multisets on `α`.
 -/
 def mem (x : α) (z : Sym2 α) : Prop :=
-  ∃ y : α, z = «expr⟦ ⟧» (x, y)
+  ∃ y : α, z = ⟦(x, y)⟧
 
 instance : HasMem α (Sym2 α) :=
   ⟨mem⟩
 
-theorem mk_has_mem (x y : α) : x ∈ «expr⟦ ⟧» (x, y) :=
+theorem mk_has_mem (x y : α) : x ∈ ⟦(x, y)⟧ :=
   ⟨y, rfl⟩
 
-theorem mk_has_mem_right (x y : α) : y ∈ «expr⟦ ⟧» (x, y) :=
+theorem mk_has_mem_right (x y : α) : y ∈ ⟦(x, y)⟧ :=
   by 
     rw [eq_swap]
     apply mk_has_mem
@@ -238,12 +238,12 @@ noncomputable def mem.other {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
   Classical.some h
 
 @[simp]
-theorem mem_other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : «expr⟦ ⟧» (a, h.other) = z :=
+theorem mem_other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z :=
   by 
     erw [←Classical.some_spec h]
 
 @[simp]
-theorem mem_iff {a b c : α} : a ∈ «expr⟦ ⟧» (b, c) ↔ a = b ∨ a = c :=
+theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
   { mp :=
       by 
         rintro ⟨_, h⟩
@@ -261,9 +261,9 @@ theorem mem_other_mem {a : α} {z : Sym2 α} (h : a ∈ z) : h.other ∈ z :=
     convert mk_has_mem_right a h.other 
     rw [mem_other_spec h]
 
-theorem elems_iff_eq {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y ∈ z ↔ z = «expr⟦ ⟧» (x, y) :=
+theorem elems_iff_eq {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y ∈ z ↔ z = ⟦(x, y)⟧ :=
   by 
-    split 
+    constructor
     ·
       refine' Quotientₓ.recOnSubsingleton z _ 
       rintro ⟨z₁, z₂⟩ ⟨hx, hy⟩
@@ -279,24 +279,32 @@ theorem elems_iff_eq {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y �
       rintro rfl 
       simp 
 
--- error in Data.Sym.Sym2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[ext #[]]
-theorem sym2_ext (z z' : sym2 α) (h : ∀ x, «expr ↔ »(«expr ∈ »(x, z), «expr ∈ »(x, z'))) : «expr = »(z, z') :=
-begin
-  refine [expr quotient.rec_on_subsingleton z (λ w, _) h],
-  refine [expr quotient.rec_on_subsingleton z' (λ w', _)],
-  intro [ident h],
-  cases [expr w] ["with", ident x, ident y],
-  cases [expr w'] ["with", ident x', ident y'],
-  simp [] [] ["only"] ["[", expr mem_iff, "]"] [] ["at", ident h],
-  apply [expr eq_iff.mpr],
-  have [ident hx] [] [":=", expr h x],
-  have [ident hy] [] [":=", expr h y],
-  have [ident hx'] [] [":=", expr h x'],
-  have [ident hy'] [] [":=", expr h y'],
-  simp [] [] ["only"] ["[", expr true_iff, ",", expr true_or, ",", expr eq_self_iff_true, ",", expr iff_true, ",", expr or_true, "]"] [] ["at", ident hx, ident hy, ident hx', ident hy'],
-  cases [expr hx] []; subst [expr x]; cases [expr hy] []; subst [expr y]; cases [expr hx'] []; try { subst [expr x'] }; cases [expr hy'] []; try { subst [expr y'] }; simp [] [] ["only"] ["[", expr eq_self_iff_true, ",", expr and_self, ",", expr or_self, ",", expr true_or, ",", expr or_true, "]"] [] []
-end
+@[ext]
+theorem sym2_ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z' :=
+  by 
+    refine' Quotientₓ.recOnSubsingleton z (fun w => _) h 
+    refine' Quotientₓ.recOnSubsingleton z' fun w' => _ 
+    intro h 
+    cases' w with x y 
+    cases' w' with x' y' 
+    simp only [mem_iff] at h 
+    apply eq_iff.mpr 
+    have hx := h x 
+    have hy := h y 
+    have hx' := h x' 
+    have hy' := h y' 
+    simp only [true_iffₓ, true_orₓ, eq_self_iff_true, iff_trueₓ, or_trueₓ] at hx hy hx' hy' 
+    cases hx <;>
+      subst x <;>
+        cases hy <;>
+          subst y <;>
+            cases hx' <;>
+              try 
+                  subst x' <;>
+                cases hy' <;>
+                  try 
+                      subst y' <;>
+                    simp only [eq_self_iff_true, and_selfₓ, or_selfₓ, true_orₓ, or_trueₓ]
 
 instance mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x ∈ z) :=
   Quotientₓ.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidableOfIff' _ mem_iff
@@ -308,7 +316,7 @@ A type `α` is naturally included in the diagonal of `α × α`, and this functi
 of this diagonal in `sym2 α`.
 -/
 def diag (x : α) : Sym2 α :=
-  «expr⟦ ⟧» (x, x)
+  ⟦(x, x)⟧
 
 theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) :=
   fun x y h =>
@@ -321,11 +329,11 @@ A predicate for testing whether an element of `sym2 α` is on the diagonal.
 def is_diag : Sym2 α → Prop :=
   lift ⟨Eq, fun _ _ => propext eq_comm⟩
 
-theorem is_diag_iff_eq {x y : α} : is_diag («expr⟦ ⟧» (x, y)) ↔ x = y :=
+theorem is_diag_iff_eq {x y : α} : is_diag (⟦(x, y)⟧) ↔ x = y :=
   Iff.rfl
 
 @[simp]
-theorem is_diag_iff_proj_eq (z : α × α) : is_diag («expr⟦ ⟧» z) ↔ z.1 = z.2 :=
+theorem is_diag_iff_proj_eq (z : α × α) : is_diag (⟦z⟧) ↔ z.1 = z.2 :=
   Prod.recOn z$ fun _ _ => is_diag_iff_eq
 
 @[simp]
@@ -348,16 +356,14 @@ instance is_diag.decidable_pred (α : Type u) [DecidableEq α] : DecidablePred (
     erw [is_diag_iff_proj_eq]
     infer_instance
 
--- error in Data.Sym.Sym2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_other_ne {a : α} {z : sym2 α} (hd : «expr¬ »(is_diag z)) (h : «expr ∈ »(a, z)) : «expr ≠ »(h.other, a) :=
-begin
-  intro [ident hn],
-  apply [expr hd],
-  have [ident h'] [] [":=", expr sym2.mem_other_spec h],
-  rw [expr hn] ["at", ident h'],
-  rw ["<-", expr h'] [],
-  simp [] [] [] [] [] []
-end
+theorem mem_other_ne {a : α} {z : Sym2 α} (hd : ¬is_diag z) (h : a ∈ z) : h.other ≠ a :=
+  by 
+    intro hn 
+    apply hd 
+    have h' := Sym2.mem_other_spec h 
+    rw [hn] at h' 
+    rw [←h']
+    simp 
 
 section Relations
 
@@ -374,11 +380,11 @@ def from_rel (sym : Symmetric r) : Set (Sym2 α) :=
   SetOf (lift ⟨r, fun x y => propext ⟨fun h => Sym h, fun h => Sym h⟩⟩)
 
 @[simp]
-theorem from_rel_proj_prop {sym : Symmetric r} {z : α × α} : «expr⟦ ⟧» z ∈ from_rel Sym ↔ r z.1 z.2 :=
+theorem from_rel_proj_prop {sym : Symmetric r} {z : α × α} : ⟦z⟧ ∈ from_rel Sym ↔ r z.1 z.2 :=
   Iff.rfl
 
 @[simp]
-theorem from_rel_prop {sym : Symmetric r} {a b : α} : «expr⟦ ⟧» (a, b) ∈ from_rel Sym ↔ r a b :=
+theorem from_rel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ from_rel Sym ↔ r a b :=
   Iff.rfl
 
 theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z ∈ from_rel Sym → ¬is_diag z :=
@@ -424,7 +430,7 @@ private theorem perm_card_two_iff {α : Type _} {a₁ b₁ a₂ b₂ : α} :
 /--
 The symmetric square is equivalent to length-2 vectors up to permutations.
 -/
-def sym2_equiv_sym' {α : Type _} : Equiv (Sym2 α) (sym' α 2) :=
+def sym2_equiv_sym' {α : Type _} : Equivₓ (Sym2 α) (sym' α 2) :=
   { toFun :=
       Quotientₓ.map (fun x : α × α => ⟨[x.1, x.2], rfl⟩)
         (by 
@@ -492,7 +498,7 @@ def sym2_equiv_sym' {α : Type _} : Equiv (Sym2 α) (sym' α 2) :=
 The symmetric square is equivalent to the second symmetric power.
 -/
 def equiv_sym (α : Type _) : Sym2 α ≃ Sym α 2 :=
-  Equiv.trans sym2_equiv_sym' sym_equiv_sym'.symm
+  Equivₓ.trans sym2_equiv_sym' sym_equiv_sym'.symm
 
 /--
 The symmetric square is equivalent to multisets of cardinality
@@ -512,7 +518,7 @@ An algorithm for computing `sym2.rel`.
 def rel_bool [DecidableEq α] (x y : α × α) : Bool :=
   if x.1 = y.1 then x.2 = y.2 else if x.1 = y.2 then x.2 = y.1 else ff
 
-theorem rel_bool_spec [DecidableEq α] (x y : α × α) : «expr↥ » (rel_bool x y) ↔ rel α x y :=
+theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥rel_bool x y ↔ rel α x y :=
   by 
     cases' x with x₁ x₂ 
     cases' y with y₁ y₂ 
@@ -524,7 +530,7 @@ theorem rel_bool_spec [DecidableEq α] (x y : α × α) : «expr↥ » (rel_bool
       cases h <;> cc 
     all_goals 
       subst x₁ 
-      split  <;> intro h1
+      constructor <;> intro h1
       ·
         subst h1 <;> apply Sym2.Rel.swap
       ·
@@ -542,61 +548,61 @@ A function that gives the other element of a pair given one of the elements.  Us
 private def pair_other [DecidableEq α] (a : α) (z : α × α) : α :=
   if a = z.1 then z.2 else z.1
 
--- error in Data.Sym.Sym2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Get the other element of the unordered pair using the decidable equality.
 This is the computable version of `mem.other`.
--/ def mem.other' [decidable_eq α] {a : α} {z : sym2 α} (h : «expr ∈ »(a, z)) : α :=
-quot.rec (λ
- x
- h', pair_other a x) (begin
-   clear [ident h, ident z],
-   intros [ident x, ident y, ident h],
-   ext [] [ident hy] [],
-   convert_to [expr «expr = »(pair_other a x, _)] [],
-   { have [ident h'] [":", expr ∀
-      {c
-       e
-       h}, «expr = »(@eq.rec _ «expr⟦ ⟧»(x) (λ s, «expr ∈ »(a, s) → α) (λ _, pair_other a x) c e h, pair_other a x)] [],
-     { intros ["_", ident e, "_"],
-       subst [expr e] },
-     apply [expr h'] },
-   have [ident h'] [] [":=", expr (rel_bool_spec x y).mpr h],
-   cases [expr x] ["with", ident x₁, ident x₂],
-   cases [expr y] ["with", ident y₁, ident y₂],
-   cases [expr mem_iff.mp hy] ["with", ident hy']; subst [expr a]; dsimp [] ["[", expr rel_bool, "]"] [] ["at", ident h']; split_ifs ["at", ident h'] []; try { rw [expr bool.of_to_bool_iff] ["at", ident h'],
-     subst [expr x₁],
-     subst [expr x₂] }; dsimp [] ["[", expr pair_other, "]"] [] [],
-   simp [] [] ["only"] ["[", expr ne.symm h_1, ",", expr if_true, ",", expr eq_self_iff_true, ",", expr if_false, "]"] [] [],
-   exfalso,
-   exact [expr bool.not_ff h'],
-   simp [] [] ["only"] ["[", expr h_1, ",", expr if_true, ",", expr eq_self_iff_true, ",", expr if_false, "]"] [] [],
-   exfalso,
-   exact [expr bool.not_ff h']
- end) z h
+-/
+def mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
+  Quot.recₓ (fun x h' => pair_other a x)
+    (by 
+      clear h z 
+      intro x y h 
+      ext hy 
+      convertTo pair_other a x = _
+      ·
+        have h' : ∀ {c e h}, @Eq.ndrec _ (⟦x⟧) (fun s => a ∈ s → α) (fun _ => pair_other a x) c e h = pair_other a x
+        ·
+          intro _ e _ 
+          subst e 
+        apply h' 
+      have h' := (rel_bool_spec x y).mpr h 
+      cases' x with x₁ x₂ 
+      cases' y with y₁ y₂ 
+      cases' mem_iff.mp hy with hy' <;>
+        subst a <;>
+          dsimp [rel_bool]  at h' <;>
+            splitIfs  at h' <;>
+              try 
+                  rw [Bool.of_to_bool_iff] at h' 
+                  subst x₁ 
+                  subst x₂ <;>
+                dsimp [pair_other]
+      simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
+      exfalso 
+      exact Bool.not_ff h' 
+      simp only [h_1, if_true, eq_self_iff_true, if_false]
+      exfalso 
+      exact Bool.not_ff h')
+    z h
 
--- error in Data.Sym.Sym2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mem_other_spec'
-[decidable_eq α]
-{a : α}
-{z : sym2 α}
-(h : «expr ∈ »(a, z)) : «expr = »(«expr⟦ ⟧»((a, h.other')), z) :=
-begin
-  induction [expr z] [] [] [],
-  cases [expr z] ["with", ident x, ident y],
-  have [ident h'] [] [":=", expr mem_iff.mp h],
-  dsimp [] ["[", expr mem.other', ",", expr quot.rec, ",", expr pair_other, "]"] [] [],
-  cases [expr h'] []; subst [expr a],
-  { simp [] [] ["only"] ["[", expr if_true, ",", expr eq_self_iff_true, "]"] [] [],
-    refl },
-  { split_ifs [] [],
-    subst [expr h_1],
-    refl,
-    rw [expr eq_swap] [],
-    refl },
-  refl
-end
+theorem mem_other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other')⟧ = z :=
+  by 
+    induction z 
+    cases' z with x y 
+    have h' := mem_iff.mp h 
+    dsimp [mem.other', Quot.recₓ, pair_other]
+    cases h' <;> subst a
+    ·
+      simp only [if_true, eq_self_iff_true]
+      rfl
+    ·
+      splitIfs 
+      subst h_1 
+      rfl 
+      rw [eq_swap]
+      rfl 
+    rfl
 
 @[simp]
 theorem other_eq_other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : h.other = h.other' :=
@@ -636,7 +642,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
     induction z using Quotientₓ.induction_on 
     rcases z with ⟨x, y⟩
     simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.exists, mem_product]
-    split 
+    constructor
     ·
       rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
       rw [←h, Sym2.is_diag_iff_eq] at hab 
@@ -653,7 +659,7 @@ theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
     induction z using Quotientₓ.induction_on 
     rcases z with ⟨x, y⟩
     simp only [mem_image, mem_off_diag, exists_prop, mem_filter, Prod.exists, mem_product]
-    split 
+    constructor
     ·
       rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
       rw [←h, Sym2.is_diag_iff_eq] at hab 

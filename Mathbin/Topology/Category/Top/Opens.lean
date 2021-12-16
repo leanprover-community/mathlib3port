@@ -143,12 +143,12 @@ theorem map_id_obj' U p : (map (𝟙 X)).obj ⟨U, p⟩ = ⟨U, p⟩ :=
   rfl
 
 @[simp]
-theorem map_id_obj_unop (U : «expr ᵒᵖ» (opens X)) : (map (𝟙 X)).obj (unop U) = unop U :=
+theorem map_id_obj_unop (U : opens Xᵒᵖ) : (map (𝟙 X)).obj (unop U) = unop U :=
   let ⟨_, _⟩ := U.unop 
   rfl
 
 @[simp]
-theorem op_map_id_obj (U : «expr ᵒᵖ» (opens X)) : (map (𝟙 X)).op.obj U = U :=
+theorem op_map_id_obj (U : opens Xᵒᵖ) : (map (𝟙 X)).op.obj U = U :=
   by 
     simp 
 
@@ -252,6 +252,29 @@ theorem map_iso_hom_app (f g : X ⟶ Y) (h : f = g) (U : opens Y) :
 theorem map_iso_inv_app (f g : X ⟶ Y) (h : f = g) (U : opens Y) :
   (map_iso f g h).inv.app U = eq_to_hom (congr_funₓ (congr_argₓ functor.obj (congr_argₓ map h.symm)) U) :=
   rfl
+
+/-- A homeomorphism of spaces gives an equivalence of categories of open sets. -/
+@[simps]
+def map_map_iso {X Y : Top.{u}} (H : X ≅ Y) : opens Y ≌ opens X :=
+  { Functor := map H.hom, inverse := map H.inv,
+    unitIso :=
+      nat_iso.of_components
+        (fun U =>
+          eq_to_iso
+            (by 
+              simp [map, Set.preimage_preimage]))
+        (by 
+          intro _ _ _ 
+          simp ),
+    counitIso :=
+      nat_iso.of_components
+        (fun U =>
+          eq_to_iso
+            (by 
+              simp [map, Set.preimage_preimage]))
+        (by 
+          intro _ _ _ 
+          simp ) }
 
 end TopologicalSpace.Opens
 

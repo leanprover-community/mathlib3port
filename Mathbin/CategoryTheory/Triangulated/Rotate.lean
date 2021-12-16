@@ -12,7 +12,7 @@ It also shows that rotation gives an equivalence on the category of triangles.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 

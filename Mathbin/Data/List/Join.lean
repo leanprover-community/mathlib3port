@@ -18,6 +18,7 @@ attribute [simp] join
 theorem join_nil : [([] : List α)].join = [] :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » L)
 @[simp]
 theorem join_eq_nil : ∀ {L : List (List α)}, join L = [] ↔ ∀ l _ : l ∈ L, l = []
 | [] => iff_of_true rfl (forall_mem_nil _)
@@ -87,39 +88,35 @@ theorem drop_sum_join (L : List (List α)) (i : ℕ) : L.join.drop ((L.map lengt
       simp 
     simp [drop_append, L_ih]
 
--- error in Data.List.Join: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Taking only the first `i+1` elements in a list, and then dropping the first `i` ones, one is
 left with a list of length `1` made of the `i`-th element of the original list. -/
-theorem drop_take_succ_eq_cons_nth_le
-(L : list α)
-{i : exprℕ()}
-(hi : «expr < »(i, L.length)) : «expr = »((L.take «expr + »(i, 1)).drop i, «expr[ , ]»([nth_le L i hi])) :=
-begin
-  induction [expr L] [] [] ["generalizing", ident i],
-  { simp [] [] ["only"] ["[", expr length, "]"] [] ["at", ident hi],
-    exact [expr (nat.not_succ_le_zero i hi).elim] },
-  cases [expr i] [],
-  { simp [] [] [] [] [] [] },
-  have [] [":", expr «expr < »(i, L_tl.length)] [],
-  { simp [] [] [] [] [] ["at", ident hi],
-    exact [expr nat.lt_of_succ_lt_succ hi] },
-  simp [] [] [] ["[", expr L_ih this, "]"] [] [],
-  refl
-end
+theorem drop_take_succ_eq_cons_nth_le (L : List α) {i : ℕ} (hi : i < L.length) :
+  (L.take (i+1)).drop i = [nth_le L i hi] :=
+  by 
+    induction L generalizing i
+    ·
+      simp only [length] at hi 
+      exact (Nat.not_succ_le_zeroₓ i hi).elim 
+    cases i
+    ·
+      simp 
+    have  : i < L_tl.length
+    ·
+      simp  at hi 
+      exact Nat.lt_of_succ_lt_succₓ hi 
+    simp [L_ih this]
+    rfl
 
--- error in Data.List.Join: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a join of sublists, taking the slice between the indices `A` and `B - 1` gives back the
 original sublist of index `i` if `A` is the sum of the lenghts of sublists of index `< i`, and
 `B` is the sum of the lengths of sublists of index `≤ i`. -/
-theorem drop_take_succ_join_eq_nth_le
-(L : list (list α))
-{i : exprℕ()}
-(hi : «expr < »(i, L.length)) : «expr = »((L.join.take ((L.map length).take «expr + »(i, 1)).sum).drop ((L.map length).take i).sum, nth_le L i hi) :=
-begin
-  have [] [":", expr «expr = »((L.map length).take i, ((L.take «expr + »(i, 1)).map length).take i)] [],
-  by simp [] [] [] ["[", expr map_take, ",", expr take_take, "]"] [] [],
-  simp [] [] [] ["[", expr take_sum_join, ",", expr this, ",", expr drop_sum_join, ",", expr drop_take_succ_eq_cons_nth_le _ hi, "]"] [] []
-end
+theorem drop_take_succ_join_eq_nth_le (L : List (List α)) {i : ℕ} (hi : i < L.length) :
+  (L.join.take ((L.map length).take (i+1)).Sum).drop ((L.map length).take i).Sum = nth_le L i hi :=
+  by 
+    have  : (L.map length).take i = ((L.take (i+1)).map length).take i
+    ·
+      simp [map_take, take_take]
+    simp [take_sum_join, this, drop_sum_join, drop_take_succ_eq_cons_nth_le _ hi]
 
 /-- Auxiliary lemma to control elements in a join. -/
 theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nth_le L i hi).length) :
@@ -127,19 +124,15 @@ theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.len
   by 
     simp [hi, sum_take_succ, hj]
 
--- error in Data.List.Join: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Auxiliary lemma to control elements in a join. -/
-theorem sum_take_map_length_lt2
-(L : list (list α))
-{i j : exprℕ()}
-(hi : «expr < »(i, L.length))
-(hj : «expr < »(j, (nth_le L i hi).length)) : «expr < »(«expr + »(((L.map length).take i).sum, j), L.join.length) :=
-begin
-  convert [] [expr lt_of_lt_of_le (sum_take_map_length_lt1 L hi hj) (monotone_sum_take _ hi)] [],
-  have [] [":", expr «expr = »(L.length, (L.map length).length)] [],
-  by simp [] [] [] [] [] [],
-  simp [] [] [] ["[", expr this, ",", "-", ident length_map, "]"] [] []
-end
+theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nth_le L i hi).length) :
+  (((L.map length).take i).Sum+j) < L.join.length :=
+  by 
+    convert lt_of_lt_of_leₓ (sum_take_map_length_lt1 L hi hj) (monotone_sum_take _ hi)
+    have  : L.length = (L.map length).length
+    ·
+      simp 
+    simp [this, -length_map]
 
 /-- The `n`-th element in a join of sublists is the `j`-th element of the `i`th sublist,
 where `n` can be obtained in terms of `i` and `j` by adding the lengths of all the sublists
@@ -150,22 +143,25 @@ theorem nth_le_join (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j
     rw [nth_le_take L.join (sum_take_map_length_lt2 L hi hj) (sum_take_map_length_lt1 L hi hj), nth_le_drop,
       nth_le_of_eq (drop_take_succ_join_eq_nth_le L hi)]
 
--- error in Data.List.Join: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two lists of sublists are equal iff their joins coincide, as well as the lengths of the
 sublists. -/
-theorem eq_iff_join_eq
-(L
- L' : list (list α)) : «expr ↔ »(«expr = »(L, L'), «expr ∧ »(«expr = »(L.join, L'.join), «expr = »(map length L, map length L'))) :=
-begin
-  refine [expr ⟨λ H, by simp [] [] [] ["[", expr H, "]"] [] [], _⟩],
-  rintros ["⟨", ident join_eq, ",", ident length_eq, "⟩"],
-  apply [expr ext_le],
-  { have [] [":", expr «expr = »(length (map length L), length (map length L'))] [],
-    by rw [expr length_eq] [],
-    simpa [] [] [] [] [] ["using", expr this] },
-  { assume [binders (n h₁ h₂)],
-    rw ["[", "<-", expr drop_take_succ_join_eq_nth_le, ",", "<-", expr drop_take_succ_join_eq_nth_le, ",", expr join_eq, ",", expr length_eq, "]"] [] }
-end
+theorem eq_iff_join_eq (L L' : List (List α)) : L = L' ↔ L.join = L'.join ∧ map length L = map length L' :=
+  by 
+    refine'
+      ⟨fun H =>
+          by 
+            simp [H],
+        _⟩
+    rintro ⟨join_eq, length_eq⟩
+    apply ext_le
+    ·
+      have  : length (map length L) = length (map length L')
+      ·
+        rw [length_eq]
+      simpa using this
+    ·
+      intro n h₁ h₂ 
+      rw [←drop_take_succ_join_eq_nth_le, ←drop_take_succ_join_eq_nth_le, join_eq, length_eq]
 
 end List
 

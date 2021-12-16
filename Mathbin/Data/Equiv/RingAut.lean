@@ -45,7 +45,7 @@ instance : Groupₓ (RingAut R) :=
         ext <;>
           try 
               rfl <;>
-            apply Equiv.left_inv
+            apply Equivₓ.left_inv
 
 instance : Inhabited (RingAut R) :=
   ⟨1⟩
@@ -61,7 +61,7 @@ def to_mul_aut : RingAut R →* MulAut R :=
     refineStruct { toFun := RingEquiv.toMulEquiv } <;> intros  <;> rfl
 
 /-- Monoid homomorphism from ring automorphisms to permutations. -/
-def to_perm : RingAut R →* Equiv.Perm R :=
+def to_perm : RingAut R →* Equivₓ.Perm R :=
   by 
     refineStruct { toFun := RingEquiv.toEquiv } <;> intros  <;> rfl
 

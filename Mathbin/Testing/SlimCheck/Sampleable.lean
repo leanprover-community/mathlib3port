@@ -171,6 +171,7 @@ section Prio
 
 open SampleableExt
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option default_priority
 set_option default_priority 50
 
 instance sampleable_ext.of_sampleable {α} [sampleable α] [HasRepr α] : sampleable_ext α :=
@@ -185,6 +186,7 @@ instance sampleable.bifunctor {α β} {F} [Bifunctor F] [sampleable_bifunctor F]
   { wf := _, sample := sampleable_bifunctor.sample F (sampleable.sample α) (sampleable.sample β),
     shrink := sampleable_bifunctor.shrink α β sampleable.shrink sampleable.shrink }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option default_priority
 set_option default_priority 100
 
 instance sampleable_ext.functor {α} {F} [Functor F] [sampleable_functor F] [sampleable_ext α] : sampleable_ext (F α) :=
@@ -253,27 +255,34 @@ def nat.shrink (n : ℕ) : List { m : ℕ // HasWellFounded.R m n } :=
 
 open Gen
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
 /--
-Transport a `sampleable` instance from a type `α` to a type `β` using
-functions between the two, going in both directions.
-
-Function `g` is used to define the well-founded order that
-`shrink` is expected to follow.
--/
-def sampleable.lift
-(α : Type u)
-{β : Type u}
-[sampleable α]
-(f : α → β)
-(g : β → α)
-(h : ∀ a : α, «expr ≤ »(sizeof (g (f a)), sizeof a)) : sampleable β :=
-{ wf := ⟨«expr ∘ »(sizeof, g)⟩,
-  sample := «expr <$> »(f, sample α),
-  shrink := λ
-  x, have ∀
-  a, «expr < »(sizeof a, sizeof (g x)) → «expr < »(sizeof (g (f a)), sizeof (g x)), by introv [ident h']; solve_by_elim [] [] ["[", expr lt_of_le_of_lt, "]"] [],
-  «expr <$> »(subtype.map f this, shrink (g x)) }
+    Transport a `sampleable` instance from a type `α` to a type `β` using
+    functions between the two, going in both directions.
+    
+    Function `g` is used to define the well-founded order that
+    `shrink` is expected to follow.
+    -/
+  def
+    sampleable.lift
+    ( α : Type u ) { β : Type u } [ sampleable α ] ( f : α → β ) ( g : β → α ) ( h : ∀ a : α , sizeof g f a ≤ sizeof a )
+      : sampleable β
+    :=
+      {
+        wf := ⟨ sizeof ∘ g ⟩ ,
+          sample := f <$> sample α ,
+          shrink
+            :=
+            fun
+              x
+                =>
+                have
+                  : ∀ a , sizeof a < sizeof g x → sizeof g f a < sizeof g x
+                    :=
+                    by introv h' <;> solveByElim [ lt_of_le_of_ltₓ ]
+                  Subtype.map f this <$> shrink g x
+        }
 
 instance nat.sampleable : sampleable ℕ :=
   { sample :=
@@ -395,21 +404,20 @@ instance prod.sampleable : sampleable_bifunctor.{u, v} Prod :=
           pure (x, y),
     shrink := @prod.shrink, pRepr := @Prod.hasRepr }
 
-instance sigma.sampleable {α β} [sampleable α] [sampleable β] : sampleable (Σ_ : α, β) :=
+instance sigma.sampleable {α β} [sampleable α] [sampleable β] : sampleable (Σ _ : α, β) :=
   (sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => ⟨x, y⟩)$ fun ⟨x, y⟩ => le_reflₓ _
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
 /-- shrinking function for sum types -/
-def sum.shrink
-{α β}
-[has_sizeof α]
-[has_sizeof β]
-(shrink_α : shrink_fn α)
-(shrink_β : shrink_fn β) : shrink_fn «expr ⊕ »(α, β)
-| sum.inr x := «expr $ »((shrink_β x).map, «expr $ »(subtype.map sum.inr, λ
-  a, by dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; solve_by_elim [] [] [] []))
-| sum.inl x := «expr $ »((shrink_α x).map, «expr $ »(subtype.map sum.inl, λ
-  a, by dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; solve_by_elim [] [] [] []))
+  def
+    sum.shrink
+    { α β } [ SizeOf α ] [ SizeOf β ] ( shrink_α : shrink_fn α ) ( shrink_β : shrink_fn β ) : shrink_fn Sum α β
+    | Sum.inr x => shrink_β x . map $ Subtype.map Sum.inr $ fun a => by dsimp [ sizeof_lt ] <;> unfoldWf <;> solveByElim
+      |
+        Sum.inl x
+        =>
+        shrink_α x . map $ Subtype.map Sum.inl $ fun a => by dsimp [ sizeof_lt ] <;> unfoldWf <;> solveByElim
 
 instance sum.sampleable : sampleable_bifunctor.{u, v} Sum :=
   { wf := _,
@@ -471,27 +479,22 @@ section ListShrink
 
 variable [SizeOf α] (shr : ∀ x : α, LazyList { y : α // sizeof_lt y x })
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem list.sizeof_drop_lt_sizeof_of_lt_length
-{xs : list α}
-{k}
-(hk : «expr < »(0, k))
-(hk' : «expr < »(k, xs.length)) : «expr < »(sizeof (list.drop k xs), sizeof xs) :=
-begin
-  induction [expr xs] [] ["with", ident x, ident xs] ["generalizing", ident k],
-  { cases [expr hk'] [] },
-  cases [expr k] [],
-  { cases [expr hk] [] },
-  have [] [":", expr «expr < »(sizeof xs, sizeof [«expr :: »/«expr :: »/«expr :: »/«expr :: »](x, xs))] [],
-  { unfold_wf,
-    linarith [] [] [] },
-  cases [expr k] [],
-  { simp [] [] ["only"] ["[", expr this, ",", expr list.drop, "]"] [] [] },
-  { simp [] [] ["only"] ["[", expr list.drop, "]"] [] [],
-    transitivity [],
-    { solve_by_elim [] [] ["[", expr xs_ih, ",", expr lt_of_succ_lt_succ hk', ",", expr zero_lt_succ, "]"] [] },
-    { assumption } }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  list.sizeof_drop_lt_sizeof_of_lt_length
+  { xs : List α } { k } ( hk : 0 < k ) ( hk' : k < xs.length ) : sizeof List.dropₓ k xs < sizeof xs
+  :=
+    by
+      induction' xs with x xs generalizing k
+        · cases hk'
+        cases k
+        · cases hk
+        have : sizeof xs < sizeof x :: xs
+        · unfoldWf linarith
+        cases k
+        · simp only [ this , List.dropₓ ]
+        · simp only [ List.dropₓ ] trans · solveByElim [ xs_ih , lt_of_succ_lt_succ hk' , zero_lt_succ ] · assumption
 
 theorem list.sizeof_cons_lt_right (a b : α) {xs : List α} (h : sizeof a < sizeof b) :
   sizeof (a :: xs) < sizeof (b :: xs) :=
@@ -518,33 +521,76 @@ theorem list.one_le_sizeof (xs : List α) : 1 ≤ sizeof xs :=
   by 
     cases xs <;> unfoldWf <;> linarith
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
 /--
-`list.shrink_removes` shrinks a list by removing chunks of size `k` in
-the middle of the list.
--/
-def list.shrink_removes
-(k : exprℕ())
-(hk : «expr < »(0, k)) : ∀ (xs : list α) (n), «expr = »(n, xs.length) → lazy_list {ys : list α // sizeof_lt ys xs}
-| xs, n, hn := if hkn : «expr > »(k, n) then lazy_list.nil else if hkn' : «expr = »(k, n) then have «expr < »(1, xs.sizeof), by { subst_vars,
-  cases [expr xs] [],
-  { contradiction },
-  unfold_wf,
-  apply [expr lt_of_lt_of_le],
-  show [expr «expr < »(1, «expr + »(«expr + »(1, has_sizeof.sizeof xs_hd), 1))],
-  { linarith [] [] [] },
-  { mono [] [] [] [],
-    apply [expr list.one_le_sizeof] } },
-lazy_list.singleton ⟨«expr[ , ]»([]), this⟩ else have h₂ : «expr < »(k, xs.length), from «expr ▸ »(hn, lt_of_le_of_ne (le_of_not_gt hkn) hkn'),
-match list.split_at k xs, rfl : ∀ ys, «expr = »(ys, list.split_at k xs) → _ with
-| ⟨xs₁, xs₂⟩, h := have h₄ : «expr = »(xs₁, xs.take k), by simp [] [] ["only"] ["[", expr list.split_at_eq_take_drop, ",", expr prod.mk.inj_iff, "]"] [] ["at", ident h]; tauto [],
-have h₃ : «expr = »(xs₂, xs.drop k), by simp [] [] ["only"] ["[", expr list.split_at_eq_take_drop, ",", expr prod.mk.inj_iff, "]"] [] ["at", ident h]; tauto [],
-have «expr < »(sizeof xs₂, sizeof xs), by rw [expr h₃] []; solve_by_elim [] [] ["[", expr list.sizeof_drop_lt_sizeof_of_lt_length, "]"] [],
-have h₁ : «expr = »(«expr - »(n, k), xs₂.length), by simp [] [] ["only"] ["[", expr h₃, ",", "<-", expr hn, ",", expr list.length_drop, "]"] [] [],
-have h₅ : ∀
-a : list α, sizeof_lt a xs₂ → sizeof_lt «expr ++ »(xs₁, a) xs, by intros [ident a, ident h]; rw ["[", "<-", expr list.take_append_drop k xs, ",", "<-", expr h₃, ",", "<-", expr h₄, "]"] []; solve_by_elim [] [] ["[", expr list.sizeof_append_lt_left, "]"] [],
-«expr $ »(lazy_list.cons ⟨xs₂, this⟩, «expr <$> »(subtype.map (((«expr ++ »)) xs₁) h₅, list.shrink_removes xs₂ «expr - »(n, k) h₁))
-end
+    `list.shrink_removes` shrinks a list by removing chunks of size `k` in
+    the middle of the list.
+    -/
+  def
+    list.shrink_removes
+    ( k : ℕ ) ( hk : 0 < k ) : ∀ xs : List α n , n = xs.length → LazyList { ys : List α // sizeof_lt ys xs }
+    |
+      xs , n , hn
+      =>
+      if
+        hkn
+        :
+        k > n
+        then
+        LazyList.nil
+        else
+        if
+          hkn'
+          :
+          k = n
+          then
+          have
+            : 1 < xs.sizeof
+              :=
+              by
+                substVars
+                  cases xs
+                  · contradiction
+                  unfoldWf
+                  apply lt_of_lt_of_leₓ
+                  show 1 < 1 + SizeOf.sizeof xs_hd + 1
+                  · linarith
+                  · mono apply list.one_le_sizeof
+            LazyList.singleton ⟨ [ ] , this ⟩
+          else
+          have
+            h₂ : k < xs.length := hn ▸ lt_of_le_of_neₓ le_of_not_gtₓ hkn hkn'
+            match
+              List.splitAt k xs , rfl
+              with
+              |
+                ⟨ xs₁ , xs₂ ⟩ , h
+                =>
+                have
+                  h₄ : xs₁ = xs.take k := by simp only [ List.split_at_eq_take_drop , Prod.mk.inj_iffₓ ] at h <;> tauto
+                  have
+                    h₃
+                      : xs₂ = xs.drop k
+                      :=
+                      by simp only [ List.split_at_eq_take_drop , Prod.mk.inj_iffₓ ] at h <;> tauto
+                    have
+                      : sizeof xs₂ < sizeof xs
+                        :=
+                        by rw [ h₃ ] <;> solveByElim [ list.sizeof_drop_lt_sizeof_of_lt_length ]
+                      have
+                        h₁ : n - k = xs₂.length := by simp only [ h₃ , ← hn , List.length_drop ]
+                        have
+                          h₅
+                            : ∀ a : List α , sizeof_lt a xs₂ → sizeof_lt xs₁ ++ a xs
+                            :=
+                            by
+                              intro a h
+                                <;>
+                                rw [ ← List.take_append_drop k xs , ← h₃ , ← h₄ ]
+                                  <;>
+                                  solveByElim [ list.sizeof_append_lt_left ]
+                          LazyList.cons ⟨ xs₂ , this ⟩ $ Subtype.map · ++ · xs₁ h₅ <$> list.shrink_removes xs₂ n - k h₁
 
 /--
 `list.shrink_one xs` shrinks list `xs` by shrinking only one item in
@@ -652,21 +698,34 @@ theorem rec_shrink_with_eq [SizeOf α]
     ext ⟨y, h⟩
     rfl
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `tree.shrink_with shrink_f t` shrinks `xs` by using the empty tree,
 each subtrees, and by shrinking the subtree to recombine them.
 
 This strategy is taken directly from Haskell's QuickCheck -/
-def tree.shrink_with [has_sizeof α] (shrink_a : shrink_fn α) : shrink_fn (tree α) :=
-«expr $ »(rec_shrink_with, λ t, match t with
- | tree.nil := λ f_rec, «expr[ , ]»([])
- | tree.node x t₀ t₁ := λ
- f_rec, have h₂ : sizeof_lt tree.nil (tree.node x t₀ t₁), by clear [ident _match]; have [] [] [":=", expr tree.one_le_sizeof t₀]; dsimp [] ["[", expr sizeof_lt, ",", expr sizeof, ",", expr has_sizeof.sizeof, "]"] [] ["at", "*"]; unfold_wf; linarith [] [] [],
- have h₀ : sizeof_lt t₀ (tree.node x t₀ t₁), by dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; linarith [] [] [],
- have h₁ : sizeof_lt t₁ (tree.node x t₀ t₁), by dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; linarith [] [] [],
- «expr[ , ]»([lazy_list.of_list «expr[ , ]»([⟨tree.nil, h₂⟩, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩]), «expr $ »((prod.shrink shrink_a (prod.shrink f_rec f_rec) (x, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩)).map, λ
-    ⟨⟨y, ⟨t'₀, _⟩, ⟨t'₁, _⟩⟩, hy⟩, ⟨tree.node y t'₀ t'₁, by revert [ident hy]; dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; intro []; linarith [] [] []⟩)])
- end)
+def tree.shrink_with [SizeOf α] (shrink_a : shrink_fn α) : shrink_fn (Tree α) :=
+  rec_shrink_with$
+    fun t =>
+      match t with 
+      | Tree.nil => fun f_rec => []
+      | Tree.node x t₀ t₁ =>
+        fun f_rec =>
+          have h₂ : sizeof_lt Tree.nil (Tree.node x t₀ t₁) :=
+            by 
+              clear _match <;>
+                have  := tree.one_le_sizeof t₀ <;>
+                  dsimp [sizeof_lt, sizeof, SizeOf.sizeof]  at * <;> unfoldWf <;> linarith 
+          have h₀ : sizeof_lt t₀ (Tree.node x t₀ t₁) :=
+            by 
+              dsimp [sizeof_lt] <;> unfoldWf <;> linarith 
+          have h₁ : sizeof_lt t₁ (Tree.node x t₀ t₁) :=
+            by 
+              dsimp [sizeof_lt] <;> unfoldWf <;> linarith
+          [LazyList.ofList [⟨Tree.nil, h₂⟩, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩],
+            (prod.shrink shrink_a (prod.shrink f_rec f_rec) (x, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩)).map$
+              fun ⟨⟨y, ⟨t'₀, _⟩, ⟨t'₁, _⟩⟩, hy⟩ =>
+                ⟨Tree.node y t'₀ t'₁,
+                  by 
+                    revert hy <;> dsimp [sizeof_lt] <;> unfoldWf <;> intro  <;> linarith⟩]
 
 instance sampleable_tree : sampleable_functor Tree :=
   { wf := _, sample := fun α sam_α => sized$ tree.sample sam_α,

@@ -26,7 +26,7 @@ is the kernel of the homomorphism `complex.norm_sq` from `ℂ` to `ℝ`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Complex Metric
 
@@ -49,7 +49,7 @@ def circle : Submonoid ℂ :=
 theorem mem_circle_iff_abs (z : ℂ) : z ∈ circle ↔ abs z = 1 :=
   mem_sphere_zero_iff_norm
 
-theorem circle_def : «expr↑ » circle = { z:ℂ | abs z = 1 } :=
+theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } :=
   by 
     ext 
     simp 
@@ -81,11 +81,11 @@ instance : Groupₓ circle :=
           by 
             simp [HasInv.inv, ←norm_sq_eq_conj_mul_self, ←mul_self_abs] }
 
-theorem coe_inv_circle_eq_conj (z : circle) : «expr↑ » (z⁻¹) = (conj : RingAut ℂ) z :=
+theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = (conj : RingAut ℂ) z :=
   rfl
 
 @[simp]
-theorem coe_inv_circle (z : circle) : «expr↑ » (z⁻¹) = (z : ℂ)⁻¹ :=
+theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ :=
   by 
     rw [coe_inv_circle_eq_conj]
     apply eq_inv_of_mul_right_eq_one 
@@ -93,8 +93,8 @@ theorem coe_inv_circle (z : circle) : «expr↑ » (z⁻¹) = (z : ℂ)⁻¹ :=
     simp 
 
 @[simp]
-theorem coe_div_circle (z w : circle) : «expr↑ » (z / w) = (z : ℂ) / w :=
-  show «expr↑ » (z*w⁻¹) = (z : ℂ)*w⁻¹by 
+theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
+  show (↑z*w⁻¹) = (z : ℂ)*w⁻¹by 
     simp 
 
 instance : CompactSpace circle :=
@@ -115,7 +115,7 @@ def expMapCircle : C(ℝ, circle) :=
             simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩ }
 
 @[simp]
-theorem exp_map_circle_apply (t : ℝ) : «expr↑ » (expMapCircle t) = Complex.exp (t*Complex.i) :=
+theorem exp_map_circle_apply (t : ℝ) : ↑expMapCircle t = Complex.exp (t*Complex.i) :=
   rfl
 
 @[simp]

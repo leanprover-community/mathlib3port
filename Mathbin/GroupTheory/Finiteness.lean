@@ -1,4 +1,5 @@
 import Mathbin.Data.Set.Finite 
+import Mathbin.Data.Finset.Default 
 import Mathbin.GroupTheory.Submonoid.Operations 
 import Mathbin.GroupTheory.Subgroup.Basic
 
@@ -32,7 +33,7 @@ section Submonoid
 /-- A submonoid of `M` is finitely generated if it is the closure of a finite subset of `M`. -/
 @[toAdditive]
 def Submonoid.Fg (P : Submonoid M) : Prop :=
-  ∃ S : Finset M, Submonoid.closure («expr↑ » S) = P
+  ∃ S : Finset M, Submonoid.closure (↑S) = P
 
 /-- An additive submonoid of `N` is finitely generated if it is the closure of a finite subset of
 `M`. -/
@@ -112,6 +113,51 @@ instance Monoidₓ.fg_of_add_monoid_fg [AddMonoidₓ.Fg N] : Monoidₓ.Fg (Multi
 
 end Monoidₓ
 
+@[toAdditive]
+theorem Submonoid.Fg.map {M' : Type _} [Monoidₓ M'] {P : Submonoid M} (h : P.fg) (e : M →* M') : (P.map e).Fg :=
+  by 
+    classical 
+    obtain ⟨s, rfl⟩ := h 
+    exact
+      ⟨s.image e,
+        by 
+          rw [Finset.coe_image, MonoidHom.map_mclosure]⟩
+
+@[toAdditive]
+theorem Submonoid.Fg.map_injective {M' : Type _} [Monoidₓ M'] {P : Submonoid M} (e : M →* M')
+  (he : Function.Injective e) (h : (P.map e).Fg) : P.fg :=
+  by 
+    obtain ⟨s, hs⟩ := h 
+    use s.preimage e (he.inj_on _)
+    apply Submonoid.map_injective_of_injective he 
+    rw [←hs, e.map_mclosure, Finset.coe_preimage]
+    congr 
+    rw [Set.image_preimage_eq_iff, ←e.coe_mrange, ←Submonoid.closure_le, hs, e.mrange_eq_map]
+    exact Submonoid.monotone_map le_top
+
+@[simp, toAdditive]
+theorem Monoidₓ.fg_iff_submonoid_fg (N : Submonoid M) : Monoidₓ.Fg N ↔ N.fg :=
+  by 
+    convRHS => rw [←N.range_subtype, MonoidHom.mrange_eq_map]
+    exact ⟨fun h => h.out.map N.subtype, fun h => ⟨h.map_injective N.subtype Subtype.coe_injective⟩⟩
+
+@[toAdditive]
+theorem Monoidₓ.fg_of_surjective {M' : Type _} [Monoidₓ M'] [Monoidₓ.Fg M] (f : M →* M') (hf : Function.Surjective f) :
+  Monoidₓ.Fg M' :=
+  by 
+    classical 
+    obtain ⟨s, hs⟩ := monoid.fg_def.mp ‹_›
+    use s.image f 
+    rwa [Finset.coe_image, ←MonoidHom.map_mclosure, hs, ←MonoidHom.mrange_eq_map, MonoidHom.mrange_top_iff_surjective]
+
+@[toAdditive]
+theorem Submonoid.powers_fg (r : M) : (Submonoid.powers r).Fg :=
+  ⟨{r}, (Finset.coe_singleton r).symm ▸ (Submonoid.powers_eq_closure r).symm⟩
+
+@[toAdditive]
+instance (r : M) : Monoidₓ.Fg (Submonoid.powers r) :=
+  (Monoidₓ.fg_iff_submonoid_fg _).mpr (Submonoid.powers_fg r)
+
 /-! ### Groups and subgroups -/
 
 
@@ -122,7 +168,7 @@ section Subgroup
 /-- A subgroup of `G` is finitely generated if it is the closure of a finite subset of `G`. -/
 @[toAdditive]
 def Subgroup.Fg (P : Subgroup G) : Prop :=
-  ∃ S : Finset G, Subgroup.closure («expr↑ » S) = P
+  ∃ S : Finset G, Subgroup.closure (↑S) = P
 
 /-- An additive subgroup of `H` is finitely generated if it is the closure of a finite subset of
 `H`. -/
@@ -142,7 +188,7 @@ theorem Subgroup.fg_iff (P : Subgroup G) : Subgroup.Fg P ↔ ∃ S : Set G, Subg
       "An additive subgroup is finitely generated if\nand only if it is finitely generated as an additive submonoid."]
 theorem Subgroup.fg_iff_submonoid_fg (P : Subgroup G) : P.fg ↔ P.to_submonoid.fg :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨S, rfl⟩
       rw [Submonoid.fg_iff]

@@ -35,19 +35,23 @@ Let `L` be a topological space and let `L×L` be equipped with the product topol
 class HasContinuousSup (L : Type _) [TopologicalSpace L] [HasSup L] : Prop where 
   continuous_sup : Continuous fun p : L × L => p.1⊔p.2
 
-/--
-Let `L` be a topological space with a supremum. If the order dual has a continuous infimum then the
-supremum is continuous.
--/
-instance (priority := 100) has_continuous_inf_dual_has_continuous_sup (L : Type _) [TopologicalSpace L] [HasSup L]
-  [h : HasContinuousInf (OrderDual L)] : HasContinuousSup L :=
-  { continuous_sup := @HasContinuousInf.continuous_inf (OrderDual L) _ _ h }
+instance (priority := 100) OrderDual.has_continuous_sup (L : Type _) [TopologicalSpace L] [HasInf L]
+  [HasContinuousInf L] : HasContinuousSup (OrderDual L) :=
+  { continuous_sup := @HasContinuousInf.continuous_inf L _ _ _ }
+
+instance (priority := 100) OrderDual.has_continuous_inf (L : Type _) [TopologicalSpace L] [HasSup L]
+  [HasContinuousSup L] : HasContinuousInf (OrderDual L) :=
+  { continuous_inf := @HasContinuousSup.continuous_sup L _ _ _ }
 
 /--
 Let `L` be a lattice equipped with a topology such that `L` has continuous infimum and supremum.
 Then `L` is said to be a *topological lattice*.
 -/
 class TopologicalLattice (L : Type _) [TopologicalSpace L] [Lattice L] extends HasContinuousInf L, HasContinuousSup L
+
+instance (priority := 100) OrderDual.topologicalLattice (L : Type _) [TopologicalSpace L] [Lattice L]
+  [TopologicalLattice L] : TopologicalLattice (OrderDual L) :=
+  {  }
 
 variable {L : Type _} [TopologicalSpace L]
 

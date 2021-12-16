@@ -35,7 +35,7 @@ theorem smul_inv_smul (c : α) (x : β) : c • c⁻¹ • x = x :=
 
 /-- Given an action of a group `α` on `β`, each `g : α` defines a permutation of `β`. -/
 @[toAdditive, simps]
-def MulAction.toPerm (a : α) : Equiv.Perm β :=
+def MulAction.toPerm (a : α) : Equivₓ.Perm β :=
   ⟨fun x => a • x, fun x => a⁻¹ • x, inv_smul_smul a, smul_inv_smul a⟩
 
 /-- Given an action of an additive group `α` on `β`, each `g : α` defines a permutation of `β`. -/
@@ -44,37 +44,37 @@ add_decl_doc AddAction.toPerm
 /-- `mul_action.to_perm` is injective on faithful actions. -/
 @[toAdditive]
 theorem MulAction.to_perm_injective [HasFaithfulScalar α β] :
-  Function.Injective (MulAction.toPerm : α → Equiv.Perm β) :=
-  (show Function.Injective (Equiv.toFun ∘ MulAction.toPerm) from smul_left_injective').of_comp
+  Function.Injective (MulAction.toPerm : α → Equivₓ.Perm β) :=
+  (show Function.Injective (Equivₓ.toFun ∘ MulAction.toPerm) from smul_left_injective').of_comp
 
 variable (α) (β)
 
 /-- Given an action of a group `α` on a set `β`, each `g : α` defines a permutation of `β`. -/
 @[simps]
-def MulAction.toPermHom : α →* Equiv.Perm β :=
-  { toFun := MulAction.toPerm, map_one' := Equiv.ext$ one_smul α,
-    map_mul' := fun u₁ u₂ => Equiv.ext$ mul_smul (u₁ : α) u₂ }
+def MulAction.toPermHom : α →* Equivₓ.Perm β :=
+  { toFun := MulAction.toPerm, map_one' := Equivₓ.ext$ one_smul α,
+    map_mul' := fun u₁ u₂ => Equivₓ.ext$ mul_smul (u₁ : α) u₂ }
 
 /-- Given an action of a additive group `α` on a set `β`, each `g : α` defines a permutation of
 `β`. -/
 @[simps]
-def AddAction.toPermHom (α : Type _) [AddGroupₓ α] [AddAction α β] : α →+ Additive (Equiv.Perm β) :=
-  { toFun := fun a => Additive.ofMul$ AddAction.toPerm a, map_zero' := Equiv.ext$ zero_vadd α,
-    map_add' := fun a₁ a₂ => Equiv.ext$ add_vadd a₁ a₂ }
+def AddAction.toPermHom (α : Type _) [AddGroupₓ α] [AddAction α β] : α →+ Additive (Equivₓ.Perm β) :=
+  { toFun := fun a => Additive.ofMul$ AddAction.toPerm a, map_zero' := Equivₓ.ext$ zero_vadd α,
+    map_add' := fun a₁ a₂ => Equivₓ.ext$ add_vadd a₁ a₂ }
 
 /-- The tautological action by `equiv.perm α` on `α`.
 
 This generalizes `function.End.apply_mul_action`.-/
-instance Equiv.Perm.applyMulAction (α : Type _) : MulAction (Equiv.Perm α) α :=
+instance Equivₓ.Perm.applyMulAction (α : Type _) : MulAction (Equivₓ.Perm α) α :=
   { smul := fun f a => f a, one_smul := fun _ => rfl, mul_smul := fun _ _ _ => rfl }
 
 @[simp]
-protected theorem Equiv.Perm.smul_def {α : Type _} (f : Equiv.Perm α) (a : α) : f • a = f a :=
+protected theorem Equivₓ.Perm.smul_def {α : Type _} (f : Equivₓ.Perm α) (a : α) : f • a = f a :=
   rfl
 
 /-- `equiv.perm.apply_mul_action` is faithful. -/
-instance Equiv.Perm.apply_has_faithful_scalar (α : Type _) : HasFaithfulScalar (Equiv.Perm α) α :=
-  ⟨fun x y => Equiv.ext⟩
+instance Equivₓ.Perm.apply_has_faithful_scalar (α : Type _) : HasFaithfulScalar (Equivₓ.Perm α) α :=
+  ⟨fun x y => Equivₓ.ext⟩
 
 variable {α} {β}
 

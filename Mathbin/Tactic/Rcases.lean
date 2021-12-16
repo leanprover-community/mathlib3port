@@ -198,13 +198,18 @@ unsafe def alts₁ : listΣ (listΠ rcases_patt) → rcases_patt
 | [[alts ps]] => tuple [alts ps]
 | ps => alts' (alts₁_core ps)
 
--- error in Tactic.Rcases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-meta instance has_reflect : has_reflect rcases_patt
-| one n := `(_)
-| clear := `(_)
-| typed l e := ((`(typed)).subst (has_reflect l)).subst (reflect e)
-| tuple l := «expr $ »((`(λ l, tuple l)).subst, by haveI [] [] [":=", expr has_reflect]; exact [expr list.reflect l])
-| alts l := «expr $ »((`(λ l, alts l)).subst, by haveI [] [] [":=", expr has_reflect]; exact [expr list.reflect l])
+unsafe instance has_reflect : has_reflect rcases_patt
+| one n => quote.1 _
+| clear => quote.1 _
+| typed l e => ((quote.1 typed).subst (has_reflect l)).subst (reflect e)
+| tuple l =>
+  (quote.1 fun l => tuple l).subst$
+    by 
+      have  := has_reflect <;> exact list.reflect l
+| alts l =>
+  (quote.1 fun l => alts l).subst$
+    by 
+      have  := has_reflect <;> exact list.reflect l
 
 /-- Formats an `rcases` pattern. If the `bracket` argument is true, then it will be
 printed at high precedence, i.e. it will have parentheses around it if it is not already a tuple
@@ -224,7 +229,7 @@ protected unsafe def format : ∀ bracket : Bool, rcases_patt → tactic _root_.
 | br, alts ls =>
   do 
     let fs ← ls.mmap$ format tt 
-    let fmt := _root_.format.join$ List.intersperse («expr↑ » " |" ++ _root_.format.space) fs 
+    let fmt := _root_.format.join$ List.intersperse (↑" |" ++ _root_.format.space) fs 
     pure$ if br then _root_.format.bracket "(" ")" fmt else fmt
 | br, typed p e =>
   do 
@@ -771,16 +776,17 @@ unsafe def rcases_parse_depth : parser Nat :=
     let o ← (tk ":" *> small_nat)?
     pure$ o.get_or_else 5
 
--- error in Tactic.Rcases: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
 /-- The arguments to `rcases`, which in fact dispatch to several other tactics.
 * `rcases? expr (: n)?` or `rcases? ⟨expr, ...⟩ (: n)?` calls `rcases_hint`
 * `rcases? ⟨expr, ...⟩ (: n)?` calls `rcases_hint_many`
 * `rcases (h :)? expr (with patt)?` calls `rcases`
 * `rcases ⟨expr, ...⟩ (with patt)?` calls `rcases_many`
--/ @[derive #[expr has_reflect]] meta inductive rcases_args
-| hint (tgt : «expr ⊕ »(pexpr, list pexpr)) (depth : nat)
-| rcases (name : option name) (tgt : pexpr) (pat : rcases_patt)
-| rcases_many (tgt : «exprlistΠ»() pexpr) (pat : rcases_patt)
+-/
+unsafe inductive rcases_args
+  | hint (tgt : Sum pexpr (List pexpr)) (depth : Nat)
+  | rcases (name : Option Name) (tgt : pexpr) (pat : rcases_patt)
+  | rcases_many (tgt : listΠ pexpr) (pat : rcases_patt)deriving [anonymous]
 
 /-- Syntax for a `rcases` pattern:
 * `rcases? expr (: n)?`
@@ -964,7 +970,7 @@ unsafe def rcases : parse rcases_parse → tactic Unit
             let pes ← ps.mmap pp 
             pure (format.bracket "⟨" "⟩" (format.comma_separated pes), rcases_patt.tuple patts)
     let ppat ← pp patt 
-    trace$ «expr↑ » "Try this: rcases " ++ pe ++ " with " ++ ppat
+    trace$ ↑"Try this: rcases " ++ pe ++ " with " ++ ppat
 
 add_tactic_doc
   { Name := "rcases", category := DocCategory.tactic, declNames := [`tactic.interactive.rcases], tags := ["induction"] }
@@ -998,7 +1004,7 @@ unsafe def rintro : parse rintro_parse → tactic Unit
             do 
               let f ← pp$ p.format tt 
               pure$ format.space ++ format.group f 
-    trace$ «expr↑ » "Try this: rintro" ++ format.join fs
+    trace$ ↑"Try this: rintro" ++ format.join fs
 
 /-- Alias for `rintro`. -/
 unsafe def rintros :=

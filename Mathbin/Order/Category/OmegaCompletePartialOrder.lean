@@ -35,8 +35,9 @@ instance : bundled_hom @continuous_hom :=
   { toFun := @continuous_hom.simps.apply, id := @continuous_hom.id, comp := @continuous_hom.comp,
     hom_ext := @continuous_hom.coe_inj }
 
--- error in Order.Category.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] ωCPO
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for ωCPO
 
 instance : CoeSort ωCPO (Type _) :=
   bundled.has_coe_to_sort
@@ -59,7 +60,7 @@ namespace HasProducts
 
 /-- The pi-type gives a cone for a product. -/
 def product {J : Type v} (f : J → ωCPO.{v}) : fan f :=
-  fan.mk (of (∀ j, f j)) fun j => continuous_hom.of_mono (Pi.evalPreorderHom j) fun c => rfl
+  fan.mk (of (∀ j, f j)) fun j => continuous_hom.of_mono (Pi.evalOrderHom j) fun c => rfl
 
 /-- The pi-type is a limit cone for the product. -/
 def is_product (J : Type v) (f : J → ωCPO) : is_limit (product f) :=
@@ -95,7 +96,7 @@ namespace HasEqualizers
 /-- The equalizer inclusion function as a `continuous_hom`. -/
 def equalizer_ι {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β] (f g : α →𝒄 β) :
   { a : α // f a = g a } →𝒄 α :=
-  continuous_hom.of_mono (PreorderHom.Subtype.val _) fun c => rfl
+  continuous_hom.of_mono (OrderHom.Subtype.val _) fun c => rfl
 
 /-- A construction of the equalizer fork. -/
 def equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : fork f g :=

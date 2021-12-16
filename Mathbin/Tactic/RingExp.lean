@@ -137,22 +137,25 @@ so they are defined in a later section.
 -/
 
 
--- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /--
 Coefficients in the expression are stored in a wrapper structure,
 allowing for easier modification of the data structures.
 The modifications might be caching of the result of `expr.of_rat`,
 or using a different meta representation of numerals.
--/ @[derive #[expr decidable_eq], derive #[expr inhabited]] structure coeff : Type := (value : exprℚ())
+-/
+structure coeff : Type where 
+  value : ℚ deriving [anonymous], [anonymous]
 
--- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The values in `ex_type` are used as parameters to `ex` to control the expression's structure. -/
-@[derive #[expr decidable_eq], derive #[expr inhabited]]
 inductive ex_type : Type
-| base : ex_type
-| sum : ex_type
-| prod : ex_type
-| exp : ex_type
+  | base : ex_type
+  | Sum : ex_type
+  | Prod : ex_type
+  | exp : ex_type deriving [anonymous], [anonymous]
 
 open ExType
 
@@ -386,11 +389,13 @@ unsafe structure context where
   info_e : eval_info 
   transp : transparency
 
--- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler monad
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler alternative
 /--
 The `ring_exp_m` monad is used instead of `tactic` to store the context.
--/ @[derive #["[", expr monad, ",", expr alternative, "]"]] meta def ring_exp_m (α : Type) : Type :=
-reader_t context (state_t (list atom) tactic) α
+-/
+unsafe def ring_exp_m (α : Type) : Type :=
+  ReaderTₓ context (StateTₓ (List atom) tactic) α deriving [anonymous], [anonymous]
 
 /--
 Access the instance cache.

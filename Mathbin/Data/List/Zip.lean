@@ -61,7 +61,7 @@ theorem zip_swap : ∀ l₁ : List α l₂ : List β, (zip l₁ l₂).map Prod.s
     rw [zip_nil_right] <;> rfl
 | a :: l₁, b :: l₂ =>
   by 
-    simp only [zip_cons_cons, map_cons, zip_swap l₁ l₂, Prod.swap_prod_mkₓ] <;> split  <;> rfl
+    simp only [zip_cons_cons, map_cons, zip_swap l₁ l₂, Prod.swap_prod_mkₓ] <;> constructor <;> rfl
 
 @[simp]
 theorem length_zip_with (f : α → β → γ) :
@@ -106,7 +106,7 @@ theorem zip_append :
     simp only [eq_nil_of_length_eq_zero h] <;> rfl
 | a :: l₁, r₁, b :: l₂, r₂, h =>
   by 
-    simp only [cons_append, zip_cons_cons, zip_append (succ.inj h)] <;> split  <;> rfl
+    simp only [cons_append, zip_cons_cons, zip_append (succ.inj h)] <;> constructor <;> rfl
 
 theorem zip_map (f : α → γ) (g : β → δ) :
   ∀ l₁ : List α l₂ : List β, zip (l₁.map f) (l₂.map g) = (zip l₁ l₂).map (Prod.map f g)
@@ -116,7 +116,7 @@ theorem zip_map (f : α → γ) (g : β → δ) :
     simp only [map, zip_nil_right]
 | a :: l₁, b :: l₂ =>
   by 
-    simp only [map, zip_cons_cons, zip_map l₁ l₂, Prod.map] <;> split  <;> rfl
+    simp only [map, zip_cons_cons, zip_map l₁ l₂, Prod.map] <;> constructor <;> rfl
 
 theorem zip_map_left (f : α → γ) (l₁ : List α) (l₂ : List β) : zip (l₁.map f) l₂ = (zip l₁ l₂).map (Prod.map f id) :=
   by 
@@ -152,7 +152,7 @@ theorem zip_map' (f : α → β) (g : α → γ) : ∀ l : List α, zip (l.map f
 | [] => rfl
 | a :: l =>
   by 
-    simp only [map, zip_cons_cons, zip_map' l] <;> split  <;> rfl
+    simp only [map, zip_cons_cons, zip_map' l] <;> constructor <;> rfl
 
 theorem map_zip_with {δ : Type _} (f : α → β) (g : γ → δ → α) (l : List γ) (l' : List δ) :
   map f (zip_with g l l') = zip_with (fun x y => f (g x y)) l l' :=
@@ -171,8 +171,9 @@ theorem mem_zip {a b} : ∀ {l₁ : List α} {l₂ : List β}, (a, b) ∈ zip l�
 | _ :: l₁, _ :: l₂, Or.inl rfl => ⟨Or.inl rfl, Or.inl rfl⟩
 | a' :: l₁, b' :: l₂, Or.inr h =>
   by 
-    split  <;> simp only [mem_cons_iff, or_trueₓ, mem_zip h]
+    constructor <;> simp only [mem_cons_iff, or_trueₓ, mem_zip h]
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem map_fst_zip : ∀ l₁ : List α l₂ : List β, l₁.length ≤ l₂.length → map Prod.fst (zip l₁ l₂) = l₁
 | [], bs, _ => rfl
 | a :: as, b :: bs, h =>
@@ -184,6 +185,7 @@ theorem map_fst_zip : ∀ l₁ : List α l₂ : List β, l₁.length ≤ l₂.le
     simp  at h 
     contradiction
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 theorem map_snd_zip : ∀ l₁ : List α l₂ : List β, l₂.length ≤ l₁.length → map Prod.snd (zip l₁ l₂) = l₂
 | _, [], _ =>
   by 
@@ -223,13 +225,13 @@ theorem unzip_right (l : List (α × β)) : (unzip l).2 = l.map Prod.snd :=
 
 theorem unzip_swap (l : List (α × β)) : unzip (l.map Prod.swap) = (unzip l).swap :=
   by 
-    simp only [unzip_eq_map, map_map] <;> split  <;> rfl
+    simp only [unzip_eq_map, map_map] <;> constructor <;> rfl
 
 theorem zip_unzip : ∀ l : List (α × β), zip (unzip l).1 (unzip l).2 = l
 | [] => rfl
 | (a, b) :: l =>
   by 
-    simp only [unzip_cons, zip_cons_cons, zip_unzip l] <;> split  <;> rfl
+    simp only [unzip_cons, zip_cons_cons, zip_unzip l] <;> constructor <;> rfl
 
 theorem unzip_zip_left : ∀ {l₁ : List α} {l₂ : List β}, length l₁ ≤ length l₂ → (unzip (zip l₁ l₂)).1 = l₁
 | [], l₂, h => rfl
@@ -238,7 +240,7 @@ theorem unzip_zip_left : ∀ {l₁ : List α} {l₂ : List β}, length l₁ ≤ 
     rw [eq_nil_of_length_eq_zero (Nat.eq_zero_of_le_zeroₓ h)] <;> rfl
 | a :: l₁, b :: l₂, h =>
   by 
-    simp only [zip_cons_cons, unzip_cons, unzip_zip_left (le_of_succ_le_succ h)] <;> split  <;> rfl
+    simp only [zip_cons_cons, unzip_cons, unzip_zip_left (le_of_succ_le_succ h)] <;> constructor <;> rfl
 
 theorem unzip_zip_right {l₁ : List α} {l₂ : List β} (h : length l₂ ≤ length l₁) : (unzip (zip l₁ l₂)).2 = l₂ :=
   by 
@@ -336,7 +338,7 @@ theorem nth_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i : �
   by 
     cases z 
     rw [zip, nth_zip_with_eq_some]
-    split 
+    constructor
     ·
       rintro ⟨x, y, h₀, h₁, h₂⟩
       cc
@@ -364,7 +366,7 @@ theorem mem_zip_inits_tails {l : List α} {init tail : List α} : (init, tail) �
     ·
       simp 
     ·
-      split  <;> rw [mem_cons_iff, zip_map_left, mem_map, Prod.exists]
+      constructor <;> rw [mem_cons_iff, zip_map_left, mem_map, Prod.exists]
       ·
         rintro (⟨rfl, rfl⟩ | ⟨_, _, h, rfl, rfl⟩)
         ·
@@ -451,34 +453,40 @@ theorem zip_with_distrib_tail : (zip_with f l l').tail = zip_with f l.tail l'.ta
   by 
     simpRw [←drop_one, zip_with_distrib_drop]
 
--- error in Data.List.Zip: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zip_with_append
-(f : α → β → γ)
-(l la : list α)
-(l' lb : list β)
-(h : «expr = »(l.length, l'.length)) : «expr = »(zip_with f «expr ++ »(l, la) «expr ++ »(l', lb), «expr ++ »(zip_with f l l', zip_with f la lb)) :=
-begin
-  induction [expr l] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident l'],
-  { have [] [":", expr «expr = »(l', «expr[ , ]»([]))] [":=", expr eq_nil_of_length_eq_zero (by simpa [] [] [] [] [] ["using", expr h.symm])],
-    simp [] [] [] ["[", expr this, "]"] [] [] },
-  { cases [expr l'] [],
-    { simpa [] [] [] [] [] ["using", expr h] },
-    { simp [] [] ["only"] ["[", expr add_left_inj, ",", expr length, "]"] [] ["at", ident h],
-      simp [] [] [] ["[", expr hl _ h, "]"] [] [] } }
-end
+theorem zip_with_append (f : α → β → γ) (l la : List α) (l' lb : List β) (h : l.length = l'.length) :
+  zip_with f (l ++ la) (l' ++ lb) = zip_with f l l' ++ zip_with f la lb :=
+  by 
+    induction' l with hd tl hl generalizing l'
+    ·
+      have  : l' = [] :=
+        eq_nil_of_length_eq_zero
+          (by 
+            simpa using h.symm)
+      simp [this]
+    ·
+      cases l'
+      ·
+        simpa using h
+      ·
+        simp only [add_left_injₓ, length] at h 
+        simp [hl _ h]
 
--- error in Data.List.Zip: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zip_with_distrib_reverse
-(h : «expr = »(l.length, l'.length)) : «expr = »((zip_with f l l').reverse, zip_with f l.reverse l'.reverse) :=
-begin
-  induction [expr l] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident l'],
-  { simp [] [] [] [] [] [] },
-  { cases [expr l'] ["with", ident hd', ident tl'],
-    { simp [] [] [] [] [] [] },
-    { simp [] [] ["only"] ["[", expr add_left_inj, ",", expr length, "]"] [] ["at", ident h],
-      have [] [":", expr «expr = »(tl.reverse.length, tl'.reverse.length)] [":=", expr by simp [] [] [] ["[", expr h, "]"] [] []],
-      simp [] [] [] ["[", expr hl _ h, ",", expr zip_with_append _ _ _ _ _ this, "]"] [] [] } }
-end
+theorem zip_with_distrib_reverse (h : l.length = l'.length) :
+  (zip_with f l l').reverse = zip_with f l.reverse l'.reverse :=
+  by 
+    induction' l with hd tl hl generalizing l'
+    ·
+      simp 
+    ·
+      cases' l' with hd' tl'
+      ·
+        simp 
+      ·
+        simp only [add_left_injₓ, length] at h 
+        have  : tl.reverse.length = tl'.reverse.length :=
+          by 
+            simp [h]
+        simp [hl _ h, zip_with_append _ _ _ _ _ this]
 
 end Distrib
 

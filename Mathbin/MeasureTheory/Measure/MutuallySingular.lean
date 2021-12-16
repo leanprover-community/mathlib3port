@@ -30,7 +30,7 @@ variable {α : Type _} {m0 : MeasurableSpace α} {μ μ₁ μ₂ ν ν₁ ν₂ 
 /-- Two measures `μ`, `ν` are said to be mutually singular if there exists a measurable set `s`
 such that `μ s = 0` and `ν sᶜ = 0`. -/
 def mutually_singular {m0 : MeasurableSpace α} (μ ν : Measureₓ α) : Prop :=
-  ∃ s : Set α, MeasurableSet s ∧ μ s = 0 ∧ ν («expr ᶜ» s) = 0
+  ∃ s : Set α, MeasurableSet s ∧ μ s = 0 ∧ ν (sᶜ) = 0
 
 localized [MeasureTheory] infixl:60 " ⊥ₘ " => MeasureTheory.Measure.MutuallySingular
 
@@ -49,7 +49,7 @@ theorem zero_right : μ ⊥ₘ 0 :=
 @[symm]
 theorem symm (h : ν ⊥ₘ μ) : μ ⊥ₘ ν :=
   let ⟨i, hi, his, hit⟩ := h
-  ⟨«expr ᶜ» i, hi.compl, hit, (compl_compl i).symm ▸ his⟩
+  ⟨iᶜ, hi.compl, hit, (compl_compl i).symm ▸ his⟩
 
 theorem comm : μ ⊥ₘ ν ↔ ν ⊥ₘ μ :=
   ⟨fun h => h.symm, fun h => h.symm⟩
@@ -70,7 +70,7 @@ theorem sum_left {ι : Type _} [Encodable ι] {μ : ι → Measureₓ α} : Sum 
   by 
     refine' ⟨fun h i => h.mono (le_sum _ _) le_rfl, fun H => _⟩
     choose s hsm hsμ hsν using H 
-    refine' ⟨⋂i, s i, MeasurableSet.Inter hsm, _, _⟩
+    refine' ⟨⋂ i, s i, MeasurableSet.Inter hsm, _, _⟩
     ·
       rw [sum_apply _ (MeasurableSet.Inter hsm), Ennreal.tsum_eq_zero]
       exact fun i => measure_mono_null (Inter_subset _ _) (hsμ i)

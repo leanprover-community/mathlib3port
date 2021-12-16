@@ -270,23 +270,19 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable [PartialOrderₓ α] [Preorderₓ β] {f : α → β}
+variable [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {s : Set α}
+
+protected theorem StrictMonoOn.monotone_on (hf : StrictMonoOn f s) : MonotoneOn f s :=
+  fun a ha b hb h => h.eq_or_lt.elim (fun H => H ▸ le_rfl) fun H => (hf ha hb H).le
+
+protected theorem StrictAntiOn.antitone_on (hf : StrictAntiOn f s) : AntitoneOn f s :=
+  hf.dual_right.monotone_on.dual_right
 
 protected theorem StrictMono.monotone (hf : StrictMono f) : Monotone f :=
-  fun a b h =>
-    h.eq_or_lt.rec
-      (by 
-        rintro rfl 
-        rfl)
-      (le_of_ltₓ ∘ @hf _ _)
+  monotone_on_univ.1 (hf.strict_mono_on Set.Univ).MonotoneOn
 
 protected theorem StrictAnti.antitone (hf : StrictAnti f) : Antitone f :=
-  fun a b h =>
-    h.eq_or_lt.rec
-      (by 
-        rintro rfl 
-        rfl)
-      (le_of_ltₓ ∘ @hf _ _)
+  hf.dual_right.monotone.dual_right
 
 end PartialOrderₓ
 
@@ -305,24 +301,16 @@ theorem monotone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Monotone fun
 theorem antitone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Antitone fun a : α => c :=
   fun a b _ => le_reflₓ c
 
--- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem strict_mono_of_le_iff_le
-[preorder α]
-[preorder β]
-{f : α → β}
-(h : ∀ x y, «expr ↔ »(«expr ≤ »(x, y), «expr ≤ »(f x, f y))) : strict_mono f :=
-λ a b, by simp [] [] [] ["[", expr lt_iff_le_not_le, ",", expr h, "]"] [] [] { contextual := tt }
+theorem strict_mono_of_le_iff_le [Preorderₓ α] [Preorderₓ β] {f : α → β} (h : ∀ x y, x ≤ y ↔ f x ≤ f y) :
+  StrictMono f :=
+  fun a b => (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
 
 theorem injective_of_lt_imp_ne [LinearOrderₓ α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) : injective f :=
   by 
-    intro x y k 
-    contrapose k 
-    rw [←Ne.def, ne_iff_lt_or_gtₓ] at k 
-    cases k
-    ·
-      exact h _ _ k
-    ·
-      exact (h _ _ k).symm
+    intro x y hxy 
+    contrapose hxy 
+    cases' Ne.lt_or_lt hxy with hxy hxy 
+    exacts[h _ _ hxy, (h _ _ hxy).symm]
 
 theorem injective_of_le_imp_le [PartialOrderₓ α] [Preorderₓ β] (f : α → β) (h : ∀ {x y}, f x ≤ f y → x ≤ y) :
   injective f :=
@@ -332,25 +320,20 @@ section Preorderₓ
 
 variable [Preorderₓ α] [Preorderₓ β] {f g : α → β}
 
--- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem strict_mono.ite'
-(hf : strict_mono f)
-(hg : strict_mono g)
-{p : α → exprProp()}
-[decidable_pred p]
-(hp : ∀ {{x y}}, «expr < »(x, y) → p y → p x)
-(hfg : ∀
- {{x y}}, p x → «expr¬ »(p y) → «expr < »(x, y) → «expr < »(f x, g y)) : strict_mono (λ x, if p x then f x else g x) :=
-begin
-  intros [ident x, ident y, ident h],
-  by_cases [expr hy, ":", expr p y],
-  { have [ident hx] [":", expr p x] [":=", expr hp h hy],
-    simpa [] [] [] ["[", expr hx, ",", expr hy, "]"] [] ["using", expr hf h] },
-  by_cases [expr hx, ":", expr p x],
-  { simpa [] [] [] ["[", expr hx, ",", expr hy, "]"] [] ["using", expr hfg hx hy h] },
-  { simpa [] [] [] ["[", expr hx, ",", expr hy, "]"] [] ["using", expr hg h] }
-end
+protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
+  (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → f x < g y) :
+  StrictMono fun x => if p x then f x else g x :=
+  by 
+    intro x y h 
+    byCases' hy : p y
+    ·
+      have hx : p x := hp h hy 
+      simpa [hx, hy] using hf h 
+    byCases' hx : p x
+    ·
+      simpa [hx, hy] using hfg hx hy h
+    ·
+      simpa [hx, hy] using hg h
 
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
   (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) : StrictMono fun x => if p x then f x else g x :=

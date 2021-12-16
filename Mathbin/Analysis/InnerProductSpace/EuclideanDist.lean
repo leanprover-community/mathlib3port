@@ -19,7 +19,7 @@ open Set
 
 variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
-noncomputable theory
+noncomputable section 
 
 /-- If `E` is a finite dimensional space over `ℝ`, then `to_euclidean` is a continuous `ℝ`-linear
 equivalence between `E` and the Euclidean space of the same dimension. -/
@@ -34,13 +34,13 @@ is the distance between these points in the metric defined by some inner product
 def dist (x y : E) : ℝ :=
   dist (toEuclidean x) (toEuclidean y)
 
-/-- Closed ball w.r.t. the euclidean distance. -/
-def closed_ball (x : E) (r : ℝ) : Set E :=
-  { y | dist y x ≤ r }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Closed ball w.r.t. the euclidean distance. -/ def closed_ball ( x : E ) ( r : ℝ ) : Set E := { y | dist y x ≤ r }
 
-/-- Open ball w.r.t. the euclidean distance. -/
-def ball (x : E) (r : ℝ) : Set E :=
-  { y | dist y x < r }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- Open ball w.r.t. the euclidean distance. -/ def ball ( x : E ) ( r : ℝ ) : Set E := { y | dist y x < r }
 
 theorem ball_eq_preimage (x : E) (r : ℝ) : ball x r = toEuclidean ⁻¹' Metric.Ball (toEuclidean x) r :=
   rfl
@@ -75,6 +75,7 @@ theorem closure_ball (x : E) {r : ℝ} (h : 0 < r) : Closure (ball x r) = closed
   by 
     rw [ball_eq_preimage, ←to_euclidean.preimage_closure, closure_ball (toEuclidean x) h, closed_ball_eq_preimage]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (r «expr ∈ » Ioo 0 R)
 theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s) (h : s ⊆ ball x R) :
   ∃ (r : _)(_ : r ∈ Ioo 0 R), s ⊆ ball x r :=
   by 

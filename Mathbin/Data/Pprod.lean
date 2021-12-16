@@ -1,10 +1,13 @@
+import Mathbin.Logic.Basic
 
 /-!
 # Extra facts about `pprod`
 -/
 
 
-variable {α : Sort _} {β : Sort _}
+open Function
+
+variable {α β γ δ : Sort _}
 
 namespace PProd
 
@@ -27,4 +30,11 @@ theorem exists' {p : α → β → Prop} : (∃ x : PProd α β, p x.1 x.2) ↔ 
   PProd.exists
 
 end PProd
+
+theorem Function.Injective.pprod_map {f : α → β} {g : γ → δ} (hf : injective f) (hg : injective g) :
+  injective (fun x => ⟨f x.1, g x.2⟩ : PProd α γ → PProd β δ) :=
+  fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ h =>
+    have A := congr_argₓ PProd.fst h 
+    have B := congr_argₓ PProd.snd h 
+    congr_arg2ₓ PProd.mk (hf A) (hg B)
 

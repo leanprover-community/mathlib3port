@@ -12,7 +12,7 @@ universe v u
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory CategoryTheory.Limits HomologicalComplex
 
@@ -370,8 +370,8 @@ variable (e : P ⟶ Q) (zero : P.X 0 ⟶ Q.X 1) (comm_zero : e.f 0 = zero ≫ Q.
   (comm_one : e.f 1 = (P.d 1 0 ≫ zero)+one ≫ Q.d 2 1)
   (succ :
     ∀ n : ℕ p :
-      Σ'(f : P.X n ⟶ Q.X (n+1))(f' : P.X (n+1) ⟶ Q.X (n+2)), e.f (n+1) = (P.d (n+1) n ≫ f)+f' ≫ Q.d (n+2) (n+1),
-      Σ'f'' : P.X (n+2) ⟶ Q.X (n+3), e.f (n+2) = (P.d (n+2) (n+1) ≫ p.2.1)+f'' ≫ Q.d (n+3) (n+2))
+      Σ' (f : P.X n ⟶ Q.X (n+1))(f' : P.X (n+1) ⟶ Q.X (n+2)), e.f (n+1) = (P.d (n+1) n ≫ f)+f' ≫ Q.d (n+2) (n+1),
+      Σ' f'' : P.X (n+2) ⟶ Q.X (n+3), e.f (n+2) = (P.d (n+2) (n+1) ≫ p.2.1)+f'' ≫ Q.d (n+3) (n+2))
 
 include comm_one comm_zero
 
@@ -389,7 +389,7 @@ which we do in `mk_inductive_aux₂`.
 -/
 @[simp, nolint unused_arguments]
 def mk_inductive_aux₁ :
-  ∀ n, Σ'(f : P.X n ⟶ Q.X (n+1))(f' : P.X (n+1) ⟶ Q.X (n+2)), e.f (n+1) = (P.d (n+1) n ≫ f)+f' ≫ Q.d (n+2) (n+1)
+  ∀ n, Σ' (f : P.X n ⟶ Q.X (n+1))(f' : P.X (n+1) ⟶ Q.X (n+2)), e.f (n+1) = (P.d (n+1) n ≫ f)+f' ≫ Q.d (n+2) (n+1)
 | 0 => ⟨zero, one, comm_one⟩
 | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
 | n+2 =>
@@ -403,7 +403,8 @@ variable [has_zero_object V]
 An auxiliary construction for `mk_inductive`.
 -/
 @[simp]
-def mk_inductive_aux₂ : ∀ n, Σ'(f : P.X_next n ⟶ Q.X n)(f' : P.X n ⟶ Q.X_prev n), e.f n = (P.d_from n ≫ f)+f' ≫ Q.d_to n
+def mk_inductive_aux₂ :
+  ∀ n, Σ' (f : P.X_next n ⟶ Q.X n)(f' : P.X n ⟶ Q.X_prev n), e.f n = (P.d_from n ≫ f)+f' ≫ Q.d_to n
 | 0 =>
   ⟨0, zero ≫ (Q.X_prev_iso rfl).inv,
     by 
@@ -563,22 +564,26 @@ namespace CategoryTheory
 
 variable {W : Type _} [category W] [preadditive W]
 
--- error in Algebra.Homology.Homotopy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An additive functor takes homotopies to homotopies. -/
-@[simps #[]]
-def functor.map_homotopy
-(F : «expr ⥤ »(V, W))
-[F.additive]
-{f g : «expr ⟶ »(C, D)}
-(h : homotopy f g) : homotopy ((F.map_homological_complex c).map f) ((F.map_homological_complex c).map g) :=
-{ hom := λ i j, F.map (h.hom i j),
-  zero' := λ i j w, by { rw ["[", expr h.zero i j w, ",", expr F.map_zero, "]"] [] },
-  comm := λ i, begin
-    have [] [] [":=", expr h.comm i],
-    dsimp [] ["[", expr d_next, ",", expr prev_d, "]"] [] ["at", "*"],
-    rcases [expr c.next i, "with", "_", "|", "⟨", ident inext, ",", ident wn, "⟩"]; rcases [expr c.prev i, "with", "_", "|", "⟨", ident iprev, ",", ident wp, "⟩"]; dsimp [] ["[", expr d_next, ",", expr prev_d, "]"] [] ["at", "*"]; { intro [ident h],
-      simp [] [] [] ["[", expr h, "]"] [] [] }
-  end }
+@[simps]
+def functor.map_homotopy (F : V ⥤ W) [F.additive] {f g : C ⟶ D} (h : Homotopy f g) :
+  Homotopy ((F.map_homological_complex c).map f) ((F.map_homological_complex c).map g) :=
+  { Hom := fun i j => F.map (h.hom i j),
+    zero' :=
+      fun i j w =>
+        by 
+          rw [h.zero i j w, F.map_zero],
+    comm :=
+      fun i =>
+        by 
+          have  := h.comm i 
+          dsimp [dNext, prevD]  at *
+          rcases c.next i with (_ | ⟨inext, wn⟩) <;>
+            rcases c.prev i with (_ | ⟨iprev, wp⟩) <;>
+              dsimp [dNext, prevD]  at * <;>
+                ·
+                  intro h 
+                  simp [h] }
 
 /-- An additive functor preserves homotopy equivalences. -/
 @[simps]

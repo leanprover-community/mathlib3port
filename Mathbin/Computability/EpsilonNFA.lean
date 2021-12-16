@@ -31,6 +31,8 @@ namespace εNFA
 instance : Inhabited (εNFA α σ) :=
   ⟨εNFA.mk (fun _ _ => ∅) ∅ ∅⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » M.step s none)
 /-- The `ε_closure` of a set is the set of states which can be reached by taking a finite string of
   ε-transitions from an element of the set -/
 inductive ε_closure : Set σ → Set σ
@@ -51,6 +53,7 @@ def eval_from (start : Set σ) : List α → Set σ :=
 def eval :=
   M.eval_from M.start
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (S «expr ∈ » M.accept)
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
 def accepts : Language α :=
   fun x => ∃ (S : _)(_ : S ∈ M.accept), S ∈ M.eval x
@@ -90,7 +93,7 @@ def to_ε_NFA (M : NFA α σ) : εNFA α σ :=
 theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.to_ε_NFA.ε_closure S = S :=
   by 
     ext a 
-    split 
+    constructor
     ·
       rintro (⟨_, _, h⟩ | ⟨_, _, _, h, _⟩)
       exact h 

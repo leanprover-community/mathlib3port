@@ -39,13 +39,13 @@ variable (D : J ⥤ algebra T) (c : cone (D ⋙ T.forget)) (t : is_limit c)
 
 /-- (Impl) The natural transformation used to define the new cone -/
 @[simps]
-def γ : D ⋙ T.forget ⋙ «expr↑ » T ⟶ D ⋙ T.forget :=
+def γ : D ⋙ T.forget ⋙ ↑T ⟶ D ⋙ T.forget :=
   { app := fun j => (D.obj j).a }
 
 /-- (Impl) This new cone is used to construct the algebra structure -/
 @[simps π_app]
 def new_cone : cone (D ⋙ forget T) :=
-  { x := T.obj c.X, π := (functor.const_comp _ _ («expr↑ » T)).inv ≫ whisker_right c.π T ≫ γ D }
+  { x := T.obj c.X, π := (functor.const_comp _ _ (↑T)).inv ≫ whisker_right c.π T ≫ γ D }
 
 /-- The algebra structure which will be the apex of the new limit cone for `D`. -/
 @[simps]
@@ -133,7 +133,7 @@ The natural transformation given by the algebra structure maps, used to construc
 apex `colimit (D ⋙ forget T)`.
  -/
 @[simps]
-def γ : (D ⋙ forget T) ⋙ «expr↑ » T ⟶ D ⋙ forget T :=
+def γ : (D ⋙ forget T) ⋙ ↑T ⟶ D ⋙ forget T :=
   { app := fun j => (D.obj j).a }
 
 /--
@@ -142,7 +142,7 @@ A cocone for the diagram `(D ⋙ forget T) ⋙ T` found by composing the natural
 with the colimiting cocone for `D ⋙ forget T`.
 -/
 @[simps]
-def new_cocone : cocone ((D ⋙ forget T) ⋙ «expr↑ » T) :=
+def new_cocone : cocone ((D ⋙ forget T) ⋙ ↑T) :=
   { x := c.X, ι := γ ≫ c.ι }
 
 variable [preserves_colimit (D ⋙ forget T) (T : C ⥤ C)]
@@ -161,7 +161,7 @@ def lambda : ((T : C ⥤ C).mapCocone c).x ⟶ c.X :=
 theorem commuting (j : J) : (T : C ⥤ C).map (c.ι.app j) ≫ lambda c t = (D.obj j).a ≫ c.ι.app j :=
   (is_colimit_of_preserves _ t).fac (new_cocone c) j
 
-variable [preserves_colimit ((D ⋙ forget T) ⋙ «expr↑ » T) (T : C ⥤ C)]
+variable [preserves_colimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)]
 
 /--
 (Impl)
@@ -232,7 +232,7 @@ The forgetful functor from the Eilenberg-Moore category for a monad creates any 
 which the monad itself preserves.
 -/
 noncomputable instance forget_creates_colimit (D : J ⥤ algebra T) [preserves_colimit (D ⋙ forget T) (T : C ⥤ C)]
-  [preserves_colimit ((D ⋙ forget T) ⋙ «expr↑ » T) (T : C ⥤ C)] : creates_colimit D (forget T) :=
+  [preserves_colimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] : creates_colimit D (forget T) :=
   creates_colimit_of_reflects_iso$
     fun c t =>
       { liftedCocone :=
@@ -312,21 +312,18 @@ noncomputable def monadic_creates_colimit_of_preserves_colimit (R : D ⥤ C) (K 
       dsimp 
       refine' preserves_colimit_of_iso_diagram _ (iso_whisker_right i (left_adjoint R ⋙ R)).symm
 
--- error in CategoryTheory.Monad.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A monadic functor creates any colimits of shapes it preserves. -/
-noncomputable
-def monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape
-(R : «expr ⥤ »(D, C))
-[monadic_right_adjoint R]
-[preserves_colimits_of_shape J R] : creates_colimits_of_shape J R :=
-begin
-  have [] [":", expr preserves_colimits_of_shape J «expr ⋙ »(left_adjoint R, R)] [],
-  { apply [expr category_theory.limits.comp_preserves_colimits_of_shape _ _],
-    { haveI [] [] [":=", expr adjunction.left_adjoint_preserves_colimits (adjunction.of_right_adjoint R)],
-      apply_instance },
-    apply_instance },
-  exactI [expr ⟨λ K, monadic_creates_colimit_of_preserves_colimit _ _⟩]
-end
+noncomputable def monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape (R : D ⥤ C) [monadic_right_adjoint R]
+  [preserves_colimits_of_shape J R] : creates_colimits_of_shape J R :=
+  by 
+    have  : preserves_colimits_of_shape J (left_adjoint R ⋙ R)
+    ·
+      apply CategoryTheory.Limits.compPreservesColimitsOfShape _ _
+      ·
+        have  := adjunction.left_adjoint_preserves_colimits (adjunction.of_right_adjoint R)
+        infer_instance 
+      infer_instance 
+    exact ⟨fun K => monadic_creates_colimit_of_preserves_colimit _ _⟩
 
 /-- A monadic functor creates colimits if it preserves colimits. -/
 noncomputable def monadic_creates_colimits_of_preserves_colimits (R : D ⥤ C) [monadic_right_adjoint R]
@@ -338,14 +335,10 @@ noncomputable def monadic_creates_colimits_of_preserves_colimits (R : D ⥤ C) [
 
 section 
 
--- error in CategoryTheory.Monad.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_limit_of_reflective
-(F : «expr ⥤ »(J, D))
-(R : «expr ⥤ »(D, C))
-[has_limit «expr ⋙ »(F, R)]
-[reflective R] : has_limit F :=
-by { haveI [] [] [":=", expr monadic_creates_limits R],
-  exact [expr has_limit_of_created F R] }
+theorem has_limit_of_reflective (F : J ⥤ D) (R : D ⥤ C) [has_limit (F ⋙ R)] [reflective R] : has_limit F :=
+  by 
+    have  := monadic_creates_limits R 
+    exact has_limit_of_created F R
 
 /-- If `C` has limits of shape `J` then any reflective subcategory has limits of shape `J`. -/
 theorem has_limits_of_shape_of_reflective [has_limits_of_shape J C] (R : D ⥤ C) [reflective R] :
@@ -359,19 +352,17 @@ theorem has_limits_of_reflective (R : D ⥤ C) [has_limits C] [reflective R] : h
         by 
           exact has_limits_of_shape_of_reflective R }
 
--- error in CategoryTheory.Monad.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `C` has colimits of shape `J` then any reflective subcategory has colimits of shape `J`. -/
-theorem has_colimits_of_shape_of_reflective
-(R : «expr ⥤ »(D, C))
-[reflective R]
-[has_colimits_of_shape J C] : has_colimits_of_shape J D :=
-{ has_colimit := λ F, begin
-    let [ident c] [] [":=", expr (left_adjoint R).map_cocone (colimit.cocone «expr ⋙ »(F, R))],
-    letI [] [] [":=", expr (adjunction.of_right_adjoint R).left_adjoint_preserves_colimits],
-    let [ident t] [":", expr is_colimit c] [":=", expr is_colimit_of_preserves (left_adjoint R) (colimit.is_colimit _)],
-    apply [expr has_colimit.mk ⟨_, (is_colimit.precompose_inv_equiv _ _).symm t⟩],
-    apply [expr «expr ≪≫ »((iso_whisker_left F (as_iso (adjunction.of_right_adjoint R).counit) : _), F.right_unitor)]
-  end }
+theorem has_colimits_of_shape_of_reflective (R : D ⥤ C) [reflective R] [has_colimits_of_shape J C] :
+  has_colimits_of_shape J D :=
+  { HasColimit :=
+      fun F =>
+        by 
+          let c := (left_adjoint R).mapCocone (colimit.cocone (F ⋙ R))
+          let this' := (adjunction.of_right_adjoint R).leftAdjointPreservesColimits 
+          let t : is_colimit c := is_colimit_of_preserves (left_adjoint R) (colimit.is_colimit _)
+          apply has_colimit.mk ⟨_, (is_colimit.precompose_inv_equiv _ _).symm t⟩
+          apply (iso_whisker_left F (as_iso (adjunction.of_right_adjoint R).counit) : _) ≪≫ F.right_unitor }
 
 /-- If `C` has colimits then any reflective subcategory has colimits. -/
 theorem has_colimits_of_reflective (R : D ⥤ C) [reflective R] [has_colimits C] : has_colimits D :=
@@ -380,26 +371,24 @@ theorem has_colimits_of_reflective (R : D ⥤ C) [reflective R] [has_colimits C]
         by 
           exact has_colimits_of_shape_of_reflective R }
 
--- error in CategoryTheory.Monad.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The reflector always preserves terminal objects. Note this in general doesn't apply to any other
 limit.
 -/
-noncomputable
-def left_adjoint_preserves_terminal_of_reflective
-(R : «expr ⥤ »(D, C))
-[reflective R]
-[has_terminal C] : preserves_limits_of_shape (discrete pempty) (left_adjoint R) :=
-{ preserves_limit := λ K, begin
-    letI [] [":", expr has_terminal D] [":=", expr has_limits_of_shape_of_reflective R],
-    letI [] [] [":=", expr monadic_creates_limits R],
-    letI [] [] [":=", expr category_theory.preserves_limit_of_creates_limit_and_has_limit (functor.empty _) R],
-    letI [] [":", expr preserves_limit (functor.empty _) (left_adjoint R)] [],
-    { apply [expr preserves_terminal_of_iso],
-      apply [expr «expr ≪≫ »(_, as_iso ((adjunction.of_right_adjoint R).counit.app «expr⊤_ »(D)))],
-      apply [expr (left_adjoint R).map_iso (preserves_terminal.iso R).symm] },
-    apply [expr preserves_limit_of_iso_diagram (left_adjoint R) (functor.unique_from_empty _).symm]
-  end }
+noncomputable def left_adjoint_preserves_terminal_of_reflective (R : D ⥤ C) [reflective R] [has_terminal C] :
+  preserves_limits_of_shape (discrete.{v₁} Pempty) (left_adjoint R) :=
+  { PreservesLimit :=
+      fun K =>
+        by 
+          let this' : has_terminal D := has_limits_of_shape_of_reflective R 
+          let this' := monadic_creates_limits R 
+          let this' := CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit (functor.empty _) R 
+          let  : preserves_limit (functor.empty _) (left_adjoint R)
+          ·
+            apply preserves_terminal_of_iso 
+            apply _ ≪≫ as_iso ((adjunction.of_right_adjoint R).counit.app (⊤_ D))
+            apply (left_adjoint R).mapIso (preserves_terminal.iso R).symm 
+          apply preserves_limit_of_iso_diagram (left_adjoint R) (functor.unique_from_empty.{v₁} _).symm }
 
 end 
 

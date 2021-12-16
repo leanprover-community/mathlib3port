@@ -31,8 +31,9 @@ namespace Groupₓₓ
 instance : bundled_hom.parent_projection Groupₓ.toMonoid :=
   ⟨⟩
 
--- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Group
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for Groupₓₓ
 
 attribute [toAdditive] Groupₓₓ.largeCategory Groupₓₓ.concreteCategory
 
@@ -115,8 +116,9 @@ namespace CommGroupₓₓ
 instance : bundled_hom.parent_projection CommGroupₓ.toGroup :=
   ⟨⟩
 
--- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
-attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommGroup
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler large_category
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler concrete_category
+deriving instance [anonymous], [anonymous] for CommGroupₓₓ
 
 attribute [toAdditive] CommGroupₓₓ.largeCategory CommGroupₓₓ.concreteCategory
 
@@ -210,16 +212,15 @@ theorem as_hom_injective {G : AddCommGroupₓₓ.{0}} : Function.Injective (@as_
 theorem int_hom_ext {G : AddCommGroupₓₓ.{0}} (f g : AddCommGroupₓₓ.of ℤ ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
   AddMonoidHom.ext_int w
 
--- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem injective_of_mono {G H : AddCommGroup.{0}} (f : «expr ⟶ »(G, H)) [mono f] : function.injective f :=
-λ g₁ g₂ h, begin
-  have [ident t0] [":", expr «expr = »(«expr ≫ »(as_hom g₁, f), «expr ≫ »(as_hom g₂, f))] [":=", expr begin
-     ext [] [] [],
-     simpa [] [] [] ["[", expr as_hom_apply, "]"] [] ["using", expr h]
-   end],
-  have [ident t1] [":", expr «expr = »(as_hom g₁, as_hom g₂)] [":=", expr (cancel_mono _).1 t0],
-  apply [expr as_hom_injective t1]
-end
+theorem injective_of_mono {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) [mono f] : Function.Injective f :=
+  fun g₁ g₂ h =>
+    by 
+      have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f :=
+        by 
+          ext 
+          simpa [as_hom_apply] using h 
+      have t1 : as_hom g₁ = as_hom g₂ := (cancel_mono _).1 t0 
+      apply as_hom_injective t1
 
 end AddCommGroupₓₓ
 
@@ -276,7 +277,7 @@ namespace CategoryTheory.Aut
 
 /-- The (bundled) group of automorphisms of a type is isomorphic to the (bundled) group
 of permutations. -/
-def iso_perm {α : Type u} : Groupₓₓ.of (Aut α) ≅ Groupₓₓ.of (Equiv.Perm α) :=
+def iso_perm {α : Type u} : Groupₓₓ.of (Aut α) ≅ Groupₓₓ.of (Equivₓ.Perm α) :=
   { Hom :=
       ⟨fun g => g.to_equiv,
         by 
@@ -292,7 +293,7 @@ def iso_perm {α : Type u} : Groupₓₓ.of (Aut α) ≅ Groupₓₓ.of (Equiv.P
 
 /-- The (unbundled) group of automorphisms of a type is `mul_equiv` to the (unbundled) group
 of permutations. -/
-def mul_equiv_perm {α : Type u} : Aut α ≃* Equiv.Perm α :=
+def mul_equiv_perm {α : Type u} : Aut α ≃* Equivₓ.Perm α :=
   iso_perm.groupIsoToMulEquiv
 
 end CategoryTheory.Aut

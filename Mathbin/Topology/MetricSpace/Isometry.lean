@@ -12,7 +12,7 @@ theory for `pseudo_metric_space` and we specialize to `metric_space` when needed
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u v w
 
@@ -140,9 +140,9 @@ theorem Isometry.closed_embedding [CompleteSpace α] [EmetricSpace β] {f : α �
   ClosedEmbedding f :=
   hf.antilipschitz.closed_embedding hf.lipschitz.uniform_continuous
 
-theorem Isometry.tendsto_nhds_iff [CompleteSpace α] [EmetricSpace β] {ι : Type _} {f : α → β} {g : ι → α} {a : Filter ι}
-  {b : α} (hf : Isometry f) : Filter.Tendsto g a (𝓝 b) ↔ Filter.Tendsto (f ∘ g) a (𝓝 (f b)) :=
-  hf.closed_embedding.tendsto_nhds_iff
+theorem Isometry.tendsto_nhds_iff [EmetricSpace β] {ι : Type _} {f : α → β} {g : ι → α} {a : Filter ι} {b : α}
+  (hf : Isometry f) : Filter.Tendsto g a (𝓝 b) ↔ Filter.Tendsto (f ∘ g) a (𝓝 (f b)) :=
+  hf.embedding.tendsto_nhds_iff
 
 end EmetricIsometry
 
@@ -178,7 +178,7 @@ theorem coe_eq_to_equiv (h : α ≃ᵢ β) (a : α) : h a = h.to_equiv a :=
   rfl
 
 @[simp]
-theorem coe_to_equiv (h : α ≃ᵢ β) : «expr⇑ » h.to_equiv = h :=
+theorem coe_to_equiv (h : α ≃ᵢ β) : ⇑h.to_equiv = h :=
   rfl
 
 protected theorem Isometry (h : α ≃ᵢ β) : Isometry h :=
@@ -215,7 +215,7 @@ theorem to_equiv_inj : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.to_equiv = h₂.
 
 @[ext]
 theorem ext ⦃h₁ h₂ : α ≃ᵢ β⦄ (H : ∀ x, h₁ x = h₂ x) : h₁ = h₂ :=
-  to_equiv_inj$ Equiv.ext H
+  to_equiv_inj$ Equivₓ.ext H
 
 /-- Alternative constructor for isometric bijections,
 taking as input an isometry, and a right inverse. -/
@@ -224,11 +224,11 @@ def mk' {α : Type u} [EmetricSpace α] (f : α → β) (g : β → α) (hfg : �
 
 /-- The identity isometry of a space. -/
 protected def refl (α : Type _) [PseudoEmetricSpace α] : α ≃ᵢ α :=
-  { Equiv.refl α with isometry_to_fun := isometry_id }
+  { Equivₓ.refl α with isometry_to_fun := isometry_id }
 
 /-- The composition of two isometric isomorphisms, as an isometric isomorphism. -/
 protected def trans (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) : α ≃ᵢ γ :=
-  { Equiv.trans h₁.to_equiv h₂.to_equiv with isometry_to_fun := h₂.isometry_to_fun.comp h₁.isometry_to_fun }
+  { Equivₓ.trans h₁.to_equiv h₂.to_equiv with isometry_to_fun := h₂.isometry_to_fun.comp h₁.isometry_to_fun }
 
 @[simp]
 theorem trans_apply (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) (x : α) : h₁.trans h₂ x = h₂ (h₁ x) :=
@@ -267,10 +267,10 @@ theorem symm_apply_eq (h : α ≃ᵢ β) {x : α} {y : β} : h.symm y = x ↔ y 
 theorem eq_symm_apply (h : α ≃ᵢ β) {x : α} {y : β} : x = h.symm y ↔ h x = y :=
   h.to_equiv.eq_symm_apply
 
-theorem symm_comp_self (h : α ≃ᵢ β) : («expr⇑ » h.symm ∘ «expr⇑ » h) = id :=
+theorem symm_comp_self (h : α ≃ᵢ β) : (⇑h.symm ∘ ⇑h) = id :=
   funext$ fun a => h.to_equiv.left_inv a
 
-theorem self_comp_symm (h : α ≃ᵢ β) : («expr⇑ » h ∘ «expr⇑ » h.symm) = id :=
+theorem self_comp_symm (h : α ≃ᵢ β) : (⇑h ∘ ⇑h.symm) = id :=
   funext$ fun a => h.to_equiv.right_inv a
 
 @[simp]
@@ -302,11 +302,11 @@ protected def to_homeomorph (h : α ≃ᵢ β) : α ≃ₜ β :=
   { continuous_to_fun := h.continuous, continuous_inv_fun := h.symm.continuous, toEquiv := h.to_equiv }
 
 @[simp]
-theorem coe_to_homeomorph (h : α ≃ᵢ β) : «expr⇑ » h.to_homeomorph = h :=
+theorem coe_to_homeomorph (h : α ≃ᵢ β) : ⇑h.to_homeomorph = h :=
   rfl
 
 @[simp]
-theorem coe_to_homeomorph_symm (h : α ≃ᵢ β) : «expr⇑ » h.to_homeomorph.symm = h.symm :=
+theorem coe_to_homeomorph_symm (h : α ≃ᵢ β) : ⇑h.to_homeomorph.symm = h.symm :=
   rfl
 
 @[simp]
@@ -329,11 +329,11 @@ instance : Groupₓ (α ≃ᵢ α) :=
     mul_left_inv := fun e => ext e.symm_apply_apply }
 
 @[simp]
-theorem coe_one : «expr⇑ » (1 : α ≃ᵢ α) = id :=
+theorem coe_one : ⇑(1 : α ≃ᵢ α) = id :=
   rfl
 
 @[simp]
-theorem coe_mul (e₁ e₂ : α ≃ᵢ α) : «expr⇑ » (e₁*e₂) = (e₁ ∘ e₂) :=
+theorem coe_mul (e₁ e₂ : α ≃ᵢ α) : (⇑e₁*e₂) = (e₁ ∘ e₂) :=
   rfl
 
 theorem mul_apply (e₁ e₂ : α ≃ᵢ α) (x : α) : (e₁*e₂) x = e₁ (e₂ x) :=
@@ -355,7 +355,7 @@ protected theorem CompleteSpace [CompleteSpace β] (e : α ≃ᵢ β) : Complete
 
 theorem complete_space_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpace β :=
   by 
-    split  <;> intro H 
+    constructor <;> intro H 
     exacts[e.symm.complete_space, e.complete_space]
 
 end PseudoEmetricSpace
@@ -388,5 +388,5 @@ def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α 
       fun x y =>
         by 
           simpa [Subtype.edist_eq] using h x y,
-    toEquiv := Equiv.ofInjective f h.injective }
+    toEquiv := Equivₓ.ofInjective f h.injective }
 

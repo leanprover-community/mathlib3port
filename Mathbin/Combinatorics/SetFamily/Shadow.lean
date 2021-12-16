@@ -1,4 +1,5 @@
-import Mathbin.Data.Finset.Lattice
+import Mathbin.Data.Finset.Lattice 
+import Mathbin.Logic.Function.Iterate
 
 /-!
 # Shadows
@@ -56,6 +57,8 @@ theorem shadow_empty : (∂ ) (∅ : Finset (Finset α)) = ∅ :=
 theorem shadow_monotone : Monotone (shadow : Finset (Finset α) → Finset (Finset α)) :=
   fun 𝒜 ℬ => sup_mono
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » 𝒜)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » t)
 /-- `s` is in the shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element to
 get `s`. -/
 theorem mem_shadow_iff : s ∈ (∂ ) 𝒜 ↔ ∃ (t : _)(_ : t ∈ 𝒜), ∃ (a : _)(_ : a ∈ t), erase t a = s :=
@@ -65,6 +68,7 @@ theorem mem_shadow_iff : s ∈ (∂ ) 𝒜 ↔ ∃ (t : _)(_ : t ∈ 𝒜), ∃ 
 theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ ) 𝒜 :=
   mem_shadow_iff.2 ⟨s, hs, a, ha, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
 theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ s), insert a s ∈ 𝒜 :=
@@ -78,6 +82,7 @@ theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ 
       rintro ⟨a, ha, hs⟩
       exact ⟨insert a s, hs, a, mem_insert_self _ _, erase_insert ha⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » 𝒜)
 /-- `s ∈ ∂ 𝒜` iff `s` is exactly one element less than something from `𝒜` -/
 theorem mem_shadow_iff_exists_mem_card_add_one : s ∈ (∂ ) 𝒜 ↔ ∃ (t : _)(_ : t ∈ 𝒜), s ⊆ t ∧ t.card = s.card+1 :=
   by 
@@ -96,11 +101,13 @@ theorem mem_shadow_iff_exists_mem_card_add_one : s ∈ (∂ ) 𝒜 ↔ ∃ (t : 
           by 
             rwa [insert_eq a s, ←ha, sdiff_union_of_subset hst]⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » 𝒜)
 /-- Being in the shadow of `𝒜` means we have a superset in `𝒜`. -/
 theorem exists_subset_of_mem_shadow (hs : s ∈ (∂ ) 𝒜) : ∃ (t : _)(_ : t ∈ 𝒜), s ⊆ t :=
   let ⟨t, ht, hst⟩ := mem_shadow_iff_exists_mem_card_add_one.1 hs
   ⟨t, ht, hst.1⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » 𝒜)
 /-- `t ∈ ∂^k 𝒜` iff `t` is exactly `k` elements less than something in `𝒜`. -/
 theorem mem_shadow_iff_exists_mem_card_add : s ∈ (∂ ^[k]) 𝒜 ↔ ∃ (t : _)(_ : t ∈ 𝒜), s ⊆ t ∧ t.card = s.card+k :=
   by 
@@ -112,7 +119,7 @@ theorem mem_shadow_iff_exists_mem_card_add : s ∈ (∂ ^[k]) 𝒜 ↔ ∃ (t : 
     simp only [exists_prop, Function.comp_app, Function.iterate_succ]
     refine' ih.trans _ 
     clear ih 
-    split 
+    constructor
     ·
       rintro ⟨t, ht, hst, hcardst⟩
       obtain ⟨u, hu, htu, hcardtu⟩ := mem_shadow_iff_exists_mem_card_add_one.1 ht 

@@ -15,7 +15,7 @@ linear_map, trace, diagonal
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe u v w
 
@@ -39,7 +39,7 @@ variable (b : Basis ι R M) (c : Basis κ R M)
 
 /-- The trace of an endomorphism given a basis. -/
 def trace_aux : (M →ₗ[R] M) →ₗ[R] R :=
-  Matrix.trace ι R R ∘ₗ «expr↑ » (LinearMap.toMatrix b b)
+  Matrix.trace ι R R ∘ₗ ↑LinearMap.toMatrix b b
 
 theorem trace_aux_def (b : Basis ι R M) (f : M →ₗ[R] M) :
   trace_aux R b f = Matrix.trace ι R R (LinearMap.toMatrix b b f) :=
@@ -90,10 +90,9 @@ theorem trace_eq_matrix_trace_of_finset {s : Finset M} (b : Basis s R M) (f : M 
     congr 1
     apply trace_aux_eq
 
--- error in LinearAlgebra.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem trace_eq_matrix_trace
-(f : «expr →ₗ[ ] »(M, R, M)) : «expr = »(trace R M f, matrix.trace ι R R (linear_map.to_matrix b b f)) :=
-if hR : nontrivial R then by haveI [] [] [":=", expr hR]; rw ["[", expr trace_eq_matrix_trace_of_finset R b.reindex_finset_range, ",", "<-", expr trace_aux_def, ",", "<-", expr trace_aux_def, ",", expr trace_aux_eq R b, "]"] [] else @subsingleton.elim _ (not_nontrivial_iff_subsingleton.mp hR) _ _
+theorem trace_eq_matrix_trace (f : M →ₗ[R] M) : trace R M f = Matrix.trace ι R R (LinearMap.toMatrix b b f) :=
+  by 
+    rw [trace_eq_matrix_trace_of_finset R b.reindex_finset_range, ←trace_aux_def, ←trace_aux_def, trace_aux_eq R b]
 
 theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f*g) = trace R M (g*f) :=
   if H : ∃ s : Finset M, Nonempty (Basis s R M) then
@@ -107,7 +106,7 @@ theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f*g) = trace R M (g*f)
 
 /-- The trace of an endomorphism is invariant under conjugation -/
 @[simp]
-theorem trace_conj (g : M →ₗ[R] M) (f : Units (M →ₗ[R] M)) : trace R M ((«expr↑ » f*g)*«expr↑ » (f⁻¹)) = trace R M g :=
+theorem trace_conj (g : M →ₗ[R] M) (f : Units (M →ₗ[R] M)) : trace R M (((↑f)*g)*↑f⁻¹) = trace R M g :=
   by 
     rw [trace_mul_comm]
     simp 

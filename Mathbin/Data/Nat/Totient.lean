@@ -74,59 +74,65 @@ theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
 
 open Zmod
 
--- error in Data.Nat.Totient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Note this takes an explicit `fintype (units (zmod n))` argument to avoid trouble with instance
-diamonds. -/
-@[simp]
-theorem _root_.zmod.card_units_eq_totient
-(n : exprℕ())
-[fact «expr < »(0, n)]
-[fintype (units (zmod n))] : «expr = »(fintype.card (units (zmod n)), exprφ() n) :=
-calc
-  «expr = »(fintype.card (units (zmod n)), fintype.card {x : zmod n // x.val.coprime n}) : fintype.card_congr zmod.units_equiv_coprime
-  «expr = »(..., exprφ() n) : begin
-    apply [expr finset.card_congr (λ (a : {x : zmod n // x.val.coprime n}) (_), a.1.val)],
-    { intro [ident a],
-      simp [] [] [] ["[", expr (a : zmod n).val_lt, ",", expr a.prop.symm, "]"] [] [] { contextual := tt } },
-    { intros ["_", "_", "_", "_", ident h],
-      rw [expr subtype.ext_iff_val] [],
-      apply [expr val_injective],
-      exact [expr h] },
-    { intros [ident b, ident hb],
-      rw ["[", expr finset.mem_filter, ",", expr finset.mem_range, "]"] ["at", ident hb],
-      refine [expr ⟨⟨b, _⟩, finset.mem_univ _, _⟩],
-      { let [ident u] [] [":=", expr unit_of_coprime b hb.2.symm],
-        exact [expr val_coe_unit_coprime u] },
-      { show [expr «expr = »(zmod.val (b : zmod n), b)],
-        rw ["[", expr val_nat_cast, ",", expr nat.mod_eq_of_lt hb.1, "]"] [] } }
-  end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+      Note this takes an explicit `fintype (units (zmod n))` argument to avoid trouble with instance
+      diamonds. -/
+    @[ simp ]
+  theorem
+    _root_.zmod.card_units_eq_totient
+    ( n : ℕ ) [ Fact 0 < n ] [ Fintype Units Zmod n ] : Fintype.card Units Zmod n = φ n
+    :=
+      calc
+        Fintype.card Units Zmod n = Fintype.card { x : Zmod n // x.val.coprime n }
+            :=
+            Fintype.card_congr Zmod.unitsEquivCoprime
+          _ = φ n
+            :=
+            by
+              apply Finset.card_congr fun a : { x : Zmod n // x.val.coprime n } _ => a . 1 . val
+                ·
+                  intro a
+                    simp
+                      ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+                      [ ( a : Zmod n ) . val_lt , a.prop.symm ]
+                · intro _ _ _ _ h rw [ Subtype.ext_iff_val ] apply val_injective exact h
+                ·
+                  intro b hb
+                    rw [ Finset.mem_filter , Finset.mem_range ] at hb
+                    refine' ⟨ ⟨ b , _ ⟩ , Finset.mem_univ _ , _ ⟩
+                    · let u := unit_of_coprime b hb . 2 . symm exact val_coe_unit_coprime u
+                    · show Zmod.val ( b : Zmod n ) = b rw [ val_nat_cast , Nat.mod_eq_of_ltₓ hb . 1 ]
 
--- error in Data.Nat.Totient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem totient_mul
-{m n : exprℕ()}
-(h : m.coprime n) : «expr = »(exprφ() «expr * »(m, n), «expr * »(exprφ() m, exprφ() n)) :=
-if hmn0 : «expr = »(«expr * »(m, n), 0) then by cases [expr nat.mul_eq_zero.1 hmn0] ["with", ident h, ident h]; simp [] [] ["only"] ["[", expr totient_zero, ",", expr mul_zero, ",", expr zero_mul, ",", expr h, "]"] [] [] else begin
-  haveI [] [":", expr fact «expr < »(0, «expr * »(m, n))] [":=", expr ⟨nat.pos_of_ne_zero hmn0⟩],
-  haveI [] [":", expr fact «expr < »(0, m)] [":=", expr ⟨«expr $ »(nat.pos_of_ne_zero, left_ne_zero_of_mul hmn0)⟩],
-  haveI [] [":", expr fact «expr < »(0, n)] [":=", expr ⟨«expr $ »(nat.pos_of_ne_zero, right_ne_zero_of_mul hmn0)⟩],
-  rw ["[", "<-", expr zmod.card_units_eq_totient, ",", "<-", expr zmod.card_units_eq_totient, ",", "<-", expr zmod.card_units_eq_totient, ",", expr fintype.card_congr (units.map_equiv (zmod.chinese_remainder h).to_mul_equiv).to_equiv, ",", expr fintype.card_congr (@mul_equiv.prod_units (zmod m) (zmod n) _ _).to_equiv, ",", expr fintype.card_prod, "]"] []
-end
+theorem totient_mul {m n : ℕ} (h : m.coprime n) : φ (m*n) = φ m*φ n :=
+  if hmn0 : (m*n) = 0 then
+    by 
+      cases' Nat.mul_eq_zero.1 hmn0 with h h <;> simp only [totient_zero, mul_zero, zero_mul, h]
+  else
+    by 
+      have  : Fact (0 < m*n) := ⟨Nat.pos_of_ne_zeroₓ hmn0⟩
+      have  : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ$ left_ne_zero_of_mul hmn0⟩
+      have  : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ$ right_ne_zero_of_mul hmn0⟩
+      rw [←Zmod.card_units_eq_totient, ←Zmod.card_units_eq_totient, ←Zmod.card_units_eq_totient,
+        Fintype.card_congr (Units.mapEquiv (Zmod.chineseRemainder h).toMulEquiv).toEquiv,
+        Fintype.card_congr (@MulEquiv.prodUnits (Zmod m) (Zmod n) _ _).toEquiv, Fintype.card_prod]
 
-theorem sum_totient (n : ℕ) : (∑m in (range n.succ).filter (· ∣ n), φ m) = n :=
+theorem sum_totient (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m) = n :=
   if hn0 : n = 0 then
     by 
       simp [hn0]
   else
     calc
-      (∑m in (range n.succ).filter (· ∣ n), φ m) =
-        ∑d in (range n.succ).filter (· ∣ n), ((range (n / d)).filter fun m => gcd (n / d) m = 1).card :=
+      (∑ m in (range n.succ).filter (· ∣ n), φ m) =
+        ∑ d in (range n.succ).filter (· ∣ n), ((range (n / d)).filter fun m => gcd (n / d) m = 1).card :=
       Eq.symm$
         sum_bij (fun d _ => n / d)
           (fun d hd =>
             mem_filter.2
               ⟨mem_range.2$ lt_succ_of_le$ Nat.div_le_selfₓ _ _,
                 by 
-                  conv  => toRHS rw [←Nat.mul_div_cancel'ₓ (mem_filter.1 hd).2] <;> simp ⟩)
+                  conv  => rhs rw [←Nat.mul_div_cancel'ₓ (mem_filter.1 hd).2] <;> simp ⟩)
           (fun _ _ => rfl)
           (fun a b ha hb h =>
             have ha : (a*n / a) = n := Nat.mul_div_cancel'ₓ (mem_filter.1 ha).2
@@ -152,7 +158,7 @@ theorem sum_totient (n : ℕ) : (∑m in (range n.succ).filter (· ∣ n), φ m)
             ⟨n / b, mem_filter.2 ⟨mem_range.2$ lt_succ_of_le$ Nat.div_le_selfₓ _ _, hbn⟩,
               by 
                 rw [←Nat.mul_left_inj (Nat.pos_of_ne_zeroₓ hnb0), Nat.mul_div_cancel'ₓ hb.2, Nat.div_mul_cancelₓ hbn]⟩
-      _ = ∑d in (range n.succ).filter (· ∣ n), ((range n).filter fun m => gcd n m = d).card :=
+      _ = ∑ d in (range n.succ).filter (· ∣ n), ((range n).filter fun m => gcd n m = d).card :=
       sum_congr rfl
         fun d hd =>
           have hd : d ∣ n := (mem_filter.1 hd).2
@@ -214,7 +220,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.prime) (n : ℕ) : φ (p ^ n+1)
         simp only [mem_range, mem_filter, coprime_pow_left_iff n.succ_pos, mem_image, not_exists,
           hp.coprime_iff_not_dvd]
         intro a ha 
-        split 
+        constructor
         ·
           rintro hap b _ rfl 
           exact hap (dvd_mul_left _ _)
@@ -262,31 +268,25 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.pr
     refine' p.prime_of_coprime hp fun n hn hnz => Finset.filter_card_eq h n$ finset.mem_Ico.mpr ⟨_, hn⟩
     rwa [succ_le_iff, pos_iff_ne_zero]
 
--- error in Data.Nat.Totient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_units_zmod_lt_sub_one
-{p : exprℕ()}
-(hp : «expr < »(1, p))
-[fintype (units (zmod p))] : «expr ≤ »(fintype.card (units (zmod p)), «expr - »(p, 1)) :=
-begin
-  haveI [] [":", expr fact «expr < »(0, p)] [":=", expr ⟨zero_lt_one.trans hp⟩],
-  rw [expr zmod.card_units_eq_totient p] [],
-  exact [expr nat.le_pred_of_lt (nat.totient_lt p hp)]
-end
+theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (Units (Zmod p))] :
+  Fintype.card (Units (Zmod p)) ≤ p - 1 :=
+  by 
+    have  : Fact (0 < p) := ⟨zero_lt_one.trans hp⟩
+    rw [Zmod.card_units_eq_totient p]
+    exact Nat.le_pred_of_lt (Nat.totient_lt p hp)
 
--- error in Data.Nat.Totient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem prime_iff_card_units
-(p : exprℕ())
-[fintype (units (zmod p))] : «expr ↔ »(p.prime, «expr = »(fintype.card (units (zmod p)), «expr - »(p, 1))) :=
-begin
-  by_cases [expr hp, ":", expr «expr = »(p, 0)],
-  { substI [expr hp],
-    simp [] [] ["only"] ["[", expr zmod, ",", expr not_prime_zero, ",", expr false_iff, ",", expr zero_tsub, "]"] [] [],
-    suffices [] [":", expr «expr ≠ »(fintype.card (units exprℤ()), 0)],
-    { convert [] [expr this] [] },
-    simp [] [] [] [] [] [] },
-  haveI [] [":", expr fact «expr < »(0, p)] [":=", expr ⟨nat.pos_of_ne_zero hp⟩],
-  rw ["[", expr zmod.card_units_eq_totient, ",", expr nat.totient_eq_iff_prime (fact.out «expr < »(0, p)), "]"] []
-end
+theorem prime_iff_card_units (p : ℕ) [Fintype (Units (Zmod p))] : p.prime ↔ Fintype.card (Units (Zmod p)) = p - 1 :=
+  by 
+    byCases' hp : p = 0
+    ·
+      subst hp 
+      simp only [Zmod, not_prime_zero, false_iffₓ, zero_tsub]
+      suffices  : Fintype.card (Units ℤ) ≠ 0
+      ·
+        convert this 
+      simp 
+    have  : Fact (0 < p) := ⟨Nat.pos_of_ne_zeroₓ hp⟩
+    rw [Zmod.card_units_eq_totient, Nat.totient_eq_iff_prime (Fact.out (0 < p))]
 
 @[simp]
 theorem totient_two : φ 2 = 1 :=

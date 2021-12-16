@@ -40,7 +40,7 @@ general limits can be used.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory.Limits
 
@@ -66,12 +66,11 @@ instance : DecidableEq (walking_parallel_family J)
 instance : Inhabited (walking_parallel_family J) :=
   ⟨zero⟩
 
--- error in CategoryTheory.Limits.Shapes.WideEqualizers: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- The type family of morphisms for the diagram indexing a wide (co)equalizer. -/
-@[derive #[expr decidable_eq]]
 inductive walking_parallel_family.hom (J : Type v) : walking_parallel_family J → walking_parallel_family J → Type v
-| id : ∀ X : walking_parallel_family.{v} J, walking_parallel_family.hom X X
-| line : ∀ j : J, walking_parallel_family.hom zero one
+  | id : ∀ X : walking_parallel_family.{v} J, walking_parallel_family.hom X X
+  | line : ∀ j : J, walking_parallel_family.hom zero one deriving [anonymous]
 
 /-- Satisfying the inhabited linter -/
 instance (J : Type v) : Inhabited (walking_parallel_family.hom J zero zero) :=

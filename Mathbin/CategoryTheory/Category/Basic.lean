@@ -237,7 +237,7 @@ theorem cancel_mono_id (f : X ⟶ Y) [mono f] {g : X ⟶ X} : g ≫ f = f ↔ g 
 
 theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [epi f] (g : Y ⟶ Z) [epi g] : epi (f ≫ g) :=
   by 
-    split 
+    constructor 
     intro Z a b w 
     apply (cancel_epi g).1
     apply (cancel_epi f).1
@@ -245,7 +245,7 @@ theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [epi f] (g : Y ⟶ Z) [epi g] : epi (
 
 theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [mono f] (g : Y ⟶ Z) [mono g] : mono (f ≫ g) :=
   by 
-    split 
+    constructor 
     intro Z a b w 
     apply (cancel_mono f).1
     apply (cancel_mono g).1
@@ -253,7 +253,7 @@ theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [mono f] (g : Y ⟶ Z) [mono g] : mo
 
 theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [mono (f ≫ g)] : mono f :=
   by 
-    split 
+    constructor 
     intro Z a b w 
     replace w := congr_argₓ (fun k => k ≫ g) w 
     dsimp  at w 
@@ -267,7 +267,7 @@ theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [
 
 theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [epi (f ≫ g)] : epi g :=
   by 
-    split 
+    constructor 
     intro Z a b w 
     replace w := congr_argₓ (fun k => f ≫ k) w 
     dsimp  at w 

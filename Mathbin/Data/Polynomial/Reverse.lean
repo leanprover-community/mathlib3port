@@ -227,22 +227,23 @@ theorem reverse_nat_degree_le (f : Polynomial R) : f.reverse.nat_degree ≤ f.na
     rw [coeff_reverse, rev_at, Function.Embedding.coe_fn_mk, if_neg (not_le_of_gtₓ hn),
       coeff_eq_zero_of_nat_degree_lt hn]
 
--- error in Data.Polynomial.Reverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree
-(f : polynomial R) : «expr = »(f.nat_degree, «expr + »(f.reverse.nat_degree, f.nat_trailing_degree)) :=
-begin
-  by_cases [expr hf, ":", expr «expr = »(f, 0)],
-  { rw ["[", expr hf, ",", expr reverse_zero, ",", expr nat_degree_zero, ",", expr nat_trailing_degree_zero, "]"] [] },
-  apply [expr le_antisymm],
-  { refine [expr tsub_le_iff_right.mp _],
-    apply [expr le_nat_degree_of_ne_zero],
-    rw ["[", expr reverse, ",", expr coeff_reflect, ",", "<-", expr rev_at_le f.nat_trailing_degree_le_nat_degree, ",", expr rev_at_invol, "]"] [],
-    exact [expr trailing_coeff_nonzero_iff_nonzero.mpr hf] },
-  { rw ["<-", expr le_tsub_iff_left f.reverse_nat_degree_le] [],
-    apply [expr nat_trailing_degree_le_of_ne_zero],
-    have [ident key] [] [":=", expr mt leading_coeff_eq_zero.mp (mt reverse_eq_zero.mp hf)],
-    rwa ["[", expr leading_coeff, ",", expr coeff_reverse, ",", expr rev_at_le f.reverse_nat_degree_le, "]"] ["at", ident key] }
-end
+theorem nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree (f : Polynomial R) :
+  f.nat_degree = f.reverse.nat_degree+f.nat_trailing_degree :=
+  by 
+    byCases' hf : f = 0
+    ·
+      rw [hf, reverse_zero, nat_degree_zero, nat_trailing_degree_zero]
+    apply le_antisymmₓ
+    ·
+      refine' tsub_le_iff_right.mp _ 
+      apply le_nat_degree_of_ne_zero 
+      rw [reverse, coeff_reflect, ←rev_at_le f.nat_trailing_degree_le_nat_degree, rev_at_invol]
+      exact trailing_coeff_nonzero_iff_nonzero.mpr hf
+    ·
+      rw [←le_tsub_iff_left f.reverse_nat_degree_le]
+      apply nat_trailing_degree_le_of_ne_zero 
+      have key := mt leading_coeff_eq_zero.mp (mt reverse_eq_zero.mp hf)
+      rwa [leading_coeff, coeff_reverse, rev_at_le f.reverse_nat_degree_le] at key
 
 theorem reverse_nat_degree (f : Polynomial R) : f.reverse.nat_degree = f.nat_degree - f.nat_trailing_degree :=
   by 
@@ -291,16 +292,20 @@ theorem trailing_coeff_mul {R : Type _} [Ringₓ R] [IsDomain R] (p q : Polynomi
   by 
     rw [←reverse_leading_coeff, reverse_mul_of_domain, leading_coeff_mul, reverse_leading_coeff, reverse_leading_coeff]
 
--- error in Data.Polynomial.Reverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem coeff_one_reverse (f : polynomial R) : «expr = »(coeff (reverse f) 1, next_coeff f) :=
-begin
-  rw ["[", expr coeff_reverse, ",", expr next_coeff, "]"] [],
-  split_ifs [] ["with", ident hf],
-  { have [] [":", expr «expr = »(coeff f 1, 0)] [":=", expr coeff_eq_zero_of_nat_degree_lt (by simp [] [] ["only"] ["[", expr hf, ",", expr zero_lt_one, "]"] [] [])],
-    simp [] [] [] ["[", "*", ",", expr rev_at, "]"] [] [] },
-  { rw [expr rev_at_le] [],
-    exact [expr nat.succ_le_iff.2 (pos_iff_ne_zero.2 hf)] }
-end
+@[simp]
+theorem coeff_one_reverse (f : Polynomial R) : coeff (reverse f) 1 = next_coeff f :=
+  by 
+    rw [coeff_reverse, next_coeff]
+    splitIfs with hf
+    ·
+      have  : coeff f 1 = 0 :=
+        coeff_eq_zero_of_nat_degree_lt
+          (by 
+            simp only [hf, zero_lt_one])
+      simp [rev_at]
+    ·
+      rw [rev_at_le]
+      exact Nat.succ_le_iff.2 (pos_iff_ne_zero.2 hf)
 
 end Semiringₓ
 

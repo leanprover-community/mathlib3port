@@ -119,6 +119,7 @@ theorem mem_of_fn {n} (f : Finₓ n → α) (a : α) : a ∈ of_fn f ↔ a ∈ S
             by 
               simpa using hi⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » of_fn f)
 @[simp]
 theorem forall_mem_of_fn_iff {n : ℕ} {f : Finₓ n → α} {P : α → Prop} :
   (∀ i _ : i ∈ of_fn f, P i) ↔ ∀ j : Finₓ n, P (f j) :=

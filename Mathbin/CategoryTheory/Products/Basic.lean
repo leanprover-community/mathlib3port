@@ -184,7 +184,7 @@ def Prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.prod 
           cases X 
           cases Y 
           simp only [functor.prod_map, Prod.mk.inj_iffₓ, prod_comp]
-          split  <;> rw [naturality] }
+          constructor <;> rw [naturality] }
 
 end NatTrans
 

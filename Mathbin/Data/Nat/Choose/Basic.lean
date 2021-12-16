@@ -117,36 +117,54 @@ theorem succ_mul_choose_eq : ∀ n k, (succ n*choose n k) = choose (succ n) (suc
     rw [choose_succ_succ (succ n) (succ k), add_mulₓ, ←succ_mul_choose_eq, mul_succ, ←succ_mul_choose_eq,
       add_right_commₓ, ←mul_addₓ, ←choose_succ_succ, ←succ_mul]
 
--- error in Data.Nat.Choose.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem choose_mul_factorial_mul_factorial : ∀
-{n
- k}, «expr ≤ »(k, n) → «expr = »(«expr * »(«expr * »(choose n k, «expr !»(k)), «expr !»(«expr - »(n, k))), «expr !»(n))
-| 0, _, hk := by simp [] [] [] ["[", expr nat.eq_zero_of_le_zero hk, "]"] [] []
-| «expr + »(n, 1), 0, hk := by simp [] [] [] [] [] []
-| «expr + »(n, 1), succ k, hk := begin
-  cases [expr lt_or_eq_of_le hk] ["with", ident hk₁, ident hk₁],
-  { have [ident h] [":", expr «expr = »(«expr * »(«expr * »(choose n k, «expr !»(k.succ)), «expr !»(«expr - »(n, k))), «expr * »(«expr + »(k, 1), «expr !»(n)))] [":=", expr by rw ["<-", expr choose_mul_factorial_mul_factorial (le_of_succ_le_succ hk)] []; simp [] [] [] ["[", expr factorial_succ, ",", expr mul_comm, ",", expr mul_left_comm, "]"] [] []],
-    have [ident h₁] [":", expr «expr = »(«expr !»(«expr - »(n, k)), «expr * »(«expr - »(n, k), «expr !»(«expr - »(n, k.succ))))] [":=", expr by rw ["[", "<-", expr succ_sub_succ, ",", expr succ_sub (le_of_lt_succ hk₁), ",", expr factorial_succ, "]"] []],
-    have [ident h₂] [":", expr «expr = »(«expr * »(«expr * »(choose n (succ k), «expr !»(k.succ)), «expr * »(«expr - »(n, k), «expr !»(«expr - »(n, k.succ)))), «expr * »(«expr - »(n, k), «expr !»(n)))] [":=", expr by rw ["<-", expr choose_mul_factorial_mul_factorial (le_of_lt_succ hk₁)] []; simp [] [] [] ["[", expr factorial_succ, ",", expr mul_comm, ",", expr mul_left_comm, ",", expr mul_assoc, "]"] [] []],
-    have [ident h₃] [":", expr «expr ≤ »(«expr * »(k, «expr !»(n)), «expr * »(n, «expr !»(n)))] [":=", expr nat.mul_le_mul_right _ (le_of_succ_le_succ hk)],
-    rw ["[", expr choose_succ_succ, ",", expr add_mul, ",", expr add_mul, ",", expr succ_sub_succ, ",", expr h, ",", expr h₁, ",", expr h₂, ",", expr add_mul, ",", expr tsub_mul, ",", expr factorial_succ, ",", "<-", expr add_tsub_assoc_of_le h₃, ",", expr add_assoc, ",", "<-", expr add_mul, ",", expr add_tsub_cancel_left, ",", expr add_comm, "]"] [] },
-  { simp [] [] [] ["[", expr hk₁, ",", expr mul_comm, ",", expr choose, ",", expr tsub_self, "]"] [] [] }
-end
+theorem choose_mul_factorial_mul_factorial : ∀ {n k}, k ≤ n → ((choose n k*k !)*(n - k)!) = n !
+| 0, _, hk =>
+  by 
+    simp [Nat.eq_zero_of_le_zeroₓ hk]
+| n+1, 0, hk =>
+  by 
+    simp 
+| n+1, succ k, hk =>
+  by 
+    cases' lt_or_eq_of_leₓ hk with hk₁ hk₁
+    ·
+      have h : ((choose n k*k.succ !)*(n - k)!) = (k+1)*n ! :=
+        by 
+          rw [←choose_mul_factorial_mul_factorial (le_of_succ_le_succ hk)] <;>
+            simp [factorial_succ, mul_commₓ, mul_left_commₓ]
+      have h₁ : (n - k)! = (n - k)*(n - k.succ)! :=
+        by 
+          rw [←succ_sub_succ, succ_sub (le_of_lt_succ hk₁), factorial_succ]
+      have h₂ : ((choose n (succ k)*k.succ !)*(n - k)*(n - k.succ)!) = (n - k)*n ! :=
+        by 
+          rw [←choose_mul_factorial_mul_factorial (le_of_lt_succ hk₁)] <;>
+            simp [factorial_succ, mul_commₓ, mul_left_commₓ, mul_assocₓ]
+      have h₃ : (k*n !) ≤ n*n ! := Nat.mul_le_mul_rightₓ _ (le_of_succ_le_succ hk)
+      rw [choose_succ_succ, add_mulₓ, add_mulₓ, succ_sub_succ, h, h₁, h₂, add_mulₓ, tsub_mul, factorial_succ,
+        ←add_tsub_assoc_of_le h₃, add_assocₓ, ←add_mulₓ, add_tsub_cancel_left, add_commₓ]
+    ·
+      simp [hk₁, mul_commₓ, choose, tsub_self]
 
--- error in Data.Nat.Choose.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem choose_mul
-{n k s : exprℕ()}
-(hkn : «expr ≤ »(k, n))
-(hsk : «expr ≤ »(s, k)) : «expr = »(«expr * »(n.choose k, k.choose s), «expr * »(n.choose s, «expr - »(n, s).choose «expr - »(k, s))) :=
-begin
-  have [ident h] [":", expr «expr < »(0, «expr * »(«expr * »(«expr !»(«expr - »(n, k)), «expr !»(«expr - »(k, s))), «expr !»(s)))] [":=", expr mul_pos (mul_pos (factorial_pos _) (factorial_pos _)) (factorial_pos _)],
-  refine [expr eq_of_mul_eq_mul_right h _],
-  calc
-    «expr = »(«expr * »(«expr * »(n.choose k, k.choose s), «expr * »(«expr * »(«expr !»(«expr - »(n, k)), «expr !»(«expr - »(k, s))), «expr !»(s))), «expr * »(«expr * »(n.choose k, «expr * »(«expr * »(k.choose s, «expr !»(s)), «expr !»(«expr - »(k, s)))), «expr !»(«expr - »(n, k)))) : by rw ["[", expr mul_assoc, ",", expr mul_assoc, ",", expr mul_assoc, ",", expr mul_assoc _ «expr !»(s), ",", expr mul_assoc, ",", expr mul_comm «expr !»(«expr - »(n, k)), ",", expr mul_comm «expr !»(s), "]"] []
-    «expr = »(..., «expr !»(n)) : by rw ["[", expr choose_mul_factorial_mul_factorial hsk, ",", expr choose_mul_factorial_mul_factorial hkn, "]"] []
-    «expr = »(..., «expr * »(«expr * »(n.choose s, «expr !»(s)), «expr * »(«expr * »(«expr - »(n, s).choose «expr - »(k, s), «expr !»(«expr - »(k, s))), «expr !»(«expr - »(«expr - »(n, s), «expr - »(k, s)))))) : by rw ["[", expr choose_mul_factorial_mul_factorial (tsub_le_tsub_right hkn _), ",", expr choose_mul_factorial_mul_factorial (hsk.trans hkn), "]"] []
-    «expr = »(..., «expr * »(«expr * »(n.choose s, «expr - »(n, s).choose «expr - »(k, s)), «expr * »(«expr * »(«expr !»(«expr - »(n, k)), «expr !»(«expr - »(k, s))), «expr !»(s)))) : by rw ["[", expr tsub_tsub_tsub_cancel_right hsk, ",", expr mul_assoc, ",", expr mul_left_comm «expr !»(s), ",", expr mul_assoc, ",", expr mul_comm «expr !»(«expr - »(k, s)), ",", expr mul_comm «expr !»(s), ",", expr mul_right_comm, ",", "<-", expr mul_assoc, "]"] []
-end
+theorem choose_mul {n k s : ℕ} (hkn : k ≤ n) (hsk : s ≤ k) :
+  (n.choose k*k.choose s) = n.choose s*(n - s).choose (k - s) :=
+  by 
+    have h : 0 < ((n - k)!*(k - s)!)*s ! := mul_pos (mul_pos (factorial_pos _) (factorial_pos _)) (factorial_pos _)
+    refine' eq_of_mul_eq_mul_right h _ 
+    calc ((n.choose k*k.choose s)*((n - k)!*(k - s)!)*s !) = (n.choose k*(k.choose s*s !)*(k - s)!)*(n - k)! :=
+      by 
+        rw [mul_assocₓ, mul_assocₓ, mul_assocₓ, mul_assocₓ _ s !, mul_assocₓ, mul_commₓ (n - k)!,
+          mul_commₓ s !]_ = n ! :=
+      by 
+        rw [choose_mul_factorial_mul_factorial hsk,
+          choose_mul_factorial_mul_factorial
+            hkn]_ = (n.choose s*s !)*((n - s).choose (k - s)*(k - s)!)*(n - s - (k - s))! :=
+      by 
+        rw [choose_mul_factorial_mul_factorial (tsub_le_tsub_right hkn _),
+          choose_mul_factorial_mul_factorial
+            (hsk.trans hkn)]_ = (n.choose s*(n - s).choose (k - s))*((n - k)!*(k - s)!)*s ! :=
+      by 
+        rw [tsub_tsub_tsub_cancel_right hsk, mul_assocₓ, mul_left_commₓ s !, mul_assocₓ, mul_commₓ (k - s)!,
+          mul_commₓ s !, mul_right_commₓ, ←mul_assocₓ]
 
 theorem choose_eq_factorial_div_factorial {n k : ℕ} (hk : k ≤ n) : choose n k = n ! / k !*(n - k)! :=
   by 
@@ -189,15 +207,11 @@ theorem choose_symm_half (m : ℕ) : choose ((2*m)+1) (m+1) = choose ((2*m)+1) m
     apply choose_symm_of_eq_add 
     rw [add_commₓ m 1, add_assocₓ 1 m m, add_commₓ (2*m) 1, two_mul m]
 
--- error in Data.Nat.Choose.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem choose_succ_right_eq
-(n
- k : exprℕ()) : «expr = »(«expr * »(choose n «expr + »(k, 1), «expr + »(k, 1)), «expr * »(choose n k, «expr - »(n, k))) :=
-begin
-  have [ident e] [":", expr «expr = »(«expr * »(«expr + »(n, 1), choose n k), «expr + »(«expr * »(choose n k, «expr + »(k, 1)), «expr * »(choose n «expr + »(k, 1), «expr + »(k, 1))))] [],
-  rw ["[", "<-", expr right_distrib, ",", "<-", expr choose_succ_succ, ",", expr succ_mul_choose_eq, "]"] [],
-  rw ["[", "<-", expr tsub_eq_of_eq_add_rev e, ",", expr mul_comm, ",", "<-", expr mul_tsub, ",", expr add_tsub_add_eq_tsub_right, "]"] []
-end
+theorem choose_succ_right_eq (n k : ℕ) : (choose n (k+1)*k+1) = choose n k*n - k :=
+  by 
+    have e : ((n+1)*choose n k) = (choose n k*k+1)+choose n (k+1)*k+1
+    rw [←right_distrib, ←choose_succ_succ, succ_mul_choose_eq]
+    rw [←tsub_eq_of_eq_add_rev e, mul_commₓ, ←mul_tsub, add_tsub_add_eq_tsub_right]
 
 @[simp]
 theorem choose_succ_self_right : ∀ n : ℕ, (n+1).choose n = n+1

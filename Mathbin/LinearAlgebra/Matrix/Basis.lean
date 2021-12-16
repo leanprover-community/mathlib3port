@@ -25,7 +25,7 @@ matrix, basis
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open LinearMap Matrix Set Submodule
 
@@ -87,7 +87,7 @@ theorem to_matrix_update [DecidableEq ι'] (x : M) :
       rw [update_noteq h]
 
 @[simp]
-theorem sum_to_matrix_smul_self [Fintype ι] : (∑i : ι, e.to_matrix v i j • e i) = v j :=
+theorem sum_to_matrix_smul_self [Fintype ι] : (∑ i : ι, e.to_matrix v i j • e i) = v j :=
   by 
     simpRw [e.to_matrix_apply, e.sum_repr]
 
@@ -116,7 +116,7 @@ def to_matrix_equiv [Fintype ι] (e : Basis ι R M) : (ι → M) ≃ₗ[R] Matri
         ext i j 
         rw [e.to_matrix_apply, Pi.smul_apply, LinearEquiv.map_smul]
         rfl,
-    invFun := fun m j => ∑i, m i j • e i,
+    invFun := fun m j => ∑ i, m i j • e i,
     left_inv :=
       by 
         intro v 
@@ -144,11 +144,13 @@ section Fintype
 
 variable [Fintype ι'] [Fintype κ] [Fintype κ']
 
--- error in LinearAlgebra.Matrix.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem basis_to_matrix_mul_linear_map_to_matrix
-[decidable_eq ι'] : «expr = »(«expr ⬝ »(c.to_matrix c', linear_map.to_matrix b' c' f), linear_map.to_matrix b' c f) :=
-(matrix.to_lin b' c).injective (by haveI [] [] [":=", expr classical.dec_eq κ']; rw ["[", expr to_lin_to_matrix, ",", expr to_lin_mul b' c' c, ",", expr to_lin_to_matrix, ",", expr c.to_lin_to_matrix, ",", expr id_comp, "]"] [])
+theorem basis_to_matrix_mul_linear_map_to_matrix [DecidableEq ι'] :
+  c.to_matrix c' ⬝ LinearMap.toMatrix b' c' f = LinearMap.toMatrix b' c f :=
+  (Matrix.toLin b' c).Injective
+    (by 
+      have  := Classical.decEq κ' <;>
+        rw [to_lin_to_matrix, to_lin_mul b' c' c, to_lin_to_matrix, c.to_lin_to_matrix, id_comp])
 
 variable [Fintype ι]
 
@@ -164,13 +166,12 @@ theorem basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix [DecidableE
   by 
     rw [basis_to_matrix_mul_linear_map_to_matrix, linear_map_to_matrix_mul_basis_to_matrix]
 
--- error in LinearAlgebra.Matrix.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A generalization of `linear_map.to_matrix_id`. -/
 @[simp]
-theorem linear_map.to_matrix_id_eq_basis_to_matrix
-[decidable_eq ι] : «expr = »(linear_map.to_matrix b b' id, b'.to_matrix b) :=
-by { haveI [] [] [":=", expr classical.dec_eq ι'],
-  rw ["[", "<-", expr @basis_to_matrix_mul_linear_map_to_matrix _ _ ι, ",", expr to_matrix_id, ",", expr matrix.mul_one, "]"] [] }
+theorem LinearMap.to_matrix_id_eq_basis_to_matrix [DecidableEq ι] : LinearMap.toMatrix b b' id = b'.to_matrix b :=
+  by 
+    have  := Classical.decEq ι' 
+    rw [←@basis_to_matrix_mul_linear_map_to_matrix _ _ ι, to_matrix_id, Matrix.mul_one]
 
 /-- See also `basis.to_matrix_reindex` which gives the `simp` normal form of this result. -/
 theorem Basis.to_matrix_reindex' [DecidableEq ι] [DecidableEq ι'] (b : Basis ι R M) (v : ι' → M) (e : ι ≃ ι') :
@@ -182,20 +183,16 @@ theorem Basis.to_matrix_reindex' [DecidableEq ι] [DecidableEq ι'] (b : Basis �
 
 end Fintype
 
--- error in LinearAlgebra.Matrix.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A generalization of `basis.to_matrix_self`, in the opposite direction. -/
 @[simp]
-theorem basis.to_matrix_mul_to_matrix
-{ι'' : Type*}
-[fintype ι']
-(b'' : ι'' → M) : «expr = »(«expr ⬝ »(b.to_matrix b', b'.to_matrix b''), b.to_matrix b'') :=
-begin
-  have [] [] [":=", expr classical.dec_eq ι],
-  have [] [] [":=", expr classical.dec_eq ι'],
-  haveI [] [] [":=", expr classical.dec_eq ι''],
-  ext [] [ident i, ident j] [],
-  simp [] [] ["only"] ["[", expr matrix.mul_apply, ",", expr basis.to_matrix_apply, ",", expr basis.sum_repr_mul_repr, "]"] [] []
-end
+theorem Basis.to_matrix_mul_to_matrix {ι'' : Type _} [Fintype ι'] (b'' : ι'' → M) :
+  b.to_matrix b' ⬝ b'.to_matrix b'' = b.to_matrix b'' :=
+  by 
+    have  := Classical.decEq ι 
+    have  := Classical.decEq ι' 
+    have  := Classical.decEq ι'' 
+    ext i j 
+    simp only [Matrix.mul_apply, Basis.to_matrix_apply, Basis.sum_repr_mul_repr]
 
 /-- `b.to_matrix b'` and `b'.to_matrix b` are inverses. -/
 theorem Basis.to_matrix_mul_to_matrix_flip [DecidableEq ι] [Fintype ι'] : b.to_matrix b' ⬝ b'.to_matrix b = 1 :=

@@ -67,25 +67,25 @@ theorem RingHom.is_integral_map {x : R} : f.is_integral_elem (f x) :=
 theorem is_integral_algebra_map {x : R} : IsIntegral R (algebraMap R A x) :=
   (algebraMap R A).is_integral_map
 
--- error in RingTheory.IntegralClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_integral_of_noetherian (H : is_noetherian R A) (x : A) : is_integral R x :=
-begin
-  let [ident leval] [":", expr «expr →ₗ[ ] »(polynomial R, R, A)] [":=", expr (aeval x).to_linear_map],
-  let [ident D] [":", expr exprℕ() → submodule R A] [":=", expr λ n, (degree_le R n).map leval],
-  let [ident M] [] [":=", expr well_founded.min (is_noetherian_iff_well_founded.1 H) (set.range D) ⟨_, ⟨0, rfl⟩⟩],
-  have [ident HM] [":", expr «expr ∈ »(M, set.range D)] [":=", expr well_founded.min_mem _ _ _],
-  cases [expr HM] ["with", ident N, ident HN],
-  have [ident HM] [":", expr «expr¬ »(«expr < »(M, D «expr + »(N, 1)))] [":=", expr well_founded.not_lt_min (is_noetherian_iff_well_founded.1 H) (set.range D) _ ⟨«expr + »(N, 1), rfl⟩],
-  rw ["<-", expr HN] ["at", ident HM],
-  have [ident HN2] [":", expr «expr ≤ »(D «expr + »(N, 1), D N)] [":=", expr classical.by_contradiction (λ
-    H, HM (lt_of_le_not_le (map_mono (degree_le_mono (with_bot.coe_le_coe.2 (nat.le_succ N)))) H))],
-  have [ident HN3] [":", expr «expr ∈ »(leval «expr ^ »(X, «expr + »(N, 1)), D N)] [],
-  { exact [expr HN2 (mem_map_of_mem (mem_degree_le.2 (degree_X_pow_le _)))] },
-  rcases [expr HN3, "with", "⟨", ident p, ",", ident hdp, ",", ident hpe, "⟩"],
-  refine [expr ⟨«expr - »(«expr ^ »(X, «expr + »(N, 1)), p), monic_X_pow_sub (mem_degree_le.1 hdp), _⟩],
-  show [expr «expr = »(leval «expr - »(«expr ^ »(X, «expr + »(N, 1)), p), 0)],
-  rw ["[", expr linear_map.map_sub, ",", expr hpe, ",", expr sub_self, "]"] []
-end
+theorem is_integral_of_noetherian (H : IsNoetherian R A) (x : A) : IsIntegral R x :=
+  by 
+    let leval : Polynomial R →ₗ[R] A := (aeval x).toLinearMap 
+    let D : ℕ → Submodule R A := fun n => (degree_le R n).map leval 
+    let M := WellFounded.min (is_noetherian_iff_well_founded.1 H) (Set.Range D) ⟨_, ⟨0, rfl⟩⟩
+    have HM : M ∈ Set.Range D := WellFounded.min_mem _ _ _ 
+    cases' HM with N HN 
+    have HM : ¬M < D (N+1) := WellFounded.not_lt_min (is_noetherian_iff_well_founded.1 H) (Set.Range D) _ ⟨N+1, rfl⟩
+    rw [←HN] at HM 
+    have HN2 : D (N+1) ≤ D N :=
+      Classical.by_contradiction
+        fun H => HM (lt_of_le_not_leₓ (map_mono (degree_le_mono (WithBot.coe_le_coe.2 (Nat.le_succₓ N)))) H)
+    have HN3 : leval (X^N+1) ∈ D N
+    ·
+      exact HN2 (mem_map_of_mem (mem_degree_le.2 (degree_X_pow_le _)))
+    rcases HN3 with ⟨p, hdp, hpe⟩
+    refine' ⟨(X^N+1) - p, monic_X_pow_sub (mem_degree_le.1 hdp), _⟩
+    show leval ((X^N+1) - p) = 0
+    rw [LinearMap.map_sub, hpe, sub_self]
 
 theorem is_integral_of_submodule_noetherian (S : Subalgebra R A) (H : IsNoetherian R S.to_submodule) (x : A)
   (hx : x ∈ S) : IsIntegral R x :=
@@ -152,7 +152,7 @@ theorem is_integral_algebra_map_iff [Algebra A B] [IsScalarTower R A B] {x : A}
 theorem is_integral_iff_is_integral_closure_finite {r : A} :
   IsIntegral R r ↔ ∃ s : Set R, s.finite ∧ IsIntegral (Subring.closure s) r :=
   by 
-    split  <;> intro hr
+    constructor <;> intro hr
     ·
       rcases hr with ⟨p, hmp, hpr⟩
       refine' ⟨_, Set.finite_mem_finset _, p.restriction, monic_restriction.2 hmp, _⟩
@@ -160,44 +160,43 @@ theorem is_integral_iff_is_integral_closure_finite {r : A} :
     rcases hr with ⟨s, hs, hsr⟩
     exact is_integral_of_subring _ hsr
 
--- error in RingTheory.IntegralClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem fg_adjoin_singleton_of_integral
-(x : A)
-(hx : is_integral R x) : (algebra.adjoin R ({x} : set A)).to_submodule.fg :=
-begin
-  rcases [expr hx, "with", "⟨", ident f, ",", ident hfm, ",", ident hfx, "⟩"],
-  existsi [expr finset.image (((«expr ^ »)) x) (finset.range «expr + »(nat_degree f, 1))],
-  apply [expr le_antisymm],
-  { rw [expr span_le] [],
-    intros [ident s, ident hs],
-    rw [expr finset.mem_coe] ["at", ident hs],
-    rcases [expr finset.mem_image.1 hs, "with", "⟨", ident k, ",", ident hk, ",", ident rfl, "⟩"],
-    clear [ident hk],
-    exact [expr (algebra.adjoin R {x}).pow_mem (algebra.subset_adjoin (set.mem_singleton _)) k] },
-  intros [ident r, ident hr],
-  change [expr «expr ∈ »(r, algebra.adjoin R ({x} : set A))] [] ["at", ident hr],
-  rw [expr algebra.adjoin_singleton_eq_range_aeval] ["at", ident hr],
-  rcases [expr (aeval x).mem_range.mp hr, "with", "⟨", ident p, ",", ident rfl, "⟩"],
-  rw ["<-", expr mod_by_monic_add_div p hfm] [],
-  rw ["<-", expr aeval_def] ["at", ident hfx],
-  rw ["[", expr alg_hom.map_add, ",", expr alg_hom.map_mul, ",", expr hfx, ",", expr zero_mul, ",", expr add_zero, "]"] [],
-  have [] [":", expr «expr ≤ »(degree «expr %ₘ »(p, f), degree f)] [":=", expr degree_mod_by_monic_le p hfm],
-  generalize_hyp [] [":"] [expr «expr = »(«expr %ₘ »(p, f), q)] ["at", ident this, "⊢"],
-  rw ["[", "<-", expr sum_C_mul_X_eq q, ",", expr aeval_def, ",", expr eval₂_sum, ",", expr sum_def, "]"] [],
-  refine [expr sum_mem _ (λ k hkq, _)],
-  rw ["[", expr eval₂_mul, ",", expr eval₂_C, ",", expr eval₂_pow, ",", expr eval₂_X, ",", "<-", expr algebra.smul_def, "]"] [],
-  refine [expr smul_mem _ _ (subset_span _)],
-  rw [expr finset.mem_coe] [],
-  refine [expr finset.mem_image.2 ⟨_, _, rfl⟩],
-  rw ["[", expr finset.mem_range, ",", expr nat.lt_succ_iff, "]"] [],
-  refine [expr le_of_not_lt (λ hk, _)],
-  rw ["[", expr degree_le_iff_coeff_zero, "]"] ["at", ident this],
-  rw ["[", expr mem_support_iff, "]"] ["at", ident hkq],
-  apply [expr hkq],
-  apply [expr this],
-  exact [expr lt_of_le_of_lt degree_le_nat_degree (with_bot.coe_lt_coe.2 hk)]
-end
+theorem fg_adjoin_singleton_of_integral (x : A) (hx : IsIntegral R x) :
+  (Algebra.adjoin R ({x} : Set A)).toSubmodule.Fg :=
+  by 
+    rcases hx with ⟨f, hfm, hfx⟩
+    exists Finset.image ((·^·) x) (Finset.range (nat_degree f+1))
+    apply le_antisymmₓ
+    ·
+      rw [span_le]
+      intro s hs 
+      rw [Finset.mem_coe] at hs 
+      rcases Finset.mem_image.1 hs with ⟨k, hk, rfl⟩
+      clear hk 
+      exact (Algebra.adjoin R {x}).pow_mem (Algebra.subset_adjoin (Set.mem_singleton _)) k 
+    intro r hr 
+    change r ∈ Algebra.adjoin R ({x} : Set A) at hr 
+    rw [Algebra.adjoin_singleton_eq_range_aeval] at hr 
+    rcases(aeval x).mem_range.mp hr with ⟨p, rfl⟩
+    rw [←mod_by_monic_add_div p hfm]
+    rw [←aeval_def] at hfx 
+    rw [AlgHom.map_add, AlgHom.map_mul, hfx, zero_mul, add_zeroₓ]
+    have  : degree (p %ₘ f) ≤ degree f := degree_mod_by_monic_le p hfm 
+    generalize p %ₘ f = q  at this⊢
+    rw [←sum_C_mul_X_eq q, aeval_def, eval₂_sum, sum_def]
+    refine' sum_mem _ fun k hkq => _ 
+    rw [eval₂_mul, eval₂_C, eval₂_pow, eval₂_X, ←Algebra.smul_def]
+    refine' smul_mem _ _ (subset_span _)
+    rw [Finset.mem_coe]
+    refine' Finset.mem_image.2 ⟨_, _, rfl⟩
+    rw [Finset.mem_range, Nat.lt_succ_iff]
+    refine' le_of_not_ltₓ fun hk => _ 
+    rw [degree_le_iff_coeff_zero] at this 
+    rw [mem_support_iff] at hkq 
+    apply hkq 
+    apply this 
+    exact lt_of_le_of_ltₓ degree_le_nat_degree (WithBot.coe_lt_coe.2 hk)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem fg_adjoin_of_finite {s : Set A} (hfs : s.finite) (his : ∀ x _ : x ∈ s, IsIntegral R x) :
   (Algebra.adjoin R s).toSubmodule.Fg :=
   Set.Finite.induction_on hfs
@@ -217,100 +216,109 @@ theorem fg_adjoin_of_finite {s : Set A} (hfs : s.finite) (his : ∀ x _ : x ∈ 
               (fg_adjoin_singleton_of_integral _$ his a$ Set.mem_insert a s))
     his
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem is_noetherian_adjoin_finset [IsNoetherianRing R] (s : Finset A) (hs : ∀ x _ : x ∈ s, IsIntegral R x) :
-  IsNoetherian R (Algebra.adjoin R («expr↑ » s : Set A)) :=
+  IsNoetherian R (Algebra.adjoin R (↑s : Set A)) :=
   is_noetherian_of_fg_of_noetherian _ (fg_adjoin_of_finite s.finite_to_set hs)
 
--- error in RingTheory.IntegralClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `S` is a sub-`R`-algebra of `A` and `S` is finitely-generated as an `R`-module,
   then all elements of `S` are integral over `R`. -/
-theorem is_integral_of_mem_of_fg
-(S : subalgebra R A)
-(HS : S.to_submodule.fg)
-(x : A)
-(hx : «expr ∈ »(x, S)) : is_integral R x :=
-begin
-  cases [expr HS] ["with", ident y, ident hy],
-  obtain ["⟨", ident lx, ",", ident hlx1, ",", ident hlx2, "⟩", ":", expr «expr∃ , »((l : «expr →₀ »(A, R))
-    (H : «expr ∈ »(l, finsupp.supported R R «expr↑ »(y))), «expr = »(finsupp.total A A R id l, x))],
-  { rwa ["[", "<-", expr @finsupp.mem_span_image_iff_total A A R _ _ _ id «expr↑ »(y) x, ",", expr set.image_id «expr↑ »(y), ",", expr hy, "]"] [] },
-  have [ident hyS] [":", expr ∀
-   {p}, «expr ∈ »(p, y) → «expr ∈ »(p, S)] [":=", expr λ
-   p hp, show «expr ∈ »(p, S.to_submodule), by { rw ["<-", expr hy] [],
-     exact [expr subset_span hp] }],
-  have [] [":", expr ∀
-   jk : («expr↑ »(y.product y) : set «expr × »(A, A)), «expr ∈ »(«expr * »(jk.1.1, jk.1.2), S.to_submodule)] [":=", expr λ
-   jk, S.mul_mem (hyS (finset.mem_product.1 jk.2).1) (hyS (finset.mem_product.1 jk.2).2)],
-  rw ["[", "<-", expr hy, ",", "<-", expr set.image_id «expr↑ »(y), "]"] ["at", ident this],
-  simp [] [] ["only"] ["[", expr finsupp.mem_span_image_iff_total, "]"] [] ["at", ident this],
-  choose [] [ident ly] [ident hly1, ident hly2] [],
-  let [ident S₀] [":", expr subring R] [":=", expr subring.closure «expr↑ »(«expr ∪ »(lx.frange, finset.bUnion finset.univ «expr ∘ »(finsupp.frange, ly)))],
-  refine [expr is_integral_of_subring S₀ _],
-  letI [] [":", expr comm_ring S₀] [":=", expr subring.to_comm_ring S₀],
-  letI [] [":", expr algebra S₀ A] [":=", expr algebra.of_subring S₀],
-  have [] [":", expr «expr ≤ »(«expr * »(span S₀ (insert 1 «expr↑ »(y) : set A), span S₀ (insert 1 «expr↑ »(y) : set A)), span S₀ (insert 1 «expr↑ »(y) : set A))] [],
-  { rw [expr span_mul_span] [],
-    refine [expr span_le.2 (λ z hz, _)],
-    rcases [expr set.mem_mul.1 hz, "with", "⟨", ident p, ",", ident q, ",", ident rfl, "|", ident hp, ",", ident hq, ",", ident rfl, "⟩"],
-    { rw [expr one_mul] [],
-      exact [expr subset_span hq] },
-    rcases [expr hq, "with", ident rfl, "|", ident hq],
-    { rw [expr mul_one] [],
-      exact [expr subset_span (or.inr hp)] },
-    erw ["<-", expr hly2 ⟨(p, q), finset.mem_product.2 ⟨hp, hq⟩⟩] [],
-    rw ["[", expr finsupp.total_apply, ",", expr finsupp.sum, "]"] [],
-    refine [expr (span S₀ (insert 1 «expr↑ »(y) : set A)).sum_mem (λ t ht, _)],
-    have [] [":", expr «expr ∈ »(ly ⟨(p, q), finset.mem_product.2 ⟨hp, hq⟩⟩ t, S₀)] [":=", expr subring.subset_closure «expr $ »(finset.mem_union_right _, finset.mem_bUnion.2 ⟨⟨(p, q), finset.mem_product.2 ⟨hp, hq⟩⟩, finset.mem_univ _, finsupp.mem_frange.2 ⟨finsupp.mem_support_iff.1 ht, _, rfl⟩⟩)],
-    change [expr «expr ∈ »(«expr • »((⟨_, this⟩ : S₀), t), _)] [] [],
-    exact [expr smul_mem _ _ «expr $ »(subset_span, «expr $ »(or.inr, hly1 _ ht))] },
-  let [ident S₁] [":", expr subring A] [":=", expr { carrier := span S₀ (insert 1 «expr↑ »(y) : set A),
-     one_mem' := «expr $ »(subset_span, or.inl rfl),
-     mul_mem' := λ p q hp hq, «expr $ »(this, mul_mem_mul hp hq),
-     zero_mem' := (span S₀ (insert 1 «expr↑ »(y) : set A)).zero_mem,
-     add_mem' := λ _ _, (span S₀ (insert 1 «expr↑ »(y) : set A)).add_mem,
-     neg_mem' := λ _, (span S₀ (insert 1 «expr↑ »(y) : set A)).neg_mem }],
-  have [] [":", expr «expr = »(S₁, (algebra.adjoin S₀ («expr↑ »(y) : set A)).to_subring)] [],
-  { ext [] [ident z] [],
-    suffices [] [":", expr «expr ↔ »(«expr ∈ »(z, span «expr↥ »(S₀) (insert 1 «expr↑ »(y) : set A)), «expr ∈ »(z, (algebra.adjoin «expr↥ »(S₀) (y : set A)).to_submodule))],
-    { simpa [] [] [] [] [] [] },
-    split; intro [ident hz],
-    { exact [expr span_le.2 (set.insert_subset.2 ⟨(algebra.adjoin S₀ «expr↑ »(y)).one_mem, algebra.subset_adjoin⟩) hz] },
-    { rw ["[", expr subalgebra.mem_to_submodule, ",", expr algebra.mem_adjoin_iff, "]"] ["at", ident hz],
-      suffices [] [":", expr «expr ≤ »(subring.closure «expr ∪ »(set.range «expr⇑ »(algebra_map «expr↥ »(S₀) A), «expr↑ »(y)), S₁)],
-      { exact [expr this hz] },
-      refine [expr subring.closure_le.2 (set.union_subset _ (λ t ht, «expr $ »(subset_span, or.inr ht)))],
-      rw [expr set.range_subset_iff] [],
-      intro [ident y],
-      rw [expr algebra.algebra_map_eq_smul_one] [],
-      exact [expr smul_mem _ y (subset_span (or.inl rfl))] } },
-  have [ident foo] [":", expr ∀
-   z, «expr ↔ »(«expr ∈ »(z, S₁), «expr ∈ »(z, algebra.adjoin «expr↥ »(S₀) (y : set A)))] [],
-  simp [] [] [] ["[", expr this, "]"] [] [],
-  haveI [] [":", expr is_noetherian_ring «expr↥ »(S₀)] [":=", expr is_noetherian_subring_closure _ (finset.finite_to_set _)],
-  refine [expr is_integral_of_submodule_noetherian (algebra.adjoin S₀ «expr↑ »(y)) (is_noetherian_of_fg_of_noetherian _ ⟨insert 1 y, by { rw ["[", expr finset.coe_insert, "]"] [],
-       ext [] [ident z] [],
-       simp [] [] [] ["[", expr S₁, "]"] [] [],
-       convert [] [expr foo z] [] }⟩) _ _],
-  rw ["[", "<-", expr hlx2, ",", expr finsupp.total_apply, ",", expr finsupp.sum, "]"] [],
-  refine [expr subalgebra.sum_mem _ (λ r hr, _)],
-  have [] [":", expr «expr ∈ »(lx r, S₀)] [":=", expr subring.subset_closure (finset.mem_union_left _ (finset.mem_image_of_mem _ hr))],
-  change [expr «expr ∈ »(«expr • »((⟨_, this⟩ : S₀), r), _)] [] [],
-  rw [expr finsupp.mem_supported] ["at", ident hlx1],
-  exact [expr subalgebra.smul_mem _ «expr $ »(algebra.subset_adjoin, hlx1 hr) _]
-end
+theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.to_submodule.fg) (x : A) (hx : x ∈ S) : IsIntegral R x :=
+  by 
+    cases' HS with y hy 
+    obtain ⟨lx, hlx1, hlx2⟩ : ∃ (l : A →₀ R)(H : l ∈ Finsupp.supported R R (↑y)), (Finsupp.total A A R id) l = x
+    ·
+      rwa [←@Finsupp.mem_span_image_iff_total A A R _ _ _ id (↑y) x, Set.image_id (↑y), hy]
+    have hyS : ∀ {p}, p ∈ y → p ∈ S :=
+      fun p hp =>
+        show p ∈ S.to_submodule by 
+          rw [←hy]
+          exact subset_span hp 
+    have  : ∀ jk : (↑y.product y : Set (A × A)), (jk.1.1*jk.1.2) ∈ S.to_submodule :=
+      fun jk => S.mul_mem (hyS (Finset.mem_product.1 jk.2).1) (hyS (Finset.mem_product.1 jk.2).2)
+    rw [←hy, ←Set.image_id (↑y)] at this 
+    simp only [Finsupp.mem_span_image_iff_total] at this 
+    choose ly hly1 hly2 
+    let S₀ : Subring R := Subring.closure (↑(lx.frange ∪ Finset.bUnion Finset.univ (Finsupp.frange ∘ ly)))
+    refine' is_integral_of_subring S₀ _ 
+    let this' : CommRingₓ S₀ := Subring.toCommRing S₀ 
+    let this' : Algebra S₀ A := Algebra.ofSubring S₀ 
+    have  : (span S₀ (insert 1 (↑y) : Set A)*span S₀ (insert 1 (↑y) : Set A)) ≤ span S₀ (insert 1 (↑y) : Set A)
+    ·
+      rw [span_mul_span]
+      refine' span_le.2 fun z hz => _ 
+      rcases Set.mem_mul.1 hz with ⟨p, q, rfl | hp, hq, rfl⟩
+      ·
+        rw [one_mulₓ]
+        exact subset_span hq 
+      rcases hq with (rfl | hq)
+      ·
+        rw [mul_oneₓ]
+        exact subset_span (Or.inr hp)
+      erw [←hly2 ⟨(p, q), Finset.mem_product.2 ⟨hp, hq⟩⟩]
+      rw [Finsupp.total_apply, Finsupp.sum]
+      refine' (span S₀ (insert 1 (↑y) : Set A)).sum_mem fun t ht => _ 
+      have  : ly ⟨(p, q), Finset.mem_product.2 ⟨hp, hq⟩⟩ t ∈ S₀ :=
+        Subring.subset_closure
+          (Finset.mem_union_right _$
+            Finset.mem_bUnion.2
+              ⟨⟨(p, q), Finset.mem_product.2 ⟨hp, hq⟩⟩, Finset.mem_univ _,
+                Finsupp.mem_frange.2 ⟨Finsupp.mem_support_iff.1 ht, _, rfl⟩⟩)
+      change (⟨_, this⟩ : S₀) • t ∈ _ 
+      exact smul_mem _ _ (subset_span$ Or.inr$ hly1 _ ht)
+    let S₁ : Subring A :=
+      { Carrier := span S₀ (insert 1 (↑y) : Set A), one_mem' := subset_span$ Or.inl rfl,
+        mul_mem' := fun p q hp hq => this$ mul_mem_mul hp hq, zero_mem' := (span S₀ (insert 1 (↑y) : Set A)).zero_mem,
+        add_mem' := fun _ _ => (span S₀ (insert 1 (↑y) : Set A)).add_mem,
+        neg_mem' := fun _ => (span S₀ (insert 1 (↑y) : Set A)).neg_mem }
+    have  : S₁ = (Algebra.adjoin S₀ (↑y : Set A)).toSubring
+    ·
+      ext z 
+      suffices  : z ∈ span (↥S₀) (insert 1 (↑y) : Set A) ↔ z ∈ (Algebra.adjoin (↥S₀) (y : Set A)).toSubmodule
+      ·
+        simpa 
+      constructor <;> intro hz
+      ·
+        exact (span_le.2 (Set.insert_subset.2 ⟨(Algebra.adjoin S₀ (↑y)).one_mem, Algebra.subset_adjoin⟩)) hz
+      ·
+        rw [Subalgebra.mem_to_submodule, Algebra.mem_adjoin_iff] at hz 
+        suffices  : Subring.closure (Set.Range (⇑algebraMap (↥S₀) A) ∪ ↑y) ≤ S₁
+        ·
+          exact this hz 
+        refine' Subring.closure_le.2 (Set.union_subset _ fun t ht => subset_span$ Or.inr ht)
+        rw [Set.range_subset_iff]
+        intro y 
+        rw [Algebra.algebra_map_eq_smul_one]
+        exact smul_mem _ y (subset_span (Or.inl rfl))
+    have foo : ∀ z, z ∈ S₁ ↔ z ∈ Algebra.adjoin (↥S₀) (y : Set A)
+    simp [this]
+    have  : IsNoetherianRing (↥S₀) := is_noetherian_subring_closure _ (Finset.finite_to_set _)
+    refine'
+      is_integral_of_submodule_noetherian (Algebra.adjoin S₀ (↑y))
+        (is_noetherian_of_fg_of_noetherian _
+          ⟨insert 1 y,
+            by 
+              rw [Finset.coe_insert]
+              ext z 
+              simp [S₁]
+              convert foo z⟩)
+        _ _ 
+    rw [←hlx2, Finsupp.total_apply, Finsupp.sum]
+    refine' Subalgebra.sum_mem _ fun r hr => _ 
+    have  : lx r ∈ S₀ := Subring.subset_closure (Finset.mem_union_left _ (Finset.mem_image_of_mem _ hr))
+    change (⟨_, this⟩ : S₀) • r ∈ _ 
+    rw [Finsupp.mem_supported] at hlx1 
+    exact Subalgebra.smul_mem _ (Algebra.subset_adjoin$ hlx1 hr) _
 
--- error in RingTheory.IntegralClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ring_hom.is_integral_of_mem_closure
-{x y z : S}
-(hx : f.is_integral_elem x)
-(hy : f.is_integral_elem y)
-(hz : «expr ∈ »(z, subring.closure ({x, y} : set S))) : f.is_integral_elem z :=
-begin
-  letI [] [":", expr algebra R S] [":=", expr f.to_algebra],
-  have [] [] [":=", expr fg_mul _ _ (fg_adjoin_singleton_of_integral x hx) (fg_adjoin_singleton_of_integral y hy)],
-  rw ["[", "<-", expr algebra.adjoin_union_coe_submodule, ",", expr set.singleton_union, "]"] ["at", ident this],
-  exact [expr is_integral_of_mem_of_fg (algebra.adjoin R {x, y}) this z «expr $ »(algebra.mem_adjoin_iff.2, subring.closure_mono (set.subset_union_right _ _) hz)]
-end
+theorem RingHom.is_integral_of_mem_closure {x y z : S} (hx : f.is_integral_elem x) (hy : f.is_integral_elem y)
+  (hz : z ∈ Subring.closure ({x, y} : Set S)) : f.is_integral_elem z :=
+  by 
+    let this' : Algebra R S := f.to_algebra 
+    have  := fg_mul _ _ (fg_adjoin_singleton_of_integral x hx) (fg_adjoin_singleton_of_integral y hy)
+    rw [←Algebra.adjoin_union_coe_submodule, Set.singleton_union] at this 
+    exact
+      is_integral_of_mem_of_fg (Algebra.adjoin R {x, y}) this z
+        (Algebra.mem_adjoin_iff.2$ Subring.closure_mono (Set.subset_union_right _ _) hz)
 
 theorem is_integral_of_mem_closure {x y z : A} (hx : IsIntegral R x) (hy : IsIntegral R y)
   (hz : z ∈ Subring.closure ({x, y} : Set A)) : IsIntegral R z :=
@@ -360,11 +368,21 @@ theorem is_integral_mul {x y : A} (hx : IsIntegral R x) (hy : IsIntegral R y) : 
 
 variable (R A)
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The integral closure of R in an R-algebra A. -/
-def integralClosure : Subalgebra R A :=
-  { Carrier := { r | IsIntegral R r }, zero_mem' := is_integral_zero, one_mem' := is_integral_one,
-    add_mem' := fun _ _ => is_integral_add, mul_mem' := fun _ _ => is_integral_mul,
-    algebra_map_mem' := fun x => is_integral_algebra_map }
+  def
+    integralClosure
+    : Subalgebra R A
+    :=
+      {
+        Carrier := { r | IsIntegral R r } ,
+          zero_mem' := is_integral_zero ,
+          one_mem' := is_integral_one ,
+          add_mem' := fun _ _ => is_integral_add ,
+          mul_mem' := fun _ _ => is_integral_mul ,
+          algebra_map_mem' := fun x => is_integral_algebra_map
+        }
 
 theorem mem_integral_closure_iff_mem_fg {r : A} :
   r ∈ integralClosure R A ↔ ∃ M : Subalgebra R A, M.to_submodule.fg ∧ r ∈ M :=
@@ -379,7 +397,7 @@ theorem integral_closure_map_alg_equiv (f : A ≃ₐ[R] B) :
   by 
     ext y 
     rw [Subalgebra.mem_map]
-    split 
+    constructor
     ·
       rintro ⟨x, hx, rfl⟩
       exact is_integral_alg_hom f hx
@@ -407,6 +425,8 @@ theorem is_integral_of_is_integral_mul_unit {x y : A} {r : R} (hr : (algebraMap 
   (hx : IsIntegral R (x*y)) : IsIntegral R x :=
   (algebraMap R A).is_integral_of_is_integral_mul_unit x y r hr hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » G)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » subring.closure G)
 /-- Generalization of `is_integral_of_mem_closure` bootstrapped up from that lemma -/
 theorem is_integral_of_mem_closure' (G : Set A) (hG : ∀ x _ : x ∈ G, IsIntegral R x) :
   ∀ x _ : x ∈ Subring.closure G, IsIntegral R x :=
@@ -414,6 +434,8 @@ theorem is_integral_of_mem_closure' (G : Set A) (hG : ∀ x _ : x ∈ G, IsInteg
     Subring.closure_induction hx hG is_integral_zero is_integral_one (fun _ _ => is_integral_add)
       (fun _ => is_integral_neg) fun _ _ => is_integral_mul
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » G)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » subring.closure G)
 theorem is_integral_of_mem_closure'' {S : Type _} [CommRingₓ S] {f : R →+* S} (G : Set S)
   (hG : ∀ x _ : x ∈ G, f.is_integral_elem x) : ∀ x _ : x ∈ Subring.closure G, f.is_integral_elem x :=
   fun x hx => @is_integral_of_mem_closure' R S _ _ f.to_algebra G hG x hx
@@ -427,18 +449,22 @@ theorem IsIntegral.nsmul {x : A} (h : IsIntegral R x) (n : ℕ) : IsIntegral R (
 theorem IsIntegral.zsmul {x : A} (h : IsIntegral R x) (n : ℤ) : IsIntegral R (n • x) :=
   (integralClosure R A).zsmul_mem h n
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem IsIntegral.multiset_prod {s : Multiset A} (h : ∀ x _ : x ∈ s, IsIntegral R x) : IsIntegral R s.prod :=
   (integralClosure R A).multiset_prod_mem h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem IsIntegral.multiset_sum {s : Multiset A} (h : ∀ x _ : x ∈ s, IsIntegral R x) : IsIntegral R s.sum :=
   (integralClosure R A).multiset_sum_mem h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem IsIntegral.prod {α : Type _} {s : Finset α} (f : α → A) (h : ∀ x _ : x ∈ s, IsIntegral R (f x)) :
-  IsIntegral R (∏x in s, f x) :=
+  IsIntegral R (∏ x in s, f x) :=
   (integralClosure R A).prod_mem h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem IsIntegral.sum {α : Type _} {s : Finset α} (f : α → A) (h : ∀ x _ : x ∈ s, IsIntegral R (f x)) :
-  IsIntegral R (∑x in s, f x) :=
+  IsIntegral R (∑ x in s, f x) :=
   (integralClosure R A).sum_mem h
 
 end 
@@ -557,14 +583,14 @@ theorem algebra_map_lift (x : S) : algebraMap A B (lift A B h x) = algebraMap S 
 
 end lift
 
-section Equiv
+section Equivₓ
 
 variable (R A B) (A' : Type _) [CommRingₓ A'] [Algebra A' B] [IsIntegralClosure A' R B]
 
 variable [Algebra R A] [Algebra R A'] [IsScalarTower R A B] [IsScalarTower R A' B]
 
 /-- Integral closures are all isomorphic to each other. -/
-noncomputable def Equiv : A ≃ₐ[R] A' :=
+noncomputable def Equivₓ : A ≃ₐ[R] A' :=
   AlgEquiv.ofAlgHom (lift _ B (is_integral_algebra R B)) (lift _ B (is_integral_algebra R B))
     (by 
       ext x 
@@ -576,10 +602,10 @@ noncomputable def Equiv : A ≃ₐ[R] A' :=
       simp )
 
 @[simp]
-theorem algebra_map_equiv (x : A) : algebraMap A' B (Equiv R A B A' x) = algebraMap A B x :=
+theorem algebra_map_equiv (x : A) : algebraMap A' B (Equivₓ R A B A' x) = algebraMap A B x :=
   algebra_map_lift _ _ _ _
 
-end Equiv
+end Equivₓ
 
 end IsIntegralClosure
 
@@ -595,35 +621,37 @@ variable [CommRingₓ R] [CommRingₓ A] [CommRingₓ B] [CommRingₓ S] [CommRi
 
 variable [Algebra A B] [Algebra R B] (f : R →+* S) (g : S →+* T)
 
--- error in RingTheory.IntegralClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_integral_trans_aux
-(x : B)
-{p : polynomial A}
-(pmonic : monic p)
-(hp : «expr = »(aeval x p, 0)) : is_integral (adjoin R («expr↑ »(«expr $ »(p.map, algebra_map A B).frange) : set B)) x :=
-begin
-  generalize [ident hS] [":"] [expr «expr = »((«expr↑ »(«expr $ »(p.map, algebra_map A B).frange) : set B), S)],
-  have [ident coeffs_mem] [":", expr ∀ i, «expr ∈ »(«expr $ »(p.map, algebra_map A B).coeff i, adjoin R S)] [],
-  { intro [ident i],
-    by_cases [expr hi, ":", expr «expr = »(«expr $ »(p.map, algebra_map A B).coeff i, 0)],
-    { rw [expr hi] [],
-      exact [expr subalgebra.zero_mem _] },
-    rw ["<-", expr hS] [],
-    exact [expr subset_adjoin (coeff_mem_frange _ _ hi)] },
-  obtain ["⟨", ident q, ",", ident hq, "⟩", ":", expr «expr∃ , »((q : polynomial (adjoin R S)), «expr = »(q.map (algebra_map (adjoin R S) B), «expr $ »(p.map, algebra_map A B)))],
-  { rw ["<-", expr set.mem_range] [],
-    exact [expr (polynomial.mem_map_range _).2 (λ i, ⟨⟨_, coeffs_mem i⟩, rfl⟩)] },
-  use [expr q],
-  split,
-  { suffices [ident h] [":", expr (q.map (algebra_map (adjoin R S) B)).monic],
-    { refine [expr monic_of_injective _ h],
-      exact [expr subtype.val_injective] },
-    { rw [expr hq] [],
-      exact [expr monic_map _ pmonic] } },
-  { convert [] [expr hp] ["using", 1],
-    replace [ident hq] [] [":=", expr congr_arg (eval x) hq],
-    convert [] [expr hq] ["using", 1]; symmetry; apply [expr eval_map] }
-end
+theorem is_integral_trans_aux (x : B) {p : Polynomial A} (pmonic : monic p) (hp : aeval x p = 0) :
+  IsIntegral (adjoin R (↑(p.map$ algebraMap A B).frange : Set B)) x :=
+  by 
+    generalize hS : (↑(p.map$ algebraMap A B).frange : Set B) = S 
+    have coeffs_mem : ∀ i, (p.map$ algebraMap A B).coeff i ∈ adjoin R S
+    ·
+      intro i 
+      byCases' hi : (p.map$ algebraMap A B).coeff i = 0
+      ·
+        rw [hi]
+        exact Subalgebra.zero_mem _ 
+      rw [←hS]
+      exact subset_adjoin (coeff_mem_frange _ _ hi)
+    obtain ⟨q, hq⟩ : ∃ q : Polynomial (adjoin R S), q.map (algebraMap (adjoin R S) B) = (p.map$ algebraMap A B)
+    ·
+      rw [←Set.mem_range]
+      exact (Polynomial.mem_map_range _).2 fun i => ⟨⟨_, coeffs_mem i⟩, rfl⟩
+    use q 
+    constructor
+    ·
+      suffices h : (q.map (algebraMap (adjoin R S) B)).Monic
+      ·
+        refine' monic_of_injective _ h 
+        exact Subtype.val_injective
+      ·
+        rw [hq]
+        exact monic_map _ pmonic
+    ·
+      convert hp using 1
+      replace hq := congr_argₓ (eval x) hq 
+      convert hq using 1 <;> symm <;> apply eval_map
 
 variable [Algebra R A] [IsScalarTower R A B]
 
@@ -632,7 +660,7 @@ and x is an element of an A-algebra that is integral over A, then x is integral 
 theorem is_integral_trans (A_int : IsIntegral R A) (x : B) (hx : IsIntegral A x) : IsIntegral R x :=
   by 
     rcases hx with ⟨p, pmonic, hp⟩
-    let S : Set B := «expr↑ » (p.map$ algebraMap A B).frange 
+    let S : Set B := ↑(p.map$ algebraMap A B).frange 
     refine' is_integral_of_mem_of_fg (adjoin R (S ∪ {x})) _ _ (subset_adjoin$ Or.inr rfl)
     refine' fg_trans (fg_adjoin_of_finite (Finset.finite_to_set _) fun x hx => _) _
     ·
@@ -714,57 +742,47 @@ theorem RingHom.is_integral_quotient_of_is_integral {I : Ideal S} (hf : f.is_int
     simpa only [hom_eval₂, eval₂_map] using congr_argₓ (Ideal.Quotient.mk I) hpx
 
 theorem is_integral_quotient_of_is_integral {I : Ideal A} (hRA : IsIntegral R A) :
-  IsIntegral (I.comap (algebraMap R A)).Quotient I.quotient :=
+  IsIntegral (R ⧸ I.comap (algebraMap R A)) (A ⧸ I) :=
   (algebraMap R A).is_integral_quotient_of_is_integral hRA
 
--- error in RingTheory.IntegralClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_integral_quotient_map_iff
-{I : ideal S} : «expr ↔ »((ideal.quotient_map I f le_rfl).is_integral, ((ideal.quotient.mk I).comp f : «expr →+* »(R, I.quotient)).is_integral) :=
-begin
-  let [ident g] [] [":=", expr ideal.quotient.mk (I.comap f)],
-  have [] [] [":=", expr ideal.quotient_map_comp_mk le_rfl],
-  refine [expr ⟨λ h, _, λ h, ring_hom.is_integral_tower_top_of_is_integral g _ «expr ▸ »(this, h)⟩],
-  refine [expr «expr ▸ »(this, ring_hom.is_integral_trans g (ideal.quotient_map I f le_rfl) _ h)],
-  exact [expr ring_hom.is_integral_of_surjective g ideal.quotient.mk_surjective]
-end
+theorem is_integral_quotient_map_iff {I : Ideal S} :
+  (Ideal.quotientMap I f le_rfl).IsIntegral ↔ ((Ideal.Quotient.mk I).comp f : R →+* S ⧸ I).IsIntegral :=
+  by 
+    let g := Ideal.Quotient.mk (I.comap f)
+    have  := Ideal.quotient_map_comp_mk le_rfl 
+    refine' ⟨fun h => _, fun h => RingHom.is_integral_tower_top_of_is_integral g _ (this ▸ h)⟩
+    refine' this ▸ RingHom.is_integral_trans g (Ideal.quotientMap I f le_rfl) _ h 
+    exact RingHom.is_integral_of_surjective g Ideal.Quotient.mk_surjective
 
--- error in RingTheory.IntegralClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the integral extension `R → S` is injective, and `S` is a field, then `R` is also a field. -/
-theorem is_field_of_is_integral_of_is_field
-{R S : Type*}
-[comm_ring R]
-[is_domain R]
-[comm_ring S]
-[is_domain S]
-[algebra R S]
-(H : is_integral R S)
-(hRS : function.injective (algebra_map R S))
-(hS : is_field S) : is_field R :=
-begin
-  refine [expr ⟨⟨0, 1, zero_ne_one⟩, mul_comm, λ a ha, _⟩],
-  obtain ["⟨", ident a_inv, ",", ident ha_inv, "⟩", ":=", expr hS.mul_inv_cancel (λ
-    h, ha (hRS (trans h (ring_hom.map_zero _).symm)))],
-  obtain ["⟨", ident p, ",", ident p_monic, ",", ident hp, "⟩", ":=", expr H a_inv],
-  use [expr «expr- »(«expr∑ in , »((i : exprℕ()), finset.range p.nat_degree, «expr * »(p.coeff i, «expr ^ »(a, «expr - »(«expr - »(p.nat_degree, i), 1)))))],
-  have [ident hq] [":", expr «expr = »(«expr∑ in , »((i : exprℕ()), finset.range «expr + »(p.nat_degree, 1), «expr * »(p.coeff i, «expr ^ »(a, «expr - »(p.nat_degree, i)))), 0)] [],
-  { apply [expr (algebra_map R S).injective_iff.mp hRS],
-    have [ident a_inv_ne_zero] [":", expr «expr ≠ »(a_inv, 0)] [":=", expr right_ne_zero_of_mul (mt ha_inv.symm.trans one_ne_zero)],
-    refine [expr (mul_eq_zero.mp _).resolve_right (pow_ne_zero p.nat_degree a_inv_ne_zero)],
-    rw ["[", expr eval₂_eq_sum_range, "]"] ["at", ident hp],
-    rw ["[", expr ring_hom.map_sum, ",", expr finset.sum_mul, "]"] [],
-    refine [expr (finset.sum_congr rfl (λ i hi, _)).trans hp],
-    rw ["[", expr ring_hom.map_mul, ",", expr mul_assoc, "]"] [],
-    congr,
-    have [] [":", expr «expr = »(«expr ^ »(a_inv, p.nat_degree), «expr * »(«expr ^ »(a_inv, «expr - »(p.nat_degree, i)), «expr ^ »(a_inv, i)))] [],
-    { rw ["[", "<-", expr pow_add a_inv, ",", expr tsub_add_cancel_of_le (nat.le_of_lt_succ (finset.mem_range.mp hi)), "]"] [] },
-    rw ["[", expr ring_hom.map_pow, ",", expr this, ",", "<-", expr mul_assoc, ",", "<-", expr mul_pow, ",", expr ha_inv, ",", expr one_pow, ",", expr one_mul, "]"] [] },
-  rw ["[", expr finset.sum_range_succ_comm, ",", expr p_monic.coeff_nat_degree, ",", expr one_mul, ",", expr tsub_self, ",", expr pow_zero, ",", expr add_eq_zero_iff_eq_neg, ",", expr eq_comm, "]"] ["at", ident hq],
-  rw ["[", expr mul_comm, ",", "<-", expr neg_mul_eq_neg_mul, ",", expr finset.sum_mul, "]"] [],
-  convert [] [expr hq] ["using", 2],
-  refine [expr finset.sum_congr rfl (λ i hi, _)],
-  have [] [":", expr «expr ≤ »(1, «expr - »(p.nat_degree, i))] [":=", expr le_tsub_of_add_le_left (finset.mem_range.mp hi)],
-  rw ["[", expr mul_assoc, ",", "<-", expr pow_succ', ",", expr tsub_add_cancel_of_le this, "]"] []
-end
+theorem is_field_of_is_integral_of_is_field {R S : Type _} [CommRingₓ R] [IsDomain R] [CommRingₓ S] [IsDomain S]
+  [Algebra R S] (H : IsIntegral R S) (hRS : Function.Injective (algebraMap R S)) (hS : IsField S) : IsField R :=
+  by 
+    refine' ⟨⟨0, 1, zero_ne_one⟩, mul_commₓ, fun a ha => _⟩
+    obtain ⟨a_inv, ha_inv⟩ := hS.mul_inv_cancel fun h => ha (hRS (trans h (RingHom.map_zero _).symm))
+    obtain ⟨p, p_monic, hp⟩ := H a_inv 
+    use -∑ i : ℕ in Finset.range p.nat_degree, p.coeff i*a^p.nat_degree - i - 1
+    have hq : (∑ i : ℕ in Finset.range (p.nat_degree+1), p.coeff i*a^p.nat_degree - i) = 0
+    ·
+      apply (algebraMap R S).injective_iff.mp hRS 
+      have a_inv_ne_zero : a_inv ≠ 0 := right_ne_zero_of_mul (mt ha_inv.symm.trans one_ne_zero)
+      refine' (mul_eq_zero.mp _).resolve_right (pow_ne_zero p.nat_degree a_inv_ne_zero)
+      rw [eval₂_eq_sum_range] at hp 
+      rw [RingHom.map_sum, Finset.sum_mul]
+      refine' (Finset.sum_congr rfl fun i hi => _).trans hp 
+      rw [RingHom.map_mul, mul_assocₓ]
+      congr 
+      have  : (a_inv^p.nat_degree) = (a_inv^p.nat_degree - i)*a_inv^i
+      ·
+        rw [←pow_addₓ a_inv, tsub_add_cancel_of_le (Nat.le_of_lt_succₓ (finset.mem_range.mp hi))]
+      rw [RingHom.map_pow, this, ←mul_assocₓ, ←mul_powₓ, ha_inv, one_pow, one_mulₓ]
+    rw [Finset.sum_range_succ_comm, p_monic.coeff_nat_degree, one_mulₓ, tsub_self, pow_zeroₓ, add_eq_zero_iff_eq_neg,
+      eq_comm] at hq 
+    rw [mul_commₓ, ←neg_mul_eq_neg_mul, Finset.sum_mul]
+    convert hq using 2
+    refine' Finset.sum_congr rfl fun i hi => _ 
+    have  : 1 ≤ p.nat_degree - i := le_tsub_of_add_le_left (finset.mem_range.mp hi)
+    rw [mul_assocₓ, ←pow_succ'ₓ, tsub_add_cancel_of_le this]
 
 end Algebra
 

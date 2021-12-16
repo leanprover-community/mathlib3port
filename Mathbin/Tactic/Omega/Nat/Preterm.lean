@@ -17,16 +17,17 @@ unsafe inductive exprterm : Type
   | add : exprterm → exprterm → exprterm
   | sub : exprterm → exprterm → exprterm
 
--- error in Tactic.Omega.Nat.Preterm: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
 the terms represented by the said exprs. -/
-@[derive #[expr has_reflect], derive #[expr decidable_eq], derive #[expr inhabited]]
 inductive preterm : Type
-| cst : nat → preterm
-| var : nat → nat → preterm
-| add : preterm → preterm → preterm
-| sub : preterm → preterm → preterm
+  | cst : Nat → preterm
+  | var : Nat → Nat → preterm
+  | add : preterm → preterm → preterm
+  | sub : preterm → preterm → preterm deriving [anonymous], [anonymous], [anonymous]
 
 localized [Omega.Nat] notation "&" k => Omega.Nat.Preterm.cst k
 
@@ -38,6 +39,7 @@ localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
@@ -76,29 +78,28 @@ def fresh_index : preterm → Nat
 | t1 +* t2 => max t1.fresh_index t2.fresh_index
 | t1 -* t2 => max t1.fresh_index t2.fresh_index
 
--- error in Tactic.Omega.Nat.Preterm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » t.fresh_index)
 /-- If variable assignments `v` and `w` agree on all variables that occur
 in term `t`, the value of `t` under `v` and `w` are identical. -/
-theorem val_constant
-(v w : nat → nat) : ∀ t : preterm, ∀ x «expr < » t.fresh_index, «expr = »(v x, w x) → «expr = »(t.val v, t.val w)
-| «expr& »(n), h1 := rfl
-| «expr ** »(m, n), h1 := begin
-  simp [] [] ["only"] ["[", expr val_var, "]"] [] [],
-  apply [expr congr_arg (λ y, «expr * »(m, y))],
-  apply [expr h1 _ (lt_add_one _)]
-end
-| «expr +* »(t, s), h1 := begin
-  simp [] [] ["only"] ["[", expr val_add, "]"] [] [],
-  have [ident ht] [] [":=", expr val_constant t (λ x hx, h1 _ (lt_of_lt_of_le hx (le_max_left _ _)))],
-  have [ident hs] [] [":=", expr val_constant s (λ x hx, h1 _ (lt_of_lt_of_le hx (le_max_right _ _)))],
-  rw ["[", expr ht, ",", expr hs, "]"] []
-end
-| «expr -* »(t, s), h1 := begin
-  simp [] [] ["only"] ["[", expr val_sub, "]"] [] [],
-  have [ident ht] [] [":=", expr val_constant t (λ x hx, h1 _ (lt_of_lt_of_le hx (le_max_left _ _)))],
-  have [ident hs] [] [":=", expr val_constant s (λ x hx, h1 _ (lt_of_lt_of_le hx (le_max_right _ _)))],
-  rw ["[", expr ht, ",", expr hs, "]"] []
-end
+theorem val_constant (v w : Nat → Nat) : ∀ t : preterm, (∀ x _ : x < t.fresh_index, v x = w x) → t.val v = t.val w
+| &n, h1 => rfl
+| m ** n, h1 =>
+  by 
+    simp only [val_var]
+    apply congr_argₓ fun y => m*y 
+    apply h1 _ (lt_add_one _)
+| t +* s, h1 =>
+  by 
+    simp only [val_add]
+    have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_leftₓ _ _))
+    have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_rightₓ _ _))
+    rw [ht, hs]
+| t -* s, h1 =>
+  by 
+    simp only [val_sub]
+    have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_leftₓ _ _))
+    have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_rightₓ _ _))
+    rw [ht, hs]
 
 def reprₓ : preterm → Stringₓ
 | &i => i.repr
@@ -125,14 +126,13 @@ open_locale List.Func
     that is equivalent to the input preterm -/
 @[simp]
 def canonize : preterm → term
-| &m => ⟨«expr↑ » m, []⟩
-| m ** n => ⟨0, [] {n ↦ «expr↑ » m}⟩
+| &m => ⟨↑m, []⟩
+| m ** n => ⟨0, [] {n ↦ ↑m}⟩
 | t +* s => term.add (canonize t) (canonize s)
 | _ -* _ => ⟨0, []⟩
 
 @[simp]
-theorem val_canonize {v : Nat → Nat} :
-  ∀ {t : preterm}, t.sub_free → ((canonize t).val fun x => «expr↑ » (v x)) = t.val v
+theorem val_canonize {v : Nat → Nat} : ∀ {t : preterm}, t.sub_free → ((canonize t).val fun x => ↑v x) = t.val v
 | &i, h1 =>
   by 
     simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zeroₓ]

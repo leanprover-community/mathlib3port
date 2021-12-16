@@ -51,7 +51,7 @@ end
 
 variable [Semiringₓ B] [galgebra R A] [Algebra R B]
 
-instance : Algebra R (⨁i, A i) :=
+instance : Algebra R (⨁ i, A i) :=
   { toFun := (DirectSum.of A 0).comp galgebra.to_fun, map_zero' := AddMonoidHom.map_zero _,
     map_add' := AddMonoidHom.map_add _, map_one' := (DirectSum.of A 0).congr_arg galgebra.map_one,
     map_mul' :=
@@ -79,11 +79,11 @@ instance : Algebra R (⨁i, A i) :=
           rw [DirectSum.of_mul_of, ←of_smul]
           apply Dfinsupp.single_eq_of_sigma_eq (galgebra.smul_def r ⟨i, xi⟩) }
 
-theorem algebra_map_apply (r : R) : algebraMap R (⨁i, A i) r = DirectSum.of A 0 (galgebra.to_fun r) :=
+theorem algebra_map_apply (r : R) : algebraMap R (⨁ i, A i) r = DirectSum.of A 0 (galgebra.to_fun r) :=
   rfl
 
 theorem algebra_map_to_add_monoid_hom :
-  «expr↑ » (algebraMap R (⨁i, A i)) = (DirectSum.of A 0).comp (galgebra.to_fun : R →+ A 0) :=
+  ↑algebraMap R (⨁ i, A i) = (DirectSum.of A 0).comp (galgebra.to_fun : R →+ A 0) :=
   rfl
 
 /-- A family of `linear_map`s preserving `direct_sum.ghas_one.one` and `direct_sum.ghas_mul.mul`
@@ -96,7 +96,7 @@ can be discharged by `rfl`. -/
 @[simps]
 def to_algebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one = 1)
   (hmul : ∀ {i j} ai : A i aj : A j, f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai*f _ aj)
-  (hcommutes : ∀ r, (f 0) (galgebra.to_fun r) = (algebraMap R B) r) : (⨁i, A i) →ₐ[R] B :=
+  (hcommutes : ∀ r, (f 0) (galgebra.to_fun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
   { to_semiring (fun i => (f i).toAddMonoidHom) hone @hmul with
     toFun := to_semiring (fun i => (f i).toAddMonoidHom) hone @hmul,
     commutes' := fun r => (DirectSum.to_semiring_of _ _ _ _ _).trans (hcommutes r) }
@@ -105,9 +105,12 @@ def to_algebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one
 
 See note [partially-applied ext lemmas]. -/
 @[ext]
-theorem alg_hom_ext ⦃f g : (⨁i, A i) →ₐ[R] B⦄
+theorem alg_hom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
   (h : ∀ i, f.to_linear_map.comp (lof _ _ A i) = g.to_linear_map.comp (lof _ _ A i)) : f = g :=
-  AlgHom.coe_ring_hom_injective$ DirectSum.ring_hom_ext$ fun i => AddMonoidHom.ext$ LinearMap.congr_fun (h i)
+  AlgHom.to_linear_map_injective$ DirectSum.linear_map_ext _ h
+
+theorem alg_hom_ext ⦃f g : (⨁ i, A i) →ₐ[R] B⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
+  alg_hom_ext' R A$ fun i => LinearMap.ext$ h i
 
 end DirectSum
 

@@ -173,24 +173,24 @@ theorem mem_iff_nth {a : α} {v : Vector α n} : a ∈ v.to_list ↔ ∃ i, v.nt
                 rwa [to_list_length],
               h⟩⟩
 
--- error in Data.Vector.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nodup_iff_nth_inj {v : vector α n} : «expr ↔ »(v.to_list.nodup, function.injective v.nth) :=
-begin
-  cases [expr v] ["with", ident l, ident hl],
-  subst [expr hl],
-  simp [] [] ["only"] ["[", expr list.nodup_iff_nth_le_inj, "]"] [] [],
-  split,
-  { intros [ident h, ident i, ident j, ident hij],
-    cases [expr i] [],
-    cases [expr j] [],
-    ext [] [] [],
-    apply [expr h],
-    simpa [] [] [] [] [] [] },
-  { intros [ident h, ident i, ident j, ident hi, ident hj, ident hij],
-    have [] [] [":=", expr @h ⟨i, hi⟩ ⟨j, hj⟩],
-    simp [] [] [] ["[", expr nth_eq_nth_le, "]"] [] ["at", "*"],
-    tauto [] }
-end
+theorem nodup_iff_nth_inj {v : Vector α n} : v.to_list.nodup ↔ Function.Injective v.nth :=
+  by 
+    cases' v with l hl 
+    subst hl 
+    simp only [List.nodup_iff_nth_le_inj]
+    constructor
+    ·
+      intro h i j hij 
+      cases i 
+      cases j 
+      ext 
+      apply h 
+      simpa
+    ·
+      intro h i j hi hj hij 
+      have  := @h ⟨i, hi⟩ ⟨j, hj⟩
+      simp [nth_eq_nth_le] at *
+      tauto
 
 @[simp]
 theorem nth_mem (i : Finₓ n) (v : Vector α n) : v.nth i ∈ v.to_list :=
@@ -251,16 +251,15 @@ def last (v : Vector α (n+1)) : α :=
 theorem last_def {v : Vector α (n+1)} : v.last = v.nth (Finₓ.last n) :=
   rfl
 
--- error in Data.Vector.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `last` element of a vector is the `head` of the `reverse` vector. -/
-theorem reverse_nth_zero {v : vector α «expr + »(n, 1)} : «expr = »(v.reverse.head, v.last) :=
-begin
-  have [] [":", expr «expr = »(0, «expr - »(«expr - »(v.to_list.length, 1), n))] [],
-  { simp [] [] ["only"] ["[", expr nat.add_succ_sub_one, ",", expr add_zero, ",", expr to_list_length, ",", expr tsub_self, ",", expr list.length_reverse, "]"] [] [] },
-  rw ["[", "<-", expr nth_zero, ",", expr last_def, ",", expr nth_eq_nth_le, ",", expr nth_eq_nth_le, "]"] [],
-  simp_rw ["[", expr to_list_reverse, ",", expr fin.val_eq_coe, ",", expr fin.coe_last, ",", expr fin.coe_zero, ",", expr this, "]"] [],
-  rw [expr list.nth_le_reverse] []
-end
+theorem reverse_nth_zero {v : Vector α (n+1)} : v.reverse.head = v.last :=
+  by 
+    have  : 0 = v.to_list.length - 1 - n
+    ·
+      simp only [Nat.add_succ_sub_one, add_zeroₓ, to_list_length, tsub_self, List.length_reverse]
+    rw [←nth_zero, last_def, nth_eq_nth_le, nth_eq_nth_le]
+    simpRw [to_list_reverse, Finₓ.val_eq_coe, Finₓ.coe_last, Finₓ.coe_zero, this]
+    rw [List.nth_le_reverse]
 
 section Scan
 
@@ -323,20 +322,23 @@ theorem scanl_singleton (v : Vector α 1) : scanl f b v = b::ᵥf b v.head::ᵥn
     rw [←cons_head_tail v]
     simp only [scanl_cons, scanl_nil, cons_head, singleton_tail]
 
--- error in Data.Vector.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The first element of `scanl` of a vector `v : vector α n`,
 retrieved via `head`, is the starting value `b : β`.
--/ @[simp] theorem scanl_head : «expr = »((scanl f b v).head, b) :=
-begin
-  cases [expr n] [],
-  { have [] [":", expr «expr = »(v, nil)] [":=", expr by simp [] [] ["only"] ["[", expr eq_iff_true_of_subsingleton, "]"] [] []],
-    simp [] [] ["only"] ["[", expr this, ",", expr scanl_nil, ",", expr cons_head, "]"] [] [] },
-  { rw ["<-", expr cons_head_tail v] [],
-    simp [] [] ["only"] ["[", "<-", expr nth_zero, ",", expr nth_eq_nth_le, ",", expr to_list_scanl, ",", expr to_list_cons, ",", expr list.scanl, ",", expr fin.val_zero', ",", expr list.nth_le, "]"] [] [] }
-end
+-/
+@[simp]
+theorem scanl_head : (scanl f b v).head = b :=
+  by 
+    cases n
+    ·
+      have  : v = nil :=
+        by 
+          simp only [eq_iff_true_of_subsingleton]
+      simp only [this, scanl_nil, cons_head]
+    ·
+      rw [←cons_head_tail v]
+      simp only [←nth_zero, nth_eq_nth_le, to_list_scanl, to_list_cons, List.scanl, Finₓ.val_zero', List.nthLe]
 
--- error in Data.Vector.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 For an index `i : fin n`, the `nth` element of `scanl` of a
 vector `v : vector α n` at `i.succ`, is equal to the application
@@ -346,19 +348,25 @@ function `f : β → α → β` of the `i.cast_succ` element of
 This lemma is the `nth` version of `scanl_cons`.
 -/
 @[simp]
-theorem scanl_nth (i : fin n) : «expr = »((scanl f b v).nth i.succ, f ((scanl f b v).nth i.cast_succ) (v.nth i)) :=
-begin
-  cases [expr n] [],
-  { exact [expr fin_zero_elim i] },
-  induction [expr n] [] ["with", ident n, ident hn] ["generalizing", ident b],
-  { have [ident i0] [":", expr «expr = »(i, 0)] [":=", expr by simp [] [] ["only"] ["[", expr eq_iff_true_of_subsingleton, "]"] [] []],
-    simpa [] [] ["only"] ["[", expr scanl_singleton, ",", expr i0, ",", expr nth_zero, "]"] [] [] },
-  { rw ["[", "<-", expr cons_head_tail v, ",", expr scanl_cons, ",", expr nth_cons_succ, "]"] [],
-    refine [expr fin.cases _ _ i],
-    { simp [] [] ["only"] ["[", expr nth_zero, ",", expr scanl_head, ",", expr fin.cast_succ_zero, ",", expr cons_head, "]"] [] [] },
-    { intro [ident i'],
-      simp [] [] ["only"] ["[", expr hn, ",", expr fin.cast_succ_fin_succ, ",", expr nth_cons_succ, "]"] [] [] } }
-end
+theorem scanl_nth (i : Finₓ n) : (scanl f b v).nth i.succ = f ((scanl f b v).nth i.cast_succ) (v.nth i) :=
+  by 
+    cases n
+    ·
+      exact finZeroElim i 
+    induction' n with n hn generalizing b
+    ·
+      have i0 : i = 0 :=
+        by 
+          simp only [eq_iff_true_of_subsingleton]
+      simpa only [scanl_singleton, i0, nth_zero]
+    ·
+      rw [←cons_head_tail v, scanl_cons, nth_cons_succ]
+      refine' Finₓ.cases _ _ i
+      ·
+        simp only [nth_zero, scanl_head, Finₓ.cast_succ_zero, cons_head]
+      ·
+        intro i' 
+        simp only [hn, Finₓ.cast_succ_fin_succ, nth_cons_succ]
 
 end Scan
 
@@ -576,31 +584,21 @@ theorem nth_update_nth_eq_if {v : Vector α n} {i j : Finₓ n} (a : α) :
             rw [nth_update_nth_of_ne] <;>
           assumption
 
--- error in Data.Vector.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem prod_update_nth
-[monoid α]
-(v : vector α n)
-(i : fin n)
-(a : α) : «expr = »((v.update_nth i a).to_list.prod, «expr * »(«expr * »((v.take i).to_list.prod, a), (v.drop «expr + »(i, 1)).to_list.prod)) :=
-begin
-  refine [expr (list.prod_update_nth v.to_list i a).trans _],
-  have [] [":", expr «expr < »(«expr↑ »(i), v.to_list.length)] [":=", expr lt_of_lt_of_le i.2 (le_of_eq v.2.symm)],
-  simp [] [] [] ["[", expr this, "]"] [] []
-end
+@[toAdditive]
+theorem prod_update_nth [Monoidₓ α] (v : Vector α n) (i : Finₓ n) (a : α) :
+  (v.update_nth i a).toList.Prod = ((v.take i).toList.Prod*a)*(v.drop (i+1)).toList.Prod :=
+  by 
+    refine' (List.prod_update_nth v.to_list i a).trans _ 
+    have  : ↑i < v.to_list.length := lt_of_lt_of_leₓ i.2 (le_of_eqₓ v.2.symm)
+    simp [this]
 
--- error in Data.Vector.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[to_additive #[]]
-theorem prod_update_nth'
-[comm_group α]
-(v : vector α n)
-(i : fin n)
-(a : α) : «expr = »((v.update_nth i a).to_list.prod, «expr * »(«expr * »(v.to_list.prod, «expr ⁻¹»(v.nth i)), a)) :=
-begin
-  refine [expr (list.prod_update_nth' v.to_list i a).trans _],
-  have [] [":", expr «expr < »(«expr↑ »(i), v.to_list.length)] [":=", expr lt_of_lt_of_le i.2 (le_of_eq v.2.symm)],
-  simp [] [] [] ["[", expr this, ",", expr nth_eq_nth_le, ",", expr mul_assoc, "]"] [] []
-end
+@[toAdditive]
+theorem prod_update_nth' [CommGroupₓ α] (v : Vector α n) (i : Finₓ n) (a : α) :
+  (v.update_nth i a).toList.Prod = (v.to_list.prod*v.nth i⁻¹)*a :=
+  by 
+    refine' (List.prod_update_nth' v.to_list i a).trans _ 
+    have  : ↑i < v.to_list.length := lt_of_lt_of_leₓ i.2 (le_of_eqₓ v.2.symm)
+    simp [this, nth_eq_nth_le, mul_assocₓ]
 
 end UpdateNth
 
@@ -642,6 +640,7 @@ protected theorem traverse_def (f : α → F β) (x : α) :
   by 
     rintro ⟨xs, rfl⟩ <;> rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x :=
   by 
     rintro ⟨x, rfl⟩
@@ -660,6 +659,7 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 variable {α β γ : Type u}
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 @[nolint unused_arguments]
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
   ∀ x : Vector α n,
@@ -669,12 +669,16 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
       dsimp [Vector.traverse, cast] <;>
         induction' x with x xs <;> simp' [cast] with functor_norm <;> [rfl, simp [· ∘ ·]]
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 protected theorem traverse_eq_map_id {α β} (f : α → β) : ∀ x : Vector α n, x.traverse (id.mk ∘ f) = id.mk (map f x) :=
   by 
     rintro ⟨x, rfl⟩ <;> simp  <;> induction x <;> simp' with functor_norm <;> rfl
 
 variable (η : ApplicativeTransformation F G)
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 protected theorem naturality {α β : Type _} (f : α → F β) :
   ∀ x : Vector α n, η (x.traverse f) = x.traverse (@η _ ∘ f) :=
   by 
@@ -685,6 +689,8 @@ end Traverse
 instance : Traversable.{u} (flip Vector n) :=
   { traverse := @Vector.traverse n, map := fun α β => @Vector.map.{u, u} α β n }
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 instance : IsLawfulTraversable.{u} (flip Vector n) :=
   { id_traverse := @Vector.id_traverse n, comp_traverse := @Vector.comp_traverse n,
     traverse_eq_map_id := @Vector.traverse_eq_map_id n, naturality := @Vector.naturality n,

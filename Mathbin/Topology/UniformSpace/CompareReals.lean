@@ -53,7 +53,7 @@ theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) 
   by 
     ext s 
     erw [Metric.mem_uniformity_dist, IsAbsoluteValue.mem_uniformity]
-    split  <;> rintro ⟨ε, ε_pos, h⟩
+    constructor <;> rintro ⟨ε, ε_pos, h⟩
     ·
       use ε,
         by 
@@ -92,18 +92,22 @@ noncomputable def rationalCauSeqPkg : @AbstractCompletion ℚ$ IsAbsoluteValue.u
 
 namespace CompareReals
 
--- error in Topology.UniformSpace.CompareReals: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler comm_ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler comm_ring
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Type wrapper around ℚ to make sure the absolute value uniform space instance is picked up
 instead of the metric space one. We proved in rat.uniform_space_eq that they are equal,
 but they are not definitionaly equal, so it would confuse the type class system (and probably
-also human readers). -/ @[derive #[expr comm_ring], derive #[expr inhabited]] def Q :=
-exprℚ()
+also human readers). -/
+def Q :=
+  ℚ deriving [anonymous], [anonymous]
 
 instance : UniformSpace Q :=
   IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
 
--- error in Topology.UniformSpace.CompareReals: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-/-- Real numbers constructed as in Bourbaki. -/ @[derive #[expr inhabited]] def Bourbakiℝ : Type := completion Q
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+/-- Real numbers constructed as in Bourbaki. -/
+def Bourbakiℝ : Type :=
+  completion Q deriving [anonymous]
 
 instance bourbaki.uniform_space : UniformSpace Bourbakiℝ :=
   completion.uniform_space Q

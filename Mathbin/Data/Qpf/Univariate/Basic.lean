@@ -80,12 +80,12 @@ open Functor
 
 theorem liftp_iff {α : Type u} (p : α → Prop) (x : F α) : liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i, p (f i) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨y, hy⟩
       cases' h : reprₓ y with a f 
       use a, fun i => (f i).val 
-      split 
+      constructor
       ·
         rw [←hy, ←abs_repr y, h, ←abs_map]
         rfl 
@@ -99,13 +99,13 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : F α) : liftp p x ↔ ∃
 
 theorem liftp_iff' {α : Type u} (p : α → Prop) (x : F α) : liftp p x ↔ ∃ u : q.P.obj α, abs u = x ∧ ∀ i, p (u.snd i) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨y, hy⟩
       cases' h : reprₓ y with a f 
       use ⟨a, fun i => (f i).val⟩
       dsimp 
-      split 
+      constructor
       ·
         rw [←hy, ←abs_repr y, h, ←abs_map]
         rfl 
@@ -120,16 +120,16 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (x : F α) : liftp p x ↔ �
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : F α) :
   liftr r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨u, xeq, yeq⟩
       cases' h : reprₓ u with a f 
       use a, fun i => (f i).val.fst, fun i => (f i).val.snd 
-      split 
+      constructor
       ·
         rw [←xeq, ←abs_repr u, h, ←abs_map]
         rfl 
-      split 
+      constructor
       ·
         rw [←yeq, ←abs_repr u, h, ←abs_map]
         rfl 
@@ -138,7 +138,7 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : F α) :
     rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
     use abs ⟨a, fun i => ⟨(f₀ i, f₁ i), h i⟩⟩
     dsimp 
-    split 
+    constructor
     ·
       rw [xeq, ←abs_map]
       rfl 
@@ -208,19 +208,18 @@ theorem Wequiv.symm (x y : q.P.W) : Wequiv x y → Wequiv y x :=
 def Wrepr : q.P.W → q.P.W :=
   recF (Pfunctor.W.mk ∘ reprₓ)
 
--- error in Data.Qpf.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem Wrepr_equiv (x : q.P.W) : Wequiv (Wrepr x) x :=
-begin
-  induction [expr x] [] ["with", ident a, ident f, ident ih] [],
-  apply [expr Wequiv.trans],
-  { change [expr Wequiv (Wrepr ⟨a, f⟩) (pfunctor.W.mk «expr <$> »(Wrepr, ⟨a, f⟩))] [] [],
-    apply [expr Wequiv.abs'],
-    have [] [":", expr «expr = »(Wrepr ⟨a, f⟩, pfunctor.W.mk (repr (abs «expr <$> »(Wrepr, ⟨a, f⟩))))] [":=", expr rfl],
-    rw ["[", expr this, ",", expr pfunctor.W.dest_mk, ",", expr abs_repr, "]"] [],
-    reflexivity },
-  apply [expr Wequiv.ind],
-  exact [expr ih]
-end
+  by 
+    induction' x with a f ih 
+    apply Wequiv.trans
+    ·
+      change Wequiv (Wrepr ⟨a, f⟩) (Pfunctor.W.mk (Wrepr <$> ⟨a, f⟩))
+      apply Wequiv.abs' 
+      have  : Wrepr ⟨a, f⟩ = Pfunctor.W.mk (reprₓ (abs (Wrepr <$> ⟨a, f⟩))) := rfl 
+      rw [this, Pfunctor.W.dest_mk, abs_repr]
+      rfl 
+    apply Wequiv.ind 
+    exact ih
 
 /--
 Define the fixed point as the quotient of trees under the equivalence relation `Wequiv`.
@@ -261,22 +260,26 @@ theorem fix.rec_eq {α : Type _} (g : F α → α) (x : F (fix F)) : fix.rec g (
       rw [fix_to_W]
       apply Wrepr_equiv 
   by 
-    conv  => toLHS rw [fix.rec, fix.mk]dsimp 
+    conv  => lhs rw [fix.rec, fix.mk]dsimp 
     cases' h : reprₓ x with a f 
     rw [Pfunctor.map_eq, recF_eq, ←Pfunctor.map_eq, Pfunctor.W.dest_mk, ←Pfunctor.comp_map, abs_map, ←h, abs_repr, this]
 
-theorem fix.ind_aux (a : q.P.A) (f : q.P.B a → q.P.W) : fix.mk (abs ⟨a, fun x => «expr⟦ ⟧» (f x)⟩) = «expr⟦ ⟧» ⟨a, f⟩ :=
-  have  : fix.mk (abs ⟨a, fun x => «expr⟦ ⟧» (f x)⟩) = «expr⟦ ⟧» (Wrepr ⟨a, f⟩) :=
-    by 
-      apply Quot.sound 
-      apply Wequiv.abs' 
-      rw [Pfunctor.W.dest_mk, abs_map, abs_repr, ←abs_map, Pfunctor.map_eq]
-      conv  => toRHS simp only [Wrepr, recF_eq, Pfunctor.W.dest_mk, abs_repr]
-      rfl 
-  by 
-    rw [this]
-    apply Quot.sound 
-    apply Wrepr_equiv
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  fix.ind_aux
+  ( a : q.P.A ) ( f : q.P.B a → q.P.W ) : fix.mk abs ⟨ a , fun x => ⟦ f x ⟧ ⟩ = ⟦ ⟨ a , f ⟩ ⟧
+  :=
+    have
+      : fix.mk abs ⟨ a , fun x => ⟦ f x ⟧ ⟩ = ⟦ Wrepr ⟨ a , f ⟩ ⟧
+        :=
+        by
+          apply Quot.sound
+            apply Wequiv.abs'
+            rw [ Pfunctor.W.dest_mk , abs_map , abs_repr , ← abs_map , Pfunctor.map_eq ]
+            conv => rhs simp only [ Wrepr , recF_eq , Pfunctor.W.dest_mk , abs_repr ]
+            rfl
+      by rw [ this ] apply Quot.sound apply Wrepr_equiv
 
 theorem fix.ind_rec {α : Type u} (g₁ g₂ : fix F → α)
   (h : ∀ x : F (fix F), g₁ <$> x = g₂ <$> x → g₁ (fix.mk x) = g₂ (fix.mk x)) : ∀ x, g₁ x = g₂ x :=
@@ -284,7 +287,7 @@ theorem fix.ind_rec {α : Type u} (g₁ g₂ : fix F → α)
     apply Quot.ind 
     intro x 
     induction' x with a f ih 
-    change g₁ («expr⟦ ⟧» ⟨a, f⟩) = g₂ («expr⟦ ⟧» ⟨a, f⟩)
+    change g₁ (⟦⟨a, f⟩⟧) = g₂ (⟦⟨a, f⟩⟧)
     rw [←fix.ind_aux a f]
     apply h 
     rw [←abs_map, ←abs_map, Pfunctor.map_eq, Pfunctor.map_eq]
@@ -314,7 +317,7 @@ theorem fix.dest_mk (x : F (fix F)) : fix.dest (fix.mk x) = x :=
   by 
     unfold fix.dest 
     rw [fix.rec_eq, ←fix.dest, ←comp_map]
-    conv  => toRHS rw [←id_map x]
+    conv  => rhs rw [←id_map x]
     congr with x 
     apply fix.mk_dest
 
@@ -323,7 +326,7 @@ theorem fix.ind (p : fix F → Prop) (h : ∀ x : F (fix F), liftp p x → p (fi
     apply Quot.ind 
     intro x 
     induction' x with a f ih 
-    change p («expr⟦ ⟧» ⟨a, f⟩)
+    change p (⟦⟨a, f⟩⟧)
     rw [←fix.ind_aux a f]
     apply h 
     rw [liftp_iff]
@@ -367,98 +370,92 @@ instance [Inhabited q.P.A] : Inhabited (cofix F) :=
 def cofix.corec {α : Type _} (g : α → F α) (x : α) : cofix F :=
   Quot.mk _ (corecF g x)
 
--- error in Data.Qpf.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- destructor for type defined by `cofix` -/ def cofix.dest : cofix F → F (cofix F) :=
-quot.lift (λ
- x, «expr <$> »(quot.mk Mcongr, abs (pfunctor.M.dest x))) (begin
-   rintros [ident x, ident y, "⟨", ident r, ",", ident pr, ",", ident rxy, "⟩"],
-   dsimp [] [] [] [],
-   have [] [":", expr ∀ x y, r x y → Mcongr x y] [],
-   { intros [ident x, ident y, ident h],
-     exact [expr ⟨r, pr, h⟩] },
-   rw ["[", "<-", expr quot.factor_mk_eq _ _ this, "]"] [],
-   dsimp [] [] [] [],
-   conv [] [] { to_lhs,
-     rw ["[", expr comp_map, ",", "<-", expr abs_map, ",", expr pr rxy, ",", expr abs_map, ",", "<-", expr comp_map, "]"] }
- end)
+/-- destructor for type defined by `cofix` -/
+def cofix.dest : cofix F → F (cofix F) :=
+  Quot.lift (fun x => Quot.mk Mcongr <$> abs (Pfunctor.M.dest x))
+    (by 
+      rintro x y ⟨r, pr, rxy⟩
+      dsimp 
+      have  : ∀ x y, r x y → Mcongr x y
+      ·
+        intro x y h 
+        exact ⟨r, pr, h⟩
+      rw [←Quot.factor_mk_eq _ _ this]
+      dsimp 
+      conv  => lhs rw [comp_map, ←abs_map, pr rxy, abs_map, ←comp_map])
 
 theorem cofix.dest_corec {α : Type u} (g : α → F α) (x : α) : cofix.dest (cofix.corec g x) = cofix.corec g <$> g x :=
   by 
-    conv  => toLHS rw [cofix.dest, cofix.corec]
+    conv  => lhs rw [cofix.dest, cofix.corec]
     dsimp 
     rw [corecF_eq, abs_map, abs_repr, ←comp_map]
     rfl
 
--- error in Data.Qpf.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem cofix.bisim_aux
-(r : cofix F → cofix F → exprProp())
-(h' : ∀ x, r x x)
-(h : ∀
- x
- y, r x y → «expr = »(«expr <$> »(quot.mk r, cofix.dest x), «expr <$> »(quot.mk r, cofix.dest y))) : ∀
-x y, r x y → «expr = »(x, y) :=
-begin
-  intro [ident x],
-  apply [expr quot.induction_on x],
-  clear [ident x],
-  intros [ident x, ident y],
-  apply [expr quot.induction_on y],
-  clear [ident y],
-  intros [ident y, ident rxy],
-  apply [expr quot.sound],
-  let [ident r'] [] [":=", expr λ x y, r (quot.mk _ x) (quot.mk _ y)],
-  have [] [":", expr is_precongr r'] [],
-  { intros [ident a, ident b, ident r'ab],
-    have [ident h₀] [":", expr «expr = »(«expr <$> »(quot.mk r, «expr <$> »(quot.mk Mcongr, abs (pfunctor.M.dest a))), «expr <$> »(quot.mk r, «expr <$> »(quot.mk Mcongr, abs (pfunctor.M.dest b))))] [":=", expr h _ _ r'ab],
-    have [ident h₁] [":", expr ∀ u v : q.P.M, Mcongr u v → «expr = »(quot.mk r' u, quot.mk r' v)] [],
-    { intros [ident u, ident v, ident cuv],
-      apply [expr quot.sound],
-      dsimp [] ["[", expr r', "]"] [] [],
-      rw [expr quot.sound cuv] [],
-      apply [expr h'] },
-    let [ident f] [":", expr quot r → quot r'] [":=", expr quot.lift (quot.lift (quot.mk r') h₁) (begin
-        intro [ident c],
-        apply [expr quot.induction_on c],
-        clear [ident c],
-        intros [ident c, ident d],
-        apply [expr quot.induction_on d],
-        clear [ident d],
-        intros [ident d, ident rcd],
-        apply [expr quot.sound],
-        apply [expr rcd]
-      end)],
-    have [] [":", expr «expr = »(«expr ∘ »(f, «expr ∘ »(quot.mk r, quot.mk Mcongr)), quot.mk r')] [":=", expr rfl],
-    rw ["[", "<-", expr this, ",", expr pfunctor.comp_map _ _ f, ",", expr pfunctor.comp_map _ _ (quot.mk r), ",", expr abs_map, ",", expr abs_map, ",", expr abs_map, ",", expr h₀, "]"] [],
-    rw ["[", expr pfunctor.comp_map _ _ f, ",", expr pfunctor.comp_map _ _ (quot.mk r), ",", expr abs_map, ",", expr abs_map, ",", expr abs_map, "]"] [] },
-  refine [expr ⟨r', this, rxy⟩]
-end
+private theorem cofix.bisim_aux (r : cofix F → cofix F → Prop) (h' : ∀ x, r x x)
+  (h : ∀ x y, r x y → Quot.mk r <$> cofix.dest x = Quot.mk r <$> cofix.dest y) : ∀ x y, r x y → x = y :=
+  by 
+    intro x 
+    apply Quot.induction_on x 
+    clear x 
+    intro x y 
+    apply Quot.induction_on y 
+    clear y 
+    intro y rxy 
+    apply Quot.sound 
+    let r' := fun x y => r (Quot.mk _ x) (Quot.mk _ y)
+    have  : is_precongr r'
+    ·
+      intro a b r'ab 
+      have h₀ :
+        Quot.mk r <$> Quot.mk Mcongr <$> abs (Pfunctor.M.dest a) =
+          Quot.mk r <$> Quot.mk Mcongr <$> abs (Pfunctor.M.dest b) :=
+        h _ _ r'ab 
+      have h₁ : ∀ u v : q.P.M, Mcongr u v → Quot.mk r' u = Quot.mk r' v
+      ·
+        intro u v cuv 
+        apply Quot.sound 
+        dsimp [r']
+        rw [Quot.sound cuv]
+        apply h' 
+      let f : Quot r → Quot r' :=
+        Quot.lift (Quot.lift (Quot.mk r') h₁)
+          (by 
+            intro c 
+            apply Quot.induction_on c 
+            clear c 
+            intro c d 
+            apply Quot.induction_on d 
+            clear d 
+            intro d rcd 
+            apply Quot.sound 
+            apply rcd)
+      have  : f ∘ Quot.mk r ∘ Quot.mk Mcongr = Quot.mk r' := rfl 
+      rw [←this, Pfunctor.comp_map _ _ f, Pfunctor.comp_map _ _ (Quot.mk r), abs_map, abs_map, abs_map, h₀]
+      rw [Pfunctor.comp_map _ _ f, Pfunctor.comp_map _ _ (Quot.mk r), abs_map, abs_map, abs_map]
+    refine' ⟨r', this, rxy⟩
 
--- error in Data.Qpf.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cofix.bisim_rel
-(r : cofix F → cofix F → exprProp())
-(h : ∀
- x
- y, r x y → «expr = »(«expr <$> »(quot.mk r, cofix.dest x), «expr <$> »(quot.mk r, cofix.dest y))) : ∀
-x y, r x y → «expr = »(x, y) :=
-let r' (x y) := «expr ∨ »(«expr = »(x, y), r x y) in
-begin
-  intros [ident x, ident y, ident rxy],
-  apply [expr cofix.bisim_aux r'],
-  { intro [ident x],
-    left,
-    reflexivity },
-  { intros [ident x, ident y, ident r'xy],
-    cases [expr r'xy] [],
-    { rw [expr r'xy] [] },
-    have [] [":", expr ∀ x y, r x y → r' x y] [":=", expr λ x y h, or.inr h],
-    rw ["<-", expr quot.factor_mk_eq _ _ this] [],
-    dsimp [] [] [] [],
-    rw ["[", expr @comp_map _ _ q _ _ _ (quot.mk r), ",", expr @comp_map _ _ q _ _ _ (quot.mk r), "]"] [],
-    rw [expr h _ _ r'xy] [] },
-  right,
-  exact [expr rxy]
-end
+theorem cofix.bisim_rel (r : cofix F → cofix F → Prop)
+  (h : ∀ x y, r x y → Quot.mk r <$> cofix.dest x = Quot.mk r <$> cofix.dest y) : ∀ x y, r x y → x = y :=
+  let r' x y := x = y ∨ r x y 
+  by 
+    intro x y rxy 
+    apply cofix.bisim_aux r'
+    ·
+      intro x 
+      left 
+      rfl
+    ·
+      intro x y r'xy 
+      cases r'xy
+      ·
+        rw [r'xy]
+      have  : ∀ x y, r x y → r' x y := fun x y h => Or.inr h 
+      rw [←Quot.factor_mk_eq _ _ this]
+      dsimp 
+      rw [@comp_map _ _ q _ _ _ (Quot.mk r), @comp_map _ _ q _ _ _ (Quot.mk r)]
+      rw [h _ _ r'xy]
+    right 
+    exact rxy
 
 theorem cofix.bisim (r : cofix F → cofix F → Prop) (h : ∀ x y, r x y → liftr r (cofix.dest x) (cofix.dest y)) :
   ∀ x y, r x y → x = y :=
@@ -522,7 +519,7 @@ def comp : Qpf (Functor.Comp F₂ F₁) :=
           abstract 
             dsimp [Functor.Comp]
             intro x 
-            conv  => toRHS rw [←abs_repr x]
+            conv  => rhs rw [←abs_repr x]
             cases' h : reprₓ x with a f 
             dsimp 
             congr with x 
@@ -547,7 +544,7 @@ def comp : Qpf (Functor.Comp F₂ F₁) :=
             rw [Pfunctor.map_eq]
             dsimp [Function.comp]
             simp [abs_map]
-            split 
+            constructor 
             rfl 
             ext x 
             rw [←abs_map]
@@ -593,69 +590,68 @@ open functor(Liftp Liftr Supp)
 
 open Set
 
--- error in Data.Qpf.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_supp
-{α : Type u}
-(x : F α)
-(u : α) : «expr ↔ »(«expr ∈ »(u, supp x), ∀ a f, «expr = »(abs ⟨a, f⟩, x) → «expr ∈ »(u, «expr '' »(f, univ))) :=
-begin
-  rw ["[", expr supp, "]"] [],
-  dsimp [] [] [] [],
-  split,
-  { intros [ident h, ident a, ident f, ident haf],
-    have [] [":", expr liftp (λ u, «expr ∈ »(u, «expr '' »(f, univ))) x] [],
-    { rw [expr liftp_iff] [],
-      refine [expr ⟨a, f, haf.symm, λ i, mem_image_of_mem _ (mem_univ _)⟩] },
-    exact [expr h this] },
-  intros [ident h, ident p],
-  rw [expr liftp_iff] [],
-  rintros ["⟨", ident a, ",", ident f, ",", ident xeq, ",", ident h', "⟩"],
-  rcases [expr h a f xeq.symm, "with", "⟨", ident i, ",", "_", ",", ident hi, "⟩"],
-  rw ["<-", expr hi] [],
-  apply [expr h']
-end
-
-theorem supp_eq {α : Type u} (x : F α) : supp x = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ } :=
+theorem mem_supp {α : Type u} (x : F α) (u : α) : u ∈ supp x ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ :=
   by 
-    ext <;> apply mem_supp
+    rw [supp]
+    dsimp 
+    constructor
+    ·
+      intro h a f haf 
+      have  : liftp (fun u => u ∈ f '' univ) x
+      ·
+        rw [liftp_iff]
+        refine' ⟨a, f, haf.symm, fun i => mem_image_of_mem _ (mem_univ _)⟩
+      exact h this 
+    intro h p 
+    rw [liftp_iff]
+    rintro ⟨a, f, xeq, h'⟩
+    rcases h a f xeq.symm with ⟨i, _, hi⟩
+    rw [←hi]
+    apply h'
 
--- error in Data.Qpf.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem has_good_supp_iff
-{α : Type u}
-(x : F α) : «expr ↔ »(∀
- p, «expr ↔ »(liftp p x, ∀
-  u «expr ∈ » supp x, p u), «expr∃ , »((a
-   f), «expr ∧ »(«expr = »(abs ⟨a, f⟩, x), ∀
-   a' f', «expr = »(abs ⟨a', f'⟩, x) → «expr ⊆ »(«expr '' »(f, univ), «expr '' »(f', univ))))) :=
-begin
-  split,
-  { intro [ident h],
-    have [] [":", expr liftp (supp x) x] [],
-    by rw [expr h] []; intro [ident u]; exact [expr id],
-    rw [expr liftp_iff] ["at", ident this],
-    rcases [expr this, "with", "⟨", ident a, ",", ident f, ",", ident xeq, ",", ident h', "⟩"],
-    refine [expr ⟨a, f, xeq.symm, _⟩],
-    intros [ident a', ident f', ident h''],
-    rintros [ident u, "⟨", ident i, ",", "_", ",", ident hfi, "⟩"],
-    have [] [":", expr «expr ∈ »(u, supp x)] [],
-    by rw ["<-", expr hfi] []; apply [expr h'],
-    exact [expr (mem_supp x u).mp this _ _ h''] },
-  rintros ["⟨", ident a, ",", ident f, ",", ident xeq, ",", ident h, "⟩", ident p],
-  rw [expr liftp_iff] [],
-  split,
-  { rintros ["⟨", ident a', ",", ident f', ",", ident xeq', ",", ident h', "⟩", ident u, ident usuppx],
-    rcases [expr (mem_supp x u).mp usuppx a' f' xeq'.symm, "with", "⟨", ident i, ",", "_", ",", ident f'ieq, "⟩"],
-    rw ["<-", expr f'ieq] [],
-    apply [expr h'] },
-  intro [ident h'],
-  refine [expr ⟨a, f, xeq.symm, _⟩],
-  intro [ident i],
-  apply [expr h'],
-  rw [expr mem_supp] [],
-  intros [ident a', ident f', ident xeq'],
-  apply [expr h a' f' xeq'],
-  apply [expr mem_image_of_mem _ (mem_univ _)]
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  supp_eq
+  { α : Type u } ( x : F α ) : supp x = { u | ∀ a f , abs ⟨ a , f ⟩ = x → u ∈ f '' univ }
+  := by ext <;> apply mem_supp
+
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » supp x)
+theorem has_good_supp_iff {α : Type u} (x : F α) :
+  (∀ p, liftp p x ↔ ∀ u _ : u ∈ supp x, p u) ↔
+    ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ a' f', abs ⟨a', f'⟩ = x → f '' univ ⊆ f' '' univ :=
+  by 
+    constructor
+    ·
+      intro h 
+      have  : liftp (supp x) x
+      ·
+        rw [h] <;> intro u <;> exact id 
+      rw [liftp_iff] at this 
+      rcases this with ⟨a, f, xeq, h'⟩
+      refine' ⟨a, f, xeq.symm, _⟩
+      intro a' f' h'' 
+      rintro u ⟨i, _, hfi⟩
+      have  : u ∈ supp x
+      ·
+        rw [←hfi] <;> apply h' 
+      exact (mem_supp x u).mp this _ _ h'' 
+    rintro ⟨a, f, xeq, h⟩ p 
+    rw [liftp_iff]
+    constructor
+    ·
+      rintro ⟨a', f', xeq', h'⟩ u usuppx 
+      rcases(mem_supp x u).mp usuppx a' f' xeq'.symm with ⟨i, _, f'ieq⟩
+      rw [←f'ieq]
+      apply h' 
+    intro h' 
+    refine' ⟨a, f, xeq.symm, _⟩
+    intro i 
+    apply h' 
+    rw [mem_supp]
+    intro a' f' xeq' 
+    apply h a' f' xeq' 
+    apply mem_image_of_mem _ (mem_univ _)
 
 variable (q)
 
@@ -679,7 +675,7 @@ theorem supp_eq_of_is_uniform (h : q.is_uniform) {α : Type u} (a : q.P.A) (f : 
   by 
     ext u 
     rw [mem_supp]
-    split 
+    constructor
     ·
       intro h' 
       apply h' _ _ rfl 
@@ -687,12 +683,13 @@ theorem supp_eq_of_is_uniform (h : q.is_uniform) {α : Type u} (a : q.P.A) (f : 
     rw [←h _ _ _ _ e.symm]
     apply h'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (u «expr ∈ » supp x)
 theorem liftp_iff_of_is_uniform (h : q.is_uniform) {α : Type u} (x : F α) (p : α → Prop) :
   liftp p x ↔ ∀ u _ : u ∈ supp x, p u :=
   by 
     rw [liftp_iff, ←abs_repr x]
     cases' reprₓ x with a f 
-    split 
+    constructor
     ·
       rintro ⟨a', f', abseq, hf⟩ u 
       rw [supp_eq_of_is_uniform h, h _ _ _ _ abseq]
@@ -713,7 +710,7 @@ theorem supp_map (h : q.is_uniform) {α β : Type u} (g : α → β) (x : F α) 
 
 theorem supp_preservation_iff_uniform : q.supp_preservation ↔ q.is_uniform :=
   by 
-    split 
+    constructor
     ·
       intro h α a a' f f' h' 
       rw [←Pfunctor.supp_eq, ←Pfunctor.supp_eq, ←h, h', h]
@@ -721,21 +718,24 @@ theorem supp_preservation_iff_uniform : q.supp_preservation ↔ q.is_uniform :=
       rintro h α ⟨a, f⟩
       rwa [supp_eq_of_is_uniform, Pfunctor.supp_eq]
 
--- error in Data.Qpf.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
-theorem supp_preservation_iff_liftp_preservation : «expr ↔ »(q.supp_preservation, q.liftp_preservation) :=
-begin
-  split; intro [ident h],
-  { rintros [ident α, ident p, "⟨", ident a, ",", ident f, "⟩"],
-    have [ident h'] [] [":=", expr h],
-    rw [expr supp_preservation_iff_uniform] ["at", ident h'],
-    dsimp ["only"] ["[", expr supp_preservation, ",", expr supp, "]"] [] ["at", ident h],
-    rwa ["[", expr liftp_iff_of_is_uniform, ",", expr supp_eq_of_is_uniform, ",", expr pfunctor.liftp_iff', "]"] []; try { assumption },
-    { simp [] [] ["only"] ["[", expr image_univ, ",", expr mem_range, ",", expr exists_imp_distrib, "]"] [] [],
-      split; intros []; subst_vars; solve_by_elim [] [] [] [] } },
-  { rintros [ident α, "⟨", ident a, ",", ident f, "⟩"],
-    simp [] [] ["only"] ["[", expr liftp_preservation, "]"] [] ["at", ident h],
-    simp [] [] ["only"] ["[", expr supp, ",", expr h, "]"] [] [] }
-end
+-- failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- failed to format: no declaration of attribute [formatter] found for 'Lean.Meta.solveByElim'
+theorem
+  supp_preservation_iff_liftp_preservation
+  : q.supp_preservation ↔ q.liftp_preservation
+  :=
+    by
+      constructor <;> intro h
+        ·
+          rintro α p ⟨ a , f ⟩
+            have h' := h
+            rw [ supp_preservation_iff_uniform ] at h'
+            dsimp only [ supp_preservation , supp ] at h
+            rwa [ liftp_iff_of_is_uniform , supp_eq_of_is_uniform , Pfunctor.liftp_iff' ] <;> try assumption
+            ·
+              simp only [ image_univ , mem_range , exists_imp_distrib ]
+                constructor <;> intros <;> substVars <;> solveByElim
+        · rintro α ⟨ a , f ⟩ simp only [ liftp_preservation ] at h simp only [ supp , h ]
 
 theorem liftp_preservation_iff_uniform : q.liftp_preservation ↔ q.is_uniform :=
   by 

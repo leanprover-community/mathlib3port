@@ -35,6 +35,8 @@ namespace LazyList
 
 open Function
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 /-- Isomorphism between strict and lazy lists. -/
 def list_equiv_lazy_list (α : Type _) : List α ≃ LazyList α :=
   { toFun := LazyList.ofList, invFun := LazyList.toList,
@@ -91,29 +93,34 @@ protected def traverse {m : Type u → Type u} [Applicativeₓ m] {α β : Type 
 instance : Traversable LazyList :=
   { map := @LazyList.traverse id _, traverse := @LazyList.traverse }
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:367:22: warning: unsupported simp config option: iota_eqn
 instance : IsLawfulTraversable LazyList :=
   by 
-    apply Equiv.isLawfulTraversable' list_equiv_lazy_list <;> intros  <;> skip <;> ext
+    apply Equivₓ.isLawfulTraversable' list_equiv_lazy_list <;> intros  <;> skip <;> ext
     ·
       induction x 
       rfl 
-      simp [Equiv.map, Functor.map] at *
+      simp [Equivₓ.map, Functor.map] at *
       simp 
       rfl
     ·
       induction x 
       rfl 
-      simp [Equiv.map, Functor.mapConst] at *
+      simp [Equivₓ.map, Functor.mapConst] at *
       simp 
       rfl
     ·
       induction x
       ·
-        simp' [Traversable.traverse, Equiv.traverse] with functor_norm 
+        simp' [Traversable.traverse, Equivₓ.traverse] with functor_norm 
         rfl 
-      simp [Equiv.map, Functor.mapConst, Traversable.traverse] at *
+      simp [Equivₓ.map, Functor.mapConst, Traversable.traverse] at *
       rw [x_ih]
-      dsimp [list_equiv_lazy_list, Equiv.traverse, to_list, Traversable.traverse, List.traverseₓ]
+      dsimp [list_equiv_lazy_list, Equivₓ.traverse, to_list, Traversable.traverse, List.traverseₓ]
       simp' with functor_norm 
       rfl
 
@@ -226,6 +233,8 @@ theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=
 theorem mem_cons {α} (x y : α) (ys : Thunkₓ (LazyList α)) : x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » @lazy_list.cons _ a l)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l ())
 theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunkₓ (LazyList α)} :
   (∀ x _ : x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x _ : x ∈ l (), p x :=
   by 
@@ -234,6 +243,7 @@ theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunkₓ (LazyList 
 /-! ### map for partial functions -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
 /-- Partial map. If `f : Π a, p a → β` is a partial function defined on
   `a : α` satisfying `p`, then `pmap f l h` is essentially the same as `map f l`
   but is defined only when all members of `l` satisfy `p`, using the proof

@@ -111,7 +111,7 @@ theorem hom_equiv_naturality_left_symm (f : X' ⟶ X) (g : X ⟶ G.obj Y) :
 theorem hom_equiv_naturality_left (f : X' ⟶ X) (g : F.obj X ⟶ Y) :
   (adj.hom_equiv X' Y) (F.map f ≫ g) = f ≫ (adj.hom_equiv X Y) g :=
   by 
-    rw [←Equiv.eq_symm_apply] <;> simp [-hom_equiv_unit]
+    rw [←Equivₓ.eq_symm_apply] <;> simp [-hom_equiv_unit]
 
 @[simp]
 theorem hom_equiv_naturality_right (f : F.obj X ⟶ Y) (g : Y ⟶ Y') :
@@ -123,14 +123,14 @@ theorem hom_equiv_naturality_right (f : F.obj X ⟶ Y) (g : Y ⟶ Y') :
 theorem hom_equiv_naturality_right_symm (f : X ⟶ G.obj Y) (g : Y ⟶ Y') :
   (adj.hom_equiv X Y').symm (f ≫ G.map g) = (adj.hom_equiv X Y).symm f ≫ g :=
   by 
-    rw [Equiv.symm_apply_eq] <;> simp [-hom_equiv_counit]
+    rw [Equivₓ.symm_apply_eq] <;> simp [-hom_equiv_counit]
 
 @[simp]
 theorem left_triangle : whisker_right adj.unit F ≫ whisker_left F adj.counit = nat_trans.id _ :=
   by 
     ext 
     dsimp 
-    erw [←adj.hom_equiv_counit, Equiv.symm_apply_eq, adj.hom_equiv_unit]
+    erw [←adj.hom_equiv_counit, Equivₓ.symm_apply_eq, adj.hom_equiv_unit]
     simp 
 
 @[simp]
@@ -138,7 +138,7 @@ theorem right_triangle : whisker_left G adj.unit ≫ whisker_right adj.counit G 
   by 
     ext 
     dsimp 
-    erw [←adj.hom_equiv_unit, ←Equiv.eq_symm_apply, adj.hom_equiv_counit]
+    erw [←adj.hom_equiv_unit, ←Equivₓ.eq_symm_apply, adj.hom_equiv_counit]
     simp 
 
 @[simp, reassoc]
@@ -216,13 +216,13 @@ variable {F : C ⥤ D} {G : D ⥤ C} (adj : core_hom_equiv F G) {X' X : C} {Y Y'
 theorem hom_equiv_naturality_left (f : X' ⟶ X) (g : F.obj X ⟶ Y) :
   (adj.hom_equiv X' Y) (F.map f ≫ g) = f ≫ (adj.hom_equiv X Y) g :=
   by 
-    rw [←Equiv.eq_symm_apply] <;> simp 
+    rw [←Equivₓ.eq_symm_apply] <;> simp 
 
 @[simp]
 theorem hom_equiv_naturality_right_symm (f : X ⟶ G.obj Y) (g : Y ⟶ Y') :
   (adj.hom_equiv X Y').symm (f ≫ G.map g) = (adj.hom_equiv X Y).symm f ≫ g :=
   by 
-    rw [Equiv.symm_apply_eq] <;> simp 
+    rw [Equivₓ.symm_apply_eq] <;> simp 
 
 end CoreHomEquiv
 
@@ -286,38 +286,38 @@ def mk_of_hom_equiv (adj : core_hom_equiv F G) : F ⊣ G :=
         by 
           erw [←adj.hom_equiv_naturality_left_symm] <;> simp  }
 
--- error in CategoryTheory.Adjunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct an adjunction between functors `F` and `G` given a unit and counit for the adjunction
 satisfying the triangle identities. -/
-@[simps #[]]
-def mk_of_unit_counit (adj : core_unit_counit F G) : «expr ⊣ »(F, G) :=
-{ hom_equiv := λ
-  X
-  Y, { to_fun := λ f, «expr ≫ »(adj.unit.app X, G.map f),
-    inv_fun := λ g, «expr ≫ »(F.map g, adj.counit.app Y),
-    left_inv := λ f, begin
-      change [expr «expr = »(«expr ≫ »(F.map «expr ≫ »(_, _), _), _)] [] [],
-      rw ["[", expr F.map_comp, ",", expr assoc, ",", "<-", expr functor.comp_map, ",", expr adj.counit.naturality, ",", "<-", expr assoc, "]"] [],
-      convert [] [expr id_comp f] [],
-      have [ident t] [] [":=", expr congr_arg (λ t : nat_trans _ _, t.app _) adj.left_triangle],
-      dsimp [] [] [] ["at", ident t],
-      simp [] [] ["only"] ["[", expr id_comp, "]"] [] ["at", ident t],
-      exact [expr t]
-    end,
-    right_inv := λ g, begin
-      change [expr «expr = »(«expr ≫ »(_, G.map «expr ≫ »(_, _)), _)] [] [],
-      rw ["[", expr G.map_comp, ",", "<-", expr assoc, ",", "<-", expr functor.comp_map, ",", "<-", expr adj.unit.naturality, ",", expr assoc, "]"] [],
-      convert [] [expr comp_id g] [],
-      have [ident t] [] [":=", expr congr_arg (λ t : nat_trans _ _, t.app _) adj.right_triangle],
-      dsimp [] [] [] ["at", ident t],
-      simp [] [] ["only"] ["[", expr id_comp, "]"] [] ["at", ident t],
-      exact [expr t]
-    end },
-  ..adj }
+@[simps]
+def mk_of_unit_counit (adj : core_unit_counit F G) : F ⊣ G :=
+  { adj with
+    homEquiv :=
+      fun X Y =>
+        { toFun := fun f => adj.unit.app X ≫ G.map f, invFun := fun g => F.map g ≫ adj.counit.app Y,
+          left_inv :=
+            fun f =>
+              by 
+                change F.map (_ ≫ _) ≫ _ = _ 
+                rw [F.map_comp, assoc, ←functor.comp_map, adj.counit.naturality, ←assoc]
+                convert id_comp f 
+                have t := congr_argₓ (fun t : nat_trans _ _ => t.app _) adj.left_triangle 
+                dsimp  at t 
+                simp only [id_comp] at t 
+                exact t,
+          right_inv :=
+            fun g =>
+              by 
+                change _ ≫ G.map (_ ≫ _) = _ 
+                rw [G.map_comp, ←assoc, ←functor.comp_map, ←adj.unit.naturality, assoc]
+                convert comp_id g 
+                have t := congr_argₓ (fun t : nat_trans _ _ => t.app _) adj.right_triangle 
+                dsimp  at t 
+                simp only [id_comp] at t 
+                exact t } }
 
 /-- The adjunction between the identity functor on a category and itself. -/
 def id : 𝟭 C ⊣ 𝟭 C :=
-  { homEquiv := fun X Y => Equiv.refl _, Unit := 𝟙 _, counit := 𝟙 _ }
+  { homEquiv := fun X Y => Equivₓ.refl _, Unit := 𝟙 _, counit := 𝟙 _ }
 
 instance : Inhabited (adjunction (𝟭 C) (𝟭 C)) :=
   ⟨id⟩
@@ -375,7 +375,7 @@ Composition of adjunctions.
 See https://stacks.math.columbia.edu/tag/0DV0.
 -/
 def comp (adj₁ : F ⊣ G) (adj₂ : H ⊣ I) : F ⋙ H ⊣ I ⋙ G :=
-  { homEquiv := fun X Z => Equiv.trans (adj₂.hom_equiv _ _) (adj₁.hom_equiv _ _),
+  { homEquiv := fun X Z => Equivₓ.trans (adj₂.hom_equiv _ _) (adj₁.hom_equiv _ _),
     Unit := adj₁.unit ≫ (whisker_left F$ whisker_right adj₂.unit G) ≫ (functor.associator _ _ _).inv,
     counit := (functor.associator _ _ _).Hom ≫ (whisker_left I$ whisker_right adj₁.counit H) ≫ adj₂.counit }
 
@@ -403,7 +403,7 @@ include he
 
 private theorem he' {X Y Y'} f g : (e X Y').symm (f ≫ G.map g) = (e X Y).symm f ≫ g :=
   by 
-    intros  <;> rw [Equiv.symm_apply_eq, he] <;> simp 
+    intros  <;> rw [Equivₓ.symm_apply_eq, he] <;> simp 
 
 /-- Construct a left adjoint functor to `G`, given the functor's value on objects `F_obj` and
 a bijection `e` between `F_obj X ⟶ Y` and `X ⟶ G.obj Y` satisfying a naturality law
@@ -415,8 +415,8 @@ def left_adjoint_of_equiv : C ⥤ D :=
     map_comp' :=
       fun X X' X'' f f' =>
         by 
-          rw [Equiv.symm_apply_eq, he, Equiv.apply_symm_apply]
-          conv  => toRHS rw [assoc, ←he, id_comp, Equiv.apply_symm_apply]
+          rw [Equivₓ.symm_apply_eq, he, Equivₓ.apply_symm_apply]
+          conv  => rhs rw [assoc, ←he, id_comp, Equivₓ.apply_symm_apply]
           simp  }
 
 /-- Show that the functor given by `left_adjoint_of_equiv` is indeed left adjoint to `G`. Dual
@@ -428,7 +428,7 @@ def adjunction_of_equiv_left : left_adjoint_of_equiv e he ⊣ G :=
       hom_equiv_naturality_left_symm' :=
         by 
           intros 
-          erw [←he' e he, ←Equiv.apply_eq_iff_eq]
+          erw [←he' e he, ←Equivₓ.apply_eq_iff_eq]
           simp [(he _ _ _ _ _).symm] }
 
 end ConstructLeft
@@ -445,7 +445,7 @@ include he
 
 private theorem he' {X' X Y} f g : F.map f ≫ (e X Y).symm g = (e X' Y).symm (f ≫ g) :=
   by 
-    intros  <;> rw [Equiv.eq_symm_apply, he] <;> simp 
+    intros  <;> rw [Equivₓ.eq_symm_apply, he] <;> simp 
 
 /-- Construct a right adjoint functor to `F`, given the functor's value on objects `G_obj` and
 a bijection `e` between `F.obj X ⟶ Y` and `X ⟶ G_obj Y` satisfying a naturality law
@@ -457,8 +457,8 @@ def right_adjoint_of_equiv : D ⥤ C :=
     map_comp' :=
       fun Y Y' Y'' g g' =>
         by 
-          rw [←Equiv.eq_symm_apply, ←he' e he, Equiv.symm_apply_apply]
-          conv  => toRHS rw [←assoc, he' e he, comp_id, Equiv.symm_apply_apply]
+          rw [←Equivₓ.eq_symm_apply, ←he' e he, Equivₓ.symm_apply_apply]
+          conv  => rhs rw [←assoc, he' e he, comp_id, Equivₓ.symm_apply_apply]
           simp  }
 
 /-- Show that the functor given by `right_adjoint_of_equiv` is indeed right adjoint to `F`. Dual
@@ -469,11 +469,11 @@ def adjunction_of_equiv_right : F ⊣ right_adjoint_of_equiv e he :=
     { homEquiv := e,
       hom_equiv_naturality_left_symm' :=
         by 
-          intros  <;> rw [Equiv.symm_apply_eq, he] <;> simp ,
+          intros  <;> rw [Equivₓ.symm_apply_eq, he] <;> simp ,
       hom_equiv_naturality_right' :=
         by 
           intro X Y Y' g h 
-          erw [←he, Equiv.apply_eq_iff_eq, ←assoc, he' e he, comp_id, Equiv.symm_apply_apply] }
+          erw [←he, Equivₓ.apply_eq_iff_eq, ←assoc, he' e he, comp_id, Equivₓ.symm_apply_apply] }
 
 end ConstructRight
 

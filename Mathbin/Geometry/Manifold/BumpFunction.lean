@@ -31,7 +31,7 @@ open Function Filter FiniteDimensional Set
 
 open_locale TopologicalSpace Manifold Classical Filter BigOperators
 
-noncomputable theory
+noncomputable section 
 
 /-!
 ### Smooth bump function
@@ -71,7 +71,7 @@ def to_fun : M → ℝ :=
 instance : CoeFun (SmoothBumpFunction I c) fun _ => M → ℝ :=
   ⟨to_fun⟩
 
-theorem coe_def : «expr⇑ » f = indicator (chart_at H c).Source (f.to_times_cont_diff_bump ∘ extChartAt I c) :=
+theorem coe_def : ⇑f = indicator (chart_at H c).Source (f.to_times_cont_diff_bump ∘ extChartAt I c) :=
   rfl
 
 theorem R_pos : 0 < f.R :=
@@ -134,14 +134,12 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
       refine' subset.trans (inter_subset_inter_left _ f.closed_ball_subset) _ 
       rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
 
--- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_Icc : «expr ∈ »(f x, Icc (0 : exprℝ()) 1) :=
-begin
-  have [] [":", expr «expr ∨ »(«expr = »(f x, 0), «expr = »(f x, _))] [],
-  from [expr indicator_eq_zero_or_self _ _ _],
-  cases [expr this] []; rw [expr this] [],
-  exacts ["[", expr left_mem_Icc.2 zero_le_one, ",", expr ⟨f.to_times_cont_diff_bump.nonneg, f.to_times_cont_diff_bump.le_one⟩, "]"]
-end
+theorem mem_Icc : f x ∈ Icc (0 : ℝ) 1 :=
+  by 
+    have  : f x = 0 ∨ f x = _ 
+    exact indicator_eq_zero_or_self _ _ _ 
+    cases this <;> rw [this]
+    exacts[left_mem_Icc.2 zero_le_one, ⟨f.to_times_cont_diff_bump.nonneg, f.to_times_cont_diff_bump.le_one⟩]
 
 theorem nonneg : 0 ≤ f x :=
   f.mem_Icc.1
@@ -210,22 +208,17 @@ theorem closed_image_of_closed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ suppor
     refine' ContinuousOn.preimage_closed_of_closed ((ext_chart_continuous_on_symm _ _).mono f.closed_ball_subset) _ hsc 
     exact IsClosed.inter is_closed_closed_ball I.closed_range
 
--- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a smooth bump function and `s` closed subset of the support of `f` (i.e., of the open
 ball of radius `f.R`), then there exists `0 < r < f.R` such that `s` is a subset of the open ball of
 radius `r`. Formally, `s ⊆ e.source ∩ e ⁻¹' (ball (e c) r)`, where `e = ext_chart_at I c`. -/
-theorem exists_r_pos_lt_subset_ball
-{s : set M}
-(hsc : is_closed s)
-(hs : «expr ⊆ »(s, support f)) : «expr∃ , »((r)
- (hr : «expr ∈ »(r, Ioo 0 f.R)), «expr ⊆ »(s, «expr ∩ »((chart_at H c).source, «expr ⁻¹' »(ext_chart_at I c, ball (ext_chart_at I c c) r)))) :=
-begin
-  set [] [ident e] [] [":="] [expr ext_chart_at I c] [],
-  have [] [":", expr is_closed «expr '' »(e, s)] [":=", expr f.closed_image_of_closed hsc hs],
-  rw ["[", expr support_eq_inter_preimage, ",", expr subset_inter_iff, ",", "<-", expr image_subset_iff, "]"] ["at", ident hs],
-  rcases [expr euclidean.exists_pos_lt_subset_ball f.R_pos this hs.2, "with", "⟨", ident r, ",", ident hrR, ",", ident hr, "⟩"],
-  exact [expr ⟨r, hrR, subset_inter hs.1 (image_subset_iff.1 hr)⟩]
-end
+theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
+  ∃ (r : _)(hr : r ∈ Ioo 0 f.R), s ⊆ (chart_at H c).Source ∩ extChartAt I c ⁻¹' ball (extChartAt I c c) r :=
+  by 
+    set e := extChartAt I c 
+    have  : IsClosed (e '' s) := f.closed_image_of_closed hsc hs 
+    rw [support_eq_inter_preimage, subset_inter_iff, ←image_subset_iff] at hs 
+    rcases Euclidean.exists_pos_lt_subset_ball f.R_pos this hs.2 with ⟨r, hrR, hr⟩
+    exact ⟨r, hrR, subset_inter hs.1 (image_subset_iff.1 hr)⟩
 
 /-- Replace `r` with another value in the interval `(0, f.R)`. -/
 def update_r (r : ℝ) (hr : r ∈ Ioo 0 f.R) : SmoothBumpFunction I c :=
@@ -278,21 +271,21 @@ theorem compact_closure_support : IsCompact (Closure$ support f) :=
 
 variable (I c)
 
--- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The closures of supports of smooth bump functions centered at `c` form a basis of `𝓝 c`.
 In other words, each of these closures is a neighborhood of `c` and each neighborhood of `c`
 includes `closure (support f)` for some `f : smooth_bump_function I c`. -/
-theorem nhds_basis_closure_support : (expr𝓝() c).has_basis (λ
- f : smooth_bump_function I c, true) (λ f, «expr $ »(closure, support f)) :=
-begin
-  have [] [":", expr (expr𝓝() c).has_basis (λ
-    f : smooth_bump_function I c, true) (λ
-    f, «expr '' »((ext_chart_at I c).symm, «expr ∩ »(closed_ball (ext_chart_at I c c) f.R, range I)))] [],
-  { rw ["[", "<-", expr ext_chart_at_symm_map_nhds_within_range I c, "]"] [],
-    exact [expr nhds_within_range_basis.map _] },
-  refine [expr this.to_has_basis' (λ
-    f hf, ⟨f, trivial, f.closure_support_subset_symm_image_closed_ball⟩) (λ f _, f.closure_support_mem_nhds)]
-end
+theorem nhds_basis_closure_support :
+  (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => True) fun f => Closure$ support f :=
+  by 
+    have  :
+      (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => True)
+        fun f => (extChartAt I c).symm '' (closed_ball (extChartAt I c c) f.R ∩ range I)
+    ·
+      rw [←ext_chart_at_symm_map_nhds_within_range I c]
+      exact nhds_within_range_basis.map _ 
+    refine'
+      this.to_has_basis' (fun f hf => ⟨f, trivialₓ, f.closure_support_subset_symm_image_closed_ball⟩)
+        fun f _ => f.closure_support_mem_nhds
 
 variable {c}
 
@@ -307,14 +300,16 @@ theorem nhds_basis_support {s : Set M} (hs : s ∈ 𝓝 c) :
 
 variable [SmoothManifoldWithCorners I M] {I}
 
--- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- A smooth bump function is infinitely smooth. -/ protected theorem smooth : smooth I «expr𝓘( )»(exprℝ()) f :=
-begin
-  refine [expr times_cont_mdiff_of_support (λ x hx, _)],
-  have [] [":", expr «expr ∈ »(x, (chart_at H c).source)] [":=", expr f.closure_support_subset_chart_at_source hx],
-  refine [expr times_cont_mdiff_at.congr_of_eventually_eq _ «expr $ »(f.eq_on_source.eventually_eq_of_mem, is_open.mem_nhds (chart_at _ _).open_source this)],
-  exact [expr f.to_times_cont_diff_bump.times_cont_diff_at.times_cont_mdiff_at.comp _ (times_cont_mdiff_at_ext_chart_at' this)]
-end
+/-- A smooth bump function is infinitely smooth. -/
+protected theorem Smooth : Smooth I 𝓘(ℝ) f :=
+  by 
+    refine' times_cont_mdiff_of_support fun x hx => _ 
+    have  : x ∈ (chart_at H c).Source := f.closure_support_subset_chart_at_source hx 
+    refine'
+      TimesContMdiffAt.congr_of_eventually_eq _
+        (f.eq_on_source.eventually_eq_of_mem$ IsOpen.mem_nhds (chart_at _ _).open_source this)
+    exact
+      f.to_times_cont_diff_bump.times_cont_diff_at.times_cont_mdiff_at.comp _ (times_cont_mdiff_at_ext_chart_at' this)
 
 protected theorem SmoothAt {x} : SmoothAt I 𝓘(ℝ) f x :=
   f.smooth.smooth_at
@@ -322,25 +317,16 @@ protected theorem SmoothAt {x} : SmoothAt I 𝓘(ℝ) f x :=
 protected theorem Continuous : Continuous f :=
   f.smooth.continuous
 
--- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f : smooth_bump_function I c` is a smooth bump function and `g : M → G` is a function smooth
 on the source of the chart at `c`, then `f • g` is smooth on the whole manifold. -/
-theorem smooth_smul
-{G}
-[normed_group G]
-[normed_space exprℝ() G]
-{g : M → G}
-(hg : smooth_on I «expr𝓘( , )»(exprℝ(), G) g (chart_at H c).source) : smooth I «expr𝓘( , )»(exprℝ(), G) (λ
- x, «expr • »(f x, g x)) :=
-begin
-  apply [expr times_cont_mdiff_of_support (λ x hx, _)],
-  have [] [":", expr «expr ∈ »(x, (chart_at H c).source)] [],
-  calc
-    «expr ∈ »(x, closure (support (λ x, «expr • »(f x, g x)))) : hx
-    «expr ⊆ »(..., closure (support f)) : closure_mono (support_smul_subset_left _ _)
-    «expr ⊆ »(..., (chart_at _ c).source) : f.closure_support_subset_chart_at_source,
-  exact [expr f.smooth_at.smul «expr $ »((hg _ this).times_cont_mdiff_at, is_open.mem_nhds (chart_at _ _).open_source this)]
-end
+theorem smooth_smul {G} [NormedGroup G] [NormedSpace ℝ G] {g : M → G}
+  (hg : SmoothOn I 𝓘(ℝ, G) g (chart_at H c).Source) : Smooth I 𝓘(ℝ, G) fun x => f x • g x :=
+  by 
+    apply times_cont_mdiff_of_support fun x hx => _ 
+    have  : x ∈ (chart_at H c).Source 
+    calc x ∈ Closure (support fun x => f x • g x) := hx _ ⊆ Closure (support f) :=
+      closure_mono (support_smul_subset_left _ _)_ ⊆ (chart_at _ c).Source := f.closure_support_subset_chart_at_source 
+    exact f.smooth_at.smul ((hg _ this).TimesContMdiffAt$ IsOpen.mem_nhds (chart_at _ _).open_source this)
 
 end SmoothBumpFunction
 

@@ -391,7 +391,7 @@ def lift_rel (R : α → β → Prop) (s : Wseq α) (t : Wseq β) : Prop :=
   the same computational behavior (i.e. if one loops forever then so does
   the other), although they may differ in the number of `think`s needed to
   arrive at the answer. -/
-def Equiv : Wseq α → Wseq α → Prop :=
+def Equivₓ : Wseq α → Wseq α → Prop :=
   lift_rel (· = ·)
 
 theorem lift_rel_destruct {R : α → β → Prop} {s : Wseq α} {t : Wseq β} :
@@ -400,28 +400,25 @@ theorem lift_rel_destruct {R : α → β → Prop} {s : Wseq α} {t : Wseq β} :
   by 
     refine' Computation.LiftRel.imp _ _ _ (h2 h1) <;> apply lift_rel_o.imp_right <;> exact fun s' t' h' => ⟨R, h', @h2⟩
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lift_rel_destruct_iff
-{R : α → β → exprProp()}
-{s : wseq α}
-{t : wseq β} : «expr ↔ »(lift_rel R s t, computation.lift_rel (lift_rel_o R (lift_rel R)) (destruct s) (destruct t)) :=
-⟨lift_rel_destruct, λ
- h, ⟨λ
-  s
-  t, «expr ∨ »(lift_rel R s t, computation.lift_rel (lift_rel_o R (lift_rel R)) (destruct s) (destruct t)), or.inr h, λ
-  s t h, begin
-    have [ident h] [":", expr computation.lift_rel (lift_rel_o R (lift_rel R)) (destruct s) (destruct t)] [],
-    { cases [expr h] ["with", ident h, ident h],
-      exact [expr lift_rel_destruct h],
-      assumption },
-    apply [expr computation.lift_rel.imp _ _ _ h],
-    intros [ident a, ident b],
-    apply [expr lift_rel_o.imp_right],
-    intros [ident s, ident t],
-    apply [expr or.inl]
-  end⟩⟩
+theorem lift_rel_destruct_iff {R : α → β → Prop} {s : Wseq α} {t : Wseq β} :
+  lift_rel R s t ↔ Computation.LiftRel (lift_rel_o R (lift_rel R)) (destruct s) (destruct t) :=
+  ⟨lift_rel_destruct,
+    fun h =>
+      ⟨fun s t => lift_rel R s t ∨ Computation.LiftRel (lift_rel_o R (lift_rel R)) (destruct s) (destruct t), Or.inr h,
+        fun s t h =>
+          by 
+            have h : Computation.LiftRel (lift_rel_o R (lift_rel R)) (destruct s) (destruct t)
+            ·
+              cases' h with h h 
+              exact lift_rel_destruct h 
+              assumption 
+            apply Computation.LiftRel.imp _ _ _ h 
+            intro a b 
+            apply lift_rel_o.imp_right 
+            intro s t 
+            apply Or.inl⟩⟩
 
-infixl:50 " ~ " => Equiv
+infixl:50 " ~ " => Equivₓ
 
 theorem destruct_congr {s t : Wseq α} : s ~ t → Computation.LiftRel (bisim_o (· ~ ·)) (destruct s) (destruct t) :=
   lift_rel_destruct
@@ -471,54 +468,63 @@ theorem lift_rel.symm (R : α → α → Prop) (H : Symmetric R) : Symmetric (li
                       constructor <;> apply H] at
         h
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem lift_rel.trans (R : α → α → exprProp()) (H : transitive R) : transitive (lift_rel R) :=
-λ s t u h1 h2, begin
-  refine [expr ⟨λ s u, «expr∃ , »((t), «expr ∧ »(lift_rel R s t, lift_rel R t u)), ⟨t, h1, h2⟩, λ s u h, _⟩],
-  rcases [expr h, "with", "⟨", ident t, ",", ident h1, ",", ident h2, "⟩"],
-  have [ident h1] [] [":=", expr lift_rel_destruct h1],
-  have [ident h2] [] [":=", expr lift_rel_destruct h2],
-  refine [expr computation.lift_rel_def.2 ⟨(computation.terminates_of_lift_rel h1).trans (computation.terminates_of_lift_rel h2), λ
-    a c ha hc, _⟩],
-  rcases [expr h1.left ha, "with", "⟨", ident b, ",", ident hb, ",", ident t1, "⟩"],
-  have [ident t2] [] [":=", expr computation.rel_of_lift_rel h2 hb hc],
-  cases [expr a] ["with", ident a]; cases [expr c] ["with", ident c],
-  { trivial },
-  { cases [expr b] [],
-    { cases [expr t2] [] },
-    { cases [expr t1] [] } },
-  { cases [expr a] [],
-    cases [expr b] ["with", ident b],
-    { cases [expr t1] [] },
-    { cases [expr b] [],
-      cases [expr t2] [] } },
-  { cases [expr a] ["with", ident a, ident s],
-    cases [expr b] ["with", ident b],
-    { cases [expr t1] [] },
-    cases [expr b] ["with", ident b, ident t],
-    cases [expr c] ["with", ident c, ident u],
-    cases [expr t1] ["with", ident ab, ident st],
-    cases [expr t2] ["with", ident bc, ident tu],
-    exact [expr ⟨H ab bc, t, st, tu⟩] }
-end
+theorem lift_rel.trans (R : α → α → Prop) (H : Transitive R) : Transitive (lift_rel R) :=
+  fun s t u h1 h2 =>
+    by 
+      refine' ⟨fun s u => ∃ t, lift_rel R s t ∧ lift_rel R t u, ⟨t, h1, h2⟩, fun s u h => _⟩
+      rcases h with ⟨t, h1, h2⟩
+      have h1 := lift_rel_destruct h1 
+      have h2 := lift_rel_destruct h2 
+      refine'
+        Computation.lift_rel_def.2
+          ⟨(Computation.terminates_of_lift_rel h1).trans (Computation.terminates_of_lift_rel h2), fun a c ha hc => _⟩
+      rcases h1.left ha with ⟨b, hb, t1⟩
+      have t2 := Computation.rel_of_lift_rel h2 hb hc 
+      cases' a with a <;> cases' c with c
+      ·
+        trivial
+      ·
+        cases b
+        ·
+          cases t2
+        ·
+          cases t1
+      ·
+        cases a 
+        cases' b with b
+        ·
+          cases t1
+        ·
+          cases b 
+          cases t2
+      ·
+        cases' a with a s 
+        cases' b with b
+        ·
+          cases t1 
+        cases' b with b t 
+        cases' c with c u 
+        cases' t1 with ab st 
+        cases' t2 with bc tu 
+        exact ⟨H ab bc, t, st, tu⟩
 
 theorem lift_rel.equiv (R : α → α → Prop) : Equivalenceₓ R → Equivalenceₓ (lift_rel R)
 | ⟨refl, symm, trans⟩ => ⟨lift_rel.refl R refl, lift_rel.symm R symm, lift_rel.trans R trans⟩
 
 @[refl]
-theorem Equiv.refl : ∀ s : Wseq α, s ~ s :=
+theorem Equivₓ.refl : ∀ s : Wseq α, s ~ s :=
   lift_rel.refl (· = ·) Eq.refl
 
 @[symm]
-theorem Equiv.symm : ∀ {s t : Wseq α}, s ~ t → t ~ s :=
+theorem Equivₓ.symm : ∀ {s t : Wseq α}, s ~ t → t ~ s :=
   lift_rel.symm (· = ·) (@Eq.symm _)
 
 @[trans]
-theorem Equiv.trans : ∀ {s t u : Wseq α}, s ~ t → t ~ u → s ~ u :=
+theorem Equivₓ.trans : ∀ {s t u : Wseq α}, s ~ t → t ~ u → s ~ u :=
   lift_rel.trans (· = ·) (@Eq.trans _)
 
-theorem equiv.equivalence : Equivalenceₓ (@Equiv α) :=
-  ⟨@Equiv.refl _, @Equiv.symm _, @Equiv.trans _⟩
+theorem equiv.equivalence : Equivalenceₓ (@Equivₓ α) :=
+  ⟨@Equivₓ.refl _, @Equivₓ.symm _, @Equivₓ.trans _⟩
 
 open Computation
 
@@ -734,23 +740,21 @@ theorem head_terminates_of_head_tail_terminates (s : Wseq α) [T : terminates (h
         let ⟨t, h3, h4⟩ := exists_of_mem_map h1 
         terminates_of_mem h3
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem destruct_some_of_destruct_tail_some
-{s : wseq α}
-{a}
-(h : «expr ∈ »(some a, destruct (tail s))) : «expr∃ , »((a'), «expr ∈ »(some a', destruct s)) :=
-begin
-  unfold [ident tail, ident functor.map] ["at", ident h],
-  simp [] [] [] [] [] ["at", ident h],
-  rcases [expr exists_of_mem_bind h, "with", "⟨", ident t, ",", ident tm, ",", ident td, "⟩"],
-  clear [ident h],
-  rcases [expr exists_of_mem_map tm, "with", "⟨", ident t', ",", ident ht', ",", ident ht2, "⟩"],
-  clear [ident tm],
-  cases [expr t'] ["with", ident t']; rw ["<-", expr ht2] ["at", ident td]; simp [] [] [] [] [] ["at", ident td],
-  { have [] [] [":=", expr mem_unique td (ret_mem _)],
-    contradiction },
-  { exact [expr ⟨_, ht'⟩] }
-end
+theorem destruct_some_of_destruct_tail_some {s : Wseq α} {a} (h : some a ∈ destruct (tail s)) :
+  ∃ a', some a' ∈ destruct s :=
+  by 
+    unfold tail Functor.map  at h 
+    simp  at h 
+    rcases exists_of_mem_bind h with ⟨t, tm, td⟩
+    clear h 
+    rcases exists_of_mem_map tm with ⟨t', ht', ht2⟩
+    clear tm 
+    cases' t' with t' <;> rw [←ht2] at td <;> simp  at td
+    ·
+      have  := mem_unique td (ret_mem _)
+      contradiction
+    ·
+      exact ⟨_, ht'⟩
 
 theorem head_some_of_head_tail_some {s : Wseq α} {a} (h : some a ∈ head (tail s)) : ∃ a', some a' ∈ head s :=
   by 
@@ -780,18 +784,20 @@ instance productive_dropn (s : Wseq α) [productive s] n : productive (drop s n)
       by 
         rw [←nth_add] <;> infer_instance⟩
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a productive weak sequence, we can collapse all the `think`s to
-  produce a sequence. -/ def to_seq (s : wseq α) [productive s] : seq α :=
-⟨λ n, (nth s n).get, λ n h, begin
-   cases [expr e, ":", expr computation.get (nth s «expr + »(n, 1))] [],
-   { assumption },
-   have [] [] [":=", expr mem_of_get_eq _ e],
-   simp [] [] [] ["[", expr nth, "]"] [] ["at", ident this, ident h],
-   cases [expr head_some_of_head_tail_some this] ["with", ident a', ident h'],
-   have [] [] [":=", expr mem_unique h' (@mem_of_get_eq _ _ _ _ h)],
-   contradiction
- end⟩
+  produce a sequence. -/
+def to_seq (s : Wseq α) [productive s] : Seqₓₓ α :=
+  ⟨fun n => (nth s n).get,
+    fun n h =>
+      by 
+        cases e : Computation.get (nth s (n+1))
+        ·
+          assumption 
+        have  := mem_of_get_eq _ e 
+        simp [nth] at this h 
+        cases' head_some_of_head_tail_some this with a' h' 
+        have  := mem_unique h' (@mem_of_get_eq _ _ _ _ h)
+        contradiction⟩
 
 theorem nth_terminates_le {s : Wseq α} {m n} (h : m ≤ n) : terminates (nth s n) → terminates (nth s m) :=
   by 
@@ -835,37 +841,35 @@ theorem mem_think (s : Wseq α) a : a ∈ think s ↔ a ∈ s :=
     ·
       apply Streamₓ.mem_cons_of_mem _ h
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_or_mem_iff_mem
-{s : wseq α}
-{a
- a'
- s'} : «expr ∈ »(some (a', s'), destruct s) → «expr ↔ »(«expr ∈ »(a, s), «expr ∨ »(«expr = »(a, a'), «expr ∈ »(a, s'))) :=
-begin
-  generalize [ident e] [":"] [expr «expr = »(destruct s, c)],
-  intro [ident h],
-  revert [ident s],
-  apply [expr computation.mem_rec_on h _ (λ
-    c
-    IH, _)]; intro [ident s]; apply [expr s.cases_on _ (λ
-    x
-    s, _) (λ
-    s, _)]; intros [ident m]; have [] [] [":=", expr congr_arg computation.destruct m]; simp [] [] [] [] [] ["at", ident this]; cases [expr this] ["with", ident i1, ident i2],
-  { rw ["[", expr i1, ",", expr i2, "]"] [],
-    cases [expr s'] ["with", ident f, ident al],
-    unfold [ident cons, ident has_mem.mem, ident wseq.mem, ident seq.mem, ident seq.cons] [],
-    simp [] [] [] [] [] [],
-    have [ident h_a_eq_a'] [":", expr «expr ↔ »(«expr = »(a, a'), «expr = »(some (some a), some (some a')))] [],
-    { simp [] [] [] [] [] [] },
-    rw ["[", expr h_a_eq_a', "]"] [],
-    refine [expr ⟨stream.eq_or_mem_of_mem_cons, λ o, _⟩],
-    { cases [expr o] ["with", ident e, ident m],
-      { rw [expr e] [],
-        apply [expr stream.mem_cons] },
-      { exact [expr stream.mem_cons_of_mem _ m] } } },
-  { simp [] [] [] [] [] [],
-    exact [expr IH this] }
-end
+theorem eq_or_mem_iff_mem {s : Wseq α} {a a' s'} : some (a', s') ∈ destruct s → (a ∈ s ↔ a = a' ∨ a ∈ s') :=
+  by 
+    generalize e : destruct s = c 
+    intro h 
+    revert s 
+    apply Computation.memRecOn h _ fun c IH => _ <;>
+      intro s <;>
+        apply s.cases_on _ (fun x s => _) fun s => _ <;>
+          intro m <;> have  := congr_argₓ Computation.destruct m <;> simp  at this <;> cases' this with i1 i2
+    ·
+      rw [i1, i2]
+      cases' s' with f al 
+      unfold cons HasMem.Mem Wseq.Mem Seqₓₓ.Mem Seqₓₓ.cons 
+      simp 
+      have h_a_eq_a' : a = a' ↔ some (some a) = some (some a')
+      ·
+        simp 
+      rw [h_a_eq_a']
+      refine' ⟨Streamₓ.eq_or_mem_of_mem_cons, fun o => _⟩
+      ·
+        cases' o with e m
+        ·
+          rw [e]
+          apply Streamₓ.mem_cons
+        ·
+          exact Streamₓ.mem_cons_of_mem _ m
+    ·
+      simp 
+      exact IH this
 
 @[simp]
 theorem mem_cons_iff (s : Wseq α) b {a} : a ∈ cons b s ↔ a = b ∨ a ∈ s :=
@@ -879,41 +883,46 @@ theorem mem_cons_of_mem {s : Wseq α} b {a} (h : a ∈ s) : a ∈ cons b s :=
 theorem mem_cons (s : Wseq α) a : a ∈ cons a s :=
   (mem_cons_iff _ _).2 (Or.inl rfl)
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_of_mem_tail {s : wseq α} {a} : «expr ∈ »(a, tail s) → «expr ∈ »(a, s) :=
-begin
-  intro [ident h],
-  have [] [] [":=", expr h],
-  cases [expr h] ["with", ident n, ident e],
-  revert [ident s],
-  simp [] [] [] ["[", expr stream.nth, "]"] [] [],
-  induction [expr n] [] ["with", ident n, ident IH] []; intro [ident s]; apply [expr s.cases_on _ (λ
-    x s, _) (λ s, _)]; repeat { simp [] [] [] [] [] [] }; intros [ident m, ident e]; injections [],
-  { exact [expr or.inr m] },
-  { exact [expr or.inr m] },
-  { apply [expr IH m],
-    rw [expr e] [],
-    cases [expr tail s] [],
-    refl }
-end
+theorem mem_of_mem_tail {s : Wseq α} {a} : a ∈ tail s → a ∈ s :=
+  by 
+    intro h 
+    have  := h 
+    cases' h with n e 
+    revert s 
+    simp [Streamₓ.nth]
+    induction' n with n IH <;>
+      intro s <;>
+        apply s.cases_on _ (fun x s => _) fun s => _ <;>
+          repeat' 
+              simp  <;>
+            intro m e <;> injections
+    ·
+      exact Or.inr m
+    ·
+      exact Or.inr m
+    ·
+      apply IH m 
+      rw [e]
+      cases tail s 
+      rfl
 
 theorem mem_of_mem_dropn {s : Wseq α} {a} : ∀ {n}, a ∈ drop s n → a ∈ s
 | 0, h => h
 | n+1, h => @mem_of_mem_dropn n (mem_of_mem_tail h)
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nth_mem {s : wseq α} {a n} : «expr ∈ »(some a, nth s n) → «expr ∈ »(a, s) :=
-begin
-  revert [ident s],
-  induction [expr n] [] ["with", ident n, ident IH] []; intros [ident s, ident h],
-  { rcases [expr exists_of_mem_map h, "with", "⟨", ident o, ",", ident h1, ",", ident h2, "⟩"],
-    cases [expr o] ["with", ident o]; injection [expr h2] ["with", ident h'],
-    cases [expr o] ["with", ident a', ident s'],
-    exact [expr (eq_or_mem_iff_mem h1).2 (or.inl h'.symm)] },
-  { have [] [] [":=", expr @IH (tail s)],
-    rw [expr nth_tail] ["at", ident this],
-    exact [expr mem_of_mem_tail (this h)] }
-end
+theorem nth_mem {s : Wseq α} {a n} : some a ∈ nth s n → a ∈ s :=
+  by 
+    revert s 
+    induction' n with n IH <;> intro s h
+    ·
+      rcases exists_of_mem_map h with ⟨o, h1, h2⟩
+      cases' o with o <;> injection h2 with h' 
+      cases' o with a' s' 
+      exact (eq_or_mem_iff_mem h1).2 (Or.inl h'.symm)
+    ·
+      have  := @IH (tail s)
+      rw [nth_tail] at this 
+      exact mem_of_mem_tail (this h)
 
 theorem exists_nth_of_mem {s : Wseq α} {a} (h : a ∈ s) : ∃ n, some a ∈ nth s n :=
   by 
@@ -938,21 +947,17 @@ theorem exists_nth_of_mem {s : Wseq α} {a} (h : a ∈ s) : ∃ n, some a ∈ nt
       simp [nth]
       apply think_mem h
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_dropn_of_mem
-{s : wseq α}
-{a}
-(h : «expr ∈ »(a, s)) : «expr∃ , »((n s'), «expr ∈ »(some (a, s'), destruct (drop s n))) :=
-let ⟨n, h⟩ := exists_nth_of_mem h in
-⟨n, begin
-   rcases [expr (head_terminates_iff _).1 ⟨⟨_, h⟩⟩, "with", "⟨", "⟨", ident o, ",", ident om, "⟩", "⟩"],
-   have [] [] [":=", expr mem_unique (mem_map _ om) h],
-   cases [expr o] ["with", ident o]; injection [expr this] ["with", ident i],
-   cases [expr o] ["with", ident a', ident s'],
-   dsimp [] [] [] ["at", ident i],
-   rw [expr i] ["at", ident om],
-   exact [expr ⟨_, om⟩]
- end⟩
+theorem exists_dropn_of_mem {s : Wseq α} {a} (h : a ∈ s) : ∃ n s', some (a, s') ∈ destruct (drop s n) :=
+  let ⟨n, h⟩ := exists_nth_of_mem h
+  ⟨n,
+    by 
+      rcases(head_terminates_iff _).1 ⟨⟨_, h⟩⟩ with ⟨⟨o, om⟩⟩
+      have  := mem_unique (mem_map _ om) h 
+      cases' o with o <;> injection this with i 
+      cases' o with a' s' 
+      dsimp  at i 
+      rw [i] at om 
+      exact ⟨_, om⟩⟩
 
 theorem lift_rel_dropn_destruct {R : α → β → Prop} {s t} (H : lift_rel R s t) :
   ∀ n, Computation.LiftRel (lift_rel_o R (lift_rel R)) (destruct (drop s n)) (destruct (drop t n))
@@ -1020,15 +1025,15 @@ theorem lift_rel_think_right (R : α → β → Prop) s t : lift_rel R s (think 
 
 theorem cons_congr {s t : Wseq α} (a : α) (h : s ~ t) : cons a s ~ cons a t :=
   by 
-    unfold Equiv <;> simp  <;> exact h
+    unfold Equivₓ <;> simp  <;> exact h
 
 theorem think_equiv (s : Wseq α) : think s ~ s :=
   by 
-    unfold Equiv <;> simp  <;> apply Equiv.refl
+    unfold Equivₓ <;> simp  <;> apply Equivₓ.refl
 
 theorem think_congr {s t : Wseq α} (a : α) (h : s ~ t) : think s ~ think t :=
   by 
-    unfold Equiv <;> simp  <;> exact h
+    unfold Equivₓ <;> simp  <;> exact h
 
 theorem head_congr : ∀ {s t : Wseq α}, s ~ t → head s ~ head t :=
   suffices ∀ {s t : Wseq α}, s ~ t → ∀ {o}, o ∈ head s → o ∈ head t from fun s t h o => ⟨this h, this h.symm⟩
@@ -1060,7 +1065,7 @@ theorem flatten_equiv {c : Computation (Wseq α)} {s} (h : s ∈ c) : flatten c 
       simp 
     ·
       intro s' 
-      apply Equiv.trans 
+      apply Equivₓ.trans 
       simp [think_equiv]
 
 theorem lift_rel_flatten {R : α → β → Prop} {c1 : Computation (Wseq α)} {c2 : Computation (Wseq β)}
@@ -1080,7 +1085,7 @@ theorem lift_rel_flatten {R : α → β → Prop} {c1 : Computation (Wseq α)} {
           intro s t h 
           refine' ⟨return s, return t, _, _, _⟩ <;> simp [h]⟩
 
-theorem flatten_congr {c1 c2 : Computation (Wseq α)} : Computation.LiftRel Equiv c1 c2 → flatten c1 ~ flatten c2 :=
+theorem flatten_congr {c1 c2 : Computation (Wseq α)} : Computation.LiftRel Equivₓ c1 c2 → flatten c1 ~ flatten c2 :=
   lift_rel_flatten
 
 theorem tail_congr {s t : Wseq α} (h : s ~ t) : tail s ~ tail t :=
@@ -1121,7 +1126,7 @@ theorem productive_congr {s t : Wseq α} (h : s ~ t) : productive s ↔ producti
   by 
     simp only [productive_iff] <;> exact forall_congrₓ fun n => terminates_congr$ nth_congr h _
 
-theorem Equiv.ext {s t : Wseq α} (h : ∀ n, nth s n ~ nth t n) : s ~ t :=
+theorem Equivₓ.ext {s t : Wseq α} (h : ∀ n, nth s n ~ nth t n) : s ~ t :=
   ⟨fun s t => ∀ n, nth s n ~ nth t n, h,
     fun s t h =>
       by 
@@ -1324,54 +1329,78 @@ theorem map_comp (f : α → β) (g : β → γ) (s : Wseq α) : map (g ∘ f) s
 theorem mem_map (f : α → β) {a : α} {s : Wseq α} : a ∈ s → f a ∈ map f s :=
   Seqₓₓ.mem_map (Option.map f)
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_of_mem_join
-{a : α} : ∀ {S : wseq (wseq α)}, «expr ∈ »(a, join S) → «expr∃ , »((s), «expr ∧ »(«expr ∈ »(s, S), «expr ∈ »(a, s))) :=
-suffices ∀
-ss : wseq α, «expr ∈ »(a, ss) → ∀
-s
-S, «expr = »(append s (join S), ss) → «expr ∈ »(a, append s (join S)) → «expr ∨ »(«expr ∈ »(a, s), «expr∃ , »((s), «expr ∧ »(«expr ∈ »(s, S), «expr ∈ »(a, s)))), from λ
-S
-h, (this _ h nil S (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr h, "]"] [] [])).resolve_left (not_mem_nil _),
-begin
-  intros [ident ss, ident h],
-  apply [expr mem_rec_on h (λ b ss o, _) (λ ss IH, _)]; intros [ident s, ident S],
-  { refine [expr s.cases_on (S.cases_on _ (λ
-       s
-       S, _) (λ
-       S, _)) (λ
-      b'
-      s, _) (λ
-      s, _)]; intros [ident ej, ident m]; simp [] [] [] [] [] ["at", ident ej]; have [] [] [":=", expr congr_arg seq.destruct ej]; simp [] [] [] [] [] ["at", ident this]; try { cases [expr this] [] }; try { contradiction },
-    substs [ident b', ident ss],
-    simp [] [] [] [] [] ["at", ident m, "⊢"],
-    cases [expr o] ["with", ident e, ident IH],
-    { simp [] [] [] ["[", expr e, "]"] [] [] },
-    cases [expr m] ["with", ident e, ident m],
-    { simp [] [] [] ["[", expr e, "]"] [] [] },
-    exact [expr or.imp_left or.inr (IH _ _ rfl m)] },
-  { refine [expr s.cases_on (S.cases_on _ (λ
-       s
-       S, _) (λ
-       S, _)) (λ
-      b'
-      s, _) (λ
-      s, _)]; intros [ident ej, ident m]; simp [] [] [] [] [] ["at", ident ej]; have [] [] [":=", expr congr_arg seq.destruct ej]; simp [] [] [] [] [] ["at", ident this]; try { try { have [] [] [":=", expr this.1] },
-      contradiction }; subst [expr ss],
-    { apply [expr or.inr],
-      simp [] [] [] [] [] ["at", ident m, "⊢"],
-      cases [expr IH s S rfl m] ["with", ident as, ident ex],
-      { exact [expr ⟨s, or.inl rfl, as⟩] },
-      { rcases [expr ex, "with", "⟨", ident s', ",", ident sS, ",", ident as, "⟩"],
-        exact [expr ⟨s', or.inr sS, as⟩] } },
-    { apply [expr or.inr],
-      simp [] [] [] [] [] ["at", ident m],
-      rcases [expr (IH nil S (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr m, "]"] [] [])).resolve_left (not_mem_nil _), "with", "⟨", ident s, ",", ident sS, ",", ident as, "⟩"],
-      exact [expr ⟨s, by simp [] [] [] ["[", expr sS, "]"] [] [], as⟩] },
-    { simp [] [] [] [] [] ["at", ident m, ident IH, "⊢"],
-      apply [expr IH _ _ rfl m] } }
-end
+theorem exists_of_mem_join {a : α} : ∀ {S : Wseq (Wseq α)}, a ∈ join S → ∃ s, s ∈ S ∧ a ∈ s :=
+  suffices
+    ∀ ss : Wseq α, a ∈ ss → ∀ s S, append s (join S) = ss → a ∈ append s (join S) → a ∈ s ∨ ∃ s, s ∈ S ∧ a ∈ s from
+    fun S h =>
+      (this _ h nil S
+            (by 
+              simp )
+            (by 
+              simp [h])).resolve_left
+        (not_mem_nil _)
+  by 
+    intro ss h 
+    apply mem_rec_on h (fun b ss o => _) fun ss IH => _ <;> intro s S
+    ·
+      refine' s.cases_on (S.cases_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
+        intro ej m <;>
+          simp  at ej <;>
+            have  := congr_argₓ Seqₓₓ.destruct ej <;>
+              simp  at this <;>
+                try 
+                    cases this <;>
+                  try 
+                    contradiction 
+      substs b' ss 
+      simp  at m⊢
+      cases' o with e IH
+      ·
+        simp [e]
+      cases' m with e m
+      ·
+        simp [e]
+      exact Or.imp_left Or.inr (IH _ _ rfl m)
+    ·
+      refine' s.cases_on (S.cases_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
+        intro ej m <;>
+          simp  at ej <;>
+            have  := congr_argₓ Seqₓₓ.destruct ej <;>
+              simp  at this <;>
+                try 
+                    try 
+                      have  := this.1
+                    contradiction <;>
+                  subst ss
+      ·
+        apply Or.inr 
+        simp  at m⊢
+        cases' IH s S rfl m with as ex
+        ·
+          exact ⟨s, Or.inl rfl, as⟩
+        ·
+          rcases ex with ⟨s', sS, as⟩
+          exact ⟨s', Or.inr sS, as⟩
+      ·
+        apply Or.inr 
+        simp  at m 
+        rcases(IH nil S
+                (by 
+                  simp )
+                (by 
+                  simp [m])).resolve_left
+            (not_mem_nil _) with
+          ⟨s, sS, as⟩
+        exact
+          ⟨s,
+            by 
+              simp [sS],
+            as⟩
+      ·
+        simp  at m IH⊢
+        apply IH _ _ rfl m
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem exists_of_mem_bind {s : Wseq α} {f : α → Wseq β} {b} (h : b ∈ bind s f) : ∃ (a : _)(_ : a ∈ s), b ∈ f a :=
   let ⟨t, tm, bt⟩ := exists_of_mem_join h 
   let ⟨a, as, e⟩ := exists_of_mem_map tm
@@ -1605,7 +1634,7 @@ theorem lift_rel_join (R : α → β → Prop) {S : Wseq (Wseq α)} {T : Wseq (W
                   ·
                     exact mb⟩
 
-theorem join_congr {S T : Wseq (Wseq α)} (h : lift_rel Equiv S T) : join S ~ join T :=
+theorem join_congr {S T : Wseq (Wseq α)} (h : lift_rel Equivₓ S T) : join S ~ join T :=
   lift_rel_join _ h
 
 theorem lift_rel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Wseq α} {s2 : Wseq β} {f1 : α → Wseq γ}
@@ -1625,28 +1654,26 @@ theorem join_ret (s : Wseq α) : join (ret s) ~ s :=
   by 
     simp [ret] <;> apply think_equiv
 
--- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem join_map_ret (s : wseq α) : [«expr ~ »/«expr ~ »](join (map ret s), s) :=
-begin
-  refine [expr ⟨λ s1 s2, «expr = »(join (map ret s2), s1), rfl, _⟩],
-  intros [ident s', ident s, ident h],
-  rw ["<-", expr h] [],
-  apply [expr lift_rel_rec (λ
-    c1 c2, «expr∃ , »((s), «expr ∧ »(«expr = »(c1, destruct (join (map ret s))), «expr = »(c2, destruct s))))],
-  { exact [expr λ c1 c2 h, match c1, c2, h with
-     | ._, ._, ⟨s, rfl, rfl⟩ := begin
-       clear [ident h, ident _match],
-       have [] [":", expr ∀
-        s, «expr∃ , »((s' : wseq α), «expr ∧ »(«expr = »((map ret s).join.destruct, (map ret s').join.destruct), «expr = »(destruct s, s'.destruct)))] [],
-       from [expr λ s, ⟨s, rfl, rfl⟩],
-       apply [expr s.cases_on _ (λ
-         a
-         s, _) (λ
-         s, _)]; simp [] [] [] ["[", expr ret, ",", expr ret_mem, ",", expr this, ",", expr option.exists, "]"] [] []
-     end
-     end] },
-  { exact [expr ⟨s, rfl, rfl⟩] }
-end
+@[simp]
+theorem join_map_ret (s : Wseq α) : join (map ret s) ~ s :=
+  by 
+    refine' ⟨fun s1 s2 => join (map ret s2) = s1, rfl, _⟩
+    intro s' s h 
+    rw [←h]
+    apply lift_rel_rec fun c1 c2 => ∃ s, c1 = destruct (join (map ret s)) ∧ c2 = destruct s
+    ·
+      exact
+        fun c1 c2 h =>
+          match c1, c2, h with 
+          | _, _, ⟨s, rfl, rfl⟩ =>
+            by 
+              clear h _match 
+              have  :
+                ∀ s, ∃ s' : Wseq α, (map ret s).join.destruct = (map ret s').join.destruct ∧ destruct s = s'.destruct 
+              exact fun s => ⟨s, rfl, rfl⟩
+              apply s.cases_on _ (fun a s => _) fun s => _ <;> simp [ret, ret_mem, this, Option.exists]
+    ·
+      exact ⟨s, rfl, rfl⟩
 
 @[simp]
 theorem join_append (S T : Wseq (Wseq α)) : join (append S T) ~ append (join S) (join T) :=

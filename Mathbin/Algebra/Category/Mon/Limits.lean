@@ -13,7 +13,7 @@ the underlying types are just the limits in the category of types.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 

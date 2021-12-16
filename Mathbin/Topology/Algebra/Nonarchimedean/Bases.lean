@@ -50,54 +50,32 @@ theorem of_comm {A ι : Type _} [CommRingₓ A] (B : ι → AddSubgroup A) (inte
         use j 
         simpa [mul_commₓ] using hj }
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
-def to_ring_filter_basis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A :=
-  { Sets := { U | ∃ i, U = B i },
-    Nonempty :=
-      by 
-        inhabit ι 
-        exact ⟨B (default ι), default ι, rfl⟩,
-    inter_sets :=
-      by 
-        rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
-        cases' hB.inter i j with k hk 
-        use B k, k, rfl, hk,
-    zero' :=
-      by 
-        rintro _ ⟨i, rfl⟩
-        exact (B i).zero_mem,
-    add' :=
-      by 
-        rintro _ ⟨i, rfl⟩
-        use B i, i, rfl 
-        rintro x ⟨y, z, y_in, z_in, rfl⟩
-        exact (B i).add_mem y_in z_in,
-    neg' :=
-      by 
-        rintro _ ⟨i, rfl⟩
-        use B i, i, rfl 
-        intro x x_in 
-        exact (B i).neg_mem x_in,
-    conj' :=
-      by 
-        rintro x₀ _ ⟨i, rfl⟩
-        use B i, i, rfl 
-        simp ,
-    mul' :=
-      by 
-        rintro _ ⟨i, rfl⟩
-        cases' hB.mul i with k hk 
-        use B k, k, rfl, hk,
-    mul_left' :=
-      by 
-        rintro x₀ _ ⟨i, rfl⟩
-        cases' hB.left_mul x₀ i with k hk 
-        use B k, k, rfl, hk,
-    mul_right' :=
-      by 
-        rintro x₀ _ ⟨i, rfl⟩
-        cases' hB.right_mul x₀ i with k hk 
-        use B k, k, rfl, hk }
+  def
+    to_ring_filter_basis
+    [ Nonempty ι ] { B : ι → AddSubgroup A } ( hB : RingSubgroupsBasis B ) : RingFilterBasis A
+    :=
+      {
+        Sets := { U | ∃ i , U = B i } ,
+          Nonempty := by inhabit ι exact ⟨ B default ι , default ι , rfl ⟩ ,
+          inter_sets := by rintro _ _ ⟨ i , rfl ⟩ ⟨ j , rfl ⟩ cases' hB.inter i j with k hk use B k , k , rfl , hk ,
+          zero' := by rintro _ ⟨ i , rfl ⟩ exact B i . zero_mem ,
+          add'
+              :=
+              by
+                rintro _ ⟨ i , rfl ⟩
+                  use B i , i , rfl
+                  rintro x ⟨ y , z , y_in , z_in , rfl ⟩
+                  exact B i . add_mem y_in z_in
+            ,
+          neg' := by rintro _ ⟨ i , rfl ⟩ use B i , i , rfl intro x x_in exact B i . neg_mem x_in ,
+          conj' := by rintro x₀ _ ⟨ i , rfl ⟩ use B i , i , rfl simp ,
+          mul' := by rintro _ ⟨ i , rfl ⟩ cases' hB.mul i with k hk use B k , k , rfl , hk ,
+          mul_left' := by rintro x₀ _ ⟨ i , rfl ⟩ cases' hB.left_mul x₀ i with k hk use B k , k , rfl , hk ,
+          mul_right' := by rintro x₀ _ ⟨ i , rfl ⟩ cases' hB.right_mul x₀ i with k hk use B k , k , rfl , hk
+        }
 
 variable [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B)
 
@@ -117,7 +95,7 @@ theorem has_basis_nhds_zero : has_basis (@nhds A hB.topology 0) (fun _ => True) 
   ⟨by 
       intro s 
       rw [hB.to_ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff]
-      split 
+      constructor
       ·
         rintro ⟨-, ⟨i, rfl⟩, hi⟩
         exact ⟨i, trivialₓ, hi⟩
@@ -125,56 +103,50 @@ theorem has_basis_nhds_zero : has_basis (@nhds A hB.topology 0) (fun _ => True) 
         rintro ⟨i, -, hi⟩
         exact ⟨B i, ⟨i, rfl⟩, hi⟩⟩
 
-theorem has_basis_nhds (a : A) : has_basis (@nhds A hB.topology a) (fun _ => True) fun i => { b | b - a ∈ B i } :=
-  ⟨by 
-      intro s 
-      rw [(hB.to_ring_filter_basis.to_add_group_filter_basis.nhds_has_basis a).mem_iff]
-      simp only [exists_prop, exists_true_left]
-      split 
-      ·
-        rintro ⟨-, ⟨i, rfl⟩, hi⟩
-        use i 
-        convert hi 
-        ext b 
-        split 
-        ·
-          intro h 
-          use b - a, h 
-          abel
-        ·
-          rintro ⟨c, hc, rfl⟩
-          simpa using hc
-      ·
-        rintro ⟨i, hi⟩
-        use B i, i, rfl 
-        rw [image_subset_iff]
-        rintro b b_in 
-        apply hi 
-        simpa using b_in⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  has_basis_nhds
+  ( a : A ) : has_basis @ nhds A hB.topology a fun _ => True fun i => { b | b - a ∈ B i }
+  :=
+    ⟨
+      by
+        intro s
+          rw [ hB.to_ring_filter_basis.to_add_group_filter_basis.nhds_has_basis a . mem_iff ]
+          simp only [ exists_prop , exists_true_left ]
+          constructor
+          ·
+            rintro ⟨ - , ⟨ i , rfl ⟩ , hi ⟩
+              use i
+              convert hi
+              ext b
+              constructor
+              · intro h use b - a , h abel
+              · rintro ⟨ c , hc , rfl ⟩ simpa using hc
+          · rintro ⟨ i , hi ⟩ use B i , i , rfl rw [ image_subset_iff ] rintro b b_in apply hi simpa using b_in
+      ⟩
 
--- error in Topology.Algebra.Nonarchimedean.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a subgroups basis, the basis elements as open additive subgroups in the associated
-topology. -/ def open_add_subgroup (i : ι) : @open_add_subgroup A _ hB.topology :=
-{ is_open' := begin
-    letI [] [] [":=", expr hB.topology],
-    rw [expr is_open_iff_mem_nhds] [],
-    intros [ident a, ident a_in],
-    rw [expr (hB.has_basis_nhds a).mem_iff] [],
-    use ["[", expr i, ",", expr trivial, "]"],
-    rintros [ident b, ident b_in],
-    simpa [] [] [] [] [] ["using", expr (B i).add_mem a_in b_in]
-  end,
-  ..B i }
+topology. -/
+def OpenAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
+  { B i with
+    is_open' :=
+      by 
+        let this' := hB.topology 
+        rw [is_open_iff_mem_nhds]
+        intro a a_in 
+        rw [(hB.has_basis_nhds a).mem_iff]
+        use i, trivialₓ 
+        rintro b b_in 
+        simpa using (B i).add_mem a_in b_in }
 
--- error in Topology.Algebra.Nonarchimedean.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nonarchimedean : @nonarchimedean_ring A _ hB.topology :=
-begin
-  letI [] [] [":=", expr hB.topology],
-  constructor,
-  intros [ident U, ident hU],
-  obtain ["⟨", ident i, ",", "-", ",", ident hi, ":", expr «expr ⊆ »((B i : set A), U), "⟩", ":=", expr hB.has_basis_nhds_zero.mem_iff.mp hU],
-  exact [expr ⟨hB.open_add_subgroup i, hi⟩]
-end
+theorem nonarchimedean : @NonarchimedeanRing A _ hB.topology :=
+  by 
+    let this' := hB.topology 
+    constructor 
+    intro U hU 
+    obtain ⟨i, -, hi : (B i : Set A) ⊆ U⟩ := hB.has_basis_nhds_zero.mem_iff.mp hU 
+    exact ⟨hB.open_add_subgroup i, hi⟩
 
 end RingSubgroupsBasis
 
@@ -214,7 +186,7 @@ some axioms ensuring there is a topology on `M` which is compatible with the mod
 admits this family as a basis of neighborhoods of zero. -/
 structure SubmodulesBasis [TopologicalSpace R] (B : ι → Submodule R M) : Prop where 
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
-  smul : ∀ m : M i : ι, ∀ᶠa in 𝓝 (0 : R), a • m ∈ B i
+  smul : ∀ m : M i : ι, ∀ᶠ a in 𝓝 (0 : R), a • m ∈ B i
 
 namespace SubmodulesBasis
 
@@ -222,83 +194,66 @@ variable [TopologicalSpace R] [Nonempty ι] {B : ι → Submodule R M} (hB : Sub
 
 include hB
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- The image of a submodules basis is a module filter basis. -/
-def to_module_filter_basis : ModuleFilterBasis R M :=
-  { Sets := { U | ∃ i, U = B i },
-    Nonempty :=
-      by 
-        inhabit ι 
-        exact ⟨B (default ι), default ι, rfl⟩,
-    inter_sets :=
-      by 
-        rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
-        cases' hB.inter i j with k hk 
-        use B k, k, rfl, hk,
-    zero' :=
-      by 
-        rintro _ ⟨i, rfl⟩
-        exact (B i).zero_mem,
-    add' :=
-      by 
-        rintro _ ⟨i, rfl⟩
-        use B i, i, rfl 
-        rintro x ⟨y, z, y_in, z_in, rfl⟩
-        exact (B i).add_mem y_in z_in,
-    neg' :=
-      by 
-        rintro _ ⟨i, rfl⟩
-        use B i, i, rfl 
-        intro x x_in 
-        exact (B i).neg_mem x_in,
-    conj' :=
-      by 
-        rintro x₀ _ ⟨i, rfl⟩
-        use B i, i, rfl 
-        simp ,
-    smul' :=
-      by 
-        rintro _ ⟨i, rfl⟩
-        use univ, univ_mem, B i, i, rfl 
-        rintro _ ⟨a, m, -, hm, rfl⟩
-        exact (B i).smul_mem _ hm,
-    smul_left' :=
-      by 
-        rintro x₀ _ ⟨i, rfl⟩
-        use B i, i, rfl 
-        intro m 
-        exact (B i).smul_mem _,
-    smul_right' :=
-      by 
-        rintro m₀ _ ⟨i, rfl⟩
-        exact hB.smul m₀ i }
+  def
+    to_module_filter_basis
+    : ModuleFilterBasis R M
+    :=
+      {
+        Sets := { U | ∃ i , U = B i } ,
+          Nonempty := by inhabit ι exact ⟨ B default ι , default ι , rfl ⟩ ,
+          inter_sets := by rintro _ _ ⟨ i , rfl ⟩ ⟨ j , rfl ⟩ cases' hB.inter i j with k hk use B k , k , rfl , hk ,
+          zero' := by rintro _ ⟨ i , rfl ⟩ exact B i . zero_mem ,
+          add'
+              :=
+              by
+                rintro _ ⟨ i , rfl ⟩
+                  use B i , i , rfl
+                  rintro x ⟨ y , z , y_in , z_in , rfl ⟩
+                  exact B i . add_mem y_in z_in
+            ,
+          neg' := by rintro _ ⟨ i , rfl ⟩ use B i , i , rfl intro x x_in exact B i . neg_mem x_in ,
+          conj' := by rintro x₀ _ ⟨ i , rfl ⟩ use B i , i , rfl simp ,
+          smul'
+              :=
+              by
+                rintro _ ⟨ i , rfl ⟩
+                  use univ , univ_mem , B i , i , rfl
+                  rintro _ ⟨ a , m , - , hm , rfl ⟩
+                  exact B i . smul_mem _ hm
+            ,
+          smul_left' := by rintro x₀ _ ⟨ i , rfl ⟩ use B i , i , rfl intro m exact B i . smul_mem _ ,
+          smul_right' := by rintro m₀ _ ⟨ i , rfl ⟩ exact hB.smul m₀ i
+        }
 
 /-- The topology associated to a basis of submodules in a module. -/
 def topology : TopologicalSpace M :=
   hB.to_module_filter_basis.to_add_group_filter_basis.topology
 
--- error in Topology.Algebra.Nonarchimedean.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a submodules basis, the basis elements as open additive subgroups in the associated
-topology. -/ def open_add_subgroup (i : ι) : @open_add_subgroup M _ hB.topology :=
-{ is_open' := begin
-    letI [] [] [":=", expr hB.topology],
-    rw [expr is_open_iff_mem_nhds] [],
-    intros [ident a, ident a_in],
-    rw [expr (hB.to_module_filter_basis.to_add_group_filter_basis.nhds_has_basis a).mem_iff] [],
-    use ["[", expr B i, ",", expr i, ",", expr rfl, "]"],
-    rintros ["-", "⟨", ident b, ",", ident b_in, ",", ident rfl, "⟩"],
-    exact [expr (B i).add_mem a_in b_in]
-  end,
-  ..(B i).to_add_subgroup }
+topology. -/
+def OpenAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
+  { (B i).toAddSubgroup with
+    is_open' :=
+      by 
+        let this' := hB.topology 
+        rw [is_open_iff_mem_nhds]
+        intro a a_in 
+        rw [(hB.to_module_filter_basis.to_add_group_filter_basis.nhds_has_basis a).mem_iff]
+        use B i, i, rfl 
+        rintro - ⟨b, b_in, rfl⟩
+        exact (B i).add_mem a_in b_in }
 
--- error in Topology.Algebra.Nonarchimedean.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nonarchimedean (hB : submodules_basis B) : @nonarchimedean_add_group M _ hB.topology :=
-begin
-  letI [] [] [":=", expr hB.topology],
-  constructor,
-  intros [ident U, ident hU],
-  obtain ["⟨", "-", ",", "⟨", ident i, ",", ident rfl, "⟩", ",", ident hi, ":", expr «expr ⊆ »((B i : set M), U), "⟩", ":=", expr hB.to_module_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff.mp hU],
-  exact [expr ⟨hB.open_add_subgroup i, hi⟩]
-end
+theorem nonarchimedean (hB : SubmodulesBasis B) : @NonarchimedeanAddGroup M _ hB.topology :=
+  by 
+    let this' := hB.topology 
+    constructor 
+    intro U hU 
+    obtain ⟨-, ⟨i, rfl⟩, hi : (B i : Set M) ⊆ U⟩ :=
+      hB.to_module_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff.mp hU 
+    exact ⟨hB.open_add_subgroup i, hi⟩
 
 /-- The non archimedean subgroup basis lemmas cannot be instances because some instances
 (such as `measure_theory.ae_eq_fun.add_monoid ` or `topological_add_group.to_has_continuous_add`)
@@ -311,7 +266,7 @@ end SubmodulesBasis
 section 
 
 variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
-  (hsmul : ∀ m : A i : ι, ∀ᶠa : R in 𝓝 0, a • m ∈ B i)
+  (hsmul : ∀ m : A i : ι, ∀ᶠ a : R in 𝓝 0, a • m ∈ B i)
 
 theorem SubmodulesRingBasis.to_submodules_basis : SubmodulesBasis B :=
   { inter := hB.inter, smul := hsmul }
@@ -321,6 +276,7 @@ example [Nonempty ι] : hB.topology = (hB.to_submodules_basis hsmul).topology :=
 
 end 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » BR)
 /-- Given a ring filter basis on a commutative ring `R`, define a compatibility condition
 on a family of submodules of a `R`-module `M`. This compatibility condition allows to get
 a topological module structure. -/
@@ -328,18 +284,15 @@ structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → S
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
   smul : ∀ m : M i : ι, ∃ (U : _)(_ : U ∈ BR), U ⊆ (fun a => a • m) ⁻¹' B i
 
--- error in Topology.Algebra.Nonarchimedean.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ring_filter_basis.submodules_basis_is_basis
-(BR : ring_filter_basis R)
-{B : ι → submodule R M}
-(hB : BR.submodules_basis B) : @submodules_basis ι R _ M _ _ BR.topology B :=
-{ inter := hB.inter,
-  smul := begin
-    letI [] [] [":=", expr BR.topology],
-    intros [ident m, ident i],
-    rcases [expr hB.smul m i, "with", "⟨", ident V, ",", ident V_in, ",", ident hV, "⟩"],
-    exact [expr mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) hV]
-  end }
+theorem RingFilterBasis.submodules_basis_is_basis (BR : RingFilterBasis R) {B : ι → Submodule R M}
+  (hB : BR.submodules_basis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=
+  { inter := hB.inter,
+    smul :=
+      by 
+        let this' := BR.topology 
+        intro m i 
+        rcases hB.smul m i with ⟨V, V_in, hV⟩
+        exact mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) hV }
 
 /-- The module filter basis associated to a ring filter basis and a compatible submodule basis.
 This allows to build a topological module structure compatible with the given module structure

@@ -189,8 +189,8 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
 
 namespace Interactive
 
--- error in Tactic.Squeeze: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
-attribute [derive #[expr decidable_eq]] simp_arg_type
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+deriving instance [anonymous] for simp_arg_type
 
 /-- Turn a `simp_arg_type` into a string. -/
 unsafe instance simp_arg_type.has_to_string : HasToString simp_arg_type :=

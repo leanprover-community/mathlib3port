@@ -74,8 +74,7 @@ noncomputable def basis_of (i : ι) : Basis { j : ι // j ≠ i } k V :=
   Basis.mk ((affine_independent_iff_linear_independent_vsub k b.points i).mp b.ind)
     (by 
       suffices  :
-        Submodule.span k (range fun j : { x // x ≠ i } => b.points («expr↑ » j) -ᵥ b.points i) =
-          vectorSpan k (range b.points)
+        Submodule.span k (range fun j : { x // x ≠ i } => b.points (↑j) -ᵥ b.points i) = vectorSpan k (range b.points)
       ·
         rw [this, ←direction_affine_span, b.tot, AffineSubspace.direction_top]
       convRHS => rw [←image_univ]
@@ -85,7 +84,7 @@ noncomputable def basis_of (i : ι) : Basis { j : ι // j ≠ i } k V :=
       simp )
 
 @[simp]
-theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) : b.basis_of i j = b.points («expr↑ » j) -ᵥ b.points i :=
+theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) : b.basis_of i j = b.points (↑j) -ᵥ b.points i :=
   by 
     simp [basis_of]
 
@@ -97,6 +96,10 @@ noncomputable def coord (i : ι) : P →ᵃ[k] k :=
         by 
           rw [vadd_vsub_assoc, LinearMap.map_add, vadd_eq_add, LinearMap.neg_apply, sub_add_eq_sub_sub_swap, add_commₓ,
             sub_eq_add_neg] }
+
+@[simp]
+theorem linear_eq_sum_coords (i : ι) : (b.coord i).linear = -(b.basis_of i).sumCoords :=
+  rfl
 
 @[simp]
 theorem coord_apply_eq (i : ι) : b.coord i (b.points i) = 1 :=
@@ -130,78 +133,97 @@ theorem coord_apply_combination_of_not_mem {s : Finset ι} {i : ι} (hi : i ∉ 
     simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_false, mul_boole, hw,
       Function.comp_app, smul_eq_mul, s.sum_ite_eq, s.map_affine_combination b.points w hw]
 
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem sum_coord_apply_eq_one [fintype ι] (q : P) : «expr = »(«expr∑ , »((i), b.coord i q), 1) :=
-begin
-  have [ident hq] [":", expr «expr ∈ »(q, affine_span k (range b.points))] [],
-  { rw [expr b.tot] [],
-    exact [expr affine_subspace.mem_top k V q] },
-  obtain ["⟨", ident w, ",", ident hw, ",", ident rfl, "⟩", ":=", expr eq_affine_combination_of_mem_affine_span_of_fintype hq],
-  convert [] [expr hw] [],
-  ext [] [ident i] [],
-  exact [expr b.coord_apply_combination_of_mem (finset.mem_univ i) hw]
-end
-
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem affine_combination_coord_eq_self
-[fintype ι]
-(q : P) : «expr = »(finset.univ.affine_combination b.points (λ i, b.coord i q), q) :=
-begin
-  have [ident hq] [":", expr «expr ∈ »(q, affine_span k (range b.points))] [],
-  { rw [expr b.tot] [],
-    exact [expr affine_subspace.mem_top k V q] },
-  obtain ["⟨", ident w, ",", ident hw, ",", ident rfl, "⟩", ":=", expr eq_affine_combination_of_mem_affine_span_of_fintype hq],
-  congr,
-  ext [] [ident i] [],
-  exact [expr b.coord_apply_combination_of_mem (finset.mem_univ i) hw]
-end
+theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.coord i q) = 1 :=
+  by 
+    have hq : q ∈ affineSpan k (range b.points)
+    ·
+      rw [b.tot]
+      exact AffineSubspace.mem_top k V q 
+    obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq 
+    convert hw 
+    ext i 
+    exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
+
+@[simp]
+theorem affine_combination_coord_eq_self [Fintype ι] (q : P) :
+  (Finset.univ.affineCombination b.points fun i => b.coord i q) = q :=
+  by 
+    have hq : q ∈ affineSpan k (range b.points)
+    ·
+      rw [b.tot]
+      exact AffineSubspace.mem_top k V q 
+    obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq 
+    congr 
+    ext i 
+    exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
 
 theorem ext_elem [Fintype ι] {q₁ q₂ : P} (h : ∀ i, b.coord i q₁ = b.coord i q₂) : q₁ = q₂ :=
   by 
     rw [←b.affine_combination_coord_eq_self q₁, ←b.affine_combination_coord_eq_self q₂]
     simp only [h]
 
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem coe_coord_of_subsingleton_eq_one [subsingleton ι] (i : ι) : «expr = »((b.coord i : P → k), 1) :=
-begin
-  ext [] [ident q] [],
-  have [ident hp] [":", expr (range b.points).subsingleton] [],
-  { rw ["<-", expr image_univ] [],
-    apply [expr subsingleton.image],
-    apply [expr subsingleton_of_subsingleton] },
-  haveI [] [] [":=", expr affine_subspace.subsingleton_of_subsingleton_span_eq_top hp b.tot],
-  let [ident s] [":", expr finset ι] [":=", expr {i}],
-  have [ident hi] [":", expr «expr ∈ »(i, s)] [],
-  { simp [] [] [] [] [] [] },
-  have [ident hw] [":", expr «expr = »(s.sum (function.const ι (1 : k)), 1)] [],
-  { simp [] [] [] [] [] [] },
-  have [ident hq] [":", expr «expr = »(q, s.affine_combination b.points (function.const ι (1 : k)))] [],
-  { simp [] [] [] [] [] [] },
-  rw ["[", expr pi.one_apply, ",", expr hq, ",", expr b.coord_apply_combination_of_mem hi hw, "]"] []
-end
+@[simp]
+theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.coord i : P → k) = 1 :=
+  by 
+    ext q 
+    have hp : (range b.points).Subsingleton
+    ·
+      rw [←image_univ]
+      apply subsingleton.image 
+      apply subsingleton_of_subsingleton 
+    have  := AffineSubspace.subsingleton_of_subsingleton_span_eq_top hp b.tot 
+    let s : Finset ι := {i}
+    have hi : i ∈ s
+    ·
+      simp 
+    have hw : s.sum (Function.const ι (1 : k)) = 1
+    ·
+      simp 
+    have hq : q = s.affine_combination b.points (Function.const ι (1 : k))
+    ·
+      simp 
+    rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem surjective_coord [nontrivial ι] (i : ι) : «expr $ »(function.surjective, b.coord i) :=
-begin
-  classical,
-  intros [ident x],
-  obtain ["⟨", ident j, ",", ident hij, "⟩", ":=", expr exists_ne i],
-  let [ident s] [":", expr finset ι] [":=", expr {i, j}],
-  have [ident hi] [":", expr «expr ∈ »(i, s)] [],
-  { simp [] [] [] [] [] [] },
-  have [ident hj] [":", expr «expr ∈ »(j, s)] [],
-  { simp [] [] [] [] [] [] },
-  let [ident w] [":", expr ι → k] [":=", expr λ j', if «expr = »(j', i) then x else «expr - »(1, x)],
-  have [ident hw] [":", expr «expr = »(s.sum w, 1)] [],
-  { simp [] [] [] ["[", expr hij, ",", expr finset.sum_ite, ",", expr finset.filter_insert, ",", expr finset.filter_eq', "]"] [] [] },
-  use [expr s.affine_combination b.points w],
-  simp [] [] [] ["[", expr b.coord_apply_combination_of_mem hi hw, "]"] [] []
-end
+theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective$ b.coord i :=
+  by 
+    classical 
+    intro x 
+    obtain ⟨j, hij⟩ := exists_ne i 
+    let s : Finset ι := {i, j}
+    have hi : i ∈ s
+    ·
+      simp 
+    have hj : j ∈ s
+    ·
+      simp 
+    let w : ι → k := fun j' => if j' = i then x else 1 - x 
+    have hw : s.sum w = 1
+    ·
+      simp [hij, Finset.sum_ite, Finset.filter_insert, Finset.filter_eq']
+    use s.affine_combination b.points w 
+    simp [b.coord_apply_combination_of_mem hi hw]
 
-/-- The vector of barycentric coordinates of a given point with respect to an affine basis. -/
-noncomputable def coords (q : P) (i : ι) :=
-  b.coord i q
+/-- Barycentric coordinates as an affine map. -/
+noncomputable def coords : P →ᵃ[k] ι → k :=
+  { toFun := fun q i => b.coord i q,
+    linear :=
+      { toFun := fun v i => -(b.basis_of i).sumCoords v,
+        map_add' :=
+          fun v w =>
+            by 
+              ext i 
+              simp only [LinearMap.map_add, Pi.add_apply, neg_add],
+        map_smul' :=
+          fun t v =>
+            by 
+              ext i 
+              simpa only [LinearMap.map_smul, Pi.smul_apply, smul_neg] },
+    map_vadd' :=
+      fun p v =>
+        by 
+          ext i 
+          simp only [linear_eq_sum_coords, LinearMap.coe_mk, LinearMap.neg_apply, Pi.vadd_apply', AffineMap.map_vadd] }
 
 @[simp]
 theorem coords_apply (q : P) (i : ι) : b.coords q i = b.coord i q :=
@@ -226,61 +248,61 @@ theorem to_matrix_self [DecidableEq ι] : b.to_matrix b.points = (1 : Matrix ι 
 
 variable {ι' : Type _} [Fintype ι'] [Fintype ι] (b₂ : AffineBasis ι k P)
 
-theorem to_matrix_row_sum_one {ι' : Type _} (q : ι' → P) (i : ι') : (∑j, b.to_matrix q i j) = 1 :=
+theorem to_matrix_row_sum_one {ι' : Type _} (q : ι' → P) (i : ι') : (∑ j, b.to_matrix q i j) = 1 :=
   by 
     simp 
 
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a right inverse, then `p` is affine independent. -/
-theorem affine_independent_of_to_matrix_right_inv
-[decidable_eq ι']
-(p : ι' → P)
-{A : matrix ι ι' k}
-(hA : «expr = »(«expr ⬝ »(b.to_matrix p, A), 1)) : affine_independent k p :=
-begin
-  rw [expr affine_independent_iff_eq_of_fintype_affine_combination_eq] [],
-  intros [ident w₁, ident w₂, ident hw₁, ident hw₂, ident hweq],
-  have [ident hweq'] [":", expr «expr = »((b.to_matrix p).vec_mul w₁, (b.to_matrix p).vec_mul w₂)] [],
-  { ext [] [ident j] [],
-    change [expr «expr = »(«expr∑ , »((i), «expr • »(w₁ i, b.coord j (p i))), «expr∑ , »((i), «expr • »(w₂ i, b.coord j (p i))))] [] [],
-    rw ["[", "<-", expr finset.univ.affine_combination_eq_linear_combination _ _ hw₁, ",", "<-", expr finset.univ.affine_combination_eq_linear_combination _ _ hw₂, ",", "<-", expr finset.univ.map_affine_combination p w₁ hw₁, ",", "<-", expr finset.univ.map_affine_combination p w₂ hw₂, ",", expr hweq, "]"] [] },
-  replace [ident hweq'] [] [":=", expr congr_arg (λ w, A.vec_mul w) hweq'],
-  simpa [] [] ["only"] ["[", expr matrix.vec_mul_vec_mul, ",", "<-", expr matrix.mul_eq_mul, ",", expr hA, ",", expr matrix.vec_mul_one, "]"] [] ["using", expr hweq']
-end
+theorem affine_independent_of_to_matrix_right_inv [DecidableEq ι'] (p : ι' → P) {A : Matrix ι ι' k}
+  (hA : b.to_matrix p ⬝ A = 1) : AffineIndependent k p :=
+  by 
+    rw [affine_independent_iff_eq_of_fintype_affine_combination_eq]
+    intro w₁ w₂ hw₁ hw₂ hweq 
+    have hweq' : (b.to_matrix p).vecMul w₁ = (b.to_matrix p).vecMul w₂
+    ·
+      ext j 
+      change (∑ i, w₁ i • b.coord j (p i)) = ∑ i, w₂ i • b.coord j (p i)
+      rw [←finset.univ.affine_combination_eq_linear_combination _ _ hw₁,
+        ←finset.univ.affine_combination_eq_linear_combination _ _ hw₂, ←finset.univ.map_affine_combination p w₁ hw₁,
+        ←finset.univ.map_affine_combination p w₂ hw₂, hweq]
+    replace hweq' := congr_argₓ (fun w => A.vec_mul w) hweq' 
+    simpa only [Matrix.vec_mul_vec_mul, ←Matrix.mul_eq_mul, hA, Matrix.vec_mul_one] using hweq'
 
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
-coordinates of `p` with respect `b` has a left inverse, then `p` spans the the entire space. -/
-theorem affine_span_eq_top_of_to_matrix_left_inv
-[decidable_eq ι]
-[nontrivial k]
-(p : ι' → P)
-{A : matrix ι ι' k}
-(hA : «expr = »(«expr ⬝ »(A, b.to_matrix p), 1)) : «expr = »(affine_span k (range p), «expr⊤»()) :=
-begin
-  suffices [] [":", expr ∀ i, «expr ∈ »(b.points i, affine_span k (range p))],
-  { rw ["[", expr eq_top_iff, ",", "<-", expr b.tot, ",", expr affine_span_le, "]"] [],
-    rintros [ident q, "⟨", ident i, ",", ident rfl, "⟩"],
-    exact [expr this i] },
-  intros [ident i],
-  have [ident hAi] [":", expr «expr = »(«expr∑ , »((j), A i j), 1)] [],
-  { calc
-      «expr = »(«expr∑ , »((j), A i j), «expr∑ , »((j), «expr * »(A i j, «expr∑ , »((l), b.to_matrix p j l)))) : by simp [] [] [] [] [] []
-      «expr = »(..., «expr∑ , »((j), «expr∑ , »((l), «expr * »(A i j, b.to_matrix p j l)))) : by simp_rw [expr finset.mul_sum] []
-      «expr = »(..., «expr∑ , »((l), «expr∑ , »((j), «expr * »(A i j, b.to_matrix p j l)))) : by rw [expr finset.sum_comm] []
-      «expr = »(..., «expr∑ , »((l), «expr ⬝ »(A, b.to_matrix p) i l)) : rfl
-      «expr = »(..., 1) : by simp [] [] [] ["[", expr hA, ",", expr matrix.one_apply, ",", expr finset.filter_eq, "]"] [] [] },
-  have [ident hbi] [":", expr «expr = »(b.points i, finset.univ.affine_combination p (A i))] [],
-  { apply [expr b.ext_elem],
-    intros [ident j],
-    rw ["[", expr b.coord_apply, ",", expr finset.univ.map_affine_combination _ _ hAi, ",", expr finset.univ.affine_combination_eq_linear_combination _ _ hAi, "]"] [],
-    change [expr «expr = »(_, «expr ⬝ »(A, b.to_matrix p) i j)] [] [],
-    simp_rw ["[", expr hA, ",", expr matrix.one_apply, ",", expr @eq_comm _ i j, "]"] [],
-    congr },
-  rw [expr hbi] [],
-  exact [expr affine_combination_mem_affine_span hAi p]
-end
+coordinates of `p` with respect `b` has a left inverse, then `p` spans the entire space. -/
+theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k] (p : ι' → P) {A : Matrix ι ι' k}
+  (hA : A ⬝ b.to_matrix p = 1) : affineSpan k (range p) = ⊤ :=
+  by 
+    suffices  : ∀ i, b.points i ∈ affineSpan k (range p)
+    ·
+      rw [eq_top_iff, ←b.tot, affine_span_le]
+      rintro q ⟨i, rfl⟩
+      exact this i 
+    intro i 
+    have hAi : (∑ j, A i j) = 1
+    ·
+      calc (∑ j, A i j) = ∑ j, A i j*∑ l, b.to_matrix p j l :=
+        by 
+          simp _ = ∑ j, ∑ l, A i j*b.to_matrix p j l :=
+        by 
+          simpRw [Finset.mul_sum]_ = ∑ l, ∑ j, A i j*b.to_matrix p j l :=
+        by 
+          rw [Finset.sum_comm]_ = ∑ l, (A ⬝ b.to_matrix p) i l :=
+        rfl _ = 1 :=
+        by 
+          simp [hA, Matrix.one_apply, Finset.filter_eq]
+    have hbi : b.points i = finset.univ.affine_combination p (A i)
+    ·
+      apply b.ext_elem 
+      intro j 
+      rw [b.coord_apply, finset.univ.map_affine_combination _ _ hAi,
+        finset.univ.affine_combination_eq_linear_combination _ _ hAi]
+      change _ = (A ⬝ b.to_matrix p) i j 
+      simpRw [hA, Matrix.one_apply, @eq_comm _ i j]
+      congr 
+    rw [hbi]
+    exact affine_combination_mem_affine_span hAi p
 
 /-- A change of basis formula for barycentric coordinates.
 
@@ -310,7 +332,7 @@ theorem is_unit_to_matrix : IsUnit (b.to_matrix b₂.points) :=
 theorem is_unit_to_matrix_iff [Nontrivial k] (p : ι → P) :
   IsUnit (b.to_matrix p) ↔ AffineIndependent k p ∧ affineSpan k (range p) = ⊤ :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨⟨B, A, hA, hA'⟩, rfl : B = b.to_matrix p⟩
       rw [Matrix.mul_eq_mul] at hA hA' 
@@ -329,29 +351,24 @@ variable [CommRingₓ k] [Module k V] [DecidableEq ι] [Fintype ι]
 
 variable (b b₂ : AffineBasis ι k P)
 
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A change of basis formula for barycentric coordinates.
 
 See also `affine_basis.to_matrix_vec_mul_coords`. -/
 @[simp]
-theorem to_matrix_inv_vec_mul_to_matrix
-(x : P) : «expr = »(«expr ⁻¹»(b.to_matrix b₂.points).vec_mul (b.coords x), b₂.coords x) :=
-begin
-  have [ident hu] [] [":=", expr b.is_unit_to_matrix b₂],
-  rw [expr matrix.is_unit_iff_is_unit_det] ["at", ident hu],
-  rw ["[", "<-", expr b.to_matrix_vec_mul_coords b₂, ",", expr matrix.vec_mul_vec_mul, ",", expr matrix.mul_nonsing_inv _ hu, ",", expr matrix.vec_mul_one, "]"] []
-end
+theorem to_matrix_inv_vec_mul_to_matrix (x : P) : b.to_matrix b₂.points⁻¹.vecMul (b.coords x) = b₂.coords x :=
+  by 
+    have hu := b.is_unit_to_matrix b₂ 
+    rw [Matrix.is_unit_iff_is_unit_det] at hu 
+    rw [←b.to_matrix_vec_mul_coords b₂, Matrix.vec_mul_vec_mul, Matrix.mul_nonsing_inv _ hu, Matrix.vec_mul_one]
 
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If we fix a background affine basis `b`, then for any other basis `b₂`, we can characterise
 the barycentric coordinates provided by `b₂` in terms of determinants relative to `b`. -/
-theorem det_smul_coords_eq_cramer_coords
-(x : P) : «expr = »(«expr • »((b.to_matrix b₂.points).det, b₂.coords x), «expr ᵀ»(b.to_matrix b₂.points).cramer (b.coords x)) :=
-begin
-  have [ident hu] [] [":=", expr b.is_unit_to_matrix b₂],
-  rw [expr matrix.is_unit_iff_is_unit_det] ["at", ident hu],
-  rw ["[", "<-", expr b.to_matrix_inv_vec_mul_to_matrix, ",", expr matrix.det_smul_inv_vec_mul_eq_cramer_transpose _ _ hu, "]"] []
-end
+theorem det_smul_coords_eq_cramer_coords (x : P) :
+  (b.to_matrix b₂.points).det • b₂.coords x = (b.to_matrix b₂.points)ᵀ.cramer (b.coords x) :=
+  by 
+    have hu := b.is_unit_to_matrix b₂ 
+    rw [Matrix.is_unit_iff_is_unit_det] at hu 
+    rw [←b.to_matrix_inv_vec_mul_to_matrix, Matrix.det_smul_inv_vec_mul_eq_cramer_transpose _ _ hu]
 
 end CommRingₓ
 
@@ -363,7 +380,7 @@ include V
 
 variable (k V P)
 
-theorem exists_affine_basis : ∃ s : Set P, Nonempty (AffineBasis («expr↥ » s) k P) :=
+theorem exists_affine_basis : ∃ s : Set P, Nonempty (AffineBasis (↥s) k P) :=
   by 
     obtain ⟨s, -, h_tot, h_ind⟩ := exists_affine_independent k V (Set.Univ : Set P)
     refine' ⟨s, ⟨⟨(coeₓ : s → P), h_ind, _⟩⟩⟩
@@ -371,23 +388,19 @@ theorem exists_affine_basis : ∃ s : Set P, Nonempty (AffineBasis («expr↥ »
 
 variable {k V P}
 
--- error in LinearAlgebra.AffineSpace.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_affine_basis_of_finite_dimensional
-{ι : Type*}
-[fintype ι]
-[finite_dimensional k V]
-(h : «expr = »(fintype.card ι, «expr + »(finite_dimensional.finrank k V, 1))) : nonempty (affine_basis ι k P) :=
-begin
-  obtain ["⟨", ident s, ",", "⟨", "⟨", ident incl, ",", ident h_ind, ",", ident h_tot, "⟩", "⟩", "⟩", ":=", expr affine_basis.exists_affine_basis k V P],
-  haveI [] [":", expr fintype s] [":=", expr fintype_of_fin_dim_affine_independent k h_ind],
-  have [ident hs] [":", expr «expr = »(fintype.card ι, fintype.card s)] [],
-  { rw [expr h] [],
-    exact [expr (h_ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp h_tot).symm] },
-  rw ["<-", expr affine_independent_equiv (fintype.equiv_of_card_eq hs)] ["at", ident h_ind],
-  refine [expr ⟨⟨_, h_ind, _⟩⟩],
-  rw [expr range_comp] [],
-  simp [] [] [] ["[", expr h_tot, "]"] [] []
-end
+theorem exists_affine_basis_of_finite_dimensional {ι : Type _} [Fintype ι] [FiniteDimensional k V]
+  (h : Fintype.card ι = FiniteDimensional.finrank k V+1) : Nonempty (AffineBasis ι k P) :=
+  by 
+    obtain ⟨s, ⟨⟨incl, h_ind, h_tot⟩⟩⟩ := AffineBasis.exists_affine_basis k V P 
+    have  : Fintype s := fintypeOfFinDimAffineIndependent k h_ind 
+    have hs : Fintype.card ι = Fintype.card s
+    ·
+      rw [h]
+      exact (h_ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp h_tot).symm 
+    rw [←affine_independent_equiv (Fintype.equivOfCardEq hs)] at h_ind 
+    refine' ⟨⟨_, h_ind, _⟩⟩
+    rw [range_comp]
+    simp [h_tot]
 
 end Field
 

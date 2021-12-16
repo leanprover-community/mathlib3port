@@ -40,7 +40,7 @@ open Nat Set
 
 open_locale Cardinal
 
-noncomputable theory
+noncomputable section 
 
 namespace Cardinal
 
@@ -86,7 +86,7 @@ theorem summable_cantor_function (f : ℕ → Bool) (h1 : 0 ≤ c) (h2 : c < 1) 
 /-- `cantor_function c (f : ℕ → bool)` is `Σ n, f n * c ^ n`, where `tt` is interpreted as `1` and
 `ff` is interpreted as `0`. It is implemented using `cantor_function_aux`. -/
 def cantor_function (c : ℝ) (f : ℕ → Bool) : ℝ :=
-  ∑'n, cantor_function_aux c f n
+  ∑' n, cantor_function_aux c f n
 
 theorem cantor_function_le (h1 : 0 ≤ c) (h2 : c < 1) (h3 : ∀ n, f n → g n) :
   cantor_function c f ≤ cantor_function c g :=
@@ -105,95 +105,98 @@ theorem cantor_function_succ (f : ℕ → Bool) (h1 : 0 ≤ c) (h2 : c < 1) :
     rw [cantor_function_aux_succ, tsum_mul_left, cantor_function_aux, pow_zeroₓ]
     rfl
 
--- error in Data.Real.Cardinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
 /-- `cantor_function c` is strictly increasing with if `0 < c < 1/2`, if we endow `ℕ → bool` with a
 lexicographic order. The lexicographic order doesn't exist for these infinitary products, so we
 explicitly write out what it means. -/
-theorem increasing_cantor_function
-(h1 : «expr < »(0, c))
-(h2 : «expr < »(c, «expr / »(1, 2)))
-{n : exprℕ()}
-{f g : exprℕ() → bool}
-(hn : ∀ k «expr < » n, «expr = »(f k, g k))
-(fn : «expr = »(f n, ff))
-(gn : «expr = »(g n, tt)) : «expr < »(cantor_function c f, cantor_function c g) :=
-begin
-  have [ident h3] [":", expr «expr < »(c, 1)] [],
-  { apply [expr h2.trans],
-    norm_num [] [] },
-  induction [expr n] [] ["with", ident n, ident ih] ["generalizing", ident f, ident g],
-  { let [ident f_max] [":", expr exprℕ() → bool] [":=", expr λ n, nat.rec ff (λ _ _, tt) n],
-    have [ident hf_max] [":", expr ∀ n, f n → f_max n] [],
-    { intros [ident n, ident hn],
-      cases [expr n] [],
-      rw ["[", expr fn, "]"] ["at", ident hn],
-      contradiction,
-      apply [expr rfl] },
-    let [ident g_min] [":", expr exprℕ() → bool] [":=", expr λ n, nat.rec tt (λ _ _, ff) n],
-    have [ident hg_min] [":", expr ∀ n, g_min n → g n] [],
-    { intros [ident n, ident hn],
-      cases [expr n] [],
-      rw ["[", expr gn, "]"] [],
-      apply [expr rfl],
-      contradiction },
-    apply [expr (cantor_function_le (le_of_lt h1) h3 hf_max).trans_lt],
-    refine [expr lt_of_lt_of_le _ (cantor_function_le (le_of_lt h1) h3 hg_min)],
-    have [] [":", expr «expr < »(«expr / »(c, «expr - »(1, c)), 1)] [],
-    { rw ["[", expr div_lt_one, ",", expr lt_sub_iff_add_lt, "]"] [],
-      { convert [] [expr add_lt_add h2 h2] [],
-        norm_num [] [] },
-      rwa [expr sub_pos] [] },
-    convert [] [expr this] [],
-    { rw ["[", expr cantor_function_succ _ (le_of_lt h1) h3, ",", expr div_eq_mul_inv, ",", "<-", expr tsum_geometric_of_lt_1 (le_of_lt h1) h3, "]"] [],
-      apply [expr zero_add] },
-    { convert [] [expr tsum_eq_single 0 _] [],
-      { apply_instance },
-      { intros [ident n, ident hn],
-        cases [expr n] [],
-        contradiction,
-        refl } } },
-  rw ["[", expr cantor_function_succ f (le_of_lt h1) h3, ",", expr cantor_function_succ g (le_of_lt h1) h3, "]"] [],
-  rw ["[", expr «expr $ »(hn 0, zero_lt_succ n), "]"] [],
-  apply [expr add_lt_add_left],
-  rw [expr mul_lt_mul_left h1] [],
-  exact [expr ih (λ k hk, «expr $ »(hn _, succ_lt_succ hk)) fn gn]
-end
+theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g : ℕ → Bool}
+  (hn : ∀ k _ : k < n, f k = g k) (fn : f n = ff) (gn : g n = tt) : cantor_function c f < cantor_function c g :=
+  by 
+    have h3 : c < 1
+    ·
+      apply h2.trans 
+      normNum 
+    induction' n with n ih generalizing f g
+    ·
+      let f_max : ℕ → Bool := fun n => Nat.rec ff (fun _ _ => tt) n 
+      have hf_max : ∀ n, f n → f_max n
+      ·
+        intro n hn 
+        cases n 
+        rw [fn] at hn 
+        contradiction 
+        apply rfl 
+      let g_min : ℕ → Bool := fun n => Nat.rec tt (fun _ _ => ff) n 
+      have hg_min : ∀ n, g_min n → g n
+      ·
+        intro n hn 
+        cases n 
+        rw [gn]
+        apply rfl 
+        contradiction 
+      apply (cantor_function_le (le_of_ltₓ h1) h3 hf_max).trans_lt 
+      refine' lt_of_lt_of_leₓ _ (cantor_function_le (le_of_ltₓ h1) h3 hg_min)
+      have  : c / (1 - c) < 1
+      ·
+        rw [div_lt_one, lt_sub_iff_add_lt]
+        ·
+          convert add_lt_add h2 h2 
+          normNum 
+        rwa [sub_pos]
+      convert this
+      ·
+        rw [cantor_function_succ _ (le_of_ltₓ h1) h3, div_eq_mul_inv, ←tsum_geometric_of_lt_1 (le_of_ltₓ h1) h3]
+        apply zero_addₓ
+      ·
+        convert tsum_eq_single 0 _
+        ·
+          infer_instance
+        ·
+          intro n hn 
+          cases n 
+          contradiction 
+          rfl 
+    rw [cantor_function_succ f (le_of_ltₓ h1) h3, cantor_function_succ g (le_of_ltₓ h1) h3]
+    rw [hn 0$ zero_lt_succ n]
+    apply add_lt_add_left 
+    rw [mul_lt_mul_left h1]
+    exact ih (fun k hk => hn _$ succ_lt_succ hk) fn gn
 
--- error in Data.Real.Cardinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `cantor_function c` is injective if `0 < c < 1/2`. -/
-theorem cantor_function_injective
-(h1 : «expr < »(0, c))
-(h2 : «expr < »(c, «expr / »(1, 2))) : function.injective (cantor_function c) :=
-begin
-  intros [ident f, ident g, ident hfg],
-  classical,
-  by_contra [ident h],
-  revert [ident hfg],
-  have [] [":", expr «expr∃ , »((n), «expr ≠ »(f n, g n))] [],
-  { rw ["[", "<-", expr not_forall, "]"] [],
-    intro [ident h'],
-    apply [expr h],
-    ext [] [] [],
-    apply [expr h'] },
-  let [ident n] [] [":=", expr nat.find this],
-  have [ident hn] [":", expr ∀ k : exprℕ(), «expr < »(k, n) → «expr = »(f k, g k)] [],
-  { intros [ident k, ident hk],
-    apply [expr of_not_not],
-    exact [expr nat.find_min this hk] },
-  cases [expr fn, ":", expr f n] [],
-  { apply [expr ne_of_lt],
-    refine [expr increasing_cantor_function h1 h2 hn fn _],
-    apply [expr eq_tt_of_not_eq_ff],
-    rw ["[", "<-", expr fn, "]"] [],
-    apply [expr ne.symm],
-    exact [expr nat.find_spec this] },
-  { apply [expr ne_of_gt],
-    refine [expr increasing_cantor_function h1 h2 (λ k hk, (hn k hk).symm) _ fn],
-    apply [expr eq_ff_of_not_eq_tt],
-    rw ["[", "<-", expr fn, "]"] [],
-    apply [expr ne.symm],
-    exact [expr nat.find_spec this] }
-end
+theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injective (cantor_function c) :=
+  by 
+    intro f g hfg 
+    classical 
+    byContra h 
+    revert hfg 
+    have  : ∃ n, f n ≠ g n
+    ·
+      rw [←not_forall]
+      intro h' 
+      apply h 
+      ext 
+      apply h' 
+    let n := Nat.findₓ this 
+    have hn : ∀ k : ℕ, k < n → f k = g k
+    ·
+      intro k hk 
+      apply of_not_not 
+      exact Nat.find_minₓ this hk 
+    cases fn : f n
+    ·
+      apply ne_of_ltₓ 
+      refine' increasing_cantor_function h1 h2 hn fn _ 
+      apply eq_tt_of_not_eq_ff 
+      rw [←fn]
+      apply Ne.symm 
+      exact Nat.find_specₓ this
+    ·
+      apply ne_of_gtₓ 
+      refine' increasing_cantor_function h1 h2 (fun k hk => (hn k hk).symm) _ fn 
+      apply eq_ff_of_not_eq_tt 
+      rw [←fn]
+      apply Ne.symm 
+      exact Nat.find_specₓ this
 
 /-- The cardinality of the reals, as a type. -/
 theorem mk_real : # ℝ = 𝔠 :=
@@ -222,63 +225,59 @@ theorem not_countable_real : ¬countable (Set.Univ : Set ℝ) :=
     rw [←mk_set_le_omega, not_leₓ, mk_univ_real]
     apply cantor
 
--- error in Data.Real.Cardinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cardinality of the interval (a, ∞). -/
-theorem mk_Ioi_real (a : exprℝ()) : «expr = »(«expr#»() (Ioi a), expr𝔠()) :=
-begin
-  refine [expr le_antisymm «expr ▸ »(mk_real, mk_set_le _) _],
-  rw ["[", "<-", expr not_lt, "]"] [],
-  intro [ident h],
-  refine [expr ne_of_lt _ mk_univ_real],
-  have [ident hu] [":", expr «expr = »(«expr ∪ »(«expr ∪ »(Iio a, {a}), Ioi a), set.univ)] [],
-  { convert [] [expr Iic_union_Ioi] [],
-    exact [expr Iio_union_right] },
-  rw ["<-", expr hu] [],
-  refine [expr lt_of_le_of_lt (mk_union_le _ _) _],
-  refine [expr lt_of_le_of_lt (add_le_add_right (mk_union_le _ _) _) _],
-  have [ident h2] [":", expr «expr = »(«expr '' »(λ x, «expr - »(«expr + »(a, a), x), Ioi a), Iio a)] [],
-  { convert [] [expr image_const_sub_Ioi _ _] [],
-    simp [] [] [] [] [] [] },
-  rw ["<-", expr h2] [],
-  refine [expr add_lt_of_lt (cantor _).le _ h],
-  refine [expr add_lt_of_lt (cantor _).le (mk_image_le.trans_lt h) _],
-  rw [expr mk_singleton] [],
-  exact [expr one_lt_omega.trans (cantor _)]
-end
+theorem mk_Ioi_real (a : ℝ) : # (Ioi a) = 𝔠 :=
+  by 
+    refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _ 
+    rw [←not_ltₓ]
+    intro h 
+    refine' ne_of_ltₓ _ mk_univ_real 
+    have hu : Iio a ∪ {a} ∪ Ioi a = Set.Univ
+    ·
+      convert Iic_union_Ioi 
+      exact Iio_union_right 
+    rw [←hu]
+    refine' lt_of_le_of_ltₓ (mk_union_le _ _) _ 
+    refine' lt_of_le_of_ltₓ (add_le_add_right (mk_union_le _ _) _) _ 
+    have h2 : (fun x => (a+a) - x) '' Ioi a = Iio a
+    ·
+      convert image_const_sub_Ioi _ _ 
+      simp 
+    rw [←h2]
+    refine' add_lt_of_lt (cantor _).le _ h 
+    refine' add_lt_of_lt (cantor _).le (mk_image_le.trans_lt h) _ 
+    rw [mk_singleton]
+    exact one_lt_omega.trans (cantor _)
 
 /-- The cardinality of the interval [a, ∞). -/
 theorem mk_Ici_real (a : ℝ) : # (Ici a) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioi_real a ▸ mk_le_mk_of_subset Ioi_subset_Ici_self)
 
--- error in Data.Real.Cardinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cardinality of the interval (-∞, a). -/
-theorem mk_Iio_real (a : exprℝ()) : «expr = »(«expr#»() (Iio a), expr𝔠()) :=
-begin
-  refine [expr le_antisymm «expr ▸ »(mk_real, mk_set_le _) _],
-  have [ident h2] [":", expr «expr = »(«expr '' »(λ x, «expr - »(«expr + »(a, a), x), Iio a), Ioi a)] [],
-  { convert [] [expr image_const_sub_Iio _ _] [],
-    simp [] [] [] [] [] [] },
-  exact [expr «expr ▸ »(mk_Ioi_real a, «expr ▸ »(h2, mk_image_le))]
-end
+theorem mk_Iio_real (a : ℝ) : # (Iio a) = 𝔠 :=
+  by 
+    refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _ 
+    have h2 : (fun x => (a+a) - x) '' Iio a = Ioi a
+    ·
+      convert image_const_sub_Iio _ _ 
+      simp 
+    exact mk_Ioi_real a ▸ h2 ▸ mk_image_le
 
 /-- The cardinality of the interval (-∞, a]. -/
 theorem mk_Iic_real (a : ℝ) : # (Iic a) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Iio_real a ▸ mk_le_mk_of_subset Iio_subset_Iic_self)
 
--- error in Data.Real.Cardinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cardinality of the interval (a, b). -/
-theorem mk_Ioo_real {a b : exprℝ()} (h : «expr < »(a, b)) : «expr = »(«expr#»() (Ioo a b), expr𝔠()) :=
-begin
-  refine [expr le_antisymm «expr ▸ »(mk_real, mk_set_le _) _],
-  have [ident h1] [":", expr «expr ≤ »(«expr#»() «expr '' »(λ
-     x, «expr - »(x, a), Ioo a b), «expr#»() (Ioo a b))] [":=", expr mk_image_le],
-  refine [expr le_trans _ h1],
-  rw ["[", expr image_sub_const_Ioo, ",", expr sub_self, "]"] [],
-  replace [ident h] [] [":=", expr sub_pos_of_lt h],
-  have [ident h2] [":", expr «expr ≤ »(«expr#»() «expr '' »(has_inv.inv, Ioo 0 «expr - »(b, a)), «expr#»() (Ioo 0 «expr - »(b, a)))] [":=", expr mk_image_le],
-  refine [expr le_trans _ h2],
-  rw ["[", expr image_inv_Ioo_0_left h, ",", expr mk_Ioi_real, "]"] []
-end
+theorem mk_Ioo_real {a b : ℝ} (h : a < b) : # (Ioo a b) = 𝔠 :=
+  by 
+    refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _ 
+    have h1 : # ((fun x => x - a) '' Ioo a b) ≤ # (Ioo a b) := mk_image_le 
+    refine' le_transₓ _ h1 
+    rw [image_sub_const_Ioo, sub_self]
+    replace h := sub_pos_of_lt h 
+    have h2 : # (HasInv.inv '' Ioo 0 (b - a)) ≤ # (Ioo 0 (b - a)) := mk_image_le 
+    refine' le_transₓ _ h2 
+    rw [image_inv_Ioo_0_left h, mk_Ioi_real]
 
 /-- The cardinality of the interval [a, b). -/
 theorem mk_Ico_real {a b : ℝ} (h : a < b) : # (Ico a b) = 𝔠 :=

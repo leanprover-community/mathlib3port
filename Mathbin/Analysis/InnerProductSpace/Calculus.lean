@@ -7,13 +7,11 @@ import Mathbin.Analysis.SpecialFunctions.Sqrt
 In this file we prove that the inner product and square of the norm in an inner space are
 infinitely `ℝ`-smooth. In order to state these results, we need a `normed_space ℝ E`
 instance. Though we can deduce this structure from `inner_product_space 𝕜 E`, this instance may be
-not definitionally equal to some other “natural” instance. So, we assume `[normed_space ℝ E]` and
-`[is_scalar_tower ℝ 𝕜 E]`. In both interesting cases `𝕜 = ℝ` and `𝕜 = ℂ` we have these instances.
-
+not definitionally equal to some other “natural” instance. So, we assume `[normed_space ℝ E]`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open IsROrC Real Filter
 
@@ -25,7 +23,7 @@ variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-variable [NormedSpace ℝ E] [IsScalarTower ℝ 𝕜 E]
+variable [NormedSpace ℝ E]
 
 /-- Derivative of the inner product. -/
 def fderivInnerClm (p : E × E) : E × E →L[ℝ] 𝕜 :=
@@ -156,10 +154,12 @@ theorem TimesContDiffWithinAt.dist (hf : TimesContDiffWithinAt ℝ n f s x) (hg 
 theorem TimesContDiffOn.norm_sq (hf : TimesContDiffOn ℝ n f s) : TimesContDiffOn ℝ n (fun y => ∥f y∥^2) s :=
   fun x hx => (hf x hx).normSq
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem TimesContDiffOn.norm (hf : TimesContDiffOn ℝ n f s) (h0 : ∀ x _ : x ∈ s, f x ≠ 0) :
   TimesContDiffOn ℝ n (fun y => ∥f y∥) s :=
   fun x hx => (hf x hx).norm (h0 x hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem TimesContDiffOn.dist (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDiffOn ℝ n g s)
   (hne : ∀ x _ : x ∈ s, f x ≠ g x) : TimesContDiffOn ℝ n (fun y => dist (f y) (g y)) s :=
   fun x hx => (hf x hx).dist (hg x hx) (hne x hx)
@@ -173,7 +173,7 @@ theorem TimesContDiff.dist (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ 
 
 omit 𝕜
 
-theorem has_strict_fderiv_at_norm_sq (x : F) : HasStrictFderivAt (fun x => ∥x∥^2) (bit0 (innerRight x)) x :=
+theorem has_strict_fderiv_at_norm_sq (x : F) : HasStrictFderivAt (fun x => ∥x∥^2) (bit0 (innerSL x)) x :=
   by 
     simp only [sq, ←inner_self_eq_norm_mul_norm]
     convert (has_strict_fderiv_at_id x).inner (has_strict_fderiv_at_id x)
@@ -221,10 +221,12 @@ theorem DifferentiableWithinAt.dist (hf : DifferentiableWithinAt ℝ f s x) (hg 
 theorem DifferentiableOn.norm_sq (hf : DifferentiableOn ℝ f s) : DifferentiableOn ℝ (fun y => ∥f y∥^2) s :=
   fun x hx => (hf x hx).normSq
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem DifferentiableOn.norm (hf : DifferentiableOn ℝ f s) (h0 : ∀ x _ : x ∈ s, f x ≠ 0) :
   DifferentiableOn ℝ (fun y => ∥f y∥) s :=
   fun x hx => (hf x hx).norm (h0 x hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem DifferentiableOn.dist (hf : DifferentiableOn ℝ f s) (hg : DifferentiableOn ℝ g s)
   (hne : ∀ x _ : x ∈ s, f x ≠ g x) : DifferentiableOn ℝ (fun y => dist (f y) (g y)) s :=
   fun x hx => (hf x hx).dist (hg x hx) (hne x hx)

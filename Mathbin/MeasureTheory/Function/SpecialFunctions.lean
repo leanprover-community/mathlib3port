@@ -11,7 +11,7 @@ We show that most standard real and complex functions are measurable, notably `e
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Nnreal Ennreal
 

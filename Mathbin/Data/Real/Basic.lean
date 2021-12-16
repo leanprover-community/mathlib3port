@@ -34,7 +34,7 @@ variable {x y : ℝ}
 theorem ext_cauchy_iff : ∀ {x y : Real}, x = y ↔ x.cauchy = y.cauchy
 | ⟨a⟩, ⟨b⟩ =>
   by 
-    split  <;> cc
+    constructor <;> cc
 
 theorem ext_cauchy {x y : Real} : x.cauchy = y.cauchy → x = y :=
   ext_cauchy_iff.2
@@ -43,24 +43,19 @@ theorem ext_cauchy {x y : Real} : x.cauchy = y.cauchy → x = y :=
 def equiv_Cauchy : ℝ ≃ CauSeq.Completion.Cauchy :=
   ⟨Real.cauchy, Real.of_cauchy, fun ⟨_⟩ => rfl, fun _ => rfl⟩
 
-@[irreducible]
-private def zero : ℝ :=
+private irreducible_def zero : ℝ :=
   ⟨0⟩
 
-@[irreducible]
-private def one : ℝ :=
+private irreducible_def one : ℝ :=
   ⟨1⟩
 
-@[irreducible]
-private def add : ℝ → ℝ → ℝ
+private irreducible_def add : ℝ → ℝ → ℝ
 | ⟨a⟩, ⟨b⟩ => ⟨a+b⟩
 
-@[irreducible]
-private def neg : ℝ → ℝ
+private irreducible_def neg : ℝ → ℝ
 | ⟨a⟩ => ⟨-a⟩
 
-@[irreducible]
-private def mul : ℝ → ℝ → ℝ
+private irreducible_def mul : ℝ → ℝ → ℝ
 | ⟨a⟩, ⟨b⟩ => ⟨a*b⟩
 
 instance : HasZero ℝ :=
@@ -226,8 +221,7 @@ def mk (x : CauSeq ℚ abs) : ℝ :=
 theorem mk_eq {f g : CauSeq ℚ abs} : mk f = mk g ↔ f ≈ g :=
   ext_cauchy_iff.trans mk_eq
 
-@[irreducible]
-private def lt : ℝ → ℝ → Prop
+private irreducible_def lt : ℝ → ℝ → Prop
 | ⟨x⟩, ⟨y⟩ =>
   Quotientₓ.liftOn₂ x y (· < ·)$
     fun f₁ g₁ f₂ g₂ hf hg =>
@@ -238,7 +232,7 @@ private def lt : ℝ → ℝ → Prop
 instance : LT ℝ :=
   ⟨lt⟩
 
-theorem lt_cauchy {f g} : (⟨«expr⟦ ⟧» f⟩ : ℝ) < ⟨«expr⟦ ⟧» g⟩ ↔ f < g :=
+theorem lt_cauchy {f g} : (⟨⟦f⟧⟩ : ℝ) < ⟨⟦g⟧⟩ ↔ f < g :=
   show lt _ _ ↔ _ by 
     rw [lt] <;> rfl
 
@@ -271,8 +265,7 @@ theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f :=
   by 
     rw [←mk_zero, mk_lt] <;> exact iff_of_eq (congr_argₓ Pos (sub_zero f))
 
-@[irreducible]
-private def le (x y : ℝ) : Prop :=
+private irreducible_def le (x y : ℝ) : Prop :=
   x < y ∨ x = y
 
 instance : LE ℝ :=
@@ -349,6 +342,7 @@ instance : Preorderₓ ℝ :=
   by 
     infer_instance
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
 theorem of_rat_lt {x y : ℚ} : of_rat x < of_rat y ↔ x < y :=
   by 
     rw [mk_lt]
@@ -431,8 +425,7 @@ instance : IsDomain ℝ :=
 instance : StarOrderedRing ℝ :=
   { star_mul_self_nonneg := fun r => mul_self_nonneg r }
 
-@[irreducible]
-private noncomputable def inv' : ℝ → ℝ
+private noncomputable irreducible_def inv' : ℝ → ℝ
 | ⟨a⟩ => ⟨a⁻¹⟩
 
 noncomputable instance : HasInv ℝ :=
@@ -508,24 +501,24 @@ open Rat
 theorem of_rat_eq_cast : ∀ x : ℚ, of_rat x = x :=
   of_rat.eq_rat_cast
 
--- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_mk_of_forall_le
-{f : cau_seq exprℚ() abs} : «expr∃ , »((i), ∀ j «expr ≥ » i, «expr ≤ »(x, f j)) → «expr ≤ »(x, mk f) :=
-begin
-  intro [ident h],
-  induction [expr x] ["using", ident real.ind_mk] ["with", ident x] [],
-  apply [expr le_of_not_lt],
-  rw [expr mk_lt] [],
-  rintro ["⟨", ident K, ",", ident K0, ",", ident hK, "⟩"],
-  obtain ["⟨", ident i, ",", ident H, "⟩", ":=", expr exists_forall_ge_and h (exists_forall_ge_and hK «expr $ »(f.cauchy₃, half_pos K0))],
-  apply [expr not_lt_of_le (H _ (le_refl _)).1],
-  rw ["<-", expr of_rat_eq_cast] [],
-  rw ["[", expr mk_lt, "]"] [] { md := tactic.transparency.semireducible },
-  refine [expr ⟨_, half_pos K0, i, λ j ij, _⟩],
-  have [] [] [":=", expr add_le_add (H _ ij).2.1 (le_of_lt «expr $ »(abs_lt.1, (H _ (le_refl _)).2.2 _ ij).1)],
-  rwa ["[", "<-", expr sub_eq_add_neg, ",", expr sub_self_div_two, ",", expr sub_apply, ",", expr sub_add_sub_cancel, "]"] ["at", ident this]
-end
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≥ » i)
+theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j _ : j ≥ i, x ≤ f j) → x ≤ mk f :=
+  by 
+    intro h 
+    induction' x using Real.ind_mk with x 
+    apply le_of_not_ltₓ 
+    rw [mk_lt]
+    rintro ⟨K, K0, hK⟩
+    obtain ⟨i, H⟩ := exists_forall_ge_and h (exists_forall_ge_and hK (f.cauchy₃$ half_pos K0))
+    apply not_lt_of_le (H _ (le_reflₓ _)).1
+    rw [←of_rat_eq_cast]
+    rw [mk_lt]
+    refine' ⟨_, half_pos K0, i, fun j ij => _⟩
+    have  := add_le_add (H _ ij).2.1 (le_of_ltₓ (abs_lt.1$ (H _ (le_reflₓ _)).2.2 _ ij).1)
+    rwa [←sub_eq_add_neg, sub_self_div_two, sub_apply, sub_add_sub_cancel] at this
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≥ » i)
 theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j _ : j ≥ i, (f j : ℝ) ≤ x) : mk f ≤ x :=
   by 
     cases' h with i H 
@@ -537,6 +530,7 @@ theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j _ : 
             by 
               simp [H _ ij]⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≥ » i)
 theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ} (H : ∃ i, ∀ j _ : j ≥ i, |(f j : ℝ) - x| ≤ ε) :
   |mk f - x| ≤ ε :=
   abs_sub_le_iff.2
@@ -570,6 +564,8 @@ theorem is_cau_seq_iff_lift {f : ℕ → ℚ} : IsCauSeq abs f ↔ IsCauSeq abs 
             by 
               simpa using hi _ ij⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (ε «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j «expr ≥ » i)
 theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε _ : ε > 0, ∃ i, ∀ j _ : j ≥ i, |(f j : ℝ) - x| < ε) :
   ∃ h', Real.mk ⟨f, h'⟩ = x :=
   ⟨is_cau_seq_iff_lift.2 (of_near _ (const abs x) h),
@@ -585,59 +581,71 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_ltₓ hn⟩)
 
--- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_is_lub (S : set exprℝ()) (hne : S.nonempty) (hbdd : bdd_above S) : «expr∃ , »((x), is_lub S x) :=
-begin
-  rcases ["⟨", expr hne, ",", expr hbdd, "⟩", "with", "⟨", "⟨", ident L, ",", ident hL, "⟩", ",", "⟨", ident U, ",", ident hU, "⟩", "⟩"],
-  have [] [":", expr ∀
-   d : exprℕ(), bdd_above {m : exprℤ() | «expr∃ , »((y «expr ∈ » S), «expr ≤ »((m : exprℝ()), «expr * »(y, d)))}] [],
-  { cases [expr exists_int_gt U] ["with", ident k, ident hk],
-    refine [expr λ d, ⟨«expr * »(k, d), λ z h, _⟩],
-    rcases [expr h, "with", "⟨", ident y, ",", ident yS, ",", ident hy, "⟩"],
-    refine [expr int.cast_le.1 (hy.trans _)],
-    push_cast [] [],
-    exact [expr mul_le_mul_of_nonneg_right ((hU yS).trans hk.le) d.cast_nonneg] },
-  choose [] [ident f] [ident hf] ["using", expr λ
-   d : exprℕ(), int.exists_greatest_of_bdd (this d) ⟨«expr⌊ ⌋»(«expr * »(L, d)), L, hL, int.floor_le _⟩],
-  have [ident hf₁] [":", expr ∀
-   n «expr > » 0, «expr∃ , »((y «expr ∈ » S), «expr ≤ »(((«expr / »(f n, n) : exprℚ()) : exprℝ()), y))] [":=", expr λ
-   n n0, let ⟨y, yS, hy⟩ := (hf n).1 in
-   ⟨y, yS, by simpa [] [] [] [] [] ["using", expr (div_le_iff (nat.cast_pos.2 n0 : «expr < »((_ : exprℝ()), _))).2 hy]⟩],
-  have [ident hf₂] [":", expr ∀
-   (n «expr > » 0)
-   (y «expr ∈ » S), «expr < »((«expr - »(y, «expr ⁻¹»((n : exprℕ()))) : exprℝ()), («expr / »(f n, n) : exprℚ()))] [],
-  { intros [ident n, ident n0, ident y, ident yS],
-    have [] [] [":=", expr (int.sub_one_lt_floor _).trans_le «expr $ »(int.cast_le.2, (hf n).2 _ ⟨y, yS, int.floor_le _⟩)],
-    simp [] [] [] ["[", "-", ident sub_eq_add_neg, "]"] [] [],
-    rwa ["[", expr lt_div_iff (nat.cast_pos.2 n0 : «expr < »((_ : exprℝ()), _)), ",", expr sub_mul, ",", expr _root_.inv_mul_cancel, "]"] [],
-    exact [expr ne_of_gt (nat.cast_pos.2 n0)] },
-  have [ident hg] [":", expr is_cau_seq abs (λ n, «expr / »(f n, n) : exprℕ() → exprℚ())] [],
-  { intros [ident ε, ident ε0],
-    suffices [] [":", expr ∀
-     j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)), «expr < »((«expr - »(«expr / »(f j, j), «expr / »(f k, k)) : exprℚ()), ε)],
-    { refine [expr ⟨_, λ j ij, abs_lt.2 ⟨_, this _ _ ij (le_refl _)⟩⟩],
-      rw ["[", expr neg_lt, ",", expr neg_sub, "]"] [],
-      exact [expr this _ _ (le_refl _) ij] },
-    intros [ident j, ident k, ident ij, ident ik],
-    replace [ident ij] [] [":=", expr le_trans (nat.le_ceil _) (nat.cast_le.2 ij)],
-    replace [ident ik] [] [":=", expr le_trans (nat.le_ceil _) (nat.cast_le.2 ik)],
-    have [ident j0] [] [":=", expr nat.cast_pos.1 (lt_of_lt_of_le (inv_pos.2 ε0) ij)],
-    have [ident k0] [] [":=", expr nat.cast_pos.1 (lt_of_lt_of_le (inv_pos.2 ε0) ik)],
-    rcases [expr hf₁ _ j0, "with", "⟨", ident y, ",", ident yS, ",", ident hy, "⟩"],
-    refine [expr lt_of_lt_of_le ((@rat.cast_lt exprℝ() _ _ _).1 _) ((inv_le ε0 (nat.cast_pos.2 k0)).1 ik)],
-    simpa [] [] [] [] [] ["using", expr sub_lt_iff_lt_add'.2 «expr $ »(lt_of_le_of_lt hy, «expr $ »(sub_lt_iff_lt_add.1, hf₂ _ k0 _ yS))] },
-  let [ident g] [":", expr cau_seq exprℚ() abs] [":=", expr ⟨λ n, «expr / »(f n, n), hg⟩],
-  refine [expr ⟨mk g, ⟨λ x xS, _, λ y h, _⟩⟩],
-  { refine [expr le_of_forall_ge_of_dense (λ z xz, _)],
-    cases [expr exists_nat_gt «expr ⁻¹»(«expr - »(x, z))] ["with", ident K, ident hK],
-    refine [expr le_mk_of_forall_le ⟨K, λ n nK, _⟩],
-    replace [ident xz] [] [":=", expr sub_pos.2 xz],
-    replace [ident hK] [] [":=", expr le_trans (le_of_lt hK) (nat.cast_le.2 nK)],
-    have [ident n0] [":", expr «expr < »(0, n)] [":=", expr nat.cast_pos.1 (lt_of_lt_of_le (inv_pos.2 xz) hK)],
-    refine [expr le_trans _ «expr $ »(le_of_lt, hf₂ _ n0 _ xS)],
-    rwa ["[", expr le_sub, ",", expr inv_le (nat.cast_pos.2 n0 : «expr < »((_ : exprℝ()), _)) xz, "]"] [] },
-  { exact [expr mk_le_of_forall_le ⟨1, λ n n1, let ⟨x, xS, hx⟩ := hf₁ _ n1 in le_trans hx (h xS)⟩] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr > » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
+theorem exists_is_lub (S : Set ℝ) (hne : S.nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x :=
+  by 
+    rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
+    have  : ∀ d : ℕ, BddAbove { m : ℤ | ∃ (y : _)(_ : y ∈ S), (m : ℝ) ≤ y*d }
+    ·
+      cases' exists_int_gt U with k hk 
+      refine' fun d => ⟨k*d, fun z h => _⟩
+      rcases h with ⟨y, yS, hy⟩
+      refine' Int.cast_le.1 (hy.trans _)
+      pushCast 
+      exact mul_le_mul_of_nonneg_right ((hU yS).trans hk.le) d.cast_nonneg 
+    choose f hf using fun d : ℕ => Int.exists_greatest_of_bdd (this d) ⟨⌊L*d⌋, L, hL, Int.floor_le _⟩
+    have hf₁ : ∀ n _ : n > 0, ∃ (y : _)(_ : y ∈ S), ((f n / n : ℚ) : ℝ) ≤ y :=
+      fun n n0 =>
+        let ⟨y, yS, hy⟩ := (hf n).1
+        ⟨y, yS,
+          by 
+            simpa using (div_le_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _)).2 hy⟩
+    have hf₂ : ∀ n _ : n > 0 y _ : y ∈ S, (y - (n : ℕ)⁻¹ : ℝ) < (f n / n : ℚ)
+    ·
+      intro n n0 y yS 
+      have  := (Int.sub_one_lt_floor _).trans_le (Int.cast_le.2$ (hf n).2 _ ⟨y, yS, Int.floor_le _⟩)
+      simp [-sub_eq_add_neg]
+      rwa [lt_div_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _), sub_mul, _root_.inv_mul_cancel]
+      exact ne_of_gtₓ (Nat.cast_pos.2 n0)
+    have hg : IsCauSeq abs (fun n => f n / n : ℕ → ℚ)
+    ·
+      intro ε ε0 
+      suffices  : ∀ j k _ : j ≥ ⌈ε⁻¹⌉₊ _ : k ≥ ⌈ε⁻¹⌉₊, (f j / j - f k / k : ℚ) < ε
+      ·
+        refine' ⟨_, fun j ij => abs_lt.2 ⟨_, this _ _ ij (le_reflₓ _)⟩⟩
+        rw [neg_lt, neg_sub]
+        exact this _ _ (le_reflₓ _) ij 
+      intro j k ij ik 
+      replace ij := le_transₓ (Nat.le_ceil _) (Nat.cast_le.2 ij)
+      replace ik := le_transₓ (Nat.le_ceil _) (Nat.cast_le.2 ik)
+      have j0 := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 ε0) ij)
+      have k0 := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 ε0) ik)
+      rcases hf₁ _ j0 with ⟨y, yS, hy⟩
+      refine' lt_of_lt_of_leₓ ((@Rat.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
+      simpa using sub_lt_iff_lt_add'.2 (lt_of_le_of_ltₓ hy$ sub_lt_iff_lt_add.1$ hf₂ _ k0 _ yS)
+    let g : CauSeq ℚ abs := ⟨fun n => f n / n, hg⟩
+    refine' ⟨mk g, ⟨fun x xS => _, fun y h => _⟩⟩
+    ·
+      refine' le_of_forall_ge_of_dense fun z xz => _ 
+      cases' exists_nat_gt ((x - z)⁻¹) with K hK 
+      refine' le_mk_of_forall_le ⟨K, fun n nK => _⟩
+      replace xz := sub_pos.2 xz 
+      replace hK := le_transₓ (le_of_ltₓ hK) (Nat.cast_le.2 nK)
+      have n0 : 0 < n := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 xz) hK)
+      refine' le_transₓ _ (le_of_ltₓ$ hf₂ _ n0 _ xS)
+      rwa [le_sub, inv_le (Nat.cast_pos.2 n0 : (_ : ℝ) < _) xz]
+    ·
+      exact
+        mk_le_of_forall_le
+          ⟨1,
+            fun n n1 =>
+              let ⟨x, xS, hx⟩ := hf₁ _ n1 
+              le_transₓ hx (h xS)⟩
 
 noncomputable instance : HasSupₓ ℝ :=
   ⟨fun S => if h : S.nonempty ∧ BddAbove S then Classical.some (exists_is_lub S h.1 h.2) else 0⟩
@@ -669,23 +677,27 @@ noncomputable instance : ConditionallyCompleteLinearOrder ℝ :=
     cInf_le := fun s a hs ha => (Real.is_glb_Inf s ⟨a, ha⟩ hs).1 ha,
     le_cInf := fun s a hs ha => (Real.is_glb_Inf s hs ⟨a, ha⟩).2 ha }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem lt_Inf_add_pos {s : Set ℝ} (h : s.nonempty) {ε : ℝ} (hε : 0 < ε) : ∃ (a : _)(_ : a ∈ s), a < Inf s+ε :=
   exists_lt_of_cInf_lt h$ lt_add_of_pos_right _ hε
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem add_neg_lt_Sup {s : Set ℝ} (h : s.nonempty) {ε : ℝ} (hε : ε < 0) : ∃ (a : _)(_ : a ∈ s), (Sup s+ε) < a :=
   exists_lt_of_lt_cSup h$ add_lt_iff_neg_left.2 hε
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem Inf_le_iff {s : Set ℝ} (h : BddBelow s) (h' : s.nonempty) {a : ℝ} :
   Inf s ≤ a ↔ ∀ ε, 0 < ε → ∃ (x : _)(_ : x ∈ s), x < a+ε :=
   by 
     rw [le_iff_forall_pos_lt_add]
-    split  <;> intro H ε ε_pos
+    constructor <;> intro H ε ε_pos
     ·
       exact exists_lt_of_cInf_lt h' (H ε ε_pos)
     ·
       rcases H ε ε_pos with ⟨x, x_in, hx⟩
       exact cInf_lt_of_lt h x_in hx
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem le_Sup_iff {s : Set ℝ} (h : BddAbove s) (h' : s.nonempty) {a : ℝ} :
   a ≤ Sup s ↔ ∀ ε, ε < 0 → ∃ (x : _)(_ : x ∈ s), (a+ε) < x :=
   by 
@@ -717,6 +729,7 @@ theorem Inf_empty : Inf (∅ : Set ℝ) = 0 :=
 theorem Inf_of_not_bdd_below {s : Set ℝ} (hs : ¬BddBelow s) : Inf s = 0 :=
   neg_eq_zero.2$ Sup_of_not_bdd_above$ mt bdd_above_neg.1 hs
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 /--
 As `0` is the default value for `real.Sup` of the empty set or sets which are not bounded above, it
 suffices to show that `S` is bounded below by `0` to show that `0 ≤ Inf S`.
@@ -729,6 +742,7 @@ theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x _ : x ∈ S, (0 : ℝ) ≤ x) : 0 �
     ·
       apply dite _ (fun h => le_cSup_of_le h hy$ hS y hy) fun h => (Sup_of_not_bdd_above h).Ge
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 /--
 As `0` is the default value for `real.Sup` of the empty set, it suffices to show that `S` is
 bounded above by `0` to show that `Sup S ≤ 0`.
@@ -738,6 +752,7 @@ theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x _ : x ∈ S, x ≤ (0 : ℝ)) : Sup
     rcases S.eq_empty_or_nonempty with (rfl | hS₂)
     exacts[Sup_empty.le, cSup_le hS₂ hS]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 /--
 As `0` is the default value for `real.Inf` of the empty set, it suffices to show that `S` is
 bounded below by `0` to show that `0 ≤ Inf S`.
@@ -747,6 +762,7 @@ theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x _ : x ∈ S, (0 : ℝ) ≤ x) : 0 �
     rcases S.eq_empty_or_nonempty with (rfl | hS₂)
     exacts[Inf_empty.ge, le_cInf hS₂ hS]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
 /--
 As `0` is the default value for `real.Inf` of the empty set or sets which are not bounded below, it
 suffices to show that `S` is bounded above by `0` to show that `Inf S ≤ 0`.
@@ -767,28 +783,28 @@ theorem Inf_le_Sup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : Inf s
     ·
       exact cInf_le_cSup h₁ h₂ hne
 
--- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem cau_seq_converges (f : cau_seq exprℝ() abs) : «expr∃ , »((x), «expr ≈ »(f, const abs x)) :=
-begin
-  let [ident S] [] [":=", expr {x : exprℝ() | «expr < »(const abs x, f)}],
-  have [ident lb] [":", expr «expr∃ , »((x), «expr ∈ »(x, S))] [":=", expr exists_lt f],
-  have [ident ub'] [":", expr ∀
-   x, «expr < »(f, const abs x) → ∀
-   y «expr ∈ » S, «expr ≤ »(y, x)] [":=", expr λ
-   x h y yS, «expr $ »(le_of_lt, «expr $ »(const_lt.1, cau_seq.lt_trans yS h))],
-  have [ident ub] [":", expr «expr∃ , »((x), ∀ y «expr ∈ » S, «expr ≤ »(y, x))] [":=", expr (exists_gt f).imp ub'],
-  refine [expr ⟨Sup S, ((lt_total _ _).resolve_left (λ h, _)).resolve_right (λ h, _)⟩],
-  { rcases [expr h, "with", "⟨", ident ε, ",", ident ε0, ",", ident i, ",", ident ih, "⟩"],
-    refine [expr (cSup_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))],
-    refine [expr ⟨_, half_pos ε0, i, λ j ij, _⟩],
-    rw ["[", expr sub_apply, ",", expr const_apply, ",", expr sub_right_comm, ",", expr le_sub_iff_add_le, ",", expr add_halves, "]"] [],
-    exact [expr ih _ ij] },
-  { rcases [expr h, "with", "⟨", ident ε, ",", ident ε0, ",", ident i, ",", ident ih, "⟩"],
-    refine [expr (le_cSup ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))],
-    refine [expr ⟨_, half_pos ε0, i, λ j ij, _⟩],
-    rw ["[", expr sub_apply, ",", expr const_apply, ",", expr add_comm, ",", "<-", expr sub_sub, ",", expr le_sub_iff_add_le, ",", expr add_halves, "]"] [],
-    exact [expr ih _ ij] }
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » S)
+theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x :=
+  by 
+    let S := { x : ℝ | const abs x < f }
+    have lb : ∃ x, x ∈ S := exists_lt f 
+    have ub' : ∀ x, f < const abs x → ∀ y _ : y ∈ S, y ≤ x :=
+      fun x h y yS => le_of_ltₓ$ const_lt.1$ CauSeq.lt_trans yS h 
+    have ub : ∃ x, ∀ y _ : y ∈ S, y ≤ x := (exists_gt f).imp ub' 
+    refine' ⟨Sup S, ((lt_total _ _).resolve_left fun h => _).resolve_right fun h => _⟩
+    ·
+      rcases h with ⟨ε, ε0, i, ih⟩
+      refine' (cSup_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))
+      refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
+      rw [sub_apply, const_apply, sub_right_comm, le_sub_iff_add_le, add_halves]
+      exact ih _ ij
+    ·
+      rcases h with ⟨ε, ε0, i, ih⟩
+      refine' (le_cSup ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
+      refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
+      rw [sub_apply, const_apply, add_commₓ, ←sub_sub, le_sub_iff_add_le, add_halves]
+      exact ih _ ij
 
 noncomputable instance : CauSeq.IsComplete ℝ abs :=
   ⟨cau_seq_converges⟩

@@ -160,7 +160,7 @@ open Set Function Filter Metric Finset Bool
 
 open_locale Classical TopologicalSpace Filter Nnreal
 
-noncomputable theory
+noncomputable section 
 
 namespace BoxIntegral
 
@@ -274,44 +274,60 @@ structure mem_base_set (l : integration_params) (I : box ι) (c :  ℝ≥0 ) (r 
 def r_cond {ι : Type _} (l : integration_params) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
   l.bRiemann → ∀ x, r x = r 0
 
-/-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion I c` if there exists
-a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s` contains each
-prepartition `π` such that `l.mem_base_set I c r π`. -/
-def to_filter_distortion (l : integration_params) (I : box ι) (c :  ℝ≥0 ) : Filter (tagged_prepartition I) :=
-  ⨅(r : (ι → ℝ) → Ioi (0 : ℝ))(hr : l.r_cond r), 𝓟 { π | l.mem_base_set I c r π }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion I c` if there exists
+    a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s` contains each
+    prepartition `π` such that `l.mem_base_set I c r π`. -/
+  def
+    to_filter_distortion
+    ( l : integration_params ) ( I : box ι ) ( c : ℝ≥0 ) : Filter tagged_prepartition I
+    := ⨅ ( r : ι → ℝ → Ioi ( 0 : ℝ ) ) ( hr : l.r_cond r ) , 𝓟 { π | l.mem_base_set I c r π }
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter I` if for any `c : ℝ≥0` there
 exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that
 `s` contains each prepartition `π` such that `l.mem_base_set I c r π`. -/
 def to_filter (l : integration_params) (I : box ι) : Filter (tagged_prepartition I) :=
-  ⨆c :  ℝ≥0 , l.to_filter_distortion I c
+  ⨆ c :  ℝ≥0 , l.to_filter_distortion I c
 
-/-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion_Union I c π₀` if
-there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
-contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
-def to_filter_distortion_Union (l : integration_params) (I : box ι) (c :  ℝ≥0 ) (π₀ : prepartition I) :=
-  l.to_filter_distortion I c⊓𝓟 { π | π.Union = π₀.Union }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion_Union I c π₀` if
+    there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
+    contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
+  def
+    to_filter_distortion_Union
+    ( l : integration_params ) ( I : box ι ) ( c : ℝ≥0 ) ( π₀ : prepartition I )
+    := l.to_filter_distortion I c ⊓ 𝓟 { π | π.Union = π₀.Union }
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_Union I π₀` if for any `c : ℝ≥0`
 there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
 contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
 def to_filter_Union (l : integration_params) (I : box ι) (π₀ : prepartition I) :=
-  ⨆c :  ℝ≥0 , l.to_filter_distortion_Union I c π₀
+  ⨆ c :  ℝ≥0 , l.to_filter_distortion_Union I c π₀
 
 theorem r_cond_of_bRiemann_eq_ff {ι} (l : integration_params) (hl : l.bRiemann = ff) {r : (ι → ℝ) → Ioi (0 : ℝ)} :
   l.r_cond r :=
   by 
     simp [r_cond, hl]
 
-theorem to_filter_inf_Union_eq (l : integration_params) (I : box ι) (π₀ : prepartition I) :
-  l.to_filter I⊓𝓟 { π | π.Union = π₀.Union } = l.to_filter_Union I π₀ :=
-  (supr_inf_principal _ _).symm
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  to_filter_inf_Union_eq
+  ( l : integration_params ) ( I : box ι ) ( π₀ : prepartition I )
+    : l.to_filter I ⊓ 𝓟 { π | π.Union = π₀.Union } = l.to_filter_Union I π₀
+  := supr_inf_principal _ _ . symm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem mem_base_set.mono' (I : box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : tagged_prepartition I}
   (hr : ∀ J _ : J ∈ π, r₁ (π.tag J) ≤ r₂ (π.tag J)) (hπ : l₁.mem_base_set I c₁ r₁ π) : l₂.mem_base_set I c₂ r₂ π :=
   ⟨hπ.1.mono' hr, fun h₂ => hπ.2 (le_iff_imp.1 h.2.1 h₂), fun hD => (hπ.3 (le_iff_imp.1 h.2.2 hD)).trans hc,
     fun hD => (hπ.4 (le_iff_imp.1 h.2.2 hD)).imp$ fun π hπ => ⟨hπ.1, hπ.2.trans hc⟩⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » I.Icc)
 @[mono]
 theorem mem_base_set.mono (I : box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : tagged_prepartition I}
   (hr : ∀ x _ : x ∈ I.Icc, r₁ x ≤ r₂ x) (hπ : l₁.mem_base_set I c₁ r₁ π) : l₂.mem_base_set I c₂ r₂ π :=
@@ -334,6 +350,7 @@ theorem mem_base_set.exists_common_compl (h₁ : l.mem_base_set I c₁ r₁ π�
       intro h₁ h₂ hU 
       simpa [hU, and_comm] using this h₂ h₁ hU.symm
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » I.Icc)
 protected theorem mem_base_set.union_compl_to_subordinate (hπ₁ : l.mem_base_set I c r₁ π₁)
   (hle : ∀ x _ : x ∈ I.Icc, r₂ x ≤ r₁ x) {π₂ : prepartition I} (hU : π₂.Union = I \ π₁.Union)
   (hc : l.bDistortion → π₂.distortion ≤ c) : l.mem_base_set I c r₁ (π₁.union_compl_to_subordinate π₂ hU r₂) :=
@@ -345,37 +362,40 @@ protected theorem mem_base_set.union_compl_to_subordinate (hπ₁ : l.mem_base_s
         by 
           simp ⟩⟩
 
--- error in Analysis.BoxIntegral.Partition.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-protected
-theorem mem_base_set.filter
-(hπ : l.mem_base_set I c r π)
-(p : box ι → exprProp()) : l.mem_base_set I c r (π.filter p) :=
-begin
-  refine [expr ⟨λ
-    J
-    hJ, hπ.1 J (π.mem_filter.1 hJ).1, λ
-    hH J hJ, hπ.2 hH J (π.mem_filter.1 hJ).1, λ hD, (distortion_filter_le _ _).trans (hπ.3 hD), λ hD, _⟩],
-  rcases [expr hπ.4 hD, "with", "⟨", ident π₁, ",", ident hπ₁U, ",", ident hc, "⟩"],
-  set [] [ident π₂] [] [":="] [expr π.filter (λ J, «expr¬ »(p J))] [],
-  have [] [":", expr disjoint π₁.Union π₂.Union] [],
-  by simpa [] [] [] ["[", expr π₂, ",", expr hπ₁U, "]"] [] ["using", expr (disjoint_diff.mono_left sdiff_le).symm],
-  refine [expr ⟨π₁.disj_union π₂.to_prepartition this, _, _⟩],
-  { suffices [] [":", expr «expr = »(«expr ∪ »(«expr \ »(«expr↑ »(I), π.Union), «expr \ »(π.Union, (π.filter p).Union)), «expr \ »(«expr↑ »(I), (π.filter p).Union))],
-    by simpa [] [] [] ["*"] [] [],
-    have [] [":", expr «expr ⊆ »((π.filter p).Union, π.Union)] [],
-    from [expr bUnion_subset_bUnion_left (finset.filter_subset _ _)],
-    ext [] [ident x] [],
-    fsplit,
-    { rintro ["(", "⟨", ident hxI, ",", ident hxπ, "⟩", "|", "⟨", ident hxπ, ",", ident hxp, "⟩", ")"],
-      exacts ["[", expr ⟨hxI, mt (@this x) hxπ⟩, ",", expr ⟨π.Union_subset hxπ, hxp⟩, "]"] },
-    { rintro ["⟨", ident hxI, ",", ident hxp, "⟩"],
-      by_cases [expr hxπ, ":", expr «expr ∈ »(x, π.Union)],
-      exacts ["[", expr or.inr ⟨hxπ, hxp⟩, ",", expr or.inl ⟨hxI, hxπ⟩, "]"] } },
-  { have [] [":", expr «expr ≤ »((π.filter (λ J, «expr¬ »(p J))).distortion, c)] [],
-    from [expr (distortion_filter_le _ _).trans (hπ.3 hD)],
-    simpa [] [] [] ["[", expr hc, "]"] [] [] }
-end
+protected theorem mem_base_set.filter (hπ : l.mem_base_set I c r π) (p : box ι → Prop) :
+  l.mem_base_set I c r (π.filter p) :=
+  by 
+    refine'
+      ⟨fun J hJ => hπ.1 J (π.mem_filter.1 hJ).1, fun hH J hJ => hπ.2 hH J (π.mem_filter.1 hJ).1,
+        fun hD => (distortion_filter_le _ _).trans (hπ.3 hD), fun hD => _⟩
+    rcases hπ.4 hD with ⟨π₁, hπ₁U, hc⟩
+    set π₂ := π.filter fun J => ¬p J 
+    have  : Disjoint π₁.Union π₂.Union
+    ·
+      simpa [π₂, hπ₁U] using (disjoint_diff.mono_left sdiff_le).symm 
+    refine' ⟨π₁.disj_union π₂.to_prepartition this, _, _⟩
+    ·
+      suffices  : ↑I \ π.Union ∪ π.Union \ (π.filter p).Union = ↑I \ (π.filter p).Union
+      ·
+        simpa [*]
+      have  : (π.filter p).Union ⊆ π.Union 
+      exact bUnion_subset_bUnion_left (Finset.filter_subset _ _)
+      ext x 
+      fconstructor
+      ·
+        rintro (⟨hxI, hxπ⟩ | ⟨hxπ, hxp⟩)
+        exacts[⟨hxI, mt (@this x) hxπ⟩, ⟨π.Union_subset hxπ, hxp⟩]
+      ·
+        rintro ⟨hxI, hxp⟩
+        byCases' hxπ : x ∈ π.Union 
+        exacts[Or.inr ⟨hxπ, hxp⟩, Or.inl ⟨hxI, hxπ⟩]
+    ·
+      have  : (π.filter fun J => ¬p J).distortion ≤ c 
+      exact (distortion_filter_le _ _).trans (hπ.3 hD)
+      simpa [hc]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (J «expr ∈ » π)
 theorem bUnion_tagged_mem_base_set {π : prepartition I} {πi : ∀ J, tagged_prepartition J}
   (h : ∀ J _ : J ∈ π, l.mem_base_set J c r (πi J)) (hp : ∀ J _ : J ∈ π, (πi J).IsPartition)
   (hc : l.bDistortion → π.compl.distortion ≤ c) : l.mem_base_set I c r (π.bUnion_tagged πi) :=
@@ -397,7 +417,7 @@ theorem r_cond.mono {ι : Type _} {r : (ι → ℝ) → Ioi (0 : ℝ)} (h : l₁
 
 theorem r_cond.min {ι : Type _} {r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)} (h₁ : l.r_cond r₁) (h₂ : l.r_cond r₂) :
   l.r_cond fun x => min (r₁ x) (r₂ x) :=
-  fun hR x => congr_arg2 min (h₁ hR x) (h₂ hR x)
+  fun hR x => congr_arg2ₓ min (h₁ hR x) (h₂ hR x)
 
 @[mono]
 theorem to_filter_distortion_mono (I : box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) :
@@ -419,38 +439,77 @@ theorem to_filter_Union_congr (I : box ι) (l : integration_params) {π₁ π₂
   by 
     simp only [to_filter_Union, to_filter_distortion_Union, h]
 
-theorem has_basis_to_filter_distortion (l : integration_params) (I : box ι) (c :  ℝ≥0 ) :
-  (l.to_filter_distortion I c).HasBasis l.r_cond fun r => { π | l.mem_base_set I c r π } :=
-  has_basis_binfi_principal'
-    (fun r₁ hr₁ r₂ hr₂ =>
-      ⟨_, hr₁.min hr₂, fun _ => mem_base_set.mono _ le_rfl le_rfl fun x hx => min_le_leftₓ _ _,
-        fun _ => mem_base_set.mono _ le_rfl le_rfl fun x hx => min_le_rightₓ _ _⟩)
-    ⟨fun _ => ⟨1, @zero_lt_one ℝ _ _⟩, fun _ _ => rfl⟩
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  has_basis_to_filter_distortion
+  ( l : integration_params ) ( I : box ι ) ( c : ℝ≥0 )
+    : l.to_filter_distortion I c . HasBasis l.r_cond fun r => { π | l.mem_base_set I c r π }
+  :=
+    has_basis_binfi_principal'
+      fun
+          r₁ hr₁ r₂ hr₂
+            =>
+            ⟨
+              _
+                ,
+                hr₁.min hr₂
+                ,
+                fun _ => mem_base_set.mono _ le_rfl le_rfl fun x hx => min_le_leftₓ _ _
+                ,
+                fun _ => mem_base_set.mono _ le_rfl le_rfl fun x hx => min_le_rightₓ _ _
+              ⟩
+        ⟨ fun _ => ⟨ 1 , @ zero_lt_one ℝ _ _ ⟩ , fun _ _ => rfl ⟩
 
-theorem has_basis_to_filter_distortion_Union (l : integration_params) (I : box ι) (c :  ℝ≥0 ) (π₀ : prepartition I) :
-  (l.to_filter_distortion_Union I c π₀).HasBasis l.r_cond
-    fun r => { π | l.mem_base_set I c r π ∧ π.Union = π₀.Union } :=
-  (l.has_basis_to_filter_distortion I c).inf_principal _
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  has_basis_to_filter_distortion_Union
+  ( l : integration_params ) ( I : box ι ) ( c : ℝ≥0 ) ( π₀ : prepartition I )
+    :
+      l.to_filter_distortion_Union I c π₀ . HasBasis
+        l.r_cond fun r => { π | l.mem_base_set I c r π ∧ π.Union = π₀.Union }
+  := l.has_basis_to_filter_distortion I c . inf_principal _
 
-theorem has_basis_to_filter_Union (l : integration_params) (I : box ι) (π₀ : prepartition I) :
-  (l.to_filter_Union I π₀).HasBasis (fun r :  ℝ≥0  → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.r_cond (r c))
-    fun r => { π | ∃ c, l.mem_base_set I c (r c) π ∧ π.Union = π₀.Union } :=
-  have  := fun c => l.has_basis_to_filter_distortion_Union I c π₀ 
-  by 
-    simpa only [set_of_and, set_of_exists] using has_basis_supr this
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  has_basis_to_filter_Union
+  ( l : integration_params ) ( I : box ι ) ( π₀ : prepartition I )
+    :
+      l.to_filter_Union I π₀ . HasBasis
+        fun r : ℝ≥0 → ι → ℝ → Ioi ( 0 : ℝ ) => ∀ c , l.r_cond r c
+          fun r => { π | ∃ c , l.mem_base_set I c r c π ∧ π.Union = π₀.Union }
+  :=
+    have
+      := fun c => l.has_basis_to_filter_distortion_Union I c π₀
+      by simpa only [ set_of_and , set_of_exists ] using has_basis_supr this
 
-theorem has_basis_to_filter_Union_top (l : integration_params) (I : box ι) :
-  (l.to_filter_Union I ⊤).HasBasis (fun r :  ℝ≥0  → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.r_cond (r c))
-    fun r => { π | ∃ c, l.mem_base_set I c (r c) π ∧ π.is_partition } :=
-  by 
-    simpa only [tagged_prepartition.is_partition_iff_Union_eq, prepartition.Union_top] using
-      l.has_basis_to_filter_Union I ⊤
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  has_basis_to_filter_Union_top
+  ( l : integration_params ) ( I : box ι )
+    :
+      l.to_filter_Union I ⊤ . HasBasis
+        fun r : ℝ≥0 → ι → ℝ → Ioi ( 0 : ℝ ) => ∀ c , l.r_cond r c
+          fun r => { π | ∃ c , l.mem_base_set I c r c π ∧ π.is_partition }
+  :=
+    by
+      simpa
+        only
+        [ tagged_prepartition.is_partition_iff_Union_eq , prepartition.Union_top ]
+        using l.has_basis_to_filter_Union I ⊤
 
-theorem has_basis_to_filter (l : integration_params) (I : box ι) :
-  (l.to_filter I).HasBasis (fun r :  ℝ≥0  → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.r_cond (r c))
-    fun r => { π | ∃ c, l.mem_base_set I c (r c) π } :=
-  by 
-    simpa only [set_of_exists] using has_basis_supr (l.has_basis_to_filter_distortion I)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  has_basis_to_filter
+  ( l : integration_params ) ( I : box ι )
+    :
+      l.to_filter I . HasBasis
+        fun r : ℝ≥0 → ι → ℝ → Ioi ( 0 : ℝ ) => ∀ c , l.r_cond r c fun r => { π | ∃ c , l.mem_base_set I c r c π }
+  := by simpa only [ set_of_exists ] using has_basis_supr l.has_basis_to_filter_distortion I
 
 theorem tendsto_embed_box_to_filter_Union_top (l : integration_params) (h : I ≤ J) :
   tendsto (tagged_prepartition.embed_box I J h) (l.to_filter_Union I ⊤)
@@ -481,18 +540,14 @@ theorem exists_mem_base_set_le_Union_eq (l : integration_params) (π₀ : prepar
     refine' ⟨π, ⟨hr, fun _ => hH, fun _ => hd.trans_le hc₁, fun hD => ⟨π₀.compl, _, hc₂⟩⟩, ⟨hle, hU⟩⟩
     exact prepartition.compl_congr hU ▸ π.to_prepartition.Union_compl
 
--- error in Analysis.BoxIntegral.Partition.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_mem_base_set_is_partition
-(l : integration_params)
-(I : box ι)
-(hc : «expr ≤ »(I.distortion, c))
-(r : (ι → exprℝ()) → Ioi (0 : exprℝ())) : «expr∃ , »((π), «expr ∧ »(l.mem_base_set I c r π, π.is_partition)) :=
-begin
-  rw ["<-", expr prepartition.distortion_top] ["at", ident hc],
-  have [ident hc'] [":", expr «expr ≤ »((«expr⊤»() : prepartition I).compl.distortion, c)] [],
-  by simp [] [] [] [] [] [],
-  simpa [] [] [] ["[", expr is_partition_iff_Union_eq, "]"] [] ["using", expr l.exists_mem_base_set_le_Union_eq «expr⊤»() hc hc' r]
-end
+theorem exists_mem_base_set_is_partition (l : integration_params) (I : box ι) (hc : I.distortion ≤ c)
+  (r : (ι → ℝ) → Ioi (0 : ℝ)) : ∃ π, l.mem_base_set I c r π ∧ π.is_partition :=
+  by 
+    rw [←prepartition.distortion_top] at hc 
+    have hc' : (⊤ : prepartition I).Compl.distortion ≤ c
+    ·
+      simp 
+    simpa [is_partition_iff_Union_eq] using l.exists_mem_base_set_le_Union_eq ⊤ hc hc' r
 
 theorem to_filter_distortion_Union_ne_bot (l : integration_params) (I : box ι) (π₀ : prepartition I)
   (hc₁ : π₀.distortion ≤ c) (hc₂ : π₀.compl.distortion ≤ c) : (l.to_filter_distortion_Union I c π₀).ne_bot :=
@@ -516,7 +571,7 @@ instance to_filter_Union_ne_bot (l : integration_params) (I : box ι) (π₀ : p
   (l.to_filter_distortion_Union_ne_bot' I π₀).mono$ le_supr (fun c => l.to_filter_distortion_Union I c π₀) _
 
 theorem eventually_is_partition (l : integration_params) (I : box ι) :
-  ∀ᶠπ in l.to_filter_Union I ⊤, tagged_prepartition.is_partition π :=
+  ∀ᶠ π in l.to_filter_Union I ⊤, tagged_prepartition.is_partition π :=
   eventually_supr.2$
     fun c =>
       eventually_inf_principal.2$

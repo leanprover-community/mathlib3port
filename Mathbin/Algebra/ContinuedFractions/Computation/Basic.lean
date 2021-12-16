@@ -102,7 +102,7 @@ instance has_coe_to_int_fract_pair : Coe (int_fract_pair K) (int_fract_pair β) 
 
 @[simp, normCast]
 theorem coe_to_int_fract_pair {b : ℤ} {fr : K} :
-  («expr↑ » (int_fract_pair.mk b fr) : int_fract_pair β) = int_fract_pair.mk b («expr↑ » fr : β) :=
+  (↑int_fract_pair.mk b fr : int_fract_pair β) = int_fract_pair.mk b (↑fr : β) :=
   rfl
 
 end coeₓ

@@ -44,47 +44,48 @@ section LinearOrderedAddCommGroup
 
 variable [LinearOrderedAddCommGroup α] [Archimedean α]
 
--- error in Algebra.Order.Archimedean: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (n «expr ∈ » s)
 /-- An archimedean decidable linearly ordered `add_comm_group` has a version of the floor: for
 `a > 0`, any `g` in the group lies between some two consecutive multiples of `a`. -/
-theorem exists_unique_zsmul_near_of_pos
-{a : α}
-(ha : «expr < »(0, a))
-(g : α) : «expr∃! , »((k : exprℤ()), «expr ∧ »(«expr ≤ »(«expr • »(k, a), g), «expr < »(g, «expr • »(«expr + »(k, 1), a)))) :=
-begin
-  let [ident s] [":", expr set exprℤ()] [":=", expr {n : exprℤ() | «expr ≤ »(«expr • »(n, a), g)}],
-  obtain ["⟨", ident k, ",", ident hk, ":", expr «expr ≤ »(«expr- »(g), «expr • »(k, a)), "⟩", ":=", expr archimedean.arch «expr- »(g) ha],
-  have [ident h_ne] [":", expr s.nonempty] [":=", expr ⟨«expr- »(k), by simpa [] [] [] [] [] ["using", expr neg_le_neg hk]⟩],
-  obtain ["⟨", ident k, ",", ident hk, "⟩", ":=", expr archimedean.arch g ha],
-  have [ident h_bdd] [":", expr ∀ n «expr ∈ » s, «expr ≤ »(n, (k : exprℤ()))] [],
-  { assume [binders (n hn)],
-    apply [expr (zsmul_le_zsmul_iff ha).mp],
-    rw ["<-", expr coe_nat_zsmul] ["at", ident hk],
-    exact [expr le_trans hn hk] },
-  obtain ["⟨", ident m, ",", ident hm, ",", ident hm', "⟩", ":=", expr int.exists_greatest_of_bdd ⟨k, h_bdd⟩ h_ne],
-  have [ident hm''] [":", expr «expr < »(g, «expr • »(«expr + »(m, 1), a))] [],
-  { contrapose ["!"] [ident hm'],
-    exact [expr ⟨«expr + »(m, 1), hm', lt_add_one _⟩] },
-  refine [expr ⟨m, ⟨hm, hm''⟩, λ n hn, «expr $ »((hm' n hn.1).antisymm, int.le_of_lt_add_one _)⟩],
-  rw ["<-", expr zsmul_lt_zsmul_iff ha] [],
-  exact [expr lt_of_le_of_lt hm hn.2]
-end
+theorem exists_unique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) : ∃! k : ℤ, k • a ≤ g ∧ g < (k+1) • a :=
+  by 
+    let s : Set ℤ := { n : ℤ | n • a ≤ g }
+    obtain ⟨k, hk : -g ≤ k • a⟩ := Archimedean.arch (-g) ha 
+    have h_ne : s.nonempty :=
+      ⟨-k,
+        by 
+          simpa using neg_le_neg hk⟩
+    obtain ⟨k, hk⟩ := Archimedean.arch g ha 
+    have h_bdd : ∀ n _ : n ∈ s, n ≤ (k : ℤ)
+    ·
+      intro n hn 
+      apply (zsmul_le_zsmul_iff ha).mp 
+      rw [←coe_nat_zsmul] at hk 
+      exact le_transₓ hn hk 
+    obtain ⟨m, hm, hm'⟩ := Int.exists_greatest_of_bdd ⟨k, h_bdd⟩ h_ne 
+    have hm'' : g < (m+1) • a
+    ·
+      contrapose! hm' 
+      exact ⟨m+1, hm', lt_add_one _⟩
+    refine' ⟨m, ⟨hm, hm''⟩, fun n hn => (hm' n hn.1).antisymm$ Int.le_of_lt_add_one _⟩
+    rw [←zsmul_lt_zsmul_iff ha]
+    exact lt_of_le_of_ltₓ hm hn.2
 
-theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) : ∃!k : ℤ, 0 ≤ g - k • a ∧ g - k • a < a :=
+theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) : ∃! k : ℤ, 0 ≤ g - k • a ∧ g - k • a < a :=
   by 
     simpa only [sub_nonneg, add_zsmul, one_zsmul, sub_lt_iff_lt_add'] using exists_unique_zsmul_near_of_pos ha g
 
-theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) : ∃!m : ℤ, (b+m • a) ∈ Set.Ico c (c+a) :=
-  (Equiv.neg ℤ).Bijective.exists_unique_iff.2$
+theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, (b+m • a) ∈ Set.Ico c (c+a) :=
+  (Equivₓ.neg ℤ).Bijective.exists_unique_iff.2$
     by 
-      simpa only [Equiv.neg_apply, mem_Ico, neg_zsmul, ←sub_eq_add_neg, le_sub_iff_add_le, zero_addₓ, add_commₓ c,
+      simpa only [Equivₓ.neg_apply, mem_Ico, neg_zsmul, ←sub_eq_add_neg, le_sub_iff_add_le, zero_addₓ, add_commₓ c,
         sub_lt_iff_lt_add', add_assocₓ] using exists_unique_zsmul_near_of_pos' ha (b - c)
 
-theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃!m : ℤ, (b+m • a) ∈ Set.Ioc c (c+a) :=
-  (Equiv.addRight (1 : ℤ)).Bijective.exists_unique_iff.2$
+theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, (b+m • a) ∈ Set.Ioc c (c+a) :=
+  (Equivₓ.addRight (1 : ℤ)).Bijective.exists_unique_iff.2$
     by 
       simpa only [add_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ←add_assocₓ, And.comm, mem_Ioc,
-        Equiv.coe_add_right, one_zsmul, add_le_add_iff_right] using exists_unique_zsmul_near_of_pos ha (c - b)
+        Equivₓ.coe_add_right, one_zsmul, add_le_add_iff_right] using exists_unique_zsmul_near_of_pos ha (c - b)
 
 end LinearOrderedAddCommGroup
 
@@ -155,21 +156,18 @@ theorem exists_int_lt (x : α) : ∃ n : ℤ, (n : α) < x :=
     by 
       rw [Int.cast_neg] <;> exact neg_lt.1 h⟩
 
--- error in Algebra.Order.Archimedean: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_floor
-(x : α) : «expr∃ , »((fl : exprℤ()), ∀ z : exprℤ(), «expr ↔ »(«expr ≤ »(z, fl), «expr ≤ »((z : α), x))) :=
-begin
-  haveI [] [] [":=", expr classical.prop_decidable],
-  have [] [":", expr «expr∃ , »((ub : exprℤ()), «expr ∧ »(«expr ≤ »((ub : α), x), ∀
-     z : exprℤ(), «expr ≤ »((z : α), x) → «expr ≤ »(z, ub)))] [":=", expr int.exists_greatest_of_bdd (let ⟨n, hn⟩ := exists_int_gt x in
-    ⟨n, λ
-     z
-     h', «expr $ »(int.cast_le.1, «expr $ »(le_trans h', le_of_lt hn))⟩) (let ⟨n, hn⟩ := exists_int_lt x in
-    ⟨n, le_of_lt hn⟩)],
-  refine [expr this.imp (λ fl h z, _)],
-  cases [expr h] ["with", ident h₁, ident h₂],
-  exact [expr ⟨λ h, le_trans (int.cast_le.2 h) h₁, h₂ z⟩]
-end
+theorem exists_floor (x : α) : ∃ fl : ℤ, ∀ z : ℤ, z ≤ fl ↔ (z : α) ≤ x :=
+  by 
+    have  := Classical.propDecidable 
+    have  : ∃ ub : ℤ, (ub : α) ≤ x ∧ ∀ z : ℤ, (z : α) ≤ x → z ≤ ub :=
+      Int.exists_greatest_of_bdd
+        (let ⟨n, hn⟩ := exists_int_gt x
+        ⟨n, fun z h' => Int.cast_le.1$ le_transₓ h'$ le_of_ltₓ hn⟩)
+        (let ⟨n, hn⟩ := exists_int_lt x
+        ⟨n, le_of_ltₓ hn⟩)
+    refine' this.imp fun fl h z => _ 
+    cases' h with h₁ h₂ 
+    exact ⟨fun h => le_transₓ (Int.cast_le.2 h) h₁, h₂ z⟩
 
 end LinearOrderedRing
 
@@ -190,7 +188,7 @@ theorem exists_mem_Ico_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy 
           ⟨-N,
             le_of_ltₓ
               (by 
-                rw [zpow_neg₀ y («expr↑ » N), zpow_coe_nat]
+                rw [zpow_neg₀ y (↑N), zpow_coe_nat]
                 exact (inv_lt hx (lt_transₓ (inv_pos.2 hx) hN)).1 hN)⟩
         let ⟨M, hM⟩ := pow_unbounded_of_one_lt x hy 
         have hb : ∃ b : ℤ, ∀ m, y ^ m ≤ x → m ≤ b :=
@@ -339,30 +337,29 @@ theorem exists_rat_lt (x : α) : ∃ q : ℚ, (q : α) < x :=
     by 
       rwa [Rat.cast_coe_int]⟩
 
--- error in Algebra.Order.Archimedean: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem exists_rat_btwn
-{x y : α}
-(h : «expr < »(x, y)) : «expr∃ , »((q : exprℚ()), «expr ∧ »(«expr < »(x, q), «expr < »((q : α), y))) :=
-begin
-  cases [expr exists_nat_gt «expr ⁻¹»(«expr - »(y, x))] ["with", ident n, ident nh],
-  cases [expr exists_floor «expr * »(x, n)] ["with", ident z, ident zh],
-  refine [expr ⟨«expr / »((«expr + »(z, 1) : exprℤ()), n), _⟩],
-  have [ident n0'] [] [":=", expr (inv_pos.2 (sub_pos.2 h)).trans nh],
-  have [ident n0] [] [":=", expr nat.cast_pos.1 n0'],
-  rw ["[", expr rat.cast_div_of_ne_zero, ",", expr rat.cast_coe_nat, ",", expr rat.cast_coe_int, ",", expr div_lt_iff n0', "]"] [],
-  refine [expr ⟨«expr $ »((lt_div_iff n0').2, (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _)), _⟩],
-  rw ["[", expr int.cast_add, ",", expr int.cast_one, "]"] [],
-  refine [expr lt_of_le_of_lt (add_le_add_right ((zh _).1 (le_refl _)) _) _],
-  rwa ["[", "<-", expr lt_sub_iff_add_lt', ",", "<-", expr sub_mul, ",", "<-", expr div_lt_iff' (sub_pos.2 h), ",", expr one_div, "]"] [],
-  { rw ["[", expr rat.coe_int_denom, ",", expr nat.cast_one, "]"] [],
-    exact [expr one_ne_zero] },
-  { intro [ident H],
-    rw ["[", expr rat.coe_nat_num, ",", "<-", expr coe_coe, ",", expr nat.cast_eq_zero, "]"] ["at", ident H],
-    subst [expr H],
-    cases [expr n0] [] },
-  { rw ["[", expr rat.coe_nat_denom, ",", expr nat.cast_one, "]"] [],
-    exact [expr one_ne_zero] }
-end
+theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α) < y :=
+  by 
+    cases' exists_nat_gt ((y - x)⁻¹) with n nh 
+    cases' exists_floor (x*n) with z zh 
+    refine' ⟨(z+1 : ℤ) / n, _⟩
+    have n0' := (inv_pos.2 (sub_pos.2 h)).trans nh 
+    have n0 := Nat.cast_pos.1 n0' 
+    rw [Rat.cast_div_of_ne_zero, Rat.cast_coe_nat, Rat.cast_coe_int, div_lt_iff n0']
+    refine' ⟨(lt_div_iff n0').2$ (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _), _⟩
+    rw [Int.cast_add, Int.cast_one]
+    refine' lt_of_le_of_ltₓ (add_le_add_right ((zh _).1 (le_reflₓ _)) _) _ 
+    rwa [←lt_sub_iff_add_lt', ←sub_mul, ←div_lt_iff' (sub_pos.2 h), one_div]
+    ·
+      rw [Rat.coe_int_denom, Nat.cast_one]
+      exact one_ne_zero
+    ·
+      intro H 
+      rw [Rat.coe_nat_num, ←coe_coe, Nat.cast_eq_zero] at H 
+      subst H 
+      cases n0
+    ·
+      rw [Rat.coe_nat_denom, Nat.cast_one]
+      exact one_ne_zero
 
 theorem exists_nat_one_div_lt {ε : α} (hε : 0 < ε) : ∃ n : ℕ, 1 / (n+1 : α) < ε :=
   by 
@@ -401,14 +398,12 @@ theorem round_one : round (1 : α) = 1 :=
     (by 
       normNum)
 
--- error in Algebra.Order.Archimedean: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem abs_sub_round (x : α) : «expr ≤ »(«expr| |»(«expr - »(x, round x)), «expr / »(1, 2)) :=
-begin
-  rw ["[", expr round, ",", expr abs_sub_le_iff, "]"] [],
-  have [] [] [":=", expr floor_le «expr + »(x, «expr / »(1, 2))],
-  have [] [] [":=", expr lt_floor_add_one «expr + »(x, «expr / »(1, 2))],
-  split; linarith [] [] []
-end
+theorem abs_sub_round (x : α) : |x - round x| ≤ 1 / 2 :=
+  by 
+    rw [round, abs_sub_le_iff]
+    have  := floor_le (x+1 / 2)
+    have  := lt_floor_add_one (x+1 / 2)
+    constructor <;> linarith
 
 @[simp, normCast]
 theorem Rat.floor_cast (x : ℚ) : ⌊(x : α)⌋ = ⌊x⌋ :=
@@ -430,7 +425,7 @@ theorem Rat.round_cast (x : ℚ) : round (x : α) = round x :=
     rw [round, round, ←this, Rat.floor_cast]
 
 @[simp, normCast]
-theorem Rat.cast_fract (x : ℚ) : («expr↑ » (fract x) : α) = fract x :=
+theorem Rat.cast_fract (x : ℚ) : (↑fract x : α) = fract x :=
   by 
     simp only [fract, Rat.cast_sub]
     simp 

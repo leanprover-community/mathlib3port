@@ -217,6 +217,8 @@ theorem vsub_subset_vsub {s' t' : Set P} (hs : s ⊆ s') (ht : t ⊆ t') : s -�
 theorem vsub_self_mono (h : s ⊆ t) : s -ᵥ s ⊆ t -ᵥ t :=
   vsub_subset_vsub h h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » t)
 theorem vsub_subset_iff {u : Set G} : s -ᵥ t ⊆ u ↔ ∀ x _ : x ∈ s y _ : y ∈ t, x -ᵥ y ∈ u :=
   image2_subset_iff
 
@@ -245,7 +247,7 @@ theorem vadd_subset_vadd (hs : s ⊆ s') (ht : t ⊆ t') : s +ᵥ t ⊆ s' +ᵥ 
   image2_subset hs ht
 
 @[simp]
-theorem vadd_singleton (s : Set G) (p : P) : s +ᵥ {p} = (· +ᵥ p) '' s :=
+theorem set_vadd_singleton (s : Set G) (p : P) : s +ᵥ {p} = (· +ᵥ p) '' s :=
   image2_singleton_right
 
 theorem finite.vadd (hs : finite s) (ht : finite t) : finite (s +ᵥ t) :=
@@ -394,7 +396,7 @@ instance [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, 
 
 end Pi
 
-namespace Equiv
+namespace Equivₓ
 
 variable {G : Type _} {P : Type _} [AddGroupₓ G] [AddTorsor G P]
 
@@ -406,11 +408,11 @@ def vadd_const (p : P) : G ≃ P :=
     right_inv := fun p' => vsub_vadd _ _ }
 
 @[simp]
-theorem coe_vadd_const (p : P) : «expr⇑ » (vadd_const p) = fun v => v +ᵥ p :=
+theorem coe_vadd_const (p : P) : ⇑vadd_const p = fun v => v +ᵥ p :=
   rfl
 
 @[simp]
-theorem coe_vadd_const_symm (p : P) : «expr⇑ » (vadd_const p).symm = fun p' => p' -ᵥ p :=
+theorem coe_vadd_const_symm (p : P) : ⇑(vadd_const p).symm = fun p' => p' -ᵥ p :=
   rfl
 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
@@ -426,17 +428,17 @@ def const_vsub (p : P) : P ≃ G :=
           simp [vsub_vadd_eq_vsub_sub] }
 
 @[simp]
-theorem coe_const_vsub (p : P) : «expr⇑ » (const_vsub p) = (· -ᵥ ·) p :=
+theorem coe_const_vsub (p : P) : ⇑const_vsub p = (· -ᵥ ·) p :=
   rfl
 
 @[simp]
-theorem coe_const_vsub_symm (p : P) : «expr⇑ » (const_vsub p).symm = fun v => -v +ᵥ p :=
+theorem coe_const_vsub_symm (p : P) : ⇑(const_vsub p).symm = fun v => -v +ᵥ p :=
   rfl
 
 variable (P)
 
 /-- The permutation given by `p ↦ v +ᵥ p`. -/
-def const_vadd (v : G) : Equiv.Perm P :=
+def const_vadd (v : G) : Equivₓ.Perm P :=
   { toFun := (· +ᵥ ·) v, invFun := (· +ᵥ ·) (-v),
     left_inv :=
       fun p =>
@@ -448,7 +450,7 @@ def const_vadd (v : G) : Equiv.Perm P :=
           simp [vadd_vadd] }
 
 @[simp]
-theorem coe_const_vadd (v : G) : «expr⇑ » (const_vadd P v) = (· +ᵥ ·) v :=
+theorem coe_const_vadd (v : G) : ⇑const_vadd P v = (· +ᵥ ·) v :=
   rfl
 
 variable (G)
@@ -464,7 +466,7 @@ theorem const_vadd_add (v₁ v₂ : G) : const_vadd P (v₁+v₂) = const_vadd P
   ext$ add_vadd v₁ v₂
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
-def const_vadd_hom : Multiplicative G →* Equiv.Perm P :=
+def const_vadd_hom : Multiplicative G →* Equivₓ.Perm P :=
   { toFun := fun v => const_vadd P v.to_add, map_one' := const_vadd_zero G P, map_mul' := const_vadd_add P }
 
 variable {P}
@@ -490,7 +492,7 @@ theorem point_reflection_self (x : P) : point_reflection x x = x :=
 
 theorem point_reflection_involutive (x : P) : involutive (point_reflection x : P → P) :=
   fun y =>
-    (Equiv.apply_eq_iff_eq_symm_apply _).2$
+    (Equivₓ.apply_eq_iff_eq_symm_apply _).2$
       by 
         rw [point_reflection_symm]
 
@@ -511,10 +513,10 @@ theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCom
       rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub, vsub_sub_vsub_cancel_right,
         ←neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ←bit0, ←bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq] at hy
 
-end Equiv
+end Equivₓ
 
 theorem AddTorsor.subsingleton_iff (G P : Type _) [AddGroupₓ G] [AddTorsor G P] : Subsingleton G ↔ Subsingleton P :=
   by 
     inhabit P 
-    exact (Equiv.vaddConst (default P)).subsingleton_congr
+    exact (Equivₓ.vaddConst (default P)).subsingleton_congr
 

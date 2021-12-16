@@ -58,18 +58,21 @@ def shl (x : Bitvec n) (i : ℕ) : Bitvec n :=
         simp )$
     drop i x++ₜrepeat ff (min n i)
 
--- error in Data.Bitvec.Core: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `fill_shr x i fill` is the bitvector obtained by right-shifting `x` `i` times and then
 padding with `fill : bool`. If `x.length < i` then this will return the constant `fill`
-bitvector. -/ def fill_shr (x : bitvec n) (i : exprℕ()) (fill : bool) : bitvec n :=
-«expr $ »(bitvec.cong (begin
-    by_cases [expr «expr ≤ »(i, n)],
-    { have [ident h₁] [] [":=", expr nat.sub_le n i],
-      rw ["[", expr min_eq_right h, "]"] [],
-      rw ["[", expr min_eq_left h₁, ",", "<-", expr add_tsub_assoc_of_le h, ",", expr nat.add_comm, ",", expr add_tsub_cancel_right, "]"] [] },
-    { have [ident h₁] [] [":=", expr le_of_not_ge h],
-      rw ["[", expr min_eq_left h₁, ",", expr tsub_eq_zero_iff_le.mpr h₁, ",", expr zero_min, ",", expr nat.add_zero, "]"] [] }
-  end), «expr ++ₜ »(repeat fill (min n i), take «expr - »(n, i) x))
+bitvector. -/
+def fill_shr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
+  Bitvec.cong
+      (by 
+        byCases' i ≤ n
+        ·
+          have h₁ := Nat.sub_leₓ n i 
+          rw [min_eq_rightₓ h]
+          rw [min_eq_leftₓ h₁, ←add_tsub_assoc_of_le h, Nat.add_comm, add_tsub_cancel_right]
+        ·
+          have h₁ := le_of_not_geₓ h 
+          rw [min_eq_leftₓ h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero])$
+    repeat fill (min n i)++ₜtake (n - i) x
 
 /-- unsigned shift right -/
 def ushr (x : Bitvec n) (i : ℕ) : Bitvec n :=
@@ -291,16 +294,17 @@ theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (to_bool (n % 2 = 1)::ᵥni
 theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜto_bool (n % 2 = 1)::ᵥnil :=
   rfl
 
--- error in Data.Bitvec.Core: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_nat_of_nat {k n : exprℕ()} : «expr = »(bitvec.to_nat (bitvec.of_nat k n), «expr % »(n, «expr ^ »(2, k))) :=
-begin
-  induction [expr k] [] ["with", ident k, ident ih] ["generalizing", ident n],
-  { simp [] [] [] ["[", expr nat.mod_one, "]"] [] [],
-    refl },
-  { have [ident h] [":", expr «expr < »(0, 2)] [],
-    { apply [expr le_succ] },
-    rw ["[", expr of_nat_succ, ",", expr to_nat_append, ",", expr ih, ",", expr bits_to_nat_to_bool, ",", expr mod_pow_succ h, ",", expr nat.mul_comm, "]"] [] }
-end
+theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k :=
+  by 
+    induction' k with k ih generalizing n
+    ·
+      simp [Nat.mod_oneₓ]
+      rfl
+    ·
+      have h : 0 < 2
+      ·
+        apply le_succ 
+      rw [of_nat_succ, to_nat_append, ih, bits_to_nat_to_bool, mod_pow_succ h, Nat.mul_comm]
 
 /-- Return the integer encoded by the input bitvector -/
 protected def to_int : ∀ {n : Nat}, Bitvec n → Int

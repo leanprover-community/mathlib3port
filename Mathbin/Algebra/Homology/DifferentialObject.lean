@@ -18,7 +18,7 @@ open CategoryTheory.Limits
 
 open_locale Classical
 
-noncomputable theory
+noncomputable section 
 
 namespace HomologicalComplex
 

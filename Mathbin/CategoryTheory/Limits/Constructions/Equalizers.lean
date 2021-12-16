@@ -11,7 +11,7 @@ TODO: provide the dual result.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 
@@ -46,24 +46,27 @@ def equalizer_cone (F : walking_parallel_pair ⥤ C) : cone F :=
         convRHS => rw [pullback_fst_eq_pullback_snd]
         convert pullback.condition =≫ limits.prod.snd using 1 <;> simp ))
 
--- error in CategoryTheory.Limits.Constructions.Equalizers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Show the equalizing cone is a limit -/
-def equalizer_cone_is_limit (F : «expr ⥤ »(walking_parallel_pair, C)) : is_limit (equalizer_cone F) :=
-{ lift := begin
-    intro [ident c],
-    apply [expr pullback.lift (c.π.app _) (c.π.app _)],
-    apply [expr limit.hom_ext],
-    rintro ["(", "_", "|", "_", ")"]; simp [] [] [] [] [] []
-  end,
-  fac' := by rintros [ident c, "(", "_", "|", "_", ")"]; simp [] [] [] [] [] [],
-  uniq' := begin
-    intros [ident c, "_", ident J],
-    have [ident J0] [] [":=", expr J walking_parallel_pair.zero],
-    simp [] [] [] [] [] ["at", ident J0],
-    apply [expr pullback.hom_ext],
-    { rwa [expr limit.lift_π] [] },
-    { erw ["[", expr limit.lift_π, ",", "<-", expr J0, ",", expr pullback_fst_eq_pullback_snd, "]"] [] }
-  end }
+def equalizer_cone_is_limit (F : walking_parallel_pair ⥤ C) : is_limit (equalizer_cone F) :=
+  { lift :=
+      by 
+        intro c 
+        apply pullback.lift (c.π.app _) (c.π.app _)
+        apply limit.hom_ext 
+        rintro (_ | _) <;> simp ,
+    fac' :=
+      by 
+        rintro c (_ | _) <;> simp ,
+    uniq' :=
+      by 
+        intro c _ J 
+        have J0 := J walking_parallel_pair.zero 
+        simp  at J0 
+        apply pullback.hom_ext
+        ·
+          rwa [limit.lift_π]
+        ·
+          erw [limit.lift_π, ←J0, pullback_fst_eq_pullback_snd] }
 
 end HasEqualizersOfPullbacksAndBinaryProducts
 

@@ -25,37 +25,44 @@ variable {ι : Type _} {α : ι → Type _} [Fintype ι] [DecidableEq ι] [∀ i
 
 namespace Finset
 
--- error in Data.Finset.PiInduction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- General theorem for `finset.induction_on_pi`-style induction principles. -/
-theorem induction_on_pi_of_choice
-(r : ∀ i, α i → finset (α i) → exprProp())
-(H_ex : ∀ (i) (s : finset (α i)) (hs : s.nonempty), «expr∃ , »((x «expr ∈ » s), r i x (s.erase x)))
-{p : ∀ i, finset (α i) → exprProp()}
-(f : ∀ i, finset (α i))
-(h0 : p (λ _, «expr∅»()))
-(step : ∀ (g : ∀ i, finset (α i)) (i : ι) (x : α i), r i x (g i) → p g → p (update g i (insert x (g i)))) : p f :=
-begin
-  induction [expr hs, ":", expr univ.sigma f] ["using", ident finset.strong_induction_on] ["with", ident s, ident ihs] ["generalizing", ident f],
-  subst [expr s],
-  cases [expr eq_empty_or_nonempty (univ.sigma f)] ["with", ident he, ident hne],
-  { convert [] [expr h0] [],
-    simpa [] [] [] ["[", expr funext_iff, "]"] [] ["using", expr he] },
-  { rcases [expr sigma_nonempty.1 hne, "with", "⟨", ident i, ",", "-", ",", ident hi, "⟩"],
-    rcases [expr H_ex i (f i) hi, "with", "⟨", ident x, ",", ident x_mem, ",", ident hr, "⟩"],
-    set [] [ident g] [] [":="] [expr update f i ((f i).erase x)] ["with", ident hg],
-    clear_value [ident g],
-    have [ident hx'] [":", expr «expr ∉ »(x, g i)] [],
-    by { rw ["[", expr hg, ",", expr update_same, "]"] [],
-      apply [expr not_mem_erase] },
-    obtain [ident rfl, ":", expr «expr = »(f, update g i (insert x (g i)))],
-    by rw ["[", expr hg, ",", expr update_idem, ",", expr update_same, ",", expr insert_erase x_mem, ",", expr update_eq_self, "]"] [],
-    clear [ident hg],
-    rw ["[", expr update_same, ",", expr erase_insert hx', "]"] ["at", ident hr],
-    refine [expr step _ _ _ hr (ihs (univ.sigma g) _ _ rfl)],
-    rw [expr ssubset_iff_of_subset (sigma_mono (subset.refl _) _)] [],
-    exacts ["[", expr ⟨⟨i, x⟩, mem_sigma.2 ⟨mem_univ _, by simp [] [] [] [] [] []⟩, by simp [] [] [] ["[", expr hx', "]"] [] []⟩, ",", expr (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, λ
-      _ _, le_rfl⟩, "]"] }
-end
+theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
+  (H_ex : ∀ i s : Finset (α i) hs : s.nonempty, ∃ (x : _)(_ : x ∈ s), r i x (s.erase x))
+  {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
+  (step : ∀ g : ∀ i, Finset (α i) i : ι x : α i, r i x (g i) → p g → p (update g i (insert x (g i)))) : p f :=
+  by 
+    induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f 
+    subst s 
+    cases' eq_empty_or_nonempty (univ.sigma f) with he hne
+    ·
+      convert h0 
+      simpa [funext_iff] using he
+    ·
+      rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
+      rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
+      set g := update f i ((f i).erase x) with hg 
+      clearValue g 
+      have hx' : x ∉ g i
+      ·
+        ·
+          rw [hg, update_same]
+          apply not_mem_erase 
+      obtain rfl : f = update g i (insert x (g i))
+      ·
+        rw [hg, update_idem, update_same, insert_erase x_mem, update_eq_self]
+      clear hg 
+      rw [update_same, erase_insert hx'] at hr 
+      refine' step _ _ _ hr (ihs (univ.sigma g) _ _ rfl)
+      rw [ssubset_iff_of_subset (sigma_mono (subset.refl _) _)]
+      exacts[⟨⟨i, x⟩,
+          mem_sigma.2
+            ⟨mem_univ _,
+              by 
+                simp ⟩,
+          by 
+            simp [hx']⟩,
+        (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
 
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
@@ -67,6 +74,8 @@ theorem induction_on_pi {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset
   (step : ∀ g : ∀ i, Finset (α i) i : ι x : α i hx : x ∉ g i, p g → p (update g i (insert x (g i)))) : p f :=
   induction_on_pi_of_choice (fun i x s => x ∉ s) (fun i s ⟨x, hx⟩ => ⟨x, hx, not_mem_erase x s⟩) f h0 step
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » g i)
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and an element`x : α i` that is strictly greater than all elements of `g i`, `p g` implies
@@ -81,6 +90,7 @@ theorem induction_on_pi_max [∀ i, LinearOrderₓ (α i)] {p : (∀ i, Finset (
   induction_on_pi_of_choice (fun i x s => ∀ y _ : y ∈ s, y < x)
     (fun i s hs => ⟨s.max' hs, s.max'_mem hs, fun y => s.lt_max'_of_mem_erase_max' _⟩) f h0 step
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » g i)
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and an element`x : α i` that is strictly less than all elements of `g i`, `p g` implies

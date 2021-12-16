@@ -46,18 +46,21 @@ open_locale Filter
 /-! ### Relations -/
 
 
-/-- The forward map of a filter under a relation. Generalization of `filter.map` to relations. Note
-that `rel.core` generalizes `set.preimage`. -/
-def rmap (r : Rel α β) (l : Filter α) : Filter β :=
-  { Sets := { s | r.core s ∈ l },
-    univ_sets :=
-      by 
-        simp ,
-    sets_of_superset := fun s t hs st => mem_of_superset hs$ Rel.core_mono _ st,
-    inter_sets :=
-      fun s t hs ht =>
-        by 
-          simp [Rel.core_inter, inter_mem hs ht] }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The forward map of a filter under a relation. Generalization of `filter.map` to relations. Note
+    that `rel.core` generalizes `set.preimage`. -/
+  def
+    rmap
+    ( r : Rel α β ) ( l : Filter α ) : Filter β
+    :=
+      {
+        Sets := { s | r.core s ∈ l } ,
+          univ_sets := by simp ,
+          sets_of_superset := fun s t hs st => mem_of_superset hs $ Rel.core_mono _ st ,
+          inter_sets := fun s t hs ht => by simp [ Rel.core_inter , inter_mem hs ht ]
+        }
 
 theorem rmap_sets (r : Rel α β) (l : Filter α) : (l.rmap r).Sets = r.core ⁻¹' l.sets :=
   rfl
@@ -82,6 +85,7 @@ theorem rmap_compose (r : Rel α β) (s : Rel β γ) : (rmap s ∘ rmap r) = rma
 def rtendsto (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.rmap r ≤ l₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l₂)
 theorem rtendsto_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : rtendsto r l₁ l₂ ↔ ∀ s _ : s ∈ l₂, r.core s ∈ l₁ :=
   Iff.rfl
 
@@ -102,7 +106,7 @@ theorem rcomap_rcomap (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap r
     by 
       ext t 
       simp [rcomap_sets, Rel.Image, Rel.core_comp]
-      split 
+      constructor
       ·
         rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
         exact ⟨v, vsets, Set.Subset.trans (Rel.core_mono _ hv) h⟩
@@ -118,7 +122,7 @@ theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter
     rw [rtendsto_def]
     change (∀ s : Set β, s ∈ l₂.sets → r.core s ∈ l₁) ↔ l₁ ≤ rcomap r l₂ 
     simp [Filter.le_def, rcomap, Rel.mem_image]
-    split 
+    constructor
     ·
       exact fun h s t tl₂ => mem_of_superset (h t tl₂)
     ·
@@ -133,6 +137,7 @@ def rcomap' (r : Rel α β) (f : Filter β) : Filter α :=
       fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ =>
         ⟨a' ∩ b', inter_mem ha₁ hb₁, (@Rel.preimage_inter _ _ r _ _).trans (Set.inter_subset_inter ha₂ hb₂)⟩ }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » l)
 @[simp]
 theorem mem_rcomap' (r : Rel α β) (l : Filter β) (s : Set α) :
   s ∈ l.rcomap' r ↔ ∃ (t : _)(_ : t ∈ l), r.preimage t ⊆ s :=
@@ -148,7 +153,7 @@ theorem rcomap'_rcomap' (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap
     fun t =>
       by 
         simp [rcomap'_sets, Rel.Image, Rel.preimage_comp]
-        split 
+        constructor
         ·
           rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
           exact ⟨v, vsets, (Rel.preimage_mono _ hv).trans h⟩
@@ -165,12 +170,13 @@ theorem rcomap'_compose (r : Rel α β) (s : Rel β γ) : (rcomap' r ∘ rcomap'
 def rtendsto' (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁ ≤ l₂.rcomap' r
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l₂)
 theorem rtendsto'_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
   rtendsto' r l₁ l₂ ↔ ∀ s _ : s ∈ l₂, r.preimage s ∈ l₁ :=
   by 
     unfold rtendsto' rcomap' 
     simp [le_def, Rel.mem_image]
-    split 
+    constructor
     ·
       exact fun h s hs => h _ _ hs Set.Subset.rfl
     ·
@@ -204,6 +210,7 @@ theorem mem_pmap (f : α →. β) (l : Filter α) (s : Set β) : s ∈ l.pmap f 
 def ptendsto (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.pmap f ≤ l₂
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l₂)
 theorem ptendsto_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) : ptendsto f l₁ l₂ ↔ ∀ s _ : s ∈ l₂, f.core s ∈ l₁ :=
   Iff.rfl
 
@@ -239,6 +246,7 @@ def pcomap' (f : α →. β) (l : Filter β) : Filter α :=
 def ptendsto' (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁ ≤ l₂.rcomap' f.graph'
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » l₂)
 theorem ptendsto'_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :
   ptendsto' f l₁ l₂ ↔ ∀ s _ : s ∈ l₂, f.preimage s ∈ l₁ :=
   rtendsto'_def _ _ _

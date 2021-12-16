@@ -10,7 +10,7 @@ TODO: generalise this to n-angles in n-angulated categories as in https://arxiv.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 

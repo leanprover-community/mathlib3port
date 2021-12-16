@@ -54,22 +54,23 @@ theorem IsOpen.exists_smul_mem [is_minimal M α] (x : α) {U : Set α} (hUo : Is
 
 @[toAdditive]
 theorem IsOpen.Union_preimage_smul [is_minimal M α] {U : Set α} (hUo : IsOpen U) (hne : U.nonempty) :
-  (⋃c : M, (· • ·) c ⁻¹' U) = univ :=
+  (⋃ c : M, (· • ·) c ⁻¹' U) = univ :=
   Union_eq_univ_iff.2$ fun x => hUo.exists_smul_mem M x hne
 
 @[toAdditive]
-theorem IsOpen.Union_smul [is_minimal G α] {U : Set α} (hUo : IsOpen U) (hne : U.nonempty) : (⋃g : G, g • U) = univ :=
+theorem IsOpen.Union_smul [is_minimal G α] {U : Set α} (hUo : IsOpen U) (hne : U.nonempty) : (⋃ g : G, g • U) = univ :=
   Union_eq_univ_iff.2$
     fun x =>
       let ⟨g, hg⟩ := hUo.exists_smul_mem G x hne
       ⟨g⁻¹, _, hg, inv_smul_smul _ _⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (g «expr ∈ » I)
 @[toAdditive]
 theorem IsCompact.exists_finite_cover_smul [TopologicalSpace G] [is_minimal G α] [HasContinuousSmul G α] {K U : Set α}
-  (hK : IsCompact K) (hUo : IsOpen U) (hne : U.nonempty) : ∃ I : Finset G, K ⊆ ⋃(g : _)(_ : g ∈ I), g • U :=
+  (hK : IsCompact K) (hUo : IsOpen U) (hne : U.nonempty) : ∃ I : Finset G, K ⊆ ⋃ (g : _)(_ : g ∈ I), g • U :=
   (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _)$
     calc K ⊆ univ := subset_univ K 
-      _ = ⋃g : G, g • U := (hUo.Union_smul G hne).symm
+      _ = ⋃ g : G, g • U := (hUo.Union_smul G hne).symm
       
 
 @[toAdditive]
@@ -87,7 +88,7 @@ theorem eq_empty_or_univ_of_smul_invariant_closed [is_minimal M α] {s : Set α}
 theorem is_minimal_iff_closed_smul_invariant [TopologicalSpace M] [HasContinuousSmul M α] :
   is_minimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ :=
   by 
-    split 
+    constructor
     ·
       intros h s 
       exact eq_empty_or_univ_of_smul_invariant_closed M 

@@ -86,11 +86,11 @@ variable (f : α → β) (s : Set α) (l : Filter α) (a : α)
 
 /-- `is_min_filter f l a` means that `f a ≤ f x` in some `l`-neighborhood of `a` -/
 def IsMinFilter : Prop :=
-  ∀ᶠx in l, f a ≤ f x
+  ∀ᶠ x in l, f a ≤ f x
 
 /-- `is_max_filter f l a` means that `f x ≤ f a` in some `l`-neighborhood of `a` -/
 def IsMaxFilter : Prop :=
-  ∀ᶠx in l, f x ≤ f a
+  ∀ᶠ x in l, f x ≤ f a
 
 /-- `is_extr_filter f l a` means `is_min_filter f l a` or `is_max_filter f l a` -/
 def IsExtrFilter : Prop :=
@@ -113,9 +113,11 @@ variable {f s a l} {t : Set α} {l' : Filter α}
 theorem IsExtrOn.elim {p : Prop} : IsExtrOn f s a → (IsMinOn f s a → p) → (IsMaxOn f s a → p) → p :=
   Or.elim
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem is_min_on_iff : IsMinOn f s a ↔ ∀ x _ : x ∈ s, f a ≤ f x :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem is_max_on_iff : IsMaxOn f s a ↔ ∀ x _ : x ∈ s, f x ≤ f a :=
   Iff.rfl
 
@@ -513,14 +515,12 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder α] {f : β → α} {s : Set β} {x₀ : β}
 
--- error in Order.Filter.Extr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_max_on.supr_eq (hx₀ : «expr ∈ »(x₀, s)) (h : is_max_on f s x₀) : «expr = »(«expr⨆ , »((x : s), f x), f x₀) :=
-begin
-  haveI [] [":", expr nonempty s] [":=", expr ⟨⟨x₀, hx₀⟩⟩],
-  exact [expr csupr_eq_of_forall_le_of_forall_lt_exists_gt (λ x, h x.prop) (λ w hw, ⟨⟨x₀, hx₀⟩, hw⟩)]
-end
+theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ :=
+  by 
+    have  : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
+    exact csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
 
-theorem IsMinOn.infi_eq (hx₀ : x₀ ∈ s) (h : IsMinOn f s x₀) : (⨅x : s, f x) = f x₀ :=
+theorem IsMinOn.infi_eq (hx₀ : x₀ ∈ s) (h : IsMinOn f s x₀) : (⨅ x : s, f x) = f x₀ :=
   @IsMaxOn.supr_eq (OrderDual α) β _ _ _ _ hx₀ h
 
 end ConditionallyCompleteLinearOrder

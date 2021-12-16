@@ -51,19 +51,14 @@ theorem mv_polynomial_X_map_matrix_aeval [Fintype m] [DecidableEq m] [CommSemiri
 
 variable (m R)
 
--- error in LinearAlgebra.Matrix.MvPolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a nontrivial ring, `matrix.mv_polynomial_X m m R` has non-zero determinant. -/
-theorem det_mv_polynomial_X_ne_zero
-[decidable_eq m]
-[fintype m]
-[comm_ring R]
-[nontrivial R] : «expr ≠ »(det (mv_polynomial_X m m R), 0) :=
-begin
-  intro [ident h_det],
-  have [] [] [":=", expr congr_arg matrix.det (mv_polynomial_X_map_matrix_eval (1 : matrix m m R))],
-  rw ["[", expr det_one, ",", "<-", expr ring_hom.map_det, ",", expr h_det, ",", expr ring_hom.map_zero, "]"] ["at", ident this],
-  exact [expr zero_ne_one this]
-end
+theorem det_mv_polynomial_X_ne_zero [DecidableEq m] [Fintype m] [CommRingₓ R] [Nontrivial R] :
+  det (mv_polynomial_X m m R) ≠ 0 :=
+  by 
+    intro h_det 
+    have  := congr_argₓ Matrix.det (mv_polynomial_X_map_matrix_eval (1 : Matrix m m R))
+    rw [det_one, ←RingHom.map_det, h_det, RingHom.map_zero] at this 
+    exact zero_ne_one this
 
 end Matrix
 

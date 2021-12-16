@@ -108,7 +108,7 @@ theorem map_val {f : α → β} (hf : Continuous f) (K : compacts α) : (K.map f
 
 /-- A homeomorphism induces an equivalence on compact sets, by taking the image. -/
 @[simp]
-protected def Equiv (f : α ≃ₜ β) : compacts α ≃ compacts β :=
+protected def Equivₓ (f : α ≃ₜ β) : compacts α ≃ compacts β :=
   { toFun := compacts.map f f.continuous, invFun := compacts.map _ f.symm.continuous,
     left_inv :=
       by 

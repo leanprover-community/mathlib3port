@@ -6,8 +6,8 @@ This file defines the following notations, for functions `X,Y`, measures `P, Q` 
 measurable space `m0`, and another measurable space structure `m` with `hm : m ≤ m0`,
 - `P[X] = ∫ a, X a ∂P`
 - `𝔼[X] = ∫ a, X a`
-- `𝔼[X|hm]`: conditional expectation of `X` with respect to the measure `volume` and the
-  measurable space `m`. The similar `P[X|hm]` for a measure `P` is defined in
+- `𝔼[X|m,hm]`: conditional expectation of `X` with respect to the measure `volume` and the
+  measurable space `m`. The similar `P[X|m,hm]` for a measure `P` is defined in
   measure_theory.function.conditional_expectation.
 - `X =ₐₛ Y`: `X =ᵐ[volume] Y`
 - `X ≤ₐₛ Y`: `X ≤ᵐ[volume] Y`
@@ -23,11 +23,14 @@ value in `ℝ`, `ℝ≥0` or `ℝ≥0∞`.
 
 open MeasureTheory
 
-localized [ProbabilityTheory] notation "𝔼[" X "|" hm "]" => MeasureTheory.condexp hm MeasureTheory.Measure.volume X
+localized [ProbabilityTheory] notation "𝔼[" X "|" hm "]" => MeasureTheory.condexp _ hm MeasureTheory.Measure.volume X
 
-localized [ProbabilityTheory] notation P "[" X "]" => ∫x, X x ∂P
+localized [ProbabilityTheory]
+  notation "𝔼[" X "|" m "," hm "]" => MeasureTheory.condexp m hm MeasureTheory.Measure.volume X
 
-localized [ProbabilityTheory] notation "𝔼[" X "]" => ∫a, X a
+localized [ProbabilityTheory] notation P "[" X "]" => ∫ x, X x ∂P
+
+localized [ProbabilityTheory] notation "𝔼[" X "]" => ∫ a, X a
 
 localized [ProbabilityTheory] notation:50 X "=ₐₛ" Y:50 => X =ᵐ[MeasureTheory.Measure.volume] Y
 

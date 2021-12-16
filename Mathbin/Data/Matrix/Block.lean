@@ -123,7 +123,7 @@ def to_block (M : Matrix m n α) (p : m → Prop) (q : n → Prop) : Matrix { a 
 
 @[simp]
 theorem to_block_apply (M : Matrix m n α) (p : m → Prop) (q : n → Prop) (i : { a // p a }) (j : { a // q a }) :
-  to_block M p q i j = M («expr↑ » i) («expr↑ » j) :=
+  to_block M p q i j = M (↑i) (↑j) :=
   rfl
 
 /-- Let `b` map rows and columns of a square matrix `M` to blocks. Then
@@ -134,7 +134,7 @@ def to_square_block (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Fin�
 
 @[simp]
 theorem to_square_block_def (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
-  to_square_block M b k = fun i j => M («expr↑ » i) («expr↑ » j) :=
+  to_square_block M b k = fun i j => M (↑i) (↑j) :=
   rfl
 
 /-- Alternate version with `b : m → nat`. Let `b` map rows and columns of a square matrix `M` to
@@ -144,7 +144,7 @@ def to_square_block' (M : Matrix m m α) (b : m → Nat) (k : Nat) : Matrix { a 
 
 @[simp]
 theorem to_square_block_def' (M : Matrix m m α) (b : m → Nat) (k : Nat) :
-  to_square_block' M b k = fun i j => M («expr↑ » i) («expr↑ » j) :=
+  to_square_block' M b k = fun i j => M (↑i) (↑j) :=
   rfl
 
 /-- Let `p` pick out certain rows and columns of a square matrix `M`. Then
@@ -154,7 +154,7 @@ def to_square_block_prop (M : Matrix m m α) (p : m → Prop) : Matrix { a // p 
 
 @[simp]
 theorem to_square_block_prop_def (M : Matrix m m α) (p : m → Prop) :
-  to_square_block_prop M p = fun i j => M («expr↑ » i) («expr↑ » j) :=
+  to_square_block_prop M p = fun i j => M (↑i) (↑j) :=
   rfl
 
 variable [Semiringₓ α]
@@ -326,7 +326,7 @@ variable [HasZero α] [HasZero β]
 and zero elsewhere.
 
 This is the dependently-typed version of `matrix.block_diagonal`. -/
-def block_diagonal' : Matrix (Σi, m' i) (Σi, n' i) α
+def block_diagonal' : Matrix (Σ i, m' i) (Σ i, n' i) α
 | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_argₓ n' h.symm) j) else 0
 
 theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} i j :

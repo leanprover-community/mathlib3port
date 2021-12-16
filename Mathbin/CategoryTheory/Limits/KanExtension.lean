@@ -24,7 +24,7 @@ A lot of boilerplate could be generalized by defining and working with pseudofun
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 
@@ -48,24 +48,20 @@ abbrev diagram (F : S ⥤ D) (x : L) : structured_arrow x ι ⥤ D :=
 
 variable {ι}
 
--- error in CategoryTheory.Limits.KanExtension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A cone over `Ran.diagram ι F x` used to define `Ran`. -/
 @[simp]
-def cone
-{F : «expr ⥤ »(S, D)}
-{G : «expr ⥤ »(L, D)}
-(x : L)
-(f : «expr ⟶ »(«expr ⋙ »(ι, G), F)) : cone (diagram ι F x) :=
-{ X := G.obj x,
-  π := { app := λ i, «expr ≫ »(G.map i.hom, f.app i.right),
-    naturality' := begin
-      rintro ["⟨", "⟨", ident il, "⟩", ",", ident ir, ",", ident i, "⟩", "⟨", "⟨", ident jl, "⟩", ",", ident jr, ",", ident j, "⟩", "⟨", "⟨", "⟨", ident fl, "⟩", "⟩", ",", ident fr, ",", ident ff, "⟩"],
-      dsimp [] [] [] ["at", "*"],
-      simp [] [] ["only"] ["[", expr category.id_comp, ",", expr category.assoc, "]"] [] ["at", "*"],
-      rw ["[", expr ff, "]"] [],
-      have [] [] [":=", expr f.naturality],
-      tidy []
-    end } }
+def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : cone (diagram ι F x) :=
+  { x := G.obj x,
+    π :=
+      { app := fun i => G.map i.hom ≫ f.app i.right,
+        naturality' :=
+          by 
+            rintro ⟨⟨il⟩, ir, i⟩ ⟨⟨jl⟩, jr, j⟩ ⟨⟨⟨fl⟩⟩, fr, ff⟩
+            dsimp  at *
+            simp only [category.id_comp, category.assoc] at *
+            rw [ff]
+            have  := f.naturality 
+            tidy } }
 
 variable (ι)
 
@@ -91,7 +87,7 @@ def loc (F : S ⥤ D) [∀ x, has_limit (diagram ι F x)] : L ⥤ D :=
 
 /-- An auxiliary definition used to define `Ran` and `Ran.adjunction`. -/
 @[simps]
-def Equiv (F : S ⥤ D) [∀ x, has_limit (diagram ι F x)] (G : L ⥤ D) :
+def Equivₓ (F : S ⥤ D) [∀ x, has_limit (diagram ι F x)] (G : L ⥤ D) :
   (G ⟶ loc ι F) ≃ (((whiskering_left _ _ _).obj ι).obj G ⟶ F) :=
   { toFun :=
       fun f =>
@@ -188,82 +184,87 @@ def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : cocone (di
 
 variable (ι)
 
--- error in CategoryTheory.Limits.KanExtension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An auxiliary definition used to define `Lan`. -/
-@[simps #[]]
-def loc (F : «expr ⥤ »(S, D)) [I : ∀ x, has_colimit (diagram ι F x)] : «expr ⥤ »(L, D) :=
-{ obj := λ x, colimit (diagram ι F x),
-  map := λ x y f, colimit.pre (diagram _ _ _) (costructured_arrow.map f : «expr ⥤ »(costructured_arrow ι _, _)),
-  map_id' := begin
-    intro [ident l],
-    ext [] [ident j] [],
-    erw ["[", expr colimit.ι_pre, ",", expr category.comp_id, "]"] [],
-    congr' [1] [],
-    simp [] [] [] [] [] []
-  end,
-  map_comp' := begin
-    intros [ident x, ident y, ident z, ident f, ident g],
-    ext [] [ident j] [],
-    let [ident ff] [":", expr «expr ⥤ »(costructured_arrow ι _, _)] [":=", expr costructured_arrow.map f],
-    let [ident gg] [":", expr «expr ⥤ »(costructured_arrow ι _, _)] [":=", expr costructured_arrow.map g],
-    let [ident dd] [] [":=", expr diagram ι F z],
-    haveI [] [":", expr has_colimit «expr ⋙ »(ff, «expr ⋙ »(gg, dd))] [":=", expr I _],
-    haveI [] [":", expr has_colimit «expr ⋙ »(«expr ⋙ »(ff, gg), dd)] [":=", expr I _],
-    haveI [] [":", expr has_colimit «expr ⋙ »(gg, dd)] [":=", expr I _],
-    change [expr «expr = »(_, «expr ≫ »(colimit.ι «expr ⋙ »(«expr ⋙ »(ff, gg), dd) j, «expr ≫ »(_, _)))] [] [],
-    erw ["[", expr colimit.pre_pre dd gg ff, ",", expr colimit.ι_pre, ",", expr colimit.ι_pre, "]"] [],
-    congr' [1] [],
-    simp [] [] [] [] [] []
-  end }
+@[simps]
+def loc (F : S ⥤ D) [I : ∀ x, has_colimit (diagram ι F x)] : L ⥤ D :=
+  { obj := fun x => colimit (diagram ι F x),
+    map := fun x y f => colimit.pre (diagram _ _ _) (costructured_arrow.map f : costructured_arrow ι _ ⥤ _),
+    map_id' :=
+      by 
+        intro l 
+        ext j 
+        erw [colimit.ι_pre, category.comp_id]
+        congr 1
+        simp ,
+    map_comp' :=
+      by 
+        intro x y z f g 
+        ext j 
+        let ff : costructured_arrow ι _ ⥤ _ := costructured_arrow.map f 
+        let gg : costructured_arrow ι _ ⥤ _ := costructured_arrow.map g 
+        let dd := diagram ι F z 
+        have  : has_colimit (ff ⋙ gg ⋙ dd) := I _ 
+        have  : has_colimit ((ff ⋙ gg) ⋙ dd) := I _ 
+        have  : has_colimit (gg ⋙ dd) := I _ 
+        change _ = colimit.ι ((ff ⋙ gg) ⋙ dd) j ≫ _ ≫ _ 
+        erw [colimit.pre_pre dd gg ff, colimit.ι_pre, colimit.ι_pre]
+        congr 1
+        simp  }
 
--- error in CategoryTheory.Limits.KanExtension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An auxiliary definition used to define `Lan` and `Lan.adjunction`. -/
-@[simps #[]]
-def equiv
-(F : «expr ⥤ »(S, D))
-[I : ∀ x, has_colimit (diagram ι F x)]
-(G : «expr ⥤ »(L, D)) : «expr ≃ »(«expr ⟶ »(loc ι F, G), «expr ⟶ »(F, ((whiskering_left _ _ _).obj ι).obj G)) :=
-{ to_fun := λ
-  f, { app := λ
-    x, by apply [expr «expr ≫ »(colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk («expr𝟙»() _)), f.app _)],
-    naturality' := begin
-      intros [ident x, ident y, ident ff],
-      dsimp ["only"] ["[", expr whiskering_left, "]"] [] [],
-      simp [] [] ["only"] ["[", expr functor.comp_map, ",", expr category.assoc, "]"] [] [],
-      rw ["[", "<-", expr f.naturality (ι.map ff), ",", "<-", expr category.assoc, ",", "<-", expr category.assoc, "]"] [],
-      let [ident fff] [":", expr «expr ⥤ »(costructured_arrow ι _, _)] [":=", expr costructured_arrow.map (ι.map ff)],
-      haveI [] [":", expr has_colimit «expr ⋙ »(fff, diagram ι F (ι.obj y))] [":=", expr I _],
-      erw [expr colimit.ι_pre (diagram ι F (ι.obj y)) fff (costructured_arrow.mk («expr𝟙»() _))] [],
-      let [ident xx] [":", expr costructured_arrow ι (ι.obj y)] [":=", expr costructured_arrow.mk (ι.map ff)],
-      let [ident yy] [":", expr costructured_arrow ι (ι.obj y)] [":=", expr costructured_arrow.mk («expr𝟙»() _)],
-      let [ident fff] [":", expr «expr ⟶ »(xx, yy)] [":=", expr costructured_arrow.hom_mk ff (by { simp [] [] ["only"] ["[", expr costructured_arrow.mk_hom_eq_self, "]"] [] [],
-          erw [expr category.comp_id] [] })],
-      erw [expr colimit.w (diagram ι F (ι.obj y)) fff] [],
-      congr,
-      simp [] [] [] [] [] []
-    end },
-  inv_fun := λ
-  f, { app := λ x, colimit.desc (diagram ι F x) (cocone _ f),
-    naturality' := begin
-      intros [ident x, ident y, ident ff],
-      ext [] [ident j] [],
-      erw ["[", expr colimit.pre_desc, ",", "<-", expr category.assoc, ",", expr colimit.ι_desc, ",", expr colimit.ι_desc, "]"] [],
-      tidy []
-    end },
-  left_inv := begin
-    intro [ident x],
-    ext [] [ident k, ident j] [],
-    rw [expr colimit.ι_desc] [],
-    dsimp ["only"] ["[", expr cocone, "]"] [] [],
-    rw ["[", expr category.assoc, ",", "<-", expr x.naturality j.hom, ",", "<-", expr category.assoc, "]"] [],
-    congr' [1] [],
-    change [expr «expr = »(«expr ≫ »(colimit.ι _ _, colimit.pre (diagram ι F k) (costructured_arrow.map _)), _)] [] [],
-    rw [expr colimit.ι_pre] [],
-    congr,
-    cases [expr j] [],
-    tidy []
-  end,
-  right_inv := by tidy [] }
+@[simps]
+def Equivₓ (F : S ⥤ D) [I : ∀ x, has_colimit (diagram ι F x)] (G : L ⥤ D) :
+  (loc ι F ⟶ G) ≃ (F ⟶ ((whiskering_left _ _ _).obj ι).obj G) :=
+  { toFun :=
+      fun f =>
+        { app :=
+            fun x =>
+              by 
+                apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,
+          naturality' :=
+            by 
+              intro x y ff 
+              dsimp only [whiskering_left]
+              simp only [functor.comp_map, category.assoc]
+              rw [←f.naturality (ι.map ff), ←category.assoc, ←category.assoc]
+              let fff : costructured_arrow ι _ ⥤ _ := costructured_arrow.map (ι.map ff)
+              have  : has_colimit (fff ⋙ diagram ι F (ι.obj y)) := I _ 
+              erw [colimit.ι_pre (diagram ι F (ι.obj y)) fff (costructured_arrow.mk (𝟙 _))]
+              let xx : costructured_arrow ι (ι.obj y) := costructured_arrow.mk (ι.map ff)
+              let yy : costructured_arrow ι (ι.obj y) := costructured_arrow.mk (𝟙 _)
+              let fff : xx ⟶ yy :=
+                costructured_arrow.hom_mk ff
+                  (by 
+                    simp only [costructured_arrow.mk_hom_eq_self]
+                    erw [category.comp_id])
+              erw [colimit.w (diagram ι F (ι.obj y)) fff]
+              congr 
+              simp  },
+    invFun :=
+      fun f =>
+        { app := fun x => colimit.desc (diagram ι F x) (cocone _ f),
+          naturality' :=
+            by 
+              intro x y ff 
+              ext j 
+              erw [colimit.pre_desc, ←category.assoc, colimit.ι_desc, colimit.ι_desc]
+              tidy },
+    left_inv :=
+      by 
+        intro x 
+        ext k j 
+        rw [colimit.ι_desc]
+        dsimp only [cocone]
+        rw [category.assoc, ←x.naturality j.hom, ←category.assoc]
+        congr 1
+        change colimit.ι _ _ ≫ colimit.pre (diagram ι F k) (costructured_arrow.map _) = _ 
+        rw [colimit.ι_pre]
+        congr 
+        cases j 
+        tidy,
+    right_inv :=
+      by 
+        tidy }
 
 end Lan
 

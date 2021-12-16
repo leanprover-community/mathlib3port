@@ -80,20 +80,24 @@ def of_succ_le_iff_of_le_lt_succ (succ : α → α) (hsucc_le_iff : ∀ {a b}, s
 
 variable [SuccOrder α]
 
--- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, mono #[]] theorem succ_le_succ {a b : α} (h : «expr ≤ »(a, b)) : «expr ≤ »(succ a, succ b) :=
-begin
-  by_cases [expr ha, ":", expr ∀ {{c}}, «expr¬ »(«expr < »(a, c))],
-  { have [ident hba] [":", expr «expr ≤ »(succ b, a)] [],
-    { by_contra [ident H],
-      exact [expr ha ((h.trans (le_succ b)).lt_of_not_le H)] },
-    by_contra [ident H],
-    exact [expr ha ((h.trans (le_succ b)).trans_lt ((hba.trans (le_succ a)).lt_of_not_le H))] },
-  { push_neg ["at", ident ha],
-    obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr ha],
-    exact [expr succ_le_of_lt «expr $ »((h.trans (le_succ b)).lt_of_not_le, λ
-      hba, maximal_of_succ_le (hba.trans h) (((le_succ b).trans hba).trans_lt hc))] }
-end
+@[simp, mono]
+theorem succ_le_succ {a b : α} (h : a ≤ b) : succ a ≤ succ b :=
+  by 
+    byCases' ha : ∀ ⦃c⦄, ¬a < c
+    ·
+      have hba : succ b ≤ a
+      ·
+        byContra H 
+        exact ha ((h.trans (le_succ b)).lt_of_not_le H)
+      byContra H 
+      exact ha ((h.trans (le_succ b)).trans_lt ((hba.trans (le_succ a)).lt_of_not_le H))
+    ·
+      pushNeg  at ha 
+      obtain ⟨c, hc⟩ := ha 
+      exact
+        succ_le_of_lt
+          ((h.trans (le_succ b)).lt_of_not_le$
+            fun hba => maximal_of_succ_le (hba.trans h) (((le_succ b).trans hba).trans_lt hc))
 
 theorem succ_mono : Monotone (succ : α → α) :=
   fun a b => succ_le_succ
@@ -158,7 +162,7 @@ variable [SuccOrder α]
 
 theorem le_le_succ_iff {a b : α} : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = succ a :=
   by 
-    split 
+    constructor
     ·
       rintro h 
       rw [or_iff_not_imp_left]
@@ -225,15 +229,13 @@ section OrderBot
 
 variable [PartialOrderₓ α] [OrderBot α] [SuccOrder α] [Nontrivial α]
 
--- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem bot_lt_succ (a : α) : «expr < »(«expr⊥»(), succ a) :=
-begin
-  obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr exists_ne («expr⊥»() : α)],
-  refine [expr bot_lt_iff_ne_bot.2 (λ h, _)],
-  have [] [] [":=", expr eq_bot_iff.2 ((le_succ a).trans h.le)],
-  rw [expr this] ["at", ident h],
-  exact [expr maximal_of_succ_le h.le (bot_lt_iff_ne_bot.2 hb)]
-end
+theorem bot_lt_succ (a : α) : ⊥ < succ a :=
+  by 
+    obtain ⟨b, hb⟩ := exists_ne (⊥ : α)
+    refine' bot_lt_iff_ne_bot.2 fun h => _ 
+    have  := eq_bot_iff.2 ((le_succ a).trans h.le)
+    rw [this] at h 
+    exact maximal_of_succ_le h.le (bot_lt_iff_ne_bot.2 hb)
 
 theorem succ_ne_bot (a : α) : succ a ≠ ⊥ :=
   (bot_lt_succ a).ne'
@@ -257,7 +259,7 @@ section CompleteLattice
 
 variable [CompleteLattice α] [SuccOrder α]
 
-theorem succ_eq_infi (a : α) : succ a = ⨅(b : α)(h : a < b), b :=
+theorem succ_eq_infi (a : α) : succ a = ⨅ (b : α)(h : a < b), b :=
   by 
     refine' le_antisymmₓ (le_infi fun b => le_infi succ_le_of_lt) _ 
     obtain rfl | ha := eq_or_ne a ⊤
@@ -297,20 +299,24 @@ def of_le_pred_iff_of_pred_le_pred (pred : α → α) (hle_pred_iff : ∀ {a b},
 
 variable [PredOrder α]
 
--- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp, mono #[]] theorem pred_le_pred {a b : α} (h : «expr ≤ »(a, b)) : «expr ≤ »(pred a, pred b) :=
-begin
-  by_cases [expr hb, ":", expr ∀ {{c}}, «expr¬ »(«expr < »(c, b))],
-  { have [ident hba] [":", expr «expr ≤ »(b, pred a)] [],
-    { by_contra [ident H],
-      exact [expr hb (((pred_le a).trans h).lt_of_not_le H)] },
-    by_contra [ident H],
-    exact [expr hb ((((pred_le b).trans hba).lt_of_not_le H).trans_le ((pred_le a).trans h))] },
-  { push_neg ["at", ident hb],
-    obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr hb],
-    exact [expr le_pred_of_lt «expr $ »(((pred_le a).trans h).lt_of_not_le, λ
-      hba, «expr $ »(minimal_of_le_pred (h.trans hba), «expr $ »(hc.trans_le, «expr $ »(hba.trans, pred_le a))))] }
-end
+@[simp, mono]
+theorem pred_le_pred {a b : α} (h : a ≤ b) : pred a ≤ pred b :=
+  by 
+    byCases' hb : ∀ ⦃c⦄, ¬c < b
+    ·
+      have hba : b ≤ pred a
+      ·
+        byContra H 
+        exact hb (((pred_le a).trans h).lt_of_not_le H)
+      byContra H 
+      exact hb ((((pred_le b).trans hba).lt_of_not_le H).trans_le ((pred_le a).trans h))
+    ·
+      pushNeg  at hb 
+      obtain ⟨c, hc⟩ := hb 
+      exact
+        le_pred_of_lt
+          (((pred_le a).trans h).lt_of_not_le$
+            fun hba => minimal_of_le_pred (h.trans hba)$ hc.trans_le$ hba.trans$ pred_le a)
 
 theorem pred_mono : Monotone (pred : α → α) :=
   fun a b => pred_le_pred
@@ -377,7 +383,7 @@ variable [PredOrder α]
 
 theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = pred a :=
   by 
-    split 
+    constructor
     ·
       rintro h 
       rw [or_iff_not_imp_left]
@@ -442,15 +448,13 @@ section OrderTop
 
 variable [PartialOrderₓ α] [OrderTop α] [PredOrder α]
 
--- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pred_lt_top [nontrivial α] (a : α) : «expr < »(pred a, «expr⊤»()) :=
-begin
-  obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr exists_ne («expr⊤»() : α)],
-  refine [expr lt_top_iff_ne_top.2 (λ h, _)],
-  have [] [] [":=", expr eq_top_iff.2 (h.ge.trans (pred_le a))],
-  rw [expr this] ["at", ident h],
-  exact [expr minimal_of_le_pred h.ge (lt_top_iff_ne_top.2 hb)]
-end
+theorem pred_lt_top [Nontrivial α] (a : α) : pred a < ⊤ :=
+  by 
+    obtain ⟨b, hb⟩ := exists_ne (⊤ : α)
+    refine' lt_top_iff_ne_top.2 fun h => _ 
+    have  := eq_top_iff.2 (h.ge.trans (pred_le a))
+    rw [this] at h 
+    exact minimal_of_le_pred h.ge (lt_top_iff_ne_top.2 hb)
 
 theorem pred_ne_top [Nontrivial α] (a : α) : pred a ≠ ⊤ :=
   (pred_lt_top a).Ne
@@ -474,7 +478,7 @@ section CompleteLattice
 
 variable [CompleteLattice α] [PredOrder α]
 
-theorem pred_eq_supr (a : α) : pred a = ⨆(b : α)(h : b < a), b :=
+theorem pred_eq_supr (a : α) : pred a = ⨆ (b : α)(h : b < a), b :=
   by 
     refine' le_antisymmₓ _ (supr_le fun b => supr_le le_pred_of_lt)
     obtain rfl | ha := eq_or_ne a ⊥

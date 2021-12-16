@@ -56,16 +56,17 @@ variable {α β γ : Type _}
 instance : Inhabited (α →. β) :=
   ⟨fun a => Part.none⟩
 
-/-- The domain of a partial function -/
-def dom (f : α →. β) : Set α :=
-  { a | (f a).Dom }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/-- The domain of a partial function -/ def dom ( f : α →. β ) : Set α := { a | f a . Dom }
 
 theorem mem_dom (f : α →. β) (x : α) : x ∈ dom f ↔ ∃ y, y ∈ f x :=
   by 
     simp [dom, Part.dom_iff_mem]
 
-theorem dom_eq (f : α →. β) : dom f = { x | ∃ y, y ∈ f x } :=
-  Set.ext (mem_dom f)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem dom_eq ( f : α →. β ) : dom f = { x | ∃ y , y ∈ f x } := Set.ext mem_dom f
 
 /-- Evaluate a partial function -/
 def fn (f : α →. β) x (h : dom f x) : β :=
@@ -88,7 +89,7 @@ def as_subtype (f : α →. β) (s : f.dom) : β :=
 
 /-- The type of partial functions `α →. β` is equivalent to
 the type of pairs `(p : α → Prop, f : subtype p → β)`. -/
-def equiv_subtype : (α →. β) ≃ Σp : α → Prop, Subtype p → β :=
+def equiv_subtype : (α →. β) ≃ Σ p : α → Prop, Subtype p → β :=
   ⟨fun f => ⟨fun a => (f a).Dom, as_subtype f⟩, fun f x => ⟨f.1 x, fun h => f.2 ⟨x, h⟩⟩,
     fun f => funext$ fun a => Part.eta _,
     fun ⟨p, f⟩ =>
@@ -114,20 +115,24 @@ theorem lift_eq_coe (f : α → β) : Pfun.lift f = f :=
 theorem coe_val (f : α → β) (a : α) : (f : α →. β) a = Part.some (f a) :=
   rfl
 
-/-- Graph of a partial function `f` as the set of pairs `(x, f x)` where `x` is in the domain of
-`f`. -/
-def graph (f : α →. β) : Set (α × β) :=
-  { p | p.2 ∈ f p.1 }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Graph of a partial function `f` as the set of pairs `(x, f x)` where `x` is in the domain of
+    `f`. -/
+  def graph ( f : α →. β ) : Set α × β := { p | p . 2 ∈ f p . 1 }
 
 /-- Graph of a partial function as a relation. `x` and `y` are related iff `f x` is defined and
 "equals" `y`. -/
 def graph' (f : α →. β) : Rel α β :=
   fun x y => y ∈ f x
 
-/-- The range of a partial function is the set of values
-  `f x` where `x` is in the domain of `f`. -/
-def ran (f : α →. β) : Set β :=
-  { b | ∃ a, b ∈ f a }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The range of a partial function is the set of values
+      `f x` where `x` is in the domain of `f`. -/
+  def ran ( f : α →. β ) : Set β := { b | ∃ a , b ∈ f a }
 
 /-- Restrict a partial function to a smaller domain. -/
 def restrict (f : α →. β) {p : Set α} (H : p ⊆ f.dom) : α →. β :=
@@ -247,26 +252,19 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
             rw [WellFounded.fix_F_eq]
             simp [h₁, h₂, h₄]⟩
 
--- error in Data.Pfun: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A recursion principle for `pfun.fix`. -/
 @[elab_as_eliminator]
-def fix_induction
-{f : «expr →. »(α, «expr ⊕ »(β, α))}
-{b : β}
-{C : α → Sort*}
-{a : α}
-(h : «expr ∈ »(b, f.fix a))
-(H : ∀ a, «expr ∈ »(b, f.fix a) → ∀ a', «expr ∈ »(b, f.fix a') → «expr ∈ »(sum.inr a', f a) → C a' → C a) : C a :=
-begin
-  replace [ident h] [] [":=", expr part.mem_assert_iff.1 h],
-  have [] [] [":=", expr h.snd],
-  revert [ident this],
-  induction [expr h.fst] [] ["with", ident a, ident ha, ident IH] [],
-  intro [ident h₂],
-  refine [expr H a (part.mem_assert_iff.2 ⟨⟨_, ha⟩, h₂⟩) (λ a' ha' fa', _)],
-  have [] [] [":=", expr (part.mem_assert_iff.1 ha').snd],
-  exact [expr IH _ fa' ⟨ha _ fa', this⟩ this]
-end
+def fix_induction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
+  (H : ∀ a, b ∈ f.fix a → (∀ a', b ∈ f.fix a' → Sum.inr a' ∈ f a → C a') → C a) : C a :=
+  by 
+    replace h := Part.mem_assert_iff.1 h 
+    have  := h.snd 
+    revert this 
+    induction' h.fst with a ha IH 
+    intro h₂ 
+    refine' H a (Part.mem_assert_iff.2 ⟨⟨_, ha⟩, h₂⟩) fun a' ha' fa' => _ 
+    have  := (Part.mem_assert_iff.1 ha').snd 
+    exact IH _ fa' ⟨ha _ fa', this⟩ this
 
 end Pfun
 
@@ -278,9 +276,12 @@ variable {α β : Type _} (f : α →. β)
 def image (s : Set α) : Set β :=
   f.graph'.image s
 
-theorem image_def (s : Set α) : f.image s = { y | ∃ (x : _)(_ : x ∈ s), y ∈ f x } :=
-  rfl
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem image_def ( s : Set α ) : f.image s = { y | ∃ ( x : _ ) ( _ : x ∈ s ) , y ∈ f x } := rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 theorem mem_image (y : β) (s : Set α) : y ∈ f.image s ↔ ∃ (x : _)(_ : x ∈ s), y ∈ f x :=
   Iff.rfl
 
@@ -297,9 +298,12 @@ theorem image_union (s t : Set α) : f.image (s ∪ t) = f.image s ∪ f.image t
 def preimage (s : Set β) : Set α :=
   Rel.Image (fun x y => x ∈ f y) s
 
-theorem preimage_def (s : Set β) : f.preimage s = { x | ∃ (y : _)(_ : y ∈ s), y ∈ f x } :=
-  rfl
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem preimage_def ( s : Set β ) : f.preimage s = { x | ∃ ( y : _ ) ( _ : y ∈ s ) , y ∈ f x } := rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem mem_preimage (s : Set β) (x : α) : x ∈ f.preimage s ↔ ∃ (y : _)(_ : y ∈ s), y ∈ f x :=
   Iff.rfl
 
@@ -324,13 +328,14 @@ such that `f a ∈ s`, if `f a` is defined. -/
 def core (s : Set β) : Set α :=
   f.graph'.core s
 
-theorem core_def (s : Set β) : f.core s = { x | ∀ y, y ∈ f x → y ∈ s } :=
-  rfl
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem core_def ( s : Set β ) : f.core s = { x | ∀ y , y ∈ f x → y ∈ s } := rfl
 
 theorem mem_core (x : α) (s : Set β) : x ∈ f.core s ↔ ∀ y, y ∈ f x → y ∈ s :=
   Iff.rfl
 
-theorem compl_dom_subset_core (s : Set β) : «expr ᶜ» f.dom ⊆ f.core s :=
+theorem compl_dom_subset_core (s : Set β) : f.domᶜ ⊆ f.core s :=
   fun x hx y fxy => absurd ((mem_dom f x).mpr ⟨y, fxy⟩) hx
 
 theorem core_mono {s t : Set β} (h : s ⊆ t) : f.core s ⊆ f.core t :=
@@ -347,7 +352,7 @@ section
 
 open_locale Classical
 
-theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).Core t = «expr ᶜ» s ∪ f ⁻¹' t :=
+theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).Core t = sᶜ ∪ f ⁻¹' t :=
   by 
     ext 
     rw [mem_core_res]
@@ -371,11 +376,12 @@ theorem preimage_eq (f : α →. β) (s : Set β) : f.preimage s = f.core s ∩ 
       have ys : y ∈ s := xcore _ (Part.get_mem _)
       show x ∈ f.preimage s from ⟨(f x).get xdom, ys, Part.get_mem _⟩
 
-theorem core_eq (f : α →. β) (s : Set β) : f.core s = f.preimage s ∪ «expr ᶜ» f.dom :=
+theorem core_eq (f : α →. β) (s : Set β) : f.core s = f.preimage s ∪ f.domᶜ :=
   by 
     rw [preimage_eq, Set.union_distrib_right, Set.union_comm (dom f), Set.compl_union_self, Set.inter_univ,
       Set.union_eq_self_of_subset_right (f.compl_dom_subset_core s)]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » s)
 theorem preimage_as_subtype (f : α →. β) (s : Set β) : f.as_subtype ⁻¹' s = Subtype.val ⁻¹' f.preimage s :=
   by 
     ext x 

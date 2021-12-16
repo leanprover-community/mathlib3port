@@ -21,7 +21,7 @@ universe u v w
 
 variable {α β : Type u}
 
-open Equiv
+open Equivₓ
 
 namespace Functor
 
@@ -48,7 +48,7 @@ theorem map_equiv_symm_apply (h : α ≃ β) (y : f β) : (map_equiv f h : f α 
   rfl
 
 @[simp]
-theorem map_equiv_refl : map_equiv f (Equiv.refl α) = Equiv.refl (f α) :=
+theorem map_equiv_refl : map_equiv f (Equivₓ.refl α) = Equivₓ.refl (f α) :=
   by 
     ext x 
     simp only [map_equiv_apply, refl_apply]
@@ -83,7 +83,7 @@ theorem map_equiv_symm_apply (h : α ≃ β) (h' : α' ≃ β') (y : F β β') :
   rfl
 
 @[simp]
-theorem map_equiv_refl_refl : map_equiv F (Equiv.refl α) (Equiv.refl α') = Equiv.refl (F α α') :=
+theorem map_equiv_refl_refl : map_equiv F (Equivₓ.refl α) (Equivₓ.refl α') = Equivₓ.refl (F α α') :=
   by 
     ext x 
     simp [id_bimap]

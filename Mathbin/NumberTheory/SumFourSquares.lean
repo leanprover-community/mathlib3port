@@ -16,7 +16,7 @@ The proof used is close to Lagrange's original proof.
 -/
 
 
-open Finset Polynomial FiniteField Equiv
+open Finset Polynomial FiniteField Equivₓ
 
 open_locale BigOperators
 
@@ -107,107 +107,222 @@ open Int
 
 open_locale Classical
 
--- error in NumberTheory.SumFourSquares: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem sum_four_squares_of_two_mul_sum_four_squares
-{m a b c d : exprℤ()}
-(h : «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), «expr ^ »(c, 2)), «expr ^ »(d, 2)), «expr * »(2, m))) : «expr∃ , »((w
-  x
-  y
-  z : exprℤ()), «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(w, 2), «expr ^ »(x, 2)), «expr ^ »(y, 2)), «expr ^ »(z, 2)), m)) :=
-have ∀
-f : fin 4 → zmod 2, «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(f 0, 2), «expr ^ »(f 1, 2)), «expr ^ »(f 2, 2)), «expr ^ »(f 3, 2)), 0) → «expr∃ , »((i : fin 4), «expr ∧ »(«expr = »(«expr + »(«expr ^ »(f i, 2), «expr ^ »(f (swap i 0 1), 2)), 0), «expr = »(«expr + »(«expr ^ »(f (swap i 0 2), 2), «expr ^ »(f (swap i 0 3), 2)), 0))), from exprdec_trivial(),
-let f : fin 4 → exprℤ() := vector.nth «expr ::ᵥ »(a, «expr ::ᵥ »(b, «expr ::ᵥ »(c, «expr ::ᵥ »(d, vector.nil)))) in
-let ⟨i, hσ⟩ := this «expr ∘ »(coe, f) (by rw ["[", "<-", expr @zero_mul (zmod 2) _ m, ",", "<-", expr show «expr = »(((2 : exprℤ()) : zmod 2), 0), from rfl, ",", "<-", expr int.cast_mul, ",", "<-", expr h, "]"] []; simp [] [] ["only"] ["[", expr int.cast_add, ",", expr int.cast_pow, "]"] [] []; refl) in
-let σ := swap i 0 in
-have h01 : «expr ∣ »(2, «expr + »(«expr ^ »(f (σ 0), 2), «expr ^ »(f (σ 1), 2))), from «expr $ »((char_p.int_cast_eq_zero_iff (zmod 2) 2 _).1, by simpa [] [] [] ["[", expr σ, "]"] [] ["using", expr hσ.1]),
-have h23 : «expr ∣ »(2, «expr + »(«expr ^ »(f (σ 2), 2), «expr ^ »(f (σ 3), 2))), from «expr $ »((char_p.int_cast_eq_zero_iff (zmod 2) 2 _).1, by simpa [] [] [] [] [] ["using", expr hσ.2]),
-let ⟨x, hx⟩ := h01 in
-let ⟨y, hy⟩ := h23 in
-⟨«expr / »(«expr - »(f (σ 0), f (σ 1)), 2), «expr / »(«expr + »(f (σ 0), f (σ 1)), 2), «expr / »(«expr - »(f (σ 2), f (σ 3)), 2), «expr / »(«expr + »(f (σ 2), f (σ 3)), 2), begin
-   rw ["[", "<-", expr int.sq_add_sq_of_two_mul_sq_add_sq hx.symm, ",", expr add_assoc, ",", "<-", expr int.sq_add_sq_of_two_mul_sq_add_sq hy.symm, ",", "<-", expr mul_right_inj' (show «expr ≠ »((2 : exprℤ()), 0), from exprdec_trivial()), ",", "<-", expr h, ",", expr mul_add, ",", "<-", expr hx, ",", "<-", expr hy, "]"] [],
-   have [] [":", expr «expr = »(«expr∑ , »((x), «expr ^ »(f (σ x), 2)), «expr∑ , »((x), «expr ^ »(f x, 2)))] [],
-   { conv_rhs [] [] { rw ["<-", expr σ.sum_comp] } },
-   have [ident fin4univ] [":", expr «expr = »((univ : finset (fin 4)).1, «expr ::ₘ »(0, «expr ::ₘ »(1, «expr ::ₘ »(2, «expr ::ₘ »(3, 0)))))] [],
-   from [expr exprdec_trivial()],
-   simpa [] [] [] ["[", expr finset.sum_eq_multiset_sum, ",", expr fin4univ, ",", expr multiset.sum_cons, ",", expr f, ",", expr add_assoc, "]"] [] []
- end⟩
+private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ} (h : ((((a^2)+b^2)+c^2)+d^2) = 2*m) :
+  ∃ w x y z : ℤ, ((((w^2)+x^2)+y^2)+z^2) = m :=
+  have  :
+    ∀ f : Finₓ 4 → Zmod 2,
+      ((((f 0^2)+f 1^2)+f 2^2)+f 3^2) = 0 →
+        ∃ i : Finₓ 4, ((f i^2)+f (swap i 0 1)^2) = 0 ∧ ((f (swap i 0 2)^2)+f (swap i 0 3)^2) = 0 :=
+    by 
+      decide 
+  let f : Finₓ 4 → ℤ := Vector.nth (a::ᵥb::ᵥc::ᵥd::ᵥVector.nil)
+  let ⟨i, hσ⟩ :=
+    this (coeₓ ∘ f)
+      (by 
+        rw [←@zero_mul (Zmod 2) _ m, ←show ((2 : ℤ) : Zmod 2) = 0 from rfl, ←Int.cast_mul, ←h] <;>
+          simp only [Int.cast_add, Int.cast_pow] <;> rfl)
+  let σ := swap i 0
+  have h01 : 2 ∣ (f (σ 0)^2)+f (σ 1)^2 :=
+    (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1$
+      by 
+        simpa [σ] using hσ.1
+  have h23 : 2 ∣ (f (σ 2)^2)+f (σ 3)^2 :=
+    (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1$
+      by 
+        simpa using hσ.2
+  let ⟨x, hx⟩ := h01 
+  let ⟨y, hy⟩ := h23
+  ⟨(f (σ 0) - f (σ 1)) / 2, (f (σ 0)+f (σ 1)) / 2, (f (σ 2) - f (σ 3)) / 2, (f (σ 2)+f (σ 3)) / 2,
+    by 
+      rw [←Int.sq_add_sq_of_two_mul_sq_add_sq hx.symm, add_assocₓ, ←Int.sq_add_sq_of_two_mul_sq_add_sq hy.symm,
+        ←mul_right_inj'
+          (show (2 : ℤ) ≠ 0 from
+            by 
+              decide),
+        ←h, mul_addₓ, ←hx, ←hy]
+      have  : (∑ x, f (σ x)^2) = ∑ x, f x^2
+      ·
+        convRHS => rw [←σ.sum_comp]
+      have fin4univ : (univ : Finset (Finₓ 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 
+      exact
+        by 
+          decide 
+      simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assocₓ]⟩
 
--- error in NumberTheory.SumFourSquares: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-private
-theorem prime_sum_four_squares
-(p : exprℕ())
-[hp : _root_.fact p.prime] : «expr∃ , »((a
-  b
-  c
-  d : exprℤ()), «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), «expr ^ »(c, 2)), «expr ^ »(d, 2)), p)) :=
-have hm : «expr∃ , »((m «expr < » p), «expr ∧ »(«expr < »(0, m), «expr∃ , »((a
-    b
-    c
-    d : exprℤ()), «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), «expr ^ »(c, 2)), «expr ^ »(d, 2)), «expr * »(m, p))))), from let ⟨a, b, k, hk⟩ := exists_sq_add_sq_add_one_eq_k p in
-⟨k, hk.2, «expr $ »(nat.pos_of_ne_zero, λ
-  hk0, by { rw ["[", expr hk0, ",", expr int.coe_nat_zero, ",", expr zero_mul, "]"] ["at", ident hk],
-    exact [expr ne_of_gt (show «expr > »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), 1), 0), from add_pos_of_nonneg_of_pos (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_lt_one) hk.1] }), a, b, 1, 0, by simpa [] [] [] ["[", expr sq, "]"] [] ["using", expr hk.1]⟩,
-let m := nat.find hm in
-let ⟨a, b, c, d, (habcd : «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), «expr ^ »(c, 2)), «expr ^ »(d, 2)), «expr * »(m, p)))⟩ := (nat.find_spec hm).snd.2 in
-by haveI [ident hm0] [":", expr _root_.fact «expr < »(0, m)] [":=", expr ⟨(nat.find_spec hm).snd.1⟩]; exact [expr have hmp : «expr < »(m, p), from (nat.find_spec hm).fst,
- m.mod_two_eq_zero_or_one.elim (λ
-  hm2 : «expr = »(«expr % »(m, 2), 0), let ⟨k, hk⟩ := (nat.dvd_iff_mod_eq_zero _ _).2 hm2 in
-  have hk0 : «expr < »(0, k), from «expr $ »(nat.pos_of_ne_zero, λ
-   _, by { simp [] [] [] ["[", "*", ",", expr lt_irrefl, "]"] [] ["at", "*"] }),
-  have hkm : «expr < »(k, m), { rw ["[", expr hk, ",", expr two_mul, "]"] [],
-    exact [expr (lt_add_iff_pos_left _).2 hk0] },
-  «expr $ »(false.elim, nat.find_min hm hkm ⟨lt_trans hkm hmp, hk0, sum_four_squares_of_two_mul_sum_four_squares (show «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), «expr ^ »(c, 2)), «expr ^ »(d, 2)), «expr * »(2, «expr * »(k, p))), by { rw ["[", expr habcd, ",", expr hk, ",", expr int.coe_nat_mul, ",", expr mul_assoc, "]"] [],
-       simp [] [] [] [] [] [] })⟩)) (λ
-  hm2 : «expr = »(«expr % »(m, 2), 1), if hm1 : «expr = »(m, 1) then ⟨a, b, c, d, by simp [] [] ["only"] ["[", expr hm1, ",", expr habcd, ",", expr int.coe_nat_one, ",", expr one_mul, "]"] [] []⟩ else let w := (a : zmod m).val_min_abs,
-      x := (b : zmod m).val_min_abs,
-      y := (c : zmod m).val_min_abs,
-      z := (d : zmod m).val_min_abs in
-  have hnat_abs : «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(w, 2), «expr ^ »(x, 2)), «expr ^ »(y, 2)), «expr ^ »(z, 2)), («expr + »(«expr + »(«expr + »(«expr ^ »(w.nat_abs, 2), «expr ^ »(x.nat_abs, 2)), «expr ^ »(y.nat_abs, 2)), «expr ^ »(z.nat_abs, 2)) : exprℕ())), by simp [] [] [] ["[", expr sq, "]"] [] [],
-  have hwxyzlt : «expr < »(«expr + »(«expr + »(«expr + »(«expr ^ »(w, 2), «expr ^ »(x, 2)), «expr ^ »(y, 2)), «expr ^ »(z, 2)), «expr ^ »(m, 2)), from calc
-    «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(w, 2), «expr ^ »(x, 2)), «expr ^ »(y, 2)), «expr ^ »(z, 2)), («expr + »(«expr + »(«expr + »(«expr ^ »(w.nat_abs, 2), «expr ^ »(x.nat_abs, 2)), «expr ^ »(y.nat_abs, 2)), «expr ^ »(z.nat_abs, 2)) : exprℕ())) : hnat_abs
-    «expr ≤ »(..., («expr + »(«expr + »(«expr + »(«expr ^ »(«expr / »(m, 2), 2), «expr ^ »(«expr / »(m, 2), 2)), «expr ^ »(«expr / »(m, 2), 2)), «expr ^ »(«expr / »(m, 2), 2)) : exprℕ())) : «expr $ »(int.coe_nat_le.2, add_le_add (add_le_add (add_le_add (nat.pow_le_pow_of_le_left (zmod.nat_abs_val_min_abs_le _) _) (nat.pow_le_pow_of_le_left (zmod.nat_abs_val_min_abs_le _) _)) (nat.pow_le_pow_of_le_left (zmod.nat_abs_val_min_abs_le _) _)) (nat.pow_le_pow_of_le_left (zmod.nat_abs_val_min_abs_le _) _))
-    «expr = »(..., «expr * »(4, «expr ^ »((«expr / »(m, 2) : exprℕ()), 2))) : by simp [] [] [] ["[", expr sq, ",", expr bit0, ",", expr bit1, ",", expr mul_add, ",", expr add_mul, ",", expr add_assoc, "]"] [] []
-    «expr < »(..., «expr + »(«expr * »(4, «expr ^ »((«expr / »(m, 2) : exprℕ()), 2)), «expr + »(«expr * »((«expr * »(4, «expr / »(m, 2)) : exprℕ()), («expr % »(m, 2) : exprℕ())), «expr ^ »((«expr % »(m, 2) : exprℕ()), 2)))) : (lt_add_iff_pos_right _).2 (by { rw ["[", expr hm2, ",", expr int.coe_nat_one, ",", expr one_pow, ",", expr mul_one, "]"] [],
-       exact [expr add_pos_of_nonneg_of_pos (int.coe_nat_nonneg _) zero_lt_one] })
-    «expr = »(..., «expr ^ »(m, 2)) : by { conv_rhs [] [] { rw ["[", "<-", expr nat.mod_add_div m 2, "]"] },
-      simp [] [] [] ["[", "-", ident nat.mod_add_div, ",", expr mul_add, ",", expr add_mul, ",", expr bit0, ",", expr bit1, ",", expr mul_comm, ",", expr mul_assoc, ",", expr mul_left_comm, ",", expr pow_add, ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] },
-  have hwxyzabcd : «expr = »(((«expr + »(«expr + »(«expr + »(«expr ^ »(w, 2), «expr ^ »(x, 2)), «expr ^ »(y, 2)), «expr ^ »(z, 2)) : exprℤ()) : zmod m), ((«expr + »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), «expr ^ »(c, 2)), «expr ^ »(d, 2)) : exprℤ()) : zmod m)), by simp [] [] [] ["[", expr w, ",", expr x, ",", expr y, ",", expr z, ",", expr sq, "]"] [] [],
-  have hwxyz0 : «expr = »(((«expr + »(«expr + »(«expr + »(«expr ^ »(w, 2), «expr ^ »(x, 2)), «expr ^ »(y, 2)), «expr ^ »(z, 2)) : exprℤ()) : zmod m), 0), by rw ["[", expr hwxyzabcd, ",", expr habcd, ",", expr int.cast_mul, ",", expr cast_coe_nat, ",", expr zmod.nat_cast_self, ",", expr zero_mul, "]"] [],
-  let ⟨n, hn⟩ := (char_p.int_cast_eq_zero_iff _ m _).1 hwxyz0 in
-  have hn0 : «expr < »(0, n.nat_abs), from int.nat_abs_pos_of_ne_zero (λ
-   hn0, have hwxyz0 : «expr = »((«expr + »(«expr + »(«expr + »(«expr ^ »(w.nat_abs, 2), «expr ^ »(x.nat_abs, 2)), «expr ^ »(y.nat_abs, 2)), «expr ^ »(z.nat_abs, 2)) : exprℕ()), 0), by { rw ["[", "<-", expr int.coe_nat_eq_zero, ",", "<-", expr hnat_abs, "]"] [],
-     rwa ["[", expr hn0, ",", expr mul_zero, "]"] ["at", ident hn] },
-   have habcd0 : «expr ∧ »(«expr ∣ »((m : exprℤ()), a), «expr ∧ »(«expr ∣ »((m : exprℤ()), b), «expr ∧ »(«expr ∣ »((m : exprℤ()), c), «expr ∣ »((m : exprℤ()), d)))), by simpa [] [] [] ["[", expr add_eq_zero_iff' (sq_nonneg (_ : exprℤ())) (sq_nonneg _), ",", expr pow_two, ",", expr w, ",", expr x, ",", expr y, ",", expr z, ",", expr char_p.int_cast_eq_zero_iff _ m _, ",", expr and.assoc, "]"] [] ["using", expr hwxyz0],
-   let ⟨ma, hma⟩ := habcd0.1, ⟨mb, hmb⟩ := habcd0.2.1, ⟨mc, hmc⟩ := habcd0.2.2.1, ⟨md, hmd⟩ := habcd0.2.2.2 in
-   have hmdvdp : «expr ∣ »(m, p), from int.coe_nat_dvd.1 ⟨«expr + »(«expr + »(«expr + »(«expr ^ »(ma, 2), «expr ^ »(mb, 2)), «expr ^ »(mc, 2)), «expr ^ »(md, 2)), «expr $ »((mul_right_inj' (show «expr ≠ »((m : exprℤ()), 0), from int.coe_nat_ne_zero_iff_pos.2 hm0.1)).1, by { rw ["[", "<-", expr habcd, ",", expr hma, ",", expr hmb, ",", expr hmc, ",", expr hmd, "]"] [],
-       ring [] })⟩,
-   (hp.1.2 _ hmdvdp).elim hm1 (λ
-    hmeqp, by simpa [] [] [] ["[", expr lt_irrefl, ",", expr hmeqp, "]"] [] ["using", expr hmp])),
-  have hawbxcydz : «expr ∣ »(((m : exprℕ()) : exprℤ()), «expr + »(«expr + »(«expr + »(«expr * »(a, w), «expr * »(b, x)), «expr * »(c, y)), «expr * »(d, z))), from «expr $ »((char_p.int_cast_eq_zero_iff (zmod m) m _).1, by { rw ["[", "<-", expr hwxyz0, "]"] [],
-     simp [] [] [] [] [] [],
-     ring [] }),
-  have haxbwczdy : «expr ∣ »(((m : exprℕ()) : exprℤ()), «expr + »(«expr - »(«expr - »(«expr * »(a, x), «expr * »(b, w)), «expr * »(c, z)), «expr * »(d, y))), from «expr $ »((char_p.int_cast_eq_zero_iff (zmod m) m _).1, by { simp [] [] [] ["[", expr sub_eq_add_neg, "]"] [] [],
-     ring [] }),
-  have haybzcwdx : «expr ∣ »(((m : exprℕ()) : exprℤ()), «expr - »(«expr - »(«expr + »(«expr * »(a, y), «expr * »(b, z)), «expr * »(c, w)), «expr * »(d, x))), from «expr $ »((char_p.int_cast_eq_zero_iff (zmod m) m _).1, by { simp [] [] [] ["[", expr sub_eq_add_neg, "]"] [] [],
-     ring [] }),
-  have hazbycxdw : «expr ∣ »(((m : exprℕ()) : exprℤ()), «expr - »(«expr + »(«expr - »(«expr * »(a, z), «expr * »(b, y)), «expr * »(c, x)), «expr * »(d, w))), from «expr $ »((char_p.int_cast_eq_zero_iff (zmod m) m _).1, by { simp [] [] [] ["[", expr sub_eq_add_neg, "]"] [] [],
-     ring [] }),
-  let ⟨s, hs⟩ := hawbxcydz, ⟨t, ht⟩ := haxbwczdy, ⟨u, hu⟩ := haybzcwdx, ⟨v, hv⟩ := hazbycxdw in
-  have hn_nonneg : «expr ≤ »(0, n), from nonneg_of_mul_nonneg_left (by { erw ["[", "<-", expr hn, "]"] [],
-     repeat { try { refine [expr add_nonneg _ _] },
-       try { exact [expr sq_nonneg _] } } }) (int.coe_nat_pos.2 hm0.1),
-  have hnm : «expr < »(n.nat_abs, m), from int.coe_nat_lt.1 (lt_of_mul_lt_mul_left (by { rw ["[", expr int.nat_abs_of_nonneg hn_nonneg, ",", "<-", expr hn, ",", "<-", expr sq, "]"] [],
-      exact [expr hwxyzlt] }) (int.coe_nat_nonneg m)),
-  have hstuv : «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(s, 2), «expr ^ »(t, 2)), «expr ^ »(u, 2)), «expr ^ »(v, 2)), «expr * »(n.nat_abs, p)), from «expr $ »((mul_right_inj' (show «expr ≠ »((«expr ^ »(m, 2) : exprℤ()), 0), from pow_ne_zero 2 (int.coe_nat_ne_zero_iff_pos.2 hm0.1))).1, calc
-     «expr = »(«expr * »(«expr ^ »((m : exprℤ()), 2), «expr + »(«expr + »(«expr + »(«expr ^ »(s, 2), «expr ^ »(t, 2)), «expr ^ »(u, 2)), «expr ^ »(v, 2))), «expr + »(«expr + »(«expr + »(«expr ^ »(«expr * »((m : exprℕ()), s), 2), «expr ^ »(«expr * »((m : exprℕ()), t), 2)), «expr ^ »(«expr * »((m : exprℕ()), u), 2)), «expr ^ »(«expr * »((m : exprℕ()), v), 2))) : by { simp [] [] [] ["[", expr mul_pow, "]"] [] [],
-       ring [] }
-     «expr = »(..., «expr * »(«expr + »(«expr + »(«expr + »(«expr ^ »(w, 2), «expr ^ »(x, 2)), «expr ^ »(y, 2)), «expr ^ »(z, 2)), «expr + »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), «expr ^ »(c, 2)), «expr ^ »(d, 2)))) : by { simp [] [] ["only"] ["[", expr hs.symm, ",", expr ht.symm, ",", expr hu.symm, ",", expr hv.symm, "]"] [] [],
-       ring [] }
-     «expr = »(..., _) : by { rw ["[", expr hn, ",", expr habcd, ",", expr int.nat_abs_of_nonneg hn_nonneg, "]"] [],
-       dsimp [] ["[", expr m, "]"] [] [],
-       ring [] }),
-  «expr $ »(false.elim, nat.find_min hm hnm ⟨lt_trans hnm hmp, hn0, s, t, u, v, hstuv⟩))]
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr < » p)
+private theorem prime_sum_four_squares (p : ℕ) [hp : _root_.fact p.prime] :
+  ∃ a b c d : ℤ, ((((a^2)+b^2)+c^2)+d^2) = p :=
+  have hm : ∃ (m : _)(_ : m < p), 0 < m ∧ ∃ a b c d : ℤ, ((((a^2)+b^2)+c^2)+d^2) = m*p :=
+    let ⟨a, b, k, hk⟩ := exists_sq_add_sq_add_one_eq_k p
+    ⟨k, hk.2,
+      Nat.pos_of_ne_zeroₓ$
+        fun hk0 =>
+          by 
+            rw [hk0, Int.coe_nat_zero, zero_mul] at hk 
+            exact
+              ne_of_gtₓ
+                (show (((a^2)+b^2)+1) > 0 from
+                  add_pos_of_nonneg_of_pos (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_lt_one)
+                hk.1,
+      a, b, 1, 0,
+      by 
+        simpa [sq] using hk.1⟩
+  let m := Nat.findₓ hm 
+  let ⟨a, b, c, d, (habcd : ((((a^2)+b^2)+c^2)+d^2) = m*p)⟩ := (Nat.find_specₓ hm).snd.2
+  by 
+    have hm0 : _root_.fact (0 < m) := ⟨(Nat.find_specₓ hm).snd.1⟩ <;>
+      exact
+        have hmp : m < p := (Nat.find_specₓ hm).fst 
+        m.mod_two_eq_zero_or_one.elim
+          (fun hm2 : m % 2 = 0 =>
+            let ⟨k, hk⟩ := (Nat.dvd_iff_mod_eq_zeroₓ _ _).2 hm2 
+            have hk0 : 0 < k :=
+              Nat.pos_of_ne_zeroₓ$
+                fun _ =>
+                  by 
+                    simp_all [lt_irreflₓ]
+            have hkm : k < m :=
+              by 
+                rw [hk, two_mul]
+                exact (lt_add_iff_pos_left _).2 hk0 
+            False.elim$
+              Nat.find_minₓ hm hkm
+                ⟨lt_transₓ hkm hmp, hk0,
+                  sum_four_squares_of_two_mul_sum_four_squares
+                    (show ((((a^2)+b^2)+c^2)+d^2) = 2*k*p by 
+                      rw [habcd, hk, Int.coe_nat_mul, mul_assocₓ]
+                      simp )⟩)
+          fun hm2 : m % 2 = 1 =>
+            if hm1 : m = 1 then
+              ⟨a, b, c, d,
+                by 
+                  simp only [hm1, habcd, Int.coe_nat_one, one_mulₓ]⟩
+            else
+              let w := (a : Zmod m).valMinAbs 
+              let x := (b : Zmod m).valMinAbs 
+              let y := (c : Zmod m).valMinAbs 
+              let z := (d : Zmod m).valMinAbs 
+              have hnat_abs : ((((w^2)+x^2)+y^2)+z^2) = ((((w.nat_abs^2)+x.nat_abs^2)+y.nat_abs^2)+z.nat_abs^2 : ℕ) :=
+                by 
+                  simp [sq]
+              have hwxyzlt : ((((w^2)+x^2)+y^2)+z^2) < (m^2) :=
+                calc ((((w^2)+x^2)+y^2)+z^2) = ((((w.nat_abs^2)+x.nat_abs^2)+y.nat_abs^2)+z.nat_abs^2 : ℕ) := hnat_abs 
+                  _ ≤ ((((m / 2^2)+m / 2^2)+m / 2^2)+m / 2^2 : ℕ) :=
+                  Int.coe_nat_le.2$
+                    add_le_add
+                      (add_le_add
+                        (add_le_add (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _)
+                          (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _))
+                        (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _))
+                      (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _)
+                  _ = 4*(m / 2 : ℕ)^2 :=
+                  by 
+                    simp [sq, bit0, bit1, mul_addₓ, add_mulₓ, add_assocₓ]
+                  _ < (4*(m / 2 : ℕ)^2)+((4*m / 2 : ℕ)*(m % 2 : ℕ))+(m % 2 : ℕ)^2 :=
+                  (lt_add_iff_pos_right _).2
+                    (by 
+                      rw [hm2, Int.coe_nat_one, one_pow, mul_oneₓ]
+                      exact add_pos_of_nonneg_of_pos (Int.coe_nat_nonneg _) zero_lt_one)
+                  _ = (m^2) :=
+                  by 
+                    convRHS => rw [←Nat.mod_add_divₓ m 2]
+                    simp [-Nat.mod_add_divₓ, mul_addₓ, add_mulₓ, bit0, bit1, mul_commₓ, mul_assocₓ, mul_left_commₓ,
+                      pow_addₓ, add_commₓ, add_left_commₓ]
+                  
+              have hwxyzabcd : (((((w^2)+x^2)+y^2)+z^2 : ℤ) : Zmod m) = (((((a^2)+b^2)+c^2)+d^2 : ℤ) : Zmod m) :=
+                by 
+                  simp [w, x, y, z, sq]
+              have hwxyz0 : (((((w^2)+x^2)+y^2)+z^2 : ℤ) : Zmod m) = 0 :=
+                by 
+                  rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, Zmod.nat_cast_self, zero_mul]
+              let ⟨n, hn⟩ := (CharP.int_cast_eq_zero_iff _ m _).1 hwxyz0 
+              have hn0 : 0 < n.nat_abs :=
+                Int.nat_abs_pos_of_ne_zero
+                  fun hn0 =>
+                    have hwxyz0 : ((((w.nat_abs^2)+x.nat_abs^2)+y.nat_abs^2)+z.nat_abs^2 : ℕ) = 0 :=
+                      by 
+                        rw [←Int.coe_nat_eq_zero, ←hnat_abs]
+                        rwa [hn0, mul_zero] at hn 
+                    have habcd0 : (m : ℤ) ∣ a ∧ (m : ℤ) ∣ b ∧ (m : ℤ) ∣ c ∧ (m : ℤ) ∣ d :=
+                      by 
+                        simpa [add_eq_zero_iff' (sq_nonneg (_ : ℤ)) (sq_nonneg _), pow_two, w, x, y, z,
+                          CharP.int_cast_eq_zero_iff _ m _, And.assoc] using hwxyz0 
+                    let ⟨ma, hma⟩ := habcd0.1
+                    let ⟨mb, hmb⟩ := habcd0.2.1
+                    let ⟨mc, hmc⟩ := habcd0.2.2.1
+                    let ⟨md, hmd⟩ := habcd0.2.2.2
+                    have hmdvdp : m ∣ p :=
+                      Int.coe_nat_dvd.1
+                        ⟨(((ma^2)+mb^2)+mc^2)+md^2,
+                          (mul_right_inj' (show (m : ℤ) ≠ 0 from Int.coe_nat_ne_zero_iff_pos.2 hm0.1)).1$
+                            by 
+                              rw [←habcd, hma, hmb, hmc, hmd]
+                              ring⟩
+                    (hp.1.2 _ hmdvdp).elim hm1
+                      fun hmeqp =>
+                        by 
+                          simpa [lt_irreflₓ, hmeqp] using hmp 
+              have hawbxcydz : ((m : ℕ) : ℤ) ∣ (((a*w)+b*x)+c*y)+d*z :=
+                (CharP.int_cast_eq_zero_iff (Zmod m) m _).1$
+                  by 
+                    rw [←hwxyz0]
+                    simp 
+                    ring 
+              have haxbwczdy : ((m : ℕ) : ℤ) ∣ (((a*x) - b*w) - c*z)+d*y :=
+                (CharP.int_cast_eq_zero_iff (Zmod m) m _).1$
+                  by 
+                    simp [sub_eq_add_neg]
+                    ring 
+              have haybzcwdx : ((m : ℕ) : ℤ) ∣ (((a*y)+b*z) - c*w) - d*x :=
+                (CharP.int_cast_eq_zero_iff (Zmod m) m _).1$
+                  by 
+                    simp [sub_eq_add_neg]
+                    ring 
+              have hazbycxdw : ((m : ℕ) : ℤ) ∣ (((a*z) - b*y)+c*x) - d*w :=
+                (CharP.int_cast_eq_zero_iff (Zmod m) m _).1$
+                  by 
+                    simp [sub_eq_add_neg]
+                    ring 
+              let ⟨s, hs⟩ := hawbxcydz 
+              let ⟨t, ht⟩ := haxbwczdy 
+              let ⟨u, hu⟩ := haybzcwdx 
+              let ⟨v, hv⟩ := hazbycxdw 
+              have hn_nonneg : 0 ≤ n :=
+                nonneg_of_mul_nonneg_left
+                  (by 
+                    erw [←hn]
+                    repeat' 
+                      try 
+                        refine' add_nonneg _ _ 
+                      try 
+                        exact sq_nonneg _)
+                  (Int.coe_nat_pos.2 hm0.1)
+              have hnm : n.nat_abs < m :=
+                Int.coe_nat_lt.1
+                  (lt_of_mul_lt_mul_left
+                    (by 
+                      rw [Int.nat_abs_of_nonneg hn_nonneg, ←hn, ←sq]
+                      exact hwxyzlt)
+                    (Int.coe_nat_nonneg m))
+              have hstuv : ((((s^2)+t^2)+u^2)+v^2) = n.nat_abs*p :=
+                (mul_right_inj' (show (m^2 : ℤ) ≠ 0 from pow_ne_zero 2 (Int.coe_nat_ne_zero_iff_pos.2 hm0.1))).1$
+                  calc
+                    (((m : ℤ)^2)*(((s^2)+t^2)+u^2)+v^2) =
+                      (((((m : ℕ)*s)^2)+((m : ℕ)*t)^2)+((m : ℕ)*u)^2)+((m : ℕ)*v)^2 :=
+                    by 
+                      simp [mul_powₓ]
+                      ring 
+                    _ = ((((w^2)+x^2)+y^2)+z^2)*(((a^2)+b^2)+c^2)+d^2 :=
+                    by 
+                      simp only [hs.symm, ht.symm, hu.symm, hv.symm]
+                      ring 
+                    _ = _ :=
+                    by 
+                      rw [hn, habcd, Int.nat_abs_of_nonneg hn_nonneg]
+                      dsimp [m]
+                      ring 
+                    
+              False.elim$ Nat.find_minₓ hm hnm ⟨lt_transₓ hnm hmp, hn0, s, t, u, v, hstuv⟩
 
 /-- **Four squares theorem** -/
 theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, ((((a^2)+b^2)+c^2)+d^2) = n

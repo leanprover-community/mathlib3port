@@ -85,10 +85,10 @@ theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.hom = h :=
     rfl
 
 /-- Construct a morphism in the opposite of a preorder category from an inequality. -/
-def op_hom_of_le {x y : «expr ᵒᵖ» X} (h : unop x ≤ unop y) : y ⟶ x :=
+def op_hom_of_le {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
   h.hom.op
 
-theorem le_of_op_hom {x y : «expr ᵒᵖ» X} (h : x ⟶ y) : unop y ≤ unop x :=
+theorem le_of_op_hom {x y : Xᵒᵖ} (h : x ⟶ y) : unop y ≤ unop x :=
   h.unop.le
 
 instance unique_to_top [OrderTop X] {x : X} : Unique (x ⟶ ⊤) :=

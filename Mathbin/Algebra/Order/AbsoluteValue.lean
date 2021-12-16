@@ -36,7 +36,7 @@ instance : CoeFun (AbsoluteValue R S) fun f => R → S :=
   ⟨fun f => f.to_fun⟩
 
 @[simp]
-theorem coe_to_mul_hom : «expr⇑ » abv.to_mul_hom = abv :=
+theorem coe_to_mul_hom : ⇑abv.to_mul_hom = abv :=
   rfl
 
 protected theorem nonneg (x : R) : 0 ≤ abv x :=
@@ -113,7 +113,7 @@ def to_monoid_with_zero_hom : MonoidWithZeroHom R S :=
   { abv with toFun := abv, map_zero' := abv.map_zero, map_one' := abv.map_one }
 
 @[simp]
-theorem coe_to_monoid_with_zero_hom : «expr⇑ » abv.to_monoid_with_zero_hom = abv :=
+theorem coe_to_monoid_with_zero_hom : ⇑abv.to_monoid_with_zero_hom = abv :=
   rfl
 
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*` and `1`. -/
@@ -121,7 +121,7 @@ def to_monoid_hom : MonoidHom R S :=
   { abv with toFun := abv, map_one' := abv.map_one }
 
 @[simp]
-theorem coe_to_monoid_hom : «expr⇑ » abv.to_monoid_hom = abv :=
+theorem coe_to_monoid_hom : ⇑abv.to_monoid_hom = abv :=
   rfl
 
 @[simp]

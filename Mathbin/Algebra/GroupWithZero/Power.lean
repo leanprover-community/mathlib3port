@@ -29,7 +29,7 @@ theorem ne_zero_pow {a : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≠ 0 → a ≠ 0 :
 @[simp]
 theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
   by 
-    split  <;> intro h
+    constructor <;> intro h
     ·
       rw [pos_iff_ne_zero]
       rintro rfl 

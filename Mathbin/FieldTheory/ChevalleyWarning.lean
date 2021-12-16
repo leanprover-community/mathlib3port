@@ -45,132 +45,138 @@ variable {K : Type _} {σ : Type _} [Fintype K] [Field K] [Fintype σ]
 
 local notation "q" => Fintype.card K
 
--- error in FieldTheory.ChevalleyWarning: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mv_polynomial.sum_mv_polynomial_eq_zero
-[decidable_eq σ]
-(f : mv_polynomial σ K)
-(h : «expr < »(f.total_degree, «expr * »(«expr - »(exprq(), 1), fintype.card σ))) : «expr = »(«expr∑ , »((x), eval x f), 0) :=
-begin
-  haveI [] [":", expr decidable_eq K] [":=", expr classical.dec_eq K],
-  calc
-    «expr = »(«expr∑ , »((x), eval x f), «expr∑ , »((x : σ → K), «expr∑ in , »((d), f.support, «expr * »(f.coeff d, «expr∏ , »((i), «expr ^ »(x i, d i)))))) : by simp [] [] ["only"] ["[", expr eval_eq', "]"] [] []
-    «expr = »(..., «expr∑ in , »((d), f.support, «expr∑ , »((x : σ → K), «expr * »(f.coeff d, «expr∏ , »((i), «expr ^ »(x i, d i)))))) : sum_comm
-    «expr = »(..., 0) : sum_eq_zero _,
-  intros [ident d, ident hd],
-  obtain ["⟨", ident i, ",", ident hi, "⟩", ":", expr «expr∃ , »((i), «expr < »(d i, «expr - »(exprq(), 1)))],
-  from [expr f.exists_degree_lt «expr - »(exprq(), 1) h hd],
-  calc
-    «expr = »(«expr∑ , »((x : σ → K), «expr * »(f.coeff d, «expr∏ , »((i), «expr ^ »(x i, d i)))), «expr * »(f.coeff d, «expr∑ , »((x : σ → K), «expr∏ , »((i), «expr ^ »(x i, d i))))) : mul_sum.symm
-    «expr = »(..., 0) : «expr ∘ »(mul_eq_zero.mpr, or.inr) _,
-  calc
-    «expr = »(«expr∑ , »((x : σ → K), «expr∏ , »((i), «expr ^ »(x i, d i))), «expr∑ , »((x₀ : {j // «expr ≠ »(j, i)} → K)
-      (x : {x : σ → K // «expr = »(«expr ∘ »(x, coe), x₀)}), «expr∏ , »((j), «expr ^ »((x : σ → K) j, d j)))) : (fintype.sum_fiberwise _ _).symm
-    «expr = »(..., 0) : fintype.sum_eq_zero _ _,
-  intros [ident x₀],
-  let [ident e] [":", expr «expr ≃ »(K, {x // «expr = »(«expr ∘ »(x, coe), x₀)})] [":=", expr (equiv.subtype_equiv_codomain _).symm],
-  calc
-    «expr = »(«expr∑ , »((x : {x : σ → K // «expr = »(«expr ∘ »(x, coe), x₀)}), «expr∏ , »((j), «expr ^ »((x : σ → K) j, d j))), «expr∑ , »((a : K), «expr∏ , »((j : σ), «expr ^ »((e a : σ → K) j, d j)))) : (e.sum_comp _).symm
-    «expr = »(..., «expr∑ , »((a : K), «expr * »(«expr∏ , »((j), «expr ^ »(x₀ j, d j)), «expr ^ »(a, d i)))) : fintype.sum_congr _ _ _
-    «expr = »(..., «expr * »(«expr∏ , »((j), «expr ^ »(x₀ j, d j)), «expr∑ , »((a : K), «expr ^ »(a, d i)))) : by rw [expr mul_sum] []
-    «expr = »(..., 0) : by rw ["[", expr sum_pow_lt_card_sub_one _ hi, ",", expr mul_zero, "]"] [],
-  intros [ident a],
-  let [ident e'] [":", expr «expr ≃ »(«expr ⊕ »({j // «expr = »(j, i)}, {j // «expr ≠ »(j, i)}), σ)] [":=", expr equiv.sum_compl _],
-  letI [] [":", expr unique {j // «expr = »(j, i)}] [":=", expr { default := ⟨i, rfl⟩,
-     uniq := λ ⟨j, h⟩, subtype.val_injective h }],
-  calc
-    «expr = »(«expr∏ , »((j : σ), «expr ^ »((e a : σ → K) j, d j)), «expr * »(«expr ^ »((e a : σ → K) i, d i), «expr∏ , »((j : {j // «expr ≠ »(j, i)}), «expr ^ »((e a : σ → K) j, d j)))) : by { rw ["[", "<-", expr e'.prod_comp, ",", expr fintype.prod_sum_type, ",", expr univ_unique, ",", expr prod_singleton, "]"] [],
-      refl }
-    «expr = »(..., «expr * »(«expr ^ »(a, d i), «expr∏ , »((j : {j // «expr ≠ »(j, i)}), «expr ^ »((e a : σ → K) j, d j)))) : by rw [expr equiv.subtype_equiv_codomain_symm_apply_eq] []
-    «expr = »(..., «expr * »(«expr ^ »(a, d i), «expr∏ , »((j), «expr ^ »(x₀ j, d j)))) : congr_arg _ (fintype.prod_congr _ _ _)
-    «expr = »(..., «expr * »(«expr∏ , »((j), «expr ^ »(x₀ j, d j)), «expr ^ »(a, d i))) : mul_comm _ _,
-  { rintros ["⟨", ident j, ",", ident hj, "⟩"],
-    show [expr «expr = »(«expr ^ »((e a : σ → K) j, d j), «expr ^ »(x₀ ⟨j, hj⟩, d j))],
-    rw [expr equiv.subtype_equiv_codomain_symm_apply_ne] [] }
-end
+theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomial σ K)
+  (h : f.total_degree < (q - 1)*Fintype.card σ) : (∑ x, eval x f) = 0 :=
+  by 
+    have  : DecidableEq K := Classical.decEq K 
+    calc (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d*∏ i, x i^d i :=
+      by 
+        simp only [eval_eq']_ = ∑ d in f.support, ∑ x : σ → K, f.coeff d*∏ i, x i^d i :=
+      sum_comm _ = 0 := sum_eq_zero _ 
+    intro d hd 
+    obtain ⟨i, hi⟩ : ∃ i, d i < q - 1 
+    exact f.exists_degree_lt (q - 1) h hd 
+    calc (∑ x : σ → K, f.coeff d*∏ i, x i^d i) = f.coeff d*∑ x : σ → K, ∏ i, x i^d i := mul_sum.symm _ = 0 :=
+      (mul_eq_zero.mpr ∘ Or.inr) _ 
+    calc
+      (∑ x : σ → K, ∏ i, x i^d i) =
+        ∑ (x₀ : { j // j ≠ i } → K)(x : { x : σ → K // x ∘ coeₓ = x₀ }), ∏ j, (x : σ → K) j^d j :=
+      (Fintype.sum_fiberwise _ _).symm _ = 0 := Fintype.sum_eq_zero _ _ 
+    intro x₀ 
+    let e : K ≃ { x // x ∘ coeₓ = x₀ } := (Equivₓ.subtypeEquivCodomain _).symm 
+    calc (∑ x : { x : σ → K // x ∘ coeₓ = x₀ }, ∏ j, (x : σ → K) j^d j) = ∑ a : K, ∏ j : σ, (e a : σ → K) j^d j :=
+      (e.sum_comp _).symm _ = ∑ a : K, (∏ j, x₀ j^d j)*a^d i :=
+      Fintype.sum_congr _ _ _ _ = (∏ j, x₀ j^d j)*∑ a : K, a^d i :=
+      by 
+        rw [mul_sum]_ = 0 :=
+      by 
+        rw [sum_pow_lt_card_sub_one _ hi, mul_zero]
+    intro a 
+    let e' : Sum { j // j = i } { j // j ≠ i } ≃ σ := Equivₓ.sumCompl _ 
+    let this' : Unique { j // j = i } := { default := ⟨i, rfl⟩, uniq := fun ⟨j, h⟩ => Subtype.val_injective h }
+    calc (∏ j : σ, (e a : σ → K) j^d j) = ((e a : σ → K) i^d i)*∏ j : { j // j ≠ i }, (e a : σ → K) j^d j :=
+      by 
+        rw [←e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
+        rfl _ = (a^d i)*∏ j : { j // j ≠ i }, (e a : σ → K) j^d j :=
+      by 
+        rw [Equivₓ.subtype_equiv_codomain_symm_apply_eq]_ = (a^d i)*∏ j, x₀ j^d j :=
+      congr_argₓ _ (Fintype.prod_congr _ _ _)_ = (∏ j, x₀ j^d j)*a^d i := mul_commₓ _ _
+    ·
+      rintro ⟨j, hj⟩
+      show ((e a : σ → K) j^d j) = (x₀ ⟨j, hj⟩^d j)
+      rw [Equivₓ.subtype_equiv_codomain_symm_apply_ne]
 
 variable [DecidableEq K] [DecidableEq σ]
 
--- error in FieldTheory.ChevalleyWarning: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The Chevalley–Warning theorem.
-Let `(f i)` be a finite family of multivariate polynomials
-in finitely many variables (`X s`, `s : σ`) over a finite field of characteristic `p`.
-Assume that the sum of the total degrees of the `f i` is less than the cardinality of `σ`.
-Then the number of common solutions of the `f i` is divisible by `p`. -/
-theorem char_dvd_card_solutions_family
-(p : exprℕ())
-[char_p K p]
-{ι : Type*}
-{s : finset ι}
-{f : ι → mv_polynomial σ K}
-(h : «expr < »(«expr∑ in , »((i), s, (f i).total_degree), fintype.card σ)) : «expr ∣ »(p, fintype.card {x : σ → K // ∀
- i «expr ∈ » s, «expr = »(eval x (f i), 0)}) :=
-begin
-  have [ident hq] [":", expr «expr < »(0, «expr - »(exprq(), 1))] [],
-  { rw ["[", "<-", expr fintype.card_units, ",", expr fintype.card_pos_iff, "]"] [],
-    exact [expr ⟨1⟩] },
-  let [ident S] [":", expr finset (σ → K)] [":=", expr {x ∈ univ | ∀ i «expr ∈ » s, «expr = »(eval x (f i), 0)}],
-  have [ident hS] [":", expr ∀
-   x : σ → K, «expr ↔ »(«expr ∈ »(x, S), ∀ i : ι, «expr ∈ »(i, s) → «expr = »(eval x (f i), 0))] [],
-  { intros [ident x],
-    simp [] [] ["only"] ["[", expr S, ",", expr true_and, ",", expr sep_def, ",", expr mem_filter, ",", expr mem_univ, "]"] [] [] },
-  let [ident F] [":", expr mv_polynomial σ K] [":=", expr «expr∏ in , »((i), s, «expr - »(1, «expr ^ »(f i, «expr - »(exprq(), 1))))],
-  have [ident hF] [":", expr ∀ x, «expr = »(eval x F, if «expr ∈ »(x, S) then 1 else 0)] [],
-  { intro [ident x],
-    calc
-      «expr = »(eval x F, «expr∏ in , »((i), s, eval x «expr - »(1, «expr ^ »(f i, «expr - »(exprq(), 1))))) : eval_prod s _ x
-      «expr = »(..., if «expr ∈ »(x, S) then 1 else 0) : _,
-    simp [] [] ["only"] ["[", expr (eval x).map_sub, ",", expr (eval x).map_pow, ",", expr (eval x).map_one, "]"] [] [],
-    split_ifs [] ["with", ident hx, ident hx],
-    { apply [expr finset.prod_eq_one],
-      intros [ident i, ident hi],
-      rw [expr hS] ["at", ident hx],
-      rw ["[", expr hx i hi, ",", expr zero_pow hq, ",", expr sub_zero, "]"] [] },
-    { obtain ["⟨", ident i, ",", ident hi, ",", ident hx, "⟩", ":", expr «expr∃ , »((i : ι), «expr ∧ »(«expr ∈ »(i, s), «expr ≠ »(eval x (f i), 0)))],
-      { simpa [] [] ["only"] ["[", expr hS, ",", expr not_forall, ",", expr not_imp, "]"] [] ["using", expr hx] },
-      apply [expr finset.prod_eq_zero hi],
-      rw ["[", expr pow_card_sub_one_eq_one (eval x (f i)) hx, ",", expr sub_self, "]"] [] } },
-  have [ident key] [":", expr «expr = »(«expr∑ , »((x), eval x F), fintype.card {x : σ → K // ∀
-    i «expr ∈ » s, «expr = »(eval x (f i), 0)})] [],
-  rw ["[", expr fintype.card_of_subtype S hS, ",", expr card_eq_sum_ones, ",", expr nat.cast_sum, ",", expr nat.cast_one, ",", "<-", expr fintype.sum_extend_by_zero S, ",", expr sum_congr rfl (λ
-    x hx, hF x), "]"] [],
-  show [expr «expr ∣ »(p, fintype.card {x // ∀ i : ι, «expr ∈ »(i, s) → «expr = »(eval x (f i), 0)})],
-  rw ["[", "<-", expr char_p.cast_eq_zero_iff K, ",", "<-", expr key, "]"] [],
-  show [expr «expr = »(«expr∑ , »((x), eval x F), 0)],
-  apply [expr F.sum_mv_polynomial_eq_zero],
-  show [expr «expr < »(F.total_degree, «expr * »(«expr - »(exprq(), 1), fintype.card σ))],
-  calc
-    «expr ≤ »(F.total_degree, «expr∑ in , »((i), s, «expr - »(1, «expr ^ »(f i, «expr - »(exprq(), 1))).total_degree)) : total_degree_finset_prod s _
-    «expr ≤ »(..., «expr∑ in , »((i), s, «expr * »(«expr - »(exprq(), 1), (f i).total_degree))) : «expr $ »(sum_le_sum, λ
-     i hi, _)
-    «expr = »(..., «expr * »(«expr - »(exprq(), 1), «expr∑ in , »((i), s, (f i).total_degree))) : mul_sum.symm
-    «expr < »(..., «expr * »(«expr - »(exprq(), 1), fintype.card σ)) : by rwa [expr mul_lt_mul_left hq] [],
-  show [expr «expr ≤ »(«expr - »(1, «expr ^ »(f i, «expr - »(exprq(), 1))).total_degree, «expr * »(«expr - »(exprq(), 1), (f i).total_degree))],
-  calc
-    «expr ≤ »(«expr - »(1, «expr ^ »(f i, «expr - »(exprq(), 1))).total_degree, max (1 : mv_polynomial σ K).total_degree «expr ^ »(f i, «expr - »(exprq(), 1)).total_degree) : total_degree_sub _ _
-    «expr ≤ »(..., «expr ^ »(f i, «expr - »(exprq(), 1)).total_degree) : by simp [] [] ["only"] ["[", expr max_eq_right, ",", expr nat.zero_le, ",", expr total_degree_one, "]"] [] []
-    «expr ≤ »(..., «expr * »(«expr - »(exprq(), 1), (f i).total_degree)) : total_degree_pow _ _
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    The Chevalley–Warning theorem.
+    Let `(f i)` be a finite family of multivariate polynomials
+    in finitely many variables (`X s`, `s : σ`) over a finite field of characteristic `p`.
+    Assume that the sum of the total degrees of the `f i` is less than the cardinality of `σ`.
+    Then the number of common solutions of the `f i` is divisible by `p`. -/
+  theorem
+    char_dvd_card_solutions_family
+    ( p : ℕ )
+        [ CharP K p ]
+        { ι : Type _ }
+        { s : Finset ι }
+        { f : ι → MvPolynomial σ K }
+        ( h : ∑ i in s , f i . totalDegree < Fintype.card σ )
+      : p ∣ Fintype.card { x : σ → K // ∀ i _ : i ∈ s , eval x f i = 0 }
+    :=
+      by
+        have hq : 0 < q - 1
+          · rw [ ← Fintype.card_units , Fintype.card_pos_iff ] exact ⟨ 1 ⟩
+          let S : Finset σ → K := { x ∈ univ | ∀ i _ : i ∈ s , eval x f i = 0 }
+          have hS : ∀ x : σ → K , x ∈ S ↔ ∀ i : ι , i ∈ s → eval x f i = 0
+          · intro x simp only [ S , true_andₓ , sep_def , mem_filter , mem_univ ]
+          let F : MvPolynomial σ K := ∏ i in s , 1 - f i ^ q - 1
+          have hF : ∀ x , eval x F = if x ∈ S then 1 else 0
+          ·
+            intro x
+              calc eval x F = ∏ i in s , eval x 1 - f i ^ q - 1 := eval_prod s _ x _ = if x ∈ S then 1 else 0 := _
+              simp only [ eval x . map_sub , eval x . map_pow , eval x . map_one ]
+              splitIfs with hx hx
+              · apply Finset.prod_eq_one intro i hi rw [ hS ] at hx rw [ hx i hi , zero_pow hq , sub_zero ]
+              ·
+                obtain ⟨ i , hi , hx ⟩ : ∃ i : ι , i ∈ s ∧ eval x f i ≠ 0
+                  · simpa only [ hS , not_forall , not_imp ] using hx
+                  apply Finset.prod_eq_zero hi
+                  rw [ pow_card_sub_one_eq_one eval x f i hx , sub_self ]
+          have key : ∑ x , eval x F = Fintype.card { x : σ → K // ∀ i _ : i ∈ s , eval x f i = 0 }
+          rw
+            [
+              Fintype.card_of_subtype S hS
+                ,
+                card_eq_sum_ones
+                ,
+                Nat.cast_sum
+                ,
+                Nat.cast_one
+                ,
+                ← Fintype.sum_extend_by_zero S
+                ,
+                sum_congr rfl fun x hx => hF x
+              ]
+          show p ∣ Fintype.card { x // ∀ i : ι , i ∈ s → eval x f i = 0 }
+          rw [ ← CharP.cast_eq_zero_iff K , ← key ]
+          show ∑ x , eval x F = 0
+          apply F.sum_mv_polynomial_eq_zero
+          show F.total_degree < q - 1 * Fintype.card σ
+          calc
+            F.total_degree ≤ ∑ i in s , 1 - f i ^ q - 1 . totalDegree := total_degree_finset_prod s _
+              _ ≤ ∑ i in s , q - 1 * f i . totalDegree := sum_le_sum $ fun i hi => _
+              _ = q - 1 * ∑ i in s , f i . totalDegree := mul_sum.symm
+              _ < q - 1 * Fintype.card σ := by rwa [ mul_lt_mul_left hq ]
+          show 1 - f i ^ q - 1 . totalDegree ≤ q - 1 * f i . totalDegree
+          calc
+            1 - f i ^ q - 1 . totalDegree ≤ max ( 1 : MvPolynomial σ K ) . totalDegree f i ^ q - 1 . totalDegree
+                :=
+                total_degree_sub _ _
+              _ ≤ f i ^ q - 1 . totalDegree := by simp only [ max_eq_rightₓ , Nat.zero_leₓ , total_degree_one ]
+              _ ≤ q - 1 * f i . totalDegree := total_degree_pow _ _
 
--- error in FieldTheory.ChevalleyWarning: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Chevalley–Warning theorem.
 Let `f` be a multivariate polynomial in finitely many variables (`X s`, `s : σ`)
 over a finite field of characteristic `p`.
 Assume that the total degree of `f` is less than the cardinality of `σ`.
 Then the number of solutions of `f` is divisible by `p`.
 See `char_dvd_card_solutions_family` for a version that takes a family of polynomials `f i`. -/
-theorem char_dvd_card_solutions
-(p : exprℕ())
-[char_p K p]
-{f : mv_polynomial σ K}
-(h : «expr < »(f.total_degree, fintype.card σ)) : «expr ∣ »(p, fintype.card {x : σ → K // «expr = »(eval x f, 0)}) :=
-begin
-  let [ident F] [":", expr unit → mv_polynomial σ K] [":=", expr λ _, f],
-  have [] [":", expr «expr < »(«expr∑ , »((i : unit), (F i).total_degree), fintype.card σ)] [],
-  { simpa [] [] ["only"] ["[", expr fintype.univ_punit, ",", expr sum_singleton, "]"] [] ["using", expr h] },
-  have [ident key] [] [":=", expr char_dvd_card_solutions_family p this],
-  simp [] [] ["only"] ["[", expr F, ",", expr fintype.univ_punit, ",", expr forall_eq, ",", expr mem_singleton, "]"] [] ["at", ident key],
-  convert [] [expr key] []
-end
+theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K} (h : f.total_degree < Fintype.card σ) :
+  p ∣ Fintype.card { x : σ → K // eval x f = 0 } :=
+  by 
+    let F : Unit → MvPolynomial σ K := fun _ => f 
+    have  : (∑ i : Unit, (F i).totalDegree) < Fintype.card σ
+    ·
+      simpa only [Fintype.univ_punit, sum_singleton] using h 
+    have key := char_dvd_card_solutions_family p this 
+    simp only [F, Fintype.univ_punit, forall_eq, mem_singleton] at key 
+    convert key
 
 end FiniteField
 

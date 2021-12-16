@@ -5,7 +5,7 @@ open Lake DSL System
 -- If you would like to use an artifact from a PR build,
 -- it will be of the form `pr-branchname-sha`.
 -- You can find the relevant SHA by inspecting the URL of the artifacts on the release page.
-def tag : String := "nightly-2021-11-28"
+def tag : String := "nightly-2021-12-15"
 def releaseRepo : String := "leanprover-community/mathport"
 def oleanTarName : String := "mathlib3-binport.tar.gz"
 def leanTarName : String := "mathlib3-synport.tar.gz"
@@ -29,7 +29,7 @@ def untarReleaseArtifact (repo tag artifact : String) (to : FilePath) : BuildM P
   untar (to / artifact)
 
 def fetchOleans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch } where
-  fetch := async do
+  fetch := async (m := BuildM) do
     IO.FS.createDirAll libDir
     let oldTrace := Hash.ofString (← Git.headRevision dir)
     buildFileUnlessUpToDate (libDir / oleanTarName) oldTrace do
@@ -38,7 +38,7 @@ def fetchOleans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch }
   libDir : FilePath := dir / "build" / "lib"
 
 def fetchLeans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch } where
-  fetch := async do
+  fetch := async (m := BuildM) do
     IO.FS.createDirAll srcDir
     let oldTrace := Hash.ofString (← Git.headRevision dir)
     buildFileUnlessUpToDate (srcDir / leanTarName) oldTrace do
@@ -53,6 +53,6 @@ package mathlib3port (dir) {
   defaultFacet := PackageFacet.oleans
   dependencies := #[{
     name := "lean3port",
-    src := Source.git "https://github.com/leanprover-community/lean3port.git" "fc17055f3535e176358f651af1eefb5f6ede0f84"
+    src := Source.git "https://github.com/leanprover-community/lean3port.git" "0b21a4acc5d285b340ed3128842a343617c4d828"
   }]
 }

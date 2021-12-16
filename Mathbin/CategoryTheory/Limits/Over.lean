@@ -19,7 +19,7 @@ TODO: If `C` has binary products, then `forget X : over X ⥤ C` has a right adj
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u
 

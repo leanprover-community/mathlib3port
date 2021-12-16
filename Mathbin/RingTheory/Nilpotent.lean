@@ -1,5 +1,6 @@
 import Mathbin.Data.Nat.Choose.Sum 
-import Mathbin.Algebra.Algebra.Bilinear
+import Mathbin.Algebra.Algebra.Bilinear 
+import Mathbin.RingTheory.Ideal.Operations
 
 /-!
 # Nilpotent elements
@@ -41,13 +42,21 @@ theorem IsNilpotent.neg [Ringₓ R] (h : IsNilpotent x) : IsNilpotent (-x) :=
 theorem is_nilpotent_neg_iff [Ringₓ R] : IsNilpotent (-x) ↔ IsNilpotent x :=
   ⟨fun h => neg_negₓ x ▸ h.neg, fun h => h.neg⟩
 
-theorem IsNilpotent.eq_zero [MonoidWithZeroₓ R] [NoZeroDivisors R] (h : IsNilpotent x) : x = 0 :=
-  by 
-    obtain ⟨n, hn⟩ := h 
-    exact pow_eq_zero hn
+/-- A structure that has zero and pow is reduced if it has no nonzero nilpotent elements. -/
+class IsReduced (R : Type _) [HasZero R] [Pow R ℕ] : Prop where 
+  eq_zero : ∀ x : R, IsNilpotent x → x = 0
+
+instance (priority := 900) is_reduced_of_no_zero_divisors [MonoidWithZeroₓ R] [NoZeroDivisors R] : IsReduced R :=
+  ⟨fun _ ⟨_, hn⟩ => pow_eq_zero hn⟩
+
+instance (priority := 900) is_reduced_of_subsingleton [HasZero R] [Pow R ℕ] [Subsingleton R] : IsReduced R :=
+  ⟨fun _ _ => Subsingleton.elimₓ _ _⟩
+
+theorem IsNilpotent.eq_zero [HasZero R] [Pow R ℕ] [IsReduced R] (h : IsNilpotent x) : x = 0 :=
+  IsReduced.eq_zero x h
 
 @[simp]
-theorem is_nilpotent_iff_eq_zero [MonoidWithZeroₓ R] [NoZeroDivisors R] : IsNilpotent x ↔ x = 0 :=
+theorem is_nilpotent_iff_eq_zero [MonoidWithZeroₓ R] [IsReduced R] : IsNilpotent x ↔ x = 0 :=
   ⟨fun h => h.eq_zero, fun h => h.symm ▸ IsNilpotent.zero⟩
 
 namespace Commute
@@ -105,6 +114,36 @@ end Ringₓ
 
 end Commute
 
+section CommSemiringₓ
+
+variable [CommSemiringₓ R]
+
+/-- The nilradical of a commutative semiring is the ideal of nilpotent elements. -/
+def nilradical (R : Type _) [CommSemiringₓ R] : Ideal R :=
+  (0 : Ideal R).radical
+
+theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
+  Iff.rfl
+
+theorem nilradical_eq_Inf (R : Type _) [CommSemiringₓ R] : nilradical R = Inf { J : Ideal R | J.is_prime } :=
+  by 
+    convert Ideal.radical_eq_Inf 0
+    simp 
+
+theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.is_prime → x ∈ J :=
+  by 
+    rw [←mem_nilradical, nilradical_eq_Inf, Submodule.mem_Inf]
+    rfl
+
+theorem nilradical_le_prime (J : Ideal R) [H : J.is_prime] : nilradical R ≤ J :=
+  (nilradical_eq_Inf R).symm ▸ Inf_le H
+
+@[simp]
+theorem nilradical_eq_zero (R : Type _) [CommSemiringₓ R] [IsReduced R] : nilradical R = 0 :=
+  Ideal.ext$ fun _ => is_nilpotent_iff_eq_zero
+
+end CommSemiringₓ
+
 namespace Algebra
 
 variable (R) {A : Type v} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
@@ -112,12 +151,12 @@ variable (R) {A : Type v} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 @[simp]
 theorem is_nilpotent_lmul_left_iff (a : A) : IsNilpotent (lmul_left R a) ↔ IsNilpotent a :=
   by 
-    split  <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [lmul_left_eq_zero_iff, pow_lmul_left] at hn⊢ <;> exact hn
+    constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [lmul_left_eq_zero_iff, pow_lmul_left] at hn⊢ <;> exact hn
 
 @[simp]
 theorem is_nilpotent_lmul_right_iff (a : A) : IsNilpotent (lmul_right R a) ↔ IsNilpotent a :=
   by 
-    split  <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [lmul_right_eq_zero_iff, pow_lmul_right] at hn⊢ <;> exact hn
+    constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [lmul_right_eq_zero_iff, pow_lmul_right] at hn⊢ <;> exact hn
 
 end Algebra
 

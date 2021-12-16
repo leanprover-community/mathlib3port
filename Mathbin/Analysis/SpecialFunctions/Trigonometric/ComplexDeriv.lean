@@ -8,7 +8,7 @@ Basic facts and derivatives for the complex trigonometric functions.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 namespace Complex
 
@@ -27,22 +27,23 @@ theorem has_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / (cos 
 
 open_locale TopologicalSpace
 
--- error in Analysis.SpecialFunctions.Trigonometric.ComplexDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem tendsto_abs_tan_of_cos_eq_zero
-{x : exprℂ()}
-(hx : «expr = »(cos x, 0)) : tendsto (λ x, abs (tan x)) «expr𝓝[ ] »(«expr ᶜ»({x}), x) at_top :=
-begin
-  simp [] [] ["only"] ["[", expr tan_eq_sin_div_cos, ",", "<-", expr norm_eq_abs, ",", expr normed_field.norm_div, "]"] [] [],
-  have [ident A] [":", expr «expr ≠ »(sin x, 0)] [":=", expr λ
-   h, by simpa [] [] [] ["[", "*", ",", expr sq, "]"] [] ["using", expr sin_sq_add_cos_sq x]],
-  have [ident B] [":", expr tendsto cos «expr𝓝[ ] »(«expr ᶜ»({x}), x) «expr𝓝[ ] »(«expr ᶜ»({0}), 0)] [],
-  { refine [expr tendsto_inf.2 ⟨tendsto.mono_left _ inf_le_left, tendsto_principal.2 _⟩],
-    exacts ["[", expr continuous_cos.tendsto' x 0 hx, ",", expr «expr ▸ »(hx, (has_deriv_at_cos _).eventually_ne (neg_ne_zero.2 A)), "]"] },
-  exact [expr continuous_sin.continuous_within_at.norm.mul_at_top (norm_pos_iff.2 A) (tendsto_norm_nhds_within_zero.comp B).inv_tendsto_zero]
-end
+theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) : tendsto (fun x => abs (tan x)) (𝓝[{x}ᶜ] x) at_top :=
+  by 
+    simp only [tan_eq_sin_div_cos, ←norm_eq_abs, NormedField.norm_div]
+    have A : sin x ≠ 0 :=
+      fun h =>
+        by 
+          simpa [*, sq] using sin_sq_add_cos_sq x 
+    have B : tendsto cos (𝓝[{x}ᶜ] x) (𝓝[{0}ᶜ] 0)
+    ·
+      refine' tendsto_inf.2 ⟨tendsto.mono_left _ inf_le_left, tendsto_principal.2 _⟩
+      exacts[continuous_cos.tendsto' x 0 hx, hx ▸ (has_deriv_at_cos _).eventually_ne (neg_ne_zero.2 A)]
+    exact
+      continuous_sin.continuous_within_at.norm.mul_at_top (norm_pos_iff.2 A)
+        (tendsto_norm_nhds_within_zero.comp B).inv_tendsto_zero
 
 theorem tendsto_abs_tan_at_top (k : ℤ) :
-  tendsto (fun x => abs (tan x)) (𝓝[«expr ᶜ» {(((2*k)+1)*π) / 2}] ((((2*k)+1)*π) / 2)) at_top :=
+  tendsto (fun x => abs (tan x)) (𝓝[{(((2*k)+1)*π) / 2}ᶜ] ((((2*k)+1)*π) / 2)) at_top :=
   tendsto_abs_tan_of_cos_eq_zero$ cos_eq_zero_iff.2 ⟨k, rfl⟩
 
 @[simp]

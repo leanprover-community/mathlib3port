@@ -53,7 +53,7 @@ instance : DistribMulAction R (A →+ B) :=
               simp [smul_zero] }
 
 @[simp]
-theorem coe_smul (r : R) (f : A →+ B) : «expr⇑ » (r • f) = r • f :=
+theorem coe_smul (r : R) (f : A →+ B) : ⇑(r • f) = r • f :=
   rfl
 
 theorem smul_apply (r : R) (f : A →+ B) (x : A) : (r • f) x = r • f x :=
@@ -64,6 +64,9 @@ instance [SmulCommClass R S B] : SmulCommClass R S (A →+ B) :=
 
 instance [HasScalar R S] [IsScalarTower R S B] : IsScalarTower R S (A →+ B) :=
   ⟨fun a b f => ext$ fun x => smul_assoc _ _ _⟩
+
+instance [DistribMulAction (Rᵐᵒᵖ) B] [IsCentralScalar R B] : IsCentralScalar R (A →+ B) :=
+  ⟨fun a b => ext$ fun x => op_smul_eq_smul _ _⟩
 
 end 
 

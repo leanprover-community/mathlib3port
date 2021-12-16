@@ -17,7 +17,7 @@ in terms of an equalizer diagram where the two objects are
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 

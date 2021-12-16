@@ -215,41 +215,41 @@ variable [TopologicalSpace β] [LinearOrderedField β] [OrderTopology β]
 
 variable (f)
 
--- error in Analysis.Asymptotics.SuperpolynomialDecay: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem superpolynomial_decay_iff_abs_is_bounded_under
-(hk : tendsto k l at_top) : «expr ↔ »(superpolynomial_decay l k f, ∀
- z : exprℕ(), is_bounded_under ((«expr ≤ »)) l (λ a : α, «expr| |»(«expr * »(«expr ^ »(k a, z), f a)))) :=
-begin
-  refine [expr ⟨λ
-    h
-    z, tendsto.is_bounded_under_le (tendsto.abs (h z)), λ
-    h, (superpolynomial_decay_iff_abs_tendsto_zero l k f).2 (λ z, _)⟩],
-  obtain ["⟨", ident m, ",", ident hm, "⟩", ":=", expr h «expr + »(z, 1)],
-  have [ident h1] [":", expr tendsto (λ a : α, (0 : β)) l (expr𝓝() 0)] [":=", expr tendsto_const_nhds],
-  have [ident h2] [":", expr tendsto (λ
-    a : α, «expr * »(«expr| |»(«expr ⁻¹»(k a)), m)) l (expr𝓝() 0)] [":=", expr «expr ▸ »(zero_mul m, tendsto.mul_const m ((tendsto_zero_iff_abs_tendsto_zero _).1 hk.inv_tendsto_at_top))],
-  refine [expr tendsto_of_tendsto_of_tendsto_of_le_of_le' h1 h2 (eventually_of_forall (λ
-     x, abs_nonneg _)) ((eventually_map.1 hm).mp _)],
-  refine [expr «expr $ »((eventually_ne_of_tendsto_at_top hk 0).mono, λ x hk0 hx, _)],
-  refine [expr le_trans (le_of_eq _) «expr $ »(mul_le_mul_of_nonneg_left hx, abs_nonneg «expr ⁻¹»(k x))],
-  rw ["[", "<-", expr abs_mul, ",", "<-", expr mul_assoc, ",", expr pow_succ, ",", "<-", expr mul_assoc, ",", expr inv_mul_cancel hk0, ",", expr one_mul, "]"] []
-end
+theorem superpolynomial_decay_iff_abs_is_bounded_under (hk : tendsto k l at_top) :
+  superpolynomial_decay l k f ↔ ∀ z : ℕ, is_bounded_under (· ≤ ·) l fun a : α => |(k a ^ z)*f a| :=
+  by 
+    refine'
+      ⟨fun h z => tendsto.is_bounded_under_le (tendsto.abs (h z)),
+        fun h => (superpolynomial_decay_iff_abs_tendsto_zero l k f).2 fun z => _⟩
+    obtain ⟨m, hm⟩ := h (z+1)
+    have h1 : tendsto (fun a : α => (0 : β)) l (𝓝 0) := tendsto_const_nhds 
+    have h2 : tendsto (fun a : α => |k a⁻¹|*m) l (𝓝 0) :=
+      zero_mul m ▸ tendsto.mul_const m ((tendsto_zero_iff_abs_tendsto_zero _).1 hk.inv_tendsto_at_top)
+    refine'
+      tendsto_of_tendsto_of_tendsto_of_le_of_le' h1 h2 (eventually_of_forall fun x => abs_nonneg _)
+        ((eventually_map.1 hm).mp _)
+    refine' (eventually_ne_of_tendsto_at_top hk 0).mono$ fun x hk0 hx => _ 
+    refine' le_transₓ (le_of_eqₓ _) (mul_le_mul_of_nonneg_left hx$ abs_nonneg (k x⁻¹))
+    rw [←abs_mul, ←mul_assocₓ, pow_succₓ, ←mul_assocₓ, inv_mul_cancel hk0, one_mulₓ]
 
--- error in Analysis.Asymptotics.SuperpolynomialDecay: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem superpolynomial_decay_iff_zpow_tendsto_zero
-(hk : tendsto k l at_top) : «expr ↔ »(superpolynomial_decay l k f, ∀
- z : exprℤ(), tendsto (λ a : α, «expr * »(«expr ^ »(k a, z), f a)) l (expr𝓝() 0)) :=
-begin
-  refine [expr ⟨λ
-    h z, _, λ h n, by simpa [] [] ["only"] ["[", expr zpow_coe_nat, "]"] [] ["using", expr h (n : exprℤ())]⟩],
-  by_cases [expr hz, ":", expr «expr ≤ »(0, z)],
-  { lift [expr z] ["to", expr exprℕ()] ["using", expr hz] [],
-    simpa [] [] [] [] [] ["using", expr h z] },
-  { have [] [":", expr tendsto (λ
-      a, «expr ^ »(k a, z)) l (expr𝓝() 0)] [":=", expr tendsto.comp (tendsto_zpow_at_top_zero (not_le.1 hz)) hk],
-    have [ident h] [":", expr tendsto f l (expr𝓝() 0)] [":=", expr by simpa [] [] [] [] [] ["using", expr h 0]],
-    exact [expr «expr ▸ »(zero_mul (0 : β), this.mul h)] }
-end
+theorem superpolynomial_decay_iff_zpow_tendsto_zero (hk : tendsto k l at_top) :
+  superpolynomial_decay l k f ↔ ∀ z : ℤ, tendsto (fun a : α => (k a ^ z)*f a) l (𝓝 0) :=
+  by 
+    refine'
+      ⟨fun h z => _,
+        fun h n =>
+          by 
+            simpa only [zpow_coe_nat] using h (n : ℤ)⟩
+    byCases' hz : 0 ≤ z
+    ·
+      lift z to ℕ using hz 
+      simpa using h z
+    ·
+      have  : tendsto (fun a => k a ^ z) l (𝓝 0) := tendsto.comp (tendsto_zpow_at_top_zero (not_leₓ.1 hz)) hk 
+      have h : tendsto f l (𝓝 0) :=
+        by 
+          simpa using h 0 
+      exact zero_mul (0 : β) ▸ this.mul h
 
 variable {f}
 
@@ -328,43 +328,42 @@ variable {l k}
 
 variable [OrderTopology β]
 
--- error in Analysis.Asymptotics.SuperpolynomialDecay: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem superpolynomial_decay_iff_is_O
-(hk : tendsto k l at_top) : «expr ↔ »(superpolynomial_decay l k f, ∀
- z : exprℤ(), is_O f (λ a : α, «expr ^ »(k a, z)) l) :=
-begin
-  refine [expr (superpolynomial_decay_iff_zpow_tendsto_zero f hk).trans _],
-  have [ident hk0] [":", expr «expr∀ᶠ in , »((x), l, «expr ≠ »(k x, 0))] [":=", expr eventually_ne_of_tendsto_at_top hk 0],
-  refine [expr ⟨λ h z, _, λ h z, _⟩],
-  { refine [expr is_O_of_div_tendsto_nhds (hk0.mono (λ x hx hxz, absurd (zpow_eq_zero hxz) hx)) 0 _],
-    have [] [":", expr «expr = »(«expr ⁻¹»(λ
-       a : α, «expr ^ »(k a, z)), λ
-      a : α, «expr ^ »(k a, «expr- »(z)))] [":=", expr funext (λ x, by simp [] [] [] [] [] [])],
-    rw ["[", expr div_eq_mul_inv, ",", expr mul_comm f, ",", expr this, "]"] [],
-    exact [expr h «expr- »(z)] },
-  { suffices [] [":", expr is_O (λ a : α, «expr * »(«expr ^ »(k a, z), f a)) (λ a : α, «expr ⁻¹»(k a)) l],
-    from [expr is_O.trans_tendsto this hk.inv_tendsto_at_top],
-    refine [expr ((is_O_refl (λ
-        a, «expr ^ »(k a, z)) l).mul (h «expr- »(«expr + »(z, 1)))).trans «expr $ »(is_O.of_bound 1, hk0.mono (λ
-       a ha0, _))],
-    simp [] [] ["only"] ["[", expr one_mul, ",", expr neg_add z 1, ",", expr zpow_add₀ ha0, ",", "<-", expr mul_assoc, ",", expr zpow_neg₀, ",", expr mul_inv_cancel (zpow_ne_zero z ha0), ",", expr zpow_one, "]"] [] [] }
-end
+theorem superpolynomial_decay_iff_is_O (hk : tendsto k l at_top) :
+  superpolynomial_decay l k f ↔ ∀ z : ℤ, is_O f (fun a : α => k a ^ z) l :=
+  by 
+    refine' (superpolynomial_decay_iff_zpow_tendsto_zero f hk).trans _ 
+    have hk0 : ∀ᶠ x in l, k x ≠ 0 := eventually_ne_of_tendsto_at_top hk 0
+    refine' ⟨fun h z => _, fun h z => _⟩
+    ·
+      refine' is_O_of_div_tendsto_nhds (hk0.mono fun x hx hxz => absurd (zpow_eq_zero hxz) hx) 0 _ 
+      have  : (fun a : α => k a ^ z)⁻¹ = fun a : α => k a ^ -z :=
+        funext
+          fun x =>
+            by 
+              simp 
+      rw [div_eq_mul_inv, mul_commₓ f, this]
+      exact h (-z)
+    ·
+      suffices  : is_O (fun a : α => (k a ^ z)*f a) (fun a : α => k a⁻¹) l 
+      exact is_O.trans_tendsto this hk.inv_tendsto_at_top 
+      refine' ((is_O_refl (fun a => k a ^ z) l).mul (h (-z+1))).trans (is_O.of_bound 1$ hk0.mono fun a ha0 => _)
+      simp only [one_mulₓ, neg_add z 1, zpow_add₀ ha0, ←mul_assocₓ, zpow_neg₀, mul_inv_cancel (zpow_ne_zero z ha0),
+        zpow_one]
 
--- error in Analysis.Asymptotics.SuperpolynomialDecay: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem superpolynomial_decay_iff_is_o
-(hk : tendsto k l at_top) : «expr ↔ »(superpolynomial_decay l k f, ∀
- z : exprℤ(), is_o f (λ a : α, «expr ^ »(k a, z)) l) :=
-begin
-  refine [expr ⟨λ h z, _, λ h, (superpolynomial_decay_iff_is_O f hk).2 (λ z, (h z).is_O)⟩],
-  have [ident hk0] [":", expr «expr∀ᶠ in , »((x), l, «expr ≠ »(k x, 0))] [":=", expr eventually_ne_of_tendsto_at_top hk 0],
-  have [] [":", expr is_o (λ
-    x : α, (1 : β)) k l] [":=", expr is_o_of_tendsto' (hk0.mono (λ
-     x hkx hkx', absurd hkx' hkx)) (by simpa [] [] [] [] [] ["using", expr hk.inv_tendsto_at_top])],
-  have [] [":", expr is_o f (λ x : α, «expr * »(k x, «expr ^ »(k x, «expr - »(z, 1)))) l] [],
-  by simpa [] [] [] [] [] ["using", expr this.mul_is_O «expr $ »((superpolynomial_decay_iff_is_O f hk).1 h, «expr - »(z, 1))],
-  refine [expr this.trans_is_O (is_O.of_bound 1 «expr $ »(hk0.mono, λ x hkx, le_of_eq _))],
-  rw ["[", expr one_mul, ",", expr zpow_sub_one₀ hkx, ",", expr mul_comm (k x), ",", expr mul_assoc, ",", expr inv_mul_cancel hkx, ",", expr mul_one, "]"] []
-end
+theorem superpolynomial_decay_iff_is_o (hk : tendsto k l at_top) :
+  superpolynomial_decay l k f ↔ ∀ z : ℤ, is_o f (fun a : α => k a ^ z) l :=
+  by 
+    refine' ⟨fun h z => _, fun h => (superpolynomial_decay_iff_is_O f hk).2 fun z => (h z).IsO⟩
+    have hk0 : ∀ᶠ x in l, k x ≠ 0 := eventually_ne_of_tendsto_at_top hk 0
+    have  : is_o (fun x : α => (1 : β)) k l :=
+      is_o_of_tendsto' (hk0.mono fun x hkx hkx' => absurd hkx' hkx)
+        (by 
+          simpa using hk.inv_tendsto_at_top)
+    have  : is_o f (fun x : α => k x*k x ^ (z - 1)) l
+    ·
+      simpa using this.mul_is_O ((superpolynomial_decay_iff_is_O f hk).1 h$ z - 1)
+    refine' this.trans_is_O (is_O.of_bound 1 (hk0.mono$ fun x hkx => le_of_eqₓ _))
+    rw [one_mulₓ, zpow_sub_one₀ hkx, mul_commₓ (k x), mul_assocₓ, inv_mul_cancel hkx, mul_oneₓ]
 
 variable {f}
 

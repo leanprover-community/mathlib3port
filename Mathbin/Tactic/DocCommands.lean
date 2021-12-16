@@ -115,14 +115,14 @@ unsafe def tactic.get_library_notes : tactic (List (Stringₓ × Stringₓ)) :=
 /-! ### The `add_tactic_doc_entry` command -/
 
 
--- error in Tactic.DocCommands: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
 /-- The categories of tactic doc entry. -/
-@[derive #["[", expr decidable_eq, ",", expr has_reflect, "]"]]
-inductive doc_category
-| tactic
-| cmd
-| hole_cmd
-| attr
+inductive DocCategory
+  | tactic
+  | cmd
+  | hole_cmd
+  | attr deriving [anonymous], [anonymous]
 
 /-- Format a `doc_category` -/
 unsafe def doc_category.to_string : DocCategory → Stringₓ
@@ -132,18 +132,17 @@ unsafe def doc_category.to_string : DocCategory → Stringₓ
 | DocCategory.attr => "attribute"
 
 unsafe instance : has_to_format DocCategory :=
-  ⟨«expr↑ » doc_category.to_string⟩
+  ⟨↑doc_category.to_string⟩
 
--- error in Tactic.DocCommands: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
 /-- The information used to generate a tactic doc entry -/
-@[derive #[expr has_reflect]]
-structure tactic_doc_entry :=
-  (name : string)
-  (category : doc_category)
-  (decl_names : list _root_.name)
-  (tags : list string := «expr[ , ]»([]))
-  (description : string := "")
-  (inherit_description_from : option _root_.name := none)
+structure TacticDocEntry where 
+  Name : Stringₓ 
+  category : DocCategory 
+  declNames : List _root_.name 
+  tags : List Stringₓ := []
+  description : Stringₓ := ""
+  inheritDescriptionFrom : Option _root_.name := none deriving [anonymous]
 
 /-- Turns a `tactic_doc_entry` into a JSON representation. -/
 unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) : json :=

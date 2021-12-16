@@ -19,7 +19,7 @@ We provide the following functions to work with these objects:
   Use the notation `[n]` in the `simplicial` locale.
 2. `simplex_category.len` gives the "length" of an object of `simplex_category`, as a natural.
 3. `simplex_category.hom.mk` makes a morphism out of a monotone map between `fin`'s.
-4. `simplex_category.hom.to_preorder_hom` gives the underlying monotone map associated to a
+4. `simplex_category.hom.to_order_hom` gives the underlying monotone map associated to a
   term of `simplex_category.hom`.
 
 -/
@@ -29,12 +29,14 @@ universe u v
 
 open CategoryTheory
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:972:31: unsupported: @[derive, irreducible] def
 /-- The simplex category:
 * objects are natural numbers `n : ℕ`
 * morphisms from `n` to `m` are monotone functions `fin (n+1) → fin (m+1)`
--/ @[derive #[expr inhabited], irreducible] def simplex_category :=
-ulift.{u} exprℕ()
+-/
+irreducible_def SimplexCategory :=
+  Ulift.{u} ℕ
 
 namespace SimplexCategory
 
@@ -67,8 +69,8 @@ theorem mk_len (n : SimplexCategory.{u}) : [n.len] = n :=
     rfl
 
 /-- Morphisms in the simplex_category. -/
-@[irreducible, nolint has_inhabited_instance]
-protected def hom (a b : SimplexCategory.{u}) : Type u :=
+@[nolint has_inhabited_instance]
+protected irreducible_def hom (a b : SimplexCategory.{u}) : Type u :=
   Ulift (Finₓ (a.len+1) →ₘ Finₓ (b.len+1))
 
 namespace Hom
@@ -80,40 +82,38 @@ def mk {a b : SimplexCategory.{u}} (f : Finₓ (a.len+1) →ₘ Finₓ (b.len+1)
   Ulift.up f
 
 /-- Recover the monotone map from a morphism in the simplex category. -/
-def to_preorder_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : Finₓ (a.len+1) →ₘ Finₓ (b.len+1) :=
+def to_order_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : Finₓ (a.len+1) →ₘ Finₓ (b.len+1) :=
   Ulift.down f
 
 @[ext]
-theorem ext {a b : SimplexCategory.{u}} (f g : SimplexCategory.Hom a b) :
-  f.to_preorder_hom = g.to_preorder_hom → f = g :=
+theorem ext {a b : SimplexCategory.{u}} (f g : SimplexCategory.Hom a b) : f.to_order_hom = g.to_order_hom → f = g :=
   Ulift.ext _ _
 
 @[simp]
-theorem mk_to_preorder_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : mk f.to_preorder_hom = f :=
+theorem mk_to_order_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : mk f.to_order_hom = f :=
   by 
     cases f 
     rfl
 
 @[simp]
-theorem to_preorder_hom_mk {a b : SimplexCategory.{u}} (f : Finₓ (a.len+1) →ₘ Finₓ (b.len+1)) :
-  (mk f).toPreorderHom = f :=
+theorem to_order_hom_mk {a b : SimplexCategory.{u}} (f : Finₓ (a.len+1) →ₘ Finₓ (b.len+1)) : (mk f).toOrderHom = f :=
   by 
-    simp [to_preorder_hom, mk]
+    simp [to_order_hom, mk]
 
-theorem mk_to_preorder_hom_apply {a b : SimplexCategory.{u}} (f : Finₓ (a.len+1) →ₘ Finₓ (b.len+1))
-  (i : Finₓ (a.len+1)) : (mk f).toPreorderHom i = f i :=
+theorem mk_to_order_hom_apply {a b : SimplexCategory.{u}} (f : Finₓ (a.len+1) →ₘ Finₓ (b.len+1)) (i : Finₓ (a.len+1)) :
+  (mk f).toOrderHom i = f i :=
   rfl
 
 /-- Identity morphisms of `simplex_category`. -/
 @[simp]
 def id (a : SimplexCategory.{u}) : SimplexCategory.Hom a a :=
-  mk PreorderHom.id
+  mk OrderHom.id
 
 /-- Composition of morphisms of `simplex_category`. -/
 @[simp]
 def comp {a b c : SimplexCategory.{u}} (f : SimplexCategory.Hom b c) (g : SimplexCategory.Hom a b) :
   SimplexCategory.Hom a c :=
-  mk$ f.to_preorder_hom.comp g.to_preorder_hom
+  mk$ f.to_order_hom.comp g.to_order_hom
 
 end Hom
 
@@ -131,7 +131,7 @@ def const (x : SimplexCategory.{u}) (i : Finₓ (x.len+1)) : [0] ⟶ x :=
 
 @[simp]
 theorem const_comp (x y : SimplexCategory.{u}) (i : Finₓ (x.len+1)) (f : x ⟶ y) :
-  const x i ≫ f = const y (f.to_preorder_hom i) :=
+  const x i ≫ f = const y (f.to_order_hom i) :=
   rfl
 
 /--
@@ -165,7 +165,7 @@ one given by the following generators and relations.
 
 /-- The `i`-th face map from `[n]` to `[n+1]` -/
 def δ {n} (i : Finₓ (n+2)) : [n] ⟶ [n+1] :=
-  mk_hom (Finₓ.succAbove i).toPreorderHom
+  mk_hom (Finₓ.succAbove i).toOrderHom
 
 /-- The `i`-th degeneracy map from `[n+1]` to `[n]` -/
 def σ {n} (i : Finₓ (n+1)) : [n+1] ⟶ [n] :=
@@ -176,8 +176,8 @@ theorem δ_comp_δ {n} {i j : Finₓ (n+2)} (H : i ≤ j) : δ i ≫ δ j.succ =
   by 
     ext k 
     dsimp [δ, Finₓ.succAbove]
-    simp only [OrderEmbedding.to_preorder_hom_coe, OrderEmbedding.coe_of_strict_mono, Function.comp_app,
-      SimplexCategory.Hom.to_preorder_hom_mk, PreorderHom.comp_coe]
+    simp only [OrderEmbedding.to_order_hom_coe, OrderEmbedding.coe_of_strict_mono, Function.comp_app,
+      SimplexCategory.Hom.to_order_hom_mk, OrderHom.comp_coe]
     rcases i with ⟨i, _⟩
     rcases j with ⟨j, _⟩
     rcases k with ⟨k, _⟩
@@ -189,36 +189,51 @@ theorem δ_comp_δ {n} {i j : Finₓ (n+2)} (H : i ≤ j) : δ i ≫ δ j.succ =
 theorem δ_comp_δ_self {n} {i : Finₓ (n+2)} : δ i ≫ δ i.cast_succ = δ i ≫ δ i.succ :=
   (δ_comp_δ (le_reflₓ i)).symm
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The second simplicial identity -/
-theorem δ_comp_σ_of_le
-{n}
-{i : fin «expr + »(n, 2)}
-{j : fin «expr + »(n, 1)}
-(H : «expr ≤ »(i, j.cast_succ)) : «expr = »(«expr ≫ »(δ i.cast_succ, σ j.succ), «expr ≫ »(σ j, δ i)) :=
-begin
-  ext [] [ident k] [],
-  suffices [] [":", expr «expr = »(ite «expr < »(j.succ.cast_succ, ite «expr < »(k, i) k.cast_succ k.succ) «expr - »(ite «expr < »(k, i) (k : exprℕ()) «expr + »(k, 1), 1) (ite «expr < »(k, i) k «expr + »(k, 1)), ite «expr < »((if h : «expr < »((j : exprℕ()), k) then k.pred (by { rintro [ident rfl],
-         exact [expr nat.not_lt_zero _ h] }) else k.cast_lt (by { cases [expr j] [],
-         cases [expr k] [],
-         simp [] [] ["only"] ["[", expr len_mk, "]"] [] [],
-         linarith [] [] [] })).cast_succ, i) (ite «expr < »(j.cast_succ, k) «expr - »(k, 1) k) «expr + »(ite «expr < »(j.cast_succ, k) «expr - »(k, 1) k, 1))],
-  { dsimp [] ["[", expr δ, ",", expr σ, ",", expr fin.succ_above, ",", expr fin.pred_above, "]"] [] [],
-    simpa [] [] [] ["[", expr fin.pred_above, "]"] ["with", ident push_cast] [] },
-  rcases [expr i, "with", "⟨", ident i, ",", "_", "⟩"],
-  rcases [expr j, "with", "⟨", ident j, ",", "_", "⟩"],
-  rcases [expr k, "with", "⟨", ident k, ",", "_", "⟩"],
-  simp [] [] ["only"] ["[", expr subtype.mk_le_mk, ",", expr fin.cast_succ_mk, "]"] [] ["at", ident H],
-  dsimp [] [] [] [],
-  simp [] [] ["only"] ["[", expr if_congr, ",", expr subtype.mk_lt_mk, ",", expr dif_ctx_congr, "]"] [] [],
-  split_ifs [] [],
-  swap 8,
-  { exact [expr (nat.succ_pred_eq_of_pos (lt_of_le_of_lt (zero_le _) «expr‹ ›»(_))).symm] },
-  swap 7,
-  { have [] [":", expr «expr ≤ »(k, i)] [":=", expr nat.le_of_pred_lt «expr‹ ›»(_)],
-    linarith [] [] [] },
-  all_goals { try { refl <|> simp [] [] [] [] [] ["at", "*"] }; linarith [] [] [] }
-end
+theorem δ_comp_σ_of_le {n} {i : Finₓ (n+2)} {j : Finₓ (n+1)} (H : i ≤ j.cast_succ) :
+  δ i.cast_succ ≫ σ j.succ = σ j ≫ δ i :=
+  by 
+    ext k 
+    suffices  :
+      ite (j.succ.cast_succ < ite (k < i) k.cast_succ k.succ) (ite (k < i) (k : ℕ) (k+1) - 1) (ite (k < i) k (k+1)) =
+        ite
+          ((if h : (j : ℕ) < k then
+                k.pred
+                  (by 
+                    rintro rfl 
+                    exact Nat.not_lt_zeroₓ _ h)
+              else
+                k.cast_lt
+                  (by 
+                    cases j 
+                    cases k 
+                    simp only [len_mk]
+                    linarith)).cast_succ <
+            i)
+          (ite (j.cast_succ < k) (k - 1) k) (ite (j.cast_succ < k) (k - 1) k+1)
+    ·
+      dsimp [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
+      simpa [Finₓ.predAbove] with push_cast 
+    rcases i with ⟨i, _⟩
+    rcases j with ⟨j, _⟩
+    rcases k with ⟨k, _⟩
+    simp only [Subtype.mk_le_mk, Finₓ.cast_succ_mk] at H 
+    dsimp 
+    simp only [if_congr, Subtype.mk_lt_mk, dif_ctx_congr]
+    splitIfs 
+    swap 8
+    ·
+      exact (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) ‹_›)).symm 
+    swap 7
+    ·
+      have  : k ≤ i := Nat.le_of_pred_lt ‹_›
+      linarith 
+    all_goals 
+      try 
+          first |
+            rfl|
+            simp  at * <;>
+        linarith
 
 /-- The first part of the third simplicial identity -/
 theorem δ_comp_σ_self {n} {i : Finₓ (n+1)} : δ i.cast_succ ≫ σ i = 𝟙 [n] :=
@@ -329,7 +344,7 @@ of `NonemptyFinLinOrd` -/
 @[simps obj map]
 def skeletal_functor : SimplexCategory.{u} ⥤ NonemptyFinLinOrdₓ.{v} :=
   { obj := fun a => NonemptyFinLinOrdₓ.of$ Ulift (Finₓ (a.len+1)),
-    map := fun a b f => ⟨fun i => Ulift.up (f.to_preorder_hom i.down), fun i j h => f.to_preorder_hom.monotone h⟩,
+    map := fun a b f => ⟨fun i => Ulift.up (f.to_order_hom i.down), fun i j h => f.to_order_hom.monotone h⟩,
     map_id' :=
       fun a =>
         by 
@@ -351,7 +366,7 @@ theorem skeletal : skeletal SimplexCategory.{u} :=
       ·
         apply Fintype.card_congr 
         refine' equiv.ulift.symm.trans (((skeletal_functor ⋙ forget _).mapIso I).toEquiv.trans _)
-        apply Equiv.ulift
+        apply Equivₓ.ulift
 
 namespace SkeletalFunctor
 
@@ -378,31 +393,37 @@ instance : faithful skeletal_functor.{u, v} :=
           change (skeletal_functor.map f) ⟨i⟩ = (skeletal_functor.map g) ⟨i⟩
           rw [h] }
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : ess_surj skeletal_functor.{u, v} :=
-{ mem_ess_image := λ
-  X, ⟨mk («expr - »(fintype.card X, 1) : exprℕ()), ⟨begin
-      have [ident aux] [":", expr «expr = »(fintype.card X, «expr + »(«expr - »(fintype.card X, 1), 1))] [],
-      { exact [expr «expr $ »(nat.succ_pred_eq_of_pos, fintype.card_pos_iff.mpr ⟨«expr⊥»()⟩).symm] },
-      let [ident f] [] [":=", expr mono_equiv_of_fin X aux],
-      have [ident hf] [] [":=", expr (finset.univ.order_emb_of_fin aux).strict_mono],
-      refine [expr { hom := ⟨λ i, f i.down, _⟩, inv := ⟨λ i, ⟨f.symm i⟩, _⟩, hom_inv_id' := _, inv_hom_id' := _ }],
-      { rintro ["⟨", ident i, "⟩", "⟨", ident j, "⟩", ident h],
-        show [expr «expr ≤ »(f i, f j)],
-        exact [expr hf.monotone h] },
-      { intros [ident i, ident j, ident h],
-        show [expr «expr ≤ »(f.symm i, f.symm j)],
-        rw ["<-", expr hf.le_iff_le] [],
-        show [expr «expr ≤ »(f (f.symm i), f (f.symm j))],
-        simpa [] [] ["only"] ["[", expr order_iso.apply_symm_apply, "]"] [] [] },
-      { ext1 [] [],
-        ext1 [] ["⟨", ident i, "⟩"],
-        ext1 [] [],
-        exact [expr f.symm_apply_apply i] },
-      { ext1 [] [],
-        ext1 [] [ident i],
-        exact [expr f.apply_symm_apply i] }
-    end⟩⟩ }
+  { mem_ess_image :=
+      fun X =>
+        ⟨mk (Fintype.card X - 1 : ℕ),
+          ⟨by 
+              have aux : Fintype.card X = (Fintype.card X - 1)+1
+              ·
+                exact (Nat.succ_pred_eq_of_posₓ$ fintype.card_pos_iff.mpr ⟨⊥⟩).symm 
+              let f := monoEquivOfFin X aux 
+              have hf := (finset.univ.order_emb_of_fin aux).StrictMono 
+              refine'
+                { Hom := ⟨fun i => f i.down, _⟩, inv := ⟨fun i => ⟨f.symm i⟩, _⟩, hom_inv_id' := _, inv_hom_id' := _ }
+              ·
+                rintro ⟨i⟩ ⟨j⟩ h 
+                show f i ≤ f j 
+                exact hf.monotone h
+              ·
+                intro i j h 
+                show f.symm i ≤ f.symm j 
+                rw [←hf.le_iff_le]
+                show f (f.symm i) ≤ f (f.symm j)
+                simpa only [OrderIso.apply_symm_apply]
+              ·
+                ext1 
+                ext1 ⟨i⟩
+                ext1 
+                exact f.symm_apply_apply i
+              ·
+                ext1 
+                ext1 i 
+                exact f.apply_symm_apply i⟩⟩ }
 
 noncomputable instance is_equivalence : is_equivalence skeletal_functor.{u, v} :=
   equivalence.of_fully_faithfully_ess_surj skeletal_functor
@@ -422,9 +443,10 @@ end Skeleton
 noncomputable def is_skeleton_of : is_skeleton_of NonemptyFinLinOrdₓ SimplexCategory skeletal_functor.{u, v} :=
   { skel := skeletal, eqv := skeletal_functor.is_equivalence }
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler small_category
-/-- The truncated simplex category. -/ @[derive #[expr small_category]] def truncated (n : exprℕ()) :=
-{a : simplex_category.{u} // «expr ≤ »(a.len, n)}
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler small_category
+/-- The truncated simplex category. -/
+def truncated (n : ℕ) :=
+  { a : SimplexCategory.{u} // a.len ≤ n }deriving [anonymous]
 
 namespace Truncated
 
@@ -433,108 +455,119 @@ instance {n} : Inhabited (truncated n) :=
       by 
         simp ⟩⟩
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
 /--
 The fully faithful inclusion of the truncated simplex category into the usual
 simplex category.
 -/
-@[derive #["[", expr full, ",", expr faithful, "]"]]
-def inclusion {n : exprℕ()} : «expr ⥤ »(simplex_category.truncated.{u} n, simplex_category.{u}) :=
-full_subcategory_inclusion _
+def inclusion {n : ℕ} : SimplexCategory.Truncated.{u} n ⥤ SimplexCategory.{u} :=
+  full_subcategory_inclusion _ deriving [anonymous], [anonymous]
 
 end Truncated
 
 section Concrete
 
 instance : concrete_category.{0} SimplexCategory.{u} :=
-  { forget := { obj := fun i => Finₓ (i.len+1), map := fun i j f => f.to_preorder_hom }, forget_faithful := {  } }
+  { forget := { obj := fun i => Finₓ (i.len+1), map := fun i j f => f.to_order_hom }, forget_faithful := {  } }
 
 end Concrete
 
 section EpiMono
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A morphism in `simplex_category` is a monomorphism precisely when it is an injective function
 -/
-theorem mono_iff_injective
-{n m : simplex_category.{u}}
-{f : «expr ⟶ »(n, m)} : «expr ↔ »(mono f, function.injective f.to_preorder_hom) :=
-begin
-  split,
-  { introsI [ident m, ident x, ident y, ident h],
-    have [ident H] [":", expr «expr = »(«expr ≫ »(const n x, f), «expr ≫ »(const n y, f))] [],
-    { dsimp [] [] [] [],
-      rw [expr h] [] },
-    change [expr «expr = »((n.const x).to_preorder_hom 0, (n.const y).to_preorder_hom 0)] [] [],
-    rw [expr cancel_mono f] ["at", ident H],
-    rw [expr H] [] },
-  { exact [expr concrete_category.mono_of_injective f] }
-end
+theorem mono_iff_injective {n m : SimplexCategory.{u}} {f : n ⟶ m} : mono f ↔ Function.Injective f.to_order_hom :=
+  by 
+    constructor
+    ·
+      intros m x y h 
+      have H : const n x ≫ f = const n y ≫ f
+      ·
+        dsimp 
+        rw [h]
+      change (n.const x).toOrderHom 0 = (n.const y).toOrderHom 0
+      rw [cancel_mono f] at H 
+      rw [H]
+    ·
+      exact concrete_category.mono_of_injective f
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- A morphism in `simplex_category` is an epimorphism if and only if it is a surjective function
--/
-theorem epi_iff_surjective
-{n m : simplex_category.{u}}
-{f : «expr ⟶ »(n, m)} : «expr ↔ »(epi f, function.surjective f.to_preorder_hom) :=
-begin
-  split,
-  { introsI [ident hyp_f_epi, ident x],
-    by_contradiction [ident h_ab],
-    rw [expr not_exists] ["at", ident h_ab],
-    set [] [ident chi_1] [":", expr «expr ⟶ »(m, «expr[ ]»(1))] [":="] [expr hom.mk ⟨λ
-      u, if «expr ≤ »(u, x) then 0 else 1, begin
-        intros [ident a, ident b, ident h],
-        dsimp ["only"] ["[", "]"] [] [],
-        split_ifs [] ["with", ident h1, ident h2, ident h3],
-        any_goals { exact [expr le_refl _] },
-        { exact [expr bot_le] },
-        { exact [expr false.elim (h1 (le_trans h h3))] }
-      end⟩] [],
-    set [] [ident chi_2] [":", expr «expr ⟶ »(m, «expr[ ]»(1))] [":="] [expr hom.mk ⟨λ
-      u, if «expr < »(u, x) then 0 else 1, begin
-        intros [ident a, ident b, ident h],
-        dsimp ["only"] ["[", "]"] [] [],
-        split_ifs [] ["with", ident h1, ident h2, ident h3],
-        any_goals { exact [expr le_refl _] },
-        { exact [expr bot_le] },
-        { exact [expr false.elim (h1 (lt_of_le_of_lt h h3))] }
-      end⟩] [],
-    have [ident f_comp_chi_i] [":", expr «expr = »(«expr ≫ »(f, chi_1), «expr ≫ »(f, chi_2))] [],
-    { dsimp [] [] [] [],
-      ext [] [] [],
-      simp [] [] [] ["[", expr le_iff_lt_or_eq, ",", expr h_ab x_1, "]"] [] [] },
-    rw [expr category_theory.cancel_epi f] ["at", ident f_comp_chi_i],
-    rename [ident f_comp_chi_i, ident eq_chi_i],
-    apply_fun [expr λ e, e.to_preorder_hom x] ["at", ident eq_chi_i] [],
-    suffices [] [":", expr «expr = »((0 : fin 2), 1)],
-    by exact [expr bot_ne_top this],
-    simpa [] [] [] [] [] ["using", expr eq_chi_i] },
-  { exact [expr concrete_category.epi_of_surjective f] }
-end
+-- failed to format: format: uncaught backtrack exception
+/--
+    A morphism in `simplex_category` is an epimorphism if and only if it is a surjective function
+    -/
+  theorem
+    epi_iff_surjective
+    { n m : SimplexCategory .{ u } } { f : n ⟶ m } : epi f ↔ Function.Surjective f.to_order_hom
+    :=
+      by
+        constructor
+          ·
+            intros hyp_f_epi x
+              byContra h_ab
+              rw [ not_exists ] at h_ab
+              set
+                chi_1
+                : m ⟶ [ 1 ]
+                :=
+                hom.mk
+                  ⟨
+                    fun u => if u ≤ x then 0 else 1
+                      ,
+                      by
+                        intro a b h
+                          dsimp only
+                          splitIfs with h1 h2 h3
+                          any_goals exact le_reflₓ _
+                          · exact bot_le
+                          · exact False.elim ( h1 ( le_transₓ h h3 ) )
+                    ⟩
+              set
+                chi_2
+                : m ⟶ [ 1 ]
+                :=
+                hom.mk
+                  ⟨
+                    fun u => if u < x then 0 else 1
+                      ,
+                      by
+                        intro a b h
+                          dsimp only
+                          splitIfs with h1 h2 h3
+                          any_goals exact le_reflₓ _
+                          · exact bot_le
+                          · exact False.elim ( h1 ( lt_of_le_of_ltₓ h h3 ) )
+                    ⟩
+              have f_comp_chi_i : f ≫ chi_1 = f ≫ chi_2
+              · dsimp ext simp [ le_iff_lt_or_eqₓ , h_ab x_1 ]
+              rw [ CategoryTheory.cancel_epi f ] at f_comp_chi_i
+              rename' f_comp_chi_i
+              applyFun fun e => e.to_order_hom x at eq_chi_i
+              suffices : ( 0 : Finₓ 2 ) = 1
+              · exact bot_ne_top this
+              simpa using eq_chi_i
+          · exact concrete_category.epi_of_surjective f
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A monomorphism in `simplex_category` must increase lengths-/
-theorem len_le_of_mono {x y : simplex_category.{u}} {f : «expr ⟶ »(x, y)} : mono f → «expr ≤ »(x.len, y.len) :=
-begin
-  intro [ident hyp_f_mono],
-  have [ident f_inj] [":", expr function.injective f.to_preorder_hom.to_fun] [],
-  { exact [expr mono_iff_injective.elim_left hyp_f_mono] },
-  simpa [] [] [] [] [] ["using", expr fintype.card_le_of_injective f.to_preorder_hom.to_fun f_inj]
-end
+theorem len_le_of_mono {x y : SimplexCategory.{u}} {f : x ⟶ y} : mono f → x.len ≤ y.len :=
+  by 
+    intro hyp_f_mono 
+    have f_inj : Function.Injective f.to_order_hom.to_fun
+    ·
+      exact mono_iff_injective.elim_left hyp_f_mono 
+    simpa using Fintype.card_le_of_injective f.to_order_hom.to_fun f_inj
 
 theorem le_of_mono {n m : ℕ} {f : [n] ⟶ [m]} : CategoryTheory.Mono f → n ≤ m :=
   len_le_of_mono
 
--- error in AlgebraicTopology.SimplexCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An epimorphism in `simplex_category` must decrease lengths-/
-theorem len_le_of_epi {x y : simplex_category.{u}} {f : «expr ⟶ »(x, y)} : epi f → «expr ≤ »(y.len, x.len) :=
-begin
-  intro [ident hyp_f_epi],
-  have [ident f_surj] [":", expr function.surjective f.to_preorder_hom.to_fun] [],
-  { exact [expr epi_iff_surjective.elim_left hyp_f_epi] },
-  simpa [] [] [] [] [] ["using", expr fintype.card_le_of_surjective f.to_preorder_hom.to_fun f_surj]
-end
+theorem len_le_of_epi {x y : SimplexCategory.{u}} {f : x ⟶ y} : epi f → y.len ≤ x.len :=
+  by 
+    intro hyp_f_epi 
+    have f_surj : Function.Surjective f.to_order_hom.to_fun
+    ·
+      exact epi_iff_surjective.elim_left hyp_f_epi 
+    simpa using Fintype.card_le_of_surjective f.to_order_hom.to_fun f_surj
 
 theorem le_of_epi {n m : ℕ} {f : [n] ⟶ [m]} : epi f → m ≤ n :=
   len_le_of_epi

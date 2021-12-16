@@ -37,59 +37,51 @@ theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrati
 -/
 
 
--- error in Data.Real.Irrational: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x^n`, `n > 0`, is integer and is not the `n`-th power of an integer, then
 `x` is irrational. -/
-theorem irrational_nrt_of_notint_nrt
-{x : exprℝ()}
-(n : exprℕ())
-(m : exprℤ())
-(hxr : «expr = »(«expr ^ »(x, n), m))
-(hv : «expr¬ »(«expr∃ , »((y : exprℤ()), «expr = »(x, y))))
-(hnpos : «expr < »(0, n)) : irrational x :=
-begin
-  rintros ["⟨", "⟨", ident N, ",", ident D, ",", ident P, ",", ident C, "⟩", ",", ident rfl, "⟩"],
-  rw ["[", "<-", expr cast_pow, "]"] ["at", ident hxr],
-  have [ident c1] [":", expr «expr ≠ »(((D : exprℤ()) : exprℝ()), 0)] [],
-  { rw ["[", expr int.cast_ne_zero, ",", expr int.coe_nat_ne_zero, "]"] [],
-    exact [expr ne_of_gt P] },
-  have [ident c2] [":", expr «expr ≠ »(«expr ^ »(((D : exprℤ()) : exprℝ()), n), 0)] [":=", expr pow_ne_zero _ c1],
-  rw ["[", expr num_denom', ",", expr cast_pow, ",", expr cast_mk, ",", expr div_pow, ",", expr div_eq_iff_mul_eq c2, ",", "<-", expr int.cast_pow, ",", "<-", expr int.cast_pow, ",", "<-", expr int.cast_mul, ",", expr int.cast_inj, "]"] ["at", ident hxr],
-  have [ident hdivn] [":", expr «expr ∣ »(«expr ^ »(«expr↑ »(D), n), «expr ^ »(N, n))] [":=", expr dvd.intro_left m hxr],
-  rw ["[", "<-", expr int.dvd_nat_abs, ",", "<-", expr int.coe_nat_pow, ",", expr int.coe_nat_dvd, ",", expr int.nat_abs_pow, ",", expr nat.pow_dvd_pow_iff hnpos, "]"] ["at", ident hdivn],
-  have [ident hD] [":", expr «expr = »(D, 1)] [":=", expr by rw ["[", "<-", expr nat.gcd_eq_right hdivn, ",", expr C.gcd_eq_one, "]"] []],
-  subst [expr D],
-  refine [expr hv ⟨N, _⟩],
-  rw ["[", expr num_denom', ",", expr int.coe_nat_one, ",", expr mk_eq_div, ",", expr int.cast_one, ",", expr div_one, ",", expr cast_coe_int, "]"] []
-end
+theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : (x^n) = m) (hv : ¬∃ y : ℤ, x = y) (hnpos : 0 < n) :
+  Irrational x :=
+  by 
+    rintro ⟨⟨N, D, P, C⟩, rfl⟩
+    rw [←cast_pow] at hxr 
+    have c1 : ((D : ℤ) : ℝ) ≠ 0
+    ·
+      rw [Int.cast_ne_zero, Int.coe_nat_ne_zero]
+      exact ne_of_gtₓ P 
+    have c2 : (((D : ℤ) : ℝ)^n) ≠ 0 := pow_ne_zero _ c1 
+    rw [num_denom', cast_pow, cast_mk, div_pow, div_eq_iff_mul_eq c2, ←Int.cast_pow, ←Int.cast_pow, ←Int.cast_mul,
+      Int.cast_inj] at hxr 
+    have hdivn : (↑D^n) ∣ (N^n) := Dvd.intro_left m hxr 
+    rw [←Int.dvd_nat_abs, ←Int.coe_nat_pow, Int.coe_nat_dvd, Int.nat_abs_pow, Nat.pow_dvd_pow_iff hnpos] at hdivn 
+    have hD : D = 1 :=
+      by 
+        rw [←Nat.gcd_eq_rightₓ hdivn, C.gcd_eq_one]
+    subst D 
+    refine' hv ⟨N, _⟩
+    rw [num_denom', Int.coe_nat_one, mk_eq_div, Int.cast_one, div_one, cast_coe_int]
 
--- error in Data.Real.Irrational: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x^n = m` is an integer and `n` does not divide the `multiplicity p m`, then `x`
 is irrational. -/
-theorem irrational_nrt_of_n_not_dvd_multiplicity
-{x : exprℝ()}
-(n : exprℕ())
-{m : exprℤ()}
-(hm : «expr ≠ »(m, 0))
-(p : exprℕ())
-[hp : fact p.prime]
-(hxr : «expr = »(«expr ^ »(x, n), m))
-(hv : «expr ≠ »(«expr % »((multiplicity (p : exprℤ()) m).get (finite_int_iff.2 ⟨hp.1.ne_one, hm⟩), n), 0)) : irrational x :=
-begin
-  rcases [expr nat.eq_zero_or_pos n, "with", ident rfl, "|", ident hnpos],
-  { rw ["[", expr eq_comm, ",", expr pow_zero, ",", "<-", expr int.cast_one, ",", expr int.cast_inj, "]"] ["at", ident hxr],
-    simpa [] [] [] ["[", expr hxr, ",", expr multiplicity.one_right (mt is_unit_iff_dvd_one.1 (mt int.coe_nat_dvd.1 hp.1.not_dvd_one)), ",", expr nat.zero_mod, "]"] [] ["using", expr hv] },
-  refine [expr irrational_nrt_of_notint_nrt _ _ hxr _ hnpos],
-  rintro ["⟨", ident y, ",", ident rfl, "⟩"],
-  rw ["[", "<-", expr int.cast_pow, ",", expr int.cast_inj, "]"] ["at", ident hxr],
-  subst [expr m],
-  have [] [":", expr «expr ≠ »(y, 0)] [],
-  { rintro [ident rfl],
-    rw [expr zero_pow hnpos] ["at", ident hm],
-    exact [expr hm rfl] },
-  erw ["[", expr multiplicity.pow' (nat.prime_iff_prime_int.1 hp.1) (finite_int_iff.2 ⟨hp.1.ne_one, this⟩), ",", expr nat.mul_mod_right, "]"] ["at", ident hv],
-  exact [expr hv rfl]
-end
+theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (hm : m ≠ 0) (p : ℕ) [hp : Fact p.prime]
+  (hxr : (x^n) = m) (hv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, hm⟩) % n ≠ 0) : Irrational x :=
+  by 
+    rcases Nat.eq_zero_or_posₓ n with (rfl | hnpos)
+    ·
+      rw [eq_comm, pow_zeroₓ, ←Int.cast_one, Int.cast_inj] at hxr 
+      simpa [hxr, multiplicity.one_right (mt is_unit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.1.not_dvd_one)),
+        Nat.zero_modₓ] using hv 
+    refine' irrational_nrt_of_notint_nrt _ _ hxr _ hnpos 
+    rintro ⟨y, rfl⟩
+    rw [←Int.cast_pow, Int.cast_inj] at hxr 
+    subst m 
+    have  : y ≠ 0
+    ·
+      rintro rfl 
+      rw [zero_pow hnpos] at hm 
+      exact hm rfl 
+    erw [multiplicity.pow' (Nat.prime_iff_prime_int.1 hp.1) (finite_int_iff.2 ⟨hp.1.ne_one, this⟩),
+      Nat.mul_mod_rightₓ] at hv 
+    exact hv rfl
 
 theorem irrational_sqrt_of_multiplicity_odd (m : ℤ) (hm : 0 < m) (p : ℕ) [hp : Fact p.prime]
   (Hpv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, (ne_of_ltₓ hm).symm⟩) % 2 = 1) :
@@ -214,10 +206,10 @@ theorem rat_add (h : Irrational x) : Irrational (q+x) :=
       rwa [cast_neg, neg_add_cancel_leftₓ]
 
 theorem of_add_rat : Irrational (x+q) → Irrational x :=
-  add_commₓ («expr↑ » q) x ▸ of_rat_add q
+  add_commₓ (↑q) x ▸ of_rat_add q
 
 theorem add_rat (h : Irrational x) : Irrational (x+q) :=
-  add_commₓ («expr↑ » q) x ▸ h.rat_add q
+  add_commₓ (↑q) x ▸ h.rat_add q
 
 theorem of_int_add (m : ℤ) (h : Irrational (m+x)) : Irrational x :=
   by 
@@ -233,7 +225,7 @@ theorem int_add (h : Irrational x) (m : ℤ) : Irrational (m+x) :=
     exact h.rat_add m
 
 theorem add_int (h : Irrational x) (m : ℤ) : Irrational (x+m) :=
-  add_commₓ («expr↑ » m) x ▸ h.int_add m
+  add_commₓ (↑m) x ▸ h.int_add m
 
 theorem of_nat_add (m : ℕ) (h : Irrational (m+x)) : Irrational x :=
   h.of_int_add m
@@ -480,26 +472,26 @@ open Polynomial
 
 variable (x : ℝ) (p : Polynomial ℤ)
 
--- error in Data.Real.Irrational: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem one_lt_nat_degree_of_irrational_root
-(hx : irrational x)
-(p_nonzero : «expr ≠ »(p, 0))
-(x_is_root : «expr = »(aeval x p, 0)) : «expr < »(1, p.nat_degree) :=
-begin
-  by_contra [ident rid],
-  rcases [expr exists_eq_X_add_C_of_nat_degree_le_one (not_lt.1 rid), "with", "⟨", ident a, ",", ident b, ",", ident rfl, "⟩"],
-  clear [ident rid],
-  have [] [":", expr «expr = »(«expr * »((a : exprℝ()), x), «expr- »(b))] [],
-  by simpa [] [] [] ["[", expr eq_neg_iff_add_eq_zero, "]"] [] ["using", expr x_is_root],
-  rcases [expr em «expr = »(a, 0), "with", "(", ident rfl, "|", ident ha, ")"],
-  { obtain [ident rfl, ":", expr «expr = »(b, 0)],
-    by simpa [] [] [] [] [] [],
-    simpa [] [] [] [] [] ["using", expr p_nonzero] },
-  { rw ["[", expr mul_comm, ",", "<-", expr eq_div_iff_mul_eq, ",", expr eq_comm, "]"] ["at", ident this],
-    refine [expr hx ⟨«expr / »(«expr- »(b), a), _⟩],
-    assumption_mod_cast,
-    assumption_mod_cast }
-end
+theorem one_lt_nat_degree_of_irrational_root (hx : Irrational x) (p_nonzero : p ≠ 0) (x_is_root : aeval x p = 0) :
+  1 < p.nat_degree :=
+  by 
+    byContra rid 
+    rcases exists_eq_X_add_C_of_nat_degree_le_one (not_ltₓ.1 rid) with ⟨a, b, rfl⟩
+    clear rid 
+    have  : ((a : ℝ)*x) = -b
+    ·
+      simpa [eq_neg_iff_add_eq_zero] using x_is_root 
+    rcases em (a = 0) with (rfl | ha)
+    ·
+      obtain rfl : b = 0
+      ·
+        simpa 
+      simpa using p_nonzero
+    ·
+      rw [mul_commₓ, ←eq_div_iff_mul_eq, eq_comm] at this 
+      refine' hx ⟨-b / a, _⟩
+      assumptionModCast 
+      assumptionModCast
 
 end Polynomial
 

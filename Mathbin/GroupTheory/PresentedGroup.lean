@@ -26,7 +26,7 @@ variable {α : Type}
 /-- Given a set of relations, rels, over a type `α`, presented_group constructs the group with
 generators `x : α` and relations `rels` as a quotient of free_group `α`.-/
 def PresentedGroup (rels : Set (FreeGroup α)) : Type :=
-  QuotientGroup.Quotient$ Subgroup.normalClosure rels
+  FreeGroup α ⧸ Subgroup.normalClosure rels
 
 namespace PresentedGroup
 
@@ -44,11 +44,13 @@ variable {G : Type} [Groupₓ G] {f : α → G} {rels : Set (FreeGroup α)}
 
 local notation "F" => FreeGroup.lift f
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (r «expr ∈ » rels)
 variable (h : ∀ r _ : r ∈ rels, F r = 1)
 
 theorem closure_rels_subset_ker : Subgroup.normalClosure rels ≤ MonoidHom.ker F :=
   Subgroup.normal_closure_le_normal fun x w => (MonoidHom.mem_ker _).2 (h x w)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » subgroup.normal_closure rels)
 theorem to_group_eq_one_of_mem_closure : ∀ x _ : x ∈ Subgroup.normalClosure rels, F x = 1 :=
   fun x w => (MonoidHom.mem_ker _).1$ closure_rels_subset_ker h w
 

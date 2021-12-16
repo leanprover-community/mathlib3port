@@ -52,7 +52,7 @@ theorem map_inv_units_sub (f : R →+* S) (u : Units R) :
   map f (inv_units_sub u) = inv_units_sub (Units.map (f : R →* S) u) :=
   by 
     ext 
-    simp [←MonoidHom.map_pow]
+    simp [←map_pow]
 
 end Ringₓ
 
@@ -122,14 +122,14 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
     apply sum_congr rfl 
     rintro x hx 
     suffices  :
-      (((a^x)*b^n - x)*algebraMap ℚ A (1 / «expr↑ » x.factorial)*algebraMap ℚ A (1 / «expr↑ » (n - x).factorial)) =
-        ((a^x)*b^n - x)*«expr↑ » (n.choose x)*(algebraMap ℚ A) (1 / «expr↑ » n.factorial)
+      (((a^x)*b^n - x)*algebraMap ℚ A (1 / ↑x.factorial)*algebraMap ℚ A (1 / ↑(n - x).factorial)) =
+        ((a^x)*b^n - x)*(↑n.choose x)*(algebraMap ℚ A) (1 / ↑n.factorial)
     ·
       convert this using 1 <;> ring 
     congr 1
     rw [←map_nat_cast (algebraMap ℚ A) (n.choose x), ←map_mul, ←map_mul]
     refine' RingHom.congr_arg _ _ 
-    rw [mul_one_div («expr↑ » (n.choose x)) _, one_div_mul_one_div]
+    rw [mul_one_div (↑n.choose x) _, one_div_mul_one_div]
     symm 
     rw [div_eq_iff, div_mul_eq_mul_div, one_mulₓ, choose_eq_factorial_div_factorial]
     normCast 

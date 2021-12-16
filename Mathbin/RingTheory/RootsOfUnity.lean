@@ -5,7 +5,8 @@ import Mathbin.Data.Zmod.Basic
 import Mathbin.RingTheory.IntegralDomain 
 import Mathbin.NumberTheory.Divisors 
 import Mathbin.FieldTheory.Finite.Basic 
-import Mathbin.GroupTheory.SpecificGroups.Cyclic
+import Mathbin.GroupTheory.SpecificGroups.Cyclic 
+import Mathbin.Algebra.CharP.Two
 
 /-!
 # Roots of unity and primitive roots of unity
@@ -55,7 +56,7 @@ This creates a little bit of friction, but lemmas like `is_primitive_root.is_uni
 
 open_locale Classical BigOperators
 
-noncomputable theory
+noncomputable section 
 
 open Polynomial
 
@@ -69,17 +70,19 @@ section rootsOfUnity
 
 variable {k l : ℕ+}
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- `roots_of_unity k M` is the subgroup of elements `m : units M` that satisfy `m ^ k = 1` -/
-def rootsOfUnity (k : ℕ+) (M : Type _) [CommMonoidₓ M] : Subgroup (Units M) :=
-  { Carrier := { ζ | (ζ^(k : ℕ)) = 1 }, one_mem' := one_pow _,
-    mul_mem' :=
-      fun ζ ξ hζ hξ =>
-        by 
-          simp_all only [Set.mem_set_of_eq, mul_powₓ, one_mulₓ],
-    inv_mem' :=
-      fun ζ hζ =>
-        by 
-          simp_all only [Set.mem_set_of_eq, inv_pow, one_inv] }
+  def
+    rootsOfUnity
+    ( k : ℕ+ ) ( M : Type _ ) [ CommMonoidₓ M ] : Subgroup Units M
+    :=
+      {
+        Carrier := { ζ | ζ ^ ( k : ℕ ) = 1 } ,
+          one_mem' := one_pow _ ,
+          mul_mem' := fun ζ ξ hζ hξ => by simp_all only [ Set.mem_set_of_eq , mul_powₓ , one_mulₓ ] ,
+          inv_mem' := fun ζ hζ => by simp_all only [ Set.mem_set_of_eq , inv_pow , one_inv ]
+        }
 
 @[simp]
 theorem mem_roots_of_unity (k : ℕ+) (ζ : Units M) : ζ ∈ rootsOfUnity k M ↔ (ζ^(k : ℕ)) = 1 :=
@@ -94,14 +97,14 @@ theorem roots_of_unity_le_of_dvd (h : k ∣ l) : rootsOfUnity k M ≤ rootsOfUni
 theorem map_roots_of_unity (f : Units M →* Units N) (k : ℕ+) : (rootsOfUnity k M).map f ≤ rootsOfUnity k N :=
   by 
     rintro _ ⟨ζ, h, rfl⟩
-    simp_all only [←MonoidHom.map_pow, mem_roots_of_unity, SetLike.mem_coe, MonoidHom.map_one]
+    simp_all only [←map_pow, mem_roots_of_unity, SetLike.mem_coe, MonoidHom.map_one]
 
 variable [CommRingₓ R]
 
 @[normCast]
-theorem rootsOfUnity.coe_pow (ζ : rootsOfUnity k R) (m : ℕ) : «expr↑ » (ζ^m) = (ζ^m : R) :=
+theorem rootsOfUnity.coe_pow (ζ : rootsOfUnity k R) (m : ℕ) : ↑(ζ^m) = (ζ^m : R) :=
   by 
-    change «expr↑ » («expr↑ » (ζ^m) : Units R) = («expr↑ » (ζ : Units R)^m)
+    change ↑(↑(ζ^m) : Units R) = (↑(ζ : Units R)^m)
     rw [Subgroup.coe_pow, Units.coe_pow]
 
 variable [CommRingₓ S]
@@ -133,7 +136,7 @@ def RingHom.restrictRootsOfUnity (σ : R →+* S) (n : ℕ+) : rootsOfUnity n R 
 
 @[simp]
 theorem RingHom.restrict_roots_of_unity_coe_apply (σ : R →+* S) (ζ : rootsOfUnity k R) :
-  «expr↑ » (σ.restrict_roots_of_unity k ζ) = σ («expr↑ » ζ) :=
+  ↑σ.restrict_roots_of_unity k ζ = σ (↑ζ) :=
   rfl
 
 /-- Restrict a ring isomorphism between integral domains to the nth roots of unity -/
@@ -153,7 +156,7 @@ def RingEquiv.restrictRootsOfUnity (σ : R ≃+* S) (n : ℕ+) : rootsOfUnity n 
 
 @[simp]
 theorem RingEquiv.restrict_roots_of_unity_coe_apply (σ : R ≃+* S) (ζ : rootsOfUnity k R) :
-  «expr↑ » (σ.restrict_roots_of_unity k ζ) = σ («expr↑ » ζ) :=
+  ↑σ.restrict_roots_of_unity k ζ = σ (↑ζ) :=
   rfl
 
 @[simp]
@@ -321,7 +324,7 @@ theorem one : IsPrimitiveRoot (1 : M) 1 :=
 @[simp]
 theorem one_right_iff : IsPrimitiveRoot ζ 1 ↔ ζ = 1 :=
   by 
-    split 
+    constructor
     ·
       intro h 
       rw [←pow_oneₓ ζ, h.pow_eq_one]
@@ -358,6 +361,7 @@ theorem pow_of_prime (h : IsPrimitiveRoot ζ k) {p : ℕ} (hprime : Nat.Prime p)
   IsPrimitiveRoot (ζ^p) k :=
   h.pow_of_coprime p (hprime.coprime_iff_not_dvd.2 hdiv)
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
 theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) : IsPrimitiveRoot (ζ^i) k ↔ i.coprime k :=
   by 
     refine' ⟨_, h.pow_of_coprime i⟩
@@ -421,24 +425,23 @@ theorem zpow_eq_one (h : IsPrimitiveRoot ζ k) : (ζ^(k : ℤ)) = 1 :=
     rw [zpow_coe_nat]
     exact h.pow_eq_one
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zpow_eq_one_iff_dvd
-(h : is_primitive_root ζ k)
-(l : exprℤ()) : «expr ↔ »(«expr = »(«expr ^ »(ζ, l), 1), «expr ∣ »((k : exprℤ()), l)) :=
-begin
-  by_cases [expr h0, ":", expr «expr ≤ »(0, l)],
-  { lift [expr l] ["to", expr exprℕ()] ["using", expr h0] [],
-    rw ["[", expr zpow_coe_nat, "]"] [],
-    norm_cast [],
-    exact [expr h.pow_eq_one_iff_dvd l] },
-  { have [] [":", expr «expr ≤ »(0, «expr- »(l))] [],
-    { simp [] [] ["only"] ["[", expr not_le, ",", expr neg_nonneg, "]"] [] ["at", ident h0, "⊢"],
-      exact [expr le_of_lt h0] },
-    lift [expr «expr- »(l)] ["to", expr exprℕ()] ["using", expr this] ["with", ident l', ident hl'],
-    rw ["[", "<-", expr dvd_neg, ",", "<-", expr hl', "]"] [],
-    norm_cast [],
-    rw ["[", "<-", expr h.pow_eq_one_iff_dvd, ",", "<-", expr inv_inj, ",", "<-", expr zpow_neg, ",", "<-", expr hl', ",", expr zpow_coe_nat, ",", expr one_inv, "]"] [] }
-end
+theorem zpow_eq_one_iff_dvd (h : IsPrimitiveRoot ζ k) (l : ℤ) : (ζ^l) = 1 ↔ (k : ℤ) ∣ l :=
+  by 
+    byCases' h0 : 0 ≤ l
+    ·
+      lift l to ℕ using h0 
+      rw [zpow_coe_nat]
+      normCast 
+      exact h.pow_eq_one_iff_dvd l
+    ·
+      have  : 0 ≤ -l
+      ·
+        simp only [not_leₓ, neg_nonneg] at h0⊢
+        exact le_of_ltₓ h0 
+      lift -l to ℕ using this with l' hl' 
+      rw [←dvd_neg, ←hl']
+      normCast 
+      rw [←h.pow_eq_one_iff_dvd, ←inv_inj, ←zpow_neg, ←hl', zpow_coe_nat, one_inv]
 
 theorem inv (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot (ζ⁻¹) k :=
   { pow_eq_one :=
@@ -458,25 +461,22 @@ theorem inv_iff : IsPrimitiveRoot (ζ⁻¹) k ↔ IsPrimitiveRoot ζ k :=
     rw [←inv_invₓ ζ]
     exact inv h
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zpow_of_gcd_eq_one
-(h : is_primitive_root ζ k)
-(i : exprℤ())
-(hi : «expr = »(i.gcd k, 1)) : is_primitive_root «expr ^ »(ζ, i) k :=
-begin
-  by_cases [expr h0, ":", expr «expr ≤ »(0, i)],
-  { lift [expr i] ["to", expr exprℕ()] ["using", expr h0] [],
-    rw [expr zpow_coe_nat] [],
-    exact [expr h.pow_of_coprime i hi] },
-  have [] [":", expr «expr ≤ »(0, «expr- »(i))] [],
-  { simp [] [] ["only"] ["[", expr not_le, ",", expr neg_nonneg, "]"] [] ["at", ident h0, "⊢"],
-    exact [expr le_of_lt h0] },
-  lift [expr «expr- »(i)] ["to", expr exprℕ()] ["using", expr this] ["with", ident i', ident hi'],
-  rw ["[", "<-", expr inv_iff, ",", "<-", expr zpow_neg, ",", "<-", expr hi', ",", expr zpow_coe_nat, "]"] [],
-  apply [expr h.pow_of_coprime],
-  rw ["[", expr int.gcd, ",", "<-", expr int.nat_abs_neg, ",", "<-", expr hi', "]"] ["at", ident hi],
-  exact [expr hi]
-end
+theorem zpow_of_gcd_eq_one (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 1) : IsPrimitiveRoot (ζ^i) k :=
+  by 
+    byCases' h0 : 0 ≤ i
+    ·
+      lift i to ℕ using h0 
+      rw [zpow_coe_nat]
+      exact h.pow_of_coprime i hi 
+    have  : 0 ≤ -i
+    ·
+      simp only [not_leₓ, neg_nonneg] at h0⊢
+      exact le_of_ltₓ h0 
+    lift -i to ℕ using this with i' hi' 
+    rw [←inv_iff, ←zpow_neg, ←hi', zpow_coe_nat]
+    apply h.pow_of_coprime 
+    rw [Int.gcdₓ, ←Int.nat_abs_neg, ←hi'] at hi 
+    exact hi
 
 @[simp]
 theorem coe_subgroup_iff (H : Subgroup G) {ζ : H} : IsPrimitiveRoot (ζ : G) k ↔ IsPrimitiveRoot ζ k :=
@@ -494,24 +494,23 @@ theorem zpow_eq_one₀ (h : IsPrimitiveRoot ζ k) : (ζ^(k : ℤ)) = 1 :=
     rw [zpow_coe_nat]
     exact h.pow_eq_one
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zpow_eq_one_iff_dvd₀
-(h : is_primitive_root ζ k)
-(l : exprℤ()) : «expr ↔ »(«expr = »(«expr ^ »(ζ, l), 1), «expr ∣ »((k : exprℤ()), l)) :=
-begin
-  by_cases [expr h0, ":", expr «expr ≤ »(0, l)],
-  { lift [expr l] ["to", expr exprℕ()] ["using", expr h0] [],
-    rw ["[", expr zpow_coe_nat, "]"] [],
-    norm_cast [],
-    exact [expr h.pow_eq_one_iff_dvd l] },
-  { have [] [":", expr «expr ≤ »(0, «expr- »(l))] [],
-    { simp [] [] ["only"] ["[", expr not_le, ",", expr neg_nonneg, "]"] [] ["at", ident h0, "⊢"],
-      exact [expr le_of_lt h0] },
-    lift [expr «expr- »(l)] ["to", expr exprℕ()] ["using", expr this] ["with", ident l', ident hl'],
-    rw ["[", "<-", expr dvd_neg, ",", "<-", expr hl', "]"] [],
-    norm_cast [],
-    rw ["[", "<-", expr h.pow_eq_one_iff_dvd, ",", "<-", expr inv_inj₀, ",", "<-", expr zpow_neg₀, ",", "<-", expr hl', ",", expr zpow_coe_nat, ",", expr inv_one, "]"] [] }
-end
+theorem zpow_eq_one_iff_dvd₀ (h : IsPrimitiveRoot ζ k) (l : ℤ) : (ζ^l) = 1 ↔ (k : ℤ) ∣ l :=
+  by 
+    byCases' h0 : 0 ≤ l
+    ·
+      lift l to ℕ using h0 
+      rw [zpow_coe_nat]
+      normCast 
+      exact h.pow_eq_one_iff_dvd l
+    ·
+      have  : 0 ≤ -l
+      ·
+        simp only [not_leₓ, neg_nonneg] at h0⊢
+        exact le_of_ltₓ h0 
+      lift -l to ℕ using this with l' hl' 
+      rw [←dvd_neg, ←hl']
+      normCast 
+      rw [←h.pow_eq_one_iff_dvd, ←inv_inj₀, ←zpow_neg₀, ←hl', zpow_coe_nat, inv_one]
 
 theorem inv' (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot (ζ⁻¹) k :=
   { pow_eq_one :=
@@ -531,25 +530,22 @@ theorem inv_iff' : IsPrimitiveRoot (ζ⁻¹) k ↔ IsPrimitiveRoot ζ k :=
     rw [←inv_inv₀ ζ]
     exact inv' h
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zpow_of_gcd_eq_one₀
-(h : is_primitive_root ζ k)
-(i : exprℤ())
-(hi : «expr = »(i.gcd k, 1)) : is_primitive_root «expr ^ »(ζ, i) k :=
-begin
-  by_cases [expr h0, ":", expr «expr ≤ »(0, i)],
-  { lift [expr i] ["to", expr exprℕ()] ["using", expr h0] [],
-    rw [expr zpow_coe_nat] [],
-    exact [expr h.pow_of_coprime i hi] },
-  have [] [":", expr «expr ≤ »(0, «expr- »(i))] [],
-  { simp [] [] ["only"] ["[", expr not_le, ",", expr neg_nonneg, "]"] [] ["at", ident h0, "⊢"],
-    exact [expr le_of_lt h0] },
-  lift [expr «expr- »(i)] ["to", expr exprℕ()] ["using", expr this] ["with", ident i', ident hi'],
-  rw ["[", "<-", expr inv_iff', ",", "<-", expr zpow_neg₀, ",", "<-", expr hi', ",", expr zpow_coe_nat, "]"] [],
-  apply [expr h.pow_of_coprime],
-  rw ["[", expr int.gcd, ",", "<-", expr int.nat_abs_neg, ",", "<-", expr hi', "]"] ["at", ident hi],
-  exact [expr hi]
-end
+theorem zpow_of_gcd_eq_one₀ (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 1) : IsPrimitiveRoot (ζ^i) k :=
+  by 
+    byCases' h0 : 0 ≤ i
+    ·
+      lift i to ℕ using h0 
+      rw [zpow_coe_nat]
+      exact h.pow_of_coprime i hi 
+    have  : 0 ≤ -i
+    ·
+      simp only [not_leₓ, neg_nonneg] at h0⊢
+      exact le_of_ltₓ h0 
+    lift -i to ℕ using this with i' hi' 
+    rw [←inv_iff', ←zpow_neg₀, ←hi', zpow_coe_nat]
+    apply h.pow_of_coprime 
+    rw [Int.gcdₓ, ←Int.nat_abs_neg, ←hi'] at hi 
+    exact hi
 
 end CommGroupWithZero
 
@@ -562,25 +558,25 @@ open Function
 theorem map_of_injective (hf : injective f) (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot (f ζ) k :=
   { pow_eq_one :=
       by 
-        rw [←f.map_pow, h.pow_eq_one, f.map_one],
+        rw [←map_pow, h.pow_eq_one, _root_.map_one],
     dvd_of_pow_eq_one :=
       by 
         rw [h.eq_order_of]
         intro l hl 
-        rw [←f.map_pow, ←f.map_one] at hl 
+        rw [←map_pow, ←f.map_one] at hl 
         exact order_of_dvd_of_pow_eq_one (hf hl) }
 
 theorem of_map_of_injective (hf : injective f) (h : IsPrimitiveRoot (f ζ) k) : IsPrimitiveRoot ζ k :=
   { pow_eq_one :=
       by 
         applyFun f 
-        rw [f.map_pow, f.map_one, h.pow_eq_one],
+        rw [map_pow, _root_.map_one, h.pow_eq_one],
     dvd_of_pow_eq_one :=
       by 
         rw [h.eq_order_of]
         intro l hl 
         applyFun f  at hl 
-        rw [f.map_pow, f.map_one] at hl 
+        rw [map_pow, _root_.map_one] at hl 
         exact order_of_dvd_of_pow_eq_one hl }
 
 theorem map_iff_of_injective (hf : injective f) : IsPrimitiveRoot (f ζ) k ↔ IsPrimitiveRoot ζ k :=
@@ -605,33 +601,13 @@ theorem primitive_roots_zero : primitiveRoots 0 R = ∅ :=
 theorem primitive_roots_one : primitiveRoots 1 R = {(1 : R)} :=
   by 
     apply Finset.eq_singleton_iff_unique_mem.2
-    split 
+    constructor
     ·
       simp only [IsPrimitiveRoot.one_right_iff, mem_primitive_roots zero_lt_one]
     ·
       intro x hx 
       rw [mem_primitive_roots zero_lt_one, IsPrimitiveRoot.one_right_iff] at hx 
       exact hx
-
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem neg_one (p : exprℕ()) [char_p R p] (hp : «expr ≠ »(p, 2)) : is_primitive_root («expr- »(1) : R) 2 :=
-«expr $ »(mk_of_lt («expr- »(1) : R) exprdec_trivial() (by simp [] [] ["only"] ["[", expr one_pow, ",", expr neg_sq, "]"] [] []), begin
-   intros [ident l, ident hl0, ident hl2],
-   obtain [ident rfl, ":", expr «expr = »(l, 1)],
-   { unfreezingI { clear_dependent [ident R, ident p] },
-     dec_trivial ["!"] },
-   simp [] [] ["only"] ["[", expr pow_one, ",", expr ne.def, "]"] [] [],
-   intro [ident h],
-   suffices [ident h2] [":", expr «expr ∣ »(p, 2)],
-   { have [] [] [":=", expr char_p.char_ne_one R p],
-     unfreezingI { clear_dependent [ident R] },
-     have [ident aux] [] [":=", expr nat.le_of_dvd exprdec_trivial() h2],
-     revert [ident this, ident hp, ident h2],
-     revert [ident p],
-     dec_trivial [] },
-   simp [] [] ["only"] ["[", "<-", expr char_p.cast_eq_zero_iff R p, ",", expr nat.cast_bit0, ",", expr nat.cast_one, "]"] [] [],
-   rw ["[", expr bit0, ",", "<-", expr h, ",", expr neg_add_self, "]"] [] { occs := occurrences.pos «expr[ , ]»([1]) }
- end)
 
 theorem eq_neg_one_of_two_right (h : IsPrimitiveRoot ζ 2) : ζ = -1 :=
   by 
@@ -650,53 +626,66 @@ variable [CommRingₓ R]
 
 variable {ζ : Units R} (h : IsPrimitiveRoot ζ k)
 
+theorem neg_one (p : ℕ) [Nontrivial R] [h : CharP R p] (hp : p ≠ 2) : IsPrimitiveRoot (-1 : R) 2 :=
+  by 
+    convert IsPrimitiveRoot.order_of (-1 : R)
+    rw [order_of_neg_one, if_neg]
+    rwa [ring_char.eq_iff.mpr h]
+
 protected theorem mem_roots_of_unity {n : ℕ+} (h : IsPrimitiveRoot ζ n) : ζ ∈ rootsOfUnity n R :=
   h.pow_eq_one
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The (additive) monoid equivalence between `zmod k`
 and the powers of a primitive root of unity `ζ`. -/
-def zmod_equiv_zpowers (h : is_primitive_root ζ k) : «expr ≃+ »(zmod k, additive (subgroup.zpowers ζ)) :=
-add_equiv.of_bijective (add_monoid_hom.lift_of_right_inverse «expr $ »(int.cast_add_hom, zmod k) _ zmod.int_cast_right_inverse ⟨{ to_fun := λ
-    i, additive.of_mul (⟨_, i, rfl⟩ : subgroup.zpowers ζ),
-    map_zero' := by { simp [] [] ["only"] ["[", expr zpow_zero, "]"] [] [],
-      refl },
-    map_add' := by { intros [ident i, ident j],
-      simp [] [] ["only"] ["[", expr zpow_add, "]"] [] [],
-      refl } }, λ i hi, begin
-    simp [] [] ["only"] ["[", expr add_monoid_hom.mem_ker, ",", expr char_p.int_cast_eq_zero_iff (zmod k) k, ",", expr add_monoid_hom.coe_mk, ",", expr int.coe_cast_add_hom, "]"] [] ["at", ident hi, "⊢"],
-    obtain ["⟨", ident i, ",", ident rfl, "⟩", ":=", expr hi],
-    simp [] [] ["only"] ["[", expr zpow_mul, ",", expr h.pow_eq_one, ",", expr one_zpow, ",", expr zpow_coe_nat, "]"] [] [],
-    refl
-  end⟩) (begin
-   split,
-   { rw [expr add_monoid_hom.injective_iff] [],
-     intros [ident i, ident hi],
-     rw [expr subtype.ext_iff] ["at", ident hi],
-     have [] [] [":=", expr (h.zpow_eq_one_iff_dvd _).mp hi],
-     rw ["[", "<-", expr (char_p.int_cast_eq_zero_iff (zmod k) k _).mpr this, ",", expr eq_comm, "]"] [],
-     exact [expr zmod.int_cast_right_inverse i] },
-   { rintro ["⟨", ident ξ, ",", ident i, ",", ident rfl, "⟩"],
-     refine [expr ⟨int.cast_add_hom _ i, _⟩],
-     rw ["[", expr add_monoid_hom.lift_of_right_inverse_comp_apply, "]"] [],
-     refl }
- end)
+def zmod_equiv_zpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup.zpowers ζ) :=
+  AddEquiv.ofBijective
+    (AddMonoidHom.liftOfRightInverse (Int.castAddHom$ Zmod k) _ Zmod.int_cast_right_inverse
+      ⟨{ toFun := fun i => Additive.ofMul (⟨_, i, rfl⟩ : Subgroup.zpowers ζ),
+          map_zero' :=
+            by 
+              simp only [zpow_zero]
+              rfl,
+          map_add' :=
+            by 
+              intro i j 
+              simp only [zpow_add]
+              rfl },
+        fun i hi =>
+          by 
+            simp only [AddMonoidHom.mem_ker, CharP.int_cast_eq_zero_iff (Zmod k) k, AddMonoidHom.coe_mk,
+              Int.coe_cast_add_hom] at hi⊢
+            obtain ⟨i, rfl⟩ := hi 
+            simp only [zpow_mul, h.pow_eq_one, one_zpow, zpow_coe_nat]
+            rfl⟩)
+    (by 
+      constructor
+      ·
+        rw [AddMonoidHom.injective_iff]
+        intro i hi 
+        rw [Subtype.ext_iff] at hi 
+        have  := (h.zpow_eq_one_iff_dvd _).mp hi 
+        rw [←(CharP.int_cast_eq_zero_iff (Zmod k) k _).mpr this, eq_comm]
+        exact Zmod.int_cast_right_inverse i
+      ·
+        rintro ⟨ξ, i, rfl⟩
+        refine' ⟨Int.castAddHom _ i, _⟩
+        rw [AddMonoidHom.lift_of_right_inverse_comp_apply]
+        rfl)
 
 @[simp]
 theorem zmod_equiv_zpowers_apply_coe_int (i : ℤ) :
   h.zmod_equiv_zpowers i = Additive.ofMul (⟨ζ^i, i, rfl⟩ : Subgroup.zpowers ζ) :=
   AddMonoidHom.lift_of_right_inverse_comp_apply _ _ Zmod.int_cast_right_inverse _ _
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem zmod_equiv_zpowers_apply_coe_nat
-(i : exprℕ()) : «expr = »(h.zmod_equiv_zpowers i, additive.of_mul (⟨«expr ^ »(ζ, i), i, rfl⟩ : subgroup.zpowers ζ)) :=
-begin
-  have [] [":", expr «expr = »((i : zmod k), (i : exprℤ()))] [],
-  by norm_cast [],
-  simp [] [] ["only"] ["[", expr this, ",", expr zmod_equiv_zpowers_apply_coe_int, ",", expr zpow_coe_nat, "]"] [] [],
-  refl
-end
+theorem zmod_equiv_zpowers_apply_coe_nat (i : ℕ) :
+  h.zmod_equiv_zpowers i = Additive.ofMul (⟨ζ^i, i, rfl⟩ : Subgroup.zpowers ζ) :=
+  by 
+    have  : (i : Zmod k) = (i : ℤ)
+    ·
+      normCast 
+    simp only [this, zmod_equiv_zpowers_apply_coe_int, zpow_coe_nat]
+    rfl
 
 @[simp]
 theorem zmod_equiv_zpowers_symm_apply_zpow (i : ℤ) :
@@ -718,68 +707,57 @@ theorem zmod_equiv_zpowers_symm_apply_pow (i : ℕ) :
 theorem zmod_equiv_zpowers_symm_apply_pow' (i : ℕ) : h.zmod_equiv_zpowers.symm ⟨ζ^i, i, rfl⟩ = i :=
   h.zmod_equiv_zpowers_symm_apply_pow i
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If there is a `n`-th primitive root of unity in `R` and `b` divides `n`,
 then there is a `b`-th primitive root of unity in `R`. -/
-theorem pow
-{ζ : R}
-{n : exprℕ()}
-{a b : exprℕ()}
-(hn : «expr < »(0, n))
-(h : is_primitive_root ζ n)
-(hprod : «expr = »(n, «expr * »(a, b))) : is_primitive_root «expr ^ »(ζ, a) b :=
-begin
-  subst [expr n],
-  simp [] [] ["only"] ["[", expr iff_def, ",", "<-", expr pow_mul, ",", expr h.pow_eq_one, ",", expr eq_self_iff_true, ",", expr true_and, "]"] [] [],
-  intros [ident l, ident hl],
-  have [ident ha0] [":", expr «expr ≠ »(a, 0)] [],
-  { rintro [ident rfl],
-    simpa [] [] ["only"] ["[", expr nat.not_lt_zero, ",", expr zero_mul, "]"] [] ["using", expr hn] },
-  rwa ["<-", expr mul_dvd_mul_iff_left ha0] [],
-  exact [expr h.dvd_of_pow_eq_one _ hl]
-end
+theorem pow {ζ : R} {n : ℕ} {a b : ℕ} (hn : 0 < n) (h : IsPrimitiveRoot ζ n) (hprod : n = a*b) :
+  IsPrimitiveRoot (ζ^a) b :=
+  by 
+    subst n 
+    simp only [iff_def, ←pow_mulₓ, h.pow_eq_one, eq_self_iff_true, true_andₓ]
+    intro l hl 
+    have ha0 : a ≠ 0
+    ·
+      rintro rfl 
+      simpa only [Nat.not_lt_zeroₓ, zero_mul] using hn 
+    rwa [←mul_dvd_mul_iff_left ha0]
+    exact h.dvd_of_pow_eq_one _ hl
 
 variable [IsDomain R]
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem zpowers_eq
-{k : «exprℕ+»()}
-{ζ : units R}
-(h : is_primitive_root ζ k) : «expr = »(subgroup.zpowers ζ, roots_of_unity k R) :=
-begin
-  apply [expr set_like.coe_injective],
-  haveI [] [":", expr fact «expr < »(0, (k : exprℕ()))] [":=", expr ⟨k.pos⟩],
-  haveI [ident F] [":", expr fintype (subgroup.zpowers ζ)] [":=", expr fintype.of_equiv _ h.zmod_equiv_zpowers.to_equiv],
-  refine [expr @set.eq_of_subset_of_card_le (units R) (subgroup.zpowers ζ) (roots_of_unity k R) F (roots_of_unity.fintype R k) «expr $ »(subgroup.zpowers_subset, show «expr ∈ »(ζ, roots_of_unity k R), from h.pow_eq_one) _],
-  calc
-    «expr ≤ »(fintype.card (roots_of_unity k R), k) : card_roots_of_unity R k
-    «expr = »(..., fintype.card (zmod k)) : (zmod.card k).symm
-    «expr = »(..., fintype.card (subgroup.zpowers ζ)) : fintype.card_congr h.zmod_equiv_zpowers.to_equiv
-end
+theorem zpowers_eq {k : ℕ+} {ζ : Units R} (h : IsPrimitiveRoot ζ k) : Subgroup.zpowers ζ = rootsOfUnity k R :=
+  by 
+    apply SetLike.coe_injective 
+    have  : Fact (0 < (k : ℕ)) := ⟨k.pos⟩
+    have F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ h.zmod_equiv_zpowers.toEquiv 
+    refine'
+      @Set.eq_of_subset_of_card_le (Units R) (Subgroup.zpowers ζ) (rootsOfUnity k R) F (rootsOfUnity.fintype R k)
+        (Subgroup.zpowers_subset$ show ζ ∈ rootsOfUnity k R from h.pow_eq_one) _ 
+    calc Fintype.card (rootsOfUnity k R) ≤ k := card_roots_of_unity R k _ = Fintype.card (Zmod k) :=
+      (Zmod.card k).symm _ = Fintype.card (Subgroup.zpowers ζ) := Fintype.card_congr h.zmod_equiv_zpowers.toEquiv
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_pow_of_mem_roots_of_unity
-{k : «exprℕ+»()}
-{ζ ξ : units R}
-(h : is_primitive_root ζ k)
-(hξ : «expr ∈ »(ξ, roots_of_unity k R)) : «expr∃ , »((i : exprℕ())
- (hi : «expr < »(i, k)), «expr = »(«expr ^ »(ζ, i), ξ)) :=
-begin
-  obtain ["⟨", ident n, ",", ident rfl, "⟩", ":", expr «expr∃ , »((n : exprℤ()), «expr = »(«expr ^ »(ζ, n), ξ))],
-  by rwa ["[", "<-", expr h.zpowers_eq, "]"] ["at", ident hξ],
-  have [ident hk0] [":", expr «expr < »((0 : exprℤ()), k)] [":=", expr by exact_mod_cast [expr k.pos]],
-  let [ident i] [] [":=", expr «expr % »(n, k)],
-  have [ident hi0] [":", expr «expr ≤ »(0, i)] [":=", expr int.mod_nonneg _ (ne_of_gt hk0)],
-  lift [expr i] ["to", expr exprℕ()] ["using", expr hi0] ["with", ident i₀, ident hi₀],
-  refine [expr ⟨i₀, _, _⟩],
-  { zify [] [],
-    rw ["[", expr hi₀, "]"] [],
-    exact [expr int.mod_lt_of_pos _ hk0] },
-  { have [ident aux] [] [":=", expr h.zpow_eq_one],
-    rw ["[", "<-", expr coe_coe, "]"] ["at", ident aux],
-    rw ["[", "<-", expr zpow_coe_nat, ",", expr hi₀, ",", "<-", expr int.mod_add_div n k, ",", expr zpow_add, ",", expr zpow_mul, ",", expr aux, ",", expr one_zpow, ",", expr mul_one, "]"] [] }
-end
+theorem eq_pow_of_mem_roots_of_unity {k : ℕ+} {ζ ξ : Units R} (h : IsPrimitiveRoot ζ k) (hξ : ξ ∈ rootsOfUnity k R) :
+  ∃ (i : ℕ)(hi : i < k), (ζ^i) = ξ :=
+  by 
+    obtain ⟨n, rfl⟩ : ∃ n : ℤ, (ζ^n) = ξ
+    ·
+      rwa [←h.zpowers_eq] at hξ 
+    have hk0 : (0 : ℤ) < k :=
+      by 
+        exactModCast k.pos 
+    let i := n % k 
+    have hi0 : 0 ≤ i := Int.mod_nonneg _ (ne_of_gtₓ hk0)
+    lift i to ℕ using hi0 with i₀ hi₀ 
+    refine' ⟨i₀, _, _⟩
+    ·
+      zify 
+      rw [hi₀]
+      exact Int.mod_lt_of_pos _ hk0
+    ·
+      have aux := h.zpow_eq_one 
+      rw [←coe_coe] at aux 
+      rw [←zpow_coe_nat, hi₀, ←Int.mod_add_div n k, zpow_add, zpow_mul, aux, one_zpow, mul_oneₓ]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » k)
 theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (hξ : (ξ^k) = 1) (h0 : 0 < k) :
   ∃ (i : _)(_ : i < k), (ζ^i) = ξ :=
   by 
@@ -791,10 +769,11 @@ theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (h
     apply h.eq_pow_of_mem_roots_of_unity 
     rw [mem_roots_of_unity, Units.ext_iff, Units.coe_pow, hξ, Units.coe_one]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » (k : exprℕ()))
 theorem is_primitive_root_iff' {k : ℕ+} {ζ ξ : Units R} (h : IsPrimitiveRoot ζ k) :
   IsPrimitiveRoot ξ k ↔ ∃ (i : _)(_ : i < (k : ℕ))(hi : i.coprime k), (ζ^i) = ξ :=
   by 
-    split 
+    constructor
     ·
       intro hξ 
       obtain ⟨i, hik, rfl⟩ := h.eq_pow_of_mem_roots_of_unity hξ.pow_eq_one 
@@ -804,10 +783,11 @@ theorem is_primitive_root_iff' {k : ℕ+} {ζ ξ : Units R} (h : IsPrimitiveRoot
       rintro ⟨i, -, hi, rfl⟩
       exact h.pow_of_coprime i hi
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr < » k)
 theorem is_primitive_root_iff {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) :
   IsPrimitiveRoot ξ k ↔ ∃ (i : _)(_ : i < k)(hi : i.coprime k), (ζ^i) = ξ :=
   by 
-    split 
+    constructor
     ·
       intro hξ 
       obtain ⟨i, hik, rfl⟩ := h.eq_pow_of_pow_eq_one hξ.pow_eq_one h0 
@@ -817,19 +797,16 @@ theorem is_primitive_root_iff {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (
       rintro ⟨i, -, hi, rfl⟩
       exact h.pow_of_coprime i hi
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_roots_of_unity'
-{n : «exprℕ+»()}
-(h : is_primitive_root ζ n) : «expr = »(fintype.card (roots_of_unity n R), n) :=
-begin
-  haveI [] [":", expr fact «expr < »(0, «expr↑ »(n))] [":=", expr ⟨n.pos⟩],
-  let [ident e] [] [":=", expr h.zmod_equiv_zpowers],
-  haveI [ident F] [":", expr fintype (subgroup.zpowers ζ)] [":=", expr fintype.of_equiv _ e.to_equiv],
-  calc
-    «expr = »(fintype.card (roots_of_unity n R), fintype.card (subgroup.zpowers ζ)) : «expr $ »(fintype.card_congr, by rw [expr h.zpowers_eq] [])
-    «expr = »(..., fintype.card (zmod n)) : fintype.card_congr e.to_equiv.symm
-    «expr = »(..., n) : zmod.card n
-end
+theorem card_roots_of_unity' {n : ℕ+} (h : IsPrimitiveRoot ζ n) : Fintype.card (rootsOfUnity n R) = n :=
+  by 
+    have  : Fact (0 < ↑n) := ⟨n.pos⟩
+    let e := h.zmod_equiv_zpowers 
+    have F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ e.to_equiv 
+    calc Fintype.card (rootsOfUnity n R) = Fintype.card (Subgroup.zpowers ζ) :=
+      Fintype.card_congr$
+        by 
+          rw [h.zpowers_eq]_ = Fintype.card (Zmod n) :=
+      Fintype.card_congr e.to_equiv.symm _ = n := Zmod.card n
 
 theorem card_roots_of_unity {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) : Fintype.card (rootsOfUnity n R) = n :=
   by 
@@ -837,48 +814,51 @@ theorem card_roots_of_unity {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) : Fin
     rw [←hζ, IsPrimitiveRoot.coe_units_iff] at h 
     exact h.card_roots_of_unity'
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cardinality of the multiset `nth_roots ↑n (1 : R)` is `n`
 if there is a primitive root of unity in `R`. -/
-theorem card_nth_roots {ζ : R} {n : exprℕ()} (h : is_primitive_root ζ n) : «expr = »((nth_roots n (1 : R)).card, n) :=
-begin
-  cases [expr nat.eq_zero_or_pos n] ["with", ident hzero, ident hpos],
-  { simp [] [] ["only"] ["[", expr hzero, ",", expr multiset.card_zero, ",", expr nth_roots_zero, "]"] [] [] },
-  rw [expr eq_iff_le_not_lt] [],
-  use [expr card_nth_roots n 1],
-  { rw ["[", expr not_lt, "]"] [],
-    have [ident hcard] [":", expr «expr ≤ »(fintype.card {x // «expr ∈ »(x, nth_roots n (1 : R))}, (nth_roots n (1 : R)).attach.card)] [":=", expr multiset.card_le_of_le (multiset.erase_dup_le _)],
-    rw [expr multiset.card_attach] ["at", ident hcard],
-    rw ["<-", expr pnat.to_pnat'_coe hpos] ["at", ident hcard, ident h, "⊢"],
-    set [] [ident m] [] [":="] [expr nat.to_pnat' n] [],
-    rw ["[", "<-", expr fintype.card_congr (roots_of_unity_equiv_nth_roots R m), ",", expr card_roots_of_unity h, "]"] ["at", ident hcard],
-    exact [expr hcard] }
-end
+theorem card_nth_roots {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nth_roots n (1 : R)).card = n :=
+  by 
+    cases' Nat.eq_zero_or_posₓ n with hzero hpos
+    ·
+      simp only [hzero, Multiset.card_zero, nth_roots_zero]
+    rw [eq_iff_le_not_lt]
+    use card_nth_roots n 1
+    ·
+      rw [not_ltₓ]
+      have hcard : Fintype.card { x // x ∈ nth_roots n (1 : R) } ≤ (nth_roots n (1 : R)).attach.card :=
+        Multiset.card_le_of_le (Multiset.erase_dup_le _)
+      rw [Multiset.card_attach] at hcard 
+      rw [←Pnat.to_pnat'_coe hpos] at hcard h⊢
+      set m := Nat.toPnat' n 
+      rw [←Fintype.card_congr (rootsOfUnityEquivNthRoots R m), card_roots_of_unity h] at hcard 
+      exact hcard
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The multiset `nth_roots ↑n (1 : R)` has no repeated elements
 if there is a primitive root of unity in `R`. -/
-theorem nth_roots_nodup {ζ : R} {n : exprℕ()} (h : is_primitive_root ζ n) : (nth_roots n (1 : R)).nodup :=
-begin
-  cases [expr nat.eq_zero_or_pos n] ["with", ident hzero, ident hpos],
-  { simp [] [] ["only"] ["[", expr hzero, ",", expr multiset.nodup_zero, ",", expr nth_roots_zero, "]"] [] [] },
-  apply [expr (@multiset.erase_dup_eq_self R _ _).1],
-  rw [expr eq_iff_le_not_lt] [],
-  split,
-  { exact [expr multiset.erase_dup_le (nth_roots n (1 : R))] },
-  { by_contra [ident ha],
-    replace [ident ha] [] [":=", expr multiset.card_lt_of_lt ha],
-    rw [expr card_nth_roots h] ["at", ident ha],
-    have [ident hrw] [":", expr «expr = »((nth_roots n (1 : R)).erase_dup.card, fintype.card {x // «expr ∈ »(x, nth_roots n (1 : R))})] [],
-    { set [] [ident fs] [] [":="] [expr (⟨(nth_roots n (1 : R)).erase_dup, multiset.nodup_erase_dup _⟩ : finset R)] [],
-      rw ["[", "<-", expr finset.card_mk, ",", "<-", expr fintype.card_of_subtype fs _, "]"] [],
-      intro [ident x],
-      simp [] [] ["only"] ["[", expr multiset.mem_erase_dup, ",", expr finset.mem_mk, "]"] [] [] },
-    rw ["<-", expr pnat.to_pnat'_coe hpos] ["at", ident h, ident hrw, ident ha],
-    set [] [ident m] [] [":="] [expr nat.to_pnat' n] [],
-    rw ["[", expr hrw, ",", "<-", expr fintype.card_congr (roots_of_unity_equiv_nth_roots R m), ",", expr card_roots_of_unity h, "]"] ["at", ident ha],
-    exact [expr nat.lt_asymm ha ha] }
-end
+theorem nth_roots_nodup {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nth_roots n (1 : R)).Nodup :=
+  by 
+    cases' Nat.eq_zero_or_posₓ n with hzero hpos
+    ·
+      simp only [hzero, Multiset.nodup_zero, nth_roots_zero]
+    apply (@Multiset.erase_dup_eq_self R _ _).1
+    rw [eq_iff_le_not_lt]
+    constructor
+    ·
+      exact Multiset.erase_dup_le (nth_roots n (1 : R))
+    ·
+      byContra ha 
+      replace ha := Multiset.card_lt_of_lt ha 
+      rw [card_nth_roots h] at ha 
+      have hrw : (nth_roots n (1 : R)).eraseDup.card = Fintype.card { x // x ∈ nth_roots n (1 : R) }
+      ·
+        set fs := (⟨(nth_roots n (1 : R)).eraseDup, Multiset.nodup_erase_dup _⟩ : Finset R)
+        rw [←Finset.card_mk, ←Fintype.card_of_subtype fs _]
+        intro x 
+        simp only [Multiset.mem_erase_dup, Finset.mem_mk]
+      rw [←Pnat.to_pnat'_coe hpos] at h hrw ha 
+      set m := Nat.toPnat' n 
+      rw [hrw, ←Fintype.card_congr (rootsOfUnityEquivNthRoots R m), card_roots_of_unity h] at ha 
+      exact Nat.lt_asymmₓ ha ha
 
 @[simp]
 theorem card_nth_roots_finset {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nth_roots_finset n R).card = n :=
@@ -916,39 +896,42 @@ theorem Disjoint {k l : ℕ} (hk : 0 < k) (hl : 0 < l) (h : k ≠ l) : Disjoint 
     rintro ⟨⟨hzk, Hzk⟩, ⟨hzl, Hzl⟩⟩
     applyRules [h, Nat.dvd_antisymm, Hzk, Hzl, hzk, hzl]
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
 /-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
 if there is a primitive root of unity in `R`. -/
-theorem nth_roots_one_eq_bUnion_primitive_roots'
-{ζ : R}
-{n : «exprℕ+»()}
-(h : is_primitive_root ζ n) : «expr = »(nth_roots_finset n R, (nat.divisors «expr↑ »(n)).bUnion (λ
-  i, primitive_roots i R)) :=
-begin
-  symmetry,
-  apply [expr finset.eq_of_subset_of_card_le],
-  { intros [ident x],
-    simp [] [] ["only"] ["[", expr nth_roots_finset, ",", "<-", expr multiset.to_finset_eq (nth_roots_nodup h), ",", expr exists_prop, ",", expr finset.mem_bUnion, ",", expr finset.mem_filter, ",", expr finset.mem_range, ",", expr mem_nth_roots, ",", expr finset.mem_mk, ",", expr nat.mem_divisors, ",", expr and_true, ",", expr ne.def, ",", expr pnat.ne_zero, ",", expr pnat.pos, ",", expr not_false_iff, "]"] [] [],
-    rintro ["⟨", ident a, ",", "⟨", ident d, ",", ident hd, "⟩", ",", ident ha, "⟩"],
-    have [ident hazero] [":", expr «expr < »(0, a)] [],
-    { contrapose ["!"] [ident hd, "with", ident ha0],
-      simp [] [] ["only"] ["[", expr nonpos_iff_eq_zero, ",", expr zero_mul, ",", "*", "]"] [] ["at", "*"],
-      exact [expr n.ne_zero] },
-    rw [expr mem_primitive_roots hazero] ["at", ident ha],
-    rw ["[", expr hd, ",", expr pow_mul, ",", expr ha.pow_eq_one, ",", expr one_pow, "]"] [] },
-  { apply [expr le_of_eq],
-    rw ["[", expr h.card_nth_roots_finset, ",", expr finset.card_bUnion, "]"] [],
-    { rw ["[", "<-", expr nat.sum_totient n, ",", expr nat.filter_dvd_eq_divisors (pnat.ne_zero n), ",", expr sum_congr rfl, "]"] [] { occs := occurrences.pos «expr[ , ]»([1]) },
-      simp [] [] ["only"] ["[", expr finset.mem_filter, ",", expr finset.mem_range, ",", expr nat.mem_divisors, "]"] [] [],
-      rintro [ident k, "⟨", ident H, ",", ident hk, "⟩"],
-      have [ident hdvd] [] [":=", expr H],
-      rcases [expr H, "with", "⟨", ident d, ",", ident hd, "⟩"],
-      rw [expr mul_comm] ["at", ident hd],
-      rw [expr (h.pow n.pos hd).card_primitive_roots (pnat.pos_of_div_pos hdvd)] [] },
-    { intros [ident i, ident hi, ident j, ident hj, ident hdiff],
-      simp [] [] ["only"] ["[", expr nat.mem_divisors, ",", expr and_true, ",", expr ne.def, ",", expr pnat.ne_zero, ",", expr not_false_iff, "]"] [] ["at", ident hi, ident hj],
-      exact [expr disjoint (pnat.pos_of_div_pos hi) (pnat.pos_of_div_pos hj) hdiff] } }
-end
+theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
+  nth_roots_finset n R = (Nat.divisors (↑n)).bUnion fun i => primitiveRoots i R :=
+  by 
+    symm 
+    apply Finset.eq_of_subset_of_card_le
+    ·
+      intro x 
+      simp only [nth_roots_finset, ←Multiset.to_finset_eq (nth_roots_nodup h), exists_prop, Finset.mem_bUnion,
+        Finset.mem_filter, Finset.mem_range, mem_nth_roots, Finset.mem_mk, Nat.mem_divisors, and_trueₓ, Ne.def,
+        Pnat.ne_zero, Pnat.pos, not_false_iff]
+      rintro ⟨a, ⟨d, hd⟩, ha⟩
+      have hazero : 0 < a
+      ·
+        contrapose! hd with ha0 
+        simp_all only [nonpos_iff_eq_zero, zero_mul]
+        exact n.ne_zero 
+      rw [mem_primitive_roots hazero] at ha 
+      rw [hd, pow_mulₓ, ha.pow_eq_one, one_pow]
+    ·
+      apply le_of_eqₓ 
+      rw [h.card_nth_roots_finset, Finset.card_bUnion]
+      ·
+        rw [←Nat.sum_totient n, Nat.filter_dvd_eq_divisors (Pnat.ne_zero n), sum_congr rfl]
+        simp only [Finset.mem_filter, Finset.mem_range, Nat.mem_divisors]
+        rintro k ⟨H, hk⟩
+        have hdvd := H 
+        rcases H with ⟨d, hd⟩
+        rw [mul_commₓ] at hd 
+        rw [(h.pow n.pos hd).card_primitive_roots (Pnat.pos_of_div_pos hdvd)]
+      ·
+        intro i hi j hj hdiff 
+        simp only [Nat.mem_divisors, and_trueₓ, Ne.def, Pnat.ne_zero, not_false_iff] at hi hj 
+        exact Disjoint (Pnat.pos_of_div_pos hi) (Pnat.pos_of_div_pos hj) hdiff
 
 /-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
 if there is a primitive root of unity in `R`. -/
@@ -970,7 +953,7 @@ include n μ h hpos
 theorem IsIntegral : IsIntegral ℤ μ :=
   by 
     use (X^n) - 1
-    split 
+    constructor
     ·
       exact monic_X_pow_sub_C 1 (ne_of_ltₓ hpos).symm
     ·
@@ -987,19 +970,17 @@ theorem minpoly_dvd_X_pow_sub_one : minpoly ℤ μ ∣ (X^n) - 1 :=
     simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, aeval_X_pow, RingHom.eq_int_cast, Int.cast_one, aeval_one,
       AlgHom.map_sub, sub_self]
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is separable. -/
-theorem separable_minpoly_mod
-{p : exprℕ()}
-[fact p.prime]
-(hdiv : «expr¬ »(«expr ∣ »(p, n))) : separable (map (int.cast_ring_hom (zmod p)) (minpoly exprℤ() μ)) :=
-begin
-  have [ident hdvd] [":", expr «expr ∣ »(map (int.cast_ring_hom (zmod p)) (minpoly exprℤ() μ), «expr - »(«expr ^ »(X, n), 1))] [],
-  { simpa [] [] [] ["[", expr map_pow, ",", expr map_X, ",", expr map_one, ",", expr map_sub, "]"] [] ["using", expr ring_hom.map_dvd (map_ring_hom (int.cast_ring_hom (zmod p))) (minpoly_dvd_X_pow_sub_one h hpos)] },
-  refine [expr separable.of_dvd (separable_X_pow_sub_C 1 _ one_ne_zero) hdvd],
-  by_contra [ident hzero],
-  exact [expr hdiv ((zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 hzero)]
-end
+theorem separable_minpoly_mod {p : ℕ} [Fact p.prime] (hdiv : ¬p ∣ n) :
+  separable (map (Int.castRingHom (Zmod p)) (minpoly ℤ μ)) :=
+  by 
+    have hdvd : map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ (X^n) - 1
+    ·
+      simpa [Polynomial.map_pow, map_X, Polynomial.map_one, Polynomial.map_sub] using
+        RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p))) (minpoly_dvd_X_pow_sub_one h hpos)
+    refine' separable.of_dvd (separable_X_pow_sub_C 1 _ one_ne_zero) hdvd 
+    byContra hzero 
+    exact hdiv ((Zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 hzero)
 
 /-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is squarefree. -/
 theorem squarefree_minpoly_mod {p : ℕ} [Fact p.prime] (hdiv : ¬p ∣ n) :
@@ -1016,104 +997,110 @@ theorem minpoly_dvd_expand {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ n) :
         ←leading_coeff, ←Polynomial.Monic]
       exact minpoly.monic (IsIntegral (pow_of_prime h hprime hdiv) hpos)
     ·
-      rw [aeval_def, coe_expand, ←comp, eval₂_eq_eval_map, map_comp, map_pow, map_X, eval_comp, eval_pow, eval_X,
-        ←eval₂_eq_eval_map, ←aeval_def]
+      rw [aeval_def, coe_expand, ←comp, eval₂_eq_eval_map, map_comp, Polynomial.map_pow, map_X, eval_comp, eval_pow,
+        eval_X, ←eval₂_eq_eval_map, ←aeval_def]
       exact minpoly.aeval _ _
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem minpoly_dvd_pow_mod
-{p : exprℕ()}
-[hprime : fact p.prime]
-(hdiv : «expr¬ »(«expr ∣ »(p, n))) : «expr ∣ »(map (int.cast_ring_hom (zmod p)) (minpoly exprℤ() μ), «expr ^ »(map (int.cast_ring_hom (zmod p)) (minpoly exprℤ() «expr ^ »(μ, p)), p)) :=
-begin
-  set [] [ident Q] [] [":="] [expr minpoly exprℤ() «expr ^ »(μ, p)] [],
-  have [ident hfrob] [":", expr «expr = »(«expr ^ »(map (int.cast_ring_hom (zmod p)) Q, p), map (int.cast_ring_hom (zmod p)) (expand exprℤ() p Q))] [],
-  by rw ["[", "<-", expr zmod.expand_card, ",", expr map_expand hprime.1.pos, "]"] [],
-  rw ["[", expr hfrob, "]"] [],
-  apply [expr ring_hom.map_dvd (map_ring_hom (int.cast_ring_hom (zmod p)))],
-  exact [expr minpoly_dvd_expand h hpos hprime.1 hdiv]
-end
+theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.prime] (hdiv : ¬p ∣ n) :
+  map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ (map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ^p))^p) :=
+  by 
+    set Q := minpoly ℤ (μ^p)
+    have hfrob : (map (Int.castRingHom (Zmod p)) Q^p) = map (Int.castRingHom (Zmod p)) (expand ℤ p Q)
+    ·
+      rw [←Zmod.expand_card, map_expand hprime.1.Pos]
+    rw [hfrob]
+    apply RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p)))
+    exact minpoly_dvd_expand h hpos hprime.1 hdiv
 
 theorem minpoly_dvd_mod_p {p : ℕ} [hprime : Fact p.prime] (hdiv : ¬p ∣ n) :
   map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ^p)) :=
   (UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree (squarefree_minpoly_mod h hpos hdiv) hprime.1.ne_zero).1
     (minpoly_dvd_pow_mod h hpos hdiv)
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `p` is a prime that does not divide `n`,
 then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ p` are the same. -/
-theorem minpoly_eq_pow
-{p : exprℕ()}
-[hprime : fact p.prime]
-(hdiv : «expr¬ »(«expr ∣ »(p, n))) : «expr = »(minpoly exprℤ() μ, minpoly exprℤ() «expr ^ »(μ, p)) :=
-begin
-  by_contra [ident hdiff],
-  set [] [ident P] [] [":="] [expr minpoly exprℤ() μ] [],
-  set [] [ident Q] [] [":="] [expr minpoly exprℤ() «expr ^ »(μ, p)] [],
-  have [ident Pmonic] [":", expr P.monic] [":=", expr minpoly.monic (h.is_integral hpos)],
-  have [ident Qmonic] [":", expr Q.monic] [":=", expr minpoly.monic ((h.pow_of_prime hprime.1 hdiv).is_integral hpos)],
-  have [ident Pirr] [":", expr irreducible P] [":=", expr minpoly.irreducible (h.is_integral hpos)],
-  have [ident Qirr] [":", expr irreducible Q] [":=", expr minpoly.irreducible ((h.pow_of_prime hprime.1 hdiv).is_integral hpos)],
-  have [ident PQprim] [":", expr is_primitive «expr * »(P, Q)] [":=", expr Pmonic.is_primitive.mul Qmonic.is_primitive],
-  have [ident prod] [":", expr «expr ∣ »(«expr * »(P, Q), «expr - »(«expr ^ »(X, n), 1))] [],
-  { rw ["[", expr is_primitive.int.dvd_iff_map_cast_dvd_map_cast «expr * »(P, Q) «expr - »(«expr ^ »(X, n), 1) PQprim (monic_X_pow_sub_C (1 : exprℤ()) (ne_of_gt hpos)).is_primitive, ",", expr map_mul, "]"] [],
-    refine [expr is_coprime.mul_dvd _ _ _],
-    { have [ident aux] [] [":=", expr is_primitive.int.irreducible_iff_irreducible_map_cast Pmonic.is_primitive],
-      refine [expr (dvd_or_coprime _ _ (aux.1 Pirr)).resolve_left _],
-      rw [expr map_dvd_map (int.cast_ring_hom exprℚ()) int.cast_injective Pmonic] [],
-      intro [ident hdiv],
-      refine [expr hdiff (eq_of_monic_of_associated Pmonic Qmonic _)],
-      exact [expr associated_of_dvd_dvd hdiv (Pirr.dvd_symm Qirr hdiv)] },
-    { apply [expr (map_dvd_map (int.cast_ring_hom exprℚ()) int.cast_injective Pmonic).2],
-      exact [expr minpoly_dvd_X_pow_sub_one h hpos] },
-    { apply [expr (map_dvd_map (int.cast_ring_hom exprℚ()) int.cast_injective Qmonic).2],
-      exact [expr minpoly_dvd_X_pow_sub_one (pow_of_prime h hprime.1 hdiv) hpos] } },
-  replace [ident prod] [] [":=", expr ring_hom.map_dvd (map_ring_hom (int.cast_ring_hom (zmod p))) prod],
-  rw ["[", expr coe_map_ring_hom, ",", expr map_mul, ",", expr map_sub, ",", expr map_one, ",", expr map_pow, ",", expr map_X, "]"] ["at", ident prod],
-  obtain ["⟨", ident R, ",", ident hR, "⟩", ":=", expr minpoly_dvd_mod_p h hpos hdiv],
-  rw ["[", expr hR, ",", "<-", expr mul_assoc, ",", "<-", expr map_mul, ",", "<-", expr sq, ",", expr map_pow, "]"] ["at", ident prod],
-  have [ident habs] [":", expr «expr ∣ »(«expr ^ »(map (int.cast_ring_hom (zmod p)) P, 2), «expr * »(«expr ^ »(map (int.cast_ring_hom (zmod p)) P, 2), R))] [],
-  { use [expr R] },
-  replace [ident habs] [] [":=", expr lt_of_lt_of_le (enat.coe_lt_coe.2 one_lt_two) (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs prod))],
-  have [ident hfree] [":", expr squarefree («expr - »(«expr ^ »(X, n), 1) : polynomial (zmod p))] [],
-  { exact [expr (separable_X_pow_sub_C 1 (λ
-       h, «expr $ »(hdiv, (zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 h)) one_ne_zero).squarefree] },
-  cases [expr (multiplicity.squarefree_iff_multiplicity_le_one «expr - »(«expr ^ »(X, n), 1)).1 hfree (map (int.cast_ring_hom (zmod p)) P)] ["with", ident hle, ident hunit],
-  { rw [expr nat.cast_one] ["at", ident habs],
-    exact [expr hle.not_lt habs] },
-  { replace [ident hunit] [] [":=", expr degree_eq_zero_of_is_unit hunit],
-    rw [expr degree_map_eq_of_leading_coeff_ne_zero (int.cast_ring_hom (zmod p)) _] ["at", ident hunit],
-    { exact [expr (minpoly.degree_pos (is_integral h hpos)).ne' hunit] },
-    simp [] [] ["only"] ["[", expr Pmonic, ",", expr ring_hom.eq_int_cast, ",", expr monic.leading_coeff, ",", expr int.cast_one, ",", expr ne.def, ",", expr not_false_iff, ",", expr one_ne_zero, "]"] [] [] }
-end
+theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.prime] (hdiv : ¬p ∣ n) : minpoly ℤ μ = minpoly ℤ (μ^p) :=
+  by 
+    byContra hdiff 
+    set P := minpoly ℤ μ 
+    set Q := minpoly ℤ (μ^p)
+    have Pmonic : P.monic := minpoly.monic (h.is_integral hpos)
+    have Qmonic : Q.monic := minpoly.monic ((h.pow_of_prime hprime.1 hdiv).IsIntegral hpos)
+    have Pirr : Irreducible P := minpoly.irreducible (h.is_integral hpos)
+    have Qirr : Irreducible Q := minpoly.irreducible ((h.pow_of_prime hprime.1 hdiv).IsIntegral hpos)
+    have PQprim : is_primitive (P*Q) := Pmonic.is_primitive.mul Qmonic.is_primitive 
+    have prod : (P*Q) ∣ (X^n) - 1
+    ·
+      rw
+        [is_primitive.int.dvd_iff_map_cast_dvd_map_cast (P*Q) ((X^n) - 1) PQprim
+          (monic_X_pow_sub_C (1 : ℤ) (ne_of_gtₓ hpos)).IsPrimitive,
+        Polynomial.map_mul]
+      refine' IsCoprime.mul_dvd _ _ _
+      ·
+        have aux := is_primitive.int.irreducible_iff_irreducible_map_cast Pmonic.is_primitive 
+        refine' (dvd_or_coprime _ _ (aux.1 Pirr)).resolve_left _ 
+        rw [map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Pmonic]
+        intro hdiv 
+        refine' hdiff (eq_of_monic_of_associated Pmonic Qmonic _)
+        exact associated_of_dvd_dvd hdiv (Pirr.dvd_symm Qirr hdiv)
+      ·
+        apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Pmonic).2 
+        exact minpoly_dvd_X_pow_sub_one h hpos
+      ·
+        apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Qmonic).2 
+        exact minpoly_dvd_X_pow_sub_one (pow_of_prime h hprime.1 hdiv) hpos 
+    replace prod := RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p))) Prod 
+    rw [coe_map_ring_hom, Polynomial.map_mul, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow, map_X] at
+      prod 
+    obtain ⟨R, hR⟩ := minpoly_dvd_mod_p h hpos hdiv 
+    rw [hR, ←mul_assocₓ, ←Polynomial.map_mul, ←sq, Polynomial.map_pow] at prod 
+    have habs : (map (Int.castRingHom (Zmod p)) P^2) ∣ (map (Int.castRingHom (Zmod p)) P^2)*R
+    ·
+      use R 
+    replace habs :=
+      lt_of_lt_of_leₓ (Enat.coe_lt_coe.2 one_lt_two) (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs Prod))
+    have hfree : Squarefree ((X^n) - 1 : Polynomial (Zmod p))
+    ·
+      exact
+        (separable_X_pow_sub_C 1 (fun h => hdiv$ (Zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 h) one_ne_zero).Squarefree 
+    cases' (multiplicity.squarefree_iff_multiplicity_le_one ((X^n) - 1)).1 hfree (map (Int.castRingHom (Zmod p)) P) with
+      hle hunit
+    ·
+      rw [Nat.cast_one] at habs 
+      exact hle.not_lt habs
+    ·
+      replace hunit := degree_eq_zero_of_is_unit hunit 
+      rw [degree_map_eq_of_leading_coeff_ne_zero (Int.castRingHom (Zmod p)) _] at hunit
+      ·
+        exact (minpoly.degree_pos (IsIntegral h hpos)).ne' hunit 
+      simp only [Pmonic, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_one, Ne.def, not_false_iff, one_ne_zero]
 
--- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `m : ℕ` is coprime with `n`,
 then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ m` are the same. -/
-theorem minpoly_eq_pow_coprime
-{m : exprℕ()}
-(hcop : nat.coprime m n) : «expr = »(minpoly exprℤ() μ, minpoly exprℤ() «expr ^ »(μ, m)) :=
-begin
-  revert [ident n, ident hcop],
-  refine [expr unique_factorization_monoid.induction_on_prime m _ _ _],
-  { intros [ident n, ident hn, ident h, ident hpos],
-    congr,
-    simpa [] [] [] ["[", expr (nat.coprime_zero_left n).mp hn, "]"] [] ["using", expr h] },
-  { intros [ident u, ident hunit, ident n, ident hcop, ident h, ident hpos],
-    congr,
-    simp [] [] [] ["[", expr nat.is_unit_iff.mp hunit, "]"] [] [] },
-  { intros [ident a, ident p, ident ha, ident hprime, ident hind, ident n, ident hcop, ident h, ident hpos],
-    rw [expr hind (nat.coprime.coprime_mul_left hcop) h hpos] [],
-    clear [ident hind],
-    replace [ident hprime] [] [":=", expr nat.prime_iff.2 hprime],
-    have [ident hdiv] [] [":=", expr (nat.prime.coprime_iff_not_dvd hprime).1 (nat.coprime.coprime_mul_right hcop)],
-    haveI [] [] [":=", expr fact.mk hprime],
-    rw ["[", expr minpoly_eq_pow (h.pow_of_coprime a (nat.coprime.coprime_mul_left hcop)) hpos hdiv, "]"] [],
-    congr' [1] [],
-    ring_exp [] [] }
-end
+theorem minpoly_eq_pow_coprime {m : ℕ} (hcop : Nat.Coprime m n) : minpoly ℤ μ = minpoly ℤ (μ^m) :=
+  by 
+    revert n hcop 
+    refine' UniqueFactorizationMonoid.induction_on_prime m _ _ _
+    ·
+      intro n hn h hpos 
+      congr 
+      simpa [(Nat.coprime_zero_leftₓ n).mp hn] using h
+    ·
+      intro u hunit n hcop h hpos 
+      congr 
+      simp [nat.is_unit_iff.mp hunit]
+    ·
+      intro a p ha hprime hind n hcop h hpos 
+      rw [hind (Nat.Coprime.coprime_mul_left hcop) h hpos]
+      clear hind 
+      replace hprime := Nat.prime_iff.2 hprime 
+      have hdiv := (Nat.Prime.coprime_iff_not_dvd hprime).1 (Nat.Coprime.coprime_mul_right hcop)
+      have  := Fact.mk hprime 
+      rw [minpoly_eq_pow (h.pow_of_coprime a (Nat.Coprime.coprime_mul_left hcop)) hpos hdiv]
+      congr 1
+      ringExp
 
 /-- If `m : ℕ` is coprime with `n`,
 then the minimal polynomial of a primitive `n`-th root of unity `μ`

@@ -19,7 +19,7 @@ variable {X : Type u} {Y : Type v} [TopologicalSpace X] [TopologicalSpace Y]
 
 variable {x₀ x₁ : X}
 
-noncomputable theory
+noncomputable section 
 
 open_locale UnitInterval
 
@@ -53,7 +53,7 @@ theorem refl_trans_symm_aux_mem_I (x : I × I) : refl_trans_symm_aux x ∈ I :=
     dsimp only [refl_trans_symm_aux]
     splitIfs
     ·
-      split 
+      constructor
       ·
         apply mul_nonneg
         ·
@@ -78,7 +78,7 @@ theorem refl_trans_symm_aux_mem_I (x : I × I) : refl_trans_symm_aux x ∈ I :=
         ·
           linarith
     ·
-      split 
+      constructor
       ·
         apply mul_nonneg
         ·
@@ -161,7 +161,7 @@ theorem continuous_trans_refl_reparam_aux : Continuous trans_refl_reparam_aux :=
 theorem trans_refl_reparam_aux_mem_I (t : I) : trans_refl_reparam_aux t ∈ I :=
   by 
     unfold trans_refl_reparam_aux 
-    splitIfs <;> split  <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
+    splitIfs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
 
 theorem trans_refl_reparam_aux_zero : trans_refl_reparam_aux 0 = 0 :=
   by 
@@ -229,7 +229,7 @@ theorem continuous_trans_assoc_reparam_aux : Continuous trans_assoc_reparam_aux 
 theorem trans_assoc_reparam_aux_mem_I (t : I) : trans_assoc_reparam_aux t ∈ I :=
   by 
     unfold trans_assoc_reparam_aux 
-    splitIfs <;> split  <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
+    splitIfs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
 
 theorem trans_assoc_reparam_aux_zero : trans_assoc_reparam_aux 0 = 0 :=
   by 
@@ -239,40 +239,49 @@ theorem trans_assoc_reparam_aux_one : trans_assoc_reparam_aux 1 = 1 :=
   by 
     normNum [trans_assoc_reparam_aux]
 
--- error in Topology.Homotopy.FundamentalGroupoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem trans_assoc_reparam
-{x₀ x₁ x₂ x₃ : X}
-(p : path x₀ x₁)
-(q : path x₁ x₂)
-(r : path x₂ x₃) : «expr = »((p.trans q).trans r, (p.trans (q.trans r)).reparam (λ
-  t, ⟨trans_assoc_reparam_aux t, trans_assoc_reparam_aux_mem_I t⟩) (by continuity [] []) (subtype.ext trans_assoc_reparam_aux_zero) (subtype.ext trans_assoc_reparam_aux_one)) :=
-begin
-  ext [] [] [],
-  simp [] [] ["only"] ["[", expr trans_assoc_reparam_aux, ",", expr path.trans_apply, ",", expr mul_inv_cancel_left₀, ",", expr not_le, ",", expr function.comp_app, ",", expr ne.def, ",", expr not_false_iff, ",", expr bit0_eq_zero, ",", expr one_ne_zero, ",", expr mul_ite, ",", expr subtype.coe_mk, ",", expr path.coe_to_fun, "]"] [] [],
-  split_ifs [] ["with", ident h₁, ident h₂, ident h₃, ident h₄, ident h₅],
-  { simp [] [] ["only"] ["[", expr one_div, ",", expr subtype.coe_mk, "]"] [] ["at", ident h₂],
-    simp [] [] [] ["[", expr h₂, ",", expr h₃, "]"] [] [] },
-  { exfalso,
-    simp [] [] ["only"] ["[", expr subtype.coe_mk, "]"] [] ["at", ident h₂],
-    linarith [] [] [] },
-  { exfalso,
-    simp [] [] ["only"] ["[", expr subtype.coe_mk, "]"] [] ["at", ident h₂],
-    linarith [] [] [] },
-  { have [ident h] [":", expr «expr¬ »(«expr ≤ »(«expr + »((x : exprℝ()), «expr / »(1, 4)), «expr / »(1, 2)))] [],
-    by linarith [] [] [],
-    have [ident h'] [":", expr «expr ≤ »(«expr - »(«expr * »(2, «expr + »((x : exprℝ()), «expr / »(1, 4))), 1), «expr / »(1, 2))] [],
-    by linarith [] [] [],
-    have [ident h''] [":", expr «expr = »(«expr - »(«expr * »(2, «expr * »(2, (x : exprℝ()))), 1), «expr * »(2, «expr - »(«expr * »(2, «expr + »(«expr↑ »(x), «expr / »(1, 4))), 1)))] [],
-    by linarith [] [] [],
-    simp [] [] ["only"] ["[", expr one_div, ",", expr subtype.coe_mk, "]"] [] ["at", ident h, ident h', ident h'', ident h₂],
-    simp [] [] [] ["[", expr h₁, ",", expr h₂, ",", expr h₄, ",", expr h, ",", expr h', ",", expr h'', "]"] [] [] },
-  { exfalso,
-    linarith [] [] [] },
-  { have [ident h] [":", expr «expr¬ »(«expr ≤ »(«expr * »((«expr / »(1, 2) : exprℝ()), «expr + »(x, 1)), «expr / »(1, 2)))] [],
-    by linarith [] [] [],
-    simp [] [] ["only"] ["[", expr one_div, "]"] [] ["at", ident h, ident h₁],
-    simp [] [] [] ["[", expr h₁, ",", expr h₅, ",", expr h, "]"] [] [] }
-end
+theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
+  (p.trans q).trans r =
+    (p.trans (q.trans r)).reparam (fun t => ⟨trans_assoc_reparam_aux t, trans_assoc_reparam_aux_mem_I t⟩)
+      (by 
+        continuity)
+      (Subtype.ext trans_assoc_reparam_aux_zero) (Subtype.ext trans_assoc_reparam_aux_one) :=
+  by 
+    ext 
+    simp only [trans_assoc_reparam_aux, Path.trans_apply, mul_inv_cancel_left₀, not_leₓ, Function.comp_app, Ne.def,
+      not_false_iff, bit0_eq_zero, one_ne_zero, mul_ite, Subtype.coe_mk, Path.coe_to_fun]
+    splitIfs with h₁ h₂ h₃ h₄ h₅
+    ·
+      simp only [one_div, Subtype.coe_mk] at h₂ 
+      simp [h₂, h₃]
+    ·
+      exfalso 
+      simp only [Subtype.coe_mk] at h₂ 
+      linarith
+    ·
+      exfalso 
+      simp only [Subtype.coe_mk] at h₂ 
+      linarith
+    ·
+      have h : ¬((x : ℝ)+1 / 4) ≤ 1 / 2
+      ·
+        linarith 
+      have h' : (2*(x : ℝ)+1 / 4) - 1 ≤ 1 / 2
+      ·
+        linarith 
+      have h'' : (2*2*(x : ℝ)) - 1 = 2*(2*(↑x)+1 / 4) - 1
+      ·
+        linarith 
+      simp only [one_div, Subtype.coe_mk] at h h' h'' h₂ 
+      simp [h₁, h₂, h₄, h, h', h'']
+    ·
+      exfalso 
+      linarith
+    ·
+      have h : ¬((1 / 2 : ℝ)*x+1) ≤ 1 / 2
+      ·
+        linarith 
+      simp only [one_div] at h h₁ 
+      simp [h₁, h₅, h]
 
 /--
 For paths `p q r`, we have a homotopy from `(p.trans q).trans r` to `p.trans (q.trans r)`.
@@ -308,27 +317,24 @@ attribute [local reducible] FundamentalGroupoid
 attribute [local instance] Path.Homotopic.setoid
 
 instance : CategoryTheory.Groupoid (FundamentalGroupoid X) :=
-  { Hom := fun x y => Path.Homotopic.Quotient x y, id := fun x => «expr⟦ ⟧» (Path.refl x),
+  { Hom := fun x y => Path.Homotopic.Quotient x y, id := fun x => ⟦Path.refl x⟧,
     comp := fun x y z => Quotientₓ.map₂ Path.trans fun p₀ : Path x y p₁ hp q₀ q₁ hq => Path.Homotopic.hcomp hp hq,
     id_comp' :=
       fun x y f =>
         Quotientₓ.induction_on f
-          fun a =>
-            show «expr⟦ ⟧» ((Path.refl x).trans a) = «expr⟦ ⟧» a from Quotientₓ.sound ⟨Path.Homotopy.reflTrans a⟩,
+          fun a => show ⟦(Path.refl x).trans a⟧ = ⟦a⟧ from Quotientₓ.sound ⟨Path.Homotopy.reflTrans a⟩,
     comp_id' :=
       fun x y f =>
         Quotientₓ.induction_on f
-          fun a =>
-            show «expr⟦ ⟧» (a.trans (Path.refl y)) = «expr⟦ ⟧» a from Quotientₓ.sound ⟨Path.Homotopy.transRefl a⟩,
+          fun a => show ⟦a.trans (Path.refl y)⟧ = ⟦a⟧ from Quotientₓ.sound ⟨Path.Homotopy.transRefl a⟩,
     assoc' :=
       fun w x y z f g h =>
         Quotientₓ.induction_on₃ f g h
           fun p q r =>
-            show «expr⟦ ⟧» ((p.trans q).trans r) = «expr⟦ ⟧» (p.trans (q.trans r)) from
-              Quotientₓ.sound ⟨Path.Homotopy.transAssoc p q r⟩,
+            show ⟦(p.trans q).trans r⟧ = ⟦p.trans (q.trans r)⟧ from Quotientₓ.sound ⟨Path.Homotopy.transAssoc p q r⟩,
     inv :=
       fun x y p =>
-        Quotientₓ.lift (fun l : Path x y => «expr⟦ ⟧» l.symm)
+        Quotientₓ.lift (fun l : Path x y => ⟦l.symm⟧)
           (by 
             rintro a b ⟨h⟩
             rw [Quotientₓ.eq]
@@ -337,15 +343,11 @@ instance : CategoryTheory.Groupoid (FundamentalGroupoid X) :=
     inv_comp' :=
       fun x y f =>
         Quotientₓ.induction_on f
-          fun a =>
-            show «expr⟦ ⟧» (a.symm.trans a) = «expr⟦ ⟧» (Path.refl y) from
-              Quotientₓ.sound ⟨(Path.Homotopy.reflSymmTrans a).symm⟩,
+          fun a => show ⟦a.symm.trans a⟧ = ⟦Path.refl y⟧ from Quotientₓ.sound ⟨(Path.Homotopy.reflSymmTrans a).symm⟩,
     comp_inv' :=
       fun x y f =>
         Quotientₓ.induction_on f
-          fun a =>
-            show «expr⟦ ⟧» (a.trans a.symm) = «expr⟦ ⟧» (Path.refl x) from
-              Quotientₓ.sound ⟨(Path.Homotopy.reflTransSymm a).symm⟩ }
+          fun a => show ⟦a.trans a.symm⟧ = ⟦Path.refl x⟧ from Quotientₓ.sound ⟨(Path.Homotopy.reflTransSymm a).symm⟩ }
 
 theorem comp_eq (x y z : FundamentalGroupoid X) (p : x ⟶ y) (q : y ⟶ z) :
   p ≫ q = Quotientₓ.map₂ Path.trans (fun p₀ : Path x y p₁ hp q₀ q₁ hq => Path.Homotopic.hcomp hp hq) p q :=

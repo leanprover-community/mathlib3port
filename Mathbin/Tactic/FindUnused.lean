@@ -1,4 +1,4 @@
-import Mathbin.Data.Bool 
+import Mathbin.Data.Bool.Basic 
 import Mathbin.Meta.RbMap 
 import Mathbin.Tactic.Core
 

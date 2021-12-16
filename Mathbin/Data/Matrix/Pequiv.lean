@@ -45,20 +45,21 @@ open_locale Matrix
 def to_matrix [DecidableEq n] [HasZero α] [HasOne α] (f : m ≃. n) : Matrix m n α
 | i, j => if j ∈ f i then 1 else 0
 
--- error in Data.Matrix.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_matrix_apply
-[fintype m]
-[decidable_eq m]
-[semiring α]
-(f : «expr ≃. »(l, m))
-(M : matrix m n α)
-(i j) : «expr = »(«expr ⬝ »(f.to_matrix, M) i j, option.cases_on (f i) 0 (λ fi, M fi j)) :=
-begin
-  dsimp [] ["[", expr to_matrix, ",", expr matrix.mul_apply, "]"] [] [],
-  cases [expr h, ":", expr f i] ["with", ident fi],
-  { simp [] [] [] ["[", expr h, "]"] [] [] },
-  { rw [expr finset.sum_eq_single fi] []; simp [] [] [] ["[", expr h, ",", expr eq_comm, "]"] [] [] { contextual := tt } }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  mul_matrix_apply
+  [ Fintype m ] [ DecidableEq m ] [ Semiringₓ α ] ( f : l ≃. m ) ( M : Matrix m n α ) i j
+    : f.to_matrix ⬝ M i j = Option.casesOn f i 0 fun fi => M fi j
+  :=
+    by
+      dsimp [ to_matrix , Matrix.mul_apply ]
+        cases' h : f i with fi
+        · simp [ h ]
+        ·
+          rw [ Finset.sum_eq_single fi ]
+            <;>
+            simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ h , eq_comm ]
 
 theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [HasZero α] [HasOne α] (f : m ≃. n) :
   (f.symm.to_matrix : Matrix n m α) = (f.to_matrix)ᵀ :=
@@ -91,7 +92,7 @@ theorem to_pequiv_mul_matrix [Fintype m] [DecidableEq m] [Semiringₓ α] (f : m
   f.to_pequiv.to_matrix ⬝ M = fun i => M (f i) :=
   by 
     ext i j 
-    rw [mul_matrix_apply, Equiv.to_pequiv_apply]
+    rw [mul_matrix_apply, Equivₓ.to_pequiv_apply]
 
 theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiringₓ α] (f : l ≃. m) (g : m ≃. n) :
   ((f.trans g).toMatrix : Matrix l n α) = f.to_matrix ⬝ g.to_matrix :=
@@ -127,12 +128,12 @@ theorem to_matrix_injective [DecidableEq n] [MonoidWithZeroₓ α] [Nontrivial �
       simp [hf.symm, Ne.symm hi]
 
 theorem to_matrix_swap [DecidableEq n] [Ringₓ α] (i j : n) :
-  (Equiv.swap i j).toPequiv.toMatrix =
+  (Equivₓ.swap i j).toPequiv.toMatrix =
     (((1 : Matrix n n α) - (single i i).toMatrix -
           (single j j).toMatrix)+(single i j).toMatrix)+(single j i).toMatrix :=
   by 
     ext 
-    dsimp [to_matrix, single, Equiv.swap_apply_def, Equiv.toPequiv, one_apply]
+    dsimp [to_matrix, single, Equivₓ.swap_apply_def, Equivₓ.toPequiv, one_apply]
     splitIfs <;> simp_all 
 
 @[simp]
@@ -156,7 +157,7 @@ theorem single_mul_single_right [Fintype n] [Fintype k] [DecidableEq n] [Decidab
     rw [←Matrix.mul_assoc, single_mul_single]
 
 /-- We can also define permutation matrices by permuting the rows of the identity matrix. -/
-theorem equiv_to_pequiv_to_matrix [DecidableEq n] [HasZero α] [HasOne α] (σ : Equiv n n) (i j : n) :
+theorem equiv_to_pequiv_to_matrix [DecidableEq n] [HasZero α] [HasOne α] (σ : Equivₓ n n) (i j : n) :
   σ.to_pequiv.to_matrix i j = (1 : Matrix n n α) (σ i) j :=
   if_congr Option.some_inj rfl rfl
 

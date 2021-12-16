@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Opposites
+import Mathbin.Algebra.Group.Opposite
 
 /-!
 # Monoid, group etc structures on `M × N`
@@ -211,11 +211,11 @@ def inr : N →* M × N :=
 variable {M N}
 
 @[simp, toAdditive]
-theorem coe_fst : «expr⇑ » (fst M N) = Prod.fst :=
+theorem coe_fst : ⇑fst M N = Prod.fst :=
   rfl
 
 @[simp, toAdditive]
-theorem coe_snd : «expr⇑ » (snd M N) = Prod.snd :=
+theorem coe_snd : ⇑snd M N = Prod.snd :=
   rfl
 
 @[simp, toAdditive]
@@ -289,7 +289,7 @@ theorem prod_map_def : prod_mapₓ f g = (f.comp (fst M N)).Prod (g.comp (snd M 
   rfl
 
 @[simp, toAdditive coe_prod_map]
-theorem coe_prod_map : «expr⇑ » (prod_mapₓ f g) = Prod.map f g :=
+theorem coe_prod_map : ⇑prod_mapₓ f g = Prod.map f g :=
   rfl
 
 @[toAdditive prod_comp_prod_map]
@@ -359,14 +359,14 @@ variable {M N} [MulOneClass M] [MulOneClass N]
 is multiplicative. -/
 @[toAdditive prod_comm "The equivalence between `M × N` and `N × M` given by swapping the\ncomponents is additive."]
 def prod_comm : M × N ≃* N × M :=
-  { Equiv.prodComm M N with map_mul' := fun ⟨x₁, y₁⟩ ⟨x₂, y₂⟩ => rfl }
+  { Equivₓ.prodComm M N with map_mul' := fun ⟨x₁, y₁⟩ ⟨x₂, y₂⟩ => rfl }
 
 @[simp, toAdditive coe_prod_comm]
-theorem coe_prod_comm : «expr⇑ » (prod_comm : M × N ≃* N × M) = Prod.swap :=
+theorem coe_prod_comm : ⇑(prod_comm : M × N ≃* N × M) = Prod.swap :=
   rfl
 
 @[simp, toAdditive coe_prod_comm_symm]
-theorem coe_prod_comm_symm : «expr⇑ » (prod_comm : M × N ≃* N × M).symm = Prod.swap :=
+theorem coe_prod_comm_symm : ⇑(prod_comm : M × N ≃* N × M).symm = Prod.swap :=
   rfl
 
 end 
@@ -383,7 +383,7 @@ def prod_units : Units (M × N) ≃* Units M × Units N :=
   { toFun := (Units.map (MonoidHom.fst M N)).Prod (Units.map (MonoidHom.snd M N)),
     invFun :=
       fun u =>
-        ⟨(u.1, u.2), («expr↑ » (u.1⁻¹), «expr↑ » (u.2⁻¹)),
+        ⟨(u.1, u.2), (↑u.1⁻¹, ↑u.2⁻¹),
           by 
             simp ,
           by 
@@ -408,8 +408,8 @@ open MulOpposite
 
 /-- Canonical homomorphism of monoids from `units α` into `α × αᵐᵒᵖ`.
 Used mainly to define the natural topology of `units α`. -/
-def embedProduct (α : Type _) [Monoidₓ α] : Units α →* α × «expr ᵐᵒᵖ» α :=
-  { toFun := fun x => ⟨x, op («expr↑ » (x⁻¹))⟩,
+def embedProduct (α : Type _) [Monoidₓ α] : Units α →* α × αᵐᵒᵖ :=
+  { toFun := fun x => ⟨x, op (↑x⁻¹)⟩,
     map_one' :=
       by 
         simp only [one_inv, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ],

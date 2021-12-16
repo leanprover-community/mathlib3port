@@ -58,14 +58,14 @@ def simps.coe (u : Units α) : α :=
 /-- See Note [custom simps projection] -/
 @[toAdditive " See Note [custom simps projection] "]
 def simps.coe_inv (u : Units α) : α :=
-  «expr↑ » (u⁻¹)
+  ↑u⁻¹
 
 initialize_simps_projections Units (val → coe as_prefix, inv → coeInv as_prefix)
 
 initialize_simps_projections AddUnits (val → coe as_prefix, neg → coeNeg as_prefix)
 
 @[simp, toAdditive]
-theorem coe_mk (a : α) b h₁ h₂ : «expr↑ » (Units.mk a b h₁ h₂) = a :=
+theorem coe_mk (a : α) b h₁ h₂ : ↑Units.mk a b h₁ h₂ = a :=
   rfl
 
 @[ext, toAdditive]
@@ -92,7 +92,7 @@ theorem mk_coe (u : Units α) y h₁ h₂ : mk (u : α) y h₁ h₂ = u :=
 
 /-- Copy a unit, adjusting definition equalities. -/
 @[toAdditive "Copy an `add_unit`, adjusting definitional equalities.", simps]
-def copy (u : Units α) (val : α) (hv : val = u) (inv : α) (hi : inv = «expr↑ » (u⁻¹)) : Units α :=
+def copy (u : Units α) (val : α) (hv : val = u) (inv : α) (hi : inv = ↑u⁻¹) : Units α :=
   { val, inv, inv_val := hv.symm ▸ hi.symm ▸ u.inv_val, val_inv := hv.symm ▸ hi.symm ▸ u.val_inv }
 
 @[toAdditive]
@@ -115,7 +115,7 @@ instance : Groupₓ (Units α) :=
 variable (a b : Units α) {c : Units α}
 
 @[simp, normCast, toAdditive]
-theorem coe_mul : («expr↑ » (a*b) : α) = a*b :=
+theorem coe_mul : (↑a*b : α) = a*b :=
   rfl
 
 @[simp, normCast, toAdditive]
@@ -132,7 +132,7 @@ theorem inv_mk (x y : α) h₁ h₂ : mk x y h₁ h₂⁻¹ = mk y x h₂ h₁ :
   rfl
 
 @[simp, toAdditive]
-theorem val_eq_coe : a.val = («expr↑ » a : α) :=
+theorem val_eq_coe : a.val = (↑a : α) :=
   rfl
 
 @[simp, toAdditive]
@@ -140,40 +140,40 @@ theorem inv_eq_coe_inv : a.inv = ((a⁻¹ : Units α) : α) :=
   rfl
 
 @[simp, toAdditive]
-theorem inv_mul : («expr↑ » (a⁻¹)*a : α) = 1 :=
+theorem inv_mul : ((↑a⁻¹)*a : α) = 1 :=
   inv_val _
 
 @[simp, toAdditive]
-theorem mul_inv : (a*«expr↑ » (a⁻¹) : α) = 1 :=
+theorem mul_inv : (a*↑a⁻¹ : α) = 1 :=
   val_inv _
 
 @[toAdditive]
-theorem inv_mul_of_eq {u : Units α} {a : α} (h : «expr↑ » u = a) : («expr↑ » (u⁻¹)*a) = 1 :=
+theorem inv_mul_of_eq {u : Units α} {a : α} (h : ↑u = a) : ((↑u⁻¹)*a) = 1 :=
   by 
     rw [←h, u.inv_mul]
 
 @[toAdditive]
-theorem mul_inv_of_eq {u : Units α} {a : α} (h : «expr↑ » u = a) : (a*«expr↑ » (u⁻¹)) = 1 :=
+theorem mul_inv_of_eq {u : Units α} {a : α} (h : ↑u = a) : (a*↑u⁻¹) = 1 :=
   by 
     rw [←h, u.mul_inv]
 
 @[simp, toAdditive]
-theorem mul_inv_cancel_left (a : Units α) (b : α) : ((a : α)*«expr↑ » (a⁻¹)*b) = b :=
+theorem mul_inv_cancel_left (a : Units α) (b : α) : ((a : α)*(↑a⁻¹)*b) = b :=
   by 
     rw [←mul_assocₓ, mul_inv, one_mulₓ]
 
 @[simp, toAdditive]
-theorem inv_mul_cancel_leftₓ (a : Units α) (b : α) : ((«expr↑ » (a⁻¹) : α)*a*b) = b :=
+theorem inv_mul_cancel_leftₓ (a : Units α) (b : α) : ((↑a⁻¹ : α)*a*b) = b :=
   by 
     rw [←mul_assocₓ, inv_mul, one_mulₓ]
 
 @[simp, toAdditive]
-theorem mul_inv_cancel_rightₓ (a : α) (b : Units α) : ((a*b)*«expr↑ » (b⁻¹)) = a :=
+theorem mul_inv_cancel_rightₓ (a : α) (b : Units α) : ((a*b)*↑b⁻¹) = a :=
   by 
     rw [mul_assocₓ, mul_inv, mul_oneₓ]
 
 @[simp, toAdditive]
-theorem inv_mul_cancel_right (a : α) (b : Units α) : ((a*«expr↑ » (b⁻¹))*b) = a :=
+theorem inv_mul_cancel_right (a : α) (b : Units α) : ((a*↑b⁻¹)*b) = a :=
   by 
     rw [mul_assocₓ, inv_mul, mul_oneₓ]
 
@@ -193,18 +193,18 @@ instance [HasRepr α] : HasRepr (Units α) :=
 theorem mul_right_injₓ (a : Units α) {b c : α} : (((a : α)*b) = a*c) ↔ b = c :=
   ⟨fun h =>
       by 
-        simpa only [inv_mul_cancel_leftₓ] using congr_argₓ ((·*·) («expr↑ » (a⁻¹ : Units α))) h,
+        simpa only [inv_mul_cancel_leftₓ] using congr_argₓ ((·*·) (↑(a⁻¹ : Units α))) h,
     congr_argₓ _⟩
 
 @[simp, toAdditive]
 theorem mul_left_injₓ (a : Units α) {b c : α} : ((b*a) = c*a) ↔ b = c :=
   ⟨fun h =>
       by 
-        simpa only [mul_inv_cancel_rightₓ] using congr_argₓ (·*«expr↑ » (a⁻¹ : Units α)) h,
+        simpa only [mul_inv_cancel_rightₓ] using congr_argₓ (·*↑(a⁻¹ : Units α)) h,
     congr_argₓ _⟩
 
 @[toAdditive]
-theorem eq_mul_inv_iff_mul_eq {a b : α} : (a = b*«expr↑ » (c⁻¹)) ↔ (a*c) = b :=
+theorem eq_mul_inv_iff_mul_eq {a b : α} : (a = b*↑c⁻¹) ↔ (a*c) = b :=
   ⟨fun h =>
       by 
         rw [h, inv_mul_cancel_right],
@@ -213,7 +213,7 @@ theorem eq_mul_inv_iff_mul_eq {a b : α} : (a = b*«expr↑ » (c⁻¹)) ↔ (a*
         rw [←h, mul_inv_cancel_rightₓ]⟩
 
 @[toAdditive]
-theorem eq_inv_mul_iff_mul_eq {a c : α} : (a = «expr↑ » (b⁻¹)*c) ↔ («expr↑ » b*a) = c :=
+theorem eq_inv_mul_iff_mul_eq {a c : α} : (a = (↑b⁻¹)*c) ↔ ((↑b)*a) = c :=
   ⟨fun h =>
       by 
         rw [h, mul_inv_cancel_left],
@@ -222,7 +222,7 @@ theorem eq_inv_mul_iff_mul_eq {a c : α} : (a = «expr↑ » (b⁻¹)*c) ↔ («
         rw [←h, inv_mul_cancel_leftₓ]⟩
 
 @[toAdditive]
-theorem inv_mul_eq_iff_eq_mul {b c : α} : («expr↑ » (a⁻¹)*b) = c ↔ b = a*c :=
+theorem inv_mul_eq_iff_eq_mul {b c : α} : ((↑a⁻¹)*b) = c ↔ b = a*c :=
   ⟨fun h =>
       by 
         rw [←h, mul_inv_cancel_left],
@@ -231,7 +231,7 @@ theorem inv_mul_eq_iff_eq_mul {b c : α} : («expr↑ » (a⁻¹)*b) = c ↔ b =
         rw [h, inv_mul_cancel_leftₓ]⟩
 
 @[toAdditive]
-theorem mul_inv_eq_iff_eq_mul {a c : α} : (a*«expr↑ » (b⁻¹)) = c ↔ a = c*b :=
+theorem mul_inv_eq_iff_eq_mul {a c : α} : (a*↑b⁻¹) = c ↔ a = c*b :=
   ⟨fun h =>
       by 
         rw [←h, inv_mul_cancel_right],
@@ -239,11 +239,11 @@ theorem mul_inv_eq_iff_eq_mul {a c : α} : (a*«expr↑ » (b⁻¹)) = c ↔ a =
       by 
         rw [h, mul_inv_cancel_rightₓ]⟩
 
-theorem inv_eq_of_mul_eq_oneₓ {u : Units α} {a : α} (h : («expr↑ » u*a) = 1) : «expr↑ » (u⁻¹) = a :=
-  calc «expr↑ » (u⁻¹) = «expr↑ » (u⁻¹)*1 :=
+theorem inv_eq_of_mul_eq_oneₓ {u : Units α} {a : α} (h : ((↑u)*a) = 1) : ↑u⁻¹ = a :=
+  calc ↑u⁻¹ = (↑u⁻¹)*1 :=
     by 
       rw [mul_oneₓ]
-    _ = («expr↑ » (u⁻¹)*«expr↑ » u)*a :=
+    _ = ((↑u⁻¹)*↑u)*a :=
     by 
       rw [←h, ←mul_assocₓ]
     _ = a :=
@@ -251,7 +251,7 @@ theorem inv_eq_of_mul_eq_oneₓ {u : Units α} {a : α} (h : («expr↑ » u*a) 
       rw [u.inv_mul, one_mulₓ]
     
 
-theorem inv_unique {u₁ u₂ : Units α} (h : («expr↑ » u₁ : α) = «expr↑ » u₂) : («expr↑ » (u₁⁻¹) : α) = «expr↑ » (u₂⁻¹) :=
+theorem inv_unique {u₁ u₂ : Units α} (h : (↑u₁ : α) = ↑u₂) : (↑u₁⁻¹ : α) = ↑u₂⁻¹ :=
   inv_eq_of_mul_eq_oneₓ$
     by 
       rw [h, u₂.mul_inv]
@@ -325,7 +325,7 @@ theorem divp_eq_one_iff_eq {a : α} {u : Units α} : a /ₚ u = 1 ↔ a = u :=
       rw [divp_mul_cancel, one_mulₓ]
 
 @[simp]
-theorem one_divp (u : Units α) : 1 /ₚ u = «expr↑ » (u⁻¹) :=
+theorem one_divp (u : Units α) : 1 /ₚ u = ↑u⁻¹ :=
   one_mulₓ _
 
 end Monoidₓ
@@ -418,7 +418,7 @@ theorem IsUnit.mul [Monoidₓ M] {x y : M} : IsUnit x → IsUnit y → IsUnit (x
 theorem Units.is_unit_mul_units [Monoidₓ M] (a : M) (u : Units M) : IsUnit (a*u) ↔ IsUnit a :=
   Iff.intro
     (fun ⟨v, hv⟩ =>
-      have  : IsUnit ((a*«expr↑ » u)*«expr↑ » (u⁻¹)) :=
+      have  : IsUnit ((a*↑u)*↑u⁻¹) :=
         by 
           exists v*u⁻¹ <;> rw [←hv, Units.coe_mul]
       by 
@@ -428,10 +428,10 @@ theorem Units.is_unit_mul_units [Monoidₓ M] (a : M) (u : Units M) : IsUnit (a*
 /-- Multiplication by a `u : units M` on the left doesn't affect `is_unit`. -/
 @[simp,
   toAdditive is_add_unit_add_units_add "Addition of a `u : add_units M` on the left doesn't\naffect `is_add_unit`."]
-theorem Units.is_unit_units_mul {M : Type _} [Monoidₓ M] (u : Units M) (a : M) : IsUnit («expr↑ » u*a) ↔ IsUnit a :=
+theorem Units.is_unit_units_mul {M : Type _} [Monoidₓ M] (u : Units M) (a : M) : IsUnit ((↑u)*a) ↔ IsUnit a :=
   Iff.intro
     (fun ⟨v, hv⟩ =>
-      have  : IsUnit («expr↑ » (u⁻¹)*«expr↑ » u*a) :=
+      have  : IsUnit ((↑u⁻¹)*(↑u)*a) :=
         by 
           exists u⁻¹*v <;> rw [←hv, Units.coe_mul]
       by 
@@ -467,16 +467,21 @@ theorem IsUnit.mul_left_inj [Monoidₓ M] {a b c : M} (ha : IsUnit a) : ((b*a) =
     cases' ha with a ha <;> rw [←ha, Units.mul_left_inj]
 
 /-- The element of the group of units, corresponding to an element of a monoid which is a unit. -/
+@[toAdditive
+      "The element of the additive group of additive units, corresponding to an element of\nan additive monoid which is an additive unit."]
 noncomputable def IsUnit.unit [Monoidₓ M] {a : M} (h : IsUnit a) : Units M :=
   (Classical.some h).copy a (Classical.some_spec h).symm _ rfl
 
-theorem IsUnit.unit_spec [Monoidₓ M] {a : M} (h : IsUnit a) : «expr↑ » h.unit = a :=
+@[toAdditive]
+theorem IsUnit.unit_spec [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.unit = a :=
   rfl
 
-theorem IsUnit.coe_inv_mul [Monoidₓ M] {a : M} (h : IsUnit a) : («expr↑ » (h.unit⁻¹)*a) = 1 :=
+@[toAdditive]
+theorem IsUnit.coe_inv_mul [Monoidₓ M] {a : M} (h : IsUnit a) : ((↑h.unit⁻¹)*a) = 1 :=
   Units.mul_inv _
 
-theorem IsUnit.mul_coe_inv [Monoidₓ M] {a : M} (h : IsUnit a) : (a*«expr↑ » (h.unit⁻¹)) = 1 :=
+@[toAdditive]
+theorem IsUnit.mul_coe_inv [Monoidₓ M] {a : M} (h : IsUnit a) : (a*↑h.unit⁻¹) = 1 :=
   by 
     convert Units.mul_inv _ 
     simp [h.unit_spec]
@@ -489,20 +494,20 @@ variable {M : Type _}
 
 /-- Constructs a `group` structure on a `monoid` consisting only of units. -/
 noncomputable def groupOfIsUnit [hM : Monoidₓ M] (h : ∀ a : M, IsUnit a) : Groupₓ M :=
-  { hM with inv := fun a => «expr↑ » ((h a).Unit⁻¹),
+  { hM with inv := fun a => ↑(h a).Unit⁻¹,
     mul_left_inv :=
       fun a =>
         by 
-          change («expr↑ » ((h a).Unit⁻¹)*a) = 1
+          change ((↑(h a).Unit⁻¹)*a) = 1
           rw [Units.inv_mul_eq_iff_eq_mul, (h a).unit_spec, mul_oneₓ] }
 
 /-- Constructs a `comm_group` structure on a `comm_monoid` consisting only of units. -/
 noncomputable def commGroupOfIsUnit [hM : CommMonoidₓ M] (h : ∀ a : M, IsUnit a) : CommGroupₓ M :=
-  { hM with inv := fun a => «expr↑ » ((h a).Unit⁻¹),
+  { hM with inv := fun a => ↑(h a).Unit⁻¹,
     mul_left_inv :=
       fun a =>
         by 
-          change («expr↑ » ((h a).Unit⁻¹)*a) = 1
+          change ((↑(h a).Unit⁻¹)*a) = 1
           rw [Units.inv_mul_eq_iff_eq_mul, (h a).unit_spec, mul_oneₓ] }
 
 end NoncomputableDefs

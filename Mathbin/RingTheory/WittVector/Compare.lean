@@ -23,7 +23,7 @@ of the inverse limit of `zmod (p^n)`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 variable {p : ℕ} [hp : Fact p.prime]
 
@@ -35,25 +35,21 @@ namespace TruncatedWittVector
 
 variable (p) (n : ℕ) (R : Type _) [CommRingₓ R]
 
--- error in RingTheory.WittVector.Compare: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eq_of_le_of_cast_pow_eq_zero
-[char_p R p]
-(i : exprℕ())
-(hin : «expr ≤ »(i, n))
-(hpi : «expr = »((«expr ^ »(p, i) : truncated_witt_vector p n R), 0)) : «expr = »(i, n) :=
-begin
-  contrapose ["!"] [ident hpi],
-  replace [ident hin] [] [":=", expr lt_of_le_of_ne hin hpi],
-  clear [ident hpi],
-  have [] [":", expr «expr = »((«expr ^ »(«expr↑ »(p), i) : truncated_witt_vector p n R), witt_vector.truncate n «expr ^ »(«expr↑ »(p), i))] [],
-  { rw ["[", expr ring_hom.map_pow, ",", expr ring_hom.map_nat_cast, "]"] [] },
-  rw ["[", expr this, ",", expr ext_iff, ",", expr not_forall, "]"] [],
-  clear [ident this],
-  use [expr ⟨i, hin⟩],
-  rw ["[", expr witt_vector.coeff_truncate, ",", expr coeff_zero, ",", expr fin.coe_mk, ",", expr witt_vector.coeff_p_pow, "]"] [],
-  haveI [] [":", expr nontrivial R] [":=", expr char_p.nontrivial_of_char_ne_one hp.1.ne_one],
-  exact [expr one_ne_zero]
-end
+theorem eq_of_le_of_cast_pow_eq_zero [CharP R p] (i : ℕ) (hin : i ≤ n) (hpi : (p^i : TruncatedWittVector p n R) = 0) :
+  i = n :=
+  by 
+    contrapose! hpi 
+    replace hin := lt_of_le_of_neₓ hin hpi 
+    clear hpi 
+    have  : (↑p^i : TruncatedWittVector p n R) = WittVector.truncate n (↑p^i)
+    ·
+      rw [RingHom.map_pow, RingHom.map_nat_cast]
+    rw [this, ext_iff, not_forall]
+    clear this 
+    use ⟨i, hin⟩
+    rw [WittVector.coeff_truncate, coeff_zero, Finₓ.coe_mk, WittVector.coeff_p_pow]
+    have  : Nontrivial R := CharP.nontrivial_of_char_ne_one hp.1.ne_one 
+    exact one_ne_zero
 
 section Iso
 
@@ -214,7 +210,7 @@ theorem from_padic_int_comp_to_padic_int_ext x :
 The ring of Witt vectors over `zmod p` is isomorphic to the ring of `p`-adic integers. This
 equivalence is witnessed by `witt_vector.to_padic_int` with inverse `witt_vector.from_padic_int`.
 -/
-def Equiv : 𝕎 (Zmod p) ≃+* ℤ_[p] :=
+def Equivₓ : 𝕎 (Zmod p) ≃+* ℤ_[p] :=
   { toFun := to_padic_int p, invFun := from_padic_int p, left_inv := from_padic_int_comp_to_padic_int_ext _,
     right_inv := to_padic_int_comp_from_padic_int_ext _, map_mul' := RingHom.map_mul _, map_add' := RingHom.map_add _ }
 

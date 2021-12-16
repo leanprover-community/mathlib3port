@@ -69,32 +69,25 @@ namespace RingQuot
 
 variable (r : R → R → Prop)
 
-@[irreducible]
-private def zero : RingQuot r :=
+private irreducible_def zero : RingQuot r :=
   ⟨Quot.mk _ 0⟩
 
-@[irreducible]
-private def one : RingQuot r :=
+private irreducible_def one : RingQuot r :=
   ⟨Quot.mk _ 1⟩
 
-@[irreducible]
-private def add : RingQuot r → RingQuot r → RingQuot r
+private irreducible_def add : RingQuot r → RingQuot r → RingQuot r
 | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ (·+·) rel.add_right rel.add_left a b⟩
 
-@[irreducible]
-private def mul : RingQuot r → RingQuot r → RingQuot r
+private irreducible_def mul : RingQuot r → RingQuot r → RingQuot r
 | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ (·*·) rel.mul_right rel.mul_left a b⟩
 
-@[irreducible]
-private def neg {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r
+private irreducible_def neg {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r
 | ⟨a⟩ => ⟨Quot.map (fun a => -a) rel.neg a⟩
 
-@[irreducible]
-private def sub {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r → RingQuot r
+private irreducible_def sub {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r → RingQuot r
 | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ Sub.sub rel.sub_right rel.sub_left a b⟩
 
-@[irreducible]
-private def smul [Algebra S R] (n : S) : RingQuot r → RingQuot r
+private irreducible_def smul [Algebra S R] (n : S) : RingQuot r → RingQuot r
 | ⟨a⟩ => ⟨Quot.map (fun a => n • a) (rel.smul n) a⟩
 
 instance : HasZero (RingQuot r) :=
@@ -389,8 +382,8 @@ agrees with the quotient by the appropriate ideal.
 
 variable {B : Type u₁} [CommRingₓ B]
 
-/-- The universal ring homomorphism from `ring_quot r` to `(ideal.of_rel r).quotient`. -/
-def ring_quot_to_ideal_quotient (r : B → B → Prop) : RingQuot r →+* (Ideal.ofRel r).Quotient :=
+/-- The universal ring homomorphism from `ring_quot r` to `B ⧸ ideal.of_rel r`. -/
+def ring_quot_to_ideal_quotient (r : B → B → Prop) : RingQuot r →+* B ⧸ Ideal.ofRel r :=
   lift
     ⟨Ideal.Quotient.mk (Ideal.ofRel r),
       fun x y h => Quot.sound (Submodule.mem_Inf.mpr fun p w => w ⟨x, y, h, sub_add_cancel x y⟩)⟩
@@ -400,8 +393,8 @@ theorem ring_quot_to_ideal_quotient_apply (r : B → B → Prop) (x : B) :
   ring_quot_to_ideal_quotient r (mk_ring_hom r x) = Ideal.Quotient.mk _ x :=
   rfl
 
-/-- The universal ring homomorphism from `(ideal.of_rel r).quotient` to `ring_quot r`. -/
-def ideal_quotient_to_ring_quot (r : B → B → Prop) : (Ideal.ofRel r).Quotient →+* RingQuot r :=
+/-- The universal ring homomorphism from `B ⧸ ideal.of_rel r` to `ring_quot r`. -/
+def ideal_quotient_to_ring_quot (r : B → B → Prop) : B ⧸ Ideal.ofRel r →+* RingQuot r :=
   Ideal.Quotient.lift (Ideal.ofRel r) (mk_ring_hom r)
     (by 
       refine' fun x h => Submodule.span_induction h _ _ _ _
@@ -427,7 +420,7 @@ theorem ideal_quotient_to_ring_quot_apply (r : B → B → Prop) (x : B) :
 /--
 The ring equivalence between `ring_quot r` and `(ideal.of_rel r).quotient`
 -/
-def ring_quot_equiv_ideal_quotient (r : B → B → Prop) : RingQuot r ≃+* (Ideal.ofRel r).Quotient :=
+def ring_quot_equiv_ideal_quotient (r : B → B → Prop) : RingQuot r ≃+* B ⧸ Ideal.ofRel r :=
   RingEquiv.ofHomInv (ring_quot_to_ideal_quotient r) (ideal_quotient_to_ring_quot r)
     (by 
       ext 
@@ -459,8 +452,7 @@ theorem rel.star ⦃a b : R⦄ (h : rel r a b) : rel r (star a) (star b) :=
       rw [star_mul, star_mul]
       exact rel.mul_left h_ih
 
-@[irreducible]
-private def star' : RingQuot r → RingQuot r
+private irreducible_def star' : RingQuot r → RingQuot r
 | ⟨a⟩ => ⟨Quot.map (star : R → R) (rel.star r hr) a⟩
 
 theorem star'_quot (hr : ∀ a b, r a b → r (star a) (star b)) {a} :
@@ -607,8 +599,6 @@ theorem eq_lift_alg_hom_comp_mk_alg_hom {s : A → A → Prop} (f : RingQuot s �
   ((lift_alg_hom S).apply_symm_apply f).symm
 
 end Algebra
-
-attribute [irreducible] mk_ring_hom mk_alg_hom lift lift_alg_hom
 
 end RingQuot
 

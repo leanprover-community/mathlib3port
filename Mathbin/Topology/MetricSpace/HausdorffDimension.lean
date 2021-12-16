@@ -82,13 +82,10 @@ open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional 
 
 variable {ι X Y : Type _} [EmetricSpace X] [EmetricSpace Y]
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hausdorff dimension of a set in an (e)metric space. -/
-@[irreducible]
-noncomputable
-def dimH (s : set X) : «exprℝ≥0∞»() :=
-by letI [] [] [":=", expr borel X]; exact [expr «expr⨆ , »((d : «exprℝ≥0»())
-  (hd : «expr = »(@hausdorff_measure X _ _ ⟨rfl⟩ d s, «expr∞»())), d)]
+noncomputable irreducible_def dimH (s : Set X) : ℝ≥0∞ :=
+  by 
+    let this' := borel X <;> exact ⨆ (d :  ℝ≥0 )(hd : @hausdorff_measure X _ _ ⟨rfl⟩ d s = ∞), d
 
 /-!
 ### Basic properties
@@ -101,26 +98,26 @@ variable [MeasurableSpace X] [BorelSpace X]
 
 /-- Unfold the definition of `dimH` using `[measurable_space X] [borel_space X]` from the
 environment. -/
-theorem dimH_def (s : Set X) : dimH s = ⨆(d :  ℝ≥0 )(hd : μH[d] s = ∞), d :=
+theorem dimH_def (s : Set X) : dimH s = ⨆ (d :  ℝ≥0 )(hd : μH[d] s = ∞), d :=
   by 
     (
       obtain rfl : ‹MeasurableSpace X› = borel X := BorelSpace.measurable_eq)
     rw [dimH]
 
-theorem hausdorff_measure_of_lt_dimH {s : Set X} {d :  ℝ≥0 } (h : «expr↑ » d < dimH s) : μH[d] s = ∞ :=
+theorem hausdorff_measure_of_lt_dimH {s : Set X} {d :  ℝ≥0 } (h : ↑d < dimH s) : μH[d] s = ∞ :=
   by 
     simp only [dimH_def, lt_supr_iff] at h 
     rcases h with ⟨d', hsd', hdd'⟩
     rw [Ennreal.coe_lt_coe, ←Nnreal.coe_lt_coe] at hdd' 
     exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 
-theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ d' :  ℝ≥0 , μH[d'] s = ∞ → «expr↑ » d' ≤ d) : dimH s ≤ d :=
+theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ d' :  ℝ≥0 , μH[d'] s = ∞ → ↑d' ≤ d) : dimH s ≤ d :=
   (dimH_def s).trans_le$ bsupr_le H
 
 theorem dimH_le_of_hausdorff_measure_ne_top {s : Set X} {d :  ℝ≥0 } (h : μH[d] s ≠ ∞) : dimH s ≤ d :=
   le_of_not_ltₓ$ mt hausdorff_measure_of_lt_dimH h
 
-theorem le_dimH_of_hausdorff_measure_eq_top {s : Set X} {d :  ℝ≥0 } (h : μH[d] s = ∞) : «expr↑ » d ≤ dimH s :=
+theorem le_dimH_of_hausdorff_measure_eq_top {s : Set X} {d :  ℝ≥0 } (h : μH[d] s = ∞) : ↑d ≤ dimH s :=
   by 
     rw [dimH_def]
     exact le_bsupr d h
@@ -135,7 +132,7 @@ theorem hausdorff_measure_of_dimH_lt {s : Set X} {d :  ℝ≥0 } (h : dimH s < d
 theorem measure_zero_of_dimH_lt {μ : Measureₓ X} {d :  ℝ≥0 } (h : μ ≪ μH[d]) {s : Set X} (hd : dimH s < d) : μ s = 0 :=
   h$ hausdorff_measure_of_dimH_lt hd
 
-theorem le_dimH_of_hausdorff_measure_ne_zero {s : Set X} {d :  ℝ≥0 } (h : μH[d] s ≠ 0) : «expr↑ » d ≤ dimH s :=
+theorem le_dimH_of_hausdorff_measure_ne_zero {s : Set X} {d :  ℝ≥0 } (h : μH[d] s ≠ 0) : ↑d ≤ dimH s :=
   le_of_not_ltₓ$ mt hausdorff_measure_of_dimH_lt h
 
 theorem dimH_of_hausdorff_measure_ne_zero_ne_top {d :  ℝ≥0 } {s : Set X} (h : μH[d] s ≠ 0) (h' : μH[d] s ≠ ∞) :
@@ -144,14 +141,12 @@ theorem dimH_of_hausdorff_measure_ne_zero_ne_top {d :  ℝ≥0 } {s : Set X} (h 
 
 end Measurable
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[mono #[]] theorem dimH_mono {s t : set X} (h : «expr ⊆ »(s, t)) : «expr ≤ »(dimH s, dimH t) :=
-begin
-  letI [] [] [":=", expr borel X],
-  haveI [] [":", expr borel_space X] [":=", expr ⟨rfl⟩],
-  exact [expr dimH_le (λ
-    d hd, «expr $ »(le_dimH_of_hausdorff_measure_eq_top, «expr $ »(top_unique, «expr ▸ »(hd, measure_mono h))))]
-end
+@[mono]
+theorem dimH_mono {s t : Set X} (h : s ⊆ t) : dimH s ≤ dimH t :=
+  by 
+    let this' := borel X 
+    have  : BorelSpace X := ⟨rfl⟩
+    exact dimH_le fun d hd => le_dimH_of_hausdorff_measure_eq_top$ top_unique$ hd ▸ measure_mono h
 
 theorem dimH_subsingleton {s : Set X} (h : s.subsingleton) : dimH s = 0 :=
   by 
@@ -167,34 +162,30 @@ theorem dimH_empty : dimH (∅ : Set X) = 0 :=
 theorem dimH_singleton (x : X) : dimH ({x} : Set X) = 0 :=
   subsingleton_singleton.dimH_zero
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem dimH_Union [encodable ι] (s : ι → set X) : «expr = »(dimH «expr⋃ , »((i), s i), «expr⨆ , »((i), dimH (s i))) :=
-begin
-  letI [] [] [":=", expr borel X],
-  haveI [] [":", expr borel_space X] [":=", expr ⟨rfl⟩],
-  refine [expr le_antisymm «expr $ »(dimH_le, λ
-    d hd, _) «expr $ »(supr_le, λ i, «expr $ »(dimH_mono, subset_Union _ _))],
-  contrapose ["!"] [ident hd],
-  have [] [":", expr ∀ i, «expr = »(«exprμH[ ]»(d) (s i), 0)] [],
-  from [expr λ i, hausdorff_measure_of_dimH_lt ((le_supr (λ i, dimH (s i)) i).trans_lt hd)],
-  rw [expr measure_Union_null this] [],
-  exact [expr ennreal.zero_ne_top]
-end
+theorem dimH_Union [Encodable ι] (s : ι → Set X) : dimH (⋃ i, s i) = ⨆ i, dimH (s i) :=
+  by 
+    let this' := borel X 
+    have  : BorelSpace X := ⟨rfl⟩
+    refine' le_antisymmₓ (dimH_le$ fun d hd => _) (supr_le$ fun i => dimH_mono$ subset_Union _ _)
+    contrapose! hd 
+    have  : ∀ i, μH[d] (s i) = 0 
+    exact fun i => hausdorff_measure_of_dimH_lt ((le_supr (fun i => dimH (s i)) i).trans_lt hd)
+    rw [measure_Union_null this]
+    exact Ennreal.zero_ne_top
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 @[simp]
-theorem dimH_bUnion
-{s : set ι}
-(hs : countable s)
-(t : ι → set X) : «expr = »(dimH «expr⋃ , »((i «expr ∈ » s), t i), «expr⨆ , »((i «expr ∈ » s), dimH (t i))) :=
-begin
-  haveI [] [] [":=", expr hs.to_encodable],
-  rw ["[", expr bUnion_eq_Union, ",", expr dimH_Union, ",", "<-", expr supr_subtype'', "]"] []
-end
+theorem dimH_bUnion {s : Set ι} (hs : countable s) (t : ι → Set X) :
+  dimH (⋃ (i : _)(_ : i ∈ s), t i) = ⨆ (i : _)(_ : i ∈ s), dimH (t i) :=
+  by 
+    have  := hs.to_encodable 
+    rw [bUnion_eq_Union, dimH_Union, ←supr_subtype'']
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » S)
 @[simp]
-theorem dimH_sUnion {S : Set (Set X)} (hS : countable S) : dimH (⋃₀S) = ⨆(s : _)(_ : s ∈ S), dimH s :=
+theorem dimH_sUnion {S : Set (Set X)} (hS : countable S) : dimH (⋃₀S) = ⨆ (s : _)(_ : s ∈ S), dimH s :=
   by 
     rw [sUnion_eq_bUnion, dimH_bUnion hS]
 
@@ -230,6 +221,10 @@ section
 
 variable [second_countable_topology X]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
 /-- If `r` is less than the Hausdorff dimension of a set `s` in an (extended) metric space with
 second countable topology, then there exists a point `x ∈ s` such that every neighborhood
 `t` of `x` within `s` has Hausdorff dimension greater than `r`. -/
@@ -239,13 +234,14 @@ theorem exists_mem_nhds_within_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (
     contrapose! h 
     choose! t htx htr using h 
     rcases countable_cover_nhds_within htx with ⟨S, hSs, hSc, hSU⟩
-    calc dimH s ≤ dimH (⋃(x : _)(_ : x ∈ S), t x) := dimH_mono hSU _ = ⨆(x : _)(_ : x ∈ S), dimH (t x) :=
+    calc dimH s ≤ dimH (⋃ (x : _)(_ : x ∈ S), t x) := dimH_mono hSU _ = ⨆ (x : _)(_ : x ∈ S), dimH (t x) :=
       dimH_bUnion hSc _ _ ≤ r := bsupr_le fun x hx => htr x (hSs hx)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
 of a set `s` is the supremum over `x ∈ s` of the limit superiors of `dimH t` along
 `(𝓝[s] x).lift' powerset`. -/
-theorem bsupr_limsup_dimH (s : Set X) : (⨆(x : _)(_ : x ∈ s), limsup ((𝓝[s] x).lift' powerset) dimH) = dimH s :=
+theorem bsupr_limsup_dimH (s : Set X) : (⨆ (x : _)(_ : x ∈ s), limsup ((𝓝[s] x).lift' powerset) dimH) = dimH s :=
   by 
     refine' le_antisymmₓ (bsupr_le$ fun x hx => _) _
     ·
@@ -267,7 +263,7 @@ theorem bsupr_limsup_dimH (s : Set X) : (⨆(x : _)(_ : x ∈ s), limsup ((𝓝[
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
 of a set `s` is the supremum over all `x` of the limit superiors of `dimH t` along
 `(𝓝[s] x).lift' powerset`. -/
-theorem supr_limsup_dimH (s : Set X) : (⨆x, limsup ((𝓝[s] x).lift' powerset) dimH) = dimH s :=
+theorem supr_limsup_dimH (s : Set X) : (⨆ x, limsup ((𝓝[s] x).lift' powerset) dimH) = dimH s :=
   by 
     refine' le_antisymmₓ (supr_le$ fun x => _) _
     ·
@@ -290,25 +286,22 @@ end
 
 variable {C K r :  ℝ≥0 } {f : X → Y} {s t : Set X}
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a Hölder continuous map with exponent `r > 0`, then `dimH (f '' s) ≤ dimH s / r`. -/
-theorem holder_on_with.dimH_image_le
-(h : holder_on_with C r f s)
-(hr : «expr < »(0, r)) : «expr ≤ »(dimH «expr '' »(f, s), «expr / »(dimH s, r)) :=
-begin
-  letI [] [] [":=", expr borel X],
-  haveI [] [":", expr borel_space X] [":=", expr ⟨rfl⟩],
-  letI [] [] [":=", expr borel Y],
-  haveI [] [":", expr borel_space Y] [":=", expr ⟨rfl⟩],
-  refine [expr dimH_le (λ d hd, _)],
-  have [] [] [":=", expr h.hausdorff_measure_image_le hr d.coe_nonneg],
-  rw ["[", expr hd, ",", expr ennreal.coe_rpow_of_nonneg _ d.coe_nonneg, ",", expr top_le_iff, "]"] ["at", ident this],
-  have [ident Hrd] [":", expr «expr = »(«exprμH[ ]»((«expr * »(r, d) : «exprℝ≥0»())) s, «expr⊤»())] [],
-  { contrapose [] [ident this],
-    exact [expr ennreal.mul_ne_top ennreal.coe_ne_top this] },
-  rw ["[", expr ennreal.le_div_iff_mul_le, ",", expr mul_comm, ",", "<-", expr ennreal.coe_mul, "]"] [],
-  exacts ["[", expr le_dimH_of_hausdorff_measure_eq_top Hrd, ",", expr or.inl (mt ennreal.coe_eq_zero.1 hr.ne'), ",", expr or.inl ennreal.coe_ne_top, "]"]
-end
+theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) : dimH (f '' s) ≤ dimH s / r :=
+  by 
+    let this' := borel X 
+    have  : BorelSpace X := ⟨rfl⟩
+    let this' := borel Y 
+    have  : BorelSpace Y := ⟨rfl⟩
+    refine' dimH_le fun d hd => _ 
+    have  := h.hausdorff_measure_image_le hr d.coe_nonneg 
+    rw [hd, Ennreal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this 
+    have Hrd : μH[(r*d :  ℝ≥0 )] s = ⊤
+    ·
+      contrapose this 
+      exact Ennreal.mul_ne_top Ennreal.coe_ne_top this 
+    rw [Ennreal.le_div_iff_mul_le, mul_commₓ, ←Ennreal.coe_mul]
+    exacts[le_dimH_of_hausdorff_measure_eq_top Hrd, Or.inl (mt Ennreal.coe_eq_zero.1 hr.ne'), Or.inl Ennreal.coe_ne_top]
 
 namespace HolderWith
 
@@ -324,6 +317,8 @@ theorem dimH_range_le (h : HolderWith C r f) (hr : 0 < r) : dimH (range f) ≤ d
 
 end HolderWith
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
 /-- If `s` is a set in a space `X` with second countable topology and `f : X → Y` is Hölder
 continuous in a neighborhood within `s` of every point `x ∈ s` with the same positive exponent `r`
 but possibly different coefficients, then the Hausdorff dimension of the image `f '' s` is at most
@@ -340,6 +335,7 @@ theorem dimH_image_le_of_locally_holder_on [second_countable_topology X] {r :  �
     simp only [Ennreal.supr_div]
     exact bsupr_le_bsupr fun x hx => ((hC x (hus hx)).mono (inter_subset_right _ _)).dimH_image_le hr
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » expr𝓝() x)
 /-- If `f : X → Y` is Hölder continuous in a neighborhood of every point `x : X` with the same
 positive exponent `r` but possibly different coefficients, then the Hausdorff dimension of the range
 of `f` is at most the Hausdorff dimension of `X` divided by `r`. -/
@@ -373,24 +369,22 @@ theorem dimH_range_le (h : LipschitzWith K f) : dimH (range f) ≤ dimH (univ : 
 
 end LipschitzWith
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (t «expr ∈ » «expr𝓝[ ] »(s, x))
 /-- If `s` is a set in an extended metric space `X` with second countable topology and `f : X → Y`
 is Lipschitz in a neighborhood within `s` of every point `x ∈ s`, then the Hausdorff dimension of
 the image `f '' s` is at most the Hausdorff dimension of `s`. -/
-theorem dimH_image_le_of_locally_lipschitz_on
-[second_countable_topology X]
-{f : X → Y}
-{s : set X}
-(hf : ∀
- x «expr ∈ » s, «expr∃ , »((C : «exprℝ≥0»())
-  (t «expr ∈ » «expr𝓝[ ] »(s, x)), lipschitz_on_with C f t)) : «expr ≤ »(dimH «expr '' »(f, s), dimH s) :=
-begin
-  have [] [":", expr ∀
-   x «expr ∈ » s, «expr∃ , »((C : «exprℝ≥0»()) (t «expr ∈ » «expr𝓝[ ] »(s, x)), holder_on_with C 1 f t)] [],
-  by simpa [] [] ["only"] ["[", expr holder_on_with_one, "]"] [] ["using", expr hf],
-  simpa [] [] ["only"] ["[", expr ennreal.coe_one, ",", expr ennreal.div_one, "]"] [] ["using", expr dimH_image_le_of_locally_holder_on zero_lt_one this]
-end
+theorem dimH_image_le_of_locally_lipschitz_on [second_countable_topology X] {f : X → Y} {s : Set X}
+  (hf : ∀ x _ : x ∈ s, ∃ (C :  ℝ≥0 )(t : _)(_ : t ∈ 𝓝[s] x), LipschitzOnWith C f t) : dimH (f '' s) ≤ dimH s :=
+  by 
+    have  : ∀ x _ : x ∈ s, ∃ (C :  ℝ≥0 )(t : _)(_ : t ∈ 𝓝[s] x), HolderOnWith C 1 f t
+    ·
+      simpa only [holder_on_with_one] using hf 
+    simpa only [Ennreal.coe_one, Ennreal.div_one] using dimH_image_le_of_locally_holder_on zero_lt_one this
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s «expr ∈ » expr𝓝() x)
 /-- If `f : X → Y` is Lipschitz in a neighborhood of each point `x : X`, then the Hausdorff
 dimension of `range f` is at most the Hausdorff dimension of `X`. -/
 theorem dimH_range_le_of_locally_lipschitz_on [second_countable_topology X] {f : X → Y}
@@ -402,19 +396,21 @@ theorem dimH_range_le_of_locally_lipschitz_on [second_countable_topology X] {f :
 
 namespace AntilipschitzWith
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dimH_preimage_le (hf : antilipschitz_with K f) (s : set Y) : «expr ≤ »(dimH «expr ⁻¹' »(f, s), dimH s) :=
-begin
-  letI [] [] [":=", expr borel X],
-  haveI [] [":", expr borel_space X] [":=", expr ⟨rfl⟩],
-  letI [] [] [":=", expr borel Y],
-  haveI [] [":", expr borel_space Y] [":=", expr ⟨rfl⟩],
-  refine [expr dimH_le (λ d hd, le_dimH_of_hausdorff_measure_eq_top _)],
-  have [] [] [":=", expr hf.hausdorff_measure_preimage_le d.coe_nonneg s],
-  rw ["[", expr hd, ",", expr top_le_iff, "]"] ["at", ident this],
-  contrapose ["!"] [ident this],
-  exact [expr ennreal.mul_ne_top (by simp [] [] [] [] [] []) this]
-end
+theorem dimH_preimage_le (hf : AntilipschitzWith K f) (s : Set Y) : dimH (f ⁻¹' s) ≤ dimH s :=
+  by 
+    let this' := borel X 
+    have  : BorelSpace X := ⟨rfl⟩
+    let this' := borel Y 
+    have  : BorelSpace Y := ⟨rfl⟩
+    refine' dimH_le fun d hd => le_dimH_of_hausdorff_measure_eq_top _ 
+    have  := hf.hausdorff_measure_preimage_le d.coe_nonneg s 
+    rw [hd, top_le_iff] at this 
+    contrapose! this 
+    exact
+      Ennreal.mul_ne_top
+        (by 
+          simp )
+        this
 
 theorem le_dimH_image (hf : AntilipschitzWith K f) (s : Set X) : dimH s ≤ dimH (f '' s) :=
   calc dimH s ≤ dimH (f ⁻¹' (f '' s)) := dimH_mono (subset_preimage_image _ _)
@@ -478,22 +474,22 @@ namespace Real
 
 variable {E : Type _} [Fintype ι] [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dimH_ball_pi
-(x : ι → exprℝ())
-{r : exprℝ()}
-(hr : «expr < »(0, r)) : «expr = »(dimH (metric.ball x r), fintype.card ι) :=
-begin
-  casesI [expr is_empty_or_nonempty ι] [],
-  { rwa ["[", expr dimH_subsingleton, ",", expr eq_comm, ",", expr nat.cast_eq_zero, ",", expr fintype.card_eq_zero_iff, "]"] [],
-    exact [expr λ x _ y _, subsingleton.elim x y] },
-  { rw ["<-", expr ennreal.coe_nat] [],
-    have [] [":", expr «expr = »(«exprμH[ ]»(fintype.card ι) (metric.ball x r), ennreal.of_real «expr ^ »(«expr * »(2, r), fintype.card ι))] [],
-    by rw ["[", expr hausdorff_measure_pi_real, ",", expr real.volume_pi_ball _ hr, "]"] [],
-    refine [expr dimH_of_hausdorff_measure_ne_zero_ne_top _ _]; rw ["[", expr nnreal.coe_nat_cast, ",", expr this, "]"] [],
-    { simp [] [] [] ["[", expr pow_pos (mul_pos zero_lt_two hr), "]"] [] [] },
-    { exact [expr ennreal.of_real_ne_top] } }
-end
+theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = Fintype.card ι :=
+  by 
+    cases' is_empty_or_nonempty ι
+    ·
+      rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
+      exact fun x _ y _ => Subsingleton.elimₓ x y
+    ·
+      rw [←Ennreal.coe_nat]
+      have  : μH[Fintype.card ι] (Metric.Ball x r) = Ennreal.ofReal ((2*r)^Fintype.card ι)
+      ·
+        rw [hausdorff_measure_pi_real, Real.volume_pi_ball _ hr]
+      refine' dimH_of_hausdorff_measure_ne_zero_ne_top _ _ <;> rw [Nnreal.coe_nat_cast, this]
+      ·
+        simp [pow_pos (mul_pos zero_lt_two hr)]
+      ·
+        exact Ennreal.of_real_ne_top
 
 theorem dimH_ball_pi_fin {n : ℕ} (x : Finₓ n → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = n :=
   by 
@@ -507,20 +503,22 @@ theorem dimH_univ_pi_fin (n : ℕ) : dimH (univ : Set (Finₓ n → ℝ)) = n :=
   by 
     rw [dimH_univ_pi, Fintype.card_fin]
 
--- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem dimH_of_mem_nhds {x : E} {s : set E} (h : «expr ∈ »(s, expr𝓝() x)) : «expr = »(dimH s, finrank exprℝ() E) :=
-begin
-  have [ident e] [":", expr «expr ≃L[ ] »(E, exprℝ(), fin (finrank exprℝ() E) → exprℝ())] [],
-  from [expr continuous_linear_equiv.of_finrank_eq (finite_dimensional.finrank_fin_fun exprℝ()).symm],
-  rw ["<-", expr e.dimH_image] [],
-  refine [expr le_antisymm _ _],
-  { exact [expr (dimH_mono (subset_univ _)).trans_eq (dimH_univ_pi_fin _)] },
-  { have [] [":", expr «expr ∈ »(«expr '' »(e, s), expr𝓝() (e x))] [],
-    by { rw ["<-", expr e.map_nhds_eq] [],
-      exact [expr image_mem_map h] },
-    rcases [expr metric.nhds_basis_ball.mem_iff.1 this, "with", "⟨", ident r, ",", ident hr0, ",", ident hr, "⟩"],
-    simpa [] [] ["only"] ["[", expr dimH_ball_pi_fin (e x) hr0, "]"] [] ["using", expr dimH_mono hr] }
-end
+theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finrank ℝ E :=
+  by 
+    have e : E ≃L[ℝ] Finₓ (finrank ℝ E) → ℝ 
+    exact ContinuousLinearEquiv.ofFinrankEq (FiniteDimensional.finrank_fin_fun ℝ).symm 
+    rw [←e.dimH_image]
+    refine' le_antisymmₓ _ _
+    ·
+      exact (dimH_mono (subset_univ _)).trans_eq (dimH_univ_pi_fin _)
+    ·
+      have  : e '' s ∈ 𝓝 (e x)
+      ·
+        ·
+          rw [←e.map_nhds_eq]
+          exact image_mem_map h 
+      rcases metric.nhds_basis_ball.mem_iff.1 this with ⟨r, hr0, hr⟩
+      simpa only [dimH_ball_pi_fin (e x) hr0] using dimH_mono hr
 
 theorem dimH_of_nonempty_interior {s : Set E} (h : (Interior s).Nonempty) : dimH s = finrank ℝ E :=
   let ⟨x, hx⟩ := h 
@@ -539,7 +537,7 @@ end Real
 
 variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedGroup F] [NormedSpace ℝ F]
 
-theorem dense_compl_of_dimH_lt_finrank {s : Set E} (hs : dimH s < finrank ℝ E) : Dense («expr ᶜ» s) :=
+theorem dense_compl_of_dimH_lt_finrank {s : Set E} (hs : dimH s < finrank ℝ E) : Dense (sᶜ) :=
   by 
     refine' fun x => mem_closure_iff_nhds.2 fun t ht => ne_empty_iff_nonempty.1$ fun he => hs.not_le _ 
     rw [←diff_eq, diff_eq_empty] at he 
@@ -580,14 +578,13 @@ theorem TimesContDiff.dimH_range_le {f : E → F} (h : TimesContDiff ℝ 1 f) : 
 vector spaces. Suppose that `f` is `C¹` smooth on a convex set `s` of Hausdorff dimension strictly
 less than the dimension of `F`. Then the complement of the image `f '' s` is dense in `F`. -/
 theorem TimesContDiffOn.dense_compl_image_of_dimH_lt_finrank [FiniteDimensional ℝ F] {f : E → F} {s t : Set E}
-  (h : TimesContDiffOn ℝ 1 f s) (hc : Convex ℝ s) (ht : t ⊆ s) (htF : dimH t < finrank ℝ F) :
-  Dense («expr ᶜ» (f '' t)) :=
+  (h : TimesContDiffOn ℝ 1 f s) (hc : Convex ℝ s) (ht : t ⊆ s) (htF : dimH t < finrank ℝ F) : Dense ((f '' t)ᶜ) :=
   dense_compl_of_dimH_lt_finrank$ (h.dimH_image_le hc ht).trans_lt htF
 
 /-- A particular case of Sard's Theorem. If `f` is a `C¹` smooth map from a real vector space to a
 real vector space `F` of strictly larger dimension, then the complement of the range of `f` is dense
 in `F`. -/
 theorem TimesContDiff.dense_compl_range_of_finrank_lt_finrank [FiniteDimensional ℝ F] {f : E → F}
-  (h : TimesContDiff ℝ 1 f) (hEF : finrank ℝ E < finrank ℝ F) : Dense («expr ᶜ» (range f)) :=
+  (h : TimesContDiff ℝ 1 f) (hEF : finrank ℝ E < finrank ℝ F) : Dense (range fᶜ) :=
   dense_compl_of_dimH_lt_finrank$ h.dimH_range_le.trans_lt$ Ennreal.coe_nat_lt_coe_nat.2 hEF
 

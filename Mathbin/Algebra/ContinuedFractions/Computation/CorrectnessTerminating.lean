@@ -73,7 +73,6 @@ protected theorem comp_exact_value_correctness_of_stream_eq_some_aux_comp {a : K
 
 open generalized_continued_fraction(compExactValue comp_exact_value_correctness_of_stream_eq_some_aux_comp)
 
--- error in Algebra.ContinuedFractions.Computation.CorrectnessTerminating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Shows the correctness of `comp_exact_value` in case the continued fraction
 `generalized_continued_fraction.of v` did not terminate at position `n`. That is, we obtain the
@@ -90,99 +89,135 @@ Now `(generalized_continued_fraction.of v).convergents' 1 = 3 + 1/2`, and our fr
 position `2` is `0.5`. We hence have `v = 3 + 1/(2 + 0.5) = 3 + 1/2.5 = 3.4`. This computation
 corresponds exactly to the one using the recurrence equation in `comp_exact_value`.
 -/
-theorem comp_exact_value_correctness_of_stream_eq_some : ∀
-{ifp_n : int_fract_pair K}, «expr = »(int_fract_pair.stream v n, some ifp_n) → «expr = »(v, comp_exact_value ((of v).continuants_aux n) «expr $ »((of v).continuants_aux, «expr + »(n, 1)) ifp_n.fr) :=
-begin
-  let [ident g] [] [":=", expr of v],
-  induction [expr n] [] ["with", ident n, ident IH] [],
-  { assume [binders (ifp_zero stream_zero_eq)],
-    have [] [":", expr «expr = »(int_fract_pair.of v, ifp_zero)] [],
-    by { have [] [":", expr «expr = »(int_fract_pair.stream v 0, some (int_fract_pair.of v))] [],
-      from [expr rfl],
-      simpa [] [] ["only"] ["[", expr this, "]"] [] ["using", expr stream_zero_eq] },
-    cases [expr this] [],
-    cases [expr decidable.em «expr = »(int.fract v, 0)] ["with", ident fract_eq_zero, ident fract_ne_zero],
-    { suffices [] [":", expr «expr = »(v, «expr⌊ ⌋»(v))],
-      by simpa [] [] [] ["[", expr continuants_aux, ",", expr fract_eq_zero, ",", expr comp_exact_value, "]"] [] [],
-      calc
-        «expr = »(v, «expr + »(int.fract v, «expr⌊ ⌋»(v))) : by rw [expr int.fract_add_floor] []
-        «expr = »(..., «expr⌊ ⌋»(v)) : by simp [] [] [] ["[", expr fract_eq_zero, "]"] [] [] },
-    { field_simp [] ["[", expr continuants_aux, ",", expr next_continuants, ",", expr next_numerator, ",", expr next_denominator, ",", expr of_h_eq_floor, ",", expr comp_exact_value, ",", expr fract_ne_zero, "]"] [] [] } },
-  { assume [binders (ifp_succ_n succ_nth_stream_eq)],
-    obtain ["⟨", ident ifp_n, ",", ident nth_stream_eq, ",", ident nth_fract_ne_zero, ",", "-", "⟩", ":", expr «expr∃ , »((ifp_n), «expr ∧ »(«expr = »(int_fract_pair.stream v n, some ifp_n), «expr ∧ »(«expr ≠ »(ifp_n.fr, 0), «expr = »(int_fract_pair.of «expr ⁻¹»(ifp_n.fr), ifp_succ_n))))],
-    from [expr int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq],
-    let [ident conts] [] [":=", expr g.continuants_aux «expr + »(n, 2)],
-    set [] [ident pconts] [] [":="] [expr g.continuants_aux «expr + »(n, 1)] ["with", ident pconts_eq],
-    set [] [ident ppconts] [] [":="] [expr g.continuants_aux n] ["with", ident ppconts_eq],
-    cases [expr decidable.em «expr = »(ifp_succ_n.fr, 0)] ["with", ident ifp_succ_n_fr_eq_zero, ident ifp_succ_n_fr_ne_zero],
-    { suffices [] [":", expr «expr = »(v, «expr / »(conts.a, conts.b))],
-      by simpa [] [] [] ["[", expr comp_exact_value, ",", expr ifp_succ_n_fr_eq_zero, "]"] [] [],
-      obtain ["⟨", ident ifp_n', ",", ident nth_stream_eq', ",", ident ifp_n_fract_inv_eq_floor, "⟩", ":", expr «expr∃ , »((ifp_n), «expr ∧ »(«expr = »(int_fract_pair.stream v n, some ifp_n), «expr = »(«expr ⁻¹»(ifp_n.fr), «expr⌊ ⌋»(«expr ⁻¹»(ifp_n.fr)))))],
-      from [expr int_fract_pair.exists_succ_nth_stream_of_fr_zero succ_nth_stream_eq ifp_succ_n_fr_eq_zero],
-      have [] [":", expr «expr = »(ifp_n', ifp_n)] [],
-      by injection [expr eq.trans nth_stream_eq'.symm nth_stream_eq] [],
-      cases [expr this] [],
-      have [ident s_nth_eq] [":", expr «expr = »(g.s.nth n, some ⟨1, «expr⌊ ⌋»(«expr ⁻¹»(ifp_n.fr))⟩)] [],
-      from [expr nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq nth_fract_ne_zero],
-      rw ["[", "<-", expr ifp_n_fract_inv_eq_floor, "]"] ["at", ident s_nth_eq],
-      suffices [] [":", expr «expr = »(v, comp_exact_value ppconts pconts ifp_n.fr)],
-      by simpa [] [] [] ["[", expr conts, ",", expr continuants_aux, ",", expr s_nth_eq, ",", expr comp_exact_value, ",", expr nth_fract_ne_zero, "]"] [] ["using", expr this],
-      exact [expr IH nth_stream_eq] },
-    { suffices [] [":", expr «expr = »(comp_exact_value ppconts pconts ifp_n.fr, comp_exact_value pconts conts ifp_succ_n.fr)],
-      by { have [] [":", expr «expr = »(v, comp_exact_value ppconts pconts ifp_n.fr)] [],
-        from [expr IH nth_stream_eq],
-        conv_lhs [] [] { rw [expr this] },
-        assumption },
-      obtain ["⟨", ident ifp_n', ",", ident nth_stream_eq', ",", ident ifp_n_fract_ne_zero, ",", "⟨", ident refl, "⟩", "⟩", ":", expr «expr∃ , »((ifp_n), «expr ∧ »(«expr = »(int_fract_pair.stream v n, some ifp_n), «expr ∧ »(«expr ≠ »(ifp_n.fr, 0), «expr = »(int_fract_pair.of «expr ⁻¹»(ifp_n.fr), ifp_succ_n))))],
-      from [expr int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq],
-      have [] [":", expr «expr = »(ifp_n', ifp_n)] [],
-      by injection [expr eq.trans nth_stream_eq'.symm nth_stream_eq] [],
-      cases [expr this] [],
-      have [ident s_nth_eq] [":", expr «expr = »(g.s.nth n, some ⟨1, («expr⌊ ⌋»(«expr ⁻¹»(ifp_n.fr)) : K)⟩)] [],
-      from [expr nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq ifp_n_fract_ne_zero],
-      let [ident ppA] [] [":=", expr ppconts.a],
-      let [ident ppB] [] [":=", expr ppconts.b],
-      let [ident pA] [] [":=", expr pconts.a],
-      let [ident pB] [] [":=", expr pconts.b],
-      have [] [":", expr «expr = »(comp_exact_value ppconts pconts ifp_n.fr, «expr / »(«expr + »(ppA, «expr * »(«expr ⁻¹»(ifp_n.fr), pA)), «expr + »(ppB, «expr * »(«expr ⁻¹»(ifp_n.fr), pB))))] [],
-      by { field_simp [] ["[", expr ifp_n_fract_ne_zero, ",", expr comp_exact_value, ",", expr next_continuants, ",", expr next_numerator, ",", expr next_denominator, "]"] [] [],
-        ac_refl },
-      rw [expr this] [],
-      have [ident tmp_calc] [] [":=", expr comp_exact_value_correctness_of_stream_eq_some_aux_comp pA ppA ifp_succ_n_fr_ne_zero],
-      have [ident tmp_calc'] [] [":=", expr comp_exact_value_correctness_of_stream_eq_some_aux_comp pB ppB ifp_succ_n_fr_ne_zero],
-      rw [expr inv_eq_one_div] ["at", ident tmp_calc, ident tmp_calc'],
-      have [] [":", expr «expr ≠ »(int.fract «expr / »(1, ifp_n.fr), 0)] [],
-      by simpa [] [] [] [] [] ["using", expr ifp_succ_n_fr_ne_zero],
-      field_simp [] ["[", expr conts, ",", expr comp_exact_value, ",", expr continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq, ",", expr next_continuants, ",", expr next_numerator, ",", expr next_denominator, ",", expr this, ",", expr tmp_calc, ",", expr tmp_calc', "]"] [] [],
-      ac_refl } }
-end
+theorem comp_exact_value_correctness_of_stream_eq_some :
+  ∀ {ifp_n : int_fract_pair K},
+    int_fract_pair.stream v n = some ifp_n →
+      v = comp_exact_value ((of v).continuantsAux n) ((of v).continuantsAux$ n+1) ifp_n.fr :=
+  by 
+    let g := of v 
+    induction' n with n IH
+    ·
+      intro ifp_zero stream_zero_eq 
+      have  : int_fract_pair.of v = ifp_zero
+      ·
+        ·
+          have  : int_fract_pair.stream v 0 = some (int_fract_pair.of v)
+          exact rfl 
+          simpa only [this] using stream_zero_eq 
+      cases this 
+      cases' Decidable.em (Int.fract v = 0) with fract_eq_zero fract_ne_zero
+      ·
+        suffices  : v = ⌊v⌋
+        ·
+          simpa [continuants_aux, fract_eq_zero, comp_exact_value]
+        calc v = Int.fract v+⌊v⌋ :=
+          by 
+            rw [Int.fract_add_floor]_ = ⌊v⌋ :=
+          by 
+            simp [fract_eq_zero]
+      ·
+        fieldSimp [continuants_aux, next_continuants, next_numerator, next_denominator, of_h_eq_floor, comp_exact_value,
+          fract_ne_zero]
+    ·
+      intro ifp_succ_n succ_nth_stream_eq 
+      obtain ⟨ifp_n, nth_stream_eq, nth_fract_ne_zero, -⟩ :
+        ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n 
+      exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq 
+      let conts := g.continuants_aux (n+2)
+      set pconts := g.continuants_aux (n+1) with pconts_eq 
+      set ppconts := g.continuants_aux n with ppconts_eq 
+      cases' Decidable.em (ifp_succ_n.fr = 0) with ifp_succ_n_fr_eq_zero ifp_succ_n_fr_ne_zero
+      ·
+        suffices  : v = conts.a / conts.b
+        ·
+          simpa [comp_exact_value, ifp_succ_n_fr_eq_zero]
+        obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_inv_eq_floor⟩ :
+          ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋
+        exact int_fract_pair.exists_succ_nth_stream_of_fr_zero succ_nth_stream_eq ifp_succ_n_fr_eq_zero 
+        have  : ifp_n' = ifp_n
+        ·
+          injection Eq.trans nth_stream_eq'.symm nth_stream_eq 
+        cases this 
+        have s_nth_eq : g.s.nth n = some ⟨1, ⌊ifp_n.fr⁻¹⌋⟩
+        exact nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq nth_fract_ne_zero 
+        rw [←ifp_n_fract_inv_eq_floor] at s_nth_eq 
+        suffices  : v = comp_exact_value ppconts pconts ifp_n.fr
+        ·
+          simpa [conts, continuants_aux, s_nth_eq, comp_exact_value, nth_fract_ne_zero] using this 
+        exact IH nth_stream_eq
+      ·
+        suffices  : comp_exact_value ppconts pconts ifp_n.fr = comp_exact_value pconts conts ifp_succ_n.fr
+        ·
+          ·
+            have  : v = comp_exact_value ppconts pconts ifp_n.fr 
+            exact IH nth_stream_eq 
+            convLHS => rw [this]
+            assumption 
+        obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_ne_zero, ⟨refl⟩⟩ :
+          ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n 
+        exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq 
+        have  : ifp_n' = ifp_n
+        ·
+          injection Eq.trans nth_stream_eq'.symm nth_stream_eq 
+        cases this 
+        have s_nth_eq : g.s.nth n = some ⟨1, (⌊ifp_n.fr⁻¹⌋ : K)⟩
+        exact nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq ifp_n_fract_ne_zero 
+        let ppA := ppconts.a 
+        let ppB := ppconts.b 
+        let pA := pconts.a 
+        let pB := pconts.b 
+        have  : comp_exact_value ppconts pconts ifp_n.fr = (ppA+ifp_n.fr⁻¹*pA) / ppB+ifp_n.fr⁻¹*pB
+        ·
+          ·
+            fieldSimp [ifp_n_fract_ne_zero, comp_exact_value, next_continuants, next_numerator, next_denominator]
+            acRfl 
+        rw [this]
+        have tmp_calc := comp_exact_value_correctness_of_stream_eq_some_aux_comp pA ppA ifp_succ_n_fr_ne_zero 
+        have tmp_calc' := comp_exact_value_correctness_of_stream_eq_some_aux_comp pB ppB ifp_succ_n_fr_ne_zero 
+        rw [inv_eq_one_div] at tmp_calc tmp_calc' 
+        have  : Int.fract (1 / ifp_n.fr) ≠ 0
+        ·
+          simpa using ifp_succ_n_fr_ne_zero 
+        fieldSimp [conts, comp_exact_value, continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq, next_continuants,
+          next_numerator, next_denominator, this, tmp_calc, tmp_calc']
+        acRfl
 
 open generalized_continued_fraction(of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none)
 
--- error in Algebra.ContinuedFractions.Computation.CorrectnessTerminating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- The convergent of `generalized_continued_fraction.of v` at step `n - 1` is exactly `v` if the
-`int_fract_pair.stream` of the corresponding continued fraction terminated at step `n`. -/
-theorem of_correctness_of_nth_stream_eq_none
-(nth_stream_eq_none : «expr = »(int_fract_pair.stream v n, none)) : «expr = »(v, (of v).convergents «expr - »(n, 1)) :=
-begin
-  induction [expr n] [] ["with", ident n, ident IH] [],
-  case [ident nat.zero] { contradiction },
-  case [ident nat.succ] { rename [ident nth_stream_eq_none, ident succ_nth_stream_eq_none],
-    let [ident g] [] [":=", expr of v],
-    change [expr «expr = »(v, g.convergents n)] [] [],
-    have [] [":", expr «expr ∨ »(«expr = »(int_fract_pair.stream v n, none), «expr∃ , »((ifp), «expr ∧ »(«expr = »(int_fract_pair.stream v n, some ifp), «expr = »(ifp.fr, 0))))] [],
-    from [expr int_fract_pair.succ_nth_stream_eq_none_iff.elim_left succ_nth_stream_eq_none],
-    rcases [expr this, "with", "⟨", ident nth_stream_eq_none, "⟩", "|", "⟨", ident ifp_n, ",", ident nth_stream_eq, ",", ident nth_stream_fr_eq_zero, "⟩"],
-    { cases [expr n] ["with", ident n'],
-      { contradiction },
-      { have [] [":", expr g.terminated_at n'] [],
-        from [expr of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_right nth_stream_eq_none],
-        have [] [":", expr «expr = »(g.convergents «expr + »(n', 1), g.convergents n')] [],
-        from [expr convergents_stable_of_terminated n'.le_succ this],
-        rw [expr this] [],
-        exact [expr IH nth_stream_eq_none] } },
-    { simpa [] [] [] ["[", expr nth_stream_fr_eq_zero, ",", expr comp_exact_value, "]"] [] ["using", expr comp_exact_value_correctness_of_stream_eq_some nth_stream_eq] } }
-end
+-- failed to format: format: uncaught backtrack exception
+/--
+    The convergent of `generalized_continued_fraction.of v` at step `n - 1` is exactly `v` if the
+    `int_fract_pair.stream` of the corresponding continued fraction terminated at step `n`. -/
+  theorem
+    of_correctness_of_nth_stream_eq_none
+    ( nth_stream_eq_none : int_fract_pair.stream v n = none ) : v = ( of v ) . convergents ( n - 1 )
+    :=
+      by
+        induction' n with n IH
+          case nat.zero => contradiction
+          case
+            nat.succ
+            =>
+            rename' nth_stream_eq_none
+              let g := of v
+              change v = g.convergents n
+              have : int_fract_pair.stream v n = none ∨ ∃ ifp , int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0
+              exact int_fract_pair.succ_nth_stream_eq_none_iff.elim_left succ_nth_stream_eq_none
+              rcases this with ( ⟨ nth_stream_eq_none ⟩ | ⟨ ifp_n , nth_stream_eq , nth_stream_fr_eq_zero ⟩ )
+              ·
+                cases' n with n'
+                  · contradiction
+                  ·
+                    have : g.terminated_at n'
+                      exact of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_right nth_stream_eq_none
+                      have : g.convergents ( n' + 1 ) = g.convergents n'
+                      exact convergents_stable_of_terminated n'.le_succ this
+                      rw [ this ]
+                      exact IH nth_stream_eq_none
+              ·
+                simpa
+                  [ nth_stream_fr_eq_zero , comp_exact_value ]
+                  using comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
 
 /--
 If `generalized_continued_fraction.of v` terminated at step `n`, then the `n`th convergent is
@@ -207,7 +242,7 @@ If `generalized_continued_fraction.of v` terminates, then its convergents will e
 be `v`.
 -/
 theorem of_correctness_at_top_of_terminates (terminates : (of v).Terminates) :
-  ∀ᶠn in at_top, v = (of v).convergents n :=
+  ∀ᶠ n in at_top, v = (of v).convergents n :=
   by 
     rw [eventually_at_top]
     obtain ⟨n, terminated_at_n⟩ : ∃ n, (of v).TerminatedAt n 

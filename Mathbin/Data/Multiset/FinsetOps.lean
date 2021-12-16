@@ -151,10 +151,16 @@ theorem subset_ndunion_right (s t : Multiset α) : t ⊆ ndunion s t :=
 theorem ndunion_le_add (s t : Multiset α) : ndunion s t ≤ s+t :=
   Quotientₓ.induction_on₂ s t$ fun l₁ l₂ => (union_sublist_append _ _).Subperm
 
--- error in Data.Multiset.FinsetOps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem ndunion_le
-{s t u : multiset α} : «expr ↔ »(«expr ≤ »(ndunion s t, u), «expr ∧ »(«expr ⊆ »(s, u), «expr ≤ »(t, u))) :=
-multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr ndinsert_le, ",", expr and_comm, ",", expr and.left_comm, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  ndunion_le
+  { s t u : Multiset α } : ndunion s t ≤ u ↔ s ⊆ u ∧ t ≤ u
+  :=
+    Multiset.induction_on
+      s
+        by simp
+        by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) [ ndinsert_le , and_comm , And.left_comm ]
 
 theorem subset_ndunion_left (s t : Multiset α) : s ⊆ ndunion s t :=
   fun a h => mem_ndunion.2$ Or.inl h

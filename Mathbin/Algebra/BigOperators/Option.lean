@@ -18,19 +18,21 @@ namespace Finset
 variable {α M : Type _} [CommMonoidₓ M]
 
 @[simp, toAdditive]
-theorem prod_insert_none (f : Option α → M) (s : Finset α) : (∏x in s.insert_none, f x) = f none*∏x in s, f (some x) :=
+theorem prod_insert_none (f : Option α → M) (s : Finset α) :
+  (∏ x in s.insert_none, f x) = f none*∏ x in s, f (some x) :=
   by 
     simp [insert_none]
 
 @[toAdditive]
-theorem prod_erase_none (f : α → M) (s : Finset (Option α)) : (∏x in s.erase_none, f x) = ∏x in s, Option.elim x 1 f :=
+theorem prod_erase_none (f : α → M) (s : Finset (Option α)) :
+  (∏ x in s.erase_none, f x) = ∏ x in s, Option.elim x 1 f :=
   by 
     classical <;>
-      calc (∏x in s.erase_none, f x) = ∏x in s.erase_none.map embedding.some, Option.elim x 1 f :=
+      calc (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map embedding.some, Option.elim x 1 f :=
         (prod_mapₓ s.erase_none embedding.some fun x => Option.elim x 1 f).symm
-          _ = ∏x in s.erase none, Option.elim x 1 f :=
+          _ = ∏ x in s.erase none, Option.elim x 1 f :=
         by 
-          rw [map_some_erase_none]_ = ∏x in s, Option.elim x 1 f :=
+          rw [map_some_erase_none]_ = ∏ x in s, Option.elim x 1 f :=
         prod_erase _ rfl
 
 end Finset

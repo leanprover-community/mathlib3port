@@ -12,15 +12,15 @@ unsafe inductive exprform
   | Or : exprform → exprform → exprform
   | And : exprform → exprform → exprform
 
--- error in Tactic.Omega.Nat.Form: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- Intermediate shadow syntax for LNA formulas that includes non-canonical terms -/
-@[derive #[expr has_reflect], derive #[expr inhabited]]
 inductive preform
-| eq : preterm → preterm → preform
-| le : preterm → preterm → preform
-| not : preform → preform
-| or : preform → preform → preform
-| and : preform → preform → preform
+  | Eq : preterm → preterm → preform
+  | le : preterm → preterm → preform
+  | Not : preform → preform
+  | Or : preform → preform → preform
+  | And : preform → preform → preform deriving [anonymous], [anonymous]
 
 localized [Omega.Nat] notation x " =* " y => Omega.Nat.Preform.eq x y
 
@@ -77,6 +77,7 @@ def fresh_index : preform → Nat
 | p ∨* q => max p.fresh_index q.fresh_index
 | p ∧* q => max p.fresh_index q.fresh_index
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » p.fresh_index)
 theorem holds_constant {v w : Nat → Nat} :
   ∀ p : preform, (∀ x _ : x < p.fresh_index, v x = w x) → (p.holds v ↔ p.holds w)
 | t =* s, h1 =>
@@ -121,7 +122,7 @@ def Implies (p q : preform) : Prop :=
   ∀ v, holds v p → holds v q
 
 /-- `equiv p q` := under any valuation, `p` holds iff `q` holds -/
-def Equiv (p q : preform) : Prop :=
+def Equivₓ (p q : preform) : Prop :=
   ∀ v, holds v p ↔ holds v q
 
 theorem sat_of_implies_of_sat {p q : preform} : Implies p q → sat p → sat q :=
@@ -168,6 +169,7 @@ theorem valid_of_unsat_not {p : preform} : (¬* p).Unsat → p.valid :=
     intro h 
     assumption
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

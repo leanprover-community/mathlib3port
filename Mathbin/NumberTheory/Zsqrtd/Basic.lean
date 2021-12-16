@@ -38,7 +38,7 @@ theorem ext : ∀ {z w : ℤ√d}, z = w ↔ z.re = w.re ∧ z.im = w.im
 | ⟨x, y⟩, ⟨x', y'⟩ =>
   ⟨fun h =>
       by 
-        injection h <;> split  <;> assumption,
+        injection h <;> constructor <;> assumption,
     fun ⟨h₁, h₂⟩ =>
       by 
         congr <;> assumption⟩
@@ -343,22 +343,22 @@ theorem conj_mul {a b : ℤ√d} : conj (a*b) = conj a*conj b :=
     simp [ext]
     ring
 
-protected theorem coe_int_add (m n : ℤ) : («expr↑ » (m+n) : ℤ√d) = «expr↑ » m+«expr↑ » n :=
+protected theorem coe_int_add (m n : ℤ) : (↑m+n : ℤ√d) = (↑m)+↑n :=
   (Int.castRingHom _).map_add _ _
 
-protected theorem coe_int_sub (m n : ℤ) : («expr↑ » (m - n) : ℤ√d) = «expr↑ » m - «expr↑ » n :=
+protected theorem coe_int_sub (m n : ℤ) : (↑(m - n) : ℤ√d) = ↑m - ↑n :=
   (Int.castRingHom _).map_sub _ _
 
-protected theorem coe_int_mul (m n : ℤ) : («expr↑ » (m*n) : ℤ√d) = «expr↑ » m*«expr↑ » n :=
+protected theorem coe_int_mul (m n : ℤ) : (↑m*n : ℤ√d) = (↑m)*↑n :=
   (Int.castRingHom _).map_mul _ _
 
-protected theorem coe_int_inj {m n : ℤ} (h : («expr↑ » m : ℤ√d) = «expr↑ » n) : m = n :=
+protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n :=
   by 
     simpa using congr_argₓ re h
 
-theorem coe_int_dvd_iff {d : ℤ} (z : ℤ) (a : ℤ√d) : «expr↑ » z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im :=
+theorem coe_int_dvd_iff {d : ℤ} (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨x, rfl⟩
       simp only [add_zeroₓ, coe_int_re, zero_mul, mul_im, dvd_mul_right, and_selfₓ, mul_re, mul_zero, coe_int_im]
@@ -381,49 +381,44 @@ theorem sq_le_add_mixed {c d x y z w : ℕ} (xy : sq_le x c y d) (zw : sq_le z c
     by 
       simpa [mul_commₓ, mul_left_commₓ] using mul_le_mul xy zw (Nat.zero_leₓ _) (Nat.zero_leₓ _)
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sq_le_add
-{c d x y z w : exprℕ()}
-(xy : sq_le x c y d)
-(zw : sq_le z c w d) : sq_le «expr + »(x, z) c «expr + »(y, w) d :=
-begin
-  have [ident xz] [] [":=", expr sq_le_add_mixed xy zw],
-  simp [] [] [] ["[", expr sq_le, ",", expr mul_assoc, "]"] [] ["at", ident xy, ident zw],
-  simp [] [] [] ["[", expr sq_le, ",", expr mul_add, ",", expr mul_comm, ",", expr mul_left_comm, ",", expr add_le_add, ",", "*", "]"] [] []
-end
+theorem sq_le_add {c d x y z w : ℕ} (xy : sq_le x c y d) (zw : sq_le z c w d) : sq_le (x+z) c (y+w) d :=
+  by 
+    have xz := sq_le_add_mixed xy zw 
+    simp [sq_le, mul_assocₓ] at xy zw 
+    simp [sq_le, mul_addₓ, mul_commₓ, mul_left_commₓ, add_le_add]
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sq_le_cancel
-{c d x y z w : exprℕ()}
-(zw : sq_le y d x c)
-(h : sq_le «expr + »(x, z) c «expr + »(y, w) d) : sq_le z c w d :=
-begin
-  apply [expr le_of_not_gt],
-  intro [ident l],
-  refine [expr not_le_of_gt _ h],
-  simp [] [] [] ["[", expr sq_le, ",", expr mul_add, ",", expr mul_comm, ",", expr mul_left_comm, ",", expr add_assoc, "]"] [] [],
-  have [ident hm] [] [":=", expr sq_le_add_mixed zw (le_of_lt l)],
-  simp [] [] [] ["[", expr sq_le, ",", expr mul_assoc, "]"] [] ["at", ident l, ident zw],
-  exact [expr lt_of_le_of_lt (add_le_add_right zw _) (add_lt_add_left (add_lt_add_of_le_of_lt hm (add_lt_add_of_le_of_lt hm l)) _)]
-end
+theorem sq_le_cancel {c d x y z w : ℕ} (zw : sq_le y d x c) (h : sq_le (x+z) c (y+w) d) : sq_le z c w d :=
+  by 
+    apply le_of_not_gtₓ 
+    intro l 
+    refine' not_le_of_gtₓ _ h 
+    simp [sq_le, mul_addₓ, mul_commₓ, mul_left_commₓ, add_assocₓ]
+    have hm := sq_le_add_mixed zw (le_of_ltₓ l)
+    simp [sq_le, mul_assocₓ] at l zw 
+    exact
+      lt_of_le_of_ltₓ (add_le_add_right zw _)
+        (add_lt_add_left (add_lt_add_of_le_of_lt hm (add_lt_add_of_le_of_lt hm l)) _)
 
 theorem sq_le_smul {c d x y : ℕ} (n : ℕ) (xy : sq_le x c y d) : sq_le (n*x) c (n*y) d :=
   by 
     simpa [sq_le, mul_left_commₓ, mul_assocₓ] using Nat.mul_le_mul_leftₓ (n*n) xy
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sq_le_mul
-{d
- x
- y
- z
- w : exprℕ()} : «expr ∧ »(sq_le x 1 y d → sq_le z 1 w d → sq_le «expr + »(«expr * »(x, w), «expr * »(y, z)) d «expr + »(«expr * »(x, z), «expr * »(«expr * »(d, y), w)) 1, «expr ∧ »(sq_le x 1 y d → sq_le w d z 1 → sq_le «expr + »(«expr * »(x, z), «expr * »(«expr * »(d, y), w)) 1 «expr + »(«expr * »(x, w), «expr * »(y, z)) d, «expr ∧ »(sq_le y d x 1 → sq_le z 1 w d → sq_le «expr + »(«expr * »(x, z), «expr * »(«expr * »(d, y), w)) 1 «expr + »(«expr * »(x, w), «expr * »(y, z)) d, sq_le y d x 1 → sq_le w d z 1 → sq_le «expr + »(«expr * »(x, w), «expr * »(y, z)) d «expr + »(«expr * »(x, z), «expr * »(«expr * »(d, y), w)) 1))) :=
-by refine [expr ⟨_, _, _, _⟩]; { intros [ident xy, ident zw],
-  have [] [] [":=", expr int.mul_nonneg (sub_nonneg_of_le (int.coe_nat_le_coe_nat_of_le xy)) (sub_nonneg_of_le (int.coe_nat_le_coe_nat_of_le zw))],
-  refine [expr int.le_of_coe_nat_le_coe_nat (le_of_sub_nonneg _)],
-  convert [] [expr this] [],
-  simp [] [] ["only"] ["[", expr one_mul, ",", expr int.coe_nat_add, ",", expr int.coe_nat_mul, "]"] [] [],
-  ring [] }
+theorem sq_le_mul {d x y z w : ℕ} :
+  (sq_le x 1 y d → sq_le z 1 w d → sq_le ((x*w)+y*z) d ((x*z)+(d*y)*w) 1) ∧
+    (sq_le x 1 y d → sq_le w d z 1 → sq_le ((x*z)+(d*y)*w) 1 ((x*w)+y*z) d) ∧
+      (sq_le y d x 1 → sq_le z 1 w d → sq_le ((x*z)+(d*y)*w) 1 ((x*w)+y*z) d) ∧
+        (sq_le y d x 1 → sq_le w d z 1 → sq_le ((x*w)+y*z) d ((x*z)+(d*y)*w) 1) :=
+  by 
+    refine' ⟨_, _, _, _⟩ <;>
+      ·
+        intro xy zw 
+        have  :=
+          Int.mul_nonneg (sub_nonneg_of_le (Int.coe_nat_le_coe_nat_of_le xy))
+            (sub_nonneg_of_le (Int.coe_nat_le_coe_nat_of_le zw))
+        refine' Int.le_of_coe_nat_le_coe_nat (le_of_sub_nonneg _)
+        convert this 
+        simp only [one_mulₓ, Int.coe_nat_add, Int.coe_nat_mul]
+        ring
 
 /-- "Generalized" `nonneg`. `nonnegg c d x y` means `a √c + b √d ≥ 0`;
   we are interested in the case `c = 1` but this is more symmetric -/
@@ -515,18 +510,29 @@ theorem norm_nonneg (hd : d ≤ 0) (n : ℤ√d) : 0 ≤ n.norm :=
     (by 
       rw [mul_assocₓ, neg_mul_eq_neg_mul] <;> exact mul_nonneg (neg_nonneg.2 hd) (mul_self_nonneg _))
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_eq_one_iff {x : «exprℤ√ »(d)} : «expr ↔ »(«expr = »(x.norm.nat_abs, 1), is_unit x) :=
-⟨λ
- h, «expr $ »(is_unit_iff_dvd_one.2, (le_total 0 (norm x)).cases_on (λ
-   hx, show «expr ∣ »(x, 1), from ⟨x.conj, by rwa ["[", "<-", expr int.coe_nat_inj', ",", expr int.nat_abs_of_nonneg hx, ",", "<-", expr @int.cast_inj «exprℤ√ »(d) _ _, ",", expr norm_eq_mul_conj, ",", expr eq_comm, "]"] ["at", ident h]⟩) (λ
-   hx, show «expr ∣ »(x, 1), from ⟨«expr- »(x.conj), by rwa ["[", "<-", expr int.coe_nat_inj', ",", expr int.of_nat_nat_abs_of_nonpos hx, ",", "<-", expr @int.cast_inj «exprℤ√ »(d) _ _, ",", expr int.cast_neg, ",", expr norm_eq_mul_conj, ",", expr neg_mul_eq_mul_neg, ",", expr eq_comm, "]"] ["at", ident h]⟩)), λ
- h, let ⟨y, hy⟩ := is_unit_iff_dvd_one.1 h in
- begin
-   have [] [] [":=", expr congr_arg «expr ∘ »(int.nat_abs, norm) hy],
-   rw ["[", expr function.comp_app, ",", expr function.comp_app, ",", expr norm_mul, ",", expr int.nat_abs_mul, ",", expr norm_one, ",", expr int.nat_abs_one, ",", expr eq_comm, ",", expr nat.mul_eq_one_iff, "]"] ["at", ident this],
-   exact [expr this.1]
- end⟩
+theorem norm_eq_one_iff {x : ℤ√d} : x.norm.nat_abs = 1 ↔ IsUnit x :=
+  ⟨fun h =>
+      is_unit_iff_dvd_one.2$
+        (le_totalₓ 0 (norm x)).casesOn
+          (fun hx =>
+            show x ∣ 1 from
+              ⟨x.conj,
+                by 
+                  rwa [←Int.coe_nat_inj', Int.nat_abs_of_nonneg hx, ←@Int.cast_inj (ℤ√d) _ _, norm_eq_mul_conj,
+                    eq_comm] at h⟩)
+          fun hx =>
+            show x ∣ 1 from
+              ⟨-x.conj,
+                by 
+                  rwa [←Int.coe_nat_inj', Int.of_nat_nat_abs_of_nonpos hx, ←@Int.cast_inj (ℤ√d) _ _, Int.cast_neg,
+                    norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
+    fun h =>
+      let ⟨y, hy⟩ := is_unit_iff_dvd_one.1 h 
+      by 
+        have  := congr_argₓ (Int.natAbs ∘ norm) hy 
+        rw [Function.comp_app, Function.comp_app, norm_mul, Int.nat_abs_mul, norm_one, Int.nat_abs_one, eq_comm,
+          Nat.mul_eq_one_iff] at this 
+        exact this.1⟩
 
 theorem is_unit_iff_norm_is_unit {d : ℤ} (z : ℤ√d) : IsUnit z ↔ IsUnit z.norm :=
   by 
@@ -536,26 +542,25 @@ theorem norm_eq_one_iff' {d : ℤ} (hd : d ≤ 0) (z : ℤ√d) : z.norm = 1 ↔
   by 
     rw [←norm_eq_one_iff, ←Int.coe_nat_inj', Int.nat_abs_of_nonneg (norm_nonneg hd z), Int.coe_nat_one]
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_eq_zero_iff
-{d : exprℤ()}
-(hd : «expr < »(d, 0))
-(z : «exprℤ√ »(d)) : «expr ↔ »(«expr = »(z.norm, 0), «expr = »(z, 0)) :=
-begin
-  split,
-  { intro [ident h],
-    rw ["[", expr ext, ",", expr zero_re, ",", expr zero_im, "]"] [],
-    rw ["[", expr norm_def, ",", expr sub_eq_add_neg, ",", expr mul_assoc, "]"] ["at", ident h],
-    have [ident left] [] [":=", expr mul_self_nonneg z.re],
-    have [ident right] [] [":=", expr neg_nonneg.mpr (mul_nonpos_of_nonpos_of_nonneg hd.le (mul_self_nonneg z.im))],
-    obtain ["⟨", ident ha, ",", ident hb, "⟩", ":=", expr (add_eq_zero_iff' left right).mp h],
-    split; apply [expr eq_zero_of_mul_self_eq_zero],
-    { exact [expr ha] },
-    { rw ["[", expr neg_eq_zero, ",", expr mul_eq_zero, "]"] ["at", ident hb],
-      exact [expr hb.resolve_left hd.ne] } },
-  { rintro [ident rfl],
-    exact [expr norm_zero] }
-end
+theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z = 0 :=
+  by 
+    constructor
+    ·
+      intro h 
+      rw [ext, zero_re, zero_im]
+      rw [norm_def, sub_eq_add_neg, mul_assocₓ] at h 
+      have left := mul_self_nonneg z.re 
+      have right := neg_nonneg.mpr (mul_nonpos_of_nonpos_of_nonneg hd.le (mul_self_nonneg z.im))
+      obtain ⟨ha, hb⟩ := (add_eq_zero_iff' left right).mp h 
+      constructor <;> apply eq_zero_of_mul_self_eq_zero
+      ·
+        exact ha
+      ·
+        rw [neg_eq_zero, mul_eq_zero] at hb 
+        exact hb.resolve_left hd.ne
+    ·
+      rintro rfl 
+      exact norm_zero
 
 theorem norm_eq_of_associated {d : ℤ} (hd : d ≤ 0) {x y : ℤ√d} (h : Associated x y) : x.norm = y.norm :=
   by 
@@ -678,7 +683,7 @@ theorem nonneg_add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a+b
       ·
         apply Nat.le_add_rightₓ
     ·
-      rw [add_commₓ, add_commₓ («expr↑ » y)]
+      rw [add_commₓ, add_commₓ (↑y)]
       exact nonneg_add_lem hb ha
     ·
       simpa [add_commₓ] using nonnegg_neg_pos.2 (sq_le_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
@@ -701,27 +706,38 @@ theorem le_of_le_le {x y z w : ℤ} (xz : x ≤ z) (yw : y ≤ w) : (⟨x, y⟩ 
     match z - x, w - y, Int.Le.dest_sub xz, Int.Le.dest_sub yw with 
     | _, _, ⟨a, rfl⟩, ⟨b, rfl⟩ => trivialₓ
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem le_arch (a : «exprℤ√ »(d)) : «expr∃ , »((n : exprℕ()), «expr ≤ »(a, n)) :=
-let ⟨x, y, (h : «expr ≤ »(a, ⟨x, y⟩))⟩ := show «expr∃ , »((x
-      y : exprℕ()), nonneg «expr + »(⟨x, y⟩, «expr- »(a))), from match «expr- »(a) with
-    | ⟨int.of_nat x, int.of_nat y⟩ := ⟨0, 0, trivial⟩
-    | ⟨int.of_nat x, «expr-[1+ ]»(y)⟩ := ⟨0, «expr + »(y, 1), by simp [] [] [] ["[", expr int.neg_succ_of_nat_coe, ",", expr add_assoc, "]"] [] []⟩
-    | ⟨«expr-[1+ ]»(x), int.of_nat y⟩ := ⟨«expr + »(x, 1), 0, by simp [] [] [] ["[", expr int.neg_succ_of_nat_coe, ",", expr add_assoc, "]"] [] []⟩
-    | ⟨«expr-[1+ ]»(x), «expr-[1+ ]»(y)⟩ := ⟨«expr + »(x, 1), «expr + »(y, 1), by simp [] [] [] ["[", expr int.neg_succ_of_nat_coe, ",", expr add_assoc, "]"] [] []⟩
-    end in
-begin
-  refine [expr ⟨«expr + »(x, «expr * »(d, y)), zsqrtd.le_trans h _⟩],
-  rw ["[", "<-", expr int.cast_coe_nat, ",", "<-", expr of_int_eq_coe, "]"] [],
-  change [expr nonneg ⟨«expr - »(«expr + »(«expr↑ »(x), «expr * »(d, y)), «expr↑ »(x)), «expr - »(0, «expr↑ »(y))⟩] [] [],
-  cases [expr y] ["with", ident y],
-  { simp [] [] [] [] [] [] },
-  have [ident h] [":", expr ∀
-   y, sq_le y d «expr * »(d, y) 1] [":=", expr λ
-   y, by simpa [] [] [] ["[", expr sq_le, ",", expr mul_comm, ",", expr mul_left_comm, "]"] [] ["using", expr nat.mul_le_mul_right «expr * »(y, y) (nat.le_mul_self d)]],
-  rw ["[", expr show «expr = »(«expr - »(«expr + »((x : exprℤ()), «expr * »(d, nat.succ y)), x), «expr * »(d, nat.succ y)), by simp [] [] [] [] [] [], "]"] [],
-  exact [expr h «expr + »(y, 1)]
-end
+theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n :=
+  let ⟨x, y, (h : a ≤ ⟨x, y⟩)⟩ :=
+    show ∃ x y : ℕ, nonneg (⟨x, y⟩+-a) from
+      match -a with 
+      | ⟨Int.ofNat x, Int.ofNat y⟩ => ⟨0, 0, trivialₓ⟩
+      | ⟨Int.ofNat x, -[1+ y]⟩ =>
+        ⟨0, y+1,
+          by 
+            simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
+      | ⟨-[1+ x], Int.ofNat y⟩ =>
+        ⟨x+1, 0,
+          by 
+            simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
+      | ⟨-[1+ x], -[1+ y]⟩ =>
+        ⟨x+1, y+1,
+          by 
+            simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
+  by 
+    refine' ⟨x+d*y, Zsqrtd.le_trans h _⟩
+    rw [←Int.cast_coe_nat, ←of_int_eq_coe]
+    change nonneg ⟨((↑x)+d*y) - ↑x, 0 - ↑y⟩
+    cases' y with y
+    ·
+      simp 
+    have h : ∀ y, sq_le y d (d*y) 1 :=
+      fun y =>
+        by 
+          simpa [sq_le, mul_commₓ, mul_left_commₓ] using Nat.mul_le_mul_rightₓ (y*y) (Nat.le_mul_self d)
+    rw
+      [show ((x : ℤ)+d*Nat.succ y) - x = d*Nat.succ y by 
+        simp ]
+    exact h (y+1)
 
 protected theorem nonneg_total : ∀ a : ℤ√d, nonneg a ∨ nonneg (-a)
 | ⟨(x : ℕ), (y : ℕ)⟩ => Or.inl trivialₓ
@@ -859,20 +875,29 @@ include dnsq
 theorem d_pos : 0 < d :=
   lt_of_le_of_neₓ (Nat.zero_leₓ _)$ Ne.symm$ nonsquare.ns d 0
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem divides_sq_eq_zero
-{x y}
-(h : «expr = »(«expr * »(x, x), «expr * »(«expr * »(d, y), y))) : «expr ∧ »(«expr = »(x, 0), «expr = »(y, 0)) :=
-let g := x.gcd y in
-or.elim g.eq_zero_or_pos (λ
- H, ⟨nat.eq_zero_of_gcd_eq_zero_left H, nat.eq_zero_of_gcd_eq_zero_right H⟩) (λ
- gpos, «expr $ »(false.elim, let ⟨m, n, co, (hx : «expr = »(x, «expr * »(m, g))), (hy : «expr = »(y, «expr * »(n, g)))⟩ := nat.exists_coprime gpos in
-  begin
-    rw ["[", expr hx, ",", expr hy, "]"] ["at", ident h],
-    have [] [":", expr «expr = »(«expr * »(m, m), «expr * »(d, «expr * »(n, n)))] [":=", expr nat.eq_of_mul_eq_mul_left (mul_pos gpos gpos) (by simpa [] [] [] ["[", expr mul_comm, ",", expr mul_left_comm, "]"] [] ["using", expr h])],
-    have [ident co2] [] [":=", expr let co1 := co.mul_right co in co1.mul co1],
-    exact [expr nonsquare.ns d m «expr $ »(nat.dvd_antisymm (by rw [expr this] []; apply [expr dvd_mul_right]), «expr $ »(co2.dvd_of_dvd_mul_right, by simp [] [] [] ["[", expr this, "]"] [] []))]
-  end))
+theorem divides_sq_eq_zero {x y} (h : (x*x) = (d*y)*y) : x = 0 ∧ y = 0 :=
+  let g := x.gcd y 
+  Or.elim g.eq_zero_or_pos (fun H => ⟨Nat.eq_zero_of_gcd_eq_zero_leftₓ H, Nat.eq_zero_of_gcd_eq_zero_rightₓ H⟩)
+    fun gpos =>
+      False.elim$
+        let ⟨m, n, co, (hx : x = m*g), (hy : y = n*g)⟩ := Nat.exists_coprimeₓ gpos 
+        by 
+          rw [hx, hy] at h 
+          have  : (m*m) = d*n*n :=
+            Nat.eq_of_mul_eq_mul_leftₓ (mul_pos gpos gpos)
+              (by 
+                simpa [mul_commₓ, mul_left_commₓ] using h)
+          have co2 :=
+            let co1 := co.mul_right co 
+            co1.mul co1 
+          exact
+            nonsquare.ns d m
+              (Nat.dvd_antisymm
+                  (by 
+                    rw [this] <;> apply dvd_mul_right)$
+                co2.dvd_of_dvd_mul_right$
+                  by 
+                    simp [this])
 
 theorem divides_sq_eq_zero_z {x y : ℤ} (h : (x*x) = (d*y)*y) : x = 0 ∧ y = 0 :=
   by 
@@ -881,11 +906,10 @@ theorem divides_sq_eq_zero_z {x y : ℤ} (h : (x*x) = (d*y)*y) : x = 0 ∧ y = 0
         let ⟨h1, h2⟩ := divides_sq_eq_zero (Int.coe_nat_inj h)
         ⟨Int.eq_zero_of_nat_abs_eq_zero h1, Int.eq_zero_of_nat_abs_eq_zero h2⟩
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem not_divides_sq
-(x
- y) : «expr ≠ »(«expr * »(«expr + »(x, 1), «expr + »(x, 1)), «expr * »(«expr * »(d, «expr + »(y, 1)), «expr + »(y, 1))) :=
-λ e, by have [ident t] [] [":=", expr (divides_sq_eq_zero e).left]; contradiction
+theorem not_divides_sq x y : ((x+1)*x+1) ≠ (d*y+1)*y+1 :=
+  fun e =>
+    by 
+      have t := (divides_sq_eq_zero e).left <;> contradiction
 
 theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
 | ⟨0, 0⟩, xy, yx => rfl
@@ -987,27 +1011,34 @@ instance : OrderedRing (ℤ√d) :=
 
 end 
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_eq_zero
-{d : exprℤ()}
-(h_nonsquare : ∀ n : exprℤ(), «expr ≠ »(d, «expr * »(n, n)))
-(a : «exprℤ√ »(d)) : «expr ↔ »(«expr = »(norm a, 0), «expr = »(a, 0)) :=
-begin
-  refine [expr ⟨λ ha, ext.mpr _, λ h, by rw ["[", expr h, ",", expr norm_zero, "]"] []⟩],
-  delta [ident norm] ["at", ident ha],
-  rw [expr sub_eq_zero] ["at", ident ha],
-  by_cases [expr h, ":", expr «expr ≤ »(0, d)],
-  { obtain ["⟨", ident d', ",", ident rfl, "⟩", ":=", expr int.eq_coe_of_zero_le h],
-    haveI [] [":", expr nonsquare d'] [":=", expr ⟨λ n h, «expr $ »(h_nonsquare n, by exact_mod_cast [expr h])⟩],
-    exact [expr divides_sq_eq_zero_z ha] },
-  { push_neg ["at", ident h],
-    suffices [] [":", expr «expr = »(«expr * »(a.re, a.re), 0)],
-    { rw [expr eq_zero_of_mul_self_eq_zero this] ["at", ident ha, "⊢"],
-      simpa [] [] ["only"] ["[", expr true_and, ",", expr or_self_right, ",", expr zero_re, ",", expr zero_im, ",", expr eq_self_iff_true, ",", expr zero_eq_mul, ",", expr mul_zero, ",", expr mul_eq_zero, ",", expr h.ne, ",", expr false_or, ",", expr or_self, "]"] [] ["using", expr ha] },
-    apply [expr _root_.le_antisymm _ (mul_self_nonneg _)],
-    rw ["[", expr ha, ",", expr mul_assoc, "]"] [],
-    exact [expr mul_nonpos_of_nonpos_of_nonneg h.le (mul_self_nonneg _)] }
-end
+theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n*n) (a : ℤ√d) : norm a = 0 ↔ a = 0 :=
+  by 
+    refine'
+      ⟨fun ha => ext.mpr _,
+        fun h =>
+          by 
+            rw [h, norm_zero]⟩
+    delta' norm  at ha 
+    rw [sub_eq_zero] at ha 
+    byCases' h : 0 ≤ d
+    ·
+      obtain ⟨d', rfl⟩ := Int.eq_coe_of_zero_le h 
+      have  : nonsquare d' :=
+        ⟨fun n h =>
+            h_nonsquare n$
+              by 
+                exactModCast h⟩
+      exact divides_sq_eq_zero_z ha
+    ·
+      pushNeg  at h 
+      suffices  : (a.re*a.re) = 0
+      ·
+        rw [eq_zero_of_mul_self_eq_zero this] at ha⊢
+        simpa only [true_andₓ, or_self_right, zero_re, zero_im, eq_self_iff_true, zero_eq_mul, mul_zero, mul_eq_zero,
+          h.ne, false_orₓ, or_selfₓ] using ha 
+      apply _root_.le_antisymm _ (mul_self_nonneg _)
+      rw [ha, mul_assocₓ]
+      exact mul_nonpos_of_nonpos_of_nonneg h.le (mul_self_nonneg _)
 
 variable {R : Type} [CommRingₓ R]
 
@@ -1017,44 +1048,61 @@ theorem hom_ext {d : ℤ} (f g : ℤ√d →+* R) (h : f sqrtd = g sqrtd) : f = 
     ext ⟨x_re, x_im⟩
     simp [decompose, h]
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The unique `ring_hom` from `ℤ√d` to a ring `R`, constructed by replacing `√d` with the provided
 root. Conversely, this associates to every mapping `ℤ√d →+* R` a value of `√d` in `R`. -/
-@[simps #[]]
-def lift {d : exprℤ()} : «expr ≃ »({r : R // «expr = »(«expr * »(r, r), «expr↑ »(d))}, «expr →+* »(«exprℤ√ »(d), R)) :=
-{ to_fun := λ
-  r, { to_fun := λ a, «expr + »(a.1, «expr * »(a.2, (r : R))),
-    map_zero' := by simp [] [] [] [] [] [],
-    map_add' := λ a b, by { simp [] [] [] [] [] [],
-      ring [] },
-    map_one' := by simp [] [] [] [] [] [],
-    map_mul' := λ
-    a
-    b, by { have [] [":", expr «expr = »(«expr * »((«expr + »(a.re, «expr * »(a.im, r)) : R), «expr + »(b.re, «expr * »(b.im, r))), «expr + »(«expr + »(«expr * »(a.re, b.re), «expr * »(«expr + »(«expr * »(a.re, b.im), «expr * »(a.im, b.re)), r)), «expr * »(«expr * »(a.im, b.im), «expr * »(r, r))))] [":=", expr by ring []],
-      simp [] [] [] ["[", expr this, ",", expr r.prop, "]"] [] [],
-      ring [] } },
-  inv_fun := λ
-  f, ⟨f sqrtd, by rw ["[", "<-", expr f.map_mul, ",", expr dmuld, ",", expr ring_hom.map_int_cast, "]"] []⟩,
-  left_inv := λ r, by { ext [] [] [],
-    simp [] [] [] [] [] [] },
-  right_inv := λ f, by { ext [] [] [],
-    simp [] [] [] [] [] [] } }
+@[simps]
+def lift {d : ℤ} : { r : R // (r*r) = ↑d } ≃ (ℤ√d →+* R) :=
+  { toFun :=
+      fun r =>
+        { toFun := fun a => a.1+a.2*(r : R),
+          map_zero' :=
+            by 
+              simp ,
+          map_add' :=
+            fun a b =>
+              by 
+                simp 
+                ring,
+          map_one' :=
+            by 
+              simp ,
+          map_mul' :=
+            fun a b =>
+              by 
+                have  : ((a.re+a.im*r : R)*b.re+b.im*r) = ((a.re*b.re)+((a.re*b.im)+a.im*b.re)*r)+(a.im*b.im)*r*r :=
+                  by 
+                    ring 
+                simp [this, r.prop]
+                ring },
+    invFun :=
+      fun f =>
+        ⟨f sqrtd,
+          by 
+            rw [←f.map_mul, dmuld, RingHom.map_int_cast]⟩,
+    left_inv :=
+      fun r =>
+        by 
+          ext 
+          simp ,
+    right_inv :=
+      fun f =>
+        by 
+          ext 
+          simp  }
 
--- error in NumberTheory.Zsqrtd.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `lift r` is injective if `d` is non-square, and R has characteristic zero (that is, the map from
 `ℤ` into `R` is injective). -/
-theorem lift_injective
-[char_zero R]
-{d : exprℤ()}
-(r : {r : R // «expr = »(«expr * »(r, r), «expr↑ »(d))})
-(hd : ∀ n : exprℤ(), «expr ≠ »(d, «expr * »(n, n))) : function.injective (lift r) :=
-«expr $ »((lift r).injective_iff.mpr, λ a ha, begin
-   have [ident h_inj] [":", expr function.injective (coe : exprℤ() → R)] [":=", expr int.cast_injective],
-   suffices [] [":", expr «expr = »(lift r a.norm, 0)],
-   { simp [] [] ["only"] ["[", expr coe_int_re, ",", expr add_zero, ",", expr lift_apply_apply, ",", expr coe_int_im, ",", expr int.cast_zero, ",", expr zero_mul, "]"] [] ["at", ident this],
-     rwa ["[", "<-", expr int.cast_zero, ",", expr h_inj.eq_iff, ",", expr norm_eq_zero hd, "]"] ["at", ident this] },
-   rw ["[", expr norm_eq_mul_conj, ",", expr ring_hom.map_mul, ",", expr ha, ",", expr zero_mul, "]"] []
- end)
+theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // (r*r) = ↑d }) (hd : ∀ n : ℤ, d ≠ n*n) :
+  Function.Injective (lift r) :=
+  (lift r).injective_iff.mpr$
+    fun a ha =>
+      by 
+        have h_inj : Function.Injective (coeₓ : ℤ → R) := Int.cast_injective 
+        suffices  : lift r a.norm = 0
+        ·
+          simp only [coe_int_re, add_zeroₓ, lift_apply_apply, coe_int_im, Int.cast_zero, zero_mul] at this 
+          rwa [←Int.cast_zero, h_inj.eq_iff, norm_eq_zero hd] at this 
+        rw [norm_eq_mul_conj, RingHom.map_mul, ha, zero_mul]
 
 end Zsqrtd
 

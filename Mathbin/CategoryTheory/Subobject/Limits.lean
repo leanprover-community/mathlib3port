@@ -15,7 +15,7 @@ TODO: an iff characterisation of `(image_subobject f).factors h`
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject
 

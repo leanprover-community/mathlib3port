@@ -35,7 +35,7 @@ attribute [local instance] fact_one_le_two_real
 
 attribute [local instance] fact_one_le_two_real
 
-noncomputable theory
+noncomputable section 
 
 variable {ι : Type _}
 
@@ -43,51 +43,49 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [InnerProductSpace 𝕜 E]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
--- error in Analysis.InnerProductSpace.PiL2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance pi_Lp.inner_product_space
-{ι : Type*}
-[fintype ι]
-(f : ι → Type*)
-[∀ i, inner_product_space 𝕜 (f i)] : inner_product_space 𝕜 (pi_Lp 2 f) :=
-{ inner := λ x y, «expr∑ , »((i), inner (x i) (y i)),
-  norm_sq_eq_inner := begin
-    intro [ident x],
-    have [ident h₁] [":", expr «expr = »(«expr∑ , »((i : ι), «expr ^ »(«expr∥ ∥»(x i), (2 : exprℕ()))), «expr∑ , »((i : ι), «expr ^ »(«expr∥ ∥»(x i), (2 : exprℝ()))))] [],
-    { apply [expr finset.sum_congr rfl],
-      intros [ident j, ident hj],
-      simp [] [] [] ["[", "<-", expr rpow_nat_cast, "]"] [] [] },
-    have [ident h₂] [":", expr «expr ≤ »(0, «expr∑ , »((i : ι), «expr ^ »(«expr∥ ∥»(x i), (2 : exprℝ()))))] [],
-    { rw ["[", "<-", expr h₁, "]"] [],
-      exact [expr finset.sum_nonneg (λ (j) (hj : «expr ∈ »(j, finset.univ)), pow_nonneg (norm_nonneg (x j)) 2)] },
-    simp [] [] [] ["[", expr norm, ",", expr add_monoid_hom.map_sum, ",", "<-", expr norm_sq_eq_inner, "]"] [] [],
-    rw ["[", "<-", expr rpow_nat_cast «expr ^ »(«expr∑ , »((i : ι), «expr ^ »(«expr∥ ∥»(x i), (2 : exprℝ()))), «expr ⁻¹»((2 : exprℝ()))) 2, "]"] [],
-    rw ["[", "<-", expr rpow_mul h₂, "]"] [],
-    norm_num ["[", expr h₁, "]"] []
-  end,
-  conj_sym := begin
-    intros [ident x, ident y],
-    unfold [ident inner] [],
-    rw [expr ring_equiv.map_sum] [],
-    apply [expr finset.sum_congr rfl],
-    rintros [ident z, "-"],
-    apply [expr inner_conj_sym]
-  end,
-  add_left := λ
-  x
-  y
-  z, show «expr = »(«expr∑ , »((i), inner «expr + »(x i, y i) (z i)), «expr + »(«expr∑ , »((i), inner (x i) (z i)), «expr∑ , »((i), inner (y i) (z i)))), by simp [] [] ["only"] ["[", expr inner_add_left, ",", expr finset.sum_add_distrib, "]"] [] [],
-  smul_left := λ
-  x
-  y
-  r, show «expr = »(«expr∑ , »((i : ι), inner «expr • »(r, x i) (y i)), «expr * »(exprconj() r, «expr∑ , »((i), inner (x i) (y i)))), by simp [] [] ["only"] ["[", expr finset.mul_sum, ",", expr inner_smul_left, "]"] [] [] }
+instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _) [∀ i, InnerProductSpace 𝕜 (f i)] :
+  InnerProductSpace 𝕜 (PiLp 2 f) :=
+  { inner := fun x y => ∑ i, inner (x i) (y i),
+    norm_sq_eq_inner :=
+      by 
+        intro x 
+        have h₁ : (∑ i : ι, ∥x i∥^(2 : ℕ)) = ∑ i : ι, ∥x i∥^(2 : ℝ)
+        ·
+          apply Finset.sum_congr rfl 
+          intro j hj 
+          simp [←rpow_nat_cast]
+        have h₂ : 0 ≤ ∑ i : ι, ∥x i∥^(2 : ℝ)
+        ·
+          rw [←h₁]
+          exact Finset.sum_nonneg fun j hj : j ∈ Finset.univ => pow_nonneg (norm_nonneg (x j)) 2
+        simp [norm, AddMonoidHom.map_sum, ←norm_sq_eq_inner]
+        rw [←rpow_nat_cast ((∑ i : ι, ∥x i∥^(2 : ℝ))^(2 : ℝ)⁻¹) 2]
+        rw [←rpow_mul h₂]
+        normNum [h₁],
+    conj_sym :=
+      by 
+        intro x y 
+        unfold inner 
+        rw [RingEquiv.map_sum]
+        apply Finset.sum_congr rfl 
+        rintro z -
+        apply inner_conj_sym,
+    add_left :=
+      fun x y z =>
+        show (∑ i, inner (x i+y i) (z i)) = (∑ i, inner (x i) (z i))+∑ i, inner (y i) (z i)by 
+          simp only [inner_add_left, Finset.sum_add_distrib],
+    smulLeft :=
+      fun x y r =>
+        show (∑ i : ι, inner (r • x i) (y i)) = conj r*∑ i, inner (x i) (y i)by 
+          simp only [Finset.mul_sum, inner_smul_left] }
 
 @[simp]
 theorem PiLp.inner_apply {ι : Type _} [Fintype ι] {f : ι → Type _} [∀ i, InnerProductSpace 𝕜 (f i)] (x y : PiLp 2 f) :
-  ⟪x, y⟫ = ∑i, ⟪x i, y i⟫ :=
+  ⟪x, y⟫ = ∑ i, ⟪x i, y i⟫ :=
   rfl
 
 theorem PiLp.norm_eq_of_L2 {ι : Type _} [Fintype ι] {f : ι → Type _} [∀ i, InnerProductSpace 𝕜 (f i)] (x : PiLp 2 f) :
-  ∥x∥ = sqrt (∑i : ι, ∥x i∥^2) :=
+  ∥x∥ = sqrt (∑ i : ι, ∥x i∥^2) :=
   by 
     rw [PiLp.norm_eq_of_nat 2] <;> simp [sqrt_eq_rpow]
 
@@ -98,7 +96,7 @@ def EuclideanSpace (𝕜 : Type _) [IsROrC 𝕜] (n : Type _) [Fintype n] : Type
   PiLp 2 fun i : n => 𝕜
 
 theorem EuclideanSpace.norm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x : EuclideanSpace 𝕜 n) :
-  ∥x∥ = Real.sqrt (∑i : n, ∥x i∥^2) :=
+  ∥x∥ = Real.sqrt (∑ i : n, ∥x i∥^2) :=
   PiLp.norm_eq_of_L2 x
 
 section 
@@ -138,7 +136,7 @@ def DirectSum.SubmoduleIsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] 
       convert this (e₁ (e₂.symm v₀)) (e₁ (e₂.symm w₀)) <;>
         simp only [LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
     intro v w 
-    trans ⟪∑i, (v i : E), ∑i, (w i : E)⟫
+    trans ⟪∑ i, (v i : E), ∑ i, (w i : E)⟫
     ·
       simp [sum_inner, hV'.inner_right_fintype]
     ·
@@ -147,33 +145,33 @@ def DirectSum.SubmoduleIsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] 
 @[simp]
 theorem DirectSum.SubmoduleIsInternal.isometry_L2_of_orthogonal_family_symm_apply [DecidableEq ι]
   {V : ι → Submodule 𝕜 E} (hV : DirectSum.SubmoduleIsInternal V) (hV' : OrthogonalFamily 𝕜 V)
-  (w : PiLp 2 fun i => V i) : (hV.isometry_L2_of_orthogonal_family hV').symm w = ∑i, (w i : E) :=
+  (w : PiLp 2 fun i => V i) : (hV.isometry_L2_of_orthogonal_family hV').symm w = ∑ i, (w i : E) :=
   by 
     classical 
     let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i 
     let e₂ := LinearEquiv.ofBijective _ hV.injective hV.surjective 
-    suffices  : ∀ v : ⨁i, V i, e₂ v = ∑i, e₁ v i
+    suffices  : ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i
     ·
       exact this (e₁.symm w)
     intro v 
     simp [e₂, DirectSum.submoduleCoe, DirectSum.toModule, Dfinsupp.sum_add_hom_apply]
 
--- error in Analysis.InnerProductSpace.PiL2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An orthonormal basis on a fintype `ι` for an inner product space induces an isometry with
 `euclidean_space 𝕜 ι`. -/
-def basis.isometry_euclidean_of_orthonormal
-(v : basis ι 𝕜 E)
-(hv : orthonormal 𝕜 v) : «expr ≃ₗᵢ[ ] »(E, 𝕜, euclidean_space 𝕜 ι) :=
-v.equiv_fun.isometry_of_inner (begin
-   intros [ident x, ident y],
-   let [ident p] [":", expr euclidean_space 𝕜 ι] [":=", expr v.equiv_fun x],
-   let [ident q] [":", expr euclidean_space 𝕜 ι] [":=", expr v.equiv_fun y],
-   have [ident key] [":", expr «expr = »(«expr⟪ , ⟫»(p, q), «expr⟪ , ⟫»(«expr∑ , »((i), «expr • »(p i, v i)), «expr∑ , »((i), «expr • »(q i, v i))))] [],
-   { simp [] [] [] ["[", expr sum_inner, ",", expr inner_smul_left, ",", expr hv.inner_right_fintype, "]"] [] [] },
-   convert [] [expr key] [],
-   { rw ["[", "<-", expr v.equiv_fun.symm_apply_apply x, ",", expr v.equiv_fun_symm_apply, "]"] [] },
-   { rw ["[", "<-", expr v.equiv_fun.symm_apply_apply y, ",", expr v.equiv_fun_symm_apply, "]"] [] }
- end)
+def Basis.isometryEuclideanOfOrthonormal (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 ι :=
+  v.equiv_fun.isometry_of_inner
+    (by 
+      intro x y 
+      let p : EuclideanSpace 𝕜 ι := v.equiv_fun x 
+      let q : EuclideanSpace 𝕜 ι := v.equiv_fun y 
+      have key : ⟪p, q⟫ = ⟪∑ i, p i • v i, ∑ i, q i • v i⟫
+      ·
+        simp [sum_inner, inner_smul_left, hv.inner_right_fintype]
+      convert key
+      ·
+        rw [←v.equiv_fun.symm_apply_apply x, v.equiv_fun_symm_apply]
+      ·
+        rw [←v.equiv_fun.symm_apply_apply y, v.equiv_fun_symm_apply])
 
 @[simp]
 theorem Basis.coe_isometry_euclidean_of_orthonormal (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
@@ -206,7 +204,7 @@ theorem Complex.isometry_euclidean_symm_apply (x : EuclideanSpace ℝ (Finₓ 2)
       simp 
 
 theorem Complex.isometry_euclidean_proj_eq_self (z : ℂ) :
-  («expr↑ » (Complex.isometryEuclidean z 0)+«expr↑ » (Complex.isometryEuclidean z 1)*(I : ℂ)) = z :=
+  ((↑Complex.isometryEuclidean z 0)+(↑Complex.isometryEuclidean z 1)*(I : ℂ)) = z :=
   by 
     rw [←Complex.isometry_euclidean_symm_apply (Complex.isometryEuclidean z),
       complex.isometry_euclidean.symm_apply_apply z]

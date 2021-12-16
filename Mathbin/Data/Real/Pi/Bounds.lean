@@ -16,70 +16,84 @@ open_locale Real
 
 namespace Real
 
--- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pi_gt_sqrt_two_add_series
-(n : exprℕ()) : «expr < »(«expr * »(«expr ^ »(2, «expr + »(n, 1)), sqrt «expr - »(2, sqrt_two_add_series 0 n)), exprπ()) :=
-begin
-  have [] [":", expr «expr < »(«expr * »(«expr / »(sqrt «expr - »(2, sqrt_two_add_series 0 n), 2), «expr ^ »(2, «expr + »(n, 2))), exprπ())] [],
-  { rw ["[", "<-", expr lt_div_iff, ",", "<-", expr sin_pi_over_two_pow_succ, "]"] [],
-    apply [expr sin_lt],
-    apply [expr div_pos pi_pos],
-    all_goals { apply [expr pow_pos],
-      norm_num [] [] } },
-  apply [expr lt_of_le_of_lt (le_of_eq _) this],
-  rw ["[", expr pow_succ _ «expr + »(n, 1), ",", "<-", expr mul_assoc, ",", expr div_mul_cancel, ",", expr mul_comm, "]"] [],
-  norm_num [] []
-end
+theorem pi_gt_sqrt_two_add_series (n : ℕ) : ((2^n+1)*sqrt (2 - sqrt_two_add_series 0 n)) < π :=
+  by 
+    have  : ((sqrt (2 - sqrt_two_add_series 0 n) / 2)*2^n+2) < π
+    ·
+      rw [←lt_div_iff, ←sin_pi_over_two_pow_succ]
+      apply sin_lt 
+      apply div_pos pi_pos 
+      all_goals 
+        apply pow_pos 
+        normNum 
+    apply lt_of_le_of_ltₓ (le_of_eqₓ _) this 
+    rw [pow_succₓ _ (n+1), ←mul_assocₓ, div_mul_cancel, mul_commₓ]
+    normNum
 
--- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pi_lt_sqrt_two_add_series
-(n : exprℕ()) : «expr < »(exprπ(), «expr + »(«expr * »(«expr ^ »(2, «expr + »(n, 1)), sqrt «expr - »(2, sqrt_two_add_series 0 n)), «expr / »(1, «expr ^ »(4, n)))) :=
-begin
-  have [] [":", expr «expr < »(exprπ(), «expr * »(«expr + »(«expr / »(sqrt «expr - »(2, sqrt_two_add_series 0 n), 2), «expr / »(«expr / »(1, «expr ^ »(«expr ^ »(2, n), 3)), 4)), «expr ^ »(2, «expr + »(n, 2))))] [],
-  { rw ["[", "<-", expr div_lt_iff, ",", "<-", expr sin_pi_over_two_pow_succ, "]"] [],
-    refine [expr lt_of_lt_of_le (lt_add_of_sub_right_lt (sin_gt_sub_cube _ _)) _],
-    { apply [expr div_pos pi_pos],
-      apply [expr pow_pos],
-      norm_num [] [] },
-    { rw [expr div_le_iff'] [],
-      { refine [expr le_trans pi_le_four _],
-        simp [] [] ["only"] ["[", expr show «expr = »((4 : exprℝ()), «expr ^ »(2, 2)), by norm_num [] [], ",", expr mul_one, "]"] [] [],
-        apply [expr pow_le_pow],
-        norm_num [] [],
-        apply [expr le_add_of_nonneg_left],
-        apply [expr nat.zero_le] },
-      { apply [expr pow_pos],
-        norm_num [] [] } },
-    apply [expr add_le_add_left],
-    rw [expr div_le_div_right] [],
-    rw ["[", expr le_div_iff, ",", "<-", expr mul_pow, "]"] [],
-    refine [expr le_trans _ (le_of_eq (one_pow 3))],
-    apply [expr pow_le_pow_of_le_left],
-    { apply [expr le_of_lt],
-      apply [expr mul_pos],
-      apply [expr div_pos pi_pos],
-      apply [expr pow_pos],
-      norm_num [] [],
-      apply [expr pow_pos],
-      norm_num [] [] },
-    rw ["<-", expr le_div_iff] [],
-    refine [expr le_trans ((div_le_div_right _).mpr pi_le_four) _],
-    apply [expr pow_pos],
-    norm_num [] [],
-    rw ["[", expr pow_succ, ",", expr pow_succ, ",", "<-", expr mul_assoc, ",", "<-", expr div_div_eq_div_mul, "]"] [],
-    convert [] [expr le_refl _] [],
-    all_goals { repeat { apply [expr pow_pos] },
-      norm_num [] [] } },
-  apply [expr lt_of_lt_of_le this (le_of_eq _)],
-  rw ["[", expr add_mul, "]"] [],
-  congr' [1] [],
-  { rw ["[", expr pow_succ _ «expr + »(n, 1), ",", "<-", expr mul_assoc, ",", expr div_mul_cancel, ",", expr mul_comm, "]"] [],
-    norm_num [] [] },
-  rw ["[", expr pow_succ, ",", "<-", expr pow_mul, ",", expr mul_comm n 2, ",", expr pow_mul, ",", expr show «expr = »(«expr ^ »((2 : exprℝ()), 2), 4), by norm_num [] [], ",", expr pow_succ, ",", expr pow_succ, ",", "<-", expr mul_assoc (2 : exprℝ()), ",", expr show «expr = »(«expr * »((2 : exprℝ()), 2), 4), by norm_num [] [], ",", "<-", expr mul_assoc, ",", expr div_mul_cancel, ",", expr mul_comm «expr ^ »((2 : exprℝ()), n), ",", "<-", expr div_div_eq_div_mul, ",", expr div_mul_cancel, "]"] [],
-  apply [expr pow_ne_zero],
-  norm_num [] [],
-  norm_num [] []
-end
+theorem pi_lt_sqrt_two_add_series (n : ℕ) : π < ((2^n+1)*sqrt (2 - sqrt_two_add_series 0 n))+1 / (4^n) :=
+  by 
+    have  : π < ((sqrt (2 - sqrt_two_add_series 0 n) / 2)+1 / ((2^n)^3) / 4)*2^n+2
+    ·
+      rw [←div_lt_iff, ←sin_pi_over_two_pow_succ]
+      refine' lt_of_lt_of_leₓ (lt_add_of_sub_right_lt (sin_gt_sub_cube _ _)) _
+      ·
+        apply div_pos pi_pos 
+        apply pow_pos 
+        normNum
+      ·
+        rw [div_le_iff']
+        ·
+          refine' le_transₓ pi_le_four _ 
+          simp only
+            [show (4 : ℝ) = (2^2)by 
+              normNum,
+            mul_oneₓ]
+          apply pow_le_pow 
+          normNum 
+          apply le_add_of_nonneg_left 
+          apply Nat.zero_leₓ
+        ·
+          apply pow_pos 
+          normNum 
+      apply add_le_add_left 
+      rw [div_le_div_right]
+      rw [le_div_iff, ←mul_powₓ]
+      refine' le_transₓ _ (le_of_eqₓ (one_pow 3))
+      apply pow_le_pow_of_le_left
+      ·
+        apply le_of_ltₓ 
+        apply mul_pos 
+        apply div_pos pi_pos 
+        apply pow_pos 
+        normNum 
+        apply pow_pos 
+        normNum 
+      rw [←le_div_iff]
+      refine' le_transₓ ((div_le_div_right _).mpr pi_le_four) _ 
+      apply pow_pos 
+      normNum 
+      rw [pow_succₓ, pow_succₓ, ←mul_assocₓ, ←div_div_eq_div_mul]
+      convert le_reflₓ _ 
+      all_goals 
+        repeat' 
+          apply pow_pos 
+        normNum 
+    apply lt_of_lt_of_leₓ this (le_of_eqₓ _)
+    rw [add_mulₓ]
+    congr 1
+    ·
+      rw [pow_succₓ _ (n+1), ←mul_assocₓ, div_mul_cancel, mul_commₓ]
+      normNum 
+    rw [pow_succₓ, ←pow_mulₓ, mul_commₓ n 2, pow_mulₓ,
+      show ((2 : ℝ)^2) = 4by 
+        normNum,
+      pow_succₓ, pow_succₓ, ←mul_assocₓ (2 : ℝ),
+      show ((2 : ℝ)*2) = 4by 
+        normNum,
+      ←mul_assocₓ, div_mul_cancel, mul_commₓ ((2 : ℝ)^n), ←div_div_eq_div_mul, div_mul_cancel]
+    apply pow_ne_zero 
+    normNum 
+    normNum
 
 /-- From an upper bound on `sqrt_two_add_series 0 n = 2 cos (π / 2 ^ (n+1))` of the form
 `sqrt_two_add_series 0 n ≤ 2 - (a / 2 ^ (n + 1)) ^ 2)`, one can deduce the lower bound `a < π`
@@ -101,25 +115,23 @@ theorem pi_lower_bound_start (n : ℕ) {a} (h : sqrt_two_add_series ((0 : ℕ) /
       show (0 : ℝ) = (0 : ℕ) / (1 : ℕ)by 
         rw [Nat.cast_zero, zero_div]]
 
--- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sqrt_two_add_series_step_up
-(c d : exprℕ())
-{a b n : exprℕ()}
-{z : exprℝ()}
-(hz : «expr ≤ »(sqrt_two_add_series «expr / »(c, d) n, z))
-(hb : «expr < »(0, b))
-(hd : «expr < »(0, d))
-(h : «expr ≤ »(«expr * »(«expr + »(«expr * »(2, b), a), «expr ^ »(d, 2)), «expr * »(«expr ^ »(c, 2), b))) : «expr ≤ »(sqrt_two_add_series «expr / »(a, b) «expr + »(n, 1), z) :=
-begin
-  refine [expr le_trans _ hz],
-  rw [expr sqrt_two_add_series_succ] [],
-  apply [expr sqrt_two_add_series_monotone_left],
-  have [ident hb'] [":", expr «expr < »(0, (b : exprℝ()))] [":=", expr nat.cast_pos.2 hb],
-  have [ident hd'] [":", expr «expr < »(0, (d : exprℝ()))] [":=", expr nat.cast_pos.2 hd],
-  rw ["[", expr sqrt_le_left (div_nonneg c.cast_nonneg d.cast_nonneg), ",", expr div_pow, ",", expr add_div_eq_mul_add_div _ _ (ne_of_gt hb'), ",", expr div_le_div_iff hb' (pow_pos hd' _), "]"] [],
-  exact_mod_cast [expr h]
-end
+theorem sqrt_two_add_series_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ} (hz : sqrt_two_add_series (c / d) n ≤ z) (hb : 0 < b)
+  (hd : 0 < d) (h : (((2*b)+a)*d^2) ≤ (c^2)*b) : sqrt_two_add_series (a / b) (n+1) ≤ z :=
+  by 
+    refine' le_transₓ _ hz 
+    rw [sqrt_two_add_series_succ]
+    apply sqrt_two_add_series_monotone_left 
+    have hb' : 0 < (b : ℝ) := Nat.cast_pos.2 hb 
+    have hd' : 0 < (d : ℝ) := Nat.cast_pos.2 hd 
+    rw [sqrt_le_left (div_nonneg c.cast_nonneg d.cast_nonneg), div_pow, add_div_eq_mul_add_div _ _ (ne_of_gtₓ hb'),
+      div_le_div_iff hb' (pow_pos hd' _)]
+    exactModCast h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Create a proof of `a < π` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
 `sqrt (2 + r i) ≤ r(i+1)`, where `r 0 = 0` and `sqrt (2 - r n) ≥ a/2^(n+1)`. -/
@@ -152,26 +164,24 @@ theorem pi_upper_bound_start (n : ℕ) {a}
     ·
       exact pow_pos zero_lt_two _
 
--- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sqrt_two_add_series_step_down
-(a b : exprℕ())
-{c d n : exprℕ()}
-{z : exprℝ()}
-(hz : «expr ≤ »(z, sqrt_two_add_series «expr / »(a, b) n))
-(hb : «expr < »(0, b))
-(hd : «expr < »(0, d))
-(h : «expr ≤ »(«expr * »(«expr ^ »(a, 2), d), «expr * »(«expr + »(«expr * »(2, d), c), «expr ^ »(b, 2)))) : «expr ≤ »(z, sqrt_two_add_series «expr / »(c, d) «expr + »(n, 1)) :=
-begin
-  apply [expr le_trans hz],
-  rw [expr sqrt_two_add_series_succ] [],
-  apply [expr sqrt_two_add_series_monotone_left],
-  apply [expr le_sqrt_of_sq_le],
-  have [ident hb'] [":", expr «expr < »(0, (b : exprℝ()))] [":=", expr nat.cast_pos.2 hb],
-  have [ident hd'] [":", expr «expr < »(0, (d : exprℝ()))] [":=", expr nat.cast_pos.2 hd],
-  rw ["[", expr div_pow, ",", expr add_div_eq_mul_add_div _ _ (ne_of_gt hd'), ",", expr div_le_div_iff (pow_pos hb' _) hd', "]"] [],
-  exact_mod_cast [expr h]
-end
+theorem sqrt_two_add_series_step_down (a b : ℕ) {c d n : ℕ} {z : ℝ} (hz : z ≤ sqrt_two_add_series (a / b) n)
+  (hb : 0 < b) (hd : 0 < d) (h : ((a^2)*d) ≤ ((2*d)+c)*b^2) : z ≤ sqrt_two_add_series (c / d) (n+1) :=
+  by 
+    apply le_transₓ hz 
+    rw [sqrt_two_add_series_succ]
+    apply sqrt_two_add_series_monotone_left 
+    apply le_sqrt_of_sq_le 
+    have hb' : 0 < (b : ℝ) := Nat.cast_pos.2 hb 
+    have hd' : 0 < (d : ℝ) := Nat.cast_pos.2 hd 
+    rw [div_pow, add_div_eq_mul_add_div _ _ (ne_of_gtₓ hd'), div_le_div_iff (pow_pos hb' _) hd']
+    exactModCast h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
 /-- Create a proof of `π < a` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
 `sqrt (2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `sqrt (2 - r n) ≥ (a - 1/4^n) / 2^(n+1)`. -/

@@ -123,7 +123,7 @@ theorem app_zsmul (X : C) (α : F ⟶ G) (n : ℤ) : (n • α).app X = n • α
   (app_hom X).map_zsmul α n
 
 @[simp]
-theorem app_sum {ι : Type _} (s : Finset ι) (X : C) (α : ι → (F ⟶ G)) : (∑i in s, α i).app X = ∑i in s, (α i).app X :=
+theorem app_sum {ι : Type _} (s : Finset ι) (X : C) (α : ι → (F ⟶ G)) : (∑ i in s, α i).app X = ∑ i in s, (α i).app X :=
   by 
     rw [←app_hom_apply, AddMonoidHom.map_sum]
     rfl

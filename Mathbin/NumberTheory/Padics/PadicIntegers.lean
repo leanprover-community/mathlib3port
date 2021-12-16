@@ -45,7 +45,7 @@ p-adic, p adic, padic, p-adic integer
 
 open Padic Metric LocalRing
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical
 
@@ -179,7 +179,7 @@ def coe.ring_hom : ℤ_[p] →+* ℚ_[p] :=
   { toFun := (coeₓ : ℤ_[p] → ℚ_[p]), map_zero' := rfl, map_one' := rfl, map_mul' := coe_mul, map_add' := coe_add }
 
 @[simp, normCast]
-theorem coe_pow (x : ℤ_[p]) (n : ℕ) : («expr↑ » (x^n) : ℚ_[p]) = ((«expr↑ » x : ℚ_[p])^n) :=
+theorem coe_pow (x : ℤ_[p]) (n : ℕ) : (↑(x^n) : ℚ_[p]) = ((↑x : ℚ_[p])^n) :=
   coe.ring_hom.map_pow x n
 
 @[simp]
@@ -220,8 +220,8 @@ A sequence of integers that is Cauchy with respect to the `p`-adic norm
 converges to a `p`-adic integer.
 -/
 def of_int_seq (seq : ℕ → ℤ) (h : IsCauSeq (padicNorm p) fun n => seq n) : ℤ_[p] :=
-  ⟨«expr⟦ ⟧» ⟨_, h⟩,
-    show «expr↑ » (PadicSeq.norm _) ≤ (1 : ℝ)by 
+  ⟨⟦⟨_, h⟩⟧,
+    show ↑PadicSeq.norm _ ≤ (1 : ℝ)by 
       rw [PadicSeq.norm]
       splitIfs with hne <;> normCast
       ·
@@ -249,7 +249,7 @@ instance : MetricSpace ℤ_[p] :=
   Subtype.metricSpace
 
 instance CompleteSpace : CompleteSpace ℤ_[p] :=
-  have  : IsClosed { x:ℚ_[p] | ∥x∥ ≤ 1 } := is_closed_le continuous_norm continuous_const 
+  have  : IsClosed { x : ℚ_[p] | ∥x∥ ≤ 1 } := is_closed_le continuous_norm continuous_const 
   this.complete_space_coe
 
 instance : HasNorm ℤ_[p] :=
@@ -361,7 +361,7 @@ theorem norm_eq_of_norm_add_lt_left {z1 z2 : ℤ_[p]} (h : ∥z1+z2∥ < ∥z1�
         h
 
 @[simp]
-theorem padic_norm_e_of_padic_int (z : ℤ_[p]) : ∥(«expr↑ » z : ℚ_[p])∥ = ∥z∥ :=
+theorem padic_norm_e_of_padic_int (z : ℤ_[p]) : ∥(↑z : ℚ_[p])∥ = ∥z∥ :=
   by 
     simp [norm_def]
 
@@ -408,7 +408,7 @@ variable (p : ℕ) [hp_prime : Fact p.prime]
 
 include hp_prime
 
-theorem exists_pow_neg_lt {ε : ℝ} (hε : 0 < ε) : ∃ k : ℕ, («expr↑ » p^-((k : ℕ) : ℤ)) < ε :=
+theorem exists_pow_neg_lt {ε : ℝ} (hε : 0 < ε) : ∃ k : ℕ, (↑p^-((k : ℕ) : ℤ)) < ε :=
   by 
     obtain ⟨k, hk⟩ := exists_nat_gt (ε⁻¹)
     use k 
@@ -423,7 +423,7 @@ theorem exists_pow_neg_lt {ε : ℝ} (hε : 0 < ε) : ∃ k : ℕ, («expr↑ »
     ·
       exactModCast hp_prime.1.Pos
 
-theorem exists_pow_neg_lt_rat {ε : ℚ} (hε : 0 < ε) : ∃ k : ℕ, («expr↑ » p^-((k : ℕ) : ℤ)) < ε :=
+theorem exists_pow_neg_lt_rat {ε : ℚ} (hε : 0 < ε) : ∃ k : ℕ, (↑p^-((k : ℕ) : ℤ)) < ε :=
   by 
     obtain ⟨k, hk⟩ :=
       @exists_pow_neg_lt p _ ε
@@ -438,13 +438,13 @@ theorem exists_pow_neg_lt_rat {ε : ℚ} (hε : 0 < ε) : ∃ k : ℕ, («expr�
 
 variable {p}
 
-theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℤ_[p])∥ < 1 ↔ «expr↑ » p ∣ k :=
-  suffices ∥(k : ℚ_[p])∥ < 1 ↔ «expr↑ » p ∣ k by 
+theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℤ_[p])∥ < 1 ↔ ↑p ∣ k :=
+  suffices ∥(k : ℚ_[p])∥ < 1 ↔ ↑p ∣ k by 
     rwa [norm_int_cast_eq_padic_norm]
   padicNormE.norm_int_lt_one_iff_dvd k
 
-theorem norm_int_le_pow_iff_dvd {k : ℤ} {n : ℕ} : ∥(k : ℤ_[p])∥ ≤ («expr↑ » p^(-n : ℤ)) ↔ («expr↑ » p^n) ∣ k :=
-  suffices ∥(k : ℚ_[p])∥ ≤ («expr↑ » p^(-n : ℤ)) ↔ «expr↑ » (p^n) ∣ k by 
+theorem norm_int_le_pow_iff_dvd {k : ℤ} {n : ℕ} : ∥(k : ℤ_[p])∥ ≤ (↑p^(-n : ℤ)) ↔ (↑p^n) ∣ k :=
+  suffices ∥(k : ℚ_[p])∥ ≤ (↑p^(-n : ℤ)) ↔ ↑(p^n) ∣ k by 
     simpa [norm_int_cast_eq_padic_norm]
   padicNormE.norm_int_le_pow_iff_dvd _ _
 
@@ -474,39 +474,42 @@ theorem valuation_p : Valuation (p : ℤ_[p]) = 1 :=
   by 
     simp [Valuation, -cast_eq_of_rat_of_nat]
 
--- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem valuation_nonneg (x : «exprℤ_[ ]»(p)) : «expr ≤ »(0, x.valuation) :=
-begin
-  by_cases [expr hx, ":", expr «expr = »(x, 0)],
-  { simp [] [] [] ["[", expr hx, "]"] [] [] },
-  have [ident h] [":", expr «expr < »((1 : exprℝ()), p)] [":=", expr by exact_mod_cast [expr hp_prime.1.one_lt]],
-  rw ["[", "<-", expr neg_nonpos, ",", "<-", expr (zpow_strict_mono h).le_iff_le, "]"] [],
-  show [expr «expr ≤ »(«expr ^ »((p : exprℝ()), «expr- »(valuation x)), «expr ^ »(p, 0))],
-  rw ["[", "<-", expr norm_eq_pow_val hx, "]"] [],
-  simpa [] [] [] [] [] ["using", expr x.property]
-end
+theorem valuation_nonneg (x : ℤ_[p]) : 0 ≤ x.valuation :=
+  by 
+    byCases' hx : x = 0
+    ·
+      simp [hx]
+    have h : (1 : ℝ) < p :=
+      by 
+        exactModCast hp_prime.1.one_lt 
+    rw [←neg_nonpos, ←(zpow_strict_mono h).le_iff_le]
+    show ((p : ℝ)^-Valuation x) ≤ (p^0)
+    rw [←norm_eq_pow_val hx]
+    simpa using x.property
 
--- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem valuation_p_pow_mul
-(n : exprℕ())
-(c : «exprℤ_[ ]»(p))
-(hc : «expr ≠ »(c, 0)) : «expr = »(«expr * »(«expr ^ »(«expr↑ »(p), n), c).valuation, «expr + »(n, c.valuation)) :=
-begin
-  have [] [":", expr «expr = »(«expr∥ ∥»(«expr * »(«expr ^ »(«expr↑ »(p), n), c)), «expr * »(«expr∥ ∥»((«expr ^ »(p, n) : «exprℤ_[ ]»(p))), «expr∥ ∥»(c)))] [],
-  { exact [expr norm_mul _ _] },
-  have [ident aux] [":", expr «expr ≠ »(«expr * »(«expr ^ »(«expr↑ »(p), n), c), 0)] [],
-  { contrapose ["!"] [ident hc],
-    rw [expr mul_eq_zero] ["at", ident hc],
-    cases [expr hc] [],
-    { refine [expr (hp_prime.1.ne_zero _).elim],
-      exact_mod_cast [expr pow_eq_zero hc] },
-    { exact [expr hc] } },
-  rwa ["[", expr norm_eq_pow_val aux, ",", expr norm_p_pow, ",", expr norm_eq_pow_val hc, ",", "<-", expr zpow_add₀, ",", "<-", expr neg_add, ",", expr zpow_inj, ",", expr neg_inj, "]"] ["at", ident this],
-  { exact_mod_cast [expr hp_prime.1.pos] },
-  { exact_mod_cast [expr hp_prime.1.ne_one] },
-  { exact_mod_cast [expr hp_prime.1.ne_zero] }
-end
+theorem valuation_p_pow_mul (n : ℕ) (c : ℤ_[p]) (hc : c ≠ 0) : ((↑p^n)*c).Valuation = n+c.valuation :=
+  by 
+    have  : ∥(↑p^n)*c∥ = ∥(p^n : ℤ_[p])∥*∥c∥
+    ·
+      exact norm_mul _ _ 
+    have aux : ((↑p^n)*c) ≠ 0
+    ·
+      contrapose! hc 
+      rw [mul_eq_zero] at hc 
+      cases hc
+      ·
+        refine' (hp_prime.1.ne_zero _).elim 
+        exactModCast pow_eq_zero hc
+      ·
+        exact hc 
+    rwa [norm_eq_pow_val aux, norm_p_pow, norm_eq_pow_val hc, ←zpow_add₀, ←neg_add, zpow_inj, neg_inj] at this
+    ·
+      exactModCast hp_prime.1.Pos
+    ·
+      exactModCast hp_prime.1.ne_one
+    ·
+      exactModCast hp_prime.1.ne_zero
 
 section Units
 
@@ -515,32 +518,33 @@ section Units
 
 attribute [local reducible] PadicInt
 
--- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_inv : ∀ {z : «exprℤ_[ ]»(p)}, «expr = »(«expr∥ ∥»(z), 1) → «expr = »(«expr * »(z, z.inv), 1)
-| ⟨k, _⟩, h := begin
-  have [ident hk] [":", expr «expr ≠ »(k, 0)] [],
-  from [expr λ h', @zero_ne_one «exprℚ_[ ]»(p) _ _ (by simpa [] [] [] ["[", expr h', "]"] [] ["using", expr h])],
-  unfold [ident padic_int.inv] [],
-  split_ifs [] [],
-  { change [expr «expr = »((⟨«expr * »(k, «expr / »(1, k)), _⟩ : «exprℤ_[ ]»(p)), 1)] [] [],
-    simp [] [] [] ["[", expr hk, "]"] [] [],
-    refl },
-  { apply [expr subtype.ext_iff_val.2],
-    simp [] [] [] ["[", expr mul_inv_cancel hk, "]"] [] [] }
-end
+theorem mul_inv : ∀ {z : ℤ_[p]}, ∥z∥ = 1 → (z*z.inv) = 1
+| ⟨k, _⟩, h =>
+  by 
+    have hk : k ≠ 0 
+    exact
+      fun h' =>
+        @zero_ne_one ℚ_[p] _ _
+          (by 
+            simpa [h'] using h)
+    unfold PadicInt.inv 
+    rw [norm_eq_padic_norm] at h 
+    rw [dif_pos h]
+    apply Subtype.ext_iff_val.2
+    simp [mul_inv_cancel hk]
 
 theorem inv_mul {z : ℤ_[p]} (hz : ∥z∥ = 1) : (z.inv*z) = 1 :=
   by 
     rw [mul_commₓ, mul_inv hz]
 
--- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_unit_iff {z : «exprℤ_[ ]»(p)} : «expr ↔ »(is_unit z, «expr = »(«expr∥ ∥»(z), 1)) :=
-⟨λ h, begin
-   rcases [expr is_unit_iff_dvd_one.1 h, "with", "⟨", ident w, ",", ident eq, "⟩"],
-   refine [expr le_antisymm (norm_le_one _) _],
-   have [] [] [":=", expr mul_le_mul_of_nonneg_left (norm_le_one w) (norm_nonneg z)],
-   rwa ["[", expr mul_one, ",", "<-", expr norm_mul, ",", "<-", expr eq, ",", expr norm_one, "]"] ["at", ident this]
- end, λ h, ⟨⟨z, z.inv, mul_inv h, inv_mul h⟩, rfl⟩⟩
+theorem is_unit_iff {z : ℤ_[p]} : IsUnit z ↔ ∥z∥ = 1 :=
+  ⟨fun h =>
+      by 
+        rcases is_unit_iff_dvd_one.1 h with ⟨w, eq⟩
+        refine' le_antisymmₓ (norm_le_one _) _ 
+        have  := mul_le_mul_of_nonneg_left (norm_le_one w) (norm_nonneg z)
+        rwa [mul_oneₓ, ←norm_mul, ←Eq, norm_one] at this,
+    fun h => ⟨⟨z, z.inv, mul_inv h, inv_mul h⟩, rfl⟩⟩
 
 theorem norm_lt_one_add {z1 z2 : ℤ_[p]} (hz1 : ∥z1∥ < 1) (hz2 : ∥z2∥ < 1) : ∥z1+z2∥ < 1 :=
   lt_of_le_of_ltₓ (nonarchimedean _ _) (max_ltₓ hz1 hz2)
@@ -590,20 +594,19 @@ def unit_coeff {x : ℤ_[p]} (hx : x ≠ 0) : Units ℤ_[p] :=
 theorem unit_coeff_coe {x : ℤ_[p]} (hx : x ≠ 0) : (unit_coeff hx : ℚ_[p]) = x*p^-x.valuation :=
   rfl
 
--- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem unit_coeff_spec
-{x : «exprℤ_[ ]»(p)}
-(hx : «expr ≠ »(x, 0)) : «expr = »(x, «expr * »((unit_coeff hx : «exprℤ_[ ]»(p)), «expr ^ »(p, int.nat_abs (valuation x)))) :=
-begin
-  apply [expr subtype.coe_injective],
-  push_cast [] [],
-  have [ident repr] [":", expr «expr = »((x : «exprℚ_[ ]»(p)), «expr * »(unit_coeff hx, «expr ^ »(p, x.valuation)))] [],
-  { rw ["[", expr unit_coeff_coe, ",", expr mul_assoc, ",", "<-", expr zpow_add₀, "]"] [],
-    { simp [] [] [] [] [] [] },
-    { exact_mod_cast [expr hp_prime.1.ne_zero] } },
-  convert [] [expr repr] ["using", 2],
-  rw ["[", "<-", expr zpow_coe_nat, ",", expr int.nat_abs_of_nonneg (valuation_nonneg x), "]"] []
-end
+theorem unit_coeff_spec {x : ℤ_[p]} (hx : x ≠ 0) : x = (unit_coeff hx : ℤ_[p])*p^Int.natAbs (Valuation x) :=
+  by 
+    apply Subtype.coe_injective 
+    pushCast 
+    have repr : (x : ℚ_[p]) = unit_coeff hx*p^x.valuation
+    ·
+      rw [unit_coeff_coe, mul_assocₓ, ←zpow_add₀]
+      ·
+        simp 
+      ·
+        exactModCast hp_prime.1.ne_zero 
+    convert reprₓ using 2
+    rw [←zpow_coe_nat, Int.nat_abs_of_nonneg (valuation_nonneg x)]
 
 end Units
 
@@ -612,29 +615,26 @@ section NormLeIff
 /-! ### Various characterizations of open unit balls -/
 
 
--- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_le_pow_iff_le_valuation
-(x : «exprℤ_[ ]»(p))
-(hx : «expr ≠ »(x, 0))
-(n : exprℕ()) : «expr ↔ »(«expr ≤ »(«expr∥ ∥»(x), «expr ^ »(p, («expr- »(n) : exprℤ()))), «expr ≤ »(«expr↑ »(n), x.valuation)) :=
-begin
-  rw [expr norm_eq_pow_val hx] [],
-  lift [expr x.valuation] ["to", expr exprℕ()] ["using", expr x.valuation_nonneg] ["with", ident k, ident hk],
-  simp [] [] ["only"] ["[", expr int.coe_nat_le, ",", expr zpow_neg₀, ",", expr zpow_coe_nat, "]"] [] [],
-  have [ident aux] [":", expr ∀ n : exprℕ(), «expr < »(0, («expr ^ »(p, n) : exprℝ()))] [],
-  { apply [expr pow_pos],
-    exact_mod_cast [expr hp_prime.1.pos] },
-  rw ["[", expr inv_le_inv (aux _) (aux _), "]"] [],
-  have [] [":", expr «expr ↔ »(«expr ≤ »(«expr ^ »(p, n), «expr ^ »(p, k)), «expr ≤ »(n, k))] [":=", expr (strict_mono_pow hp_prime.1.one_lt).le_iff_le],
-  rw ["[", "<-", expr this, "]"] [],
-  norm_cast []
-end
+theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) : ∥x∥ ≤ (p^(-n : ℤ)) ↔ ↑n ≤ x.valuation :=
+  by 
+    rw [norm_eq_pow_val hx]
+    lift x.valuation to ℕ using x.valuation_nonneg with k hk 
+    simp only [Int.coe_nat_le, zpow_neg₀, zpow_coe_nat]
+    have aux : ∀ n : ℕ, 0 < (p^n : ℝ)
+    ·
+      apply pow_pos 
+      exactModCast hp_prime.1.Pos 
+    rw [inv_le_inv (aux _) (aux _)]
+    have  : (p^n) ≤ (p^k) ↔ n ≤ k := (strict_mono_pow hp_prime.1.one_lt).le_iff_le 
+    rw [←this]
+    normCast
 
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2]) }
 theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
-  x ∈ (Ideal.span {p^n} : Ideal ℤ_[p]) ↔ «expr↑ » n ≤ x.valuation :=
+  x ∈ (Ideal.span {p^n} : Ideal ℤ_[p]) ↔ ↑n ≤ x.valuation :=
   by 
     rw [Ideal.mem_span_singleton]
-    split 
+    constructor
     ·
       rintro ⟨c, rfl⟩
       suffices  : c ≠ 0
@@ -669,17 +669,15 @@ theorem norm_lt_pow_iff_norm_le_pow_sub_one (x : ℤ_[p]) (n : ℤ) : ∥x∥ < 
   by 
     rw [norm_le_pow_iff_norm_lt_pow_add_one, sub_add_cancel]
 
--- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem norm_lt_one_iff_dvd (x : «exprℤ_[ ]»(p)) : «expr ↔ »(«expr < »(«expr∥ ∥»(x), 1), «expr ∣ »(«expr↑ »(p), x)) :=
-begin
-  have [] [] [":=", expr norm_le_pow_iff_mem_span_pow x 1],
-  rw ["[", expr ideal.mem_span_singleton, ",", expr pow_one, "]"] ["at", ident this],
-  rw ["[", "<-", expr this, ",", expr norm_le_pow_iff_norm_lt_pow_add_one, "]"] [],
-  simp [] [] ["only"] ["[", expr zpow_zero, ",", expr int.coe_nat_zero, ",", expr int.coe_nat_succ, ",", expr add_left_neg, ",", expr zero_add, "]"] [] []
-end
+theorem norm_lt_one_iff_dvd (x : ℤ_[p]) : ∥x∥ < 1 ↔ ↑p ∣ x :=
+  by 
+    have  := norm_le_pow_iff_mem_span_pow x 1
+    rw [Ideal.mem_span_singleton, pow_oneₓ] at this 
+    rw [←this, norm_le_pow_iff_norm_lt_pow_add_one]
+    simp only [zpow_zero, Int.coe_nat_zero, Int.coe_nat_succ, add_left_negₓ, zero_addₓ]
 
 @[simp]
-theorem pow_p_dvd_int_iff (n : ℕ) (a : ℤ) : (p^n : ℤ_[p]) ∣ a ↔ («expr↑ » p^n) ∣ a :=
+theorem pow_p_dvd_int_iff (n : ℕ) (a : ℤ) : (p^n : ℤ_[p]) ∣ a ↔ (↑p^n) ∣ a :=
   by 
     rw [←norm_int_le_pow_iff_dvd, norm_le_pow_iff_mem_span_pow, Ideal.mem_span_singleton]
 
@@ -740,31 +738,37 @@ theorem ideal_eq_span_pow_p {s : Ideal ℤ_[p]} (hs : s ≠ ⊥) : ∃ n : ℕ, 
 
 open CauSeq
 
--- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : is_adic_complete (maximal_ideal «exprℤ_[ ]»(p)) «exprℤ_[ ]»(p) :=
-{ prec' := λ x hx, begin
-    simp [] [] ["only"] ["[", "<-", expr ideal.one_eq_top, ",", expr smul_eq_mul, ",", expr mul_one, ",", expr smodeq.sub_mem, ",", expr maximal_ideal_eq_span_p, ",", expr ideal.span_singleton_pow, ",", "<-", expr norm_le_pow_iff_mem_span_pow, "]"] [] ["at", ident hx, "⊢"],
-    let [ident x'] [":", expr cau_seq «exprℤ_[ ]»(p) norm] [":=", expr ⟨x, _⟩],
-    swap,
-    { intros [ident ε, ident hε],
-      obtain ["⟨", ident m, ",", ident hm, "⟩", ":=", expr exists_pow_neg_lt p hε],
-      refine [expr ⟨m, λ n hn, lt_of_le_of_lt _ hm⟩],
-      rw ["[", "<-", expr neg_sub, ",", expr norm_neg, "]"] [],
-      exact [expr hx hn] },
-    { refine [expr ⟨x'.lim, λ n, _⟩],
-      have [] [":", expr «expr < »((0 : exprℝ()), «expr ^ »(p, («expr- »(n) : exprℤ())))] [],
-      { apply [expr zpow_pos_of_pos],
-        exact_mod_cast [expr hp_prime.1.pos] },
-      obtain ["⟨", ident i, ",", ident hi, "⟩", ":=", expr equiv_def₃ (equiv_lim x') this],
-      by_cases [expr hin, ":", expr «expr ≤ »(i, n)],
-      { exact [expr (hi i le_rfl n hin).le] },
-      { push_neg ["at", ident hin],
-        specialize [expr hi i le_rfl i le_rfl],
-        specialize [expr hx hin.le],
-        have [] [] [":=", expr nonarchimedean «expr - »(x n, x i) «expr - »(x i, x'.lim)],
-        rw ["[", expr sub_add_sub_cancel, "]"] ["at", ident this],
-        refine [expr this.trans (max_le_iff.mpr ⟨hx, hi.le⟩)] } }
-  end }
+instance : IsAdicComplete (maximal_ideal ℤ_[p]) ℤ_[p] :=
+  { prec' :=
+      fun x hx =>
+        by 
+          simp only [←Ideal.one_eq_top, smul_eq_mul, mul_oneₓ, Smodeq.sub_mem, maximal_ideal_eq_span_p,
+            Ideal.span_singleton_pow, ←norm_le_pow_iff_mem_span_pow] at hx⊢
+          let x' : CauSeq ℤ_[p] norm := ⟨x, _⟩
+          swap
+          ·
+            intro ε hε 
+            obtain ⟨m, hm⟩ := exists_pow_neg_lt p hε 
+            refine' ⟨m, fun n hn => lt_of_le_of_ltₓ _ hm⟩
+            rw [←neg_sub, norm_neg]
+            exact hx hn
+          ·
+            refine' ⟨x'.lim, fun n => _⟩
+            have  : (0 : ℝ) < (p^(-n : ℤ))
+            ·
+              apply zpow_pos_of_pos 
+              exactModCast hp_prime.1.Pos 
+            obtain ⟨i, hi⟩ := equiv_def₃ (equiv_lim x') this 
+            byCases' hin : i ≤ n
+            ·
+              exact (hi i le_rfl n hin).le
+            ·
+              pushNeg  at hin 
+              specialize hi i le_rfl i le_rfl 
+              specialize hx hin.le 
+              have  := nonarchimedean (x n - x i) (x i - x'.lim)
+              rw [sub_add_sub_cancel] at this 
+              refine' this.trans (max_le_iff.mpr ⟨hx, hi.le⟩) }
 
 end Dvr
 

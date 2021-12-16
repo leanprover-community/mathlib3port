@@ -21,26 +21,30 @@ open_locale Classical
 noncomputable instance : HasInfₓ ℕ :=
   ⟨fun s => if h : ∃ n, n ∈ s then @Nat.findₓ (fun n => n ∈ s) _ h else 0⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 noncomputable instance : HasSupₓ ℕ :=
   ⟨fun s => if h : ∃ n, ∀ a _ : a ∈ s, a ≤ n then @Nat.findₓ (fun n => ∀ a _ : a ∈ s, a ≤ n) _ h else 0⟩
 
 theorem Inf_def {s : Set ℕ} (h : s.nonempty) : Inf s = @Nat.findₓ (fun n => n ∈ s) _ h :=
   dif_pos _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » s)
 theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀ a _ : a ∈ s, a ≤ n) : Sup s = @Nat.findₓ (fun n => ∀ a _ : a ∈ s, a ≤ n) _ h :=
   dif_pos _
 
--- error in Data.Nat.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem Inf_eq_zero
-{s : set exprℕ()} : «expr ↔ »(«expr = »(Inf s, 0), «expr ∨ »(«expr ∈ »(0, s), «expr = »(s, «expr∅»()))) :=
-begin
-  cases [expr eq_empty_or_nonempty s] [],
-  { subst [expr h],
-    simp [] [] ["only"] ["[", expr or_true, ",", expr eq_self_iff_true, ",", expr iff_true, ",", expr Inf, ",", expr has_Inf.Inf, ",", expr mem_empty_eq, ",", expr exists_false, ",", expr dif_neg, ",", expr not_false_iff, "]"] [] [] },
-  { have [] [] [":=", expr ne_empty_iff_nonempty.mpr h],
-    simp [] [] ["only"] ["[", expr this, ",", expr or_false, ",", expr nat.Inf_def, ",", expr h, ",", expr nat.find_eq_zero, "]"] [] [] }
-end
+theorem Inf_eq_zero {s : Set ℕ} : Inf s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
+  by 
+    cases eq_empty_or_nonempty s
+    ·
+      subst h 
+      simp only [or_trueₓ, eq_self_iff_true, iff_trueₓ, Inf, HasInfₓ.inf, mem_empty_eq, exists_false, dif_neg,
+        not_false_iff]
+    ·
+      have  := ne_empty_iff_nonempty.mpr h 
+      simp only [this, or_falseₓ, Nat.Inf_def, h, Nat.find_eq_zero]
 
 @[simp]
 theorem Inf_empty : Inf ∅ = 0 :=
@@ -69,18 +73,17 @@ protected theorem Inf_le {s : Set ℕ} {m : ℕ} (hm : m ∈ s) : Inf s ≤ m :=
     rw [Nat.Inf_def ⟨m, hm⟩]
     exact Nat.find_min'ₓ ⟨m, hm⟩ hm
 
--- error in Data.Nat.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nonempty_of_pos_Inf {s : set exprℕ()} (h : «expr < »(0, Inf s)) : s.nonempty :=
-begin
-  by_contradiction [ident contra],
-  rw [expr set.not_nonempty_iff_eq_empty] ["at", ident contra],
-  have [ident h'] [":", expr «expr ≠ »(Inf s, 0)] [],
-  { exact [expr ne_of_gt h] },
-  apply [expr h'],
-  rw [expr nat.Inf_eq_zero] [],
-  right,
-  assumption
-end
+theorem nonempty_of_pos_Inf {s : Set ℕ} (h : 0 < Inf s) : s.nonempty :=
+  by 
+    byContra contra 
+    rw [Set.not_nonempty_iff_eq_empty] at contra 
+    have h' : Inf s ≠ 0
+    ·
+      exact ne_of_gtₓ h 
+    apply h' 
+    rw [Nat.Inf_eq_zero]
+    right 
+    assumption
 
 theorem nonempty_of_Inf_eq_succ {s : Set ℕ} {k : ℕ} (h : Inf s = k+1) : s.nonempty :=
   nonempty_of_pos_Inf (h.symm ▸ succ_pos k : Inf s > 0)
@@ -92,7 +95,7 @@ theorem eq_Ici_of_nonempty_of_upward_closed {s : Set ℕ} (hs : s.nonempty)
 theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) (k : ℕ) :
   (Inf s = k+1) ↔ (k+1) ∈ s ∧ k ∉ s :=
   by 
-    split 
+    constructor
     ·
       intro H 
       rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_Inf_eq_succ H) hs, H, mem_Ici, mem_Ici]
@@ -132,58 +135,71 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
         apply bot_unique (Nat.find_min'ₓ _ _)
         trivial }
 
--- error in Data.Nat.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem Inf_add
-{n : exprℕ()}
-{p : exprℕ() → exprProp()}
-(hn : «expr ≤ »(n, Inf {m | p m})) : «expr = »(«expr + »(Inf {m | p «expr + »(m, n)}, n), Inf {m | p m}) :=
-begin
-  obtain [ident h, "|", "⟨", ident m, ",", ident hm, "⟩", ":=", expr {m | p «expr + »(m, n)}.eq_empty_or_nonempty],
-  { rw ["[", expr h, ",", expr nat.Inf_empty, ",", expr zero_add, "]"] [],
-    obtain [ident hnp, "|", ident hnp, ":=", expr hn.eq_or_lt],
-    { exact [expr hnp] },
-    suffices [ident hp] [":", expr p «expr + »(«expr - »(Inf {m | p m}, n), n)],
-    { exact [expr (h.subset hp).elim] },
-    rw [expr tsub_add_cancel_of_le hn] [],
-    exact [expr Inf_mem «expr $ »(nonempty_of_pos_Inf, n.zero_le.trans_lt hnp)] },
-  { have [ident hp] [":", expr «expr∃ , »((n), «expr ∈ »(n, {m | p m}))] [":=", expr ⟨_, hm⟩],
-    rw ["[", expr nat.Inf_def ⟨m, hm⟩, ",", expr nat.Inf_def hp, "]"] [],
-    rw ["[", expr nat.Inf_def hp, "]"] ["at", ident hn],
-    exact [expr find_add hn] }
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  Inf_add
+  { n : ℕ } { p : ℕ → Prop } ( hn : n ≤ Inf { m | p m } ) : Inf { m | p m + n } + n = Inf { m | p m }
+  :=
+    by
+      obtain h | ⟨ m , hm ⟩ := { m | p m + n } . eq_empty_or_nonempty
+        ·
+          rw [ h , Nat.Inf_empty , zero_addₓ ]
+            obtain hnp | hnp := hn.eq_or_lt
+            · exact hnp
+            suffices hp : p Inf { m | p m } - n + n
+            · exact h.subset hp . elim
+            rw [ tsub_add_cancel_of_le hn ]
+            exact Inf_mem nonempty_of_pos_Inf $ n.zero_le.trans_lt hnp
+        ·
+          have hp : ∃ n , n ∈ { m | p m } := ⟨ _ , hm ⟩
+            rw [ Nat.Inf_def ⟨ m , hm ⟩ , Nat.Inf_def hp ]
+            rw [ Nat.Inf_def hp ] at hn
+            exact find_add hn
 
-theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < Inf { m | p m }) : (Inf { m | p m }+n) = Inf { m | p (m - n) } :=
-  by 
-    convert Inf_add _
-    ·
-      simpRw [add_tsub_cancel_right]
-    obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h 
-    refine'
-      le_cInf ⟨m+n, _⟩
-        fun b hb => le_of_not_ltₓ$ fun hbn => ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
-    ·
-      dsimp 
-      rwa [add_tsub_cancel_right]
-    ·
-      exact hb
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  Inf_add'
+  { n : ℕ } { p : ℕ → Prop } ( h : 0 < Inf { m | p m } ) : Inf { m | p m } + n = Inf { m | p m - n }
+  :=
+    by
+      convert Inf_add _
+        · simpRw [ add_tsub_cancel_right ]
+        obtain ⟨ m , hm ⟩ := nonempty_of_pos_Inf h
+        refine'
+          le_cInf
+            ⟨ m + n , _ ⟩
+              fun
+                b hb => le_of_not_ltₓ $ fun hbn => ne_of_mem_of_not_mem _ not_mem_of_lt_Inf h tsub_eq_zero_of_le hbn.le
+        · dsimp rwa [ add_tsub_cancel_right ]
+        · exact hb
 
 section 
 
 variable {α : Type _} [CompleteLattice α]
 
-theorem supr_lt_succ (u : ℕ → α) (n : ℕ) : (⨆(k : _)(_ : k < n+1), u k) = (⨆(k : _)(_ : k < n), u k)⊔u n :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » «expr + »(n, 1))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
+theorem supr_lt_succ (u : ℕ → α) (n : ℕ) : (⨆ (k : _)(_ : k < n+1), u k) = (⨆ (k : _)(_ : k < n), u k)⊔u n :=
   by 
     simp [Nat.lt_succ_iff_lt_or_eq, supr_or, supr_sup_eq]
 
-theorem supr_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆(k : _)(_ : k < n+1), u k) = u 0⊔⨆(k : _)(_ : k < n), u (k+1) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » «expr + »(n, 1))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
+theorem supr_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ (k : _)(_ : k < n+1), u k) = u 0⊔⨆ (k : _)(_ : k < n), u (k+1) :=
   by 
     rw [←sup_supr_nat_succ]
     simp 
 
-theorem infi_lt_succ (u : ℕ → α) (n : ℕ) : (⨅(k : _)(_ : k < n+1), u k) = (⨅(k : _)(_ : k < n), u k)⊓u n :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » «expr + »(n, 1))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
+theorem infi_lt_succ (u : ℕ → α) (n : ℕ) : (⨅ (k : _)(_ : k < n+1), u k) = (⨅ (k : _)(_ : k < n), u k)⊓u n :=
   @supr_lt_succ (OrderDual α) _ _ _
 
-theorem infi_lt_succ' (u : ℕ → α) (n : ℕ) : (⨅(k : _)(_ : k < n+1), u k) = u 0⊓⨅(k : _)(_ : k < n), u (k+1) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » «expr + »(n, 1))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
+theorem infi_lt_succ' (u : ℕ → α) (n : ℕ) : (⨅ (k : _)(_ : k < n+1), u k) = u 0⊓⨅ (k : _)(_ : k < n), u (k+1) :=
   @supr_lt_succ' (OrderDual α) _ _ _
 
 end 
@@ -194,16 +210,24 @@ namespace Set
 
 variable {α : Type _}
 
-theorem bUnion_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋃(k : _)(_ : k < n+1), u k) = (⋃(k : _)(_ : k < n), u k) ∪ u n :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » «expr + »(n, 1))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
+theorem bUnion_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋃ (k : _)(_ : k < n+1), u k) = (⋃ (k : _)(_ : k < n), u k) ∪ u n :=
   Nat.supr_lt_succ u n
 
-theorem bUnion_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋃(k : _)(_ : k < n+1), u k) = u 0 ∪ ⋃(k : _)(_ : k < n), u (k+1) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » «expr + »(n, 1))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
+theorem bUnion_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋃ (k : _)(_ : k < n+1), u k) = u 0 ∪ ⋃ (k : _)(_ : k < n), u (k+1) :=
   Nat.supr_lt_succ' u n
 
-theorem bInter_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋂(k : _)(_ : k < n+1), u k) = (⋂(k : _)(_ : k < n), u k) ∩ u n :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » «expr + »(n, 1))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
+theorem bInter_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋂ (k : _)(_ : k < n+1), u k) = (⋂ (k : _)(_ : k < n), u k) ∩ u n :=
   Nat.infi_lt_succ u n
 
-theorem bInter_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋂(k : _)(_ : k < n+1), u k) = u 0 ∩ ⋂(k : _)(_ : k < n), u (k+1) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » «expr + »(n, 1))
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (k «expr < » n)
+theorem bInter_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋂ (k : _)(_ : k < n+1), u k) = u 0 ∩ ⋂ (k : _)(_ : k < n), u (k+1) :=
   Nat.infi_lt_succ' u n
 
 end Set

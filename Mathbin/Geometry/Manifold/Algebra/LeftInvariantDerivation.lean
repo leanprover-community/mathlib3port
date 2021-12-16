@@ -14,7 +14,7 @@ implementing one of the possible definitions of the Lie algebra attached to a Li
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale LieGroup Manifold Derivation
 
@@ -49,10 +49,10 @@ instance : CoeFun (LeftInvariantDerivation I G) fun _ => C^∞⟮I, G; 𝕜⟯ �
 variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {x : M} {r : 𝕜} {X Y : LeftInvariantDerivation I G}
   {f f' : C^∞⟮I, G; 𝕜⟯}
 
-theorem to_fun_eq_coe : X.to_fun = «expr⇑ » X :=
+theorem to_fun_eq_coe : X.to_fun = ⇑X :=
   rfl
 
-theorem coe_to_linear_map : «expr⇑ » (X : C^∞⟮I, G; 𝕜⟯ →ₗ[𝕜] C^∞⟮I, G; 𝕜⟯) = X :=
+theorem coe_to_linear_map : ⇑(X : C^∞⟮I, G; 𝕜⟯ →ₗ[𝕜] C^∞⟮I, G; 𝕜⟯) = X :=
   rfl
 
 @[simp]
@@ -73,7 +73,7 @@ theorem ext (h : ∀ f, X f = Y f) : X = Y :=
 
 variable (X Y f)
 
-theorem coe_derivation : «expr⇑ » (X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = (X : C^∞⟮I, G; 𝕜⟯ → C^∞⟮I, G; 𝕜⟯) :=
+theorem coe_derivation : ⇑(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = (X : C^∞⟮I, G; 𝕜⟯ → C^∞⟮I, G; 𝕜⟯) :=
   rfl
 
 theorem coe_derivation_injective :
@@ -86,8 +86,7 @@ theorem coe_derivation_injective :
       exact h
 
 /-- Premature version of the lemma. Prefer using `left_invariant` instead. -/
-theorem left_invariant' :
-  𝒅ₕ (smooth_left_mul_one I g) (Derivation.evalAt (1 : G) («expr↑ » X)) = Derivation.evalAt g («expr↑ » X) :=
+theorem left_invariant' : 𝒅ₕ (smooth_left_mul_one I g) (Derivation.evalAt (1 : G) (↑X)) = Derivation.evalAt g (↑X) :=
   by 
     rw [←to_derivation_eq_coe] <;> exact left_invariant'' X g
 
@@ -149,27 +148,27 @@ instance : Sub (LeftInvariantDerivation I G) :=
               simp only [LinearMap.map_sub, Derivation.coe_sub, left_invariant', Pi.sub_apply]⟩ }
 
 @[simp]
-theorem coe_add : «expr⇑ » (X+Y) = X+Y :=
+theorem coe_add : (⇑X+Y) = X+Y :=
   rfl
 
 @[simp]
-theorem coe_zero : «expr⇑ » (0 : LeftInvariantDerivation I G) = 0 :=
+theorem coe_zero : ⇑(0 : LeftInvariantDerivation I G) = 0 :=
   rfl
 
 @[simp]
-theorem coe_neg : «expr⇑ » (-X) = -X :=
+theorem coe_neg : ⇑(-X) = -X :=
   rfl
 
 @[simp]
-theorem coe_sub : «expr⇑ » (X - Y) = X - Y :=
+theorem coe_sub : ⇑(X - Y) = X - Y :=
   rfl
 
 @[simp, normCast]
-theorem lift_add : («expr↑ » (X+Y) : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = X+Y :=
+theorem lift_add : (↑X+Y : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = X+Y :=
   rfl
 
 @[simp, normCast]
-theorem lift_zero : («expr↑ » (0 : LeftInvariantDerivation I G) : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = 0 :=
+theorem lift_zero : (↑(0 : LeftInvariantDerivation I G) : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = 0 :=
   rfl
 
 instance : AddCommGroupₓ (LeftInvariantDerivation I G) :=
@@ -187,11 +186,11 @@ instance : HasScalar 𝕜 (LeftInvariantDerivation I G) :=
 variable (r X)
 
 @[simp]
-theorem coe_smul : «expr⇑ » (r • X) = r • X :=
+theorem coe_smul : ⇑(r • X) = r • X :=
   rfl
 
 @[simp]
-theorem lift_smul (k : 𝕜) : («expr↑ » (k • X) : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = k • X :=
+theorem lift_smul (k : 𝕜) : (↑(k • X) : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = k • X :=
   rfl
 
 variable (I G)
@@ -209,13 +208,13 @@ instance : Module 𝕜 (LeftInvariantDerivation I G) :=
 /-- Evaluation at a point for left invariant derivation. Same thing as for generic global
 derivations (`derivation.eval_at`). -/
 def eval_at : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g :=
-  { toFun := fun X => Derivation.evalAt g («expr↑ » X), map_add' := fun X Y => rfl, map_smul' := fun k X => rfl }
+  { toFun := fun X => Derivation.evalAt g (↑X), map_add' := fun X Y => rfl, map_smul' := fun k X => rfl }
 
 theorem eval_at_apply : eval_at g X f = (X f) g :=
   rfl
 
 @[simp]
-theorem eval_at_coe : Derivation.evalAt g («expr↑ » X) = eval_at g X :=
+theorem eval_at_coe : Derivation.evalAt g (↑X) = eval_at g X :=
   rfl
 
 theorem left_invariant : 𝒅ₕ (smooth_left_mul_one I g) (eval_at (1 : G) X) = eval_at g X :=
@@ -233,26 +232,25 @@ theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) :=
       rw [TimesContMdiffMap.comp_apply, L_apply, ←eval_at_apply, eval_at_mul, apply_hfdifferential, apply_fdifferential,
         eval_at_apply]
 
--- error in Geometry.Manifold.Algebra.LeftInvariantDerivation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance : has_bracket (left_invariant_derivation I G) (left_invariant_derivation I G) :=
-{ bracket := λ
-  X
-  Y, ⟨«expr⁅ , ⁆»((X : derivation 𝕜 «exprC^ ⟮ , ; ⟯»(«expr∞»(), I, G, 𝕜) «exprC^ ⟮ , ; ⟯»(«expr∞»(), I, G, 𝕜)), Y), λ
-   g, begin
-     ext [] [ident f] [],
-     have [ident hX] [] [":=", expr derivation.congr_fun (left_invariant' g X) (Y f)],
-     have [ident hY] [] [":=", expr derivation.congr_fun (left_invariant' g Y) (X f)],
-     rw ["[", expr apply_hfdifferential, ",", expr apply_fdifferential, ",", expr derivation.eval_at_apply, "]"] ["at", ident hX, ident hY, "⊢"],
-     rw [expr comp_L] ["at", ident hX, ident hY],
-     rw ["[", expr derivation.commutator_apply, ",", expr smooth_map.coe_sub, ",", expr pi.sub_apply, ",", expr coe_derivation, "]"] [],
-     rw [expr coe_derivation] ["at", ident hX, ident hY, "⊢"],
-     rw ["[", expr hX, ",", expr hY, "]"] [],
-     refl
-   end⟩ }
+instance : HasBracket (LeftInvariantDerivation I G) (LeftInvariantDerivation I G) :=
+  { bracket :=
+      fun X Y =>
+        ⟨⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯),Y⁆,
+          fun g =>
+            by 
+              ext f 
+              have hX := Derivation.congr_fun (left_invariant' g X) (Y f)
+              have hY := Derivation.congr_fun (left_invariant' g Y) (X f)
+              rw [apply_hfdifferential, apply_fdifferential, Derivation.eval_at_apply] at hX hY⊢
+              rw [comp_L] at hX hY 
+              rw [Derivation.commutator_apply, SmoothMap.coe_sub, Pi.sub_apply, coe_derivation]
+              rw [coe_derivation] at hX hY⊢
+              rw [hX, hY]
+              rfl⟩ }
 
 @[simp]
 theorem commutator_coe_derivation :
-  «expr⇑ » ⁅X,Y⁆ = (⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯),Y⁆ : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
+  ⇑⁅X,Y⁆ = (⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯),Y⁆ : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
   rfl
 
 theorem commutator_apply : ⁅X,Y⁆ f = X (Y f) - Y (X f) :=

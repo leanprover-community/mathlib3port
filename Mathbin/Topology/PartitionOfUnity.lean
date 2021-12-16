@@ -74,8 +74,9 @@ open Function Set Filter
 
 open_locale BigOperators TopologicalSpace Classical
 
-noncomputable theory
+noncomputable section 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A continuous partition of unity on a set `s : set X` is a collection of continuous functions
 `f i` such that
 
@@ -93,9 +94,10 @@ structure PartitionOfUnity (ι X : Type _) [TopologicalSpace X] (s : Set X := un
   toFun : ι → C(X, ℝ)
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun 
-  sum_eq_one' : ∀ x _ : x ∈ s, (∑ᶠi, to_fun i x) = 1
-  sum_le_one' : ∀ x, (∑ᶠi, to_fun i x) ≤ 1
+  sum_eq_one' : ∀ x _ : x ∈ s, (∑ᶠ i, to_fun i x) = 1
+  sum_le_one' : ∀ x, (∑ᶠ i, to_fun i x) ≤ 1
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- A `bump_covering ι X s` is an indexed family of functions `f i`, `i : ι`, such that
 
 * the supports of `f i` form a locally finite family of sets, i.e., for every point `x : X` there
@@ -133,13 +135,13 @@ protected theorem LocallyFinite : LocallyFinite fun i => support (f i) :=
 theorem nonneg (i : ι) (x : X) : 0 ≤ f i x :=
   f.nonneg' i x
 
-theorem sum_eq_one {x : X} (hx : x ∈ s) : (∑ᶠi, f i x) = 1 :=
+theorem sum_eq_one {x : X} (hx : x ∈ s) : (∑ᶠ i, f i x) = 1 :=
   f.sum_eq_one' x hx
 
-theorem sum_le_one (x : X) : (∑ᶠi, f i x) ≤ 1 :=
+theorem sum_le_one (x : X) : (∑ᶠ i, f i x) ≤ 1 :=
   f.sum_le_one' x
 
-theorem sum_nonneg (x : X) : 0 ≤ ∑ᶠi, f i x :=
+theorem sum_nonneg (x : X) : 0 ≤ ∑ᶠ i, f i x :=
   finsum_nonneg$ fun i => f.nonneg i x
 
 theorem le_one (i : ι) (x : X) : f i x ≤ 1 :=
@@ -162,8 +164,9 @@ instance : CoeFun (BumpCovering ι X s) fun _ => ι → C(X, ℝ) :=
 protected theorem LocallyFinite : LocallyFinite fun i => support (f i) :=
   f.locally_finite'
 
-protected theorem point_finite (x : X) : finite { i | f i x ≠ 0 } :=
-  f.locally_finite.point_finite x
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+protected theorem point_finite ( x : X ) : finite { i | f i x ≠ 0 } := f.locally_finite.point_finite x
 
 theorem nonneg (i : ι) (x : X) : 0 ≤ f i x :=
   f.nonneg' i x
@@ -192,7 +195,7 @@ protected def single (i : ι) (s : Set X) : BumpCovering ι X s :=
             simp ⟩ }
 
 @[simp]
-theorem coe_single (i : ι) (s : Set X) : «expr⇑ » (BumpCovering.single i s) = Pi.single i 1 :=
+theorem coe_single (i : ι) (s : Set X) : ⇑BumpCovering.single i s = Pi.single i 1 :=
   rfl
 
 instance [Inhabited ι] : Inhabited (BumpCovering ι X s) :=
@@ -207,52 +210,43 @@ theorem is_subordinate.mono {f : BumpCovering ι X s} {U V : ι → Set X} (hU :
   f.is_subordinate V :=
   fun i => subset.trans (hU i) (hV i)
 
--- error in Topology.PartitionOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `X` is a normal topological space and `U i`, `i : ι`, is a locally finite open covering of a
 closed set `s`, then there exists a `bump_covering ι X s` that is subordinate to `U`. If `X` is a
 paracompact space, then the assumption `hf : locally_finite U` can be omitted, see
 `bump_covering.exists_is_subordinate`. This version assumes that `p : (X → ℝ) → Prop` is a predicate
 that satisfies Urysohn's lemma, and provides a `bump_covering` such that each function of the
 covering satisfies `p`. -/
-theorem exists_is_subordinate_of_locally_finite_of_prop
-[normal_space X]
-(p : (X → exprℝ()) → exprProp())
-(h01 : ∀
- s
- t, is_closed s → is_closed t → disjoint s t → «expr∃ , »((f : «exprC( , )»(X, exprℝ())), «expr ∧ »(p f, «expr ∧ »(eq_on f 0 s, «expr ∧ »(eq_on f 1 t, ∀
-     x, «expr ∈ »(f x, Icc (0 : exprℝ()) 1))))))
-(hs : is_closed s)
-(U : ι → set X)
-(ho : ∀ i, is_open (U i))
-(hf : locally_finite U)
-(hU : «expr ⊆ »(s, «expr⋃ , »((i), U i))) : «expr∃ , »((f : bump_covering ι X s), «expr ∧ »(∀
-  i, p (f i), f.is_subordinate U)) :=
-begin
-  rcases [expr exists_subset_Union_closure_subset hs ho (λ
-    x _, hf.point_finite x) hU, "with", "⟨", ident V, ",", ident hsV, ",", ident hVo, ",", ident hVU, "⟩"],
-  have [ident hVU'] [":", expr ∀ i, «expr ⊆ »(V i, U i)] [],
-  from [expr λ i, subset.trans subset_closure (hVU i)],
-  rcases [expr exists_subset_Union_closure_subset hs hVo (λ
-    x
-    _, (hf.subset hVU').point_finite x) hsV, "with", "⟨", ident W, ",", ident hsW, ",", ident hWo, ",", ident hWV, "⟩"],
-  choose [] [ident f] [ident hfp, ident hf0, ident hf1, ident hf01] ["using", expr λ
-   i, h01 _ _ «expr $ »(is_closed_compl_iff.2, hVo i) is_closed_closure «expr $ »(disjoint_right.2, λ
-    x hx, not_not.2 (hWV i hx))],
-  have [ident hsupp] [":", expr ∀ i, «expr ⊆ »(support (f i), V i)] [],
-  from [expr λ i, support_subset_iff'.2 (hf0 i)],
-  refine [expr ⟨⟨f, hf.subset (λ
-      i, subset.trans (hsupp i) (hVU' i)), λ
-     i x, (hf01 i x).1, λ i x, (hf01 i x).2, λ x hx, _⟩, hfp, λ i, subset.trans (closure_mono (hsupp i)) (hVU i)⟩],
-  rcases [expr mem_Union.1 (hsW hx), "with", "⟨", ident i, ",", ident hi, "⟩"],
-  exact [expr ⟨i, ((hf1 i).mono subset_closure).eventually_eq_of_mem ((hWo i).mem_nhds hi)⟩]
-end
+theorem exists_is_subordinate_of_locally_finite_of_prop [NormalSpace X] (p : (X → ℝ) → Prop)
+  (h01 :
+    ∀ s t,
+      IsClosed s →
+        IsClosed t → Disjoint s t → ∃ f : C(X, ℝ), p f ∧ eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1)
+  (hs : IsClosed s) (U : ι → Set X) (ho : ∀ i, IsOpen (U i)) (hf : LocallyFinite U) (hU : s ⊆ ⋃ i, U i) :
+  ∃ f : BumpCovering ι X s, (∀ i, p (f i)) ∧ f.is_subordinate U :=
+  by 
+    rcases exists_subset_Union_closure_subset hs ho (fun x _ => hf.point_finite x) hU with ⟨V, hsV, hVo, hVU⟩
+    have hVU' : ∀ i, V i ⊆ U i 
+    exact fun i => subset.trans subset_closure (hVU i)
+    rcases exists_subset_Union_closure_subset hs hVo (fun x _ => (hf.subset hVU').point_finite x) hsV with
+      ⟨W, hsW, hWo, hWV⟩
+    choose f hfp hf0 hf1 hf01 using
+      fun i =>
+        h01 _ _ (is_closed_compl_iff.2$ hVo i) is_closed_closure (disjoint_right.2$ fun x hx => not_not.2 (hWV i hx))
+    have hsupp : ∀ i, support (f i) ⊆ V i 
+    exact fun i => support_subset_iff'.2 (hf0 i)
+    refine'
+      ⟨⟨f, hf.subset fun i => subset.trans (hsupp i) (hVU' i), fun i x => (hf01 i x).1, fun i x => (hf01 i x).2,
+          fun x hx => _⟩,
+        hfp, fun i => subset.trans (closure_mono (hsupp i)) (hVU i)⟩
+    rcases mem_Union.1 (hsW hx) with ⟨i, hi⟩
+    exact ⟨i, ((hf1 i).mono subset_closure).eventually_eq_of_mem ((hWo i).mem_nhds hi)⟩
 
 /-- If `X` is a normal topological space and `U i`, `i : ι`, is a locally finite open covering of a
 closed set `s`, then there exists a `bump_covering ι X s` that is subordinate to `U`. If `X` is a
 paracompact space, then the assumption `hf : locally_finite U` can be omitted, see
 `bump_covering.exists_is_subordinate`. -/
 theorem exists_is_subordinate_of_locally_finite [NormalSpace X] (hs : IsClosed s) (U : ι → Set X)
-  (ho : ∀ i, IsOpen (U i)) (hf : LocallyFinite U) (hU : s ⊆ ⋃i, U i) : ∃ f : BumpCovering ι X s, f.is_subordinate U :=
+  (ho : ∀ i, IsOpen (U i)) (hf : LocallyFinite U) (hU : s ⊆ ⋃ i, U i) : ∃ f : BumpCovering ι X s, f.is_subordinate U :=
   let ⟨f, _, hfU⟩ :=
     exists_is_subordinate_of_locally_finite_of_prop (fun _ => True)
       (fun s t hs ht hd => (exists_continuous_zero_one_of_closed hs ht hd).imp$ fun f hf => ⟨trivialₓ, hf⟩) hs U ho hf
@@ -268,7 +262,7 @@ theorem exists_is_subordinate_of_prop [NormalSpace X] [ParacompactSpace X] (p : 
     ∀ s t,
       IsClosed s →
         IsClosed t → Disjoint s t → ∃ f : C(X, ℝ), p f ∧ eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1)
-  (hs : IsClosed s) (U : ι → Set X) (ho : ∀ i, IsOpen (U i)) (hU : s ⊆ ⋃i, U i) :
+  (hs : IsClosed s) (U : ι → Set X) (ho : ∀ i, IsOpen (U i)) (hU : s ⊆ ⋃ i, U i) :
   ∃ f : BumpCovering ι X s, (∀ i, p (f i)) ∧ f.is_subordinate U :=
   by 
     rcases precise_refinement_set hs _ ho hU with ⟨V, hVo, hsV, hVf, hVU⟩
@@ -278,7 +272,7 @@ theorem exists_is_subordinate_of_prop [NormalSpace X] [ParacompactSpace X] (p : 
 /-- If `X` is a paracompact normal topological space and `U` is an open covering of a closed set
 `s`, then there exists a `bump_covering ι X s` that is subordinate to `U`. -/
 theorem exists_is_subordinate [NormalSpace X] [ParacompactSpace X] (hs : IsClosed s) (U : ι → Set X)
-  (ho : ∀ i, IsOpen (U i)) (hU : s ⊆ ⋃i, U i) : ∃ f : BumpCovering ι X s, f.is_subordinate U :=
+  (ho : ∀ i, IsOpen (U i)) (hU : s ⊆ ⋃ i, U i) : ∃ f : BumpCovering ι X s, f.is_subordinate U :=
   by 
     rcases precise_refinement_set hs _ ho hU with ⟨V, hVo, hsV, hVf, hVU⟩
     rcases exists_is_subordinate_of_locally_finite hs V hVo hVf hsV with ⟨f, hf⟩
@@ -305,7 +299,7 @@ of `1 - f j x` vanishes, and `∑ᶠ i, g i x = 1`.
 
 In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` instead of `(<)`. -/
 def to_pou_fun (i : ι) (x : X) : ℝ :=
-  f i x*∏ᶠ(j : _)(hj : WellOrderingRel j i), 1 - f j x
+  f i x*∏ᶠ (j : _)(hj : WellOrderingRel j i), 1 - f j x
 
 theorem to_pou_fun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.to_pou_fun i x = 0 :=
   by 
@@ -315,34 +309,43 @@ theorem support_to_pou_fun_subset (i : ι) : support (f.to_pou_fun i) ⊆ suppor
   fun x => mt$ f.to_pou_fun_zero_of_zero
 
 theorem to_pou_fun_eq_mul_prod (i : ι) (x : X) (t : Finset ι) (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
-  f.to_pou_fun i x = f i x*∏j in t.filter fun j => WellOrderingRel j i, 1 - f j x :=
+  f.to_pou_fun i x = f i x*∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x :=
   by 
     refine' congr_argₓ _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
     rw [Ne.def, sub_eq_self] at hj 
     rw [Finset.mem_filter, Iff.comm, and_iff_right_iff_imp]
     exact flip (ht j) hj
 
--- error in Topology.PartitionOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem sum_to_pou_fun_eq
-(x : X) : «expr = »(«expr∑ᶠ , »((i), f.to_pou_fun i x), «expr - »(1, «expr∏ᶠ , »((i), «expr - »(1, f i x)))) :=
-begin
-  set [] [ident s] [] [":="] [expr (f.point_finite x).to_finset] [],
-  have [ident hs] [":", expr «expr = »((s : set ι), {i | «expr ≠ »(f i x, 0)})] [":=", expr finite.coe_to_finset _],
-  have [ident A] [":", expr «expr ⊆ »(support (λ i, to_pou_fun f i x), s)] [],
-  { rw [expr hs] [],
-    exact [expr λ i hi, f.support_to_pou_fun_subset i hi] },
-  have [ident B] [":", expr «expr ⊆ »(mul_support (λ i, «expr - »(1, f i x)), s)] [],
-  { rw ["[", expr hs, ",", expr mul_support_one_sub, "]"] [],
-    exact [expr λ i, id] },
-  letI [] [":", expr linear_order ι] [":=", expr linear_order_of_STO' well_ordering_rel],
-  rw ["[", expr finsum_eq_sum_of_support_subset _ A, ",", expr finprod_eq_prod_of_mul_support_subset _ B, ",", expr finset.prod_one_sub_ordered, ",", expr sub_sub_cancel, "]"] [],
-  refine [expr finset.sum_congr rfl (λ i hi, _)],
-  convert [] [expr f.to_pou_fun_eq_mul_prod _ _ _ (λ j hji hj, _)] [],
-  rwa [expr finite.mem_to_finset] []
-end
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  sum_to_pou_fun_eq
+  ( x : X ) : ∑ᶠ i , f.to_pou_fun i x = 1 - ∏ᶠ i , 1 - f i x
+  :=
+    by
+      set s := f.point_finite x . toFinset
+        have hs : ( s : Set ι ) = { i | f i x ≠ 0 } := finite.coe_to_finset _
+        have A : support fun i => to_pou_fun f i x ⊆ s
+        · rw [ hs ] exact fun i hi => f.support_to_pou_fun_subset i hi
+        have B : mul_support fun i => 1 - f i x ⊆ s
+        · rw [ hs , mul_support_one_sub ] exact fun i => id
+        let this' : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
+        rw
+          [
+            finsum_eq_sum_of_support_subset _ A
+              ,
+              finprod_eq_prod_of_mul_support_subset _ B
+              ,
+              Finset.prod_one_sub_ordered
+              ,
+              sub_sub_cancel
+            ]
+        refine' Finset.sum_congr rfl fun i hi => _
+        convert f.to_pou_fun_eq_mul_prod _ _ _ fun j hji hj => _
+        rwa [ finite.mem_to_finset ]
 
 theorem exists_finset_to_pou_fun_eventually_eq (i : ι) (x : X) :
-  ∃ t : Finset ι, f.to_pou_fun i =ᶠ[𝓝 x] f i*∏j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
+  ∃ t : Finset ι, f.to_pou_fun i =ᶠ[𝓝 x] f i*∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
   by 
     rcases f.locally_finite x with ⟨U, hU, hf⟩
     use hf.to_finset 
@@ -388,16 +391,16 @@ def to_partition_of_unity : PartitionOfUnity ι X s :=
           exact finprod_nonneg fun i => sub_nonneg.2$ f.le_one i x }
 
 theorem to_partition_of_unity_apply (i : ι) (x : X) :
-  f.to_partition_of_unity i x = f i x*∏ᶠ(j : _)(hj : WellOrderingRel j i), 1 - f j x :=
+  f.to_partition_of_unity i x = f i x*∏ᶠ (j : _)(hj : WellOrderingRel j i), 1 - f j x :=
   rfl
 
 theorem to_partition_of_unity_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
   (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
-  f.to_partition_of_unity i x = f i x*∏j in t.filter fun j => WellOrderingRel j i, 1 - f j x :=
+  f.to_partition_of_unity i x = f i x*∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x :=
   f.to_pou_fun_eq_mul_prod i x t ht
 
 theorem exists_finset_to_partition_of_unity_eventually_eq (i : ι) (x : X) :
-  ∃ t : Finset ι, f.to_partition_of_unity i =ᶠ[𝓝 x] f i*∏j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
+  ∃ t : Finset ι, f.to_partition_of_unity i =ᶠ[𝓝 x] f i*∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
   f.exists_finset_to_pou_fun_eventually_eq i x
 
 theorem to_partition_of_unity_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.to_partition_of_unity i x = 0 :=
@@ -406,7 +409,7 @@ theorem to_partition_of_unity_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.
 theorem support_to_partition_of_unity_subset (i : ι) : support (f.to_partition_of_unity i) ⊆ support (f i) :=
   f.support_to_pou_fun_subset i
 
-theorem sum_to_partition_of_unity_eq (x : X) : (∑ᶠi, f.to_partition_of_unity i x) = 1 - ∏ᶠi, 1 - f i x :=
+theorem sum_to_partition_of_unity_eq (x : X) : (∑ᶠ i, f.to_partition_of_unity i x) = 1 - ∏ᶠ i, 1 - f i x :=
   f.sum_to_pou_fun_eq x
 
 theorem is_subordinate.to_partition_of_unity {f : BumpCovering ι X s} {U : ι → Set X} (h : f.is_subordinate U) :
@@ -427,7 +430,7 @@ instance [Inhabited ι] : Inhabited (PartitionOfUnity ι X s) :=
 paracompact space, then the assumption `hf : locally_finite U` can be omitted, see
 `bump_covering.exists_is_subordinate`. -/
 theorem exists_is_subordinate_of_locally_finite [NormalSpace X] (hs : IsClosed s) (U : ι → Set X)
-  (ho : ∀ i, IsOpen (U i)) (hf : LocallyFinite U) (hU : s ⊆ ⋃i, U i) :
+  (ho : ∀ i, IsOpen (U i)) (hf : LocallyFinite U) (hU : s ⊆ ⋃ i, U i) :
   ∃ f : PartitionOfUnity ι X s, f.is_subordinate U :=
   let ⟨f, hf⟩ := BumpCovering.exists_is_subordinate_of_locally_finite hs U ho hf hU
   ⟨f.to_partition_of_unity, hf.to_partition_of_unity⟩
@@ -435,7 +438,7 @@ theorem exists_is_subordinate_of_locally_finite [NormalSpace X] (hs : IsClosed s
 /-- If `X` is a paracompact normal topological space and `U` is an open covering of a closed set
 `s`, then there exists a `partition_of_unity ι X s` that is subordinate to `U`. -/
 theorem exists_is_subordinate [NormalSpace X] [ParacompactSpace X] (hs : IsClosed s) (U : ι → Set X)
-  (ho : ∀ i, IsOpen (U i)) (hU : s ⊆ ⋃i, U i) : ∃ f : PartitionOfUnity ι X s, f.is_subordinate U :=
+  (ho : ∀ i, IsOpen (U i)) (hU : s ⊆ ⋃ i, U i) : ∃ f : PartitionOfUnity ι X s, f.is_subordinate U :=
   let ⟨f, hf⟩ := BumpCovering.exists_is_subordinate hs U ho hU
   ⟨f.to_partition_of_unity, hf.to_partition_of_unity⟩
 

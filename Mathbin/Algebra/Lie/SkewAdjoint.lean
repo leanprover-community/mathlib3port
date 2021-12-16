@@ -35,23 +35,21 @@ variable {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R
 
 variable (B : BilinForm R M)
 
--- error in Algebra.Lie.SkewAdjoint: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem bilin_form.is_skew_adjoint_bracket
-(f g : module.End R M)
-(hf : «expr ∈ »(f, B.skew_adjoint_submodule))
-(hg : «expr ∈ »(g, B.skew_adjoint_submodule)) : «expr ∈ »(«expr⁅ , ⁆»(f, g), B.skew_adjoint_submodule) :=
-begin
-  rw [expr mem_skew_adjoint_submodule] ["at", "*"],
-  have [ident hfg] [":", expr is_adjoint_pair B B «expr * »(f, g) «expr * »(g, f)] [],
-  { rw ["<-", expr neg_mul_neg g f] [],
-    exact [expr hf.mul hg] },
-  have [ident hgf] [":", expr is_adjoint_pair B B «expr * »(g, f) «expr * »(f, g)] [],
-  { rw ["<-", expr neg_mul_neg f g] [],
-    exact [expr hg.mul hf] },
-  change [expr bilin_form.is_adjoint_pair B B «expr - »(«expr * »(f, g), «expr * »(g, f)) «expr- »(«expr - »(«expr * »(f, g), «expr * »(g, f)))] [] [],
-  rw [expr neg_sub] [],
-  exact [expr hfg.sub hgf]
-end
+theorem BilinForm.is_skew_adjoint_bracket (f g : Module.End R M) (hf : f ∈ B.skew_adjoint_submodule)
+  (hg : g ∈ B.skew_adjoint_submodule) : ⁅f,g⁆ ∈ B.skew_adjoint_submodule :=
+  by 
+    rw [mem_skew_adjoint_submodule] at *
+    have hfg : is_adjoint_pair B B (f*g) (g*f)
+    ·
+      rw [←neg_mul_neg g f]
+      exact hf.mul hg 
+    have hgf : is_adjoint_pair B B (g*f) (f*g)
+    ·
+      rw [←neg_mul_neg f g]
+      exact hg.mul hf 
+    change BilinForm.IsAdjointPair B B ((f*g) - g*f) (-((f*g) - g*f))
+    rw [neg_sub]
+    exact hfg.sub hgf
 
 /-- Given an `R`-module `M`, equipped with a bilinear form, the skew-adjoint endomorphisms form a
 Lie subalgebra of the Lie algebra of endomorphisms. -/
@@ -63,7 +61,7 @@ variable {N : Type w} [AddCommGroupₓ N] [Module R N] (e : N ≃ₗ[R] M)
 /-- An equivalence of modules with bilinear forms gives equivalence of Lie algebras of skew-adjoint
 endomorphisms. -/
 def skewAdjointLieSubalgebraEquiv :
-  skewAdjointLieSubalgebra (B.comp («expr↑ » e : N →ₗ[R] M) («expr↑ » e)) ≃ₗ⁅R⁆ skewAdjointLieSubalgebra B :=
+  skewAdjointLieSubalgebra (B.comp (↑e : N →ₗ[R] M) (↑e)) ≃ₗ⁅R⁆ skewAdjointLieSubalgebra B :=
   by 
     apply LieEquiv.ofSubalgebras _ _ e.lie_conj 
     ext f 
@@ -71,14 +69,14 @@ def skewAdjointLieSubalgebraEquiv :
     exact (BilinForm.is_pair_self_adjoint_equiv (-B) B e f).symm
 
 @[simp]
-theorem skew_adjoint_lie_subalgebra_equiv_apply (f : skewAdjointLieSubalgebra (B.comp («expr↑ » e) («expr↑ » e))) :
-  «expr↑ » (skewAdjointLieSubalgebraEquiv B e f) = e.lie_conj f :=
+theorem skew_adjoint_lie_subalgebra_equiv_apply (f : skewAdjointLieSubalgebra (B.comp (↑e) (↑e))) :
+  ↑skewAdjointLieSubalgebraEquiv B e f = e.lie_conj f :=
   by 
     simp [skewAdjointLieSubalgebraEquiv]
 
 @[simp]
 theorem skew_adjoint_lie_subalgebra_equiv_symm_apply (f : skewAdjointLieSubalgebra B) :
-  «expr↑ » ((skewAdjointLieSubalgebraEquiv B e).symm f) = e.symm.lie_conj f :=
+  ↑(skewAdjointLieSubalgebraEquiv B e).symm f = e.symm.lie_conj f :=
   by 
     simp [skewAdjointLieSubalgebraEquiv]
 
@@ -131,8 +129,7 @@ def skewAdjointMatricesLieSubalgebraEquiv (P : Matrix n n R) (h : Invertible P) 
       simp [Matrix.IsSkewAdjoint, J.is_adjoint_pair_equiv _ _ P (is_unit_of_invertible P)])
 
 theorem skew_adjoint_matrices_lie_subalgebra_equiv_apply (P : Matrix n n R) (h : Invertible P)
-  (A : skewAdjointMatricesLieSubalgebra J) :
-  «expr↑ » (skewAdjointMatricesLieSubalgebraEquiv J P h A) = P⁻¹ ⬝ «expr↑ » A ⬝ P :=
+  (A : skewAdjointMatricesLieSubalgebra J) : ↑skewAdjointMatricesLieSubalgebraEquiv J P h A = P⁻¹ ⬝ ↑A ⬝ P :=
   by 
     simp [skewAdjointMatricesLieSubalgebraEquiv]
 
@@ -160,7 +157,7 @@ theorem mem_skew_adjoint_matrices_lie_subalgebra_unit_smul (u : Units R) (J A : 
   by 
     change A ∈ skewAdjointMatricesSubmodule (u • J) ↔ A ∈ skewAdjointMatricesSubmodule J 
     simp only [mem_skew_adjoint_matrices_submodule, Matrix.IsSkewAdjoint, Matrix.IsAdjointPair]
-    split  <;> intro h
+    constructor <;> intro h
     ·
       simpa using congr_argₓ (fun B => u⁻¹ • B) h
     ·

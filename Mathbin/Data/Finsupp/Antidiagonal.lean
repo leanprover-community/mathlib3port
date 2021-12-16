@@ -9,7 +9,7 @@ all pairs `(t₁, t₂) : (α →₀ ℕ) × (α →₀ ℕ)` such that `t₁ + 
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open_locale Classical BigOperators
 
@@ -49,7 +49,7 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀
       simpa [apply_ite ((· ∈ ·) (a, b)), ←And.assoc, @And.right_comm _ (a = _), And.congr_left_iff]
     (
       rintro rfl)
-    split 
+    constructor
     ·
       rintro rfl 
       exact ⟨le_add_right le_rfl, (add_tsub_cancel_left _ _).symm⟩
@@ -66,7 +66,7 @@ theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀
       simpa [apply_ite ((· ∈ ·) (a, b)), ←And.assoc, And.congr_left_iff]
     (
       rintro rfl)
-    split 
+    constructor
     ·
       rintro rfl 
       exact ⟨le_add_left le_rfl, (add_tsub_cancel_right _ _).symm⟩
@@ -81,7 +81,7 @@ theorem antidiagonal_zero : antidiagonal (0 : α →₀ ℕ) = singleton (0, 0) 
 
 @[toAdditive]
 theorem prod_antidiagonal_swap {M : Type _} [CommMonoidₓ M] (n : α →₀ ℕ) (f : (α →₀ ℕ) → (α →₀ ℕ) → M) :
-  (∏p in antidiagonal n, f p.1 p.2) = ∏p in antidiagonal n, f p.2 p.1 :=
+  (∏ p in antidiagonal n, f p.1 p.2) = ∏ p in antidiagonal n, f p.2 p.1 :=
   Finset.prod_bij (fun p hp => p.swap) (fun p => swap_mem_antidiagonal.2) (fun p hp => rfl)
     (fun p₁ p₂ _ _ h => Prod.swap_injectiveₓ h) fun p hp => ⟨p.swap, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
 
@@ -95,23 +95,26 @@ theorem mem_Iic_finset {m n : α →₀ ℕ} : m ∈ Iic_finset n ↔ m ≤ n :=
     simp [Iic_finset, le_iff_exists_add, eq_comm]
 
 @[simp]
-theorem coe_Iic_finset (n : α →₀ ℕ) : «expr↑ » (Iic_finset n) = Set.Iic n :=
+theorem coe_Iic_finset (n : α →₀ ℕ) : ↑Iic_finset n = Set.Iic n :=
   by 
     ext 
     simp 
 
-/-- Let `n : α →₀ ℕ` be a finitely supported function.
-The set of `m : α →₀ ℕ` that are coordinatewise less than or equal to `n`,
-is a finite set. -/
-theorem finite_le_nat (n : α →₀ ℕ) : Set.Finite { m | m ≤ n } :=
-  by 
-    simpa using (Iic_finset n).finite_to_set
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Let `n : α →₀ ℕ` be a finitely supported function.
+    The set of `m : α →₀ ℕ` that are coordinatewise less than or equal to `n`,
+    is a finite set. -/
+  theorem finite_le_nat ( n : α →₀ ℕ ) : Set.Finite { m | m ≤ n } := by simpa using Iic_finset n . finite_to_set
 
-/-- Let `n : α →₀ ℕ` be a finitely supported function.
-The set of `m : α →₀ ℕ` that are coordinatewise less than or equal to `n`,
-but not equal to `n` everywhere, is a finite set. -/
-theorem finite_lt_nat (n : α →₀ ℕ) : Set.Finite { m | m < n } :=
-  (finite_le_nat n).Subset$ fun m => le_of_ltₓ
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    Let `n : α →₀ ℕ` be a finitely supported function.
+    The set of `m : α →₀ ℕ` that are coordinatewise less than or equal to `n`,
+    but not equal to `n` everywhere, is a finite set. -/
+  theorem finite_lt_nat ( n : α →₀ ℕ ) : Set.Finite { m | m < n } := finite_le_nat n . Subset $ fun m => le_of_ltₓ
 
 end Finsupp
 

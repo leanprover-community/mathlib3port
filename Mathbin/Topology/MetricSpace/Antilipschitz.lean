@@ -131,16 +131,12 @@ theorem to_right_inv_on (hf : AntilipschitzWith K f) {g : β → α} {t : Set β
   LipschitzWith K (t.restrict g) :=
   (hf.restrict univ).to_right_inv_on' (maps_to_univ g t) h
 
--- error in Topology.MetricSpace.Antilipschitz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem to_right_inverse
-(hf : antilipschitz_with K f)
-{g : β → α}
-(hg : function.right_inverse g f) : lipschitz_with K g :=
-begin
-  intros [ident x, ident y],
-  have [] [] [":=", expr hf (g x) (g y)],
-  rwa ["[", expr hg x, ",", expr hg y, "]"] ["at", ident this]
-end
+theorem to_right_inverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
+  LipschitzWith K g :=
+  by 
+    intro x y 
+    have  := hf (g x) (g y)
+    rwa [hg x, hg y] at this
 
 theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α :=
   by 
@@ -198,27 +194,17 @@ theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded
         _ ≤ K*diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2
         
 
--- error in Topology.MetricSpace.Antilipschitz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The image of a proper space under an expanding onto map is proper. -/
-protected
-theorem proper_space
-{α : Type*}
-[metric_space α]
-{K : «exprℝ≥0»()}
-{f : α → β}
-[proper_space α]
-(hK : antilipschitz_with K f)
-(f_cont : continuous f)
-(hf : function.surjective f) : proper_space β :=
-begin
-  apply [expr proper_space_of_compact_closed_ball_of_le 0 (λ x₀ r hr, _)],
-  let [ident K] [] [":=", expr «expr ⁻¹' »(f, closed_ball x₀ r)],
-  have [ident A] [":", expr is_closed K] [":=", expr is_closed_ball.preimage f_cont],
-  have [ident B] [":", expr bounded K] [":=", expr hK.bounded_preimage bounded_closed_ball],
-  have [] [":", expr is_compact K] [":=", expr compact_iff_closed_bounded.2 ⟨A, B⟩],
-  convert [] [expr this.image f_cont] [],
-  exact [expr (hf.image_preimage _).symm]
-end
+protected theorem ProperSpace {α : Type _} [MetricSpace α] {K :  ℝ≥0 } {f : α → β} [ProperSpace α]
+  (hK : AntilipschitzWith K f) (f_cont : Continuous f) (hf : Function.Surjective f) : ProperSpace β :=
+  by 
+    apply proper_space_of_compact_closed_ball_of_le 0 fun x₀ r hr => _ 
+    let K := f ⁻¹' closed_ball x₀ r 
+    have A : IsClosed K := is_closed_ball.preimage f_cont 
+    have B : Bounded K := hK.bounded_preimage bounded_closed_ball 
+    have  : IsCompact K := compact_iff_closed_bounded.2 ⟨A, B⟩
+    convert this.image f_cont 
+    exact (hf.image_preimage _).symm
 
 end AntilipschitzWith
 

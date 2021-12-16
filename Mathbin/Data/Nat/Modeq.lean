@@ -21,11 +21,10 @@ modeq, congruence, mod, MOD, modulo
 
 namespace Nat
 
--- error in Data.Nat.Modeq: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable
 /-- Modular equality. `n.modeq a b`, or `a ≡ b [MOD n]`, means that `a - b` is a multiple of `n`. -/
-@[derive #[expr decidable]]
-def modeq (n a b : exprℕ()) :=
-«expr = »(«expr % »(a, n), «expr % »(b, n))
+def modeq (n a b : ℕ) :=
+  a % n = b % n deriving [anonymous]
 
 notation:50 a " ≡ " b " [MOD " n "]" => modeq n a b
 
@@ -189,46 +188,61 @@ end Modeq
 
 attribute [local semireducible] Int.Nonneg
 
--- error in Data.Nat.Modeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The natural number less than `lcm n m` congruent to `a` mod `n` and `b` mod `m` -/
-def chinese_remainder'
-(h : «expr ≡ [MOD ]»(a, b, gcd n m)) : {k // «expr ∧ »(«expr ≡ [MOD ]»(k, a, n), «expr ≡ [MOD ]»(k, b, m))} :=
-if hn : «expr = »(n, 0) then ⟨a, begin
-   rw ["[", expr hn, ",", expr gcd_zero_left, "]"] ["at", ident h],
-   split,
-   refl,
-   exact [expr h]
- end⟩ else if hm : «expr = »(m, 0) then ⟨b, begin
-   rw ["[", expr hm, ",", expr gcd_zero_right, "]"] ["at", ident h],
-   split,
-   exact [expr h.symm],
-   refl
- end⟩ else ⟨let (c, d) := xgcd n m in
- int.to_nat «expr % »(«expr / »(«expr + »(«expr * »(«expr * »(n, c), b), «expr * »(«expr * »(m, d), a)), gcd n m), lcm n m), begin
-   rw [expr xgcd_val] [],
-   dsimp [] ["[", expr chinese_remainder'._match_1, "]"] [] [],
-   rw ["[", expr modeq_iff_dvd, ",", expr modeq_iff_dvd, ",", expr int.to_nat_of_nonneg (int.mod_nonneg _ (int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm))), "]"] [],
-   have [ident hnonzero] [":", expr «expr ≠ »((gcd n m : exprℤ()), 0)] [":=", expr begin
-      norm_cast [],
-      rw ["[", expr nat.gcd_eq_zero_iff, ",", expr not_and, "]"] [],
-      exact [expr λ _, hm]
-    end],
-   have [ident hcoedvd] [":", expr ∀
-    t, «expr ∣ »((gcd n m : exprℤ()), «expr * »(t, «expr - »(b, a)))] [":=", expr λ t, h.dvd.mul_left _],
-   have [] [] [":=", expr gcd_eq_gcd_ab n m],
-   split; rw ["[", expr int.mod_def, ",", "<-", expr sub_add, "]"] []; refine [expr dvd_add _ (dvd_mul_of_dvd_left _ _)]; try { norm_cast [] },
-   { rw ["<-", expr sub_eq_iff_eq_add'] ["at", ident this],
-     rw ["[", "<-", expr this, ",", expr sub_mul, ",", "<-", expr add_sub_assoc, ",", expr add_comm, ",", expr add_sub_assoc, ",", "<-", expr mul_sub, ",", expr int.add_div_of_dvd_left, ",", expr int.mul_div_cancel_left _ hnonzero, ",", expr int.mul_div_assoc _ h.dvd, ",", "<-", expr sub_sub, ",", expr sub_self, ",", expr zero_sub, ",", expr dvd_neg, ",", expr mul_assoc, "]"] [],
-     exact [expr dvd_mul_right _ _],
-     norm_cast [],
-     exact [expr dvd_mul_right _ _] },
-   { exact [expr dvd_lcm_left n m] },
-   { rw ["<-", expr sub_eq_iff_eq_add] ["at", ident this],
-     rw ["[", "<-", expr this, ",", expr sub_mul, ",", expr sub_add, ",", "<-", expr mul_sub, ",", expr int.sub_div_of_dvd, ",", expr int.mul_div_cancel_left _ hnonzero, ",", expr int.mul_div_assoc _ h.dvd, ",", "<-", expr sub_add, ",", expr sub_self, ",", expr zero_add, ",", expr mul_assoc, "]"] [],
-     exact [expr dvd_mul_right _ _],
-     exact [expr hcoedvd _] },
-   { exact [expr dvd_lcm_right n m] }
- end⟩
+def chinese_remainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
+  if hn : n = 0 then
+    ⟨a,
+      by 
+        rw [hn, gcd_zero_left] at h 
+        constructor 
+        rfl 
+        exact h⟩
+  else
+    if hm : m = 0 then
+      ⟨b,
+        by 
+          rw [hm, gcd_zero_right] at h 
+          constructor 
+          exact h.symm 
+          rfl⟩
+    else
+      ⟨let (c, d) := xgcd n m 
+        Int.toNat ((((n*c)*b)+(m*d)*a) / gcd n m % lcm n m),
+        by 
+          rw [xgcd_val]
+          dsimp [chinese_remainder'._match_1]
+          rw [modeq_iff_dvd, modeq_iff_dvd,
+            Int.to_nat_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm)))]
+          have hnonzero : (gcd n m : ℤ) ≠ 0 :=
+            by 
+              normCast 
+              rw [Nat.gcd_eq_zero_iffₓ, not_and]
+              exact fun _ => hm 
+          have hcoedvd : ∀ t, (gcd n m : ℤ) ∣ t*b - a := fun t => h.dvd.mul_left _ 
+          have  := gcd_eq_gcd_ab n m 
+          constructor <;>
+            rw [Int.mod_def, ←sub_add] <;>
+              refine' dvd_add _ (dvd_mul_of_dvd_left _ _) <;>
+                try 
+                  normCast
+          ·
+            rw [←sub_eq_iff_eq_add'] at this 
+            rw [←this, sub_mul, ←add_sub_assoc, add_commₓ, add_sub_assoc, ←mul_sub, Int.add_div_of_dvd_left,
+              Int.mul_div_cancel_left _ hnonzero, Int.mul_div_assoc _ h.dvd, ←sub_sub, sub_self, zero_sub, dvd_neg,
+              mul_assocₓ]
+            exact dvd_mul_right _ _ 
+            normCast 
+            exact dvd_mul_right _ _
+          ·
+            exact dvd_lcm_left n m
+          ·
+            rw [←sub_eq_iff_eq_add] at this 
+            rw [←this, sub_mul, sub_add, ←mul_sub, Int.sub_div_of_dvd, Int.mul_div_cancel_left _ hnonzero,
+              Int.mul_div_assoc _ h.dvd, ←sub_add, sub_self, zero_addₓ, mul_assocₓ]
+            exact dvd_mul_right _ _ 
+            exact hcoedvd _
+          ·
+            exact dvd_lcm_right n m⟩
 
 /-- The natural number less than `n*m` congruent to `a` mod `n` and `b` mod `m` -/
 def chinese_remainder (co : coprime n m) (a b : ℕ) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
@@ -236,20 +250,16 @@ def chinese_remainder (co : coprime n m) (a b : ℕ) : { k // k ≡ a [MOD n] �
     (by 
       convert modeq_one)
 
--- error in Data.Nat.Modeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem chinese_remainder'_lt_lcm
-(h : «expr ≡ [MOD ]»(a, b, gcd n m))
-(hn : «expr ≠ »(n, 0))
-(hm : «expr ≠ »(m, 0)) : «expr < »(«expr↑ »(chinese_remainder' h), lcm n m) :=
-begin
-  dsimp ["only"] ["[", expr chinese_remainder', "]"] [] [],
-  rw ["[", expr dif_neg hn, ",", expr dif_neg hm, ",", expr subtype.coe_mk, ",", expr xgcd_val, ",", "<-", expr int.to_nat_coe_nat (lcm n m), "]"] [],
-  have [ident lcm_pos] [] [":=", expr int.coe_nat_pos.mpr (nat.pos_of_ne_zero (lcm_ne_zero hn hm))],
-  exact [expr (int.to_nat_lt_to_nat lcm_pos).mpr (int.mod_lt_of_pos _ lcm_pos)]
-end
+theorem chinese_remainder'_lt_lcm (h : a ≡ b [MOD gcd n m]) (hn : n ≠ 0) (hm : m ≠ 0) :
+  ↑chinese_remainder' h < lcm n m :=
+  by 
+    dsimp only [chinese_remainder']
+    rw [dif_neg hn, dif_neg hm, Subtype.coe_mk, xgcd_val, ←Int.to_nat_coe_nat (lcm n m)]
+    have lcm_pos := int.coe_nat_pos.mpr (Nat.pos_of_ne_zeroₓ (lcm_ne_zero hn hm))
+    exact (Int.to_nat_lt_to_nat lcm_pos).mpr (Int.mod_lt_of_pos _ lcm_pos)
 
 theorem chinese_remainder_lt_mul (co : coprime n m) (a b : ℕ) (hn : n ≠ 0) (hm : m ≠ 0) :
-  «expr↑ » (chinese_remainder co a b) < n*m :=
+  ↑chinese_remainder co a b < n*m :=
   lt_of_lt_of_leₓ (chinese_remainder'_lt_lcm _ hn hm) (le_of_eqₓ co.lcm_eq_mul)
 
 theorem modeq_and_modeq_iff_modeq_mul {a b m n : ℕ} (hmn : coprime m n) :
@@ -292,22 +302,28 @@ theorem div_mod_eq_mod_mul_div (a b c : ℕ) : a / b % c = (a % b*c) / b :=
         ←@add_left_cancel_iffₓ _ _ ((a % b*c) % b), add_left_commₓ, ←add_assocₓ ((a % b*c) % b), mod_add_div,
         ←mul_assocₓ, mod_add_div, mod_mul_right_mod]
 
--- error in Data.Nat.Modeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem add_mod_add_ite
-(a
- b
- c : exprℕ()) : «expr = »(«expr + »(«expr % »(«expr + »(a, b), c), if «expr ≤ »(c, «expr + »(«expr % »(a, c), «expr % »(b, c))) then c else 0), «expr + »(«expr % »(a, c), «expr % »(b, c))) :=
-have «expr = »(«expr % »(«expr + »(a, b), c), «expr % »(«expr + »(«expr % »(a, c), «expr % »(b, c)), c)), from «expr $ »((mod_modeq _ _).add, mod_modeq _ _).symm,
-if hc0 : «expr = »(c, 0) then by simp [] [] [] ["[", expr hc0, "]"] [] [] else begin
-  rw [expr this] [],
-  split_ifs [] [],
-  { have [ident h2] [":", expr «expr < »(«expr / »(«expr + »(«expr % »(a, c), «expr % »(b, c)), c), 2)] [],
-    from [expr nat.div_lt_of_lt_mul (by rw [expr mul_two] []; exact [expr add_lt_add (nat.mod_lt _ (nat.pos_of_ne_zero hc0)) (nat.mod_lt _ (nat.pos_of_ne_zero hc0))])],
-    have [ident h0] [":", expr «expr < »(0, «expr / »(«expr + »(«expr % »(a, c), «expr % »(b, c)), c))] [],
-    from [expr nat.div_pos h (nat.pos_of_ne_zero hc0)],
-    rw ["[", "<-", expr @add_right_cancel_iff _ _ «expr * »(c, «expr / »(«expr + »(«expr % »(a, c), «expr % »(b, c)), c)), ",", expr add_comm _ c, ",", expr add_assoc, ",", expr mod_add_div, ",", expr le_antisymm (le_of_lt_succ h2) h0, ",", expr mul_one, ",", expr add_comm, "]"] [] },
-  { rw ["[", expr nat.mod_eq_of_lt (lt_of_not_ge h), ",", expr add_zero, "]"] [] }
-end
+theorem add_mod_add_ite (a b c : ℕ) : (((a+b) % c)+if c ≤ (a % c)+b % c then c else 0) = (a % c)+b % c :=
+  have  : (a+b) % c = ((a % c)+b % c) % c := ((mod_modeq _ _).add$ mod_modeq _ _).symm 
+  if hc0 : c = 0 then
+    by 
+      simp [hc0]
+  else
+    by 
+      rw [this]
+      splitIfs
+      ·
+        have h2 : ((a % c)+b % c) / c < 2 
+        exact
+          Nat.div_lt_of_lt_mul
+            (by 
+              rw [mul_two] <;>
+                exact add_lt_add (Nat.mod_ltₓ _ (Nat.pos_of_ne_zeroₓ hc0)) (Nat.mod_ltₓ _ (Nat.pos_of_ne_zeroₓ hc0)))
+        have h0 : 0 < ((a % c)+b % c) / c 
+        exact Nat.div_pos h (Nat.pos_of_ne_zeroₓ hc0)
+        rw [←@add_right_cancel_iffₓ _ _ (c*((a % c)+b % c) / c), add_commₓ _ c, add_assocₓ, mod_add_div,
+          le_antisymmₓ (le_of_lt_succ h2) h0, mul_oneₓ, add_commₓ]
+      ·
+        rw [Nat.mod_eq_of_ltₓ (lt_of_not_geₓ h), add_zeroₓ]
 
 theorem add_mod_of_add_mod_lt {a b c : ℕ} (hc : ((a % c)+b % c) < c) : (a+b) % c = (a % c)+b % c :=
   by 
@@ -472,7 +488,7 @@ theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
           fun n hn h₁ =>
             by 
               rw [←Option.some_inj, ←List.nth_le_nth]
-              conv  => toLHS rw [←h (List.length (a :: l) - n)]
+              conv  => lhs rw [←h (List.length (a :: l) - n)]
               rw [nth_rotate hn, add_tsub_cancel_of_le (le_of_ltₓ hn), Nat.mod_selfₓ, nth_le_repeat]
               rfl⟩,
     fun ⟨a, ha⟩ n =>

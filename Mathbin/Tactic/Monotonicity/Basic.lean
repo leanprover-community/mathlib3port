@@ -8,14 +8,17 @@ open Lean Lean.Parser Interactive
 
 open Interactive.Types
 
--- error in Tactic.Monotonicity.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
-@[derive #[expr inhabited]] structure mono_cfg := (unify := ff)
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+structure mono_cfg where 
+  unify := ff deriving [anonymous]
 
--- error in Tactic.Monotonicity.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
-@[derive #["[", expr decidable_eq, ",", expr has_reflect, ",", expr inhabited, "]"]] inductive mono_selection : Type
-| left : mono_selection
-| right : mono_selection
-| both : mono_selection
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+inductive mono_selection : Type
+  | left : mono_selection
+  | right : mono_selection
+  | both : mono_selection deriving [anonymous], [anonymous], [anonymous]
 
 initialize 
   registerTraceClass.1 `mono.relation

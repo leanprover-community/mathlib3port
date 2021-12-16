@@ -12,7 +12,7 @@ the limit of `f`.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 universe v u₁ u₂
 

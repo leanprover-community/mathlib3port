@@ -27,7 +27,7 @@ which allows specifying a particular choice of terminal object and binary produc
 
 universe v u
 
-noncomputable theory
+noncomputable section 
 
 namespace CategoryTheory
 

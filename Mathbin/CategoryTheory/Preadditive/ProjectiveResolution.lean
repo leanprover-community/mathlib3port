@@ -30,7 +30,7 @@ we can construct a functor `projective_resolutions C : C ⥤ homotopy_category C
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 
@@ -171,7 +171,7 @@ theorem lift_f_one_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y
 def lift_f_succ {Y Z : C} (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) (n : ℕ)
   (g : P.complex.X n ⟶ Q.complex.X n) (g' : P.complex.X (n+1) ⟶ Q.complex.X (n+1))
   (w : g' ≫ Q.complex.d (n+1) n = P.complex.d (n+1) n ≫ g) :
-  Σ'g'' : P.complex.X (n+2) ⟶ Q.complex.X (n+2), g'' ≫ Q.complex.d (n+2) (n+1) = P.complex.d (n+2) (n+1) ≫ g' :=
+  Σ' g'' : P.complex.X (n+2) ⟶ Q.complex.X (n+2), g'' ≫ Q.complex.d (n+2) (n+1) = P.complex.d (n+2) (n+1) ≫ g' :=
   ⟨exact.lift (P.complex.d (n+2) (n+1) ≫ g') (Q.complex.d (n+2) (n+1)) (Q.complex.d (n+1) n)
       (by 
         simp [w]),
@@ -204,8 +204,6 @@ theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : 
     ·
       dsimp 
       simp 
-
-attribute [irreducible] lift
 
 end ProjectiveResolution
 
@@ -251,7 +249,7 @@ def lift_homotopy_zero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveRes
       simp [lift_homotopy_zero_one]
     ·
       rintro n ⟨g, g', w⟩
-      fsplit
+      fconstructor
       ·
         exact lift_homotopy_zero_succ f n g g' w
       ·
@@ -276,8 +274,6 @@ def lift_comp_homotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (P : ProjectiveRe
   (R : ProjectiveResolution Z) : Homotopy (lift (f ≫ g) P R) (lift f P Q ≫ lift g Q R) :=
   by 
     apply lift_homotopy (f ≫ g) <;> simp 
-
-attribute [irreducible] lift_homotopy_zero lift_homotopy lift_id_homotopy lift_comp_homotopy
 
 /-- Any two projective resolutions are homotopy equivalent. -/
 def HomotopyEquiv {X : C} (P Q : ProjectiveResolution X) : HomotopyEquiv P.complex Q.complex :=

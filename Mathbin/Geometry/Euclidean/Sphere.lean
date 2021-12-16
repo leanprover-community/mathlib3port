@@ -50,33 +50,43 @@ which are used to deduce corresponding results for Euclidean affine spaces.
 -/
 
 
--- error in Geometry.Euclidean.Sphere: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mul_norm_eq_abs_sub_sq_norm
-{x y z : V}
-(h₁ : «expr∃ , »((k : exprℝ()), «expr ∧ »(«expr ≠ »(k, 1), «expr = »(«expr + »(x, y), «expr • »(k, «expr - »(x, y))))))
-(h₂ : «expr = »(«expr∥ ∥»(«expr - »(z, y)), «expr∥ ∥»(«expr + »(z, y)))) : «expr = »(«expr * »(«expr∥ ∥»(«expr - »(x, y)), «expr∥ ∥»(«expr + »(x, y))), «expr| |»(«expr - »(«expr ^ »(«expr∥ ∥»(«expr + »(z, y)), 2), «expr ^ »(«expr∥ ∥»(«expr - »(z, x)), 2)))) :=
-begin
-  obtain ["⟨", ident k, ",", ident hk_ne_one, ",", ident hk, "⟩", ":=", expr h₁],
-  let [ident r] [] [":=", expr «expr * »(«expr ⁻¹»(«expr - »(k, 1)), «expr + »(k, 1))],
-  have [ident hxy] [":", expr «expr = »(x, «expr • »(r, y))] [],
-  { rw ["[", "<-", expr smul_smul, ",", expr eq_inv_smul_iff₀ (sub_ne_zero.mpr hk_ne_one), ",", "<-", expr sub_eq_zero, "]"] [],
-    calc
-      «expr = »(«expr - »(«expr • »(«expr - »(k, 1), x), «expr • »(«expr + »(k, 1), y)), «expr - »(«expr - »(«expr • »(k, x), x), «expr + »(«expr • »(k, y), y))) : by simp_rw ["[", expr sub_smul, ",", expr add_smul, ",", expr one_smul, "]"] []
-      «expr = »(..., «expr - »(«expr - »(«expr • »(k, x), «expr • »(k, y)), «expr + »(x, y))) : by simp_rw ["[", "<-", expr sub_sub, ",", expr sub_right_comm, "]"] []
-      «expr = »(..., «expr - »(«expr • »(k, «expr - »(x, y)), «expr + »(x, y))) : by rw ["<-", expr smul_sub k x y] []
-      «expr = »(..., 0) : sub_eq_zero.mpr hk.symm },
-  have [ident hzy] [":", expr «expr = »(«expr⟪ , ⟫»(z, y), 0)] [],
-  by rwa ["[", expr inner_eq_zero_iff_angle_eq_pi_div_two, ",", "<-", expr norm_add_eq_norm_sub_iff_angle_eq_pi_div_two, ",", expr eq_comm, "]"] [],
-  have [ident hzx] [":", expr «expr = »(«expr⟪ , ⟫»(z, x), 0)] [":=", expr by rw ["[", expr hxy, ",", expr inner_smul_right, ",", expr hzy, ",", expr mul_zero, "]"] []],
-  calc
-    «expr = »(«expr * »(«expr∥ ∥»(«expr - »(x, y)), «expr∥ ∥»(«expr + »(x, y))), «expr * »(«expr∥ ∥»(«expr • »(«expr - »(r, 1), y)), «expr∥ ∥»(«expr • »(«expr + »(r, 1), y)))) : by simp [] [] [] ["[", expr sub_smul, ",", expr add_smul, ",", expr hxy, "]"] [] []
-    «expr = »(..., «expr * »(«expr * »(«expr∥ ∥»(«expr - »(r, 1)), «expr∥ ∥»(y)), «expr * »(«expr∥ ∥»(«expr + »(r, 1)), «expr∥ ∥»(y)))) : by simp_rw ["[", expr norm_smul, "]"] []
-    «expr = »(..., «expr * »(«expr * »(«expr∥ ∥»(«expr - »(r, 1)), «expr∥ ∥»(«expr + »(r, 1))), «expr ^ »(«expr∥ ∥»(y), 2))) : by ring []
-    «expr = »(..., «expr| |»(«expr * »(«expr * »(«expr - »(r, 1), «expr + »(r, 1)), «expr ^ »(«expr∥ ∥»(y), 2)))) : by simp [] [] [] ["[", expr abs_mul, ",", expr norm_eq_abs, "]"] [] []
-    «expr = »(..., «expr| |»(«expr - »(«expr * »(«expr ^ »(r, 2), «expr ^ »(«expr∥ ∥»(y), 2)), «expr ^ »(«expr∥ ∥»(y), 2)))) : by ring_nf [] [] []
-    «expr = »(..., «expr| |»(«expr - »(«expr ^ »(«expr∥ ∥»(x), 2), «expr ^ »(«expr∥ ∥»(y), 2)))) : by simp [] [] [] ["[", expr hxy, ",", expr norm_smul, ",", expr mul_pow, ",", expr norm_eq_abs, ",", expr sq_abs, "]"] [] []
-    «expr = »(..., «expr| |»(«expr - »(«expr ^ »(«expr∥ ∥»(«expr + »(z, y)), 2), «expr ^ »(«expr∥ ∥»(«expr - »(z, x)), 2)))) : by simp [] [] [] ["[", expr norm_add_sq_real, ",", expr norm_sub_sq_real, ",", expr hzy, ",", expr hzx, ",", expr abs_sub_comm, "]"] [] []
-end
+theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧ (x+y) = k • (x - y)) (h₂ : ∥z - y∥ = ∥z+y∥) :
+  (∥x - y∥*∥x+y∥) = |(∥z+y∥^2) - (∥z - x∥^2)| :=
+  by 
+    obtain ⟨k, hk_ne_one, hk⟩ := h₁ 
+    let r := (k - 1)⁻¹*k+1
+    have hxy : x = r • y
+    ·
+      rw [←smul_smul, eq_inv_smul_iff₀ (sub_ne_zero.mpr hk_ne_one), ←sub_eq_zero]
+      calc (k - 1) • x - (k+1) • y = k • x - x - (k • y)+y :=
+        by 
+          simpRw [sub_smul, add_smul, one_smul]_ = k • x - k • y - x+y :=
+        by 
+          simpRw [←sub_sub, sub_right_comm]_ = k • (x - y) - x+y :=
+        by 
+          rw [←smul_sub k x y]_ = 0 :=
+        sub_eq_zero.mpr hk.symm 
+    have hzy : ⟪z, y⟫ = 0
+    ·
+      rwa [inner_eq_zero_iff_angle_eq_pi_div_two, ←norm_add_eq_norm_sub_iff_angle_eq_pi_div_two, eq_comm]
+    have hzx : ⟪z, x⟫ = 0 :=
+      by 
+        rw [hxy, inner_smul_right, hzy, mul_zero]
+    calc (∥x - y∥*∥x+y∥) = ∥(r - 1) • y∥*∥(r+1) • y∥ :=
+      by 
+        simp [sub_smul, add_smul, hxy]_ = (∥r - 1∥*∥y∥)*∥r+1∥*∥y∥ :=
+      by 
+        simpRw [norm_smul]_ = (∥r - 1∥*∥r+1∥)*∥y∥^2 :=
+      by 
+        ring _ = |((r - 1)*r+1)*∥y∥^2| :=
+      by 
+        simp [abs_mul, norm_eq_abs]_ = |((r^2)*∥y∥^2) - (∥y∥^2)| :=
+      by 
+        ringNF _ = |(∥x∥^2) - (∥y∥^2)| :=
+      by 
+        simp [hxy, norm_smul, mul_powₓ, norm_eq_abs, sq_abs]_ = |(∥z+y∥^2) - (∥z - x∥^2)| :=
+      by 
+        simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
 
 end InnerProductGeometry
 
@@ -95,25 +105,23 @@ variable {P : Type _} [MetricSpace P] [NormedAddTorsor V P]
 
 include V
 
--- error in Geometry.Euclidean.Sphere: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `P` is a point on the line `AB` and `Q` is equidistant from `A` and `B`, then
 `AP * BP = abs (BQ ^ 2 - PQ ^ 2)`. -/
-theorem mul_dist_eq_abs_sub_sq_dist
-{a b p q : P}
-(hp : «expr∃ , »((k : exprℝ()), «expr ∧ »(«expr ≠ »(k, 1), «expr = »(«expr -ᵥ »(b, p), «expr • »(k, «expr -ᵥ »(a, p))))))
-(hq : «expr = »(dist a q, dist b q)) : «expr = »(«expr * »(dist a p, dist b p), «expr| |»(«expr - »(«expr ^ »(dist b q, 2), «expr ^ »(dist p q, 2)))) :=
-begin
-  let [ident m] [":", expr P] [":=", expr midpoint exprℝ() a b],
-  obtain ["⟨", ident v, ",", ident h1, ",", ident h2, ",", ident h3, "⟩", ":=", "⟨", expr vsub_sub_vsub_cancel_left, ",", expr v a p m, ",", expr v p q m, ",", expr v a q m, "⟩"],
-  have [ident h] [":", expr ∀
-   r, «expr = »(«expr -ᵥ »(b, r), «expr + »(«expr -ᵥ »(m, r), «expr -ᵥ »(m, a)))] [":=", expr λ
-   r, by rw ["[", expr midpoint_vsub_left, ",", "<-", expr right_vsub_midpoint, ",", expr add_comm, ",", expr vsub_add_vsub_cancel, "]"] []],
-  iterate [4] { rw [expr dist_eq_norm_vsub V] [] },
-  rw ["[", "<-", expr h1, ",", "<-", expr h2, ",", expr h, ",", expr h, "]"] [],
-  rw ["[", "<-", expr h1, ",", expr h, "]"] ["at", ident hp],
-  rw ["[", expr dist_eq_norm_vsub V a q, ",", expr dist_eq_norm_vsub V b q, ",", "<-", expr h3, ",", expr h, "]"] ["at", ident hq],
-  exact [expr mul_norm_eq_abs_sub_sq_norm hp hq]
-end
+theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧ b -ᵥ p = k • (a -ᵥ p))
+  (hq : dist a q = dist b q) : (dist a p*dist b p) = |(dist b q^2) - (dist p q^2)| :=
+  by 
+    let m : P := midpoint ℝ a b 
+    obtain ⟨v, h1, h2, h3⟩ := vsub_sub_vsub_cancel_left, v a p m, v p q m, v a q m 
+    have h : ∀ r, b -ᵥ r = (m -ᵥ r)+m -ᵥ a :=
+      fun r =>
+        by 
+          rw [midpoint_vsub_left, ←right_vsub_midpoint, add_commₓ, vsub_add_vsub_cancel]
+    iterate 4 
+      rw [dist_eq_norm_vsub V]
+    rw [←h1, ←h2, h, h]
+    rw [←h1, h] at hp 
+    rw [dist_eq_norm_vsub V a q, dist_eq_norm_vsub V b q, ←h3, h] at hq 
+    exact mul_norm_eq_abs_sub_sq_norm hp hq
 
 /-- If `A`, `B`, `C`, `D` are cospherical and `P` is on both lines `AB` and `CD`, then
 `AP * BP = CP * DP`. -/
@@ -157,35 +165,39 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P} (h 
       byContra hnot <;> simp_all only [not_not, one_smul]
     exacts[hab (vsub_left_cancel hab₁).symm, hcd (vsub_left_cancel hcd₁).symm]
 
--- error in Geometry.Euclidean.Sphere: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Ptolemy’s Theorem**. -/
-theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical
-{a b c d p : P}
-(h : cospherical ({a, b, c, d} : set P))
-(hapc : «expr = »(«expr∠»() a p c, exprπ()))
-(hbpd : «expr = »(«expr∠»() b p d, exprπ())) : «expr = »(«expr + »(«expr * »(dist a b, dist c d), «expr * »(dist b c, dist d a)), «expr * »(dist a c, dist b d)) :=
-begin
-  have [ident h'] [":", expr cospherical ({a, c, b, d} : set P)] [],
-  { rwa [expr set.insert_comm c b {d}] [] },
-  have [ident hmul] [] [":=", expr mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi h' hapc hbpd],
-  have [ident hbp] [] [":=", expr left_dist_ne_zero_of_angle_eq_pi hbpd],
-  have [ident h₁] [":", expr «expr = »(dist c d, «expr * »(«expr / »(dist c p, dist b p), dist a b))] [],
-  { rw ["[", expr dist_mul_of_eq_angle_of_dist_mul b p a c p d, ",", expr dist_comm a b, "]"] [],
-    { rw ["[", expr angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi hbpd hapc, ",", expr angle_comm, "]"] [] },
-    all_goals { field_simp [] ["[", expr mul_comm, ",", expr hmul, "]"] [] [] } },
-  have [ident h₂] [":", expr «expr = »(dist d a, «expr * »(«expr / »(dist a p, dist b p), dist b c))] [],
-  { rw ["[", expr dist_mul_of_eq_angle_of_dist_mul c p b d p a, ",", expr dist_comm c b, "]"] [],
-    { rwa ["[", expr angle_comm, ",", expr angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi, "]"] [],
-      rwa [expr angle_comm] [] },
-    all_goals { field_simp [] ["[", expr mul_comm, ",", expr hmul, "]"] [] [] } },
-  have [ident h₃] [":", expr «expr = »(dist d p, «expr / »(«expr * »(dist a p, dist c p), dist b p))] [],
-  { field_simp [] ["[", expr mul_comm, ",", expr hmul, "]"] [] [] },
-  have [ident h₄] [":", expr ∀
-   x
-   y : exprℝ(), «expr = »(«expr * »(x, «expr * »(y, x)), «expr * »(«expr * »(x, x), y))] [":=", expr λ
-   x y, by rw ["[", expr mul_left_comm, ",", expr mul_comm, "]"] []],
-  field_simp [] ["[", expr h₁, ",", expr h₂, ",", expr dist_eq_add_dist_of_angle_eq_pi hbpd, ",", expr h₃, ",", expr hbp, ",", expr dist_comm a b, ",", expr h₄, ",", "<-", expr sq, ",", expr dist_sq_mul_dist_add_dist_sq_mul_dist b, ",", expr hapc, "]"] [] []
-end
+theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : cospherical ({a, b, c, d} : Set P))
+  (hapc : ∠ a p c = π) (hbpd : ∠ b p d = π) : ((dist a b*dist c d)+dist b c*dist d a) = dist a c*dist b d :=
+  by 
+    have h' : cospherical ({a, c, b, d} : Set P)
+    ·
+      rwa [Set.insert_comm c b {d}]
+    have hmul := mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi h' hapc hbpd 
+    have hbp := left_dist_ne_zero_of_angle_eq_pi hbpd 
+    have h₁ : dist c d = (dist c p / dist b p)*dist a b
+    ·
+      rw [dist_mul_of_eq_angle_of_dist_mul b p a c p d, dist_comm a b]
+      ·
+        rw [angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi hbpd hapc, angle_comm]
+      all_goals 
+        fieldSimp [mul_commₓ, hmul]
+    have h₂ : dist d a = (dist a p / dist b p)*dist b c
+    ·
+      rw [dist_mul_of_eq_angle_of_dist_mul c p b d p a, dist_comm c b]
+      ·
+        rwa [angle_comm, angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi]
+        rwa [angle_comm]
+      all_goals 
+        fieldSimp [mul_commₓ, hmul]
+    have h₃ : dist d p = (dist a p*dist c p) / dist b p
+    ·
+      fieldSimp [mul_commₓ, hmul]
+    have h₄ : ∀ x y : ℝ, (x*y*x) = (x*x)*y :=
+      fun x y =>
+        by 
+          rw [mul_left_commₓ, mul_commₓ]
+    fieldSimp [h₁, h₂, dist_eq_add_dist_of_angle_eq_pi hbpd, h₃, hbp, dist_comm a b, h₄, ←sq,
+      dist_sq_mul_dist_add_dist_sq_mul_dist b, hapc]
 
 end EuclideanGeometry
 

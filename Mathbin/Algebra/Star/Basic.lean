@@ -77,7 +77,7 @@ theorem star_mul' [CommMonoidₓ R] [StarMonoid R] (x y : R) : star (x*y) = star
 
 /-- `star` as an `mul_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
-def starMulEquiv [Monoidₓ R] [StarMonoid R] : R ≃* «expr ᵐᵒᵖ» R :=
+def starMulEquiv [Monoidₓ R] [StarMonoid R] : R ≃* Rᵐᵒᵖ :=
   { (HasInvolutiveStar.star_involutive.toEquiv star).trans op_equiv with toFun := fun x => MulOpposite.op (star x),
     map_mul' := fun x y => (star_mul x y).symm ▸ MulOpposite.op_mul _ _ }
 
@@ -90,21 +90,21 @@ variable (R)
 
 @[simp]
 theorem star_one [Monoidₓ R] [StarMonoid R] : star (1 : R) = 1 :=
-  op_injective$ (starMulEquiv : R ≃* «expr ᵐᵒᵖ» R).map_one.trans (op_one _).symm
+  op_injective$ (starMulEquiv : R ≃* Rᵐᵒᵖ).map_one.trans (op_one _).symm
 
 variable {R}
 
 @[simp]
 theorem star_pow [Monoidₓ R] [StarMonoid R] (x : R) (n : ℕ) : star (x ^ n) = star x ^ n :=
-  op_injective$ ((starMulEquiv : R ≃* «expr ᵐᵒᵖ» R).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
+  op_injective$ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
 
 @[simp]
 theorem star_inv [Groupₓ R] [StarMonoid R] (x : R) : star (x⁻¹) = star x⁻¹ :=
-  op_injective$ ((starMulEquiv : R ≃* «expr ᵐᵒᵖ» R).toMonoidHom.map_inv x).trans (op_inv (star x)).symm
+  op_injective$ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_inv x).trans (op_inv (star x)).symm
 
 @[simp]
 theorem star_zpow [Groupₓ R] [StarMonoid R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective$ ((starMulEquiv : R ≃* «expr ᵐᵒᵖ» R).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective$ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
 
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
@@ -117,7 +117,7 @@ open_locale BigOperators
 
 @[simp]
 theorem star_prod [CommMonoidₓ R] [StarMonoid R] {α : Type _} (s : Finset α) (f : α → R) :
-  star (∏x in s, f x) = ∏x in s, star (f x) :=
+  star (∏ x in s, f x) = ∏ x in s, star (f x) :=
   (starMulAut : R ≃* R).map_prod _ _
 
 end 
@@ -187,7 +187,7 @@ open_locale BigOperators
 
 @[simp]
 theorem star_sum [AddCommMonoidₓ R] [StarAddMonoid R] {α : Type _} (s : Finset α) (f : α → R) :
-  star (∑x in s, f x) = ∑x in s, star (f x) :=
+  star (∑ x in s, f x) = ∑ x in s, star (f x) :=
   (starAddEquiv : R ≃+ R).map_sum _ _
 
 end 
@@ -205,8 +205,8 @@ instance (priority := 100) StarRing.toStarAddMonoid [Semiringₓ R] [StarRing R]
 
 /-- `star` as an `ring_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
-def starRingEquiv [Semiringₓ R] [StarRing R] : R ≃+* «expr ᵐᵒᵖ» R :=
-  { starAddEquiv.trans (MulOpposite.opAddEquiv : R ≃+ «expr ᵐᵒᵖ» R), starMulEquiv with
+def starRingEquiv [Semiringₓ R] [StarRing R] : R ≃+* Rᵐᵒᵖ :=
+  { starAddEquiv.trans (MulOpposite.opAddEquiv : R ≃+ Rᵐᵒᵖ), starMulEquiv with
     toFun := fun x => MulOpposite.op (star x) }
 
 /-- `star` as a `ring_aut` for commutative `R`. This is used to denote complex
@@ -232,11 +232,11 @@ alias star_ring_aut_self_apply ← IsROrC.conj_conj
 
 @[simp]
 theorem star_inv' [DivisionRing R] [StarRing R] (x : R) : star (x⁻¹) = star x⁻¹ :=
-  op_injective$ ((starRingEquiv : R ≃+* «expr ᵐᵒᵖ» R).toRingHom.map_inv x).trans (op_inv (star x)).symm
+  op_injective$ ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_inv x).trans (op_inv (star x)).symm
 
 @[simp]
 theorem star_zpow₀ [DivisionRing R] [StarRing R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective$ ((starRingEquiv : R ≃+* «expr ᵐᵒᵖ» R).toRingHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective$ ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_zpow x z).trans (op_zpow (star x) z).symm
 
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
@@ -319,21 +319,21 @@ variable [Monoidₓ R] [StarMonoid R]
 instance : StarMonoid (Units R) :=
   { star :=
       fun u =>
-        { val := star u, inv := star («expr↑ » (u⁻¹)),
+        { val := star u, inv := star (↑u⁻¹),
           val_inv := (star_mul _ _).symm.trans$ (congr_argₓ star u.inv_val).trans$ star_one _,
           inv_val := (star_mul _ _).symm.trans$ (congr_argₓ star u.val_inv).trans$ star_one _ },
     star_involutive := fun u => Units.ext (star_involutive _), star_mul := fun u v => Units.ext (star_mul _ _) }
 
 @[simp]
-theorem coe_star (u : Units R) : «expr↑ » (star u) = (star («expr↑ » u) : R) :=
+theorem coe_star (u : Units R) : ↑star u = (star (↑u) : R) :=
   rfl
 
 @[simp]
-theorem coe_star_inv (u : Units R) : «expr↑ » (star u⁻¹) = (star («expr↑ » (u⁻¹)) : R) :=
+theorem coe_star_inv (u : Units R) : ↑star u⁻¹ = (star (↑u⁻¹) : R) :=
   rfl
 
 instance {A : Type _} [HasStar A] [HasScalar R A] [StarModule R A] : StarModule (Units R) A :=
-  ⟨fun u a => (star_smul («expr↑ » u) a : _)⟩
+  ⟨fun u a => (star_smul (↑u) a : _)⟩
 
 end Units
 
@@ -355,33 +355,33 @@ theorem Ringₓ.inverse_star [Semiringₓ R] [StarRing R] (a : R) : Ring.inverse
 namespace MulOpposite
 
 /-- The opposite type carries the same star operation. -/
-instance [HasStar R] : HasStar («expr ᵐᵒᵖ» R) :=
+instance [HasStar R] : HasStar (Rᵐᵒᵖ) :=
   { star := fun r => op (star r.unop) }
 
 @[simp]
-theorem unop_star [HasStar R] (r : «expr ᵐᵒᵖ» R) : unop (star r) = star (unop r) :=
+theorem unop_star [HasStar R] (r : Rᵐᵒᵖ) : unop (star r) = star (unop r) :=
   rfl
 
 @[simp]
 theorem op_star [HasStar R] (r : R) : op (star r) = star (op r) :=
   rfl
 
-instance [HasInvolutiveStar R] : HasInvolutiveStar («expr ᵐᵒᵖ» R) :=
+instance [HasInvolutiveStar R] : HasInvolutiveStar (Rᵐᵒᵖ) :=
   { star_involutive := fun r => unop_injective (star_star r.unop) }
 
-instance [Monoidₓ R] [StarMonoid R] : StarMonoid («expr ᵐᵒᵖ» R) :=
+instance [Monoidₓ R] [StarMonoid R] : StarMonoid (Rᵐᵒᵖ) :=
   { star_mul := fun x y => unop_injective (star_mul y.unop x.unop) }
 
-instance [AddMonoidₓ R] [StarAddMonoid R] : StarAddMonoid («expr ᵐᵒᵖ» R) :=
+instance [AddMonoidₓ R] [StarAddMonoid R] : StarAddMonoid (Rᵐᵒᵖ) :=
   { star_add := fun x y => unop_injective (star_add x.unop y.unop) }
 
-instance [Semiringₓ R] [StarRing R] : StarRing («expr ᵐᵒᵖ» R) :=
+instance [Semiringₓ R] [StarRing R] : StarRing (Rᵐᵒᵖ) :=
   { MulOpposite.starAddMonoid with  }
 
 end MulOpposite
 
 /-- A commutative star monoid is a star module over its opposite via
 `monoid.to_opposite_mul_action`. -/
-instance StarMonoid.toOppositeStarModule [CommMonoidₓ R] [StarMonoid R] : StarModule («expr ᵐᵒᵖ» R) R :=
+instance StarMonoid.toOppositeStarModule [CommMonoidₓ R] [StarMonoid R] : StarModule (Rᵐᵒᵖ) R :=
   ⟨fun r s => star_mul' s r.unop⟩
 

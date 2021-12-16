@@ -14,8 +14,11 @@ expr, name, declaration, level, environment, meta, metaprogramming, tactic
 -/
 
 
--- error in Meta.Expr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
-attribute [derive #[expr has_reflect], derive #[expr decidable_eq]] binder_info congr_arg_kind
+open Tactic
+
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+deriving instance [anonymous], [anonymous] for BinderInfo, CongrArgKind
 
 unsafe instance (priority := 100) has_reflect.has_to_pexpr {α} [has_reflect α] : has_to_pexpr α :=
   ⟨fun b => pexpr.of_expr (reflect b)⟩
@@ -261,11 +264,13 @@ end Level
 /-! ### Declarations about `binder` -/
 
 
--- error in Meta.Expr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
 /-- The type of binders containing a name, the binding info and the binding type -/
-@[derive #[expr decidable_eq], derive #[expr inhabited]]
-meta
-structure binder := (name : name) (info : binder_info) (type : expr)
+unsafe structure binder where 
+  Name : Name 
+  info : BinderInfo 
+  type : expr deriving [anonymous], [anonymous]
 
 namespace Binder
 
@@ -273,8 +278,6 @@ namespace Binder
 protected unsafe def toString (b : binder) : Stringₓ :=
   let (l, r) := b.info.brackets 
   l ++ b.name.to_string ++ " : " ++ b.type.to_string ++ r
-
-open Tactic
 
 unsafe instance : HasToString binder :=
   ⟨binder.to_string⟩
@@ -387,8 +390,6 @@ end Expr
 
 
 namespace Expr
-
-open Tactic
 
 /-- List of names removed by `clean`. All these names must resolve to functions defeq `id`. -/
 unsafe def clean_ids : List Name :=
@@ -603,6 +604,7 @@ unsafe def contains_constant (e : expr) (p : Name → Prop) [DecidablePred p] : 
 
 /--
 Returns true if `e` contains a `sorry`.
+See also `name.contains_sorry`.
 -/
 unsafe def contains_sorry (e : expr) : Bool :=
   e.fold ff fun e' _ b => if (is_sorry e').isSome then tt else b
@@ -993,8 +995,6 @@ end Environment
 
 namespace Expr
 
-open Tactic
-
 /-- `is_eta_expansion_of args univs l` checks whether for all elements `(nm, pr)` in `l` we have
   `pr = nm.{univs} args`.
   Used in `is_eta_expansion`, where `l` consists of the projections and the fields of the value we
@@ -1054,8 +1054,6 @@ end Expr
 
 
 namespace Declaration
-
-open Tactic
 
 /--
 `declaration.update_with_fun f test tgt decl`

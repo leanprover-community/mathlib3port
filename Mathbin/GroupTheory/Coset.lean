@@ -1,3 +1,4 @@
+import Mathbin.Algebra.Quotient 
 import Mathbin.GroupTheory.Subgroup.Basic
 
 /-!
@@ -24,6 +25,8 @@ This file develops the basic theory of left and right cosets.
 * `a +l s`: for `left_add_coset a s`.
 * `s *r a`: for `right_coset s a`.
 * `s +r a`: for `right_add_coset s a`.
+
+* `G ⧸ H` is the quotient of the (additive) group `G` by the (additive) subgroup `H`
 
 ## TODO
 
@@ -223,7 +226,7 @@ theorem left_coset_eq_iff {x y : α} : LeftCoset x s = LeftCoset y s ↔ (x⁻¹
   by 
     rw [Set.ext_iff]
     simpRw [mem_left_coset_iff, SetLike.mem_coe]
-    split 
+    constructor
     ·
       intro h 
       apply (h y).mpr 
@@ -236,11 +239,11 @@ theorem left_coset_eq_iff {x y : α} : LeftCoset x s = LeftCoset y s ↔ (x⁻¹
       exact s.mul_mem_cancel_left h
 
 @[toAdditive right_add_coset_eq_iff]
-theorem right_coset_eq_iff {x y : α} : RightCoset («expr↑ » s) x = RightCoset s y ↔ (y*x⁻¹) ∈ s :=
+theorem right_coset_eq_iff {x y : α} : RightCoset (↑s) x = RightCoset s y ↔ (y*x⁻¹) ∈ s :=
   by 
     rw [Set.ext_iff]
     simpRw [mem_right_coset_iff, SetLike.mem_coe]
-    split 
+    constructor
     ·
       intro h 
       apply (h y).mpr 
@@ -279,12 +282,12 @@ theorem left_rel_r_eq_left_coset_equivalence : @Setoidₓ.R _ (QuotientGroup.lef
 instance left_rel_decidable [DecidablePred (· ∈ s)] : DecidableRel (left_rel s).R :=
   fun x y => ‹DecidablePred (· ∈ s)› _
 
-/-- `quotient s` is the quotient type representing the left cosets of `s`.
-  If `s` is a normal subgroup, `quotient s` is a group -/
+/-- `α ⧸ s` is the quotient type representing the left cosets of `s`.
+  If `s` is a normal subgroup, `α ⧸ s` is a group -/
 @[toAdditive
-      "`quotient s` is the quotient type representing the left cosets of `s`.  If `s` is a\nnormal subgroup, `quotient s` is a group"]
-def Quotientₓ : Type _ :=
-  Quotientₓ (left_rel s)
+      "`α ⧸ s` is the quotient type representing the left cosets of `s`.  If `s` is a\nnormal subgroup, `α ⧸ s` is a group"]
+instance : HasQuotient α (Subgroup α) :=
+  ⟨fun s => Quotientₓ (left_rel s)⟩
 
 /-- The equivalence relation corresponding to the partition of a group by right cosets of a
 subgroup. -/
@@ -311,50 +314,54 @@ namespace QuotientGroup
 variable [Groupₓ α] {s : Subgroup α}
 
 @[toAdditive]
-instance Fintype [Fintype α] (s : Subgroup α) [DecidableRel (left_rel s).R] : Fintype (QuotientGroup.Quotient s) :=
+instance Fintype [Fintype α] (s : Subgroup α) [DecidableRel (left_rel s).R] : Fintype (α ⧸ s) :=
   Quotientₓ.fintype (left_rel s)
 
-/-- The canonical map from a group `α` to the quotient `α/s`. -/
-@[toAdditive "The canonical map from an `add_group` `α` to the quotient `α/s`."]
-abbrev mk (a : α) : Quotientₓ s :=
+/-- The canonical map from a group `α` to the quotient `α ⧸ s`. -/
+@[toAdditive "The canonical map from an `add_group` `α` to the quotient `α ⧸ s`."]
+abbrev mk (a : α) : α ⧸ s :=
   Quotientₓ.mk' a
 
 @[elab_as_eliminator, toAdditive]
-theorem induction_on {C : Quotientₓ s → Prop} (x : Quotientₓ s) (H : ∀ z, C (QuotientGroup.mk z)) : C x :=
+theorem induction_on {C : α ⧸ s → Prop} (x : α ⧸ s) (H : ∀ z, C (QuotientGroup.mk z)) : C x :=
   Quotientₓ.induction_on' x H
 
 @[toAdditive]
-instance : CoeTₓ α (Quotientₓ s) :=
+instance : CoeTₓ α (α ⧸ s) :=
   ⟨mk⟩
 
 @[elab_as_eliminator, toAdditive]
-theorem induction_on' {C : Quotientₓ s → Prop} (x : Quotientₓ s) (H : ∀ z : α, C z) : C x :=
+theorem induction_on' {C : α ⧸ s → Prop} (x : α ⧸ s) (H : ∀ z : α, C z) : C x :=
   Quotientₓ.induction_on' x H
 
+@[simp, toAdditive]
+theorem quotient_lift_on_coe {β} (f : α → β) h (x : α) : Quotientₓ.liftOn' (x : α ⧸ s) f h = f x :=
+  rfl
+
 @[toAdditive]
-theorem forall_coe {C : Quotientₓ s → Prop} : (∀ x : Quotientₓ s, C x) ↔ ∀ x : α, C x :=
+theorem forall_coe {C : α ⧸ s → Prop} : (∀ x : α ⧸ s, C x) ↔ ∀ x : α, C x :=
   ⟨fun hx x => hx _, Quot.ind⟩
 
 @[toAdditive]
-instance (s : Subgroup α) : Inhabited (Quotientₓ s) :=
-  ⟨((1 : α) : Quotientₓ s)⟩
+instance (s : Subgroup α) : Inhabited (α ⧸ s) :=
+  ⟨((1 : α) : α ⧸ s)⟩
 
 @[toAdditive QuotientAddGroup.eq]
-protected theorem Eq {a b : α} : (a : Quotientₓ s) = b ↔ (a⁻¹*b) ∈ s :=
+protected theorem Eq {a b : α} : (a : α ⧸ s) = b ↔ (a⁻¹*b) ∈ s :=
   Quotientₓ.eq'
 
 @[toAdditive QuotientAddGroup.eq']
-theorem eq' {a b : α} : (mk a : Quotientₓ s) = mk b ↔ (a⁻¹*b) ∈ s :=
+theorem eq' {a b : α} : (mk a : α ⧸ s) = mk b ↔ (a⁻¹*b) ∈ s :=
   QuotientGroup.eq
 
 @[toAdditive QuotientAddGroup.out_eq']
-theorem out_eq' (a : Quotientₓ s) : mk a.out' = a :=
+theorem out_eq' (a : α ⧸ s) : mk a.out' = a :=
   Quotientₓ.out_eq' a
 
 variable (s)
 
 @[toAdditive QuotientAddGroup.mk_out'_eq_mul]
-theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : Quotientₓ s).out' = g*h :=
+theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : α ⧸ s).out' = g*h :=
   ⟨⟨g⁻¹*(mk g).out', eq'.mp (mk g).out_eq'.symm⟩,
     by 
       rw [s.coe_mk, mul_inv_cancel_left]⟩
@@ -362,12 +369,12 @@ theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : Quotientₓ s).out' = g*h :
 variable {s}
 
 @[toAdditive QuotientAddGroup.mk_mul_of_mem]
-theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁*g₂) : Quotientₓ s) = mk g₁ :=
+theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁*g₂) : α ⧸ s) = mk g₁ :=
   by 
     rwa [eq', mul_inv_rev, inv_mul_cancel_right, s.inv_mem_iff]
 
 @[toAdditive]
-theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x:α | (x : Quotientₓ s) = g } = LeftCoset g s :=
+theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : α ⧸ s) = g } = LeftCoset g s :=
   Set.ext$
     fun z =>
       by 
@@ -375,7 +382,7 @@ theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x:α | (x : Quotie
 
 @[toAdditive]
 theorem preimage_image_coe (N : Subgroup α) (s : Set α) :
-  coeₓ ⁻¹' ((coeₓ : α → Quotientₓ N) '' s) = ⋃x : N, (fun y : α => y*x) ⁻¹' s :=
+  coeₓ ⁻¹' ((coeₓ : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y*x) ⁻¹' s :=
   by 
     ext x 
     simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union, Set.mem_image,
@@ -413,7 +420,7 @@ def left_coset_equiv_subgroup (g : α) : LeftCoset g s ≃ s :=
 
 /-- The natural bijection between a right coset `s * g` and `s`. -/
 @[toAdditive "The natural bijection between the cosets `s + g` and `s`."]
-def right_coset_equiv_subgroup (g : α) : RightCoset («expr↑ » s) g ≃ s :=
+def right_coset_equiv_subgroup (g : α) : RightCoset (↑s) g ≃ s :=
   ⟨fun x => ⟨x.1*g⁻¹, (mem_right_coset_iff _).1 x.2⟩, fun x => ⟨x.1*g, x.1, x.2, rfl⟩,
     fun ⟨x, hx⟩ =>
       Subtype.eq$
@@ -426,10 +433,10 @@ def right_coset_equiv_subgroup (g : α) : RightCoset («expr↑ » s) g ≃ s :=
 
 /-- A (non-canonical) bijection between a group `α` and the product `(α/s) × s` -/
 @[toAdditive "A (non-canonical) bijection between an add_group `α` and the product `(α/s) × s`"]
-noncomputable def group_equiv_quotient_times_subgroup : α ≃ Quotientₓ s × s :=
-  calc α ≃ ΣL : Quotientₓ s, { x : α // (x : Quotientₓ s) = L } := (Equiv.sigmaPreimageEquiv QuotientGroup.mk).symm 
-    _ ≃ ΣL : Quotientₓ s, LeftCoset (Quotientₓ.out' L) s :=
-    Equiv.sigmaCongrRight
+noncomputable def group_equiv_quotient_times_subgroup : α ≃ (α ⧸ s) × s :=
+  calc α ≃ Σ L : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equivₓ.sigmaPreimageEquiv QuotientGroup.mk).symm 
+    _ ≃ Σ L : α ⧸ s, LeftCoset (Quotientₓ.out' L) s :=
+    Equivₓ.sigmaCongrRight
       fun L =>
         by 
           rw [←eq_class_eq_left_coset]
@@ -437,91 +444,97 @@ noncomputable def group_equiv_quotient_times_subgroup : α ≃ Quotientₓ s × 
             (_root_.subtype fun x : α => Quotientₓ.mk' x = L) ≃
               _root_.subtype fun x : α => Quotientₓ.mk' x = Quotientₓ.mk' _ 
           simp [-Quotientₓ.eq']
-    _ ≃ ΣL : Quotientₓ s, s := Equiv.sigmaCongrRight fun L => left_coset_equiv_subgroup _ 
-    _ ≃ Quotientₓ s × s := Equiv.sigmaEquivProd _ _
+    _ ≃ Σ L : α ⧸ s, s := Equivₓ.sigmaCongrRight fun L => left_coset_equiv_subgroup _ 
+    _ ≃ (α ⧸ s) × s := Equivₓ.sigmaEquivProd _ _
     
 
 variable {t : Subgroup α}
 
--- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse
 of the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`. -/
-@[to_additive #[expr "If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse\nof the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`."], simps #[]]
-def quotient_equiv_prod_of_le'
-(h_le : «expr ≤ »(s, t))
-(f : quotient t → α)
-(hf : function.right_inverse f quotient_group.mk) : «expr ≃ »(quotient s, «expr × »(quotient t, quotient (s.subgroup_of t))) :=
-{ to_fun := λ
-  a, ⟨a.map' id (λ
-    b
-    c
-    h, h_le h), a.map' (λ
-    g : α, ⟨«expr * »(«expr ⁻¹»(f (quotient.mk' g)), g), quotient.exact' (hf g)⟩) (λ
-    b
-    c
-    h, by { change [expr «expr ∈ »(«expr * »(«expr ⁻¹»(«expr * »(«expr ⁻¹»(f b), b)), «expr * »(«expr ⁻¹»(f c), c)), s)] [] [],
-      have [ident key] [":", expr «expr = »(f b, f c)] [":=", expr congr_arg f (quotient.sound' (h_le h))],
-      rwa ["[", expr key, ",", expr mul_inv_rev, ",", expr inv_inv, ",", expr mul_assoc, ",", expr mul_inv_cancel_left, "]"] [] })⟩,
-  inv_fun := λ
-  a, a.2.map' (λ
-   b, «expr * »(f a.1, b)) (λ
-   b c h, by { change [expr «expr ∈ »(«expr * »(«expr ⁻¹»(«expr * »(f a.1, b)), «expr * »(f a.1, c)), s)] [] [],
-     rwa ["[", expr mul_inv_rev, ",", expr mul_assoc, ",", expr inv_mul_cancel_left, "]"] [] }),
-  left_inv := by { refine [expr quotient.ind' (λ a, _)],
-    simp_rw ["[", expr quotient.map'_mk', ",", expr id.def, ",", expr t.coe_mk, ",", expr mul_inv_cancel_left, "]"] [] },
-  right_inv := by { refine [expr prod.rec _],
-    refine [expr quotient.ind' (λ a, _)],
-    refine [expr quotient.ind' (λ b, _)],
-    have [ident key] [":", expr «expr = »(quotient.mk' «expr * »(f (quotient.mk' a), b), quotient.mk' a)] [":=", expr (quotient_group.mk_mul_of_mem (f a) «expr↑ »(b) b.2).trans (hf a)],
-    simp_rw ["[", expr quotient.map'_mk', ",", expr id.def, ",", expr key, ",", expr inv_mul_cancel_left, ",", expr subtype.coe_eta, "]"] [] } }
+@[toAdditive
+      "If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse\nof the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`.",
+  simps]
+def quotient_equiv_prod_of_le' (h_le : s ≤ t) (f : α ⧸ t → α) (hf : Function.RightInverse f QuotientGroup.mk) :
+  α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroup_of t :=
+  { toFun :=
+      fun a =>
+        ⟨a.map' id fun b c h => h_le h,
+          a.map' (fun g : α => ⟨f (Quotientₓ.mk' g)⁻¹*g, Quotientₓ.exact' (hf g)⟩)
+            fun b c h =>
+              by 
+                change ((f b⁻¹*b)⁻¹*f c⁻¹*c) ∈ s 
+                have key : f b = f c := congr_argₓ f (Quotientₓ.sound' (h_le h))
+                rwa [key, mul_inv_rev, inv_invₓ, mul_assocₓ, mul_inv_cancel_left]⟩,
+    invFun :=
+      fun a =>
+        a.2.map' (fun b => f a.1*b)
+          fun b c h =>
+            by 
+              change ((f a.1*b)⁻¹*f a.1*c) ∈ s 
+              rwa [mul_inv_rev, mul_assocₓ, inv_mul_cancel_leftₓ],
+    left_inv :=
+      by 
+        refine' Quotientₓ.ind' fun a => _ 
+        simpRw [Quotientₓ.map'_mk', id.def, t.coe_mk, mul_inv_cancel_left],
+    right_inv :=
+      by 
+        refine' Prod.rec _ 
+        refine' Quotientₓ.ind' fun a => _ 
+        refine' Quotientₓ.ind' fun b => _ 
+        have key : Quotientₓ.mk' (f (Quotientₓ.mk' a)*b) = Quotientₓ.mk' a :=
+          (QuotientGroup.mk_mul_of_mem (f a) (↑b) b.2).trans (hf a)
+        simpRw [Quotientₓ.map'_mk', id.def, key, inv_mul_cancel_leftₓ, Subtype.coe_eta] }
 
 /-- If `H ≤ K`, then `G/H ≃ G/K × K/H` nonconstructively.
 The constructive version is `quotient_equiv_prod_of_le'`. -/
 @[toAdditive
       "If `H ≤ K`, then `G/H ≃ G/K × K/H` nonconstructively.\nThe constructive version is `quotient_equiv_prod_of_le'`.",
   simps]
-noncomputable def quotient_equiv_prod_of_le (h_le : s ≤ t) : Quotientₓ s ≃ Quotientₓ t × Quotientₓ (s.subgroup_of t) :=
+noncomputable def quotient_equiv_prod_of_le (h_le : s ≤ t) : α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroup_of t :=
   quotient_equiv_prod_of_le' h_le Quotientₓ.out' Quotientₓ.out_eq'
 
 @[toAdditive]
 theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [Fintype s]
-  [DecidablePred fun a => a ∈ s] : Fintype.card α = Fintype.card (Quotientₓ s)*Fintype.card s :=
+  [DecidablePred fun a => a ∈ s] : Fintype.card α = Fintype.card (α ⧸ s)*Fintype.card s :=
   by 
     rw [←Fintype.card_prod] <;> exact Fintype.card_congr Subgroup.groupEquivQuotientTimesSubgroup
 
--- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Order of a Subgroup** -/
-theorem card_subgroup_dvd_card [fintype α] (s : subgroup α) [fintype s] : «expr ∣ »(fintype.card s, fintype.card α) :=
-by haveI [] [] [":=", expr classical.prop_decidable]; simp [] [] [] ["[", expr card_eq_card_quotient_mul_card_subgroup s, "]"] [] []
-
-theorem card_quotient_dvd_card [Fintype α] (s : Subgroup α) [DecidablePred fun a => a ∈ s] [Fintype s] :
-  Fintype.card (Quotientₓ s) ∣ Fintype.card α :=
+@[toAdditive]
+theorem card_subgroup_dvd_card [Fintype α] (s : Subgroup α) [Fintype s] : Fintype.card s ∣ Fintype.card α :=
   by 
-    simp [card_eq_card_quotient_mul_card_subgroup s]
+    classical <;> simp [card_eq_card_quotient_mul_card_subgroup s, @dvd_mul_left ℕ]
+
+@[toAdditive]
+theorem card_quotient_dvd_card [Fintype α] (s : Subgroup α) [DecidablePred fun a => a ∈ s] [Fintype s] :
+  Fintype.card (α ⧸ s) ∣ Fintype.card α :=
+  by 
+    simp [card_eq_card_quotient_mul_card_subgroup s, @dvd_mul_right ℕ]
 
 open Fintype
 
 variable {H : Type _} [Groupₓ H]
 
+@[toAdditive]
 theorem card_dvd_of_injective [Fintype α] [Fintype H] (f : α →* H) (hf : Function.Injective f) : card α ∣ card H :=
   by 
     classical <;>
-      calc card α = card (f.range : Subgroup H) := card_congr (Equiv.ofInjective f hf)_ ∣ card H :=
+      calc card α = card (f.range : Subgroup H) := card_congr (Equivₓ.ofInjective f hf)_ ∣ card H :=
         card_subgroup_dvd_card _
 
+@[toAdditive]
 theorem card_dvd_of_le {H K : Subgroup α} [Fintype H] [Fintype K] (hHK : H ≤ K) : card H ∣ card K :=
   card_dvd_of_injective (inclusion hHK) (inclusion_injective hHK)
 
--- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem card_comap_dvd_of_injective
-(K : subgroup H)
-[fintype K]
-(f : «expr →* »(α, H))
-[fintype (K.comap f)]
-(hf : function.injective f) : «expr ∣ »(fintype.card (K.comap f), fintype.card K) :=
-by haveI [] [":", expr fintype ((K.comap f).map f)] [":=", expr fintype.of_equiv _ (equiv_map_of_injective _ _ hf).to_equiv]; calc
-  «expr = »(fintype.card (K.comap f), fintype.card ((K.comap f).map f)) : fintype.card_congr (equiv_map_of_injective _ _ hf).to_equiv
-  «expr ∣ »(..., fintype.card K) : card_dvd_of_le (map_comap_le _ _)
+@[toAdditive]
+theorem card_comap_dvd_of_injective (K : Subgroup H) [Fintype K] (f : α →* H) [Fintype (K.comap f)]
+  (hf : Function.Injective f) : Fintype.card (K.comap f) ∣ Fintype.card K :=
+  by 
+    have  : Fintype ((K.comap f).map f) := Fintype.ofEquiv _ (equiv_map_of_injective _ _ hf).toEquiv <;>
+      calc Fintype.card (K.comap f) = Fintype.card ((K.comap f).map f) :=
+        Fintype.card_congr (equiv_map_of_injective _ _ hf).toEquiv _ ∣ Fintype.card K :=
+        card_dvd_of_le (map_comap_le _ _)
 
 end Subgroup
 
@@ -532,11 +545,11 @@ variable [Groupₓ α]
 /-- If `s` is a subgroup of the group `α`, and `t` is a subset of `α/s`, then
 there is a (typically non-canonical) bijection between the preimage of `t` in
 `α` and the product `s × t`. -/
-noncomputable def preimage_mk_equiv_subgroup_times_set (s : Subgroup α) (t : Set (Quotientₓ s)) :
+noncomputable def preimage_mk_equiv_subgroup_times_set (s : Subgroup α) (t : Set (α ⧸ s)) :
   QuotientGroup.mk ⁻¹' t ≃ s × t :=
   have h :
-    ∀ {x : Quotientₓ s} {a : α},
-      x ∈ t → a ∈ s → (Quotientₓ.mk' (Quotientₓ.out' x*a) : Quotientₓ s) = Quotientₓ.mk' (Quotientₓ.out' x) :=
+    ∀ {x : α ⧸ s} {a : α},
+      x ∈ t → a ∈ s → (Quotientₓ.mk' (Quotientₓ.out' x*a) : α ⧸ s) = Quotientₓ.mk' (Quotientₓ.out' x) :=
     fun x a hx ha =>
       Quotientₓ.sound'
         (show ((Quotientₓ.out' x*a)⁻¹*Quotientₓ.out' x) ∈ s from

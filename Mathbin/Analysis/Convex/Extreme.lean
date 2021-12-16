@@ -46,15 +46,23 @@ section HasScalar
 
 variable [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [HasScalar 𝕜 E]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » B)
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
 def IsExtreme (A B : Set E) : Prop :=
   B ⊆ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, ∀ x _ : x ∈ B, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ ∈ B ∧ x₂ ∈ B
 
-/-- A point `x` is an extreme point of a set `A` if `x` belongs to no open segment with ends in
-`A`, except for the obvious `open_segment x x`. -/
-def Set.ExtremePoints (A : Set E) : Set E :=
-  { x∈A | ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+/--
+    A point `x` is an extreme point of a set `A` if `x` belongs to no open segment with ends in
+    `A`, except for the obvious `open_segment x x`. -/
+  def
+    Set.ExtremePoints
+    ( A : Set E ) : Set E
+    := { x ∈ A | ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A , x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
 
 @[refl]
 protected theorem IsExtreme.refl (A : Set E) : IsExtreme 𝕜 A A :=
@@ -90,47 +98,38 @@ theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) : 
 protected theorem IsExtreme.mono (hAC : IsExtreme 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B) : IsExtreme 𝕜 B C :=
   ⟨hCB, fun x₁ x₂ hx₁B hx₂B x hxC hx => hAC.2 x₁ x₂ (hBA hx₁B) (hBA hx₂B) x hxC hx⟩
 
--- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_extreme_Inter
-{ι : Type*}
-[nonempty ι]
-{F : ι → set E}
-(hAF : ∀ i : ι, is_extreme 𝕜 A (F i)) : is_extreme 𝕜 A «expr⋂ , »((i : ι), F i) :=
-begin
-  obtain [ident i, ":=", expr classical.arbitrary ι],
-  use [expr Inter_subset_of_subset i (hAF i).1],
-  rintro [ident x₁, ident x₂, ident hx₁A, ident hx₂A, ident x, ident hxF, ident hx],
-  simp_rw [expr mem_Inter] ["at", "⊢", ident hxF],
-  have [ident h] [] [":=", expr λ i, (hAF i).2 x₁ x₂ hx₁A hx₂A x (hxF i) hx],
-  exact [expr ⟨λ i, (h i).1, λ i, (h i).2⟩]
-end
+theorem is_extreme_Inter {ι : Type _} [Nonempty ι] {F : ι → Set E} (hAF : ∀ i : ι, IsExtreme 𝕜 A (F i)) :
+  IsExtreme 𝕜 A (⋂ i : ι, F i) :=
+  by 
+    obtain i := Classical.arbitrary ι 
+    use Inter_subset_of_subset i (hAF i).1
+    rintro x₁ x₂ hx₁A hx₂A x hxF hx 
+    simpRw [mem_Inter]  at hxF⊢
+    have h := fun i => (hAF i).2 x₁ x₂ hx₁A hx₂A x (hxF i) hx 
+    exact ⟨fun i => (h i).1, fun i => (h i).2⟩
 
--- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_extreme_bInter
-{F : set (set E)}
-(hF : F.nonempty)
-(hAF : ∀ B «expr ∈ » F, is_extreme 𝕜 A B) : is_extreme 𝕜 A «expr⋂ , »((B «expr ∈ » F), B) :=
-begin
-  obtain ["⟨", ident B, ",", ident hB, "⟩", ":=", expr hF],
-  refine [expr ⟨(bInter_subset_of_mem hB).trans (hAF B hB).1, λ x₁ x₂ hx₁A hx₂A x hxF hx, _⟩],
-  simp_rw [expr mem_bInter_iff] ["at", "⊢", ident hxF],
-  have [ident h] [] [":=", expr λ B hB, (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx],
-  exact [expr ⟨λ B hB, (h B hB).1, λ B hB, (h B hB).2⟩]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (B «expr ∈ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (B «expr ∈ » F)
+theorem is_extreme_bInter {F : Set (Set E)} (hF : F.nonempty) (hAF : ∀ B _ : B ∈ F, IsExtreme 𝕜 A B) :
+  IsExtreme 𝕜 A (⋂ (B : _)(_ : B ∈ F), B) :=
+  by 
+    obtain ⟨B, hB⟩ := hF 
+    refine' ⟨(bInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ x₂ hx₁A hx₂A x hxF hx => _⟩
+    simpRw [mem_bInter_iff]  at hxF⊢
+    have h := fun B hB => (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx 
+    exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 
--- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_extreme_sInter
-{F : set (set E)}
-(hF : F.nonempty)
-(hAF : ∀ B «expr ∈ » F, is_extreme 𝕜 A B) : is_extreme 𝕜 A «expr⋂₀ »(F) :=
-begin
-  obtain ["⟨", ident B, ",", ident hB, "⟩", ":=", expr hF],
-  refine [expr ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, λ x₁ x₂ hx₁A hx₂A x hxF hx, _⟩],
-  simp_rw [expr mem_sInter] ["at", "⊢", ident hxF],
-  have [ident h] [] [":=", expr λ B hB, (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx],
-  exact [expr ⟨λ B hB, (h B hB).1, λ B hB, (h B hB).2⟩]
-end
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (B «expr ∈ » F)
+theorem is_extreme_sInter {F : Set (Set E)} (hF : F.nonempty) (hAF : ∀ B _ : B ∈ F, IsExtreme 𝕜 A B) :
+  IsExtreme 𝕜 A (⋂₀F) :=
+  by 
+    obtain ⟨B, hB⟩ := hF 
+    refine' ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ x₂ hx₁A hx₂A x hxF hx => _⟩
+    simpRw [mem_sInter]  at hxF⊢
+    have h := fun B hB => (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx 
+    exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 theorem extreme_points_def :
   x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
   Iff.rfl
@@ -184,12 +183,13 @@ section LinearOrderedField
 
 variable {𝕜} [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
   x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ Segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨hxA, hAx⟩
       use hxA 

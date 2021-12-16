@@ -9,7 +9,7 @@ We give several lemmas about their interaction with each other and with module o
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open Finset AddMonoidAlgebra
 
@@ -44,9 +44,44 @@ theorem eval₂_congr {R S : Type _} [Semiringₓ R] [Semiringₓ S] {f g : R �
   by 
     rintro rfl rfl rfl <;> rfl
 
--- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-@[simp] theorem eval₂_at_zero : «expr = »(p.eval₂ f 0, f (coeff p 0)) :=
-by simp [] [] ["only"] ["[", expr eval₂_eq_sum, ",", expr zero_pow_eq, ",", expr mul_ite, ",", expr mul_zero, ",", expr mul_one, ",", expr sum, ",", expr not_not, ",", expr mem_support_iff, ",", expr sum_ite_eq', ",", expr ite_eq_left_iff, ",", expr ring_hom.map_zero, ",", expr implies_true_iff, ",", expr eq_self_iff_true, "]"] [] [] { contextual := tt }
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    eval₂_at_zero
+    : p.eval₂ f 0 = f coeff p 0
+    :=
+      by
+        simp
+          ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+          only
+          [
+            eval₂_eq_sum
+              ,
+              zero_pow_eq
+              ,
+              mul_ite
+              ,
+              mul_zero
+              ,
+              mul_oneₓ
+              ,
+              Sum
+              ,
+              not_not
+              ,
+              mem_support_iff
+              ,
+              sum_ite_eq'
+              ,
+              ite_eq_left_iff
+              ,
+              RingHom.map_zero
+              ,
+              implies_true_iff
+              ,
+              eq_self_iff_true
+            ]
 
 @[simp]
 theorem eval₂_zero : (0 : Polynomial R).eval₂ f x = 0 :=
@@ -95,18 +130,12 @@ theorem eval₂_bit1 : (bit1 p).eval₂ f x = bit1 (p.eval₂ f x) :=
   by 
     rw [bit1, eval₂_add, eval₂_bit0, eval₂_one, bit1]
 
--- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem eval₂_smul
-(g : «expr →+* »(R, S))
-(p : polynomial R)
-(x : S)
-{s : R} : «expr = »(eval₂ g x «expr • »(s, p), «expr * »(g s, eval₂ g x p)) :=
-begin
-  have [ident A] [":", expr «expr < »(p.nat_degree, p.nat_degree.succ)] [":=", expr nat.lt_succ_self _],
-  have [ident B] [":", expr «expr < »(«expr • »(s, p).nat_degree, p.nat_degree.succ)] [":=", expr (nat_degree_smul_le _ _).trans_lt A],
-  rw ["[", expr eval₂_eq_sum, ",", expr eval₂_eq_sum, ",", expr sum_over_range' _ _ _ A, ",", expr sum_over_range' _ _ _ B, "]"] []; simp [] [] [] ["[", expr mul_sum, ",", expr mul_assoc, "]"] [] []
-end
+theorem eval₂_smul (g : R →+* S) (p : Polynomial R) (x : S) {s : R} : eval₂ g x (s • p) = g s*eval₂ g x p :=
+  by 
+    have A : p.nat_degree < p.nat_degree.succ := Nat.lt_succ_selfₓ _ 
+    have B : (s • p).natDegree < p.nat_degree.succ := (nat_degree_smul_le _ _).trans_lt A 
+    rw [eval₂_eq_sum, eval₂_eq_sum, sum_over_range' _ _ _ A, sum_over_range' _ _ _ B] <;> simp [mul_sum, mul_assocₓ]
 
 @[simp]
 theorem eval₂_C_X : eval₂ C X p = p :=
@@ -135,22 +164,17 @@ theorem eval₂_nat_cast (n : ℕ) : (n : Polynomial R).eval₂ f x = n :=
 
 variable [Semiringₓ T]
 
--- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eval₂_sum
-(p : polynomial T)
-(g : exprℕ() → T → polynomial R)
-(x : S) : «expr = »((p.sum g).eval₂ f x, p.sum (λ n a, (g n a).eval₂ f x)) :=
-begin
-  let [ident T] [":", expr «expr →+ »(polynomial R, S)] [":=", expr { to_fun := eval₂ f x,
-     map_zero' := eval₂_zero _ _,
-     map_add' := λ p q, eval₂_add _ _ }],
-  have [ident A] [":", expr ∀ y, «expr = »(eval₂ f x y, T y)] [":=", expr λ y, rfl],
-  simp [] [] ["only"] ["[", expr A, "]"] [] [],
-  rw ["[", expr sum, ",", expr T.map_sum, ",", expr sum, "]"] []
-end
+theorem eval₂_sum (p : Polynomial T) (g : ℕ → T → Polynomial R) (x : S) :
+  (p.sum g).eval₂ f x = p.sum fun n a => (g n a).eval₂ f x :=
+  by 
+    let T : Polynomial R →+ S :=
+      { toFun := eval₂ f x, map_zero' := eval₂_zero _ _, map_add' := fun p q => eval₂_add _ _ }
+    have A : ∀ y, eval₂ f x y = T y := fun y => rfl 
+    simp only [A]
+    rw [Sum, T.map_sum, Sum]
 
 theorem eval₂_finset_sum (s : Finset ι) (g : ι → Polynomial R) (x : S) :
-  (∑i in s, g i).eval₂ f x = ∑i in s, (g i).eval₂ f x :=
+  (∑ i in s, g i).eval₂ f x = ∑ i in s, (g i).eval₂ f x :=
   by 
     classical 
     induction' s using Finset.induction with p hp s hs 
@@ -158,7 +182,7 @@ theorem eval₂_finset_sum (s : Finset ι) (g : ι → Polynomial R) (x : S) :
     rw [sum_insert, eval₂_add, hs, sum_insert] <;> assumption
 
 theorem eval₂_to_finsupp_eq_lift_nc {f : R →+* S} {x : S} {p : AddMonoidAlgebra R ℕ} :
-  eval₂ f x (⟨p⟩ : Polynomial R) = lift_nc («expr↑ » f) (powersHom S x) p :=
+  eval₂ f x (⟨p⟩ : Polynomial R) = lift_nc (↑f) (powersHom S x) p :=
   by 
     simp only [eval₂_eq_sum, Sum, sum_to_finsupp, support, coeff]
     rfl
@@ -199,6 +223,7 @@ theorem eval₂_mul_C' (h : Commute (f a) x) : eval₂ f x (p*C a) = eval₂ f x
     ·
       simp only [coeff_C_ne_zero hk, RingHom.map_zero, Commute.zero_left]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » ps)
 theorem eval₂_list_prod_noncomm (ps : List (Polynomial R)) (hf : ∀ p _ : p ∈ ps k, Commute (f$ coeff p k) x) :
   eval₂ f x ps.prod = (ps.map (Polynomial.eval₂ f x)).Prod :=
   by 
@@ -248,13 +273,13 @@ def eval₂_ring_hom (f : R →+* S) (x : S) : Polynomial R →+* S :=
   { eval₂_add_monoid_hom f x with map_one' := eval₂_one _ _, map_mul' := fun _ _ => eval₂_mul _ _ }
 
 @[simp]
-theorem coe_eval₂_ring_hom (f : R →+* S) x : «expr⇑ » (eval₂_ring_hom f x) = eval₂ f x :=
+theorem coe_eval₂_ring_hom (f : R →+* S) x : ⇑eval₂_ring_hom f x = eval₂ f x :=
   rfl
 
 theorem eval₂_pow (n : ℕ) : (p ^ n).eval₂ f x = p.eval₂ f x ^ n :=
   (eval₂_ring_hom _ _).map_pow _ _
 
-theorem eval₂_eq_sum_range : p.eval₂ f x = ∑i in Finset.range (p.nat_degree+1), f (p.coeff i)*x ^ i :=
+theorem eval₂_eq_sum_range : p.eval₂ f x = ∑ i in Finset.range (p.nat_degree+1), f (p.coeff i)*x ^ i :=
   trans (congr_argₓ _ p.as_sum_range)
     (trans (eval₂_finset_sum f _ _ x)
       (congr_argₓ _
@@ -262,7 +287,7 @@ theorem eval₂_eq_sum_range : p.eval₂ f x = ∑i in Finset.range (p.nat_degre
           simp )))
 
 theorem eval₂_eq_sum_range' (f : R →+* S) {p : Polynomial R} {n : ℕ} (hn : p.nat_degree < n) (x : S) :
-  eval₂ f x p = ∑i in Finset.range n, f (p.coeff i)*x ^ i :=
+  eval₂ f x p = ∑ i in Finset.range n, f (p.coeff i)*x ^ i :=
   by 
     rw [eval₂_eq_sum, p.sum_over_range' _ _ hn]
     intro i 
@@ -287,13 +312,13 @@ def eval : R → Polynomial R → R :=
 theorem eval_eq_sum : p.eval x = p.sum fun e a => a*x ^ e :=
   rfl
 
-theorem eval_eq_finset_sum (p : Polynomial R) (x : R) : p.eval x = ∑i in range (p.nat_degree+1), p.coeff i*x ^ i :=
+theorem eval_eq_finset_sum (p : Polynomial R) (x : R) : p.eval x = ∑ i in range (p.nat_degree+1), p.coeff i*x ^ i :=
   by 
     rw [eval_eq_sum, sum_over_range]
     simp 
 
 theorem eval_eq_finset_sum' (P : Polynomial R) :
-  (fun x => eval x P) = fun x => ∑i in range (P.nat_degree+1), P.coeff i*x ^ i :=
+  (fun x => eval x P) = fun x => ∑ i in range (P.nat_degree+1), P.coeff i*x ^ i :=
   by 
     ext 
     exact P.eval_eq_finset_sum x
@@ -402,7 +427,8 @@ theorem eval_sum (p : Polynomial R) (f : ℕ → R → Polynomial R) (x : R) :
   (p.sum f).eval x = p.sum fun n a => (f n a).eval x :=
   eval₂_sum _ _ _ _
 
-theorem eval_finset_sum (s : Finset ι) (g : ι → Polynomial R) (x : R) : (∑i in s, g i).eval x = ∑i in s, (g i).eval x :=
+theorem eval_finset_sum (s : Finset ι) (g : ι → Polynomial R) (x : R) :
+  (∑ i in s, g i).eval x = ∑ i in s, (g i).eval x :=
   eval₂_finset_sum _ _ _ _
 
 /-- `is_root p x` implies `x` is a root of `p`. The evaluation of `p` at `x` is zero -/
@@ -631,7 +657,7 @@ def map_ring_hom (f : R →+* S) : Polynomial R →+* Polynomial S :=
     map_mul' := fun _ _ => map_mul f, map_one' := map_one f }
 
 @[simp]
-theorem coe_map_ring_hom (f : R →+* S) : «expr⇑ » (map_ring_hom f) = map f :=
+theorem coe_map_ring_hom (f : R →+* S) : ⇑map_ring_hom f = map f :=
   rfl
 
 @[simp]
@@ -764,12 +790,12 @@ theorem map_list_prod (L : List (Polynomial R)) : L.prod.map f = (L.map$ map f).
   Eq.symm$ List.prod_hom _ (map_ring_hom f).toMonoidHom
 
 @[simp]
-theorem map_pow (n : ℕ) : (p ^ n).map f = p.map f ^ n :=
+protected theorem map_pow (n : ℕ) : (p ^ n).map f = p.map f ^ n :=
   (map_ring_hom f).map_pow _ _
 
 theorem mem_map_srange {p : Polynomial S} : p ∈ (map_ring_hom f).srange ↔ ∀ n, p.coeff n ∈ f.srange :=
   by 
-    split 
+    constructor
     ·
       rintro ⟨p, rfl⟩ n 
       rw [coe_map_ring_hom, coeff_map]
@@ -781,31 +807,66 @@ theorem mem_map_srange {p : Polynomial S} : p ∈ (map_ring_hom f).srange ↔ �
       intro i hi 
       rcases h i with ⟨c, hc⟩
       use C c*X ^ i 
-      rw [coe_map_ring_hom, map_mul, map_C, hc, map_pow, map_X]
+      rw [coe_map_ring_hom, map_mul, map_C, hc, Polynomial.map_pow, map_X]
 
 theorem mem_map_range {R S : Type _} [Ringₓ R] [Ringₓ S] (f : R →+* S) {p : Polynomial S} :
   p ∈ (map_ring_hom f).range ↔ ∀ n, p.coeff n ∈ f.range :=
   mem_map_srange f
 
--- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem eval₂_map [semiring T] (g : «expr →+* »(S, T)) (x : T) : «expr = »((p.map f).eval₂ g x, p.eval₂ (g.comp f) x) :=
-begin
-  have [ident A] [":", expr «expr < »(nat_degree (p.map f), p.nat_degree.succ)] [":=", expr (nat_degree_map_le _ _).trans_lt (nat.lt_succ_self _)],
-  conv_lhs [] [] { rw ["[", expr eval₂_eq_sum, "]"] },
-  rw ["[", expr sum_over_range' _ _ _ A, "]"] [],
-  { simp [] [] ["only"] ["[", expr coeff_map, ",", expr eval₂_eq_sum, ",", expr sum_over_range, ",", expr forall_const, ",", expr zero_mul, ",", expr ring_hom.map_zero, ",", expr function.comp_app, ",", expr ring_hom.coe_comp, "]"] [] [] },
-  { simp [] [] ["only"] ["[", expr forall_const, ",", expr zero_mul, ",", expr ring_hom.map_zero, "]"] [] [] }
-end
+theorem eval₂_map [Semiringₓ T] (g : S →+* T) (x : T) : (p.map f).eval₂ g x = p.eval₂ (g.comp f) x :=
+  by 
+    have A : nat_degree (p.map f) < p.nat_degree.succ := (nat_degree_map_le _ _).trans_lt (Nat.lt_succ_selfₓ _)
+    convLHS => rw [eval₂_eq_sum]
+    rw [sum_over_range' _ _ _ A]
+    ·
+      simp only [coeff_map, eval₂_eq_sum, sum_over_range, forall_const, zero_mul, RingHom.map_zero, Function.comp_app,
+        RingHom.coe_comp]
+    ·
+      simp only [forall_const, zero_mul, RingHom.map_zero]
 
 theorem eval_map (x : S) : (p.map f).eval x = p.eval₂ f x :=
   eval₂_map f (RingHom.id _) x
 
-theorem map_sum {ι : Type _} (g : ι → Polynomial R) (s : Finset ι) : (∑i in s, g i).map f = ∑i in s, (g i).map f :=
+theorem map_sum {ι : Type _} (g : ι → Polynomial R) (s : Finset ι) : (∑ i in s, g i).map f = ∑ i in s, (g i).map f :=
   (map_ring_hom f).map_sum _ _
 
--- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem map_comp (p q : polynomial R) : «expr = »(map f (p.comp q), (map f p).comp (map f q)) :=
-polynomial.induction_on p (by simp [] [] ["only"] ["[", expr map_C, ",", expr forall_const, ",", expr C_comp, ",", expr eq_self_iff_true, "]"] [] []) (by simp [] [] ["only"] ["[", expr map_add, ",", expr add_comp, ",", expr forall_const, ",", expr implies_true_iff, ",", expr eq_self_iff_true, "]"] [] [] { contextual := tt }) (by simp [] [] ["only"] ["[", expr pow_succ', ",", "<-", expr mul_assoc, ",", expr comp, ",", expr forall_const, ",", expr eval₂_mul_X, ",", expr implies_true_iff, ",", expr eq_self_iff_true, ",", expr map_X, ",", expr map_mul, "]"] [] [] { contextual := tt })
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
+theorem
+  map_comp
+  ( p q : Polynomial R ) : map f p.comp q = map f p . comp map f q
+  :=
+    Polynomial.induction_on
+      p
+        by simp only [ map_C , forall_const , C_comp , eq_self_iff_true ]
+        by
+          simp
+            ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+            only
+            [ map_add , add_comp , forall_const , implies_true_iff , eq_self_iff_true ]
+        by
+          simp
+            ( config := { contextual := Bool.true._@._internal._hyg.0 } )
+            only
+            [
+              pow_succ'ₓ
+                ,
+                ← mul_assocₓ
+                ,
+                comp
+                ,
+                forall_const
+                ,
+                eval₂_mul_X
+                ,
+                implies_true_iff
+                ,
+                eq_self_iff_true
+                ,
+                map_X
+                ,
+                map_mul
+              ]
 
 @[simp]
 theorem eval_zero_map (f : R →+* S) (p : Polynomial R) : (p.map f).eval 0 = f (p.eval 0) :=
@@ -855,8 +916,6 @@ we make `eval₂` irreducible.
 Perhaps we can make the others irreducible too?
 -/
 
-
-attribute [irreducible] Polynomial.eval₂
 
 section HomEval₂
 
@@ -934,27 +993,26 @@ theorem root_mul_right_of_is_root {p : Polynomial R} (q : Polynomial R) : is_roo
     by 
       rw [is_root, eval_mul, is_root.def.1 H, zero_mul]
 
--- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Polynomial evaluation commutes with finset.prod
 -/
-theorem eval_prod
-{ι : Type*}
-(s : finset ι)
-(p : ι → polynomial R)
-(x : R) : «expr = »(eval x «expr∏ in , »((j), s, p j), «expr∏ in , »((j), s, eval x (p j))) :=
-begin
-  classical,
-  apply [expr finset.induction_on s],
-  { simp [] [] ["only"] ["[", expr finset.prod_empty, ",", expr eval_one, "]"] [] [] },
-  { intros [ident j, ident s, ident hj, ident hpj],
-    have [ident h0] [":", expr «expr = »(«expr∏ in , »((i), insert j s, eval x (p i)), «expr * »(eval x (p j), «expr∏ in , »((i), s, eval x (p i))))] [],
-    { apply [expr finset.prod_insert hj] },
-    rw ["[", expr h0, ",", "<-", expr hpj, ",", expr finset.prod_insert hj, ",", expr eval_mul, "]"] [] }
-end
+theorem eval_prod {ι : Type _} (s : Finset ι) (p : ι → Polynomial R) (x : R) :
+  eval x (∏ j in s, p j) = ∏ j in s, eval x (p j) :=
+  by 
+    classical 
+    apply Finset.induction_on s
+    ·
+      simp only [Finset.prod_empty, eval_one]
+    ·
+      intro j s hj hpj 
+      have h0 : (∏ i in insert j s, eval x (p i)) = eval x (p j)*∏ i in s, eval x (p i)
+      ·
+        apply Finset.prod_insert hj 
+      rw [h0, ←hpj, Finset.prod_insert hj, eval_mul]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (i «expr ∈ » s)
 theorem is_root_prod {R} [CommRingₓ R] [IsDomain R] {ι : Type _} (s : Finset ι) (p : ι → Polynomial R) (x : R) :
-  is_root (∏j in s, p j) x ↔ ∃ (i : _)(_ : i ∈ s), is_root (p i) x :=
+  is_root (∏ j in s, p j) x ↔ ∃ (i : _)(_ : i ∈ s), is_root (p i) x :=
   by 
     simp only [is_root, eval_prod, Finset.prod_eq_zero_iff]
 
@@ -978,7 +1036,7 @@ variable [CommSemiringₓ R] [CommSemiringₓ S] (f : R →+* S)
 theorem map_multiset_prod (m : Multiset (Polynomial R)) : m.prod.map f = (m.map$ map f).Prod :=
   Eq.symm$ Multiset.prod_hom _ (map_ring_hom f).toMonoidHom
 
-theorem map_prod {ι : Type _} (g : ι → Polynomial R) (s : Finset ι) : (∏i in s, g i).map f = ∏i in s, (g i).map f :=
+theorem map_prod {ι : Type _} (g : ι → Polynomial R) (s : Finset ι) : (∏ i in s, g i).map f = ∏ i in s, (g i).map f :=
   (map_ring_hom f).map_prod _ _
 
 theorem support_map_subset (p : Polynomial R) : (map f p).Support ⊆ p.support :=
@@ -1027,7 +1085,7 @@ theorem map_neg {S} [Ringₓ S] (f : R →+* S) : (-p).map f = -p.map f :=
   (map_ring_hom f).map_neg p
 
 @[simp]
-theorem map_int_cast {S} [Ringₓ S] (f : R →+* S) (n : ℤ) : map f («expr↑ » n) = «expr↑ » n :=
+theorem map_int_cast {S} [Ringₓ S] (f : R →+* S) (n : ℤ) : map f (↑n) = ↑n :=
   (map_ring_hom f).map_int_cast n
 
 @[simp]

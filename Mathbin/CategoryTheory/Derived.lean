@@ -34,7 +34,7 @@ provide all the typeclass hypotheses assumed here.
 -/
 
 
-noncomputable theory
+noncomputable section 
 
 open CategoryTheory
 

@@ -21,17 +21,17 @@ import Mathbin.Algebra.Group.Hom
 
 universe u v l
 
--- error in Algebra.Free: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
-/-- Free magma over a given alphabet. -/ @[derive #[expr decidable_eq]] inductive free_magma (α : Type u) : Type u
-| of : α → free_magma
-| mul : free_magma → free_magma → free_magma
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
+/-- Free magma over a given alphabet. -/
+inductive FreeMagma (α : Type u) : Type u
+  | of : α → FreeMagma
+  | mul : FreeMagma → FreeMagma → FreeMagma deriving [anonymous]
 
--- error in Algebra.Free: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
 /-- Free nonabelian additive magma over a given alphabet. -/
-@[derive #[expr decidable_eq]]
-inductive free_add_magma (α : Type u) : Type u
-| of : α → free_add_magma
-| add : free_add_magma → free_add_magma → free_add_magma
+inductive FreeAddMagma (α : Type u) : Type u
+  | of : α → FreeAddMagma
+  | add : FreeAddMagma → FreeAddMagma → FreeAddMagma deriving [anonymous]
 
 attribute [toAdditive] FreeMagma
 
@@ -78,7 +78,7 @@ namespace FreeMagma
 variable {α : Type u} {β : Type v} [Mul β] (f : α → β)
 
 @[toAdditive]
-theorem lift_aux_unique (F : MulHom (FreeMagma α) β) : «expr⇑ » F = lift_aux (F ∘ of) :=
+theorem lift_aux_unique (F : MulHom (FreeMagma α) β) : ⇑F = lift_aux (F ∘ of) :=
   funext$
     fun x => (FreeMagma.recOn x fun x => rfl)$ fun x y ih1 ih2 => (F.map_mul x y).trans$ congr (congr_argₓ _ ih1) ih2
 

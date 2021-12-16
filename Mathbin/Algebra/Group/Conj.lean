@@ -21,7 +21,7 @@ variable [Monoidₓ α] [Monoidₓ β]
 
 /-- We say that `a` is conjugate to `b` if for some unit `c` we have `c * a * c⁻¹ = b`. -/
 def IsConj (a b : α) :=
-  ∃ c : Units α, SemiconjBy («expr↑ » c) a b
+  ∃ c : Units α, SemiconjBy (↑c) a b
 
 @[refl]
 theorem IsConj.refl (a : α) : IsConj a a :=
@@ -141,15 +141,15 @@ variable [Monoidₓ α] [Monoidₓ β]
 
 /-- The canonical quotient map from a monoid `α` into the `conj_classes` of `α` -/
 protected def mk {α : Type _} [Monoidₓ α] (a : α) : ConjClasses α :=
-  «expr⟦ ⟧» a
+  ⟦a⟧
 
 instance : Inhabited (ConjClasses α) :=
-  ⟨«expr⟦ ⟧» 1⟩
+  ⟨⟦1⟧⟩
 
 theorem mk_eq_mk_iff_is_conj {a b : α} : ConjClasses.mk a = ConjClasses.mk b ↔ IsConj a b :=
   Iff.intro Quotientₓ.exact Quot.sound
 
-theorem quotient_mk_eq_mk (a : α) : «expr⟦ ⟧» a = ConjClasses.mk a :=
+theorem quotient_mk_eq_mk (a : α) : ⟦a⟧ = ConjClasses.mk a :=
   rfl
 
 theorem quot_mk_eq_mk (a : α) : Quot.mk Setoidₓ.R a = ConjClasses.mk a :=
@@ -162,7 +162,7 @@ theorem mk_surjective : Function.Surjective (@ConjClasses.mk α _) :=
   forall_is_conj.2 fun a => ⟨a, rfl⟩
 
 instance : HasOne (ConjClasses α) :=
-  ⟨«expr⟦ ⟧» 1⟩
+  ⟨⟦1⟧⟩
 
 theorem one_eq_mk_one : (1 : ConjClasses α) = ConjClasses.mk 1 :=
   rfl
@@ -205,9 +205,10 @@ section Monoidₓ
 
 variable [Monoidₓ α]
 
+-- failed to parenthesize: parenthesize: uncaught backtrack exception
+-- failed to format: format: uncaught backtrack exception
 /-- Given an element `a`, `conjugates a` is the set of conjugates. -/
-def ConjugatesOf (a : α) : Set α :=
-  { b | IsConj a b }
+  def ConjugatesOf ( a : α ) : Set α := { b | IsConj a b }
 
 theorem mem_conjugates_of_self {a : α} : a ∈ ConjugatesOf a :=
   IsConj.refl _
@@ -215,12 +216,12 @@ theorem mem_conjugates_of_self {a : α} : a ∈ ConjugatesOf a :=
 theorem IsConj.conjugates_of_eq {a b : α} (ab : IsConj a b) : ConjugatesOf a = ConjugatesOf b :=
   Set.ext fun g => ⟨fun ag => ab.symm.trans ag, fun bg => ab.trans bg⟩
 
--- error in Algebra.Group.Conj: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_conj_iff_conjugates_of_eq {a b : α} : «expr ↔ »(is_conj a b, «expr = »(conjugates_of a, conjugates_of b)) :=
-⟨is_conj.conjugates_of_eq, λ h, begin
-   have [ident ha] [] [":=", expr mem_conjugates_of_self],
-   rwa ["<-", expr h] ["at", ident ha]
- end⟩
+theorem is_conj_iff_conjugates_of_eq {a b : α} : IsConj a b ↔ ConjugatesOf a = ConjugatesOf b :=
+  ⟨IsConj.conjugates_of_eq,
+    fun h =>
+      by 
+        have ha := mem_conjugates_of_self 
+        rwa [←h] at ha⟩
 
 end Monoidₓ
 
