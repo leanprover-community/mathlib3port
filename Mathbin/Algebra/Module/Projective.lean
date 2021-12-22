@@ -1,5 +1,5 @@
-import Mathbin.Algebra.Module.Basic 
-import Mathbin.LinearAlgebra.Finsupp 
+import Mathbin.Algebra.Module.Basic
+import Mathbin.LinearAlgebra.Finsupp
 import Mathbin.LinearAlgebra.FreeModule.Basic
 
 /-!
@@ -57,16 +57,16 @@ projective module
 
 universe u v
 
-/-- An R-module is projective if it is a direct summand of a free module, or equivalently
+/--  An R-module is projective if it is a direct summand of a free module, or equivalently
   if maps from the module lift along surjections. There are several other equivalent
   definitions. -/
-class Module.Projective (R : Type u) [Semiringₓ R] (P : Type max u v) [AddCommMonoidₓ P] [Module R P] : Prop where 
+class Module.Projective (R : Type u) [Semiringₓ R] (P : Type max u v) [AddCommMonoidₓ P] [Module R P] : Prop where
   out : ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s
 
 namespace Module
 
 theorem projective_def {R : Type u} [Semiringₓ R] {P : Type max u v} [AddCommMonoidₓ P] [Module R P] :
-  projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s :=
+    projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
 section Semiringₓ
@@ -74,38 +74,34 @@ section Semiringₓ
 variable {R : Type u} [Semiringₓ R] {P : Type max u v} [AddCommMonoidₓ P] [Module R P] {M : Type max u v}
   [AddCommGroupₓ M] [Module R M] {N : Type _} [AddCommGroupₓ N] [Module R N]
 
-/-- A projective R-module has the property that maps from it lift along surjections. -/
+/--  A projective R-module has the property that maps from it lift along surjections. -/
 theorem projective_lifting_property [h : projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N) (hf : Function.Surjective f) :
-  ∃ h : P →ₗ[R] M, f.comp h = g :=
-  by 
-    let φ : (P →₀ R) →ₗ[R] M := Finsupp.total _ _ _ fun p => Function.surjInv hf (g p)
-    cases' h.out with s hs 
-    use φ.comp s 
-    ext p 
-    convRHS => rw [←hs p]
-    simp [φ, Finsupp.total_apply, Function.surj_inv_eq hf]
+    ∃ h : P →ₗ[R] M, f.comp h = g := by
+  let φ : (P →₀ R) →ₗ[R] M := Finsupp.total _ _ _ fun p => Function.surjInv hf (g p)
+  cases' h.out with s hs
+  use φ.comp s
+  ext p
+  conv_rhs => rw [← hs p]
+  simp [φ, Finsupp.total_apply, Function.surj_inv_eq hf]
 
-/-- A module which satisfies the universal property is projective. Note that the universe variables
+/--  A module which satisfies the universal property is projective. Note that the universe variables
 in `huniv` are somewhat restricted. -/
 theorem projective_of_lifting_property'
-  (huniv :
-    ∀ {M : Type max v u} {N : Type max u v} [AddCommMonoidₓ M] [AddCommMonoidₓ N],
-      by 
+    (huniv :
+      ∀ {M : Type max v u} {N : Type max u v} [AddCommMonoidₓ M] [AddCommMonoidₓ N], by
         exact
-          ∀ [Module R M] [Module R N],
-            by 
-              exact ∀ f : M →ₗ[R] N g : P →ₗ[R] N, Function.Surjective f → ∃ h : P →ₗ[R] M, f.comp h = g) :
-  projective R P :=
-  by 
-    obtain ⟨s, hs⟩ : ∃ s : P →ₗ[R] P →₀ R, (Finsupp.total P P R id).comp s = LinearMap.id :=
-      huniv (Finsupp.total P P R (id : P → P)) (LinearMap.id : P →ₗ[R] P) _
-    ·
-      use s 
-      rwa [LinearMap.ext_iff] at hs
-    ·
-      intro p 
-      use Finsupp.single p 1
-      simp 
+          ∀ [Module R M] [Module R N], by
+            exact ∀ f : M →ₗ[R] N g : P →ₗ[R] N, Function.Surjective f → ∃ h : P →ₗ[R] M, f.comp h = g) :
+    projective R P := by
+  obtain ⟨s, hs⟩ : ∃ s : P →ₗ[R] P →₀ R, (Finsupp.total P P R id).comp s = LinearMap.id :=
+    huniv (Finsupp.total P P R (id : P → P)) (LinearMap.id : P →ₗ[R] P) _
+  ·
+    use s
+    rwa [LinearMap.ext_iff] at hs
+  ·
+    intro p
+    use Finsupp.single p 1
+    simp
 
 end Semiringₓ
 
@@ -113,38 +109,34 @@ section Ringₓ
 
 variable {R : Type u} [Ringₓ R] {P : Type max u v} [AddCommGroupₓ P] [Module R P]
 
-/-- A variant of `of_lifting_property'` when we're working over a `[ring R]`,
+/--  A variant of `of_lifting_property'` when we're working over a `[ring R]`,
 which only requires quantifying over modules with an `add_comm_group` instance. -/
 theorem projective_of_lifting_property
-  (huniv :
-    ∀ {M : Type max v u} {N : Type max u v} [AddCommGroupₓ M] [AddCommGroupₓ N],
-      by 
+    (huniv :
+      ∀ {M : Type max v u} {N : Type max u v} [AddCommGroupₓ M] [AddCommGroupₓ N], by
         exact
-          ∀ [Module R M] [Module R N],
-            by 
-              exact ∀ f : M →ₗ[R] N g : P →ₗ[R] N, Function.Surjective f → ∃ h : P →ₗ[R] M, f.comp h = g) :
-  projective R P :=
-  by 
-    obtain ⟨s, hs⟩ : ∃ s : P →ₗ[R] P →₀ R, (Finsupp.total P P R id).comp s = LinearMap.id :=
-      huniv (Finsupp.total P P R (id : P → P)) (LinearMap.id : P →ₗ[R] P) _
-    ·
-      use s 
-      rwa [LinearMap.ext_iff] at hs
-    ·
-      intro p 
-      use Finsupp.single p 1
-      simp 
+          ∀ [Module R M] [Module R N], by
+            exact ∀ f : M →ₗ[R] N g : P →ₗ[R] N, Function.Surjective f → ∃ h : P →ₗ[R] M, f.comp h = g) :
+    projective R P := by
+  obtain ⟨s, hs⟩ : ∃ s : P →ₗ[R] P →₀ R, (Finsupp.total P P R id).comp s = LinearMap.id :=
+    huniv (Finsupp.total P P R (id : P → P)) (LinearMap.id : P →ₗ[R] P) _
+  ·
+    use s
+    rwa [LinearMap.ext_iff] at hs
+  ·
+    intro p
+    use Finsupp.single p 1
+    simp
 
-/-- Free modules are projective. -/
-theorem projective_of_basis {ι : Type _} (b : Basis ι R P) : projective R P :=
-  by 
-    use b.constr ℕ fun i => Finsupp.single (b i) (1 : R)
-    intro m 
-    simp only [b.constr_apply, mul_oneₓ, id.def, Finsupp.smul_single', Finsupp.total_single, LinearMap.map_finsupp_sum]
-    exact b.total_repr m
+/--  Free modules are projective. -/
+theorem projective_of_basis {ι : Type _} (b : Basis ι R P) : projective R P := by
+  use b.constr ℕ fun i => Finsupp.single (b i) (1 : R)
+  intro m
+  simp only [b.constr_apply, mul_oneₓ, id.def, Finsupp.smul_single', Finsupp.total_single, LinearMap.map_finsupp_sum]
+  exact b.total_repr m
 
 instance (priority := 100) projective_of_free [Module.Free R P] : Module.Projective R P :=
-  projective_of_basis$ Module.Free.chooseBasis R P
+  projective_of_basis $ Module.Free.chooseBasis R P
 
 end Ringₓ
 

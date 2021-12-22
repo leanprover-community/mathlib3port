@@ -1,4 +1,4 @@
-import Mathbin.Algebra.BigOperators.Basic 
+import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Sym.Sym2
 
 /-!
@@ -38,72 +38,64 @@ namespace Sym2
 
 variable {α : Type _} [DecidableEq α]
 
-/-- The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
-theorem card_image_diag (s : Finset α) : (s.diag.image Quotientₓ.mk).card = s.card :=
-  by 
-    rw [card_image_of_inj_on, diag_card]
-    rintro ⟨x₀, x₁⟩ hx _ _ h 
-    cases Quotientₓ.eq.1 h
-    ·
-      rfl
-    ·
-      simp only [mem_coe, mem_diag] at hx 
-      rw [hx.2]
+/--  The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
+theorem card_image_diag (s : Finset α) : (s.diag.image Quotientₓ.mk).card = s.card := by
+  rw [card_image_of_inj_on, diag_card]
+  rintro ⟨x₀, x₁⟩ hx _ _ h
+  cases Quotientₓ.eq.1 h
+  ·
+    rfl
+  ·
+    simp only [mem_coe, mem_diag] at hx
+    rw [hx.2]
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » s.off_diag)
-theorem two_mul_card_image_off_diag (s : Finset α) : (2*(s.off_diag.image Quotientₓ.mk).card) = s.off_diag.card :=
-  by 
-    rw
-      [card_eq_sum_card_fiberwise
-        (fun x => mem_image_of_mem _ : ∀ x _ : x ∈ s.off_diag, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
-      sum_const_nat (Quotientₓ.ind _), mul_commₓ]
-    rintro ⟨x, y⟩ hxy 
-    simpRw [mem_image, exists_prop, mem_off_diag, Quotientₓ.eq]  at hxy 
-    obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy 
-    obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y
-    ·
-      cases h <;> have  := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
-    have hxy' : y ≠ x := hxy.symm 
-    have  : (s.off_diag.filter fun z => ⟦z⟧ = ⟦(x, y)⟧) = ({(x, y), (y, x)} : Finset _)
-    ·
-      ext ⟨x₁, y₁⟩
-      rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iffₓ, Prod.mk.inj_iffₓ, and_iff_right_iff_imp]
-      rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
-    rw [this, card_insert_of_not_mem, card_singleton]
-    simp only [not_and, Prod.mk.inj_iffₓ, mem_singleton]
-    exact fun _ => hxy'
+theorem two_mul_card_image_off_diag (s : Finset α) : (2*(s.off_diag.image Quotientₓ.mk).card) = s.off_diag.card := by
+  rw
+    [card_eq_sum_card_fiberwise
+      (fun x => mem_image_of_mem _ : ∀, ∀ x ∈ s.off_diag, ∀, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
+    sum_const_nat (Quotientₓ.ind _), mul_commₓ]
+  rintro ⟨x, y⟩ hxy
+  simp_rw [mem_image, exists_prop, mem_off_diag, Quotientₓ.eq]  at hxy
+  obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy
+  obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y
+  ·
+    cases h <;> have := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
+  have hxy' : y ≠ x := hxy.symm
+  have : (s.off_diag.filter fun z => ⟦z⟧ = ⟦(x, y)⟧) = ({(x, y), (y, x)} : Finset _) := by
+    ext ⟨x₁, y₁⟩
+    rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iffₓ, Prod.mk.inj_iffₓ, and_iff_right_iff_imp]
+    rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
+  rw [this, card_insert_of_not_mem, card_singleton]
+  simp only [not_and, Prod.mk.inj_iffₓ, mem_singleton]
+  exact fun _ => hxy'
 
-/-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.
+/--  The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.
 This is because every element `⟦(x, y)⟧` of `sym2 α` not on the diagonal comes from exactly two
 pairs: `(x, y)` and `(y, x)`. -/
-theorem card_image_off_diag (s : Finset α) : (s.off_diag.image Quotientₓ.mk).card = s.card.choose 2 :=
-  by 
-    rw [Nat.choose_two_right, mul_tsub, mul_oneₓ, ←off_diag_card,
-      Nat.div_eq_of_eq_mul_rightₓ zero_lt_two (two_mul_card_image_off_diag s).symm]
+theorem card_image_off_diag (s : Finset α) : (s.off_diag.image Quotientₓ.mk).card = s.card.choose 2 := by
+  rw [Nat.choose_two_right, mul_tsub, mul_oneₓ, ← off_diag_card,
+    Nat.div_eq_of_eq_mul_rightₓ zero_lt_two (two_mul_card_image_off_diag s).symm]
 
-theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.is_diag } = card α :=
-  by 
-    convert card_image_diag (univ : Finset α)
-    rw [Fintype.card_of_subtype, ←filter_image_quotient_mk_is_diag]
-    rintro x 
-    rw [mem_filter, univ_product_univ, mem_image]
-    obtain ⟨a, ha⟩ := Quotientₓ.exists_rep x 
-    exact and_iff_right ⟨a, mem_univ _, ha⟩
+theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.is_diag } = card α := by
+  convert card_image_diag (univ : Finset α)
+  rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_is_diag]
+  rintro x
+  rw [mem_filter, univ_product_univ, mem_image]
+  obtain ⟨a, ha⟩ := Quotientₓ.exists_rep x
+  exact and_iff_right ⟨a, mem_univ _, ha⟩
 
-theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.is_diag } = (card α).choose 2 :=
-  by 
-    convert card_image_off_diag (univ : Finset α)
-    rw [Fintype.card_of_subtype, ←filter_image_quotient_mk_not_is_diag]
-    rintro x 
-    rw [mem_filter, univ_product_univ, mem_image]
-    obtain ⟨a, ha⟩ := Quotientₓ.exists_rep x 
-    exact and_iff_right ⟨a, mem_univ _, ha⟩
+theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.is_diag } = (card α).choose 2 := by
+  convert card_image_off_diag (univ : Finset α)
+  rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_not_is_diag]
+  rintro x
+  rw [mem_filter, univ_product_univ, mem_image]
+  obtain ⟨a, ha⟩ := Quotientₓ.exists_rep x
+  exact and_iff_right ⟨a, mem_univ _, ha⟩
 
-protected theorem card [Fintype α] : card (Sym2 α) = (card α*card α+1) / 2 :=
-  by 
-    rw [←Fintype.card_congr (@Equivₓ.sumCompl _ is_diag (Sym2.IsDiag.decidablePred α)), Fintype.card_sum,
-      card_subtype_diag, card_subtype_not_diag, Nat.choose_two_right, add_commₓ, ←Nat.triangle_succ, Nat.succ_sub_one,
-      mul_commₓ]
+protected theorem card [Fintype α] : card (Sym2 α) = (card α*card α+1) / 2 := by
+  rw [← Fintype.card_congr (@Equivₓ.sumCompl _ is_diag (Sym2.IsDiag.decidablePred α)), Fintype.card_sum,
+    card_subtype_diag, card_subtype_not_diag, Nat.choose_two_right, add_commₓ, ← Nat.triangle_succ, Nat.succ_sub_one,
+    mul_commₓ]
 
 end Sym2
 

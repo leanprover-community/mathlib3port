@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Limits.Shapes.RegularMono 
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels 
+import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
+import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
 
 /-!
@@ -14,7 +14,7 @@ normal monomorphism is normal (`category_theory.normal_of_is_pullback_snd_of_nor
 -/
 
 
-noncomputable section 
+noncomputable section
 
 namespace CategoryTheory
 
@@ -26,191 +26,183 @@ variable {C : Type u₁} [category.{v₁} C]
 
 variable {X Y : C}
 
-section 
+section
 
 variable [has_zero_morphisms C]
 
-/-- A normal monomorphism is a morphism which is the kernel of some morphism. -/
-class normal_mono (f : X ⟶ Y) where 
-  z : C 
-  g : Y ⟶ Z 
+/--  A normal monomorphism is a morphism which is the kernel of some morphism. -/
+class normal_mono (f : X ⟶ Y) where
+  z : C
+  g : Y ⟶ Z
   w : f ≫ g = 0
   IsLimit : is_limit (kernel_fork.of_ι f w)
 
-section 
+section
 
 attribute [local instance] fully_faithful_reflects_limits
 
 attribute [local instance] equivalence.ess_surj_of_equivalence
 
-/-- If `F` is an equivalence and `F.map f` is a normal mono, then `f` is a normal mono. -/
+/--  If `F` is an equivalence and `F.map f` is a normal mono, then `f` is a normal mono. -/
 def equivalence_reflects_normal_mono {D : Type u₂} [category.{v₁} D] [has_zero_morphisms D] (F : C ⥤ D)
-  [is_equivalence F] {X Y : C} {f : X ⟶ Y} (hf : normal_mono (F.map f)) : normal_mono f :=
+    [is_equivalence F] {X Y : C} {f : X ⟶ Y} (hf : normal_mono (F.map f)) : normal_mono f :=
   { z := F.obj_preimage hf.Z, g := full.preimage (hf.g ≫ (F.obj_obj_preimage_iso hf.Z).inv),
     w :=
-      faithful.map_injective F$
-        by 
-          simp [reassoc_of hf.w],
+      faithful.map_injective F $ by
+        simp [reassoc_of hf.w],
     IsLimit :=
-      reflects_limit.reflects$
-        is_limit.of_cone_equiv (cones.postcompose_equivalence (comp_nat_iso F : _))$
+      reflects_limit.reflects $
+        is_limit.of_cone_equiv (cones.postcompose_equivalence (comp_nat_iso F : _)) $
           is_limit.of_iso_limit
-            (by 
+            (by
               exact
                 is_limit.of_iso_limit
                   (is_kernel.of_comp_iso _ _ (F.obj_obj_preimage_iso hf.Z)
-                    (by 
+                    (by
                       simp )
                     hf.is_limit)
                   (of_ι_congr (category.comp_id _).symm))
             (iso_of_ι _).symm }
 
-end 
+end
 
-/-- Every normal monomorphism is a regular monomorphism. -/
+/--  Every normal monomorphism is a regular monomorphism. -/
 instance (priority := 100) normal_mono.regular_mono (f : X ⟶ Y) [I : normal_mono f] : regular_mono f :=
   { I with left := I.g, right := 0,
-    w :=
-      by 
-        simpa using I.w }
+    w := by
+      simpa using I.w }
 
-/-- If `f` is a normal mono, then any map `k : W ⟶ Y` such that `k ≫ normal_mono.g = 0` induces
+/--  If `f` is a normal mono, then any map `k : W ⟶ Y` such that `k ≫ normal_mono.g = 0` induces
     a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
 def normal_mono.lift' {W : C} (f : X ⟶ Y) [normal_mono f] (k : W ⟶ Y) (h : k ≫ normal_mono.g = 0) :
-  { l : W ⟶ X // l ≫ f = k } :=
+    { l : W ⟶ X // l ≫ f = k } :=
   kernel_fork.is_limit.lift' normal_mono.is_limit _ h
 
-/--
+/-- 
 The second leg of a pullback cone is a normal monomorphism if the right component is too.
 
 See also `pullback.snd_of_mono` for the basic monomorphism version, and
 `normal_of_is_pullback_fst_of_normal` for the flipped version.
 -/
 def normal_of_is_pullback_snd_of_normal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
-  [hn : normal_mono h] (comm : f ≫ h = g ≫ k) (t : is_limit (pullback_cone.mk _ _ comm)) : normal_mono g :=
+    [hn : normal_mono h] (comm : f ≫ h = g ≫ k) (t : is_limit (pullback_cone.mk _ _ comm)) : normal_mono g :=
   { z := hn.Z, g := k ≫ hn.g,
-    w :=
-      by 
-        rw [←reassoc_of comm, hn.w, has_zero_morphisms.comp_zero],
-    IsLimit :=
-      by 
-        let gr := regular_of_is_pullback_snd_of_regular comm t 
-        have q := (has_zero_morphisms.comp_zero k hn.Z).symm 
-        convert gr.is_limit 
-        dunfold kernel_fork.of_ι fork.of_ι 
-        congr 
-        exact q 
-        exact q 
-        exact q 
-        apply proof_irrel_heq }
+    w := by
+      rw [← reassoc_of comm, hn.w, has_zero_morphisms.comp_zero],
+    IsLimit := by
+      let gr := regular_of_is_pullback_snd_of_regular comm t
+      have q := (has_zero_morphisms.comp_zero k hn.Z).symm
+      convert gr.is_limit
+      dunfold kernel_fork.of_ι fork.of_ι
+      congr
+      exact q
+      exact q
+      exact q
+      apply proof_irrel_heq }
 
-/--
+/-- 
 The first leg of a pullback cone is a normal monomorphism if the left component is too.
 
 See also `pullback.fst_of_mono` for the basic monomorphism version, and
 `normal_of_is_pullback_snd_of_normal` for the flipped version.
 -/
 def normal_of_is_pullback_fst_of_normal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
-  [hn : normal_mono k] (comm : f ≫ h = g ≫ k) (t : is_limit (pullback_cone.mk _ _ comm)) : normal_mono f :=
+    [hn : normal_mono k] (comm : f ≫ h = g ≫ k) (t : is_limit (pullback_cone.mk _ _ comm)) : normal_mono f :=
   normal_of_is_pullback_snd_of_normal comm.symm (pullback_cone.flip_is_limit t)
 
-end 
+end
 
-section 
+section
 
 variable [has_zero_morphisms C]
 
-/-- A normal epimorphism is a morphism which is the cokernel of some morphism. -/
-class normal_epi (f : X ⟶ Y) where 
-  w : C 
-  g : W ⟶ X 
+/--  A normal epimorphism is a morphism which is the cokernel of some morphism. -/
+class normal_epi (f : X ⟶ Y) where
+  w : C
+  g : W ⟶ X
   w : g ≫ f = 0
   IsColimit : is_colimit (cokernel_cofork.of_π f w)
 
-section 
+section
 
 attribute [local instance] fully_faithful_reflects_colimits
 
 attribute [local instance] equivalence.ess_surj_of_equivalence
 
-/-- If `F` is an equivalence and `F.map f` is a normal epi, then `f` is a normal epi. -/
+/--  If `F` is an equivalence and `F.map f` is a normal epi, then `f` is a normal epi. -/
 def equivalence_reflects_normal_epi {D : Type u₂} [category.{v₁} D] [has_zero_morphisms D] (F : C ⥤ D)
-  [is_equivalence F] {X Y : C} {f : X ⟶ Y} (hf : normal_epi (F.map f)) : normal_epi f :=
+    [is_equivalence F] {X Y : C} {f : X ⟶ Y} (hf : normal_epi (F.map f)) : normal_epi f :=
   { w := F.obj_preimage hf.W, g := full.preimage ((F.obj_obj_preimage_iso hf.W).Hom ≫ hf.g),
     w :=
-      faithful.map_injective F$
-        by 
-          simp [hf.w],
+      faithful.map_injective F $ by
+        simp [hf.w],
     IsColimit :=
-      reflects_colimit.reflects$
-        is_colimit.of_cocone_equiv (cocones.precompose_equivalence (comp_nat_iso F).symm)$
+      reflects_colimit.reflects $
+        is_colimit.of_cocone_equiv (cocones.precompose_equivalence (comp_nat_iso F).symm) $
           is_colimit.of_iso_colimit
-            (by 
+            (by
               exact
                 is_colimit.of_iso_colimit
                   (is_cokernel.of_iso_comp _ _ (F.obj_obj_preimage_iso hf.W).symm
-                    (by 
+                    (by
                       simp )
                     hf.is_colimit)
                   (of_π_congr (category.id_comp _).symm))
             (iso_of_π _).symm }
 
-end 
+end
 
-/-- Every normal epimorphism is a regular epimorphism. -/
+/--  Every normal epimorphism is a regular epimorphism. -/
 instance (priority := 100) normal_epi.regular_epi (f : X ⟶ Y) [I : normal_epi f] : regular_epi f :=
   { I with left := I.g, right := 0,
-    w :=
-      by 
-        simpa using I.w }
+    w := by
+      simpa using I.w }
 
-/-- If `f` is a normal epi, then every morphism `k : X ⟶ W` satisfying `normal_epi.g ≫ k = 0`
+/--  If `f` is a normal epi, then every morphism `k : X ⟶ W` satisfying `normal_epi.g ≫ k = 0`
     induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
 def normal_epi.desc' {W : C} (f : X ⟶ Y) [normal_epi f] (k : X ⟶ W) (h : normal_epi.g ≫ k = 0) :
-  { l : Y ⟶ W // f ≫ l = k } :=
+    { l : Y ⟶ W // f ≫ l = k } :=
   cokernel_cofork.is_colimit.desc' normal_epi.is_colimit _ h
 
-/--
+/-- 
 The second leg of a pushout cocone is a normal epimorphism if the right component is too.
 
 See also `pushout.snd_of_epi` for the basic epimorphism version, and
 `normal_of_is_pushout_fst_of_normal` for the flipped version.
 -/
 def normal_of_is_pushout_snd_of_normal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [gn : normal_epi g]
-  (comm : f ≫ h = g ≫ k) (t : is_colimit (pushout_cocone.mk _ _ comm)) : normal_epi h :=
+    (comm : f ≫ h = g ≫ k) (t : is_colimit (pushout_cocone.mk _ _ comm)) : normal_epi h :=
   { w := gn.W, g := gn.g ≫ f,
-    w :=
-      by 
-        rw [category.assoc, comm, reassoc_of gn.w, zero_comp],
-    IsColimit :=
-      by 
-        let hn := regular_of_is_pushout_snd_of_regular comm t 
-        have q := (@zero_comp _ _ _ gn.W _ _ f).symm 
-        convert hn.is_colimit 
-        dunfold cokernel_cofork.of_π cofork.of_π 
-        congr 
-        exact q 
-        exact q 
-        exact q 
-        apply proof_irrel_heq }
+    w := by
+      rw [category.assoc, comm, reassoc_of gn.w, zero_comp],
+    IsColimit := by
+      let hn := regular_of_is_pushout_snd_of_regular comm t
+      have q := (@zero_comp _ _ _ gn.W _ _ f).symm
+      convert hn.is_colimit
+      dunfold cokernel_cofork.of_π cofork.of_π
+      congr
+      exact q
+      exact q
+      exact q
+      apply proof_irrel_heq }
 
-/--
+/-- 
 The first leg of a pushout cocone is a normal epimorphism if the left component is too.
 
 See also `pushout.fst_of_epi` for the basic epimorphism version, and
 `normal_of_is_pushout_snd_of_normal` for the flipped version.
 -/
 def normal_of_is_pushout_fst_of_normal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hn : normal_epi f]
-  (comm : f ≫ h = g ≫ k) (t : is_colimit (pushout_cocone.mk _ _ comm)) : normal_epi k :=
+    (comm : f ≫ h = g ≫ k) (t : is_colimit (pushout_cocone.mk _ _ comm)) : normal_epi k :=
   normal_of_is_pushout_snd_of_normal comm.symm (pushout_cocone.flip_is_colimit t)
 
-end 
+end
 
 open Opposite
 
 variable [has_zero_morphisms C]
 
-/-- A normal mono becomes a normal epi in the opposite category. -/
+/--  A normal mono becomes a normal epi in the opposite category. -/
 def normal_epi_of_normal_mono_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : normal_mono f.unop) : normal_epi f :=
   { w := op m.Z, g := m.g.op, w := congr_argₓ Quiver.Hom.op m.w,
     IsColimit :=
@@ -218,13 +210,13 @@ def normal_epi_of_normal_mono_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : normal_mon
         (fun Z' g' w' => (kernel_fork.is_limit.lift' m.is_limit g'.unop (congr_argₓ Quiver.Hom.unop w')).1.op)
         (fun Z' g' w' =>
           congr_argₓ Quiver.Hom.op (kernel_fork.is_limit.lift' m.is_limit g'.unop (congr_argₓ Quiver.Hom.unop w')).2)
-        (by 
-          rintro Z' g' w' m' rfl 
-          apply Quiver.Hom.unop_inj 
-          apply m.is_limit.uniq (kernel_fork.of_ι (m'.unop ≫ f.unop) _) m'.unop 
+        (by
+          rintro Z' g' w' m' rfl
+          apply Quiver.Hom.unop_inj
+          apply m.is_limit.uniq (kernel_fork.of_ι (m'.unop ≫ f.unop) _) m'.unop
           rintro (⟨⟩ | ⟨⟩) <;> simp ) }
 
-/-- A normal epi becomes a normal mono in the opposite category. -/
+/--  A normal epi becomes a normal mono in the opposite category. -/
 def normal_mono_of_normal_epi_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : normal_epi f.unop) : normal_mono f :=
   { z := op m.W, g := m.g.op, w := congr_argₓ Quiver.Hom.op m.w,
     IsLimit :=
@@ -233,10 +225,10 @@ def normal_mono_of_normal_epi_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : normal_epi
         (fun Z' g' w' =>
           congr_argₓ Quiver.Hom.op
             (cokernel_cofork.is_colimit.desc' m.is_colimit g'.unop (congr_argₓ Quiver.Hom.unop w')).2)
-        (by 
-          rintro Z' g' w' m' rfl 
-          apply Quiver.Hom.unop_inj 
-          apply m.is_colimit.uniq (cokernel_cofork.of_π (f.unop ≫ m'.unop) _) m'.unop 
+        (by
+          rintro Z' g' w' m' rfl
+          apply Quiver.Hom.unop_inj
+          apply m.is_colimit.uniq (cokernel_cofork.of_π (f.unop ≫ m'.unop) _) m'.unop
           rintro (⟨⟩ | ⟨⟩) <;> simp ) }
 
 end CategoryTheory

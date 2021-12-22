@@ -1,4 +1,4 @@
-import Mathbin.CategoryTheory.Category.Preorder 
+import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.Limits.IsLimit
 
 /-!
@@ -17,7 +17,7 @@ and show that `supr U` provides a colimit cocone over this functor.
 -/
 
 
-noncomputable section 
+noncomputable section
 
 universe v u
 
@@ -27,7 +27,7 @@ open CategoryTheory.Limits
 
 namespace CategoryTheory
 
-/--
+/-- 
 An inductive type representing either a single term of a type `ι`, or a pair of terms.
 We use this as the objects of a category to describe the sheaf condition.
 -/
@@ -42,7 +42,7 @@ namespace Pairwise
 instance pairwise_inhabited [Inhabited ι] : Inhabited (Pairwise ι) :=
   ⟨single (default ι)⟩
 
-/--
+/-- 
 Morphisms in the category `pairwise ι`. The only non-identity morphisms are
 `left i j : single i ⟶ pair i j` and `right i j : single j ⟶ pair i j`.
 -/
@@ -57,50 +57,50 @@ open Hom
 instance hom_inhabited [Inhabited ι] : Inhabited (hom (single (default ι)) (single (default ι))) :=
   ⟨id_single (default ι)⟩
 
-/--
+/-- 
 The identity morphism in `pairwise ι`.
 -/
 def id : ∀ o : Pairwise ι, hom o o
-| single i => id_single i
-| pair i j => id_pair i j
+  | single i => id_single i
+  | pair i j => id_pair i j
 
-/-- Composition of morphisms in `pairwise ι`. -/
+/--  Composition of morphisms in `pairwise ι`. -/
 def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} f : hom o₁ o₂ g : hom o₂ o₃, hom o₁ o₃
-| _, _, _, id_single i, g => g
-| _, _, _, id_pair i j, g => g
-| _, _, _, left i j, id_single _ => left i j
-| _, _, _, right i j, id_single _ => right i j
+  | _, _, _, id_single i, g => g
+  | _, _, _, id_pair i j, g => g
+  | _, _, _, left i j, id_single _ => left i j
+  | _, _, _, right i j, id_single _ => right i j
 
-section 
+section
 
 attribute [local tidy] tactic.case_bash
 
-instance : category (Pairwise ι) :=
-  { Hom := hom, id := id, comp := fun X Y Z f g => comp f g }
+-- failed to format: format: uncaught backtrack exception
+instance : category ( Pairwise ι ) where Hom := hom id := id comp X Y Z f g := comp f g
 
-end 
+end
 
 variable {α : Type v} (U : ι → α)
 
-section 
+section
 
 variable [SemilatticeInf α]
 
-/-- Auxiliary definition for `diagram`. -/
+/--  Auxiliary definition for `diagram`. -/
 @[simp]
 def diagram_obj : Pairwise ι → α
-| single i => U i
-| pair i j => U i⊓U j
+  | single i => U i
+  | pair i j => U i⊓U j
 
-/-- Auxiliary definition for `diagram`. -/
+/--  Auxiliary definition for `diagram`. -/
 @[simp]
 def diagram_map : ∀ {o₁ o₂ : Pairwise ι} f : o₁ ⟶ o₂, diagram_obj U o₁ ⟶ diagram_obj U o₂
-| _, _, id_single i => 𝟙 _
-| _, _, id_pair i j => 𝟙 _
-| _, _, left i j => hom_of_le inf_le_left
-| _, _, right i j => hom_of_le inf_le_right
+  | _, _, id_single i => 𝟙 _
+  | _, _, id_pair i j => 𝟙 _
+  | _, _, left i j => hom_of_le inf_le_left
+  | _, _, right i j => hom_of_le inf_le_right
 
-/--
+/-- 
 Given a function `U : ι → α` for `[semilattice_inf α]`, we obtain a functor `pairwise ι ⥤ α`,
 sending `single i` to `U i` and `pair i j` to `U i ⊓ U j`,
 and the morphisms to the obvious inequalities.
@@ -109,18 +109,18 @@ and the morphisms to the obvious inequalities.
 def diagram : Pairwise ι ⥤ α :=
   { obj := diagram_obj U, map := fun X Y f => diagram_map U f }
 
-end 
+end
 
-section 
+section
 
 variable [CompleteLattice α]
 
-/-- Auxiliary definition for `cocone`. -/
+/--  Auxiliary definition for `cocone`. -/
 def cocone_ι_app : ∀ o : Pairwise ι, diagram_obj U o ⟶ supr U
-| single i => hom_of_le (le_supr U i)
-| pair i j => hom_of_le inf_le_left ≫ hom_of_le (le_supr U i)
+  | single i => hom_of_le (le_supr U i)
+  | pair i j => hom_of_le inf_le_left ≫ hom_of_le (le_supr U i)
 
-/--
+/-- 
 Given a function `U : ι → α` for `[complete_lattice α]`,
 `supr U` provides a cocone over `diagram U`.
 -/
@@ -128,20 +128,19 @@ Given a function `U : ι → α` for `[complete_lattice α]`,
 def cocone : cocone (diagram U) :=
   { x := supr U, ι := { app := cocone_ι_app U } }
 
-/--
+/-- 
 Given a function `U : ι → α` for `[complete_lattice α]`,
 `infi U` provides a limit cone over `diagram U`.
 -/
 def cocone_is_colimit : is_colimit (cocone U) :=
-  { desc :=
-      fun s =>
-        hom_of_le
-          (by 
-            apply CompleteLattice.Sup_le 
-            rintro _ ⟨j, rfl⟩
-            exact (s.ι.app (single j)).le) }
+  { desc := fun s =>
+      hom_of_le
+        (by
+          apply CompleteLattice.Sup_le
+          rintro _ ⟨j, rfl⟩
+          exact (s.ι.app (single j)).le) }
 
-end 
+end
 
 end Pairwise
 

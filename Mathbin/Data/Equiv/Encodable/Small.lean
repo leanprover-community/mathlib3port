@@ -1,4 +1,4 @@
-import Mathbin.Data.Equiv.Encodable.Basic 
+import Mathbin.Data.Equiv.Encodable.Basic
 import Mathbin.Logic.Small
 
 /-!

@@ -1,4 +1,4 @@
-import Mathbin.Tactic.Interactive 
+import Mathbin.Tactic.Interactive
 import Mathbin.Tactic.Converter.Interactive
 
 /-!
@@ -19,7 +19,7 @@ open Interactive Interactive.Types Lean.Parser
 
 local postfix:9001 "?" => optionalₓ
 
-/--
+/-- 
 Apply a congruence lemma inside `conv` mode.
 
 When called without an argument `apply_congr` will try applying all lemmas marked with `@[congr]`.
@@ -64,27 +64,22 @@ end
 In the above example, when the `apply_congr` tactic is called it gives the hypothesis `H : x ∈ S`
 which is then used to rewrite the `f x` to `g x`.
 -/
-unsafe def apply_congr (q : parse (texpr)?) : conv Unit :=
-  do 
-    let congr_lemmas ←
-      match q with 
-        | some e =>
-          do 
-            let gs ← get_goals 
-            let e ← to_expr e 
-            set_goals gs 
-            return [e]
-        | none =>
-          do 
-            let congr_lemma_names ← attribute.get_instances `congr 
-            congr_lemma_names.mmap mk_const 
-    congr_lemmas.any_of
-        fun n =>
-          seq' (tactic.eapply n >> tactic.skip)
-            (tactic.intros >>
-              do 
-                let quote.1 (_ = _) ← target 
-                tactic.skip)
+unsafe def apply_congr (q : parse (texpr)?) : conv Unit := do
+  let congr_lemmas ←
+    match q with
+      | some e => do
+        let gs ← get_goals
+        let e ← to_expr e
+        set_goals gs
+        return [e]
+      | none => do
+        let congr_lemma_names ← attribute.get_instances `congr
+        congr_lemma_names.mmap mk_const
+  congr_lemmas.any_of fun n =>
+      seq' (tactic.eapply n >> tactic.skip)
+        (tactic.intros >> do
+          let quote.1 (_ = _) ← target
+          tactic.skip)
 
 add_tactic_doc
   { Name := "apply_congr", category := DocCategory.tactic, declNames := [`conv.interactive.apply_congr],

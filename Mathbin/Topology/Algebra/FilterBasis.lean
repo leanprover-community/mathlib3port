@@ -1,4 +1,4 @@
-import Mathbin.Order.Filter.Bases 
+import Mathbin.Order.Filter.Bases
 import Mathbin.Topology.Algebra.Module
 
 /-!
@@ -36,245 +36,214 @@ open_locale TopologicalSpace Filter Pointwise
 
 universe u
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
-/-- A `group_filter_basis` on a group is a `filter_basis` satisfying some additional axioms.
+/--  A `group_filter_basis` on a group is a `filter_basis` satisfying some additional axioms.
   Example : if `G` is a topological group then the neighbourhoods of the identity are a
   `group_filter_basis`. Conversely given a `group_filter_basis` one can define a topology
   compatible with the group structure on `G`.  -/
-class GroupFilterBasis (G : Type u) [Groupₓ G] extends FilterBasis G where 
-  one' : ∀ {U}, U ∈ sets → (1 : G) ∈ U 
-  mul' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), (V*V) ⊆ U 
-  inv' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x⁻¹) ⁻¹' U 
-  conj' : ∀ x₀, ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => (x₀*x)*x₀⁻¹) ⁻¹' U
+class GroupFilterBasis (G : Type u) [Groupₓ G] extends FilterBasis G where
+  one' : ∀ {U}, U ∈ sets → (1 : G) ∈ U
+  mul' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, (V*V) ⊆ U
+  inv' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U
+  conj' : ∀ x₀, ∀ {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => (x₀*x)*x₀⁻¹) ⁻¹' U
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
-/-- A `add_group_filter_basis` on an additive group is a `filter_basis` satisfying some additional
+/--  A `add_group_filter_basis` on an additive group is a `filter_basis` satisfying some additional
   axioms. Example : if `G` is a topological group then the neighbourhoods of the identity are a
   `add_group_filter_basis`. Conversely given a `add_group_filter_basis` one can define a topology
   compatible with the group structure on `G`. -/
-class AddGroupFilterBasis (A : Type u) [AddGroupₓ A] extends FilterBasis A where 
-  zero' : ∀ {U}, U ∈ sets → (0 : A) ∈ U 
-  add' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), (V+V) ⊆ U 
-  neg' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => -x) ⁻¹' U 
-  conj' : ∀ x₀, ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => (x₀+x)+-x₀) ⁻¹' U
+class AddGroupFilterBasis (A : Type u) [AddGroupₓ A] extends FilterBasis A where
+  zero' : ∀ {U}, U ∈ sets → (0 : A) ∈ U
+  add' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, (V+V) ⊆ U
+  neg' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => -x) ⁻¹' U
+  conj' : ∀ x₀, ∀ {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => (x₀+x)+-x₀) ⁻¹' U
 
-attribute [toAdditive] GroupFilterBasis
+attribute [to_additive] GroupFilterBasis
 
-attribute [toAdditive] GroupFilterBasis.one'
+attribute [to_additive] GroupFilterBasis.one'
 
-attribute [toAdditive] GroupFilterBasis.mul'
+attribute [to_additive] GroupFilterBasis.mul'
 
-attribute [toAdditive] GroupFilterBasis.inv'
+attribute [to_additive] GroupFilterBasis.inv'
 
-attribute [toAdditive] GroupFilterBasis.conj'
+attribute [to_additive] GroupFilterBasis.conj'
 
-attribute [toAdditive] GroupFilterBasis.toFilterBasis
+attribute [to_additive] GroupFilterBasis.toFilterBasis
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (z «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
-/-- `group_filter_basis` constructor in the commutative group case. -/
-@[toAdditive "`add_group_filter_basis` constructor in the commutative group case."]
+/--  `group_filter_basis` constructor in the commutative group case. -/
+@[to_additive "`add_group_filter_basis` constructor in the commutative group case."]
 def groupFilterBasisOfComm {G : Type _} [CommGroupₓ G] (sets : Set (Set G)) (nonempty : sets.nonempty)
-  (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ (z : _)(_ : z ∈ sets), z ⊆ x ∩ y) (one : ∀ U _ : U ∈ sets, (1 : G) ∈ U)
-  (mul : ∀ U _ : U ∈ sets, ∃ (V : _)(_ : V ∈ sets), (V*V) ⊆ U)
-  (inv : ∀ U _ : U ∈ sets, ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x⁻¹) ⁻¹' U) : GroupFilterBasis G :=
+    (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ z ∈ sets, z ⊆ x ∩ y) (one : ∀, ∀ U ∈ sets, ∀, (1 : G) ∈ U)
+    (mul : ∀, ∀ U ∈ sets, ∀, ∃ V ∈ sets, (V*V) ⊆ U) (inv : ∀, ∀ U ∈ sets, ∀, ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U) :
+    GroupFilterBasis G :=
   { Sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv,
-    conj' :=
-      fun x U U_in =>
-        ⟨U, U_in,
-          by 
-            simp ⟩ }
+    conj' := fun x U U_in =>
+      ⟨U, U_in, by
+        simp ⟩ }
 
 namespace GroupFilterBasis
 
 variable {G : Type u} [Groupₓ G] {B : GroupFilterBasis G}
 
-@[toAdditive]
+@[to_additive]
 instance : HasMem (Set G) (GroupFilterBasis G) :=
   ⟨fun s f => s ∈ f.sets⟩
 
-@[toAdditive]
+@[to_additive]
 theorem one {U : Set G} : U ∈ B → (1 : G) ∈ U :=
   GroupFilterBasis.one'
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
-@[toAdditive]
-theorem mul {U : Set G} : U ∈ B → ∃ (V : _)(_ : V ∈ B), (V*V) ⊆ U :=
+@[to_additive]
+theorem mul {U : Set G} : U ∈ B → ∃ V ∈ B, (V*V) ⊆ U :=
   GroupFilterBasis.mul'
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
-@[toAdditive]
-theorem inv {U : Set G} : U ∈ B → ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => x⁻¹) ⁻¹' U :=
+@[to_additive]
+theorem inv {U : Set G} : U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x⁻¹) ⁻¹' U :=
   GroupFilterBasis.inv'
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
-@[toAdditive]
-theorem conj : ∀ x₀, ∀ {U}, U ∈ B → ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => (x₀*x)*x₀⁻¹) ⁻¹' U :=
+@[to_additive]
+theorem conj : ∀ x₀, ∀ {U}, U ∈ B → ∃ V ∈ B, V ⊆ (fun x => (x₀*x)*x₀⁻¹) ⁻¹' U :=
   GroupFilterBasis.conj'
 
-/-- The trivial group filter basis consists of `{1}` only. The associated topology
+/--  The trivial group filter basis consists of `{1}` only. The associated topology
 is discrete. -/
-@[toAdditive "The trivial additive group filter basis consists of `{0}` only. The associated\ntopology is discrete."]
+@[to_additive "The trivial additive group filter basis consists of `{0}` only. The associated\ntopology is discrete."]
 instance : Inhabited (GroupFilterBasis G) :=
-  ⟨by 
-      refine' { Sets := {{1}}, Nonempty := singleton_nonempty _, .. }
-      all_goals 
-        simp only [exists_prop, mem_singleton_iff]
-      ·
-        rintro - - rfl rfl 
-        use {1}
-        simp 
-      ·
-        simp 
-      ·
-        rintro - rfl 
-        use {1}
-        simp 
-      ·
-        rintro - rfl 
-        use {1}
-        simp 
-      ·
-        rintro x₀ - rfl 
-        use {1}
-        simp ⟩
+  ⟨by
+    refine' { Sets := {{1}}, Nonempty := singleton_nonempty _, .. }
+    all_goals
+      simp only [exists_prop, mem_singleton_iff]
+    ·
+      rintro - - rfl rfl
+      use {1}
+      simp
+    ·
+      simp
+    ·
+      rintro - rfl
+      use {1}
+      simp
+    ·
+      rintro - rfl
+      use {1}
+      simp
+    ·
+      rintro x₀ - rfl
+      use {1}
+      simp ⟩
 
-@[toAdditive]
-theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U*U :=
-  fun x x_in => ⟨1, x, one h, x_in, one_mulₓ x⟩
+@[to_additive]
+theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U*U := fun x x_in =>
+  ⟨1, x, one h, x_in, one_mulₓ x⟩
 
-/-- The neighborhood function of a `group_filter_basis` -/
-@[toAdditive "The neighborhood function of a `add_group_filter_basis`"]
-def N (B : GroupFilterBasis G) : G → Filter G :=
-  fun x => map (fun y => x*y) B.to_filter_basis.filter
+/--  The neighborhood function of a `group_filter_basis` -/
+@[to_additive "The neighborhood function of a `add_group_filter_basis`"]
+def N (B : GroupFilterBasis G) : G → Filter G := fun x => map (fun y => x*y) B.to_filter_basis.filter
 
-@[simp, toAdditive]
-theorem N_one (B : GroupFilterBasis G) : B.N 1 = B.to_filter_basis.filter :=
-  by 
-    simp only [N, one_mulₓ, map_id']
+@[simp, to_additive]
+theorem N_one (B : GroupFilterBasis G) : B.N 1 = B.to_filter_basis.filter := by
+  simp only [N, one_mulₓ, map_id']
 
-@[toAdditive]
+@[to_additive]
 protected theorem has_basis (B : GroupFilterBasis G) (x : G) :
-  has_basis (B.N x) (fun V : Set G => V ∈ B) fun V => (fun y => x*y) '' V :=
+    has_basis (B.N x) (fun V : Set G => V ∈ B) fun V => (fun y => x*y) '' V :=
   has_basis.map (fun y => x*y) to_filter_basis.HasBasis
 
-/-- The topological space structure coming from a group filter basis. -/
-@[toAdditive "The topological space structure coming from an additive group filter basis."]
+/--  The topological space structure coming from a group filter basis. -/
+@[to_additive "The topological space structure coming from an additive group filter basis."]
 def topology (B : GroupFilterBasis G) : TopologicalSpace G :=
   TopologicalSpace.mkOfNhds B.N
 
-@[toAdditive]
-theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = B.N x₀ :=
-  by 
-    rw [TopologicalSpace.nhds_mk_of_nhds]
+@[to_additive]
+theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = B.N x₀ := by
+  rw [TopologicalSpace.nhds_mk_of_nhds]
+  ·
+    intro x U U_in
+    rw [(B.has_basis x).mem_iff] at U_in
+    rcases U_in with ⟨V, V_in, H⟩
+    simpa [mem_pure] using H (mem_image_of_mem _ (GroupFilterBasis.one V_in))
+  ·
+    intro x U U_in
+    rw [(B.has_basis x).mem_iff] at U_in
+    rcases U_in with ⟨V, V_in, H⟩
+    rcases GroupFilterBasis.mul V_in with ⟨W, W_in, hW⟩
+    use (fun y => x*y) '' W, image_mem_map (FilterBasis.mem_filter_of_mem _ W_in)
+    constructor
     ·
-      intro x U U_in 
-      rw [(B.has_basis x).mem_iff] at U_in 
-      rcases U_in with ⟨V, V_in, H⟩
-      simpa [mem_pure] using H (mem_image_of_mem _ (GroupFilterBasis.one V_in))
+      rw [image_subset_iff] at H⊢
+      exact ((B.prod_subset_self W_in).trans hW).trans H
     ·
-      intro x U U_in 
-      rw [(B.has_basis x).mem_iff] at U_in 
-      rcases U_in with ⟨V, V_in, H⟩
-      rcases GroupFilterBasis.mul V_in with ⟨W, W_in, hW⟩
-      use (fun y => x*y) '' W, image_mem_map (FilterBasis.mem_filter_of_mem _ W_in)
-      constructor
-      ·
-        rw [image_subset_iff] at H⊢
-        exact ((B.prod_subset_self W_in).trans hW).trans H
-      ·
-        rintro y ⟨t, tW, rfl⟩
-        rw [(B.has_basis _).mem_iff]
-        use W, W_in 
-        apply subset.trans _ H 
-        clear H 
-        rintro z ⟨w, wW, rfl⟩
-        exact
-          ⟨t*w, hW (mul_mem_mul tW wW),
-            by 
-              simp [mul_assocₓ]⟩
+      rintro y ⟨t, tW, rfl⟩
+      rw [(B.has_basis _).mem_iff]
+      use W, W_in
+      apply subset.trans _ H
+      clear H
+      rintro z ⟨w, wW, rfl⟩
+      exact
+        ⟨t*w, hW (mul_mem_mul tW wW), by
+          simp [mul_assocₓ]⟩
 
-@[toAdditive]
-theorem nhds_one_eq (B : GroupFilterBasis G) : @nhds G B.topology (1 : G) = B.to_filter_basis.filter :=
-  by 
-    rw [B.nhds_eq]
-    simp only [N, one_mulₓ]
-    exact map_id
+@[to_additive]
+theorem nhds_one_eq (B : GroupFilterBasis G) : @nhds G B.topology (1 : G) = B.to_filter_basis.filter := by
+  rw [B.nhds_eq]
+  simp only [N, one_mulₓ]
+  exact map_id
 
-@[toAdditive]
+@[to_additive]
 theorem nhds_has_basis (B : GroupFilterBasis G) (x₀ : G) :
-  has_basis (@nhds G B.topology x₀) (fun V : Set G => V ∈ B) fun V => (fun y => x₀*y) '' V :=
-  by 
-    rw [B.nhds_eq]
-    apply B.has_basis
+    has_basis (@nhds G B.topology x₀) (fun V : Set G => V ∈ B) fun V => (fun y => x₀*y) '' V := by
+  rw [B.nhds_eq]
+  apply B.has_basis
 
-@[toAdditive]
-theorem nhds_one_has_basis (B : GroupFilterBasis G) : has_basis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id :=
-  by 
-    rw [B.nhds_one_eq]
-    exact B.to_filter_basis.has_basis
+@[to_additive]
+theorem nhds_one_has_basis (B : GroupFilterBasis G) : has_basis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id := by
+  rw [B.nhds_one_eq]
+  exact B.to_filter_basis.has_basis
 
-@[toAdditive]
-theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 :=
-  by 
-    rw [B.nhds_one_has_basis.mem_iff]
-    exact ⟨U, hU, rfl.subset⟩
+@[to_additive]
+theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 := by
+  rw [B.nhds_one_has_basis.mem_iff]
+  exact ⟨U, hU, rfl.subset⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » B)
-/-- If a group is endowed with a topological structure coming from
+/--  If a group is endowed with a topological structure coming from
 a group filter basis then it's a topological group. -/
-@[toAdditive]
-instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ :=
-  by 
-    let this' := B.topology 
-    have basis := B.nhds_one_has_basis 
-    have basis' := basis.prod basis 
-    refine' TopologicalGroup.of_nhds_one _ _ _ _
-    ·
-      rw [basis'.tendsto_iff basis]
-      suffices  : ∀ U _ : U ∈ B, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → (a*b) ∈ U
-      ·
-        simpa 
-      intro U U_in 
-      rcases mul U_in with ⟨V, V_in, hV⟩
-      use V, V, V_in, V_in 
-      intro a b a_in b_in 
-      exact hV ⟨a, b, a_in, b_in, rfl⟩
-    ·
-      rw [basis.tendsto_iff basis]
-      intro U U_in 
-      simpa using inv U_in
-    ·
-      intro x₀ 
-      rw [nhds_eq, nhds_one_eq]
-      rfl
-    ·
-      intro x₀ 
-      rw [basis.tendsto_iff basis]
-      intro U U_in 
-      exact conj x₀ U_in
+@[to_additive]
+instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ := by
+  let this' := B.topology
+  have basis := B.nhds_one_has_basis
+  have basis' := basis.prod basis
+  refine' TopologicalGroup.of_nhds_one _ _ _ _
+  ·
+    rw [basis'.tendsto_iff basis]
+    suffices ∀, ∀ U ∈ B, ∀, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → (a*b) ∈ U by
+      simpa
+    intro U U_in
+    rcases mul U_in with ⟨V, V_in, hV⟩
+    use V, V, V_in, V_in
+    intro a b a_in b_in
+    exact hV ⟨a, b, a_in, b_in, rfl⟩
+  ·
+    rw [basis.tendsto_iff basis]
+    intro U U_in
+    simpa using inv U_in
+  ·
+    intro x₀
+    rw [nhds_eq, nhds_one_eq]
+    rfl
+  ·
+    intro x₀
+    rw [basis.tendsto_iff basis]
+    intro U U_in
+    exact conj x₀ U_in
 
 end GroupFilterBasis
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
-/-- A `ring_filter_basis` on a ring is a `filter_basis` satisfying some additional axioms.
+/--  A `ring_filter_basis` on a ring is a `filter_basis` satisfying some additional axioms.
   Example : if `R` is a topological ring then the neighbourhoods of the identity are a
   `ring_filter_basis`. Conversely given a `ring_filter_basis` on a ring `R`, one can define a
   topology on `R` which is compatible with the ring structure.  -/
-class RingFilterBasis (R : Type u) [Ringₓ R] extends AddGroupFilterBasis R where 
-  mul' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), (V*V) ⊆ U 
-  mul_left' : ∀ x₀ : R {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x₀*x) ⁻¹' U 
-  mul_right' : ∀ x₀ : R {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x*x₀) ⁻¹' U
+class RingFilterBasis (R : Type u) [Ringₓ R] extends AddGroupFilterBasis R where
+  mul' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, (V*V) ⊆ U
+  mul_left' : ∀ x₀ : R {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀*x) ⁻¹' U
+  mul_right' : ∀ x₀ : R {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x*x₀) ⁻¹' U
 
 namespace RingFilterBasis
 
@@ -283,70 +252,302 @@ variable {R : Type u} [Ringₓ R] (B : RingFilterBasis R)
 instance : HasMem (Set R) (RingFilterBasis R) :=
   ⟨fun s B => s ∈ B.sets⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
-theorem mul {U : Set R} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ B), (V*V) ⊆ U :=
+theorem mul {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, (V*V) ⊆ U :=
   mul' hU
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
-theorem mul_left (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => x₀*x) ⁻¹' U :=
+theorem mul_left (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x₀*x) ⁻¹' U :=
   mul_left' x₀ hU
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
-theorem mul_right (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => x*x₀) ⁻¹' U :=
+theorem mul_right (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x*x₀) ⁻¹' U :=
   mul_right' x₀ hU
 
-/-- The topology associated to a ring filter basis.
+/--  The topology associated to a ring filter basis.
 It has the given basis as a basis of neighborhoods of zero. -/
 def topology : TopologicalSpace R :=
   B.to_add_group_filter_basis.topology
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (U «expr ∈ » B')
-/-- If a ring is endowed with a topological structure coming from
+/--  If a ring is endowed with a topological structure coming from
 a ring filter basis then it's a topological ring. -/
 instance (priority := 100) is_topological_ring {R : Type u} [Ringₓ R] (B : RingFilterBasis R) :
-  @TopologicalRing R B.topology _ :=
-  by 
-    let B' := B.to_add_group_filter_basis 
-    let this' := B'.topology 
-    have basis := B'.nhds_zero_has_basis 
-    have basis' := basis.prod basis 
-    have  := B'.is_topological_add_group 
-    apply TopologicalRing.of_add_group_of_nhds_zero
-    ·
-      rw [basis'.tendsto_iff basis]
-      suffices  : ∀ U _ : U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → (a*b) ∈ U
-      ·
-        simpa 
-      intro U U_in 
-      rcases B.mul U_in with ⟨V, V_in, hV⟩
-      use V, V, V_in, V_in 
-      intro a b a_in b_in 
-      exact hV ⟨a, b, a_in, b_in, rfl⟩
-    ·
-      intro x₀ 
-      rw [basis.tendsto_iff basis]
-      intro U 
-      simpa using B.mul_left x₀
-    ·
-      intro x₀ 
-      rw [basis.tendsto_iff basis]
-      intro U 
-      simpa using B.mul_right x₀
+    @TopologicalRing R B.topology _ := by
+  let B' := B.to_add_group_filter_basis
+  let this' := B'.topology
+  have basis := B'.nhds_zero_has_basis
+  have basis' := basis.prod basis
+  have := B'.is_topological_add_group
+  apply TopologicalRing.of_add_group_of_nhds_zero
+  ·
+    rw [basis'.tendsto_iff basis]
+    suffices ∀, ∀ U ∈ B', ∀, ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → (a*b) ∈ U by
+      simpa
+    intro U U_in
+    rcases B.mul U_in with ⟨V, V_in, hV⟩
+    use V, V, V_in, V_in
+    intro a b a_in b_in
+    exact hV ⟨a, b, a_in, b_in, rfl⟩
+  ·
+    intro x₀
+    rw [basis.tendsto_iff basis]
+    intro U
+    simpa using B.mul_left x₀
+  ·
+    intro x₀
+    rw [basis.tendsto_iff basis]
+    intro U
+    simpa using B.mul_right x₀
 
 end RingFilterBasis
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » expr𝓝() (0 : R))
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (W «expr ∈ » sets)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » sets)
-/-- A `module_filter_basis` on a module is a `filter_basis` satisfying some additional axioms.
-  Example : if `M` is a topological module then the neighbourhoods of zero are a
-  `module_filter_basis`. Conversely given a `module_filter_basis` one can define a topology
-  compatible with the module structure on `M`.  -/
-structure ModuleFilterBasis (R M : Type _) [CommRingₓ R] [TopologicalSpace R] [AddCommGroupₓ M] [Module R M] extends
-  AddGroupFilterBasis M where 
-  smul' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ 𝓝 (0 : R))(W : _)(_ : W ∈ sets), V • W ⊆ U 
-  smul_left' : ∀ x₀ : R {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x₀ • x) ⁻¹' U 
-  smul_right' : ∀ m₀ : M {U}, U ∈ sets → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment
+    "/--"
+    " A `module_filter_basis` on a module is a `filter_basis` satisfying some additional axioms.\n  Example : if `M` is a topological module then the neighbourhoods of zero are a\n  `module_filter_basis`. Conversely given a `module_filter_basis` one can define a topology\n  compatible with the module structure on `M`.  -/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.structure
+  (Command.structureTk "structure")
+  (Command.declId `ModuleFilterBasis [])
+  [(Term.explicitBinder "(" [`R `M] [":" (Term.type "Type" [(Level.hole "_")])] [] ")")
+   (Term.instBinder "[" [] (Term.app `CommRingₓ [`R]) "]")
+   (Term.instBinder "[" [] (Term.app `TopologicalSpace [`R]) "]")
+   (Term.instBinder "[" [] (Term.app `AddCommGroupₓ [`M]) "]")
+   (Term.instBinder "[" [] (Term.app `Module [`R `M]) "]")]
+  [(Command.extends "extends" [(Term.app `AddGroupFilterBasis [`M])])]
+  []
+  ["where"
+   []
+   (Command.structFields
+    [(Command.structSimpleBinder
+      (Command.declModifiers [] [] [] [] [] [])
+      `smul'
+      []
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         (Term.forall
+          "∀"
+          [(Term.implicitBinder "{" [`U] [] "}")]
+          ","
+          (Term.arrow
+           (Init.Core.«term_∈_» `U " ∈ " `sets)
+           "→"
+           (Mathlib.ExtendedBinder.«term∃___,_»
+            "∃"
+            `V
+            («binderTerm∈_»
+             "∈"
+             (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")]))
+            ","
+            (Mathlib.ExtendedBinder.«term∃___,_»
+             "∃"
+             `W
+             («binderTerm∈_» "∈" `sets)
+             ","
+             (Init.Core.«term_⊆_» (Algebra.Group.Defs.«term_•_» `V " • " `W) " ⊆ " `U))))))])
+      [])
+     (Command.structSimpleBinder
+      (Command.declModifiers [] [] [] [] [] [])
+      `smul_left'
+      []
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         (Term.forall
+          "∀"
+          [(Term.simpleBinder [`x₀] [(Term.typeSpec ":" `R)]) (Term.implicitBinder "{" [`U] [] "}")]
+          ","
+          (Term.arrow
+           (Init.Core.«term_∈_» `U " ∈ " `sets)
+           "→"
+           (Mathlib.ExtendedBinder.«term∃___,_»
+            "∃"
+            `V
+            («binderTerm∈_» "∈" `sets)
+            ","
+            (Init.Core.«term_⊆_»
+             `V
+             " ⊆ "
+             (Set.Data.Set.Basic.«term_⁻¹'_»
+              (Term.fun
+               "fun"
+               (Term.basicFun [(Term.simpleBinder [`x] [])] "=>" (Algebra.Group.Defs.«term_•_» `x₀ " • " `x)))
+              " ⁻¹' "
+              `U))))))])
+      [])
+     (Command.structSimpleBinder
+      (Command.declModifiers [] [] [] [] [] [])
+      `smul_right'
+      []
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         (Term.forall
+          "∀"
+          [(Term.simpleBinder [`m₀] [(Term.typeSpec ":" `M)]) (Term.implicitBinder "{" [`U] [] "}")]
+          ","
+          (Term.arrow
+           (Init.Core.«term_∈_» `U " ∈ " `sets)
+           "→"
+           (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
+            "∀ᶠ"
+            (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
+            " in "
+            (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")])
+            ", "
+            (Init.Core.«term_∈_» (Algebra.Group.Defs.«term_•_» `x " • " `m₀) " ∈ " `U)))))])
+      [])])]
+  (Command.optDeriving [])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structure', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.optDeriving', expected 'Lean.Parser.Command.optDeriving.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structFields', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structFields', expected 'Lean.Parser.Command.structFields.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structSimpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structSimpleBinder', expected 'Lean.Parser.Command.structExplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structSimpleBinder', expected 'Lean.Parser.Command.structExplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structSimpleBinder', expected 'Lean.Parser.Command.structImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structSimpleBinder', expected 'Lean.Parser.Command.structImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structSimpleBinder', expected 'Lean.Parser.Command.structInstBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structSimpleBinder', expected 'Lean.Parser.Command.structInstBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.structSimpleBinder', expected 'Lean.Parser.Command.structSimpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.optDeclSig', expected 'Lean.Parser.Command.optDeclSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.forall
+   "∀"
+   [(Term.simpleBinder [`m₀] [(Term.typeSpec ":" `M)]) (Term.implicitBinder "{" [`U] [] "}")]
+   ","
+   (Term.arrow
+    (Init.Core.«term_∈_» `U " ∈ " `sets)
+    "→"
+    (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
+     "∀ᶠ"
+     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
+     " in "
+     (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")])
+     ", "
+     (Init.Core.«term_∈_» (Algebra.Group.Defs.«term_•_» `x " • " `m₀) " ∈ " `U))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'Lean.Parser.Term.forall.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.arrow
+   (Init.Core.«term_∈_» `U " ∈ " `sets)
+   "→"
+   (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
+    "∀ᶠ"
+    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
+    " in "
+    (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")])
+    ", "
+    (Init.Core.«term_∈_» (Algebra.Group.Defs.«term_•_» `x " • " `m₀) " ∈ " `U)))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
+   "∀ᶠ"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
+   " in "
+   (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")])
+   ", "
+   (Init.Core.«term_∈_» (Algebra.Group.Defs.«term_•_» `x " • " `m₀) " ∈ " `U))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Core.«term_∈_» (Algebra.Group.Defs.«term_•_» `x " • " `m₀) " ∈ " `U)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `U
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  (Algebra.Group.Defs.«term_•_» `x " • " `m₀)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Defs.«term_•_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `m₀
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 73 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 73, (some 73, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `R
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (numLit "0")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Topology.Basic.term𝓝 "𝓝")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Basic.term𝓝', expected 'antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'-/-- failed to format: format: uncaught backtrack exception
+/--
+    A `module_filter_basis` on a module is a `filter_basis` satisfying some additional axioms.
+      Example : if `M` is a topological module then the neighbourhoods of zero are a
+      `module_filter_basis`. Conversely given a `module_filter_basis` one can define a topology
+      compatible with the module structure on `M`.  -/
+  structure
+    ModuleFilterBasis
+    ( R M : Type _ ) [ CommRingₓ R ] [ TopologicalSpace R ] [ AddCommGroupₓ M ] [ Module R M ]
+    extends AddGroupFilterBasis M
+    where
+      smul' : ∀ { U } , U ∈ sets → ∃ V ∈ 𝓝 ( 0 : R ) , ∃ W ∈ sets , V • W ⊆ U
+        smul_left' : ∀ x₀ : R { U } , U ∈ sets → ∃ V ∈ sets , V ⊆ fun x => x₀ • x ⁻¹' U
+        smul_right' : ∀ m₀ : M { U } , U ∈ sets → ∀ᶠ x in 𝓝 ( 0 : R ) , x • m₀ ∈ U
 
 namespace ModuleFilterBasis
 
@@ -355,103 +556,230 @@ variable {R M : Type _} [CommRingₓ R] [TopologicalSpace R] [AddCommGroupₓ M]
 instance GroupFilterBasis.hasMem : HasMem (Set M) (ModuleFilterBasis R M) :=
   ⟨fun s B => s ∈ B.sets⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » expr𝓝() (0 : R))
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (W «expr ∈ » B)
-theorem smul {U : Set M} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ 𝓝 (0 : R))(W : _)(_ : W ∈ B), V • W ⊆ U :=
+theorem smul {U : Set M} (hU : U ∈ B) : ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ B, V • W ⊆ U :=
   B.smul' hU
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » B)
-theorem smul_left (x₀ : R) {U : Set M} (hU : U ∈ B) : ∃ (V : _)(_ : V ∈ B), V ⊆ (fun x => x₀ • x) ⁻¹' U :=
+theorem smul_left (x₀ : R) {U : Set M} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x₀ • x) ⁻¹' U :=
   B.smul_left' x₀ hU
 
-theorem smul_right (m₀ : M) {U : Set M} (hU : U ∈ B) : ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U :=
-  B.smul_right' m₀ hU
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `smul_right [])
+  (Command.declSig
+   [(Term.explicitBinder "(" [`m₀] [":" `M] [] ")")
+    (Term.implicitBinder "{" [`U] [":" (Term.app `Set [`M])] "}")
+    (Term.explicitBinder "(" [`hU] [":" (Init.Core.«term_∈_» `U " ∈ " `B)] [] ")")]
+   (Term.typeSpec
+    ":"
+    (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
+     "∀ᶠ"
+     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
+     " in "
+     (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")])
+     ", "
+     (Init.Core.«term_∈_» (Algebra.Group.Defs.«term_•_» `x " • " `m₀) " ∈ " `U))))
+  (Command.declValSimple ":=" (Term.app `B.smul_right' [`m₀ `hU]) [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `B.smul_right' [`m₀ `hU])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hU
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `m₀
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `B.smul_right'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
+   "∀ᶠ"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
+   " in "
+   (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")])
+   ", "
+   (Init.Core.«term_∈_» (Algebra.Group.Defs.«term_•_» `x " • " `m₀) " ∈ " `U))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Core.«term_∈_» (Algebra.Group.Defs.«term_•_» `x " • " `m₀) " ∈ " `U)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `U
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  (Algebra.Group.Defs.«term_•_» `x " • " `m₀)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Defs.«term_•_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `m₀
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 73 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 73, (some 73, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Topology.Basic.term𝓝 "𝓝") [(Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `R)]] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `R
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (numLit "0")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Topology.Basic.term𝓝 "𝓝")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Basic.term𝓝', expected 'antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem smul_right ( m₀ : M ) { U : Set M } ( hU : U ∈ B ) : ∀ᶠ x in 𝓝 ( 0 : R ) , x • m₀ ∈ U := B.smul_right' m₀ hU
 
-/-- If `R` is discrete then the trivial additive group filter basis on any `R`-module is a
+/--  If `R` is discrete then the trivial additive group filter basis on any `R`-module is a
 module filter basis. -/
 instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
-  ⟨{ default$ AddGroupFilterBasis M with
-      smul' :=
-        by 
-          rintro U (h : U ∈ {{(0 : M)}})
-          rw [mem_singleton_iff] at h 
-          use univ, univ_mem, {0}, rfl 
-          rintro a ⟨x, m, -, hm, rfl⟩
-          simp [mem_singleton_iff.1 hm, h],
-      smul_left' :=
-        by 
-          rintro x₀ U (h : U ∈ {{(0 : M)}})
-          rw [mem_singleton_iff] at h 
-          use {0}, rfl 
-          simp [h],
-      smul_right' :=
-        by 
-          rintro m₀ U (h : U ∈ {{(0 : M)}})
-          rw [mem_singleton_iff] at h 
-          simp [h, nhds_discrete] }⟩
+  ⟨{ default $ AddGroupFilterBasis M with
+      smul' := by
+        rintro U (h : U ∈ {{(0 : M)}})
+        rw [mem_singleton_iff] at h
+        use univ, univ_mem, {0}, rfl
+        rintro a ⟨x, m, -, hm, rfl⟩
+        simp [mem_singleton_iff.1 hm, h],
+      smul_left' := by
+        rintro x₀ U (h : U ∈ {{(0 : M)}})
+        rw [mem_singleton_iff] at h
+        use {0}, rfl
+        simp [h],
+      smul_right' := by
+        rintro m₀ U (h : U ∈ {{(0 : M)}})
+        rw [mem_singleton_iff] at h
+        simp [h, nhds_discrete] }⟩
 
-/-- The topology associated to a module filter basis on a module over a topological ring.
+/--  The topology associated to a module filter basis on a module over a topological ring.
 It has the given basis as a basis of neighborhoods of zero. -/
 def topology : TopologicalSpace M :=
   B.to_add_group_filter_basis.topology
 
-/-- The topology associated to a module filter basis on a module over a topological ring.
+/--  The topology associated to a module filter basis on a module over a topological ring.
 It has the given basis as a basis of neighborhoods of zero. This version gets the ring
 topology by unification instead of type class inference. -/
 def topology' {R M : Type _} [CommRingₓ R] {tR : TopologicalSpace R} [AddCommGroupₓ M] [Module R M]
-  (B : ModuleFilterBasis R M) : TopologicalSpace M :=
+    (B : ModuleFilterBasis R M) : TopologicalSpace M :=
   B.to_add_group_filter_basis.topology
 
-/-- If a module is endowed with a topological structure coming from
+/--  If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
-instance (priority := 100) HasContinuousSmul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology :=
-  by 
-    let B' := B.to_add_group_filter_basis 
-    let this' := B'.topology 
-    have basis := B'.nhds_zero_has_basis 
-    have  := B'.is_topological_add_group 
-    apply HasContinuousSmul.of_nhds_zero
-    ·
-      rw [basis.tendsto_right_iff]
-      intro U U_in 
-      rcases B.smul U_in with ⟨V, V_in, W, W_in, H⟩
-      apply mem_of_superset (prod_mem_prod V_in$ B'.mem_nhds_zero W_in)
-      rintro ⟨v, w⟩ ⟨v_in : v ∈ V, w_in : w ∈ W⟩
-      exact H (Set.mem_smul_of_mem v_in w_in)
-    ·
-      intro m₀ 
-      rw [basis.tendsto_right_iff]
-      intro U U_in 
-      exact B.smul_right m₀ U_in
-    ·
-      intro x₀ 
-      rw [basis.tendsto_right_iff]
-      intro U U_in 
-      rcases B.smul_left x₀ U_in with ⟨V, V_in, hV⟩
-      exact mem_of_superset (B'.mem_nhds_zero V_in) hV
+instance (priority := 100) HasContinuousSmul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology := by
+  let B' := B.to_add_group_filter_basis
+  let this' := B'.topology
+  have basis := B'.nhds_zero_has_basis
+  have := B'.is_topological_add_group
+  apply HasContinuousSmul.of_nhds_zero
+  ·
+    rw [basis.tendsto_right_iff]
+    intro U U_in
+    rcases B.smul U_in with ⟨V, V_in, W, W_in, H⟩
+    apply mem_of_superset (prod_mem_prod V_in $ B'.mem_nhds_zero W_in)
+    rintro ⟨v, w⟩ ⟨v_in : v ∈ V, w_in : w ∈ W⟩
+    exact H (Set.mem_smul_of_mem v_in w_in)
+  ·
+    intro m₀
+    rw [basis.tendsto_right_iff]
+    intro U U_in
+    exact B.smul_right m₀ U_in
+  ·
+    intro x₀
+    rw [basis.tendsto_right_iff]
+    intro U U_in
+    rcases B.smul_left x₀ U_in with ⟨V, V_in, hV⟩
+    exact mem_of_superset (B'.mem_nhds_zero V_in) hV
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » BR)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (W «expr ∈ » BM)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » BM)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (V «expr ∈ » BR)
-/-- Build a module filter basis from compatible ring and additive group filter bases. -/
+/--  Build a module filter basis from compatible ring and additive group filter bases. -/
 def of_bases {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (BR : RingFilterBasis R)
-  (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BR)(W : _)(_ : W ∈ BM), V • W ⊆ U)
-  (smul_left : ∀ x₀ : R {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BM), V ⊆ (fun x => x₀ • x) ⁻¹' U)
-  (smul_right : ∀ m₀ : M {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BR), V ⊆ (fun x => x • m₀) ⁻¹' U) :
-  @ModuleFilterBasis R M _ BR.topology _ _ :=
+    (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ V ∈ BR, ∃ W ∈ BM, V • W ⊆ U)
+    (smul_left : ∀ x₀ : R {U}, U ∈ BM → ∃ V ∈ BM, V ⊆ (fun x => x₀ • x) ⁻¹' U)
+    (smul_right : ∀ m₀ : M {U}, U ∈ BM → ∃ V ∈ BR, V ⊆ (fun x => x • m₀) ⁻¹' U) :
+    @ModuleFilterBasis R M _ BR.topology _ _ :=
   { BM with
-    smul' :=
-      by 
-        intro U U_in 
-        rcases smul U_in with ⟨V, V_in, W, W_in, H⟩
-        exact ⟨V, BR.to_add_group_filter_basis.mem_nhds_zero V_in, W, W_in, H⟩,
+    smul' := by
+      intro U U_in
+      rcases smul U_in with ⟨V, V_in, W, W_in, H⟩
+      exact ⟨V, BR.to_add_group_filter_basis.mem_nhds_zero V_in, W, W_in, H⟩,
     smul_left' := smul_left,
-    smul_right' :=
-      by 
-        intro m₀ U U_in 
-        rcases smul_right m₀ U_in with ⟨V, V_in, H⟩
-        exact mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) H }
+    smul_right' := by
+      intro m₀ U U_in
+      rcases smul_right m₀ U_in with ⟨V, V_in, H⟩
+      exact mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) H }
 
 end ModuleFilterBasis
 

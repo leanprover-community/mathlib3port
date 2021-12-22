@@ -87,7 +87,7 @@ open Expr
 
 namespace UnfoldCases
 
-/--
+/-- 
   Given an equation `f x = y`, this tactic tries to infer an expression that can be
   used to do distinction by cases on to make progress.
 
@@ -95,13 +95,13 @@ namespace UnfoldCases
   (e.g. `whnf` or `dsimp`).
 -/
 unsafe def find_splitting_expr : expr → tactic expr
-| quote.1 (@ite _ (%%ₓcond) (%%ₓdec_inst) _ _ = _) => pure (quote.1 (@Decidable.em (%%ₓcond) (%%ₓdec_inst)))
-| quote.1 ((%%ₓapp x y) = _) => pure y
-| e =>
-  throwError "expected an expression of the form: f x = y. Got:
-    { ← e}"
+  | quote.1 (@ite _ (%%ₓcond) (%%ₓdec_inst) _ _ = _) => pure (quote.1 (@Decidable.em (%%ₓcond) (%%ₓdec_inst)))
+  | quote.1 ((%%ₓapp x y) = _) => pure y
+  | e =>
+    throwError "expected an expression of the form: f x = y. Got:
+      {← e}"
 
-/--
+/-- 
   Tries to finish the current goal using the `inner` tactic. If the tactic
   fails, it tries to find an expression on which to do a distinction by
   cases and calls itself recursively.
@@ -113,32 +113,31 @@ unsafe def find_splitting_expr : expr → tactic expr
 -/
 unsafe def unfold_cases_core (inner : interactive.itactic) : tactic Unit :=
   inner <|>
-    (do 
+    (do
         split_ifs []
-        all_goals unfold_cases_core 
+        all_goals unfold_cases_core
         skip) <|>
-      do 
-        let tgt ← target 
-        let e ← find_splitting_expr tgt 
-        focus1$
-            do 
-              cases e 
-              all_goals$ (dsimp_target >> unfold_cases_core <|> skip)
-              skip
+      do
+      let tgt ← target
+      let e ← find_splitting_expr tgt
+      focus1 $ do
+          cases e
+          all_goals $ (dsimp_target >> unfold_cases_core <|> skip)
+          skip
 
-/--
+/-- 
   Given a target of the form `⊢ f x₁ ... xₙ = y`, unfolds `f` using a delta reduction.
 -/
 unsafe def unfold_tgt : expr → tactic Unit
-| quote.1 ((%%ₓl@(app _ _)) = %%ₓr) =>
-  match l.get_app_fn with 
-  | const n ls => delta_target [n]
+  | quote.1 ((%%ₓl@(app _ _)) = %%ₓr) =>
+    match l.get_app_fn with
+    | const n ls => delta_target [n]
+    | e =>
+      throwError "couldn't unfold:
+        {← e}"
   | e =>
-    throwError "couldn't unfold:
-      { ← e}"
-| e =>
-  throwError "expected an expression of the form: f x = y. Got:
-    { ← e}"
+    throwError "expected an expression of the form: f x = y. Got:
+      {← e}"
 
 end UnfoldCases
 
@@ -146,7 +145,7 @@ namespace Interactive
 
 open UnfoldCases
 
-/--
+/-- 
   This tactic unfolds the definition of a function or `match` expression.
   Then it recursively introduces a distinction by cases. The decision what expression
   to do the distinction on is driven by the pattern matching expression.
@@ -190,13 +189,12 @@ open UnfoldCases
   Further examples can be found in `test/unfold_cases.lean`.
 -/
 unsafe def unfold_cases (inner : itactic) : tactic Unit :=
-  focus1$
-    do 
-      tactic.intros 
-      let tgt ← target 
-      unfold_tgt tgt 
-      try dsimp_target 
-      unfold_cases_core inner
+  focus1 $ do
+    tactic.intros
+    let tgt ← target
+    unfold_tgt tgt
+    try dsimp_target
+    unfold_cases_core inner
 
 add_tactic_doc
   { Name := "unfold_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.unfold_cases],

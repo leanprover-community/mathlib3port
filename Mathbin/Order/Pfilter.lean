@@ -34,24 +34,23 @@ namespace Order
 
 variable {P : Type _}
 
-/-- A filter on a preorder `P` is a subset of `P` that is
+/--  A filter on a preorder `P` is a subset of `P` that is
   - nonempty
   - downward directed
   - upward closed. -/
-structure pfilter (P) [Preorderₓ P] where 
+structure pfilter (P) [Preorderₓ P] where
   dual : ideal (OrderDual P)
 
-/-- A predicate for when a subset of `P` is a filter. -/
+/--  A predicate for when a subset of `P` is a filter. -/
 def is_pfilter [Preorderₓ P] (F : Set P) : Prop :=
   @is_ideal (OrderDual P) _ F
 
 theorem is_pfilter.of_def [Preorderₓ P] {F : Set P} (nonempty : F.nonempty) (directed : DirectedOn (· ≥ ·) F)
-  (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : is_pfilter F :=
-  by 
-    use Nonempty, Directed 
-    exact fun _ _ _ _ => mem_of_le ‹_› ‹_›
+    (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : is_pfilter F := by
+  use Nonempty, Directed
+  exact fun _ _ _ _ => mem_of_le ‹_› ‹_›
 
-/-- Create an element of type `order.pfilter` from a set satisfying the predicate
+/--  Create an element of type `order.pfilter` from a set satisfying the predicate
 `order.is_pfilter`. -/
 def is_pfilter.to_pfilter [Preorderₓ P] {F : Set P} (h : is_pfilter F) : pfilter P :=
   ⟨h.to_ideal⟩
@@ -62,11 +61,11 @@ section Preorderₓ
 
 variable [Preorderₓ P] {x y : P} (F : pfilter P)
 
-/-- A filter on `P` is a subset of `P`. -/
+/--  A filter on `P` is a subset of `P`. -/
 instance : Coe (pfilter P) (Set P) :=
   ⟨fun F => F.dual.carrier⟩
 
-/-- For the notation `x ∈ F`. -/
+/--  For the notation `x ∈ F`. -/
 instance : HasMem P (pfilter P) :=
   ⟨fun x F => x ∈ (F : Set P)⟩
 
@@ -83,22 +82,21 @@ theorem Nonempty : (F : Set P).Nonempty :=
 theorem Directed : DirectedOn (· ≥ ·) (F : Set P) :=
   F.dual.directed
 
-theorem mem_of_le {F : pfilter P} : x ≤ y → x ∈ F → y ∈ F :=
-  fun h => F.dual.mem_of_le h
+theorem mem_of_le {F : pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => F.dual.mem_of_le h
 
-/-- The smallest filter containing a given element. -/
+/--  The smallest filter containing a given element. -/
 def principal (p : P) : pfilter P :=
   ⟨ideal.principal p⟩
 
 instance [Inhabited P] : Inhabited (pfilter P) :=
   ⟨⟨default _⟩⟩
 
-/-- Two filters are equal when their underlying sets are equal. -/
+/--  Two filters are equal when their underlying sets are equal. -/
 @[ext]
 theorem ext : ∀ F G : pfilter P, (F : Set P) = G → F = G
-| ⟨⟨_, _, _, _⟩⟩, ⟨⟨_, _, _, _⟩⟩, rfl => rfl
+  | ⟨⟨_, _, _, _⟩⟩, ⟨⟨_, _, _, _⟩⟩, rfl => rfl
 
-/-- The partial ordering by subset inclusion, inherited from `set P`. -/
+/--  The partial ordering by subset inclusion, inherited from `set P`. -/
 instance : PartialOrderₓ (pfilter P) :=
   PartialOrderₓ.lift coeₓ ext
 
@@ -116,27 +114,29 @@ section OrderTop
 
 variable [Preorderₓ P] [OrderTop P] {F : pfilter P}
 
-/-- A specific witness of `pfilter.nonempty` when `P` has a top element. -/
+/--  A specific witness of `pfilter.nonempty` when `P` has a top element. -/
 @[simp]
 theorem top_mem : ⊤ ∈ F :=
   ideal.bot_mem
 
+-- failed to format: format: uncaught backtrack exception
 /-- There is a bottom filter when `P` has a top element. -/
-instance : OrderBot (pfilter P) :=
-  { bot := ⟨⊥⟩, bot_le := fun F => (bot_le : ⊥ ≤ F.dual) }
+  instance : OrderBot ( pfilter P ) where bot := ⟨ ⊥ ⟩ bot_le F := ( bot_le : ⊥ ≤ F.dual )
 
 end OrderTop
 
+-- failed to format: format: uncaught backtrack exception
 /-- There is a top filter when `P` has a bottom element. -/
-instance {P} [Preorderₓ P] [OrderBot P] : OrderTop (pfilter P) :=
-  { top := ⟨⊤⟩, le_top := fun F => (le_top : F.dual ≤ ⊤) }
+  instance
+    { P } [ Preorderₓ P ] [ OrderBot P ] : OrderTop ( pfilter P )
+    where top := ⟨ ⊤ ⟩ le_top F := ( le_top : F.dual ≤ ⊤ )
 
 section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {F : pfilter P}
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x y «expr ∈ » F)
-/-- A specific witness of `pfilter.directed` when `P` has meets. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (x y «expr ∈ » F)
+/--  A specific witness of `pfilter.directed` when `P` has meets. -/
 theorem inf_mem x y (_ : x ∈ F) (_ : y ∈ F) : x⊓y ∈ F :=
   ideal.sup_mem x y ‹x ∈ F› ‹y ∈ F›
 

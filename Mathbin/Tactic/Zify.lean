@@ -1,4 +1,4 @@
-import Mathbin.Data.Int.Cast 
+import Mathbin.Data.Int.Cast
 import Mathbin.Tactic.NormCast
 
 /-!
@@ -27,7 +27,7 @@ open Tactic
 
 namespace Zify
 
-/--
+/-- 
 The `zify` attribute is used by the `zify` tactic. It applies to lemmas that shift propositions
 between `nat` and `int`.
 
@@ -38,18 +38,16 @@ For example, `int.coe_nat_le_coe_nat_iff : ∀ (m n : ℕ), ↑m ≤ ↑n ↔ m 
 unsafe def zify_attr : user_attribute simp_lemmas Unit :=
   { Name := `zify, descr := "Used to tag lemmas for use in the `zify` tactic",
     cache_cfg :=
-      { mk_cache :=
-          fun ns =>
-            mmap
-                (fun n =>
-                  do 
-                    let c ← mk_const n 
-                    return (c, tt))
-                ns >>=
-              simp_lemmas.mk.append_with_symm,
+      { mk_cache := fun ns =>
+          mmap
+              (fun n => do
+                let c ← mk_const n
+                return (c, tt))
+              ns >>=
+            simp_lemmas.mk.append_with_symm,
         dependencies := [] } }
 
-/--
+/-- 
 Given an expression `e`, `lift_to_z e` looks for subterms of `e` that are propositions "about"
 natural numbers and change them to propositions about integers.
 
@@ -58,51 +56,46 @@ Returns an expression `e'` and a proof that `e = e'`.
 Includes `ge_iff_le` and `gt_iff_lt` in the simp set. These can't be tagged with `zify` as we
 want to use them in the "forward", not "backward", direction.
 -/
-unsafe def lift_to_z (e : expr) : tactic (expr × expr) :=
-  do 
-    let sl ← zify_attr.get_cache 
-    let sl ← sl.add_simp `ge_iff_le 
-    let sl ← sl.add_simp `gt_iff_lt 
-    let (e', prf, _) ← simplify sl [] e 
-    return (e', prf)
+unsafe def lift_to_z (e : expr) : tactic (expr × expr) := do
+  let sl ← zify_attr.get_cache
+  let sl ← sl.add_simp `ge_iff_le
+  let sl ← sl.add_simp `gt_iff_lt
+  let (e', prf, _) ← simplify sl [] e
+  return (e', prf)
 
 attribute [zify] Int.coe_nat_le_coe_nat_iff Int.coe_nat_lt_coe_nat_iff Int.coe_nat_eq_coe_nat_iff
 
 end Zify
 
 @[zify]
-theorem Int.coe_nat_ne_coe_nat_iff (a b : ℕ) : (a : ℤ) ≠ b ↔ a ≠ b :=
-  by 
-    simp 
+theorem Int.coe_nat_ne_coe_nat_iff (a b : ℕ) : (a : ℤ) ≠ b ↔ a ≠ b := by
+  simp
 
-/--
+/-- 
 `zify extra_lems e` is used to shift propositions in `e` from `ℕ` to `ℤ`.
 This is often useful since `ℤ` has well-behaved subtraction.
 
 The list of extra lemmas is used in the `push_cast` step.
 
 Returns an expression `e'` and a proof that `e = e'`.-/
-unsafe def tactic.zify (extra_lems : List simp_arg_type) : expr → tactic (expr × expr) :=
-  fun z =>
-    do 
-      let (z1, p1) ← zify.lift_to_z z <|> fail "failed to find an applicable zify lemma"
-      let (z2, p2) ← norm_cast.derive_push_cast extra_lems z1 
-      Prod.mk z2 <$> mk_eq_trans p1 p2
+unsafe def tactic.zify (extra_lems : List simp_arg_type) : expr → tactic (expr × expr) := fun z => do
+  let (z1, p1) ← zify.lift_to_z z <|> fail "failed to find an applicable zify lemma"
+  let (z2, p2) ← norm_cast.derive_push_cast extra_lems z1
+  Prod.mk z2 <$> mk_eq_trans p1 p2
 
-/--
+/-- 
 A variant of `tactic.zify` that takes `h`, a proof of a proposition about natural numbers,
 and returns a proof of the zified version of that propositon.
 -/
-unsafe def tactic.zify_proof (extra_lems : List simp_arg_type) (h : expr) : tactic expr :=
-  do 
-    let (_, pf) ← infer_type h >>= tactic.zify extra_lems 
-    mk_eq_mp pf h
+unsafe def tactic.zify_proof (extra_lems : List simp_arg_type) (h : expr) : tactic expr := do
+  let (_, pf) ← infer_type h >>= tactic.zify extra_lems
+  mk_eq_mp pf h
 
-section 
+section
 
 setup_tactic_parser
 
-/--
+/-- 
 The `zify` tactic is used to shift propositions from `ℕ` to `ℤ`.
 This is often useful since `ℤ` has well-behaved subtraction.
 
@@ -136,12 +129,11 @@ integer `z` (in the supertype) to `ℕ` (the subtype), given a proof that `z ≥
 propositions concerning `z` will still be over `ℤ`. `zify` changes propositions about `ℕ` (the
 subtype) to propositions about `ℤ` (the supertype), without changing the type of any variable.
 -/
-unsafe def tactic.interactive.zify (sl : parse simp_arg_list) (l : parse location) : tactic Unit :=
-  do 
-    let locs ← l.get_locals 
-    replace_at (tactic.zify sl) locs l.include_goal >>= guardb
+unsafe def tactic.interactive.zify (sl : parse simp_arg_list) (l : parse location) : tactic Unit := do
+  let locs ← l.get_locals
+  replace_at (tactic.zify sl) locs l.include_goal >>= guardb
 
-end 
+end
 
 add_tactic_doc
   { Name := "zify", category := DocCategory.attr, declNames := [`zify.zify_attr], tags := ["coercions", "transport"] }

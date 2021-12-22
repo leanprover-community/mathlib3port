@@ -7,87 +7,79 @@ namespace Tactic
 setup_tactic_parser
 
 unsafe def find_if_cond : expr → Option expr
-| e =>
-  e.fold none$
-    fun e _ acc =>
-      Acc <|>
-        do 
-          let c ←
-            match e with 
-              | quote.1 (@ite _ (%%ₓc) (%%ₓ_) _ _) => some c
-              | quote.1 (@dite _ (%%ₓc) (%%ₓ_) _ _) => some c
-              | _ => none 
-          guardₓ ¬c.has_var 
-          find_if_cond c <|> return c
+  | e =>
+    e.fold none $ fun e _ acc =>
+      Acc <|> do
+        let c ←
+          match e with
+            | quote.1 (@ite _ (%%ₓc) (%%ₓ_) _ _) => some c
+            | quote.1 (@dite _ (%%ₓc) (%%ₓ_) _ _) => some c
+            | _ => none
+        guardₓ ¬c.has_var
+        find_if_cond c <|> return c
 
-unsafe def find_if_cond_at (at_ : loc) : tactic (Option expr) :=
-  do 
-    let lctx ← at_.get_locals 
-    let lctx ← lctx.mmap infer_type 
-    let tgt ← target 
-    let es := if at_.include_goal then tgt :: lctx else lctx 
-    return$ find_if_cond$ es.foldr app (default expr)
+unsafe def find_if_cond_at (at_ : loc) : tactic (Option expr) := do
+  let lctx ← at_.get_locals
+  let lctx ← lctx.mmap infer_type
+  let tgt ← target
+  let es := if at_.include_goal then tgt :: lctx else lctx
+  return $ find_if_cond $ es.foldr app (default expr)
 
-run_cmd 
+run_cmd
   mk_simp_attr `split_if_reduction
 
-run_cmd 
+run_cmd
   add_doc_string `simp_attr.split_if_reduction "Simp set for if-then-else statements"
 
 attribute [split_if_reduction] if_pos if_neg dif_pos dif_neg
 
-unsafe def reduce_ifs_at (at_ : loc) : tactic Unit :=
-  do 
-    let sls ← get_user_simp_lemmas `split_if_reduction 
-    let cfg : simp_config := { failIfUnchanged := ff }
-    let discharger := assumption <|> applyc `not_not_intro >> assumption 
-    let hs ← at_.get_locals 
-    hs.mmap' fun h => simp_hyp sls [] h cfg discharger >> skip 
-    when at_.include_goal (simp_target sls [] cfg discharger >> skip)
+unsafe def reduce_ifs_at (at_ : loc) : tactic Unit := do
+  let sls ← get_user_simp_lemmas `split_if_reduction
+  let cfg : simp_config := { failIfUnchanged := ff }
+  let discharger := assumption <|> applyc `not_not_intro >> assumption
+  let hs ← at_.get_locals
+  hs.mmap' fun h => simp_hyp sls [] h cfg discharger >> skip
+  when at_.include_goal (simp_target sls [] cfg discharger >> skip)
 
 unsafe def split_if1 (c : expr) (n : Name) (at_ : loc) : tactic Unit :=
   by_cases c n; reduce_ifs_at at_
 
-private unsafe def get_next_name (names : ref (List Name)) : tactic Name :=
-  do 
-    let ns ← read_ref names 
-    match ns with 
-      | [] => get_unused_name `h
-      | n :: ns =>
-        do 
-          write_ref names ns 
-          return n
+private unsafe def get_next_name (names : ref (List Name)) : tactic Name := do
+  let ns ← read_ref names
+  match ns with
+    | [] => get_unused_name `h
+    | n :: ns => do
+      write_ref names ns
+      return n
 
-private unsafe def value_known (c : expr) : tactic Bool :=
-  do 
-    let lctx ← local_context 
-    let lctx ← lctx.mmap infer_type 
-    return$ c ∈ lctx ∨ (quote.1 ¬%%ₓc) ∈ lctx
+private unsafe def value_known (c : expr) : tactic Bool := do
+  let lctx ← local_context
+  let lctx ← lctx.mmap infer_type
+  return $ c ∈ lctx ∨ (quote.1 ¬%%ₓc) ∈ lctx
 
 private unsafe def split_ifs_core (at_ : loc) (names : ref (List Name)) : List expr → tactic Unit
-| done =>
-  do 
+  | done => do
     let some cond ← find_if_cond_at at_ | fail "no if-then-else expressions to split"
     let cond :=
-      match cond with 
+      match cond with
       | quote.1 ¬%%ₓp => p
-      | p => p 
-    if cond ∈ done then skip else
-        do 
-          let no_split ← value_known cond 
-          if no_split then reduce_ifs_at at_; try (split_ifs_core (cond :: done)) else
-              do 
-                let n ← get_next_name names 
-                split_if1 cond n at_; try (split_ifs_core (cond :: done))
+      | p => p
+    if cond ∈ done then skip
+      else do
+        let no_split ← value_known cond
+        if no_split then reduce_ifs_at at_; try (split_ifs_core (cond :: done))
+          else do
+            let n ← get_next_name names
+            split_if1 cond n at_; try (split_ifs_core (cond :: done))
 
 unsafe def split_ifs (names : List Name) (at_ : loc := loc.ns [none]) :=
-  using_new_ref names$ fun names => split_ifs_core at_ names []
+  using_new_ref names $ fun names => split_ifs_core at_ names []
 
 namespace Interactive
 
 open Interactive Interactive.Types Expr Lean.Parser
 
-/-- Splits all if-then-else-expressions into multiple goals.
+/--  Splits all if-then-else-expressions into multiple goals.
 
 Given a goal of the form `g (if p then x else y)`, `split_ifs` will produce
 two goals: `p ⊢ g x` and `¬p ⊢ g y`.
@@ -103,7 +95,7 @@ ite-expression.
 unsafe def split_ifs (at_ : parse location) (names : parse with_ident_list) : tactic Unit :=
   tactic.split_ifs names at_
 
-add_hint_tactic splitIfs
+add_hint_tactic split_ifs
 
 add_tactic_doc
   { Name := "split_ifs", category := DocCategory.tactic, declNames := [`` split_ifs], tags := ["case bashing"] }

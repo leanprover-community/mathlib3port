@@ -1,7 +1,7 @@
-import Mathbin.Algebra.ContinuedFractions.Computation.Translations 
-import Mathbin.Algebra.ContinuedFractions.TerminatedStable 
-import Mathbin.Algebra.ContinuedFractions.ContinuantsRecurrence 
-import Mathbin.Order.Filter.AtTopBot 
+import Mathbin.Algebra.ContinuedFractions.Computation.Translations
+import Mathbin.Algebra.ContinuedFractions.TerminatedStable
+import Mathbin.Algebra.ContinuedFractions.ContinuantsRecurrence
+import Mathbin.Order.Filter.AtTopBot
 import Mathbin.Tactic.FieldSimp
 
 /-!
@@ -42,11 +42,11 @@ information about the computation process, refer to `algebra.continued_fraction.
 
 namespace GeneralizedContinuedFraction
 
-open generalized_continued_fraction(of)
+open generalized_continued_fraction (of)
 
 variable {K : Type _} [LinearOrderedField K] {v : K} {n : ℕ}
 
-/--
+/-- 
 Given two continuants `pconts` and `conts` and a value `fr`, this function returns
 - `conts.a / conts.b` if `fr = 0`
 - `exact_conts.a / exact_conts.b` where `exact_conts = next_continuants 1 fr⁻¹ pconts conts`
@@ -57,23 +57,23 @@ This function can be used to compute the exact value approxmated by a continued 
 `comp_exact_value_correctness_of_stream_eq_some`.
 -/
 protected def comp_exact_value (pconts conts : pair K) (fr : K) : K :=
-  if fr = 0 then conts.a / conts.b else
-    let exact_conts := next_continuants 1 (fr⁻¹) pconts conts 
+  if fr = 0 then conts.a / conts.b
+  else
+    let exact_conts := next_continuants 1 (fr⁻¹) pconts conts
     exact_conts.a / exact_conts.b
 
 variable [FloorRing K]
 
-/-- Just a computational lemma we need for the next main proof. -/
+/--  Just a computational lemma we need for the next main proof. -/
 protected theorem comp_exact_value_correctness_of_stream_eq_some_aux_comp {a : K} (b c : K)
-  (fract_a_ne_zero : Int.fract a ≠ 0) : (((((⌊a⌋ : K)*b)+c) / Int.fract a)+b) = ((b*a)+c) / Int.fract a :=
-  by 
-    fieldSimp [fract_a_ne_zero]
-    rw [Int.fract]
-    ring
+    (fract_a_ne_zero : Int.fract a ≠ 0) : (((((⌊a⌋ : K)*b)+c) / Int.fract a)+b) = ((b*a)+c) / Int.fract a := by
+  field_simp [fract_a_ne_zero]
+  rw [Int.fract]
+  ring
 
-open generalized_continued_fraction(compExactValue comp_exact_value_correctness_of_stream_eq_some_aux_comp)
+open generalized_continued_fraction (compExactValue comp_exact_value_correctness_of_stream_eq_some_aux_comp)
 
-/--
+/-- 
 Shows the correctness of `comp_exact_value` in case the continued fraction
 `generalized_continued_fraction.of v` did not terminate at position `n`. That is, we obtain the
 value `v` if we pass the two successive (auxiliary) continuants at positions `n` and `n + 1` as well
@@ -90,99 +90,88 @@ position `2` is `0.5`. We hence have `v = 3 + 1/(2 + 0.5) = 3 + 1/2.5 = 3.4`. Th
 corresponds exactly to the one using the recurrence equation in `comp_exact_value`.
 -/
 theorem comp_exact_value_correctness_of_stream_eq_some :
-  ∀ {ifp_n : int_fract_pair K},
-    int_fract_pair.stream v n = some ifp_n →
-      v = comp_exact_value ((of v).continuantsAux n) ((of v).continuantsAux$ n+1) ifp_n.fr :=
-  by 
-    let g := of v 
-    induction' n with n IH
+    ∀ {ifp_n : int_fract_pair K},
+      int_fract_pair.stream v n = some ifp_n →
+        v = comp_exact_value ((of v).continuantsAux n) ((of v).continuantsAux $ n+1) ifp_n.fr :=
+  by
+  let g := of v
+  induction' n with n IH
+  ·
+    intro ifp_zero stream_zero_eq
+    have : int_fract_pair.of v = ifp_zero := by
+      ·
+        have : int_fract_pair.stream v 0 = some (int_fract_pair.of v)
+        exact rfl
+        simpa only [this] using stream_zero_eq
+    cases this
+    cases' Decidable.em (Int.fract v = 0) with fract_eq_zero fract_ne_zero
     ·
-      intro ifp_zero stream_zero_eq 
-      have  : int_fract_pair.of v = ifp_zero
-      ·
-        ·
-          have  : int_fract_pair.stream v 0 = some (int_fract_pair.of v)
-          exact rfl 
-          simpa only [this] using stream_zero_eq 
-      cases this 
-      cases' Decidable.em (Int.fract v = 0) with fract_eq_zero fract_ne_zero
-      ·
-        suffices  : v = ⌊v⌋
-        ·
-          simpa [continuants_aux, fract_eq_zero, comp_exact_value]
-        calc v = Int.fract v+⌊v⌋ :=
-          by 
-            rw [Int.fract_add_floor]_ = ⌊v⌋ :=
-          by 
-            simp [fract_eq_zero]
-      ·
-        fieldSimp [continuants_aux, next_continuants, next_numerator, next_denominator, of_h_eq_floor, comp_exact_value,
-          fract_ne_zero]
+      suffices v = ⌊v⌋by
+        simpa [continuants_aux, fract_eq_zero, comp_exact_value]
+      calc v = Int.fract v+⌊v⌋ := by
+        rw [Int.fract_add_floor]_ = ⌊v⌋ := by
+        simp [fract_eq_zero]
     ·
-      intro ifp_succ_n succ_nth_stream_eq 
-      obtain ⟨ifp_n, nth_stream_eq, nth_fract_ne_zero, -⟩ :
-        ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n 
-      exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq 
-      let conts := g.continuants_aux (n+2)
-      set pconts := g.continuants_aux (n+1) with pconts_eq 
-      set ppconts := g.continuants_aux n with ppconts_eq 
-      cases' Decidable.em (ifp_succ_n.fr = 0) with ifp_succ_n_fr_eq_zero ifp_succ_n_fr_ne_zero
-      ·
-        suffices  : v = conts.a / conts.b
+      field_simp [continuants_aux, next_continuants, next_numerator, next_denominator, of_h_eq_floor, comp_exact_value,
+        fract_ne_zero]
+  ·
+    intro ifp_succ_n succ_nth_stream_eq
+    obtain ⟨ifp_n, nth_stream_eq, nth_fract_ne_zero, -⟩ :
+      ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n
+    exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
+    let conts := g.continuants_aux (n+2)
+    set pconts := g.continuants_aux (n+1) with pconts_eq
+    set ppconts := g.continuants_aux n with ppconts_eq
+    cases' Decidable.em (ifp_succ_n.fr = 0) with ifp_succ_n_fr_eq_zero ifp_succ_n_fr_ne_zero
+    ·
+      suffices v = conts.a / conts.b by
+        simpa [comp_exact_value, ifp_succ_n_fr_eq_zero]
+      obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_inv_eq_floor⟩ :
+        ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋
+      exact int_fract_pair.exists_succ_nth_stream_of_fr_zero succ_nth_stream_eq ifp_succ_n_fr_eq_zero
+      have : ifp_n' = ifp_n := by
+        injection Eq.trans nth_stream_eq'.symm nth_stream_eq
+      cases this
+      have s_nth_eq : g.s.nth n = some ⟨1, ⌊ifp_n.fr⁻¹⌋⟩
+      exact nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq nth_fract_ne_zero
+      rw [← ifp_n_fract_inv_eq_floor] at s_nth_eq
+      suffices v = comp_exact_value ppconts pconts ifp_n.fr by
+        simpa [conts, continuants_aux, s_nth_eq, comp_exact_value, nth_fract_ne_zero] using this
+      exact IH nth_stream_eq
+    ·
+      suffices comp_exact_value ppconts pconts ifp_n.fr = comp_exact_value pconts conts ifp_succ_n.fr by
         ·
-          simpa [comp_exact_value, ifp_succ_n_fr_eq_zero]
-        obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_inv_eq_floor⟩ :
-          ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋
-        exact int_fract_pair.exists_succ_nth_stream_of_fr_zero succ_nth_stream_eq ifp_succ_n_fr_eq_zero 
-        have  : ifp_n' = ifp_n
+          have : v = comp_exact_value ppconts pconts ifp_n.fr
+          exact IH nth_stream_eq
+          conv_lhs => rw [this]
+          assumption
+      obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_ne_zero, ⟨refl⟩⟩ :
+        ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n
+      exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
+      have : ifp_n' = ifp_n := by
+        injection Eq.trans nth_stream_eq'.symm nth_stream_eq
+      cases this
+      have s_nth_eq : g.s.nth n = some ⟨1, (⌊ifp_n.fr⁻¹⌋ : K)⟩
+      exact nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq ifp_n_fract_ne_zero
+      let ppA := ppconts.a
+      let ppB := ppconts.b
+      let pA := pconts.a
+      let pB := pconts.b
+      have : comp_exact_value ppconts pconts ifp_n.fr = (ppA+ifp_n.fr⁻¹*pA) / ppB+ifp_n.fr⁻¹*pB := by
         ·
-          injection Eq.trans nth_stream_eq'.symm nth_stream_eq 
-        cases this 
-        have s_nth_eq : g.s.nth n = some ⟨1, ⌊ifp_n.fr⁻¹⌋⟩
-        exact nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq nth_fract_ne_zero 
-        rw [←ifp_n_fract_inv_eq_floor] at s_nth_eq 
-        suffices  : v = comp_exact_value ppconts pconts ifp_n.fr
-        ·
-          simpa [conts, continuants_aux, s_nth_eq, comp_exact_value, nth_fract_ne_zero] using this 
-        exact IH nth_stream_eq
-      ·
-        suffices  : comp_exact_value ppconts pconts ifp_n.fr = comp_exact_value pconts conts ifp_succ_n.fr
-        ·
-          ·
-            have  : v = comp_exact_value ppconts pconts ifp_n.fr 
-            exact IH nth_stream_eq 
-            convLHS => rw [this]
-            assumption 
-        obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_ne_zero, ⟨refl⟩⟩ :
-          ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n 
-        exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq 
-        have  : ifp_n' = ifp_n
-        ·
-          injection Eq.trans nth_stream_eq'.symm nth_stream_eq 
-        cases this 
-        have s_nth_eq : g.s.nth n = some ⟨1, (⌊ifp_n.fr⁻¹⌋ : K)⟩
-        exact nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq ifp_n_fract_ne_zero 
-        let ppA := ppconts.a 
-        let ppB := ppconts.b 
-        let pA := pconts.a 
-        let pB := pconts.b 
-        have  : comp_exact_value ppconts pconts ifp_n.fr = (ppA+ifp_n.fr⁻¹*pA) / ppB+ifp_n.fr⁻¹*pB
-        ·
-          ·
-            fieldSimp [ifp_n_fract_ne_zero, comp_exact_value, next_continuants, next_numerator, next_denominator]
-            acRfl 
-        rw [this]
-        have tmp_calc := comp_exact_value_correctness_of_stream_eq_some_aux_comp pA ppA ifp_succ_n_fr_ne_zero 
-        have tmp_calc' := comp_exact_value_correctness_of_stream_eq_some_aux_comp pB ppB ifp_succ_n_fr_ne_zero 
-        rw [inv_eq_one_div] at tmp_calc tmp_calc' 
-        have  : Int.fract (1 / ifp_n.fr) ≠ 0
-        ·
-          simpa using ifp_succ_n_fr_ne_zero 
-        fieldSimp [conts, comp_exact_value, continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq, next_continuants,
-          next_numerator, next_denominator, this, tmp_calc, tmp_calc']
-        acRfl
+          field_simp [ifp_n_fract_ne_zero, comp_exact_value, next_continuants, next_numerator, next_denominator]
+          ac_rfl
+      rw [this]
+      have tmp_calc := comp_exact_value_correctness_of_stream_eq_some_aux_comp pA ppA ifp_succ_n_fr_ne_zero
+      have tmp_calc' := comp_exact_value_correctness_of_stream_eq_some_aux_comp pB ppB ifp_succ_n_fr_ne_zero
+      rw [inv_eq_one_div] at tmp_calc tmp_calc'
+      have : Int.fract (1 / ifp_n.fr) ≠ 0 := by
+        simpa using ifp_succ_n_fr_ne_zero
+      field_simp [conts, comp_exact_value, continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq, next_continuants,
+        next_numerator, next_denominator, this, tmp_calc, tmp_calc']
+      ac_rfl
 
-open generalized_continued_fraction(of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none)
+open generalized_continued_fraction (of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none)
 
 -- failed to format: format: uncaught backtrack exception
 /--
@@ -219,16 +208,16 @@ open generalized_continued_fraction(of_terminated_at_n_iff_succ_nth_int_fract_pa
                   [ nth_stream_fr_eq_zero , comp_exact_value ]
                   using comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
 
-/--
+/-- 
 If `generalized_continued_fraction.of v` terminated at step `n`, then the `n`th convergent is
 exactly `v`.
 -/
 theorem of_correctness_of_terminated_at (terminated_at_n : (of v).TerminatedAt n) : v = (of v).convergents n :=
-  have  : int_fract_pair.stream v (n+1) = none :=
-    of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_left terminated_at_n 
+  have : int_fract_pair.stream v (n+1) = none :=
+    of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_left terminated_at_n
   of_correctness_of_nth_stream_eq_none this
 
-/--
+/-- 
 If `generalized_continued_fraction.of v` terminates, then there is `n : ℕ` such that the `n`th
 convergent is exactly `v`.
 -/
@@ -237,20 +226,417 @@ theorem of_correctness_of_terminates (terminates : (of v).Terminates) : ∃ n : 
 
 open Filter
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment
+    "/--"
+    "\nIf `generalized_continued_fraction.of v` terminates, then its convergents will eventually always\nbe `v`.\n-/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `of_correctness_at_top_of_terminates [])
+  (Command.declSig
+   [(Term.explicitBinder "(" [`terminates] [":" (Term.proj (Term.app `of [`v]) "." `Terminates)] [] ")")]
+   (Term.typeSpec
+    ":"
+    (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
+     "∀ᶠ"
+     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
+     " in "
+     `at_top
+     ", "
+     («term_=_» `v "=" (Term.app (Term.proj (Term.app `of [`v]) "." `convergents) [`n])))))
+  (Command.declValSimple
+   ":="
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eventually_at_top)] "]") []) [])
+       (group
+        (Tactic.obtain
+         "obtain"
+         [(Tactic.rcasesPatMed
+           [(Tactic.rcasesPat.tuple
+             "⟨"
+             [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `n)]) [])
+              ","
+              (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `terminated_at_n)]) [])]
+             "⟩")])]
+         [":"
+          («term∃_,_»
+           "∃"
+           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
+           ","
+           (Term.app (Term.proj (Term.app `of [`v]) "." `TerminatedAt) [`n]))]
+         [])
+        [])
+       (group (Tactic.exact "exact" `terminates) [])
+       (group (Tactic.use "use" [`n]) [])
+       (group (Tactic.intro "intro" [`m `m_geq_n]) [])
+       (group
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule [] (Term.app `convergents_stable_of_terminated [`m_geq_n `terminated_at_n]))]
+          "]")
+         [])
+        [])
+       (group (Tactic.exact "exact" (Term.app `of_correctness_of_terminated_at [`terminated_at_n])) [])])))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eventually_at_top)] "]") []) [])
+      (group
+       (Tactic.obtain
+        "obtain"
+        [(Tactic.rcasesPatMed
+          [(Tactic.rcasesPat.tuple
+            "⟨"
+            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `n)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `terminated_at_n)]) [])]
+            "⟩")])]
+        [":"
+         («term∃_,_»
+          "∃"
+          (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
+          ","
+          (Term.app (Term.proj (Term.app `of [`v]) "." `TerminatedAt) [`n]))]
+        [])
+       [])
+      (group (Tactic.exact "exact" `terminates) [])
+      (group (Tactic.use "use" [`n]) [])
+      (group (Tactic.intro "intro" [`m `m_geq_n]) [])
+      (group
+       (Tactic.rwSeq
+        "rw"
+        []
+        (Tactic.rwRuleSeq
+         "["
+         [(Tactic.rwRule [] (Term.app `convergents_stable_of_terminated [`m_geq_n `terminated_at_n]))]
+         "]")
+        [])
+       [])
+      (group (Tactic.exact "exact" (Term.app `of_correctness_of_terminated_at [`terminated_at_n])) [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.exact "exact" (Term.app `of_correctness_of_terminated_at [`terminated_at_n]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `of_correctness_of_terminated_at [`terminated_at_n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `terminated_at_n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `of_correctness_of_terminated_at
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rwSeq
+   "rw"
+   []
+   (Tactic.rwRuleSeq
+    "["
+    [(Tactic.rwRule [] (Term.app `convergents_stable_of_terminated [`m_geq_n `terminated_at_n]))]
+    "]")
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `convergents_stable_of_terminated [`m_geq_n `terminated_at_n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `terminated_at_n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `m_geq_n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `convergents_stable_of_terminated
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.intro "intro" [`m `m_geq_n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.intro', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `m_geq_n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `m
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.use "use" [`n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.use', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.exact "exact" `terminates)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `terminates
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.obtain
+   "obtain"
+   [(Tactic.rcasesPatMed
+     [(Tactic.rcasesPat.tuple
+       "⟨"
+       [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `n)]) [])
+        ","
+        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `terminated_at_n)]) [])]
+       "⟩")])]
+   [":"
+    («term∃_,_»
+     "∃"
+     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
+     ","
+     (Term.app (Term.proj (Term.app `of [`v]) "." `TerminatedAt) [`n]))]
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.obtain', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term∃_,_»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term∃_,_»
+   "∃"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
+   ","
+   (Term.app (Term.proj (Term.app `of [`v]) "." `TerminatedAt) [`n]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term∃_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Term.proj (Term.app `of [`v]) "." `TerminatedAt) [`n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj (Term.app `of [`v]) "." `TerminatedAt)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `of [`v])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `v
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `of
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `of [`v]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.binderIdent', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatMed', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eventually_at_top)] "]") [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `eventually_at_top
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
+   "∀ᶠ"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] []))
+   " in "
+   `at_top
+   ", "
+   («term_=_» `v "=" (Term.app (Term.proj (Term.app `of [`v]) "." `convergents) [`n])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_=_» `v "=" (Term.app (Term.proj (Term.app `of [`v]) "." `convergents) [`n]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Term.proj (Term.app `of [`v]) "." `convergents) [`n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj (Term.app `of [`v]) "." `convergents)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `of [`v])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `v
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `of
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `of [`v]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  `v
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `at_top
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /--
-If `generalized_continued_fraction.of v` terminates, then its convergents will eventually always
-be `v`.
--/
-theorem of_correctness_at_top_of_terminates (terminates : (of v).Terminates) :
-  ∀ᶠ n in at_top, v = (of v).convergents n :=
-  by 
-    rw [eventually_at_top]
-    obtain ⟨n, terminated_at_n⟩ : ∃ n, (of v).TerminatedAt n 
-    exact terminates 
-    use n 
-    intro m m_geq_n 
-    rw [convergents_stable_of_terminated m_geq_n terminated_at_n]
-    exact of_correctness_of_terminated_at terminated_at_n
+    If `generalized_continued_fraction.of v` terminates, then its convergents will eventually always
+    be `v`.
+    -/
+  theorem
+    of_correctness_at_top_of_terminates
+    ( terminates : of v . Terminates ) : ∀ᶠ n in at_top , v = of v . convergents n
+    :=
+      by
+        rw [ eventually_at_top ]
+          obtain ⟨ n , terminated_at_n ⟩ : ∃ n , of v . TerminatedAt n
+          exact terminates
+          use n
+          intro m m_geq_n
+          rw [ convergents_stable_of_terminated m_geq_n terminated_at_n ]
+          exact of_correctness_of_terminated_at terminated_at_n
 
 end GeneralizedContinuedFraction
 

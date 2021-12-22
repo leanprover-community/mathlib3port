@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Associated 
+import Mathbin.Algebra.Associated
 import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
@@ -58,16 +58,16 @@ divisibility, gcd, lcm, normalize
 
 variable {α : Type _}
 
-/-- Normalization monoid: multiplying with `norm_unit` gives a normal form for associated
+/--  Normalization monoid: multiplying with `norm_unit` gives a normal form for associated
 elements. -/
-@[protectProj]
-class NormalizationMonoid (α : Type _) [CancelCommMonoidWithZero α] where 
-  normUnit : α → Units α 
+@[protect_proj]
+class NormalizationMonoid (α : Type _) [CancelCommMonoidWithZero α] where
+  normUnit : α → Units α
   norm_unit_zero : norm_unit 0 = 1
-  norm_unit_mul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a*b) = norm_unit a*norm_unit b 
+  norm_unit_mul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a*b) = norm_unit a*norm_unit b
   norm_unit_coe_units : ∀ u : Units α, norm_unit u = u⁻¹
 
-export NormalizationMonoid(normUnit norm_unit_zero norm_unit_mul norm_unit_coe_units)
+export NormalizationMonoid (normUnit norm_unit_zero norm_unit_mul norm_unit_coe_units)
 
 attribute [simp] norm_unit_coe_units norm_unit_zero norm_unit_mul
 
@@ -79,29 +79,21 @@ variable [CancelCommMonoidWithZero α] [NormalizationMonoid α]
 theorem norm_unit_one : norm_unit (1 : α) = 1 :=
   norm_unit_coe_units 1
 
-/-- Chooses an element of each associate class, by multiplying by `norm_unit` -/
+/--  Chooses an element of each associate class, by multiplying by `norm_unit` -/
 def normalize : MonoidWithZeroHom α α :=
   { toFun := fun x => x*norm_unit x,
-    map_zero' :=
-      by 
-        simp ,
-    map_one' :=
-      by 
-        rw [norm_unit_one, Units.coe_one, mul_oneₓ],
-    map_mul' :=
-      fun x y =>
-        (Classical.by_cases
-            fun hx : x = 0 =>
-              by 
-                rw [hx, zero_mul, zero_mul, zero_mul])$
-          fun hx =>
-            (Classical.by_cases
-                fun hy : y = 0 =>
-                  by 
-                    rw [hy, mul_zero, zero_mul, mul_zero])$
-              fun hy =>
-                by 
-                  simp only [norm_unit_mul hx hy, Units.coe_mul] <;> simp only [mul_assocₓ, mul_left_commₓ y] }
+    map_zero' := by
+      simp ,
+    map_one' := by
+      rw [norm_unit_one, Units.coe_one, mul_oneₓ],
+    map_mul' := fun x y =>
+      (Classical.by_cases fun hx : x = 0 => by
+          rw [hx, zero_mul, zero_mul, zero_mul]) $
+        fun hx =>
+        (Classical.by_cases fun hy : y = 0 => by
+            rw [hy, mul_zero, zero_mul, mul_zero]) $
+          fun hy => by
+          simp only [norm_unit_mul hx hy, Units.coe_mul] <;> simp only [mul_assocₓ, mul_left_commₓ y] }
 
 theorem associated_normalize (x : α) : Associated x (normalize x) :=
   ⟨_, rfl⟩
@@ -124,55 +116,48 @@ theorem normalize_zero : normalize (0 : α) = 0 :=
 theorem normalize_one : normalize (1 : α) = 1 :=
   normalize.map_one
 
-theorem normalize_coe_units (u : Units α) : normalize (u : α) = 1 :=
-  by 
-    simp 
+theorem normalize_coe_units (u : Units α) : normalize (u : α) = 1 := by
+  simp
 
 theorem normalize_eq_zero {x : α} : normalize x = 0 ↔ x = 0 :=
-  ⟨fun hx => (associated_zero_iff_eq_zero x).1$ hx ▸ associated_normalize _,
-    by 
-      rintro rfl <;> exact normalize_zero⟩
+  ⟨fun hx => (associated_zero_iff_eq_zero x).1 $ hx ▸ associated_normalize _, by
+    rintro rfl <;> exact normalize_zero⟩
 
 theorem normalize_eq_one {x : α} : normalize x = 1 ↔ IsUnit x :=
   ⟨fun hx => is_unit_iff_exists_inv.2 ⟨_, hx⟩, fun ⟨u, hu⟩ => hu ▸ normalize_coe_units u⟩
 
 @[simp]
-theorem norm_unit_mul_norm_unit (a : α) : norm_unit (a*norm_unit a) = 1 :=
-  by 
-    nontriviality α using Subsingleton.elimₓ a 0 
-    obtain rfl | h := eq_or_ne a 0
-    ·
-      rw [norm_unit_zero, zero_mul, norm_unit_zero]
-    ·
-      rw [norm_unit_mul h (Units.ne_zero _), norm_unit_coe_units, mul_inv_eq_one]
+theorem norm_unit_mul_norm_unit (a : α) : norm_unit (a*norm_unit a) = 1 := by
+  nontriviality α using Subsingleton.elimₓ a 0
+  obtain rfl | h := eq_or_ne a 0
+  ·
+    rw [norm_unit_zero, zero_mul, norm_unit_zero]
+  ·
+    rw [norm_unit_mul h (Units.ne_zero _), norm_unit_coe_units, mul_inv_eq_one]
 
-theorem normalize_idem (x : α) : normalize (normalize x) = normalize x :=
-  by 
-    simp 
+theorem normalize_idem (x : α) : normalize (normalize x) = normalize x := by
+  simp
 
-theorem normalize_eq_normalize {a b : α} (hab : a ∣ b) (hba : b ∣ a) : normalize a = normalize b :=
-  by 
-    nontriviality α 
-    rcases associated_of_dvd_dvd hab hba with ⟨u, rfl⟩
-    refine'
-      Classical.by_cases
-        (by 
-          rintro rfl <;> simp only [zero_mul])
-        fun ha : a ≠ 0 => _ 
-    suffices  : (a*↑norm_unit a) = ((a*↑u)*↑norm_unit a)*↑u⁻¹
-    ·
-      simpa only [normalize_apply, mul_assocₓ, norm_unit_mul ha u.ne_zero, norm_unit_coe_units]
-    calc (a*↑norm_unit a) = ((a*↑norm_unit a)*↑u)*↑u⁻¹ :=
-      (Units.mul_inv_cancel_right _ _).symm _ = ((a*↑u)*↑norm_unit a)*↑u⁻¹ :=
-      by 
-        rw [mul_right_commₓ a]
+theorem normalize_eq_normalize {a b : α} (hab : a ∣ b) (hba : b ∣ a) : normalize a = normalize b := by
+  nontriviality α
+  rcases associated_of_dvd_dvd hab hba with ⟨u, rfl⟩
+  refine'
+    Classical.by_cases
+      (by
+        rintro rfl <;> simp only [zero_mul])
+      fun ha : a ≠ 0 => _
+  suffices (a*↑norm_unit a) = ((a*↑u)*↑norm_unit a)*↑u⁻¹by
+    simpa only [normalize_apply, mul_assocₓ, norm_unit_mul ha u.ne_zero, norm_unit_coe_units]
+  calc (a*↑norm_unit a) = ((a*↑norm_unit a)*↑u)*↑u⁻¹ :=
+    (Units.mul_inv_cancel_right _ _).symm _ = ((a*↑u)*↑norm_unit a)*↑u⁻¹ := by
+    rw [mul_right_commₓ a]
 
 theorem normalize_eq_normalize_iff {x y : α} : normalize x = normalize y ↔ x ∣ y ∧ y ∣ x :=
-  ⟨fun h => ⟨Units.dvd_mul_right.1 ⟨_, h.symm⟩, Units.dvd_mul_right.1 ⟨_, h⟩⟩,
-    fun ⟨hxy, hyx⟩ => normalize_eq_normalize hxy hyx⟩
+  ⟨fun h => ⟨Units.dvd_mul_right.1 ⟨_, h.symm⟩, Units.dvd_mul_right.1 ⟨_, h⟩⟩, fun ⟨hxy, hyx⟩ =>
+    normalize_eq_normalize hxy hyx⟩
 
 theorem dvd_antisymm_of_normalize_eq {a b : α} (ha : normalize a = a) (hb : normalize b = b) (hab : a ∣ b)
-  (hba : b ∣ a) : a = b :=
+    (hba : b ∣ a) : a = b :=
   ha ▸ hb ▸ normalize_eq_normalize hab hba
 
 theorem dvd_normalize_iff {a b : α} : a ∣ normalize b ↔ a ∣ b :=
@@ -189,10 +174,10 @@ variable [CancelCommMonoidWithZero α] [NormalizationMonoid α]
 
 attribute [local instance] Associated.setoid
 
-/-- Maps an element of `associates` back to the normalized element of its associate class -/
+/--  Maps an element of `associates` back to the normalized element of its associate class -/
 protected def out : Associates α → α :=
-  Quotientₓ.lift (normalize : α → α)$
-    fun a b ⟨u, hu⟩ => hu ▸ normalize_eq_normalize ⟨_, rfl⟩ (Units.mul_right_dvd.2$ dvd_refl a)
+  Quotientₓ.lift (normalize : α → α) $ fun a b ⟨u, hu⟩ =>
+    hu ▸ normalize_eq_normalize ⟨_, rfl⟩ (Units.mul_right_dvd.2 $ dvd_refl a)
 
 @[simp]
 theorem out_mk (a : α) : (Associates.mk a).out = normalize a :=
@@ -203,20 +188,16 @@ theorem out_one : (1 : Associates α).out = 1 :=
   normalize_one
 
 theorem out_mul (a b : Associates α) : (a*b).out = a.out*b.out :=
-  Quotientₓ.induction_on₂ a b$
-    fun a b =>
-      by 
-        simp only [Associates.quotient_mk_eq_mk, out_mk, mk_mul_mk, normalize.map_mul]
+  Quotientₓ.induction_on₂ a b $ fun a b => by
+    simp only [Associates.quotient_mk_eq_mk, out_mk, mk_mul_mk, normalize.map_mul]
 
 theorem dvd_out_iff (a : α) (b : Associates α) : a ∣ b.out ↔ Associates.mk a ≤ b :=
-  Quotientₓ.induction_on b$
-    by 
-      simp [Associates.out_mk, Associates.quotient_mk_eq_mk, mk_le_mk_iff_dvd_iff]
+  Quotientₓ.induction_on b $ by
+    simp [Associates.out_mk, Associates.quotient_mk_eq_mk, mk_le_mk_iff_dvd_iff]
 
 theorem out_dvd_iff (a : α) (b : Associates α) : b.out ∣ a ↔ b ≤ Associates.mk a :=
-  Quotientₓ.induction_on b$
-    by 
-      simp [Associates.out_mk, Associates.quotient_mk_eq_mk, mk_le_mk_iff_dvd_iff]
+  Quotientₓ.induction_on b $ by
+    simp [Associates.out_mk, Associates.quotient_mk_eq_mk, mk_le_mk_iff_dvd_iff]
 
 @[simp]
 theorem out_top : (⊤ : Associates α).out = 0 :=
@@ -235,32 +216,32 @@ theorem out_injective : Function.Injective (Associates.out : _ → α) :=
 
 end Associates
 
-/-- GCD monoid: a `cancel_comm_monoid_with_zero` with `gcd` (greatest common divisor) and
+/--  GCD monoid: a `cancel_comm_monoid_with_zero` with `gcd` (greatest common divisor) and
 `lcm` (least common multiple) operations, determined up to a unit. The type class focuses on `gcd`
 and we derive the corresponding `lcm` facts from `gcd`.
 -/
-@[protectProj]
-class GcdMonoid (α : Type _) [CancelCommMonoidWithZero α] where 
-  gcd : α → α → α 
-  lcm : α → α → α 
-  gcd_dvd_left : ∀ a b, gcd a b ∣ a 
-  gcd_dvd_right : ∀ a b, gcd a b ∣ b 
-  dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b 
+@[protect_proj]
+class GcdMonoid (α : Type _) [CancelCommMonoidWithZero α] where
+  gcd : α → α → α
+  lcm : α → α → α
+  gcd_dvd_left : ∀ a b, gcd a b ∣ a
+  gcd_dvd_right : ∀ a b, gcd a b ∣ b
+  dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b
   gcd_mul_lcm : ∀ a b, Associated (gcd a b*lcm a b) (a*b)
   lcm_zero_left : ∀ a, lcm 0 a = 0
   lcm_zero_right : ∀ a, lcm a 0 = 0
 
-/-- Normalized GCD monoid: a `cancel_comm_monoid_with_zero` with normalization and `gcd`
+/--  Normalized GCD monoid: a `cancel_comm_monoid_with_zero` with normalization and `gcd`
 (greatest common divisor) and `lcm` (least common multiple) operations. In this setting `gcd` and
 `lcm` form a bounded lattice on the associated elements where `gcd` is the infimum, `lcm` is the
 supremum, `1` is bottom, and `0` is top. The type class focuses on `gcd` and we derive the
 corresponding `lcm` facts from `gcd`.
 -/
-class NormalizedGcdMonoid (α : Type _) [CancelCommMonoidWithZero α] extends NormalizationMonoid α, GcdMonoid α where 
-  normalize_gcd : ∀ a b, normalize (gcd a b) = gcd a b 
+class NormalizedGcdMonoid (α : Type _) [CancelCommMonoidWithZero α] extends NormalizationMonoid α, GcdMonoid α where
+  normalize_gcd : ∀ a b, normalize (gcd a b) = gcd a b
   normalize_lcm : ∀ a b, normalize (lcm a b) = lcm a b
 
-export GcdMonoid(gcd lcm gcd_dvd_left gcd_dvd_right dvd_gcd lcm_zero_left lcm_zero_right)
+export GcdMonoid (gcd lcm gcd_dvd_left gcd_dvd_right dvd_gcd lcm_zero_left lcm_zero_right)
 
 attribute [simp] lcm_zero_left lcm_zero_right
 
@@ -309,7 +290,7 @@ instance [NormalizedGcdMonoid α] : IsAssociative α gcd :=
   ⟨gcd_assoc⟩
 
 theorem gcd_eq_normalize [NormalizedGcdMonoid α] {a b c : α} (habc : gcd a b ∣ c) (hcab : c ∣ gcd a b) :
-  gcd a b = normalize c :=
+    gcd a b = normalize c :=
   normalize_gcd a b ▸ normalize_eq_normalize habc hcab
 
 @[simp]
@@ -330,14 +311,13 @@ theorem gcd_zero_right' [GcdMonoid α] (a : α) : Associated (gcd a 0) a :=
 theorem gcd_eq_zero_iff [GcdMonoid α] (a b : α) : gcd a b = 0 ↔ a = 0 ∧ b = 0 :=
   Iff.intro
     (fun h =>
-      let ⟨ca, ha⟩ := gcd_dvd_left a b 
-      let ⟨cb, hb⟩ := gcd_dvd_right a b 
-      by 
-        rw [h, zero_mul] at ha hb <;> exact ⟨ha, hb⟩)
-    fun ⟨ha, hb⟩ =>
-      by 
-        rw [ha, hb, ←zero_dvd_iff]
-        apply dvd_gcd <;> rfl
+      let ⟨ca, ha⟩ := gcd_dvd_left a b
+      let ⟨cb, hb⟩ := gcd_dvd_right a b
+      by
+      rw [h, zero_mul] at ha hb <;> exact ⟨ha, hb⟩)
+    fun ⟨ha, hb⟩ => by
+    rw [ha, hb, ← zero_dvd_iff]
+    apply dvd_gcd <;> rfl
 
 @[simp]
 theorem gcd_one_left [NormalizedGcdMonoid α] (a : α) : gcd 1 a = 1 :=
@@ -365,52 +345,48 @@ theorem gcd_same [NormalizedGcdMonoid α] (a : α) : gcd a a = normalize a :=
 @[simp]
 theorem gcd_mul_left [NormalizedGcdMonoid α] (a b c : α) : gcd (a*b) (a*c) = normalize a*gcd b c :=
   Classical.by_cases
-      (by 
-        rintro rfl <;> simp only [zero_mul, gcd_zero_left, normalize_zero])$
+      (by
+        rintro rfl <;> simp only [zero_mul, gcd_zero_left, normalize_zero]) $
     fun ha : a ≠ 0 =>
-      suffices gcd (a*b) (a*c) = normalize (a*gcd b c)by 
-        simpa only [normalize.map_mul, normalize_gcd]
-      let ⟨d, Eq⟩ := dvd_gcd (dvd_mul_right a b) (dvd_mul_right a c)
-      gcd_eq_normalize
-        (Eq.symm ▸ mul_dvd_mul_left a$
-          show d ∣ gcd b c from
-            dvd_gcd ((mul_dvd_mul_iff_left ha).1$ Eq ▸ gcd_dvd_left _ _)
-              ((mul_dvd_mul_iff_left ha).1$ Eq ▸ gcd_dvd_right _ _))
-        (dvd_gcd (mul_dvd_mul_left a$ gcd_dvd_left _ _) (mul_dvd_mul_left a$ gcd_dvd_right _ _))
+    suffices gcd (a*b) (a*c) = normalize (a*gcd b c)by
+      simpa only [normalize.map_mul, normalize_gcd]
+    let ⟨d, Eq⟩ := dvd_gcd (dvd_mul_right a b) (dvd_mul_right a c)
+    gcd_eq_normalize
+      (Eq.symm ▸ mul_dvd_mul_left a $
+        show d ∣ gcd b c from
+          dvd_gcd ((mul_dvd_mul_iff_left ha).1 $ Eq ▸ gcd_dvd_left _ _)
+            ((mul_dvd_mul_iff_left ha).1 $ Eq ▸ gcd_dvd_right _ _))
+      (dvd_gcd (mul_dvd_mul_left a $ gcd_dvd_left _ _) (mul_dvd_mul_left a $ gcd_dvd_right _ _))
 
-theorem gcd_mul_left' [GcdMonoid α] (a b c : α) : Associated (gcd (a*b) (a*c)) (a*gcd b c) :=
-  by 
-    obtain rfl | ha := eq_or_ne a 0
-    ·
-      simp only [zero_mul, gcd_zero_left']
-    obtain ⟨d, eq⟩ := dvd_gcd (dvd_mul_right a b) (dvd_mul_right a c)
-    apply associated_of_dvd_dvd
-    ·
-      rw [Eq]
-      apply mul_dvd_mul_left 
-      exact
-        dvd_gcd ((mul_dvd_mul_iff_left ha).1$ Eq ▸ gcd_dvd_left _ _)
-          ((mul_dvd_mul_iff_left ha).1$ Eq ▸ gcd_dvd_right _ _)
-    ·
-      exact dvd_gcd (mul_dvd_mul_left a$ gcd_dvd_left _ _) (mul_dvd_mul_left a$ gcd_dvd_right _ _)
-
-@[simp]
-theorem gcd_mul_right [NormalizedGcdMonoid α] (a b c : α) : gcd (b*a) (c*a) = gcd b c*normalize a :=
-  by 
-    simp only [mul_commₓ, gcd_mul_left]
+theorem gcd_mul_left' [GcdMonoid α] (a b c : α) : Associated (gcd (a*b) (a*c)) (a*gcd b c) := by
+  obtain rfl | ha := eq_or_ne a 0
+  ·
+    simp only [zero_mul, gcd_zero_left']
+  obtain ⟨d, eq⟩ := dvd_gcd (dvd_mul_right a b) (dvd_mul_right a c)
+  apply associated_of_dvd_dvd
+  ·
+    rw [Eq]
+    apply mul_dvd_mul_left
+    exact
+      dvd_gcd ((mul_dvd_mul_iff_left ha).1 $ Eq ▸ gcd_dvd_left _ _)
+        ((mul_dvd_mul_iff_left ha).1 $ Eq ▸ gcd_dvd_right _ _)
+  ·
+    exact dvd_gcd (mul_dvd_mul_left a $ gcd_dvd_left _ _) (mul_dvd_mul_left a $ gcd_dvd_right _ _)
 
 @[simp]
-theorem gcd_mul_right' [GcdMonoid α] (a b c : α) : Associated (gcd (b*a) (c*a)) (gcd b c*a) :=
-  by 
-    simp only [mul_commₓ, gcd_mul_left']
+theorem gcd_mul_right [NormalizedGcdMonoid α] (a b c : α) : gcd (b*a) (c*a) = gcd b c*normalize a := by
+  simp only [mul_commₓ, gcd_mul_left]
+
+@[simp]
+theorem gcd_mul_right' [GcdMonoid α] (a b c : α) : Associated (gcd (b*a) (c*a)) (gcd b c*a) := by
+  simp only [mul_commₓ, gcd_mul_left']
 
 theorem gcd_eq_left_iff [NormalizedGcdMonoid α] (a b : α) (h : normalize a = a) : gcd a b = a ↔ a ∣ b :=
-  (Iff.intro fun eq => Eq ▸ gcd_dvd_right _ _)$
-    fun hab => dvd_antisymm_of_normalize_eq (normalize_gcd _ _) h (gcd_dvd_left _ _) (dvd_gcd (dvd_refl a) hab)
+  (Iff.intro fun eq => Eq ▸ gcd_dvd_right _ _) $ fun hab =>
+    dvd_antisymm_of_normalize_eq (normalize_gcd _ _) h (gcd_dvd_left _ _) (dvd_gcd (dvd_refl a) hab)
 
-theorem gcd_eq_right_iff [NormalizedGcdMonoid α] (a b : α) (h : normalize b = b) : gcd a b = b ↔ b ∣ a :=
-  by 
-    simpa only [gcd_comm a b] using gcd_eq_left_iff b a h
+theorem gcd_eq_right_iff [NormalizedGcdMonoid α] (a b : α) (h : normalize b = b) : gcd a b = b ↔ b ∣ a := by
+  simpa only [gcd_comm a b] using gcd_eq_left_iff b a h
 
 theorem gcd_dvd_gcd_mul_left [GcdMonoid α] (m n k : α) : gcd m n ∣ gcd (k*m) n :=
   gcd_dvd_gcd (dvd_mul_left _ _) dvd_rfl
@@ -435,159 +411,147 @@ theorem Associated.gcd_eq_right [NormalizedGcdMonoid α] {m n : α} (h : Associa
 theorem dvd_gcd_mul_of_dvd_mul [GcdMonoid α] {m n k : α} (H : k ∣ m*n) : k ∣ gcd k m*n :=
   (dvd_gcd (dvd_mul_right _ n) H).trans (gcd_mul_right' n k m).Dvd
 
-theorem dvd_mul_gcd_of_dvd_mul [GcdMonoid α] {m n k : α} (H : k ∣ m*n) : k ∣ m*gcd k n :=
-  by 
-    rw [mul_commₓ] at H⊢
-    exact dvd_gcd_mul_of_dvd_mul H
+theorem dvd_mul_gcd_of_dvd_mul [GcdMonoid α] {m n k : α} (H : k ∣ m*n) : k ∣ m*gcd k n := by
+  rw [mul_commₓ] at H⊢
+  exact dvd_gcd_mul_of_dvd_mul H
 
-/-- Represent a divisor of `m * n` as a product of a divisor of `m` and a divisor of `n`.
+/--  Represent a divisor of `m * n` as a product of a divisor of `m` and a divisor of `n`.
 
  Note: In general, this representation is highly non-unique. -/
 theorem exists_dvd_and_dvd_of_dvd_mul [GcdMonoid α] {m n k : α} (H : k ∣ m*n) :
-  ∃ (d₁ : _)(hd₁ : d₁ ∣ m)(d₂ : _)(hd₂ : d₂ ∣ n), k = d₁*d₂ :=
-  by 
-    byCases' h0 : gcd k m = 0
+    ∃ (d₁ : _)(hd₁ : d₁ ∣ m)(d₂ : _)(hd₂ : d₂ ∣ n), k = d₁*d₂ := by
+  by_cases' h0 : gcd k m = 0
+  ·
+    rw [gcd_eq_zero_iff] at h0
+    rcases h0 with ⟨rfl, rfl⟩
+    refine' ⟨0, dvd_refl 0, n, dvd_refl n, _⟩
+    simp
+  ·
+    obtain ⟨a, ha⟩ := gcd_dvd_left k m
+    refine' ⟨gcd k m, gcd_dvd_right _ _, a, _, ha⟩
+    suffices h : (gcd k m*a) ∣ gcd k m*n
     ·
-      rw [gcd_eq_zero_iff] at h0 
-      rcases h0 with ⟨rfl, rfl⟩
-      refine' ⟨0, dvd_refl 0, n, dvd_refl n, _⟩
-      simp 
-    ·
-      obtain ⟨a, ha⟩ := gcd_dvd_left k m 
-      refine' ⟨gcd k m, gcd_dvd_right _ _, a, _, ha⟩
-      suffices h : (gcd k m*a) ∣ gcd k m*n
-      ·
-        cases' h with b hb 
-        use b 
-        rw [mul_assocₓ] at hb 
-        apply mul_left_cancel₀ h0 hb 
-      rw [←ha]
-      exact dvd_gcd_mul_of_dvd_mul H
+      cases' h with b hb
+      use b
+      rw [mul_assocₓ] at hb
+      apply mul_left_cancel₀ h0 hb
+    rw [← ha]
+    exact dvd_gcd_mul_of_dvd_mul H
 
-theorem gcd_mul_dvd_mul_gcd [GcdMonoid α] (k m n : α) : gcd k (m*n) ∣ gcd k m*gcd k n :=
-  by 
-    obtain ⟨m', hm', n', hn', h⟩ := exists_dvd_and_dvd_of_dvd_mul$ gcd_dvd_right k (m*n)
-    replace h : gcd k (m*n) = m'*n' := h 
-    rw [h]
-    have hm'n' : (m'*n') ∣ k := h ▸ gcd_dvd_left _ _ 
-    apply mul_dvd_mul
-    ·
-      have hm'k : m' ∣ k := (dvd_mul_right m' n').trans hm'n' 
-      exact dvd_gcd hm'k hm'
-    ·
-      have hn'k : n' ∣ k := (dvd_mul_left n' m').trans hm'n' 
-      exact dvd_gcd hn'k hn'
+theorem gcd_mul_dvd_mul_gcd [GcdMonoid α] (k m n : α) : gcd k (m*n) ∣ gcd k m*gcd k n := by
+  obtain ⟨m', hm', n', hn', h⟩ := exists_dvd_and_dvd_of_dvd_mul $ gcd_dvd_right k (m*n)
+  replace h : gcd k (m*n) = m'*n' := h
+  rw [h]
+  have hm'n' : (m'*n') ∣ k := h ▸ gcd_dvd_left _ _
+  apply mul_dvd_mul
+  ·
+    have hm'k : m' ∣ k := (dvd_mul_right m' n').trans hm'n'
+    exact dvd_gcd hm'k hm'
+  ·
+    have hn'k : n' ∣ k := (dvd_mul_left n' m').trans hm'n'
+    exact dvd_gcd hn'k hn'
 
-theorem gcd_pow_right_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd a (b ^ k) ∣ gcd a b ^ k :=
-  by 
-    byCases' hg : gcd a b = 0
+theorem gcd_pow_right_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd a (b ^ k) ∣ gcd a b ^ k := by
+  by_cases' hg : gcd a b = 0
+  ·
+    rw [gcd_eq_zero_iff] at hg
+    rcases hg with ⟨rfl, rfl⟩
+    exact (gcd_zero_left' (0 ^ k : α)).Dvd.trans (pow_dvd_pow_of_dvd (gcd_zero_left' (0 : α)).symm.Dvd _)
+  ·
+    induction' k with k hk
     ·
-      rw [gcd_eq_zero_iff] at hg 
-      rcases hg with ⟨rfl, rfl⟩
-      exact (gcd_zero_left' (0 ^ k : α)).Dvd.trans (pow_dvd_pow_of_dvd (gcd_zero_left' (0 : α)).symm.Dvd _)
-    ·
-      induction' k with k hk
-      ·
-        simp only [pow_zeroₓ]
-        exact (gcd_one_right' a).Dvd 
-      rw [pow_succₓ, pow_succₓ]
-      trans gcd a b*gcd a (b ^ k)
-      apply gcd_mul_dvd_mul_gcd a b (b ^ k)
-      exact (mul_dvd_mul_iff_left hg).mpr hk
+      simp only [pow_zeroₓ]
+      exact (gcd_one_right' a).Dvd
+    rw [pow_succₓ, pow_succₓ]
+    trans gcd a b*gcd a (b ^ k)
+    apply gcd_mul_dvd_mul_gcd a b (b ^ k)
+    exact (mul_dvd_mul_iff_left hg).mpr hk
 
 theorem gcd_pow_left_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd (a ^ k) b ∣ gcd a b ^ k :=
-  calc gcd (a ^ k) b ∣ gcd b (a ^ k) := (gcd_comm' _ _).Dvd 
-    _ ∣ gcd b a ^ k := gcd_pow_right_dvd_pow_gcd 
+  calc gcd (a ^ k) b ∣ gcd b (a ^ k) := (gcd_comm' _ _).Dvd
+    _ ∣ gcd b a ^ k := gcd_pow_right_dvd_pow_gcd
     _ ∣ gcd a b ^ k := pow_dvd_pow_of_dvd (gcd_comm' _ _).Dvd _
     
 
 theorem pow_dvd_of_mul_eq_pow [GcdMonoid α] {a b c d₁ d₂ : α} (ha : a ≠ 0) (hab : IsUnit (gcd a b)) {k : ℕ}
-  (h : (a*b) = c ^ k) (hc : c = d₁*d₂) (hd₁ : d₁ ∣ a) : d₁ ^ k ≠ 0 ∧ d₁ ^ k ∣ a :=
-  by 
-    have h1 : IsUnit (gcd (d₁ ^ k) b)
+    (h : (a*b) = c ^ k) (hc : c = d₁*d₂) (hd₁ : d₁ ∣ a) : d₁ ^ k ≠ 0 ∧ d₁ ^ k ∣ a := by
+  have h1 : IsUnit (gcd (d₁ ^ k) b) := by
+    apply is_unit_of_dvd_one
+    trans gcd d₁ b ^ k
     ·
-      apply is_unit_of_dvd_one 
-      trans gcd d₁ b ^ k
-      ·
-        exact gcd_pow_left_dvd_pow_gcd
-      ·
-        apply IsUnit.dvd 
-        apply IsUnit.pow 
-        apply is_unit_of_dvd_one 
-        apply dvd_trans _ hab.dvd 
-        apply gcd_dvd_gcd hd₁ (dvd_refl b)
-    have h2 : d₁ ^ k ∣ a*b
+      exact gcd_pow_left_dvd_pow_gcd
     ·
-      use d₂ ^ k 
-      rw [h, hc]
-      exact mul_powₓ d₁ d₂ k 
-    rw [mul_commₓ] at h2 
-    have h3 : d₁ ^ k ∣ a
-    ·
-      apply (dvd_gcd_mul_of_dvd_mul h2).trans 
-      rw [IsUnit.mul_left_dvd _ _ _ h1]
-    have h4 : d₁ ^ k ≠ 0
-    ·
-      intro hdk 
-      rw [hdk] at h3 
-      apply absurd (zero_dvd_iff.mp h3) ha 
-    exact ⟨h4, h3⟩
+      apply IsUnit.dvd
+      apply IsUnit.pow
+      apply is_unit_of_dvd_one
+      apply dvd_trans _ hab.dvd
+      apply gcd_dvd_gcd hd₁ (dvd_refl b)
+  have h2 : d₁ ^ k ∣ a*b := by
+    use d₂ ^ k
+    rw [h, hc]
+    exact mul_powₓ d₁ d₂ k
+  rw [mul_commₓ] at h2
+  have h3 : d₁ ^ k ∣ a := by
+    apply (dvd_gcd_mul_of_dvd_mul h2).trans
+    rw [IsUnit.mul_left_dvd _ _ _ h1]
+  have h4 : d₁ ^ k ≠ 0 := by
+    intro hdk
+    rw [hdk] at h3
+    apply absurd (zero_dvd_iff.mp h3) ha
+  exact ⟨h4, h3⟩
 
 theorem exists_associated_pow_of_mul_eq_pow [GcdMonoid α] {a b c : α} (hab : IsUnit (gcd a b)) {k : ℕ}
-  (h : (a*b) = c ^ k) : ∃ d : α, Associated (d ^ k) a :=
-  by 
-    cases' subsingleton_or_nontrivial α
-    ·
-      use 0
-      rw [Subsingleton.elimₓ a (0 ^ k)]
-    byCases' ha : a = 0
-    ·
-      use 0
-      rw [ha]
-      obtain rfl | hk := k.eq_zero_or_pos
-      ·
-        exfalso 
-        revert h 
-        rw [ha, zero_mul, pow_zeroₓ]
-        apply zero_ne_one
-      ·
-        rw [zero_pow hk]
-    byCases' hb : b = 0
-    ·
-      use 1
-      rw [one_pow]
-      apply (associated_one_iff_is_unit.mpr hab).symm.trans 
-      rw [hb]
-      exact gcd_zero_right' a 
+    (h : (a*b) = c ^ k) : ∃ d : α, Associated (d ^ k) a := by
+  cases' subsingleton_or_nontrivial α
+  ·
+    use 0
+    rw [Subsingleton.elimₓ a (0 ^ k)]
+  by_cases' ha : a = 0
+  ·
+    use 0
+    rw [ha]
     obtain rfl | hk := k.eq_zero_or_pos
     ·
-      use 1
-      rw [pow_zeroₓ] at h⊢
-      use Units.mkOfMulEqOne _ _ h 
-      rw [Units.coe_mk_of_mul_eq_one, one_mulₓ]
-    have hc : c ∣ a*b
+      exfalso
+      revert h
+      rw [ha, zero_mul, pow_zeroₓ]
+      apply zero_ne_one
     ·
-      rw [h]
-      exact dvd_pow_self _ hk.ne' 
-    obtain ⟨d₁, hd₁, d₂, hd₂, hc⟩ := exists_dvd_and_dvd_of_dvd_mul hc 
-    use d₁ 
-    obtain ⟨h0₁, ⟨a', ha'⟩⟩ := pow_dvd_of_mul_eq_pow ha hab h hc hd₁ 
-    rw [mul_commₓ] at h hc 
-    rw [(gcd_comm' a b).is_unit_iff] at hab 
-    obtain ⟨h0₂, ⟨b', hb'⟩⟩ := pow_dvd_of_mul_eq_pow hb hab h hc hd₂ 
-    rw [ha', hb', hc, mul_powₓ] at h 
-    have h' : (a'*b') = 1
-    ·
-      apply (mul_right_inj' h0₁).mp 
-      rw [mul_oneₓ]
-      apply (mul_right_inj' h0₂).mp 
-      rw [←h]
-      rw [mul_assocₓ, mul_commₓ a', ←mul_assocₓ _ b', ←mul_assocₓ b', mul_commₓ b']
-    use Units.mkOfMulEqOne _ _ h' 
-    rw [Units.coe_mk_of_mul_eq_one, ha']
+      rw [zero_pow hk]
+  by_cases' hb : b = 0
+  ·
+    use 1
+    rw [one_pow]
+    apply (associated_one_iff_is_unit.mpr hab).symm.trans
+    rw [hb]
+    exact gcd_zero_right' a
+  obtain rfl | hk := k.eq_zero_or_pos
+  ·
+    use 1
+    rw [pow_zeroₓ] at h⊢
+    use Units.mkOfMulEqOne _ _ h
+    rw [Units.coe_mk_of_mul_eq_one, one_mulₓ]
+  have hc : c ∣ a*b := by
+    rw [h]
+    exact dvd_pow_self _ hk.ne'
+  obtain ⟨d₁, hd₁, d₂, hd₂, hc⟩ := exists_dvd_and_dvd_of_dvd_mul hc
+  use d₁
+  obtain ⟨h0₁, ⟨a', ha'⟩⟩ := pow_dvd_of_mul_eq_pow ha hab h hc hd₁
+  rw [mul_commₓ] at h hc
+  rw [(gcd_comm' a b).is_unit_iff] at hab
+  obtain ⟨h0₂, ⟨b', hb'⟩⟩ := pow_dvd_of_mul_eq_pow hb hab h hc hd₂
+  rw [ha', hb', hc, mul_powₓ] at h
+  have h' : (a'*b') = 1 := by
+    apply (mul_right_inj' h0₁).mp
+    rw [mul_oneₓ]
+    apply (mul_right_inj' h0₂).mp
+    rw [← h]
+    rw [mul_assocₓ, mul_commₓ a', ← mul_assocₓ _ b', ← mul_assocₓ b', mul_commₓ b']
+  use Units.mkOfMulEqOne _ _ h'
+  rw [Units.coe_mk_of_mul_eq_one, ha']
 
 theorem exists_eq_pow_of_mul_eq_pow [GcdMonoid α] [Unique (Units α)] {a b c : α} (hab : IsUnit (gcd a b)) {k : ℕ}
-  (h : (a*b) = c ^ k) : ∃ d : α, a = d ^ k :=
+    (h : (a*b) = c ^ k) : ∃ d : α, a = d ^ k :=
   let ⟨d, hd⟩ := exists_associated_pow_of_mul_eq_pow hab h
   ⟨d, (associated_iff_eq.mp hd).symm⟩
 
@@ -595,14 +559,1027 @@ end Gcd
 
 section Lcm
 
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `lcm_dvd_iff [])
+  (Command.declSig
+   [(Term.instBinder "[" [] (Term.app `GcdMonoid [`α]) "]") (Term.implicitBinder "{" [`a `b `c] [":" `α] "}")]
+   (Term.typeSpec
+    ":"
+    («term_↔_»
+     (Init.Core.«term_∣_» (Term.app `lcm [`a `b]) " ∣ " `c)
+     "↔"
+     («term_∧_» (Init.Core.«term_∣_» `a " ∣ " `c) "∧" (Init.Core.«term_∣_» `b " ∣ " `c)))))
+  (Command.declValSimple
+   ":="
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group
+        (Tactic.byCases'
+         "by_cases'"
+         [`this ":"]
+         («term_∨_» («term_=_» `a "=" (numLit "0")) "∨" («term_=_» `b "=" (numLit "0"))))
+        [])
+       (group
+        (Tactic.«tactic·._»
+         "·"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(group
+             (Tactic.«tactic_<;>_»
+              (Tactic.rcases
+               "rcases"
+               [(Tactic.casesTarget [] `this)]
+               ["with"
+                (Tactic.rcasesPat.paren
+                 "("
+                 (Tactic.rcasesPatLo
+                  (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl) "|" (Tactic.rcasesPat.one `rfl)])
+                  [])
+                 ")")])
+              "<;>"
+              (Tactic.simp
+               "simp"
+               ["("
+                "config"
+                ":="
+                (Term.structInst
+                 "{"
+                 []
+                 [(group
+                   (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
+                   [])]
+                 (Term.optEllipsis [])
+                 []
+                 "}")
+                ")"]
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `iff_def)
+                 ","
+                 (Tactic.simpLemma [] [] `lcm_zero_left)
+                 ","
+                 (Tactic.simpLemma [] [] `lcm_zero_right)
+                 ","
+                 (Tactic.simpLemma [] [] `zero_dvd_iff)
+                 ","
+                 (Tactic.simpLemma [] [] `dvd_zero)
+                 ","
+                 (Tactic.simpLemma [] [] `eq_self_iff_true)
+                 ","
+                 (Tactic.simpLemma [] [] `and_trueₓ)
+                 ","
+                 (Tactic.simpLemma [] [] `imp_true_iff)]
+                "]"]
+               []))
+             [])])))
+        [])
+       (group
+        (Tactic.«tactic·._»
+         "·"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(group
+             (Tactic.obtain
+              "obtain"
+              [(Tactic.rcasesPatMed
+                [(Tactic.rcasesPat.tuple
+                  "⟨"
+                  [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `h1)]) [])
+                   ","
+                   (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `h2)]) [])]
+                  "⟩")])]
+              []
+              [":=" [(Term.app (Term.proj `not_or_distrib "." (fieldIdx "1")) [`this])]])
+             [])
+            (group
+             (Tactic.have'' "have" [`h []] [(Term.typeSpec ":" («term_≠_» (Term.app `gcd [`a `b]) "≠" (numLit "0")))])
+             [])
+            (group
+             (Tactic.exact
+              "exact"
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [(Term.simpleBinder [`H] [])]
+                "=>"
+                (Term.app
+                 `h1
+                 [(Term.proj
+                   (Term.app
+                    (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1"))
+                    [`H])
+                   "."
+                   (fieldIdx "1"))]))))
+             [])
+            (group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule ["←"] (Term.app `mul_dvd_mul_iff_left [`h]))
+                ","
+                (Tactic.rwRule [] (Term.proj (Term.app `gcd_mul_lcm [`a `b]) "." `dvd_iff_dvd_left))
+                ","
+                (Tactic.rwRule ["←"] (Term.proj (Term.app `gcd_mul_right' [`c `a `b]) "." `dvd_iff_dvd_right))
+                ","
+                (Tactic.rwRule [] `dvd_gcd_iff)
+                ","
+                (Tactic.rwRule [] (Term.app `mul_commₓ [`b `c]))
+                ","
+                (Tactic.rwRule [] (Term.app `mul_dvd_mul_iff_left [`h1]))
+                ","
+                (Tactic.rwRule [] (Term.app `mul_dvd_mul_iff_right [`h2]))
+                ","
+                (Tactic.rwRule [] `and_comm)]
+               "]")
+              [])
+             [])])))
+        [])])))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.byCases'
+        "by_cases'"
+        [`this ":"]
+        («term_∨_» («term_=_» `a "=" (numLit "0")) "∨" («term_=_» `b "=" (numLit "0"))))
+       [])
+      (group
+       (Tactic.«tactic·._»
+        "·"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(group
+            (Tactic.«tactic_<;>_»
+             (Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget [] `this)]
+              ["with"
+               (Tactic.rcasesPat.paren
+                "("
+                (Tactic.rcasesPatLo
+                 (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl) "|" (Tactic.rcasesPat.one `rfl)])
+                 [])
+                ")")])
+             "<;>"
+             (Tactic.simp
+              "simp"
+              ["("
+               "config"
+               ":="
+               (Term.structInst
+                "{"
+                []
+                [(group
+                  (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
+                  [])]
+                (Term.optEllipsis [])
+                []
+                "}")
+               ")"]
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `iff_def)
+                ","
+                (Tactic.simpLemma [] [] `lcm_zero_left)
+                ","
+                (Tactic.simpLemma [] [] `lcm_zero_right)
+                ","
+                (Tactic.simpLemma [] [] `zero_dvd_iff)
+                ","
+                (Tactic.simpLemma [] [] `dvd_zero)
+                ","
+                (Tactic.simpLemma [] [] `eq_self_iff_true)
+                ","
+                (Tactic.simpLemma [] [] `and_trueₓ)
+                ","
+                (Tactic.simpLemma [] [] `imp_true_iff)]
+               "]"]
+              []))
+            [])])))
+       [])
+      (group
+       (Tactic.«tactic·._»
+        "·"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(group
+            (Tactic.obtain
+             "obtain"
+             [(Tactic.rcasesPatMed
+               [(Tactic.rcasesPat.tuple
+                 "⟨"
+                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `h1)]) [])
+                  ","
+                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `h2)]) [])]
+                 "⟩")])]
+             []
+             [":=" [(Term.app (Term.proj `not_or_distrib "." (fieldIdx "1")) [`this])]])
+            [])
+           (group
+            (Tactic.have'' "have" [`h []] [(Term.typeSpec ":" («term_≠_» (Term.app `gcd [`a `b]) "≠" (numLit "0")))])
+            [])
+           (group
+            (Tactic.exact
+             "exact"
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [(Term.simpleBinder [`H] [])]
+               "=>"
+               (Term.app
+                `h1
+                [(Term.proj
+                  (Term.app
+                   (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1"))
+                   [`H])
+                  "."
+                  (fieldIdx "1"))]))))
+            [])
+           (group
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule ["←"] (Term.app `mul_dvd_mul_iff_left [`h]))
+               ","
+               (Tactic.rwRule [] (Term.proj (Term.app `gcd_mul_lcm [`a `b]) "." `dvd_iff_dvd_left))
+               ","
+               (Tactic.rwRule ["←"] (Term.proj (Term.app `gcd_mul_right' [`c `a `b]) "." `dvd_iff_dvd_right))
+               ","
+               (Tactic.rwRule [] `dvd_gcd_iff)
+               ","
+               (Tactic.rwRule [] (Term.app `mul_commₓ [`b `c]))
+               ","
+               (Tactic.rwRule [] (Term.app `mul_dvd_mul_iff_left [`h1]))
+               ","
+               (Tactic.rwRule [] (Term.app `mul_dvd_mul_iff_right [`h2]))
+               ","
+               (Tactic.rwRule [] `and_comm)]
+              "]")
+             [])
+            [])])))
+       [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.«tactic·._»
+   "·"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.obtain
+        "obtain"
+        [(Tactic.rcasesPatMed
+          [(Tactic.rcasesPat.tuple
+            "⟨"
+            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `h1)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `h2)]) [])]
+            "⟩")])]
+        []
+        [":=" [(Term.app (Term.proj `not_or_distrib "." (fieldIdx "1")) [`this])]])
+       [])
+      (group
+       (Tactic.have'' "have" [`h []] [(Term.typeSpec ":" («term_≠_» (Term.app `gcd [`a `b]) "≠" (numLit "0")))])
+       [])
+      (group
+       (Tactic.exact
+        "exact"
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [(Term.simpleBinder [`H] [])]
+          "=>"
+          (Term.app
+           `h1
+           [(Term.proj
+             (Term.app
+              (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1"))
+              [`H])
+             "."
+             (fieldIdx "1"))]))))
+       [])
+      (group
+       (Tactic.rwSeq
+        "rw"
+        []
+        (Tactic.rwRuleSeq
+         "["
+         [(Tactic.rwRule ["←"] (Term.app `mul_dvd_mul_iff_left [`h]))
+          ","
+          (Tactic.rwRule [] (Term.proj (Term.app `gcd_mul_lcm [`a `b]) "." `dvd_iff_dvd_left))
+          ","
+          (Tactic.rwRule ["←"] (Term.proj (Term.app `gcd_mul_right' [`c `a `b]) "." `dvd_iff_dvd_right))
+          ","
+          (Tactic.rwRule [] `dvd_gcd_iff)
+          ","
+          (Tactic.rwRule [] (Term.app `mul_commₓ [`b `c]))
+          ","
+          (Tactic.rwRule [] (Term.app `mul_dvd_mul_iff_left [`h1]))
+          ","
+          (Tactic.rwRule [] (Term.app `mul_dvd_mul_iff_right [`h2]))
+          ","
+          (Tactic.rwRule [] `and_comm)]
+         "]")
+        [])
+       [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.rwSeq
+   "rw"
+   []
+   (Tactic.rwRuleSeq
+    "["
+    [(Tactic.rwRule ["←"] (Term.app `mul_dvd_mul_iff_left [`h]))
+     ","
+     (Tactic.rwRule [] (Term.proj (Term.app `gcd_mul_lcm [`a `b]) "." `dvd_iff_dvd_left))
+     ","
+     (Tactic.rwRule ["←"] (Term.proj (Term.app `gcd_mul_right' [`c `a `b]) "." `dvd_iff_dvd_right))
+     ","
+     (Tactic.rwRule [] `dvd_gcd_iff)
+     ","
+     (Tactic.rwRule [] (Term.app `mul_commₓ [`b `c]))
+     ","
+     (Tactic.rwRule [] (Term.app `mul_dvd_mul_iff_left [`h1]))
+     ","
+     (Tactic.rwRule [] (Term.app `mul_dvd_mul_iff_right [`h2]))
+     ","
+     (Tactic.rwRule [] `and_comm)]
+    "]")
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `and_comm
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `mul_dvd_mul_iff_right [`h2])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `mul_dvd_mul_iff_right
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `mul_dvd_mul_iff_left [`h1])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h1
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `mul_dvd_mul_iff_left
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `mul_commₓ [`b `c])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `c
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `b
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `mul_commₓ
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `dvd_gcd_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.proj (Term.app `gcd_mul_right' [`c `a `b]) "." `dvd_iff_dvd_right)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `gcd_mul_right' [`c `a `b])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `b
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `c
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `gcd_mul_right'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `gcd_mul_right' [`c `a `b]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«←»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.proj (Term.app `gcd_mul_lcm [`a `b]) "." `dvd_iff_dvd_left)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `gcd_mul_lcm [`a `b])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `b
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `gcd_mul_lcm
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `gcd_mul_lcm [`a `b]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `mul_dvd_mul_iff_left [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `mul_dvd_mul_iff_left
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«←»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.exact
+   "exact"
+   (Term.fun
+    "fun"
+    (Term.basicFun
+     [(Term.simpleBinder [`H] [])]
+     "=>"
+     (Term.app
+      `h1
+      [(Term.proj
+        (Term.app (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1")) [`H])
+        "."
+        (fieldIdx "1"))]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [`H] [])]
+    "=>"
+    (Term.app
+     `h1
+     [(Term.proj
+       (Term.app (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1")) [`H])
+       "."
+       (fieldIdx "1"))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `h1
+   [(Term.proj
+     (Term.app (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1")) [`H])
+     "."
+     (fieldIdx "1"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.proj
+   (Term.app (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1")) [`H])
+   "."
+   (fieldIdx "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1")) [`H])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `gcd_eq_zero_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app
+   (Term.proj
+    (Term.paren "(" [(Term.app `gcd_eq_zero_iff [(Term.hole "_") (Term.hole "_")]) []] ")")
+    "."
+    (fieldIdx "1"))
+   [`H])
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `h1
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.have'' "have" [`h []] [(Term.typeSpec ":" («term_≠_» (Term.app `gcd [`a `b]) "≠" (numLit "0")))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.have''', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_≠_» (Term.app `gcd [`a `b]) "≠" (numLit "0"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_≠_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (numLit "0")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  (Term.app `gcd [`a `b])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `b
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `gcd
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.obtain
+   "obtain"
+   [(Tactic.rcasesPatMed
+     [(Tactic.rcasesPat.tuple
+       "⟨"
+       [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `h1)]) [])
+        ","
+        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `h2)]) [])]
+       "⟩")])]
+   []
+   [":=" [(Term.app (Term.proj `not_or_distrib "." (fieldIdx "1")) [`this])]])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.obtain', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Term.proj `not_or_distrib "." (fieldIdx "1")) [`this])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `this
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj `not_or_distrib "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `not_or_distrib
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatMed', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.«tactic·._»
+   "·"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.«tactic_<;>_»
+        (Tactic.rcases
+         "rcases"
+         [(Tactic.casesTarget [] `this)]
+         ["with"
+          (Tactic.rcasesPat.paren
+           "("
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl) "|" (Tactic.rcasesPat.one `rfl)]) [])
+           ")")])
+        "<;>"
+        (Tactic.simp
+         "simp"
+         ["("
+          "config"
+          ":="
+          (Term.structInst
+           "{"
+           []
+           [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
+           (Term.optEllipsis [])
+           []
+           "}")
+          ")"]
+         ["only"]
+         ["["
+          [(Tactic.simpLemma [] [] `iff_def)
+           ","
+           (Tactic.simpLemma [] [] `lcm_zero_left)
+           ","
+           (Tactic.simpLemma [] [] `lcm_zero_right)
+           ","
+           (Tactic.simpLemma [] [] `zero_dvd_iff)
+           ","
+           (Tactic.simpLemma [] [] `dvd_zero)
+           ","
+           (Tactic.simpLemma [] [] `eq_self_iff_true)
+           ","
+           (Tactic.simpLemma [] [] `and_trueₓ)
+           ","
+           (Tactic.simpLemma [] [] `imp_true_iff)]
+          "]"]
+         []))
+       [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.«tactic_<;>_»
+   (Tactic.rcases
+    "rcases"
+    [(Tactic.casesTarget [] `this)]
+    ["with"
+     (Tactic.rcasesPat.paren
+      "("
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl) "|" (Tactic.rcasesPat.one `rfl)]) [])
+      ")")])
+   "<;>"
+   (Tactic.simp
+    "simp"
+    ["("
+     "config"
+     ":="
+     (Term.structInst
+      "{"
+      []
+      [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
+      (Term.optEllipsis [])
+      []
+      "}")
+     ")"]
+    ["only"]
+    ["["
+     [(Tactic.simpLemma [] [] `iff_def)
+      ","
+      (Tactic.simpLemma [] [] `lcm_zero_left)
+      ","
+      (Tactic.simpLemma [] [] `lcm_zero_right)
+      ","
+      (Tactic.simpLemma [] [] `zero_dvd_iff)
+      ","
+      (Tactic.simpLemma [] [] `dvd_zero)
+      ","
+      (Tactic.simpLemma [] [] `eq_self_iff_true)
+      ","
+      (Tactic.simpLemma [] [] `and_trueₓ)
+      ","
+      (Tactic.simpLemma [] [] `imp_true_iff)]
+     "]"]
+    []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.simp
+   "simp"
+   ["("
+    "config"
+    ":="
+    (Term.structInst
+     "{"
+     []
+     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
+     (Term.optEllipsis [])
+     []
+     "}")
+    ")"]
+   ["only"]
+   ["["
+    [(Tactic.simpLemma [] [] `iff_def)
+     ","
+     (Tactic.simpLemma [] [] `lcm_zero_left)
+     ","
+     (Tactic.simpLemma [] [] `lcm_zero_right)
+     ","
+     (Tactic.simpLemma [] [] `zero_dvd_iff)
+     ","
+     (Tactic.simpLemma [] [] `dvd_zero)
+     ","
+     (Tactic.simpLemma [] [] `eq_self_iff_true)
+     ","
+     (Tactic.simpLemma [] [] `and_trueₓ)
+     ","
+     (Tactic.simpLemma [] [] `imp_true_iff)]
+    "]"]
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `imp_true_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `and_trueₓ
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `eq_self_iff_true
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `dvd_zero
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `zero_dvd_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `lcm_zero_right
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `lcm_zero_left
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `iff_def
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   lcm_dvd_iff
   [ GcdMonoid α ] { a b c : α } : lcm a b ∣ c ↔ a ∣ c ∧ b ∣ c
   :=
     by
-      byCases' this : a = 0 ∨ b = 0
+      by_cases' this : a = 0 ∨ b = 0
         ·
           rcases this with ( rfl | rfl )
             <;>
@@ -662,13 +1639,12 @@ theorem lcm_dvd [GcdMonoid α] {a b c : α} (hab : a ∣ b) (hcb : c ∣ b) : lc
 theorem lcm_eq_zero_iff [GcdMonoid α] (a b : α) : lcm a b = 0 ↔ a = 0 ∨ b = 0 :=
   Iff.intro
     (fun h : lcm a b = 0 =>
-      have  : Associated (a*b) 0 :=
-        (gcd_mul_lcm a b).symm.trans$
-          by 
-            rw [h, mul_zero]
-      by 
-        simpa only [associated_zero_iff_eq_zero, mul_eq_zero])
-    (by 
+      have : Associated (a*b) 0 :=
+        (gcd_mul_lcm a b).symm.trans $ by
+          rw [h, mul_zero]
+      by
+      simpa only [associated_zero_iff_eq_zero, mul_eq_zero])
+    (by
       rintro (rfl | rfl) <;> [apply lcm_zero_left, apply lcm_zero_right])
 
 @[simp]
@@ -704,7 +1680,7 @@ instance [NormalizedGcdMonoid α] : IsAssociative α lcm :=
   ⟨lcm_assoc⟩
 
 theorem lcm_eq_normalize [NormalizedGcdMonoid α] {a b c : α} (habc : lcm a b ∣ c) (hcab : c ∣ lcm a b) :
-  lcm a b = normalize c :=
+    lcm a b = normalize c :=
   normalize_lcm a b ▸ normalize_eq_normalize habc hcab
 
 theorem lcm_dvd_lcm [GcdMonoid α] {a b c d : α} (hab : a ∣ b) (hcd : c ∣ d) : lcm a c ∣ lcm b d :=
@@ -716,7 +1692,7 @@ theorem lcm_units_coe_left [NormalizedGcdMonoid α] (u : Units α) (a : α) : lc
 
 @[simp]
 theorem lcm_units_coe_right [NormalizedGcdMonoid α] (a : α) (u : Units α) : lcm a (↑u) = normalize a :=
-  (lcm_comm a u).trans$ lcm_units_coe_left _ _
+  (lcm_comm a u).trans $ lcm_units_coe_left _ _
 
 @[simp]
 theorem lcm_one_left [NormalizedGcdMonoid α] (a : α) : lcm 1 a = normalize a :=
@@ -732,39 +1708,36 @@ theorem lcm_same [NormalizedGcdMonoid α] (a : α) : lcm a a = normalize a :=
 
 @[simp]
 theorem lcm_eq_one_iff [NormalizedGcdMonoid α] (a b : α) : lcm a b = 1 ↔ a ∣ 1 ∧ b ∣ 1 :=
-  Iff.intro (fun eq => Eq ▸ ⟨dvd_lcm_left _ _, dvd_lcm_right _ _⟩)
-    fun ⟨⟨c, hc⟩, ⟨d, hd⟩⟩ =>
-      show lcm (Units.mkOfMulEqOne a c hc.symm : α) (Units.mkOfMulEqOne b d hd.symm) = 1by 
-        rw [lcm_units_coe_left, normalize_coe_units]
+  Iff.intro (fun eq => Eq ▸ ⟨dvd_lcm_left _ _, dvd_lcm_right _ _⟩) fun ⟨⟨c, hc⟩, ⟨d, hd⟩⟩ =>
+    show lcm (Units.mkOfMulEqOne a c hc.symm : α) (Units.mkOfMulEqOne b d hd.symm) = 1by
+      rw [lcm_units_coe_left, normalize_coe_units]
 
 @[simp]
 theorem lcm_mul_left [NormalizedGcdMonoid α] (a b c : α) : lcm (a*b) (a*c) = normalize a*lcm b c :=
   Classical.by_cases
-      (by 
-        rintro rfl <;> simp only [zero_mul, lcm_zero_left, normalize_zero])$
+      (by
+        rintro rfl <;> simp only [zero_mul, lcm_zero_left, normalize_zero]) $
     fun ha : a ≠ 0 =>
-      suffices lcm (a*b) (a*c) = normalize (a*lcm b c)by 
-        simpa only [normalize.map_mul, normalize_lcm]
-      have  : a ∣ lcm (a*b) (a*c) := (dvd_mul_right _ _).trans (dvd_lcm_left _ _)
-      let ⟨d, Eq⟩ := this 
-      lcm_eq_normalize (lcm_dvd (mul_dvd_mul_left a (dvd_lcm_left _ _)) (mul_dvd_mul_left a (dvd_lcm_right _ _)))
-        (Eq.symm ▸
-          (mul_dvd_mul_left a$
-            lcm_dvd ((mul_dvd_mul_iff_left ha).1$ Eq ▸ dvd_lcm_left _ _)
-              ((mul_dvd_mul_iff_left ha).1$ Eq ▸ dvd_lcm_right _ _)))
+    suffices lcm (a*b) (a*c) = normalize (a*lcm b c)by
+      simpa only [normalize.map_mul, normalize_lcm]
+    have : a ∣ lcm (a*b) (a*c) := (dvd_mul_right _ _).trans (dvd_lcm_left _ _)
+    let ⟨d, Eq⟩ := this
+    lcm_eq_normalize (lcm_dvd (mul_dvd_mul_left a (dvd_lcm_left _ _)) (mul_dvd_mul_left a (dvd_lcm_right _ _)))
+      (Eq.symm ▸
+        (mul_dvd_mul_left a $
+          lcm_dvd ((mul_dvd_mul_iff_left ha).1 $ Eq ▸ dvd_lcm_left _ _)
+            ((mul_dvd_mul_iff_left ha).1 $ Eq ▸ dvd_lcm_right _ _)))
 
 @[simp]
-theorem lcm_mul_right [NormalizedGcdMonoid α] (a b c : α) : lcm (b*a) (c*a) = lcm b c*normalize a :=
-  by 
-    simp only [mul_commₓ, lcm_mul_left]
+theorem lcm_mul_right [NormalizedGcdMonoid α] (a b c : α) : lcm (b*a) (c*a) = lcm b c*normalize a := by
+  simp only [mul_commₓ, lcm_mul_left]
 
 theorem lcm_eq_left_iff [NormalizedGcdMonoid α] (a b : α) (h : normalize a = a) : lcm a b = a ↔ b ∣ a :=
-  (Iff.intro fun eq => Eq ▸ dvd_lcm_right _ _)$
-    fun hab => dvd_antisymm_of_normalize_eq (normalize_lcm _ _) h (lcm_dvd (dvd_refl a) hab) (dvd_lcm_left _ _)
+  (Iff.intro fun eq => Eq ▸ dvd_lcm_right _ _) $ fun hab =>
+    dvd_antisymm_of_normalize_eq (normalize_lcm _ _) h (lcm_dvd (dvd_refl a) hab) (dvd_lcm_left _ _)
 
-theorem lcm_eq_right_iff [NormalizedGcdMonoid α] (a b : α) (h : normalize b = b) : lcm a b = b ↔ a ∣ b :=
-  by 
-    simpa only [lcm_comm b a] using lcm_eq_left_iff b a h
+theorem lcm_eq_right_iff [NormalizedGcdMonoid α] (a b : α) (h : normalize b = b) : lcm a b = b ↔ a ∣ b := by
+  simpa only [lcm_comm b a] using lcm_eq_left_iff b a h
 
 theorem lcm_dvd_lcm_mul_left [GcdMonoid α] (m n k : α) : lcm m n ∣ lcm (k*m) n :=
   lcm_dvd_lcm (dvd_mul_left _ _) dvd_rfl
@@ -792,21 +1765,19 @@ namespace GcdMonoid
 
 theorem prime_of_irreducible [GcdMonoid α] {x : α} (hi : Irreducible x) : Prime x :=
   ⟨hi.ne_zero,
-    ⟨hi.1,
-      fun a b h =>
-        by 
-          cases' gcd_dvd_left x a with y hy 
-          cases' hi.is_unit_or_is_unit hy with hu hu
-          ·
-            right 
-            trans gcd (x*b) (a*b)
-            apply dvd_gcd (dvd_mul_right x b) h 
-            rw [(gcd_mul_right' b x a).dvd_iff_dvd_left]
-            exact (associated_unit_mul_left _ _ hu).Dvd
-          ·
-            left 
-            rw [hy]
-            exact dvd_trans (associated_mul_unit_left _ _ hu).Dvd (gcd_dvd_right x a)⟩⟩
+    ⟨hi.1, fun a b h => by
+      cases' gcd_dvd_left x a with y hy
+      cases' hi.is_unit_or_is_unit hy with hu hu
+      ·
+        right
+        trans gcd (x*b) (a*b)
+        apply dvd_gcd (dvd_mul_right x b) h
+        rw [(gcd_mul_right' b x a).dvd_iff_dvd_left]
+        exact (associated_unit_mul_left _ _ hu).Dvd
+      ·
+        left
+        rw [hy]
+        exact dvd_trans (associated_mul_unit_left _ _ hu).Dvd (gcd_dvd_right x a)⟩⟩
 
 theorem irreducible_iff_prime [GcdMonoid α] {p : α} : Irreducible p ↔ Prime p :=
   ⟨prime_of_irreducible, Prime.irreducible⟩
@@ -819,9 +1790,16 @@ section UniqueUnit
 
 variable [CancelCommMonoidWithZero α] [Unique (Units α)]
 
-instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoid α :=
-  { normUnit := fun x => 1, norm_unit_zero := rfl, norm_unit_mul := fun x y hx hy => (mul_oneₓ 1).symm,
-    norm_unit_coe_units := fun u => Subsingleton.elimₓ _ _ }
+-- failed to format: format: uncaught backtrack exception
+instance
+  ( priority := 100 )
+  normalizationMonoidOfUniqueUnits
+  : NormalizationMonoid α
+  where
+    normUnit x := 1
+      norm_unit_zero := rfl
+      norm_unit_mul x y hx hy := ( mul_oneₓ 1 ) . symm
+      norm_unit_coe_units u := Subsingleton.elimₓ _ _
 
 @[simp]
 theorem norm_unit_eq_one (x : α) : norm_unit x = 1 :=
@@ -831,11 +1809,11 @@ theorem norm_unit_eq_one (x : α) : norm_unit x = 1 :=
 theorem normalize_eq (x : α) : normalize x = x :=
   mul_oneₓ x
 
-/-- If a monoid's only unit is `1`, then it is isomorphic to its associates. -/
+/--  If a monoid's only unit is `1`, then it is isomorphic to its associates. -/
 @[simps]
 def associatesEquivOfUniqueUnits : Associates α ≃* α :=
   { toFun := Associates.out, invFun := Associates.mk, left_inv := Associates.mk_out,
-    right_inv := fun t => (Associates.out_mk _).trans$ normalize_eq _, map_mul' := Associates.out_mul }
+    right_inv := fun t => (Associates.out_mk _).trans $ normalize_eq _, map_mul' := Associates.out_mul }
 
 end UniqueUnit
 
@@ -843,364 +1821,317 @@ section IsDomain
 
 variable [CommRingₓ α] [IsDomain α] [NormalizedGcdMonoid α]
 
-theorem gcd_eq_of_dvd_sub_right {a b c : α} (h : a ∣ b - c) : gcd a b = gcd a c :=
-  by 
-    apply dvd_antisymm_of_normalize_eq (normalize_gcd _ _) (normalize_gcd _ _) <;>
-      rw [dvd_gcd_iff] <;> refine' ⟨gcd_dvd_left _ _, _⟩
-    ·
-      rcases h with ⟨d, hd⟩
-      rcases gcd_dvd_right a b with ⟨e, he⟩
-      rcases gcd_dvd_left a b with ⟨f, hf⟩
-      use e - f*d 
-      rw [mul_sub, ←he, ←mul_assocₓ, ←hf, ←hd, sub_sub_cancel]
-    ·
-      rcases h with ⟨d, hd⟩
-      rcases gcd_dvd_right a c with ⟨e, he⟩
-      rcases gcd_dvd_left a c with ⟨f, hf⟩
-      use e+f*d 
-      rw [mul_addₓ, ←he, ←mul_assocₓ, ←hf, ←hd, ←add_sub_assoc, add_commₓ c b, add_sub_cancel]
+theorem gcd_eq_of_dvd_sub_right {a b c : α} (h : a ∣ b - c) : gcd a b = gcd a c := by
+  apply dvd_antisymm_of_normalize_eq (normalize_gcd _ _) (normalize_gcd _ _) <;>
+    rw [dvd_gcd_iff] <;> refine' ⟨gcd_dvd_left _ _, _⟩
+  ·
+    rcases h with ⟨d, hd⟩
+    rcases gcd_dvd_right a b with ⟨e, he⟩
+    rcases gcd_dvd_left a b with ⟨f, hf⟩
+    use e - f*d
+    rw [mul_sub, ← he, ← mul_assocₓ, ← hf, ← hd, sub_sub_cancel]
+  ·
+    rcases h with ⟨d, hd⟩
+    rcases gcd_dvd_right a c with ⟨e, he⟩
+    rcases gcd_dvd_left a c with ⟨f, hf⟩
+    use e+f*d
+    rw [mul_addₓ, ← he, ← mul_assocₓ, ← hf, ← hd, ← add_sub_assoc, add_commₓ c b, add_sub_cancel]
 
-theorem gcd_eq_of_dvd_sub_left {a b c : α} (h : a ∣ b - c) : gcd b a = gcd c a :=
-  by 
-    rw [gcd_comm _ a, gcd_comm _ a, gcd_eq_of_dvd_sub_right h]
+theorem gcd_eq_of_dvd_sub_left {a b c : α} (h : a ∣ b - c) : gcd b a = gcd c a := by
+  rw [gcd_comm _ a, gcd_comm _ a, gcd_eq_of_dvd_sub_right h]
 
 end IsDomain
 
 section Constructors
 
-noncomputable section 
+noncomputable section
 
 open Associates
 
 variable [CancelCommMonoidWithZero α]
 
 private theorem map_mk_unit_aux [DecidableEq α] {f : Associates α →* α} (hinv : Function.RightInverse f Associates.mk)
-  (a : α) : (a*↑Classical.some (associated_map_mk hinv a)) = f (Associates.mk a) :=
+    (a : α) : (a*↑Classical.some (associated_map_mk hinv a)) = f (Associates.mk a) :=
   Classical.some_spec (associated_map_mk hinv a)
 
-/-- Define `normalization_monoid` on a structure from a `monoid_hom` inverse to `associates.mk`. -/
+/--  Define `normalization_monoid` on a structure from a `monoid_hom` inverse to `associates.mk`. -/
 def normalizationMonoidOfMonoidHomRightInverse [DecidableEq α] (f : Associates α →* α)
-  (hinv : Function.RightInverse f Associates.mk) : NormalizationMonoid α :=
-  { normUnit :=
-      fun a => if a = 0 then 1 else Classical.some (Associates.mk_eq_mk_iff_associated.1 (hinv (Associates.mk a)).symm),
+    (hinv : Function.RightInverse f Associates.mk) : NormalizationMonoid α :=
+  { normUnit := fun a =>
+      if a = 0 then 1 else Classical.some (Associates.mk_eq_mk_iff_associated.1 (hinv (Associates.mk a)).symm),
     norm_unit_zero := if_pos rfl,
-    norm_unit_mul :=
-      fun a b ha hb =>
-        by 
-          rw [if_neg (mul_ne_zero ha hb), if_neg ha, if_neg hb, Units.ext_iff, Units.coe_mul]
-          suffices  :
-            ((a*b)*↑Classical.some (associated_map_mk hinv (a*b))) =
-              (a*↑Classical.some (associated_map_mk hinv a))*b*↑Classical.some (associated_map_mk hinv b)
-          ·
-            apply mul_left_cancel₀ (mul_ne_zero ha hb) _ 
-            simpa only [mul_assocₓ, mul_commₓ, mul_left_commₓ] using this 
-          rw [map_mk_unit_aux hinv a, map_mk_unit_aux hinv (a*b), map_mk_unit_aux hinv b, ←MonoidHom.map_mul,
-            Associates.mk_mul_mk],
-    norm_unit_coe_units :=
-      fun u =>
-        by 
-          nontriviality α 
-          rw [if_neg (Units.ne_zero u), Units.ext_iff]
-          apply mul_left_cancel₀ (Units.ne_zero u)
-          rw [Units.mul_inv, map_mk_unit_aux hinv u,
-            Associates.mk_eq_mk_iff_associated.2 (associated_one_iff_is_unit.2 ⟨u, rfl⟩), Associates.mk_one,
-            MonoidHom.map_one] }
+    norm_unit_mul := fun a b ha hb => by
+      rw [if_neg (mul_ne_zero ha hb), if_neg ha, if_neg hb, Units.ext_iff, Units.coe_mul]
+      suffices
+        ((a*b)*↑Classical.some (associated_map_mk hinv (a*b))) =
+          (a*↑Classical.some (associated_map_mk hinv a))*b*↑Classical.some (associated_map_mk hinv b)by
+        apply mul_left_cancel₀ (mul_ne_zero ha hb) _
+        simpa only [mul_assocₓ, mul_commₓ, mul_left_commₓ] using this
+      rw [map_mk_unit_aux hinv a, map_mk_unit_aux hinv (a*b), map_mk_unit_aux hinv b, ← MonoidHom.map_mul,
+        Associates.mk_mul_mk],
+    norm_unit_coe_units := fun u => by
+      nontriviality α
+      rw [if_neg (Units.ne_zero u), Units.ext_iff]
+      apply mul_left_cancel₀ (Units.ne_zero u)
+      rw [Units.mul_inv, map_mk_unit_aux hinv u,
+        Associates.mk_eq_mk_iff_associated.2 (associated_one_iff_is_unit.2 ⟨u, rfl⟩), Associates.mk_one,
+        MonoidHom.map_one] }
 
-/-- Define `gcd_monoid` on a structure just from the `gcd` and its properties. -/
+/--  Define `gcd_monoid` on a structure just from the `gcd` and its properties. -/
 noncomputable def gcdMonoidOfGcd [DecidableEq α] (gcd : α → α → α) (gcd_dvd_left : ∀ a b, gcd a b ∣ a)
-  (gcd_dvd_right : ∀ a b, gcd a b ∣ b) (dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b) : GcdMonoid α :=
+    (gcd_dvd_right : ∀ a b, gcd a b ∣ b) (dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b) : GcdMonoid α :=
   { gcd, gcd_dvd_left, gcd_dvd_right, dvd_gcd := fun a b c => dvd_gcd,
     lcm := fun a b => if a = 0 then 0 else Classical.some ((gcd_dvd_left a b).trans (Dvd.intro b rfl)),
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          splitIfs with a0
-          ·
-            rw [mul_zero, a0, zero_mul]
-          ·
-            rw [←Classical.some_spec ((gcd_dvd_left a b).trans (Dvd.intro b rfl))],
+    gcd_mul_lcm := fun a b => by
+      split_ifs with a0
+      ·
+        rw [mul_zero, a0, zero_mul]
+      ·
+        rw [← Classical.some_spec ((gcd_dvd_left a b).trans (Dvd.intro b rfl))],
     lcm_zero_left := fun a => if_pos rfl,
-    lcm_zero_right :=
-      fun a =>
-        by 
-          splitIfs with a0
-          ·
-            rfl 
-          have h := (Classical.some_spec ((gcd_dvd_left a 0).trans (Dvd.intro 0 rfl))).symm 
-          have a0' : gcd a 0 ≠ 0
-          ·
-            contrapose! a0 
-            rw [←associated_zero_iff_eq_zero, ←a0]
-            exact associated_of_dvd_dvd (dvd_gcd (dvd_refl a) (dvd_zero a)) (gcd_dvd_left _ _)
-          apply Or.resolve_left (mul_eq_zero.1 _) a0' 
-          rw [h, mul_zero] }
+    lcm_zero_right := fun a => by
+      split_ifs with a0
+      ·
+        rfl
+      have h := (Classical.some_spec ((gcd_dvd_left a 0).trans (Dvd.intro 0 rfl))).symm
+      have a0' : gcd a 0 ≠ 0 := by
+        contrapose! a0
+        rw [← associated_zero_iff_eq_zero, ← a0]
+        exact associated_of_dvd_dvd (dvd_gcd (dvd_refl a) (dvd_zero a)) (gcd_dvd_left _ _)
+      apply Or.resolve_left (mul_eq_zero.1 _) a0'
+      rw [h, mul_zero] }
 
-/-- Define `normalized_gcd_monoid` on a structure just from the `gcd` and its properties. -/
+/--  Define `normalized_gcd_monoid` on a structure just from the `gcd` and its properties. -/
 noncomputable def normalizedGcdMonoidOfGcd [NormalizationMonoid α] [DecidableEq α] (gcd : α → α → α)
-  (gcd_dvd_left : ∀ a b, gcd a b ∣ a) (gcd_dvd_right : ∀ a b, gcd a b ∣ b)
-  (dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b) (normalize_gcd : ∀ a b, normalize (gcd a b) = gcd a b) :
-  NormalizedGcdMonoid α :=
+    (gcd_dvd_left : ∀ a b, gcd a b ∣ a) (gcd_dvd_right : ∀ a b, gcd a b ∣ b)
+    (dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b) (normalize_gcd : ∀ a b, normalize (gcd a b) = gcd a b) :
+    NormalizedGcdMonoid α :=
   { (inferInstance : NormalizationMonoid α) with gcd, gcd_dvd_left, gcd_dvd_right, dvd_gcd := fun a b c => dvd_gcd,
     normalize_gcd,
-    lcm :=
-      fun a b => if a = 0 then 0 else Classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl))),
-    normalize_lcm :=
-      fun a b =>
-        by 
-          dsimp [normalize]
-          splitIfs with a0
+    lcm := fun a b =>
+      if a = 0 then 0 else Classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl))),
+    normalize_lcm := fun a b => by
+      dsimp [normalize]
+      split_ifs with a0
+      ·
+        exact @normalize_zero α _ _
+      ·
+        have := (Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))).symm
+        set l := Classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))
+        obtain rfl | hb := eq_or_ne b 0
+        ·
+          simp only [normalize_zero, mul_zero, mul_eq_zero] at this
+          obtain ha | hl := this
           ·
-            exact @normalize_zero α _ _
+            apply (a0 _).elim
+            rw [← zero_dvd_iff, ← ha]
+            exact gcd_dvd_left _ _
           ·
-            have  := (Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))).symm 
-            set l := Classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))
-            obtain rfl | hb := eq_or_ne b 0
-            ·
-              simp only [normalize_zero, mul_zero, mul_eq_zero] at this 
-              obtain ha | hl := this
-              ·
-                apply (a0 _).elim 
-                rw [←zero_dvd_iff, ←ha]
-                exact gcd_dvd_left _ _
-              ·
-                convert @normalize_zero α _ _ 
-            have h1 : gcd a b ≠ 0
-            ·
-              have hab : (a*b) ≠ 0 := mul_ne_zero a0 hb 
-              contrapose! hab 
-              rw [←normalize_eq_zero, ←this, hab, zero_mul]
-            have h2 : normalize (gcd a b*l) = gcd a b*l
-            ·
-              rw [this, normalize_idem]
-            rw [←normalize_gcd] at this 
-            rwa [normalize.map_mul, normalize_gcd, mul_right_inj' h1] at h2,
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          splitIfs with a0
-          ·
-            rw [mul_zero, a0, zero_mul]
-          ·
-            rw [←Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))]
-            exact normalize_associated (a*b),
+            convert @normalize_zero α _ _
+        have h1 : gcd a b ≠ 0 := by
+          have hab : (a*b) ≠ 0 := mul_ne_zero a0 hb
+          contrapose! hab
+          rw [← normalize_eq_zero, ← this, hab, zero_mul]
+        have h2 : normalize (gcd a b*l) = gcd a b*l := by
+          rw [this, normalize_idem]
+        rw [← normalize_gcd] at this
+        rwa [normalize.map_mul, normalize_gcd, mul_right_inj' h1] at h2,
+    gcd_mul_lcm := fun a b => by
+      split_ifs with a0
+      ·
+        rw [mul_zero, a0, zero_mul]
+      ·
+        rw [← Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))]
+        exact normalize_associated (a*b),
     lcm_zero_left := fun a => if_pos rfl,
-    lcm_zero_right :=
-      fun a =>
-        by 
-          splitIfs with a0
-          ·
-            rfl 
-          rw [←normalize_eq_zero] at a0 
-          have h := (Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a 0).trans (Dvd.intro 0 rfl)))).symm 
-          have gcd0 : gcd a 0 = normalize a
-          ·
-            rw [←normalize_gcd]
-            exact normalize_eq_normalize (gcd_dvd_left _ _) (dvd_gcd (dvd_refl a) (dvd_zero a))
-          rw [←gcd0] at a0 
-          apply Or.resolve_left (mul_eq_zero.1 _) a0 
-          rw [h, mul_zero, normalize_zero] }
+    lcm_zero_right := fun a => by
+      split_ifs with a0
+      ·
+        rfl
+      rw [← normalize_eq_zero] at a0
+      have h := (Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a 0).trans (Dvd.intro 0 rfl)))).symm
+      have gcd0 : gcd a 0 = normalize a := by
+        rw [← normalize_gcd]
+        exact normalize_eq_normalize (gcd_dvd_left _ _) (dvd_gcd (dvd_refl a) (dvd_zero a))
+      rw [← gcd0] at a0
+      apply Or.resolve_left (mul_eq_zero.1 _) a0
+      rw [h, mul_zero, normalize_zero] }
 
-/-- Define `gcd_monoid` on a structure just from the `lcm` and its properties. -/
+/--  Define `gcd_monoid` on a structure just from the `lcm` and its properties. -/
 noncomputable def gcdMonoidOfLcm [DecidableEq α] (lcm : α → α → α) (dvd_lcm_left : ∀ a b, a ∣ lcm a b)
-  (dvd_lcm_right : ∀ a b, b ∣ lcm a b) (lcm_dvd : ∀ {a b c}, c ∣ a → b ∣ a → lcm c b ∣ a) : GcdMonoid α :=
+    (dvd_lcm_right : ∀ a b, b ∣ lcm a b) (lcm_dvd : ∀ {a b c}, c ∣ a → b ∣ a → lcm c b ∣ a) : GcdMonoid α :=
   let exists_gcd := fun a b => lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
   { lcm, gcd := fun a b => if a = 0 then b else if b = 0 then a else Classical.some (exists_gcd a b),
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          splitIfs
-          ·
-            rw [h, zero_dvd_iff.1 (dvd_lcm_left _ _), mul_zero, zero_mul]
-          ·
-            rw [h_1, zero_dvd_iff.1 (dvd_lcm_right _ _), mul_zero]
-          rw [mul_commₓ, ←Classical.some_spec (exists_gcd a b)],
+    gcd_mul_lcm := fun a b => by
+      split_ifs
+      ·
+        rw [h, zero_dvd_iff.1 (dvd_lcm_left _ _), mul_zero, zero_mul]
+      ·
+        rw [h_1, zero_dvd_iff.1 (dvd_lcm_right _ _), mul_zero]
+      rw [mul_commₓ, ← Classical.some_spec (exists_gcd a b)],
     lcm_zero_left := fun a => zero_dvd_iff.1 (dvd_lcm_left _ _),
     lcm_zero_right := fun a => zero_dvd_iff.1 (dvd_lcm_right _ _),
-    gcd_dvd_left :=
-      fun a b =>
-        by 
-          splitIfs with h h_1
-          ·
-            rw [h]
-            apply dvd_zero
-          ·
-            exact dvd_rfl 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd a b), mul_commₓ, mul_dvd_mul_iff_right h]
-          apply dvd_lcm_right,
-    gcd_dvd_right :=
-      fun a b =>
-        by 
-          splitIfs with h h_1
-          ·
-            exact dvd_rfl
-          ·
-            rw [h_1]
-            apply dvd_zero 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd a b), mul_dvd_mul_iff_right h_1]
-          apply dvd_lcm_left,
-    dvd_gcd :=
-      fun a b c ac ab =>
-        by 
-          splitIfs
-          ·
-            exact ab
-          ·
-            exact ac 
-          have h0 : lcm c b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd c b)]
-          rcases ab with ⟨d, rfl⟩
-          rw [mul_eq_zero] at h_1 
-          pushNeg  at h_1 
-          rw [mul_commₓ a, ←mul_assocₓ, mul_dvd_mul_iff_right h_1.1]
-          apply lcm_dvd (Dvd.intro d rfl)
-          rw [mul_commₓ, mul_dvd_mul_iff_right h_1.2]
-          apply ac }
+    gcd_dvd_left := fun a b => by
+      split_ifs with h h_1
+      ·
+        rw [h]
+        apply dvd_zero
+      ·
+        exact dvd_rfl
+      have h0 : lcm a b ≠ 0 := by
+        intro con
+        have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
+        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        cases h <;> tauto
+      rw [← mul_dvd_mul_iff_left h0, ← Classical.some_spec (exists_gcd a b), mul_commₓ, mul_dvd_mul_iff_right h]
+      apply dvd_lcm_right,
+    gcd_dvd_right := fun a b => by
+      split_ifs with h h_1
+      ·
+        exact dvd_rfl
+      ·
+        rw [h_1]
+        apply dvd_zero
+      have h0 : lcm a b ≠ 0 := by
+        intro con
+        have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
+        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        cases h <;> tauto
+      rw [← mul_dvd_mul_iff_left h0, ← Classical.some_spec (exists_gcd a b), mul_dvd_mul_iff_right h_1]
+      apply dvd_lcm_left,
+    dvd_gcd := fun a b c ac ab => by
+      split_ifs
+      ·
+        exact ab
+      ·
+        exact ac
+      have h0 : lcm c b ≠ 0 := by
+        intro con
+        have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl)
+        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        cases h <;> tauto
+      rw [← mul_dvd_mul_iff_left h0, ← Classical.some_spec (exists_gcd c b)]
+      rcases ab with ⟨d, rfl⟩
+      rw [mul_eq_zero] at h_1
+      push_neg  at h_1
+      rw [mul_commₓ a, ← mul_assocₓ, mul_dvd_mul_iff_right h_1.1]
+      apply lcm_dvd (Dvd.intro d rfl)
+      rw [mul_commₓ, mul_dvd_mul_iff_right h_1.2]
+      apply ac }
 
-/-- Define `normalized_gcd_monoid` on a structure just from the `lcm` and its properties. -/
+/--  Define `normalized_gcd_monoid` on a structure just from the `lcm` and its properties. -/
 noncomputable def normalizedGcdMonoidOfLcm [NormalizationMonoid α] [DecidableEq α] (lcm : α → α → α)
-  (dvd_lcm_left : ∀ a b, a ∣ lcm a b) (dvd_lcm_right : ∀ a b, b ∣ lcm a b)
-  (lcm_dvd : ∀ {a b c}, c ∣ a → b ∣ a → lcm c b ∣ a) (normalize_lcm : ∀ a b, normalize (lcm a b) = lcm a b) :
-  NormalizedGcdMonoid α :=
+    (dvd_lcm_left : ∀ a b, a ∣ lcm a b) (dvd_lcm_right : ∀ a b, b ∣ lcm a b)
+    (lcm_dvd : ∀ {a b c}, c ∣ a → b ∣ a → lcm c b ∣ a) (normalize_lcm : ∀ a b, normalize (lcm a b) = lcm a b) :
+    NormalizedGcdMonoid α :=
   let exists_gcd := fun a b => dvd_normalize_iff.2 (lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl))
   { (inferInstance : NormalizationMonoid α) with lcm,
     gcd := fun a b => if a = 0 then normalize b else if b = 0 then normalize a else Classical.some (exists_gcd a b),
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          splitIfs with h h_1
-          ·
-            rw [h, zero_dvd_iff.1 (dvd_lcm_left _ _), mul_zero, zero_mul]
-          ·
-            rw [h_1, zero_dvd_iff.1 (dvd_lcm_right _ _), mul_zero, mul_zero]
-          rw [mul_commₓ, ←Classical.some_spec (exists_gcd a b)]
-          exact normalize_associated (a*b),
+    gcd_mul_lcm := fun a b => by
+      split_ifs with h h_1
+      ·
+        rw [h, zero_dvd_iff.1 (dvd_lcm_left _ _), mul_zero, zero_mul]
+      ·
+        rw [h_1, zero_dvd_iff.1 (dvd_lcm_right _ _), mul_zero, mul_zero]
+      rw [mul_commₓ, ← Classical.some_spec (exists_gcd a b)]
+      exact normalize_associated (a*b),
     normalize_lcm,
-    normalize_gcd :=
-      fun a b =>
-        by 
-          dsimp [normalize]
-          splitIfs with h h_1
-          ·
-            apply normalize_idem
-          ·
-            apply normalize_idem 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          apply mul_left_cancel₀ h0 
-          refine' trans _ (Classical.some_spec (exists_gcd a b))
-          convLHS => congr rw [←normalize_lcm a b]
-          erw [←normalize.map_mul, ←Classical.some_spec (exists_gcd a b), normalize_idem],
+    normalize_gcd := fun a b => by
+      dsimp [normalize]
+      split_ifs with h h_1
+      ·
+        apply normalize_idem
+      ·
+        apply normalize_idem
+      have h0 : lcm a b ≠ 0 := by
+        intro con
+        have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
+        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        cases h <;> tauto
+      apply mul_left_cancel₀ h0
+      refine' trans _ (Classical.some_spec (exists_gcd a b))
+      conv_lhs => congr rw [← normalize_lcm a b]
+      erw [← normalize.map_mul, ← Classical.some_spec (exists_gcd a b), normalize_idem],
     lcm_zero_left := fun a => zero_dvd_iff.1 (dvd_lcm_left _ _),
     lcm_zero_right := fun a => zero_dvd_iff.1 (dvd_lcm_right _ _),
-    gcd_dvd_left :=
-      fun a b =>
-        by 
-          splitIfs
-          ·
-            rw [h]
-            apply dvd_zero
-          ·
-            exact (normalize_associated _).Dvd 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd a b), normalize_dvd_iff, mul_commₓ,
-            mul_dvd_mul_iff_right h]
-          apply dvd_lcm_right,
-    gcd_dvd_right :=
-      fun a b =>
-        by 
-          splitIfs
-          ·
-            exact (normalize_associated _).Dvd
-          ·
-            rw [h_1]
-            apply dvd_zero 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd a b), normalize_dvd_iff,
-            mul_dvd_mul_iff_right h_1]
-          apply dvd_lcm_left,
-    dvd_gcd :=
-      fun a b c ac ab =>
-        by 
-          splitIfs
-          ·
-            apply dvd_normalize_iff.2 ab
-          ·
-            apply dvd_normalize_iff.2 ac 
-          have h0 : lcm c b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0,
-            ←Classical.some_spec (dvd_normalize_iff.2 (lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl))),
-            dvd_normalize_iff]
-          rcases ab with ⟨d, rfl⟩
-          rw [mul_eq_zero] at h_1 
-          pushNeg  at h_1 
-          rw [mul_commₓ a, ←mul_assocₓ, mul_dvd_mul_iff_right h_1.1]
-          apply lcm_dvd (Dvd.intro d rfl)
-          rw [mul_commₓ, mul_dvd_mul_iff_right h_1.2]
-          apply ac }
+    gcd_dvd_left := fun a b => by
+      split_ifs
+      ·
+        rw [h]
+        apply dvd_zero
+      ·
+        exact (normalize_associated _).Dvd
+      have h0 : lcm a b ≠ 0 := by
+        intro con
+        have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
+        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        cases h <;> tauto
+      rw [← mul_dvd_mul_iff_left h0, ← Classical.some_spec (exists_gcd a b), normalize_dvd_iff, mul_commₓ,
+        mul_dvd_mul_iff_right h]
+      apply dvd_lcm_right,
+    gcd_dvd_right := fun a b => by
+      split_ifs
+      ·
+        exact (normalize_associated _).Dvd
+      ·
+        rw [h_1]
+        apply dvd_zero
+      have h0 : lcm a b ≠ 0 := by
+        intro con
+        have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
+        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        cases h <;> tauto
+      rw [← mul_dvd_mul_iff_left h0, ← Classical.some_spec (exists_gcd a b), normalize_dvd_iff,
+        mul_dvd_mul_iff_right h_1]
+      apply dvd_lcm_left,
+    dvd_gcd := fun a b c ac ab => by
+      split_ifs
+      ·
+        apply dvd_normalize_iff.2 ab
+      ·
+        apply dvd_normalize_iff.2 ac
+      have h0 : lcm c b ≠ 0 := by
+        intro con
+        have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl)
+        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        cases h <;> tauto
+      rw [← mul_dvd_mul_iff_left h0, ←
+        Classical.some_spec (dvd_normalize_iff.2 (lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl))), dvd_normalize_iff]
+      rcases ab with ⟨d, rfl⟩
+      rw [mul_eq_zero] at h_1
+      push_neg  at h_1
+      rw [mul_commₓ a, ← mul_assocₓ, mul_dvd_mul_iff_right h_1.1]
+      apply lcm_dvd (Dvd.intro d rfl)
+      rw [mul_commₓ, mul_dvd_mul_iff_right h_1.2]
+      apply ac }
 
-/-- Define a `gcd_monoid` structure on a monoid just from the existence of a `gcd`. -/
+/--  Define a `gcd_monoid` structure on a monoid just from the existence of a `gcd`. -/
 noncomputable def gcdMonoidOfExistsGcd [DecidableEq α] (h : ∀ a b : α, ∃ c : α, ∀ d : α, d ∣ a ∧ d ∣ b ↔ d ∣ c) :
-  GcdMonoid α :=
+    GcdMonoid α :=
   gcdMonoidOfGcd (fun a b => Classical.some (h a b))
     (fun a b => ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).1)
-    (fun a b => ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).2)
-    fun a b c ac ab => (Classical.some_spec (h c b) a).1 ⟨ac, ab⟩
+    (fun a b => ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).2) fun a b c ac ab =>
+    (Classical.some_spec (h c b) a).1 ⟨ac, ab⟩
 
-/-- Define a `normalized_gcd_monoid` structure on a monoid just from the existence of a `gcd`. -/
+/--  Define a `normalized_gcd_monoid` structure on a monoid just from the existence of a `gcd`. -/
 noncomputable def normalizedGcdMonoidOfExistsGcd [NormalizationMonoid α] [DecidableEq α]
-  (h : ∀ a b : α, ∃ c : α, ∀ d : α, d ∣ a ∧ d ∣ b ↔ d ∣ c) : NormalizedGcdMonoid α :=
+    (h : ∀ a b : α, ∃ c : α, ∀ d : α, d ∣ a ∧ d ∣ b ↔ d ∣ c) : NormalizedGcdMonoid α :=
   normalizedGcdMonoidOfGcd (fun a b => normalize (Classical.some (h a b)))
     (fun a b => normalize_dvd_iff.2 ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).1)
     (fun a b => normalize_dvd_iff.2 ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).2)
     (fun a b c ac ab => dvd_normalize_iff.2 ((Classical.some_spec (h c b) a).1 ⟨ac, ab⟩)) fun a b => normalize_idem _
 
-/-- Define a `gcd_monoid` structure on a monoid just from the existence of an `lcm`. -/
+/--  Define a `gcd_monoid` structure on a monoid just from the existence of an `lcm`. -/
 noncomputable def gcdMonoidOfExistsLcm [DecidableEq α] (h : ∀ a b : α, ∃ c : α, ∀ d : α, a ∣ d ∧ b ∣ d ↔ c ∣ d) :
-  GcdMonoid α :=
+    GcdMonoid α :=
   gcdMonoidOfLcm (fun a b => Classical.some (h a b))
     (fun a b => ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).1)
-    (fun a b => ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).2)
-    fun a b c ac ab => (Classical.some_spec (h c b) a).1 ⟨ac, ab⟩
+    (fun a b => ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).2) fun a b c ac ab =>
+    (Classical.some_spec (h c b) a).1 ⟨ac, ab⟩
 
-/-- Define a `normalized_gcd_monoid` structure on a monoid just from the existence of an `lcm`. -/
+/--  Define a `normalized_gcd_monoid` structure on a monoid just from the existence of an `lcm`. -/
 noncomputable def normalizedGcdMonoidOfExistsLcm [NormalizationMonoid α] [DecidableEq α]
-  (h : ∀ a b : α, ∃ c : α, ∀ d : α, a ∣ d ∧ b ∣ d ↔ c ∣ d) : NormalizedGcdMonoid α :=
+    (h : ∀ a b : α, ∃ c : α, ∀ d : α, a ∣ d ∧ b ∣ d ↔ c ∣ d) : NormalizedGcdMonoid α :=
   normalizedGcdMonoidOfLcm (fun a b => normalize (Classical.some (h a b)))
     (fun a b => dvd_normalize_iff.2 ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).1)
     (fun a b => dvd_normalize_iff.2 ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).2)
@@ -1212,80 +2143,49 @@ namespace CommGroupWithZero
 
 variable (G₀ : Type _) [CommGroupWithZero G₀] [DecidableEq G₀]
 
-instance (priority := 100) : NormalizedGcdMonoid G₀ :=
-  { normUnit := fun x => if h : x = 0 then 1 else Units.mk0 x h⁻¹, norm_unit_zero := dif_pos rfl,
-    norm_unit_mul :=
-      fun x y x0 y0 =>
-        Units.eq_iff.1
-          (by 
-            simp [x0, y0, mul_commₓ]),
-    norm_unit_coe_units :=
-      fun u =>
-        by 
-          rw [dif_neg (Units.ne_zero _), Units.mk0_coe]
-          infer_instance,
-    gcd := fun a b => if a = 0 ∧ b = 0 then 0 else 1, lcm := fun a b => if a = 0 ∨ b = 0 then 0 else 1,
-    gcd_dvd_left :=
-      fun a b =>
-        by 
-          splitIfs with h
-          ·
-            rw [h.1]
-          ·
-            exact one_dvd _,
-    gcd_dvd_right :=
-      fun a b =>
-        by 
-          splitIfs with h
-          ·
-            rw [h.2]
-          ·
-            exact one_dvd _,
-    dvd_gcd :=
-      fun a b c hac hab =>
-        by 
-          splitIfs with h
-          ·
-            apply dvd_zero 
-          cases' not_and_distrib.mp h with h h <;>
-            refine' is_unit_iff_dvd_one.mp (is_unit_of_dvd_unit _ (IsUnit.mk0 _ h)) <;> assumption,
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          byCases' ha : a = 0
-          ·
-            simp [ha]
-          byCases' hb : b = 0
-          ·
-            simp [hb]
-          rw [if_neg (not_and_of_not_left _ ha), one_mulₓ, if_neg (not_orₓ ha hb)]
-          exact (associated_one_iff_is_unit.mpr ((IsUnit.mk0 _ ha).mul (IsUnit.mk0 _ hb))).symm,
-    lcm_zero_left := fun b => if_pos (Or.inl rfl), lcm_zero_right := fun a => if_pos (Or.inr rfl),
-    normalize_gcd :=
-      fun a b =>
-        if h : a = 0 ∧ b = 0 then
-          by 
-            simp [if_pos h]
-        else
-          by 
-            simp [if_neg h],
-    normalize_lcm :=
-      fun a b =>
-        if h : a = 0 ∨ b = 0 then
-          by 
-            simp [if_pos h]
-        else
-          by 
-            simp [if_neg h] }
+-- failed to format: format: uncaught backtrack exception
+instance
+  ( priority := 100 )
+  : NormalizedGcdMonoid G₀
+  where
+    normUnit x := if h : x = 0 then 1 else Units.mk0 x h ⁻¹
+      norm_unit_zero := dif_pos rfl
+      norm_unit_mul x y x0 y0 := Units.eq_iff . 1 ( by simp [ x0 , y0 , mul_commₓ ] )
+      norm_unit_coe_units u := by rw [ dif_neg ( Units.ne_zero _ ) , Units.mk0_coe ] infer_instance
+      gcd a b := if a = 0 ∧ b = 0 then 0 else 1
+      lcm a b := if a = 0 ∨ b = 0 then 0 else 1
+      gcd_dvd_left a b := by split_ifs with h · rw [ h . 1 ] · exact one_dvd _
+      gcd_dvd_right a b := by split_ifs with h · rw [ h . 2 ] · exact one_dvd _
+      dvd_gcd
+        a b c hac hab
+        :=
+        by
+          split_ifs with h
+            · apply dvd_zero
+            cases' not_and_distrib.mp h with h h
+              <;>
+              refine' is_unit_iff_dvd_one.mp ( is_unit_of_dvd_unit _ ( IsUnit.mk0 _ h ) ) <;> assumption
+      gcd_mul_lcm
+        a b
+        :=
+        by
+          by_cases' ha : a = 0
+            · simp [ ha ]
+            by_cases' hb : b = 0
+            · simp [ hb ]
+            rw [ if_neg ( not_and_of_not_left _ ha ) , one_mulₓ , if_neg ( not_orₓ ha hb ) ]
+            exact ( associated_one_iff_is_unit.mpr ( ( IsUnit.mk0 _ ha ) . mul ( IsUnit.mk0 _ hb ) ) ) . symm
+      lcm_zero_left b := if_pos ( Or.inl rfl )
+      lcm_zero_right a := if_pos ( Or.inr rfl )
+      normalize_gcd a b := if h : a = 0 ∧ b = 0 then by simp [ if_pos h ] else by simp [ if_neg h ]
+      normalize_lcm a b := if h : a = 0 ∨ b = 0 then by simp [ if_pos h ] else by simp [ if_neg h ]
 
 @[simp]
-theorem coe_norm_unit {a : G₀} (h0 : a ≠ 0) : (↑norm_unit a : G₀) = a⁻¹ :=
-  by 
-    simp [norm_unit, h0]
+theorem coe_norm_unit {a : G₀} (h0 : a ≠ 0) : (↑norm_unit a : G₀) = a⁻¹ := by
+  simp [norm_unit, h0]
 
-theorem normalize_eq_one {a : G₀} (h0 : a ≠ 0) : normalize a = 1 :=
-  by 
-    simp [normalize_apply, h0]
+theorem normalize_eq_one {a : G₀} (h0 : a ≠ 0) : normalize a = 1 := by
+  simp [normalize_apply, h0]
 
 end CommGroupWithZero
 

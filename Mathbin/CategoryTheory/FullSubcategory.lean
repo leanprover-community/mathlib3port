@@ -40,7 +40,7 @@ variable (F : C → D)
 
 include F
 
-/--
+/-- 
 `induced_category D F`, where `F : C → D`, is a typeclass synonym for `C`,
 which provides a category structure so that the morphisms `X ⟶ Y` are the morphisms
 in `D` from `F X` to `F Y`.
@@ -54,10 +54,13 @@ variable {D}
 instance induced_category.has_coe_to_sort {α : Sort _} [CoeSort D α] : CoeSort (induced_category D F) α :=
   ⟨fun c => ↥F c⟩
 
-instance induced_category.category : category.{v} (induced_category D F) :=
-  { Hom := fun X Y => F X ⟶ F Y, id := fun X => 𝟙 (F X), comp := fun _ _ _ f g => f ≫ g }
+-- failed to format: format: uncaught backtrack exception
+instance
+  induced_category.category
+  : category .{ v } ( induced_category D F )
+  where Hom X Y := F X ⟶ F Y id X := 𝟙 ( F X ) comp _ _ _ f g := f ≫ g
 
-/--
+/-- 
 The forgetful functor from an induced category to the original category,
 forgetting the extra data.
 -/
@@ -65,8 +68,8 @@ forgetting the extra data.
 def induced_functor : induced_category D F ⥤ D :=
   { obj := F, map := fun x y f => f }
 
-instance induced_category.full : full (induced_functor F) :=
-  { Preimage := fun x y f => f }
+-- failed to format: format: uncaught backtrack exception
+instance induced_category.full : full ( induced_functor F ) where Preimage x y f := f
 
 instance induced_category.faithful : faithful (induced_functor F) :=
   {  }
@@ -79,7 +82,7 @@ variable {C : Type u₂} [category.{v} C]
 
 variable (Z : C → Prop)
 
-/--
+/-- 
 The category structure on a subtype; morphisms just ignore the property.
 
 See https://stacks.math.columbia.edu/tag/001D. We do not define 'strictly full' subcategories.
@@ -87,7 +90,7 @@ See https://stacks.math.columbia.edu/tag/001D. We do not define 'strictly full' 
 instance full_subcategory : category.{v} { X : C // Z X } :=
   induced_category.category Subtype.val
 
-/--
+/-- 
 The forgetful functor from a full subcategory into the original category
 ("forgetting" the condition).
 -/

@@ -2,47 +2,43 @@ import Mathbin.Tactic.Monotonicity.Default
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
-/-- Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
+-- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+/--  Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
 of the form `a = b` or `a ≤ b`, replacing the type of `hyp` with `f a = f b` or `f a ≤ f b`. If
 `hyp` names an inequality then a new goal `monotone f` is created, unless the name of a proof of
 this fact is passed as the optional argument `mono_lem`, or the `mono` tactic can prove it.
 -/
-unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) : tactic Unit :=
-  do 
-    let t ← infer_type hyp 
-    let prf ←
-      match t with 
-        | quote.1 ((%%ₓl) = %%ₓr) =>
-          do 
-            let ltp ← infer_type l 
-            let mv ← mk_mvar 
-            to_expr (pquote.1 (congr_argₓ (%%ₓe : (%%ₓltp) → %%ₓmv) (%%ₓhyp)))
-        | quote.1 ((%%ₓl) ≤ %%ₓr) =>
-          do 
-            let Hmono ←
-              match mono_lem with 
-                | some mono_lem => tactic.i_to_expr mono_lem
-                | none =>
-                  do 
-                    let n ← get_unused_name `mono 
-                    to_expr (pquote.1 (Monotone (%%ₓe))) >>= assert n 
-                    swap 
-                    let n ← get_local n 
-                    to_expr (pquote.1 ((%%ₓn) (%%ₓhyp)))
-                    swap
-                    (do 
-                          intro_lst [`x, `y, `h]
-                          sorry) <|>
-                        swap 
-                    return n 
-            to_expr (pquote.1 ((%%ₓHmono) (%%ₓhyp)))
-        | _ => throwError "failed to apply {( ← e)} at { ← hyp }"
-    clear hyp 
-    let hyp ← note hyp.local_pp_name none prf 
-    try$ tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
+unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) : tactic Unit := do
+  let t ← infer_type hyp
+  let prf ←
+    match t with
+      | quote.1 ((%%ₓl) = %%ₓr) => do
+        let ltp ← infer_type l
+        let mv ← mk_mvar
+        to_expr (pquote.1 (congr_argₓ (%%ₓe : (%%ₓltp) → %%ₓmv) (%%ₓhyp)))
+      | quote.1 ((%%ₓl) ≤ %%ₓr) => do
+        let Hmono ←
+          match mono_lem with
+            | some mono_lem => tactic.i_to_expr mono_lem
+            | none => do
+              let n ← get_unused_name `mono
+              to_expr (pquote.1 (Monotone (%%ₓe))) >>= assert n
+              swap
+              let n ← get_local n
+              to_expr (pquote.1 ((%%ₓn) (%%ₓhyp)))
+              swap
+              (do
+                    intro_lst [`x, `y, `h]
+                    sorry) <|>
+                  swap
+              return n
+        to_expr (pquote.1 ((%%ₓHmono) (%%ₓhyp)))
+      | _ => throwError "failed to apply {(← e)} at {← hyp}"
+  clear hyp
+  let hyp ← note hyp.local_pp_name none prf
+  try $ tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
 
-/--
+/-- 
 Attempt to "apply" a function `f` represented by the argument `e : pexpr` to the goal.
 
 If the goal is of the form `a ≠ b`, we obtain the new goal `f a ≠ f b`.
@@ -52,35 +48,33 @@ If the goal is of the form `a = b`, we obtain a new goal `f a = f b`, and a subs
 If the goal is of the form `a ≤ b` (or similarly for `a < b`), and `f` is an `order_iso`,
 we obtain a new goal `f a ≤ f b`.
 -/
-unsafe def apply_fun_to_goal (e : pexpr) (lem : Option pexpr) : tactic Unit :=
-  do 
-    let t ← target 
-    match t with 
-      | quote.1 ((%%ₓl) ≠ %%ₓr) => to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply >> skip
-      | quote.1 ¬(%%ₓl) = %%ₓr => to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply >> skip
-      | quote.1 ((%%ₓl) ≤ %%ₓr) => to_expr (pquote.1 (OrderIso.le_iff_le (%%ₓe)).mp) >>= apply >> skip
-      | quote.1 ((%%ₓl) < %%ₓr) => to_expr (pquote.1 (OrderIso.lt_iff_lt (%%ₓe)).mp) >>= apply >> skip
-      | quote.1 ((%%ₓl) = %%ₓr) =>
-        focus1
-          do 
-            to_expr (pquote.1 ((%%ₓe) (%%ₓl)))
-            let n ← get_unused_name `inj 
-            to_expr (pquote.1 (Function.Injective (%%ₓe))) >>= assert n 
-            focus1$
-                  (assumption <|>
-                    to_expr (pquote.1 Equivₓ.injective) >>= apply >> done <|>
-                      (lem.mmap fun l => to_expr l >>= apply) >> done) <|>
-                swap 
-            let n ← get_local n 
-            apply n 
-            clear n
-      | _ => throwError "failed to apply { ← e} to the goal"
+unsafe def apply_fun_to_goal (e : pexpr) (lem : Option pexpr) : tactic Unit := do
+  let t ← target
+  match t with
+    | quote.1 ((%%ₓl) ≠ %%ₓr) => to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply >> skip
+    | quote.1 ¬(%%ₓl) = %%ₓr => to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply >> skip
+    | quote.1 ((%%ₓl) ≤ %%ₓr) => to_expr (pquote.1 (OrderIso.le_iff_le (%%ₓe)).mp) >>= apply >> skip
+    | quote.1 ((%%ₓl) < %%ₓr) => to_expr (pquote.1 (OrderIso.lt_iff_lt (%%ₓe)).mp) >>= apply >> skip
+    | quote.1 ((%%ₓl) = %%ₓr) =>
+      focus1 do
+        to_expr (pquote.1 ((%%ₓe) (%%ₓl)))
+        let n ← get_unused_name `inj
+        to_expr (pquote.1 (Function.Injective (%%ₓe))) >>= assert n
+        focus1 $
+              (assumption <|>
+                to_expr (pquote.1 Equivₓ.injective) >>= apply >> done <|>
+                  (lem.mmap fun l => to_expr l >>= apply) >> done) <|>
+            swap
+        let n ← get_local n
+        apply n
+        clear n
+    | _ => throwError "failed to apply {← e} to the goal"
 
 namespace Interactive
 
 setup_tactic_parser
 
-/--
+/-- 
 Apply a function to an equality or inequality in either a local hypothesis or the goal.
 
 * If we have `h : a = b`, then `apply_fun f at h` will replace this with `h : f a = f b`.

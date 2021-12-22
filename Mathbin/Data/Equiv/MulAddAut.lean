@@ -23,8 +23,8 @@ mul_aut, add_aut
 
 variable {A : Type _} {M : Type _} {G : Type _}
 
-/-- The group of multiplicative automorphisms. -/
-@[reducible, toAdditive "The group of additive automorphisms."]
+/--  The group of multiplicative automorphisms. -/
+@[reducible, to_additive "The group of additive automorphisms."]
 def MulAut (M : Type _) [Mul M] :=
   M ≃* M
 
@@ -32,22 +32,21 @@ namespace MulAut
 
 variable (M) [Mul M]
 
-/--
+/-- 
 The group operation on multiplicative automorphisms is defined by
 `λ g h, mul_equiv.trans h g`.
 This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
-instance : Groupₓ (MulAut M) :=
-  by 
-    refineStruct
-        { mul := fun g h => MulEquiv.trans h g, one := MulEquiv.refl M, inv := MulEquiv.symm, div := _,
-          npow := @npowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩,
-          zpow := @zpowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩ ⟨MulEquiv.symm⟩ } <;>
-      intros  <;>
-        ext <;>
-          try 
-              rfl <;>
-            apply Equivₓ.left_inv
+instance : Groupₓ (MulAut M) := by
+  refine_struct
+      { mul := fun g h => MulEquiv.trans h g, one := MulEquiv.refl M, inv := MulEquiv.symm, div := _,
+        npow := @npowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩,
+        zpow := @zpowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩ ⟨MulEquiv.symm⟩ } <;>
+    intros <;>
+      ext <;>
+        try
+            rfl <;>
+          apply Equivₓ.left_inv
 
 instance : Inhabited (MulAut M) :=
   ⟨1⟩
@@ -85,52 +84,46 @@ theorem apply_inv_self (e : MulAut M) (m : M) : e ((e⁻¹) m) = m :=
 theorem inv_apply_self (e : MulAut M) (m : M) : (e⁻¹) (e m) = m :=
   MulEquiv.apply_symm_apply _ _
 
-/-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def to_perm : MulAut M →* Equivₓ.Perm M :=
-  by 
-    refineStruct { toFun := MulEquiv.toEquiv } <;> intros  <;> rfl
+/--  Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
+def to_perm : MulAut M →* Equivₓ.Perm M := by
+  refine_struct { toFun := MulEquiv.toEquiv } <;> intros <;> rfl
 
-/-- The tautological action by `mul_aut M` on `M`.
-
-This generalizes `function.End.apply_mul_action`. -/
-instance apply_mul_distrib_mul_action {M} [Monoidₓ M] : MulDistribMulAction (MulAut M) M :=
-  { smul := ·$ ·, one_smul := fun _ => rfl, mul_smul := fun _ _ _ => rfl, smul_one := MulEquiv.map_one,
-    smul_mul := MulEquiv.map_mul }
+-- failed to format: format: uncaught backtrack exception
+/--
+    The tautological action by `mul_aut M` on `M`.
+    
+    This generalizes `function.End.apply_mul_action`. -/
+  instance
+    apply_mul_distrib_mul_action
+    { M } [ Monoidₓ M ] : MulDistribMulAction ( MulAut M ) M
+    where
+      smul := · $ · one_smul _ := rfl mul_smul _ _ _ := rfl smul_one := MulEquiv.map_one smul_mul := MulEquiv.map_mul
 
 @[simp]
 protected theorem smul_def {M} [Monoidₓ M] (f : MulAut M) (a : M) : f • a = f a :=
   rfl
 
-/-- `mul_aut.apply_mul_action` is faithful. -/
+/--  `mul_aut.apply_mul_action` is faithful. -/
 instance apply_has_faithful_scalar {M} [Monoidₓ M] : HasFaithfulScalar (MulAut M) M :=
   ⟨fun _ _ => MulEquiv.ext⟩
 
-/-- Group conjugation, `mul_aut.conj g h = g * h * g⁻¹`, as a monoid homomorphism
+/--  Group conjugation, `mul_aut.conj g h = g * h * g⁻¹`, as a monoid homomorphism
 mapping multiplication in `G` into multiplication in the automorphism group `mul_aut G`.
 See also the type `conj_act G` for any group `G`, which has a `mul_action (conj_act G) G` instance
 where `conj G` acts on `G` by conjugation. -/
 def conj [Groupₓ G] : G →* MulAut G :=
-  { toFun :=
-      fun g =>
-        { toFun := fun h => (g*h)*g⁻¹, invFun := fun h => (g⁻¹*h)*g,
-          left_inv :=
-            fun _ =>
-              by 
-                simp [mul_assocₓ],
-          right_inv :=
-            fun _ =>
-              by 
-                simp [mul_assocₓ],
-          map_mul' :=
-            by 
-              simp [mul_assocₓ] },
-    map_mul' :=
-      fun _ _ =>
-        by 
-          ext <;> simp [mul_assocₓ],
-    map_one' :=
-      by 
-        ext <;> simp [mul_assocₓ] }
+  { toFun := fun g =>
+      { toFun := fun h => (g*h)*g⁻¹, invFun := fun h => (g⁻¹*h)*g,
+        left_inv := fun _ => by
+          simp [mul_assocₓ],
+        right_inv := fun _ => by
+          simp [mul_assocₓ],
+        map_mul' := by
+          simp [mul_assocₓ] },
+    map_mul' := fun _ _ => by
+      ext <;> simp [mul_assocₓ],
+    map_one' := by
+      ext <;> simp [mul_assocₓ] }
 
 @[simp]
 theorem conj_apply [Groupₓ G] (g h : G) : conj g h = (g*h)*g⁻¹ :=
@@ -150,22 +143,21 @@ namespace AddAut
 
 variable (A) [Add A]
 
-/--
+/-- 
 The group operation on additive automorphisms is defined by
 `λ g h, add_equiv.trans h g`.
 This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
-instance Groupₓ : Groupₓ (AddAut A) :=
-  by 
-    refineStruct
-        { mul := fun g h => AddEquiv.trans h g, one := AddEquiv.refl A, inv := AddEquiv.symm, div := _,
-          npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩,
-          zpow := @zpowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩ ⟨AddEquiv.symm⟩ } <;>
-      intros  <;>
-        ext <;>
-          try 
-              rfl <;>
-            apply Equivₓ.left_inv
+instance Groupₓ : Groupₓ (AddAut A) := by
+  refine_struct
+      { mul := fun g h => AddEquiv.trans h g, one := AddEquiv.refl A, inv := AddEquiv.symm, div := _,
+        npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩,
+        zpow := @zpowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩ ⟨AddEquiv.symm⟩ } <;>
+    intros <;>
+      ext <;>
+        try
+            rfl <;>
+          apply Equivₓ.left_inv
 
 instance : Inhabited (AddAut A) :=
   ⟨1⟩
@@ -203,52 +195,46 @@ theorem apply_inv_self (e : AddAut A) (a : A) : (e⁻¹) (e a) = a :=
 theorem inv_apply_self (e : AddAut A) (a : A) : e ((e⁻¹) a) = a :=
   AddEquiv.apply_symm_apply _ _
 
-/-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def to_perm : AddAut A →* Equivₓ.Perm A :=
-  by 
-    refineStruct { toFun := AddEquiv.toEquiv } <;> intros  <;> rfl
+/--  Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
+def to_perm : AddAut A →* Equivₓ.Perm A := by
+  refine_struct { toFun := AddEquiv.toEquiv } <;> intros <;> rfl
 
-/-- The tautological action by `add_aut A` on `A`.
-
-This generalizes `function.End.apply_mul_action`. -/
-instance apply_distrib_mul_action {A} [AddMonoidₓ A] : DistribMulAction (AddAut A) A :=
-  { smul := ·$ ·, smul_zero := AddEquiv.map_zero, smul_add := AddEquiv.map_add, one_smul := fun _ => rfl,
-    mul_smul := fun _ _ _ => rfl }
+-- failed to format: format: uncaught backtrack exception
+/--
+    The tautological action by `add_aut A` on `A`.
+    
+    This generalizes `function.End.apply_mul_action`. -/
+  instance
+    apply_distrib_mul_action
+    { A } [ AddMonoidₓ A ] : DistribMulAction ( AddAut A ) A
+    where
+      smul := · $ · smul_zero := AddEquiv.map_zero smul_add := AddEquiv.map_add one_smul _ := rfl mul_smul _ _ _ := rfl
 
 @[simp]
 protected theorem smul_def {A} [AddMonoidₓ A] (f : AddAut A) (a : A) : f • a = f a :=
   rfl
 
-/-- `add_aut.apply_distrib_mul_action` is faithful. -/
+/--  `add_aut.apply_distrib_mul_action` is faithful. -/
 instance apply_has_faithful_scalar {A} [AddMonoidₓ A] : HasFaithfulScalar (AddAut A) A :=
   ⟨fun _ _ => AddEquiv.ext⟩
 
-/-- Additive group conjugation, `add_aut.conj g h = g + h - g`, as an additive monoid
+/--  Additive group conjugation, `add_aut.conj g h = g + h - g`, as an additive monoid
 homomorphism mapping addition in `G` into multiplication in the automorphism group `add_aut G`
 (written additively in order to define the map). -/
 def conj [AddGroupₓ G] : G →+ Additive (AddAut G) :=
-  { toFun :=
-      fun g =>
-        @Additive.ofMul (AddAut G)
-          { toFun := fun h => (g+h)+-g, invFun := fun h => ((-g)+h)+g,
-            left_inv :=
-              fun _ =>
-                by 
-                  simp [add_assocₓ],
-            right_inv :=
-              fun _ =>
-                by 
-                  simp [add_assocₓ],
-            map_add' :=
-              by 
-                simp [add_assocₓ] },
-    map_add' :=
-      fun _ _ =>
-        by 
-          apply additive.to_mul.injective <;> ext <;> simp [add_assocₓ],
-    map_zero' :=
-      by 
-        ext <;> simpa }
+  { toFun := fun g =>
+      @Additive.ofMul (AddAut G)
+        { toFun := fun h => (g+h)+-g, invFun := fun h => ((-g)+h)+g,
+          left_inv := fun _ => by
+            simp [add_assocₓ],
+          right_inv := fun _ => by
+            simp [add_assocₓ],
+          map_add' := by
+            simp [add_assocₓ] },
+    map_add' := fun _ _ => by
+      apply additive.to_mul.injective <;> ext <;> simp [add_assocₓ],
+    map_zero' := by
+      ext <;> simpa }
 
 @[simp]
 theorem conj_apply [AddGroupₓ G] (g h : G) : conj g h = (g+h)+-g :=

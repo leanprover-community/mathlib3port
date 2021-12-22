@@ -1,5 +1,5 @@
-import Mathbin.Logic.Function.Basic 
-import Mathbin.Tactic.Lint.Default 
+import Mathbin.Logic.Function.Basic
+import Mathbin.Tactic.Lint.Default
 import Mathbin.Tactic.NormCast
 
 /-!
@@ -111,14 +111,14 @@ instead of linearly increasing the work per `my_hom`-related declaration.
 
 attribute [instance] coeFnTrans
 
-/-- The class `fun_like F α β` expresses that terms of type `F` have an
+/--  The class `fun_like F α β` expresses that terms of type `F` have an
 injective coercion to functions from `α` to `β`.
 
 This typeclass is used in the definition of the homomorphism typeclasses,
 such as `zero_hom_class`, `mul_hom_class`, `monoid_hom_class`, ....
 -/
-class FunLike (F : Sort _) (α : outParam (Sort _)) (β : outParam$ α → Sort _) where 
-  coe : F → ∀ a : α, β a 
+class FunLike (F : Sort _) (α : outParam (Sort _)) (β : outParam $ α → Sort _) where
+  coe : F → ∀ a : α, β a
   coe_injective' : Function.Injective coeₓ
 
 section Dependent
@@ -135,18 +135,16 @@ variable {F α β} [i : FunLike F α β]
 include i
 
 @[nolint dangerous_instance]
-instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a :=
-  { coe := FunLike.coe }
+instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a where
+  coe := FunLike.coe
 
 theorem coe_injective : Function.Injective (coeFn : F → ∀ a : α, β a) :=
   FunLike.coe_injective'
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_fn_eq {f g : F} : (f : ∀ a : α, β a) = (g : ∀ a : α, β a) ↔ f = g :=
-  ⟨fun h => @coe_injective _ _ _ i _ _ h,
-    fun h =>
-      by 
-        cases h <;> rfl⟩
+  ⟨fun h => @coe_injective _ _ _ i _ _ h, fun h => by
+    cases h <;> rfl⟩
 
 theorem ext' {f g : F} (h : (f : ∀ a : α, β a) = (g : ∀ a : α, β a)) : f = g :=
   coe_injective h

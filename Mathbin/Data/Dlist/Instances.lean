@@ -1,5 +1,5 @@
-import Mathbin.Control.Traversable.Equiv 
-import Mathbin.Control.Traversable.Instances 
+import Mathbin.Control.Traversable.Equiv
+import Mathbin.Control.Traversable.Instances
 import Leanbin.Data.Dlist
 
 /-!
@@ -16,12 +16,11 @@ namespace Dlist
 
 variable (α : Type _)
 
-/-- The natural equivalence between lists and difference lists, using
+/--  The natural equivalence between lists and difference lists, using
 `dlist.of_list` and `dlist.to_list`. -/
-def list_equiv_dlist : List α ≃ Dlist α :=
-  by 
-    refine' { toFun := Dlist.ofList, invFun := Dlist.toList, .. } <;>
-      simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
+def list_equiv_dlist : List α ≃ Dlist α := by
+  refine' { toFun := Dlist.ofList, invFun := Dlist.toList, .. } <;>
+    simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
 
 instance : Traversable Dlist :=
   Equivₓ.traversable list_equiv_dlist

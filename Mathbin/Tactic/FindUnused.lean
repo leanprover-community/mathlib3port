@@ -1,5 +1,5 @@
-import Mathbin.Data.Bool.Basic 
-import Mathbin.Meta.RbMap 
+import Mathbin.Data.Bool.Basic
+import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Core
 
 /-!
@@ -27,7 +27,7 @@ code to mathlib as it is merely a tool for cleaning up a module.
 
 namespace Tactic
 
-/-- Attribute `main_declaration` is used to mark declarations that are featured
+/--  Attribute `main_declaration` is used to mark declarations that are featured
 in the current file.  Then, the `#list_unused_decls` command can be used to
 list the declaration present in the file that are not used by the main
 declarations of the file. -/
@@ -35,41 +35,36 @@ declarations of the file. -/
 unsafe def main_declaration_attr : user_attribute :=
   { Name := `main_declaration, descr := "tag essential declarations to help identify unused definitions" }
 
-/-- `update_unsed_decls_list n m` removes from the map of unneeded declarations those
+/--  `update_unsed_decls_list n m` removes from the map of unneeded declarations those
 referenced by declaration named `n` which is considerred to be a
 main declaration -/
 private unsafe def update_unsed_decls_list : Name → name_map declaration → tactic (name_map declaration)
-| n, m =>
-  do 
-    let d ← get_decl n 
-    if m.contains n then
-        do 
-          let m := m.erase n 
-          let ns := d.value.list_constant.union d.type.list_constant 
-          ns.mfold m update_unsed_decls_list
+  | n, m => do
+    let d ← get_decl n
+    if m.contains n then do
+        let m := m.erase n
+        let ns := d.value.list_constant.union d.type.list_constant
+        ns.mfold m update_unsed_decls_list
       else pure m
 
-/-- In the current file, list all the declaration that are not marked as `@[main_declaration]` and
+/--  In the current file, list all the declaration that are not marked as `@[main_declaration]` and
 that are not referenced by such declarations -/
-unsafe def all_unused (fs : List (Option Stringₓ)) : tactic (name_map declaration) :=
-  do 
-    let ds ← get_decls_from fs 
-    let ls ← ds.keys.mfilter (succeeds ∘ user_attribute.get_param_untyped main_declaration_attr)
-    let ds ← ls.mfoldl (flip update_unsed_decls_list) ds 
-    ds.mfilter$
-        fun n d =>
-          do 
-            let e ← get_env 
-            return$ !d.is_auto_or_internal e
+unsafe def all_unused (fs : List (Option Stringₓ)) : tactic (name_map declaration) := do
+  let ds ← get_decls_from fs
+  let ls ← ds.keys.mfilter (succeeds ∘ user_attribute.get_param_untyped main_declaration_attr)
+  let ds ← ls.mfoldl (flip update_unsed_decls_list) ds
+  ds.mfilter $ fun n d => do
+      let e ← get_env
+      return $ !d.is_auto_or_internal e
 
-/-- expecting a string literal (e.g. `"src/tactic/find_unused.lean"`)
+/--  expecting a string literal (e.g. `"src/tactic/find_unused.lean"`)
 -/
 unsafe def parse_file_name (fn : pexpr) : tactic (Option Stringₓ) :=
   some <$> (to_expr fn >>= eval_expr Stringₓ) <|> fail "expecting: \"src/dir/file-name\""
 
 setup_tactic_parser
 
-/-- The command `#list_unused_decls` lists the declarations that that
+/--  The command `#list_unused_decls` lists the declarations that that
 are not used the main features of the present file. The main features
 of a file are taken as the declaration tagged with
 `@[main_declaration]`.
@@ -93,18 +88,14 @@ is present).
 Neither `#list_unused_decls` nor `@[main_declaration]` should appear
 in a finished mathlib development. -/
 @[user_command]
-unsafe def unused_decls_cmd (_ : parse$ tk "#list_unused_decls") : lean.parser Unit :=
-  do 
-    let fs ← pexpr_list 
-    show tactic Unit from
-        do 
-          let fs ← fs.mmap parse_file_name 
-          let ds ← all_unused$ none :: fs 
-          ds.to_list.mmap'$
-              fun ⟨n, _⟩ =>
-                 ←
-                  do 
-                    dbg_trace "#print { ← n}"
+unsafe def unused_decls_cmd (_ : parse $ tk "#list_unused_decls") : lean.parser Unit := do
+  let fs ← pexpr_list
+  show tactic Unit from do
+      let fs ← fs.mmap parse_file_name
+      let ds ← all_unused $ none :: fs
+      ds.to_list.mmap' $ fun ⟨n, _⟩ =>
+          ← do
+            dbg_trace "#print {← n}"
 
 add_tactic_doc
   { Name := "#list_unused_decls", category := DocCategory.cmd, declNames := [`tactic.unused_decls_cmd],

@@ -15,28 +15,29 @@ strings are carefully converted into a call to `string.join`.
 -/
 
 
-/--
+/-- 
 Splits a string into chunks of at most `size` characters.
 -/
 unsafe def string.to_chunks (size : ℕ) : Stringₓ → optParam (List Stringₓ) [] → List Stringₓ
-| s, Acc => if s.length ≤ size then s :: Acc else string.to_chunks (s.popn_back size) (s.backn size :: Acc)
+  | s, Acc => if s.length ≤ size then s :: Acc else string.to_chunks (s.popn_back size) (s.backn size :: Acc)
 
-section 
+section
 
 attribute [local semireducible] reflected
 
 unsafe instance {α} [has_reflect α] : has_reflect (Thunkₓ α)
-| a => expr.lam `x BinderInfo.default (reflect Unit) (reflect (a ()))
+  | a => expr.lam `x BinderInfo.default (reflect Unit) (reflect (a ()))
 
-end 
+end
 
 unsafe instance (priority := 2000) : has_reflect Stringₓ
-| s =>
-  let chunk_size := 256
-  if s.length ≤ chunk_size then reflect s else
-    have ts : List (Thunkₓ Stringₓ) := (s.to_chunks chunk_size).map fun s _ => s 
-    have h : s = Stringₓ.join (ts.map fun t => t ()) := undefined 
-    suffices reflected (Stringₓ.join$ ts.map fun t => t ())by 
-      rwa [h]
-    quote.1 (Stringₓ.join$ List.map _ _)
+  | s =>
+    let chunk_size := 256
+    if s.length ≤ chunk_size then reflect s
+    else
+      have ts : List (Thunkₓ Stringₓ) := (s.to_chunks chunk_size).map fun s _ => s
+      have h : s = Stringₓ.join (ts.map fun t => t ()) := undefined
+      suffices reflected (Stringₓ.join $ ts.map fun t => t ())by
+        rwa [h]
+      quote.1 (Stringₓ.join $ List.map _ _)
 

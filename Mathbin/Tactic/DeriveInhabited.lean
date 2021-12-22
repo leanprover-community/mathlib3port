@@ -1,4 +1,4 @@
-import Mathbin.Logic.Basic 
+import Mathbin.Logic.Basic
 import Mathbin.Data.Rbmap.Basic
 
 /-!
@@ -12,8 +12,8 @@ instances for types in the core library.
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
-/--
+-- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+/-- 
 Tries to derive an `inhabited` instance for inductives and structures.
 
 For example:
@@ -32,20 +32,17 @@ argument `inhabited α`, even if it is not used.  (This is due to the implementa
 -/
 @[derive_handler]
 unsafe def inhabited_instance : derive_handler :=
-  instance_derive_handler `` Inhabited$
-    do 
-      applyc `` Inhabited.mk 
-      sorry <|> constructor >> skip 
-      all_goals'$
-          do 
-            applyc `` default <|>
-                do 
-                  let s ← read 
-                  fail$ to_fmt "could not find inhabited instance for:\n" ++ to_fmt s
+  instance_derive_handler `` Inhabited $ do
+    applyc `` Inhabited.mk
+    sorry <|> constructor >> skip
+    all_goals' $ do
+        applyc `` default <|> do
+            let s ← read
+            fail $ to_fmt "could not find inhabited instance for:\n" ++ to_fmt s
 
 end Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 deriving instance [anonymous] for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.Transparency, Tactic.ApplyCfg,
   SmtPreConfig, EmatchConfig, CcConfig, SmtConfig, Rsimp.Config, Tactic.DunfoldConfig, Tactic.DsimpConfig,
   Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig, Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg,

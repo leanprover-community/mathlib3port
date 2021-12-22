@@ -12,7 +12,7 @@ TODO: pullback for presheaves and sheaves
 -/
 
 
-noncomputable section 
+noncomputable section
 
 universe v u u₁
 
@@ -32,41 +32,37 @@ namespace Top
 
 namespace Presheaf.SheafConditionPairwiseIntersections
 
-theorem map_diagram : pairwise.diagram U ⋙ opens.map f = pairwise.diagram ((opens.map f).obj ∘ U) :=
-  by 
-    apply functor.hext 
-    abstract obj_eq 
-      intro i 
-      cases i <;> rfl 
-    intro i j g 
-    apply Subsingleton.helimₓ 
-    iterate 2 
-      rw [map_diagram.obj_eq]
+theorem map_diagram : pairwise.diagram U ⋙ opens.map f = pairwise.diagram ((opens.map f).obj ∘ U) := by
+  apply functor.hext
+  abstract obj_eq 
+    intro i
+    cases i <;> rfl
+  intro i j g
+  apply Subsingleton.helimₓ
+  iterate 2 
+    rw [map_diagram.obj_eq]
 
-theorem map_cocone : HEq ((opens.map f).mapCocone (pairwise.cocone U)) (pairwise.cocone ((opens.map f).obj ∘ U)) :=
-  by 
-    unfold functor.map_cocone cocones.functoriality 
-    dsimp 
-    congr 
-    iterate 2 
-      rw [map_diagram]
-      rw [opens.map_supr]
-    apply Subsingleton.helimₓ 
-    rw [map_diagram, opens.map_supr]
-    apply proof_irrel_heq
+theorem map_cocone : HEq ((opens.map f).mapCocone (pairwise.cocone U)) (pairwise.cocone ((opens.map f).obj ∘ U)) := by
+  unfold functor.map_cocone cocones.functoriality
+  dsimp
+  congr
+  iterate 2 
+    rw [map_diagram]
+    rw [opens.map_supr]
+  apply Subsingleton.helimₓ
+  rw [map_diagram, opens.map_supr]
+  apply proof_irrel_heq
 
 theorem pushforward_sheaf_of_sheaf {F : presheaf C X} (h : F.is_sheaf_pairwise_intersections) :
-  (f _* F).IsSheafPairwiseIntersections :=
-  fun ι U =>
-    by 
-      convert h ((opens.map f).obj ∘ U) using 2
-      rw [←map_diagram]
-      rfl 
-      change HEq (F.map_cone ((opens.map f).mapCocone _).op) _ 
-      congr 
-      iterate 2 
-        rw [map_diagram]
-      apply map_cocone
+    (f _* F).IsSheafPairwiseIntersections := fun ι U => by
+  convert h ((opens.map f).obj ∘ U) using 2
+  rw [← map_diagram]
+  rfl
+  change HEq (F.map_cone ((opens.map f).mapCocone _).op) _
+  congr
+  iterate 2 
+    rw [map_diagram]
+  apply map_cocone
 
 end Presheaf.SheafConditionPairwiseIntersections
 
@@ -76,15 +72,14 @@ open Presheaf
 
 variable [has_products C]
 
-/--
+/-- 
 The pushforward of a sheaf (by a continuous map) is a sheaf.
 -/
-theorem pushforward_sheaf_of_sheaf {F : presheaf C X} (h : F.is_sheaf) : (f _* F).IsSheaf :=
-  by 
-    rw [is_sheaf_iff_is_sheaf_pairwise_intersections] at h⊢ <;>
-      exact sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf f h
+theorem pushforward_sheaf_of_sheaf {F : presheaf C X} (h : F.is_sheaf) : (f _* F).IsSheaf := by
+  rw [is_sheaf_iff_is_sheaf_pairwise_intersections] at h⊢ <;>
+    exact sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf f h
 
-/--
+/-- 
 The pushforward functor.
 -/
 def pushforward (f : X ⟶ Y) : X.sheaf C ⥤ Y.sheaf C :=

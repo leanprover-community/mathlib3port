@@ -1,5 +1,5 @@
-import Mathbin.LinearAlgebra.AffineSpace.AffineMap 
-import Mathbin.Topology.ContinuousFunction.Basic 
+import Mathbin.LinearAlgebra.AffineSpace.AffineMap
+import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.Algebra.Module
 
 /-!
@@ -24,10 +24,10 @@ to the notation `E →L[R] F` for `continuous_linear_map R E F`.
 -/
 
 
-/-- A continuous map of affine spaces. -/
+/--  A continuous map of affine spaces. -/
 structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ringₓ R] [AddCommGroupₓ V] [Module R V]
   [TopologicalSpace P] [AddTorsor V P] [AddCommGroupₓ W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q] extends
-  P →ᵃ[R] Q where 
+  P →ᵃ[R] Q where
   cont : Continuous to_fun
 
 notation:25 P " →A[" R "] " Q => ContinuousAffineMap R P Q
@@ -42,31 +42,28 @@ variable [AddCommGroupₓ W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q]
 
 include V W
 
-/-- see Note [function coercion] -/
+/--  see Note [function coercion] -/
 instance : CoeFun (P →A[R] Q) fun _ => P → Q :=
   ⟨fun f => f.to_affine_map.to_fun⟩
 
 theorem to_fun_eq_coe (f : P →A[R] Q) : f.to_fun = ⇑f :=
   rfl
 
-theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn :=
-  by 
-    rintro ⟨⟨f, ⟨f', hf₁, hf₂⟩, hf₀⟩, hf₁⟩ ⟨⟨g, ⟨g', hg₁, hg₂⟩, hg₀⟩, hg₁⟩ h 
-    have  : f = g ∧ f' = g'
-    ·
-      simpa only using AffineMap.coe_fn_injective h 
-    congr 
-    exacts[this.1, this.2]
+theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn := by
+  rintro ⟨⟨f, ⟨f', hf₁, hf₂⟩, hf₀⟩, hf₁⟩ ⟨⟨g, ⟨g', hg₁, hg₂⟩, hg₀⟩, hg₁⟩ h
+  have : f = g ∧ f' = g' := by
+    simpa only using AffineMap.coe_fn_injective h
+  congr
+  exacts[this.1, this.2]
 
 @[ext]
 theorem ext {f g : P →A[R] Q} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective$ funext h
+  coe_injective $ funext h
 
 theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by 
-      rintro rfl x 
-      rfl,
-    ext⟩
+  ⟨by
+    rintro rfl x
+    rfl, ext⟩
 
 theorem congr_funₓ {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
   h ▸ rfl
@@ -74,7 +71,7 @@ theorem congr_funₓ {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
 instance : Coe (P →A[R] Q) (P →ᵃ[R] Q) :=
   ⟨to_affine_map⟩
 
-/-- Forgetting its algebraic properties, a continuous affine map is a continuous map. -/
+/--  Forgetting its algebraic properties, a continuous affine map is a continuous map. -/
 def to_continuous_map (f : P →A[R] Q) : C(P, Q) :=
   ⟨f, f.cont⟩
 
@@ -89,29 +86,27 @@ theorem to_affine_map_eq_coe (f : P →A[R] Q) : f.to_affine_map = ↑f :=
 theorem to_continuous_map_coe (f : P →A[R] Q) : f.to_continuous_map = ↑f :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_to_affine_map (f : P →A[R] Q) : ((f : P →ᵃ[R] Q) : P → Q) = f :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_to_continuous_map (f : P →A[R] Q) : ((f : C(P, Q)) : P → Q) = f :=
   rfl
 
-theorem to_affine_map_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
-  by 
-    ext a 
-    exact AffineMap.congr_fun h a
+theorem to_affine_map_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g := by
+  ext a
+  exact AffineMap.congr_fun h a
 
-theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
-  by 
-    ext a 
-    exact ContinuousMap.congr_fun h a
+theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g := by
+  ext a
+  exact ContinuousMap.congr_fun h a
 
-@[normCast]
+@[norm_cast]
 theorem coe_affine_map_mk (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
   rfl
 
-@[normCast]
+@[norm_cast]
 theorem coe_continuous_map_mk (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q) : C(P, Q)) = ⟨f, h⟩ :=
   rfl
 
@@ -120,10 +115,9 @@ theorem coe_mk (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q) : P → Q) = 
   rfl
 
 @[simp]
-theorem mk_coe (f : P →A[R] Q) h : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f :=
-  by 
-    ext 
-    rfl
+theorem mk_coe (f : P →A[R] Q) h : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f := by
+  ext
+  rfl
 
 @[continuity]
 protected theorem Continuous (f : P →A[R] Q) : Continuous f :=
@@ -131,7 +125,7 @@ protected theorem Continuous (f : P →A[R] Q) : Continuous f :=
 
 variable (R P)
 
-/-- The constant map is a continuous affine map. -/
+/--  The constant map is a continuous affine map. -/
 def const (q : Q) : P →A[R] Q :=
   { AffineMap.const R P q with toFun := AffineMap.const R P q, cont := continuous_const }
 
@@ -140,11 +134,10 @@ theorem coe_const (q : Q) : (const R P q : P → Q) = Function.const P q :=
   rfl
 
 noncomputable instance : Inhabited (P →A[R] Q) :=
-  ⟨const R P$
+  ⟨const R P $
       Nonempty.some
-        (by 
-          infer_instance :
-        Nonempty Q)⟩
+        (by
+          infer_instance : Nonempty Q)⟩
 
 variable {R P} {W₂ Q₂ : Type _}
 
@@ -152,11 +145,11 @@ variable [AddCommGroupₓ W₂] [Module R W₂] [TopologicalSpace Q₂] [AddTors
 
 include W₂
 
-/-- The composition of morphisms is a morphism. -/
+/--  The composition of morphisms is a morphism. -/
 def comp (f : Q →A[R] Q₂) (g : P →A[R] Q) : P →A[R] Q₂ :=
   { (f : Q →ᵃ[R] Q₂).comp (g : P →ᵃ[R] Q) with cont := f.cont.comp g.cont }
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_comp (f : Q →A[R] Q₂) (g : P →A[R] Q) : (f.comp g : P → Q₂) = ((f : Q → Q₂) ∘ (g : P → Q)) :=
   rfl
 
@@ -174,17 +167,19 @@ variable [TopologicalSpace W] [TopologicalSpace S] [HasContinuousSmul S W]
 instance : HasZero (P →A[R] W) :=
   ⟨ContinuousAffineMap.const R P 0⟩
 
-@[normCast, simp]
+@[norm_cast, simp]
 theorem coe_zero : ((0 : P →A[R] W) : P → W) = 0 :=
   rfl
 
 theorem zero_apply (x : P) : (0 : P →A[R] W) x = 0 :=
   rfl
 
-instance : HasScalar S (P →A[S] W) :=
-  { smul := fun t f => { t • (f : P →ᵃ[S] W) with cont := f.continuous.const_smul t } }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : HasScalar S ( P →A[ S ] W )
+  where smul t f := { t • ( f : P →ᵃ[ S ] W ) with cont := f.continuous.const_smul t }
 
-@[normCast, simp]
+@[norm_cast, simp]
 theorem coe_smul (t : S) (f : P →A[S] W) : ⇑(t • f) = t • f :=
   rfl
 
@@ -193,30 +188,34 @@ theorem smul_apply (t : S) (f : P →A[S] W) (x : P) : (t • f) x = t • f x :
 
 variable [TopologicalAddGroup W]
 
-instance : Add (P →A[R] W) :=
-  { add := fun f g => { (f : P →ᵃ[R] W)+(g : P →ᵃ[R] W) with cont := f.continuous.add g.continuous } }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : Add ( P →A[ R ] W )
+  where add f g := { ( f : P →ᵃ[ R ] W ) + ( g : P →ᵃ[ R ] W ) with cont := f.continuous.add g.continuous }
 
-@[normCast, simp]
+@[norm_cast, simp]
 theorem coe_add (f g : P →A[R] W) : (⇑f+g) = f+g :=
   rfl
 
 theorem add_apply (f g : P →A[R] W) (x : P) : (f+g) x = f x+g x :=
   rfl
 
-instance : Sub (P →A[R] W) :=
-  { sub := fun f g => { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.continuous.sub g.continuous } }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : Sub ( P →A[ R ] W )
+  where sub f g := { ( f : P →ᵃ[ R ] W ) - ( g : P →ᵃ[ R ] W ) with cont := f.continuous.sub g.continuous }
 
-@[normCast, simp]
+@[norm_cast, simp]
 theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
   rfl
 
 theorem sub_apply (f g : P →A[R] W) (x : P) : (f - g) x = f x - g x :=
   rfl
 
-instance : Neg (P →A[R] W) :=
-  { neg := fun f => { -(f : P →ᵃ[R] W) with cont := f.continuous.neg } }
+-- failed to format: format: uncaught backtrack exception
+instance : Neg ( P →A[ R ] W ) where neg f := { - ( f : P →ᵃ[ R ] W ) with cont := f.continuous.neg }
 
-@[normCast, simp]
+@[norm_cast, simp]
 theorem coe_neg (f : P →A[R] W) : ⇑(-f) = -f :=
   rfl
 
@@ -242,12 +241,11 @@ variable [AddCommGroupₓ V] [Module R V] [TopologicalSpace V]
 
 variable [AddCommGroupₓ W] [Module R W] [TopologicalSpace W]
 
-/-- A continuous linear map can be regarded as a continuous affine map. -/
+/--  A continuous linear map can be regarded as a continuous affine map. -/
 def to_continuous_affine_map (f : V →L[R] W) : V →A[R] W :=
   { toFun := f, linear := f,
-    map_vadd' :=
-      by 
-        simp ,
+    map_vadd' := by
+      simp ,
     cont := f.cont }
 
 @[simp]
@@ -255,9 +253,8 @@ theorem coe_to_continuous_affine_map (f : V →L[R] W) : ⇑f.to_continuous_affi
   rfl
 
 @[simp]
-theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.to_continuous_affine_map 0 = 0 :=
-  by 
-    simp 
+theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.to_continuous_affine_map 0 = 0 := by
+  simp
 
 end ContinuousLinearMap
 

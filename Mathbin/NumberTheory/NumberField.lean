@@ -1,8 +1,8 @@
-import Mathbin.Algebra.Field.Basic 
-import Mathbin.Data.Rat.Basic 
-import Mathbin.RingTheory.Algebraic 
-import Mathbin.RingTheory.DedekindDomain 
-import Mathbin.RingTheory.IntegralClosure 
+import Mathbin.Algebra.Field.Basic
+import Mathbin.Data.Rat.Basic
+import Mathbin.RingTheory.Algebraic
+import Mathbin.RingTheory.DedekindDomain
+import Mathbin.RingTheory.IntegralClosure
 import Mathbin.RingTheory.Polynomial.RationalRoot
 
 /-!
@@ -29,9 +29,9 @@ number field, ring of integers
 -/
 
 
-/-- A number field is a field which has characteristic zero and is finite
+/--  A number field is a field which has characteristic zero and is finite
 dimensional over ℚ. -/
-class NumberField (K : Type _) [Field K] : Prop where 
+class NumberField (K : Type _) [Field K] : Prop where
   [to_char_zero : CharZero K]
   [to_finite_dimensional : FiniteDimensional ℚ K]
 
@@ -52,7 +52,7 @@ protected theorem IsAlgebraic : Algebra.IsAlgebraic ℚ K :=
 
 omit nf
 
-/-- The ring of integers (or number ring) corresponding to a number field
+/--  The ring of integers (or number ring) corresponding to a number field
 is the integral closure of ℤ in the number field. -/
 def ring_of_integers :=
   integralClosure ℤ K
@@ -73,9 +73,9 @@ instance [NumberField K] : IsIntegrallyClosed (ring_of_integers K) :=
 theorem is_integral_coe (x : ring_of_integers K) : IsIntegral ℤ (x : K) :=
   x.2
 
-/-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
+/--  The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
 protected noncomputable def Equivₓ (R : Type _) [CommRingₓ R] [Algebra R K] [IsIntegralClosure R ℤ K] :
-  ring_of_integers K ≃+* R :=
+    ring_of_integers K ≃+* R :=
   (IsIntegralClosure.equiv ℤ R K _).symm.toRingEquiv
 
 variable (K)
@@ -94,15 +94,14 @@ namespace Rat
 
 open NumberField
 
-instance rat.number_field : NumberField ℚ :=
-  { to_char_zero := inferInstance,
-    to_finite_dimensional :=
-      by 
-        convert (inferInstance : FiniteDimensional ℚ ℚ)
-        ext 
-        simp [Algebra.smul_def] }
+instance rat.number_field : NumberField ℚ where
+  to_char_zero := inferInstance
+  to_finite_dimensional := by
+    convert (inferInstance : FiniteDimensional ℚ ℚ)
+    ext
+    simp [Algebra.smul_def]
 
-/-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
+/--  The ring of integers of `ℚ` as a number field is just `ℤ`. -/
 noncomputable def ring_of_integers_equiv : ring_of_integers ℚ ≃+* ℤ :=
   ring_of_integers.equiv ℤ
 

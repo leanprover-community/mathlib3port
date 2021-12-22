@@ -1,4 +1,4 @@
-import Mathbin.GroupTheory.GroupAction.Opposite 
+import Mathbin.GroupTheory.GroupAction.Opposite
 import Mathbin.Data.Equiv.Module
 
 /-!
@@ -15,12 +15,12 @@ universe u v
 
 variable (R : Type u) {M : Type v} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-/-- `mul_opposite.distrib_mul_action` extends to a `module` -/
+/--  `mul_opposite.distrib_mul_action` extends to a `module` -/
 instance : Module R (MulOpposite M) :=
-  { MulOpposite.distribMulAction M R with add_smul := fun r₁ r₂ x => unop_injective$ add_smul r₁ r₂ (unop x),
-    zero_smul := fun x => unop_injective$ zero_smul _ (unop x) }
+  { MulOpposite.distribMulAction M R with add_smul := fun r₁ r₂ x => unop_injective $ add_smul r₁ r₂ (unop x),
+    zero_smul := fun x => unop_injective $ zero_smul _ (unop x) }
 
-/-- The function `op` is a linear equivalence. -/
+/--  The function `op` is a linear equivalence. -/
 def op_linear_equiv : M ≃ₗ[R] Mᵐᵒᵖ :=
   { op_add_equiv with map_smul' := MulOpposite.op_smul }
 

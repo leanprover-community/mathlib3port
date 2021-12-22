@@ -18,7 +18,7 @@ universe u v
 
 open_locale Cardinal
 
-/-- Cardinality of continuum. -/
+/--  Cardinality of continuum. -/
 def continuum : Cardinal.{u} :=
   2^omega.{u}
 
@@ -29,9 +29,8 @@ theorem two_power_omega : (2^omega.{u} : Cardinal.{u}) = 𝔠 :=
   rfl
 
 @[simp]
-theorem lift_continuum : lift.{v} continuum.{u} = 𝔠 :=
-  by 
-    rw [←two_power_omega, lift_two_power, lift_omega, two_power_omega]
+theorem lift_continuum : lift.{v} continuum.{u} = 𝔠 := by
+  rw [← two_power_omega, lift_two_power, lift_omega, two_power_omega]
 
 /-!
 ### Inequalities
@@ -47,9 +46,8 @@ theorem omega_le_continuum : ω ≤ 𝔠 :=
 theorem nat_lt_continuum (n : ℕ) : ↑n < 𝔠 :=
   (nat_lt_omega n).trans omega_lt_continuum
 
-theorem mk_set_nat : # (Set ℕ) = 𝔠 :=
-  by 
-    simp 
+theorem mk_set_nat : # (Set ℕ) = 𝔠 := by
+  simp
 
 theorem continuum_pos : 0 < 𝔠 :=
   nat_lt_continuum 0
@@ -121,9 +119,8 @@ theorem nat_power_omega {n : ℕ} (hn : 2 ≤ n) : (n^omega.{u} : Cardinal.{u}) 
   nat_power_eq le_rfl hn
 
 @[simp]
-theorem continuum_power_omega : (continuum.{u}^omega.{u}) = 𝔠 :=
-  by 
-    rw [←two_power_omega, ←power_mul, mul_eq_left le_rfl le_rfl omega_ne_zero]
+theorem continuum_power_omega : (continuum.{u}^omega.{u}) = 𝔠 := by
+  rw [← two_power_omega, ← power_mul, mul_eq_left le_rfl le_rfl omega_ne_zero]
 
 end Cardinal
 

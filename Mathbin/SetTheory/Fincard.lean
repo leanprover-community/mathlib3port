@@ -15,13 +15,13 @@ import Mathbin.SetTheory.Cardinal
 
 open Cardinal
 
-noncomputable section 
+noncomputable section
 
 variable {α : Type _}
 
 namespace Nat
 
-/-- `nat.card α` is the cardinality of `α` as a natural number.
+/--  `nat.card α` is the cardinality of `α` as a natural number.
   If `α` is infinite, `nat.card α = 0`. -/
 def card (α : Type _) : ℕ :=
   (mk α).toNat
@@ -38,7 +38,7 @@ end Nat
 
 namespace Enat
 
-/-- `enat.card α` is the cardinality of `α` as an extended natural number.
+/--  `enat.card α` is the cardinality of `α` as an extended natural number.
   If `α` is infinite, `enat.card α = ⊤`. -/
 def card (α : Type _) : Enat :=
   (mk α).toEnat

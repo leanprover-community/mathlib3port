@@ -1,6 +1,6 @@
-import Mathbin.Algebra.CharP.Algebra 
-import Mathbin.FieldTheory.Finite.Basic 
-import Mathbin.FieldTheory.Separable 
+import Mathbin.Algebra.CharP.Algebra
+import Mathbin.FieldTheory.Finite.Basic
+import Mathbin.FieldTheory.Separable
 import Mathbin.LinearAlgebra.FiniteDimensional
 
 /-!
@@ -23,20 +23,19 @@ It is a finite field with `p ^ n` elements.
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open Polynomial
 
 theorem galois_poly_separable {K : Type _} [Field K] (p q : ℕ) [CharP K p] (h : p ∣ q) :
-  separable ((X^q) - X : Polynomial K) :=
-  by 
-    use 1, (X^q) - X - 1
-    rw [←CharP.cast_eq_zero_iff (Polynomial K) p] at h 
-    rw [derivative_sub, derivative_pow, derivative_X, h]
-    ring
+    separable ((X^q) - X : Polynomial K) := by
+  use 1, (X^q) - X - 1
+  rw [← CharP.cast_eq_zero_iff (Polynomial K) p] at h
+  rw [derivative_sub, derivative_pow, derivative_X, h]
+  ring
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler field
-/-- A finite field with `p ^ n` elements.
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler field
+/--  A finite field with `p ^ n` elements.
 Every field with the same cardinality is (non-canonically)
 isomorphic to this field. -/
 def GaloisField (p : ℕ) [Fact p.prime] (n : ℕ) :=
@@ -57,133 +56,119 @@ instance : is_splitting_field (Zmod p) (GaloisField p n) ((X^p^n) - X) :=
 
 instance : CharP (GaloisField p n) p :=
   (Algebra.char_p_iff (Zmod p) (GaloisField p n) p).mp
-    (by 
+    (by
       infer_instance)
 
-instance : Fintype (GaloisField p n) :=
-  by 
-    dsimp only [GaloisField]
-    exact FiniteDimensional.fintypeOfFintype (Zmod p) (GaloisField p n)
+instance : Fintype (GaloisField p n) := by
+  dsimp only [GaloisField]
+  exact FiniteDimensional.fintypeOfFintype (Zmod p) (GaloisField p n)
 
-theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisField p n) = n :=
-  by 
-    set g_poly := ((X^p^n) - X : Polynomial (Zmod p))
-    have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt 
-    have aux : g_poly ≠ 0 := FiniteField.X_pow_card_pow_sub_X_ne_zero _ h hp 
-    have key : Fintype.card (g_poly.RootSet (GaloisField p n)) = g_poly.natDegree :=
-      card_root_set_eq_nat_degree (galois_poly_separable p _ (dvd_pow (dvd_refl p) h)) (splitting_field.splits g_poly)
-    have nat_degree_eq : g_poly.natDegree = (p^n) := FiniteField.X_pow_card_pow_sub_X_nat_degree_eq _ h hp 
-    rw [nat_degree_eq] at key 
-    suffices  : g_poly.RootSet (GaloisField p n) = Set.Univ
+theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisField p n) = n := by
+  set g_poly := ((X^p^n) - X : Polynomial (Zmod p))
+  have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
+  have aux : g_poly ≠ 0 := FiniteField.X_pow_card_pow_sub_X_ne_zero _ h hp
+  have key : Fintype.card (g_poly.RootSet (GaloisField p n)) = g_poly.natDegree :=
+    card_root_set_eq_nat_degree (galois_poly_separable p _ (dvd_pow (dvd_refl p) h)) (splitting_field.splits g_poly)
+  have nat_degree_eq : g_poly.natDegree = (p^n) := FiniteField.X_pow_card_pow_sub_X_nat_degree_eq _ h hp
+  rw [nat_degree_eq] at key
+  suffices g_poly.RootSet (GaloisField p n) = Set.Univ by
+    simp_rw [this, ← Fintype.of_equiv_card (Equivₓ.Set.univ _)]  at key
+    rw [@card_eq_pow_finrank (Zmod p), Zmod.card] at key
+    exact Nat.pow_right_injective (Nat.Prime.one_lt' p).out key
+  rw [Set.eq_univ_iff_forall]
+  suffices
+    ∀ x hx : x ∈ (⊤ : Subalgebra (Zmod p) (GaloisField p n)),
+      x ∈ ((X^p^n) - X : Polynomial (Zmod p)).RootSet (GaloisField p n)by
+    simpa
+  rw [← splitting_field.adjoin_root_set]
+  simp_rw [Algebra.mem_adjoin_iff]
+  intro x hx
+  (
+    cases p
+    cases hp)
+  apply Subring.closure_induction hx <;> clear! x <;> simp_rw [mem_root_set aux]
+  ·
+    rintro x (⟨r, rfl⟩ | hx)
     ·
-      simpRw [this, ←Fintype.of_equiv_card (Equivₓ.Set.univ _)]  at key 
-      rw [@card_eq_pow_finrank (Zmod p), Zmod.card] at key 
-      exact Nat.pow_right_injective (Nat.Prime.one_lt' p).out key 
-    rw [Set.eq_univ_iff_forall]
-    suffices  :
-      ∀ x hx : x ∈ (⊤ : Subalgebra (Zmod p) (GaloisField p n)),
-        x ∈ ((X^p^n) - X : Polynomial (Zmod p)).RootSet (GaloisField p n)
+      simp only [aeval_X_pow, aeval_X, AlgHom.map_sub]
+      rw [← map_pow, Zmod.pow_card_pow, sub_self]
     ·
-      simpa 
-    rw [←splitting_field.adjoin_root_set]
-    simpRw [Algebra.mem_adjoin_iff]
+      dsimp only [GaloisField]  at hx
+      rwa [mem_root_set aux] at hx
+  ·
+    dsimp only [g_poly]
+    rw [← coeff_zero_eq_aeval_zero']
+    simp only [coeff_X_pow, coeff_X_zero, sub_zero, RingHom.map_eq_zero, ite_eq_right_iff, one_ne_zero, coeff_sub]
+    intro hn
+    exact Nat.not_lt_zeroₓ 1 (pow_eq_zero hn.symm ▸ hp)
+  ·
+    simp
+  ·
+    simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, add_pow_char_pow, sub_eq_zero]
+    intro x y hx hy
+    rw [hx, hy]
+  ·
     intro x hx
-    (
-      cases p 
-      cases hp)
-    apply Subring.closure_induction hx <;> clear! x <;> simpRw [mem_root_set aux]
-    ·
-      rintro x (⟨r, rfl⟩ | hx)
-      ·
-        simp only [aeval_X_pow, aeval_X, AlgHom.map_sub]
-        rw [←map_pow, Zmod.pow_card_pow, sub_self]
-      ·
-        dsimp only [GaloisField]  at hx 
-        rwa [mem_root_set aux] at hx
-    ·
-      dsimp only [g_poly]
-      rw [←coeff_zero_eq_aeval_zero']
-      simp only [coeff_X_pow, coeff_X_zero, sub_zero, RingHom.map_eq_zero, ite_eq_right_iff, one_ne_zero, coeff_sub]
-      intro hn 
-      exact Nat.not_lt_zeroₓ 1 (pow_eq_zero hn.symm ▸ hp)
-    ·
-      simp 
-    ·
-      simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, add_pow_char_pow, sub_eq_zero]
-      intro x y hx hy 
-      rw [hx, hy]
-    ·
-      intro x hx 
-      simp only [sub_eq_zero, aeval_X_pow, aeval_X, AlgHom.map_sub, sub_neg_eq_add] at *
-      rw [neg_pow, hx, CharP.neg_one_pow_char_pow]
-      simp 
-    ·
-      simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, mul_powₓ, sub_eq_zero]
-      intro x y hx hy 
-      rw [hx, hy]
+    simp only [sub_eq_zero, aeval_X_pow, aeval_X, AlgHom.map_sub, sub_neg_eq_add] at *
+    rw [neg_pow, hx, CharP.neg_one_pow_char_pow]
+    simp
+  ·
+    simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, mul_powₓ, sub_eq_zero]
+    intro x y hx hy
+    rw [hx, hy]
 
-theorem card (h : n ≠ 0) : Fintype.card (GaloisField p n) = (p^n) :=
-  by 
-    let b := IsNoetherian.finsetBasis (Zmod p) (GaloisField p n)
-    rw [Module.card_fintype b, ←FiniteDimensional.finrank_eq_card_basis b, Zmod.card, finrank p h]
+theorem card (h : n ≠ 0) : Fintype.card (GaloisField p n) = (p^n) := by
+  let b := IsNoetherian.finsetBasis (Zmod p) (GaloisField p n)
+  rw [Module.card_fintype b, ← FiniteDimensional.finrank_eq_card_basis b, Zmod.card, finrank p h]
 
-theorem splits_zmod_X_pow_sub_X : splits (RingHom.id (Zmod p)) ((X^p) - X) :=
-  by 
-    have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt 
-    have h1 : roots ((X^p) - X : Polynomial (Zmod p)) = finset.univ.val
-    ·
-      convert FiniteField.roots_X_pow_card_sub_X _ 
-      exact (Zmod.card p).symm 
-    have h2 := FiniteField.X_pow_card_sub_X_nat_degree_eq (Zmod p) hp
-    (
-      cases p 
-      cases hp)
-    rw [splits_iff_card_roots, h1, ←Finset.card_def, Finset.card_univ, h2, Zmod.card]
+theorem splits_zmod_X_pow_sub_X : splits (RingHom.id (Zmod p)) ((X^p) - X) := by
+  have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
+  have h1 : roots ((X^p) - X : Polynomial (Zmod p)) = finset.univ.val := by
+    convert FiniteField.roots_X_pow_card_sub_X _
+    exact (Zmod.card p).symm
+  have h2 := FiniteField.X_pow_card_sub_X_nat_degree_eq (Zmod p) hp
+  (
+    cases p
+    cases hp)
+  rw [splits_iff_card_roots, h1, ← Finset.card_def, Finset.card_univ, h2, Zmod.card]
 
-/-- A Galois field with exponent 1 is equivalent to `zmod` -/
+/--  A Galois field with exponent 1 is equivalent to `zmod` -/
 def equiv_zmod_p : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
-  have h : (X^p^1 : Polynomial (Zmod p)) = (X^Fintype.card (Zmod p)) :=
-    by 
-      rw [pow_oneₓ, Zmod.card p]
-  have inst : is_splitting_field (Zmod p) (Zmod p) ((X^p^1) - X) :=
-    by 
-      rw [h]
-      infer_instance 
-  by 
-    exact (is_splitting_field.alg_equiv (Zmod p) ((X^p^1) - X : Polynomial (Zmod p))).symm
+  have h : (X^p^1 : Polynomial (Zmod p)) = (X^Fintype.card (Zmod p)) := by
+    rw [pow_oneₓ, Zmod.card p]
+  have inst : is_splitting_field (Zmod p) (Zmod p) ((X^p^1) - X) := by
+    rw [h]
+    infer_instance
+  by
+  exact (is_splitting_field.alg_equiv (Zmod p) ((X^p^1) - X : Polynomial (Zmod p))).symm
 
 variable {K : Type _} [Field K] [Fintype K] [Algebra (Zmod p) K]
 
-theorem splits_X_pow_card_sub_X : splits (algebraMap (Zmod p) K) ((X^Fintype.card K) - X) :=
-  by 
-    rw [←splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, map_X, splits_iff_card_roots,
-        FiniteField.roots_X_pow_card_sub_X, ←Finset.card_def, Finset.card_univ,
-        FiniteField.X_pow_card_sub_X_nat_degree_eq] <;>
-      exact Fintype.one_lt_card
+theorem splits_X_pow_card_sub_X : splits (algebraMap (Zmod p) K) ((X^Fintype.card K) - X) := by
+  rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, map_X, splits_iff_card_roots,
+      FiniteField.roots_X_pow_card_sub_X, ← Finset.card_def, Finset.card_univ,
+      FiniteField.X_pow_card_sub_X_nat_degree_eq] <;>
+    exact Fintype.one_lt_card
 
 theorem is_splitting_field_of_card_eq (h : Fintype.card K = (p^n)) : is_splitting_field (Zmod p) K ((X^p^n) - X) :=
-  { Splits :=
-      by 
-        rw [←h]
-        exact splits_X_pow_card_sub_X p,
-    adjoin_roots :=
-      by 
-        have hne : n ≠ 0
-        ·
-          rintro rfl 
-          rw [pow_zeroₓ, Fintype.card_eq_one_iff_nonempty_unique] at h 
-          cases h 
-          skip 
-          exact false_of_nontrivial_of_subsingleton K 
-        refine' algebra.eq_top_iff.mpr fun x => Algebra.subset_adjoin _ 
-        rw [Polynomial.map_sub, Polynomial.map_pow, map_X, Finset.mem_coe, Multiset.mem_to_finset, mem_roots,
-          is_root.def, eval_sub, eval_pow, eval_X, ←h, FiniteField.pow_card, sub_self]
-        exact FiniteField.X_pow_card_pow_sub_X_ne_zero K hne (Fact.out _) }
+  { Splits := by
+      rw [← h]
+      exact splits_X_pow_card_sub_X p,
+    adjoin_roots := by
+      have hne : n ≠ 0 := by
+        rintro rfl
+        rw [pow_zeroₓ, Fintype.card_eq_one_iff_nonempty_unique] at h
+        cases h
+        skip
+        exact false_of_nontrivial_of_subsingleton K
+      refine' algebra.eq_top_iff.mpr fun x => Algebra.subset_adjoin _
+      rw [Polynomial.map_sub, Polynomial.map_pow, map_X, Finset.mem_coe, Multiset.mem_to_finset, mem_roots, is_root.def,
+        eval_sub, eval_pow, eval_X, ← h, FiniteField.pow_card, sub_self]
+      exact FiniteField.X_pow_card_pow_sub_X_ne_zero K hne (Fact.out _) }
 
-/-- Any finite field is (possibly non canonically) isomorphic to some Galois field. -/
-def alg_equiv_galois_field (h : Fintype.card K = (p^n)) : K ≃ₐ[Zmod p] GaloisField p n :=
-  by 
-    have  := is_splitting_field_of_card_eq _ _ h <;> exact is_splitting_field.alg_equiv _ _
+/--  Any finite field is (possibly non canonically) isomorphic to some Galois field. -/
+def alg_equiv_galois_field (h : Fintype.card K = (p^n)) : K ≃ₐ[Zmod p] GaloisField p n := by
+  have := is_splitting_field_of_card_eq _ _ h <;> exact is_splitting_field.alg_equiv _ _
 
 end GaloisField
 
@@ -191,47 +176,42 @@ namespace FiniteField
 
 variable {K : Type _} [Field K] [Fintype K] {K' : Type _} [Field K'] [Fintype K']
 
-/-- Uniqueness of finite fields:
+/--  Uniqueness of finite fields:
   Any two finite fields of the same cardinality are (possibly non canonically) isomorphic-/
 def alg_equiv_of_card_eq (p : ℕ) [Fact p.prime] [Algebra (Zmod p) K] [Algebra (Zmod p) K']
-  (hKK' : Fintype.card K = Fintype.card K') : K ≃ₐ[Zmod p] K' :=
-  by 
-    have  : CharP K p
-    ·
-      rw [←Algebra.char_p_iff (Zmod p) K p]
-      exact Zmod.char_p p 
-    have  : CharP K' p
-    ·
-      rw [←Algebra.char_p_iff (Zmod p) K' p]
-      exact Zmod.char_p p 
-    choose n a hK using FiniteField.card K p 
-    choose n' a' hK' using FiniteField.card K' p 
-    rw [hK, hK'] at hKK' 
-    have hGalK := GaloisField.algEquivGaloisField p n hK 
-    have hK'Gal := (GaloisField.algEquivGaloisField p n' hK').symm 
-    rw [Nat.pow_right_injective (Fact.out (Nat.Prime p)).one_lt hKK'] at *
-    use AlgEquiv.trans hGalK hK'Gal
+    (hKK' : Fintype.card K = Fintype.card K') : K ≃ₐ[Zmod p] K' := by
+  have : CharP K p := by
+    rw [← Algebra.char_p_iff (Zmod p) K p]
+    exact Zmod.char_p p
+  have : CharP K' p := by
+    rw [← Algebra.char_p_iff (Zmod p) K' p]
+    exact Zmod.char_p p
+  choose n a hK using FiniteField.card K p
+  choose n' a' hK' using FiniteField.card K' p
+  rw [hK, hK'] at hKK'
+  have hGalK := GaloisField.algEquivGaloisField p n hK
+  have hK'Gal := (GaloisField.algEquivGaloisField p n' hK').symm
+  rw [Nat.pow_right_injective (Fact.out (Nat.Prime p)).one_lt hKK'] at *
+  use AlgEquiv.trans hGalK hK'Gal
 
-/-- Uniqueness of finite fields:
+/--  Uniqueness of finite fields:
   Any two finite fields of the same cardinality are (possibly non canonically) isomorphic-/
-def ring_equiv_of_card_eq (hKK' : Fintype.card K = Fintype.card K') : K ≃+* K' :=
-  by 
-    choose p _char_p_K using CharP.exists K 
-    choose p' _char_p'_K' using CharP.exists K' 
-    skip 
-    choose n hp hK using FiniteField.card K p 
-    choose n' hp' hK' using FiniteField.card K' p' 
-    have hpp' : p = p'
-    ·
-      byContra hne 
-      have h2 := Nat.coprime_pow_primes n n' hp hp' hne 
-      rw [(Eq.congr hK hK').mp hKK', Nat.coprime_selfₓ, pow_eq_one_iff (Pnat.ne_zero n')] at h2 
-      exact Nat.Prime.ne_one hp' h2 
-      all_goals 
-        infer_instance 
-    rw [←hpp'] at *
-    have  := fact_iff.2 hp 
-    exact alg_equiv_of_card_eq p hKK'
+def ring_equiv_of_card_eq (hKK' : Fintype.card K = Fintype.card K') : K ≃+* K' := by
+  choose p _char_p_K using CharP.exists K
+  choose p' _char_p'_K' using CharP.exists K'
+  skip
+  choose n hp hK using FiniteField.card K p
+  choose n' hp' hK' using FiniteField.card K' p'
+  have hpp' : p = p' := by
+    by_contra hne
+    have h2 := Nat.coprime_pow_primes n n' hp hp' hne
+    rw [(Eq.congr hK hK').mp hKK', Nat.coprime_selfₓ, pow_eq_one_iff (Pnat.ne_zero n')] at h2
+    exact Nat.Prime.ne_one hp' h2
+    all_goals
+      infer_instance
+  rw [← hpp'] at *
+  have := fact_iff.2 hp
+  exact alg_equiv_of_card_eq p hKK'
 
 end FiniteField
 

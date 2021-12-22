@@ -1,5 +1,5 @@
-import Mathbin.RingTheory.Subsemiring.Pointwise 
-import Mathbin.GroupTheory.Subgroup.Pointwise 
+import Mathbin.RingTheory.Subsemiring.Pointwise
+import Mathbin.GroupTheory.Subgroup.Pointwise
 import Mathbin.RingTheory.Subring.Basic
 
 /-! # Pointwise instances on `subring`s
@@ -25,25 +25,21 @@ section Monoidₓ
 
 variable [Monoidₓ M] [Ringₓ R] [MulSemiringAction M R]
 
-/-- The action on a subring corresponding to applying the action to every element.
+/--  The action on a subring corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwise_mul_action : MulAction M (Subring R) :=
   { smul := fun a S => S.map (MulSemiringAction.toRingHom _ _ a),
-    one_smul :=
-      fun S =>
-        (congr_argₓ (fun f => S.map f)
-              (RingHom.ext$
-                by 
-                  exact one_smul M)).trans
-          S.map_id,
-    mul_smul :=
-      fun a₁ a₂ S =>
-        (congr_argₓ (fun f => S.map f)
-              (RingHom.ext$
-                by 
-                  exact mul_smul _ _)).trans
-          (S.map_map _ _).symm }
+    one_smul := fun S =>
+      (congr_argₓ (fun f => S.map f)
+            (RingHom.ext $ by
+              exact one_smul M)).trans
+        S.map_id,
+    mul_smul := fun a₁ a₂ S =>
+      (congr_argₓ (fun f => S.map f)
+            (RingHom.ext $ by
+              exact mul_smul _ _)).trans
+        (S.map_map _ _).symm }
 
 localized [Pointwise] attribute [instance] Subring.pointwiseMulAction
 
@@ -67,12 +63,14 @@ theorem pointwise_smul_to_subsemiring (m : M) (S : Subring R) : (m • S).toSubs
 theorem smul_mem_pointwise_smul (m : M) (r : R) (S : Subring R) : r ∈ S → m • r ∈ m • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ m • (S : Set R))
 
+theorem mem_smul_pointwise_iff_exists (m : M) (r : R) (S : Subring R) : r ∈ m • S ↔ ∃ s : R, s ∈ S ∧ m • s = r :=
+  (Set.mem_smul_set : r ∈ m • (S : Set R) ↔ _)
+
 instance pointwise_central_scalar [MulSemiringAction (Mᵐᵒᵖ) R] [IsCentralScalar M R] : IsCentralScalar M (Subring R) :=
   ⟨fun a S =>
-      (congr_argₓ fun f => S.map f)$
-        RingHom.ext$
-          by 
-            exact op_smul_eq_smul _⟩
+    (congr_argₓ fun f => S.map f) $
+      RingHom.ext $ by
+        exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 

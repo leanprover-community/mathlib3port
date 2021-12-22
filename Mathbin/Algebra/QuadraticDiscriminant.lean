@@ -1,5 +1,5 @@
-import Mathbin.Algebra.CharP.Invertible 
-import Mathbin.Order.Filter.AtTopBot 
+import Mathbin.Algebra.CharP.Invertible
+import Mathbin.Order.Filter.AtTopBot
 import Mathbin.Tactic.Linarith.Default
 
 /-!
@@ -31,47 +31,40 @@ section Ringₓ
 
 variable {R : Type _}
 
-/-- Discriminant of a quadratic -/
+/--  Discriminant of a quadratic -/
 def discrim [Ringₓ R] (a b c : R) : R :=
   b ^ 2 - (4*a)*c
 
 variable [CommRingₓ R] [IsDomain R] {a b c : R}
 
-/--
+/-- 
 A quadratic has roots if and only if its discriminant equals some square.
 -/
 theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (x : R) :
-  ((((a*x)*x)+b*x)+c) = 0 ↔ discrim a b c = (((2*a)*x)+b) ^ 2 :=
-  by 
-    constructor
-    ·
-      intro h 
-      calc discrim a b c = (((4*a)*(((a*x)*x)+b*x)+c)+b*b) - (4*a)*c :=
-        by 
-          rw [h, discrim]
-          ring _ = (((2*a)*x)+b) ^ 2 :=
-        by 
-          ring
-    ·
-      intro h 
-      have ha : ((2*2)*a) ≠ 0 := mul_ne_zero (mul_ne_zero h2 h2) ha 
-      apply mul_left_cancel₀ ha 
-      calc (((2*2)*a)*(((a*x)*x)+b*x)+c) = (((2*a)*x)+b) ^ 2 - (b ^ 2 - (4*a)*c) :=
-        by 
-          ring _ = 0 :=
-        by 
-          rw [←h, discrim]
-          ring _ = ((2*2)*a)*0 :=
-        by 
-          ring
+    ((((a*x)*x)+b*x)+c) = 0 ↔ discrim a b c = (((2*a)*x)+b) ^ 2 := by
+  constructor
+  ·
+    intro h
+    calc discrim a b c = (((4*a)*(((a*x)*x)+b*x)+c)+b*b) - (4*a)*c := by
+      rw [h, discrim]
+      ring _ = (((2*a)*x)+b) ^ 2 := by
+      ring
+  ·
+    intro h
+    have ha : ((2*2)*a) ≠ 0 := mul_ne_zero (mul_ne_zero h2 h2) ha
+    apply mul_left_cancel₀ ha
+    calc (((2*2)*a)*(((a*x)*x)+b*x)+c) = (((2*a)*x)+b) ^ 2 - (b ^ 2 - (4*a)*c) := by
+      ring _ = 0 := by
+      rw [← h, discrim]
+      ring _ = ((2*2)*a)*0 := by
+      ring
 
-/-- A quadratic has no root if its discriminant has no square root. -/
+/--  A quadratic has no root if its discriminant has no square root. -/
 theorem quadratic_ne_zero_of_discrim_ne_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (h : ∀ s : R, discrim a b c ≠ s*s) (x : R) :
-  ((((a*x)*x)+b*x)+c) ≠ 0 :=
-  by 
-    intro h' 
-    rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, sq] at h' 
-    exact h _ h'
+    ((((a*x)*x)+b*x)+c) ≠ 0 := by
+  intro h'
+  rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, sq] at h'
+  exact h _ h'
 
 end Ringₓ
 
@@ -79,56 +72,52 @@ section Field
 
 variable {K : Type _} [Field K] [Invertible (2 : K)] {a b c x : K}
 
-/-- Roots of a quadratic -/
+/--  Roots of a quadratic -/
 theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s*s) (x : K) :
-  ((((a*x)*x)+b*x)+c) = 0 ↔ (x = ((-b)+s) / 2*a) ∨ x = (-b - s) / 2*a :=
-  by 
-    have h2 : (2 : K) ≠ 0 := nonzero_of_invertible 2
-    rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, h, sq, mul_self_eq_mul_self_iff]
-    have ne : (2*a) ≠ 0 := mul_ne_zero h2 ha 
-    have  : x = ((2*a)*x) / 2*a := (mul_div_cancel_left x Ne).symm 
-    have h₁ : ((2*a)*((-b)+s) / 2*a) = (-b)+s := mul_div_cancel' _ Ne 
-    have h₂ : ((2*a)*(-b - s) / 2*a) = -b - s := mul_div_cancel' _ Ne 
-    constructor
+    ((((a*x)*x)+b*x)+c) = 0 ↔ (x = ((-b)+s) / 2*a) ∨ x = (-b - s) / 2*a := by
+  have h2 : (2 : K) ≠ 0 := nonzero_of_invertible 2
+  rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, h, sq, mul_self_eq_mul_self_iff]
+  have ne : (2*a) ≠ 0 := mul_ne_zero h2 ha
+  have : x = ((2*a)*x) / 2*a := (mul_div_cancel_left x Ne).symm
+  have h₁ : ((2*a)*((-b)+s) / 2*a) = (-b)+s := mul_div_cancel' _ Ne
+  have h₂ : ((2*a)*(-b - s) / 2*a) = -b - s := mul_div_cancel' _ Ne
+  constructor
+  ·
+    intro h'
+    rcases h' with ⟨⟩
     ·
-      intro h' 
-      rcases h' with ⟨⟩
-      ·
-        left 
-        rw [h']
-        simpa [add_commₓ]
-      ·
-        right 
-        rw [h']
-        simpa [add_commₓ, sub_eq_add_neg]
+      left
+      rw [h']
+      simpa [add_commₓ]
     ·
-      intro h' 
-      rcases h' with ⟨⟩
-      ·
-        left 
-        rw [h', h₁]
-        ring
-      ·
-        right 
-        rw [h', h₂]
-        ring
+      right
+      rw [h']
+      simpa [add_commₓ, sub_eq_add_neg]
+  ·
+    intro h'
+    rcases h' with ⟨⟩
+    ·
+      left
+      rw [h', h₁]
+      ring
+    ·
+      right
+      rw [h', h₂]
+      ring
 
-/-- A quadratic has roots if its discriminant has square roots -/
-theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s*s) : ∃ x, ((((a*x)*x)+b*x)+c) = 0 :=
-  by 
-    rcases h with ⟨s, hs⟩
-    use ((-b)+s) / 2*a 
-    rw [quadratic_eq_zero_iff ha hs]
-    simp 
+/--  A quadratic has roots if its discriminant has square roots -/
+theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s*s) : ∃ x, ((((a*x)*x)+b*x)+c) = 0 := by
+  rcases h with ⟨s, hs⟩
+  use ((-b)+s) / 2*a
+  rw [quadratic_eq_zero_iff ha hs]
+  simp
 
-/-- Root of a quadratic when its discriminant equals zero -/
+/--  Root of a quadratic when its discriminant equals zero -/
 theorem quadratic_eq_zero_iff_of_discrim_eq_zero (ha : a ≠ 0) (h : discrim a b c = 0) (x : K) :
-  ((((a*x)*x)+b*x)+c) = 0 ↔ x = -b / 2*a :=
-  by 
-    have  : discrim a b c = 0*0
-    ·
-      rw [h, mul_zero]
-    rw [quadratic_eq_zero_iff ha this, add_zeroₓ, sub_zero, or_selfₓ]
+    ((((a*x)*x)+b*x)+c) = 0 ↔ x = -b / 2*a := by
+  have : discrim a b c = 0*0 := by
+    rw [h, mul_zero]
+  rw [quadratic_eq_zero_iff ha this, add_zeroₓ, sub_zero, or_selfₓ]
 
 end Field
 
@@ -136,62 +125,56 @@ section LinearOrderedField
 
 variable {K : Type _} [LinearOrderedField K] {a b c : K}
 
-/-- If a polynomial of degree 2 is always nonnegative, then its discriminant is nonpositive -/
-theorem discrim_le_zero (h : ∀ x : K, 0 ≤ (((a*x)*x)+b*x)+c) : discrim a b c ≤ 0 :=
-  by 
-    rw [discrim, sq]
-    obtain ha | rfl | ha : a < 0 ∨ a = 0 ∨ 0 < a := lt_trichotomyₓ a 0
+/--  If a polynomial of degree 2 is always nonnegative, then its discriminant is nonpositive -/
+theorem discrim_le_zero (h : ∀ x : K, 0 ≤ (((a*x)*x)+b*x)+c) : discrim a b c ≤ 0 := by
+  rw [discrim, sq]
+  obtain ha | rfl | ha : a < 0 ∨ a = 0 ∨ 0 < a := lt_trichotomyₓ a 0
+  ·
+    have : tendsto (fun x => (((a*x)+b)*x)+c) at_top at_bot :=
+      tendsto_at_bot_add_const_right _ c
+        ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top tendsto_id)
+    rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
+    exact
+      False.elim
+        ((h x).not_lt $ by
+          rwa [← add_mulₓ])
+  ·
+    rcases em (b = 0) with (rfl | hb)
     ·
-      have  : tendsto (fun x => (((a*x)+b)*x)+c) at_top at_bot :=
-        tendsto_at_bot_add_const_right _ c
-          ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top tendsto_id)
-      rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
-      exact
-        False.elim
-          ((h x).not_lt$
-            by 
-              rwa [←add_mulₓ])
+      simp
     ·
-      rcases em (b = 0) with (rfl | hb)
-      ·
-        simp 
-      ·
-        have  := h ((-c - 1) / b)
-        rw [mul_div_cancel' _ hb] at this 
-        linarith
-    ·
-      have  :=
-        calc
-          ((4*a)*(((a*(-(b / a))*1 / 2)*(-(b / a))*1 / 2)+b*(-(b / a))*1 / 2)+c) =
-            (((a*b / a)*a*b / a) - (2*a*b / a)*b)+(4*a)*c :=
-          by 
-            ring 
-          _ = -((b*b) - (4*a)*c) :=
-          by 
-            simp only [mul_div_cancel' b (ne_of_gtₓ ha)]
-            ring 
-          
-      have ha' : 0 ≤ 4*a
-      ·
-        linarith 
-      have h := mul_nonneg ha' (h ((-(b / a))*1 / 2))
-      rw [this] at h 
-      rwa [←neg_nonneg]
+      have := h ((-c - 1) / b)
+      rw [mul_div_cancel' _ hb] at this
+      linarith
+  ·
+    have :=
+      calc
+        ((4*a)*(((a*(-(b / a))*1 / 2)*(-(b / a))*1 / 2)+b*(-(b / a))*1 / 2)+c) =
+          (((a*b / a)*a*b / a) - (2*a*b / a)*b)+(4*a)*c :=
+        by
+        ring
+        _ = -((b*b) - (4*a)*c) := by
+        simp only [mul_div_cancel' b (ne_of_gtₓ ha)]
+        ring
+        
+    have ha' : 0 ≤ 4*a := by
+      linarith
+    have h := mul_nonneg ha' (h ((-(b / a))*1 / 2))
+    rw [this] at h
+    rwa [← neg_nonneg]
 
-/--
+/-- 
 If a polynomial of degree 2 is always positive, then its discriminant is negative,
 at least when the coefficient of the quadratic term is nonzero.
 -/
-theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < (((a*x)*x)+b*x)+c) : discrim a b c < 0 :=
-  by 
-    have  : ∀ x : K, 0 ≤ (((a*x)*x)+b*x)+c := fun x => le_of_ltₓ (h x)
-    refine' lt_of_le_of_neₓ (discrim_le_zero this) _ 
-    intro h' 
-    have  := h (-b / 2*a)
-    have  : ((((a*-b / 2*a)*-b / 2*a)+b*-b / 2*a)+c) = 0
-    ·
-      rw [quadratic_eq_zero_iff_of_discrim_eq_zero ha h' (-b / 2*a)]
-    linarith
+theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < (((a*x)*x)+b*x)+c) : discrim a b c < 0 := by
+  have : ∀ x : K, 0 ≤ (((a*x)*x)+b*x)+c := fun x => le_of_ltₓ (h x)
+  refine' lt_of_le_of_neₓ (discrim_le_zero this) _
+  intro h'
+  have := h (-b / 2*a)
+  have : ((((a*-b / 2*a)*-b / 2*a)+b*-b / 2*a)+c) = 0 := by
+    rw [quadratic_eq_zero_iff_of_discrim_eq_zero ha h' (-b / 2*a)]
+  linarith
 
 end LinearOrderedField
 

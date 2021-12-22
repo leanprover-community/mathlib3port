@@ -1,4 +1,4 @@
-import Mathbin.RingTheory.Localization 
+import Mathbin.RingTheory.Localization
 import Mathbin.Topology.Algebra.Ring
 
 /-!
@@ -19,7 +19,7 @@ to the equivalence class of `(x, 1)` in the localization of `R` at a `M`.
 
 variable {R : Type _} [CommRingₓ R] [TopologicalSpace R] {M : Submonoid R}
 
-/-- The ring topology on `localization M` coinduced from the natural homomorphism sending `x : R`
+/--  The ring topology on `localization M` coinduced from the natural homomorphism sending `x : R`
 to the equivalence class of `(x, 1)`. -/
 def Localization.ringTopology : RingTopology (Localization M) :=
   RingTopology.coinduced (Localization.monoidOf M).toFun

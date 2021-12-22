@@ -40,15 +40,15 @@ variable {k : Type _} {S : Type _} {M : Type _} {M₁ : Type _} {M₂ : Type _} 
 
 variable {N₁ : Type _} {N₂ : Type _} {N₃ : Type _} {N₄ : Type _} {ι : Type _}
 
-section 
+section
 
-/-- A linear equivalence is an invertible linear map. -/
+/--  A linear equivalence is an invertible linear map. -/
 @[nolint has_inhabited_instance]
 structure LinearEquiv {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (σ : R →+* S) {σ' : S →+* R}
   [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type _) (M₂ : Type _) [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
   [Module R M] [Module S M₂] extends LinearMap σ M M₂, M ≃+ M₂
 
-end 
+end
 
 attribute [nolint doc_blame] LinearEquiv.toLinearMap
 
@@ -68,7 +68,7 @@ variable {M₄ : Type _}
 
 variable [Semiringₓ R] [Semiringₓ S]
 
-section 
+section
 
 variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
 
@@ -88,12 +88,11 @@ instance : CoeFun (M ≃ₛₗ[σ] M₂) fun _ => M → M₂ :=
 
 @[simp]
 theorem coe_mk {to_fun inv_fun map_add map_smul left_inv right_inv} :
-  ⇑(⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₛₗ[σ] M₂) = to_fun :=
+    ⇑(⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₛₗ[σ] M₂) = to_fun :=
   rfl
 
 @[nolint doc_blame]
-def to_equiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂ :=
-  fun f => f.to_add_equiv.to_equiv
+def to_equiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂ := fun f => f.to_add_equiv.to_equiv
 
 theorem to_equiv_injective : Function.Injective (to_equiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂) :=
   fun ⟨_, _, _, _, _, _⟩ ⟨_, _, _, _, _, _⟩ h => LinearEquiv.mk.inj_eq.mpr (Equivₓ.mk.inj h)
@@ -102,23 +101,28 @@ theorem to_equiv_injective : Function.Injective (to_equiv : (M ≃ₛₗ[σ] M�
 theorem to_equiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.to_equiv = e₂.to_equiv ↔ e₁ = e₂ :=
   to_equiv_injective.eq_iff
 
-theorem to_linear_map_injective : injective (coeₓ : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) :=
-  fun e₁ e₂ H => to_equiv_injective$ Equivₓ.ext$ LinearMap.congr_fun H
+theorem to_linear_map_injective : injective (coeₓ : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) := fun e₁ e₂ H =>
+  to_equiv_injective $ Equivₓ.ext $ LinearMap.congr_fun H
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem to_linear_map_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : (e₁ : M →ₛₗ[σ] M₂) = e₂ ↔ e₁ = e₂ :=
   to_linear_map_injective.eq_iff
 
-instance : AddMonoidHomClass (M ≃ₛₗ[σ] M₂) M M₂ :=
-  { coe := LinearEquiv.toFun, coe_injective' := fun f g h => to_linear_map_injective (FunLike.coe_injective h),
-    map_add := LinearEquiv.map_add', map_zero := fun f => f.to_linear_map.map_zero }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : AddMonoidHomClass ( M ≃ₛₗ[ σ ] M₂ ) M M₂
+  where
+    coe := LinearEquiv.toFun
+      coe_injective' f g h := to_linear_map_injective ( FunLike.coe_injective h )
+      map_add := LinearEquiv.map_add'
+      map_zero f := f.to_linear_map.map_zero
 
 theorem coe_injective : @injective (M ≃ₛₗ[σ] M₂) (M → M₂) coeFn :=
   FunLike.coe_injective
 
-end 
+end
 
-section 
+section
 
 variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
 
@@ -137,7 +141,7 @@ variable (e e' : M ≃ₛₗ[σ] M₂)
 theorem to_linear_map_eq_coe : e.to_linear_map = (e : M →ₛₗ[σ] M₂) :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_coe : ⇑(e : M →ₛₗ[σ] M₂) = e :=
   rfl
 
@@ -153,7 +157,7 @@ theorem coe_to_linear_map : ⇑e.to_linear_map = e :=
 theorem to_fun_eq_coe : e.to_fun = e :=
   rfl
 
-section 
+section
 
 variable {e e'}
 
@@ -170,18 +174,18 @@ protected theorem congr_argₓ {x x'} : x = x' → e x = e x' :=
 protected theorem congr_funₓ (h : e = e') (x : M) : e x = e' x :=
   FunLike.congr_fun h x
 
-end 
+end
 
-section 
+section
 
 variable (M R)
 
-/-- The identity map is a linear equivalence. -/
+/--  The identity map is a linear equivalence. -/
 @[refl]
 def refl [Module R M] : M ≃ₗ[R] M :=
-  { LinearMap.id, Equivₓ.refl M with  }
+  { LinearMap.id, Equivₓ.refl M with }
 
-end 
+end
 
 @[simp]
 theorem refl_apply [Module R M] (x : M) : refl R M x = x :=
@@ -189,22 +193,20 @@ theorem refl_apply [Module R M] (x : M) : refl R M x = x :=
 
 include module_M module_S_M₂ re₁ re₂
 
-/-- Linear equivalences are symmetric. -/
+/--  Linear equivalences are symmetric. -/
 @[symm]
 def symm (e : M ≃ₛₗ[σ] M₂) : M₂ ≃ₛₗ[σ'] M :=
   { e.to_linear_map.inverse e.inv_fun e.left_inv e.right_inv, e.to_equiv.symm with
     toFun := e.to_linear_map.inverse e.inv_fun e.left_inv e.right_inv, invFun := e.to_equiv.symm.inv_fun,
-    map_smul' :=
-      fun r x =>
-        by 
-          simp  }
+    map_smul' := fun r x => by
+      simp }
 
 omit module_M module_S_M₂ re₁ re₂
 
-/-- See Note [custom simps projection] -/
+/--  See Note [custom simps projection] -/
 def simps.symm_apply {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] {σ : R →+* S} {σ' : S →+* R}
-  [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {M : Type _} {M₂ : Type _} [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
-  [Module R M] [Module S M₂] (e : M ≃ₛₗ[σ] M₂) : M₂ → M :=
+    [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {M : Type _} {M₂ : Type _} [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
+    [Module R M] [Module S M₂] (e : M ≃ₛₗ[σ] M₂) : M₂ → M :=
   e.symm
 
 initialize_simps_projections LinearEquiv (toFun → apply, invFun → symmApply)
@@ -239,10 +241,10 @@ variable (e₁₂ : M₁ ≃ₛₗ[σ₁₂] M₂) (e₂₃ : M₂ ≃ₛₗ[σ�
 
 include σ₃₁
 
-/-- Linear equivalences are transitive. -/
+/--  Linear equivalences are transitive. -/
 @[trans, nolint unused_arguments]
 def trans : M₁ ≃ₛₗ[σ₁₃] M₃ :=
-  { e₂₃.to_linear_map.comp e₁₂.to_linear_map, e₁₂.to_equiv.trans e₂₃.to_equiv with  }
+  { e₂₃.to_linear_map.comp e₁₂.to_linear_map, e₁₂.to_equiv.trans e₂₃.to_equiv with }
 
 omit σ₃₁
 
@@ -257,7 +259,7 @@ variable {e₁₂} {e₂₃}
 theorem coe_to_add_equiv : ⇑e.to_add_equiv = e :=
   rfl
 
-/-- The two paths coercion can take to an `add_monoid_hom` are equivalent -/
+/--  The two paths coercion can take to an `add_monoid_hom` are equivalent -/
 theorem to_add_monoid_hom_commutes : e.to_linear_map.to_add_monoid_hom = e.to_add_equiv.to_add_monoid_hom :=
   rfl
 
@@ -312,29 +314,27 @@ theorem refl_symm [Module R M] : (refl R M).symm = LinearEquiv.refl R M :=
   rfl
 
 @[simp]
-theorem self_trans_symm [Module R M] [Module R M₂] (f : M ≃ₗ[R] M₂) : f.trans f.symm = LinearEquiv.refl R M :=
-  by 
-    ext x 
-    simp 
+theorem self_trans_symm [Module R M] [Module R M₂] (f : M ≃ₗ[R] M₂) : f.trans f.symm = LinearEquiv.refl R M := by
+  ext x
+  simp
 
 @[simp]
-theorem symm_trans_self [Module R M] [Module R M₂] (f : M ≃ₗ[R] M₂) : f.symm.trans f = LinearEquiv.refl R M₂ :=
-  by 
-    ext x 
-    simp 
+theorem symm_trans_self [Module R M] [Module R M₂] (f : M ≃ₗ[R] M₂) : f.symm.trans f = LinearEquiv.refl R M₂ := by
+  ext x
+  simp
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem refl_to_linear_map [Module R M] : (LinearEquiv.refl R M : M →ₗ[R] M) = LinearMap.id :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem comp_coe [Module R M] [Module R M₂] [Module R M₃] (f : M ≃ₗ[R] M₂) (f' : M₂ ≃ₗ[R] M₃) :
-  (f' : M₂ →ₗ[R] M₃).comp (f : M →ₗ[R] M₂) = (f.trans f' : M ≃ₗ[R] M₃) :=
+    (f' : M₂ →ₗ[R] M₃).comp (f : M →ₗ[R] M₂) = (f.trans f' : M ≃ₗ[R] M₃) :=
   rfl
 
 @[simp]
 theorem mk_coe h₁ h₂ f h₃ h₄ : (LinearEquiv.mk e h₁ h₂ f h₃ h₄ : M ≃ₛₗ[σ] M₂) = e :=
-  ext$ fun _ => rfl
+  ext $ fun _ => rfl
 
 protected theorem map_add (a b : M) : e (a+b) = e a+e b :=
   map_add e a b
@@ -353,9 +353,144 @@ theorem map_smul (e : N₁ ≃ₗ[R₁] N₂) (c : R₁) (x : N₁) : e (c • x
 
 omit module_N₁ module_N₂
 
-@[simp]
-theorem map_sum {s : Finset ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
-  e.to_linear_map.map_sum
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  []
+  [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+  []
+  []
+  []
+  [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `map_sum [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`s] [":" (Term.app `Finset [`ι])] "}")
+    (Term.explicitBinder "(" [`u] [":" (Term.arrow `ι "→" `M)] [] ")")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Term.app
+      `e
+      [(Algebra.BigOperators.Basic.«term∑_in_,_»
+        "∑"
+        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+        " in "
+        `s
+        ", "
+        (Term.app `u [`i]))])
+     "="
+     (Algebra.BigOperators.Basic.«term∑_in_,_»
+      "∑"
+      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+      " in "
+      `s
+      ", "
+      (Term.app `e [(Term.app `u [`i])])))))
+  (Command.declValSimple ":=" `e.to_linear_map.map_sum [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `e.to_linear_map.map_sum
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Term.app
+    `e
+    [(Algebra.BigOperators.Basic.«term∑_in_,_»
+      "∑"
+      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+      " in "
+      `s
+      ", "
+      (Term.app `u [`i]))])
+   "="
+   (Algebra.BigOperators.Basic.«term∑_in_,_»
+    "∑"
+    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+    " in "
+    `s
+    ", "
+    (Term.app `e [(Term.app `u [`i])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Algebra.BigOperators.Basic.«term∑_in_,_»
+   "∑"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+   " in "
+   `s
+   ", "
+   (Term.app `e [(Term.app `u [`i])]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∑_in_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `e [(Term.app `u [`i])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `u [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `i
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `u
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `u [`i]) []] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `e
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `s
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem map_sum { s : Finset ι } ( u : ι → M ) : e ∑ i in s , u i = ∑ i in s , e u i := e.to_linear_map.map_sum
 
 @[simp]
 theorem map_eq_zero_iff {x : M} : e x = 0 ↔ x = 0 :=
@@ -367,34 +502,29 @@ theorem map_ne_zero_iff {x : M} : e x ≠ 0 ↔ x ≠ 0 :=
 include module_M module_S_M₂ re₁ re₂
 
 @[simp]
-theorem symm_symm (e : M ≃ₛₗ[σ] M₂) : e.symm.symm = e :=
-  by 
-    cases e 
-    rfl
+theorem symm_symm (e : M ≃ₛₗ[σ] M₂) : e.symm.symm = e := by
+  cases e
+  rfl
 
 omit module_M module_S_M₂ re₁ re₂
 
 theorem symm_bijective [Module R M] [Module S M₂] [RingHomInvPair σ' σ] [RingHomInvPair σ σ'] :
-  Function.Bijective (symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M) :=
+    Function.Bijective (symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M) :=
   Equivₓ.bijective ⟨(symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M), (symm : (M₂ ≃ₛₗ[σ'] M) → M ≃ₛₗ[σ] M₂), symm_symm, symm_symm⟩
 
 @[simp]
 theorem mk_coe' f h₁ h₂ h₃ h₄ : (LinearEquiv.mk f h₁ h₂ (⇑e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
-  symm_bijective.Injective$ ext$ fun x => rfl
-
-include σ'
+  symm_bijective.Injective $ ext $ fun x => rfl
 
 @[simp]
 theorem symm_mk f h₁ h₂ h₃ h₄ :
-  (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm =
-    { (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm with toFun := f, invFun := e } :=
+    (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm =
+      { (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm with toFun := f, invFun := e } :=
   rfl
-
-omit σ'
 
 @[simp]
 theorem coe_symm_mk [Module R M] [Module R M₂] {to_fun inv_fun map_add map_smul left_inv right_inv} :
-  ⇑(⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₗ[R] M₂).symm = inv_fun :=
+    ⇑(⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₗ[R] M₂).symm = inv_fun :=
   rfl
 
 protected theorem bijective : Function.Bijective e :=
@@ -406,43 +536,65 @@ protected theorem injective : Function.Injective e :=
 protected theorem surjective : Function.Surjective e :=
   e.to_equiv.surjective
 
-include σ'
-
 protected theorem image_eq_preimage (s : Set M) : e '' s = e.symm ⁻¹' s :=
   e.to_equiv.image_eq_preimage s
 
-omit σ'
+protected theorem image_symm_eq_preimage (s : Set M₂) : e.symm '' s = e ⁻¹' s :=
+  e.to_equiv.symm.image_eq_preimage s
 
-end 
+section Pointwise
 
-/-- Interpret a `ring_equiv` `f` as an `f`-semilinear equiv. -/
+open_locale Pointwise
+
+@[simp]
+theorem image_smul_setₛₗ (c : R) (s : Set M) : e '' (c • s) = σ c • e '' s :=
+  LinearMap.image_smul_setₛₗ e.to_linear_map c s
+
+@[simp]
+theorem preimage_smul_setₛₗ (c : S) (s : Set M₂) : e ⁻¹' (c • s) = σ' c • e ⁻¹' s := by
+  rw [← LinearEquiv.image_symm_eq_preimage, ← LinearEquiv.image_symm_eq_preimage, image_smul_setₛₗ]
+
+include module_M₁ module_N₁
+
+@[simp]
+theorem image_smul_set (e : M₁ ≃ₗ[R₁] N₁) (c : R₁) (s : Set M₁) : e '' (c • s) = c • e '' s :=
+  LinearMap.image_smul_set e.to_linear_map c s
+
+@[simp]
+theorem preimage_smul_set (e : M₁ ≃ₗ[R₁] N₁) (c : R₁) (s : Set N₁) : e ⁻¹' (c • s) = c • e ⁻¹' s :=
+  e.preimage_smul_setₛₗ c s
+
+end Pointwise
+
+end
+
+/--  Interpret a `ring_equiv` `f` as an `f`-semilinear equiv. -/
 @[simps]
-def _root_.ring_equiv.to_semilinear_equiv (f : R ≃+* S) :
-  by 
-    have  := RingHomInvPair.of_ring_equiv f <;>
-      have  := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;> exact R ≃ₛₗ[(↑f : R →+* S)] S :=
-  by 
-    exact { f with toFun := f, map_smul' := f.map_mul }
+def _root_.ring_equiv.to_semilinear_equiv (f : R ≃+* S) : by
+    have := RingHomInvPair.of_ring_equiv f <;>
+      have := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;> exact R ≃ₛₗ[(↑f : R →+* S)] S :=
+  by
+  exact { f with toFun := f, map_smul' := f.map_mul }
 
 variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
 
 variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
 
-/-- An involutive linear map is a linear equivalence. -/
+/--  An involutive linear map is a linear equivalence. -/
 def of_involutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {module_M : Module R M} (f : M →ₛₗ[σ] M)
-  (hf : involutive f) : M ≃ₛₗ[σ] M :=
-  { f, hf.to_equiv f with  }
+    (hf : involutive f) : M ≃ₛₗ[σ] M :=
+  { f, hf.to_equiv f with }
 
 @[simp]
 theorem coe_of_involutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {module_M : Module R M}
-  (f : M →ₛₗ[σ] M) (hf : involutive f) : ⇑of_involutive f hf = f :=
+    (f : M →ₛₗ[σ] M) (hf : involutive f) : ⇑of_involutive f hf = f :=
   rfl
 
 section RestrictScalars
 
 variable (R) [Module R M] [Module R M₂] [Module S M] [Module S M₂] [LinearMap.CompatibleSmul M M₂ R S]
 
-/-- If `M` and `M₂` are both `R`-semimodules and `S`-semimodules and `R`-semimodule structures
+/--  If `M` and `M₂` are both `R`-semimodules and `S`-semimodules and `R`-semimodule structures
 are defined by an action of `R` on `S` (formally, we have two scalar towers), then any `S`-linear
 equivalence from `M` to `M₂` is also an `R`-linear equivalence.
 
@@ -452,8 +604,8 @@ def restrict_scalars (f : M ≃ₗ[S] M₂) : M ≃ₗ[R] M₂ :=
   { f.to_linear_map.restrict_scalars R with toFun := f, invFun := f.symm, left_inv := f.left_inv,
     right_inv := f.right_inv }
 
-theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : (M ≃ₗ[S] M₂) → M ≃ₗ[R] M₂) :=
-  fun f g h => ext (LinearEquiv.congr_fun h : _)
+theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : (M ≃ₗ[S] M₂) → M ≃ₗ[R] M₂) := fun f g h =>
+  ext (LinearEquiv.congr_fun h : _)
 
 @[simp]
 theorem restrict_scalars_inj (f g : M ≃ₗ[S] M₂) : f.restrict_scalars R = g.restrict_scalars R ↔ f = g :=
@@ -465,37 +617,53 @@ section Automorphisms
 
 variable [Module R M]
 
-instance automorphism_group : Groupₓ (M ≃ₗ[R] M) :=
-  { mul := fun f g => g.trans f, one := LinearEquiv.refl R M, inv := fun f => f.symm, mul_assoc := fun f g h => rfl,
-    mul_one := fun f => ext$ fun x => rfl, one_mul := fun f => ext$ fun x => rfl,
-    mul_left_inv := fun f => ext$ f.left_inv }
+-- failed to format: format: uncaught backtrack exception
+instance
+  automorphism_group
+  : Groupₓ ( M ≃ₗ[ R ] M )
+  where
+    mul f g := g.trans f
+      one := LinearEquiv.refl R M
+      inv f := f.symm
+      mul_assoc f g h := rfl
+      mul_one f := ext $ fun x => rfl
+      one_mul f := ext $ fun x => rfl
+      mul_left_inv f := ext $ f.left_inv
 
-/-- Restriction from `R`-linear automorphisms of `M` to `R`-linear endomorphisms of `M`,
+/--  Restriction from `R`-linear automorphisms of `M` to `R`-linear endomorphisms of `M`,
 promoted to a monoid hom. -/
 @[simps]
 def automorphism_group.to_linear_map_monoid_hom : (M ≃ₗ[R] M) →* M →ₗ[R] M :=
   { toFun := coeₓ, map_one' := rfl, map_mul' := fun _ _ => rfl }
 
-/-- The tautological action by `M ≃ₗ[R] M` on `M`.
-
-This generalizes `function.End.apply_mul_action`. -/
-instance apply_distrib_mul_action : DistribMulAction (M ≃ₗ[R] M) M :=
-  { smul := ·$ ·, smul_zero := LinearEquiv.map_zero, smul_add := LinearEquiv.map_add, one_smul := fun _ => rfl,
-    mul_smul := fun _ _ _ => rfl }
+-- failed to format: format: uncaught backtrack exception
+/--
+    The tautological action by `M ≃ₗ[R] M` on `M`.
+    
+    This generalizes `function.End.apply_mul_action`. -/
+  instance
+    apply_distrib_mul_action
+    : DistribMulAction ( M ≃ₗ[ R ] M ) M
+    where
+      smul := · $ ·
+        smul_zero := LinearEquiv.map_zero
+        smul_add := LinearEquiv.map_add
+        one_smul _ := rfl
+        mul_smul _ _ _ := rfl
 
 @[simp]
 protected theorem smul_def (f : M ≃ₗ[R] M) (a : M) : f • a = f a :=
   rfl
 
-/-- `linear_equiv.apply_distrib_mul_action` is faithful. -/
+/--  `linear_equiv.apply_distrib_mul_action` is faithful. -/
 instance apply_has_faithful_scalar : HasFaithfulScalar (M ≃ₗ[R] M) M :=
   ⟨fun _ _ => LinearEquiv.ext⟩
 
-instance apply_smul_comm_class : SmulCommClass R (M ≃ₗ[R] M) M :=
-  { smul_comm := fun r e m => (e.map_smul r m).symm }
+-- failed to format: format: uncaught backtrack exception
+instance apply_smul_comm_class : SmulCommClass R ( M ≃ₗ[ R ] M ) M where smul_comm r e m := ( e.map_smul r m ) . symm
 
-instance apply_smul_comm_class' : SmulCommClass (M ≃ₗ[R] M) R M :=
-  { smul_comm := LinearEquiv.map_smul }
+instance apply_smul_comm_class' : SmulCommClass (M ≃ₗ[R] M) R M where
+  smul_comm := LinearEquiv.map_smul
 
 end Automorphisms
 
@@ -505,13 +673,11 @@ end LinearEquiv
 
 namespace Module
 
-/-- `g : R ≃+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
+/--  `g : R ≃+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
-def comp_hom.to_linear_equiv {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R ≃+* S) :
-  by 
-    have  := comp_hom S (↑g : R →+* S) <;> exact R ≃ₗ[R] S :=
-  by 
-    exact { g with toFun := (g : R → S), invFun := (g.symm : S → R), map_smul' := g.map_mul }
+def comp_hom.to_linear_equiv {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R ≃+* S) : by
+    have := comp_hom S (↑g : R →+* S) <;> exact R ≃ₗ[R] S := by
+  exact { g with toFun := (g : R → S), invFun := (g.symm : S → R), map_smul' := g.map_mul }
 
 end Module
 
@@ -521,20 +687,20 @@ variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 variable [Groupₓ S] [DistribMulAction S M] [SmulCommClass S R M]
 
-/-- Each element of the group defines a linear equivalence.
+/--  Each element of the group defines a linear equivalence.
 
 This is a stronger version of `distrib_mul_action.to_add_equiv`. -/
 @[simps]
 def to_linear_equiv (s : S) : M ≃ₗ[R] M :=
-  { to_add_equiv M s, to_linear_map R M s with  }
+  { to_add_equiv M s, to_linear_map R M s with }
 
-/-- Each element of the group defines a module automorphism.
+/--  Each element of the group defines a module automorphism.
 
 This is a stronger version of `distrib_mul_action.to_add_aut`. -/
 @[simps]
 def to_module_aut : S →* M ≃ₗ[R] M :=
-  { toFun := to_linear_equiv R M, map_one' := LinearEquiv.ext$ one_smul _,
-    map_mul' := fun a b => LinearEquiv.ext$ mul_smul _ _ }
+  { toFun := to_linear_equiv R M, map_one' := LinearEquiv.ext $ one_smul _,
+    map_mul' := fun a b => LinearEquiv.ext $ mul_smul _ _ }
 
 end DistribMulAction
 

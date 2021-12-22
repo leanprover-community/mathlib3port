@@ -1,6 +1,6 @@
-import Mathbin.Algebra.Group.TypeTags 
-import Mathbin.Algebra.Group.Conj 
-import Mathbin.Algebra.Group.WithOne 
+import Mathbin.Algebra.Group.TypeTags
+import Mathbin.Algebra.Group.Conj
+import Mathbin.Algebra.Group.WithOne
 import Mathbin.Algebra.Group.UnitsHom
 
 /-!

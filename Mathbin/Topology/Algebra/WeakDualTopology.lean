@@ -64,7 +64,7 @@ weak-star, weak dual
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open Filter
 
@@ -83,9 +83,9 @@ variable (𝕜 : Type _) [TopologicalSpace 𝕜] [Semiringₓ 𝕜]
 
 variable (E : Type _) [TopologicalSpace E] [AddCommMonoidₓ E] [Module 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler λ α, has_coe_to_fun α (λ _, E → 𝕜)
-/-- The weak dual of a topological module `E` over a topological semiring `𝕜` consists of
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler λ α, has_coe_to_fun α (λ _, E → 𝕜)
+/--  The weak dual of a topological module `E` over a topological semiring `𝕜` consists of
 continuous linear functionals from `E` to scalars `𝕜`. It is a type synonym with the usual dual
 (when the latter is defined), but will be equipped with a different topology. -/
 def WeakDual :=
@@ -96,7 +96,7 @@ instance [HasContinuousAdd 𝕜] : AddCommMonoidₓ (WeakDual 𝕜 E) :=
 
 namespace WeakDual
 
-/-- The weak-* topology instance `weak_dual.topological_space` on the dual of a topological module
+/--  The weak-* topology instance `weak_dual.topological_space` on the dual of a topological module
 `E` over a topological semiring `𝕜` is defined as the induced topology under the mapping that
 associates to a dual element `x' : weak_dual 𝕜 E` the functional `E → 𝕜`, when the space `E → 𝕜`
 of functionals is equipped with the topology of pointwise convergence (product topology). -/
@@ -110,45 +110,42 @@ theorem eval_continuous (z : E) : Continuous fun x' : WeakDual 𝕜 E => x' z :=
   (continuous_pi_iff.mp (coe_fn_continuous 𝕜 E)) z
 
 theorem continuous_of_continuous_eval {α : Type u} [TopologicalSpace α] {g : α → WeakDual 𝕜 E}
-  (h : ∀ z, Continuous fun a => g a z) : Continuous g :=
+    (h : ∀ z, Continuous fun a => g a z) : Continuous g :=
   continuous_induced_rng (continuous_pi_iff.mpr h)
 
 theorem tendsto_iff_forall_eval_tendsto {γ : Type u} {F : Filter γ} {ψs : γ → WeakDual 𝕜 E} {ψ : WeakDual 𝕜 E} :
-  tendsto ψs F (𝓝 ψ) ↔ ∀ z : E, tendsto (fun i => ψs i z) F (𝓝 (ψ z)) :=
-  by 
-    rw [←tendsto_pi_nhds]
-    constructor
-    ·
-      intro weak_star_conv 
-      exact ((coe_fn_continuous 𝕜 E).Tendsto ψ).comp weak_star_conv
-    ·
-      intro h_lim_forall 
-      rwa [nhds_induced, tendsto_comap_iff]
+    tendsto ψs F (𝓝 ψ) ↔ ∀ z : E, tendsto (fun i => ψs i z) F (𝓝 (ψ z)) := by
+  rw [← tendsto_pi_nhds]
+  constructor
+  ·
+    intro weak_star_conv
+    exact ((coe_fn_continuous 𝕜 E).Tendsto ψ).comp weak_star_conv
+  ·
+    intro h_lim_forall
+    rwa [nhds_induced, tendsto_comap_iff]
 
-/-- Addition in `weak_dual 𝕜 E` is continuous. -/
-instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakDual 𝕜 E) :=
-  { continuous_add :=
-      by 
-        apply continuous_of_continuous_eval 
-        intro z 
-        have h : Continuous fun p : 𝕜 × 𝕜 => p.1+p.2 := continuous_add 
-        exact h.comp ((eval_continuous 𝕜 E z).prod_map (eval_continuous 𝕜 E z)) }
+/--  Addition in `weak_dual 𝕜 E` is continuous. -/
+instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakDual 𝕜 E) where
+  continuous_add := by
+    apply continuous_of_continuous_eval
+    intro z
+    have h : Continuous fun p : 𝕜 × 𝕜 => p.1+p.2 := continuous_add
+    exact h.comp ((eval_continuous 𝕜 E z).prod_map (eval_continuous 𝕜 E z))
 
-/-- If the scalars `𝕜` are a commutative semiring, then `weak_dual 𝕜 E` is a module over `𝕜`. -/
+/--  If the scalars `𝕜` are a commutative semiring, then `weak_dual 𝕜 E` is a module over `𝕜`. -/
 instance (𝕜 : Type u) [TopologicalSpace 𝕜] [CommSemiringₓ 𝕜] [HasContinuousAdd 𝕜] [HasContinuousMul 𝕜] (E : Type _)
-  [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E] : Module 𝕜 (WeakDual 𝕜 E) :=
+    [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E] : Module 𝕜 (WeakDual 𝕜 E) :=
   ContinuousLinearMap.module
 
-/-- Scalar multiplication in `weak_dual 𝕜 E` is continuous (when `𝕜` is a commutative
+/--  Scalar multiplication in `weak_dual 𝕜 E` is continuous (when `𝕜` is a commutative
 semiring). -/
 instance (𝕜 : Type u) [TopologicalSpace 𝕜] [CommSemiringₓ 𝕜] [HasContinuousAdd 𝕜] [HasContinuousMul 𝕜] (E : Type _)
-  [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E] : HasContinuousSmul 𝕜 (WeakDual 𝕜 E) :=
-  { continuous_smul :=
-      by 
-        apply continuous_of_continuous_eval 
-        intro z 
-        have h : Continuous fun p : 𝕜 × 𝕜 => p.1*p.2 := continuous_mul 
-        exact h.comp (continuous_id'.prod_map (eval_continuous 𝕜 E z)) }
+    [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E] : HasContinuousSmul 𝕜 (WeakDual 𝕜 E) where
+  continuous_smul := by
+    apply continuous_of_continuous_eval
+    intro z
+    have h : Continuous fun p : 𝕜 × 𝕜 => p.1*p.2 := continuous_mul
+    exact h.comp (continuous_id'.prod_map (eval_continuous 𝕜 E z))
 
 end WeakDual
 

@@ -18,7 +18,7 @@ multilinear, formal series
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open Set Finₓ
 
@@ -27,11 +27,11 @@ open_locale TopologicalSpace
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
   [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler add_comm_group
-/-- A formal multilinear series over a field `𝕜`, from `E` to `F`, is given by a family of
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler add_comm_group
+/--  A formal multilinear series over a field `𝕜`, from `E` to `F`, is given by a family of
 multilinear maps from `E^n` to `F` for all `n`. -/
 def FormalMultilinearSeries (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E]
-  (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] :=
+    (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] :=
   ∀ n : ℕ, E[×n]→L[𝕜] F deriving [anonymous]
 
 instance : Inhabited (FormalMultilinearSeries 𝕜 E F) :=
@@ -41,13 +41,10 @@ section Module
 
 attribute [local reducible] FormalMultilinearSeries
 
-instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) :=
-  by 
-    let this' : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) F) :=
-      fun n =>
-        by 
-          infer_instance 
+instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) := by
+  let this' : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) F) := fun n => by
     infer_instance
+  infer_instance
 
 end Module
 
@@ -55,23 +52,22 @@ namespace FormalMultilinearSeries
 
 variable (p : FormalMultilinearSeries 𝕜 E F)
 
-/-- Forgetting the zeroth term in a formal multilinear series, and interpreting the following terms
+/--  Forgetting the zeroth term in a formal multilinear series, and interpreting the following terms
 as multilinear maps into `E →L[𝕜] F`. If `p` corresponds to the Taylor series of a function, then
 `p.shift` is the Taylor series of the derivative of the function. -/
-def shift : FormalMultilinearSeries 𝕜 E (E →L[𝕜] F) :=
-  fun n => (p n.succ).curryRight
+def shift : FormalMultilinearSeries 𝕜 E (E →L[𝕜] F) := fun n => (p n.succ).curryRight
 
-/-- Adding a zeroth term to a formal multilinear series taking values in `E →L[𝕜] F`. This
+/--  Adding a zeroth term to a formal multilinear series taking values in `E →L[𝕜] F`. This
 corresponds to starting from a Taylor series for the derivative of a function, and building a Taylor
 series for the function itself. -/
 def unshift (q : FormalMultilinearSeries 𝕜 E (E →L[𝕜] F)) (z : F) : FormalMultilinearSeries 𝕜 E F
-| 0 => (continuousMultilinearCurryFin0 𝕜 E F).symm z
-| n+1 => continuousMultilinearCurryRightEquiv' 𝕜 n E F (q n)
+  | 0 => (continuousMultilinearCurryFin0 𝕜 E F).symm z
+  | n+1 => continuousMultilinearCurryRightEquiv' 𝕜 n E F (q n)
 
-/-- Killing the zeroth coefficient in a formal multilinear series -/
+/--  Killing the zeroth coefficient in a formal multilinear series -/
 def remove_zero (p : FormalMultilinearSeries 𝕜 E F) : FormalMultilinearSeries 𝕜 E F
-| 0 => 0
-| n+1 => p (n+1)
+  | 0 => 0
+  | n+1 => p (n+1)
 
 @[simp]
 theorem remove_zero_coeff_zero : p.remove_zero 0 = 0 :=
@@ -81,28 +77,26 @@ theorem remove_zero_coeff_zero : p.remove_zero 0 = 0 :=
 theorem remove_zero_coeff_succ (n : ℕ) : p.remove_zero (n+1) = p (n+1) :=
   rfl
 
-theorem remove_zero_of_pos {n : ℕ} (h : 0 < n) : p.remove_zero n = p n :=
-  by 
-    rw [←Nat.succ_pred_eq_of_posₓ h]
-    rfl
+theorem remove_zero_of_pos {n : ℕ} (h : 0 < n) : p.remove_zero n = p n := by
+  rw [← Nat.succ_pred_eq_of_posₓ h]
+  rfl
 
-/-- Convenience congruence lemma stating in a dependent setting that, if the arguments to a formal
+/--  Convenience congruence lemma stating in a dependent setting that, if the arguments to a formal
 multilinear series are equal, then the values are also equal. -/
 theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Finₓ m → E} {w : Finₓ n → E} (h1 : m = n)
-  (h2 : ∀ i : ℕ him : i < m hin : i < n, v ⟨i, him⟩ = w ⟨i, hin⟩) : p m v = p n w :=
-  by 
-    cases h1 
-    congr with ⟨i, hi⟩
-    exact h2 i hi hi
+    (h2 : ∀ i : ℕ him : i < m hin : i < n, v ⟨i, him⟩ = w ⟨i, hin⟩) : p m v = p n w := by
+  cases h1
+  congr with ⟨i, hi⟩
+  exact h2 i hi hi
 
-/-- Composing each term `pₙ` in a formal multilinear series with `(u, ..., u)` where `u` is a fixed
+/--  Composing each term `pₙ` in a formal multilinear series with `(u, ..., u)` where `u` is a fixed
 continuous linear map, gives a new formal multilinear series `p.comp_continuous_linear_map u`. -/
 def comp_continuous_linear_map (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) : FormalMultilinearSeries 𝕜 E G :=
   fun n => (p n).compContinuousLinearMap fun i : Finₓ n => u
 
 @[simp]
 theorem comp_continuous_linear_map_apply (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) (n : ℕ) (v : Finₓ n → E) :
-  (p.comp_continuous_linear_map u) n v = p n (u ∘ v) :=
+    (p.comp_continuous_linear_map u) n v = p n (u ∘ v) :=
   rfl
 
 variable (𝕜) {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
@@ -111,11 +105,11 @@ variable [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E]
 
 variable [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
 
-/-- Reinterpret a formal `𝕜'`-multilinear series as a formal `𝕜`-multilinear series, where `𝕜'` is a
+/--  Reinterpret a formal `𝕜'`-multilinear series as a formal `𝕜`-multilinear series, where `𝕜'` is a
 normed algebra over `𝕜`. -/
 @[simp]
-protected def RestrictScalars (p : FormalMultilinearSeries 𝕜' E F) : FormalMultilinearSeries 𝕜 E F :=
-  fun n => (p n).restrictScalars 𝕜
+protected def RestrictScalars (p : FormalMultilinearSeries 𝕜' E F) : FormalMultilinearSeries 𝕜 E F := fun n =>
+  (p n).restrictScalars 𝕜
 
 end FormalMultilinearSeries
 

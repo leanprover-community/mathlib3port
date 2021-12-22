@@ -1,5 +1,5 @@
-import Mathbin.Algebra.Category.Module.Monoidal 
-import Mathbin.Algebra.Category.Algebra.Basic 
+import Mathbin.Algebra.Category.Module.Monoidal
+import Mathbin.Algebra.Category.Algebra.Basic
 import Mathbin.CategoryTheory.Monoidal.Mon_
 
 /-!
@@ -30,125 +30,101 @@ namespace MonModuleEquivalenceAlgebra
 
 @[simps]
 instance (A : Mon_ (ModuleCat.{u} R)) : Ringₓ A.X :=
-  { (by 
-      infer_instance :
-    AddCommGroupₓ A.X) with
+  { (by
+      infer_instance : AddCommGroupₓ A.X) with
     one := A.one (1 : R), mul := fun x y => A.mul (x ⊗ₜ y),
-    one_mul :=
-      fun x =>
-        by 
-          convert LinearMap.congr_fun A.one_mul ((1 : R) ⊗ₜ x)
-          simp ,
-    mul_one :=
-      fun x =>
-        by 
-          convert LinearMap.congr_fun A.mul_one (x ⊗ₜ (1 : R))
-          simp ,
-    mul_assoc :=
-      fun x y z =>
-        by 
-          convert LinearMap.congr_fun A.mul_assoc (x ⊗ₜ y ⊗ₜ z),
-    left_distrib :=
-      fun x y z =>
-        by 
-          convert A.mul.map_add (x ⊗ₜ y) (x ⊗ₜ z)
-          rw [←TensorProduct.tmul_add]
-          rfl,
-    right_distrib :=
-      fun x y z =>
-        by 
-          convert A.mul.map_add (x ⊗ₜ z) (y ⊗ₜ z)
-          rw [←TensorProduct.add_tmul]
-          rfl }
+    one_mul := fun x => by
+      convert LinearMap.congr_fun A.one_mul ((1 : R) ⊗ₜ x)
+      simp ,
+    mul_one := fun x => by
+      convert LinearMap.congr_fun A.mul_one (x ⊗ₜ (1 : R))
+      simp ,
+    mul_assoc := fun x y z => by
+      convert LinearMap.congr_fun A.mul_assoc (x ⊗ₜ y ⊗ₜ z),
+    left_distrib := fun x y z => by
+      convert A.mul.map_add (x ⊗ₜ y) (x ⊗ₜ z)
+      rw [← TensorProduct.tmul_add]
+      rfl,
+    right_distrib := fun x y z => by
+      convert A.mul.map_add (x ⊗ₜ z) (y ⊗ₜ z)
+      rw [← TensorProduct.add_tmul]
+      rfl }
 
 instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.X :=
   { A.one with map_zero' := A.one.map_zero, map_one' := rfl,
-    map_mul' :=
-      fun x y =>
-        by 
-          have h := LinearMap.congr_fun A.one_mul.symm (x ⊗ₜ A.one y)
-          rwa [monoidal_category.left_unitor_hom_apply, ←A.one.map_smul] at h,
-    commutes' :=
-      fun r a =>
-        by 
-          dsimp 
-          have h₁ := LinearMap.congr_fun A.one_mul (r ⊗ₜ a)
-          have h₂ := LinearMap.congr_fun A.mul_one (a ⊗ₜ r)
-          exact h₁.trans h₂.symm,
-    smul_def' :=
-      fun r a =>
-        by 
-          convert (LinearMap.congr_fun A.one_mul (r ⊗ₜ a)).symm 
-          simp  }
+    map_mul' := fun x y => by
+      have h := LinearMap.congr_fun A.one_mul.symm (x ⊗ₜ A.one y)
+      rwa [monoidal_category.left_unitor_hom_apply, ← A.one.map_smul] at h,
+    commutes' := fun r a => by
+      dsimp
+      have h₁ := LinearMap.congr_fun A.one_mul (r ⊗ₜ a)
+      have h₂ := LinearMap.congr_fun A.mul_one (a ⊗ₜ r)
+      exact h₁.trans h₂.symm,
+    smul_def' := fun r a => by
+      convert (LinearMap.congr_fun A.one_mul (r ⊗ₜ a)).symm
+      simp }
 
 @[simp]
 theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.X r = A.one r :=
   rfl
 
-/--
+/-- 
 Converting a monoid object in `Module R` to a bundled algebra.
 -/
 @[simps]
 def Functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R :=
   { obj := fun A => AlgebraCat.of R A.X,
-    map :=
-      fun A B f =>
-        { f.hom.to_add_monoid_hom with toFun := f.hom, map_one' := LinearMap.congr_fun f.one_hom (1 : R),
-          map_mul' := fun x y => LinearMap.congr_fun f.mul_hom (x ⊗ₜ y),
-          commutes' := fun r => LinearMap.congr_fun f.one_hom r } }
+    map := fun A B f =>
+      { f.hom.to_add_monoid_hom with toFun := f.hom, map_one' := LinearMap.congr_fun f.one_hom (1 : R),
+        map_mul' := fun x y => LinearMap.congr_fun f.mul_hom (x ⊗ₜ y),
+        commutes' := fun r => LinearMap.congr_fun f.one_hom r } }
 
-/--
+/-- 
 Converting a bundled algebra to a monoid object in `Module R`.
 -/
 @[simps]
 def inverse_obj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R) :=
   { x := ModuleCat.of R A, one := Algebra.linearMap R A, mul := @Algebra.lmul' R A _ _ _,
-    one_mul' :=
-      by 
-        ext x 
-        dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
-          Function.comp_app, RingHom.map_one, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
-          ModuleCat.monoidalCategory.left_unitor_hom_apply]
-        rw [Algebra.lmul'_apply, monoidal_category.left_unitor_hom_apply, ←Algebra.smul_def],
-    mul_one' :=
-      by 
-        ext x 
-        dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
-          Function.comp_app, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp]
-        rw [Algebra.lmul'_apply, ModuleCat.monoidalCategory.right_unitor_hom_apply, ←Algebra.commutes,
-          ←Algebra.smul_def],
-    mul_assoc' :=
-      by 
-        ext x y z 
-        dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, LinearMap.compr₂_apply, Function.comp_app,
-          ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp, monoidal_category.associator_hom_apply]
-        simp only [Algebra.lmul'_apply, mul_assocₓ] }
+    one_mul' := by
+      ext x
+      dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
+        Function.comp_app, RingHom.map_one, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
+        ModuleCat.monoidalCategory.left_unitor_hom_apply]
+      rw [Algebra.lmul'_apply, monoidal_category.left_unitor_hom_apply, ← Algebra.smul_def],
+    mul_one' := by
+      ext x
+      dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
+        Function.comp_app, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp]
+      rw [Algebra.lmul'_apply, ModuleCat.monoidalCategory.right_unitor_hom_apply, ← Algebra.commutes, ←
+        Algebra.smul_def],
+    mul_assoc' := by
+      ext x y z
+      dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, LinearMap.compr₂_apply, Function.comp_app,
+        ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp, monoidal_category.associator_hom_apply]
+      simp only [Algebra.lmul'_apply, mul_assocₓ] }
 
-/--
+/-- 
 Converting a bundled algebra to a monoid object in `Module R`.
 -/
 @[simps]
 def inverse : AlgebraCat.{u} R ⥤ Mon_ (ModuleCat.{u} R) :=
   { obj := inverse_obj,
-    map :=
-      fun A B f =>
-        { Hom := f.to_linear_map,
-          one_hom' :=
-            by 
-              ext 
-              dsimp 
-              simp only [RingHom.map_one, AlgHom.map_one],
-          mul_hom' :=
-            by 
-              ext 
-              dsimp 
-              simp only [Algebra.lmul'_apply, RingHom.map_mul, AlgHom.map_mul] } }
+    map := fun A B f =>
+      { Hom := f.to_linear_map,
+        one_hom' := by
+          ext
+          dsimp
+          simp only [RingHom.map_one, AlgHom.map_one],
+        mul_hom' := by
+          ext
+          dsimp
+          simp only [Algebra.lmul'_apply, RingHom.map_mul, AlgHom.map_mul] } }
 
 end MonModuleEquivalenceAlgebra
 
 open MonModuleEquivalenceAlgebra
 
-/--
+/-- 
 The category of internal monoid objects in `Module R`
 is equivalent to the category of "native" bundled `R`-algebras.
 -/
@@ -159,19 +135,17 @@ def Mon_Module_equivalence_Algebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R :=
         (fun A =>
           { Hom :=
               { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun r a => rfl },
-                mul_hom' :=
-                  by 
-                    ext 
-                    dsimp  at *
-                    simp only [Algebra.lmul'_apply, Mon_.X.ring_mul] },
+                mul_hom' := by
+                  ext
+                  dsimp  at *
+                  simp only [Algebra.lmul'_apply, Mon_.X.ring_mul] },
             inv :=
               { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun r a => rfl },
-                mul_hom' :=
-                  by 
-                    ext 
-                    dsimp  at *
-                    simp only [Algebra.lmul'_apply, Mon_.X.ring_mul] } })
-        (by 
+                mul_hom' := by
+                  ext
+                  dsimp  at *
+                  simp only [Algebra.lmul'_apply, Mon_.X.ring_mul] } })
+        (by
           tidy),
     counitIso :=
       nat_iso.of_components
@@ -182,22 +156,22 @@ def Mon_Module_equivalence_Algebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R :=
             inv :=
               { toFun := id, map_zero' := rfl, map_add' := fun x y => rfl, map_one' := (algebraMap R A).map_one.symm,
                 map_mul' := fun x y => Algebra.lmul'_apply.symm, commutes' := fun r => rfl } })
-        (by 
-          intros 
+        (by
+          intros
           rfl) }
 
-/--
+/-- 
 The equivalence `Mon_ (Module R) ≌ Algebra R`
 is naturally compatible with the forgetful functors to `Module R`.
 -/
 def Mon_Module_equivalence_Algebra_forget :
-  Mon_Module_equivalence_Algebra.functor ⋙ forget₂ (AlgebraCat.{u} R) (ModuleCat.{u} R) ≅
-    Mon_.forget (ModuleCat.{u} R) :=
+    Mon_Module_equivalence_Algebra.functor ⋙ forget₂ (AlgebraCat.{u} R) (ModuleCat.{u} R) ≅
+      Mon_.forget (ModuleCat.{u} R) :=
   nat_iso.of_components
     (fun A =>
       { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun c x => rfl },
         inv := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun c x => rfl } })
-    (by 
+    (by
       tidy)
 
 end ModuleCat

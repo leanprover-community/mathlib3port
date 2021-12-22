@@ -1,4 +1,4 @@
-import Mathbin.Topology.Algebra.Ordered.Basic 
+import Mathbin.Topology.Algebra.Ordered.Basic
 import Mathbin.Data.Set.Intervals.ProjIcc
 
 /-!
@@ -16,43 +16,40 @@ open_locale Filter TopologicalSpace
 variable {α β γ : Type _} [LinearOrderₓ α] [TopologicalSpace γ] {a b c : α} {h : a ≤ b}
 
 theorem Filter.Tendsto.Icc_extend (f : γ → Icc a b → β) {z : γ} {l : Filter α} {l' : Filter β}
-  (hf : tendsto (↿f) (𝓝 z ×ᶠ l.map (proj_Icc a b h)) l') : tendsto (↿(Icc_extend h ∘ f)) (𝓝 z ×ᶠ l) l' :=
-  show tendsto (↿f ∘ Prod.map id (proj_Icc a b h)) (𝓝 z ×ᶠ l) l' from hf.comp$ tendsto_id.prod_map tendsto_map
+    (hf : tendsto (↿f) (𝓝 z ×ᶠ l.map (proj_Icc a b h)) l') : tendsto (↿(Icc_extend h ∘ f)) (𝓝 z ×ᶠ l) l' :=
+  show tendsto (↿f ∘ Prod.map id (proj_Icc a b h)) (𝓝 z ×ᶠ l) l' from hf.comp $ tendsto_id.prod_map tendsto_map
 
 variable [TopologicalSpace α] [OrderTopology α] [TopologicalSpace β]
 
 @[continuity]
 theorem continuous_proj_Icc : Continuous (proj_Icc a b h) :=
-  continuous_subtype_mk _$ continuous_const.max$ continuous_const.min continuous_id
+  continuous_subtype_mk _ $ continuous_const.max $ continuous_const.min continuous_id
 
 theorem quotient_map_proj_Icc : QuotientMap (proj_Icc a b h) :=
   quotient_map_iff.2
-    ⟨proj_Icc_surjective h,
-      fun s =>
-        ⟨fun hs => hs.preimage continuous_proj_Icc,
-          fun hs =>
-            ⟨_, hs,
-              by 
-                ext 
-                simp ⟩⟩⟩
+    ⟨proj_Icc_surjective h, fun s =>
+      ⟨fun hs => hs.preimage continuous_proj_Icc, fun hs =>
+        ⟨_, hs, by
+          ext
+          simp ⟩⟩⟩
 
 @[simp]
 theorem continuous_Icc_extend_iff {f : Icc a b → β} : Continuous (Icc_extend h f) ↔ Continuous f :=
   quotient_map_proj_Icc.continuous_iff.symm
 
-/-- See Note [continuity lemma statement]. -/
+/--  See Note [continuity lemma statement]. -/
 theorem Continuous.Icc_extend {f : γ → Icc a b → β} {g : γ → α} (hf : Continuous (↿f)) (hg : Continuous g) :
-  Continuous fun a => Icc_extend h (f a) (g a) :=
-  hf.comp$ continuous_id.prod_mk$ continuous_proj_Icc.comp hg
+    Continuous fun a => Icc_extend h (f a) (g a) :=
+  hf.comp $ continuous_id.prod_mk $ continuous_proj_Icc.comp hg
 
-/-- A useful special case of `continuous.Icc_extend`. -/
+/--  A useful special case of `continuous.Icc_extend`. -/
 @[continuity]
 theorem Continuous.Icc_extend' {f : Icc a b → β} (hf : Continuous f) : Continuous (Icc_extend h f) :=
   hf.comp continuous_proj_Icc
 
 theorem ContinuousAt.Icc_extend {x : γ} (f : γ → Icc a b → β) {g : γ → α}
-  (hf : ContinuousAt (↿f) (x, proj_Icc a b h (g x))) (hg : ContinuousAt g x) :
-  ContinuousAt (fun a => Icc_extend h (f a) (g a)) x :=
+    (hf : ContinuousAt (↿f) (x, proj_Icc a b h (g x))) (hg : ContinuousAt g x) :
+    ContinuousAt (fun a => Icc_extend h (f a) (g a)) x :=
   show ContinuousAt (↿f ∘ fun x => (x, proj_Icc a b h (g x))) x from
-    ContinuousAt.comp hf$ continuous_at_id.Prod$ continuous_proj_Icc.ContinuousAt.comp hg
+    ContinuousAt.comp hf $ continuous_at_id.Prod $ continuous_proj_Icc.ContinuousAt.comp hg
 

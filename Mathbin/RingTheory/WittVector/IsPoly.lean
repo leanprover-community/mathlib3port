@@ -1,5 +1,5 @@
-import Mathbin.Algebra.Ring.Ulift 
-import Mathbin.RingTheory.WittVector.Basic 
+import Mathbin.Algebra.Ring.Ulift
+import Mathbin.RingTheory.WittVector.Basic
 import Mathbin.Data.MvPolynomial.Funext
 
 /-!
@@ -93,13 +93,12 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- A macro for a common simplification when rewriting with ghost component equations. -/
-unsafe def ghost_simp (lems : parse simp_arg_list) : tactic Unit :=
-  do 
-    tactic.try tactic.intro1 
-    simp none none tt (lems ++ [simp_arg_type.symm_expr (pquote.1 sub_eq_add_neg)]) [`ghost_simps] (loc.ns [none])
+/--  A macro for a common simplification when rewriting with ghost component equations. -/
+unsafe def ghost_simp (lems : parse simp_arg_list) : tactic Unit := do
+  tactic.try tactic.intro1
+  simp none none tt (lems ++ [simp_arg_type.symm_expr (pquote.1 sub_eq_add_neg)]) [`ghost_simps] (loc.ns [none])
 
-/--
+/-- 
 `ghost_calc` is a tactic for proving identities between polynomial functions.
 Typically, when faced with a goal like
 ```lean
@@ -124,22 +123,21 @@ All it does is apply the appropriate extensionality lemma and try to infer the r
 This is subtle and Lean's elaborator doesn't like it because of the HO unification involved,
 so it is easier (and prettier) to put it in a tactic script.
 -/
-unsafe def ghost_calc (ids' : parse (ident_)*) : tactic Unit :=
-  do 
-    let ids ← ids'.mmap$ fun n => get_local n <|> tactic.intro n 
-    let quote.1 (@Eq (WittVector _ (%%ₓR)) _ _) ← target 
-    match ids with 
-      | [x] => refine (ppquote.1 (is_poly.ext _ _ _ _ (%%ₓx)))
-      | [x, y] => refine (ppquote.1 (is_poly₂.ext _ _ _ _ (%%ₓx) (%%ₓy)))
-      | _ => fail "ghost_calc takes one or two arguments"
-    let nm ←
-      match R with 
-        | expr.local_const _ nm _ _ => return nm
-        | _ => get_unused_name `R 
-    iterate_exactly 2 apply_instance 
-    unfreezingI (tactic.clear' tt [R])
-    introsI$ [nm, nm <.> "_inst"] ++ ids' 
-    skip
+unsafe def ghost_calc (ids' : parse (ident_)*) : tactic Unit := do
+  let ids ← ids'.mmap $ fun n => get_local n <|> tactic.intro n
+  let quote.1 (@Eq (WittVector _ (%%ₓR)) _ _) ← target
+  match ids with
+    | [x] => refine (ppquote.1 (is_poly.ext _ _ _ _ (%%ₓx)))
+    | [x, y] => refine (ppquote.1 (is_poly₂.ext _ _ _ _ (%%ₓx) (%%ₓy)))
+    | _ => fail "ghost_calc takes one or two arguments"
+  let nm ←
+    match R with
+      | expr.local_const _ nm _ _ => return nm
+      | _ => get_unused_name `R
+  iterate_exactly 2 apply_instance
+  unfreezingI (tactic.clear' tt [R])
+  introsI $ [nm, nm <.> "_inst"] ++ ids'
+  skip
 
 end Interactive
 
@@ -155,13 +153,13 @@ local notation "𝕎" => WittVector p
 
 open MvPolynomial
 
-open function(uncurry)
+open function (uncurry)
 
 include hp
 
 variable (p)
 
-noncomputable section 
+noncomputable section
 
 /-!
 ### The `is_poly` predicate
@@ -169,28 +167,26 @@ noncomputable section
 
 
 theorem poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × ℕ) ℤ)
-  (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=
-  by 
-    ext1 n 
-    apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective 
-    rw [←Function.funext_iffₓ] at h 
-    replace h := congr_argₓ (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h 
-    simpa only [Function.comp, map_bind₁, map_witt_polynomial, ←bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W,
-      bind₁_X_right] using h
+    (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g := by
+  ext1 n
+  apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
+  rw [← Function.funext_iffₓ] at h
+  replace h := congr_argₓ (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
+  simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W,
+    bind₁_X_right] using h
 
 theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
-  (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=
-  by 
-    ext1 n 
-    apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective 
-    rw [←Function.funext_iffₓ] at h 
-    replace h := congr_argₓ (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h 
-    simpa only [Function.comp, map_bind₁, map_witt_polynomial, ←bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W,
-      bind₁_X_right] using h
+    (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g := by
+  ext1 n
+  apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
+  rw [← Function.funext_iffₓ] at h
+  replace h := congr_argₓ (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
+  simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W,
+    bind₁_X_right] using h
 
 omit hp
 
-/--
+/-- 
 A function `f : Π R, 𝕎 R → 𝕎 R` that maps Witt vectors to Witt vectors over arbitrary base rings
 is said to be *polynomial* if there is a family of polynomials `φₙ` over `ℤ` such that the `n`th
 coefficient of `f x` is given by evaluating `φₙ` at the coefficients of `x`.
@@ -202,19 +198,17 @@ and the `@[is_poly]` attribute derives certain specialized composition instances
 for declarations of type `is_poly f`.
 For the most part, users are not expected to treat `is_poly` as a class.
 -/
-class is_poly (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' :: 
+class is_poly (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' ::
   poly :
-  ∃ φ : ℕ → MvPolynomial ℕ ℤ,
-    ∀ ⦃R⦄ [CommRingₓ R] x : 𝕎 R,
-      by 
+    ∃ φ : ℕ → MvPolynomial ℕ ℤ,
+      ∀ ⦃R⦄ [CommRingₓ R] x : 𝕎 R, by
         exact (f x).coeff = fun n => aeval x.coeff (φ n)
 
-/-- The identity function on Witt vectors is a polynomial function. -/
+/--  The identity function on Witt vectors is a polynomial function. -/
 instance id_is_poly : is_poly p fun _ _ => id :=
-  ⟨⟨X,
-      by 
-        intros 
-        simp only [aeval_X, id]⟩⟩
+  ⟨⟨X, by
+      intros
+      simp only [aeval_X, id]⟩⟩
 
 instance id_is_poly_i' : is_poly p fun _ _ a => a :=
   WittVector.id_is_poly _
@@ -229,55 +223,52 @@ variable {p}
 include hp
 
 theorem ext {f g} (hf : is_poly p f) (hg : is_poly p g)
-  (h :
-    ∀ R : Type u [_Rcr : CommRingₓ R] x : 𝕎 R n : ℕ,
-      by 
+    (h :
+      ∀ R : Type u [_Rcr : CommRingₓ R] x : 𝕎 R n : ℕ, by
         exact ghost_component n (f x) = ghost_component n (g x)) :
-  ∀ R : Type u [_Rcr : CommRingₓ R] x : 𝕎 R,
-    by 
+    ∀ R : Type u [_Rcr : CommRingₓ R] x : 𝕎 R, by
       exact f x = g x :=
-  by 
-    (
-      obtain ⟨φ, hf⟩ := hf 
-      obtain ⟨ψ, hg⟩ := hg)
-    intros 
-    ext n 
-    rw [hf, hg, poly_eq_of_witt_polynomial_bind_eq p φ ψ]
-    intro k 
-    apply MvPolynomial.funext 
-    intro x 
-    simp only [hom_bind₁]
-    specialize h (Ulift ℤ) (mk p$ fun i => ⟨x i⟩) k 
-    simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h 
-    apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective 
-    simp only [←RingEquiv.coe_to_ring_hom, map_eval₂_hom]
-    convert h using 1
-    all_goals 
-      funext i 
-      simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
-      apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl 
-      ext1 
-      apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl 
-      simp only [coeff_mk]
-      rfl
+  by
+  (
+    obtain ⟨φ, hf⟩ := hf
+    obtain ⟨ψ, hg⟩ := hg)
+  intros
+  ext n
+  rw [hf, hg, poly_eq_of_witt_polynomial_bind_eq p φ ψ]
+  intro k
+  apply MvPolynomial.funext
+  intro x
+  simp only [hom_bind₁]
+  specialize h (Ulift ℤ) (mk p $ fun i => ⟨x i⟩) k
+  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
+  apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
+  simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
+  convert h using 1
+  all_goals
+    funext i
+    simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
+    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    ext1
+    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    simp only [coeff_mk]
+    rfl
 
 omit hp
 
-/-- The composition of polynomial functions is polynomial. -/
-theorem comp {g f} (hg : is_poly p g) (hf : is_poly p f) : is_poly p fun R _Rcr => @g R _Rcr ∘ @f R _Rcr :=
-  by 
-    (
-      obtain ⟨φ, hf⟩ := hf 
-      obtain ⟨ψ, hg⟩ := hg)
-    use fun n => bind₁ φ (ψ n)
-    intros 
-    simp only [aeval_bind₁, Function.comp, hg, hf]
+/--  The composition of polynomial functions is polynomial. -/
+theorem comp {g f} (hg : is_poly p g) (hf : is_poly p f) : is_poly p fun R _Rcr => @g R _Rcr ∘ @f R _Rcr := by
+  (
+    obtain ⟨φ, hf⟩ := hf
+    obtain ⟨ψ, hg⟩ := hg)
+  use fun n => bind₁ φ (ψ n)
+  intros
+  simp only [aeval_bind₁, Function.comp, hg, hf]
 
 end IsPoly
 
--- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
-/--
+-- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»
+/-- 
 A binary function `f : Π R, 𝕎 R → 𝕎 R → 𝕎 R` on Witt vectors
 is said to be *polynomial* if there is a family of polynomials `φₙ` over `ℤ` such that the `n`th
 coefficient of `f x y` is given by evaluating `φₙ` at the coefficients of `x` and `y`.
@@ -289,86 +280,76 @@ and the `@[is_poly]` attribute derives certain specialized composition instances
 for declarations of type `is_poly₂ f`.
 For the most part, users are not expected to treat `is_poly₂` as a class.
 -/
-class is_poly₂ (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R → 𝕎 R) : Prop where mk' :: 
+class is_poly₂ (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R → 𝕎 R) : Prop where mk' ::
   poly :
-  ∃ φ : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ,
-    ∀ ⦃R⦄ [CommRingₓ R] x y : 𝕎 R,
-      by 
+    ∃ φ : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ,
+      ∀ ⦃R⦄ [CommRingₓ R] x y : 𝕎 R, by
         exact
-          (f x y).coeff =
-            fun n =>
-              peval (φ n)
-                («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
+          (f x y).coeff = fun n =>
+            peval (φ n)
+              («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»")
 
 variable {p}
 
--- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
-/-- The composition of polynomial functions is polynomial. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»
+/--  The composition of polynomial functions is polynomial. -/
 theorem is_poly₂.comp {h f g} (hh : is_poly₂ p h) (hf : is_poly p f) (hg : is_poly p g) :
-  is_poly₂ p
-    fun R _Rcr x y =>
-      by 
-        exact h (f x) (g y) :=
-  by 
-    (
-      obtain ⟨φ, hf⟩ := hf 
-      obtain ⟨ψ, hg⟩ := hg 
-      obtain ⟨χ, hh⟩ := hh)
-    refine'
-      ⟨⟨fun n =>
-            bind₁
-              (uncurry$
-                «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»")
-              (χ n),
-          _⟩⟩
-    intros 
-    funext n 
-    simp only [peval, aeval_bind₁, Function.comp, hh, hf, hg, uncurry]
-    apply eval₂_hom_congr rfl _ rfl 
-    ext ⟨i, n⟩
-    finCases i <;>
-      simp only [aeval_eq_eval₂_hom, eval₂_hom_rename, Function.comp, Matrix.cons_val_zero, Matrix.head_cons,
-        Matrix.cons_val_one]
+    is_poly₂ p fun R _Rcr x y => by
+      exact h (f x) (g y) :=
+  by
+  (
+    obtain ⟨φ, hf⟩ := hf
+    obtain ⟨ψ, hg⟩ := hg
+    obtain ⟨χ, hh⟩ := hh)
+  refine'
+    ⟨⟨fun n =>
+        bind₁
+          (uncurry $ «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»")
+          (χ n),
+        _⟩⟩
+  intros
+  funext n
+  simp only [peval, aeval_bind₁, Function.comp, hh, hf, hg, uncurry]
+  apply eval₂_hom_congr rfl _ rfl
+  ext ⟨i, n⟩
+  fin_cases i <;>
+    simp only [aeval_eq_eval₂_hom, eval₂_hom_rename, Function.comp, Matrix.cons_val_zero, Matrix.head_cons,
+      Matrix.cons_val_one]
 
-/-- The composition of a polynomial function with a binary polynomial function is polynomial. -/
+/--  The composition of a polynomial function with a binary polynomial function is polynomial. -/
 theorem is_poly.comp₂ {g f} (hg : is_poly p g) (hf : is_poly₂ p f) :
-  is_poly₂ p
-    fun R _Rcr x y =>
-      by 
-        exact g (f x y) :=
-  by 
-    (
-      obtain ⟨φ, hf⟩ := hf 
-      obtain ⟨ψ, hg⟩ := hg)
-    use fun n => bind₁ φ (ψ n)
-    intros 
-    simp only [peval, aeval_bind₁, Function.comp, hg, hf]
+    is_poly₂ p fun R _Rcr x y => by
+      exact g (f x y) :=
+  by
+  (
+    obtain ⟨φ, hf⟩ := hf
+    obtain ⟨ψ, hg⟩ := hg)
+  use fun n => bind₁ φ (ψ n)
+  intros
+  simp only [peval, aeval_bind₁, Function.comp, hg, hf]
 
--- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
-/-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»
+/--  The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
 theorem is_poly₂.diag {f} (hf : is_poly₂ p f) :
-  is_poly p
-    fun R _Rcr x =>
-      by 
-        exact f x x :=
-  by 
-    (
-      obtain ⟨φ, hf⟩ := hf)
-    refine'
-      ⟨⟨fun n =>
-            bind₁
-              (uncurry
-                («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»"))
-              (φ n),
-          _⟩⟩
-    intros 
-    funext n 
-    simp only [hf, peval, uncurry, aeval_bind₁]
-    apply eval₂_hom_congr rfl _ rfl 
-    ext ⟨i, k⟩
-    finCases i <;> simp only [Matrix.head_cons, aeval_X, Matrix.cons_val_zero, Matrix.cons_val_one]
+    is_poly p fun R _Rcr x => by
+      exact f x x :=
+  by
+  (
+    obtain ⟨φ, hf⟩ := hf)
+  refine'
+    ⟨⟨fun n =>
+        bind₁
+          (uncurry («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»"))
+          (φ n),
+        _⟩⟩
+  intros
+  funext n
+  simp only [hf, peval, uncurry, aeval_bind₁]
+  apply eval₂_hom_congr rfl _ rfl
+  ext ⟨i, k⟩
+  fin_cases i <;> simp only [Matrix.head_cons, aeval_X, Matrix.cons_val_zero, Matrix.cons_val_one]
 
 open Tactic
 
@@ -382,73 +363,70 @@ for `is_poly` and `is_poly₂` declarations.
 -/
 
 
-/--
+/-- 
 If `n` is the name of a lemma with opened type `∀ vars, is_poly p _`,
 `mk_poly_comp_lemmas n vars p` adds composition instances to the environment
 `n.comp_i` and `n.comp₂_i`.
 -/
-unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic Unit :=
-  do 
-    let c ← mk_const n 
-    let appd := vars.foldl expr.app c 
-    let tgt_bod ←
-      to_expr (pquote.1 fun f [hf : is_poly (%%ₓp) f] => is_poly.comp (%%ₓappd) hf) >>=
-          replace_univ_metas_with_univ_params 
-    let tgt_bod ← lambdas vars tgt_bod 
-    let tgt_tp ← infer_type tgt_bod 
-    let nm := n <.> "comp_i"
-    add_decl$ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod 
-    set_attribute `instance nm 
-    let tgt_bod ←
-      to_expr (pquote.1 fun f [hf : is_poly₂ (%%ₓp) f] => is_poly.comp₂ (%%ₓappd) hf) >>=
-          replace_univ_metas_with_univ_params 
-    let tgt_bod ← lambdas vars tgt_bod 
-    let tgt_tp ← infer_type tgt_bod 
-    let nm := n <.> "comp₂_i"
-    add_decl$ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod 
-    set_attribute `instance nm
+unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic Unit := do
+  let c ← mk_const n
+  let appd := vars.foldl expr.app c
+  let tgt_bod ←
+    to_expr (pquote.1 fun f [hf : is_poly (%%ₓp) f] => is_poly.comp (%%ₓappd) hf) >>=
+        replace_univ_metas_with_univ_params
+  let tgt_bod ← lambdas vars tgt_bod
+  let tgt_tp ← infer_type tgt_bod
+  let nm := n <.> "comp_i"
+  add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod
+  set_attribute `instance nm
+  let tgt_bod ←
+    to_expr (pquote.1 fun f [hf : is_poly₂ (%%ₓp) f] => is_poly.comp₂ (%%ₓappd) hf) >>=
+        replace_univ_metas_with_univ_params
+  let tgt_bod ← lambdas vars tgt_bod
+  let tgt_tp ← infer_type tgt_bod
+  let nm := n <.> "comp₂_i"
+  add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod
+  set_attribute `instance nm
 
-/--
+/-- 
 If `n` is the name of a lemma with opened type `∀ vars, is_poly₂ p _`,
 `mk_poly₂_comp_lemmas n vars p` adds composition instances to the environment
 `n.comp₂_i` and `n.comp_diag`.
 -/
-unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic Unit :=
-  do 
-    let c ← mk_const n 
-    let appd := vars.foldl expr.app c 
-    let tgt_bod ←
-      to_expr (pquote.1 fun {f g} [hf : is_poly (%%ₓp) f] [hg : is_poly (%%ₓp) g] => is_poly₂.comp (%%ₓappd) hf hg) >>=
-          replace_univ_metas_with_univ_params 
-    let tgt_bod ← lambdas vars tgt_bod 
-    let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify 
-    let nm := n <.> "comp₂_i"
-    add_decl$ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod 
-    set_attribute `instance nm 
-    let tgt_bod ←
-      to_expr
-            (pquote.1
-              fun {f g} [hf : is_poly (%%ₓp) f] [hg : is_poly (%%ₓp) g] => (is_poly₂.comp (%%ₓappd) hf hg).diag) >>=
-          replace_univ_metas_with_univ_params 
-    let tgt_bod ← lambdas vars tgt_bod 
-    let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify 
-    let nm := n <.> "comp_diag"
-    add_decl$ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod 
-    set_attribute `instance nm
+unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic Unit := do
+  let c ← mk_const n
+  let appd := vars.foldl expr.app c
+  let tgt_bod ←
+    to_expr (pquote.1 fun {f g} [hf : is_poly (%%ₓp) f] [hg : is_poly (%%ₓp) g] => is_poly₂.comp (%%ₓappd) hf hg) >>=
+        replace_univ_metas_with_univ_params
+  let tgt_bod ← lambdas vars tgt_bod
+  let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
+  let nm := n <.> "comp₂_i"
+  add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod
+  set_attribute `instance nm
+  let tgt_bod ←
+    to_expr
+          (pquote.1 fun {f g} [hf : is_poly (%%ₓp) f] [hg : is_poly (%%ₓp) g] =>
+            (is_poly₂.comp (%%ₓappd) hf hg).diag) >>=
+        replace_univ_metas_with_univ_params
+  let tgt_bod ← lambdas vars tgt_bod
+  let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
+  let nm := n <.> "comp_diag"
+  add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod
+  set_attribute `instance nm
 
-/--
+/-- 
 The `after_set` function for `@[is_poly]`. Calls `mk_poly(₂)_comp_lemmas`.
 -/
-unsafe def mk_comp_lemmas (n : Name) : tactic Unit :=
-  do 
-    let d ← get_decl n 
-    let (vars, tp) ← open_pis d.type 
-    match tp with 
-      | quote.1 (is_poly (%%ₓp) _) => mk_poly_comp_lemmas n vars p
-      | quote.1 (is_poly₂ (%%ₓp) _) => mk_poly₂_comp_lemmas n vars p
-      | _ => fail "@[is_poly] should only be applied to terms of type `is_poly _ _` or `is_poly₂ _ _`"
+unsafe def mk_comp_lemmas (n : Name) : tactic Unit := do
+  let d ← get_decl n
+  let (vars, tp) ← open_pis d.type
+  match tp with
+    | quote.1 (is_poly (%%ₓp) _) => mk_poly_comp_lemmas n vars p
+    | quote.1 (is_poly₂ (%%ₓp) _) => mk_poly₂_comp_lemmas n vars p
+    | _ => fail "@[is_poly] should only be applied to terms of type `is_poly _ _` or `is_poly₂ _ _`"
 
-/--
+/-- 
 `@[is_poly]` is applied to lemmas of the form `is_poly f φ` or `is_poly₂ f φ`.
 These lemmas should *not* be tagged as instances, and only atomic `is_poly` defs should be tagged:
 composition lemmas should not. Roughly speaking, lemmas that take `is_poly` proofs as arguments
@@ -474,7 +452,7 @@ The user-written lemmas are not instances. Users should be able to assemble `is_
 @[user_attribute]
 unsafe def is_poly_attr : user_attribute :=
   { Name := `is_poly, descr := "Lemmas with this attribute describe the polynomial structure of functions",
-    after_set := some$ fun n _ _ => mk_comp_lemmas n }
+    after_set := some $ fun n _ _ => mk_comp_lemmas n }
 
 end Tactic
 
@@ -489,120 +467,102 @@ Users are expected to use the non-instance versions manually.
 -/
 
 
-/-- The additive negation is a polynomial function on Witt vectors. -/
-@[isPoly]
+/--  The additive negation is a polynomial function on Witt vectors. -/
+@[is_poly]
 theorem neg_is_poly :
-  is_poly p
-    fun R _ =>
-      by 
-        exact @Neg.neg (𝕎 R) _ :=
-  ⟨⟨fun n => rename Prod.snd (witt_neg p n),
-      by 
-        intros 
-        funext n 
-        rw [neg_coeff, aeval_eq_eval₂_hom, eval₂_hom_rename]
-        apply eval₂_hom_congr rfl _ rfl 
-        ext ⟨i, k⟩
-        finCases i 
-        rfl⟩⟩
+    is_poly p fun R _ => by
+      exact @Neg.neg (𝕎 R) _ :=
+  ⟨⟨fun n => rename Prod.snd (witt_neg p n), by
+      intros
+      funext n
+      rw [neg_coeff, aeval_eq_eval₂_hom, eval₂_hom_rename]
+      apply eval₂_hom_congr rfl _ rfl
+      ext ⟨i, k⟩
+      fin_cases i
+      rfl⟩⟩
 
 section ZeroOne
 
-/-- The function that is constantly zero on Witt vectors is a polynomial function. -/
+/--  The function that is constantly zero on Witt vectors is a polynomial function. -/
 instance zero_is_poly :
-  is_poly p
-    fun _ _ _ =>
-      by 
-        exact 0 :=
-  ⟨⟨0,
-      by 
-        intros 
-        funext n 
-        simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
+    is_poly p fun _ _ _ => by
+      exact 0 :=
+  ⟨⟨0, by
+      intros
+      funext n
+      simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
 
 @[simp]
-theorem bind₁_zero_witt_polynomial (n : ℕ) : bind₁ (0 : ℕ → MvPolynomial ℕ R) (wittPolynomial p R n) = 0 :=
-  by 
-    rw [←aeval_eq_bind₁, aeval_zero, constant_coeff_witt_polynomial, RingHom.map_zero]
+theorem bind₁_zero_witt_polynomial (n : ℕ) : bind₁ (0 : ℕ → MvPolynomial ℕ R) (wittPolynomial p R n) = 0 := by
+  rw [← aeval_eq_bind₁, aeval_zero, constant_coeff_witt_polynomial, RingHom.map_zero]
 
 omit hp
 
-/-- The coefficients of `1 : 𝕎 R` as polynomials. -/
+/--  The coefficients of `1 : 𝕎 R` as polynomials. -/
 def one_poly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if n = 0 then 1 else 0
 
 include hp
 
 @[simp]
-theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ one_poly (wittPolynomial p ℤ n) = 1 :=
-  by 
-    rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum, Finset.sum_eq_single 0]
-    ·
-      simp only [one_poly, one_pow, one_mulₓ, AlgHom.map_pow, C_1, pow_zeroₓ, bind₁_X_right, if_true, eq_self_iff_true]
-    ·
-      intro i hi hi0 
-      simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.Pos _), mul_zero, AlgHom.map_pow, bind₁_X_right,
-        AlgHom.map_mul]
-    ·
-      rw [Finset.mem_range]
-      decide
+theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ one_poly (wittPolynomial p ℤ n) = 1 := by
+  rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum, Finset.sum_eq_single 0]
+  ·
+    simp only [one_poly, one_pow, one_mulₓ, AlgHom.map_pow, C_1, pow_zeroₓ, bind₁_X_right, if_true, eq_self_iff_true]
+  ·
+    intro i hi hi0
+    simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.Pos _), mul_zero, AlgHom.map_pow, bind₁_X_right,
+      AlgHom.map_mul]
+  ·
+    rw [Finset.mem_range]
+    decide
 
-/-- The function that is constantly one on Witt vectors is a polynomial function. -/
+/--  The function that is constantly one on Witt vectors is a polynomial function. -/
 instance one_is_poly :
-  is_poly p
-    fun _ _ _ =>
-      by 
-        exact 1 :=
-  ⟨⟨one_poly,
-      by 
-        intros 
-        funext n 
-        cases n
-        ·
-          simp only [one_poly, if_true, eq_self_iff_true, one_coeff_zero, AlgHom.map_one]
-        ·
-          simp only [one_poly, Nat.succ_pos', one_coeff_eq_of_pos, if_neg n.succ_ne_zero, AlgHom.map_zero]⟩⟩
+    is_poly p fun _ _ _ => by
+      exact 1 :=
+  ⟨⟨one_poly, by
+      intros
+      funext n
+      cases n
+      ·
+        simp only [one_poly, if_true, eq_self_iff_true, one_coeff_zero, AlgHom.map_one]
+      ·
+        simp only [one_poly, Nat.succ_pos', one_coeff_eq_of_pos, if_neg n.succ_ne_zero, AlgHom.map_zero]⟩⟩
 
 end ZeroOne
 
 omit hp
 
-/-- Addition of Witt vectors is a polynomial function. -/
-@[isPoly]
+/--  Addition of Witt vectors is a polynomial function. -/
+@[is_poly]
 theorem add_is_poly₂ [Fact p.prime] :
-  is_poly₂ p
-    fun _ _ =>
-      by 
-        exact ·+· :=
-  ⟨⟨witt_add p,
-      by 
-        intros 
-        dunfold WittVector.hasAdd 
-        simp [eval]⟩⟩
+    is_poly₂ p fun _ _ => by
+      exact ·+· :=
+  ⟨⟨witt_add p, by
+      intros
+      dunfold WittVector.hasAdd
+      simp [eval]⟩⟩
 
-/-- Multiplication of Witt vectors is a polynomial function. -/
-@[isPoly]
+/--  Multiplication of Witt vectors is a polynomial function. -/
+@[is_poly]
 theorem mul_is_poly₂ [Fact p.prime] :
-  is_poly₂ p
-    fun _ _ =>
-      by 
-        exact ·*· :=
-  ⟨⟨witt_mul p,
-      by 
-        intros 
-        dunfold WittVector.hasMul 
-        simp [eval]⟩⟩
+    is_poly₂ p fun _ _ => by
+      exact ·*· :=
+  ⟨⟨witt_mul p, by
+      intros
+      dunfold WittVector.hasMul
+      simp [eval]⟩⟩
 
 include hp
 
-theorem is_poly.map {f} (hf : is_poly p f) (g : R →+* S) (x : 𝕎 R) : map g (f x) = f (map g x) :=
-  by 
-    (
-      obtain ⟨φ, hf⟩ := hf)
-    ext n 
-    simp only [map_coeff, hf, map_aeval]
-    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl 
-    simp only [map_coeff]
+theorem is_poly.map {f} (hf : is_poly p f) (g : R →+* S) (x : 𝕎 R) : map g (f x) = f (map g x) := by
+  (
+    obtain ⟨φ, hf⟩ := hf)
+  ext n
+  simp only [map_coeff, hf, map_aeval]
+  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+  simp only [map_coeff]
 
 namespace IsPoly₂
 
@@ -613,80 +573,70 @@ instance [Fact p.prime] : Inhabited (is_poly₂ p _) :=
 
 variable {p}
 
-/-- The composition of a binary polynomial function
+/--  The composition of a binary polynomial function
  with a unary polynomial function in the first argument is polynomial. -/
 theorem comp_left {g f} (hg : is_poly₂ p g) (hf : is_poly p f) :
-  is_poly₂ p
-    fun R _Rcr x y =>
-      by 
-        exact g (f x) y :=
+    is_poly₂ p fun R _Rcr x y => by
+      exact g (f x) y :=
   hg.comp hf (WittVector.id_is_poly _)
 
-/-- The composition of a binary polynomial function
+/--  The composition of a binary polynomial function
  with a unary polynomial function in the second argument is polynomial. -/
 theorem comp_right {g f} (hg : is_poly₂ p g) (hf : is_poly p f) :
-  is_poly₂ p
-    fun R _Rcr x y =>
-      by 
-        exact g x (f y) :=
+    is_poly₂ p fun R _Rcr x y => by
+      exact g x (f y) :=
   hg.comp (WittVector.id_is_poly p) hf
 
 include hp
 
 theorem ext {f g} (hf : is_poly₂ p f) (hg : is_poly₂ p g)
-  (h :
-    ∀ R : Type u [_Rcr : CommRingₓ R] x y : 𝕎 R n : ℕ,
-      by 
+    (h :
+      ∀ R : Type u [_Rcr : CommRingₓ R] x y : 𝕎 R n : ℕ, by
         exact ghost_component n (f x y) = ghost_component n (g x y)) :
-  ∀ R [_Rcr : CommRingₓ R] x y : 𝕎 R,
-    by 
+    ∀ R [_Rcr : CommRingₓ R] x y : 𝕎 R, by
       exact f x y = g x y :=
-  by 
-    (
-      obtain ⟨φ, hf⟩ := hf 
-      obtain ⟨ψ, hg⟩ := hg)
-    intros 
-    ext n 
-    rw [hf, hg, poly_eq_of_witt_polynomial_bind_eq' p φ ψ]
-    clear x y 
-    intro k 
-    apply MvPolynomial.funext 
-    intro x 
-    simp only [hom_bind₁]
-    specialize h (Ulift ℤ) (mk p$ fun i => ⟨x (0, i)⟩) (mk p$ fun i => ⟨x (1, i)⟩) k 
-    simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h 
-    apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective 
-    simp only [←RingEquiv.coe_to_ring_hom, map_eval₂_hom]
-    convert h using 1
-    all_goals 
-      funext i 
-      simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
-      apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl 
-      ext1 
-      apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl 
-      ext ⟨b, _⟩
-      finCases b <;> simp only [coeff_mk, uncurry] <;> rfl
+  by
+  (
+    obtain ⟨φ, hf⟩ := hf
+    obtain ⟨ψ, hg⟩ := hg)
+  intros
+  ext n
+  rw [hf, hg, poly_eq_of_witt_polynomial_bind_eq' p φ ψ]
+  clear x y
+  intro k
+  apply MvPolynomial.funext
+  intro x
+  simp only [hom_bind₁]
+  specialize h (Ulift ℤ) (mk p $ fun i => ⟨x (0, i)⟩) (mk p $ fun i => ⟨x (1, i)⟩) k
+  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
+  apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
+  simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
+  convert h using 1
+  all_goals
+    funext i
+    simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
+    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    ext1
+    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    ext ⟨b, _⟩
+    fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
 
-theorem map {f} (hf : is_poly₂ p f) (g : R →+* S) (x y : 𝕎 R) : map g (f x y) = f (map g x) (map g y) :=
-  by 
-    (
-      obtain ⟨φ, hf⟩ := hf)
-    ext n 
-    simp only [map_coeff, hf, map_aeval, peval, uncurry]
-    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl 
-    try 
-      ext ⟨i, k⟩
-      finCases i 
-    all_goals 
-      simp only [map_coeff, Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
+theorem map {f} (hf : is_poly₂ p f) (g : R →+* S) (x y : 𝕎 R) : map g (f x y) = f (map g x) (map g y) := by
+  (
+    obtain ⟨φ, hf⟩ := hf)
+  ext n
+  simp only [map_coeff, hf, map_aeval, peval, uncurry]
+  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+  try
+    ext ⟨i, k⟩
+    fin_cases i
+  all_goals
+    simp only [map_coeff, Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
 
 end IsPoly₂
 
-attribute [ghost_simps] AlgHom.map_zero AlgHom.map_one AlgHom.map_add AlgHom.map_mul AlgHom.map_sub AlgHom.map_neg
-  AlgHom.id_apply AlgHom.map_nat_cast RingHom.map_zero RingHom.map_one RingHom.map_mul RingHom.map_add RingHom.map_sub
-  RingHom.map_neg RingHom.id_apply RingHom.map_nat_cast mul_addₓ add_mulₓ add_zeroₓ zero_addₓ mul_oneₓ one_mulₓ mul_zero
-  zero_mul Nat.succ_ne_zero add_tsub_cancel_right Nat.succ_eq_add_one if_true eq_self_iff_true if_false forall_true_iff
-  forall_2_true_iff forall_3_true_iff
+attribute [ghost_simps]
+  AlgHom.map_zero AlgHom.map_one AlgHom.map_add AlgHom.map_mul AlgHom.map_sub AlgHom.map_neg AlgHom.id_apply AlgHom.map_nat_cast RingHom.map_zero RingHom.map_one RingHom.map_mul RingHom.map_add RingHom.map_sub RingHom.map_neg RingHom.id_apply RingHom.map_nat_cast mul_addₓ add_mulₓ add_zeroₓ zero_addₓ mul_oneₓ one_mulₓ mul_zero zero_mul Nat.succ_ne_zero add_tsub_cancel_right Nat.succ_eq_add_one if_true eq_self_iff_true if_false forall_true_iff forall_2_true_iff forall_3_true_iff
 
 end WittVector
 

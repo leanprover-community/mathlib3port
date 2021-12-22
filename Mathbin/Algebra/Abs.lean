@@ -25,24 +25,24 @@ absolute
 -/
 
 
-/--
+/-- 
 Absolute value is a unary operator with properties similar to the absolute value of a real number.
 -/
-class HasAbs (α : Type _) where 
+class HasAbs (α : Type _) where
   abs : α → α
 
-export HasAbs(abs)
+export HasAbs (abs)
 
-/--
+/-- 
 The positive part of an element admiting a decomposition into positive and negative parts.
 -/
-class HasPosPart (α : Type _) where 
+class HasPosPart (α : Type _) where
   Pos : α → α
 
-/--
+/-- 
 The negative part of an element admiting a decomposition into positive and negative parts.
 -/
-class HasNegPart (α : Type _) where 
+class HasNegPart (α : Type _) where
   neg : α → α
 
 notation "|" a "|" => abs a

@@ -1,4 +1,4 @@
-import Mathbin.Analysis.Calculus.Deriv 
+import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.Analysis.Calculus.TimesContDiff
 
 /-!
@@ -36,7 +36,7 @@ iterated Fréchet derivative.
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open_locale Classical TopologicalSpace BigOperators
 
@@ -48,243 +48,703 @@ variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
 
 variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-/-- The `n`-th iterated derivative of a function from `𝕜` to `F`, as a function from `𝕜` to `F`. -/
+/--  The `n`-th iterated derivative of a function from `𝕜` to `F`, as a function from `𝕜` to `F`. -/
 def iteratedDeriv (n : ℕ) (f : 𝕜 → F) (x : 𝕜) : F :=
   (iteratedFderiv 𝕜 n f x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1
 
-/-- The `n`-th iterated derivative of a function from `𝕜` to `F` within a set `s`, as a function
+/--  The `n`-th iterated derivative of a function from `𝕜` to `F` within a set `s`, as a function
 from `𝕜` to `F`. -/
 def iteratedDerivWithin (n : ℕ) (f : 𝕜 → F) (s : Set 𝕜) (x : 𝕜) : F :=
   (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1
 
 variable {n : ℕ} {f : 𝕜 → F} {s : Set 𝕜} {x : 𝕜}
 
-theorem iterated_deriv_within_univ : iteratedDerivWithin n f univ = iteratedDeriv n f :=
-  by 
-    ext x 
-    rw [iteratedDerivWithin, iteratedDeriv, iterated_fderiv_within_univ]
+theorem iterated_deriv_within_univ : iteratedDerivWithin n f univ = iteratedDeriv n f := by
+  ext x
+  rw [iteratedDerivWithin, iteratedDeriv, iterated_fderiv_within_univ]
 
 /-! ### Properties of the iterated derivative within a set -/
 
 
 theorem iterated_deriv_within_eq_iterated_fderiv_within :
-  iteratedDerivWithin n f s x = (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1 :=
+    iteratedDerivWithin n f s x = (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1 :=
   rfl
 
-/-- Write the iterated derivative as the composition of a continuous linear equiv and the iterated
+/--  Write the iterated derivative as the composition of a continuous linear equiv and the iterated
 Fréchet derivative -/
 theorem iterated_deriv_within_eq_equiv_comp :
-  iteratedDerivWithin n f s =
-    ((ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F).symm ∘ iteratedFderivWithin 𝕜 n f s) :=
-  by 
-    ext x 
-    rfl
+    iteratedDerivWithin n f s =
+      ((ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F).symm ∘ iteratedFderivWithin 𝕜 n f s) :=
+  by
+  ext x
+  rfl
 
-/-- Write the iterated Fréchet derivative as the composition of a continuous linear equiv and the
+/--  Write the iterated Fréchet derivative as the composition of a continuous linear equiv and the
 iterated derivative. -/
 theorem iterated_fderiv_within_eq_equiv_comp :
-  iteratedFderivWithin 𝕜 n f s = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F ∘ iteratedDerivWithin n f s) :=
-  by 
-    rw [iterated_deriv_within_eq_equiv_comp, ←Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
+    iteratedFderivWithin 𝕜 n f s = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F ∘ iteratedDerivWithin n f s) :=
+  by
+  rw [iterated_deriv_within_eq_equiv_comp, ← Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
 
-/-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
-multiplied by the product of the `m i`s. -/
-theorem iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod {m : Finₓ n → 𝕜} :
-  (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) m = (∏ i, m i) • iteratedDerivWithin n f s x :=
-  by 
-    rw [iterated_deriv_within_eq_iterated_fderiv_within, ←ContinuousMultilinearMap.map_smul_univ]
-    simp 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment
+    "/--"
+    " The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative\nmultiplied by the product of the `m i`s. -/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`m] [":" (Term.arrow (Term.app `Finₓ [`n]) "→" `𝕜)] "}")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Term.app
+      (Term.paren
+       "("
+       [(Term.app `iteratedFderivWithin [`𝕜 `n `f `s `x])
+        [(Term.typeAscription ":" (Term.arrow (Term.arrow (Term.app `Finₓ [`n]) "→" `𝕜) "→" `F))]]
+       ")")
+      [`m])
+     "="
+     (Algebra.Group.Defs.«term_•_»
+      (Algebra.BigOperators.Basic.«term∏_,_»
+       "∏"
+       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+       ", "
+       (Term.app `m [`i]))
+      " • "
+      (Term.app `iteratedDerivWithin [`n `f `s `x])))))
+  (Command.declValSimple
+   ":="
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule [] `iterated_deriv_within_eq_iterated_fderiv_within)
+           ","
+           (Tactic.rwRule ["←"] `ContinuousMultilinearMap.map_smul_univ)]
+          "]")
+         [])
+        [])
+       (group (Tactic.simp "simp" [] [] [] []) [])])))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.rwSeq
+        "rw"
+        []
+        (Tactic.rwRuleSeq
+         "["
+         [(Tactic.rwRule [] `iterated_deriv_within_eq_iterated_fderiv_within)
+          ","
+          (Tactic.rwRule ["←"] `ContinuousMultilinearMap.map_smul_univ)]
+         "]")
+        [])
+       [])
+      (group (Tactic.simp "simp" [] [] [] []) [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.simp "simp" [] [] [] [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rwSeq
+   "rw"
+   []
+   (Tactic.rwRuleSeq
+    "["
+    [(Tactic.rwRule [] `iterated_deriv_within_eq_iterated_fderiv_within)
+     ","
+     (Tactic.rwRule ["←"] `ContinuousMultilinearMap.map_smul_univ)]
+    "]")
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `ContinuousMultilinearMap.map_smul_univ
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«←»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `iterated_deriv_within_eq_iterated_fderiv_within
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Term.app
+    (Term.paren
+     "("
+     [(Term.app `iteratedFderivWithin [`𝕜 `n `f `s `x])
+      [(Term.typeAscription ":" (Term.arrow (Term.arrow (Term.app `Finₓ [`n]) "→" `𝕜) "→" `F))]]
+     ")")
+    [`m])
+   "="
+   (Algebra.Group.Defs.«term_•_»
+    (Algebra.BigOperators.Basic.«term∏_,_»
+     "∏"
+     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+     ", "
+     (Term.app `m [`i]))
+    " • "
+    (Term.app `iteratedDerivWithin [`n `f `s `x])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Algebra.Group.Defs.«term_•_»
+   (Algebra.BigOperators.Basic.«term∏_,_»
+    "∏"
+    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+    ", "
+    (Term.app `m [`i]))
+   " • "
+   (Term.app `iteratedDerivWithin [`n `f `s `x]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Defs.«term_•_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `iteratedDerivWithin [`n `f `s `x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `s
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `f
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `iteratedDerivWithin
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 73 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
+  (Algebra.BigOperators.Basic.«term∏_,_»
+   "∏"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+   ", "
+   (Term.app `m [`i]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `m [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `i
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `m
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
+    multiplied by the product of the `m i`s. -/
+  theorem
+    iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod
+    { m : Finₓ n → 𝕜 } : ( iteratedFderivWithin 𝕜 n f s x : Finₓ n → 𝕜 → F ) m = ∏ i , m i • iteratedDerivWithin n f s x
+    := by rw [ iterated_deriv_within_eq_iterated_fderiv_within , ← ContinuousMultilinearMap.map_smul_univ ] simp
 
 @[simp]
-theorem iterated_deriv_within_zero : iteratedDerivWithin 0 f s = f :=
-  by 
-    ext x 
-    simp [iteratedDerivWithin]
+theorem iterated_deriv_within_zero : iteratedDerivWithin 0 f s = f := by
+  ext x
+  simp [iteratedDerivWithin]
 
 @[simp]
 theorem iterated_deriv_within_one (hs : UniqueDiffOn 𝕜 s) {x : 𝕜} (hx : x ∈ s) :
-  iteratedDerivWithin 1 f s x = derivWithin f s x :=
-  by 
-    simp [iteratedDerivWithin, iterated_fderiv_within_one_apply hs hx]
-    rfl
+    iteratedDerivWithin 1 f s x = derivWithin f s x := by
+  simp [iteratedDerivWithin, iterated_fderiv_within_one_apply hs hx]
+  rfl
 
-/-- If the first `n` derivatives within a set of a function are continuous, and its first `n-1`
+/--  If the first `n` derivatives within a set of a function are continuous, and its first `n-1`
 derivatives are differentiable, then the function is `C^n`. This is not an equivalence in general,
 but this is an equivalence when the set has unique derivatives, see
 `times_cont_diff_on_iff_continuous_on_differentiable_on_deriv`. -/
 theorem times_cont_diff_on_of_continuous_on_differentiable_on_deriv {n : WithTop ℕ}
-  (Hcont : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedDerivWithin m f s x) s)
-  (Hdiff : ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedDerivWithin m f s x) s) :
-  TimesContDiffOn 𝕜 n f s :=
-  by 
-    apply times_cont_diff_on_of_continuous_on_differentiable_on
-    ·
-      simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff]
-    ·
-      simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
+    (Hcont : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedDerivWithin m f s x) s)
+    (Hdiff : ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedDerivWithin m f s x) s) :
+    TimesContDiffOn 𝕜 n f s := by
+  apply times_cont_diff_on_of_continuous_on_differentiable_on
+  ·
+    simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff]
+  ·
+    simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 
-/-- To check that a function is `n` times continuously differentiable, it suffices to check that its
+/--  To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
 require on the `n`-th derivative is differentiability instead of continuity, but it has the
 advantage of avoiding the discussion of continuity in the proof (and for `n = ∞` this is optimal).
 -/
 theorem times_cont_diff_on_of_differentiable_on_deriv {n : WithTop ℕ}
-  (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) : TimesContDiffOn 𝕜 n f s :=
-  by 
-    apply times_cont_diff_on_of_differentiable_on 
-    simpa only [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
+    (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) : TimesContDiffOn 𝕜 n f s :=
+  by
+  apply times_cont_diff_on_of_differentiable_on
+  simpa only [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 
-/-- On a set with unique derivatives, a `C^n` function has derivatives up to `n` which are
+/--  On a set with unique derivatives, a `C^n` function has derivatives up to `n` which are
 continuous. -/
 theorem TimesContDiffOn.continuous_on_iterated_deriv_within {n : WithTop ℕ} {m : ℕ} (h : TimesContDiffOn 𝕜 n f s)
-  (hmn : (m : WithTop ℕ) ≤ n) (hs : UniqueDiffOn 𝕜 s) : ContinuousOn (iteratedDerivWithin m f s) s :=
-  by 
-    simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff] using
-      h.continuous_on_iterated_fderiv_within hmn hs
+    (hmn : (m : WithTop ℕ) ≤ n) (hs : UniqueDiffOn 𝕜 s) : ContinuousOn (iteratedDerivWithin m f s) s := by
+  simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff] using
+    h.continuous_on_iterated_fderiv_within hmn hs
 
-/-- On a set with unique derivatives, a `C^n` function has derivatives less than `n` which are
+/--  On a set with unique derivatives, a `C^n` function has derivatives less than `n` which are
 differentiable. -/
 theorem TimesContDiffOn.differentiable_on_iterated_deriv_within {n : WithTop ℕ} {m : ℕ} (h : TimesContDiffOn 𝕜 n f s)
-  (hmn : (m : WithTop ℕ) < n) (hs : UniqueDiffOn 𝕜 s) : DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
-  by 
-    simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff] using
-      h.differentiable_on_iterated_fderiv_within hmn hs
+    (hmn : (m : WithTop ℕ) < n) (hs : UniqueDiffOn 𝕜 s) : DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s := by
+  simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff] using
+    h.differentiable_on_iterated_fderiv_within hmn hs
 
-/-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
+/--  The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
 reformulated in terms of the one-dimensional derivative on sets with unique derivatives. -/
 theorem times_cont_diff_on_iff_continuous_on_differentiable_on_deriv {n : WithTop ℕ} (hs : UniqueDiffOn 𝕜 s) :
-  TimesContDiffOn 𝕜 n f s ↔
-    (∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (iteratedDerivWithin m f s) s) ∧
-      ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
-  by 
-    simp only [times_cont_diff_on_iff_continuous_on_differentiable_on hs, iterated_fderiv_within_eq_equiv_comp,
-      LinearIsometryEquiv.comp_continuous_on_iff, LinearIsometryEquiv.comp_differentiable_on_iff]
+    TimesContDiffOn 𝕜 n f s ↔
+      (∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (iteratedDerivWithin m f s) s) ∧
+        ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
+  by
+  simp only [times_cont_diff_on_iff_continuous_on_differentiable_on hs, iterated_fderiv_within_eq_equiv_comp,
+    LinearIsometryEquiv.comp_continuous_on_iff, LinearIsometryEquiv.comp_differentiable_on_iff]
 
-/-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
+/--  The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 differentiating the `n`-th iterated derivative. -/
 theorem iterated_deriv_within_succ {x : 𝕜} (hxs : UniqueDiffWithinAt 𝕜 s x) :
-  iteratedDerivWithin (n+1) f s x = derivWithin (iteratedDerivWithin n f s) s x :=
-  by 
-    rw [iterated_deriv_within_eq_iterated_fderiv_within, iterated_fderiv_within_succ_apply_left,
-      iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_fderiv_within _ hxs, derivWithin]
-    change
-      ((ContinuousMultilinearMap.mkPiField 𝕜 (Finₓ n) ((fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1) :
+    iteratedDerivWithin (n+1) f s x = derivWithin (iteratedDerivWithin n f s) s x := by
+  rw [iterated_deriv_within_eq_iterated_fderiv_within, iterated_fderiv_within_succ_apply_left,
+    iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_fderiv_within _ hxs, derivWithin]
+  change
+    ((ContinuousMultilinearMap.mkPiField 𝕜 (Finₓ n) ((fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1) :
           (Finₓ n → 𝕜) → F)
-          fun i : Finₓ n => 1) =
-        (fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1
-    simp 
+        fun i : Finₓ n => 1) =
+      (fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1
+  simp
 
-/-- The `n`-th iterated derivative within a set with unique derivatives can be obtained by
+/--  The `n`-th iterated derivative within a set with unique derivatives can be obtained by
 iterating `n` times the differentiation operation. -/
 theorem iterated_deriv_within_eq_iterate {x : 𝕜} (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
-  iteratedDerivWithin n f s x = ((fun g : 𝕜 → F => derivWithin g s)^[n]) f x :=
-  by 
-    induction' n with n IH generalizing x
-    ·
-      simp 
-    ·
-      rw [iterated_deriv_within_succ (hs x hx), Function.iterate_succ']
-      exact deriv_within_congr (hs x hx) (fun y hy => IH hy) (IH hx)
+    iteratedDerivWithin n f s x = ((fun g : 𝕜 → F => derivWithin g s)^[n]) f x := by
+  induction' n with n IH generalizing x
+  ·
+    simp
+  ·
+    rw [iterated_deriv_within_succ (hs x hx), Function.iterate_succ']
+    exact deriv_within_congr (hs x hx) (fun y hy => IH hy) (IH hx)
 
-/-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
+/--  The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 taking the `n`-th derivative of the derivative. -/
 theorem iterated_deriv_within_succ' {x : 𝕜} (hxs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
-  iteratedDerivWithin (n+1) f s x = (iteratedDerivWithin n (derivWithin f s) s) x :=
-  by 
-    rw [iterated_deriv_within_eq_iterate hxs hx, iterated_deriv_within_eq_iterate hxs hx]
-    rfl
+    iteratedDerivWithin (n+1) f s x = (iteratedDerivWithin n (derivWithin f s) s) x := by
+  rw [iterated_deriv_within_eq_iterate hxs hx, iterated_deriv_within_eq_iterate hxs hx]
+  rfl
 
 /-! ### Properties of the iterated derivative on the whole space -/
 
 
 theorem iterated_deriv_eq_iterated_fderiv :
-  iteratedDeriv n f x = (iteratedFderiv 𝕜 n f x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1 :=
+    iteratedDeriv n f x = (iteratedFderiv 𝕜 n f x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1 :=
   rfl
 
-/-- Write the iterated derivative as the composition of a continuous linear equiv and the iterated
+/--  Write the iterated derivative as the composition of a continuous linear equiv and the iterated
 Fréchet derivative -/
 theorem iterated_deriv_eq_equiv_comp :
-  iteratedDeriv n f = ((ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F).symm ∘ iteratedFderiv 𝕜 n f) :=
-  by 
-    ext x 
-    rfl
+    iteratedDeriv n f = ((ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F).symm ∘ iteratedFderiv 𝕜 n f) := by
+  ext x
+  rfl
 
-/-- Write the iterated Fréchet derivative as the composition of a continuous linear equiv and the
+/--  Write the iterated Fréchet derivative as the composition of a continuous linear equiv and the
 iterated derivative. -/
 theorem iterated_fderiv_eq_equiv_comp :
-  iteratedFderiv 𝕜 n f = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F ∘ iteratedDeriv n f) :=
-  by 
-    rw [iterated_deriv_eq_equiv_comp, ←Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
+    iteratedFderiv 𝕜 n f = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F ∘ iteratedDeriv n f) := by
+  rw [iterated_deriv_eq_equiv_comp, ← Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
 
-/-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
-multiplied by the product of the `m i`s. -/
-theorem iterated_fderiv_apply_eq_iterated_deriv_mul_prod {m : Finₓ n → 𝕜} :
-  (iteratedFderiv 𝕜 n f x : (Finₓ n → 𝕜) → F) m = (∏ i, m i) • iteratedDeriv n f x :=
-  by 
-    rw [iterated_deriv_eq_iterated_fderiv, ←ContinuousMultilinearMap.map_smul_univ]
-    simp 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment
+    "/--"
+    " The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative\nmultiplied by the product of the `m i`s. -/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `iterated_fderiv_apply_eq_iterated_deriv_mul_prod [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`m] [":" (Term.arrow (Term.app `Finₓ [`n]) "→" `𝕜)] "}")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Term.app
+      (Term.paren
+       "("
+       [(Term.app `iteratedFderiv [`𝕜 `n `f `x])
+        [(Term.typeAscription ":" (Term.arrow (Term.arrow (Term.app `Finₓ [`n]) "→" `𝕜) "→" `F))]]
+       ")")
+      [`m])
+     "="
+     (Algebra.Group.Defs.«term_•_»
+      (Algebra.BigOperators.Basic.«term∏_,_»
+       "∏"
+       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+       ", "
+       (Term.app `m [`i]))
+      " • "
+      (Term.app `iteratedDeriv [`n `f `x])))))
+  (Command.declValSimple
+   ":="
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule [] `iterated_deriv_eq_iterated_fderiv)
+           ","
+           (Tactic.rwRule ["←"] `ContinuousMultilinearMap.map_smul_univ)]
+          "]")
+         [])
+        [])
+       (group (Tactic.simp "simp" [] [] [] []) [])])))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.rwSeq
+        "rw"
+        []
+        (Tactic.rwRuleSeq
+         "["
+         [(Tactic.rwRule [] `iterated_deriv_eq_iterated_fderiv)
+          ","
+          (Tactic.rwRule ["←"] `ContinuousMultilinearMap.map_smul_univ)]
+         "]")
+        [])
+       [])
+      (group (Tactic.simp "simp" [] [] [] []) [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.simp "simp" [] [] [] [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rwSeq
+   "rw"
+   []
+   (Tactic.rwRuleSeq
+    "["
+    [(Tactic.rwRule [] `iterated_deriv_eq_iterated_fderiv)
+     ","
+     (Tactic.rwRule ["←"] `ContinuousMultilinearMap.map_smul_univ)]
+    "]")
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `ContinuousMultilinearMap.map_smul_univ
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«←»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `iterated_deriv_eq_iterated_fderiv
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Term.app
+    (Term.paren
+     "("
+     [(Term.app `iteratedFderiv [`𝕜 `n `f `x])
+      [(Term.typeAscription ":" (Term.arrow (Term.arrow (Term.app `Finₓ [`n]) "→" `𝕜) "→" `F))]]
+     ")")
+    [`m])
+   "="
+   (Algebra.Group.Defs.«term_•_»
+    (Algebra.BigOperators.Basic.«term∏_,_»
+     "∏"
+     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+     ", "
+     (Term.app `m [`i]))
+    " • "
+    (Term.app `iteratedDeriv [`n `f `x])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Algebra.Group.Defs.«term_•_»
+   (Algebra.BigOperators.Basic.«term∏_,_»
+    "∏"
+    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+    ", "
+    (Term.app `m [`i]))
+   " • "
+   (Term.app `iteratedDeriv [`n `f `x]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Defs.«term_•_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `iteratedDeriv [`n `f `x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `f
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `n
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `iteratedDeriv
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 73 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
+  (Algebra.BigOperators.Basic.«term∏_,_»
+   "∏"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+   ", "
+   (Term.app `m [`i]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `m [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `i
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `m
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
+    multiplied by the product of the `m i`s. -/
+  theorem
+    iterated_fderiv_apply_eq_iterated_deriv_mul_prod
+    { m : Finₓ n → 𝕜 } : ( iteratedFderiv 𝕜 n f x : Finₓ n → 𝕜 → F ) m = ∏ i , m i • iteratedDeriv n f x
+    := by rw [ iterated_deriv_eq_iterated_fderiv , ← ContinuousMultilinearMap.map_smul_univ ] simp
 
 @[simp]
-theorem iterated_deriv_zero : iteratedDeriv 0 f = f :=
-  by 
-    ext x 
-    simp [iteratedDeriv]
+theorem iterated_deriv_zero : iteratedDeriv 0 f = f := by
+  ext x
+  simp [iteratedDeriv]
 
 @[simp]
-theorem iterated_deriv_one : iteratedDeriv 1 f = deriv f :=
-  by 
-    ext x 
-    simp [iteratedDeriv]
-    rfl
+theorem iterated_deriv_one : iteratedDeriv 1 f = deriv f := by
+  ext x
+  simp [iteratedDeriv]
+  rfl
 
-/-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
+/--  The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
 reformulated in terms of the one-dimensional derivative. -/
 theorem times_cont_diff_iff_iterated_deriv {n : WithTop ℕ} :
-  TimesContDiff 𝕜 n f ↔
-    (∀ m : ℕ, (m : WithTop ℕ) ≤ n → Continuous (iteratedDeriv m f)) ∧
-      ∀ m : ℕ, (m : WithTop ℕ) < n → Differentiable 𝕜 (iteratedDeriv m f) :=
-  by 
-    simp only [times_cont_diff_iff_continuous_differentiable, iterated_fderiv_eq_equiv_comp,
-      LinearIsometryEquiv.comp_continuous_iff, LinearIsometryEquiv.comp_differentiable_iff]
+    TimesContDiff 𝕜 n f ↔
+      (∀ m : ℕ, (m : WithTop ℕ) ≤ n → Continuous (iteratedDeriv m f)) ∧
+        ∀ m : ℕ, (m : WithTop ℕ) < n → Differentiable 𝕜 (iteratedDeriv m f) :=
+  by
+  simp only [times_cont_diff_iff_continuous_differentiable, iterated_fderiv_eq_equiv_comp,
+    LinearIsometryEquiv.comp_continuous_iff, LinearIsometryEquiv.comp_differentiable_iff]
 
-/-- To check that a function is `n` times continuously differentiable, it suffices to check that its
+/--  To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
 require on the `n`-th derivative is differentiability instead of continuity, but it has the
 advantage of avoiding the discussion of continuity in the proof (and for `n = ∞` this is optimal).
 -/
 theorem times_cont_diff_of_differentiable_iterated_deriv {n : WithTop ℕ}
-  (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → Differentiable 𝕜 (iteratedDeriv m f)) : TimesContDiff 𝕜 n f :=
+    (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → Differentiable 𝕜 (iteratedDeriv m f)) : TimesContDiff 𝕜 n f :=
   times_cont_diff_iff_iterated_deriv.2 ⟨fun m hm => (h m hm).Continuous, fun m hm => h m (le_of_ltₓ hm)⟩
 
 theorem TimesContDiff.continuous_iterated_deriv {n : WithTop ℕ} (m : ℕ) (h : TimesContDiff 𝕜 n f)
-  (hmn : (m : WithTop ℕ) ≤ n) : Continuous (iteratedDeriv m f) :=
+    (hmn : (m : WithTop ℕ) ≤ n) : Continuous (iteratedDeriv m f) :=
   (times_cont_diff_iff_iterated_deriv.1 h).1 m hmn
 
 theorem TimesContDiff.differentiable_iterated_deriv {n : WithTop ℕ} (m : ℕ) (h : TimesContDiff 𝕜 n f)
-  (hmn : (m : WithTop ℕ) < n) : Differentiable 𝕜 (iteratedDeriv m f) :=
+    (hmn : (m : WithTop ℕ) < n) : Differentiable 𝕜 (iteratedDeriv m f) :=
   (times_cont_diff_iff_iterated_deriv.1 h).2 m hmn
 
-/-- The `n+1`-th iterated derivative can be obtained by differentiating the `n`-th
+/--  The `n+1`-th iterated derivative can be obtained by differentiating the `n`-th
 iterated derivative. -/
-theorem iterated_deriv_succ : iteratedDeriv (n+1) f = deriv (iteratedDeriv n f) :=
-  by 
-    ext x 
-    rw [←iterated_deriv_within_univ, ←iterated_deriv_within_univ, ←deriv_within_univ]
-    exact iterated_deriv_within_succ unique_diff_within_at_univ
+theorem iterated_deriv_succ : iteratedDeriv (n+1) f = deriv (iteratedDeriv n f) := by
+  ext x
+  rw [← iterated_deriv_within_univ, ← iterated_deriv_within_univ, ← deriv_within_univ]
+  exact iterated_deriv_within_succ unique_diff_within_at_univ
 
-/-- The `n`-th iterated derivative can be obtained by iterating `n` times the
+/--  The `n`-th iterated derivative can be obtained by iterating `n` times the
 differentiation operation. -/
-theorem iterated_deriv_eq_iterate : iteratedDeriv n f = (deriv^[n]) f :=
-  by 
-    ext x 
-    rw [←iterated_deriv_within_univ]
-    convert iterated_deriv_within_eq_iterate unique_diff_on_univ (mem_univ x)
-    simp [deriv_within_univ]
+theorem iterated_deriv_eq_iterate : iteratedDeriv n f = (deriv^[n]) f := by
+  ext x
+  rw [← iterated_deriv_within_univ]
+  convert iterated_deriv_within_eq_iterate unique_diff_on_univ (mem_univ x)
+  simp [deriv_within_univ]
 
-/-- The `n+1`-th iterated derivative can be obtained by taking the `n`-th derivative of the
+/--  The `n+1`-th iterated derivative can be obtained by taking the `n`-th derivative of the
 derivative. -/
-theorem iterated_deriv_succ' : iteratedDeriv (n+1) f = iteratedDeriv n (deriv f) :=
-  by 
-    rw [iterated_deriv_eq_iterate, iterated_deriv_eq_iterate]
-    rfl
+theorem iterated_deriv_succ' : iteratedDeriv (n+1) f = iteratedDeriv n (deriv f) := by
+  rw [iterated_deriv_eq_iterate, iterated_deriv_eq_iterate]
+  rfl
 

@@ -1,5 +1,5 @@
-import Mathbin.Topology.Algebra.WeakDualTopology 
-import Mathbin.Analysis.NormedSpace.Dual 
+import Mathbin.Topology.Algebra.WeakDualTopology
+import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 
 /-!
@@ -64,7 +64,7 @@ weak-star, weak dual
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open Filter
 
@@ -87,12 +87,12 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
 variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-/-- For normed spaces `E`, there is a canonical map `dual 𝕜 E → weak_dual 𝕜 E` (the "identity"
+/--  For normed spaces `E`, there is a canonical map `dual 𝕜 E → weak_dual 𝕜 E` (the "identity"
 mapping). It is a linear equivalence. -/
 def NormedSpace.Dual.toWeakDual : dual 𝕜 E ≃ₗ[𝕜] WeakDual 𝕜 E :=
   LinearEquiv.refl 𝕜 (E →L[𝕜] 𝕜)
 
-/-- For normed spaces `E`, there is a canonical map `weak_dual 𝕜 E → dual 𝕜 E` (the "identity"
+/--  For normed spaces `E`, there is a canonical map `weak_dual 𝕜 E → dual 𝕜 E` (the "identity"
 mapping). It is a linear equivalence. Here it is implemented as the inverse of the linear
 equivalence `normed_space.dual.to_weak_dual` in the other direction. -/
 def WeakDual.toNormedDual : WeakDual 𝕜 E ≃ₗ[𝕜] dual 𝕜 E :=
@@ -110,52 +110,47 @@ theorem to_weak_dual_eq_iff (x' y' : dual 𝕜 E) : x'.to_weak_dual = y'.to_weak
 
 @[simp]
 theorem _root_.weak_dual.to_normed_dual_eq_iff (x' y' : WeakDual 𝕜 E) :
-  x'.to_normed_dual = y'.to_normed_dual ↔ x' = y' :=
+    x'.to_normed_dual = y'.to_normed_dual ↔ x' = y' :=
   WeakDual.toNormedDual.Injective.eq_iff
 
-theorem to_weak_dual_continuous : Continuous fun x' : dual 𝕜 E => x'.to_weak_dual :=
-  by 
-    apply WeakDual.continuous_of_continuous_eval 
-    intro z 
-    exact (inclusion_in_double_dual 𝕜 E z).Continuous
+theorem to_weak_dual_continuous : Continuous fun x' : dual 𝕜 E => x'.to_weak_dual := by
+  apply WeakDual.continuous_of_continuous_eval
+  intro z
+  exact (inclusion_in_double_dual 𝕜 E z).Continuous
 
-/-- For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
+/--  For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
 `dual 𝕜 E → weak_dual 𝕜 E` is continuous. This definition implements it as a continuous linear
 map. -/
 def continuous_linear_map_to_weak_dual : dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
   { to_weak_dual with cont := to_weak_dual_continuous }
 
-/-- The weak-star topology is coarser than the dual-norm topology. -/
+/--  The weak-star topology is coarser than the dual-norm topology. -/
 theorem dual_norm_topology_le_weak_dual_topology :
-  (by 
-      infer_instance :
-    TopologicalSpace (dual 𝕜 E)) ≤
-    (by 
-      infer_instance :
-    TopologicalSpace (WeakDual 𝕜 E)) :=
-  by 
-    refine' Continuous.le_induced _ 
-    apply continuous_pi_iff.mpr 
-    intro z 
-    exact (inclusion_in_double_dual 𝕜 E z).Continuous
+    (by
+        infer_instance : TopologicalSpace (dual 𝕜 E)) ≤
+      (by
+        infer_instance : TopologicalSpace (WeakDual 𝕜 E)) :=
+  by
+  refine' Continuous.le_induced _
+  apply continuous_pi_iff.mpr
+  intro z
+  exact (inclusion_in_double_dual 𝕜 E z).Continuous
 
 end NormedSpace.Dual
 
 namespace WeakDual
 
 theorem to_normed_dual.preimage_closed_unit_ball :
-  to_normed_dual ⁻¹' Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : WeakDual 𝕜 E | ∥x'.to_normed_dual∥ ≤ 1 } :=
-  by 
-    have eq : Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : dual 𝕜 E | ∥x'∥ ≤ 1 }
-    ·
-      ext x' 
-      simp only [dist_zero_right, Metric.mem_closed_ball, Set.mem_set_of_eq]
-    rw [Eq]
-    exact Set.preimage_set_of_eq
+    to_normed_dual ⁻¹' Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : WeakDual 𝕜 E | ∥x'.to_normed_dual∥ ≤ 1 } := by
+  have eq : Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : dual 𝕜 E | ∥x'∥ ≤ 1 } := by
+    ext x'
+    simp only [dist_zero_right, Metric.mem_closed_ball, Set.mem_set_of_eq]
+  rw [Eq]
+  exact Set.preimage_set_of_eq
 
 variable (𝕜)
 
-/-- The polar set `polar 𝕜 s` of `s : set E` seen as a subset of the dual of `E` with the
+/--  The polar set `polar 𝕜 s` of `s : set E` seen as a subset of the dual of `E` with the
 weak-star topology is `weak_dual.polar 𝕜 s`. -/
 def Polar (s : Set E) : Set (WeakDual 𝕜 E) :=
   to_normed_dual ⁻¹' Polar 𝕜 s
@@ -172,20 +167,18 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
 variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-/-- The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
+/--  The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
 is used, i.e., when `polar 𝕜 s` is interpreted as a subset of `weak_dual 𝕜 E`. -/
-theorem WeakDual.is_closed_polar (s : Set E) : IsClosed (WeakDual.Polar 𝕜 s) :=
-  by 
-    rw [WeakDual.Polar, polar_eq_Inter, preimage_bInter]
-    apply is_closed_bInter 
-    intro z hz 
-    rw [Set.preimage_set_of_eq]
-    have eq : { x' : WeakDual 𝕜 E | ∥WeakDual.toNormedDual x' z∥ ≤ 1 } = (fun x' : WeakDual 𝕜 E => ∥x' z∥) ⁻¹' Iic 1 :=
-      by 
-        rfl 
-    rw [Eq]
-    refine' IsClosed.preimage _ is_closed_Iic 
-    apply Continuous.comp continuous_norm (WeakDual.eval_continuous _ _ z)
+theorem WeakDual.is_closed_polar (s : Set E) : IsClosed (WeakDual.Polar 𝕜 s) := by
+  rw [WeakDual.Polar, polar_eq_Inter, preimage_bInter]
+  apply is_closed_bInter
+  intro z hz
+  rw [Set.preimage_set_of_eq]
+  have eq : { x' : WeakDual 𝕜 E | ∥WeakDual.toNormedDual x' z∥ ≤ 1 } = (fun x' : WeakDual 𝕜 E => ∥x' z∥) ⁻¹' Iic 1 := by
+    rfl
+  rw [Eq]
+  refine' IsClosed.preimage _ is_closed_Iic
+  apply Continuous.comp continuous_norm (WeakDual.eval_continuous _ _ z)
 
 end PolarSetsInWeakDual
 

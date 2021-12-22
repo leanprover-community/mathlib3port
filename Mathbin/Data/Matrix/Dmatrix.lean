@@ -7,7 +7,7 @@ import Mathbin.Data.Fintype.Basic
 
 universe u u' v w z
 
-/-- `dmatrix m n` is the type of dependently typed matrices
+/--  `dmatrix m n` is the type of dependently typed matrices
 whose rows are indexed by the fintype `m` and
 whose columns are indexed by the fintype `n`. -/
 @[nolint unused_arguments]
@@ -25,10 +25,8 @@ section Ext
 variable {M N : Dmatrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
-  ⟨fun h => funext$ fun i => funext$ h i,
-    fun h =>
-      by 
-        simp [h]⟩
+  ⟨fun h => funext $ fun i => funext $ h i, fun h => by
+    simp [h]⟩
 
 @[ext]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
@@ -36,35 +34,33 @@ theorem ext : (∀ i j, M i j = N i j) → M = N :=
 
 end Ext
 
-/-- `M.map f` is the dmatrix obtained by applying `f` to each entry of the matrix `M`. -/
-def map (M : Dmatrix m n α) {β : m → n → Type w} (f : ∀ ⦃i j⦄, α i j → β i j) : Dmatrix m n β :=
-  fun i j => f (M i j)
+/--  `M.map f` is the dmatrix obtained by applying `f` to each entry of the matrix `M`. -/
+def map (M : Dmatrix m n α) {β : m → n → Type w} (f : ∀ ⦃i j⦄, α i j → β i j) : Dmatrix m n β := fun i j => f (M i j)
 
 @[simp]
 theorem map_apply {M : Dmatrix m n α} {β : m → n → Type w} {f : ∀ ⦃i j⦄, α i j → β i j} {i : m} {j : n} :
-  M.map f i j = f (M i j) :=
+    M.map f i j = f (M i j) :=
   rfl
 
 @[simp]
 theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n → Type z} {f : ∀ ⦃i j⦄, α i j → β i j}
-  {g : ∀ ⦃i j⦄, β i j → γ i j} : (M.map f).map g = M.map fun i j x => g (f x) :=
-  by 
-    ext 
-    simp 
+    {g : ∀ ⦃i j⦄, β i j → γ i j} : (M.map f).map g = M.map fun i j x => g (f x) := by
+  ext
+  simp
 
-/-- The transpose of a dmatrix. -/
+/--  The transpose of a dmatrix. -/
 def transpose (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
-| x, y => M y x
+  | x, y => M y x
 
 localized [Dmatrix] postfix:1500 "ᵀ" => Dmatrix.transposeₓ
 
-/-- `dmatrix.col u` is the column matrix whose entries are given by `u`. -/
+/--  `dmatrix.col u` is the column matrix whose entries are given by `u`. -/
 def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
-| x, y => w x
+  | x, y => w x
 
-/-- `dmatrix.row u` is the row matrix whose entries are given by `u`. -/
+/--  `dmatrix.row u` is the row matrix whose entries are given by `u`. -/
 def row {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j
-| x, y => v y
+  | x, y => v y
 
 instance [∀ i j, Inhabited (α i j)] : Inhabited (Dmatrix m n α) :=
   Pi.inhabited _
@@ -123,50 +119,44 @@ theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) i j : (M - N) i
 
 @[simp]
 theorem map_zero [∀ i j, HasZero (α i j)] {β : m → n → Type w} [∀ i j, HasZero (β i j)] {f : ∀ ⦃i j⦄, α i j → β i j}
-  (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 :=
-  by 
-    ext 
-    simp [h]
+    (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 := by
+  ext
+  simp [h]
 
 theorem map_add [∀ i j, AddMonoidₓ (α i j)] {β : m → n → Type w} [∀ i j, AddMonoidₓ (β i j)]
-  (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : Dmatrix m n α) :
-  ((M+N).map fun i j => @f i j) = (M.map fun i j => @f i j)+N.map fun i j => @f i j :=
-  by 
-    ext 
-    simp 
+    (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : Dmatrix m n α) :
+    ((M+N).map fun i j => @f i j) = (M.map fun i j => @f i j)+N.map fun i j => @f i j := by
+  ext
+  simp
 
 theorem map_sub [∀ i j, AddGroupₓ (α i j)] {β : m → n → Type w} [∀ i j, AddGroupₓ (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j)
-  (M N : Dmatrix m n α) : ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j :=
-  by 
-    ext 
-    simp 
+    (M N : Dmatrix m n α) : ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by
+  ext
+  simp
 
 theorem subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Dmatrix m n α) :=
-  ⟨fun M N =>
-      by 
-        ext 
-        exact isEmptyElim i⟩
+  ⟨fun M N => by
+    ext
+    exact isEmptyElim i⟩
 
 theorem subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Dmatrix m n α) :=
-  ⟨fun M N =>
-      by 
-        ext 
-        exact isEmptyElim j⟩
+  ⟨fun M N => by
+    ext
+    exact isEmptyElim j⟩
 
 end Dmatrix
 
-/-- The `add_monoid_hom` between spaces of dependently typed matrices
+/--  The `add_monoid_hom` between spaces of dependently typed matrices
 induced by an `add_monoid_hom` between their coefficients. -/
 def AddMonoidHom.mapDmatrix [∀ i j, AddMonoidₓ (α i j)] {β : m → n → Type w} [∀ i j, AddMonoidₓ (β i j)]
-  (f : ∀ ⦃i j⦄, α i j →+ β i j) : Dmatrix m n α →+ Dmatrix m n β :=
+    (f : ∀ ⦃i j⦄, α i j →+ β i j) : Dmatrix m n α →+ Dmatrix m n β :=
   { toFun := fun M => M.map fun i j => @f i j,
-    map_zero' :=
-      by 
-        simp ,
+    map_zero' := by
+      simp ,
     map_add' := Dmatrix.map_add f }
 
 @[simp]
 theorem AddMonoidHom.map_dmatrix_apply [∀ i j, AddMonoidₓ (α i j)] {β : m → n → Type w} [∀ i j, AddMonoidₓ (β i j)]
-  (f : ∀ ⦃i j⦄, α i j →+ β i j) (M : Dmatrix m n α) : AddMonoidHom.mapDmatrix f M = M.map fun i j => @f i j :=
+    (f : ∀ ⦃i j⦄, α i j →+ β i j) (M : Dmatrix m n α) : AddMonoidHom.mapDmatrix f M = M.map fun i j => @f i j :=
   rfl
 

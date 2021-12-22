@@ -1,4 +1,4 @@
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts 
+import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
 
 /-!
@@ -12,7 +12,7 @@ the product of `X` and `Y`.
 -/
 
 
-noncomputable section 
+noncomputable section
 
 universe v u₁ u₂
 
@@ -26,59 +26,59 @@ variable (G : C ⥤ D)
 
 namespace CategoryTheory.Limits
 
-section 
+section
 
 variable {P X Y Z : C} (f : P ⟶ X) (g : P ⟶ Y)
 
-/--
+/-- 
 The map of a binary fan is a limit iff the fork consisting of the mapped morphisms is a limit. This
 essentially lets us commute `binary_fan.mk` with `functor.map_cone`.
 -/
 def is_limit_map_cone_binary_fan_equiv :
-  is_limit (G.map_cone (binary_fan.mk f g)) ≃ is_limit (binary_fan.mk (G.map f) (G.map g)) :=
+    is_limit (G.map_cone (binary_fan.mk f g)) ≃ is_limit (binary_fan.mk (G.map f) (G.map g)) :=
   (is_limit.postcompose_hom_equiv (diagram_iso_pair.{v} _) _).symm.trans
     (is_limit.equiv_iso_limit
       (cones.ext (iso.refl _)
-        (by 
+        (by
           rintro (_ | _)
           tidy)))
 
-/-- The property of preserving products expressed in terms of binary fans. -/
+/--  The property of preserving products expressed in terms of binary fans. -/
 def map_is_limit_of_preserves_of_is_limit [preserves_limit (pair X Y) G] (l : is_limit (binary_fan.mk f g)) :
-  is_limit (binary_fan.mk (G.map f) (G.map g)) :=
+    is_limit (binary_fan.mk (G.map f) (G.map g)) :=
   is_limit_map_cone_binary_fan_equiv G f g (preserves_limit.preserves l)
 
-/-- The property of reflecting products expressed in terms of binary fans. -/
+/--  The property of reflecting products expressed in terms of binary fans. -/
 def is_limit_of_reflects_of_map_is_limit [reflects_limit (pair X Y) G]
-  (l : is_limit (binary_fan.mk (G.map f) (G.map g))) : is_limit (binary_fan.mk f g) :=
+    (l : is_limit (binary_fan.mk (G.map f) (G.map g))) : is_limit (binary_fan.mk f g) :=
   reflects_limit.reflects ((is_limit_map_cone_binary_fan_equiv G f g).symm l)
 
 variable (X Y) [has_binary_product X Y]
 
-/--
+/-- 
 If `G` preserves binary products and `C` has them, then the binary fan constructed of the mapped
 morphisms of the binary product cone is a limit.
 -/
 def is_limit_of_has_binary_product_of_preserves_limit [preserves_limit (pair X Y) G] :
-  is_limit (binary_fan.mk (G.map (limits.prod.fst : X ⨯ Y ⟶ X)) (G.map limits.prod.snd)) :=
+    is_limit (binary_fan.mk (G.map (limits.prod.fst : X ⨯ Y ⟶ X)) (G.map limits.prod.snd)) :=
   map_is_limit_of_preserves_of_is_limit G _ _ (prod_is_prod X Y)
 
 variable [has_binary_product (G.obj X) (G.obj Y)]
 
-/--
+/-- 
 If the product comparison map for `G` at `(X,Y)` is an isomorphism, then `G` preserves the
 pair of `(X,Y)`.
 -/
 def preserves_limit_pair.of_iso_prod_comparison [i : is_iso (prod_comparison G X Y)] : preserves_limit (pair X Y) G :=
-  by 
-    apply preserves_limit_of_preserves_limit_cone (prod_is_prod X Y)
-    apply (is_limit_map_cone_binary_fan_equiv _ _ _).symm _ 
-    apply is_limit.of_point_iso (limit.is_limit (pair (G.obj X) (G.obj Y)))
-    apply i
+  by
+  apply preserves_limit_of_preserves_limit_cone (prod_is_prod X Y)
+  apply (is_limit_map_cone_binary_fan_equiv _ _ _).symm _
+  apply is_limit.of_point_iso (limit.is_limit (pair (G.obj X) (G.obj Y)))
+  apply i
 
 variable [preserves_limit (pair X Y) G]
 
-/--
+/-- 
 If `G` preserves the product of `(X,Y)`, then the product comparison map for `G` at `(X,Y)` is
 an isomorphism.
 -/
@@ -89,68 +89,66 @@ def preserves_limit_pair.iso : G.obj (X ⨯ Y) ≅ G.obj X ⨯ G.obj Y :=
 theorem preserves_limit_pair.iso_hom : (preserves_limit_pair.iso G X Y).Hom = prod_comparison G X Y :=
   rfl
 
-instance : is_iso (prod_comparison G X Y) :=
-  by 
-    rw [←preserves_limit_pair.iso_hom]
-    infer_instance
+instance : is_iso (prod_comparison G X Y) := by
+  rw [← preserves_limit_pair.iso_hom]
+  infer_instance
 
-end 
+end
 
-section 
+section
 
 variable {P X Y Z : C} (f : X ⟶ P) (g : Y ⟶ P)
 
-/--
+/-- 
 The map of a binary cofan is a colimit iff
 the cofork consisting of the mapped morphisms is a colimit.
 This essentially lets us commute `binary_cofan.mk` with `functor.map_cocone`.
 -/
 def is_colimit_map_cocone_binary_cofan_equiv :
-  is_colimit (G.map_cocone (binary_cofan.mk f g)) ≃ is_colimit (binary_cofan.mk (G.map f) (G.map g)) :=
+    is_colimit (G.map_cocone (binary_cofan.mk f g)) ≃ is_colimit (binary_cofan.mk (G.map f) (G.map g)) :=
   (is_colimit.precompose_hom_equiv (diagram_iso_pair.{v} _).symm _).symm.trans
     (is_colimit.equiv_iso_colimit
       (cocones.ext (iso.refl _)
-        (by 
+        (by
           rintro (_ | _)
           tidy)))
 
-/-- The property of preserving coproducts expressed in terms of binary cofans. -/
+/--  The property of preserving coproducts expressed in terms of binary cofans. -/
 def map_is_colimit_of_preserves_of_is_colimit [preserves_colimit (pair X Y) G] (l : is_colimit (binary_cofan.mk f g)) :
-  is_colimit (binary_cofan.mk (G.map f) (G.map g)) :=
+    is_colimit (binary_cofan.mk (G.map f) (G.map g)) :=
   is_colimit_map_cocone_binary_cofan_equiv G f g (preserves_colimit.preserves l)
 
-/-- The property of reflecting coproducts expressed in terms of binary cofans. -/
+/--  The property of reflecting coproducts expressed in terms of binary cofans. -/
 def is_colimit_of_reflects_of_map_is_colimit [reflects_colimit (pair X Y) G]
-  (l : is_colimit (binary_cofan.mk (G.map f) (G.map g))) : is_colimit (binary_cofan.mk f g) :=
+    (l : is_colimit (binary_cofan.mk (G.map f) (G.map g))) : is_colimit (binary_cofan.mk f g) :=
   reflects_colimit.reflects ((is_colimit_map_cocone_binary_cofan_equiv G f g).symm l)
 
 variable (X Y) [has_binary_coproduct X Y]
 
-/--
+/-- 
 If `G` preserves binary coproducts and `C` has them, then the binary cofan constructed of the mapped
 morphisms of the binary product cocone is a colimit.
 -/
 def is_colimit_of_has_binary_coproduct_of_preserves_colimit [preserves_colimit (pair X Y) G] :
-  is_colimit (binary_cofan.mk (G.map (limits.coprod.inl : X ⟶ X ⨿ Y)) (G.map limits.coprod.inr)) :=
+    is_colimit (binary_cofan.mk (G.map (limits.coprod.inl : X ⟶ X ⨿ Y)) (G.map limits.coprod.inr)) :=
   map_is_colimit_of_preserves_of_is_colimit G _ _ (coprod_is_coprod X Y)
 
 variable [has_binary_coproduct (G.obj X) (G.obj Y)]
 
-/--
+/-- 
 If the coproduct comparison map for `G` at `(X,Y)` is an isomorphism, then `G` preserves the
 pair of `(X,Y)`.
 -/
 def preserves_colimit_pair.of_iso_coprod_comparison [i : is_iso (coprod_comparison G X Y)] :
-  preserves_colimit (pair X Y) G :=
-  by 
-    apply preserves_colimit_of_preserves_colimit_cocone (coprod_is_coprod X Y)
-    apply (is_colimit_map_cocone_binary_cofan_equiv _ _ _).symm _ 
-    apply is_colimit.of_point_iso (colimit.is_colimit (pair (G.obj X) (G.obj Y)))
-    apply i
+    preserves_colimit (pair X Y) G := by
+  apply preserves_colimit_of_preserves_colimit_cocone (coprod_is_coprod X Y)
+  apply (is_colimit_map_cocone_binary_cofan_equiv _ _ _).symm _
+  apply is_colimit.of_point_iso (colimit.is_colimit (pair (G.obj X) (G.obj Y)))
+  apply i
 
 variable [preserves_colimit (pair X Y) G]
 
-/--
+/-- 
 If `G` preserves the coproduct of `(X,Y)`, then the coproduct comparison map for `G` at `(X,Y)` is
 an isomorphism.
 -/
@@ -162,12 +160,11 @@ def preserves_colimit_pair.iso : G.obj X ⨿ G.obj Y ≅ G.obj (X ⨿ Y) :=
 theorem preserves_colimit_pair.iso_hom : (preserves_colimit_pair.iso G X Y).Hom = coprod_comparison G X Y :=
   rfl
 
-instance : is_iso (coprod_comparison G X Y) :=
-  by 
-    rw [←preserves_colimit_pair.iso_hom]
-    infer_instance
+instance : is_iso (coprod_comparison G X Y) := by
+  rw [← preserves_colimit_pair.iso_hom]
+  infer_instance
 
-end 
+end
 
 end CategoryTheory.Limits
 

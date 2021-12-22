@@ -25,7 +25,7 @@ add_tactic_doc
   { Name := "abstract", category := DocCategory.tactic, declNames := [`tactic.interactive.abstract],
     tags := ["core", "proof extraction"] }
 
-/-- Proves a goal of the form `s = t` when `s` and `t` are expressions built up out of a binary
+/--  Proves a goal of the form `s = t` when `s` and `t` are expressions built up out of a binary
 operation, and equality can be proved using associativity and commutativity of that operation. -/
 add_tactic_doc
   { Name := "ac_refl", category := DocCategory.tactic,
@@ -76,7 +76,7 @@ add_tactic_doc
   { Name := "async", category := DocCategory.tactic, declNames := [`tactic.interactive.async],
     tags := ["core", "goal management", "combinator", "proof extraction"] }
 
-/--
+/-- 
 `by_cases p` splits the main goal into two cases, assuming `h : p` in the first branch, and
 `h : ¬ p` in the second branch. You can specify the name of the new hypothesis using the syntax
 `by_cases h : p`.
@@ -87,7 +87,7 @@ add_tactic_doc
   { Name := "by_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.by_cases],
     tags := ["core", "basic", "logic", "case bashing"] }
 
-/--
+/-- 
 If the target of the main goal is a proposition `p`, `by_contra h` reduces the goal to proving
 `false` using the additional hypothesis `h : ¬ p`. If `h` is omitted, a name is generated
 automatically.
@@ -109,7 +109,7 @@ add_tactic_doc
   { Name := "cases", category := DocCategory.tactic, declNames := [`tactic.interactive.cases],
     tags := ["core", "basic", "induction"] }
 
-/--
+/-- 
 `cases_matching p` applies the `cases` tactic to a hypothesis `h : type`
 if `type` matches the pattern `p`.
 
@@ -132,7 +132,7 @@ add_tactic_doc
     declNames := [`tactic.interactive.cases_matching, `tactic.interactive.casesm],
     tags := ["core", "induction", "context management"] }
 
-/--
+/-- 
 * `cases_type I` applies the `cases` tactic to a hypothesis `h : (I ...)`
 * `cases_type I_1 ... I_n` applies the `cases` tactic to a hypothesis
   `h : (I_1 ...)` or ... or `h : (I_n ...)`
@@ -156,7 +156,7 @@ add_tactic_doc
   { Name := "clear", category := DocCategory.tactic, declNames := [`tactic.interactive.clear],
     tags := ["core", "context management"] }
 
-/--
+/-- 
 Close goals of the form `n ≠ m` when `n` and `m` have type `nat`, `char`, `string`, `int`
 or `fin sz`, and they are literals. It also closes goals of the form `n < m`, `n > m`, `n ≤ m` and
 `n ≥ m` for `nat`. If the goal is of the form `n = m`, then it tries to close it using reflexivity.
@@ -167,7 +167,7 @@ add_tactic_doc
   { Name := "comp_val", category := DocCategory.tactic, declNames := [`tactic.interactive.comp_val],
     tags := ["core", "arithmetic"] }
 
-/--
+/-- 
 The `congr` tactic attempts to identify both sides of an equality goal `A = B`,
 leaving as new goals the subterms of `A` and `B` which are not definitionally equal.
 Example: suppose the goal is `x * f y = g w * f z`. Then `congr` will produce two goals:
@@ -219,7 +219,7 @@ add_tactic_doc
   { Name := "econstructor", category := DocCategory.tactic, declNames := [`tactic.interactive.econstructor],
     tags := ["core", "logic"] }
 
-/--
+/-- 
 A variant of `rw` that uses the unifier more aggressively, unfolding semireducible definitions.
 -/
 add_tactic_doc
@@ -238,7 +238,7 @@ add_tactic_doc
   { Name := "exfalso", category := DocCategory.tactic, declNames := [`tactic.interactive.exfalso],
     tags := ["core", "basic", "logic"] }
 
-/--
+/-- 
 `existsi e` will instantiate an existential quantifier in the target with `e` and leave the
 instantiated body as the new target. More generally, it applies to any inductive type with one
 constructor and at least two arguments, applying the constructor with `e` as the first argument
@@ -269,7 +269,7 @@ add_tactic_doc
   { Name := "from", category := DocCategory.tactic, declNames := [`tactic.interactive.from],
     tags := ["core", "finishing"] }
 
-/--
+/-- 
 Apply function extensionality and introduce new hypotheses.
 The tactic `funext` will keep applying new the `funext` lemma until the goal target is not reducible
 to
@@ -313,7 +313,7 @@ add_tactic_doc
   { Name := "injections", category := DocCategory.tactic, declNames := [`tactic.interactive.injections],
     tags := ["core", "structures", "induction"] }
 
-/--
+/-- 
 If the current goal is a Pi/forall `∀ x : t, u` (resp. `let x := t in u`) then `intro` puts
 `x : t` (resp. `x := t`) in the local context. The new subgoal target is `u`.
 
@@ -344,7 +344,7 @@ add_tactic_doc
   { Name := "iterate", category := DocCategory.tactic, declNames := [`tactic.interactive.iterate],
     tags := ["core", "combinator"] }
 
-/--
+/-- 
 `left` applies the first constructor when the type of the target is an inductive data type with
 two constructors.
 
@@ -354,7 +354,7 @@ add_tactic_doc
   { Name := "left / right", category := DocCategory.tactic,
     declNames := [`tactic.interactive.left, `tactic.interactive.right], tags := ["core", "basic", "logic"] }
 
-/--
+/-- 
 `let h : t := p` adds the hypothesis `h : t := p` to the current goal if `p` a term of type `t`.
 If `t` is omitted, it will be inferred.
 
@@ -383,7 +383,7 @@ add_tactic_doc
   { Name := "refine", category := DocCategory.tactic, declNames := [`tactic.interactive.refine],
     tags := ["core", "basic", "lemma application"] }
 
-/--
+/-- 
 This tactic applies to a goal whose target has the form `t ~ u` where `~` is a reflexive relation,
 that is, a relation which has a reflexivity lemma tagged with the attribute `[refl]`.
 The tactic checks whether `t` and `u` are definitionally equal and then solves the goal.
@@ -404,7 +404,7 @@ add_tactic_doc
   { Name := "revert", category := DocCategory.tactic, declNames := [`tactic.interactive.revert],
     tags := ["core", "context management", "goal management"] }
 
-/--
+/-- 
 `rw e` applies an equation or iff `e` as a rewrite rule to the main goal. If `e` is preceded by
 left arrow (`←` or `<-`), the rewrite is applied in the reverse direction. If `e` is a defined
 constant, then the equational lemmas associated with `e` are used. This provides a convenient
@@ -519,28 +519,28 @@ add_tactic_doc
   { Name := "with_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.with_cases],
     tags := ["core", "combinator"] }
 
-/--
+/-- 
 Navigate to the left-hand-side of a relation.
 A goal of `| a = b` will turn into the goal `| a`.
 -/
 add_tactic_doc
   { Name := "conv: to_lhs", category := DocCategory.tactic, declNames := [`conv.interactive.to_lhs], tags := ["conv"] }
 
-/--
+/-- 
 Navigate to the right-hand-side of a relation.
 A goal of `| a = b` will turn into the goal `| b`.
 -/
 add_tactic_doc
   { Name := "conv: to_rhs", category := DocCategory.tactic, declNames := [`conv.interactive.to_rhs], tags := ["conv"] }
 
-/--
+/-- 
 Navigate into every argument of the current head function.
 A target of `| (a * b) * c` will turn into the two targets `| a * b` and `| c`.
 -/
 add_tactic_doc
   { Name := "conv: congr", category := DocCategory.tactic, declNames := [`conv.interactive.congr], tags := ["conv"] }
 
-/--
+/-- 
 Navigate into the contents of top-level `λ` binders.
 A target of `| λ a, a + b` will turn into the target `| a + b` and introduce `a` into the local
 context.
@@ -550,7 +550,7 @@ no-op.
 add_tactic_doc
   { Name := "conv: funext", category := DocCategory.tactic, declNames := [`conv.interactive.funext], tags := ["conv"] }
 
-/--
+/-- 
 Navigate into the first scope matching the expression.
 
 For a target of `| ∀ c, a + (b + c) = 1`, `find (b + _) { ... }` will run the tactics within the
@@ -559,7 +559,7 @@ For a target of `| ∀ c, a + (b + c) = 1`, `find (b + _) { ... }` will run the 
 add_tactic_doc
   { Name := "conv: find", category := DocCategory.tactic, declNames := [`conv.interactive.find], tags := ["conv"] }
 
-/--
+/-- 
 Navigate into the numbered scopes matching the expression.
 
 For a target of `| λ c, 10 * c + 20 * c + 30 * c`, `for (_ * _) [1, 3] { ... }` will run the
@@ -568,7 +568,7 @@ tactics within the `{}` with first a target of `| 10 * c`, then a target of `| 3
 add_tactic_doc
   { Name := "conv: for", category := DocCategory.tactic, declNames := [`conv.interactive.for], tags := ["conv"] }
 
-/--
+/-- 
 End conversion of the current goal. This is often what is needed when muscle memory would type
 `sorry`.
 -/

@@ -4,8 +4,8 @@ namespace Tactic
 
 namespace Interactive
 
--- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
-/-- A tactic for simplifying identities in not-necessarily-commutative rings.
+-- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+/--  A tactic for simplifying identities in not-necessarily-commutative rings.
 
 An example:
 ```lean

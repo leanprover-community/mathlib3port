@@ -24,7 +24,7 @@ open Function
 
 variable (A B R : Type _) [CommSemiringₓ A] [CommSemiringₓ B] [CommRingₓ R] [Algebra A B]
 
-/-- `mv_polynomial.acounit A B` is the natural surjective algebra homomorphism
+/--  `mv_polynomial.acounit A B` is the natural surjective algebra homomorphism
 `mv_polynomial B A →ₐ[A] B` obtained by `X a ↦ a`.
 
 See `mv_polynomial.counit` for the “absolute” variant with `A = ℤ`,
@@ -46,10 +46,9 @@ theorem acounit_C (a : A) : acounit A B (C a) = algebraMap A B a :=
 
 variable (A)
 
-theorem acounit_surjective : surjective (acounit A B) :=
-  fun b => ⟨X b, acounit_X A b⟩
+theorem acounit_surjective : surjective (acounit A B) := fun b => ⟨X b, acounit_X A b⟩
 
-/-- `mv_polynomial.counit R` is the natural surjective ring homomorphism
+/--  `mv_polynomial.counit R` is the natural surjective ring homomorphism
 `mv_polynomial R ℤ →+* R` obtained by `X r ↦ r`.
 
 See `mv_polynomial.acounit` for a “relative” variant for algebras over a base ring,
@@ -57,7 +56,7 @@ and `mv_polynomial.counit_nat` for the “absolute” variant with `R = ℕ`. -/
 noncomputable def counit : MvPolynomial R ℤ →+* R :=
   acounit ℤ R
 
-/-- `mv_polynomial.counit_nat A` is the natural surjective ring homomorphism
+/--  `mv_polynomial.counit_nat A` is the natural surjective ring homomorphism
 `mv_polynomial A ℕ →+* A` obtained by `X a ↦ a`.
 
 See `mv_polynomial.acounit` for a “relative” variant for algebras over a base ring

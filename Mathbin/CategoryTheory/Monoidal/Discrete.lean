@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Monoidal.NaturalTransformation 
-import Mathbin.CategoryTheory.DiscreteCategory 
+import Mathbin.CategoryTheory.Monoidal.NaturalTransformation
+import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.Algebra.Group.Hom
 
 /-!
@@ -20,24 +20,24 @@ variable (M : Type u) [Monoidₓ M]
 
 namespace CategoryTheory
 
-instance monoid_discrete : Monoidₓ (discrete M) :=
-  by 
-    dsimp [discrete]
-    infer_instance
+instance monoid_discrete : Monoidₓ (discrete M) := by
+  dsimp [discrete]
+  infer_instance
 
-instance : monoidal_category (discrete M) :=
-  { tensorUnit := 1, tensorObj := fun X Y => X*Y,
-    tensorHom :=
-      fun W X Y Z f g =>
-        eq_to_hom
-          (by 
-            rw [eq_of_hom f, eq_of_hom g]),
-    leftUnitor := fun X => eq_to_iso (one_mulₓ X), rightUnitor := fun X => eq_to_iso (mul_oneₓ X),
-    associator := fun X Y Z => eq_to_iso (mul_assocₓ _ _ _) }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : monoidal_category ( discrete M )
+  where
+    tensorUnit := 1
+      tensorObj X Y := X * Y
+      tensorHom W X Y Z f g := eq_to_hom ( by rw [ eq_of_hom f , eq_of_hom g ] )
+      leftUnitor X := eq_to_iso ( one_mulₓ X )
+      rightUnitor X := eq_to_iso ( mul_oneₓ X )
+      associator X Y Z := eq_to_iso ( mul_assocₓ _ _ _ )
 
 variable {M} {N : Type u} [Monoidₓ N]
 
-/--
+/-- 
 A multiplicative morphism between monoids gives a monoidal functor between the corresponding
 discrete monoidal categories.
 -/
@@ -48,11 +48,11 @@ def discrete.monoidal_functor (F : M →* N) : monoidal_functor (discrete M) (di
 
 variable {K : Type u} [Monoidₓ K]
 
-/--
+/-- 
 The monoidal natural isomorphism corresponding to composing two multiplicative morphisms.
 -/
 def discrete.monoidal_functor_comp (F : M →* N) (G : N →* K) :
-  discrete.monoidal_functor F ⊗⋙ discrete.monoidal_functor G ≅ discrete.monoidal_functor (G.comp F) :=
+    discrete.monoidal_functor F ⊗⋙ discrete.monoidal_functor G ≅ discrete.monoidal_functor (G.comp F) :=
   { Hom := { app := fun X => 𝟙 _ }, inv := { app := fun X => 𝟙 _ } }
 
 end CategoryTheory

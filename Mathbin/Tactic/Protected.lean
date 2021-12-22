@@ -33,7 +33,7 @@ will be protected, but not `foo.baz` or `foo.bar`
 
 namespace Tactic
 
-/--
+/-- 
 Attribute to protect a declaration.
 If a declaration `foo.bar` is marked protected, then it must be referred to
 by its full name `foo.bar`, even when the `foo` namespace is open.
@@ -53,15 +53,15 @@ add_tactic_doc
   { Name := "protected", category := DocCategory.attr, declNames := [`tactic.protected_attr],
     tags := ["parsing", "environment"] }
 
-/-- Tactic that is executed when a structure is marked with the `protect_proj` attribute -/
-unsafe def protect_proj_tac (n : Name) (l : List Name) : tactic Unit :=
-  do 
-    let env ← get_env 
-    match env.structure_fields_full n with 
-      | none => fail "protect_proj failed: declaration is not a structure"
-      | some fields => fields.mmap'$ fun field => when (l.all$ fun m => bnot$ m.is_suffix_of field)$ mk_protected field
+/--  Tactic that is executed when a structure is marked with the `protect_proj` attribute -/
+unsafe def protect_proj_tac (n : Name) (l : List Name) : tactic Unit := do
+  let env ← get_env
+  match env.structure_fields_full n with
+    | none => fail "protect_proj failed: declaration is not a structure"
+    | some fields =>
+      fields.mmap' $ fun field => when (l.all $ fun m => bnot $ m.is_suffix_of field) $ mk_protected field
 
-/--
+/-- 
 Attribute to protect the projections of a structure.
 If a structure `foo` is marked with the `protect_proj` user attribute, then
 all of the projections become protected, meaning they must always be referred to by
@@ -80,11 +80,9 @@ unsafe def protect_proj_attr : user_attribute Unit (List Name) :=
     descr :=
       "Attribute to protect the projections of a structure.\n    If a structure `foo` is marked with the `protect_proj` user attribute, then\n    all of the projections become protected, meaning they must always be referred to by\n    their full name `foo.bar`, even when the `foo` namespace is open.\n\n    `protect_proj without bar baz` will protect all projections except for bar and baz",
     after_set :=
-      some
-        fun n _ _ =>
-          do 
-            let l ← protect_proj_attr.get_param n 
-            protect_proj_tac n l,
+      some fun n _ _ => do
+        let l ← protect_proj_attr.get_param n
+        protect_proj_tac n l,
     parser := interactive.types.without_ident_list }
 
 add_tactic_doc

@@ -10,12 +10,12 @@ attribute [local semireducible] reflected
 
 @[local instance]
 private unsafe def reflect_name_list : has_reflect (List Name)
-| ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop)$ ns.map (flip expr.const [])) : List Name)
+  | ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop) $ ns.map (flip expr.const [])) : List Name)
 
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name
 
-/-- The `ancestor` attributes is used to record the names of structures which appear in the
+/--  The `ancestor` attributes is used to record the names of structures which appear in the
 extends clause of a `structure` or `class` declared with `old_structure_cmd` set to true.
 
 As an example:
@@ -43,7 +43,7 @@ add_tactic_doc
 
 end Performance
 
-/--
+/-- 
 Returns the parents of a structure added via the `ancestor` attribute.
 
 On failure, the empty list is returned.
@@ -51,7 +51,7 @@ On failure, the empty list is returned.
 unsafe def get_tagged_ancestors (cl : Name) : tactic (List Name) :=
   parse_name_list <$> ancestor_attr.get_param_untyped cl <|> pure []
 
-/--
+/-- 
 Returns the parents of a structure added via the `ancestor` attribute, as well as subobjects.
 
 On failure, the empty list is returned.
@@ -59,17 +59,16 @@ On failure, the empty list is returned.
 unsafe def get_ancestors (cl : Name) : tactic (List Name) :=
   (· ++ ·) <$> (Prod.fst <$> subobject_names cl <|> pure []) <*> get_tagged_ancestors cl
 
-/--
+/-- 
 Returns the (transitive) ancestors of a structure added via the `ancestor`
 attribute (or reachable via subobjects).
 
 On failure, the empty list is returned.
 -/
 unsafe def find_ancestors : Name → expr → tactic (List expr)
-| cl, arg =>
-  do 
-    let cs ← get_ancestors cl 
-    let r ← cs.mmap$ fun c => List.ret <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg 
+  | cl, arg => do
+    let cs ← get_ancestors cl
+    let r ← cs.mmap $ fun c => List.ret <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg
     return r.join
 
 end Tactic

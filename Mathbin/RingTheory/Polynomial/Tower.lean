@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Algebra.Tower 
+import Mathbin.Algebra.Algebra.Tower
 import Mathbin.Data.Polynomial.AlgebraMap
 
 /-!
@@ -27,9 +27,8 @@ variable [IsScalarTower R S A] [IsScalarTower R S B]
 variable (R S A) {B}
 
 theorem aeval_apply (x : A) (p : Polynomial R) :
-  Polynomial.aeval x p = Polynomial.aeval x (Polynomial.map (algebraMap R S) p) :=
-  by 
-    rw [Polynomial.aeval_def, Polynomial.aeval_def, Polynomial.eval₂_map, algebra_map_eq R S A]
+    Polynomial.aeval x p = Polynomial.aeval x (Polynomial.map (algebraMap R S) p) := by
+  rw [Polynomial.aeval_def, Polynomial.aeval_def, Polynomial.eval₂_map, algebra_map_eq R S A]
 
 end Semiringₓ
 
@@ -40,19 +39,17 @@ variable [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B]
 variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 
 theorem algebra_map_aeval (x : A) (p : Polynomial R) :
-  algebraMap A B (Polynomial.aeval x p) = Polynomial.aeval (algebraMap A B x) p :=
-  by 
-    rw [Polynomial.aeval_def, Polynomial.aeval_def, Polynomial.hom_eval₂, ←IsScalarTower.algebra_map_eq]
+    algebraMap A B (Polynomial.aeval x p) = Polynomial.aeval (algebraMap A B x) p := by
+  rw [Polynomial.aeval_def, Polynomial.aeval_def, Polynomial.hom_eval₂, ← IsScalarTower.algebra_map_eq]
 
 theorem aeval_eq_zero_of_aeval_algebra_map_eq_zero {x : A} {p : Polynomial R} (h : Function.Injective (algebraMap A B))
-  (hp : Polynomial.aeval (algebraMap A B x) p = 0) : Polynomial.aeval x p = 0 :=
-  by 
-    rw [←algebra_map_aeval, ←(algebraMap A B).map_zero] at hp 
-    exact h hp
+    (hp : Polynomial.aeval (algebraMap A B x) p = 0) : Polynomial.aeval x p = 0 := by
+  rw [← algebra_map_aeval, ← (algebraMap A B).map_zero] at hp
+  exact h hp
 
 theorem aeval_eq_zero_of_aeval_algebra_map_eq_zero_field {R A B : Type _} [CommSemiringₓ R] [Field A] [CommSemiringₓ B]
-  [Nontrivial B] [Algebra R A] [Algebra R B] [Algebra A B] [IsScalarTower R A B] {x : A} {p : Polynomial R}
-  (h : Polynomial.aeval (algebraMap A B x) p = 0) : Polynomial.aeval x p = 0 :=
+    [Nontrivial B] [Algebra R A] [Algebra R B] [Algebra A B] [IsScalarTower R A B] {x : A} {p : Polynomial R}
+    (h : Polynomial.aeval (algebraMap A B x) p = 0) : Polynomial.aeval x p = 0 :=
   aeval_eq_zero_of_aeval_algebra_map_eq_zero R A B (algebraMap A B).Injective h
 
 end CommSemiringₓ

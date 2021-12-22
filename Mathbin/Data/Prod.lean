@@ -48,47 +48,43 @@ theorem map_snd (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).2 =
   rfl
 
 theorem map_fst' (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
-  funext$ map_fst f g
+  funext $ map_fst f g
 
 theorem map_snd' (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
-  funext$ map_snd f g
+  funext $ map_snd f g
 
-/--
+/-- 
 Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions.
 -/
 theorem map_comp_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) :
-  Prod.map g g' ∘ Prod.map f f' = Prod.map (g ∘ f) (g' ∘ f') :=
+    Prod.map g g' ∘ Prod.map f f' = Prod.map (g ∘ f) (g' ∘ f') :=
   rfl
 
-/--
+/-- 
 Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions, fully applied.
 -/
 theorem map_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) (x : α × γ) :
-  Prod.map g g' (Prod.map f f' x) = Prod.map (g ∘ f) (g' ∘ f') x :=
+    Prod.map g g' (Prod.map f f' x) = Prod.map (g ∘ f) (g' ∘ f') x :=
   rfl
 
 @[simp]
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
-  ⟨Prod.mk.inj,
-    by 
-      cc⟩
+  ⟨Prod.mk.inj, by
+    cc⟩
 
-theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) :=
-  by 
-    intro b₁ b₂ h 
-    simpa only [true_andₓ, Prod.mk.inj_iffₓ, eq_self_iff_true] using h
+theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
+  intro b₁ b₂ h
+  simpa only [true_andₓ, Prod.mk.inj_iffₓ, eq_self_iff_true] using h
 
-theorem mk.inj_right {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) :=
-  by 
-    intro b₁ b₂ h
-    ·
-      simpa only [and_trueₓ, eq_self_iff_true, mk.inj_iff] using h
+theorem mk.inj_right {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) := by
+  intro b₁ b₂ h
+  ·
+    simpa only [and_trueₓ, eq_self_iff_true, mk.inj_iff] using h
 
-theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 :=
-  by 
-    rw [←@mk.eta _ _ p, ←@mk.eta _ _ q, mk.inj_iff]
+theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
+  rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
 
 @[ext]
 theorem ext {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
@@ -98,27 +94,22 @@ theorem map_def {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × �
   funext fun p => ext (map_fst f g p) (map_snd f g p)
 
 theorem id_prod : (fun p : α × α => (p.1, p.2)) = id :=
-  funext$ fun ⟨a, b⟩ => rfl
+  funext $ fun ⟨a, b⟩ => rfl
 
-theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) :=
-  fun x => h.elim$ fun y => ⟨⟨x, y⟩, rfl⟩
+theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim $ fun y => ⟨⟨x, y⟩, rfl⟩
 
-theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) :=
-  fun y => h.elim$ fun x => ⟨⟨x, y⟩, rfl⟩
+theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim $ fun x => ⟨⟨x, y⟩, rfl⟩
 
-theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) :=
-  fun x y h => ext h (Subsingleton.elimₓ _ _)
+theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => ext h (Subsingleton.elimₓ _ _)
 
-theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) :=
-  fun x y h => ext (Subsingleton.elimₓ _ _) h
+theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => ext (Subsingleton.elimₓ _ _) h
 
-/-- Swap the factors of a product. `swap (a, b) = (b, a)` -/
-def swap : α × β → β × α :=
-  fun p => (p.2, p.1)
+/--  Swap the factors of a product. `swap (a, b) = (b, a)` -/
+def swap : α × β → β × α := fun p => (p.2, p.1)
 
 @[simp]
 theorem swap_swap : ∀ x : α × β, swap (swap x) = x
-| ⟨a, b⟩ => rfl
+  | ⟨a, b⟩ => rfl
 
 @[simp]
 theorem fst_swap {p : α × β} : (swap p).1 = p.2 :=
@@ -158,52 +149,43 @@ theorem swap_inj {p q : α × β} : swap p = swap q ↔ p = q :=
   swap_injective.eq_iff
 
 theorem eq_iff_fst_eq_snd_eq : ∀ {p q : α × β}, p = q ↔ p.1 = q.1 ∧ p.2 = q.2
-| ⟨p₁, p₂⟩, ⟨q₁, q₂⟩ =>
-  by 
-    simp 
+  | ⟨p₁, p₂⟩, ⟨q₁, q₂⟩ => by
+    simp
 
 theorem fst_eq_iff : ∀ {p : α × β} {x : α}, p.1 = x ↔ p = (x, p.2)
-| ⟨a, b⟩, x =>
-  by 
-    simp 
+  | ⟨a, b⟩, x => by
+    simp
 
 theorem snd_eq_iff : ∀ {p : α × β} {x : β}, p.2 = x ↔ p = (p.1, x)
-| ⟨a, b⟩, x =>
-  by 
-    simp 
+  | ⟨a, b⟩, x => by
+    simp
 
 theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × β} :
-  Prod.Lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
-  ⟨fun h =>
-      by 
-        cases h <;> simp ,
-    fun h =>
-      match p, q, h with 
-      | (a, b), (c, d), Or.inl h => lex.left _ _ h
-      | (a, b), (c, d), Or.inr ⟨e, h⟩ =>
-        by 
-          change a = c at e <;> subst e <;> exact lex.right _ h⟩
+    Prod.Lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
+  ⟨fun h => by
+    cases h <;> simp , fun h =>
+    match p, q, h with
+    | (a, b), (c, d), Or.inl h => lex.left _ _ h
+    | (a, b), (c, d), Or.inr ⟨e, h⟩ => by
+      change a = c at e <;> subst e <;> exact lex.right _ h⟩
 
 instance lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β → Prop) [DecidableRel r] [DecidableRel s] :
-  DecidableRel (Prod.Lex r s) :=
-  fun p q =>
-    decidableOfDecidableOfIff
-      (by 
-        infer_instance)
-      (lex_def r s).symm
+    DecidableRel (Prod.Lex r s) := fun p q =>
+  decidableOfDecidableOfIff
+    (by
+      infer_instance)
+    (lex_def r s).symm
 
 end Prod
 
 open Function
 
 theorem Function.Injective.prod_map {f : α → γ} {g : β → δ} (hf : injective f) (hg : injective g) :
-  injective (Prod.map f g) :=
-  fun x y h => Prod.extₓ (hf (Prod.ext_iff.1 h).1) (hg$ (Prod.ext_iff.1 h).2)
+    injective (Prod.map f g) := fun x y h => Prod.extₓ (hf (Prod.ext_iff.1 h).1) (hg $ (Prod.ext_iff.1 h).2)
 
 theorem Function.Surjective.prod_map {f : α → γ} {g : β → δ} (hf : surjective f) (hg : surjective g) :
-  surjective (Prod.map f g) :=
-  fun p =>
-    let ⟨x, hx⟩ := hf p.1
-    let ⟨y, hy⟩ := hg p.2
-    ⟨(x, y), Prod.extₓ hx hy⟩
+    surjective (Prod.map f g) := fun p =>
+  let ⟨x, hx⟩ := hf p.1
+  let ⟨y, hy⟩ := hg p.2
+  ⟨(x, y), Prod.extₓ hx hy⟩
 

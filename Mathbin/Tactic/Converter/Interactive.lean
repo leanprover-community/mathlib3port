@@ -1,19 +1,17 @@
-import Mathbin.Tactic.Core 
+import Mathbin.Tactic.Core
 import Mathbin.Tactic.Converter.OldConv
 
 namespace OldConv
 
-unsafe def save_info (p : Pos) : old_conv Unit :=
-  fun r lhs =>
-    do 
-      let ts ← tactic.read
-      (tactic.save_info_thunk p fun _ => ts.format_expr lhs) >> return ⟨(), lhs, none⟩
+unsafe def save_info (p : Pos) : old_conv Unit := fun r lhs => do
+  let ts ← tactic.read
+  (tactic.save_info_thunk p fun _ => ts.format_expr lhs) >> return ⟨(), lhs, none⟩
 
 unsafe def step {α : Type} (c : old_conv α) : old_conv Unit :=
   c >> return ()
 
-unsafe def istep {α : Type} (line0 col0 line col : Nat) (c : old_conv α) : old_conv Unit :=
-  fun r lhs ts => (@scopeTrace _ line col fun _ => (c >> return ()) r lhs ts).clamp_pos line0 line col
+unsafe def istep {α : Type} (line0 col0 line col : Nat) (c : old_conv α) : old_conv Unit := fun r lhs ts =>
+  (@scopeTrace _ line col fun _ => (c >> return ()) r lhs ts).clamp_pos line0 line col
 
 unsafe def execute (c : old_conv Unit) : tactic Unit :=
   conversion c
@@ -37,23 +35,20 @@ unsafe def trace_state : old_conv Unit :=
 unsafe def change (p : parse texpr) : old_conv Unit :=
   old_conv.change p
 
-unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit :=
-  fun r lhs =>
-    do 
-      let pat ← tactic.pexpr_to_pattern p 
-      let s ← simp_lemmas.mk_default 
-      let (found, new_lhs, pr) ←
-        tactic.ext_simplify_core ff { zeta := ff, beta := ff, singlePass := tt, eta := ff, proj := ff } s
-            (fun u => return u)
-            (fun found s r p e =>
-              do 
-                guardₓ (Not found)
-                let matched ← tactic.match_pattern pat e >> return tt <|> return ff 
-                guardₓ matched 
-                let ⟨u, new_e, pr⟩ ← c r e 
-                return (tt, new_e, pr, ff))
-            (fun a s r p e => tactic.failed) r lhs 
-      if Not found then tactic.fail "find converter failed, pattern was not found" else return ⟨(), new_lhs, some pr⟩
+unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit := fun r lhs => do
+  let pat ← tactic.pexpr_to_pattern p
+  let s ← simp_lemmas.mk_default
+  let (found, new_lhs, pr) ←
+    tactic.ext_simplify_core ff { zeta := ff, beta := ff, singlePass := tt, eta := ff, proj := ff } s
+        (fun u => return u)
+        (fun found s r p e => do
+          guardₓ (Not found)
+          let matched ← tactic.match_pattern pat e >> return tt <|> return ff
+          guardₓ matched
+          let ⟨u, new_e, pr⟩ ← c r e
+          return (tt, new_e, pr, ff))
+        (fun a s r p e => tactic.failed) r lhs
+  if Not found then tactic.fail "find converter failed, pattern was not found" else return ⟨(), new_lhs, some pr⟩
 
 end Interactive
 
@@ -63,57 +58,52 @@ namespace Conv
 
 open Tactic
 
-unsafe def replace_lhs (tac : expr → tactic (expr × expr)) : conv Unit :=
-  do 
-    let (e, pf) ← lhs >>= tac 
-    update_lhs e pf
+unsafe def replace_lhs (tac : expr → tactic (expr × expr)) : conv Unit := do
+  let (e, pf) ← lhs >>= tac
+  update_lhs e pf
 
-unsafe def discharge_eq_lhs (tac : tactic Unit) : conv Unit :=
-  do 
-    let pf ←
-      lock_tactic_state
-          do 
-            let m ← lhs >>= mk_meta_var 
-            set_goals [m]
-            tac >> done 
-            instantiate_mvars m 
-    congr 
-    let the_rhs ← rhs 
-    update_lhs the_rhs pf 
-    skip 
-    skip
+unsafe def discharge_eq_lhs (tac : tactic Unit) : conv Unit := do
+  let pf ←
+    lock_tactic_state do
+        let m ← lhs >>= mk_meta_var
+        set_goals [m]
+        tac >> done
+        instantiate_mvars m
+  congr
+  let the_rhs ← rhs
+  update_lhs the_rhs pf
+  skip
+  skip
 
 namespace Interactive
 
 setup_tactic_parser
 
-open tactic.interactive(rw_rules)
+open tactic.interactive (rw_rules)
 
-/-- The `conv` tactic provides a `conv` within a `conv`. It allows the user to return to a
+/--  The `conv` tactic provides a `conv` within a `conv`. It allows the user to return to a
 previous state of the outer conv block to continue editing an expression without having to
 start a new conv block. -/
-protected unsafe def conv (t : conv.interactive.itactic) : conv Unit :=
-  do 
-    transitivity 
-    let a :: rest ← get_goals 
-    set_goals [a]
-    t 
-    all_goals reflexivity 
-    set_goals rest
+protected unsafe def conv (t : conv.interactive.itactic) : conv Unit := do
+  transitivity
+  let a :: rest ← get_goals
+  set_goals [a]
+  t
+  all_goals reflexivity
+  set_goals rest
 
 unsafe def erw (q : parse rw_rules) (cfg : rewrite_cfg := { md := semireducible }) : conv Unit :=
   rw q cfg
 
 open Interactive.Types
 
-/--
+/-- 
 `guard_target t` fails if the target of the conv goal is not `t`.
 We use this tactic for writing tests.
 -/
-unsafe def guard_target (p : parse texpr) : conv Unit :=
-  do 
-    let quote.1 ((%%ₓt) = _) ← target 
-    tactic.interactive.guard_expr_eq t p
+unsafe def guard_target (p : parse texpr) : conv Unit := do
+  let quote.1 ((%%ₓt) = _) ← target
+  tactic.interactive.guard_expr_eq t p
 
 end Interactive
 
@@ -125,21 +115,20 @@ namespace Interactive
 
 setup_tactic_parser
 
-unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit :=
-  do 
-    let t ← target 
-    let (new_t, pr) ← c.to_tactic `eq t 
-    replace_target new_t pr
+unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
+  let t ← target
+  let (new_t, pr) ← c.to_tactic `eq t
+  replace_target new_t pr
 
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
-  old_conv$ old_conv.interactive.find p c
+  old_conv $ old_conv.interactive.find p c
 
 unsafe def conv_lhs (loc : parse (tk "at" *> ident)?) (p : parse (tk "in" *> parser.pexpr)?)
-  (c : conv.interactive.itactic) : tactic Unit :=
+    (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_lhs >> c)
 
 unsafe def conv_rhs (loc : parse (tk "at" *> ident)?) (p : parse (tk "in" *> parser.pexpr)?)
-  (c : conv.interactive.itactic) : tactic Unit :=
+    (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_rhs >> c)
 
 end Interactive

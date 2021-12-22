@@ -1,4 +1,4 @@
-import Mathbin.Tactic.Linarith.Verification 
+import Mathbin.Tactic.Linarith.Verification
 import Mathbin.Tactic.Linarith.Preprocessing
 
 /-!
@@ -117,7 +117,7 @@ namespace Linarith
 /-! ### Control -/
 
 
-/--
+/-- 
 If `e` is a comparison `a R b` or the negation of a comparison `¬ a R b`, found in the target,
 `get_contr_lemma_name_and_type e` returns the name of a lemma that will change the goal to an
 implication, along with the type of `a` and `b`.
@@ -125,20 +125,20 @@ implication, along with the type of `a` and `b`.
 For example, if `e` is `(a : ℕ) < b`, returns ``(`lt_of_not_ge, ℕ)``.
 -/
 unsafe def get_contr_lemma_name_and_type : expr → Option (Name × expr)
-| quote.1 (@LT.lt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
-| quote.1 (@LE.le (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
-| quote.1 (@Eq (%%ₓtp) _ _) => return (`` eq_of_not_lt_of_not_gt, tp)
-| quote.1 (@Ne (%%ₓtp) _ _) => return (`not.intro, tp)
-| quote.1 (@Ge (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
-| quote.1 (@Gt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
-| quote.1 ¬@LT.lt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-| quote.1 ¬@LE.le (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-| quote.1 ¬@Eq (%%ₓtp) _ _ => return (`` Not.intro, tp)
-| quote.1 ¬@Ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-| quote.1 ¬@Gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-| _ => none
+  | quote.1 (@LT.lt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
+  | quote.1 (@LE.le (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
+  | quote.1 (@Eq (%%ₓtp) _ _) => return (`` eq_of_not_lt_of_not_gt, tp)
+  | quote.1 (@Ne (%%ₓtp) _ _) => return (`not.intro, tp)
+  | quote.1 (@Ge (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
+  | quote.1 (@Gt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
+  | quote.1 ¬@LT.lt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | quote.1 ¬@LE.le (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | quote.1 ¬@Eq (%%ₓtp) _ _ => return (`` Not.intro, tp)
+  | quote.1 ¬@Ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | quote.1 ¬@Gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | _ => none
 
-/--
+/-- 
 `apply_contr_lemma` inspects the target to see if it can be moved to a hypothesis by negation.
 For example, a goal `⊢ a ≤ b` can become `a > b ⊢ false`.
 If this is the case, it applies the appropriate lemma and introduces the new hypothesis.
@@ -146,39 +146,36 @@ It returns the type of the terms in the comparison (e.g. the type of `a` and `b`
 newly introduced local constant.
 Otherwise returns `none`.
 -/
-unsafe def apply_contr_lemma : tactic (Option (expr × expr)) :=
-  do 
-    let t ← target 
-    match get_contr_lemma_name_and_type t with 
-      | some (nm, tp) =>
-        do 
-          refine ((expr.const nm []) pexpr.mk_placeholder)
-          let v ← intro1 
-          return$ some (tp, v)
-      | none => return none
+unsafe def apply_contr_lemma : tactic (Option (expr × expr)) := do
+  let t ← target
+  match get_contr_lemma_name_and_type t with
+    | some (nm, tp) => do
+      refine ((expr.const nm []) pexpr.mk_placeholder)
+      let v ← intro1
+      return $ some (tp, v)
+    | none => return none
 
-/--
+/-- 
 `partition_by_type l` takes a list `l` of proofs of comparisons. It sorts these proofs by
 the type of the variables in the comparison, e.g. `(a : ℚ) < 1` and `(b : ℤ) > c` will be separated.
 Returns a map from a type to a list of comparisons over that type.
 -/
 unsafe def partition_by_type (l : List expr) : tactic (rb_lmap expr expr) :=
   l.mfoldl
-    (fun m h =>
-      do 
-        let tp ← ineq_prf_tp h 
-        return$ m.insert tp h)
+    (fun m h => do
+      let tp ← ineq_prf_tp h
+      return $ m.insert tp h)
     mk_rb_map
 
-/--
+/-- 
 Given a list `ls` of lists of proofs of comparisons, `try_linarith_on_lists cfg ls` will try to
 prove `false` by calling `linarith` on each list in succession. It will stop at the first proof of
 `false`, and fail if no contradiction is found with any list.
 -/
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
-  first$ ls.map$ prove_false_by_linarith cfg <|> fail "linarith failed to find a contradiction"
+  first $ ls.map $ prove_false_by_linarith cfg <|> fail "linarith failed to find a contradiction"
 
-/--
+/-- 
 Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
 preprocesses `hyps` according to the list of preprocessors in `cfg`.
 This results in a list of branches (typically only one),
@@ -189,46 +186,38 @@ in the partition; one of these must succeed in order for `linarith` to succeed o
 If `pref_type` is given, it will first use the class of proofs of comparisons over that type.
 -/
 unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_type : Option expr) : tactic Unit :=
-  let single_process :=
-    fun hyps : List expr =>
-      do 
-        linarith_trace_proofs ("after preprocessing, linarith has " ++ toString hyps.length ++ " facts:") hyps 
-        let hyp_set ← partition_by_type hyps 
-        linarith_trace f! "hypotheses appear in {hyp_set.size } different types"
-        match pref_type with 
-          | some t =>
-            prove_false_by_linarith cfg (hyp_set.ifind t) <|>
-              try_linarith_on_lists cfg (rb_map.values (hyp_set.erase t))
-          | none => try_linarith_on_lists cfg (rb_map.values hyp_set)
-  let preprocessors := cfg.preprocessors.get_or_else default_preprocessors 
-  let preprocessors := if cfg.split_ne then linarith.remove_ne :: preprocessors else preprocessors 
-  do 
-    let hyps ← preprocess preprocessors hyps 
-    hyps.mmap'$
-        fun hs =>
-          do 
-            set_goals [hs.1]
-            single_process hs.2 >>= exact
+  let single_process := fun hyps : List expr => do
+    linarith_trace_proofs ("after preprocessing, linarith has " ++ toString hyps.length ++ " facts:") hyps
+    let hyp_set ← partition_by_type hyps
+    linarith_trace f! "hypotheses appear in {hyp_set.size} different types"
+    match pref_type with
+      | some t =>
+        prove_false_by_linarith cfg (hyp_set.ifind t) <|> try_linarith_on_lists cfg (rb_map.values (hyp_set.erase t))
+      | none => try_linarith_on_lists cfg (rb_map.values hyp_set)
+  let preprocessors := cfg.preprocessors.get_or_else default_preprocessors
+  let preprocessors := if cfg.split_ne then linarith.remove_ne :: preprocessors else preprocessors
+  do
+  let hyps ← preprocess preprocessors hyps
+  hyps.mmap' $ fun hs => do
+      set_goals [hs.1]
+      single_process hs.2 >>= exact
 
-/--
+/-- 
 `filter_hyps_to_type restr_type hyps` takes a list of proofs of comparisons `hyps`, and filters it
 to only those that are comparisons over the type `restr_type`.
 -/
 unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (List expr) :=
-  hyps.mfilter$
-    fun h =>
-      do 
-        let ht ← infer_type h 
-        match get_contr_lemma_name_and_type ht with 
-          | some (_, htype) => succeeds$ unify htype restr_type
-          | none => return ff
+  hyps.mfilter $ fun h => do
+    let ht ← infer_type h
+    match get_contr_lemma_name_and_type ht with
+      | some (_, htype) => succeeds $ unify htype restr_type
+      | none => return ff
 
-/-- A hack to allow users to write `{restr_type := ℚ}` in configuration structures. -/
-unsafe def get_restrict_type (e : expr) : tactic expr :=
-  do 
-    let m ← mk_mvar 
-    unify (quote.1 (some (%%ₓm) : Option Type)) e 
-    instantiate_mvars m
+/--  A hack to allow users to write `{restr_type := ℚ}` in configuration structures. -/
+unsafe def get_restrict_type (e : expr) : tactic expr := do
+  let m ← mk_mvar
+  unify (quote.1 (some (%%ₓm) : Option Type)) e
+  instantiate_mvars m
 
 end Linarith
 
@@ -237,7 +226,7 @@ end Linarith
 
 open Linarith
 
-/--
+/-- 
 `linarith reduce_semi only_on hyps cfg` tries to close the goal using linear arithmetic. It fails
 if it does not succeed at doing this.
 
@@ -248,34 +237,32 @@ expressions.
   comparisons in the local context.
 -/
 unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pexpr) (cfg : linarith_config := {  }) :
-  tactic Unit :=
-  focus1$
-    do 
-      let t ← target 
-      if t.is_eq.is_some then
-          linarith_trace "target is an equality: splitting" >> seq' (applyc `` eq_of_not_lt_of_not_gt) tactic.linarith
-        else
-          do 
-            let hyps ← hyps.mmap$ fun e => i_to_expr e >>= note_anon none 
-            when cfg.split_hypotheses (linarith_trace "trying to split hypotheses" >> try auto.split_hyps)
-            let pref_type_and_new_var_from_tgt ← apply_contr_lemma 
-            when pref_type_and_new_var_from_tgt.is_none$
-                if cfg.exfalso then linarith_trace "using exfalso" >> exfalso else
-                  fail "linarith failed: target is not a valid comparison"
-            let cfg := cfg.update_reducibility reduce_semi 
-            let (pref_type, new_var) := pref_type_and_new_var_from_tgt.elim (none, none) fun ⟨a, b⟩ => (some a, some b)
-            let hyps ← if only_on then return (new_var.elim [] singleton ++ hyps) else (· ++ hyps) <$> local_context 
-            let hyps ←
-              (do 
-                    let t ← get_restrict_type cfg.restrict_type_reflect 
-                    filter_hyps_to_type t hyps) <|>
-                  return hyps 
-            linarith_trace_proofs "linarith is running on the following hypotheses:" hyps 
-            run_linarith_on_pfs cfg hyps pref_type
+    tactic Unit :=
+  focus1 $ do
+    let t ← target
+    if t.is_eq.is_some then
+        linarith_trace "target is an equality: splitting" >> seq' (applyc `` eq_of_not_lt_of_not_gt) tactic.linarith
+      else do
+        let hyps ← hyps.mmap $ fun e => i_to_expr e >>= note_anon none
+        when cfg.split_hypotheses (linarith_trace "trying to split hypotheses" >> try auto.split_hyps)
+        let pref_type_and_new_var_from_tgt ← apply_contr_lemma
+        when pref_type_and_new_var_from_tgt.is_none $
+            if cfg.exfalso then linarith_trace "using exfalso" >> exfalso
+            else fail "linarith failed: target is not a valid comparison"
+        let cfg := cfg.update_reducibility reduce_semi
+        let (pref_type, new_var) := pref_type_and_new_var_from_tgt.elim (none, none) fun ⟨a, b⟩ => (some a, some b)
+        let hyps ← if only_on then return (new_var.elim [] singleton ++ hyps) else (· ++ hyps) <$> local_context
+        let hyps ←
+          (do
+                let t ← get_restrict_type cfg.restrict_type_reflect
+                filter_hyps_to_type t hyps) <|>
+              return hyps
+        linarith_trace_proofs "linarith is running on the following hypotheses:" hyps
+        run_linarith_on_pfs cfg hyps pref_type
 
 setup_tactic_parser
 
-/--
+/-- 
 Tries to prove a goal of `false` by linear arithmetic on hypotheses.
 If the goal is a linear (in)equality, tries to prove it by contradiction.
 If the goal is not `false` or an inequality, applies `exfalso` and tries linarith on the
@@ -295,12 +282,12 @@ Config options:
 * `linarith {split_hypotheses := ff}` will not destruct conjunctions in the context.
 -/
 unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse (pexpr_list)?)
-  (cfg : linarith_config := {  }) : tactic Unit :=
+    (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.is_some restr.is_some (hyps.get_or_else []) cfg
 
 add_hint_tactic linarith
 
-/--
+/-- 
 `linarith` attempts to find a contradiction between hypotheses that are linear (in)equalities.
 Equivalently, it can prove a linear inequality by assuming its negation and proving `false`.
 
@@ -355,7 +342,7 @@ add_tactic_doc
   { Name := "linarith", category := DocCategory.tactic, declNames := [`tactic.interactive.linarith],
     tags := ["arithmetic", "decision procedure", "finishing"] }
 
-/--
+/-- 
 An extension of `linarith` with some preprocessing to allow it to solve some nonlinear arithmetic
 problems. (Based on Coq's `nra` tactic.) See `linarith` for the available syntax of options,
 which are inherited by `nlinarith`; that is, `nlinarith!` and `nlinarith only [h1, h2]` all work as
@@ -368,9 +355,9 @@ in `linarith`. The preprocessing is as follows:
   where `R ∈ {<, ≤, =}` is the appropriate comparison derived from `R1, R2`.
 -/
 unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
-  (hyps : parse (pexpr_list)?) (cfg : linarith_config := {  }) : tactic Unit :=
+    (hyps : parse (pexpr_list)?) (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.is_some restr.is_some (hyps.get_or_else [])
-    { cfg with preprocessors := some$ cfg.preprocessors.get_or_else default_preprocessors ++ [nlinarith_extras] }
+    { cfg with preprocessors := some $ cfg.preprocessors.get_or_else default_preprocessors ++ [nlinarith_extras] }
 
 add_hint_tactic nlinarith
 

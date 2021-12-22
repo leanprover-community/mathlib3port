@@ -1,4 +1,4 @@
-import Mathbin.LinearAlgebra.Multilinear.Basic 
+import Mathbin.LinearAlgebra.Multilinear.Basic
 import Mathbin.LinearAlgebra.TensorProduct
 
 /-!
@@ -24,7 +24,7 @@ variable {N₂ : Type _} [AddCommMonoidₓ N₂] [Module R N₂]
 
 variable {N : Type _} [AddCommMonoidₓ N] [Module R N]
 
-/-- Given two multilinear maps `(ι₁ → N) → N₁` and `(ι₂ → N) → N₂`, this produces the map
+/--  Given two multilinear maps `(ι₁ → N) → N₁` and `(ι₂ → N) → N₂`, this produces the map
 `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂` by taking the coproduct of the domain and the tensor product
 of the codomain.
 
@@ -39,51 +39,43 @@ https://leanprover.zulipchat.com/#narrow/stream/217875-Is-there.20code.20for.20X
 -/
 @[simps apply]
 def dom_coprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
-  MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) :=
+    MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) :=
   { toFun := fun v => (a fun i => v (Sum.inl i)) ⊗ₜ b fun i => v (Sum.inr i),
-    map_add' :=
-      fun v i p q =>
-        by 
-          cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add],
-    map_smul' :=
-      fun v i c p =>
-        by 
-          cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul] }
+    map_add' := fun v i p q => by
+      cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add],
+    map_smul' := fun v i c p => by
+      cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul] }
 
-/-- A more bundled version of `multilinear_map.dom_coprod` that maps
+/--  A more bundled version of `multilinear_map.dom_coprod` that maps
 `((ι₁ → N) → N₁) ⊗ ((ι₂ → N) → N₂)` to `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂`. -/
 def dom_coprod' :
-  MultilinearMap R (fun _ : ι₁ => N) N₁ ⊗[R] MultilinearMap R (fun _ : ι₂ => N) N₂ →ₗ[R]
-    MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) :=
-  TensorProduct.lift$
+    MultilinearMap R (fun _ : ι₁ => N) N₁ ⊗[R] MultilinearMap R (fun _ : ι₂ => N) N₂ →ₗ[R]
+      MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) :=
+  TensorProduct.lift $
     LinearMap.mk₂ R dom_coprod
-      (fun m₁ m₂ n =>
-        by 
-          ext 
-          simp only [dom_coprod_apply, TensorProduct.add_tmul, add_apply])
-      (fun c m n =>
-        by 
-          ext 
-          simp only [dom_coprod_apply, TensorProduct.smul_tmul', smul_apply])
-      (fun m n₁ n₂ =>
-        by 
-          ext 
-          simp only [dom_coprod_apply, TensorProduct.tmul_add, add_apply])
-      fun c m n =>
-        by 
-          ext 
-          simp only [dom_coprod_apply, TensorProduct.tmul_smul, smul_apply]
+      (fun m₁ m₂ n => by
+        ext
+        simp only [dom_coprod_apply, TensorProduct.add_tmul, add_apply])
+      (fun c m n => by
+        ext
+        simp only [dom_coprod_apply, TensorProduct.smul_tmul', smul_apply])
+      (fun m n₁ n₂ => by
+        ext
+        simp only [dom_coprod_apply, TensorProduct.tmul_add, add_apply])
+      fun c m n => by
+      ext
+      simp only [dom_coprod_apply, TensorProduct.tmul_smul, smul_apply]
 
 @[simp]
 theorem dom_coprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
-  dom_coprod' (a ⊗ₜ[R] b) = dom_coprod a b :=
+    dom_coprod' (a ⊗ₜ[R] b) = dom_coprod a b :=
   rfl
 
-/-- When passed an `equiv.sum_congr`, `multilinear_map.dom_dom_congr` distributes over
+/--  When passed an `equiv.sum_congr`, `multilinear_map.dom_dom_congr` distributes over
 `multilinear_map.dom_coprod`. -/
 theorem dom_coprod_dom_dom_congr_sum_congr (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
-  (b : MultilinearMap R (fun _ : ι₂ => N) N₂) (σa : ι₁ ≃ ι₃) (σb : ι₂ ≃ ι₄) :
-  (a.dom_coprod b).domDomCongr (σa.sum_congr σb) = (a.dom_dom_congr σa).domCoprod (b.dom_dom_congr σb) :=
+    (b : MultilinearMap R (fun _ : ι₂ => N) N₂) (σa : ι₁ ≃ ι₃) (σb : ι₂ ≃ ι₄) :
+    (a.dom_coprod b).domDomCongr (σa.sum_congr σb) = (a.dom_dom_congr σa).domCoprod (b.dom_dom_congr σb) :=
   rfl
 
 end DomCoprod

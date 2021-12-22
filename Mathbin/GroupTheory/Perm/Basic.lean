@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Group.Pi 
+import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
@@ -16,10 +16,18 @@ variable {α : Type u} {β : Type v}
 
 namespace Perm
 
-instance perm_group : Groupₓ (perm α) :=
-  { mul := fun f g => Equivₓ.trans g f, one := Equivₓ.refl α, inv := Equivₓ.symm,
-    mul_assoc := fun f g h => (trans_assoc _ _ _).symm, one_mul := trans_refl, mul_one := refl_trans,
-    mul_left_inv := self_trans_symm }
+-- failed to format: format: uncaught backtrack exception
+instance
+  perm_group
+  : Groupₓ ( perm α )
+  where
+    mul f g := Equivₓ.trans g f
+      one := Equivₓ.refl α
+      inv := Equivₓ.symm
+      mul_assoc f g h := ( trans_assoc _ _ _ ) . symm
+      one_mul := trans_refl
+      mul_one := refl_trans
+      mul_left_inv := self_trans_symm
 
 theorem mul_apply (f g : perm α) x : (f*g) x = f (g x) :=
   Equivₓ.trans_apply _ _ _
@@ -59,9 +67,8 @@ theorem inv_eq_iff_eq {f : perm α} {x y : α} : (f⁻¹) x = y ↔ x = f y :=
   f.symm_apply_eq
 
 theorem zpow_apply_comm {α : Type _} (σ : Equivₓ.Perm α) (m n : ℤ) {x : α} :
-  (σ ^ m) ((σ ^ n) x) = (σ ^ n) ((σ ^ m) x) :=
-  by 
-    rw [←Equivₓ.Perm.mul_apply, ←Equivₓ.Perm.mul_apply, zpow_mul_comm]
+    (σ ^ m) ((σ ^ n) x) = (σ ^ n) ((σ ^ m) x) := by
+  rw [← Equivₓ.Perm.mul_apply, ← Equivₓ.Perm.mul_apply, zpow_mul_comm]
 
 /-! Lemmas about mixing `perm` with `equiv`. Because we have multiple ways to express
 `equiv.refl`, `equiv.symm`, and `equiv.trans`, we want simp lemmas for every combination.
@@ -114,7 +121,7 @@ theorem symm_mul (e : perm α) : (e.symm*e) = 1 :=
 
 @[simp]
 theorem sum_congr_mul {α β : Type _} (e : perm α) (f : perm β) (g : perm α) (h : perm β) :
-  (sum_congr e f*sum_congr g h) = sum_congr (e*g) (f*h) :=
+    (sum_congr e f*sum_congr g h) = sum_congr (e*g) (f*h) :=
   sum_congr_trans g h e f
 
 @[simp]
@@ -125,7 +132,7 @@ theorem sum_congr_inv {α β : Type _} (e : perm α) (f : perm β) : sum_congr e
 theorem sum_congr_one {α β : Type _} : sum_congr (1 : perm α) (1 : perm β) = 1 :=
   sum_congr_refl
 
-/-- `equiv.perm.sum_congr` as a `monoid_hom`, with its two arguments bundled into a single `prod`.
+/--  `equiv.perm.sum_congr` as a `monoid_hom`, with its two arguments bundled into a single `prod`.
 
 This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
 permutations which do not exchange elements between `α` and `β`. -/
@@ -134,24 +141,23 @@ def sum_congr_hom (α β : Type _) : perm α × perm β →* perm (Sum α β) :=
   { toFun := fun a => sum_congr a.1 a.2, map_one' := sum_congr_one,
     map_mul' := fun a b => (sum_congr_mul _ _ _ _).symm }
 
-theorem sum_congr_hom_injective {α β : Type _} : Function.Injective (sum_congr_hom α β) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    rw [Prod.mk.inj_iffₓ]
-    constructor <;> ext i
-    ·
-      simpa using Equivₓ.congr_fun h (Sum.inl i)
-    ·
-      simpa using Equivₓ.congr_fun h (Sum.inr i)
+theorem sum_congr_hom_injective {α β : Type _} : Function.Injective (sum_congr_hom α β) := by
+  rintro ⟨⟩ ⟨⟩ h
+  rw [Prod.mk.inj_iffₓ]
+  constructor <;> ext i
+  ·
+    simpa using Equivₓ.congr_fun h (Sum.inl i)
+  ·
+    simpa using Equivₓ.congr_fun h (Sum.inr i)
 
 @[simp]
 theorem sum_congr_swap_one {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : α) :
-  sum_congr (Equivₓ.swap i j) (1 : perm β) = Equivₓ.swap (Sum.inl i) (Sum.inl j) :=
+    sum_congr (Equivₓ.swap i j) (1 : perm β) = Equivₓ.swap (Sum.inl i) (Sum.inl j) :=
   sum_congr_swap_refl i j
 
 @[simp]
 theorem sum_congr_one_swap {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : β) :
-  sum_congr (1 : perm α) (Equivₓ.swap i j) = Equivₓ.swap (Sum.inr i) (Sum.inr j) :=
+    sum_congr (1 : perm α) (Equivₓ.swap i j) = Equivₓ.swap (Sum.inr i) (Sum.inr j) :=
   sum_congr_refl_swap i j
 
 /-! Lemmas about `equiv.perm.sigma_congr_right` re-expressed via the group structure. -/
@@ -159,46 +165,298 @@ theorem sum_congr_one_swap {α β : Type _} [DecidableEq α] [DecidableEq β] (i
 
 @[simp]
 theorem sigma_congr_right_mul {α : Type _} {β : α → Type _} (F : ∀ a, perm (β a)) (G : ∀ a, perm (β a)) :
-  (sigma_congr_right F*sigma_congr_right G) = sigma_congr_right (F*G) :=
+    (sigma_congr_right F*sigma_congr_right G) = sigma_congr_right (F*G) :=
   sigma_congr_right_trans G F
 
 @[simp]
 theorem sigma_congr_right_inv {α : Type _} {β : α → Type _} (F : ∀ a, perm (β a)) :
-  sigma_congr_right F⁻¹ = sigma_congr_right fun a => F a⁻¹ :=
+    sigma_congr_right F⁻¹ = sigma_congr_right fun a => F a⁻¹ :=
   sigma_congr_right_symm F
 
 @[simp]
-theorem sigma_congr_right_one {α : Type _} {β : α → Type _} : sigma_congr_right (1 : ∀ a, Equivₓ.Perm$ β a) = 1 :=
+theorem sigma_congr_right_one {α : Type _} {β : α → Type _} : sigma_congr_right (1 : ∀ a, Equivₓ.Perm $ β a) = 1 :=
   sigma_congr_right_refl
 
-/-- `equiv.perm.sigma_congr_right` as a `monoid_hom`.
-
-This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
-permutations which do not exchange elements between fibers. -/
-@[simps]
-def sigma_congr_right_hom {α : Type _} (β : α → Type _) : (∀ a, perm (β a)) →* perm (Σ a, β a) :=
-  { toFun := sigma_congr_right, map_one' := sigma_congr_right_one,
-    map_mul' := fun a b => (sigma_congr_right_mul _ _).symm }
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment
+    "/--"
+    " `equiv.perm.sigma_congr_right` as a `monoid_hom`.\n\nThis is particularly useful for its `monoid_hom.range` projection, which is the subgroup of\npermutations which do not exchange elements between fibers. -/")]
+  [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simps "simps" [] []))] "]")]
+  []
+  []
+  []
+  [])
+ (Command.def
+  "def"
+  (Command.declId `sigma_congr_right_hom [])
+  (Command.optDeclSig
+   [(Term.implicitBinder "{" [`α] [":" (Term.type "Type" [(Level.hole "_")])] "}")
+    (Term.explicitBinder "(" [`β] [":" (Term.arrow `α "→" (Term.type "Type" [(Level.hole "_")]))] [] ")")]
+   [(Term.typeSpec
+     ":"
+     (Algebra.Group.Hom.«term_→*_»
+      (Term.forall "∀" [(Term.simpleBinder [`a] [])] "," (Term.app `perm [(Term.app `β [`a])]))
+      " →* "
+      (Term.app
+       `perm
+       [(Init.Data.Sigma.Basic.«termΣ_,_»
+         "Σ"
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] []))
+         ", "
+         (Term.app `β [`a]))])))])
+  (Command.declValSimple
+   ":="
+   (Term.structInst
+    "{"
+    []
+    [(group (Term.structInstField (Term.structInstLVal `toFun []) ":=" `sigma_congr_right) [","])
+     (group (Term.structInstField (Term.structInstLVal `map_one' []) ":=" `sigma_congr_right_one) [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `map_mul' [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`a `b] [])]
+         "=>"
+         (Term.proj (Term.app `sigma_congr_right_mul [(Term.hole "_") (Term.hole "_")]) "." `symm))))
+      [])]
+    (Term.optEllipsis [])
+    []
+    "}")
+   [])
+  []
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.structInst
+   "{"
+   []
+   [(group (Term.structInstField (Term.structInstLVal `toFun []) ":=" `sigma_congr_right) [","])
+    (group (Term.structInstField (Term.structInstLVal `map_one' []) ":=" `sigma_congr_right_one) [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `map_mul' [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`a `b] [])]
+        "=>"
+        (Term.proj (Term.app `sigma_congr_right_mul [(Term.hole "_") (Term.hole "_")]) "." `symm))))
+     [])]
+   (Term.optEllipsis [])
+   []
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.structInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.optEllipsis', expected 'Lean.Parser.Term.optEllipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [`a `b] [])]
+    "=>"
+    (Term.proj (Term.app `sigma_congr_right_mul [(Term.hole "_") (Term.hole "_")]) "." `symm)))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.proj (Term.app `sigma_congr_right_mul [(Term.hole "_") (Term.hole "_")]) "." `symm)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `sigma_congr_right_mul [(Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `sigma_congr_right_mul
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app `sigma_congr_right_mul [(Term.hole "_") (Term.hole "_")]) []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `sigma_congr_right_one
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `sigma_congr_right
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.optDeclSig', expected 'Lean.Parser.Command.optDeclSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (Algebra.Group.Hom.«term_→*_»
+   (Term.forall "∀" [(Term.simpleBinder [`a] [])] "," (Term.app `perm [(Term.app `β [`a])]))
+   " →* "
+   (Term.app
+    `perm
+    [(Init.Data.Sigma.Basic.«termΣ_,_»
+      "Σ"
+      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] []))
+      ", "
+      (Term.app `β [`a]))]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Hom.«term_→*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `perm
+   [(Init.Data.Sigma.Basic.«termΣ_,_»
+     "Σ"
+     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] []))
+     ", "
+     (Term.app `β [`a]))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Data.Sigma.Basic.«termΣ_,_»
+   "Σ"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] []))
+   ", "
+   (Term.app `β [`a]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Sigma.Basic.«termΣ_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `β [`a])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `β
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      `equiv.perm.sigma_congr_right` as a `monoid_hom`.
+      
+      This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
+      permutations which do not exchange elements between fibers. -/
+    @[ simps ]
+  def
+    sigma_congr_right_hom
+    { α : Type _ } ( β : α → Type _ ) : ∀ a , perm β a →* perm Σ a , β a
+    :=
+      {
+        toFun := sigma_congr_right ,
+          map_one' := sigma_congr_right_one ,
+          map_mul' := fun a b => sigma_congr_right_mul _ _ . symm
+        }
 
 theorem sigma_congr_right_hom_injective {α : Type _} {β : α → Type _} : Function.Injective (sigma_congr_right_hom β) :=
-  by 
-    intro x y h 
-    ext a b 
-    simpa using Equivₓ.congr_fun h ⟨a, b⟩
+  by
+  intro x y h
+  ext a b
+  simpa using Equivₓ.congr_fun h ⟨a, b⟩
 
-/-- `equiv.perm.subtype_congr` as a `monoid_hom`. -/
+/--  `equiv.perm.subtype_congr` as a `monoid_hom`. -/
 @[simps]
 def subtype_congr_hom (p : α → Prop) [DecidablePred p] : perm { a // p a } × perm { a // ¬p a } →* perm α :=
   { toFun := fun pair => perm.subtype_congr pair.fst pair.snd, map_one' := perm.subtype_congr.refl,
     map_mul' := fun _ _ => (perm.subtype_congr.trans _ _ _ _).symm }
 
-theorem subtype_congr_hom_injective (p : α → Prop) [DecidablePred p] : Function.Injective (subtype_congr_hom p) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    rw [Prod.mk.inj_iffₓ]
-    constructor <;> ext i <;> simpa using Equivₓ.congr_fun h i
+theorem subtype_congr_hom_injective (p : α → Prop) [DecidablePred p] : Function.Injective (subtype_congr_hom p) := by
+  rintro ⟨⟩ ⟨⟩ h
+  rw [Prod.mk.inj_iffₓ]
+  constructor <;> ext i <;> simpa using Equivₓ.congr_fun h i
 
-/-- If `e` is also a permutation, we can write `perm_congr`
+/--  If `e` is also a permutation, we can write `perm_congr`
 completely in terms of the group structure. -/
 @[simp]
 theorem perm_congr_eq_mul (e p : perm α) : e.perm_congr p = (e*p)*e⁻¹ :=
@@ -223,16 +481,15 @@ theorem extend_domain_inv : e.extend_domain f⁻¹ = e⁻¹.extendDomain f :=
 theorem extend_domain_mul (e e' : perm α) : (e.extend_domain f*e'.extend_domain f) = (e*e').extendDomain f :=
   extend_domain_trans _ _ _
 
-/-- `extend_domain` as a group homomorphism -/
+/--  `extend_domain` as a group homomorphism -/
 @[simps]
 def extend_domain_hom : perm α →* perm β :=
   { toFun := fun e => extend_domain e f, map_one' := extend_domain_one f,
     map_mul' := fun e e' => (extend_domain_mul f e e').symm }
 
 theorem extend_domain_hom_injective : Function.Injective (extend_domain_hom f) :=
-  (extend_domain_hom f).injective_iff.mpr
-    fun e he =>
-      ext fun x => f.injective (Subtype.ext ((extend_domain_apply_image e f x).symm.trans (ext_iff.mp he (f x))))
+  (extend_domain_hom f).injective_iff.mpr fun e he =>
+    ext fun x => f.injective (Subtype.ext ((extend_domain_apply_image e f x).symm.trans (ext_iff.mp he (f x))))
 
 @[simp]
 theorem extend_domain_eq_one_iff {e : perm α} {f : α ≃ Subtype p} : e.extend_domain f = 1 ↔ e = 1 :=
@@ -240,144 +497,125 @@ theorem extend_domain_eq_one_iff {e : perm α} {f : α ≃ Subtype p} : e.extend
 
 end ExtendDomain
 
-/-- If the permutation `f` fixes the subtype `{x // p x}`, then this returns the permutation
+/--  If the permutation `f` fixes the subtype `{x // p x}`, then this returns the permutation
   on `{x // p x}` induced by `f`. -/
 def subtype_perm (f : perm α) {p : α → Prop} (h : ∀ x, p x ↔ p (f x)) : perm { x // p x } :=
-  ⟨fun x => ⟨f x, (h _).1 x.2⟩,
-    fun x =>
-      ⟨(f⁻¹) x,
-        (h ((f⁻¹) x)).2$
-          by 
-            simpa using x.2⟩,
-    fun _ =>
-      by 
-        simp only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk],
-    fun _ =>
-      by 
-        simp only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk]⟩
+  ⟨fun x => ⟨f x, (h _).1 x.2⟩, fun x =>
+    ⟨(f⁻¹) x,
+      (h ((f⁻¹) x)).2 $ by
+        simpa using x.2⟩,
+    fun _ => by
+    simp only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk], fun _ => by
+    simp only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk]⟩
 
 @[simp]
 theorem subtype_perm_apply (f : perm α) {p : α → Prop} (h : ∀ x, p x ↔ p (f x)) (x : { x // p x }) :
-  subtype_perm f h x = ⟨f x, (h _).1 x.2⟩ :=
+    subtype_perm f h x = ⟨f x, (h _).1 x.2⟩ :=
   rfl
 
 @[simp]
 theorem subtype_perm_one (p : α → Prop) (h : ∀ x, p x ↔ p ((1 : perm α) x)) : @subtype_perm α 1 p h = 1 :=
-  Equivₓ.ext$ fun ⟨_, _⟩ => rfl
+  Equivₓ.ext $ fun ⟨_, _⟩ => rfl
 
-/-- The inclusion map of permutations on a subtype of `α` into permutations of `α`,
+/--  The inclusion map of permutations on a subtype of `α` into permutations of `α`,
   fixing the other points. -/
 def of_subtype {p : α → Prop} [DecidablePred p] : perm (Subtype p) →* perm α :=
-  { toFun :=
-      fun f =>
-        ⟨fun x => if h : p x then f ⟨x, h⟩ else x, fun x => if h : p x then (f⁻¹) ⟨x, h⟩ else x,
-          fun x =>
-            have h : ∀ h : p x, p (f ⟨x, h⟩) := fun h => (f ⟨x, h⟩).2
-            by 
-              simp only 
-              splitIfs  at * <;> simp_all only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk, not_true],
-          fun x =>
-            have h : ∀ h : p x, p ((f⁻¹) ⟨x, h⟩) := fun h => ((f⁻¹) ⟨x, h⟩).2
-            by 
-              simp only 
-              splitIfs  at * <;> simp_all only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk, not_true]⟩,
-    map_one' :=
-      by 
-        ext 
-        dsimp 
-        splitIfs <;> rfl,
-    map_mul' :=
-      fun f g =>
-        Equivₓ.ext$
-          fun x =>
-            by 
-              byCases' h : p x
-              ·
-                have h₁ : p (f (g ⟨x, h⟩))
-                exact (f (g ⟨x, h⟩)).2
-                have h₂ : p (g ⟨x, h⟩)
-                exact (g ⟨x, h⟩).2
-                simp only [h, h₂, coe_fn_mk, perm.mul_apply, dif_pos, Subtype.coe_eta]
-              ·
-                simp only [h, coe_fn_mk, perm.mul_apply, dif_neg, not_false_iff] }
+  { toFun := fun f =>
+      ⟨fun x => if h : p x then f ⟨x, h⟩ else x, fun x => if h : p x then (f⁻¹) ⟨x, h⟩ else x, fun x =>
+        have h : ∀ h : p x, p (f ⟨x, h⟩) := fun h => (f ⟨x, h⟩).2
+        by
+        simp only
+        split_ifs  at * <;> simp_all only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk, not_true],
+        fun x =>
+        have h : ∀ h : p x, p ((f⁻¹) ⟨x, h⟩) := fun h => ((f⁻¹) ⟨x, h⟩).2
+        by
+        simp only
+        split_ifs  at * <;> simp_all only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk, not_true]⟩,
+    map_one' := by
+      ext
+      dsimp
+      split_ifs <;> rfl,
+    map_mul' := fun f g =>
+      Equivₓ.ext $ fun x => by
+        by_cases' h : p x
+        ·
+          have h₁ : p (f (g ⟨x, h⟩))
+          exact (f (g ⟨x, h⟩)).2
+          have h₂ : p (g ⟨x, h⟩)
+          exact (g ⟨x, h⟩).2
+          simp only [h, h₂, coe_fn_mk, perm.mul_apply, dif_pos, Subtype.coe_eta]
+        ·
+          simp only [h, coe_fn_mk, perm.mul_apply, dif_neg, not_false_iff] }
 
 theorem of_subtype_subtype_perm {f : perm α} {p : α → Prop} [DecidablePred p] (h₁ : ∀ x, p x ↔ p (f x))
-  (h₂ : ∀ x, f x ≠ x → p x) : of_subtype (subtype_perm f h₁) = f :=
-  Equivₓ.ext$
-    fun x =>
-      by 
-        rw [of_subtype, subtype_perm]
-        byCases' hx : p x
-        ·
-          simp only [hx, coe_fn_mk, dif_pos, MonoidHom.coe_mk, Subtype.coe_mk]
-        ·
-          have  := Classical.propDecidable 
-          simp only [hx, not_not.mp (mt (h₂ x) hx), coe_fn_mk, dif_neg, not_false_iff, MonoidHom.coe_mk]
+    (h₂ : ∀ x, f x ≠ x → p x) : of_subtype (subtype_perm f h₁) = f :=
+  Equivₓ.ext $ fun x => by
+    rw [of_subtype, subtype_perm]
+    by_cases' hx : p x
+    ·
+      simp only [hx, coe_fn_mk, dif_pos, MonoidHom.coe_mk, Subtype.coe_mk]
+    ·
+      have := Classical.propDecidable
+      simp only [hx, not_not.mp (mt (h₂ x) hx), coe_fn_mk, dif_neg, not_false_iff, MonoidHom.coe_mk]
 
 theorem of_subtype_apply_of_mem {p : α → Prop} [DecidablePred p] (f : perm (Subtype p)) {x : α} (hx : p x) :
-  of_subtype f x = f ⟨x, hx⟩ :=
+    of_subtype f x = f ⟨x, hx⟩ :=
   dif_pos hx
 
 @[simp]
 theorem of_subtype_apply_coe {p : α → Prop} [DecidablePred p] (f : perm (Subtype p)) (x : Subtype p) :
-  of_subtype f x = f x :=
-  Subtype.casesOn x$ fun _ => of_subtype_apply_of_mem f
+    of_subtype f x = f x :=
+  Subtype.casesOn x $ fun _ => of_subtype_apply_of_mem f
 
 theorem of_subtype_apply_of_not_mem {p : α → Prop} [DecidablePred p] (f : perm (Subtype p)) {x : α} (hx : ¬p x) :
-  of_subtype f x = x :=
+    of_subtype f x = x :=
   dif_neg hx
 
 theorem mem_iff_of_subtype_apply_mem {p : α → Prop} [DecidablePred p] (f : perm (Subtype p)) (x : α) :
-  p x ↔ p ((of_subtype f : α → α) x) :=
-  if h : p x then
-    by 
-      simpa only [of_subtype, h, coe_fn_mk, dif_pos, true_iffₓ, MonoidHom.coe_mk] using (f ⟨x, h⟩).2
-  else
-    by 
-      simp [h, of_subtype_apply_of_not_mem f h]
+    p x ↔ p ((of_subtype f : α → α) x) :=
+  if h : p x then by
+    simpa only [of_subtype, h, coe_fn_mk, dif_pos, true_iffₓ, MonoidHom.coe_mk] using (f ⟨x, h⟩).2
+  else by
+    simp [h, of_subtype_apply_of_not_mem f h]
 
 @[simp]
 theorem subtype_perm_of_subtype {p : α → Prop} [DecidablePred p] (f : perm (Subtype p)) :
-  subtype_perm (of_subtype f) (mem_iff_of_subtype_apply_mem f) = f :=
-  Equivₓ.ext$
-    fun ⟨x, hx⟩ =>
-      by 
-        dsimp [subtype_perm, of_subtype]
-        simp only [show p x from hx, dif_pos, Subtype.coe_eta]
+    subtype_perm (of_subtype f) (mem_iff_of_subtype_apply_mem f) = f :=
+  Equivₓ.ext $ fun ⟨x, hx⟩ => by
+    dsimp [subtype_perm, of_subtype]
+    simp only [show p x from hx, dif_pos, Subtype.coe_eta]
 
 @[simp]
 theorem default_perm {n : Type _} : default (Equivₓ.Perm n) = 1 :=
   rfl
 
-/-- Permutations on a subtype are equivalent to permutations on the original type that fix pointwise
+/--  Permutations on a subtype are equivalent to permutations on the original type that fix pointwise
 the rest. -/
 @[simps]
 protected def subtype_equiv_subtype_perm (p : α → Prop) [DecidablePred p] :
-  perm (Subtype p) ≃ { f : perm α // ∀ a, ¬p a → f a = a } :=
+    perm (Subtype p) ≃ { f : perm α // ∀ a, ¬p a → f a = a } :=
   { toFun := fun f => ⟨f.of_subtype, fun a => f.of_subtype_apply_of_not_mem⟩,
-    invFun :=
-      fun f =>
-        (f : perm α).subtypePerm
-          fun a =>
-            ⟨Decidable.not_imp_not.1$ fun hfa => f.val.injective (f.prop _ hfa) ▸ hfa,
-              Decidable.not_imp_not.1$ fun ha hfa => ha$ f.prop a ha ▸ hfa⟩,
+    invFun := fun f =>
+      (f : perm α).subtypePerm fun a =>
+        ⟨Decidable.not_imp_not.1 $ fun hfa => f.val.injective (f.prop _ hfa) ▸ hfa,
+          Decidable.not_imp_not.1 $ fun ha hfa => ha $ f.prop a ha ▸ hfa⟩,
     left_inv := Equivₓ.Perm.subtype_perm_of_subtype,
-    right_inv :=
-      fun f => Subtype.ext (Equivₓ.Perm.of_subtype_subtype_perm _$ fun a => Not.decidable_imp_symm$ f.prop a) }
+    right_inv := fun f =>
+      Subtype.ext (Equivₓ.Perm.of_subtype_subtype_perm _ $ fun a => Not.decidable_imp_symm $ f.prop a) }
 
 theorem subtype_equiv_subtype_perm_apply_of_mem {α : Type _} {p : α → Prop} [DecidablePred p] (f : perm (Subtype p))
-  {a : α} (h : p a) : perm.subtype_equiv_subtype_perm p f a = f ⟨a, h⟩ :=
+    {a : α} (h : p a) : perm.subtype_equiv_subtype_perm p f a = f ⟨a, h⟩ :=
   f.of_subtype_apply_of_mem h
 
 theorem subtype_equiv_subtype_perm_apply_of_not_mem {α : Type _} {p : α → Prop} [DecidablePred p] (f : perm (Subtype p))
-  {a : α} (h : ¬p a) : perm.subtype_equiv_subtype_perm p f a = a :=
+    {a : α} (h : ¬p a) : perm.subtype_equiv_subtype_perm p f a = a :=
   f.of_subtype_apply_of_not_mem h
 
 variable (e : perm α) (ι : α ↪ β)
 
 open_locale Classical
 
-/-- Noncomputable version of `equiv.perm.via_fintype_embedding` that does not assume `fintype` -/
+/--  Noncomputable version of `equiv.perm.via_fintype_embedding` that does not assume `fintype` -/
 noncomputable def via_embedding : perm β :=
   extend_domain e (of_injective ι.1 ι.2)
 
@@ -387,7 +625,7 @@ theorem via_embedding_apply (x : α) : e.via_embedding ι (ι x) = ι (e x) :=
 theorem via_embedding_apply_of_not_mem (x : β) (hx : x ∉ _root_.set.range ι) : e.via_embedding ι x = x :=
   extend_domain_apply_not_subtype e (of_injective ι.1 ι.2) hx
 
-/-- `via_embedding` as a group homomorphism -/
+/--  `via_embedding` as a group homomorphism -/
 noncomputable def via_embedding_hom : perm α →* perm β :=
   extend_domain_hom (of_injective ι.1 ι.2)
 
@@ -412,44 +650,38 @@ theorem swap_mul_self (i j : α) : (swap i j*swap i j) = 1 :=
   swap_swap i j
 
 theorem swap_mul_eq_mul_swap (f : perm α) (x y : α) : (swap x y*f) = f*swap ((f⁻¹) x) ((f⁻¹) y) :=
-  Equivₓ.ext$
-    fun z =>
-      by 
-        simp only [perm.mul_apply, swap_apply_def]
-        splitIfs <;> simp_all only [perm.apply_inv_self, perm.eq_inv_iff_eq, eq_self_iff_true, not_true]
+  Equivₓ.ext $ fun z => by
+    simp only [perm.mul_apply, swap_apply_def]
+    split_ifs <;> simp_all only [perm.apply_inv_self, perm.eq_inv_iff_eq, eq_self_iff_true, not_true]
 
-theorem mul_swap_eq_swap_mul (f : perm α) (x y : α) : (f*swap x y) = swap (f x) (f y)*f :=
-  by 
-    rw [swap_mul_eq_mul_swap, perm.inv_apply_self, perm.inv_apply_self]
+theorem mul_swap_eq_swap_mul (f : perm α) (x y : α) : (f*swap x y) = swap (f x) (f y)*f := by
+  rw [swap_mul_eq_mul_swap, perm.inv_apply_self, perm.inv_apply_self]
 
-theorem swap_apply_apply (f : perm α) (x y : α) : swap (f x) (f y) = (f*swap x y)*f⁻¹ :=
-  by 
-    rw [mul_swap_eq_swap_mul, mul_inv_cancel_rightₓ]
+theorem swap_apply_apply (f : perm α) (x y : α) : swap (f x) (f y) = (f*swap x y)*f⁻¹ := by
+  rw [mul_swap_eq_swap_mul, mul_inv_cancel_rightₓ]
 
-/-- Left-multiplying a permutation with `swap i j` twice gives the original permutation.
+/--  Left-multiplying a permutation with `swap i j` twice gives the original permutation.
 
   This specialization of `swap_mul_self` is useful when using cosets of permutations.
 -/
 @[simp]
-theorem swap_mul_self_mul (i j : α) (σ : perm α) : (Equivₓ.swap i j*Equivₓ.swap i j*σ) = σ :=
-  by 
-    rw [←mul_assocₓ, swap_mul_self, one_mulₓ]
+theorem swap_mul_self_mul (i j : α) (σ : perm α) : (Equivₓ.swap i j*Equivₓ.swap i j*σ) = σ := by
+  rw [← mul_assocₓ, swap_mul_self, one_mulₓ]
 
-/-- Right-multiplying a permutation with `swap i j` twice gives the original permutation.
+/--  Right-multiplying a permutation with `swap i j` twice gives the original permutation.
 
   This specialization of `swap_mul_self` is useful when using cosets of permutations.
 -/
 @[simp]
-theorem mul_swap_mul_self (i j : α) (σ : perm α) : ((σ*Equivₓ.swap i j)*Equivₓ.swap i j) = σ :=
-  by 
-    rw [mul_assocₓ, swap_mul_self, mul_oneₓ]
+theorem mul_swap_mul_self (i j : α) (σ : perm α) : ((σ*Equivₓ.swap i j)*Equivₓ.swap i j) = σ := by
+  rw [mul_assocₓ, swap_mul_self, mul_oneₓ]
 
-/-- A stronger version of `mul_right_injective` -/
+/--  A stronger version of `mul_right_injective` -/
 @[simp]
 theorem swap_mul_involutive (i j : α) : Function.Involutive ((·*·) (Equivₓ.swap i j)) :=
   swap_mul_self_mul i j
 
-/-- A stronger version of `mul_left_injective` -/
+/--  A stronger version of `mul_left_injective` -/
 @[simp]
 theorem mul_swap_involutive (i j : α) : Function.Involutive (·*Equivₓ.swap i j) :=
   mul_swap_mul_self i j
@@ -460,30 +692,26 @@ theorem swap_eq_one_iff {i j : α} : swap i j = (1 : perm α) ↔ i = j :=
 
 theorem swap_mul_eq_iff {i j : α} {σ : perm α} : (swap i j*σ) = σ ↔ i = j :=
   ⟨fun h =>
-      have swap_id : swap i j = 1 := mul_right_cancelₓ (trans h (one_mulₓ σ).symm)
-      by 
-        rw [←swap_apply_right i j, swap_id]
-        rfl,
-    fun h =>
-      by 
-        erw [h, swap_self, one_mulₓ]⟩
+    have swap_id : swap i j = 1 := mul_right_cancelₓ (trans h (one_mulₓ σ).symm)
+    by
+    rw [← swap_apply_right i j, swap_id]
+    rfl,
+    fun h => by
+    erw [h, swap_self, one_mulₓ]⟩
 
 theorem mul_swap_eq_iff {i j : α} {σ : perm α} : (σ*swap i j) = σ ↔ i = j :=
   ⟨fun h =>
-      have swap_id : swap i j = 1 := mul_left_cancelₓ (trans h (one_mulₓ σ).symm)
-      by 
-        rw [←swap_apply_right i j, swap_id]
-        rfl,
-    fun h =>
-      by 
-        erw [h, swap_self, mul_oneₓ]⟩
+    have swap_id : swap i j = 1 := mul_left_cancelₓ (trans h (one_mulₓ σ).symm)
+    by
+    rw [← swap_apply_right i j, swap_id]
+    rfl,
+    fun h => by
+    erw [h, swap_self, mul_oneₓ]⟩
 
 theorem swap_mul_swap_mul_swap {x y z : α} (hwz : x ≠ y) (hxz : x ≠ z) : ((swap y z*swap x y)*swap y z) = swap z x :=
-  Equivₓ.ext$
-    fun n =>
-      by 
-        simp only [swap_apply_def, perm.mul_apply]
-        splitIfs <;> cc
+  Equivₓ.ext $ fun n => by
+    simp only [swap_apply_def, perm.mul_apply]
+    split_ifs <;> cc
 
 end Swap
 

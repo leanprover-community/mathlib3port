@@ -43,15 +43,15 @@ universe u v
 
 namespace Module
 
-open function(Injective)
+open function (Injective)
 
-open linear_map(lsmul)
+open linear_map (lsmul)
 
 open_locale TensorProduct
 
-/-- An `R`-module `M` is flat if for all finitely generated ideals `I` of `R`,
+/--  An `R`-module `M` is flat if for all finitely generated ideals `I` of `R`,
 the canonical map `I ⊗ M →ₗ M` is injective. -/
-class flat (R : Type u) (M : Type v) [CommRingₓ R] [AddCommGroupₓ M] [Module R M] : Prop where 
+class flat (R : Type u) (M : Type v) [CommRingₓ R] [AddCommGroupₓ M] [Module R M] : Prop where
   out : ∀ ⦃I : Ideal R⦄ hI : I.fg, injective (TensorProduct.lift ((lsmul R M).comp I.subtype))
 
 namespace Flat
@@ -59,13 +59,13 @@ namespace Flat
 open TensorProduct LinearMap _Root_.Submodule
 
 instance self (R : Type u) [CommRingₓ R] : flat R R :=
-  ⟨by 
-      intro I hI 
-      rw [←Equivₓ.injective_comp (TensorProduct.rid R I).symm.toEquiv]
-      convert Subtype.coe_injective using 1 
-      ext x 
-      simp only [Function.comp_app, LinearEquiv.coe_to_equiv, rid_symm_apply, comp_apply, mul_oneₓ, lift.tmul,
-        subtype_apply, Algebra.id.smul_eq_mul, lsmul_apply]⟩
+  ⟨by
+    intro I hI
+    rw [← Equivₓ.injective_comp (TensorProduct.rid R I).symm.toEquiv]
+    convert Subtype.coe_injective using 1
+    ext x
+    simp only [Function.comp_app, LinearEquiv.coe_to_equiv, rid_symm_apply, comp_apply, mul_oneₓ, lift.tmul,
+      subtype_apply, Algebra.id.smul_eq_mul, lsmul_apply]⟩
 
 end Flat
 

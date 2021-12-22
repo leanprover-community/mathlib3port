@@ -11,7 +11,7 @@ see https://ncatlab.org/nlab/show/biproduct#BiproductsImplyEnrichment
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open CategoryTheory
 
@@ -25,7 +25,7 @@ namespace CategoryTheory
 
 variable (C : Type u) [category C]
 
-/--
+/-- 
 A preadditive category `C` is called additive if it has all finite biproducts.
 See https://stacks.math.columbia.edu/tag/0104.
 -/

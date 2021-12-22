@@ -16,7 +16,7 @@ open Tactic.Interactive
 
 setup_tactic_parser
 
-/-- `dec_trivial` tries to use decidability to prove a goal
+/--  `dec_trivial` tries to use decidability to prove a goal
 (i.e., using `exact dec_trivial`).
 The variant `dec_trivial!` will revert all hypotheses on which the target depends,
 before it tries `exact dec_trivial`.

@@ -1,4 +1,4 @@
-import Mathbin.Data.Equiv.Ring 
+import Mathbin.Data.Equiv.Ring
 import Mathbin.Algebra.Ring.Opposite
 
 /-!
@@ -23,18 +23,18 @@ Ring involution
 
 variable (R : Type _)
 
-/-- A ring involution -/
-structure RingInvo [Semiringₓ R] extends R ≃+* Rᵐᵒᵖ where 
+/--  A ring involution -/
+structure RingInvo [Semiringₓ R] extends R ≃+* Rᵐᵒᵖ where
   involution' : ∀ x, (to_fun (to_fun x).unop).unop = x
 
 namespace RingInvo
 
 variable {R} [Semiringₓ R]
 
-/-- Construct a ring involution from a ring homomorphism. -/
+/--  Construct a ring involution from a ring homomorphism. -/
 def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) : RingInvo R :=
   { f with invFun := fun r => (f r.unop).unop, left_inv := fun r => involution r,
-    right_inv := fun r => MulOpposite.unop_injective$ involution _, involution' := involution }
+    right_inv := fun r => MulOpposite.unop_injective $ involution _, involution' := involution }
 
 instance : CoeFun (RingInvo R) fun _ => R → Rᵐᵒᵖ :=
   ⟨fun f => f.to_ring_equiv.to_fun⟩
@@ -50,7 +50,7 @@ theorem involution (f : RingInvo R) (x : R) : (f (f x).unop).unop = x :=
 instance has_coe_to_ring_equiv : Coe (RingInvo R) (R ≃+* Rᵐᵒᵖ) :=
   ⟨RingInvo.toRingEquiv⟩
 
-@[normCast]
+@[norm_cast]
 theorem coe_ring_equiv (f : RingInvo R) (a : R) : (f : R ≃+* Rᵐᵒᵖ) a = f a :=
   rfl
 
@@ -66,7 +66,7 @@ section CommRingₓ
 
 variable [CommRingₓ R]
 
-/-- The identity function of a `comm_ring` is a ring involution. -/
+/--  The identity function of a `comm_ring` is a ring involution. -/
 protected def RingInvo.id : RingInvo R :=
   { RingEquiv.toOpposite R with involution' := fun r => rfl }
 

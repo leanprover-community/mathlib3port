@@ -32,7 +32,7 @@ refer to restricting the scalar type in a bundled type, such as from `A →ₗ[R
 
 variable (R S M A : Type _)
 
-/-- If we put an `R`-algebra structure on a semiring `S`, we get a natural equivalence from the
+/--  If we put an `R`-algebra structure on a semiring `S`, we get a natural equivalence from the
 category of `S`-modules to the category of representations of the algebra `S` (over `R`). The type
 synonym `restrict_scalars` is essentially this equivalence.
 
@@ -77,10 +77,10 @@ instance [I : AddCommGroupₓ M] : AddCommGroupₓ (RestrictScalars R S M) :=
   I
 
 instance RestrictScalars.moduleOrig [Semiringₓ S] [AddCommMonoidₓ M] [I : Module S M] :
-  Module S (RestrictScalars R S M) :=
+    Module S (RestrictScalars R S M) :=
   I
 
-/-- `restrict_scalars.linear_equiv` is an equivalence of modules over the semiring `S`. -/
+/--  `restrict_scalars.linear_equiv` is an equivalence of modules over the semiring `S`. -/
 def RestrictScalars.linearEquiv [Semiringₓ S] [AddCommMonoidₓ M] [Module S M] : RestrictScalars R S M ≃ₗ[S] M :=
   LinearEquiv.refl S M
 
@@ -88,7 +88,7 @@ section Module
 
 variable [Semiringₓ S] [AddCommMonoidₓ M] [CommSemiringₓ R] [Algebra R S] [Module S M]
 
-/--
+/-- 
 When `M` is a module over a ring `S`, and `S` is an algebra over `R`, then `M` inherits a
 module structure over `R`.
 
@@ -102,14 +102,13 @@ theorem restrict_scalars_smul_def (c : R) (x : RestrictScalars R S M) : c • x 
 
 @[simp]
 theorem RestrictScalars.linear_equiv_map_smul (t : R) (x : RestrictScalars R S M) :
-  RestrictScalars.linearEquiv R S M (t • x) = algebraMap R S t • RestrictScalars.linearEquiv R S M x :=
+    RestrictScalars.linearEquiv R S M (t • x) = algebraMap R S t • RestrictScalars.linearEquiv R S M x :=
   rfl
 
 instance : IsScalarTower R S (RestrictScalars R S M) :=
-  ⟨fun r S M =>
-      by 
-        rw [Algebra.smul_def, mul_smul]
-        rfl⟩
+  ⟨fun r S M => by
+    rw [Algebra.smul_def, mul_smul]
+    rfl⟩
 
 end Module
 
@@ -134,13 +133,13 @@ instance RestrictScalars.algebraOrig [I : Algebra S A] : Algebra S (RestrictScal
 
 variable [Algebra S A]
 
-/-- Tautological `S`-algebra isomorphism `restrict_scalars R S A ≃ₐ[S] A`. -/
+/--  Tautological `S`-algebra isomorphism `restrict_scalars R S A ≃ₐ[S] A`. -/
 def RestrictScalars.algEquiv : RestrictScalars R S A ≃ₐ[S] A :=
   AlgEquiv.refl
 
 variable [CommSemiringₓ R] [Algebra R S]
 
-/-- `R ⟶ S` induces `S-Alg ⥤ R-Alg` -/
+/--  `R ⟶ S` induces `S-Alg ⥤ R-Alg` -/
 instance : Algebra R (RestrictScalars R S A) :=
   { (algebraMap S A).comp (algebraMap R S) with smul := · • ·, commutes' := fun r x => Algebra.commutes _ _,
     smul_def' := fun _ _ => Algebra.smul_def _ _ }

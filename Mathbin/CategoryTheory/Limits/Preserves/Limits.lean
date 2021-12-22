@@ -15,7 +15,7 @@ The duals of these are also given. For functors which preserve (co)limits of spe
 
 universe v u₁ u₂
 
-noncomputable section 
+noncomputable section
 
 namespace CategoryTheory
 
@@ -31,20 +31,20 @@ variable {J : Type v} [small_category J]
 
 variable (F : J ⥤ C)
 
-section 
+section
 
 variable [preserves_limit F G]
 
 @[simp]
 theorem preserves_lift_map_cone (c₁ c₂ : cone F) (t : is_limit c₁) :
-  (preserves_limit.preserves t).lift (G.map_cone c₂) = G.map (t.lift c₂) :=
+    (preserves_limit.preserves t).lift (G.map_cone c₂) = G.map (t.lift c₂) :=
   ((preserves_limit.preserves t).uniq (G.map_cone c₂) _
-      (by 
-        simp [←G.map_comp])).symm
+      (by
+        simp [← G.map_comp])).symm
 
 variable [has_limit F] [has_limit (F ⋙ G)]
 
-/--
+/-- 
 If `G` preserves limits, we have an isomorphism from the image of the limit of a functor `F`
 to the limit of the functor `F ⋙ G`.
 -/
@@ -61,41 +61,40 @@ theorem preserves_limits_iso_inv_π j : (preserves_limit_iso G F).inv ≫ G.map 
 
 @[simp, reassoc]
 theorem lift_comp_preserves_limits_iso_hom (t : cone F) :
-  G.map (limit.lift _ t) ≫ (preserves_limit_iso G F).Hom = limit.lift (F ⋙ G) (G.map_cone _) :=
-  by 
-    ext 
-    simp [←G.map_comp]
+    G.map (limit.lift _ t) ≫ (preserves_limit_iso G F).Hom = limit.lift (F ⋙ G) (G.map_cone _) := by
+  ext
+  simp [← G.map_comp]
 
 variable [preserves_limits_of_shape J G] [has_limits_of_shape J D] [has_limits_of_shape J C]
 
-/-- If `C, D` has all limits of shape `J`, and `G` preserves them, then `preserves_limit_iso` is
+/--  If `C, D` has all limits of shape `J`, and `G` preserves them, then `preserves_limit_iso` is
 functorial wrt `F`. -/
 @[simps]
 def preserves_limit_nat_iso : lim ⋙ G ≅ (whiskering_right J C D).obj G ⋙ lim :=
   nat_iso.of_components (fun F => preserves_limit_iso G F)
-    (by 
-      intro _ _ f 
-      ext 
-      dsimp 
+    (by
+      intro _ _ f
+      ext
+      dsimp
       simp only [preserves_limits_iso_hom_π, whisker_right_app, lim_map_π, category.assoc,
-        preserves_limits_iso_hom_π_assoc, ←G.map_comp])
+        preserves_limits_iso_hom_π_assoc, ← G.map_comp])
 
-end 
+end
 
-section 
+section
 
 variable [preserves_colimit F G]
 
 @[simp]
 theorem preserves_desc_map_cocone (c₁ c₂ : cocone F) (t : is_colimit c₁) :
-  (preserves_colimit.preserves t).desc (G.map_cocone _) = G.map (t.desc c₂) :=
+    (preserves_colimit.preserves t).desc (G.map_cocone _) = G.map (t.desc c₂) :=
   ((preserves_colimit.preserves t).uniq (G.map_cocone _) _
-      (by 
-        simp [←G.map_comp])).symm
+      (by
+        simp [← G.map_comp])).symm
 
 variable [has_colimit F] [has_colimit (F ⋙ G)]
 
-/--
+/-- 
 If `G` preserves colimits, we have an isomorphism from the image of the colimit of a functor `F`
 to the colimit of the functor `F ⋙ G`.
 -/
@@ -104,39 +103,38 @@ def preserves_colimit_iso : G.obj (colimit F) ≅ colimit (F ⋙ G) :=
 
 @[simp, reassoc]
 theorem ι_preserves_colimits_iso_inv (j : J) :
-  colimit.ι _ j ≫ (preserves_colimit_iso G F).inv = G.map (colimit.ι F j) :=
+    colimit.ι _ j ≫ (preserves_colimit_iso G F).inv = G.map (colimit.ι F j) :=
   is_colimit.comp_cocone_point_unique_up_to_iso_inv _ (colimit.is_colimit (F ⋙ G)) j
 
 @[simp, reassoc]
 theorem ι_preserves_colimits_iso_hom (j : J) :
-  G.map (colimit.ι F j) ≫ (preserves_colimit_iso G F).Hom = colimit.ι (F ⋙ G) j :=
+    G.map (colimit.ι F j) ≫ (preserves_colimit_iso G F).Hom = colimit.ι (F ⋙ G) j :=
   (preserves_colimit.preserves (colimit.is_colimit _)).comp_cocone_point_unique_up_to_iso_hom _ j
 
 @[simp, reassoc]
 theorem preserves_colimits_iso_inv_comp_desc (t : cocone F) :
-  (preserves_colimit_iso G F).inv ≫ G.map (colimit.desc _ t) = colimit.desc _ (G.map_cocone t) :=
-  by 
-    ext 
-    simp [←G.map_comp]
+    (preserves_colimit_iso G F).inv ≫ G.map (colimit.desc _ t) = colimit.desc _ (G.map_cocone t) := by
+  ext
+  simp [← G.map_comp]
 
 variable [preserves_colimits_of_shape J G] [has_colimits_of_shape J D] [has_colimits_of_shape J C]
 
-/-- If `C, D` has all colimits of shape `J`, and `G` preserves them, then `preserves_colimit_iso`
+/--  If `C, D` has all colimits of shape `J`, and `G` preserves them, then `preserves_colimit_iso`
 is functorial wrt `F`. -/
 @[simps]
 def preserves_colimit_nat_iso : colim ⋙ G ≅ (whiskering_right J C D).obj G ⋙ colim :=
   nat_iso.of_components (fun F => preserves_colimit_iso G F)
-    (by 
-      intro _ _ f 
-      rw [←iso.inv_comp_eq, ←category.assoc, ←iso.eq_comp_inv]
-      ext 
-      dsimp 
+    (by
+      intro _ _ f
+      rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv]
+      ext
+      dsimp
       erw [ι_colim_map_assoc]
-      simp only [ι_preserves_colimits_iso_inv, whisker_right_app, category.assoc, ι_preserves_colimits_iso_inv_assoc,
-        ←G.map_comp]
+      simp only [ι_preserves_colimits_iso_inv, whisker_right_app, category.assoc, ι_preserves_colimits_iso_inv_assoc, ←
+        G.map_comp]
       erw [ι_colim_map])
 
-end 
+end
 
 end CategoryTheory
 

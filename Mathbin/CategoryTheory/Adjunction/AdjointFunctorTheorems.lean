@@ -1,9 +1,9 @@
-import Mathbin.CategoryTheory.Adjunction.Basic 
-import Mathbin.CategoryTheory.Adjunction.Comma 
-import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial 
-import Mathbin.CategoryTheory.Limits.Preserves.Basic 
-import Mathbin.CategoryTheory.Limits.Creates 
-import Mathbin.CategoryTheory.Limits.Comma 
+import Mathbin.CategoryTheory.Adjunction.Basic
+import Mathbin.CategoryTheory.Adjunction.Comma
+import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial
+import Mathbin.CategoryTheory.Limits.Preserves.Basic
+import Mathbin.CategoryTheory.Limits.Creates
+import Mathbin.CategoryTheory.Limits.Comma
 import Mathbin.CategoryTheory.Punit
 
 /-!
@@ -34,7 +34,7 @@ variable {J : Type v}
 
 variable {C : Type u} [category.{v} C]
 
-/--
+/-- 
 The functor `G : D ⥤ C` satisfies the *solution set condition* if for every `A : C`, there is a
 family of morphisms `{f_i : A ⟶ G (B_i) // i ∈ ι}` such that given any morphism `h : A ⟶ G X`,
 there is some `i ∈ ι` such that `h` factors through `f_i`.
@@ -54,34 +54,31 @@ section GeneralAdjointFunctorTheorem
 
 variable (G : D ⥤ C)
 
-/-- If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
-theorem solution_set_condition_of_is_right_adjoint [is_right_adjoint G] : solution_set_condition G :=
-  by 
-    intro A 
-    refine' ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
-    intro B h 
-    refine' ⟨PUnit.unit, ((adjunction.of_right_adjoint G).homEquiv _ _).symm h, _⟩
-    rw [←adjunction.hom_equiv_unit, Equivₓ.apply_symm_apply]
+/--  If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
+theorem solution_set_condition_of_is_right_adjoint [is_right_adjoint G] : solution_set_condition G := by
+  intro A
+  refine' ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
+  intro B h
+  refine' ⟨PUnit.unit, ((adjunction.of_right_adjoint G).homEquiv _ _).symm h, _⟩
+  rw [← adjunction.hom_equiv_unit, Equivₓ.apply_symm_apply]
 
-/--
+/-- 
 The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
 if `G` satisfies the solution set condition then `G` is a right adjoint.
 -/
 noncomputable def is_right_adjoint_of_preserves_limits_of_solution_set_condition [has_limits D] [preserves_limits G]
-  (hG : solution_set_condition G) : is_right_adjoint G :=
-  by 
-    apply is_right_adjoint_of_structured_arrow_initials _ 
-    intro A 
-    specialize hG A 
-    choose ι B f g using hG 
-    let B' : ι → structured_arrow A G := fun i => structured_arrow.mk (f i)
-    have hB' : ∀ A' : structured_arrow A G, ∃ i, Nonempty (B' i ⟶ A')
-    ·
-      intro A' 
-      obtain ⟨i, _, t⟩ := g _ A'.hom 
-      exact ⟨i, ⟨structured_arrow.hom_mk _ t⟩⟩
-    obtain ⟨T, hT⟩ := has_weakly_initial_of_weakly_initial_set_and_has_products hB' 
-    apply has_initial_of_weakly_initial_and_has_wide_equalizers hT
+    (hG : solution_set_condition G) : is_right_adjoint G := by
+  apply is_right_adjoint_of_structured_arrow_initials _
+  intro A
+  specialize hG A
+  choose ι B f g using hG
+  let B' : ι → structured_arrow A G := fun i => structured_arrow.mk (f i)
+  have hB' : ∀ A' : structured_arrow A G, ∃ i, Nonempty (B' i ⟶ A') := by
+    intro A'
+    obtain ⟨i, _, t⟩ := g _ A'.hom
+    exact ⟨i, ⟨structured_arrow.hom_mk _ t⟩⟩
+  obtain ⟨T, hT⟩ := has_weakly_initial_of_weakly_initial_set_and_has_products hB'
+  apply has_initial_of_weakly_initial_and_has_wide_equalizers hT
 
 end GeneralAdjointFunctorTheorem
 

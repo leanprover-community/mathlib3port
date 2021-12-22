@@ -12,7 +12,7 @@ A morphism of schemes is just a morphism of the underlying locally ringed spaces
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open TopologicalSpace
 
@@ -24,8 +24,8 @@ open Opposite
 
 namespace AlgebraicGeometry
 
--- ././Mathport/Syntax/Translate/Basic.lean:1056:11: unsupported: advanced extends in structure
-/--
+-- ././Mathport/Syntax/Translate/Basic.lean:1141:11: unsupported: advanced extends in structure
+/-- 
 We define `Scheme` as a `X : LocallyRingedSpace`,
 along with a proof that every point has an open neighbourhood `U`
 so that that the restriction of `X` to `U` is isomorphic,
@@ -33,30 +33,31 @@ as a locally ringed space, to `Spec.to_LocallyRingedSpace.obj (op R)`
 for some `R : CommRing`.
 -/
 structure Scheme extends
-  "././Mathport/Syntax/Translate/Basic.lean:1056:11: unsupported: advanced extends in structure" where 
+  "././Mathport/Syntax/Translate/Basic.lean:1141:11: unsupported: advanced extends in structure" where
   local_affine :
-  ∀ x : X,
-    ∃ (U : open_nhds x)(R : CommRingₓₓ), Nonempty (X.restrict U.open_embedding ≅ Spec.to_LocallyRingedSpace.obj (op R))
+    ∀ x : X,
+      ∃ (U : open_nhds x)(R : CommRingₓₓ),
+        Nonempty (X.restrict U.open_embedding ≅ Spec.to_LocallyRingedSpace.obj (op R))
 
 namespace Scheme
 
-/--
+/-- 
 Every `Scheme` is a `LocallyRingedSpace`.
 -/
 def to_LocallyRingedSpace (S : Scheme) : LocallyRingedSpace :=
-  { S with  }
+  { S with }
 
-/--
+/-- 
 Schemes are a full subcategory of locally ringed spaces.
 -/
 instance : category Scheme :=
   induced_category.category Scheme.to_LocallyRingedSpace
 
-/-- The structure sheaf of a Scheme. -/
+/--  The structure sheaf of a Scheme. -/
 protected abbrev sheaf (X : Scheme) :=
   X.to_SheafedSpace.sheaf
 
-/--
+/-- 
 The spectrum of a commutative ring, as a scheme.
 -/
 def Spec_obj (R : CommRingₓₓ) : Scheme :=
@@ -65,10 +66,10 @@ def Spec_obj (R : CommRingₓₓ) : Scheme :=
 
 @[simp]
 theorem Spec_obj_to_LocallyRingedSpace (R : CommRingₓₓ) :
-  (Spec_obj R).toLocallyRingedSpace = Spec.LocallyRingedSpace_obj R :=
+    (Spec_obj R).toLocallyRingedSpace = Spec.LocallyRingedSpace_obj R :=
   rfl
 
-/--
+/-- 
 The induced map of a ring homomorphism on the ring spectra, as a morphism of schemes.
 -/
 def Spec_map {R S : CommRingₓₓ} (f : R ⟶ S) : Spec_obj S ⟶ Spec_obj R :=
@@ -81,22 +82,18 @@ theorem Spec_map_id (R : CommRingₓₓ) : Spec_map (𝟙 R) = 𝟙 (Spec_obj R)
 theorem Spec_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) : Spec_map (f ≫ g) = Spec_map g ≫ Spec_map f :=
   Spec.LocallyRingedSpace_map_comp f g
 
-/--
+/-- 
 The spectrum, as a contravariant functor from commutative rings to schemes.
 -/
 @[simps]
 def Spec : CommRingₓₓᵒᵖ ⥤ Scheme :=
   { obj := fun R => Spec_obj (unop R), map := fun R S f => Spec_map f.unop,
-    map_id' :=
-      fun R =>
-        by 
-          rw [unop_id, Spec_map_id],
-    map_comp' :=
-      fun R S T f g =>
-        by 
-          rw [unop_comp, Spec_map_comp] }
+    map_id' := fun R => by
+      rw [unop_id, Spec_map_id],
+    map_comp' := fun R S T f g => by
+      rw [unop_comp, Spec_map_comp] }
 
-/--
+/-- 
 The empty scheme, as `Spec 0`.
 -/
 def Empty : Scheme :=
@@ -108,7 +105,7 @@ instance : HasEmptyc Scheme :=
 instance : Inhabited Scheme :=
   ⟨∅⟩
 
-/--
+/-- 
 The global sections, notated Gamma.
 -/
 def Γ : Schemeᵒᵖ ⥤ CommRingₓₓ :=

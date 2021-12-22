@@ -65,7 +65,7 @@ weak convergence of measures, finite measure, probability measure
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open MeasureTheory
 
@@ -79,25 +79,25 @@ namespace MeasureTheory
 
 variable {α : Type _} [MeasurableSpace α]
 
-/-- Finite measures are defined as the subtype of measures that have the property of being finite
+/--  Finite measures are defined as the subtype of measures that have the property of being finite
 measures (i.e., their total mass is finite). -/
 def finite_measure (α : Type _) [MeasurableSpace α] : Type _ :=
   { μ : Measureₓ α // is_finite_measure μ }
 
 namespace FiniteMeasure
 
-/-- A finite measure can be interpreted as a measure. -/
+/--  A finite measure can be interpreted as a measure. -/
 instance : Coe (finite_measure α) (MeasureTheory.Measure α) :=
   coeSubtype
 
 instance is_finite_measure (μ : finite_measure α) : is_finite_measure (μ : Measureₓ α) :=
   μ.prop
 
-instance : CoeFun (finite_measure α) fun _ => Set α →  ℝ≥0  :=
+instance : CoeFun (finite_measure α) fun _ => Set α → ℝ≥0 :=
   ⟨fun μ s => (μ s).toNnreal⟩
 
 theorem coe_fn_eq_to_nnreal_coe_fn_to_measure (ν : finite_measure α) :
-  (ν : Set α →  ℝ≥0 ) = fun s => ((ν : Measureₓ α) s).toNnreal :=
+    (ν : Set α → ℝ≥0 ) = fun s => ((ν : Measureₓ α) s).toNnreal :=
   rfl
 
 @[simp]
@@ -111,72 +111,71 @@ theorem val_eq_to_measure (ν : finite_measure α) : ν.val = (ν : Measureₓ �
 theorem coe_injective : Function.Injective (coeₓ : finite_measure α → Measureₓ α) :=
   Subtype.coe_injective
 
-/-- The (total) mass of a finite measure `μ` is `μ univ`, i.e., the cast to `nnreal` of
+/--  The (total) mass of a finite measure `μ` is `μ univ`, i.e., the cast to `nnreal` of
 `(μ : measure α) univ`. -/
-def mass (μ : finite_measure α) :  ℝ≥0  :=
+def mass (μ : finite_measure α) : ℝ≥0 :=
   μ univ
 
 @[simp]
 theorem ennreal_mass {μ : finite_measure α} : (μ.mass : ℝ≥0∞) = (μ : Measureₓ α) univ :=
   ennreal_coe_fn_eq_coe_fn_to_measure μ Set.Univ
 
-instance HasZero : HasZero (finite_measure α) :=
-  { zero := ⟨0, MeasureTheory.is_finite_measure_zero⟩ }
+instance HasZero : HasZero (finite_measure α) where
+  zero := ⟨0, MeasureTheory.is_finite_measure_zero⟩
 
 instance : Inhabited (finite_measure α) :=
   ⟨0⟩
 
-instance : Add (finite_measure α) :=
-  { add := fun μ ν => ⟨μ+ν, MeasureTheory.is_finite_measure_add⟩ }
+-- failed to format: format: uncaught backtrack exception
+instance : Add ( finite_measure α ) where add μ ν := ⟨ μ + ν , MeasureTheory.is_finite_measure_add ⟩
 
-instance : HasScalar ℝ≥0  (finite_measure α) :=
-  { smul := fun c :  ℝ≥0  μ => ⟨c • μ, MeasureTheory.is_finite_measure_smul_nnreal⟩ }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : HasScalar ℝ≥0 ( finite_measure α )
+  where smul c : ℝ≥0 μ := ⟨ c • μ , MeasureTheory.is_finite_measure_smul_nnreal ⟩
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_zero : (coeₓ : finite_measure α → Measureₓ α) 0 = 0 :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_add (μ ν : finite_measure α) : (↑μ+ν) = ((↑μ)+↑ν : Measureₓ α) :=
   rfl
 
-@[simp, normCast]
-theorem coe_smul (c :  ℝ≥0 ) (μ : finite_measure α) : ↑(c • μ) = (c • ↑μ : Measureₓ α) :=
+@[simp, norm_cast]
+theorem coe_smul (c : ℝ≥0 ) (μ : finite_measure α) : ↑(c • μ) = (c • ↑μ : Measureₓ α) :=
   rfl
 
-@[simp, normCast]
-theorem coe_fn_zero : (⇑(0 : finite_measure α) : Set α →  ℝ≥0 ) = (0 : Set α →  ℝ≥0 ) :=
-  by 
-    funext 
-    rfl
+@[simp, norm_cast]
+theorem coe_fn_zero : (⇑(0 : finite_measure α) : Set α → ℝ≥0 ) = (0 : Set α → ℝ≥0 ) := by
+  funext
+  rfl
 
-@[simp, normCast]
-theorem coe_fn_add (μ ν : finite_measure α) : (⇑μ+ν : Set α →  ℝ≥0 ) = ((⇑μ)+⇑ν : Set α →  ℝ≥0 ) :=
-  by 
-    funext 
-    simp [←Ennreal.coe_eq_coe]
+@[simp, norm_cast]
+theorem coe_fn_add (μ ν : finite_measure α) : (⇑μ+ν : Set α → ℝ≥0 ) = ((⇑μ)+⇑ν : Set α → ℝ≥0 ) := by
+  funext
+  simp [← Ennreal.coe_eq_coe]
 
-@[simp, normCast]
-theorem coe_fn_smul (c :  ℝ≥0 ) (μ : finite_measure α) : (⇑(c • μ) : Set α →  ℝ≥0 ) = c • (⇑μ : Set α →  ℝ≥0 ) :=
-  by 
-    funext 
-    simp [←Ennreal.coe_eq_coe]
+@[simp, norm_cast]
+theorem coe_fn_smul (c : ℝ≥0 ) (μ : finite_measure α) : (⇑(c • μ) : Set α → ℝ≥0 ) = c • (⇑μ : Set α → ℝ≥0 ) := by
+  funext
+  simp [← Ennreal.coe_eq_coe]
 
 instance : AddCommMonoidₓ (finite_measure α) :=
   finite_measure.coe_injective.AddCommMonoid (coeₓ : finite_measure α → Measureₓ α) finite_measure.coe_zero
     finite_measure.coe_add
 
-/-- Coercion is an `add_monoid_hom`. -/
+/--  Coercion is an `add_monoid_hom`. -/
 @[simps]
 def coe_add_monoid_hom : finite_measure α →+ Measureₓ α :=
   { toFun := coeₓ, map_zero' := coe_zero, map_add' := coe_add }
 
-instance {α : Type _} [MeasurableSpace α] : Module ℝ≥0  (finite_measure α) :=
+instance {α : Type _} [MeasurableSpace α] : Module ℝ≥0 (finite_measure α) :=
   Function.Injective.module _ coe_add_monoid_hom finite_measure.coe_injective coe_smul
 
 end FiniteMeasure
 
-/-- Probability measures are defined as the subtype of measures that have the property of being
+/--  Probability measures are defined as the subtype of measures that have the property of being
 probability measures (i.e., their total mass is one). -/
 def probability_measure (α : Type _) [MeasurableSpace α] : Type _ :=
   { μ : Measureₓ α // is_probability_measure μ }
@@ -186,18 +185,18 @@ namespace ProbabilityMeasure
 instance [Inhabited α] : Inhabited (probability_measure α) :=
   ⟨⟨measure.dirac (default α), measure.dirac.is_probability_measure⟩⟩
 
-/-- A probability measure can be interpreted as a measure. -/
+/--  A probability measure can be interpreted as a measure. -/
 instance : Coe (probability_measure α) (MeasureTheory.Measure α) :=
   coeSubtype
 
-instance : CoeFun (probability_measure α) fun _ => Set α →  ℝ≥0  :=
+instance : CoeFun (probability_measure α) fun _ => Set α → ℝ≥0 :=
   ⟨fun μ s => (μ s).toNnreal⟩
 
 instance (μ : probability_measure α) : is_probability_measure (μ : Measureₓ α) :=
   μ.prop
 
 theorem coe_fn_eq_to_nnreal_coe_fn_to_measure (ν : probability_measure α) :
-  (ν : Set α →  ℝ≥0 ) = fun s => ((ν : Measureₓ α) s).toNnreal :=
+    (ν : Set α → ℝ≥0 ) = fun s => ((ν : Measureₓ α) s).toNnreal :=
   rfl
 
 @[simp]
@@ -211,26 +210,25 @@ theorem coe_injective : Function.Injective (coeₓ : probability_measure α → 
 theorem coe_fn_univ (ν : probability_measure α) : ν univ = 1 :=
   congr_argₓ Ennreal.toNnreal ν.prop.measure_univ
 
-/-- A probability measure can be interpreted as a finite measure. -/
+/--  A probability measure can be interpreted as a finite measure. -/
 def to_finite_measure (μ : probability_measure α) : finite_measure α :=
   ⟨μ, inferInstance⟩
 
 @[simp]
 theorem coe_comp_to_finite_measure_eq_coe (ν : probability_measure α) :
-  (ν.to_finite_measure : Measureₓ α) = (ν : Measureₓ α) :=
+    (ν.to_finite_measure : Measureₓ α) = (ν : Measureₓ α) :=
   rfl
 
 @[simp]
 theorem coe_fn_comp_to_finite_measure_eq_coe_fn (ν : probability_measure α) :
-  (ν.to_finite_measure : Set α →  ℝ≥0 ) = (ν : Set α →  ℝ≥0 ) :=
+    (ν.to_finite_measure : Set α → ℝ≥0 ) = (ν : Set α → ℝ≥0 ) :=
   rfl
 
 @[simp]
 theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : probability_measure α) (s : Set α) :
-  (ν s : ℝ≥0∞) = (ν : Measureₓ α) s :=
-  by 
-    rw [←coe_fn_comp_to_finite_measure_eq_coe_fn, finite_measure.ennreal_coe_fn_eq_coe_fn_to_measure]
-    rfl
+    (ν s : ℝ≥0∞) = (ν : Measureₓ α) s := by
+  rw [← coe_fn_comp_to_finite_measure_eq_coe_fn, finite_measure.ennreal_coe_fn_eq_coe_fn_to_measure]
+  rfl
 
 @[simp]
 theorem mass_to_finite_measure (μ : probability_measure α) : μ.to_finite_measure.mass = 1 :=

@@ -1,4 +1,4 @@
-import Mathbin.Analysis.NormedSpace.ContinuousAffineMap 
+import Mathbin.Analysis.NormedSpace.ContinuousAffineMap
 import Mathbin.Analysis.Calculus.TimesContDiff
 
 /-!
@@ -21,13 +21,12 @@ variable [NormedGroup V] [NormedSpace 𝕜 V]
 
 variable [NormedGroup W] [NormedSpace 𝕜 W]
 
-/-- A continuous affine map between normed vector spaces is smooth. -/
-theorem TimesContDiff {n : WithTop ℕ} (f : V →A[𝕜] W) : TimesContDiff 𝕜 n f :=
-  by 
-    rw [f.decomp]
-    apply f.cont_linear.times_cont_diff.add 
-    simp only 
-    exact times_cont_diff_const
+/--  A continuous affine map between normed vector spaces is smooth. -/
+theorem TimesContDiff {n : WithTop ℕ} (f : V →A[𝕜] W) : TimesContDiff 𝕜 n f := by
+  rw [f.decomp]
+  apply f.cont_linear.times_cont_diff.add
+  simp only
+  exact times_cont_diff_const
 
 end ContinuousAffineMap
 

@@ -1,4 +1,4 @@
-import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts 
+import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Types
 
 /-!
@@ -44,12 +44,12 @@ theorem right_unitor_inv_apply {X : Type u} {x : X} : ((ρ_ X).inv : X ⟶ X ⊗
 
 @[simp]
 theorem associator_hom_apply {X Y Z : Type u} {x : X} {y : Y} {z : Z} :
-  ((α_ X Y Z).Hom : (X ⊗ Y) ⊗ Z → X ⊗ Y ⊗ Z) ((x, y), z) = (x, (y, z)) :=
+    ((α_ X Y Z).Hom : (X ⊗ Y) ⊗ Z → X ⊗ Y ⊗ Z) ((x, y), z) = (x, (y, z)) :=
   rfl
 
 @[simp]
 theorem associator_inv_apply {X Y Z : Type u} {x : X} {y : Y} {z : Z} :
-  ((α_ X Y Z).inv : X ⊗ Y ⊗ Z → (X ⊗ Y) ⊗ Z) (x, (y, z)) = ((x, y), z) :=
+    ((α_ X Y Z).inv : X ⊗ Y ⊗ Z → (X ⊗ Y) ⊗ Z) (x, (y, z)) = ((x, y), z) :=
   rfl
 
 @[simp]
@@ -64,34 +64,28 @@ open Opposite
 
 open MonoidalCategory
 
-/-- `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
+/--  `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
 def coyoneda_tensor_unit (C : Type u) [category.{v} C] [monoidal_category C] : lax_monoidal_functor C (Type v) :=
   { coyoneda.obj (op (𝟙_ C)) with ε := fun p => 𝟙 _, μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2),
-    μ_natural' :=
-      by 
-        tidy,
-    associativity' :=
-      fun X Y Z =>
-        by 
-          ext ⟨⟨f, g⟩, h⟩
-          dsimp  at f g h 
-          dsimp 
-          simp only [iso.cancel_iso_inv_left, category.assoc]
-          convLHS =>
-            rw [←category.id_comp h, tensor_comp, category.assoc, associator_naturality, ←category.assoc,
-              unitors_inv_equal, triangle_assoc_comp_right_inv]
-          convRHS => rw [←category.id_comp f, tensor_comp],
-    left_unitality' :=
-      by 
-        tidy,
-    right_unitality' :=
-      fun X =>
-        by 
-          ext ⟨f, ⟨⟩⟩
-          dsimp  at f 
-          dsimp 
-          simp only [category.assoc]
-          rw [right_unitor_naturality, unitors_inv_equal, iso.inv_hom_id_assoc] }
+    μ_natural' := by
+      tidy,
+    associativity' := fun X Y Z => by
+      ext ⟨⟨f, g⟩, h⟩
+      dsimp  at f g h
+      dsimp
+      simp only [iso.cancel_iso_inv_left, category.assoc]
+      conv_lhs =>
+        rw [← category.id_comp h, tensor_comp, category.assoc, associator_naturality, ← category.assoc,
+          unitors_inv_equal, triangle_assoc_comp_right_inv]
+      conv_rhs => rw [← category.id_comp f, tensor_comp],
+    left_unitality' := by
+      tidy,
+    right_unitality' := fun X => by
+      ext ⟨f, ⟨⟩⟩
+      dsimp  at f
+      dsimp
+      simp only [category.assoc]
+      rw [right_unitor_naturality, unitors_inv_equal, iso.inv_hom_id_assoc] }
 
 end CategoryTheory
 

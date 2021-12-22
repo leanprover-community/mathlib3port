@@ -1,4 +1,4 @@
-import Mathbin.GroupTheory.Subgroup.Basic 
+import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.GroupTheory.Submonoid.Pointwise
 
 /-! # Pointwise instances on `subgroup` and `add_subgroup`s
@@ -27,7 +27,7 @@ section Monoidₓ
 
 variable [Monoidₓ α] [MulDistribMulAction α G]
 
-/-- The action on a subgroup corresponding to applying the action to every element.
+/--  The action on a subgroup corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwise_mul_action : MulAction α (Subgroup G) :=
@@ -53,13 +53,15 @@ theorem pointwise_smul_to_submonoid (a : α) (S : Subgroup G) : (a • S).toSubm
 theorem smul_mem_pointwise_smul (m : G) (a : α) (S : Subgroup G) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set G))
 
+theorem mem_smul_pointwise_iff_exists (m : G) (a : α) (S : Subgroup G) : m ∈ a • S ↔ ∃ s : G, s ∈ S ∧ a • s = m :=
+  (Set.mem_smul_set : m ∈ a • (S : Set G) ↔ _)
+
 instance pointwise_central_scalar [MulDistribMulAction (αᵐᵒᵖ) G] [IsCentralScalar α G] :
-  IsCentralScalar α (Subgroup G) :=
+    IsCentralScalar α (Subgroup G) :=
   ⟨fun a S =>
-      (congr_argₓ fun f => S.map f)$
-        MonoidHom.ext$
-          by 
-            exact op_smul_eq_smul _⟩
+    (congr_argₓ fun f => S.map f) $
+      MonoidHom.ext $ by
+        exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -89,7 +91,7 @@ theorem pointwise_smul_subset_iff {a : α} {S T : Subgroup G} : a • S ≤ T �
 theorem subset_pointwise_smul_iff {a : α} {S T : Subgroup G} : S ≤ a • T ↔ a⁻¹ • S ≤ T :=
   subset_set_smul_iff
 
-/-- Applying a `mul_distrib_mul_action` results in an isomorphic subgroup -/
+/--  Applying a `mul_distrib_mul_action` results in an isomorphic subgroup -/
 @[simps]
 def equiv_smul (a : α) (H : Subgroup G) : H ≃* (a • H : Subgroup G) :=
   (MulDistribMulAction.toMulEquiv G a).subgroupEquivMap H
@@ -132,7 +134,7 @@ section Monoidₓ
 
 variable [Monoidₓ α] [DistribMulAction α A]
 
-/-- The action on an additive subgroup corresponding to applying the action to every element.
+/--  The action on an additive subgroup corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwise_mul_action : MulAction α (AddSubgroup A) :=
@@ -155,13 +157,15 @@ theorem pointwise_smul_to_add_submonoid (a : α) (S : AddSubgroup A) : (a • S)
 theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubgroup A) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set A))
 
+theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubgroup A) : m ∈ a • S ↔ ∃ s : A, s ∈ S ∧ a • s = m :=
+  (Set.mem_smul_set : m ∈ a • (S : Set A) ↔ _)
+
 instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) A] [IsCentralScalar α A] :
-  IsCentralScalar α (AddSubgroup A) :=
+    IsCentralScalar α (AddSubgroup A) :=
   ⟨fun a S =>
-      (congr_argₓ fun f => S.map f)$
-        AddMonoidHom.ext$
-          by 
-            exact op_smul_eq_smul _⟩
+    (congr_argₓ fun f => S.map f) $
+      AddMonoidHom.ext $ by
+        exact op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -204,7 +208,7 @@ theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup 
   smul_mem_smul_set_iff₀ ha (S : Set A) x
 
 theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup A) (x : A) :
-  x ∈ a • S ↔ a⁻¹ • x ∈ S :=
+    x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem₀ ha (S : Set A) x
 
 theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup A) (x : A) : x ∈ a⁻¹ • S ↔ a • x ∈ S :=

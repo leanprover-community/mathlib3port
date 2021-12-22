@@ -1,5 +1,5 @@
-import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts 
-import Mathbin.CategoryTheory.FullSubcategory 
+import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts
+import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Limits.Punit
 
 /-!
@@ -35,7 +35,7 @@ for those `V : opens X` such that `V ≤ U i` for some `i`.
 
 universe v u
 
-noncomputable section 
+noncomputable section
 
 open CategoryTheory
 
@@ -57,7 +57,7 @@ namespace Presheaf
 
 open SheafConditionEqualizerProducts
 
-/--
+/-- 
 The sheaf condition for a `F : presheaf C X` requires that the morphism
 `F.obj U ⟶ ∏ F.obj (U i)` (where `U` is some open set which is the union of the `U i`)
 is the equalizer of the two morphisms
@@ -66,19 +66,17 @@ is the equalizer of the two morphisms
 def is_sheaf (F : presheaf C X) : Prop :=
   ∀ ⦃ι : Type v⦄ U : ι → opens X, Nonempty (is_limit (sheaf_condition_equalizer_products.fork F U))
 
-/--
+/-- 
 The presheaf valued in `punit` over any topological space is a sheaf.
 -/
-theorem is_sheaf_punit (F : presheaf (CategoryTheory.Discrete PUnit) X) : F.is_sheaf :=
-  fun ι U => ⟨punit_cone_is_limit⟩
+theorem is_sheaf_punit (F : presheaf (CategoryTheory.Discrete PUnit) X) : F.is_sheaf := fun ι U => ⟨punit_cone_is_limit⟩
 
-/--
+/-- 
 Transfer the sheaf condition across an isomorphism of presheaves.
 -/
-theorem is_sheaf_of_iso {F G : presheaf C X} (α : F ≅ G) (h : F.is_sheaf) : G.is_sheaf :=
-  fun ι U =>
-    ⟨is_limit.of_iso_limit ((is_limit.postcompose_inv_equiv _ _).symm (h U).some)
-        (sheaf_condition_equalizer_products.fork.iso_of_iso U α.symm).symm⟩
+theorem is_sheaf_of_iso {F G : presheaf C X} (α : F ≅ G) (h : F.is_sheaf) : G.is_sheaf := fun ι U =>
+  ⟨is_limit.of_iso_limit ((is_limit.postcompose_inv_equiv _ _).symm (h U).some)
+      (sheaf_condition_equalizer_products.fork.iso_of_iso U α.symm).symm⟩
 
 theorem is_sheaf_iso_iff {F G : presheaf C X} (α : F ≅ G) : F.is_sheaf ↔ G.is_sheaf :=
   ⟨fun h => is_sheaf_of_iso α h, fun h => is_sheaf_of_iso α.symm h⟩
@@ -87,8 +85,8 @@ end Presheaf
 
 variable (C X)
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler category
-/--
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler category
+/-- 
 A `sheaf C X` is a presheaf of objects from `C` over a (bundled) topological space `X`,
 satisfying the sheaf condition.
 -/
@@ -100,9 +98,9 @@ instance sheaf_inhabited : Inhabited (sheaf (CategoryTheory.Discrete PUnit) X) :
 
 namespace Sheaf
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
-/--
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler faithful
+/-- 
 The forgetful functor from sheaves to presheaves.
 -/
 def forget : Top.Sheaf C X ⥤ Top.Presheaf C X :=

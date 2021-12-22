@@ -12,16 +12,16 @@ lift, tactic
 -/
 
 
-/-- A class specifying that you can lift elements from `α` to `β` assuming `cond` is true.
+/--  A class specifying that you can lift elements from `α` to `β` assuming `cond` is true.
   Used by the tactic `lift`. -/
-class CanLift (α β : Sort _) where 
-  coe : β → α 
-  cond : α → Prop 
+class CanLift (α β : Sort _) where
+  coe : β → α
+  cond : α → Prop
   prf : ∀ x : α, cond x → ∃ y : β, coeₓ y = x
 
 open Tactic
 
-/--
+/-- 
 A user attribute used internally by the `lift` tactic.
 This should not be applied by hand.
 -/
@@ -29,47 +29,57 @@ This should not be applied by hand.
 unsafe def can_lift_attr : user_attribute (List Name) :=
   { Name := "_can_lift", descr := "internal attribute used by the lift tactic", parser := failed,
     cache_cfg :=
-      { mk_cache :=
-          fun _ =>
-            do 
-              let ls ← attribute.get_instances `instance 
-              ls.mfilter$
-                  fun l =>
-                    do 
-                      let (_, t) ← mk_const l >>= infer_type >>= open_pis 
-                      return$ t.is_app_of `can_lift,
+      { mk_cache := fun _ => do
+          let ls ← attribute.get_instances `instance
+          ls.mfilter $ fun l => do
+              let (_, t) ← mk_const l >>= infer_type >>= open_pis
+              return $ t.is_app_of `can_lift,
         dependencies := [`instance] } }
 
 instance : CanLift ℤ ℕ :=
   ⟨coeₓ, fun n => 0 ≤ n, fun n hn => ⟨n.nat_abs, Int.nat_abs_of_nonneg hn⟩⟩
 
+-- failed to format: format: uncaught backtrack exception
 /-- Enable automatic handling of pi types in `can_lift`. -/
-instance Pi.canLift (ι : Type _) (α : ∀ i : ι, Type _) (β : ∀ i : ι, Type _) [∀ i : ι, CanLift (α i) (β i)] :
-  CanLift (∀ i : ι, α i) (∀ i : ι, β i) :=
-  { coe := fun f i => CanLift.coe (f i), cond := fun f => ∀ i, CanLift.Cond (β i) (f i),
-    prf :=
-      fun f hf =>
-        ⟨fun i => Classical.some (CanLift.prf (f i) (hf i)),
-          funext$ fun i => Classical.some_spec (CanLift.prf (f i) (hf i))⟩ }
+  instance
+    Pi.canLift
+    ( ι : Type _ ) ( α : ∀ i : ι , Type _ ) ( β : ∀ i : ι , Type _ ) [ ∀ i : ι , CanLift ( α i ) ( β i ) ]
+      : CanLift ( ∀ i : ι , α i ) ( ∀ i : ι , β i )
+    where
+      coe f i := CanLift.coe ( f i )
+        cond f := ∀ i , CanLift.Cond ( β i ) ( f i )
+        prf
+          f hf
+          :=
+          ⟨
+            fun i => Classical.some ( CanLift.prf ( f i ) ( hf i ) )
+              ,
+              funext $ fun i => Classical.some_spec ( CanLift.prf ( f i ) ( hf i ) )
+            ⟩
 
-instance PiSubtype.canLift (ι : Type _) (α : ∀ i : ι, Type _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
-  CanLift (∀ i : Subtype p, α i) (∀ i, α i) :=
-  { coe := fun f i => f i, cond := fun _ => True,
-    prf :=
-      by 
-        runTac 
-          classical 
-        refine' fun f _ => ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
-        rintro ⟨i, hi⟩
-        exact dif_pos hi }
+-- failed to format: format: uncaught backtrack exception
+instance
+  PiSubtype.canLift
+  ( ι : Type _ ) ( α : ∀ i : ι , Type _ ) [ ne : ∀ i , Nonempty ( α i ) ] ( p : ι → Prop )
+    : CanLift ( ∀ i : Subtype p , α i ) ( ∀ i , α i )
+  where
+    coe f i := f i
+      cond _ := True
+      prf
+        :=
+        by
+          run_tac classical
+            refine' fun f _ => ⟨ fun i => if hi : p i then f ⟨ i , hi ⟩ else Classical.choice ( Ne i ) , funext _ ⟩
+            rintro ⟨ i , hi ⟩
+            exact dif_pos hi
 
 instance PiSubtype.canLift' (ι : Type _) (α : Type _) [ne : Nonempty α] (p : ι → Prop) :
-  CanLift (Subtype p → α) (ι → α) :=
+    CanLift (Subtype p → α) (ι → α) :=
   PiSubtype.canLift ι (fun _ => α) p
 
 namespace Tactic
 
-/--
+/-- 
 Construct the proof of `cond x` in the lift tactic.
 *  `e` is the expression being lifted and `h` is the specified proof of `can_lift.cond e`.
 *  `old_tp` and `new_tp` are the arguments to `can_lift` and `inst` is the `can_lift`-instance.
@@ -83,66 +93,63 @@ If the proof was not specified, we create assert it as a local constant.
 (The name of this local constant doesn't matter, since `lift` will remove it from the context.)
 -/
 unsafe def get_lift_prf (h : Option pexpr) (old_tp new_tp inst e : expr) (s : simp_lemmas) (to_unfold : List Name) :
-  tactic expr :=
-  do 
-    let expected_prf_ty ← mk_app `can_lift.cond [old_tp, new_tp, inst, e]
-    let expected_prf_ty ← s.dsimplify to_unfold expected_prf_ty 
-    if h_some : h.is_some then
-        decorate_error "lift tactic failed."$ i_to_expr (pquote.1 (%%ₓOption.get h_some : %%ₓexpected_prf_ty)) else
-        do 
-          let prf_nm ← get_unused_name 
-          let prf ← assert prf_nm expected_prf_ty 
-          swap 
-          return prf
+    tactic expr := do
+  let expected_prf_ty ← mk_app `can_lift.cond [old_tp, new_tp, inst, e]
+  let expected_prf_ty ← s.dsimplify to_unfold expected_prf_ty
+  if h_some : h.is_some then
+      decorate_error "lift tactic failed." $ i_to_expr (pquote.1 (%%ₓOption.getₓ h_some : %%ₓexpected_prf_ty))
+    else do
+      let prf_nm ← get_unused_name
+      let prf ← assert prf_nm expected_prf_ty
+      swap
+      return prf
 
-/-- Lift the expression `p` to the type `t`, with proof obligation given by `h`.
+/--  Lift the expression `p` to the type `t`, with proof obligation given by `h`.
   The list `n` is used for the two newly generated names, and to specify whether `h` should
   remain in the local context. See the doc string of `tactic.interactive.lift` for more information.
   -/
-unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tactic Unit :=
-  do 
-    propositional_goal <|> fail "lift tactic failed. Tactic is only applicable when the target is a proposition."
-    let e ← i_to_expr p 
-    let old_tp ← infer_type e 
-    let new_tp ← i_to_expr (pquote.1 (%%ₓt : Sort _))
-    let inst_type ← mk_app `` CanLift [old_tp, new_tp]
-    let inst ←
-      mk_instance inst_type <|>
-          (f!"Failed to find a lift from {( ← old_tp)} to {( ← new_tp)}. Provide an instance of
-                { ← inst_type}") >>=
-            fail 
-    let can_lift_instances ← can_lift_attr.get_cache >>= fun l => l.mmap resolve_name 
-    let (s, to_unfold) ← mk_simp_set tt []$ can_lift_instances.map simp_arg_type.expr 
-    let prf_cond ← get_lift_prf h old_tp new_tp inst e s to_unfold 
-    let prf_nm := if prf_cond.is_local_constant then some prf_cond.local_pp_name else none 
-    let prf_ex0 ← mk_mapp `can_lift.prf [old_tp, new_tp, inst, e]
-    let prf_ex := prf_ex0 prf_cond 
-    let new_nm ←
-      if n ≠ [] then return n.head else if e.is_local_constant then return e.local_pp_name else get_unused_name 
-    let eq_nm ←
-      if hn : 1 < n.length then return (n.nth_le 1 hn) else
-          if e.is_local_constant then return `rfl else get_unused_name `h 
-    let temp_nm ← get_unused_name 
-    let temp_e ← note temp_nm none prf_ex 
-    dsimp_hyp temp_e s to_unfold {  }
-    rcases none (pexpr.of_expr temp_e)$ rcases_patt.tuple ([new_nm, eq_nm].map rcases_patt.one)
-    when (¬e.is_local_constant)
-        (get_local eq_nm >>= fun e => interactive.rw ⟨[⟨⟨0, 0⟩, tt, pexpr.of_expr e⟩], none⟩ Interactive.Loc.wildcard)
-    if h_prf_nm : prf_nm.is_some ∧ n.nth 2 ≠ prf_nm then get_local (Option.get h_prf_nm.1) >>= clear else skip
+unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tactic Unit := do
+  propositional_goal <|> fail "lift tactic failed. Tactic is only applicable when the target is a proposition."
+  let e ← i_to_expr p
+  let old_tp ← infer_type e
+  let new_tp ← i_to_expr (pquote.1 (%%ₓt : Sort _))
+  let inst_type ← mk_app `` CanLift [old_tp, new_tp]
+  let inst ←
+    mk_instance inst_type <|>
+        (f!"Failed to find a lift from {(← old_tp)} to {(← new_tp)}. Provide an instance of
+              {← inst_type}") >>=
+          fail
+  let can_lift_instances ← can_lift_attr.get_cache >>= fun l => l.mmap resolve_name
+  let (s, to_unfold) ← mk_simp_set tt [] $ can_lift_instances.map simp_arg_type.expr
+  let prf_cond ← get_lift_prf h old_tp new_tp inst e s to_unfold
+  let prf_nm := if prf_cond.is_local_constant then some prf_cond.local_pp_name else none
+  let prf_ex0 ← mk_mapp `can_lift.prf [old_tp, new_tp, inst, e]
+  let prf_ex := prf_ex0 prf_cond
+  let new_nm ← if n ≠ [] then return n.head else if e.is_local_constant then return e.local_pp_name else get_unused_name
+  let eq_nm ←
+    if hn : 1 < n.length then return (n.nth_le 1 hn)
+      else if e.is_local_constant then return `rfl else get_unused_name `h
+  let temp_nm ← get_unused_name
+  let temp_e ← note temp_nm none prf_ex
+  dsimp_hyp temp_e s to_unfold {  }
+  rcases none (pexpr.of_expr temp_e) $ rcases_patt.tuple ([new_nm, eq_nm].map rcases_patt.one)
+  when (¬e.is_local_constant)
+      (get_local eq_nm >>= fun e => interactive.rw ⟨[⟨⟨0, 0⟩, tt, pexpr.of_expr e⟩], none⟩ Interactive.Loc.wildcard)
+  if h_prf_nm : prf_nm.is_some ∧ n.nth 2 ≠ prf_nm then get_local (Option.getₓ h_prf_nm.1) >>= clear else skip
 
 setup_tactic_parser
 
-/-- Parses an optional token "using" followed by a trailing `pexpr`. -/
+/--  Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   (tk "using" *> texpr)?
 
-/-- Parses a token "to" followed by a trailing `pexpr`. -/
+/--  Parses a token "to" followed by a trailing `pexpr`. -/
 unsafe def to_texpr :=
   tk "to" *> texpr
 
 namespace Interactive
 
-/--
+/-- 
 Lift an expression to another type.
 * Usage: `'lift' expr 'to' expr ('using' expr)? ('with' id (id id?)?)?`.
 * If `n : ℤ` and `hn : n ≥ 0` then the tactic `lift n to ℕ using hn` creates a new
@@ -181,7 +188,7 @@ propositions concerning `z` will still be over `ℤ`. `zify` changes proposition
 subtype) to propositions about `ℤ` (the supertype), without changing the type of any variable.
 -/
 unsafe def lift (p : parse texpr) (t : parse to_texpr) (h : parse using_texpr) (n : parse with_ident_list) :
-  tactic Unit :=
+    tactic Unit :=
   tactic.lift p t h n
 
 add_tactic_doc

@@ -1,5 +1,5 @@
-import Mathbin.Tactic.ReassocAxiom 
-import Mathbin.Tactic.Monotonicity.Default 
+import Mathbin.Tactic.ReassocAxiom
+import Mathbin.Tactic.Monotonicity.Default
 import Mathbin.CategoryTheory.Category.Basic
 
 /-!
@@ -17,9 +17,9 @@ namespace CategoryTheory
 
 universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
-section 
+section
 
-/--
+/-- 
 `functor C D` represents a functor between categories `C` and `D`.
 
 To apply a functor `F` to an object use `F.obj X`, and to a morphism use `F.map f`.
@@ -30,18 +30,18 @@ The axiom `map_id` expresses preservation of identities, and
 See https://stacks.math.columbia.edu/tag/001B.
 -/
 structure Functor (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D] extends Prefunctor C D :
-  Type max v₁ v₂ u₁ u₂ where 
-  map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (obj X) :=  by 
-  runTac 
-    obviously 
-  map_comp' : ∀ {X Y Z : C} f : X ⟶ Y g : Y ⟶ Z, map (f ≫ g) = map f ≫ map g :=  by 
-  runTac 
-    obviously
+  Type max v₁ v₂ u₁ u₂ where
+  map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (obj X) := by
+    run_tac
+      obviously
+  map_comp' : ∀ {X Y Z : C} f : X ⟶ Y g : Y ⟶ Z, map (f ≫ g) = map f ≫ map g := by
+    run_tac
+      obviously
 
-/-- The prefunctor between the underlying quivers. -/
+/--  The prefunctor between the underlying quivers. -/
 add_decl_doc functor.to_prefunctor
 
-end 
+end
 
 infixr:26 " ⥤ " => Functor
 
@@ -55,11 +55,11 @@ attribute [reassoc, simp] functor.map_comp
 
 namespace Functor
 
-section 
+section
 
 variable (C : Type u₁) [category.{v₁} C]
 
-/-- `𝟭 C` is the identity functor on a category `C`. -/
+/--  `𝟭 C` is the identity functor on a category `C`. -/
 protected def id : C ⥤ C :=
   { obj := fun X => X, map := fun _ _ f => f }
 
@@ -78,13 +78,13 @@ theorem id_obj (X : C) : (𝟭 C).obj X = X :=
 theorem id_map {X Y : C} (f : X ⟶ Y) : (𝟭 C).map f = f :=
   rfl
 
-end 
+end
 
-section 
+section
 
 variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
 
-/--
+/-- 
 `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
 -/
 def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E :=
@@ -100,21 +100,18 @@ theorem comp_obj (F : C ⥤ D) (G : D ⥤ E) (X : C) : (F ⋙ G).obj X = G.obj (
 theorem comp_map (F : C ⥤ D) (G : D ⥤ E) {X Y : C} (f : X ⟶ Y) : (F ⋙ G).map f = G.map (F.map f) :=
   rfl
 
-protected theorem comp_id (F : C ⥤ D) : F ⋙ 𝟭 D = F :=
-  by 
-    cases F <;> rfl
+protected theorem comp_id (F : C ⥤ D) : F ⋙ 𝟭 D = F := by
+  cases F <;> rfl
 
-protected theorem id_comp (F : C ⥤ D) : 𝟭 C ⋙ F = F :=
-  by 
-    cases F <;> rfl
+protected theorem id_comp (F : C ⥤ D) : 𝟭 C ⋙ F = F := by
+  cases F <;> rfl
 
 @[simp]
 theorem map_dite (F : C ⥤ D) {X Y : C} {P : Prop} [Decidable P] (f : P → (X ⟶ Y)) (g : ¬P → (X ⟶ Y)) :
-  F.map (if h : P then f h else g h) = if h : P then F.map (f h) else F.map (g h) :=
-  by 
-    splitIfs <;> rfl
+    F.map (if h : P then f h else g h) = if h : P then F.map (f h) else F.map (g h) := by
+  split_ifs <;> rfl
 
-end 
+end
 
 end Functor
 

@@ -1,4 +1,4 @@
-import Mathbin.Meta.RbMap 
+import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Core
 
 /-!
@@ -15,14 +15,15 @@ namespace Tactic
 
 namespace Explode
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
 inductive status : Type
   | reg
   | intro
   | lam
-  | sintro deriving [anonymous]
+  | sintro
+  deriving [anonymous]
 
-/--
+/-- 
 A type to distinguish introduction or elimination rules represented as
 strings from theorems referred to by their names.
 -/
@@ -31,30 +32,31 @@ unsafe inductive thm : Type
   | Name (n : Name)
   | Stringₓ (s : Stringₓ)
 
-/--
+/-- 
 Turn a thm into a string.
 -/
 unsafe def thm.to_string : thm → Stringₓ
-| thm.expr e => e.to_string
-| thm.name n => n.to_string
-| thm.string s => s
+  | thm.expr e => e.to_string
+  | thm.name n => n.to_string
+  | thm.string s => s
 
-unsafe structure entry : Type where 
-  expr : expr 
-  line : Nat 
-  depth : Nat 
-  Status : status 
-  thm : thm 
+unsafe structure entry : Type where
+  expr : expr
+  line : Nat
+  depth : Nat
+  Status : status
+  thm : thm
   deps : List Nat
 
 unsafe def pad_right (l : List Stringₓ) : List Stringₓ :=
   let n := l.foldl (fun r s : Stringₓ => max r s.length) 0
-  l.map$ fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
+  l.map $ fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
-unsafe structure entries : Type where mk' :: 
-  s : expr_map entry 
-  l : List entry deriving [anonymous]
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
+unsafe structure entries : Type where mk' ::
+  s : expr_map entry
+  l : List entry
+  deriving [anonymous]
 
 unsafe def entries.find (es : entries) (e : expr) : Option entry :=
   es.s.find e
@@ -63,115 +65,107 @@ unsafe def entries.size (es : entries) : ℕ :=
   es.s.size
 
 unsafe def entries.add : entries → entry → entries
-| es@⟨s, l⟩, e => if s.contains e.expr then es else ⟨s.insert e.expr e, e :: l⟩
+  | es@⟨s, l⟩, e => if s.contains e.expr then es else ⟨s.insert e.expr e, e :: l⟩
 
 unsafe def entries.head (es : entries) : Option entry :=
   es.l.head'
 
 unsafe def format_aux : List Stringₓ → List Stringₓ → List Stringₓ → List entry → tactic format
-| line :: lines, dep :: deps, thm :: thms, en :: es =>
-  do 
+  | line :: lines, dep :: deps, thm :: thms, en :: es => do
     let fmt ←
-      do 
-          let margin := Stringₓ.join (List.repeat " │" en.depth)
-          let margin :=
-            match en.status with 
-            | status.sintro => " ├" ++ margin
-            | status.intro => " │" ++ margin ++ " ┌"
-            | status.reg => " │" ++ margin ++ ""
-            | status.lam => " │" ++ margin ++ ""
-          let p ← infer_type en.expr >>= pp 
-          let lhs := line ++ "│" ++ dep ++ "│ " ++ thm ++ margin ++ " "
-          return$ format.of_string lhs ++ (p.nest lhs.length).group ++ format.line
+      do
+        let margin := Stringₓ.join (List.repeat " │" en.depth)
+        let margin :=
+          match en.status with
+          | status.sintro => " ├" ++ margin
+          | status.intro => " │" ++ margin ++ " ┌"
+          | status.reg => " │" ++ margin ++ ""
+          | status.lam => " │" ++ margin ++ ""
+        let p ← infer_type en.expr >>= pp
+        let lhs := line ++ "│" ++ dep ++ "│ " ++ thm ++ margin ++ " "
+        return $ format.of_string lhs ++ (p.nest lhs.length).group ++ format.line
     (· ++ fmt) <$> format_aux lines deps thms es
-| _, _, _, _ => return format.nil
+  | _, _, _, _ => return format.nil
 
 unsafe instance : has_to_tactic_format entries :=
   ⟨fun es : entries =>
-      let lines := pad_right$ es.l.map fun en => toString en.line 
-      let deps := pad_right$ es.l.map fun en => Stringₓ.intercalate "," (en.deps.map toString)
-      let thms := pad_right$ es.l.map fun en => (entry.thm en).toString 
-      format_aux lines deps thms es.l⟩
+    let lines := pad_right $ es.l.map fun en => toString en.line
+    let deps := pad_right $ es.l.map fun en => Stringₓ.intercalate "," (en.deps.map toString)
+    let thms := pad_right $ es.l.map fun en => (entry.thm en).toString
+    format_aux lines deps thms es.l⟩
 
 unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) (deps : List Nat) : tactic (List Nat) :=
-  (do 
-      let ei ← es.find e 
-      filter ei.expr 
+  (do
+      let ei ← es.find e
+      filter ei.expr
       return (ei.line :: deps)) <|>
     return deps
 
-unsafe def may_be_proof (e : expr) : tactic Bool :=
-  do 
-    let expr.sort u ← infer_type e >>= infer_type 
-    return$ bnot u.nonzero
+unsafe def may_be_proof (e : expr) : tactic Bool := do
+  let expr.sort u ← infer_type e >>= infer_type
+  return $ bnot u.nonzero
 
 end Explode
 
 open Explode
 
-mutual 
+mutual
   unsafe def explode.core (filter : expr → tactic Unit) : expr → Bool → Nat → entries → tactic entries
-  | e@(lam n bi d b), si, depth, es =>
-    do 
-      let m ← mk_fresh_name 
-      let l := local_const m n bi d 
-      let b' := instantiate_var b l 
+    | e@(lam n bi d b), si, depth, es => do
+      let m ← mk_fresh_name
+      let l := local_const m n bi d
+      let b' := instantiate_var b l
       if si then
           let en : entry := ⟨l, es.size, depth, status.sintro, thm.name n, []⟩
-          do 
-            let es' ← explode.core b' si depth (es.add en)
-            return$ es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", [es.size, es'.size - 1]⟩
-        else
-          do 
-            let en : entry := ⟨l, es.size, depth, status.intro, thm.name n, []⟩
-            let es' ← explode.core b' si (depth+1) (es.add en)
-            let deps' ← explode.append_dep filter es' b'.erase_annotations []
-            let deps' ← explode.append_dep filter es' l deps' 
-            return$ es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", deps'⟩
-  | e@(elet n t a b), si, depth, es => explode.core (reduce_lets e) si depth es
-  | e@(macro n l), si, depth, es => explode.core l.head si depth es
-  | e, si, depth, es =>
-    filter e >>
-      match get_app_fn_args e with 
-      | (nm@(const n _), args) => explode.args e args depth es (thm.expr nm) []
-      | (fn, []) =>
-        do 
+          do
+          let es' ← explode.core b' si depth (es.add en)
+          return $ es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", [es.size, es'.size - 1]⟩
+        else do
+          let en : entry := ⟨l, es.size, depth, status.intro, thm.name n, []⟩
+          let es' ← explode.core b' si (depth+1) (es.add en)
+          let deps' ← explode.append_dep filter es' b'.erase_annotations []
+          let deps' ← explode.append_dep filter es' l deps'
+          return $ es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", deps'⟩
+    | e@(elet n t a b), si, depth, es => explode.core (reduce_lets e) si depth es
+    | e@(macro n l), si, depth, es => explode.core l.head si depth es
+    | e, si, depth, es =>
+      filter e >>
+        match get_app_fn_args e with
+        | (nm@(const n _), args) => explode.args e args depth es (thm.expr nm) []
+        | (fn, []) => do
           let en : entry := ⟨fn, es.size, depth, status.reg, thm.expr fn, []⟩
           return (es.add en)
-      | (fn, args) =>
-        do 
-          let es' ← explode.core fn ff depth es 
+        | (fn, args) => do
+          let es' ← explode.core fn ff depth es
           let deps ← explode.append_dep filter es' fn.erase_annotations []
-          explode.args e args depth es' (thm.string "∀E") deps 
+          explode.args e args depth es' (thm.string "∀E") deps
   unsafe def explode.args (filter : expr → tactic Unit) :
-    expr → List expr → Nat → entries → thm → List Nat → tactic entries
-  | e, arg :: args, depth, es, thm, deps =>
-    do 
-      let es' ← explode.core arg ff depth es <|> return es 
-      let deps' ← explode.append_dep filter es' arg deps 
+      expr → List expr → Nat → entries → thm → List Nat → tactic entries
+    | e, arg :: args, depth, es, thm, deps => do
+      let es' ← explode.core arg ff depth es <|> return es
+      let deps' ← explode.append_dep filter es' arg deps
       explode.args e args depth es' thm deps'
-  | e, [], depth, es, thm, deps => return (es.add ⟨e, es.size, depth, status.reg, thm, deps.reverse⟩)
+    | e, [], depth, es, thm, deps => return (es.add ⟨e, es.size, depth, status.reg, thm, deps.reverse⟩)
 end
 
 unsafe def explode_expr (e : expr) (hide_non_prop := tt) : tactic entries :=
-  let filter := if hide_non_prop then fun e => may_be_proof e >>= guardb else fun _ => skip 
+  let filter := if hide_non_prop then fun e => may_be_proof e >>= guardb else fun _ => skip
   tactic.explode.core filter e tt 0 (default _)
 
-unsafe def explode (n : Name) : tactic Unit :=
-  do 
-    let const n _ ← resolve_name n | fail "cannot resolve name"
-    let d ← get_decl n 
-    let v ←
-      match d with 
-        | declaration.defn _ _ _ v _ _ => return v
-        | declaration.thm _ _ _ v => return v.get
-        | _ => fail "not a definition"
-    let t ← pp d.type 
-    explode_expr v <* trace (to_fmt n ++ " : " ++ t) >>= trace
+unsafe def explode (n : Name) : tactic Unit := do
+  let const n _ ← resolve_name n | fail "cannot resolve name"
+  let d ← get_decl n
+  let v ←
+    match d with
+      | declaration.defn _ _ _ v _ _ => return v
+      | declaration.thm _ _ _ v => return v.get
+      | _ => fail "not a definition"
+  let t ← pp d.type
+  explode_expr v <* trace (to_fmt n ++ " : " ++ t) >>= trace
 
 setup_tactic_parser
 
-/--
+/-- 
 `#explode decl_name` displays a proof term in a line-by-line format somewhat akin to a Fitch-style
 proof or the Metamath proof style.
 `#explode_widget decl_name` renders a widget that displays an `#explode` proof.
@@ -229,10 +223,9 @@ brackets are only needed in order to delimit the scope of assumptions, and these
 have global scope anyway so detailed tracking is not necessary.)
 -/
 @[user_command]
-unsafe def explode_cmd (_ : parse$ tk "#explode") : parser Unit :=
-  do 
-    let n ← ident 
-    explode n
+unsafe def explode_cmd (_ : parse $ tk "#explode") : parser Unit := do
+  let n ← ident
+  explode n
 
 add_tactic_doc
   { Name := "#explode / #explode_widget", category := DocCategory.cmd,

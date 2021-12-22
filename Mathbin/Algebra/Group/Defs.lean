@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Group.ToAdditive 
+import Mathbin.Algebra.Group.ToAdditive
 import Mathbin.Tactic.Basic
 
 /-!
@@ -32,26 +32,26 @@ actions and register the following instances:
 -/
 
 
-/-- Type class for the `+ᵥ` notation. -/
-class HasVadd (G : Type _) (P : Type _) where 
+/--  Type class for the `+ᵥ` notation. -/
+class HasVadd (G : Type _) (P : Type _) where
   vadd : G → P → P
 
-/-- Typeclass for types with a scalar multiplication operation, denoted `•` (`\bu`) -/
-@[toAdditive HasVadd]
-class HasScalar (M : Type _) (α : Type _) where 
+/--  Typeclass for types with a scalar multiplication operation, denoted `•` (`\bu`) -/
+@[to_additive HasVadd]
+class HasScalar (M : Type _) (α : Type _) where
   smul : M → α → α
 
 infixl:65 " +ᵥ " => HasVadd.vadd
 
 infixr:73 " • " => HasScalar.smul
 
-attribute [toAdditiveReorder 1] Pow
+attribute [to_additive_reorder 1] Pow
 
-attribute [toAdditiveReorder 1 4] Pow.pow
+attribute [to_additive_reorder 1 4] Pow.pow
 
-attribute [toAdditive HasScalar] Pow
+attribute [to_additive HasScalar] Pow
 
-attribute [toAdditive HasScalar.smul] Pow.pow
+attribute [to_additive HasScalar.smul] Pow.pow
 
 universe u
 
@@ -59,214 +59,209 @@ section Mul
 
 variable {G : Type u} [Mul G]
 
-/-- `left_mul g` denotes left multiplication by `g` -/
-@[toAdditive "`left_add g` denotes left addition by `g`"]
-def leftMul : G → G → G :=
-  fun g : G => fun x : G => g*x
+/--  `left_mul g` denotes left multiplication by `g` -/
+@[to_additive "`left_add g` denotes left addition by `g`"]
+def leftMul : G → G → G := fun g : G => fun x : G => g*x
 
-/-- `right_mul g` denotes right multiplication by `g` -/
-@[toAdditive "`right_add g` denotes right addition by `g`"]
-def rightMul : G → G → G :=
-  fun g : G => fun x : G => x*g
+/--  `right_mul g` denotes right multiplication by `g` -/
+@[to_additive "`right_add g` denotes right addition by `g`"]
+def rightMul : G → G → G := fun g : G => fun x : G => x*g
 
 end Mul
 
-/-- A semigroup is a type with an associative `(*)`. -/
-@[protectProj, ancestor Mul, ext]
-class Semigroupₓ (G : Type u) extends Mul G where 
+/--  A semigroup is a type with an associative `(*)`. -/
+@[protect_proj, ancestor Mul, ext]
+class Semigroupₓ (G : Type u) extends Mul G where
   mul_assoc : ∀ a b c : G, ((a*b)*c) = a*b*c
 
-/-- An additive semigroup is a type with an associative `(+)`. -/
-@[protectProj, ancestor Add, ext]
-class AddSemigroupₓ (G : Type u) extends Add G where 
+/--  An additive semigroup is a type with an associative `(+)`. -/
+@[protect_proj, ancestor Add, ext]
+class AddSemigroupₓ (G : Type u) extends Add G where
   add_assoc : ∀ a b c : G, ((a+b)+c) = a+b+c
 
-attribute [toAdditive] Semigroupₓ
+attribute [to_additive] Semigroupₓ
 
 section Semigroupₓ
 
 variable {G : Type u} [Semigroupₓ G]
 
-@[no_rsimp, toAdditive]
+@[no_rsimp, to_additive]
 theorem mul_assocₓ : ∀ a b c : G, ((a*b)*c) = a*b*c :=
   Semigroupₓ.mul_assoc
 
-@[toAdditive]
+@[to_additive]
 instance Semigroupₓ.to_is_associative : IsAssociative G (·*·) :=
   ⟨mul_assocₓ⟩
 
 end Semigroupₓ
 
-/-- A commutative semigroup is a type with an associative commutative `(*)`. -/
-@[protectProj, ancestor Semigroupₓ, ext]
-class CommSemigroupₓ (G : Type u) extends Semigroupₓ G where 
+/--  A commutative semigroup is a type with an associative commutative `(*)`. -/
+@[protect_proj, ancestor Semigroupₓ, ext]
+class CommSemigroupₓ (G : Type u) extends Semigroupₓ G where
   mul_comm : ∀ a b : G, (a*b) = b*a
 
-/-- A commutative additive semigroup is a type with an associative commutative `(+)`. -/
-@[protectProj, ancestor AddSemigroupₓ, ext]
-class AddCommSemigroupₓ (G : Type u) extends AddSemigroupₓ G where 
+/--  A commutative additive semigroup is a type with an associative commutative `(+)`. -/
+@[protect_proj, ancestor AddSemigroupₓ, ext]
+class AddCommSemigroupₓ (G : Type u) extends AddSemigroupₓ G where
   add_comm : ∀ a b : G, (a+b) = b+a
 
-attribute [toAdditive] CommSemigroupₓ
+attribute [to_additive] CommSemigroupₓ
 
 section CommSemigroupₓ
 
 variable {G : Type u} [CommSemigroupₓ G]
 
-@[no_rsimp, toAdditive]
+@[no_rsimp, to_additive]
 theorem mul_commₓ : ∀ a b : G, (a*b) = b*a :=
   CommSemigroupₓ.mul_comm
 
-@[toAdditive]
+@[to_additive]
 instance CommSemigroupₓ.to_is_commutative : IsCommutative G (·*·) :=
   ⟨mul_commₓ⟩
 
 end CommSemigroupₓ
 
-/-- A `left_cancel_semigroup` is a semigroup such that `a * b = a * c` implies `b = c`. -/
-@[protectProj, ancestor Semigroupₓ, ext]
-class LeftCancelSemigroup (G : Type u) extends Semigroupₓ G where 
+/--  A `left_cancel_semigroup` is a semigroup such that `a * b = a * c` implies `b = c`. -/
+@[protect_proj, ancestor Semigroupₓ, ext]
+class LeftCancelSemigroup (G : Type u) extends Semigroupₓ G where
   mul_left_cancel : ∀ a b c : G, ((a*b) = a*c) → b = c
 
-/-- An `add_left_cancel_semigroup` is an additive semigroup such that
+/--  An `add_left_cancel_semigroup` is an additive semigroup such that
 `a + b = a + c` implies `b = c`. -/
-@[protectProj, ancestor AddSemigroupₓ, ext]
-class AddLeftCancelSemigroup (G : Type u) extends AddSemigroupₓ G where 
+@[protect_proj, ancestor AddSemigroupₓ, ext]
+class AddLeftCancelSemigroup (G : Type u) extends AddSemigroupₓ G where
   add_left_cancel : ∀ a b c : G, ((a+b) = a+c) → b = c
 
-attribute [toAdditive AddLeftCancelSemigroup] LeftCancelSemigroup
+attribute [to_additive AddLeftCancelSemigroup] LeftCancelSemigroup
 
 section LeftCancelSemigroup
 
 variable {G : Type u} [LeftCancelSemigroup G] {a b c : G}
 
-@[toAdditive]
+@[to_additive]
 theorem mul_left_cancelₓ : ((a*b) = a*c) → b = c :=
   LeftCancelSemigroup.mul_left_cancel a b c
 
-@[toAdditive]
+@[to_additive]
 theorem mul_left_cancel_iffₓ : ((a*b) = a*c) ↔ b = c :=
   ⟨mul_left_cancelₓ, congr_argₓ _⟩
 
-@[toAdditive]
-theorem mul_right_injective (a : G) : Function.Injective ((·*·) a) :=
-  fun b c => mul_left_cancelₓ
+@[to_additive]
+theorem mul_right_injective (a : G) : Function.Injective ((·*·) a) := fun b c => mul_left_cancelₓ
 
-@[simp, toAdditive]
+@[simp, to_additive]
 theorem mul_right_injₓ (a : G) {b c : G} : ((a*b) = a*c) ↔ b = c :=
   (mul_right_injective a).eq_iff
 
-@[toAdditive]
+@[to_additive]
 theorem mul_ne_mul_right (a : G) {b c : G} : ((a*b) ≠ a*c) ↔ b ≠ c :=
   (mul_right_injective a).ne_iff
 
 end LeftCancelSemigroup
 
-/-- A `right_cancel_semigroup` is a semigroup such that `a * b = c * b` implies `a = c`. -/
-@[protectProj, ancestor Semigroupₓ, ext]
-class RightCancelSemigroup (G : Type u) extends Semigroupₓ G where 
+/--  A `right_cancel_semigroup` is a semigroup such that `a * b = c * b` implies `a = c`. -/
+@[protect_proj, ancestor Semigroupₓ, ext]
+class RightCancelSemigroup (G : Type u) extends Semigroupₓ G where
   mul_right_cancel : ∀ a b c : G, ((a*b) = c*b) → a = c
 
-/-- An `add_right_cancel_semigroup` is an additive semigroup such that
+/--  An `add_right_cancel_semigroup` is an additive semigroup such that
 `a + b = c + b` implies `a = c`. -/
-@[protectProj, ancestor AddSemigroupₓ, ext]
-class AddRightCancelSemigroup (G : Type u) extends AddSemigroupₓ G where 
+@[protect_proj, ancestor AddSemigroupₓ, ext]
+class AddRightCancelSemigroup (G : Type u) extends AddSemigroupₓ G where
   add_right_cancel : ∀ a b c : G, ((a+b) = c+b) → a = c
 
-attribute [toAdditive AddRightCancelSemigroup] RightCancelSemigroup
+attribute [to_additive AddRightCancelSemigroup] RightCancelSemigroup
 
 section RightCancelSemigroup
 
 variable {G : Type u} [RightCancelSemigroup G] {a b c : G}
 
-@[toAdditive]
+@[to_additive]
 theorem mul_right_cancelₓ : ((a*b) = c*b) → a = c :=
   RightCancelSemigroup.mul_right_cancel a b c
 
-@[toAdditive]
+@[to_additive]
 theorem mul_right_cancel_iffₓ : ((b*a) = c*a) ↔ b = c :=
   ⟨mul_right_cancelₓ, congr_argₓ _⟩
 
-@[toAdditive]
-theorem mul_left_injective (a : G) : Function.Injective fun x => x*a :=
-  fun b c => mul_right_cancelₓ
+@[to_additive]
+theorem mul_left_injective (a : G) : Function.Injective fun x => x*a := fun b c => mul_right_cancelₓ
 
-@[simp, toAdditive]
+@[simp, to_additive]
 theorem mul_left_injₓ (a : G) {b c : G} : ((b*a) = c*a) ↔ b = c :=
   (mul_left_injective a).eq_iff
 
-@[toAdditive]
+@[to_additive]
 theorem mul_ne_mul_left (a : G) {b c : G} : ((b*a) ≠ c*a) ↔ b ≠ c :=
   (mul_left_injective a).ne_iff
 
 end RightCancelSemigroup
 
-/-- Typeclass for expressing that a type `M` with multiplication and a one satisfies
+/--  Typeclass for expressing that a type `M` with multiplication and a one satisfies
 `1 * a = a` and `a * 1 = a` for all `a : M`. -/
 @[ancestor HasOne Mul]
-class MulOneClass (M : Type u) extends HasOne M, Mul M where 
-  one_mul : ∀ a : M, (1*a) = a 
+class MulOneClass (M : Type u) extends HasOne M, Mul M where
+  one_mul : ∀ a : M, (1*a) = a
   mul_one : ∀ a : M, (a*1) = a
 
-/-- Typeclass for expressing that a type `M` with addition and a zero satisfies
+/--  Typeclass for expressing that a type `M` with addition and a zero satisfies
 `0 + a = a` and `a + 0 = a` for all `a : M`. -/
 @[ancestor HasZero Add]
-class AddZeroClass (M : Type u) extends HasZero M, Add M where 
-  zero_add : ∀ a : M, (0+a) = a 
+class AddZeroClass (M : Type u) extends HasZero M, Add M where
+  zero_add : ∀ a : M, (0+a) = a
   add_zero : ∀ a : M, (a+0) = a
 
-attribute [toAdditive] MulOneClass
+attribute [to_additive] MulOneClass
 
-@[ext, toAdditive]
-theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁.mul = m₂.mul → m₁ = m₂ :=
-  by 
-    rintro ⟨one₁, mul₁, one_mul₁, mul_one₁⟩ ⟨one₂, mul₂, one_mul₂, mul_one₂⟩ (rfl : mul₁ = mul₂)
-    congr 
-    exact (one_mul₂ one₁).symm.trans (mul_one₁ one₂)
+@[ext, to_additive]
+theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁.mul = m₂.mul → m₁ = m₂ := by
+  rintro ⟨one₁, mul₁, one_mul₁, mul_one₁⟩ ⟨one₂, mul₂, one_mul₂, mul_one₂⟩ (rfl : mul₁ = mul₂)
+  congr
+  exact (one_mul₂ one₁).symm.trans (mul_one₁ one₂)
 
 section MulOneClass
 
 variable {M : Type u} [MulOneClass M]
 
-@[ematch, simp, toAdditive]
+@[ematch, simp, to_additive]
 theorem one_mulₓ : ∀ a : M, (1*a) = a :=
   MulOneClass.one_mul
 
-@[ematch, simp, toAdditive]
+@[ematch, simp, to_additive]
 theorem mul_oneₓ : ∀ a : M, (a*1) = a :=
   MulOneClass.mul_one
 
-@[toAdditive]
+@[to_additive]
 instance MulOneClass.to_is_left_id : IsLeftId M (·*·) 1 :=
   ⟨MulOneClass.one_mul⟩
 
-@[toAdditive]
+@[to_additive]
 instance MulOneClass.to_is_right_id : IsRightId M (·*·) 1 :=
   ⟨MulOneClass.mul_one⟩
 
 end MulOneClass
 
-section 
+section
 
 variable {M : Type u}
 
-/-- The fundamental power operation in a monoid. `npow_rec n a = a*a*...*a` n times.
+/--  The fundamental power operation in a monoid. `npow_rec n a = a*a*...*a` n times.
 Use instead `a ^ n`,  which has better definitional behavior. -/
 def npowRec [HasOne M] [Mul M] : ℕ → M → M
-| 0, a => 1
-| n+1, a => a*npowRec n a
+  | 0, a => 1
+  | n+1, a => a*npowRec n a
 
-/-- The fundamental scalar multiplication in an additive monoid. `nsmul_rec n a = a+a+...+a` n
+/--  The fundamental scalar multiplication in an additive monoid. `nsmul_rec n a = a+a+...+a` n
 times. Use instead `n • a`, which has better definitional behavior. -/
 def nsmulRec [HasZero M] [Add M] : ℕ → M → M
-| 0, a => 0
-| n+1, a => a+nsmulRec n a
+  | 0, a => 0
+  | n+1, a => a+nsmulRec n a
 
-attribute [toAdditive] npowRec
+attribute [to_additive] npowRec
 
-end 
+end
 
-/-- Suppose that one can put two mathematical structures on a type, a rich one `R` and a poor one
+/--  Suppose that one can put two mathematical structures on a type, a rich one `R` and a poor one
 `P`, and that one can deduce the poor structure from the rich structure through a map `F` (called a
 forgetful functor) (think `R = metric_space` and `P = topological_space`). A possible
 implementation would be to have a type class `rich` containing a field `R`, a type class `poor`
@@ -317,8 +312,8 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 library_note "forgetful inheritance"
 
--- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
-/-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
+-- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+/--  `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
   sorry
@@ -358,27 +353,27 @@ to `0 : ℕ`).
 -/
 
 
-/-- An `add_monoid` is an `add_semigroup` with an element `0` such that `0 + a = a + 0 = a`. -/
+/--  An `add_monoid` is an `add_semigroup` with an element `0` such that `0 + a = a + 0 = a`. -/
 @[ancestor AddSemigroupₓ AddZeroClass]
-class AddMonoidₓ (M : Type u) extends AddSemigroupₓ M, AddZeroClass M where 
-  nsmul : ℕ → M → M := nsmulRec 
-  nsmul_zero' : ∀ x, nsmul 0 x = 0 :=  by 
-  runTac 
-    try_refl_tac 
-  nsmul_succ' : ∀ n : ℕ x, nsmul n.succ x = x+nsmul n x :=  by 
-  runTac 
-    try_refl_tac
+class AddMonoidₓ (M : Type u) extends AddSemigroupₓ M, AddZeroClass M where
+  nsmul : ℕ → M → M := nsmulRec
+  nsmul_zero' : ∀ x, nsmul 0 x = 0 := by
+    run_tac
+      try_refl_tac
+  nsmul_succ' : ∀ n : ℕ x, nsmul n.succ x = x+nsmul n x := by
+    run_tac
+      try_refl_tac
 
-/-- A `monoid` is a `semigroup` with an element `1` such that `1 * a = a * 1 = a`. -/
-@[ancestor Semigroupₓ MulOneClass, toAdditive]
-class Monoidₓ (M : Type u) extends Semigroupₓ M, MulOneClass M where 
-  npow : ℕ → M → M := npowRec 
-  npow_zero' : ∀ x, npow 0 x = 1 :=  by 
-  runTac 
-    try_refl_tac 
-  npow_succ' : ∀ n : ℕ x, npow n.succ x = x*npow n x :=  by 
-  runTac 
-    try_refl_tac
+/--  A `monoid` is a `semigroup` with an element `1` such that `1 * a = a * 1 = a`. -/
+@[ancestor Semigroupₓ MulOneClass, to_additive]
+class Monoidₓ (M : Type u) extends Semigroupₓ M, MulOneClass M where
+  npow : ℕ → M → M := npowRec
+  npow_zero' : ∀ x, npow 0 x = 1 := by
+    run_tac
+      try_refl_tac
+  npow_succ' : ∀ n : ℕ x, npow n.succ x = x*npow n x := by
+    run_tac
+      try_refl_tac
 
 instance Monoidₓ.hasPow {M : Type _} [Monoidₓ M] : Pow M ℕ :=
   ⟨fun x n => Monoidₓ.npow n x⟩
@@ -386,119 +381,116 @@ instance Monoidₓ.hasPow {M : Type _} [Monoidₓ M] : Pow M ℕ :=
 instance AddMonoidₓ.hasScalarNat {M : Type _} [AddMonoidₓ M] : HasScalar ℕ M :=
   ⟨AddMonoidₓ.nsmul⟩
 
-attribute [toAdditive AddMonoidₓ.hasScalarNat] Monoidₓ.hasPow
+attribute [to_additive AddMonoidₓ.hasScalarNat] Monoidₓ.hasPow
 
-section 
+section
 
 variable {M : Type _} [Monoidₓ M]
 
-@[simp, toAdditive nsmul_eq_smul]
+@[simp, to_additive nsmul_eq_smul]
 theorem npow_eq_powₓ (n : ℕ) (x : M) : Monoidₓ.npow n x = x ^ n :=
   rfl
 
-@[toAdditive zero_nsmul, simp]
+@[to_additive zero_nsmul, simp]
 theorem pow_zeroₓ (a : M) : a ^ 0 = 1 :=
   Monoidₓ.npow_zero' _
 
-@[toAdditive succ_nsmul]
+@[to_additive succ_nsmul]
 theorem pow_succₓ (a : M) (n : ℕ) : (a ^ n+1) = a*a ^ n :=
   Monoidₓ.npow_succ' n a
 
-end 
+end
 
 section Monoidₓ
 
 variable {M : Type u} [Monoidₓ M]
 
-@[toAdditive]
-theorem left_inv_eq_right_invₓ {a b c : M} (hba : (b*a) = 1) (hac : (a*c) = 1) : b = c :=
-  by 
-    rw [←one_mulₓ c, ←hba, mul_assocₓ, hac, mul_oneₓ b]
+@[to_additive]
+theorem left_inv_eq_right_invₓ {a b c : M} (hba : (b*a) = 1) (hac : (a*c) = 1) : b = c := by
+  rw [← one_mulₓ c, ← hba, mul_assocₓ, hac, mul_oneₓ b]
 
 end Monoidₓ
 
-/-- An additive commutative monoid is an additive monoid with commutative `(+)`. -/
-@[protectProj, ancestor AddMonoidₓ AddCommSemigroupₓ]
+/--  An additive commutative monoid is an additive monoid with commutative `(+)`. -/
+@[protect_proj, ancestor AddMonoidₓ AddCommSemigroupₓ]
 class AddCommMonoidₓ (M : Type u) extends AddMonoidₓ M, AddCommSemigroupₓ M
 
-/-- A commutative monoid is a monoid with commutative `(*)`. -/
-@[protectProj, ancestor Monoidₓ CommSemigroupₓ, toAdditive]
+/--  A commutative monoid is a monoid with commutative `(*)`. -/
+@[protect_proj, ancestor Monoidₓ CommSemigroupₓ, to_additive]
 class CommMonoidₓ (M : Type u) extends Monoidₓ M, CommSemigroupₓ M
 
 section LeftCancelMonoid
 
-/-- An additive monoid in which addition is left-cancellative.
+/--  An additive monoid in which addition is left-cancellative.
 Main examples are `ℕ` and groups. This is the right typeclass for many sum lemmas, as having a zero
 is useful to define the sum over the empty set, so `add_left_cancel_semigroup` is not enough. -/
-@[protectProj, ancestor AddLeftCancelSemigroup AddMonoidₓ]
+@[protect_proj, ancestor AddLeftCancelSemigroup AddMonoidₓ]
 class AddLeftCancelMonoid (M : Type u) extends AddLeftCancelSemigroup M, AddMonoidₓ M
 
-/-- A monoid in which multiplication is left-cancellative. -/
-@[protectProj, ancestor LeftCancelSemigroup Monoidₓ, toAdditive AddLeftCancelMonoid]
+/--  A monoid in which multiplication is left-cancellative. -/
+@[protect_proj, ancestor LeftCancelSemigroup Monoidₓ, to_additive AddLeftCancelMonoid]
 class LeftCancelMonoid (M : Type u) extends LeftCancelSemigroup M, Monoidₓ M
 
 end LeftCancelMonoid
 
 section RightCancelMonoid
 
-/-- An additive monoid in which addition is right-cancellative.
+/--  An additive monoid in which addition is right-cancellative.
 Main examples are `ℕ` and groups. This is the right typeclass for many sum lemmas, as having a zero
 is useful to define the sum over the empty set, so `add_right_cancel_semigroup` is not enough. -/
-@[protectProj, ancestor AddRightCancelSemigroup AddMonoidₓ]
+@[protect_proj, ancestor AddRightCancelSemigroup AddMonoidₓ]
 class AddRightCancelMonoid (M : Type u) extends AddRightCancelSemigroup M, AddMonoidₓ M
 
-/-- A monoid in which multiplication is right-cancellative. -/
-@[protectProj, ancestor RightCancelSemigroup Monoidₓ, toAdditive AddRightCancelMonoid]
+/--  A monoid in which multiplication is right-cancellative. -/
+@[protect_proj, ancestor RightCancelSemigroup Monoidₓ, to_additive AddRightCancelMonoid]
 class RightCancelMonoid (M : Type u) extends RightCancelSemigroup M, Monoidₓ M
 
 end RightCancelMonoid
 
 section CancelMonoid
 
-/-- An additive monoid in which addition is cancellative on both sides.
+/--  An additive monoid in which addition is cancellative on both sides.
 Main examples are `ℕ` and groups. This is the right typeclass for many sum lemmas, as having a zero
 is useful to define the sum over the empty set, so `add_right_cancel_semigroup` is not enough. -/
-@[protectProj, ancestor AddLeftCancelMonoid AddRightCancelMonoid]
+@[protect_proj, ancestor AddLeftCancelMonoid AddRightCancelMonoid]
 class AddCancelMonoid (M : Type u) extends AddLeftCancelMonoid M, AddRightCancelMonoid M
 
-/-- A monoid in which multiplication is cancellative. -/
-@[protectProj, ancestor LeftCancelMonoid RightCancelMonoid, toAdditive AddCancelMonoid]
+/--  A monoid in which multiplication is cancellative. -/
+@[protect_proj, ancestor LeftCancelMonoid RightCancelMonoid, to_additive AddCancelMonoid]
 class CancelMonoid (M : Type u) extends LeftCancelMonoid M, RightCancelMonoid M
 
-/-- Commutative version of add_cancel_monoid. -/
-@[protectProj, ancestor AddLeftCancelMonoid AddCommMonoidₓ]
+/--  Commutative version of add_cancel_monoid. -/
+@[protect_proj, ancestor AddLeftCancelMonoid AddCommMonoidₓ]
 class AddCancelCommMonoid (M : Type u) extends AddLeftCancelMonoid M, AddCommMonoidₓ M
 
-/-- Commutative version of cancel_monoid. -/
-@[protectProj, ancestor LeftCancelMonoid CommMonoidₓ, toAdditive AddCancelCommMonoid]
+/--  Commutative version of cancel_monoid. -/
+@[protect_proj, ancestor LeftCancelMonoid CommMonoidₓ, to_additive AddCancelCommMonoid]
 class CancelCommMonoid (M : Type u) extends LeftCancelMonoid M, CommMonoidₓ M
 
-@[toAdditive]
+@[to_additive]
 instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelCommMonoid M] : CancelMonoid M :=
   { ‹CancelCommMonoid M› with
-    mul_right_cancel :=
-      fun a b c h =>
-        mul_left_cancelₓ$
-          by 
-            rw [mul_commₓ, h, mul_commₓ] }
+    mul_right_cancel := fun a b c h =>
+      mul_left_cancelₓ $ by
+        rw [mul_commₓ, h, mul_commₓ] }
 
 end CancelMonoid
 
-/-- The fundamental power operation in a group. `zpow_rec n a = a*a*...*a` n times, for integer `n`.
+/--  The fundamental power operation in a group. `zpow_rec n a = a*a*...*a` n times, for integer `n`.
 Use instead `a ^ n`,  which has better definitional behavior. -/
 def zpowRec {M : Type _} [HasOne M] [Mul M] [HasInv M] : ℤ → M → M
-| Int.ofNat n, a => npowRec n a
-| -[1+ n], a => npowRec n.succ a⁻¹
+  | Int.ofNat n, a => npowRec n a
+  | -[1+ n], a => npowRec n.succ a⁻¹
 
-/-- The fundamental scalar multiplication in an additive group. `zsmul_rec n a = a+a+...+a` n
+/--  The fundamental scalar multiplication in an additive group. `zsmul_rec n a = a+a+...+a` n
 times, for integer `n`. Use instead `n • a`, which has better definitional behavior. -/
 def zsmulRec {M : Type _} [HasZero M] [Add M] [Neg M] : ℤ → M → M
-| Int.ofNat n, a => nsmulRec n a
-| -[1+ n], a => -nsmulRec n.succ a
+  | Int.ofNat n, a => nsmulRec n a
+  | -[1+ n], a => -nsmulRec n.succ a
 
-attribute [toAdditive] zpowRec
+attribute [to_additive] zpowRec
 
-/-- A `div_inv_monoid` is a `monoid` with operations `/` and `⁻¹` satisfying
+/--  A `div_inv_monoid` is a `monoid` with operations `/` and `⁻¹` satisfying
 `div_eq_mul_inv : ∀ a b, a / b = a * b⁻¹`.
 
 This is the immediate common ancestor of `group` and `group_with_zero`,
@@ -517,24 +509,24 @@ In the same way, adding a `zpow` field makes it possible to avoid definitional f
 in diamonds. See the definition of `monoid` and Note [forgetful inheritance] for more
 explanations on this.
 -/
-@[protectProj, ancestor Monoidₓ HasInv Div]
-class DivInvMonoidₓ (G : Type u) extends Monoidₓ G, HasInv G, Div G where 
+@[protect_proj, ancestor Monoidₓ HasInv Div]
+class DivInvMonoidₓ (G : Type u) extends Monoidₓ G, HasInv G, Div G where
   div := fun a b => a*b⁻¹
-  div_eq_mul_inv : ∀ a b : G, a / b = a*b⁻¹ :=  by 
-  runTac 
-    try_refl_tac 
-  zpow : ℤ → G → G := zpowRec 
-  zpow_zero' : ∀ a : G, zpow 0 a = 1 :=  by 
-  runTac 
-    try_refl_tac 
-  zpow_succ' : ∀ n : ℕ a : G, zpow (Int.ofNat n.succ) a = a*zpow (Int.ofNat n) a :=  by 
-  runTac 
-    try_refl_tac 
-  zpow_neg' : ∀ n : ℕ a : G, zpow -[1+ n] a = zpow n.succ a⁻¹ :=  by 
-  runTac 
-    try_refl_tac
+  div_eq_mul_inv : ∀ a b : G, a / b = a*b⁻¹ := by
+    run_tac
+      try_refl_tac
+  zpow : ℤ → G → G := zpowRec
+  zpow_zero' : ∀ a : G, zpow 0 a = 1 := by
+    run_tac
+      try_refl_tac
+  zpow_succ' : ∀ n : ℕ a : G, zpow (Int.ofNat n.succ) a = a*zpow (Int.ofNat n) a := by
+    run_tac
+      try_refl_tac
+  zpow_neg' : ∀ n : ℕ a : G, zpow -[1+ n] a = zpow n.succ a⁻¹ := by
+    run_tac
+      try_refl_tac
 
-/-- A `sub_neg_monoid` is an `add_monoid` with unary `-` and binary `-` operations
+/--  A `sub_neg_monoid` is an `add_monoid` with unary `-` and binary `-` operations
 satisfying `sub_eq_add_neg : ∀ a b, a - b = a + -b`.
 
 The default for `sub` is such that `a - b = a + -b` holds by definition.
@@ -551,24 +543,24 @@ In the same way, adding a `zsmul` field makes it possible to avoid definitional 
 in diamonds. See the definition of `add_monoid` and Note [forgetful inheritance] for more
 explanations on this.
 -/
-@[protectProj, ancestor AddMonoidₓ Neg Sub]
-class SubNegMonoidₓ (G : Type u) extends AddMonoidₓ G, Neg G, Sub G where 
-  sub := fun a b => a+-b 
-  sub_eq_add_neg : ∀ a b : G, a - b = a+-b :=  by 
-  runTac 
-    try_refl_tac 
-  zsmul : ℤ → G → G := zsmulRec 
-  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 :=  by 
-  runTac 
-    try_refl_tac 
-  zsmul_succ' : ∀ n : ℕ a : G, zsmul (Int.ofNat n.succ) a = a+zsmul (Int.ofNat n) a :=  by 
-  runTac 
-    try_refl_tac 
-  zsmul_neg' : ∀ n : ℕ a : G, zsmul -[1+ n] a = -zsmul n.succ a :=  by 
-  runTac 
-    try_refl_tac
+@[protect_proj, ancestor AddMonoidₓ Neg Sub]
+class SubNegMonoidₓ (G : Type u) extends AddMonoidₓ G, Neg G, Sub G where
+  sub := fun a b => a+-b
+  sub_eq_add_neg : ∀ a b : G, a - b = a+-b := by
+    run_tac
+      try_refl_tac
+  zsmul : ℤ → G → G := zsmulRec
+  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 := by
+    run_tac
+      try_refl_tac
+  zsmul_succ' : ∀ n : ℕ a : G, zsmul (Int.ofNat n.succ) a = a+zsmul (Int.ofNat n) a := by
+    run_tac
+      try_refl_tac
+  zsmul_neg' : ∀ n : ℕ a : G, zsmul -[1+ n] a = -zsmul n.succ a := by
+    run_tac
+      try_refl_tac
 
-attribute [toAdditive SubNegMonoidₓ] DivInvMonoidₓ
+attribute [to_additive SubNegMonoidₓ] DivInvMonoidₓ
 
 instance DivInvMonoidₓ.hasPow {M} [DivInvMonoidₓ M] : Pow M ℤ :=
   ⟨fun x n => DivInvMonoidₓ.zpow n x⟩
@@ -576,72 +568,71 @@ instance DivInvMonoidₓ.hasPow {M} [DivInvMonoidₓ M] : Pow M ℤ :=
 instance SubNegMonoidₓ.hasScalarInt {M} [SubNegMonoidₓ M] : HasScalar ℤ M :=
   ⟨SubNegMonoidₓ.zsmul⟩
 
-attribute [toAdditive SubNegMonoidₓ.hasScalarInt] DivInvMonoidₓ.hasPow
+attribute [to_additive SubNegMonoidₓ.hasScalarInt] DivInvMonoidₓ.hasPow
 
-section 
+section
 
 variable {G : Type _} [DivInvMonoidₓ G]
 
-@[simp, toAdditive zsmul_eq_smul]
+@[simp, to_additive zsmul_eq_smul]
 theorem zpow_eq_pow (n : ℤ) (x : G) : DivInvMonoidₓ.zpow n x = x ^ n :=
   rfl
 
-@[simp, toAdditive zero_zsmul]
+@[simp, to_additive zero_zsmul]
 theorem zpow_zero (a : G) : a ^ (0 : ℤ) = 1 :=
   DivInvMonoidₓ.zpow_zero' a
 
-@[simp, normCast, toAdditive coe_nat_zsmul]
+@[simp, norm_cast, to_additive coe_nat_zsmul]
 theorem zpow_coe_nat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
-| 0 => (zpow_zero _).trans (pow_zeroₓ _).symm
-| n+1 =>
-  calc a ^ (↑n+1 : ℤ) = a*a ^ (n : ℤ) := DivInvMonoidₓ.zpow_succ' _ _ 
-    _ = a*a ^ n := congr_argₓ ((·*·) a) (zpow_coe_nat n)
-    _ = a ^ n+1 := (pow_succₓ _ _).symm
-    
+  | 0 => (zpow_zero _).trans (pow_zeroₓ _).symm
+  | n+1 =>
+    calc a ^ (↑n+1 : ℤ) = a*a ^ (n : ℤ) := DivInvMonoidₓ.zpow_succ' _ _
+      _ = a*a ^ n := congr_argₓ ((·*·) a) (zpow_coe_nat n)
+      _ = a ^ n+1 := (pow_succₓ _ _).symm
+      
 
-@[toAdditive of_nat_zsmul]
+@[to_additive of_nat_zsmul]
 theorem zpow_of_nat (a : G) (n : ℕ) : a ^ Int.ofNat n = a ^ n :=
   zpow_coe_nat a n
 
-@[simp, toAdditive]
-theorem zpow_neg_succ_of_nat (a : G) (n : ℕ) : a ^ -[1+ n] = (a ^ n+1)⁻¹ :=
-  by 
-    rw [←zpow_coe_nat]
-    exact DivInvMonoidₓ.zpow_neg' n a
+@[simp, to_additive]
+theorem zpow_neg_succ_of_nat (a : G) (n : ℕ) : a ^ -[1+ n] = (a ^ n+1)⁻¹ := by
+  rw [← zpow_coe_nat]
+  exact DivInvMonoidₓ.zpow_neg' n a
 
-end 
+end
 
-@[toAdditive]
+@[to_additive]
 theorem div_eq_mul_inv {G : Type u} [DivInvMonoidₓ G] : ∀ a b : G, a / b = a*b⁻¹ :=
   DivInvMonoidₓ.div_eq_mul_inv
 
-/-- A `group` is a `monoid` with an operation `⁻¹` satisfying `a⁻¹ * a = 1`.
+/--  A `group` is a `monoid` with an operation `⁻¹` satisfying `a⁻¹ * a = 1`.
 
 There is also a division operation `/` such that `a / b = a * b⁻¹`,
 with a default so that `a / b = a * b⁻¹` holds by definition.
 -/
-@[protectProj, ancestor DivInvMonoidₓ]
-class Groupₓ (G : Type u) extends DivInvMonoidₓ G where 
+@[protect_proj, ancestor DivInvMonoidₓ]
+class Groupₓ (G : Type u) extends DivInvMonoidₓ G where
   mul_left_inv : ∀ a : G, (a⁻¹*a) = 1
 
-/-- An `add_group` is an `add_monoid` with a unary `-` satisfying `-a + a = 0`.
+/--  An `add_group` is an `add_monoid` with a unary `-` satisfying `-a + a = 0`.
 
 There is also a binary operation `-` such that `a - b = a + -b`,
 with a default so that `a - b = a + -b` holds by definition.
 -/
-@[protectProj, ancestor SubNegMonoidₓ]
-class AddGroupₓ (A : Type u) extends SubNegMonoidₓ A where 
+@[protect_proj, ancestor SubNegMonoidₓ]
+class AddGroupₓ (A : Type u) extends SubNegMonoidₓ A where
   add_left_neg : ∀ a : A, ((-a)+a) = 0
 
-attribute [toAdditive] Groupₓ
+attribute [to_additive] Groupₓ
 
-/-- Abbreviation for `@div_inv_monoid.to_monoid _ (@group.to_div_inv_monoid _ _)`.
+/--  Abbreviation for `@div_inv_monoid.to_monoid _ (@group.to_div_inv_monoid _ _)`.
 
 Useful because it corresponds to the fact that `Grp` is a subcategory of `Mon`.
 Not an instance since it duplicates `@div_inv_monoid.to_monoid _ (@group.to_div_inv_monoid _ _)`.
 See note [reducible non-instances]. -/
 @[reducible,
-  toAdditive
+  to_additive
       "Abbreviation for `@sub_neg_monoid.to_add_monoid _ (@add_group.to_sub_neg_monoid _ _)`.\n\nUseful because it corresponds to the fact that `AddGroup` is a subcategory of `AddMon`.\nNot an instance since it duplicates\n`@sub_neg_monoid.to_add_monoid _ (@add_group.to_sub_neg_monoid _ _)`."]
 def Groupₓ.toMonoid (G : Type u) [Groupₓ G] : Monoidₓ G :=
   @DivInvMonoidₓ.toMonoid _ (@Groupₓ.toDivInvMonoid _ _)
@@ -650,93 +641,85 @@ section Groupₓ
 
 variable {G : Type u} [Groupₓ G] {a b c : G}
 
-@[simp, toAdditive]
+@[simp, to_additive]
 theorem mul_left_invₓ : ∀ a : G, (a⁻¹*a) = 1 :=
   Groupₓ.mul_left_inv
 
-@[toAdditive]
+@[to_additive]
 theorem inv_mul_selfₓ (a : G) : (a⁻¹*a) = 1 :=
   mul_left_invₓ a
 
-@[simp, toAdditive]
-theorem inv_mul_cancel_leftₓ (a b : G) : (a⁻¹*a*b) = b :=
-  by 
-    rw [←mul_assocₓ, mul_left_invₓ, one_mulₓ]
+@[simp, to_additive]
+theorem inv_mul_cancel_leftₓ (a b : G) : (a⁻¹*a*b) = b := by
+  rw [← mul_assocₓ, mul_left_invₓ, one_mulₓ]
 
-@[simp, toAdditive]
+@[simp, to_additive]
 theorem inv_eq_of_mul_eq_oneₓ (h : (a*b) = 1) : a⁻¹ = b :=
   left_inv_eq_right_invₓ (inv_mul_selfₓ a) h
 
-@[simp, toAdditive]
+@[simp, to_additive]
 theorem inv_invₓ (a : G) : a⁻¹⁻¹ = a :=
   inv_eq_of_mul_eq_oneₓ (mul_left_invₓ a)
 
-@[simp, toAdditive]
+@[simp, to_additive]
 theorem mul_right_invₓ (a : G) : (a*a⁻¹) = 1 :=
-  have  : (a⁻¹⁻¹*a⁻¹) = 1 := mul_left_invₓ (a⁻¹)
-  by 
-    rwa [inv_invₓ] at this
+  have : (a⁻¹⁻¹*a⁻¹) = 1 := mul_left_invₓ (a⁻¹)
+  by
+  rwa [inv_invₓ] at this
 
-@[toAdditive]
+@[to_additive]
 theorem mul_inv_selfₓ (a : G) : (a*a⁻¹) = 1 :=
   mul_right_invₓ a
 
-@[simp, toAdditive]
-theorem mul_inv_cancel_rightₓ (a b : G) : ((a*b)*b⁻¹) = a :=
-  by 
-    rw [mul_assocₓ, mul_right_invₓ, mul_oneₓ]
+@[simp, to_additive]
+theorem mul_inv_cancel_rightₓ (a b : G) : ((a*b)*b⁻¹) = a := by
+  rw [mul_assocₓ, mul_right_invₓ, mul_oneₓ]
 
-@[toAdditive]
+@[to_additive]
 instance (priority := 100) Groupₓ.toCancelMonoid : CancelMonoid G :=
   { ‹Groupₓ G› with
-    mul_right_cancel :=
-      fun a b c h =>
-        by 
-          rw [←mul_inv_cancel_rightₓ a b, h, mul_inv_cancel_rightₓ],
-    mul_left_cancel :=
-      fun a b c h =>
-        by 
-          rw [←inv_mul_cancel_leftₓ a b, h, inv_mul_cancel_leftₓ] }
+    mul_right_cancel := fun a b c h => by
+      rw [← mul_inv_cancel_rightₓ a b, h, mul_inv_cancel_rightₓ],
+    mul_left_cancel := fun a b c h => by
+      rw [← inv_mul_cancel_leftₓ a b, h, inv_mul_cancel_leftₓ] }
 
 end Groupₓ
 
-@[toAdditive]
-theorem Groupₓ.to_div_inv_monoid_injective {G : Type _} : Function.Injective (@Groupₓ.toDivInvMonoid G) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    replace h := DivInvMonoidₓ.mk.inj h 
-    dsimp  at h 
-    rcases h with ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
-    rfl
+@[to_additive]
+theorem Groupₓ.to_div_inv_monoid_injective {G : Type _} : Function.Injective (@Groupₓ.toDivInvMonoid G) := by
+  rintro ⟨⟩ ⟨⟩ h
+  replace h := DivInvMonoidₓ.mk.inj h
+  dsimp  at h
+  rcases h with ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+  rfl
 
-/-- A commutative group is a group with commutative `(*)`. -/
-@[protectProj, ancestor Groupₓ CommMonoidₓ]
+/--  A commutative group is a group with commutative `(*)`. -/
+@[protect_proj, ancestor Groupₓ CommMonoidₓ]
 class CommGroupₓ (G : Type u) extends Groupₓ G, CommMonoidₓ G
 
-/-- An additive commutative group is an additive group with commutative `(+)`. -/
-@[protectProj, ancestor AddGroupₓ AddCommMonoidₓ]
+/--  An additive commutative group is an additive group with commutative `(+)`. -/
+@[protect_proj, ancestor AddGroupₓ AddCommMonoidₓ]
 class AddCommGroupₓ (G : Type u) extends AddGroupₓ G, AddCommMonoidₓ G
 
-attribute [toAdditive] CommGroupₓ
+attribute [to_additive] CommGroupₓ
 
 attribute [instance] AddCommGroupₓ.toAddCommMonoid
 
-@[toAdditive]
-theorem CommGroupₓ.to_group_injective {G : Type u} : Function.Injective (@CommGroupₓ.toGroup G) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    replace h := Groupₓ.mk.inj h 
-    dsimp  at h 
-    rcases h with ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
-    rfl
+@[to_additive]
+theorem CommGroupₓ.to_group_injective {G : Type u} : Function.Injective (@CommGroupₓ.toGroup G) := by
+  rintro ⟨⟩ ⟨⟩ h
+  replace h := Groupₓ.mk.inj h
+  dsimp  at h
+  rcases h with ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+  rfl
 
 section CommGroupₓ
 
 variable {G : Type u} [CommGroupₓ G]
 
-@[toAdditive]
+@[to_additive]
 instance (priority := 100) CommGroupₓ.toCancelCommMonoid : CancelCommMonoid G :=
-  { ‹CommGroupₓ G›, Groupₓ.toCancelMonoid with  }
+  { ‹CommGroupₓ G›, Groupₓ.toCancelMonoid with }
 
 end CommGroupₓ
 

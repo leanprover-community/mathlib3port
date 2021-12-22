@@ -1,6 +1,6 @@
-import Mathbin.Analysis.SpecialFunctions.Pow 
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Arctan 
-import Mathbin.Analysis.InnerProductSpace.Basic 
+import Mathbin.Analysis.SpecialFunctions.Pow
+import Mathbin.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathbin.Analysis.InnerProductSpace.Basic
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 
 /-!
@@ -11,7 +11,7 @@ We show that most standard real and complex functions are measurable, notably `e
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open_locale Nnreal Ennreal
 
@@ -23,8 +23,8 @@ theorem measurable_exp : Measurable exp :=
 
 @[measurability]
 theorem measurable_log : Measurable log :=
-  measurable_of_measurable_on_compl_singleton 0$
-    Continuous.measurable$ continuous_on_iff_continuous_restrict.1 continuous_on_log
+  measurable_of_measurable_on_compl_singleton 0 $
+    Continuous.measurable $ continuous_on_iff_continuous_restrict.1 continuous_on_log
 
 @[measurability]
 theorem measurable_sin : Measurable sin :=
@@ -96,12 +96,12 @@ theorem measurable_arg : Measurable arg :=
     Real.measurable_arcsin.comp (measurable_im.div measurable_norm)
   have B : Measurable fun x : ℂ => Real.arcsin ((-x).im / x.abs) :=
     Real.measurable_arcsin.comp ((measurable_im.comp measurable_neg).div measurable_norm)
-  Measurable.ite (is_closed_le continuous_const continuous_re).MeasurableSet A$
+  Measurable.ite (is_closed_le continuous_const continuous_re).MeasurableSet A $
     Measurable.ite (is_closed_le continuous_const continuous_im).MeasurableSet (B.add_const _) (B.sub_const _)
 
 @[measurability]
 theorem measurable_log : Measurable log :=
-  (measurable_of_real.comp$ Real.measurable_log.comp measurable_norm).add$
+  (measurable_of_real.comp $ Real.measurable_log.comp measurable_norm).add $
     (measurable_of_real.comp measurable_arg).mul_const I
 
 end Complex
@@ -218,7 +218,7 @@ theorem AeMeasurable.im (hf : AeMeasurable f μ) : AeMeasurable (fun x => IsROrC
 
 end IsROrCComposition
 
-section 
+section
 
 variable {α 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {f : α → 𝕜} {μ : MeasureTheory.Measure α}
 
@@ -227,28 +227,26 @@ theorem IsROrC.measurable_of_real : Measurable (coeₓ : ℝ → 𝕜) :=
   IsROrC.continuous_of_real.Measurable
 
 theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x)) (him : Measurable fun x => IsROrC.im (f x)) :
-  Measurable f :=
-  by 
-    convert (is_R_or_C.measurable_of_real.comp hre).add ((is_R_or_C.measurable_of_real.comp him).mul_const IsROrC.i)
-    ·
-      ext1 x 
-      exact (IsROrC.re_add_im _).symm 
-    all_goals 
-      infer_instance
+    Measurable f := by
+  convert (is_R_or_C.measurable_of_real.comp hre).add ((is_R_or_C.measurable_of_real.comp him).mul_const IsROrC.i)
+  ·
+    ext1 x
+    exact (IsROrC.re_add_im _).symm
+  all_goals
+    infer_instance
 
 theorem ae_measurable_of_re_im (hre : AeMeasurable (fun x => IsROrC.re (f x)) μ)
-  (him : AeMeasurable (fun x => IsROrC.im (f x)) μ) : AeMeasurable f μ :=
-  by 
-    convert
-      (is_R_or_C.measurable_of_real.comp_ae_measurable hre).add
-        ((is_R_or_C.measurable_of_real.comp_ae_measurable him).mul_const IsROrC.i)
-    ·
-      ext1 x 
-      exact (IsROrC.re_add_im _).symm 
-    all_goals 
-      infer_instance
+    (him : AeMeasurable (fun x => IsROrC.im (f x)) μ) : AeMeasurable f μ := by
+  convert
+    (is_R_or_C.measurable_of_real.comp_ae_measurable hre).add
+      ((is_R_or_C.measurable_of_real.comp_ae_measurable him).mul_const IsROrC.i)
+  ·
+    ext1 x
+    exact (IsROrC.re_add_im _).symm
+  all_goals
+    infer_instance
 
-end 
+end
 
 section PowInstances
 
@@ -258,27 +256,26 @@ instance Complex.hasMeasurablePow : HasMeasurablePow ℂ ℂ :=
       (measurable_fst.clog.mul measurable_snd).cexp⟩
 
 instance Real.hasMeasurablePow : HasMeasurablePow ℝ ℝ :=
-  ⟨Complex.measurable_re.comp$
+  ⟨Complex.measurable_re.comp $
       (Complex.measurable_of_real.comp measurable_fst).pow (Complex.measurable_of_real.comp measurable_snd)⟩
 
-instance Nnreal.hasMeasurablePow : HasMeasurablePow ℝ≥0  ℝ :=
+instance Nnreal.hasMeasurablePow : HasMeasurablePow ℝ≥0 ℝ :=
   ⟨(measurable_fst.coe_nnreal_real.pow measurable_snd).subtype_mk⟩
 
-instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ :=
-  by 
-    refine' ⟨Ennreal.measurable_of_measurable_nnreal_prod _ _⟩
-    ·
-      simpRw [Ennreal.coe_rpow_def]
-      refine' Measurable.ite _ measurable_const (measurable_fst.pow measurable_snd).coe_nnreal_ennreal 
-      exact MeasurableSet.inter (measurable_fst (measurable_set_singleton 0)) (measurable_snd measurable_set_Iio)
-    ·
-      simpRw [Ennreal.top_rpow_def]
-      refine' Measurable.ite measurable_set_Ioi measurable_const _ 
-      exact Measurable.ite (measurable_set_singleton 0) measurable_const measurable_const
+instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ := by
+  refine' ⟨Ennreal.measurable_of_measurable_nnreal_prod _ _⟩
+  ·
+    simp_rw [Ennreal.coe_rpow_def]
+    refine' Measurable.ite _ measurable_const (measurable_fst.pow measurable_snd).coe_nnreal_ennreal
+    exact MeasurableSet.inter (measurable_fst (measurable_set_singleton 0)) (measurable_snd measurable_set_Iio)
+  ·
+    simp_rw [Ennreal.top_rpow_def]
+    refine' Measurable.ite measurable_set_Ioi measurable_const _
+    exact Measurable.ite (measurable_set_singleton 0) measurable_const measurable_const
 
 end PowInstances
 
-section 
+section
 
 variable {α : Type _} {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E]
 
@@ -286,23 +283,22 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 @[measurability]
 theorem Measurable.inner [MeasurableSpace α] [MeasurableSpace E] [OpensMeasurableSpace E]
-  [TopologicalSpace.SecondCountableTopology E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) :
-  Measurable fun t => ⟪f t, g t⟫ :=
+    [TopologicalSpace.SecondCountableTopology E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) :
+    Measurable fun t => ⟪f t, g t⟫ :=
   Continuous.measurable2 continuous_inner hf hg
 
 @[measurability]
 theorem AeMeasurable.inner [MeasurableSpace α] [MeasurableSpace E] [OpensMeasurableSpace E]
-  [TopologicalSpace.SecondCountableTopology E] {μ : MeasureTheory.Measure α} {f g : α → E} (hf : AeMeasurable f μ)
-  (hg : AeMeasurable g μ) : AeMeasurable (fun x => ⟪f x, g x⟫) μ :=
-  by 
-    refine' ⟨fun x => ⟪hf.mk f x, hg.mk g x⟫, hf.measurable_mk.inner hg.measurable_mk, _⟩
-    refine' hf.ae_eq_mk.mp (hg.ae_eq_mk.mono fun x hxg hxf => _)
-    dsimp only 
-    congr
-    ·
-      exact hxf
-    ·
-      exact hxg
+    [TopologicalSpace.SecondCountableTopology E] {μ : MeasureTheory.Measure α} {f g : α → E} (hf : AeMeasurable f μ)
+    (hg : AeMeasurable g μ) : AeMeasurable (fun x => ⟪f x, g x⟫) μ := by
+  refine' ⟨fun x => ⟪hf.mk f x, hg.mk g x⟫, hf.measurable_mk.inner hg.measurable_mk, _⟩
+  refine' hf.ae_eq_mk.mp (hg.ae_eq_mk.mono fun x hxg hxf => _)
+  dsimp only
+  congr
+  ·
+    exact hxf
+  ·
+    exact hxg
 
-end 
+end
 

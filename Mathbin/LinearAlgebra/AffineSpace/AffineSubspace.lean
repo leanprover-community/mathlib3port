@@ -1,4 +1,4 @@
-import Mathbin.Data.Set.Intervals.UnorderedInterval 
+import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.LinearAlgebra.AffineSpace.AffineEquiv
 
 /-!
@@ -47,13 +47,13 @@ Those depending on analysis or topology are defined elsewhere; see
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open_locale BigOperators Classical Affine
 
 open Set
 
-section 
+section
 
 variable (k : Type _) {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V]
 
@@ -61,119 +61,273 @@ variable [affine_space V P]
 
 include V
 
-/-- The submodule spanning the differences of a (possibly empty) set
+/--  The submodule spanning the differences of a (possibly empty) set
 of points. -/
 def vectorSpan (s : Set P) : Submodule k V :=
   Submodule.span k (s -ᵥ s)
 
-/-- The definition of `vector_span`, for rewriting. -/
+/--  The definition of `vector_span`, for rewriting. -/
 theorem vector_span_def (s : Set P) : vectorSpan k s = Submodule.span k (s -ᵥ s) :=
   rfl
 
-/-- `vector_span` is monotone. -/
+/--  `vector_span` is monotone. -/
 theorem vector_span_mono {s₁ s₂ : Set P} (h : s₁ ⊆ s₂) : vectorSpan k s₁ ≤ vectorSpan k s₂ :=
   Submodule.span_mono (vsub_self_mono h)
 
 variable (P)
 
-/-- The `vector_span` of the empty set is `⊥`. -/
+/--  The `vector_span` of the empty set is `⊥`. -/
 @[simp]
-theorem vector_span_empty : vectorSpan k (∅ : Set P) = (⊥ : Submodule k V) :=
-  by 
-    rw [vector_span_def, vsub_empty, Submodule.span_empty]
+theorem vector_span_empty : vectorSpan k (∅ : Set P) = (⊥ : Submodule k V) := by
+  rw [vector_span_def, vsub_empty, Submodule.span_empty]
 
 variable {P}
 
-/-- The `vector_span` of a single point is `⊥`. -/
+/--  The `vector_span` of a single point is `⊥`. -/
 @[simp]
-theorem vector_span_singleton (p : P) : vectorSpan k ({p} : Set P) = ⊥ :=
-  by 
-    simp [vector_span_def]
+theorem vector_span_singleton (p : P) : vectorSpan k ({p} : Set P) = ⊥ := by
+  simp [vector_span_def]
 
-/-- The `s -ᵥ s` lies within the `vector_span k s`. -/
+/--  The `s -ᵥ s` lies within the `vector_span k s`. -/
 theorem vsub_set_subset_vector_span (s : Set P) : s -ᵥ s ⊆ ↑vectorSpan k s :=
   Submodule.subset_span
 
-/-- Each pairwise difference is in the `vector_span`. -/
+/--  Each pairwise difference is in the `vector_span`. -/
 theorem vsub_mem_vector_span {s : Set P} {p1 p2 : P} (hp1 : p1 ∈ s) (hp2 : p2 ∈ s) : p1 -ᵥ p2 ∈ vectorSpan k s :=
   vsub_set_subset_vector_span k s (vsub_mem_vsub hp1 hp2)
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p1 «expr ∈ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » vector_span k s)
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment
+    "/--"
+    " The points in the affine span of a (possibly empty) set of\npoints. Use `affine_span` instead to get an `affine_subspace k P`. -/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.def
+  "def"
+  (Command.declId `SpanPoints [])
+  (Command.optDeclSig
+   [(Term.explicitBinder "(" [`s] [":" (Term.app `Set [`P])] [] ")")]
+   [(Term.typeSpec ":" (Term.app `Set [`P]))])
+  (Command.declValSimple
+   ":="
+   (Set.«term{_|_}»
+    "{"
+    `p
+    "|"
+    (Mathlib.ExtendedBinder.«term∃___,_»
+     "∃"
+     `p1
+     («binderTerm∈_» "∈" `s)
+     ","
+     (Mathlib.ExtendedBinder.«term∃___,_»
+      "∃"
+      `v
+      («binderTerm∈_» "∈" (Term.app `vectorSpan [`k `s]))
+      ","
+      («term_=_» `p "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p1))))
+    "}")
+   [])
+  []
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Set.«term{_|_}»
+   "{"
+   `p
+   "|"
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `p1
+    («binderTerm∈_» "∈" `s)
+    ","
+    (Mathlib.ExtendedBinder.«term∃___,_»
+     "∃"
+     `v
+     («binderTerm∈_» "∈" (Term.app `vectorSpan [`k `s]))
+     ","
+     («term_=_» `p "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p1))))
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `p1
+   («binderTerm∈_» "∈" `s)
+   ","
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `v
+    («binderTerm∈_» "∈" (Term.app `vectorSpan [`k `s]))
+    ","
+    («term_=_» `p "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p1))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `v
+   («binderTerm∈_» "∈" (Term.app `vectorSpan [`k `s]))
+   ","
+   («term_=_» `p "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p1)))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_=_» `p "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p1))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p1)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Defs.«term_+ᵥ_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `p1
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
+  `v
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 65, (some 66, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `vectorSpan [`k `s])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `s
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `k
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `vectorSpan
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `s
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /--
     The points in the affine span of a (possibly empty) set of
     points. Use `affine_span` instead to get an `affine_subspace k P`. -/
-  def
-    SpanPoints
-    ( s : Set P ) : Set P
-    := { p | ∃ ( p1 : _ ) ( _ : p1 ∈ s ) , ∃ ( v : _ ) ( _ : v ∈ vectorSpan k s ) , p = v +ᵥ p1 }
+  def SpanPoints ( s : Set P ) : Set P := { p | ∃ p1 ∈ s , ∃ v ∈ vectorSpan k s , p = v +ᵥ p1 }
 
-/-- A point in a set is in its affine span. -/
+/--  A point in a set is in its affine span. -/
 theorem mem_span_points (p : P) (s : Set P) : p ∈ s → p ∈ SpanPoints k s
-| hp => ⟨p, hp, 0, Submodule.zero_mem _, (zero_vadd V p).symm⟩
+  | hp => ⟨p, hp, 0, Submodule.zero_mem _, (zero_vadd V p).symm⟩
 
-/-- A set is contained in its `span_points`. -/
-theorem subset_span_points (s : Set P) : s ⊆ SpanPoints k s :=
-  fun p => mem_span_points k p s
+/--  A set is contained in its `span_points`. -/
+theorem subset_span_points (s : Set P) : s ⊆ SpanPoints k s := fun p => mem_span_points k p s
 
-/-- The `span_points` of a set is nonempty if and only if that set
+/--  The `span_points` of a set is nonempty if and only if that set
 is. -/
 @[simp]
-theorem span_points_nonempty (s : Set P) : (SpanPoints k s).Nonempty ↔ s.nonempty :=
-  by 
-    constructor
-    ·
-      contrapose 
-      rw [Set.not_nonempty_iff_eq_empty, Set.not_nonempty_iff_eq_empty]
-      intro h 
-      simp [h, SpanPoints]
-    ·
-      exact fun h => h.mono (subset_span_points _ _)
+theorem span_points_nonempty (s : Set P) : (SpanPoints k s).Nonempty ↔ s.nonempty := by
+  constructor
+  ·
+    contrapose
+    rw [Set.not_nonempty_iff_eq_empty, Set.not_nonempty_iff_eq_empty]
+    intro h
+    simp [h, SpanPoints]
+  ·
+    exact fun h => h.mono (subset_span_points _ _)
 
-/-- Adding a point in the affine span and a vector in the spanning
+/--  Adding a point in the affine span and a vector in the spanning
 submodule produces a point in the affine span. -/
 theorem vadd_mem_span_points_of_mem_span_points_of_mem_vector_span {s : Set P} {p : P} {v : V} (hp : p ∈ SpanPoints k s)
-  (hv : v ∈ vectorSpan k s) : v +ᵥ p ∈ SpanPoints k s :=
-  by 
-    rcases hp with ⟨p2, ⟨hp2, ⟨v2, ⟨hv2, hv2p⟩⟩⟩⟩
-    rw [hv2p, vadd_vadd]
-    use p2, hp2, v+v2, (vectorSpan k s).add_mem hv hv2, rfl
+    (hv : v ∈ vectorSpan k s) : v +ᵥ p ∈ SpanPoints k s := by
+  rcases hp with ⟨p2, ⟨hp2, ⟨v2, ⟨hv2, hv2p⟩⟩⟩⟩
+  rw [hv2p, vadd_vadd]
+  use p2, hp2, v+v2, (vectorSpan k s).add_mem hv hv2, rfl
 
-/-- Subtracting two points in the affine span produces a vector in the
+/--  Subtracting two points in the affine span produces a vector in the
 spanning submodule. -/
 theorem vsub_mem_vector_span_of_mem_span_points_of_mem_span_points {s : Set P} {p1 p2 : P} (hp1 : p1 ∈ SpanPoints k s)
-  (hp2 : p2 ∈ SpanPoints k s) : p1 -ᵥ p2 ∈ vectorSpan k s :=
-  by 
-    rcases hp1 with ⟨p1a, ⟨hp1a, ⟨v1, ⟨hv1, hv1p⟩⟩⟩⟩
-    rcases hp2 with ⟨p2a, ⟨hp2a, ⟨v2, ⟨hv2, hv2p⟩⟩⟩⟩
-    rw [hv1p, hv2p, vsub_vadd_eq_vsub_sub (v1 +ᵥ p1a), vadd_vsub_assoc, add_commₓ, add_sub_assoc]
-    have hv1v2 : v1 - v2 ∈ vectorSpan k s
-    ·
-      rw [sub_eq_add_neg]
-      apply (vectorSpan k s).add_mem hv1 
-      rw [←neg_one_smul k v2]
-      exact (vectorSpan k s).smul_mem (-1 : k) hv2 
-    refine' (vectorSpan k s).add_mem _ hv1v2 
-    exact vsub_mem_vector_span k hp1a hp2a
+    (hp2 : p2 ∈ SpanPoints k s) : p1 -ᵥ p2 ∈ vectorSpan k s := by
+  rcases hp1 with ⟨p1a, ⟨hp1a, ⟨v1, ⟨hv1, hv1p⟩⟩⟩⟩
+  rcases hp2 with ⟨p2a, ⟨hp2a, ⟨v2, ⟨hv2, hv2p⟩⟩⟩⟩
+  rw [hv1p, hv2p, vsub_vadd_eq_vsub_sub (v1 +ᵥ p1a), vadd_vsub_assoc, add_commₓ, add_sub_assoc]
+  have hv1v2 : v1 - v2 ∈ vectorSpan k s := by
+    rw [sub_eq_add_neg]
+    apply (vectorSpan k s).add_mem hv1
+    rw [← neg_one_smul k v2]
+    exact (vectorSpan k s).smul_mem (-1 : k) hv2
+  refine' (vectorSpan k s).add_mem _ hv1v2
+  exact vsub_mem_vector_span k hp1a hp2a
 
-end 
+end
 
-/-- An `affine_subspace k P` is a subset of an `affine_space V P`
+/--  An `affine_subspace k P` is a subset of an `affine_space V P`
 that, if not empty, has an affine space structure induced by a
 corresponding subspace of the `module k V`. -/
 structure AffineSubspace (k : Type _) {V : Type _} (P : Type _) [Ringₓ k] [AddCommGroupₓ V] [Module k V]
-  [affine_space V P] where 
-  Carrier : Set P 
+  [affine_space V P] where
+  Carrier : Set P
   smul_vsub_vadd_mem :
-  ∀ c : k {p1 p2 p3 : P}, p1 ∈ carrier → p2 ∈ carrier → p3 ∈ carrier → c • (p1 -ᵥ p2 : V) +ᵥ p3 ∈ carrier
+    ∀ c : k {p1 p2 p3 : P}, p1 ∈ carrier → p2 ∈ carrier → p3 ∈ carrier → c • (p1 -ᵥ p2 : V) +ᵥ p3 ∈ carrier
 
 namespace Submodule
 
 variable {k V : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V]
 
-/-- Reinterpret `p : submodule k V` as an `affine_subspace k V`. -/
+/--  Reinterpret `p : submodule k V` as an `affine_subspace k V`. -/
 def to_affine_subspace (p : Submodule k V) : AffineSubspace k V :=
   { Carrier := p, smul_vsub_vadd_mem := fun c p₁ p₂ p₃ h₁ h₂ h₃ => p.add_mem (p.smul_mem _ (p.sub_mem h₁ h₂)) h₃ }
 
@@ -191,7 +345,7 @@ instance : Coe (AffineSubspace k P) (Set P) :=
 instance : HasMem P (AffineSubspace k P) :=
   ⟨fun p s => p ∈ (s : Set P)⟩
 
-/-- A point is in an affine subspace coerced to a set if and only if
+/--  A point is in an affine subspace coerced to a set if and only if
 it is in that affine subspace. -/
 @[simp]
 theorem mem_coe (p : P) (s : AffineSubspace k P) : p ∈ (s : Set P) ↔ p ∈ s :=
@@ -199,7 +353,7 @@ theorem mem_coe (p : P) (s : AffineSubspace k P) : p ∈ (s : Set P) ↔ p ∈ s
 
 variable {k P}
 
-/-- The direction of an affine subspace is the submodule spanned by
+/--  The direction of an affine subspace is the submodule spanned by
 the pairwise differences of points.  (Except in the case of an empty
 affine subspace, where the direction is the zero submodule, every
 vector in the direction is the difference of two points in the affine
@@ -207,236 +361,994 @@ subspace.) -/
 def direction (s : AffineSubspace k P) : Submodule k V :=
   vectorSpan k (s : Set P)
 
-/-- The direction equals the `vector_span`. -/
+/--  The direction equals the `vector_span`. -/
 theorem direction_eq_vector_span (s : AffineSubspace k P) : s.direction = vectorSpan k (s : Set P) :=
   rfl
 
-/-- Alternative definition of the direction when the affine subspace
+/--  Alternative definition of the direction when the affine subspace
 is nonempty.  This is defined so that the order on submodules (as used
 in the definition of `submodule.span`) can be used in the proof of
 `coe_direction_eq_vsub_set`, and is not intended to be used beyond
 that proof. -/
 def direction_of_nonempty {s : AffineSubspace k P} (h : (s : Set P).Nonempty) : Submodule k V :=
   { Carrier := (s : Set P) -ᵥ s,
-    zero_mem' :=
-      by 
-        cases' h with p hp 
-        exact vsub_self p ▸ vsub_mem_vsub hp hp,
-    add_mem' :=
-      by 
-        intro a b ha hb 
-        rcases ha with ⟨p1, p2, hp1, hp2, rfl⟩
-        rcases hb with ⟨p3, p4, hp3, hp4, rfl⟩
-        rw [←vadd_vsub_assoc]
-        refine' vsub_mem_vsub _ hp4 
-        convert s.smul_vsub_vadd_mem 1 hp1 hp2 hp3 
-        rw [one_smul],
-    smul_mem' :=
-      by 
-        intro c v hv 
-        rcases hv with ⟨p1, p2, hp1, hp2, rfl⟩
-        rw [←vadd_vsub (c • (p1 -ᵥ p2)) p2]
-        refine' vsub_mem_vsub _ hp2 
-        exact s.smul_vsub_vadd_mem c hp1 hp2 hp2 }
+    zero_mem' := by
+      cases' h with p hp
+      exact vsub_self p ▸ vsub_mem_vsub hp hp,
+    add_mem' := by
+      intro a b ha hb
+      rcases ha with ⟨p1, p2, hp1, hp2, rfl⟩
+      rcases hb with ⟨p3, p4, hp3, hp4, rfl⟩
+      rw [← vadd_vsub_assoc]
+      refine' vsub_mem_vsub _ hp4
+      convert s.smul_vsub_vadd_mem 1 hp1 hp2 hp3
+      rw [one_smul],
+    smul_mem' := by
+      intro c v hv
+      rcases hv with ⟨p1, p2, hp1, hp2, rfl⟩
+      rw [← vadd_vsub (c • (p1 -ᵥ p2)) p2]
+      refine' vsub_mem_vsub _ hp2
+      exact s.smul_vsub_vadd_mem c hp1 hp2 hp2 }
 
-/-- `direction_of_nonempty` gives the same submodule as
+/--  `direction_of_nonempty` gives the same submodule as
 `direction`. -/
 theorem direction_of_nonempty_eq_direction {s : AffineSubspace k P} (h : (s : Set P).Nonempty) :
-  direction_of_nonempty h = s.direction :=
+    direction_of_nonempty h = s.direction :=
   le_antisymmₓ (vsub_set_subset_vector_span k s) (Submodule.span_le.2 Set.Subset.rfl)
 
-/-- The set of vectors in the direction of a nonempty affine subspace
+/--  The set of vectors in the direction of a nonempty affine subspace
 is given by `vsub_set`. -/
 theorem coe_direction_eq_vsub_set {s : AffineSubspace k P} (h : (s : Set P).Nonempty) :
-  (s.direction : Set V) = (s : Set P) -ᵥ s :=
+    (s.direction : Set V) = (s : Set P) -ᵥ s :=
   direction_of_nonempty_eq_direction h ▸ rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p1 «expr ∈ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p2 «expr ∈ » s)
-/-- A vector is in the direction of a nonempty affine subspace if and
+/--  A vector is in the direction of a nonempty affine subspace if and
 only if it is the subtraction of two vectors in the subspace. -/
 theorem mem_direction_iff_eq_vsub {s : AffineSubspace k P} (h : (s : Set P).Nonempty) (v : V) :
-  v ∈ s.direction ↔ ∃ (p1 : _)(_ : p1 ∈ s), ∃ (p2 : _)(_ : p2 ∈ s), v = p1 -ᵥ p2 :=
-  by 
-    rw [←SetLike.mem_coe, coe_direction_eq_vsub_set h]
-    exact
-      ⟨fun ⟨p1, p2, hp1, hp2, hv⟩ => ⟨p1, hp1, p2, hp2, hv.symm⟩,
-        fun ⟨p1, hp1, p2, hp2, hv⟩ => ⟨p1, p2, hp1, hp2, hv.symm⟩⟩
+    v ∈ s.direction ↔ ∃ p1 ∈ s, ∃ p2 ∈ s, v = p1 -ᵥ p2 := by
+  rw [← SetLike.mem_coe, coe_direction_eq_vsub_set h]
+  exact
+    ⟨fun ⟨p1, p2, hp1, hp2, hv⟩ => ⟨p1, hp1, p2, hp2, hv.symm⟩, fun ⟨p1, hp1, p2, hp2, hv⟩ =>
+      ⟨p1, p2, hp1, hp2, hv.symm⟩⟩
 
-/-- Adding a vector in the direction to a point in the subspace
+/--  Adding a vector in the direction to a point in the subspace
 produces a point in the subspace. -/
 theorem vadd_mem_of_mem_direction {s : AffineSubspace k P} {v : V} (hv : v ∈ s.direction) {p : P} (hp : p ∈ s) :
-  v +ᵥ p ∈ s :=
-  by 
-    rw [mem_direction_iff_eq_vsub ⟨p, hp⟩] at hv 
-    rcases hv with ⟨p1, hp1, p2, hp2, hv⟩
-    rw [hv]
-    convert s.smul_vsub_vadd_mem 1 hp1 hp2 hp 
-    rw [one_smul]
+    v +ᵥ p ∈ s := by
+  rw [mem_direction_iff_eq_vsub ⟨p, hp⟩] at hv
+  rcases hv with ⟨p1, hp1, p2, hp2, hv⟩
+  rw [hv]
+  convert s.smul_vsub_vadd_mem 1 hp1 hp2 hp
+  rw [one_smul]
 
-/-- Subtracting two points in the subspace produces a vector in the
+/--  Subtracting two points in the subspace produces a vector in the
 direction. -/
 theorem vsub_mem_direction {s : AffineSubspace k P} {p1 p2 : P} (hp1 : p1 ∈ s) (hp2 : p2 ∈ s) :
-  p1 -ᵥ p2 ∈ s.direction :=
+    p1 -ᵥ p2 ∈ s.direction :=
   vsub_mem_vector_span k hp1 hp2
 
-/-- Adding a vector to a point in a subspace produces a point in the
+/--  Adding a vector to a point in a subspace produces a point in the
 subspace if and only if the vector is in the direction. -/
 theorem vadd_mem_iff_mem_direction {s : AffineSubspace k P} (v : V) {p : P} (hp : p ∈ s) :
-  v +ᵥ p ∈ s ↔ v ∈ s.direction :=
-  ⟨fun h =>
-      by 
-        simpa using vsub_mem_direction h hp,
-    fun h => vadd_mem_of_mem_direction h hp⟩
+    v +ᵥ p ∈ s ↔ v ∈ s.direction :=
+  ⟨fun h => by
+    simpa using vsub_mem_direction h hp, fun h => vadd_mem_of_mem_direction h hp⟩
 
-/-- Given a point in an affine subspace, the set of vectors in its
+/--  Given a point in an affine subspace, the set of vectors in its
 direction equals the set of vectors subtracting that point on the
 right. -/
 theorem coe_direction_eq_vsub_set_right {s : AffineSubspace k P} {p : P} (hp : p ∈ s) :
-  (s.direction : Set V) = (· -ᵥ p) '' s :=
-  by 
-    rw [coe_direction_eq_vsub_set ⟨p, hp⟩]
-    refine' le_antisymmₓ _ _
-    ·
-      rintro v ⟨p1, p2, hp1, hp2, rfl⟩
-      exact ⟨p1 -ᵥ p2 +ᵥ p, vadd_mem_of_mem_direction (vsub_mem_direction hp1 hp2) hp, vadd_vsub _ _⟩
-    ·
-      rintro v ⟨p2, hp2, rfl⟩
-      exact ⟨p2, p, hp2, hp, rfl⟩
+    (s.direction : Set V) = (· -ᵥ p) '' s := by
+  rw [coe_direction_eq_vsub_set ⟨p, hp⟩]
+  refine' le_antisymmₓ _ _
+  ·
+    rintro v ⟨p1, p2, hp1, hp2, rfl⟩
+    exact ⟨p1 -ᵥ p2 +ᵥ p, vadd_mem_of_mem_direction (vsub_mem_direction hp1 hp2) hp, vadd_vsub _ _⟩
+  ·
+    rintro v ⟨p2, hp2, rfl⟩
+    exact ⟨p2, p, hp2, hp, rfl⟩
 
-/-- Given a point in an affine subspace, the set of vectors in its
+/--  Given a point in an affine subspace, the set of vectors in its
 direction equals the set of vectors subtracting that point on the
 left. -/
 theorem coe_direction_eq_vsub_set_left {s : AffineSubspace k P} {p : P} (hp : p ∈ s) :
-  (s.direction : Set V) = (· -ᵥ ·) p '' s :=
-  by 
-    ext v 
-    rw [SetLike.mem_coe, ←Submodule.neg_mem_iff, ←SetLike.mem_coe, coe_direction_eq_vsub_set_right hp,
-      Set.mem_image_iff_bex, Set.mem_image_iff_bex]
-    convLHS => congr ext rw [←neg_vsub_eq_vsub_rev, neg_inj]
+    (s.direction : Set V) = (· -ᵥ ·) p '' s := by
+  ext v
+  rw [SetLike.mem_coe, ← Submodule.neg_mem_iff, ← SetLike.mem_coe, coe_direction_eq_vsub_set_right hp,
+    Set.mem_image_iff_bex, Set.mem_image_iff_bex]
+  conv_lhs => congr ext rw [← neg_vsub_eq_vsub_rev, neg_inj]
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p2 «expr ∈ » s)
-/-- Given a point in an affine subspace, a vector is in its direction
+/--  Given a point in an affine subspace, a vector is in its direction
 if and only if it results from subtracting that point on the right. -/
 theorem mem_direction_iff_eq_vsub_right {s : AffineSubspace k P} {p : P} (hp : p ∈ s) (v : V) :
-  v ∈ s.direction ↔ ∃ (p2 : _)(_ : p2 ∈ s), v = p2 -ᵥ p :=
-  by 
-    rw [←SetLike.mem_coe, coe_direction_eq_vsub_set_right hp]
-    exact ⟨fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩, fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩⟩
+    v ∈ s.direction ↔ ∃ p2 ∈ s, v = p2 -ᵥ p := by
+  rw [← SetLike.mem_coe, coe_direction_eq_vsub_set_right hp]
+  exact ⟨fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩, fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p2 «expr ∈ » s)
-/-- Given a point in an affine subspace, a vector is in its direction
+/--  Given a point in an affine subspace, a vector is in its direction
 if and only if it results from subtracting that point on the left. -/
 theorem mem_direction_iff_eq_vsub_left {s : AffineSubspace k P} {p : P} (hp : p ∈ s) (v : V) :
-  v ∈ s.direction ↔ ∃ (p2 : _)(_ : p2 ∈ s), v = p -ᵥ p2 :=
-  by 
-    rw [←SetLike.mem_coe, coe_direction_eq_vsub_set_left hp]
-    exact ⟨fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩, fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩⟩
+    v ∈ s.direction ↔ ∃ p2 ∈ s, v = p -ᵥ p2 := by
+  rw [← SetLike.mem_coe, coe_direction_eq_vsub_set_left hp]
+  exact ⟨fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩, fun ⟨p2, hp2, hv⟩ => ⟨p2, hp2, hv.symm⟩⟩
 
-/-- Given a point in an affine subspace, a result of subtracting that
+/--  Given a point in an affine subspace, a result of subtracting that
 point on the right is in the direction if and only if the other point
 is in the subspace. -/
 theorem vsub_right_mem_direction_iff_mem {s : AffineSubspace k P} {p : P} (hp : p ∈ s) (p2 : P) :
-  p2 -ᵥ p ∈ s.direction ↔ p2 ∈ s :=
-  by 
-    rw [mem_direction_iff_eq_vsub_right hp]
-    simp 
+    p2 -ᵥ p ∈ s.direction ↔ p2 ∈ s := by
+  rw [mem_direction_iff_eq_vsub_right hp]
+  simp
 
-/-- Given a point in an affine subspace, a result of subtracting that
+/--  Given a point in an affine subspace, a result of subtracting that
 point on the left is in the direction if and only if the other point
 is in the subspace. -/
 theorem vsub_left_mem_direction_iff_mem {s : AffineSubspace k P} {p : P} (hp : p ∈ s) (p2 : P) :
-  p -ᵥ p2 ∈ s.direction ↔ p2 ∈ s :=
-  by 
-    rw [mem_direction_iff_eq_vsub_left hp]
-    simp 
+    p -ᵥ p2 ∈ s.direction ↔ p2 ∈ s := by
+  rw [mem_direction_iff_eq_vsub_left hp]
+  simp
 
-/-- Two affine subspaces are equal if they have the same points. -/
+/--  Two affine subspaces are equal if they have the same points. -/
 @[ext]
-theorem ext {s1 s2 : AffineSubspace k P} (h : (s1 : Set P) = s2) : s1 = s2 :=
-  by 
-    cases s1 
-    cases s2 
-    congr 
-    exact h
+theorem coe_injective : Function.Injective (coeₓ : AffineSubspace k P → Set P) := fun s1 s2 h => by
+  cases s1
+  cases s2
+  congr
+  exact h
 
 @[simp]
 theorem ext_iff (s₁ s₂ : AffineSubspace k P) : (s₁ : Set P) = s₂ ↔ s₁ = s₂ :=
-  ⟨ext,
-    by 
-      tidy⟩
+  ⟨fun h => coe_injective h, by
+    tidy⟩
 
-/-- Two affine subspaces with the same direction and nonempty
+/--  Two affine subspaces with the same direction and nonempty
 intersection are equal. -/
 theorem ext_of_direction_eq {s1 s2 : AffineSubspace k P} (hd : s1.direction = s2.direction)
-  (hn : ((s1 : Set P) ∩ s2).Nonempty) : s1 = s2 :=
-  by 
-    ext p 
-    have hq1 := Set.mem_of_mem_inter_left hn.some_mem 
-    have hq2 := Set.mem_of_mem_inter_right hn.some_mem 
-    constructor
-    ·
-      intro hp 
-      rw [←vsub_vadd p hn.some]
-      refine' vadd_mem_of_mem_direction _ hq2 
-      rw [←hd]
-      exact vsub_mem_direction hp hq1
-    ·
-      intro hp 
-      rw [←vsub_vadd p hn.some]
-      refine' vadd_mem_of_mem_direction _ hq1 
-      rw [hd]
-      exact vsub_mem_direction hp hq2
+    (hn : ((s1 : Set P) ∩ s2).Nonempty) : s1 = s2 := by
+  ext p
+  have hq1 := Set.mem_of_mem_inter_left hn.some_mem
+  have hq2 := Set.mem_of_mem_inter_right hn.some_mem
+  constructor
+  ·
+    intro hp
+    rw [← vsub_vadd p hn.some]
+    refine' vadd_mem_of_mem_direction _ hq2
+    rw [← hd]
+    exact vsub_mem_direction hp hq1
+  ·
+    intro hp
+    rw [← vsub_vadd p hn.some]
+    refine' vadd_mem_of_mem_direction _ hq1
+    rw [hd]
+    exact vsub_mem_direction hp hq2
 
-instance to_add_torsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.direction s :=
-  { vadd := fun a b => ⟨(a : V) +ᵥ (b : P), vadd_mem_of_mem_direction a.2 b.2⟩,
-    zero_vadd :=
-      by 
-        simp ,
-    add_vadd :=
-      fun a b c =>
-        by 
-          ext 
-          apply add_vadd,
-    vsub := fun a b => ⟨(a : P) -ᵥ (b : P), (vsub_left_mem_direction_iff_mem a.2 _).mpr b.2⟩,
-    Nonempty :=
-      by 
-        infer_instance,
-    vsub_vadd' :=
-      fun a b =>
-        by 
-          ext 
-          apply AddTorsor.vsub_vadd',
-    vadd_vsub' :=
-      fun a b =>
-        by 
-          ext 
-          apply AddTorsor.vadd_vsub' }
+-- failed to format: format: uncaught backtrack exception
+instance
+  to_add_torsor
+  ( s : AffineSubspace k P ) [ Nonempty s ] : AddTorsor s.direction s
+  where
+    vadd a b := ⟨ ( a : V ) +ᵥ ( b : P ) , vadd_mem_of_mem_direction a . 2 b . 2 ⟩
+      zero_vadd := by simp
+      add_vadd a b c := by ext apply add_vadd
+      vsub a b := ⟨ ( a : P ) -ᵥ ( b : P ) , ( vsub_left_mem_direction_iff_mem a . 2 _ ) . mpr b . 2 ⟩
+      Nonempty := by infer_instance
+      vsub_vadd' a b := by ext apply AddTorsor.vsub_vadd'
+      vadd_vsub' a b := by ext apply AddTorsor.vadd_vsub'
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_vsub (s : AffineSubspace k P) [Nonempty s] (a b : s) : ↑(a -ᵥ b) = (a : P) -ᵥ (b : P) :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_vadd (s : AffineSubspace k P) [Nonempty s] (a : s.direction) (b : s) : ↑(a +ᵥ b) = (a : V) +ᵥ (b : P) :=
   rfl
 
-/-- Two affine subspaces with nonempty intersection are equal if and
+/--  Two affine subspaces with nonempty intersection are equal if and
 only if their directions are equal. -/
 theorem eq_iff_direction_eq_of_mem {s₁ s₂ : AffineSubspace k P} {p : P} (h₁ : p ∈ s₁) (h₂ : p ∈ s₂) :
-  s₁ = s₂ ↔ s₁.direction = s₂.direction :=
+    s₁ = s₂ ↔ s₁.direction = s₂.direction :=
   ⟨fun h => h ▸ rfl, fun h => ext_of_direction_eq h ⟨p, h₁, h₂⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (v «expr ∈ » direction)
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment "/--" " Construct an affine subspace from a point and a direction. -/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.def
+  "def"
+  (Command.declId `mk' [])
+  (Command.optDeclSig
+   [(Term.explicitBinder "(" [`p] [":" `P] [] ")")
+    (Term.explicitBinder "(" [`direction] [":" (Term.app `Submodule [`k `V])] [] ")")]
+   [(Term.typeSpec ":" (Term.app `AffineSubspace [`k `P]))])
+  (Command.declValSimple
+   ":="
+   (Term.structInst
+    "{"
+    []
+    [(group
+      (Term.structInstField
+       (Term.structInstLVal `Carrier [])
+       ":="
+       (Set.«term{_|_}»
+        "{"
+        `q
+        "|"
+        (Mathlib.ExtendedBinder.«term∃___,_»
+         "∃"
+         `v
+         («binderTerm∈_» "∈" `direction)
+         ","
+         («term_=_» `q "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p)))
+        "}"))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `smul_vsub_vadd_mem [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+         "=>"
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(group
+              (Tactic.rcases
+               "rcases"
+               [(Tactic.casesTarget [] `hp1)]
+               ["with"
+                (Tactic.rcasesPat.tuple
+                 "⟨"
+                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v1)]) [])
+                  ","
+                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv1)]) [])
+                  ","
+                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp1)]) [])]
+                 "⟩")])
+              [])
+             (group
+              (Tactic.rcases
+               "rcases"
+               [(Tactic.casesTarget [] `hp2)]
+               ["with"
+                (Tactic.rcasesPat.tuple
+                 "⟨"
+                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v2)]) [])
+                  ","
+                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv2)]) [])
+                  ","
+                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp2)]) [])]
+                 "⟩")])
+              [])
+             (group
+              (Tactic.rcases
+               "rcases"
+               [(Tactic.casesTarget [] `hp3)]
+               ["with"
+                (Tactic.rcasesPat.tuple
+                 "⟨"
+                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v3)]) [])
+                  ","
+                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv3)]) [])
+                  ","
+                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp3)]) [])]
+                 "⟩")])
+              [])
+             (group
+              (Tactic.use
+               "use"
+               [(Init.Logic.«term_+_» (Algebra.Group.Defs.«term_•_» `c " • " («term_-_» `v1 "-" `v2)) "+" `v3)
+                ","
+                (Term.app
+                 `direction.add_mem
+                 [(Term.app `direction.smul_mem [`c (Term.app `direction.sub_mem [`hv1 `hv2])]) `hv3])])
+              [])
+             (group
+              (Tactic.simp
+               "simp"
+               []
+               []
+               ["["
+                [(Tactic.simpLemma [] [] `hp1)
+                 ","
+                 (Tactic.simpLemma [] [] `hp2)
+                 ","
+                 (Tactic.simpLemma [] [] `hp3)
+                 ","
+                 (Tactic.simpLemma [] [] `vadd_vadd)]
+                "]"]
+               [])
+              [])]))))))
+      [])]
+    (Term.optEllipsis [])
+    []
+    "}")
+   [])
+  []
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.structInst
+   "{"
+   []
+   [(group
+     (Term.structInstField
+      (Term.structInstLVal `Carrier [])
+      ":="
+      (Set.«term{_|_}»
+       "{"
+       `q
+       "|"
+       (Mathlib.ExtendedBinder.«term∃___,_»
+        "∃"
+        `v
+        («binderTerm∈_» "∈" `direction)
+        ","
+        («term_=_» `q "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p)))
+       "}"))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `smul_vsub_vadd_mem [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+        "=>"
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(group
+             (Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget [] `hp1)]
+              ["with"
+               (Tactic.rcasesPat.tuple
+                "⟨"
+                [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v1)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv1)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp1)]) [])]
+                "⟩")])
+             [])
+            (group
+             (Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget [] `hp2)]
+              ["with"
+               (Tactic.rcasesPat.tuple
+                "⟨"
+                [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v2)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv2)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp2)]) [])]
+                "⟩")])
+             [])
+            (group
+             (Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget [] `hp3)]
+              ["with"
+               (Tactic.rcasesPat.tuple
+                "⟨"
+                [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v3)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv3)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp3)]) [])]
+                "⟩")])
+             [])
+            (group
+             (Tactic.use
+              "use"
+              [(Init.Logic.«term_+_» (Algebra.Group.Defs.«term_•_» `c " • " («term_-_» `v1 "-" `v2)) "+" `v3)
+               ","
+               (Term.app
+                `direction.add_mem
+                [(Term.app `direction.smul_mem [`c (Term.app `direction.sub_mem [`hv1 `hv2])]) `hv3])])
+             [])
+            (group
+             (Tactic.simp
+              "simp"
+              []
+              []
+              ["["
+               [(Tactic.simpLemma [] [] `hp1)
+                ","
+                (Tactic.simpLemma [] [] `hp2)
+                ","
+                (Tactic.simpLemma [] [] `hp3)
+                ","
+                (Tactic.simpLemma [] [] `vadd_vadd)]
+               "]"]
+              [])
+             [])]))))))
+     [])]
+   (Term.optEllipsis [])
+   []
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.structInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.optEllipsis', expected 'Lean.Parser.Term.optEllipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+    "=>"
+    (Term.byTactic
+     "by"
+     (Tactic.tacticSeq
+      (Tactic.tacticSeq1Indented
+       [(group
+         (Tactic.rcases
+          "rcases"
+          [(Tactic.casesTarget [] `hp1)]
+          ["with"
+           (Tactic.rcasesPat.tuple
+            "⟨"
+            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v1)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv1)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp1)]) [])]
+            "⟩")])
+         [])
+        (group
+         (Tactic.rcases
+          "rcases"
+          [(Tactic.casesTarget [] `hp2)]
+          ["with"
+           (Tactic.rcasesPat.tuple
+            "⟨"
+            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v2)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv2)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp2)]) [])]
+            "⟩")])
+         [])
+        (group
+         (Tactic.rcases
+          "rcases"
+          [(Tactic.casesTarget [] `hp3)]
+          ["with"
+           (Tactic.rcasesPat.tuple
+            "⟨"
+            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v3)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv3)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp3)]) [])]
+            "⟩")])
+         [])
+        (group
+         (Tactic.use
+          "use"
+          [(Init.Logic.«term_+_» (Algebra.Group.Defs.«term_•_» `c " • " («term_-_» `v1 "-" `v2)) "+" `v3)
+           ","
+           (Term.app
+            `direction.add_mem
+            [(Term.app `direction.smul_mem [`c (Term.app `direction.sub_mem [`hv1 `hv2])]) `hv3])])
+         [])
+        (group
+         (Tactic.simp
+          "simp"
+          []
+          []
+          ["["
+           [(Tactic.simpLemma [] [] `hp1)
+            ","
+            (Tactic.simpLemma [] [] `hp2)
+            ","
+            (Tactic.simpLemma [] [] `hp3)
+            ","
+            (Tactic.simpLemma [] [] `vadd_vadd)]
+           "]"]
+          [])
+         [])])))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.rcases
+        "rcases"
+        [(Tactic.casesTarget [] `hp1)]
+        ["with"
+         (Tactic.rcasesPat.tuple
+          "⟨"
+          [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v1)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv1)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp1)]) [])]
+          "⟩")])
+       [])
+      (group
+       (Tactic.rcases
+        "rcases"
+        [(Tactic.casesTarget [] `hp2)]
+        ["with"
+         (Tactic.rcasesPat.tuple
+          "⟨"
+          [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v2)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv2)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp2)]) [])]
+          "⟩")])
+       [])
+      (group
+       (Tactic.rcases
+        "rcases"
+        [(Tactic.casesTarget [] `hp3)]
+        ["with"
+         (Tactic.rcasesPat.tuple
+          "⟨"
+          [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v3)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv3)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp3)]) [])]
+          "⟩")])
+       [])
+      (group
+       (Tactic.use
+        "use"
+        [(Init.Logic.«term_+_» (Algebra.Group.Defs.«term_•_» `c " • " («term_-_» `v1 "-" `v2)) "+" `v3)
+         ","
+         (Term.app
+          `direction.add_mem
+          [(Term.app `direction.smul_mem [`c (Term.app `direction.sub_mem [`hv1 `hv2])]) `hv3])])
+       [])
+      (group
+       (Tactic.simp
+        "simp"
+        []
+        []
+        ["["
+         [(Tactic.simpLemma [] [] `hp1)
+          ","
+          (Tactic.simpLemma [] [] `hp2)
+          ","
+          (Tactic.simpLemma [] [] `hp3)
+          ","
+          (Tactic.simpLemma [] [] `vadd_vadd)]
+         "]"]
+        [])
+       [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.simp
+   "simp"
+   []
+   []
+   ["["
+    [(Tactic.simpLemma [] [] `hp1)
+     ","
+     (Tactic.simpLemma [] [] `hp2)
+     ","
+     (Tactic.simpLemma [] [] `hp3)
+     ","
+     (Tactic.simpLemma [] [] `vadd_vadd)]
+    "]"]
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `vadd_vadd
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hp3
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hp2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hp1
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.use
+   "use"
+   [(Init.Logic.«term_+_» (Algebra.Group.Defs.«term_•_» `c " • " («term_-_» `v1 "-" `v2)) "+" `v3)
+    ","
+    (Term.app `direction.add_mem [(Term.app `direction.smul_mem [`c (Term.app `direction.sub_mem [`hv1 `hv2])]) `hv3])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.use', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `direction.add_mem [(Term.app `direction.smul_mem [`c (Term.app `direction.sub_mem [`hv1 `hv2])]) `hv3])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hv3
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `direction.smul_mem [`c (Term.app `direction.sub_mem [`hv1 `hv2])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `direction.sub_mem [`hv1 `hv2])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hv2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `hv1
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `direction.sub_mem
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `direction.sub_mem [`hv1 `hv2]) []] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `c
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `direction.smul_mem
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app `direction.smul_mem [`c (Term.paren "(" [(Term.app `direction.sub_mem [`hv1 `hv2]) []] ")")]) []]
+ ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `direction.add_mem
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_+_»', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_+_» (Algebra.Group.Defs.«term_•_» `c " • " («term_-_» `v1 "-" `v2)) "+" `v3)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_+_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `v3
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Algebra.Group.Defs.«term_•_» `c " • " («term_-_» `v1 "-" `v2))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Defs.«term_•_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_-_» `v1 "-" `v2)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `v2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
+  `v1
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
+[PrettyPrinter.parenthesize] ...precedences are 73 >? 65, (some 66, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_-_» `v1 "-" `v2) []] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
+  `c
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 73, (some 73, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Algebra.Group.Defs.«term_•_» `c " • " (Term.paren "(" [(«term_-_» `v1 "-" `v2) []] ")")) []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rcases
+   "rcases"
+   [(Tactic.casesTarget [] `hp3)]
+   ["with"
+    (Tactic.rcasesPat.tuple
+     "⟨"
+     [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v3)]) [])
+      ","
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv3)]) [])
+      ","
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp3)]) [])]
+     "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcases', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.casesTarget', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hp3
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rcases
+   "rcases"
+   [(Tactic.casesTarget [] `hp2)]
+   ["with"
+    (Tactic.rcasesPat.tuple
+     "⟨"
+     [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v2)]) [])
+      ","
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv2)]) [])
+      ","
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp2)]) [])]
+     "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcases', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.casesTarget', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hp2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rcases
+   "rcases"
+   [(Tactic.casesTarget [] `hp1)]
+   ["with"
+    (Tactic.rcasesPat.tuple
+     "⟨"
+     [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `v1)]) [])
+      ","
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hv1)]) [])
+      ","
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hp1)]) [])]
+     "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcases', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.casesTarget', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hp1
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Set.«term{_|_}»
+   "{"
+   `q
+   "|"
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `v
+    («binderTerm∈_» "∈" `direction)
+    ","
+    («term_=_» `q "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p)))
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `v
+   («binderTerm∈_» "∈" `direction)
+   ","
+   («term_=_» `q "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p)))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_=_» `q "=" (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Algebra.Group.Defs.«term_+ᵥ_» `v " +ᵥ " `p)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.Group.Defs.«term_+ᵥ_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
+  `v
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 65, (some 66, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `direction
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Construct an affine subspace from a point and a direction. -/
   def
     mk'
     ( p : P ) ( direction : Submodule k V ) : AffineSubspace k P
     :=
       {
-        Carrier := { q | ∃ ( v : _ ) ( _ : v ∈ direction ) , q = v +ᵥ p } ,
+        Carrier := { q | ∃ v ∈ direction , q = v +ᵥ p } ,
           smul_vsub_vadd_mem
             :=
             fun
@@ -450,62 +1362,60 @@ theorem eq_iff_direction_eq_of_mem {s₁ s₂ : AffineSubspace k P} {p : P} (h�
                     simp [ hp1 , hp2 , hp3 , vadd_vadd ]
         }
 
-/-- An affine subspace constructed from a point and a direction contains
+/--  An affine subspace constructed from a point and a direction contains
 that point. -/
 theorem self_mem_mk' (p : P) (direction : Submodule k V) : p ∈ mk' p direction :=
   ⟨0, ⟨direction.zero_mem, (zero_vadd _ _).symm⟩⟩
 
-/-- An affine subspace constructed from a point and a direction contains
+/--  An affine subspace constructed from a point and a direction contains
 the result of adding a vector in that direction to that point. -/
 theorem vadd_mem_mk' {v : V} (p : P) {direction : Submodule k V} (hv : v ∈ direction) : v +ᵥ p ∈ mk' p direction :=
   ⟨v, hv, rfl⟩
 
-/-- An affine subspace constructed from a point and a direction is
+/--  An affine subspace constructed from a point and a direction is
 nonempty. -/
 theorem mk'_nonempty (p : P) (direction : Submodule k V) : (mk' p direction : Set P).Nonempty :=
   ⟨p, self_mem_mk' p direction⟩
 
-/-- The direction of an affine subspace constructed from a point and a
+/--  The direction of an affine subspace constructed from a point and a
 direction. -/
 @[simp]
-theorem direction_mk' (p : P) (direction : Submodule k V) : (mk' p direction).direction = direction :=
-  by 
-    ext v 
-    rw [mem_direction_iff_eq_vsub (mk'_nonempty _ _)]
-    constructor
-    ·
-      rintro ⟨p1, ⟨v1, hv1, hp1⟩, p2, ⟨v2, hv2, hp2⟩, hv⟩
-      rw [hv, hp1, hp2, vadd_vsub_vadd_cancel_right]
-      exact direction.sub_mem hv1 hv2
-    ·
-      exact fun hv => ⟨v +ᵥ p, vadd_mem_mk' _ hv, p, self_mem_mk' _ _, (vadd_vsub _ _).symm⟩
+theorem direction_mk' (p : P) (direction : Submodule k V) : (mk' p direction).direction = direction := by
+  ext v
+  rw [mem_direction_iff_eq_vsub (mk'_nonempty _ _)]
+  constructor
+  ·
+    rintro ⟨p1, ⟨v1, hv1, hp1⟩, p2, ⟨v2, hv2, hp2⟩, hv⟩
+    rw [hv, hp1, hp2, vadd_vsub_vadd_cancel_right]
+    exact direction.sub_mem hv1 hv2
+  ·
+    exact fun hv => ⟨v +ᵥ p, vadd_mem_mk' _ hv, p, self_mem_mk' _ _, (vadd_vsub _ _).symm⟩
 
-/-- Constructing an affine subspace from a point in a subspace and
+/--  Constructing an affine subspace from a point in a subspace and
 that subspace's direction yields the original subspace. -/
 @[simp]
 theorem mk'_eq {s : AffineSubspace k P} {p : P} (hp : p ∈ s) : mk' p s.direction = s :=
   ext_of_direction_eq (direction_mk' p s.direction) ⟨p, Set.mem_inter (self_mem_mk' _ _) hp⟩
 
-/-- If an affine subspace contains a set of points, it contains the
+/--  If an affine subspace contains a set of points, it contains the
 `span_points` of that set. -/
 theorem span_points_subset_coe_of_subset_coe {s : Set P} {s1 : AffineSubspace k P} (h : s ⊆ s1) : SpanPoints k s ⊆ s1 :=
-  by 
-    rintro p ⟨p1, hp1, v, hv, hp⟩
-    rw [hp]
-    have hp1s1 : p1 ∈ (s1 : Set P) := Set.mem_of_mem_of_subset hp1 h 
-    refine' vadd_mem_of_mem_direction _ hp1s1 
-    have hs : vectorSpan k s ≤ s1.direction := vector_span_mono k h 
-    rw [SetLike.le_def] at hs 
-    rw [←SetLike.mem_coe]
-    exact Set.mem_of_mem_of_subset hv hs
+  by
+  rintro p ⟨p1, hp1, v, hv, hp⟩
+  rw [hp]
+  have hp1s1 : p1 ∈ (s1 : Set P) := Set.mem_of_mem_of_subset hp1 h
+  refine' vadd_mem_of_mem_direction _ hp1s1
+  have hs : vectorSpan k s ≤ s1.direction := vector_span_mono k h
+  rw [SetLike.le_def] at hs
+  rw [← SetLike.mem_coe]
+  exact Set.mem_of_mem_of_subset hv hs
 
 end AffineSubspace
 
 theorem AffineMap.line_map_mem {k V P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V] [AddTorsor V P]
-  {Q : AffineSubspace k P} {p₀ p₁ : P} (c : k) (h₀ : p₀ ∈ Q) (h₁ : p₁ ∈ Q) : AffineMap.lineMap p₀ p₁ c ∈ Q :=
-  by 
-    rw [AffineMap.line_map_apply]
-    exact Q.smul_vsub_vadd_mem c h₁ h₀ h₀
+    {Q : AffineSubspace k P} {p₀ p₁ : P} (c : k) (h₀ : p₀ ∈ Q) (h₁ : p₁ ∈ Q) : AffineMap.lineMap p₀ p₁ c ∈ Q := by
+  rw [AffineMap.line_map_apply]
+  exact Q.smul_vsub_vadd_mem c h₁ h₀ h₀
 
 section affineSpan
 
@@ -513,38 +1423,36 @@ variable (k : Type _) {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] 
 
 include V
 
-/-- The affine span of a set of points is the smallest affine subspace
+/--  The affine span of a set of points is the smallest affine subspace
 containing those points. (Actually defined here in terms of spans in
 modules.) -/
 def affineSpan (s : Set P) : AffineSubspace k P :=
   { Carrier := SpanPoints k s,
-    smul_vsub_vadd_mem :=
-      fun c p1 p2 p3 hp1 hp2 hp3 =>
-        vadd_mem_span_points_of_mem_span_points_of_mem_vector_span k hp3
-          ((vectorSpan k s).smul_mem c (vsub_mem_vector_span_of_mem_span_points_of_mem_span_points k hp1 hp2)) }
+    smul_vsub_vadd_mem := fun c p1 p2 p3 hp1 hp2 hp3 =>
+      vadd_mem_span_points_of_mem_span_points_of_mem_vector_span k hp3
+        ((vectorSpan k s).smul_mem c (vsub_mem_vector_span_of_mem_span_points_of_mem_span_points k hp1 hp2)) }
 
-/-- The affine span, converted to a set, is `span_points`. -/
+/--  The affine span, converted to a set, is `span_points`. -/
 @[simp]
 theorem coe_affine_span (s : Set P) : (affineSpan k s : Set P) = SpanPoints k s :=
   rfl
 
-/-- A set is contained in its affine span. -/
+/--  A set is contained in its affine span. -/
 theorem subset_affine_span (s : Set P) : s ⊆ affineSpan k s :=
   subset_span_points k s
 
-/-- The direction of the affine span is the `vector_span`. -/
-theorem direction_affine_span (s : Set P) : (affineSpan k s).direction = vectorSpan k s :=
-  by 
-    apply le_antisymmₓ
-    ·
-      refine' Submodule.span_le.2 _ 
-      rintro v ⟨p1, p3, ⟨p2, hp2, v1, hv1, hp1⟩, ⟨p4, hp4, v2, hv2, hp3⟩, rfl⟩
-      rw [hp1, hp3, vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, SetLike.mem_coe]
-      exact (vectorSpan k s).sub_mem ((vectorSpan k s).add_mem hv1 (vsub_mem_vector_span k hp2 hp4)) hv2
-    ·
-      exact vector_span_mono k (subset_span_points k s)
+/--  The direction of the affine span is the `vector_span`. -/
+theorem direction_affine_span (s : Set P) : (affineSpan k s).direction = vectorSpan k s := by
+  apply le_antisymmₓ
+  ·
+    refine' Submodule.span_le.2 _
+    rintro v ⟨p1, p3, ⟨p2, hp2, v1, hv1, hp1⟩, ⟨p4, hp4, v2, hv2, hp3⟩, rfl⟩
+    rw [hp1, hp3, vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, SetLike.mem_coe]
+    exact (vectorSpan k s).sub_mem ((vectorSpan k s).add_mem hv1 (vsub_mem_vector_span k hp2 hp4)) hv2
+  ·
+    exact vector_span_mono k (subset_span_points k s)
 
-/-- A point in a set is in its affine span. -/
+/--  A point in a set is in its affine span. -/
 theorem mem_affine_span {p : P} {s : Set P} (hp : p ∈ s) : p ∈ affineSpan k s :=
   mem_span_points k p s hp
 
@@ -556,86 +1464,1631 @@ variable {k : Type _} {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] 
 
 include S
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s' «expr ∈ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (s' «expr ∈ » s)
-instance : CompleteLattice (AffineSubspace k P) :=
-  { PartialOrderₓ.lift (coeₓ : AffineSubspace k P → Set P) fun _ _ => ext with
-    sup := fun s1 s2 => affineSpan k (s1 ∪ s2),
-    le_sup_left := fun s1 s2 => Set.Subset.trans (Set.subset_union_left s1 s2) (subset_span_points k _),
-    le_sup_right := fun s1 s2 => Set.Subset.trans (Set.subset_union_right s1 s2) (subset_span_points k _),
-    sup_le := fun s1 s2 s3 hs1 hs2 => span_points_subset_coe_of_subset_coe (Set.union_subset hs1 hs2),
-    inf :=
-      fun s1 s2 =>
-        mk (s1 ∩ s2)
-          fun c p1 p2 p3 hp1 hp2 hp3 =>
-            ⟨s1.smul_vsub_vadd_mem c hp1.1 hp2.1 hp3.1, s2.smul_vsub_vadd_mem c hp1.2 hp2.2 hp3.2⟩,
-    inf_le_left := fun _ _ => Set.inter_subset_left _ _, inf_le_right := fun _ _ => Set.inter_subset_right _ _,
-    le_inf := fun _ _ _ => Set.subset_inter,
-    top := { Carrier := Set.Univ, smul_vsub_vadd_mem := fun _ _ _ _ _ _ _ => Set.mem_univ _ },
-    le_top := fun _ _ _ => Set.mem_univ _, bot := { Carrier := ∅, smul_vsub_vadd_mem := fun _ _ _ _ => False.elim },
-    bot_le := fun _ _ => False.elim, sup := fun s => affineSpan k (⋃ (s' : _)(_ : s' ∈ s), (s' : Set P)),
-    inf :=
-      fun s =>
-        mk (⋂ (s' : _)(_ : s' ∈ s), (s' : Set P))
-          fun c p1 p2 p3 hp1 hp2 hp3 =>
-            Set.mem_bInter_iff.2$
-              fun s2 hs2 =>
-                s2.smul_vsub_vadd_mem c (Set.mem_bInter_iff.1 hp1 s2 hs2) (Set.mem_bInter_iff.1 hp2 s2 hs2)
-                  (Set.mem_bInter_iff.1 hp3 s2 hs2),
-    le_Sup := fun _ _ h => Set.Subset.trans (Set.subset_bUnion_of_mem h) (subset_span_points k _),
-    Sup_le := fun _ _ h => span_points_subset_coe_of_subset_coe (Set.bUnion_subset h),
-    Inf_le := fun _ _ => Set.bInter_subset_of_mem, le_Inf := fun _ _ => Set.subset_bInter }
+-- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (s' «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:477:2: warning: expanding binder collection (s' «expr ∈ » s)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.instance
+  (Term.attrKind [])
+  "instance"
+  []
+  []
+  (Command.declSig [] (Term.typeSpec ":" (Term.app `CompleteLattice [(Term.app `AffineSubspace [`k `P])])))
+  (Command.declValSimple
+   ":="
+   (Term.structInst
+    "{"
+    [[(Term.app
+       `PartialOrderₓ.lift
+       [(Term.paren
+         "("
+         [`coeₓ [(Term.typeAscription ":" (Term.arrow (Term.app `AffineSubspace [`k `P]) "→" (Term.app `Set [`P])))]]
+         ")")
+        `coe_injective])]
+     "with"]
+    [(group
+      (Term.structInstField
+       (Term.structInstLVal `sup [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`s1 `s2] [])]
+         "=>"
+         (Term.app `affineSpan [`k (Init.Core.«term_∪_» `s1 " ∪ " `s2)]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `le_sup_left [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`s1 `s2] [])]
+         "=>"
+         (Term.app
+          `Set.Subset.trans
+          [(Term.app `Set.subset_union_left [`s1 `s2]) (Term.app `subset_span_points [`k (Term.hole "_")])]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `le_sup_right [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`s1 `s2] [])]
+         "=>"
+         (Term.app
+          `Set.Subset.trans
+          [(Term.app `Set.subset_union_right [`s1 `s2]) (Term.app `subset_span_points [`k (Term.hole "_")])]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `sup_le [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`s1 `s2 `s3 `hs1 `hs2] [])]
+         "=>"
+         (Term.app `span_points_subset_coe_of_subset_coe [(Term.app `Set.union_subset [`hs1 `hs2])]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `inf [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`s1 `s2] [])]
+         "=>"
+         (Term.app
+          `mk
+          [(Init.Core.«term_∩_» `s1 " ∩ " `s2)
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+             "=>"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.app
+                `s1.smul_vsub_vadd_mem
+                [`c
+                 (Term.proj `hp1 "." (fieldIdx "1"))
+                 (Term.proj `hp2 "." (fieldIdx "1"))
+                 (Term.proj `hp3 "." (fieldIdx "1"))])
+               ","
+               (Term.app
+                `s2.smul_vsub_vadd_mem
+                [`c
+                 (Term.proj `hp1 "." (fieldIdx "2"))
+                 (Term.proj `hp2 "." (fieldIdx "2"))
+                 (Term.proj `hp3 "." (fieldIdx "2"))])]
+              "⟩")))]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `inf_le_left [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])]
+         "=>"
+         (Term.app `Set.inter_subset_left [(Term.hole "_") (Term.hole "_")]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `inf_le_right [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])]
+         "=>"
+         (Term.app `Set.inter_subset_right [(Term.hole "_") (Term.hole "_")]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `le_inf [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") (Term.hole "_")] [])]
+         "=>"
+         `Set.subset_inter)))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `top [])
+       ":="
+       (Term.structInst
+        "{"
+        []
+        [(group (Term.structInstField (Term.structInstLVal `Carrier []) ":=" `Set.Univ) [","])
+         (group
+          (Term.structInstField
+           (Term.structInstLVal `smul_vsub_vadd_mem [])
+           ":="
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.simpleBinder
+               [(Term.hole "_")
+                (Term.hole "_")
+                (Term.hole "_")
+                (Term.hole "_")
+                (Term.hole "_")
+                (Term.hole "_")
+                (Term.hole "_")]
+               [])]
+             "=>"
+             (Term.app `Set.mem_univ [(Term.hole "_")]))))
+          [])]
+        (Term.optEllipsis [])
+        []
+        "}"))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `le_top [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") (Term.hole "_")] [])]
+         "=>"
+         (Term.app `Set.mem_univ [(Term.hole "_")]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `bot [])
+       ":="
+       (Term.structInst
+        "{"
+        []
+        [(group (Term.structInstField (Term.structInstLVal `Carrier []) ":=" («term∅» "∅")) [","])
+         (group
+          (Term.structInstField
+           (Term.structInstLVal `smul_vsub_vadd_mem [])
+           ":="
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")] [])]
+             "=>"
+             `False.elim)))
+          [])]
+        (Term.optEllipsis [])
+        []
+        "}"))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `bot_le [])
+       ":="
+       (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])] "=>" `False.elim)))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `sup [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`s] [])]
+         "=>"
+         (Term.app
+          `affineSpan
+          [`k
+           (Set.Data.Set.Lattice.«term⋃_,_»
+            "⋃"
+            (Lean.explicitBinders
+             [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s')] ":" (Term.hole "_") ")")
+              (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s' " ∈ " `s) ")")])
+            ", "
+            (Term.paren "(" [`s' [(Term.typeAscription ":" (Term.app `Set [`P]))]] ")"))]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `inf [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`s] [])]
+         "=>"
+         (Term.app
+          `mk
+          [(Set.Data.Set.Lattice.«term⋂_,_»
+            "⋂"
+            (Lean.explicitBinders
+             [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s')] ":" (Term.hole "_") ")")
+              (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s' " ∈ " `s) ")")])
+            ", "
+            (Term.paren "(" [`s' [(Term.typeAscription ":" (Term.app `Set [`P]))]] ")"))
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+             "=>"
+             («term_$__»
+              (Term.proj `Set.mem_bInter_iff "." (fieldIdx "2"))
+              "$"
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [(Term.simpleBinder [`s2 `hs2] [])]
+                "=>"
+                (Term.app
+                 `s2.smul_vsub_vadd_mem
+                 [`c
+                  (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+                  (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+                  (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])]))))))]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `le_Sup [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") `h] [])]
+         "=>"
+         (Term.app
+          `Set.Subset.trans
+          [(Term.app `Set.subset_bUnion_of_mem [`h]) (Term.app `subset_span_points [`k (Term.hole "_")])]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `Sup_le [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") `h] [])]
+         "=>"
+         (Term.app `span_points_subset_coe_of_subset_coe [(Term.app `Set.bUnion_subset [`h])]))))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `Inf_le [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])] "=>" `Set.bInter_subset_of_mem)))
+      [","])
+     (group
+      (Term.structInstField
+       (Term.structInstLVal `le_Inf [])
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])] "=>" `Set.subset_bInter)))
+      [])]
+    (Term.optEllipsis [])
+    []
+    "}")
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.structInst
+   "{"
+   [[(Term.app
+      `PartialOrderₓ.lift
+      [(Term.paren
+        "("
+        [`coeₓ [(Term.typeAscription ":" (Term.arrow (Term.app `AffineSubspace [`k `P]) "→" (Term.app `Set [`P])))]]
+        ")")
+       `coe_injective])]
+    "with"]
+   [(group
+     (Term.structInstField
+      (Term.structInstLVal `sup [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`s1 `s2] [])]
+        "=>"
+        (Term.app `affineSpan [`k (Init.Core.«term_∪_» `s1 " ∪ " `s2)]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `le_sup_left [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`s1 `s2] [])]
+        "=>"
+        (Term.app
+         `Set.Subset.trans
+         [(Term.app `Set.subset_union_left [`s1 `s2]) (Term.app `subset_span_points [`k (Term.hole "_")])]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `le_sup_right [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`s1 `s2] [])]
+        "=>"
+        (Term.app
+         `Set.Subset.trans
+         [(Term.app `Set.subset_union_right [`s1 `s2]) (Term.app `subset_span_points [`k (Term.hole "_")])]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `sup_le [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`s1 `s2 `s3 `hs1 `hs2] [])]
+        "=>"
+        (Term.app `span_points_subset_coe_of_subset_coe [(Term.app `Set.union_subset [`hs1 `hs2])]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `inf [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`s1 `s2] [])]
+        "=>"
+        (Term.app
+         `mk
+         [(Init.Core.«term_∩_» `s1 " ∩ " `s2)
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+            "=>"
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.app
+               `s1.smul_vsub_vadd_mem
+               [`c
+                (Term.proj `hp1 "." (fieldIdx "1"))
+                (Term.proj `hp2 "." (fieldIdx "1"))
+                (Term.proj `hp3 "." (fieldIdx "1"))])
+              ","
+              (Term.app
+               `s2.smul_vsub_vadd_mem
+               [`c
+                (Term.proj `hp1 "." (fieldIdx "2"))
+                (Term.proj `hp2 "." (fieldIdx "2"))
+                (Term.proj `hp3 "." (fieldIdx "2"))])]
+             "⟩")))]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `inf_le_left [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])]
+        "=>"
+        (Term.app `Set.inter_subset_left [(Term.hole "_") (Term.hole "_")]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `inf_le_right [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])]
+        "=>"
+        (Term.app `Set.inter_subset_right [(Term.hole "_") (Term.hole "_")]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `le_inf [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") (Term.hole "_")] [])]
+        "=>"
+        `Set.subset_inter)))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `top [])
+      ":="
+      (Term.structInst
+       "{"
+       []
+       [(group (Term.structInstField (Term.structInstLVal `Carrier []) ":=" `Set.Univ) [","])
+        (group
+         (Term.structInstField
+          (Term.structInstLVal `smul_vsub_vadd_mem [])
+          ":="
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [(Term.simpleBinder
+              [(Term.hole "_")
+               (Term.hole "_")
+               (Term.hole "_")
+               (Term.hole "_")
+               (Term.hole "_")
+               (Term.hole "_")
+               (Term.hole "_")]
+              [])]
+            "=>"
+            (Term.app `Set.mem_univ [(Term.hole "_")]))))
+         [])]
+       (Term.optEllipsis [])
+       []
+       "}"))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `le_top [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") (Term.hole "_")] [])]
+        "=>"
+        (Term.app `Set.mem_univ [(Term.hole "_")]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `bot [])
+      ":="
+      (Term.structInst
+       "{"
+       []
+       [(group (Term.structInstField (Term.structInstLVal `Carrier []) ":=" («term∅» "∅")) [","])
+        (group
+         (Term.structInstField
+          (Term.structInstLVal `smul_vsub_vadd_mem [])
+          ":="
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")] [])]
+            "=>"
+            `False.elim)))
+         [])]
+       (Term.optEllipsis [])
+       []
+       "}"))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `bot_le [])
+      ":="
+      (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])] "=>" `False.elim)))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `sup [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`s] [])]
+        "=>"
+        (Term.app
+         `affineSpan
+         [`k
+          (Set.Data.Set.Lattice.«term⋃_,_»
+           "⋃"
+           (Lean.explicitBinders
+            [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s')] ":" (Term.hole "_") ")")
+             (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s' " ∈ " `s) ")")])
+           ", "
+           (Term.paren "(" [`s' [(Term.typeAscription ":" (Term.app `Set [`P]))]] ")"))]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `inf [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`s] [])]
+        "=>"
+        (Term.app
+         `mk
+         [(Set.Data.Set.Lattice.«term⋂_,_»
+           "⋂"
+           (Lean.explicitBinders
+            [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s')] ":" (Term.hole "_") ")")
+             (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s' " ∈ " `s) ")")])
+           ", "
+           (Term.paren "(" [`s' [(Term.typeAscription ":" (Term.app `Set [`P]))]] ")"))
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+            "=>"
+            («term_$__»
+             (Term.proj `Set.mem_bInter_iff "." (fieldIdx "2"))
+             "$"
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [(Term.simpleBinder [`s2 `hs2] [])]
+               "=>"
+               (Term.app
+                `s2.smul_vsub_vadd_mem
+                [`c
+                 (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+                 (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+                 (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])]))))))]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `le_Sup [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") `h] [])]
+        "=>"
+        (Term.app
+         `Set.Subset.trans
+         [(Term.app `Set.subset_bUnion_of_mem [`h]) (Term.app `subset_span_points [`k (Term.hole "_")])]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `Sup_le [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") `h] [])]
+        "=>"
+        (Term.app `span_points_subset_coe_of_subset_coe [(Term.app `Set.bUnion_subset [`h])]))))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `Inf_le [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])] "=>" `Set.bInter_subset_of_mem)))
+     [","])
+    (group
+     (Term.structInstField
+      (Term.structInstLVal `le_Inf [])
+      ":="
+      (Term.fun
+       "fun"
+       (Term.basicFun [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])] "=>" `Set.subset_bInter)))
+     [])]
+   (Term.optEllipsis [])
+   []
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.structInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.optEllipsis', expected 'Lean.Parser.Term.optEllipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])] "=>" `Set.subset_bInter))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `Set.subset_bInter
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun [(Term.simpleBinder [(Term.hole "_") (Term.hole "_")] [])] "=>" `Set.bInter_subset_of_mem))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `Set.bInter_subset_of_mem
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") `h] [])]
+    "=>"
+    (Term.app `span_points_subset_coe_of_subset_coe [(Term.app `Set.bUnion_subset [`h])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `span_points_subset_coe_of_subset_coe [(Term.app `Set.bUnion_subset [`h])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `Set.bUnion_subset [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `Set.bUnion_subset
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Set.bUnion_subset [`h]) []] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `span_points_subset_coe_of_subset_coe
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [(Term.hole "_") (Term.hole "_") `h] [])]
+    "=>"
+    (Term.app
+     `Set.Subset.trans
+     [(Term.app `Set.subset_bUnion_of_mem [`h]) (Term.app `subset_span_points [`k (Term.hole "_")])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `Set.Subset.trans
+   [(Term.app `Set.subset_bUnion_of_mem [`h]) (Term.app `subset_span_points [`k (Term.hole "_")])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `subset_span_points [`k (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+  `k
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `subset_span_points
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app `subset_span_points [`k (Term.hole "_")]) []]
+ ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `Set.subset_bUnion_of_mem [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `Set.subset_bUnion_of_mem
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Set.subset_bUnion_of_mem [`h]) []] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `Set.Subset.trans
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstLVal', expected 'Lean.Parser.Term.structInstLVal.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«,»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstField.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [`s] [])]
+    "=>"
+    (Term.app
+     `mk
+     [(Set.Data.Set.Lattice.«term⋂_,_»
+       "⋂"
+       (Lean.explicitBinders
+        [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s')] ":" (Term.hole "_") ")")
+         (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s' " ∈ " `s) ")")])
+       ", "
+       (Term.paren "(" [`s' [(Term.typeAscription ":" (Term.app `Set [`P]))]] ")"))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+        "=>"
+        («term_$__»
+         (Term.proj `Set.mem_bInter_iff "." (fieldIdx "2"))
+         "$"
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [(Term.simpleBinder [`s2 `hs2] [])]
+           "=>"
+           (Term.app
+            `s2.smul_vsub_vadd_mem
+            [`c
+             (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+             (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+             (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])]))))))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `mk
+   [(Set.Data.Set.Lattice.«term⋂_,_»
+     "⋂"
+     (Lean.explicitBinders
+      [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s')] ":" (Term.hole "_") ")")
+       (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s' " ∈ " `s) ")")])
+     ", "
+     (Term.paren "(" [`s' [(Term.typeAscription ":" (Term.app `Set [`P]))]] ")"))
+    (Term.fun
+     "fun"
+     (Term.basicFun
+      [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+      "=>"
+      («term_$__»
+       (Term.proj `Set.mem_bInter_iff "." (fieldIdx "2"))
+       "$"
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [(Term.simpleBinder [`s2 `hs2] [])]
+         "=>"
+         (Term.app
+          `s2.smul_vsub_vadd_mem
+          [`c
+           (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+           (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+           (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])]))))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [`c `p1 `p2 `p3 `hp1 `hp2 `hp3] [])]
+    "=>"
+    («term_$__»
+     (Term.proj `Set.mem_bInter_iff "." (fieldIdx "2"))
+     "$"
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [(Term.simpleBinder [`s2 `hs2] [])]
+       "=>"
+       (Term.app
+        `s2.smul_vsub_vadd_mem
+        [`c
+         (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+         (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+         (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])]))))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_$__»
+   (Term.proj `Set.mem_bInter_iff "." (fieldIdx "2"))
+   "$"
+   (Term.fun
+    "fun"
+    (Term.basicFun
+     [(Term.simpleBinder [`s2 `hs2] [])]
+     "=>"
+     (Term.app
+      `s2.smul_vsub_vadd_mem
+      [`c
+       (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+       (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+       (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_$__»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [`s2 `hs2] [])]
+    "=>"
+    (Term.app
+     `s2.smul_vsub_vadd_mem
+     [`c
+      (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+      (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+      (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `s2.smul_vsub_vadd_mem
+   [`c
+    (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+    (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+    (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hs2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `s2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `hp3
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `Set.mem_bInter_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp3 `s2 `hs2]) []]
+ ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hs2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `s2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `hp2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `Set.mem_bInter_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp2 `s2 `hs2]) []]
+ ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `hs2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `s2
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `hp1
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `Set.mem_bInter_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app (Term.proj `Set.mem_bInter_iff "." (fieldIdx "1")) [`hp1 `s2 `hs2]) []]
+ ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `c
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `s2.smul_vsub_vadd_mem
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+  (Term.proj `Set.mem_bInter_iff "." (fieldIdx "2"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `Set.mem_bInter_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Lattice.«term⋂_,_»', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Lattice.«term⋂_,_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Lattice.«term⋂_,_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Lattice.«term⋂_,_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Lattice.«term⋂_,_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+  (Set.Data.Set.Lattice.«term⋂_,_»
+   "⋂"
+   (Lean.explicitBinders
+    [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `s')] ":" (Term.hole "_") ")")
+     (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent "_")] ":" (Init.Core.«term_∈_» `s' " ∈ " `s) ")")])
+   ", "
+   (Term.paren "(" [`s' [(Term.typeAscription ":" (Term.app `Set [`P]))]] ")"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Lattice.«term⋂_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.paren "(" [`s' [(Term.typeAscription ":" (Term.app `Set [`P]))]] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.paren.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.typeAscription.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `Set [`P])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `P
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `Set
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  `s'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+instance
+  : CompleteLattice AffineSubspace k P
+  :=
+    {
+      PartialOrderₓ.lift ( coeₓ : AffineSubspace k P → Set P ) coe_injective with
+      sup := fun s1 s2 => affineSpan k s1 ∪ s2 ,
+        le_sup_left := fun s1 s2 => Set.Subset.trans Set.subset_union_left s1 s2 subset_span_points k _ ,
+        le_sup_right := fun s1 s2 => Set.Subset.trans Set.subset_union_right s1 s2 subset_span_points k _ ,
+        sup_le := fun s1 s2 s3 hs1 hs2 => span_points_subset_coe_of_subset_coe Set.union_subset hs1 hs2 ,
+        inf
+            :=
+            fun
+              s1 s2
+                =>
+                mk
+                  s1 ∩ s2
+                    fun
+                      c p1 p2 p3 hp1 hp2 hp3
+                        =>
+                        ⟨
+                          s1.smul_vsub_vadd_mem c hp1 . 1 hp2 . 1 hp3 . 1
+                            ,
+                            s2.smul_vsub_vadd_mem c hp1 . 2 hp2 . 2 hp3 . 2
+                          ⟩
+          ,
+        inf_le_left := fun _ _ => Set.inter_subset_left _ _ ,
+        inf_le_right := fun _ _ => Set.inter_subset_right _ _ ,
+        le_inf := fun _ _ _ => Set.subset_inter ,
+        top := { Carrier := Set.Univ , smul_vsub_vadd_mem := fun _ _ _ _ _ _ _ => Set.mem_univ _ } ,
+        le_top := fun _ _ _ => Set.mem_univ _ ,
+        bot := { Carrier := ∅ , smul_vsub_vadd_mem := fun _ _ _ _ => False.elim } ,
+        bot_le := fun _ _ => False.elim ,
+        sup := fun s => affineSpan k ⋃ ( s' : _ ) ( _ : s' ∈ s ) , ( s' : Set P ) ,
+        inf
+            :=
+            fun
+              s
+                =>
+                mk
+                  ⋂ ( s' : _ ) ( _ : s' ∈ s ) , ( s' : Set P )
+                    fun
+                      c p1 p2 p3 hp1 hp2 hp3
+                        =>
+                        Set.mem_bInter_iff . 2
+                          $
+                          fun
+                            s2 hs2
+                              =>
+                              s2.smul_vsub_vadd_mem
+                                c
+                                  Set.mem_bInter_iff . 1 hp1 s2 hs2
+                                  Set.mem_bInter_iff . 1 hp2 s2 hs2
+                                  Set.mem_bInter_iff . 1 hp3 s2 hs2
+          ,
+        le_Sup := fun _ _ h => Set.Subset.trans Set.subset_bUnion_of_mem h subset_span_points k _ ,
+        Sup_le := fun _ _ h => span_points_subset_coe_of_subset_coe Set.bUnion_subset h ,
+        Inf_le := fun _ _ => Set.bInter_subset_of_mem ,
+        le_Inf := fun _ _ => Set.subset_bInter
+      }
 
 instance : Inhabited (AffineSubspace k P) :=
   ⟨⊤⟩
 
-/-- The `≤` order on subspaces is the same as that on the corresponding
+/--  The `≤` order on subspaces is the same as that on the corresponding
 sets. -/
 theorem le_def (s1 s2 : AffineSubspace k P) : s1 ≤ s2 ↔ (s1 : Set P) ⊆ s2 :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s1)
-/-- One subspace is less than or equal to another if and only if all
+/--  One subspace is less than or equal to another if and only if all
 its points are in the second subspace. -/
-theorem le_def' (s1 s2 : AffineSubspace k P) : s1 ≤ s2 ↔ ∀ p _ : p ∈ s1, p ∈ s2 :=
+theorem le_def' (s1 s2 : AffineSubspace k P) : s1 ≤ s2 ↔ ∀, ∀ p ∈ s1, ∀, p ∈ s2 :=
   Iff.rfl
 
-/-- The `<` order on subspaces is the same as that on the corresponding
+/--  The `<` order on subspaces is the same as that on the corresponding
 sets. -/
 theorem lt_def (s1 s2 : AffineSubspace k P) : s1 < s2 ↔ (s1 : Set P) ⊂ s2 :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s1)
-/-- One subspace is not less than or equal to another if and only if
+/--  One subspace is not less than or equal to another if and only if
 it has a point not in the second subspace. -/
-theorem not_le_iff_exists (s1 s2 : AffineSubspace k P) : ¬s1 ≤ s2 ↔ ∃ (p : _)(_ : p ∈ s1), p ∉ s2 :=
+theorem not_le_iff_exists (s1 s2 : AffineSubspace k P) : ¬s1 ≤ s2 ↔ ∃ p ∈ s1, p ∉ s2 :=
   Set.not_subset
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s2)
-/-- If a subspace is less than another, there is a point only in the
+/--  If a subspace is less than another, there is a point only in the
 second. -/
-theorem exists_of_lt {s1 s2 : AffineSubspace k P} (h : s1 < s2) : ∃ (p : _)(_ : p ∈ s2), p ∉ s1 :=
+theorem exists_of_lt {s1 s2 : AffineSubspace k P} (h : s1 < s2) : ∃ p ∈ s2, p ∉ s1 :=
   Set.exists_of_ssubset h
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » s2)
-/-- A subspace is less than another if and only if it is less than or
+/--  A subspace is less than another if and only if it is less than or
 equal to the second subspace and there is a point only in the
 second. -/
-theorem lt_iff_le_and_exists (s1 s2 : AffineSubspace k P) : s1 < s2 ↔ s1 ≤ s2 ∧ ∃ (p : _)(_ : p ∈ s2), p ∉ s1 :=
-  by 
-    rw [lt_iff_le_not_leₓ, not_le_iff_exists]
+theorem lt_iff_le_and_exists (s1 s2 : AffineSubspace k P) : s1 < s2 ↔ s1 ≤ s2 ∧ ∃ p ∈ s2, p ∉ s1 := by
+  rw [lt_iff_le_not_leₓ, not_le_iff_exists]
 
-/-- If an affine subspace is nonempty and contained in another with
+/--  If an affine subspace is nonempty and contained in another with
 the same direction, they are equal. -/
 theorem eq_of_direction_eq_of_nonempty_of_le {s₁ s₂ : AffineSubspace k P} (hd : s₁.direction = s₂.direction)
-  (hn : (s₁ : Set P).Nonempty) (hle : s₁ ≤ s₂) : s₁ = s₂ :=
-  let ⟨p, hp⟩ := hn 
+    (hn : (s₁ : Set P).Nonempty) (hle : s₁ ≤ s₂) : s₁ = s₂ :=
+  let ⟨p, hp⟩ := hn
   ext_of_direction_eq hd ⟨p, hp, hle hp⟩
 
 variable (k V)
 
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment "/--" " The affine span is the `Inf` of subspaces containing the given\npoints. -/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `affine_span_eq_Inf [])
+  (Command.declSig
+   [(Term.explicitBinder "(" [`s] [":" (Term.app `Set [`P])] [] ")")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Term.app `affineSpan [`k `s])
+     "="
+     (Term.app `Inf [(Set.«term{_|_}» "{" `s' "|" (Init.Core.«term_⊆_» `s " ⊆ " `s') "}")]))))
+  (Command.declValSimple
+   ":="
+   (Term.app
+    `le_antisymmₓ
+    [(Term.app
+      `span_points_subset_coe_of_subset_coe
+      [(Term.app
+        `Set.subset_bInter
+        [(Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") `h] [])] "=>" `h))])])
+     (Term.app `Inf_le [(Term.app `subset_span_points [`k (Term.hole "_")])])])
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `le_antisymmₓ
+   [(Term.app
+     `span_points_subset_coe_of_subset_coe
+     [(Term.app
+       `Set.subset_bInter
+       [(Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") `h] [])] "=>" `h))])])
+    (Term.app `Inf_le [(Term.app `subset_span_points [`k (Term.hole "_")])])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `Inf_le [(Term.app `subset_span_points [`k (Term.hole "_")])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `subset_span_points [`k (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+  `k
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `subset_span_points
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app `subset_span_points [`k (Term.hole "_")]) []]
+ ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `Inf_le
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app `Inf_le [(Term.paren "(" [(Term.app `subset_span_points [`k (Term.hole "_")]) []] ")")]) []]
+ ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app
+   `span_points_subset_coe_of_subset_coe
+   [(Term.app
+     `Set.subset_bInter
+     [(Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") `h] [])] "=>" `h))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `Set.subset_bInter [(Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") `h] [])] "=>" `h))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") `h] [])] "=>" `h))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `Set.subset_bInter
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app `Set.subset_bInter [(Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") `h] [])] "=>" `h))])
+  []]
+ ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `span_points_subset_coe_of_subset_coe
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app
+   `span_points_subset_coe_of_subset_coe
+   [(Term.paren
+     "("
+     [(Term.app
+       `Set.subset_bInter
+       [(Term.fun "fun" (Term.basicFun [(Term.simpleBinder [(Term.hole "_") `h] [])] "=>" `h))])
+      []]
+     ")")])
+  []]
+ ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `le_antisymmₓ
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Term.app `affineSpan [`k `s])
+   "="
+   (Term.app `Inf [(Set.«term{_|_}» "{" `s' "|" (Init.Core.«term_⊆_» `s " ⊆ " `s') "}")]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `Inf [(Set.«term{_|_}» "{" `s' "|" (Init.Core.«term_⊆_» `s " ⊆ " `s') "}")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Set.«term{_|_}» "{" `s' "|" (Init.Core.«term_⊆_» `s " ⊆ " `s') "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Core.«term_⊆_» `s " ⊆ " `s')
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_⊆_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `s'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  `s
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /--
     The affine span is the `Inf` of subspaces containing the given
     points. -/
@@ -646,22 +3099,22 @@ variable (k V)
 
 variable (P)
 
-/-- The Galois insertion formed by `affine_span` and coercion back to
+/--  The Galois insertion formed by `affine_span` and coercion back to
 a set. -/
 protected def gi : GaloisInsertion (affineSpan k) (coeₓ : AffineSubspace k P → Set P) :=
   { choice := fun s _ => affineSpan k s,
     gc := fun s1 s2 => ⟨fun h => Set.Subset.trans (subset_span_points k s1) h, span_points_subset_coe_of_subset_coe⟩,
     le_l_u := fun _ => subset_span_points k _, choice_eq := fun _ _ => rfl }
 
-/-- The span of the empty set is `⊥`. -/
+/--  The span of the empty set is `⊥`. -/
 @[simp]
 theorem span_empty : affineSpan k (∅ : Set P) = ⊥ :=
   (AffineSubspace.gi k V P).gc.l_bot
 
-/-- The span of `univ` is `⊤`. -/
+/--  The span of `univ` is `⊤`. -/
 @[simp]
 theorem span_univ : affineSpan k (Set.Univ : Set P) = ⊤ :=
-  eq_top_iff.2$ subset_span_points k _
+  eq_top_iff.2 $ subset_span_points k _
 
 variable {k V P}
 
@@ -670,295 +3123,449 @@ theorem _root_.affine_span_le {s : Set P} {Q : AffineSubspace k P} : affineSpan 
 
 variable (k V) {P}
 
-/-- The affine span of a single point, coerced to a set, contains just
+/--  The affine span of a single point, coerced to a set, contains just
 that point. -/
 @[simp]
-theorem coe_affine_span_singleton (p : P) : (affineSpan k ({p} : Set P) : Set P) = {p} :=
-  by 
-    ext x 
-    rw [mem_coe, ←vsub_right_mem_direction_iff_mem (mem_affine_span k (Set.mem_singleton p)) _, direction_affine_span]
-    simp 
+theorem coe_affine_span_singleton (p : P) : (affineSpan k ({p} : Set P) : Set P) = {p} := by
+  ext x
+  rw [mem_coe, ← vsub_right_mem_direction_iff_mem (mem_affine_span k (Set.mem_singleton p)) _, direction_affine_span]
+  simp
 
-/-- A point is in the affine span of a single point if and only if
+/--  A point is in the affine span of a single point if and only if
 they are equal. -/
 @[simp]
-theorem mem_affine_span_singleton (p1 p2 : P) : p1 ∈ affineSpan k ({p2} : Set P) ↔ p1 = p2 :=
-  by 
-    simp [←mem_coe]
+theorem mem_affine_span_singleton (p1 p2 : P) : p1 ∈ affineSpan k ({p2} : Set P) ↔ p1 = p2 := by
+  simp [← mem_coe]
 
-/-- The span of a union of sets is the sup of their spans. -/
+/--  The span of a union of sets is the sup of their spans. -/
 theorem span_union (s t : Set P) : affineSpan k (s ∪ t) = affineSpan k s⊔affineSpan k t :=
   (AffineSubspace.gi k V P).gc.l_sup
 
-/-- The span of a union of an indexed family of sets is the sup of
-their spans. -/
-theorem span_Union {ι : Type _} (s : ι → Set P) : affineSpan k (⋃ i, s i) = ⨆ i, affineSpan k (s i) :=
-  (AffineSubspace.gi k V P).gc.l_supr
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment "/--" " The span of a union of an indexed family of sets is the sup of\ntheir spans. -/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `span_Union [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`ι] [":" (Term.type "Type" [(Level.hole "_")])] "}")
+    (Term.explicitBinder "(" [`s] [":" (Term.arrow `ι "→" (Term.app `Set [`P]))] [] ")")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Term.app
+      `affineSpan
+      [`k
+       (Set.Data.Set.Lattice.«term⋃_,_»
+        "⋃"
+        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+        ", "
+        (Term.app `s [`i]))])
+     "="
+     (Order.CompleteLattice.«term⨆_,_»
+      "⨆"
+      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+      ", "
+      (Term.app `affineSpan [`k (Term.app `s [`i])])))))
+  (Command.declValSimple ":=" (Term.proj (Term.proj (Term.app `AffineSubspace.gi [`k `V `P]) "." `gc) "." `l_supr) [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.proj (Term.proj (Term.app `AffineSubspace.gi [`k `V `P]) "." `gc) "." `l_supr)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.proj (Term.app `AffineSubspace.gi [`k `V `P]) "." `gc)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `AffineSubspace.gi [`k `V `P])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `P
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `V
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `k
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `AffineSubspace.gi
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `AffineSubspace.gi [`k `V `P]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Term.app
+    `affineSpan
+    [`k
+     (Set.Data.Set.Lattice.«term⋃_,_»
+      "⋃"
+      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+      ", "
+      (Term.app `s [`i]))])
+   "="
+   (Order.CompleteLattice.«term⨆_,_»
+    "⨆"
+    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+    ", "
+    (Term.app `affineSpan [`k (Term.app `s [`i])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Order.CompleteLattice.«term⨆_,_»
+   "⨆"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+   ", "
+   (Term.app `affineSpan [`k (Term.app `s [`i])]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.CompleteLattice.«term⨆_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `affineSpan [`k (Term.app `s [`i])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `s [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `i
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `s
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `s [`i]) []] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `k
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `affineSpan
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    The span of a union of an indexed family of sets is the sup of
+    their spans. -/
+  theorem
+    span_Union
+    { ι : Type _ } ( s : ι → Set P ) : affineSpan k ⋃ i , s i = ⨆ i , affineSpan k s i
+    := AffineSubspace.gi k V P . gc . l_supr
 
 variable (P)
 
-/-- `⊤`, coerced to a set, is the whole set of points. -/
+/--  `⊤`, coerced to a set, is the whole set of points. -/
 @[simp]
 theorem top_coe : ((⊤ : AffineSubspace k P) : Set P) = Set.Univ :=
   rfl
 
 variable {P}
 
-/-- All points are in `⊤`. -/
+/--  All points are in `⊤`. -/
 theorem mem_top (p : P) : p ∈ (⊤ : AffineSubspace k P) :=
   Set.mem_univ p
 
 variable (P)
 
-/-- The direction of `⊤` is the whole module as a submodule. -/
+/--  The direction of `⊤` is the whole module as a submodule. -/
 @[simp]
-theorem direction_top : (⊤ : AffineSubspace k P).direction = ⊤ :=
-  by 
-    cases' S.nonempty with p 
-    ext v 
-    refine' ⟨imp_intro Submodule.mem_top, fun hv => _⟩
-    have hpv : (v +ᵥ p -ᵥ p : V) ∈ (⊤ : AffineSubspace k P).direction :=
-      vsub_mem_direction (mem_top k V _) (mem_top k V _)
-    rwa [vadd_vsub] at hpv
+theorem direction_top : (⊤ : AffineSubspace k P).direction = ⊤ := by
+  cases' S.nonempty with p
+  ext v
+  refine' ⟨imp_intro Submodule.mem_top, fun hv => _⟩
+  have hpv : (v +ᵥ p -ᵥ p : V) ∈ (⊤ : AffineSubspace k P).direction :=
+    vsub_mem_direction (mem_top k V _) (mem_top k V _)
+  rwa [vadd_vsub] at hpv
 
-/-- `⊥`, coerced to a set, is the empty set. -/
+/--  `⊥`, coerced to a set, is the empty set. -/
 @[simp]
 theorem bot_coe : ((⊥ : AffineSubspace k P) : Set P) = ∅ :=
   rfl
 
-theorem bot_ne_top : (⊥ : AffineSubspace k P) ≠ ⊤ :=
-  by 
-    intro contra 
-    rw [←ext_iff, bot_coe, top_coe] at contra 
-    exact Set.empty_ne_univ contra
+theorem bot_ne_top : (⊥ : AffineSubspace k P) ≠ ⊤ := by
+  intro contra
+  rw [← ext_iff, bot_coe, top_coe] at contra
+  exact Set.empty_ne_univ contra
 
 instance : Nontrivial (AffineSubspace k P) :=
   ⟨⟨⊥, ⊤, bot_ne_top k V P⟩⟩
 
-theorem nonempty_of_affine_span_eq_top {s : Set P} (h : affineSpan k s = ⊤) : s.nonempty :=
-  by 
-    rw [←Set.ne_empty_iff_nonempty]
-    rintro rfl 
-    rw [AffineSubspace.span_empty] at h 
-    exact bot_ne_top k V P h
+theorem nonempty_of_affine_span_eq_top {s : Set P} (h : affineSpan k s = ⊤) : s.nonempty := by
+  rw [← Set.ne_empty_iff_nonempty]
+  rintro rfl
+  rw [AffineSubspace.span_empty] at h
+  exact bot_ne_top k V P h
 
-/-- If the affine span of a set is `⊤`, then the vector span of the same set is the `⊤`. -/
-theorem vector_span_eq_top_of_affine_span_eq_top {s : Set P} (h : affineSpan k s = ⊤) : vectorSpan k s = ⊤ :=
-  by 
-    rw [←direction_affine_span, h, direction_top]
+/--  If the affine span of a set is `⊤`, then the vector span of the same set is the `⊤`. -/
+theorem vector_span_eq_top_of_affine_span_eq_top {s : Set P} (h : affineSpan k s = ⊤) : vectorSpan k s = ⊤ := by
+  rw [← direction_affine_span, h, direction_top]
 
-/-- For a nonempty set, the affine span is `⊤` iff its vector span is `⊤`. -/
+/--  For a nonempty set, the affine span is `⊤` iff its vector span is `⊤`. -/
 theorem affine_span_eq_top_iff_vector_span_eq_top_of_nonempty {s : Set P} (hs : s.nonempty) :
-  affineSpan k s = ⊤ ↔ vectorSpan k s = ⊤ :=
-  by 
-    refine' ⟨vector_span_eq_top_of_affine_span_eq_top k V P, _⟩
-    intro h 
-    suffices  : Nonempty (affineSpan k s)
-    ·
-      obtain ⟨p, hp : p ∈ affineSpan k s⟩ := this 
-      rw [eq_iff_direction_eq_of_mem hp (mem_top k V p), direction_affine_span, h, direction_top]
-    obtain ⟨x, hx⟩ := hs 
-    exact ⟨⟨x, mem_affine_span k hx⟩⟩
+    affineSpan k s = ⊤ ↔ vectorSpan k s = ⊤ := by
+  refine' ⟨vector_span_eq_top_of_affine_span_eq_top k V P, _⟩
+  intro h
+  suffices Nonempty (affineSpan k s)by
+    obtain ⟨p, hp : p ∈ affineSpan k s⟩ := this
+    rw [eq_iff_direction_eq_of_mem hp (mem_top k V p), direction_affine_span, h, direction_top]
+  obtain ⟨x, hx⟩ := hs
+  exact ⟨⟨x, mem_affine_span k hx⟩⟩
 
-/-- For a non-trivial space, the affine span of a set is `⊤` iff its vector span is `⊤`. -/
+/--  For a non-trivial space, the affine span of a set is `⊤` iff its vector span is `⊤`. -/
 theorem affine_span_eq_top_iff_vector_span_eq_top_of_nontrivial {s : Set P} [Nontrivial P] :
-  affineSpan k s = ⊤ ↔ vectorSpan k s = ⊤ :=
-  by 
-    cases' s.eq_empty_or_nonempty with hs hs
-    ·
-      simp [hs, subsingleton_iff_bot_eq_top, AddTorsor.subsingleton_iff V P, not_subsingleton]
-    ·
-      rw [affine_span_eq_top_iff_vector_span_eq_top_of_nonempty k V P hs]
+    affineSpan k s = ⊤ ↔ vectorSpan k s = ⊤ := by
+  cases' s.eq_empty_or_nonempty with hs hs
+  ·
+    simp [hs, subsingleton_iff_bot_eq_top, AddTorsor.subsingleton_iff V P, not_subsingleton]
+  ·
+    rw [affine_span_eq_top_iff_vector_span_eq_top_of_nonempty k V P hs]
 
 theorem card_pos_of_affine_span_eq_top {ι : Type _} [Fintype ι] {p : ι → P} (h : affineSpan k (range p) = ⊤) :
-  0 < Fintype.card ι :=
-  by 
-    obtain ⟨-, ⟨i, -⟩⟩ := nonempty_of_affine_span_eq_top k V P h 
-    exact fintype.card_pos_iff.mpr ⟨i⟩
+    0 < Fintype.card ι := by
+  obtain ⟨-, ⟨i, -⟩⟩ := nonempty_of_affine_span_eq_top k V P h
+  exact fintype.card_pos_iff.mpr ⟨i⟩
 
 variable {P}
 
-/-- No points are in `⊥`. -/
+/--  No points are in `⊥`. -/
 theorem not_mem_bot (p : P) : p ∉ (⊥ : AffineSubspace k P) :=
   Set.not_mem_empty p
 
 variable (P)
 
-/-- The direction of `⊥` is the submodule `⊥`. -/
+/--  The direction of `⊥` is the submodule `⊥`. -/
 @[simp]
-theorem direction_bot : (⊥ : AffineSubspace k P).direction = ⊥ :=
-  by 
-    rw [direction_eq_vector_span, bot_coe, vector_span_def, vsub_empty, Submodule.span_empty]
+theorem direction_bot : (⊥ : AffineSubspace k P).direction = ⊥ := by
+  rw [direction_eq_vector_span, bot_coe, vector_span_def, vsub_empty, Submodule.span_empty]
 
 variable {k V P}
 
 theorem subsingleton_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.subsingleton) (h₂ : affineSpan k s = ⊤) :
-  Subsingleton P :=
-  by 
-    obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affine_span_eq_top k V P h₂ 
-    have  : s = {p}
-    ·
-      exact
-        subset.antisymm (fun q hq => h₁ hq hp)
-          (by 
-            simp [hp])
-    rw [this, ←AffineSubspace.ext_iff, AffineSubspace.coe_affine_span_singleton, AffineSubspace.top_coe, eq_comm,
-      ←subsingleton_iff_singleton (mem_univ _)] at h₂ 
-    exact subsingleton_of_univ_subsingleton h₂
+    Subsingleton P := by
+  obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affine_span_eq_top k V P h₂
+  have : s = {p} := by
+    exact
+      subset.antisymm (fun q hq => h₁ hq hp)
+        (by
+          simp [hp])
+  rw [this, ← AffineSubspace.ext_iff, AffineSubspace.coe_affine_span_singleton, AffineSubspace.top_coe, eq_comm, ←
+    subsingleton_iff_singleton (mem_univ _)] at h₂
+  exact subsingleton_of_univ_subsingleton h₂
 
 theorem eq_univ_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.subsingleton) (h₂ : affineSpan k s = ⊤) :
-  s = (univ : Set P) :=
-  by 
-    obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affine_span_eq_top k V P h₂ 
-    have  : s = {p}
-    ·
-      exact
-        subset.antisymm (fun q hq => h₁ hq hp)
-          (by 
-            simp [hp])
-    rw [this, eq_comm, ←subsingleton_iff_singleton (mem_univ p), subsingleton_univ_iff]
-    exact subsingleton_of_subsingleton_span_eq_top h₁ h₂
+    s = (univ : Set P) := by
+  obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affine_span_eq_top k V P h₂
+  have : s = {p} := by
+    exact
+      subset.antisymm (fun q hq => h₁ hq hp)
+        (by
+          simp [hp])
+  rw [this, eq_comm, ← subsingleton_iff_singleton (mem_univ p), subsingleton_univ_iff]
+  exact subsingleton_of_subsingleton_span_eq_top h₁ h₂
 
-/-- A nonempty affine subspace is `⊤` if and only if its direction is
+/--  A nonempty affine subspace is `⊤` if and only if its direction is
 `⊤`. -/
 @[simp]
 theorem direction_eq_top_iff_of_nonempty {s : AffineSubspace k P} (h : (s : Set P).Nonempty) :
-  s.direction = ⊤ ↔ s = ⊤ :=
-  by 
-    constructor
-    ·
-      intro hd 
-      rw [←direction_top k V P] at hd 
-      refine' ext_of_direction_eq hd _ 
-      simp [h]
-    ·
-      rintro rfl 
-      simp 
+    s.direction = ⊤ ↔ s = ⊤ := by
+  constructor
+  ·
+    intro hd
+    rw [← direction_top k V P] at hd
+    refine' ext_of_direction_eq hd _
+    simp [h]
+  ·
+    rintro rfl
+    simp
 
-/-- The inf of two affine subspaces, coerced to a set, is the
+/--  The inf of two affine subspaces, coerced to a set, is the
 intersection of the two sets of points. -/
 @[simp]
 theorem inf_coe (s1 s2 : AffineSubspace k P) : (s1⊓s2 : Set P) = s1 ∩ s2 :=
   rfl
 
-/-- A point is in the inf of two affine subspaces if and only if it is
+/--  A point is in the inf of two affine subspaces if and only if it is
 in both of them. -/
 theorem mem_inf_iff (p : P) (s1 s2 : AffineSubspace k P) : p ∈ s1⊓s2 ↔ p ∈ s1 ∧ p ∈ s2 :=
   Iff.rfl
 
-/-- The direction of the inf of two affine subspaces is less than or
+/--  The direction of the inf of two affine subspaces is less than or
 equal to the inf of their directions. -/
-theorem direction_inf (s1 s2 : AffineSubspace k P) : (s1⊓s2).direction ≤ s1.direction⊓s2.direction :=
-  by 
-    repeat' 
-      rw [direction_eq_vector_span, vector_span_def]
-    exact
-      le_inf (Inf_le_Inf fun p hp => trans (vsub_self_mono (inter_subset_left _ _)) hp)
-        (Inf_le_Inf fun p hp => trans (vsub_self_mono (inter_subset_right _ _)) hp)
+theorem direction_inf (s1 s2 : AffineSubspace k P) : (s1⊓s2).direction ≤ s1.direction⊓s2.direction := by
+  repeat'
+    rw [direction_eq_vector_span, vector_span_def]
+  exact
+    le_inf (Inf_le_Inf fun p hp => trans (vsub_self_mono (inter_subset_left _ _)) hp)
+      (Inf_le_Inf fun p hp => trans (vsub_self_mono (inter_subset_right _ _)) hp)
 
-/-- If two affine subspaces have a point in common, the direction of
+/--  If two affine subspaces have a point in common, the direction of
 their inf equals the inf of their directions. -/
 theorem direction_inf_of_mem {s₁ s₂ : AffineSubspace k P} {p : P} (h₁ : p ∈ s₁) (h₂ : p ∈ s₂) :
-  (s₁⊓s₂).direction = s₁.direction⊓s₂.direction :=
-  by 
-    ext v 
-    rw [Submodule.mem_inf, ←vadd_mem_iff_mem_direction v h₁, ←vadd_mem_iff_mem_direction v h₂,
-      ←vadd_mem_iff_mem_direction v ((mem_inf_iff p s₁ s₂).2 ⟨h₁, h₂⟩), mem_inf_iff]
+    (s₁⊓s₂).direction = s₁.direction⊓s₂.direction := by
+  ext v
+  rw [Submodule.mem_inf, ← vadd_mem_iff_mem_direction v h₁, ← vadd_mem_iff_mem_direction v h₂, ←
+    vadd_mem_iff_mem_direction v ((mem_inf_iff p s₁ s₂).2 ⟨h₁, h₂⟩), mem_inf_iff]
 
-/-- If two affine subspaces have a point in their inf, the direction
+/--  If two affine subspaces have a point in their inf, the direction
 of their inf equals the inf of their directions. -/
 theorem direction_inf_of_mem_inf {s₁ s₂ : AffineSubspace k P} {p : P} (h : p ∈ s₁⊓s₂) :
-  (s₁⊓s₂).direction = s₁.direction⊓s₂.direction :=
+    (s₁⊓s₂).direction = s₁.direction⊓s₂.direction :=
   direction_inf_of_mem ((mem_inf_iff p s₁ s₂).1 h).1 ((mem_inf_iff p s₁ s₂).1 h).2
 
-/-- If one affine subspace is less than or equal to another, the same
+/--  If one affine subspace is less than or equal to another, the same
 applies to their directions. -/
-theorem direction_le {s1 s2 : AffineSubspace k P} (h : s1 ≤ s2) : s1.direction ≤ s2.direction :=
-  by 
-    repeat' 
-      rw [direction_eq_vector_span, vector_span_def]
-    exact vector_span_mono k h
+theorem direction_le {s1 s2 : AffineSubspace k P} (h : s1 ≤ s2) : s1.direction ≤ s2.direction := by
+  repeat'
+    rw [direction_eq_vector_span, vector_span_def]
+  exact vector_span_mono k h
 
-/-- If one nonempty affine subspace is less than another, the same
+/--  If one nonempty affine subspace is less than another, the same
 applies to their directions -/
 theorem direction_lt_of_nonempty {s1 s2 : AffineSubspace k P} (h : s1 < s2) (hn : (s1 : Set P).Nonempty) :
-  s1.direction < s2.direction :=
-  by 
-    cases' hn with p hp 
-    rw [lt_iff_le_and_exists] at h 
-    rcases h with ⟨hle, p2, hp2, hp2s1⟩
-    rw [SetLike.lt_iff_le_and_exists]
-    use direction_le hle, p2 -ᵥ p, vsub_mem_direction hp2 (hle hp)
-    intro hm 
-    rw [vsub_right_mem_direction_iff_mem hp p2] at hm 
-    exact hp2s1 hm
+    s1.direction < s2.direction := by
+  cases' hn with p hp
+  rw [lt_iff_le_and_exists] at h
+  rcases h with ⟨hle, p2, hp2, hp2s1⟩
+  rw [SetLike.lt_iff_le_and_exists]
+  use direction_le hle, p2 -ᵥ p, vsub_mem_direction hp2 (hle hp)
+  intro hm
+  rw [vsub_right_mem_direction_iff_mem hp p2] at hm
+  exact hp2s1 hm
 
-/-- The sup of the directions of two affine subspaces is less than or
+/--  The sup of the directions of two affine subspaces is less than or
 equal to the direction of their sup. -/
-theorem sup_direction_le (s1 s2 : AffineSubspace k P) : s1.direction⊔s2.direction ≤ (s1⊔s2).direction :=
-  by 
-    repeat' 
-      rw [direction_eq_vector_span, vector_span_def]
-    exact
-      sup_le (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_left : s1 ≤ s1⊔s2)) hp)
-        (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_right : s2 ≤ s1⊔s2)) hp)
+theorem sup_direction_le (s1 s2 : AffineSubspace k P) : s1.direction⊔s2.direction ≤ (s1⊔s2).direction := by
+  repeat'
+    rw [direction_eq_vector_span, vector_span_def]
+  exact
+    sup_le (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_left : s1 ≤ s1⊔s2)) hp)
+      (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_right : s2 ≤ s1⊔s2)) hp)
 
-/-- The sup of the directions of two nonempty affine subspaces with
+/--  The sup of the directions of two nonempty affine subspaces with
 empty intersection is less than the direction of their sup. -/
 theorem sup_direction_lt_of_nonempty_of_inter_empty {s1 s2 : AffineSubspace k P} (h1 : (s1 : Set P).Nonempty)
-  (h2 : (s2 : Set P).Nonempty) (he : (s1 ∩ s2 : Set P) = ∅) : s1.direction⊔s2.direction < (s1⊔s2).direction :=
-  by 
-    cases' h1 with p1 hp1 
-    cases' h2 with p2 hp2 
-    rw [SetLike.lt_iff_le_and_exists]
-    use sup_direction_le s1 s2, p2 -ᵥ p1,
-      vsub_mem_direction ((le_sup_right : s2 ≤ s1⊔s2) hp2) ((le_sup_left : s1 ≤ s1⊔s2) hp1)
-    intro h 
-    rw [Submodule.mem_sup] at h 
-    rcases h with ⟨v1, hv1, v2, hv2, hv1v2⟩
-    rw [←sub_eq_zero, sub_eq_add_neg, neg_vsub_eq_vsub_rev, add_commₓ v1, add_assocₓ, ←vadd_vsub_assoc, ←neg_negₓ v2,
-      add_commₓ, ←sub_eq_add_neg, ←vsub_vadd_eq_vsub_sub, vsub_eq_zero_iff_eq] at hv1v2 
-    refine' Set.Nonempty.ne_empty _ he 
-    use v1 +ᵥ p1, vadd_mem_of_mem_direction hv1 hp1 
-    rw [hv1v2]
-    exact vadd_mem_of_mem_direction (Submodule.neg_mem _ hv2) hp2
+    (h2 : (s2 : Set P).Nonempty) (he : (s1 ∩ s2 : Set P) = ∅) : s1.direction⊔s2.direction < (s1⊔s2).direction := by
+  cases' h1 with p1 hp1
+  cases' h2 with p2 hp2
+  rw [SetLike.lt_iff_le_and_exists]
+  use sup_direction_le s1 s2, p2 -ᵥ p1,
+    vsub_mem_direction ((le_sup_right : s2 ≤ s1⊔s2) hp2) ((le_sup_left : s1 ≤ s1⊔s2) hp1)
+  intro h
+  rw [Submodule.mem_sup] at h
+  rcases h with ⟨v1, hv1, v2, hv2, hv1v2⟩
+  rw [← sub_eq_zero, sub_eq_add_neg, neg_vsub_eq_vsub_rev, add_commₓ v1, add_assocₓ, ← vadd_vsub_assoc, ← neg_negₓ v2,
+    add_commₓ, ← sub_eq_add_neg, ← vsub_vadd_eq_vsub_sub, vsub_eq_zero_iff_eq] at hv1v2
+  refine' Set.Nonempty.ne_empty _ he
+  use v1 +ᵥ p1, vadd_mem_of_mem_direction hv1 hp1
+  rw [hv1v2]
+  exact vadd_mem_of_mem_direction (Submodule.neg_mem _ hv2) hp2
 
-/-- If the directions of two nonempty affine subspaces span the whole
+/--  If the directions of two nonempty affine subspaces span the whole
 module, they have nonempty intersection. -/
 theorem inter_nonempty_of_nonempty_of_sup_direction_eq_top {s1 s2 : AffineSubspace k P} (h1 : (s1 : Set P).Nonempty)
-  (h2 : (s2 : Set P).Nonempty) (hd : s1.direction⊔s2.direction = ⊤) : ((s1 : Set P) ∩ s2).Nonempty :=
-  by 
-    byContra h 
-    rw [Set.not_nonempty_iff_eq_empty] at h 
-    have hlt := sup_direction_lt_of_nonempty_of_inter_empty h1 h2 h 
-    rw [hd] at hlt 
-    exact not_top_lt hlt
+    (h2 : (s2 : Set P).Nonempty) (hd : s1.direction⊔s2.direction = ⊤) : ((s1 : Set P) ∩ s2).Nonempty := by
+  by_contra h
+  rw [Set.not_nonempty_iff_eq_empty] at h
+  have hlt := sup_direction_lt_of_nonempty_of_inter_empty h1 h2 h
+  rw [hd] at hlt
+  exact not_top_lt hlt
 
-/-- If the directions of two nonempty affine subspaces are complements
+/--  If the directions of two nonempty affine subspaces are complements
 of each other, they intersect in exactly one point. -/
 theorem inter_eq_singleton_of_nonempty_of_is_compl {s1 s2 : AffineSubspace k P} (h1 : (s1 : Set P).Nonempty)
-  (h2 : (s2 : Set P).Nonempty) (hd : IsCompl s1.direction s2.direction) : ∃ p, (s1 : Set P) ∩ s2 = {p} :=
-  by 
-    cases' inter_nonempty_of_nonempty_of_sup_direction_eq_top h1 h2 hd.sup_eq_top with p hp 
-    use p 
-    ext q 
-    rw [Set.mem_singleton_iff]
-    constructor
-    ·
-      rintro ⟨hq1, hq2⟩
-      have hqp : q -ᵥ p ∈ s1.direction⊓s2.direction := ⟨vsub_mem_direction hq1 hp.1, vsub_mem_direction hq2 hp.2⟩
-      rwa [hd.inf_eq_bot, Submodule.mem_bot, vsub_eq_zero_iff_eq] at hqp
-    ·
-      exact fun h => h.symm ▸ hp
+    (h2 : (s2 : Set P).Nonempty) (hd : IsCompl s1.direction s2.direction) : ∃ p, (s1 : Set P) ∩ s2 = {p} := by
+  cases' inter_nonempty_of_nonempty_of_sup_direction_eq_top h1 h2 hd.sup_eq_top with p hp
+  use p
+  ext q
+  rw [Set.mem_singleton_iff]
+  constructor
+  ·
+    rintro ⟨hq1, hq2⟩
+    have hqp : q -ᵥ p ∈ s1.direction⊓s2.direction := ⟨vsub_mem_direction hq1 hp.1, vsub_mem_direction hq2 hp.2⟩
+    rwa [hd.inf_eq_bot, Submodule.mem_bot, vsub_eq_zero_iff_eq] at hqp
+  ·
+    exact fun h => h.symm ▸ hp
 
-/-- Coercing a subspace to a set then taking the affine span produces
+/--  Coercing a subspace to a set then taking the affine span produces
 the original subspace. -/
 @[simp]
-theorem affine_span_coe (s : AffineSubspace k P) : affineSpan k (s : Set P) = s :=
-  by 
-    refine' le_antisymmₓ _ (subset_span_points _ _)
-    rintro p ⟨p1, hp1, v, hv, rfl⟩
-    exact vadd_mem_of_mem_direction hv hp1
+theorem affine_span_coe (s : AffineSubspace k P) : affineSpan k (s : Set P) = s := by
+  refine' le_antisymmₓ _ (subset_span_points _ _)
+  rintro p ⟨p1, hp1, v, hv, rfl⟩
+  exact vadd_mem_of_mem_direction hv hp1
 
 end AffineSubspace
 
@@ -972,184 +3579,170 @@ include V
 
 open AffineSubspace Set
 
-/-- The `vector_span` is the span of the pairwise subtractions with a
+/--  The `vector_span` is the span of the pairwise subtractions with a
 given point on the left. -/
 theorem vector_span_eq_span_vsub_set_left {s : Set P} {p : P} (hp : p ∈ s) :
-  vectorSpan k s = Submodule.span k ((· -ᵥ ·) p '' s) :=
-  by 
-    rw [vector_span_def]
-    refine' le_antisymmₓ _ (Submodule.span_mono _)
-    ·
-      rw [Submodule.span_le]
-      rintro v ⟨p1, p2, hp1, hp2, hv⟩
-      rw [←vsub_sub_vsub_cancel_left p1 p2 p] at hv 
-      rw [←hv, SetLike.mem_coe, Submodule.mem_span]
-      exact fun m hm => Submodule.sub_mem _ (hm ⟨p2, hp2, rfl⟩) (hm ⟨p1, hp1, rfl⟩)
-    ·
-      rintro v ⟨p2, hp2, hv⟩
-      exact ⟨p, p2, hp, hp2, hv⟩
+    vectorSpan k s = Submodule.span k ((· -ᵥ ·) p '' s) := by
+  rw [vector_span_def]
+  refine' le_antisymmₓ _ (Submodule.span_mono _)
+  ·
+    rw [Submodule.span_le]
+    rintro v ⟨p1, p2, hp1, hp2, hv⟩
+    rw [← vsub_sub_vsub_cancel_left p1 p2 p] at hv
+    rw [← hv, SetLike.mem_coe, Submodule.mem_span]
+    exact fun m hm => Submodule.sub_mem _ (hm ⟨p2, hp2, rfl⟩) (hm ⟨p1, hp1, rfl⟩)
+  ·
+    rintro v ⟨p2, hp2, hv⟩
+    exact ⟨p, p2, hp, hp2, hv⟩
 
-/-- The `vector_span` is the span of the pairwise subtractions with a
+/--  The `vector_span` is the span of the pairwise subtractions with a
 given point on the right. -/
 theorem vector_span_eq_span_vsub_set_right {s : Set P} {p : P} (hp : p ∈ s) :
-  vectorSpan k s = Submodule.span k ((· -ᵥ p) '' s) :=
-  by 
-    rw [vector_span_def]
-    refine' le_antisymmₓ _ (Submodule.span_mono _)
-    ·
-      rw [Submodule.span_le]
-      rintro v ⟨p1, p2, hp1, hp2, hv⟩
-      rw [←vsub_sub_vsub_cancel_right p1 p2 p] at hv 
-      rw [←hv, SetLike.mem_coe, Submodule.mem_span]
-      exact fun m hm => Submodule.sub_mem _ (hm ⟨p1, hp1, rfl⟩) (hm ⟨p2, hp2, rfl⟩)
-    ·
-      rintro v ⟨p2, hp2, hv⟩
-      exact ⟨p2, p, hp2, hp, hv⟩
+    vectorSpan k s = Submodule.span k ((· -ᵥ p) '' s) := by
+  rw [vector_span_def]
+  refine' le_antisymmₓ _ (Submodule.span_mono _)
+  ·
+    rw [Submodule.span_le]
+    rintro v ⟨p1, p2, hp1, hp2, hv⟩
+    rw [← vsub_sub_vsub_cancel_right p1 p2 p] at hv
+    rw [← hv, SetLike.mem_coe, Submodule.mem_span]
+    exact fun m hm => Submodule.sub_mem _ (hm ⟨p1, hp1, rfl⟩) (hm ⟨p2, hp2, rfl⟩)
+  ·
+    rintro v ⟨p2, hp2, hv⟩
+    exact ⟨p2, p, hp2, hp, hv⟩
 
-/-- The `vector_span` is the span of the pairwise subtractions with a
+/--  The `vector_span` is the span of the pairwise subtractions with a
 given point on the left, excluding the subtraction of that point from
 itself. -/
 theorem vector_span_eq_span_vsub_set_left_ne {s : Set P} {p : P} (hp : p ∈ s) :
-  vectorSpan k s = Submodule.span k ((· -ᵥ ·) p '' (s \ {p})) :=
-  by 
-    convLHS =>
-      rw [vector_span_eq_span_vsub_set_left k hp, ←Set.insert_eq_of_mem hp, ←Set.insert_diff_singleton,
-        Set.image_insert_eq]
-    simp [Submodule.span_insert_eq_span]
+    vectorSpan k s = Submodule.span k ((· -ᵥ ·) p '' (s \ {p})) := by
+  conv_lhs =>
+    rw [vector_span_eq_span_vsub_set_left k hp, ← Set.insert_eq_of_mem hp, ← Set.insert_diff_singleton,
+      Set.image_insert_eq]
+  simp [Submodule.span_insert_eq_span]
 
-/-- The `vector_span` is the span of the pairwise subtractions with a
+/--  The `vector_span` is the span of the pairwise subtractions with a
 given point on the right, excluding the subtraction of that point from
 itself. -/
 theorem vector_span_eq_span_vsub_set_right_ne {s : Set P} {p : P} (hp : p ∈ s) :
-  vectorSpan k s = Submodule.span k ((· -ᵥ p) '' (s \ {p})) :=
-  by 
-    convLHS =>
-      rw [vector_span_eq_span_vsub_set_right k hp, ←Set.insert_eq_of_mem hp, ←Set.insert_diff_singleton,
-        Set.image_insert_eq]
-    simp [Submodule.span_insert_eq_span]
+    vectorSpan k s = Submodule.span k ((· -ᵥ p) '' (s \ {p})) := by
+  conv_lhs =>
+    rw [vector_span_eq_span_vsub_set_right k hp, ← Set.insert_eq_of_mem hp, ← Set.insert_diff_singleton,
+      Set.image_insert_eq]
+  simp [Submodule.span_insert_eq_span]
 
-/-- The `vector_span` is the span of the pairwise subtractions with a
+/--  The `vector_span` is the span of the pairwise subtractions with a
 given point on the right, excluding the subtraction of that point from
 itself. -/
 theorem vector_span_eq_span_vsub_finset_right_ne {s : Finset P} {p : P} (hp : p ∈ s) :
-  vectorSpan k (s : Set P) = Submodule.span k ((s.erase p).Image (· -ᵥ p)) :=
-  by 
-    simp [vector_span_eq_span_vsub_set_right_ne _ (finset.mem_coe.mpr hp)]
+    vectorSpan k (s : Set P) = Submodule.span k ((s.erase p).Image (· -ᵥ p)) := by
+  simp [vector_span_eq_span_vsub_set_right_ne _ (finset.mem_coe.mpr hp)]
 
-/-- The `vector_span` of the image of a function is the span of the
+/--  The `vector_span` of the image of a function is the span of the
 pairwise subtractions with a given point on the left, excluding the
 subtraction of that point from itself. -/
 theorem vector_span_image_eq_span_vsub_set_left_ne (p : ι → P) {s : Set ι} {i : ι} (hi : i ∈ s) :
-  vectorSpan k (p '' s) = Submodule.span k ((· -ᵥ ·) (p i) '' (p '' (s \ {i}))) :=
-  by 
-    convLHS =>
-      rw [vector_span_eq_span_vsub_set_left k (Set.mem_image_of_mem p hi), ←Set.insert_eq_of_mem hi,
-        ←Set.insert_diff_singleton, Set.image_insert_eq, Set.image_insert_eq]
-    simp [Submodule.span_insert_eq_span]
+    vectorSpan k (p '' s) = Submodule.span k ((· -ᵥ ·) (p i) '' (p '' (s \ {i}))) := by
+  conv_lhs =>
+    rw [vector_span_eq_span_vsub_set_left k (Set.mem_image_of_mem p hi), ← Set.insert_eq_of_mem hi, ←
+      Set.insert_diff_singleton, Set.image_insert_eq, Set.image_insert_eq]
+  simp [Submodule.span_insert_eq_span]
 
-/-- The `vector_span` of the image of a function is the span of the
+/--  The `vector_span` of the image of a function is the span of the
 pairwise subtractions with a given point on the right, excluding the
 subtraction of that point from itself. -/
 theorem vector_span_image_eq_span_vsub_set_right_ne (p : ι → P) {s : Set ι} {i : ι} (hi : i ∈ s) :
-  vectorSpan k (p '' s) = Submodule.span k ((· -ᵥ p i) '' (p '' (s \ {i}))) :=
-  by 
-    convLHS =>
-      rw [vector_span_eq_span_vsub_set_right k (Set.mem_image_of_mem p hi), ←Set.insert_eq_of_mem hi,
-        ←Set.insert_diff_singleton, Set.image_insert_eq, Set.image_insert_eq]
-    simp [Submodule.span_insert_eq_span]
+    vectorSpan k (p '' s) = Submodule.span k ((· -ᵥ p i) '' (p '' (s \ {i}))) := by
+  conv_lhs =>
+    rw [vector_span_eq_span_vsub_set_right k (Set.mem_image_of_mem p hi), ← Set.insert_eq_of_mem hi, ←
+      Set.insert_diff_singleton, Set.image_insert_eq, Set.image_insert_eq]
+  simp [Submodule.span_insert_eq_span]
 
-/-- The `vector_span` of an indexed family is the span of the pairwise
+/--  The `vector_span` of an indexed family is the span of the pairwise
 subtractions with a given point on the left. -/
 theorem vector_span_range_eq_span_range_vsub_left (p : ι → P) (i0 : ι) :
-  vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : ι => p i0 -ᵥ p i) :=
-  by 
-    rw [vector_span_eq_span_vsub_set_left k (Set.mem_range_self i0), ←Set.range_comp]
+    vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : ι => p i0 -ᵥ p i) := by
+  rw [vector_span_eq_span_vsub_set_left k (Set.mem_range_self i0), ← Set.range_comp]
 
-/-- The `vector_span` of an indexed family is the span of the pairwise
+/--  The `vector_span` of an indexed family is the span of the pairwise
 subtractions with a given point on the right. -/
 theorem vector_span_range_eq_span_range_vsub_right (p : ι → P) (i0 : ι) :
-  vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : ι => p i -ᵥ p i0) :=
-  by 
-    rw [vector_span_eq_span_vsub_set_right k (Set.mem_range_self i0), ←Set.range_comp]
+    vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : ι => p i -ᵥ p i0) := by
+  rw [vector_span_eq_span_vsub_set_right k (Set.mem_range_self i0), ← Set.range_comp]
 
-/-- The `vector_span` of an indexed family is the span of the pairwise
+/--  The `vector_span` of an indexed family is the span of the pairwise
 subtractions with a given point on the left, excluding the subtraction
 of that point from itself. -/
 theorem vector_span_range_eq_span_range_vsub_left_ne (p : ι → P) (i₀ : ι) :
-  vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : { x // x ≠ i₀ } => p i₀ -ᵥ p i) :=
-  by 
-    rw [←Set.image_univ, vector_span_image_eq_span_vsub_set_left_ne k _ (Set.mem_univ i₀)]
-    congr with v 
-    simp only [Set.mem_range, Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Subtype.exists, Subtype.coe_mk]
-    constructor
-    ·
-      rintro ⟨x, ⟨i₁, ⟨⟨hi₁u, hi₁⟩, rfl⟩⟩, hv⟩
-      exact ⟨i₁, hi₁, hv⟩
-    ·
-      exact fun ⟨i₁, hi₁, hv⟩ => ⟨p i₁, ⟨i₁, ⟨Set.mem_univ _, hi₁⟩, rfl⟩, hv⟩
+    vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : { x // x ≠ i₀ } => p i₀ -ᵥ p i) := by
+  rw [← Set.image_univ, vector_span_image_eq_span_vsub_set_left_ne k _ (Set.mem_univ i₀)]
+  congr with v
+  simp only [Set.mem_range, Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Subtype.exists, Subtype.coe_mk]
+  constructor
+  ·
+    rintro ⟨x, ⟨i₁, ⟨⟨hi₁u, hi₁⟩, rfl⟩⟩, hv⟩
+    exact ⟨i₁, hi₁, hv⟩
+  ·
+    exact fun ⟨i₁, hi₁, hv⟩ => ⟨p i₁, ⟨i₁, ⟨Set.mem_univ _, hi₁⟩, rfl⟩, hv⟩
 
-/-- The `vector_span` of an indexed family is the span of the pairwise
+/--  The `vector_span` of an indexed family is the span of the pairwise
 subtractions with a given point on the right, excluding the subtraction
 of that point from itself. -/
 theorem vector_span_range_eq_span_range_vsub_right_ne (p : ι → P) (i₀ : ι) :
-  vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : { x // x ≠ i₀ } => p i -ᵥ p i₀) :=
-  by 
-    rw [←Set.image_univ, vector_span_image_eq_span_vsub_set_right_ne k _ (Set.mem_univ i₀)]
-    congr with v 
-    simp only [Set.mem_range, Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Subtype.exists, Subtype.coe_mk]
-    constructor
-    ·
-      rintro ⟨x, ⟨i₁, ⟨⟨hi₁u, hi₁⟩, rfl⟩⟩, hv⟩
-      exact ⟨i₁, hi₁, hv⟩
-    ·
-      exact fun ⟨i₁, hi₁, hv⟩ => ⟨p i₁, ⟨i₁, ⟨Set.mem_univ _, hi₁⟩, rfl⟩, hv⟩
+    vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : { x // x ≠ i₀ } => p i -ᵥ p i₀) := by
+  rw [← Set.image_univ, vector_span_image_eq_span_vsub_set_right_ne k _ (Set.mem_univ i₀)]
+  congr with v
+  simp only [Set.mem_range, Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Subtype.exists, Subtype.coe_mk]
+  constructor
+  ·
+    rintro ⟨x, ⟨i₁, ⟨⟨hi₁u, hi₁⟩, rfl⟩⟩, hv⟩
+    exact ⟨i₁, hi₁, hv⟩
+  ·
+    exact fun ⟨i₁, hi₁, hv⟩ => ⟨p i₁, ⟨i₁, ⟨Set.mem_univ _, hi₁⟩, rfl⟩, hv⟩
 
-/-- The affine span of a set is nonempty if and only if that set
+/--  The affine span of a set is nonempty if and only if that set
 is. -/
 theorem affine_span_nonempty (s : Set P) : (affineSpan k s : Set P).Nonempty ↔ s.nonempty :=
   span_points_nonempty k s
 
-/-- The affine span of a nonempty set is nonempty. -/
+/--  The affine span of a nonempty set is nonempty. -/
 instance {s : Set P} [Nonempty s] : Nonempty (affineSpan k s) :=
   ((affine_span_nonempty k s).mpr (nonempty_subtype.mp ‹_›)).to_subtype
 
 variable {k}
 
-/-- Suppose a set of vectors spans `V`.  Then a point `p`, together
+/--  Suppose a set of vectors spans `V`.  Then a point `p`, together
 with those vectors added to `p`, spans `P`. -/
 theorem affine_span_singleton_union_vadd_eq_top_of_span_eq_top {s : Set V} (p : P)
-  (h : Submodule.span k (Set.Range (coeₓ : s → V)) = ⊤) : affineSpan k ({p} ∪ (fun v => v +ᵥ p) '' s) = ⊤ :=
-  by 
-    convert ext_of_direction_eq _ ⟨p, mem_affine_span k (Set.mem_union_left _ (Set.mem_singleton _)), mem_top k V p⟩
-    rw [direction_affine_span, direction_top,
-      vector_span_eq_span_vsub_set_right k (Set.mem_union_left _ (Set.mem_singleton _) : p ∈ _), eq_top_iff, ←h]
-    apply Submodule.span_mono 
-    rintro v ⟨v', rfl⟩
-    use (v' : V) +ᵥ p 
-    simp 
+    (h : Submodule.span k (Set.Range (coeₓ : s → V)) = ⊤) : affineSpan k ({p} ∪ (fun v => v +ᵥ p) '' s) = ⊤ := by
+  convert ext_of_direction_eq _ ⟨p, mem_affine_span k (Set.mem_union_left _ (Set.mem_singleton _)), mem_top k V p⟩
+  rw [direction_affine_span, direction_top,
+    vector_span_eq_span_vsub_set_right k (Set.mem_union_left _ (Set.mem_singleton _) : p ∈ _), eq_top_iff, ← h]
+  apply Submodule.span_mono
+  rintro v ⟨v', rfl⟩
+  use (v' : V) +ᵥ p
+  simp
 
 variable (k)
 
-/-- `affine_span` is monotone. -/
+/--  `affine_span` is monotone. -/
 @[mono]
 theorem affine_span_mono {s₁ s₂ : Set P} (h : s₁ ⊆ s₂) : affineSpan k s₁ ≤ affineSpan k s₂ :=
   span_points_subset_coe_of_subset_coe (Set.Subset.trans h (subset_affine_span k _))
 
-/-- Taking the affine span of a set, adding a point and taking the
+/--  Taking the affine span of a set, adding a point and taking the
 span again produces the same results as adding the point to the set
 and taking the span. -/
 theorem affine_span_insert_affine_span (p : P) (ps : Set P) :
-  affineSpan k (insert p (affineSpan k ps : Set P)) = affineSpan k (insert p ps) :=
-  by 
-    rw [Set.insert_eq, Set.insert_eq, span_union, span_union, affine_span_coe]
+    affineSpan k (insert p (affineSpan k ps : Set P)) = affineSpan k (insert p ps) := by
+  rw [Set.insert_eq, Set.insert_eq, span_union, span_union, affine_span_coe]
 
-/-- If a point is in the affine span of a set, adding it to that set
+/--  If a point is in the affine span of a set, adding it to that set
 does not change the affine span. -/
 theorem affine_span_insert_eq_affine_span {p : P} {ps : Set P} (h : p ∈ affineSpan k ps) :
-  affineSpan k (insert p ps) = affineSpan k ps :=
-  by 
-    rw [←mem_coe] at h 
-    rw [←affine_span_insert_affine_span, Set.insert_eq_of_mem h, affine_span_coe]
+    affineSpan k (insert p ps) = affineSpan k ps := by
+  rw [← mem_coe] at h
+  rw [← affine_span_insert_affine_span, Set.insert_eq_of_mem h, affine_span_coe]
 
 end AffineSpace'
 
@@ -1159,164 +3752,507 @@ variable {k : Type _} {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] 
 
 include V
 
-/-- The direction of the sup of two nonempty affine subspaces is the
+/--  The direction of the sup of two nonempty affine subspaces is the
 sup of the two directions and of any one difference between points in
 the two subspaces. -/
 theorem direction_sup {s1 s2 : AffineSubspace k P} {p1 p2 : P} (hp1 : p1 ∈ s1) (hp2 : p2 ∈ s2) :
-  (s1⊔s2).direction = s1.direction⊔s2.direction⊔k∙p2 -ᵥ p1 :=
-  by 
-    refine' le_antisymmₓ _ _
+    (s1⊔s2).direction = s1.direction⊔s2.direction⊔k∙p2 -ᵥ p1 := by
+  refine' le_antisymmₓ _ _
+  ·
+    change (affineSpan k ((s1 : Set P) ∪ s2)).direction ≤ _
+    rw [← mem_coe] at hp1
+    rw [direction_affine_span, vector_span_eq_span_vsub_set_right k (Set.mem_union_left _ hp1), Submodule.span_le]
+    rintro v ⟨p3, hp3, rfl⟩
+    cases hp3
     ·
-      change (affineSpan k ((s1 : Set P) ∪ s2)).direction ≤ _ 
-      rw [←mem_coe] at hp1 
-      rw [direction_affine_span, vector_span_eq_span_vsub_set_right k (Set.mem_union_left _ hp1), Submodule.span_le]
-      rintro v ⟨p3, hp3, rfl⟩
-      cases hp3
-      ·
-        rw [sup_assoc, sup_comm, SetLike.mem_coe, Submodule.mem_sup]
-        use 0, Submodule.zero_mem _, p3 -ᵥ p1, vsub_mem_direction hp3 hp1 
-        rw [zero_addₓ]
-      ·
-        rw [sup_assoc, SetLike.mem_coe, Submodule.mem_sup]
-        use 0, Submodule.zero_mem _, p3 -ᵥ p1 
-        rw [and_comm, zero_addₓ]
-        use rfl 
-        rw [←vsub_add_vsub_cancel p3 p2 p1, Submodule.mem_sup]
-        use p3 -ᵥ p2, vsub_mem_direction hp3 hp2, p2 -ᵥ p1, Submodule.mem_span_singleton_self _
+      rw [sup_assoc, sup_comm, SetLike.mem_coe, Submodule.mem_sup]
+      use 0, Submodule.zero_mem _, p3 -ᵥ p1, vsub_mem_direction hp3 hp1
+      rw [zero_addₓ]
     ·
-      refine' sup_le (sup_direction_le _ _) _ 
-      rw [direction_eq_vector_span, vector_span_def]
-      exact
-        Inf_le_Inf
-          fun p hp =>
-            Set.Subset.trans
-              (Set.singleton_subset_iff.2
-                (vsub_mem_vsub (mem_span_points k p2 _ (Set.mem_union_right _ hp2))
-                  (mem_span_points k p1 _ (Set.mem_union_left _ hp1))))
-              hp
+      rw [sup_assoc, SetLike.mem_coe, Submodule.mem_sup]
+      use 0, Submodule.zero_mem _, p3 -ᵥ p1
+      rw [and_comm, zero_addₓ]
+      use rfl
+      rw [← vsub_add_vsub_cancel p3 p2 p1, Submodule.mem_sup]
+      use p3 -ᵥ p2, vsub_mem_direction hp3 hp2, p2 -ᵥ p1, Submodule.mem_span_singleton_self _
+  ·
+    refine' sup_le (sup_direction_le _ _) _
+    rw [direction_eq_vector_span, vector_span_def]
+    exact
+      Inf_le_Inf fun p hp =>
+        Set.Subset.trans
+          (Set.singleton_subset_iff.2
+            (vsub_mem_vsub (mem_span_points k p2 _ (Set.mem_union_right _ hp2))
+              (mem_span_points k p1 _ (Set.mem_union_left _ hp1))))
+          hp
 
-/-- The direction of the span of the result of adding a point to a
+/--  The direction of the span of the result of adding a point to a
 nonempty affine subspace is the sup of the direction of that subspace
 and of any one difference between that point and a point in the
 subspace. -/
 theorem direction_affine_span_insert {s : AffineSubspace k P} {p1 p2 : P} (hp1 : p1 ∈ s) :
-  (affineSpan k (insert p2 (s : Set P))).direction = Submodule.span k {p2 -ᵥ p1}⊔s.direction :=
-  by 
-    rw [sup_comm, ←Set.union_singleton, ←coe_affine_span_singleton k V p2]
-    change (s⊔affineSpan k {p2}).direction = _ 
-    rw [direction_sup hp1 (mem_affine_span k (Set.mem_singleton _)), direction_affine_span]
-    simp 
+    (affineSpan k (insert p2 (s : Set P))).direction = Submodule.span k {p2 -ᵥ p1}⊔s.direction := by
+  rw [sup_comm, ← Set.union_singleton, ← coe_affine_span_singleton k V p2]
+  change (s⊔affineSpan k {p2}).direction = _
+  rw [direction_sup hp1 (mem_affine_span k (Set.mem_singleton _)), direction_affine_span]
+  simp
 
-/-- Given a point `p1` in an affine subspace `s`, and a point `p2`, a
+/--  Given a point `p1` in an affine subspace `s`, and a point `p2`, a
 point `p` is in the span of `s` with `p2` added if and only if it is a
 multiple of `p2 -ᵥ p1` added to a point in `s`. -/
 theorem mem_affine_span_insert_iff {s : AffineSubspace k P} {p1 : P} (hp1 : p1 ∈ s) (p2 p : P) :
-  p ∈ affineSpan k (insert p2 (s : Set P)) ↔ ∃ (r : k)(p0 : P)(hp0 : p0 ∈ s), p = r • (p2 -ᵥ p1 : V) +ᵥ p0 :=
-  by 
-    rw [←mem_coe] at hp1 
-    rw [←vsub_right_mem_direction_iff_mem (mem_affine_span k (Set.mem_insert_of_mem _ hp1)),
-      direction_affine_span_insert hp1, Submodule.mem_sup]
-    constructor
-    ·
-      rintro ⟨v1, hv1, v2, hv2, hp⟩
-      rw [Submodule.mem_span_singleton] at hv1 
-      rcases hv1 with ⟨r, rfl⟩
-      use r, v2 +ᵥ p1, vadd_mem_of_mem_direction hv2 hp1 
-      symm'  at hp 
-      rw [←sub_eq_zero, ←vsub_vadd_eq_vsub_sub, vsub_eq_zero_iff_eq] at hp 
-      rw [hp, vadd_vadd]
-    ·
-      rintro ⟨r, p3, hp3, rfl⟩
-      use r • (p2 -ᵥ p1), Submodule.mem_span_singleton.2 ⟨r, rfl⟩, p3 -ᵥ p1, vsub_mem_direction hp3 hp1 
-      rw [vadd_vsub_assoc, add_commₓ]
+    p ∈ affineSpan k (insert p2 (s : Set P)) ↔ ∃ (r : k)(p0 : P)(hp0 : p0 ∈ s), p = r • (p2 -ᵥ p1 : V) +ᵥ p0 := by
+  rw [← mem_coe] at hp1
+  rw [← vsub_right_mem_direction_iff_mem (mem_affine_span k (Set.mem_insert_of_mem _ hp1)),
+    direction_affine_span_insert hp1, Submodule.mem_sup]
+  constructor
+  ·
+    rintro ⟨v1, hv1, v2, hv2, hp⟩
+    rw [Submodule.mem_span_singleton] at hv1
+    rcases hv1 with ⟨r, rfl⟩
+    use r, v2 +ᵥ p1, vadd_mem_of_mem_direction hv2 hp1
+    symm'  at hp
+    rw [← sub_eq_zero, ← vsub_vadd_eq_vsub_sub, vsub_eq_zero_iff_eq] at hp
+    rw [hp, vadd_vadd]
+  ·
+    rintro ⟨r, p3, hp3, rfl⟩
+    use r • (p2 -ᵥ p1), Submodule.mem_span_singleton.2 ⟨r, rfl⟩, p3 -ᵥ p1, vsub_mem_direction hp3 hp1
+    rw [vadd_vsub_assoc, add_commₓ]
 
 end AffineSubspace
 
-section Maps
+section MapComap
 
-variable {k V₁ P₁ V₂ P₂ : Type _} [Ringₓ k]
+variable {k V₁ P₁ V₂ P₂ V₃ P₃ : Type _} [Ringₓ k]
 
 variable [AddCommGroupₓ V₁] [Module k V₁] [AddTorsor V₁ P₁]
 
 variable [AddCommGroupₓ V₂] [Module k V₂] [AddTorsor V₂ P₂]
 
+variable [AddCommGroupₓ V₃] [Module k V₃] [AddTorsor V₃ P₃]
+
 include V₁ V₂
+
+section
 
 variable (f : P₁ →ᵃ[k] P₂)
 
 @[simp]
 theorem AffineMap.vector_span_image_eq_submodule_map {s : Set P₁} :
-  Submodule.map f.linear (vectorSpan k s) = vectorSpan k (f '' s) :=
-  by 
-    simp [f.image_vsub_image, vector_span_def]
+    Submodule.map f.linear (vectorSpan k s) = vectorSpan k (f '' s) := by
+  simp [f.image_vsub_image, vector_span_def]
 
 namespace AffineSubspace
 
-/-- The image of an affine subspace under an affine map as an affine subspace. -/
+/--  The image of an affine subspace under an affine map as an affine subspace. -/
 def map (s : AffineSubspace k P₁) : AffineSubspace k P₂ :=
   { Carrier := f '' s,
-    smul_vsub_vadd_mem :=
-      by 
-        rintro t - - - ⟨p₁, h₁, rfl⟩ ⟨p₂, h₂, rfl⟩ ⟨p₃, h₃, rfl⟩
-        use t • (p₁ -ᵥ p₂) +ᵥ p₃ 
-        suffices  : t • (p₁ -ᵥ p₂) +ᵥ p₃ ∈ s
+    smul_vsub_vadd_mem := by
+      rintro t - - - ⟨p₁, h₁, rfl⟩ ⟨p₂, h₂, rfl⟩ ⟨p₃, h₃, rfl⟩
+      use t • (p₁ -ᵥ p₂) +ᵥ p₃
+      suffices t • (p₁ -ᵥ p₂) +ᵥ p₃ ∈ s by
         ·
-          ·
-            simp [this]
-        exact s.smul_vsub_vadd_mem t h₁ h₂ h₃ }
+          simp [this]
+      exact s.smul_vsub_vadd_mem t h₁ h₂ h₃ }
 
 @[simp]
-theorem map_coe (s : AffineSubspace k P₁) : (s.map f : Set P₂) = f '' s :=
+theorem coe_map (s : AffineSubspace k P₁) : (s.map f : Set P₂) = f '' s :=
   rfl
 
 @[simp]
-theorem map_bot : (⊥ : AffineSubspace k P₁).map f = ⊥ :=
-  by 
-    rw [←ext_iff]
-    exact image_empty f
+theorem mem_map {f : P₁ →ᵃ[k] P₂} {x : P₂} {s : AffineSubspace k P₁} : x ∈ s.map f ↔ ∃ y ∈ s, f y = x :=
+  mem_image_iff_bex
 
 @[simp]
-theorem map_direction (s : AffineSubspace k P₁) : (s.map f).direction = s.direction.map f.linear :=
-  by 
-    simp [direction_eq_vector_span]
+theorem map_bot : (⊥ : AffineSubspace k P₁).map f = ⊥ :=
+  coe_injective $ image_empty f
 
-theorem map_span (s : Set P₁) : (affineSpan k s).map f = affineSpan k (f '' s) :=
-  by 
-    rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)
-    ·
-      simp 
-    apply ext_of_direction_eq
-    ·
-      simp [direction_affine_span]
-    ·
-      exact ⟨f p, mem_image_of_mem f (subset_affine_span k _ hp), subset_affine_span k _ (mem_image_of_mem f hp)⟩
+omit V₂
+
+@[simp]
+theorem map_id (s : AffineSubspace k P₁) : s.map (AffineMap.id k P₁) = s :=
+  coe_injective $ image_id _
+
+include V₂ V₃
+
+theorem map_map (s : AffineSubspace k P₁) (f : P₁ →ᵃ[k] P₂) (g : P₂ →ᵃ[k] P₃) : (s.map f).map g = s.map (g.comp f) :=
+  coe_injective $ image_image _ _ _
+
+omit V₃
+
+@[simp]
+theorem map_direction (s : AffineSubspace k P₁) : (s.map f).direction = s.direction.map f.linear := by
+  simp [direction_eq_vector_span]
+
+theorem map_span (s : Set P₁) : (affineSpan k s).map f = affineSpan k (f '' s) := by
+  rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)
+  ·
+    simp
+  apply ext_of_direction_eq
+  ·
+    simp [direction_affine_span]
+  ·
+    exact ⟨f p, mem_image_of_mem f (subset_affine_span k _ hp), subset_affine_span k _ (mem_image_of_mem f hp)⟩
 
 end AffineSubspace
 
 namespace AffineMap
 
 @[simp]
-theorem map_top_of_surjective (hf : Function.Surjective f) : AffineSubspace.map f ⊤ = ⊤ :=
-  by 
-    rw [←AffineSubspace.ext_iff]
-    exact image_univ_of_surjective hf
+theorem map_top_of_surjective (hf : Function.Surjective f) : AffineSubspace.map f ⊤ = ⊤ := by
+  rw [← AffineSubspace.ext_iff]
+  exact image_univ_of_surjective hf
 
 theorem span_eq_top_of_surjective {s : Set P₁} (hf : Function.Surjective f) (h : affineSpan k s = ⊤) :
-  affineSpan k (f '' s) = ⊤ :=
-  by 
-    rw [←AffineSubspace.map_span, h, map_top_of_surjective f hf]
+    affineSpan k (f '' s) = ⊤ := by
+  rw [← AffineSubspace.map_span, h, map_top_of_surjective f hf]
 
 end AffineMap
 
 theorem AffineEquiv.span_eq_top_iff {s : Set P₁} (e : P₁ ≃ᵃ[k] P₂) : affineSpan k s = ⊤ ↔ affineSpan k (e '' s) = ⊤ :=
-  by 
-    refine' ⟨(e : P₁ →ᵃ[k] P₂).span_eq_top_of_surjective e.surjective, _⟩
-    intro h 
-    have  : s = e.symm '' (e '' s)
-    ·
-      simp [←image_comp]
-    rw [this]
-    exact (e.symm : P₂ →ᵃ[k] P₁).span_eq_top_of_surjective e.symm.surjective h
+  by
+  refine' ⟨(e : P₁ →ᵃ[k] P₂).span_eq_top_of_surjective e.surjective, _⟩
+  intro h
+  have : s = e.symm '' (e '' s) := by
+    simp [← image_comp]
+  rw [this]
+  exact (e.symm : P₂ →ᵃ[k] P₁).span_eq_top_of_surjective e.symm.surjective h
 
-end Maps
+end
+
+namespace AffineSubspace
+
+/--  The preimage of an affine subspace under an affine map as an affine subspace. -/
+def comap (f : P₁ →ᵃ[k] P₂) (s : AffineSubspace k P₂) : AffineSubspace k P₁ :=
+  { Carrier := f ⁻¹' s,
+    smul_vsub_vadd_mem := fun t p₁ p₂ p₃ hp₁ : f p₁ ∈ s hp₂ : f p₂ ∈ s hp₃ : f p₃ ∈ s =>
+      show f _ ∈ s by
+        rw [AffineMap.map_vadd, LinearMap.map_smul, AffineMap.linear_map_vsub]
+        apply s.smul_vsub_vadd_mem _ hp₁ hp₂ hp₃ }
+
+@[simp]
+theorem coe_comap (f : P₁ →ᵃ[k] P₂) (s : AffineSubspace k P₂) : (s.comap f : Set P₁) = f ⁻¹' ↑s :=
+  rfl
+
+@[simp]
+theorem mem_comap {f : P₁ →ᵃ[k] P₂} {x : P₁} {s : AffineSubspace k P₂} : x ∈ s.comap f ↔ f x ∈ s :=
+  Iff.rfl
+
+theorem comap_mono {f : P₁ →ᵃ[k] P₂} {s t : AffineSubspace k P₂} : s ≤ t → s.comap f ≤ t.comap f :=
+  preimage_mono
+
+@[simp]
+theorem comap_top {f : P₁ →ᵃ[k] P₂} : (⊤ : AffineSubspace k P₂).comap f = ⊤ := by
+  rw [← ext_iff]
+  exact preimage_univ
+
+omit V₂
+
+@[simp]
+theorem comap_id (s : AffineSubspace k P₁) : s.comap (AffineMap.id k P₁) = s :=
+  coe_injective rfl
+
+include V₂ V₃
+
+theorem comap_comap (s : AffineSubspace k P₃) (f : P₁ →ᵃ[k] P₂) (g : P₂ →ᵃ[k] P₃) :
+    (s.comap g).comap f = s.comap (g.comp f) :=
+  coe_injective rfl
+
+omit V₃
+
+theorem map_le_iff_le_comap {f : P₁ →ᵃ[k] P₂} {s : AffineSubspace k P₁} {t : AffineSubspace k P₂} :
+    s.map f ≤ t ↔ s ≤ t.comap f :=
+  image_subset_iff
+
+theorem gc_map_comap (f : P₁ →ᵃ[k] P₂) : GaloisConnection (map f) (comap f) := fun _ _ => map_le_iff_le_comap
+
+theorem map_comap_le (f : P₁ →ᵃ[k] P₂) (s : AffineSubspace k P₂) : (s.comap f).map f ≤ s :=
+  (gc_map_comap f).l_u_le _
+
+theorem le_comap_map (f : P₁ →ᵃ[k] P₂) (s : AffineSubspace k P₁) : s ≤ (s.map f).comap f :=
+  (gc_map_comap f).le_u_l _
+
+theorem map_sup (s t : AffineSubspace k P₁) (f : P₁ →ᵃ[k] P₂) : (s⊔t).map f = s.map f⊔t.map f :=
+  (gc_map_comap f).l_sup
+
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `map_supr [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`ι] [":" (Term.sort "Sort" [(Level.hole "_")])] "}")
+    (Term.explicitBinder
+     "("
+     [`f]
+     [":" (LinearAlgebra.AffineSpace.AffineMap.«term_→ᵃ[_]_» `P₁ " →ᵃ[" `k "] " `P₂)]
+     []
+     ")")
+    (Term.explicitBinder "(" [`s] [":" (Term.arrow `ι "→" (Term.app `AffineSubspace [`k `P₁]))] [] ")")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Term.app (Term.proj (Term.app `supr [`s]) "." `map) [`f])
+     "="
+     (Order.CompleteLattice.«term⨆_,_»
+      "⨆"
+      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+      ", "
+      (Term.app (Term.proj (Term.app `s [`i]) "." `map) [`f])))))
+  (Command.declValSimple ":=" (Term.proj (Term.app `gc_map_comap [`f]) "." `l_supr) [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.proj (Term.app `gc_map_comap [`f]) "." `l_supr)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `gc_map_comap [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `f
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `gc_map_comap
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `gc_map_comap [`f]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Term.app (Term.proj (Term.app `supr [`s]) "." `map) [`f])
+   "="
+   (Order.CompleteLattice.«term⨆_,_»
+    "⨆"
+    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+    ", "
+    (Term.app (Term.proj (Term.app `s [`i]) "." `map) [`f])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Order.CompleteLattice.«term⨆_,_»
+   "⨆"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+   ", "
+   (Term.app (Term.proj (Term.app `s [`i]) "." `map) [`f]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.CompleteLattice.«term⨆_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Term.proj (Term.app `s [`i]) "." `map) [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `f
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj (Term.app `s [`i]) "." `map)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `s [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `i
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `s
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `s [`i]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  map_supr
+  { ι : Sort _ } ( f : P₁ →ᵃ[ k ] P₂ ) ( s : ι → AffineSubspace k P₁ ) : supr s . map f = ⨆ i , s i . map f
+  := gc_map_comap f . l_supr
+
+theorem comap_inf (s t : AffineSubspace k P₂) (f : P₁ →ᵃ[k] P₂) : (s⊓t).comap f = s.comap f⊓t.comap f :=
+  (gc_map_comap f).u_inf
+
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `comap_supr [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`ι] [":" (Term.sort "Sort" [(Level.hole "_")])] "}")
+    (Term.explicitBinder
+     "("
+     [`f]
+     [":" (LinearAlgebra.AffineSpace.AffineMap.«term_→ᵃ[_]_» `P₁ " →ᵃ[" `k "] " `P₂)]
+     []
+     ")")
+    (Term.explicitBinder "(" [`s] [":" (Term.arrow `ι "→" (Term.app `AffineSubspace [`k `P₂]))] [] ")")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Term.app (Term.proj (Term.app `infi [`s]) "." `comap) [`f])
+     "="
+     (Order.CompleteLattice.«term⨅_,_»
+      "⨅"
+      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+      ", "
+      (Term.app (Term.proj (Term.app `s [`i]) "." `comap) [`f])))))
+  (Command.declValSimple ":=" (Term.proj (Term.app `gc_map_comap [`f]) "." `u_infi) [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.proj (Term.app `gc_map_comap [`f]) "." `u_infi)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `gc_map_comap [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `f
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `gc_map_comap
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `gc_map_comap [`f]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Term.app (Term.proj (Term.app `infi [`s]) "." `comap) [`f])
+   "="
+   (Order.CompleteLattice.«term⨅_,_»
+    "⨅"
+    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+    ", "
+    (Term.app (Term.proj (Term.app `s [`i]) "." `comap) [`f])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Order.CompleteLattice.«term⨅_,_»
+   "⨅"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+   ", "
+   (Term.app (Term.proj (Term.app `s [`i]) "." `comap) [`f]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.CompleteLattice.«term⨅_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Term.proj (Term.app `s [`i]) "." `comap) [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `f
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj (Term.app `s [`i]) "." `comap)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.app `s [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `i
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `s
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `s [`i]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  comap_supr
+  { ι : Sort _ } ( f : P₁ →ᵃ[ k ] P₂ ) ( s : ι → AffineSubspace k P₂ ) : infi s . comap f = ⨅ i , s i . comap f
+  := gc_map_comap f . u_infi
+
+end AffineSubspace
+
+end MapComap
 

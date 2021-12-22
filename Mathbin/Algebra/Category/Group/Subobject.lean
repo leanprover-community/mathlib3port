@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Category.Group.ZModuleEquivalence 
+import Mathbin.Algebra.Category.Group.ZModuleEquivalence
 import Mathbin.Algebra.Category.Module.Subobject
 
 /-!

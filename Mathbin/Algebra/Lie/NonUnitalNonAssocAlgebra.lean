@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Lie.Basic 
+import Mathbin.Algebra.Lie.Basic
 import Mathbin.Algebra.NonUnitalAlgHom
 
 /-!
@@ -31,7 +31,7 @@ universe u v w
 
 variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
-/-- A `lie_ring` can be regarded as a `non_unital_non_assoc_semiring` by turning its
+/--  A `lie_ring` can be regarded as a `non_unital_non_assoc_semiring` by turning its
 `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
 def LieRing.toNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring L :=
   { (inferInstance : AddCommMonoidₓ L) with mul := HasBracket.bracket, left_distrib := lie_add,
@@ -41,12 +41,12 @@ attribute [local instance] LieRing.toNonUnitalNonAssocSemiring
 
 namespace LieAlgebra
 
-/-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
+/--  Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 reinterpret the `smul_lie` law as an `is_scalar_tower`. -/
 instance IsScalarTower : IsScalarTower R L L :=
   ⟨smul_lie⟩
 
-/-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
+/--  Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 reinterpret the `lie_smul` law as an `smul_comm_class`. -/
 instance SmulCommClass : SmulCommClass R L L :=
   ⟨fun t x y => (lie_smul t x y).symm⟩
@@ -57,14 +57,14 @@ namespace LieHom
 
 variable {R L} {L₂ : Type w} [LieRing L₂] [LieAlgebra R L₂]
 
-/-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
+/--  Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 regard a `lie_hom` as a `non_unital_alg_hom`. -/
 @[simps]
 def to_non_unital_alg_hom (f : L →ₗ⁅R⁆ L₂) : NonUnitalAlgHom R L L₂ :=
   { f with toFun := f, map_zero' := f.map_zero, map_mul' := f.map_lie }
 
 theorem to_non_unital_alg_hom_injective : Function.Injective (to_non_unital_alg_hom : _ → NonUnitalAlgHom R L L₂) :=
-  fun f g h => ext$ NonUnitalAlgHom.congr_fun h
+  fun f g h => ext $ NonUnitalAlgHom.congr_fun h
 
 end LieHom
 

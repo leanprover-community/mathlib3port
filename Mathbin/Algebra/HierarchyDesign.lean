@@ -11,7 +11,7 @@ TODO: Add sections about interactions with topological typeclasses, and order ty
 -/
 
 
-/--
+/-- 
 # The algebraic hierarchy
 
 In any theorem proving environment,
@@ -183,7 +183,7 @@ Another alternative to a TODO list in the doc-strings is adding github issues.
 -/
 library_note "the algebraic hierarchy"
 
-/--
+/-- 
 Some definitions that define objects of a class cannot be instances, because they have an
 explicit argument that does not occur in the conclusion. An example is `preorder.lift` that has a
 function `f : α → β` as an explicit argument to lift a preorder on `β` to a preorder on `α`.

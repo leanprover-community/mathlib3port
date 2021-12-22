@@ -1,4 +1,4 @@
-import Mathbin.Data.Bool.Basic 
+import Mathbin.Data.Bool.Basic
 import Mathbin.Tactic.Core
 
 /-!
@@ -23,36 +23,33 @@ Simon Hudon.
 
 open Native Tactic Interactive Lean.Parser
 
-/-- Clears all the hypotheses in `hyps`. The tactic fails if any of the `hyps`
+/--  Clears all the hypotheses in `hyps`. The tactic fails if any of the `hyps`
 is not a local or if the target depends on any of the `hyps`. It also fails if
 `hyps` contains duplicates.
 
 If there are local hypotheses or definitions, say `H`, which are not in `hyps`
 but depend on one of the `hyps`, what we do depends on `clear_dependent`. If it
 is true, `H` is implicitly also cleared. If it is false, `clear'` fails. -/
-unsafe def tactic.clear' (clear_dependent : Bool) (hyps : List expr) : tactic Unit :=
-  do 
-    let tgt ← target 
-    hyps.mmap'
-        fun h =>
-          do 
-            let dep ← kdepends_on tgt h 
-            when dep$ fail$ f! "Cannot clear hypothesis {h } since the target depends on it."
-    let n ← revert_lst hyps 
-    when (!clear_dependent && n ≠ hyps.length)$
-        fail$
-          format.join
-            ["Some of the following hypotheses cannot be cleared because other ",
-              "hypotheses depend on (some of) them:\n", format.intercalate ", " (hyps.map to_fmt)]
-    let v ← mk_meta_var tgt 
-    intron n 
-    exact v 
-    let gs ← get_goals 
-    set_goals$ v :: gs
+unsafe def tactic.clear' (clear_dependent : Bool) (hyps : List expr) : tactic Unit := do
+  let tgt ← target
+  hyps.mmap' fun h => do
+      let dep ← kdepends_on tgt h
+      when dep $ fail $ f! "Cannot clear hypothesis {h} since the target depends on it."
+  let n ← revert_lst hyps
+  when (!clear_dependent && n ≠ hyps.length) $
+      fail $
+        format.join
+          ["Some of the following hypotheses cannot be cleared because other ",
+            "hypotheses depend on (some of) them:\n", format.intercalate ", " (hyps.map to_fmt)]
+  let v ← mk_meta_var tgt
+  intron n
+  exact v
+  let gs ← get_goals
+  set_goals $ v :: gs
 
 namespace Tactic.Interactive
 
-/--
+/-- 
 An improved version of the standard `clear` tactic. `clear` is sensitive to the
 order of its arguments: `clear x y` may fail even though both `x` and `y` could
 be cleared (if the type of `y` depends on `x`). `clear'` lifts this limitation.
@@ -66,12 +63,11 @@ begin
 end
 ```
 -/
-unsafe def clear' (p : parse (many ident)) : tactic Unit :=
-  do 
-    let hyps ← p.mmap get_local 
-    tactic.clear' False hyps
+unsafe def clear' (p : parse (many ident)) : tactic Unit := do
+  let hyps ← p.mmap get_local
+  tactic.clear' False hyps
 
-/--
+/-- 
 A variant of `clear'` which clears not only the given hypotheses, but also any
 other hypotheses depending on them.
 
@@ -84,10 +80,9 @@ begin
 end
 ```
  -/
-unsafe def clear_dependent (p : parse (many ident)) : tactic Unit :=
-  do 
-    let hyps ← p.mmap get_local 
-    tactic.clear' True hyps
+unsafe def clear_dependent (p : parse (many ident)) : tactic Unit := do
+  let hyps ← p.mmap get_local
+  tactic.clear' True hyps
 
 add_tactic_doc
   { Name := "clear'", category := DocCategory.tactic,

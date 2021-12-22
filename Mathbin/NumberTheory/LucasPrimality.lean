@@ -1,7 +1,7 @@
-import Mathbin.Data.Fintype.Basic 
-import Mathbin.GroupTheory.OrderOfElement 
-import Mathbin.Tactic.Zify 
-import Mathbin.Data.Nat.Totient 
+import Mathbin.Data.Fintype.Basic
+import Mathbin.GroupTheory.OrderOfElement
+import Mathbin.Tactic.Zify
+import Mathbin.Data.Nat.Totient
 import Mathbin.Data.Zmod.Basic
 
 /-!
@@ -29,35 +29,31 @@ to `1`.
 -/
 
 
-/--
+/-- 
 If `a^(p-1) = 1 mod p`, but `a^((p-1)/q) ≠ 1 mod p` for all prime factors `q` of `p-1`, then `p`
 is prime. This is true because `a` has order `p-1` in the multiplicative group mod `p`, so this
 group must itself have order `p-1`, which only happens when `p` is prime.
 -/
 theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
-  (hd : ∀ q : ℕ, q.prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.prime :=
-  by 
-    have h0 : p ≠ 0
-    ·
-      rintro ⟨⟩
-      exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)
-    have h1 : p ≠ 1
-    ·
-      rintro ⟨⟩
-      exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)
-    have hp1 : 1 < p := lt_of_le_of_neₓ h0.bot_lt h1.symm 
-    have order_of_a : orderOf a = p - 1
-    ·
-      apply order_of_eq_of_pow_and_pow_div_prime _ ha hd 
-      exact tsub_pos_of_lt hp1 
-    have fhp0 : Fact (0 < p) := ⟨h0.bot_lt⟩
-    rw [Nat.prime_iff_card_units]
-    refine' le_antisymmₓ (Nat.card_units_zmod_lt_sub_one hp1) _ 
-    have hp' : ((p - 2)+1) = p - 1 := tsub_add_eq_add_tsub hp1 
-    let a' : Units (Zmod p) :=
-      Units.mkOfMulEqOne a (a ^ (p - 2))
-        (by 
-          rw [←pow_succₓ, hp', ha])
-    calc p - 1 = orderOf a := order_of_a.symm _ = orderOf a' :=
-      order_of_injective (Units.coeHom (Zmod p)) Units.ext a' _ ≤ Fintype.card (Units (Zmod p)) := order_of_le_card_univ
+    (hd : ∀ q : ℕ, q.prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.prime := by
+  have h0 : p ≠ 0 := by
+    rintro ⟨⟩
+    exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)
+  have h1 : p ≠ 1 := by
+    rintro ⟨⟩
+    exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)
+  have hp1 : 1 < p := lt_of_le_of_neₓ h0.bot_lt h1.symm
+  have order_of_a : orderOf a = p - 1 := by
+    apply order_of_eq_of_pow_and_pow_div_prime _ ha hd
+    exact tsub_pos_of_lt hp1
+  have fhp0 : Fact (0 < p) := ⟨h0.bot_lt⟩
+  rw [Nat.prime_iff_card_units]
+  refine' le_antisymmₓ (Nat.card_units_zmod_lt_sub_one hp1) _
+  have hp' : ((p - 2)+1) = p - 1 := tsub_add_eq_add_tsub hp1
+  let a' : Units (Zmod p) :=
+    Units.mkOfMulEqOne a (a ^ (p - 2))
+      (by
+        rw [← pow_succₓ, hp', ha])
+  calc p - 1 = orderOf a := order_of_a.symm _ = orderOf a' :=
+    order_of_injective (Units.coeHom (Zmod p)) Units.ext a' _ ≤ Fintype.card (Units (Zmod p)) := order_of_le_card_univ
 

@@ -1,5 +1,5 @@
-import Mathbin.Algebra.Algebra.Basic 
-import Mathbin.LinearAlgebra.TensorProduct 
+import Mathbin.Algebra.Algebra.Basic
+import Mathbin.LinearAlgebra.TensorProduct
 import Mathbin.Algebra.IterateHom
 
 /-!
@@ -19,42 +19,35 @@ open_locale TensorProduct
 
 open Module
 
-section 
+section
 
 variable (R A : Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-/-- The multiplication in an algebra is a bilinear map.
+/--  The multiplication in an algebra is a bilinear map.
 
 A weaker version of this for semirings exists as `add_monoid_hom.mul`. -/
 def lmul : A →ₐ[R] End R A :=
   { show A →ₗ[R] A →ₗ[R] A from
       LinearMap.mk₂ R (·*·) (fun x y z => add_mulₓ x y z)
-        (fun c x y =>
-          by 
-            rw [smul_def, smul_def, mul_assocₓ _ x y])
-        (fun x y z => mul_addₓ x y z)
-        fun c x y =>
-          by 
-            rw [smul_def, smul_def, left_comm] with
-    map_one' :=
-      by 
-        ext a 
-        exact one_mulₓ a,
-    map_mul' :=
-      by 
-        intro a b 
-        ext c 
-        exact mul_assocₓ a b c,
-    map_zero' :=
-      by 
-        ext a 
-        exact zero_mul a,
-    commutes' :=
-      by 
-        intro r 
-        ext a 
-        dsimp 
-        rw [smul_def] }
+        (fun c x y => by
+          rw [smul_def, smul_def, mul_assocₓ _ x y])
+        (fun x y z => mul_addₓ x y z) fun c x y => by
+        rw [smul_def, smul_def, left_comm] with
+    map_one' := by
+      ext a
+      exact one_mulₓ a,
+    map_mul' := by
+      intro a b
+      ext c
+      exact mul_assocₓ a b c,
+    map_zero' := by
+      ext a
+      exact zero_mul a,
+    commutes' := by
+      intro r
+      ext a
+      dsimp
+      rw [smul_def] }
 
 variable {R A}
 
@@ -64,33 +57,31 @@ theorem lmul_apply (p q : A) : lmul R A p q = p*q :=
 
 variable (R)
 
-/-- The multiplication on the left in an algebra is a linear map. -/
+/--  The multiplication on the left in an algebra is a linear map. -/
 def lmul_left (r : A) : A →ₗ[R] A :=
   lmul R A r
 
-/-- The multiplication on the right in an algebra is a linear map. -/
+/--  The multiplication on the right in an algebra is a linear map. -/
 def lmul_right (r : A) : A →ₗ[R] A :=
   (lmul R A).toLinearMap.flip r
 
-/-- Simultaneous multiplication on the left and right is a linear map. -/
+/--  Simultaneous multiplication on the left and right is a linear map. -/
 def lmul_left_right (vw : A × A) : A →ₗ[R] A :=
   (lmul_right R vw.2).comp (lmul_left R vw.1)
 
-theorem commute_lmul_left_right (a b : A) : Commute (lmul_left R a) (lmul_right R b) :=
-  by 
-    ext c 
-    exact (mul_assocₓ a c b).symm
+theorem commute_lmul_left_right (a b : A) : Commute (lmul_left R a) (lmul_right R b) := by
+  ext c
+  exact (mul_assocₓ a c b).symm
 
-/-- The multiplication map on an algebra, as an `R`-linear map from `A ⊗[R] A` to `A`. -/
+/--  The multiplication map on an algebra, as an `R`-linear map from `A ⊗[R] A` to `A`. -/
 def lmul' : A ⊗[R] A →ₗ[R] A :=
   TensorProduct.lift (lmul R A).toLinearMap
 
 variable {R A}
 
 @[simp]
-theorem lmul'_apply {x y : A} : lmul' R (x ⊗ₜ y) = x*y :=
-  by 
-    simp only [Algebra.lmul', TensorProduct.lift.tmul, AlgHom.to_linear_map_apply, lmul_apply]
+theorem lmul'_apply {x y : A} : lmul' R (x ⊗ₜ y) = x*y := by
+  simp only [Algebra.lmul', TensorProduct.lift.tmul, AlgHom.to_linear_map_apply, lmul_apply]
 
 @[simp]
 theorem lmul_left_apply (p q : A) : lmul_left R p q = p*q :=
@@ -105,28 +96,24 @@ theorem lmul_left_right_apply (vw : A × A) (p : A) : lmul_left_right R vw p = (
   rfl
 
 @[simp]
-theorem lmul_left_one : lmul_left R (1 : A) = LinearMap.id :=
-  by 
-    ext 
-    simp only [LinearMap.id_coe, one_mulₓ, id.def, lmul_left_apply]
+theorem lmul_left_one : lmul_left R (1 : A) = LinearMap.id := by
+  ext
+  simp only [LinearMap.id_coe, one_mulₓ, id.def, lmul_left_apply]
 
 @[simp]
-theorem lmul_left_mul (a b : A) : lmul_left R (a*b) = (lmul_left R a).comp (lmul_left R b) :=
-  by 
-    ext 
-    simp only [lmul_left_apply, LinearMap.comp_apply, mul_assocₓ]
+theorem lmul_left_mul (a b : A) : lmul_left R (a*b) = (lmul_left R a).comp (lmul_left R b) := by
+  ext
+  simp only [lmul_left_apply, LinearMap.comp_apply, mul_assocₓ]
 
 @[simp]
-theorem lmul_right_one : lmul_right R (1 : A) = LinearMap.id :=
-  by 
-    ext 
-    simp only [LinearMap.id_coe, mul_oneₓ, id.def, lmul_right_apply]
+theorem lmul_right_one : lmul_right R (1 : A) = LinearMap.id := by
+  ext
+  simp only [LinearMap.id_coe, mul_oneₓ, id.def, lmul_right_apply]
 
 @[simp]
-theorem lmul_right_mul (a b : A) : lmul_right R (a*b) = (lmul_right R b).comp (lmul_right R a) :=
-  by 
-    ext 
-    simp only [lmul_right_apply, LinearMap.comp_apply, mul_assocₓ]
+theorem lmul_right_mul (a b : A) : lmul_right R (a*b) = (lmul_right R b).comp (lmul_right R a) := by
+  ext
+  simp only [lmul_right_apply, LinearMap.comp_apply, mul_assocₓ]
 
 @[simp]
 theorem lmul_left_zero_eq_zero : lmul_left R (0 : A) = 0 :=
@@ -137,24 +124,22 @@ theorem lmul_right_zero_eq_zero : lmul_right R (0 : A) = 0 :=
   (lmul R A).toLinearMap.flip.map_zero
 
 @[simp]
-theorem lmul_left_eq_zero_iff (a : A) : lmul_left R a = 0 ↔ a = 0 :=
-  by 
-    constructor <;> intro h
-    ·
-      rw [←mul_oneₓ a, ←lmul_left_apply a 1, h, LinearMap.zero_apply]
-    ·
-      rw [h]
-      exact lmul_left_zero_eq_zero
+theorem lmul_left_eq_zero_iff (a : A) : lmul_left R a = 0 ↔ a = 0 := by
+  constructor <;> intro h
+  ·
+    rw [← mul_oneₓ a, ← lmul_left_apply a 1, h, LinearMap.zero_apply]
+  ·
+    rw [h]
+    exact lmul_left_zero_eq_zero
 
 @[simp]
-theorem lmul_right_eq_zero_iff (a : A) : lmul_right R a = 0 ↔ a = 0 :=
-  by 
-    constructor <;> intro h
-    ·
-      rw [←one_mulₓ a, ←lmul_right_apply a 1, h, LinearMap.zero_apply]
-    ·
-      rw [h]
-      exact lmul_right_zero_eq_zero
+theorem lmul_right_eq_zero_iff (a : A) : lmul_right R a = 0 ↔ a = 0 := by
+  constructor <;> intro h
+  ·
+    rw [← one_mulₓ a, ← lmul_right_apply a 1, h, LinearMap.zero_apply]
+  ·
+    rw [h]
+    exact lmul_right_zero_eq_zero
 
 @[simp]
 theorem pow_lmul_left (a : A) (n : ℕ) : lmul_left R a ^ n = lmul_left R (a ^ n) :=
@@ -162,30 +147,27 @@ theorem pow_lmul_left (a : A) (n : ℕ) : lmul_left R a ^ n = lmul_left R (a ^ n
 
 @[simp]
 theorem pow_lmul_right (a : A) (n : ℕ) : lmul_right R a ^ n = lmul_right R (a ^ n) :=
-  LinearMap.coe_injective$ ((lmul_right R a).coe_pow n).symm ▸ mul_right_iterate a n
+  LinearMap.coe_injective $ ((lmul_right R a).coe_pow n).symm ▸ mul_right_iterate a n
 
-end 
+end
 
-section 
+section
 
 variable {R A : Type _} [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
-theorem lmul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul_left R x) :=
-  by 
-    let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-    exact mul_right_injective₀ hx
+theorem lmul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul_left R x) := by
+  let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  exact mul_right_injective₀ hx
 
-theorem lmul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul_right R x) :=
-  by 
-    let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-    exact mul_left_injective₀ hx
+theorem lmul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul_right R x) := by
+  let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  exact mul_left_injective₀ hx
 
-theorem lmul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul R A x) :=
-  by 
-    let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-    exact mul_right_injective₀ hx
+theorem lmul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul R A x) := by
+  let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  exact mul_right_injective₀ hx
 
-end 
+end
 
 end Algebra
 

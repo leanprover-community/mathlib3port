@@ -6,7 +6,7 @@ namespace Omega
 
 namespace Nat
 
-/-- The shadow syntax for arithmetic terms. All constants are reified to `cst`
+/--  The shadow syntax for arithmetic terms. All constants are reified to `cst`
 (e.g., `5` is reified to `cst 5`) and all other atomic terms are reified to
 `exp` (e.g., `5 * (list.length l)` is reified to `exp 5 \`(list.length l)`).
 `exp` accepts a coefficient of type `nat` as its first argument because
@@ -17,17 +17,18 @@ unsafe inductive exprterm : Type
   | add : exprterm → exprterm → exprterm
   | sub : exprterm → exprterm → exprterm
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler has_reflect
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler decidable_eq
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler inhabited
-/-- Similar to `exprterm`, except that all exprs are now replaced with
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler has_reflect
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler decidable_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler inhabited
+/--  Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
 the terms represented by the said exprs. -/
 inductive preterm : Type
   | cst : Nat → preterm
   | var : Nat → Nat → preterm
   | add : preterm → preterm → preterm
-  | sub : preterm → preterm → preterm deriving [anonymous], [anonymous], [anonymous]
+  | sub : preterm → preterm → preterm
+  deriving [anonymous], [anonymous], [anonymous]
 
 localized [Omega.Nat] notation "&" k => Omega.Nat.Preterm.cst k
 
@@ -39,29 +40,28 @@ localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
--- ././Mathport/Syntax/Translate/Basic.lean:686:4: warning: unsupported (TODO): `[tacs]
-/-- Helper tactic for proof by induction over preterms -/
+-- ././Mathport/Syntax/Translate/Basic.lean:771:4: warning: unsupported (TODO): `[tacs]
+/--  Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
 
-/-- Preterm evaluation -/
+/--  Preterm evaluation -/
 def val (v : Nat → Nat) : preterm → Nat
-| &i => i
-| i ** n => if i = 1 then v n else v n*i
-| t1 +* t2 => t1.val+t2.val
-| t1 -* t2 => t1.val - t2.val
+  | &i => i
+  | i ** n => if i = 1 then v n else v n*i
+  | t1 +* t2 => t1.val+t2.val
+  | t1 -* t2 => t1.val - t2.val
 
 @[simp]
 theorem val_const {v : Nat → Nat} {m : Nat} : (&m).val v = m :=
   rfl
 
 @[simp]
-theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m*v n :=
-  by 
-    simp only [val]
-    byCases' h1 : m = 1
-    rw [if_pos h1, h1, one_mulₓ]
-    rw [if_neg h1, mul_commₓ]
+theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m*v n := by
+  simp only [val]
+  by_cases' h1 : m = 1
+  rw [if_pos h1, h1, one_mulₓ]
+  rw [if_neg h1, mul_commₓ]
 
 @[simp]
 theorem val_add {v : Nat → Nat} {t s : preterm} : (t +* s).val v = t.val v+s.val v :=
@@ -71,76 +71,69 @@ theorem val_add {v : Nat → Nat} {t s : preterm} : (t +* s).val v = t.val v+s.v
 theorem val_sub {v : Nat → Nat} {t s : preterm} : (t -* s).val v = t.val v - s.val v :=
   rfl
 
-/-- Fresh de Brujin index not used by any variable in argument -/
+/--  Fresh de Brujin index not used by any variable in argument -/
 def fresh_index : preterm → Nat
-| &_ => 0
-| i ** n => n+1
-| t1 +* t2 => max t1.fresh_index t2.fresh_index
-| t1 -* t2 => max t1.fresh_index t2.fresh_index
+  | &_ => 0
+  | i ** n => n+1
+  | t1 +* t2 => max t1.fresh_index t2.fresh_index
+  | t1 -* t2 => max t1.fresh_index t2.fresh_index
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr < » t.fresh_index)
-/-- If variable assignments `v` and `w` agree on all variables that occur
+/--  If variable assignments `v` and `w` agree on all variables that occur
 in term `t`, the value of `t` under `v` and `w` are identical. -/
-theorem val_constant (v w : Nat → Nat) : ∀ t : preterm, (∀ x _ : x < t.fresh_index, v x = w x) → t.val v = t.val w
-| &n, h1 => rfl
-| m ** n, h1 =>
-  by 
+theorem val_constant (v w : Nat → Nat) : ∀ t : preterm, (∀, ∀ x < t.fresh_index, ∀, v x = w x) → t.val v = t.val w
+  | &n, h1 => rfl
+  | m ** n, h1 => by
     simp only [val_var]
-    apply congr_argₓ fun y => m*y 
+    apply congr_argₓ fun y => m*y
     apply h1 _ (lt_add_one _)
-| t +* s, h1 =>
-  by 
+  | t +* s, h1 => by
     simp only [val_add]
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_leftₓ _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_rightₓ _ _))
     rw [ht, hs]
-| t -* s, h1 =>
-  by 
+  | t -* s, h1 => by
     simp only [val_sub]
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_leftₓ _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_rightₓ _ _))
     rw [ht, hs]
 
 def reprₓ : preterm → Stringₓ
-| &i => i.repr
-| i ** n => i.repr ++ "*x" ++ n.repr
-| t1 +* t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
-| t1 -* t2 => "(" ++ t1.repr ++ " - " ++ t2.repr ++ ")"
+  | &i => i.repr
+  | i ** n => i.repr ++ "*x" ++ n.repr
+  | t1 +* t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
+  | t1 -* t2 => "(" ++ t1.repr ++ " - " ++ t2.repr ++ ")"
 
 @[simp]
 def add_one (t : preterm) : preterm :=
   t +* &1
 
-/-- Preterm is free of subtractions -/
+/--  Preterm is free of subtractions -/
 def sub_free : preterm → Prop
-| &m => True
-| m ** n => True
-| t +* s => t.sub_free ∧ s.sub_free
-| _ -* _ => False
+  | &m => True
+  | m ** n => True
+  | t +* s => t.sub_free ∧ s.sub_free
+  | _ -* _ => False
 
 end Preterm
 
 open_locale List.Func
 
-/-- Return a term (which is in canonical form by definition)
+/--  Return a term (which is in canonical form by definition)
     that is equivalent to the input preterm -/
 @[simp]
 def canonize : preterm → term
-| &m => ⟨↑m, []⟩
-| m ** n => ⟨0, [] {n ↦ ↑m}⟩
-| t +* s => term.add (canonize t) (canonize s)
-| _ -* _ => ⟨0, []⟩
+  | &m => ⟨↑m, []⟩
+  | m ** n => ⟨0, [] {n ↦ ↑m}⟩
+  | t +* s => term.add (canonize t) (canonize s)
+  | _ -* _ => ⟨0, []⟩
 
 @[simp]
 theorem val_canonize {v : Nat → Nat} : ∀ {t : preterm}, t.sub_free → ((canonize t).val fun x => ↑v x) = t.val v
-| &i, h1 =>
-  by 
+  | &i, h1 => by
     simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zeroₓ]
-| i ** n, h1 =>
-  by 
+  | i ** n, h1 => by
     simp only [preterm.val_var, coeffs.val_set, term.val, zero_addₓ, Int.coe_nat_mul, canonize]
-| t +* s, h1 =>
-  by 
+  | t +* s, h1 => by
     simp only [val_canonize h1.left, val_canonize h1.right, Int.coe_nat_add, canonize, term.val_add, preterm.val_add]
 
 end Nat

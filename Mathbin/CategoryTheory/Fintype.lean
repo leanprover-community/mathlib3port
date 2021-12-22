@@ -1,7 +1,7 @@
-import Mathbin.CategoryTheory.ConcreteCategory.Bundled 
-import Mathbin.CategoryTheory.FullSubcategory 
-import Mathbin.CategoryTheory.Skeletal 
-import Mathbin.Data.Fin.Basic 
+import Mathbin.CategoryTheory.ConcreteCategory.Bundled
+import Mathbin.CategoryTheory.FullSubcategory
+import Mathbin.CategoryTheory.Skeletal
+import Mathbin.Data.Fin.Basic
 import Mathbin.Data.Fintype.Basic
 
 /-!
@@ -21,7 +21,7 @@ open_locale Classical
 
 open CategoryTheory
 
-/-- The category of finite types. -/
+/--  The category of finite types. -/
 def Fintypeₓ :=
   bundled Fintype
 
@@ -30,7 +30,7 @@ namespace Fintypeₓ
 instance : CoeSort Fintypeₓ (Type _) :=
   bundled.has_coe_to_sort
 
-/-- Construct a bundled `Fintype` from the underlying type and typeclass. -/
+/--  Construct a bundled `Fintype` from the underlying type and typeclass. -/
 def of (X : Type _) [Fintype X] : Fintypeₓ :=
   bundled.of X
 
@@ -43,9 +43,9 @@ instance {X : Fintypeₓ} : Fintype X :=
 instance : category Fintypeₓ :=
   induced_category.category bundled.α
 
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler full
--- ././Mathport/Syntax/Translate/Basic.lean:748:9: unsupported derive handler faithful
-/-- The fully faithful embedding of `Fintype` into the category of types. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler full
+-- ././Mathport/Syntax/Translate/Basic.lean:833:9: unsupported derive handler faithful
+/--  The fully faithful embedding of `Fintype` into the category of types. -/
 @[simps]
 def incl : Fintypeₓ ⥤ Type _ :=
   induced_functor _ deriving [anonymous], [anonymous]
@@ -63,7 +63,7 @@ theorem comp_apply {X Y Z : Fintypeₓ} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f
 
 universe u
 
-/--
+/-- 
 The "standard" skeleton for `Fintype`. This is the full subcategory of `Fintype` spanned by objects
 of the form `ulift (fin n)` for `n : ℕ`. We parameterize the objects of `Fintype.skeleton`
 directly as `ulift ℕ`, as the type `ulift (fin m) ≃ ulift (fin n)` is
@@ -75,14 +75,14 @@ def skeleton : Type u :=
 
 namespace Skeleton
 
-/-- Given any natural number `n`, this creates the associated object of `Fintype.skeleton`. -/
+/--  Given any natural number `n`, this creates the associated object of `Fintype.skeleton`. -/
 def mk : ℕ → skeleton :=
   Ulift.up
 
 instance : Inhabited skeleton :=
   ⟨mk 0⟩
 
-/-- Given any object of `Fintype.skeleton`, this returns the associated natural number. -/
+/--  Given any object of `Fintype.skeleton`, this returns the associated natural number. -/
 def len : skeleton → ℕ :=
   Ulift.down
 
@@ -90,68 +90,63 @@ def len : skeleton → ℕ :=
 theorem ext (X Y : skeleton) : X.len = Y.len → X = Y :=
   Ulift.ext _ _
 
-instance : small_category skeleton.{u} :=
-  { Hom := fun X Y => Ulift.{u} (Finₓ X.len) → Ulift.{u} (Finₓ Y.len), id := fun _ => id,
-    comp := fun _ _ _ f g => g ∘ f }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : small_category skeleton .{ u }
+  where Hom X Y := Ulift .{ u } ( Finₓ X.len ) → Ulift .{ u } ( Finₓ Y.len ) id _ := id comp _ _ _ f g := g ∘ f
 
-theorem is_skeletal : skeletal skeleton.{u} :=
-  fun X Y ⟨h⟩ =>
-    ext _ _$
-      Finₓ.equiv_iff_eq.mp$
-        Nonempty.intro$
-          { toFun := fun x => (h.hom ⟨x⟩).down, invFun := fun x => (h.inv ⟨x⟩).down,
-            left_inv :=
-              by 
-                intro a 
-                change Ulift.down _ = _ 
-                rw [Ulift.up_down]
-                change ((h.hom ≫ h.inv) _).down = _ 
-                simpa,
-            right_inv :=
-              by 
-                intro a 
-                change Ulift.down _ = _ 
-                rw [Ulift.up_down]
-                change ((h.inv ≫ h.hom) _).down = _ 
-                simpa }
+theorem is_skeletal : skeletal skeleton.{u} := fun X Y ⟨h⟩ =>
+  ext _ _ $
+    Finₓ.equiv_iff_eq.mp $
+      Nonempty.intro $
+        { toFun := fun x => (h.hom ⟨x⟩).down, invFun := fun x => (h.inv ⟨x⟩).down,
+          left_inv := by
+            intro a
+            change Ulift.down _ = _
+            rw [Ulift.up_down]
+            change ((h.hom ≫ h.inv) _).down = _
+            simpa,
+          right_inv := by
+            intro a
+            change Ulift.down _ = _
+            rw [Ulift.up_down]
+            change ((h.inv ≫ h.hom) _).down = _
+            simpa }
 
-/-- The canonical fully faithful embedding of `Fintype.skeleton` into `Fintype`. -/
+/--  The canonical fully faithful embedding of `Fintype.skeleton` into `Fintype`. -/
 def incl : skeleton.{u} ⥤ Fintypeₓ.{u} :=
   { obj := fun X => Fintypeₓ.of (Ulift (Finₓ X.len)), map := fun _ _ f => f }
 
-instance : full incl :=
-  { Preimage := fun _ _ f => f }
+-- failed to format: format: uncaught backtrack exception
+instance : full incl where Preimage _ _ f := f
 
 instance : faithful incl :=
   {  }
 
 instance : ess_surj incl :=
-  ess_surj.mk$
-    fun X =>
-      let F := Fintype.equivFin X
-      ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ Ulift.down, inv := Ulift.up ∘ F }⟩
+  ess_surj.mk $ fun X =>
+    let F := Fintype.equivFin X
+    ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ Ulift.down, inv := Ulift.up ∘ F }⟩
 
 noncomputable instance : is_equivalence incl :=
   equivalence.of_fully_faithfully_ess_surj _
 
-/-- The equivalence between `Fintype.skeleton` and `Fintype`. -/
+/--  The equivalence between `Fintype.skeleton` and `Fintype`. -/
 noncomputable def Equivalenceₓ : skeleton ≌ Fintypeₓ :=
   incl.asEquivalence
 
 @[simp]
-theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n :=
-  by 
-    convert Finset.card_fin n 
-    apply Fintype.of_equiv_card
+theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n := by
+  convert Finset.card_fin n
+  apply Fintype.of_equiv_card
 
 end Skeleton
 
-/-- `Fintype.skeleton` is a skeleton of `Fintype`. -/
+/--  `Fintype.skeleton` is a skeleton of `Fintype`. -/
 noncomputable def is_skeleton : is_skeleton_of Fintypeₓ skeleton skeleton.incl :=
   { skel := skeleton.is_skeletal,
-    eqv :=
-      by 
-        infer_instance }
+    eqv := by
+      infer_instance }
 
 end Fintypeₓ
 

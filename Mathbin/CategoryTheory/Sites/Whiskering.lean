@@ -38,24 +38,25 @@ namespace GrothendieckTopology.Cover
 
 variable (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X)
 
-/-- The multicospan associated to a cover `S : J.cover X` and a presheaf of the form `P ⋙ F`
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
+/--  The multicospan associated to a cover `S : J.cover X` and a presheaf of the form `P ⋙ F`
 is isomorphic to the composition of the multicospan associated to `S` and `P`,
 composed with `F`. -/
 def multicospan_comp : (S.index (P ⋙ F)).multicospan ≅ (S.index P).multicospan ⋙ F :=
   nat_iso.of_components
     (fun t =>
-      match t with 
+      match t with
       | walking_multicospan.left a => eq_to_iso rfl
       | walking_multicospan.right b => eq_to_iso rfl)
-    (by 
+    (by
       rintro (a | b) (a | b) (f | f | f)
-      any_goals 
-        dsimp 
-        erw [Functor.map_id, Functor.map_id, category.id_comp]
-      any_goals 
-        dsimp 
-        erw [category.comp_id, category.id_comp]
-        rfl)
+      any_goals {
+      }
+      any_goals {
+      })
 
 @[simp]
 theorem multicospan_comp_app_left a : (S.multicospan_comp F P).app (walking_multicospan.left a) = eq_to_iso rfl :=
@@ -67,38 +68,38 @@ theorem multicospan_comp_app_right b : (S.multicospan_comp F P).app (walking_mul
 
 @[simp]
 theorem multicospan_comp_hom_app_left a :
-  (S.multicospan_comp F P).Hom.app (walking_multicospan.left a) = eq_to_hom rfl :=
+    (S.multicospan_comp F P).Hom.app (walking_multicospan.left a) = eq_to_hom rfl :=
   rfl
 
 @[simp]
 theorem multicospan_comp_hom_app_right b :
-  (S.multicospan_comp F P).Hom.app (walking_multicospan.right b) = eq_to_hom rfl :=
+    (S.multicospan_comp F P).Hom.app (walking_multicospan.right b) = eq_to_hom rfl :=
   rfl
 
 @[simp]
 theorem multicospan_comp_hom_inv_left (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X) a :
-  (S.multicospan_comp F P).inv.app (walking_multicospan.left a) = eq_to_hom rfl :=
+    (S.multicospan_comp F P).inv.app (walking_multicospan.left a) = eq_to_hom rfl :=
   rfl
 
 @[simp]
 theorem multicospan_comp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X) b :
-  (S.multicospan_comp F P).inv.app (walking_multicospan.right b) = eq_to_hom rfl :=
+    (S.multicospan_comp F P).inv.app (walking_multicospan.right b) = eq_to_hom rfl :=
   rfl
 
-/-- Mapping the multifork associated to a cover `S : J.cover X` and a presheaf `P` with
+/--  Mapping the multifork associated to a cover `S : J.cover X` and a presheaf `P` with
 respect to a functor `F` is isomorphic (upto a natural isomorphism of the underlying functors)
 to the multifork associated to `S` and `P ⋙ F`. -/
 def map_multifork :
-  F.map_cone (S.multifork P) ≅ (limits.cones.postcompose (S.multicospan_comp F P).Hom).obj (S.multifork (P ⋙ F)) :=
+    F.map_cone (S.multifork P) ≅ (limits.cones.postcompose (S.multicospan_comp F P).Hom).obj (S.multifork (P ⋙ F)) :=
   cones.ext (eq_to_iso rfl)
-    (by 
+    (by
       rintro (a | b)
       ·
-        dsimp 
+        dsimp
         simpa
       ·
-        dsimp 
-        simp 
+        dsimp
+        simp
         dsimp [multifork.of_ι]
         simpa)
 
@@ -106,23 +107,23 @@ end GrothendieckTopology.Cover
 
 variable [∀ X : C S : J.cover X P : Cᵒᵖ ⥤ A, preserves_limit (S.index P).multicospan F]
 
-theorem presheaf.is_sheaf.comp {P : Cᵒᵖ ⥤ A} (hP : presheaf.is_sheaf J P) : presheaf.is_sheaf J (P ⋙ F) :=
-  by 
-    rw [presheaf.is_sheaf_iff_multifork] at hP⊢
-    intro X S 
-    obtain ⟨h⟩ := hP X S 
-    replace h := is_limit_of_preserves F h 
-    replace h := limits.is_limit.of_iso_limit h (S.map_multifork F P)
-    exact ⟨limits.is_limit.postcompose_hom_equiv (S.multicospan_comp F P) _ h⟩
+theorem presheaf.is_sheaf.comp {P : Cᵒᵖ ⥤ A} (hP : presheaf.is_sheaf J P) : presheaf.is_sheaf J (P ⋙ F) := by
+  rw [presheaf.is_sheaf_iff_multifork] at hP⊢
+  intro X S
+  obtain ⟨h⟩ := hP X S
+  replace h := is_limit_of_preserves F h
+  replace h := limits.is_limit.of_iso_limit h (S.map_multifork F P)
+  exact ⟨limits.is_limit.postcompose_hom_equiv (S.multicospan_comp F P) _ h⟩
 
 variable (J)
 
-/-- Composing a sheaf with a functor preserving the appropriate limits yields a functor
+/--  Composing a sheaf with a functor preserving the appropriate limits yields a functor
 between sheaf categories. -/
 @[simps]
 def Sheaf_compose : Sheaf J A ⥤ Sheaf J B :=
-  { obj := fun G => ⟨↑G ⋙ F, presheaf.is_sheaf.comp _ G.2⟩, map := fun G H η => whisker_right η _,
-    map_id' := fun G => whisker_right_id _, map_comp' := fun G H W f g => whisker_right_comp _ _ _ }
+  { obj := fun G => ⟨G.val ⋙ F, presheaf.is_sheaf.comp _ G.2⟩, map := fun G H η => ⟨whisker_right η.val _⟩,
+    map_id' := fun G => Sheaf.hom.ext _ _ $ whisker_right_id _,
+    map_comp' := fun G H W f g => Sheaf.hom.ext _ _ $ whisker_right_comp _ _ _ }
 
 end CategoryTheory
 

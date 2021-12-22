@@ -1,4 +1,4 @@
-import Mathbin.Order.BoundedOrder 
+import Mathbin.Order.BoundedOrder
 import Mathbin.Data.Set.Intervals.Basic
 
 /-!
@@ -33,7 +33,7 @@ variable {a b : α}
 instance [SemilatticeInf α] : SemilatticeInf (Ico a b) :=
   Subtype.semilatticeInf fun x y hx hy => ⟨le_inf hx.1 hy.1, lt_of_le_of_ltₓ inf_le_left hx.2⟩
 
-/-- `Ico a b` has a bottom element whenever `a < b`. -/
+/--  `Ico a b` has a bottom element whenever `a < b`. -/
 def OrderBot [PartialOrderₓ α] (h : a < b) : OrderBot (Ico a b) :=
   { bot := ⟨a, ⟨le_reflₓ a, h⟩⟩, bot_le := fun x => x.prop.1 }
 
@@ -53,7 +53,7 @@ variable {a b : α}
 instance [SemilatticeSup α] : SemilatticeSup (Ioc a b) :=
   Subtype.semilatticeSup fun x y hx hy => ⟨lt_of_lt_of_leₓ hx.1 le_sup_left, sup_le hx.2 hy.2⟩
 
-/-- `Ioc a b` has a top element whenever `a < b`. -/
+/--  `Ioc a b` has a top element whenever `a < b`. -/
 def OrderTop [PartialOrderₓ α] (h : a < b) : OrderTop (Ioc a b) :=
   { top := ⟨b, ⟨h, le_reflₓ b⟩⟩, le_top := fun x => x.prop.2 }
 
@@ -77,17 +77,19 @@ instance [SemilatticeSup α] : SemilatticeSup (Iic a) :=
   Subtype.semilatticeSup fun x y hx hy => sup_le hx hy
 
 instance [Lattice α] : Lattice (Iic a) :=
-  { Iic.semilattice_inf, Iic.semilattice_sup with  }
+  { Iic.semilattice_inf, Iic.semilattice_sup with }
 
-instance [Preorderₓ α] : OrderTop (Iic a) :=
-  { top := ⟨a, le_reflₓ a⟩, le_top := fun x => x.prop }
+-- failed to format: format: uncaught backtrack exception
+instance [ Preorderₓ α ] : OrderTop ( Iic a ) where top := ⟨ a , le_reflₓ a ⟩ le_top x := x.prop
 
 @[simp]
 theorem coe_top [PartialOrderₓ α] {a : α} : ↑(⊤ : Iic a) = a :=
   rfl
 
-instance [Preorderₓ α] [OrderBot α] : OrderBot (Iic a) :=
-  { bot := ⟨⊥, bot_le⟩, bot_le := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 bot_le }
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ Preorderₓ α ] [ OrderBot α ] : OrderBot ( Iic a )
+  where bot := ⟨ ⊥ , bot_le ⟩ bot_le ⟨ _ , _ ⟩ := Subtype.mk_le_mk . 2 bot_le
 
 @[simp]
 theorem coe_bot [Preorderₓ α] [OrderBot α] {a : α} : ↑(⊥ : Iic a) = (⊥ : α) :=
@@ -95,11 +97,11 @@ theorem coe_bot [Preorderₓ α] [OrderBot α] {a : α} : ↑(⊥ : Iic a) = (�
 
 instance [PartialOrderₓ α] [NoBotOrder α] {a : α} : NoBotOrder (Iic a) :=
   ⟨fun x =>
-      let ⟨y, hy⟩ := no_bot x.1
-      ⟨⟨y, le_transₓ hy.le x.2⟩, hy⟩⟩
+    let ⟨y, hy⟩ := no_bot x.1
+    ⟨⟨y, le_transₓ hy.le x.2⟩, hy⟩⟩
 
 instance [Preorderₓ α] [BoundedOrder α] : BoundedOrder (Iic a) :=
-  { Iic.order_top, Iic.order_bot with  }
+  { Iic.order_top, Iic.order_bot with }
 
 end Iic
 
@@ -114,17 +116,19 @@ instance [SemilatticeSup α] : SemilatticeSup (Ici a) :=
   Subtype.semilatticeSup fun x y hx hy => le_transₓ hx le_sup_left
 
 instance [Lattice α] : Lattice (Ici a) :=
-  { Ici.semilattice_inf, Ici.semilattice_sup with  }
+  { Ici.semilattice_inf, Ici.semilattice_sup with }
 
-instance [Preorderₓ α] : OrderBot (Ici a) :=
-  { bot := ⟨a, le_reflₓ a⟩, bot_le := fun x => x.prop }
+-- failed to format: format: uncaught backtrack exception
+instance [ Preorderₓ α ] : OrderBot ( Ici a ) where bot := ⟨ a , le_reflₓ a ⟩ bot_le x := x.prop
 
 @[simp]
 theorem coe_bot [PartialOrderₓ α] {a : α} : ↑(⊥ : Ici a) = a :=
   rfl
 
-instance [Preorderₓ α] [OrderTop α] : OrderTop (Ici a) :=
-  { top := ⟨⊤, le_top⟩, le_top := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 le_top }
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ Preorderₓ α ] [ OrderTop α ] : OrderTop ( Ici a )
+  where top := ⟨ ⊤ , le_top ⟩ le_top ⟨ _ , _ ⟩ := Subtype.mk_le_mk . 2 le_top
 
 @[simp]
 theorem coe_top [Preorderₓ α] [OrderTop α] {a : α} : ↑(⊤ : Ici a) = (⊤ : α) :=
@@ -132,11 +136,11 @@ theorem coe_top [Preorderₓ α] [OrderTop α] {a : α} : ↑(⊤ : Ici a) = (�
 
 instance [PartialOrderₓ α] [NoTopOrder α] {a : α} : NoTopOrder (Ici a) :=
   ⟨fun x =>
-      let ⟨y, hy⟩ := no_top x.1
-      ⟨⟨y, le_transₓ x.2 hy.le⟩, hy⟩⟩
+    let ⟨y, hy⟩ := no_top x.1
+    ⟨⟨y, le_transₓ x.2 hy.le⟩, hy⟩⟩
 
 instance [Preorderₓ α] [BoundedOrder α] : BoundedOrder (Ici a) :=
-  { Ici.order_top, Ici.order_bot with  }
+  { Ici.order_top, Ici.order_bot with }
 
 end Ici
 
@@ -149,19 +153,19 @@ instance [SemilatticeSup α] {a b : α} : SemilatticeSup (Icc a b) :=
   Subtype.semilatticeSup fun x y hx hy => ⟨le_transₓ hx.1 le_sup_left, sup_le hx.2 hy.2⟩
 
 instance [Lattice α] {a b : α} : Lattice (Icc a b) :=
-  { Icc.semilattice_inf, Icc.semilattice_sup with  }
+  { Icc.semilattice_inf, Icc.semilattice_sup with }
 
-/-- `Icc a b` has a bottom element whenever `a ≤ b`. -/
+/--  `Icc a b` has a bottom element whenever `a ≤ b`. -/
 def OrderBot [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) :=
   { bot := ⟨a, ⟨le_reflₓ a, h⟩⟩, bot_le := fun x => x.prop.1 }
 
-/-- `Icc a b` has a top element whenever `a ≤ b`. -/
+/--  `Icc a b` has a top element whenever `a ≤ b`. -/
 def OrderTop [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) :=
   { top := ⟨b, ⟨h, le_reflₓ b⟩⟩, le_top := fun x => x.prop.2 }
 
-/-- `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
+/--  `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
 def BoundedOrder [Preorderₓ α] {a b : α} (h : a ≤ b) : BoundedOrder (Icc a b) :=
-  { Icc.order_top h, Icc.order_bot h with  }
+  { Icc.order_top h, Icc.order_bot h with }
 
 end Icc
 

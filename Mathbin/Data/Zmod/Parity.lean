@@ -1,4 +1,4 @@
-import Mathbin.Data.Nat.Parity 
+import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Zmod.Basic
 
 /-!
@@ -17,17 +17,15 @@ namespace Zmod
 theorem eq_zero_iff_even {n : ℕ} : (n : Zmod 2) = 0 ↔ Even n :=
   (CharP.cast_eq_zero_iff (Zmod 2) 2 n).trans even_iff_two_dvd.symm
 
-theorem eq_one_iff_odd {n : ℕ} : (n : Zmod 2) = 1 ↔ Odd n :=
-  by 
-    rw [←@Nat.cast_one (Zmod 2), Zmod.eq_iff_modeq_nat, Nat.odd_iff, Nat.Modeq]
-    normNum
+theorem eq_one_iff_odd {n : ℕ} : (n : Zmod 2) = 1 ↔ Odd n := by
+  rw [← @Nat.cast_one (Zmod 2), Zmod.eq_iff_modeq_nat, Nat.odd_iff, Nat.Modeq]
+  norm_num
 
-theorem ne_zero_iff_odd {n : ℕ} : (n : Zmod 2) ≠ 0 ↔ Odd n :=
-  by 
-    constructor <;>
-      ·
-        contrapose 
-        simp [eq_zero_iff_even]
+theorem ne_zero_iff_odd {n : ℕ} : (n : Zmod 2) ≠ 0 ↔ Odd n := by
+  constructor <;>
+    ·
+      contrapose
+      simp [eq_zero_iff_even]
 
 end Zmod
 

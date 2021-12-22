@@ -1,4 +1,4 @@
-import Mathbin.Geometry.Manifold.TimesContMdiff 
+import Mathbin.Geometry.Manifold.TimesContMdiff
 import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
@@ -16,13 +16,13 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
   {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M'']
   [ChartedSpace H'' M''] (n : WithTop ℕ)
 
-/-- Bundled `n` times continuously differentiable maps. -/
-@[protectProj]
-structure TimesContMdiffMap where 
-  toFun : M → M' 
+/--  Bundled `n` times continuously differentiable maps. -/
+@[protect_proj]
+structure TimesContMdiffMap where
+  toFun : M → M'
   times_cont_mdiff_to_fun : TimesContMdiff I I' n to_fun
 
-/-- Bundled smooth maps. -/
+/--  Bundled smooth maps. -/
 @[reducible]
 def SmoothMap :=
   TimesContMdiffMap I I' M M' ⊤
@@ -43,8 +43,8 @@ instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
   ⟨fun f => ⟨f, f.times_cont_mdiff_to_fun.continuous⟩⟩
 
-attribute [toAdditiveIgnoreArgs 21] TimesContMdiffMap TimesContMdiffMap.hasCoeToFun
-  TimesContMdiffMap.ContinuousMap.hasCoe
+attribute [to_additive_ignore_args 21]
+  TimesContMdiffMap TimesContMdiffMap.hasCoeToFun TimesContMdiffMap.ContinuousMap.hasCoe
 
 variable {f g : C^n⟮I, M; I', M'⟯}
 
@@ -67,20 +67,18 @@ protected theorem Mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiabl
 protected theorem MdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
   f.mdifferentiable x
 
-theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g :=
-  by 
-    cases f <;> cases g <;> cases h <;> rfl
+theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
+  cases f <;> cases g <;> cases h <;> rfl
 
 @[ext]
-theorem ext (h : ∀ x, f x = g x) : f = g :=
-  by 
-    cases f <;> cases g <;> congr <;> exact funext h
+theorem ext (h : ∀ x, f x = g x) : f = g := by
+  cases f <;> cases g <;> congr <;> exact funext h
 
-/-- The identity as a smooth map. -/
+/--  The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ :=
   ⟨id, times_cont_mdiff_id⟩
 
-/-- The composition of smooth maps, as a smooth map. -/
+/--  The composition of smooth maps, as a smooth map. -/
 def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯ :=
   { toFun := fun a => f (g a), times_cont_mdiff_to_fun := f.times_cont_mdiff_to_fun.comp g.times_cont_mdiff_to_fun }
 
@@ -91,7 +89,7 @@ theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (
 instance [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
   ⟨⟨fun _ => default _, times_cont_mdiff_const⟩⟩
 
-/-- Constant map as a smooth map -/
+/--  Constant map as a smooth map -/
 def const (y : M') : C^n⟮I, M; I', M'⟯ :=
   ⟨fun x => y, times_cont_mdiff_const⟩
 

@@ -1,5 +1,5 @@
-import Mathbin.Algebra.Group.Defs 
-import Mathbin.Data.Equiv.Basic 
+import Mathbin.Algebra.Group.Defs
+import Mathbin.Data.Equiv.Basic
 import Mathbin.Logic.Nontrivial
 
 /-!
@@ -20,24 +20,24 @@ universe u v
 
 open Function
 
-/-- Multiplicative opposite of a type. This type inherits all additive structures on `α` and
+/--  Multiplicative opposite of a type. This type inherits all additive structures on `α` and
 reverses left and right in multiplication.-/
 def MulOpposite (α : Type u) : Type u :=
   α
 
--- ././Mathport/Syntax/Translate/Basic.lean:308:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:333:9: unsupported: advanced prec syntax
 postfix:999 "ᵐᵒᵖ" => MulOpposite
 
 namespace MulOpposite
 
 variable {α : Type u}
 
-/-- The element of `mul_opposite α` that represents `x : α`. -/
+/--  The element of `mul_opposite α` that represents `x : α`. -/
 @[pp_nodot]
 def op : α → αᵐᵒᵖ :=
   id
 
-/-- The element of `α` represented by `x : αᵐᵒᵖ`. -/
+/--  The element of `α` represented by `x : αᵐᵒᵖ`. -/
 @[pp_nodot]
 def unop : αᵐᵒᵖ → α :=
   id
@@ -58,12 +58,11 @@ theorem op_comp_unop : (op : α → αᵐᵒᵖ) ∘ unop = id :=
 theorem unop_comp_op : (unop : αᵐᵒᵖ → α) ∘ op = id :=
   rfl
 
-/-- A recursor for `opposite`. Use as `induction x using mul_opposite.rec`. -/
+/--  A recursor for `opposite`. Use as `induction x using mul_opposite.rec`. -/
 @[simp]
-protected def rec {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X :=
-  fun X => h (unop X)
+protected def rec {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)
 
-/-- The canonical bijection between `αᵐᵒᵖ` and `α`. -/
+/--  The canonical bijection between `αᵐᵒᵖ` and `α`. -/
 @[simps (config := { fullyApplied := ff }) apply symmApply]
 def op_equiv : α ≃ αᵐᵒᵖ :=
   ⟨op, unop, unop_op, op_unop⟩
@@ -111,31 +110,31 @@ instance [Unique α] : Unique (αᵐᵒᵖ) :=
 instance [IsEmpty α] : IsEmpty (αᵐᵒᵖ) :=
   Function.is_empty unop
 
-instance [HasZero α] : HasZero (αᵐᵒᵖ) :=
-  { zero := op 0 }
+instance [HasZero α] : HasZero (αᵐᵒᵖ) where
+  zero := op 0
 
-instance [HasOne α] : HasOne (αᵐᵒᵖ) :=
-  { one := op 1 }
+instance [HasOne α] : HasOne (αᵐᵒᵖ) where
+  one := op 1
 
-instance [Add α] : Add (αᵐᵒᵖ) :=
-  { add := fun x y => op (unop x+unop y) }
+-- failed to format: format: uncaught backtrack exception
+instance [ Add α ] : Add ( α ᵐᵒᵖ ) where add x y := op ( unop x + unop y )
 
-instance [Sub α] : Sub (αᵐᵒᵖ) :=
-  { sub := fun x y => op (unop x - unop y) }
+-- failed to format: format: uncaught backtrack exception
+instance [ Sub α ] : Sub ( α ᵐᵒᵖ ) where sub x y := op ( unop x - unop y )
 
-instance [Neg α] : Neg (αᵐᵒᵖ) :=
-  { neg := fun x => op$ -unop x }
+-- failed to format: format: uncaught backtrack exception
+instance [ Neg α ] : Neg ( α ᵐᵒᵖ ) where neg x := op $ - unop x
 
-instance [Mul α] : Mul (αᵐᵒᵖ) :=
-  { mul := fun x y => op (unop y*unop x) }
+-- failed to format: format: uncaught backtrack exception
+instance [ Mul α ] : Mul ( α ᵐᵒᵖ ) where mul x y := op ( unop y * unop x )
 
-instance [HasInv α] : HasInv (αᵐᵒᵖ) :=
-  { inv := fun x => op$ unop x⁻¹ }
+-- failed to format: format: uncaught backtrack exception
+instance [ HasInv α ] : HasInv ( α ᵐᵒᵖ ) where inv x := op $ unop x ⁻¹
 
-instance (R : Type _) [HasScalar R α] : HasScalar R (αᵐᵒᵖ) :=
-  { smul := fun c x => op (c • unop x) }
+-- failed to format: format: uncaught backtrack exception
+instance ( R : Type _ ) [ HasScalar R α ] : HasScalar R ( α ᵐᵒᵖ ) where smul c x := op ( c • unop x )
 
-section 
+section
 
 variable (α)
 
@@ -205,7 +204,7 @@ theorem op_smul {R : Type _} [HasScalar R α] (c : R) (a : α) : op (c • a) = 
 theorem unop_smul {R : Type _} [HasScalar R α] (c : R) (a : αᵐᵒᵖ) : unop (c • a) = c • unop a :=
   rfl
 
-end 
+end
 
 @[simp]
 theorem unop_eq_zero_iff {α} [HasZero α] (a : αᵐᵒᵖ) : a.unop = (0 : α) ↔ a = (0 : αᵐᵒᵖ) :=
@@ -216,10 +215,10 @@ theorem op_eq_zero_iff {α} [HasZero α] (a : α) : op a = (0 : αᵐᵒᵖ) ↔
   op_injective.eq_iff' rfl
 
 theorem unop_ne_zero_iff {α} [HasZero α] (a : αᵐᵒᵖ) : a.unop ≠ (0 : α) ↔ a ≠ (0 : αᵐᵒᵖ) :=
-  not_congr$ unop_eq_zero_iff a
+  not_congr $ unop_eq_zero_iff a
 
 theorem op_ne_zero_iff {α} [HasZero α] (a : α) : op a ≠ (0 : αᵐᵒᵖ) ↔ a ≠ (0 : α) :=
-  not_congr$ op_eq_zero_iff a
+  not_congr $ op_eq_zero_iff a
 
 @[simp]
 theorem unop_eq_one_iff {α} [HasOne α] (a : αᵐᵒᵖ) : a.unop = 1 ↔ a = 1 :=

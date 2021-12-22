@@ -1,4 +1,4 @@
-import Mathbin.Analysis.Complex.Isometry 
+import Mathbin.Analysis.Complex.Isometry
 import Mathbin.Analysis.NormedSpace.ConformalLinearMap
 
 /-!
@@ -25,7 +25,7 @@ this file.
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open Complex ContinuousLinearMap
 
@@ -39,29 +39,26 @@ section ConformalIntoComplexNormed
 variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ} {g : ℂ →L[ℝ] E} {f : ℂ → E}
 
 theorem is_conformal_map_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
-  IsConformalMap (map.restrict_scalars ℝ) :=
-  by 
-    have minor₁ : ∥map 1∥ ≠ 0
-    ·
-      simpa [ext_ring_iff] using nonzero 
-    refine' ⟨∥map 1∥, minor₁, ⟨∥map 1∥⁻¹ • map, _⟩, _⟩
-    ·
-      intro x 
-      simp only [LinearMap.smul_apply]
-      have  : x = x • 1 :=
-        by 
-          rw [smul_eq_mul, mul_oneₓ]
-      nthRw 0[this]
-      rw [_root_.coe_coe map, LinearMap.coe_coe_is_scalar_tower]
-      simp only [map.coe_coe, map.map_smul, norm_smul, NormedField.norm_inv, norm_norm]
-      fieldSimp [minor₁]
-    ·
-      ext1 
-      rw [←LinearIsometry.coe_to_linear_map]
-      simp [minor₁]
+    IsConformalMap (map.restrict_scalars ℝ) := by
+  have minor₁ : ∥map 1∥ ≠ 0 := by
+    simpa [ext_ring_iff] using nonzero
+  refine' ⟨∥map 1∥, minor₁, ⟨∥map 1∥⁻¹ • map, _⟩, _⟩
+  ·
+    intro x
+    simp only [LinearMap.smul_apply]
+    have : x = x • 1 := by
+      rw [smul_eq_mul, mul_oneₓ]
+    nth_rw 0[this]
+    rw [_root_.coe_coe map, LinearMap.coe_coe_is_scalar_tower]
+    simp only [map.coe_coe, map.map_smul, norm_smul, NormedField.norm_inv, norm_norm]
+    field_simp [minor₁]
+  ·
+    ext1
+    rw [← LinearIsometry.coe_to_linear_map]
+    simp [minor₁]
 
 theorem is_conformal_map_complex_linear_conj {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
-  IsConformalMap ((map.restrict_scalars ℝ).comp (conj_cle : ℂ →L[ℝ] ℂ)) :=
+    IsConformalMap ((map.restrict_scalars ℝ).comp (conj_cle : ℂ →L[ℝ] ℂ)) :=
   (is_conformal_map_complex_linear nonzero).comp is_conformal_map_conj
 
 end ConformalIntoComplexNormed
@@ -73,50 +70,48 @@ open ContinuousLinearMap
 variable {f : ℂ → ℂ} {z : ℂ} {g : ℂ →L[ℝ] ℂ}
 
 theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
-  (∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g ∘L ↑conj_cle :=
-  by 
-    rcases h with ⟨c, hc, li, hg⟩
-    rcases linear_isometry_complex (li.to_linear_isometry_equiv rfl) with ⟨a, ha⟩
-    let rot := c • (a : ℂ) • ContinuousLinearMap.id ℂ ℂ 
-    cases ha
-    ·
-      refine' Or.intro_left _ ⟨rot, _⟩
-      ext1 
-      simp only [coe_restrict_scalars', hg, ←li.coe_to_linear_isometry_equiv, ha, Pi.smul_apply,
-        ContinuousLinearMap.smul_apply, rotation_apply, ContinuousLinearMap.id_apply, smul_eq_mul]
-    ·
-      refine' Or.intro_rightₓ _ ⟨rot, _⟩
-      ext1 
-      rw [ContinuousLinearMap.coe_comp', hg, ←li.coe_to_linear_isometry_equiv, ha]
-      simp only [coe_restrict_scalars', Function.comp_app, Pi.smul_apply, LinearIsometryEquiv.coe_trans, conj_lie_apply,
-        rotation_apply, ContinuousLinearEquiv.coe_apply, conj_cle_apply]
-      simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul, conj_conj]
+    (∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g ∘L ↑conj_cle := by
+  rcases h with ⟨c, hc, li, hg⟩
+  rcases linear_isometry_complex (li.to_linear_isometry_equiv rfl) with ⟨a, ha⟩
+  let rot := c • (a : ℂ) • ContinuousLinearMap.id ℂ ℂ
+  cases ha
+  ·
+    refine' Or.intro_left _ ⟨rot, _⟩
+    ext1
+    simp only [coe_restrict_scalars', hg, ← li.coe_to_linear_isometry_equiv, ha, Pi.smul_apply,
+      ContinuousLinearMap.smul_apply, rotation_apply, ContinuousLinearMap.id_apply, smul_eq_mul]
+  ·
+    refine' Or.intro_rightₓ _ ⟨rot, _⟩
+    ext1
+    rw [ContinuousLinearMap.coe_comp', hg, ← li.coe_to_linear_isometry_equiv, ha]
+    simp only [coe_restrict_scalars', Function.comp_app, Pi.smul_apply, LinearIsometryEquiv.coe_trans, conj_lie_apply,
+      rotation_apply, ContinuousLinearEquiv.coe_apply, conj_cle_apply]
+    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul, conj_conj]
 
-/-- A real continuous linear map on the complex plane is conformal if and only if the map or its
+/--  A real continuous linear map on the complex plane is conformal if and only if the map or its
     conjugate is complex linear, and the map is nonvanishing. -/
 theorem is_conformal_map_iff_is_complex_or_conj_linear :
-  IsConformalMap g ↔
-    ((∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g ∘L ↑conj_cle) ∧
-      g ≠ 0 :=
-  by 
-    constructor
+    IsConformalMap g ↔
+      ((∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g ∘L ↑conj_cle) ∧
+        g ≠ 0 :=
+  by
+  constructor
+  ·
+    exact fun h => ⟨h.is_complex_or_conj_linear, h.ne_zero⟩
+  ·
+    rintro ⟨⟨map, rfl⟩ | ⟨map, hmap⟩, h₂⟩
     ·
-      exact fun h => ⟨h.is_complex_or_conj_linear, h.ne_zero⟩
+      refine' is_conformal_map_complex_linear _
+      contrapose! h₂ with w
+      simp [w]
     ·
-      rintro ⟨⟨map, rfl⟩ | ⟨map, hmap⟩, h₂⟩
-      ·
-        refine' is_conformal_map_complex_linear _ 
-        contrapose! h₂ with w 
-        simp [w]
-      ·
-        have minor₁ : g = map.restrict_scalars ℝ ∘L ↑conj_cle
-        ·
-          ext1 
-          simp [hmap]
-        rw [minor₁] at h₂⊢
-        refine' is_conformal_map_complex_linear_conj _ 
-        contrapose! h₂ with w 
-        simp [w]
+      have minor₁ : g = map.restrict_scalars ℝ ∘L ↑conj_cle := by
+        ext1
+        simp [hmap]
+      rw [minor₁] at h₂⊢
+      refine' is_conformal_map_complex_linear_conj _
+      contrapose! h₂ with w
+      simp [w]
 
 end ConformalIntoComplexPlane
 

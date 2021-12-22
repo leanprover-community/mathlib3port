@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Preadditive.Default 
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor 
+import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.Data.Equiv.TransferInstance
 
 /-!
@@ -14,10 +14,13 @@ namespace CategoryTheory
 
 variable (C : Type _) [category C] [preadditive C]
 
-instance : preadditive (Cᵒᵖ) :=
-  { homGroup := fun X Y => Equivₓ.addCommGroup (op_equiv X Y),
-    add_comp' := fun X Y Z f f' g => congr_argₓ Quiver.Hom.op (preadditive.comp_add _ _ _ g.unop f.unop f'.unop),
-    comp_add' := fun X Y Z f g g' => congr_argₓ Quiver.Hom.op (preadditive.add_comp _ _ _ g.unop g'.unop f.unop) }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : preadditive ( C ᵒᵖ )
+  where
+    homGroup X Y := Equivₓ.addCommGroup ( op_equiv X Y )
+      add_comp' X Y Z f f' g := congr_argₓ Quiver.Hom.op ( preadditive.comp_add _ _ _ g.unop f.unop f'.unop )
+      comp_add' X Y Z f g g' := congr_argₓ Quiver.Hom.op ( preadditive.add_comp _ _ _ g.unop g'.unop f.unop )
 
 @[simp]
 theorem unop_zero (X Y : Cᵒᵖ) : (0 : X ⟶ Y).unop = 0 :=

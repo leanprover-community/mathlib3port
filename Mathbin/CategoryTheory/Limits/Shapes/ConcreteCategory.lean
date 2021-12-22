@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels 
-import Mathbin.CategoryTheory.ConcreteCategory.Basic 
+import Mathbin.CategoryTheory.Limits.Shapes.Kernels
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
 import Mathbin.Tactic.Elementwise
 
 /-!

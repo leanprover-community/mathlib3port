@@ -41,7 +41,7 @@ since it is not a monad in `Type` but in `CommRing` (or rather `CommSemiRing`).
 
 open_locale BigOperators
 
-noncomputable section 
+noncomputable section
 
 namespace MvPolynomial
 
@@ -51,7 +51,7 @@ variable {σ : Type _} {τ : Type _}
 
 variable {R S T : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ T]
 
-/--
+/-- 
 `bind₁` is the "left hand side" bind operation on `mv_polynomial`, operating on the variable type.
 Given a polynomial `p : mv_polynomial σ R` and a map `f : σ → mv_polynomial τ R` taking variables
 in `p` to polynomials in the variable type `τ`, `bind₁ f p` replaces each variable in `p` with
@@ -61,7 +61,7 @@ This operation is an algebra hom.
 def bind₁ (f : σ → MvPolynomial τ R) : MvPolynomial σ R →ₐ[R] MvPolynomial τ R :=
   aeval f
 
-/--
+/-- 
 `bind₂` is the "right hand side" bind operation on `mv_polynomial`,
 operating on the coefficient type.
 Given a polynomial `p : mv_polynomial σ R` and
@@ -73,7 +73,7 @@ The variable type remains the same. This operation is a ring hom.
 def bind₂ (f : R →+* MvPolynomial σ S) : MvPolynomial σ R →+* MvPolynomial σ S :=
   eval₂_hom f X
 
-/--
+/-- 
 `join₁` is the monadic join operation corresponding to `mv_polynomial.bind₁`. Given a polynomial `p`
 with coefficients in `R` whose variables are polynomials in `σ` with coefficients in `R`,
 `join₁ p` collapses `p` to a polynomial with variables in `σ` and coefficients in `R`.
@@ -82,7 +82,7 @@ This operation is an algebra hom.
 def join₁ : MvPolynomial (MvPolynomial σ R) R →ₐ[R] MvPolynomial σ R :=
   aeval id
 
-/--
+/-- 
 `join₂` is the monadic join operation corresponding to `mv_polynomial.bind₂`. Given a polynomial `p`
 with variables in `σ` whose coefficients are polynomials in `σ` with coefficients in `R`,
 `join₂ p` collapses `p` to a polynomial with variables in `σ` and coefficients in `R`.
@@ -103,7 +103,7 @@ theorem eval₂_hom_C_eq_bind₁ (f : σ → MvPolynomial τ R) : eval₂_hom C 
 theorem eval₂_hom_eq_bind₂ (f : R →+* MvPolynomial σ S) : eval₂_hom f X = bind₂ f :=
   rfl
 
-section 
+section
 
 variable (σ R)
 
@@ -118,7 +118,7 @@ theorem eval₂_hom_C_id_eq_join₁ (φ : MvPolynomial (MvPolynomial σ R) R) : 
 theorem eval₂_hom_id_X_eq_join₂ : eval₂_hom (RingHom.id _) X = @join₂ σ R _ :=
   rfl
 
-end 
+end
 
 attribute [-simp] aeval_eq_bind₁ eval₂_hom_C_eq_bind₁ eval₂_hom_eq_bind₂ aeval_id_eq_join₁ eval₂_hom_id_X_eq_join₂
 
@@ -131,51 +131,44 @@ theorem bind₂_X_right (f : R →+* MvPolynomial σ S) (i : σ) : bind₂ f (X 
   eval₂_hom_X' f X i
 
 @[simp]
-theorem bind₁_X_left : bind₁ (X : σ → MvPolynomial σ R) = AlgHom.id R _ :=
-  by 
-    ext1 i 
-    simp 
+theorem bind₁_X_left : bind₁ (X : σ → MvPolynomial σ R) = AlgHom.id R _ := by
+  ext1 i
+  simp
 
-theorem aeval_X_left : aeval (X : σ → MvPolynomial σ R) = AlgHom.id R _ :=
-  by 
-    rw [aeval_eq_bind₁, bind₁_X_left]
+theorem aeval_X_left : aeval (X : σ → MvPolynomial σ R) = AlgHom.id R _ := by
+  rw [aeval_eq_bind₁, bind₁_X_left]
 
-theorem aeval_X_left_apply (φ : MvPolynomial σ R) : aeval X φ = φ :=
-  by 
-    rw [aeval_eq_bind₁, bind₁_X_left, AlgHom.id_apply]
+theorem aeval_X_left_apply (φ : MvPolynomial σ R) : aeval X φ = φ := by
+  rw [aeval_eq_bind₁, bind₁_X_left, AlgHom.id_apply]
 
 variable (f : σ → MvPolynomial τ R)
 
 @[simp]
-theorem bind₁_C_right (f : σ → MvPolynomial τ R) x : bind₁ f (C x) = C x :=
-  by 
-    simp [bind₁, algebra_map_eq]
+theorem bind₁_C_right (f : σ → MvPolynomial τ R) x : bind₁ f (C x) = C x := by
+  simp [bind₁, algebra_map_eq]
 
 @[simp]
 theorem bind₂_C_right (f : R →+* MvPolynomial σ S) (r : R) : bind₂ f (C r) = f r :=
   eval₂_hom_C f X r
 
 @[simp]
-theorem bind₂_C_left : bind₂ (C : R →+* MvPolynomial σ R) = RingHom.id _ :=
-  by 
-    ext : 2 <;> simp 
+theorem bind₂_C_left : bind₂ (C : R →+* MvPolynomial σ R) = RingHom.id _ := by
+  ext : 2 <;> simp
 
 @[simp]
 theorem bind₂_comp_C (f : R →+* MvPolynomial σ S) : (bind₂ f).comp C = f :=
-  RingHom.ext$ bind₂_C_right _
+  RingHom.ext $ bind₂_C_right _
 
 @[simp]
-theorem join₂_map (f : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) : join₂ (map f φ) = bind₂ f φ :=
-  by 
-    simp only [join₂, bind₂, eval₂_hom_map_hom, RingHom.id_comp]
+theorem join₂_map (f : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) : join₂ (map f φ) = bind₂ f φ := by
+  simp only [join₂, bind₂, eval₂_hom_map_hom, RingHom.id_comp]
 
 @[simp]
 theorem join₂_comp_map (f : R →+* MvPolynomial σ S) : join₂.comp (map f) = bind₂ f :=
-  RingHom.ext$ join₂_map _
+  RingHom.ext $ join₂_map _
 
-theorem aeval_id_rename (f : σ → MvPolynomial τ R) (p : MvPolynomial σ R) : aeval id (rename f p) = aeval f p :=
-  by 
-    rw [aeval_rename, Function.comp.left_id]
+theorem aeval_id_rename (f : σ → MvPolynomial τ R) (p : MvPolynomial σ R) : aeval id (rename f p) = aeval f p := by
+  rw [aeval_rename, Function.comp.left_id]
 
 @[simp]
 theorem join₁_rename (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) : join₁ (rename f φ) = bind₁ f φ :=
@@ -190,144 +183,411 @@ theorem bind₂_id : bind₂ (RingHom.id (MvPolynomial σ R)) = join₂ :=
   rfl
 
 theorem bind₁_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → MvPolynomial υ R) (φ : MvPolynomial σ R) :
-  (bind₁ g) (bind₁ f φ) = bind₁ (fun i => bind₁ g (f i)) φ :=
-  by 
-    simp [bind₁, ←comp_aeval]
+    (bind₁ g) (bind₁ f φ) = bind₁ (fun i => bind₁ g (f i)) φ := by
+  simp [bind₁, ← comp_aeval]
 
 theorem bind₁_comp_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → MvPolynomial υ R) :
-  (bind₁ g).comp (bind₁ f) = bind₁ fun i => bind₁ g (f i) :=
-  by 
-    ext1 
-    apply bind₁_bind₁
+    (bind₁ g).comp (bind₁ f) = bind₁ fun i => bind₁ g (f i) := by
+  ext1
+  apply bind₁_bind₁
 
 theorem bind₂_comp_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* MvPolynomial σ T) :
-  (bind₂ g).comp (bind₂ f) = bind₂ ((bind₂ g).comp f) :=
-  by 
-    ext : 2 <;> simp 
+    (bind₂ g).comp (bind₂ f) = bind₂ ((bind₂ g).comp f) := by
+  ext : 2 <;> simp
 
 theorem bind₂_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* MvPolynomial σ T) (φ : MvPolynomial σ R) :
-  (bind₂ g) (bind₂ f φ) = bind₂ ((bind₂ g).comp f) φ :=
+    (bind₂ g) (bind₂ f φ) = bind₂ ((bind₂ g).comp f) φ :=
   RingHom.congr_fun (bind₂_comp_bind₂ f g) φ
 
 theorem rename_comp_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → υ) :
-  (rename g).comp (bind₁ f) = bind₁ fun i => rename g$ f i :=
-  by 
-    ext1 i 
-    simp 
+    (rename g).comp (bind₁ f) = bind₁ fun i => rename g $ f i := by
+  ext1 i
+  simp
 
 theorem rename_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → υ) (φ : MvPolynomial σ R) :
-  rename g (bind₁ f φ) = bind₁ (fun i => rename g$ f i) φ :=
+    rename g (bind₁ f φ) = bind₁ (fun i => rename g $ f i) φ :=
   AlgHom.congr_fun (rename_comp_bind₁ f g) φ
 
 theorem map_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* T) (φ : MvPolynomial σ R) :
-  map g (bind₂ f φ) = bind₂ ((map g).comp f) φ :=
-  by 
-    simp only [bind₂, eval₂_comp_right, coe_eval₂_hom, eval₂_map]
-    congr 1 with  : 1
-    simp only [Function.comp_app, map_X]
+    map g (bind₂ f φ) = bind₂ ((map g).comp f) φ := by
+  simp only [bind₂, eval₂_comp_right, coe_eval₂_hom, eval₂_map]
+  congr 1 with : 1
+  simp only [Function.comp_app, map_X]
 
 theorem bind₁_comp_rename {υ : Type _} (f : τ → MvPolynomial υ R) (g : σ → τ) :
-  (bind₁ f).comp (rename g) = bind₁ (f ∘ g) :=
-  by 
-    ext1 i 
-    simp 
+    (bind₁ f).comp (rename g) = bind₁ (f ∘ g) := by
+  ext1 i
+  simp
 
 theorem bind₁_rename {υ : Type _} (f : τ → MvPolynomial υ R) (g : σ → τ) (φ : MvPolynomial σ R) :
-  bind₁ f (rename g φ) = bind₁ (f ∘ g) φ :=
+    bind₁ f (rename g φ) = bind₁ (f ∘ g) φ :=
   AlgHom.congr_fun (bind₁_comp_rename f g) φ
 
 theorem bind₂_map (f : S →+* MvPolynomial σ T) (g : R →+* S) (φ : MvPolynomial σ R) :
-  bind₂ f (map g φ) = bind₂ (f.comp g) φ :=
-  by 
-    simp [bind₂]
+    bind₂ f (map g φ) = bind₂ (f.comp g) φ := by
+  simp [bind₂]
 
 @[simp]
-theorem map_comp_C (f : R →+* S) : (map f).comp (C : R →+* MvPolynomial σ R) = C.comp f :=
-  by 
-    ext1 
-    apply map_C
+theorem map_comp_C (f : R →+* S) : (map f).comp (C : R →+* MvPolynomial σ R) = C.comp f := by
+  ext1
+  apply map_C
 
 theorem hom_bind₁ (f : MvPolynomial τ R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-  f (bind₁ g φ) = eval₂_hom (f.comp C) (fun i => f (g i)) φ :=
-  by 
-    rw [bind₁, map_aeval, algebra_map_eq]
+    f (bind₁ g φ) = eval₂_hom (f.comp C) (fun i => f (g i)) φ := by
+  rw [bind₁, map_aeval, algebra_map_eq]
 
 theorem map_bind₁ (f : R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-  map f (bind₁ g φ) = bind₁ (fun i : σ => (map f) (g i)) (map f φ) :=
-  by 
-    rw [hom_bind₁, map_comp_C, ←eval₂_hom_map_hom]
-    rfl
+    map f (bind₁ g φ) = bind₁ (fun i : σ => (map f) (g i)) (map f φ) := by
+  rw [hom_bind₁, map_comp_C, ← eval₂_hom_map_hom]
+  rfl
 
 @[simp]
-theorem eval₂_hom_comp_C (f : R →+* S) (g : σ → S) : (eval₂_hom f g).comp C = f :=
-  by 
-    ext1 r 
-    exact eval₂_C f g r
+theorem eval₂_hom_comp_C (f : R →+* S) (g : σ → S) : (eval₂_hom f g).comp C = f := by
+  ext1 r
+  exact eval₂_C f g r
 
 theorem eval₂_hom_bind₁ (f : R →+* S) (g : τ → S) (h : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-  eval₂_hom f g (bind₁ h φ) = eval₂_hom f (fun i => eval₂_hom f g (h i)) φ :=
-  by 
-    rw [hom_bind₁, eval₂_hom_comp_C]
+    eval₂_hom f g (bind₁ h φ) = eval₂_hom f (fun i => eval₂_hom f g (h i)) φ := by
+  rw [hom_bind₁, eval₂_hom_comp_C]
 
 theorem aeval_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-  aeval f (bind₁ g φ) = aeval (fun i => aeval f (g i)) φ :=
+    aeval f (bind₁ g φ) = aeval (fun i => aeval f (g i)) φ :=
   eval₂_hom_bind₁ _ _ _ _
 
 theorem aeval_comp_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial τ R) :
-  (aeval f).comp (bind₁ g) = aeval fun i => aeval f (g i) :=
-  by 
-    ext1 
-    apply aeval_bind₁
+    (aeval f).comp (bind₁ g) = aeval fun i => aeval f (g i) := by
+  ext1
+  apply aeval_bind₁
 
 theorem eval₂_hom_comp_bind₂ (f : S →+* T) (g : σ → T) (h : R →+* MvPolynomial σ S) :
-  (eval₂_hom f g).comp (bind₂ h) = eval₂_hom ((eval₂_hom f g).comp h) g :=
-  by 
-    ext : 2 <;> simp 
+    (eval₂_hom f g).comp (bind₂ h) = eval₂_hom ((eval₂_hom f g).comp h) g := by
+  ext : 2 <;> simp
 
 theorem eval₂_hom_bind₂ (f : S →+* T) (g : σ → T) (h : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) :
-  eval₂_hom f g (bind₂ h φ) = eval₂_hom ((eval₂_hom f g).comp h) g φ :=
+    eval₂_hom f g (bind₂ h φ) = eval₂_hom ((eval₂_hom f g).comp h) g φ :=
   RingHom.congr_fun (eval₂_hom_comp_bind₂ f g h) φ
 
 theorem aeval_bind₂ [Algebra S T] (f : σ → T) (g : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) :
-  aeval f (bind₂ g φ) = eval₂_hom ((↑(aeval f : _ →ₐ[S] _) : _ →+* _).comp g) f φ :=
+    aeval f (bind₂ g φ) = eval₂_hom ((↑(aeval f : _ →ₐ[S] _) : _ →+* _).comp g) f φ :=
   eval₂_hom_bind₂ _ _ _ _
 
 theorem eval₂_hom_C_left (f : σ → MvPolynomial τ R) : eval₂_hom C f = bind₁ f :=
   rfl
 
-theorem bind₁_monomial (f : σ → MvPolynomial τ R) (d : σ →₀ ℕ) (r : R) :
-  bind₁ f (monomial d r) = C r*∏ i in d.support, f i ^ d i :=
-  by 
-    simp only [monomial_eq, AlgHom.map_mul, bind₁_C_right, Finsupp.prod, AlgHom.map_prod, AlgHom.map_pow, bind₁_X_right]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `bind₁_monomial [])
+  (Command.declSig
+   [(Term.explicitBinder "(" [`f] [":" (Term.arrow `σ "→" (Term.app `MvPolynomial [`τ `R]))] [] ")")
+    (Term.explicitBinder "(" [`d] [":" (Data.Finsupp.Basic.«term_→₀_» `σ " →₀ " (termℕ "ℕ"))] [] ")")
+    (Term.explicitBinder "(" [`r] [":" `R] [] ")")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Term.app `bind₁ [`f (Term.app `monomial [`d `r])])
+     "="
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Term.app `C [`r])
+      "*"
+      (Algebra.BigOperators.Basic.«term∏_in_,_»
+       "∏"
+       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+       " in "
+       `d.support
+       ", "
+       («term_^_» (Term.app `f [`i]) "^" (Term.app `d [`i])))))))
+  (Command.declValSimple
+   ":="
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group
+        (Tactic.simp
+         "simp"
+         []
+         ["only"]
+         ["["
+          [(Tactic.simpLemma [] [] `monomial_eq)
+           ","
+           (Tactic.simpLemma [] [] `AlgHom.map_mul)
+           ","
+           (Tactic.simpLemma [] [] `bind₁_C_right)
+           ","
+           (Tactic.simpLemma [] [] `Finsupp.prod)
+           ","
+           (Tactic.simpLemma [] [] `AlgHom.map_prod)
+           ","
+           (Tactic.simpLemma [] [] `AlgHom.map_pow)
+           ","
+           (Tactic.simpLemma [] [] `bind₁_X_right)]
+          "]"]
+         [])
+        [])])))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.simp
+        "simp"
+        []
+        ["only"]
+        ["["
+         [(Tactic.simpLemma [] [] `monomial_eq)
+          ","
+          (Tactic.simpLemma [] [] `AlgHom.map_mul)
+          ","
+          (Tactic.simpLemma [] [] `bind₁_C_right)
+          ","
+          (Tactic.simpLemma [] [] `Finsupp.prod)
+          ","
+          (Tactic.simpLemma [] [] `AlgHom.map_prod)
+          ","
+          (Tactic.simpLemma [] [] `AlgHom.map_pow)
+          ","
+          (Tactic.simpLemma [] [] `bind₁_X_right)]
+         "]"]
+        [])
+       [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.simp
+   "simp"
+   []
+   ["only"]
+   ["["
+    [(Tactic.simpLemma [] [] `monomial_eq)
+     ","
+     (Tactic.simpLemma [] [] `AlgHom.map_mul)
+     ","
+     (Tactic.simpLemma [] [] `bind₁_C_right)
+     ","
+     (Tactic.simpLemma [] [] `Finsupp.prod)
+     ","
+     (Tactic.simpLemma [] [] `AlgHom.map_prod)
+     ","
+     (Tactic.simpLemma [] [] `AlgHom.map_pow)
+     ","
+     (Tactic.simpLemma [] [] `bind₁_X_right)]
+    "]"]
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `bind₁_X_right
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `AlgHom.map_pow
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `AlgHom.map_prod
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `Finsupp.prod
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `bind₁_C_right
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `AlgHom.map_mul
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `monomial_eq
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Term.app `bind₁ [`f (Term.app `monomial [`d `r])])
+   "="
+   (Finset.Data.Finset.Fold.«term_*_»
+    (Term.app `C [`r])
+    "*"
+    (Algebra.BigOperators.Basic.«term∏_in_,_»
+     "∏"
+     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+     " in "
+     `d.support
+     ", "
+     («term_^_» (Term.app `f [`i]) "^" (Term.app `d [`i])))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Finset.Data.Finset.Fold.«term_*_»
+   (Term.app `C [`r])
+   "*"
+   (Algebra.BigOperators.Basic.«term∏_in_,_»
+    "∏"
+    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+    " in "
+    `d.support
+    ", "
+    («term_^_» (Term.app `f [`i]) "^" (Term.app `d [`i]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Algebra.BigOperators.Basic.«term∏_in_,_»
+   "∏"
+   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i)] []))
+   " in "
+   `d.support
+   ", "
+   («term_^_» (Term.app `f [`i]) "^" (Term.app `d [`i])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Algebra.BigOperators.Basic.«term∏_in_,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_^_» (Term.app `f [`i]) "^" (Term.app `d [`i]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_^_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `d [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `i
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `d
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+  (Term.app `f [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `i
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `f
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 81 >? 1022, (some 1023, term) <=? (some 80, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 80, (some 80, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `d.support
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.explicitBinders', expected 'Mathlib.ExtendedBinder.extBinders'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  bind₁_monomial
+  ( f : σ → MvPolynomial τ R ) ( d : σ →₀ ℕ ) ( r : R ) : bind₁ f monomial d r = C r * ∏ i in d.support , f i ^ d i
+  :=
+    by
+      simp
+        only
+        [
+          monomial_eq , AlgHom.map_mul , bind₁_C_right , Finsupp.prod , AlgHom.map_prod , AlgHom.map_pow , bind₁_X_right
+          ]
 
 theorem bind₂_monomial (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) (r : R) : bind₂ f (monomial d r) = f r*monomial d 1 :=
-  by 
-    simp only [monomial_eq, RingHom.map_mul, bind₂_C_right, Finsupp.prod, RingHom.map_prod, RingHom.map_pow,
-      bind₂_X_right, C_1, one_mulₓ]
+  by
+  simp only [monomial_eq, RingHom.map_mul, bind₂_C_right, Finsupp.prod, RingHom.map_prod, RingHom.map_pow,
+    bind₂_X_right, C_1, one_mulₓ]
 
 @[simp]
-theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) : bind₂ f (monomial d 1) = monomial d 1 :=
-  by 
-    rw [bind₂_monomial, f.map_one, one_mulₓ]
+theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) : bind₂ f (monomial d 1) = monomial d 1 := by
+  rw [bind₂_monomial, f.map_one, one_mulₓ]
 
-instance Monadₓ : Monadₓ fun σ => MvPolynomial σ R :=
-  { map := fun α β f p => rename f p, pure := fun _ => X, bind := fun _ _ p f => bind₁ f p }
+-- failed to format: format: uncaught backtrack exception
+instance Monadₓ : Monadₓ fun σ => MvPolynomial σ R where map α β f p := rename f p pure _ := X bind _ _ p f := bind₁ f p
 
-instance IsLawfulFunctor : IsLawfulFunctor fun σ => MvPolynomial σ R :=
-  { id_map :=
-      by 
-        intros  <;> simp [· <$> ·],
-    comp_map :=
-      by 
-        intros  <;> simp [· <$> ·] }
+instance IsLawfulFunctor : IsLawfulFunctor fun σ => MvPolynomial σ R where
+  id_map := by
+    intros <;> simp [· <$> ·]
+  comp_map := by
+    intros <;> simp [· <$> ·]
 
-instance IsLawfulMonad : IsLawfulMonad fun σ => MvPolynomial σ R :=
-  { pure_bind :=
-      by 
-        intros  <;> simp [pure, bind],
-    bind_assoc :=
-      by 
-        intros  <;> simp [bind, ←bind₁_comp_bind₁] }
+instance IsLawfulMonad : IsLawfulMonad fun σ => MvPolynomial σ R where
+  pure_bind := by
+    intros <;> simp [pure, bind]
+  bind_assoc := by
+    intros <;> simp [bind, ← bind₁_comp_bind₁]
 
 end MvPolynomial
 

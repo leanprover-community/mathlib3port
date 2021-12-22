@@ -25,16 +25,16 @@ variable {X : Type u}
 
 local notation a "<" m ">" b => m a b
 
-/-- `is_unital m e` expresses that `e : X` is a left and right unit
+/--  `is_unital m e` expresses that `e : X` is a left and right unit
 for the binary operation `m : X → X → X`. -/
 structure is_unital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId _ m e : Prop
 
-@[toAdditive EckmannHilton.AddZeroClass.is_unital]
+@[to_additive EckmannHilton.AddZeroClass.is_unital]
 theorem mul_one_class.is_unital [G : MulOneClass X] : is_unital (·*·) (1 : X) :=
   is_unital.mk
-    (by 
+    (by
       infer_instance)
-    (by 
+    (by
       infer_instance)
 
 variable {m₁ m₂ : X → X → X} {e₁ e₂ : X}
@@ -45,62 +45,56 @@ variable (distrib : ∀ a b c d, ((a<m₂>b)<m₁>c<m₂>d) = (a<m₁>c)<m₂>b<
 
 include h₁ h₂ distrib
 
-/-- If a type carries two unital binary operations that distribute over each other,
+/--  If a type carries two unital binary operations that distribute over each other,
 then they have the same unit elements.
 
 In fact, the two operations are the same, and give a commutative monoid structure,
 see `eckmann_hilton.comm_monoid`. -/
-theorem one : e₁ = e₂ :=
-  by 
-    simpa only [h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id] using distrib e₂ e₁ e₁ e₂
+theorem one : e₁ = e₂ := by
+  simpa only [h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id] using distrib e₂ e₁ e₁ e₂
 
-/-- If a type carries two unital binary operations that distribute over each other,
+/--  If a type carries two unital binary operations that distribute over each other,
 then these operations are equal.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
-theorem mul : m₁ = m₂ :=
-  by 
-    funext a b 
-    calc m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) :=
-      by 
-        simp only [one h₁ h₂ distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]_ = m₂ a b :=
-      by 
-        simp only [distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
+theorem mul : m₁ = m₂ := by
+  funext a b
+  calc m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) := by
+    simp only [one h₁ h₂ distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]_ = m₂ a b := by
+    simp only [distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
 
-/-- If a type carries two unital binary operations that distribute over each other,
+/--  If a type carries two unital binary operations that distribute over each other,
 then these operations are commutative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
 theorem mul_commₓ : IsCommutative _ m₂ :=
-  ⟨fun a b =>
-      by 
-        simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib e₂ a b e₂⟩
+  ⟨fun a b => by
+    simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib e₂ a b e₂⟩
 
-/-- If a type carries two unital binary operations that distribute over each other,
+/--  If a type carries two unital binary operations that distribute over each other,
 then these operations are associative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
 theorem mul_assocₓ : IsAssociative _ m₂ :=
-  ⟨fun a b c =>
-      by 
-        simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib a b e₂ c⟩
+  ⟨fun a b c => by
+    simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib a b e₂ c⟩
 
 omit h₁ h₂ distrib
 
-/-- If a type carries a unital magma structure that distributes over a unital binary
+/--  If a type carries a unital magma structure that distributes over a unital binary
 operations, then the magma structure is a commutative monoid. -/
-@[toAdditive
+@[to_additive
       "If a type carries a unital additive magma structure that distributes over a\nunital binary operations, then the additive magma structure is a commutative additive monoid."]
 def CommMonoidₓ [h : MulOneClass X] (distrib : ∀ a b c d, ((a*b)<m₁>c*d) = (a<m₁>c)*b<m₁>d) : CommMonoidₓ X :=
   { h with mul := ·*·, one := 1, mul_comm := (mul_commₓ h₁ mul_one_class.is_unital distrib).comm,
     mul_assoc := (mul_assocₓ h₁ mul_one_class.is_unital distrib).assoc }
 
-/-- If a type carries a group structure that distributes over a unital binary operation,
+/--  If a type carries a group structure that distributes over a unital binary operation,
 then the group is commutative. -/
-@[toAdditive
+@[to_additive
       "If a type carries an additive group structure that distributes\nover a unital binary operation, then the additive group is commutative."]
 def CommGroupₓ [G : Groupₓ X] (distrib : ∀ a b c d, ((a*b)<m₁>c*d) = (a<m₁>c)*b<m₁>d) : CommGroupₓ X :=
-  { EckmannHilton.commMonoid h₁ distrib, G with  }
+  { EckmannHilton.commMonoid h₁ distrib, G with }
 
 end EckmannHilton
 

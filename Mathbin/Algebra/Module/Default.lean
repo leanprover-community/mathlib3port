@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Module.Basic 
+import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.Submodule
 
 /-!

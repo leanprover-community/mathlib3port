@@ -38,7 +38,7 @@ uniform spaces, completion, universal property
 -/
 
 
-noncomputable section 
+noncomputable section
 
 attribute [local instance] Classical.propDecidable
 
@@ -46,15 +46,15 @@ open Filter Set Function
 
 universe u
 
-/-- A completion of `α` is the data of a complete separated uniform space (from the same universe)
+/--  A completion of `α` is the data of a complete separated uniform space (from the same universe)
 and a map from `α` with dense range and inducing the original uniform structure on `α`. -/
-structure AbstractCompletion (α : Type u) [UniformSpace α] where 
-  Space : Type u 
-  coe : α → space 
-  uniformStruct : UniformSpace space 
-  complete : CompleteSpace space 
-  separation : SeparatedSpace space 
-  UniformInducing : UniformInducing coeₓ 
+structure AbstractCompletion (α : Type u) [UniformSpace α] where
+  Space : Type u
+  coe : α → space
+  uniformStruct : UniformSpace space
+  complete : CompleteSpace space
+  separation : SeparatedSpace space
+  UniformInducing : UniformInducing coeₓ
   dense : DenseRange coeₓ
 
 attribute [local instance] AbstractCompletion.uniformStruct AbstractCompletion.complete AbstractCompletion.separation
@@ -79,8 +79,244 @@ theorem uniform_continuous_coe : UniformContinuous ι :=
 theorem continuous_coe : Continuous ι :=
   pkg.uniform_continuous_coe.continuous
 
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  []
+  [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simple `elab_as_eliminator []))] "]")]
+  []
+  []
+  []
+  [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `induction_on [])
+  (Command.declSig
+   [(Term.implicitBinder
+     "{"
+     [`p]
+     [":"
+      (Term.arrow (AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termhatα "hatα") "→" (Term.prop "Prop"))]
+     "}")
+    (Term.explicitBinder
+     "("
+     [`a]
+     [":" (AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termhatα "hatα")]
+     []
+     ")")
+    (Term.explicitBinder
+     "("
+     [`hp]
+     [":" (Term.app `IsClosed [(Set.«term{_|_}» "{" `a "|" (Term.app `p [`a]) "}")])]
+     []
+     ")")
+    (Term.explicitBinder
+     "("
+     [`ih]
+     [":"
+      (Term.forall
+       "∀"
+       [(Term.simpleBinder [`a] [])]
+       ","
+       (Term.app `p [(Term.app (AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termι "ι") [`a])]))]
+     []
+     ")")]
+   (Term.typeSpec ":" (Term.app `p [`a])))
+  (Command.declValSimple ":=" (Term.app `is_closed_property [`pkg.dense `hp `ih `a]) [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `is_closed_property [`pkg.dense `hp `ih `a])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `ih
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `hp
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `pkg.dense
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `is_closed_property
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (Term.app `p [`a])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.simpleBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.explicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.forall
+   "∀"
+   [(Term.simpleBinder [`a] [])]
+   ","
+   (Term.app `p [(Term.app (AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termι "ι") [`a])]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.forall', expected 'Lean.Parser.Term.forall.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `p [(Term.app (AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termι "ι") [`a])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termι "ι") [`a])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termι "ι")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termι', expected 'antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Term.app (AbstractCompletion.Topology.UniformSpace.AbstractCompletion.termι "ι") [`a]) []]
+ ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.simpleBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.simpleBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.explicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `IsClosed [(Set.«term{_|_}» "{" `a "|" (Term.app `p [`a]) "}")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Set.«term{_|_}» "{" `a "|" (Term.app `p [`a]) "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `p [`a])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 @[ elab_as_eliminator ]
   theorem
     induction_on
@@ -90,12 +326,12 @@ theorem continuous_coe : Continuous ι :=
 variable {β : Type _} [UniformSpace β]
 
 protected theorem funext [T2Space β] {f g : hatα → β} (hf : Continuous f) (hg : Continuous g)
-  (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
-  funext$ fun a => pkg.induction_on a (is_closed_eq hf hg) h
+    (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
+  funext $ fun a => pkg.induction_on a (is_closed_eq hf hg) h
 
 section Extend
 
-/-- Extension of maps to completions -/
+/--  Extension of maps to completions -/
 protected def extend (f : α → β) : hatα → β :=
   if UniformContinuous f then pkg.dense_inducing.extend f else fun x => f (pkg.dense.some x)
 
@@ -104,27 +340,23 @@ variable {f : α → β}
 theorem extend_def (hf : UniformContinuous f) : pkg.extend f = pkg.dense_inducing.extend f :=
   if_pos hf
 
-theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.extend f) (ι a) = f a :=
-  by 
-    rw [pkg.extend_def hf]
-    exact pkg.dense_inducing.extend_eq hf.continuous a
+theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.extend f) (ι a) = f a := by
+  rw [pkg.extend_def hf]
+  exact pkg.dense_inducing.extend_eq hf.continuous a
 
 variable [CompleteSpace β]
 
-theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) :=
-  by 
-    byCases' hf : UniformContinuous f
-    ·
-      rw [pkg.extend_def hf]
-      exact uniform_continuous_uniformly_extend pkg.uniform_inducing pkg.dense hf
-    ·
-      change UniformContinuous (ite _ _ _)
-      rw [if_neg hf]
-      exact
-        uniform_continuous_of_const
-          fun a b =>
-            by 
-              congr
+theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) := by
+  by_cases' hf : UniformContinuous f
+  ·
+    rw [pkg.extend_def hf]
+    exact uniform_continuous_uniformly_extend pkg.uniform_inducing pkg.dense hf
+  ·
+    change UniformContinuous (ite _ _ _)
+    rw [if_neg hf]
+    exact
+      uniform_continuous_of_const fun a b => by
+        congr
 
 theorem continuous_extend : Continuous (pkg.extend f) :=
   pkg.uniform_continuous_extend.continuous
@@ -132,17 +364,15 @@ theorem continuous_extend : Continuous (pkg.extend f) :=
 variable [SeparatedSpace β]
 
 theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : UniformContinuous g)
-  (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g :=
-  by 
-    apply pkg.funext pkg.continuous_extend hg.continuous 
-    simpa only [pkg.extend_coe hf] using h
+    (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g := by
+  apply pkg.funext pkg.continuous_extend hg.continuous
+  simpa only [pkg.extend_coe hf] using h
 
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
-  funext$
-    fun x =>
-      pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.continuous)
-        fun y => pkg.extend_coe (hf.comp$ pkg.uniform_continuous_coe) y
+  funext $ fun x =>
+    pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.continuous) fun y =>
+      pkg.extend_coe (hf.comp $ pkg.uniform_continuous_coe) y
 
 end Extend
 
@@ -154,7 +384,7 @@ local notation "hatβ" => pkg'.space
 
 local notation "ι'" => pkg'.coe
 
-/-- Lifting maps to completions -/
+/--  Lifting maps to completions -/
 protected def map (f : α → β) : hatα → hatβ :=
   pkg.extend (ι' ∘ f)
 
@@ -175,12 +405,11 @@ theorem map_coe (hf : UniformContinuous f) (a : α) : map f (ι a) = ι' (f a) :
   pkg.extend_coe (pkg'.uniform_continuous_coe.comp hf) a
 
 theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous g) (h : ∀ a, ι' (f a) = g (ι a)) : map f = g :=
-  pkg.funext (pkg.continuous_map _ _) hg.continuous$
-    by 
-      intro a 
-      change pkg.extend (ι' ∘ f) _ = _ 
-      simp only [· ∘ ·, h]
-      rw [pkg.extend_coe (hg.comp pkg.uniform_continuous_coe)]
+  pkg.funext (pkg.continuous_map _ _) hg.continuous $ by
+    intro a
+    change pkg.extend (ι' ∘ f) _ = _
+    simp only [· ∘ ·, h]
+    rw [pkg.extend_coe (hg.comp pkg.uniform_continuous_coe)]
 
 @[simp]
 theorem map_id : pkg.map pkg id = id :=
@@ -189,16 +418,14 @@ theorem map_id : pkg.map pkg id = id :=
 variable {γ : Type _} [UniformSpace γ]
 
 theorem extend_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : α → β} (hf : UniformContinuous f)
-  (hg : UniformContinuous g) : (pkg'.extend f ∘ map g) = pkg.extend (f ∘ g) :=
-  pkg.funext (pkg'.continuous_extend.comp (pkg.continuous_map pkg' _)) pkg.continuous_extend$
-    fun a =>
-      by 
-        rw [pkg.extend_coe (hf.comp hg), comp_app, pkg.map_coe pkg' hg, pkg'.extend_coe hf]
+    (hg : UniformContinuous g) : (pkg'.extend f ∘ map g) = pkg.extend (f ∘ g) :=
+  pkg.funext (pkg'.continuous_extend.comp (pkg.continuous_map pkg' _)) pkg.continuous_extend $ fun a => by
+    rw [pkg.extend_coe (hf.comp hg), comp_app, pkg.map_coe pkg' hg, pkg'.extend_coe hf]
 
 variable (pkg'' : AbstractCompletion γ)
 
 theorem map_comp {g : β → γ} {f : α → β} (hg : UniformContinuous g) (hf : UniformContinuous f) :
-  (pkg'.map pkg'' g ∘ pkg.map pkg' f) = pkg.map pkg'' (g ∘ f) :=
+    (pkg'.map pkg'' g ∘ pkg.map pkg' f) = pkg.map pkg'' (g ∘ f) :=
   pkg.extend_map pkg' (pkg''.uniform_continuous_coe.comp hg) hf
 
 end MapSec
@@ -207,7 +434,7 @@ section Compare
 
 variable (pkg' : AbstractCompletion α)
 
-/-- The comparison map between two completions of the same uniform space. -/
+/--  The comparison map between two completions of the same uniform space. -/
 def compare : pkg.space → pkg'.space :=
   pkg.extend pkg'.coe
 
@@ -217,16 +444,15 @@ theorem uniform_continuous_compare : UniformContinuous (pkg.compare pkg') :=
 theorem compare_coe (a : α) : pkg.compare pkg' (pkg.coe a) = pkg'.coe a :=
   pkg.extend_coe pkg'.uniform_continuous_coe a
 
-theorem inverse_compare : (pkg.compare pkg' ∘ pkg'.compare pkg) = id :=
-  by 
-    have uc := pkg.uniform_continuous_compare pkg' 
-    have uc' := pkg'.uniform_continuous_compare pkg 
-    apply pkg'.funext (uc.comp uc').Continuous continuous_id 
-    intro a 
-    rw [comp_app, pkg'.compare_coe pkg, pkg.compare_coe pkg']
-    rfl
+theorem inverse_compare : (pkg.compare pkg' ∘ pkg'.compare pkg) = id := by
+  have uc := pkg.uniform_continuous_compare pkg'
+  have uc' := pkg'.uniform_continuous_compare pkg
+  apply pkg'.funext (uc.comp uc').Continuous continuous_id
+  intro a
+  rw [comp_app, pkg'.compare_coe pkg, pkg.compare_coe pkg']
+  rfl
 
-/-- The bijection between two completions of the same uniform space. -/
+/--  The bijection between two completions of the same uniform space. -/
 def compare_equiv : pkg.space ≃ pkg'.space :=
   { toFun := pkg.compare pkg', invFun := pkg'.compare pkg, left_inv := congr_funₓ (pkg'.inverse_compare pkg),
     right_inv := congr_funₓ (pkg.inverse_compare pkg') }
@@ -247,15 +473,13 @@ local notation "hatβ" => pkg'.space
 
 local notation "ι'" => pkg'.coe
 
-/-- Products of completions -/
+/--  Products of completions -/
 protected def Prod : AbstractCompletion (α × β) :=
   { Space := hatα × hatβ, coe := fun p => ⟨ι p.1, ι' p.2⟩, uniformStruct := Prod.uniformSpace,
-    complete :=
-      by 
-        infer_instance,
-    separation :=
-      by 
-        infer_instance,
+    complete := by
+      infer_instance,
+    separation := by
+      infer_instance,
     UniformInducing := UniformInducing.prod pkg.uniform_inducing pkg'.uniform_inducing,
     dense := pkg.dense.prod_map pkg'.dense }
 
@@ -273,16 +497,16 @@ variable {γ : Type _} [UniformSpace γ]
 
 open Function
 
-/-- Extend two variable map to completions. -/
+/--  Extend two variable map to completions. -/
 protected def extend₂ (f : α → β → γ) : hatα → hatβ → γ :=
-  curry$ (pkg.prod pkg').extend (uncurry f)
+  curry $ (pkg.prod pkg').extend (uncurry f)
 
 section SeparatedSpace
 
 variable [SeparatedSpace γ] {f : α → β → γ}
 
-theorem extension₂_coe_coe (hf : UniformContinuous$ uncurry f) (a : α) (b : β) :
-  pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
+theorem extension₂_coe_coe (hf : UniformContinuous $ uncurry f) (a : α) (b : β) :
+    pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
   show (pkg.prod pkg').extend (uncurry f) ((pkg.prod pkg').coe (a, b)) = uncurry f (a, b) from
     (pkg.prod pkg').extend_coe hf _
 
@@ -292,10 +516,9 @@ variable {f : α → β → γ}
 
 variable [CompleteSpace γ] (f)
 
-theorem uniform_continuous_extension₂ : UniformContinuous₂ (pkg.extend₂ pkg' f) :=
-  by 
-    rw [uniform_continuous₂_def, AbstractCompletion.extend₂, uncurry_curry]
-    apply uniform_continuous_extend
+theorem uniform_continuous_extension₂ : UniformContinuous₂ (pkg.extend₂ pkg' f) := by
+  rw [uniform_continuous₂_def, AbstractCompletion.extend₂, uncurry_curry]
+  apply uniform_continuous_extend
 
 end Extension₂
 
@@ -315,7 +538,7 @@ local notation "ι''" => pkg''.coe
 
 local notation f "∘₂" g => bicompr f g
 
-/-- Lift two variable maps to completions. -/
+/--  Lift two variable maps to completions. -/
 protected def map₂ (f : α → β → γ) : hatα → hatβ → hatγ :=
   pkg.extend₂ pkg' (pkg''.coe∘₂f)
 
@@ -323,11 +546,11 @@ theorem uniform_continuous_map₂ (f : α → β → γ) : UniformContinuous₂ 
   pkg.uniform_continuous_extension₂ pkg' _
 
 theorem continuous_map₂ {δ} [TopologicalSpace δ] {f : α → β → γ} {a : δ → hatα} {b : δ → hatβ} (ha : Continuous a)
-  (hb : Continuous b) : Continuous fun d : δ => pkg.map₂ pkg' pkg'' f (a d) (b d) :=
+    (hb : Continuous b) : Continuous fun d : δ => pkg.map₂ pkg' pkg'' f (a d) (b d) :=
   ((pkg.uniform_continuous_map₂ pkg' pkg'' f).Continuous.comp (Continuous.prod_mk ha hb) : _)
 
 theorem map₂_coe_coe (a : α) (b : β) (f : α → β → γ) (hf : UniformContinuous₂ f) :
-  pkg.map₂ pkg' pkg'' f (ι a) (ι' b) = ι'' (f a b) :=
+    pkg.map₂ pkg' pkg'' f (ι a) (ι' b) = ι'' (f a b) :=
   pkg.extension₂_coe_coe pkg' (pkg''.uniform_continuous_coe.comp hf) a b
 
 end Map₂

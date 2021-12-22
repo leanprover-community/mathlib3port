@@ -1,4 +1,4 @@
-import Mathbin.Analysis.Convex.Basic 
+import Mathbin.Analysis.Convex.Basic
 import Mathbin.Data.Complex.Module
 
 /-!

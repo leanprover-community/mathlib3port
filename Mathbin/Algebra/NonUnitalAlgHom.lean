@@ -41,7 +41,7 @@ universe u v w w₁ w₂ w₃
 
 variable (R : Type u) (A : Type v) (B : Type w) (C : Type w₁)
 
-/-- A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
+/--  A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
 algebra structures, this is the same as a not-necessarily-unital morphism of algebras. -/
 structure NonUnitalAlgHom [Monoidₓ R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B]
   [DistribMulAction R B] extends A →+[R] B, MulHom A B
@@ -60,7 +60,7 @@ variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
 
 variable [NonUnitalNonAssocSemiring C] [DistribMulAction R C]
 
-/-- see Note [function coercion] -/
+/--  see Note [function coercion] -/
 instance : CoeFun (NonUnitalAlgHom R A B) fun _ => A → B :=
   ⟨to_fun⟩
 
@@ -70,19 +70,17 @@ theorem to_fun_eq_coe (f : NonUnitalAlgHom R A B) : f.to_fun = ⇑f :=
 
 initialize_simps_projections NonUnitalAlgHom (toFun → apply)
 
-theorem coe_injective : @Function.Injective (NonUnitalAlgHom R A B) (A → B) coeFn :=
-  by 
-    rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
+theorem coe_injective : @Function.Injective (NonUnitalAlgHom R A B) (A → B) coeFn := by
+  rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
 
 @[ext]
 theorem ext {f g : NonUnitalAlgHom R A B} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective$ funext h
+  coe_injective $ funext h
 
 theorem ext_iff {f g : NonUnitalAlgHom R A B} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by 
-      rintro rfl x 
-      rfl,
-    ext⟩
+  ⟨by
+    rintro rfl x
+    rfl, ext⟩
 
 theorem congr_funₓ {f g : NonUnitalAlgHom R A B} (h : f = g) (x : A) : f x = g x :=
   h ▸ rfl
@@ -92,10 +90,9 @@ theorem coe_mk (f : A → B) h₁ h₂ h₃ h₄ : ((⟨f, h₁, h₂, h₃, h�
   rfl
 
 @[simp]
-theorem mk_coe (f : NonUnitalAlgHom R A B) h₁ h₂ h₃ h₄ : (⟨f, h₁, h₂, h₃, h₄⟩ : NonUnitalAlgHom R A B) = f :=
-  by 
-    ext 
-    rfl
+theorem mk_coe (f : NonUnitalAlgHom R A B) h₁ h₂ h₃ h₄ : (⟨f, h₁, h₂, h₃, h₄⟩ : NonUnitalAlgHom R A B) = f := by
+  ext
+  rfl
 
 instance : Coe (NonUnitalAlgHom R A B) (A →+[R] B) :=
   ⟨to_distrib_mul_action_hom⟩
@@ -111,38 +108,34 @@ theorem to_distrib_mul_action_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.to_dist
 theorem to_mul_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.to_mul_hom = ↑f :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_to_distrib_mul_action_hom (f : NonUnitalAlgHom R A B) : ((f : A →+[R] B) : A → B) = f :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_to_mul_hom (f : NonUnitalAlgHom R A B) : ((f : MulHom A B) : A → B) = f :=
   rfl
 
 theorem to_distrib_mul_action_hom_injective {f g : NonUnitalAlgHom R A B} (h : (f : A →+[R] B) = (g : A →+[R] B)) :
-  f = g :=
-  by 
-    ext a 
-    exact DistribMulActionHom.congr_fun h a
+    f = g := by
+  ext a
+  exact DistribMulActionHom.congr_fun h a
 
-theorem to_mul_hom_injective {f g : NonUnitalAlgHom R A B} (h : (f : MulHom A B) = (g : MulHom A B)) : f = g :=
-  by 
-    ext a 
-    exact MulHom.congr_fun h a
+theorem to_mul_hom_injective {f g : NonUnitalAlgHom R A B} (h : (f : MulHom A B) = (g : MulHom A B)) : f = g := by
+  ext a
+  exact MulHom.congr_fun h a
 
-@[normCast]
+@[norm_cast]
 theorem coe_distrib_mul_action_hom_mk (f : NonUnitalAlgHom R A B) h₁ h₂ h₃ h₄ :
-  ((⟨f, h₁, h₂, h₃, h₄⟩ : NonUnitalAlgHom R A B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ :=
-  by 
-    ext 
-    rfl
+    ((⟨f, h₁, h₂, h₃, h₄⟩ : NonUnitalAlgHom R A B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ := by
+  ext
+  rfl
 
-@[normCast]
+@[norm_cast]
 theorem coe_mul_hom_mk (f : NonUnitalAlgHom R A B) h₁ h₂ h₃ h₄ :
-  ((⟨f, h₁, h₂, h₃, h₄⟩ : NonUnitalAlgHom R A B) : MulHom A B) = ⟨f, h₄⟩ :=
-  by 
-    ext 
-    rfl
+    ((⟨f, h₁, h₂, h₃, h₄⟩ : NonUnitalAlgHom R A B) : MulHom A B) = ⟨f, h₄⟩ := by
+  ext
+  rfl
 
 @[simp]
 theorem map_smul (f : NonUnitalAlgHom R A B) (c : R) (x : A) : f (c • x) = c • f x :=
@@ -162,15 +155,13 @@ theorem map_zero (f : NonUnitalAlgHom R A B) : f 0 = 0 :=
 
 instance : HasZero (NonUnitalAlgHom R A B) :=
   ⟨{ (0 : A →+[R] B) with
-      map_mul' :=
-        by 
-          simp  }⟩
+      map_mul' := by
+        simp }⟩
 
 instance : HasOne (NonUnitalAlgHom R A A) :=
   ⟨{ (1 : A →+[R] A) with
-      map_mul' :=
-        by 
-          simp  }⟩
+      map_mul' := by
+        simp }⟩
 
 @[simp]
 theorem coe_zero : ((0 : NonUnitalAlgHom R A B) : A → B) = 0 :=
@@ -189,26 +180,26 @@ theorem one_apply (a : A) : (1 : NonUnitalAlgHom R A A) a = a :=
 instance : Inhabited (NonUnitalAlgHom R A B) :=
   ⟨0⟩
 
-/-- The composition of morphisms is a morphism. -/
+/--  The composition of morphisms is a morphism. -/
 def comp (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) : NonUnitalAlgHom R A C :=
-  { (f : MulHom B C).comp (g : MulHom A B), (f : B →+[R] C).comp (g : A →+[R] B) with  }
+  { (f : MulHom B C).comp (g : MulHom A B), (f : B →+[R] C).comp (g : A →+[R] B) with }
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_comp (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) :
-  (f.comp g : A → C) = (f : B → C) ∘ (g : A → B) :=
+    (f.comp g : A → C) = (f : B → C) ∘ (g : A → B) :=
   rfl
 
 theorem comp_apply (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) (x : A) : f.comp g x = f (g x) :=
   rfl
 
-/-- The inverse of a bijective morphism is a morphism. -/
+/--  The inverse of a bijective morphism is a morphism. -/
 def inverse (f : NonUnitalAlgHom R A B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) :
-  NonUnitalAlgHom R B A :=
-  { (f : MulHom A B).inverse g h₁ h₂, (f : A →+[R] B).inverse g h₁ h₂ with  }
+    NonUnitalAlgHom R B A :=
+  { (f : MulHom A B).inverse g h₁ h₂, (f : A →+[R] B).inverse g h₁ h₂ with }
 
 @[simp]
 theorem coe_inverse (f : NonUnitalAlgHom R A B) (g : B → A) (h₁ : Function.LeftInverse g f)
-  (h₂ : Function.RightInverse g f) : (inverse f g h₁ h₂ : B → A) = g :=
+    (h₂ : Function.RightInverse g f) : (inverse f g h₁ h₂ : B → A) = g :=
   rfl
 
 end NonUnitalAlgHom
@@ -217,7 +208,7 @@ namespace AlgHom
 
 variable {R A B} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
 
-/-- A unital morphism of algebras is a `non_unital_alg_hom`. -/
+/--  A unital morphism of algebras is a `non_unital_alg_hom`. -/
 def to_non_unital_alg_hom (f : A →ₐ[R] B) : NonUnitalAlgHom R A B :=
   { f with map_smul' := f.map_smul }
 
@@ -228,7 +219,7 @@ instance non_unital_alg_hom.has_coe : Coe (A →ₐ[R] B) (NonUnitalAlgHom R A B
 theorem to_non_unital_alg_hom_eq_coe (f : A →ₐ[R] B) : f.to_non_unital_alg_hom = f :=
   rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_to_non_unital_alg_hom (f : A →ₐ[R] B) : ((f : NonUnitalAlgHom R A B) : A → B) = f :=
   rfl
 

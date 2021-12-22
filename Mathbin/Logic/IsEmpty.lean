@@ -1,4 +1,4 @@
-import Mathbin.Logic.Function.Basic 
+import Mathbin.Logic.Function.Basic
 import Mathbin.Tactic.Protected
 
 /-!
@@ -14,9 +14,9 @@ In this file we define a typeclass `is_empty`, which expresses that a type has n
 
 variable {α β γ : Sort _}
 
-/-- `is_empty α` expresses that `α` is empty. -/
-@[protectProj]
-class IsEmpty (α : Sort _) : Prop where 
+/--  `is_empty α` expresses that `α` is empty. -/
+@[protect_proj]
+class IsEmpty (α : Sort _) : Prop where
   False : α → False
 
 instance : IsEmpty Empty :=
@@ -35,7 +35,7 @@ protected theorem Function.is_empty [IsEmpty β] (f : α → β) : IsEmpty α :=
   ⟨fun x => IsEmpty.false (f x)⟩
 
 instance {p : α → Sort _} [h : Nonempty α] [∀ x, IsEmpty (p x)] : IsEmpty (∀ x, p x) :=
-  h.elim$ fun x => Function.is_empty$ Function.eval x
+  h.elim $ fun x => Function.is_empty $ Function.eval x
 
 instance PProd.is_empty_left [IsEmpty α] : IsEmpty (PProd α β) :=
   Function.is_empty PProd.fst
@@ -55,23 +55,22 @@ instance [IsEmpty α] [IsEmpty β] : IsEmpty (Psum α β) :=
 instance {α β} [IsEmpty α] [IsEmpty β] : IsEmpty (Sum α β) :=
   ⟨fun x => Sum.rec IsEmpty.false IsEmpty.false x⟩
 
-/-- subtypes of an empty type are empty -/
+/--  subtypes of an empty type are empty -/
 instance [IsEmpty α] (p : α → Prop) : IsEmpty (Subtype p) :=
   ⟨fun x => IsEmpty.false x.1⟩
 
-/-- subtypes by an all-false predicate are false. -/
+/--  subtypes by an all-false predicate are false. -/
 theorem Subtype.is_empty_of_false {p : α → Prop} (hp : ∀ a, ¬p a) : IsEmpty (Subtype p) :=
   ⟨fun x => hp _ x.2⟩
 
-/-- subtypes by false are false. -/
+/--  subtypes by false are false. -/
 instance Subtype.is_empty_false : IsEmpty { a : α // False } :=
   Subtype.is_empty_of_false fun a => id
 
-example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) :=
-  by 
-    infer_instance
+example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by
+  infer_instance
 
-/-- Eliminate out of a type that `is_empty` (without using projection notation). -/
+/--  Eliminate out of a type that `is_empty` (without using projection notation). -/
 @[elab_as_eliminator]
 def isEmptyElim [IsEmpty α] {p : α → Sort _} (a : α) : p a :=
   (IsEmpty.false a).elim
@@ -83,11 +82,11 @@ namespace IsEmpty
 
 open Function
 
-/-- Eliminate out of a type that `is_empty` (using projection notation). -/
+/--  Eliminate out of a type that `is_empty` (using projection notation). -/
 protected def elim (h : IsEmpty α) {p : α → Sort _} (a : α) : p a :=
   isEmptyElim a
 
-/-- Non-dependent version of `is_empty.elim`. Helpful if the elaborator cannot elaborate `h.elim a`
+/--  Non-dependent version of `is_empty.elim`. Helpful if the elaborator cannot elaborate `h.elim a`
   correctly. -/
 protected def elim' {β : Sort _} (h : IsEmpty α) (a : α) : β :=
   h.elim a
@@ -101,7 +100,7 @@ theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ True :=
   iff_true_intro isEmptyElim
 
 theorem exists_iff {p : α → Prop} : (∃ a, p a) ↔ False :=
-  iff_false_intro$ fun ⟨x, hx⟩ => IsEmpty.false x
+  iff_false_intro $ fun ⟨x, hx⟩ => IsEmpty.false x
 
 instance (priority := 100) : Subsingleton α :=
   ⟨isEmptyElim⟩
@@ -117,34 +116,29 @@ theorem not_is_empty_iff : ¬IsEmpty α ↔ Nonempty α :=
   not_iff_comm.mp not_nonempty_iff
 
 @[simp]
-theorem is_empty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) :=
-  by 
-    simp only [←not_nonempty_iff, Classical.nonempty_pi, not_forall]
+theorem is_empty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
+  simp only [← not_nonempty_iff, Classical.nonempty_pi, not_forall]
 
 @[simp]
-theorem is_empty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β :=
-  by 
-    simp only [←not_nonempty_iff, nonempty_prod, not_and_distrib]
+theorem is_empty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
+  simp only [← not_nonempty_iff, nonempty_prod, not_and_distrib]
 
 @[simp]
-theorem is_empty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β :=
-  by 
-    simp only [←not_nonempty_iff, nonempty_pprod, not_and_distrib]
+theorem is_empty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := by
+  simp only [← not_nonempty_iff, nonempty_pprod, not_and_distrib]
 
 @[simp]
-theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β :=
-  by 
-    simp only [←not_nonempty_iff, nonempty_sum, not_or_distrib]
+theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β := by
+  simp only [← not_nonempty_iff, nonempty_sum, not_or_distrib]
 
 @[simp]
-theorem is_empty_psum {α β} : IsEmpty (Psum α β) ↔ IsEmpty α ∧ IsEmpty β :=
-  by 
-    simp only [←not_nonempty_iff, nonempty_psum, not_or_distrib]
+theorem is_empty_psum {α β} : IsEmpty (Psum α β) ↔ IsEmpty α ∧ IsEmpty β := by
+  simp only [← not_nonempty_iff, nonempty_psum, not_or_distrib]
 
 variable (α)
 
 theorem is_empty_or_nonempty : IsEmpty α ∨ Nonempty α :=
-  (em$ IsEmpty α).elim Or.inl$ Or.inr ∘ not_is_empty_iff.mp
+  (em $ IsEmpty α).elim Or.inl $ Or.inr ∘ not_is_empty_iff.mp
 
 @[simp]
 theorem not_is_empty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
@@ -153,5 +147,5 @@ theorem not_is_empty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
 variable {α}
 
 theorem Function.extend_of_empty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extendₓ f g h = h :=
-  funext$ fun x => Function.extend_apply' _ _ _$ fun ⟨a, h⟩ => isEmptyElim a
+  funext $ fun x => Function.extend_apply' _ _ _ $ fun ⟨a, h⟩ => isEmptyElim a
 

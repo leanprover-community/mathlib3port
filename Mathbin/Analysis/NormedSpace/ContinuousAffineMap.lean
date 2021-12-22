@@ -1,6 +1,6 @@
-import Mathbin.Topology.Algebra.ContinuousAffineMap 
-import Mathbin.Analysis.NormedSpace.AddTorsor 
-import Mathbin.Analysis.NormedSpace.AffineIsometry 
+import Mathbin.Topology.Algebra.ContinuousAffineMap
+import Mathbin.Analysis.NormedSpace.AddTorsor
+import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 
 /-!
@@ -51,23 +51,21 @@ variable [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace 𝕜 W]
 
 include V W
 
-/-- The linear map underlying a continuous affine map is continuous. -/
+/--  The linear map underlying a continuous affine map is continuous. -/
 def cont_linear (f : P →A[R] Q) : V →L[R] W :=
   { f.linear with toFun := f.linear,
-    cont :=
-      by 
-        rw [AffineMap.continuous_linear_iff]
-        exact f.cont }
+    cont := by
+      rw [AffineMap.continuous_linear_iff]
+      exact f.cont }
 
 @[simp]
 theorem coe_cont_linear (f : P →A[R] Q) : (f.cont_linear : V → W) = f.linear :=
   rfl
 
 @[simp]
-theorem coe_cont_linear_eq_linear (f : P →A[R] Q) : (f.cont_linear : V →ₗ[R] W) = (f : P →ᵃ[R] Q).linear :=
-  by 
-    ext 
-    rfl
+theorem coe_cont_linear_eq_linear (f : P →A[R] Q) : (f.cont_linear : V →ₗ[R] W) = (f : P →ᵃ[R] Q).linear := by
+  ext
+  rfl
 
 @[simp]
 theorem coe_mk_const_linear_eq_linear (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q).contLinear : V → W) = f.linear :=
@@ -96,35 +94,31 @@ theorem cont_linear_map_vsub (f : P →A[R] Q) (p₁ p₂ : P) : f.cont_linear (
 theorem const_cont_linear (q : Q) : (const R P q).contLinear = 0 :=
   rfl
 
-theorem cont_linear_eq_zero_iff_exists_const (f : P →A[R] Q) : f.cont_linear = 0 ↔ ∃ q, f = const R P q :=
-  by 
-    have h₁ : f.cont_linear = 0 ↔ (f : P →ᵃ[R] Q).linear = 0
+theorem cont_linear_eq_zero_iff_exists_const (f : P →A[R] Q) : f.cont_linear = 0 ↔ ∃ q, f = const R P q := by
+  have h₁ : f.cont_linear = 0 ↔ (f : P →ᵃ[R] Q).linear = 0 := by
+    refine' ⟨fun h => _, fun h => _⟩ <;> ext
     ·
-      refine' ⟨fun h => _, fun h => _⟩ <;> ext
-      ·
-        rw [←coe_cont_linear_eq_linear, h]
-        rfl
-      ·
-        rw [←coe_linear_eq_coe_cont_linear, h]
-        rfl 
-    have h₂ : ∀ q : Q, f = const R P q ↔ (f : P →ᵃ[R] Q) = AffineMap.const R P q
+      rw [← coe_cont_linear_eq_linear, h]
+      rfl
     ·
-      intro q 
-      refine' ⟨fun h => _, fun h => _⟩ <;> ext
-      ·
-        rw [h]
-        rfl
-      ·
-        rw [←coe_to_affine_map, h]
-        rfl 
-    simpRw [h₁, h₂]
-    exact (f : P →ᵃ[R] Q).linear_eq_zero_iff_exists_const
+      rw [← coe_linear_eq_coe_cont_linear, h]
+      rfl
+  have h₂ : ∀ q : Q, f = const R P q ↔ (f : P →ᵃ[R] Q) = AffineMap.const R P q := by
+    intro q
+    refine' ⟨fun h => _, fun h => _⟩ <;> ext
+    ·
+      rw [h]
+      rfl
+    ·
+      rw [← coe_to_affine_map, h]
+      rfl
+  simp_rw [h₁, h₂]
+  exact (f : P →ᵃ[R] Q).linear_eq_zero_iff_exists_const
 
 @[simp]
-theorem to_affine_map_cont_linear (f : V →L[R] W) : f.to_continuous_affine_map.cont_linear = f :=
-  by 
-    ext 
-    rfl
+theorem to_affine_map_cont_linear (f : V →L[R] W) : f.to_continuous_affine_map.cont_linear = f := by
+  ext
+  rfl
 
 @[simp]
 theorem zero_cont_linear : (0 : P →A[R] W).contLinear = 0 :=
@@ -146,16 +140,15 @@ theorem neg_cont_linear (f : P →A[R] W) : (-f).contLinear = -f.cont_linear :=
 theorem smul_cont_linear (t : R) (f : P →A[R] W) : (t • f).contLinear = t • f.cont_linear :=
   rfl
 
-theorem decomp (f : V →A[R] W) : (f : V → W) = f.cont_linear+Function.const V (f 0) :=
-  by 
-    rcases f with ⟨f, h⟩
-    rw [coe_mk_const_linear_eq_linear, coe_mk, f.decomp, Pi.add_apply, LinearMap.map_zero, zero_addₓ]
+theorem decomp (f : V →A[R] W) : (f : V → W) = f.cont_linear+Function.const V (f 0) := by
+  rcases f with ⟨f, h⟩
+  rw [coe_mk_const_linear_eq_linear, coe_mk, f.decomp, Pi.add_apply, LinearMap.map_zero, zero_addₓ]
 
 section NormedSpaceStructure
 
 variable (f : V →A[𝕜] W)
 
-/-- Note that unlike the operator norm for linear maps, this norm is _not_ submultiplicative:
+/--  Note that unlike the operator norm for linear maps, this norm is _not_ submultiplicative:
 we do _not_ necessarily have `∥f.comp g∥ ≤ ∥f∥ * ∥g∥`. See `norm_comp_le` for what we can say. -/
 noncomputable instance HasNorm : HasNorm (V →A[𝕜] W) :=
   ⟨fun f => max ∥f 0∥ ∥f.cont_linear∥⟩
@@ -171,115 +164,113 @@ theorem norm_image_zero_le : ∥f 0∥ ≤ ∥f∥ :=
 
 @[simp]
 theorem norm_eq (h : f 0 = 0) : ∥f∥ = ∥f.cont_linear∥ :=
-  calc ∥f∥ = max ∥f 0∥ ∥f.cont_linear∥ :=
-    by 
-      rw [norm_def]
-    _ = max 0 ∥f.cont_linear∥ :=
-    by 
-      rw [h, norm_zero]
+  calc ∥f∥ = max ∥f 0∥ ∥f.cont_linear∥ := by
+    rw [norm_def]
+    _ = max 0 ∥f.cont_linear∥ := by
+    rw [h, norm_zero]
     _ = ∥f.cont_linear∥ := max_eq_rightₓ (norm_nonneg _)
     
 
 noncomputable instance : NormedGroup (V →A[𝕜] W) :=
   NormedGroup.ofCore _
-    { norm_eq_zero_iff :=
-        fun f =>
-          by 
-            rw [norm_def]
-            refine'
-              ⟨fun h₀ => _,
-                by 
-                  rintro rfl 
-                  simp ⟩
-            rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
-            ·
-              rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂ 
-              obtain ⟨q, rfl⟩ := h₂ 
-              simp only [Function.const_applyₓ, coe_const, norm_eq_zero] at h₁ 
-              rw [h₁]
-              rfl
-            ·
-              rw [norm_eq_zero_iff', cont_linear_eq_zero_iff_exists_const] at h₁ 
-              obtain ⟨q, rfl⟩ := h₁ 
-              simp only [Function.const_applyₓ, coe_const, norm_le_zero_iff] at h₂ 
-              rw [h₂]
-              rfl,
-      triangle :=
-        fun f g =>
-          by 
-            simp only [norm_def, Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
-            exact
-              ⟨(norm_add_le _ _).trans (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)),
-                (norm_add_le _ _).trans (add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _))⟩,
-      norm_neg :=
-        fun f =>
-          by 
-            simp [norm_def] }
+    { norm_eq_zero_iff := fun f => by
+        rw [norm_def]
+        refine'
+          ⟨fun h₀ => _, by
+            rintro rfl
+            simp ⟩
+        rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
+        ·
+          rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂
+          obtain ⟨q, rfl⟩ := h₂
+          simp only [Function.const_applyₓ, coe_const, norm_eq_zero] at h₁
+          rw [h₁]
+          rfl
+        ·
+          rw [norm_eq_zero_iff', cont_linear_eq_zero_iff_exists_const] at h₁
+          obtain ⟨q, rfl⟩ := h₁
+          simp only [Function.const_applyₓ, coe_const, norm_le_zero_iff] at h₂
+          rw [h₂]
+          rfl,
+      triangle := fun f g => by
+        simp only [norm_def, Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
+        exact
+          ⟨(norm_add_le _ _).trans (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)),
+            (norm_add_le _ _).trans (add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _))⟩,
+      norm_neg := fun f => by
+        simp [norm_def] }
 
-noncomputable instance : NormedSpace 𝕜 (V →A[𝕜] W) :=
-  { norm_smul_le :=
-      fun t f =>
-        by 
-          simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul,
-            ←mul_max_of_nonneg _ _ (norm_nonneg t)] }
+-- failed to format: format: uncaught backtrack exception
+noncomputable
+  instance
+    : NormedSpace 𝕜 ( V →A[ 𝕜 ] W )
+    where
+      norm_smul_le
+        t f
+        :=
+        by
+          simp
+            only
+            [
+              norm_def
+                ,
+                smul_cont_linear
+                ,
+                coe_smul
+                ,
+                Pi.smul_apply
+                ,
+                norm_smul
+                ,
+                ← mul_max_of_nonneg _ _ ( norm_nonneg t )
+              ]
 
-theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ (∥f∥*∥g∥)+∥f 0∥ :=
-  by 
-    rw [norm_def, max_le_iff]
-    constructor
-    ·
-      calc ∥f.comp g 0∥ = ∥f (g 0)∥ :=
-        by 
-          simp _ = ∥f.cont_linear (g 0)+f 0∥ :=
-        by 
-          rw [f.decomp]
-          simp _ ≤ (∥f.cont_linear∥*∥g 0∥)+∥f 0∥ :=
-        (norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _)_ ≤ (∥f∥*∥g∥)+∥f 0∥ :=
-        add_le_add_right (mul_le_mul f.norm_cont_linear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
-    ·
-      calc ∥(f.comp g).contLinear∥ ≤ ∥f.cont_linear∥*∥g.cont_linear∥ :=
-        (g.comp_cont_linear f).symm ▸ f.cont_linear.op_norm_comp_le _ _ ≤ ∥f∥*∥g∥ :=
-        mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _)_ ≤ (∥f∥*∥g∥)+∥f 0∥ :=
-        by 
-          rw [le_add_iff_nonneg_right]
-          apply norm_nonneg
+theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ (∥f∥*∥g∥)+∥f 0∥ := by
+  rw [norm_def, max_le_iff]
+  constructor
+  ·
+    calc ∥f.comp g 0∥ = ∥f (g 0)∥ := by
+      simp _ = ∥f.cont_linear (g 0)+f 0∥ := by
+      rw [f.decomp]
+      simp _ ≤ (∥f.cont_linear∥*∥g 0∥)+∥f 0∥ :=
+      (norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _)_ ≤ (∥f∥*∥g∥)+∥f 0∥ :=
+      add_le_add_right (mul_le_mul f.norm_cont_linear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
+  ·
+    calc ∥(f.comp g).contLinear∥ ≤ ∥f.cont_linear∥*∥g.cont_linear∥ :=
+      (g.comp_cont_linear f).symm ▸ f.cont_linear.op_norm_comp_le _ _ ≤ ∥f∥*∥g∥ :=
+      mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _)_ ≤ (∥f∥*∥g∥)+∥f 0∥ := by
+      rw [le_add_iff_nonneg_right]
+      apply norm_nonneg
 
 variable (𝕜 V W)
 
-/-- The space of affine maps between two normed spaces is linearly isometric to the product of the
+/--  The space of affine maps between two normed spaces is linearly isometric to the product of the
 codomain with the space of linear maps, by taking the value of the affine map at `(0 : V)` and the
 linear part. -/
 noncomputable def to_const_prod_continuous_linear_map : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V →L[𝕜] W) :=
   { toFun := fun f => ⟨f 0, f.cont_linear⟩, invFun := fun p => p.2.toContinuousAffineMap+const 𝕜 V p.1,
-    left_inv :=
-      fun f =>
-        by 
-          ext 
-          rw [f.decomp]
-          simp ,
-    right_inv :=
-      by 
-        rintro ⟨v, f⟩
-        ext <;> simp ,
-    map_add' :=
-      by 
-        simp ,
-    map_smul' :=
-      by 
-        simp ,
-    norm_map' :=
-      fun f =>
-        by 
-          simp [Prod.norm_def, norm_def] }
+    left_inv := fun f => by
+      ext
+      rw [f.decomp]
+      simp ,
+    right_inv := by
+      rintro ⟨v, f⟩
+      ext <;> simp ,
+    map_add' := by
+      simp ,
+    map_smul' := by
+      simp ,
+    norm_map' := fun f => by
+      simp [Prod.norm_def, norm_def] }
 
 @[simp]
 theorem to_const_prod_continuous_linear_map_fst (f : V →A[𝕜] W) :
-  (to_const_prod_continuous_linear_map 𝕜 V W f).fst = f 0 :=
+    (to_const_prod_continuous_linear_map 𝕜 V W f).fst = f 0 :=
   rfl
 
 @[simp]
 theorem to_const_prod_continuous_linear_map_snd (f : V →A[𝕜] W) :
-  (to_const_prod_continuous_linear_map 𝕜 V W f).snd = f.cont_linear :=
+    (to_const_prod_continuous_linear_map 𝕜 V W f).snd = f.cont_linear :=
   rfl
 
 end NormedSpaceStructure

@@ -17,13 +17,13 @@ universe v u
 
 variable (C : Type u) [category.{v} C]
 
-/-- A category has a shift, or translation, if it is equipped with an automorphism. -/
-class has_shift where 
+/--  A category has a shift, or translation, if it is equipped with an automorphism. -/
+class has_shift where
   shift : C ≌ C
 
 variable [has_shift C]
 
-/-- The shift autoequivalence, moving objects and morphisms 'up'. -/
+/--  The shift autoequivalence, moving objects and morphisms 'up'. -/
 def shift : C ≌ C :=
   has_shift.shift
 
@@ -42,9 +42,8 @@ open CategoryTheory.Limits
 variable [has_zero_morphisms C]
 
 @[simp]
-theorem shift_zero_eq_zero (X Y : C) (n : ℤ) : (0 : X ⟶ Y)⟦n⟧' = (0 : X⟦n⟧ ⟶ Y⟦n⟧) :=
-  by 
-    apply equivalence_preserves_zero_morphisms
+theorem shift_zero_eq_zero (X Y : C) (n : ℤ) : (0 : X ⟶ Y)⟦n⟧' = (0 : X⟦n⟧ ⟶ Y⟦n⟧) := by
+  apply equivalence_preserves_zero_morphisms
 
 end CategoryTheory
 

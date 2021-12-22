@@ -1,4 +1,4 @@
-import Mathbin.Logic.Function.Basic 
+import Mathbin.Logic.Function.Basic
 import Mathbin.Tactic.Core
 
 /-!
@@ -11,27 +11,26 @@ Performs Skolemization, that is, given `h : ∀ a:α, ∃ b:β, p a b |- G` prod
 
 namespace Tactic
 
-/-- Given `α : Sort u`, `nonemp : nonempty α`, `p : α → Prop`, a context of local variables
+/--  Given `α : Sort u`, `nonemp : nonempty α`, `p : α → Prop`, a context of local variables
 `ctxt`, and a pair of an element `val : α` and `spec : p val`,
 `mk_sometimes u α nonemp p ctx (val, spec)` produces another pair `val', spec'`
 such that `val'` does not have any free variables from elements of `ctxt` whose types are
 propositions. This is done by applying `function.sometimes` to abstract over all the propositional
 arguments. -/
 unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr × expr → tactic (expr × expr)
-| [], (val, spec) => pure (val, spec)
-| e :: ctxt, (val, spec) =>
-  do 
+  | [], (val, spec) => pure (val, spec)
+  | e :: ctxt, (val, spec) => do
     let (val, spec) ← mk_sometimes ctxt (val, spec)
-    let t ← infer_type e 
-    let b ← is_prop t 
-    pure$
+    let t ← infer_type e
+    let b ← is_prop t
+    pure $
         if b then
           let val' := expr.bind_lambda val e
           (expr.const `` Function.sometimes [level.zero, u] t α nonemp val',
-          expr.const `` Function.sometimes_spec [u] t α nonemp p val' e spec)
+            expr.const `` Function.sometimes_spec [u] t α nonemp p val' e spec)
         else (val, spec)
 
-/-- Changes `(h : ∀xs, ∃a:α, p a) ⊢ g` to `(d : ∀xs, a) (s : ∀xs, p (d xs)) ⊢ g` and
+/--  Changes `(h : ∀xs, ∃a:α, p a) ⊢ g` to `(d : ∀xs, a) (s : ∀xs, p (d xs)) ⊢ g` and
 `(h : ∀xs, p xs ∧ q xs) ⊢ g` to `(d : ∀xs, p xs) (s : ∀xs, q xs) ⊢ g`.
 `choose1` returns a pair of the second local constant it introduces,
 and the error result (see below).
@@ -46,58 +45,51 @@ The second value returned by `choose1` is the result of nondep elimination:
 * ``some (some `(nonempty α))``: nondep elimination was unsuccessful
   because we could not find a `nonempty α` instance
 -/
-unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tactic (expr × Option (Option expr)) :=
-  do 
-    let t ← infer_type h 
-    let (ctxt, t) ← whnf t >>= open_pis 
-    let t ← whnf t transparency.all 
-    match t with 
-      | quote.1 (@Exists (%%ₓα) (%%ₓp)) =>
-        do 
-          let α_t ← infer_type α 
-          let expr.sort u ← whnf α_t transparency.all 
-          let (ne_fail, nonemp) ←
-            if nondep then
-                do 
-                  let ne := expr.const `` Nonempty [u] α 
-                  let nonemp ←
-                    try_core
-                        (mk_instance Ne <|>
-                          retrieve'
-                            do 
-                              let m ← mk_meta_var Ne 
-                              set_goals [m]
-                              ctxt.mmap'
-                                  fun e =>
-                                    do 
-                                      let b ← is_proof e 
-                                      Monadₓ.unlessb b$ (mk_app `` Nonempty.intro [e] >>= note_anon none) $> ()
-                              unfreeze_local_instances >> apply_instance 
-                              instantiate_mvars m)
-                  pure (some (Option.guard (fun _ => nonemp.is_none) Ne), nonemp)
-              else pure (none, none)
-          let ctxt' ← if nonemp.is_some then ctxt.mfilter fun e => bnot <$> is_proof e else pure ctxt 
-          let value ← mk_local_def data (α.pis ctxt')
-          let t' ← head_beta (p.app (value.mk_app ctxt'))
-          let spec ← mk_local_def spec (t'.pis ctxt)
-          let (value_proof, spec_proof) ←
-            nonemp.elim pure (fun nonemp => mk_sometimes u α nonemp p ctxt)
-                (expr.const `` Classical.some [u] α p (h.mk_app ctxt),
-                expr.const `` Classical.some_spec [u] α p (h.mk_app ctxt))
-          dependent_pose_core [(value, value_proof.lambdas ctxt'), (spec, spec_proof.lambdas ctxt)]
-          try (tactic.clear h)
-          intro1 
-          let e ← intro1 
-          pure (e, ne_fail)
-      | quote.1 ((%%ₓp) ∧ %%ₓq) =>
-        do 
-          mk_app `` And.elim_left [h.mk_app ctxt] >>= lambdas ctxt >>= note data none 
-          let hq ← mk_app `` And.elim_right [h.mk_app ctxt] >>= lambdas ctxt >>= note spec none 
-          try (tactic.clear h)
-          pure (hq, none)
-      | _ => fail "expected a term of the shape `∀xs, ∃a, p xs a` or `∀xs, p xs ∧ q xs`"
+unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tactic (expr × Option (Option expr)) := do
+  let t ← infer_type h
+  let (ctxt, t) ← whnf t >>= open_pis
+  let t ← whnf t transparency.all
+  match t with
+    | quote.1 (@Exists (%%ₓα) (%%ₓp)) => do
+      let α_t ← infer_type α
+      let expr.sort u ← whnf α_t transparency.all
+      let (ne_fail, nonemp) ←
+        if nondep then do
+            let ne := expr.const `` Nonempty [u] α
+            let nonemp ←
+              try_core
+                  (mk_instance Ne <|>
+                    retrieve' do
+                      let m ← mk_meta_var Ne
+                      set_goals [m]
+                      ctxt.mmap' fun e => do
+                          let b ← is_proof e
+                          Monadₓ.unlessb b $ (mk_app `` Nonempty.intro [e] >>= note_anon none) $> ()
+                      unfreeze_local_instances >> apply_instance
+                      instantiate_mvars m)
+            pure (some (Option.guard (fun _ => nonemp.is_none) Ne), nonemp)
+          else pure (none, none)
+      let ctxt' ← if nonemp.is_some then ctxt.mfilter fun e => bnot <$> is_proof e else pure ctxt
+      let value ← mk_local_def data (α.pis ctxt')
+      let t' ← head_beta (p.app (value.mk_app ctxt'))
+      let spec ← mk_local_def spec (t'.pis ctxt)
+      let (value_proof, spec_proof) ←
+        nonemp.elim pure (fun nonemp => mk_sometimes u α nonemp p ctxt)
+            (expr.const `` Classical.some [u] α p (h.mk_app ctxt),
+              expr.const `` Classical.some_spec [u] α p (h.mk_app ctxt))
+      dependent_pose_core [(value, value_proof.lambdas ctxt'), (spec, spec_proof.lambdas ctxt)]
+      try (tactic.clear h)
+      intro1
+      let e ← intro1
+      pure (e, ne_fail)
+    | quote.1 ((%%ₓp) ∧ %%ₓq) => do
+      mk_app `` And.elim_left [h.mk_app ctxt] >>= lambdas ctxt >>= note data none
+      let hq ← mk_app `` And.elim_right [h.mk_app ctxt] >>= lambdas ctxt >>= note spec none
+      try (tactic.clear h)
+      pure (hq, none)
+    | _ => fail "expected a term of the shape `∀xs, ∃a, p xs a` or `∀xs, p xs ∧ q xs`"
 
-/-- Changes `(h : ∀xs, ∃as, p as ∧ q as) ⊢ g` to a list of functions `as`,
+/--  Changes `(h : ∀xs, ∃as, p as ∧ q as) ⊢ g` to a list of functions `as`,
 and a final hypothesis on `p as` and `q as`. If `nondep` is true then the functions will
 be made to not depend on propositional arguments, when possible.
 
@@ -107,23 +99,20 @@ attempted at least once, and it fails every time it is attempted, in which case 
 an error complaining about the first attempt.
 -/
 unsafe def choose (nondep : Bool) : expr → List Name → optParam (Option (Option expr)) none → tactic Unit
-| h, [], _ => fail "expect list of variables"
-| h, [n], some (some Ne) =>
-  do 
-    let g ← mk_meta_var Ne 
+  | h, [], _ => fail "expect list of variables"
+  | h, [n], some (some Ne) => do
+    let g ← mk_meta_var Ne
     set_goals [g]
     fail "choose: failed to synthesize nonempty instance"
-| h, [n], _ =>
-  do 
-    let cnt ← revert h 
-    intro n 
+  | h, [n], _ => do
+    let cnt ← revert h
+    intro n
     intron (cnt - 1)
     return ()
-| h, n :: ns, ne_fail₁ =>
-  do 
-    let (v, ne_fail₂) ← get_unused_name >>= choose1 nondep h n 
-    choose v ns$
-        match ne_fail₁, ne_fail₂ with 
+  | h, n :: ns, ne_fail₁ => do
+    let (v, ne_fail₂) ← get_unused_name >>= choose1 nondep h n
+    choose v ns $
+        match ne_fail₁, ne_fail₂ with
         | none, _ => ne_fail₂
         | some none, _ => some none
         | _, some none => some none
@@ -133,7 +122,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/-- `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
+/--  `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
 `∀ (x : X) (y : Y), ∃ (a : A) (b : B), P x y a b ∧ Q x y a b`
 for some `P Q : X → Y → A → B → Prop` and outputs
 into context a function `a : X → Y → A`, `b : X → Y → B` and two assumptions:
@@ -172,15 +161,14 @@ end
 ```
 -/
 unsafe def choose (nondep : parse (tk "!")?) (first : parse ident) (names : parse (ident)*)
-  (tgt : parse (tk "using" *> texpr)?) : tactic Unit :=
-  do 
-    let tgt ←
-      match tgt with 
-        | none => get_local `this
-        | some e => tactic.i_to_expr_strict e 
-    tactic.choose nondep.is_some tgt (first :: names)
-    try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns$ some <$> names))
-    try (tactic.clear tgt)
+    (tgt : parse (tk "using" *> texpr)?) : tactic Unit := do
+  let tgt ←
+    match tgt with
+      | none => get_local `this
+      | some e => tactic.i_to_expr_strict e
+  tactic.choose nondep.is_some tgt (first :: names)
+  try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns $ some <$> names))
+  try (tactic.clear tgt)
 
 add_tactic_doc
   { Name := "choose", category := DocCategory.tactic, declNames := [`tactic.interactive.choose],

@@ -1,4 +1,4 @@
-import Mathbin.Data.Fintype.Basic 
+import Mathbin.Data.Fintype.Basic
 import Mathbin.Control.EquivFunctor
 
 /-!
@@ -10,18 +10,15 @@ We derive some `equiv_functor` instances, to enable `equiv_rw` to rewrite under 
 
 open Equivₓ
 
-instance equivFunctorUnique : EquivFunctor Unique :=
-  { map := fun α β e => Equivₓ.uniqueCongr e }
+-- failed to format: format: uncaught backtrack exception
+instance equivFunctorUnique : EquivFunctor Unique where map α β e := Equivₓ.uniqueCongr e
 
-instance equivFunctorPerm : EquivFunctor perm :=
-  { map := fun α β e p => (e.symm.trans p).trans e }
+-- failed to format: format: uncaught backtrack exception
+instance equivFunctorPerm : EquivFunctor perm where map α β e p := ( e.symm.trans p ) . trans e
 
-instance equivFunctorFinset : EquivFunctor Finset :=
-  { map := fun α β e s => s.map e.to_embedding }
+-- failed to format: format: uncaught backtrack exception
+instance equivFunctorFinset : EquivFunctor Finset where map α β e s := s.map e.to_embedding
 
-instance equivFunctorFintype : EquivFunctor Fintype :=
-  { map :=
-      fun α β e s =>
-        by 
-          exact Fintype.ofBijective e e.bijective }
+-- failed to format: format: uncaught backtrack exception
+instance equivFunctorFintype : EquivFunctor Fintype where map α β e s := by exact Fintype.ofBijective e e.bijective
 

@@ -1,4 +1,4 @@
-import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners 
+import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 import Mathbin.Analysis.NormedSpace.Units
 
 /-!
@@ -39,7 +39,7 @@ None of this should be particularly difficult.
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open_locale Manifold
 

@@ -1,4 +1,4 @@
-import Mathbin.LinearAlgebra.Charpoly.Basic 
+import Mathbin.LinearAlgebra.Charpoly.Basic
 import Mathbin.LinearAlgebra.InvariantBasisNumber
 
 /-!
@@ -30,26 +30,23 @@ variable (R : Type _) [CommRingₓ R] [Nontrivial R]
 
 open Polynomial Function Finₓ LinearMap
 
-/-- Any commutative ring satisfies the `strong_rank_condition`. -/
-instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition R :=
-  by 
-    suffices  : ∀ n, ∀ f : (Finₓ (n+1) → R) →ₗ[R] Finₓ n → R, ¬injective f
-    ·
-      rwa [strong_rank_condition_iff_succ R]
-    intro n f 
-    byContra hf 
-    let this' := Module.Finite.of_basis (Pi.basisFun R (Finₓ (n+1)))
-    let g : (Finₓ (n+1) → R) →ₗ[R] Finₓ (n+1) → R := (extend_by_zero.linear_map R cast_succ).comp f 
-    have hg : injective g := (extend_injective (RelEmbedding.injective cast_succ) 0).comp hf 
-    have hnex : ¬∃ i : Finₓ n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_ltₓ (cast_succ_lt_last i) hi 
-    let a₀ := (minpoly R g).coeff 0
-    have  : a₀ ≠ 0 := minpoly_coeff_zero_of_injective hg 
-    have  : a₀ = 0
-    ·
-      have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Finₓ.last n) 1)
-      obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
-      rw [←monomial_add_erase (minpoly R g) 0, hP] at heval 
-      replace heval := congr_funₓ heval (Finₓ.last n)
-      simpa [hnex] using heval 
-    contradiction
+/--  Any commutative ring satisfies the `strong_rank_condition`. -/
+instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition R := by
+  suffices ∀ n, ∀ f : (Finₓ (n+1) → R) →ₗ[R] Finₓ n → R, ¬injective f by
+    rwa [strong_rank_condition_iff_succ R]
+  intro n f
+  by_contra hf
+  let this' : Module.Finite R (Finₓ n.succ → R) := Module.Finite.pi
+  let g : (Finₓ (n+1) → R) →ₗ[R] Finₓ (n+1) → R := (extend_by_zero.linear_map R cast_succ).comp f
+  have hg : injective g := (extend_injective (RelEmbedding.injective cast_succ) 0).comp hf
+  have hnex : ¬∃ i : Finₓ n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_ltₓ (cast_succ_lt_last i) hi
+  let a₀ := (minpoly R g).coeff 0
+  have : a₀ ≠ 0 := minpoly_coeff_zero_of_injective hg
+  have : a₀ = 0 := by
+    have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Finₓ.last n) 1)
+    obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
+    rw [← monomial_add_erase (minpoly R g) 0, hP] at heval
+    replace heval := congr_funₓ heval (Finₓ.last n)
+    simpa [hnex] using heval
+  contradiction
 

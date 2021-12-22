@@ -1,4 +1,4 @@
-import Mathbin.LinearAlgebra.Determinant 
+import Mathbin.LinearAlgebra.Determinant
 import Mathbin.Topology.Algebra.Ring
 
 /-!
@@ -21,24 +21,21 @@ instance : TopologicalSpace (Matrix ι ι k) :=
 
 variable [Fintype ι] [DecidableEq ι] [CommRingₓ k] [TopologicalRing k]
 
-theorem continuous_det : Continuous (det : Matrix ι ι k → k) :=
-  by 
-    suffices  : ∀ n : ℕ, Continuous fun A : Matrix (Finₓ n) (Finₓ n) k => Matrix.det A
-    ·
-      have h : (det : Matrix ι ι k → k) = (det ∘ reindex (Fintype.equivFin ι) (Fintype.equivFin ι))
-      ·
-        ext 
-        simp 
-      rw [h]
-      apply (this (Fintype.card ι)).comp 
-      exact continuous_pi fun i => continuous_pi fun j => continuous_apply_apply _ _ 
-    intro n 
-    induction' n with n ih
-    ·
-      simpRw [coe_det_is_empty]
-      exact continuous_const 
-    simpRw [det_succ_column_zero]
-    refine' continuous_finset_sum _ fun l _ => _ 
-    refine' (continuous_const.mul (continuous_apply_apply _ _)).mul (ih.comp _)
+theorem continuous_det : Continuous (det : Matrix ι ι k → k) := by
+  suffices ∀ n : ℕ, Continuous fun A : Matrix (Finₓ n) (Finₓ n) k => Matrix.det A by
+    have h : (det : Matrix ι ι k → k) = (det ∘ reindex (Fintype.equivFin ι) (Fintype.equivFin ι)) := by
+      ext
+      simp
+    rw [h]
+    apply (this (Fintype.card ι)).comp
     exact continuous_pi fun i => continuous_pi fun j => continuous_apply_apply _ _
+  intro n
+  induction' n with n ih
+  ·
+    simp_rw [coe_det_is_empty]
+    exact continuous_const
+  simp_rw [det_succ_column_zero]
+  refine' continuous_finset_sum _ fun l _ => _
+  refine' (continuous_const.mul (continuous_apply_apply _ _)).mul (ih.comp _)
+  exact continuous_pi fun i => continuous_pi fun j => continuous_apply_apply _ _
 

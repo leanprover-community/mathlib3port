@@ -1,5 +1,5 @@
-import Mathbin.Data.Bracket 
-import Mathbin.GroupTheory.Subgroup.Basic 
+import Mathbin.Data.Bracket
+import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.Tactic.Group
 
 /-!
@@ -18,118 +18,2109 @@ open Subgroup
 
 variable {G G' : Type _} [Groupₓ G] [Groupₓ G'] {f : G →* G'}
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers
+  [(Command.docComment "/--" " The commutator of two subgroups `H₁` and `H₂`. -/")]
+  []
+  []
+  []
+  []
+  [])
+ (Command.instance
+  (Term.attrKind [])
+  "instance"
+  []
+  [(Command.declId `generalCommutator [])]
+  (Command.declSig [] (Term.typeSpec ":" (Term.app `HasBracket [(Term.app `Subgroup [`G]) (Term.app `Subgroup [`G])])))
+  (Command.declValSimple
+   ":="
+   (Term.anonymousCtor
+    "⟨"
+    [(Term.fun
+      "fun"
+      (Term.basicFun
+       [(Term.simpleBinder [`H₁ `H₂] [])]
+       "=>"
+       (Term.app
+        `closure
+        [(Set.«term{_|_}»
+          "{"
+          `x
+          "|"
+          (Mathlib.ExtendedBinder.«term∃___,_»
+           "∃"
+           `p
+           («binderTerm∈_» "∈" `H₁)
+           ","
+           (Mathlib.ExtendedBinder.«term∃___,_»
+            "∃"
+            `q
+            («binderTerm∈_» "∈" `H₂)
+            ","
+            («term_=_»
+             (Finset.Data.Finset.Fold.«term_*_»
+              (Finset.Data.Finset.Fold.«term_*_»
+               (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+               "*"
+               (Init.Logic.«term_⁻¹» `p "⁻¹"))
+              "*"
+              (Init.Logic.«term_⁻¹» `q "⁻¹"))
+             "="
+             `x)))
+          "}")])))]
+    "⟩")
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.anonymousCtor
+   "⟨"
+   [(Term.fun
+     "fun"
+     (Term.basicFun
+      [(Term.simpleBinder [`H₁ `H₂] [])]
+      "=>"
+      (Term.app
+       `closure
+       [(Set.«term{_|_}»
+         "{"
+         `x
+         "|"
+         (Mathlib.ExtendedBinder.«term∃___,_»
+          "∃"
+          `p
+          («binderTerm∈_» "∈" `H₁)
+          ","
+          (Mathlib.ExtendedBinder.«term∃___,_»
+           "∃"
+           `q
+           («binderTerm∈_» "∈" `H₂)
+           ","
+           («term_=_»
+            (Finset.Data.Finset.Fold.«term_*_»
+             (Finset.Data.Finset.Fold.«term_*_»
+              (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+              "*"
+              (Init.Logic.«term_⁻¹» `p "⁻¹"))
+             "*"
+             (Init.Logic.«term_⁻¹» `q "⁻¹"))
+            "="
+            `x)))
+         "}")])))]
+   "⟩")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [(Term.simpleBinder [`H₁ `H₂] [])]
+    "=>"
+    (Term.app
+     `closure
+     [(Set.«term{_|_}»
+       "{"
+       `x
+       "|"
+       (Mathlib.ExtendedBinder.«term∃___,_»
+        "∃"
+        `p
+        («binderTerm∈_» "∈" `H₁)
+        ","
+        (Mathlib.ExtendedBinder.«term∃___,_»
+         "∃"
+         `q
+         («binderTerm∈_» "∈" `H₂)
+         ","
+         («term_=_»
+          (Finset.Data.Finset.Fold.«term_*_»
+           (Finset.Data.Finset.Fold.«term_*_»
+            (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+            "*"
+            (Init.Logic.«term_⁻¹» `p "⁻¹"))
+           "*"
+           (Init.Logic.«term_⁻¹» `q "⁻¹"))
+          "="
+          `x)))
+       "}")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `closure
+   [(Set.«term{_|_}»
+     "{"
+     `x
+     "|"
+     (Mathlib.ExtendedBinder.«term∃___,_»
+      "∃"
+      `p
+      («binderTerm∈_» "∈" `H₁)
+      ","
+      (Mathlib.ExtendedBinder.«term∃___,_»
+       "∃"
+       `q
+       («binderTerm∈_» "∈" `H₂)
+       ","
+       («term_=_»
+        (Finset.Data.Finset.Fold.«term_*_»
+         (Finset.Data.Finset.Fold.«term_*_»
+          (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+          "*"
+          (Init.Logic.«term_⁻¹» `p "⁻¹"))
+         "*"
+         (Init.Logic.«term_⁻¹» `q "⁻¹"))
+        "="
+        `x)))
+     "}")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Set.«term{_|_}»
+   "{"
+   `x
+   "|"
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `p
+    («binderTerm∈_» "∈" `H₁)
+    ","
+    (Mathlib.ExtendedBinder.«term∃___,_»
+     "∃"
+     `q
+     («binderTerm∈_» "∈" `H₂)
+     ","
+     («term_=_»
+      (Finset.Data.Finset.Fold.«term_*_»
+       (Finset.Data.Finset.Fold.«term_*_»
+        (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+        "*"
+        (Init.Logic.«term_⁻¹» `p "⁻¹"))
+       "*"
+       (Init.Logic.«term_⁻¹» `q "⁻¹"))
+      "="
+      `x)))
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `p
+   («binderTerm∈_» "∈" `H₁)
+   ","
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `q
+    («binderTerm∈_» "∈" `H₂)
+    ","
+    («term_=_»
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_»
+       (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+       "*"
+       (Init.Logic.«term_⁻¹» `p "⁻¹"))
+      "*"
+      (Init.Logic.«term_⁻¹» `q "⁻¹"))
+     "="
+     `x)))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `q
+   («binderTerm∈_» "∈" `H₂)
+   ","
+   («term_=_»
+    (Finset.Data.Finset.Fold.«term_*_»
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+      "*"
+      (Init.Logic.«term_⁻¹» `p "⁻¹"))
+     "*"
+     (Init.Logic.«term_⁻¹» `q "⁻¹"))
+    "="
+    `x))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_=_»
+   (Finset.Data.Finset.Fold.«term_*_»
+    (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+    "*"
+    (Init.Logic.«term_⁻¹» `q "⁻¹"))
+   "="
+   `x)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  (Finset.Data.Finset.Fold.«term_*_»
+   (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+   "*"
+   (Init.Logic.«term_⁻¹» `q "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `q "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `p "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Finset.Data.Finset.Fold.«term_*_»
+   (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+   "*"
+   (Init.Logic.«term_⁻¹» `p "⁻¹"))
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Finset.Data.Finset.Fold.«term_*_»
+   (Term.paren
+    "("
+    [(Finset.Data.Finset.Fold.«term_*_»
+      (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+      "*"
+      (Init.Logic.«term_⁻¹» `p "⁻¹"))
+     []]
+    ")")
+   "*"
+   (Init.Logic.«term_⁻¹» `q "⁻¹"))
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₂
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₁
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The commutator of two subgroups `H₁` and `H₂`. -/
   instance
     generalCommutator
     : HasBracket Subgroup G Subgroup G
-    := ⟨ fun H₁ H₂ => closure { x | ∃ ( p : _ ) ( _ : p ∈ H₁ ) ( q : _ ) ( _ : q ∈ H₂ ) , p * q * p ⁻¹ * q ⁻¹ = x } ⟩
+    := ⟨ fun H₁ H₂ => closure { x | ∃ p ∈ H₁ , ∃ q ∈ H₂ , p * q * p ⁻¹ * q ⁻¹ = x } ⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `general_commutator_def [])
+  (Command.declSig
+   [(Term.explicitBinder "(" [`H₁ `H₂] [":" (Term.app `Subgroup [`G])] [] ")")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")
+     "="
+     (Term.app
+      `closure
+      [(Set.«term{_|_}»
+        "{"
+        `x
+        "|"
+        (Mathlib.ExtendedBinder.«term∃___,_»
+         "∃"
+         `p
+         («binderTerm∈_» "∈" `H₁)
+         ","
+         (Mathlib.ExtendedBinder.«term∃___,_»
+          "∃"
+          `q
+          («binderTerm∈_» "∈" `H₂)
+          ","
+          («term_=_»
+           (Finset.Data.Finset.Fold.«term_*_»
+            (Finset.Data.Finset.Fold.«term_*_»
+             (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+             "*"
+             (Init.Logic.«term_⁻¹» `p "⁻¹"))
+            "*"
+            (Init.Logic.«term_⁻¹» `q "⁻¹"))
+           "="
+           `x)))
+        "}")]))))
+  (Command.declValSimple ":=" `rfl [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `rfl
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")
+   "="
+   (Term.app
+    `closure
+    [(Set.«term{_|_}»
+      "{"
+      `x
+      "|"
+      (Mathlib.ExtendedBinder.«term∃___,_»
+       "∃"
+       `p
+       («binderTerm∈_» "∈" `H₁)
+       ","
+       (Mathlib.ExtendedBinder.«term∃___,_»
+        "∃"
+        `q
+        («binderTerm∈_» "∈" `H₂)
+        ","
+        («term_=_»
+         (Finset.Data.Finset.Fold.«term_*_»
+          (Finset.Data.Finset.Fold.«term_*_»
+           (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+           "*"
+           (Init.Logic.«term_⁻¹» `p "⁻¹"))
+          "*"
+          (Init.Logic.«term_⁻¹» `q "⁻¹"))
+         "="
+         `x)))
+      "}")]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `closure
+   [(Set.«term{_|_}»
+     "{"
+     `x
+     "|"
+     (Mathlib.ExtendedBinder.«term∃___,_»
+      "∃"
+      `p
+      («binderTerm∈_» "∈" `H₁)
+      ","
+      (Mathlib.ExtendedBinder.«term∃___,_»
+       "∃"
+       `q
+       («binderTerm∈_» "∈" `H₂)
+       ","
+       («term_=_»
+        (Finset.Data.Finset.Fold.«term_*_»
+         (Finset.Data.Finset.Fold.«term_*_»
+          (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+          "*"
+          (Init.Logic.«term_⁻¹» `p "⁻¹"))
+         "*"
+         (Init.Logic.«term_⁻¹» `q "⁻¹"))
+        "="
+        `x)))
+     "}")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Set.«term{_|_}»
+   "{"
+   `x
+   "|"
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `p
+    («binderTerm∈_» "∈" `H₁)
+    ","
+    (Mathlib.ExtendedBinder.«term∃___,_»
+     "∃"
+     `q
+     («binderTerm∈_» "∈" `H₂)
+     ","
+     («term_=_»
+      (Finset.Data.Finset.Fold.«term_*_»
+       (Finset.Data.Finset.Fold.«term_*_»
+        (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+        "*"
+        (Init.Logic.«term_⁻¹» `p "⁻¹"))
+       "*"
+       (Init.Logic.«term_⁻¹» `q "⁻¹"))
+      "="
+      `x)))
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `p
+   («binderTerm∈_» "∈" `H₁)
+   ","
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `q
+    («binderTerm∈_» "∈" `H₂)
+    ","
+    («term_=_»
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_»
+       (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+       "*"
+       (Init.Logic.«term_⁻¹» `p "⁻¹"))
+      "*"
+      (Init.Logic.«term_⁻¹» `q "⁻¹"))
+     "="
+     `x)))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `q
+   («binderTerm∈_» "∈" `H₂)
+   ","
+   («term_=_»
+    (Finset.Data.Finset.Fold.«term_*_»
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+      "*"
+      (Init.Logic.«term_⁻¹» `p "⁻¹"))
+     "*"
+     (Init.Logic.«term_⁻¹» `q "⁻¹"))
+    "="
+    `x))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_=_»
+   (Finset.Data.Finset.Fold.«term_*_»
+    (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+    "*"
+    (Init.Logic.«term_⁻¹» `q "⁻¹"))
+   "="
+   `x)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  (Finset.Data.Finset.Fold.«term_*_»
+   (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+   "*"
+   (Init.Logic.«term_⁻¹» `q "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `q "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `p "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Finset.Data.Finset.Fold.«term_*_»
+   (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+   "*"
+   (Init.Logic.«term_⁻¹» `p "⁻¹"))
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Finset.Data.Finset.Fold.«term_*_»
+   (Term.paren
+    "("
+    [(Finset.Data.Finset.Fold.«term_*_»
+      (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+      "*"
+      (Init.Logic.«term_⁻¹» `p "⁻¹"))
+     []]
+    ")")
+   "*"
+   (Init.Logic.«term_⁻¹» `q "⁻¹"))
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₂
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₁
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   general_commutator_def
-  ( H₁ H₂ : Subgroup G )
-    : ⁅ H₁ , H₂ ⁆ = closure { x | ∃ ( p : _ ) ( _ : p ∈ H₁ ) ( q : _ ) ( _ : q ∈ H₂ ) , p * q * p ⁻¹ * q ⁻¹ = x }
+  ( H₁ H₂ : Subgroup G ) : ⁅ H₁ , H₂ ⁆ = closure { x | ∃ p ∈ H₁ , ∃ q ∈ H₂ , p * q * p ⁻¹ * q ⁻¹ = x }
   := rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.instance
+  (Term.attrKind [])
+  "instance"
+  []
+  [(Command.declId `general_commutator_normal [])]
+  (Command.declSig
+   [(Term.explicitBinder "(" [`H₁ `H₂] [":" (Term.app `Subgroup [`G])] [] ")")
+    (Term.instBinder "[" [`h₁ ":"] `H₁.normal "]")
+    (Term.instBinder "[" [`h₂ ":"] `H₂.normal "]")]
+   (Term.typeSpec ":" (Term.app `normal [(Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")])))
+  (Command.declValSimple
+   ":="
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group
+        (Tactic.tacticLet_
+         "let"
+         (Term.letDecl
+          (Term.letIdDecl
+           `base
+           [(Term.typeSpec ":" (Term.app `Set [`G]))]
+           ":="
+           (Set.«term{_|_}»
+            "{"
+            `x
+            "|"
+            (Mathlib.ExtendedBinder.«term∃___,_»
+             "∃"
+             `p
+             («binderTerm∈_» "∈" `H₁)
+             ","
+             (Mathlib.ExtendedBinder.«term∃___,_»
+              "∃"
+              `q
+              («binderTerm∈_» "∈" `H₂)
+              ","
+              («term_=_»
+               (Finset.Data.Finset.Fold.«term_*_»
+                (Finset.Data.Finset.Fold.«term_*_»
+                 (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+                 "*"
+                 (Init.Logic.«term_⁻¹» `p "⁻¹"))
+                "*"
+                (Init.Logic.«term_⁻¹» `q "⁻¹"))
+               "="
+               `x)))
+            "}"))))
+        [])
+       (group
+        (Tactic.suffices'
+         "suffices"
+         [`h_base []]
+         [(Term.typeSpec ":" («term_=_» `base "=" (Term.app `Groupₓ.ConjugatesOfSet [`base])))])
+        [])
+       (group
+        (Tactic.«tactic·._»
+         "·"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(group
+             (Tactic.dsimp
+              "dsimp"
+              []
+              ["only"]
+              ["[" [(Tactic.simpLemma [] [] `general_commutator_def) "," (Tactic.simpLemma [] ["←"] `base)] "]"]
+              []
+              [])
+             [])
+            (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h_base)] "]") []) [])
+            (group (Tactic.exact "exact" `Subgroup.normal_closure_normal) [])])))
+        [])
+       (group (Tactic.apply "apply" (Term.app `Set.Subset.antisymm [`Groupₓ.subset_conjugates_of_set])) [])
+       (group (Tactic.intro "intro" [`a `h]) [])
+       (group
+        (Tactic.simpRw
+         "simp_rw"
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule [] `Groupₓ.mem_conjugates_of_set_iff) "," (Tactic.rwRule [] `is_conj_iff)]
+          "]")
+         [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+        [])
+       (group
+        (Tactic.rcases
+         "rcases"
+         [(Tactic.casesTarget [] `h)]
+         ["with"
+          (Tactic.rcasesPat.tuple
+           "⟨"
+           [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b)]) [])
+            ","
+            (Tactic.rcasesPatLo
+             (Tactic.rcasesPatMed
+              [(Tactic.rcasesPat.tuple
+                "⟨"
+                [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `c)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hc)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `e)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `he)]) [])
+                 ","
+                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+                "⟩")])
+             [])
+            ","
+            (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `d)]) [])
+            ","
+            (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+           "⟩")])
+        [])
+       (group
+        (Tactic.exact
+         "exact"
+         (Term.anonymousCtor
+          "⟨"
+          [(Finset.Data.Finset.Fold.«term_*_»
+            (Finset.Data.Finset.Fold.«term_*_» `d "*" `c)
+            "*"
+            (Init.Logic.«term_⁻¹» `d "⁻¹"))
+           ","
+           (Term.app `h₁.conj_mem [`c `hc `d])
+           ","
+           (Finset.Data.Finset.Fold.«term_*_»
+            (Finset.Data.Finset.Fold.«term_*_» `d "*" `e)
+            "*"
+            (Init.Logic.«term_⁻¹» `d "⁻¹"))
+           ","
+           (Term.app `h₂.conj_mem [`e `he `d])
+           ","
+           (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.group "group" []) [])])))]
+          "⟩"))
+        [])])))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.tacticLet_
+        "let"
+        (Term.letDecl
+         (Term.letIdDecl
+          `base
+          [(Term.typeSpec ":" (Term.app `Set [`G]))]
+          ":="
+          (Set.«term{_|_}»
+           "{"
+           `x
+           "|"
+           (Mathlib.ExtendedBinder.«term∃___,_»
+            "∃"
+            `p
+            («binderTerm∈_» "∈" `H₁)
+            ","
+            (Mathlib.ExtendedBinder.«term∃___,_»
+             "∃"
+             `q
+             («binderTerm∈_» "∈" `H₂)
+             ","
+             («term_=_»
+              (Finset.Data.Finset.Fold.«term_*_»
+               (Finset.Data.Finset.Fold.«term_*_»
+                (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+                "*"
+                (Init.Logic.«term_⁻¹» `p "⁻¹"))
+               "*"
+               (Init.Logic.«term_⁻¹» `q "⁻¹"))
+              "="
+              `x)))
+           "}"))))
+       [])
+      (group
+       (Tactic.suffices'
+        "suffices"
+        [`h_base []]
+        [(Term.typeSpec ":" («term_=_» `base "=" (Term.app `Groupₓ.ConjugatesOfSet [`base])))])
+       [])
+      (group
+       (Tactic.«tactic·._»
+        "·"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(group
+            (Tactic.dsimp
+             "dsimp"
+             []
+             ["only"]
+             ["[" [(Tactic.simpLemma [] [] `general_commutator_def) "," (Tactic.simpLemma [] ["←"] `base)] "]"]
+             []
+             [])
+            [])
+           (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h_base)] "]") []) [])
+           (group (Tactic.exact "exact" `Subgroup.normal_closure_normal) [])])))
+       [])
+      (group (Tactic.apply "apply" (Term.app `Set.Subset.antisymm [`Groupₓ.subset_conjugates_of_set])) [])
+      (group (Tactic.intro "intro" [`a `h]) [])
+      (group
+       (Tactic.simpRw
+        "simp_rw"
+        (Tactic.rwRuleSeq
+         "["
+         [(Tactic.rwRule [] `Groupₓ.mem_conjugates_of_set_iff) "," (Tactic.rwRule [] `is_conj_iff)]
+         "]")
+        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+       [])
+      (group
+       (Tactic.rcases
+        "rcases"
+        [(Tactic.casesTarget [] `h)]
+        ["with"
+         (Tactic.rcasesPat.tuple
+          "⟨"
+          [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b)]) [])
+           ","
+           (Tactic.rcasesPatLo
+            (Tactic.rcasesPatMed
+             [(Tactic.rcasesPat.tuple
+               "⟨"
+               [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `c)]) [])
+                ","
+                (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hc)]) [])
+                ","
+                (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `e)]) [])
+                ","
+                (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `he)]) [])
+                ","
+                (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+               "⟩")])
+            [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `d)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+          "⟩")])
+       [])
+      (group
+       (Tactic.exact
+        "exact"
+        (Term.anonymousCtor
+         "⟨"
+         [(Finset.Data.Finset.Fold.«term_*_»
+           (Finset.Data.Finset.Fold.«term_*_» `d "*" `c)
+           "*"
+           (Init.Logic.«term_⁻¹» `d "⁻¹"))
+          ","
+          (Term.app `h₁.conj_mem [`c `hc `d])
+          ","
+          (Finset.Data.Finset.Fold.«term_*_»
+           (Finset.Data.Finset.Fold.«term_*_» `d "*" `e)
+           "*"
+           (Init.Logic.«term_⁻¹» `d "⁻¹"))
+          ","
+          (Term.app `h₂.conj_mem [`e `he `d])
+          ","
+          (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.group "group" []) [])])))]
+         "⟩"))
+       [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.exact
+   "exact"
+   (Term.anonymousCtor
+    "⟨"
+    [(Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_» `d "*" `c)
+      "*"
+      (Init.Logic.«term_⁻¹» `d "⁻¹"))
+     ","
+     (Term.app `h₁.conj_mem [`c `hc `d])
+     ","
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_» `d "*" `e)
+      "*"
+      (Init.Logic.«term_⁻¹» `d "⁻¹"))
+     ","
+     (Term.app `h₂.conj_mem [`e `he `d])
+     ","
+     (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.group "group" []) [])])))]
+    "⟩"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.anonymousCtor
+   "⟨"
+   [(Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `d "*" `c) "*" (Init.Logic.«term_⁻¹» `d "⁻¹"))
+    ","
+    (Term.app `h₁.conj_mem [`c `hc `d])
+    ","
+    (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `d "*" `e) "*" (Init.Logic.«term_⁻¹» `d "⁻¹"))
+    ","
+    (Term.app `h₂.conj_mem [`e `he `d])
+    ","
+    (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.group "group" []) [])])))]
+   "⟩")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.group "group" []) [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.group "group" [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.group', expected 'antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `h₂.conj_mem [`e `he `d])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `d
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `he
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `e
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `h₂.conj_mem
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `d "*" `e) "*" (Init.Logic.«term_⁻¹» `d "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `d "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `d
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» `d "*" `e)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `e
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `d
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `d "*" `e) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `h₁.conj_mem [`c `hc `d])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `d
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `hc
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `c
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `h₁.conj_mem
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `d "*" `c) "*" (Init.Logic.«term_⁻¹» `d "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `d "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `d
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» `d "*" `c)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `c
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `d
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `d "*" `c) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rcases
+   "rcases"
+   [(Tactic.casesTarget [] `h)]
+   ["with"
+    (Tactic.rcasesPat.tuple
+     "⟨"
+     [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b)]) [])
+      ","
+      (Tactic.rcasesPatLo
+       (Tactic.rcasesPatMed
+        [(Tactic.rcasesPat.tuple
+          "⟨"
+          [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `c)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `hc)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `e)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `he)]) [])
+           ","
+           (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+          "⟩")])
+       [])
+      ","
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `d)]) [])
+      ","
+      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+     "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcases', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.tuple', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPatLo', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rcasesPat.one', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.casesTarget', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.simpRw
+   "simp_rw"
+   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Groupₓ.mem_conjugates_of_set_iff) "," (Tactic.rwRule [] `is_conj_iff)] "]")
+   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpRw', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.location', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `is_conj_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `Groupₓ.mem_conjugates_of_set_iff
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.intro "intro" [`a `h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.intro', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  `a
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.apply "apply" (Term.app `Set.Subset.antisymm [`Groupₓ.subset_conjugates_of_set]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.apply', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `Set.Subset.antisymm [`Groupₓ.subset_conjugates_of_set])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `Groupₓ.subset_conjugates_of_set
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `Set.Subset.antisymm
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.«tactic·._»
+   "·"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.dsimp
+        "dsimp"
+        []
+        ["only"]
+        ["[" [(Tactic.simpLemma [] [] `general_commutator_def) "," (Tactic.simpLemma [] ["←"] `base)] "]"]
+        []
+        [])
+       [])
+      (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h_base)] "]") []) [])
+      (group (Tactic.exact "exact" `Subgroup.normal_closure_normal) [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic·._»', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.exact "exact" `Subgroup.normal_closure_normal)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `Subgroup.normal_closure_normal
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h_base)] "]") [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h_base
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.dsimp
+   "dsimp"
+   []
+   ["only"]
+   ["[" [(Tactic.simpLemma [] [] `general_commutator_def) "," (Tactic.simpLemma [] ["←"] `base)] "]"]
+   []
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.dsimp', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `base
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«←»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `general_commutator_def
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.suffices'
+   "suffices"
+   [`h_base []]
+   [(Term.typeSpec ":" («term_=_» `base "=" (Term.app `Groupₓ.ConjugatesOfSet [`base])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.suffices'', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_=_» `base "=" (Term.app `Groupₓ.ConjugatesOfSet [`base]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `Groupₓ.ConjugatesOfSet [`base])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `base
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `Groupₓ.ConjugatesOfSet
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  `base
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.tacticLet_
+   "let"
+   (Term.letDecl
+    (Term.letIdDecl
+     `base
+     [(Term.typeSpec ":" (Term.app `Set [`G]))]
+     ":="
+     (Set.«term{_|_}»
+      "{"
+      `x
+      "|"
+      (Mathlib.ExtendedBinder.«term∃___,_»
+       "∃"
+       `p
+       («binderTerm∈_» "∈" `H₁)
+       ","
+       (Mathlib.ExtendedBinder.«term∃___,_»
+        "∃"
+        `q
+        («binderTerm∈_» "∈" `H₂)
+        ","
+        («term_=_»
+         (Finset.Data.Finset.Fold.«term_*_»
+          (Finset.Data.Finset.Fold.«term_*_»
+           (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+           "*"
+           (Init.Logic.«term_⁻¹» `p "⁻¹"))
+          "*"
+          (Init.Logic.«term_⁻¹» `q "⁻¹"))
+         "="
+         `x)))
+      "}"))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticLet_', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Set.«term{_|_}»
+   "{"
+   `x
+   "|"
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `p
+    («binderTerm∈_» "∈" `H₁)
+    ","
+    (Mathlib.ExtendedBinder.«term∃___,_»
+     "∃"
+     `q
+     («binderTerm∈_» "∈" `H₂)
+     ","
+     («term_=_»
+      (Finset.Data.Finset.Fold.«term_*_»
+       (Finset.Data.Finset.Fold.«term_*_»
+        (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+        "*"
+        (Init.Logic.«term_⁻¹» `p "⁻¹"))
+       "*"
+       (Init.Logic.«term_⁻¹» `q "⁻¹"))
+      "="
+      `x)))
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `p
+   («binderTerm∈_» "∈" `H₁)
+   ","
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `q
+    («binderTerm∈_» "∈" `H₂)
+    ","
+    («term_=_»
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_»
+       (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+       "*"
+       (Init.Logic.«term_⁻¹» `p "⁻¹"))
+      "*"
+      (Init.Logic.«term_⁻¹» `q "⁻¹"))
+     "="
+     `x)))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `q
+   («binderTerm∈_» "∈" `H₂)
+   ","
+   («term_=_»
+    (Finset.Data.Finset.Fold.«term_*_»
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+      "*"
+      (Init.Logic.«term_⁻¹» `p "⁻¹"))
+     "*"
+     (Init.Logic.«term_⁻¹» `q "⁻¹"))
+    "="
+    `x))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_=_»
+   (Finset.Data.Finset.Fold.«term_*_»
+    (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+    "*"
+    (Init.Logic.«term_⁻¹» `q "⁻¹"))
+   "="
+   `x)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  (Finset.Data.Finset.Fold.«term_*_»
+   (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+   "*"
+   (Init.Logic.«term_⁻¹» `q "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `q "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `p "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Finset.Data.Finset.Fold.«term_*_»
+   (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+   "*"
+   (Init.Logic.«term_⁻¹» `p "⁻¹"))
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Finset.Data.Finset.Fold.«term_*_»
+   (Term.paren
+    "("
+    [(Finset.Data.Finset.Fold.«term_*_»
+      (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+      "*"
+      (Init.Logic.«term_⁻¹» `p "⁻¹"))
+     []]
+    ")")
+   "*"
+   (Init.Logic.«term_⁻¹» `q "⁻¹"))
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₂
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₁
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 instance
   general_commutator_normal
   ( H₁ H₂ : Subgroup G ) [ h₁ : H₁.normal ] [ h₂ : H₂.normal ] : normal ⁅ H₁ , H₂ ⁆
   :=
     by
-      let base : Set G := { x | ∃ ( p : _ ) ( _ : p ∈ H₁ ) ( q : _ ) ( _ : q ∈ H₂ ) , p * q * p ⁻¹ * q ⁻¹ = x }
+      let base : Set G := { x | ∃ p ∈ H₁ , ∃ q ∈ H₂ , p * q * p ⁻¹ * q ⁻¹ = x }
         suffices h_base : base = Groupₓ.ConjugatesOfSet base
         · dsimp only [ general_commutator_def , ← base ] rw [ h_base ] exact Subgroup.normal_closure_normal
         apply Set.Subset.antisymm Groupₓ.subset_conjugates_of_set
         intro a h
-        simpRw [ Groupₓ.mem_conjugates_of_set_iff , is_conj_iff ] at h
+        simp_rw [ Groupₓ.mem_conjugates_of_set_iff , is_conj_iff ] at h
         rcases h with ⟨ b , ⟨ c , hc , e , he , rfl ⟩ , d , rfl ⟩
         exact ⟨ d * c * d ⁻¹ , h₁.conj_mem c hc d , d * e * d ⁻¹ , h₂.conj_mem e he d , by group ⟩
 
-theorem general_commutator_mono {H₁ H₂ K₁ K₂ : Subgroup G} (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,H₂⁆ ≤ ⁅K₁,K₂⁆ :=
-  by 
-    apply closure_mono 
-    rintro x ⟨p, hp, q, hq, rfl⟩
-    exact ⟨p, h₁ hp, q, h₂ hq, rfl⟩
+theorem general_commutator_mono {H₁ H₂ K₁ K₂ : Subgroup G} (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,H₂⁆ ≤ ⁅K₁,K₂⁆ := by
+  apply closure_mono
+  rintro x ⟨p, hp, q, hq, rfl⟩
+  exact ⟨p, h₁ hp, q, h₂ hq, rfl⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `general_commutator_def' [])
+  (Command.declSig
+   [(Term.explicitBinder "(" [`H₁ `H₂] [":" (Term.app `Subgroup [`G])] [] ")")
+    (Term.instBinder "[" [] `H₁.normal "]")
+    (Term.instBinder "[" [] `H₂.normal "]")]
+   (Term.typeSpec
+    ":"
+    («term_=_»
+     (Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")
+     "="
+     (Term.app
+      `normal_closure
+      [(Set.«term{_|_}»
+        "{"
+        `x
+        "|"
+        (Mathlib.ExtendedBinder.«term∃___,_»
+         "∃"
+         `p
+         («binderTerm∈_» "∈" `H₁)
+         ","
+         (Mathlib.ExtendedBinder.«term∃___,_»
+          "∃"
+          `q
+          («binderTerm∈_» "∈" `H₂)
+          ","
+          («term_=_»
+           (Finset.Data.Finset.Fold.«term_*_»
+            (Finset.Data.Finset.Fold.«term_*_»
+             (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+             "*"
+             (Init.Logic.«term_⁻¹» `p "⁻¹"))
+            "*"
+            (Init.Logic.«term_⁻¹» `q "⁻¹"))
+           "="
+           `x)))
+        "}")]))))
+  (Command.declValSimple
+   ":="
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule ["←"] (Term.app `normal_closure_eq_self [(Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")]))
+           ","
+           (Tactic.rwRule [] `general_commutator_def)
+           ","
+           (Tactic.rwRule [] `normal_closure_closure_eq_normal_closure)]
+          "]")
+         [])
+        [])])))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.rwSeq
+        "rw"
+        []
+        (Tactic.rwRuleSeq
+         "["
+         [(Tactic.rwRule ["←"] (Term.app `normal_closure_eq_self [(Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")]))
+          ","
+          (Tactic.rwRule [] `general_commutator_def)
+          ","
+          (Tactic.rwRule [] `normal_closure_closure_eq_normal_closure)]
+         "]")
+        [])
+       [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.rwSeq
+   "rw"
+   []
+   (Tactic.rwRuleSeq
+    "["
+    [(Tactic.rwRule ["←"] (Term.app `normal_closure_eq_self [(Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")]))
+     ","
+     (Tactic.rwRule [] `general_commutator_def)
+     ","
+     (Tactic.rwRule [] `normal_closure_closure_eq_normal_closure)]
+    "]")
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `normal_closure_closure_eq_normal_closure
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `general_commutator_def
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `normal_closure_eq_self [(Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Bracket.«term⁅_,_⁆»', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Bracket.«term⁅_,_⁆»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Bracket.«term⁅_,_⁆»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Bracket.«term⁅_,_⁆»', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Bracket.«term⁅_,_⁆»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Bracket.«term⁅_,_⁆»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₂
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₁
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `normal_closure_eq_self
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«←»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  («term_=_»
+   (Data.Bracket.«term⁅_,_⁆» "⁅" `H₁ "," `H₂ "⁆")
+   "="
+   (Term.app
+    `normal_closure
+    [(Set.«term{_|_}»
+      "{"
+      `x
+      "|"
+      (Mathlib.ExtendedBinder.«term∃___,_»
+       "∃"
+       `p
+       («binderTerm∈_» "∈" `H₁)
+       ","
+       (Mathlib.ExtendedBinder.«term∃___,_»
+        "∃"
+        `q
+        («binderTerm∈_» "∈" `H₂)
+        ","
+        («term_=_»
+         (Finset.Data.Finset.Fold.«term_*_»
+          (Finset.Data.Finset.Fold.«term_*_»
+           (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+           "*"
+           (Init.Logic.«term_⁻¹» `p "⁻¹"))
+          "*"
+          (Init.Logic.«term_⁻¹» `q "⁻¹"))
+         "="
+         `x)))
+      "}")]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `normal_closure
+   [(Set.«term{_|_}»
+     "{"
+     `x
+     "|"
+     (Mathlib.ExtendedBinder.«term∃___,_»
+      "∃"
+      `p
+      («binderTerm∈_» "∈" `H₁)
+      ","
+      (Mathlib.ExtendedBinder.«term∃___,_»
+       "∃"
+       `q
+       («binderTerm∈_» "∈" `H₂)
+       ","
+       («term_=_»
+        (Finset.Data.Finset.Fold.«term_*_»
+         (Finset.Data.Finset.Fold.«term_*_»
+          (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+          "*"
+          (Init.Logic.«term_⁻¹» `p "⁻¹"))
+         "*"
+         (Init.Logic.«term_⁻¹» `q "⁻¹"))
+        "="
+        `x)))
+     "}")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Set.«term{_|_}»
+   "{"
+   `x
+   "|"
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `p
+    («binderTerm∈_» "∈" `H₁)
+    ","
+    (Mathlib.ExtendedBinder.«term∃___,_»
+     "∃"
+     `q
+     («binderTerm∈_» "∈" `H₂)
+     ","
+     («term_=_»
+      (Finset.Data.Finset.Fold.«term_*_»
+       (Finset.Data.Finset.Fold.«term_*_»
+        (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+        "*"
+        (Init.Logic.«term_⁻¹» `p "⁻¹"))
+       "*"
+       (Init.Logic.«term_⁻¹» `q "⁻¹"))
+      "="
+      `x)))
+   "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `p
+   («binderTerm∈_» "∈" `H₁)
+   ","
+   (Mathlib.ExtendedBinder.«term∃___,_»
+    "∃"
+    `q
+    («binderTerm∈_» "∈" `H₂)
+    ","
+    («term_=_»
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_»
+       (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+       "*"
+       (Init.Logic.«term_⁻¹» `p "⁻¹"))
+      "*"
+      (Init.Logic.«term_⁻¹» `q "⁻¹"))
+     "="
+     `x)))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Mathlib.ExtendedBinder.«term∃___,_»
+   "∃"
+   `q
+   («binderTerm∈_» "∈" `H₂)
+   ","
+   («term_=_»
+    (Finset.Data.Finset.Fold.«term_*_»
+     (Finset.Data.Finset.Fold.«term_*_»
+      (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+      "*"
+      (Init.Logic.«term_⁻¹» `p "⁻¹"))
+     "*"
+     (Init.Logic.«term_⁻¹» `q "⁻¹"))
+    "="
+    `x))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.ExtendedBinder.«term∃___,_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  («term_=_»
+   (Finset.Data.Finset.Fold.«term_*_»
+    (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+    "*"
+    (Init.Logic.«term_⁻¹» `q "⁻¹"))
+   "="
+   `x)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  (Finset.Data.Finset.Fold.«term_*_»
+   (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+   "*"
+   (Init.Logic.«term_⁻¹» `q "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `q "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» (Finset.Data.Finset.Fold.«term_*_» `p "*" `q) "*" (Init.Logic.«term_⁻¹» `p "⁻¹"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Logic.«term_⁻¹» `p "⁻¹")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Logic.«term_⁻¹»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Finset.Data.Finset.Fold.«term_*_» `p "*" `q)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Data.Finset.Fold.«term_*_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `q
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `p
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Finset.Data.Finset.Fold.«term_*_»
+   (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+   "*"
+   (Init.Logic.«term_⁻¹» `p "⁻¹"))
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+ "("
+ [(Finset.Data.Finset.Fold.«term_*_»
+   (Term.paren
+    "("
+    [(Finset.Data.Finset.Fold.«term_*_»
+      (Term.paren "(" [(Finset.Data.Finset.Fold.«term_*_» `p "*" `q) []] ")")
+      "*"
+      (Init.Logic.«term_⁻¹» `p "⁻¹"))
+     []]
+    ")")
+   "*"
+   (Init.Logic.«term_⁻¹» `q "⁻¹"))
+  []]
+ ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₂
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«binderTerm∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `H₁
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   general_commutator_def'
   ( H₁ H₂ : Subgroup G ) [ H₁.normal ] [ H₂.normal ]
-    : ⁅ H₁ , H₂ ⁆ = normal_closure { x | ∃ ( p : _ ) ( _ : p ∈ H₁ ) ( q : _ ) ( _ : q ∈ H₂ ) , p * q * p ⁻¹ * q ⁻¹ = x }
+    : ⁅ H₁ , H₂ ⁆ = normal_closure { x | ∃ p ∈ H₁ , ∃ q ∈ H₂ , p * q * p ⁻¹ * q ⁻¹ = x }
   := by rw [ ← normal_closure_eq_self ⁅ H₁ , H₂ ⁆ , general_commutator_def , normal_closure_closure_eq_normal_closure ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (p «expr ∈ » H₁)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (q «expr ∈ » H₂)
 theorem general_commutator_le (H₁ H₂ : Subgroup G) (K : Subgroup G) :
-  ⁅H₁,H₂⁆ ≤ K ↔ ∀ p _ : p ∈ H₁ q _ : q ∈ H₂, (((p*q)*p⁻¹)*q⁻¹) ∈ K :=
-  by 
-    rw [generalCommutator, closure_le]
-    constructor
-    ·
-      intro h p hp q hq 
-      exact h ⟨p, hp, q, hq, rfl⟩
-    ·
-      rintro h x ⟨p, hp, q, hq, rfl⟩
-      exact h p hp q hq
+    ⁅H₁,H₂⁆ ≤ K ↔ ∀, ∀ p ∈ H₁, ∀, ∀ q ∈ H₂, ∀, (((p*q)*p⁻¹)*q⁻¹) ∈ K := by
+  rw [generalCommutator, closure_le]
+  constructor
+  ·
+    intro h p hp q hq
+    exact h ⟨p, hp, q, hq, rfl⟩
+  ·
+    rintro h x ⟨p, hp, q, hq, rfl⟩
+    exact h p hp q hq
 
 theorem general_commutator_containment (H₁ H₂ : Subgroup G) {p q : G} (hp : p ∈ H₁) (hq : q ∈ H₂) :
-  (((p*q)*p⁻¹)*q⁻¹) ∈ ⁅H₁,H₂⁆ :=
+    (((p*q)*p⁻¹)*q⁻¹) ∈ ⁅H₁,H₂⁆ :=
   (general_commutator_le H₁ H₂ ⁅H₁,H₂⁆).mp (le_reflₓ ⁅H₁,H₂⁆) p hp q hq
 
-theorem general_commutator_comm (H₁ H₂ : Subgroup G) : ⁅H₁,H₂⁆ = ⁅H₂,H₁⁆ :=
-  by 
-    suffices  : ∀ H₁ H₂ : Subgroup G, ⁅H₁,H₂⁆ ≤ ⁅H₂,H₁⁆
-    ·
-      exact le_antisymmₓ (this _ _) (this _ _)
-    intro H₁ H₂ 
-    rw [general_commutator_le]
-    intro p hp q hq 
-    have h : (((p*q)*p⁻¹)*q⁻¹)⁻¹ ∈ ⁅H₂,H₁⁆ :=
-      subset_closure
-        ⟨q, hq, p, hp,
-          by 
-            group⟩
-    convert inv_mem ⁅H₂,H₁⁆ h 
-    group
+theorem general_commutator_comm (H₁ H₂ : Subgroup G) : ⁅H₁,H₂⁆ = ⁅H₂,H₁⁆ := by
+  suffices ∀ H₁ H₂ : Subgroup G, ⁅H₁,H₂⁆ ≤ ⁅H₂,H₁⁆by
+    exact le_antisymmₓ (this _ _) (this _ _)
+  intro H₁ H₂
+  rw [general_commutator_le]
+  intro p hp q hq
+  have h : (((p*q)*p⁻¹)*q⁻¹)⁻¹ ∈ ⁅H₂,H₁⁆ :=
+    subset_closure
+      ⟨q, hq, p, hp, by
+        group⟩
+  convert inv_mem ⁅H₂,H₁⁆ h
+  group
 
-theorem general_commutator_le_right (H₁ H₂ : Subgroup G) [h : normal H₂] : ⁅H₁,H₂⁆ ≤ H₂ :=
-  by 
-    rw [general_commutator_le]
-    intro p hp q hq 
-    exact mul_mem H₂ (h.conj_mem q hq p) (inv_mem H₂ hq)
+theorem general_commutator_le_right (H₁ H₂ : Subgroup G) [h : normal H₂] : ⁅H₁,H₂⁆ ≤ H₂ := by
+  rw [general_commutator_le]
+  intro p hp q hq
+  exact mul_mem H₂ (h.conj_mem q hq p) (inv_mem H₂ hq)
 
-theorem general_commutator_le_left (H₁ H₂ : Subgroup G) [h : normal H₁] : ⁅H₁,H₂⁆ ≤ H₁ :=
-  by 
-    rw [general_commutator_comm]
-    exact general_commutator_le_right H₂ H₁
+theorem general_commutator_le_left (H₁ H₂ : Subgroup G) [h : normal H₁] : ⁅H₁,H₂⁆ ≤ H₁ := by
+  rw [general_commutator_comm]
+  exact general_commutator_le_right H₂ H₁
 
 @[simp]
-theorem general_commutator_bot (H : Subgroup G) : ⁅H,⊥⁆ = (⊥ : Subgroup G) :=
-  by 
-    rw [eq_bot_iff]
-    exact general_commutator_le_right H ⊥
+theorem general_commutator_bot (H : Subgroup G) : ⁅H,⊥⁆ = (⊥ : Subgroup G) := by
+  rw [eq_bot_iff]
+  exact general_commutator_le_right H ⊥
 
 @[simp]
-theorem bot_general_commutator (H : Subgroup G) : ⁅(⊥ : Subgroup G),H⁆ = (⊥ : Subgroup G) :=
-  by 
-    rw [eq_bot_iff]
-    exact general_commutator_le_left ⊥ H
+theorem bot_general_commutator (H : Subgroup G) : ⁅(⊥ : Subgroup G),H⁆ = (⊥ : Subgroup G) := by
+  rw [eq_bot_iff]
+  exact general_commutator_le_left ⊥ H
 
-theorem general_commutator_le_inf (H₁ H₂ : Subgroup G) [normal H₁] [normal H₂] : ⁅H₁,H₂⁆ ≤ H₁⊓H₂ :=
-  by 
-    simp only [general_commutator_le_left, general_commutator_le_right, le_inf_iff, and_selfₓ]
+theorem general_commutator_le_inf (H₁ H₂ : Subgroup G) [normal H₁] [normal H₂] : ⁅H₁,H₂⁆ ≤ H₁⊓H₂ := by
+  simp only [general_commutator_le_left, general_commutator_le_right, le_inf_iff, and_selfₓ]
 

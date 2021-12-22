@@ -21,72 +21,69 @@ universe v₁ u₁
 
 open Sum
 
-section 
+section
 
 variable (C : Type u₁) [category.{v₁} C] (D : Type u₁) [category.{v₁} D]
 
+-- failed to format: format: uncaught backtrack exception
 /--
-`sum C D` gives the direct sum of two categories.
--/
-instance Sum : category.{v₁} (Sum C D) :=
-  { Hom :=
-      fun X Y =>
-        match X, Y with 
-        | inl X, inl Y => X ⟶ Y
-        | inl X, inr Y => Pempty
-        | inr X, inl Y => Pempty
-        | inr X, inr Y => X ⟶ Y,
-    id :=
-      fun X =>
-        match X with 
-        | inl X => 𝟙 X
-        | inr X => 𝟙 X,
-    comp :=
-      fun X Y Z f g =>
-        match X, Y, Z, f, g with 
-        | inl X, inl Y, inl Z, f, g => f ≫ g
-        | inr X, inr Y, inr Z, f, g => f ≫ g }
+    `sum C D` gives the direct sum of two categories.
+    -/
+  instance
+    Sum
+    : category .{ v₁ } ( Sum C D )
+    where
+      Hom
+          X Y
+          :=
+          match
+            X , Y
+            with
+            | inl X , inl Y => X ⟶ Y | inl X , inr Y => Pempty | inr X , inl Y => Pempty | inr X , inr Y => X ⟶ Y
+        id X := match X with | inl X => 𝟙 X | inr X => 𝟙 X
+        comp
+          X Y Z f g
+          :=
+          match X , Y , Z , f , g with | inl X , inl Y , inl Z , f , g => f ≫ g | inr X , inr Y , inr Z , f , g => f ≫ g
 
 @[simp]
 theorem sum_comp_inl {P Q R : C} (f : (inl P : Sum C D) ⟶ inl Q) (g : (inl Q : Sum C D) ⟶ inl R) :
-  @category_struct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
-    @category_struct.comp _ _ (inl P) (inl Q) (inl R) (f : P ⟶ Q) (g : Q ⟶ R) :=
+    @category_struct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
+      @category_struct.comp _ _ (inl P) (inl Q) (inl R) (f : P ⟶ Q) (g : Q ⟶ R) :=
   rfl
 
 @[simp]
 theorem sum_comp_inr {P Q R : D} (f : (inr P : Sum C D) ⟶ inr Q) (g : (inr Q : Sum C D) ⟶ inr R) :
-  @category_struct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
-    @category_struct.comp _ _ (inr P) (inr Q) (inr R) (f : P ⟶ Q) (g : Q ⟶ R) :=
+    @category_struct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
+      @category_struct.comp _ _ (inr P) (inr Q) (inr R) (f : P ⟶ Q) (g : Q ⟶ R) :=
   rfl
 
-end 
+end
 
 namespace Sum
 
 variable (C : Type u₁) [category.{v₁} C] (D : Type u₁) [category.{v₁} D]
 
-/-- `inl_` is the functor `X ↦ inl X`. -/
+/--  `inl_` is the functor `X ↦ inl X`. -/
 @[simps]
 def inl_ : C ⥤ Sum C D :=
   { obj := fun X => inl X, map := fun X Y f => f }
 
-/-- `inr_` is the functor `X ↦ inr X`. -/
+/--  `inr_` is the functor `X ↦ inr X`. -/
 @[simps]
 def inr_ : D ⥤ Sum C D :=
   { obj := fun X => inr X, map := fun X Y f => f }
 
-/-- The functor exchanging two direct summand categories. -/
+/--  The functor exchanging two direct summand categories. -/
 def swap : Sum C D ⥤ Sum D C :=
-  { obj :=
-      fun X =>
-        match X with 
-        | inl X => inr X
-        | inr X => inl X,
-    map :=
-      fun X Y f =>
-        match X, Y, f with 
-        | inl X, inl Y, f => f
-        | inr X, inr Y, f => f }
+  { obj := fun X =>
+      match X with
+      | inl X => inr X
+      | inr X => inl X,
+    map := fun X Y f =>
+      match X, Y, f with
+      | inl X, inl Y, f => f
+      | inr X, inr Y, f => f }
 
 @[simp]
 theorem swap_obj_inl (X : C) : (swap C D).obj (inl X) = inr X :=
@@ -106,30 +103,29 @@ theorem swap_map_inr {X Y : D} {f : inr X ⟶ inr Y} : (swap C D).map f = f :=
 
 namespace Swap
 
-/-- `swap` gives an equivalence between `C ⊕ D` and `D ⊕ C`. -/
+/--  `swap` gives an equivalence between `C ⊕ D` and `D ⊕ C`. -/
 def Equivalenceₓ : Sum C D ≌ Sum D C :=
   equivalence.mk (swap C D) (swap D C)
     (nat_iso.of_components
       (fun X =>
         eq_to_iso
-          (by 
+          (by
             cases X <;> rfl))
-      (by 
+      (by
         tidy))
     (nat_iso.of_components
       (fun X =>
         eq_to_iso
-          (by 
+          (by
             cases X <;> rfl))
-      (by 
+      (by
         tidy))
 
 instance is_equivalence : is_equivalence (swap C D) :=
-  (by 
-    infer_instance :
-  is_equivalence (Equivalenceₓ C D).Functor)
+  (by
+    infer_instance : is_equivalence (Equivalenceₓ C D).Functor)
 
-/-- The double swap on `C ⊕ D` is naturally isomorphic to the identity functor. -/
+/--  The double swap on `C ⊕ D` is naturally isomorphic to the identity functor. -/
 def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (Sum C D) :=
   (Equivalenceₓ C D).unitIso.symm
 
@@ -142,39 +138,32 @@ variable {A : Type u₁} [category.{v₁} A] {B : Type u₁} [category.{v₁} B]
 
 namespace Functor
 
-/-- The sum of two functors. -/
+/--  The sum of two functors. -/
 def Sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D :=
-  { obj :=
-      fun X =>
-        match X with 
-        | inl X => inl (F.obj X)
-        | inr X => inr (G.obj X),
-    map :=
-      fun X Y f =>
-        match X, Y, f with 
-        | inl X, inl Y, f => F.map f
-        | inr X, inr Y, f => G.map f,
-    map_id' :=
-      fun X =>
-        by 
-          cases X <;> unfoldAux 
-          erw [F.map_id]
-          rfl 
-          erw [G.map_id]
-          rfl,
-    map_comp' :=
-      fun X Y Z f g =>
-        match X, Y, Z, f, g with 
-        | inl X, inl Y, inl Z, f, g =>
-          by 
-            unfoldAux 
-            erw [F.map_comp]
-            rfl
-        | inr X, inr Y, inr Z, f, g =>
-          by 
-            unfoldAux 
-            erw [G.map_comp]
-            rfl }
+  { obj := fun X =>
+      match X with
+      | inl X => inl (F.obj X)
+      | inr X => inr (G.obj X),
+    map := fun X Y f =>
+      match X, Y, f with
+      | inl X, inl Y, f => F.map f
+      | inr X, inr Y, f => G.map f,
+    map_id' := fun X => by
+      cases X <;> unfold_aux
+      erw [F.map_id]
+      rfl
+      erw [G.map_id]
+      rfl,
+    map_comp' := fun X Y Z f g =>
+      match X, Y, Z, f, g with
+      | inl X, inl Y, inl Z, f, g => by
+        unfold_aux
+        erw [F.map_comp]
+        rfl
+      | inr X, inr Y, inr Z, f, g => by
+        unfold_aux
+        erw [G.map_comp]
+        rfl }
 
 @[simp]
 theorem sum_obj_inl (F : A ⥤ B) (G : C ⥤ D) (a : A) : (F.sum G).obj (inl a) = inl (F.obj a) :=
@@ -196,26 +185,22 @@ end Functor
 
 namespace NatTrans
 
-/-- The sum of two natural transformations. -/
+/--  The sum of two natural transformations. -/
 def Sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.sum H ⟶ G.sum I :=
-  { app :=
-      fun X =>
-        match X with 
-        | inl X => α.app X
-        | inr X => β.app X,
-    naturality' :=
-      fun X Y f =>
-        match X, Y, f with 
-        | inl X, inl Y, f =>
-          by 
-            unfoldAux 
-            erw [α.naturality]
-            rfl
-        | inr X, inr Y, f =>
-          by 
-            unfoldAux 
-            erw [β.naturality]
-            rfl }
+  { app := fun X =>
+      match X with
+      | inl X => α.app X
+      | inr X => β.app X,
+    naturality' := fun X Y f =>
+      match X, Y, f with
+      | inl X, inl Y, f => by
+        unfold_aux
+        erw [α.naturality]
+        rfl
+      | inr X, inr Y, f => by
+        unfold_aux
+        erw [β.naturality]
+        rfl }
 
 @[simp]
 theorem sum_app_inl {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (a : A) : (Sum α β).app (inl a) = α.app a :=

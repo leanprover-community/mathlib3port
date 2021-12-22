@@ -1,4 +1,4 @@
-import Mathbin.Tactic.Core 
+import Mathbin.Tactic.Core
 import Mathbin.Tactic.PushNeg
 
 /-!
@@ -15,7 +15,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-/--
+/-- 
 If the target of the main goal is a proposition `p`,
 `by_contra'` reduces the goal to proving `false` using the additional hypothesis `h : ¬ p`.
 `by_contra' h` can be used to name the hypothesis `h : ¬ p`.
@@ -46,22 +46,20 @@ begin
 end
 ```
 -/
-unsafe def by_contra' (h : parse (ident)?) (t : parse (tk ":" *> texpr)?) : tactic Unit :=
-  do 
-    let h := h.get_or_else `this 
-    let tgt ← target 
-    mk_mapp `classical.by_contradiction [some tgt] >>= tactic.eapply 
-    let h₁ ← tactic.intro h 
-    let t' ← infer_type h₁ 
-    let (e', pr') ← push_neg.normalize_negations t' <|> refl_conv t' 
-    match t with 
-      | none => () <$ replace_hyp h₁ e' pr'
-      | some t =>
-        do 
-          let t ← to_expr (pquote.1 (%%ₓt : Prop))
-          let (e, pr) ← push_neg.normalize_negations t <|> refl_conv t 
-          unify e e'
-          () <$ (mk_eq_symm pr >>= mk_eq_trans pr' >>= replace_hyp h₁ t)
+unsafe def by_contra' (h : parse (ident)?) (t : parse (tk ":" *> texpr)?) : tactic Unit := do
+  let h := h.get_or_else `this
+  let tgt ← target
+  mk_mapp `classical.by_contradiction [some tgt] >>= tactic.eapply
+  let h₁ ← tactic.intro h
+  let t' ← infer_type h₁
+  let (e', pr') ← push_neg.normalize_negations t' <|> refl_conv t'
+  match t with
+    | none => () <$ replace_hyp h₁ e' pr'
+    | some t => do
+      let t ← to_expr (pquote.1 (%%ₓt : Prop))
+      let (e, pr) ← push_neg.normalize_negations t <|> refl_conv t
+      unify e e'
+      () <$ (mk_eq_symm pr >>= mk_eq_trans pr' >>= replace_hyp h₁ t)
 
 add_tactic_doc
   { Name := "by_contra'", category := DocCategory.tactic, declNames := [`tactic.interactive.by_contra'],

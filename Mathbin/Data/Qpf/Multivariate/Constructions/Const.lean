@@ -1,4 +1,4 @@
-import Mathbin.Control.Functor.Multivariate 
+import Mathbin.Control.Functor.Multivariate
 import Mathbin.Data.Qpf.Multivariate.Basic
 
 /-!
@@ -20,7 +20,7 @@ open_locale Mvfunctor
 
 variable (n : ℕ)
 
-/-- Constant multivariate functor -/
+/--  Constant multivariate functor -/
 @[nolint unused_arguments]
 def const (A : Type _) (v : Typevec.{u} n) : Type _ :=
   A
@@ -34,11 +34,11 @@ open Mvfunctor Mvpfunctor
 
 variable {n} {A : Type u} {α β : Typevec.{u} n} (f : α ⟹ β)
 
-/-- Constructor for constant functor -/
+/--  Constructor for constant functor -/
 protected def mk (x : A) : (const n A) α :=
   x
 
-/-- Destructor for constant functor -/
+/--  Destructor for constant functor -/
 protected def get (x : (const n A) α) : A :=
   x
 
@@ -50,12 +50,11 @@ protected theorem mk_get (x : (const n A) α) : const.mk (const.get x) = x :=
 protected theorem get_mk (x : A) : const.get (const.mk x : const n A α) = x :=
   rfl
 
-/-- `map` for constant functor -/
-protected def map : (const n A) α → (const n A) β :=
-  fun x => x
+/--  `map` for constant functor -/
+protected def map : (const n A) α → (const n A) β := fun x => x
 
-instance : Mvfunctor (const n A) :=
-  { map := fun α β f => const.map }
+-- failed to format: format: uncaught backtrack exception
+instance : Mvfunctor ( const n A ) where map α β f := const.map
 
 theorem map_mk (x : A) : f <$$> const.mk x = const.mk x :=
   rfl
@@ -63,14 +62,16 @@ theorem map_mk (x : A) : f <$$> const.mk x = const.mk x :=
 theorem get_map (x : (const n A) α) : const.get (f <$$> x) = const.get x :=
   rfl
 
-instance Mvqpf : @Mvqpf _ (const n A) Mvqpf.Const.mvfunctor :=
-  { p := Mvpfunctor.const n A, abs := fun α x => Mvpfunctor.const.get x, repr := fun α x => Mvpfunctor.const.mk n x,
-    abs_repr :=
-      by 
-        intros  <;> simp ,
-    abs_map :=
-      by 
-        intros  <;> simp  <;> rfl }
+-- failed to format: format: uncaught backtrack exception
+instance
+  Mvqpf
+  : @ Mvqpf _ ( const n A ) Mvqpf.Const.mvfunctor
+  where
+    p := Mvpfunctor.const n A
+      abs α x := Mvpfunctor.const.get x
+      repr α x := Mvpfunctor.const.mk n x
+      abs_repr := by intros <;> simp
+      abs_map := by intros <;> simp <;> rfl
 
 end Const
 

@@ -4,7 +4,7 @@ open Tactic
 
 namespace Tactic.Interactive
 
-/--
+/-- 
 `show_term { tac }` runs the tactic `tac`,
 and then prints the term that was constructed.
 
@@ -24,12 +24,11 @@ print `refine (0, _)`, and afterwards there will be one remaining goal (of type 
 This indicates that `split, exact 0` partially filled in the original metavariable,
 but created a new metavariable for the resulting sub-goal.
 -/
-unsafe def show_term (t : itactic) : itactic :=
-  do 
-    let g :: _ ← get_goals 
-    t 
-    let g ← tactic_statement g 
-    trace g
+unsafe def show_term (t : itactic) : itactic := do
+  let g :: _ ← get_goals
+  t
+  let g ← tactic_statement g
+  trace g
 
 add_tactic_doc
   { Name := "show_term", category := DocCategory.tactic, declNames := [`` show_term], tags := ["debugging"] }

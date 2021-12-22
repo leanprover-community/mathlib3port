@@ -1,6 +1,6 @@
-import Mathbin.Algebra.Order.Smul 
-import Mathbin.Data.Complex.Basic 
-import Mathbin.Data.Fin.VecNotation 
+import Mathbin.Algebra.Order.Smul
+import Mathbin.Data.Complex.Basic
+import Mathbin.Data.Fin.VecNotation
 import Mathbin.FieldTheory.Tower
 
 /-!
@@ -35,196 +35,161 @@ open_locale ComplexConjugate
 
 variable {R : Type _} {S : Type _}
 
-section 
+section
 
 variable [HasScalar R ℝ]
 
-instance : HasScalar R ℂ :=
-  { smul := fun r x => ⟨r • x.re - 0*x.im, (r • x.im)+0*x.re⟩ }
+-- failed to format: format: uncaught backtrack exception
+instance : HasScalar R ℂ where smul r x := ⟨ r • x.re - 0 * x.im , ( r • x.im ) + 0 * x.re ⟩
 
-theorem smul_re (r : R) (z : ℂ) : (r • z).re = r • z.re :=
-  by 
-    simp [· • ·]
+theorem smul_re (r : R) (z : ℂ) : (r • z).re = r • z.re := by
+  simp [· • ·]
 
-theorem smul_im (r : R) (z : ℂ) : (r • z).im = r • z.im :=
-  by 
-    simp [· • ·]
+theorem smul_im (r : R) (z : ℂ) : (r • z).im = r • z.im := by
+  simp [· • ·]
 
 @[simp]
 theorem real_smul {x : ℝ} {z : ℂ} : x • z = x*z :=
   rfl
 
-end 
+end
 
-instance [HasScalar R ℝ] [HasScalar S ℝ] [SmulCommClass R S ℝ] : SmulCommClass R S ℂ :=
-  { smul_comm :=
-      fun r s x =>
-        by 
-          ext <;> simp [smul_re, smul_im, smul_comm] }
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ HasScalar R ℝ ] [ HasScalar S ℝ ] [ SmulCommClass R S ℝ ] : SmulCommClass R S ℂ
+  where smul_comm r s x := by ext <;> simp [ smul_re , smul_im , smul_comm ]
 
-instance [HasScalar R S] [HasScalar R ℝ] [HasScalar S ℝ] [IsScalarTower R S ℝ] : IsScalarTower R S ℂ :=
-  { smul_assoc :=
-      fun r s x =>
-        by 
-          ext <;> simp [smul_re, smul_im, smul_assoc] }
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ HasScalar R S ] [ HasScalar R ℝ ] [ HasScalar S ℝ ] [ IsScalarTower R S ℝ ] : IsScalarTower R S ℂ
+  where smul_assoc r s x := by ext <;> simp [ smul_re , smul_im , smul_assoc ]
 
-instance [HasScalar R ℝ] [HasScalar (Rᵐᵒᵖ) ℝ] [IsCentralScalar R ℝ] : IsCentralScalar R ℂ :=
-  { op_smul_eq_smul :=
-      fun r x =>
-        by 
-          ext <;> simp [smul_re, smul_im, op_smul_eq_smul] }
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ HasScalar R ℝ ] [ HasScalar ( R ᵐᵒᵖ ) ℝ ] [ IsCentralScalar R ℝ ] : IsCentralScalar R ℂ
+  where op_smul_eq_smul r x := by ext <;> simp [ smul_re , smul_im , op_smul_eq_smul ]
 
-instance [Monoidₓ R] [MulAction R ℝ] : MulAction R ℂ :=
-  { one_smul :=
-      fun x =>
-        by 
-          ext <;> simp [smul_re, smul_im, one_smul],
-    mul_smul :=
-      fun r s x =>
-        by 
-          ext <;> simp [smul_re, smul_im, mul_smul] }
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ Monoidₓ R ] [ MulAction R ℝ ] : MulAction R ℂ
+  where
+    one_smul x := by ext <;> simp [ smul_re , smul_im , one_smul ]
+      mul_smul r s x := by ext <;> simp [ smul_re , smul_im , mul_smul ]
 
-instance [Semiringₓ R] [DistribMulAction R ℝ] : DistribMulAction R ℂ :=
-  { smul_add :=
-      fun r x y =>
-        by 
-          ext <;> simp [smul_re, smul_im, smul_add],
-    smul_zero :=
-      fun r =>
-        by 
-          ext <;> simp [smul_re, smul_im, smul_zero] }
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ Semiringₓ R ] [ DistribMulAction R ℝ ] : DistribMulAction R ℂ
+  where
+    smul_add r x y := by ext <;> simp [ smul_re , smul_im , smul_add ]
+      smul_zero r := by ext <;> simp [ smul_re , smul_im , smul_zero ]
 
-instance [Semiringₓ R] [Module R ℝ] : Module R ℂ :=
-  { add_smul :=
-      fun r s x =>
-        by 
-          ext <;> simp [smul_re, smul_im, add_smul],
-    zero_smul :=
-      fun r =>
-        by 
-          ext <;> simp [smul_re, smul_im, zero_smul] }
+-- failed to format: format: uncaught backtrack exception
+instance
+  [ Semiringₓ R ] [ Module R ℝ ] : Module R ℂ
+  where
+    add_smul r s x := by ext <;> simp [ smul_re , smul_im , add_smul ]
+      zero_smul r := by ext <;> simp [ smul_re , smul_im , zero_smul ]
 
 instance [CommSemiringₓ R] [Algebra R ℝ] : Algebra R ℂ :=
   { Complex.ofReal.comp (algebraMap R ℝ) with smul := · • ·,
-    smul_def' :=
-      fun r x =>
-        by 
-          ext <;> simp [smul_re, smul_im, Algebra.smul_def],
-    commutes' :=
-      fun r ⟨xr, xi⟩ =>
-        by 
-          ext <;> simp [smul_re, smul_im, Algebra.commutes] }
+    smul_def' := fun r x => by
+      ext <;> simp [smul_re, smul_im, Algebra.smul_def],
+    commutes' := fun r ⟨xr, xi⟩ => by
+      ext <;> simp [smul_re, smul_im, Algebra.commutes] }
 
 @[simp]
 theorem coe_algebra_map : (algebraMap ℝ ℂ : ℝ → ℂ) = coeₓ :=
   rfl
 
-section 
+section
 
 variable {A : Type _} [Semiringₓ A] [Algebra ℝ A]
 
-/-- We need this lemma since `complex.coe_algebra_map` diverts the simp-normal form away from
+/--  We need this lemma since `complex.coe_algebra_map` diverts the simp-normal form away from
 `alg_hom.commutes`. -/
 @[simp]
 theorem _root_.alg_hom.map_coe_real_complex (f : ℂ →ₐ[ℝ] A) (x : ℝ) : f x = algebraMap ℝ A x :=
   f.commutes x
 
-/-- Two `ℝ`-algebra homomorphisms from ℂ are equal if they agree on `complex.I`. -/
+/--  Two `ℝ`-algebra homomorphisms from ℂ are equal if they agree on `complex.I`. -/
 @[ext]
-theorem alg_hom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f I = g I) : f = g :=
-  by 
-    ext ⟨x, y⟩
-    simp only [mk_eq_add_mul_I, AlgHom.map_add, AlgHom.map_coe_real_complex, AlgHom.map_mul, h]
+theorem alg_hom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f I = g I) : f = g := by
+  ext ⟨x, y⟩
+  simp only [mk_eq_add_mul_I, AlgHom.map_add, AlgHom.map_coe_real_complex, AlgHom.map_mul, h]
 
-end 
+end
 
-section 
+section
 
 open_locale ComplexOrder
 
 protected theorem OrderedSmul : OrderedSmul ℝ ℂ :=
-  OrderedSmul.mk'$
-    fun a b r hab hr =>
-      ⟨by 
-          simp [hr, hab.1.le],
-        by 
-          simp [hab.2]⟩
+  OrderedSmul.mk' $ fun a b r hab hr =>
+    ⟨by
+      simp [hr, hab.1.le], by
+      simp [hab.2]⟩
 
 localized [ComplexOrder] attribute [instance] Complex.ordered_smul
 
-end 
+end
 
 open Submodule FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
-/-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»
+/--  `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
 noncomputable def basis_one_I : Basis (Finₓ 2) ℝ ℂ :=
   Basis.ofEquivFun
-    { toFun :=
-        fun z => «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»",
+    { toFun := fun z =>
+        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»",
       invFun := fun c => c 0+c 1 • I,
-      left_inv :=
-        fun z =>
-          by 
-            simp ,
-      right_inv :=
-        fun c =>
-          by 
-            ext i 
-            finCases i <;> simp ,
-      map_add' :=
-        fun z z' =>
-          by 
-            simp ,
-      map_smul' :=
-        fun c z =>
-          by 
-            simp  }
+      left_inv := fun z => by
+        simp ,
+      right_inv := fun c => by
+        ext i
+        fin_cases i <;> simp ,
+      map_add' := fun z z' => by
+        simp ,
+      map_smul' := fun c z => by
+        simp }
 
--- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem coe_basis_one_I_repr (z : ℂ) :
-  ⇑basis_one_I.repr z =
-    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
+    ⇑basis_one_I.repr z =
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»" :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:600:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:680:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem coe_basis_one_I :
-  ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:601:61: unsupported notation `«expr![ , ]»" :=
-  funext$
-    fun i =>
-      Basis.apply_eq_iff.mpr$
-        Finsupp.ext$
-          fun j =>
-            by 
-              finCases i <;>
-                finCases j <;>
-                  simp only [coe_basis_one_I_repr, Finsupp.single_eq_same, Finsupp.single_eq_of_ne,
-                    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Nat.one_ne_zero, Finₓ.one_eq_zero_iff,
-                    Finₓ.zero_eq_one_iff, Ne.def, not_false_iff, one_re, one_im, I_re, I_im]
+    ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:681:61: unsupported notation `«expr![ , ]»" :=
+  funext $ fun i =>
+    Basis.apply_eq_iff.mpr $
+      Finsupp.ext $ fun j => by
+        fin_cases i <;>
+          fin_cases j <;>
+            simp only [coe_basis_one_I_repr, Finsupp.single_eq_same, Finsupp.single_eq_of_ne, Matrix.cons_val_zero,
+              Matrix.cons_val_one, Matrix.head_cons, Nat.one_ne_zero, Finₓ.one_eq_zero_iff, Finₓ.zero_eq_one_iff,
+              Ne.def, not_false_iff, one_re, one_im, I_re, I_im]
 
 instance : FiniteDimensional ℝ ℂ :=
   of_fintype_basis basis_one_I
 
 @[simp]
-theorem finrank_real_complex : FiniteDimensional.finrank ℝ ℂ = 2 :=
-  by 
-    rw [finrank_eq_card_basis basis_one_I, Fintype.card_fin]
+theorem finrank_real_complex : FiniteDimensional.finrank ℝ ℂ = 2 := by
+  rw [finrank_eq_card_basis basis_one_I, Fintype.card_fin]
 
 @[simp]
-theorem dim_real_complex : Module.rank ℝ ℂ = 2 :=
-  by 
-    simp [←finrank_eq_dim, finrank_real_complex]
+theorem dim_real_complex : Module.rank ℝ ℂ = 2 := by
+  simp [← finrank_eq_dim, finrank_real_complex]
 
-theorem dim_real_complex'.{u} : Cardinal.lift.{u} (Module.rank ℝ ℂ) = 2 :=
-  by 
-    simp [←finrank_eq_dim, finrank_real_complex, bit0]
+theorem dim_real_complex'.{u} : Cardinal.lift.{u} (Module.rank ℝ ℂ) = 2 := by
+  simp [← finrank_eq_dim, finrank_real_complex, bit0]
 
-/-- `fact` version of the dimension of `ℂ` over `ℝ`, locally useful in the definition of the
+/--  `fact` version of the dimension of `ℂ` over `ℝ`, locally useful in the definition of the
 circle. -/
 theorem finrank_real_complex_fact : Fact (finrank ℝ ℂ = 2) :=
   ⟨finrank_real_complex⟩
@@ -237,52 +202,48 @@ instance (priority := 900) Module.complexToReal (E : Type _) [AddCommGroupₓ E]
 instance Module.real_complex_tower (E : Type _) [AddCommGroupₓ E] [Module ℂ E] : IsScalarTower ℝ ℂ E :=
   RestrictScalars.is_scalar_tower ℝ ℂ E
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem Complex.coe_smul {E : Type _} [AddCommGroupₓ E] [Module ℂ E] (x : ℝ) (y : E) : (x : ℂ) • y = x • y :=
   rfl
 
 instance (priority := 100) FiniteDimensional.complex_to_real (E : Type _) [AddCommGroupₓ E] [Module ℂ E]
-  [FiniteDimensional ℂ E] : FiniteDimensional ℝ E :=
+    [FiniteDimensional ℂ E] : FiniteDimensional ℝ E :=
   FiniteDimensional.trans ℝ ℂ E
 
 theorem dim_real_of_complex (E : Type _) [AddCommGroupₓ E] [Module ℂ E] : Module.rank ℝ E = 2*Module.rank ℂ E :=
-  Cardinal.lift_inj.1$
-    by 
-      rw [←dim_mul_dim' ℝ ℂ E, Complex.dim_real_complex]
-      simp [bit0]
+  Cardinal.lift_inj.1 $ by
+    rw [← dim_mul_dim' ℝ ℂ E, Complex.dim_real_complex]
+    simp [bit0]
 
 theorem finrank_real_of_complex (E : Type _) [AddCommGroupₓ E] [Module ℂ E] :
-  FiniteDimensional.finrank ℝ E = 2*FiniteDimensional.finrank ℂ E :=
-  by 
-    rw [←FiniteDimensional.finrank_mul_finrank ℝ ℂ E, Complex.finrank_real_complex]
+    FiniteDimensional.finrank ℝ E = 2*FiniteDimensional.finrank ℂ E := by
+  rw [← FiniteDimensional.finrank_mul_finrank ℝ ℂ E, Complex.finrank_real_complex]
 
 namespace Complex
 
 open_locale ComplexConjugate
 
-/-- Linear map version of the real part function, from `ℂ` to `ℝ`. -/
+/--  Linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def re_lm : ℂ →ₗ[ℝ] ℝ :=
   { toFun := fun x => x.re, map_add' := add_re,
-    map_smul' :=
-      by 
-        simp  }
+    map_smul' := by
+      simp }
 
 @[simp]
 theorem re_lm_coe : ⇑re_lm = re :=
   rfl
 
-/-- Linear map version of the imaginary part function, from `ℂ` to `ℝ`. -/
+/--  Linear map version of the imaginary part function, from `ℂ` to `ℝ`. -/
 def im_lm : ℂ →ₗ[ℝ] ℝ :=
   { toFun := fun x => x.im, map_add' := add_im,
-    map_smul' :=
-      by 
-        simp  }
+    map_smul' := by
+      simp }
 
 @[simp]
 theorem im_lm_coe : ⇑im_lm = im :=
   rfl
 
-/-- `ℝ`-algebra morphism version of the canonical embedding of `ℝ` in `ℂ`. -/
+/--  `ℝ`-algebra morphism version of the canonical embedding of `ℝ` in `ℂ`. -/
 def of_real_am : ℝ →ₐ[ℝ] ℂ :=
   Algebra.ofId ℝ ℂ
 
@@ -290,7 +251,7 @@ def of_real_am : ℝ →ₐ[ℝ] ℂ :=
 theorem of_real_am_coe : ⇑of_real_am = coeₓ :=
   rfl
 
-/-- `ℝ`-algebra isomorphism version of the complex conjugation function from `ℂ` to `ℂ` -/
+/--  `ℝ`-algebra isomorphism version of the complex conjugation function from `ℂ` to `ℂ` -/
 def conj_ae : ℂ ≃ₐ[ℝ] ℂ :=
   { conj with invFun := conj, left_inv := star_star, right_inv := star_star, commutes' := conj_of_real }
 
@@ -302,36 +263,33 @@ section lift
 
 variable {A : Type _} [Ringₓ A] [Algebra ℝ A]
 
-/-- There is an alg_hom from `ℂ` to any `ℝ`-algebra with an element that squares to `-1`.
+/--  There is an alg_hom from `ℂ` to any `ℝ`-algebra with an element that squares to `-1`.
 
 See `complex.lift` for this as an equiv. -/
 def lift_aux (I' : A) (hf : (I'*I') = -1) : ℂ →ₐ[ℝ] A :=
   AlgHom.ofLinearMap ((Algebra.ofId ℝ A).toLinearMap.comp re_lm+(LinearMap.toSpanSingleton _ _ I').comp im_lm)
-    (show (algebraMap ℝ A 1+(0 : ℝ) • I') = 1by 
+    (show (algebraMap ℝ A 1+(0 : ℝ) • I') = 1by
       rw [RingHom.map_one, zero_smul, add_zeroₓ])
     fun ⟨x₁, y₁⟩ ⟨x₂, y₂⟩ =>
-      show
-        (algebraMap ℝ A ((x₁*x₂) - y₁*y₂)+((x₁*y₂)+y₁*x₂) • I') =
-          (algebraMap ℝ A x₁+y₁ • I')*algebraMap ℝ A x₂+y₂ • I' by
-        
-        rw [add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ _ ((y₁ • I')*y₂ • I'), add_add_add_commₓ]
-        congr 1
-        ·
-          rw [smul_mul_smul, hf, smul_neg, ←Algebra.algebra_map_eq_smul_one, ←sub_eq_add_neg, ←RingHom.map_mul,
-            ←RingHom.map_sub]
-        ·
-          rw [Algebra.smul_def, Algebra.smul_def, Algebra.smul_def, ←Algebra.right_comm _ x₂, ←mul_assocₓ, ←add_mulₓ,
-            ←RingHom.map_mul, ←RingHom.map_mul, ←RingHom.map_add]
+    show
+      (algebraMap ℝ A ((x₁*x₂) - y₁*y₂)+((x₁*y₂)+y₁*x₂) • I') = (algebraMap ℝ A x₁+y₁ • I')*algebraMap ℝ A x₂+y₂ • I' by
+      rw [add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ _ ((y₁ • I')*y₂ • I'), add_add_add_commₓ]
+      congr 1
+      ·
+        rw [smul_mul_smul, hf, smul_neg, ← Algebra.algebra_map_eq_smul_one, ← sub_eq_add_neg, ← RingHom.map_mul, ←
+          RingHom.map_sub]
+      ·
+        rw [Algebra.smul_def, Algebra.smul_def, Algebra.smul_def, ← Algebra.right_comm _ x₂, ← mul_assocₓ, ← add_mulₓ, ←
+          RingHom.map_mul, ← RingHom.map_mul, ← RingHom.map_add]
 
 @[simp]
 theorem lift_aux_apply (I' : A) hI' (z : ℂ) : lift_aux I' hI' z = algebraMap ℝ A z.re+z.im • I' :=
   rfl
 
-theorem lift_aux_apply_I (I' : A) hI' : lift_aux I' hI' I = I' :=
-  by 
-    simp 
+theorem lift_aux_apply_I (I' : A) hI' : lift_aux I' hI' I = I' := by
+  simp
 
-/-- A universal property of the complex numbers, providing a unique `ℂ →ₐ[ℝ] A` for every element
+/--  A universal property of the complex numbers, providing a unique `ℂ →ₐ[ℝ] A` for every element
 of `A` which squares to `-1`.
 
 This can be used to embed the complex numbers in the `quaternion`s.
@@ -340,21 +298,19 @@ This isomorphism is named to match the very similar `zsqrtd.lift`. -/
 @[simps (config := { simpRhs := tt })]
 def lift : { I' : A // (I'*I') = -1 } ≃ (ℂ →ₐ[ℝ] A) :=
   { toFun := fun I' => lift_aux I' I'.prop,
-    invFun :=
-      fun F =>
-        ⟨F I,
-          by 
-            rw [←F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩,
-    left_inv := fun I' => Subtype.ext$ lift_aux_apply_I I' I'.prop,
-    right_inv := fun F => alg_hom_ext$ lift_aux_apply_I _ _ }
+    invFun := fun F =>
+      ⟨F I, by
+        rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩,
+    left_inv := fun I' => Subtype.ext $ lift_aux_apply_I I' I'.prop,
+    right_inv := fun F => alg_hom_ext $ lift_aux_apply_I _ _ }
 
 @[simp]
 theorem lift_aux_I : lift_aux I I_mul_I = AlgHom.id ℝ ℂ :=
-  alg_hom_ext$ lift_aux_apply_I _ _
+  alg_hom_ext $ lift_aux_apply_I _ _
 
 @[simp]
 theorem lift_aux_neg_I : lift_aux (-I) ((neg_mul_neg _ _).trans I_mul_I) = conj_ae :=
-  alg_hom_ext$ (lift_aux_apply_I _ _).trans conj_I.symm
+  alg_hom_ext $ (lift_aux_apply_I _ _).trans conj_I.symm
 
 end lift
 

@@ -1,4 +1,4 @@
-import Mathbin.Data.Set.Basic 
+import Mathbin.Data.Set.Basic
 import Mathbin.Tactic.Monotonicity.Basic
 
 /-!
@@ -65,7 +65,7 @@ subobjects
 -/
 
 
-/-- A class to indicate that there is a canonical injection between `A` and `set B`.
+/--  A class to indicate that there is a canonical injection between `A` and `set B`.
 
 This has the effect of giving terms of `A` elements of type `B` (through a `has_mem`
 instance) and a compatible coercion to `Type*` as a subtype.
@@ -76,9 +76,9 @@ Note: if `set_like.coe` is a projection, implementers should create a simp lemma
 ```
 to normalize terms.
 -/
-@[protectProj]
-class SetLike (A : Type _) (B : outParam$ Type _) where 
-  coe : A → Set B 
+@[protect_proj]
+class SetLike (A : Type _) (B : outParam $ Type _) where
+  coe : A → Set B
   coe_injective' : Function.Injective coeₓ
 
 namespace SetLike
@@ -99,24 +99,21 @@ instance (priority := 100) : CoeSort A (Type _) :=
 
 variable (p q : A)
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_sort_coe : ((p : Set B) : Type _) = p :=
   rfl
 
 variable {p q}
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
-protected theorem exists {q : p → Prop} : (∃ x, q x) ↔ ∃ (x : _)(_ : x ∈ p), q ⟨x, ‹_›⟩ :=
+protected theorem exists {q : p → Prop} : (∃ x, q x) ↔ ∃ x ∈ p, q ⟨x, ‹_›⟩ :=
   SetCoe.exists
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
-protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀ x _ : x ∈ p, q ⟨x, ‹_›⟩ :=
+protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀, ∀ x ∈ p, ∀, q ⟨x, ‹_›⟩ :=
   SetCoe.forall
 
-theorem coe_injective : Function.Injective (coeₓ : A → Set B) :=
-  fun x y h => SetLike.coe_injective' h
+theorem coe_injective : Function.Injective (coeₓ : A → Set B) := fun x y h => SetLike.coe_injective' h
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_set_eq : (p : Set B) = q ↔ p = q :=
   coe_injective.eq_iff
 
@@ -126,9 +123,9 @@ theorem ext' (h : (p : Set B) = q) : p = q :=
 theorem ext'_iff : p = q ↔ (p : Set B) = q :=
   coe_set_eq.symm
 
-/-- Note: implementers of `set_like` must copy this lemma in order to tag it with `@[ext]`. -/
+/--  Note: implementers of `set_like` must copy this lemma in order to tag it with `@[ext]`. -/
 theorem ext (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
-  coe_injective$ Set.ext h
+  coe_injective $ Set.ext h
 
 theorem ext_iff : p = q ↔ ∀ x, x ∈ p ↔ x ∈ q :=
   coe_injective.eq_iff.symm.trans Set.ext_iff
@@ -137,11 +134,11 @@ theorem ext_iff : p = q ↔ ∀ x, x ∈ p ↔ x ∈ q :=
 theorem mem_coe {x : B} : x ∈ (p : Set B) ↔ x ∈ p :=
   Iff.rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_eq_coe {x y : p} : (x : B) = y ↔ x = y :=
   Subtype.ext_iff_val.symm
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_mk (x : B) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : B) = x :=
   rfl
 
@@ -160,34 +157,28 @@ instance (priority := 100) : PartialOrderₓ A :=
 theorem le_def {S T : A} : S ≤ T ↔ ∀ ⦃x : B⦄, x ∈ S → x ∈ T :=
   Iff.rfl
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_subset_coe {S T : A} : (S : Set B) ⊆ T ↔ S ≤ T :=
   Iff.rfl
 
 @[mono]
-theorem coe_mono : Monotone (coeₓ : A → Set B) :=
-  fun a b => coe_subset_coe.mpr
+theorem coe_mono : Monotone (coeₓ : A → Set B) := fun a b => coe_subset_coe.mpr
 
-@[simp, normCast]
+@[simp, norm_cast]
 theorem coe_ssubset_coe {S T : A} : (S : Set B) ⊂ T ↔ S < T :=
   Iff.rfl
 
 @[mono]
-theorem coe_strict_mono : StrictMono (coeₓ : A → Set B) :=
-  fun a b => coe_ssubset_coe.mpr
+theorem coe_strict_mono : StrictMono (coeₓ : A → Set B) := fun a b => coe_ssubset_coe.mpr
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » p)
-theorem not_le_iff_exists : ¬p ≤ q ↔ ∃ (x : _)(_ : x ∈ p), x ∉ q :=
+theorem not_le_iff_exists : ¬p ≤ q ↔ ∃ x ∈ p, x ∉ q :=
   Set.not_subset
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » q)
-theorem exists_of_lt : p < q → ∃ (x : _)(_ : x ∈ q), x ∉ p :=
+theorem exists_of_lt : p < q → ∃ x ∈ q, x ∉ p :=
   Set.exists_of_ssubset
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » q)
-theorem lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ (x : _)(_ : x ∈ q), x ∉ p :=
-  by 
-    rw [lt_iff_le_not_leₓ, not_le_iff_exists]
+theorem lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ x ∈ q, x ∉ p := by
+  rw [lt_iff_le_not_leₓ, not_le_iff_exists]
 
 end SetLike
 

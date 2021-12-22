@@ -1,8 +1,8 @@
-import Mathbin.Algebra.Category.Group.Basic 
-import Mathbin.Algebra.Category.Module.Abelian 
-import Mathbin.CategoryTheory.Derived 
-import Mathbin.CategoryTheory.Linear.Yoneda 
-import Mathbin.CategoryTheory.Abelian.Opposite 
+import Mathbin.Algebra.Category.Group.Basic
+import Mathbin.Algebra.Category.Module.Abelian
+import Mathbin.CategoryTheory.Derived
+import Mathbin.CategoryTheory.Linear.Yoneda
+import Mathbin.CategoryTheory.Abelian.Opposite
 import Mathbin.CategoryTheory.Abelian.Projective
 
 /-!
@@ -25,13 +25,13 @@ let alone start the harder project of showing they agree.
 -/
 
 
-noncomputable section 
+noncomputable section
 
 open CategoryTheory
 
 variable (R : Type _) [Ringₓ R] (C : Type _) [category C] [abelian C] [linear R C] [enough_projectives C]
 
-/--
+/-- 
 `Ext R C n` is defined by deriving in the frst argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
 (which is the second argument of `linear_yoneda`).
 -/
@@ -40,32 +40,29 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
   functor.flip
     { obj := fun Y => (((linear_yoneda R C).obj Y).rightOp.leftDerived n).leftOp,
       map := fun Y Y' f => (nat_trans.left_derived ((linear_yoneda R C).map f).rightOp n).leftOp,
-      map_id' :=
-        by 
-          intro X 
-          ext Y : 2
-          dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app, functor.left_op_obj,
-            functor.right_op_obj]
-          rw [(linear_yoneda R C).map_id, ←unop_id, nat_trans.right_op_id, nat_trans.left_derived_id]
-          rfl,
-      map_comp' :=
-        by 
-          intro X Y Z f g 
-          rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp]
-          rfl }
+      map_id' := by
+        intro X
+        ext Y : 2
+        dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app, functor.left_op_obj,
+          functor.right_op_obj]
+        rw [(linear_yoneda R C).map_id, ← unop_id, nat_trans.right_op_id, nat_trans.left_derived_id]
+        rfl,
+      map_comp' := by
+        intro X Y Z f g
+        rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp]
+        rfl }
 
 open_locale ZeroObject
 
-/-- If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
+/--  If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
 def extSuccOfProjective (X Y : C) [projective X] (n : ℕ) : ((ext R C (n+1)).obj (Opposite.op X)).obj Y ≅ 0 :=
-  let E := (((linear_yoneda R C).obj Y).rightOp.leftDerivedObjProjectiveSucc n X).unop.symm 
+  let E := (((linear_yoneda R C).obj Y).rightOp.leftDerivedObjProjectiveSucc n X).unop.symm
   E ≪≫
     { Hom := 0, inv := 0,
-      hom_inv_id' :=
-        by 
-          let Z : ModuleCat Rᵒᵖ := 0
-          rw [←(0 : 0 ⟶ Z.unop).unop_op, ←(0 : Z.unop ⟶ 0).unop_op, ←unop_id, ←unop_comp]
-          congr 1
-          dsimp 
-          decide }
+      hom_inv_id' := by
+        let Z : ModuleCat Rᵒᵖ := 0
+        rw [← (0 : 0 ⟶ Z.unop).unop_op, ← (0 : Z.unop ⟶ 0).unop_op, ← unop_id, ← unop_comp]
+        congr 1
+        dsimp
+        decide }
 

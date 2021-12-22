@@ -1,4 +1,4 @@
-import Mathbin.Data.Real.Sqrt 
+import Mathbin.Data.Real.Sqrt
 import Mathbin.NumberTheory.Zsqrtd.Basic
 
 /-!
@@ -11,7 +11,7 @@ It is in a separate file to avoid pulling in all of `data.real` into `data.zsqrt
 
 namespace Zsqrtd
 
-/-- The image of `zsqrtd` in `ℝ`, using `real.sqrt` which takes the positive root of `d`.
+/--  The image of `zsqrtd` in `ℝ`, using `real.sqrt` which takes the positive root of `d`.
 
 If the negative root is desired, use `to_real h a.conj`. -/
 @[simps]

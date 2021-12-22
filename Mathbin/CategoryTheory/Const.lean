@@ -22,7 +22,7 @@ variable (J : Type u₁) [category.{v₁} J]
 
 variable {C : Type u₂} [category.{v₂} C]
 
-/--
+/-- 
 The functor sending `X : C` to the constant functor `J ⥤ C` sending everything to `X`.
 -/
 def const : C ⥤ J ⥤ C :=
@@ -46,7 +46,7 @@ theorem obj_map (X : C) {j j' : J} (f : j ⟶ j') : ((const J).obj X).map f = �
 theorem map_app {X Y : C} (f : X ⟶ Y) (j : J) : ((const J).map f).app j = f :=
   rfl
 
-/--
+/-- 
 The contant functor `Jᵒᵖ ⥤ Cᵒᵖ` sending everything to `op X`
 is (naturally isomorphic to) the opposite of the constant functor `J ⥤ C` sending everything to `X`.
 -/
@@ -61,7 +61,7 @@ theorem op_obj_op_hom_app (X : C) (j : Jᵒᵖ) : (op_obj_op X).Hom.app j = 𝟙
 theorem op_obj_op_inv_app (X : C) (j : Jᵒᵖ) : (op_obj_op X).inv.app j = 𝟙 _ :=
   rfl
 
-/--
+/-- 
 The contant functor `Jᵒᵖ ⥤ C` sending everything to `unop X`
 is (naturally isomorphic to) the opposite of
 the constant functor `J ⥤ Cᵒᵖ` sending everything to `X`.
@@ -79,27 +79,29 @@ theorem op_obj_unop_inv_app (X : Cᵒᵖ) (j : Jᵒᵖ) : (op_obj_unop.{v₁, v�
 
 @[simp]
 theorem unop_functor_op_obj_map (X : Cᵒᵖ) {j₁ j₂ : J} (f : j₁ ⟶ j₂) :
-  (unop ((functor.op (const J)).obj X)).map f = 𝟙 (unop X) :=
+    (unop ((functor.op (const J)).obj X)).map f = 𝟙 (unop X) :=
   rfl
 
 end Const
 
-section 
+section
 
 variable {D : Type u₃} [category.{v₃} D]
 
-/-- These are actually equal, of course, but not definitionally equal
+/--  These are actually equal, of course, but not definitionally equal
   (the equality requires F.map (𝟙 _) = 𝟙 _). A natural isomorphism is
   more convenient than an equality between functors (compare id_to_iso). -/
 @[simps]
 def const_comp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (F.obj X) :=
   { Hom := { app := fun _ => 𝟙 _ }, inv := { app := fun _ => 𝟙 _ } }
 
+-- failed to format: format: uncaught backtrack exception
 /-- If `J` is nonempty, then the constant functor over `J` is faithful. -/
-instance [Nonempty J] : faithful (const J : C ⥤ J ⥤ C) :=
-  { map_injective' := fun X Y f g e => nat_trans.congr_app e (Classical.arbitrary J) }
+  instance
+    [ Nonempty J ] : faithful ( const J : C ⥤ J ⥤ C )
+    where map_injective' X Y f g e := nat_trans.congr_app e ( Classical.arbitrary J )
 
-end 
+end
 
 end CategoryTheory.Functor
 

@@ -1,4 +1,4 @@
-import Mathbin.Analysis.NormedSpace.ConformalLinearMap 
+import Mathbin.Analysis.NormedSpace.ConformalLinearMap
 import Mathbin.Analysis.Calculus.Fderiv
 
 /-!
@@ -36,7 +36,7 @@ Maps such as the complex conjugate are considered to be conformal.
 -/
 
 
-noncomputable section 
+noncomputable section
 
 variable {X Y Z : Type _} [NormedGroup X] [NormedGroup Y] [NormedGroup Z] [NormedSpace ℝ X] [NormedSpace ℝ Y]
   [NormedSpace ℝ Z]
@@ -45,7 +45,7 @@ section LocConformality
 
 open LinearIsometry ContinuousLinearMap
 
-/-- A map `f` is said to be conformal if it has a conformal differential `f'`. -/
+/--  A map `f` is said to be conformal if it has a conformal differential `f'`. -/
 def ConformalAt (f : X → Y) (x : X) :=
   ∃ f' : X →L[ℝ] Y, HasFderivAt f f' x ∧ IsConformalMap f'
 
@@ -55,48 +55,46 @@ theorem conformal_at_id (x : X) : ConformalAt id x :=
 theorem conformal_at_const_smul {c : ℝ} (h : c ≠ 0) (x : X) : ConformalAt (fun x' : X => c • x') x :=
   ⟨c • ContinuousLinearMap.id ℝ X, (has_fderiv_at_id x).const_smul c, is_conformal_map_const_smul h⟩
 
-/-- A function is a conformal map if and only if its differential is a conformal linear map-/
+/--  A function is a conformal map if and only if its differential is a conformal linear map-/
 theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
-  ConformalAt f x ↔ IsConformalMap (fderiv ℝ f x) :=
-  by 
-    constructor
+    ConformalAt f x ↔ IsConformalMap (fderiv ℝ f x) := by
+  constructor
+  ·
+    rintro ⟨c, hf, hf'⟩
+    rw [hf.fderiv]
+    exact hf'
+  ·
+    intro H
+    by_cases' h : DifferentiableAt ℝ f x
     ·
-      rintro ⟨c, hf, hf'⟩
-      rw [hf.fderiv]
-      exact hf'
+      exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩
     ·
-      intro H 
-      byCases' h : DifferentiableAt ℝ f x
+      cases' subsingleton_or_nontrivial X with w w <;> skip
       ·
-        exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩
+        exact ⟨(0 : X →L[ℝ] Y), has_fderiv_at_of_subsingleton f x, is_conformal_map_of_subsingleton 0⟩
       ·
-        cases' subsingleton_or_nontrivial X with w w <;> skip
-        ·
-          exact ⟨(0 : X →L[ℝ] Y), has_fderiv_at_of_subsingleton f x, is_conformal_map_of_subsingleton 0⟩
-        ·
-          exfalso 
-          exact H.ne_zero (fderiv_zero_of_not_differentiable_at h)
+        exfalso
+        exact H.ne_zero (fderiv_zero_of_not_differentiable_at h)
 
 namespace ConformalAt
 
 theorem DifferentiableAt {f : X → Y} {x : X} (h : ConformalAt f x) : DifferentiableAt ℝ f x :=
-  let ⟨_, h₁, _⟩ := h 
+  let ⟨_, h₁, _⟩ := h
   h₁.differentiable_at
 
 theorem congr {f g : X → Y} {x : X} {u : Set X} (hx : x ∈ u) (hu : IsOpen u) (hf : ConformalAt f x)
-  (h : ∀ x : X, x ∈ u → g x = f x) : ConformalAt g x :=
+    (h : ∀ x : X, x ∈ u → g x = f x) : ConformalAt g x :=
   let ⟨f', hfderiv, hf'⟩ := hf
   ⟨f', hfderiv.congr_of_eventually_eq ((hu.eventually_mem hx).mono h), hf'⟩
 
 theorem comp {f : X → Y} {g : Y → Z} (x : X) (hg : ConformalAt g (f x)) (hf : ConformalAt f x) :
-  ConformalAt (g ∘ f) x :=
-  by 
-    rcases hf with ⟨f', hf₁, cf⟩
-    rcases hg with ⟨g', hg₁, cg⟩
-    exact ⟨g'.comp f', hg₁.comp x hf₁, cg.comp cf⟩
+    ConformalAt (g ∘ f) x := by
+  rcases hf with ⟨f', hf₁, cf⟩
+  rcases hg with ⟨g', hg₁, cg⟩
+  exact ⟨g'.comp f', hg₁.comp x hf₁, cg.comp cf⟩
 
 theorem const_smul {f : X → Y} {x : X} {c : ℝ} (hc : c ≠ 0) (hf : ConformalAt f x) : ConformalAt (c • f) x :=
-  (conformal_at_const_smul hc$ f x).comp x hf
+  (conformal_at_const_smul hc $ f x).comp x hf
 
 end ConformalAt
 
@@ -104,29 +102,26 @@ end LocConformality
 
 section GlobalConformality
 
-/-- A map `f` is conformal if it's conformal at every point. -/
+/--  A map `f` is conformal if it's conformal at every point. -/
 def Conformal (f : X → Y) :=
   ∀ x : X, ConformalAt f x
 
-theorem conformal_id : Conformal (id : X → X) :=
-  fun x => conformal_at_id x
+theorem conformal_id : Conformal (id : X → X) := fun x => conformal_at_id x
 
-theorem conformal_const_smul {c : ℝ} (h : c ≠ 0) : Conformal fun x : X => c • x :=
-  fun x => conformal_at_const_smul h x
+theorem conformal_const_smul {c : ℝ} (h : c ≠ 0) : Conformal fun x : X => c • x := fun x => conformal_at_const_smul h x
 
 namespace Conformal
 
 theorem ConformalAt {f : X → Y} (h : Conformal f) (x : X) : ConformalAt f x :=
   h x
 
-theorem Differentiable {f : X → Y} (h : Conformal f) : Differentiable ℝ f :=
-  fun x => (h x).DifferentiableAt
+theorem Differentiable {f : X → Y} (h : Conformal f) : Differentiable ℝ f := fun x => (h x).DifferentiableAt
 
-theorem comp {f : X → Y} {g : Y → Z} (hf : Conformal f) (hg : Conformal g) : Conformal (g ∘ f) :=
-  fun x => (hg$ f x).comp x (hf x)
+theorem comp {f : X → Y} {g : Y → Z} (hf : Conformal f) (hg : Conformal g) : Conformal (g ∘ f) := fun x =>
+  (hg $ f x).comp x (hf x)
 
-theorem const_smul {f : X → Y} (hf : Conformal f) {c : ℝ} (hc : c ≠ 0) : Conformal (c • f) :=
-  fun x => (hf x).const_smul hc
+theorem const_smul {f : X → Y} (hf : Conformal f) {c : ℝ} (hc : c ≠ 0) : Conformal (c • f) := fun x =>
+  (hf x).const_smul hc
 
 end Conformal
 

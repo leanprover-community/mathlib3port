@@ -1,5 +1,5 @@
-import Mathbin.Data.Bool.Basic 
-import Mathbin.Meta.RbMap 
+import Mathbin.Data.Bool.Basic
+import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Lint.Basic
 
 /-!
@@ -27,14 +27,14 @@ open Tactic Expr
 -/
 
 
-/-- The names of `≥` and `>`, mostly disallowed in lemma statements -/
+/--  The names of `≥` and `>`, mostly disallowed in lemma statements -/
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
 
--- ././Mathport/Syntax/Translate/Basic.lean:168:9: warning: unsupported option eqn_compiler.max_steps
+-- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 20000
 
-/--
+/-- 
   Checks whether `≥` and `>` occurs in an illegal way in the expression.
   The main ways we legally use these orderings are:
   - `f (≥)`
@@ -48,34 +48,35 @@ set_option eqn_compiler.max_steps 20000
   Here `&0` is the 0-th de Bruijn variable.
 -/
 private unsafe def contains_illegal_ge_gt : expr → Bool
-| const nm us => if nm ∈ illegal_ge_gt then tt else ff
-| app f e@(app (app (const nm us) tp) Tc) =>
-  contains_illegal_ge_gt f || if nm ∈ illegal_ge_gt then ff else contains_illegal_ge_gt e
-| app (app custom_binder (app (app (app (app (const nm us) tp) Tc) (var 0)) t)) e@(lam var_name bi var_type body) =>
-  contains_illegal_ge_gt e || if nm ∈ illegal_ge_gt then ff else contains_illegal_ge_gt e
-| app f x => contains_illegal_ge_gt f || contains_illegal_ge_gt x
-| lam `H bi (type@(app (app (app (app (const nm us) tp) Tc) (var 0)) t)) body =>
-  contains_illegal_ge_gt body || if nm ∈ illegal_ge_gt then ff else contains_illegal_ge_gt type
-| lam var_name bi var_type body => contains_illegal_ge_gt var_type || contains_illegal_ge_gt body
-| pi `H bi (type@(app (app (app (app (const nm us) tp) Tc) (var 0)) t)) body =>
-  contains_illegal_ge_gt body || if nm ∈ illegal_ge_gt then ff else contains_illegal_ge_gt type
-| pi var_name bi var_type body => contains_illegal_ge_gt var_type || contains_illegal_ge_gt body
-| elet var_name type assignment body =>
-  contains_illegal_ge_gt type || contains_illegal_ge_gt assignment || contains_illegal_ge_gt body
-| _ => ff
+  | const nm us => if nm ∈ illegal_ge_gt then tt else ff
+  | app f e@(app (app (const nm us) tp) Tc) =>
+    contains_illegal_ge_gt f || if nm ∈ illegal_ge_gt then ff else contains_illegal_ge_gt e
+  | app (app custom_binder (app (app (app (app (const nm us) tp) Tc) (var 0)) t)) e@(lam var_name bi var_type body) =>
+    contains_illegal_ge_gt e || if nm ∈ illegal_ge_gt then ff else contains_illegal_ge_gt e
+  | app f x => contains_illegal_ge_gt f || contains_illegal_ge_gt x
+  | lam `H bi (type@(app (app (app (app (const nm us) tp) Tc) (var 0)) t)) body =>
+    contains_illegal_ge_gt body || if nm ∈ illegal_ge_gt then ff else contains_illegal_ge_gt type
+  | lam var_name bi var_type body => contains_illegal_ge_gt var_type || contains_illegal_ge_gt body
+  | pi `H bi (type@(app (app (app (app (const nm us) tp) Tc) (var 0)) t)) body =>
+    contains_illegal_ge_gt body || if nm ∈ illegal_ge_gt then ff else contains_illegal_ge_gt type
+  | pi var_name bi var_type body => contains_illegal_ge_gt var_type || contains_illegal_ge_gt body
+  | elet var_name type assignment body =>
+    contains_illegal_ge_gt type || contains_illegal_ge_gt assignment || contains_illegal_ge_gt body
+  | _ => ff
 
-/-- Checks whether a `>`/`≥` is used in the statement of `d`.
+/--  Checks whether a `>`/`≥` is used in the statement of `d`.
 
 It first does a quick check to see if there is any `≥` or `>` in the statement, and then does a
 slower check whether the occurrences of `≥` and `>` are allowed.
 Currently it checks only the conclusion of the declaration, to eliminate false positive from
 binders such as `∀ ε > 0, ...` -/
 private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option Stringₓ) :=
-  return$
+  return $
     if (d.type.contains_constant fun n => n ∈ illegal_ge_gt) && contains_illegal_ge_gt d.type then
-      some "the type contains ≥/>. Use ≤/< instead." else none
+      some "the type contains ≥/>. Use ≤/< instead."
+    else none
 
-/-- A linter for checking whether illegal constants (≥, >) appear in a declaration's type. -/
+/--  A linter for checking whether illegal constants (≥, >) appear in a declaration's type. -/
 @[linter]
 unsafe def linter.ge_or_gt : linter :=
   { test := ge_or_gt_in_statement, auto_decls := ff, no_errors_found := "Not using ≥/> in declarations.",
@@ -83,7 +84,7 @@ unsafe def linter.ge_or_gt : linter :=
       "The following declarations use ≥/>, probably in a way where we would prefer\n  to use ≤/< instead. See note [nolint_ge] for more information.",
     is_fast := ff }
 
-/--
+/-- 
 Currently, the linter forbids the use of `>` and `≥` in definitions and
 statements, as they cause problems in rewrites.
 They are still allowed in statements such as `bounded (≥)` or `∀ ε > 0` or `⨆ n ≥ m`,
@@ -101,17 +102,17 @@ library_note "nolint_ge"
 -/
 
 
-/-- Checks whether a declaration has a namespace twice consecutively in its name -/
+/--  Checks whether a declaration has a namespace twice consecutively in its name -/
 private unsafe def dup_namespace (d : declaration) : tactic (Option Stringₓ) :=
-  is_instance d.to_name >>=
-    fun is_inst =>
-      return$
-        let nm := d.to_name.components 
-        if nm.chain' (· ≠ ·) ∨ is_inst then none else
-          let s := (nm.find$ fun n => nm.count n ≥ 2).iget.toString 
-          some$ "The namespace `" ++ s ++ "` is duplicated in the name"
+  is_instance d.to_name >>= fun is_inst =>
+    return $
+      let nm := d.to_name.components
+      if nm.chain' (· ≠ ·) ∨ is_inst then none
+      else
+        let s := (nm.find $ fun n => nm.count n ≥ 2).iget.toString
+        some $ "The namespace `" ++ s ++ "` is duplicated in the name"
 
-/-- A linter for checking whether a declaration has a namespace twice consecutively in its name. -/
+/--  A linter for checking whether a declaration has a namespace twice consecutively in its name. -/
 @[linter]
 unsafe def linter.dup_namespace : linter :=
   { test := dup_namespace, auto_decls := ff, no_errors_found := "No declarations have a duplicate namespace.",
@@ -122,16 +123,18 @@ unsafe def linter.dup_namespace : linter :=
 -/
 
 
-/-- Auxiliary definition for `check_unused_arguments` -/
+/--  Auxiliary definition for `check_unused_arguments` -/
 private unsafe def check_unused_arguments_aux : List ℕ → ℕ → ℕ → expr → List ℕ
-| l, n, n_max, e =>
-  if n > n_max then l else
-    if ¬is_lambda e ∧ ¬is_pi e then l else
-      let b := e.binding_body 
-      let l' := if b.has_var_idx 0 then l else n :: l 
-      check_unused_arguments_aux l' (n+1) n_max b
+  | l, n, n_max, e =>
+    if n > n_max then l
+    else
+      if ¬is_lambda e ∧ ¬is_pi e then l
+      else
+        let b := e.binding_body
+        let l' := if b.has_var_idx 0 then l else n :: l
+        check_unused_arguments_aux l' (n+1) n_max b
 
-/-- Check which arguments of a declaration are not used.
+/--  Check which arguments of a declaration are not used.
 Prints a list of natural numbers corresponding to which arguments are not used (e.g.
   this outputs [1, 4] if the first and fourth arguments are unused).
 Checks both the type and the value of `d` for whether the argument is used
@@ -140,37 +143,36 @@ We return [] if the declaration was automatically generated.
 We print arguments that are larger than the arity of the type of the declaration
 (without unfolding definitions). -/
 unsafe def check_unused_arguments (d : declaration) : Option (List ℕ) :=
-  let l := check_unused_arguments_aux [] 1 d.type.pi_arity d.value 
-  if l = [] then none else
+  let l := check_unused_arguments_aux [] 1 d.type.pi_arity d.value
+  if l = [] then none
+  else
     let l2 := check_unused_arguments_aux [] 1 d.type.pi_arity d.type
-    (l.filter$ fun n => n ∈ l2).reverse
+    (l.filter $ fun n => n ∈ l2).reverse
 
-/-- Check for unused arguments, and print them with their position, variable name, type and whether
+/--  Check for unused arguments, and print them with their position, variable name, type and whether
 the argument is a duplicate.
 See also `check_unused_arguments`.
 This tactic additionally filters out all unused arguments of type `parse _`.
 We skip all declarations that contain `sorry` in their value. -/
-private unsafe def unused_arguments (d : declaration) : tactic (Option Stringₓ) :=
-  do 
-    let ff ← d.to_name.contains_sorry | return none 
-    let ns := check_unused_arguments d 
-    let tt ← return ns.is_some | return none 
-    let ns := ns.iget 
-    let (ds, _) ← get_pi_binders d.type 
-    let ns := ns.map fun n => (n, (ds.nth$ n - 1).iget)
-    let ns := ns.filter fun x => x.2.type.get_app_fn ≠ const `interactive.parse []
-    let ff ← return ns.empty | return none 
-    let ds' ← ds.mmap pp 
-    let ns ←
-      ns.mmap
-          fun ⟨n, b⟩ =>
-            (fun s =>
-                to_fmt "argument " ++ to_fmt n ++ ": " ++ s ++
-                  if (ds.countp fun b' => b.type = b'.type) ≥ 2 then " (duplicate)" else "") <$>
-              pp b 
-    return$ some$ ns.to_string_aux tt
+private unsafe def unused_arguments (d : declaration) : tactic (Option Stringₓ) := do
+  let ff ← d.to_name.contains_sorry | return none
+  let ns := check_unused_arguments d
+  let tt ← return ns.is_some | return none
+  let ns := ns.iget
+  let (ds, _) ← get_pi_binders d.type
+  let ns := ns.map fun n => (n, (ds.nth $ n - 1).iget)
+  let ns := ns.filter fun x => x.2.type.get_app_fn ≠ const `interactive.parse []
+  let ff ← return ns.empty | return none
+  let ds' ← ds.mmap pp
+  let ns ←
+    ns.mmap fun ⟨n, b⟩ =>
+        (fun s =>
+            to_fmt "argument " ++ to_fmt n ++ ": " ++ s ++
+              if (ds.countp fun b' => b.type = b'.type) ≥ 2 then " (duplicate)" else "") <$>
+          pp b
+  return $ some $ ns.to_string_aux tt
 
-/-- A linter object for checking for unused arguments. This is in the default linter set. -/
+/--  A linter object for checking for unused arguments. This is in the default linter set. -/
 @[linter]
 unsafe def linter.unused_arguments : linter :=
   { test := unused_arguments, auto_decls := ff, no_errors_found := "No unused arguments.",
@@ -183,25 +185,25 @@ attribute [nolint unused_arguments] imp_intro
 -/
 
 
-/-- Reports definitions and constants that are missing doc strings -/
+/--  Reports definitions and constants that are missing doc strings -/
 private unsafe def doc_blame_report_defn : declaration → tactic (Option Stringₓ)
-| declaration.defn n _ _ _ _ _ => doc_string n >> return none <|> return "def missing doc string"
-| declaration.cnst n _ _ _ => doc_string n >> return none <|> return "constant missing doc string"
-| _ => return none
+  | declaration.defn n _ _ _ _ _ => doc_string n >> return none <|> return "def missing doc string"
+  | declaration.cnst n _ _ _ => doc_string n >> return none <|> return "constant missing doc string"
+  | _ => return none
 
-/-- Reports definitions and constants that are missing doc strings -/
+/--  Reports definitions and constants that are missing doc strings -/
 private unsafe def doc_blame_report_thm : declaration → tactic (Option Stringₓ)
-| declaration.thm n _ _ _ => doc_string n >> return none <|> return "theorem missing doc string"
-| _ => return none
+  | declaration.thm n _ _ _ => doc_string n >> return none <|> return "theorem missing doc string"
+  | _ => return none
 
-/-- A linter for checking definition doc strings -/
+/--  A linter for checking definition doc strings -/
 @[linter]
 unsafe def linter.doc_blame : linter :=
   { test := fun d => mcond (bnot <$> has_attribute' `instance d.to_name) (doc_blame_report_defn d) (return none),
     auto_decls := ff, no_errors_found := "No definitions are missing documentation.",
     errors_found := "DEFINITIONS ARE MISSING DOCUMENTATION STRINGS:" }
 
-/-- A linter for checking theorem doc strings. This is not in the default linter set. -/
+/--  A linter for checking theorem doc strings. This is not in the default linter set. -/
 unsafe def linter.doc_blame_thm : linter :=
   { test := doc_blame_report_thm, auto_decls := ff, no_errors_found := "No theorems are missing documentation.",
     errors_found := "THEOREMS ARE MISSING DOCUMENTATION STRINGS:", is_fast := ff }
@@ -211,7 +213,7 @@ unsafe def linter.doc_blame_thm : linter :=
 -/
 
 
-/--
+/-- 
 Checks whether the correct declaration constructor (definition or theorem) by
 comparing it to its sort. Instances will not be printed.
 
@@ -219,19 +221,20 @@ This test is not very quick: maybe we can speed-up testing that something is a p
 This takes almost all of the execution time.
 -/
 private unsafe def incorrect_def_lemma (d : declaration) : tactic (Option Stringₓ) :=
-  if d.is_constant ∨ d.is_axiom then return none else
-    do 
-      let is_instance_d ← is_instance d.to_name 
-      if is_instance_d then return none else
-          do 
-            let expr.sort n ← infer_type d.type 
-            let is_pattern ← has_attribute' `pattern d.to_name 
-            return$
-                if d.is_theorem ↔ n = level.zero then none else
-                  if d.is_theorem then "is a lemma/theorem, should be a def" else
-                    if is_pattern then none else "is a def, should be a lemma/theorem"
+  if d.is_constant ∨ d.is_axiom then return none
+  else do
+    let is_instance_d ← is_instance d.to_name
+    if is_instance_d then return none
+      else do
+        let expr.sort n ← infer_type d.type
+        let is_pattern ← has_attribute' `pattern d.to_name
+        return $
+            if d.is_theorem ↔ n = level.zero then none
+            else
+              if d.is_theorem then "is a lemma/theorem, should be a def"
+              else if is_pattern then none else "is a def, should be a lemma/theorem"
 
-/-- A linter for checking whether the correct declaration constructor (definition or theorem)
+/--  A linter for checking whether the correct declaration constructor (definition or theorem)
 has been used. -/
 @[linter]
 unsafe def linter.def_lemma : linter :=
@@ -243,11 +246,11 @@ unsafe def linter.def_lemma : linter :=
 -/
 
 
-/-- Checks whether the statement of a declaration is well-typed. -/
+/--  Checks whether the statement of a declaration is well-typed. -/
 unsafe def check_type (d : declaration) : tactic (Option Stringₓ) :=
   type_check d.type >> return none <|> return "The statement doesn't type-check"
 
-/-- A linter for missing checking whether statements of declarations are well-typed. -/
+/--  A linter for missing checking whether statements of declarations are well-typed. -/
 @[linter]
 unsafe def linter.check_type : linter :=
   { test := check_type, auto_decls := ff,
@@ -266,7 +269,7 @@ unsafe def linter.check_type : linter :=
 
 open Native
 
-/--
+/-- 
   `univ_params_grouped e` computes for each `level` `u` of `e` the parameters that occur in `u`,
   and returns the corresponding set of lists of parameters.
   In pseudo-mathematical form, this returns `{ { p : parameter | p ∈ u } | (u : level) ∈ e }`
@@ -274,27 +277,27 @@ open Native
   It will ignore `nm₀._proof_i` declarations.
 -/
 unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Name) :=
-  e.fold mk_rb_set$
-    fun e n l =>
-      match e with 
-      | e@(sort u) => l.insert u.params.to_list
-      | e@(const nm us) =>
-        if nm.get_prefix = nm₀ ∧ nm.last.starts_with "_proof_" then l else
-          l.union$ rb_set.of_list$ us.map$ fun u : level => u.params.to_list
-      | _ => l
+  e.fold mk_rb_set $ fun e n l =>
+    match e with
+    | e@(sort u) => l.insert u.params.to_list
+    | e@(const nm us) =>
+      if nm.get_prefix = nm₀ ∧ nm.last.starts_with "_proof_" then l
+      else l.union $ rb_set.of_list $ us.map $ fun u : level => u.params.to_list
+    | _ => l
 
-/--
+/-- 
   The good parameters are the parameters that occur somewhere in the `rb_set` as a singleton or
   (recursively) with only other good parameters.
   All other parameters in the `rb_set` are bad.
 -/
 unsafe def bad_params : rb_set (List Name) → List Name
-| l =>
-  let good_levels : name_set := l.fold mk_name_set$ fun us prev => if us.length = 1 then prev.insert us.head else prev 
-  if good_levels.empty then l.fold [] List.unionₓ else
-    bad_params$ rb_set.of_list$ l.to_list.map$ fun us => us.filter$ fun nm => !good_levels.contains nm
+  | l =>
+    let good_levels : name_set :=
+      l.fold mk_name_set $ fun us prev => if us.length = 1 then prev.insert us.head else prev
+    if good_levels.empty then l.fold [] List.unionₓ
+    else bad_params $ rb_set.of_list $ l.to_list.map $ fun us => us.filter $ fun nm => !good_levels.contains nm
 
-/--
+/-- 
 Checks whether all universe levels `u` in the type of `d` are "good".
 This means that `u` either occurs in a `level` of `d` by itself, or (recursively)
 with only other good levels.
@@ -303,13 +306,12 @@ occur by themselves in a level. It is ok if *one* of `u` or `v` never occurs alo
 `(α : Type u) (β : Type (max u v))` is a occasionally useful method of saying that `β` lives in
 a higher universe level than `α`.
 -/
-unsafe def check_univs (d : declaration) : tactic (Option Stringₓ) :=
-  do 
-    let l := d.type.univ_params_grouped d.to_name 
-    let bad := bad_params l 
-    if bad.empty then return none else return$ some$ "universes " ++ toString bad ++ " only occur together."
+unsafe def check_univs (d : declaration) : tactic (Option Stringₓ) := do
+  let l := d.type.univ_params_grouped d.to_name
+  let bad := bad_params l
+  if bad.empty then return none else return $ some $ "universes " ++ toString bad ++ " only occur together."
 
-/-- A linter for checking that there are no bad `max u v` universe levels. -/
+/--  A linter for checking that there are no bad `max u v` universe levels. -/
 @[linter]
 unsafe def linter.check_univs : linter :=
   { test := check_univs, auto_decls := ff, no_errors_found := "All declarations have good universe levels.",
@@ -329,7 +331,7 @@ unsafe def linter.check_univs : linter :=
 -/
 
 
-/--
+/-- 
 Checks whether a lemma is a declaration of the form `∀ a b ... z, e₁ = e₂`
 where `e₁` and `e₂` are identical exprs.
 We call declarations of this form syntactic tautologies.
@@ -337,13 +339,13 @@ Such lemmas are (mostly) useless and sometimes introduced unintentionally when p
 with rfl when elaboration results in a different term than the user intended.
 -/
 unsafe def syn_taut (d : declaration) : tactic (Option Stringₓ) :=
-  (do 
-      let (el, er) ← d.type.pi_codomain.is_eq 
+  (do
+      let (el, er) ← d.type.pi_codomain.is_eq
       guardb (el =ₐ er)
-      return$ some "LHS equals RHS syntactically") <|>
+      return $ some "LHS equals RHS syntactically") <|>
     return none
 
-/-- A linter for checking that declarations aren't syntactic tautologies. -/
+/--  A linter for checking that declarations aren't syntactic tautologies. -/
 @[linter]
 unsafe def linter.syn_taut : linter :=
   { test := syn_taut, auto_decls := ff, no_errors_found := "No declarations are syntactic tautologies.",
@@ -363,59 +365,57 @@ attribute [nolint syn_taut] rfl
 -/
 
 
-/--
+/-- 
 Check if an expression contains `var 0` by folding over the expression and matching the binder depth
 -/
 unsafe def expr.has_zero_var (e : expr) : Bool :=
-  e.fold ff$
-    fun e' d res =>
-      res ||
-        match e' with 
-        | var k => k = d
-        | _ => ff
+  e.fold ff $ fun e' d res =>
+    res ||
+      match e' with
+      | var k => k = d
+      | _ => ff
 
-/--
+/-- 
 Return a list of unused have and suffices terms in an expression
 -/
 unsafe def find_unused_have_suffices_macros : expr → tactic (List Stringₓ)
-| app a b => (· ++ ·) <$> find_unused_have_suffices_macros a <*> find_unused_have_suffices_macros b
-| lam var_name bi var_type body => find_unused_have_suffices_macros body
-| pi var_name bi var_type body => find_unused_have_suffices_macros body
-| elet var_name type assignment body =>
-  (· ++ ·) <$> find_unused_have_suffices_macros assignment <*> find_unused_have_suffices_macros body
-| m@(macro md [l@(lam ppnm bi vt bd)]) =>
-  do 
+  | app a b => (· ++ ·) <$> find_unused_have_suffices_macros a <*> find_unused_have_suffices_macros b
+  | lam var_name bi var_type body => find_unused_have_suffices_macros body
+  | pi var_name bi var_type body => find_unused_have_suffices_macros body
+  | elet var_name type assignment body =>
+    (· ++ ·) <$> find_unused_have_suffices_macros assignment <*> find_unused_have_suffices_macros body
+  | m@(macro md [l@(lam ppnm bi vt bd)]) => do
     (· ++ ·)
           (if m.is_annotation.iget.fst = `have ∧ ¬bd.has_zero_var then
-            ["unnecessary have " ++ ppnm.to_string ++ " : " ++ vt.to_string] else []) <$>
+            ["unnecessary have " ++ ppnm.to_string ++ " : " ++ vt.to_string]
+          else []) <$>
         find_unused_have_suffices_macros l
-| m@(macro md [app (l@(lam ppnm bi vt bd)) arg]) =>
-  do 
+  | m@(macro md [app (l@(lam ppnm bi vt bd)) arg]) => do
     (· ++ ·)
           (if m.is_annotation.iget.fst = `suffices ∧ ¬bd.has_zero_var then
-            ["unnecessary suffices " ++ ppnm.to_string ++ " : " ++ vt.to_string] else []) <$>
+            ["unnecessary suffices " ++ ppnm.to_string ++ " : " ++ vt.to_string]
+          else []) <$>
         ((· ++ ·) <$> find_unused_have_suffices_macros l <*> find_unused_have_suffices_macros arg)
-| macro md l => List.join <$> l.mmap find_unused_have_suffices_macros
-| _ => return []
+  | macro md l => List.join <$> l.mmap find_unused_have_suffices_macros
+  | _ => return []
 
-/--
+/-- 
 Return a list of unused have and suffices terms in a declaration
 -/
 unsafe def unused_have_of_decl : declaration → tactic (List Stringₓ)
-| declaration.defn _ _ _ bd _ _ => find_unused_have_suffices_macros bd
-| declaration.thm _ _ _ bd => find_unused_have_suffices_macros bd.get
-| _ => return []
+  | declaration.defn _ _ _ bd _ _ => find_unused_have_suffices_macros bd
+  | declaration.thm _ _ _ bd => find_unused_have_suffices_macros bd.get
+  | _ => return []
 
-/--
+/-- 
 Checks whether a declaration contains term mode have statements that have no effect on the resulting
 term.
 -/
-unsafe def has_unused_haves_suffices (d : declaration) : tactic (Option Stringₓ) :=
-  do 
-    let ns ← unused_have_of_decl d 
-    if ns.length = 0 then return none else return (", ".intercalate (ns.map toString))
+unsafe def has_unused_haves_suffices (d : declaration) : tactic (Option Stringₓ) := do
+  let ns ← unused_have_of_decl d
+  if ns.length = 0 then return none else return (", ".intercalate (ns.map toString))
 
-/-- A linter for checking that declarations don't have unused term mode have statements. We do not
+/--  A linter for checking that declarations don't have unused term mode have statements. We do not
 tag this as `@[linter]` so that it is not in the default linter set as it is slow and an uncommon
 problem. -/
 unsafe def linter.unused_haves_suffices : linter :=

@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Module.Basic 
+import Mathbin.Algebra.Module.Basic
 import Mathbin.GroupTheory.GroupAction.Prod
 
 /-!
@@ -13,12 +13,12 @@ variable {R : Type _} {S : Type _} {M : Type _} {N : Type _}
 namespace Prod
 
 instance SmulWithZero [HasZero R] [HasZero M] [HasZero N] [SmulWithZero R M] [SmulWithZero R N] :
-  SmulWithZero R (M × N) :=
+    SmulWithZero R (M × N) :=
   { Prod.hasScalar with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }
 
 instance MulActionWithZero [MonoidWithZeroₓ R] [HasZero M] [HasZero N] [MulActionWithZero R M] [MulActionWithZero R N] :
-  MulActionWithZero R (M × N) :=
+    MulActionWithZero R (M × N) :=
   { Prod.mulAction with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }
 
@@ -27,13 +27,11 @@ instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R
     zero_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨zero_smul _ _, zero_smul _ _⟩ }
 
 instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] [NoZeroSmulDivisors R M]
-  [NoZeroSmulDivisors R N] : NoZeroSmulDivisors R (M × N) :=
+    [NoZeroSmulDivisors R N] : NoZeroSmulDivisors R (M × N) :=
   ⟨fun c ⟨x, y⟩ h =>
-      or_iff_not_imp_left.mpr
-        fun hc =>
-          mk.inj_iff.mpr
-            ⟨(smul_eq_zero.mp (congr_argₓ fst h)).resolve_left hc,
-              (smul_eq_zero.mp (congr_argₓ snd h)).resolve_left hc⟩⟩
+    or_iff_not_imp_left.mpr fun hc =>
+      mk.inj_iff.mpr
+        ⟨(smul_eq_zero.mp (congr_argₓ fst h)).resolve_left hc, (smul_eq_zero.mp (congr_argₓ snd h)).resolve_left hc⟩⟩
 
 end Prod
 

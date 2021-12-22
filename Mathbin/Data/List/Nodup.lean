@@ -1,5 +1,5 @@
-import Mathbin.Data.List.Lattice 
-import Mathbin.Data.List.Pairwise 
+import Mathbin.Data.List.Lattice
+import Mathbin.Data.List.Pairwise
 import Mathbin.Data.List.Forall2
 
 /-!
@@ -27,19 +27,16 @@ theorem nodup_nil : @nodup α [] :=
   pairwise.nil
 
 @[simp]
-theorem nodup_cons {a : α} {l : List α} : nodup (a :: l) ↔ a ∉ l ∧ nodup l :=
-  by 
-    simp only [nodup, pairwise_cons, forall_mem_ne]
+theorem nodup_cons {a : α} {l : List α} : nodup (a :: l) ↔ a ∉ l ∧ nodup l := by
+  simp only [nodup, pairwise_cons, forall_mem_ne]
 
 protected theorem pairwise.nodup {l : List α} {r : α → α → Prop} [IsIrrefl α r] (h : Pairwise r l) : nodup l :=
-  h.imp$ fun a b => ne_of_irrefl
+  h.imp $ fun a b => ne_of_irrefl
 
 theorem rel_nodup {r : α → β → Prop} (hr : Relator.BiUnique r) : (forall₂ r⇒(· ↔ ·)) nodup nodup
-| _, _, forall₂.nil =>
-  by 
+  | _, _, forall₂.nil => by
     simp only [nodup_nil]
-| _, _, forall₂.cons hab h =>
-  by 
+  | _, _, forall₂.cons hab h => by
     simpa only [nodup_cons] using Relator.rel_and (Relator.rel_not (rel_mem hr hab h)) (rel_nodup h)
 
 theorem nodup_cons_of_nodup {a : α} {l : List α} (m : a ∉ l) (n : nodup l) : nodup (a :: l) :=
@@ -61,83 +58,234 @@ theorem nodup_of_sublist {l₁ l₂ : List α} : l₁ <+ l₂ → nodup l₂ →
   pairwise_of_sublist
 
 theorem not_nodup_pair (a : α) : ¬nodup [a, a] :=
-  not_nodup_cons_of_mem$ mem_singleton_self _
+  not_nodup_cons_of_mem $ mem_singleton_self _
 
 theorem nodup_iff_sublist {l : List α} : nodup l ↔ ∀ a, ¬[a, a] <+ l :=
-  ⟨fun d a h => not_nodup_pair a (nodup_of_sublist h d),
-    by 
-      induction' l with a l IH <;> intro h
-      ·
-        exact nodup_nil 
-      exact
-        nodup_cons_of_nodup (fun al => h a$ (singleton_sublist.2 al).cons_cons _)
-          (IH$ fun a s => h a$ sublist_cons_of_sublist _ s)⟩
+  ⟨fun d a h => not_nodup_pair a (nodup_of_sublist h d), by
+    induction' l with a l IH <;> intro h
+    ·
+      exact nodup_nil
+    exact
+      nodup_cons_of_nodup (fun al => h a $ (singleton_sublist.2 al).cons_cons _)
+        (IH $ fun a s => h a $ sublist_cons_of_sublist _ s)⟩
 
 theorem nodup_iff_nth_le_inj {l : List α} : nodup l ↔ ∀ i j h₁ h₂, nth_le l i h₁ = nth_le l j h₂ → i = j :=
   pairwise_iff_nth_le.trans
     ⟨fun H i j h₁ h₂ h =>
-        ((lt_trichotomyₓ _ _).resolve_left fun h' => H _ _ h₂ h' h).resolve_right fun h' => H _ _ h₁ h' h.symm,
+      ((lt_trichotomyₓ _ _).resolve_left fun h' => H _ _ h₂ h' h).resolve_right fun h' => H _ _ h₁ h' h.symm,
       fun H i j h₁ h₂ h => ne_of_ltₓ h₂ (H _ _ _ _ h)⟩
 
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `nodup.nth_le_inj_iff [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`α] [":" (Term.type "Type" [(Level.hole "_")])] "}")
+    (Term.implicitBinder "{" [`l] [":" (Term.app `List [`α])] "}")
+    (Term.explicitBinder "(" [`h] [":" (Term.app `nodup [`l])] [] ")")
+    (Term.implicitBinder "{" [`i `j] [":" (termℕ "ℕ")] "}")
+    (Term.explicitBinder "(" [`hi] [":" («term_<_» `i "<" `l.length)] [] ")")
+    (Term.explicitBinder "(" [`hj] [":" («term_<_» `j "<" `l.length)] [] ")")]
+   (Term.typeSpec
+    ":"
+    («term_↔_» («term_=_» (Term.app `l.nth_le [`i `hi]) "=" (Term.app `l.nth_le [`j `hj])) "↔" («term_=_» `i "=" `j))))
+  (Command.declValSimple
+   ":="
+   (Term.anonymousCtor
+    "⟨"
+    [(Term.app
+      (Term.proj `nodup_iff_nth_le_inj "." `mp)
+      [`h (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])
+     ","
+     (Term.byTactic
+      "by"
+      (Tactic.tacticSeq
+       (Tactic.tacticSeq1Indented
+        [(group
+          (Tactic.simp
+           "simp"
+           ["("
+            "config"
+            ":="
+            (Term.structInst
+             "{"
+             []
+             [(group
+               (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0)
+               [])]
+             (Term.optEllipsis [])
+             []
+             "}")
+            ")"]
+           []
+           []
+           [])
+          [])])))]
+    "⟩")
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.anonymousCtor
+   "⟨"
+   [(Term.app
+     (Term.proj `nodup_iff_nth_le_inj "." `mp)
+     [`h (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])
+    ","
+    (Term.byTactic
+     "by"
+     (Tactic.tacticSeq
+      (Tactic.tacticSeq1Indented
+       [(group
+         (Tactic.simp
+          "simp"
+          ["("
+           "config"
+           ":="
+           (Term.structInst
+            "{"
+            []
+            [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
+            (Term.optEllipsis [])
+            []
+            "}")
+           ")"]
+          []
+          []
+          [])
+         [])])))]
+   "⟩")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.anonymousCtor.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Tactic.simp
+        "simp"
+        ["("
+         "config"
+         ":="
+         (Term.structInst
+          "{"
+          []
+          [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
+          (Term.optEllipsis [])
+          []
+          "}")
+         ")"]
+        []
+        []
+        [])
+       [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.simp
+   "simp"
+   ["("
+    "config"
+    ":="
+    (Term.structInst
+     "{"
+     []
+     [(group (Term.structInstField (Term.structInstLVal `contextual []) ":=" `Bool.true._@._internal._hyg.0) [])]
+     (Term.optEllipsis [])
+     []
+     "}")
+    ")"]
+   []
+   []
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   nodup.nth_le_inj_iff
   { α : Type _ } { l : List α } ( h : nodup l ) { i j : ℕ } ( hi : i < l.length ) ( hj : j < l.length )
     : l.nth_le i hi = l.nth_le j hj ↔ i = j
   := ⟨ nodup_iff_nth_le_inj . mp h _ _ _ _ , by simp ( config := { contextual := Bool.true._@._internal._hyg.0 } ) ⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
-theorem nodup.ne_singleton_iff {l : List α} (h : nodup l) (x : α) : l ≠ [x] ↔ l = [] ∨ ∃ (y : _)(_ : y ∈ l), y ≠ x :=
-  by 
-    induction' l with hd tl hl
+theorem nodup.ne_singleton_iff {l : List α} (h : nodup l) (x : α) : l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x := by
+  induction' l with hd tl hl
+  ·
+    simp
+  ·
+    specialize hl (nodup_of_nodup_cons h)
+    by_cases' hx : tl = [x]
     ·
-      simp 
+      simpa [hx, And.comm, and_or_distrib_left] using h
     ·
-      specialize hl (nodup_of_nodup_cons h)
-      byCases' hx : tl = [x]
+      rw [← Ne.def, hl] at hx
+      rcases hx with (rfl | ⟨y, hy, hx⟩)
       ·
-        simpa [hx, And.comm, and_or_distrib_left] using h
+        simp
       ·
-        rw [←Ne.def, hl] at hx 
-        rcases hx with (rfl | ⟨y, hy, hx⟩)
-        ·
-          simp 
-        ·
-          have  : tl ≠ [] := ne_nil_of_mem hy 
-          suffices  : ∃ (y : α)(H : y ∈ hd :: tl), y ≠ x
-          ·
-            simpa [ne_nil_of_mem hy]
-          exact ⟨y, mem_cons_of_mem _ hy, hx⟩
+        have : tl ≠ [] := ne_nil_of_mem hy
+        suffices ∃ (y : α)(H : y ∈ hd :: tl), y ≠ x by
+          simpa [ne_nil_of_mem hy]
+        exact ⟨y, mem_cons_of_mem _ hy, hx⟩
 
 theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length) (hm : m < xs.length)
-  (h : xs.nth_le n hn = xs.nth_le m hm) (hne : n ≠ m) : ¬nodup xs :=
-  by 
-    rw [nodup_iff_nth_le_inj]
-    simp only [exists_prop, exists_and_distrib_right, not_forall]
-    exact ⟨n, m, ⟨hn, hm, h⟩, hne⟩
+    (h : xs.nth_le n hn = xs.nth_le m hm) (hne : n ≠ m) : ¬nodup xs := by
+  rw [nodup_iff_nth_le_inj]
+  simp only [exists_prop, exists_and_distrib_right, not_forall]
+  exact ⟨n, m, ⟨hn, hm, h⟩, hne⟩
 
 @[simp]
 theorem nth_le_index_of [DecidableEq α] {l : List α} (H : nodup l) n h : index_of (nth_le l n h) l = n :=
-  nodup_iff_nth_le_inj.1 H _ _ _ h$ index_of_nth_le$ index_of_lt_length.2$ nth_le_mem _ _ _
+  nodup_iff_nth_le_inj.1 H _ _ _ h $ index_of_nth_le $ index_of_lt_length.2 $ nth_le_mem _ _ _
 
 theorem nodup_iff_count_le_one [DecidableEq α] {l : List α} : nodup l ↔ ∀ a, count a l ≤ 1 :=
-  nodup_iff_sublist.trans$
-    forall_congrₓ$
-      fun a =>
-        have  : [a, a] <+ l ↔ 1 < count a l := (@le_count_iff_repeat_sublist _ _ a l 2).symm
-        (not_congr this).trans not_ltₓ
+  nodup_iff_sublist.trans $
+    forall_congrₓ $ fun a =>
+      have : [a, a] <+ l ↔ 1 < count a l := (@le_count_iff_repeat_sublist _ _ a l 2).symm
+      (not_congr this).trans not_ltₓ
 
 theorem nodup_repeat (a : α) : ∀ {n : ℕ}, nodup (repeat a n) ↔ n ≤ 1
-| 0 =>
-  by 
+  | 0 => by
     simp [Nat.zero_leₓ]
-| 1 =>
-  by 
-    simp 
-| n+2 =>
-  iff_of_false (fun H => nodup_iff_sublist.1 H a ((repeat_sublist_repeat _).2 (Nat.le_add_leftₓ 2 n)))
-    (not_le_of_lt$ Nat.le_add_leftₓ 2 n)
+  | 1 => by
+    simp
+  | n+2 =>
+    iff_of_false (fun H => nodup_iff_sublist.1 H a ((repeat_sublist_repeat _).2 (Nat.le_add_leftₓ 2 n)))
+      (not_le_of_lt $ Nat.le_add_leftₓ 2 n)
 
 @[simp]
 theorem count_eq_one_of_mem [DecidableEq α] {a : α} {l : List α} (d : nodup l) (h : a ∈ l) : count a l = 1 :=
@@ -149,59 +297,51 @@ theorem nodup_of_nodup_append_left {l₁ l₂ : List α} : nodup (l₁ ++ l₂) 
 theorem nodup_of_nodup_append_right {l₁ l₂ : List α} : nodup (l₁ ++ l₂) → nodup l₂ :=
   nodup_of_sublist (sublist_append_right l₁ l₂)
 
-theorem nodup_append {l₁ l₂ : List α} : nodup (l₁ ++ l₂) ↔ nodup l₁ ∧ nodup l₂ ∧ Disjoint l₁ l₂ :=
-  by 
-    simp only [nodup, pairwise_append, disjoint_iff_ne]
+theorem nodup_append {l₁ l₂ : List α} : nodup (l₁ ++ l₂) ↔ nodup l₁ ∧ nodup l₂ ∧ Disjoint l₁ l₂ := by
+  simp only [nodup, pairwise_append, disjoint_iff_ne]
 
 theorem disjoint_of_nodup_append {l₁ l₂ : List α} (d : nodup (l₁ ++ l₂)) : Disjoint l₁ l₂ :=
   (nodup_append.1 d).2.2
 
 theorem nodup_append_of_nodup {l₁ l₂ : List α} (d₁ : nodup l₁) (d₂ : nodup l₂) (dj : Disjoint l₁ l₂) :
-  nodup (l₁ ++ l₂) :=
+    nodup (l₁ ++ l₂) :=
   nodup_append.2 ⟨d₁, d₂, dj⟩
 
-theorem nodup_append_comm {l₁ l₂ : List α} : nodup (l₁ ++ l₂) ↔ nodup (l₂ ++ l₁) :=
-  by 
-    simp only [nodup_append, And.left_comm, disjoint_comm]
+theorem nodup_append_comm {l₁ l₂ : List α} : nodup (l₁ ++ l₂) ↔ nodup (l₂ ++ l₁) := by
+  simp only [nodup_append, And.left_comm, disjoint_comm]
 
-theorem nodup_middle {a : α} {l₁ l₂ : List α} : nodup (l₁ ++ a :: l₂) ↔ nodup (a :: (l₁ ++ l₂)) :=
-  by 
-    simp only [nodup_append, not_or_distrib, And.left_comm, and_assoc, nodup_cons, mem_append, disjoint_cons_right]
+theorem nodup_middle {a : α} {l₁ l₂ : List α} : nodup (l₁ ++ a :: l₂) ↔ nodup (a :: (l₁ ++ l₂)) := by
+  simp only [nodup_append, not_or_distrib, And.left_comm, and_assoc, nodup_cons, mem_append, disjoint_cons_right]
 
 theorem nodup_of_nodup_map (f : α → β) {l : List α} : nodup (map f l) → nodup l :=
-  pairwise_of_pairwise_map f$ fun a b => mt$ congr_argₓ f
+  pairwise_of_pairwise_map f $ fun a b => mt $ congr_argₓ f
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
-theorem nodup_map_on {f : α → β} {l : List α} (H : ∀ x _ : x ∈ l, ∀ y _ : y ∈ l, f x = f y → x = y) (d : nodup l) :
-  nodup (map f l) :=
+theorem nodup_map_on {f : α → β} {l : List α} (H : ∀, ∀ x ∈ l, ∀, ∀, ∀ y ∈ l, ∀, f x = f y → x = y) (d : nodup l) :
+    nodup (map f l) :=
   pairwise_map_of_pairwise _
-    (by 
+    (by
       exact fun a b ⟨ma, mb, n⟩ e => n (H a ma b mb e))
     (pairwise.and_mem.1 d)
 
 theorem inj_on_of_nodup_map {f : α → β} {l : List α} (d : nodup (map f l)) :
-  ∀ ⦃x⦄, x ∈ l → ∀ ⦃y⦄, y ∈ l → f x = f y → x = y :=
-  by 
-    induction' l with hd tl ih
+    ∀ ⦃x⦄, x ∈ l → ∀ ⦃y⦄, y ∈ l → f x = f y → x = y := by
+  induction' l with hd tl ih
+  ·
+    simp
+  ·
+    simp only [map, nodup_cons, mem_map, not_exists, not_and, ← Ne.def] at d
+    rintro _ (rfl | h₁) _ (rfl | h₂) h₃
     ·
-      simp 
+      rfl
     ·
-      simp only [map, nodup_cons, mem_map, not_exists, not_and, ←Ne.def] at d 
-      rintro _ (rfl | h₁) _ (rfl | h₂) h₃
-      ·
-        rfl
-      ·
-        apply (d.1 _ h₂ h₃.symm).elim
-      ·
-        apply (d.1 _ h₁ h₃).elim
-      ·
-        apply ih d.2 h₁ h₂ h₃
+      apply (d.1 _ h₂ h₃.symm).elim
+    ·
+      apply (d.1 _ h₁ h₃).elim
+    ·
+      apply ih d.2 h₁ h₂ h₃
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (y «expr ∈ » l)
 theorem nodup_map_iff_inj_on {f : α → β} {l : List α} (d : nodup l) :
-  nodup (map f l) ↔ ∀ x _ : x ∈ l y _ : y ∈ l, f x = f y → x = y :=
+    nodup (map f l) ↔ ∀, ∀ x ∈ l, ∀, ∀ y ∈ l, ∀, f x = f y → x = y :=
   ⟨inj_on_of_nodup_map, fun h => nodup_map_on h d⟩
 
 theorem nodup_map {f : α → β} {l : List α} (hf : injective f) : nodup l → nodup (map f l) :=
@@ -212,193 +352,292 @@ theorem nodup_map_iff {f : α → β} {l : List α} (hf : injective f) : nodup (
 
 @[simp]
 theorem nodup_attach {l : List α} : nodup (attach l) ↔ nodup l :=
-  ⟨fun h => attach_map_val l ▸ nodup_map (fun a b => Subtype.eq) h,
-    fun h => nodup_of_nodup_map Subtype.val ((attach_map_val l).symm ▸ h)⟩
+  ⟨fun h => attach_map_val l ▸ nodup_map (fun a b => Subtype.eq) h, fun h =>
+    nodup_of_nodup_map Subtype.val ((attach_map_val l).symm ▸ h)⟩
 
 theorem nodup_pmap {p : α → Prop} {f : ∀ a, p a → β} {l : List α} {H} (hf : ∀ a ha b hb, f a ha = f b hb → a = b)
-  (h : nodup l) : nodup (pmap f l H) :=
-  by 
-    rw [pmap_eq_map_attach] <;>
-      exact
-        nodup_map
-          (fun ⟨a, ha⟩ ⟨b, hb⟩ h =>
-            by 
-              congr <;> exact hf a (H _ ha) b (H _ hb) h)
-          (nodup_attach.2 h)
+    (h : nodup l) : nodup (pmap f l H) := by
+  rw [pmap_eq_map_attach] <;>
+    exact
+      nodup_map
+        (fun ⟨a, ha⟩ ⟨b, hb⟩ h => by
+          congr <;> exact hf a (H _ ha) b (H _ hb) h)
+        (nodup_attach.2 h)
 
 theorem nodup_filter (p : α → Prop) [DecidablePred p] {l} : nodup l → nodup (filter p l) :=
   pairwise_filter_of_pairwise p
 
 @[simp]
 theorem nodup_reverse {l : List α} : nodup (reverse l) ↔ nodup l :=
-  pairwise_reverse.trans$
-    by 
-      simp only [nodup, Ne.def, eq_comm]
+  pairwise_reverse.trans $ by
+    simp only [nodup, Ne.def, eq_comm]
 
-theorem nodup_erase_eq_filter [DecidableEq α] (a : α) {l} (d : nodup l) : l.erase a = filter (· ≠ a) l :=
-  by 
-    induction' d with b l m d IH
-    ·
-      rfl 
-    byCases' b = a
-    ·
-      subst h 
-      rw [erase_cons_head, filter_cons_of_neg]
-      symm 
-      rw [filter_eq_self]
-      simpa only [Ne.def, eq_comm] using m 
-      exact not_not_intro rfl
-    ·
-      rw [erase_cons_tail _ h, filter_cons_of_pos, IH]
-      exact h
+theorem nodup_erase_eq_filter [DecidableEq α] (a : α) {l} (d : nodup l) : l.erase a = filter (· ≠ a) l := by
+  induction' d with b l m d IH
+  ·
+    rfl
+  by_cases' b = a
+  ·
+    subst h
+    rw [erase_cons_head, filter_cons_of_neg]
+    symm
+    rw [filter_eq_self]
+    simpa only [Ne.def, eq_comm] using m
+    exact not_not_intro rfl
+  ·
+    rw [erase_cons_tail _ h, filter_cons_of_pos, IH]
+    exact h
 
 theorem nodup_erase_of_nodup [DecidableEq α] (a : α) {l} : nodup l → nodup (l.erase a) :=
   nodup_of_sublist (erase_sublist _ _)
 
 theorem nodup_diff [DecidableEq α] : ∀ {l₁ l₂ : List α} h : l₁.nodup, (l₁.diff l₂).Nodup
-| l₁, [], h => h
-| l₁, a :: l₂, h =>
-  by 
+  | l₁, [], h => h
+  | l₁, a :: l₂, h => by
     rw [diff_cons] <;> exact nodup_diff (nodup_erase_of_nodup _ h)
 
-theorem mem_erase_iff_of_nodup [DecidableEq α] {a b : α} {l} (d : nodup l) : a ∈ l.erase b ↔ a ≠ b ∧ a ∈ l :=
-  by 
-    rw [nodup_erase_eq_filter b d] <;> simp only [mem_filter, and_comm]
+theorem mem_erase_iff_of_nodup [DecidableEq α] {a b : α} {l} (d : nodup l) : a ∈ l.erase b ↔ a ≠ b ∧ a ∈ l := by
+  rw [nodup_erase_eq_filter b d] <;> simp only [mem_filter, and_comm]
 
-theorem mem_erase_of_nodup [DecidableEq α] {a : α} {l} (h : nodup l) : a ∉ l.erase a :=
-  fun H => ((mem_erase_iff_of_nodup h).1 H).1 rfl
+theorem mem_erase_of_nodup [DecidableEq α] {a : α} {l} (h : nodup l) : a ∉ l.erase a := fun H =>
+  ((mem_erase_iff_of_nodup h).1 H).1 rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (l «expr ∈ » L)
-theorem nodup_join {L : List (List α)} : nodup (join L) ↔ (∀ l _ : l ∈ L, nodup l) ∧ Pairwise Disjoint L :=
-  by 
-    simp only [nodup, pairwise_join, disjoint_left.symm, forall_mem_ne]
+theorem nodup_join {L : List (List α)} : nodup (join L) ↔ (∀, ∀ l ∈ L, ∀, nodup l) ∧ Pairwise Disjoint L := by
+  simp only [nodup, pairwise_join, disjoint_left.symm, forall_mem_ne]
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (x «expr ∈ » l₁)
 theorem nodup_bind {l₁ : List α} {f : α → List β} :
-  nodup (l₁.bind f) ↔ (∀ x _ : x ∈ l₁, nodup (f x)) ∧ Pairwise (fun a b : α => Disjoint (f a) (f b)) l₁ :=
-  by 
-    simp only [List.bind, nodup_join, pairwise_map, and_comm, And.left_comm, mem_map, exists_imp_distrib, and_imp] <;>
-      rw
-        [show (∀ l : List β x : α, f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
-          forall_swap.trans$ forall_congrₓ$ fun _ => forall_eq']
+    nodup (l₁.bind f) ↔ (∀, ∀ x ∈ l₁, ∀, nodup (f x)) ∧ Pairwise (fun a b : α => Disjoint (f a) (f b)) l₁ := by
+  simp only [List.bind, nodup_join, pairwise_map, and_comm, And.left_comm, mem_map, exists_imp_distrib, and_imp] <;>
+    rw
+      [show (∀ l : List β x : α, f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
+        forall_swap.trans $ forall_congrₓ $ fun _ => forall_eq']
 
 theorem nodup_product {l₁ : List α} {l₂ : List β} (d₁ : nodup l₁) (d₂ : nodup l₂) : nodup (product l₁ l₂) :=
   nodup_bind.2
     ⟨fun a ma => nodup_map (left_inverse.injective fun b => (rfl : (a, b).2 = b)) d₂,
-      d₁.imp$
-        fun a₁ a₂ n x h₁ h₂ =>
-          by 
-            rcases mem_map.1 h₁ with ⟨b₁, mb₁, rfl⟩
-            rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
-            exact n rfl⟩
+      d₁.imp $ fun a₁ a₂ n x h₁ h₂ => by
+        rcases mem_map.1 h₁ with ⟨b₁, mb₁, rfl⟩
+        rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
+        exact n rfl⟩
 
 theorem nodup_sigma {σ : α → Type _} {l₁ : List α} {l₂ : ∀ a, List (σ a)} (d₁ : nodup l₁) (d₂ : ∀ a, nodup (l₂ a)) :
-  nodup (l₁.sigma l₂) :=
+    nodup (l₁.sigma l₂) :=
   nodup_bind.2
     ⟨fun a ma =>
-        nodup_map
-          (fun b b' h =>
-            by 
-              injection h with _ h <;> exact eq_of_heq h)
-          (d₂ a),
-      d₁.imp$
-        fun a₁ a₂ n x h₁ h₂ =>
-          by 
-            rcases mem_map.1 h₁ with ⟨b₁, mb₁, rfl⟩
-            rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
-            exact n rfl⟩
+      nodup_map
+        (fun b b' h => by
+          injection h with _ h <;> exact eq_of_heq h)
+        (d₂ a),
+      d₁.imp $ fun a₁ a₂ n x h₁ h₂ => by
+        rcases mem_map.1 h₁ with ⟨b₁, mb₁, rfl⟩
+        rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
+        exact n rfl⟩
 
 theorem nodup_filter_map {f : α → Option β} {l : List α} (H : ∀ a a' : α b : β, b ∈ f a → b ∈ f a' → a = a') :
-  nodup l → nodup (filter_map f l) :=
-  pairwise_filter_map_of_pairwise f$ fun a a' n b bm b' bm' e => n$ H a a' b' (e ▸ bm) bm'
+    nodup l → nodup (filter_map f l) :=
+  pairwise_filter_map_of_pairwise f $ fun a a' n b bm b' bm' e => n $ H a a' b' (e ▸ bm) bm'
 
-theorem nodup_concat {a : α} {l : List α} (h : a ∉ l) (h' : nodup l) : nodup (concat l a) :=
-  by 
-    rw [concat_eq_append] <;> exact nodup_append_of_nodup h' (nodup_singleton _) (disjoint_singleton.2 h)
+theorem nodup_concat {a : α} {l : List α} (h : a ∉ l) (h' : nodup l) : nodup (concat l a) := by
+  rw [concat_eq_append] <;> exact nodup_append_of_nodup h' (nodup_singleton _) (disjoint_singleton.2 h)
 
 theorem nodup_insert [DecidableEq α] {a : α} {l : List α} (h : nodup l) : nodup (insert a l) :=
-  if h' : a ∈ l then
-    by 
-      rw [insert_of_mem h'] <;> exact h
-  else
-    by 
-      rw [insert_of_not_mem h', nodup_cons] <;> constructor <;> assumption
+  if h' : a ∈ l then by
+    rw [insert_of_mem h'] <;> exact h
+  else by
+    rw [insert_of_not_mem h', nodup_cons] <;> constructor <;> assumption
 
-theorem nodup_union [DecidableEq α] (l₁ : List α) {l₂ : List α} (h : nodup l₂) : nodup (l₁ ∪ l₂) :=
-  by 
-    induction' l₁ with a l₁ ih generalizing l₂
-    ·
-      exact h 
-    apply nodup_insert 
-    exact ih h
+theorem nodup_union [DecidableEq α] (l₁ : List α) {l₂ : List α} (h : nodup l₂) : nodup (l₁ ∪ l₂) := by
+  induction' l₁ with a l₁ ih generalizing l₂
+  ·
+    exact h
+  apply nodup_insert
+  exact ih h
 
 theorem nodup_inter_of_nodup [DecidableEq α] {l₁ : List α} l₂ : nodup l₁ → nodup (l₁ ∩ l₂) :=
   nodup_filter _
 
 @[simp]
 theorem nodup_sublists {l : List α} : nodup (sublists l) ↔ nodup l :=
-  ⟨fun h => nodup_of_nodup_map _ (nodup_of_sublist (map_ret_sublist_sublists _) h),
-    fun h => (pairwise_sublists h).imp fun _ _ h => mt reverse_inj.2 h.to_ne⟩
+  ⟨fun h => nodup_of_nodup_map _ (nodup_of_sublist (map_ret_sublist_sublists _) h), fun h =>
+    (pairwise_sublists h).imp fun _ _ h => mt reverse_inj.2 h.to_ne⟩
 
 @[simp]
-theorem nodup_sublists' {l : List α} : nodup (sublists' l) ↔ nodup l :=
-  by 
-    rw [sublists'_eq_sublists, nodup_map_iff reverse_injective, nodup_sublists, nodup_reverse]
+theorem nodup_sublists' {l : List α} : nodup (sublists' l) ↔ nodup l := by
+  rw [sublists'_eq_sublists, nodup_map_iff reverse_injective, nodup_sublists, nodup_reverse]
 
 theorem nodup_sublists_len {α : Type _} n {l : List α} (nd : nodup l) : (sublists_len n l).Nodup :=
   nodup_of_sublist (sublists_len_sublist_sublists' _ _) (nodup_sublists'.2 nd)
 
 theorem diff_eq_filter_of_nodup [DecidableEq α] : ∀ {l₁ l₂ : List α} hl₁ : l₁.nodup, l₁.diff l₂ = l₁.filter (· ∉ l₂)
-| l₁, [], hl₁ =>
-  by 
-    simp 
-| l₁, a :: l₂, hl₁ =>
-  by 
+  | l₁, [], hl₁ => by
+    simp
+  | l₁, a :: l₂, hl₁ => by
     rw [diff_cons, diff_eq_filter_of_nodup (nodup_erase_of_nodup _ hl₁), nodup_erase_eq_filter _ hl₁, filter_filter]
     simp only [mem_cons_iff, not_or_distrib, And.comm]
     congr
 
 theorem mem_diff_iff_of_nodup [DecidableEq α] {l₁ l₂ : List α} (hl₁ : l₁.nodup) {a : α} :
-  a ∈ l₁.diff l₂ ↔ a ∈ l₁ ∧ a ∉ l₂ :=
-  by 
-    rw [diff_eq_filter_of_nodup hl₁, mem_filter]
+    a ∈ l₁.diff l₂ ↔ a ∈ l₁ ∧ a ∉ l₂ := by
+  rw [diff_eq_filter_of_nodup hl₁, mem_filter]
 
 theorem nodup_update_nth : ∀ {l : List α} {n : ℕ} {a : α} hl : l.nodup ha : a ∉ l, (l.update_nth n a).Nodup
-| [], n, a, hl, ha => nodup_nil
-| b :: l, 0, a, hl, ha => nodup_cons.2 ⟨mt (mem_cons_of_mem _) ha, (nodup_cons.1 hl).2⟩
-| b :: l, n+1, a, hl, ha =>
-  nodup_cons.2
-    ⟨fun h => (mem_or_eq_of_mem_update_nth h).elim (nodup_cons.1 hl).1 fun hba => ha (hba ▸ mem_cons_self _ _),
-      nodup_update_nth (nodup_cons.1 hl).2 (mt (mem_cons_of_mem _) ha)⟩
+  | [], n, a, hl, ha => nodup_nil
+  | b :: l, 0, a, hl, ha => nodup_cons.2 ⟨mt (mem_cons_of_mem _) ha, (nodup_cons.1 hl).2⟩
+  | b :: l, n+1, a, hl, ha =>
+    nodup_cons.2
+      ⟨fun h => (mem_or_eq_of_mem_update_nth h).elim (nodup_cons.1 hl).1 fun hba => ha (hba ▸ mem_cons_self _ _),
+        nodup_update_nth (nodup_cons.1 hl).2 (mt (mem_cons_of_mem _) ha)⟩
 
 theorem nodup.map_update [DecidableEq α] {l : List α} (hl : l.nodup) (f : α → β) (x : α) (y : β) :
-  l.map (Function.update f x y) = if x ∈ l then (l.map f).updateNth (l.index_of x) y else l.map f :=
-  by 
-    induction' l with hd tl ihl
-    ·
-      simp 
-    rw [nodup_cons] at hl 
-    simp only [mem_cons_iff, map, ihl hl.2]
-    byCases' H : hd = x
-    ·
-      subst hd 
-      simp [update_nth, hl.1]
-    ·
-      simp [Ne.symm H, H, update_nth, ←apply_ite (cons (f hd))]
+    l.map (Function.update f x y) = if x ∈ l then (l.map f).updateNth (l.index_of x) y else l.map f := by
+  induction' l with hd tl ihl
+  ·
+    simp
+  rw [nodup_cons] at hl
+  simp only [mem_cons_iff, map, ihl hl.2]
+  by_cases' H : hd = x
+  ·
+    subst hd
+    simp [update_nth, hl.1]
+  ·
+    simp [Ne.symm H, H, update_nth, ← apply_ite (cons (f hd))]
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (a «expr ∈ » l)
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (b «expr ∈ » l)
 theorem nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.nodup)
-  (h : ∀ a _ : a ∈ l b _ : b ∈ l, a ≠ b → r a b) : l.pairwise r :=
-  by 
-    classical 
-    refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h 
-    intro x hx 
-    rw [nodup_iff_count_le_one] at hl 
-    exact absurd (hl x) hx.not_le
+    (h : ∀, ∀ a ∈ l, ∀, ∀ b ∈ l, ∀, a ≠ b → r a b) : l.pairwise r := by
+  classical
+  refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h
+  intro x hx
+  rw [nodup_iff_count_le_one] at hl
+  exact absurd (hl x) hx.not_le
 
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `nodup.pairwise_of_set_pairwise [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`l] [":" (Term.app `List [`α])] "}")
+    (Term.implicitBinder "{" [`r] [":" (Term.arrow `α "→" (Term.arrow `α "→" (Term.prop "Prop")))] "}")
+    (Term.explicitBinder "(" [`hl] [":" `l.nodup] [] ")")
+    (Term.explicitBinder
+     "("
+     [`h]
+     [":" (Term.app (Term.proj (Set.«term{_|_}» "{" `x "|" (Init.Core.«term_∈_» `x " ∈ " `l) "}") "." `Pairwise) [`r])]
+     []
+     ")")]
+   (Term.typeSpec ":" (Term.app `l.pairwise [`r])))
+  (Command.declValSimple ":=" (Term.app `hl.pairwise_of_forall_ne [`h]) [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `hl.pairwise_of_forall_ne [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `hl.pairwise_of_forall_ne
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (Term.app `l.pairwise [`r])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `r
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `l.pairwise
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.simpleBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.simpleBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.explicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app (Term.proj (Set.«term{_|_}» "{" `x "|" (Init.Core.«term_∈_» `x " ∈ " `l) "}") "." `Pairwise) [`r])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `r
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  (Term.proj (Set.«term{_|_}» "{" `x "|" (Init.Core.«term_∈_» `x " ∈ " `l) "}") "." `Pairwise)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Set.«term{_|_}» "{" `x "|" (Init.Core.«term_∈_» `x " ∈ " `l) "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.«term{_|_}»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Init.Core.«term_∈_» `x " ∈ " `l)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_∈_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `l
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+  `x
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Mathlib.ExtendedBinder.extBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   nodup.pairwise_of_set_pairwise
   { l : List α } { r : α → α → Prop } ( hl : l.nodup ) ( h : { x | x ∈ l } . Pairwise r ) : l.pairwise r
@@ -407,6 +646,6 @@ theorem
 end List
 
 theorem Option.to_list_nodup {α} : ∀ o : Option α, o.to_list.nodup
-| none => List.nodup_nil
-| some x => List.nodup_singleton x
+  | none => List.nodup_nil
+  | some x => List.nodup_singleton x
 

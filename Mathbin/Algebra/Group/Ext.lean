@@ -19,115 +19,104 @@ monoid, group, extensionality
 
 universe u
 
-@[ext, toAdditive]
-theorem Monoidₓ.ext {M : Type u} ⦃m₁ m₂ : Monoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  by 
-    have h₁ : (@Monoidₓ.toMulOneClass _ m₁).one = (@Monoidₓ.toMulOneClass _ m₂).one 
-    exact congr_argₓ (@MulOneClass.one M) (MulOneClass.ext h_mul)
-    set f : @MonoidHom M M (@Monoidₓ.toMulOneClass _ m₁) (@Monoidₓ.toMulOneClass _ m₂) :=
-      { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
-    have hpow : m₁.npow = m₂.npow
+@[ext, to_additive]
+theorem Monoidₓ.ext {M : Type u} ⦃m₁ m₂ : Monoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ := by
+  have h₁ : (@Monoidₓ.toMulOneClass _ m₁).one = (@Monoidₓ.toMulOneClass _ m₂).one
+  exact congr_argₓ (@MulOneClass.one M) (MulOneClass.ext h_mul)
+  set f : @MonoidHom M M (@Monoidₓ.toMulOneClass _ m₁) (@Monoidₓ.toMulOneClass _ m₂) :=
+    { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
+  have hpow : m₁.npow = m₂.npow := by
     ·
-      ·
-        ext n x 
-        exact @MonoidHom.map_pow M M m₁ m₂ f x n
-    (
-      cases m₁ 
-      cases m₂)
-    congr <;> assumption
+      ext n x
+      exact @MonoidHom.map_pow M M m₁ m₂ f x n
+  (
+    cases m₁
+    cases m₂)
+  congr <;> assumption
 
-@[toAdditive]
-theorem CommMonoidₓ.to_monoid_injective {M : Type u} : Function.Injective (@CommMonoidₓ.toMonoid M) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    congr <;> injection h
+@[to_additive]
+theorem CommMonoidₓ.to_monoid_injective {M : Type u} : Function.Injective (@CommMonoidₓ.toMonoid M) := by
+  rintro ⟨⟩ ⟨⟩ h
+  congr <;> injection h
 
-@[ext, toAdditive]
+@[ext, to_additive]
 theorem CommMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : CommMonoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  CommMonoidₓ.to_monoid_injective$ Monoidₓ.ext h_mul
+  CommMonoidₓ.to_monoid_injective $ Monoidₓ.ext h_mul
 
-@[toAdditive]
-theorem LeftCancelMonoid.to_monoid_injective {M : Type u} : Function.Injective (@LeftCancelMonoid.toMonoid M) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    congr <;> injection h
+@[to_additive]
+theorem LeftCancelMonoid.to_monoid_injective {M : Type u} : Function.Injective (@LeftCancelMonoid.toMonoid M) := by
+  rintro ⟨⟩ ⟨⟩ h
+  congr <;> injection h
 
-@[ext, toAdditive]
+@[ext, to_additive]
 theorem LeftCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : LeftCancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  LeftCancelMonoid.to_monoid_injective$ Monoidₓ.ext h_mul
+  LeftCancelMonoid.to_monoid_injective $ Monoidₓ.ext h_mul
 
-@[toAdditive]
-theorem RightCancelMonoid.to_monoid_injective {M : Type u} : Function.Injective (@RightCancelMonoid.toMonoid M) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    congr <;> injection h
+@[to_additive]
+theorem RightCancelMonoid.to_monoid_injective {M : Type u} : Function.Injective (@RightCancelMonoid.toMonoid M) := by
+  rintro ⟨⟩ ⟨⟩ h
+  congr <;> injection h
 
-@[ext, toAdditive]
+@[ext, to_additive]
 theorem RightCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : RightCancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  RightCancelMonoid.to_monoid_injective$ Monoidₓ.ext h_mul
+  RightCancelMonoid.to_monoid_injective $ Monoidₓ.ext h_mul
 
-@[toAdditive]
+@[to_additive]
 theorem CancelMonoid.to_left_cancel_monoid_injective {M : Type u} :
-  Function.Injective (@CancelMonoid.toLeftCancelMonoid M) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    congr <;> injection h
+    Function.Injective (@CancelMonoid.toLeftCancelMonoid M) := by
+  rintro ⟨⟩ ⟨⟩ h
+  congr <;> injection h
 
-@[ext, toAdditive]
+@[ext, to_additive]
 theorem CancelMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  CancelMonoid.to_left_cancel_monoid_injective$ LeftCancelMonoid.ext h_mul
+  CancelMonoid.to_left_cancel_monoid_injective $ LeftCancelMonoid.ext h_mul
 
-@[toAdditive]
+@[to_additive]
 theorem CancelCommMonoid.to_comm_monoid_injective {M : Type u} :
-  Function.Injective (@CancelCommMonoid.toCommMonoid M) :=
-  by 
-    rintro ⟨⟩ ⟨⟩ h 
-    congr <;> injection h
+    Function.Injective (@CancelCommMonoid.toCommMonoid M) := by
+  rintro ⟨⟩ ⟨⟩ h
+  congr <;> injection h
 
-@[ext, toAdditive]
+@[ext, to_additive]
 theorem CancelCommMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelCommMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  CancelCommMonoid.to_comm_monoid_injective$ CommMonoidₓ.ext h_mul
+  CancelCommMonoid.to_comm_monoid_injective $ CommMonoidₓ.ext h_mul
 
-@[ext, toAdditive]
+@[ext, to_additive]
 theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) (h_inv : m₁.inv = m₂.inv) :
-  m₁ = m₂ :=
-  by 
-    have h₁ : (@DivInvMonoidₓ.toMonoid _ m₁).one = (@DivInvMonoidₓ.toMonoid _ m₂).one 
-    exact congr_argₓ (@Monoidₓ.one M) (Monoidₓ.ext h_mul)
-    set f :
-      @MonoidHom M M
-        (by 
-          let this' := m₁ <;> infer_instance)
-        (by 
-          let this' := m₂ <;> infer_instance) :=
-      { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
-    have hpow : (@DivInvMonoidₓ.toMonoid _ m₁).npow = (@DivInvMonoidₓ.toMonoid _ m₂).npow :=
-      congr_argₓ (@Monoidₓ.npow M) (Monoidₓ.ext h_mul)
-    have hzpow : m₁.zpow = m₂.zpow
-    ·
-      ext m x 
-      exact @MonoidHom.map_zpow' M M m₁ m₂ f (congr_funₓ h_inv) x m 
-    have hdiv : m₁.div = m₂.div
-    ·
-      ext a b 
-      exact @MonoidHom.map_div' M M m₁ m₂ f (congr_funₓ h_inv) a b
-    (
-      cases m₁ 
-      cases m₂)
-    congr 
-    exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
+    m₁ = m₂ := by
+  have h₁ : (@DivInvMonoidₓ.toMonoid _ m₁).one = (@DivInvMonoidₓ.toMonoid _ m₂).one
+  exact congr_argₓ (@Monoidₓ.one M) (Monoidₓ.ext h_mul)
+  set f :
+    @MonoidHom M M
+      (by
+        let this' := m₁ <;> infer_instance)
+      (by
+        let this' := m₂ <;> infer_instance) :=
+    { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
+  have hpow : (@DivInvMonoidₓ.toMonoid _ m₁).npow = (@DivInvMonoidₓ.toMonoid _ m₂).npow :=
+    congr_argₓ (@Monoidₓ.npow M) (Monoidₓ.ext h_mul)
+  have hzpow : m₁.zpow = m₂.zpow := by
+    ext m x
+    exact @MonoidHom.map_zpow' M M m₁ m₂ f (congr_funₓ h_inv) x m
+  have hdiv : m₁.div = m₂.div := by
+    ext a b
+    exact @MonoidHom.map_div' M M m₁ m₂ f (congr_funₓ h_inv) a b
+  (
+    cases m₁
+    cases m₂)
+  congr
+  exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
 
-@[ext, toAdditive]
-theorem Groupₓ.ext {G : Type _} ⦃g₁ g₂ : Groupₓ G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=
-  by 
-    set f :=
-      @MonoidHom.mk' G G
-        (by 
-          let this' := g₁ <;> infer_instance)
-        g₂ id fun a b => congr_funₓ (congr_funₓ h_mul a) b 
-    exact Groupₓ.to_div_inv_monoid_injective (DivInvMonoidₓ.ext h_mul (funext$ @MonoidHom.map_inv G G g₁ g₂ f))
+@[ext, to_additive]
+theorem Groupₓ.ext {G : Type _} ⦃g₁ g₂ : Groupₓ G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ := by
+  set f :=
+    @MonoidHom.mk' G G
+      (by
+        let this' := g₁ <;> infer_instance)
+      g₂ id fun a b => congr_funₓ (congr_funₓ h_mul a) b
+  exact Groupₓ.to_div_inv_monoid_injective (DivInvMonoidₓ.ext h_mul (funext $ @MonoidHom.map_inv G G g₁ g₂ f))
 
-@[ext, toAdditive]
+@[ext, to_additive]
 theorem CommGroupₓ.ext {G : Type _} ⦃g₁ g₂ : CommGroupₓ G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=
-  CommGroupₓ.to_group_injective$ Groupₓ.ext h_mul
+  CommGroupₓ.to_group_injective $ Groupₓ.ext h_mul
 

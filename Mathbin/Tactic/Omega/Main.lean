@@ -1,59 +1,57 @@
-import Mathbin.Tactic.Omega.Int.Main 
+import Mathbin.Tactic.Omega.Int.Main
 import Mathbin.Tactic.Omega.Nat.Main
 
 namespace Omega
 
 open Tactic
 
-unsafe def select_domain (t s : tactic (Option Bool)) : tactic (Option Bool) :=
-  do 
-    let a ← t 
-    let b ← s 
-    match a, b with 
-      | a, none => return a
-      | none, b => return b
-      | some tt, some tt => return (some tt)
-      | some ff, some ff => return (some ff)
-      | _, _ => failed
+unsafe def select_domain (t s : tactic (Option Bool)) : tactic (Option Bool) := do
+  let a ← t
+  let b ← s
+  match a, b with
+    | a, none => return a
+    | none, b => return b
+    | some tt, some tt => return (some tt)
+    | some ff, some ff => return (some ff)
+    | _, _ => failed
 
 unsafe def type_domain (x : expr) : tactic (Option Bool) :=
   if x = quote.1 Int then return (some tt) else if x = quote.1 Nat then return (some ff) else failed
 
-/-- Detects domain of a formula from its expr.
+/--  Detects domain of a formula from its expr.
 * Returns none, if domain can be either ℤ or ℕ
 * Returns some tt, if domain is exclusively ℤ
 * Returns some ff, if domain is exclusively ℕ
 * Fails, if domain is neither ℤ nor ℕ -/
 unsafe def form_domain : expr → tactic (Option Bool)
-| quote.1 ¬%%ₓpx => form_domain px
-| quote.1 ((%%ₓpx) ∨ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
-| quote.1 ((%%ₓpx) ∧ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
-| quote.1 ((%%ₓpx) ↔ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
-| quote.1 (%%ₓexpr.pi _ _ px qx) =>
-  Monadₓ.cond (if expr.has_var px then return tt else is_prop px) (select_domain (form_domain px) (form_domain qx))
-    (select_domain (type_domain px) (form_domain qx))
-| quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-| quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-| quote.1 (@Eq (%%ₓdx) _ _) => type_domain dx
-| quote.1 (@Ge (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-| quote.1 (@Gt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-| quote.1 (@Ne (%%ₓdx) _ _) => type_domain dx
-| quote.1 True => return none
-| quote.1 False => return none
-| x => failed
+  | quote.1 ¬%%ₓpx => form_domain px
+  | quote.1 ((%%ₓpx) ∨ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
+  | quote.1 ((%%ₓpx) ∧ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
+  | quote.1 ((%%ₓpx) ↔ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
+  | quote.1 (%%ₓexpr.pi _ _ px qx) =>
+    Monadₓ.cond (if expr.has_var px then return tt else is_prop px) (select_domain (form_domain px) (form_domain qx))
+      (select_domain (type_domain px) (form_domain qx))
+  | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+  | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+  | quote.1 (@Eq (%%ₓdx) _ _) => type_domain dx
+  | quote.1 (@Ge (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+  | quote.1 (@Gt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+  | quote.1 (@Ne (%%ₓdx) _ _) => type_domain dx
+  | quote.1 True => return none
+  | quote.1 False => return none
+  | x => failed
 
 unsafe def goal_domain_aux (x : expr) : tactic Bool :=
   omega.int.wff x >> return tt <|> omega.nat.wff x >> return ff
 
-/-- Use the current goal to determine.
+/--  Use the current goal to determine.
     Return tt if the domain is ℤ, and return ff if it is ℕ -/
-unsafe def goal_domain : tactic Bool :=
-  do 
-    let gx ← target 
-    let hxs ← local_context >>= Monadₓ.mapm infer_type 
-    app_first goal_domain_aux (gx :: hxs)
+unsafe def goal_domain : tactic Bool := do
+  let gx ← target
+  let hxs ← local_context >>= Monadₓ.mapm infer_type
+  app_first goal_domain_aux (gx :: hxs)
 
-/-- Return tt if the domain is ℤ, and return ff if it is ℕ -/
+/--  Return tt if the domain is ℤ, and return ff if it is ℕ -/
 unsafe def determine_domain (opt : List Name) : tactic Bool :=
   if `int ∈ opt then return tt else if `nat ∈ opt then return ff else goal_domain
 
@@ -61,25 +59,24 @@ end Omega
 
 open Lean.Parser Interactive Omega
 
-/-- Attempts to discharge goals in the quantifier-free fragment of
+/--  Attempts to discharge goals in the quantifier-free fragment of
 linear integer and natural number arithmetic using the Omega test.
 Guesses the correct domain by looking at the goal and hypotheses,
 and then reverts all relevant hypotheses and variables.
 Use `omega manual` to disable automatic reverts, and `omega int` or
 `omega nat` to specify the domain.
 -/
-unsafe def tactic.interactive.omega (opt : parse (many ident)) : tactic Unit :=
-  do 
-    let is_int ← determine_domain opt 
-    let is_manual : Bool := if `manual ∈ opt then tt else ff 
-    if is_int then omega_int is_manual else omega_nat is_manual
+unsafe def tactic.interactive.omega (opt : parse (many ident)) : tactic Unit := do
+  let is_int ← determine_domain opt
+  let is_manual : Bool := if `manual ∈ opt then tt else ff
+  if is_int then omega_int is_manual else omega_nat is_manual
 
 add_hint_tactic omega
 
-initialize 
+initialize
   registerTraceClass.1 `omega
 
-/--
+/-- 
 `omega` attempts to discharge goals in the quantifier-free fragment of linear integer and natural
 number arithmetic using the Omega test. In other words, the core procedure of `omega` works with
 goals of the form

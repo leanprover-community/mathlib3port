@@ -1,5 +1,5 @@
-import Mathbin.Data.Equiv.MulAdd 
-import Mathbin.Tactic.NormNum 
+import Mathbin.Data.Equiv.MulAdd
+import Mathbin.Tactic.NormNum
 import Mathbin.Data.Part
 
 /-!
@@ -44,13 +44,13 @@ enat, with_top ℕ
 
 open Part hiding some
 
-/-- Type of natural numbers with infinity (`⊤`) -/
+/--  Type of natural numbers with infinity (`⊤`) -/
 def Enat : Type :=
   Part ℕ
 
 namespace Enat
 
-/-- The computable embedding `ℕ → enat`.
+/--  The computable embedding `ℕ → enat`.
 
 This coincides with the coercion `coe : ℕ → enat`, see `enat.some_eq_coe`.
 However, `coe` is noncomputable so `some` is preferable when computability is a concern. -/
@@ -72,44 +72,46 @@ instance : Add Enat :=
 instance (n : ℕ) : Decidable (some n).Dom :=
   is_true trivialₓ
 
-theorem some_eq_coe (n : ℕ) : some n = n :=
-  by 
-    induction' n with n ih
-    ·
-      rfl 
-    apply Part.ext'
-    ·
-      show True ↔ (n : Enat).Dom ∧ True 
-      rw [←ih, and_trueₓ]
-      exact Iff.rfl
-    ·
-      intro h H 
-      show n.succ = (n : Enat).get H.1+1
-      rw [Nat.cast_succ] at H 
-      revert H 
-      simp only [←ih]
-      intro 
-      rfl
+theorem some_eq_coe (n : ℕ) : some n = n := by
+  induction' n with n ih
+  ·
+    rfl
+  apply Part.ext'
+  ·
+    show True ↔ (n : Enat).Dom ∧ True
+    rw [← ih, and_trueₓ]
+    exact Iff.rfl
+  ·
+    intro h H
+    show n.succ = (n : Enat).get H.1+1
+    rw [Nat.cast_succ] at H
+    revert H
+    simp only [← ih]
+    intro
+    rfl
 
 @[simp]
-theorem coe_inj {x y : ℕ} : (x : Enat) = y ↔ x = y :=
-  by 
-    simpa only [←some_eq_coe] using Part.some_inj
+theorem coe_inj {x y : ℕ} : (x : Enat) = y ↔ x = y := by
+  simpa only [← some_eq_coe] using Part.some_inj
 
 @[simp]
 theorem dom_some (x : ℕ) : (some x).Dom :=
   trivialₓ
 
 @[simp]
-theorem dom_coe (x : ℕ) : (x : Enat).Dom :=
-  by 
-    rw [←some_eq_coe] <;> trivial
+theorem dom_coe (x : ℕ) : (x : Enat).Dom := by
+  rw [← some_eq_coe] <;> trivial
 
-instance : AddCommMonoidₓ Enat :=
-  { add := ·+·, zero := 0, add_comm := fun x y => Part.ext' And.comm fun _ _ => add_commₓ _ _,
-    zero_add := fun x => Part.ext' (true_andₓ _) fun _ _ => zero_addₓ _,
-    add_zero := fun x => Part.ext' (and_trueₓ _) fun _ _ => add_zeroₓ _,
-    add_assoc := fun x y z => Part.ext' And.assoc fun _ _ => add_assocₓ _ _ _ }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : AddCommMonoidₓ Enat
+  where
+    add := · + ·
+      zero := 0
+      add_comm x y := Part.ext' And.comm fun _ _ => add_commₓ _ _
+      zero_add x := Part.ext' ( true_andₓ _ ) fun _ _ => zero_addₓ _
+      add_zero x := Part.ext' ( and_trueₓ _ ) fun _ _ => add_zeroₓ _
+      add_assoc x y z := Part.ext' And.assoc fun _ _ => add_assocₓ _ _ _
 
 instance : LE Enat :=
   ⟨fun x y => ∃ h : y.dom → x.dom, ∀ hy : y.dom, x.get (h hy) ≤ y.get hy⟩
@@ -131,38 +133,33 @@ protected theorem cases_on' {P : Enat → Prop} : ∀ a : Enat, P ⊤ → (∀ n
   Part.induction_on
 
 @[elab_as_eliminator]
-protected theorem cases_on {P : Enat → Prop} : ∀ a : Enat, P ⊤ → (∀ n : ℕ, P n) → P a :=
-  by 
-    simp only [←some_eq_coe]
-    exact Enat.cases_on'
+protected theorem cases_on {P : Enat → Prop} : ∀ a : Enat, P ⊤ → (∀ n : ℕ, P n) → P a := by
+  simp only [← some_eq_coe]
+  exact Enat.cases_on'
 
 @[simp]
 theorem top_add (x : Enat) : (⊤+x) = ⊤ :=
   Part.ext' (false_andₓ _) fun h => h.left.elim
 
 @[simp]
-theorem add_top (x : Enat) : (x+⊤) = ⊤ :=
-  by 
-    rw [add_commₓ, top_add]
+theorem add_top (x : Enat) : (x+⊤) = ⊤ := by
+  rw [add_commₓ, top_add]
 
 @[simp]
-theorem coe_get {x : Enat} (h : x.dom) : (x.get h : Enat) = x :=
-  by 
-    rw [←some_eq_coe]
-    exact Part.ext' (iff_of_true trivialₓ h) fun _ _ => rfl
+theorem coe_get {x : Enat} (h : x.dom) : (x.get h : Enat) = x := by
+  rw [← some_eq_coe]
+  exact Part.ext' (iff_of_true trivialₓ h) fun _ _ => rfl
 
-@[simp, normCast]
-theorem get_coe' (x : ℕ) (h : (x : Enat).Dom) : get (x : Enat) h = x :=
-  by 
-    rw [←coe_inj, coe_get]
+@[simp, norm_cast]
+theorem get_coe' (x : ℕ) (h : (x : Enat).Dom) : get (x : Enat) h = x := by
+  rw [← coe_inj, coe_get]
 
 theorem get_coe {x : ℕ} : get (x : Enat) (dom_coe x) = x :=
   get_coe' _ _
 
-theorem coe_add_get {x : ℕ} {y : Enat} (h : ((x : Enat)+y).Dom) : get ((x : Enat)+y) h = x+get y h.2 :=
-  by 
-    simp only [←some_eq_coe] at h⊢
-    rfl
+theorem coe_add_get {x : ℕ} {y : Enat} (h : ((x : Enat)+y).Dom) : get ((x : Enat)+y) h = x+get y h.2 := by
+  simp only [← some_eq_coe] at h⊢
+  rfl
 
 @[simp]
 theorem get_add {x y : Enat} (h : (x+y).Dom) : get (x+y) h = x.get h.1+y.get h.2 :=
@@ -179,33 +176,30 @@ theorem get_one (h : (1 : Enat).Dom) : (1 : Enat).get h = 1 :=
 theorem get_eq_iff_eq_some {a : Enat} {ha : a.dom} {b : ℕ} : a.get ha = b ↔ a = some b :=
   get_eq_iff_eq_some
 
-theorem get_eq_iff_eq_coe {a : Enat} {ha : a.dom} {b : ℕ} : a.get ha = b ↔ a = b :=
-  by 
-    rw [get_eq_iff_eq_some, some_eq_coe]
+theorem get_eq_iff_eq_coe {a : Enat} {ha : a.dom} {b : ℕ} : a.get ha = b ↔ a = b := by
+  rw [get_eq_iff_eq_some, some_eq_coe]
 
-theorem dom_of_le_of_dom {x y : Enat} : x ≤ y → y.dom → x.dom :=
-  fun ⟨h, _⟩ => h
+theorem dom_of_le_of_dom {x y : Enat} : x ≤ y → y.dom → x.dom := fun ⟨h, _⟩ => h
 
 theorem dom_of_le_some {x : Enat} {y : ℕ} (h : x ≤ some y) : x.dom :=
   dom_of_le_of_dom h trivialₓ
 
-theorem dom_of_le_coe {x : Enat} {y : ℕ} (h : x ≤ y) : x.dom :=
-  by 
-    rw [←some_eq_coe] at h 
-    exact dom_of_le_some h
+theorem dom_of_le_coe {x : Enat} {y : ℕ} (h : x ≤ y) : x.dom := by
+  rw [← some_eq_coe] at h
+  exact dom_of_le_some h
 
 instance decidable_le (x y : Enat) [Decidable x.dom] [Decidable y.dom] : Decidable (x ≤ y) :=
   if hx : x.dom then
     decidableOfDecidableOfIff
-        (show Decidable (∀ hy : (y : Enat).Dom, x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _)$
-      by 
-        dsimp [· ≤ ·]
-        simp only [hx, exists_prop_of_true, forall_true_iff]
+        (show Decidable (∀ hy : (y : Enat).Dom, x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _) $
+      by
+      dsimp [· ≤ ·]
+      simp only [hx, exists_prop_of_true, forall_true_iff]
   else
-    if hy : y.dom then is_false$ fun h => hx$ dom_of_le_of_dom h hy else
-      is_true ⟨fun h => (hy h).elim, fun h => (hy h).elim⟩
+    if hy : y.dom then is_false $ fun h => hx $ dom_of_le_of_dom h hy
+    else is_true ⟨fun h => (hy h).elim, fun h => (hy h).elim⟩
 
-/-- The coercion `ℕ → enat` preserves `0` and addition. -/
+/--  The coercion `ℕ → enat` preserves `0` and addition. -/
 def coe_hom : ℕ →+ Enat :=
   ⟨coeₓ, Nat.cast_zero, Nat.cast_add⟩
 
@@ -213,137 +207,129 @@ def coe_hom : ℕ →+ Enat :=
 theorem coe_coe_hom : ⇑coe_hom = coeₓ :=
   rfl
 
-instance : PartialOrderₓ Enat :=
-  { le := · ≤ ·, le_refl := fun x => ⟨id, fun _ => le_reflₓ _⟩,
-    le_trans := fun x y z ⟨hxy₁, hxy₂⟩ ⟨hyz₁, hyz₂⟩ => ⟨hxy₁ ∘ hyz₁, fun _ => le_transₓ (hxy₂ _) (hyz₂ _)⟩,
-    le_antisymm :=
-      fun x y ⟨hxy₁, hxy₂⟩ ⟨hyx₁, hyx₂⟩ => Part.ext' ⟨hyx₁, hxy₁⟩ fun _ _ => le_antisymmₓ (hxy₂ _) (hyx₂ _) }
+-- failed to format: format: uncaught backtrack exception
+instance
+  : PartialOrderₓ Enat
+  where
+    le := · ≤ ·
+      le_refl x := ⟨ id , fun _ => le_reflₓ _ ⟩
+      le_trans x y z ⟨ hxy₁ , hxy₂ ⟩ ⟨ hyz₁ , hyz₂ ⟩ := ⟨ hxy₁ ∘ hyz₁ , fun _ => le_transₓ ( hxy₂ _ ) ( hyz₂ _ ) ⟩
+      le_antisymm
+        x y ⟨ hxy₁ , hxy₂ ⟩ ⟨ hyx₁ , hyx₂ ⟩
+        :=
+        Part.ext' ⟨ hyx₁ , hxy₁ ⟩ fun _ _ => le_antisymmₓ ( hxy₂ _ ) ( hyx₂ _ )
 
-theorem lt_def (x y : Enat) : x < y ↔ ∃ hx : x.dom, ∀ hy : y.dom, x.get hx < y.get hy :=
-  by 
-    rw [lt_iff_le_not_leₓ, le_def, le_def, not_exists]
-    constructor
+theorem lt_def (x y : Enat) : x < y ↔ ∃ hx : x.dom, ∀ hy : y.dom, x.get hx < y.get hy := by
+  rw [lt_iff_le_not_leₓ, le_def, le_def, not_exists]
+  constructor
+  ·
+    rintro ⟨⟨hyx, H⟩, h⟩
+    by_cases' hx : x.dom
     ·
-      rintro ⟨⟨hyx, H⟩, h⟩
-      byCases' hx : x.dom
-      ·
-        use hx 
-        intro hy 
-        specialize H hy 
-        specialize h fun _ => hy 
-        rw [not_forall] at h 
-        cases' h with hx' h 
-        rw [not_leₓ] at h 
-        exact h
-      ·
-        specialize h fun hx' => (hx hx').elim 
-        rw [not_forall] at h 
-        cases' h with hx' h 
-        exact (hx hx').elim
+      use hx
+      intro hy
+      specialize H hy
+      specialize h fun _ => hy
+      rw [not_forall] at h
+      cases' h with hx' h
+      rw [not_leₓ] at h
+      exact h
     ·
-      rintro ⟨hx, H⟩
-      exact ⟨⟨fun _ => hx, fun hy => (H hy).le⟩, fun hxy h => not_lt_of_le (h _) (H _)⟩
+      specialize h fun hx' => (hx hx').elim
+      rw [not_forall] at h
+      cases' h with hx' h
+      exact (hx hx').elim
+  ·
+    rintro ⟨hx, H⟩
+    exact ⟨⟨fun _ => hx, fun hy => (H hy).le⟩, fun hxy h => not_lt_of_le (h _) (H _)⟩
 
-@[simp, normCast]
-theorem coe_le_coe {x y : ℕ} : (x : Enat) ≤ y ↔ x ≤ y :=
-  by 
-    rw [←some_eq_coe, ←some_eq_coe]
-    exact ⟨fun ⟨_, h⟩ => h trivialₓ, fun h => ⟨fun _ => trivialₓ, fun _ => h⟩⟩
+@[simp, norm_cast]
+theorem coe_le_coe {x y : ℕ} : (x : Enat) ≤ y ↔ x ≤ y := by
+  rw [← some_eq_coe, ← some_eq_coe]
+  exact ⟨fun ⟨_, h⟩ => h trivialₓ, fun h => ⟨fun _ => trivialₓ, fun _ => h⟩⟩
 
-@[simp, normCast]
-theorem coe_lt_coe {x y : ℕ} : (x : Enat) < y ↔ x < y :=
-  by 
-    rw [lt_iff_le_not_leₓ, lt_iff_le_not_leₓ, coe_le_coe, coe_le_coe]
+@[simp, norm_cast]
+theorem coe_lt_coe {x y : ℕ} : (x : Enat) < y ↔ x < y := by
+  rw [lt_iff_le_not_leₓ, lt_iff_le_not_leₓ, coe_le_coe, coe_le_coe]
 
 @[simp]
-theorem get_le_get {x y : Enat} {hx : x.dom} {hy : y.dom} : x.get hx ≤ y.get hy ↔ x ≤ y :=
-  by 
-    conv  => lhs rw [←coe_le_coe, coe_get, coe_get]
+theorem get_le_get {x y : Enat} {hx : x.dom} {hy : y.dom} : x.get hx ≤ y.get hy ↔ x ≤ y := by
+  conv => lhs rw [← coe_le_coe, coe_get, coe_get]
 
-theorem le_coe_iff (x : Enat) (n : ℕ) : x ≤ n ↔ ∃ h : x.dom, x.get h ≤ n :=
-  by 
-    rw [←some_eq_coe]
-    show (∃ h : True → x.dom, _) ↔ ∃ h : x.dom, x.get h ≤ n 
-    simp only [forall_prop_of_true, some_eq_coe, dom_coe, get_coe']
-    constructor <;>
-      rintro ⟨_, _⟩ <;>
-        refine' ⟨_, _⟩ <;>
-          intros  <;>
-            try 
-              assumption
+theorem le_coe_iff (x : Enat) (n : ℕ) : x ≤ n ↔ ∃ h : x.dom, x.get h ≤ n := by
+  rw [← some_eq_coe]
+  show (∃ h : True → x.dom, _) ↔ ∃ h : x.dom, x.get h ≤ n
+  simp only [forall_prop_of_true, some_eq_coe, dom_coe, get_coe']
+  constructor <;>
+    rintro ⟨_, _⟩ <;>
+      refine' ⟨_, _⟩ <;>
+        intros <;>
+          try
+            assumption
 
-theorem lt_coe_iff (x : Enat) (n : ℕ) : x < n ↔ ∃ h : x.dom, x.get h < n :=
-  by 
-    simp only [lt_def, forall_prop_of_true, get_coe', dom_coe]
+theorem lt_coe_iff (x : Enat) (n : ℕ) : x < n ↔ ∃ h : x.dom, x.get h < n := by
+  simp only [lt_def, forall_prop_of_true, get_coe', dom_coe]
 
-theorem coe_le_iff (n : ℕ) (x : Enat) : (n : Enat) ≤ x ↔ ∀ h : x.dom, n ≤ x.get h :=
-  by 
-    rw [←some_eq_coe]
-    simp only [le_def, exists_prop_of_true, dom_some, forall_true_iff]
-    rfl
+theorem coe_le_iff (n : ℕ) (x : Enat) : (n : Enat) ≤ x ↔ ∀ h : x.dom, n ≤ x.get h := by
+  rw [← some_eq_coe]
+  simp only [le_def, exists_prop_of_true, dom_some, forall_true_iff]
+  rfl
 
-theorem coe_lt_iff (n : ℕ) (x : Enat) : (n : Enat) < x ↔ ∀ h : x.dom, n < x.get h :=
-  by 
-    rw [←some_eq_coe]
-    simp only [lt_def, exists_prop_of_true, dom_some, forall_true_iff]
-    rfl
+theorem coe_lt_iff (n : ℕ) (x : Enat) : (n : Enat) < x ↔ ∀ h : x.dom, n < x.get h := by
+  rw [← some_eq_coe]
+  simp only [lt_def, exists_prop_of_true, dom_some, forall_true_iff]
+  rfl
 
-protected theorem zero_lt_one : (0 : Enat) < 1 :=
-  by 
-    normCast 
-    normNum
+protected theorem zero_lt_one : (0 : Enat) < 1 := by
+  norm_cast
+  norm_num
 
 instance SemilatticeSup : SemilatticeSup Enat :=
   { Enat.partialOrder with sup := ·⊔·, le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
     le_sup_right := fun _ _ => ⟨And.right, fun _ => le_sup_right⟩,
     sup_le := fun x y z ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ => ⟨fun hz => ⟨hx₁ hz, hy₁ hz⟩, fun _ => sup_le (hx₂ _) (hy₂ _)⟩ }
 
-instance OrderBot : OrderBot Enat :=
-  { bot := ⊥, bot_le := fun _ => ⟨fun _ => trivialₓ, fun _ => Nat.zero_leₓ _⟩ }
+-- failed to format: format: uncaught backtrack exception
+instance OrderBot : OrderBot Enat where bot := ⊥ bot_le _ := ⟨ fun _ => trivialₓ , fun _ => Nat.zero_leₓ _ ⟩
 
-instance OrderTop : OrderTop Enat :=
-  { top := ⊤, le_top := fun x => ⟨fun h => False.elim h, fun hy => False.elim hy⟩ }
+-- failed to format: format: uncaught backtrack exception
+instance OrderTop : OrderTop Enat where top := ⊤ le_top x := ⟨ fun h => False.elim h , fun hy => False.elim hy ⟩
 
 theorem dom_of_lt {x y : Enat} : x < y → x.dom :=
-  Enat.cases_on x not_top_lt$ fun _ _ => dom_coe _
+  Enat.cases_on x not_top_lt $ fun _ _ => dom_coe _
 
 theorem top_eq_none : (⊤ : Enat) = none :=
   rfl
 
 @[simp]
 theorem coe_lt_top (x : ℕ) : (x : Enat) < ⊤ :=
-  Ne.lt_top
-    fun h =>
-      absurd (congr_argₓ dom h)$
-        by 
-          simpa only [dom_coe] using true_ne_false
+  Ne.lt_top fun h =>
+    absurd (congr_argₓ dom h) $ by
+      simpa only [dom_coe] using true_ne_false
 
 @[simp]
 theorem coe_ne_top (x : ℕ) : (x : Enat) ≠ ⊤ :=
   ne_of_ltₓ (coe_lt_top x)
 
-theorem ne_top_iff {x : Enat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n :=
-  by 
-    simpa only [←some_eq_coe] using Part.ne_none_iff
+theorem ne_top_iff {x : Enat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by
+  simpa only [← some_eq_coe] using Part.ne_none_iff
 
-theorem ne_top_iff_dom {x : Enat} : x ≠ ⊤ ↔ x.dom :=
-  by 
-    classical <;> exact not_iff_comm.1 part.eq_none_iff'.symm
+theorem ne_top_iff_dom {x : Enat} : x ≠ ⊤ ↔ x.dom := by
+  classical <;> exact not_iff_comm.1 part.eq_none_iff'.symm
 
 theorem ne_top_of_lt {x y : Enat} (h : x < y) : x ≠ ⊤ :=
-  ne_of_ltₓ$ lt_of_lt_of_leₓ h le_top
+  ne_of_ltₓ $ lt_of_lt_of_leₓ h le_top
 
-theorem eq_top_iff_forall_lt (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) < x :=
-  by 
-    constructor
-    ·
-      rintro rfl n 
-      exact coe_lt_top _
-    ·
-      contrapose! 
-      rw [ne_top_iff]
-      rintro ⟨n, rfl⟩
-      exact ⟨n, irrefl _⟩
+theorem eq_top_iff_forall_lt (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) < x := by
+  constructor
+  ·
+    rintro rfl n
+    exact coe_lt_top _
+  ·
+    contrapose!
+    rw [ne_top_iff]
+    rintro ⟨n, rfl⟩
+    exact ⟨n, irrefl _⟩
 
 theorem eq_top_iff_forall_le (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) ≤ x :=
   (eq_top_iff_forall_lt x).trans
@@ -351,24 +337,22 @@ theorem eq_top_iff_forall_le (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) �
 
 theorem pos_iff_one_le {x : Enat} : 0 < x ↔ 1 ≤ x :=
   Enat.cases_on x
-      (by 
-        simp only [iff_trueₓ, le_top, coe_lt_top, ←@Nat.cast_zero Enat])$
-    fun n =>
-      by 
-        rw [←Nat.cast_zero, ←Nat.cast_one, Enat.coe_lt_coe, Enat.coe_le_coe]
-        rfl
+      (by
+        simp only [iff_trueₓ, le_top, coe_lt_top, ← @Nat.cast_zero Enat]) $
+    fun n => by
+    rw [← Nat.cast_zero, ← Nat.cast_one, Enat.coe_lt_coe, Enat.coe_le_coe]
+    rfl
 
 noncomputable instance : LinearOrderₓ Enat :=
   { Enat.partialOrder with
-    le_total :=
-      fun x y =>
-        Enat.cases_on x (Or.inr le_top)
-          (Enat.cases_on y (fun _ => Or.inl le_top)
-            fun x y => (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2)),
+    le_total := fun x y =>
+      Enat.cases_on x (Or.inr le_top)
+        (Enat.cases_on y (fun _ => Or.inl le_top) fun x y =>
+          (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2)),
     decidableLe := Classical.decRel _ }
 
 instance : BoundedOrder Enat :=
-  { Enat.orderTop, Enat.orderBot with  }
+  { Enat.orderTop, Enat.orderBot with }
 
 noncomputable instance : Lattice Enat :=
   { Enat.semilatticeSup with inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ,
@@ -382,137 +366,119 @@ theorem inf_eq_min {a b : Enat} : a⊓b = min a b :=
 
 instance : OrderedAddCommMonoid Enat :=
   { Enat.linearOrder, Enat.addCommMonoid with
-    add_le_add_left :=
-      fun a b ⟨h₁, h₂⟩ c =>
-        Enat.cases_on c
-          (by 
-            simp )
-          fun c =>
-            ⟨fun h => And.intro (dom_coe _) (h₁ h.2),
-              fun h =>
-                by 
-                  simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩ }
+    add_le_add_left := fun a b ⟨h₁, h₂⟩ c =>
+      Enat.cases_on c
+        (by
+          simp )
+        fun c =>
+        ⟨fun h => And.intro (dom_coe _) (h₁ h.2), fun h => by
+          simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩ }
 
 instance : CanonicallyOrderedAddMonoid Enat :=
   { Enat.semilatticeSup, Enat.orderBot, Enat.orderedAddCommMonoid with
-    le_iff_exists_add :=
-      fun a b =>
-        Enat.cases_on b (iff_of_true le_top ⟨⊤, (add_top _).symm⟩)
-          fun b =>
-            Enat.cases_on a
-              (iff_of_false (not_le_of_gtₓ (coe_lt_top _))
-                (not_exists.2
-                  fun x =>
-                    ne_of_ltₓ
-                      (by 
-                        rw [top_add] <;> exact coe_lt_top _)))
-              fun a =>
-                ⟨fun h =>
-                    ⟨(b - a : ℕ),
-                      by 
-                        rw [←Nat.cast_add, coe_inj, add_commₓ, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩,
-                  fun ⟨c, hc⟩ =>
-                    Enat.cases_on c
-                      (fun hc =>
-                        hc.symm ▸
-                          show (a : Enat) ≤ a+⊤by 
-                            rw [add_top] <;> exact le_top)
-                      (fun c hc : (b : Enat) = a+c =>
-                        coe_le_coe.2
-                          (by 
-                            rw [←Nat.cast_add, coe_inj] at hc <;> rw [hc] <;> exact Nat.le_add_rightₓ _ _))
-                      hc⟩ }
+    le_iff_exists_add := fun a b =>
+      Enat.cases_on b (iff_of_true le_top ⟨⊤, (add_top _).symm⟩) fun b =>
+        Enat.cases_on a
+          (iff_of_false (not_le_of_gtₓ (coe_lt_top _))
+            (not_exists.2 fun x =>
+              ne_of_ltₓ
+                (by
+                  rw [top_add] <;> exact coe_lt_top _)))
+          fun a =>
+          ⟨fun h =>
+            ⟨(b - a : ℕ), by
+              rw [← Nat.cast_add, coe_inj, add_commₓ, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩,
+            fun ⟨c, hc⟩ =>
+            Enat.cases_on c
+              (fun hc =>
+                hc.symm ▸
+                  show (a : Enat) ≤ a+⊤by
+                    rw [add_top] <;> exact le_top)
+              (fun c hc : (b : Enat) = a+c =>
+                coe_le_coe.2
+                  (by
+                    rw [← Nat.cast_add, coe_inj] at hc <;> rw [hc] <;> exact Nat.le_add_rightₓ _ _))
+              hc⟩ }
 
-protected theorem add_lt_add_right {x y z : Enat} (h : x < y) (hz : z ≠ ⊤) : (x+z) < y+z :=
-  by 
-    rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
-    rcases ne_top_iff.mp hz with ⟨k, rfl⟩
-    induction' y using Enat.cases_on with n
-    ·
-      rw [top_add]
-      applyModCast coe_lt_top 
-    normCast  at h 
-    applyModCast add_lt_add_right h
+protected theorem add_lt_add_right {x y z : Enat} (h : x < y) (hz : z ≠ ⊤) : (x+z) < y+z := by
+  rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
+  rcases ne_top_iff.mp hz with ⟨k, rfl⟩
+  induction' y using Enat.cases_on with n
+  ·
+    rw [top_add]
+    apply_mod_cast coe_lt_top
+  norm_cast  at h
+  apply_mod_cast add_lt_add_right h
 
 protected theorem add_lt_add_iff_right {x y z : Enat} (hz : z ≠ ⊤) : ((x+z) < y+z) ↔ x < y :=
   ⟨lt_of_add_lt_add_right, fun h => Enat.add_lt_add_right h hz⟩
 
-protected theorem add_lt_add_iff_left {x y z : Enat} (hz : z ≠ ⊤) : ((z+x) < z+y) ↔ x < y :=
-  by 
-    rw [add_commₓ z, add_commₓ z, Enat.add_lt_add_iff_right hz]
+protected theorem add_lt_add_iff_left {x y z : Enat} (hz : z ≠ ⊤) : ((z+x) < z+y) ↔ x < y := by
+  rw [add_commₓ z, add_commₓ z, Enat.add_lt_add_iff_right hz]
 
-protected theorem lt_add_iff_pos_right {x y : Enat} (hx : x ≠ ⊤) : (x < x+y) ↔ 0 < y :=
-  by 
-    convRHS => rw [←Enat.add_lt_add_iff_left hx]
-    rw [add_zeroₓ]
+protected theorem lt_add_iff_pos_right {x y : Enat} (hx : x ≠ ⊤) : (x < x+y) ↔ 0 < y := by
+  conv_rhs => rw [← Enat.add_lt_add_iff_left hx]
+  rw [add_zeroₓ]
 
-theorem lt_add_one {x : Enat} (hx : x ≠ ⊤) : x < x+1 :=
-  by 
-    rw [Enat.lt_add_iff_pos_right hx]
-    normCast 
-    normNum
+theorem lt_add_one {x : Enat} (hx : x ≠ ⊤) : x < x+1 := by
+  rw [Enat.lt_add_iff_pos_right hx]
+  norm_cast
+  norm_num
 
-theorem le_of_lt_add_one {x y : Enat} (h : x < y+1) : x ≤ y :=
-  by 
-    induction' y using Enat.cases_on with n 
-    apply le_top 
-    rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
-    applyModCast Nat.le_of_lt_succₓ 
-    applyModCast h
+theorem le_of_lt_add_one {x y : Enat} (h : x < y+1) : x ≤ y := by
+  induction' y using Enat.cases_on with n
+  apply le_top
+  rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
+  apply_mod_cast Nat.le_of_lt_succₓ
+  apply_mod_cast h
 
-theorem add_one_le_of_lt {x y : Enat} (h : x < y) : (x+1) ≤ y :=
-  by 
-    induction' y using Enat.cases_on with n 
-    apply le_top 
-    rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
-    applyModCast Nat.succ_le_of_ltₓ 
-    applyModCast h
+theorem add_one_le_of_lt {x y : Enat} (h : x < y) : (x+1) ≤ y := by
+  induction' y using Enat.cases_on with n
+  apply le_top
+  rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
+  apply_mod_cast Nat.succ_le_of_ltₓ
+  apply_mod_cast h
 
-theorem add_one_le_iff_lt {x y : Enat} (hx : x ≠ ⊤) : (x+1) ≤ y ↔ x < y :=
-  by 
-    constructor 
-    swap 
-    exact add_one_le_of_lt 
-    intro h 
-    rcases ne_top_iff.mp hx with ⟨m, rfl⟩
-    induction' y using Enat.cases_on with n 
-    apply coe_lt_top 
-    applyModCast Nat.lt_of_succ_leₓ 
-    applyModCast h
+theorem add_one_le_iff_lt {x y : Enat} (hx : x ≠ ⊤) : (x+1) ≤ y ↔ x < y := by
+  constructor
+  swap
+  exact add_one_le_of_lt
+  intro h
+  rcases ne_top_iff.mp hx with ⟨m, rfl⟩
+  induction' y using Enat.cases_on with n
+  apply coe_lt_top
+  apply_mod_cast Nat.lt_of_succ_leₓ
+  apply_mod_cast h
 
-theorem lt_add_one_iff_lt {x y : Enat} (hx : x ≠ ⊤) : (x < y+1) ↔ x ≤ y :=
-  by 
-    constructor 
-    exact le_of_lt_add_one 
-    intro h 
-    rcases ne_top_iff.mp hx with ⟨m, rfl⟩
-    induction' y using Enat.cases_on with n
-    ·
-      rw [top_add]
-      apply coe_lt_top 
-    applyModCast Nat.lt_succ_of_leₓ 
-    applyModCast h
+theorem lt_add_one_iff_lt {x y : Enat} (hx : x ≠ ⊤) : (x < y+1) ↔ x ≤ y := by
+  constructor
+  exact le_of_lt_add_one
+  intro h
+  rcases ne_top_iff.mp hx with ⟨m, rfl⟩
+  induction' y using Enat.cases_on with n
+  ·
+    rw [top_add]
+    apply coe_lt_top
+  apply_mod_cast Nat.lt_succ_of_leₓ
+  apply_mod_cast h
 
-theorem add_eq_top_iff {a b : Enat} : (a+b) = ⊤ ↔ a = ⊤ ∨ b = ⊤ :=
-  by 
-    apply Enat.cases_on a <;>
-      apply Enat.cases_on b <;> simp  <;> simp only [(Nat.cast_add _ _).symm, Enat.coe_ne_top] <;> simp 
+theorem add_eq_top_iff {a b : Enat} : (a+b) = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
+  apply Enat.cases_on a <;>
+    apply Enat.cases_on b <;> simp <;> simp only [(Nat.cast_add _ _).symm, Enat.coe_ne_top] <;> simp
 
-protected theorem add_right_cancel_iffₓ {a b c : Enat} (hc : c ≠ ⊤) : ((a+c) = b+c) ↔ a = b :=
-  by 
-    rcases ne_top_iff.1 hc with ⟨c, rfl⟩
-    apply Enat.cases_on a <;>
-      apply Enat.cases_on b <;>
-        simp [add_eq_top_iff, coe_ne_top, @eq_comm _ (⊤ : Enat)] <;>
-          simp only [(Nat.cast_add _ _).symm, add_left_cancel_iffₓ, Enat.coe_inj, add_commₓ] <;> tauto
+protected theorem add_right_cancel_iffₓ {a b c : Enat} (hc : c ≠ ⊤) : ((a+c) = b+c) ↔ a = b := by
+  rcases ne_top_iff.1 hc with ⟨c, rfl⟩
+  apply Enat.cases_on a <;>
+    apply Enat.cases_on b <;>
+      simp [add_eq_top_iff, coe_ne_top, @eq_comm _ (⊤ : Enat)] <;>
+        simp only [(Nat.cast_add _ _).symm, add_left_cancel_iffₓ, Enat.coe_inj, add_commₓ] <;> tauto
 
-protected theorem add_left_cancel_iffₓ {a b c : Enat} (ha : a ≠ ⊤) : ((a+b) = a+c) ↔ b = c :=
-  by 
-    rw [add_commₓ a, add_commₓ a, Enat.add_right_cancel_iff ha]
+protected theorem add_left_cancel_iffₓ {a b c : Enat} (ha : a ≠ ⊤) : ((a+b) = a+c) ↔ b = c := by
+  rw [add_commₓ a, add_commₓ a, Enat.add_right_cancel_iff ha]
 
 section WithTop
 
-/-- Computably converts an `enat` to a `with_top ℕ`. -/
+/--  Computably converts an `enat` to a `with_top ℕ`. -/
 def to_with_top (x : Enat) [Decidable x.dom] : WithTop ℕ :=
   x.to_option
 
@@ -520,44 +486,39 @@ theorem to_with_top_top : to_with_top ⊤ = ⊤ :=
   rfl
 
 @[simp]
-theorem to_with_top_top' {h : Decidable (⊤ : Enat).Dom} : to_with_top ⊤ = ⊤ :=
-  by 
-    convert to_with_top_top
+theorem to_with_top_top' {h : Decidable (⊤ : Enat).Dom} : to_with_top ⊤ = ⊤ := by
+  convert to_with_top_top
 
 theorem to_with_top_zero : to_with_top 0 = 0 :=
   rfl
 
 @[simp]
-theorem to_with_top_zero' {h : Decidable (0 : Enat).Dom} : to_with_top 0 = 0 :=
-  by 
-    convert to_with_top_zero
+theorem to_with_top_zero' {h : Decidable (0 : Enat).Dom} : to_with_top 0 = 0 := by
+  convert to_with_top_zero
 
 theorem to_with_top_some (n : ℕ) : to_with_top (some n) = n :=
   rfl
 
-theorem to_with_top_coe (n : ℕ) {_ : Decidable (n : Enat).Dom} : to_with_top n = n :=
-  by 
-    simp only [←some_eq_coe, ←to_with_top_some]
-    congr
+theorem to_with_top_coe (n : ℕ) {_ : Decidable (n : Enat).Dom} : to_with_top n = n := by
+  simp only [← some_eq_coe, ← to_with_top_some]
+  congr
 
 @[simp]
-theorem to_with_top_coe' (n : ℕ) {h : Decidable (n : Enat).Dom} : to_with_top (n : Enat) = n :=
-  by 
-    convert to_with_top_coe n
+theorem to_with_top_coe' (n : ℕ) {h : Decidable (n : Enat).Dom} : to_with_top (n : Enat) = n := by
+  convert to_with_top_coe n
 
 @[simp]
 theorem to_with_top_le {x y : Enat} :
-  ∀ [Decidable x.dom] [Decidable y.dom],
-    by 
+    ∀ [Decidable x.dom] [Decidable y.dom], by
       exact to_with_top x ≤ to_with_top y ↔ x ≤ y :=
   Enat.cases_on y
-    (by 
+    (by
       simp )
     (Enat.cases_on x
-      (by 
+      (by
         simp )
-      (by 
-        intros  <;> simp ))
+      (by
+        intros <;> simp ))
 
 @[simp]
 theorem to_with_top_lt {x y : Enat} [Decidable x.dom] [Decidable y.dom] : to_with_top x < to_with_top y ↔ x < y :=
@@ -570,37 +531,31 @@ section WithTopEquiv
 open_locale Classical
 
 @[simp]
-theorem to_with_top_add {x y : Enat} : to_with_top (x+y) = to_with_top x+to_with_top y :=
-  by 
-    apply Enat.cases_on y <;> apply Enat.cases_on x
-    ·
-      simp 
-    ·
-      simp 
-    ·
-      simp 
-    ·
-      intros 
-      rw [to_with_top_coe', to_with_top_coe']
-      normCast 
-      exact to_with_top_coe' _
+theorem to_with_top_add {x y : Enat} : to_with_top (x+y) = to_with_top x+to_with_top y := by
+  apply Enat.cases_on y <;> apply Enat.cases_on x
+  ·
+    simp
+  ·
+    simp
+  ·
+    simp
+  ·
+    intros
+    rw [to_with_top_coe', to_with_top_coe']
+    norm_cast
+    exact to_with_top_coe' _
 
-/-- `equiv` between `enat` and `with_top ℕ` (for the order isomorphism see `with_top_order_iso`). -/
+/--  `equiv` between `enat` and `with_top ℕ` (for the order isomorphism see `with_top_order_iso`). -/
 noncomputable def with_top_equiv : Enat ≃ WithTop ℕ :=
   { toFun := fun x => to_with_top x,
-    invFun :=
-      fun x =>
-        match x with 
-        | Option.some n => coeₓ n
-        | none => ⊤,
-    left_inv :=
-      fun x =>
-        by 
-          apply Enat.cases_on x <;> intros  <;> simp  <;> rfl,
-    right_inv :=
-      fun x =>
-        by 
-          cases x <;> simp [with_top_equiv._match_1] <;> rfl }
+    invFun := fun x =>
+      match x with
+      | Option.some n => coeₓ n
+      | none => ⊤,
+    left_inv := fun x => by
+      apply Enat.cases_on x <;> intros <;> simp <;> rfl,
+    right_inv := fun x => by
+      cases x <;> simp [with_top_equiv._match_1] <;> rfl }
 
 @[simp]
 theorem with_top_equiv_top : with_top_equiv ⊤ = ⊤ :=
@@ -611,9 +566,8 @@ theorem with_top_equiv_coe (n : Nat) : with_top_equiv n = n :=
   to_with_top_coe' _
 
 @[simp]
-theorem with_top_equiv_zero : with_top_equiv 0 = 0 :=
-  by 
-    simpa only [Nat.cast_zero] using with_top_equiv_coe 0
+theorem with_top_equiv_zero : with_top_equiv 0 = 0 := by
+  simpa only [Nat.cast_zero] using with_top_equiv_coe 0
 
 @[simp]
 theorem with_top_equiv_le {x y : Enat} : with_top_equiv x ≤ with_top_equiv y ↔ x ≤ y :=
@@ -623,7 +577,7 @@ theorem with_top_equiv_le {x y : Enat} : with_top_equiv x ≤ with_top_equiv y �
 theorem with_top_equiv_lt {x y : Enat} : with_top_equiv x < with_top_equiv y ↔ x < y :=
   to_with_top_lt
 
-/-- `to_with_top` induces an order isomorphism between `enat` and `with_top ℕ`. -/
+/--  `to_with_top` induces an order isomorphism between `enat` and `with_top ℕ`. -/
 noncomputable def with_top_order_iso : Enat ≃o WithTop ℕ :=
   { with_top_equiv with map_rel_iff' := fun _ _ => with_top_equiv_le }
 
@@ -640,27 +594,277 @@ theorem with_top_equiv_symm_zero : with_top_equiv.symm 0 = 0 :=
   rfl
 
 @[simp]
-theorem with_top_equiv_symm_le {x y : WithTop ℕ} : with_top_equiv.symm x ≤ with_top_equiv.symm y ↔ x ≤ y :=
-  by 
-    rw [←with_top_equiv_le] <;> simp 
+theorem with_top_equiv_symm_le {x y : WithTop ℕ} : with_top_equiv.symm x ≤ with_top_equiv.symm y ↔ x ≤ y := by
+  rw [← with_top_equiv_le] <;> simp
 
 @[simp]
-theorem with_top_equiv_symm_lt {x y : WithTop ℕ} : with_top_equiv.symm x < with_top_equiv.symm y ↔ x < y :=
-  by 
-    rw [←with_top_equiv_lt] <;> simp 
+theorem with_top_equiv_symm_lt {x y : WithTop ℕ} : with_top_equiv.symm x < with_top_equiv.symm y ↔ x < y := by
+  rw [← with_top_equiv_lt] <;> simp
 
-/-- `to_with_top` induces an additive monoid isomorphism between `enat` and `with_top ℕ`. -/
+/--  `to_with_top` induces an additive monoid isomorphism between `enat` and `with_top ℕ`. -/
 noncomputable def with_top_add_equiv : Enat ≃+ WithTop ℕ :=
   { with_top_equiv with
-    map_add' :=
-      fun x y =>
-        by 
-          simp only [with_top_equiv] <;> convert to_with_top_add }
+    map_add' := fun x y => by
+      simp only [with_top_equiv] <;> convert to_with_top_add }
 
 end WithTopEquiv
 
--- failed to parenthesize: parenthesize: uncaught backtrack exception
--- failed to format: format: uncaught backtrack exception
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `lt_wf [])
+  (Command.declSig
+   []
+   (Term.typeSpec
+    ":"
+    (Term.app
+     `WellFounded
+     [(Term.paren
+       "("
+       [(«term_<_» (Term.cdot "·") "<" (Term.cdot "·"))
+        [(Term.typeAscription ":" (Term.arrow `Enat "→" (Term.arrow `Enat "→" (Term.prop "Prop"))))]]
+       ")")])))
+  (Command.declValSimple
+   ":="
+   (Term.show
+    "show"
+    (Term.app
+     `WellFounded
+     [(Term.fun
+       "fun"
+       (Term.basicFun [(Term.simpleBinder [`a `b] [(Term.typeSpec ":" `Enat)])] "=>" («term_<_» `a "<" `b)))])
+    (Term.byTactic
+     "by"
+     (Tactic.tacticSeq
+      (Tactic.tacticSeq1Indented
+       [(group
+         (Tactic.«tactic_<;>_»
+          (Tactic.tacticHave_ "have" (Term.haveDecl (Term.haveIdDecl [] [] ":=" `Classical.dec)))
+          "<;>"
+          (Tactic.«tactic_<;>_»
+           (Tactic.simp
+            "simp"
+            ["("
+             "config"
+             ":="
+             (Term.structInst
+              "{"
+              []
+              [(group (Term.structInstField (Term.structInstLVal `eta []) ":=" `Bool.false._@._internal._hyg.0) [])]
+              (Term.optEllipsis [])
+              []
+              "}")
+             ")"]
+            ["only"]
+            ["[" [(Tactic.simpLemma [] [] `to_with_top_lt.symm)] "]"]
+            [])
+           "<;>"
+           (Tactic.exact
+            "exact"
+            (Term.app `InvImage.wfₓ [(Term.hole "_") (Term.app `WithTop.well_founded_lt [`Nat.lt_wf])]))))
+         [])]))))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.show
+   "show"
+   (Term.app
+    `WellFounded
+    [(Term.fun
+      "fun"
+      (Term.basicFun [(Term.simpleBinder [`a `b] [(Term.typeSpec ":" `Enat)])] "=>" («term_<_» `a "<" `b)))])
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group
+        (Tactic.«tactic_<;>_»
+         (Tactic.tacticHave_ "have" (Term.haveDecl (Term.haveIdDecl [] [] ":=" `Classical.dec)))
+         "<;>"
+         (Tactic.«tactic_<;>_»
+          (Tactic.simp
+           "simp"
+           ["("
+            "config"
+            ":="
+            (Term.structInst
+             "{"
+             []
+             [(group (Term.structInstField (Term.structInstLVal `eta []) ":=" `Bool.false._@._internal._hyg.0) [])]
+             (Term.optEllipsis [])
+             []
+             "}")
+            ")"]
+           ["only"]
+           ["[" [(Tactic.simpLemma [] [] `to_with_top_lt.symm)] "]"]
+           [])
+          "<;>"
+          (Tactic.exact
+           "exact"
+           (Term.app `InvImage.wfₓ [(Term.hole "_") (Term.app `WithTop.well_founded_lt [`Nat.lt_wf])]))))
+        [])]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.show.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.fromTerm.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.fromTerm'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.«tactic_<;>_»
+   (Tactic.tacticHave_ "have" (Term.haveDecl (Term.haveIdDecl [] [] ":=" `Classical.dec)))
+   "<;>"
+   (Tactic.«tactic_<;>_»
+    (Tactic.simp
+     "simp"
+     ["("
+      "config"
+      ":="
+      (Term.structInst
+       "{"
+       []
+       [(group (Term.structInstField (Term.structInstLVal `eta []) ":=" `Bool.false._@._internal._hyg.0) [])]
+       (Term.optEllipsis [])
+       []
+       "}")
+      ")"]
+     ["only"]
+     ["[" [(Tactic.simpLemma [] [] `to_with_top_lt.symm)] "]"]
+     [])
+    "<;>"
+    (Tactic.exact "exact" (Term.app `InvImage.wfₓ [(Term.hole "_") (Term.app `WithTop.well_founded_lt [`Nat.lt_wf])]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.«tactic_<;>_»
+   (Tactic.simp
+    "simp"
+    ["("
+     "config"
+     ":="
+     (Term.structInst
+      "{"
+      []
+      [(group (Term.structInstField (Term.structInstLVal `eta []) ":=" `Bool.false._@._internal._hyg.0) [])]
+      (Term.optEllipsis [])
+      []
+      "}")
+     ")"]
+    ["only"]
+    ["[" [(Tactic.simpLemma [] [] `to_with_top_lt.symm)] "]"]
+    [])
+   "<;>"
+   (Tactic.exact "exact" (Term.app `InvImage.wfₓ [(Term.hole "_") (Term.app `WithTop.well_founded_lt [`Nat.lt_wf])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.«tactic_<;>_»', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.exact "exact" (Term.app `InvImage.wfₓ [(Term.hole "_") (Term.app `WithTop.well_founded_lt [`Nat.lt_wf])]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `InvImage.wfₓ [(Term.hole "_") (Term.app `WithTop.well_founded_lt [`Nat.lt_wf])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `WithTop.well_founded_lt [`Nat.lt_wf])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `Nat.lt_wf
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `WithTop.well_founded_lt
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `WithTop.well_founded_lt [`Nat.lt_wf]) []] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `InvImage.wfₓ
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+  (Tactic.simp
+   "simp"
+   ["("
+    "config"
+    ":="
+    (Term.structInst
+     "{"
+     []
+     [(group (Term.structInstField (Term.structInstLVal `eta []) ":=" `Bool.false._@._internal._hyg.0) [])]
+     (Term.optEllipsis [])
+     []
+     "}")
+    ")"]
+   ["only"]
+   ["[" [(Tactic.simpLemma [] [] `to_with_top_lt.symm)] "]"]
+   [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `to_with_top_lt.symm
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«)»', expected 'Lean.Parser.Tactic.discharger'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.constant'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   lt_wf
   : WellFounded ( · < · : Enat → Enat → Prop )
@@ -681,7 +885,7 @@ section Find
 
 variable (P : ℕ → Prop) [DecidablePred P]
 
-/-- The smallest `enat` satisfying a (decidable) predicate `P : ℕ → Prop` -/
+/--  The smallest `enat` satisfying a (decidable) predicate `P : ℕ → Prop` -/
 def find : Enat :=
   ⟨∃ n, P n, Nat.findₓ⟩
 
@@ -692,38 +896,33 @@ theorem find_get (h : (find P).Dom) : (find P).get h = Nat.findₓ h :=
 theorem find_dom (h : ∃ n, P n) : (find P).Dom :=
   h
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≤ » n)
-theorem lt_find (n : ℕ) (h : ∀ m _ : m ≤ n, ¬P m) : (n : Enat) < find P :=
-  by 
-    rw [coe_lt_iff]
-    intro h' 
-    rw [find_get]
-    have  := @Nat.find_specₓ P _ h' 
-    contrapose! this 
-    exact h _ this
+theorem lt_find (n : ℕ) (h : ∀, ∀ m ≤ n, ∀, ¬P m) : (n : Enat) < find P := by
+  rw [coe_lt_iff]
+  intro h'
+  rw [find_get]
+  have := @Nat.find_specₓ P _ h'
+  contrapose! this
+  exact h _ this
 
--- ././Mathport/Syntax/Translate/Basic.lean:452:2: warning: expanding binder collection (m «expr ≤ » n)
-theorem lt_find_iff (n : ℕ) : (n : Enat) < find P ↔ ∀ m _ : m ≤ n, ¬P m :=
-  by 
-    refine' ⟨_, lt_find P n⟩
-    intro h m hm 
-    byCases' H : (find P).Dom
-    ·
-      apply Nat.find_minₓ H 
-      rw [coe_lt_iff] at h 
-      specialize h H 
-      exact lt_of_le_of_ltₓ hm h
-    ·
-      exact not_exists.mp H m
+theorem lt_find_iff (n : ℕ) : (n : Enat) < find P ↔ ∀, ∀ m ≤ n, ∀, ¬P m := by
+  refine' ⟨_, lt_find P n⟩
+  intro h m hm
+  by_cases' H : (find P).Dom
+  ·
+    apply Nat.find_minₓ H
+    rw [coe_lt_iff] at h
+    specialize h H
+    exact lt_of_le_of_ltₓ hm h
+  ·
+    exact not_exists.mp H m
 
-theorem find_le (n : ℕ) (h : P n) : find P ≤ n :=
-  by 
-    rw [le_coe_iff]
-    refine' ⟨⟨_, h⟩, @Nat.find_min'ₓ P _ _ _ h⟩
+theorem find_le (n : ℕ) (h : P n) : find P ≤ n := by
+  rw [le_coe_iff]
+  refine' ⟨⟨_, h⟩, @Nat.find_min'ₓ P _ _ _ h⟩
 
 theorem find_eq_top_iff : find P = ⊤ ↔ ∀ n, ¬P n :=
   (eq_top_iff_forall_lt _).trans
-    ⟨fun h n => (lt_find_iff P n).mp (h n) _ le_rfl, fun h n => lt_find P n$ fun _ _ => h _⟩
+    ⟨fun h n => (lt_find_iff P n).mp (h n) _ le_rfl, fun h n => lt_find P n $ fun _ _ => h _⟩
 
 end Find
 
